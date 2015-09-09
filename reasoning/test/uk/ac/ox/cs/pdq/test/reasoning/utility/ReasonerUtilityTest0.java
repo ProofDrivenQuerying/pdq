@@ -53,8 +53,8 @@ public abstract class ReasonerUtilityTest0 {
 	@Before
 	protected void loadSchema() throws FileNotFoundException, IOException {
 		
-		String PATH = "C:/Users/tsamoura/workspace2/dev4.benchmark/local/bio/queries/schema2/DAG/CONSTRAINT_CARDINALITY";
-		String schemaPath = "/case_008b/schema.xml";
+		String PATH = "";
+		String schemaPath = "test/schema.xml";
 
 		try(FileInputStream sis = new FileInputStream(PATH + schemaPath);) {
 
