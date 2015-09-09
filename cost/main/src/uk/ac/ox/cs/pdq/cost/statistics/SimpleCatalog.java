@@ -1,0 +1,632 @@
+package uk.ac.ox.cs.pdq.cost.statistics;
+
+
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Triple;
+import org.apache.log4j.Logger;
+
+import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.db.Relation;
+import uk.ac.ox.cs.pdq.db.Schema;
+import uk.ac.ox.cs.pdq.db.TypedConstant;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+import uk.ac.ox.cs.pdq.fol.Query;
+import uk.ac.ox.cs.pdq.io.xml.QueryReader;
+import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
+import uk.ac.ox.cs.pdq.plan.CommandToTGDTranslator;
+
+
+
+
+import com.google.common.base.Joiner;
+import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+
+/**
+ * Holds unconditional statistics.
+ * @author Efthymia Tsamoura
+ *
+ */
+public class SimpleCatalog implements Catalog{
+
+	/** Logger. */
+	private static Logger log = Logger.getLogger(SimpleCatalog.class);
+
+	public static double DEFAULT_EQUIJOIN_SELECTIVITY = 0.001;
+
+	private static int DEFAULT_CARDINALITY = 1000000;
+	private static int DEFAULT_COLUMN_CARDINALITY = 1000;
+	private static double DEFAULT_COST = 1.0;
+	private static String CATALOG_FILE_NAME = "catalog/catalog.properties";
+
+	private static String READ_CARDINALITY = "^(RE:(\\w+)(\\s+)CA:(\\d+))";
+	private static String READ_COLUMN_CARDINALITY = "^(RE:(\\w+)(\\s+)AT:(\\w+)(\\s+)CC:(\\d+))";
+	private static String READ_COLUMN_SELECTIVITY = "^(RE:(\\w+)(\\s+)AT:(\\w+)(\\s+)SE:(\\d+(\\.\\d+)?))";
+	private static String READ_ERSPI = "^(RE:(\\w+)(\\s+)BI:(\\w+)(\\s+)ERSPI:(\\d+(\\.\\d+)?))";
+	private static String READ_COST = "^(RE:(\\w+)(\\s+)BI:(\\w+)(\\s+)RT:(\\d+(\\.\\d+)?))";
+
+	/** Cardinalities of the schema relations*/
+	private final Map<Relation,Integer> cardinalities;
+	/** Cardinalities of the relations' attributes*/
+	private final Map<Pair<Relation,Attribute>,Integer> columnCardinalities;
+	/** The estimated result size per invocation of each access method*/
+	private final Map<Pair<Relation,AccessMethod>,Integer> erpsi;
+	/** The response time of each access method*/
+	private final Map<Pair<Relation,AccessMethod>,Double> costs;
+	/** The selectivity of each attribute*/
+	private final Map<Pair<Relation,Attribute>,Double> columnSelectivity;
+	/** The frequency histogram of each attribute*/
+	private final Map<Pair<Relation,Attribute>, Histogram> histograms;
+	/** 
+	 * The queries correspond to cardinality expressions. 
+	 * This structure maps cardinality queries to its size. 
+	 * This implementation keeps only cardinality expressions coming from single relations-single attribute.*/
+	private final Map<Query<?>,Integer> queries; 
+
+	private final Schema schema;
+
+	/**
+	 * 
+	 * @param schema
+	 */
+	public SimpleCatalog(Schema schema) {
+		this(schema, SimpleCatalog.CATALOG_FILE_NAME);
+	}
+
+	/**
+	 * 
+	 * @param schema
+	 * @param fileName
+	 */
+	public SimpleCatalog(Schema schema, String fileName) {
+		Preconditions.checkNotNull(schema);
+		this.schema = schema;
+		this.erpsi = new HashMap<>();
+		this.costs = new HashMap<>();
+		this.columnSelectivity = new HashMap<>();
+		this.cardinalities = new HashMap<>();
+		this.columnCardinalities = new HashMap<>();
+		this.histograms = new HashMap<>();
+		this.read(schema, fileName);
+		this.queries = SimpleCatalog.getQueries(this.columnCardinalities);
+		this.queries.putAll(SimpleCatalog.getQueriesFromHistograms(this.histograms));
+	}
+	
+	/**
+	 * 
+	 * @param columnCardinalities
+	 * @return
+	 * 		query expressions for the input set of column cardinalities
+	 */
+	private static Map<Query<?>,Integer> getQueries(Map<Pair<Relation,Attribute>,Integer> columnCardinalities) {
+		Map<Query<?>,Integer> ret = Maps.newHashMap();
+		for(Entry<Pair<Relation, Attribute>, Integer> entry:columnCardinalities.entrySet()) {
+			Relation relation = entry.getKey().getLeft();
+			Attribute attribute = entry.getKey().getRight();
+			Query<?> query = new CommandToTGDTranslator().toQuery(relation, attribute);
+			ret.put(query, entry.getValue());
+		}
+		return ret;
+	}
+	
+	/**
+	 * 
+	 * @param columnCardinalities
+	 * @return
+	 * 		query expressions for the input set of histograms
+	 */
+	private static Map<Query<?>,Integer> getQueriesFromHistograms(Map<Pair<Relation,Attribute>, Histogram> histograms) {
+		Map<Query<?>,Integer> ret = Maps.newHashMap();
+		for(Entry<Pair<Relation, Attribute>, Histogram> entry:histograms.entrySet()) {
+			Relation relation = entry.getKey().getLeft();
+			Attribute attribute = entry.getKey().getRight();
+			Histogram histogram = entry.getValue();
+			for(Entry<String, Integer> frequency:histogram.getFrequencies().entrySet()) {
+				Map<Attribute, TypedConstant> constantsMap = new HashMap<>();
+				constantsMap.put(attribute, new TypedConstant(frequency.getKey()));
+				List<Attribute> free = Lists.newArrayList(relation.getAttributes());
+				free.remove(attribute);
+				Query<?> query = new CommandToTGDTranslator().toQuery(relation, constantsMap, free);
+				ret.put(query, frequency.getValue());
+			}
+		}
+		return ret;
+	}
+
+	/**
+	 * 
+	 * @param schema
+	 * @param fileName
+	 * 		The file that stores the statistics 
+	 */
+	private void read(Schema schema, String fileName) {
+		String line = null;
+		try {
+			FileReader fileReader = new FileReader(fileName);
+			BufferedReader bufferedReader = new BufferedReader(fileReader);
+			while((line = bufferedReader.readLine()) != null) {
+				this.parse(schema, line);
+			}
+			bufferedReader.close();            
+		}
+		catch(FileNotFoundException ex) {      
+			ex.printStackTrace(System.out);
+		}
+		catch(IOException ex) {
+			ex.printStackTrace(System.out);
+		}
+	}
+
+	/**
+	 * Parses the statistics file
+	 * @param schema
+	 * @param line
+	 */
+	private void parse(Schema schema, String line) {
+		Pattern p = Pattern.compile(READ_CARDINALITY);
+		Matcher m = p.matcher(line);
+		if (m.find()) {
+			String relation = m.group(2);
+			String cardinality = m.group(4);
+			if(schema.contains(relation)) {
+				Relation r = schema.getRelation(relation);
+				this.cardinalities.put(r, Integer.parseInt(cardinality));
+				log.info("RELATION: " + relation + " CARDINALITY: " + cardinality);
+			}
+			else {
+				throw new java.lang.IllegalArgumentException();
+			}
+			return;
+		}
+
+		p = Pattern.compile(READ_COLUMN_CARDINALITY);
+		m = p.matcher(line);
+		if (m.find()) {
+			String relation = m.group(2);
+			String column = m.group(4);
+			String cardinality = m.group(6);
+			if(schema.contains(relation)) {
+				Relation r = schema.getRelation(relation);
+				if(r.getAttribute(column) != null) {
+					Attribute attribute = r.getAttribute(column);
+					this.columnCardinalities.put( Pair.of(r,attribute), Integer.parseInt(cardinality));  
+					log.info("RELATION: " + relation + " ATTRIBUTE: " + attribute + " CARDINALITY: " + cardinality);
+				}
+				else {
+					throw new java.lang.IllegalArgumentException();
+				}
+			}
+			else {
+				throw new java.lang.IllegalArgumentException();
+			}
+			return;
+		}
+
+		p = Pattern.compile(READ_COLUMN_SELECTIVITY);
+		m = p.matcher(line);
+		if (m.find()) {
+			String relation = m.group(2);
+			String column = m.group(4);
+			String selectivity = m.group(6);
+			if(schema.contains(relation)) {
+				Relation r = schema.getRelation(relation);
+				if(r.getAttribute(column) != null) {
+					Attribute attribute = r.getAttribute(column);
+					this.columnSelectivity.put( Pair.of(r,attribute), Double.parseDouble(selectivity));  
+					log.info("RELATION: " + relation + " ATTRIBUTE: " + attribute + " SELECTIVITY: " + selectivity);
+				}
+				else {
+					throw new java.lang.IllegalArgumentException();
+				}
+			}
+			else {
+				throw new java.lang.IllegalArgumentException();
+			}
+			return;
+		}
+
+		p = Pattern.compile(READ_ERSPI);
+		m = p.matcher(line);
+		if (m.find()) {
+			log.info(line);
+			String relation = m.group(2);
+			String binding = m.group(4);
+			String erspi = m.group(6);
+			if(schema.contains(relation)) {
+				Relation r = schema.getRelation(relation);
+				if(r.getAccessMethod(binding) != null) {
+					AccessMethod b = r.getAccessMethod(binding);
+					this.erpsi.put( Pair.of(r,b), Integer.parseInt(erspi));  
+					log.info("RELATION: " + relation + " BINDING: " + binding + " ERPSI: " + erspi);
+				}
+				else {
+					throw new java.lang.IllegalArgumentException();
+				}
+			}
+			else {
+				throw new java.lang.IllegalArgumentException();
+			}
+			return;
+		}
+
+		p = Pattern.compile(READ_COST);
+		m = p.matcher(line);
+		if (m.find()) {
+			String relation = m.group(2);
+			String binding = m.group(4);
+			String cost = m.group(6);
+			if(schema.contains(relation)) {
+				Relation r = schema.getRelation(relation);
+				if(r.getAccessMethod(binding) != null) {
+					AccessMethod b = r.getAccessMethod(binding);
+					this.costs.put( Pair.of(r,b), Double.parseDouble(cost));  
+					log.info("RELATION: " + relation + " BINDING: " + binding + " COST: " + cost);
+				}
+				else {
+					throw new java.lang.IllegalArgumentException();
+				}
+			}
+			else {
+				throw new java.lang.IllegalArgumentException();
+			}
+			return;
+		}
+
+		Histogram h = Histogram.build(schema, line);
+		if(h != null) {
+			this.histograms.put(Pair.of(h.getRelation(), h.getAttibute()), h);
+			return;
+		}
+
+	}
+
+	/**
+	 * 
+	 * @param cardinalities
+	 * @param erpsi
+	 * @param responseTimes
+	 * @param columnSelectivity
+	 * @param columnCardinalities
+	 */
+	private SimpleCatalog(Schema schema, Map<Relation,Integer> cardinalities, Map<Pair<Relation,AccessMethod>,Integer> erpsi, Map<Pair<Relation,AccessMethod>,Double> responseTimes,
+			Map<Pair<Relation,Attribute>,Double> columnSelectivity, Map<Pair<Relation,Attribute>,Integer> columnCardinalities, 
+			Map<Query<?>,Integer> queries,
+			Map<Pair<Relation,Attribute>, Histogram> histograms) {
+		Preconditions.checkNotNull(schema);
+		Preconditions.checkNotNull(cardinalities);
+		Preconditions.checkNotNull(erpsi);
+		Preconditions.checkNotNull(responseTimes);
+		Preconditions.checkNotNull(columnSelectivity);
+		Preconditions.checkNotNull(columnCardinalities);
+		Preconditions.checkNotNull(histograms);
+		this.schema = schema;
+		this.cardinalities = Maps.newHashMap(cardinalities);
+		this.erpsi = Maps.newHashMap(erpsi);
+		this.costs = Maps.newHashMap(responseTimes);
+		this.columnSelectivity = Maps.newHashMap(columnSelectivity);
+		this.columnCardinalities = Maps.newHashMap(columnCardinalities);
+		this.histograms = Maps.newHashMap(histograms);
+		this.queries = Maps.newHashMap(queries);
+	}
+
+	public Double getSelectivity(Relation relation, Attribute attribute, TypedConstant<?> constant) {
+		return null;
+	}
+
+	public double getSelectivity(Relation relation, Attribute attribute) {
+		Preconditions.checkNotNull(attribute);
+		Preconditions.checkNotNull(relation);
+		Double selectivities = this.columnSelectivity.get(Pair.of(relation, attribute));
+		if(selectivities != null) {
+			log.info("RELATION: " + relation.getName() + " ATTRIBUTE: " + attribute + " SELECTIVITY: " + selectivities);
+			return selectivities;
+		}
+		else {
+			Integer columnCardinality = this.columnCardinalities.get(Pair.of(relation, attribute));
+			if(columnCardinality != null) {
+				log.info("RELATION: " + relation.getName() + " ATTRIBUTE: " + attribute + " SELECTIVITY: " + 1.0/columnCardinality);
+				return 1.0/columnCardinality;
+			}
+			log.info("RELATION: " + relation.getName() + " ATTRIBUTE: " + attribute + " SELECTIVITY: " + 1.0/SimpleCatalog.DEFAULT_COLUMN_CARDINALITY);
+			return 1.0/SimpleCatalog.DEFAULT_COLUMN_CARDINALITY;
+		}
+	}
+
+	public double getSelectivity(Relation left, Relation right, Attribute leftAttribute, Attribute rightAttribute) {
+		Preconditions.checkNotNull(left);
+		Preconditions.checkNotNull(right);
+		Preconditions.checkNotNull(leftAttribute);
+		Preconditions.checkNotNull(rightAttribute);
+		Integer leftcardinalities = this.columnCardinalities.get(Pair.of(left, leftAttribute));
+		Integer rightcardinalities = this.columnCardinalities.get(Pair.of(right, rightAttribute));
+		if(leftcardinalities != null && rightcardinalities != null) {
+			log.info("LEFT RELATION: " + left.getName() + " LEFT ATTRIBUTE " + leftAttribute + " RIGHT RELATION: " + right.getName() + " RIGHT ATTRIBUTE " + rightAttribute + " SELECTIVITY: " + 1.0 / Math.max(leftcardinalities, rightcardinalities));
+			return 1.0 / Math.max(leftcardinalities, rightcardinalities);
+		}
+		else {
+			log.info("LEFT RELATION: " + left.getName() + " LEFT ATTRIBUTE " + leftAttribute + " RIGHT RELATION: " + right.getName() + " RIGHT ATTRIBUTE " + rightAttribute + " SELECTIVITY: " + 1.0 / SimpleCatalog.DEFAULT_COLUMN_CARDINALITY);
+			return 1.0 / SimpleCatalog.DEFAULT_COLUMN_CARDINALITY;
+		}
+	}
+
+	@Override
+	public int getERPSI(Relation relation, AccessMethod method) {
+		Preconditions.checkNotNull(relation);
+		Preconditions.checkNotNull(method);
+		Integer erspi = this.erpsi.get(Pair.of(relation, method));
+		if(erspi == null) {
+			double columnProduct = 1.0;
+			for(Integer input:method.getZeroBasedInputs()) {
+				Attribute attribute = relation.getAttribute(input);
+				Integer columnCardinality = this.columnCardinalities.get(Pair.of(relation, attribute));
+				if(columnCardinality != null) {
+					columnProduct *= columnCardinality;
+				}
+				else {
+					log.info("RELATION: " + relation.getName() + " AccessMethod: " + method + " ERPSI: " + SimpleCatalog.DEFAULT_CARDINALITY/SimpleCatalog.DEFAULT_COLUMN_CARDINALITY);
+					return SimpleCatalog.DEFAULT_CARDINALITY/SimpleCatalog.DEFAULT_COLUMN_CARDINALITY;
+				}
+			}
+			if(this.cardinalities.containsKey(relation)) {
+				log.info("RELATION: " + relation.getName() + " AccessMethod: " + method + " ERPSI: " + this.cardinalities.get(relation)/columnProduct);
+				return (int) ((int) this.cardinalities.get(relation)/columnProduct);
+			}
+			else {
+				log.info("RELATION: " + relation.getName() + " AccessMethod: " + method + " ERPSI: " + SimpleCatalog.DEFAULT_CARDINALITY/SimpleCatalog.DEFAULT_COLUMN_CARDINALITY);
+				return SimpleCatalog.DEFAULT_CARDINALITY/SimpleCatalog.DEFAULT_COLUMN_CARDINALITY;
+			}
+		}
+		return erspi;
+	}
+
+
+	@Override
+	public int getERPSI(Relation relation, AccessMethod method, Map<Integer, TypedConstant<?>> inputs) {
+		Preconditions.checkNotNull(relation);
+		Preconditions.checkNotNull(inputs);
+		if(inputs.size() == 1) {
+			Preconditions.checkArgument(method.getZeroBasedInputs().size() == inputs.size());
+			Attribute attribute = relation.getAttribute(method.getZeroBasedInputs().get(0));
+			Histogram histogram = this.histograms.get(Pair.of(relation, attribute));
+			if(histogram != null && histogram.getFrequency(inputs.get(0).toString()) != null) {
+				int erpsi = histogram.getFrequency(inputs.get(0).toString());
+				log.info("RELATION: " + relation.getName() + " ACCESS: " + method + " INPUTS: " + inputs + " ERPSI: " + erpsi);
+				return erpsi;
+			}
+		}
+		int erpsi = this.getERPSI(relation, method);
+		log.info("RELATION: " + relation.getName() + " ACCESS: " + method + " INPUTS: " + inputs + " ERPSI: " + erpsi);
+		return erpsi;
+	}
+
+	@Override
+	public int getCardinality(Relation relation) {
+		if(this.cardinalities.get(relation) != null) {
+			return this.cardinalities.get(relation);
+		}
+		return DEFAULT_CARDINALITY;
+	}
+
+	@Override
+	public int getCardinality(Relation relation, Attribute attribute) {
+		if(this.columnCardinalities.get(Pair.of(relation, attribute)) != null) {
+			log.info("RELATION: " + relation.getName() + " ATTRIBUTE: " + attribute + " CARDINALITY: " + this.columnCardinalities.get(Pair.of(relation, attribute)));
+			return this.columnCardinalities.get(Pair.of(relation, attribute));
+		}
+		log.info("RELATION: " + relation.getName() + " ATTRIBUTE: " + attribute + " CARDINALITY: " + DEFAULT_COLUMN_CARDINALITY);
+		return DEFAULT_COLUMN_CARDINALITY;
+	}
+	
+	@Override
+	public double getCost(Relation relation, AccessMethod method) {
+		Preconditions.checkNotNull(relation);		
+		Preconditions.checkNotNull(method);		
+		Double cost = this.costs.get(Pair.of(relation, method));
+		return cost == null ? DEFAULT_COST : cost;
+	}
+
+	@Override
+	public double getCost(Relation relation, AccessMethod method, Map<Integer, TypedConstant<?>> inputs) {
+		Preconditions.checkNotNull(relation);		
+		Preconditions.checkNotNull(method);		
+		double erpsi = -1;
+		if(inputs.size() == 1) {
+			Attribute attribute = relation.getAttribute(method.getZeroBasedInputs().get(0));
+			Histogram histogram = this.histograms.get(Pair.of(relation, attribute));
+			if(histogram != null && histogram.getFrequency(inputs.get(0).toString()) != null) {
+				erpsi = histogram.getFrequency(inputs.get(0).toString());
+				log.info("RELATION: " + relation.getName() + " ACCESS: " + method + " INPUTS: " + inputs + " ERPSI: " + erpsi);
+			}
+		}
+		Double cost = this.costs.get(Pair.of(relation, method));
+		if(cost == null) {
+			log.info("RELATION: " + relation.getName() + " ACCESS METHOD: " + method + " COST: " + DEFAULT_COST);
+			return DEFAULT_COST;
+		}
+		log.info("RELATION: " + relation.getName() + " ACCESS METHOD: " + method + " COST: " + cost);
+		return erpsi > 0 ? erpsi * cost : cost;
+	}
+	
+
+	@Override
+	public Collection<Query<?>> getExpressions() {
+		return this.queries.keySet();
+	}
+
+	@Override
+	public int size(Query<?> query) {
+		Preconditions.checkNotNull(this.queries.get(query), "Undentified input query");
+		return this.queries.get(query);
+	}
+
+	@Override
+	public SimpleCatalog clone() {
+		return new SimpleCatalog(this.schema, this.cardinalities, this.erpsi, this.costs, this.columnSelectivity, 
+				this.columnCardinalities, this.queries, this.histograms);
+	}
+	/**
+	 * @author Efthymia Tsamoura
+	 *
+	 */
+	private static class Histogram {
+
+		private static String READ_RELATION_COLUMN = "^(RE:(\\w+)(\\s+)AT:(\\w+)(\\s+)HH:)";
+		/** Reads single-word constants **/
+		private static String READ_BINS = "(\\(VA:(\\w+)(\\s+)FR:(\\d+)\\))+";
+		/** Reads two-word constants **/
+		private static String READ_BINS_ALT = "(\\(VA:(\\w+)(\\s+)(\\w+)(\\s+)FR:(\\d+)\\))+";
+		
+		private final Relation relation;
+		private final Attribute attibute;
+		private final Map<String,Integer> frequencies;
+
+		private Histogram(Relation relation, Attribute attibute, Map<String,Integer> values) {
+			this.relation = relation;
+			this.attibute = attibute;
+			this.frequencies = values;
+		}
+
+		public static Histogram build(Schema schema, String histogram) {			
+			Triple<Relation, Attribute, Map<String, Integer>> h = parse(schema, histogram);
+			return h == null ? null : new Histogram(h.getLeft(), h.getMiddle(), h.getRight());			
+		}
+
+		private static Triple<Relation,Attribute,Map<String,Integer>> parse(Schema schema, String histogram) {
+			Preconditions.checkNotNull(schema);
+			Preconditions.checkNotNull(histogram);
+			Pattern p = Pattern.compile(READ_RELATION_COLUMN);
+			Matcher m = p.matcher(histogram);
+			if (m.find()) {
+				String relation = m.group(2);
+				String attribute = m.group(4);
+				if(schema.contains(relation)) {
+					Relation r = schema.getRelation(relation);
+					Attribute a = r.getAttribute(attribute);
+					if(a == null) {
+						throw new java.lang.IllegalStateException("RELATION " + relation + " DOES NOT CONTAINT ATTRIBUTE " + attribute);
+					}
+
+					Map<String,Integer> frequencies = new HashMap<>();
+					Pattern p2 = Pattern.compile(READ_BINS);
+					Matcher m2 = p2.matcher(histogram);
+					while (m2.find()) {
+						String value = m2.group(2);
+						String freq = m2.group(4);
+						frequencies.put(value, Integer.parseInt(freq));
+					}
+					if(!frequencies.isEmpty()) {
+						return Triple.of(r, a, frequencies);
+					}
+					else {
+						p2 = Pattern.compile(READ_BINS_ALT);
+						m2 = p2.matcher(histogram);
+						while (m2.find()) {
+							String value = m2.group(2) + m2.group(3) + m2.group(4);
+							String freq = m2.group(6);
+							frequencies.put(value, Integer.parseInt(freq));
+						}
+						if(!frequencies.isEmpty()) {
+							return Triple.of(r, a, frequencies);
+						}
+						else {
+							throw new java.lang.IllegalStateException("UNPARSABLE INPUT LINE " + histogram);
+						}
+					}
+				}
+				else {
+					throw new java.lang.IllegalStateException("SCHEMA DOES NOT CONTAINT RELATION " + relation);
+				}
+			}
+			return null;
+		}
+
+		public Integer getFrequency(String entry) {
+			Preconditions.checkNotNull(this.frequencies.get(entry));
+			return this.frequencies.get(entry);
+		}
+		
+		public Map<String, Integer> getFrequencies() {
+			return this.frequencies;
+		}
+
+		public Relation getRelation() {
+			return this.relation;
+		}
+
+		public Attribute getAttibute() {
+			return this.attibute;
+		}
+
+		@Override
+		public String toString() {
+			return Joiner.on("\t").join(this.frequencies.entrySet());
+		}
+	}
+
+	@Override
+	public String toString() {
+		return new String(
+						"\n============RELATION CARDINALITIES==========\n" + 
+						Joiner.on("\n").join(this.cardinalities.entrySet()) + 
+
+						"\n============COLUMN CARDINALITIES============\n" + 
+						Joiner.on("\n").join(this.columnCardinalities.entrySet()) +
+
+						"\n==================ERSPI=====================\n" + 
+						Joiner.on("\n").join(this.erpsi.entrySet()) +
+
+						"\n==================COSTS=====================\n" + 
+						Joiner.on("\n").join(this.costs.entrySet()) +
+
+						"\n============COLUMN SELECTIVITIES============\n" + 
+						Joiner.on("\n").join(this.columnSelectivity.entrySet()) +
+
+						"\n==============COLUMN HISTOGRAMS=============\n" + 
+						Joiner.on("\n").join(this.histograms.entrySet()) );
+	}
+
+	public static void main(String... args) {
+		String PATH = "SCHEMA AND QUERY PATH";
+		String schemafile = "SCHEMA FILE";
+		String queryfile = "QUERY FILE";
+		String catalogfile = "CATALOG FILE";
+		try(FileInputStream sis = new FileInputStream(PATH + schemafile);
+				FileInputStream qis = new FileInputStream(PATH + queryfile)) {
+
+			Schema schema = new SchemaReader().read(sis);
+			ConjunctiveQuery query = new QueryReader(schema).read(qis);
+
+			if (schema == null || query == null) {
+				throw new IllegalStateException("Schema and query must be provided.");
+			}
+			schema.updateConstants(query.getSchemaConstants());
+			SimpleCatalog catalog = new SimpleCatalog(schema, catalogfile);
+			System.out.println(catalog.toString());
+		} catch (FileNotFoundException e) {
+			System.out.println("Cannot find input files");
+		} catch (Exception e) {
+			System.out.println("EXCEPTION: " + e.getClass().getSimpleName() + " " + e.getMessage());
+			e.printStackTrace();
+		} catch (Error e) {
+			System.out.println("ERROR: " + e.getClass().getSimpleName() + " " + e.getMessage());
+			e.printStackTrace();
+			System.exit(-1);
+		}
+	}
+
+}
