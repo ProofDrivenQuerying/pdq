@@ -1,0 +1,151 @@
+package uk.ac.ox.cs.pdq.io.xml;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Stack;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+
+import uk.ac.ox.cs.pdq.algebra.RelationalOperator;
+import uk.ac.ox.cs.pdq.db.Schema;
+import uk.ac.ox.cs.pdq.io.ReaderException;
+import uk.ac.ox.cs.pdq.plan.AccessOperator;
+import uk.ac.ox.cs.pdq.plan.DoubleCost;
+import uk.ac.ox.cs.pdq.plan.LinearPlan;
+
+/**
+ * Reads plans from XML.
+ * 
+ * @author Julien Leblay
+ */
+public class LinearPlanReader extends AbstractXMLReader<LinearPlan> {
+	
+	/** The plan's cost. */
+	private Double cost = null;
+	
+	/** The pan being built */
+	private LinearPlan plan = null;
+	
+	/** The operator if the command being read */
+	private RelationalOperator operator = null;
+	
+	/** The current access operator being read */
+	private AccessOperator access = null;
+	
+	/** The map from logical operator to aliases */
+	private Map<String, RelationalOperator> aliases = new LinkedHashMap<>();
+	
+	/** The last operator name read */
+	private String name;
+
+	/** The operator reader */
+	private Stack<OperatorReader> operatorReaders = new Stack<>();
+
+	private Schema schema;
+	
+	/**
+	 * Default constructor
+	 * @param schema Schema
+	 */
+	public LinearPlanReader(Schema schema) {
+		this.schema = schema;
+	}
+
+	/**
+	 * @param in InputStream
+	 * @return LinearPlan
+	 * @see uk.ac.ox.cs.pdq.io.Reader#read(InputStream)
+	 */
+	@Override
+	public LinearPlan read(InputStream in) {
+		try {
+			SAXParserFactory factory = SAXParserFactory.newInstance();
+			SAXParser parser = factory.newSAXParser();
+			parser.parse(in, this);
+			return this.plan;
+		} catch (ParserConfigurationException | SAXException | IOException e) {
+			throw new ReaderException(e.getMessage());
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.xml.sax.helpers.DefaultHandler#startElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
+	 */
+	@Override
+	public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
+		switch(QNames.parse(qName)) {
+		case EMPTY:
+			break;
+			
+		case PLAN:
+			String c = this.getValue(atts, QNames.COST);
+			if (c != null) {
+				this.cost = Double.valueOf(c);
+			}
+			break;
+
+		case COMMAND:
+//			this.commandReader = new OperatorReader(this.schema, ControlFlows.PULL);
+			this.name = this.getValue(atts, QNames.NAME);
+			break;
+
+		case OPERATOR:
+			OperatorReader opReader = new OperatorReader(this.schema, this.aliases);
+			this.operatorReaders.add(opReader);
+			opReader.startElement(uri, localName, qName, atts);
+			break;
+
+		default:
+			this.operatorReaders.peek().startElement(uri, localName, qName, atts);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.xml.sax.helpers.DefaultHandler#endElement(java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public void endElement(String uri, String localName, String qName) throws SAXException {
+		switch(QNames.parse(qName)) {
+		case EMPTY:
+			this.plan = null;
+			return;
+			
+		case PLAN:
+			if (this.cost != null) {
+				this.plan.setCost(new DoubleCost(this.cost));
+			}
+			break;
+
+		case COMMAND:
+			this.plan = new LinearPlan(this.operator, this.access, this.plan, null);
+			this.aliases.put(this.name, this.operator);
+			this.name = null;
+			break;
+
+		case OPERATOR:
+			OperatorReader reader = this.operatorReaders.pop();
+			reader.endElement(uri, localName, qName);
+			if (!this.operatorReaders.isEmpty()) {
+				this.operatorReaders.peek().addChild(reader.getOperator());
+			}
+			this.operator = reader.getOperator();
+			if (this.operator instanceof AccessOperator) {
+				this.access = (AccessOperator) this.operator;
+			}
+			break;
+
+		default:
+			this.operatorReaders.peek().endElement(uri, localName, qName);
+			return;
+		}
+	}
+}

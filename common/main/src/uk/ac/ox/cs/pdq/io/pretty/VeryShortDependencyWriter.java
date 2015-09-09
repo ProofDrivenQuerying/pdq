@@ -1,0 +1,147 @@
+package uk.ac.ox.cs.pdq.io.pretty;
+
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.db.Constraint;
+import uk.ac.ox.cs.pdq.db.LinearGuarded;
+import uk.ac.ox.cs.pdq.db.Relation;
+import uk.ac.ox.cs.pdq.fol.LogicalSymbols;
+import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Term;
+import uk.ac.ox.cs.pdq.io.Writer;
+
+/**
+ * Writes a concise representation of a dependency to the given output
+ * 
+ * @author Julien Leblay
+ */
+public class VeryShortDependencyWriter<T extends Constraint> extends PrettyWriter<T> implements Writer<T> {
+
+	/**
+	 * The default out to which dependencies should be written, if not 
+	 * explicitly provided at write time.
+	 */
+	private PrintStream out;
+
+	/**
+	 * 
+	 * @param out the default output
+	 */
+	private VeryShortDependencyWriter(PrintStream out) {
+		this.out = out;
+	}
+	
+	/**
+	 * Fluent pretty writer provider.
+	 * @param out
+	 * @return a new SQLLikeQueryWriter with the given default output.
+	 */
+	public static VeryShortDependencyWriter to(PrintStream out) {
+		return new VeryShortDependencyWriter<>(out);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.provider.io.Writer#write(java.io.PrintStream, java.lang.Object)
+	 */
+	@Override
+	public void write(PrintStream out, T tgd) {
+		out.print(this.toString(tgd));
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.builder.io.PrettyWriter#write(java.lang.Object)
+	 */
+	@Override
+	public void write(T t) {
+		this.write(this.out, t);
+	}
+
+	/**
+	 * Returns a short String representation of the given dependency. This
+	 * by-passes toString which is too verbose for non-debug purpose.
+	 * 
+	 * @param ic
+	 * @return a short String representation of the dependency.
+	 */
+	public static <T extends Constraint> String convert(T t) {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		PrintStream ps = new PrintStream(baos);
+		VeryShortDependencyWriter.to(ps).write(t);
+		return baos.toString();
+	}
+	
+	/*
+	 * 
+	 */
+	private <T extends Constraint> String toString(T tgd) {
+		if (tgd instanceof LinearGuarded) {
+			return this.toString((LinearGuarded) tgd);
+		}
+		StringBuilder result = new StringBuilder();
+		String sep = "";
+		for (Predicate a : tgd.getLeft().getPredicates()) {
+			result.append(sep);
+			Predicate f = a;
+			result.append(f.getSignature().getName());
+			result.append('(' + joinTerms(f.getTerms(), ", ") + ')');
+			sep = " " + LogicalSymbols.AND + ' ';
+		}
+		result.append(" " + LogicalSymbols.IMPLIES + ' ');
+		sep = "";
+		for (Predicate a : tgd.getRight().getPredicates()) {
+			result.append(sep);
+			Predicate f = a;
+			result.append(f.getSignature().getName());
+			result.append('(' + joinTerms(f.getTerms(), ", ") + ')');
+			sep = " " + LogicalSymbols.AND + ' ';
+		}
+		return result.toString();
+	}
+	
+	/*
+	 * 
+	 */
+	private String toString(LinearGuarded tgd) {
+		try {
+			StringBuilder result = new StringBuilder();
+			Map<Term, Attribute> leftAttributes = new LinkedHashMap<>();
+			for (Predicate p: tgd.getLeft()) {
+				for (int i = 0, l = p.getTermCount(); i < l; i++) {
+					leftAttributes.put(p.getTerm(i), ((Relation) p.getSignature()).getAttribute(i));
+				}
+			}
+			Map<Term, Attribute> rightAttributes = new LinkedHashMap<>();
+			for (Predicate p: tgd.getRight()) {
+				for (int i = 0, l = p.getTermCount(); i < l; i++) {
+					rightAttributes.put(p.getTerm(i), ((Relation) p.getSignature()).getAttribute(i));
+				}
+			}
+			leftAttributes.keySet().retainAll(rightAttributes.keySet());
+			rightAttributes.keySet().retainAll(leftAttributes.keySet());
+
+			result.append(tgd.getLeft().iterator().next().getSignature().getName());
+			String sep = "(";
+			for (Attribute a: leftAttributes.values()) {
+				result.append(sep).append(a.getName());
+				sep = ",";
+			}
+			result.append("): ");
+			result.append(tgd.getRight().iterator().next().getSignature().getName());
+			sep = "(";
+			for (Attribute a: rightAttributes.values()) {
+				result.append(sep).append(a.getName());
+				sep = ",";
+			}
+			result.append(")");
+			return result.toString();
+		} catch (Exception e) {
+			throw new IllegalStateException();
+		}
+	}
+}

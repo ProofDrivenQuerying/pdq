@@ -1,0 +1,15 @@
+jcs.default=DC
+jcs.default.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
+jcs.default.cacheattributes.MaxObjects=50000
+jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
+
+
+jcs.region.restrelation=DC
+jcs.region.restrelation.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
+jcs.region.restrelation.cacheattributes.MaxObjects=50000
+jcs.region.restrelation.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
+        	
+jcs.auxiliary.DC=org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
+jcs.auxiliary.DC.attributes=org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
+jcs.auxiliary.DC.attributes.DiskPath=${user.dir}
+jcs.auxiliary.DC.attributes.ClearDiskOnStartup=true
