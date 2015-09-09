@@ -59,8 +59,8 @@ public abstract class ConstraintCardinalityEstimator0 {
 	@Before
 	protected void loadSchema() throws FileNotFoundException, IOException {
 		
-		String PATH = "C:/Users/tsamoura/workspace2/dev4.benchmark/local/bio/queries/schema2/DAG/CONSTRAINT_CARDINALITY";
-		String schemaPath = "/case_008b/schema.xml";
+		String PATH = "";
+		String schemaPath = "test/resources/schema.xml";
 
 		try(FileInputStream sis = new FileInputStream(PATH + schemaPath);) {
 
@@ -160,7 +160,7 @@ public abstract class ConstraintCardinalityEstimator0 {
 	
 	@Before
 	protected void loadStatistics() {
-		String catalogPath = "C:/Users/tsamoura/workspace2/dev4.benchmark/catalog5/catalog.properties";
+		String catalogPath = "test/catalog.properties";
 		//Load the catalog
 		this.catalog = new SimpleCatalog(this.schema, catalogPath);
 	}

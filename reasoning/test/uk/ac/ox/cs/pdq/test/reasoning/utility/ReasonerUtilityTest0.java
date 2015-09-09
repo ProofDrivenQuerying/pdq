@@ -54,7 +54,7 @@ public abstract class ReasonerUtilityTest0 {
 	protected void loadSchema() throws FileNotFoundException, IOException {
 		
 		String PATH = "";
-		String schemaPath = "test/schema.xml";
+		String schemaPath = "test/resources/schema.xml";
 
 		try(FileInputStream sis = new FileInputStream(PATH + schemaPath);) {
 
