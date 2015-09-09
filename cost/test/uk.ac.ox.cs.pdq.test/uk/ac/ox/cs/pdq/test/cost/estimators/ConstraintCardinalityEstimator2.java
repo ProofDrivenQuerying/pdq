@@ -181,12 +181,12 @@ public class ConstraintCardinalityEstimator2 extends ConstraintCardinalityEstima
 	
 	@Test
 	public void test20() {
-		Integer estim8 = this.estimator.commandDriven(projection2.getOutput(), this.plan, this.catalog);
+		Integer estim8 = this.estimator.commandDriven(this.projection2.getOutput(), this.plan, this.catalog);
 	}
 	
 	@Test
 	public void test21() {
-		Pair<Integer, Boolean> estim10 = this.estimator.constraintDriven(projection3.getOutput(), this.plan, this.catalog);
+		Pair<Integer, Boolean> estim10 = this.estimator.constraintDriven(this.projection3.getOutput(), this.plan, this.catalog);
 	}
 	
 	@Test
