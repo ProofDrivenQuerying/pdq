@@ -1,0 +1,335 @@
+<services name="Google">
+	<input-methods>
+		<input-method name="apikey"    type="url-param" value="AIzaSyDN1I2acLKglH3vjzVXeKbXDoSs_oNw6Jc"/>
+		<input-method name="latlng"    type="url-param" template="{1},{2}" />
+		<input-method name="location"  type="url-param" template="{1},{2}" />
+		<input-method name="locations" type="url-param" template="{1},{2}" batch-delimiter="|" />
+		<input-method name="sensor"    type="url-param" value="false"/>
+		<input-method name="filter"    type="url-param" template="(all type:{type})"/>
+		<input-method name="output"    type="url-param" template="({1} {2})"/>
+		<input-method name="q"         type="url-param"/>
+		<input-method name="lang"      type="url-param" value="en"/>
+		
+	</input-methods>
+	<usage-policies>
+		<policy name="url_auth"
+				type="uk.ac.ox.cs.pdq.runtime.services.ServiceReader.policies.URLAuthentication"
+				input-method="apikey"/>
+		<policy name="1000_request_per_day"
+				type="uk.ac.ox.cs.pdq.runtime.services.ServiceReader.policies.RequestAllowance"
+				limit="1000" period="24h"/>
+		<policy name="25000_request_per_day"
+				type="uk.ac.ox.cs.pdq.runtime.services.ServiceReader.policies.RequestAllowance"
+				limit="25000" period="24h"/>
+		<policy name="100000_request_per_day"
+				type="uk.ac.ox.cs.pdq.runtime.services.ServiceReader.policies.RequestAllowance"
+				limit="25000" period="24h"/>
+	</usage-policies>
+	<service
+		name="FreeBasePeople"
+		protocol="REST"
+		url="https://www.googleapis.com/freebase/v1sandbox/search"
+		documentation="https://developers.google.com/freebase/v1/getting-started"
+		result-delimiter="result">
+
+		<policy name="url_auth" />
+		<policy type="uk.ac.ox.cs.pdq.runtime.services.ServiceReader.policies.ItemsLimit"
+				limit="20" start-index="0" page-size="limit" page-index="cursor" total-items="total"/>
+		<policy type="uk.ac.ox.cs.pdq.runtime.services.ServiceReader.policies.RequestAllowance"
+				limit="10" period="1s"/>
+		<policy type="uk.ac.ox.cs.pdq.runtime.services.ServiceReader.policies.RequestAllowance"
+				limit="100000" period="24h"/>
+
+		<static-input name="type"    input-method="filter.type" value="/people/person"/>
+		<static-input name="lang"    input-method="lang"/>
+		<static-input name="dop_out" input-method="output.1"    value="/people/person/date_of_birth"/>
+		<static-input name="pop_out" input-method="output.2"    value="/people/person/place_of_birth"/>
+
+		<attribute name="id"             type="java.lang.String"  path="mid"/>
+		<attribute name="name"           type="java.lang.String"  path="name"/>
+		<attribute name="notable"        type="java.lang.String"  path="notable/name"/>
+		<attribute name="date_of_birth"  type="java.lang.String"  path="output/\/people\/person\/date_of_birth/\/people\/person\/date_of_birth[0]"/>
+		<attribute name="place_of_birth" type="java.lang.String"  path="output/\/people\/person\/place_of_birth/\/people\/person\/place_of_birth[0]/name"/>
+
+	<!--
+	TODO 
+		<access-method type="LIMITED" name="by_location" inputs="1,2"   cost="1.0" />
+	 -->
+
+	</service>
+	<service
+		name="FreeBaseCountries"
+		protocol="REST"
+		url="https://www.googleapis.com/freebase/v1sandbox/search"
+		documentation="https://developers.google.com/freebase/v1/getting-started"
+		result-delimiter="result">
+
+		<policy name="url_auth" />
+		<policy type="uk.ac.ox.cs.pdq.runtime.services.ServiceReader.policies.ItemsLimit"
+				limit="20" start-index="0" page-size="limit" page-index="cursor" total-items="total"/>
+		<policy type="uk.ac.ox.cs.pdq.runtime.services.ServiceReader.policies.RequestAllowance"
+				limit="10" period="1s"/>
+		<policy type="uk.ac.ox.cs.pdq.runtime.services.ServiceReader.policies.RequestAllowance"
+				limit="100000" period="24h"/>
+
+		<static-input name="type"    input-method="filter.type" value="/location/country"/>
+		<static-input name="lang"    input-method="lang"/>
+		<static-input name="cap_out" input-method="output.1"    value="/location/country/capital_city"/>
+		<static-input name="iso_out" input-method="output.2"    value="/location/country/iso3166_1_alpha2"/>
+
+		<attribute name="id"           type="java.lang.String"  path="mid"/>
+		<attribute name="name"         type="java.lang.String"  path="name"/>
+		<attribute name="notable"      type="java.lang.String"  path="notable/name"/>
+		<attribute name="capitalCity"  type="java.lang.String"  path="output/\/location\/country\/capital/\/location\/country\/capital[0]"/>
+		<attribute name="isoCode"      type="java.lang.String"  path="output/\/location\/country\/iso3166_1_alpha2/\/location\/country\/iso3166_1_alpha2[0]"/>
+
+		<access-method type="FREE" name="fb_country_free" cost="100.0" />
+
+	</service>
+	<service
+		name="GoogleGeoCode"
+		protocol="REST"
+		url="http://maps.googleapis.com/maps/api/geocode/json"
+		documentation="https://developers.google.com/maps/documentation/geocoding/?csw=1"
+		result-delimiter="results">
+
+		<policy type="uk.ac.ox.cs.pdq.runtime.services.ServiceReader.policies.RequestAllowance"
+				limit="2500" period="24h"/>
+
+		<static-input name="sensor"  input-method="sensor"/>
+
+		<attribute name="address"    type="java.lang.String" path="formatted_address"/>
+		<attribute name="latitude"   type="java.lang.Double" path="geometry/location/lat" input-method="latlng.1"/>
+		<attribute name="longitude"  type="java.lang.Double" path="geometry/location/lng" input-method="latlng.2"/>
+
+		<access-method type="LIMITED" name="by_address" inputs="1"   cost="5.0" />
+		<access-method type="LIMITED" name="by_coord" inputs="2,3"   cost="1.0" />
+	</service>
+	<service
+		name="GoogleElevation"
+		protocol="REST"
+		url="http://maps.googleapis.com/maps/api/elevation/json"
+		documentation="https://developers.google.com/maps/documentation/elevation/"
+		result-delimiter="results">
+
+		<policy type="uk.ac.ox.cs.pdq.runtime.services.ServiceReader.policies.RequestAllowance"
+				limit="2500" period="24h"/>
+		<policy type="uk.ac.ox.cs.pdq.runtime.services.ServiceReader.policies.ItemsLimit"
+				limit="512" start-index="0" page-size="count" page-index="start" total-items="total"/>
+		<policy type="uk.ac.ox.cs.pdq.runtime.services.ServiceReader.policies.ResultAllowance"
+				limit="25000" period="24h"/>
+
+		<static-input name="sensor"  input-method="sensor"/>
+
+		<attribute name="latitude"   type="java.lang.Double" path="location/lat" input-method="locations.1"/>
+		<attribute name="longitude"  type="java.lang.Double" path="location/lng" input-method="locations.2"/>
+		<attribute name="elevation"  type="java.lang.Double" path="elevation"/>
+		<attribute name="resolution" type="java.lang.Double" path="resolution" />
+
+		<access-method type="LIMITED" name="by_location" inputs="1,2"   cost="1.0" />
+	</service>
+	<service
+		name="GoogleTimezone"
+		protocol="REST"
+		url="https://maps.googleapis.com/maps/api/timezone/json?"
+		documentation="">
+
+		<policy type="uk.ac.ox.cs.pdq.runtime.services.ServiceReader.policies.RequestAllowance"
+				limit="2500" period="24h"/>
+
+		<static-input name="sensor"  input-method="sensor"/>
+
+		<attribute name="latitude"   type="java.lang.Double" input-method="location.1"/>
+		<attribute name="longitude"  type="java.lang.Double" input-method="location.2"/>
+		<attribute name="timestamp"  type="java.lang.Long"/>
+
+		<attribute name="dstOffset"     type="java.lang.Integer" path="dstOffset"/>
+		<attribute name="rawOffset"     type="java.lang.Integer" path="rawOffset"/>
+		<attribute name="timeZoneId"    type="java.lang.String"  path="timeZoneId"/>
+		<attribute name="timeZoneName"  type="java.lang.String"  path="timeZoneName"/>
+
+		<access-method type="LIMITED" name="g_timezone" inputs="1,2,3"   cost="1.0" />
+	</service>
+	<service
+		name="GoogleBooks"
+		protocol="REST"
+		url="https://www.googleapis.com/books/v1/volumes"
+		documentation="https://developers.google.com/books/docs/v1/getting_started?csw=1"
+		result-delimiter="items">
+
+		<policy name="url_auth" />
+		<policy type="uk.ac.ox.cs.pdq.runtime.services.ServiceReader.policies.PagingLimit"
+				limit="40" start-index="0" page-size="limit" page-index="cursor" total-items="total"/>
+		<policy type="uk.ac.ox.cs.pdq.runtime.services.ServiceReader.policies.RequestAllowance"
+				limit="1" period="1s"/>
+		<policy type="uk.ac.ox.cs.pdq.runtime.services.ServiceReader.policies.RequestAllowance"
+				limit="1000" period="24h"/>
+
+		<attribute name="keywords"    type="java.lang.String"  input-method="q"/>
+		
+		<attribute name="kind"        type="java.lang.String"  path="kind"/>
+		<attribute name="id"          type="java.lang.String"  path="id"/>
+		<attribute name="etag"        type="java.lang.String"  path="etag"/>
+		<attribute name="selfLink"    type="java.lang.String"  path="selfLink"/>
+		<attribute name="title"       type="java.lang.String"  path="volumeInfo/title"/>
+		<attribute name="subtitle"    type="java.lang.String"  path="volumeInfo/subtitle"/>
+		<attribute name="author1"     type="java.lang.String"  path="volumeInfo/authors[0]"/>
+		<attribute name="author2"     type="java.lang.String"  path="volumeInfo/authors[1]"/>
+		<attribute name="author3"     type="java.lang.String"  path="volumeInfo/authors[2]"/>
+		<attribute name="publisher"   type="java.lang.String"  path="volumeInfo/publisher"/>
+		<attribute name="published"   type="java.lang.String"  path="volumeInfo/publishedDate"/>
+		<attribute name="description" type="java.lang.String"  path="volumeInfo/description"/>
+ 		<attribute name="isbn_10"     type="java.lang.String"  path="volumeInfo/industryIdentifiers[type=ISBN_10]/identifier"/>
+		<attribute name="isbn_13"     type="java.lang.String"  path="volumeInfo/industryIdentifiers[type=ISBN_13]/identifier"/>
+ 		<attribute name="pageCount"   type="java.lang.Integer" path="volumeInfo/pageCount"/>
+		<attribute name="pageCount"   type="java.lang.Integer" path="volumeInfo/pageCount"/>
+		<attribute name="printType"   type="java.lang.String"  path="volumeInfo/printType"/>
+
+		<attribute name="category1"          type="java.lang.String"  path="volumeInfo/categories[0]"/>
+		<attribute name="category2"          type="java.lang.String"  path="volumeInfo/categories[1]"/>
+		<attribute name="category3"          type="java.lang.String"  path="volumeInfo/categories[2]"/>
+		<attribute name="averageRating"       type="java.lang.Double"  path="volumeInfo/averageRating"/>
+		<attribute name="ratingsCount"        type="java.lang.Integer" path="volumeInfo/ratingsCount"/>
+		<attribute name="contentVersion"      type="java.lang.String"  path="volumeInfo/contentVersion"/>
+		<attribute name="thumbnailLinks"      type="java.lang.String"  path="volumeInfo/imageLinks/thumbnail"/>
+		<attribute name="printType"           type="java.lang.String"  path="volumeInfo/printType"/>
+		<attribute name="language"            type="java.lang.String"  path="volumeInfo/language"/>
+		<attribute name="previewLink"         type="java.lang.String"  path="volumeInfo/previewLink"/>
+		<attribute name="infoLink"            type="java.lang.String"  path="volumeInfo/infoLink"/>
+		<attribute name="canonicalVolumeLink" type="java.lang.String"  path="volumeInfo/canonicalVolumeLink"/>
+
+		<attribute name="saleCountry"         type="java.lang.String"  path="saleInfo/country"/>
+		<attribute name="saleType"            type="java.lang.String"  path="saleInfo/saleability"/>
+		<attribute name="isEbook"             type="java.lang.Boolean" path="volumeInfo/isEbook"/>
+
+		<attribute name="accessCountry"       type="java.lang.String"  path="accessInfo/country"/>
+		<attribute name="viewability"         type="java.lang.String"  path="accessInfo/viewability"/>
+		<attribute name="embeddable"          type="java.lang.Boolean" path="accessInfo/embeddable"/>
+		<attribute name="publicDomain"        type="java.lang.Boolean" path="accessInfo/publicDomain"/>
+		<attribute name="textToSpeech"        type="java.lang.String"  path="accessInfo/textToSpeechPermission"/>
+		<attribute name="epubAvailable"       type="java.lang.Boolean" path="accessInfo/epub/isAvailable"/>
+		<attribute name="acsTokenLink"        type="java.lang.String"  path="accessInfo/epub/acsTokenLink"/>
+		<attribute name="pdfAvailable"        type="java.lang.Boolean" path="accessInfo/pdf/isAvailable"/>
+		<attribute name="webReaderLink"       type="java.lang.String"  path="accessInfo/webReaderLink"/>
+		<attribute name="accessViewStatus"    type="java.lang.String"  path="accessInfo/accessViewStatus"/>
+		<attribute name="quoteSharingAllowed" type="java.lang.Boolean" path="accessInfo/quoteSharingAllowed"/>
+
+		<attribute name="textSnippet"         type="java.lang.Boolean" path="searchInfo/textSnippet"/>
+
+		<access-method type="LIMITED" name="by_keywords" inputs="1"   cost="1.0" />
+	</service>
+	<!-- 
+	<service
+		name="GoogleDirections"
+		protocol="REST"
+		url="http://maps.googleapis.com/maps/api/directions/json?"
+		documentation="https://developers.google.com/maps/documentation/directions/">
+
+		<policy name="2000_request_per_day"/>
+
+		<input-params>
+			<param name="origin"      type="coords" required="true"/>
+			<param name="destination" type="coords" required="true"/>
+			<param name="sensor"    type="boolean"   required="true"/>
+		</input-params>
+		<output-params>
+			<param name="mode"           type="enum"         required="false" values="driving|walking|bicycling"/>
+			<param name="waypoints"      type="array_coords" required="false"/>
+			<param name="alternatives"   type="boolean"      required="false"/>
+			<param name="avoid"          type="enum"         required="false" value="tolls|highways"/>
+			<param name="language"       type="string"       required="false" />
+			<param name="units"          type="enum"         required="false" value="metric|imperial" />
+			<param name="departure_time" type="timestamp"    required="false" />
+			<param name="arrival_time"   type="timestamp"    required="false" />
+			<param name="status"         type="enum"         values="OK|INVALID_REQUEST|OVER_QUERY_LIMIT|REQUEST_DENIED|UNKNOWN_ERROR|ZERO_RESULTS"/>
+			<param name="error_message"  type="string"/>
+		</output-params>
+	</service>
+	<protocol type="REST" baseurl="http://maps.googleapis.com/maps/api/distancematrix/json?">
+		<input-params>
+			<param name="origins"        type="string"    required="true" batch="true"/>
+			<param name="destinations"   type="string"    required="true" batch="true"/>
+			<param name="sensor"         type="boolean"   required="true"/>
+			<param name="mode"           type="enum"      required="false" values="driving|walking|bicycling"/>
+			<param name="language"       type="string"    required="false" />
+			<param name="avoid"          type="enum"      required="false" value="tolls|highways"/>
+			<param name="units"          type="enum"      required="false" value="metric|imperial" />
+			<param name="departure_time" type="timestamp" required="false" />
+		</input-params>
+		<output-params>
+			<param name="origin_addresses"      type="string"/>
+			<param name="destination_addresses" type="string"/>
+			<param name="rows"                  type="array">
+				<param name="element" type="complex">
+					<param name="status" type="string"/>
+					<param name="duration" type="complex">
+						<param name="value" type="integer"/>
+						<param name="text" type="string"/>
+					</param>
+				</param>
+			</param>
+			<param name="timeZoneName"  type="string"/>
+			<param name="status"        type="enum" values="OK|INVALID_REQUEST|OVER_QUERY_LIMIT|REQUEST_DENIED|UNKNOWN_ERROR|ZERO_RESULTS"/>
+			<param name="error_message" type="string"/>
+		</output-params>
+	</protocol>
+	<protocol type="REST" baseurl="https://maps.googleapis.com/maps/api/geocode/json?">
+		<input-params>
+			<param name="address"    type="string"    required="true"/>
+			<param name="components" type="string"    required="false"/>
+			<param name="sensor"     type="boolean"   required="true"/>
+		</input-params>
+		<input-params>
+			<param name="address"    type="string"    required="false"/>
+			<param name="components" type="string"    required="true"/>
+			<param name="sensor"     type="boolean"   required="true"/>
+		</input-params>
+		<input-params>
+			<param name="latlng"     type="coords"    required="true"/>
+			<param name="sensor"     type="boolean"   required="true"/>
+		</input-params>
+		<output-params>
+			<param name="dstOffset"     type="integer"/>
+			<param name="rawOffset"     type="integer"/>
+			<param name="timeZoneId"    type="string"/>
+			<param name="timeZoneName"  type="string"/>
+			<param name="status"        type="enum" values="OK|INVALID_REQUEST|OVER_QUERY_LIMIT|REQUEST_DENIED|UNKNOWN_ERROR|ZERO_RESULTS"/>
+			<param name="error_message" type="string"/>
+		</output-params>
+	</protocol>
+	<access type="REST" baseurl="http://maps.googleapis.com/maps/api/directions/json?">
+		<input-params>
+			<param name="key"        type="string"  attribute="0"/>
+			<param name="reference"  type="string"  attribute="1"/>
+			<param name="sensor"     type="boolean" static-value="false"/>
+			<param name="extensions" type="enum"    attribute="2" values="review_summary"/>
+			<param name="language"   type="string"  attribute="3" />
+		</input-params>
+		<output-params>
+			<result-path single="/result" multiple="/results[]"/>
+			<param name="address_components"       type="complex_array" attribute="4"/>
+			<param name="events"                   type="complex_array" attribute="5"/>
+			<param name="formatted_address"        type="string"        attribute="6"/>
+			<param name="formatted_phone_number"   type="string"        attribute="7"/>
+			<param name="geometry/lat"             type="string"        attribute="8"/>
+			<param name="geometry/lng"             type="string"        attribute="9"/>
+			<param name="icon"                     type="url"           attribute="10"/>
+			<param name="id"                       type="string"        attribute="11"/>
+			<param name="internation_phone_number" type="string"        attribute="12"/>
+			<param name="name"                     type="string"        attribute="13"/>
+			<param name="rating"                   type="double"        attribute="14"/>
+			<param name="reference"                type="string"        attribute="15"/>
+			<param name="reviews"                  type="complex_array"/>
+			<param name="types"                    type="string_array"  attribute="16"/>
+			<param name="url"                      type="url"           attribute="17"/>
+			<param name="vicinity"                 type="string"        attribute="18"/>
+			<param name="website"                  type="url"           attribute="19"/>
+		</output-params>
+		<binding-pattern>
+			<param name="key"/>
+			<param name="reference"/>
+			<param name="sensor"/>
+		</binding-pattern>
+	</access>
+	 -->
+</services>

@@ -1,0 +1,41 @@
+<service>
+	<name>Google Places Details</name>
+	<documentation>https://developers.google.com/places/documentation/details</documentation>
+	<usage-limits>
+		<!-- 
+		<pricing>free</pricing>
+		<frequency max="2500" period="24h"/>
+		 -->
+		<api-key required="true"/>
+	</usage-limits>
+	<protocol type="REST" baseurl="http://maps.googleapis.com/maps/api/directions/json?">
+		<input-params>
+			<param name="key"        type="string"  required="true"  static-value="AIzaSyDN1I2acLKglH3vjzVXeKbXDoSs_oNw6Jc"/>
+			<param name="reference"  type="string"  required="true"/>
+			<param name="sensor"     type="boolean" required="true"  static-value="false"/>
+			<param name="extensions" type="enum"    required="false" values="review_summary"/>
+			<param name="language"   type="string"  required="false" />
+		</input-params>
+		<output-params>
+			<result-path single="/result" multiple="/results[]"/>
+			<param name="address_components"     type="complex_array"/>
+			<param name="events"                 type="complex_array"/>
+			<param name="formatted_address"      type="string"/>
+			<param name="formatted_phone_number" type="string"/>
+			<param name="geometry"    type="coord(/lat,/lng)"/>
+			<param name="icon"        type="url"/>
+			<param name="id"          type="string"/>
+			<param name="international_phone_number" type="string"/>
+			<param name="name"        type="string"/>
+			<param name="rating"      type="double"/>
+			<param name="reference"   type="string"/>
+			<param name="reviews"     type="complex_array"/>
+			<param name="types"       type="string_array"/>
+			<param name="url"         type="url"/>
+			<param name="vicinity"    type="string"/>
+			<param name="website"     type="url"/>
+			<param name="status"         type="enum" values="OK|INVALID_REQUEST|OVER_QUERY_LIMIT|REQUEST_DENIED|UNKNOWN_ERROR|ZERO_RESULTS"/>
+			<param name="error_message"  type="string"/>
+		</output-params>
+	</protocol>
+</service>

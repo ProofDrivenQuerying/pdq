@@ -1,0 +1,741 @@
+<!-- TODO: separate these services in independent files -->
+<service
+	name="Yahoo GeoPlanet"
+	documentation="http://developer.yahoo.com/geo/geoplanet/"
+	<usage-policies>
+		<pricing>free</pricing>
+		<frequency max="2000" period="24h"/>
+		<api-key required="true" static-value="JzP8IhLV34FYtPGFngow9GLtYgdmoXAFCyjNOAPiry1mGIdTpk40H_kJCUzXGBs-"/>
+	</usage-policies>
+	<protocol
+		type="REST"
+		baseurl="http://where.yahooapis.com/v1/places" >
+		<access-method type="LIMITED" name="yh_geo_select"  inputs="1,5" cost="1.0" />
+		<access-method type="LIMITED" name="yh_geo_keyword" inputs="1,6" cost="1.0" />
+		<access-method type="LIMITED" name="yh_geo_woeid"   inputs="1,7" cost="1.0" />
+		<access-method type="LIMITED" name="yh_geo_type"    inputs="1,8" cost="1.0" />
+		<input-params>
+			<param name="appid"    type="string"  required="true"/> 
+			<param name="lang"     type="string"  required="false"/>
+			<param name="format"   type="enum"    required="false" values="json|xml"/>
+			<param name="callback" type="string"  required="false"/>
+			<param name="view"     type="enum"    required="false" values="short|long"/>
+			<param name="select"   type="enum"    required="false" values="short|long"/>
+			<param name="keyword"  type="string"  required="true" method=".q('{keyword}')"/>
+			<param name="woeid"    type="string"  required="true" method=".woeid('{woeid}')" batch=","/>
+			<param name="type"     type="integer" required="true"  method=".type('{type}')"/>
+		</input-params>
+		<output-params>
+			<result-path single="/places/place" multiple="/places/place"/>
+			<param name="woeid"               type="string"/>
+			<param name="placeTypeName"       type="string"/>
+			<param name="name"                type="string"/>
+			<param name="country"             type="string"/>
+			<param name="admin1"              type="string"/>
+			<param name="admin2"              type="string"/>
+			<param name="admin3"              type="string"/>
+			<param name="locality1"           type="string"/>
+			<param name="locality2"           type="string"/>
+			<param name="postal"              type="string"/>
+			<param name="centroid"            type="coord(/latitude,/longitude)"/>
+			<param name="boundingBox"         type="complex(/southWest:coord(/latitude,/longitude), /northEast:coord(/latitude,/longitude))"/>
+		</output-params>
+	</protocol>
+	<protocol type="REST" baseurl="http://where.yahooapis.com/v1/place" >
+		<input-params>
+			<param name="appid"    type="string"  required="true"/> 
+			<param name="lang"     type="string"  required="false"/>
+			<param name="format"   type="enum"    required="false" values="json|xml"/>
+			<param name="callback" type="string"  required="false"/>
+			<param name="view"     type="enum"    required="false" values="short|long"/>
+			<param name="select"   type="enum"    required="false" values="short|long"/>
+			<param name="woeid"    type="string"  required="true"  method="/{woeid}"/>
+		</input-params>
+		<output-params>
+			<result-path single="/places/place" multiple="/places/place"/>
+			<param name="woeid"               type="string"/>
+			<param name="placeTypeName"       type="string"/>
+			<param name="name"                type="string"/>
+			<param name="country"             type="string"/>
+			<param name="admin1"              type="string"/>
+			<param name="admin2"              type="string"/>
+			<param name="admin3"              type="string"/>
+			<param name="locality1"           type="string"/>
+			<param name="locality2"           type="string"/>
+			<param name="postal"              type="string"/>
+			<param name="centroid"            type="coord(/latitude,/longitude)"/>
+			<param name="boundingBox"         type="complex(/southWest:coord(/latitude,/longitude), /northEast:coord(/latitude,/longitude))"/>
+		</output-params>
+	</protocol>
+	<protocol type="REST" baseurl="http://where.yahooapis.com/v1/place" >
+		<input-params>
+			<param name="appid"     type="string"  required="true"/> 
+			<param name="lang"      type="string"  required="false"/>
+			<param name="format"    type="enum"    required="false" values="json|xml"/>
+			<param name="callback"  type="string"  required="false"/>
+			<param name="view"      type="enum"    required="false" values="short|long"/>
+			<param name="select"    type="enum"    required="false" values="short|long"/>
+			<param name="belongtos" type="string"  required="true"  method="/place/{woeid}/belongtos"/>
+			<param name="type"      type="integer" required="false" method=".type('{type}')"/>
+		</input-params>
+		<output-params>
+			<result-path single="/places/place" multiple="/places/place"/>
+			<param name="woeid"               type="string"/>
+			<param name="placeTypeName"       type="string"/>
+			<param name="name"                type="string"/>
+			<param name="country"             type="string"/>
+			<param name="admin1"              type="string"/>
+			<param name="admin2"              type="string"/>
+			<param name="admin3"              type="string"/>
+			<param name="locality1"           type="string"/>
+			<param name="locality2"           type="string"/>
+			<param name="postal"              type="string"/>
+			<param name="centroid"            type="coord(/latitude,/longitude)"/>
+			<param name="boundingBox"         type="complex(/southWest:coord(/latitude,/longitude), /northEast:coord(/latitude,/longitude))"/>
+		</output-params>
+	</protocol>
+	<protocol type="REST" baseurl="http://where.yahooapis.com/v1/place" >
+		<input-params>
+			<param name="appid"     type="string"  required="true"/> 
+			<param name="lang"      type="string"  required="false"/>
+			<param name="format"    type="enum"    required="false" values="json|xml"/>
+			<param name="callback"  type="string"  required="false"/>
+			<param name="view"      type="enum"    required="false" values="short|long"/>
+			<param name="select"    type="enum"    required="false" values="short|long"/>
+			<param name="neighbors" type="string"  required="true"  method="/place/{woeid}/neighbors"/>
+			<param name="degree"    type="integer" required="false" method=".degree('{degree}')"/>
+		</input-params>
+		<output-params>
+			<result-path single="/places/place" multiple="/places/place"/>
+			<param name="woeid"               type="string"/>
+			<param name="placeTypeName"       type="string"/>
+			<param name="name"                type="string"/>
+			<param name="country"             type="string"/>
+			<param name="admin1"              type="string"/>
+			<param name="admin2"              type="string"/>
+			<param name="admin3"              type="string"/>
+			<param name="locality1"           type="string"/>
+			<param name="locality2"           type="string"/>
+			<param name="postal"              type="string"/>
+			<param name="centroid"            type="coord(/latitude,/longitude)"/>
+			<param name="boundingBox"         type="complex(/southWest:coord(/latitude,/longitude), /northEast:coord(/latitude,/longitude))"/>
+		</output-params>
+	</protocol>
+	<protocol type="REST" baseurl="http://where.yahooapis.com/v1/place" >
+		<input-params>
+			<param name="appid"    type="string"  required="true"/> 
+			<param name="lang"     type="string"  required="false"/>
+			<param name="format"   type="enum"    required="false" values="json|xml"/>
+			<param name="callback" type="string"  required="false"/>
+			<param name="view"     type="enum"    required="false" values="short|long"/>
+			<param name="select"   type="enum"    required="false" values="short|long"/>
+			<param name="siblings"    type="string"  required="true" method="/place/{woeid}/siblings"/>
+		</input-params>
+		<output-params>
+			<result-path single="/places/place" multiple="/places/place"/>
+			<param name="woeid"               type="string"/>
+			<param name="placeTypeName"       type="string"/>
+			<param name="name"                type="string"/>
+			<param name="country"             type="string"/>
+			<param name="admin1"              type="string"/>
+			<param name="admin2"              type="string"/>
+			<param name="admin3"              type="string"/>
+			<param name="locality1"           type="string"/>
+			<param name="locality2"           type="string"/>
+			<param name="postal"              type="string"/>
+			<param name="centroid"            type="coord(/latitude,/longitude)"/>
+			<param name="boundingBox"         type="complex(/southWest:coord(/latitude,/longitude), /northEast:coord(/latitude,/longitude))"/>
+		</output-params>
+	</protocol>
+	<protocol type="REST" baseurl="http://where.yahooapis.com/v1/place" >
+		<input-params>
+			<param name="appid"    type="string"  required="true"/> 
+			<param name="lang"     type="string"  required="false"/>
+			<param name="format"   type="enum"    required="false" values="json|xml"/>
+			<param name="callback" type="string"  required="false"/>
+			<param name="view"     type="enum"    required="false" values="short|long"/>
+			<param name="select"   type="enum"    required="false" values="short|long"/>
+			<param name="parent"   type="string"  required="true" method="/place/{woeid}/parent" />
+		</input-params>
+		<output-params>
+			<result-path single="/places/place" multiple="/places/place"/>
+			<param name="woeid"               type="string"/>
+			<param name="placeTypeName"       type="string"/>
+			<param name="name"                type="string"/>
+			<param name="country"             type="string"/>
+			<param name="admin1"              type="string"/>
+			<param name="admin2"              type="string"/>
+			<param name="admin3"              type="string"/>
+			<param name="locality1"           type="string"/>
+			<param name="locality2"           type="string"/>
+			<param name="postal"              type="string"/>
+			<param name="centroid"            type="coord(/latitude,/longitude)"/>
+			<param name="boundingBox"         type="complex(/southWest:coord(/latitude,/longitude), /northEast:coord(/latitude,/longitude))"/>
+		</output-params>
+	</protocol>
+	<protocol type="REST" baseurl="http://where.yahooapis.com/v1/place" >
+		<input-params>
+			<param name="appid"     type="string"  required="true"/> 
+			<param name="lang"      type="string"  required="false"/>
+			<param name="format"    type="enum"    required="false" values="json|xml"/>
+			<param name="callback"  type="string"  required="false"/>
+			<param name="view"      type="enum"    required="false" values="short|long"/>
+			<param name="select"    type="enum"    required="false" values="short|long"/>
+			<param name="ancestors" type="string"  required="true" method="/place/{woeid}/ancestors" />
+		</input-params>
+		<output-params>
+			<result-path single="/places/place" multiple="/places/place"/>
+			<param name="woeid"               type="string"/>
+			<param name="placeTypeName"       type="string"/>
+			<param name="name"                type="string"/>
+			<param name="country"             type="string"/>
+			<param name="admin1"              type="string"/>
+			<param name="admin2"              type="string"/>
+			<param name="admin3"              type="string"/>
+			<param name="locality1"           type="string"/>
+			<param name="locality2"           type="string"/>
+			<param name="postal"              type="string"/>
+			<param name="centroid"            type="coord(/latitude,/longitude)"/>
+			<param name="boundingBox"         type="complex(/southWest:coord(/latitude,/longitude), /northEast:coord(/latitude,/longitude))"/>
+		</output-params>
+	</protocol>
+	<protocol type="REST" baseurl="http://where.yahooapis.com/v1/place" >
+		<input-params>
+			<param name="appid"    type="string"  required="true"/> 
+			<param name="lang"     type="string"  required="false"/>
+			<param name="format"   type="enum"    required="false" values="json|xml"/>
+			<param name="callback" type="string"  required="false"/>
+			<param name="view"     type="enum"    required="false" values="short|long"/>
+			<param name="select"   type="enum"    required="false" values="short|long"/>
+			<param name="children" type="string"  required="true"  method="/place/{woeid}/children" />
+			<param name="type"     type="integer" required="false" method=".type('{type}')"/>
+			<param name="degree"   type="integer" required="false" method=".degree('{degree}')"/>
+		</input-params>
+		<output-params>
+			<result-path single="/places/place" multiple="/places/place"/>
+			<param name="woeid"               type="string"/>
+			<param name="placeTypeName"       type="string"/>
+			<param name="name"                type="string"/>
+			<param name="country"             type="string"/>
+			<param name="admin1"              type="string"/>
+			<param name="admin2"              type="string"/>
+			<param name="admin3"              type="string"/>
+			<param name="locality1"           type="string"/>
+			<param name="locality2"           type="string"/>
+			<param name="postal"              type="string"/>
+			<param name="centroid"            type="coord(/latitude,/longitude)"/>
+			<param name="boundingBox"         type="complex(/southWest:coord(/latitude,/longitude), /northEast:coord(/latitude,/longitude))"/>
+		</output-params>
+	</protocol>
+	<protocol type="REST" baseurl="http://where.yahooapis.com/v1/place" >
+		<input-params>
+			<param name="appid"       type="string"  required="true"/> 
+			<param name="lang"        type="string"  required="false"/>
+			<param name="format"      type="enum"    required="false" values="json|xml"/>
+			<param name="callback"    type="string"  required="false"/>
+			<param name="view"        type="enum"    required="false" values="short|long"/>
+			<param name="select"      type="enum"    required="false" values="short|long"/>
+			<param name="descendants" type="string"  required="true"  method="/place/{woeid}/descendants"/>
+			<param name="type"        type="integer" required="false" method=".type('{type}')"/>
+		</input-params>
+		<output-params>
+			<result-path single="/places/place" multiple="/places/place"/>
+			<param name="woeid"               type="string"/>
+			<param name="placeTypeName"       type="string"/>
+			<param name="name"                type="string"/>
+			<param name="country"             type="string"/>
+			<param name="admin1"              type="string"/>
+			<param name="admin2"              type="string"/>
+			<param name="admin3"              type="string"/>
+			<param name="locality1"           type="string"/>
+			<param name="locality2"           type="string"/>
+			<param name="postal"              type="string"/>
+			<param name="centroid"            type="coord(/latitude,/longitude)"/>
+			<param name="boundingBox"         type="complex(/southWest:coord(/latitude,/longitude), /northEast:coord(/latitude,/longitude))"/>
+		</output-params>
+	</protocol>
+	<protocol type="REST" baseurl="http://where.yahooapis.com/v1/place" >
+		<input-params>
+			<param name="appid"       type="string"  required="true"/> 
+			<param name="lang"        type="string"  required="false"/>
+			<param name="format"      type="enum"    required="false" values="json|xml"/>
+			<param name="callback"    type="string"  required="false"/>
+			<param name="view"        type="enum"    required="false" values="short|long"/>
+			<param name="select"      type="enum"    required="false" values="short|long"/>
+			<param name="woeid1"      type="string"  required="true"  method="{woeid1}"/>
+			<param name="woeid2"      type="string"  required="true"  method="/common/{woeid2}"/>
+		</input-params>
+		<output-params>
+			<result-path single="/places/place" multiple="/places/place"/>
+			<param name="woeid"               type="string"/>
+			<param name="placeTypeName"       type="string"/>
+			<param name="name"                type="string"/>
+			<param name="country"             type="string"/>
+			<param name="admin1"              type="string"/>
+			<param name="admin2"              type="string"/>
+			<param name="admin3"              type="string"/>
+			<param name="locality1"           type="string"/>
+			<param name="locality2"           type="string"/>
+			<param name="postal"              type="string"/>
+			<param name="centroid"            type="coord(/latitude,/longitude)"/>
+			<param name="boundingBox"         type="complex(/southWest:coord(/latitude,/longitude), /northEast:coord(/latitude,/longitude))"/>
+		</output-params>
+	</protocol>
+	<protocol type="REST" baseurl="http://where.yahooapis.com/v1/continents" >
+		<input-params>
+			<param name="appid"    type="string"  required="true"/> 
+			<param name="lang"     type="string"  required="false"/>
+			<param name="format"   type="enum"    required="false" values="json|xml"/>
+			<param name="callback" type="string"  required="false"/>
+			<param name="view"     type="enum"    required="false" values="short|long"/>
+			<param name="select"   type="enum"    required="false" values="short|long"/>
+		</input-params>
+		<output-params>
+			<result-path single="/places/place" multiple="/places/place"/>
+			<param name="woeid"               type="string"/>
+			<param name="placeTypeName"       type="string"/>
+			<param name="name"                type="string"/>
+			<param name="country"             type="string"/>
+			<param name="admin1"              type="string"/>
+			<param name="admin2"              type="string"/>
+			<param name="admin3"              type="string"/>
+			<param name="locality1"           type="string"/>
+			<param name="locality2"           type="string"/>
+			<param name="postal"              type="string"/>
+			<param name="centroid"            type="coord(/latitude,/longitude)"/>
+			<param name="boundingBox"         type="complex(/southWest:coord(/latitude,/longitude), /northEast:coord(/latitude,/longitude))"/>
+		</output-params>
+	</protocol>
+	<protocol type="REST" baseurl="http://where.yahooapis.com/v1/oceans" >
+		<input-params>
+			<param name="appid"    type="string"  required="true"/> 
+			<param name="lang"     type="string"  required="false"/>
+			<param name="format"   type="enum"    required="false" values="json|xml"/>
+			<param name="callback" type="string"  required="false"/>
+			<param name="view"     type="enum"    required="false" values="short|long"/>
+			<param name="select"   type="enum"    required="false" values="short|long"/>
+		</input-params>
+		<output-params>
+			<result-path single="/places/place" multiple="/places/place"/>
+			<param name="woeid"               type="string"/>
+			<param name="placeTypeName"       type="string"/>
+			<param name="name"                type="string"/>
+			<param name="country"             type="string"/>
+			<param name="admin1"              type="string"/>
+			<param name="admin2"              type="string"/>
+			<param name="admin3"              type="string"/>
+			<param name="locality1"           type="string"/>
+			<param name="locality2"           type="string"/>
+			<param name="postal"              type="string"/>
+			<param name="centroid"            type="coord(/latitude,/longitude)"/>
+			<param name="boundingBox"         type="complex(/southWest:coord(/latitude,/longitude), /northEast:coord(/latitude,/longitude))"/>
+		</output-params>
+	</protocol>
+	<protocol type="REST" baseurl="http://where.yahooapis.com/v1/seas" >
+		<input-params>
+			<param name="appid"    type="string"  required="true"/> 
+			<param name="lang"     type="string"  required="false"/>
+			<param name="format"   type="enum"    required="false" values="json|xml"/>
+			<param name="callback" type="string"  required="false"/>
+			<param name="view"     type="enum"    required="false" values="short|long"/>
+			<param name="select"   type="enum"    required="false" values="short|long"/>
+		</input-params>
+		<output-params>
+			<result-path single="/places/place" multiple="/places/place"/>
+			<param name="woeid"               type="string"/>
+			<param name="placeTypeName"       type="string"/>
+			<param name="name"                type="string"/>
+			<param name="country"             type="string"/>
+			<param name="admin1"              type="string"/>
+			<param name="admin2"              type="string"/>
+			<param name="admin3"              type="string"/>
+			<param name="locality1"           type="string"/>
+			<param name="locality2"           type="string"/>
+			<param name="postal"              type="string"/>
+			<param name="centroid"            type="coord(/latitude,/longitude)"/>
+			<param name="boundingBox"         type="complex(/southWest:coord(/latitude,/longitude), /northEast:coord(/latitude,/longitude))"/>
+		</output-params>
+	</protocol>
+	<protocol type="REST" baseurl="http://where.yahooapis.com/v1/countries" >
+		<input-params>
+			<param name="appid"    type="string"  required="true"/> 
+			<param name="lang"     type="string"  required="false"/>
+			<param name="format"   type="enum"    required="false" values="json|xml"/>
+			<param name="callback" type="string"  required="false"/>
+			<param name="view"     type="enum"    required="false" values="short|long"/>
+			<param name="select"   type="enum"    required="false" values="short|long"/>
+		</input-params>
+		<output-params>
+			<result-path single="/places/place" multiple="/places/place"/>
+			<param name="woeid"               type="string"/>
+			<param name="placeTypeName"       type="string"/>
+			<param name="name"                type="string"/>
+			<param name="country"             type="string"/>
+			<param name="admin1"              type="string"/>
+			<param name="admin2"              type="string"/>
+			<param name="admin3"              type="string"/>
+			<param name="locality1"           type="string"/>
+			<param name="locality2"           type="string"/>
+			<param name="postal"              type="string"/>
+			<param name="centroid"            type="coord(/latitude,/longitude)"/>
+			<param name="boundingBox"         type="complex(/southWest:coord(/latitude,/longitude), /northEast:coord(/latitude,/longitude))"/>
+		</output-params>
+	</protocol>
+	<protocol type="REST" baseurl="http://where.yahooapis.com/v1/states" >
+		<input-params>
+			<param name="appid"    type="string"  required="true"/> 
+			<param name="lang"     type="string"  required="false"/>
+			<param name="format"   type="enum"    required="false" values="json|xml"/>
+			<param name="callback" type="string"  required="false"/>
+			<param name="view"     type="enum"    required="false" values="short|long"/>
+			<param name="select"   type="enum"    required="false" values="short|long"/>
+			<param name="country"  type="string"  required="true"  method="/{country}"/> 
+		</input-params>
+		<output-params>
+			<result-path single="/places/place" multiple="/places/place"/>
+			<param name="woeid"               type="string"/>
+			<param name="placeTypeName"       type="string"/>
+			<param name="name"                type="string"/>
+			<param name="country"             type="string"/>
+			<param name="admin1"              type="string"/>
+			<param name="admin2"              type="string"/>
+			<param name="admin3"              type="string"/>
+			<param name="locality1"           type="string"/>
+			<param name="locality2"           type="string"/>
+			<param name="postal"              type="string"/>
+			<param name="centroid"            type="coord(/latitude,/longitude)"/>
+			<param name="boundingBox"         type="complex(/southWest:coord(/latitude,/longitude), /northEast:coord(/latitude,/longitude))"/>
+		</output-params>
+	</protocol>
+	<protocol type="REST" baseurl="http://where.yahooapis.com/v1/counties" >
+		<input-params>
+			<param name="appid"    type="string"  required="true"/> 
+			<param name="lang"     type="string"  required="false"/>
+			<param name="format"   type="enum"    required="false" values="json|xml"/>
+			<param name="callback" type="string"  required="false"/>
+			<param name="view"     type="enum"    required="false" values="short|long"/>
+			<param name="select"   type="enum"    required="false" values="short|long"/>
+			<param name="state"    type="string"  required="true"  method="/{state}"/> 
+		</input-params>
+		<output-params>
+			<result-path single="/places/place" multiple="/places/place"/>
+			<param name="woeid"               type="string"/>
+			<param name="placeTypeName"       type="string"/>
+			<param name="name"                type="string"/>
+			<param name="country"             type="string"/>
+			<param name="admin1"              type="string"/>
+			<param name="admin2"              type="string"/>
+			<param name="admin3"              type="string"/>
+			<param name="locality1"           type="string"/>
+			<param name="locality2"           type="string"/>
+			<param name="postal"              type="string"/>
+			<param name="centroid"            type="coord(/latitude,/longitude)"/>
+			<param name="boundingBox"         type="complex(/southWest:coord(/latitude,/longitude), /northEast:coord(/latitude,/longitude))"/>
+		</output-params>
+	</protocol>
+	<protocol type="REST" baseurl="http://where.yahooapis.com/v1/districts" >
+		<input-params>
+			<param name="appid"    type="string"  required="true"/> 
+			<param name="lang"     type="string"  required="false"/>
+			<param name="format"   type="enum"    required="false" values="json|xml"/>
+			<param name="callback" type="string"  required="false"/>
+			<param name="view"     type="enum"    required="false" values="short|long"/>
+			<param name="select"   type="enum"    required="false" values="short|long"/>
+			<param name="county"   type="string"  required="true"  method="/{county}"/> 
+		</input-params>
+		<output-params>
+			<result-path single="/places/place" multiple="/places/place"/>
+			<param name="woeid"               type="string"/>
+			<param name="placeTypeName"       type="string"/>
+			<param name="name"                type="string"/>
+			<param name="country"             type="string"/>
+			<param name="admin1"              type="string"/>
+			<param name="admin2"              type="string"/>
+			<param name="admin3"              type="string"/>
+			<param name="locality1"           type="string"/>
+			<param name="locality2"           type="string"/>
+			<param name="postal"              type="string"/>
+			<param name="centroid"            type="coord(/latitude,/longitude)"/>
+			<param name="boundingBox"         type="complex(/southWest:coord(/latitude,/longitude), /northEast:coord(/latitude,/longitude))"/>
+		</output-params>
+	</protocol>
+	<protocol type="REST" baseurl="http://where.yahooapis.com/v1/placetypes" >
+		<input-params>
+			<param name="appid"    type="string"  required="true"/> 
+			<param name="lang"     type="string"  required="false"/>
+			<param name="format"   type="enum"    required="false" values="json|xml"/>
+			<param name="callback" type="string"  required="false"/>
+			<param name="view"     type="enum"    required="false" values="short|long"/>
+			<param name="select"   type="enum"    required="false" values="short|long"/>
+			<param name="country"  type="string"  required="false" method="/{country}"/> 
+			<param name="type"     type="string"  required="false" method=".type('{type}')"/> 
+		</input-params>
+		<input-params>
+			<param name="appid"    type="string"  required="true"/> 
+			<param name="lang"     type="string"  required="false"/>
+			<param name="format"   type="enum"    required="false" values="json|xml"/>
+			<param name="callback" type="string"  required="false"/>
+			<param name="view"     type="enum"    required="false" values="short|long"/>
+			<param name="select"   type="enum"    required="false" values="short|long"/>
+			<param name="type"     type="string"  required="true" method="/{type}"/> 
+			<param name="country"  type="string"  required="false" method="/{country}"/> 
+		</input-params>
+		<output-params>
+			<result-path single="/placeTypes/placeType" multiple="/placeTypes/placeType"/>
+			<param name="placeTypeName"       type="string"/>
+		</output-params>
+	</protocol>
+	<!-- Canadian postal codes to OEID -->
+	<protocol type="REST" baseurl="http://where.yahooapis.com/v1/concordance/capost" >
+		<input-params>
+			<param name="appid"     type="string"  required="true"/> 
+			<param name="lang"      type="string"  required="false"/>
+			<param name="format"    type="enum"    required="false" values="json|xml"/>
+			<param name="callback"  type="string"  required="false"/>
+			<param name="view"      type="enum"    required="false" values="short|long"/>
+			<param name="select"    type="enum"    required="false" values="short|long"/>
+			<param name="id"        type="string"  required="true"  method="/{id}"/> 
+		</input-params>
+		<output-params>
+			<result-path single="/concordance"/>
+			<param name="woeid"  type="string"/>
+			<param name="fips"   type="string"/>
+			<param name="iso"    type="string"/>
+		</output-params>
+	</protocol>
+	<!-- IANA country codes to WOEID -->
+	<protocol type="REST" baseurl="http://where.yahooapis.com/v1/concordance/ccltd" >
+		<input-params>
+			<param name="appid"     type="string"  required="true"/> 
+			<param name="lang"      type="string"  required="false"/>
+			<param name="format"    type="enum"    required="false" values="json|xml"/>
+			<param name="callback"  type="string"  required="false"/>
+			<param name="view"      type="enum"    required="false" values="short|long"/>
+			<param name="select"    type="enum"    required="false" values="short|long"/>
+			<param name="id"        type="string"  required="true"  method="/{id}"/> 
+		</input-params>
+		<output-params>
+			<result-path single="/concordance"/>
+			<param name="woeid"  type="string"/>
+			<param name="fips"   type="string"/>
+			<param name="iso"    type="string"/>
+		</output-params>
+	</protocol>
+	<!-- FAA US airport codes to WOEID -->
+	<protocol type="REST" baseurl="http://where.yahooapis.com/v1/concordance/faa" >
+		<input-params>
+			<param name="appid"     type="string"  required="true"/> 
+			<param name="lang"      type="string"  required="false"/>
+			<param name="format"    type="enum"    required="false" values="json|xml"/>
+			<param name="callback"  type="string"  required="false"/>
+			<param name="view"      type="enum"    required="false" values="short|long"/>
+			<param name="select"    type="enum"    required="false" values="short|long"/>
+			<param name="id"        type="string"  required="true"  method="/{id}"/> 
+		</input-params>
+		<output-params>
+			<result-path single="/concordance"/>
+			<param name="woeid"  type="string"/>
+			<param name="fips"   type="string"/>
+			<param name="iso"    type="string"/>
+		</output-params>
+	</protocol>
+	<!-- FIPS countries, US states and US towns to WOEID. -->
+	<protocol type="REST" baseurl="http://where.yahooapis.com/v1/concordance/fips" >
+		<input-params>
+			<param name="appid"     type="string"  required="true"/> 
+			<param name="lang"      type="string"  required="false"/>
+			<param name="format"    type="enum"    required="false" values="json|xml"/>
+			<param name="callback"  type="string"  required="false"/>
+			<param name="view"      type="enum"    required="false" values="short|long"/>
+			<param name="select"    type="enum"    required="false" values="short|long"/>
+			<param name="id"        type="string"  required="true"  method="/{id}"/> 
+		</input-params>
+		<output-params>
+			<result-path single="/concordance"/>
+			<param name="woeid"  type="string"/>
+			<param name="fips"   type="string"/>
+			<param name="iso"    type="string"/>
+		</output-params>
+	</protocol>
+	<!-- Geonames towns to WOEID. -->
+	<protocol type="REST" baseurl="http://where.yahooapis.com/v1/concordance/geonames" >
+		<input-params>
+			<param name="appid"     type="string"  required="true"/> 
+			<param name="lang"      type="string"  required="false"/>
+			<param name="format"    type="enum"    required="false" values="json|xml"/>
+			<param name="callback"  type="string"  required="false"/>
+			<param name="view"      type="enum"    required="false" values="short|long"/>
+			<param name="select"    type="enum"    required="false" values="short|long"/>
+			<param name="id"        type="string"  required="true"  method="/{id}"/> 
+		</input-params>
+		<output-params>
+			<result-path single="/concordance"/>
+			<param name="woeid"  type="string"/>
+			<param name="fips"   type="string"/>
+			<param name="iso"    type="string"/>
+		</output-params>
+	</protocol>
+	<!-- IATA airport codes to WOEID. -->
+	<protocol type="REST" baseurl="http://where.yahooapis.com/v1/concordance/iata" >
+		<input-params>
+			<param name="appid"     type="string"  required="true"/> 
+			<param name="lang"      type="string"  required="false"/>
+			<param name="format"    type="enum"    required="false" values="json|xml"/>
+			<param name="callback"  type="string"  required="false"/>
+			<param name="view"      type="enum"    required="false" values="short|long"/>
+			<param name="select"    type="enum"    required="false" values="short|long"/>
+			<param name="id"        type="string"  required="true"  method="/{id}"/> 
+		</input-params>
+		<output-params>
+			<result-path single="/concordance"/>
+			<param name="woeid"  type="string"/>
+			<param name="fips"   type="string"/>
+			<param name="iso"    type="string"/>
+		</output-params>
+	</protocol>
+	<!-- ICAO airport codes to WOEID. -->
+	<protocol type="REST" baseurl="http://where.yahooapis.com/v1/concordance/icao" >
+		<input-params>
+			<param name="appid"     type="string"  required="true"/> 
+			<param name="lang"      type="string"  required="false"/>
+			<param name="format"    type="enum"    required="false" values="json|xml"/>
+			<param name="callback"  type="string"  required="false"/>
+			<param name="view"      type="enum"    required="false" values="short|long"/>
+			<param name="select"    type="enum"    required="false" values="short|long"/>
+			<param name="id"        type="string"  required="true"  method="/{id}"/> 
+		</input-params>
+		<output-params>
+			<result-path single="/concordance"/>
+			<param name="woeid"  type="string"/>
+			<param name="fips"   type="string"/>
+			<param name="iso"    type="string"/>
+		</output-params>
+	</protocol>
+	<!-- French towns codes to WOEID. -->
+	<protocol type="REST" baseurl="http://where.yahooapis.com/v1/concordance/insee" >
+		<input-params>
+			<param name="appid"     type="string"  required="true"/> 
+			<param name="lang"      type="string"  required="false"/>
+			<param name="format"    type="enum"    required="false" values="json|xml"/>
+			<param name="callback"  type="string"  required="false"/>
+			<param name="view"      type="enum"    required="false" values="short|long"/>
+			<param name="select"    type="enum"    required="false" values="short|long"/>
+			<param name="id"        type="string"  required="true"  method="/{id}"/> 
+		</input-params>
+		<output-params>
+			<result-path single="/concordance"/>
+			<param name="woeid"  type="string"/>
+			<param name="fips"   type="string"/>
+			<param name="iso"    type="string"/>
+		</output-params>
+	</protocol>
+	<!-- ISO country, states, county codes to WOEID. -->
+	<protocol type="REST" baseurl="http://where.yahooapis.com/v1/concordance/iso" >
+		<input-params>
+			<param name="appid"     type="string"  required="true"/> 
+			<param name="lang"      type="string"  required="false"/>
+			<param name="format"    type="enum"    required="false" values="json|xml"/>
+			<param name="callback"  type="string"  required="false"/>
+			<param name="view"      type="enum"    required="false" values="short|long"/>
+			<param name="select"    type="enum"    required="false" values="short|long"/>
+			<param name="namespace" type="enum"    required="true"  method="/{namespace}" values="capost|ccltd|faa|fips|geonames|iata|icao|insee|iso|jgdc|locode|osm|usps|wiki"/> 
+			<param name="id"        type="string"  required="true"  method="/{id}"/> 
+		</input-params>
+		<output-params>
+			<result-path single="/concordance"/>
+			<param name="woeid"  type="string"/>
+			<param name="fips"   type="string"/>
+			<param name="iso"    type="string"/>
+		</output-params>
+	</protocol>
+	<!-- ISO country, states, county codes to WOEID. -->
+	<protocol type="REST" baseurl="http://where.yahooapis.com/v1/concordance/jgdc" >
+		<input-params>
+			<param name="appid"     type="string"  required="true"/> 
+			<param name="lang"      type="string"  required="false"/>
+			<param name="format"    type="enum"    required="false" values="json|xml"/>
+			<param name="callback"  type="string"  required="false"/>
+			<param name="view"      type="enum"    required="false" values="short|long"/>
+			<param name="select"    type="enum"    required="false" values="short|long"/>
+			<param name="id"        type="string"  required="true"  method="/{id}"/> 
+		</input-params>
+		<output-params>
+			<result-path single="/concordance"/>
+			<param name="woeid"  type="string"/>
+			<param name="fips"   type="string"/>
+			<param name="iso"    type="string"/>
+		</output-params>
+	</protocol>
+	<!-- United nations towns to WOEID -->
+	<protocol type="REST" baseurl="http://where.yahooapis.com/v1/concordance/locode" >
+		<input-params>
+			<param name="appid"     type="string"  required="true"/> 
+			<param name="lang"      type="string"  required="false"/>
+			<param name="format"    type="enum"    required="false" values="json|xml"/>
+			<param name="callback"  type="string"  required="false"/>
+			<param name="view"      type="enum"    required="false" values="short|long"/>
+			<param name="select"    type="enum"    required="false" values="short|long"/>
+			<param name="id"        type="string"  required="true"  method="/{id}"/> 
+		</input-params>
+		<output-params>
+			<result-path single="/concordance"/>
+			<param name="woeid"  type="string"/>
+			<param name="fips"   type="string"/>
+			<param name="iso"    type="string"/>
+		</output-params>
+	</protocol>
+	<!-- OpenStreeMap aitrport and town to WOEID -->
+	<protocol type="REST" baseurl="http://where.yahooapis.com/v1/concordance/osm" >
+		<input-params>
+			<param name="appid"     type="string"  required="true"/> 
+			<param name="lang"      type="string"  required="false"/>
+			<param name="format"    type="enum"    required="false" values="json|xml"/>
+			<param name="callback"  type="string"  required="false"/>
+			<param name="view"      type="enum"    required="false" values="short|long"/>
+			<param name="select"    type="enum"    required="false" values="short|long"/>
+			<param name="id"        type="string"  required="true"  method="/{id}"/> 
+		</input-params>
+		<output-params>
+			<result-path single="/concordance"/>
+			<param name="woeid"  type="string"/>
+			<param name="fips"   type="string"/>
+			<param name="iso"    type="string"/>
+		</output-params>
+	</protocol>
+	<!-- USPS US postal codes to WOEID -->
+	<protocol type="REST" baseurl="http://where.yahooapis.com/v1/concordance/usps" >
+		<input-params>
+			<param name="appid"     type="string"  required="true"/> 
+			<param name="lang"      type="string"  required="false"/>
+			<param name="format"    type="enum"    required="false" values="json|xml"/>
+			<param name="callback"  type="string"  required="false"/>
+			<param name="view"      type="enum"    required="false" values="short|long"/>
+			<param name="select"    type="enum"    required="false" values="short|long"/>
+			<param name="id"        type="string"  required="true"  method="/{id}"/> 
+		</input-params>
+		<output-params>
+			<result-path single="/concordance"/>
+			<param name="woeid"  type="string"/>
+			<param name="fips"   type="string"/>
+			<param name="iso"    type="string"/>
+		</output-params>
+	</protocol>
+	<!-- Wikipedia US airport and US towns page IDs to WOEID -->
+	<protocol type="REST" baseurl="http://where.yahooapis.com/v1/concordance" >
+		<input-params>
+			<param name="appid"     type="string"  required="true"/> 
+			<param name="lang"      type="string"  required="false"/>
+			<param name="format"    type="enum"    required="false" values="json|xml"/>
+			<param name="callback"  type="string"  required="false"/>
+			<param name="view"      type="enum"    required="false" values="short|long"/>
+			<param name="select"    type="enum"    required="false" values="short|long"/>
+			<param name="id"        type="string"  required="true"  method="/{id}"/> 
+		</input-params>
+		<output-params>
+			<result-path single="/concordance"/>
+			<param name="woeid"  type="string"/>
+			<param name="fips"   type="string"/>
+			<param name="iso"    type="string"/>
+		</output-params>
+	</protocol>
+</service>

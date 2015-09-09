@@ -1,0 +1,45 @@
+<service>
+	<name>Google Distance</name>
+	<documentation>https://developers.google.com/maps/documentation/distancematrix/</documentation>
+	<!--
+		WARNING: 
+		Use of the Distance Matrix API must relate to the display of information on a Google Map;
+		for example, to determine origin-destination pairs that fall within a specific driving time from one another, 
+		before requesting and displaying those destinations on a map. Use of the service in an application that doesn't display a Google map is prohibited.
+	 -->
+	<usage-limits>
+		<pricing>free</pricing>
+		<page-size max="100"/>
+		<items-allowance max="100" period="10s"/>
+		<items-allowance max="2500" period="24h"/>
+		<api-key required="false"/>
+	</usage-limits>
+	<protocol type="REST" baseurl="http://maps.googleapis.com/maps/api/distancematrix/json?">
+		<input-params>
+			<param name="origins"        type="string"    required="true" batch="true"/>
+			<param name="destinations"   type="string"    required="true" batch="true"/>
+			<param name="sensor"         type="boolean"   required="true"/>
+			<param name="mode"           type="enum"      required="false" values="driving|walking|bicycling"/>
+			<param name="language"       type="string"    required="false" />
+			<param name="avoid"          type="enum"      required="false" value="tolls|highways"/>
+			<param name="units"          type="enum"      required="false" value="metric|imperial" />
+			<param name="departure_time" type="timestamp" required="false" />
+		</input-params>
+		<output-params>
+			<param name="origin_addresses"      type="string"/>
+			<param name="destination_addresses" type="string"/>
+			<param name="rows"                  type="array">
+				<param name="element" type="complex">
+					<param name="status" type="string"/>
+					<param name="duration" type="complex">
+						<param name="value" type="integer"/>
+						<param name="text" type="string"/>
+					</param>
+				</param>
+			</param>
+			<param name="timeZoneName"  type="string"/>
+			<param name="status"        type="enum" values="OK|INVALID_REQUEST|OVER_QUERY_LIMIT|REQUEST_DENIED|UNKNOWN_ERROR|ZERO_RESULTS"/>
+			<param name="error_message" type="string"/>
+		</output-params>
+	</protocol>
+</service>

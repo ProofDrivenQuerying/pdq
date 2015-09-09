@@ -1,0 +1,31 @@
+This short tutorial describes the steps to build the PDQ tool. 
+ 
+Prerequisites
+-	Java 1.7 or higher
+-	Maven 2 or higher. You can build each library outside Maven, e.g. in your favorite IDE, but you will have to manage dependencies manually.
+-	MySQL 5.6 or higher. MySQL is used to detect homomorphisms during chasing. This is optional but it is recommended as it speeds up reasoning. 
+-	PostgreSQL 9.3.3 or higher. Used when delegating plan cost estimation to a database. Some test cases under the pdq-regression package use PostgreSQL for cost estimation. 
+
+Both internal and external dependencies are managed by Maven automatically through the pom.xml files. These files can be found inside each project. However, if you wish to build the projects outside Maven, consider the following dependencies
+
+Project dependencies (internal)
+-	pdq-cost: pdq-common project
+-	pdq-planner: pdq-common and pdq-cost projects
+-	pdq-runtime: pdq-common project
+-	pdq-benchmark, pdq-regression: pdq-common, pdq-cost, pdq-planner and pdq-runtime projects
+
+Project dependencies (external) 
+-	pdq-common: junit-4.11, log4j2-1.2, guava-16, commons-lang3-3.3.1, commons-collections4-4.0, jgrapht-0.8.3, commons-io-2.4 mysql-connector-5.1.30, postgresql-9.1, jersey-client-2.11, jackson-databind-2.2.3, javax.ws.api-2.0, jackson-jaxrs-json-provider-2.2.3, jcommander-1.35
+-	pdq-cost: junit-4.11, log4j2-1.2, guava-16, commons-lang3-3.3.1, commons-collections4-4.0
+-	pdq-planner: derby-10.10, mysql-connector-5.1.30
+-	pdq-runtime: jcommander-1.35
+-	pdq-benchmark: jcommander-1.35
+-	pdq-regression: jcommander-1.35
+
+Installation
+When using Maven type under the top directory of each project 
+mvn install	
+Two JARs will be built and placed in the project's "target/" directory. Go to the "target/" directory of the pdq-benchmark project. You will notice the following jar 
+pdq-project-<version>.jar, contains the bytecode for the planner only, i.e., you need to make sure all dependencies are on the CLASSPATH to  run it.
+pdq-benchmark-<version>.one-jar.jar, is fully self-contained and can be run directly both for planning and plan execution.
+

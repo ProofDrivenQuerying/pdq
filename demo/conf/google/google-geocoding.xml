@@ -1,0 +1,33 @@
+<service>
+	<name>Google Geocoding</name>
+	<documentation>https://developers.google.com/maps/documentation/geocoding/</documentation>
+	<usage-limits>
+		<pricing>free</pricing>
+		<frequency max="2500" period="24h"/>
+		<api-key required="false"/>
+	</usage-limits>
+	<protocol type="REST" baseurl="https://maps.googleapis.com/maps/api/geocode/json?">
+		<input-params>
+			<param name="address"    type="string"    required="true"/>
+			<param name="components" type="string"    required="false"/>
+			<param name="sensor"     type="boolean"   required="true"/>
+		</input-params>
+		<input-params>
+			<param name="address"    type="string"    required="false"/>
+			<param name="components" type="string"    required="true"/>
+			<param name="sensor"     type="boolean"   required="true"/>
+		</input-params>
+		<input-params>
+			<param name="latlng"     type="coords"    required="true"/>
+			<param name="sensor"     type="boolean"   required="true"/>
+		</input-params>
+		<output-params>
+			<param name="dstOffset"     type="integer"/>
+			<param name="rawOffset"     type="integer"/>
+			<param name="timeZoneId"    type="string"/>
+			<param name="timeZoneName"  type="string"/>
+			<param name="status"        type="enum" values="OK|INVALID_REQUEST|OVER_QUERY_LIMIT|REQUEST_DENIED|UNKNOWN_ERROR|ZERO_RESULTS"/>
+			<param name="error_message" type="string"/>
+		</output-params>
+	</protocol>
+</service>

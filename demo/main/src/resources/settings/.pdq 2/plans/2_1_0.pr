@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proof>
+<state>
+<axiom relation="YahooPlaceCode" access-method="yh_geo_code"/>
+<candidate>
+<entry key="namespace" value="iso"/>
+<entry key="code" value="FR"/>
+<entry key="woeid" value="c1"/>
+</candidate>
+</state>
+<state>
+<axiom relation="YahooPlaceRelationship" access-method="yh_geo_rel"/>
+<candidate>
+<entry key="relation" value="descendants"/>
+<entry key="of" value="c1"/>
+<entry key="woeid" value="c2"/>
+<entry key="placeTypeName" value="c3"/>
+<entry key="name" value="c4"/>
+<entry key="uri" value="c5"/>
+</candidate>
+</state>
+<state>
+<axiom relation="YahooPlaces" access-method="yh_geo_woeid"/>
+<candidate>
+<entry key="woeid" value="c2"/>
+<entry key="name" value="c6"/>
+<entry key="type" value="c7"/>
+<entry key="placeTypeName" value="Point of Interest"/>
+<entry key="country" value="c8"/>
+<entry key="admin1" value="c9"/>
+<entry key="admin2" value="c10"/>
+<entry key="admin3" value="c11"/>
+<entry key="locality1" value="c12"/>
+<entry key="locality2" value="c13"/>
+<entry key="postal" value="c14"/>
+<entry key="centroid_lat" value="c15"/>
+<entry key="centroid_lng" value="c16"/>
+<entry key="bboxNorth" value="c17"/>
+<entry key="bboxSouth" value="c18"/>
+<entry key="bboxEast" value="c19"/>
+<entry key="bboxWest" value="c20"/>
+<entry key="timezone" value="c21"/>
+</candidate>
+</state>
+<state>
+<axiom relation="YahooWeather" access-method="yh_wtr_woeid"/>
+<candidate>
+<entry key="woeid" value="c2"/>
+<entry key="city" value="c22"/>
+<entry key="country" value="c23"/>
+<entry key="region" value="c24"/>
+<entry key="distance_unit" value="c25"/>
+<entry key="pressure_unit" value="c26"/>
+<entry key="speed_unit" value="c27"/>
+<entry key="temp_unit" value="c28"/>
+<entry key="wind_chill" value="c29"/>
+<entry key="wind_direction" value="c30"/>
+<entry key="wind_speed" value="c31"/>
+<entry key="humidity" value="c32"/>
+<entry key="pressure" value="c33"/>
+<entry key="rising" value="c34"/>
+<entry key="visibility" value="c35"/>
+<entry key="sunrise" value="c36"/>
+<entry key="sunset" value="c37"/>
+<entry key="date" value="c38"/>
+<entry key="temperature" value="c39"/>
+<entry key="condition" value="Sunny"/>
+<entry key="code" value="c40"/>
+</candidate>
+</state>
+<match>
+<entry key="city" value="c22"/>
+<entry key="country" value="c23"/>
+<entry key="region" value="c24"/>
+<entry key="temperature" value="c39"/>
+</match>
+</proof>

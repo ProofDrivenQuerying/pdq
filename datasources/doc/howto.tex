@@ -1,0 +1,32 @@
+\section{How-To\dots}
+
+\subsection{\dots create my own service repository description.}
+TODO
+
+\subsection{\dots setup a schema for existing service descriptions.}
+Once the service description file is ready, one can refer to the
+service defined in it as relations in a schema.
+
+For this, one needs to include the proper set of source descriptions
+at the beginning of the schema file.
+This is an optional block and was so far used for defining schemas
+whose tables could be discovered from a DB.
+In this case, ``source'' elements define an external file that contains
+description for services. 
+Required attributes are ``discoverer'' which here takes the value
+``uk.ac.ox.cs.pdq.builder.io.xml.ServiceReader'', and ``file'' which
+take the relation path to the service description file.
+
+The schema is defined by listing the relations one wants to include
+from those defined in the external service description.
+Each service comes with a list of access methods.
+One can select in the schema which of those will be used/allowed.
+Note that this is why access-methods entries in the schema.xml only
+have a name and, optionally, a cost.
+The other details about the access-methods are defined in the service
+descriptions.
+
+Note that dependencies are defined as before. Here, we have an
+inclusion dependency from the latitude and longitude of the Yahoo
+service to those of Google.
+
