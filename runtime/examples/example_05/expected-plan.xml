@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plan type="linear" cost="5.0" control-flow="BOTTOM_UP">
+<command name="T1">
+<operator type="PROJECT">
+<outputs>
+<attribute name="c26" type="java.lang.String"/>
+<attribute name="c27" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="c26" type="java.lang.String"/>
+<attribute name="c27" type="java.lang.String"/>
+</project>
+<child>
+<operator type="PROJECT">
+<outputs>
+<attribute name="c26" type="java.lang.String"/>
+<attribute name="c27" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="a0" type="java.lang.String"/>
+<attribute name="a1" type="java.lang.String"/>
+</project>
+<child>
+<operator type="ACCESS" relation="V3" access-method="m1">
+<outputs>
+<attribute name="a0" type="java.lang.String"/>
+<attribute name="a1" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</child>
+</operator>
+</command>
+</plan>

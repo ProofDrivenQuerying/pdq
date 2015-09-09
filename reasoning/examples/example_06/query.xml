@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<query type="conjunctive">
+	<body>
+		<atom name="R10">
+			<variable name="x0" />
+			<variable name="x4" />
+		</atom>
+		<atom name="R2">
+			<variable name="x0" />
+			<variable name="x1" />
+			<variable name="x2" />
+			<variable name="x3" />
+			<variable name="x4" />
+		</atom>
+		<atom name="R17">
+			<variable name="x3" />
+			<variable name="x2" />
+			<variable name="x4" />
+			<variable name="x2" />
+		</atom>
+	</body>
+	<head name="Q">
+		<variable name="x2" />
+		<variable name="x1" />
+		<variable name="x0" />
+	</head>
+</query>

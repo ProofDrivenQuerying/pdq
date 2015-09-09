@@ -1,0 +1,321 @@
+package uk.ac.ox.cs.pdq.runtime.exec.iterator;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Set;
+
+import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.AccessMethod.Types;
+import uk.ac.ox.cs.pdq.db.TypedConstant;
+import uk.ac.ox.cs.pdq.db.wrappers.RelationAccessWrapper;
+import uk.ac.ox.cs.pdq.util.ResetableIterator;
+import uk.ac.ox.cs.pdq.util.Table;
+import uk.ac.ox.cs.pdq.util.Tuple;
+import uk.ac.ox.cs.pdq.util.TupleType;
+import uk.ac.ox.cs.pdq.util.Typed;
+
+import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+
+/**
+ * Access over a relation, where the input are provided by the parent operator.
+ * 
+ * @author Julien Leblay
+ */
+public class TopDownAccess extends TupleIterator {
+
+
+	/** The input table of the access. */
+	private final RelationAccessWrapper relation;
+
+	/** The access method to use. */
+	private final AccessMethod accessMethod;
+
+	/** The complete input type, including statically and dynamically bound. */
+	private final TupleType inputBindingType;
+
+	/** The map some of the inputs to static values. */
+	private final Map<Integer, TypedConstant<?>> staticInputs;
+
+	/** Iterator over the output tuples. */
+	protected Map<Tuple, ResetableIterator<Tuple>> outputs = null;
+
+	/** Iterator over the output tuples. */
+	protected ResetableIterator<Tuple> iterator = null;
+
+	/**Next tuple to returns. */
+	protected Tuple nextTuple = null;
+
+	/** The last input tuple bound. */
+	private Tuple lastInput;
+
+	/**
+	 * Instantiates a new join.
+	 * 
+	 * @param relation RelationAccessWrapper
+	 * @param accessMethod AccessMethod
+	 */
+	public TopDownAccess(RelationAccessWrapper relation, AccessMethod accessMethod) {
+		this(relation, accessMethod, ImmutableMap.<Integer, TypedConstant<?>>of());
+	}
+
+	/**
+	 * Instantiates a new join.
+	 * 
+	 * @param relation RelationAccessWrapper
+	 * @param accessMethod AccessMethod
+	 * @param staticInputs maps of the inputs in the access method that are 
+	 * statically provided (indices correspond to original attributes positions
+	 * in the relation, regardless of how input positions are ordered.)
+	 */
+	public TopDownAccess(RelationAccessWrapper relation, AccessMethod accessMethod, Map<Integer, TypedConstant<?>> staticInputs) {
+		super(inferInput(relation, accessMethod, keySet(staticInputs)),
+				Lists.<Typed>newArrayList(relation.getAttributes()));
+		Preconditions.checkArgument(accessMethod != null);
+		Preconditions.checkArgument(accessMethod.getType() != Types.FREE);
+		Preconditions.checkArgument(relation.getAccessMethod(accessMethod.getName()) != null);
+		this.relation = relation;
+		this.accessMethod = accessMethod;
+		this.staticInputs = staticInputs;
+		this.inputBindingType = TupleType.DefaultFactory.createFromTyped(relation.getInputAttributes(accessMethod));
+		Preconditions.checkArgument(isStaticInputsConsistentWithAccessMethod(relation, accessMethod, staticInputs));
+	}
+
+	private static Boolean isStaticInputsConsistentWithAccessMethod(
+			RelationAccessWrapper relation, AccessMethod mt, Map<Integer, TypedConstant<?>> staticInputs) {
+		for (Integer i: mt.getZeroBasedInputs()) {
+			if (staticInputs.containsKey(i)) {
+				if (!relation.getAttributes().get(i).getType().equals(staticInputs.get(i).getType())) {
+					return false;
+				}
+			}
+		}
+		List<Integer> remains = Lists.newArrayList(staticInputs.keySet());
+		remains.removeAll(mt.getZeroBasedInputs());
+		return remains.isEmpty();
+	}
+
+	private static Set<Integer> keySet(Map<Integer, ?> m) {
+		Preconditions.checkArgument(m != null);
+		return m.keySet();
+	}
+	
+	/**
+	 * @param relation RelationAccessWrapper
+	 * @param accessMethod AccessMethod
+	 * @param staticInputs Set<Integer>
+	 * @return List<Typed>
+	 */
+	private static List<Typed> inferInput(RelationAccessWrapper relation, AccessMethod accessMethod, Set<Integer> staticInputs) {
+		Preconditions.checkArgument(relation != null);
+		Preconditions.checkArgument(accessMethod != null);
+		List<Typed> result = new ArrayList<>();
+		for (Integer i: accessMethod.getZeroBasedInputs()) {
+			if (!staticInputs.contains(i)) {
+				result.add(relation.getAttributes().get(i));
+			}
+		}
+		return result;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder result = new StringBuilder();
+		result.append(this.getClass().getSimpleName());
+		result.append('[').append(this.relation.getName()).append('/');
+		result.append(this.accessMethod).append(']');
+		return result.toString();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.UnaryIterator#open()
+	 */
+	@Override
+	public void open() {
+		Preconditions.checkState(this.open == null);
+		this.outputs = Maps.newLinkedHashMap();
+		this.open = true;
+		// If there is no dynamic input, bind the empty tuple once and for all
+		if (this.inputType.size() == 0) {
+			bind(Tuple.EmptyTuple);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.UnaryIterator#reset()
+	 */
+	@Override
+	public void reset() {
+		Preconditions.checkState(this.open != null && this.open);
+		Preconditions.checkState(!this.interrupted);
+		this.iterator.reset();
+		this.nextTuple();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.UnaryIterator#hasNext()
+	 */
+	@Override
+	public boolean hasNext() {
+		Preconditions.checkState(this.open != null && this.open);
+		if (this.interrupted) {
+			return false;
+		}
+		if (this.nextTuple != null) {
+			return true;
+		}
+		this.nextTuple();
+		return this.nextTuple != null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#next()
+	 */
+	@Override
+	public Tuple next() {
+		Preconditions.checkState(this.open != null && this.open);
+		Preconditions.checkState(!this.interrupted);
+		Preconditions.checkState(this.lastInput != null);
+		if (this.eventBus != null) {
+			this.eventBus.post(this);
+		}
+		Tuple result = this.nextTuple;
+		this.nextTuple = null;
+		if (!this.hasNext() && result == null) {
+			throw new NoSuchElementException("End of operator reached.");
+		}
+		return result;
+	}
+
+	public void nextTuple() {
+		this.nextTuple = null;
+		if (this.interrupted) {
+			return;
+		}
+		if (this.iterator == null) {
+			// If iterator has not been set at this stage, it implies all 
+			// inputs this access are statically defined.
+			// Preconditions.checkState(this.inputType.size() == 0);
+			Tuple staticInput = this.makeInput(Tuple.EmptyTuple);
+			Table inputs = new Table(this.relation.getInputAttributes(this.accessMethod));
+			inputs.appendRow(staticInput);
+			this.iterator = this.relation.iterator(
+					this.relation.getInputAttributes(this.accessMethod), 
+					inputs.iterator());
+			this.iterator.open();
+			this.outputs.put(staticInput, this.iterator);
+		}
+		if (this.iterator.hasNext()) {
+			this.nextTuple = this.iterator.next();
+		}
+	}
+
+	/**
+	 * @param input Tuple
+	 */
+	@Override
+	public void bind(Tuple input) {
+		Preconditions.checkState(this.open != null && this.open);
+		Preconditions.checkState(!this.interrupted);
+		Preconditions.checkArgument(input != null);
+		Preconditions.checkArgument(input.getType().equals(this.inputType));
+		Tuple combinedInputs = this.makeInput(input);
+		this.iterator = this.outputs.get(combinedInputs);
+		if (this.iterator == null) {
+			Table inputs = new Table(this.relation.getInputAttributes(this.accessMethod));
+			inputs.appendRow(combinedInputs);
+			this.iterator = this.relation.iterator(
+					this.relation.getInputAttributes(this.accessMethod),
+					inputs.iterator());
+			this.iterator.open();
+			this.outputs.put(combinedInputs, this.iterator);
+		} else {
+			this.iterator.reset();
+		}
+		this.nextTuple();
+		this.lastInput = input;
+	}
+
+	/**
+	 * @param dynamicInput
+
+	 * @return an tuple obtained by mixing input from dynamicInput with inputs
+	 * defined statically for this access.
+	 */
+	private Tuple makeInput(Tuple dynamicInput) {
+		Object[] result = new Object[this.inputBindingType.size()];
+		int j = 0, k = 0;
+		for (int i : this.accessMethod.getZeroBasedInputs()) {
+			TypedConstant<?> staticInput = this.staticInputs.get(i);
+			if (staticInput != null) {
+				result[k++] = staticInput.getValue();
+			} else {
+				result[k++] = dynamicInput.getValue(j++);
+			}
+		}
+		return this.inputBindingType.createTuple(result);
+	}
+
+	/**
+	 * @return the relation being accessed.
+	 */
+	public RelationAccessWrapper getRelation() {
+		return this.relation;
+	}
+
+	/**
+	 * @return the access method in use
+	 */
+	public AccessMethod getAccessMethod() {
+		return this.accessMethod;
+	}
+
+	/**
+	 * @return the static inputs
+	 */
+	public Map<Integer, TypedConstant<?>> getStaticInputs() {
+		return this.staticInputs;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#deepCopy()
+	 */
+	@Override
+	public TopDownAccess deepCopy() {
+		return new TopDownAccess(this.relation, this.accessMethod, this.staticInputs);
+	}
+
+	/**
+	 * @see java.lang.AutoCloseable#close()
+	 */
+	@Override
+	public void close() {
+		super.close();
+		for (ResetableIterator<Tuple> i: this.outputs.values()) {
+			if (i instanceof TupleIterator) {
+				((TupleIterator) i).close();
+			}
+		}
+		this.outputs = null;
+	}
+
+	@Override
+	public void interrupt() {
+		Preconditions.checkState(this.open != null && this.open);
+		Preconditions.checkState(!this.interrupted);
+		this.interrupted = true;
+	}
+}

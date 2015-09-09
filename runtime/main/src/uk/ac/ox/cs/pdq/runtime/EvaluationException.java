@@ -1,0 +1,41 @@
+package uk.ac.ox.cs.pdq.runtime;
+
+/**
+ * Exception that occurred during an evaluation (of plan or query).
+ * 
+ * @author Julien Leblay
+ */
+public class EvaluationException extends Exception {
+
+	/** */
+	private static final long serialVersionUID = -315472460756924167L;
+
+	/**
+	 * Default constructor. No message or root cause.
+	 */
+	public EvaluationException() {
+		super();
+	}
+
+	/**
+	 * @param msg exception message.
+	 */
+	public EvaluationException(String msg) {
+		super(msg);
+	}
+
+	/**
+	 * @param cause Throwable
+	 */
+	public EvaluationException(Throwable cause) {
+		super(cause);
+	}
+
+	/**
+	 * @param msg exception's message
+	 * @param cause root cause of the problem.
+	 */
+	public EvaluationException(String msg, Throwable cause) {
+		super(msg, cause);
+	}
+}
