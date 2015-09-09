@@ -33,7 +33,7 @@ import com.google.common.collect.Sets;
  * @author Efthymia Tsamoura
  *
  */
-public abstract class ReasonerUtility0 {
+public abstract class ReasonerUtilityTest0 {
 
 	protected String driver = null;
 	protected String url = "jdbc:mysql://localhost/";
