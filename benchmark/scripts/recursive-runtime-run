@@ -1,0 +1,9 @@
+#!/usr/bin/bash
+
+hostname=$(hostname)
+datetime=$(date +"%Y%m%d%H%M")
+# Running experiments recursively from an input top directory.
+for dir in `find $1 -type d -links 2`
+do echo "Running benchmark from $1 for ${dir}" 
+   java -Xms4096m -Xmx8192m -jar pdq-benchmark.jar runtime -i ${dir} -c ${dir}/case.properties >> pdq-${hostname}-${datetime}.log
+done

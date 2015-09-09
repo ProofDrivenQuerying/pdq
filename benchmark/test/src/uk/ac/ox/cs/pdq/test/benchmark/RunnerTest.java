@@ -1,0 +1,92 @@
+package uk.ac.ox.cs.pdq.test.benchmark;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+
+import org.junit.Ignore;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
+
+import uk.ac.ox.cs.pdq.benchmark.BenchmarkParameters.QueryTypes;
+import uk.ac.ox.cs.pdq.benchmark.PlannerBenchmark;
+import uk.ac.ox.cs.pdq.benchmark.Runner;
+
+import com.google.common.collect.Sets;
+
+/**
+ * 
+ * @author Julien Leblay
+ */
+@Ignore
+@RunWith(Parameterized.class) 
+public class RunnerTest {
+
+	@Parameters
+	public static Collection<Object[]> getParameters() {
+		List<Set<?>> params = new ArrayList<>();
+		params.add(inputSchemas);
+		params.add(queryTypes);
+		params.add(nbQueryConjuncts);
+		params.add(seeds);
+		List<Object[]> result = new LinkedList<>();
+		for (List<?> param : Sets.cartesianProduct(params)) {
+			result.add(param.toArray());
+		}
+		return result;
+	}
+	
+	private static Set<Integer> seeds = asLinkedSet(1, 2, 3, 4, 5);
+	private static Set<String> inputSchemas = asLinkedSet("test/input/schema-mysql-tpch.xml", "");
+	private static Set<Integer> nbQueryConjuncts = asLinkedSet(1, 2, 3, 4, 5);
+	private static Set<QueryTypes> queryTypes = asSet(QueryTypes.class);
+	
+	private int seed;
+	
+	private int nbQueryConjunct;
+	
+	private String inputSchema;
+	
+	private QueryTypes queryType;
+	
+	public RunnerTest(String schema, QueryTypes qt, int q, int s) {
+		this.seed = s;
+		this.nbQueryConjunct = q;
+		this.inputSchema = schema;
+		this.queryType = qt;
+	}
+	
+	@Test
+	public void testMinimalRun() throws Exception {
+		List<String> params = new LinkedList<>();
+		params.add("planner");
+		params.add("-Ddatabase_name=pdq_chase_junit");
+		params.add("-Dtimeout=90000"); // Stop search after 15 minutes
+		params.add("-Dseed=" + this.seed);
+		params.add("-Dinput_schema=" + this.inputSchema);
+		params.add("-Dquery_type=" + this.queryType);
+		params.add("-Dquery_conjuncts=" + this.nbQueryConjunct);
+		Runner r = new PlannerBenchmark(params.toArray(new String[params.size()]));
+	}
+
+	private static <T> Set<T> asLinkedSet(T... array) {
+		Set<T> result = new LinkedHashSet<>();
+		for (T i: array) {
+			result.add(i);
+		}
+		return result;
+	}
+
+	private static <T extends Enum<?>> Set<T> asSet(Class<T> e) {
+		Set<T> result = new LinkedHashSet<>();
+		for (T i: e.getEnumConstants()) {
+			result.add(i);
+		}
+		return result;
+	}
+}

@@ -1,0 +1,19 @@
+#!/bin/bash
+
+#
+# ARG1: location where to store retrieved results.
+#
+
+source cluster-settings
+
+rcp="scp -C"
+
+typeset -i i=0
+
+# Retrieve experiments results
+for instance in ${instances[@]}
+do hostname="${prefix}${instances[${i}]}${suffix}" 
+   echo "Retrieving experiment results on ${hostname}..." 
+   ${rcp} ${keypair} ${hostname}:~/pdq-*.log $1
+   i+=1
+done

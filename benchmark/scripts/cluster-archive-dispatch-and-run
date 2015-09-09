@@ -1,0 +1,48 @@
+#!/bin/bash
+
+#
+# ARG1: location of the test case to run
+#
+
+source cluster-settings
+
+rcp="scp -C"
+
+typeset -i i=0
+
+# Delete existing archives
+for instance in ${instances[@]}
+do hostname="${prefix}${instances[${i}]}${suffix}" 
+   echo "Deleting archive-${hostname}.tar.gz..." 
+   rm -f archive-${hostname}.tar.gz
+   i+=1
+done
+
+i=0
+# Dispatching case directories files to all instances
+for j in ${@}
+do echo "Case $j"
+   for dir in `find $j -type d -links 2`
+   do hostname="${prefix}${instances[${i}]}${suffix}" 
+   echo "Deploying case ${dir} on ${hostname}..." 
+   #${rcp} ${keypair} -r ${dir}/* ${hostname}:${testdir}/${dir}
+   tar -f  archive-${hostname}.tar -r ${dir}/*
+   i=(i+1)%${#instances[@]}
+done
+done
+
+i=0
+# Launching experiments
+for instance in ${instances[@]}
+do hostname="${prefix}${instances[${i}]}${suffix}" 
+   echo "Launching experiments on ${hostname}..." 
+   ssh ${keypair} ${hostname} rm -Rf ${testdir}
+   ssh ${keypair} ${hostname} mkdir -p ${testdir} 
+   # send the archives
+   gzip archive-${hostname}.tar
+   ${rcp} ${keypair} archive-${hostname}.tar.gz ${hostname}:${testdir}/
+   # uncompress
+   ssh ${keypair} ${hostname} tar zxvf ${testdir}/archive-${hostname}.tar.gz -C ${testdir}
+   nohup ssh ${keypair} ${hostname} "nohup ${deploydir}/recursive-run planner ${deploydir} ${testdir} &" &
+   i+=1
+done
