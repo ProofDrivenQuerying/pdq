@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema>
+	<sources>
+		<source name="chebi" file="services/chebi-services.xml"
+			discoverer="uk.ac.ox.cs.pdq.services.ServiceReader" />
+	</sources>
+	<relations>
+		<!-- Yahoo Relations -->
+		<relation name="CompleteEntity" source="chebi" size="10000000">
+			<access-method name="chebi-chebiId" />
+		</relation>
+	</relations>
+</schema>

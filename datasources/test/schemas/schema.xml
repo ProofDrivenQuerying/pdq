@@ -1,0 +1,503 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema name="Geonames API" description="">
+	<sources>
+		<source name="geonames" file="services/geonames-services.xml"
+			discoverer="uk.ac.ox.cs.pdq.services.ServiceReader" />
+	</sources>
+	<relations>
+		<relation name="GNChildren" source="geonames" size="10000000">
+			<access-method name="gn_children_id" type="LIMITED"
+				inputs="1" cost="1.0" />
+		</relation>
+		<relation name="GNSiblings" source="geonames" size="10000000">
+			<access-method name="gn_siblings_id" type="LIMITED"
+				inputs="1" cost="1.0" />
+		</relation>
+		<relation name="GNContains" source="geonames" size="10000000">
+			<access-method name="gn_contains_id" type="LIMITED"
+				inputs="1" cost="1.0" />
+		</relation>
+		<relation name="GNNeighbours" source="geonames" size="10000000">
+			<access-method name="gn_neighbours_id" type="LIMITED"
+				inputs="1" cost="1.0" />
+			<access-method name="gn_neighbours_cc" type="LIMITED"
+				inputs="7" cost="1.0" />
+		</relation>
+		<relation name="GNHierarchy" source="geonames" size="10000000">
+			<access-method name="gn_hierarchy_id" type="LIMITED"
+				inputs="1" cost="1.0" />
+		</relation>
+		<relation name="GNCountrySubDivision" source="geonames" size="25000">
+			<access-method name="gn_csubdiv_coord" type="LIMITED"
+				inputs="7,8" cost="1.0" />
+		</relation>
+		<relation name="GNOcean" source="geonames" size="5">
+			<access-method name="gn_ocean_coord" type="LIMITED"
+				inputs="2,3" cost="1.0" />
+		</relation>
+		<relation name="GNTimezone" source="geonames" size="24">
+			<access-method name="gn_tz_coord" type="LIMITED"
+				inputs="10,11" cost="1.0" />
+		</relation>
+		<relation name="GNEarthquakes" source="geonames" size="100000000">
+			<access-method name="gn_quakes_coord" type="LIMITED"
+				inputs="1,2,3,4" cost="1.0" />
+		</relation>
+		<relation name="GNPlaces" source="geonames" size="10000000">
+			<access-method name="gn_get_id" type="LIMITED" inputs="1"
+				cost="1.0" />
+			<access-method name="gn_get_name" type="LIMITED"
+				inputs="2" cost="1.0" />
+			<access-method name="gn_get_nametype" type="LIMITED"
+				inputs="2,6" cost="1.0" />
+		</relation>
+		<relation name="GNCountryInfo" source="geonames" size="250">
+			<access-method name="gn_cinfo" type="FREE" cost="1.0" />
+			<access-method name="gn_cinfo_cc" type="LIMITED"
+				inputs="2" cost="1.0" />
+		</relation>
+		<relation name="GNCountryCode" source="geonames" size="250">
+			<access-method name="gn_ccode_coord" type="LIMITED"
+				inputs="5,6" cost="1.0" />
+		</relation>
+		<relation name="GNCities" source="geonames" size="2500000">
+			<access-method name="gn_cities_coord" type="LIMITED"
+				inputs="1,2,3,4" cost="1.0" />
+		</relation>
+		<relation name="GNWeather" source="geonames" size="100000000">
+			<access-method name="gn_weather_bbox" type="LIMITED"
+				inputs="1,2,3,4" cost="1.0" />
+			<access-method name="gn_weather_coord" type="LIMITED"
+				inputs="6,7" cost="1.0" />
+			<access-method name="gn_weather_icao" type="LIMITED"
+				inputs="8" cost="1.0" />
+		</relation>
+	</relations>
+	<dependencies>
+		<dependency>
+			<body>
+				<atom name="GNCountryInfo">
+					<variable name="id" />
+					<variable name="countryName" />
+					<variable name="countryCode" />
+					<variable name="continentCode" />
+					<variable name="continentName" />
+					<variable name="iso3Alpha" />
+					<variable name="isoNumeric" />
+					<variable name="fipsCode" />
+					<variable name="capital" />
+					<variable name="population" />
+					<variable name="bbNorth" />
+					<variable name="bbSouth" />
+					<variable name="bbEast" />
+					<variable name="bbWest" />
+					<variable name="languages" />
+					<variable name="currencyCode" />
+					<variable name="areaInSqKm" />
+				</atom>
+			</body>
+			<head>
+				<atom name="GNCities">
+					<variable name="bbNorth" />
+					<variable name="bbSouth" />
+					<variable name="bbEast" />
+					<variable name="bbWest" />
+					<variable name="id" />
+					<variable name="name" />
+					<variable name="topoName" />
+					<variable name="countryCode" />
+					<variable name="fcl" />
+					<variable name="fclName" />
+					<variable name="fcode" />
+					<variable name="fcodeName" />
+					<variable name="population" />
+					<variable name="wikipedia" />
+					<variable name="latitude" />
+					<variable name="longitude" />
+				</atom>
+			</head>
+		</dependency>
+		<dependency>
+			<body>
+				<atom name="GNCities">
+					<variable name="bbNorth" />
+					<variable name="bbSouth" />
+					<variable name="bbEast" />
+					<variable name="bbWest" />
+					<variable name="id" />
+					<variable name="name" />
+					<variable name="topoName" />
+					<variable name="countryCode" />
+					<variable name="fcl" />
+					<variable name="fclName" />
+					<variable name="fcode" />
+					<variable name="fcodeName" />
+					<variable name="population" />
+					<variable name="wikipedia" />
+					<variable name="latitude" />
+					<variable name="longitude" />
+				</atom>
+			</body>
+			<head>
+				<atom name="GNCountryInfo">
+					<variable name="id" />
+					<variable name="countryName" />
+					<variable name="countryCode" />
+					<variable name="continentCode" />
+					<variable name="continentName" />
+					<variable name="iso3Alpha" />
+					<variable name="isoNumeric" />
+					<variable name="fipsCode" />
+					<variable name="capital" />
+					<variable name="population" />
+					<variable name="bbNorth" />
+					<variable name="bbSouth" />
+					<variable name="bbEast" />
+					<variable name="bbWest" />
+					<variable name="languages" />
+					<variable name="currencyCode" />
+					<variable name="areaInSqKm" />
+				</atom>
+			</head>
+		</dependency>
+		<dependency>
+			<body>
+				<atom name="GNChildren">
+					<variable name="source" />
+					<variable name="x0" />
+					<variable name="x1" />
+					<variable name="x2" />
+					<variable name="x3" />
+					<variable name="x4" />
+					<variable name="x5" />
+					<variable name="x6" />
+					<variable name="x7" />
+					<variable name="x8" />
+				</atom>
+			</body>
+			<head>
+				<atom name="GNPlaces">
+					<variable name="source" />
+					<variable name="name" />
+					<variable name="topoName" />
+					<variable name="class" />
+					<variable name="className" />
+					<variable name="code" />
+					<variable name="codeName" />
+					<variable name="country" />
+					<variable name="countryId" />
+					<variable name="countryCode" />
+					<variable name="continentCode" />
+					<variable name="admin1" />
+					<variable name="admin2" />
+					<variable name="admin3" />
+					<variable name="admin4" />
+					<variable name="admin5" />
+					<variable name="adminId1" />
+					<variable name="adminId2" />
+					<variable name="adminId3" />
+					<variable name="adminId4" />
+					<variable name="adminId5" />
+					<variable name="adminCode1" />
+					<variable name="adminCode2" />
+					<variable name="adminCode3" />
+					<variable name="adminCode4" />
+					<variable name="adminCode5" />
+					<variable name="wikipedia" />
+					<variable name="population" />
+					<variable name="elevation" />
+					<variable name="latitude" />
+					<variable name="longitude" />
+					<variable name="bbNorth" />
+					<variable name="bbSouth" />
+					<variable name="bbEast" />
+					<variable name="bbWest" />
+					<variable name="timezone" />
+				</atom>
+			</head>
+		</dependency>
+		<dependency>
+			<body>
+				<atom name="GNSiblings">
+					<variable name="source" />
+					<variable name="x0" />
+					<variable name="x1" />
+					<variable name="x2" />
+					<variable name="x3" />
+					<variable name="x4" />
+					<variable name="x5" />
+					<variable name="x6" />
+					<variable name="x7" />
+				</atom>
+			</body>
+			<head>
+				<atom name="GNPlaces">
+					<variable name="source" />
+					<variable name="name" />
+					<variable name="topoName" />
+					<variable name="class" />
+					<variable name="className" />
+					<variable name="code" />
+					<variable name="codeName" />
+					<variable name="country" />
+					<variable name="countryId" />
+					<variable name="countryCode" />
+					<variable name="continentCode" />
+					<variable name="admin1" />
+					<variable name="admin2" />
+					<variable name="admin3" />
+					<variable name="admin4" />
+					<variable name="admin5" />
+					<variable name="adminId1" />
+					<variable name="adminId2" />
+					<variable name="adminId3" />
+					<variable name="adminId4" />
+					<variable name="adminId5" />
+					<variable name="adminCode1" />
+					<variable name="adminCode2" />
+					<variable name="adminCode3" />
+					<variable name="adminCode4" />
+					<variable name="adminCode5" />
+					<variable name="wikipedia" />
+					<variable name="population" />
+					<variable name="elevation" />
+					<variable name="latitude" />
+					<variable name="longitude" />
+					<variable name="bbNorth" />
+					<variable name="bbSouth" />
+					<variable name="bbEast" />
+					<variable name="bbWest" />
+					<variable name="timezone" />
+				</atom>
+			</head>
+		</dependency>
+		<dependency>
+			<body>
+				<atom name="GNNeighbours">
+					<variable name="source" />
+					<variable name="x0" />
+					<variable name="x1" />
+					<variable name="x2" />
+					<variable name="x3" />
+					<variable name="x4" />
+					<variable name="x5" />
+					<variable name="x6" />
+					<variable name="x7" />
+				</atom>
+			</body>
+			<head>
+				<atom name="GNPlaces">
+					<variable name="source" />
+					<variable name="name" />
+					<variable name="topoName" />
+					<variable name="class" />
+					<variable name="className" />
+					<variable name="code" />
+					<variable name="codeName" />
+					<variable name="country" />
+					<variable name="countryId" />
+					<variable name="countryCode" />
+					<variable name="continentCode" />
+					<variable name="admin1" />
+					<variable name="admin2" />
+					<variable name="admin3" />
+					<variable name="admin4" />
+					<variable name="admin5" />
+					<variable name="adminId1" />
+					<variable name="adminId2" />
+					<variable name="adminId3" />
+					<variable name="adminId4" />
+					<variable name="adminId5" />
+					<variable name="adminCode1" />
+					<variable name="adminCode2" />
+					<variable name="adminCode3" />
+					<variable name="adminCode4" />
+					<variable name="adminCode5" />
+					<variable name="wikipedia" />
+					<variable name="population" />
+					<variable name="elevation" />
+					<variable name="latitude" />
+					<variable name="longitude" />
+					<variable name="bbNorth" />
+					<variable name="bbSouth" />
+					<variable name="bbEast" />
+					<variable name="bbWest" />
+					<variable name="timezone" />
+				</atom>
+			</head>
+		</dependency>
+		<dependency>
+			<body>
+				<atom name="GNContains">
+					<variable name="source" />
+					<variable name="x0" />
+					<variable name="x1" />
+					<variable name="x2" />
+					<variable name="x3" />
+					<variable name="x4" />
+					<variable name="x5" />
+					<variable name="x6" />
+					<variable name="x7" />
+				</atom>
+			</body>
+			<head>
+				<atom name="GNPlaces">
+					<variable name="source" />
+					<variable name="name" />
+					<variable name="topoName" />
+					<variable name="class" />
+					<variable name="className" />
+					<variable name="code" />
+					<variable name="codeName" />
+					<variable name="country" />
+					<variable name="countryId" />
+					<variable name="countryCode" />
+					<variable name="continentCode" />
+					<variable name="admin1" />
+					<variable name="admin2" />
+					<variable name="admin3" />
+					<variable name="admin4" />
+					<variable name="admin5" />
+					<variable name="adminId1" />
+					<variable name="adminId2" />
+					<variable name="adminId3" />
+					<variable name="adminId4" />
+					<variable name="adminId5" />
+					<variable name="adminCode1" />
+					<variable name="adminCode2" />
+					<variable name="adminCode3" />
+					<variable name="adminCode4" />
+					<variable name="adminCode5" />
+					<variable name="wikipedia" />
+					<variable name="population" />
+					<variable name="elevation" />
+					<variable name="latitude" />
+					<variable name="longitude" />
+					<variable name="bbNorth" />
+					<variable name="bbSouth" />
+					<variable name="bbEast" />
+					<variable name="bbWest" />
+					<variable name="timezone" />
+				</atom>
+			</head>
+		</dependency>
+		<dependency>
+			<body>
+				<atom name="GNHierarchy">
+					<variable name="source" />
+					<variable name="x0" />
+					<variable name="x1" />
+					<variable name="x2" />
+					<variable name="x3" />
+					<variable name="x4" />
+					<variable name="x5" />
+					<variable name="x6" />
+					<variable name="x7" />
+				</atom>
+			</body>
+			<head>
+				<atom name="GNPlaces">
+					<variable name="source" />
+					<variable name="name" />
+					<variable name="topoName" />
+					<variable name="class" />
+					<variable name="className" />
+					<variable name="code" />
+					<variable name="codeName" />
+					<variable name="country" />
+					<variable name="countryId" />
+					<variable name="countryCode" />
+					<variable name="continentCode" />
+					<variable name="admin1" />
+					<variable name="admin2" />
+					<variable name="admin3" />
+					<variable name="admin4" />
+					<variable name="admin5" />
+					<variable name="adminId1" />
+					<variable name="adminId2" />
+					<variable name="adminId3" />
+					<variable name="adminId4" />
+					<variable name="adminId5" />
+					<variable name="adminCode1" />
+					<variable name="adminCode2" />
+					<variable name="adminCode3" />
+					<variable name="adminCode4" />
+					<variable name="adminCode5" />
+					<variable name="wikipedia" />
+					<variable name="population" />
+					<variable name="elevation" />
+					<variable name="latitude" />
+					<variable name="longitude" />
+					<variable name="bbNorth" />
+					<variable name="bbSouth" />
+					<variable name="bbEast" />
+					<variable name="bbWest" />
+					<variable name="timezone" />
+				</atom>
+			</head>
+		</dependency>
+		<dependency>
+			<body>
+				<atom name="GNCountryInfo">
+					<variable name="id" />
+					<variable name="countryName" />
+					<variable name="countryCode" />
+					<variable name="continentCode" />
+					<variable name="continentName" />
+					<variable name="iso3Alpha" />
+					<variable name="isoNumeric" />
+					<variable name="fipsCode" />
+					<variable name="capital" />
+					<variable name="population" />
+					<variable name="bbNorth" />
+					<variable name="bbSouth" />
+					<variable name="bbEast" />
+					<variable name="bbWest" />
+					<variable name="languages" />
+					<variable name="currencyCode" />
+					<variable name="areaInSqKm" />
+				</atom>
+			</body>
+			<head>
+				<atom name="GNPlaces">
+					<variable name="source" />
+					<variable name="name" />
+					<variable name="topoName" />
+					<constant value="A" />
+					<constant value="country, state, region,..." />
+					<variable name="code" />
+					<variable name="codeName" />
+					<variable name="country" />
+					<variable name="countryId" />
+					<variable name="countryCode" />
+					<variable name="continentCode" />
+					<variable name="admin1" />
+					<variable name="admin2" />
+					<variable name="admin3" />
+					<variable name="admin4" />
+					<variable name="admin5" />
+					<variable name="adminId1" />
+					<variable name="adminId2" />
+					<variable name="adminId3" />
+					<variable name="adminId4" />
+					<variable name="adminId5" />
+					<variable name="adminCode1" />
+					<variable name="adminCode2" />
+					<variable name="adminCode3" />
+					<variable name="adminCode4" />
+					<variable name="adminCode5" />
+					<variable name="wikipedia" />
+					<variable name="population" />
+					<variable name="elevation" />
+					<variable name="latitude" />
+					<variable name="longitude" />
+					<variable name="bbNorth" />
+					<variable name="bbSouth" />
+					<variable name="bbEast" />
+					<variable name="bbWest" />
+					<variable name="timezone" />
+				</atom>
+			</head>
+		</dependency>
+	</dependencies>
+</schema>

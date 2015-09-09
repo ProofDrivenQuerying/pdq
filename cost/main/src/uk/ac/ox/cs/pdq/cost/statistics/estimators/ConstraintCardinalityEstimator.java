@@ -13,17 +13,12 @@ import uk.ac.ox.cs.pdq.algebra.predicates.ConstantEqualityPredicate;
 import uk.ac.ox.cs.pdq.cost.statistics.Catalog;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Constraint;
-import uk.ac.ox.cs.pdq.db.EGD;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TGD;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
-import uk.ac.ox.cs.pdq.fol.Conjunction;
-import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
-import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Query;
-import uk.ac.ox.cs.pdq.fol.Signature;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.plan.Access;
 import uk.ac.ox.cs.pdq.plan.Command;
@@ -40,9 +35,9 @@ import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseListState;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ListState;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismConstraint;
+import uk.ac.ox.cs.pdq.reasoning.utility.ReasonerUtility;
 import uk.ac.ox.cs.pdq.util.Table;
 import uk.ac.ox.cs.pdq.util.Typed;
-import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.beust.jcommander.internal.Lists;
 import com.beust.jcommander.internal.Maps;
@@ -76,7 +71,6 @@ public class ConstraintCardinalityEstimator {
 		this.detector = detector;
 		this.schema = schema;
 	}
-
 
 	/**
 	 * Entry point for cardinality estimation
@@ -275,15 +269,15 @@ public class ConstraintCardinalityEstimator {
 		}
 		
 		//If there is a key foreign key dependency from right to left
-		if(this.isKey(left, keys, CollectionUtils.union(schema.getDependencies(), forwardTgds)) &&
-				this.existsInclustionDependency(right, left, forwardTgds)
+		if(new ReasonerUtility().isKey(left, keys, CollectionUtils.union(this.schema.getDependencies(), forwardTgds), this.egdChaser, this.detector) &&
+				new ReasonerUtility().existsInclustionDependency(right, left, forwardTgds, this.restrictedChaser, this.detector)
 				) {
 			return this.cardinality(right, plan, catalog);
 		}
 		
 		//If there is a key foreign key dependency from left to right
-		if(this.isKey(right, keys, CollectionUtils.union(schema.getDependencies(), forwardTgds)) &&
-				this.existsInclustionDependency(left, right, forwardTgds)
+		if(new ReasonerUtility().isKey(right, keys, CollectionUtils.union(this.schema.getDependencies(), forwardTgds), this.egdChaser, this.detector) &&
+				new ReasonerUtility().existsInclustionDependency(left, right, forwardTgds, this.restrictedChaser, this.detector)
 				) {
 			return this.cardinality(left, plan, catalog);
 		}
@@ -411,49 +405,5 @@ public class ConstraintCardinalityEstimator {
 		//and estimate its selectivity using the database catalog
 		return catalog.getSelectivity(pair.getLeft(), pair.getRight(), constant);
 	}
-
-	/**
-	 * 
-	 * @param left
-	 * @param right
-	 * @return
-	 * 		returns true if there is an inclusion dependency from left to right on the common variables 
-	 */
-	public boolean existsInclustionDependency(Table left, Table right, Collection<? extends Constraint> constraints) {
-		Query<?> lquery = new CommandToTGDTranslator().toQuery(left);
-		
-		//Find the variables shared among the tables
-		//These should be preserved when checking for entailment 
-		List<Attribute> _toShare = Lists.newArrayList();
-		_toShare.addAll((Collection<? extends Attribute>) CollectionUtils.intersection(left.getHeader(),right.getHeader()));
-		Query<?> rquery = new CommandToTGDTranslator().toQuery(right, _toShare);
-		Map<Variable, Constant> _toPreserve = Utility.retain(lquery.getFree2Canonical(), Utility.typedToVariable(_toShare));
-	
-		//Creates a chase state that consists of the canonical database of the input query.
-		ListState state = new DatabaseListState(lquery, (DBHomomorphismManager) this.detector);
-		return this.restrictedChaser.entails(state, _toPreserve, rquery, constraints);
-	}
-
-	/**
-	 * 
-	 * @param table
-	 * @param candidateKeys
-	 * @return
-	 * 		true if the input set of attributes is a key of the input table
-	 */
-	public boolean isKey(Table table, List<Attribute> candidateKeys, Collection<? extends Constraint> constraints) {
-		//Create the set of EGDs that correspond to the given table and keys
-		EGD egd = EGD.getEGDs(new Signature(table.getName(),table.getHeader().size()), (List<Attribute>) table.getHeader(), candidateKeys);
-		
-		Query<?> lquery = new ConjunctiveQuery(new Predicate(new Signature("Q", egd.getFree().size()), egd.getFree()), egd.getLeft());
-		
-		Query<?> rquery = new ConjunctiveQuery(new Predicate(new Signature("Q", egd.getRight().getTerms().size()), egd.getRight().getTerms()), 
-				Conjunction.of(egd.getRight().getPredicates()));
-		
-		//Creates a chase state that consists of the canonical database of the input query.
-		ListState state = new DatabaseListState(lquery, (DBHomomorphismManager) this.detector);
-		return this.egdChaser.entails(state, lquery.getFree2Canonical(), rquery, constraints);
-	}
-
 
 }

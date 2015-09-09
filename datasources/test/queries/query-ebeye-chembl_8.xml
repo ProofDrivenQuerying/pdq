@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<query name="Example 1" description="" type="conjunctive">
+	<body>
+
+
+		<atom name="EBEYEDocument">
+			<variable name="document_chembl_id"/>
+			<constant value="6887196" />
+			<variable name="title"/>
+		</atom>
+
+
+	</body>
+	<head name="Q">
+
+			<variable name="document_chembl_id" />
+			<variable name="title"/>
+	</head>
+
+</query>

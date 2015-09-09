@@ -1,7 +1,6 @@
-package uk.ac.ox.cs.pdq.test.cost.estimators;
+package uk.ac.ox.cs.pdq.test.reasoning.utility;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -17,10 +16,17 @@ import uk.ac.ox.cs.pdq.plan.Join;
 import uk.ac.ox.cs.pdq.plan.NormalisedPlan;
 import uk.ac.ox.cs.pdq.plan.Project;
 import uk.ac.ox.cs.pdq.plan.Select;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager;
+import uk.ac.ox.cs.pdq.reasoning.utility.ReasonerUtility;
 
 import com.google.common.collect.Lists;
 
-public class TotalAccessCostEstimatorTest3 extends TotalAccessCostEstimatorTest0{
+/**
+ * 
+ * @author Efthymia Tsamoura
+ *
+ */
+public class ReasonerUtility4  extends ReasonerUtility0{
 
 	Command access0; 
 	Command access2; 
@@ -41,11 +47,10 @@ public class TotalAccessCostEstimatorTest3 extends TotalAccessCostEstimatorTest0
 	Command projection2;
 	Command projection3;
 
-	//Creates the this.plan for the configuration of case_018a
-	//MERGE(JCOMPOSE(APPLYRULE(TargetFree(){TargetFree(c2272,c2300,c2301,c2289,c2302,c2303,c2304,c2305)}),
-	//APPLYRULE(AssayLimited(4){AssayLimited(c2269,c2270,c2271,c2272,c2273,c2274,c2275,c2276,Liver,c2277,c2278,
-	//c2279,c2280,c2281,c2282,c2283,c2284,c2285,c2286,c2287,c2288,c2289)})),
-	//APPLYRULE(DocumentFree(){DocumentFree(c2290,c2291,c2284,c2292,c2293,c2294,c2295,c2296,c2297,c2298,c2299,2007)}))
+	//Creates the optimal plan for case_018a	
+	//RE:DocumentFree BI:chembl_document_free
+	//RE:AssayLimited BI:chembl_assay_limited_2
+	//RE:TargetLimited BI:chembl_target_limited
 	@Before
 	protected void loadPlan() {
 		//Define all schema and chase constants
@@ -91,63 +96,70 @@ public class TotalAccessCostEstimatorTest3 extends TotalAccessCostEstimatorTest0
 		Term volume = new Variable("volume");
 		Term year = new Variable("year");
 
-		this.access0 = new Access(schema.getRelation("TargetFree"), schema.getRelation("TargetFree").getAccessMethod("chembl_target_free"), 
-				Lists.newArrayList(organism,pref_name,species_group_flag,target_chembl_id,target_component_accession,target_component_id,target_component_type,target_type), null, null);
-		Attribute attr = (Attribute) access0.getOutput().getHeader().get(0);
-		this.projection0 = new Project(Lists.newArrayList(attr), access0.getOutput());
+		this.access0 = new Access(this.schema.getRelation("DocumentFree"), this.schema.getRelation("DocumentFree").getAccessMethod("chembl_document_free"), 
+				Lists.newArrayList(authors, doc_type, document_chembl_id, doi, first_page, issue, journal, last_page,
+						pubmed_id, title, volume, year), null, null);
+		ConstantEqualityPredicate p00 = new ConstantEqualityPredicate(11, new TypedConstant<String>("2007"));
+		this.selection0 = new Select(new ConjunctivePredicate(Lists.newArrayList(p00)), access0.getOutput());
+		Attribute attr = (Attribute) this.access0.getOutput().getHeader().get(2);
+		this.projection0 = new Project(Lists.newArrayList(attr), this.selection0.getOutput());
 
-		this.access1 = new Access(schema.getRelation("AssayLimited"), schema.getRelation("AssayLimited").getAccessMethod("chembl_assay_limited_1"), 
+		this.access1 = new Access(schema.getRelation("AssayLimited"), schema.getRelation("AssayLimited").getAccessMethod("chembl_assay_limited_2"), 
 				Lists.newArrayList(assay_category, assay_cell_type, assay_chembl_id, organism, assay_strain, assay_subcellular_fraction, 
 						assay_tax_id, assay_test_type, assay_tissue, assay_type, assay_type_description, bao_format,
 						cell_chembl_id, confidence_description, confidence_score, description, document_chembl_id,
 						relationship_description, relationship_type, src_assay_id, src_id, target_chembl_id), projection0.getOutput(), null);
 		ConstantEqualityPredicate p10 = new ConstantEqualityPredicate(8, new TypedConstant<String>("Liver"));
 		this.selection1 = new Select(new ConjunctivePredicate(Lists.newArrayList(p10)), access1.getOutput());
-		this.join1 = new Join(selection1.getOutput(), access0.getOutput());
+		this.join1 = new Join(this.selection1.getOutput(), this.selection0.getOutput());
+		Attribute attr1 = (Attribute) this.join1.getOutput().getHeader().get(21);
+		this.projection1 = new Project(Lists.newArrayList(attr1), this.join1.getOutput());
 
-		this.access2 = new Access(schema.getRelation("DocumentFree"), schema.getRelation("DocumentFree").getAccessMethod("chembl_document_free"), 
-				Lists.newArrayList(authors, doc_type, document_chembl_id, doi, first_page, issue, journal, last_page,
-						pubmed_id, title, volume, year), null, null);
-		ConstantEqualityPredicate p20 = new ConstantEqualityPredicate(11, new TypedConstant<String>("2007"));
-		this.selection2 = new Select(new ConjunctivePredicate(Lists.newArrayList(p20)), access1.getOutput());
-		this.join2 = new Join(selection2.getOutput(), join1.getOutput());
+		this.access2 = new Access(this.schema.getRelation("TargetLimited"), this.schema.getRelation("TargetLimited").getAccessMethod("chembl_target_limited"), 
+				Lists.newArrayList(organism,pref_name,species_group_flag,target_chembl_id,target_component_accession,target_component_id,
+						target_component_type,target_type), projection1.getOutput(), null);
+		this.join2 = new Join(this.access2.getOutput(), this.join1.getOutput());
 
-		this.plan = new NormalisedPlan(Lists.newArrayList(this.access0, this.projection0, this.access1, this.selection1, this.join1, this.access2,
-				this.selection2, this.join2));
+
+		this.plan = new NormalisedPlan(Lists.newArrayList(this.access0, this.selection0, this.projection0, this.access1, this.selection1, 
+				this.join1, this.projection1, 
+				this.access2, this.join2));
 	}
+
 
 	@Test
 	public void test1() {
-		Attribute k1 = (Attribute) access0.getOutput().getHeader().get(3);
-		boolean r3 = this.estimator.isKey(this.selection1.getOutput(), Lists.newArrayList(k1), CollectionUtils.union(this.keyDependencies, this.constraints));
-		boolean r4 = this.estimator.isKey(this.access0.getOutput(), Lists.newArrayList(k1), CollectionUtils.union(this.keyDependencies, this.constraints));
+		Attribute k1 = (Attribute) selection0.getOutput().getHeader().get(2);
+		boolean r3 = new ReasonerUtility().isKey(this.selection1.getOutput(), Lists.newArrayList(k1), CollectionUtils.union(this.keyDependencies, this.constraints), this.egdChaser, (DBHomomorphismManager) this.detector);
+		boolean r4 = new ReasonerUtility().isKey(this.selection0.getOutput(), Lists.newArrayList(k1), CollectionUtils.union(this.keyDependencies, this.constraints), this.egdChaser, (DBHomomorphismManager) this.detector);
 	}
 
 	@Test
 	public void test2() {
-		boolean r1 = this.estimator.existsInclustionDependency(this.selection1.getOutput(), this.access0.getOutput(), this.constraints);
+		Attribute k2 = (Attribute) access2.getOutput().getHeader().get(3);
+		boolean r7 = new ReasonerUtility().isKey(this.access2.getOutput(), Lists.newArrayList(k2), CollectionUtils.union(this.keyDependencies, this.constraints), this.egdChaser, (DBHomomorphismManager) this.detector);
+		boolean r8 = new ReasonerUtility().isKey(this.join1.getOutput(), Lists.newArrayList(k2), CollectionUtils.union(this.keyDependencies, this.constraints), this.egdChaser, (DBHomomorphismManager) this.detector);
 	}
 
 	@Test
 	public void test3() {
-		boolean r2 = this.estimator.existsInclustionDependency(this.access0.getOutput(), this.selection1.getOutput(), this.constraints);
+		boolean r1 = new ReasonerUtility().existsInclustionDependency(this.selection1.getOutput(), this.selection0.getOutput(), this.constraints, this.restrictedChaser, (DBHomomorphismManager) this.detector);
 	}
 
 	@Test
 	public void test4() {
-		Pair<Integer, Boolean> estim1 = this.estimator.constraintDriven(this.projection0.getOutput(), this.plan, this.catalog);
+		boolean r2 = new ReasonerUtility().existsInclustionDependency(this.selection0.getOutput(), this.selection1.getOutput(), this.constraints, this.restrictedChaser, (DBHomomorphismManager) this.detector);
 	}
 
 	@Test
 	public void test5() {
-		Integer estim3 = this.estimator.commandDriven(this.projection0.getOutput(), this.plan, this.catalog);
+		boolean r5 = new ReasonerUtility().existsInclustionDependency(this.access2.getOutput(), this.join1.getOutput(), this.constraints, this.restrictedChaser, (DBHomomorphismManager) this.detector);
 	}
 
 
 	@Test
 	public void test6() {
-		Integer estim5 = this.estimator.simple(this.projection0.getOutput(),this.plan, this.catalog);
+		boolean r6 = new ReasonerUtility().existsInclustionDependency(this.join1.getOutput(), this.access2.getOutput(), this.constraints, this.restrictedChaser, (DBHomomorphismManager) this.detector);
 	}
-
 
 }

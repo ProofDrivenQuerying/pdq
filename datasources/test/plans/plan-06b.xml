@@ -1,0 +1,1097 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plan cost="-5.2035566203758797E18">
+	<command type="access" relation="WBTopics" access-method="t_free">
+		<relation name="T">
+			<attribute name="c9" type="java.lang.Integer" />
+			<attribute name="k31" type="java.lang.String" />
+			<attribute name="k32" type="java.lang.String" />
+		</relation>
+		<input source="id" target="c9" />
+		<input source="name" target="k31" />
+		<input source="sourceNote" target="k32" />
+	</command>
+	<command type="rename">
+		<relation name="T">
+			<attribute name="c9" type="java.lang.Integer" />
+			<attribute name="k31" type="java.lang.String" />
+			<attribute name="k32" type="java.lang.String" />
+		</relation>
+		<attribute name="c9" />
+		<attribute name="k31" />
+		<attribute name="k32" />
+	</command>
+	<command type="assign">
+		<relation name="T">
+			<attribute name="c9" type="java.lang.Integer" />
+			<attribute name="k31" type="java.lang.String" />
+			<attribute name="k32" type="java.lang.String" />
+		</relation>
+		<relation name="target">
+			<attribute name="c9" type="java.lang.Integer" />
+			<attribute name="k31" type="java.lang.String" />
+			<attribute name="k32" type="java.lang.String" />
+		</relation>
+	</command>
+	<command type="rename">
+		<relation name="T">
+			<attribute name="k27" type="java.lang.Integer" />
+			<attribute name="k33" type="java.lang.String" />
+			<attribute name="k34" type="java.lang.String" />
+		</relation>
+		<attribute name="k27" />
+		<attribute name="k33" />
+		<attribute name="k34" />
+	</command>
+	<command type="join">
+		<relation name="T">
+			<attribute name="c9" type="java.lang.Integer" />
+			<attribute name="k31" type="java.lang.String" />
+			<attribute name="k32" type="java.lang.String" />
+			<attribute name="k27" type="java.lang.Integer" />
+			<attribute name="k33" type="java.lang.String" />
+			<attribute name="k34" type="java.lang.String" />
+		</relation>
+		<relation name="left">
+			<attribute name="c9" type="java.lang.Integer" />
+			<attribute name="k31" type="java.lang.String" />
+			<attribute name="k32" type="java.lang.String" />
+		</relation>
+		<relation name="right">
+			<attribute name="k27" type="java.lang.Integer" />
+			<attribute name="k33" type="java.lang.String" />
+			<attribute name="k34" type="java.lang.String" />
+		</relation>
+	</command>
+	<command type="access" relation="WBCountries" access-method="c_free">
+		<relation name="T">
+			<attribute name="c12" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="c13" type="java.lang.String" />
+			<attribute name="c14" type="java.lang.String" />
+			<attribute name="c15" type="java.lang.String" />
+			<attribute name="c16" type="java.lang.String" />
+			<attribute name="c1" type="java.lang.Double" />
+			<attribute name="c2" type="java.lang.Double" />
+		</relation>
+		<input source="id" target="c12" />
+		<input source="iso2" target="c5" />
+		<input source="name" target="c13" />
+		<input source="incomeLevel" target="c14" />
+		<input source="lendingType" target="c15" />
+		<input source="capitalCity" target="c16" />
+		<input source="latitude" target="c1" />
+		<input source="longitude" target="c2" />
+	</command>
+	<command type="rename">
+		<relation name="T">
+			<attribute name="c12" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="c13" type="java.lang.String" />
+			<attribute name="c14" type="java.lang.String" />
+			<attribute name="c15" type="java.lang.String" />
+			<attribute name="c16" type="java.lang.String" />
+			<attribute name="c1" type="java.lang.Double" />
+			<attribute name="c2" type="java.lang.Double" />
+		</relation>
+		<attribute name="c12" />
+		<attribute name="c5" />
+		<attribute name="c13" />
+		<attribute name="c14" />
+		<attribute name="c15" />
+		<attribute name="c16" />
+		<attribute name="c1" />
+		<attribute name="c2" />
+	</command>
+	<command type="join">
+		<relation name="T">
+			<attribute name="c9" type="java.lang.Integer" />
+			<attribute name="k31" type="java.lang.String" />
+			<attribute name="k32" type="java.lang.String" />
+			<attribute name="k27" type="java.lang.Integer" />
+			<attribute name="k33" type="java.lang.String" />
+			<attribute name="k34" type="java.lang.String" />
+			<attribute name="c12" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="c13" type="java.lang.String" />
+			<attribute name="c14" type="java.lang.String" />
+			<attribute name="c15" type="java.lang.String" />
+			<attribute name="c16" type="java.lang.String" />
+			<attribute name="c1" type="java.lang.Double" />
+			<attribute name="c2" type="java.lang.Double" />
+		</relation>
+		<relation name="left">
+			<attribute name="c9" type="java.lang.Integer" />
+			<attribute name="k31" type="java.lang.String" />
+			<attribute name="k32" type="java.lang.String" />
+			<attribute name="k27" type="java.lang.Integer" />
+			<attribute name="k33" type="java.lang.String" />
+			<attribute name="k34" type="java.lang.String" />
+		</relation>
+		<relation name="right">
+			<attribute name="c12" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="c13" type="java.lang.String" />
+			<attribute name="c14" type="java.lang.String" />
+			<attribute name="c15" type="java.lang.String" />
+			<attribute name="c16" type="java.lang.String" />
+			<attribute name="c1" type="java.lang.Double" />
+			<attribute name="c2" type="java.lang.Double" />
+		</relation>
+	</command>
+	<command type="rename">
+		<relation name="T">
+			<attribute name="k19" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="c7" type="java.lang.String" />
+			<attribute name="k20" type="java.lang.String" />
+			<attribute name="k21" type="java.lang.String" />
+			<attribute name="k22" type="java.lang.String" />
+			<attribute name="k23" type="java.lang.Double" />
+			<attribute name="k24" type="java.lang.Double" />
+		</relation>
+		<attribute name="k19" />
+		<attribute name="c5" />
+		<attribute name="c7" />
+		<attribute name="k20" />
+		<attribute name="k21" />
+		<attribute name="k22" />
+		<attribute name="k23" />
+		<attribute name="k24" />
+	</command>
+	<command type="join">
+		<relation name="T">
+			<attribute name="c9" type="java.lang.Integer" />
+			<attribute name="k31" type="java.lang.String" />
+			<attribute name="k32" type="java.lang.String" />
+			<attribute name="k27" type="java.lang.Integer" />
+			<attribute name="k33" type="java.lang.String" />
+			<attribute name="k34" type="java.lang.String" />
+			<attribute name="c12" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="c13" type="java.lang.String" />
+			<attribute name="c14" type="java.lang.String" />
+			<attribute name="c15" type="java.lang.String" />
+			<attribute name="c16" type="java.lang.String" />
+			<attribute name="c1" type="java.lang.Double" />
+			<attribute name="c2" type="java.lang.Double" />
+			<attribute name="k19" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="c7" type="java.lang.String" />
+			<attribute name="k20" type="java.lang.String" />
+			<attribute name="k21" type="java.lang.String" />
+			<attribute name="k22" type="java.lang.String" />
+			<attribute name="k23" type="java.lang.Double" />
+			<attribute name="k24" type="java.lang.Double" />
+		</relation>
+		<relation name="left">
+			<attribute name="c9" type="java.lang.Integer" />
+			<attribute name="k31" type="java.lang.String" />
+			<attribute name="k32" type="java.lang.String" />
+			<attribute name="k27" type="java.lang.Integer" />
+			<attribute name="k33" type="java.lang.String" />
+			<attribute name="k34" type="java.lang.String" />
+			<attribute name="c12" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="c13" type="java.lang.String" />
+			<attribute name="c14" type="java.lang.String" />
+			<attribute name="c15" type="java.lang.String" />
+			<attribute name="c16" type="java.lang.String" />
+			<attribute name="c1" type="java.lang.Double" />
+			<attribute name="c2" type="java.lang.Double" />
+		</relation>
+		<relation name="right">
+			<attribute name="k19" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="c7" type="java.lang.String" />
+			<attribute name="k20" type="java.lang.String" />
+			<attribute name="k21" type="java.lang.String" />
+			<attribute name="k22" type="java.lang.String" />
+			<attribute name="k23" type="java.lang.Double" />
+			<attribute name="k24" type="java.lang.Double" />
+		</relation>
+		<predicate type="equality" left="7" right="15" />
+	</command>
+	<command type="access" relation="FreeBaseCountries"
+		access-method="fb_country_free">
+		<relation name="T">
+			<attribute name="k17" type="java.lang.String" />
+			<attribute name="c13" type="java.lang.String" />
+			<attribute name="k18" type="java.lang.String" />
+			<attribute name="c16" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+		</relation>
+		<input source="id" target="k17" />
+		<input source="name" target="c13" />
+		<input source="notable" target="k18" />
+		<input source="capitalCity" target="c16" />
+		<input source="isoCode" target="c5" />
+	</command>
+	<command type="rename">
+		<relation name="T">
+			<attribute name="k17" type="java.lang.String" />
+			<attribute name="c13" type="java.lang.String" />
+			<attribute name="k18" type="java.lang.String" />
+			<attribute name="c16" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+		</relation>
+		<attribute name="k17" />
+		<attribute name="c13" />
+		<attribute name="k18" />
+		<attribute name="c16" />
+		<attribute name="c5" />
+	</command>
+	<command type="join">
+		<relation name="T">
+			<attribute name="c9" type="java.lang.Integer" />
+			<attribute name="k31" type="java.lang.String" />
+			<attribute name="k32" type="java.lang.String" />
+			<attribute name="k27" type="java.lang.Integer" />
+			<attribute name="k33" type="java.lang.String" />
+			<attribute name="k34" type="java.lang.String" />
+			<attribute name="c12" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="c13" type="java.lang.String" />
+			<attribute name="c14" type="java.lang.String" />
+			<attribute name="c15" type="java.lang.String" />
+			<attribute name="c16" type="java.lang.String" />
+			<attribute name="c1" type="java.lang.Double" />
+			<attribute name="c2" type="java.lang.Double" />
+			<attribute name="k19" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="c7" type="java.lang.String" />
+			<attribute name="k20" type="java.lang.String" />
+			<attribute name="k21" type="java.lang.String" />
+			<attribute name="k22" type="java.lang.String" />
+			<attribute name="k23" type="java.lang.Double" />
+			<attribute name="k24" type="java.lang.Double" />
+			<attribute name="k17" type="java.lang.String" />
+			<attribute name="c13" type="java.lang.String" />
+			<attribute name="k18" type="java.lang.String" />
+			<attribute name="c16" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+		</relation>
+		<relation name="left">
+			<attribute name="c9" type="java.lang.Integer" />
+			<attribute name="k31" type="java.lang.String" />
+			<attribute name="k32" type="java.lang.String" />
+			<attribute name="k27" type="java.lang.Integer" />
+			<attribute name="k33" type="java.lang.String" />
+			<attribute name="k34" type="java.lang.String" />
+			<attribute name="c12" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="c13" type="java.lang.String" />
+			<attribute name="c14" type="java.lang.String" />
+			<attribute name="c15" type="java.lang.String" />
+			<attribute name="c16" type="java.lang.String" />
+			<attribute name="c1" type="java.lang.Double" />
+			<attribute name="c2" type="java.lang.Double" />
+			<attribute name="k19" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="c7" type="java.lang.String" />
+			<attribute name="k20" type="java.lang.String" />
+			<attribute name="k21" type="java.lang.String" />
+			<attribute name="k22" type="java.lang.String" />
+			<attribute name="k23" type="java.lang.Double" />
+			<attribute name="k24" type="java.lang.Double" />
+		</relation>
+		<relation name="right">
+			<attribute name="k17" type="java.lang.String" />
+			<attribute name="c13" type="java.lang.String" />
+			<attribute name="k18" type="java.lang.String" />
+			<attribute name="c16" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+		</relation>
+		<predicate type="equality" left="7" right="26" />
+		<predicate type="equality" left="8" right="23" />
+		<predicate type="equality" left="11" right="25" />
+		<predicate type="equality" left="15" right="26" />
+	</command>
+	<command type="rename">
+		<relation name="T">
+			<attribute name="k25" type="java.lang.String" />
+			<attribute name="c7" type="java.lang.String" />
+			<attribute name="k26" type="java.lang.String" />
+			<attribute name="k22" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+		</relation>
+		<attribute name="k25" />
+		<attribute name="c7" />
+		<attribute name="k26" />
+		<attribute name="k22" />
+		<attribute name="c5" />
+	</command>
+	<command type="join">
+		<relation name="T">
+			<attribute name="c9" type="java.lang.Integer" />
+			<attribute name="k31" type="java.lang.String" />
+			<attribute name="k32" type="java.lang.String" />
+			<attribute name="k27" type="java.lang.Integer" />
+			<attribute name="k33" type="java.lang.String" />
+			<attribute name="k34" type="java.lang.String" />
+			<attribute name="c12" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="c13" type="java.lang.String" />
+			<attribute name="c14" type="java.lang.String" />
+			<attribute name="c15" type="java.lang.String" />
+			<attribute name="c16" type="java.lang.String" />
+			<attribute name="c1" type="java.lang.Double" />
+			<attribute name="c2" type="java.lang.Double" />
+			<attribute name="k19" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="c7" type="java.lang.String" />
+			<attribute name="k20" type="java.lang.String" />
+			<attribute name="k21" type="java.lang.String" />
+			<attribute name="k22" type="java.lang.String" />
+			<attribute name="k23" type="java.lang.Double" />
+			<attribute name="k24" type="java.lang.Double" />
+			<attribute name="k17" type="java.lang.String" />
+			<attribute name="c13" type="java.lang.String" />
+			<attribute name="k18" type="java.lang.String" />
+			<attribute name="c16" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="k25" type="java.lang.String" />
+			<attribute name="c7" type="java.lang.String" />
+			<attribute name="k26" type="java.lang.String" />
+			<attribute name="k22" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+		</relation>
+		<relation name="left">
+			<attribute name="c9" type="java.lang.Integer" />
+			<attribute name="k31" type="java.lang.String" />
+			<attribute name="k32" type="java.lang.String" />
+			<attribute name="k27" type="java.lang.Integer" />
+			<attribute name="k33" type="java.lang.String" />
+			<attribute name="k34" type="java.lang.String" />
+			<attribute name="c12" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="c13" type="java.lang.String" />
+			<attribute name="c14" type="java.lang.String" />
+			<attribute name="c15" type="java.lang.String" />
+			<attribute name="c16" type="java.lang.String" />
+			<attribute name="c1" type="java.lang.Double" />
+			<attribute name="c2" type="java.lang.Double" />
+			<attribute name="k19" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="c7" type="java.lang.String" />
+			<attribute name="k20" type="java.lang.String" />
+			<attribute name="k21" type="java.lang.String" />
+			<attribute name="k22" type="java.lang.String" />
+			<attribute name="k23" type="java.lang.Double" />
+			<attribute name="k24" type="java.lang.Double" />
+			<attribute name="k17" type="java.lang.String" />
+			<attribute name="c13" type="java.lang.String" />
+			<attribute name="k18" type="java.lang.String" />
+			<attribute name="c16" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+		</relation>
+		<relation name="right">
+			<attribute name="k25" type="java.lang.String" />
+			<attribute name="c7" type="java.lang.String" />
+			<attribute name="k26" type="java.lang.String" />
+			<attribute name="k22" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+		</relation>
+		<predicate type="equality" left="7" right="31" />
+		<predicate type="equality" left="15" right="31" />
+		<predicate type="equality" left="16" right="28" />
+		<predicate type="equality" left="19" right="30" />
+		<predicate type="equality" left="26" right="31" />
+	</command>
+	<command type="access" relation="WBIncomeLevels" access-method="il_free">
+		<relation name="T">
+			<attribute name="c12" type="java.lang.String" />
+			<attribute name="Low income" type="java.lang.String" />
+		</relation>
+		<input source="id" target="c12" />
+		<input source="name" target="Low income" />
+	</command>
+	<command type="rename">
+		<relation name="T">
+			<attribute name="c12" type="java.lang.String" />
+			<attribute name="Low income" type="java.lang.String" />
+		</relation>
+		<attribute name="c12" />
+		<attribute name="Low income" />
+	</command>
+	<command type="select">
+		<relation name="T">
+			<attribute name="c12" type="java.lang.String" />
+			<attribute name="Low income" type="java.lang.String" />
+		</relation>
+		<predicate type="equality" left="1" value="Low income" />
+	</command>
+	<command type="join">
+		<relation name="T">
+			<attribute name="c9" type="java.lang.Integer" />
+			<attribute name="k31" type="java.lang.String" />
+			<attribute name="k32" type="java.lang.String" />
+			<attribute name="k27" type="java.lang.Integer" />
+			<attribute name="k33" type="java.lang.String" />
+			<attribute name="k34" type="java.lang.String" />
+			<attribute name="c12" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="c13" type="java.lang.String" />
+			<attribute name="c14" type="java.lang.String" />
+			<attribute name="c15" type="java.lang.String" />
+			<attribute name="c16" type="java.lang.String" />
+			<attribute name="c1" type="java.lang.Double" />
+			<attribute name="c2" type="java.lang.Double" />
+			<attribute name="k19" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="c7" type="java.lang.String" />
+			<attribute name="k20" type="java.lang.String" />
+			<attribute name="k21" type="java.lang.String" />
+			<attribute name="k22" type="java.lang.String" />
+			<attribute name="k23" type="java.lang.Double" />
+			<attribute name="k24" type="java.lang.Double" />
+			<attribute name="k17" type="java.lang.String" />
+			<attribute name="c13" type="java.lang.String" />
+			<attribute name="k18" type="java.lang.String" />
+			<attribute name="c16" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="k25" type="java.lang.String" />
+			<attribute name="c7" type="java.lang.String" />
+			<attribute name="k26" type="java.lang.String" />
+			<attribute name="k22" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="c12" type="java.lang.String" />
+			<attribute name="Low income" type="java.lang.String" />
+		</relation>
+		<relation name="left">
+			<attribute name="c9" type="java.lang.Integer" />
+			<attribute name="k31" type="java.lang.String" />
+			<attribute name="k32" type="java.lang.String" />
+			<attribute name="k27" type="java.lang.Integer" />
+			<attribute name="k33" type="java.lang.String" />
+			<attribute name="k34" type="java.lang.String" />
+			<attribute name="c12" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="c13" type="java.lang.String" />
+			<attribute name="c14" type="java.lang.String" />
+			<attribute name="c15" type="java.lang.String" />
+			<attribute name="c16" type="java.lang.String" />
+			<attribute name="c1" type="java.lang.Double" />
+			<attribute name="c2" type="java.lang.Double" />
+			<attribute name="k19" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="c7" type="java.lang.String" />
+			<attribute name="k20" type="java.lang.String" />
+			<attribute name="k21" type="java.lang.String" />
+			<attribute name="k22" type="java.lang.String" />
+			<attribute name="k23" type="java.lang.Double" />
+			<attribute name="k24" type="java.lang.Double" />
+			<attribute name="k17" type="java.lang.String" />
+			<attribute name="c13" type="java.lang.String" />
+			<attribute name="k18" type="java.lang.String" />
+			<attribute name="c16" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="k25" type="java.lang.String" />
+			<attribute name="c7" type="java.lang.String" />
+			<attribute name="k26" type="java.lang.String" />
+			<attribute name="k22" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+		</relation>
+		<relation name="right">
+			<attribute name="c12" type="java.lang.String" />
+			<attribute name="Low income" type="java.lang.String" />
+		</relation>
+		<predicate type="equality" left="6" right="32" />
+	</command>
+	<command type="project">
+		<relation name="T">
+			<attribute name="k27" type="java.lang.Integer" />
+		</relation>
+		<attribute name="k27" />
+	</command>
+	<command type="access" relation="WBIndicators" access-method="i_topicid">
+		<relation name="T">
+			<attribute name="c6" type="java.lang.String" />
+			<attribute name="k27" type="java.lang.Integer" />
+			<attribute name="k28" type="java.lang.String" />
+			<attribute name="k29" type="java.lang.Integer" />
+			<attribute name="k30" type="java.lang.String" />
+		</relation>
+		<input source="id" target="c6" />
+		<input source="topicId" target="k27" />
+		<input source="name" target="k28" />
+		<input source="sourceId" target="k29" />
+		<input source="sourceNote" target="k30" />
+	</command>
+	<command type="rename">
+		<relation name="T">
+			<attribute name="c6" type="java.lang.String" />
+			<attribute name="k27" type="java.lang.Integer" />
+			<attribute name="k28" type="java.lang.String" />
+			<attribute name="k29" type="java.lang.Integer" />
+			<attribute name="k30" type="java.lang.String" />
+		</relation>
+		<attribute name="c6" />
+		<attribute name="k27" />
+		<attribute name="k28" />
+		<attribute name="k29" />
+		<attribute name="k30" />
+	</command>
+	<command type="join">
+		<relation name="T">
+			<attribute name="c9" type="java.lang.Integer" />
+			<attribute name="k31" type="java.lang.String" />
+			<attribute name="k32" type="java.lang.String" />
+			<attribute name="k27" type="java.lang.Integer" />
+			<attribute name="k33" type="java.lang.String" />
+			<attribute name="k34" type="java.lang.String" />
+			<attribute name="c12" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="c13" type="java.lang.String" />
+			<attribute name="c14" type="java.lang.String" />
+			<attribute name="c15" type="java.lang.String" />
+			<attribute name="c16" type="java.lang.String" />
+			<attribute name="c1" type="java.lang.Double" />
+			<attribute name="c2" type="java.lang.Double" />
+			<attribute name="k19" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="c7" type="java.lang.String" />
+			<attribute name="k20" type="java.lang.String" />
+			<attribute name="k21" type="java.lang.String" />
+			<attribute name="k22" type="java.lang.String" />
+			<attribute name="k23" type="java.lang.Double" />
+			<attribute name="k24" type="java.lang.Double" />
+			<attribute name="k17" type="java.lang.String" />
+			<attribute name="c13" type="java.lang.String" />
+			<attribute name="k18" type="java.lang.String" />
+			<attribute name="c16" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="k25" type="java.lang.String" />
+			<attribute name="c7" type="java.lang.String" />
+			<attribute name="k26" type="java.lang.String" />
+			<attribute name="k22" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="c12" type="java.lang.String" />
+			<attribute name="Low income" type="java.lang.String" />
+			<attribute name="c6" type="java.lang.String" />
+			<attribute name="k27" type="java.lang.Integer" />
+			<attribute name="k28" type="java.lang.String" />
+			<attribute name="k29" type="java.lang.Integer" />
+			<attribute name="k30" type="java.lang.String" />
+		</relation>
+		<relation name="left">
+			<attribute name="c9" type="java.lang.Integer" />
+			<attribute name="k31" type="java.lang.String" />
+			<attribute name="k32" type="java.lang.String" />
+			<attribute name="k27" type="java.lang.Integer" />
+			<attribute name="k33" type="java.lang.String" />
+			<attribute name="k34" type="java.lang.String" />
+			<attribute name="c12" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="c13" type="java.lang.String" />
+			<attribute name="c14" type="java.lang.String" />
+			<attribute name="c15" type="java.lang.String" />
+			<attribute name="c16" type="java.lang.String" />
+			<attribute name="c1" type="java.lang.Double" />
+			<attribute name="c2" type="java.lang.Double" />
+			<attribute name="k19" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="c7" type="java.lang.String" />
+			<attribute name="k20" type="java.lang.String" />
+			<attribute name="k21" type="java.lang.String" />
+			<attribute name="k22" type="java.lang.String" />
+			<attribute name="k23" type="java.lang.Double" />
+			<attribute name="k24" type="java.lang.Double" />
+			<attribute name="k17" type="java.lang.String" />
+			<attribute name="c13" type="java.lang.String" />
+			<attribute name="k18" type="java.lang.String" />
+			<attribute name="c16" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="k25" type="java.lang.String" />
+			<attribute name="c7" type="java.lang.String" />
+			<attribute name="k26" type="java.lang.String" />
+			<attribute name="k22" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="c12" type="java.lang.String" />
+			<attribute name="Low income" type="java.lang.String" />
+		</relation>
+		<relation name="right">
+			<attribute name="c6" type="java.lang.String" />
+			<attribute name="k27" type="java.lang.Integer" />
+			<attribute name="k28" type="java.lang.String" />
+			<attribute name="k29" type="java.lang.Integer" />
+			<attribute name="k30" type="java.lang.String" />
+		</relation>
+		<predicate type="equality" left="3" right="35" />
+	</command>
+	<command type="project">
+		<relation name="T">
+			<attribute name="c1" type="java.lang.Double" />
+			<attribute name="c2" type="java.lang.Double" />
+		</relation>
+		<attribute name="c1" />
+		<attribute name="c2" />
+	</command>
+	<command type="access" relation="GoogleElevation"
+		access-method="by_location">
+		<relation name="T">
+			<attribute name="c1" type="java.lang.Double" />
+			<attribute name="c2" type="java.lang.Double" />
+			<attribute name="c3" type="java.lang.Double" />
+			<attribute name="c4" type="java.lang.Double" />
+		</relation>
+		<input source="latitude" target="c1" />
+		<input source="longitude" target="c2" />
+		<input source="elevation" target="c3" />
+		<input source="resolution" target="c4" />
+	</command>
+	<command type="rename">
+		<relation name="T">
+			<attribute name="c1" type="java.lang.Double" />
+			<attribute name="c2" type="java.lang.Double" />
+			<attribute name="c3" type="java.lang.Double" />
+			<attribute name="c4" type="java.lang.Double" />
+		</relation>
+		<attribute name="c1" />
+		<attribute name="c2" />
+		<attribute name="c3" />
+		<attribute name="c4" />
+	</command>
+	<command type="join">
+		<relation name="T">
+			<attribute name="c9" type="java.lang.Integer" />
+			<attribute name="k31" type="java.lang.String" />
+			<attribute name="k32" type="java.lang.String" />
+			<attribute name="k27" type="java.lang.Integer" />
+			<attribute name="k33" type="java.lang.String" />
+			<attribute name="k34" type="java.lang.String" />
+			<attribute name="c12" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="c13" type="java.lang.String" />
+			<attribute name="c14" type="java.lang.String" />
+			<attribute name="c15" type="java.lang.String" />
+			<attribute name="c16" type="java.lang.String" />
+			<attribute name="c1" type="java.lang.Double" />
+			<attribute name="c2" type="java.lang.Double" />
+			<attribute name="k19" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="c7" type="java.lang.String" />
+			<attribute name="k20" type="java.lang.String" />
+			<attribute name="k21" type="java.lang.String" />
+			<attribute name="k22" type="java.lang.String" />
+			<attribute name="k23" type="java.lang.Double" />
+			<attribute name="k24" type="java.lang.Double" />
+			<attribute name="k17" type="java.lang.String" />
+			<attribute name="c13" type="java.lang.String" />
+			<attribute name="k18" type="java.lang.String" />
+			<attribute name="c16" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="k25" type="java.lang.String" />
+			<attribute name="c7" type="java.lang.String" />
+			<attribute name="k26" type="java.lang.String" />
+			<attribute name="k22" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="c12" type="java.lang.String" />
+			<attribute name="Low income" type="java.lang.String" />
+			<attribute name="c6" type="java.lang.String" />
+			<attribute name="k27" type="java.lang.Integer" />
+			<attribute name="k28" type="java.lang.String" />
+			<attribute name="k29" type="java.lang.Integer" />
+			<attribute name="k30" type="java.lang.String" />
+			<attribute name="c1" type="java.lang.Double" />
+			<attribute name="c2" type="java.lang.Double" />
+			<attribute name="c3" type="java.lang.Double" />
+			<attribute name="c4" type="java.lang.Double" />
+		</relation>
+		<relation name="left">
+			<attribute name="c9" type="java.lang.Integer" />
+			<attribute name="k31" type="java.lang.String" />
+			<attribute name="k32" type="java.lang.String" />
+			<attribute name="k27" type="java.lang.Integer" />
+			<attribute name="k33" type="java.lang.String" />
+			<attribute name="k34" type="java.lang.String" />
+			<attribute name="c12" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="c13" type="java.lang.String" />
+			<attribute name="c14" type="java.lang.String" />
+			<attribute name="c15" type="java.lang.String" />
+			<attribute name="c16" type="java.lang.String" />
+			<attribute name="c1" type="java.lang.Double" />
+			<attribute name="c2" type="java.lang.Double" />
+			<attribute name="k19" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="c7" type="java.lang.String" />
+			<attribute name="k20" type="java.lang.String" />
+			<attribute name="k21" type="java.lang.String" />
+			<attribute name="k22" type="java.lang.String" />
+			<attribute name="k23" type="java.lang.Double" />
+			<attribute name="k24" type="java.lang.Double" />
+			<attribute name="k17" type="java.lang.String" />
+			<attribute name="c13" type="java.lang.String" />
+			<attribute name="k18" type="java.lang.String" />
+			<attribute name="c16" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="k25" type="java.lang.String" />
+			<attribute name="c7" type="java.lang.String" />
+			<attribute name="k26" type="java.lang.String" />
+			<attribute name="k22" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="c12" type="java.lang.String" />
+			<attribute name="Low income" type="java.lang.String" />
+			<attribute name="c6" type="java.lang.String" />
+			<attribute name="k27" type="java.lang.Integer" />
+			<attribute name="k28" type="java.lang.String" />
+			<attribute name="k29" type="java.lang.Integer" />
+			<attribute name="k30" type="java.lang.String" />
+		</relation>
+		<relation name="right">
+			<attribute name="c1" type="java.lang.Double" />
+			<attribute name="c2" type="java.lang.Double" />
+			<attribute name="c3" type="java.lang.Double" />
+			<attribute name="c4" type="java.lang.Double" />
+		</relation>
+		<predicate type="equality" left="12" right="39" />
+		<predicate type="equality" left="13" right="40" />
+	</command>
+	<command type="project">
+		<relation name="T">
+			<attribute name="c9" type="java.lang.Integer" />
+		</relation>
+		<attribute name="c9" />
+	</command>
+	<command type="access" relation="WBIndicators" access-method="i_topicid">
+		<relation name="T">
+			<attribute name="c6" type="java.lang.String" />
+			<attribute name="c9" type="java.lang.Integer" />
+			<attribute
+				name="Population living in areas where elevation is below 5 meters (% of total population)"
+				type="java.lang.String" />
+			<attribute name="c10" type="java.lang.Integer" />
+			<attribute name="c11" type="java.lang.String" />
+		</relation>
+		<input source="id" target="c6" />
+		<input source="topicId" target="c9" />
+		<input source="name"
+			target="Population living in areas where elevation is below 5 meters (% of total population)" />
+		<input source="sourceId" target="c10" />
+		<input source="sourceNote" target="c11" />
+	</command>
+	<command type="rename">
+		<relation name="T">
+			<attribute name="c6" type="java.lang.String" />
+			<attribute name="c9" type="java.lang.Integer" />
+			<attribute
+				name="Population living in areas where elevation is below 5 meters (% of total population)"
+				type="java.lang.String" />
+			<attribute name="c10" type="java.lang.Integer" />
+			<attribute name="c11" type="java.lang.String" />
+		</relation>
+		<attribute name="c6" />
+		<attribute name="c9" />
+		<attribute
+			name="Population living in areas where elevation is below 5 meters (% of total population)" />
+		<attribute name="c10" />
+		<attribute name="c11" />
+	</command>
+	<command type="select">
+		<relation name="T">
+			<attribute name="c6" type="java.lang.String" />
+			<attribute name="c9" type="java.lang.Integer" />
+			<attribute
+				name="Population living in areas where elevation is below 5 meters (% of total population)"
+				type="java.lang.String" />
+			<attribute name="c10" type="java.lang.Integer" />
+			<attribute name="c11" type="java.lang.String" />
+		</relation>
+		<predicate type="equality" left="2"
+			value="Population living in areas where elevation is below 5 meters (% of total population)" />
+	</command>
+	<command type="join">
+		<relation name="T">
+			<attribute name="c9" type="java.lang.Integer" />
+			<attribute name="k31" type="java.lang.String" />
+			<attribute name="k32" type="java.lang.String" />
+			<attribute name="k27" type="java.lang.Integer" />
+			<attribute name="k33" type="java.lang.String" />
+			<attribute name="k34" type="java.lang.String" />
+			<attribute name="c12" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="c13" type="java.lang.String" />
+			<attribute name="c14" type="java.lang.String" />
+			<attribute name="c15" type="java.lang.String" />
+			<attribute name="c16" type="java.lang.String" />
+			<attribute name="c1" type="java.lang.Double" />
+			<attribute name="c2" type="java.lang.Double" />
+			<attribute name="k19" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="c7" type="java.lang.String" />
+			<attribute name="k20" type="java.lang.String" />
+			<attribute name="k21" type="java.lang.String" />
+			<attribute name="k22" type="java.lang.String" />
+			<attribute name="k23" type="java.lang.Double" />
+			<attribute name="k24" type="java.lang.Double" />
+			<attribute name="k17" type="java.lang.String" />
+			<attribute name="c13" type="java.lang.String" />
+			<attribute name="k18" type="java.lang.String" />
+			<attribute name="c16" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="k25" type="java.lang.String" />
+			<attribute name="c7" type="java.lang.String" />
+			<attribute name="k26" type="java.lang.String" />
+			<attribute name="k22" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="c12" type="java.lang.String" />
+			<attribute name="Low income" type="java.lang.String" />
+			<attribute name="c6" type="java.lang.String" />
+			<attribute name="k27" type="java.lang.Integer" />
+			<attribute name="k28" type="java.lang.String" />
+			<attribute name="k29" type="java.lang.Integer" />
+			<attribute name="k30" type="java.lang.String" />
+			<attribute name="c1" type="java.lang.Double" />
+			<attribute name="c2" type="java.lang.Double" />
+			<attribute name="c3" type="java.lang.Double" />
+			<attribute name="c4" type="java.lang.Double" />
+			<attribute name="c6" type="java.lang.String" />
+			<attribute name="c9" type="java.lang.Integer" />
+			<attribute
+				name="Population living in areas where elevation is below 5 meters (% of total population)"
+				type="java.lang.String" />
+			<attribute name="c10" type="java.lang.Integer" />
+			<attribute name="c11" type="java.lang.String" />
+		</relation>
+		<relation name="left">
+			<attribute name="c9" type="java.lang.Integer" />
+			<attribute name="k31" type="java.lang.String" />
+			<attribute name="k32" type="java.lang.String" />
+			<attribute name="k27" type="java.lang.Integer" />
+			<attribute name="k33" type="java.lang.String" />
+			<attribute name="k34" type="java.lang.String" />
+			<attribute name="c12" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="c13" type="java.lang.String" />
+			<attribute name="c14" type="java.lang.String" />
+			<attribute name="c15" type="java.lang.String" />
+			<attribute name="c16" type="java.lang.String" />
+			<attribute name="c1" type="java.lang.Double" />
+			<attribute name="c2" type="java.lang.Double" />
+			<attribute name="k19" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="c7" type="java.lang.String" />
+			<attribute name="k20" type="java.lang.String" />
+			<attribute name="k21" type="java.lang.String" />
+			<attribute name="k22" type="java.lang.String" />
+			<attribute name="k23" type="java.lang.Double" />
+			<attribute name="k24" type="java.lang.Double" />
+			<attribute name="k17" type="java.lang.String" />
+			<attribute name="c13" type="java.lang.String" />
+			<attribute name="k18" type="java.lang.String" />
+			<attribute name="c16" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="k25" type="java.lang.String" />
+			<attribute name="c7" type="java.lang.String" />
+			<attribute name="k26" type="java.lang.String" />
+			<attribute name="k22" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="c12" type="java.lang.String" />
+			<attribute name="Low income" type="java.lang.String" />
+			<attribute name="c6" type="java.lang.String" />
+			<attribute name="k27" type="java.lang.Integer" />
+			<attribute name="k28" type="java.lang.String" />
+			<attribute name="k29" type="java.lang.Integer" />
+			<attribute name="k30" type="java.lang.String" />
+			<attribute name="c1" type="java.lang.Double" />
+			<attribute name="c2" type="java.lang.Double" />
+			<attribute name="c3" type="java.lang.Double" />
+			<attribute name="c4" type="java.lang.Double" />
+		</relation>
+		<relation name="right">
+			<attribute name="c6" type="java.lang.String" />
+			<attribute name="c9" type="java.lang.Integer" />
+			<attribute
+				name="Population living in areas where elevation is below 5 meters (% of total population)"
+				type="java.lang.String" />
+			<attribute name="c10" type="java.lang.Integer" />
+			<attribute name="c11" type="java.lang.String" />
+		</relation>
+		<predicate type="equality" left="0" right="44" />
+		<predicate type="equality" left="34" right="43" />
+	</command>
+	<command type="project">
+		<relation name="T">
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="c6" type="java.lang.String" />
+		</relation>
+		<attribute name="c5" />
+		<attribute name="c6" />
+	</command>
+	<command type="access" relation="WBData" access-method="wb_ci">
+		<relation name="T">
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="c6" type="java.lang.String" />
+			<attribute name="2010" type="java.lang.Integer" />
+			<attribute name="c7" type="java.lang.String" />
+			<attribute name="c8" type="java.lang.Double" />
+		</relation>
+		<input source="country" target="c5" />
+		<input source="indicator" target="c6" />
+		<input source="date" target="2010" />
+		<input source="countryName" target="c7" />
+		<input source="value" target="c8" />
+	</command>
+	<command type="rename">
+		<relation name="T">
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="c6" type="java.lang.String" />
+			<attribute name="2010" type="java.lang.Integer" />
+			<attribute name="c7" type="java.lang.String" />
+			<attribute name="c8" type="java.lang.Double" />
+		</relation>
+		<attribute name="c5" />
+		<attribute name="c6" />
+		<attribute name="2010" />
+		<attribute name="c7" />
+		<attribute name="c8" />
+	</command>
+	<command type="select">
+		<relation name="T">
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="c6" type="java.lang.String" />
+			<attribute name="2010" type="java.lang.Integer" />
+			<attribute name="c7" type="java.lang.String" />
+			<attribute name="c8" type="java.lang.Double" />
+		</relation>
+		<predicate type="equality" left="2" value="2010" />
+	</command>
+	<command type="join">
+		<relation name="T">
+			<attribute name="c9" type="java.lang.Integer" />
+			<attribute name="k31" type="java.lang.String" />
+			<attribute name="k32" type="java.lang.String" />
+			<attribute name="k27" type="java.lang.Integer" />
+			<attribute name="k33" type="java.lang.String" />
+			<attribute name="k34" type="java.lang.String" />
+			<attribute name="c12" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="c13" type="java.lang.String" />
+			<attribute name="c14" type="java.lang.String" />
+			<attribute name="c15" type="java.lang.String" />
+			<attribute name="c16" type="java.lang.String" />
+			<attribute name="c1" type="java.lang.Double" />
+			<attribute name="c2" type="java.lang.Double" />
+			<attribute name="k19" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="c7" type="java.lang.String" />
+			<attribute name="k20" type="java.lang.String" />
+			<attribute name="k21" type="java.lang.String" />
+			<attribute name="k22" type="java.lang.String" />
+			<attribute name="k23" type="java.lang.Double" />
+			<attribute name="k24" type="java.lang.Double" />
+			<attribute name="k17" type="java.lang.String" />
+			<attribute name="c13" type="java.lang.String" />
+			<attribute name="k18" type="java.lang.String" />
+			<attribute name="c16" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="k25" type="java.lang.String" />
+			<attribute name="c7" type="java.lang.String" />
+			<attribute name="k26" type="java.lang.String" />
+			<attribute name="k22" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="c12" type="java.lang.String" />
+			<attribute name="Low income" type="java.lang.String" />
+			<attribute name="c6" type="java.lang.String" />
+			<attribute name="k27" type="java.lang.Integer" />
+			<attribute name="k28" type="java.lang.String" />
+			<attribute name="k29" type="java.lang.Integer" />
+			<attribute name="k30" type="java.lang.String" />
+			<attribute name="c1" type="java.lang.Double" />
+			<attribute name="c2" type="java.lang.Double" />
+			<attribute name="c3" type="java.lang.Double" />
+			<attribute name="c4" type="java.lang.Double" />
+			<attribute name="c6" type="java.lang.String" />
+			<attribute name="c9" type="java.lang.Integer" />
+			<attribute
+				name="Population living in areas where elevation is below 5 meters (% of total population)"
+				type="java.lang.String" />
+			<attribute name="c10" type="java.lang.Integer" />
+			<attribute name="c11" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="c6" type="java.lang.String" />
+			<attribute name="2010" type="java.lang.Integer" />
+			<attribute name="c7" type="java.lang.String" />
+			<attribute name="c8" type="java.lang.Double" />
+		</relation>
+		<relation name="left">
+			<attribute name="c9" type="java.lang.Integer" />
+			<attribute name="k31" type="java.lang.String" />
+			<attribute name="k32" type="java.lang.String" />
+			<attribute name="k27" type="java.lang.Integer" />
+			<attribute name="k33" type="java.lang.String" />
+			<attribute name="k34" type="java.lang.String" />
+			<attribute name="c12" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="c13" type="java.lang.String" />
+			<attribute name="c14" type="java.lang.String" />
+			<attribute name="c15" type="java.lang.String" />
+			<attribute name="c16" type="java.lang.String" />
+			<attribute name="c1" type="java.lang.Double" />
+			<attribute name="c2" type="java.lang.Double" />
+			<attribute name="k19" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="c7" type="java.lang.String" />
+			<attribute name="k20" type="java.lang.String" />
+			<attribute name="k21" type="java.lang.String" />
+			<attribute name="k22" type="java.lang.String" />
+			<attribute name="k23" type="java.lang.Double" />
+			<attribute name="k24" type="java.lang.Double" />
+			<attribute name="k17" type="java.lang.String" />
+			<attribute name="c13" type="java.lang.String" />
+			<attribute name="k18" type="java.lang.String" />
+			<attribute name="c16" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="k25" type="java.lang.String" />
+			<attribute name="c7" type="java.lang.String" />
+			<attribute name="k26" type="java.lang.String" />
+			<attribute name="k22" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="c12" type="java.lang.String" />
+			<attribute name="Low income" type="java.lang.String" />
+			<attribute name="c6" type="java.lang.String" />
+			<attribute name="k27" type="java.lang.Integer" />
+			<attribute name="k28" type="java.lang.String" />
+			<attribute name="k29" type="java.lang.Integer" />
+			<attribute name="k30" type="java.lang.String" />
+			<attribute name="c1" type="java.lang.Double" />
+			<attribute name="c2" type="java.lang.Double" />
+			<attribute name="c3" type="java.lang.Double" />
+			<attribute name="c4" type="java.lang.Double" />
+			<attribute name="c6" type="java.lang.String" />
+			<attribute name="c9" type="java.lang.Integer" />
+			<attribute
+				name="Population living in areas where elevation is below 5 meters (% of total population)"
+				type="java.lang.String" />
+			<attribute name="c10" type="java.lang.Integer" />
+			<attribute name="c11" type="java.lang.String" />
+		</relation>
+		<relation name="right">
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="c6" type="java.lang.String" />
+			<attribute name="2010" type="java.lang.Integer" />
+			<attribute name="c7" type="java.lang.String" />
+			<attribute name="c8" type="java.lang.Double" />
+		</relation>
+		<predicate type="equality" left="7" right="48" />
+		<predicate type="equality" left="15" right="48" />
+		<predicate type="equality" left="16" right="51" />
+		<predicate type="equality" left="26" right="48" />
+		<predicate type="equality" left="28" right="51" />
+		<predicate type="equality" left="31" right="48" />
+		<predicate type="equality" left="34" right="49" />
+		<predicate type="equality" left="43" right="49" />
+	</command>
+	<command type="project">
+		<relation name="T">
+			<attribute name="c13" type="java.lang.String" />
+			<attribute name="c8" type="java.lang.Double" />
+			<attribute name="c16" type="java.lang.String" />
+			<attribute name="c3" type="java.lang.Double" />
+		</relation>
+		<attribute name="c13" />
+		<attribute name="c8" />
+		<attribute name="c16" />
+		<attribute name="c3" />
+	</command>
+</plan>

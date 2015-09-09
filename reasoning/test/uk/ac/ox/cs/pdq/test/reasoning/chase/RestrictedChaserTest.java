@@ -5,8 +5,6 @@ import org.junit.Test;
 
 public class RestrictedChaserTest {
 	
-
-
 	@Before 
 	public void setup() {
 	
@@ -17,6 +15,5 @@ public class RestrictedChaserTest {
 		
 		
 	}
-
 
 }

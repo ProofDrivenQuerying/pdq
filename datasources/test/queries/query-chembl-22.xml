@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<query name="Example 1" description="" type="conjunctive">
+	<body>
+		<atom name="SourceFree">
+			<variable name="src_description" />
+			<variable name="src_id" />
+			<variable name="src_short_name" />
+		</atom>
+	</body>
+	<head name="Q">
+		<variable name="src_description" />
+		<variable name="src_id" />
+		<variable name="src_short_name" />
+	</head>
+
+</query>

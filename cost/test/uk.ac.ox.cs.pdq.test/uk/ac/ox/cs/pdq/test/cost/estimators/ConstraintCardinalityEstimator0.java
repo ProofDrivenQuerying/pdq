@@ -23,6 +23,8 @@ import uk.ac.ox.cs.pdq.plan.CommandToTGDTranslator;
 import uk.ac.ox.cs.pdq.plan.NormalisedPlan;
 import uk.ac.ox.cs.pdq.reasoning.HomomorphismException;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters.HomomorphismDetectorTypes;
+import uk.ac.ox.cs.pdq.reasoning.chase.EGDChaser;
+import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismManagerFactory;
@@ -30,7 +32,12 @@ import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismManagerFactory;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
-public abstract class TotalAccessCostEstimatorTest0 {
+/**
+ * 
+ * @author Efthymia Tsamoura
+ *
+ */
+public abstract class ConstraintCardinalityEstimator0 {
 
 	protected String driver = null;
 	protected String url = "jdbc:mysql://localhost/";
@@ -45,6 +52,9 @@ public abstract class TotalAccessCostEstimatorTest0 {
 	protected NormalisedPlan plan;
 	protected ConstraintCardinalityEstimator estimator;
 	protected Collection<Constraint> constraints;
+	
+	protected final RestrictedChaser restrictedChaser = new RestrictedChaser(null);
+	protected final EGDChaser egdChaser = new EGDChaser(null);
 	
 	@Before
 	protected void loadSchema() throws FileNotFoundException, IOException {

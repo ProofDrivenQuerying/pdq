@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<query name="Example 1" description="" type="conjunctive">
+	<body>
+		<atom name="PathwayBySpecies">
+			<variable name="pathwayId" />
+			<variable name="pathwayName" />
+			<variable name="stableIdentifier" />
+			<variable name="goBiologicalProcess" />
+			<variable name="isInDisease" />
+			<variable name="isInferred" />
+			<variable name="organism_id" />
+			<constant value="Homo&#32;sapiens" />
+			<variable name="doi" />
+			<variable name="hasDiagram" />
+		</atom>
+	</body>
+	<head name="Q">
+		<variable name="pathwayId" />
+		<variable name="pathwayName" />
+		<variable name="stableIdentifier" />
+		<variable name="goBiologicalProcess" />
+		<variable name="isInDisease" />
+		<variable name="isInferred" />
+		<variable name="organism_id" />
+		<variable name="doi" />
+		<variable name="hasDiagram" />
+	</head>
+
+</query>

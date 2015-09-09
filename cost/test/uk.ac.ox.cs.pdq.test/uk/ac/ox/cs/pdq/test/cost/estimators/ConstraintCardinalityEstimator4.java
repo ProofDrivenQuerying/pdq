@@ -1,6 +1,5 @@
 package uk.ac.ox.cs.pdq.test.cost.estimators;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,8 +18,12 @@ import uk.ac.ox.cs.pdq.plan.Project;
 import uk.ac.ox.cs.pdq.plan.Select;
 
 import com.google.common.collect.Lists;
-
-public class TotalAccessCostEstimatorTest4  extends TotalAccessCostEstimatorTest0{
+/**
+ * 
+ * @author Efthymia Tsamoura
+ *
+ */
+public class ConstraintCardinalityEstimator4  extends ConstraintCardinalityEstimator0{
 
 	Command access0; 
 	Command access2; 
@@ -118,42 +121,6 @@ public class TotalAccessCostEstimatorTest4  extends TotalAccessCostEstimatorTest
 		this.plan = new NormalisedPlan(Lists.newArrayList(this.access0, this.selection0, this.projection0, this.access1, this.selection1, 
 				this.join1, this.projection1, 
 				this.access2, this.join2));
-	}
-
-
-	@Test
-	public void test1() {
-		Attribute k1 = (Attribute) selection0.getOutput().getHeader().get(2);
-		boolean r3 = this.estimator.isKey(this.selection1.getOutput(), Lists.newArrayList(k1), CollectionUtils.union(this.keyDependencies, this.constraints));
-		boolean r4 = this.estimator.isKey(this.selection0.getOutput(), Lists.newArrayList(k1), CollectionUtils.union(this.keyDependencies, this.constraints));
-	}
-
-	@Test
-	public void test2() {
-		Attribute k2 = (Attribute) access2.getOutput().getHeader().get(3);
-		boolean r7 = this.estimator.isKey(this.access2.getOutput(), Lists.newArrayList(k2), CollectionUtils.union(this.keyDependencies, this.constraints));
-		boolean r8 = this.estimator.isKey(this.join1.getOutput(), Lists.newArrayList(k2), CollectionUtils.union(this.keyDependencies, this.constraints));
-	}
-
-	@Test
-	public void test3() {
-		boolean r1 = this.estimator.existsInclustionDependency(this.selection1.getOutput(), this.selection0.getOutput(), this.constraints);
-	}
-
-	@Test
-	public void test4() {
-		boolean r2 = this.estimator.existsInclustionDependency(this.selection0.getOutput(), this.selection1.getOutput(), this.constraints);
-	}
-
-	@Test
-	public void test5() {
-		boolean r5 = this.estimator.existsInclustionDependency(this.access2.getOutput(), this.join1.getOutput(), this.constraints);
-	}
-
-
-	@Test
-	public void test6() {
-		boolean r6 = this.estimator.existsInclustionDependency(this.join1.getOutput(), this.access2.getOutput(), this.constraints);
 	}
 
 	@Test

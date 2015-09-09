@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<query name="Example 1" description="" type="conjunctive">
+	<body>
+		<atom name="CellLineLimited">
+			<variable name="cell_chembl_id"/>   	
+			<variable name="cell_description"/>    	
+			<constant value="1704"/>   			
+			<variable name="cell_name"/>   			
+			<variable name="cell_source_organism"/> 
+			<variable name="cell_source_tax_id"/>   
+			<variable name="cell_source_tissue"/>   
+			<variable name="cellosaurus_id"/>   	
+			<variable name="clo_id"/>   			
+			<variable name="efo_id"/>   	   				
+		</atom>
+	</body>
+	<head name="Q">
+		<variable name="cell_chembl_id"/>   	
+		<variable name="cell_description"/>    				
+		<variable name="cell_name"/>   			
+		<variable name="cell_source_organism"/> 
+		<variable name="cell_source_tax_id"/>   
+		<variable name="cell_source_tissue"/>   
+		<variable name="cellosaurus_id"/>   	
+		<variable name="clo_id"/>   			
+		<variable name="efo_id"/>   	 		
+	</head>
+
+</query>

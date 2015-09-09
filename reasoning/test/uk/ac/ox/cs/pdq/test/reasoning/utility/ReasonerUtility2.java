@@ -1,7 +1,6 @@
-package uk.ac.ox.cs.pdq.test.cost.estimators;
+package uk.ac.ox.cs.pdq.test.reasoning.utility;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -17,10 +16,16 @@ import uk.ac.ox.cs.pdq.plan.Join;
 import uk.ac.ox.cs.pdq.plan.NormalisedPlan;
 import uk.ac.ox.cs.pdq.plan.Project;
 import uk.ac.ox.cs.pdq.plan.Select;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager;
+import uk.ac.ox.cs.pdq.reasoning.utility.ReasonerUtility;
 
 import com.google.common.collect.Lists;
-
-public class TotalAccessCostEstimatorTest2 extends TotalAccessCostEstimatorTest0 {
+/**
+ * 
+ * @author Efthymia Tsamoura
+ *
+ */
+public class ReasonerUtility2 extends ReasonerUtility0 {
 
 	Command access0; 
 	Command access2; 
@@ -143,125 +148,71 @@ public class TotalAccessCostEstimatorTest2 extends TotalAccessCostEstimatorTest0
 	
 	@Test
 	public void test1() {
-		boolean r1 = this.estimator.existsInclustionDependency(this.access1.getOutput(), this.selection0.getOutput(), this.constraints);
+		boolean r1 = new ReasonerUtility().existsInclustionDependency(this.access1.getOutput(), this.selection0.getOutput(), this.constraints, this.restrictedChaser, (DBHomomorphismManager) this.detector);
 	}
 	
 	@Test
 	public void test2() {
-		boolean r2 = this.estimator.existsInclustionDependency(this.selection0.getOutput(), this.access1.getOutput(), this.constraints);
+		boolean r2 = new ReasonerUtility().existsInclustionDependency(this.selection0.getOutput(), this.access1.getOutput(), this.constraints, this.restrictedChaser, (DBHomomorphismManager) this.detector);
 	}
 	
 	@Test
 	public void test3() {
 		Attribute k1 = (Attribute) access1.getOutput().getHeader().get(1);
-		boolean r3 = this.estimator.isKey(access1.getOutput(), Lists.newArrayList(k1), CollectionUtils.union(this.keyDependencies, this.constraints));
-		boolean r4 = this.estimator.isKey(selection0.getOutput(), Lists.newArrayList(k1), CollectionUtils.union(this.keyDependencies, this.constraints));
+		boolean r3 = new ReasonerUtility().isKey(access1.getOutput(), Lists.newArrayList(k1), CollectionUtils.union(this.keyDependencies, this.constraints), this.egdChaser, (DBHomomorphismManager) this.detector);
+		boolean r4 = new ReasonerUtility().isKey(selection0.getOutput(), Lists.newArrayList(k1), CollectionUtils.union(this.keyDependencies, this.constraints), this.egdChaser, (DBHomomorphismManager) this.detector);
 	}
 	
 	@Test
 	public void test4() {
-		boolean r5 = this.estimator.existsInclustionDependency(selection2.getOutput(), join1.getOutput(), this.constraints);
+		boolean r5 = new ReasonerUtility().existsInclustionDependency(selection2.getOutput(), join1.getOutput(), this.constraints, this.restrictedChaser, (DBHomomorphismManager) this.detector);
 	}
 	
 	@Test
 	public void test5() {
-		boolean r6 = this.estimator.existsInclustionDependency(join1.getOutput(), selection2.getOutput(), this.constraints);
+		boolean r6 = new ReasonerUtility().existsInclustionDependency(join1.getOutput(), selection2.getOutput(), this.constraints, this.restrictedChaser, (DBHomomorphismManager) this.detector);
 	}
 	
 	
 	@Test
 	public void test6() {
 		Attribute k2 = (Attribute) this.selection2.getOutput().getHeader().get(0);
-		boolean r7 = this.estimator.isKey(this.selection2.getOutput(), Lists.newArrayList(k2), CollectionUtils.union(this.keyDependencies, this.constraints));
-		boolean r8 = this.estimator.isKey(this.join1.getOutput(), Lists.newArrayList(k2), CollectionUtils.union(this.keyDependencies, this.constraints));
+		boolean r7 = new ReasonerUtility().isKey(this.selection2.getOutput(), Lists.newArrayList(k2), CollectionUtils.union(this.keyDependencies, this.constraints), this.egdChaser, (DBHomomorphismManager) this.detector);
+		boolean r8 = new ReasonerUtility().isKey(this.join1.getOutput(), Lists.newArrayList(k2), CollectionUtils.union(this.keyDependencies, this.constraints), this.egdChaser, (DBHomomorphismManager) this.detector);
 	}
 	
 	@Test
 	public void test7() {
-		boolean r9 = this.estimator.existsInclustionDependency(this.access3.getOutput(), this.join2.getOutput(), this.constraints);
+		boolean r9 = new ReasonerUtility().existsInclustionDependency(this.access3.getOutput(), this.join2.getOutput(), this.constraints, this.restrictedChaser, (DBHomomorphismManager) this.detector);
 	}
 	
 	@Test
 	public void test8() {
-		boolean r10 = this.estimator.existsInclustionDependency(this.join2.getOutput(), this.access3.getOutput(), this.constraints);
+		boolean r10 = new ReasonerUtility().existsInclustionDependency(this.join2.getOutput(), this.access3.getOutput(), this.constraints, this.restrictedChaser, (DBHomomorphismManager) this.detector);
 	}
 	
 	@Test
 	public void test9() {
 		Attribute k3 = (Attribute) join2.getOutput().getHeader().get(3);
-		boolean r11 = this.estimator.isKey(this.access3.getOutput(), Lists.newArrayList(k3), CollectionUtils.union(this.keyDependencies, this.constraints));
-		boolean r12 = this.estimator.isKey(this.join2.getOutput(), Lists.newArrayList(k3), CollectionUtils.union(this.keyDependencies, this.constraints));
+		boolean r11 = new ReasonerUtility().isKey(this.access3.getOutput(), Lists.newArrayList(k3), CollectionUtils.union(this.keyDependencies, this.constraints), this.egdChaser, (DBHomomorphismManager) this.detector);
+		boolean r12 = new ReasonerUtility().isKey(this.join2.getOutput(), Lists.newArrayList(k3), CollectionUtils.union(this.keyDependencies, this.constraints), this.egdChaser, (DBHomomorphismManager) this.detector);
 	}
 	
 	@Test
 	public void test10() {
-		boolean r13 = this.estimator.existsInclustionDependency(this.selection4.getOutput(), this.join3.getOutput(), this.constraints);
+		boolean r13 = new ReasonerUtility().existsInclustionDependency(this.selection4.getOutput(), this.join3.getOutput(), this.constraints, this.restrictedChaser, (DBHomomorphismManager) this.detector);
 	}
 	
 	@Test
 	public void test11() {
-		boolean r14 = this.estimator.existsInclustionDependency(this.join3.getOutput(), this.selection4.getOutput(), this.constraints);
+		boolean r14 = new ReasonerUtility().existsInclustionDependency(this.join3.getOutput(), this.selection4.getOutput(), this.constraints, this.restrictedChaser, (DBHomomorphismManager) this.detector);
 	}
 	
 	@Test
 	public void test12() {
 		Attribute k4 = (Attribute) this.selection4.getOutput().getHeader().get(1);
-		boolean r15 = this.estimator.isKey(this.selection4.getOutput(), Lists.newArrayList(k4), CollectionUtils.union(this.keyDependencies, this.constraints));
-		boolean r16 = this.estimator.isKey(this.join3.getOutput(), Lists.newArrayList(k4), CollectionUtils.union(this.keyDependencies, this.constraints));
-	}
-
-	@Test
-	public void test13() {
-		Pair<Integer, Boolean> estim1 = this.estimator.constraintDriven(this.projection0.getOutput(), this.plan, this.catalog);
-	}
-	
-	@Test
-	public void test14() {
-		Integer estim3 = this.estimator.commandDriven(this.projection0.getOutput(), this.plan, this.catalog);
-	}
-	
-	@Test
-	public void test15() {
-		Integer estim5 = this.estimator.simple(this.projection0.getOutput(), this.plan, this.catalog);
-	}
-	
-	@Test
-	public void test16() {
-		Pair<Integer, Boolean> estim2 = this.estimator.constraintDriven(this.projection1.getOutput(), this.plan, this.catalog);
-	}
-	
-	@Test
-	public void test17() {
-		Integer estim4 = this.estimator.commandDriven(this.projection1.getOutput(), this.plan, this.catalog);
-	}
-	
-	@Test
-	public void test18() {
-		Integer estim6 = this.estimator.simple(this.projection1.getOutput(), this.plan, this.catalog);
-	}
-	
-	@Test
-	public void test19() {
-		Pair<Integer, Boolean> estim7 = this.estimator.constraintDriven(projection2.getOutput(), this.plan, this.catalog);
-	}
-	
-	@Test
-	public void test20() {
-		Integer estim8 = this.estimator.commandDriven(projection2.getOutput(), this.plan, this.catalog);
-	}
-	
-	@Test
-	public void test21() {
-		Pair<Integer, Boolean> estim10 = this.estimator.constraintDriven(projection3.getOutput(), this.plan, this.catalog);
-	}
-	
-	@Test
-	public void test22() {
-		Integer estim11 = this.estimator.commandDriven(this.projection3.getOutput(), this.plan, this.catalog);
-	}
-	@Test
-	public void test23() {
-		Integer estim12 = this.estimator.simple(this.projection3.getOutput(), this.plan, this.catalog);
+		boolean r15 = new ReasonerUtility().isKey(this.selection4.getOutput(), Lists.newArrayList(k4), CollectionUtils.union(this.keyDependencies, this.constraints), this.egdChaser, (DBHomomorphismManager) this.detector);
+		boolean r16 = new ReasonerUtility().isKey(this.join3.getOutput(), Lists.newArrayList(k4), CollectionUtils.union(this.keyDependencies, this.constraints), this.egdChaser, (DBHomomorphismManager) this.detector);
 	}
 
 

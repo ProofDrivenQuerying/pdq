@@ -2,7 +2,6 @@ package uk.ac.ox.cs.pdq.reasoning.chase.state;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 import uk.ac.ox.cs.pdq.db.Constraint;
 import uk.ac.ox.cs.pdq.fol.Conjunction;

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<query name="Example 1" description="" type="conjunctive">
+	<body>
+		<atom name="DocumentFree">
+			<variable name="authors"/>   			
+			<variable name="doc_type"/>    			
+			<variable name="document_chembl_id"/>   
+			<variable name="doi"/>   				
+			<variable name="first_page"/>   		
+			<variable name="issue"/>   				
+			<variable name="journal"/>   			
+			<variable name="last_page"/>   			
+			<variable name="pubmed_id"/>   			
+			<variable name="title"/>   				
+			<variable name="volume"/>   			
+			<variable name="year"/>   				   				
+		</atom>
+	</body>
+	<head name="Q">
+		<variable name="authors"/>   			
+		<variable name="doc_type"/>    			
+		<variable name="document_chembl_id"/>   
+		<variable name="doi"/>   				
+		<variable name="first_page"/>   		
+		<variable name="issue"/>   				
+		<variable name="journal"/>   			
+		<variable name="last_page"/>   			
+		<variable name="pubmed_id"/>   			
+		<variable name="title"/>   				
+		<variable name="volume"/>   			
+		<variable name="year"/>   				 		
+	</head>
+
+</query>
