@@ -26,7 +26,7 @@ import com.google.common.collect.Lists;
  * @author Efthymia Tsamoura
  *
  */
-public class ReasonerUtility4  extends ReasonerUtilityTest0{
+public class ReasonerUtilityTest4  extends ReasonerUtilityTest0{
 
 	Command access0; 
 	Command access2; 
