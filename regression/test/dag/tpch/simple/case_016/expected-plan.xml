@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plan type="dag" cost="2.0" control-flow="TOP_DOWN">
+<operator type="PROJECT">
+<outputs>
+<attribute name="c1166" type="java.lang.String"/>
+<attribute name="c1168" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="c1166" type="java.lang.String"/>
+<attribute name="c1168" type="java.lang.String"/>
+</project>
+<child>
+<operator type="JOIN" variant="SYMMETRIC_HASH">
+<outputs>
+<attribute name="c1165" type="java.lang.Integer"/>
+<attribute name="c1166" type="java.lang.String"/>
+<attribute name="c1165" type="java.lang.Integer"/>
+<attribute name="c1167" type="java.lang.String"/>
+<attribute name="c1165" type="java.lang.Integer"/>
+<attribute name="c1168" type="java.lang.String"/>
+<attribute name="c1169" type="java.lang.String"/>
+</outputs>
+<conjunction>
+<predicate type="equality" left="0" right="4"/>
+</conjunction>
+<children>
+<operator type="PROJECT">
+<outputs>
+<attribute name="c1165" type="java.lang.Integer"/>
+<attribute name="c1166" type="java.lang.String"/>
+<attribute name="c1165" type="java.lang.Integer"/>
+<attribute name="c1167" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="n_nationkey" type="java.lang.Integer"/>
+<attribute name="n_name" type="java.lang.String"/>
+<attribute name="n_regionkey" type="java.lang.Integer"/>
+<attribute name="n_comment" type="java.lang.String"/>
+</project>
+<child>
+<operator type="SELECT">
+<outputs>
+<attribute name="n_nationkey" type="java.lang.Integer"/>
+<attribute name="n_name" type="java.lang.String"/>
+<attribute name="n_regionkey" type="java.lang.Integer"/>
+<attribute name="n_comment" type="java.lang.String"/>
+</outputs>
+<conjunction>
+<predicate type="equality" left="0" right="2"/>
+</conjunction>
+<child>
+<operator type="ACCESS" relation="nation" access-method="m10">
+<outputs>
+<attribute name="n_nationkey" type="java.lang.Integer"/>
+<attribute name="n_name" type="java.lang.String"/>
+<attribute name="n_regionkey" type="java.lang.Integer"/>
+<attribute name="n_comment" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</child>
+</operator>
+<operator type="PROJECT">
+<outputs>
+<attribute name="c1165" type="java.lang.Integer"/>
+<attribute name="c1168" type="java.lang.String"/>
+<attribute name="c1169" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="r_regionkey" type="java.lang.Integer"/>
+<attribute name="r_name" type="java.lang.String"/>
+<attribute name="r_comment" type="java.lang.String"/>
+</project>
+<child>
+<operator type="ACCESS" relation="region" access-method="m12">
+<outputs>
+<attribute name="r_regionkey" type="java.lang.Integer"/>
+<attribute name="r_name" type="java.lang.String"/>
+<attribute name="r_comment" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</children>
+</operator>
+</child>
+</operator>
+</plan>

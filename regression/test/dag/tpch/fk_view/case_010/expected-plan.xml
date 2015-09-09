@@ -1,0 +1,571 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plan type="dag" cost="74086.66666666667" control-flow="TOP_DOWN">
+<operator type="PROJECT">
+<outputs>
+<attribute name="c4820" type="java.lang.String"/>
+<attribute name="c4843" type="java.lang.String"/>
+<attribute name="c4836" type="java.lang.Integer"/>
+<attribute name="c4829" type="java.lang.String"/>
+<attribute name="c4849" type="java.lang.String"/>
+<attribute name="c4840" type="java.lang.Integer"/>
+</outputs>
+<project>
+<attribute name="c4820" type="java.lang.String"/>
+<attribute name="c4843" type="java.lang.String"/>
+<attribute name="c4836" type="java.lang.Integer"/>
+<attribute name="c4829" type="java.lang.String"/>
+<attribute name="c4849" type="java.lang.String"/>
+<attribute name="c4840" type="java.lang.Integer"/>
+</project>
+<child>
+<operator type="JOIN" variant="SYMMETRIC_HASH">
+<outputs>
+<attribute name="c4856" type="java.lang.Integer"/>
+<attribute name="c4860" type="java.lang.String"/>
+<attribute name="c4851" type="java.lang.Integer"/>
+<attribute name="c4858" type="java.lang.String"/>
+<attribute name="c4856" type="java.lang.Integer"/>
+<attribute name="c4859" type="java.lang.String"/>
+<attribute name="c4845" type="java.lang.Integer"/>
+<attribute name="c4855" type="java.lang.String"/>
+<attribute name="c4856" type="java.lang.Integer"/>
+<attribute name="c4857" type="java.lang.String"/>
+<attribute name="c4839" type="java.lang.Integer"/>
+<attribute name="c4849" type="java.lang.String"/>
+<attribute name="c4850" type="java.lang.String"/>
+<attribute name="c4851" type="java.lang.Integer"/>
+<attribute name="c4852" type="java.lang.String"/>
+<attribute name="c4853" type="java.math.BigDecimal"/>
+<attribute name="c4854" type="java.lang.String"/>
+<attribute name="c4835" type="java.lang.Integer"/>
+<attribute name="c4843" type="java.lang.String"/>
+<attribute name="c4844" type="java.lang.String"/>
+<attribute name="c4845" type="java.lang.Integer"/>
+<attribute name="c4846" type="java.lang.String"/>
+<attribute name="c4847" type="java.math.BigDecimal"/>
+<attribute name="c4848" type="java.lang.String"/>
+<attribute name="c4819" type="java.lang.Integer"/>
+<attribute name="c4835" type="java.lang.Integer"/>
+<attribute name="c4836" type="java.lang.Integer"/>
+<attribute name="c4837" type="java.math.BigDecimal"/>
+<attribute name="c4838" type="java.lang.String"/>
+<attribute name="c4828" type="java.lang.Integer"/>
+<attribute name="c4839" type="java.lang.Integer"/>
+<attribute name="c4840" type="java.lang.Integer"/>
+<attribute name="c4841" type="java.math.BigDecimal"/>
+<attribute name="c4842" type="java.lang.String"/>
+<attribute name="c4828" type="java.lang.Integer"/>
+<attribute name="c4829" type="java.lang.String"/>
+<attribute name="c4830" type="java.lang.String"/>
+<attribute name="c4822" type="java.lang.String"/>
+<attribute name="c4823" type="java.lang.String"/>
+<attribute name="c4831" type="java.lang.Integer"/>
+<attribute name="c4832" type="java.lang.String"/>
+<attribute name="c4833" type="java.math.BigDecimal"/>
+<attribute name="c4834" type="java.lang.String"/>
+<attribute name="c4819" type="java.lang.Integer"/>
+<attribute name="c4820" type="java.lang.String"/>
+<attribute name="c4821" type="java.lang.String"/>
+<attribute name="c4822" type="java.lang.String"/>
+<attribute name="c4823" type="java.lang.String"/>
+<attribute name="c4824" type="java.lang.Integer"/>
+<attribute name="c4825" type="java.lang.String"/>
+<attribute name="c4826" type="java.math.BigDecimal"/>
+<attribute name="c4827" type="java.lang.String"/>
+</outputs>
+<conjunction>
+<predicate type="equality" left="24" right="43"/>
+<predicate type="equality" left="37" right="46"/>
+<predicate type="equality" left="38" right="47"/>
+</conjunction>
+<children>
+<operator type="JOIN" variant="SYMMETRIC_HASH">
+<outputs>
+<attribute name="c4856" type="java.lang.Integer"/>
+<attribute name="c4860" type="java.lang.String"/>
+<attribute name="c4851" type="java.lang.Integer"/>
+<attribute name="c4858" type="java.lang.String"/>
+<attribute name="c4856" type="java.lang.Integer"/>
+<attribute name="c4859" type="java.lang.String"/>
+<attribute name="c4845" type="java.lang.Integer"/>
+<attribute name="c4855" type="java.lang.String"/>
+<attribute name="c4856" type="java.lang.Integer"/>
+<attribute name="c4857" type="java.lang.String"/>
+<attribute name="c4839" type="java.lang.Integer"/>
+<attribute name="c4849" type="java.lang.String"/>
+<attribute name="c4850" type="java.lang.String"/>
+<attribute name="c4851" type="java.lang.Integer"/>
+<attribute name="c4852" type="java.lang.String"/>
+<attribute name="c4853" type="java.math.BigDecimal"/>
+<attribute name="c4854" type="java.lang.String"/>
+<attribute name="c4835" type="java.lang.Integer"/>
+<attribute name="c4843" type="java.lang.String"/>
+<attribute name="c4844" type="java.lang.String"/>
+<attribute name="c4845" type="java.lang.Integer"/>
+<attribute name="c4846" type="java.lang.String"/>
+<attribute name="c4847" type="java.math.BigDecimal"/>
+<attribute name="c4848" type="java.lang.String"/>
+<attribute name="c4819" type="java.lang.Integer"/>
+<attribute name="c4835" type="java.lang.Integer"/>
+<attribute name="c4836" type="java.lang.Integer"/>
+<attribute name="c4837" type="java.math.BigDecimal"/>
+<attribute name="c4838" type="java.lang.String"/>
+<attribute name="c4828" type="java.lang.Integer"/>
+<attribute name="c4839" type="java.lang.Integer"/>
+<attribute name="c4840" type="java.lang.Integer"/>
+<attribute name="c4841" type="java.math.BigDecimal"/>
+<attribute name="c4842" type="java.lang.String"/>
+<attribute name="c4828" type="java.lang.Integer"/>
+<attribute name="c4829" type="java.lang.String"/>
+<attribute name="c4830" type="java.lang.String"/>
+<attribute name="c4822" type="java.lang.String"/>
+<attribute name="c4823" type="java.lang.String"/>
+<attribute name="c4831" type="java.lang.Integer"/>
+<attribute name="c4832" type="java.lang.String"/>
+<attribute name="c4833" type="java.math.BigDecimal"/>
+<attribute name="c4834" type="java.lang.String"/>
+</outputs>
+<conjunction>
+<predicate type="equality" left="29" right="34"/>
+</conjunction>
+<children>
+<operator type="DEPENDENT_JOIN" param="10">
+<outputs>
+<attribute name="c4856" type="java.lang.Integer"/>
+<attribute name="c4860" type="java.lang.String"/>
+<attribute name="c4851" type="java.lang.Integer"/>
+<attribute name="c4858" type="java.lang.String"/>
+<attribute name="c4856" type="java.lang.Integer"/>
+<attribute name="c4859" type="java.lang.String"/>
+<attribute name="c4845" type="java.lang.Integer"/>
+<attribute name="c4855" type="java.lang.String"/>
+<attribute name="c4856" type="java.lang.Integer"/>
+<attribute name="c4857" type="java.lang.String"/>
+<attribute name="c4839" type="java.lang.Integer"/>
+<attribute name="c4849" type="java.lang.String"/>
+<attribute name="c4850" type="java.lang.String"/>
+<attribute name="c4851" type="java.lang.Integer"/>
+<attribute name="c4852" type="java.lang.String"/>
+<attribute name="c4853" type="java.math.BigDecimal"/>
+<attribute name="c4854" type="java.lang.String"/>
+<attribute name="c4835" type="java.lang.Integer"/>
+<attribute name="c4843" type="java.lang.String"/>
+<attribute name="c4844" type="java.lang.String"/>
+<attribute name="c4845" type="java.lang.Integer"/>
+<attribute name="c4846" type="java.lang.String"/>
+<attribute name="c4847" type="java.math.BigDecimal"/>
+<attribute name="c4848" type="java.lang.String"/>
+<attribute name="c4819" type="java.lang.Integer"/>
+<attribute name="c4835" type="java.lang.Integer"/>
+<attribute name="c4836" type="java.lang.Integer"/>
+<attribute name="c4837" type="java.math.BigDecimal"/>
+<attribute name="c4838" type="java.lang.String"/>
+<attribute name="c4828" type="java.lang.Integer"/>
+<attribute name="c4839" type="java.lang.Integer"/>
+<attribute name="c4840" type="java.lang.Integer"/>
+<attribute name="c4841" type="java.math.BigDecimal"/>
+<attribute name="c4842" type="java.lang.String"/>
+</outputs>
+<children>
+<operator type="DEPENDENT_JOIN" param="17">
+<outputs>
+<attribute name="c4856" type="java.lang.Integer"/>
+<attribute name="c4860" type="java.lang.String"/>
+<attribute name="c4851" type="java.lang.Integer"/>
+<attribute name="c4858" type="java.lang.String"/>
+<attribute name="c4856" type="java.lang.Integer"/>
+<attribute name="c4859" type="java.lang.String"/>
+<attribute name="c4845" type="java.lang.Integer"/>
+<attribute name="c4855" type="java.lang.String"/>
+<attribute name="c4856" type="java.lang.Integer"/>
+<attribute name="c4857" type="java.lang.String"/>
+<attribute name="c4839" type="java.lang.Integer"/>
+<attribute name="c4849" type="java.lang.String"/>
+<attribute name="c4850" type="java.lang.String"/>
+<attribute name="c4851" type="java.lang.Integer"/>
+<attribute name="c4852" type="java.lang.String"/>
+<attribute name="c4853" type="java.math.BigDecimal"/>
+<attribute name="c4854" type="java.lang.String"/>
+<attribute name="c4835" type="java.lang.Integer"/>
+<attribute name="c4843" type="java.lang.String"/>
+<attribute name="c4844" type="java.lang.String"/>
+<attribute name="c4845" type="java.lang.Integer"/>
+<attribute name="c4846" type="java.lang.String"/>
+<attribute name="c4847" type="java.math.BigDecimal"/>
+<attribute name="c4848" type="java.lang.String"/>
+<attribute name="c4819" type="java.lang.Integer"/>
+<attribute name="c4835" type="java.lang.Integer"/>
+<attribute name="c4836" type="java.lang.Integer"/>
+<attribute name="c4837" type="java.math.BigDecimal"/>
+<attribute name="c4838" type="java.lang.String"/>
+</outputs>
+<children>
+<operator type="DEPENDENT_JOIN" param="6">
+<outputs>
+<attribute name="c4856" type="java.lang.Integer"/>
+<attribute name="c4860" type="java.lang.String"/>
+<attribute name="c4851" type="java.lang.Integer"/>
+<attribute name="c4858" type="java.lang.String"/>
+<attribute name="c4856" type="java.lang.Integer"/>
+<attribute name="c4859" type="java.lang.String"/>
+<attribute name="c4845" type="java.lang.Integer"/>
+<attribute name="c4855" type="java.lang.String"/>
+<attribute name="c4856" type="java.lang.Integer"/>
+<attribute name="c4857" type="java.lang.String"/>
+<attribute name="c4839" type="java.lang.Integer"/>
+<attribute name="c4849" type="java.lang.String"/>
+<attribute name="c4850" type="java.lang.String"/>
+<attribute name="c4851" type="java.lang.Integer"/>
+<attribute name="c4852" type="java.lang.String"/>
+<attribute name="c4853" type="java.math.BigDecimal"/>
+<attribute name="c4854" type="java.lang.String"/>
+<attribute name="c4835" type="java.lang.Integer"/>
+<attribute name="c4843" type="java.lang.String"/>
+<attribute name="c4844" type="java.lang.String"/>
+<attribute name="c4845" type="java.lang.Integer"/>
+<attribute name="c4846" type="java.lang.String"/>
+<attribute name="c4847" type="java.math.BigDecimal"/>
+<attribute name="c4848" type="java.lang.String"/>
+</outputs>
+<children>
+<operator type="DEPENDENT_JOIN" param="2">
+<outputs>
+<attribute name="c4856" type="java.lang.Integer"/>
+<attribute name="c4860" type="java.lang.String"/>
+<attribute name="c4851" type="java.lang.Integer"/>
+<attribute name="c4858" type="java.lang.String"/>
+<attribute name="c4856" type="java.lang.Integer"/>
+<attribute name="c4859" type="java.lang.String"/>
+<attribute name="c4845" type="java.lang.Integer"/>
+<attribute name="c4855" type="java.lang.String"/>
+<attribute name="c4856" type="java.lang.Integer"/>
+<attribute name="c4857" type="java.lang.String"/>
+<attribute name="c4839" type="java.lang.Integer"/>
+<attribute name="c4849" type="java.lang.String"/>
+<attribute name="c4850" type="java.lang.String"/>
+<attribute name="c4851" type="java.lang.Integer"/>
+<attribute name="c4852" type="java.lang.String"/>
+<attribute name="c4853" type="java.math.BigDecimal"/>
+<attribute name="c4854" type="java.lang.String"/>
+</outputs>
+<children>
+<operator type="DEPENDENT_JOIN" param="0">
+<outputs>
+<attribute name="c4856" type="java.lang.Integer"/>
+<attribute name="c4860" type="java.lang.String"/>
+<attribute name="c4851" type="java.lang.Integer"/>
+<attribute name="c4858" type="java.lang.String"/>
+<attribute name="c4856" type="java.lang.Integer"/>
+<attribute name="c4859" type="java.lang.String"/>
+<attribute name="c4845" type="java.lang.Integer"/>
+<attribute name="c4855" type="java.lang.String"/>
+<attribute name="c4856" type="java.lang.Integer"/>
+<attribute name="c4857" type="java.lang.String"/>
+</outputs>
+<children>
+<operator type="DEPENDENT_JOIN" param="0">
+<outputs>
+<attribute name="c4856" type="java.lang.Integer"/>
+<attribute name="c4860" type="java.lang.String"/>
+<attribute name="c4851" type="java.lang.Integer"/>
+<attribute name="c4858" type="java.lang.String"/>
+<attribute name="c4856" type="java.lang.Integer"/>
+<attribute name="c4859" type="java.lang.String"/>
+</outputs>
+<children>
+<operator type="PROJECT">
+<outputs>
+<attribute name="c4856" type="java.lang.Integer"/>
+<attribute name="c4860" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="r_regionkey" type="java.lang.Integer"/>
+<attribute name="r_comment" type="java.lang.String"/>
+</project>
+<child>
+<operator type="SELECT">
+<outputs>
+<attribute name="r_regionkey" type="java.lang.Integer"/>
+<attribute name="r_name" type="java.lang.String"/>
+<attribute name="r_comment" type="java.lang.String"/>
+</outputs>
+<conjunction>
+<predicate type="equality" left="1" value="EUROPE"/>
+</conjunction>
+<child>
+<operator type="ACCESS" relation="region" access-method="m8">
+<outputs>
+<attribute name="r_regionkey" type="java.lang.Integer"/>
+<attribute name="r_name" type="java.lang.String"/>
+<attribute name="r_comment" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</child>
+</operator>
+<operator type="PROJECT">
+<outputs>
+<attribute name="c4851" type="java.lang.Integer"/>
+<attribute name="c4858" type="java.lang.String"/>
+<attribute name="c4856" type="java.lang.Integer"/>
+<attribute name="c4859" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="n_nationkey" type="java.lang.Integer"/>
+<attribute name="n_name" type="java.lang.String"/>
+<attribute name="n_regionkey" type="java.lang.Integer"/>
+<attribute name="n_comment" type="java.lang.String"/>
+</project>
+<child>
+<operator type="ACCESS" relation="nation" access-method="m7">
+<outputs>
+<attribute name="n_nationkey" type="java.lang.Integer"/>
+<attribute name="n_name" type="java.lang.String"/>
+<attribute name="n_regionkey" type="java.lang.Integer"/>
+<attribute name="n_comment" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</children>
+</operator>
+<operator type="PROJECT">
+<outputs>
+<attribute name="c4845" type="java.lang.Integer"/>
+<attribute name="c4855" type="java.lang.String"/>
+<attribute name="c4856" type="java.lang.Integer"/>
+<attribute name="c4857" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="n_nationkey" type="java.lang.Integer"/>
+<attribute name="n_name" type="java.lang.String"/>
+<attribute name="n_regionkey" type="java.lang.Integer"/>
+<attribute name="n_comment" type="java.lang.String"/>
+</project>
+<child>
+<operator type="ACCESS" relation="nation" access-method="m7">
+<outputs>
+<attribute name="n_nationkey" type="java.lang.Integer"/>
+<attribute name="n_name" type="java.lang.String"/>
+<attribute name="n_regionkey" type="java.lang.Integer"/>
+<attribute name="n_comment" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</children>
+</operator>
+<operator type="PROJECT">
+<outputs>
+<attribute name="c4839" type="java.lang.Integer"/>
+<attribute name="c4849" type="java.lang.String"/>
+<attribute name="c4850" type="java.lang.String"/>
+<attribute name="c4851" type="java.lang.Integer"/>
+<attribute name="c4852" type="java.lang.String"/>
+<attribute name="c4853" type="java.math.BigDecimal"/>
+<attribute name="c4854" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="s_suppkey" type="java.lang.Integer"/>
+<attribute name="s_name" type="java.lang.String"/>
+<attribute name="s_address" type="java.lang.String"/>
+<attribute name="s_nationkey" type="java.lang.Integer"/>
+<attribute name="s_phone" type="java.lang.String"/>
+<attribute name="s_acctbal" type="java.math.BigDecimal"/>
+<attribute name="s_comment" type="java.lang.String"/>
+</project>
+<child>
+<operator type="ACCESS" relation="supplier" access-method="m3">
+<outputs>
+<attribute name="s_suppkey" type="java.lang.Integer"/>
+<attribute name="s_name" type="java.lang.String"/>
+<attribute name="s_address" type="java.lang.String"/>
+<attribute name="s_nationkey" type="java.lang.Integer"/>
+<attribute name="s_phone" type="java.lang.String"/>
+<attribute name="s_acctbal" type="java.math.BigDecimal"/>
+<attribute name="s_comment" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</children>
+</operator>
+<operator type="PROJECT">
+<outputs>
+<attribute name="c4835" type="java.lang.Integer"/>
+<attribute name="c4843" type="java.lang.String"/>
+<attribute name="c4844" type="java.lang.String"/>
+<attribute name="c4845" type="java.lang.Integer"/>
+<attribute name="c4846" type="java.lang.String"/>
+<attribute name="c4847" type="java.math.BigDecimal"/>
+<attribute name="c4848" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="s_suppkey" type="java.lang.Integer"/>
+<attribute name="s_name" type="java.lang.String"/>
+<attribute name="s_address" type="java.lang.String"/>
+<attribute name="s_nationkey" type="java.lang.Integer"/>
+<attribute name="s_phone" type="java.lang.String"/>
+<attribute name="s_acctbal" type="java.math.BigDecimal"/>
+<attribute name="s_comment" type="java.lang.String"/>
+</project>
+<child>
+<operator type="ACCESS" relation="supplier" access-method="m3">
+<outputs>
+<attribute name="s_suppkey" type="java.lang.Integer"/>
+<attribute name="s_name" type="java.lang.String"/>
+<attribute name="s_address" type="java.lang.String"/>
+<attribute name="s_nationkey" type="java.lang.Integer"/>
+<attribute name="s_phone" type="java.lang.String"/>
+<attribute name="s_acctbal" type="java.math.BigDecimal"/>
+<attribute name="s_comment" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</children>
+</operator>
+<operator type="PROJECT">
+<outputs>
+<attribute name="c4819" type="java.lang.Integer"/>
+<attribute name="c4835" type="java.lang.Integer"/>
+<attribute name="c4836" type="java.lang.Integer"/>
+<attribute name="c4837" type="java.math.BigDecimal"/>
+<attribute name="c4838" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="ps_partkey" type="java.lang.Integer"/>
+<attribute name="ps_suppkey" type="java.lang.Integer"/>
+<attribute name="ps_availqty" type="java.lang.Integer"/>
+<attribute name="ps_supplycost" type="java.math.BigDecimal"/>
+<attribute name="ps_comment" type="java.lang.String"/>
+</project>
+<child>
+<operator type="ACCESS" relation="partsupp" access-method="m5">
+<outputs>
+<attribute name="ps_partkey" type="java.lang.Integer"/>
+<attribute name="ps_suppkey" type="java.lang.Integer"/>
+<attribute name="ps_availqty" type="java.lang.Integer"/>
+<attribute name="ps_supplycost" type="java.math.BigDecimal"/>
+<attribute name="ps_comment" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</children>
+</operator>
+<operator type="PROJECT">
+<outputs>
+<attribute name="c4828" type="java.lang.Integer"/>
+<attribute name="c4839" type="java.lang.Integer"/>
+<attribute name="c4840" type="java.lang.Integer"/>
+<attribute name="c4841" type="java.math.BigDecimal"/>
+<attribute name="c4842" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="ps_partkey" type="java.lang.Integer"/>
+<attribute name="ps_suppkey" type="java.lang.Integer"/>
+<attribute name="ps_availqty" type="java.lang.Integer"/>
+<attribute name="ps_supplycost" type="java.math.BigDecimal"/>
+<attribute name="ps_comment" type="java.lang.String"/>
+</project>
+<child>
+<operator type="ACCESS" relation="partsupp" access-method="m5">
+<outputs>
+<attribute name="ps_partkey" type="java.lang.Integer"/>
+<attribute name="ps_suppkey" type="java.lang.Integer"/>
+<attribute name="ps_availqty" type="java.lang.Integer"/>
+<attribute name="ps_supplycost" type="java.math.BigDecimal"/>
+<attribute name="ps_comment" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</children>
+</operator>
+<operator type="PROJECT">
+<outputs>
+<attribute name="c4828" type="java.lang.Integer"/>
+<attribute name="c4829" type="java.lang.String"/>
+<attribute name="c4830" type="java.lang.String"/>
+<attribute name="c4822" type="java.lang.String"/>
+<attribute name="c4823" type="java.lang.String"/>
+<attribute name="c4831" type="java.lang.Integer"/>
+<attribute name="c4832" type="java.lang.String"/>
+<attribute name="c4833" type="java.math.BigDecimal"/>
+<attribute name="c4834" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="p_partkey" type="java.lang.Integer"/>
+<attribute name="p_name" type="java.lang.String"/>
+<attribute name="p_mfgr" type="java.lang.String"/>
+<attribute name="p_brand" type="java.lang.String"/>
+<attribute name="p_type" type="java.lang.String"/>
+<attribute name="p_size" type="java.lang.Integer"/>
+<attribute name="p_container" type="java.lang.String"/>
+<attribute name="p_retailprice" type="java.math.BigDecimal"/>
+<attribute name="p_comment" type="java.lang.String"/>
+</project>
+<child>
+<operator type="ACCESS" relation="part" access-method="m2">
+<outputs>
+<attribute name="p_partkey" type="java.lang.Integer"/>
+<attribute name="p_name" type="java.lang.String"/>
+<attribute name="p_mfgr" type="java.lang.String"/>
+<attribute name="p_brand" type="java.lang.String"/>
+<attribute name="p_type" type="java.lang.String"/>
+<attribute name="p_size" type="java.lang.Integer"/>
+<attribute name="p_container" type="java.lang.String"/>
+<attribute name="p_retailprice" type="java.math.BigDecimal"/>
+<attribute name="p_comment" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</children>
+</operator>
+<operator type="PROJECT">
+<outputs>
+<attribute name="c4819" type="java.lang.Integer"/>
+<attribute name="c4820" type="java.lang.String"/>
+<attribute name="c4821" type="java.lang.String"/>
+<attribute name="c4822" type="java.lang.String"/>
+<attribute name="c4823" type="java.lang.String"/>
+<attribute name="c4824" type="java.lang.Integer"/>
+<attribute name="c4825" type="java.lang.String"/>
+<attribute name="c4826" type="java.math.BigDecimal"/>
+<attribute name="c4827" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="p_partkey" type="java.lang.Integer"/>
+<attribute name="p_name" type="java.lang.String"/>
+<attribute name="p_mfgr" type="java.lang.String"/>
+<attribute name="p_brand" type="java.lang.String"/>
+<attribute name="p_type" type="java.lang.String"/>
+<attribute name="p_size" type="java.lang.Integer"/>
+<attribute name="p_container" type="java.lang.String"/>
+<attribute name="p_retailprice" type="java.math.BigDecimal"/>
+<attribute name="p_comment" type="java.lang.String"/>
+</project>
+<child>
+<operator type="ACCESS" relation="part" access-method="m2">
+<outputs>
+<attribute name="p_partkey" type="java.lang.Integer"/>
+<attribute name="p_name" type="java.lang.String"/>
+<attribute name="p_mfgr" type="java.lang.String"/>
+<attribute name="p_brand" type="java.lang.String"/>
+<attribute name="p_type" type="java.lang.String"/>
+<attribute name="p_size" type="java.lang.Integer"/>
+<attribute name="p_container" type="java.lang.String"/>
+<attribute name="p_retailprice" type="java.math.BigDecimal"/>
+<attribute name="p_comment" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</children>
+</operator>
+</child>
+</operator>
+</plan>

@@ -1,0 +1,4 @@
+RE:DocumentFree BI:chembl_document_free
+RE:AssayLimited BI:chembl_assay_limited_2
+RE:PathwayBySpecies BI:reactome_pathway_1
+RE:TargetLimited BI:chembl_target_limited_1

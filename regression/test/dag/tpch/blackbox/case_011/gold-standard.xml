@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plan type="dag" control-flow="BOTTOM_UP">
+	<operator type="PROJECT">
+		<outputs>
+			<attribute name="c1" type="java.lang.Integer" />
+		</outputs>
+		<child>
+			<operator type="RENAME">
+				<outputs>
+					<attribute name="c1" type="java.lang.Integer" />
+					<attribute name="c2" type="java.lang.String" />
+					<attribute name="c3" type="java.lang.String" />
+					<attribute name="c4" type="java.lang.String" />
+					<attribute name="c5" type="java.lang.String" />
+					<attribute name="c6" type="java.lang.Integer" />
+					<attribute name="c7" type="java.lang.String" />
+					<attribute name="c8" type="java.math.BigDecimal" />
+					<attribute name="c9" type="java.lang.String" />
+				</outputs>
+				<child>
+					<operator type="ACCESS" relation="part">
+						<outputs>
+							<attribute name="p_partkey" type="java.lang.Integer" />
+							<attribute name="p_name" type="java.lang.String" />
+							<attribute name="p_mfgr" type="java.lang.String" />
+							<attribute name="p_brand" type="java.lang.String" />
+							<attribute name="p_type" type="java.lang.String" />
+							<attribute name="p_size" type="java.lang.Integer" />
+							<attribute name="p_container" type="java.lang.String" />
+							<attribute name="p_retailprice" type="java.math.BigDecimal" />
+							<attribute name="p_comment" type="java.lang.String" />
+						</outputs>
+					</operator>
+				</child>
+			</operator>
+		</child>
+	</operator>
+</plan>

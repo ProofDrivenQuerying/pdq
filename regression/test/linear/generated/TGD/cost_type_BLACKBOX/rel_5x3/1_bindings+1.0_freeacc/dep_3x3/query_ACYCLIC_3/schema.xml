@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema>
+	<relations>
+		<relation name="R0" size="884">
+			<attribute name="x0" type="java.lang.String" />
+			<attribute name="x1" type="java.lang.String" />
+			<attribute name="x2" type="java.lang.String" />
+			<access-method name="mt_0" type="LIMITED" inputs="1"
+				cost="5.0" />
+			<access-method name="mt_1" type="FREE" cost="5.0" />
+		</relation>
+		<relation name="R1" size="401">
+			<attribute name="x0" type="java.lang.String" />
+			<attribute name="x1" type="java.lang.String" />
+			<attribute name="x2" type="java.lang.String" />
+			<access-method name="mt_2" type="LIMITED" inputs="2,3"
+				cost="5.0" />
+			<access-method name="mt_3" type="FREE" cost="5.0" />
+		</relation>
+		<relation name="R2" size="508">
+			<attribute name="x0" type="java.lang.String" />
+			<attribute name="x1" type="java.lang.String" />
+			<attribute name="x2" type="java.lang.String" />
+			<access-method name="mt_4" type="LIMITED" inputs="1"
+				cost="5.0" />
+			<access-method name="mt_5" type="FREE" cost="5.0" />
+		</relation>
+		<relation name="R3" size="216">
+			<attribute name="x0" type="java.lang.String" />
+			<attribute name="x1" type="java.lang.String" />
+			<attribute name="x2" type="java.lang.String" />
+			<access-method name="mt_6" type="LIMITED" inputs="2"
+				cost="5.0" />
+			<access-method name="mt_7" type="FREE" cost="5.0" />
+		</relation>
+		<relation name="R4" size="973">
+			<attribute name="x0" type="java.lang.String" />
+			<attribute name="x1" type="java.lang.String" />
+			<attribute name="x2" type="java.lang.String" />
+			<access-method name="mt_8" type="LIMITED" inputs="2,3"
+				cost="5.0" />
+			<access-method name="mt_9" type="FREE" cost="5.0" />
+		</relation>
+	</relations>
+	<dependencies>
+		<dependency>
+			<body>
+				<atom name="R0">
+					<variable name="x4" />
+					<variable name="x1" />
+					<variable name="x2" />
+				</atom>
+			</body>
+			<head>
+				<atom name="R2">
+					<variable name="y8" />
+					<variable name="y4" />
+					<variable name="x4" />
+				</atom>
+				<atom name="R0">
+					<variable name="y5" />
+					<variable name="y4" />
+					<variable name="y2" />
+				</atom>
+				<atom name="R3">
+					<variable name="y2" />
+					<variable name="x1" />
+					<variable name="y5" />
+				</atom>
+			</head>
+		</dependency>
+		<dependency>
+			<body>
+				<atom name="R3">
+					<variable name="x3" />
+					<variable name="x4" />
+					<variable name="x5" />
+				</atom>
+			</body>
+			<head>
+				<atom name="R3">
+					<variable name="y6" />
+					<variable name="y6" />
+					<variable name="x5" />
+				</atom>
+				<atom name="R1">
+					<variable name="y8" />
+					<variable name="x4" />
+					<variable name="x5" />
+				</atom>
+				<atom name="R2">
+					<variable name="x4" />
+					<variable name="y0" />
+					<variable name="x5" />
+				</atom>
+			</head>
+		</dependency>
+		<dependency>
+			<body>
+				<atom name="R4">
+					<variable name="x6" />
+					<variable name="x7" />
+					<variable name="x2" />
+				</atom>
+			</body>
+			<head>
+				<atom name="R1">
+					<variable name="y6" />
+					<variable name="y6" />
+					<variable name="y4" />
+				</atom>
+				<atom name="R3">
+					<variable name="x6" />
+					<variable name="x6" />
+					<variable name="y5" />
+				</atom>
+			</head>
+		</dependency>
+	</dependencies>
+</schema>

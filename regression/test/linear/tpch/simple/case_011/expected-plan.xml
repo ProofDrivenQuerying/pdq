@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plan type="linear" cost="10.0" control-flow="TOP_DOWN">
+<command name="T1">
+<operator type="PROJECT">
+<outputs>
+<attribute name="c1654" type="java.lang.Integer"/>
+</outputs>
+<project>
+<attribute name="c1654" type="java.lang.Integer"/>
+</project>
+<child>
+<operator type="PROJECT">
+<outputs>
+<attribute name="c1654" type="java.lang.Integer"/>
+<attribute name="c1655" type="java.lang.String"/>
+<attribute name="c1656" type="java.lang.String"/>
+<attribute name="c1657" type="java.lang.String"/>
+<attribute name="c1658" type="java.lang.String"/>
+<attribute name="c1659" type="java.lang.Integer"/>
+<attribute name="c1660" type="java.lang.String"/>
+<attribute name="c1661" type="java.math.BigDecimal"/>
+<attribute name="c1662" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="p_partkey" type="java.lang.Integer"/>
+<attribute name="p_name" type="java.lang.String"/>
+<attribute name="p_mfgr" type="java.lang.String"/>
+<attribute name="p_brand" type="java.lang.String"/>
+<attribute name="p_type" type="java.lang.String"/>
+<attribute name="p_size" type="java.lang.Integer"/>
+<attribute name="p_container" type="java.lang.String"/>
+<attribute name="p_retailprice" type="java.math.BigDecimal"/>
+<attribute name="p_comment" type="java.lang.String"/>
+</project>
+<child>
+<operator type="ACCESS" relation="part" access-method="m4">
+<outputs>
+<attribute name="p_partkey" type="java.lang.Integer"/>
+<attribute name="p_name" type="java.lang.String"/>
+<attribute name="p_mfgr" type="java.lang.String"/>
+<attribute name="p_brand" type="java.lang.String"/>
+<attribute name="p_type" type="java.lang.String"/>
+<attribute name="p_size" type="java.lang.Integer"/>
+<attribute name="p_container" type="java.lang.String"/>
+<attribute name="p_retailprice" type="java.math.BigDecimal"/>
+<attribute name="p_comment" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</child>
+</operator>
+</command>
+</plan>

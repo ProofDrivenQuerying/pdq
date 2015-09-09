@@ -1,0 +1,848 @@
+<services name="Chembl services">
+	<input-methods>
+		<input-method name="format"  		 					type="path-element" 	template="&#038;format=json"/>
+		<!-- <input-method name="id"									type="path-element"		template="/{1}.json"	/>
+		<input-method name="id_set"								type="path-element"		template="/{1}"	batch-delimiter=";" batch-size="50"/>
+		 -->
+		<input-method name="document_chembl_id"					type="path-element"		template="?document_chembl_id__exact={1}"	/>
+		<input-method name="molecule_chembl_id"					type="path-element"		template="?molecule_chembl_id__exact={1}"	/>
+		<input-method name="target_chembl_id"					type="path-element"		template="?target_chembl_id__exact={1}"	/>
+		<input-method name="target_organism"					type="path-element"		template="?target_organism__exact={1}"	/>
+		<input-method name="assay_organism"						type="path-element"		template="?assay_organism__exact={1}"	/>
+		<input-method name="pubmed_id"							type="path-element"		template="?pubmed_id__exact={1}"	/>
+		<input-method name="target_component_accession"			type="path-element"		template="?accession__exact={1}"	/>
+		<input-method name="target_component_id"				type="path-element"		template="?component_id__exact={1}"	/>
+		<input-method name="organism"							type="path-element"		template="?organism__exact={1}"/>
+		<input-method name="activity_id"						type="path-element"		template="?activity_id__exact={1}"/>
+		<input-method name="assay_chembl_id"					type="path-element"		template="?assay_chembl_id__exact={1}"/>
+		<input-method name="site_id"							type="path-element"		template="?site_id__exact={1}"/>
+		<input-method name="cell_id"							type="path-element"		template="?cell_id__exact={1}"/>
+		<input-method name="component_id"						type="path-element"		template="?component_id__exact={1}"/>
+		<input-method name="mec_id"								type="path-element"		template="?mec_id__exact={1}"/>
+		<input-method name="protein_class_id"					type="path-element"		template="?protein_class_id__exact={1}"/>
+		<input-method name="src_id"								type="path-element"		template="?src_id__exact={1}"/>
+		
+		
+	</input-methods>
+	
+	 <usage-policies>
+	  <policy name="1000_items_per_page"
+	    type="uk.ac.ox.cs.pdq.services.policies.ItemsLimit"
+	    limit="1000" start-index="0" page-size="limit" page-index="offset" total-items="total_count"/>
+	 </usage-policies>
+	
+	<service
+		name="ActivityFree"
+		protocol="REST"
+		url="https://www.ebi.ac.uk/chembl/api/data/activity.json" 
+		media-type="application/json"
+		documentation=""
+		result-delimiter="activities">
+
+		<policy name="1000_items_per_page" />
+
+		<attribute name="activity_comment"    			type="java.lang.String"    	path="activity_comment"/>
+		<attribute name="activity_id"     				type="java.lang.String"   	path="activity_id"/>
+		<attribute name="assay_chembl_id"     			type="java.lang.String"    	path="assay_chembl_id"/>
+		<attribute name="assay_description" 			type="java.lang.String" 	path="assay_description"/>
+		<attribute name="assay_type"    				type="java.lang.String" 	path="assay_type"/>
+		<attribute name="bao_endpoint"        			type="java.lang.String" 	path="bao_endpoint"/> 
+		<attribute name="bao_format"        			type="java.lang.String" 	path="bao_format"/> 
+		<attribute name="canonical_smiles"        		type="java.lang.String" 	path="canonical_smiles"/>
+		<attribute name="data_validity_comment"        	type="java.lang.String" 	path="data_validity_comment"/>
+		<attribute name="document_chembl_id"     		type="java.lang.String" 	path="document_chembl_id"/>
+		<attribute name="document_journal"     			type="java.lang.String" 	path="document_journal"/>
+		<attribute name="document_year"     			type="java.lang.String" 	path="document_year"/> 
+		<attribute name="molecule_chembl_id"        	type="java.lang.String" 	path="molecule_chembl_id"/>
+		<attribute name="pchembl_value"  				type="java.lang.Double" 	path="pchembl_value"/>
+		<attribute name="potential_duplicate"  			type="java.lang.String" 	path="potential_duplicate"/>
+		<attribute name="published_relation"  			type="java.lang.String" 	path="published_relation"/>
+		<attribute name="published_type"  				type="java.lang.String" 	path="published_type"/>
+		<attribute name="published_units"  				type="java.lang.String" 	path="published_units"/>
+		<attribute name="published_value"  				type="java.lang.String" 	path="published_value"/>
+		<attribute name="qudt_units"  					type="java.lang.String" 	path="qudt_units"/>
+		<attribute name="record_id"  					type="java.lang.String" 	path="record_id"/>
+		<attribute name="standard_flag"  				type="java.lang.Boolean" 	path="standard_flag"/>
+		<attribute name="standard_relation"  			type="java.lang.String" 	path="standard_relation"/>
+		<attribute name="standard_type"  				type="java.lang.String" 	path="standard_type"/>
+		<attribute name="standard_units"  				type="java.lang.String" 	path="standard_units"/>
+		<attribute name="standard_value"  				type="java.lang.Double" 	path="standard_value"/>
+		<attribute name="target_chembl_id"  			type="java.lang.String" 	path="target_chembl_id"/>
+		<attribute name="target_organism"  				type="java.lang.String" 	path="target_organism"/>
+		<attribute name="target_pref_name"  			type="java.lang.String" 	path="target_pref_name"/>
+		<attribute name="uo_units"  					type="java.lang.String" 	path="uo_units"/>
+
+		<access-method type="FREE" 						name="chembl_activity_free" cost="1000.0" />
+	</service>
+
+
+	<service
+		name="ActivityLimited"
+		protocol="REST"
+		url="https://www.ebi.ac.uk/chembl/api/data/activity" 
+		media-type="application/json"
+		documentation=""
+		result-delimiter="activities">
+
+		<policy name="1000_items_per_page" />
+
+		<attribute name="activity_comment"    			type="java.lang.String"    	path="activity_comment"/>
+		<attribute name="activity_id"     				type="java.lang.String"   	path="activity_id"			input-method="activity_id.1"	/>
+		<attribute name="assay_chembl_id"     			type="java.lang.String"    	path="assay_chembl_id"/>
+		<attribute name="assay_description" 			type="java.lang.String" 	path="assay_description"/>
+		<attribute name="assay_type"    				type="java.lang.String" 	path="assay_type"/>
+		<attribute name="bao_endpoint"        			type="java.lang.String" 	path="bao_endpoint"/> 
+		<attribute name="bao_format"        			type="java.lang.String" 	path="bao_format"/> 
+		<attribute name="canonical_smiles"        		type="java.lang.String" 	path="canonical_smiles"/>
+		<attribute name="data_validity_comment"        	type="java.lang.String" 	path="data_validity_comment"/>
+		<attribute name="document_chembl_id"     		type="java.lang.String" 	path="document_chembl_id"	input-method="document_chembl_id.1"/>
+		<attribute name="document_journal"     			type="java.lang.String" 	path="document_journal"/>
+		<attribute name="document_year"     			type="java.lang.String" 	path="document_year"/> 
+		<attribute name="molecule_chembl_id"        	type="java.lang.String" 	path="molecule_chembl_id"	input-method="molecule_chembl_id.1"/>
+		<attribute name="pchembl_value"  				type="java.lang.Double" 	path="pchembl_value"/>
+		<attribute name="potential_duplicate"  			type="java.lang.String" 	path="potential_duplicate"/>
+		<attribute name="published_relation"  			type="java.lang.String" 	path="published_relation"/>
+		<attribute name="published_type"  				type="java.lang.String" 	path="published_type"/>
+		<attribute name="published_units"  				type="java.lang.String" 	path="published_units"/>
+		<attribute name="published_value"  				type="java.lang.String" 	path="published_value"/>
+		<attribute name="qudt_units"  					type="java.lang.String" 	path="qudt_units"/>
+		<attribute name="record_id"  					type="java.lang.String" 	path="record_id"/>
+		<attribute name="standard_flag"  				type="java.lang.Boolean" 	path="standard_flag"/>
+		<attribute name="standard_relation"  			type="java.lang.String" 	path="standard_relation"/>
+		<attribute name="standard_type"  				type="java.lang.String" 	path="standard_type"/>
+		<attribute name="standard_units"  				type="java.lang.String" 	path="standard_units"/>
+		<attribute name="standard_value"  				type="java.lang.Double" 	path="standard_value"/>
+		<attribute name="target_chembl_id"  			type="java.lang.String" 	path="target_chembl_id"		input-method="target_chembl_id.1"/>
+		<attribute name="target_organism"  				type="java.lang.String" 	path="target_organism"		input-method="target_organism.1"/>
+		<attribute name="target_pref_name"  			type="java.lang.String" 	path="target_pref_name"/>
+		<attribute name="uo_units"  					type="java.lang.String" 	path="uo_units"/>
+
+		<static-input name="format" input-method="format"/>
+
+		<access-method type="LIMITED" 					name="chembl_activity_limited" 		inputs="2"    cost="1.0" />
+		<access-method type="LIMITED" 					name="chembl_activity_limited_1" 	inputs="10"   cost="1.0" />
+		<access-method type="LIMITED" 					name="chembl_activity_limited_2" 	inputs="13"   cost="1.0" />
+		<access-method type="LIMITED" 					name="chembl_activity_limited_3" 	inputs="27"   cost="1.0" />
+		<access-method type="LIMITED" 					name="chembl_activity_limited_4" 	inputs="28"   cost="1.0" />
+	</service>
+
+
+
+	<service
+		name="AssayFree"
+		protocol="REST"
+		url="https://www.ebi.ac.uk/chembl/api/data/assay.json" 
+		media-type="application/json"
+		documentation=""
+		result-delimiter="assays">
+
+		<policy name="1000_items_per_page" />
+
+		<attribute name="assay_category"    			type="java.lang.String"    	path="assay_category"/>
+		<attribute name="assay_cell_type"     			type="java.lang.String"   	path="assay_cell_type"/>
+		<attribute name="assay_chembl_id"     			type="java.lang.String"    	path="assay_chembl_id"/>
+		<attribute name="assay_organism" 				type="java.lang.String" 	path="assay_organism"/>
+		<attribute name="assay_strain"    				type="java.lang.String" 	path="assay_strain"/>
+		<attribute name="assay_subcellular_fraction"    type="java.lang.String" 	path="assay_subcellular_fraction"/> 
+		<attribute name="assay_tax_id"        			type="java.lang.String" 	path="assay_tax_id"/> 
+		<attribute name="assay_test_type"        		type="java.lang.String" 	path="assay_test_type"/>
+		<attribute name="assay_tissue"        			type="java.lang.String" 	path="assay_tissue"/>
+		<attribute name="assay_type"     				type="java.lang.String" 	path="assay_type"/>
+		<attribute name="assay_type_description"     	type="java.lang.String" 	path="assay_type_description"/>
+		<attribute name="bao_format"     				type="java.lang.String" 	path="bao_format"/> 
+		<attribute name="cell_chembl_id"        		type="java.lang.String" 	path="cell_chembl_id"/>
+		<attribute name="confidence_description"  		type="java.lang.String" 	path="confidence_description"/>
+		<attribute name="confidence_score"  			type="java.lang.String" 	path="confidence_score"/>
+		<attribute name="description"  					type="java.lang.String" 	path="description"/>
+		<attribute name="document_chembl_id"  			type="java.lang.String" 	path="document_chembl_id"/>
+		<attribute name="relationship_description"  	type="java.lang.String" 	path="relationship_description"/>
+		<attribute name="relationship_type"  			type="java.lang.String" 	path="relationship_type"/>
+		<attribute name="src_assay_id"  				type="java.lang.String" 	path="src_assay_id"/>
+		<attribute name="src_id"  						type="java.lang.String" 	path="src_id"/>
+		<attribute name="target_chembl_id"  			type="java.lang.String" 	path="target_chembl_id"/>
+		
+		<access-method type="FREE" 						name="chembl_assay_free" cost="1000.0" />
+	</service>
+	
+	<service
+		name="AssayLimited"
+		protocol="REST"
+		url="https://www.ebi.ac.uk/chembl/api/data/assay" 
+		media-type="application/json"
+		documentation=""
+		result-delimiter="assays">
+		
+		<policy name="1000_items_per_page" />
+
+		<attribute name="assay_category"    			type="java.lang.String"    	path="assay_category"/>
+		<attribute name="assay_cell_type"     			type="java.lang.String"   	path="assay_cell_type"/>
+		<attribute name="assay_chembl_id"     			type="java.lang.String"    	path="assay_chembl_id"		input-method="assay_chembl_id.1" />
+		<attribute name="assay_organism" 				type="java.lang.String" 	path="assay_organism"		input-method="assay_organism.1"/>
+		<attribute name="assay_strain"    				type="java.lang.String" 	path="assay_strain"/>
+		<attribute name="assay_subcellular_fraction"    type="java.lang.String" 	path="assay_subcellular_fraction"/> 
+		<attribute name="assay_tax_id"        			type="java.lang.String" 	path="assay_tax_id"/> 
+		<attribute name="assay_test_type"        		type="java.lang.String" 	path="assay_test_type"/>
+		<attribute name="assay_tissue"        			type="java.lang.String" 	path="assay_tissue"/>
+		<attribute name="assay_type"     				type="java.lang.String" 	path="assay_type"/>
+		<attribute name="assay_type_description"     	type="java.lang.String" 	path="assay_type_description"/>
+		<attribute name="bao_format"     				type="java.lang.String" 	path="bao_format"/> 
+		<attribute name="cell_chembl_id"        		type="java.lang.String" 	path="cell_chembl_id"/>
+		<attribute name="confidence_description"  		type="java.lang.String" 	path="confidence_description"/>
+		<attribute name="confidence_score"  			type="java.lang.String" 	path="confidence_score"/>
+		<attribute name="description"  					type="java.lang.String" 	path="description"/>
+		<attribute name="document_chembl_id"  			type="java.lang.String" 	path="document_chembl_id"	input-method="document_chembl_id.1"/>
+		<attribute name="relationship_description"  	type="java.lang.String" 	path="relationship_description"/>
+		<attribute name="relationship_type"  			type="java.lang.String" 	path="relationship_type"/>
+		<attribute name="src_assay_id"  				type="java.lang.String" 	path="src_assay_id"/>
+		<attribute name="src_id"  						type="java.lang.String" 	path="src_id"/>
+		<attribute name="target_chembl_id"  			type="java.lang.String" 	path="target_chembl_id"		input-method="target_chembl_id.1"/>
+		
+		<static-input name="format" input-method="format"/>
+		
+		<access-method type="LIMITED" 					name="chembl_assay_limited"		inputs="3"	cost="1.0" />
+		<access-method type="LIMITED" 					name="chembl_assay_limited_1"	inputs="4"	cost="1.0" />
+		<access-method type="LIMITED" 					name="chembl_assay_limited_2"	inputs="17"	cost="1.0" />
+		<access-method type="LIMITED" 					name="chembl_assay_limited_3"	inputs="22"	cost="1.0" />
+	</service>
+
+
+	
+	<service
+		name="ATCFree"
+		protocol="REST"
+		url="https://www.ebi.ac.uk/chembl/api/data/atc_class.json" 
+		media-type="application/json"
+		documentation=""
+		result-delimiter="atc">
+
+		<policy name="1000_items_per_page" />
+
+		<attribute name="level1"    					type="java.lang.String"    	path="level1"/>
+		<attribute name="level1_description"     		type="java.lang.String"   	path="level1_description"/>
+		<attribute name="level2"    					type="java.lang.String"    	path="level2"/>
+		<attribute name="level2_description"     		type="java.lang.String"   	path="level2_description"/>
+		<attribute name="level3"    					type="java.lang.String"    	path="level3"/>
+		<attribute name="level3_description"     		type="java.lang.String"   	path="level3_description"/>
+		<attribute name="level4"    					type="java.lang.String"    	path="level4"/>
+		<attribute name="level4_description"     		type="java.lang.String"   	path="level4_description"/>
+		<attribute name="level5"    					type="java.lang.String"    	path="level5"/>
+		<attribute name="who_id"     					type="java.lang.String"    	path="who_id"/>
+		<attribute name="who_name" 						type="java.lang.String" 	path="who_name"/>
+		
+		<access-method type="FREE" 						name="chembl_atc_free" 		cost="1.0" />
+	</service>
+	
+
+	<service
+		name="BindingSiteFree"
+		protocol="REST"
+		url="https://www.ebi.ac.uk/chembl/api/data/binding_site.json" 
+		media-type="application/json"
+		documentation=""
+		result-delimiter="binding_sites">
+		
+		<policy name="1000_items_per_page" />
+
+		<attribute name="domain_description"    		type="java.lang.String"    	path="site_component/domain/domain_description"/>
+		<attribute name="domain_id"     				type="java.lang.String"   	path="site_component/domain/domain_id"/>
+		<attribute name="domain_name"    				type="java.lang.String"    	path="site_component/domain/domain_name"/>
+		<attribute name="domain_type"    				type="java.lang.String"    	path="site_component/domain/domain_type"/>
+		<attribute name="source_domain_id"    			type="java.lang.String"    	path="site_component/domain/source_domain_id"/>
+		<attribute name="site_residues"    				type="java.lang.String"    	path="site_component/site_residues"/>
+		<attribute name="sitecomp_id"    				type="java.lang.String"    	path="site_component/sitecomp_id"/>
+		<attribute name="site_id"    					type="java.lang.String"    	path="site_id"/>
+		<attribute name="site_name"    					type="java.lang.String"    	path="site_name"/>
+		
+		<access-method type="FREE" 						name="chembl_bindingsite_free" 		cost="1.0" />
+	</service>
+	
+	<service
+		name="BindingSiteLimited"
+		protocol="REST"
+		url="https://www.ebi.ac.uk/chembl/api/data/binding_site" 
+		media-type="application/json"
+		documentation=""
+		result-delimiter="binding_sites">
+		
+		<policy name="1000_items_per_page" />
+
+		<attribute name="domain_description"    		type="java.lang.String"    	path="site_component/domain/domain_description"/>
+		<attribute name="domain_id"     				type="java.lang.String"   	path="site_component/domain/domain_id"/>
+		<attribute name="domain_name"    				type="java.lang.String"    	path="site_component/domain/domain_name"/>
+		<attribute name="domain_type"    				type="java.lang.String"    	path="site_component/domain/domain_type"/>
+		<attribute name="source_domain_id"    			type="java.lang.String"    	path="site_component/domain/source_domain_id"/>
+		<attribute name="site_residues"    				type="java.lang.String"    	path="site_component/site_residues"/>
+		<attribute name="sitecomp_id"    				type="java.lang.String"    	path="site_component/sitecomp_id"/>
+		<attribute name="site_id"    					type="java.lang.String"    	path="site_id"							input-method="site_id.1"/>
+		<attribute name="site_name"    					type="java.lang.String"    	path="site_name"/>
+		
+		<static-input name="format" input-method="format"/>
+		
+		<access-method type="LIMITED" 					name="chembl_bindingsite_limited" inputs="8"		cost="1.0" />
+	</service>
+
+	<service
+		name="BioComponentFree"
+		protocol="REST"
+		url="https://www.ebi.ac.uk/chembl/api/data/biocomponent.json" 
+		media-type="application/json"
+		documentation=""
+		result-delimiter="biocomponents">
+
+		<policy name="1000_items_per_page" />
+
+		<attribute name="component_id"    				type="java.lang.String"    	path="component_id"/>
+		<attribute name="component_type"     			type="java.lang.String"   	path="component_type"/>
+		<attribute name="description"    				type="java.lang.String"    	path="description"/>
+		<attribute name="organism"    					type="java.lang.String"    	path="organism"/>
+		<attribute name="sequence"    					type="java.lang.String"    	path="sequence"/>
+		<attribute name="tax_id"    					type="java.lang.String"    	path="tax_id"/>
+		
+		<access-method type="FREE" 						name="chembl_biocomponent_free" 		cost="1.0" />
+	</service>
+	
+	<service
+		name="BioComponentLimited"
+		protocol="REST"
+		url="https://www.ebi.ac.uk/chembl/api/data/biocomponent" 
+		media-type="application/json"
+		documentation=""
+		result-delimiter="biocomponents">
+		
+		<policy name="1000_items_per_page" />
+
+		<attribute name="component_id"    				type="java.lang.String"    	path="component_id"		input-method="component_id.1"/>
+		<attribute name="component_type"     			type="java.lang.String"   	path="component_type"/>
+		<attribute name="description"    				type="java.lang.String"    	path="description"/>
+		<attribute name="organism"    					type="java.lang.String"    	path="organism"/>
+		<attribute name="sequence"    					type="java.lang.String"    	path="sequence"/>
+		<attribute name="tax_id"    					type="java.lang.String"    	path="tax_id"/>
+		
+		<static-input name="format" input-method="format"/>
+		
+		<access-method type="LIMITED" 					name="chembl_biocomponent_limited" inputs="1"		cost="1.0" />
+	</service>
+
+	<service
+		name="CellLineFree"
+		protocol="REST"
+		url="https://www.ebi.ac.uk/chembl/api/data/cell_line.json" 
+		media-type="application/json"
+		documentation=""
+		result-delimiter="cell_lines">
+		
+		<policy name="1000_items_per_page" />
+
+		<attribute name="cell_chembl_id"    			type="java.lang.String"    	path="cell_chembl_id"/>
+		<attribute name="cell_description"     			type="java.lang.String"   	path="cell_description"/>
+		<attribute name="cell_id"    					type="java.lang.String"    	path="cell_id"/>
+		<attribute name="cell_name"    					type="java.lang.String"    	path="cell_name"/>
+		<attribute name="cell_source_organism"    		type="java.lang.String"    	path="cell_source_organism"/>
+		<attribute name="cell_source_tax_id"    		type="java.lang.String"    	path="cell_source_tax_id"/>
+		<attribute name="cell_source_tissue"    		type="java.lang.String"    	path="cell_source_tissue"/>
+		<attribute name="cellosaurus_id"    			type="java.lang.String"    	path="cellosaurus_id"/>
+		<attribute name="clo_id"    					type="java.lang.String"    	path="clo_id"/>
+		<attribute name="efo_id"    					type="java.lang.String"    	path="efo_id"/>
+		
+		<access-method type="FREE" 						name="chembl_cellline_free" 		cost="1.0" />
+	</service>
+	
+	<service
+		name="CellLineLimited"
+		protocol="REST"
+		url="https://www.ebi.ac.uk/chembl/api/data/cell_line" 
+		media-type="application/json"
+		documentation=""
+		result-delimiter="cell_lines">
+		
+		<policy name="1000_items_per_page" />
+
+		<attribute name="cell_chembl_id"    			type="java.lang.String"    	path="cell_chembl_id"/>
+		<attribute name="cell_description"     			type="java.lang.String"   	path="cell_description"/>
+		<attribute name="cell_id"    					type="java.lang.String"   	path="cell_id"				input-method="cell_id.1"/>
+		<attribute name="cell_name"    					type="java.lang.String"    	path="cell_name"/>
+		<attribute name="cell_source_organism"    		type="java.lang.String"    	path="cell_source_organism"/>
+		<attribute name="cell_source_tax_id"    		type="java.lang.String"    	path="cell_source_tax_id"/>
+		<attribute name="cell_source_tissue"    		type="java.lang.String"    	path="cell_source_tissue"/>
+		<attribute name="cellosaurus_id"    			type="java.lang.String"    	path="cellosaurus_id"/>
+		<attribute name="clo_id"    					type="java.lang.String"    	path="clo_id"/>
+		<attribute name="efo_id"    					type="java.lang.String"    	path="efo_id"/>
+		
+		<static-input name="format" input-method="format"/>
+		
+		<access-method type="LIMITED" 					name="chembl_cellline_limited" inputs="3"		cost="1.0" />
+	</service>
+
+	<service
+		name="DocumentFree"
+		protocol="REST"
+		url="https://www.ebi.ac.uk/chembl/api/data/document.json" 
+		media-type="application/json"
+		documentation=""
+		result-delimiter="documents">
+		
+		<policy name="1000_items_per_page" />
+
+		<attribute name="authors"    			type="java.lang.String"    	path="authors"/>
+		<attribute name="doc_type"     			type="java.lang.String"   	path="doc_type"/>
+		<attribute name="document_chembl_id"    type="java.lang.String"    	path="document_chembl_id"/>
+		<attribute name="doi"    				type="java.lang.String"    	path="doi"/>
+		<attribute name="first_page"    		type="java.lang.String"    	path="first_page"/>
+		<attribute name="issue"    				type="java.lang.String"    	path="issue"/>
+		<attribute name="journal"    			type="java.lang.String"    	path="journal"/>
+		<attribute name="last_page"    			type="java.lang.String"    	path="last_page"/>
+		<attribute name="pubmed_id"    			type="java.lang.String"    	path="pubmed_id"		/>
+		<attribute name="title"    				type="java.lang.String"    	path="title"/>
+		<attribute name="volume"    			type="java.lang.String"    	path="volume"/>
+		<attribute name="year"    				type="java.lang.String"    	path="year"/>
+		
+		<access-method type="FREE" 				name="chembl_document_free" cost="1.0" />
+	</service>
+	
+	<service
+		name="DocumentLimited"
+		protocol="REST"
+		url="https://www.ebi.ac.uk/chembl/api/data/document" 
+		media-type="application/json"
+		documentation=""
+		result-delimiter="documents">
+		
+		<policy name="1000_items_per_page" />
+
+		<attribute name="authors"    			type="java.lang.String"    	path="authors"/>
+		<attribute name="doc_type"     			type="java.lang.String"   	path="doc_type"/>
+		<attribute name="document_chembl_id"    type="java.lang.String"    	path="document_chembl_id"	input-method="document_chembl_id.1"/>
+		<attribute name="doi"    				type="java.lang.String"    	path="doi"/>
+		<attribute name="first_page"    		type="java.lang.String"    	path="first_page"/>
+		<attribute name="issue"    				type="java.lang.String"    	path="issue"/>
+		<attribute name="journal"    			type="java.lang.String"    	path="journal"/>
+		<attribute name="last_page"    			type="java.lang.String"    	path="last_page"/>
+		<attribute name="pubmed_id"    			type="java.lang.String"    	path="pubmed_id"			input-method="pubmed_id.1"/>
+		<attribute name="title"    				type="java.lang.String"    	path="title"/>
+		<attribute name="volume"    			type="java.lang.String"    	path="volume"/>
+		<attribute name="year"    				type="java.lang.String"    	path="year"/>
+		
+		<static-input name="format" input-method="format"/>
+		
+		<access-method type="LIMITED" 			name="chembl_document_limited" 		inputs="3"	cost="1.0" />
+		<access-method type="LIMITED" 			name="chembl_document_limited_1" 	inputs="9"	cost="1.0" />
+	</service>
+	
+	<service
+		name="MechanismFree"
+		protocol="REST"
+		url="https://www.ebi.ac.uk/chembl/api/data/mechanism.json" 
+		media-type="application/json"
+		documentation=""
+		result-delimiter="mechanisms">
+		
+		<policy name="1000_items_per_page" />
+
+		<attribute name="action_type"    				type="java.lang.String"    	path="action_type"/>
+		<attribute name="binding_site_comment"     		type="java.lang.String"   	path="binding_site_comment"/>
+		<attribute name="direct_interaction"    		type="java.lang.Boolean"    path="direct_interaction"/>
+		<attribute name="disease_efficacy"    			type="java.lang.Boolean"    path="disease_efficacy"/>
+		<attribute name="mec_id"    					type="java.lang.String"    	path="mec_id"/>
+		<attribute name="mechanism_comment"    			type="java.lang.String"    	path="mechanism_comment"/>
+		<attribute name="mechanism_of_action"    		type="java.lang.String"    	path="mechanism_of_action"/>
+		<attribute name="molecular_mechanism"    		type="java.lang.Boolean"    path="molecular_mechanism"/>
+		<attribute name="molecule_chembl_id"    		type="java.lang.String"    	path="molecule_chembl_id"/>
+		<attribute name="record_id"    					type="java.lang.String"    	path="record_id"/>
+		<attribute name="selectivity_comment"    		type="java.lang.String"    	path="selectivity_comment"/>
+		<attribute name="site_id"    					type="java.lang.String"    	path="site_id"/>
+		<attribute name="target_chembl_id"    			type="java.lang.String"    	path="target_chembl_id"/>
+		
+		<access-method type="FREE" 				name="chembl_mechanism_free" cost="1.0" />
+	</service>
+
+	<service
+		name="MechanismLimited"
+		protocol="REST"
+		url="https://www.ebi.ac.uk/chembl/api/data/mechanism" 
+		media-type="application/json"
+		documentation=""
+		result-delimiter="mechanisms">
+		
+		<policy name="1000_items_per_page" />
+
+		<attribute name="action_type"    				type="java.lang.String"    	path="action_type"/>
+		<attribute name="binding_site_comment"     		type="java.lang.String"   	path="binding_site_comment"/>
+		<attribute name="direct_interaction"    		type="java.lang.Boolean"    path="direct_interaction"/>
+		<attribute name="disease_efficacy"    			type="java.lang.Boolean"    path="disease_efficacy"/>
+		<attribute name="mec_id"    					type="java.lang.String"    	path="mec_id"					input-method="mec_id.1"/>
+		<attribute name="mechanism_comment"    			type="java.lang.String"    	path="mechanism_comment"/>
+		<attribute name="mechanism_of_action"    		type="java.lang.String"    	path="mechanism_of_action"/>
+		<attribute name="molecular_mechanism"    		type="java.lang.Boolean"    path="molecular_mechanism"/>
+		<attribute name="molecule_chembl_id"    		type="java.lang.String"    	path="molecule_chembl_id"/>
+		<attribute name="record_id"    					type="java.lang.Integer"    path="record_id"/>
+		<attribute name="selectivity_comment"    		type="java.lang.String"    	path="selectivity_comment"/>
+		<attribute name="site_id"    					type="java.lang.String"    	path="site_id"/>
+		<attribute name="target_chembl_id"    			type="java.lang.String"    	path="target_chembl_id"/>
+		
+		<static-input name="format" input-method="format"/>
+		
+		<access-method type="LIMITED" 				name="chembl_mechanism_limited" inputs="5"	cost="1.0" />
+	</service>
+		
+	<service
+		name="MoleculeFree"
+		protocol="REST"
+		url="https://www.ebi.ac.uk/chembl/api/data/molecule.json" 
+		media-type="application/json"
+		documentation=""
+		result-delimiter="molecules">
+		
+		<policy name="1000_items_per_page" />
+
+		<attribute name="atc_classifications"    		type="java.lang.String"    	path="atc_classifications"/>
+		<attribute name="availability_type"     		type="java.lang.String"   	path="availability_type"/>
+		<attribute name="biocomponents"    				type="java.lang.String"    	path="biocomponents"/>
+		<attribute name="biotherapeutic"    			type="java.lang.Boolean"    path="biotherapeutic"/>
+		<attribute name="black_box_warning"    			type="java.lang.Integer"    path="black_box_warning"/>
+		<attribute name="chebi_par_id"    				type="java.lang.String"    	path="chebi_par_id"/>
+		<attribute name="chirality"    					type="java.lang.Integer"    path="chirality"/>
+		<attribute name="dosed_ingredient"    			type="java.lang.String"    	path="dosed_ingredient"/>
+		<attribute name="first_approval"    			type="java.lang.String"    	path="first_approval"/>
+		<attribute name="first_in_class"    			type="java.lang.Integer"    path="first_in_class"/>
+		<attribute name="helm_notation"    				type="java.lang.String"    	path="helm_notation"/>
+		<attribute name="indication_class"    			type="java.lang.String"    	path="indication_class"/>
+		<attribute name="inorganic_flag"    			type="java.lang.String"    	path="inorganic_flag"/>
+		<attribute name="max_phase"    					type="java.lang.String"    	path="max_phase"/>
+		<attribute name="molecule_chembl_id"    		type="java.lang.String"    	path="molecule_chembl_id"/>
+		<attribute name="parent_chembl_id"    			type="java.lang.String"    	path="molecule_hierarchy/parent_chembl_id"/>
+		<attribute name="acd_logd"    					type="java.lang.Double"    	path="molecule_properties/acd_logd"/>
+		<attribute name="acd_logp"    					type="java.lang.Double"    	path="molecule_properties/acd_logp"/>
+		<attribute name="acd_most_apka"    				type="java.lang.Double"    	path="molecule_properties/acd_most_apka"/>
+		<attribute name="acd_most_bpka"    				type="java.lang.Double"   	path="molecule_properties/acd_most_bpka"/>
+		<attribute name="alogp"    						type="java.lang.Double"    	path="molecule_properties/alogp"/>
+		<attribute name="aromatic_rings"    			type="java.lang.Integer"    path="molecule_properties/aromatic_rings"/>
+		<attribute name="full_molformula"    			type="java.lang.String"    	path="molecule_properties/full_molformula"/>
+		<attribute name="full_mwt"    					type="java.lang.Double"    	path="molecule_properties/full_mwt"/>
+		<attribute name="hba"    						type="java.lang.Integer"    path="molecule_properties/hba"/>
+		<attribute name="hbd"    						type="java.lang.Integer"    path="molecule_properties/hbd"/>
+		<attribute name="heavy_atoms"    				type="java.lang.Integer"    path="molecule_properties/heavy_atoms"/>
+		<attribute name="med_chem_friendly"    			type="java.lang.String"  	path="molecule_properties/med_chem_friendly"/>
+		<attribute name="molecular_species"    			type="java.lang.String"    	path="molecule_properties/molecular_species"/> <!-- Indicates whether the compound is an acid/base/neutral -->
+		<attribute name="mw_freebase"    				type="java.lang.Double"    	path="molecule_properties/mw_freebase"/>
+		<attribute name="mw_monoisotopic"    			type="java.lang.Double"    	path="molecule_properties/mw_monoisotopic"/>
+		<attribute name="num_alerts"    				type="java.lang.Integer"    path="molecule_properties/num_alerts"/>
+		<attribute name="num_ro5_violations"    		type="java.lang.Integer"  	path="molecule_properties/num_ro5_violations"/>
+		<attribute name="psa"    						type="java.lang.Double"    	path="molecule_properties/psa"/>	
+		<attribute name="qed_weighted"    				type="java.lang.Double"    	path="molecule_properties/qed_weighted"/>
+		<attribute name="ro3_pass"    					type="java.lang.String"  	path="molecule_properties/ro3_pass"/>
+		<attribute name="rtb"    						type="java.lang.Integer"   	path="molecule_properties/rtb"/>	
+		<attribute name="canonical_smiles"    			type="java.lang.String"    	path="molecule_structure/canonical_smiles"/>
+		<attribute name="standard_inchi"    			type="java.lang.String"    	path="molecule_structure/standard_inchi"/>
+		<attribute name="standard_inchi_key"    		type="java.lang.String"    	path="molecule_structure/standard_inchi_key"/>
+		<attribute name="molecule_synonyms"    			type="java.lang.String"  	path="molecule_synonyms"/>
+		<attribute name="molecule_type"    				type="java.lang.String"    	path="molecule_type"/>
+		<attribute name="natural_product"    			type="java.lang.String"    	path="natural_product"/>
+		<attribute name="oral"    						type="java.lang.String"   	path="oral"/>
+		<attribute name="parenteral"    				type="java.lang.String"    	path="parenteral"/>
+		<attribute name="polymer_flag"    				type="java.lang.String"  	path="polymer_flag"/>
+		<attribute name="pref_name"    					type="java.lang.String"    	path="pref_name"/>	
+		<attribute name="prodrug"    					type="java.lang.String"    	path="prodrug"/>
+		<attribute name="structure_type"    			type="java.lang.String"  	path="structure_type"/>
+		<attribute name="therapeutic_flag"    			type="java.lang.String"   	path="therapeutic_flag"/>
+		<attribute name="topical"    					type="java.lang.String"    	path="topical"/>
+		<attribute name="usan_stem"    					type="java.lang.String"  	path="usan_stem"/>
+		<attribute name="usan_stem_definition"    		type="java.lang.String"    	path="usan_stem_definition"/>	
+		<attribute name="usan_substem"    				type="java.lang.String"    	path="usan_substem"/>
+		<attribute name="usan_year"    					type="java.lang.String"  	path="usan_year"/>
+		
+		<access-method type="FREE" 					name="chembl_molecule_free" cost="1.0" />
+	</service>
+	
+	<service
+		name="MoleculeLimited"
+		protocol="REST"
+		url="https://www.ebi.ac.uk/chembl/api/data/molecule" 
+		media-type="application/json"
+		documentation=""
+		result-delimiter="molecules">
+		
+		<policy name="1000_items_per_page" />
+
+		<attribute name="atc_classifications"    		type="java.lang.String"    	path="atc_classifications"/>
+		<attribute name="availability_type"     		type="java.lang.String"   	path="availability_type"/>
+		<attribute name="biocomponents"    				type="java.lang.String"    	path="biocomponents"/>
+		<attribute name="biotherapeutic"    			type="java.lang.Boolean"    path="biotherapeutic"/>
+		<attribute name="black_box_warning"    			type="java.lang.Integer"    path="black_box_warning"/>
+		<attribute name="chebi_par_id"    				type="java.lang.String"    	path="chebi_par_id"/>
+		<attribute name="chirality"    					type="java.lang.Integer"    path="chirality"/>
+		<attribute name="dosed_ingredient"    			type="java.lang.String"    	path="dosed_ingredient"/>
+		<attribute name="first_approval"    			type="java.lang.String"    	path="first_approval"/>
+		<attribute name="first_in_class"    			type="java.lang.Integer"    path="first_in_class"/>
+		<attribute name="helm_notation"    				type="java.lang.String"    	path="helm_notation"/>
+		<attribute name="indication_class"    			type="java.lang.String"    	path="indication_class"/>
+		<attribute name="inorganic_flag"    			type="java.lang.String"    	path="inorganic_flag"/>
+		<attribute name="max_phase"    					type="java.lang.String"    	path="max_phase"/>
+		<attribute name="molecule_chembl_id"    		type="java.lang.String"    	path="molecule_chembl_id"						input-method="molecule_chembl_id.1"/>
+		<attribute name="parent_chembl_id"    			type="java.lang.String"    	path="molecule_hierarchy/parent_chembl_id"/>
+		<attribute name="acd_logd"    					type="java.lang.Double"    	path="molecule_properties/acd_logd"/>
+		<attribute name="acd_logp"    					type="java.lang.Double"    	path="molecule_properties/acd_logp"/>
+		<attribute name="acd_most_apka"    				type="java.lang.Double"    	path="molecule_properties/acd_most_apka"/>
+		<attribute name="acd_most_bpka"    				type="java.lang.Double"   	path="molecule_properties/acd_most_bpka"/>
+		<attribute name="alogp"    						type="java.lang.Double"    	path="molecule_properties/alogp"/>
+		<attribute name="aromatic_rings"    			type="java.lang.Integer"    path="molecule_properties/aromatic_rings"/>
+		<attribute name="full_molformula"    			type="java.lang.String"    	path="molecule_properties/full_molformula"/>
+		<attribute name="full_mwt"    					type="java.lang.Double"    	path="molecule_properties/full_mwt"/>
+		<attribute name="hba"    						type="java.lang.Integer"    path="molecule_properties/hba"/>
+		<attribute name="hbd"    						type="java.lang.Integer"    path="molecule_properties/hbd"/>
+		<attribute name="heavy_atoms"    				type="java.lang.Integer"    path="molecule_properties/heavy_atoms"/>
+		<attribute name="med_chem_friendly"    			type="java.lang.String"  	path="molecule_properties/med_chem_friendly"/>
+		<attribute name="molecular_species"    			type="java.lang.String"    	path="molecule_properties/molecular_species"/> 
+		<attribute name="mw_freebase"    				type="java.lang.Double"    	path="molecule_properties/mw_freebase"/>
+		<attribute name="mw_monoisotopic"    			type="java.lang.Double"    	path="molecule_properties/mw_monoisotopic"/>
+		<attribute name="num_alerts"    				type="java.lang.Integer"    path="molecule_properties/num_alerts"/>
+		<attribute name="num_ro5_violations"    		type="java.lang.Integer"  	path="molecule_properties/num_ro5_violations"/>
+		<attribute name="psa"    						type="java.lang.Double"    	path="molecule_properties/psa"/>	
+		<attribute name="qed_weighted"    				type="java.lang.Double"    	path="molecule_properties/qed_weighted"/>
+		<attribute name="ro3_pass"    					type="java.lang.String"  	path="molecule_properties/ro3_pass"/>
+		<attribute name="rtb"    						type="java.lang.Integer"   	path="molecule_properties/rtb"/>	
+		<attribute name="canonical_smiles"    			type="java.lang.String"    	path="molecule_structure/canonical_smiles"/>
+		<attribute name="standard_inchi"    			type="java.lang.String"    	path="molecule_structure/standard_inchi"/>
+		<attribute name="standard_inchi_key"    		type="java.lang.String"    	path="molecule_structure/standard_inchi_key"/>
+		<attribute name="molecule_synonyms"    			type="java.lang.String"  	path="molecule_synonyms"/>
+		<attribute name="molecule_type"    				type="java.lang.String"    	path="molecule_type"/>
+		<attribute name="natural_product"    			type="java.lang.String"    	path="natural_product"/>
+		<attribute name="oral"    						type="java.lang.String"   	path="oral"/>
+		<attribute name="parenteral"    				type="java.lang.String"    	path="parenteral"/>
+		<attribute name="polymer_flag"    				type="java.lang.String"  	path="polymer_flag"/>
+		<attribute name="pref_name"    					type="java.lang.String"    	path="pref_name"/>	
+		<attribute name="prodrug"    					type="java.lang.String"    	path="prodrug"/>
+		<attribute name="structure_type"    			type="java.lang.String"  	path="structure_type"/>
+		<attribute name="therapeutic_flag"    			type="java.lang.String"   	path="therapeutic_flag"/>
+		<attribute name="topical"    					type="java.lang.String"    	path="topical"/>
+		<attribute name="usan_stem"    					type="java.lang.String"  	path="usan_stem"/>
+		<attribute name="usan_stem_definition"    		type="java.lang.String"    	path="usan_stem_definition"/>	
+		<attribute name="usan_substem"    				type="java.lang.String"    	path="usan_substem"/>
+		<attribute name="usan_year"    					type="java.lang.String"  	path="usan_year"/>
+		
+		<static-input name="format" input-method="format"/>
+		
+		<access-method type="LIMITED" 					name="chembl_molecule_limited"	inputs="15"	cost="1.0" />
+	</service>
+	
+	
+	
+	<service
+		name="MoleculeFormFree"
+		protocol="REST"
+		url="https://www.ebi.ac.uk/chembl/api/data/molecule_form.json" 
+		media-type="application/json"
+		documentation=""
+		result-delimiter="molecule_forms">
+		
+		<policy name="1000_items_per_page" />
+
+		<attribute name="molecule_chembl_id"    		type="java.lang.String"    	path="molecule_chembl_id"/>
+		<attribute name="parent"     					type="java.lang.Boolean"   	path="parent"/>
+		
+		<access-method type="FREE" 					name="chembl_molecule_form_free" cost="1.0" />
+	</service>
+	
+	<service
+		name="MoleculeFormLimited"
+		protocol="REST"
+		url="https://www.ebi.ac.uk/chembl/api/data/molecule_form" 
+		media-type="application/json"
+		documentation=""
+		result-delimiter="molecule_forms">
+		
+		<policy name="1000_items_per_page" />
+
+		<attribute name="in_id"    						type="java.lang.String"    									input-method="molecule_chembl_id.1"/>
+		<attribute name="molecule_chembl_id"    		type="java.lang.String"    	path="molecule_chembl_id"/>
+		<attribute name="parent"     					type="java.lang.Boolean"   	path="parent"/>
+		
+		<static-input name="format" input-method="format"/>
+		
+		<access-method type="LIMITED" 					name="chembl_molecule_form_limited"	inputs="1"	cost="1.0" />
+	</service>
+	
+	<service
+		name="ProteinClassFree"
+		protocol="REST"
+		url="https://www.ebi.ac.uk/chembl/api/data/protein_class.json" 
+		media-type="application/json"
+		documentation=""
+		result-delimiter="protein_classes">
+		
+		<policy name="1000_items_per_page" />
+
+		<attribute name="l1"    					type="java.lang.String"    	path="l1"/>
+		<attribute name="l2"    					type="java.lang.String"    	path="l2"/>
+		<attribute name="l3"    					type="java.lang.String"    	path="l3"/>
+		<attribute name="l4"    					type="java.lang.String"    	path="l4"/>
+		<attribute name="l5"    					type="java.lang.String"    	path="l5"/>
+		<attribute name="l6"    					type="java.lang.String"    	path="l6"/>
+		<attribute name="l7"    					type="java.lang.String"    	path="l7"/>
+		<attribute name="l8"    					type="java.lang.String"    	path="l8"/>
+		<attribute name="protein_class_id"    		type="java.lang.String"    	path="protein_class_id"/>
+		
+		<access-method type="FREE" 					name="chembl_protein_class_free" cost="1.0" />
+	</service>
+	
+	<service
+		name="ProteinClassLimited"
+		protocol="REST"
+		url="https://www.ebi.ac.uk/chembl/api/data/protein_class" 
+		media-type="application/json"
+		documentation=""
+		result-delimiter="protein_classes">
+
+		<policy name="1000_items_per_page" />
+
+		<attribute name="l1"    					type="java.lang.String"    	path="l1"/>
+		<attribute name="l2"    					type="java.lang.String"    	path="l2"/>
+		<attribute name="l3"    					type="java.lang.String"    	path="l3"/>
+		<attribute name="l4"    					type="java.lang.String"    	path="l4"/>
+		<attribute name="l5"    					type="java.lang.String"    	path="l5"/>
+		<attribute name="l6"    					type="java.lang.String"    	path="l6"/>
+		<attribute name="l7"    					type="java.lang.String"    	path="l7"/>
+		<attribute name="l8"    					type="java.lang.String"    	path="l8"/>
+		<attribute name="protein_class_id"    		type="java.lang.String"    	path="protein_class_id"	input-method="protein_class_id.1"/>
+		
+		<static-input name="format" input-method="format"/>
+		
+		<access-method type="LIMITED" 					name="chembl_protein_class_limited"	inputs="9"	cost="1.0" />
+	</service>
+
+	<service
+		name="SourceFree"
+		protocol="REST"
+		url="https://www.ebi.ac.uk/chembl/api/data/source.json" 
+		media-type="application/json"
+		documentation=""
+		result-delimiter="sources">
+		
+		<policy name="1000_items_per_page" />
+
+		<attribute name="src_description"    		type="java.lang.String"    	path="src_description"/>
+		<attribute name="src_id"    				type="java.lang.String"    	path="src_id"/>
+		<attribute name="src_short_name"    		type="java.lang.String"    	path="src_short_name"/>
+		
+		<access-method type="FREE" 					name="chembl_source_free" cost="1.0" />
+	</service>
+	
+	<service
+		name="SourceLimited"
+		protocol="REST"
+		url="https://www.ebi.ac.uk/chembl/api/data/source" 
+		media-type="application/json"
+		documentation=""
+		result-delimiter="sources">
+		
+		<policy name="1000_items_per_page" />
+
+		<attribute name="src_description"    		type="java.lang.String"    	path="src_description"/>
+		<attribute name="src_id"    				type="java.lang.String"    	path="src_id"	input-method="src_id.1"/>
+		<attribute name="src_short_name"    		type="java.lang.String"    	path="src_short_name"/>
+		
+		<static-input name="format" input-method="format"/>
+		
+		<access-method type="LIMITED" 					name="chembl_source_limited"	inputs="2" cost="1.0" />
+	</service>
+	
+	<service
+		name="TargetFree"
+		protocol="REST"
+		url="https://www.ebi.ac.uk/chembl/api/data/target.json" 
+		media-type="application/json"
+		documentation=""
+		result-delimiter="targets">
+		
+		<policy name="1000_items_per_page" />
+
+		<attribute name="organism"    					type="java.lang.String"    	path="organism"/>
+		<attribute name="pref_name"    					type="java.lang.String"    	path="pref_name"/>
+		<attribute name="species_group_flag"    		type="java.lang.String"    	path="species_group_flag"/>
+		<attribute name="target_chembl_id"    			type="java.lang.String"    	path="target_chembl_id"/>
+		<attribute name="target_component_accession"    type="java.lang.String"    	path="target_components/accession"/>
+		<attribute name="target_component_id"    		type="java.lang.String"    	path="target_components/component_id"/>
+		<attribute name="target_component_type"    		type="java.lang.String"    	path="target_components/component_type"/>
+		<attribute name="target_type"    				type="java.lang.String"    	path="target_type"/>
+		
+		<access-method type="FREE" 					name="chembl_target_free" cost="1.0" />
+	</service>
+	
+	<service
+		name="TargetLimited"
+		protocol="REST"
+		url="https://www.ebi.ac.uk/chembl/api/data/target" 
+		media-type="application/json"
+		documentation=""
+		result-delimiter="targets">
+		
+		<policy name="1000_items_per_page" />
+
+		<attribute name="organism"    					type="java.lang.String"    	path="organism"								input-method="organism.1"/>
+		<attribute name="pref_name"    					type="java.lang.String"    	path="pref_name"/>
+		<attribute name="species_group_flag"    		type="java.lang.String"    	path="species_group_flag"/>
+		<attribute name="target_chembl_id"    			type="java.lang.String"    	path="target_chembl_id"						input-method="target_chembl_id.1"/>
+		<attribute name="target_component_accession"    type="java.lang.String"    	path="target_components/accession"			input-method="target_component_accession.1"/>
+		<attribute name="target_component_id"    		type="java.lang.String"    	path="target_components/component_id" 		input-method="target_component_id.1"/>
+		<attribute name="target_component_type"    		type="java.lang.String"    	path="target_components/component_type"/>
+		<attribute name="target_type"    				type="java.lang.String"    	path="target_type"/>
+		
+		<static-input name="format" input-method="format"/>
+		
+		<access-method type="LIMITED" 					name="chembl_target_limited" 	inputs="4"	cost="1.0" />
+		<access-method type="LIMITED" 					name="chembl_target_limited_1" 	inputs="1"	cost="1.0" />
+		<!-- 
+		<access-method type="LIMITED" 					name="chembl_target_limited_2" 	inputs="5"	cost="1.0" />
+		<access-method type="LIMITED" 					name="chembl_target_limited_3" 	inputs="6"	cost="1.0" />
+		 -->
+		
+	</service>
+
+	<service
+		name="TargetComponentFree"
+		protocol="REST"
+		url="https://www.ebi.ac.uk/chembl/api/data/target_component.json" 
+		media-type="application/json"
+		documentation=""
+		result-delimiter="target_components">
+		
+		<policy name="1000_items_per_page" />
+
+		<attribute name="accession"    						type="java.lang.String"    	path="accession"/>
+		<attribute name="component_id"    					type="java.lang.String"    	path="component_id"/>
+		<attribute name="component_type"    				type="java.lang.String"    	path="component_type"/>
+		<attribute name="description"    					type="java.lang.String"    	path="description"/>
+		<attribute name="organism"    						type="java.lang.String"    	path="organism"/>
+		<attribute name="protein_classification_id"    		type="java.lang.String"    	path="protein_classifications/protein_classification_id"/>
+		<attribute name="sequence"    						type="java.lang.String"    	path="sequence"/>
+		<attribute name="tax_id"    						type="java.lang.String"    	path="tax_id"/>
+		
+		<access-method type="FREE" 					name="chembl_target_component_free" cost="1.0" />
+	</service>
+	
+	<service
+		name="TargetComponentLimited"
+		protocol="REST"
+		url="https://www.ebi.ac.uk/chembl/api/data/target_component" 
+		media-type="application/json"
+		documentation=""
+		result-delimiter="target_components">
+		
+		<policy name="1000_items_per_page" />
+
+		<attribute name="accession"    						type="java.lang.String"    	path="accession"														input-method="target_component_accession.1"/>
+		<attribute name="component_id"    					type="java.lang.String"    	path="component_id"														input-method="component_id.1"/>
+		<attribute name="component_type"    				type="java.lang.String"    	path="component_type"/>
+		<attribute name="description"    					type="java.lang.String"    	path="description"/>
+		<attribute name="organism"    						type="java.lang.String"    	path="organism"															input-method="organism.1"/>
+		<attribute name="protein_classification_id"    		type="java.lang.String"    	path="protein_classifications/protein_classification_id"/>
+		<attribute name="sequence"    						type="java.lang.String"    	path="sequence"/>
+		<attribute name="tax_id"    						type="java.lang.String"    	path="tax_id"/>
+		
+		<static-input name="format" input-method="format"/>
+		
+		<access-method type="LIMITED" 					name="chembl_target_component_limited" 	 inputs="2"	cost="1.0" />
+		<access-method type="LIMITED" 					name="chembl_target_component_limited_1" inputs="1"	cost="1.0" />
+		<access-method type="LIMITED" 					name="chembl_target_component_limited_2" inputs="5"	cost="5000.0" />
+	</service>
+	
+</services>

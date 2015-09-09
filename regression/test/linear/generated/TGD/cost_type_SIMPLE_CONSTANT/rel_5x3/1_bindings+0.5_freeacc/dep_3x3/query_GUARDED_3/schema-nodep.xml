@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema>
+	<relations>
+		<relation name="R1" size="558">
+			<attribute name="x0" type="java.lang.String" />
+			<access-method name="mt_0" type="LIMITED" inputs="1"
+				cost="5.0" />
+			<access-method name="mt_1" type="FREE" cost="5.0" />
+		</relation>
+		<relation name="R2" size="105">
+			<attribute name="x0" type="java.lang.String" />
+			<access-method name="mt_2" type="LIMITED" inputs="1"
+				cost="5.0" />
+			<access-method name="mt_3" type="FREE" cost="5.0" />
+		</relation>
+		<relation name="R0" size="452">
+			<attribute name="x0" type="java.lang.String" />
+			<attribute name="x1" type="java.lang.String" />
+			<attribute name="x2" type="java.lang.String" />
+			<access-method name="mt_4" type="LIMITED" inputs="2,3"
+				cost="5.0" />
+			<access-method name="mt_5" type="FREE" cost="5.0" />
+		</relation>
+		<relation name="R3" size="911">
+			<attribute name="x0" type="java.lang.String" />
+			<attribute name="x1" type="java.lang.String" />
+			<attribute name="x2" type="java.lang.String" />
+			<access-method name="mt_6" type="LIMITED" inputs="2,3"
+				cost="5.0" />
+			<access-method name="mt_7" type="FREE" cost="5.0" />
+		</relation>
+		<relation name="R4" size="846">
+			<attribute name="x0" type="java.lang.String" />
+			<attribute name="x1" type="java.lang.String" />
+			<attribute name="x2" type="java.lang.String" />
+			<access-method name="mt_8" type="LIMITED" inputs="2,3"
+				cost="5.0" />
+		</relation>
+	</relations>
+	<dependencies>
+	</dependencies>
+</schema>

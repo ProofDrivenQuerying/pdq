@@ -1,0 +1,390 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plan type="linear" cost="15.0">
+<command name="T1">
+<operator type="PROJECT">
+<outputs>
+<attribute name="c1425" type="java.lang.String"/>
+<attribute name="c1424" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="x0" type="java.lang.String"/>
+<attribute name="x1" type="java.lang.String"/>
+</project>
+<child>
+<operator type="ACCESS" relation="R1" access-method="mt_3">
+<outputs>
+<attribute name="x0" type="java.lang.String"/>
+<attribute name="x1" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</command>
+<command name="T2">
+<operator type="JOIN" variant="SYMMETRIC_HASH">
+<outputs>
+<attribute name="c1425" type="java.lang.String"/>
+<attribute name="c1424" type="java.lang.String"/>
+<attribute name="k1575" type="java.lang.String"/>
+<attribute name="k1576" type="java.lang.String"/>
+<attribute name="k1575" type="java.lang.String"/>
+<attribute name="c1424" type="java.lang.String"/>
+<attribute name="c1424" type="java.lang.String"/>
+<attribute name="c1425" type="java.lang.String"/>
+<attribute name="c1426" type="java.lang.String"/>
+<attribute name="k1580" type="java.lang.String"/>
+<attribute name="c1424" type="java.lang.String"/>
+<attribute name="c1425" type="java.lang.String"/>
+<attribute name="k1584" type="java.lang.String"/>
+<attribute name="c1425" type="java.lang.String"/>
+</outputs>
+<conjunction>
+<predicate type="equality" left="0" right="7"/>
+<predicate type="equality" left="1" right="5"/>
+</conjunction>
+<children>
+<operator type="ALIAS" name="T1"/>
+<operator type="JOIN" variant="SYMMETRIC_HASH">
+<outputs>
+<attribute name="k1575" type="java.lang.String"/>
+<attribute name="k1576" type="java.lang.String"/>
+<attribute name="k1575" type="java.lang.String"/>
+<attribute name="c1424" type="java.lang.String"/>
+<attribute name="c1424" type="java.lang.String"/>
+<attribute name="c1425" type="java.lang.String"/>
+<attribute name="c1426" type="java.lang.String"/>
+<attribute name="k1580" type="java.lang.String"/>
+<attribute name="c1424" type="java.lang.String"/>
+<attribute name="c1425" type="java.lang.String"/>
+<attribute name="k1584" type="java.lang.String"/>
+<attribute name="c1425" type="java.lang.String"/>
+</outputs>
+<conjunction>
+<predicate type="equality" left="5" right="9"/>
+</conjunction>
+<children>
+<operator type="JOIN" variant="SYMMETRIC_HASH">
+<outputs>
+<attribute name="k1575" type="java.lang.String"/>
+<attribute name="k1576" type="java.lang.String"/>
+<attribute name="k1575" type="java.lang.String"/>
+<attribute name="c1424" type="java.lang.String"/>
+<attribute name="c1424" type="java.lang.String"/>
+<attribute name="c1425" type="java.lang.String"/>
+<attribute name="c1426" type="java.lang.String"/>
+<attribute name="k1580" type="java.lang.String"/>
+<attribute name="c1424" type="java.lang.String"/>
+</outputs>
+<conjunction>
+<predicate type="equality" left="3" right="8"/>
+</conjunction>
+<children>
+<operator type="CROSS_PRODUCT">
+<outputs>
+<attribute name="k1575" type="java.lang.String"/>
+<attribute name="k1576" type="java.lang.String"/>
+<attribute name="k1575" type="java.lang.String"/>
+<attribute name="c1424" type="java.lang.String"/>
+<attribute name="c1424" type="java.lang.String"/>
+<attribute name="c1425" type="java.lang.String"/>
+</outputs>
+<children>
+<operator type="PROJECT">
+<outputs>
+<attribute name="k1575" type="java.lang.String"/>
+<attribute name="k1576" type="java.lang.String"/>
+<attribute name="k1575" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="x0" type="java.lang.String"/>
+<attribute name="x1" type="java.lang.String"/>
+<attribute name="x2" type="java.lang.String"/>
+</project>
+<child>
+<operator type="SELECT">
+<outputs>
+<attribute name="x0" type="java.lang.String"/>
+<attribute name="x1" type="java.lang.String"/>
+<attribute name="x2" type="java.lang.String"/>
+</outputs>
+<conjunction>
+<predicate type="equality" left="0" right="2"/>
+</conjunction>
+<child>
+<operator type="ACCESS" relation="R3" access-method="mt_7">
+<outputs>
+<attribute name="x0" type="java.lang.String"/>
+<attribute name="x1" type="java.lang.String"/>
+<attribute name="x2" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</child>
+</operator>
+<operator type="PROJECT">
+<outputs>
+<attribute name="c1424" type="java.lang.String"/>
+<attribute name="c1424" type="java.lang.String"/>
+<attribute name="c1425" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="x0" type="java.lang.String"/>
+<attribute name="x1" type="java.lang.String"/>
+<attribute name="x2" type="java.lang.String"/>
+</project>
+<child>
+<operator type="SELECT">
+<outputs>
+<attribute name="x0" type="java.lang.String"/>
+<attribute name="x1" type="java.lang.String"/>
+<attribute name="x2" type="java.lang.String"/>
+</outputs>
+<conjunction>
+<predicate type="equality" left="0" right="1"/>
+</conjunction>
+<child>
+<operator type="ACCESS" relation="R3" access-method="mt_7">
+<outputs>
+<attribute name="x0" type="java.lang.String"/>
+<attribute name="x1" type="java.lang.String"/>
+<attribute name="x2" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</child>
+</operator>
+</children>
+</operator>
+<operator type="PROJECT">
+<outputs>
+<attribute name="c1426" type="java.lang.String"/>
+<attribute name="k1580" type="java.lang.String"/>
+<attribute name="c1424" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="x0" type="java.lang.String"/>
+<attribute name="x1" type="java.lang.String"/>
+<attribute name="x2" type="java.lang.String"/>
+</project>
+<child>
+<operator type="ACCESS" relation="R3" access-method="mt_7">
+<outputs>
+<attribute name="x0" type="java.lang.String"/>
+<attribute name="x1" type="java.lang.String"/>
+<attribute name="x2" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</children>
+</operator>
+<operator type="PROJECT">
+<outputs>
+<attribute name="c1425" type="java.lang.String"/>
+<attribute name="k1584" type="java.lang.String"/>
+<attribute name="c1425" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="x0" type="java.lang.String"/>
+<attribute name="x1" type="java.lang.String"/>
+<attribute name="x2" type="java.lang.String"/>
+</project>
+<child>
+<operator type="SELECT">
+<outputs>
+<attribute name="x0" type="java.lang.String"/>
+<attribute name="x1" type="java.lang.String"/>
+<attribute name="x2" type="java.lang.String"/>
+</outputs>
+<conjunction>
+<predicate type="equality" left="0" right="2"/>
+</conjunction>
+<child>
+<operator type="ACCESS" relation="R3" access-method="mt_7">
+<outputs>
+<attribute name="x0" type="java.lang.String"/>
+<attribute name="x1" type="java.lang.String"/>
+<attribute name="x2" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</child>
+</operator>
+</children>
+</operator>
+</children>
+</operator>
+</command>
+<command name="T3">
+<operator type="PROJECT">
+<outputs>
+<attribute name="c1426" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="c1426" type="java.lang.String"/>
+</project>
+<child>
+<operator type="JOIN" variant="SYMMETRIC_HASH">
+<outputs>
+<attribute name="c1425" type="java.lang.String"/>
+<attribute name="c1424" type="java.lang.String"/>
+<attribute name="k1575" type="java.lang.String"/>
+<attribute name="k1576" type="java.lang.String"/>
+<attribute name="k1575" type="java.lang.String"/>
+<attribute name="c1424" type="java.lang.String"/>
+<attribute name="c1424" type="java.lang.String"/>
+<attribute name="c1425" type="java.lang.String"/>
+<attribute name="c1426" type="java.lang.String"/>
+<attribute name="k1580" type="java.lang.String"/>
+<attribute name="c1424" type="java.lang.String"/>
+<attribute name="c1425" type="java.lang.String"/>
+<attribute name="k1584" type="java.lang.String"/>
+<attribute name="c1425" type="java.lang.String"/>
+<attribute name="c1425" type="java.lang.String"/>
+<attribute name="c1425" type="java.lang.String"/>
+<attribute name="c1425" type="java.lang.String"/>
+<attribute name="c1426" type="java.lang.String"/>
+<attribute name="c1424" type="java.lang.String"/>
+<attribute name="c1425" type="java.lang.String"/>
+<attribute name="c1426" type="java.lang.String"/>
+<attribute name="k1571" type="java.lang.String"/>
+<attribute name="c1426" type="java.lang.String"/>
+</outputs>
+<conjunction>
+<predicate type="equality" left="0" right="14"/>
+<predicate type="equality" left="1" right="18"/>
+<predicate type="equality" left="8" right="17"/>
+</conjunction>
+<children>
+<operator type="ALIAS" name="T2"/>
+<operator type="JOIN" variant="SYMMETRIC_HASH">
+<outputs>
+<attribute name="c1425" type="java.lang.String"/>
+<attribute name="c1425" type="java.lang.String"/>
+<attribute name="c1425" type="java.lang.String"/>
+<attribute name="c1426" type="java.lang.String"/>
+<attribute name="c1424" type="java.lang.String"/>
+<attribute name="c1425" type="java.lang.String"/>
+<attribute name="c1426" type="java.lang.String"/>
+<attribute name="k1571" type="java.lang.String"/>
+<attribute name="c1426" type="java.lang.String"/>
+</outputs>
+<conjunction>
+<predicate type="equality" left="3" right="6"/>
+</conjunction>
+<children>
+<operator type="JOIN" variant="SYMMETRIC_HASH">
+<outputs>
+<attribute name="c1425" type="java.lang.String"/>
+<attribute name="c1425" type="java.lang.String"/>
+<attribute name="c1425" type="java.lang.String"/>
+<attribute name="c1426" type="java.lang.String"/>
+<attribute name="c1424" type="java.lang.String"/>
+<attribute name="c1425" type="java.lang.String"/>
+</outputs>
+<conjunction>
+<predicate type="equality" left="0" right="5"/>
+</conjunction>
+<children>
+<operator type="PROJECT">
+<outputs>
+<attribute name="c1425" type="java.lang.String"/>
+<attribute name="c1425" type="java.lang.String"/>
+<attribute name="c1425" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="x0" type="java.lang.String"/>
+<attribute name="x1" type="java.lang.String"/>
+<attribute name="x2" type="java.lang.String"/>
+</project>
+<child>
+<operator type="SELECT">
+<outputs>
+<attribute name="x0" type="java.lang.String"/>
+<attribute name="x1" type="java.lang.String"/>
+<attribute name="x2" type="java.lang.String"/>
+</outputs>
+<conjunction>
+<predicate type="equality" left="0" right="1"/>
+<predicate type="equality" left="0" right="2"/>
+<predicate type="equality" left="1" right="2"/>
+</conjunction>
+<child>
+<operator type="ACCESS" relation="R4" access-method="mt_9">
+<outputs>
+<attribute name="x0" type="java.lang.String"/>
+<attribute name="x1" type="java.lang.String"/>
+<attribute name="x2" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</child>
+</operator>
+<operator type="PROJECT">
+<outputs>
+<attribute name="c1426" type="java.lang.String"/>
+<attribute name="c1424" type="java.lang.String"/>
+<attribute name="c1425" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="x0" type="java.lang.String"/>
+<attribute name="x1" type="java.lang.String"/>
+<attribute name="x2" type="java.lang.String"/>
+</project>
+<child>
+<operator type="ACCESS" relation="R4" access-method="mt_9">
+<outputs>
+<attribute name="x0" type="java.lang.String"/>
+<attribute name="x1" type="java.lang.String"/>
+<attribute name="x2" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</children>
+</operator>
+<operator type="PROJECT">
+<outputs>
+<attribute name="c1426" type="java.lang.String"/>
+<attribute name="k1571" type="java.lang.String"/>
+<attribute name="c1426" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="x0" type="java.lang.String"/>
+<attribute name="x1" type="java.lang.String"/>
+<attribute name="x2" type="java.lang.String"/>
+</project>
+<child>
+<operator type="SELECT">
+<outputs>
+<attribute name="x0" type="java.lang.String"/>
+<attribute name="x1" type="java.lang.String"/>
+<attribute name="x2" type="java.lang.String"/>
+</outputs>
+<conjunction>
+<predicate type="equality" left="0" right="2"/>
+</conjunction>
+<child>
+<operator type="ACCESS" relation="R4" access-method="mt_9">
+<outputs>
+<attribute name="x0" type="java.lang.String"/>
+<attribute name="x1" type="java.lang.String"/>
+<attribute name="x2" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</child>
+</operator>
+</children>
+</operator>
+</children>
+</operator>
+</child>
+</operator>
+</command>
+</plan>

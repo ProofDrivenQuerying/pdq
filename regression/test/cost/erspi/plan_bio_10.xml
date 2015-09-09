@@ -1,0 +1,438 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plan type="dag" cost="11889.8942" control-flow="TOP_DOWN">
+<operator type="DEPENDENT_JOIN" param="35">
+<outputs>
+<attribute name="c1587" type="java.lang.String"/>
+<attribute name="c1626" type="java.lang.String"/>
+<attribute name="c1627" type="java.lang.String"/>
+<attribute name="c1604" type="java.lang.String"/>
+<attribute name="c1628" type="java.lang.String"/>
+<attribute name="c1629" type="java.lang.String"/>
+<attribute name="c1630" type="java.lang.String"/>
+<attribute name="c1584" type="java.lang.String"/>
+<attribute name="c1585" type="java.lang.String"/>
+<attribute name="c1586" type="java.lang.String"/>
+<attribute name="c1587" type="java.lang.String"/>
+<attribute name="c1588" type="java.lang.String"/>
+<attribute name="c1589" type="java.lang.String"/>
+<attribute name="c1590" type="java.lang.String"/>
+<attribute name="c1591" type="java.lang.String"/>
+<attribute name="c1592" type="java.lang.String"/>
+<attribute name="c1593" type="java.lang.String"/>
+<attribute name="c1594" type="java.lang.String"/>
+<attribute name="c1595" type="java.lang.String"/>
+<attribute name="c1596" type="java.lang.String"/>
+<attribute name="c1597" type="java.lang.String"/>
+<attribute name="c1598" type="java.lang.String"/>
+<attribute name="c1599" type="java.lang.String"/>
+<attribute name="c1600" type="java.lang.String"/>
+<attribute name="c1601" type="java.lang.String"/>
+<attribute name="c1602" type="java.lang.String"/>
+<attribute name="c1603" type="java.lang.String"/>
+<attribute name="c1604" type="java.lang.String"/>
+<attribute name="c1617" type="java.lang.String"/>
+<attribute name="c1599" type="java.lang.String"/>
+<attribute name="c1618" type="java.lang.String"/>
+<attribute name="c1619" type="java.lang.String"/>
+<attribute name="c1620" type="java.lang.String"/>
+<attribute name="c1621" type="java.lang.String"/>
+<attribute name="c1622" type="java.lang.String"/>
+<attribute name="c1616" type="java.lang.String"/>
+<attribute name="c1623" type="java.lang.String"/>
+<attribute name="c1624" type="java.lang.String"/>
+<attribute name="c1625" type="java.lang.String"/>
+<attribute name="c1605" type="java.lang.String"/>
+<attribute name="c1606" type="java.lang.String"/>
+<attribute name="c1607" type="java.lang.String"/>
+<attribute name="c1608" type="java.lang.String"/>
+<attribute name="c1609" type="java.lang.String"/>
+<attribute name="c1610" type="java.lang.String"/>
+<attribute name="c1611" type="java.lang.String"/>
+<attribute name="c1612" type="java.lang.String"/>
+<attribute name="c1613" type="java.lang.String"/>
+<attribute name="c1614" type="java.lang.String"/>
+<attribute name="c1615" type="java.lang.String"/>
+<attribute name="c1616" type="java.lang.String"/>
+</outputs>
+<children>
+<operator type="DEPENDENT_JOIN" param="22">
+<outputs>
+<attribute name="c1587" type="java.lang.String"/>
+<attribute name="c1626" type="java.lang.String"/>
+<attribute name="c1627" type="java.lang.String"/>
+<attribute name="c1604" type="java.lang.String"/>
+<attribute name="c1628" type="java.lang.String"/>
+<attribute name="c1629" type="java.lang.String"/>
+<attribute name="c1630" type="java.lang.String"/>
+<attribute name="c1584" type="java.lang.String"/>
+<attribute name="c1585" type="java.lang.String"/>
+<attribute name="c1586" type="java.lang.String"/>
+<attribute name="c1587" type="java.lang.String"/>
+<attribute name="c1588" type="java.lang.String"/>
+<attribute name="c1589" type="java.lang.String"/>
+<attribute name="c1590" type="java.lang.String"/>
+<attribute name="c1591" type="java.lang.String"/>
+<attribute name="c1592" type="java.lang.String"/>
+<attribute name="c1593" type="java.lang.String"/>
+<attribute name="c1594" type="java.lang.String"/>
+<attribute name="c1595" type="java.lang.String"/>
+<attribute name="c1596" type="java.lang.String"/>
+<attribute name="c1597" type="java.lang.String"/>
+<attribute name="c1598" type="java.lang.String"/>
+<attribute name="c1599" type="java.lang.String"/>
+<attribute name="c1600" type="java.lang.String"/>
+<attribute name="c1601" type="java.lang.String"/>
+<attribute name="c1602" type="java.lang.String"/>
+<attribute name="c1603" type="java.lang.String"/>
+<attribute name="c1604" type="java.lang.String"/>
+<attribute name="c1617" type="java.lang.String"/>
+<attribute name="c1599" type="java.lang.String"/>
+<attribute name="c1618" type="java.lang.String"/>
+<attribute name="c1619" type="java.lang.String"/>
+<attribute name="c1620" type="java.lang.String"/>
+<attribute name="c1621" type="java.lang.String"/>
+<attribute name="c1622" type="java.lang.String"/>
+<attribute name="c1616" type="java.lang.String"/>
+<attribute name="c1623" type="java.lang.String"/>
+<attribute name="c1624" type="java.lang.String"/>
+<attribute name="c1625" type="java.lang.String"/>
+</outputs>
+<children>
+<operator type="DEPENDENT_JOIN" param="3">
+<outputs>
+<attribute name="c1587" type="java.lang.String"/>
+<attribute name="c1626" type="java.lang.String"/>
+<attribute name="c1627" type="java.lang.String"/>
+<attribute name="c1604" type="java.lang.String"/>
+<attribute name="c1628" type="java.lang.String"/>
+<attribute name="c1629" type="java.lang.String"/>
+<attribute name="c1630" type="java.lang.String"/>
+<attribute name="c1584" type="java.lang.String"/>
+<attribute name="c1585" type="java.lang.String"/>
+<attribute name="c1586" type="java.lang.String"/>
+<attribute name="c1587" type="java.lang.String"/>
+<attribute name="c1588" type="java.lang.String"/>
+<attribute name="c1589" type="java.lang.String"/>
+<attribute name="c1590" type="java.lang.String"/>
+<attribute name="c1591" type="java.lang.String"/>
+<attribute name="c1592" type="java.lang.String"/>
+<attribute name="c1593" type="java.lang.String"/>
+<attribute name="c1594" type="java.lang.String"/>
+<attribute name="c1595" type="java.lang.String"/>
+<attribute name="c1596" type="java.lang.String"/>
+<attribute name="c1597" type="java.lang.String"/>
+<attribute name="c1598" type="java.lang.String"/>
+<attribute name="c1599" type="java.lang.String"/>
+<attribute name="c1600" type="java.lang.String"/>
+<attribute name="c1601" type="java.lang.String"/>
+<attribute name="c1602" type="java.lang.String"/>
+<attribute name="c1603" type="java.lang.String"/>
+<attribute name="c1604" type="java.lang.String"/>
+</outputs>
+<children>
+<operator type="PROJECT">
+<outputs>
+<attribute name="c1587" type="java.lang.String"/>
+<attribute name="c1626" type="java.lang.String"/>
+<attribute name="c1627" type="java.lang.String"/>
+<attribute name="c1604" type="java.lang.String"/>
+<attribute name="c1628" type="java.lang.String"/>
+<attribute name="c1629" type="java.lang.String"/>
+<attribute name="c1630" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="organism" type="java.lang.String"/>
+<attribute name="pref_name" type="java.lang.String"/>
+<attribute name="species_group_flag" type="java.lang.String"/>
+<attribute name="target_chembl_id" type="java.lang.String"/>
+<attribute name="target_component_accession" type="java.lang.String"/>
+<attribute name="target_component_id" type="java.lang.String"/>
+<attribute name="target_component_type" type="java.lang.String"/>
+</project>
+<child>
+<operator type="SELECT">
+<outputs>
+<attribute name="organism" type="java.lang.String"/>
+<attribute name="pref_name" type="java.lang.String"/>
+<attribute name="species_group_flag" type="java.lang.String"/>
+<attribute name="target_chembl_id" type="java.lang.String"/>
+<attribute name="target_component_accession" type="java.lang.String"/>
+<attribute name="target_component_id" type="java.lang.String"/>
+<attribute name="target_component_type" type="java.lang.String"/>
+<attribute name="target_type" type="java.lang.String"/>
+</outputs>
+<conjunction>
+<predicate type="equality" left="7" value="SINGLE PROTEIN"/>
+</conjunction>
+<child>
+<operator type="ACCESS" relation="TargetFree" access-method="chembl_target_free">
+<outputs>
+<attribute name="organism" type="java.lang.String"/>
+<attribute name="pref_name" type="java.lang.String"/>
+<attribute name="species_group_flag" type="java.lang.String"/>
+<attribute name="target_chembl_id" type="java.lang.String"/>
+<attribute name="target_component_accession" type="java.lang.String"/>
+<attribute name="target_component_id" type="java.lang.String"/>
+<attribute name="target_component_type" type="java.lang.String"/>
+<attribute name="target_type" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</child>
+</operator>
+<operator type="PROJECT">
+<outputs>
+<attribute name="c1584" type="java.lang.String"/>
+<attribute name="c1585" type="java.lang.String"/>
+<attribute name="c1586" type="java.lang.String"/>
+<attribute name="c1587" type="java.lang.String"/>
+<attribute name="c1588" type="java.lang.String"/>
+<attribute name="c1589" type="java.lang.String"/>
+<attribute name="c1590" type="java.lang.String"/>
+<attribute name="c1591" type="java.lang.String"/>
+<attribute name="c1592" type="java.lang.String"/>
+<attribute name="c1593" type="java.lang.String"/>
+<attribute name="c1594" type="java.lang.String"/>
+<attribute name="c1595" type="java.lang.String"/>
+<attribute name="c1596" type="java.lang.String"/>
+<attribute name="c1597" type="java.lang.String"/>
+<attribute name="c1598" type="java.lang.String"/>
+<attribute name="c1599" type="java.lang.String"/>
+<attribute name="c1600" type="java.lang.String"/>
+<attribute name="c1601" type="java.lang.String"/>
+<attribute name="c1602" type="java.lang.String"/>
+<attribute name="c1603" type="java.lang.String"/>
+<attribute name="c1604" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="assay_category" type="java.lang.String"/>
+<attribute name="assay_cell_type" type="java.lang.String"/>
+<attribute name="assay_chembl_id" type="java.lang.String"/>
+<attribute name="assay_organism" type="java.lang.String"/>
+<attribute name="assay_strain" type="java.lang.String"/>
+<attribute name="assay_subcellular_fraction" type="java.lang.String"/>
+<attribute name="assay_tax_id" type="java.lang.String"/>
+<attribute name="assay_test_type" type="java.lang.String"/>
+<attribute name="assay_type" type="java.lang.String"/>
+<attribute name="assay_type_description" type="java.lang.String"/>
+<attribute name="bao_format" type="java.lang.String"/>
+<attribute name="cell_chembl_id" type="java.lang.String"/>
+<attribute name="confidence_description" type="java.lang.String"/>
+<attribute name="confidence_score" type="java.lang.String"/>
+<attribute name="description" type="java.lang.String"/>
+<attribute name="document_chembl_id" type="java.lang.String"/>
+<attribute name="relationship_description" type="java.lang.String"/>
+<attribute name="relationship_type" type="java.lang.String"/>
+<attribute name="src_assay_id" type="java.lang.String"/>
+<attribute name="src_id" type="java.lang.String"/>
+<attribute name="target_chembl_id" type="java.lang.String"/>
+</project>
+<child>
+<operator type="SELECT">
+<outputs>
+<attribute name="assay_category" type="java.lang.String"/>
+<attribute name="assay_cell_type" type="java.lang.String"/>
+<attribute name="assay_chembl_id" type="java.lang.String"/>
+<attribute name="assay_organism" type="java.lang.String"/>
+<attribute name="assay_strain" type="java.lang.String"/>
+<attribute name="assay_subcellular_fraction" type="java.lang.String"/>
+<attribute name="assay_tax_id" type="java.lang.String"/>
+<attribute name="assay_test_type" type="java.lang.String"/>
+<attribute name="assay_tissue" type="java.lang.String"/>
+<attribute name="assay_type" type="java.lang.String"/>
+<attribute name="assay_type_description" type="java.lang.String"/>
+<attribute name="bao_format" type="java.lang.String"/>
+<attribute name="cell_chembl_id" type="java.lang.String"/>
+<attribute name="confidence_description" type="java.lang.String"/>
+<attribute name="confidence_score" type="java.lang.String"/>
+<attribute name="description" type="java.lang.String"/>
+<attribute name="document_chembl_id" type="java.lang.String"/>
+<attribute name="relationship_description" type="java.lang.String"/>
+<attribute name="relationship_type" type="java.lang.String"/>
+<attribute name="src_assay_id" type="java.lang.String"/>
+<attribute name="src_id" type="java.lang.String"/>
+<attribute name="target_chembl_id" type="java.lang.String"/>
+</outputs>
+<conjunction>
+<predicate type="equality" left="8" value="Liver"/>
+</conjunction>
+<child>
+<operator type="ACCESS" relation="AssayLimited" access-method="chembl_assay_limited_3">
+<outputs>
+<attribute name="assay_category" type="java.lang.String"/>
+<attribute name="assay_cell_type" type="java.lang.String"/>
+<attribute name="assay_chembl_id" type="java.lang.String"/>
+<attribute name="assay_organism" type="java.lang.String"/>
+<attribute name="assay_strain" type="java.lang.String"/>
+<attribute name="assay_subcellular_fraction" type="java.lang.String"/>
+<attribute name="assay_tax_id" type="java.lang.String"/>
+<attribute name="assay_test_type" type="java.lang.String"/>
+<attribute name="assay_tissue" type="java.lang.String"/>
+<attribute name="assay_type" type="java.lang.String"/>
+<attribute name="assay_type_description" type="java.lang.String"/>
+<attribute name="bao_format" type="java.lang.String"/>
+<attribute name="cell_chembl_id" type="java.lang.String"/>
+<attribute name="confidence_description" type="java.lang.String"/>
+<attribute name="confidence_score" type="java.lang.String"/>
+<attribute name="description" type="java.lang.String"/>
+<attribute name="document_chembl_id" type="java.lang.String"/>
+<attribute name="relationship_description" type="java.lang.String"/>
+<attribute name="relationship_type" type="java.lang.String"/>
+<attribute name="src_assay_id" type="java.lang.String"/>
+<attribute name="src_id" type="java.lang.String"/>
+<attribute name="target_chembl_id" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</child>
+</operator>
+</children>
+</operator>
+<operator type="PROJECT">
+<outputs>
+<attribute name="c1617" type="java.lang.String"/>
+<attribute name="c1599" type="java.lang.String"/>
+<attribute name="c1618" type="java.lang.String"/>
+<attribute name="c1619" type="java.lang.String"/>
+<attribute name="c1620" type="java.lang.String"/>
+<attribute name="c1621" type="java.lang.String"/>
+<attribute name="c1622" type="java.lang.String"/>
+<attribute name="c1616" type="java.lang.String"/>
+<attribute name="c1623" type="java.lang.String"/>
+<attribute name="c1624" type="java.lang.String"/>
+<attribute name="c1625" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="authors" type="java.lang.String"/>
+<attribute name="document_chembl_id" type="java.lang.String"/>
+<attribute name="doi" type="java.lang.String"/>
+<attribute name="first_page" type="java.lang.String"/>
+<attribute name="issue" type="java.lang.String"/>
+<attribute name="journal" type="java.lang.String"/>
+<attribute name="last_page" type="java.lang.String"/>
+<attribute name="pubmed_id" type="java.lang.String"/>
+<attribute name="title" type="java.lang.String"/>
+<attribute name="volume" type="java.lang.String"/>
+<attribute name="year" type="java.lang.String"/>
+</project>
+<child>
+<operator type="SELECT">
+<outputs>
+<attribute name="authors" type="java.lang.String"/>
+<attribute name="doc_type" type="java.lang.String"/>
+<attribute name="document_chembl_id" type="java.lang.String"/>
+<attribute name="doi" type="java.lang.String"/>
+<attribute name="first_page" type="java.lang.String"/>
+<attribute name="issue" type="java.lang.String"/>
+<attribute name="journal" type="java.lang.String"/>
+<attribute name="last_page" type="java.lang.String"/>
+<attribute name="pubmed_id" type="java.lang.String"/>
+<attribute name="title" type="java.lang.String"/>
+<attribute name="volume" type="java.lang.String"/>
+<attribute name="year" type="java.lang.String"/>
+</outputs>
+<conjunction>
+<predicate type="equality" left="1" value="PUBLICATION"/>
+</conjunction>
+<child>
+<operator type="ACCESS" relation="DocumentLimited" access-method="chembl_document_limited">
+<outputs>
+<attribute name="authors" type="java.lang.String"/>
+<attribute name="doc_type" type="java.lang.String"/>
+<attribute name="document_chembl_id" type="java.lang.String"/>
+<attribute name="doi" type="java.lang.String"/>
+<attribute name="first_page" type="java.lang.String"/>
+<attribute name="issue" type="java.lang.String"/>
+<attribute name="journal" type="java.lang.String"/>
+<attribute name="last_page" type="java.lang.String"/>
+<attribute name="pubmed_id" type="java.lang.String"/>
+<attribute name="title" type="java.lang.String"/>
+<attribute name="volume" type="java.lang.String"/>
+<attribute name="year" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</child>
+</operator>
+</children>
+</operator>
+<operator type="PROJECT">
+<outputs>
+<attribute name="c1605" type="java.lang.String"/>
+<attribute name="c1606" type="java.lang.String"/>
+<attribute name="c1607" type="java.lang.String"/>
+<attribute name="c1608" type="java.lang.String"/>
+<attribute name="c1609" type="java.lang.String"/>
+<attribute name="c1610" type="java.lang.String"/>
+<attribute name="c1611" type="java.lang.String"/>
+<attribute name="c1612" type="java.lang.String"/>
+<attribute name="c1613" type="java.lang.String"/>
+<attribute name="c1614" type="java.lang.String"/>
+<attribute name="c1615" type="java.lang.String"/>
+<attribute name="c1616" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="id" type="java.lang.String"/>
+<attribute name="source" type="java.lang.String"/>
+<attribute name="citationType" type="java.lang.String"/>
+<attribute name="title" type="java.lang.String"/>
+<attribute name="authorString" type="java.lang.String"/>
+<attribute name="journalAbbreviation" type="java.lang.String"/>
+<attribute name="pubYear" type="java.lang.String"/>
+<attribute name="volume" type="java.lang.String"/>
+<attribute name="issue" type="java.lang.String"/>
+<attribute name="pageInfo" type="java.lang.String"/>
+<attribute name="citedByCount" type="java.lang.String"/>
+<attribute name="ext_id" type="java.lang.String"/>
+</project>
+<child>
+<operator type="SELECT">
+<outputs>
+<attribute name="id" type="java.lang.String"/>
+<attribute name="source" type="java.lang.String"/>
+<attribute name="citationType" type="java.lang.String"/>
+<attribute name="title" type="java.lang.String"/>
+<attribute name="authorString" type="java.lang.String"/>
+<attribute name="journalAbbreviation" type="java.lang.String"/>
+<attribute name="pubYear" type="java.lang.String"/>
+<attribute name="volume" type="java.lang.String"/>
+<attribute name="issue" type="java.lang.String"/>
+<attribute name="pageInfo" type="java.lang.String"/>
+<attribute name="citedByCount" type="java.lang.String"/>
+<attribute name="src" type="java.lang.String"/>
+<attribute name="ext_id" type="java.lang.String"/>
+</outputs>
+<conjunction>
+<predicate type="equality" left="11" value="MED"/>
+</conjunction>
+<child>
+<operator type="ACCESS" relation="Citation" access-method="pubmed_citation_1">
+<outputs>
+<attribute name="id" type="java.lang.String"/>
+<attribute name="source" type="java.lang.String"/>
+<attribute name="citationType" type="java.lang.String"/>
+<attribute name="title" type="java.lang.String"/>
+<attribute name="authorString" type="java.lang.String"/>
+<attribute name="journalAbbreviation" type="java.lang.String"/>
+<attribute name="pubYear" type="java.lang.String"/>
+<attribute name="volume" type="java.lang.String"/>
+<attribute name="issue" type="java.lang.String"/>
+<attribute name="pageInfo" type="java.lang.String"/>
+<attribute name="citedByCount" type="java.lang.String"/>
+<attribute name="src" type="java.lang.String"/>
+<attribute name="ext_id" type="java.lang.String"/>
+</outputs>
+<static-input>
+<input attribute="11" value="MED" type="java.lang.String"/>
+</static-input>
+</operator>
+</child>
+</operator>
+</child>
+</operator>
+</children>
+</operator>
+</plan>

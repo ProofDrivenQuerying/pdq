@@ -1,0 +1,185 @@
+0. Building 
+
+	The jar executables for the regression tests can be built either from
+	Eclipse using the pdq-regression.jardesc file, or from Ant using
+	the jar target.
+	In case you need to rebuild other project, use the ant build configuration
+	in the directory containing all project and use target 'package-all'
+
+	Example
+	cd /path/to/all/projects/
+	ant [export] package-all 
+	
+	Where the optional 'export' guarantees you are using the latest files.
+
+I. Short explanation
+
+	To run any regression test, you must execute the following command:
+	java -jar pdq-regression.jar type -i /path/to/testcases (or --input /path/to/testcases)
+
+	where type is one of proof, plangen, optimizations, planner or runtime
+
+	To run a complete regression test sequence, i.e. taking the plan from the
+	planner and the running it on the runtime, execute:
+	java -jar pdq-regression.jar runtime -i /path/to/testcases -f (or --full-run)
+
+II. Planner regression
+	a. Setup
+	To set a test suite, create a top folder (default is ./test/planner/)
+	under which you must create a single folder for each test case.
+	Each test case, folder must contain 4 files: 
+		- case.properties: featuring input parameters,
+		- schema.xml: containing the input schema,
+		- query.xml: containing the input query,
+		- expected-plan.xml: containing the expected output plan
+		For now, a test passes if the costs of the expected and observed plans
+		are the same. If the plan are, however, not completely identical, both
+		plan will be displayed.
+	
+	b. Requirements before running.
+	You currently need to have MySQL installed with the appropriate user/right
+	for the chase to work. By default, the planner regression tests are run on
+	a database called "chase_planner_runner" with login/password "root/root"
+	You may also need Postgresql installed if you are testing psql-related cases,
+	such as Postgres black box cost estimation. The current default test folder
+	contains such tests.
+	
+	c. Run
+	To run a batch of test cases, execute the following command:
+	java -jar pdq-regression.jar planner -i path/to/testcases
+	
+	This will descend the directory tree and run test on all valid directories
+	(i.e. contains the proper input files.)
+	
+	Example:
+	To run a single test case on a tpch example
+	java -jar pdq-regression.jar planner -i test/planner/tpch/case_001/
+	
+	To run all test cases 
+	java -jar pdq-regression.jar planner -i test/planner
+
+	d. Prepare mode
+	Initially, you may want to simply generate and store a plan, rather than 
+	writing it by hand, to check it manually.
+	This can be done using the -p (or --prepare) option.
+
+	Example:
+	java -jar pdq-regression.jar planner -i test/planner -p
+	
+	This will output a "plan.xml" in each of the respective case folder.
+
+III. Runtime regression
+
+	a. Setup
+	To set a test suite, create a top folder (default is ./test/runtime/)
+	under which you must create a single folder for each test case.
+	Each test case, folder must contain 3 or 4 files: 
+		- case.properties: featuring input parameters,
+		- schema.xml: containing the input schema,
+		- query.xml: containing the input query,
+		- (optional) *.txt: containing lists of facts to run the test on.
+		You can create multiple data file, each of them will be read and use
+		for individual tests sequentially.
+	
+	b. Requirements before running.
+	You currently need to have MySQL installed with the appropriate user/right
+	for the chase to work. By default, the runtime regression tests are run on
+	a database called "chase_regression_runner" with login/password "root/root".
+	You may also need the proper specific database installed if the cases you 
+	want to test are not backed by simple in-memory examples.
+	The current default test location has postgresql- and mysql-backed cases.
+	
+	c. Run
+	To run a batch of test cases, execute the following command:
+	java -jar pdq-regression.jar runtime -i path/to/testcases
+	
+	This will descend the directory tree and run test on all valid directories (i.e. contains the proper input files.)
+	
+	Example:
+	To run a single test case on a tpch example
+	java -jar pdq-regression.jar runtime -i test/runtime/tpch/case_001/
+	
+	To run all test cases 
+	java -jar pdq-regression.jar runtime -i test/runtime
+
+	d. Full run
+	If you want to make complete test, i.e. get the plan directly from the 
+	planner rather than reading it from a file, simply add the -f option 	
+
+	Example:
+	java -jar pdq-regression.jar runtime -i test/runtime/case_001/ -f
+
+	e. Prepare mode
+	Just like for planner test, you may want to generate and store a plan, 
+	rather than writing it by hand, to check it manually.
+	This can be done using the planner test's prepare mode. 	
+
+	Example:
+	java -jar pdq-regression.jar planner -i test/runtime -p
+
+
+IV. Plan generation regression
+
+	a. Setup
+	To set a test suite, create a top folder (default is ./test/runtime/)
+	under which you must create a single folder for each test case.
+	Each test case, folder must contain 3 or 4 files: 
+		- case.properties: featuring input parameters,
+		- schema.xml: containing the input schema,
+		- query.xml: containing the input query,
+		- proof.xml: containing the input proof.
+	
+	b. Run
+	To run a batch of test cases, execute the following command:
+	java -jar pdq-regression.jar plangen -i path/to/testcases
+	
+	This will descend the directory tree and run test on all valid directories (i.e. contains the proper input files.)
+	
+	Example:
+	To run a single test case on a tpch example
+	java -jar pdq-regression.jar plangen -i test/plangen/tpch/case_001/
+	
+	To run all test cases 
+	java -jar pdq-regression.jar plangen -i test/plangen
+
+	c. Prepare mode
+	In initially, you may want to simply generate and store a plan, rather than
+	writing it by hand, to check it manually. This can be done using the -p option.
+
+	Example:
+	java -jar pdq-regression.jar plangen -i test/plangen -p
+	
+	This will output a "proof.xml" in each of the respective case folder.
+	 
+
+V. Proof regression
+
+	a. Setup
+	To set a test suite, create a top folder (default is ./test/runtime/)
+	under which you must create a single folder for each test case.
+	Each test case, folder must contain 3 or 4 files: 
+		- case.properties: featuring input parameters,
+		- schema.xml: containing the input schema,
+		- query*.xml: containing the input query files,
+		- answerability.properties: associating each query files in the folder
+		with a boolean value,
+	
+	b. Requirements before running.
+	You currently need to have MySQL installed with the appropriate user/right
+	for the chase to work. By default, the runtime regression tests are run on
+	a database called "chase_proof_runner" with login/password "root/root"
+	
+	c. Run
+	To run a batch of test cases, execute the following command:
+	java -jar pdq-regression.jar proof -i path/to/testcases
+	
+	This will descend the directory tree and run test on all valid directories
+	(i.e. contains the proper input files.)
+	
+	Example:
+	To run a single test case on a tpch example
+	java -jar pdq-regression.jar proof -i test/proof/tpch/case_001/
+	
+	To run all test cases 
+	java -jar pdq-regression.jar proof -i test/proof
+	 

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plan type="dag" cost="6971.489166666666" control-flow="TOP_DOWN">
+	<operator type="PROJECT">
+		<outputs>
+			<attribute name="c3" type="java.lang.String" />
+			<attribute name="c4" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="c6" type="java.lang.String" />
+			<attribute name="c7" type="java.lang.String" />
+			<attribute name="c8" type="java.lang.String" />
+			<attribute name="c9" type="java.lang.String" />
+		</outputs>
+		<project>
+			<attribute name="c3" type="java.lang.String" />
+			<attribute name="c4" type="java.lang.String" />
+			<attribute name="c5" type="java.lang.String" />
+			<attribute name="c6" type="java.lang.String" />
+			<attribute name="c7" type="java.lang.String" />
+			<attribute name="c8" type="java.lang.String" />
+			<attribute name="c9" type="java.lang.String" />
+		</project>
+		<child>
+			<operator type="CROSS_PRODUCT">
+				<outputs>
+					<attribute name="c1" type="java.lang.String" />
+					<attribute name="c2" type="java.lang.String" />
+					<attribute name="c3" type="java.lang.String" />
+					<attribute name="c4" type="java.lang.String" />
+					<attribute name="c5" type="java.lang.String" />
+					<attribute name="c6" type="java.lang.String" />
+					<attribute name="c7" type="java.lang.String" />
+					<attribute name="c8" type="java.lang.String" />
+					<attribute name="c9" type="java.lang.String" />
+				</outputs>
+				<children>
+					<operator type="PROJECT">
+						<outputs>
+							<attribute name="c1" type="java.lang.String" />
+							<attribute name="c2" type="java.lang.String" />
+						</outputs>
+						<project>
+							<attribute name="target_chembl_id" type="java.lang.String" />
+							<attribute name="target_component_id" type="java.lang.String" />
+						</project>
+						<child>
+							<operator type="SELECT">
+								<outputs>
+									<attribute name="organism" type="java.lang.String" />
+									<attribute name="target_chembl_id" type="java.lang.String" />
+									<attribute name="target_component_id" type="java.lang.String" />
+								</outputs>
+								<conjunction>
+									<predicate type="equality" left="0" value="Mus musculus" />
+								</conjunction>
+								<child>
+									<operator type="ACCESS" relation="EBEYETarget"
+										access-method="ebeye_chembl_target_limited">
+										<outputs>
+											<attribute name="organism" type="java.lang.String" />
+											<attribute name="target_chembl_id" type="java.lang.String" />
+											<attribute name="target_component_id" type="java.lang.String" />
+										</outputs>
+										<static-input>
+											<input attribute="0" value="Mus musculus" type="java.lang.String" />
+										</static-input>
+									</operator>
+								</child>
+							</operator>
+						</child>
+					</operator>
+					<operator type="PROJECT">
+						<outputs>
+							<attribute name="c3" type="java.lang.String" />
+							<attribute name="c4" type="java.lang.String" />
+							<attribute name="c5" type="java.lang.String" />
+							<attribute name="c6" type="java.lang.String" />
+							<attribute name="c7" type="java.lang.String" />
+							<attribute name="c8" type="java.lang.String" />
+							<attribute name="c9" type="java.lang.String" />
+						</outputs>
+						<project>
+							<attribute name="accession" type="java.lang.String" />
+							<attribute name="component_id" type="java.lang.String" />
+							<attribute name="description" type="java.lang.String" />
+							<attribute name="organism" type="java.lang.String" />
+							<attribute name="protein_classification_id" type="java.lang.String" />
+							<attribute name="sequence" type="java.lang.String" />
+							<attribute name="tax_id" type="java.lang.String" />
+						</project>
+						<child>
+							<operator type="SELECT">
+								<outputs>
+									<attribute name="accession" type="java.lang.String" />
+									<attribute name="component_id" type="java.lang.String" />
+									<attribute name="component_type" type="java.lang.String" />
+									<attribute name="description" type="java.lang.String" />
+									<attribute name="organism" type="java.lang.String" />
+									<attribute name="protein_classification_id" type="java.lang.String" />
+									<attribute name="sequence" type="java.lang.String" />
+									<attribute name="tax_id" type="java.lang.String" />
+								</outputs>
+								<conjunction>
+									<predicate type="equality" left="2" value="PROTEIN" />
+								</conjunction>
+								<child>
+									<operator type="ACCESS" relation="TargetComponentFree"
+										access-method="chembl_target_component_free">
+										<outputs>
+											<attribute name="accession" type="java.lang.String" />
+											<attribute name="component_id" type="java.lang.String" />
+											<attribute name="component_type" type="java.lang.String" />
+											<attribute name="description" type="java.lang.String" />
+											<attribute name="organism" type="java.lang.String" />
+											<attribute name="protein_classification_id" type="java.lang.String" />
+											<attribute name="sequence" type="java.lang.String" />
+											<attribute name="tax_id" type="java.lang.String" />
+										</outputs>
+									</operator>
+								</child>
+							</operator>
+						</child>
+					</operator>
+				</children>
+			</operator>
+		</child>
+	</operator>
+</plan>

@@ -1,0 +1,3 @@
+RE:DocumentFree BI:chembl_document_free
+RE:AssayLimited BI:chembl_assay_limited_2
+RE:TargetLimited BI:chembl_target_limited

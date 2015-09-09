@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plan type="linear" cost="1.820032679738562E7">
+<command name="T1">
+<operator type="PROJECT">
+<outputs>
+<attribute name="c225" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="c225" type="java.lang.String"/>
+</project>
+<child>
+<operator type="PROJECT">
+<outputs>
+<attribute name="c222" type="java.lang.Integer"/>
+<attribute name="c223" type="java.lang.Integer"/>
+<attribute name="c224" type="java.lang.String"/>
+<attribute name="c225" type="java.lang.String"/>
+<attribute name="c226" type="java.lang.String"/>
+<attribute name="c227" type="java.lang.String"/>
+<attribute name="c228" type="java.lang.String"/>
+<attribute name="c229" type="java.lang.String"/>
+<attribute name="c230" type="java.lang.String"/>
+<attribute name="c231" type="java.lang.String"/>
+<attribute name="c232" type="java.lang.Double"/>
+<attribute name="c233" type="java.lang.Double"/>
+<attribute name="c234" type="java.lang.Double"/>
+<attribute name="c235" type="java.lang.Double"/>
+<attribute name="c236" type="java.lang.Double"/>
+<attribute name="c237" type="java.lang.Double"/>
+<attribute name="c238" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="woeid" type="java.lang.Integer"/>
+<attribute name="type" type="java.lang.Integer"/>
+<attribute name="placeTypeName" type="java.lang.String"/>
+<attribute name="country" type="java.lang.String"/>
+<attribute name="admin1" type="java.lang.String"/>
+<attribute name="admin2" type="java.lang.String"/>
+<attribute name="admin3" type="java.lang.String"/>
+<attribute name="locality1" type="java.lang.String"/>
+<attribute name="locality2" type="java.lang.String"/>
+<attribute name="postal" type="java.lang.String"/>
+<attribute name="centroid_lat" type="java.lang.Double"/>
+<attribute name="centroid_lng" type="java.lang.Double"/>
+<attribute name="bboxNorth" type="java.lang.Double"/>
+<attribute name="bboxSouth" type="java.lang.Double"/>
+<attribute name="bboxEast" type="java.lang.Double"/>
+<attribute name="bboxWest" type="java.lang.Double"/>
+<attribute name="timezone" type="java.lang.String"/>
+</project>
+<child>
+<operator type="SELECT">
+<outputs>
+<attribute name="woeid" type="java.lang.Integer"/>
+<attribute name="name" type="java.lang.String"/>
+<attribute name="type" type="java.lang.Integer"/>
+<attribute name="placeTypeName" type="java.lang.String"/>
+<attribute name="country" type="java.lang.String"/>
+<attribute name="admin1" type="java.lang.String"/>
+<attribute name="admin2" type="java.lang.String"/>
+<attribute name="admin3" type="java.lang.String"/>
+<attribute name="locality1" type="java.lang.String"/>
+<attribute name="locality2" type="java.lang.String"/>
+<attribute name="postal" type="java.lang.String"/>
+<attribute name="centroid_lat" type="java.lang.Double"/>
+<attribute name="centroid_lng" type="java.lang.Double"/>
+<attribute name="bboxNorth" type="java.lang.Double"/>
+<attribute name="bboxSouth" type="java.lang.Double"/>
+<attribute name="bboxEast" type="java.lang.Double"/>
+<attribute name="bboxWest" type="java.lang.Double"/>
+<attribute name="timezone" type="java.lang.String"/>
+</outputs>
+<conjunction>
+<predicate type="equality" left="1" value="Eiffel Tower"/>
+</conjunction>
+<child>
+<operator type="ACCESS" relation="YahooPlaces" access-method="yh_geo_name">
+<outputs>
+<attribute name="woeid" type="java.lang.Integer"/>
+<attribute name="name" type="java.lang.String"/>
+<attribute name="type" type="java.lang.Integer"/>
+<attribute name="placeTypeName" type="java.lang.String"/>
+<attribute name="country" type="java.lang.String"/>
+<attribute name="admin1" type="java.lang.String"/>
+<attribute name="admin2" type="java.lang.String"/>
+<attribute name="admin3" type="java.lang.String"/>
+<attribute name="locality1" type="java.lang.String"/>
+<attribute name="locality2" type="java.lang.String"/>
+<attribute name="postal" type="java.lang.String"/>
+<attribute name="centroid_lat" type="java.lang.Double"/>
+<attribute name="centroid_lng" type="java.lang.Double"/>
+<attribute name="bboxNorth" type="java.lang.Double"/>
+<attribute name="bboxSouth" type="java.lang.Double"/>
+<attribute name="bboxEast" type="java.lang.Double"/>
+<attribute name="bboxWest" type="java.lang.Double"/>
+<attribute name="timezone" type="java.lang.String"/>
+</outputs>
+<static-input>
+<input attribute="1" value="Eiffel Tower" type="java.lang.String"/>
+</static-input>
+</operator>
+</child>
+</operator>
+</child>
+</operator>
+</child>
+</operator>
+</command>
+</plan>

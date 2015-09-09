@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plan type="linear" cost="356700.32000000007">
+	<command name="T1">
+		<operator type="JOIN" variant="SYMMETRIC_HASH">
+			<outputs>
+				<attribute name="k537" type="java.lang.String" />
+				<attribute name="c430" type="java.lang.String" />
+				<attribute name="c428" type="java.lang.String" />
+				<attribute name="c430" type="java.lang.String" />
+				<attribute name="c429" type="java.lang.String" />
+				<attribute name="c429" type="java.lang.String" />
+			</outputs>
+			<conjunction>
+				<predicate type="equality" left="1" right="3" />
+			</conjunction>
+			<children>
+				<operator type="PROJECT">
+					<outputs>
+						<attribute name="k537" type="java.lang.String" />
+						<attribute name="c430" type="java.lang.String" />
+						<attribute name="c428" type="java.lang.String" />
+					</outputs>
+					<project>
+						<attribute name="x0" type="java.lang.String" />
+						<attribute name="x1" type="java.lang.String" />
+						<attribute name="x2" type="java.lang.String" />
+					</project>
+					<child>
+						<operator type="ACCESS" relation="R0" access-method="mt_5">
+							<outputs>
+								<attribute name="x0" type="java.lang.String" />
+								<attribute name="x1" type="java.lang.String" />
+								<attribute name="x2" type="java.lang.String" />
+							</outputs>
+						</operator>
+					</child>
+				</operator>
+				<operator type="PROJECT">
+					<outputs>
+						<attribute name="c430" type="java.lang.String" />
+						<attribute name="c429" type="java.lang.String" />
+						<attribute name="c429" type="java.lang.String" />
+					</outputs>
+					<project>
+						<attribute name="x0" type="java.lang.String" />
+						<attribute name="x1" type="java.lang.String" />
+						<attribute name="x2" type="java.lang.String" />
+					</project>
+					<child>
+						<operator type="SELECT">
+							<outputs>
+								<attribute name="x0" type="java.lang.String" />
+								<attribute name="x1" type="java.lang.String" />
+								<attribute name="x2" type="java.lang.String" />
+							</outputs>
+							<conjunction>
+								<predicate type="equality" left="1" right="2" />
+							</conjunction>
+							<child>
+								<operator type="ACCESS" relation="R0" access-method="mt_5">
+									<outputs>
+										<attribute name="x0" type="java.lang.String" />
+										<attribute name="x1" type="java.lang.String" />
+										<attribute name="x2" type="java.lang.String" />
+									</outputs>
+								</operator>
+							</child>
+						</operator>
+					</child>
+				</operator>
+			</children>
+		</operator>
+	</command>
+	<command name="T2">
+		<operator type="DEPENDENT_JOIN" param="2,1">
+			<outputs>
+				<attribute name="k537" type="java.lang.String" />
+				<attribute name="c430" type="java.lang.String" />
+				<attribute name="c428" type="java.lang.String" />
+				<attribute name="c430" type="java.lang.String" />
+				<attribute name="c429" type="java.lang.String" />
+				<attribute name="c429" type="java.lang.String" />
+				<attribute name="c429" type="java.lang.String" />
+				<attribute name="c428" type="java.lang.String" />
+				<attribute name="c430" type="java.lang.String" />
+			</outputs>
+			<children>
+				<operator type="ALIAS" name="T1" />
+				<operator type="PROJECT">
+					<outputs>
+						<attribute name="c429" type="java.lang.String" />
+						<attribute name="c428" type="java.lang.String" />
+						<attribute name="c430" type="java.lang.String" />
+					</outputs>
+					<project>
+						<attribute name="x0" type="java.lang.String" />
+						<attribute name="x1" type="java.lang.String" />
+						<attribute name="x2" type="java.lang.String" />
+					</project>
+					<child>
+						<operator type="ACCESS" relation="R4" access-method="mt_8">
+							<outputs>
+								<attribute name="x0" type="java.lang.String" />
+								<attribute name="x1" type="java.lang.String" />
+								<attribute name="x2" type="java.lang.String" />
+							</outputs>
+						</operator>
+					</child>
+				</operator>
+			</children>
+		</operator>
+	</command>
+	<command name="T3">
+		<operator type="DEPENDENT_JOIN" param="2">
+			<outputs>
+				<attribute name="k537" type="java.lang.String" />
+				<attribute name="c430" type="java.lang.String" />
+				<attribute name="c428" type="java.lang.String" />
+				<attribute name="c430" type="java.lang.String" />
+				<attribute name="c429" type="java.lang.String" />
+				<attribute name="c429" type="java.lang.String" />
+				<attribute name="c429" type="java.lang.String" />
+				<attribute name="c428" type="java.lang.String" />
+				<attribute name="c430" type="java.lang.String" />
+				<attribute name="c428" type="java.lang.String" />
+			</outputs>
+			<children>
+				<operator type="ALIAS" name="T2" />
+				<operator type="PROJECT">
+					<outputs>
+						<attribute name="c428" type="java.lang.String" />
+					</outputs>
+					<project>
+						<attribute name="x0" type="java.lang.String" />
+					</project>
+					<child>
+						<operator type="ACCESS" relation="R2" access-method="mt_2">
+							<outputs>
+								<attribute name="x0" type="java.lang.String" />
+							</outputs>
+						</operator>
+					</child>
+				</operator>
+			</children>
+		</operator>
+	</command>
+	<command name="T4">
+		<operator type="PROJECT">
+			<outputs>
+				<attribute name="c428" type="java.lang.String" />
+			</outputs>
+			<project>
+				<attribute name="c428" type="java.lang.String" />
+			</project>
+			<child>
+				<operator type="DEPENDENT_JOIN" param="2">
+					<outputs>
+						<attribute name="k537" type="java.lang.String" />
+						<attribute name="c430" type="java.lang.String" />
+						<attribute name="c428" type="java.lang.String" />
+						<attribute name="c430" type="java.lang.String" />
+						<attribute name="c429" type="java.lang.String" />
+						<attribute name="c429" type="java.lang.String" />
+						<attribute name="c429" type="java.lang.String" />
+						<attribute name="c428" type="java.lang.String" />
+						<attribute name="c430" type="java.lang.String" />
+						<attribute name="c428" type="java.lang.String" />
+						<attribute name="c428" type="java.lang.String" />
+					</outputs>
+					<children>
+						<operator type="ALIAS" name="T3" />
+						<operator type="PROJECT">
+							<outputs>
+								<attribute name="c428" type="java.lang.String" />
+							</outputs>
+							<project>
+								<attribute name="x0" type="java.lang.String" />
+							</project>
+							<child>
+								<operator type="ACCESS" relation="R1" access-method="mt_0">
+									<outputs>
+										<attribute name="x0" type="java.lang.String" />
+									</outputs>
+								</operator>
+							</child>
+						</operator>
+					</children>
+				</operator>
+			</child>
+		</operator>
+	</command>
+</plan>

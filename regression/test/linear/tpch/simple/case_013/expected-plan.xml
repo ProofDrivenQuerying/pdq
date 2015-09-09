@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plan type="linear" cost="5.0" control-flow="TOP_DOWN">
+<command name="T1">
+<operator type="PROJECT">
+<outputs>
+<attribute name="c1742" type="java.lang.Integer"/>
+<attribute name="c1743" type="java.lang.String"/>
+<attribute name="c1744" type="java.lang.Integer"/>
+<attribute name="c1746" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="c1742" type="java.lang.Integer"/>
+<attribute name="c1743" type="java.lang.String"/>
+<attribute name="c1744" type="java.lang.Integer"/>
+<attribute name="c1746" type="java.lang.String"/>
+</project>
+<child>
+<operator type="PROJECT">
+<outputs>
+<attribute name="c1742" type="java.lang.Integer"/>
+<attribute name="c1743" type="java.lang.String"/>
+<attribute name="c1744" type="java.lang.Integer"/>
+<attribute name="c1746" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="nation_key" type="java.lang.Integer"/>
+<attribute name="nation_name" type="java.lang.String"/>
+<attribute name="region_key" type="java.lang.Integer"/>
+<attribute name="region_name" type="java.lang.String"/>
+</project>
+<child>
+<operator type="ACCESS" relation="region_nation" access-method="m1">
+<outputs>
+<attribute name="nation_key" type="java.lang.Integer"/>
+<attribute name="nation_name" type="java.lang.String"/>
+<attribute name="region_key" type="java.lang.Integer"/>
+<attribute name="region_name" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</child>
+</operator>
+</command>
+</plan>
