@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema>
+	<relations>
+		<relation name="R1">
+			<attribute name="a0" type="java.lang.String" />
+			<attribute name="a1" type="java.lang.String" />
+		</relation>
+		<relation name="R2">
+			<attribute name="a0" type="java.lang.String" />
+			<attribute name="a1" type="java.lang.String" />
+			<attribute name="a2" type="java.lang.String" />
+			<attribute name="a3" type="java.lang.String" />
+		</relation>
+		<view name="V3">
+			<attribute name="a0" type="java.lang.String" />
+			<attribute name="a1" type="java.lang.String" />
+			<access-method type="FREE" name="m1" cost="5.0" />
+		</view>
+	</relations>
+	<dependencies>
+		<dependency>
+			<body>
+				<atom name="V3">
+					<variable name="x1" />
+					<variable name="x2" />
+				</atom>
+			</body>
+			<head>
+				<atom name="R1">
+					<variable name="x0" />
+					<variable name="x1" />
+				</atom>
+				<atom name="R2">
+					<variable name="x0" />
+					<variable name="x2" />
+					<variable name="x3" />
+					<variable name="x4" />
+				</atom>
+			</head>
+		</dependency>
+		<!-- <dependency> <body> <atom name="R1"> <variable name="x0" /> <variable 
+			name="x1" /> </atom> <atom name="R2"> <variable name="x0" /> <variable name="x2" 
+			/> <variable name="x3" /> <variable name="x4" /> </atom> </body> <head> <atom 
+			name="V3"> <variable name="x1" /> <variable name="x2" /> </atom> </head> 
+			</dependency> -->
+	</dependencies>
+</schema>

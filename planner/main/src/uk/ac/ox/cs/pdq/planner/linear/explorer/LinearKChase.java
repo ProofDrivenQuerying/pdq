@@ -1,0 +1,248 @@
+package uk.ac.ox.cs.pdq.planner.linear.explorer;
+
+import static uk.ac.ox.cs.pdq.planner.logging.performance.PlannerStatKeys.DOMINANCE_PRUNING;
+import static uk.ac.ox.cs.pdq.planner.logging.performance.PlannerStatKeys.EQUIVALENCE_PRUNING;
+import static uk.ac.ox.cs.pdq.planner.logging.performance.PlannerStatKeys.HIGHER_COST_PRUNING;
+import static uk.ac.ox.cs.pdq.planner.logging.performance.PlannerStatKeys.MILLI_CLOSE;
+import static uk.ac.ox.cs.pdq.planner.logging.performance.PlannerStatKeys.MILLI_DOMINANCE;
+import static uk.ac.ox.cs.pdq.planner.logging.performance.PlannerStatKeys.MILLI_EQUIVALENCE;
+import static uk.ac.ox.cs.pdq.planner.logging.performance.PlannerStatKeys.MILLI_QUERY_MATCH;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+
+import org.apache.log4j.Logger;
+import org.jgrapht.graph.DefaultEdge;
+
+import uk.ac.ox.cs.pdq.LimitReachedException;
+import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
+import uk.ac.ox.cs.pdq.plan.LinearPlan;
+import uk.ac.ox.cs.pdq.planner.PlannerException;
+import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
+import uk.ac.ox.cs.pdq.planner.linear.LinearConfiguration;
+import uk.ac.ox.cs.pdq.planner.linear.cost.CostPropagator;
+import uk.ac.ox.cs.pdq.planner.linear.cost.PropagatorUtils;
+import uk.ac.ox.cs.pdq.planner.linear.cost.SimplePropagator;
+import uk.ac.ox.cs.pdq.planner.linear.metadata.BestPlanMetadata;
+import uk.ac.ox.cs.pdq.planner.linear.metadata.CreationMetadata;
+import uk.ac.ox.cs.pdq.planner.linear.metadata.DominanceMetadata;
+import uk.ac.ox.cs.pdq.planner.linear.metadata.EquivalenceMetadata;
+import uk.ac.ox.cs.pdq.planner.linear.metadata.Metadata;
+import uk.ac.ox.cs.pdq.planner.linear.metadata.StatusUpdateMetadata;
+import uk.ac.ox.cs.pdq.planner.linear.node.NodeFactory;
+import uk.ac.ox.cs.pdq.planner.linear.node.SearchNode;
+import uk.ac.ox.cs.pdq.planner.linear.node.SearchNode.NodeStatus;
+import uk.ac.ox.cs.pdq.planner.reasoning.chase.state.AccessibleChaseState;
+import uk.ac.ox.cs.pdq.reasoning.Match;
+
+import com.google.common.base.Preconditions;
+import com.google.common.eventbus.EventBus;
+
+/**
+ * Searches the plan space employing several optimisations (similar to the OptimizedExplorer) in order to reach faster the best plan.
+ * Performs chasing at intervals
+ *
+ * @author Efthymia Tsamoura
+ */
+public class LinearKChase extends LinearExplorer {
+
+	/** Logger. */
+	private static Logger log = Logger.getLogger(LinearKChase.class);
+
+	/** Propagates to the root of the plan tree the best plan found so far */
+	protected final CostPropagator costPropagator;
+
+	/** How often to perform chasing */
+	private final Integer chaseInterval;
+
+	/**
+	 * 
+	 * @param eventBus
+	 * @param collectStats
+	 * @param schema
+	 * @param accessibleSchema
+	 * @param query
+	 * @param accessibleQuery
+	 * @param costEstimator
+	 * 		Estimates the cost of the plans found
+	 * @param configurationFactory
+	 * 		Returns the configuration of the root node
+	 * @param nodeFactory
+	 * 		Creates nodes
+	 * @param depth
+	 * 		Maximum exploration depth
+	 * @param chaseInterval
+	 * 		How often to perform chasing
+	 * @param planPostPruning
+	 * 		Performs plan post-pruning
+	 * @throws PlannerException
+	 */
+	public LinearKChase(
+			EventBus eventBus, boolean collectStats,
+			CostEstimator<LinearPlan> costEstimator,
+			LinearChaseConfiguration configuration,
+			NodeFactory nodeFactory,
+			int depth,
+			int chaseInterval) throws PlannerException {
+		super(eventBus, collectStats, configuration, nodeFactory, depth);
+		Preconditions.checkArgument(costEstimator != null);
+
+		this.costPropagator = PropagatorUtils.getPropagator(costEstimator);
+		this.chaseInterval = chaseInterval;
+	}
+
+	/**
+	 * @throws PlannerException
+	 */
+	@Override
+	protected void _explore() throws PlannerException, LimitReachedException {
+
+		log.debug("Iteration: " + this.rounds);
+
+		if(this.rounds % this.chaseInterval != 0 ) {
+
+			// Choose the next node to explore below it
+			SearchNode selectedNode = this.chooseNode();
+			if (selectedNode == null) {
+				return;
+			}
+			LinearConfiguration selectedConfig = selectedNode.getConfiguration();
+
+			/*
+			 * Choose a new candidate fact. A candidate fact F(c1,c2,...,cN) is one for which
+			 * (i) there exists Accessible(c_i) facts for any c_i
+			 * (ii) AccessedF(c1,c2,...,cN) does not exist in the current initialConfig
+			 */
+			Candidate selectedCandidate = selectedConfig.chooseCandidate();
+			if(selectedCandidate == null) {
+				selectedNode.setStatus(NodeStatus.TERMINAL);
+				Metadata metadata = new StatusUpdateMetadata(selectedNode, this.getElapsedTime());
+				selectedNode.setMetadata(metadata);
+				this.eventBus.post(selectedNode);
+				return;
+			}
+
+			// Search for other candidate facts that could be exposed along with the selected candidate. 
+			Set<Candidate> similarCandidates = selectedConfig.getSimilarCandidates(selectedCandidate);
+			selectedConfig.removeCandidates(similarCandidates);
+			if (!selectedConfig.hasCandidates()) {
+				selectedNode.setStatus(NodeStatus.TERMINAL);
+			}
+
+			// Create a new node from the exposed facts and add it to the plan tree
+			SearchNode freshNode = this.getNodeFactory().getInstance(selectedNode, similarCandidates);	
+			
+			Metadata metadata = new CreationMetadata(selectedNode, this.getElapsedTime());
+			freshNode.setMetadata(metadata);
+			this.eventBus.post(freshNode);
+			
+			this.planTree.addVertex(freshNode);
+			this.planTree.addEdge(selectedNode, freshNode, new DefaultEdge());
+
+			boolean domination = false;
+			/* If the cost of the plan of the newly created node is higher than the best plan found so far then kill the newly created node  */
+			LinearPlan freshNodePlan = freshNode.getConfiguration().getPlan();
+			if (this.bestPlan != null) {
+				if (freshNodePlan.getCost().greaterOrEquals(this.bestPlan.getCost())) {
+					domination = true;
+					freshNode.setDominancePlan(this.bestPlan);
+					metadata = new DominanceMetadata(selectedNode, this.bestPlan, freshNodePlan, this.getElapsedTime());
+					freshNode.setMetadata(metadata);
+					this.stats.increase(HIGHER_COST_PRUNING, 1);
+					log.debug(freshNodePlan.toString() + " has higher cost than plan " + this.bestPlan.toString() + " Costs " + freshNodePlan.getCost().toString() + ">=" + this.bestPlan.getCost().toString());
+				}
+			}
+
+			/* If at least one node in the plan tree dominates the newly created node, then kill the newly created node   */
+			if (!domination && this.costPropagator instanceof SimplePropagator) {
+				this.stats.start(MILLI_DOMINANCE);
+				SearchNode dominanceNode = ExplorerUtils.isDominated(ExplorerUtils.getFullyGeneratedNodes(this.planTree), freshNode);
+				this.stats.stop(MILLI_DOMINANCE);
+				if(dominanceNode != null) {
+					domination = true;
+					LinearPlan dominancePlan = dominanceNode.getConfiguration().getPlan();
+					freshNode.setDominancePlan(dominancePlan);
+					metadata = new DominanceMetadata(dominanceNode, dominancePlan, freshNodePlan, this.getElapsedTime());
+					freshNode.setMetadata(metadata);
+					this.stats.increase(DOMINANCE_PRUNING, 1);
+					log.debug(dominancePlan.toString() + " dominates " + freshNodePlan.toString() + dominancePlan.getCost().toString() + "<" + freshNodePlan.getCost().toString());
+				}
+			}
+			if (domination) {
+				freshNode.setStatus(NodeStatus.TERMINAL);
+				this.eventBus.post(freshNode);
+				this.planTree.removeVertex(freshNode);
+			}
+		}
+		else {
+			Collection<SearchNode> leaves = ExplorerUtils.getPartiallyGeneratedLeaves(this.planTree);
+			log.debug("Number of partially generated leaves " + leaves.size());
+			this.stats.start(MILLI_CLOSE);
+			for(SearchNode leaf:leaves) {
+				leaf.close();
+				log.debug("Close leaf: " + leaf);
+			}	
+			this.stats.stop(MILLI_CLOSE);
+
+			// Perform global equivalence checks
+			for(SearchNode leaf: leaves) {
+				this.stats.start(MILLI_EQUIVALENCE);
+				SearchNode parentEquivalent = ExplorerUtils.isEquivalent(leaves, leaf);
+				this.stats.stop(MILLI_EQUIVALENCE);
+
+				/*
+				 * If such a node exists then
+				 * -create a pointer from the newly created node to the one that is globally equivalent to
+				 * -propagate upwards the best paths to success
+				 * -update the best plan found so far
+				 * -stop exploring plans below the newly created node
+				 */
+				if (parentEquivalent != null && !parentEquivalent.getStatus().equals(NodeStatus.SUCCESSFUL)) {
+					leaf.setPointer(parentEquivalent);
+					leaf.setStatus(NodeStatus.TERMINAL);
+					SearchNode parentNode = this.planTree.getParent(leaf);
+					Metadata metadata = new EquivalenceMetadata(parentNode, this.getElapsedTime());
+					leaf.setMetadata(metadata);
+					this.eventBus.post(leaf);
+					this.updateBestPlan(parentNode, leaf);
+					log.debug("Node " + parentEquivalent.toString() + " is equivalent to " + leaf.toString());
+					this.stats.increase(EQUIVALENCE_PRUNING, 1);
+				}
+			}
+
+			// Check for query match
+			for (SearchNode leaf: leaves) {
+				if((leaf.getStatus() == NodeStatus.TERMINAL || leaf.getStatus() == NodeStatus.ONGOING) && leaf.getPointer() == null) {
+					this.stats.start(MILLI_QUERY_MATCH);
+					List<Match> matches = leaf.matchesQuery();//this.getAccessibleQuery(), this.getQuery().getFreeToCanonical()
+					this.stats.stop(MILLI_QUERY_MATCH);
+
+					// If there exists at least one query match
+					if (!matches.isEmpty()) {
+						leaf.setStatus(NodeStatus.SUCCESSFUL);
+						SearchNode parentNode = this.planTree.getParent(leaf);
+						this.updateBestPlan(parentNode, leaf);
+					}
+				}
+			}
+		}
+	}
+	
+	private void updateBestPlan(SearchNode parentNode, SearchNode freshNode) {
+		this.costPropagator.propagate(freshNode, this.planTree);
+		LinearPlan successfulPlan = this.costPropagator.getBestPlan();
+		if ((this.bestPlan == null && successfulPlan != null) || 
+				(this.bestPlan != null && successfulPlan != null && successfulPlan.getCost().lessThan(this.bestPlan.getCost()))) {
+			this.bestPlan = successfulPlan;
+			this.eventBus.post(this.getBestPlan());
+			this.bestProof = this.costPropagator.getBestProof(); 
+			this.eventBus.post(this.bestProof);
+			log.trace("\t+++BEST PLAN: " + this.bestPlan.getAccesses() + " " + this.bestPlan.getCost());
+
+			BestPlanMetadata successMetadata = new BestPlanMetadata(parentNode, this.bestPlan, this.bestProof, this.costPropagator.getBestPath(), this.getElapsedTime());
+			freshNode.setMetadata(successMetadata);
+			this.eventBus.post(freshNode);
+		}
+	}
+}
