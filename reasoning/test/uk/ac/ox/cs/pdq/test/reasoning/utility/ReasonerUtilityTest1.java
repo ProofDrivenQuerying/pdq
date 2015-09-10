@@ -1,7 +1,6 @@
 package uk.ac.ox.cs.pdq.test.reasoning.utility;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.junit.Before;
 import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.algebra.predicates.ConjunctivePredicate;
@@ -41,8 +40,9 @@ public class ReasonerUtilityTest1 extends ReasonerUtilityTest0 {
 	//PCOMPOSE(PCOMPOSE(APPLYRULE(DocumentFree(){DocumentFree(c434,PUBLICATION,c428,c435,c436,c437,c438,c439,c440,c441,c442,2015)}),
 	//APPLYRULE(AssayLimited(17){AssayLimited(c412,c413,c414,c415,c416,c417,c418,c419,c420,c421,c422,c423,c424,c425,c426,c427,c428,c429,c430,c431,c432,c433)})),
 	//APPLYRULE(TargetLimited(4){TargetLimited(c443,c444,c445,c433,c446,c447,c448,SINGLE PROTEIN)}))
-	@Before
-	protected void loadPlan() {
+
+	@Override
+	public NormalisedPlan loadPlan() {
 		//Define all schema and chase constants
 		Term _authors = new Variable("authors");
 		Term _document_chembl_id = new Variable("document_chembl_id");
@@ -111,41 +111,49 @@ public class ReasonerUtilityTest1 extends ReasonerUtilityTest0 {
 		this.selection2 = new Select(new ConjunctivePredicate(Lists.newArrayList(p20)), access2.getOutput());
 		this.join2 = new Join(selection2.getOutput(), join1.getOutput());
 		
-		this.plan = new NormalisedPlan(Lists.newArrayList(this.access0, this.selection0, this.projection0, this.access1, this.join1, 
+		return new NormalisedPlan(Lists.newArrayList(this.access0, this.selection0, this.projection0, this.access1, this.join1, 
 				this.projection1, this.access2, this.selection2, this.join2));
 	}
 	
 	@Test
 	public void test1() {
-		boolean r1 = new ReasonerUtility().existsInclustionDependency(this.access1.getOutput(), this.selection0.getOutput(), this.constraints, this.restrictedChaser, (DBHomomorphismManager) this.detector);
+		boolean r1 = new ReasonerUtility().existsInclustionDependency(this.access1.getOutput(), this.selection0.getOutput(), CollectionUtils.union(this.schema.getDependencies(), this.planConstraints), this.restrictedChaser, (DBHomomorphismManager) this.detector);
+		System.out.println(r1);
 	}
 	
 	@Test
 	public void test2() {
-		boolean r2 = new ReasonerUtility().existsInclustionDependency(this.selection0.getOutput(), this.access1.getOutput(), this.constraints,this.restrictedChaser, (DBHomomorphismManager) this.detector);
+		boolean r2 = new ReasonerUtility().existsInclustionDependency(this.selection0.getOutput(), this.access1.getOutput(), CollectionUtils.union(this.schema.getDependencies(), this.planConstraints),this.restrictedChaser, (DBHomomorphismManager) this.detector);
+		System.out.println(r2);
 	}
 	
 	@Test
 	public void test3() {
 		Attribute k1 = (Attribute) this.access1.getOutput().getHeader().get(16);
-		boolean r3 = new ReasonerUtility().isKey(this.access1.getOutput(), Lists.newArrayList(k1), CollectionUtils.union(this.keyDependencies, this.constraints), this.egdChaser, (DBHomomorphismManager) this.detector);
-		boolean r4 = new ReasonerUtility().isKey(this.selection0.getOutput(), Lists.newArrayList(k1), CollectionUtils.union(this.keyDependencies, this.constraints), this.egdChaser, (DBHomomorphismManager) this.detector);
+		boolean r3 = new ReasonerUtility().isKey(this.access1.getOutput(), Lists.newArrayList(k1), CollectionUtils.union(this.keys, CollectionUtils.union(this.schema.getDependencies(), this.planConstraints)), this.egdChaser, (DBHomomorphismManager) this.detector);
+		boolean r4 = new ReasonerUtility().isKey(this.selection0.getOutput(), Lists.newArrayList(k1), CollectionUtils.union(this.keys, CollectionUtils.union(this.schema.getDependencies(), this.planConstraints)), this.egdChaser, (DBHomomorphismManager) this.detector);
+		System.out.println(r3);
+		System.out.println(r4);
 	}
 	
 	@Test
 	public void test4() {
-		boolean r5 = new ReasonerUtility().existsInclustionDependency(this.selection2.getOutput(), this.join1.getOutput(), this.constraints, this.restrictedChaser, (DBHomomorphismManager) this.detector);
+		boolean r5 = new ReasonerUtility().existsInclustionDependency(this.selection2.getOutput(), this.join1.getOutput(), CollectionUtils.union(this.schema.getDependencies(), this.planConstraints), this.restrictedChaser, (DBHomomorphismManager) this.detector);
+		System.out.println(r5);
 	}
 	
 	@Test
 	public void test5() {
-		boolean r6 = new ReasonerUtility().existsInclustionDependency(this.join1.getOutput(), this.selection2.getOutput(), this.constraints, this.restrictedChaser, (DBHomomorphismManager) this.detector);
+		boolean r6 = new ReasonerUtility().existsInclustionDependency(this.join1.getOutput(), this.selection2.getOutput(), CollectionUtils.union(this.schema.getDependencies(), this.planConstraints), this.restrictedChaser, (DBHomomorphismManager) this.detector);
+		System.out.println(r6);
 	}
 	
 	@Test
 	public void test12() {
 		Attribute k2 = (Attribute) this.selection2.getOutput().getHeader().get(3);
-		boolean r5 = new ReasonerUtility().isKey(this.selection2.getOutput(), Lists.newArrayList(k2), CollectionUtils.union(this.keyDependencies, this.constraints), this.egdChaser, (DBHomomorphismManager) this.detector);
-		boolean r6 = new ReasonerUtility().isKey(this.join1.getOutput(), Lists.newArrayList(k2), CollectionUtils.union(this.keyDependencies, this.constraints), this.egdChaser, (DBHomomorphismManager) this.detector);
+		boolean r5 = new ReasonerUtility().isKey(this.selection2.getOutput(), Lists.newArrayList(k2), CollectionUtils.union(this.keys, CollectionUtils.union(this.schema.getDependencies(), this.planConstraints)), this.egdChaser, (DBHomomorphismManager) this.detector);
+		boolean r6 = new ReasonerUtility().isKey(this.join1.getOutput(), Lists.newArrayList(k2), CollectionUtils.union(this.keys, CollectionUtils.union(this.schema.getDependencies(), this.planConstraints)), this.egdChaser, (DBHomomorphismManager) this.detector);
+		System.out.println(r5);
+		System.out.println(r6);
 	}	
 }
