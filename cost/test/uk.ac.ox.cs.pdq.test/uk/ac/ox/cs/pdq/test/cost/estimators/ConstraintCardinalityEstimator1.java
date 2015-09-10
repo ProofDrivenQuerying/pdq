@@ -23,7 +23,7 @@ import com.google.common.collect.Lists;
  * @author Efthymia Tsamoura
  *
  */
-@Ignore
+
 public class ConstraintCardinalityEstimator1 extends ConstraintCardinalityEstimator0 {
 	
 	Command access0; 

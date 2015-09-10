@@ -21,7 +21,7 @@ import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismManagerFactory;
  * @author Efthymia Tsamoura
  *
  */
-@Ignore
+
 public abstract class ConstraintCardinalityEstimator0 {
 
 	protected String driver = null;
@@ -30,8 +30,8 @@ public abstract class ConstraintCardinalityEstimator0 {
 	protected String username = "root";
 	protected String password ="root";
 	
-	protected Schema schema;
-	protected Catalog catalog = new SimpleCatalog(this.schema, "test/catalog.properties");
+	protected Schema schema = new TestSchema().getSchema();
+	protected Catalog catalog = new SimpleCatalog(this.schema, "test/uk.ac.ox.cs.pdq.test/resources/catalog.properties");
 	protected HomomorphismDetector detector;
 	protected NormalisedPlan plan;
 	protected ConstraintCardinalityEstimator estimator;
