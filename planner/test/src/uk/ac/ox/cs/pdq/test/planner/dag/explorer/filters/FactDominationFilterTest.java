@@ -4,6 +4,7 @@ import static org.mockito.Mockito.when;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
 
@@ -21,6 +22,7 @@ import com.google.common.collect.Lists;
  * @author Efthymia Tsamoura
  *
  */
+@Ignore
 public class FactDominationFilterTest extends TestObjects1{
 
 	FactDominationFilter filter = new FactDominationFilter();

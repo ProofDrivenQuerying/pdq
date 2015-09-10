@@ -1,7 +1,7 @@
 package uk.ac.ox.cs.pdq.test.cost.estimators;
 
 import org.apache.commons.lang3.tuple.Pair;
-import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.algebra.predicates.ConjunctivePredicate;
@@ -23,6 +23,7 @@ import com.google.common.collect.Lists;
  * @author Efthymia Tsamoura
  *
  */
+@Ignore
 public class ConstraintCardinalityEstimator2 extends ConstraintCardinalityEstimator0 {
 
 	Command access0; 
@@ -50,8 +51,8 @@ public class ConstraintCardinalityEstimator2 extends ConstraintCardinalityEstima
 	//APPLYRULE(TargetLimited(1){TargetLimited(c443,c444,c445,c433,c446,c447,c448,SINGLE PROTEIN)})),
 	//APPLYRULE(AssayLimited(22){AssayLimited(c412,c413,c414,c415,c416,c417,c418,c419,c420,c421,c422,c423,c424,c425,c426,c427,c428,c429,c430,c431,c432,c433)})),
 	//APPLYRULE(DocumentLimited(3){DocumentLimited(c434,PUBLICATION,c428,c435,c436,c437,c438,c439,c440,c441,c442,2015)}))
-	@Before
-	protected void loadPlan() {
+	@Override
+	protected NormalisedPlan loadPlan() {
 		//Define all schema and chase constants
 		Term _accession = new Variable("accession");
 		Term _component_id = new Variable("component_id");
@@ -139,7 +140,7 @@ public class ConstraintCardinalityEstimator2 extends ConstraintCardinalityEstima
 		this.join4 = new Join(selection4.getOutput(), join3.getOutput());
 		
 		
-		this.plan = new NormalisedPlan(Lists.newArrayList(this.access0, this.selection0, this.projection0, this.access1, this.join1, this.projection1, 
+		return new NormalisedPlan(Lists.newArrayList(this.access0, this.selection0, this.projection0, this.access1, this.join1, this.projection1, 
 				this.access2, this.selection2, this.join2,
 				this.projection2, this.access3, this.join3, this.projection3, this.access4, this.selection4, this.join4));
 	}

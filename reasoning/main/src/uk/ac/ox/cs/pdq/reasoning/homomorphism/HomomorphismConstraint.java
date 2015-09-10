@@ -1,7 +1,6 @@
 package uk.ac.ox.cs.pdq.reasoning.homomorphism;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 import uk.ac.ox.cs.pdq.fol.Conjunction;

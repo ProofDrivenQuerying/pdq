@@ -23,7 +23,6 @@ import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
-import uk.ac.ox.cs.pdq.fol.Equality;
 import uk.ac.ox.cs.pdq.fol.Evaluatable;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Query;
@@ -196,7 +195,9 @@ public class DBHomomorphismManager implements HomomorphismManager {
 			Schema schema
 			) {
 		Set<Evaluatable> result = Sets.newLinkedHashSet();
-		result.add(query);
+		if(query != null) {
+			result.add(query);
+		}
 		for (Constraint ic: schema.getDependencies()) {
 			result.add(ic);
 		}

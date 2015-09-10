@@ -5,6 +5,7 @@ import java.util.Collection;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.junit.Before;
+import org.junit.Ignore;
 
 import uk.ac.ox.cs.pdq.db.Constraint;
 import uk.ac.ox.cs.pdq.db.EGD;
@@ -19,6 +20,7 @@ import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismManagerFactory;
+import uk.ac.ox.cs.pdq.test.schemas.TestSchema;
 
 import com.google.common.collect.Sets;
 /**
@@ -26,6 +28,7 @@ import com.google.common.collect.Sets;
  * @author Efthymia Tsamoura
  *
  */
+@Ignore
 public abstract class ReasonerUtilityTest0 {
 
 	protected String driver = null;
@@ -33,21 +36,21 @@ public abstract class ReasonerUtilityTest0 {
 	protected String database = "pdq_chase";
 	protected String username = "root";
 	protected String password ="root";
-	
+
 	protected Schema schema = new TestSchema().getSchema();
 	protected Collection<EGD> keys;
 	protected HomomorphismDetector detector;
 	protected NormalisedPlan plan;
 	protected Collection<Constraint> planConstraints;
-	
+
 	protected final RestrictedChaser restrictedChaser = new RestrictedChaser(null);
 	protected final EGDChaser egdChaser = new EGDChaser(null);
-	
-	
+
+
 	@Before
 	public void setup() {
 		this.plan = this.loadPlan();
-		
+
 		//Get the tgds from the input commands;
 		Collection<TGD> forwardTgds = new CommandToTGDTranslator().toTGD(this.plan);
 		Collection<TGD> backwardTgds = Sets.newLinkedHashSet();
@@ -55,22 +58,23 @@ public abstract class ReasonerUtilityTest0 {
 			backwardTgds.add(tgd.invert());
 		}
 		this.planConstraints = CollectionUtils.<Constraint>union(forwardTgds, backwardTgds);
-		
+
 		try {
-			this.detector = new HomomorphismManagerFactory().getInstance(
-					this.schema, 
-					null, 
-					HomomorphismDetectorTypes.DATABASE,
-					this.driver,
-					this.url,
-					this.database,
-					this.username,			
-					this.password);
+			this.detector = 
+					new HomomorphismManagerFactory().getInstance(
+							this.schema, 
+							null, 
+							HomomorphismDetectorTypes.DATABASE,
+							this.driver,
+							this.url,
+							this.database,
+							this.username,			
+							this.password);
 			((DBHomomorphismManager) this.detector).consolidateBaseTables(this.plan.getTables());
 		} catch (HomomorphismException | SQLException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public abstract NormalisedPlan loadPlan();	
 }

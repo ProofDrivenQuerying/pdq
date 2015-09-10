@@ -1,7 +1,7 @@
 package uk.ac.ox.cs.pdq.test.cost.estimators;
 
 import org.apache.commons.lang3.tuple.Pair;
-import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.algebra.predicates.ConjunctivePredicate;
@@ -23,6 +23,7 @@ import com.google.common.collect.Lists;
  * @author Efthymia Tsamoura
  *
  */
+@Ignore
 public class ConstraintCardinalityEstimator4  extends ConstraintCardinalityEstimator0{
 
 	Command access0; 
@@ -48,8 +49,8 @@ public class ConstraintCardinalityEstimator4  extends ConstraintCardinalityEstim
 	//RE:DocumentFree BI:chembl_document_free
 	//RE:AssayLimited BI:chembl_assay_limited_2
 	//RE:TargetLimited BI:chembl_target_limited
-	@Before
-	protected void loadPlan() {
+	@Override
+	protected NormalisedPlan loadPlan() {
 		//Define all schema and chase constants
 		Term organism = new Variable("organism");
 		Term pref_name = new Variable("pref_name");
@@ -118,7 +119,7 @@ public class ConstraintCardinalityEstimator4  extends ConstraintCardinalityEstim
 		this.join2 = new Join(this.access2.getOutput(), this.join1.getOutput());
 
 
-		this.plan = new NormalisedPlan(Lists.newArrayList(this.access0, this.selection0, this.projection0, this.access1, this.selection1, 
+		return new NormalisedPlan(Lists.newArrayList(this.access0, this.selection0, this.projection0, this.access1, this.selection1, 
 				this.join1, this.projection1, 
 				this.access2, this.join2));
 	}

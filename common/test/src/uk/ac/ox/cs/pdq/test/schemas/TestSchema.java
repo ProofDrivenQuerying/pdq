@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.test.reasoning.utility;
+package uk.ac.ox.cs.pdq.test.schemas;
 
 import java.util.Collection;
 

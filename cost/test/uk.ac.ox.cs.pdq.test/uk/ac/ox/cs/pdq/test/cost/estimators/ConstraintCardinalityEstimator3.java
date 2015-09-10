@@ -1,7 +1,7 @@
 package uk.ac.ox.cs.pdq.test.cost.estimators;
 
 import org.apache.commons.lang3.tuple.Pair;
-import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.algebra.predicates.ConjunctivePredicate;
@@ -23,6 +23,7 @@ import com.google.common.collect.Lists;
  * @author Efthymia Tsamoura
  *
  */
+@Ignore
 public class ConstraintCardinalityEstimator3 extends ConstraintCardinalityEstimator0{
 
 	Command access0; 
@@ -49,8 +50,8 @@ public class ConstraintCardinalityEstimator3 extends ConstraintCardinalityEstima
 	//APPLYRULE(AssayLimited(4){AssayLimited(c2269,c2270,c2271,c2272,c2273,c2274,c2275,c2276,Liver,c2277,c2278,
 	//c2279,c2280,c2281,c2282,c2283,c2284,c2285,c2286,c2287,c2288,c2289)})),
 	//APPLYRULE(DocumentFree(){DocumentFree(c2290,c2291,c2284,c2292,c2293,c2294,c2295,c2296,c2297,c2298,c2299,2007)}))
-	@Before
-	protected void loadPlan() {
+	@Override
+	protected NormalisedPlan loadPlan() {
 		//Define all schema and chase constants
 		Term organism = new Variable("organism");
 		Term pref_name = new Variable("pref_name");
@@ -115,7 +116,7 @@ public class ConstraintCardinalityEstimator3 extends ConstraintCardinalityEstima
 		this.selection2 = new Select(new ConjunctivePredicate(Lists.newArrayList(p20)), access1.getOutput());
 		this.join2 = new Join(selection2.getOutput(), join1.getOutput());
 
-		this.plan = new NormalisedPlan(Lists.newArrayList(this.access0, this.projection0, this.access1, this.selection1, this.join1, this.access2,
+		return new NormalisedPlan(Lists.newArrayList(this.access0, this.projection0, this.access1, this.selection1, this.join1, this.access2,
 				this.selection2, this.join2));
 	}
 

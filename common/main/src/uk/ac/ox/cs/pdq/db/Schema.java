@@ -118,7 +118,7 @@ public class Schema {
 				this.keyDependencies.add(EGD.getEGDs(relation, relation.getKey()));
 			}
 		}
-		this.schemaDependencies = ImmutableList.copyOf(CollectionUtils.union(this.dependencyIndex.values(), this.keyDependencies));
+		this.schemaDependencies = ImmutableList.copyOf(this.dependencyIndex.values());
 		
 		this.loadConstants();
 	}

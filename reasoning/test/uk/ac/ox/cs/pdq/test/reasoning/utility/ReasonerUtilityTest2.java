@@ -1,6 +1,7 @@
 package uk.ac.ox.cs.pdq.test.reasoning.utility;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.algebra.predicates.ConjunctivePredicate;
@@ -24,6 +25,7 @@ import com.google.common.collect.Lists;
  * @author Efthymia Tsamoura
  *
  */
+@Ignore
 public class ReasonerUtilityTest2 extends ReasonerUtilityTest0 {
 
 	Command access0; 

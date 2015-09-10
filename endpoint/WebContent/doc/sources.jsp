@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <%@page import="uk.ac.ox.cs.pdq.builder.SchemaDiscoverer"%>
-<%@page import="uk.ac.ox.cs.pdq.db.AccessMethod.AccessMethodTypes"%>
 <%@page import="uk.ac.ox.cs.pdq.db.AccessMethod"%>
 <%@page import="uk.ac.ox.cs.pdq.db.Attribute"%>
 <%@page import="uk.ac.ox.cs.pdq.db.Relation"%>
@@ -48,32 +47,30 @@
 							%>
 									<tr><th>Access method name</th><th>Required inputs</th></tr>
 									<%
-									if (r.getAccessMethods().isEmpty()) {
-										%><tr>
-										<td><%="Inaccessible"%></td>
-										</tr><%
-									} else {
-										for (AccessMethod b: r.getAccessMethods()) {
-											%>
-												<tr>
-													<td><%=b.getName() %></td>
-													<td>
-													<%
-													if (b.getType() == AccessMethodTypes.FREE) {
-														out.println("None");
-													} else {
-														String sep = "";
-														for (Integer i: b.getInputs()) {
-															out.print(sep + r.getAttribute(i - 1));
-															sep = ", ";
-														}
-													}
-													%>
-													</td>
-												</tr>
-												<%
+										if (r.getAccessMethods().isEmpty()) {
+											out.println("Inaccessible");
+										} else for (AccessMethod b: r.getAccessMethods()) {
+									%>
+										<tr>
+											<td><%=b.getName()%></td>
+											<td>
+											<%
+											if (b.getType() == AccessMethod.Types.FREE) {
+												out.println("None");
+											} else {
+												String sep = "";
+												for (Integer i: b.getInputs()) {
+													out.print(sep + r.getAttribute(i - 1));
+													sep = ", ";
+												}
 											}
+											%>
+											</td>
+										</tr>
+										<%
 									}
+									%>
+								<%
 							}
 							%>
 							</table>
