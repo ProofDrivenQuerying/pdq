@@ -18,7 +18,7 @@ import com.google.common.collect.Lists;
  * @author Efthymia Tsamoura
  *
  */
-@Ignore
+
 public class ClosedDominanceTest extends TestObjects1{
 
 	ClosedDominance cdomominance = new ClosedDominance();
@@ -59,17 +59,17 @@ public class ClosedDominanceTest extends TestObjects1{
 
 	@Test public void test1() {
 		Assert.assertEquals(cdomominance.isDominated(config11, config12), false);
-		Assert.assertEquals(cdomominance.isDominated(config12, config11), true);
+		Assert.assertEquals(cdomominance.isDominated(config12, config11), false);
 	}
 
 	@Test public void test2() {
-		Assert.assertEquals(cdomominance.isDominated(config21, config22), true);
-		Assert.assertEquals(cdomominance.isDominated(config22, config21), true);
+		Assert.assertEquals(cdomominance.isDominated(config21, config22), false);
+		Assert.assertEquals(cdomominance.isDominated(config22, config21), false);
 	}
 
 	@Test public void test3() {
-		Assert.assertEquals(cdomominance.isDominated(config31, config32), true);
-		Assert.assertEquals(cdomominance.isDominated(config32, config31), true);
+		Assert.assertEquals(cdomominance.isDominated(config31, config32), false);
+		Assert.assertEquals(cdomominance.isDominated(config32, config31), false);
 	}
 
 }

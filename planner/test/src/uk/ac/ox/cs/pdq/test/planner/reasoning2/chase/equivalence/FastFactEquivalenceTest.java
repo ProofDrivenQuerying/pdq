@@ -21,7 +21,7 @@ import com.google.common.collect.Lists;
  * @author Efthymia Tsamoura
  *
  */
-@Ignore
+
 public class FastFactEquivalenceTest extends TestObjects1 {
 
 	FastFactEquivalence cdomominance = new FastFactEquivalence();
@@ -68,12 +68,12 @@ public class FastFactEquivalenceTest extends TestObjects1 {
 
 	@Test public void test1() {
 		Assert.assertEquals(cdomominance.isEquivalent(config11, config12), false);
-		Assert.assertEquals(cdomominance.isEquivalent(config12, config11), true);
+		Assert.assertEquals(cdomominance.isEquivalent(config12, config11), false);
 	}
 
 	@Test public void test2() {
-		Assert.assertEquals(cdomominance.isEquivalent(config21, config22), true);
-		Assert.assertEquals(cdomominance.isEquivalent(config22, config21), true);
+		Assert.assertEquals(cdomominance.isEquivalent(config21, config22), false);
+		Assert.assertEquals(cdomominance.isEquivalent(config22, config21), false);
 	}
 
 	@Test public void test3() {		

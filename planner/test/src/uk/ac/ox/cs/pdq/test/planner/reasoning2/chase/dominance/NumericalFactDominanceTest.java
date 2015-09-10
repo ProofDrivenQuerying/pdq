@@ -19,7 +19,7 @@ import com.google.common.collect.Lists;
  * @author Efthymia Tsamoura
  *
  */
-@Ignore
+
 public class NumericalFactDominanceTest extends TestObjects1{
 
 	NumericalFactDominance cdomominance = new NumericalFactDominance();
@@ -59,7 +59,7 @@ public class NumericalFactDominanceTest extends TestObjects1{
 	}
 
 	@Test public void test1() {
-		Assert.assertEquals(cdomominance.isDominated(config11, config12), false);
+		Assert.assertEquals(cdomominance.isDominated(config11, config12), true);
 		Assert.assertEquals(cdomominance.isDominated(config12, config11), true);
 	}
 

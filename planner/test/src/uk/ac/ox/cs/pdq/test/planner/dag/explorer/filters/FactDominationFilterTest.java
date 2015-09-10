@@ -16,13 +16,14 @@ import uk.ac.ox.cs.pdq.planner.dag.explorer.filters.FactDominationFilter;
 import uk.ac.ox.cs.pdq.test.planner.TestObjects1;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 /**
  * 
  * @author Efthymia Tsamoura
  *
  */
-@Ignore
+
 public class FactDominationFilterTest extends TestObjects1{
 
 	FactDominationFilter filter = new FactDominationFilter();
@@ -68,7 +69,8 @@ public class FactDominationFilterTest extends TestObjects1{
 		when(config32.isClosed()).thenReturn(true);
 		when(config21.getInput()).thenReturn(Lists.<Constant>newArrayList(new Skolem("c1"), new Skolem("c2")));
 		
-		Assert.assertEquals(this.filter.filter(Lists.newArrayList(config11, config12, config21, config22, config31, config32)).isEmpty(), false);
+		Assert.assertEquals(this.filter.filter(Sets.newHashSet(config11, config12, config21, config22, config31, config32)), 
+				Sets.newHashSet(config11, config12, config21, config22, config31));
 	}
 
 	@Test public void test2() {
@@ -108,7 +110,8 @@ public class FactDominationFilterTest extends TestObjects1{
 		when(config32.isClosed()).thenReturn(true);
 		when(config21.getInput()).thenReturn(Lists.<Constant>newArrayList(new Skolem("c1"), new Skolem("c2")));
 		
-		Assert.assertEquals(this.filter.filter(Lists.newArrayList(config11, config21, config22, config32)).isEmpty(), false);
+		Assert.assertEquals(this.filter.filter(Sets.newHashSet(config11, config21, config22, config32)), 
+				Sets.newHashSet(config11, config21, config22));
 	}
 
 	@Test public void test3() {
@@ -148,6 +151,6 @@ public class FactDominationFilterTest extends TestObjects1{
 		when(config32.isClosed()).thenReturn(true);
 		when(config21.getInput()).thenReturn(Lists.<Constant>newArrayList(new Skolem("c1"), new Skolem("c2")));
 		
-		Assert.assertEquals(this.filter.filter(Lists.newArrayList(config12, config21, config22, config31)).isEmpty(), false);
+		Assert.assertEquals(this.filter.filter(Sets.newHashSet(config12, config21, config22, config31)), Sets.newHashSet(config12, config21, config22));
 	}
 }
