@@ -20,7 +20,6 @@ import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismManagerFactory;
-import uk.ac.ox.cs.pdq.test.schemas.TestSchema;
 
 import com.google.common.collect.Sets;
 /**
@@ -28,17 +27,17 @@ import com.google.common.collect.Sets;
  * @author Efthymia Tsamoura
  *
  */
-@Ignore
+
 public abstract class ReasonerUtilityTest0 {
 
-	protected String driver = null;
+	protected String driver = "com.mysql.jdbc.Driver";
 	protected String url = "jdbc:mysql://localhost/";
 	protected String database = "pdq_chase";
 	protected String username = "root";
 	protected String password ="root";
 
 	protected Schema schema = new TestSchema().getSchema();
-	protected Collection<EGD> keys;
+	protected Collection<EGD> keys = this.schema.getKeyDependencies();
 	protected HomomorphismDetector detector;
 	protected NormalisedPlan plan;
 	protected Collection<Constraint> planConstraints;

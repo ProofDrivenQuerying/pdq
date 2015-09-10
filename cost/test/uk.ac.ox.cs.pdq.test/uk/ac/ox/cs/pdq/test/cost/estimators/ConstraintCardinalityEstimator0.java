@@ -24,7 +24,7 @@ import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismManagerFactory;
 
 public abstract class ConstraintCardinalityEstimator0 {
 
-	protected String driver = null;
+	protected String driver = "com.mysql.jdbc.Driver";
 	protected String url = "jdbc:mysql://localhost/";
 	protected String database = "pdq_chase";
 	protected String username = "root";

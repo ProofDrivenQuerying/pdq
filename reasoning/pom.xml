@@ -6,7 +6,7 @@
 	<version>1.0.0-Beta</version>
 	<build>
 		<sourceDirectory>main/src</sourceDirectory>
-		<testSourceDirectory>test/src</testSourceDirectory> 
+		<testSourceDirectory>test/src</testSourceDirectory>
 		<resources>
 			<resource>
 				<directory>main/src</directory>
@@ -60,6 +60,11 @@ FOL formulas, relation algebra, etc.
 			<groupId>com.beust</groupId>
 			<artifactId>jcommander</artifactId>
 			<version>1.35</version>
+		</dependency>
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.36</version>
 		</dependency>
 	</dependencies>
 	<dependencyManagement>

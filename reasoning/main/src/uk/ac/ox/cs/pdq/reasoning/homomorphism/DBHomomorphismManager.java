@@ -415,9 +415,15 @@ public class DBHomomorphismManager implements HomomorphismManager {
 	public static Connection getConnection(String driver, String url, String database, String username, String password) throws SQLException {
 		if (!Strings.isNullOrEmpty(driver)) {
 			try {
-				Class.forName(driver);
+				Class.forName(driver).newInstance();
 			} catch (ClassNotFoundException e) {
 				throw new IllegalStateException("Could not load chase database driver '" + driver + "'");
+			} catch (InstantiationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 		String u = null;
