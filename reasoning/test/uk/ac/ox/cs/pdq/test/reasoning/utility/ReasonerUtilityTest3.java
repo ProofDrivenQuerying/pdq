@@ -1,5 +1,7 @@
 package uk.ac.ox.cs.pdq.test.reasoning.utility;
 
+import junit.framework.Assert;
+
 import org.apache.commons.collections4.CollectionUtils;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -25,7 +27,7 @@ import com.google.common.collect.Lists;
  * @author Efthymia Tsamoura
  *
  */
-@Ignore
+
 public class ReasonerUtilityTest3 extends ReasonerUtilityTest0{
 
 	Command access0; 
@@ -127,6 +129,8 @@ public class ReasonerUtilityTest3 extends ReasonerUtilityTest0{
 		Attribute k1 = (Attribute) access0.getOutput().getHeader().get(3);
 		boolean r3 = new ReasonerUtility().isKey(this.selection1.getOutput(), Lists.newArrayList(k1), CollectionUtils.union(this.keys, CollectionUtils.union(this.schema.getDependencies(), this.planConstraints)), this.egdChaser, (DBHomomorphismManager) this.detector);
 		boolean r4 = new ReasonerUtility().isKey(this.access0.getOutput(), Lists.newArrayList(k1), CollectionUtils.union(this.keys, CollectionUtils.union(this.schema.getDependencies(), this.planConstraints)), this.egdChaser, (DBHomomorphismManager) this.detector);
+		Assert.assertEquals(false, r3);
+		Assert.assertEquals(true, r4);
 		System.out.println(r3);
 		System.out.println(r4);
 	}
@@ -134,12 +138,14 @@ public class ReasonerUtilityTest3 extends ReasonerUtilityTest0{
 	@Test
 	public void test2() {
 		boolean r1 = new ReasonerUtility().existsInclustionDependency(this.selection1.getOutput(), this.access0.getOutput(), CollectionUtils.union(this.schema.getDependencies(), this.planConstraints), this.restrictedChaser, (DBHomomorphismManager) this.detector);
+		Assert.assertEquals(false, r1);
 		System.out.println(r1);
 	}
 
 	@Test
 	public void test3() {
 		boolean r2 = new ReasonerUtility().existsInclustionDependency(this.access0.getOutput(), this.selection1.getOutput(), CollectionUtils.union(this.schema.getDependencies(), this.planConstraints), this.restrictedChaser, (DBHomomorphismManager) this.detector);
+		Assert.assertEquals(false, r2);
 		System.out.println(r2);
 	}
 

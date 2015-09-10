@@ -5,7 +5,6 @@ import java.util.Collection;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.junit.Before;
-import org.junit.Ignore;
 
 import uk.ac.ox.cs.pdq.db.Constraint;
 import uk.ac.ox.cs.pdq.db.EGD;
