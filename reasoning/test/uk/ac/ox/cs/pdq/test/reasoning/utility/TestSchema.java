@@ -886,7 +886,7 @@ public final class TestSchema {
 		TGD tgd39 = new TGD(Conjunction.of(Pathway),Conjunction.of(Organism));
 
 		TGD tgd40 = new TGD(Conjunction.of(
-				new Predicate(schema.getRelation("OrganismById"), 
+				new Predicate(schema.getRelation("Document"), 
 						Lists.newArrayList(new Variable("_1"), 
 								new TypedConstant<>("PUBLICATION"),
 								new Variable("_3"),
