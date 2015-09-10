@@ -1,5 +1,7 @@
 package uk.ac.ox.cs.pdq.test.cost.estimators;
 
+import junit.framework.Assert;
+
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -23,7 +25,7 @@ import com.google.common.collect.Lists;
  * @author Efthymia Tsamoura
  *
  */
-@Ignore
+
 public class ConstraintCardinalityEstimator2 extends ConstraintCardinalityEstimator0 {
 
 	Command access0; 
@@ -148,55 +150,77 @@ public class ConstraintCardinalityEstimator2 extends ConstraintCardinalityEstima
 	@Test
 	public void test13() {
 		Pair<Integer, Boolean> estim1 = this.estimator.constraintDriven(this.projection0.getOutput(), this.plan, this.catalog);
+		Assert.assertTrue("Conjunctions must match be equal ", estim1.equals(Pair.of(500, true)));
+		System.out.println(estim1);
 	}
 	
+	@Ignore
 	@Test
 	public void test14() {
 		Integer estim3 = this.estimator.commandDriven(this.projection0.getOutput(), this.plan, this.catalog);
+		System.out.println(estim3);
 	}
 	
 	@Test
 	public void test15() {
 		Integer estim5 = this.estimator.simple(this.projection0.getOutput(), this.plan, this.catalog);
+		Assert.assertTrue("Conjunctions must match be equal ", estim5 == 500);
+		System.out.println(estim5);
 	}
 	
 	@Test
 	public void test16() {
 		Pair<Integer, Boolean> estim2 = this.estimator.constraintDriven(this.projection1.getOutput(), this.plan, this.catalog);
+		Assert.assertTrue("Conjunctions must match be equal ", estim2.equals(Pair.of(500, true)));
+		System.out.println(estim2);
 	}
 	
+	@Ignore
 	@Test
 	public void test17() {
 		Integer estim4 = this.estimator.commandDriven(this.projection1.getOutput(), this.plan, this.catalog);
+		System.out.println(estim4);
 	}
 	
 	@Test
 	public void test18() {
 		Integer estim6 = this.estimator.simple(this.projection1.getOutput(), this.plan, this.catalog);
+		Assert.assertTrue("Conjunctions must match be equal ", estim6==500);
+		System.out.println(estim6);
 	}
 	
 	@Test
 	public void test19() {
 		Pair<Integer, Boolean> estim7 = this.estimator.constraintDriven(projection2.getOutput(), this.plan, this.catalog);
+		Assert.assertTrue("Conjunctions must match be equal ", estim7.equals(Pair.of(10774,true)));
+		System.out.println(estim7);
 	}
 	
+	@Ignore
 	@Test
 	public void test20() {
 		Integer estim8 = this.estimator.commandDriven(this.projection2.getOutput(), this.plan, this.catalog);
+		System.out.println(estim8);
 	}
 	
 	@Test
 	public void test21() {
 		Pair<Integer, Boolean> estim10 = this.estimator.constraintDriven(this.projection3.getOutput(), this.plan, this.catalog);
+		Assert.assertTrue("Conjunctions must match be equal ", estim10.equals(Pair.of(57000,false)));
+		System.out.println(estim10);
 	}
 	
+	@Ignore
 	@Test
 	public void test22() {
 		Integer estim11 = this.estimator.commandDriven(this.projection3.getOutput(), this.plan, this.catalog);
+		System.out.println(estim11);
 	}
 	@Test
 	public void test23() {
 		Integer estim12 = this.estimator.simple(this.projection3.getOutput(), this.plan, this.catalog);
+		Assert.assertTrue("Conjunctions must match be equal ", estim12==57000);
+		System.out.println(estim12);
 	}
 
 

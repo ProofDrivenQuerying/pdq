@@ -1,5 +1,7 @@
 package uk.ac.ox.cs.pdq.test.cost.estimators;
 
+import junit.framework.Assert;
+
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -23,7 +25,7 @@ import com.google.common.collect.Lists;
  * @author Efthymia Tsamoura
  *
  */
-@Ignore
+
 public class ConstraintCardinalityEstimator4  extends ConstraintCardinalityEstimator0{
 
 	Command access0; 
@@ -125,33 +127,45 @@ public class ConstraintCardinalityEstimator4  extends ConstraintCardinalityEstim
 	}
 
 	@Test
-	public void test7() {
-		Pair<Integer, Boolean> estim1 = this.estimator.constraintDriven(this.projection0.getOutput(), this.plan, this.catalog);
-	}
-
-	@Test
-	public void test8() {
-		Integer estim3 = this.estimator.commandDriven(this.projection0.getOutput(), this.plan, this.catalog);
-	}
-
-	@Test
-	public void test9() {
-		Integer estim5 = this.estimator.simple(this.projection0.getOutput(), this.plan, this.catalog);
-	}
-
-	@Test
 	public void test10() {
 		Pair<Integer, Boolean> estim2 = this.estimator.constraintDriven(this.projection1.getOutput(), this.plan, this.catalog);
+		Assert.assertTrue("Conjunctions must match be equal ", estim2.equals(Pair.of(3822,false)));
+		System.out.println(estim2);
 	}
 
+	@Ignore
 	@Test
 	public void test11() {
 		Integer estim4 = this.estimator.commandDriven(this.projection1.getOutput(), this.plan, this.catalog);
+		System.out.println(estim4);
 	}
 
 	@Test
 	public void test12() {
 		Integer estim6 = this.estimator.simple(this.projection1.getOutput(), this.plan, this.catalog);
+		Assert.assertTrue("Conjunctions must match be equal ", estim6==1000);
+		System.out.println(estim6);
+	}
+	
+	@Test
+	public void test7() {
+		Pair<Integer, Boolean> estim1 = this.estimator.constraintDriven(this.projection0.getOutput(), this.plan, this.catalog);
+		Assert.assertTrue("Conjunctions must match be equal ", estim1.equals(Pair.of(59610,true)));
+		System.out.println(estim1);
+	}
+
+	@Ignore
+	@Test
+	public void test8() {
+		Integer estim3 = this.estimator.commandDriven(this.projection0.getOutput(), this.plan, this.catalog);
+		System.out.println(estim3);
+	}
+
+	@Test
+	public void test9() {
+		Integer estim5 = this.estimator.simple(this.projection0.getOutput(), this.plan, this.catalog);
+		Assert.assertTrue("Conjunctions must match be equal ", estim5==59610);
+		System.out.println(estim5);
 	}
 
 }

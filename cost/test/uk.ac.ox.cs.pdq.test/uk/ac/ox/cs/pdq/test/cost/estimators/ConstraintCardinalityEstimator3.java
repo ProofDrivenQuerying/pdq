@@ -1,5 +1,7 @@
 package uk.ac.ox.cs.pdq.test.cost.estimators;
 
+import junit.framework.Assert;
+
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -23,7 +25,7 @@ import com.google.common.collect.Lists;
  * @author Efthymia Tsamoura
  *
  */
-@Ignore
+
 public class ConstraintCardinalityEstimator3 extends ConstraintCardinalityEstimator0{
 
 	Command access0; 
@@ -123,17 +125,23 @@ public class ConstraintCardinalityEstimator3 extends ConstraintCardinalityEstima
 	@Test
 	public void test4() {
 		Pair<Integer, Boolean> estim1 = this.estimator.constraintDriven(this.projection0.getOutput(), this.plan, this.catalog);
+		Assert.assertTrue("Conjunctions must match be equal ", estim1.equals(Pair.of(2400,true)));
+		System.out.println(estim1);
 	}
 
+	@Ignore
 	@Test
 	public void test5() {
 		Integer estim3 = this.estimator.commandDriven(this.projection0.getOutput(), this.plan, this.catalog);
+		System.out.println(estim3);
 	}
 
 
 	@Test
 	public void test6() {
 		Integer estim5 = this.estimator.simple(this.projection0.getOutput(),this.plan, this.catalog);
+		Assert.assertTrue("Conjunctions must match be equal ", estim5==2400);
+		System.out.println(estim5);
 	}
 
 
