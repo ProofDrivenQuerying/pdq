@@ -17,6 +17,7 @@ import uk.ac.ox.cs.pdq.reasoning.chase.Bag.BagStatus;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.TreeState;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismConstraint;
+import uk.ac.ox.cs.pdq.reasoning.utility.ReasonerUtility;
 
 import com.google.common.base.Preconditions;
 
@@ -71,38 +72,38 @@ public class BlockingChaser extends Chaser {
 	/**
 	 * Performs blocking detection.
 	 * It is called every this.blockingInterval steps
-	 * @param state S
+	 * @param s S
 	 */
-	protected void blockingCheck(TreeState state) {
+	protected void blockingCheck(TreeState s) {
 		if(this.statistics != null){this.statistics.start(MILLI_BLOCKING_CHECK);}
-		this.blockingDetector.doBlocking(state.getTree().vertexSet());
+		this.blockingDetector.doBlocking(s.getTree().vertexSet());
 		if(this.statistics != null){this.statistics.stop(MILLI_BLOCKING_CHECK);}
 	}
 
 	/**
-	 * @param state S
+	 * @param s S
 	 * @param dependencies Collection<? extends Constraint>
 	 * @return if the chase succeeds
 	 */
-	public boolean reason(TreeState state, Collection<? extends Constraint> dependencies) {
-		state.updateTree();
+	public boolean reason(TreeState s, Collection<? extends Constraint> dependencies) {
+		s.updateTree();
 		int rounds = 0;
 		//True if at the end of the internal for loop at least one dependency has been fired
 		boolean appliedStep = true;
-		while (appliedStep && !this.terminates(state)) {
+		while (appliedStep && !this.terminates(s)) {
 			appliedStep = false;
 			//Find for each input dependency, the matches of its left-hand side to the facts of the input state
-			List<Match> matches = state.getMaches(dependencies);
+			List<Match> matches = s.getMaches(dependencies);
 			for (Match match: matches) {
-				if(!state.isSatisfied(match)){
-					state.chaseStep(match);
+				if(new ReasonerUtility().isOpenTrigger(match, s)){
+					s.chaseStep(match);
 					appliedStep = true;
 					++rounds;
 					if (rounds % this.blockingInterval == 0) {
 						this.statistics.start(MILLI_UPDATE_QUERY_DEPENDENCIES);
-						state.updateTree();
+						s.updateTree();
 						this.statistics.stop(MILLI_UPDATE_QUERY_DEPENDENCIES);
-						this.blockingCheck(state);
+						this.blockingCheck(s);
 					}
 				}
 			}

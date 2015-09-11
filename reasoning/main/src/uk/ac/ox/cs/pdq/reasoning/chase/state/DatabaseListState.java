@@ -116,35 +116,6 @@ public class DatabaseListState extends DatabaseChaseState implements ListState{
 	}
 	
 	/**
-	 * @return
-	 * 		true if there is an homomorphism that extends the input match
-	 */
-	@Override
-	public boolean isSatisfied(Match match) {
-		Preconditions.checkNotNull(match);
-		Map<Variable, Constant> mapping = match.getMapping();
-		Constraint constraint = ((Constraint)match.getQuery());
-		Map<Variable, ? extends Term> input = Utility.retain(mapping, constraint.getBothSideVariables());
-		Conjunction.Builder cb = Conjunction.builder();
-		for (Predicate p: constraint.getLeft().getPredicates()) {
-			cb.and(p);
-		}
-		for (Predicate p: constraint.getRight().getPredicates()) {
-			cb.and(p);
-		}
-		TGD tgd = new TGD((Conjunction<Predicate>) cb.build(), Conjunction.<Predicate>of());
-		List<Match> matches = this.getMaches(tgd);
-		Set<Variable> variables = constraint.getBothSideVariables();
-		for(Match m:matches) {
-			Map<Variable, Constant> map = Utility.retain(m.getMapping(), variables);
-			if (map.equals(input)) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	/**
 	 * @return Collection<PredicateFormula>
 	 * @see uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState#getFacts()
 	 */

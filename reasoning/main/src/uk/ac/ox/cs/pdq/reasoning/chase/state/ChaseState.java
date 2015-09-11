@@ -61,14 +61,6 @@ public interface ChaseState {
 	
 	/**
 	 * 
-	 * @param match
-	 * @return
-	 * 		true if the match is already satisfied in the state
-	 */
-	boolean isSatisfied(Match match);
-	
-	/**
-	 * 
 	 * @return
 	 * 		true if the input state is successful
 	 */

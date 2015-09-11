@@ -84,9 +84,6 @@ public class Match {
 	 */
 	@Override
 	public String toString() {
-		if (this.mapping != null) {
-			return this.mapping.toString();
-		}
-		return "Matching?";
+		return this.mapping.toString() + "\n" + this.query.toString(); 
 	}
 }

@@ -9,6 +9,7 @@ import uk.ac.ox.cs.pdq.logging.performance.StatisticsCollector;
 import uk.ac.ox.cs.pdq.reasoning.Match;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ListState;
+import uk.ac.ox.cs.pdq.reasoning.utility.ReasonerUtility;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Supplier;
@@ -88,7 +89,7 @@ public class BoundedChaser extends RestrictedChaser {
 			appliedStep = false;
 			List<Match> matches = s.getMaches(dependencies);
 			for (Match match: matches) {
-				if(!s.isSatisfied(match)){
+				if(new ReasonerUtility().isActiveTrigger(match, s)){
 					s.chaseStep(match);
 					appliedStep = true;
 				}

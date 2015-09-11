@@ -13,6 +13,7 @@ import uk.ac.ox.cs.pdq.reasoning.Match;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ListState;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismConstraint;
+import uk.ac.ox.cs.pdq.reasoning.utility.ReasonerUtility;
 
 import com.google.common.base.Preconditions;
 
@@ -51,7 +52,7 @@ public class RestrictedChaser extends Chaser {
 			appliedStep = false;
 			List<Match> matches = s.getMaches(dependencies);
 			for (Match match: matches) {
-				if(!s.isSatisfied(match)){
+				if(new ReasonerUtility().isActiveTrigger(match, s)){
 					//A single chase step
 					s.chaseStep(match);
 					appliedStep = true;

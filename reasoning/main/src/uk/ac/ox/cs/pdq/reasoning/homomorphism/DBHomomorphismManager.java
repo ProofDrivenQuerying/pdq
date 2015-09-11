@@ -334,6 +334,24 @@ public class DBHomomorphismManager implements HomomorphismManager {
 	}
 	
 	/**
+	 * @param queries Collection<Q>
+	 * @param constraints HomomorphismConstraint[]
+	 * @return Map<Q,List<Matching>>
+	 * @see uk.ac.ox.cs.pdq.homomorphism.HomomorphismDetector#getMatches(Collection<Q>, HomomorphismConstraint[])
+	 */
+	@Override
+	public <Q extends Evaluatable> List<Match> getMatches(Collection<Q> queries, HomomorphismConstraint... constraints) {
+		List<Match> result = new ArrayList<>();
+		for (Q q: queries) {
+			List<Match> matches = this.getMatches(q, constraints);
+			if (!matches.isEmpty()) {
+				result.addAll(matches);
+			}
+		}
+		return result;
+	}
+	
+	/**
 	 * 
 	 * @param source
 	 * @param aliases
@@ -460,24 +478,6 @@ public class DBHomomorphismManager implements HomomorphismManager {
 		}
 	}
 	
-	/**
-	 * @param queries Collection<Q>
-	 * @param constraints HomomorphismConstraint[]
-	 * @return Map<Q,List<Matching>>
-	 * @see uk.ac.ox.cs.pdq.homomorphism.HomomorphismDetector#getMatches(Collection<Q>, HomomorphismConstraint[])
-	 */
-	@Override
-	public <Q extends Evaluatable> List<Match> getMatches(Collection<Q> queries, HomomorphismConstraint... constraints) {
-		List<Match> result = new ArrayList<>();
-		for (Q q: queries) {
-			List<Match> matches = this.getMatches(q, constraints);
-			if (!matches.isEmpty()) {
-				result.addAll(matches);
-			}
-		}
-		return result;
-	}
-
 	/**
 	 * @return DBHomomorphismManager
 	 * @see uk.ac.ox.cs.pdq.homomorphism.HomomorphismDetector#clone()

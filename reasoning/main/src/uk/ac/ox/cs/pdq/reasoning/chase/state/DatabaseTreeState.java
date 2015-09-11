@@ -244,18 +244,6 @@ public class DatabaseTreeState extends DatabaseChaseState implements TreeState{
 		this.manager.addFacts(created);
 		return true;
 	}
-
-	/**
-	 * @return
-	 * 		true if the constraint kept in the input match is already fired with the input homomorphism  
-	 */
-	@Override
-	public boolean isSatisfied(Match match) {
-		Map<Variable, Constant> mapping = match.getMapping();
-		Constraint constraint = (Constraint) match.getQuery();
-		Constraint grounded = constraint.fire(mapping, this.canonicalNames);
-		return this.getFiringGraph().isFired(constraint, grounded.getLeft().getPredicates());
-	}
 	
 	/**
 	 * @param formula

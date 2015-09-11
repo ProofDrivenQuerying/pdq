@@ -15,8 +15,10 @@ import uk.ac.ox.cs.pdq.reasoning.Match;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ListState;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismConstraint;
+import uk.ac.ox.cs.pdq.reasoning.utility.ReasonerUtility;
 
 import com.beust.jcommander.internal.Lists;
+import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 
@@ -75,10 +77,16 @@ public class EGDChaser extends Chaser {
 			List<Match> matches = step % 2 == 0 ? s.getMaches(tgds):s.getMaches(egds);
 			List<Match> activeTriggers = Lists.newArrayList();
 			for(Match match:matches) {
-				if(!s.isSatisfied(match)){
+				if(new ReasonerUtility().isActiveTrigger(match, s)){
 					activeTriggers.add(match);
 				}
 			}
+			System.out.println(Joiner.on("\n").join(s.getFacts()));
+			
+			System.out.println(Joiner.on("\n").join(activeTriggers));
+			
+			System.out.println("-----------------------------------------------------------");
+			
 			boolean succeeds = s.chaseStep(activeTriggers);
 			if(!succeeds) {
 				break;
