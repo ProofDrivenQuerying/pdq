@@ -3,6 +3,7 @@
 	<sources>
 		<source name="tpch_0001_mysql"
 			discoverer="uk.ac.ox.cs.pdq.sql.MySQLSchemaDiscoverer"
+			driver=com.mysql.jdbc.Driver
 			url="jdbc:mysql://localhost/" database="tpch_0001" username="root"
 			password="root" />
 	</sources>

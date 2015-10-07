@@ -76,6 +76,11 @@ public class HomomorphismManagerFactory {
 			) throws HomomorphismException {
 		HomomorphismManager result = null;
 		try {
+			Class.forName(driver);
+		} catch (ClassNotFoundException e) {
+			throw new IllegalStateException("No suitable driver found for homomorphism checker.", e);
+		}
+		try {
 			if (type != null) {
 				switch (type) {
 				case DATABASE:
@@ -107,7 +112,7 @@ public class HomomorphismManagerFactory {
 				}
 			}
 		} catch (SQLException e) {
-			log.warn("Could not load " + database + ". Falling back to default database.");
+			log.warn("Could not load " + database + ". Falling back to default database.", e);
 		}
 		synchronized (counter) {
 			username = "APP_" + (counter++);

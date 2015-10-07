@@ -5,7 +5,7 @@
 	<artifactId>pdq-regression</artifactId>
 	<version>1.0.0-Beta</version>
 	<name>PDQ regression test library</name>
-	<description>Packages and classes for detecting regressions in the code.</description>
+	<description>Gather packages and classes aims at checking when regressions occur in the code.</description>
 	<build>
 		<sourceDirectory>main/src</sourceDirectory>
 		<testSourceDirectory>test/src</testSourceDirectory>

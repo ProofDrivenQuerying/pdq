@@ -80,6 +80,7 @@ public class CostEstimatorFactory {
 				if (url != null && bbUrl != null) {
 					if (url.contains("postgresql") && bbUrl.contains("postgresql")) {
 						prop.put("url", costParams.getBlackBoxConnectionUrl());
+						prop.put("driver", costParams.getBlackBoxDatabaseDriver());
 						prop.put("database", costParams.getBlackBoxDatabaseName());
 						prop.put("username", costParams.getBlackBoxDatabaseUser());
 						prop.put("password", costParams.getBlackBoxDatabasePassword());

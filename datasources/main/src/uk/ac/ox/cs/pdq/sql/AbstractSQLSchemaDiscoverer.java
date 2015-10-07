@@ -71,9 +71,13 @@ public abstract class AbstractSQLSchemaDiscoverer implements SchemaDiscoverer {
 	public Schema discover() throws BuilderException {
 		if (this.discovered == null) {
 			String url = this.properties.getProperty("url");
+			String driver = this.properties.getProperty("driver");
 			String database = this.properties.getProperty("database");
 			log.info("Discovering schema '" + url + database + "'... ");
 			try {
+//				if (driver != null) {
+					Class.forName(driver);
+//				}
 				Collection<Relation> relations = new ArrayList<>(this.discoverRelations());
 				Map<String, Relation> relationMap = new LinkedHashMap<>();
 				for (Relation r: relations) {
