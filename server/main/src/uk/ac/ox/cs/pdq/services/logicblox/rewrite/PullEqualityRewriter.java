@@ -161,7 +161,7 @@ public class PullEqualityRewriter<F extends Formula> implements Rewriter<F, F> {
 	 * @return the rewritten formula
 	 */
 	private Negation<Formula> propagate(Negation<Formula> negation) {
-		Collection<Formula> subFormula = negation.getSubFormulas();
+		Collection<Formula> subFormula = negation.getChildren();
 		assert subFormula.size() == 1;
 		return Negation.of(this.findBindings(subFormula.iterator().next()));
 	}
