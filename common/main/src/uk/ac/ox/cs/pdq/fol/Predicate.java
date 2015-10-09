@@ -54,19 +54,19 @@ public class Predicate extends AbstractFormula implements Formula {
 	 */
 	public Predicate(Signature signature, Collection<? extends Term> terms) {
 		super();
-		if(signature == null || terms == null) {
-			System.out.println();
-		}
-		Preconditions.checkArgument(signature != null && terms != null, "Signature and terms list cannot be null. (signature: " + signature + ", terms:" + terms + ")");
-		if(signature.getArity() != terms.size()) {
-			System.out.println();
-		}
-		Preconditions.checkArgument(signature.getArity() == terms.size(), "Predicate signature does not match terms lists " + signature.getName() + "(" + signature.getArity() + ") <> " + terms);
+		Preconditions.checkArgument(signature != null && terms != null,
+				"Signature and terms list cannot be null. (signature: " + signature + ", terms:" + terms + ")");
+		Preconditions.checkArgument(signature.getArity() == terms.size(),
+				"Predicate signature does not match terms lists " + signature.getName()
+				+ "(" + signature.getArity() + ") <> " + terms);
+
 		this.signature = signature;
 		this.name = signature.getName();
 		this.arity = signature.getArity();
 		this.terms = ImmutableList.copyOf(terms);
-		this.toString = this.signature.getName() + (this.signature.arity > 0 ? "(" + Joiner.on(",").join(this.terms) + ")" : "");
+		this.toString = this.signature.getName() +
+				(this.signature.arity > 0 ? "(" + Joiner.on(",").join(this.terms) + ")" : "");
+
 	}
 	
 	/**
@@ -75,6 +75,13 @@ public class Predicate extends AbstractFormula implements Formula {
 	 */
 	public Predicate(Signature signature, Term... term) {
 		this(signature, Lists.newArrayList(term));
+	}
+
+	/**
+	 * @return true, if the predicate acts as an equality
+	 */
+	public boolean isEquality() {
+		return this.signature.isEquality();
 	}
 
 	/**
