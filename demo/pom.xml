@@ -80,6 +80,10 @@
   		<artifactId>review.planner</artifactId>
   	</dependency>
 	<dependency>
+  		<groupId>uk.ac.ox.cs.pdq</groupId>
+  		<artifactId>review.reasoning</artifactId>
+  	</dependency>
+	<dependency>
 		<groupId>com.jolira</groupId>
 		<artifactId>onejar-maven-plugin</artifactId>
 		<version>1.4.4</version>
@@ -116,6 +120,11 @@
   		<dependency>
   			<groupId>uk.ac.ox.cs.pdq</groupId>
   			<artifactId>review.runtime</artifactId>
+  			<version>1.0.0-Beta</version>
+  		</dependency>
+		<dependency>
+  			<groupId>uk.ac.ox.cs.pdq</groupId>
+  			<artifactId>review.reasoning</artifactId>
   			<version>1.0.0-Beta</version>
   		</dependency>
   		<dependency>

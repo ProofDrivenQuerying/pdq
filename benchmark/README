@@ -53,3 +53,6 @@ recursively for directory containing the following files:
 	- schema.xml : the input schema
 	- query.xml : the input query
 	- plan.xml : this input plan (in case you are benchmarking the runtime)
+
+	
+...

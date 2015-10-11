@@ -1,0 +1,29 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>uk.ac.ox.cs.pdq</groupId>
+  <artifactId>pdq</artifactId>
+  <version>1.0.0-Beta</version>
+  <packaging>pom</packaging>
+  <name>PDQ</name>
+  <url>http://www.cs.ox.ac.uk/pdq/</url>
+  <description>Proof-Driven Query Answering (PDQ) is a research project held at the Information Science group at the Department of Computer Science in Oxford University.</description>
+  <organization>
+  	<name>Oxford University - Department of Computer Science</name>
+  	<url>http://www.cs.ox.ac.uk/</url>
+  </organization>
+  <modules>
+  	<module>common</module>
+  	<module>cost</module>
+  	<module>planner</module>
+  	<module>runtime</module>
+  	<module>datasources</module>
+  	<module>regression</module>
+  	<module>benchmark</module>
+  	<module>demo</module>
+	<module>endpoint</module>
+    <!--
+	// the server is not build by default as it depends on proprietary libraries (logicblox).
+	<module>server</module>
+    -->
+  </modules>
+</project>

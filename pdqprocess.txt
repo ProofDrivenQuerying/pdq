@@ -1,0 +1,181 @@
+
+O. Summary
+	The document explains the process, each developer involves in the PDQ 
+	process should follow.
+	TL;DR:
+	a. Branches are spun off from the trunk's head only, and uses for any new features.
+	b. Trunk goes get bugfixes, refactorings, and minor improvements (missing comments, unit tests)
+	c. Changes on trunk must be merged regularly to all active branches.
+	d. Changes to branches must under proper code review before merge to trunk.
+	e. Branches should be committed regularly with passing unit tests.
+	f. Code reviews check on:
+
+
+
+I. Branching.
+    - As a general rule, branching should be done from the trunk, 
+      using the "svn copy" command, or the branching menu in Eclipse.
+
+II. Bug fixing in Trunk vs. Branches
+    - Refactorings, renamings, missing comments or unit tests. 
+      If they affect something in the trunk, they should be performed on the trunk first, 
+      and then propagated to the other branches.
+
+    - If a bug is found on the trunk, it should be fixed there first 
+      (not in a branch, even if that is where it was originally found).
+      Only then, everyone can merge the fix from the trunk into their own branches. 
+
+      Whether a bugfix requires a review process will depend on the bug severity. 
+      When a bug is found on the trunk, the person who detected it 
+      should first estimate it severity and decide what to do:
+      - For a minor bug, i.e. with an obvious and fairly easy fix,
+        we can have a light-weight version of the process, where
+        someone fixes the bug on the trunk, updates the tests accordingly,
+        reruns all tests, and asks someone else to take a look at it.
+      - For a major bug, i.e. either that requires more work (e.g. more than 1 day),
+        or a bug that was clearly part of a recently added feature 
+        but was not detected by the code review process,
+        we should either fix it on the branch it came from or, 
+        if the branch has diverged, create a new branch specifically for fixing it,
+        and follow the usual process there.
+
+    - The discussion is still open whether we should use a bug tracking management system,
+      and which one. Current candidate are FusionForge, Bitbucket, github.
+
+
+III. Merging Branches > Trunk
+
+    - When some new feature is ready to go, 
+      it can be merged back to the trunk. 
+      However, this is the most delicate and critical things we do, 
+      so we should do it very carefully (see process description below).
+
+    - We should not commit more than one feature/change at a time. 
+      Distinct features should map to separate commit/merge processes.
+
+
+      The trunk check-in process would be:
+
+      1.  Test new feature in the branch. Add and update unit tests.
+          Every class (other than abstract or interfaces) is committed with
+          its own unit-test class counterpart.
+
+          Also add new regression tests where appropriate.
+
+      2.  Commit the branch regularly (for instance daily), with all tests passing.
+          Commit message should as concise and complete as possible.
+
+      3.  When ready to merge to the trunk, notify others (e.g. via email)
+          summarizing the changes, asking for volunteer reviewers.
+          At this point, we should consider the trunk “locked” for both
+          updates and other branching until the review process is complete.
+
+      4.  Reviewers should run regression tests and review code for:
+          —— Adequacy of comments and general comprehensibility
+          —— Coverage of new features by unit tests
+          —- Appropriate re-use of code from other packages
+          —- Appropriate updating of documentation 
+          (including comments in other packages, updating of any web-based 
+          documentation, such as tutorials, if relevant)
+
+          The review process may require iteration as issues are found
+          and corrected by the branch owner. 
+          Owner must ensure that all reviewers are informed 
+          if iterations occur so they can update their copies.
+
+          This last part can be done automatically via svn/gforge/bitbucket — 
+          details to come.
+
+      5.  Once all reviewers sign off, the branch owner will merge
+          into the trunk, resolving conflicts and re-running tests.
+
+      6.  At the end of the merge-to-trunk process, and before the final commit,
+          we should increment the version number on the jars appropriately.
+          (see Maven section of the document).
+
+      7.  When the trunk is changed, other branches that have
+          been copied off the old trunk should be updated. 
+
+IV. Unit tests
+
+  - JUnit, the framework we use for unit tests, requires to annotate types, 
+    fields and methods to indicate which tests are run.
+    When doing so, the tests can be run automatically within Eclipse, 
+    but most importantly, they are run as part of Maven's build process, 
+    so if a test fails, compilation aborts.
+
+  - In each project, there is a main/src folder containing sources for the actual code, 
+    and a test/src containing unit tests.
+
+  - The package and classes structure in test/src should ideally match that of main, 
+    i.e., for each class some.package.R in main, there is a some.test.package.RTest in test.
+
+    In practice, it is not always easy nor practical to strictly adhere to that, 
+    but we should try to get something close. 
+    I think we can easily converge on what is "sufficient" case by case.
+
+  - Each RTest class hosts a bunch of tests for each public method in R. 
+    For instance, if there is a method R.doThis(arg1, arg2), 
+    then RTest should test that method under various circumstances.
+    Typically:
+      - checking whether doThis() works for some expected inputs, 
+      - checking whether doThis() works for some unusual inputs, 
+        when that makes sense, (e.g. lower-upper bounds number, negatives, etc.), and 
+      - checking whether doThis() throws the correct exception, 
+        when something goes wrong (e.g. inconsistent inputs, nulls, etc.)
+
+  - We use Mockito, a library for mock objects, to run fine-grain tests on 
+    complex objects, such as the planner or chasers, without having to initialize 
+    every underlying stuff (database, etc).
+    The algebra package has very simple examples on how to use Mockito. 
+
+  - In the process of adding unit tests, 
+    there are various little adjustments that need to be 
+    brought to the code to catch corner cases. 
+    So, after completing tests on a set of classes, and before committing, 
+    it is important to rerun the current regressions tests, 
+    to make sure no new problem was introduced.
+
+V. Maven
+  - Maven is a software life-cycle management suite, use in PDQ.
+    It is not compulsory, but highly recommended to use it, in particular 
+    for software version and dependency management.
+
+  - All maven configuration can be done, be editing a single file: pom.xml
+    which defines build instructions, dependencies, etc.
+
+  - Each project has its own pom.xml file, in addition to which there is a
+    global pom.xml at the root of the trunk and each branches, allowing
+    to build all library at once.
+
+  - Each project also has a README, which among other things, details the 
+    how to use maven there.
+
+  - In general, a project (or all or them) is build, by running the following
+    command in the same directory as the corresponding pom.xml:
+    > mvn install
+
+  - This not only builds the project(s), runs unit tests, and installs the resulting
+    JARs in the local maven repository, for other programs to use.
+
+  - Before any commit to the trunk or a branch, the mvn install sequence must pass,
+    and all the pom.xml files should reflect the current change set, in particular,
+    the libraries version numbers should be adjusted.
+
+  - The library name have the following structure:
+    pdq-projectname-X.Y.Z-FLAG.jar
+
+    X should be incremented when there was a major architectural change.
+    Y should be incremented when a new feature was added.
+    Z should be incremented when a bug was fixed.
+
+    Possible values for FLAG are:
+    SNAPSHOT: default flag used for daily builds
+    ALPHA:    not stable, experimental, should not be used for production
+    BETA:     not stable, use for production at your own risk
+    none:     stable
+
+    Maven can get confused when branches with overlapping 
+    version names are being used. One easy to avoid this is 
+    to use a branch-specific prefix, for instance “pdq-” above
+    is reserved for the trunk, and “dev3-” used on development3 branch.

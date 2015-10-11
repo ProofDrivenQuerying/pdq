@@ -399,8 +399,7 @@ public class SimpleCatalog implements Catalog{
 	public int getERPSI(Relation relation, AccessMethod method, Map<Integer, TypedConstant<?>> inputs) {
 		Preconditions.checkNotNull(relation);
 		Preconditions.checkNotNull(inputs);
-		if(inputs.size() == 1) {
-			Preconditions.checkArgument(method.getZeroBasedInputs().size() == inputs.size());
+		if(inputs.size() == 1 && method.getZeroBasedInputs().size() == 1) {
 			Attribute attribute = relation.getAttribute(method.getZeroBasedInputs().get(0));
 			Histogram histogram = this.histograms.get(Pair.of(relation, attribute));
 			if(histogram != null && histogram.getFrequency(inputs.get(0).toString()) != null) {

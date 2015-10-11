@@ -6,9 +6,12 @@ import java.util.List;
 import java.util.Map;
 
 import uk.ac.ox.cs.pdq.algebra.Access;
+import uk.ac.ox.cs.pdq.algebra.Count;
 import uk.ac.ox.cs.pdq.algebra.CrossProduct;
 import uk.ac.ox.cs.pdq.algebra.DependentAccess;
 import uk.ac.ox.cs.pdq.algebra.DependentJoin;
+import uk.ac.ox.cs.pdq.algebra.Distinct;
+import uk.ac.ox.cs.pdq.algebra.IsEmpty;
 import uk.ac.ox.cs.pdq.algebra.Join;
 import uk.ac.ox.cs.pdq.algebra.NaryOperator;
 import uk.ac.ox.cs.pdq.algebra.Projection;
@@ -18,6 +21,7 @@ import uk.ac.ox.cs.pdq.algebra.Selection;
 import uk.ac.ox.cs.pdq.algebra.StaticInput;
 import uk.ac.ox.cs.pdq.algebra.SubPlanAlias;
 import uk.ac.ox.cs.pdq.algebra.UnaryOperator;
+import uk.ac.ox.cs.pdq.algebra.Union;
 import uk.ac.ox.cs.pdq.algebra.predicates.AttributeEqualityPredicate;
 import uk.ac.ox.cs.pdq.algebra.predicates.ConjunctivePredicate;
 import uk.ac.ox.cs.pdq.algebra.predicates.ConstantEqualityPredicate;
@@ -114,6 +118,18 @@ public class OperatorWriter extends AbstractXMLWriter<RelationalOperator> {
 		}
 		if (operator instanceof StaticInput) {
 			return Types.STATIC_INPUT;
+		}
+		if (operator instanceof Distinct) {
+			return Types.DISTINCT;
+		}
+		if (operator instanceof Count) {
+			return Types.COUNT;
+		}
+		if (operator instanceof IsEmpty) {
+			return Types.IS_EMPTY;
+		}
+		if (operator instanceof Union) {
+			return Types.UNION;
 		}
 		if (operator instanceof SubPlanAlias) {
 			return Types.ALIAS;
