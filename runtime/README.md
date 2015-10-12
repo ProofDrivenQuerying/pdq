@@ -45,5 +45,6 @@ Example:
 			-c examples/example_01/case.properties     \
 			-s examples/example_01/schema.xml          \
 			-q examples/example_01/query.xml           \
-			-p examples/example_01/plan.xml           \
+			-p examples/example_01/plan.xml            \
+			-d examples/example_01/data.txt            \
 			-v

@@ -13,6 +13,7 @@
   </organization>
   <modules>
   	<module>common</module>
+  	<module>reasoning</module>
   	<module>cost</module>
   	<module>planner</module>
   	<module>runtime</module>

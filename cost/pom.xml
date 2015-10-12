@@ -2,7 +2,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>uk.ac.ox.cs.pdq</groupId>
-	<artifactId>review.cost</artifactId>
+	<artifactId>pdq-cost</artifactId>
 	<version>1.0.0-Beta</version>
 	<build>
 		<sourceDirectory>main/src</sourceDirectory>
@@ -18,14 +18,14 @@
 				<directory>main/src/resources</directory>
 				<filtering>true</filtering>
 				<includes>
-					<include>**/common.version</include>
+					<include>**/cost.version</include>
 				</includes>
 			</resource>
 			<resource>
 				<directory>main/src/resources</directory>
 				<filtering>false</filtering>
 				<excludes>
-					<exclude>**/common.version</exclude>
+					<exclude>**/cost.version</exclude>
 				</excludes>
 			</resource>
 		</resources>
@@ -41,11 +41,8 @@
 			</plugin>
 		</plugins>
 	</build>
-	<name>PDQ common library</name>
-	<description>The common library features the packages and classes used across the whole 
-application. It features high-level interfaces and basic code for handling,
-FOL formulas, relation algebra, etc.
-</description>
+	<name>PDQ cost library</name>
+	<description>The cost library features the packages and classes used to compute cost information.</description>
 	<url>http://www.cs.ox.ac.uk/pdq/</url>
 	<organization>
 		<name>Oxford University - Department of Computer Science</name>
@@ -54,28 +51,23 @@ FOL formulas, relation algebra, etc.
 	<dependencies>
 		<dependency>
 			<groupId>uk.ac.ox.cs.pdq</groupId>
-			<artifactId>review.common</artifactId>
+			<artifactId>pdq-common</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>uk.ac.ox.cs.pdq</groupId>
-			<artifactId>review.reasoning</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<version>5.1.36</version>
+			<artifactId>pdq-reasoning</artifactId>
 		</dependency>
 	</dependencies>
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
 				<groupId>uk.ac.ox.cs.pdq</groupId>
-				<artifactId>review.common</artifactId>
+				<artifactId>pdq-common</artifactId>
 				<version>1.0.0-Beta</version>
 			</dependency>
 			<dependency>
 				<groupId>uk.ac.ox.cs.pdq</groupId>
-				<artifactId>review.reasoning</artifactId>
+				<artifactId>pdq-reasoning</artifactId>
 				<version>1.0.0-Beta</version>
 			</dependency>
 		</dependencies>
