@@ -163,7 +163,7 @@ public class QueryToProtoBuffer implements Rewriter<Query<?>, Rule> {
 	private com.logicblox.common.protocol.CommonProto.Conjunction rewriteConjunction(Conjunction<?> formula) {
 		com.logicblox.common.protocol.CommonProto.Conjunction.Builder builder = 
 				com.logicblox.common.protocol.CommonProto.Conjunction.newBuilder();
-		for (uk.ac.ox.cs.pdq.fol.Formula subForm: formula.getSubFormulas()) {
+		for (uk.ac.ox.cs.pdq.fol.Formula subForm: formula.getChildren()) {
 			builder.addFormula(this.rewriteFormula(subForm));
 		}
 		return builder.build();
@@ -176,7 +176,7 @@ public class QueryToProtoBuffer implements Rewriter<Query<?>, Rule> {
 	private com.logicblox.common.protocol.CommonProto.Disjunction rewriteDisjunction(Disjunction<?> formula) {
 		com.logicblox.common.protocol.CommonProto.Disjunction.Builder builder = 
 				com.logicblox.common.protocol.CommonProto.Disjunction.newBuilder();
-		for (uk.ac.ox.cs.pdq.fol.Formula subForm: formula.getSubFormulas()) {
+		for (uk.ac.ox.cs.pdq.fol.Formula subForm: formula.getChildren()) {
 			builder.addFormula(this.rewriteFormula(subForm));
 		}
 		return builder.build();

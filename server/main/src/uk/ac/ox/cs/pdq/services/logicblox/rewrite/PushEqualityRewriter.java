@@ -167,7 +167,7 @@ public class PushEqualityRewriter<F extends Formula> implements Rewriter<F, F> {
 	 * @return the rewritten formula
 	 */
 	private Negation<Formula> propagate(Negation<Formula> negation) throws RewriterException {
-		Collection<Formula> subFormula = negation.getSubFormulas();
+		Collection<Formula> subFormula = negation.getChildren();
 		assert subFormula.size() == 1;
 		Formula sub = this.propagate(subFormula.iterator().next());
 		if (sub != null) {

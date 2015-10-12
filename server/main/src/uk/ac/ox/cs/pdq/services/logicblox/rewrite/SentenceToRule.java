@@ -36,7 +36,7 @@ public class SentenceToRule<T extends Formula> implements Rewriter<T, TGD>{
 			for (Formula f: conjunction) {
 				if (f instanceof Negation) {
 					if (head == null) {
-						Collection<T> subFormula = ((Negation) f).getSubFormulas();
+						Collection<T> subFormula = ((Negation) f).getChildren();
 						Formula h = subFormula.iterator().next();
 						if (!(h instanceof Predicate)) {
 							throw new RewriterException("Not a supported constraint sentence: " + input);

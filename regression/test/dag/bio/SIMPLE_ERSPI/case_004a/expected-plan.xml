@@ -1,120 +1,134 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<plan type="dag" cost="2832.5378842975206" control-flow="TOP_DOWN">
+<plan type="dag" cost="2831.0">
 <operator type="PROJECT">
 <outputs>
-<attribute name="c7138" type="java.lang.String"/>
-<attribute name="c7139" type="java.lang.String"/>
-<attribute name="c7140" type="java.lang.String"/>
-<attribute name="c7136" type="java.lang.String"/>
-<attribute name="c7137" type="java.lang.String"/>
-<attribute name="c7132" type="java.lang.String"/>
-<attribute name="c7126" type="java.lang.Integer"/>
-<attribute name="c7127" type="java.lang.String"/>
-<attribute name="c7128" type="java.lang.String"/>
-<attribute name="c7129" type="java.lang.String"/>
-<attribute name="c7130" type="java.lang.Boolean"/>
-<attribute name="c7131" type="java.lang.String"/>
-<attribute name="c7132" type="java.lang.String"/>
-<attribute name="c7133" type="java.lang.String"/>
-<attribute name="c7134" type="java.lang.Boolean"/>
+<attribute name="c8542" type="java.lang.String"/>
+<attribute name="c8543" type="java.lang.String"/>
+<attribute name="c8544" type="java.lang.String"/>
+<attribute name="c8540" type="java.lang.String"/>
+<attribute name="c8541" type="java.lang.String"/>
+<attribute name="c8536" type="java.lang.String"/>
+<attribute name="c8530" type="java.lang.Integer"/>
+<attribute name="c8531" type="java.lang.String"/>
+<attribute name="c8532" type="java.lang.String"/>
+<attribute name="c8533" type="java.lang.String"/>
+<attribute name="c8534" type="java.lang.Boolean"/>
+<attribute name="c8535" type="java.lang.String"/>
+<attribute name="c8536" type="java.lang.String"/>
+<attribute name="c8537" type="java.lang.String"/>
+<attribute name="c8538" type="java.lang.Boolean"/>
 </outputs>
 <project>
-<attribute name="c7138" type="java.lang.String"/>
-<attribute name="c7139" type="java.lang.String"/>
-<attribute name="c7140" type="java.lang.String"/>
-<attribute name="c7136" type="java.lang.String"/>
-<attribute name="c7137" type="java.lang.String"/>
-<attribute name="c7132" type="java.lang.String"/>
-<attribute name="c7126" type="java.lang.Integer"/>
-<attribute name="c7127" type="java.lang.String"/>
-<attribute name="c7128" type="java.lang.String"/>
-<attribute name="c7129" type="java.lang.String"/>
-<attribute name="c7130" type="java.lang.Boolean"/>
-<attribute name="c7131" type="java.lang.String"/>
-<attribute name="c7132" type="java.lang.String"/>
-<attribute name="c7133" type="java.lang.String"/>
-<attribute name="c7134" type="java.lang.Boolean"/>
+<attribute name="c8542" type="java.lang.String"/>
+<attribute name="c8543" type="java.lang.String"/>
+<attribute name="c8544" type="java.lang.String"/>
+<attribute name="c8540" type="java.lang.String"/>
+<attribute name="c8541" type="java.lang.String"/>
+<attribute name="c8536" type="java.lang.String"/>
+<attribute name="c8530" type="java.lang.Integer"/>
+<attribute name="c8531" type="java.lang.String"/>
+<attribute name="c8532" type="java.lang.String"/>
+<attribute name="c8533" type="java.lang.String"/>
+<attribute name="c8534" type="java.lang.Boolean"/>
+<attribute name="c8535" type="java.lang.String"/>
+<attribute name="c8536" type="java.lang.String"/>
+<attribute name="c8537" type="java.lang.String"/>
+<attribute name="c8538" type="java.lang.Boolean"/>
 </project>
 <child>
 <operator type="DEPENDENT_JOIN" param="1">
 <outputs>
-<attribute name="c7131" type="java.lang.String"/>
-<attribute name="c7132" type="java.lang.String"/>
-<attribute name="c7135" type="java.lang.String"/>
-<attribute name="c7136" type="java.lang.String"/>
-<attribute name="c7137" type="java.lang.String"/>
-<attribute name="c7132" type="java.lang.String"/>
-<attribute name="c7138" type="java.lang.String"/>
-<attribute name="c7139" type="java.lang.String"/>
-<attribute name="c7140" type="java.lang.String"/>
-<attribute name="k7162" type="java.lang.String"/>
-<attribute name="k7163" type="java.lang.String"/>
-<attribute name="k7164" type="java.lang.String"/>
-<attribute name="k7165" type="java.lang.String"/>
-<attribute name="k7166" type="java.lang.String"/>
-<attribute name="k7167" type="java.lang.String"/>
-<attribute name="k7168" type="java.lang.String"/>
-<attribute name="k7169" type="java.lang.String"/>
-<attribute name="k7170" type="java.lang.String"/>
-<attribute name="k7171" type="java.lang.String"/>
-<attribute name="k7172" type="java.lang.String"/>
-<attribute name="c7159" type="java.lang.String"/>
-<attribute name="c7160" type="java.lang.String"/>
-<attribute name="c7161" type="java.lang.String"/>
-<attribute name="c7136" type="java.lang.String"/>
-<attribute name="c7126" type="java.lang.Integer"/>
-<attribute name="c7127" type="java.lang.String"/>
-<attribute name="c7128" type="java.lang.String"/>
-<attribute name="c7129" type="java.lang.String"/>
-<attribute name="c7130" type="java.lang.Boolean"/>
-<attribute name="c7131" type="java.lang.String"/>
-<attribute name="c7132" type="java.lang.String"/>
-<attribute name="c7133" type="java.lang.String"/>
-<attribute name="c7134" type="java.lang.Boolean"/>
+<attribute name="c8535" type="java.lang.String"/>
+<attribute name="c8536" type="java.lang.String"/>
+<attribute name="c8539" type="java.lang.String"/>
+<attribute name="c8540" type="java.lang.String"/>
+<attribute name="c8541" type="java.lang.String"/>
+<attribute name="c8536" type="java.lang.String"/>
+<attribute name="c8542" type="java.lang.String"/>
+<attribute name="c8543" type="java.lang.String"/>
+<attribute name="c8544" type="java.lang.String"/>
+<attribute name="c8545" type="java.lang.String"/>
+<attribute name="c8546" type="java.lang.String"/>
+<attribute name="c8547" type="java.lang.String"/>
+<attribute name="c8548" type="java.lang.String"/>
+<attribute name="c8549" type="java.lang.String"/>
+<attribute name="c8550" type="java.lang.String"/>
+<attribute name="c8551" type="java.lang.String"/>
+<attribute name="c8552" type="java.lang.String"/>
+<attribute name="c8553" type="java.lang.String"/>
+<attribute name="c8554" type="java.lang.String"/>
+<attribute name="c8555" type="java.lang.String"/>
+<attribute name="c8556" type="java.lang.String"/>
+<attribute name="c8557" type="java.lang.Integer"/>
+<attribute name="c8558" type="java.lang.String"/>
+<attribute name="c8559" type="java.lang.String"/>
+<attribute name="c8560" type="java.lang.String"/>
+<attribute name="c8561" type="java.lang.String"/>
+<attribute name="c8562" type="java.lang.String"/>
+<attribute name="c8563" type="java.lang.String"/>
+<attribute name="c8564" type="java.lang.String"/>
+<attribute name="c8565" type="java.lang.String"/>
+<attribute name="c8540" type="java.lang.String"/>
+<attribute name="c8530" type="java.lang.Integer"/>
+<attribute name="c8531" type="java.lang.String"/>
+<attribute name="c8532" type="java.lang.String"/>
+<attribute name="c8533" type="java.lang.String"/>
+<attribute name="c8534" type="java.lang.Boolean"/>
+<attribute name="c8535" type="java.lang.String"/>
+<attribute name="c8536" type="java.lang.String"/>
+<attribute name="c8537" type="java.lang.String"/>
+<attribute name="c8538" type="java.lang.Boolean"/>
 </outputs>
 <children>
 <operator type="DEPENDENT_JOIN" param="3">
 <outputs>
-<attribute name="c7131" type="java.lang.String"/>
-<attribute name="c7132" type="java.lang.String"/>
-<attribute name="c7135" type="java.lang.String"/>
-<attribute name="c7136" type="java.lang.String"/>
-<attribute name="c7137" type="java.lang.String"/>
-<attribute name="c7132" type="java.lang.String"/>
-<attribute name="c7138" type="java.lang.String"/>
-<attribute name="c7139" type="java.lang.String"/>
-<attribute name="c7140" type="java.lang.String"/>
-<attribute name="k7162" type="java.lang.String"/>
-<attribute name="k7163" type="java.lang.String"/>
-<attribute name="k7164" type="java.lang.String"/>
-<attribute name="k7165" type="java.lang.String"/>
-<attribute name="k7166" type="java.lang.String"/>
-<attribute name="k7167" type="java.lang.String"/>
-<attribute name="k7168" type="java.lang.String"/>
-<attribute name="k7169" type="java.lang.String"/>
-<attribute name="k7170" type="java.lang.String"/>
-<attribute name="k7171" type="java.lang.String"/>
-<attribute name="k7172" type="java.lang.String"/>
-<attribute name="c7159" type="java.lang.String"/>
-<attribute name="c7160" type="java.lang.String"/>
-<attribute name="c7161" type="java.lang.String"/>
-<attribute name="c7136" type="java.lang.String"/>
+<attribute name="c8535" type="java.lang.String"/>
+<attribute name="c8536" type="java.lang.String"/>
+<attribute name="c8539" type="java.lang.String"/>
+<attribute name="c8540" type="java.lang.String"/>
+<attribute name="c8541" type="java.lang.String"/>
+<attribute name="c8536" type="java.lang.String"/>
+<attribute name="c8542" type="java.lang.String"/>
+<attribute name="c8543" type="java.lang.String"/>
+<attribute name="c8544" type="java.lang.String"/>
+<attribute name="c8545" type="java.lang.String"/>
+<attribute name="c8546" type="java.lang.String"/>
+<attribute name="c8547" type="java.lang.String"/>
+<attribute name="c8548" type="java.lang.String"/>
+<attribute name="c8549" type="java.lang.String"/>
+<attribute name="c8550" type="java.lang.String"/>
+<attribute name="c8551" type="java.lang.String"/>
+<attribute name="c8552" type="java.lang.String"/>
+<attribute name="c8553" type="java.lang.String"/>
+<attribute name="c8554" type="java.lang.String"/>
+<attribute name="c8555" type="java.lang.String"/>
+<attribute name="c8556" type="java.lang.String"/>
+<attribute name="c8557" type="java.lang.Integer"/>
+<attribute name="c8558" type="java.lang.String"/>
+<attribute name="c8559" type="java.lang.String"/>
+<attribute name="c8560" type="java.lang.String"/>
+<attribute name="c8561" type="java.lang.String"/>
+<attribute name="c8562" type="java.lang.String"/>
+<attribute name="c8563" type="java.lang.String"/>
+<attribute name="c8564" type="java.lang.String"/>
+<attribute name="c8565" type="java.lang.String"/>
+<attribute name="c8540" type="java.lang.String"/>
 </outputs>
 <children>
 <operator type="DEPENDENT_JOIN" param="1">
 <outputs>
-<attribute name="c7131" type="java.lang.String"/>
-<attribute name="c7132" type="java.lang.String"/>
-<attribute name="c7135" type="java.lang.String"/>
-<attribute name="c7136" type="java.lang.String"/>
-<attribute name="c7137" type="java.lang.String"/>
-<attribute name="c7132" type="java.lang.String"/>
+<attribute name="c8535" type="java.lang.String"/>
+<attribute name="c8536" type="java.lang.String"/>
+<attribute name="c8539" type="java.lang.String"/>
+<attribute name="c8540" type="java.lang.String"/>
+<attribute name="c8541" type="java.lang.String"/>
+<attribute name="c8536" type="java.lang.String"/>
 </outputs>
 <children>
 <operator type="PROJECT">
 <outputs>
-<attribute name="c7131" type="java.lang.String"/>
-<attribute name="c7132" type="java.lang.String"/>
+<attribute name="c8535" type="java.lang.String"/>
+<attribute name="c8536" type="java.lang.String"/>
 </outputs>
 <project>
 <attribute name="organismId" type="java.lang.String"/>
@@ -131,10 +145,10 @@
 </operator>
 <operator type="PROJECT">
 <outputs>
-<attribute name="c7135" type="java.lang.String"/>
-<attribute name="c7136" type="java.lang.String"/>
-<attribute name="c7137" type="java.lang.String"/>
-<attribute name="c7132" type="java.lang.String"/>
+<attribute name="c8539" type="java.lang.String"/>
+<attribute name="c8540" type="java.lang.String"/>
+<attribute name="c8541" type="java.lang.String"/>
+<attribute name="c8536" type="java.lang.String"/>
 </outputs>
 <project>
 <attribute name="input_id" type="java.lang.String"/>
@@ -157,24 +171,31 @@
 </operator>
 <operator type="PROJECT">
 <outputs>
-<attribute name="c7138" type="java.lang.String"/>
-<attribute name="c7139" type="java.lang.String"/>
-<attribute name="c7140" type="java.lang.String"/>
-<attribute name="k7162" type="java.lang.String"/>
-<attribute name="k7163" type="java.lang.String"/>
-<attribute name="k7164" type="java.lang.String"/>
-<attribute name="k7165" type="java.lang.String"/>
-<attribute name="k7166" type="java.lang.String"/>
-<attribute name="k7167" type="java.lang.String"/>
-<attribute name="k7168" type="java.lang.String"/>
-<attribute name="k7169" type="java.lang.String"/>
-<attribute name="k7170" type="java.lang.String"/>
-<attribute name="k7171" type="java.lang.String"/>
-<attribute name="k7172" type="java.lang.String"/>
-<attribute name="c7159" type="java.lang.String"/>
-<attribute name="c7160" type="java.lang.String"/>
-<attribute name="c7161" type="java.lang.String"/>
-<attribute name="c7136" type="java.lang.String"/>
+<attribute name="c8542" type="java.lang.String"/>
+<attribute name="c8543" type="java.lang.String"/>
+<attribute name="c8544" type="java.lang.String"/>
+<attribute name="c8545" type="java.lang.String"/>
+<attribute name="c8546" type="java.lang.String"/>
+<attribute name="c8547" type="java.lang.String"/>
+<attribute name="c8548" type="java.lang.String"/>
+<attribute name="c8549" type="java.lang.String"/>
+<attribute name="c8550" type="java.lang.String"/>
+<attribute name="c8551" type="java.lang.String"/>
+<attribute name="c8552" type="java.lang.String"/>
+<attribute name="c8553" type="java.lang.String"/>
+<attribute name="c8554" type="java.lang.String"/>
+<attribute name="c8555" type="java.lang.String"/>
+<attribute name="c8556" type="java.lang.String"/>
+<attribute name="c8557" type="java.lang.Integer"/>
+<attribute name="c8558" type="java.lang.String"/>
+<attribute name="c8559" type="java.lang.String"/>
+<attribute name="c8560" type="java.lang.String"/>
+<attribute name="c8561" type="java.lang.String"/>
+<attribute name="c8562" type="java.lang.String"/>
+<attribute name="c8563" type="java.lang.String"/>
+<attribute name="c8564" type="java.lang.String"/>
+<attribute name="c8565" type="java.lang.String"/>
+<attribute name="c8540" type="java.lang.String"/>
 </outputs>
 <project>
 <attribute name="id" type="java.lang.String"/>
@@ -188,16 +209,23 @@
 <attribute name="issue" type="java.lang.String"/>
 <attribute name="journalVolume" type="java.lang.String"/>
 <attribute name="pubYear" type="java.lang.String"/>
+<attribute name="journalIssn" type="java.lang.String"/>
 <attribute name="pubType" type="java.lang.String"/>
 <attribute name="inEPMC" type="java.lang.String"/>
 <attribute name="inPMC" type="java.lang.String"/>
+<attribute name="citedByCount" type="java.lang.Integer"/>
+<attribute name="hasReferences" type="java.lang.String"/>
+<attribute name="hasTextMinedTerms" type="java.lang.String"/>
+<attribute name="hasDbCrossReferences" type="java.lang.String"/>
+<attribute name="hasLabsLinks" type="java.lang.String"/>
+<attribute name="hasTMAccessionNumbers" type="java.lang.String"/>
 <attribute name="authors" type="java.lang.String"/>
 <attribute name="gene" type="java.lang.String"/>
 <attribute name="organism" type="java.lang.String"/>
 <attribute name="uniprotPubs" type="java.lang.String"/>
 </project>
 <child>
-<operator type="ACCESS" relation="PublicationShort" access-method="pubmed_pubshort_14">
+<operator type="ACCESS" relation="PublicationFull" access-method="pubmed_pub_14">
 <outputs>
 <attribute name="id" type="java.lang.String"/>
 <attribute name="source" type="java.lang.String"/>
@@ -210,9 +238,16 @@
 <attribute name="issue" type="java.lang.String"/>
 <attribute name="journalVolume" type="java.lang.String"/>
 <attribute name="pubYear" type="java.lang.String"/>
+<attribute name="journalIssn" type="java.lang.String"/>
 <attribute name="pubType" type="java.lang.String"/>
 <attribute name="inEPMC" type="java.lang.String"/>
 <attribute name="inPMC" type="java.lang.String"/>
+<attribute name="citedByCount" type="java.lang.Integer"/>
+<attribute name="hasReferences" type="java.lang.String"/>
+<attribute name="hasTextMinedTerms" type="java.lang.String"/>
+<attribute name="hasDbCrossReferences" type="java.lang.String"/>
+<attribute name="hasLabsLinks" type="java.lang.String"/>
+<attribute name="hasTMAccessionNumbers" type="java.lang.String"/>
 <attribute name="authors" type="java.lang.String"/>
 <attribute name="gene" type="java.lang.String"/>
 <attribute name="organism" type="java.lang.String"/>
@@ -225,15 +260,15 @@
 </operator>
 <operator type="PROJECT">
 <outputs>
-<attribute name="c7126" type="java.lang.Integer"/>
-<attribute name="c7127" type="java.lang.String"/>
-<attribute name="c7128" type="java.lang.String"/>
-<attribute name="c7129" type="java.lang.String"/>
-<attribute name="c7130" type="java.lang.Boolean"/>
-<attribute name="c7131" type="java.lang.String"/>
-<attribute name="c7132" type="java.lang.String"/>
-<attribute name="c7133" type="java.lang.String"/>
-<attribute name="c7134" type="java.lang.Boolean"/>
+<attribute name="c8530" type="java.lang.Integer"/>
+<attribute name="c8531" type="java.lang.String"/>
+<attribute name="c8532" type="java.lang.String"/>
+<attribute name="c8533" type="java.lang.String"/>
+<attribute name="c8534" type="java.lang.Boolean"/>
+<attribute name="c8535" type="java.lang.String"/>
+<attribute name="c8536" type="java.lang.String"/>
+<attribute name="c8537" type="java.lang.String"/>
+<attribute name="c8538" type="java.lang.Boolean"/>
 </outputs>
 <project>
 <attribute name="pathwayId" type="java.lang.Integer"/>

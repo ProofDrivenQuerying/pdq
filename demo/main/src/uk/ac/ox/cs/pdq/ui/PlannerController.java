@@ -262,10 +262,12 @@ public class PlannerController {
 		if (workDir.exists()) {
 			this.params = new PlannerParameters(new File(workDir.getAbsolutePath() + '/' + PDQApplication.DEFAULT_CONFIGURATION));
 			this.costParams = new CostParameters(new File(workDir.getAbsolutePath() + '/' + PDQApplication.DEFAULT_CONFIGURATION));
+			this.reasoningParams = new ReasoningParameters(new File(workDir.getAbsolutePath() + '/' + PDQApplication.DEFAULT_CONFIGURATION));
 		} else {
 			log.info("No default configuration file. Initializing demo environment...");
 			this.params = new PlannerParameters();
 			this.costParams = new CostParameters();
+			this.reasoningParams = new ReasoningParameters();
 		}
 		this.plan = plan;
 		this.params.setSeed(1);

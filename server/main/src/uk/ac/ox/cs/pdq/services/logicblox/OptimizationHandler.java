@@ -19,6 +19,7 @@ import uk.ac.ox.cs.pdq.plan.DAGPlan;
 import uk.ac.ox.cs.pdq.planner.Planner;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
+import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.rewrite.RewriterException;
 import uk.ac.ox.cs.pdq.services.MessageHandler;
 import uk.ac.ox.cs.pdq.services.ServiceException;
@@ -129,8 +130,10 @@ public class OptimizationHandler implements MessageHandler<ExternalRuleOptimizat
 		
 		PlannerParameters plannerParams = new PlannerParameters();
 		CostParameters costParams = new CostParameters();
+		ReasoningParameters reasoningParams = new ReasoningParameters();
+		
 		try {
-			Planner planner = new Planner(plannerParams, costParams, schema, query);
+			Planner planner = new Planner(plannerParams, costParams, reasoningParams, schema, query);
 			planner.setCostEstimator(estimator);
 			for (EventHandler eh: handlers) {
 				planner.registerEventHandler(eh);

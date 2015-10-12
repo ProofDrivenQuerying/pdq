@@ -2,7 +2,6 @@ package uk.ac.ox.cs.pdq.io.xml;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Stack;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -36,11 +35,11 @@ public class DAGPlanReader extends AbstractXMLReader<DAGPlan> {
 	
 	/** The current operator being built */
 	private RelationalOperator operator = null;
-
-	/** The operator reader */
-	private Stack<OperatorReader> operatorReaders = new Stack<>();
 	
 	private Schema schema = null;
+
+	/** The operator reader */
+	private final OperatorReader operatorReader;
 	
 	/**
 	 * Default constructor
@@ -48,6 +47,7 @@ public class DAGPlanReader extends AbstractXMLReader<DAGPlan> {
 	 */
 	public DAGPlanReader(Schema schema) {
 		this.schema = schema;
+		this.operatorReader = new OperatorReader(this.schema);
 	}
 
 	/**
@@ -87,14 +87,8 @@ public class DAGPlanReader extends AbstractXMLReader<DAGPlan> {
 			}
 			break;
 
-		case OPERATOR:
-			OperatorReader opReader = new OperatorReader(this.schema);
-			this.operatorReaders.add(opReader);
-			opReader.startElement(uri, localName, qName, atts);
-			break;
-
 		default:
-			this.operatorReaders.peek().startElement(uri, localName, qName, atts);
+			this.operatorReader.startElement(uri, localName, qName, atts);
 		}
 	}
 
@@ -106,21 +100,12 @@ public class DAGPlanReader extends AbstractXMLReader<DAGPlan> {
 	public void endElement(String uri, String localName, String qName) throws SAXException {
 		switch(QNames.parse(qName)) {
 		case PLAN:
-			this.plan = new DAGPlan(this.operator);
+			this.plan = new DAGPlan(this.operatorReader.getOperator());
 			this.plan.setCost(new DoubleCost(this.cost));
 			break;
 
-		case OPERATOR:
-			OperatorReader reader = this.operatorReaders.pop();
-			reader.endElement(uri, localName, qName);
-			if (!this.operatorReaders.isEmpty()) {
-				this.operatorReaders.peek().addChild(reader.getOperator());
-			}
-			this.operator = reader.getOperator();
-			break;
-
 		default:
-			this.operatorReaders.peek().endElement(uri, localName, qName);
+			this.operatorReader.endElement(uri, localName, qName);
 			return;
 		}
 	}

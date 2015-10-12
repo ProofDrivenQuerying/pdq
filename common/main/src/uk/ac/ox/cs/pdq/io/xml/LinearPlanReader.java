@@ -2,6 +2,7 @@ package uk.ac.ox.cs.pdq.io.xml;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Stack;
@@ -12,6 +13,8 @@ import javax.xml.parsers.SAXParserFactory;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
+
+import com.google.common.collect.Iterators;
 
 import uk.ac.ox.cs.pdq.algebra.RelationalOperator;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -46,7 +49,7 @@ public class LinearPlanReader extends AbstractXMLReader<LinearPlan> {
 	private String name;
 
 	/** The operator reader */
-	private Stack<OperatorReader> operatorReaders = new Stack<>();
+	private OperatorReader operatorReader;
 
 	private Schema schema;
 	
@@ -93,18 +96,12 @@ public class LinearPlanReader extends AbstractXMLReader<LinearPlan> {
 			break;
 
 		case COMMAND:
-//			this.commandReader = new OperatorReader(this.schema, ControlFlows.PULL);
+			this.operatorReader = new OperatorReader(this.schema, this.aliases);
 			this.name = this.getValue(atts, QNames.NAME);
 			break;
 
-		case OPERATOR:
-			OperatorReader opReader = new OperatorReader(this.schema, this.aliases);
-			this.operatorReaders.add(opReader);
-			opReader.startElement(uri, localName, qName, atts);
-			break;
-
 		default:
-			this.operatorReaders.peek().startElement(uri, localName, qName, atts);
+			this.operatorReader.startElement(uri, localName, qName, atts);
 		}
 	}
 
@@ -126,25 +123,16 @@ public class LinearPlanReader extends AbstractXMLReader<LinearPlan> {
 			break;
 
 		case COMMAND:
+			this.operator = this.operatorReader.getOperator();
+			Collection<AccessOperator> accesses = RelationalOperator.getAccesses(this.operator);
+			this.access = Iterators.getLast(accesses.iterator());
 			this.plan = new LinearPlan(this.operator, this.access, this.plan, null);
 			this.aliases.put(this.name, this.operator);
 			this.name = null;
 			break;
 
-		case OPERATOR:
-			OperatorReader reader = this.operatorReaders.pop();
-			reader.endElement(uri, localName, qName);
-			if (!this.operatorReaders.isEmpty()) {
-				this.operatorReaders.peek().addChild(reader.getOperator());
-			}
-			this.operator = reader.getOperator();
-			if (this.operator instanceof AccessOperator) {
-				this.access = (AccessOperator) this.operator;
-			}
-			break;
-
 		default:
-			this.operatorReaders.peek().endElement(uri, localName, qName);
+			this.operatorReader.endElement(uri, localName, qName);
 			return;
 		}
 	}

@@ -12,7 +12,6 @@ import uk.ac.ox.cs.pdq.algebra.UnaryOperator;
 import uk.ac.ox.cs.pdq.algebra.predicates.AttributeEqualityPredicate;
 import uk.ac.ox.cs.pdq.algebra.predicates.ConjunctivePredicate;
 import uk.ac.ox.cs.pdq.algebra.predicates.ConstantEqualityPredicate;
-import uk.ac.ox.cs.pdq.algebra.predicates.Predicate;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.db.builder.QueryBuilder;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
@@ -124,10 +123,10 @@ public class DAGPlanToConjunctiveQuery implements Rewriter<DAGPlan, ConjunctiveQ
 	 * @param mapping Map<Term,Term>
 	 * @param pred LogicalOperator
 	 */
-	private void propagateConstants(Map<Term, Term> mapping, Predicate pred, RelationalOperator child) {
+	private void propagateConstants(Map<Term, Term> mapping, uk.ac.ox.cs.pdq.algebra.predicates.Predicate pred, RelationalOperator child) {
 		if (pred instanceof ConjunctivePredicate) {
-			ConjunctivePredicate<Predicate> conj = (ConjunctivePredicate<Predicate>) pred;
-			for (Predicate p : conj) {
+			ConjunctivePredicate<uk.ac.ox.cs.pdq.algebra.predicates.Predicate> conj = (ConjunctivePredicate<uk.ac.ox.cs.pdq.algebra.predicates.Predicate>) pred;
+			for (uk.ac.ox.cs.pdq.algebra.predicates.Predicate p : conj) {
 				this.propagateConstants(mapping, p, child);
 			}
 		} else if (pred instanceof AttributeEqualityPredicate) {

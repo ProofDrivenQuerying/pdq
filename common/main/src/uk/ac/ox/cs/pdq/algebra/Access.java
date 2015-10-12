@@ -42,7 +42,7 @@ public class Access extends UnaryOperator implements AccessOperator {
 	 * @param accessMethod AccessMethod
 	 */
 	public Access(Relation relation, AccessMethod accessMethod) {
-		this(relation, accessMethod, Utility.typedToTerms(relation.getAttributes()), null);
+		this(relation, accessMethod, getOutputTerms(relation), null);
 	}
 
 	/**
@@ -53,7 +53,7 @@ public class Access extends UnaryOperator implements AccessOperator {
 	 * @param child LogicalOperator
 	 */
 	public Access(Relation relation, AccessMethod accessMethod, RelationalOperator child) {
-		this(relation, accessMethod, Utility.typedToTerms(relation.getAttributes()), child);
+		this(relation, accessMethod, getOutputTerms(relation), child);
 	}
 	
 	/**
@@ -83,6 +83,11 @@ public class Access extends UnaryOperator implements AccessOperator {
 	private static List<Attribute> attributesOf(Relation relation) {
 		Preconditions.checkArgument(relation != null);
 		return relation.getAttributes();
+	}
+	
+	private static List<Term> getOutputTerms(Relation relation) {
+		Preconditions.checkArgument(relation != null);
+		return Utility.typedToTerms(relation.getAttributes());
 	}
 
 	/**

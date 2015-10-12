@@ -263,7 +263,7 @@ public class ProtoBufferUnwrapper {
 			} else if (!(body instanceof Conjunction)) {
 				throw new ParserException("Expected atom or positive conjunction as rule body: " + body);
 			} else {
-				for (uk.ac.ox.cs.pdq.fol.Formula sub: body.getSubFormulas()) {
+				for (uk.ac.ox.cs.pdq.fol.Formula sub: body.getChildren()) {
 					if (!(sub instanceof Predicate)) {
 						throw new ParserException("Expected atom or positive conjunction as rule body: " + body);
 					}
@@ -418,9 +418,9 @@ public class ProtoBufferUnwrapper {
 		Signature relation = this.getRelation(atom);
 		if (relation == null) {
 			if (strict) {
-				throw new ParserException("Referring to unknow predicate " + atom.getName());
+				throw new ParserException("Referring to unknow predicate " + atom.getPredicateName());
 			}
-			relation = new Signature(atom.getName(), atomBuilder.getTermCount());
+			relation = new Signature(atom.getPredicateName(), atomBuilder.getTermCount());
 		}
 		atomBuilder.setSignature(relation);
 		return atomBuilder.build();
@@ -431,7 +431,7 @@ public class ProtoBufferUnwrapper {
 	 * @return Relation
 	 */
 	private Relation getRelation(Atom atom) {
-		Relation result = this.builder.getRelation(atom.getName());
+		Relation result = this.builder.getRelation(atom.getPredicateName());
 		if (result != null) {
 			return result;
 		}

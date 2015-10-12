@@ -1,3 +1,5 @@
-/.settings/
-/log/
 /.project
+/.settings/
+/*.log
+/log/
+/.DS_Store
