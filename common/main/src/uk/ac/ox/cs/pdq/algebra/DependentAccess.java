@@ -75,7 +75,7 @@ public class DependentAccess  extends RelationalOperator implements AccessOperat
 	 * @param staticInput Map<Integer,TypedConstant<?>>
 	 */
 	public DependentAccess(Relation relation, AccessMethod accessMethod, Map<Integer, TypedConstant<?>> staticInput) {
-		this(relation, accessMethod, Utility.typedToTerms(relation.getAttributes()), staticInput);
+		this(relation, accessMethod, Utility.typedToTerms(attributesOf(relation)), staticInput);
 	}
 
 	/**
