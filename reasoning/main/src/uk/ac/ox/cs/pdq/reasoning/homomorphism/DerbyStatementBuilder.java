@@ -20,6 +20,7 @@ public class DerbyStatementBuilder extends SQLStatementBuilder {
 
 	private static BiMap<String, String> nameEncodings = HashBiMap.create();
 	static {
+		nameEncodings.put(".", "dot_");
 		nameEncodings.put(":", "cl_");
 		nameEncodings.put("$", "dl_");
 		nameEncodings.put("#", "hs_");
