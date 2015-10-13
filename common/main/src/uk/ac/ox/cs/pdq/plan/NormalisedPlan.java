@@ -42,15 +42,15 @@ public class NormalisedPlan {
 	/** Maps each table to the command that produced it and the order of appearance of the command**/
 	private final Map<Table, Pair<Command,Integer>> tables;
 	
-	private final List<Access> accessCommands = Lists.newArrayList();
+	private final List<AccessCommand> accessCommands = Lists.newArrayList();
 	
 	public NormalisedPlan(Command command) {
 		Preconditions.checkNotNull(command);
 		this.commands = Lists.newArrayList(command);
 		this.tables = Maps.newHashMap();
 		this.tables.put(command.getOutput(), Pair.of(command, 0));
-		if(command instanceof Access) {
-			this.accessCommands.add((Access) command);
+		if(command instanceof AccessCommand) {
+			this.accessCommands.add((AccessCommand) command);
 		}
 	}
 
@@ -61,8 +61,8 @@ public class NormalisedPlan {
 		int order = 0;
 		for(Command command:commands) {
 			this.tables.put(command.getOutput(), Pair.of(command, order++));
-			if(command instanceof Access) {
-				this.accessCommands.add((Access) command);
+			if(command instanceof AccessCommand) {
+				this.accessCommands.add((AccessCommand) command);
 			}
 		}
 	}
@@ -77,8 +77,8 @@ public class NormalisedPlan {
 		this.commands.add(command);
 		this.tables.put(command.getOutput(), Pair.of(command, order));
 		this.accessCommands.addAll(plan.accessCommands);
-		if(command instanceof Access) {
-			this.accessCommands.add((Access) command);
+		if(command instanceof AccessCommand) {
+			this.accessCommands.add((AccessCommand) command);
 		}
 	}
 	
@@ -93,8 +93,8 @@ public class NormalisedPlan {
 		for(Command c:commands) {
 			this.commands.add(c);
 			this.tables.put(c.getOutput(), Pair.of(c, order));
-			if(c instanceof Access) {
-				this.accessCommands.add((Access) c);
+			if(c instanceof AccessCommand) {
+				this.accessCommands.add((AccessCommand) c);
 			}
 		}
 	}
@@ -103,8 +103,8 @@ public class NormalisedPlan {
 		Preconditions.checkNotNull(command);
 		this.tables.put(command.getOutput(), Pair.of(command, this.commands.size()));
 		this.commands.add(command);
-		if(command instanceof Access) {
-			this.accessCommands.add((Access) command);
+		if(command instanceof AccessCommand) {
+			this.accessCommands.add((AccessCommand) command);
 		}
 	}
 
@@ -132,7 +132,7 @@ public class NormalisedPlan {
 		return this.tables.get(table).getLeft();
 	}
 	
-	public List<Access> getAccessCommands() {
+	public List<AccessCommand> getAccessCommands() {
 		return this.accessCommands;
 	}
 	
@@ -257,7 +257,7 @@ public class NormalisedPlan {
 	 * @param schema
 	 * @param line
 	 */
-	private static Access parseAccess(Schema schema, String access) {
+	private static AccessCommand parseAccess(Schema schema, String access) {
 		Preconditions.checkNotNull(schema);
 		Preconditions.checkNotNull(access);
 		Pattern p = Pattern.compile(READ_RELATION_METHOD);
@@ -306,7 +306,7 @@ public class NormalisedPlan {
 				for(String column:m2.group(2).split(",")) {
 					columns.add(new Skolem(column));
 				}
-				return new Access(r, binding, columns, null, staticInputs);
+				return new AccessCommand(r, binding, columns, null, staticInputs);
 			}
 			else {
 				throw new java.lang.IllegalStateException("UNPROVIDED LIST OF COLUMNS");

@@ -44,26 +44,26 @@ public class CommandToTGDTranslator {
 	}
 
 	public TGD toTGD(Command command) {
-		if(command instanceof Access) {
-			return this.toTGD((Access)command); 
+		if(command instanceof AccessCommand) {
+			return this.toTGD((AccessCommand)command); 
 		}
-		else if(command instanceof Project) {
-			return this.toTGD((Project)command); 
+		else if(command instanceof ProjectCommand) {
+			return this.toTGD((ProjectCommand)command); 
 		}
-		else if(command instanceof Select) {
-			return this.toTGD((Select)command); 
+		else if(command instanceof SelectCommand) {
+			return this.toTGD((SelectCommand)command); 
 		}
-		else if(command instanceof Join) {
-			return this.toTGD((Join)command); 
+		else if(command instanceof JoinCommand) {
+			return this.toTGD((JoinCommand)command); 
 		}
-		else if(command instanceof Rename) {
-			return this.toTGD((Rename)command); 
+		else if(command instanceof RenameCommand) {
+			return this.toTGD((RenameCommand)command); 
 		}
 		throw new java.lang.IllegalArgumentException("Unknown command " + command);
 	}
 
 
-	public TGD toTGD(Access command) {
+	public TGD toTGD(AccessCommand command) {
 		//The access is input free
 		if(command.getInput() == null) {
 			//Prepare the right-hand side
@@ -96,7 +96,7 @@ public class CommandToTGDTranslator {
 		}
 	}
 
-	public TGD toTGD(Project command) {
+	public TGD toTGD(ProjectCommand command) {
 		//Get the attributes to project and create variables
 		List<Term> projected = Utility.typedToTerms(command.getOutput().getHeader());
 		Predicate ti = new Predicate(new Signature(command.getOutput().getName(), projected.size()), projected);
@@ -107,7 +107,7 @@ public class CommandToTGDTranslator {
 		return new TGD(Conjunction.of(tj), Conjunction.of(ti));
 	}
 
-	public TGD toTGD(Select command) {		
+	public TGD toTGD(SelectCommand command) {		
 		List<Term> inputs = Utility.typedToTerms(command.getInput().getHeader());
 		uk.ac.ox.cs.pdq.algebra.predicates.Predicate predicates = command.getPredicates();
 		if(predicates instanceof ConjunctivePredicate) {
@@ -134,7 +134,7 @@ public class CommandToTGDTranslator {
 		return new TGD(Conjunction.of(tj), Conjunction.of(ti));
 	}
 
-	public TGD toTGD(Join command) {
+	public TGD toTGD(JoinCommand command) {
 		List<Term> outputs = Utility.typedToTerms(command.getOutput().getHeader());
 		Predicate ti = new Predicate(new Signature(command.getOutput().getName(), outputs.size()), outputs);
 		
@@ -147,7 +147,7 @@ public class CommandToTGDTranslator {
 		return new TGD(Conjunction.of(tj, tk), Conjunction.of(ti));
 	}
 
-	public TGD toTGD(Rename command) {
+	public TGD toTGD(RenameCommand command) {
 		//Get the renamed attributes and create variables
 		List<Term> renamed = Utility.typedToTerms(command.getOutput().getHeader());
 		Predicate ti = new Predicate(new Signature(command.getOutput().getName(), renamed.size()), renamed);

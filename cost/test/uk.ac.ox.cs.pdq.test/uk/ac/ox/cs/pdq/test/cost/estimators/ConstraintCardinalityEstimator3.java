@@ -12,12 +12,12 @@ import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
-import uk.ac.ox.cs.pdq.plan.Access;
+import uk.ac.ox.cs.pdq.plan.AccessCommand;
 import uk.ac.ox.cs.pdq.plan.Command;
-import uk.ac.ox.cs.pdq.plan.Join;
+import uk.ac.ox.cs.pdq.plan.JoinCommand;
 import uk.ac.ox.cs.pdq.plan.NormalisedPlan;
-import uk.ac.ox.cs.pdq.plan.Project;
-import uk.ac.ox.cs.pdq.plan.Select;
+import uk.ac.ox.cs.pdq.plan.ProjectCommand;
+import uk.ac.ox.cs.pdq.plan.SelectCommand;
 
 import com.google.common.collect.Lists;
 /**
@@ -97,26 +97,26 @@ public class ConstraintCardinalityEstimator3 extends ConstraintCardinalityEstima
 		Term volume = new Variable("volume");
 		Term year = new Variable("year");
 
-		this.access0 = new Access(schema.getRelation("TargetFree"), schema.getRelation("TargetFree").getAccessMethod("chembl_target_free"), 
+		this.access0 = new AccessCommand(schema.getRelation("TargetFree"), schema.getRelation("TargetFree").getAccessMethod("chembl_target_free"), 
 				Lists.newArrayList(organism,pref_name,species_group_flag,target_chembl_id,target_component_accession,target_component_id,target_component_type,target_type), null, null);
 		Attribute attr = (Attribute) access0.getOutput().getHeader().get(0);
-		this.projection0 = new Project(Lists.newArrayList(attr), access0.getOutput());
+		this.projection0 = new ProjectCommand(Lists.newArrayList(attr), access0.getOutput());
 
-		this.access1 = new Access(schema.getRelation("AssayLimited"), schema.getRelation("AssayLimited").getAccessMethod("chembl_assay_limited_1"), 
+		this.access1 = new AccessCommand(schema.getRelation("AssayLimited"), schema.getRelation("AssayLimited").getAccessMethod("chembl_assay_limited_1"), 
 				Lists.newArrayList(assay_category, assay_cell_type, assay_chembl_id, organism, assay_strain, assay_subcellular_fraction, 
 						assay_tax_id, assay_test_type, assay_tissue, assay_type, assay_type_description, bao_format,
 						cell_chembl_id, confidence_description, confidence_score, description, document_chembl_id,
 						relationship_description, relationship_type, src_assay_id, src_id, target_chembl_id), projection0.getOutput(), null);
 		ConstantEqualityPredicate p10 = new ConstantEqualityPredicate(8, new TypedConstant<String>("Liver"));
-		this.selection1 = new Select(new ConjunctivePredicate(Lists.newArrayList(p10)), access1.getOutput());
-		this.join1 = new Join(selection1.getOutput(), access0.getOutput());
+		this.selection1 = new SelectCommand(new ConjunctivePredicate(Lists.newArrayList(p10)), access1.getOutput());
+		this.join1 = new JoinCommand(selection1.getOutput(), access0.getOutput());
 
-		this.access2 = new Access(schema.getRelation("DocumentFree"), schema.getRelation("DocumentFree").getAccessMethod("chembl_document_free"), 
+		this.access2 = new AccessCommand(schema.getRelation("DocumentFree"), schema.getRelation("DocumentFree").getAccessMethod("chembl_document_free"), 
 				Lists.newArrayList(authors, doc_type, document_chembl_id, doi, first_page, issue, journal, last_page,
 						pubmed_id, title, volume, year), null, null);
 		ConstantEqualityPredicate p20 = new ConstantEqualityPredicate(11, new TypedConstant<String>("2007"));
-		this.selection2 = new Select(new ConjunctivePredicate(Lists.newArrayList(p20)), access1.getOutput());
-		this.join2 = new Join(selection2.getOutput(), join1.getOutput());
+		this.selection2 = new SelectCommand(new ConjunctivePredicate(Lists.newArrayList(p20)), access1.getOutput());
+		this.join2 = new JoinCommand(selection2.getOutput(), join1.getOutput());
 
 		return new NormalisedPlan(Lists.newArrayList(this.access0, this.projection0, this.access1, this.selection1, this.join1, this.access2,
 				this.selection2, this.join2));
