@@ -348,7 +348,7 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 	 */
 	@Override
 	public String toString() {
-		return this.getHead() + " <- " + this.bound + this.getBody();
+		return this.getHead() + " <- " + /*this.bound +*/ this.getBody();
 	}
 
 	/**

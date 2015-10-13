@@ -94,7 +94,7 @@ public class RelationWriter extends AbstractXMLWriter<Relation> {
 		if (!ints.isEmpty()) {
 			att.put(QNames.INPUTS, ints.substring(0, ints.length() - 1));
 		}
-		if (r.getMetadata().getPerInputTupleCost(ar) != null) {
+		if (r.getMetadata() != null && r.getMetadata().getPerInputTupleCost(ar) != null) {
 			att.put(QNames.COST, String.valueOf(r.getMetadata().getPerInputTupleCost(ar).getValue()));
 		}
 		openclose(out, QNames.ACCESS_METHOD, att);
