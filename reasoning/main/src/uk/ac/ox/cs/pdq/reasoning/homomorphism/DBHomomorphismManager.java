@@ -320,7 +320,7 @@ public class DBHomomorphismManager implements HomomorphismManager {
 		Preconditions.checkNotNull(source);
 		List<Match> result = new LinkedList<>();
 		Q s = this.convert(source, this.aliases, constraints);
-		Set<Map<Variable, Constant>> maps = this.builder.findHomomorphismThroughSQL(s, constraints, this.constants, this.connection);
+		Set<Map<Variable, Constant>> maps = this.builder.findHomomorphismsThroughSQL(s, constraints, this.constants, this.connection);
 		
 		for(Map<Variable, Constant> map:maps) {
 			if(map.containsKey(new Variable(this.Bag.getName()))) {

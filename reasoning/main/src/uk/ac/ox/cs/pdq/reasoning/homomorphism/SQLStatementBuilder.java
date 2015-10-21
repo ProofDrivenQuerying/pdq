@@ -46,6 +46,8 @@ import uk.ac.ox.cs.pdq.util.Utility;
 import com.google.common.base.Joiner;
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
@@ -61,7 +63,7 @@ public abstract class SQLStatementBuilder {
 	private static Logger log = Logger.getLogger(SQLStatementBuilder.class);
 
 	/** Aliases for facts **/
-	protected List<Pair<Predicate, String>> aliases;
+	protected BiMap<Predicate, String> aliases = HashBiMap.create();
 
 	private String aliasPrefix = "A";
 	private int aliasCounter = 0;
@@ -228,7 +230,7 @@ public abstract class SQLStatementBuilder {
 	 * 			The homomorphism constraints that should be satisfied
 	 * @return homomorphisms of the input query to facts kept in a database.
 	 */
-	public Set<Map<Variable, Constant>> findHomomorphismThroughSQL(Evaluatable source, HomomorphismConstraint[] constraints, Map<String, TypedConstant<?>> constants, Connection connection) {
+	public Set<Map<Variable, Constant>> findHomomorphismsThroughSQL(Evaluatable source, HomomorphismConstraint[] constraints, Map<String, TypedConstant<?>> constants, Connection connection) {
 
 		String query = "";
 		List<String> from = this.createContentForFromStatement(source);
@@ -315,6 +317,7 @@ public abstract class SQLStatementBuilder {
 		return maps;
 	}
 
+	
 	/**
 	 * 
 	 * @param source
@@ -324,11 +327,11 @@ public abstract class SQLStatementBuilder {
 	protected List<String> createContentForFromStatement(Evaluatable source) {
 		this.aliasCounter = 0;
 		List<String> relations = new ArrayList<String>();
-		this.aliases = Lists.newArrayList();
+		this.aliases = HashBiMap.create();;
 		for (Predicate fact:source.getBody().getPredicates()) {
 			String aliasName = this.aliasPrefix + this.aliasCounter;
 			relations.add(createTableAliasingExpression(aliasName, (Relation) fact.getSignature()));
-			this.aliases.add(Pair.of(fact, aliasName));
+			this.aliases.put(fact, aliasName);
 			this.aliasCounter++;
 		}
 		return relations;
@@ -345,9 +348,8 @@ public abstract class SQLStatementBuilder {
 	protected LinkedHashMap<Projection,Variable> toProjectStatement(Evaluatable source) {
 		LinkedHashMap<Projection,Variable> projected = new LinkedHashMap<>();
 		List<Variable> attributes = new ArrayList<>();
-		int f = 0;
 		for (Predicate fact:source.getBody().getPredicates()) {
-			String alias = this.aliases.get(f).getRight();
+			String alias = this.aliases.get(fact);
 			List<Term> terms = fact.getTerms();
 			for (int it = 0; it < terms.size(); ++it) {
 				Term term = terms.get(it);
@@ -356,7 +358,6 @@ public abstract class SQLStatementBuilder {
 					attributes.add(((Variable) term));
 				}
 			}
-			++f;
 		}
 		return projected;
 	}
@@ -367,12 +368,11 @@ public abstract class SQLStatementBuilder {
 	 * @return
 	 * 		the equality predicates of the input conjunction
 	 */
-	protected List<ExtendedAttributeEqualityPredicate> toAttributeEqualityPredicates(Conjunction<Predicate> source, List<Pair<Predicate, String>> aliases) {
+	protected List<ExtendedAttributeEqualityPredicate> toAttributeEqualityPredicates(Conjunction<Predicate> source, BiMap<Predicate, String> aliases2) {
 		List<ExtendedAttributeEqualityPredicate> attributePredicates = new ArrayList<>();
 		Collection<Term> terms = Utility.getTerms(source.getPredicates());
 		terms = Utility.removeDuplicates(terms);
 		for (Term term:terms) {
-			int f = 0;
 			Integer leftPosition = null;
 			Relation left = null;
 			String leftAlias = null;
@@ -382,14 +382,13 @@ public abstract class SQLStatementBuilder {
 					if(leftPosition == null) {
 						leftPosition = it;
 						left = (Relation) fact.getSignature();
-						leftAlias = aliases.get(f).getRight();
+						leftAlias = aliases2.get(fact);
 					}
 					else {
 						attributePredicates.add(new ExtendedAttributeEqualityPredicate(leftPosition, it, left, leftAlias, 
-								(Relation) fact.getSignature(), aliases.get(f).getRight()));
+								(Relation) fact.getSignature(), aliases2.get(fact)));
 					}
 				}
-				++f;
 			}
 		}
 		return attributePredicates;
@@ -444,11 +443,10 @@ public abstract class SQLStatementBuilder {
 	 * @return
 	 * 		constant equality predicates 
 	 */
-	protected List<ExtendedConstantEqualityPredicate> toConstantPredicates(Conjunction<Predicate> source, List<Pair<Predicate, String>> aliases) {
+	protected List<ExtendedConstantEqualityPredicate> toConstantPredicates(Conjunction<Predicate> source, BiMap<Predicate, String> aliases2) {
 		List<ExtendedConstantEqualityPredicate> constantPredicates = new ArrayList<>();
-		int f = 0;
 		for (Predicate fact:source.getPredicates()) {
-			String alias = aliases.get(f).getRight();
+			String alias = aliases2.get(fact);
 			List<Term> terms = fact.getTerms();
 			for (int it = 0; it < terms.size(); ++it) {
 				Term term = terms.get(it);
@@ -456,7 +454,6 @@ public abstract class SQLStatementBuilder {
 					constantPredicates.add(new ExtendedConstantEqualityPredicate(it, (TypedConstant) term, (Relation) fact.getSignature(), alias));
 				}
 			}
-			++f;
 		}
 		return constantPredicates;
 	}
@@ -468,7 +465,7 @@ public abstract class SQLStatementBuilder {
 	 * @return
 	 * 		predicates that correspond to fact constraints 
 	 */
-	protected List<ExtendedSetEqualityPredicate> translateFactConstraints(Evaluatable source, List<Pair<Predicate, String>> aliases, HomomorphismConstraint... constraints) {
+	protected List<ExtendedSetEqualityPredicate> translateFactConstraints(Evaluatable source, BiMap<Predicate, String> aliases2, HomomorphismConstraint... constraints) {
 		List<ExtendedSetEqualityPredicate> setPredicates = new ArrayList<>();
 		for(HomomorphismConstraint c:constraints) {
 			if(c instanceof FactScope) {
@@ -476,11 +473,9 @@ public abstract class SQLStatementBuilder {
 				for (Predicate atom:((FactScope) c).atoms) {
 					facts.add(atom.getId());
 				}
-				int f = 0;
 				for(Predicate fact:source.getBody().getPredicates()) {
-					String alias = aliases.get(f).getRight();
+					String alias = aliases2.get(fact);
 					setPredicates.add(new ExtendedSetEqualityPredicate(fact.getTermCount()-1, facts, (Relation) fact.getSignature(), alias));
-					++f;
 				}
 			}
 		}
@@ -494,7 +489,7 @@ public abstract class SQLStatementBuilder {
 	 * @return
 	 * 		predicates that correspond to canonical constraints
 	 */
-	protected List<ExtendedSkolemEqualityPredicate> translateCanonicalConstraints(Evaluatable source, List<Pair<Predicate, String>> aliases, HomomorphismConstraint... constraints) {
+	protected List<ExtendedSkolemEqualityPredicate> translateCanonicalConstraints(Evaluatable source, BiMap<Predicate, String> aliases2, HomomorphismConstraint... constraints) {
 		List<ExtendedSkolemEqualityPredicate> constantPredicates = new ArrayList<>();
 		for(HomomorphismConstraint c:constraints) {
 			if(c instanceof SuperMap) {
@@ -505,7 +500,7 @@ public abstract class SQLStatementBuilder {
 						int it = fact.getTerms().indexOf(pair.getKey());
 						if(it != -1) {
 							constantPredicates.add(
-									new ExtendedSkolemEqualityPredicate(it, (Skolem) pair.getValue(), (Relation) fact.getSignature(), aliases.get(f).getRight()));
+									new ExtendedSkolemEqualityPredicate(it, (Skolem) pair.getValue(), (Relation) fact.getSignature(), aliases2.get(fact)));
 						}
 						++f;
 					}
@@ -515,7 +510,7 @@ public abstract class SQLStatementBuilder {
 		return constantPredicates;
 	}
 
-	protected String translateParametrisedMatch(Evaluatable source, List<Pair<Predicate, String>> aliases, HomomorphismConstraint... constraints) {
+	protected String translateParametrisedMatch(Evaluatable source, BiMap<Predicate, String> aliases2, HomomorphismConstraint... constraints) {
 		List<ExtendedSetEqualityPredicate> constantPredicates = new ArrayList<>();
 		for(HomomorphismConstraint c:constraints) {
 			if(c instanceof ParametrisedMatch) {
@@ -529,7 +524,7 @@ public abstract class SQLStatementBuilder {
 						int it = fact.getTerms().indexOf(variable);
 						if(it != -1) {
 							constantPredicates.add(
-									new ExtendedSetEqualityPredicate(it, constants, (Relation) fact.getSignature(), aliases.get(f).getRight()));
+									new ExtendedSetEqualityPredicate(it, constants, (Relation) fact.getSignature(), aliases2.get(fact)));
 						}
 						++f;
 					}
@@ -547,7 +542,7 @@ public abstract class SQLStatementBuilder {
 	 * @return
 	 * 		predicates that correspond to bag constraints
 	 */
-	protected List<ExtendedSetEqualityPredicate> translateBagConstraints(Evaluatable source, List<Pair<Predicate, String>> aliases, HomomorphismConstraint... constraints) {
+	protected List<ExtendedSetEqualityPredicate> translateBagConstraints(Evaluatable source, BiMap<Predicate, String> aliases2, HomomorphismConstraint... constraints) {
 		List<ExtendedSetEqualityPredicate> setPredicates = new ArrayList<>();
 		for(HomomorphismConstraint c:constraints) {
 			if(c instanceof BagScope) {
@@ -557,7 +552,7 @@ public abstract class SQLStatementBuilder {
 				}
 				int f = 0;
 				for(Predicate fact:source.getBody().getPredicates()) {
-					String alias = aliases.get(f).getRight();
+					String alias = aliases2.get(fact);
 					setPredicates.add(new ExtendedSetEqualityPredicate(fact.getTermCount()-2, bags, (Relation) fact.getSignature(), alias));
 					++f;
 				}
