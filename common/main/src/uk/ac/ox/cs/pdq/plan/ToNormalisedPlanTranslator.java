@@ -28,25 +28,25 @@ public class ToNormalisedPlanTranslator {
 			Preconditions.checkArgument(rightAccesses.size()==1);
 			AccessOperator rightAccess = rightAccesses.iterator().next();
 			//Create an access command
-			Command access = new Access(rightAccess, null);
+			Command access = new AccessCommand(rightAccess, null);
 			//Create selection commands for the right hand child if exist
 			Collection<Selection> rightSelections = RelationalOperator.getSelections(rightOp);
 			Preconditions.checkArgument(rightSelections.size()==1 || rightSelections.size() == 0);
 			Command selection = access;
 			if(rightSelections.size()==1) {
 				Selection rightSelection = rightSelections.iterator().next();
-				selection = new Select(rightSelection.getPredicate(), access.getOutput());
+				selection = new SelectCommand(rightSelection.getPredicate(), access.getOutput());
 			}
 			//Create the join command
-			Command join = new Join(left.getLast().getOutput(), selection.getOutput(), ((uk.ac.ox.cs.pdq.algebra.Join) operator).getPredicate());
+			Command join = new JoinCommand(left.getLast().getOutput(), selection.getOutput(), ((uk.ac.ox.cs.pdq.algebra.Join) operator).getPredicate());
 			return new NormalisedPlan(left, join);
 		}
 		else if(operator instanceof DependentAccess) {
-			return new NormalisedPlan(new Access((AccessOperator) operator, null));
+			return new NormalisedPlan(new AccessCommand((AccessOperator) operator, null));
 		}
 		else if(operator instanceof Selection) {
 			NormalisedPlan child = this.translate(((Selection) operator).getChild());
-			Command selection = new Select(((Selection) operator).getPredicate(), child.getFirst().getOutput());
+			Command selection = new SelectCommand(((Selection) operator).getPredicate(), child.getFirst().getOutput());
 			List<Command> commands = Lists.newArrayList();
 			commands.addAll(child.getCommands());
 			commands.add(selection);

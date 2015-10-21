@@ -12,12 +12,12 @@ import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
-import uk.ac.ox.cs.pdq.plan.Access;
+import uk.ac.ox.cs.pdq.plan.AccessCommand;
 import uk.ac.ox.cs.pdq.plan.Command;
-import uk.ac.ox.cs.pdq.plan.Join;
+import uk.ac.ox.cs.pdq.plan.JoinCommand;
 import uk.ac.ox.cs.pdq.plan.NormalisedPlan;
-import uk.ac.ox.cs.pdq.plan.Project;
-import uk.ac.ox.cs.pdq.plan.Select;
+import uk.ac.ox.cs.pdq.plan.ProjectCommand;
+import uk.ac.ox.cs.pdq.plan.SelectCommand;
 
 import com.google.common.collect.Lists;
 /**
@@ -107,39 +107,39 @@ public class ConstraintCardinalityEstimator2 extends ConstraintCardinalityEstima
 		
 		
 		//Define the this.plan
-		this.access0 = new Access(schema.getRelation("TargetComponentFree"), this.schema.getRelation("TargetComponentFree").getAccessMethod("chembl_target_component_free"), 
+		this.access0 = new AccessCommand(schema.getRelation("TargetComponentFree"), this.schema.getRelation("TargetComponentFree").getAccessMethod("chembl_target_component_free"), 
 				Lists.newArrayList(_accession,_component_id,protein,_description0,_organism,_protein_classification_id,_sequence,_tax_id), null, null);
 		ConstantEqualityPredicate p00 = new ConstantEqualityPredicate(2, new TypedConstant<String>("PROTEIN"));
-		this.selection0 = new Select(new ConjunctivePredicate(Lists.newArrayList(p00)), access0.getOutput());
+		this.selection0 = new SelectCommand(new ConjunctivePredicate(Lists.newArrayList(p00)), access0.getOutput());
 		Attribute attr = (Attribute) selection0.getOutput().getHeader().get(3);
-		this.projection0 = new Project(Lists.newArrayList(attr), selection0.getOutput());
+		this.projection0 = new ProjectCommand(Lists.newArrayList(attr), selection0.getOutput());
 				
-		this.access1 = new Access(schema.getRelation("ProteinLimited"), this.schema.getRelation("ProteinLimited").getAccessMethod("uniprot_protein_2"), 
+		this.access1 = new AccessCommand(schema.getRelation("ProteinLimited"), this.schema.getRelation("ProteinLimited").getAccessMethod("uniprot_protein_2"), 
 				Lists.newArrayList(_input_id,_accession,_entry_name,_organism), projection0.getOutput(), null);
-		this.join1 = new Join(access1.getOutput(), selection0.getOutput());
+		this.join1 = new JoinCommand(access1.getOutput(), selection0.getOutput());
 		Attribute attr1 = (Attribute) join1.getOutput().getHeader().get(3);
-		this.projection1 = new Project(Lists.newArrayList(attr1), join1.getOutput());
+		this.projection1 = new ProjectCommand(Lists.newArrayList(attr1), join1.getOutput());
 		
-		this.access2 = new Access(schema.getRelation("TargetLimited"), this.schema.getRelation("TargetLimited").getAccessMethod("chembl_target_limited_1"), 
+		this.access2 = new AccessCommand(schema.getRelation("TargetLimited"), this.schema.getRelation("TargetLimited").getAccessMethod("chembl_target_limited_1"), 
 				Lists.newArrayList(_organism,_pref_name, _species_group_flag,_target_chembl_id,_accession,_component_id,_target_component_type,singleprotein), projection1.getOutput(), null);
 		ConstantEqualityPredicate p20 = new ConstantEqualityPredicate(7, new TypedConstant<String>("SINGLE PROTEIN"));
-		this.selection2 = new Select(new ConjunctivePredicate(Lists.newArrayList(p20)), access2.getOutput());
-		this.join2 = new Join(selection2.getOutput(), join1.getOutput());
+		this.selection2 = new SelectCommand(new ConjunctivePredicate(Lists.newArrayList(p20)), access2.getOutput());
+		this.join2 = new JoinCommand(selection2.getOutput(), join1.getOutput());
 		Attribute attr2 = (Attribute) join2.getOutput().getHeader().get(3);
-		this.projection2 = new Project(Lists.newArrayList(attr2), join2.getOutput());
+		this.projection2 = new ProjectCommand(Lists.newArrayList(attr2), join2.getOutput());
 		
-		this.access3 = new Access(schema.getRelation("AssayLimited"), this.schema.getRelation("AssayLimited").getAccessMethod("chembl_assay_limited_3"), 
+		this.access3 = new AccessCommand(schema.getRelation("AssayLimited"), this.schema.getRelation("AssayLimited").getAccessMethod("chembl_assay_limited_3"), 
 				Lists.newArrayList(_assay_category,_assay_cell_type,_assay_chembl_id,_assay_organism,_assay_strain,_assay_subcellular_fraction,_assay_tax_id,_assay_test_type,_assay_tissue,_assay_type,_assay_type_description,_bao_format,_cell_chembl_id,_confidence_description,_confidence_score,_description,_document_chembl_id,_relationship_description,_relationship_type,_src_assay_id,_src_id,_target_chembl_id), 
 				projection2.getOutput(), null);
-		this.join3 = new Join(access3.getOutput(), join2.getOutput());
+		this.join3 = new JoinCommand(access3.getOutput(), join2.getOutput());
 		Attribute attr3 = (Attribute) join3.getOutput().getHeader().get(16);
-		this.projection3 = new Project(Lists.newArrayList(attr3), join3.getOutput());
+		this.projection3 = new ProjectCommand(Lists.newArrayList(attr3), join3.getOutput());
 		
-		this.access4 = new Access(schema.getRelation("DocumentLimited"), this.schema.getRelation("DocumentLimited").getAccessMethod("chembl_document_limited"), 
+		this.access4 = new AccessCommand(schema.getRelation("DocumentLimited"), this.schema.getRelation("DocumentLimited").getAccessMethod("chembl_document_limited"), 
 				Lists.newArrayList(_authors,pub,_document_chembl_id,_doi,_first_page,_issue,_journal,_last_page,_pubmed_id,_title,_volume,year), projection3.getOutput(), null);
 		ConstantEqualityPredicate p40 = new ConstantEqualityPredicate(1, new TypedConstant<String>("PUBLICATION"));
-		this.selection4 = new Select(new ConjunctivePredicate(Lists.newArrayList(p40)), access4.getOutput());
-		this.join4 = new Join(selection4.getOutput(), join3.getOutput());
+		this.selection4 = new SelectCommand(new ConjunctivePredicate(Lists.newArrayList(p40)), access4.getOutput());
+		this.join4 = new JoinCommand(selection4.getOutput(), join3.getOutput());
 		
 		
 		return new NormalisedPlan(Lists.newArrayList(this.access0, this.selection0, this.projection0, this.access1, this.join1, this.projection1, 

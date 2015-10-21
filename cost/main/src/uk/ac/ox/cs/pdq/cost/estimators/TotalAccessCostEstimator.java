@@ -8,7 +8,7 @@ import uk.ac.ox.cs.pdq.algebra.RelationalOperator;
 import uk.ac.ox.cs.pdq.cost.statistics.Catalog;
 import uk.ac.ox.cs.pdq.db.TGD;
 import uk.ac.ox.cs.pdq.logging.performance.StatisticsCollector;
-import uk.ac.ox.cs.pdq.plan.Access;
+import uk.ac.ox.cs.pdq.plan.AccessCommand;
 import uk.ac.ox.cs.pdq.plan.Command;
 import uk.ac.ox.cs.pdq.plan.CommandToTGDTranslator;
 import uk.ac.ox.cs.pdq.plan.DAGPlan;
@@ -88,9 +88,9 @@ public class TotalAccessCostEstimator<P extends Plan> implements BlackBoxCostEst
 		NormalisedPlan normalised = new ToNormalisedPlanTranslator().translate((RelationalOperator) plan.getEffectiveOperator());
 		double totalCost = 0.0;
 		for(Command command:normalised.getCommands()) {
-			if(command instanceof Access) {	
+			if(command instanceof AccessCommand) {	
 				//Get the input table
-				Table input = ((Access) command).getInput();
+				Table input = ((AccessCommand) command).getInput();
 
 				//Call the constraint-aware cardinality estimator
 
@@ -101,7 +101,7 @@ public class TotalAccessCostEstimator<P extends Plan> implements BlackBoxCostEst
 				double cardinality = 1.0;
 
 
-				double cost = this.catalog.getERPSI(((Access) command).getRelation(), ((Access) command).getMethod(), ((Access) command).getStaticInputs());
+				double cost = this.catalog.getERPSI(((AccessCommand) command).getRelation(), ((AccessCommand) command).getMethod(), ((AccessCommand) command).getStaticInputs());
 						totalCost += cost;
 			}
 		}

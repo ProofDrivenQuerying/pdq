@@ -5,7 +5,7 @@ import uk.ac.ox.cs.pdq.util.Tuple;
 
 
 /**
- * An inequality predicate
+ * An inequality predicate that keeps the relations of the referenced attributes 
  * @author Efthymia Tsamoura
  *
  */

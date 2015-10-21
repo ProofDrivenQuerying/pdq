@@ -22,7 +22,7 @@ import com.google.common.collect.Lists;
  * @author Efthymia Tsamoura
  *
  */
-public class Access implements Command{
+public class AccessCommand implements Command{
 
 	private final Relation relation;
 
@@ -45,7 +45,7 @@ public class Access implements Command{
 	 * Constructor used in plan to normalised plan translation
 	 * @param access
 	 */
-	public Access(AccessOperator access, Table input) {
+	public AccessCommand(AccessOperator access, Table input) {
 		this(access.getRelation(), access.getAccessMethod(), 
 				access.getColumns(),
 				input,
@@ -60,7 +60,7 @@ public class Access implements Command{
 	 * @param input
 	 * @param staticInputs
 	 */
-	public Access(Relation relation, AccessMethod method, List<Term> columns, Table input, Map<Integer, TypedConstant<?>> staticInputs) {
+	public AccessCommand(Relation relation, AccessMethod method, List<Term> columns, Table input, Map<Integer, TypedConstant<?>> staticInputs) {
 		Preconditions.checkNotNull(relation);
 		Preconditions.checkNotNull(method);
 		Preconditions.checkNotNull(columns);
@@ -125,11 +125,11 @@ public class Access implements Command{
 		if (o == null) {
 			return false;
 		}
-		return Access.class.isInstance(o)
-				&& this.relation.equals(((Access) o).relation)
-				&& this.method.equals(((Access) o).method)
-				&& this.columns.equals(((Access) o).columns)
-				&& this.staticInputs.equals(((Access) o).staticInputs);
+		return AccessCommand.class.isInstance(o)
+				&& this.relation.equals(((AccessCommand) o).relation)
+				&& this.method.equals(((AccessCommand) o).method)
+				&& this.columns.equals(((AccessCommand) o).columns)
+				&& this.staticInputs.equals(((AccessCommand) o).staticInputs);
 	}
 
 	/**

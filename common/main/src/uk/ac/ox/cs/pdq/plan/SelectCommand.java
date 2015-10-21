@@ -5,13 +5,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
-import uk.ac.ox.cs.pdq.algebra.predicates.AttributeEqualityPredicate;
 import uk.ac.ox.cs.pdq.algebra.predicates.ConjunctivePredicate;
 import uk.ac.ox.cs.pdq.algebra.predicates.ConstantEqualityPredicate;
 import uk.ac.ox.cs.pdq.algebra.predicates.Predicate;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.TGD;
-import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.util.Table;
 
 import com.google.common.base.Preconditions;
@@ -22,7 +20,7 @@ import com.google.common.collect.Lists;
  * @author Efthymia Tsamoura
  *
  */
-public class Select implements Command{
+public class SelectCommand implements Command{
 
 	private final Table input;
 	
@@ -33,7 +31,7 @@ public class Select implements Command{
 	/** Caches the constraint that captures this access command **/
 	private final TGD command;
 	
-	public Select(Predicate predicates, Table input) {
+	public SelectCommand(Predicate predicates, Table input) {
 		Preconditions.checkNotNull(predicates);
 		Preconditions.checkNotNull(input);
 		this.input = input;
@@ -88,9 +86,9 @@ public class Select implements Command{
 		if (o == null) {
 			return false;
 		}
-		return Select.class.isInstance(o)
-				&& this.predicates.equals(((Select) o).predicates)
-				&& this.input.equals(((Select) o).input);
+		return SelectCommand.class.isInstance(o)
+				&& this.predicates.equals(((SelectCommand) o).predicates)
+				&& this.input.equals(((SelectCommand) o).input);
 	}
 
 	/**

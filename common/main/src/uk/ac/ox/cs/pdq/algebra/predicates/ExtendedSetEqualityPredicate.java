@@ -10,13 +10,12 @@ import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.util.Tuple;
 
-import com.google.common.base.Joiner;
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 
 
 /**
- * A set equality predicate
+ * A set equality predicate that keeps the relations of the referenced attributes
  * @author Efthymia Tsamoura
  *
  */

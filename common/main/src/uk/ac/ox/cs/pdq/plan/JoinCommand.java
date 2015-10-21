@@ -26,7 +26,7 @@ import com.google.common.collect.Sets;
  * @author Efthymia Tsamoura
  *
  */
-public class Join implements Command{
+public class JoinCommand implements Command{
 
 	private final Table left;
 	
@@ -39,11 +39,11 @@ public class Join implements Command{
 	/** Caches the constraint that captures this access command **/
 	private final TGD command;
 	
-	public Join(Table left, Table right) {
+	public JoinCommand(Table left, Table right) {
 		this(left, right, initNaturalJoin(left, right));
 	}
 	
-	public Join(Table left, Table right, Predicate predicates) {
+	public JoinCommand(Table left, Table right, Predicate predicates) {
 		Preconditions.checkNotNull(left);
 		Preconditions.checkNotNull(right);
 		Preconditions.checkNotNull(predicates);
@@ -120,10 +120,10 @@ public class Join implements Command{
 		if (o == null) {
 			return false;
 		}
-		return Join.class.isInstance(o)
-				&& this.left.equals(((Join) o).left)
-				&& this.right.equals(((Join) o).right)
-				&& this.predicates.equals(((Join) o).predicates);
+		return JoinCommand.class.isInstance(o)
+				&& this.left.equals(((JoinCommand) o).left)
+				&& this.right.equals(((JoinCommand) o).right)
+				&& this.predicates.equals(((JoinCommand) o).predicates);
 	}
 
 	/**

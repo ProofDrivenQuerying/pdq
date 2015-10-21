@@ -3,35 +3,34 @@ package uk.ac.ox.cs.pdq.plan;
 import java.util.List;
 import java.util.Objects;
 
+import com.google.common.base.Preconditions;
+
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.TGD;
 import uk.ac.ox.cs.pdq.util.Table;
-
-import com.google.common.base.Preconditions;
 
 /**
  * 
  * @author Efthymia Tsamoura
  *
  */
-public class Rename implements Command {
-
+public class ProjectCommand implements Command{
+	
 	private final Table input;
 	
 	private final Table output;
 	
-	private final List<Attribute> toRename;
+	private final List<Attribute> toProject;
 	
 	/** Caches the constraint that captures this access command **/
 	private final TGD command;
 	
-	public Rename(List<Attribute> toRename, Table input) {
-		Preconditions.checkNotNull(toRename);
+	public ProjectCommand(List<Attribute> toProject, Table input) {
+		Preconditions.checkNotNull(toProject);
 		Preconditions.checkNotNull(input);
-		Preconditions.checkArgument(toRename.size()==input.getHeader().size());
 		this.input = input;
-		this.toRename = toRename;
-		this.output = new Table(toRename);
+		this.toProject = toProject;
+		this.output = new Table(toProject);
 		this.command = new CommandToTGDTranslator().toTGD(this);
 	}
 
@@ -42,6 +41,10 @@ public class Rename implements Command {
 
 	public Table getInput() {
 		return input;
+	}
+
+	public List<Attribute> getToProject() {
+		return toProject;
 	}
 	
 	/**
@@ -56,9 +59,9 @@ public class Rename implements Command {
 		if (o == null) {
 			return false;
 		}
-		return Rename.class.isInstance(o)
-				&& this.toRename.equals(((Rename) o).toRename)
-				&& this.input.equals(((Rename) o).input);
+		return ProjectCommand.class.isInstance(o)
+				&& this.toProject.equals(((ProjectCommand) o).toProject)
+				&& this.input.equals(((ProjectCommand) o).input);
 	}
 
 	/**
@@ -66,7 +69,7 @@ public class Rename implements Command {
 	 */
 	@Override
 	public int hashCode() {
-		return Objects.hash(this.toRename, this.input);
+		return Objects.hash(this.toProject, this.input);
 	}
 
 	/**
