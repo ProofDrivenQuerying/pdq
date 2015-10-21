@@ -234,7 +234,7 @@ public abstract class SQLStatementBuilder {
 
 		String query = "";
 		List<String> from = this.createContentForFromStatement(source);
-		LinkedHashMap<Projection,Variable> projection = this.toProjectStatement(source);
+		LinkedHashMap<String,Variable> projectionStatementsAndVariables = this.createProjectionStatements(source);
 		List<uk.ac.ox.cs.pdq.algebra.predicates.Predicate> predicates = Lists.newArrayList();
 		List<ExtendedAttributeEqualityPredicate> where = this.toAttributeEqualityPredicates((Conjunction<Predicate>) source.getBody(), this.aliases);
 		List<ExtendedConstantEqualityPredicate> constantPredicates = this.toConstantPredicates((Conjunction<Predicate>) source.getBody(), this.aliases);
@@ -267,7 +267,7 @@ public abstract class SQLStatementBuilder {
 		//Limit the number of returned homomorphisms
 		String limit = this.translateLimitConstraints(source, constraints); 
 
-		query = "SELECT " 	+ Joiner.on(",").join(projection.keySet()) + "\n" +  
+		query = "SELECT " 	+ Joiner.on(",").join(projectionStatementsAndVariables.keySet()) + "\n" +  
 				"FROM " 	+ Joiner.on(",").join(from);
 		if(!predicates.isEmpty()) {
 			query += "\n" + "WHERE " + Joiner.on(" AND ").join(predicates);
@@ -300,7 +300,7 @@ public abstract class SQLStatementBuilder {
 
 				int f = 1;
 				Map<Variable, Constant> map = new LinkedHashMap<>();
-				for(Entry<Projection, Variable> entry:projection.entrySet()) {
+				for(Entry<String, Variable> entry:projectionStatementsAndVariables.entrySet()) {
 					String assigned = resultSet.getString(f);
 					TypedConstant<?> constant = constants.get(assigned);
 					Constant constantTerm = constant != null ? constant : new Skolem(assigned);
@@ -345,8 +345,8 @@ public abstract class SQLStatementBuilder {
 	 * 		If the input is an egd or tgd we project the attributes that map to universally quantified variables.
 	 * 		If the input is a query we project the attributes that map to its free variables. 
 	 */
-	protected LinkedHashMap<Projection,Variable> toProjectStatement(Evaluatable source) {
-		LinkedHashMap<Projection,Variable> projected = new LinkedHashMap<>();
+	protected LinkedHashMap<String,Variable> createProjectionStatements(Evaluatable source) {
+		LinkedHashMap<String,Variable> projected = new LinkedHashMap<>();
 		List<Variable> attributes = new ArrayList<>();
 		for (Predicate fact:source.getBody().getPredicates()) {
 			String alias = this.aliases.get(fact);
@@ -354,7 +354,7 @@ public abstract class SQLStatementBuilder {
 			for (int it = 0; it < terms.size(); ++it) {
 				Term term = terms.get(it);
 				if (term instanceof Variable && !attributes.contains(((Variable) term).getName())) {
-					projected.put(new Projection(it, (Relation) fact.getSignature(), alias), (Variable)term);
+					projected.put(createProjectionStatementForArgument(it, (Relation) fact.getSignature(), alias), (Variable)term);
 					attributes.add(((Variable) term));
 				}
 			}
@@ -495,14 +495,12 @@ public abstract class SQLStatementBuilder {
 			if(c instanceof SuperMap) {
 				Map<Variable, Constant> m = ((SuperMap) c).mapping;
 				for(Entry<Variable, Constant> pair:m.entrySet()) {
-					int f = 0;
 					for (Predicate fact:source.getBody().getPredicates()) {
 						int it = fact.getTerms().indexOf(pair.getKey());
 						if(it != -1) {
 							constantPredicates.add(
 									new ExtendedSkolemEqualityPredicate(it, (Skolem) pair.getValue(), (Relation) fact.getSignature(), aliases2.get(fact)));
 						}
-						++f;
 					}
 				}
 			}
@@ -567,48 +565,15 @@ public abstract class SQLStatementBuilder {
 	@Override
 	public abstract SQLStatementBuilder clone();
 
-	/**
-	 * 
-	 * @author Efthymia Tsamoura
-	 *
-	 */
-	protected static class Projection {
-		private final Relation relation;
-		private final int position; 
-		private final String alias;
-
-		public Projection(int position, Relation relation, String alias) {
-			Preconditions.checkNotNull(relation);
-			Preconditions.checkArgument(position >= 0 && position < relation.getArity());
-			this.relation = relation;
-			this.position = position;
-			this.alias = alias;
-		}
-
-		public Attribute getAttribute() {
-			return this.relation.getAttribute(this.getPosition());
-		}
-
-		public Relation getRelation() {
-			return this.relation;
-		}
-
-		public int getPosition() {
-			return this.position;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * @see java.lang.Object#toString()
-		 */
-		@Override
-		public String toString() {
-			StringBuilder result = new StringBuilder();
-			result.append(this.alias==null ? this.relation.getName():this.alias).
-			append(".").append(this.getAttribute().getName());
-			return result.toString();
-		}
+	protected String createProjectionStatementForArgument(int position, Relation relation, String alias) {
+		Preconditions.checkNotNull(relation);
+		Preconditions.checkArgument(position >= 0 && position < relation.getArity());
+		StringBuilder result = new StringBuilder();
+		result.append(alias==null ? relation.getName():alias).
+		append(".").append(relation.getAttribute(position).getName());
+		return result.toString();
 	}
+	
 
 	/**
 	 * 
