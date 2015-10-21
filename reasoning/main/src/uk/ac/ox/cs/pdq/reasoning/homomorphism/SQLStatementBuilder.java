@@ -228,10 +228,10 @@ public abstract class SQLStatementBuilder {
 	 * 			The homomorphism constraints that should be satisfied
 	 * @return homomorphisms of the input query to facts kept in a database.
 	 */
-	public Set<Map<Variable, Constant>> toSQL(Evaluatable source, HomomorphismConstraint[] constraints, Map<String, TypedConstant<?>> constants, Connection connection) {
+	public Set<Map<Variable, Constant>> findHomomorphismThroughSQL(Evaluatable source, HomomorphismConstraint[] constraints, Map<String, TypedConstant<?>> constants, Connection connection) {
 
 		String query = "";
-		List<From> from = this.toFromStatement(source);
+		List<String> from = this.createContentForFromStatement(source);
 		LinkedHashMap<Projection,Variable> projection = this.toProjectStatement(source);
 		List<uk.ac.ox.cs.pdq.algebra.predicates.Predicate> predicates = Lists.newArrayList();
 		List<ExtendedAttributeEqualityPredicate> where = this.toAttributeEqualityPredicates((Conjunction<Predicate>) source.getBody(), this.aliases);
@@ -319,15 +319,15 @@ public abstract class SQLStatementBuilder {
 	 * 
 	 * @param source
 	 * @return
-	 * 		the tables that will be queried
+	 * 		a list of the table names that will be queried
 	 */
-	protected List<From> toFromStatement(Evaluatable source) {
+	protected List<String> createContentForFromStatement(Evaluatable source) {
 		this.aliasCounter = 0;
-		List<From> relations = new ArrayList<>();
+		List<String> relations = new ArrayList<String>();
 		this.aliases = Lists.newArrayList();
 		for (Predicate fact:source.getBody().getPredicates()) {
 			String aliasName = this.aliasPrefix + this.aliasCounter;
-			relations.add(new From(aliasName, (Relation) fact.getSignature()));
+			relations.add(createTableAliasingExpression(aliasName, (Relation) fact.getSignature()));
 			this.aliases.add(Pair.of(fact, aliasName));
 			this.aliasCounter++;
 		}
@@ -617,38 +617,15 @@ public abstract class SQLStatementBuilder {
 
 	/**
 	 * 
-	 * @author Efthymia Tsamoura
+	 *
 	 *
 	 */
-	protected static class From {
-		private final Relation relation;
-		private final String alias; 
-
-		public From(String alias, Relation relation) {
-			Preconditions.checkNotNull(relation);
-			this.relation = relation;
-			this.alias = alias;
-		}
-
-		public Relation getRelation() {
-			return this.relation;
-		}
-
-		public String getAlias() {
-			return this.alias;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * @see java.lang.Object#toString()
-		 */
-		@Override
-		public String toString() {
-			StringBuilder result = new StringBuilder();
-			result.append(this.getRelation().getName()).append(" AS ");
-			result.append(this.alias==null ? this.relation.getName():this.alias);
-			return result.toString();
-		}
+	protected String createTableAliasingExpression(String alias, Relation relation) {
+		Preconditions.checkNotNull(relation);
+		StringBuilder result = new StringBuilder();
+		result.append(relation.getName()).append(" AS ");
+		result.append(alias==null ? relation.getName():alias);
+		return result.toString();
 	}
 
 
