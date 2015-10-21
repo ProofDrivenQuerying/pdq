@@ -397,48 +397,6 @@ public abstract class SQLStatementBuilder {
 
 	/**
 	 * 
-	 * @param tgd
-	 * @return
-	 * 		equality predicates between the left and the right hand side conjuncts of the input tgd
-	 */
-	protected List<ExtendedAttributeEqualityPredicate> toAttributeEqualityPredicates(TGD tgd, List<Pair<Predicate, String>> aliases) {
-		List<ExtendedAttributeEqualityPredicate> attributePredicates = new ArrayList<>();
-		//For each universally quantified variable
-		for (Term term:tgd.getUniversal()) {
-			int f = 0;
-			//Find its occurrences in the body of the dependency
-			for (Predicate lfact:tgd.getLeft().getPredicates()) {
-				Integer leftPosition = null;
-				Relation leftRelation = null;
-				String leftAlias = null;
-				List<Integer> lpositions = lfact.getTermPositions(term);
-				if(!lpositions.isEmpty()) {
-
-					leftPosition = lpositions.get(0);
-					leftRelation = (Relation) lfact.getSignature();
-					leftAlias = aliases.get(f).getRight();
-
-					int rf = tgd.getLeft().size();
-					//Find also its occurrences in the head of the dependency
-					for(Predicate rfact:tgd.getRight().getPredicates()) {
-						List<Integer> rpositions = rfact.getTermPositions(term);
-						if(!rpositions.isEmpty()) {
-							//Make the corresponding variables unequal
-							Integer rightPosition = rpositions.get(0);
-							attributePredicates.add(new ExtendedAttributeEqualityPredicate(leftPosition, rightPosition, leftRelation, leftAlias, 
-									(Relation) rfact.getSignature(), aliases.get(rf).getRight()));
-						}
-						++rf;
-					}
-				}
-				++f;
-			}
-		}
-		return attributePredicates;
-	}
-
-	/**
-	 * 
 	 * @param source
 	 * @return
 	 * 		constant equality predicates 
