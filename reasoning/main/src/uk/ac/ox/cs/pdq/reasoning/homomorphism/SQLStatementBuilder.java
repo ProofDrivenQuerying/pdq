@@ -18,9 +18,6 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.algebra.predicates.EqualityPredicate;
-import uk.ac.ox.cs.pdq.algebra.predicates.ExtendedAttributeEqualityPredicate;
-import uk.ac.ox.cs.pdq.algebra.predicates.ExtendedConstantEqualityPredicate;
-import uk.ac.ox.cs.pdq.algebra.predicates.ExtendedSetEqualityPredicate;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TGD;
