@@ -99,7 +99,7 @@ public class TypedConstant<T> implements Typed, Constant {
 	public String toString() {
 		if (this.rep == null) {
 			StringBuilder result = new StringBuilder();
-			result.append(this.value);
+			result.append(this.value+this.value.getClass().getName());
 			this.rep = result.toString().intern();
 		}
 		return this.rep;
