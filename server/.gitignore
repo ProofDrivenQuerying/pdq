@@ -4,4 +4,4 @@
 /.classpath
 /.project
 /log/
-/derby.log
+/*.log
