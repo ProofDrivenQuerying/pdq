@@ -18,31 +18,6 @@ import com.google.common.collect.HashBiMap;
  */
 public class DerbyStatementBuilder extends SQLStatementBuilder {
 
-	private static BiMap<String, String> nameEncodings = HashBiMap.create();
-	static {
-		nameEncodings.put(".", "dot_");
-		nameEncodings.put(":", "cl_");
-		nameEncodings.put("$", "dl_");
-		nameEncodings.put("#", "hs_");
-		nameEncodings.put("%", "pc_");
-		nameEncodings.put("-", "hp_");
-		nameEncodings.put("{", "lbc_");
-		nameEncodings.put("}", "rbc_");
-		nameEncodings.put("[", "lbk_");
-		nameEncodings.put("]", "rbk_");
-		nameEncodings.put("(", "lpr_");
-		nameEncodings.put(")", "rpr_");
-		nameEncodings.put("int", "int_");
-		nameEncodings.put("float", "flt_");
-		nameEncodings.put("string", "str_");
-		nameEncodings.put("boolean", "bool_");
-		nameEncodings.put("decimal", "dec_");
-		nameEncodings.put("datetime", "date_");
-		nameEncodings.put("both", "both_");
-		nameEncodings.put("none", "none_");
-		nameEncodings.put("check", "chk_");
-	}
-
 	/**
 	 * Default constructor
 	 */
@@ -89,10 +64,6 @@ public class DerbyStatementBuilder extends SQLStatementBuilder {
 
 	@Override
 	public String encodeName(String name) {
-		String result = name;
-		for (Map.Entry<String, String> entry: nameEncodings.entrySet()) {
-			result = result.replace(entry.getKey(), entry.getValue());
-		}
-		return result;
+		return super.encodeName(name);
 	}
 }

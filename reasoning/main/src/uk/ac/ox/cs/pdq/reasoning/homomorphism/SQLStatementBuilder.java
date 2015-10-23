@@ -66,6 +66,10 @@ public abstract class SQLStatementBuilder {
 	private String aliasPrefix = "A";
 	private int aliasCounter = 0;
 
+	public int cleanNameCounter =0;
+	
+	/** maps all relation names to clean ones **/
+	protected BiMap<String, String> cleanMap = HashBiMap.create();
 
 	/**
 	 * @param databaseName
@@ -85,26 +89,31 @@ public abstract class SQLStatementBuilder {
 	 * @return a SQL statement for dropping the facts table of the given relation
 	 */
 	protected String dropTableStatement(DBRelation relation) {
-		return "DROP TABLE " + relation.getName();
+		return "DROP TABLE " + encodeName(relation.getName());
 	}
 
 	/**
 	 * @param name
-	 * @return a new String that is a copy of the given name modified such that
+	 * @return a new String that is an alias of the given name modified such that
 	 * it is acceptable for the underlying system
 	 */
-	public abstract String encodeName(String name);
+	public String encodeName(String dirtyRelationName)
+	{
+		if(!cleanMap.containsKey(dirtyRelationName))
+			cleanMap.put(dirtyRelationName, "cleanR"+cleanNameCounter++);
+		return cleanMap.get(dirtyRelationName);
+	}
 
 	/**
 	 * @param facts
 	 * @return insert statements that add the input fact to the fact database.
 	 */
-	protected Collection<String> makeInserts(Collection<? extends Predicate> facts, Map<String, DBRelation> aliases) {
+	protected Collection<String> makeInserts(Collection<? extends Predicate> facts, Map<String, DBRelation> dbrelations) {
 		Collection<String> result = new LinkedList<>();
 		for (Predicate fact : facts) {
-			DBRelation alias = aliases.get(fact.getName());
+			DBRelation rel = dbrelations.get(fact.getName());
 			List<Term> terms = fact.getTerms();
-			String insertInto = "INSERT INTO " + this.encodeName(alias.getName()) + " " + "VALUES ( ";
+			String insertInto = "INSERT INTO " + this.encodeName(rel.getName()) + " " + "VALUES ( ";
 			for (Term term : terms) {
 				if (!term.isVariable()) {
 					insertInto += "'" + term + "'" + ",";
@@ -388,8 +397,8 @@ public abstract class SQLStatementBuilder {
 						String rightAlias = aliases2.get(fact);
 						
 						StringBuilder result = new StringBuilder();
-						result.append(leftAlias==null ? leftRelation.getName():leftAlias).append(".").append(leftRelation.getAttribute(leftPosition).getName()).append('=');
-						result.append(rightAlias==null ? rightRelation.getName():rightAlias).append(".").append(rightRelation.getAttribute(rightPosition).getName());
+						result.append(leftAlias==null ? encodeName(leftRelation.getName()):leftAlias).append(".").append(leftRelation.getAttribute(leftPosition).getName()).append('=');
+						result.append(rightAlias==null ? encodeName(rightRelation.getName()):rightAlias).append(".").append(rightRelation.getAttribute(rightPosition).getName());
 						attributePredicates.add(result.toString());
 					}
 				}
@@ -414,7 +423,7 @@ public abstract class SQLStatementBuilder {
 				Term term = terms.get(it);
 				if (!term.isVariable() && !term.isSkolem()) {
 					StringBuilder eq = new StringBuilder();
-					eq.append(alias==null ? fact.getSignature().getName():alias).append(".").append(((Relation) fact.getSignature()).getAttribute(it).getName()).append('=');
+					eq.append(alias==null ? encodeName(fact.getSignature().getName()):alias).append(".").append(((Relation) fact.getSignature()).getAttribute(it).getName()).append('=');
 					eq.append("'").append(((TypedConstant) term).getValue()).append("'");
 					constantPredicates.add(eq.toString());
 				}
@@ -464,7 +473,7 @@ public abstract class SQLStatementBuilder {
 						int it = fact.getTerms().indexOf(pair.getKey());
 						if(it != -1) {
 							StringBuilder eq = new StringBuilder();
-							eq.append(aliases2.get(fact)==null ? fact.getSignature().getName():aliases2.get(fact)).append(".").append(((Relation) fact.getSignature()).getAttribute(it).getName()).append('=');
+							eq.append(aliases2.get(fact)==null ? encodeName(fact.getSignature().getName()):aliases2.get(fact)).append(".").append(((Relation) fact.getSignature()).getAttribute(it).getName()).append('=');
 							eq.append("'").append(pair.getValue()).append("'");
 							constantPredicates.add(eq.toString());
 						}
@@ -542,7 +551,7 @@ public abstract class SQLStatementBuilder {
 			set += "\"" + values.get(v) + "\"";
 		}
 		
-		result.append(alias==null ? relation.getName():alias).append(".").append(relation.getAttribute(position).getName()).
+		result.append(alias==null ? encodeName(relation.getName()):alias).append(".").append(relation.getAttribute(position).getName()).
 		append(" IN ").append("(").append(set).append(")");
 		return result.toString();
 	
@@ -558,7 +567,7 @@ public abstract class SQLStatementBuilder {
 		Preconditions.checkNotNull(relation);
 		Preconditions.checkArgument(position >= 0 && position < relation.getArity());
 		StringBuilder result = new StringBuilder();
-		result.append(alias==null ? relation.getName():alias).
+		result.append(alias==null ? encodeName(relation.getName()):alias).
 		append(".").append(relation.getAttribute(position).getName());
 		return result.toString();
 	}
@@ -572,7 +581,7 @@ public abstract class SQLStatementBuilder {
 	protected String createTableAliasingExpression(String alias, Relation relation) {
 		Preconditions.checkNotNull(relation);
 		StringBuilder result = new StringBuilder();
-		result.append(relation.getName()).append(" AS ");
+		result.append(encodeName(relation.getName())).append(" AS ");
 		result.append(alias==null ? relation.getName():alias);
 		return result.toString();
 	}
