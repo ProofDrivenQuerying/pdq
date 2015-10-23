@@ -266,24 +266,6 @@ public class DBHomomorphismManager implements HomomorphismManager {
 		stmt.addBatch(this.builder.createTableNonJoinIndexes(equality, this.Bag));
 		stmt.addBatch(this.builder.createTableNonJoinIndexes(equality, this.Fact));
 	}
-	
-	public void consolidateBaseTables(Collection<Table> tables) throws SQLException {
-		try(Statement sqlStatement = this.connection.createStatement()) {
-			try {
-				DBRelation dbRelation = null;
-				for (Table table:tables) {
-					dbRelation = this.toDBRelation(table);
-					this.aliases.put(table.getName(), dbRelation);
-					sqlStatement.addBatch(this.builder.createTableStatement(dbRelation));
-				}
-				sqlStatement.executeBatch();
-			} catch (SQLException ex) {
-				throw new IllegalStateException(ex.getMessage(), ex);
-			}
-		} catch (SQLException ex) {
-			throw new IllegalStateException(ex.getMessage(), ex);
-		}
-	}
 
 	/**
 	 * @param stmt Statement
