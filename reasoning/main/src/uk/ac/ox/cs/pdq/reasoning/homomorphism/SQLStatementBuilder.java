@@ -84,7 +84,7 @@ public abstract class SQLStatementBuilder {
 	 * @param relation the table to drop
 	 * @return a SQL statement for dropping the facts table of the given relation
 	 */
-	protected String dropTableStatement(Relation relation) {
+	protected String dropTableStatement(DBRelation relation) {
 		return "DROP TABLE " + relation.getName();
 	}
 
@@ -102,7 +102,7 @@ public abstract class SQLStatementBuilder {
 	protected Collection<String> makeInserts(Collection<? extends Predicate> facts, Map<String, DBRelation> aliases) {
 		Collection<String> result = new LinkedList<>();
 		for (Predicate fact : facts) {
-			Relation alias = aliases.get(fact.getName());
+			DBRelation alias = aliases.get(fact.getName());
 			List<Term> terms = fact.getTerms();
 			String insertInto = "INSERT INTO " + this.encodeName(alias.getName()) + " " + "VALUES ( ";
 			for (Term term : terms) {
@@ -126,7 +126,7 @@ public abstract class SQLStatementBuilder {
 	 * @param relation the table to create
 	 * @return a SQL statement that creates the fact table of the given relation
 	 */
-	protected String createTableStatement(Relation relation) {
+	protected String createTableStatement(DBRelation relation) {
 		StringBuilder result = new StringBuilder();
 		result.append("CREATE TABLE  ").append(this.encodeName(relation.getName())).append('(');
 		for (int it = 0; it < relation.getAttributes().size(); ++it) {
@@ -153,7 +153,7 @@ public abstract class SQLStatementBuilder {
 	 * @param columns
 	 * @return a SQL statement that creates an index for the columns of the input relation
 	 */
-	protected String createTableIndex(Relation relation, Integer... columns) {
+	protected String createTableIndex(DBRelation relation, Integer... columns) {
 		StringBuilder indexName = new StringBuilder();
 		StringBuilder indexColumns = new StringBuilder();
 		String sep1 = "", sep2 = "";
@@ -171,7 +171,7 @@ public abstract class SQLStatementBuilder {
 	 * @param relation
 	 * @return a SQL statement that creates an index for the bag and fact attributes of the database tables
 	 */
-	protected String createTableNonJoinIndexes(Relation relation, Attribute column) {
+	protected String createTableNonJoinIndexes(DBRelation relation, Attribute column) {
 		return "CREATE INDEX idx_" + this.encodeName(relation.getName()) + "_" + 
 				column.getName() + " ON " + this.encodeName(relation.getName()) + "(" + column.getName() + ")";
 	}
