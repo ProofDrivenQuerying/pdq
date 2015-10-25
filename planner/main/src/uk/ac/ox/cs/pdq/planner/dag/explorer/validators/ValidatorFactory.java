@@ -1,7 +1,6 @@
 package uk.ac.ox.cs.pdq.planner.dag.explorer.validators;
 
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.ValidatorTypes;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.state.AccessibleChaseState;
 
 /**
  * Creates validators (shape restrictions) based on the input arguments.
@@ -9,7 +8,7 @@ import uk.ac.ox.cs.pdq.planner.reasoning.chase.state.AccessibleChaseState;
  * @author Efthymia Tsamoura
  *
  */
-public class ValidatorFactory<S extends AccessibleChaseState> {
+public class ValidatorFactory {
 
 	private final ValidatorTypes type;
 

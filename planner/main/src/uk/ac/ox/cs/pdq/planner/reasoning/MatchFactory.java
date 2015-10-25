@@ -8,9 +8,6 @@ import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.planner.db.access.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.reasoning.Match;
-import uk.ac.ox.cs.pdq.reasoning.chase.BagBoundPredicate;
-import uk.ac.ox.cs.pdq.reasoning.chase.BagMatch;
-
 /**
  * Creates Match objects
  *
@@ -27,9 +24,9 @@ public class MatchFactory {
 	 */
 	public static Match getMatch(AccessibilityAxiom axiom, Predicate fact) {
 		Map<Variable, Constant> map = createMap(axiom, fact);
-		if(fact instanceof BagBoundPredicate) {
-			return new BagMatch(axiom, map, ((BagBoundPredicate) fact).getBag());
-		}
+//		if(fact instanceof BagBoundPredicate) {
+//			return new BagMatch(axiom, map, ((BagBoundPredicate) fact).getBag());
+//		}
 		return new Match(axiom, map);
 	}
 

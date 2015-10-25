@@ -19,8 +19,6 @@ import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.reasoning.Match;
 import uk.ac.ox.cs.pdq.reasoning.chase.ChaseException;
-
-
 import uk.ac.ox.cs.pdq.reasoning.chase.FiringGraph;
 import uk.ac.ox.cs.pdq.reasoning.chase.MapFiringGraph;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager;
@@ -47,7 +45,13 @@ public class DatabaseEGDState extends DatabaseListState {
 	 * @param manager
 	 */
 	public DatabaseEGDState(Query<?> query, DBHomomorphismManager manager) {
-		this(query, manager, query.getCanonical().getPredicates(), new MapFiringGraph());
+		this(manager, query.getCanonical().getPredicates(), new MapFiringGraph());
+	}
+	
+	public DatabaseEGDState(
+			DBHomomorphismManager manager,
+			Collection<Predicate> facts) {
+		this(manager, facts, new MapFiringGraph());
 	}
 	
 	/**
@@ -57,16 +61,11 @@ public class DatabaseEGDState extends DatabaseListState {
 	 * @param facts
 	 * @param graph
 	 */
-	protected DatabaseEGDState(Query<?> query,
+	public DatabaseEGDState(
 			DBHomomorphismManager manager,
 			Collection<Predicate> facts,
 			FiringGraph graph) {
-		super(query, manager);
-		Preconditions.checkNotNull(facts);
-		Preconditions.checkNotNull(graph);
-		this.facts = Sets.newLinkedHashSet(facts);
-		this.graph = graph;
-		this.manager.addFacts(facts);
+		super(manager, facts, graph);
 		this.constantClasses = new EqualConstantsClasses();
 		for(Predicate fact:facts) {
 			if(fact instanceof Equality) {
@@ -74,7 +73,7 @@ public class DatabaseEGDState extends DatabaseListState {
 			}
 		}
 	}
-	
+
 	/**
 	 * Updates that state given the input match. 
 	 * @param match
@@ -112,12 +111,16 @@ public class DatabaseEGDState extends DatabaseListState {
 		return !this._isFailed;
 	}
 	
+	public EqualConstantsClasses getConstantClasses() {
+		return this.constantClasses;
+	}
+	
 	/**
 	 * Class of equal constants
 	 * @author Efthymia Tsamoura
 	 *
 	 */
-	private static class EqualConstantsClass {
+	public static class EqualConstantsClass {
 
 		/** Collection of equal constants **/
 		private final Collection<Term> constants = new HashSet<>();
@@ -232,7 +235,7 @@ public class DatabaseEGDState extends DatabaseListState {
 	 * @author Efthymia Tsamoura
 	 *
 	 */
-	private static class EqualConstantsClasses {
+	public static class EqualConstantsClasses {
 
 		/** The classes of equal constants**/
 		private final Set<EqualConstantsClass> classes = new HashSet<>();

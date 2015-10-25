@@ -11,33 +11,21 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
 
-import uk.ac.ox.cs.pdq.algebra.Operators;
-import uk.ac.ox.cs.pdq.algebra.Projection;
-import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
-import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Predicate;
-import uk.ac.ox.cs.pdq.fol.Query;
-import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.plan.LinearPlan;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
-import uk.ac.ox.cs.pdq.planner.db.access.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.db.access.AccessibilityAxiom;
+import uk.ac.ox.cs.pdq.planner.db.access.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.Candidate;
 import uk.ac.ox.cs.pdq.planner.reasoning.Configuration;
-import uk.ac.ox.cs.pdq.planner.reasoning.Proof;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.dominance.Dominance;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.dominance.SuccessDominance;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.state.AccessibleChaseState;
 import uk.ac.ox.cs.pdq.reasoning.Match;
-import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import com.google.common.eventbus.EventBus;
 
 /**
  * A linear configuration with state a ChaseState object
@@ -46,132 +34,72 @@ import com.google.common.eventbus.EventBus;
  */
 public class LinearChaseConfiguration extends ChaseConfiguration<LinearPlan> implements LinearConfiguration {
 
-	private final EventBus eventBus;
-
-	private final boolean collectStats;
-
 	/** The parent linear configuration*/
 	private final LinearChaseConfiguration parent;
 
 	/** The (un)exposed candidates */
-	private final List<Candidate> candidates;
+	private List<Candidate> candidates;
 
 	/** The exposed candidates */
 	private final Set<Candidate> exposedCandidates;
 
 	/** Random engine. Used when selecting candidate facts to expose*/
 	protected final Random random;
-	
-	private final CostEstimator<LinearPlan> costEstimator;
 
 	/**
-	 *
-	 * @param eventBus
-	 * @param collectStats
-	 * @param schema
-	 * @param accessibleSchema
-	 * @param chaser
-	 * 		Chases the input state
-	 * @param costEstimator
-	 * 		Estimates a plan's cost
+	 * 
 	 * @param parent
-	 * 		The parent linear configuration
 	 * @param exposedCandidates
-	 * 		The exposed candidates
-	 * @param flow
 	 * @param random
-	 * @throws PlannerException
 	 */
-	public LinearChaseConfiguration(EventBus eventBus,
-			boolean collectStats,
-			AccessibleSchema accessibleSchema,
-			Query<?> query,
-			Chaser chaser,
-			Dominance[] dominance,
-			SuccessDominance successDominance,
-			CostEstimator<LinearPlan> costEstimator,
+	public LinearChaseConfiguration(
 			LinearChaseConfiguration parent,
 			Set<Candidate> exposedCandidates,
-			Random random) throws PlannerException {		
-		super(accessibleSchema, 
-				query, 
-				chaser, 
-				parent.getState().clone(),
-				createState(parent.getProofState(), exposedCandidates),
+			Random random) {		
+		super(parent.getState().clone(),
 				Collections.EMPTY_SET,
-				LinearUtility.getOutputConstants(exposedCandidates),
-				dominance,
-				successDominance);
+				LinearUtility.getOutputConstants(exposedCandidates)
+				);
 		Preconditions.checkNotNull(parent);
 		Preconditions.checkNotNull(exposedCandidates);
 		Preconditions.checkArgument(!exposedCandidates.isEmpty());
-		Preconditions.checkNotNull(costEstimator);
 		Preconditions.checkNotNull(this.getInput());
 		Preconditions.checkNotNull(this.getOutput());
-
-		this.eventBus = eventBus;
-		this.collectStats = collectStats;
 		this.random = random;
 		this.parent = parent;
 		this.exposedCandidates = exposedCandidates;
-		this.costEstimator = costEstimator;
 		List<Match> matches = new ArrayList<>();
 		for (Candidate candidate:exposedCandidates) {
 			matches.add(candidate.getMatch());
 		}
 		this.chaseStep(matches);
-		this.candidates = this.detectCandidates();
-		LinearPlan plan = this.createPlan(this.parent.getPlan());
+		LinearPlan plan = LinearPlanGenerator.createLinearPlan(this, this.parent.getPlan());
 		this.setPlan(plan);
 	}
-	
+
 	/**
-	 *
-	 * @param eventBus
-	 * @param collectStats
-	 * @param schema
-	 * @param accessibleSchema
-	 * @param chaser
-	 * 		Chases the input state
-	 * @param costEstimator
-	 * 		Estimates a plan's cost
+	 * 
 	 * @param state
-	 * @param flow
 	 * @param random
-	 * @throws PlannerException
 	 */
-	public LinearChaseConfiguration(EventBus eventBus,
-			boolean collectStats,
-			AccessibleSchema accessibleSchema,
-			Query<?> query,
-			Chaser chaser,
+	public LinearChaseConfiguration(
 			AccessibleChaseState state,
-			Dominance[] dominance,
-			SuccessDominance successDominance,
-			CostEstimator<LinearPlan> costEstimator,
-			Random random) throws PlannerException {
-		super(accessibleSchema, 
-				query,
-				chaser, 
-				state,
+			Random random) {
+		super(state,
 				null,
-				null,
-				null,
-				dominance,
-				successDominance);
-		Preconditions.checkNotNull(costEstimator);
-		
-		this.eventBus = eventBus;
-		this.collectStats = collectStats;
+				null
+				);
 		this.random = random;
 		this.parent = null;
 		this.exposedCandidates = null;
-		this.candidates = this.detectCandidates();
-		this.costEstimator = costEstimator;
 		this.setPlan(null);
 	}
 
-
+	public boolean isExposed(Candidate candidate) {
+		Predicate infAcc = candidate.getInferredAccessibleFact();
+		return this.getState().getFacts().contains(infAcc);
+	}
+	
 	/**
 	 * @param candidates Set<Candidate>
 	 * @see uk.ac.ox.cs.pdq.linear.configuration.LinearConfiguration#removeCandidates(Set<Candidate>)
@@ -186,27 +114,17 @@ public class LinearChaseConfiguration extends ChaseConfiguration<LinearPlan> imp
 	 * @return List<Candidate>
 	 * @throws PlannerException
 	 */
-	public List<Candidate> detectCandidates() throws PlannerException {
-		return this.detectCandidates(null);
-	}
-
-	/**
-	 * Detects the configuration's candidate facts
-	 * @param reachableRelations List<Relation>
-	 * @return List<Candidate>
-	 * @throws PlannerException
-	 */
-	public List<Candidate> detectCandidates(List<Relation> reachableRelations) throws PlannerException {
+	public void detectCandidates(AccessibleSchema accessibleSchema) throws PlannerException {
 		List<Candidate> result = new ArrayList<>();
 		Map<AccessibilityAxiom, List<Match>> nonFiredAxioms =
-				this.getState().getUnexposedFacts(this.getAccessibleSchema());
+				this.getState().getUnexposedFacts(accessibleSchema);
 		for (AccessibilityAxiom axiom:nonFiredAxioms.keySet()) {
 			for (Match matching:nonFiredAxioms.get(axiom)) {
 				Predicate fact = axiom.getGuard().ground(matching.getMapping());
-				result.add(new Candidate(this.getAccessibleSchema(), axiom, fact, matching));
+				result.add(new Candidate(accessibleSchema, axiom, fact, matching));
 			}
 		}
-		return result;
+		this.candidates = result;
 	}
 
 	/**
@@ -223,20 +141,20 @@ public class LinearChaseConfiguration extends ChaseConfiguration<LinearPlan> imp
 				iterator.remove();
 			}
 			else 
-			if (candidate.getRelation().equals(current.getRelation())
-					&& candidate.getBinding().equals(current.getBinding())) {
-				Collection<Constant> terms1 = candidate.getInput();
-				Collection<Constant> terms2 = current.getInput();
-				if (terms1 == null && terms2 == null) {
-					similarCandidates.add(current);
-				} else if (terms1 != null && terms2 != null) {
-					Set<Constant> set1 = Sets.newLinkedHashSet(terms1);
-					Set<Constant> set2 = Sets.newLinkedHashSet(terms2);
-					if (set1.equals(set2)) {
+				if (candidate.getRelation().equals(current.getRelation())
+						&& candidate.getBinding().equals(current.getBinding())) {
+					Collection<Constant> terms1 = candidate.getInput();
+					Collection<Constant> terms2 = current.getInput();
+					if (terms1 == null && terms2 == null) {
 						similarCandidates.add(current);
+					} else if (terms1 != null && terms2 != null) {
+						Set<Constant> set1 = Sets.newLinkedHashSet(terms1);
+						Set<Constant> set2 = Sets.newLinkedHashSet(terms2);
+						if (set1.equals(set2)) {
+							similarCandidates.add(current);
+						}
 					}
 				}
-			}
 		}
 		return similarCandidates;
 	}
@@ -288,29 +206,6 @@ public class LinearChaseConfiguration extends ChaseConfiguration<LinearPlan> imp
 		}
 		return null;
 	}
-	
-	@Override
-	public void addProjection() {
-		Projection project = Operators.createFinalProjection(this.getQuery(), this.getPlan().getOperator());
-		LinearPlan plan = this.getPlan().projectLast(project);
-		plan.setCost(this.getPlan().getCost());
-		this.setPlan(plan);
-	}
-	
-	private static List<Proof.ProofState> createState(List<Proof.ProofState> parentState, Set<Candidate> exposedCandidates) {
-		AccessibilityAxiom axiom = null;
-		Set<Map<Variable, Constant>> matches = Sets.newLinkedHashSet();
-		for(Candidate candidate:exposedCandidates) {
-			axiom = candidate.getRule();
-			matches.add(candidate.getMatch().getMapping());
-		}
-		List<Proof.ProofState> s = Lists.newArrayList();
-		if(parentState != null) {
-			s.addAll(parentState);
-		}
-		s.add(Proof.ProofState.createState(axiom, matches));
-		return s;
-	}
 
 	/**
 	 * @param o Object
@@ -343,61 +238,22 @@ public class LinearChaseConfiguration extends ChaseConfiguration<LinearPlan> imp
 	public String toString() {
 		return Joiner.on("\n").join(this.exposedCandidates);
 	}
-	
+
 	/**
 	 * @return LinearChaseConfiguration
 	 * @see uk.ac.ox.cs.pdq.planner.linear.LinearConfiguration#clone()
 	 */
 	@Override
 	public LinearChaseConfiguration clone() {
-		try {
-			if(this.parent != null) {
-				return new LinearChaseConfiguration(this.eventBus,
-						this.collectStats,
-						this.getAccessibleSchema(),
-						this.getQuery(),
-						this.getChaser(),
-						this.getDominanceDetectors(),
-						this.getSuccessDominanceDetector(),
-						this.getCostEstimator(),
-						this.parent,
-						this.exposedCandidates,
-						this.random);
-			}
-			return new LinearChaseConfiguration(this.eventBus,
-					this.collectStats,
-					this.getAccessibleSchema(),
-					this.getQuery(),
-					this.getChaser(),
-					this.getState().clone(),
-					this.getDominanceDetectors(),
-					this.getSuccessDominanceDetector(),
-					this.getCostEstimator(),
+		if(this.parent != null) {
+			return new LinearChaseConfiguration(
+					this.parent,
+					this.exposedCandidates,
 					this.random);
-		} catch (PlannerException e) {
-			e.printStackTrace();
 		}
-		return null;
-	}
-
-	/**
-	 * @param parentPlan LinearPlan
-	 * @see uk.ac.ox.cs.pdq.planner.linear.LinearConfiguration#createPlan(LinearPlan)
-	 */
-	@Override
-	public LinearPlan createPlan(LinearPlan parentPlan) {
-		LinearPlan plan = LinearPlanGenerator.createLinearPlan(this, parentPlan);
-		this.getCostEstimator().cost(plan);
-		return plan;
-	}
-	
-	public boolean isExposed(Candidate candidate) {
-		Predicate infAcc = candidate.getInferredAccessibleFact();
-		return this.getState().getFacts().contains(infAcc);
-	}
-
-	public CostEstimator<LinearPlan> getCostEstimator() {
-		return this.costEstimator;
+		return new LinearChaseConfiguration(
+				this.getState().clone(),
+				this.random);
 	}
 
 	@Override

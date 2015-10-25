@@ -18,7 +18,6 @@ import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismConstraint;
 import uk.ac.ox.cs.pdq.reasoning.utility.ReasonerUtility;
 
 import com.beust.jcommander.internal.Lists;
-import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 
@@ -81,11 +80,6 @@ public class EGDChaser extends Chaser {
 					activeTriggers.add(match);
 				}
 			}
-			System.out.println(Joiner.on("\n").join(s.getFacts()));
-			
-			System.out.println(Joiner.on("\n").join(activeTriggers));
-			
-			System.out.println("-----------------------------------------------------------");
 			
 			boolean succeeds = s.chaseStep(activeTriggers);
 			if(!succeeds) {
@@ -141,6 +135,11 @@ public class EGDChaser extends Chaser {
 			Collection<? extends Constraint> constraints) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public EGDChaser clone() {
+		return new EGDChaser(this.statistics);
 	}
 
 }

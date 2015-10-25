@@ -14,6 +14,7 @@ import uk.ac.ox.cs.pdq.db.Constraint;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.db.access.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.planner.db.access.AccessibleSchema;
@@ -24,6 +25,7 @@ import uk.ac.ox.cs.pdq.planner.linear.node.NodeFactory;
 import uk.ac.ox.cs.pdq.planner.linear.node.SearchNode;
 import uk.ac.ox.cs.pdq.planner.linear.node.SearchNode.NodeStatus;
 import uk.ac.ox.cs.pdq.reasoning.Match;
+import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.base.Preconditions;
@@ -37,15 +39,20 @@ import com.google.common.collect.Sets;
  * @author Efthymia Tsamoura
  */
 public final class PostPruningRemoveFollowUps extends PostPruning {
-
-
+	
+	private final Chaser chaser;
+	private final Query<?> query;
 	/**
 	 * Constructor for PlanPostPruningImprovedImplementation.
 	 * @param nodeFactory NodeFactory<S,N>
 	 * @param accessibleSchema AccessibleSchema
 	 */
-	public PostPruningRemoveFollowUps(NodeFactory nodeFactory, AccessibleSchema accessibleSchema) {
+	public PostPruningRemoveFollowUps(NodeFactory nodeFactory, Chaser chaser, Query<?> query, AccessibleSchema accessibleSchema) {
 		super(nodeFactory, accessibleSchema);
+		Preconditions.checkNotNull(chaser);
+		Preconditions.checkNotNull(query);
+		this.chaser = chaser;
+		this.query = query;
 	}
 
 	/**
@@ -80,7 +87,7 @@ public final class PostPruningRemoveFollowUps extends PostPruning {
 						freshNode = this.nodeFactory.getInstance(root, Sets.newHashSet(alreadyExposed));
 					}
 					freshNode.setStatus(NodeStatus.FAKE_TERMINAL);
-					freshNode.close();
+					freshNode.close(this.chaser, this.query, this.accessibleSchema.getAccessibilityAxioms());
 					this.path.add(freshNode);
 					nodeIds.add(freshNode.getId());
 				}
@@ -92,7 +99,7 @@ public final class PostPruningRemoveFollowUps extends PostPruning {
 			}
 			this.path.get(n).setPathToSuccess(Lists.<Integer>newArrayList());
 			this.path.get(n).setStatus(NodeStatus.SUCCESSFUL);
-			List<Match> matches = this.path.get(n).matchesQuery();
+			List<Match> matches = this.path.get(n).matchesQuery(this.query);
 			Preconditions.checkArgument(!matches.isEmpty());
 			this.plan = this.path.get(n).getConfiguration().getPlan();
 		}
@@ -144,7 +151,7 @@ public final class PostPruningRemoveFollowUps extends PostPruning {
 		Preconditions.checkArgument(queryMatch != null);
 		Preconditions.checkArgument(successNode != null);
 		Preconditions.checkArgument(successNode.getStatus() == NodeStatus.SUCCESSFUL);
-		Map<Predicate, Pair<Constraint, Collection<Predicate>>> factProvenance = successNode.getConfiguration().getFactProvenance();
+		Map<Predicate, Pair<Constraint, Collection<Predicate>>> factProvenance = successNode.getConfiguration().getState().getProvenance();
 		Collection<Predicate> minimalFacts = this.getMinimalFactsRecursive(queryMatch, Utility.getConstants(queryMatch), new LinkedHashSet<Constant>(), factProvenance);
 		return minimalFacts;
 	}

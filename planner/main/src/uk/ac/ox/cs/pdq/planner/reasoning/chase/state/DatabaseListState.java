@@ -64,7 +64,7 @@ public class DatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase.state.Dat
 	 * @param manager
 	 */
 	public DatabaseListState(Query<?> query, Schema schema, DBHomomorphismManager manager) {
-		this(query, manager, 
+		this(manager, 
 				createInitialFacts(query, schema), 
 				new MapFiringGraph(),
 				Utility.inferInferred(createInitialFacts(query, schema)),
@@ -108,7 +108,6 @@ public class DatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase.state.Dat
 	 * @param accessibleTerms
 	 */
 	private DatabaseListState(
-			Query<?> query,
 			DBHomomorphismManager manager,
 			Collection<Predicate> facts,
 			FiringGraph graph,
@@ -117,11 +116,7 @@ public class DatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase.state.Dat
 			Multimap<Signature, Predicate> signatureGroups,
 			Multimap<Term,Predicate> accessibleTerms
 			) {
-		super(query, manager);
-		Preconditions.checkNotNull(facts);
-		Preconditions.checkNotNull(graph);
-		this.facts = facts;
-		this.graph = graph;
+		super(manager, facts, graph);
 		this.inferred = inferred;
 		this.derivedInferred = derivedInferred;
 		this.signatureGroups = signatureGroups;
@@ -301,7 +296,7 @@ public class DatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase.state.Dat
 	 */
 	@Override
 	public DatabaseListState clone() {
-		return new DatabaseListState(this.query, this.manager, Sets.newHashSet(this.facts), 
+		return new DatabaseListState(this.manager, Sets.newHashSet(this.facts), 
 				this.graph.clone(),
 				new LinkedHashSet<>(this.inferred),
 				new LinkedHashSet<>(this.derivedInferred), 
@@ -323,7 +318,6 @@ public class DatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase.state.Dat
 		accessibleTerms.putAll(((DatabaseListState)s).accessibleTerms);
 		
 		return new DatabaseListState(
-				this.query, 
 				this.getManager(),
 				facts, 
 				this.getFiringGraph().merge(s.getFiringGraph()),

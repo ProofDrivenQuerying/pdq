@@ -1,12 +1,11 @@
 package uk.ac.ox.cs.pdq.planner.dag;
 
-import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
+import java.util.Collection;
+import java.util.List;
+
+import uk.ac.ox.cs.pdq.db.Constraint;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.plan.DAGPlan;
-import uk.ac.ox.cs.pdq.planner.db.access.AccessibleSchema;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.dominance.Dominance;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.dominance.SuccessDominance;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.state.AccessibleChaseState;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 
 import com.google.common.base.Preconditions;
@@ -43,72 +42,47 @@ public class BinaryConfiguration extends DAGChaseConfiguration {
 	/** The string representation if this configuration*/
 	private String toString;
 	
+	/** The configuration's ApplyRule sub-configurations */
+	private final Collection<ApplyRule> rules;
 
+	/** The configuration's ApplyRule sub-configurations ordered according to their appearance */
+	private final List<ApplyRule> rulesList;
+	
 	/**
 	 * 
-	 * @param accessibleSchema
-	 * @param query
-	 * 		The input query
-	 * @param chaser
-	 * 		Chase reasoner
-	 * @param state
-	 * 		The state of this configuration.
-	 * @param dominance
-	 * 		Perform dominance checks
-	 * @param successDominance
-	 * 		Performs success dominance checks
-	 * @param costEstimator
-	 * 		Estimates the configuration's plan
 	 * @param left
 	 * 		The left sub-configuration
 	 * @param right
 	 * 		The right sub-configuration
-	 * @param chase
-	 * 		true if we will chase the configuration's state
 	 */
 	public BinaryConfiguration(
-			AccessibleSchema accessibleSchema,
-			Query<?> query,
-			Chaser chaser,
-			AccessibleChaseState state,
-			Dominance[] dominance,
-			SuccessDominance successDominance,
-			CostEstimator<DAGPlan> costEstimator,
 			DAGChaseConfiguration left,
-			DAGChaseConfiguration right,	
-			Boolean chase) {
-		super(accessibleSchema,
-				query,
-				chaser,
-				state != null ? state.clone() : ConfigurationUtility.merge(left, right),
-				null,
+			DAGChaseConfiguration right
+			) {
+		super(ConfigurationUtility.merge(left, right),
 				ConfigurationUtility.getInput(left, right),
 				ConfigurationUtility.getOutput(left, right),
-				ConfigurationUtility.arrayCopy(dominance),
-				successDominance.clone(),
 				left.getHeight() + right.getHeight(),
-				ConfigurationUtility.getBushiness(left, right),
-				costEstimator);
+				ConfigurationUtility.getBushiness(left, right)
+				);
 		Preconditions.checkNotNull(left);
 		Preconditions.checkNotNull(right);
 		this.left = left;
 		this.right = right;
 		this.type = ConfigurationUtility.getCombinationType(left, right);
-		if (chase) {
-			this.chase();
-		}
 		DAGPlan plan = PlanGenerator.toPlan(this);
 		this.setPlan(plan);
-		this.getCostEstimator().cost(plan);
 		Preconditions.checkState(this.getInput().containsAll(this.getPlan().getInputs()));
 		Preconditions.checkState(this.getPlan().getInputs().containsAll(this.getPlan().getInputs()));
+		this.rules = ConfigurationUtility.getApplyRules(this);
+		this.rulesList = ConfigurationUtility.getApplyRulesList(this);
 	}
 
 	/**
-	 * Chases the configuration using the inferred accessible axioms
+	 * Chases the configuration using the input dependencies
 	 */
-	public void chase() {
-		this.chaser.reasonUntilTermination(this.getState(), this.getQuery(), this.accessibleSchema.getInferredAccessibilityAxioms());
+	public void chase(Chaser chaser, Query<?> query, Collection<? extends Constraint> dependencies) {
+		chaser.reasonUntilTermination(this.getState(), query, dependencies);
 	}
 
 	/**
@@ -151,15 +125,16 @@ public class BinaryConfiguration extends DAGChaseConfiguration {
 	@Override
 	public BinaryConfiguration clone() {
 		return new BinaryConfiguration(
-				this.getAccessibleSchema(),
-				this.getQuery(),
-				this.getChaser(),
-				null,
-				this.getDominanceDetectors(),
-				this.getSuccessDominanceDetector(),
-				this.getCostEstimator(),
 				this.left.clone(),
-				this.right.clone(),
-				false);
+				this.right.clone()
+				);
+	}
+	
+	public Collection<ApplyRule> getApplyRules() {
+		return this.rules;
+	}
+
+	public List<ApplyRule> getApplyRulesList() {
+		return this.rulesList;
 	}
 }

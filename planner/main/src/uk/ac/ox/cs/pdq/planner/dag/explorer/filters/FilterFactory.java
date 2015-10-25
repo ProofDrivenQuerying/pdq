@@ -1,7 +1,6 @@
 package uk.ac.ox.cs.pdq.planner.dag.explorer.filters;
 
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.FilterTypes;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.state.AccessibleChaseState;
 
 /**
  * Creates filters based on the input arguments.
@@ -9,7 +8,7 @@ import uk.ac.ox.cs.pdq.planner.reasoning.chase.state.AccessibleChaseState;
  * @author Efthymia Tsamoura
  *
  */
-public class FilterFactory<S extends AccessibleChaseState> {
+public class FilterFactory {
 
 	private final FilterTypes type;
 

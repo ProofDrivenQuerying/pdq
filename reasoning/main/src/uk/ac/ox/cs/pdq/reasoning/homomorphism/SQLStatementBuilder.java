@@ -33,10 +33,7 @@ import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Skolem;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
-import uk.ac.ox.cs.pdq.reasoning.chase.Bag;
-import uk.ac.ox.cs.pdq.reasoning.chase.BagBoundPredicate;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager.DBRelation;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismConstraint.BagScope;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismConstraint.FactScope;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismConstraint.ParametrisedMatch;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismConstraint.SuperMap;
@@ -110,11 +107,11 @@ public abstract class SQLStatementBuilder {
 					insertInto += "'" + term + "'" + ",";
 				}
 			}
-			if (fact instanceof BagBoundPredicate) {
-				insertInto += ((BagBoundPredicate) fact).getBag() + ",";
-			} else {
+//			if (fact instanceof BagBoundPredicate) {
+//				insertInto += ((BagBoundPredicate) fact).getBag() + ",";
+//			} else {
 				insertInto += 0 + ",";
-			}
+//			}
 			insertInto += fact.getId();
 			insertInto += ")";
 			result.add(insertInto);
@@ -131,10 +128,10 @@ public abstract class SQLStatementBuilder {
 		result.append("CREATE TABLE  ").append(this.encodeName(relation.getName())).append('(');
 		for (int it = 0; it < relation.getAttributes().size(); ++it) {
 			result.append(' ').append(relation.getAttributes().get(it).getName());
-			if(relation.getAttribute(it).getType().toString().contains("java.lang.String") ) {
+			if(relation.getAttribute(it).getType().toString().contains("java.lang.String")) {
 				result.append(" VARCHAR(500),");
 			}
-			else if(relation.getAttribute(it).getType().toString().contains("java.lang.Integer") ) {
+			else if(relation.getAttribute(it).getType().toString().contains("java.lang.Integer")) {
 				result.append(" int");
 				if(it < relation.getAttributes().size() - 1) {
 					result.append(",");
@@ -238,13 +235,13 @@ public abstract class SQLStatementBuilder {
 		List<ExtendedConstantEqualityPredicate> constantPredicates = this.toConstantPredicates((Conjunction<Predicate>) source.getBody(), this.aliases);
 		List<ExtendedSkolemEqualityPredicate> canonicalConstraints = this.translateCanonicalConstraints(source, this.aliases, constraints);
 
-		/*
-		 * if the target set of bags is not null,
-		 * we add in the WHERE statement a predicate which limits the
-		 * identifiers of the bags within which we search for homomorphisms to
-		 * the identifiers of these bags
-		 */
-		List<ExtendedSetEqualityPredicate> bagConstraints = this.translateBagConstraints(source, this.aliases, constraints);
+//		/*
+//		 * if the target set of bags is not null,
+//		 * we add in the WHERE statement a predicate which limits the
+//		 * identifiers of the bags within which we search for homomorphisms to
+//		 * the identifiers of these bags
+//		 */
+//		List<ExtendedSetEqualityPredicate> bagConstraints = this.translateBagConstraints(source, this.aliases, constraints);
 
 		/*
 		 * if the target set of facts is not null, we
@@ -259,7 +256,7 @@ public abstract class SQLStatementBuilder {
 		predicates.addAll(where);
 		predicates.addAll(constantPredicates);
 		predicates.addAll(canonicalConstraints);
-		predicates.addAll(bagConstraints);
+//		predicates.addAll(bagConstraints);
 		predicates.addAll(factConstraints);
 
 		//Limit the number of returned homomorphisms
@@ -540,31 +537,31 @@ public abstract class SQLStatementBuilder {
 		return null;
 	}
 
-	/**
-	 * 
-	 * @param source
-	 * @param constraints
-	 * @return
-	 * 		predicates that correspond to bag constraints
-	 */
-	protected List<ExtendedSetEqualityPredicate> translateBagConstraints(Evaluatable source, List<Pair<Predicate, String>> aliases, HomomorphismConstraint... constraints) {
-		List<ExtendedSetEqualityPredicate> setPredicates = new ArrayList<>();
-		for(HomomorphismConstraint c:constraints) {
-			if(c instanceof BagScope) {
-				List<Object> bags = new ArrayList<>();
-				for (Bag bag:((BagScope) c).bags) {
-					bags.add(bag.getId());
-				}
-				int f = 0;
-				for(Predicate fact:source.getBody().getPredicates()) {
-					String alias = aliases.get(f).getRight();
-					setPredicates.add(new ExtendedSetEqualityPredicate(fact.getTermCount()-2, bags, (Relation) fact.getSignature(), alias));
-					++f;
-				}
-			}
-		}
-		return setPredicates;
-	}
+//	/**
+//	 * 
+//	 * @param source
+//	 * @param constraints
+//	 * @return
+//	 * 		predicates that correspond to bag constraints
+//	 */
+//	protected List<ExtendedSetEqualityPredicate> translateBagConstraints(Evaluatable source, List<Pair<Predicate, String>> aliases, HomomorphismConstraint... constraints) {
+//		List<ExtendedSetEqualityPredicate> setPredicates = new ArrayList<>();
+//		for(HomomorphismConstraint c:constraints) {
+//			if(c instanceof BagScope) {
+//				List<Object> bags = new ArrayList<>();
+//				for (Bag bag:((BagScope) c).bags) {
+//					bags.add(bag.getId());
+//				}
+//				int f = 0;
+//				for(Predicate fact:source.getBody().getPredicates()) {
+//					String alias = aliases.get(f).getRight();
+//					setPredicates.add(new ExtendedSetEqualityPredicate(fact.getTermCount()-2, bags, (Relation) fact.getSignature(), alias));
+//					++f;
+//				}
+//			}
+//		}
+//		return setPredicates;
+//	}
 
 	/**
 	 * @return SQLStatementBuilder

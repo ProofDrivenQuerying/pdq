@@ -4,15 +4,23 @@ import java.util.Set;
 
 import org.jgrapht.graph.DefaultEdge;
 
+import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
+import uk.ac.ox.cs.pdq.db.Schema;
+import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.plan.LinearPlan;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
+import uk.ac.ox.cs.pdq.planner.db.access.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.explorer.Explorer;
-import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.linear.metadata.CreationMetadata;
 import uk.ac.ox.cs.pdq.planner.linear.node.NodeFactory;
 import uk.ac.ox.cs.pdq.planner.linear.node.PlanTree;
 import uk.ac.ox.cs.pdq.planner.linear.node.SearchNode;
 import uk.ac.ox.cs.pdq.planner.linear.node.SearchNode.NodeStatus;
+import uk.ac.ox.cs.pdq.planner.reasoning.chase.state.AccessibleChaseState;
+import uk.ac.ox.cs.pdq.planner.reasoning.chase.state.DatabaseListState;
+import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
 
 import com.google.common.base.Preconditions;
 import com.google.common.eventbus.EventBus;
@@ -23,14 +31,25 @@ import com.google.common.eventbus.EventBus;
  *
  * @author Efthymia Tsamoura
  *
- * @param <S>
- * @param <N>
  */
 public abstract class LinearExplorer extends Explorer<LinearPlan> {
 
+	protected final Query<?> query;
+	
+	protected final Query<?> accessibleQuery;
+
+	protected final Schema schema;
+	
+	protected final AccessibleSchema accessibleSchema;
+
+	protected final Chaser chaser;
+
+	protected final HomomorphismDetector detector;
+
+	protected final CostEstimator<LinearPlan> costEstimator;
+
 	/** Creates new nodes */
 	private final NodeFactory nodeFactory;
-
 
 	/**
 	 * The tree of plans.
@@ -43,27 +62,50 @@ public abstract class LinearExplorer extends Explorer<LinearPlan> {
 	/** Maximum exploration depth  */
 	protected final int depth;
 
-
 	/**
 	 * 
 	 * @param eventBus
 	 * @param collectStats
-	 * @param configuration The configuration of the root of the plan tree
-	 * @param nodeFactory Creates new nodes
-	 * @param depth Maximum exploration depth
+	 * @param query
+	 * @param accessibleSchema
+	 * @param chaser
+	 * @param costEstimator
+	 * @param nodeFactory
+	 * @param depth
 	 * @throws PlannerException
 	 */
-	public LinearExplorer(EventBus eventBus, boolean collectStats,
-			LinearChaseConfiguration configuration,
+	public LinearExplorer(EventBus eventBus, 
+			boolean collectStats,
+			Query<?> query,
+			Query<?> accessibleQuery,
+			Schema schema,
+			AccessibleSchema accessibleSchema, 
+			Chaser chaser,
+			HomomorphismDetector detector,
+			CostEstimator<LinearPlan> costEstimator,
 			NodeFactory nodeFactory,
 			int depth) throws PlannerException {
 		super(eventBus, collectStats);
 		Preconditions.checkArgument(eventBus != null);
-		Preconditions.checkArgument(configuration != null);
 		Preconditions.checkArgument(nodeFactory != null);
+		Preconditions.checkArgument(query != null);
+		Preconditions.checkArgument(accessibleQuery != null);
+		Preconditions.checkArgument(schema != null);
+		Preconditions.checkArgument(accessibleSchema != null);
+		Preconditions.checkArgument(chaser != null);
+		Preconditions.checkArgument(detector != null);
+		Preconditions.checkArgument(costEstimator != null);
+
+		this.query = query;
+		this.accessibleQuery = accessibleQuery;
+		this.schema = schema;
+		this.accessibleSchema = accessibleSchema;
+		this.chaser = chaser;
+		this.detector = detector;
+		this.costEstimator = costEstimator;
 		this.nodeFactory = nodeFactory;
 		this.depth = depth;
-		this.initialise(configuration);
+		this.initialise();
 	}
 
 	/**
@@ -71,16 +113,22 @@ public abstract class LinearExplorer extends Explorer<LinearPlan> {
 	 * @param configuration The configuration of the root of the plan tree
 	 * @throws PlannerException
 	 */
-	private void initialise(LinearChaseConfiguration configuration) throws PlannerException {
+	private void initialise() throws PlannerException {
+		AccessibleChaseState state = null;
+		state = (uk.ac.ox.cs.pdq.planner.reasoning.chase.state.AccessibleChaseState) 
+				new DatabaseListState(this.query, this.schema, (DBHomomorphismManager) this.detector);
+		this.chaser.reasonUntilTermination(state, this.query, this.schema.getDependencies());
+
 		this.tick = System.nanoTime();
-		SearchNode root = this.nodeFactory.getInstance(configuration);
+		SearchNode root = this.nodeFactory.getInstance(state);
+		root.getConfiguration().detectCandidates(this.accessibleSchema);
 		this.elapsedTime += System.nanoTime() - this.tick;
 		CreationMetadata metadata = new CreationMetadata(null, this.getElapsedTime());
 		root.setMetadata(metadata);
 		this.eventBus.post(root);
 		this.planTree.addVertex(root);
 	}
-	
+
 	/**
 	 * Returns true if there does not exist at least one ongoing node (a node that has at least one unexplored candidate)
 	 * or there does not exist at least one node with depth lower than the input depth-threshold
@@ -119,7 +167,8 @@ public abstract class LinearExplorer extends Explorer<LinearPlan> {
 	}
 
 	/**
-	 * @return NodeFactory<S,N>
+	 * 
+	 * @return
 	 */
 	public NodeFactory getNodeFactory() {
 		return this.nodeFactory;

@@ -1,17 +1,20 @@
 package uk.ac.ox.cs.pdq.planner.linear.node;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
 import uk.ac.ox.cs.pdq.LimitReachedException;
+import uk.ac.ox.cs.pdq.db.Constraint;
+import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.plan.LinearPlan;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.linear.metadata.Metadata;
-import uk.ac.ox.cs.pdq.planner.reasoning.Proof;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.dominance.FactDominance;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.dominance.FastFactDominance;
 import uk.ac.ox.cs.pdq.reasoning.Match;
+import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 
 import com.google.common.collect.Lists;
 
@@ -122,22 +125,23 @@ public abstract class SearchNode implements Cloneable{
 	 * @return the list of matches
 	 * @throws PlannerException
 	 */
-	public List<Match> matchesQuery() throws PlannerException, LimitReachedException {
-		List<Match> matches = this.configuration.matchesQuery(this.configuration.getQuery());
-		if(!matches.isEmpty()) {
-			this.configuration.addProjection();
-			Proof proof = this.configuration.createProof(matches.get(0).getMapping());
-			this.configuration.setProof(proof);
-		}
-		return matches;
+	public List<Match> matchesQuery(Query<?> query) throws PlannerException, LimitReachedException {
+//		List<Match> matches = this.configuration.matchesQuery(query);
+//		if(!matches.isEmpty()) {
+////			this.configuration.addProjection(query);
+//			Proof proof = this.configuration.createProof(matches.get(0).getMapping());
+//			this.configuration.setProof(proof);
+//		}
+//		return matches;
+		return this.configuration.matchesQuery(query);
 	}
 
 	/**
 	 * Closes the configuration of this node
 	 * @throws PlannerException
 	 */
-	public void close() throws PlannerException, LimitReachedException {
-		this.configuration.close();
+	public void close(Chaser chaser, Query<?> query, Collection<? extends Constraint> dependencies) throws PlannerException, LimitReachedException {
+		this.configuration.close(chaser, query, dependencies);
 		this.isFullyGenerated = true;
 	}
 

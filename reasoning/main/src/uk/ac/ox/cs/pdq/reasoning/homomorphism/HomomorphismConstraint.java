@@ -7,7 +7,6 @@ import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Variable;
-import uk.ac.ox.cs.pdq.reasoning.chase.Bag;
 
 /**
  * Super class for all constraints that can be passed for homomorphism detection
@@ -48,23 +47,23 @@ public abstract class HomomorphismConstraint {
 		}
 	}
 
-	/**
-	 * Limits the matches to a subset of bags.
-	 * @author Julien Leblay
-	 */
-	static class BagScope extends HomomorphismConstraint {
-		final Bag[] bags;
-		final boolean singleBag;
-		/**
-		 * Constructor for BagScope.
-		 * @param singleBag boolean
-		 * @param bags Bag[]
-		 */
-		private BagScope(boolean singleBag, Bag... bags) {
-			this.bags = bags;
-			this.singleBag = singleBag;
-		}
-	}
+//	/**
+//	 * Limits the matches to a subset of bags.
+//	 * @author Julien Leblay
+//	 */
+//	static class BagScope extends HomomorphismConstraint {
+//		final Bag[] bags;
+//		final boolean singleBag;
+//		/**
+//		 * Constructor for BagScope.
+//		 * @param singleBag boolean
+//		 * @param bags Bag[]
+//		 */
+//		private BagScope(boolean singleBag, Bag... bags) {
+//			this.bags = bags;
+//			this.singleBag = singleBag;
+//		}
+//	}
 
 	/**
 	 * Limits the matches to those subsuming the given map.
@@ -145,14 +144,14 @@ public abstract class HomomorphismConstraint {
 		return new FactScope(atoms);
 	}
 
-	/**
-	 * @param bags
-	 * @param singleBag boolean
-	 * @return a fresh bag collection scope constraint
-	 */
-	public static BagScope bagScope(boolean singleBag, Bag... bags) {
-		return new BagScope(singleBag, bags);
-	}
+//	/**
+//	 * @param bags
+//	 * @param singleBag boolean
+//	 * @return a fresh bag collection scope constraint
+//	 */
+//	public static BagScope bagScope(boolean singleBag, Bag... bags) {
+//		return new BagScope(singleBag, bags);
+//	}
 
 	/**
 	 * @param mapping

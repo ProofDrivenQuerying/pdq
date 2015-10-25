@@ -67,4 +67,6 @@ public abstract class Chaser {
 	 */
 	public abstract <S extends ChaseState> boolean entails(Query<?> source, Query<?> target, Collection<? extends Constraint> constraints);
 	
+
+	public abstract Chaser clone();
 }

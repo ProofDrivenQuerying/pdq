@@ -50,7 +50,9 @@ public class LinearPlanGenerator {
 	public static<T extends SearchNode> LinearPlan createLinearPlan(List<T> nodes) {
 		LinearPlan parentPlan = null;
 		for (T node: nodes) {
-			parentPlan = node.getConfiguration().createPlan(parentPlan);
+			parentPlan = //node.getConfiguration().createPlan(parentPlan);
+			LinearPlanGenerator.createLinearPlan(node.getConfiguration(), parentPlan);
+			
 		}
 		return parentPlan;
 	}

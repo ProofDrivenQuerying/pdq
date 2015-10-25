@@ -14,6 +14,7 @@ import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.plan.DAGPlan;
 import uk.ac.ox.cs.pdq.planner.dag.BinaryConfiguration.BinaryConfigurationTypes;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator;
+import uk.ac.ox.cs.pdq.planner.db.access.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.db.access.AccessibleSchema.InferredAccessibleRelation;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.dominance.Dominance;
@@ -299,7 +300,7 @@ public class ConfigurationUtility {
 	 * 		true if the binary configuration composed from the left and right input configurations passes the validation tests,
 	 * 		i.e., satisfies given shape restrictions.
 	 */
-	public static <S extends AccessibleChaseState> boolean validate(DAGChaseConfiguration left, DAGChaseConfiguration right, List<Validator> validators) {
+	public static boolean validate(DAGChaseConfiguration left, DAGChaseConfiguration right, List<Validator> validators) {
 		return validate(left, right, validators, -1);
 	}
 
@@ -311,6 +312,19 @@ public class ConfigurationUtility {
 	 */
 	public static Boolean getPotential(DAGChaseConfiguration configuration, DAGPlan bestPlan, SuccessDominance successDominance) {
 		return bestPlan == null || !successDominance.isDominated(configuration.getPlan(), bestPlan);
+	}
+	
+	/**
+	 * @param target 
+	 * @return true if this configuration is dominated by the input one
+	 */
+	public static boolean isDominatedBy(Dominance[] dominance, DAGChaseConfiguration target, DAGChaseConfiguration source) {
+		for(Dominance detector:dominance) {
+			if(detector.isDominated(source, target)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -331,27 +345,11 @@ public class ConfigurationUtility {
 			if(bestPlan == null) {
 				return true;
 			}
-			
 			DAGPlan plan = PlanGenerator.toPlan(left, right, type);
 			costEstimator.cost(plan);
 			return !successDominance.isDominated(plan, bestPlan);
 		}
 		return false;
-
-//		if(bestPlan == null) {
-//			return true;
-//		}
-//		BinaryConfiguration config = new BinaryConfiguration(
-//				left.getAccessibleSchema(),
-//				left.getQuery(),
-//				left.getChaser(), 
-//				null, left.getDominanceDetectors(),
-//				successDominance,
-//				costEstimator,
-//				left,
-//				right,	
-//				false);
-//		return !successDominance.isDominated(config.getPlan(), bestPlan);
 	}
 	
 	/**
@@ -359,7 +357,7 @@ public class ConfigurationUtility {
 	 * @return
 	 * 		the output facts of the input configuration that are sufficient to make each input constant accessible
 	 */
-	public static Collection<Set<Predicate>> getMinimalSetThatExposesConstants(DAGChaseConfiguration configuration, Collection<Constant> constants) {
+	public static Collection<Set<Predicate>> getMinimalSetThatExposesConstants(DAGChaseConfiguration configuration, Collection<Constant> constants, AccessibleSchema accessibleSchema) {
 		Collection<Set<Predicate>> ret = new LinkedHashSet<>();
 		Collection<ApplyRule> applyRules = configuration.getApplyRules();
 		//Create all combinations of the constituting ApplyRule configurations
@@ -378,7 +376,7 @@ public class ConfigurationUtility {
 			for(ApplyRule applyRule:set) {
 
 				Relation baseRelation = applyRule.getRelation();
-				InferredAccessibleRelation infAccRelation = configuration.getAccessibleSchema().getInferredAccessibleRelation(baseRelation);
+				InferredAccessibleRelation infAccRelation = accessibleSchema.getInferredAccessibleRelation(baseRelation);
 
 				Collection<Predicate> facts = applyRule.getFacts();
 				if(observed.containsAll(applyRule.getInput())) {

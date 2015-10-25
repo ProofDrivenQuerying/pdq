@@ -10,6 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
+import uk.ac.ox.cs.pdq.planner.reasoning.chase.dominance.Dominance;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
@@ -22,10 +23,9 @@ import com.google.common.collect.Sets;
  *
  * @author Efthymia Tsamoura
  *
- * @param 
  */
 public class SynchronizedEquivalenceClasses implements DAGEquivalenceClasses{
-
+	
 	/** Maps each configuration to its class*/
 	private final Map<DAGChaseConfiguration, SynchronizedEquivalenceClass> configurationToEquivalenceClass;
 
@@ -42,7 +42,7 @@ public class SynchronizedEquivalenceClasses implements DAGEquivalenceClasses{
 		SynchronizedEquivalenceClass e;
 		DAGChaseConfiguration equivalent = this.structurallyEquivalentTo(configuration);
 		if(equivalent != null) {
-			e = (SynchronizedEquivalenceClass) equivalent.getEquivalenceClass();
+			e = this.configurationToEquivalenceClass.get(equivalent);
 			e.addEntry(configuration);
 		}
 		else {
@@ -90,10 +90,10 @@ public class SynchronizedEquivalenceClasses implements DAGEquivalenceClasses{
 	 * @see uk.ac.ox.cs.pdq.equivalence.dag.DAGEquivalenceClasses#dominatedBy(DAGChaseConfiguration)
 	 */
 	@Override
-	public Collection<DAGChaseConfiguration> dominatedBy(DAGChaseConfiguration configuration) {
+	public Collection<DAGChaseConfiguration> dominatedBy(Dominance[] dominance, DAGChaseConfiguration configuration) {
 		Collection<DAGChaseConfiguration> dominated = new LinkedHashSet<>();
 		for(SynchronizedEquivalenceClass c: this.configurationToEquivalenceClass.values()) {
-			dominated.addAll(c.dominatedBy(configuration));
+			dominated.addAll(c.dominatedBy(dominance, configuration));
 		}
 		return dominated;
 	}
@@ -119,15 +119,16 @@ public class SynchronizedEquivalenceClasses implements DAGEquivalenceClasses{
 	 * @see uk.ac.ox.cs.pdq.equivalence.dag.DAGEquivalenceClasses#dominate(DAGChaseConfiguration)
 	 */
 	@Override
-	public DAGChaseConfiguration dominate(DAGChaseConfiguration configuration) {
+	public DAGChaseConfiguration dominate(Dominance[] dominance,DAGChaseConfiguration configuration) {
 		for(SynchronizedEquivalenceClass c: this.configurationToEquivalenceClass.values()) {
-			DAGChaseConfiguration dominating = c.dominate(configuration);
+			DAGChaseConfiguration dominating = c.dominate(dominance, configuration);
 			if(dominating != null) {
 				return dominating;
 			}
 		}
 		return null;
 	}
+
 
 	/**
 	 * @return Collection<DAGEquivalenceClass>

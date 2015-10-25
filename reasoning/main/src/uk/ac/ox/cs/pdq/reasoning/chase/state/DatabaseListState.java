@@ -2,27 +2,21 @@ package uk.ac.ox.cs.pdq.reasoning.chase.state;
 
 import java.util.Collection;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.db.Constraint;
-import uk.ac.ox.cs.pdq.db.TGD;
-import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Query;
-import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.reasoning.Match;
 import uk.ac.ox.cs.pdq.reasoning.chase.FiringGraph;
 import uk.ac.ox.cs.pdq.reasoning.chase.MapFiringGraph;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager;
-import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
@@ -38,8 +32,6 @@ import com.google.common.collect.Sets;
 public class DatabaseListState extends DatabaseChaseState implements ListState{
 
 	protected static Logger log = Logger.getLogger(DatabaseListState.class);
-		
-	protected final Query<?> query;
 	
 	/** True if Skolem terms are assigned to existentially quantified variables*/
 	protected final boolean canonicalNames = true;
@@ -56,7 +48,7 @@ public class DatabaseListState extends DatabaseChaseState implements ListState{
 	 * @param manager
 	 */
 	public DatabaseListState(Query<?> query, DBHomomorphismManager manager) {
-		this(query, manager, query.getCanonical().getPredicates(), new MapFiringGraph());
+		this(manager, query.getCanonical().getPredicates(), new MapFiringGraph());
 		this.manager.addFacts(this.facts);
 	}
 	
@@ -67,14 +59,26 @@ public class DatabaseListState extends DatabaseChaseState implements ListState{
 	 * @param facts
 	 * @param graph
 	 */
-	protected DatabaseListState(Query<?> query,
+	public DatabaseListState(
+			DBHomomorphismManager manager,
+			Collection<Predicate> facts) {
+		this(manager, facts, new MapFiringGraph());
+	}
+	
+	/**
+	 * 
+	 * @param query
+	 * @param manager
+	 * @param facts
+	 * @param graph
+	 */
+	protected DatabaseListState(
 			DBHomomorphismManager manager,
 			Collection<Predicate> facts,
 			FiringGraph graph) {
 		super(manager);
 		Preconditions.checkNotNull(facts);
 		Preconditions.checkNotNull(graph);
-		this.query = query;
 		this.facts = facts;
 		this.graph = graph;
 	}
@@ -173,18 +177,30 @@ public class DatabaseListState extends DatabaseChaseState implements ListState{
 	 */
 	@Override
 	public DatabaseListState clone() {
-		return new DatabaseListState(this.query, this.manager, Sets.newHashSet(this.facts), this.graph.clone());
+		return new DatabaseListState(this.manager, Sets.newHashSet(this.facts), this.graph.clone());
 	}
 
 	@Override
-	public boolean isSuccessful() {
-		return !this.getMatches(this.query).isEmpty();
+	public boolean isSuccessful(Query<?> query) {
+		return !this.getMatches(query).isEmpty();
 	}
 
 	@Override
 	public boolean isFailed() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+	
+	@Override
+	public ChaseState merge(ChaseState s) {
+		Preconditions.checkState(s instanceof DatabaseListState);
+		Collection<Predicate> facts =  new LinkedHashSet<>(this.facts);
+		facts.addAll(s.getFacts());
+		
+		return new DatabaseListState(
+				this.getManager(),
+				facts, 
+				this.getFiringGraph().merge(s.getFiringGraph()));
 	}
 	
 }

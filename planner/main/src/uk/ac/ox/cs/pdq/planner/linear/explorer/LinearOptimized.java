@@ -22,10 +22,12 @@ import org.jgrapht.graph.DefaultEdge;
 
 import uk.ac.ox.cs.pdq.LimitReachedException;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
+import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.plan.LinearPlan;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
-import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
+import uk.ac.ox.cs.pdq.planner.db.access.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.linear.LinearConfiguration;
 import uk.ac.ox.cs.pdq.planner.linear.LinearUtility;
 import uk.ac.ox.cs.pdq.planner.linear.cost.BlackBoxPropagator;
@@ -44,8 +46,9 @@ import uk.ac.ox.cs.pdq.planner.linear.node.NodeFactory;
 import uk.ac.ox.cs.pdq.planner.linear.node.SearchNode;
 import uk.ac.ox.cs.pdq.planner.linear.node.SearchNode.NodeStatus;
 import uk.ac.ox.cs.pdq.planner.linear.pruning.PostPruning;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.state.AccessibleChaseState;
 import uk.ac.ox.cs.pdq.reasoning.Match;
+import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
 import uk.ac.ox.cs.pdq.util.IndexedDirectedGraph;
 
 import com.google.common.base.Joiner;
@@ -94,31 +97,37 @@ public class LinearOptimized extends LinearExplorer {
 	});
 
 	/**
-	 *
+	 * 
 	 * @param eventBus
 	 * @param collectStats
+	 * @param query
+	 * @param accessibleSchema
+	 * @param chaser
+	 * @param detector
 	 * @param costEstimator
-	 * 		Estimates the cost of the plans found
-	 * @param configuration The configuration of the root of the plan tree
-	 * @param nodeFactory Creates new nodes
-	 * @param depth Maximum exploration depth
+	 * @param nodeFactory
+	 * @param depth
 	 * @param queryMatchInterval
-	 * 		How often we check for query matches
 	 * @param postPruning
-	 * 		Performs plan post-pruning
+	 * @param zombification
 	 * @throws PlannerException
 	 */
 	public LinearOptimized(
-			EventBus eventBus, boolean collectStats,
+			EventBus eventBus, 
+			boolean collectStats,
+			Query<?> query,
+			Query<?> accessibleQuery,
+			Schema schema,
+			AccessibleSchema accessibleSchema, 
+			Chaser chaser,
+			HomomorphismDetector detector,
 			CostEstimator<LinearPlan> costEstimator,
-			LinearChaseConfiguration configuration,
 			NodeFactory nodeFactory,
 			int depth,
 			int queryMatchInterval, 
 			PostPruning postPruning,
 			boolean zombification) throws PlannerException {
-		super(eventBus, collectStats, configuration, nodeFactory, depth);
-		Preconditions.checkArgument(costEstimator != null);
+		super(eventBus, collectStats, query, accessibleQuery, schema, accessibleSchema, chaser, detector, costEstimator, nodeFactory, depth);
 		this.costPropagator = PropagatorUtils.getPropagator(costEstimator);
 		this.queryMatchInterval = queryMatchInterval;
 		this.postPruning = postPruning;
@@ -183,7 +192,8 @@ public class LinearOptimized extends LinearExplorer {
 
 		// Create a new node from the exposed facts and add it to the plan tree
 		SearchNode freshNode = this.getNodeFactory().getInstance(selectedNode, similarCandidates);	
-
+		freshNode.getConfiguration().detectCandidates(this.accessibleSchema);
+		this.costEstimator.cost(freshNode.getConfiguration().getPlan());
 
 		log.info("SELECTED NODE: " + selectedNode);
 		log.info("EXPOSED CANDIDATES\t");
@@ -240,7 +250,7 @@ public class LinearOptimized extends LinearExplorer {
 
 		// Close the newly created node using the inferred accessible dependencies of the accessible schema
 		this.stats.start(MILLI_CLOSE);
-		freshNode.close();
+		freshNode.close(this.chaser, this.accessibleQuery, this.accessibleSchema.getInferredAccessibilityAxioms());
 		this.stats.stop(MILLI_CLOSE);
 
 		if (domination) {
@@ -283,7 +293,7 @@ public class LinearOptimized extends LinearExplorer {
 				/* Check for query match */
 				if (this.rounds % this.queryMatchInterval == 0) {
 					this.stats.start(MILLI_QUERY_MATCH);
-					List<Match> matches = freshNode.matchesQuery();
+					List<Match> matches = freshNode.matchesQuery(this.accessibleQuery);
 					this.stats.stop(MILLI_QUERY_MATCH);
 
 					// If there exists at least one query match
@@ -305,13 +315,11 @@ public class LinearOptimized extends LinearExplorer {
 				(this.bestPlan != null && successfulPlan != null && successfulPlan.getCost().lessThan(this.bestPlan.getCost()))) {
 			this.bestPlan = successfulPlan;
 			this.eventBus.post(this.getBestPlan());
-			this.bestProof = this.costPropagator.getBestProof(); 
-			this.eventBus.post(this.bestProof);
 		
 			if(this.postPruning != null && !this.prunedPaths.contains(this.costPropagator.getBestPath())) {
 				this.prunedPaths.add(this.costPropagator.getBestPath());
 				List<SearchNode> path = LinearUtility.createPath(this.planTree, this.costPropagator.getBestPath());
-				List<Predicate> queryFacts = freshNode.getConfiguration().getQuery().ground(match.getMapping()).getPredicates();
+				List<Predicate> queryFacts = this.query.ground(match.getMapping()).getPredicates();
 				boolean isPruned = this.postPruning.prune(this.planTree.getRoot(), path, queryFacts);
 				if(isPruned) {
 					this.postPruning.addPrunedPathToTree(this.planTree, this.planTree.getRoot(), this.postPruning.getPath());
@@ -322,15 +330,13 @@ public class LinearOptimized extends LinearExplorer {
 							(this.bestPlan != null && successfulPlan != null && successfulPlan.getCost().lessThan(this.bestPlan.getCost()))) {
 						this.bestPlan = successfulPlan;
 						this.eventBus.post(this.getBestPlan());
-						this.bestProof = this.costPropagator.getBestProof(); 
-						this.eventBus.post(this.bestProof);
 					}
 					this.prunedPaths.add(this.costPropagator.getBestPath());
 				}
 			}
 			log.trace("\t+++BEST PLAN: " + this.bestPlan.getAccesses() + " " + this.bestPlan.getCost());
 
-			BestPlanMetadata successMetadata = new BestPlanMetadata(parentNode, this.bestPlan, this.bestProof, this.costPropagator.getBestPath(), this.getElapsedTime());
+			BestPlanMetadata successMetadata = new BestPlanMetadata(parentNode, this.bestPlan, this.costPropagator.getBestPath(), this.getElapsedTime());
 			freshNode.setMetadata(successMetadata);
 			this.eventBus.post(freshNode);
 		}
@@ -345,11 +351,9 @@ public class LinearOptimized extends LinearExplorer {
 				&& successfulPlan.getCost().lessThan(this.bestPlan.getCost()))) {
 			this.bestPlan = successfulPlan;
 			this.eventBus.post(this.getBestPlan());
-			this.bestProof = this.costPropagator.getBestProof(); 
-			this.eventBus.post(this.bestProof);
 			log.trace("\t+++BEST PLAN: " + this.bestPlan.getAccesses() + " " + this.bestPlan.getCost());
 
-			BestPlanMetadata successMetadata = new BestPlanMetadata(parentNode, this.bestPlan, this.bestProof, this.costPropagator.getBestPath(), this.getElapsedTime());
+			BestPlanMetadata successMetadata = new BestPlanMetadata(parentNode, this.bestPlan, this.costPropagator.getBestPath(), this.getElapsedTime());
 			freshNode.setMetadata(successMetadata);
 			this.eventBus.post(freshNode);
 		}
@@ -386,7 +390,7 @@ public class LinearOptimized extends LinearExplorer {
 
 			List<Integer> pathFromRoot = deadDescendant.getPathFromRoot();
 			List<Integer> equivalencePath = this.createPath(representativePath, path, pathFromRoot);
-			LinearPlan equivalencePlan = PropagatorUtils.createLinearPlan(this.planTree, equivalencePath, this.costPropagator.getCostEstimator(), true);
+			LinearPlan equivalencePlan = PropagatorUtils.createLinearPlan(this.planTree, equivalencePath, this.costPropagator.getCostEstimator());
 
 			if(equivalencePlan.getCost().lessThan(deadDescendant.getBestPlanFromRoot().getCost())) {
 				deadDescendant.setBestPathFromRoot(equivalencePath);
@@ -397,7 +401,7 @@ public class LinearOptimized extends LinearExplorer {
 					(this.bestPlan != null && equivalencePlan.getCost().lessThan(this.bestPlan.getCost()))	) {
 
 				this.stats.start(MILLI_QUERY_MATCH);
-				List<Match> matches = deadDescendant.matchesQuery();
+				List<Match> matches = deadDescendant.matchesQuery(this.accessibleQuery);
 				this.stats.stop(MILLI_QUERY_MATCH);
 
 				SearchNode parent = this.planTree.getParent(deadDescendant);

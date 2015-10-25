@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.Map.Entry;
 
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
+import uk.ac.ox.cs.pdq.planner.reasoning.chase.dominance.Dominance;
 
 
 /**
@@ -61,7 +62,7 @@ public interface DAGEquivalenceClasses {
 	 * @param configuration
 	 * @return the configurations that are dominated by the input configuration
 	 */
-	Collection<DAGChaseConfiguration> dominatedBy(DAGChaseConfiguration configuration);
+	Collection<DAGChaseConfiguration> dominatedBy(Dominance[] dominance, DAGChaseConfiguration configuration);
 
 	/**
 	 * @param configuration
@@ -73,7 +74,7 @@ public interface DAGEquivalenceClasses {
 	 * @param configuration
 	 * @return a configuration that dominates the input configuration
 	 */
-	DAGChaseConfiguration dominate(DAGChaseConfiguration configuration);
+	DAGChaseConfiguration dominate(Dominance[] dominance, DAGChaseConfiguration configuration);
 
 	/**
 	 * @param configuration

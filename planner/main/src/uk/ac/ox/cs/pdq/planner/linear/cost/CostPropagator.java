@@ -6,7 +6,6 @@ import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.plan.LinearPlan;
 import uk.ac.ox.cs.pdq.planner.linear.node.PlanTree;
 import uk.ac.ox.cs.pdq.planner.linear.node.SearchNode;
-import uk.ac.ox.cs.pdq.planner.reasoning.Proof;
 
 /**
  * 
@@ -20,9 +19,6 @@ import uk.ac.ox.cs.pdq.planner.reasoning.Proof;
 public abstract class CostPropagator<T extends SearchNode> {
 
 	protected final CostEstimator<LinearPlan> costEstimator;
-
-	/** The proof of the bestPlan */
-	protected Proof bestProof = null;
 	
 	/** The best plan found after propagation. It is null if no plan is found */
 	protected LinearPlan bestPlan = null;
@@ -39,10 +35,6 @@ public abstract class CostPropagator<T extends SearchNode> {
 	
 	public LinearPlan getBestPlan() {
 		return this.bestPlan;
-	}
-
-	public Proof getBestProof() {
-		return this.bestProof;
 	}
 	
 	public List<Integer> getBestPath() {

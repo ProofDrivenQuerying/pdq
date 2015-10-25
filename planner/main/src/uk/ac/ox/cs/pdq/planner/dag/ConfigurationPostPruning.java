@@ -6,14 +6,20 @@ import java.util.Set;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.db.Constraint;
+import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Query;
+import uk.ac.ox.cs.pdq.plan.DAGPlan;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.db.access.AccessibleSchema.AccessibleRelation;
 import uk.ac.ox.cs.pdq.planner.db.access.AccessibleSchema.InferredAccessibleRelation;
 import uk.ac.ox.cs.pdq.planner.db.access.AccessibilityAxiom;
+import uk.ac.ox.cs.pdq.planner.db.access.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.state.AccessibleChaseState;
+import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
@@ -25,6 +31,14 @@ import com.google.common.collect.Sets;
  */
 public class ConfigurationPostPruning {
 
+	protected final Query<?> query;
+
+	protected final AccessibleSchema accessibleSchema;
+
+	protected final Chaser chaser;
+
+	protected final CostEstimator<DAGPlan> costEstimator;
+	
 	/** A successful configuration*/
 	private final DAGChaseConfiguration configuration;
 
@@ -44,10 +58,20 @@ public class ConfigurationPostPruning {
 	 * An exception is thrown if the input facts are not accessible or inferred accessible ones
 	 *
 	 */
-	public ConfigurationPostPruning(DAGChaseConfiguration configuration, Collection<Predicate> queryFacts) {
+	public ConfigurationPostPruning(
+			Query<?> query,
+			AccessibleSchema accessibleSchema,
+			Chaser chaser,
+			CostEstimator<DAGPlan> costEstimator,
+			DAGChaseConfiguration configuration, 
+			Collection<Predicate> queryFacts) {
+		Preconditions.checkNotNull(query);
+		Preconditions.checkNotNull(accessibleSchema);
+		Preconditions.checkNotNull(chaser);
+		Preconditions.checkNotNull(costEstimator);
 		Preconditions.checkNotNull(configuration);
 		Preconditions.checkArgument(configuration.isClosed());
-		Preconditions.checkArgument(configuration.isSuccessful());
+		Preconditions.checkArgument(configuration.isSuccessful(query));
 		Preconditions.checkNotNull(queryFacts);
 		Collection<Predicate> qF = new LinkedHashSet<>();
 		for(Predicate queryFact: queryFacts) {
@@ -57,6 +81,10 @@ public class ConfigurationPostPruning {
 				throw new java.lang.IllegalArgumentException();
 			}
 		}
+		this.query = query;
+		this.accessibleSchema = accessibleSchema;
+		this.chaser = chaser;
+		this.costEstimator = costEstimator;
 		this.configuration = configuration;
 		this.queryFacts = qF;
 	}
@@ -90,10 +118,10 @@ public class ConfigurationPostPruning {
 		
 		/** If the configuration is an ApplyRule one, then find the facts that after chasing lead to the derivation of the input query facts  */
 		if(configuration instanceof ApplyRule) {
-			Set<Predicate> firings = ((ApplyRule) configuration).getFiringsThatExposeFacts(queryFacts);
+			Set<Predicate> firings = this.getFiringsThatExposeFacts(((ApplyRule) configuration), this.accessibleSchema, queryFacts);
 			if(!firings.equals(((ApplyRule) configuration).getFacts())) {
 				this.isPruned = true;
-				return ((ApplyRule) configuration).prune(firings);
+				return this.prune(((ApplyRule) configuration), firings, this.chaser, this.query, this.accessibleSchema);
 			}
 			return configuration;
 		}
@@ -101,8 +129,8 @@ public class ConfigurationPostPruning {
 		DAGChaseConfiguration c1 = ((BinaryConfiguration)configuration).getLeft();
 		DAGChaseConfiguration c2 = ((BinaryConfiguration)configuration).getRight();
 
-		Set<Predicate> atoms1 = Sets.newLinkedHashSet(c1.getDerivedInferred());
-		Set<Predicate> atoms2 = Sets.newLinkedHashSet(c2.getDerivedInferred());
+		Set<Predicate> atoms1 = Sets.newLinkedHashSet(c1.getState().getDerivedInferred());
+		Set<Predicate> atoms2 = Sets.newLinkedHashSet(c2.getState().getDerivedInferred());
 		if(atoms1.containsAll(atoms2)) {
 			this.isPruned = true;
 			return this.pruneRecursive(c1, queryFacts);
@@ -110,20 +138,14 @@ public class ConfigurationPostPruning {
 		DAGChaseConfiguration ret = null;
 		DAGChaseConfiguration r = this.pruneRecursive(c2, queryFacts);
 		Collection<Constant> input2 = r.getInput();
-		Collection<Set<Predicate>> sets = ConfigurationUtility.getMinimalSetThatExposesConstants(c1, input2);
+		Collection<Set<Predicate>> sets = ConfigurationUtility.getMinimalSetThatExposesConstants(c1, input2, this.accessibleSchema);
 		for(Set<Predicate> set:sets) {
 			DAGChaseConfiguration l = this.pruneRecursive(c1, set);
 			DAGChaseConfiguration output = new BinaryConfiguration(
-					c1.getAccessibleSchema(),
-					c1.getQuery(),
-					c1.getChaser(),
-					null,
-					c1.getDominanceDetectors(),
-					c1.getSuccessDominanceDetector(),
-					c1.getCostEstimator(),
-					l, r,
-					true
+					l, r
 					);
+			this.costEstimator.cost(configuration.getPlan());
+			((BinaryConfiguration)configuration).chase(this.chaser, this.query, this.accessibleSchema.getInferredAccessibilityAxioms());
 			if(ret == null || ret.getPlan().getCost().greaterThan(output.getPlan().getCost())) {
 				ret = output;
 			}
@@ -164,4 +186,41 @@ public class ConfigurationPostPruning {
 	public Boolean getIsPruned() {
 		return this.isPruned;
 	}
+	
+	/**
+	 * @param facts
+	 * @return
+	 * 		a configuration that comprises only the facts derived using only the input facts.
+	 * 		The input facts must be a subset of this configuration's facts
+	 */
+	private DAGChaseConfiguration prune(ApplyRule applyRule, Set<Predicate> facts, Chaser chaser, Query<?> query, AccessibleSchema accessibleSchema) {
+		ApplyRule configuration = new ApplyRule(
+				applyRule.getState(),
+				applyRule.getRule(),
+				facts);
+		configuration.generate(chaser, query, accessibleSchema);
+		return configuration;
+	}
+	
+	/**
+	 * @param input
+	 * @return the facts that lead to the derivation of the input facts
+	 */
+	private Set<Predicate> getFiringsThatExposeFacts(ApplyRule applyRule, AccessibleSchema accessibleSchema, Collection<Predicate> input) {
+		Set<Predicate> ret = new LinkedHashSet<>();
+		Relation baseRelation = applyRule.getRelation();
+		InferredAccessibleRelation infAccRelation = accessibleSchema.getInferredAccessibleRelation(baseRelation);
+		for(Predicate fact:applyRule.getFacts()) {
+			for(Predicate inputFact:input) {
+				if(inputFact.getSignature() instanceof InferredAccessibleRelation &&
+						inputFact.getSignature().equals(infAccRelation) &&
+						inputFact.getTerms().equals(fact.getTerms())) {
+					ret.add(fact);
+					break;
+				}
+			}
+		}
+		return ret;
+	}
+	
 }

@@ -1,9 +1,14 @@
 package uk.ac.ox.cs.pdq.planner.reasoning.chase.dominance;
 
+import com.google.common.base.Preconditions;
+
+import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.SimpleCostEstimator;
 import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.planner.dag.ApplyRule;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
+import uk.ac.ox.cs.pdq.planner.reasoning.chase.equivalence.FactEquivalence;
+import uk.ac.ox.cs.pdq.planner.reasoning.chase.equivalence.FastFactEquivalence;
 
 /**
  * Open configuration domination. A configuration c dominates a configuration c',
@@ -16,22 +21,27 @@ import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
  */
 public class StrictOpenDominance implements Dominance<ChaseConfiguration> {
 
-	/** True if we allow open to closed comparison*/
-	private final boolean openToClosedComparison;
+	private final CostEstimator<Plan> costEstimator;
 	/** Performs fact dominance */
 	private final FactDominance factDominance = new FastFactDominance(false);
+	private final FactEquivalence factEquivalence = new FastFactEquivalence();
 	/** Performs strict fact dominance */
 	private final FactDominance strictFactDominance = new FastFactDominance(true);
 	/** Simple plan cost estimator*/
-	private final SimpleCostEstimator<Plan> estimator;
-
+	private final SimpleCostEstimator<Plan> simpleEstimator;
+	/** True if we allow open to closed comparison*/
+	private final boolean openToClosedComparison;
+	
 	/**
 	 * Constructor for StrictOpenDominance.
 	 * @param simpleCostEstimator SimpleCostEstimator<Plan>
 	 * @param openToClosedComparison boolean
 	 */
-	public StrictOpenDominance(SimpleCostEstimator<Plan> simpleCostEstimator, boolean openToClosedComparison) {
-		this.estimator = simpleCostEstimator;
+	public StrictOpenDominance(CostEstimator<Plan> costEstimator, SimpleCostEstimator<Plan> simpleCostEstimator, boolean openToClosedComparison) {
+		Preconditions.checkNotNull(costEstimator);
+		Preconditions.checkNotNull(simpleCostEstimator);
+		this.costEstimator = costEstimator;
+		this.simpleEstimator = simpleCostEstimator;
 		this.openToClosedComparison = openToClosedComparison;
 	}
 
@@ -47,17 +57,15 @@ public class StrictOpenDominance implements Dominance<ChaseConfiguration> {
 		boolean factDominated = this.factDominance.isDominated(source, target);
 		boolean strictlyCostDominated = false;
 		boolean costDominated = false;
-
-		if(		(source.getCostEstimator() instanceof SimpleCostEstimator 
-				&& target.getCostEstimator() instanceof SimpleCostEstimator) ||
+		if(this.costEstimator instanceof SimpleCostEstimator  ||
 				(source.isClosed() && target.isClosed())
 				) {
 			strictlyCostDominated = source.getPlan().getCost().greaterThan(target.getPlan().getCost());
 			costDominated = source.getPlan().getCost().greaterOrEquals(target.getPlan().getCost());
 		}
 		else if(this.openToClosedComparison || (!source.isClosed() && !target.isClosed())) {
-			strictlyCostDominated = this.estimator.estimateCost(source.getPlan()).greaterThan(this.estimator.estimateCost(target.getPlan()));
-			costDominated = this.estimator.estimateCost(source.getPlan()).greaterOrEquals(this.estimator.estimateCost(target.getPlan()));
+			strictlyCostDominated = this.simpleEstimator.estimateCost(source.getPlan()).greaterThan(this.simpleEstimator.estimateCost(target.getPlan()));
+			costDominated = this.simpleEstimator.estimateCost(source.getPlan()).greaterOrEquals(this.simpleEstimator.estimateCost(target.getPlan()));
 		}
 
 		if((!(source instanceof ApplyRule) && strictlyFactDominated && costDominated) ||
@@ -67,8 +75,8 @@ public class StrictOpenDominance implements Dominance<ChaseConfiguration> {
 
 		if (!(source instanceof ApplyRule) &&
 				!source.isClosed() && !target.isClosed() &&
-				source.isEquivalentTo(target) &&
-				this.estimator.estimateCost(source.getPlan()).equals(this.estimator.estimateCost(target.getPlan())) ) {
+				this.factEquivalence.isEquivalent(source, target) &&
+				this.simpleEstimator.estimateCost(source.getPlan()).equals(this.simpleEstimator.estimateCost(target.getPlan())) ) {
 			return true;
 		}
 		return false;
@@ -80,6 +88,6 @@ public class StrictOpenDominance implements Dominance<ChaseConfiguration> {
 	 */
 	@Override
 	public StrictOpenDominance clone() {
-		return new StrictOpenDominance(this.estimator.clone(), this.openToClosedComparison);
+		return new StrictOpenDominance(this.costEstimator.clone(), this.simpleEstimator.clone(), this.openToClosedComparison);
 	}
 }

@@ -11,12 +11,12 @@ import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
-import uk.ac.ox.cs.pdq.plan.Access;
+import uk.ac.ox.cs.pdq.plan.AccessCommand;
 import uk.ac.ox.cs.pdq.plan.Command;
-import uk.ac.ox.cs.pdq.plan.Join;
+import uk.ac.ox.cs.pdq.plan.JoinCommand;
 import uk.ac.ox.cs.pdq.plan.NormalisedPlan;
-import uk.ac.ox.cs.pdq.plan.Project;
-import uk.ac.ox.cs.pdq.plan.Select;
+import uk.ac.ox.cs.pdq.plan.ProjectCommand;
+import uk.ac.ox.cs.pdq.plan.SelectCommand;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.utility.ReasonerUtility;
 
@@ -91,28 +91,28 @@ public class ReasonerUtilityTest1 extends ReasonerUtilityTest0 {
 		Term _target_type = new Variable("ctype");
 		
 		//Define the plan
-		this.access0 = new Access(this.schema.getRelation("DocumentFree"), this.schema.getRelation("DocumentFree").getAccessMethod("chembl_document_free"), 
+		this.access0 = new AccessCommand(this.schema.getRelation("DocumentFree"), this.schema.getRelation("DocumentFree").getAccessMethod("chembl_document_free"), 
 				Lists.newArrayList(_authors,_publication, _document_chembl_id,_doi,_first_page,_issue,_journal,_last_page,_pubmed_id,_title,_volume,_year), null, null);
 		ConstantEqualityPredicate p00 = new ConstantEqualityPredicate(1, new TypedConstant<String>("PUBLICATION"));
 		ConstantEqualityPredicate p01 = new ConstantEqualityPredicate(11, new TypedConstant<String>("2015"));
-		this.selection0 = new Select(new ConjunctivePredicate(Lists.newArrayList(p00,p01)), access0.getOutput());
+		this.selection0 = new SelectCommand(new ConjunctivePredicate(Lists.newArrayList(p00,p01)), access0.getOutput());
 		Attribute attr = (Attribute) selection0.getOutput().getHeader().get(1);
-		this.projection0 = new Project(Lists.newArrayList(attr), selection0.getOutput());
+		this.projection0 = new ProjectCommand(Lists.newArrayList(attr), selection0.getOutput());
 		
-		this.access1 = new Access(this.schema.getRelation("AssayLimited"), this.schema.getRelation("AssayLimited").getAccessMethod("chembl_assay_limited_2"), 
+		this.access1 = new AccessCommand(this.schema.getRelation("AssayLimited"), this.schema.getRelation("AssayLimited").getAccessMethod("chembl_assay_limited_2"), 
 				Lists.newArrayList(_assay_category, _assay_cell_type, _assay_chembl_id, _assay_organism, _assay_strain, _assay_subcellular_fraction, 
 						_assay_tax_id, _assay_test_type, _assay_tissue, _assay_type, _assay_type_description, _bao_format, 
 						_cell_chembl_id, _confidence_description, _confidence_score, _description, 
 						_document_chembl_id, _relationship_description, _relationship_type, _src_assay_id, _src_id, _target_chembl_id), projection0.getOutput(), null);
-		this.join1 = new Join(access1.getOutput(), selection0.getOutput());
+		this.join1 = new JoinCommand(access1.getOutput(), selection0.getOutput());
 		Attribute attr1 = (Attribute) join1.getOutput().getHeader().get(21);
-		this.projection1 = new Project(Lists.newArrayList(attr1), join1.getOutput());
+		this.projection1 = new ProjectCommand(Lists.newArrayList(attr1), join1.getOutput());
 		
-		access2 = new Access(this.schema.getRelation("TargetLimited"), this.schema.getRelation("TargetLimited").getAccessMethod("chembl_target_limited"), 
+		access2 = new AccessCommand(this.schema.getRelation("TargetLimited"), this.schema.getRelation("TargetLimited").getAccessMethod("chembl_target_limited"), 
 				Lists.newArrayList(_organism,_pref_name,_species_group_flag,_target_chembl_id,_target_component_accession,_target_component_id,_target_component_type,_target_type), projection1.getOutput(), null);
 		ConstantEqualityPredicate p20 = new ConstantEqualityPredicate(7, new TypedConstant<String>("SINGLE PROTEIN"));
-		this.selection2 = new Select(new ConjunctivePredicate(Lists.newArrayList(p20)), access2.getOutput());
-		this.join2 = new Join(selection2.getOutput(), join1.getOutput());
+		this.selection2 = new SelectCommand(new ConjunctivePredicate(Lists.newArrayList(p20)), access2.getOutput());
+		this.join2 = new JoinCommand(selection2.getOutput(), join1.getOutput());
 		
 		return new NormalisedPlan(Lists.newArrayList(this.access0, this.selection0, this.projection0, this.access1, this.join1, 
 				this.projection1, this.access2, this.selection2, this.join2));

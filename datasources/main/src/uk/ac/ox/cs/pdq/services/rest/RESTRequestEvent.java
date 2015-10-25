@@ -102,6 +102,7 @@ public class RESTRequestEvent implements RequestEvent {
 	@Override
 	public RESTResponseEvent processRequest() throws AccessException, ProcessingException {
 		WebTarget target = this.access.build();
+		System.out.println(target.getUri());
 		log.info(target.getUri());
 		Response response = target.request(relation.getMediaType()).get();
 		return new RESTResponseEvent(this.relation, this, response);

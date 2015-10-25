@@ -4,8 +4,6 @@ import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.logging.performance.StatisticsCollector;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters.ReasoningTypes;
-import uk.ac.ox.cs.pdq.reasoning.chase.BlockingChaser;
-import uk.ac.ox.cs.pdq.reasoning.chase.BlockingDetector;
 import uk.ac.ox.cs.pdq.reasoning.chase.BoundedChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.BoundedChaser.KSupplier;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
@@ -89,10 +87,10 @@ public class ReasonerFactory {
 	 *      implement the Chaser interface.
 	 */
 	public Chaser getInstance() {
-		BlockingDetector blockingDetector = null;
-		if (this.type == ReasoningTypes.BLOCKING_CHASE) {
-			blockingDetector = new BlockingDetector();
-		} 
+//		BlockingDetector blockingDetector = null;
+//		if (this.type == ReasoningTypes.BLOCKING_CHASE) {
+//			blockingDetector = new BlockingDetector();
+//		} 
 //		else  if (this.schema.isCyclic() && !this.schema.containsViews()) {
 //			log.warn("Cycles detected in input schema. Forcing reasoning type to " + ReasoningTypes.BLOCKING_CHASE);
 //			this.type = ReasoningTypes.BLOCKING_CHASE;
@@ -114,11 +112,11 @@ public class ReasonerFactory {
 					this.collectStatistics == true ? new StatisticsCollector(this.collectStatistics, this.eventBus) : null,
 					this.kSupplier,
 					this.fullInitialization);
-		case BLOCKING_CHASE:
-			return new BlockingChaser(
-					this.collectStatistics == true ? new StatisticsCollector(this.collectStatistics, this.eventBus) : null,
-					blockingDetector,
-					1);
+//		case BLOCKING_CHASE:
+//			return new BlockingChaser(
+//					this.collectStatistics == true ? new StatisticsCollector(this.collectStatistics, this.eventBus) : null,
+//					blockingDetector,
+//					1);
 		default:
 			return null;
 		}

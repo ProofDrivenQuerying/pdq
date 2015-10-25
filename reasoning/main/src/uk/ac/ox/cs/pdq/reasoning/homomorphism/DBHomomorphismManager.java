@@ -31,8 +31,6 @@ import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.io.xml.QNames;
 import uk.ac.ox.cs.pdq.reasoning.HomomorphismException;
 import uk.ac.ox.cs.pdq.reasoning.Match;
-import uk.ac.ox.cs.pdq.reasoning.chase.BagMatch;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismConstraint.BagScope;
 import uk.ac.ox.cs.pdq.util.Table;
 
 import com.google.common.base.Preconditions;
@@ -323,12 +321,12 @@ public class DBHomomorphismManager implements HomomorphismManager {
 		Set<Map<Variable, Constant>> maps = this.builder.toSQL(s, constraints, this.constants, this.connection);
 		
 		for(Map<Variable, Constant> map:maps) {
-			if(map.containsKey(new Variable(this.Bag.getName()))) {
-				Constant bagId = map.get(new Variable(this.Bag.getName()));
-				result.add(new BagMatch(source, map, new Integer(bagId.toString())));
-			} else {
+//			if(map.containsKey(new Variable(this.Bag.getName()))) {
+//				Constant bagId = map.get(new Variable(this.Bag.getName()));
+//				result.add(new BagMatch(source, map, new Integer(bagId.toString())));
+//			} else {
 				result.add(new Match(source, map));
-			}
+//			}
 		}
 		return result;
 	}
@@ -361,13 +359,13 @@ public class DBHomomorphismManager implements HomomorphismManager {
 	 */
 	private <Q extends Evaluatable> Q convert(Q source, Map<String, DBRelation> aliases, HomomorphismConstraint... constraints) {
 		boolean singleBag = false;
-		for(HomomorphismConstraint c:constraints) {
-			if(c instanceof BagScope) {
-				if(((BagScope) c).singleBag==true) {
-					singleBag = true;
-				}
-			}
-		}
+//		for(HomomorphismConstraint c:constraints) {
+//			if(c instanceof BagScope) {
+//				if(((BagScope) c).singleBag==true) {
+//					singleBag = true;
+//				}
+//			}
+//		}
 		if(source instanceof Constraint) {
 			int f = 0;
 			int b = 0;

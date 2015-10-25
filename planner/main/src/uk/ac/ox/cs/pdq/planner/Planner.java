@@ -2,7 +2,6 @@ package uk.ac.ox.cs.pdq.planner;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Collection;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
@@ -12,14 +11,12 @@ import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.cost.CostStatKeys;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.logging.performance.ChainedStatistics;
 import uk.ac.ox.cs.pdq.logging.performance.DynamicStatistics;
 import uk.ac.ox.cs.pdq.logging.performance.StatKey;
 import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.planner.db.access.AccessibleSchema;
-import uk.ac.ox.cs.pdq.planner.explorer.ConfigurationFactory;
 import uk.ac.ox.cs.pdq.planner.explorer.CostEstimatorFactory;
 import uk.ac.ox.cs.pdq.planner.explorer.Explorer;
 import uk.ac.ox.cs.pdq.planner.explorer.ExplorerFactory;
@@ -28,17 +25,9 @@ import uk.ac.ox.cs.pdq.planner.logging.performance.ConstantsStatistics;
 import uk.ac.ox.cs.pdq.planner.logging.performance.EventDrivenExplorerStatistics;
 import uk.ac.ox.cs.pdq.planner.logging.performance.PlannerStatKeys;
 import uk.ac.ox.cs.pdq.planner.reasoning.ReasonerFactory;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.ExtendedBagFactory;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.dominance.DominanceFactory;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.dominance.SuccessDominanceFactory;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.state.AccessibleChaseState;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.state.DatabaseListState;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.state.DatabaseTreeState;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
-import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters.ReasoningTypes;
-import uk.ac.ox.cs.pdq.reasoning.chase.BagsTree;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismManagerFactory;
 
@@ -194,48 +183,21 @@ public class Planner {
 			if (costEstimator == null) {
 				costEstimator = CostEstimatorFactory.getEstimator(this.plannerParams, this.costParams, schema);
 			}
-			ReasonerFactory reasonerFactory = new ReasonerFactory(
+			Chaser reasoner = new ReasonerFactory(
 					this.eventBus, 
 					collectStats,
-					this.reasoningParams);
-			Chaser reasoner = reasonerFactory.getInstance();
-			if(this.reasoningParams.getReasoningType().equals(ReasoningTypes.BLOCKING_CHASE)) {
-				BagsTree.setBagFactory(new ExtendedBagFactory(accessibleSchema, this.query));
-			}
-			AccessibleChaseState state = this.reasoningParams.getReasoningType().equals(ReasoningTypes.BLOCKING_CHASE) == true ?
-			(uk.ac.ox.cs.pdq.planner.reasoning.chase.state.AccessibleChaseState) new DatabaseTreeState(this.query, this.schema, (DBHomomorphismManager) detector) : 
-			(uk.ac.ox.cs.pdq.planner.reasoning.chase.state.AccessibleChaseState) new DatabaseListState(this.query, this.schema, (DBHomomorphismManager) detector);
-			reasoner.reasonUntilTermination(state, accessibleQuery, this.schema.getDependencies());
-
-			DominanceFactory dominanceFactory = new DominanceFactory(
-					this.plannerParams.getDominanceType());
-
-			SuccessDominanceFactory<P> successDominanceFactory =
-					new SuccessDominanceFactory<>(costEstimator, this.plannerParams.getSuccessDominanceType());
-
-			ConfigurationFactory<P> configFactory = new ConfigurationFactory<>(
-					this.eventBus, collectStats,
-					accessibleSchema,
-					accessibleQuery, 
-					state,
-					reasoner,
-					costEstimator,
-					dominanceFactory,
-					successDominanceFactory,
-					this.plannerParams);
+					this.reasoningParams).getInstance();
 			
 			explorer = ExplorerFactory.createExplorer(
 					this.eventBus, 
 					collectStats,
 					this.schema,
 					accessibleSchema,
-					this.query,
-					state,
-					reasonerFactory,
+					query,
+					accessibleQuery,
+					reasoner,
 					detector,
 					costEstimator,
-					configFactory,
-					successDominanceFactory,
 					this.plannerParams);
 
 			// Chain all statistics collectors

@@ -96,4 +96,9 @@ public class RestrictedChaser extends Chaser {
 		// TODO Auto-generated method stub
 		return false;
 	}
+
+	@Override
+	public RestrictedChaser clone() {
+		return new RestrictedChaser(this.statistics);
+	}
 }

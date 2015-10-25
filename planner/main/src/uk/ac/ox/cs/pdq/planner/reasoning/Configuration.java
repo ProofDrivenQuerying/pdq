@@ -1,5 +1,6 @@
 package uk.ac.ox.cs.pdq.planner.reasoning;
 
+import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.util.Costable;
 
@@ -23,7 +24,7 @@ public interface Configuration<P extends Plan> extends Costable, Cloneable, Comp
 	/**
 	 * @return true if the configuration matches the target query 
 	 */
-	boolean isSuccessful();
+	boolean isSuccessful(Query<?> query);
 
 	int compareTo(Configuration<P> o);
 }

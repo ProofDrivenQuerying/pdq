@@ -8,7 +8,11 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.planner.dag.ApplyRule;
+import uk.ac.ox.cs.pdq.planner.dag.ConfigurationUtility;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
+import uk.ac.ox.cs.pdq.planner.reasoning.chase.dominance.Dominance;
+import uk.ac.ox.cs.pdq.planner.reasoning.chase.equivalence.FastStructuralEquivalence;
+import uk.ac.ox.cs.pdq.planner.reasoning.chase.equivalence.StructuralEquivalence;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
@@ -19,7 +23,6 @@ import com.google.common.collect.Lists;
  *
  * @author Efthymia Tsamoura
  *
- * @param 
  */
 public class SynchronizedEquivalenceClass extends DAGEquivalenceClass{
 
@@ -34,6 +37,9 @@ public class SynchronizedEquivalenceClass extends DAGEquivalenceClass{
 
 	/** True if the class contains an ApplyRule configuration*/
 	private boolean applyRule = false;
+	
+	/** Performs structural equivalence checks */
+	private final StructuralEquivalence structuralEquivalence = new FastStructuralEquivalence();
 
 	private final ReentrantReadWriteLock readWriteLock =  new ReentrantReadWriteLock();
 	private final Lock read  = this.readWriteLock.readLock();
@@ -49,7 +55,6 @@ public class SynchronizedEquivalenceClass extends DAGEquivalenceClass{
 		if(configuration.isClosed()) {
 			this.minCostConfiguration = configuration;
 		}
-		configuration.setEquivalenceClass(this);
 		if(configuration instanceof ApplyRule) {
 			this.applyRule = true;
 		}
@@ -76,7 +81,6 @@ public class SynchronizedEquivalenceClass extends DAGEquivalenceClass{
 			if(this.minHeight > configuration.getHeight()) {
 				this.minHeight = configuration.getHeight();
 			}
-			configuration.setEquivalenceClass(this);
 			if(configuration instanceof ApplyRule) {
 				this.applyRule = true;
 			}
@@ -168,17 +172,17 @@ public class SynchronizedEquivalenceClass extends DAGEquivalenceClass{
 	 * @return Collection<DAGChaseConfiguration>
 	 */
 	@Override
-	public Collection<DAGChaseConfiguration> dominatedBy(DAGChaseConfiguration input) {
+	public Collection<DAGChaseConfiguration> dominatedBy(Dominance[] dominance, DAGChaseConfiguration input) {
 		this.read.lock();
 		try {
 			Collection<DAGChaseConfiguration> dominated = new LinkedHashSet<>();
 			if (!this.isEmpty()){
 				for (DAGChaseConfiguration configuration: this.nonRepresentatives) {
-					if(configuration.isDominatedBy(input)) {
+					if(ConfigurationUtility.isDominatedBy(dominance, input, configuration)) {
 						dominated.add(configuration);
 					}
 				}
-				if(this.representative.isDominatedBy(input)) {
+				if(ConfigurationUtility.isDominatedBy(dominance, input, this.representative)) {
 					dominated.add(this.representative);
 				}
 			}
@@ -196,7 +200,7 @@ public class SynchronizedEquivalenceClass extends DAGEquivalenceClass{
 	public boolean structurallyEquivalentTo(DAGChaseConfiguration configuration) {
 		this.read.lock();
 		try {
-			return !this.isEmpty() && this.representative.isStructurallyEquivalentTo(configuration);
+			return !this.isEmpty() && this.structuralEquivalence.isEquivalent(this.representative, configuration);
 		} finally {
 			this.read.unlock();
 		}
@@ -207,16 +211,16 @@ public class SynchronizedEquivalenceClass extends DAGEquivalenceClass{
 	 * @return DAGChaseConfiguration
 	 */
 	@Override
-	public DAGChaseConfiguration dominate(DAGChaseConfiguration input) {
+	public DAGChaseConfiguration dominate(Dominance[] dominance, DAGChaseConfiguration input) {
 		this.read.lock();
 		try {
 			if (!this.isEmpty()){
 				for (DAGChaseConfiguration configuration: this.nonRepresentatives) {
-					if (input.isDominatedBy(configuration)) {
+					if (ConfigurationUtility.isDominatedBy(dominance, configuration, input)) {
 						return configuration;
 					}
 				}
-				if (input.isDominatedBy(this.representative)) {
+				if (ConfigurationUtility.isDominatedBy(dominance, this.representative, input)) {
 					return this.representative;
 				}
 			}

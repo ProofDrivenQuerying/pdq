@@ -1,6 +1,8 @@
 package uk.ac.ox.cs.pdq.planner.reasoning.chase.dominance;
 
+import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.SimpleCostEstimator;
+import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.planner.dag.ApplyRule;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
 
@@ -13,9 +15,12 @@ import com.google.common.base.Preconditions;
  */
 public class ClosedDominance implements Dominance<ChaseConfiguration>{
 
+	private final CostEstimator<Plan> costEstimator;
 	private final FactDominance factDominance;
 
-	public ClosedDominance(){
+	public ClosedDominance(CostEstimator<Plan> costEstimator){
+		Preconditions.checkNotNull(costEstimator);
+		this.costEstimator = costEstimator;
 		this.factDominance = new FastFactDominance(false);
 	}
 
@@ -23,8 +28,10 @@ public class ClosedDominance implements Dominance<ChaseConfiguration>{
 	 * Constructor for ClosedDominance.
 	 * @param factDominance FactDominance<DAGConfiguration<?>>
 	 */
-	public ClosedDominance(FactDominance factDominance){
+	public ClosedDominance(CostEstimator costEstimator, FactDominance factDominance){
 		Preconditions.checkNotNull(factDominance);
+		Preconditions.checkNotNull(costEstimator);
+		this.costEstimator = costEstimator;
 		this.factDominance = factDominance;
 	}
 
@@ -45,8 +52,7 @@ public class ClosedDominance implements Dominance<ChaseConfiguration>{
 				&& this.factDominance.isDominated(source, target) ) {
 			return true;
 		} else if(!(source instanceof ApplyRule)
-				&& source.getCostEstimator() instanceof SimpleCostEstimator
-				&& target.getCostEstimator() instanceof SimpleCostEstimator
+				&& this.costEstimator instanceof SimpleCostEstimator
 				&& source.getPlan().getCost().greaterThan(target.getPlan().getCost())
 				&& this.factDominance.isDominated(source, target) ) {
 			return true;
@@ -61,6 +67,6 @@ public class ClosedDominance implements Dominance<ChaseConfiguration>{
 	 */
 	@Override
 	public ClosedDominance clone() {
-		return new ClosedDominance(this.factDominance.clone());
+		return new ClosedDominance(this.costEstimator.clone(), this.factDominance.clone());
 	}
 }

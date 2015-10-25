@@ -64,7 +64,7 @@ public interface ChaseState {
 	 * @return
 	 * 		true if the input state is successful
 	 */
-	boolean isSuccessful();
+	boolean isSuccessful(Query<?> query);
 	
 	
 	/**
@@ -105,6 +105,15 @@ public interface ChaseState {
 	 * 		true if the step has been applied successfully 
 	 */
 	boolean chaseStep(Collection<Match> matches);
+	
+	/**
+	 *
+	 * @param s
+	 * 		An input chase configuration
+	 * @return
+	 * 		a merged state
+	 */
+	ChaseState merge(ChaseState s);
 
 	ChaseState clone();
 }

@@ -65,17 +65,17 @@ public class SimplePropagator extends CostPropagator<SimpleNode> {
 
 		} else {
 			Cost currentCost = node.getPathToSuccess() == null ? null: 
-			PropagatorUtils.createLinearPlan(planTree, node.getPathToSuccess(), this.costEstimator, false).getCost();
+			PropagatorUtils.createLinearPlan(planTree, node.getPathToSuccess(), this.costEstimator).getCost();
 			// Iterate over all children of the given node.
 			for (DefaultEdge edge:planTree.outgoingEdgesOf(node)) {
 				SimpleNode child = planTree.getEdgeTarget(edge);
 				if (child.getPathToSuccess() != null) {
 					List<Integer> sequence = Lists.newArrayList(child.getId());
 					sequence.addAll(child.getPathToSuccess());
-					Cost childCost = PropagatorUtils.createLinearPlan(planTree, sequence, this.costEstimator, false).getCost();
+					Cost childCost = PropagatorUtils.createLinearPlan(planTree, sequence, this.costEstimator).getCost();
 					if (currentCost == null || childCost.lessThan(currentCost)) {
 						node.setPathToSuccess(sequence);
-						currentCost = PropagatorUtils.createLinearPlan(planTree, node.getPathToSuccess(), this.costEstimator, false).getCost();
+						currentCost = PropagatorUtils.createLinearPlan(planTree, node.getPathToSuccess(), this.costEstimator).getCost();
 					}
 				}
 			}
@@ -84,11 +84,9 @@ public class SimplePropagator extends CostPropagator<SimpleNode> {
 
 		// Update the best plan at the root if necessary
 		if (node.equals(planTree.getRoot()) && node.getPathToSuccess() != null) {
-			this.bestPlan = PropagatorUtils.createLinearPlan(planTree, node.getPathToSuccess(), this.costEstimator, true);
-			this.bestProof = PropagatorUtils.createProof(planTree, node.getPathToSuccess());
+			this.bestPlan = PropagatorUtils.createLinearPlan(planTree, node.getPathToSuccess(), this.costEstimator);
 			this.bestPath = node.getPathToSuccess();
 			Preconditions.checkState(this.bestPlan != null);
-			Preconditions.checkState(this.bestProof != null);
 			Preconditions.checkState(this.bestPath != null);
 		} else {
 			for (DefaultEdge edge: planTree.incomingEdgesOf(node)) {

@@ -82,7 +82,7 @@ public class ReasonerUtility {
 		ListState state = new DatabaseListState(lquery, detector);
 		return egdChaser.entails(state, lquery.getFree2Canonical(), rquery, constraints);
 	}
-	
+		
 	/**
 	 * 
 	 * @param match

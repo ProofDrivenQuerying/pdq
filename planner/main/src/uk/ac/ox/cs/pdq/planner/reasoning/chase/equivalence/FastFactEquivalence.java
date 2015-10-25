@@ -27,7 +27,7 @@ public class FastFactEquivalence implements FactEquivalence{
 		Set<Constant> inputs1 = Sets.newLinkedHashSet(source.getInput());
 		Set<Constant> inputs2 = Sets.newLinkedHashSet(target.getInput());
 		if(inputs1.equals(inputs2)) {
-			if (source.getInferred().equals(target.getInferred())) {
+			if (source.getState().getInferred().equals(target.getState().getInferred())) {
 				return true;
 			}
 		}

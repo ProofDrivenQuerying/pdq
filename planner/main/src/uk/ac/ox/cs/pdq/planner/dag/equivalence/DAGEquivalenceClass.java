@@ -3,6 +3,7 @@ package uk.ac.ox.cs.pdq.planner.dag.equivalence;
 import java.util.Collection;
 
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
+import uk.ac.ox.cs.pdq.planner.reasoning.chase.dominance.Dominance;
 
 /**
  * Class of structurally equivalent configurations
@@ -44,7 +45,7 @@ public abstract class DAGEquivalenceClass {
 	 * @param configuration
 	 * @return the class configurations that are dominated by the input configuration
 	 */
-	public abstract Collection<DAGChaseConfiguration> dominatedBy(DAGChaseConfiguration configuration);
+	public abstract Collection<DAGChaseConfiguration> dominatedBy(Dominance[] dominance, DAGChaseConfiguration configuration);
 
 
 	/**
@@ -57,7 +58,7 @@ public abstract class DAGEquivalenceClass {
 	 * @param configuration
 	 * @return the configurations that dominate the input configuration
 	 */
-	public abstract DAGChaseConfiguration dominate(DAGChaseConfiguration configuration);
+	public abstract DAGChaseConfiguration dominate(Dominance[] dominance, DAGChaseConfiguration configuration);
 
 	/**
 	 *

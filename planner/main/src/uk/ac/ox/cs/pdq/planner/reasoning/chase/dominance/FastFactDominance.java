@@ -36,7 +36,7 @@ public class FastFactDominance implements FactDominance{
 			return false;
 		}
 		if (source.getInput().containsAll(target.getInput()) &&
-				target.getInferred().containsAll(source.getInferred())) {
+				target.getState().getInferred().containsAll(source.getState().getInferred())) {
 			if (!this.isStrict ||  ( this.isStrict && source.getOutputFacts().size() < target.getOutputFacts().size())) {
 				return true;
 			}
