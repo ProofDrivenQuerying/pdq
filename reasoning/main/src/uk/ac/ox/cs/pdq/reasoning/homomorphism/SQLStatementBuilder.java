@@ -424,7 +424,7 @@ public abstract class SQLStatementBuilder {
 				if (!term.isVariable() && !term.isSkolem()) {
 					StringBuilder eq = new StringBuilder();
 					eq.append(alias==null ? encodeName(fact.getSignature().getName()):alias).append(".").append(((Relation) fact.getSignature()).getAttribute(it).getName()).append('=');
-					eq.append("'").append(((TypedConstant) term).getValue()).append("'");
+					eq.append("'").append(((TypedConstant) term).toString()).append("'");
 					constantPredicates.add(eq.toString());
 				}
 			}
