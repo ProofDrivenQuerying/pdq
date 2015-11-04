@@ -19,13 +19,13 @@ import uk.ac.ox.cs.pdq.util.Utility;
 import com.google.common.base.Preconditions;
 
 /**
- * A linear plan
+ * A sequence of access subplans, where each subplan consists of a single access operator and (optionally) selections and projections. 
  *
  * @author Efthymia Tsamoura
  */
 public final class LinearPlan extends Plan implements Iterable<LinearPlan>, Rewritable {
 
-	/** The last access */
+	/** The top-most access */
 	protected final AccessOperator access;
 
 	/** The top-level operator of the plan*/
@@ -37,27 +37,35 @@ public final class LinearPlan extends Plan implements Iterable<LinearPlan>, Rewr
 	/** The suffix sub-plan */
 	protected LinearPlan suffix;
 
+	/** The first linear subplan **/
 	protected LinearPlan last;
 
+	/** The last linear subplan **/
 	protected LinearPlan first;
 
 	/**
-	 * Constructor for LinearPlan.
-	 * @param operator LogicalOperator
-	 * @param access AccessOperator
-	 * @param cf ControlFlows
+	 * Creates a linear plan consisting of a single access operator.
+	 * The top-most operator has the input access operator as a child.
+	 * @param operator
+	 * 		The top-level operator of the plan
+	 * @param access
+	 * 		The top-most access
 	 */
 	public LinearPlan(RelationalOperator operator, AccessOperator access) {
 		this(operator, access, null, null);
 	}
 
 	/**
-	 * Constructor for LinearPlan.
-	 * @param operator LogicalOperator
-	 * @param access AccessOperator
-	 * @param prefix LinearPlan
-	 * @param suffix LinearPlan
-	 * @param cf ControlFlows
+	 * Creates a linear plan that is suffixed and prefixed by the input subplans.
+	 * The output linear plan looks like <prefix,LinearPlan(operator, access), suffix> 
+	 * @param operator
+	 * 		The top-level operator of the plan
+	 * @param access
+	 * 		The top-most access
+	 * @param prefix
+	 * 		The prefix sub-plan
+	 * @param suffix
+	 * 		The suffix sub-plan
 	 */
 	public LinearPlan(RelationalOperator operator, AccessOperator access, LinearPlan prefix, LinearPlan suffix) {
 		super();
