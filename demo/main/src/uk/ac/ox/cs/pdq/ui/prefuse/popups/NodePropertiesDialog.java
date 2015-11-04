@@ -20,6 +20,7 @@ import uk.ac.ox.cs.pdq.planner.linear.metadata.DominanceMetadata.PruningTypes;
 import uk.ac.ox.cs.pdq.planner.linear.metadata.EquivalenceMetadata;
 import uk.ac.ox.cs.pdq.planner.linear.metadata.Metadata;
 import uk.ac.ox.cs.pdq.planner.linear.node.SearchNode;
+import uk.ac.ox.cs.pdq.ui.proof.Proof;
 
 
 public class NodePropertiesDialog extends JFrame {
@@ -133,7 +134,7 @@ public class NodePropertiesDialog extends JFrame {
 
 		Metadata metadata = node.getMetadata();
 		if(metadata instanceof BestPlanMetadata) {
-			PopupUtils.addBorderAndTextToContainer(titledBorders, BorderFactory.createTitledBorder("Found proof"), ((BestPlanMetadata) metadata).getProof().toString());
+			PopupUtils.addBorderAndTextToContainer(titledBorders, BorderFactory.createTitledBorder("Found proof"), Proof.toProof(((BestPlanMetadata) metadata).getPlan()).toString());
 			PopupUtils.addBorderAndTextToContainer(titledBorders, BorderFactory.createTitledBorder("Found plan"), ((BestPlanMetadata) metadata).getPlan().toString());
 			PopupUtils.addBorderAndTextToContainer(titledBorders, BorderFactory.createTitledBorder("Found plan's cost"), ((BestPlanMetadata) metadata).getPlan().getCost().toString());
 		}

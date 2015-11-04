@@ -42,14 +42,27 @@ public class LinearGeneric extends LinearExplorer {
 	/** Logger. */
 	private static Logger log = Logger.getLogger(LinearGeneric.class);
 
+
 	/**
 	 * 
 	 * @param eventBus
 	 * @param collectStats
-	 * @param costEstimator Estimates the cost of the plans found
-	 * @param configuration The configuration of the root of the plan tree
-	 * @param nodeFactory Creates new nodes
-	 * @param depth Maximum exploration depth
+	 * @param query
+	 * 		The input user query
+	 * @param accessibleQuery
+	 * 		The accessible counterpart of the user query
+	 * @param schema
+	 * 		The input schema
+	 * @param accessibleSchema
+	 * 		The accessible counterpart of the input schema
+	 * @param chaser
+	 * 		Runs the chase algorithm
+	 * @param detector
+	 * 		Detects homomorphisms during chasing
+	 * @param costEstimator
+	 * 		Estimates the cost of a plan
+	 * @param nodeFactory
+	 * @param depth
 	 * @throws PlannerException
 	 */
 	public LinearGeneric(
@@ -99,6 +112,9 @@ public class LinearGeneric extends LinearExplorer {
 		// Create a new node from the exposed facts and add it to the plan tree
 		SearchNode freshNode = this.getNodeFactory().getInstance(selectedNode, similarCandidates);
 		freshNode.getConfiguration().detectCandidates(this.accessibleSchema);
+		if (!freshNode.getConfiguration().hasCandidates()) {
+			freshNode.setStatus(NodeStatus.TERMINAL);
+		}
 		this.costEstimator.cost(freshNode.getConfiguration().getPlan());
 		
 		this.stats.start(MILLI_CLOSE);

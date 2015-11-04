@@ -137,7 +137,7 @@ public class AccessibleSchema extends Schema {
 	public AccessibilityAxiom getAccessibilityAxiom(Relation r, AccessMethod b) {
 		return this.accessibilityAxioms.get(Pair.of(r, b));
 	}
-
+	
 	/**
 	 * @return List<Relation>
 	 */

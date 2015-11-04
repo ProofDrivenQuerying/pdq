@@ -96,20 +96,32 @@ public class LinearOptimized extends LinearExplorer {
 		}
 	});
 
+
 	/**
 	 * 
 	 * @param eventBus
 	 * @param collectStats
 	 * @param query
+	 * 		The input user query
+	 * @param accessibleQuery
+	 * 		The accessible counterpart of the user query
+	 * @param schema
+	 * 		The input schema
 	 * @param accessibleSchema
+	 * 		The accessible counterpart of the input schema
 	 * @param chaser
+	 * 		Runs the chase algorithm
 	 * @param detector
+	 * 		Detects homomorphisms during chasing
 	 * @param costEstimator
+	 * 		Estimates the cost of a plan
 	 * @param nodeFactory
 	 * @param depth
 	 * @param queryMatchInterval
 	 * @param postPruning
+	 * 		Removes the redundant follow up joins and accesses from a plan
 	 * @param zombification
+	 * 		True if we wake up previously terminal nodes
 	 * @throws PlannerException
 	 */
 	public LinearOptimized(
@@ -193,6 +205,9 @@ public class LinearOptimized extends LinearExplorer {
 		// Create a new node from the exposed facts and add it to the plan tree
 		SearchNode freshNode = this.getNodeFactory().getInstance(selectedNode, similarCandidates);	
 		freshNode.getConfiguration().detectCandidates(this.accessibleSchema);
+		if (!freshNode.getConfiguration().hasCandidates()) {
+			freshNode.setStatus(NodeStatus.TERMINAL);
+		}
 		this.costEstimator.cost(freshNode.getConfiguration().getPlan());
 
 		log.info("SELECTED NODE: " + selectedNode);
@@ -319,7 +334,7 @@ public class LinearOptimized extends LinearExplorer {
 			if(this.postPruning != null && !this.prunedPaths.contains(this.costPropagator.getBestPath())) {
 				this.prunedPaths.add(this.costPropagator.getBestPath());
 				List<SearchNode> path = LinearUtility.createPath(this.planTree, this.costPropagator.getBestPath());
-				List<Predicate> queryFacts = this.query.ground(match.getMapping()).getPredicates();
+				List<Predicate> queryFacts = this.accessibleQuery.ground(match.getMapping()).getPredicates();
 				boolean isPruned = this.postPruning.prune(this.planTree.getRoot(), path, queryFacts);
 				if(isPruned) {
 					this.postPruning.addPrunedPathToTree(this.planTree, this.planTree.getRoot(), this.postPruning.getPath());

@@ -203,12 +203,12 @@ public class QueryToProtoBuffer implements Rewriter<Query<?>, Rule> {
 		builder.setPredicateName(predicate.getName());
 		Signature signature = predicate.getSignature();
 		
-		for (int i = 0, l = predicate.getTermCount(); i < l; i++) {
+		for (int i = 0, l = predicate.getTermsCount(); i < l; i++) {
 			Term term = predicate.getTerm(i);
 			if (!this.varTypes.containsKey(term) && signature instanceof Relation) {
 				this.varTypes.put(term, this.resolveType((Relation) signature, i));
 			}
-			if (i == 0 || i < predicate.getTermCount() - 1) {
+			if (i == 0 || i < predicate.getTermsCount() - 1) {
 				builder.addKeyArgument(this.rewriteTerm(term));
 			} else {
 				builder.addValueArgument(this.rewriteTerm(term));

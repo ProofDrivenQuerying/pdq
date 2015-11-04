@@ -62,6 +62,7 @@ public class MySQLStatementBuilder extends SQLStatementBuilder {
 
 	@Override
 	public String encodeName(String name) {
-		return name;
+		//return name;
+		return super.encodeName(name);
 	}
 }

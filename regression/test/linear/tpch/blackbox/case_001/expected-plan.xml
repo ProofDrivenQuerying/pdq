@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<plan type="linear" cost="2022.2222222222222" control-flow="TOP_DOWN">
+<plan type="linear" cost="2000.0">
 <command name="T1">
-<operator type="PROJECT">
-<outputs>
-<attribute name="c1" type="java.lang.Integer"/>
-</outputs>
-<project>
-<attribute name="c1" type="java.lang.Integer"/>
-</project>
-<child>
 <operator type="PROJECT">
 <outputs>
 <attribute name="c1" type="java.lang.Integer"/>
@@ -45,8 +37,6 @@
 <attribute name="p_retailprice" type="java.math.BigDecimal"/>
 <attribute name="p_comment" type="java.lang.String"/>
 </outputs>
-</operator>
-</child>
 </operator>
 </child>
 </operator>

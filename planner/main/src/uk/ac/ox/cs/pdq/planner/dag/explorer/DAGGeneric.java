@@ -45,6 +45,7 @@ import com.google.common.eventbus.EventBus;
  */
 public class DAGGeneric extends DAGExplorer {
 	
+	/** Removes success dominated configurations **/
 	protected final SuccessDominance successDominance;
 	
 	/**
@@ -79,14 +80,27 @@ public class DAGGeneric extends DAGExplorer {
 	 * @param collectStats
 	 * @param parameters
 	 * @param query
+	 * 		The input user query
+	 * @param accessibleQuery
+	 * 		The accessible counterpart of the user query
+	 * @param schema
+	 * 		The input schema
 	 * @param accessibleSchema
+	 * 		The accessible counterpart of the input schema
 	 * @param chaser
+	 * 		Runs the chase algorithm
 	 * @param detector
+	 * 		Detects homomorphisms during chasing
 	 * @param costEstimator
+	 * 		Estimates the cost of a plan
 	 * @param successDominance
+	 * 		Removes success dominated configurations
 	 * @param filter
+	 * 		Filters out configurations at the end of each iteration
 	 * @param validators
+	 * 		Validates pairs of configurations to be composed
 	 * @param maxDepth
+	 * 		The maximum depth to explore
 	 * @param orderAware
 	 * @throws PlannerException
 	 */

@@ -1,21 +1,18 @@
 package uk.ac.ox.cs.pdq.planner.linear.pruning;
 
-import com.google.common.base.Preconditions;
-
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.PostPruningTypes;
 import uk.ac.ox.cs.pdq.planner.db.access.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.linear.node.NodeFactory;
-import uk.ac.ox.cs.pdq.planner.linear.node.SearchNode;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
+
+import com.google.common.base.Preconditions;
 
 /**
  * Creates plan post-pruning objects
  *
  * @author Efthymia Tsamoura
  *
- * @param <S>
- * @param <N>
  */
 public class PostPruningFactory {
 
@@ -33,7 +30,6 @@ public class PostPruningFactory {
 	 */
 	public PostPruningFactory(PostPruningTypes type, NodeFactory nodeFactory, Chaser chaser, Query<?> query,
 			AccessibleSchema accessibleSchema) {
-		Preconditions.checkNotNull(type);
 		Preconditions.checkNotNull(nodeFactory);
 		Preconditions.checkNotNull(chaser);
 		Preconditions.checkNotNull(query);

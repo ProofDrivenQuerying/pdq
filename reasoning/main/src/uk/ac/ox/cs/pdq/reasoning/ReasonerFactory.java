@@ -7,6 +7,7 @@ import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters.ReasoningTypes;
 import uk.ac.ox.cs.pdq.reasoning.chase.BoundedChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.BoundedChaser.KSupplier;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
+import uk.ac.ox.cs.pdq.reasoning.chase.EGDChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.KTerminationChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
 
@@ -87,18 +88,12 @@ public class ReasonerFactory {
 	 *      implement the Chaser interface.
 	 */
 	public Chaser getInstance() {
-//		BlockingDetector blockingDetector = null;
-//		if (this.type == ReasoningTypes.BLOCKING_CHASE) {
-//			blockingDetector = new BlockingDetector();
-//		} 
-//		else  if (this.schema.isCyclic() && !this.schema.containsViews()) {
-//			log.warn("Cycles detected in input schema. Forcing reasoning type to " + ReasoningTypes.BLOCKING_CHASE);
-//			this.type = ReasoningTypes.BLOCKING_CHASE;
-//			blockingDetector = new BlockingDetector();
-//		}
 		switch (this.type) {
 		case RESTRICTED_CHASE:
 			return new RestrictedChaser(
+					this.collectStatistics == true ? new StatisticsCollector(this.collectStatistics, this.eventBus) : null);
+		case EGD_CHASE:
+			return new EGDChaser(
 					this.collectStatistics == true ? new StatisticsCollector(this.collectStatistics, this.eventBus) : null);
 		case KTERMINATION_CHASE:
 			return new KTerminationChaser(
@@ -112,11 +107,6 @@ public class ReasonerFactory {
 					this.collectStatistics == true ? new StatisticsCollector(this.collectStatistics, this.eventBus) : null,
 					this.kSupplier,
 					this.fullInitialization);
-//		case BLOCKING_CHASE:
-//			return new BlockingChaser(
-//					this.collectStatistics == true ? new StatisticsCollector(this.collectStatistics, this.eventBus) : null,
-//					blockingDetector,
-//					1);
 		default:
 			return null;
 		}

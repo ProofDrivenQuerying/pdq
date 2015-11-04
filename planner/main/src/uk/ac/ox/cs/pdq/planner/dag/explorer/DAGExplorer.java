@@ -22,7 +22,7 @@ import uk.ac.ox.cs.pdq.planner.db.access.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.planner.db.access.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.explorer.Explorer;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.state.AccessibleChaseState;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.state.DatabaseListState;
+import uk.ac.ox.cs.pdq.planner.reasoning.chase.state.AccessibleDatabaseListState;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
@@ -38,18 +38,25 @@ import com.google.common.eventbus.EventBus;
  */
 public abstract class DAGExplorer extends Explorer<DAGPlan> {
 
+	/** The input user query **/
 	protected final Query<?> query;
 	
+	/** The accessible counterpart of the user query **/
 	protected final Query<?> accessibleQuery;
 
+	/** The input schema **/
 	protected final Schema schema;
 	
+	/** The accessible counterpart of the input schema **/
 	protected final AccessibleSchema accessibleSchema;
 
+	/** Runs the chase algorithm **/
 	protected final Chaser chaser;
 
+	/** Detects homomorphisms during chasing**/
 	protected final HomomorphismDetector detector;
 
+	/** Estimates the cost of a plan **/
 	protected final CostEstimator<DAGPlan> costEstimator;
 
 	/** The minimum cost configuration */
@@ -63,10 +70,19 @@ public abstract class DAGExplorer extends Explorer<DAGPlan> {
 	 * @param collectStats
 	 * @param parameters
 	 * @param query
+	 * 		The input user query
+	 * @param accessibleQuery
+	 * 		The accessible counterpart of the user query
+	 * @param schema
+	 * 		The input schema
 	 * @param accessibleSchema
+	 * 		The accessible counterpart of the input schema
 	 * @param chaser
+	 * 		Runs the chase algorithm
 	 * @param detector
+	 * 		Detects homomorphisms during chasing
 	 * @param costEstimator
+	 * 		Estimates the cost of a plan
 	 */
 	public DAGExplorer(EventBus eventBus, 
 			boolean collectStats, 
@@ -149,7 +165,7 @@ public abstract class DAGExplorer extends Explorer<DAGPlan> {
 	protected List<DAGChaseConfiguration> createInitialConfigurations() throws PlannerException {
 		AccessibleChaseState state = null;
 		state = (uk.ac.ox.cs.pdq.planner.reasoning.chase.state.AccessibleChaseState) 
-				new DatabaseListState(this.query, this.schema, (DBHomomorphismManager) this.detector);
+				new AccessibleDatabaseListState(this.query, this.schema, (DBHomomorphismManager) this.detector);
 		this.chaser.reasonUntilTermination(state, this.query, this.schema.getDependencies());
 
 

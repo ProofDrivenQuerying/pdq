@@ -79,9 +79,6 @@ public abstract class SearchNode implements Cloneable{
 		this.id = globalId++;
 		this.configuration = configuration;
 		this.pathFromRoot = null;
-		if (!this.configuration.hasCandidates()) {
-			this.setStatus(NodeStatus.TERMINAL);
-		}
 	}
 
 	/**
@@ -93,11 +90,6 @@ public abstract class SearchNode implements Cloneable{
 		this.id = globalId++;
 		this.depth = parent.getDepth() + 1;
 		this.configuration = configuration;
-
-		if (!this.configuration.hasCandidates()) {
-			this.setStatus(NodeStatus.TERMINAL);
-		}
-
 		List<Integer> pathFromRoot = null;
 		if(parent.getPathFromRoot() == null) {
 			pathFromRoot = Lists.newArrayList();
@@ -126,13 +118,6 @@ public abstract class SearchNode implements Cloneable{
 	 * @throws PlannerException
 	 */
 	public List<Match> matchesQuery(Query<?> query) throws PlannerException, LimitReachedException {
-//		List<Match> matches = this.configuration.matchesQuery(query);
-//		if(!matches.isEmpty()) {
-////			this.configuration.addProjection(query);
-//			Proof proof = this.configuration.createProof(matches.get(0).getMapping());
-//			this.configuration.setProof(proof);
-//		}
-//		return matches;
 		return this.configuration.matchesQuery(query);
 	}
 

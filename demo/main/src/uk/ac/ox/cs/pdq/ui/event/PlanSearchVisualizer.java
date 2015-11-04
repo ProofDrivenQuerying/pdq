@@ -5,6 +5,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import uk.ac.ox.cs.pdq.EventHandler;
 import uk.ac.ox.cs.pdq.planner.explorer.Explorer;
 import uk.ac.ox.cs.pdq.ui.model.ObservableSearchState;
+import uk.ac.ox.cs.pdq.ui.proof.Proof;
 
 import com.google.common.base.Preconditions;
 import com.google.common.eventbus.Subscribe;
@@ -47,7 +48,7 @@ public class PlanSearchVisualizer implements EventHandler {
 					explorer.getElapsedTime() / 1e6,
 					rounds,
 					explorer.getBestPlan(),
-					explorer.getBestProof()));
+					Proof.toProof(explorer.getBestPlan())));
 			synchronized (this.dataQueue) {
 				try {
 					this.dataQueue.wait();

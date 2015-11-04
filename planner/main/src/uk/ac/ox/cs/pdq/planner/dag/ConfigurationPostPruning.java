@@ -31,12 +31,16 @@ import com.google.common.collect.Sets;
  */
 public class ConfigurationPostPruning {
 
-	protected final Query<?> query;
+	/** The accessible counterpart of the user query **/
+	protected final Query<?> accessibleQuery;
 
+	/** The accessible counterpart of the input schema **/
 	protected final AccessibleSchema accessibleSchema;
 
+	/** Runs the chase algorithm **/
 	protected final Chaser chaser;
 
+	/** Estimates the cost of a plan **/
 	protected final CostEstimator<DAGPlan> costEstimator;
 	
 	/** A successful configuration*/
@@ -44,6 +48,7 @@ public class ConfigurationPostPruning {
 
 	/** Facts that match the query */
 	private final Collection<Predicate> queryFacts;
+	
 	/**
 	 * True if the input configuration is pruned
 	 */
@@ -59,19 +64,19 @@ public class ConfigurationPostPruning {
 	 *
 	 */
 	public ConfigurationPostPruning(
-			Query<?> query,
+			Query<?> accessibleQuery,
 			AccessibleSchema accessibleSchema,
 			Chaser chaser,
 			CostEstimator<DAGPlan> costEstimator,
 			DAGChaseConfiguration configuration, 
 			Collection<Predicate> queryFacts) {
-		Preconditions.checkNotNull(query);
+		Preconditions.checkNotNull(accessibleQuery);
 		Preconditions.checkNotNull(accessibleSchema);
 		Preconditions.checkNotNull(chaser);
 		Preconditions.checkNotNull(costEstimator);
 		Preconditions.checkNotNull(configuration);
 		Preconditions.checkArgument(configuration.isClosed());
-		Preconditions.checkArgument(configuration.isSuccessful(query));
+		Preconditions.checkArgument(configuration.isSuccessful(accessibleQuery));
 		Preconditions.checkNotNull(queryFacts);
 		Collection<Predicate> qF = new LinkedHashSet<>();
 		for(Predicate queryFact: queryFacts) {
@@ -81,7 +86,7 @@ public class ConfigurationPostPruning {
 				throw new java.lang.IllegalArgumentException();
 			}
 		}
-		this.query = query;
+		this.accessibleQuery = accessibleQuery;
 		this.accessibleSchema = accessibleSchema;
 		this.chaser = chaser;
 		this.costEstimator = costEstimator;
@@ -121,7 +126,7 @@ public class ConfigurationPostPruning {
 			Set<Predicate> firings = this.getFiringsThatExposeFacts(((ApplyRule) configuration), this.accessibleSchema, queryFacts);
 			if(!firings.equals(((ApplyRule) configuration).getFacts())) {
 				this.isPruned = true;
-				return this.prune(((ApplyRule) configuration), firings, this.chaser, this.query, this.accessibleSchema);
+				return this.prune(((ApplyRule) configuration), firings, this.chaser, this.accessibleQuery, this.accessibleSchema);
 			}
 			return configuration;
 		}
@@ -145,7 +150,7 @@ public class ConfigurationPostPruning {
 					l, r
 					);
 			this.costEstimator.cost(configuration.getPlan());
-			((BinaryConfiguration)configuration).chase(this.chaser, this.query, this.accessibleSchema.getInferredAccessibilityAxioms());
+			((BinaryConfiguration)configuration).chase(this.chaser, this.accessibleQuery, this.accessibleSchema.getInferredAccessibilityAxioms());
 			if(ret == null || ret.getPlan().getCost().greaterThan(output.getPlan().getCost())) {
 				ret = output;
 			}

@@ -91,8 +91,8 @@ public class CostEstimatorFactory {
 			}
 			throw new UnsupportedOperationException("BLACKBOX_DB cost estimator is supported for the provided schema.");
 		case SIMPLE_ERSPI:
-			Preconditions.checkNotNull(costParams.getCatalog());
-			Catalog catalog = new SimpleCatalog(schema, costParams.getCatalog());
+			Preconditions.checkNotNull(costParams.getDatabaseCatalog());
+			Catalog catalog = new SimpleCatalog(schema, costParams.getDatabaseCatalog());
 			result = new TotalERSPICostEstimator(new StatisticsCollector(collectStats, eventBus), catalog);
 			break;
 		case SIMPLE_CONSTANT:

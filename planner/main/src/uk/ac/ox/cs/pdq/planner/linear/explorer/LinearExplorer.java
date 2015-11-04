@@ -17,7 +17,7 @@ import uk.ac.ox.cs.pdq.planner.linear.node.PlanTree;
 import uk.ac.ox.cs.pdq.planner.linear.node.SearchNode;
 import uk.ac.ox.cs.pdq.planner.linear.node.SearchNode.NodeStatus;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.state.AccessibleChaseState;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.state.DatabaseListState;
+import uk.ac.ox.cs.pdq.planner.reasoning.chase.state.AccessibleDatabaseListState;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
@@ -34,18 +34,25 @@ import com.google.common.eventbus.EventBus;
  */
 public abstract class LinearExplorer extends Explorer<LinearPlan> {
 
+	/** The input user query **/
 	protected final Query<?> query;
 	
+	/** The accessible counterpart of the user query **/
 	protected final Query<?> accessibleQuery;
 
+	/** The input schema **/
 	protected final Schema schema;
 	
+	/** The accessible counterpart of the input schema **/
 	protected final AccessibleSchema accessibleSchema;
 
+	/** Runs the chase algorithm **/
 	protected final Chaser chaser;
 
+	/** Detects homomorphisms during chasing**/
 	protected final HomomorphismDetector detector;
 
+	/** Estimates the cost of a plan **/
 	protected final CostEstimator<LinearPlan> costEstimator;
 
 	/** Creates new nodes */
@@ -67,9 +74,19 @@ public abstract class LinearExplorer extends Explorer<LinearPlan> {
 	 * @param eventBus
 	 * @param collectStats
 	 * @param query
+	 * 		The input user query
+	 * @param accessibleQuery
+	 * 		The accessible counterpart of the user query
+	 * @param schema
+	 * 		The input schema
 	 * @param accessibleSchema
+	 * 		The accessible counterpart of the input schema
 	 * @param chaser
+	 * 		Runs the chase algorithm
+	 * @param detector
+	 * 		Detects homomorphisms during chasing
 	 * @param costEstimator
+	 * 		Estimates the cost of a plan
 	 * @param nodeFactory
 	 * @param depth
 	 * @throws PlannerException
@@ -110,18 +127,20 @@ public abstract class LinearExplorer extends Explorer<LinearPlan> {
 
 	/**
 	 * Initialises the plan tree
-	 * @param configuration The configuration of the root of the plan tree
 	 * @throws PlannerException
 	 */
 	private void initialise() throws PlannerException {
 		AccessibleChaseState state = null;
 		state = (uk.ac.ox.cs.pdq.planner.reasoning.chase.state.AccessibleChaseState) 
-				new DatabaseListState(this.query, this.schema, (DBHomomorphismManager) this.detector);
+				new AccessibleDatabaseListState(this.query, this.schema, (DBHomomorphismManager) this.detector);
 		this.chaser.reasonUntilTermination(state, this.query, this.schema.getDependencies());
 
 		this.tick = System.nanoTime();
 		SearchNode root = this.nodeFactory.getInstance(state);
 		root.getConfiguration().detectCandidates(this.accessibleSchema);
+		if (!root.getConfiguration().hasCandidates()) {
+			root.setStatus(NodeStatus.TERMINAL);
+		}
 		this.elapsedTime += System.nanoTime() - this.tick;
 		CreationMetadata metadata = new CreationMetadata(null, this.getElapsedTime());
 		root.setMetadata(metadata);

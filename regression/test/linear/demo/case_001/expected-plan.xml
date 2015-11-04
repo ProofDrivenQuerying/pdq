@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<plan type="linear" cost="2.2118580482085184E14">
+<plan type="linear" cost="2.2100061963566666E14">
 <command name="T1">
 <operator type="PROJECT">
 <outputs>
-<attribute name="c1" type="java.lang.Integer"/>
+<attribute name="c636" type="java.lang.Integer"/>
 </outputs>
 <project>
 <attribute name="woeid" type="java.lang.Integer"/>
@@ -39,22 +39,22 @@
 <command name="T2">
 <operator type="DEPENDENT_JOIN" param="0">
 <outputs>
-<attribute name="c1" type="java.lang.Integer"/>
-<attribute name="c1" type="java.lang.Integer"/>
-<attribute name="c2" type="java.lang.Integer"/>
-<attribute name="c3" type="java.lang.String"/>
-<attribute name="c4" type="java.lang.String"/>
-<attribute name="c5" type="java.lang.String"/>
+<attribute name="c636" type="java.lang.Integer"/>
+<attribute name="c636" type="java.lang.Integer"/>
+<attribute name="c637" type="java.lang.Integer"/>
+<attribute name="c638" type="java.lang.String"/>
+<attribute name="c639" type="java.lang.String"/>
+<attribute name="c640" type="java.lang.String"/>
 </outputs>
 <children>
 <operator type="ALIAS" name="T1"/>
 <operator type="PROJECT">
 <outputs>
-<attribute name="c1" type="java.lang.Integer"/>
-<attribute name="c2" type="java.lang.Integer"/>
-<attribute name="c3" type="java.lang.String"/>
-<attribute name="c4" type="java.lang.String"/>
-<attribute name="c5" type="java.lang.String"/>
+<attribute name="c636" type="java.lang.Integer"/>
+<attribute name="c637" type="java.lang.Integer"/>
+<attribute name="c638" type="java.lang.String"/>
+<attribute name="c639" type="java.lang.String"/>
+<attribute name="c640" type="java.lang.String"/>
 </outputs>
 <project>
 <attribute name="of" type="java.lang.Integer"/>
@@ -98,77 +98,61 @@
 </operator>
 </command>
 <command name="T3">
-<operator type="PROJECT">
-<outputs>
-<attribute name="c6" type="java.lang.String"/>
-<attribute name="c7" type="java.lang.String"/>
-<attribute name="c8" type="java.lang.String"/>
-<attribute name="c23" type="java.lang.Double"/>
-<attribute name="c24" type="java.lang.String"/>
-</outputs>
-<project>
-<attribute name="c6" type="java.lang.String"/>
-<attribute name="c7" type="java.lang.String"/>
-<attribute name="c8" type="java.lang.String"/>
-<attribute name="c23" type="java.lang.Double"/>
-<attribute name="c24" type="java.lang.String"/>
-</project>
-<child>
 <operator type="DEPENDENT_JOIN" param="2">
 <outputs>
-<attribute name="c1" type="java.lang.Integer"/>
-<attribute name="c1" type="java.lang.Integer"/>
-<attribute name="c2" type="java.lang.Integer"/>
-<attribute name="c3" type="java.lang.String"/>
-<attribute name="c4" type="java.lang.String"/>
-<attribute name="c5" type="java.lang.String"/>
-<attribute name="c2" type="java.lang.Integer"/>
-<attribute name="c6" type="java.lang.String"/>
-<attribute name="c7" type="java.lang.String"/>
-<attribute name="c8" type="java.lang.String"/>
-<attribute name="c9" type="java.lang.String"/>
-<attribute name="c10" type="java.lang.String"/>
-<attribute name="c11" type="java.lang.String"/>
-<attribute name="c12" type="java.lang.String"/>
-<attribute name="c13" type="java.lang.Integer"/>
-<attribute name="c14" type="java.lang.Integer"/>
-<attribute name="c15" type="java.lang.String"/>
-<attribute name="c16" type="java.lang.Double"/>
-<attribute name="c17" type="java.lang.Double"/>
-<attribute name="c18" type="java.lang.Integer"/>
-<attribute name="c19" type="java.lang.Double"/>
-<attribute name="c20" type="java.lang.String"/>
-<attribute name="c21" type="java.lang.String"/>
-<attribute name="c22" type="java.lang.String"/>
-<attribute name="c23" type="java.lang.Double"/>
-<attribute name="c24" type="java.lang.String"/>
-<attribute name="c25" type="java.lang.Integer"/>
+<attribute name="c636" type="java.lang.Integer"/>
+<attribute name="c636" type="java.lang.Integer"/>
+<attribute name="c637" type="java.lang.Integer"/>
+<attribute name="c638" type="java.lang.String"/>
+<attribute name="c639" type="java.lang.String"/>
+<attribute name="c640" type="java.lang.String"/>
+<attribute name="c637" type="java.lang.Integer"/>
+<attribute name="c641" type="java.lang.String"/>
+<attribute name="c642" type="java.lang.String"/>
+<attribute name="c643" type="java.lang.String"/>
+<attribute name="c644" type="java.lang.String"/>
+<attribute name="c645" type="java.lang.String"/>
+<attribute name="c646" type="java.lang.String"/>
+<attribute name="c647" type="java.lang.String"/>
+<attribute name="c648" type="java.lang.Integer"/>
+<attribute name="c649" type="java.lang.Integer"/>
+<attribute name="c650" type="java.lang.String"/>
+<attribute name="c651" type="java.lang.Double"/>
+<attribute name="c652" type="java.lang.Double"/>
+<attribute name="c653" type="java.lang.Integer"/>
+<attribute name="c654" type="java.lang.Double"/>
+<attribute name="c655" type="java.lang.String"/>
+<attribute name="c656" type="java.lang.String"/>
+<attribute name="c657" type="java.lang.String"/>
+<attribute name="c658" type="java.lang.Double"/>
+<attribute name="c659" type="java.lang.String"/>
+<attribute name="c660" type="java.lang.Integer"/>
 </outputs>
 <children>
 <operator type="ALIAS" name="T2"/>
 <operator type="PROJECT">
 <outputs>
-<attribute name="c2" type="java.lang.Integer"/>
-<attribute name="c6" type="java.lang.String"/>
-<attribute name="c7" type="java.lang.String"/>
-<attribute name="c8" type="java.lang.String"/>
-<attribute name="c9" type="java.lang.String"/>
-<attribute name="c10" type="java.lang.String"/>
-<attribute name="c11" type="java.lang.String"/>
-<attribute name="c12" type="java.lang.String"/>
-<attribute name="c13" type="java.lang.Integer"/>
-<attribute name="c14" type="java.lang.Integer"/>
-<attribute name="c15" type="java.lang.String"/>
-<attribute name="c16" type="java.lang.Double"/>
-<attribute name="c17" type="java.lang.Double"/>
-<attribute name="c18" type="java.lang.Integer"/>
-<attribute name="c19" type="java.lang.Double"/>
-<attribute name="c20" type="java.lang.String"/>
-<attribute name="c21" type="java.lang.String"/>
-<attribute name="c22" type="java.lang.String"/>
-<attribute name="c23" type="java.lang.Double"/>
-<attribute name="c24" type="java.lang.String"/>
-<attribute name="c25" type="java.lang.Integer"/>
+<attribute name="c637" type="java.lang.Integer"/>
+<attribute name="c641" type="java.lang.String"/>
+<attribute name="c642" type="java.lang.String"/>
+<attribute name="c643" type="java.lang.String"/>
+<attribute name="c644" type="java.lang.String"/>
+<attribute name="c645" type="java.lang.String"/>
+<attribute name="c646" type="java.lang.String"/>
+<attribute name="c647" type="java.lang.String"/>
+<attribute name="c648" type="java.lang.Integer"/>
+<attribute name="c649" type="java.lang.Integer"/>
+<attribute name="c650" type="java.lang.String"/>
+<attribute name="c651" type="java.lang.Double"/>
+<attribute name="c652" type="java.lang.Double"/>
+<attribute name="c653" type="java.lang.Integer"/>
+<attribute name="c654" type="java.lang.Double"/>
+<attribute name="c655" type="java.lang.String"/>
+<attribute name="c656" type="java.lang.String"/>
+<attribute name="c657" type="java.lang.String"/>
+<attribute name="c658" type="java.lang.Double"/>
+<attribute name="c659" type="java.lang.String"/>
+<attribute name="c660" type="java.lang.Integer"/>
 </outputs>
 <project>
 <attribute name="woeid" type="java.lang.Integer"/>
@@ -222,8 +206,6 @@
 </child>
 </operator>
 </children>
-</operator>
-</child>
 </operator>
 </command>
 </plan>

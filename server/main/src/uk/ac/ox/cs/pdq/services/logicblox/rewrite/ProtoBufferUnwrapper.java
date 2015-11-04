@@ -357,7 +357,7 @@ public class ProtoBufferUnwrapper {
 			DependencyBuilder db = new DependencyBuilder();
 			Predicate atom = relation.createAtoms();
 			db.addLeftAtom(atom);
-			for (int i = 0, l = atom.getTermCount(); i < l; i++) {
+			for (int i = 0, l = atom.getTermsCount(); i < l; i++) {
 				Relation r = entityTypedAtts.get(relation.getAttribute(i));
 				if (r != null) {
 //					attributes.set(i, new Attribute(r, attributes.get(i).getName()));

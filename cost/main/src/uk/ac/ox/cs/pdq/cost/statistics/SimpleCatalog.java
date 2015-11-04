@@ -50,6 +50,7 @@ public class SimpleCatalog implements Catalog{
 	public static double DEFAULT_EQUIJOIN_SELECTIVITY = 0.001;
 
 	private static int DEFAULT_CARDINALITY = 1000000;
+	private static double DEFAULT_QUALITY = 0.0;
 	private static int DEFAULT_COLUMN_CARDINALITY = 1000;
 	private static double DEFAULT_COST = 1.0;
 	private static String CATALOG_FILE_NAME = "catalog/catalog.properties";
@@ -106,7 +107,7 @@ public class SimpleCatalog implements Catalog{
 		this.queries = SimpleCatalog.getQueries(this.columnCardinalities);
 		this.queries.putAll(SimpleCatalog.getQueriesFromHistograms(this.histograms));
 	}
-	
+
 	/**
 	 * 
 	 * @param columnCardinalities
@@ -123,7 +124,7 @@ public class SimpleCatalog implements Catalog{
 		}
 		return ret;
 	}
-	
+
 	/**
 	 * 
 	 * @param columnCardinalities
@@ -325,7 +326,17 @@ public class SimpleCatalog implements Catalog{
 	}
 
 	public Double getSelectivity(Relation relation, Attribute attribute, TypedConstant<?> constant) {
-		return null;
+		Preconditions.checkNotNull(relation);
+		Preconditions.checkNotNull(attribute);
+		Preconditions.checkNotNull(constant);
+
+		SimpleFrequencyMap histogram = this.histograms.get(Pair.of(relation, attribute));
+		if(histogram != null && histogram.getFrequency(constant.toString()) != null) {
+			int erpsi = histogram.getFrequency(constant.toString());
+			log.info("RELATION: " + relation.getName() + " ATTRIBUTE: " + attribute + " CONSTANTS: " + constant);
+			return (double)erpsi/this.getCardinality(relation);
+		}
+		return this.getSelectivity(relation, attribute);
 	}
 
 	public double getSelectivity(Relation relation, Attribute attribute) {
@@ -430,7 +441,7 @@ public class SimpleCatalog implements Catalog{
 		log.info("RELATION: " + relation.getName() + " ATTRIBUTE: " + attribute + " CARDINALITY: " + DEFAULT_COLUMN_CARDINALITY);
 		return DEFAULT_COLUMN_CARDINALITY;
 	}
-	
+
 	@Override
 	public double getCost(Relation relation, AccessMethod method) {
 		Preconditions.checkNotNull(relation);		
@@ -460,7 +471,6 @@ public class SimpleCatalog implements Catalog{
 		log.info("RELATION: " + relation.getName() + " ACCESS METHOD: " + method + " COST: " + cost);
 		return erpsi > 0 ? erpsi * cost : cost;
 	}
-	
 
 	@Override
 	public Collection<Query<?>> getStatisticsExpressions() {
@@ -468,16 +478,16 @@ public class SimpleCatalog implements Catalog{
 	}
 
 	@Override
-	public int getCardinality(Query<?> query) {
-		Preconditions.checkNotNull(this.queries.get(query), "Undentified input query");
-		return this.queries.get(query);
-	}
-
-	@Override
 	public SimpleCatalog clone() {
 		return new SimpleCatalog(this.schema, this.cardinalities, this.erpsi, this.costs, this.columnSelectivity, 
 				this.columnCardinalities, this.queries, this.histograms);
 	}
+
+	@Override
+	public double getQuality(Relation relation) {
+		return DEFAULT_QUALITY;
+	}
+
 	/**
 	 * @author Efthymia Tsamoura
 	 *
@@ -489,7 +499,7 @@ public class SimpleCatalog implements Catalog{
 		private static String READ_BINS = "(\\(VA:(\\w+)(\\s+)FR:(\\d+)\\))+";
 		/** Reads two-word constants **/
 		private static String READ_BINS_ALT = "(\\(VA:(\\w+)(\\s+)(\\w+)(\\s+)FR:(\\d+)\\))+";
-		
+
 		private final Relation relation;
 		private final Attribute attibute;
 		private final Map<String,Integer> frequencies;
@@ -558,7 +568,7 @@ public class SimpleCatalog implements Catalog{
 			Preconditions.checkNotNull(this.frequencies.get(entry));
 			return this.frequencies.get(entry);
 		}
-		
+
 		public Map<String, Integer> getFrequencies() {
 			return this.frequencies;
 		}
@@ -580,7 +590,7 @@ public class SimpleCatalog implements Catalog{
 	@Override
 	public String toString() {
 		return new String(
-						"\n============RELATION CARDINALITIES==========\n" + 
+				"\n============RELATION CARDINALITIES==========\n" + 
 						Joiner.on("\n").join(this.cardinalities.entrySet()) + 
 
 						"\n============COLUMN CARDINALITIES============\n" + 
@@ -627,5 +637,4 @@ public class SimpleCatalog implements Catalog{
 			System.exit(-1);
 		}
 	}
-
 }

@@ -59,18 +59,17 @@ import uk.ac.ox.cs.pdq.planner.Planner;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.db.access.AccessibleSchema;
-import uk.ac.ox.cs.pdq.planner.io.pretty.ExtendedPrettyProofWriter;
-import uk.ac.ox.cs.pdq.planner.io.pretty.PrettyProofWriter;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.Candidate;
 import uk.ac.ox.cs.pdq.planner.linear.metadata.BestPlanMetadata;
 import uk.ac.ox.cs.pdq.planner.linear.metadata.DominanceMetadata;
 import uk.ac.ox.cs.pdq.planner.linear.metadata.Metadata;
 import uk.ac.ox.cs.pdq.planner.linear.node.SearchNode;
 import uk.ac.ox.cs.pdq.planner.linear.node.SearchNode.NodeStatus;
-import uk.ac.ox.cs.pdq.planner.reasoning.Proof;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.ui.event.PlanSearchVisualizer;
 import uk.ac.ox.cs.pdq.ui.event.PrefuseEventHandler;
+import uk.ac.ox.cs.pdq.ui.io.pretty.ExtendedPrettyProofWriter;
+import uk.ac.ox.cs.pdq.ui.io.pretty.PrettyProofWriter;
 import uk.ac.ox.cs.pdq.ui.model.ObservablePlan;
 import uk.ac.ox.cs.pdq.ui.model.ObservableQuery;
 import uk.ac.ox.cs.pdq.ui.model.ObservableSchema;
@@ -79,6 +78,7 @@ import uk.ac.ox.cs.pdq.ui.prefuse.control.AggregateDragControl;
 import uk.ac.ox.cs.pdq.ui.prefuse.control.ClickControl;
 import uk.ac.ox.cs.pdq.ui.prefuse.control.HoverControl;
 import uk.ac.ox.cs.pdq.ui.prefuse.types.EdgeTypes;
+import uk.ac.ox.cs.pdq.ui.proof.Proof;
 import uk.ac.ox.cs.pdq.ui.util.DecimalConverter;
 import uk.ac.ox.cs.pdq.ui.util.LogarithmicAxis;
 
@@ -554,12 +554,12 @@ public class PlannerController {
 
 	public void updateSuccessMetadata(SearchNode node) {
 		Metadata m = node.getMetadata();
-		if (m instanceof BestPlanMetadata && ((BestPlanMetadata) m).getProof() != null) {
+		if (m instanceof BestPlanMetadata && ((BestPlanMetadata) m).getPlan() != null) {
 			BestPlanMetadata metadata = (BestPlanMetadata) m;
 			ByteArrayOutputStream prBos = new ByteArrayOutputStream();
 			ByteArrayOutputStream plBos = new ByteArrayOutputStream();
 			AlgebraLikeLinearPlanWriter.to(new PrintStream(plBos)).write((LinearPlan) metadata.getPlan());
-			ExtendedPrettyProofWriter.to(new PrintStream(prBos), this.accSchema).write(metadata.getProof());
+			ExtendedPrettyProofWriter.to(new PrintStream(prBos), this.accSchema).write(Proof.toProof(metadata.getPlan()));
 			this.searchSpaceMetadataSuccessTab.setDisable(false);
 			this.searchSpaceMetadataSuccess.setText(
 					"*******************\n* Proof \n*******************\n" + prBos + "\n\n" +

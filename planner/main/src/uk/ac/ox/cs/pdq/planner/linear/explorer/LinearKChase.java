@@ -22,7 +22,6 @@ import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.plan.LinearPlan;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.db.access.AccessibleSchema;
-import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.linear.LinearConfiguration;
 import uk.ac.ox.cs.pdq.planner.linear.cost.CostPropagator;
 import uk.ac.ox.cs.pdq.planner.linear.cost.PropagatorUtils;
@@ -64,10 +63,19 @@ public class LinearKChase extends LinearExplorer {
 	 * @param eventBus
 	 * @param collectStats
 	 * @param query
+	 * 		The input user query
+	 * @param accessibleQuery
+	 * 		The accessible counterpart of the user query
+	 * @param schema
+	 * 		The input schema
 	 * @param accessibleSchema
+	 * 		The accessible counterpart of the input schema
 	 * @param chaser
+	 * 		Runs the chase algorithm
 	 * @param detector
+	 * 		Detects homomorphisms during chasing
 	 * @param costEstimator
+	 * 		Estimates the cost of a plan
 	 * @param nodeFactory
 	 * @param depth
 	 * @param chaseInterval
@@ -132,6 +140,9 @@ public class LinearKChase extends LinearExplorer {
 			// Create a new node from the exposed facts and add it to the plan tree
 			SearchNode freshNode = this.getNodeFactory().getInstance(selectedNode, similarCandidates);	
 			freshNode.getConfiguration().detectCandidates(this.accessibleSchema);
+			if (!freshNode.getConfiguration().hasCandidates()) {
+				freshNode.setStatus(NodeStatus.TERMINAL);
+			}
 			this.costEstimator.cost(freshNode.getConfiguration().getPlan());
 			
 			Metadata metadata = new CreationMetadata(selectedNode, this.getElapsedTime());

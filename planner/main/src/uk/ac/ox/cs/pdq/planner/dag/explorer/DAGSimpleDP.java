@@ -46,15 +46,27 @@ public class DAGSimpleDP extends DAGGeneric {
 	 * @param collectStats
 	 * @param parameters
 	 * @param query
+	 * 		The input user query
+	 * @param accessibleQuery
+	 * 		The accessible counterpart of the user query
+	 * @param schema
+	 * 		The input schema
 	 * @param accessibleSchema
+	 * 		The accessible counterpart of the input schema
 	 * @param chaser
+	 * 		Runs the chase algorithm
 	 * @param detector
+	 * 		Detects homomorphisms during chasing
 	 * @param costEstimator
+	 * 		Estimates the cost of a plan
 	 * @param successDominance
-	 * @param dominance
+	 * 		Removes success dominated configurations
 	 * @param filter
+	 * 		Filters out configurations at the end of each iteration
 	 * @param validators
+	 * 		Validates pairs of configurations to be composed
 	 * @param maxDepth
+	 * 		The maximum depth to explore
 	 * @param orderAware
 	 * @throws PlannerException
 	 */

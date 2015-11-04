@@ -6,7 +6,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableNumberValue;
 import javafx.beans.value.ObservableValue;
 import uk.ac.ox.cs.pdq.plan.Plan;
-import uk.ac.ox.cs.pdq.planner.reasoning.Proof;
+import uk.ac.ox.cs.pdq.ui.proof.Proof;
 
 /**
  * Representation a Planner's search space state.

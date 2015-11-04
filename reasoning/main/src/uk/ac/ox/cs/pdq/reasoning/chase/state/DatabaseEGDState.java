@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import uk.ac.ox.cs.pdq.db.Constraint;
@@ -23,6 +24,7 @@ import uk.ac.ox.cs.pdq.reasoning.chase.FiringGraph;
 import uk.ac.ox.cs.pdq.reasoning.chase.MapFiringGraph;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager;
 
+import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 
@@ -33,12 +35,12 @@ import com.google.common.collect.Sets;
  */
 public class DatabaseEGDState extends DatabaseListState {
 
-	
+
 	private boolean _isFailed = false;
-	
+
 	/** Keeps the classes of equal constants **/
 	protected EqualConstantsClasses constantClasses;
-	
+
 	/**
 	 * 
 	 * @param query
@@ -46,14 +48,16 @@ public class DatabaseEGDState extends DatabaseListState {
 	 */
 	public DatabaseEGDState(Query<?> query, DBHomomorphismManager manager) {
 		this(manager, query.getCanonical().getPredicates(), new MapFiringGraph());
+		//this.manager.addFacts(this.facts);
 	}
-	
+
 	public DatabaseEGDState(
 			DBHomomorphismManager manager,
 			Collection<Predicate> facts) {
 		this(manager, facts, new MapFiringGraph());
+		//this.manager.addFacts(this.facts);
 	}
-	
+
 	/**
 	 * 
 	 * @param query
@@ -83,7 +87,7 @@ public class DatabaseEGDState extends DatabaseListState {
 	public boolean chaseStep(Match match) {	
 		return this.chaseStep(Sets.newHashSet(match));
 	}
-	
+
 	@Override
 	public boolean chaseStep(Collection<Match> matches) {
 		Preconditions.checkNotNull(matches);
@@ -95,26 +99,31 @@ public class DatabaseEGDState extends DatabaseListState {
 			Formula left = grounded.getLeft();
 			Formula right = grounded.getRight();
 			if(dependency instanceof EGD) {
-				if(!this.constantClasses.add((Equality)right)) {
-					this._isFailed = true;
-					break;
+				for(Predicate equality:right.getPredicates()) {
+					if(!this.constantClasses.add((Equality)equality)) {
+						this._isFailed = true;
+						break;
+					}
 				}
 			}	
 			this.graph.put(dependency, Sets.newHashSet(left.getPredicates()), Sets.newHashSet(right.getPredicates()));
 			created.addAll(right.getPredicates());
 		}
 		this.addFacts(created);
-		
+
 		if(this.constantClasses.size()==1 || this.constantClasses.size()==0) {
+			this._isFailed = false;
+		}
+		else {
 			this._isFailed = true;
 		}
 		return !this._isFailed;
 	}
-	
+
 	public EqualConstantsClasses getConstantClasses() {
 		return this.constantClasses;
 	}
-	
+
 	/**
 	 * Class of equal constants
 	 * @author Efthymia Tsamoura
@@ -227,6 +236,39 @@ public class DatabaseEGDState extends DatabaseListState {
 		public Collection<Term> getConstants() {
 			return this.constants;
 		}
+		
+		/**
+		 * @param o Object
+		 * @return boolean
+		 */
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) {
+				return true;
+			}
+			if (o == null) {
+				return false;
+			}
+			return this.getClass().isInstance(o)
+					&& this.constants.equals(((EqualConstantsClass) o).constants)
+					&& this.schemaConstant.equals(((EqualConstantsClass) o).schemaConstant);
+		}
+
+		/**
+		 * @return int
+		 */
+		@Override
+		public int hashCode() {
+			return Objects.hash(this.constants, this.schemaConstant);
+		}
+
+		/**
+		 * @return String
+		 */
+		@Override
+		public String toString() {
+			return "[" + Joiner.on(",").join(this.constants) + "," + this.schemaConstant + "]";
+		}
 	}
 
 
@@ -287,10 +329,43 @@ public class DatabaseEGDState extends DatabaseListState {
 			}
 			return null;
 		}
+		
+		/**
+		 * @param o Object
+		 * @return boolean
+		 */
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) {
+				return true;
+			}
+			if (o == null) {
+				return false;
+			}
+			return this.getClass().isInstance(o)
+					&& this.classes.equals(((EqualConstantsClasses) o).classes);
+		}
+
+		/**
+		 * @return int
+		 */
+		@Override
+		public int hashCode() {
+			return Objects.hash(this.classes);
+		}
+
+		/**
+		 * @return String
+		 */
+		@Override
+		public String toString() {
+			return Joiner.on("\n").join(this.classes);
+		}
 	}	
-	
+
 	@Override
 	public boolean isFailed() {
 		return this._isFailed;
 	}
+
 }

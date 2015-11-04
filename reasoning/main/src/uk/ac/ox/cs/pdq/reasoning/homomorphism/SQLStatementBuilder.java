@@ -14,16 +14,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 
-import uk.ac.ox.cs.pdq.algebra.predicates.EqualityPredicate;
-import uk.ac.ox.cs.pdq.algebra.predicates.ExtendedAttributeEqualityPredicate;
-import uk.ac.ox.cs.pdq.algebra.predicates.ExtendedConstantEqualityPredicate;
-import uk.ac.ox.cs.pdq.algebra.predicates.ExtendedSetEqualityPredicate;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
-import uk.ac.ox.cs.pdq.db.TGD;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.Constant;
@@ -37,12 +31,12 @@ import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager.DBRelation;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismConstraint.FactScope;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismConstraint.ParametrisedMatch;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismConstraint.SuperMap;
-import uk.ac.ox.cs.pdq.util.Tuple;
 import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.base.Joiner;
-import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
@@ -50,7 +44,9 @@ import com.google.common.collect.Multimap;
 /**
  * Creates SQL statements for relation database-backed homomorphism detectors.
  *
+
  * @author Efthymia Tsamoura
+ * @author George Konstantinidis
  */
 public abstract class SQLStatementBuilder {
 
@@ -58,11 +54,15 @@ public abstract class SQLStatementBuilder {
 	private static Logger log = Logger.getLogger(SQLStatementBuilder.class);
 
 	/** Aliases for facts **/
-	protected List<Pair<Predicate, String>> aliases;
+	protected BiMap<Predicate, String> aliases = HashBiMap.create();
 
 	private String aliasPrefix = "A";
 	private int aliasCounter = 0;
 
+	public int cleanNameCounter =0;
+	
+	/** maps all relation names to clean ones **/
+	protected BiMap<String, String> cleanMap = HashBiMap.create();
 
 	/**
 	 * @param databaseName
@@ -81,37 +81,38 @@ public abstract class SQLStatementBuilder {
 	 * @param relation the table to drop
 	 * @return a SQL statement for dropping the facts table of the given relation
 	 */
-	protected String dropTableStatement(Relation relation) {
-		return "DROP TABLE " + relation.getName();
+	protected String dropTableStatement(DBRelation relation) {
+		return "DROP TABLE " + encodeName(relation.getName());
 	}
 
 	/**
 	 * @param name
-	 * @return a new String that is a copy of the given name modified such that
+	 * @return a new String that is an alias of the given name modified such that
 	 * it is acceptable for the underlying system
 	 */
-	public abstract String encodeName(String name);
+	public String encodeName(String dirtyRelationName)
+	{
+		if(!cleanMap.containsKey(dirtyRelationName))
+			cleanMap.put(dirtyRelationName, "cleanR"+cleanNameCounter++);
+		return cleanMap.get(dirtyRelationName);
+	}
 
 	/**
 	 * @param facts
 	 * @return insert statements that add the input fact to the fact database.
 	 */
-	protected Collection<String> makeInserts(Collection<? extends Predicate> facts, Map<String, DBRelation> aliases) {
+	protected Collection<String> makeInserts(Collection<? extends Predicate> facts, Map<String, DBRelation> dbrelations) {
 		Collection<String> result = new LinkedList<>();
 		for (Predicate fact : facts) {
-			Relation alias = aliases.get(fact.getName());
+			DBRelation rel = dbrelations.get(fact.getName());
 			List<Term> terms = fact.getTerms();
-			String insertInto = "INSERT INTO " + this.encodeName(alias.getName()) + " " + "VALUES ( ";
+			String insertInto = "INSERT INTO " + this.encodeName(rel.getName()) + " " + "VALUES ( ";
 			for (Term term : terms) {
 				if (!term.isVariable()) {
 					insertInto += "'" + term + "'" + ",";
 				}
 			}
-//			if (fact instanceof BagBoundPredicate) {
-//				insertInto += ((BagBoundPredicate) fact).getBag() + ",";
-//			} else {
-				insertInto += 0 + ",";
-//			}
+			insertInto += 0 + ",";
 			insertInto += fact.getId();
 			insertInto += ")";
 			result.add(insertInto);
@@ -123,15 +124,15 @@ public abstract class SQLStatementBuilder {
 	 * @param relation the table to create
 	 * @return a SQL statement that creates the fact table of the given relation
 	 */
-	protected String createTableStatement(Relation relation) {
+	protected String createTableStatement(DBRelation relation) {
 		StringBuilder result = new StringBuilder();
 		result.append("CREATE TABLE  ").append(this.encodeName(relation.getName())).append('(');
 		for (int it = 0; it < relation.getAttributes().size(); ++it) {
 			result.append(' ').append(relation.getAttributes().get(it).getName());
-			if(relation.getAttribute(it).getType().toString().contains("java.lang.String")) {
+			if(relation.getAttribute(it).getType().toString().contains("java.lang.String") ) {
 				result.append(" VARCHAR(500),");
 			}
-			else if(relation.getAttribute(it).getType().toString().contains("java.lang.Integer")) {
+			else if(relation.getAttribute(it).getType().toString().contains("java.lang.Integer") ) {
 				result.append(" int");
 				if(it < relation.getAttributes().size() - 1) {
 					result.append(",");
@@ -150,7 +151,7 @@ public abstract class SQLStatementBuilder {
 	 * @param columns
 	 * @return a SQL statement that creates an index for the columns of the input relation
 	 */
-	protected String createTableIndex(Relation relation, Integer... columns) {
+	protected String createTableIndex(DBRelation relation, Integer... columns) {
 		StringBuilder indexName = new StringBuilder();
 		StringBuilder indexColumns = new StringBuilder();
 		String sep1 = "", sep2 = "";
@@ -168,7 +169,7 @@ public abstract class SQLStatementBuilder {
 	 * @param relation
 	 * @return a SQL statement that creates an index for the bag and fact attributes of the database tables
 	 */
-	protected String createTableNonJoinIndexes(Relation relation, Attribute column) {
+	protected String createTableNonJoinIndexes(DBRelation relation, Attribute column) {
 		return "CREATE INDEX idx_" + this.encodeName(relation.getName()) + "_" + 
 				column.getName() + " ON " + this.encodeName(relation.getName()) + "(" + column.getName() + ")";
 	}
@@ -205,7 +206,7 @@ public abstract class SQLStatementBuilder {
 			Collection<Predicate> atoms = clusters.get(t);
 			if (atoms.size() > 1) {
 				for (Predicate atom: atoms) {
-					for (int i = 0, l = atom.getTermCount(); i < l; i++) {
+					for (int i = 0, l = atom.getTermsCount(); i < l; i++) {
 						if (atom.getTerm(i).equals(t)) {
 							result.add(this.createTableIndex(relationMap.get(atom.getName()), i));
 						}
@@ -225,23 +226,15 @@ public abstract class SQLStatementBuilder {
 	 * 			The homomorphism constraints that should be satisfied
 	 * @return homomorphisms of the input query to facts kept in a database.
 	 */
-	public Set<Map<Variable, Constant>> toSQL(Evaluatable source, HomomorphismConstraint[] constraints, Map<String, TypedConstant<?>> constants, Connection connection) {
+	public Set<Map<Variable, Constant>> findHomomorphismsThroughSQL(Evaluatable source, HomomorphismConstraint[] constraints, Map<String, TypedConstant<?>> constants, Connection connection) {
 
 		String query = "";
-		List<From> from = this.toFromStatement(source);
-		LinkedHashMap<Projection,Variable> projection = this.toProjectStatement(source);
-		List<uk.ac.ox.cs.pdq.algebra.predicates.Predicate> predicates = Lists.newArrayList();
-		List<ExtendedAttributeEqualityPredicate> where = this.toAttributeEqualityPredicates((Conjunction<Predicate>) source.getBody(), this.aliases);
-		List<ExtendedConstantEqualityPredicate> constantPredicates = this.toConstantPredicates((Conjunction<Predicate>) source.getBody(), this.aliases);
-		List<ExtendedSkolemEqualityPredicate> canonicalConstraints = this.translateCanonicalConstraints(source, this.aliases, constraints);
-
-//		/*
-//		 * if the target set of bags is not null,
-//		 * we add in the WHERE statement a predicate which limits the
-//		 * identifiers of the bags within which we search for homomorphisms to
-//		 * the identifiers of these bags
-//		 */
-//		List<ExtendedSetEqualityPredicate> bagConstraints = this.translateBagConstraints(source, this.aliases, constraints);
+		List<String> from = this.createContentForFromStatement(source);
+		LinkedHashMap<String,Variable> projectionStatementsAndVariables = this.createProjectionStatements(source);
+		List<String> predicates = new ArrayList<String>();
+		List<String> attributeEqualityPredicates = this.createAttributeEqualities((Conjunction<Predicate>) source.getBody(), this.aliases);
+		List<String> attributeConstantEqualityPredicates = this.createEqualitiesWithConstants((Conjunction<Predicate>) source.getBody(), this.aliases);
+		List<String> equalityForHomRestrictionsPredicates = this.createEqualitiesForHomConstraints(source, this.aliases, constraints);
 
 		/*
 		 * if the target set of facts is not null, we
@@ -249,20 +242,19 @@ public abstract class SQLStatementBuilder {
 		 * of the facts that satisfy any homomorphism to the
 		 * identifiers of these facts
 		 */
-		List<ExtendedSetEqualityPredicate> factConstraints = this.translateFactConstraints(source, this.aliases, constraints);
+		List<String> factConstraints = this.translateFactConstraints(source, this.aliases, constraints);
 
 		String parametrisedMatches = this.translateParametrisedMatch(source, this.aliases, constraints);
 
-		predicates.addAll(where);
-		predicates.addAll(constantPredicates);
-		predicates.addAll(canonicalConstraints);
-//		predicates.addAll(bagConstraints);
+		predicates.addAll(attributeEqualityPredicates);
+		predicates.addAll(attributeConstantEqualityPredicates);
+		predicates.addAll(equalityForHomRestrictionsPredicates);
 		predicates.addAll(factConstraints);
 
 		//Limit the number of returned homomorphisms
 		String limit = this.translateLimitConstraints(source, constraints); 
 
-		query = "SELECT " 	+ Joiner.on(",").join(projection.keySet()) + "\n" +  
+		query = "SELECT " 	+ Joiner.on(",").join(projectionStatementsAndVariables.keySet()) + "\n" +  
 				"FROM " 	+ Joiner.on(",").join(from);
 		if(!predicates.isEmpty()) {
 			query += "\n" + "WHERE " + Joiner.on(" AND ").join(predicates);
@@ -295,7 +287,7 @@ public abstract class SQLStatementBuilder {
 
 				int f = 1;
 				Map<Variable, Constant> map = new LinkedHashMap<>();
-				for(Entry<Projection, Variable> entry:projection.entrySet()) {
+				for(Entry<String, Variable> entry:projectionStatementsAndVariables.entrySet()) {
 					String assigned = resultSet.getString(f);
 					TypedConstant<?> constant = constants.get(assigned);
 					Constant constantTerm = constant != null ? constant : new Skolem(assigned);
@@ -312,20 +304,21 @@ public abstract class SQLStatementBuilder {
 		return maps;
 	}
 
+	
 	/**
 	 * 
 	 * @param source
 	 * @return
-	 * 		the tables that will be queried
+	 * 		a list of the table names that will be queried
 	 */
-	protected List<From> toFromStatement(Evaluatable source) {
+	protected List<String> createContentForFromStatement(Evaluatable source) {
 		this.aliasCounter = 0;
-		List<From> relations = new ArrayList<>();
-		this.aliases = Lists.newArrayList();
+		List<String> relations = new ArrayList<String>();
+		this.aliases = HashBiMap.create();;
 		for (Predicate fact:source.getBody().getPredicates()) {
 			String aliasName = this.aliasPrefix + this.aliasCounter;
-			relations.add(new From(aliasName, (Relation) fact.getSignature()));
-			this.aliases.add(Pair.of(fact, aliasName));
+			relations.add(createTableAliasingExpression(aliasName, (Relation) fact.getSignature()));
+			this.aliases.put(fact, aliasName);
 			this.aliasCounter++;
 		}
 		return relations;
@@ -339,21 +332,19 @@ public abstract class SQLStatementBuilder {
 	 * 		If the input is an egd or tgd we project the attributes that map to universally quantified variables.
 	 * 		If the input is a query we project the attributes that map to its free variables. 
 	 */
-	protected LinkedHashMap<Projection,Variable> toProjectStatement(Evaluatable source) {
-		LinkedHashMap<Projection,Variable> projected = new LinkedHashMap<>();
+	protected LinkedHashMap<String,Variable> createProjectionStatements(Evaluatable source) {
+		LinkedHashMap<String,Variable> projected = new LinkedHashMap<>();
 		List<Variable> attributes = new ArrayList<>();
-		int f = 0;
 		for (Predicate fact:source.getBody().getPredicates()) {
-			String alias = this.aliases.get(f).getRight();
+			String alias = this.aliases.get(fact);
 			List<Term> terms = fact.getTerms();
 			for (int it = 0; it < terms.size(); ++it) {
 				Term term = terms.get(it);
 				if (term instanceof Variable && !attributes.contains(((Variable) term).getName())) {
-					projected.put(new Projection(it, (Relation) fact.getSignature(), alias), (Variable)term);
+					projected.put(createProjectionStatementForArgument(it, (Relation) fact.getSignature(), alias), (Variable)term);
 					attributes.add(((Variable) term));
 				}
 			}
-			++f;
 		}
 		return projected;
 	}
@@ -362,78 +353,40 @@ public abstract class SQLStatementBuilder {
 	 * 
 	 * @param source
 	 * @return
-	 * 		the equality predicates of the input conjunction
+	 * 		explicit equalities (String objects of the form A.x1 = B.x2) of the implicit equalities in the input conjunction (the latter is denoted by repetition of the same term)
 	 */
-	protected List<ExtendedAttributeEqualityPredicate> toAttributeEqualityPredicates(Conjunction<Predicate> source, List<Pair<Predicate, String>> aliases) {
-		List<ExtendedAttributeEqualityPredicate> attributePredicates = new ArrayList<>();
+	protected List<String> createAttributeEqualities(Conjunction<Predicate> source, BiMap<Predicate, String> aliases2) {
+		List<String> attributePredicates = new ArrayList<String>();
 		Collection<Term> terms = Utility.getTerms(source.getPredicates());
 		terms = Utility.removeDuplicates(terms);
 		for (Term term:terms) {
-			int f = 0;
 			Integer leftPosition = null;
-			Relation left = null;
+			Relation leftRelation = null;
 			String leftAlias = null;
 			for (Predicate fact:source.getPredicates()) {
-				List<Integer> positions = fact.getTermPositions(term);
-				for (Integer it:positions) {
+				List<Integer> positions = fact.getTermPositions(term); //all the positions for the same term should be equated
+				for (Integer pos:positions) {
 					if(leftPosition == null) {
-						leftPosition = it;
-						left = (Relation) fact.getSignature();
-						leftAlias = aliases.get(f).getRight();
+						leftPosition = pos;
+						leftRelation = (Relation) fact.getSignature();
+						leftAlias = aliases2.get(fact);
 					}
-					else {
-						attributePredicates.add(new ExtendedAttributeEqualityPredicate(leftPosition, it, left, leftAlias, 
-								(Relation) fact.getSignature(), aliases.get(f).getRight()));
+					else {					
+						Integer rightPosition = pos;
+						Relation rightRelation = (Relation) fact.getSignature();
+						String rightAlias = aliases2.get(fact);
+						
+						StringBuilder result = new StringBuilder();
+						result.append(leftAlias==null ? encodeName(leftRelation.getName()):leftAlias).append(".").append(leftRelation.getAttribute(leftPosition).getName()).append('=');
+						result.append(rightAlias==null ? encodeName(rightRelation.getName()):rightAlias).append(".").append(rightRelation.getAttribute(rightPosition).getName());
+						attributePredicates.add(result.toString());
 					}
 				}
-				++f;
 			}
 		}
 		return attributePredicates;
 	}
 
-
-	/**
-	 * 
-	 * @param tgd
-	 * @return
-	 * 		equality predicates between the left and the right hand side conjuncts of the input tgd
-	 */
-	protected List<ExtendedAttributeEqualityPredicate> toAttributeEqualityPredicates(TGD tgd, List<Pair<Predicate, String>> aliases) {
-		List<ExtendedAttributeEqualityPredicate> attributePredicates = new ArrayList<>();
-		//For each universally quantified variable
-		for (Term term:tgd.getUniversal()) {
-			int f = 0;
-			//Find its occurrences in the body of the dependency
-			for (Predicate lfact:tgd.getLeft().getPredicates()) {
-				Integer leftPosition = null;
-				Relation leftRelation = null;
-				String leftAlias = null;
-				List<Integer> lpositions = lfact.getTermPositions(term);
-				if(!lpositions.isEmpty()) {
-
-					leftPosition = lpositions.get(0);
-					leftRelation = (Relation) lfact.getSignature();
-					leftAlias = aliases.get(f).getRight();
-
-					int rf = tgd.getLeft().size();
-					//Find also its occurrences in the head of the dependency
-					for(Predicate rfact:tgd.getRight().getPredicates()) {
-						List<Integer> rpositions = rfact.getTermPositions(term);
-						if(!rpositions.isEmpty()) {
-							//Make the corresponding variables unequal
-							Integer rightPosition = rpositions.get(0);
-							attributePredicates.add(new ExtendedAttributeEqualityPredicate(leftPosition, rightPosition, leftRelation, leftAlias, 
-									(Relation) rfact.getSignature(), aliases.get(rf).getRight()));
-						}
-						++rf;
-					}
-				}
-				++f;
-			}
-		}
-		return attributePredicates;
-	}
 
 	/**
 	 * 
@@ -441,19 +394,20 @@ public abstract class SQLStatementBuilder {
 	 * @return
 	 * 		constant equality predicates 
 	 */
-	protected List<ExtendedConstantEqualityPredicate> toConstantPredicates(Conjunction<Predicate> source, List<Pair<Predicate, String>> aliases) {
-		List<ExtendedConstantEqualityPredicate> constantPredicates = new ArrayList<>();
-		int f = 0;
+	protected List<String> createEqualitiesWithConstants(Conjunction<Predicate> source, BiMap<Predicate, String> aliases2) {
+		List<String> constantPredicates = new ArrayList<>();
 		for (Predicate fact:source.getPredicates()) {
-			String alias = aliases.get(f).getRight();
+			String alias = aliases2.get(fact);
 			List<Term> terms = fact.getTerms();
 			for (int it = 0; it < terms.size(); ++it) {
 				Term term = terms.get(it);
 				if (!term.isVariable() && !term.isSkolem()) {
-					constantPredicates.add(new ExtendedConstantEqualityPredicate(it, (TypedConstant) term, (Relation) fact.getSignature(), alias));
+					StringBuilder eq = new StringBuilder();
+					eq.append(alias==null ? encodeName(fact.getSignature().getName()):alias).append(".").append(((Relation) fact.getSignature()).getAttribute(it).getName()).append('=');
+					eq.append("'").append(((TypedConstant) term).toString()).append("'");
+					constantPredicates.add(eq.toString());
 				}
 			}
-			++f;
 		}
 		return constantPredicates;
 	}
@@ -465,19 +419,17 @@ public abstract class SQLStatementBuilder {
 	 * @return
 	 * 		predicates that correspond to fact constraints 
 	 */
-	protected List<ExtendedSetEqualityPredicate> translateFactConstraints(Evaluatable source, List<Pair<Predicate, String>> aliases, HomomorphismConstraint... constraints) {
-		List<ExtendedSetEqualityPredicate> setPredicates = new ArrayList<>();
+	protected List<String> translateFactConstraints(Evaluatable source, BiMap<Predicate, String> aliases2, HomomorphismConstraint... constraints) {
+		List<String> setPredicates = new ArrayList<>();
 		for(HomomorphismConstraint c:constraints) {
 			if(c instanceof FactScope) {
 				List<Object> facts = new ArrayList<>();
 				for (Predicate atom:((FactScope) c).atoms) {
 					facts.add(atom.getId());
 				}
-				int f = 0;
 				for(Predicate fact:source.getBody().getPredicates()) {
-					String alias = aliases.get(f).getRight();
-					setPredicates.add(new ExtendedSetEqualityPredicate(fact.getTermCount()-1, facts, (Relation) fact.getSignature(), alias));
-					++f;
+					String alias = aliases2.get(fact);
+					setPredicates.add(createSQLMembershipExpression(fact.getTermsCount()-1, facts, (Relation) fact.getSignature(), alias));
 				}
 			}
 		}
@@ -491,20 +443,20 @@ public abstract class SQLStatementBuilder {
 	 * @return
 	 * 		predicates that correspond to canonical constraints
 	 */
-	protected List<ExtendedSkolemEqualityPredicate> translateCanonicalConstraints(Evaluatable source, List<Pair<Predicate, String>> aliases, HomomorphismConstraint... constraints) {
-		List<ExtendedSkolemEqualityPredicate> constantPredicates = new ArrayList<>();
+	protected List<String> createEqualitiesForHomConstraints(Evaluatable source, BiMap<Predicate, String> aliases2, HomomorphismConstraint... constraints) {
+		List<String> constantPredicates = new ArrayList<>();
 		for(HomomorphismConstraint c:constraints) {
 			if(c instanceof SuperMap) {
 				Map<Variable, Constant> m = ((SuperMap) c).mapping;
 				for(Entry<Variable, Constant> pair:m.entrySet()) {
-					int f = 0;
 					for (Predicate fact:source.getBody().getPredicates()) {
 						int it = fact.getTerms().indexOf(pair.getKey());
 						if(it != -1) {
-							constantPredicates.add(
-									new ExtendedSkolemEqualityPredicate(it, (Skolem) pair.getValue(), (Relation) fact.getSignature(), aliases.get(f).getRight()));
+							StringBuilder eq = new StringBuilder();
+							eq.append(aliases2.get(fact)==null ? encodeName(fact.getSignature().getName()):aliases2.get(fact)).append(".").append(((Relation) fact.getSignature()).getAttribute(it).getName()).append('=');
+							eq.append("'").append(pair.getValue()).append("'");
+							constantPredicates.add(eq.toString());
 						}
-						++f;
 					}
 				}
 			}
@@ -512,8 +464,8 @@ public abstract class SQLStatementBuilder {
 		return constantPredicates;
 	}
 
-	protected String translateParametrisedMatch(Evaluatable source, List<Pair<Predicate, String>> aliases, HomomorphismConstraint... constraints) {
-		List<ExtendedSetEqualityPredicate> constantPredicates = new ArrayList<>();
+	protected String translateParametrisedMatch(Evaluatable source, BiMap<Predicate, String> aliases2, HomomorphismConstraint... constraints) {
+		List<String> constantPredicates = new ArrayList<>();
 		for(HomomorphismConstraint c:constraints) {
 			if(c instanceof ParametrisedMatch) {
 				boolean isStrong = ((ParametrisedMatch) c).isStrong;
@@ -521,14 +473,11 @@ public abstract class SQLStatementBuilder {
 				List<Object> constants = Lists.newArrayList();
 				constants.addAll(((ParametrisedMatch) c).constants);
 				for(Variable variable:variables) {
-					int f = 0;
 					for (Predicate fact:source.getBody().getPredicates()) {
 						int it = fact.getTerms().indexOf(variable);
 						if(it != -1) {
-							constantPredicates.add(
-									new ExtendedSetEqualityPredicate(it, constants, (Relation) fact.getSignature(), aliases.get(f).getRight()));
+							constantPredicates.add(createSQLMembershipExpression(it, constants, (Relation) fact.getSignature(), aliases2.get(fact)));
 						}
-						++f;
 					}
 				}
 				return isStrong == true ? Joiner.on(" AND ").join(constantPredicates) : Joiner.on(" OR ").join(constantPredicates);
@@ -537,31 +486,32 @@ public abstract class SQLStatementBuilder {
 		return null;
 	}
 
-//	/**
-//	 * 
-//	 * @param source
-//	 * @param constraints
-//	 * @return
-//	 * 		predicates that correspond to bag constraints
-//	 */
-//	protected List<ExtendedSetEqualityPredicate> translateBagConstraints(Evaluatable source, List<Pair<Predicate, String>> aliases, HomomorphismConstraint... constraints) {
-//		List<ExtendedSetEqualityPredicate> setPredicates = new ArrayList<>();
-//		for(HomomorphismConstraint c:constraints) {
-//			if(c instanceof BagScope) {
-//				List<Object> bags = new ArrayList<>();
-//				for (Bag bag:((BagScope) c).bags) {
-//					bags.add(bag.getId());
-//				}
-//				int f = 0;
-//				for(Predicate fact:source.getBody().getPredicates()) {
-//					String alias = aliases.get(f).getRight();
-//					setPredicates.add(new ExtendedSetEqualityPredicate(fact.getTermCount()-2, bags, (Relation) fact.getSignature(), alias));
-//					++f;
-//				}
-//			}
-//		}
-//		return setPredicates;
-//	}
+	private String createSQLMembershipExpression(int position, List<Object> values, Relation relation, String alias) {
+		
+		StringBuilder result = new StringBuilder();
+		String set = "";
+		int v = 0;
+		for(v = 0; v < values.size()-1; ++v) {
+			if(values.get(v) instanceof Number) {
+				set += values.get(v) + ",";
+			}
+			else {
+				set += "\"" + values.get(v) + "\"" + ",";
+			}
+		}
+		
+		if(values.get(v) instanceof Number) {
+			set += values.get(v);
+		}
+		else {
+			set += "\"" + values.get(v) + "\"";
+		}
+		
+		result.append(alias==null ? encodeName(relation.getName()):alias).append(".").append(relation.getAttribute(position).getName()).
+		append(" IN ").append("(").append(set).append(")");
+		return result.toString();
+	
+	}
 
 	/**
 	 * @return SQLStatementBuilder
@@ -569,178 +519,28 @@ public abstract class SQLStatementBuilder {
 	@Override
 	public abstract SQLStatementBuilder clone();
 
-	/**
-	 * 
-	 * @author Efthymia Tsamoura
-	 *
-	 */
-	protected static class Projection {
-		private final Relation relation;
-		private final int position; 
-		private final String alias;
-
-		public Projection(int position, Relation relation, String alias) {
-			Preconditions.checkNotNull(relation);
-			Preconditions.checkArgument(position >= 0 && position < relation.getArity());
-			this.relation = relation;
-			this.position = position;
-			this.alias = alias;
-		}
-
-		public Attribute getAttribute() {
-			return this.relation.getAttribute(this.getPosition());
-		}
-
-		public Relation getRelation() {
-			return this.relation;
-		}
-
-		public int getPosition() {
-			return this.position;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * @see java.lang.Object#toString()
-		 */
-		@Override
-		public String toString() {
-			StringBuilder result = new StringBuilder();
-			result.append(this.alias==null ? this.relation.getName():this.alias).
-			append(".").append(this.getAttribute().getName());
-			return result.toString();
-		}
+	protected String createProjectionStatementForArgument(int position, Relation relation, String alias) {
+		Preconditions.checkNotNull(relation);
+		Preconditions.checkArgument(position >= 0 && position < relation.getArity());
+		StringBuilder result = new StringBuilder();
+		result.append(alias==null ? encodeName(relation.getName()):alias).
+		append(".").append(relation.getAttribute(position).getName());
+		return result.toString();
 	}
+	
 
 	/**
 	 * 
-	 * @author Efthymia Tsamoura
+	 *
 	 *
 	 */
-	protected static class From {
-		private final Relation relation;
-		private final String alias; 
-
-		public From(String alias, Relation relation) {
-			Preconditions.checkNotNull(relation);
-			this.relation = relation;
-			this.alias = alias;
-		}
-
-		public Relation getRelation() {
-			return this.relation;
-		}
-
-		public String getAlias() {
-			return this.alias;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * @see java.lang.Object#toString()
-		 */
-		@Override
-		public String toString() {
-			StringBuilder result = new StringBuilder();
-			result.append(this.getRelation().getName()).append(" AS ");
-			result.append(this.alias==null ? this.relation.getName():this.alias);
-			return result.toString();
-		}
+	protected String createTableAliasingExpression(String alias, Relation relation) {
+		Preconditions.checkNotNull(relation);
+		StringBuilder result = new StringBuilder();
+		result.append(encodeName(relation.getName())).append(" AS ");
+		result.append(alias==null ? relation.getName():alias);
+		return result.toString();
 	}
 
 
-	/**
-	 * 
-	 * @author Efthymia Tsamoura
-	 *
-	 */
-	protected static class ExtendedSkolemEqualityPredicate implements EqualityPredicate{
-
-		private final Relation relation;
-		private final String alias;
-		private final int position;
-		private final Skolem constant;
-
-		public ExtendedSkolemEqualityPredicate(int position, Skolem constant, Relation relation,  String alias) {
-			Preconditions.checkNotNull(constant);
-			Preconditions.checkNotNull(relation);
-			Preconditions.checkArgument(position >= 0 && position < relation.getArity());
-			this.relation = relation;
-			this.alias = alias;
-			this.constant = constant;
-			this.position = position;
-		}
-
-		public Attribute getAttribute() {
-			return this.relation.getAttribute(this.getPosition());
-		}
-
-		public Relation getRelation() {
-			return this.relation;
-		}
-
-		/**
-		 * @param predicate the (possibly nested) predicate to flatten, if null the empty collection is returned.
-		 * @return a collection of predicate remove the nesting of conjunction that
-		 * it may contain.
-		 */
-		public Collection<uk.ac.ox.cs.pdq.algebra.predicates.Predicate> flatten() {
-			Collection<uk.ac.ox.cs.pdq.algebra.predicates.Predicate> result = new LinkedList<>();
-			result.add(this);
-			return result;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * @see java.lang.Object#equals(java.lang.Object)
-		 */
-		@Override
-		public boolean equals(Object o) {
-			if (this == o) {
-				return true;
-			}
-			if (o == null) {
-				return false;
-			}
-			return this.getClass().isInstance(o)
-					&& this.getPosition() == ((ExtendedSkolemEqualityPredicate) o).getPosition()
-					&& this.getConstant() == ((ExtendedSkolemEqualityPredicate) o).getConstant()
-					&& this.getRelation() == ((ExtendedSkolemEqualityPredicate) o).getRelation();
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * @see java.lang.Object#hashCode()
-		 */
-		@Override
-		public int hashCode() {
-			return Objects.hashCode(this.getPosition(), this.getConstant(), this.getRelation());
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * @see java.lang.Object#toString()
-		 */
-		@Override
-		public String toString() {
-			StringBuilder result = new StringBuilder();
-			result.append(this.alias==null ? this.relation.getName():this.alias).append(".").append(this.getAttribute().getName()).append('=');
-			result.append("'").append(this.getConstant()).append("'");
-			return result.toString();
-		}
-
-		public int getPosition() {
-			return this.position;
-		}
-
-		public Skolem getConstant() {
-			return this.constant;
-		}
-
-		@Override
-		public boolean isSatisfied(Tuple t) {
-			throw new java.lang.UnsupportedOperationException();
-		}
-
-	}
 }

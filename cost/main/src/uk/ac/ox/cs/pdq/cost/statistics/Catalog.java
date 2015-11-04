@@ -9,7 +9,6 @@ import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
-import uk.ac.ox.cs.pdq.db.View;
 import uk.ac.ox.cs.pdq.fol.Query;
 
 /**
@@ -31,14 +30,6 @@ public interface Catalog {
 	
 	/**
 	 * 
-	 * @param view
-	 * @return
-	 * 		the cardinality associated with the input view
-	 */
-	int getCardinality(View view);
-	
-	/**
-	 * 
 	 * @param relation
 	 * @param attribute
 	 * @return
@@ -46,12 +37,6 @@ public interface Catalog {
 	 */
 	int getCardinality(Relation relation, Attribute attribute);
 	
-	/**
-	 * 
-	 * @return
-	 * 		the length of the input statistics expression
-	 */
-	int getCardinality(Query<?> query);
 	
 	/**
 	 * 
@@ -90,9 +75,6 @@ public interface Catalog {
 	
 	
 	double getQuality(Relation relation);
-	
-	
-	double getQuality(View view);
 	
 	
 	Catalog clone();

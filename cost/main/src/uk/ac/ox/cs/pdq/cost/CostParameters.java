@@ -54,7 +54,7 @@ public class CostParameters extends uk.ac.ox.cs.pdq.Parameters {
 	protected CardinalityEstimationTypes cardinalityEstimationType = CardinalityEstimationTypes.NAIVE;
 	
 	@Parameter(description="File which stores the database metadata ")
-	protected String catalog;
+	protected String databaseCatalog;
 
 	/** Properties file name */
 	static final String DEFAULT_CONFIG_FILE_NAME = "pdq-cost.properties";
@@ -214,12 +214,12 @@ public class CostParameters extends uk.ac.ox.cs.pdq.Parameters {
 		this.blackBoxDatabaseUser = databaseUser;
 	}
 	
-	public void setCatalog(String catalog) {
-		this.catalog = catalog;
+	public void setDatabaseCatalog(String catalog) {
+		this.databaseCatalog = catalog;
 	}
 	
-	public String getCatalog() {
-		return this.catalog;
+	public String getDatabaseCatalog() {
+		return this.databaseCatalog;
 	}
 	
 	/**

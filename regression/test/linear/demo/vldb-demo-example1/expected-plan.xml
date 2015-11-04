@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<plan type="linear" cost="1.5051012256944444E14">
+<plan type="linear" cost="1.5050012256944444E14">
 <command name="T1">
 <operator type="PROJECT">
 <outputs>
-<attribute name="c1" type="java.lang.Integer"/>
-<attribute name="c2" type="java.lang.Integer"/>
-<attribute name="c3" type="java.lang.String"/>
-<attribute name="c4" type="java.lang.String"/>
-<attribute name="c5" type="java.lang.String"/>
-<attribute name="c6" type="java.lang.String"/>
-<attribute name="c7" type="java.lang.String"/>
-<attribute name="c8" type="java.lang.String"/>
-<attribute name="c9" type="java.lang.String"/>
-<attribute name="c10" type="java.lang.String"/>
-<attribute name="c11" type="java.lang.Double"/>
-<attribute name="c12" type="java.lang.Double"/>
-<attribute name="c13" type="java.lang.Double"/>
-<attribute name="c14" type="java.lang.Double"/>
-<attribute name="c15" type="java.lang.Double"/>
-<attribute name="c16" type="java.lang.Double"/>
-<attribute name="c17" type="java.lang.String"/>
+<attribute name="c2955" type="java.lang.Integer"/>
+<attribute name="c2956" type="java.lang.Integer"/>
+<attribute name="c2957" type="java.lang.String"/>
+<attribute name="c2958" type="java.lang.String"/>
+<attribute name="c2959" type="java.lang.String"/>
+<attribute name="c2960" type="java.lang.String"/>
+<attribute name="c2961" type="java.lang.String"/>
+<attribute name="c2962" type="java.lang.String"/>
+<attribute name="c2963" type="java.lang.String"/>
+<attribute name="c2964" type="java.lang.String"/>
+<attribute name="c2965" type="java.lang.Double"/>
+<attribute name="c2966" type="java.lang.Double"/>
+<attribute name="c2967" type="java.lang.Double"/>
+<attribute name="c2968" type="java.lang.Double"/>
+<attribute name="c2969" type="java.lang.Double"/>
+<attribute name="c2970" type="java.lang.Double"/>
+<attribute name="c2971" type="java.lang.String"/>
 </outputs>
 <project>
 <attribute name="woeid" type="java.lang.Integer"/>
@@ -99,34 +99,34 @@
 <command name="T2">
 <operator type="CROSS_PRODUCT">
 <outputs>
-<attribute name="c1" type="java.lang.Integer"/>
-<attribute name="c2" type="java.lang.Integer"/>
-<attribute name="c3" type="java.lang.String"/>
-<attribute name="c4" type="java.lang.String"/>
-<attribute name="c5" type="java.lang.String"/>
-<attribute name="c6" type="java.lang.String"/>
-<attribute name="c7" type="java.lang.String"/>
-<attribute name="c8" type="java.lang.String"/>
-<attribute name="c9" type="java.lang.String"/>
-<attribute name="c10" type="java.lang.String"/>
-<attribute name="c11" type="java.lang.Double"/>
-<attribute name="c12" type="java.lang.Double"/>
-<attribute name="c13" type="java.lang.Double"/>
-<attribute name="c14" type="java.lang.Double"/>
-<attribute name="c15" type="java.lang.Double"/>
-<attribute name="c16" type="java.lang.Double"/>
-<attribute name="c17" type="java.lang.String"/>
-<attribute name="c18" type="java.lang.Integer"/>
-<attribute name="c20" type="java.lang.Integer"/>
-<attribute name="c19" type="java.lang.String"/>
+<attribute name="c2955" type="java.lang.Integer"/>
+<attribute name="c2956" type="java.lang.Integer"/>
+<attribute name="c2957" type="java.lang.String"/>
+<attribute name="c2958" type="java.lang.String"/>
+<attribute name="c2959" type="java.lang.String"/>
+<attribute name="c2960" type="java.lang.String"/>
+<attribute name="c2961" type="java.lang.String"/>
+<attribute name="c2962" type="java.lang.String"/>
+<attribute name="c2963" type="java.lang.String"/>
+<attribute name="c2964" type="java.lang.String"/>
+<attribute name="c2965" type="java.lang.Double"/>
+<attribute name="c2966" type="java.lang.Double"/>
+<attribute name="c2967" type="java.lang.Double"/>
+<attribute name="c2968" type="java.lang.Double"/>
+<attribute name="c2969" type="java.lang.Double"/>
+<attribute name="c2970" type="java.lang.Double"/>
+<attribute name="c2971" type="java.lang.String"/>
+<attribute name="c2972" type="java.lang.Integer"/>
+<attribute name="c2974" type="java.lang.Integer"/>
+<attribute name="c2973" type="java.lang.String"/>
 </outputs>
 <children>
 <operator type="ALIAS" name="T1"/>
 <operator type="PROJECT">
 <outputs>
-<attribute name="c18" type="java.lang.Integer"/>
-<attribute name="c20" type="java.lang.Integer"/>
-<attribute name="c19" type="java.lang.String"/>
+<attribute name="c2972" type="java.lang.Integer"/>
+<attribute name="c2974" type="java.lang.Integer"/>
+<attribute name="c2973" type="java.lang.String"/>
 </outputs>
 <project>
 <attribute name="woeid" type="java.lang.Integer"/>
@@ -161,51 +161,43 @@
 </operator>
 </command>
 <command name="T3">
-<operator type="PROJECT">
-<outputs>
-<attribute name="c19" type="java.lang.String"/>
-</outputs>
-<project>
-<attribute name="c19" type="java.lang.String"/>
-</project>
-<child>
 <operator type="DEPENDENT_JOIN" param="17">
 <outputs>
-<attribute name="c1" type="java.lang.Integer"/>
-<attribute name="c2" type="java.lang.Integer"/>
-<attribute name="c3" type="java.lang.String"/>
-<attribute name="c4" type="java.lang.String"/>
-<attribute name="c5" type="java.lang.String"/>
-<attribute name="c6" type="java.lang.String"/>
-<attribute name="c7" type="java.lang.String"/>
-<attribute name="c8" type="java.lang.String"/>
-<attribute name="c9" type="java.lang.String"/>
-<attribute name="c10" type="java.lang.String"/>
-<attribute name="c11" type="java.lang.Double"/>
-<attribute name="c12" type="java.lang.Double"/>
-<attribute name="c13" type="java.lang.Double"/>
-<attribute name="c14" type="java.lang.Double"/>
-<attribute name="c15" type="java.lang.Double"/>
-<attribute name="c16" type="java.lang.Double"/>
-<attribute name="c17" type="java.lang.String"/>
-<attribute name="c18" type="java.lang.Integer"/>
-<attribute name="c20" type="java.lang.Integer"/>
-<attribute name="c19" type="java.lang.String"/>
-<attribute name="c18" type="java.lang.Integer"/>
-<attribute name="c1" type="java.lang.Integer"/>
-<attribute name="c35" type="java.lang.String"/>
-<attribute name="c36" type="java.lang.String"/>
-<attribute name="c37" type="java.lang.String"/>
+<attribute name="c2955" type="java.lang.Integer"/>
+<attribute name="c2956" type="java.lang.Integer"/>
+<attribute name="c2957" type="java.lang.String"/>
+<attribute name="c2958" type="java.lang.String"/>
+<attribute name="c2959" type="java.lang.String"/>
+<attribute name="c2960" type="java.lang.String"/>
+<attribute name="c2961" type="java.lang.String"/>
+<attribute name="c2962" type="java.lang.String"/>
+<attribute name="c2963" type="java.lang.String"/>
+<attribute name="c2964" type="java.lang.String"/>
+<attribute name="c2965" type="java.lang.Double"/>
+<attribute name="c2966" type="java.lang.Double"/>
+<attribute name="c2967" type="java.lang.Double"/>
+<attribute name="c2968" type="java.lang.Double"/>
+<attribute name="c2969" type="java.lang.Double"/>
+<attribute name="c2970" type="java.lang.Double"/>
+<attribute name="c2971" type="java.lang.String"/>
+<attribute name="c2972" type="java.lang.Integer"/>
+<attribute name="c2974" type="java.lang.Integer"/>
+<attribute name="c2973" type="java.lang.String"/>
+<attribute name="c2972" type="java.lang.Integer"/>
+<attribute name="c2955" type="java.lang.Integer"/>
+<attribute name="c2989" type="java.lang.String"/>
+<attribute name="c2990" type="java.lang.String"/>
+<attribute name="c2991" type="java.lang.String"/>
 </outputs>
 <children>
 <operator type="ALIAS" name="T2"/>
 <operator type="PROJECT">
 <outputs>
-<attribute name="c18" type="java.lang.Integer"/>
-<attribute name="c1" type="java.lang.Integer"/>
-<attribute name="c35" type="java.lang.String"/>
-<attribute name="c36" type="java.lang.String"/>
-<attribute name="c37" type="java.lang.String"/>
+<attribute name="c2972" type="java.lang.Integer"/>
+<attribute name="c2955" type="java.lang.Integer"/>
+<attribute name="c2989" type="java.lang.String"/>
+<attribute name="c2990" type="java.lang.String"/>
+<attribute name="c2991" type="java.lang.String"/>
 </outputs>
 <project>
 <attribute name="source" type="java.lang.Integer"/>
@@ -227,8 +219,6 @@
 </child>
 </operator>
 </children>
-</operator>
-</child>
 </operator>
 </command>
 </plan>

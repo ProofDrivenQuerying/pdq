@@ -63,6 +63,7 @@ public class DatabaseListState extends DatabaseChaseState implements ListState{
 			DBHomomorphismManager manager,
 			Collection<Predicate> facts) {
 		this(manager, facts, new MapFiringGraph());
+		this.manager.addFacts(this.facts);
 	}
 	
 	/**

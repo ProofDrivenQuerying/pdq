@@ -102,7 +102,7 @@ public class Predicate extends AbstractFormula implements Formula {
 	/**
 	 * @return the predicate's arity
 	 */
-	public int getTermCount() {
+	public int getTermsCount() {
 		return this.arity;
 	}
 

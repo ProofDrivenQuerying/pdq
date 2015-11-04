@@ -12,11 +12,11 @@ import uk.ac.ox.cs.pdq.plan.Cost;
 import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.PlannerTypes;
-import uk.ac.ox.cs.pdq.planner.io.xml.ProofWriter;
-import uk.ac.ox.cs.pdq.planner.reasoning.Proof;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters.ReasoningTypes;
 import uk.ac.ox.cs.pdq.ui.UserInterfaceException;
+import uk.ac.ox.cs.pdq.ui.io.xml.ProofWriter;
+import uk.ac.ox.cs.pdq.ui.proof.Proof;
 
 import com.google.common.base.Preconditions;
 

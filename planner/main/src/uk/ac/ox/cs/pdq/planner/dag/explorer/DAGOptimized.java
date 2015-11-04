@@ -82,6 +82,36 @@ public class DAGOptimized extends DAGExplorer {
 	 * 		The maximum depth to explore
 	 * @throws PlannerException
 	 */
+	
+	/**
+	 * 
+	 * @param eventBus
+	 * @param collectStats
+	 * @param parameters
+	 * @param query
+	 * 		The input user query
+	 * @param accessibleQuery
+	 * 		The accessible counterpart of the user query
+	 * @param schema
+	 * 		The input schema
+	 * @param accessibleSchema
+	 * 		The accessible counterpart of the input schema
+	 * @param chaser
+	 * 		Runs the chase algorithm
+	 * @param detector
+	 * 		Detects homomorphisms during chasing
+	 * @param costEstimator
+	 * 		Estimates the cost of a plan
+	 * @param filter
+	 * 		Filters out configurations at the end of each iteration
+	 * @param firstPhaseExecutor
+	 * 		Performs parallel chasing
+	 * @param secondPhaseExecutor
+	 * 		Iterates over all newly created configurations in parallel and returns the best configuration
+	 * @param maxDepth
+	 * 		The maximum depth to explore
+	 * @throws PlannerException
+	 */
 	public DAGOptimized(
 			EventBus eventBus, 
 			boolean collectStats, 
@@ -176,7 +206,7 @@ public class DAGOptimized extends DAGExplorer {
 			//Update the best configuration
 			List<DAGChaseConfiguration> output = results.getOutput();
 			DAGChaseConfiguration bestResult = results.getBest();
-			if (bestResult !=  null && !bestResult.getPlan().getCost().isUpperBound()) {
+			if (bestResult !=  null) {
 				this.setBestPlan(bestResult);
 			}
 

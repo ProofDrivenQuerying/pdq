@@ -19,7 +19,8 @@ import com.google.common.collect.Lists;
 
 
 /**
- * A candidate fact
+ * A fact that could be exposed at that point as all its terms are 
+ * already accessible.
  * @author Efthymia Tsamoura
  *
  */
@@ -29,11 +30,13 @@ public class Candidate implements Cloneable{
 	 *  e.g., the grounding of its variables to constants */
 	private final Match match;
 
+	/** The accessible counterpart of the input schema **/
 	private final AccessibleSchema accessibleSchema;
 
+	/** The axiom that will be fired given this candidate fact**/
 	private final AccessibilityAxiom rule;
 
-	/** The fact*/
+	/** The fact itself*/
 	private final Predicate fact;
 
 	/** Input constants */
@@ -49,9 +52,13 @@ public class Candidate implements Cloneable{
 	/**
 	 * Constructor for Candidate.
 	 * @param accessibleSchema AccessibleSchema
+	 * 		The accessible counterpart of the input schema
 	 * @param rule AccessibilityAxiom
-	 * @param fact PredicateFormula
+	 * 		The axiom that will be fired given this candidate fact
+	 * @param fact Predicate
+	 * 		The fact itself
 	 * @param matching Matching
+	 * 		Keeps information relevant to the exposed fact
 	 */
 	public Candidate(AccessibleSchema accessibleSchema, AccessibilityAxiom rule, Predicate fact, Match matching) {
 		this.accessibleSchema = accessibleSchema;

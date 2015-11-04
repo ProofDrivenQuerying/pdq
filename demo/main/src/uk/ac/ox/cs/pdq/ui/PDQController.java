@@ -90,10 +90,13 @@ import uk.ac.ox.cs.pdq.runtime.RuntimeParameters.ExecutorTypes;
 import uk.ac.ox.cs.pdq.services.Service;
 import uk.ac.ox.cs.pdq.ui.io.ObservableQueryReader;
 import uk.ac.ox.cs.pdq.ui.io.ObservableSchemaReader;
+import uk.ac.ox.cs.pdq.ui.io.pretty.PrettyProofWriter;
 import uk.ac.ox.cs.pdq.ui.io.sql.SQLLikeQueryWriter;
+import uk.ac.ox.cs.pdq.ui.io.xml.ProofReader;
 import uk.ac.ox.cs.pdq.ui.model.ObservablePlan;
 import uk.ac.ox.cs.pdq.ui.model.ObservableQuery;
 import uk.ac.ox.cs.pdq.ui.model.ObservableSchema;
+import uk.ac.ox.cs.pdq.ui.proof.Proof;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;

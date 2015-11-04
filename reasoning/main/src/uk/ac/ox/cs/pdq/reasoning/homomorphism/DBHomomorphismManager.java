@@ -264,24 +264,6 @@ public class DBHomomorphismManager implements HomomorphismManager {
 		stmt.addBatch(this.builder.createTableNonJoinIndexes(equality, this.Bag));
 		stmt.addBatch(this.builder.createTableNonJoinIndexes(equality, this.Fact));
 	}
-	
-	public void consolidateBaseTables(Collection<Table> tables) throws SQLException {
-		try(Statement sqlStatement = this.connection.createStatement()) {
-			try {
-				DBRelation dbRelation = null;
-				for (Table table:tables) {
-					dbRelation = this.toDBRelation(table);
-					this.aliases.put(table.getName(), dbRelation);
-					sqlStatement.addBatch(this.builder.createTableStatement(dbRelation));
-				}
-				sqlStatement.executeBatch();
-			} catch (SQLException ex) {
-				throw new IllegalStateException(ex.getMessage(), ex);
-			}
-		} catch (SQLException ex) {
-			throw new IllegalStateException(ex.getMessage(), ex);
-		}
-	}
 
 	/**
 	 * @param stmt Statement
@@ -318,15 +300,10 @@ public class DBHomomorphismManager implements HomomorphismManager {
 		Preconditions.checkNotNull(source);
 		List<Match> result = new LinkedList<>();
 		Q s = this.convert(source, this.aliases, constraints);
-		Set<Map<Variable, Constant>> maps = this.builder.toSQL(s, constraints, this.constants, this.connection);
-		
+		//Set<Map<Variable, Constant>> maps = this.builder.toSQL(s, constraints, this.constants, this.connection);
+		Set<Map<Variable, Constant>> maps = this.builder.findHomomorphismsThroughSQL(s, constraints, this.constants, this.connection);
 		for(Map<Variable, Constant> map:maps) {
-//			if(map.containsKey(new Variable(this.Bag.getName()))) {
-//				Constant bagId = map.get(new Variable(this.Bag.getName()));
-//				result.add(new BagMatch(source, map, new Integer(bagId.toString())));
-//			} else {
-				result.add(new Match(source, map));
-//			}
+			result.add(new Match(source, map));
 		}
 		return result;
 	}
@@ -359,13 +336,6 @@ public class DBHomomorphismManager implements HomomorphismManager {
 	 */
 	private <Q extends Evaluatable> Q convert(Q source, Map<String, DBRelation> aliases, HomomorphismConstraint... constraints) {
 		boolean singleBag = false;
-//		for(HomomorphismConstraint c:constraints) {
-//			if(c instanceof BagScope) {
-//				if(((BagScope) c).singleBag==true) {
-//					singleBag = true;
-//				}
-//			}
-//		}
 		if(source instanceof Constraint) {
 			int f = 0;
 			int b = 0;

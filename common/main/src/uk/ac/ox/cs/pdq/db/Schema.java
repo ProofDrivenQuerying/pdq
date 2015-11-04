@@ -53,7 +53,7 @@ public class Schema {
 	/** A map of the string representation of a constant to the constant*/
 	protected Map<String, TypedConstant<?>> constants = new LinkedHashMap<>();
 	
-	protected final Collection<EGD> keyDependencies;
+	protected final Collection<EGD> keyDependencies = Lists.newArrayList();
 
 	protected final List<Constraint> views;
 
@@ -107,20 +107,25 @@ public class Schema {
 				dm.put(((TGD) ic).getId(), ic);
 			}
 		}
-
 		this.relIndex = ImmutableMap.copyOf(rm);
 		this.dependencyIndex = ImmutableMap.copyOf(dm);
 		this.relations = ImmutableList.copyOf(this.relIndex.values());
 		
-		this.keyDependencies = Lists.newArrayList();
 		for(Relation relation:this.relations) {
 			if(!relation.getKey().isEmpty()) {
 				this.keyDependencies.add(EGD.getEGDs(relation, relation.getKey()));
 			}
 		}
 		this.schemaDependencies = ImmutableList.copyOf(this.dependencyIndex.values());
-		
 		this.loadConstants();
+	}
+	
+	public void consolidateKeys() {
+		for(Relation relation:this.relations) {
+			if(!relation.getKey().isEmpty()) {
+				this.keyDependencies.add(EGD.getEGDs(relation, relation.getKey()));
+			}
+		}
 	}
 
 	/**
