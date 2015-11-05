@@ -34,18 +34,19 @@ import com.google.common.collect.Lists;
 public class LinearPlanGenerator {
 
 	/**
-	 * @param configuration LinearConfiguration
-	 * @param parentPlan LinearPlan
-	 * @param cf ControlFlows
-	 * @return LinearPlan
+	 * Creates a linear plan by appending the access and middlewares commands of the input configuration to the input parent plan
+	 * @param configuration 
+	 * @param parent 
+	 * @return 
 	 */
-	public static LinearPlan createLinearPlan(LinearChaseConfiguration configuration, LinearPlan parentPlan) {
-		return create(configuration, parentPlan, inferOutputChaseConstants(configuration));
+	public static LinearPlan createLinearPlan(LinearChaseConfiguration configuration, LinearPlan parent) {
+		return create(configuration, parent, inferOutputChaseConstants(configuration));
 	}
 
 	/**
+	 * Creates a linear plan using the subplans of the input sequence of nodes
 	 * @param nodes List<T>
-	 * @return LinearPlan
+	 * @return 
 	 */
 	public static<T extends SearchNode> LinearPlan createLinearPlan(List<T> nodes) {
 		LinearPlan parentPlan = null;
@@ -57,20 +58,23 @@ public class LinearPlanGenerator {
 	}
 
 	/**
-	 * @param configuration LinearConfiguration
-	 * @param predecessor LinearPlan
-	 * @param toProject List<Term>
-	 * @return LinearPlan
+	 * Creates a linear plan by appending the access and middlewares commands of the input configuration to the input parent plan.
+	 * The top level operator is a projection that projects the input terms
+	 * @param configuration 
+	 * @param parent 
+	 * @param toProject 
+	 * 		Terms to project in the resulting plan
+	 * @return 
 	 */
 	private static LinearPlan create(LinearConfiguration configuration,
-			LinearPlan predecessor,
+			LinearPlan parent,
 			List<Term> toProject) {
 		Preconditions.checkArgument(configuration.getExposedCandidates() != null);
 		RelationalOperator op1 = null;
 		AccessOperator access = null;
 		RelationalOperator predAlias = null;
-		if (predecessor != null) {
-			predAlias = new SubPlanAlias(predecessor);
+		if (parent != null) {
+			predAlias = new SubPlanAlias(parent);
 		}
 
 		for (Candidate candidate: configuration.getExposedCandidates()) {
@@ -99,7 +103,7 @@ public class LinearPlanGenerator {
 				op1 = new Join(op1, op2);
 			}
 		}
-		if (predecessor != null) {
+		if (parent != null) {
 			if (access instanceof DependentAccess) {
 				op1 = new DependentJoin(predAlias, op1);
 			} else {
@@ -107,17 +111,17 @@ public class LinearPlanGenerator {
 			}
 		}
 		LinearPlan lp = new LinearPlan(op1);
-		if (predecessor != null) {
-			lp.addPrefix(predecessor);
-			predecessor.addSuffix(lp);
+		if (parent != null) {
+			lp.addPrefix(parent);
+			parent.addSuffix(lp);
 		}
 		return lp;
 	}
 
 
 	/**
-	 * @param configuration LinearConfiguration
-	 * @return List<Term>
+	 * @param configuration 
+	 * @return the output constants of the input configuration
 	 */
 	public static List<Term> inferOutputChaseConstants(LinearChaseConfiguration configuration) {
 		Collection<Term> result = new LinkedHashSet();
@@ -132,9 +136,10 @@ public class LinearPlanGenerator {
 	}
 
 	/**
-	 * @param candidate Candidate
-	 * @param toProject List<? extends Term>
-	 * @return LinkedHashMap<Integer,Term>
+	 * @param candidate 
+	 * @param toProject 
+	 * @return
+	 * 		a map of positions to terms of a candidate fact
 	 */
 	private static LinkedHashMap<Integer, Term> getOutputMap(Candidate candidate, List<? extends Term> toProject) {
 		LinkedHashMap<Integer, Term> ret = new LinkedHashMap();
