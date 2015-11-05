@@ -8,7 +8,7 @@ import java.util.Set;
 import org.jgrapht.graph.DefaultEdge;
 
 import uk.ac.ox.cs.pdq.cost.estimators.BlackBoxCostEstimator;
-import uk.ac.ox.cs.pdq.plan.LinearPlan;
+import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.planner.linear.node.BlackBoxNode;
 import uk.ac.ox.cs.pdq.planner.linear.node.PlanTree;
 import uk.ac.ox.cs.pdq.planner.linear.node.SearchNode.NodeStatus;
@@ -37,7 +37,7 @@ public class BlackBoxPropagator extends CostPropagator<BlackBoxNode> {
 	 * Empty constructor
 	 * @param estimator BlackBoxCostEstimator<LinearPlan,?>
 	 */
-	public BlackBoxPropagator(BlackBoxCostEstimator<LinearPlan> estimator) {
+	public BlackBoxPropagator(BlackBoxCostEstimator<LeftDeepPlan> estimator) {
 		super(estimator);
 	}
 
@@ -102,7 +102,7 @@ public class BlackBoxPropagator extends CostPropagator<BlackBoxNode> {
 			Set<List<Integer>> paths = node.getPathsToSuccess();
 			if (paths != null) {
 				for (List<Integer> path:paths) {
-					LinearPlan plan = PropagatorUtils.createLinearPlan(planTree, path, this.costEstimator);
+					LeftDeepPlan plan = PropagatorUtils.createLinearPlan(planTree, path, this.costEstimator);
 					Preconditions.checkState(plan != null);
 					if (this.bestPlan == null || plan.getCost().lessThan(this.bestPlan.getCost())) {
 						this.bestPlan = plan;

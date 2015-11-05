@@ -7,7 +7,7 @@ import uk.ac.ox.cs.pdq.Parameters.EnumParameterValue;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.plan.AccessOperator;
-import uk.ac.ox.cs.pdq.plan.LinearPlan;
+import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.runtime.RuntimeParameters;
 import uk.ac.ox.cs.pdq.runtime.RuntimeParameters.ExecutorTypes;
@@ -49,10 +49,10 @@ public final class Middleware {
 		case SQL_TREE: 
 			return new SQLPlanExecutor(p, q, params.getSemantics(), properties);
 		case SQL_STEP: 
-			if (!(p instanceof LinearPlan)) {
+			if (!(p instanceof LeftDeepPlan)) {
 				throw new InconsistentParametersException("Executor type " + ExecutorTypes.SQL_STEP + " can only be used in conjunction with linear plans.");
 			}
-			return new SQLStepPlanExecutor((LinearPlan) p, q, params.getSemantics(), properties);
+			return new SQLStepPlanExecutor((LeftDeepPlan) p, q, params.getSemantics(), properties);
 		case SQL_WITH: 
 			return new SQLWithPlanExecutor(p, q, params.getSemantics(), properties);
 		default: 

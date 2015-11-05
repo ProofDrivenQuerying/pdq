@@ -21,20 +21,20 @@ import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.io.ReaderException;
 import uk.ac.ox.cs.pdq.plan.AccessOperator;
 import uk.ac.ox.cs.pdq.plan.DoubleCost;
-import uk.ac.ox.cs.pdq.plan.LinearPlan;
+import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 
 /**
  * Reads plans from XML.
  * 
  * @author Julien Leblay
  */
-public class LinearPlanReader extends AbstractXMLReader<LinearPlan> {
+public class LinearPlanReader extends AbstractXMLReader<LeftDeepPlan> {
 	
 	/** The plan's cost. */
 	private Double cost = null;
 	
 	/** The pan being built */
-	private LinearPlan plan = null;
+	private LeftDeepPlan plan = null;
 	
 	/** The operator if the command being read */
 	private RelationalOperator operator = null;
@@ -67,7 +67,7 @@ public class LinearPlanReader extends AbstractXMLReader<LinearPlan> {
 	 * @see uk.ac.ox.cs.pdq.io.Reader#read(InputStream)
 	 */
 	@Override
-	public LinearPlan read(InputStream in) {
+	public LeftDeepPlan read(InputStream in) {
 		try {
 			SAXParserFactory factory = SAXParserFactory.newInstance();
 			SAXParser parser = factory.newSAXParser();
@@ -127,7 +127,7 @@ public class LinearPlanReader extends AbstractXMLReader<LinearPlan> {
 			Collection<AccessOperator> accesses = RelationalOperator.getAccesses(this.operator);
 			this.access = Iterators.getLast(accesses.iterator());
 			//this.plan = new LinearPlan(this.operator, this.access, this.plan, null);
-			this.plan = new LinearPlan(this.operator, this.plan, null);
+			this.plan = new LeftDeepPlan(this.operator, this.plan, null);
 			this.aliases.put(this.name, this.operator);
 			this.name = null;
 			break;

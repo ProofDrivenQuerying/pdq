@@ -17,7 +17,7 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.plan.DAGPlan;
-import uk.ac.ox.cs.pdq.plan.LinearPlan;
+import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.PlannerTypes;
@@ -94,7 +94,7 @@ public class ExplorerFactory {
 		if (parameters.getPlannerType().equals(PlannerTypes.LINEAR_GENERIC)
 				|| parameters.getPlannerType().equals(PlannerTypes.LINEAR_KCHASE)
 				|| parameters.getPlannerType().equals(PlannerTypes.LINEAR_OPTIMIZED)) {
-			nodeFactory = new NodeFactory(parameters, (CostEstimator<LinearPlan>) costEstimator);
+			nodeFactory = new NodeFactory(parameters, (CostEstimator<LeftDeepPlan>) costEstimator);
 			postPruning = new PostPruningFactory(parameters.getPostPruningType(), nodeFactory, chaser, query, accessibleSchema).getInstance();
 		}
 		else {
@@ -144,7 +144,7 @@ public class ExplorerFactory {
 					accessibleSchema, 
 					chaser, 
 					detector, 
-					(CostEstimator<LinearPlan>) costEstimator,
+					(CostEstimator<LeftDeepPlan>) costEstimator,
 					nodeFactory,
 					parameters.getMaxDepth());
 		case LINEAR_KCHASE:
@@ -157,7 +157,7 @@ public class ExplorerFactory {
 					accessibleSchema, 
 					chaser, 
 					detector, 
-					(CostEstimator<LinearPlan>) costEstimator,
+					(CostEstimator<LeftDeepPlan>) costEstimator,
 					nodeFactory,
 					parameters.getMaxDepth(),
 					parameters.getChaseInterval());
@@ -240,7 +240,7 @@ public class ExplorerFactory {
 					accessibleSchema, 
 					chaser,
 					detector,
-					(CostEstimator<LinearPlan>) costEstimator,
+					(CostEstimator<LeftDeepPlan>) costEstimator,
 					nodeFactory,
 					parameters.getMaxDepth(),
 					parameters.getQueryMatchInterval(),

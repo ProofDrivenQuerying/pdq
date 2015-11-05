@@ -17,7 +17,7 @@ import uk.ac.ox.cs.pdq.io.pretty.AlgebraLikeLinearPlanWriter;
 import uk.ac.ox.cs.pdq.io.pretty.VeryPrettyQueryWriter;
 import uk.ac.ox.cs.pdq.io.xml.QueryReader;
 import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
-import uk.ac.ox.cs.pdq.plan.LinearPlan;
+import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.planner.Planner;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
@@ -79,7 +79,7 @@ public class QueryChecker implements Runnable {
 						Plan plan = planner.search();
 						if (plan != null) {
 							System.out.println("\t+++ Answerable " + plan.getCost() + " ");
-							AlgebraLikeLinearPlanWriter.to(System.out).write((LinearPlan) plan);
+							AlgebraLikeLinearPlanWriter.to(System.out).write((LeftDeepPlan) plan);
 						} else {
 							System.out.println("\t--- Not answerable");
 						}

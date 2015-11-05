@@ -13,7 +13,7 @@ import uk.ac.ox.cs.pdq.LimitReachedException;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Query;
-import uk.ac.ox.cs.pdq.plan.LinearPlan;
+import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.db.access.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.linear.LinearConfiguration;
@@ -74,7 +74,7 @@ public class LinearGeneric extends LinearExplorer {
 			AccessibleSchema accessibleSchema, 
 			Chaser chaser,
 			HomomorphismDetector detector,
-			CostEstimator<LinearPlan> costEstimator,
+			CostEstimator<LeftDeepPlan> costEstimator,
 			NodeFactory nodeFactory,
 			int depth) throws PlannerException {
 		super(eventBus, collectStats, query, accessibleQuery, schema, accessibleSchema, chaser, detector, costEstimator, nodeFactory, depth);
@@ -136,7 +136,7 @@ public class LinearGeneric extends LinearExplorer {
 		// If there exists at least one query match
 		if (!matches.isEmpty()) {
 			freshNode.setStatus(NodeStatus.SUCCESSFUL);
-			LinearPlan successfulPlan = freshNode.getConfiguration().getPlan();
+			LeftDeepPlan successfulPlan = freshNode.getConfiguration().getPlan();
 			
 			// Update the best plan found so far
 			if (this.bestPlan == null || (this.bestPlan != null && successfulPlan.getCost().lessThan(this.bestPlan.getCost()))) {

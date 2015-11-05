@@ -27,7 +27,7 @@ import uk.ac.ox.cs.pdq.logging.performance.StatisticsCollector;
 import uk.ac.ox.cs.pdq.plan.Cost;
 import uk.ac.ox.cs.pdq.plan.DAGPlan;
 import uk.ac.ox.cs.pdq.plan.DoubleCost;
-import uk.ac.ox.cs.pdq.plan.LinearPlan;
+import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.plan.Plan;
 
 import com.google.common.collect.Lists;
@@ -101,7 +101,7 @@ public class WhiteBoxCostEstimator<P extends Plan> implements BlackBoxCostEstima
 			RelationalOperator lo = plan.getOperator();
 			this.cardEstimator.estimate(lo);
 			return this.recursiveCost(lo, dPlan.getDescendants());
-		} else if (plan instanceof LinearPlan) {
+		} else if (plan instanceof LeftDeepPlan) {
 			RelationalOperator lo = plan.getOperator();
 			this.cardEstimator.estimate(lo);
 			return this.recursiveCost(lo);

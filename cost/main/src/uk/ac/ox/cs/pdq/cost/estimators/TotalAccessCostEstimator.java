@@ -13,7 +13,7 @@ import uk.ac.ox.cs.pdq.plan.Command;
 import uk.ac.ox.cs.pdq.plan.CommandToTGDTranslator;
 import uk.ac.ox.cs.pdq.plan.DAGPlan;
 import uk.ac.ox.cs.pdq.plan.DoubleCost;
-import uk.ac.ox.cs.pdq.plan.NormalisedPlan;
+import uk.ac.ox.cs.pdq.plan.SequentialPlan;
 import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.plan.ToNormalisedPlanTranslator;
 import uk.ac.ox.cs.pdq.util.Table;
@@ -85,7 +85,7 @@ public class TotalAccessCostEstimator<P extends Plan> implements BlackBoxCostEst
 	@Override
 	public DoubleCost estimateCost(P plan) {
 		//Translate plan to a normalised plan
-		NormalisedPlan normalised = new ToNormalisedPlanTranslator().translate((RelationalOperator) plan.getEffectiveOperator());
+		SequentialPlan normalised = new ToNormalisedPlanTranslator().translate((RelationalOperator) plan.getEffectiveOperator());
 		double totalCost = 0.0;
 		for(Command command:normalised.getCommands()) {
 			if(command instanceof AccessCommand) {	

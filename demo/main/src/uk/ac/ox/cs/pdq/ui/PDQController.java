@@ -80,7 +80,7 @@ import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.io.pretty.AlgebraLikeLinearPlanWriter;
 import uk.ac.ox.cs.pdq.io.pretty.VeryShortDependencyWriter;
 import uk.ac.ox.cs.pdq.io.xml.LinearPlanReader;
-import uk.ac.ox.cs.pdq.plan.LinearPlan;
+import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.PlannerTypes;
@@ -826,9 +826,9 @@ public class PDQController {
 
     void displayPlan(Plan p) {
 		PDQController.this.planViewArea.getItems().clear();
-		if (p instanceof LinearPlan) {
+		if (p instanceof LeftDeepPlan) {
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			AlgebraLikeLinearPlanWriter.to(new PrintStream(bos)).write((LinearPlan) p);
+			AlgebraLikeLinearPlanWriter.to(new PrintStream(bos)).write((LeftDeepPlan) p);
 			for (String line: bos.toString().split("\n")) {
 				Text t = new Text(line);
 				PDQController.this.planViewArea.getItems().add(t);

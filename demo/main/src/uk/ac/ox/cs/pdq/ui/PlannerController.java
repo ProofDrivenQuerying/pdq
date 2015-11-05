@@ -53,7 +53,7 @@ import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.io.pretty.AccessOnlyPlanWriter;
 import uk.ac.ox.cs.pdq.io.pretty.AlgebraLikeLinearPlanWriter;
-import uk.ac.ox.cs.pdq.plan.LinearPlan;
+import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.planner.Planner;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
@@ -427,9 +427,9 @@ public class PlannerController {
 
 	private void updatePlanTab(Plan pplan) {
 		this.planViewArea.getItems().clear();
-		if (pplan != null && pplan instanceof LinearPlan) {
+		if (pplan != null && pplan instanceof LeftDeepPlan) {
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			AlgebraLikeLinearPlanWriter.to(new PrintStream(bos)).write((LinearPlan) pplan);
+			AlgebraLikeLinearPlanWriter.to(new PrintStream(bos)).write((LeftDeepPlan) pplan);
 			for (String line: bos.toString().split("\n")) {
 				Text t = new Text(line);
 				this.planViewArea.getItems().add(t);
@@ -476,9 +476,9 @@ public class PlannerController {
 		
 	void displayPlan(ListView<Text> area, Plan p) {
 		area.getItems().clear();
-		if (p instanceof LinearPlan) {
+		if (p instanceof LeftDeepPlan) {
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			AlgebraLikeLinearPlanWriter.to(new PrintStream(bos)).write((LinearPlan) p);
+			AlgebraLikeLinearPlanWriter.to(new PrintStream(bos)).write((LeftDeepPlan) p);
 			for (String line: bos.toString().split("\n")) {
 				Text t = new Text(line);
 				area.getItems().add(t);
@@ -558,7 +558,7 @@ public class PlannerController {
 			BestPlanMetadata metadata = (BestPlanMetadata) m;
 			ByteArrayOutputStream prBos = new ByteArrayOutputStream();
 			ByteArrayOutputStream plBos = new ByteArrayOutputStream();
-			AlgebraLikeLinearPlanWriter.to(new PrintStream(plBos)).write((LinearPlan) metadata.getPlan());
+			AlgebraLikeLinearPlanWriter.to(new PrintStream(plBos)).write((LeftDeepPlan) metadata.getPlan());
 			ExtendedPrettyProofWriter.to(new PrintStream(prBos), this.accSchema).write(Proof.toProof(metadata.getPlan()));
 			this.searchSpaceMetadataSuccessTab.setDisable(false);
 			this.searchSpaceMetadataSuccess.setText(
@@ -592,9 +592,9 @@ public class PlannerController {
 		if (metadata instanceof DominanceMetadata) {
 			this.searchSpaceMetadataDominanceTab.setDisable(false);
 			    ByteArrayOutputStream bos1 = new ByteArrayOutputStream();
-			    AlgebraLikeLinearPlanWriter.to(new PrintStream(bos1)).write((LinearPlan) ((DominanceMetadata) metadata).getDominatedPlan());
+			    AlgebraLikeLinearPlanWriter.to(new PrintStream(bos1)).write((LeftDeepPlan) ((DominanceMetadata) metadata).getDominatedPlan());
 			    ByteArrayOutputStream bos2 = new ByteArrayOutputStream();
-			    AlgebraLikeLinearPlanWriter.to(new PrintStream(bos2)).write((LinearPlan) ((DominanceMetadata) metadata).getDominancePlan());
+			    AlgebraLikeLinearPlanWriter.to(new PrintStream(bos2)).write((LeftDeepPlan) ((DominanceMetadata) metadata).getDominancePlan());
 			switch (((DominanceMetadata) metadata).getType()) {
 			case DOMINANCE:
 			    this.searchSpaceMetadataDominance.setText(

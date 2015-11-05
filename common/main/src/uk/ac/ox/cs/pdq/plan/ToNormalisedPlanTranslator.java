@@ -18,10 +18,10 @@ import com.google.common.collect.Lists;
  */
 public class ToNormalisedPlanTranslator {
 	
-	public NormalisedPlan translate(RelationalOperator operator) {
+	public SequentialPlan translate(RelationalOperator operator) {
 		if(operator instanceof uk.ac.ox.cs.pdq.algebra.Join) {
 			//Get the left hand child plan
-			NormalisedPlan left = this.translate(((uk.ac.ox.cs.pdq.algebra.Join) operator).getChildren().get(0));
+			SequentialPlan left = this.translate(((uk.ac.ox.cs.pdq.algebra.Join) operator).getChildren().get(0));
 			//Do the right hand child access
 			RelationalOperator rightOp = ((uk.ac.ox.cs.pdq.algebra.Join) operator).getChildren().get(1);
 			Collection<AccessOperator> rightAccesses = RelationalOperator.getAccesses(rightOp);
@@ -39,18 +39,18 @@ public class ToNormalisedPlanTranslator {
 			}
 			//Create the join command
 			Command join = new JoinCommand(left.getLast().getOutput(), selection.getOutput(), ((uk.ac.ox.cs.pdq.algebra.Join) operator).getPredicate());
-			return new NormalisedPlan(left, join);
+			return new SequentialPlan(left, join);
 		}
 		else if(operator instanceof DependentAccess) {
-			return new NormalisedPlan(new AccessCommand((AccessOperator) operator, null));
+			return new SequentialPlan(new AccessCommand((AccessOperator) operator, null));
 		}
 		else if(operator instanceof Selection) {
-			NormalisedPlan child = this.translate(((Selection) operator).getChild());
+			SequentialPlan child = this.translate(((Selection) operator).getChild());
 			Command selection = new SelectCommand(((Selection) operator).getPredicate(), child.getFirst().getOutput());
 			List<Command> commands = Lists.newArrayList();
 			commands.addAll(child.getCommands());
 			commands.add(selection);
-			return new NormalisedPlan(commands);
+			return new SequentialPlan(commands);
 		}
 		else if(operator instanceof Projection) {
 			return this.translate(((Projection) operator).getChild());

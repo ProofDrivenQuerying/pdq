@@ -5,7 +5,7 @@ import java.util.Set;
 
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.SimpleCostEstimator;
-import uk.ac.ox.cs.pdq.plan.LinearPlan;
+import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
@@ -25,11 +25,11 @@ public final class NodeFactory {
 	
 	/** Estimates the cost of linear plan visited during exploration.
 	 * If  instance of SimpleCostEstimator, then the factory returns a simple node. Otherwise, a blackbox one. **/
-	private final CostEstimator<LinearPlan> costEstimator;
+	private final CostEstimator<LeftDeepPlan> costEstimator;
 	
 	private final Random random;
 
-	public NodeFactory(PlannerParameters parameters, CostEstimator<LinearPlan> costEstimator) {
+	public NodeFactory(PlannerParameters parameters, CostEstimator<LeftDeepPlan> costEstimator) {
 		Preconditions.checkNotNull(parameters);
 		Preconditions.checkNotNull(costEstimator);
 		this.plannerParameters = parameters;

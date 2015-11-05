@@ -10,7 +10,7 @@ import org.jgrapht.graph.DefaultEdge;
 
 import uk.ac.ox.cs.pdq.LimitReachedException;
 import uk.ac.ox.cs.pdq.fol.Predicate;
-import uk.ac.ox.cs.pdq.plan.LinearPlan;
+import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.db.access.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.db.access.AccessibleSchema.AccessibleRelation;
@@ -36,7 +36,7 @@ public abstract class PostPruning {
 	protected Boolean isPruned = false;
 	/** The pruned path and its corresponding plan */
 	protected List<SearchNode> path = null;
-	protected LinearPlan plan = null;
+	protected LeftDeepPlan plan = null;
 
 	/**
 	 * @param nodeFactory
@@ -124,7 +124,7 @@ public abstract class PostPruning {
 		return this.path;
 	}
 	
-	public LinearPlan getPlan() {
+	public LeftDeepPlan getPlan() {
 		return this.plan;
 	}
 

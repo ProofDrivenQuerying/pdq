@@ -5,7 +5,7 @@ import java.util.List;
 import uk.ac.ox.cs.pdq.cost.estimators.BlackBoxCostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.SimpleCostEstimator;
-import uk.ac.ox.cs.pdq.plan.LinearPlan;
+import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.planner.linear.LinearPlanGenerator;
 import uk.ac.ox.cs.pdq.planner.linear.LinearUtility;
 import uk.ac.ox.cs.pdq.planner.linear.node.SearchNode;
@@ -21,7 +21,7 @@ import com.google.common.base.Preconditions;
  */
 public class PropagatorUtils {
 	
-	public static CostPropagator getPropagator(CostEstimator<LinearPlan> e) {
+	public static CostPropagator getPropagator(CostEstimator<LeftDeepPlan> e) {
 		if (e instanceof BlackBoxCostEstimator) {
 			return new BlackBoxPropagator((BlackBoxCostEstimator) e);
 		}
@@ -42,10 +42,10 @@ public class PropagatorUtils {
 	 * @param costEstimator CostEstimator<LinearPlan>
 	 * @return a linear plan that corresponds to the input path to success
 	 */
-	public static <T extends SearchNode> LinearPlan createLinearPlan(IndexedDirectedGraph<T> nodesSet, List<Integer> path, CostEstimator<LinearPlan> costEstimator) {
+	public static <T extends SearchNode> LeftDeepPlan createLinearPlan(IndexedDirectedGraph<T> nodesSet, List<Integer> path, CostEstimator<LeftDeepPlan> costEstimator) {
 		Preconditions.checkArgument(path != null && !path.isEmpty());
 		List<T> nodes = LinearUtility.createPath(nodesSet, path);
-		LinearPlan plan = LinearPlanGenerator.createLinearPlan(nodes);
+		LeftDeepPlan plan = LinearPlanGenerator.createLinearPlan(nodes);
 		costEstimator.cost(plan);
 
 		for (T next:nodes) {

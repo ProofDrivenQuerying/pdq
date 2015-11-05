@@ -19,7 +19,7 @@ import uk.ac.ox.cs.pdq.db.AccessMethod.Types;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.plan.AccessOperator;
-import uk.ac.ox.cs.pdq.plan.LinearPlan;
+import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.Candidate;
 import uk.ac.ox.cs.pdq.planner.linear.node.SearchNode;
 
@@ -39,7 +39,7 @@ public class LinearPlanGenerator {
 	 * @param parent 
 	 * @return 
 	 */
-	public static LinearPlan createLinearPlan(LinearChaseConfiguration configuration, LinearPlan parent) {
+	public static LeftDeepPlan createLinearPlan(LinearChaseConfiguration configuration, LeftDeepPlan parent) {
 		return create(configuration, parent, inferOutputChaseConstants(configuration));
 	}
 
@@ -48,8 +48,8 @@ public class LinearPlanGenerator {
 	 * @param nodes List<T>
 	 * @return 
 	 */
-	public static<T extends SearchNode> LinearPlan createLinearPlan(List<T> nodes) {
-		LinearPlan parentPlan = null;
+	public static<T extends SearchNode> LeftDeepPlan createLinearPlan(List<T> nodes) {
+		LeftDeepPlan parentPlan = null;
 		for (T node: nodes) {
 			parentPlan = LinearPlanGenerator.createLinearPlan(node.getConfiguration(), parentPlan);
 			
@@ -66,8 +66,8 @@ public class LinearPlanGenerator {
 	 * 		Terms to project in the resulting plan
 	 * @return 
 	 */
-	private static LinearPlan create(LinearConfiguration configuration,
-			LinearPlan parent,
+	private static LeftDeepPlan create(LinearConfiguration configuration,
+			LeftDeepPlan parent,
 			List<Term> toProject) {
 		Preconditions.checkArgument(configuration.getExposedCandidates() != null);
 		RelationalOperator op1 = null;
@@ -110,7 +110,7 @@ public class LinearPlanGenerator {
 				op1 = new Join(predAlias, op1);
 			}
 		}
-		LinearPlan lp = new LinearPlan(op1);
+		LeftDeepPlan lp = new LeftDeepPlan(op1);
 		if (parent != null) {
 			lp.addPrefix(parent);
 			parent.addSuffix(lp);

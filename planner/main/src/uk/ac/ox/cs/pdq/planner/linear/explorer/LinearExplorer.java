@@ -7,7 +7,7 @@ import org.jgrapht.graph.DefaultEdge;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Query;
-import uk.ac.ox.cs.pdq.plan.LinearPlan;
+import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.db.access.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.explorer.Explorer;
@@ -32,7 +32,7 @@ import com.google.common.eventbus.EventBus;
  * @author Efthymia Tsamoura
  *
  */
-public abstract class LinearExplorer extends Explorer<LinearPlan> {
+public abstract class LinearExplorer extends Explorer<LeftDeepPlan> {
 
 	/** The input user query **/
 	protected final Query<?> query;
@@ -53,7 +53,7 @@ public abstract class LinearExplorer extends Explorer<LinearPlan> {
 	protected final HomomorphismDetector detector;
 
 	/** Estimates the cost of a plan **/
-	protected final CostEstimator<LinearPlan> costEstimator;
+	protected final CostEstimator<LeftDeepPlan> costEstimator;
 
 	/** Creates new nodes */
 	private final NodeFactory nodeFactory;
@@ -99,7 +99,7 @@ public abstract class LinearExplorer extends Explorer<LinearPlan> {
 			AccessibleSchema accessibleSchema, 
 			Chaser chaser,
 			HomomorphismDetector detector,
-			CostEstimator<LinearPlan> costEstimator,
+			CostEstimator<LeftDeepPlan> costEstimator,
 			NodeFactory nodeFactory,
 			int depth) throws PlannerException {
 		super(eventBus, collectStats);

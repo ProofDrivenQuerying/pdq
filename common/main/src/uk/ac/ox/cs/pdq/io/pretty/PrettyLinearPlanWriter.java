@@ -3,7 +3,7 @@ package uk.ac.ox.cs.pdq.io.pretty;
 import java.io.PrintStream;
 
 import uk.ac.ox.cs.pdq.io.Writer;
-import uk.ac.ox.cs.pdq.plan.LinearPlan;
+import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 
 /**
  * Writes a concise representation of a plan to the given output
@@ -11,7 +11,7 @@ import uk.ac.ox.cs.pdq.plan.LinearPlan;
  * @author Julien Leblay
  *
  */
-public class PrettyLinearPlanWriter extends PrettyWriter<LinearPlan> implements Writer<LinearPlan> {
+public class PrettyLinearPlanWriter extends PrettyWriter<LeftDeepPlan> implements Writer<LeftDeepPlan> {
 	/**
 	 * The default out to which plans should be written, if not 
 	 * explicitly provided at write time.
@@ -47,7 +47,7 @@ public class PrettyLinearPlanWriter extends PrettyWriter<LinearPlan> implements 
 	 * @param plan LinearPlan
 	 */
 	@Override
-	public void write(PrintStream out, LinearPlan plan) {
+	public void write(PrintStream out, LeftDeepPlan plan) {
 		out.println(plan + ": " + plan.getCost());
 	}
 	
@@ -55,7 +55,7 @@ public class PrettyLinearPlanWriter extends PrettyWriter<LinearPlan> implements 
 	 * @param q LinearPlan
 	 */
 	@Override
-	public void write(LinearPlan q) {
+	public void write(LeftDeepPlan q) {
 		this.write(this.out, q);
 	}
 	

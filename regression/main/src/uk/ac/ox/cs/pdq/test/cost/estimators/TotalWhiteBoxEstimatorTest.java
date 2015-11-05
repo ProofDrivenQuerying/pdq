@@ -17,7 +17,7 @@ import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
 import uk.ac.ox.cs.pdq.logging.performance.StatisticsCollector;
 import uk.ac.ox.cs.pdq.plan.DAGPlan;
-import uk.ac.ox.cs.pdq.plan.LinearPlan;
+import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.plan.Plan;
 
 import com.google.common.eventbus.EventBus;
@@ -87,7 +87,7 @@ public class TotalWhiteBoxEstimatorTest extends CostEstimatorTest{
 					costEstimator = new WhiteBoxCostEstimator<DAGPlan>(new StatisticsCollector(false, this.eventBus), card);
 				}
 				else {
-					costEstimator = new WhiteBoxCostEstimator<LinearPlan>(new StatisticsCollector(false, this.eventBus), card);
+					costEstimator = new WhiteBoxCostEstimator<LeftDeepPlan>(new StatisticsCollector(false, this.eventBus), card);
 				}
 			
 				Assert.assertEquals(plan.getCost(), costEstimator.estimateCost(plan));

@@ -7,7 +7,7 @@ import org.jgrapht.graph.DefaultEdge;
 
 import uk.ac.ox.cs.pdq.cost.estimators.SimpleCostEstimator;
 import uk.ac.ox.cs.pdq.plan.Cost;
-import uk.ac.ox.cs.pdq.plan.LinearPlan;
+import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.planner.linear.node.PlanTree;
 import uk.ac.ox.cs.pdq.planner.linear.node.SearchNode.NodeStatus;
 import uk.ac.ox.cs.pdq.planner.linear.node.SimpleNode;
@@ -37,7 +37,7 @@ public class SimplePropagator extends CostPropagator<SimpleNode> {
 	 * Empty constructor
 	 * @param estimator SimpleCostEstimator<LinearPlan>
 	 */
-	public SimplePropagator(SimpleCostEstimator<LinearPlan> estimator) {
+	public SimplePropagator(SimpleCostEstimator<LeftDeepPlan> estimator) {
 		super(estimator);
 	}
 

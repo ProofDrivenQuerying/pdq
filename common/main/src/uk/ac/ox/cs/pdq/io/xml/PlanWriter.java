@@ -3,7 +3,7 @@ package uk.ac.ox.cs.pdq.io.xml;
 import java.io.PrintStream;
 
 import uk.ac.ox.cs.pdq.plan.DAGPlan;
-import uk.ac.ox.cs.pdq.plan.LinearPlan;
+import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.plan.Plan;
 
 import com.google.common.base.Preconditions;
@@ -39,8 +39,8 @@ public abstract class PlanWriter {
 		}
 		
 		public void write(Plan plan) {
-			if (plan instanceof LinearPlan) {
-				new LinearPlanWriter().write(out, (LinearPlan) plan);
+			if (plan instanceof LeftDeepPlan) {
+				new LinearPlanWriter().write(out, (LeftDeepPlan) plan);
 				return;
 			}
 			new DAGPlanWriter().write(out, (DAGPlan) plan);
