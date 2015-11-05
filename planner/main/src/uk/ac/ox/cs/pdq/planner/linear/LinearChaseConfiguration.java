@@ -28,7 +28,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 
 /**
- * A linear configuration with state a ChaseState object
+ * A linear configuration with state an AccessibleChaseState object
  *
  * @author Efthymia Tsamoura
  */
@@ -37,10 +37,10 @@ public class LinearChaseConfiguration extends ChaseConfiguration<LinearPlan> imp
 	/** The parent linear configuration*/
 	private final LinearChaseConfiguration parent;
 
-	/** The (un)exposed candidates */
+	/** The (un)exposed candidate facts */
 	private List<Candidate> candidates;
 
-	/** The exposed candidates */
+	/** The candidate facts exposed in this configuration */
 	private final Set<Candidate> exposedCandidates;
 
 	/** Random engine. Used when selecting candidate facts to expose*/
@@ -49,7 +49,9 @@ public class LinearChaseConfiguration extends ChaseConfiguration<LinearPlan> imp
 	/**
 	 * 
 	 * @param parent
+	 * 		The parent linear configuration
 	 * @param exposedCandidates
+	 * 		The candidate facts exposed in this configuration
 	 * @param random
 	 */
 	public LinearChaseConfiguration(
@@ -78,7 +80,8 @@ public class LinearChaseConfiguration extends ChaseConfiguration<LinearPlan> imp
 	}
 
 	/**
-	 * 
+	 * Creates a linear chase configuration using the input accessible chase state that has no parent configuration.
+	 * Used when creating the root of the linear plan tree.
 	 * @param state
 	 * @param random
 	 */
@@ -95,6 +98,12 @@ public class LinearChaseConfiguration extends ChaseConfiguration<LinearPlan> imp
 		this.setPlan(null);
 	}
 
+	/**
+	 * 
+	 * @param candidate
+	 * @return
+	 * 		true of the input candidate has been already exposed 
+	 */
 	public boolean isExposed(Candidate candidate) {
 		Predicate infAcc = candidate.getInferredAccessibleFact();
 		return this.getState().getFacts().contains(infAcc);

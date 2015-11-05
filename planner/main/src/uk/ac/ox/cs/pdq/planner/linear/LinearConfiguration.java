@@ -47,8 +47,6 @@ public interface LinearConfiguration extends Configuration<LinearPlan> {
 	 */
 	Set<Candidate> getSimilarCandidates(Candidate candidate);
 	
-//	LinearPlan createPlan(LinearPlan parentPlan);
-	
 	@Override
 	LinearConfiguration clone();
 

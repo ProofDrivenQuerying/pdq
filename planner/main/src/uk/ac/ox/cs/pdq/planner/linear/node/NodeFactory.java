@@ -15,7 +15,7 @@ import uk.ac.ox.cs.pdq.planner.reasoning.chase.state.AccessibleChaseState;
 import com.google.common.base.Preconditions;
 
 /**
- * Creates nodes based on the input arguments
+ * Creates plan tree nodes 
  *
  * @author Efthymia Tsamoura
  */
@@ -23,6 +23,8 @@ public final class NodeFactory {
 	
 	private final PlannerParameters plannerParameters;
 	
+	/** Estimates the cost of linear plan visited during exploration.
+	 * If  instance of SimpleCostEstimator, then the factory returns a simple node. Otherwise, a blackbox one. **/
 	private final CostEstimator<LinearPlan> costEstimator;
 	
 	private final Random random;
@@ -36,8 +38,10 @@ public final class NodeFactory {
 	}
 	
 	/**
-	 * @param configuration LinearConfiguration
-	 * @return a node with the input configuration * @throws PlannerException
+	 * 
+	 * @param state
+	 * @return a node with the input accessible chase state
+	 * @throws PlannerException
 	 */
 	public SearchNode getInstance(AccessibleChaseState state) throws PlannerException {
 		Preconditions.checkNotNull(state);
@@ -49,20 +53,20 @@ public final class NodeFactory {
 	}
 
 	/**
-	 * @param parentNode
+	 * @param parent
 	 * @param exposedCandidates
-	 * @return a node having the given parent node and the given exposed candidate facts
+	 * @return a node that exposes the input candidate facts and has as parent the input node
 	 * @throws PlannerException
 	 */
-	public SearchNode getInstance(SearchNode parentNode, Set<Candidate> exposedCandidates) throws PlannerException {
+	public SearchNode getInstance(SearchNode parent, Set<Candidate> exposedCandidates) throws PlannerException {
 		LinearChaseConfiguration configuration = new LinearChaseConfiguration(
-				parentNode.getConfiguration(),
+				parent.getConfiguration(),
 				exposedCandidates,
 				this.random);
-		if (parentNode instanceof SimpleNode) {
-			return new SimpleNode((SimpleNode) parentNode, configuration);
+		if (parent instanceof SimpleNode) {
+			return new SimpleNode((SimpleNode) parent, configuration);
 		}
-		return new BlackBoxNode((BlackBoxNode) parentNode, configuration);
+		return new BlackBoxNode((BlackBoxNode) parent, configuration);
 	}
 	
 }

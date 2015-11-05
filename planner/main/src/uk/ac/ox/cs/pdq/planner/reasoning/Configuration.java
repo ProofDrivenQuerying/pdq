@@ -5,7 +5,7 @@ import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.util.Costable;
 
 /**
- * A sequence of chase states and the associated subplan.
+ * A sequence of chase states and the associated subplan
  *
  * @author Efthymia Tsamoura
  * @author Julien Leblay
