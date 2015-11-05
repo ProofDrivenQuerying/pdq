@@ -43,7 +43,6 @@ public class DAGPlan extends Plan implements Rewritable {
 	/**
 	 * Creates a dag plan with no parent or child subplans
 	 * @param operator The input top-level logical operator
-	 * @param cf The plan's control flow
 	 */
 	public DAGPlan(RelationalOperator operator) {
 		this(Lists.<Term>newArrayList(), operator, Lists.<DAGPlan>newArrayList(), Lists.<DAGPlan>newArrayList());
@@ -56,7 +55,6 @@ public class DAGPlan extends Plan implements Rewritable {
 	 *  	The plan's inputs
 	 * @param operator
 	 * 		The input top-level logical operator
-	 * @param cf The plan's control flow
 	 */
 	public DAGPlan(Collection<? extends Term> inputs, RelationalOperator operator) {
 		this(inputs, operator, Lists.<DAGPlan>newArrayList(), Lists.<DAGPlan>newArrayList());
@@ -72,7 +70,6 @@ public class DAGPlan extends Plan implements Rewritable {
 	 * 		The input parent subplans
 	 * @param children
 	 * 		The input child subplans
-	 * @param cf ControlFlows
 	 */
 	public DAGPlan(Collection<? extends Term> inputs, RelationalOperator operator, List<DAGPlan> parents, List<DAGPlan> children) {
 		super(inferInputTerms(inputs, operator));
@@ -93,7 +90,6 @@ public class DAGPlan extends Plan implements Rewritable {
 	 * Returns the input terms of the input operator 
 	 * @param inputs
 	 * @param operator
-	 * @param cf
 	 * @return
 	 */
 	private static List<Term> inferInputTerms(Collection<? extends Term> inputs, RelationalOperator operator) {
@@ -103,11 +99,6 @@ public class DAGPlan extends Plan implements Rewritable {
 				result.add(t);
 			}
 		}
-//		for (Term t: operator.getColumns()) {
-//			if (inputs.contains(t) && t.isSkolem()) {
-//				result.add(t);
-//			}
-//		}
 		return result;
 	}
 

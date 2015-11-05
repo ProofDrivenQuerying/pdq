@@ -44,8 +44,7 @@ public final class LeftDeepPlan extends Plan implements Iterable<LeftDeepPlan>, 
 	protected LeftDeepPlan first;
 
 	/**
-	 * Creates a linear plan consisting of a single access operator.
-	 * The top-most operator has the input access operator as a child.
+	 * Creates a linear plan having the input relational operator at its top level.
 	 * @param operator
 	 * 		The top-level operator of the plan
 	 */
@@ -55,7 +54,7 @@ public final class LeftDeepPlan extends Plan implements Iterable<LeftDeepPlan>, 
 
 	/**
 	 * Creates a linear plan that is suffixed and prefixed by the input subplans.
-	 * The output linear plan looks like <prefix,LinearPlan(operator, access), suffix> 
+	 * The output linear plan looks like <prefix,LinearPlan(operator), suffix> 
 	 * @param operator
 	 * 		The top-level operator of the plan
 	 * @param prefix

@@ -34,10 +34,11 @@ import com.google.common.eventbus.EventBus;
 public class CostEstimatorFactory {
 
 	/**
-	 * @param params
+	 * 
+	 * @param planParams
+	 * @param costParams
 	 * @param schema
-	 * @return a cost estimator implementation corresponding to that specified
-	 * in the initialConfig.
+	 * @return
 	 * @throws SQLException
 	 */
 	public static <P extends Plan> CostEstimator<P> getEstimator(PlannerParameters planParams, CostParameters costParams, Schema schema) throws SQLException {
@@ -45,12 +46,13 @@ public class CostEstimatorFactory {
 	}
 
 	/**
+	 * 
+	 * @param eventBus
+	 * @param collectStats
 	 * @param planParams
+	 * @param costParams
 	 * @param schema
-	 * @param eventBus EventBus
-	 * @param collectStats boolean
-	 * @return a cost estimator implementation corresponding to that specified
-	 * in the initialConfig.
+	 * @return
 	 * @throws SQLException
 	 */
 	public static <P extends Plan> CostEstimator<P> getInstance(
