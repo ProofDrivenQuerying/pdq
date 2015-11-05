@@ -89,6 +89,7 @@ public abstract class LinearExplorer extends Explorer<LeftDeepPlan> {
 	 * 		Estimates the cost of a plan
 	 * @param nodeFactory
 	 * @param depth
+	 * 		Maximum exploration depth
 	 * @throws PlannerException
 	 */
 	public LinearExplorer(EventBus eventBus, 

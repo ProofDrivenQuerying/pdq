@@ -24,6 +24,12 @@ import com.google.common.collect.Sets;
  */
 public class LinearUtility {
 
+	/**
+	 * 
+	 * @param exposedCandidates
+	 * @return
+	 * 		the input constants of the input candidate facts
+	 */
 	public static Collection<Constant> getInputConstants(Set<Candidate> exposedCandidates) {
 		Preconditions.checkNotNull(exposedCandidates);
 		Preconditions.checkArgument(exposedCandidates.size() > 0);
@@ -31,6 +37,12 @@ public class LinearUtility {
 		return PlannerUtility.getInputConstants(candidate.getRule(), Sets.newHashSet(candidate.getFact()));
 	}
 	
+	/**
+	 * 
+	 * @param candidates
+	 * @return
+	 * 		the output constants of the input candidate facts
+	 */
 	public static Collection<Constant> getOutputConstants(Set<Candidate> candidates) {
 		Set<Predicate> facts = new HashSet<>();
 		for(Candidate candidate:candidates) {
@@ -39,11 +51,19 @@ public class LinearUtility {
 		return Utility.getConstants(facts);
 	}
 	
-	public static <T extends SearchNode> List<T> createPath(IndexedDirectedGraph<T> nodesSet, List<Integer> path){
-		Preconditions.checkArgument(path != null && !path.isEmpty());
+	/**
+	 * 
+	 * @param tree
+	 * 		the input node tree
+	 * @param ids
+	 * @return
+	 * 		a sequence of nodes having the input node ids
+	 */
+	public static <T extends SearchNode> List<T> createPath(IndexedDirectedGraph<T> tree, List<Integer> ids){
+		Preconditions.checkArgument(ids != null && !ids.isEmpty());
 		List<T> nodes = new ArrayList<>();
-		for (Integer n: path) {
-			T node = nodesSet.getVertex(n);
+		for (Integer n: ids) {
+			T node = tree.getVertex(n);
 			Preconditions.checkNotNull(node);
 			nodes.add(node);
 		}

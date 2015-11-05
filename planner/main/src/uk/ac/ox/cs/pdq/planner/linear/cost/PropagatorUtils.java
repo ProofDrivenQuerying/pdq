@@ -6,7 +6,7 @@ import uk.ac.ox.cs.pdq.cost.estimators.BlackBoxCostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.SimpleCostEstimator;
 import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
-import uk.ac.ox.cs.pdq.planner.linear.LinearPlanGenerator;
+import uk.ac.ox.cs.pdq.planner.linear.LeftDeepPlanGenerator;
 import uk.ac.ox.cs.pdq.planner.linear.LinearUtility;
 import uk.ac.ox.cs.pdq.planner.linear.node.SearchNode;
 import uk.ac.ox.cs.pdq.util.IndexedDirectedGraph;
@@ -45,7 +45,7 @@ public class PropagatorUtils {
 	public static <T extends SearchNode> LeftDeepPlan createLinearPlan(IndexedDirectedGraph<T> nodesSet, List<Integer> path, CostEstimator<LeftDeepPlan> costEstimator) {
 		Preconditions.checkArgument(path != null && !path.isEmpty());
 		List<T> nodes = LinearUtility.createPath(nodesSet, path);
-		LeftDeepPlan plan = LinearPlanGenerator.createLinearPlan(nodes);
+		LeftDeepPlan plan = LeftDeepPlanGenerator.createLinearPlan(nodes);
 		costEstimator.cost(plan);
 
 		for (T next:nodes) {

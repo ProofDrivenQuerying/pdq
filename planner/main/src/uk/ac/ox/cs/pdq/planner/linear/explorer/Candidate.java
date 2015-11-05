@@ -19,8 +19,7 @@ import com.google.common.collect.Lists;
 
 
 /**
- * A fact that could be exposed at that point as all its terms are 
- * already accessible.
+ * A fact that could be exposed at that point as all its chase constants are already accessible.
  * @author Efthymia Tsamoura
  *
  */
@@ -147,7 +146,7 @@ public class Candidate implements Cloneable{
 	/**
 	 * @return AccessMethod
 	 */
-	public AccessMethod getBinding() {
+	public AccessMethod getAccessMethod() {
 		return this.rule.getAccessMethod();
 	}
 

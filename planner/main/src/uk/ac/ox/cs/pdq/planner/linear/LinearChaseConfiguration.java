@@ -75,7 +75,7 @@ public class LinearChaseConfiguration extends ChaseConfiguration<LeftDeepPlan> i
 			matches.add(candidate.getMatch());
 		}
 		this.chaseStep(matches);
-		LeftDeepPlan plan = LinearPlanGenerator.createLinearPlan(this, this.parent.getPlan());
+		LeftDeepPlan plan = LeftDeepPlanGenerator.createLinearPlan(this, this.parent.getPlan());
 		this.setPlan(plan);
 	}
 
@@ -151,7 +151,7 @@ public class LinearChaseConfiguration extends ChaseConfiguration<LeftDeepPlan> i
 			}
 			else 
 				if (candidate.getRelation().equals(current.getRelation())
-						&& candidate.getBinding().equals(current.getBinding())) {
+						&& candidate.getAccessMethod().equals(current.getAccessMethod())) {
 					Collection<Constant> terms1 = candidate.getInput();
 					Collection<Constant> terms2 = current.getInput();
 					if (terms1 == null && terms2 == null) {

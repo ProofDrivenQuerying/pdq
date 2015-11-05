@@ -27,11 +27,11 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
 /**
- * Creates linear plans
+ * Creates left deep plans
  *
  * @author Efthymia Tsamoura
  */
-public class LinearPlanGenerator {
+public class LeftDeepPlanGenerator {
 
 	/**
 	 * Creates a linear plan by appending the access and middlewares commands of the input configuration to the input parent plan
@@ -51,7 +51,7 @@ public class LinearPlanGenerator {
 	public static<T extends SearchNode> LeftDeepPlan createLinearPlan(List<T> nodes) {
 		LeftDeepPlan parentPlan = null;
 		for (T node: nodes) {
-			parentPlan = LinearPlanGenerator.createLinearPlan(node.getConfiguration(), parentPlan);
+			parentPlan = LeftDeepPlanGenerator.createLinearPlan(node.getConfiguration(), parentPlan);
 			
 		}
 		return parentPlan;
@@ -79,10 +79,10 @@ public class LinearPlanGenerator {
 
 		for (Candidate candidate: configuration.getExposedCandidates()) {
 			if (access == null) {
-				if (candidate.getBinding().getType() == Types.FREE) {
+				if (candidate.getAccessMethod().getType() == Types.FREE) {
 					access = new Scan(candidate.getRelation());
 				} else {
-					access = new DependentAccess(candidate.getRelation(), candidate.getBinding(), candidate.getFact().getTerms());
+					access = new DependentAccess(candidate.getRelation(), candidate.getAccessMethod(), candidate.getFact().getTerms());
 				}
 			}
 			RelationalOperator op2 = (RelationalOperator) access;
