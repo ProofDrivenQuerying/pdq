@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.planner.reasoning.chase.state;
+package uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate;
 
 import java.util.Collection;
 import java.util.List;

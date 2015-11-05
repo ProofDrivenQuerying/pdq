@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.planner.reasoning.chase.state;
+package uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -125,7 +125,7 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 
 	/**
 	 * @return Collection<String>
-	 * @see uk.ac.ox.cs.pdq.planner.reasoning.chase.state.AccessibleChaseState#getInferred()
+	 * @see uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState#getInferred()
 	 */
 	@Override
 	public Collection<String> getInferred() {
@@ -134,7 +134,7 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 
 	/**
 	 * @return Collection<PredicateFormula>
-	 * @see uk.ac.ox.cs.pdq.planner.reasoning.chase.state.AccessibleChaseState#getDerivedInferred()
+	 * @see uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState#getDerivedInferred()
 	 */
 	@Override
 	public Collection<Predicate> getDerivedInferred() {
@@ -292,7 +292,7 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 
 	/**
 	 * @return DatabaseListState
-	 * @see uk.ac.ox.cs.pdq.planner.reasoning.chase.state.AccessibleChaseState#clone()
+	 * @see uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState#clone()
 	 */
 	@Override
 	public AccessibleDatabaseListState clone() {

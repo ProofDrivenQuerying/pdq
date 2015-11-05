@@ -16,8 +16,8 @@ import uk.ac.ox.cs.pdq.planner.linear.node.NodeFactory;
 import uk.ac.ox.cs.pdq.planner.linear.node.PlanTree;
 import uk.ac.ox.cs.pdq.planner.linear.node.SearchNode;
 import uk.ac.ox.cs.pdq.planner.linear.node.SearchNode.NodeStatus;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.state.AccessibleChaseState;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.state.AccessibleDatabaseListState;
+import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState;
+import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleDatabaseListState;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
@@ -132,7 +132,7 @@ public abstract class LinearExplorer extends Explorer<LeftDeepPlan> {
 	 */
 	private void initialise() throws PlannerException {
 		AccessibleChaseState state = null;
-		state = (uk.ac.ox.cs.pdq.planner.reasoning.chase.state.AccessibleChaseState) 
+		state = (uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState) 
 				new AccessibleDatabaseListState(this.query, this.schema, (DBHomomorphismManager) this.detector);
 		this.chaser.reasonUntilTermination(state, this.query, this.schema.getDependencies());
 
