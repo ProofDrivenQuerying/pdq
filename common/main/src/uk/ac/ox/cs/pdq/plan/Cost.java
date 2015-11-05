@@ -1,7 +1,7 @@
 package uk.ac.ox.cs.pdq.plan;
 
 /**
- * Plan cost abstraction
+ * Abstract plan cost
  * @author Efthymia Tsamoura
  *
  */

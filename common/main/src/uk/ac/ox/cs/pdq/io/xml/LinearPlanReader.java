@@ -126,7 +126,8 @@ public class LinearPlanReader extends AbstractXMLReader<LinearPlan> {
 			this.operator = this.operatorReader.getOperator();
 			Collection<AccessOperator> accesses = RelationalOperator.getAccesses(this.operator);
 			this.access = Iterators.getLast(accesses.iterator());
-			this.plan = new LinearPlan(this.operator, this.access, this.plan, null);
+			//this.plan = new LinearPlan(this.operator, this.access, this.plan, null);
+			this.plan = new LinearPlan(this.operator, this.plan, null);
 			this.aliases.put(this.name, this.operator);
 			this.name = null;
 			break;

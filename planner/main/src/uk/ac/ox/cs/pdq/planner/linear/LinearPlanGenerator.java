@@ -50,8 +50,7 @@ public class LinearPlanGenerator {
 	public static<T extends SearchNode> LinearPlan createLinearPlan(List<T> nodes) {
 		LinearPlan parentPlan = null;
 		for (T node: nodes) {
-			parentPlan = //node.getConfiguration().createPlan(parentPlan);
-			LinearPlanGenerator.createLinearPlan(node.getConfiguration(), parentPlan);
+			parentPlan = LinearPlanGenerator.createLinearPlan(node.getConfiguration(), parentPlan);
 			
 		}
 		return parentPlan;
@@ -107,7 +106,7 @@ public class LinearPlanGenerator {
 				op1 = new Join(predAlias, op1);
 			}
 		}
-		LinearPlan lp = new LinearPlan(op1, access);
+		LinearPlan lp = new LinearPlan(op1);
 		if (predecessor != null) {
 			lp.addPrefix(predecessor);
 			predecessor.addSuffix(lp);

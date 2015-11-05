@@ -48,11 +48,9 @@ public final class LinearPlan extends Plan implements Iterable<LinearPlan>, Rewr
 	 * The top-most operator has the input access operator as a child.
 	 * @param operator
 	 * 		The top-level operator of the plan
-	 * @param access
-	 * 		The top-most access
 	 */
-	public LinearPlan(RelationalOperator operator, AccessOperator access) {
-		this(operator, access, null, null);
+	public LinearPlan(RelationalOperator operator) {
+		this(operator, null, null);
 	}
 
 	/**
@@ -60,19 +58,18 @@ public final class LinearPlan extends Plan implements Iterable<LinearPlan>, Rewr
 	 * The output linear plan looks like <prefix,LinearPlan(operator, access), suffix> 
 	 * @param operator
 	 * 		The top-level operator of the plan
-	 * @param access
-	 * 		The top-most access
 	 * @param prefix
 	 * 		The prefix sub-plan
 	 * @param suffix
 	 * 		The suffix sub-plan
 	 */
-	public LinearPlan(RelationalOperator operator, AccessOperator access, LinearPlan prefix, LinearPlan suffix) {
+	public LinearPlan(RelationalOperator operator, LinearPlan prefix, LinearPlan suffix) {
 		super();
-		Preconditions.checkArgument(access != null);
 		Preconditions.checkArgument(operator != null);
+		Preconditions.checkArgument(RelationalOperator.getAccesses(operator) != null);
+		Preconditions.checkArgument(RelationalOperator.getAccesses(operator).size() == 1);
 		this.operator = operator;
-		this.access = access;
+		this.access = RelationalOperator.getAccesses(operator).iterator().next();
 		if (prefix == null) {
 			this.first = this;
 		}
@@ -109,7 +106,7 @@ public final class LinearPlan extends Plan implements Iterable<LinearPlan>, Rewr
 	 */
 	public LinearPlan projectLast(Projection proj) {
 		Preconditions.checkArgument(proj.getChild() == this.last.operator);
-		return new LinearPlan(proj, this.last.access, this.last.prefix, null);
+		return new LinearPlan(proj, this.last.prefix, null);
 	}
 
 	/**
@@ -195,7 +192,7 @@ public final class LinearPlan extends Plan implements Iterable<LinearPlan>, Rewr
 	 */
 	@Override
 	public LinearPlan clone() {
-		return new LinearPlan(this.operator, this.access, this.prefix, this.suffix);
+		return new LinearPlan(this.operator, this.prefix, this.suffix);
 	}
 
 	/*

@@ -24,8 +24,10 @@ import com.google.common.collect.Lists;
  */
 public class AccessCommand implements Command{
 
+	/** The accessed relation **/
 	private final Relation relation;
 
+	/** The method applied to access the corresponding relation**/
 	private final AccessMethod method;
 
 	/** The output columns */
@@ -34,16 +36,19 @@ public class AccessCommand implements Command{
 	/** The constants used to call the underlying access method */
 	private final Map<Integer, TypedConstant<?>> staticInputs;
 
+	/** The input table**/
 	private final Table input;
 
+	/** The output table**/
 	private final Table output;
 
 	/** Caches the constraint that captures this access command **/
 	private final TGD command;
 
 	/**
-	 * Constructor used in plan to normalised plan translation
+	 * Creates an access command that takes as input the input table
 	 * @param access
+	 * @param input
 	 */
 	public AccessCommand(AccessOperator access, Table input) {
 		this(access.getRelation(), access.getAccessMethod(), 
@@ -55,10 +60,15 @@ public class AccessCommand implements Command{
 	/**
 	 * 
 	 * @param relation
+	 * 		The accessed relation
 	 * @param method
+	 * 		The method applied to access the corresponding relation
 	 * @param columns
+	 * 		The output columns
 	 * @param input
+	 * 		The input table
 	 * @param staticInputs
+	 * 		Schema constants that are input positions
 	 */
 	public AccessCommand(Relation relation, AccessMethod method, List<Term> columns, Table input, Map<Integer, TypedConstant<?>> staticInputs) {
 		Preconditions.checkNotNull(relation);
