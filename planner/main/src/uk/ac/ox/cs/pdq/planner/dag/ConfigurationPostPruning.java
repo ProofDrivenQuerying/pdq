@@ -150,7 +150,7 @@ public class ConfigurationPostPruning {
 					l, r
 					);
 			this.costEstimator.cost(configuration.getPlan());
-			((BinaryConfiguration)configuration).chase(this.chaser, this.accessibleQuery, this.accessibleSchema.getInferredAccessibilityAxioms());
+			((BinaryConfiguration)configuration).reasonUntilTermination(this.chaser, this.accessibleQuery, this.accessibleSchema.getInferredAccessibilityAxioms());
 			if(ret == null || ret.getPlan().getCost().greaterThan(output.getPlan().getCost())) {
 				ret = output;
 			}

@@ -205,7 +205,7 @@ public class DAGGeneric extends DAGExplorer {
 						pair.getLeft(),
 						pair.getRight());
 				this.costEstimator.cost(configuration.getPlan());
-				configuration.chase(this.chaser, this.accessibleQuery, this.accessibleSchema.getInferredAccessibilityAxioms());
+				configuration.reasonUntilTermination(this.chaser, this.accessibleQuery, this.accessibleSchema.getInferredAccessibilityAxioms());
 				//If the newly created binary configuration has the potential to lead to the optimal plan
 				if (this.bestPlan == null || !this.successDominance.isDominated(configuration.getPlan(), this.bestPlan)) {
 					//If it is closed and has a match, update the best configuration

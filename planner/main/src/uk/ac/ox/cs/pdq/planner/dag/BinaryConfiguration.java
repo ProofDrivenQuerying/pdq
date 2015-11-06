@@ -81,7 +81,7 @@ public class BinaryConfiguration extends DAGChaseConfiguration {
 	/**
 	 * Chases the configuration using the input dependencies
 	 */
-	public void chase(Chaser chaser, Query<?> query, Collection<? extends Constraint> dependencies) {
+	public void reasonUntilTermination(Chaser chaser, Query<?> query, Collection<? extends Constraint> dependencies) {
 		chaser.reasonUntilTermination(this.getState(), query, dependencies);
 	}
 

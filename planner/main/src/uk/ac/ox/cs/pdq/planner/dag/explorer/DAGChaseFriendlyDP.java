@@ -113,7 +113,7 @@ public class DAGChaseFriendlyDP extends DAGGeneric {
 						pair.getRight());
 				this.costEstimator.cost(configuration.getPlan());
 				if (this.bestPlan == null || !this.successDominance.isDominated(configuration.getPlan(), this.bestPlan)) {
-					configuration.chase(this.chaser, this.accessibleQuery, this.accessibleSchema.getInferredAccessibilityAxioms());
+					configuration.reasonUntilTermination(this.chaser, this.accessibleQuery, this.accessibleSchema.getInferredAccessibilityAxioms());
 					if (ExplorerUtils.isDominated(this.dominance, this.getRight(), configuration) == null
 							&& ExplorerUtils.isDominated(this.dominance, last.values(), configuration) == null) {
 						if (configuration.isClosed()
