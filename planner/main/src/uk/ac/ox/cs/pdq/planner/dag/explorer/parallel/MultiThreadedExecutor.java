@@ -75,7 +75,7 @@ public class MultiThreadedExecutor extends IterativeExecutor {
 	 * @throws PlannerException
 	 */
 	@Override
-	public Collection<DAGChaseConfiguration> chaseOrPropagate(
+	public Collection<DAGChaseConfiguration> reason(
 			int depth,
 			Queue<DAGChaseConfiguration> left,
 			Collection<DAGChaseConfiguration> right,
@@ -181,7 +181,7 @@ public class MultiThreadedExecutor extends IterativeExecutor {
 	 * @throws PlannerException
 	 */
 	@Override
-	public FinalIterationThreadResults finalIteration(
+	public ExplorationResults explore(
 			Query<?> query,
 			Queue<DAGChaseConfiguration> input,
 			DAGEquivalenceClasses equivalenceClasses,
@@ -206,7 +206,7 @@ public class MultiThreadedExecutor extends IterativeExecutor {
 			for (int j = 0; j < this.mtcontext.getParallelThreads(); ++j) {
 				//Create the threads that will iterate over the input configurations to find the non-dominated ones,
 				//along with the minimum-cost successful and closed one
-				threads.add(new FinalIterationThread(
+				threads.add(new ExplorationThread(
 						query,
 						input,
 						equivalenceClasses,
@@ -245,7 +245,7 @@ public class MultiThreadedExecutor extends IterativeExecutor {
 			}
 
 			executorService.shutdown();
-			return new FinalIterationThreadResults(
+			return new ExplorationResults(
 					Lists.newArrayList(output),
 					successfulConfigurations,
 					configuration

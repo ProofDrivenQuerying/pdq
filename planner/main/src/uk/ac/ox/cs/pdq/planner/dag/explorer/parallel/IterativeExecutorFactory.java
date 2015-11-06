@@ -23,10 +23,15 @@ public class IterativeExecutorFactory {
 	 * @param executorType
 	 * @param parallelThreads
 	 * @param chaser
+	 * 		Runs the chase algorithm
 	 * @param detector
+	 * 		Detects homomorphisms during chasing
 	 * @param estimator
+	 * 		Estimates the cost of a plan
 	 * @param successDominance
+	 * 		Removes success dominated configurations
 	 * @param validators
+	 * 		Validates pairs of configurations to be composed
 	 * @return
 	 * @throws Exception
 	 */

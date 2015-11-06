@@ -38,6 +38,7 @@ import com.google.common.eventbus.EventBus;
  */
 public class DAGSimpleDP extends DAGGeneric {
 
+	/** Removes dominated configurations **/
 	private final Dominance[] dominance;
 	
 	/**

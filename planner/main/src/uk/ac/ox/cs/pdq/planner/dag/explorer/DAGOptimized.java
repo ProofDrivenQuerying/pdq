@@ -22,7 +22,7 @@ import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.dag.equivalence.DAGEquivalenceClasses;
 import uk.ac.ox.cs.pdq.planner.dag.equivalence.SynchronizedEquivalenceClasses;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.filters.Filter;
-import uk.ac.ox.cs.pdq.planner.dag.explorer.parallel.FinalIterationThreadResults;
+import uk.ac.ox.cs.pdq.planner.dag.explorer.parallel.ExplorationResults;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.parallel.IterativeExecutor;
 import uk.ac.ox.cs.pdq.planner.db.access.AccessibleSchema;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
@@ -49,10 +49,10 @@ public class DAGOptimized extends DAGExplorer {
 	protected int depth;
 
 	/** Performs parallel chasing */
-	private final IterativeExecutor firstPhaseExecutor;
+	private final IterativeExecutor reasoningThreads;
 
 	/** Iterate over all newly created configurations in parallel and returns the best configuration*/
-	private final IterativeExecutor secondPhaseExecutor;
+	private final IterativeExecutor explorationThreads;
 
 	/** Filters out configurations at the end of each iteration*/
 	private final Filter filter;
@@ -85,9 +85,9 @@ public class DAGOptimized extends DAGExplorer {
 	 * 		Estimates the cost of a plan
 	 * @param filter
 	 * 		Filters out configurations at the end of each iteration
-	 * @param firstPhaseExecutor
+	 * @param reasoningThreads
 	 * 		Performs parallel chasing
-	 * @param secondPhaseExecutor
+	 * @param explorationThreads
 	 * 		Iterates over all newly created configurations in parallel and returns the best configuration
 	 * @param maxDepth
 	 * 		The maximum depth to explore
@@ -105,16 +105,16 @@ public class DAGOptimized extends DAGExplorer {
 			HomomorphismDetector detector,
 			CostEstimator<DAGPlan> costEstimator,
 			Filter filter,
-			IterativeExecutor firstPhaseExecutor,
-			IterativeExecutor secondPhaseExecutor,
+			IterativeExecutor reasoningThreads,
+			IterativeExecutor explorationThreads,
 			int maxDepth) throws PlannerException {
 		super(eventBus, collectStats, parameters, 
 				query, accessibleQuery, schema, accessibleSchema, chaser, detector, costEstimator);
-		Preconditions.checkNotNull(firstPhaseExecutor);
-		Preconditions.checkNotNull(secondPhaseExecutor);
+		Preconditions.checkNotNull(reasoningThreads);
+		Preconditions.checkNotNull(explorationThreads);
 		this.filter = filter;
-		this.firstPhaseExecutor = firstPhaseExecutor;
-		this.secondPhaseExecutor = secondPhaseExecutor;
+		this.reasoningThreads = reasoningThreads;
+		this.explorationThreads = explorationThreads;
 		this.maxDepth = maxDepth;
 		List<DAGChaseConfiguration> initialConfigurations = this.createInitialConfigurations();
 		if(this.filter != null) {
@@ -154,7 +154,7 @@ public class DAGOptimized extends DAGExplorer {
 			this.checkLimitReached();
 			//Perform parallel chasing
 			Collection<DAGChaseConfiguration> configurations =
-					this.firstPhaseExecutor.chaseOrPropagate(this.depth,
+					this.reasoningThreads.reason(this.depth,
 							this.left,
 							this.equivalenceClasses.getConfigurations(),
 							this.accessibleQuery,
@@ -171,7 +171,7 @@ public class DAGOptimized extends DAGExplorer {
 
 			this.checkLimitReached();
 			//Iterate over all newly created configurations in parallel and return the best configuration
-			FinalIterationThreadResults results = this.secondPhaseExecutor.finalIteration(
+			ExplorationResults results = this.explorationThreads.explore(
 					this.accessibleQuery,
 					new ConcurrentLinkedQueue<>(configurations),
 					this.equivalenceClasses,

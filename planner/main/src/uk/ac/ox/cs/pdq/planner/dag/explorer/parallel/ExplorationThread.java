@@ -24,7 +24,7 @@ import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
  * @author Efthymia Tsamoura
  *
  */
-public class FinalIterationThread implements Callable<DAGChaseConfiguration> {
+public class ExplorationThread implements Callable<DAGChaseConfiguration> {
 
 	private final Query<?> query;
 	
@@ -68,7 +68,7 @@ public class FinalIterationThread implements Callable<DAGChaseConfiguration> {
 	 * @param successfulConfigurations
 	 * 		The output non-dominated and successful (and not closed) configurations
 	 */
-	public FinalIterationThread(
+	public ExplorationThread(
 			Query<?> query,
 			Queue<DAGChaseConfiguration> input,
 			DAGEquivalenceClasses equivalenceClasses,

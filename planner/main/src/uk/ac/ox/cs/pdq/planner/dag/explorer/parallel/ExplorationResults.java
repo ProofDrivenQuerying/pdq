@@ -11,7 +11,7 @@ import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
  * @author Efthymia Tsamoura
  *
  */
-public class FinalIterationThreadResults {
+public class ExplorationResults {
 	private final List<DAGChaseConfiguration> output;
 	private final Set<DAGChaseConfiguration> successful;
 	private final DAGChaseConfiguration best;
@@ -22,7 +22,7 @@ public class FinalIterationThreadResults {
 	 * @param successfulConfigurations Set<DAGChaseConfiguration>
 	 * @param bestConfiguration DAGChaseConfiguration
 	 */
-	public FinalIterationThreadResults(List<DAGChaseConfiguration> output,
+	public ExplorationResults(List<DAGChaseConfiguration> output,
 			Set<DAGChaseConfiguration> successfulConfigurations,
 			DAGChaseConfiguration bestConfiguration) {
 		this.output = output;

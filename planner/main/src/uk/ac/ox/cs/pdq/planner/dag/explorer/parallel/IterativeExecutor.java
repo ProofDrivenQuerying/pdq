@@ -54,7 +54,7 @@ public abstract class IterativeExecutor {
 	 * 		when we are about to create a new binary configuration c''= BinaryConfiguration(c,c')
 	 * 		from c and c' and there exists another configuration c^(3) with ApplyRules
 	 * 		the ApplyRules of c and c' and c^(3) is already chased then we use c^(3)'s state as the state of c''
-	 * @param bestConfiguration
+	 * @param best
 	 * 	 	The minimum cost closed and successful configuration found so far. The plans that correspond to the
 	 * 		returned configurations have cost < the bestConfiguration
 	 * @param twoWay
@@ -63,13 +63,13 @@ public abstract class IterativeExecutor {
 	 * @return Collection<DAGChaseConfiguration>
 	 * @throws PlannerException
 	 */
-	public abstract Collection<DAGChaseConfiguration> chaseOrPropagate(
+	public abstract Collection<DAGChaseConfiguration> reason(
 			int depth,
 			Queue<DAGChaseConfiguration> left,
 			Collection<DAGChaseConfiguration> right,
 			Query<?> query,
 			Collection<? extends Constraint> dependencies,
-			DAGChaseConfiguration bestConfiguration,
+			DAGChaseConfiguration best,
 			DAGEquivalenceClasses equivalenceClasses, 
 			boolean twoWay,
 			long timeout, TimeUnit unit) throws PlannerException, LimitReachedException;
@@ -80,7 +80,7 @@ public abstract class IterativeExecutor {
 	 * 		The input set of configurations
 	 * @param equivalenceClasses
 	 * 		Classes of structurally equivalent configurations
-	 * @param bestConfiguration
+	 * @param best
 	 * 		The minimum cost closed and successful configuration found so far. The plans that correspond to the
 	 * 		returned configurations have cost < the bestConfiguration
 	 * @param successDominance
@@ -92,10 +92,10 @@ public abstract class IterativeExecutor {
 	 * 		the minimum-cost configuration with cost < the cost of the input bestConfiguration and the successful configurations
 	 * @throws PlannerException
 	 */
-	public abstract FinalIterationThreadResults finalIteration(
+	public abstract ExplorationResults explore(
 			Query<?> query,
 			Queue<DAGChaseConfiguration> input,
 			DAGEquivalenceClasses equivalenceClasses,
-			DAGChaseConfiguration bestConfiguration,
+			DAGChaseConfiguration best,
 			long timeout, TimeUnit unit) throws PlannerException, LimitReachedException;
 }
