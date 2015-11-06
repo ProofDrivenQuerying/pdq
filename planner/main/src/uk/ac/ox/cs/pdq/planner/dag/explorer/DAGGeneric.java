@@ -45,9 +45,6 @@ import com.google.common.eventbus.EventBus;
  */
 public class DAGGeneric extends DAGExplorer {
 	
-	/** Removes success dominated configurations **/
-	protected final SuccessDominance successDominance;
-	
 	/**
 	 * The maximum depth we can explore. The exploration ends when
 	 * there does not exist any configuration with depth < maxDepth
@@ -72,7 +69,8 @@ public class DAGGeneric extends DAGExplorer {
 	/** Returns pairs of configurations to combine */
 	protected PairSelector selector;
 
-
+	/** Removes success dominated configurations **/
+	protected final SuccessDominance successDominance;
 
 	/**
 	 * 

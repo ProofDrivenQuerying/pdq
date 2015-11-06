@@ -68,25 +68,6 @@ public class DAGOptimized extends DAGExplorer {
 	 * 
 	 * @param eventBus
 	 * @param collectStats
-	 * @param initialConfigurations
-	 * 		ApplyRule configurations to initilise the explorer
-	 * @param filter
-	 * 		Filters out configurations at the end of each iteration
-	 * @param priority Prioritises configurations
-	 * 
-	 * @param firstPhaseExecutor
-	 * 		Performs parallel chasing
-	 * @param secondPhaseExecutor
-	 * 		Iterates over all newly created configurations in parallel and returns the best configuration
-	 * @param maxDepth
-	 * 		The maximum depth to explore
-	 * @throws PlannerException
-	 */
-	
-	/**
-	 * 
-	 * @param eventBus
-	 * @param collectStats
 	 * @param parameters
 	 * @param query
 	 * 		The input user query

@@ -39,6 +39,7 @@ import com.google.common.eventbus.EventBus;
  */
 public class DAGChaseFriendlyDP extends DAGGeneric {
 
+	/** Removes dominated configurations **/
 	private final Dominance[] dominance;
 	
 	/**
@@ -47,12 +48,23 @@ public class DAGChaseFriendlyDP extends DAGGeneric {
 	 * @param collectStats
 	 * @param parameters
 	 * @param query
+	 * 		The input user query
+	 * @param accessibleQuery
+	 * 		The accessible counterpart of the user query
+	 * @param schema
+	 * 		The input schema
 	 * @param accessibleSchema
+	 * 		The accessible counterpart of the input schema
 	 * @param chaser
+	 * 		Runs the chase algorithm
 	 * @param detector
+	 * 		Detects homomorphisms during chasing
 	 * @param costEstimator
+	 * 		Estimates the cost of a plan
 	 * @param successDominance
+	 * 		Removes success dominated configurations
 	 * @param dominance
+	 * 		Removes dominated configurations
 	 * @param filter
 	 * 		Filters out configurations at the end of each iteration
 	 * @param validator
