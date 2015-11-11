@@ -180,7 +180,12 @@ public class OperatorWriter extends AbstractXMLWriter<RelationalOperator> {
 			}
 		} else for (int i = 0, l = plan.getColumns().size(); i < l; i++) {
 			Term t = plan.getColumn(i);
-			this.writeAttribute(out, new Attribute(plan.getType().getType(i), String.valueOf(t)));
+			if (t instanceof TypedConstant) {
+				TypedConstant<?> c = ((TypedConstant) t);
+				this.writeConstant(out, new TypedConstant<>(uk.ac.ox.cs.pdq.util.Types.cast(c.getType(), c.getValue())));
+			} else {
+				this.writeAttribute(out, new Attribute(plan.getType().getType(i), String.valueOf(t)));
+			}
 		}
 		close(out, QNames.OUTPUTS);
 	}
@@ -286,7 +291,7 @@ public class OperatorWriter extends AbstractXMLWriter<RelationalOperator> {
 			Map<QNames, String> att = new LinkedHashMap<>();
 			att.put(QNames.TYPE, "equality");
 			att.put(QNames.LEFT, String.valueOf(((ConstantEqualityPredicate) predicate).getPosition()));
-			att.put(QNames.VALUE, String.valueOf(((ConstantEqualityPredicate) predicate).getValue()));
+			att.put(QNames.VALUE, String.valueOf(((ConstantEqualityPredicate) predicate).getValue().getValue()));
 			openclose(out, QNames.PREDICATE, att);
 
 		} else if (predicate instanceof AttributeEqualityPredicate) {
