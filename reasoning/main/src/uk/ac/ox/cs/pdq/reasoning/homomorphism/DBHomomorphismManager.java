@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -235,6 +236,14 @@ public class DBHomomorphismManager implements HomomorphismManager {
 				for (String sql: this.builder.setupStatements(this.database)) {
 					sqlStatement.addBatch(sql);
 				}
+				createEqualityTable(sqlStatement);
+
+				//putting relations into a set so as to make them unique
+				Set<Relation> relationset = new HashSet<Relation>();
+				relationset.addAll(this.relations);
+				this.relations.clear();
+				this.relations.addAll(relationset);
+
 				this.createBaseTables(this.relations, sqlStatement);
 				this.createJoinIndexes(sqlStatement);
 				sqlStatement.executeBatch();
@@ -260,6 +269,10 @@ public class DBHomomorphismManager implements HomomorphismManager {
 			stmt.addBatch(this.builder.createTableNonJoinIndexes(dbRelation, this.Bag));
 			stmt.addBatch(this.builder.createTableNonJoinIndexes(dbRelation, this.Fact));
 		}
+	}
+
+	private void createEqualityTable(Statement stmt) throws SQLException
+	{
 		DBRelation equality = this.createEquality();
 		this.aliases.put(QNames.EQUALITY.toString(), equality);
 		stmt.addBatch(this.builder.createTableStatement(equality));
