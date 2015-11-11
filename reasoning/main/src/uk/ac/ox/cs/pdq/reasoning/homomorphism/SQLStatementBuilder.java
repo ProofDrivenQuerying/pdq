@@ -172,8 +172,9 @@ public abstract class SQLStatementBuilder {
 			sep1 = "_";
 			sep2 = ",";
 		}
-		return "CREATE INDEX idx_" + this.encodeName(relation.getName()) + "_" + indexName +
+		String ret ="CREATE INDEX idx_" + this.encodeName(relation.getName()) + "_" + indexName +
 				" ON " + this.encodeName(relation.getName()) + "(" + indexColumns + ")";
+		return ret;
 	}
 
 	/**
