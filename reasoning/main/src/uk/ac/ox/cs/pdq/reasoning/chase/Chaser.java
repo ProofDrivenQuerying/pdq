@@ -14,8 +14,6 @@ import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState;
 
 /**
  *
- * The chase algorithm
- *
  * @author Efthymia Tsamoura
  */
 public abstract class Chaser {

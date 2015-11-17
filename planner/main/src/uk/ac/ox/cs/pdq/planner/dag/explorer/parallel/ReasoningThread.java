@@ -240,7 +240,8 @@ public class ReasoningThread implements Callable<Boolean> {
 		else if(representative != null) {
 			configuration = new BinaryConfiguration(
 					left,
-					right
+					right,
+					representative.getState().clone()
 					);
 		}
 		this.costEstimator.cost(configuration.getPlan());

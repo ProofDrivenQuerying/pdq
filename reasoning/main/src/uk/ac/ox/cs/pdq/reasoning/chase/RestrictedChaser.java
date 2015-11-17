@@ -13,7 +13,9 @@ import uk.ac.ox.cs.pdq.reasoning.Match;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ListState;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismConstraint;
+import uk.ac.ox.cs.pdq.reasoning.utility.DefaultRestrictedDependencyAssessor;
 import uk.ac.ox.cs.pdq.reasoning.utility.ReasonerUtility;
+import uk.ac.ox.cs.pdq.reasoning.utility.RestrictedDependencyAssessor;
 
 import com.google.common.base.Preconditions;
 
@@ -27,7 +29,6 @@ import com.google.common.base.Preconditions;
  *
  */
 public class RestrictedChaser extends Chaser {
-
 
 	/**
 	 * Constructor for RestrictedChaser.
@@ -47,10 +48,12 @@ public class RestrictedChaser extends Chaser {
 	@Override
 	public <S extends ChaseState> void reasonUntilTermination(S s,  Query<?> target, Collection<? extends Constraint> dependencies) {
 		Preconditions.checkArgument(s instanceof ListState);
+		RestrictedDependencyAssessor accessor = new DefaultRestrictedDependencyAssessor(dependencies);
 		boolean appliedStep = false;
 		do {
 			appliedStep = false;
-			List<Match> matches = s.getMaches(dependencies);
+			Collection<? extends Constraint> d = accessor.getDependencies(s);
+			List<Match> matches = s.getMaches(d);
 			for (Match match: matches) {
 				if(new ReasonerUtility().isActiveTrigger(match, s)){
 					//A single chase step
@@ -77,8 +80,8 @@ public class RestrictedChaser extends Chaser {
 			Collection<? extends Constraint> constraints) {
 		this.reasonUntilTermination(instance, target, constraints);
 		HomomorphismConstraint[] c = {
-				HomomorphismConstraint.topK(1),
-				HomomorphismConstraint.satisfies(free)};
+				HomomorphismConstraint.createTopKConstraint(1),
+				HomomorphismConstraint.createMapConstraint(free)};
 		return !instance.getMatches(target,c).isEmpty();
 	}
 

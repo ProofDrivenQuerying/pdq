@@ -16,6 +16,7 @@ import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Constraint;
+import uk.ac.ox.cs.pdq.db.EGD;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TGD;
@@ -23,6 +24,7 @@ import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
+import uk.ac.ox.cs.pdq.fol.Equality;
 import uk.ac.ox.cs.pdq.fol.Evaluatable;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Query;
@@ -52,19 +54,19 @@ public class DBHomomorphismManager implements HomomorphismManager {
 
 	/** Logger. */
 	private static Logger log = Logger.getLogger(DBHomomorphismManager.class);
-	
+
 	private final Attribute Bag = new Attribute(Integer.class, "Bag");
 	private final Attribute Fact = new Attribute(Integer.class, "Fact");
 	private String attrPrefix = "x";
-	
+
 	/** Collection of expected queries. */
 	protected Set<Evaluatable> queries;
-	
+
 	protected final List<Relation> relations;
-	
+
 	/** A map of the string representation of a constant to the constant*/
 	protected final Map<String, TypedConstant<?>> constants;
-	
+
 	/** Statement builder */
 	protected final SQLStatementBuilder builder;
 	/**
@@ -72,13 +74,13 @@ public class DBHomomorphismManager implements HomomorphismManager {
 	 * correspond to the created database tables)
 	 */
 	protected final Map<String, DBRelation> aliases;
-	
+
 	/** Connection to the database */
 	protected Connection connection;
-	
+
 	/** Chase database name */
 	protected final String database;
-	
+
 	/** Information to connect to the facts database*/
 	protected final String driver;
 	protected final String url;
@@ -125,13 +127,13 @@ public class DBHomomorphismManager implements HomomorphismManager {
 		this.password = password;
 		this.database = database;
 		this.builder = builder;
-		
+
 		this.queries = this.makeQueries(query, schema);
 		this.constants = schema.getConstants();
 		this.relations = schema.getRelations();
 		this.aliases = new LinkedHashMap<>();
 	}
-	
+
 	/**
 	 * 
 	 * @param driver
@@ -300,14 +302,24 @@ public class DBHomomorphismManager implements HomomorphismManager {
 		Preconditions.checkNotNull(source);
 		List<Match> result = new LinkedList<>();
 		Q s = this.convert(source, this.aliases, constraints);
-		//Set<Map<Variable, Constant>> maps = this.builder.toSQL(s, constraints, this.constants, this.connection);
-		Set<Map<Variable, Constant>> maps = this.builder.findHomomorphismsThroughSQL(s, constraints, this.constants, this.connection);
+
+		HomomorphismConstraint[] c = null;
+		if(source instanceof EGD) {
+			c = new HomomorphismConstraint[constraints.length+1];
+			System.arraycopy(constraints, 0, c, 0, constraints.length);
+			c[constraints.length] = HomomorphismConstraint.createEGDHomomorphismConstraint();
+		}
+		else {
+			c = constraints;
+		}
+
+		Set<Map<Variable, Constant>> maps = this.builder.toSQL(s, c, this.constants, this.connection);
 		for(Map<Variable, Constant> map:maps) {
 			result.add(new Match(source, map));
 		}
 		return result;
 	}
-	
+
 	/**
 	 * @param queries Collection<Q>
 	 * @param constraints HomomorphismConstraint[]
@@ -325,7 +337,7 @@ public class DBHomomorphismManager implements HomomorphismManager {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * 
 	 * @param source
@@ -348,11 +360,14 @@ public class DBHomomorphismManager implements HomomorphismManager {
 				left.add(new Predicate(relation, terms));
 			}
 			List<Predicate> right = Lists.newArrayList();
+			List<Equality> equalities = Lists.newArrayList();
+
 			for(Predicate atom:((Constraint) source).getRight().getPredicates()) {
 				Relation relation = aliases.get(atom.getName());
 				List<Term> terms = Lists.newArrayList(atom.getTerms());
 				terms.add(new Variable(singleBag == true ? this.Bag.getName() : (this.Bag.getName() + b++)));
 				terms.add(new Variable(this.Fact.getName() + f++));
+				right.add(new Predicate(relation, terms));
 				right.add(new Predicate(relation, terms));
 			}
 			return (Q) new TGD(Conjunction.of(left), Conjunction.of(right));
@@ -375,7 +390,7 @@ public class DBHomomorphismManager implements HomomorphismManager {
 		}
 	}
 
-	
+
 	/*
 	 * (non-Javadoc)
 	 * @see java.lang.AutoCloseable#close()
@@ -445,7 +460,23 @@ public class DBHomomorphismManager implements HomomorphismManager {
 			throw new IllegalStateException(ex.getMessage(), ex);
 		}
 	}
-	
+
+	/**
+	 * Deletes the facts of the list in the database
+	 * @param facts Input list of facts
+	 */
+	@Override
+	public void deleteFacts(Collection<? extends Predicate> facts) {
+		try (Statement sqlStatement = this.connection.createStatement()) {
+			for (String stmt : this.builder.makeDeletes(facts, this.aliases)) {
+				sqlStatement.addBatch(stmt);
+			}
+			sqlStatement.executeBatch();
+		} catch (SQLException ex) {
+			throw new IllegalStateException(ex.getMessage(), ex);
+		}
+	}
+
 	/**
 	 * @return DBHomomorphismManager
 	 * @see uk.ac.ox.cs.pdq.homomorphism.HomomorphismDetector#clone()
@@ -468,14 +499,14 @@ public class DBHomomorphismManager implements HomomorphismManager {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * A relation built-up for homomorphism detection 
 	 * @author Efthymia Tsamoura
 	 *
 	 */
 	protected static class DBRelation extends Relation {
-		
+
 		private static final long serialVersionUID = 3503553786085749666L;
 
 		/**
@@ -487,7 +518,7 @@ public class DBHomomorphismManager implements HomomorphismManager {
 			super(name, attributes);
 		}
 	}
-	
+
 	/**
 	 * @param relation 
 	 * @return a new database relation with attributes x0,x1,...,x_{N-1}, Bag, Fact where
@@ -502,7 +533,7 @@ public class DBHomomorphismManager implements HomomorphismManager {
 		attributes.add(this.Fact);
 		return new DBRelation(relation.getName(), attributes);
 	}
-	
+
 	protected DBRelation toDBRelation(Table table) {
 		List<Attribute> attributes = new ArrayList<>();
 		for (int index = 0, l = table.getHeader().size(); index < l; ++index) {
@@ -512,7 +543,7 @@ public class DBHomomorphismManager implements HomomorphismManager {
 		attributes.add(this.Fact);
 		return new DBRelation(table.getName(), attributes);
 	}
-	
+
 	protected DBRelation createEquality() {
 		List<Attribute> attributes = new ArrayList<>();
 		attributes.add(new Attribute(String.class, this.attrPrefix + 0));

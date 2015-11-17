@@ -60,9 +60,9 @@ public abstract class DatabaseChaseState implements ChaseState {
 	public List<Match> getMatches(Query<?> query) {
 		return this.manager.getMatches(
 				query,
-				HomomorphismConstraint.topK(1),
-				HomomorphismConstraint.factScope(Conjunction.of(this.getFacts())),
-				HomomorphismConstraint.satisfies(query.getFree2Canonical()));
+				HomomorphismConstraint.createTopKConstraint(1),
+				HomomorphismConstraint.createFactConstraint(Conjunction.of(this.getFacts())),
+				HomomorphismConstraint.createMapConstraint(query.getFree2Canonical()));
 	}
 	
 	/**
@@ -76,7 +76,7 @@ public abstract class DatabaseChaseState implements ChaseState {
 	public List<Match> getMatches(Query<?> query, HomomorphismConstraint... constraints) {
 		HomomorphismConstraint[] c = new HomomorphismConstraint[constraints.length+1];
 		System.arraycopy(constraints, 0, c, 0, constraints.length);
-		c[constraints.length] = HomomorphismConstraint.factScope(Conjunction.of(this.getFacts()));
+		c[constraints.length] = HomomorphismConstraint.createFactConstraint(Conjunction.of(this.getFacts()));
 		return this.manager.getMatches(query, c);
 	}
 	
@@ -92,7 +92,7 @@ public abstract class DatabaseChaseState implements ChaseState {
 	public List<Match> getMaches(Constraint dependency, HomomorphismConstraint... constraints) {
 		HomomorphismConstraint[] c = new HomomorphismConstraint[constraints.length+1];
 		System.arraycopy(constraints, 0, c, 0, constraints.length);
-		c[constraints.length] = HomomorphismConstraint.factScope(Conjunction.of(this.getFacts()));
+		c[constraints.length] = HomomorphismConstraint.createFactConstraint(Conjunction.of(this.getFacts()));
 		return this.manager.getMatches(dependency, c);
 	}
 
@@ -108,7 +108,7 @@ public abstract class DatabaseChaseState implements ChaseState {
 	public List<Match> getMaches(Collection<? extends Constraint> dependencies, HomomorphismConstraint... constraints) {
 		HomomorphismConstraint[] c = new HomomorphismConstraint[constraints.length+1];
 		System.arraycopy(constraints, 0, c, 0, constraints.length);
-		c[constraints.length] = HomomorphismConstraint.factScope(Conjunction.of(this.getFacts()));
+		c[constraints.length] = HomomorphismConstraint.createFactConstraint(Conjunction.of(this.getFacts()));
 		return this.manager.getMatches(dependencies, c);
 	}
 

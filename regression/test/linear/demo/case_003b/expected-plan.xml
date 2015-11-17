@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<plan type="linear" cost="1.5051012256944444E14">
+<plan type="linear" cost="1.5050012256944444E14">
 <command name="T1">
 <operator type="PROJECT">
 <outputs>
-<attribute name="c306" type="java.lang.Integer"/>
-<attribute name="c307" type="java.lang.Integer"/>
-<attribute name="c308" type="java.lang.String"/>
-<attribute name="c309" type="java.lang.String"/>
-<attribute name="c310" type="java.lang.String"/>
-<attribute name="c311" type="java.lang.String"/>
-<attribute name="c312" type="java.lang.String"/>
-<attribute name="c313" type="java.lang.String"/>
-<attribute name="c314" type="java.lang.String"/>
-<attribute name="c315" type="java.lang.String"/>
-<attribute name="c316" type="java.lang.Double"/>
-<attribute name="c317" type="java.lang.Double"/>
-<attribute name="c318" type="java.lang.Double"/>
-<attribute name="c319" type="java.lang.Double"/>
-<attribute name="c320" type="java.lang.Double"/>
-<attribute name="c321" type="java.lang.Double"/>
-<attribute name="c322" type="java.lang.String"/>
+<attribute name="c2732" type="java.lang.Integer"/>
+<attribute name="c2733" type="java.lang.Integer"/>
+<attribute name="c2734" type="java.lang.String"/>
+<attribute name="c2735" type="java.lang.String"/>
+<attribute name="c2736" type="java.lang.String"/>
+<attribute name="c2737" type="java.lang.String"/>
+<attribute name="c2738" type="java.lang.String"/>
+<attribute name="c2739" type="java.lang.String"/>
+<attribute name="c2740" type="java.lang.String"/>
+<attribute name="c2741" type="java.lang.String"/>
+<attribute name="c2742" type="java.lang.Double"/>
+<attribute name="c2743" type="java.lang.Double"/>
+<attribute name="c2744" type="java.lang.Double"/>
+<attribute name="c2745" type="java.lang.Double"/>
+<attribute name="c2746" type="java.lang.Double"/>
+<attribute name="c2747" type="java.lang.Double"/>
+<attribute name="c2748" type="java.lang.String"/>
 </outputs>
 <project>
 <attribute name="woeid" type="java.lang.Integer"/>
@@ -99,34 +99,34 @@
 <command name="T2">
 <operator type="CROSS_PRODUCT">
 <outputs>
-<attribute name="c306" type="java.lang.Integer"/>
-<attribute name="c307" type="java.lang.Integer"/>
-<attribute name="c308" type="java.lang.String"/>
-<attribute name="c309" type="java.lang.String"/>
-<attribute name="c310" type="java.lang.String"/>
-<attribute name="c311" type="java.lang.String"/>
-<attribute name="c312" type="java.lang.String"/>
-<attribute name="c313" type="java.lang.String"/>
-<attribute name="c314" type="java.lang.String"/>
-<attribute name="c315" type="java.lang.String"/>
-<attribute name="c316" type="java.lang.Double"/>
-<attribute name="c317" type="java.lang.Double"/>
-<attribute name="c318" type="java.lang.Double"/>
-<attribute name="c319" type="java.lang.Double"/>
-<attribute name="c320" type="java.lang.Double"/>
-<attribute name="c321" type="java.lang.Double"/>
-<attribute name="c322" type="java.lang.String"/>
-<attribute name="c323" type="java.lang.Integer"/>
-<attribute name="c325" type="java.lang.Integer"/>
-<attribute name="c324" type="java.lang.String"/>
+<attribute name="c2732" type="java.lang.Integer"/>
+<attribute name="c2733" type="java.lang.Integer"/>
+<attribute name="c2734" type="java.lang.String"/>
+<attribute name="c2735" type="java.lang.String"/>
+<attribute name="c2736" type="java.lang.String"/>
+<attribute name="c2737" type="java.lang.String"/>
+<attribute name="c2738" type="java.lang.String"/>
+<attribute name="c2739" type="java.lang.String"/>
+<attribute name="c2740" type="java.lang.String"/>
+<attribute name="c2741" type="java.lang.String"/>
+<attribute name="c2742" type="java.lang.Double"/>
+<attribute name="c2743" type="java.lang.Double"/>
+<attribute name="c2744" type="java.lang.Double"/>
+<attribute name="c2745" type="java.lang.Double"/>
+<attribute name="c2746" type="java.lang.Double"/>
+<attribute name="c2747" type="java.lang.Double"/>
+<attribute name="c2748" type="java.lang.String"/>
+<attribute name="c2749" type="java.lang.Integer"/>
+<attribute name="c2751" type="java.lang.Integer"/>
+<attribute name="c2750" type="java.lang.String"/>
 </outputs>
 <children>
 <operator type="ALIAS" name="T1"/>
 <operator type="PROJECT">
 <outputs>
-<attribute name="c323" type="java.lang.Integer"/>
-<attribute name="c325" type="java.lang.Integer"/>
-<attribute name="c324" type="java.lang.String"/>
+<attribute name="c2749" type="java.lang.Integer"/>
+<attribute name="c2751" type="java.lang.Integer"/>
+<attribute name="c2750" type="java.lang.String"/>
 </outputs>
 <project>
 <attribute name="woeid" type="java.lang.Integer"/>
@@ -161,51 +161,43 @@
 </operator>
 </command>
 <command name="T3">
-<operator type="PROJECT">
-<outputs>
-<attribute name="c324" type="java.lang.String"/>
-</outputs>
-<project>
-<attribute name="c324" type="java.lang.String"/>
-</project>
-<child>
 <operator type="DEPENDENT_JOIN" param="17">
 <outputs>
-<attribute name="c306" type="java.lang.Integer"/>
-<attribute name="c307" type="java.lang.Integer"/>
-<attribute name="c308" type="java.lang.String"/>
-<attribute name="c309" type="java.lang.String"/>
-<attribute name="c310" type="java.lang.String"/>
-<attribute name="c311" type="java.lang.String"/>
-<attribute name="c312" type="java.lang.String"/>
-<attribute name="c313" type="java.lang.String"/>
-<attribute name="c314" type="java.lang.String"/>
-<attribute name="c315" type="java.lang.String"/>
-<attribute name="c316" type="java.lang.Double"/>
-<attribute name="c317" type="java.lang.Double"/>
-<attribute name="c318" type="java.lang.Double"/>
-<attribute name="c319" type="java.lang.Double"/>
-<attribute name="c320" type="java.lang.Double"/>
-<attribute name="c321" type="java.lang.Double"/>
-<attribute name="c322" type="java.lang.String"/>
-<attribute name="c323" type="java.lang.Integer"/>
-<attribute name="c325" type="java.lang.Integer"/>
-<attribute name="c324" type="java.lang.String"/>
-<attribute name="c323" type="java.lang.Integer"/>
-<attribute name="c306" type="java.lang.Integer"/>
-<attribute name="c340" type="java.lang.String"/>
-<attribute name="c341" type="java.lang.String"/>
-<attribute name="c342" type="java.lang.String"/>
+<attribute name="c2732" type="java.lang.Integer"/>
+<attribute name="c2733" type="java.lang.Integer"/>
+<attribute name="c2734" type="java.lang.String"/>
+<attribute name="c2735" type="java.lang.String"/>
+<attribute name="c2736" type="java.lang.String"/>
+<attribute name="c2737" type="java.lang.String"/>
+<attribute name="c2738" type="java.lang.String"/>
+<attribute name="c2739" type="java.lang.String"/>
+<attribute name="c2740" type="java.lang.String"/>
+<attribute name="c2741" type="java.lang.String"/>
+<attribute name="c2742" type="java.lang.Double"/>
+<attribute name="c2743" type="java.lang.Double"/>
+<attribute name="c2744" type="java.lang.Double"/>
+<attribute name="c2745" type="java.lang.Double"/>
+<attribute name="c2746" type="java.lang.Double"/>
+<attribute name="c2747" type="java.lang.Double"/>
+<attribute name="c2748" type="java.lang.String"/>
+<attribute name="c2749" type="java.lang.Integer"/>
+<attribute name="c2751" type="java.lang.Integer"/>
+<attribute name="c2750" type="java.lang.String"/>
+<attribute name="c2749" type="java.lang.Integer"/>
+<attribute name="c2732" type="java.lang.Integer"/>
+<attribute name="c2766" type="java.lang.String"/>
+<attribute name="c2767" type="java.lang.String"/>
+<attribute name="c2768" type="java.lang.String"/>
 </outputs>
 <children>
 <operator type="ALIAS" name="T2"/>
 <operator type="PROJECT">
 <outputs>
-<attribute name="c323" type="java.lang.Integer"/>
-<attribute name="c306" type="java.lang.Integer"/>
-<attribute name="c340" type="java.lang.String"/>
-<attribute name="c341" type="java.lang.String"/>
-<attribute name="c342" type="java.lang.String"/>
+<attribute name="c2749" type="java.lang.Integer"/>
+<attribute name="c2732" type="java.lang.Integer"/>
+<attribute name="c2766" type="java.lang.String"/>
+<attribute name="c2767" type="java.lang.String"/>
+<attribute name="c2768" type="java.lang.String"/>
 </outputs>
 <project>
 <attribute name="source" type="java.lang.Integer"/>
@@ -227,8 +219,6 @@
 </child>
 </operator>
 </children>
-</operator>
-</child>
 </operator>
 </command>
 </plan>

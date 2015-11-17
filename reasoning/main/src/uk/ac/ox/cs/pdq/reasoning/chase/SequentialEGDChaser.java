@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import uk.ac.ox.cs.pdq.db.Constraint;
-import uk.ac.ox.cs.pdq.db.EGD;
-import uk.ac.ox.cs.pdq.db.TGD;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.fol.Variable;
@@ -15,11 +13,11 @@ import uk.ac.ox.cs.pdq.reasoning.Match;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ListState;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismConstraint;
+import uk.ac.ox.cs.pdq.reasoning.utility.DefaultRestrictedDependencyAssessor;
 import uk.ac.ox.cs.pdq.reasoning.utility.ReasonerUtility;
+import uk.ac.ox.cs.pdq.reasoning.utility.RestrictedDependencyAssessor;
 
-import com.beust.jcommander.internal.Lists;
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Sets;
 
 
 /**
@@ -29,14 +27,13 @@ import com.google.common.collect.Sets;
  * @author Efthymia Tsamoura
  *
  */
-public class EGDChaser extends Chaser {
-
-
+public class SequentialEGDChaser extends Chaser {
+	
 	/**
 	 * Constructor for EGDChaser.
 	 * @param statistics StatisticsCollector
 	 */
-	public EGDChaser(
+	public SequentialEGDChaser(
 			StatisticsCollector statistics) {
 		super(statistics);
 	}
@@ -50,50 +47,23 @@ public class EGDChaser extends Chaser {
 	@Override
 	public <S extends ChaseState> void reasonUntilTermination(S s,  Query<?> target, Collection<? extends Constraint> dependencies) {
 		Preconditions.checkArgument(s instanceof ListState);
-		Collection<TGD> tgds = Sets.newHashSet();
-		Collection<EGD> egds = Sets.newHashSet();
-		for(Constraint constraint:dependencies) {
-			if(constraint instanceof EGD) {
-				egds.add((EGD) constraint);
-			}
-			else if(constraint instanceof TGD) {
-				tgds.add((TGD) constraint);
-			}
-			else {
-				throw new java.lang.IllegalArgumentException("Unsupported constraint type");
-			}
-		}
-
-		int step = 0;
-		//True if at the end of the internal for loop at least one dependency has been fired
-		boolean appliedOddStep = false;
-		boolean appliedEvenStep = false;
+		RestrictedDependencyAssessor accessor = new DefaultRestrictedDependencyAssessor(dependencies);
+		boolean appliedStep = false;
 		do {
-			++step;
-			appliedOddStep = false;
-			appliedEvenStep = false;
-			//Find all active triggers
-			List<Match> matches = step % 2 == 0 ? s.getMaches(tgds):s.getMaches(egds);
-			List<Match> activeTriggers = Lists.newArrayList();
-			for(Match match:matches) {
-				if(new ReasonerUtility().isActiveTrigger(match, s)){
-					activeTriggers.add(match);
-				}
-			}
+			appliedStep = false;
+			Collection<? extends Constraint> d = accessor.getDependencies(s);
+			List<Match> matches = s.getMaches(d);
 			
-			boolean succeeds = s.chaseStep(activeTriggers);
-			if(!succeeds) {
-				break;
-			}
-			if(succeeds && !activeTriggers.isEmpty()) {
-				if(step % 2 == 0) {
-					appliedEvenStep = true;
+			int i = 0;
+			for (Match match: matches) {
+				if(new ReasonerUtility().isActiveTrigger(match, s)){
+					//A single chase step
+					s.chaseStep(match);
+					appliedStep = true;
 				}
-				else {
-					appliedOddStep = true;
-				}
+				i++;
 			}
-		} while (!(appliedOddStep == false && appliedEvenStep == false && step % 2 == 0));
+		} while (appliedStep);
 	}
 
 
@@ -114,8 +84,8 @@ public class EGDChaser extends Chaser {
 		this.reasonUntilTermination(instance, target, constraints);
 		if(!instance.isFailed()) {
 			HomomorphismConstraint[] c = {
-					HomomorphismConstraint.topK(1),
-					HomomorphismConstraint.satisfies(free)};
+					HomomorphismConstraint.createTopKConstraint(1),
+					HomomorphismConstraint.createMapConstraint(free)};
 
 			return !instance.getMatches(target,c).isEmpty(); 
 		}
@@ -138,8 +108,8 @@ public class EGDChaser extends Chaser {
 	}
 
 	@Override
-	public EGDChaser clone() {
-		return new EGDChaser(this.statistics);
+	public SequentialEGDChaser clone() {
+		return new SequentialEGDChaser(this.statistics);
 	}
 
 }

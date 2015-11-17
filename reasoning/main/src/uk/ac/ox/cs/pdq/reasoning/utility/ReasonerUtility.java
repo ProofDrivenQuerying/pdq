@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Constraint;
@@ -14,6 +15,7 @@ import uk.ac.ox.cs.pdq.db.TGD;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
+import uk.ac.ox.cs.pdq.fol.Equality;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.fol.Signature;
@@ -21,9 +23,10 @@ import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.plan.CommandToTGDTranslator;
 import uk.ac.ox.cs.pdq.reasoning.Match;
-import uk.ac.ox.cs.pdq.reasoning.chase.EGDChaser;
+import uk.ac.ox.cs.pdq.reasoning.chase.ParallelEGDChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseEGDState;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseListState;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ListState;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager;
@@ -40,6 +43,8 @@ import com.google.common.base.Preconditions;
  */
 public class ReasonerUtility {
 
+	protected static Logger log = Logger.getLogger(ReasonerUtility.class);
+	
 	/**
 	 * 
 	 * @param left
@@ -69,7 +74,7 @@ public class ReasonerUtility {
 	 * @return
 	 * 		true if the input set of attributes is a key of the input table
 	 */
-	public boolean isKey(Table table, List<Attribute> candidateKeys, Collection<? extends Constraint> constraints, EGDChaser egdChaser, DBHomomorphismManager detector) {
+	public boolean isKey(Table table, List<Attribute> candidateKeys, Collection<? extends Constraint> constraints, ParallelEGDChaser egdChaser, DBHomomorphismManager detector) {
 		//Create the set of EGDs that correspond to the given table and keys
 		EGD egd = EGD.getEGDs(new Signature(table.getName(),table.getHeader().size()), (List<Attribute>) table.getHeader(), candidateKeys);
 		
@@ -92,6 +97,27 @@ public class ReasonerUtility {
 	 */
 	public boolean isActiveTrigger(Match match, ChaseState s) {
 		Preconditions.checkNotNull(match);
+		if(match.getQuery() instanceof EGD) {
+			
+			Preconditions.checkArgument(s instanceof DatabaseEGDState);
+			for(Equality equality:((EGD)match.getQuery()).getRight()) {
+				Term leftTerm = equality.getTerms().get(0);
+				Term rightTerm = equality.getTerms().get(1);
+				Constant leftConstant = match.getMapping().get(leftTerm);
+				Constant rightConstant = match.getMapping().get(rightTerm);
+				Preconditions.checkArgument(rightConstant != null && rightConstant != null);
+
+				if(((DatabaseEGDState)s).getConstantClasses().getClass(leftConstant) == null ||
+				((DatabaseEGDState)s).getConstantClasses().getClass(rightConstant) == null	|| 
+				!((DatabaseEGDState)s).getConstantClasses().getClass(leftConstant).equals(((DatabaseEGDState)s).getConstantClasses().getClass(rightConstant))) {
+					log.trace("Match " + match + " is active ");
+					return true;
+				}
+			}
+			log.trace("Match " + match + " is not active ");
+			return false;
+		}
+		
 		Map<Variable, Constant> mapping = match.getMapping();
 		Constraint constraint = ((Constraint)match.getQuery());
 		Map<Variable, ? extends Term> input = Utility.retain(mapping, constraint.getBothSideVariables());

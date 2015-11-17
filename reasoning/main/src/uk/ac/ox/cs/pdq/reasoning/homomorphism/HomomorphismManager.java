@@ -9,6 +9,7 @@ import uk.ac.ox.cs.pdq.fol.Predicate;
  * Extends the HomomorphismDetector interface by providing a way to add facts.
  *
  * @author Julien Leblay
+ * @author Efthymia Tsamoura
  */
 public interface HomomorphismManager extends HomomorphismDetector {
 
@@ -17,6 +18,12 @@ public interface HomomorphismManager extends HomomorphismDetector {
 	 * @param facts Input list of facts
 	 */
 	void addFacts(Collection<? extends Predicate> facts);
+	
+	/**
+	 * Deletes the facts of the list in the database
+	 * @param facts Input list of facts
+	 */
+	void deleteFacts(Collection<? extends Predicate> facts);
 
 	/**
 	 * Initialises the manager.

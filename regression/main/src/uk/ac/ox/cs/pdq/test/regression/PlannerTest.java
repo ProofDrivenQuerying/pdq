@@ -16,7 +16,6 @@ import uk.ac.ox.cs.pdq.InconsistentParametersException;
 import uk.ac.ox.cs.pdq.LimitReachedException;
 import uk.ac.ox.cs.pdq.LimitReachedException.Reasons;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
-import uk.ac.ox.cs.pdq.cost.CostParameters.CostTypes;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Query;
@@ -174,6 +173,7 @@ public class PlannerTest extends RegressionTest {
 				}
 			}
 		} catch (Throwable e) {
+			e.printStackTrace(System.out);
 			return handleException(e, directory);
 		}
 		return true;

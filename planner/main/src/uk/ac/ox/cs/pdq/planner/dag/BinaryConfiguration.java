@@ -6,6 +6,7 @@ import java.util.List;
 import uk.ac.ox.cs.pdq.db.Constraint;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.plan.DAGPlan;
+import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 
 import com.google.common.base.Preconditions;
@@ -60,6 +61,39 @@ public class BinaryConfiguration extends DAGChaseConfiguration {
 			DAGChaseConfiguration right
 			) {
 		super(ConfigurationUtility.merge(left, right),
+				ConfigurationUtility.getInput(left, right),
+				ConfigurationUtility.getOutput(left, right),
+				left.getHeight() + right.getHeight(),
+				ConfigurationUtility.getBushiness(left, right)
+				);
+		Preconditions.checkNotNull(left);
+		Preconditions.checkNotNull(right);
+		this.left = left;
+		this.right = right;
+		this.type = ConfigurationUtility.getCombinationType(left, right);
+		DAGPlan plan = PlanGenerator.toPlan(this);
+		this.setPlan(plan);
+		Preconditions.checkState(this.getInput().containsAll(this.getPlan().getInputs()));
+		Preconditions.checkState(this.getPlan().getInputs().containsAll(this.getPlan().getInputs()));
+		this.rules = ConfigurationUtility.getApplyRules(this);
+		this.rulesList = ConfigurationUtility.getApplyRulesList(this);
+	}
+	
+	/**
+	 * 
+	 * @param left
+	 * 		The left sub-configuration
+	 * @param right
+	 * 		The right sub-configuration
+	 * @param state
+	 * 		The state of the new binary configuration
+	 */
+	public BinaryConfiguration(
+			DAGChaseConfiguration left,
+			DAGChaseConfiguration right,
+			AccessibleChaseState state
+			) {
+		super(state,
 				ConfigurationUtility.getInput(left, right),
 				ConfigurationUtility.getOutput(left, right),
 				left.getHeight() + right.getHeight(),

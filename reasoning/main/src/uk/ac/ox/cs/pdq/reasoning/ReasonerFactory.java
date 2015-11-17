@@ -7,9 +7,10 @@ import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters.ReasoningTypes;
 import uk.ac.ox.cs.pdq.reasoning.chase.BoundedChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.BoundedChaser.KSupplier;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
-import uk.ac.ox.cs.pdq.reasoning.chase.EGDChaser;
+import uk.ac.ox.cs.pdq.reasoning.chase.ParallelEGDChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.KTerminationChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
+import uk.ac.ox.cs.pdq.reasoning.chase.SequentialEGDChaser;
 
 import com.google.common.base.Preconditions;
 import com.google.common.eventbus.EventBus;
@@ -92,9 +93,14 @@ public class ReasonerFactory {
 		case RESTRICTED_CHASE:
 			return new RestrictedChaser(
 					this.collectStatistics == true ? new StatisticsCollector(this.collectStatistics, this.eventBus) : null);
-		case EGD_CHASE:
-			return new EGDChaser(
+		case PARALLEL_EGD_CHASE:
+			return new ParallelEGDChaser(
 					this.collectStatistics == true ? new StatisticsCollector(this.collectStatistics, this.eventBus) : null);
+			
+		case SEQUENTIAL_EGD_CHASE:
+			return new SequentialEGDChaser(
+					this.collectStatistics == true ? new StatisticsCollector(this.collectStatistics, this.eventBus) : null);
+			
 		case KTERMINATION_CHASE:
 			return new KTerminationChaser(
 					this.collectStatistics == true ? new StatisticsCollector(this.collectStatistics, this.eventBus) : null,

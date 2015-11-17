@@ -328,7 +328,10 @@ public class ReasoningParameters extends Parameters {
 		BOUNDED_CHASE,
 		
 		@EnumParameterValue(description = "Runs the parallel EGD chase algorithm")
-		EGD_CHASE
+		PARALLEL_EGD_CHASE,
+		
+		@EnumParameterValue(description = "Runs a sequential version of the EGD chase algorithm")
+		SEQUENTIAL_EGD_CHASE
 	}
 
 	/** */

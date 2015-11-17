@@ -70,7 +70,7 @@ public abstract class IterativeExecutor {
 			Query<?> query,
 			Collection<? extends Constraint> dependencies,
 			DAGChaseConfiguration best,
-			DAGEquivalenceClasses equivalenceClasses, 
+			DAGEquivalenceClasses classes, 
 			boolean twoWay,
 			long timeout, TimeUnit unit) throws PlannerException, LimitReachedException;
 
@@ -78,7 +78,7 @@ public abstract class IterativeExecutor {
 	 * Iterates over the input collection of configurations to identify the minimum-cost one
 	 * @param input
 	 * 		The input set of configurations
-	 * @param equivalenceClasses
+	 * @param classes
 	 * 		Classes of structurally equivalent configurations
 	 * @param best
 	 * 		The minimum cost closed and successful configuration found so far. The plans that correspond to the
@@ -95,7 +95,7 @@ public abstract class IterativeExecutor {
 	public abstract ExplorationResults explore(
 			Query<?> query,
 			Queue<DAGChaseConfiguration> input,
-			DAGEquivalenceClasses equivalenceClasses,
+			DAGEquivalenceClasses classes,
 			DAGChaseConfiguration best,
 			long timeout, TimeUnit unit) throws PlannerException, LimitReachedException;
 }

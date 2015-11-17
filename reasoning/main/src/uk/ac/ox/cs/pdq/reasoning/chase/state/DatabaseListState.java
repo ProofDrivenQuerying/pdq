@@ -48,7 +48,7 @@ public class DatabaseListState extends DatabaseChaseState implements ListState{
 	 * @param manager
 	 */
 	public DatabaseListState(Query<?> query, DBHomomorphismManager manager) {
-		this(manager, query.getCanonical().getPredicates(), new MapFiringGraph());
+		this(manager, Sets.newHashSet(query.getCanonical().getPredicates()), new MapFiringGraph());
 		this.manager.addFacts(this.facts);
 	}
 	
@@ -188,7 +188,6 @@ public class DatabaseListState extends DatabaseChaseState implements ListState{
 
 	@Override
 	public boolean isFailed() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 	

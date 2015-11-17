@@ -122,7 +122,7 @@ public abstract class ChaseConfiguration<P extends Plan> implements Configuratio
 	 * @throws PlannerException
 	 * @throws LimitReachedException
 	 */
-	public void close(Chaser chaser, Query<?> query, Collection<? extends Constraint> dependencies) throws PlannerException, LimitReachedException {
+	public void reasonUntilTermination(Chaser chaser, Query<?> query, Collection<? extends Constraint> dependencies) throws PlannerException, LimitReachedException {
 		chaser.reasonUntilTermination(this.state, query, dependencies);
 	}
 

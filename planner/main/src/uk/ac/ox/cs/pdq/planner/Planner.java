@@ -193,7 +193,7 @@ public class Planner {
 					collectStats,
 					this.schema,
 					accessibleSchema,
-					query,
+					this.query,
 					accessibleQuery,
 					reasoner,
 					detector,
