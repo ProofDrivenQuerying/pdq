@@ -28,12 +28,16 @@ import com.google.common.collect.Sets;
  */
 public class JoinCommand implements Command{
 
+	/** The left input table **/
 	private final Table left;
 	
+	/** The right input table **/
 	private final Table right;
 	
+	/** The output table **/
 	private final Table output;
 	
+	/** The join predicates**/
 	private final Predicate predicates;
 	
 	/** Caches the constraint that captures this access command **/
@@ -43,6 +47,12 @@ public class JoinCommand implements Command{
 		this(left, right, initNaturalJoin(left, right));
 	}
 	
+	/**
+	 * Creates a join command with the given input tables and input join predicates
+	 * @param left
+	 * @param right
+	 * @param predicates
+	 */
 	public JoinCommand(Table left, Table right, Predicate predicates) {
 		Preconditions.checkNotNull(left);
 		Preconditions.checkNotNull(right);
@@ -57,6 +67,12 @@ public class JoinCommand implements Command{
 		this.command = new CommandToTGDTranslator().toTGD(this);
 	}
 	
+	/**
+	 * Finds the equijoin predicates based on the attribute names of the input tables
+	 * @param ltable
+	 * @param rtable
+	 * @return
+	 */
 	private static Predicate initNaturalJoin(Table ltable, Table rtable) {
 		Multimap<Typed, Integer> joinVariables = LinkedHashMultimap.create();
 		int totalCol = 0;

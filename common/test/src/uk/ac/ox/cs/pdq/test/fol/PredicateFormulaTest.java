@@ -186,7 +186,7 @@ public class PredicateFormulaTest {
 				);
 		Predicate p = new Predicate(s, t);
 		Assert.assertEquals("Predicate must have " + t.size() +  " terms ",
-				t.size(), p.getTermCount());
+				t.size(), p.getTermsCount());
 	}
 
 	@Test public void testGetTerm() {

@@ -34,7 +34,7 @@ import com.google.common.collect.Sets;
  */
 public class CommandToTGDTranslator {
 	
-	public Collection<TGD> toTGD(NormalisedPlan plan) {
+	public Collection<TGD> toTGD(SequentialPlan plan) {
 		Preconditions.checkNotNull(plan);
 		Collection<TGD> tgds = Sets.newLinkedHashSet();
 		for(Command command:plan.getCommands()) {

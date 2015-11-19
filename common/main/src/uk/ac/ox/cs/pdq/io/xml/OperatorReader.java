@@ -256,18 +256,26 @@ public class OperatorReader extends AbstractXMLReader<RelationalOperator> {
 			break;
 
 		case CONSTANT:
-			try {
-				TypedConstant<?> c = new TypedConstant<>(uk.ac.ox.cs.pdq.util.Types.cast(
-						Class.forName(this.getValue(atts, QNames.TYPE)),
-						this.getValue(atts, QNames.VALUE)));
-				if (this.inOutputs) {
-					this.outputs.add(c);
+			if (this.inOutputs) {
+				try {
+					this.outputs.add(
+							new TypedConstant<>(uk.ac.ox.cs.pdq.util.Types.cast(
+							Class.forName(this.getValue(atts, QNames.TYPE)),
+							this.getValue(atts, QNames.VALUE))));
+				} catch (ClassNotFoundException e) {
+					throw new IllegalStateException();
 				}
-				if (this.inOptions) {
-					this.projection.add(c);
+			} else if (this.inOptions) {
+				try {
+					this.projection.add(
+							new TypedConstant<>(uk.ac.ox.cs.pdq.util.Types.cast(
+									Class.forName(this.getValue(atts, QNames.TYPE)),
+									this.getValue(atts, QNames.VALUE))));
+				} catch (ClassNotFoundException e) {
+					throw new IllegalStateException();
 				}
-			} catch (ClassNotFoundException e) {
-				throw new IllegalStateException();
+			} else {
+				throw new IllegalStateException("Attempting to read term while not in output list.");
 			}
 			break;
 

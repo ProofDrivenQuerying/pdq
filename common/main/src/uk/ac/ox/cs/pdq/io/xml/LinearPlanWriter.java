@@ -6,7 +6,7 @@ import java.util.Map;
 
 import uk.ac.ox.cs.pdq.algebra.RelationalOperator;
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.plan.LinearPlan;
+import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 
 /**
  * Writes plans to XML.
@@ -14,7 +14,7 @@ import uk.ac.ox.cs.pdq.plan.LinearPlan;
  * @author Julien Leblay
  * 
  */
-public class LinearPlanWriter extends AbstractXMLWriter<LinearPlan> {
+public class LinearPlanWriter extends AbstractXMLWriter<LeftDeepPlan> {
 
 	public static final String TYPE_MARKER = "linear"; 
 
@@ -35,7 +35,7 @@ public class LinearPlanWriter extends AbstractXMLWriter<LinearPlan> {
 	 * @param out
 	 * @param plan LinearPlan
 	 */
-	public void writePlan(PrintStream out, LinearPlan plan) {
+	public void writePlan(PrintStream out, LeftDeepPlan plan) {
 		Map<QNames, String> att = new LinkedHashMap<>();
 		att.put(QNames.TYPE, TYPE_MARKER);
 		if (plan != null) {
@@ -43,7 +43,7 @@ public class LinearPlanWriter extends AbstractXMLWriter<LinearPlan> {
 			open(out, QNames.PLAN, att);
 			int i = 1;
 			Map<RelationalOperator, String> aliases = new LinkedHashMap<>();
-			for (LinearPlan step: plan) {
+			for (LeftDeepPlan step: plan) {
 				String alias = SUBPLAN_ALIAS + (i++);
 				aliases.put(step.getOperator(), alias);
 				this.writeCommand(out, step, alias, aliases);
@@ -72,7 +72,7 @@ public class LinearPlanWriter extends AbstractXMLWriter<LinearPlan> {
 	 * @param alias String
 	 * @param aliases Map<LogicalOperator,String>
 	 */
-	public void writeCommand(PrintStream out, LinearPlan plan, String alias, Map<RelationalOperator, String> aliases) {
+	public void writeCommand(PrintStream out, LeftDeepPlan plan, String alias, Map<RelationalOperator, String> aliases) {
 		Map<QNames, String> att = new LinkedHashMap<>();
 		att.put(QNames.NAME, alias);
 		open(out, QNames.COMMAND, att);
@@ -85,7 +85,7 @@ public class LinearPlanWriter extends AbstractXMLWriter<LinearPlan> {
 	 * @param o LinearPlan
 	 */
 	@Override
-	public void write(PrintStream out, LinearPlan o) {
+	public void write(PrintStream out, LeftDeepPlan o) {
 		out.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
 		this.writePlan(out, o);
 	}

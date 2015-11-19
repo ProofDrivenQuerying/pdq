@@ -13,7 +13,7 @@ import uk.ac.ox.cs.pdq.db.AccessMethod.Types;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.io.Writer;
 import uk.ac.ox.cs.pdq.plan.AccessOperator;
-import uk.ac.ox.cs.pdq.plan.LinearPlan;
+import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.util.TupleType;
 
 import com.google.common.collect.Lists;
@@ -24,7 +24,7 @@ import com.google.common.collect.Lists;
  * @author Julien Leblay
  *
  */
-public class AlgebraLikeLinearPlanWriter extends PrettyWriter<LinearPlan> implements Writer<LinearPlan> {
+public class AlgebraLikeLinearPlanWriter extends PrettyWriter<LeftDeepPlan> implements Writer<LeftDeepPlan> {
 
 	public static final String SUBPLAN_ALIAS = "T"; 
 	public static final String ASSIGN = " := ";
@@ -69,12 +69,12 @@ public class AlgebraLikeLinearPlanWriter extends PrettyWriter<LinearPlan> implem
 	 * @param out
 	 * @param plan LinearPlan
 	 */
-	public void writePlan(PrintStream out, LinearPlan plan) {
+	public void writePlan(PrintStream out, LeftDeepPlan plan) {
 		if (plan != null) {
 			int i = 1;
 			Map<RelationalOperator, String> aliases = new LinkedHashMap<>();
 			String previous = null;
-			for (LinearPlan step: plan) {
+			for (LeftDeepPlan step: plan) {
 				AccessOperator access = step.getAccess();
 				String accAlias = SUBPLAN_ALIAS + (i++);
 				aliases.put((RelationalOperator) access, accAlias);
@@ -118,7 +118,7 @@ public class AlgebraLikeLinearPlanWriter extends PrettyWriter<LinearPlan> implem
 	 * @param alias String
 	 * @param aliases Map<LogicalOperator,String>
 	 */
-	public void writeCommand(PrintStream out, LinearPlan plan, String alias, Map<RelationalOperator, String> aliases) {
+	public void writeCommand(PrintStream out, LeftDeepPlan plan, String alias, Map<RelationalOperator, String> aliases) {
 		StringBuilder sb = new StringBuilder();
 		this.operatorWriter.writeOperator(sb, plan.getOperator(), aliases);
 		out.print(sb);
@@ -129,7 +129,7 @@ public class AlgebraLikeLinearPlanWriter extends PrettyWriter<LinearPlan> implem
 	 * @param o LinearPlan
 	 */
 	@Override
-	public void write(PrintStream out, LinearPlan o) {
+	public void write(PrintStream out, LeftDeepPlan o) {
 		this.writePlan(out, o);
 	}
 
@@ -137,7 +137,7 @@ public class AlgebraLikeLinearPlanWriter extends PrettyWriter<LinearPlan> implem
 	 * @param p LinearPlan
 	 */
 	@Override
-	public void write(LinearPlan p) {
+	public void write(LeftDeepPlan p) {
 		this.write(this.out, p);
 	}
 }

@@ -16,15 +16,23 @@ import com.google.common.base.Preconditions;
  */
 public class RenameCommand implements Command {
 
+	/** The input table **/
 	private final Table input;
 	
+	/** The output table **/
 	private final Table output;
 	
+	/** The attributes after the renaming **/
 	private final List<Attribute> toRename;
 	
 	/** Caches the constraint that captures this access command **/
 	private final TGD command;
 	
+	/**
+	 * Creates a project command based on the input table and the input new attributes
+	 * @param toRename
+	 * @param input
+	 */
 	public RenameCommand(List<Attribute> toRename, Table input) {
 		Preconditions.checkNotNull(toRename);
 		Preconditions.checkNotNull(input);

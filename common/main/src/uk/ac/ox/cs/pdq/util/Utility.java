@@ -129,7 +129,7 @@ public class Utility {
 	public static List<TypedConstant<?>> toTypedConstants(List<Typed> typed) {
 		List<TypedConstant<?>> result = new ArrayList<>();
 		for (Typed t: typed) {
-			if (t instanceof TypedConstant) {
+			if (typed instanceof TypedConstant) {
 				result.add((TypedConstant) t);
 			} else {
 				result.add(new TypedConstant(Types.cast(t.getType(), String.valueOf(t))));

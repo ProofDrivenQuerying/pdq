@@ -19,8 +19,7 @@ import uk.ac.ox.cs.pdq.fol.Variable;
  * @author Efthymia Tsamoura
  * @author Julien Leblay
  */
-public interface Constraint<L extends Formula, R extends Formula>
-extends Evaluatable, Rule<L, R> {
+public interface Constraint<L extends Formula, R extends Formula> extends Evaluatable, Rule<L, R> {
 
 	/**
 	 * @param match

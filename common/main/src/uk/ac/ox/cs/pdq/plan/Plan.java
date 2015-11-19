@@ -12,8 +12,7 @@ import uk.ac.ox.cs.pdq.util.Typed;
 import com.google.common.collect.ImmutableList;
 
 /**
- * A plan
- *
+ * Abstract plan class
  * @author Efthymia Tsamoura
  * @author Julien Leblay
  */
@@ -27,7 +26,6 @@ public abstract class Plan implements Costable, Comparable<Plan>, Differentiable
 
 	/**
 	 * Constructor for Plan.
-	 * @param controlFlow The plan's control flow
 	 */
 	public Plan() {
 		this(ImmutableList.<Term>of());
@@ -37,8 +35,6 @@ public abstract class Plan implements Costable, Comparable<Plan>, Differentiable
 	 *
 	 * @param inputs
 	 * 		The plan's inputs
-	 * @param controlFlow
-	 * 		The plan's control flow
 	 */
 	public Plan(List<? extends Term> inputs) {
 		this.inputs = inputs;

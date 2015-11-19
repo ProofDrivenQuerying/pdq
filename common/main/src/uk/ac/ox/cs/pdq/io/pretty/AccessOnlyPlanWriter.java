@@ -9,7 +9,7 @@ import org.apache.commons.io.output.WriterOutputStream;
 
 import uk.ac.ox.cs.pdq.io.Writer;
 import uk.ac.ox.cs.pdq.plan.AccessOperator;
-import uk.ac.ox.cs.pdq.plan.LinearPlan;
+import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 
 /**
  * Writes a concise representation of a plan to the given output
@@ -17,7 +17,7 @@ import uk.ac.ox.cs.pdq.plan.LinearPlan;
  * @author Julien Leblay
  *
  */
-public class AccessOnlyPlanWriter extends PrettyWriter<LinearPlan> implements Writer<LinearPlan> {
+public class AccessOnlyPlanWriter extends PrettyWriter<LeftDeepPlan> implements Writer<LeftDeepPlan> {
 
 	/**
 	 * The default out to which plans should be written, if not 
@@ -56,7 +56,7 @@ public class AccessOnlyPlanWriter extends PrettyWriter<LinearPlan> implements Wr
 	 * @param plan LinearPlan
 	 */
 	@Override
-	public void write(PrintStream out, LinearPlan plan) {
+	public void write(PrintStream out, LeftDeepPlan plan) {
 		StringBuilder result = new StringBuilder();
 		List<AccessOperator> accesses = new ArrayList<>(plan.getAccesses());
 		String sep = "";
@@ -72,7 +72,7 @@ public class AccessOnlyPlanWriter extends PrettyWriter<LinearPlan> implements Wr
 	 * @param q LinearPlan
 	 */
 	@Override
-	public void write(LinearPlan q) {
+	public void write(LeftDeepPlan q) {
 		this.write(this.out, q);
 	}
 	
