@@ -1,9 +1,12 @@
+
 package uk.ac.ox.cs.pdq.reasoning.homomorphism;
 
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import com.google.common.collect.BiMap;
 
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
@@ -13,9 +16,6 @@ import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager.DBRelation;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismConstraint.TopKConstraint;
 
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
-
 /**
  * Builds queries for detecting homomorphisms in Derby
  *
@@ -24,35 +24,15 @@ import com.google.common.collect.HashBiMap;
  */
 public class DerbyStatementBuilder extends SQLStatementBuilder {
 
-	private static BiMap<String, String> nameEncodings = HashBiMap.create();
-	static {
-		nameEncodings.put(":", "cl_");
-		nameEncodings.put("$", "dl_");
-		nameEncodings.put("#", "hs_");
-		nameEncodings.put("%", "pc_");
-		nameEncodings.put("-", "hp_");
-		nameEncodings.put("{", "lbc_");
-		nameEncodings.put("}", "rbc_");
-		nameEncodings.put("[", "lbk_");
-		nameEncodings.put("]", "rbk_");
-		nameEncodings.put("(", "lpr_");
-		nameEncodings.put(")", "rpr_");
-		nameEncodings.put("int", "int_");
-		nameEncodings.put("float", "flt_");
-		nameEncodings.put("string", "str_");
-		nameEncodings.put("boolean", "bool_");
-		nameEncodings.put("decimal", "dec_");
-		nameEncodings.put("datetime", "date_");
-		nameEncodings.put("both", "both_");
-		nameEncodings.put("none", "none_");
-		nameEncodings.put("check", "chk_");
-	}
-
 	/**
 	 * Default constructor
 	 */
 	public DerbyStatementBuilder() {
 		super();
+	}
+	
+	protected DerbyStatementBuilder(BiMap<String, String> cleanMap) {
+		super(cleanMap);
 	}
 
 	/*
@@ -71,6 +51,30 @@ public class DerbyStatementBuilder extends SQLStatementBuilder {
 	@Override
 	public Collection<String> cleanupStatements(String databaseName) {
 		return new LinkedList<>();
+	}
+	
+	
+	@Override
+	protected String translateLimitConstraints(Evaluatable source, HomomorphismConstraint... constraints) {
+		for(HomomorphismConstraint c:constraints) {
+			if(c instanceof TopKConstraint) {
+				return "FETCH NEXT " + ((TopKConstraint) c).k + " ROWS ONLY  ";
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * @return DerbyHomomorphismStatementBuilder
+	 */
+	@Override
+	public DerbyStatementBuilder clone() {
+		return new DerbyStatementBuilder(this.cleanMap);
+	}
+
+	@Override
+	public String encodeName(String name) {
+		return super.encodeName(name);
 	}
 	
 	/**
@@ -102,12 +106,12 @@ public class DerbyStatementBuilder extends SQLStatementBuilder {
 	 * @return insert statements that add the input fact to the fact database.
 	 */
 	@Override
-	protected Collection<String> makeInserts(Collection<? extends Predicate> facts, Map<String, DBRelation> aliases) {
+	protected Collection<String> makeInserts(Collection<? extends Predicate> facts, Map<String, DBRelation> dbrelations) {
 		Collection<String> result = new LinkedList<>();
 		for (Predicate fact : facts) {
-			Relation alias = aliases.get(fact.getName());
+			DBRelation rel = dbrelations.get(fact.getName());
 			List<Term> terms = fact.getTerms();
-			String insertInto = "INSERT INTO " + this.encodeName(alias.getName()) + " " + "VALUES ( ";
+			String insertInto = "INSERT INTO " + this.encodeName(rel.getName()) + " " + "VALUES ( ";
 			for (Term term : terms) {
 				if (!term.isVariable()) {
 					insertInto += "'" + term + "'" + ",";
@@ -134,33 +138,6 @@ public class DerbyStatementBuilder extends SQLStatementBuilder {
 			Attribute attribute = alias.getAttributes().get(alias.getAttributes().size()-1);
 			delete += attribute.getName() + "=" + fact.getId();
 			result.add(delete);
-		}
-		return result;
-	}
-	
-	@Override
-	protected String translateLimitConstraints(Evaluatable source, HomomorphismConstraint... constraints) {
-		for(HomomorphismConstraint c:constraints) {
-			if(c instanceof TopKConstraint) {
-				return "FETCH NEXT " + ((TopKConstraint) c).k + " ROWS ONLY  ";
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * @return DerbyHomomorphismStatementBuilder
-	 */
-	@Override
-	public DerbyStatementBuilder clone() {
-		return new DerbyStatementBuilder();
-	}
-
-	@Override
-	public String encodeName(String name) {
-		String result = name;
-		for (Map.Entry<String, String> entry: nameEncodings.entrySet()) {
-			result = result.replace(entry.getKey(), entry.getValue());
 		}
 		return result;
 	}

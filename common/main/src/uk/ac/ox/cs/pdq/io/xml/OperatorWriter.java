@@ -1,6 +1,7 @@
 package uk.ac.ox.cs.pdq.io.xml;
 
 import java.io.PrintStream;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +32,8 @@ import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.io.xml.OperatorReader.Types;
 import uk.ac.ox.cs.pdq.plan.AccessOperator;
+import uk.ac.ox.cs.pdq.util.Tuple;
+import uk.ac.ox.cs.pdq.util.TupleType;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
@@ -167,9 +170,22 @@ public class OperatorWriter extends AbstractXMLWriter<RelationalOperator> {
 	 */
 	public void writeOutputs(PrintStream out, RelationalOperator plan) {
 		open(out, QNames.OUTPUTS);
-		for (int i = 0, l = plan.getColumns().size(); i < l; i++) {
+		if (plan instanceof StaticInput) {
+			Collection<Tuple> tuples = ((StaticInput) plan).getTuples();
+			Preconditions.checkState(tuples.size() == 1, "Single tuple static input only supported for now.");
+			Tuple first = tuples.iterator().next();
+			TupleType ttype = first.getType();
+			for (int j = 0, l = ttype.size(); j < l; j++) {
+				this.writeConstant(out, new TypedConstant<>(uk.ac.ox.cs.pdq.util.Types.cast(ttype.getType(j), first.getValue(j))));
+			}
+		} else for (int i = 0, l = plan.getColumns().size(); i < l; i++) {
 			Term t = plan.getColumn(i);
-			this.writeAttribute(out, new Attribute(plan.getType().getType(i), String.valueOf(t)));
+			if (t instanceof TypedConstant) {
+				TypedConstant<?> c = ((TypedConstant) t);
+				this.writeConstant(out, new TypedConstant<>(uk.ac.ox.cs.pdq.util.Types.cast(c.getType(), c.getValue())));
+			} else {
+				this.writeAttribute(out, new Attribute(plan.getType().getType(i), String.valueOf(t)));
+			}
 		}
 		close(out, QNames.OUTPUTS);
 	}
@@ -275,7 +291,7 @@ public class OperatorWriter extends AbstractXMLWriter<RelationalOperator> {
 			Map<QNames, String> att = new LinkedHashMap<>();
 			att.put(QNames.TYPE, "equality");
 			att.put(QNames.LEFT, String.valueOf(((ConstantEqualityPredicate) predicate).getPosition()));
-			att.put(QNames.VALUE, String.valueOf(((ConstantEqualityPredicate) predicate).getValue()));
+			att.put(QNames.VALUE, String.valueOf(((ConstantEqualityPredicate) predicate).getValue().getValue()));
 			openclose(out, QNames.PREDICATE, att);
 
 		} else if (predicate instanceof AttributeEqualityPredicate) {

@@ -17,7 +17,7 @@ import com.google.common.base.Preconditions;
 public class TypedConstant<T> implements Typed, Constant {
 
 	/** The constant's type */
-	public final Type type;
+	private final Type type;
 
 	/** The constant's value */
 	public final T value;

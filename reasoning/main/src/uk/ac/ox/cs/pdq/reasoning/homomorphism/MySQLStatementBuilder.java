@@ -1,9 +1,12 @@
+
 package uk.ac.ox.cs.pdq.reasoning.homomorphism;
 
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import com.google.common.collect.BiMap;
 
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
@@ -23,6 +26,10 @@ public class MySQLStatementBuilder extends SQLStatementBuilder {
 
 	public MySQLStatementBuilder() {
 		super();
+	}
+	
+	protected MySQLStatementBuilder(BiMap<String, String> cleanMap) {
+		super(cleanMap);
 	}
 
 	/*
@@ -60,6 +67,19 @@ public class MySQLStatementBuilder extends SQLStatementBuilder {
 	}
 	
 	/**
+	 * @return MySQLHomomorphismStatementBuilder
+	 */
+	@Override
+	public MySQLStatementBuilder clone() {
+		return new MySQLStatementBuilder(this.cleanMap);
+	}
+
+	@Override
+	public String encodeName(String name) {
+		return super.encodeName(name);
+	}
+
+	/**
 	 * @param relation the table to create
 	 * @return a SQL statement that creates the fact table of the given relation
 	 */
@@ -88,12 +108,12 @@ public class MySQLStatementBuilder extends SQLStatementBuilder {
 	 * @return insert statements that add the input fact to the fact database.
 	 */
 	@Override
-	protected Collection<String> makeInserts(Collection<? extends Predicate> facts, Map<String, DBRelation> aliases) {
+	protected Collection<String> makeInserts(Collection<? extends Predicate> facts, Map<String, DBRelation> dbrelations) {
 		Collection<String> result = new LinkedList<>();
 		for (Predicate fact : facts) {
-			Relation alias = aliases.get(fact.getName());
+			DBRelation rel = dbrelations.get(fact.getName());
 			List<Term> terms = fact.getTerms();
-			String insertInto = "INSERT IGNORE INTO " + this.encodeName(alias.getName()) + " " + "VALUES ( ";
+			String insertInto = "INSERT IGNORE INTO " + this.encodeName(rel.getName()) + " " + "VALUES ( ";
 			for (Term term : terms) {
 				if (!term.isVariable()) {
 					insertInto += "'" + term + "'" + ",";
@@ -123,17 +143,5 @@ public class MySQLStatementBuilder extends SQLStatementBuilder {
 		}
 		return result;
 	}
-	
-	/**
-	 * @return MySQLHomomorphismStatementBuilder
-	 */
-	@Override
-	public MySQLStatementBuilder clone() {
-		return new MySQLStatementBuilder();
-	}
-
-	@Override
-	public String encodeName(String name) {
-		return name;
-	}
 }
+
