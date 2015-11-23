@@ -112,13 +112,13 @@ public class VeryShortDependencyWriter<T extends Constraint> extends PrettyWrite
 			StringBuilder result = new StringBuilder();
 			Map<Term, Attribute> leftAttributes = new LinkedHashMap<>();
 			for (Predicate p: tgd.getLeft()) {
-				for (int i = 0, l = p.getTermCount(); i < l; i++) {
+				for (int i = 0, l = p.getTermsCount(); i < l; i++) {
 					leftAttributes.put(p.getTerm(i), ((Relation) p.getSignature()).getAttribute(i));
 				}
 			}
 			Map<Term, Attribute> rightAttributes = new LinkedHashMap<>();
 			for (Predicate p: tgd.getRight()) {
-				for (int i = 0, l = p.getTermCount(); i < l; i++) {
+				for (int i = 0, l = p.getTermsCount(); i < l; i++) {
 					rightAttributes.put(p.getTerm(i), ((Relation) p.getSignature()).getAttribute(i));
 				}
 			}

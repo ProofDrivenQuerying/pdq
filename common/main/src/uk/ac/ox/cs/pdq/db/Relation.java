@@ -63,6 +63,7 @@ public abstract class Relation extends Signature implements Serializable {
 	 * which require input values.
 	 */
 	protected Map<String, AccessMethod> accessMethods;
+	
 	protected List<AccessMethod> amView;
 
 	/**
@@ -71,6 +72,8 @@ public abstract class Relation extends Signature implements Serializable {
 	protected List<ForeignKey> foreignKeys;
 	
 	protected List<Attribute> key = Lists.newArrayList();
+	
+	protected List<Integer> keyPositions = null;
 
 
 	/**
@@ -366,6 +369,16 @@ public abstract class Relation extends Signature implements Serializable {
 	
 	public List<Attribute> getKey() {
 		return this.key;
+	}
+	
+	public List<Integer> getKeyPositions() {
+		if(this.keyPositions == null) {
+			this.keyPositions = Lists.newArrayList();
+			for(Attribute key:this.key) {
+				this.keyPositions.add(this.attributes.indexOf(key));
+			}
+		}
+		return this.keyPositions;
 	}
 
 	/**

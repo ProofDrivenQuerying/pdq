@@ -20,7 +20,7 @@ public class TypedConstant<T> implements Typed, Constant {
 	private final Type type;
 
 	/** The constant's value */
-	private final T value;
+	public final T value;
 
 	/** Cached instance hash (only possible because variables are immutable). */
 	private int hash = Integer.MIN_VALUE;
@@ -99,7 +99,7 @@ public class TypedConstant<T> implements Typed, Constant {
 	public String toString() {
 		if (this.rep == null) {
 			StringBuilder result = new StringBuilder();
-			result.append(this.value+this.type.toString());
+			result.append(this.value);
 			this.rep = result.toString().intern();
 		}
 		return this.rep;

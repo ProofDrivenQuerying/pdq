@@ -16,15 +16,23 @@ import uk.ac.ox.cs.pdq.util.Table;
  */
 public class ProjectCommand implements Command{
 	
+	/** The input table **/
 	private final Table input;
 	
+	/** The output table **/
 	private final Table output;
 	
+	/** The attributes to project **/
 	private final List<Attribute> toProject;
 	
 	/** Caches the constraint that captures this access command **/
 	private final TGD command;
 	
+	/**
+	 * Creates a project command based on the input table and the input attributes that will be projected
+	 * @param toProject
+	 * @param input
+	 */
 	public ProjectCommand(List<Attribute> toProject, Table input) {
 		Preconditions.checkNotNull(toProject);
 		Preconditions.checkNotNull(input);

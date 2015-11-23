@@ -157,9 +157,7 @@ public class EGD
 	 */
 	@Override
 	public EGD ground(Map<Variable, Constant> mapping) {
-		return new EGD(
-				this.left.ground(mapping),
-				this.right.ground(mapping));
+		return new EGD(this.left.ground(mapping), this.right.ground(mapping));
 	}
 
 	/**

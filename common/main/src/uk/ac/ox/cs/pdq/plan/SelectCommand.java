@@ -22,15 +22,23 @@ import com.google.common.collect.Lists;
  */
 public class SelectCommand implements Command{
 
+	/** The input table **/
 	private final Table input;
 	
+	/** The output table **/
 	private final Table output;
 	
+	/** The selection predicates **/
 	private final Predicate predicates;
 	
 	/** Caches the constraint that captures this access command **/
 	private final TGD command;
 	
+	/**
+	 * Creates a project command based on the input table and the input selection predicates
+	 * @param predicates
+	 * @param input
+	 */
 	public SelectCommand(Predicate predicates, Table input) {
 		Preconditions.checkNotNull(predicates);
 		Preconditions.checkNotNull(input);

@@ -34,7 +34,7 @@ import com.google.common.collect.Maps;
  * @author Efthymia Tsamoura
  *
  */
-public class NormalisedPlan {
+public class SequentialPlan {
 
 	/** The list of commands of the plan**/
 	private final List<Command> commands;
@@ -42,9 +42,14 @@ public class NormalisedPlan {
 	/** Maps each table to the command that produced it and the order of appearance of the command**/
 	private final Map<Table, Pair<Command,Integer>> tables;
 	
+	/** The list of access commands of this plan**/
 	private final List<AccessCommand> accessCommands = Lists.newArrayList();
 	
-	public NormalisedPlan(Command command) {
+	/**
+	 * Creates a normalised plan consisting of a single command
+	 * @param command
+	 */
+	public SequentialPlan(Command command) {
 		Preconditions.checkNotNull(command);
 		this.commands = Lists.newArrayList(command);
 		this.tables = Maps.newHashMap();
@@ -54,7 +59,11 @@ public class NormalisedPlan {
 		}
 	}
 
-	public NormalisedPlan(List<Command> commands) {
+	/**
+	 * Creates a normalised plan consisting of a list of commands
+	 * @param commands
+	 */
+	public SequentialPlan(List<Command> commands) {
 		Preconditions.checkNotNull(commands);
 		this.commands = Lists.newArrayList(commands);
 		this.tables = Maps.newHashMap();
@@ -67,7 +76,12 @@ public class NormalisedPlan {
 		}
 	}
 
-	public NormalisedPlan(NormalisedPlan plan, Command command) {
+	/**
+	 * Creates a normalised plan by appending the input list of commands to the input normalised plan
+	 * @param plan
+	 * @param command
+	 */
+	public SequentialPlan(SequentialPlan plan, Command command) {
 		Preconditions.checkNotNull(plan);
 		Preconditions.checkNotNull(command);
 		this.commands = Lists.newArrayList(plan.getCommands());
@@ -82,7 +96,12 @@ public class NormalisedPlan {
 		}
 	}
 	
-	public NormalisedPlan(NormalisedPlan plan, Command... commands) {
+	/**
+	 * Creates a normalised plan by appending the input list of commands to the input normalised plan
+	 * @param plan
+	 * @param commands
+	 */
+	public SequentialPlan(SequentialPlan plan, Command... commands) {
 		Preconditions.checkNotNull(plan);
 		Preconditions.checkNotNull(commands);
 		this.commands = Lists.newArrayList(plan.getCommands());
@@ -99,6 +118,10 @@ public class NormalisedPlan {
 		}
 	}
 	
+	/**
+	 * Appends the input command to the plan
+	 * @param command
+	 */
 	public void addCommand(Command command) {
 		Preconditions.checkNotNull(command);
 		this.tables.put(command.getOutput(), Pair.of(command, this.commands.size()));
@@ -108,14 +131,26 @@ public class NormalisedPlan {
 		}
 	}
 
+	/**
+	 * 
+	 * @return this plan's commands
+	 */
 	public List<Command> getCommands() {
 		return this.commands;
 	}
 
+	/**
+	 * 
+	 * @return the first command
+	 */
 	public Command getFirst() {
 		return this.commands.get(0);
 	}
 
+	/**
+	 * 
+	 * @return the last command
+	 */
 	public Command getLast() {
 		return this.commands.get(this.commands.size()-1);
 	}
@@ -142,11 +177,11 @@ public class NormalisedPlan {
 	 * @return
 	 * 		a normalised plan that consists of the commands of this plan up to the command that produced the input table 
 	 */
-	public NormalisedPlan getAncestor(Table table) {
+	public SequentialPlan getAncestor(Table table) {
 		Preconditions.checkNotNull(table);
 		Preconditions.checkNotNull(this.tables.get(table));
 		int order = this.tables.get(table).getRight();
-		return new NormalisedPlan(this.commands.subList(0, order+1));
+		return new SequentialPlan(this.commands.subList(0, order+1));
 	}
 	
 	/**
@@ -155,11 +190,11 @@ public class NormalisedPlan {
 	 * @return
 	 * 		a normalised plan that consists of the commands of this plan up to the command that produced the input table 
 	 */
-	public NormalisedPlan getAncestorExclusive(Table table) {
+	public SequentialPlan getAncestorExclusive(Table table) {
 		Preconditions.checkNotNull(table);
 		Preconditions.checkNotNull(this.tables.get(table));
 		int order = this.tables.get(table).getRight();
-		return new NormalisedPlan(this.commands.subList(0, order));
+		return new SequentialPlan(this.commands.subList(0, order));
 	}
 	
 	/**
@@ -168,10 +203,10 @@ public class NormalisedPlan {
 	 * @return
 	 * 		a normalised plan that consists of the commands of this plan up to the input command
 	 */
-	public NormalisedPlan getAncestor(Command command) {
+	public SequentialPlan getAncestor(Command command) {
 		Preconditions.checkNotNull(command);
 		int order = this.commands.indexOf(command);
-		return new NormalisedPlan(this.commands.subList(0, order));
+		return new SequentialPlan(this.commands.subList(0, order));
 	}
 	
 	public Collection<Table> getTables() {
@@ -190,8 +225,8 @@ public class NormalisedPlan {
 		if (o == null) {
 			return false;
 		}
-		return NormalisedPlan.class.isInstance(o)
-				&& this.commands.equals(((NormalisedPlan) o).commands);
+		return SequentialPlan.class.isInstance(o)
+				&& this.commands.equals(((SequentialPlan) o).commands);
 	}
 
 	/**
@@ -211,112 +246,7 @@ public class NormalisedPlan {
 	}
 	
 	@Override
-	public NormalisedPlan clone() {
-		return new NormalisedPlan(this);
-	}
-		
-	private static String READ_RELATION_METHOD = "^(RE:(\\w+)(\\s+)MT:(\\w+)(\\s+))";
-	/** Reads single-word constants**/
-	private static String READ_STATIC_INPUTS = "(\\(CONSTANT:(\\w+)(\\s+)POS:(\\d+)\\))+";
-	/** Reads two-word constants**/
-	private static String READ_STATIC_INPUTS_ALT = "(\\(CONSTANT:(\\w+)(\\s+)(\\w+)(\\s+)POS:(\\d+)\\))+";
-	/** Reads the input table**/
-	private static String READ_COLUMNS = "(COLUMNS:)(\"([\\p{Alnum}&\\s]+,)+[\\p{Alnum}&\\s]+\")";
-	
-	/** Logger. */
-	private static Logger log = Logger.getLogger(NormalisedPlan.class);
-
-	/**
-	 * 
-	 * @param schema
-	 * @param fileName
-	 * @return
-	 */
-	public static NormalisedPlan reader(Schema schema, String fileName) {
-		List<Command> commands = new ArrayList<>();
-		String line = null;
-		try {
-			FileReader fileReader = new FileReader(fileName);
-			BufferedReader bufferedReader = new BufferedReader(fileReader);
-			while((line = bufferedReader.readLine()) != null) {
-				commands.add(NormalisedPlan.parseAccess(schema, line));
-			}
-			bufferedReader.close();            
-		}
-		catch(FileNotFoundException ex) {      
-			ex.printStackTrace(System.out);
-		}
-		catch(IOException ex) {
-			ex.printStackTrace(System.out);
-		}
-		return new NormalisedPlan(commands);
-	}
-	
-	/**
-	 * Parses the statistics file
-	 * @param schema
-	 * @param line
-	 */
-	private static AccessCommand parseAccess(Schema schema, String access) {
-		Preconditions.checkNotNull(schema);
-		Preconditions.checkNotNull(access);
-		Pattern p = Pattern.compile(READ_RELATION_METHOD);
-		Matcher m = p.matcher(access);
-		Relation r = null;
-		AccessMethod binding = null;
-		Map<Integer, TypedConstant<?>> staticInputs = Maps.newHashMap();
-		
-		if (m.find()) {
-			String relation = m.group(2);
-			String method = m.group(4);
-			if(schema.contains(relation)) {
-				r = schema.getRelation(relation);
-				binding = r.getAccessMethod(method);
-				if(binding == null) {
-					throw new java.lang.IllegalStateException("RELATION " + relation + " DOES NOT CONTAINT ATTRIBUTE " + method);
-				}
-				Pattern p2 = Pattern.compile(READ_STATIC_INPUTS);
-				Matcher m2 = p2.matcher(access);
-				
-				while (m2.find()) {
-					String constant = m2.group(2);
-					String position = m2.group(4);
-					staticInputs.put(new Integer(position), new TypedConstant(constant));
-				}
-				if(staticInputs.isEmpty()) {
-					p2 = Pattern.compile(READ_STATIC_INPUTS_ALT);
-					m2 = p2.matcher(access);
-					while (m2.find()) {
-						String constant = m2.group(2) + m2.group(3) + m2.group(4);
-						String position = m2.group(6);
-						staticInputs.put(new Integer(position), new TypedConstant(constant));
-					}
-					if(staticInputs.isEmpty()) {
-						log.info("No static input provided");
-					}
-				}
-			}
-			else {
-				throw new java.lang.IllegalStateException("SCHEMA DOES NOT CONTAINT RELATION " + relation);
-			}
-			Pattern p2 = Pattern.compile(READ_COLUMNS);
-			Matcher m2 = p2.matcher(access);
-			if(m2.find()) {
-				List<Term> columns = Lists.newArrayList();
-				for(String column:m2.group(2).split(",")) {
-					columns.add(new Skolem(column));
-				}
-				return new AccessCommand(r, binding, columns, null, staticInputs);
-			}
-			else {
-				throw new java.lang.IllegalStateException("UNPROVIDED LIST OF COLUMNS");
-			}
-		}
-		return null;
-	}
-
-	
-	public static void main(String... args) {
-		
+	public SequentialPlan clone() {
+		return new SequentialPlan(this);
 	}
 }
