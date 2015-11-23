@@ -240,13 +240,13 @@ public class TGD
 		String f = "";
 		String b = "";
 
-//		if(!this.universal.isEmpty()) {
-//			f = this.universal.toString();
-//		}
-//
-//		if(!this.existential.isEmpty()) {
-//			b = this.existential.toString();
-//		}
+		if(!this.universal.isEmpty()) {
+			f = this.universal.toString();
+		}
+
+		if(!this.existential.isEmpty()) {
+			b = this.existential.toString();
+		}
 		return f + this.left + LogicalSymbols.IMPLIES + b + this.right;
 	}
 }
