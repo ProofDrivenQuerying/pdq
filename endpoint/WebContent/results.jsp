@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <%@page contentType="text/html; charset=UTF-8" %>
-<%@page import="uk.ac.ox.cs.pdq.plan.LinearPlan"%>
+<%@page import="uk.ac.ox.cs.pdq.plan.LeftDeepPlan"%>
 <%@page import="uk.ac.ox.cs.pdq.io.pretty.AlgebraLikeLinearPlanWriter"%>
 <%@page import="uk.ac.ox.cs.pdq.endpoint.util.PlanningSession"%>
 <%@page import="uk.ac.ox.cs.pdq.runtime.exec.PlanExecutor"%>
@@ -47,7 +47,7 @@
     	<br/>
     	<%if (plan != null) {
        		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-       		AlgebraLikeLinearPlanWriter.to(new PrintStream(bos)).write((LinearPlan) plan);
+       		AlgebraLikeLinearPlanWriter.to(new PrintStream(bos)).write((LeftDeepPlan) plan);
        		%>
 
        		<span class="title">Plan:</span><br/>

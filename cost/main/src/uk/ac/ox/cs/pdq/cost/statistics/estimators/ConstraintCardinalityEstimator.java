@@ -24,10 +24,10 @@ import uk.ac.ox.cs.pdq.plan.AccessCommand;
 import uk.ac.ox.cs.pdq.plan.Command;
 import uk.ac.ox.cs.pdq.plan.CommandToTGDTranslator;
 import uk.ac.ox.cs.pdq.plan.JoinCommand;
-import uk.ac.ox.cs.pdq.plan.NormalisedPlan;
 import uk.ac.ox.cs.pdq.plan.ProjectCommand;
 import uk.ac.ox.cs.pdq.plan.RenameCommand;
 import uk.ac.ox.cs.pdq.plan.SelectCommand;
+import uk.ac.ox.cs.pdq.plan.SequentialPlan;
 import uk.ac.ox.cs.pdq.reasoning.Match;
 import uk.ac.ox.cs.pdq.reasoning.chase.EGDChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
@@ -81,7 +81,7 @@ public class ConstraintCardinalityEstimator {
 	 * @return 
 	 * 		the minimum among the values returned by the constraintDriven, commandDriven and simple methods.
 	 */
-	public Integer cardinality(Table table, NormalisedPlan plan, Catalog catalog) {
+	public Integer cardinality(Table table, SequentialPlan plan, Catalog catalog) {
 		Pair<Integer, Boolean> v = this.constraintDriven(table, plan, catalog);
 		if(v.getRight()) {
 			return v.getLeft();
@@ -103,12 +103,12 @@ public class ConstraintCardinalityEstimator {
 	 * @return
 	 * 		the cardinality of the input table. The second argument of the pair expresses whether the returned value is accurate or not
 	 */
-	public Pair<Integer,Boolean> constraintDriven(Table table, NormalisedPlan plan, Catalog catalog) {
+	public Pair<Integer,Boolean> constraintDriven(Table table, SequentialPlan plan, Catalog catalog) {
 		Integer approximation = Integer.MAX_VALUE; 
 		//Create the query that corresponds to the input table
 		Query<?> query = new CommandToTGDTranslator().toQuery(table);	
 		//Get the tgds from the input commands;
-		NormalisedPlan subplan = plan.getAncestor(table);
+		SequentialPlan subplan = plan.getAncestor(table);
 		Collection<TGD> forwardTgds = new CommandToTGDTranslator().toTGD(subplan);		
 		Collection<TGD> backwardTgds = Sets.newLinkedHashSet();
 		for(TGD tgd:forwardTgds) {
@@ -171,7 +171,7 @@ public class ConstraintCardinalityEstimator {
 	 * @return
 	 * 		the cardinality of the input table through analysing the commands that produced the input table. 
 	 */
-	public Integer commandDriven(Table table, NormalisedPlan plan, Catalog catalog) {
+	public Integer commandDriven(Table table, SequentialPlan plan, Catalog catalog) {
 		//Get the command that produced the input table;
 		Command command = plan.getCommand(table);
 		if(command instanceof AccessCommand) {
@@ -185,7 +185,7 @@ public class ConstraintCardinalityEstimator {
 			}
 			//else, formulate the access command as a join command
 			else {				
-				NormalisedPlan subplan = plan.getAncestor(table);
+				SequentialPlan subplan = plan.getAncestor(table);
 				//Get the tgds from the input commands;
 				Collection<TGD> forwardTgds = new CommandToTGDTranslator().toTGD(subplan);
 				Collection<AttributeEqualityPredicate> conjunctions = Sets.newLinkedHashSet();
@@ -213,7 +213,7 @@ public class ConstraintCardinalityEstimator {
 				//Create a new middleware query command using the new predicate
 				predicates.remove(singlePredicate);
 				SelectCommand newCommand = new SelectCommand(new ConjunctivePredicate(predicates), input);
-				NormalisedPlan newPlan = new NormalisedPlan(plan.getAncestorExclusive(table), newCommand);
+				SequentialPlan newPlan = new SequentialPlan(plan.getAncestorExclusive(table), newCommand);
 				return (int) (singleSelectivity * this.cardinality(newCommand.getOutput(), newPlan, catalog));
 			}
 			else {
@@ -236,7 +236,7 @@ public class ConstraintCardinalityEstimator {
 
 			//Consider key foreign key dependencies
 			//Get the tgds from the input commands;
-			NormalisedPlan subplan = plan.getAncestor(table);
+			SequentialPlan subplan = plan.getAncestor(table);
 			Collection<TGD> forwardTgds = new CommandToTGDTranslator().toTGD(subplan);
 			
 			Collection<AttributeEqualityPredicate> conjunctions = Sets.newLinkedHashSet();
@@ -259,7 +259,7 @@ public class ConstraintCardinalityEstimator {
 	 * @param catalog
 	 * @return
 	 */
-	public Integer commandDriven(Command command, Table left, Table right, Collection<AttributeEqualityPredicate> conjunctions, Collection<TGD> forwardTgds, NormalisedPlan plan, Catalog catalog) {
+	public Integer commandDriven(Command command, Table left, Table right, Collection<AttributeEqualityPredicate> conjunctions, Collection<TGD> forwardTgds, SequentialPlan plan, Catalog catalog) {
 		//Find the candidate keys. These will be the attributes that are joined.
 		List<Attribute> keys = Lists.newArrayList(); 
 		for(AttributeEqualityPredicate singlePredicate:conjunctions) {
@@ -303,7 +303,7 @@ public class ConstraintCardinalityEstimator {
 				Table newLeft = rename.getOutput();
 				JoinCommand newJoin = new JoinCommand(newLeft, right, current);
 				//Add the newly created commands to the plan
-				NormalisedPlan newPlan = new NormalisedPlan(plan.getAncestor(command), rename, newJoin);
+				SequentialPlan newPlan = new SequentialPlan(plan.getAncestor(command), rename, newJoin);
 				cardinality *= this.cardinality(newLeft, newPlan, catalog);
 			}
 		}
@@ -340,7 +340,7 @@ public class ConstraintCardinalityEstimator {
 	 * @param catalog
 	 * @return the cardinality of the input table using independence assumption
 	 */
-	public Integer simple(Table table, NormalisedPlan plan, Catalog catalog) {
+	public Integer simple(Table table, SequentialPlan plan, Catalog catalog) {
 		Integer cardinality = 1;
 		for(Typed attribute:table.getHeader()) {
 			Pair<Relation, Attribute> pair = this.toBaseAttribute((Attribute) attribute, table, plan);
@@ -369,7 +369,7 @@ public class ConstraintCardinalityEstimator {
 	 * @return
 	 * 		the relation and the attribute of the first access that produced this table attribute
 	 */
-	private Pair<Relation,Attribute> toBaseAttribute(Attribute input, Table table, NormalisedPlan plan) {
+	private Pair<Relation,Attribute> toBaseAttribute(Attribute input, Table table, SequentialPlan plan) {
 		Pair<Relation,Attribute> output = this.toBaseAttribute.get(input);
 		if(output != null) { 
 			return output; 
@@ -395,7 +395,7 @@ public class ConstraintCardinalityEstimator {
 	 * @return
 	 * 		the selectivity of the constant equality predicate after mapping the attribute of the input predicate to a base reltion attribute
 	 */
-	private double singlePredicateSelectivity(uk.ac.ox.cs.pdq.algebra.predicates.Predicate singlePredicate, SelectCommand command, NormalisedPlan plan, Catalog catalog){
+	private double singlePredicateSelectivity(uk.ac.ox.cs.pdq.algebra.predicates.Predicate singlePredicate, SelectCommand command, SequentialPlan plan, Catalog catalog){
 		//Get the relation and the attribute of the selection predicate
 		Preconditions.checkArgument(singlePredicate instanceof ConstantEqualityPredicate);
 		TypedConstant<?> constant = ((ConstantEqualityPredicate)singlePredicate).getValue();

@@ -13,7 +13,7 @@ import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.plan.DAGPlan;
-import uk.ac.ox.cs.pdq.plan.LinearPlan;
+import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
@@ -254,7 +254,7 @@ public final class ConfigurationFactory<P extends Plan> {
 				this.reasoner,
 				this.df.getInstance(),
 				this.sdf.getInstance(),
-				(CostEstimator<LinearPlan>) this.costEstimator,
+				(CostEstimator<LeftDeepPlan>) this.costEstimator,
 				(LinearChaseConfiguration) parent,
 				exposedCandidates,
 				this.random);
@@ -274,7 +274,7 @@ public final class ConfigurationFactory<P extends Plan> {
 				this.state,
 				this.df.getInstance(),
 				this.sdf.getInstance(),
-				(CostEstimator<LinearPlan>) this.costEstimator,
+				(CostEstimator<LeftDeepPlan>) this.costEstimator,
 				this.random);
 	}
 

@@ -4,7 +4,7 @@ import java.util.Set;
 
 import org.jgrapht.graph.DefaultEdge;
 
-import uk.ac.ox.cs.pdq.plan.LinearPlan;
+import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.explorer.Explorer;
 import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
@@ -26,7 +26,7 @@ import com.google.common.eventbus.EventBus;
  * @param <S>
  * @param <N>
  */
-public abstract class LinearExplorer extends Explorer<LinearPlan> {
+public abstract class LinearExplorer extends Explorer<LeftDeepPlan> {
 
 	/** Creates new nodes */
 	private final NodeFactory nodeFactory;

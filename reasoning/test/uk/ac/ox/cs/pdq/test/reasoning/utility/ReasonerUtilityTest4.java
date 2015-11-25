@@ -15,7 +15,7 @@ import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.plan.Access;
 import uk.ac.ox.cs.pdq.plan.Command;
 import uk.ac.ox.cs.pdq.plan.Join;
-import uk.ac.ox.cs.pdq.plan.NormalisedPlan;
+import uk.ac.ox.cs.pdq.plan.SequentialPlan;
 import uk.ac.ox.cs.pdq.plan.Project;
 import uk.ac.ox.cs.pdq.plan.Select;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager;
@@ -55,7 +55,7 @@ public class ReasonerUtilityTest4  extends ReasonerUtilityTest0{
 	//RE:AssayLimited BI:chembl_assay_limited_2
 	//RE:TargetLimited BI:chembl_target_limited
 	@Override
-	public NormalisedPlan loadPlan() {
+	public SequentialPlan loadPlan() {
 		//Define all schema and chase constants
 		Term organism = new Variable("organism");
 		Term pref_name = new Variable("pref_name");
@@ -124,7 +124,7 @@ public class ReasonerUtilityTest4  extends ReasonerUtilityTest0{
 		this.join2 = new Join(this.access2.getOutput(), this.join1.getOutput());
 
 
-		return new NormalisedPlan(Lists.newArrayList(this.access0, this.selection0, this.projection0, this.access1, this.selection1, 
+		return new SequentialPlan(Lists.newArrayList(this.access0, this.selection0, this.projection0, this.access1, this.selection1, 
 				this.join1, this.projection1, 
 				this.access2, this.join2));
 	}

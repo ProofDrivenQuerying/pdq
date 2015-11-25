@@ -15,7 +15,7 @@ import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.plan.AccessCommand;
 import uk.ac.ox.cs.pdq.plan.Command;
 import uk.ac.ox.cs.pdq.plan.JoinCommand;
-import uk.ac.ox.cs.pdq.plan.NormalisedPlan;
+import uk.ac.ox.cs.pdq.plan.SequentialPlan;
 import uk.ac.ox.cs.pdq.plan.ProjectCommand;
 import uk.ac.ox.cs.pdq.plan.SelectCommand;
 
@@ -43,7 +43,7 @@ public class ConstraintCardinalityEstimator1 extends ConstraintCardinalityEstima
 	//APPLYRULE(AssayLimited(17){AssayLimited(c412,c413,c414,c415,c416,c417,c418,c419,c420,c421,c422,c423,c424,c425,c426,c427,c428,c429,c430,c431,c432,c433)})),
 	//APPLYRULE(TargetLimited(4){TargetLimited(c443,c444,c445,c433,c446,c447,c448,SINGLE PROTEIN)}))
 	@Override
-	protected NormalisedPlan loadPlan() {
+	protected SequentialPlan loadPlan() {
 		//Define all schema and chase constants
 		Term _authors = new Variable("authors");
 		Term _document_chembl_id = new Variable("document_chembl_id");
@@ -112,7 +112,7 @@ public class ConstraintCardinalityEstimator1 extends ConstraintCardinalityEstima
 		this.selection2 = new SelectCommand(new ConjunctivePredicate(Lists.newArrayList(p20)), access2.getOutput());
 		this.join2 = new JoinCommand(selection2.getOutput(), join1.getOutput());
 		
-		return new NormalisedPlan(Lists.newArrayList(this.access0, this.selection0, this.projection0, this.access1, this.join1, 
+		return new SequentialPlan(Lists.newArrayList(this.access0, this.selection0, this.projection0, this.access1, this.join1, 
 				this.projection1, this.access2, this.selection2, this.join2));
 	}
 	

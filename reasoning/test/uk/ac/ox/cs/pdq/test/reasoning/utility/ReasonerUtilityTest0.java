@@ -11,7 +11,7 @@ import uk.ac.ox.cs.pdq.db.EGD;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TGD;
 import uk.ac.ox.cs.pdq.plan.CommandToTGDTranslator;
-import uk.ac.ox.cs.pdq.plan.NormalisedPlan;
+import uk.ac.ox.cs.pdq.plan.SequentialPlan;
 import uk.ac.ox.cs.pdq.reasoning.HomomorphismException;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters.HomomorphismDetectorTypes;
 import uk.ac.ox.cs.pdq.reasoning.chase.EGDChaser;
@@ -38,7 +38,7 @@ public abstract class ReasonerUtilityTest0 {
 	protected Schema schema = new TestSchema().getSchema();
 	protected Collection<EGD> keys = this.schema.getKeyDependencies();
 	protected HomomorphismDetector detector;
-	protected NormalisedPlan plan;
+	protected SequentialPlan plan;
 	protected Collection<Constraint> planConstraints;
 
 	protected final RestrictedChaser restrictedChaser = new RestrictedChaser(null);
@@ -74,5 +74,5 @@ public abstract class ReasonerUtilityTest0 {
 		}
 	}
 
-	public abstract NormalisedPlan loadPlan();	
+	public abstract SequentialPlan loadPlan();	
 }

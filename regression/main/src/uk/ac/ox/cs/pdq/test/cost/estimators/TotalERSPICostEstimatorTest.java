@@ -14,7 +14,7 @@ import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
 import uk.ac.ox.cs.pdq.logging.performance.StatisticsCollector;
 import uk.ac.ox.cs.pdq.plan.DAGPlan;
-import uk.ac.ox.cs.pdq.plan.LinearPlan;
+import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.plan.Plan;
 
 import com.google.common.eventbus.EventBus;
@@ -91,7 +91,7 @@ public class TotalERSPICostEstimatorTest extends CostEstimatorTest{
 					costEstimator = new TotalERSPICostEstimator<DAGPlan>(new StatisticsCollector(false, this.eventBus), catalog);
 				}
 				else {
-					costEstimator = new TotalERSPICostEstimator<LinearPlan>(new StatisticsCollector(false, this.eventBus), catalog);
+					costEstimator = new TotalERSPICostEstimator<LeftDeepPlan>(new StatisticsCollector(false, this.eventBus), catalog);
 				}
 			
 				Assert.assertEquals(plan.getCost(), costEstimator.estimateCost(plan));

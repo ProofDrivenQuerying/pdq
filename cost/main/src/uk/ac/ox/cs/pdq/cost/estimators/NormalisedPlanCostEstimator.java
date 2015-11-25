@@ -8,7 +8,7 @@ import uk.ac.ox.cs.pdq.logging.performance.StatisticsCollector;
 import uk.ac.ox.cs.pdq.plan.AccessCommand;
 import uk.ac.ox.cs.pdq.plan.Command;
 import uk.ac.ox.cs.pdq.plan.DoubleCost;
-import uk.ac.ox.cs.pdq.plan.NormalisedPlan;
+import uk.ac.ox.cs.pdq.plan.SequentialPlan;
 import uk.ac.ox.cs.pdq.util.Table;
 
 
@@ -65,7 +65,7 @@ public class NormalisedPlanCostEstimator {
 	 * (non-Javadoc)
 	 * @see uk.ac.ox.cs.pdq.costs.AbstractCostEstimator#estimateCost(uk.ac.ox.cs.pdq.plan.Plan)
 	 */
-	public DoubleCost estimateCost(NormalisedPlan plan) {
+	public DoubleCost estimateCost(SequentialPlan plan) {
 		double totalCost = 0.0;
 		for(Command command:plan.getCommands()) {
 			if(command instanceof AccessCommand) {	

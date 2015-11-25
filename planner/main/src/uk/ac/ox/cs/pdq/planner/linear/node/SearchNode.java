@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Objects;
 
 import uk.ac.ox.cs.pdq.LimitReachedException;
-import uk.ac.ox.cs.pdq.plan.LinearPlan;
+import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.linear.metadata.Metadata;
@@ -63,10 +63,10 @@ public abstract class SearchNode implements Cloneable{
 	private List<Integer> bestPathFromRoot = null;
 
 	/** The path plan from root */
-	private LinearPlan bestPlanFromRoot = null;
+	private LeftDeepPlan bestPlanFromRoot = null;
 
 	/** The plan that cost dominates the node */
-	private LinearPlan dominancePlan = null;
+	private LeftDeepPlan dominancePlan = null;
 
 	/**
 	 * @param configuration The configuration of the node
@@ -222,9 +222,9 @@ public abstract class SearchNode implements Cloneable{
 	}
 
 	/**
-	 * @return LinearPlan
+	 * @return LeftDeepPlan
 	 */
-	public LinearPlan getBestPlanFromRoot() {
+	public LeftDeepPlan getBestPlanFromRoot() {
 		return this.bestPlanFromRoot;
 	}
 
@@ -236,23 +236,23 @@ public abstract class SearchNode implements Cloneable{
 	}
 
 	/**
-	 * @param planFromRoot LinearPlan
+	 * @param planFromRoot LeftDeepPlan
 	 */
-	public void setBestPlanFromRoot(LinearPlan planFromRoot) {
+	public void setBestPlanFromRoot(LeftDeepPlan planFromRoot) {
 		this.bestPlanFromRoot = planFromRoot;
 	}
 
 	/**
-	 * @return LinearPlan
+	 * @return LeftDeepPlan
 	 */
-	public LinearPlan getDominancePlan() {
+	public LeftDeepPlan getDominancePlan() {
 		return this.dominancePlan;
 	}
 
 	/**
-	 * @param dominancePlan LinearPlan
+	 * @param dominancePlan LeftDeepPlan
 	 */
-	public void setDominancePlan(LinearPlan dominancePlan) {
+	public void setDominancePlan(LeftDeepPlan dominancePlan) {
 		this.dominancePlan = dominancePlan;
 	}
 

@@ -17,7 +17,7 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.plan.DAGPlan;
-import uk.ac.ox.cs.pdq.plan.LinearPlan;
+import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.PlannerTypes;
@@ -106,7 +106,7 @@ public class ExplorerFactory {
 		if (parameters.getPlannerType().equals(PlannerTypes.LINEAR_GENERIC)
 				|| parameters.getPlannerType().equals(PlannerTypes.LINEAR_KCHASE)
 				|| parameters.getPlannerType().equals(PlannerTypes.LINEAR_OPTIMIZED)) {
-			nf = new NodeFactory((ConfigurationFactory<LinearPlan>) configurationFactory);
+			nf = new NodeFactory((ConfigurationFactory<LeftDeepPlan>) configurationFactory);
 			ppf = new PostPruningFactory(parameters.getPostPruningType(), nf, accessibleSchema);
 		}
 		else {
@@ -163,14 +163,14 @@ public class ExplorerFactory {
 		case LINEAR_GENERIC:
 			return (Explorer<P>) new LinearGeneric(
 					eventBus, collectStats,
-					(CostEstimator<LinearPlan>) costEstimator,
+					(CostEstimator<LeftDeepPlan>) costEstimator,
 					configurationFactory.getLinearInstance(),
 					nf,
 					parameters.getMaxDepth());
 		case LINEAR_KCHASE:
 			return (Explorer<P>) new LinearKChase(
 					eventBus, collectStats,
-					(CostEstimator<LinearPlan>) costEstimator,
+					(CostEstimator<LeftDeepPlan>) costEstimator,
 					configurationFactory.getLinearInstance(),
 					nf,
 					parameters.getMaxDepth(),
@@ -214,7 +214,7 @@ public class ExplorerFactory {
 		case LINEAR_OPTIMIZED:
 			return (Explorer<P>) new LinearOptimized(
 					eventBus, collectStats,
-					(CostEstimator<LinearPlan>) costEstimator,
+					(CostEstimator<LeftDeepPlan>) costEstimator,
 					configurationFactory.getLinearInstance(),
 					nf,
 					parameters.getMaxDepth(),

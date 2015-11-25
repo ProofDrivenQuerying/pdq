@@ -54,7 +54,7 @@ public final class LeftDeepPlan extends Plan implements Iterable<LeftDeepPlan>, 
 
 	/**
 	 * Creates a linear plan that is suffixed and prefixed by the input subplans.
-	 * The output linear plan looks like <prefix,LinearPlan(operator), suffix> 
+	 * The output linear plan looks like <prefix,LeftDeepPlan(operator), suffix> 
 	 * @param operator
 	 * 		The top-level operator of the plan
 	 * @param prefix
@@ -101,7 +101,7 @@ public final class LeftDeepPlan extends Plan implements Iterable<LeftDeepPlan>, 
 
 	/**
 	 * @param proj Projection
-	 * @return LinearPlan
+	 * @return LeftDeepPlan
 	 */
 	public LeftDeepPlan projectLast(Projection proj) {
 		Preconditions.checkArgument(proj.getChild() == this.last.operator);
@@ -109,7 +109,7 @@ public final class LeftDeepPlan extends Plan implements Iterable<LeftDeepPlan>, 
 	}
 
 	/**
-	 * @param suff LinearPlan
+	 * @param suff LeftDeepPlan
 	 */
 	public void addSuffix(LeftDeepPlan suff) {
 		Preconditions.checkState(suff != null);
@@ -119,7 +119,7 @@ public final class LeftDeepPlan extends Plan implements Iterable<LeftDeepPlan>, 
 	}
 
 	/**
-	 * @param pref LinearPlan
+	 * @param pref LeftDeepPlan
 	 */
 	public void addPrefix(LeftDeepPlan pref) {
 		Preconditions.checkState(pref != null);
@@ -159,35 +159,35 @@ public final class LeftDeepPlan extends Plan implements Iterable<LeftDeepPlan>, 
 	}
 
 	/**
-	 * @return LinearPlan
+	 * @return LeftDeepPlan
 	 */
 	public LeftDeepPlan getPrefix() {
 		return this.prefix;
 	}
 
 	/**
-	 * @return LinearPlan
+	 * @return LeftDeepPlan
 	 */
 	public LeftDeepPlan getSuffix() {
 		return this.suffix;
 	}
 
 	/**
-	 * @return LinearPlan
+	 * @return LeftDeepPlan
 	 */
 	public LeftDeepPlan getLast() {
 		return this.last;
 	}
 
 	/**
-	 * @return LinearPlan
+	 * @return LeftDeepPlan
 	 */
 	public LeftDeepPlan getFirst() {
 		return this.first;
 	}
 
 	/**
-	 * @return LinearPlan
+	 * @return LeftDeepPlan
 	 */
 	@Override
 	public LeftDeepPlan clone() {
@@ -248,7 +248,7 @@ public final class LeftDeepPlan extends Plan implements Iterable<LeftDeepPlan>, 
 	}
 
 	/**
-	 * @param plan LinearPlan
+	 * @param plan LeftDeepPlan
 	 * @return Integer
 	 */
 	private static Integer size(LeftDeepPlan plan) {
@@ -311,7 +311,7 @@ public final class LeftDeepPlan extends Plan implements Iterable<LeftDeepPlan>, 
 	}
 
 	/**
-	 * @return Iterator<LinearPlan>
+	 * @return Iterator<LeftDeepPlan>
 	 */
 	public Iterator<LeftDeepPlan> descendingIterator() {
 		return new DescendingLinearPlanIterator(this);
@@ -327,7 +327,7 @@ public final class LeftDeepPlan extends Plan implements Iterable<LeftDeepPlan>, 
 
 		/**
 		 * Constructor for LinearPlanIterator.
-		 * @param p LinearPlan
+		 * @param p LeftDeepPlan
 		 */
 		public LinearPlanIterator(LeftDeepPlan p) {
 			Preconditions.checkArgument(p != null);
@@ -344,7 +344,7 @@ public final class LeftDeepPlan extends Plan implements Iterable<LeftDeepPlan>, 
 		}
 
 		/**
-		 * @return LinearPlan
+		 * @return LeftDeepPlan
 		 * @see java.util.Iterator#next()
 		 */
 		@Override
@@ -376,7 +376,7 @@ public final class LeftDeepPlan extends Plan implements Iterable<LeftDeepPlan>, 
 
 		/**
 		 * Constructor for DescendingLinearPlanIterator.
-		 * @param p LinearPlan
+		 * @param p LeftDeepPlan
 		 */
 		public DescendingLinearPlanIterator(LeftDeepPlan p) {
 			Preconditions.checkArgument(p != null);
@@ -393,7 +393,7 @@ public final class LeftDeepPlan extends Plan implements Iterable<LeftDeepPlan>, 
 		}
 
 		/**
-		 * @return LinearPlan
+		 * @return LeftDeepPlan
 		 * @see java.util.Iterator#next()
 		 */
 		@Override

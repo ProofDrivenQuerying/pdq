@@ -53,7 +53,7 @@ public class AccessOnlyPlanWriter extends PrettyWriter<LeftDeepPlan> implements 
 
 	/**
 	 * @param out PrintStream
-	 * @param plan LinearPlan
+	 * @param plan LeftDeepPlan
 	 */
 	@Override
 	public void write(PrintStream out, LeftDeepPlan plan) {
@@ -69,7 +69,7 @@ public class AccessOnlyPlanWriter extends PrettyWriter<LeftDeepPlan> implements 
 	}
 	
 	/**
-	 * @param q LinearPlan
+	 * @param q LeftDeepPlan
 	 */
 	@Override
 	public void write(LeftDeepPlan q) {
@@ -83,7 +83,7 @@ public class AccessOnlyPlanWriter extends PrettyWriter<LeftDeepPlan> implements 
 //		try(FileInputStream sis = new FileInputStream(args[0]);
 //			FileInputStream pis = new FileInputStream(args[1])) {
 //			Schema schema = new SchemaReader().read(sis);
-//			LinearPlan plan = Readers.with(schema).from(pis).read();
+//			LeftDeepPlan plan = Readers.with(schema).from(pis).read();
 //			new AccessOnlyPlanWriter(System.out).write(plan);
 //		} catch ( IOException e) {
 //			e.printStackTrace();

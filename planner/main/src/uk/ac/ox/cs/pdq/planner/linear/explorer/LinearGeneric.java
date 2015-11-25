@@ -11,7 +11,7 @@ import org.jgrapht.graph.DefaultEdge;
 
 import uk.ac.ox.cs.pdq.LimitReachedException;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
-import uk.ac.ox.cs.pdq.plan.LinearPlan;
+import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.linear.LinearConfiguration;
@@ -50,7 +50,7 @@ public class LinearGeneric extends LinearExplorer {
 	 */
 	public LinearGeneric(
 			EventBus eventBus, boolean collectStats,
-			CostEstimator<LinearPlan> costEstimator,
+			CostEstimator<LeftDeepPlan> costEstimator,
 			LinearChaseConfiguration configuration,
 			NodeFactory nodeFactory,
 			int depth) throws PlannerException {
@@ -110,7 +110,7 @@ public class LinearGeneric extends LinearExplorer {
 		// If there exists at least one query match
 		if (!matches.isEmpty()) {
 			freshNode.setStatus(NodeStatus.SUCCESSFUL);
-			LinearPlan successfulPlan = freshNode.getConfiguration().getPlan();
+			LeftDeepPlan successfulPlan = freshNode.getConfiguration().getPlan();
 			
 			// Update the best plan found so far
 			if (this.bestPlan == null || (this.bestPlan != null && successfulPlan.getCost().lessThan(this.bestPlan.getCost()))) {

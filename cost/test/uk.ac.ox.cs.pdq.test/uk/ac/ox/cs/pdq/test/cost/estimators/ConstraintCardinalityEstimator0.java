@@ -9,7 +9,7 @@ import uk.ac.ox.cs.pdq.cost.statistics.Catalog;
 import uk.ac.ox.cs.pdq.cost.statistics.SimpleCatalog;
 import uk.ac.ox.cs.pdq.cost.statistics.estimators.ConstraintCardinalityEstimator;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.plan.NormalisedPlan;
+import uk.ac.ox.cs.pdq.plan.SequentialPlan;
 import uk.ac.ox.cs.pdq.reasoning.HomomorphismException;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters.HomomorphismDetectorTypes;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager;
@@ -33,7 +33,7 @@ public abstract class ConstraintCardinalityEstimator0 {
 	protected Schema schema = new TestSchema().getSchema();
 	protected Catalog catalog = new SimpleCatalog(this.schema, "test/uk.ac.ox.cs.pdq.test/resources/catalog.properties");
 	protected HomomorphismDetector detector;
-	protected NormalisedPlan plan;
+	protected SequentialPlan plan;
 	protected ConstraintCardinalityEstimator estimator;
 	
 	@Before
@@ -59,5 +59,5 @@ public abstract class ConstraintCardinalityEstimator0 {
 		this.estimator = new ConstraintCardinalityEstimator(this.schema, (DBHomomorphismManager) this.detector);
 	}	
 		
-	protected abstract NormalisedPlan loadPlan();	
+	protected abstract SequentialPlan loadPlan();	
 }

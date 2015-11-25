@@ -23,7 +23,7 @@ import org.jgrapht.graph.DefaultEdge;
 import uk.ac.ox.cs.pdq.LimitReachedException;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.fol.Predicate;
-import uk.ac.ox.cs.pdq.plan.LinearPlan;
+import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.linear.LinearConfiguration;
@@ -110,7 +110,7 @@ public class LinearOptimized extends LinearExplorer {
 	 */
 	public LinearOptimized(
 			EventBus eventBus, boolean collectStats,
-			CostEstimator<LinearPlan> costEstimator,
+			CostEstimator<LeftDeepPlan> costEstimator,
 			LinearChaseConfiguration configuration,
 			NodeFactory nodeFactory,
 			int depth,
@@ -209,7 +209,7 @@ public class LinearOptimized extends LinearExplorer {
 		// If the cost of the plan of the newly created node is higher than the best plan found so far 
 		//then zombify the newly created node  
 		boolean domination = false;
-		LinearPlan freshNodePlan = freshNode.getBestPlanFromRoot();
+		LeftDeepPlan freshNodePlan = freshNode.getBestPlanFromRoot();
 		if (this.bestPlan != null) {
 			if (freshNodePlan.getCost().greaterOrEquals(this.bestPlan.getCost())) {
 				domination = true;
@@ -228,7 +228,7 @@ public class LinearOptimized extends LinearExplorer {
 			this.stats.stop(MILLI_DOMINANCE);
 			if(dominanceNode != null) {
 				domination = true;
-				LinearPlan dominancePlan = dominanceNode.getConfiguration().getPlan();
+				LeftDeepPlan dominancePlan = dominanceNode.getConfiguration().getPlan();
 				freshNode.setDominancePlan(dominancePlan);
 				metadata = new DominanceMetadata(dominanceNode, dominancePlan, freshNodePlan, this.getElapsedTime());
 				freshNode.setMetadata(metadata);
@@ -300,7 +300,7 @@ public class LinearOptimized extends LinearExplorer {
 
 	private void updateBestPlan(SearchNode parentNode, SearchNode freshNode, Match match) throws PlannerException, LimitReachedException {
 		this.costPropagator.propagate(freshNode, this.planTree);
-		LinearPlan successfulPlan = this.costPropagator.getBestPlan();
+		LeftDeepPlan successfulPlan = this.costPropagator.getBestPlan();
 		if ((this.bestPlan == null && successfulPlan != null) || 
 				(this.bestPlan != null && successfulPlan != null && successfulPlan.getCost().lessThan(this.bestPlan.getCost()))) {
 			this.bestPlan = successfulPlan;
@@ -339,7 +339,7 @@ public class LinearOptimized extends LinearExplorer {
 	
 	private void updateBestPlan(SearchNode parentNode, SearchNode freshNode) throws PlannerException, LimitReachedException {
 		this.costPropagator.propagate(freshNode, this.planTree);
-		LinearPlan successfulPlan = this.costPropagator.getBestPlan();
+		LeftDeepPlan successfulPlan = this.costPropagator.getBestPlan();
 		if ((this.bestPlan == null && successfulPlan != null) 
 			|| (this.bestPlan != null && successfulPlan != null 
 				&& successfulPlan.getCost().lessThan(this.bestPlan.getCost()))) {
@@ -386,7 +386,7 @@ public class LinearOptimized extends LinearExplorer {
 
 			List<Integer> pathFromRoot = deadDescendant.getPathFromRoot();
 			List<Integer> equivalencePath = this.createPath(representativePath, path, pathFromRoot);
-			LinearPlan equivalencePlan = PropagatorUtils.createLinearPlan(this.planTree, equivalencePath, this.costPropagator.getCostEstimator(), true);
+			LeftDeepPlan equivalencePlan = PropagatorUtils.createLinearPlan(this.planTree, equivalencePath, this.costPropagator.getCostEstimator(), true);
 
 			if(equivalencePlan.getCost().lessThan(deadDescendant.getBestPlanFromRoot().getCost())) {
 				deadDescendant.setBestPathFromRoot(equivalencePath);

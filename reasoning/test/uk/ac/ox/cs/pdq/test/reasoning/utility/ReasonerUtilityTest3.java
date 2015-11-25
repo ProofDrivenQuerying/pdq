@@ -15,7 +15,7 @@ import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.plan.Access;
 import uk.ac.ox.cs.pdq.plan.Command;
 import uk.ac.ox.cs.pdq.plan.Join;
-import uk.ac.ox.cs.pdq.plan.NormalisedPlan;
+import uk.ac.ox.cs.pdq.plan.SequentialPlan;
 import uk.ac.ox.cs.pdq.plan.Project;
 import uk.ac.ox.cs.pdq.plan.Select;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager;
@@ -55,7 +55,7 @@ public class ReasonerUtilityTest3 extends ReasonerUtilityTest0{
 	//c2279,c2280,c2281,c2282,c2283,c2284,c2285,c2286,c2287,c2288,c2289)})),
 	//APPLYRULE(DocumentFree(){DocumentFree(c2290,c2291,c2284,c2292,c2293,c2294,c2295,c2296,c2297,c2298,c2299,2007)}))
 	@Override
-	public NormalisedPlan loadPlan() {
+	public SequentialPlan loadPlan() {
 		//Define all schema and chase constants
 		Term organism = new Variable("organism");
 		Term pref_name = new Variable("pref_name");
@@ -120,7 +120,7 @@ public class ReasonerUtilityTest3 extends ReasonerUtilityTest0{
 		this.selection2 = new Select(new ConjunctivePredicate(Lists.newArrayList(p20)), access1.getOutput());
 		this.join2 = new Join(selection2.getOutput(), join1.getOutput());
 
-		return new NormalisedPlan(Lists.newArrayList(this.access0, this.projection0, this.access1, this.selection1, this.join1, this.access2,
+		return new SequentialPlan(Lists.newArrayList(this.access0, this.projection0, this.access1, this.selection1, this.join1, this.access2,
 				this.selection2, this.join2));
 	}
 

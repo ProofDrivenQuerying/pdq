@@ -17,7 +17,7 @@ import org.jgrapht.graph.DefaultEdge;
 
 import uk.ac.ox.cs.pdq.LimitReachedException;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
-import uk.ac.ox.cs.pdq.plan.LinearPlan;
+import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.linear.LinearConfiguration;
@@ -80,7 +80,7 @@ public class LinearKChase extends LinearExplorer {
 	 */
 	public LinearKChase(
 			EventBus eventBus, boolean collectStats,
-			CostEstimator<LinearPlan> costEstimator,
+			CostEstimator<LeftDeepPlan> costEstimator,
 			LinearChaseConfiguration configuration,
 			NodeFactory nodeFactory,
 			int depth,
@@ -142,7 +142,7 @@ public class LinearKChase extends LinearExplorer {
 
 			boolean domination = false;
 			/* If the cost of the plan of the newly created node is higher than the best plan found so far then kill the newly created node  */
-			LinearPlan freshNodePlan = freshNode.getConfiguration().getPlan();
+			LeftDeepPlan freshNodePlan = freshNode.getConfiguration().getPlan();
 			if (this.bestPlan != null) {
 				if (freshNodePlan.getCost().greaterOrEquals(this.bestPlan.getCost())) {
 					domination = true;
@@ -161,7 +161,7 @@ public class LinearKChase extends LinearExplorer {
 				this.stats.stop(MILLI_DOMINANCE);
 				if(dominanceNode != null) {
 					domination = true;
-					LinearPlan dominancePlan = dominanceNode.getConfiguration().getPlan();
+					LeftDeepPlan dominancePlan = dominanceNode.getConfiguration().getPlan();
 					freshNode.setDominancePlan(dominancePlan);
 					metadata = new DominanceMetadata(dominanceNode, dominancePlan, freshNodePlan, this.getElapsedTime());
 					freshNode.setMetadata(metadata);
@@ -231,7 +231,7 @@ public class LinearKChase extends LinearExplorer {
 	
 	private void updateBestPlan(SearchNode parentNode, SearchNode freshNode) {
 		this.costPropagator.propagate(freshNode, this.planTree);
-		LinearPlan successfulPlan = this.costPropagator.getBestPlan();
+		LeftDeepPlan successfulPlan = this.costPropagator.getBestPlan();
 		if ((this.bestPlan == null && successfulPlan != null) || 
 				(this.bestPlan != null && successfulPlan != null && successfulPlan.getCost().lessThan(this.bestPlan.getCost()))) {
 			this.bestPlan = successfulPlan;

@@ -3,7 +3,7 @@ package uk.ac.ox.cs.pdq.planner.linear.node;
 import java.util.Set;
 
 import uk.ac.ox.cs.pdq.cost.estimators.SimpleCostEstimator;
-import uk.ac.ox.cs.pdq.plan.LinearPlan;
+import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.explorer.ConfigurationFactory;
 import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
@@ -18,13 +18,13 @@ import com.google.common.base.Preconditions;
  */
 public final class NodeFactory {
 
-	private final ConfigurationFactory<LinearPlan> configurationFactory;
+	private final ConfigurationFactory<LeftDeepPlan> configurationFactory;
 
 	/**
 	 * Constructor for NodeFactory.
-	 * @param configurationFactory ConfigurationFactory<S,LinearPlan>
+	 * @param configurationFactory ConfigurationFactory<S,LeftDeepPlan>
 	 */
-	public NodeFactory(ConfigurationFactory<LinearPlan> configurationFactory) {
+	public NodeFactory(ConfigurationFactory<LeftDeepPlan> configurationFactory) {
 		Preconditions.checkArgument(configurationFactory != null);
 		this.configurationFactory = configurationFactory;
 	}

@@ -218,7 +218,7 @@ public abstract class SQLStatementBuilder {
 			Collection<Predicate> atoms = clusters.get(t);
 			if (atoms.size() > 1) {
 				for (Predicate atom: atoms) {
-					for (int i = 0, l = atom.getTermCount(); i < l; i++) {
+					for (int i = 0, l = atom.getTermsCount(); i < l; i++) {
 						if (atom.getTerm(i).equals(t)) {
 							result.add(this.createTableIndex(relationMap.get(atom.getName()), i));
 						}
@@ -450,7 +450,7 @@ public abstract class SQLStatementBuilder {
 				}
 				for(Predicate fact:source.getBody().getPredicates()) {
 					String alias = aliases2.get(fact);
-					setPredicates.add(createSQLMembershipExpression(fact.getTermCount()-1, facts, (Relation) fact.getSignature(), alias));
+					setPredicates.add(createSQLMembershipExpression(fact.getTermsCount()-1, facts, (Relation) fact.getSignature(), alias));
 				}
 			}
 		}
@@ -524,7 +524,7 @@ public abstract class SQLStatementBuilder {
 				}
 				for(Predicate fact:source.getBody().getPredicates()) {
 					String alias = aliases2.get(fact);
-					setPredicates.add(createSQLMembershipExpression(fact.getTermCount()-2, bags, (Relation) fact.getSignature(), alias));
+					setPredicates.add(createSQLMembershipExpression(fact.getTermsCount()-2, bags, (Relation) fact.getSignature(), alias));
 				}
 			}
 		}

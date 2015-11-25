@@ -19,7 +19,7 @@ import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.fol.Variable;
-import uk.ac.ox.cs.pdq.plan.LinearPlan;
+import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.db.access.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.db.access.AccessibilityAxiom;
@@ -44,7 +44,7 @@ import com.google.common.eventbus.EventBus;
  *
  * @author Efthymia Tsamoura
  */
-public class LinearChaseConfiguration extends ChaseConfiguration<LinearPlan> implements LinearConfiguration {
+public class LinearChaseConfiguration extends ChaseConfiguration<LeftDeepPlan> implements LinearConfiguration {
 
 	private final EventBus eventBus;
 
@@ -62,7 +62,7 @@ public class LinearChaseConfiguration extends ChaseConfiguration<LinearPlan> imp
 	/** Random engine. Used when selecting candidate facts to expose*/
 	protected final Random random;
 	
-	private final CostEstimator<LinearPlan> costEstimator;
+	private final CostEstimator<LeftDeepPlan> costEstimator;
 
 	/**
 	 *
@@ -89,7 +89,7 @@ public class LinearChaseConfiguration extends ChaseConfiguration<LinearPlan> imp
 			Chaser chaser,
 			Dominance[] dominance,
 			SuccessDominance successDominance,
-			CostEstimator<LinearPlan> costEstimator,
+			CostEstimator<LeftDeepPlan> costEstimator,
 			LinearChaseConfiguration parent,
 			Set<Candidate> exposedCandidates,
 			Random random) throws PlannerException {		
@@ -121,7 +121,7 @@ public class LinearChaseConfiguration extends ChaseConfiguration<LinearPlan> imp
 		}
 		this.chaseStep(matches);
 		this.candidates = this.detectCandidates();
-		LinearPlan plan = this.createPlan(this.parent.getPlan());
+		LeftDeepPlan plan = this.createPlan(this.parent.getPlan());
 		this.setPlan(plan);
 	}
 	
@@ -148,7 +148,7 @@ public class LinearChaseConfiguration extends ChaseConfiguration<LinearPlan> imp
 			AccessibleChaseState state,
 			Dominance[] dominance,
 			SuccessDominance successDominance,
-			CostEstimator<LinearPlan> costEstimator,
+			CostEstimator<LeftDeepPlan> costEstimator,
 			Random random) throws PlannerException {
 		super(accessibleSchema, 
 				query,
@@ -292,7 +292,7 @@ public class LinearChaseConfiguration extends ChaseConfiguration<LinearPlan> imp
 	@Override
 	public void addProjection() {
 		Projection project = Operators.createFinalProjection(this.getQuery(), this.getPlan().getOperator());
-		LinearPlan plan = this.getPlan().projectLast(project);
+		LeftDeepPlan plan = this.getPlan().projectLast(project);
 		plan.setCost(this.getPlan().getCost());
 		this.setPlan(plan);
 	}
@@ -381,12 +381,12 @@ public class LinearChaseConfiguration extends ChaseConfiguration<LinearPlan> imp
 	}
 
 	/**
-	 * @param parentPlan LinearPlan
-	 * @see uk.ac.ox.cs.pdq.planner.linear.LinearConfiguration#createPlan(LinearPlan)
+	 * @param parentPlan LeftDeepPlan
+	 * @see uk.ac.ox.cs.pdq.planner.linear.LinearConfiguration#createPlan(LeftDeepPlan)
 	 */
 	@Override
-	public LinearPlan createPlan(LinearPlan parentPlan) {
-		LinearPlan plan = LinearPlanGenerator.createLinearPlan(this, parentPlan);
+	public LeftDeepPlan createPlan(LeftDeepPlan parentPlan) {
+		LeftDeepPlan plan = LinearPlanGenerator.createLinearPlan(this, parentPlan);
 		this.getCostEstimator().cost(plan);
 		return plan;
 	}
@@ -396,12 +396,12 @@ public class LinearChaseConfiguration extends ChaseConfiguration<LinearPlan> imp
 		return this.getState().getFacts().contains(infAcc);
 	}
 
-	public CostEstimator<LinearPlan> getCostEstimator() {
+	public CostEstimator<LeftDeepPlan> getCostEstimator() {
 		return this.costEstimator;
 	}
 
 	@Override
-	public int compareTo(Configuration<LinearPlan> o) {
+	public int compareTo(Configuration<LeftDeepPlan> o) {
 		return this.getPlan().compareTo(o.getPlan());
 	}
 }

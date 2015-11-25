@@ -31,7 +31,7 @@ import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.io.pretty.AlgebraLikeLinearPlanWriter;
-import uk.ac.ox.cs.pdq.plan.LinearPlan;
+import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.runtime.EvaluationException;
 import uk.ac.ox.cs.pdq.runtime.RuntimeParameters;
@@ -211,9 +211,9 @@ public class RuntimeController {
 		Preconditions.checkArgument(p != null);
 		this.plan = p.getPlan();
 		Preconditions.checkNotNull(this.plan);
-		if (this.plan instanceof LinearPlan) {
+		if (this.plan instanceof LeftDeepPlan) {
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			AlgebraLikeLinearPlanWriter.to(new PrintStream(bos)).write((LinearPlan) this.plan);
+			AlgebraLikeLinearPlanWriter.to(new PrintStream(bos)).write((LeftDeepPlan) this.plan);
 			for (String c : bos.toString().split("\n")) {
 				this.runtimePlan.getItems().add(new Text(c));
 			}

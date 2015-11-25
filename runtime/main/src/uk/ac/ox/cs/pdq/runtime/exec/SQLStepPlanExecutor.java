@@ -10,7 +10,7 @@ import java.util.Set;
 
 import uk.ac.ox.cs.pdq.algebra.RelationalOperator;
 import uk.ac.ox.cs.pdq.fol.Query;
-import uk.ac.ox.cs.pdq.plan.LinearPlan;
+import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.runtime.EvaluationException;
 import uk.ac.ox.cs.pdq.runtime.RuntimeParameters.Semantics;
 import uk.ac.ox.cs.pdq.runtime.query.SQLQueryEvaluator;
@@ -38,7 +38,7 @@ public class SQLStepPlanExecutor extends SQLPlanExecutor {
 	 * @param properties
 	 * @param sem Semantics
 	 */
-	public SQLStepPlanExecutor(LinearPlan plan, Query<?> q, Semantics sem, Properties properties) {
+	public SQLStepPlanExecutor(LeftDeepPlan plan, Query<?> q, Semantics sem, Properties properties) {
 		super(plan, q, sem, properties);
 	}
 

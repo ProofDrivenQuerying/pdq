@@ -19,7 +19,7 @@ import uk.ac.ox.cs.pdq.db.AccessMethod.Types;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.plan.AccessOperator;
-import uk.ac.ox.cs.pdq.plan.LinearPlan;
+import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.Candidate;
 import uk.ac.ox.cs.pdq.planner.linear.node.SearchNode;
 
@@ -35,20 +35,20 @@ public class LinearPlanGenerator {
 
 	/**
 	 * @param configuration LinearConfiguration
-	 * @param parentPlan LinearPlan
+	 * @param parentPlan LeftDeepPlan
 	 * @param cf ControlFlows
-	 * @return LinearPlan
+	 * @return LeftDeepPlan
 	 */
-	public static LinearPlan createLinearPlan(LinearChaseConfiguration configuration, LinearPlan parentPlan) {
+	public static LeftDeepPlan createLinearPlan(LinearChaseConfiguration configuration, LeftDeepPlan parentPlan) {
 		return create(configuration, parentPlan, inferOutputChaseConstants(configuration));
 	}
 
 	/**
 	 * @param nodes List<T>
-	 * @return LinearPlan
+	 * @return LeftDeepPlan
 	 */
-	public static<T extends SearchNode> LinearPlan createLinearPlan(List<T> nodes) {
-		LinearPlan parentPlan = null;
+	public static<T extends SearchNode> LeftDeepPlan createLinearPlan(List<T> nodes) {
+		LeftDeepPlan parentPlan = null;
 		for (T node: nodes) {
 			parentPlan = node.getConfiguration().createPlan(parentPlan);
 		}
@@ -57,12 +57,12 @@ public class LinearPlanGenerator {
 
 	/**
 	 * @param configuration LinearConfiguration
-	 * @param predecessor LinearPlan
+	 * @param predecessor LeftDeepPlan
 	 * @param toProject List<Term>
-	 * @return LinearPlan
+	 * @return LeftDeepPlan
 	 */
-	private static LinearPlan create(LinearConfiguration configuration,
-			LinearPlan predecessor,
+	private static LeftDeepPlan create(LinearConfiguration configuration,
+			LeftDeepPlan predecessor,
 			List<Term> toProject) {
 		Preconditions.checkArgument(configuration.getExposedCandidates() != null);
 		RelationalOperator op1 = null;
@@ -105,7 +105,7 @@ public class LinearPlanGenerator {
 				op1 = new Join(predAlias, op1);
 			}
 		}
-		LinearPlan lp = new LinearPlan(op1, access);
+		LeftDeepPlan lp = new LeftDeepPlan(op1);
 		if (predecessor != null) {
 			lp.addPrefix(predecessor);
 			predecessor.addSuffix(lp);

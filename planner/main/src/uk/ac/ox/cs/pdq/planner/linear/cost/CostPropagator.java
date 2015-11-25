@@ -3,7 +3,7 @@ package uk.ac.ox.cs.pdq.planner.linear.cost;
 import java.util.List;
 
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
-import uk.ac.ox.cs.pdq.plan.LinearPlan;
+import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.planner.linear.node.PlanTree;
 import uk.ac.ox.cs.pdq.planner.linear.node.SearchNode;
 import uk.ac.ox.cs.pdq.planner.reasoning.Proof;
@@ -19,25 +19,25 @@ import uk.ac.ox.cs.pdq.planner.reasoning.Proof;
  */
 public abstract class CostPropagator<T extends SearchNode> {
 
-	protected final CostEstimator<LinearPlan> costEstimator;
+	protected final CostEstimator<LeftDeepPlan> costEstimator;
 
 	/** The proof of the bestPlan */
 	protected Proof bestProof = null;
 	
 	/** The best plan found after propagation. It is null if no plan is found */
-	protected LinearPlan bestPlan = null;
+	protected LeftDeepPlan bestPlan = null;
 	
 	protected List<Integer> bestPath = null;
 	
-	protected CostPropagator(CostEstimator<LinearPlan> estimator) {
+	protected CostPropagator(CostEstimator<LeftDeepPlan> estimator) {
 		this.costEstimator = estimator;
 	}
 
-	public CostEstimator<LinearPlan> getCostEstimator() {
+	public CostEstimator<LeftDeepPlan> getCostEstimator() {
 		return this.costEstimator;
 	}
 	
-	public LinearPlan getBestPlan() {
+	public LeftDeepPlan getBestPlan() {
 		return this.bestPlan;
 	}
 

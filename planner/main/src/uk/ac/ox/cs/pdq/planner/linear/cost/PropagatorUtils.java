@@ -8,7 +8,7 @@ import uk.ac.ox.cs.pdq.algebra.Projection;
 import uk.ac.ox.cs.pdq.cost.estimators.BlackBoxCostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.SimpleCostEstimator;
-import uk.ac.ox.cs.pdq.plan.LinearPlan;
+import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.planner.db.access.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.planner.linear.LinearPlanGenerator;
 import uk.ac.ox.cs.pdq.planner.linear.LinearUtility;
@@ -24,7 +24,7 @@ import com.google.common.base.Preconditions;
  */
 public class PropagatorUtils {
 	
-	public static CostPropagator getPropagator(CostEstimator<LinearPlan> e) {
+	public static CostPropagator getPropagator(CostEstimator<LeftDeepPlan> e) {
 		if (e instanceof BlackBoxCostEstimator) {
 			return new BlackBoxPropagator((BlackBoxCostEstimator) e);
 		}
@@ -42,13 +42,13 @@ public class PropagatorUtils {
 	 *            A successful path (sequence of nodes). The corresponding nodes must
 	 *            correspond to a successful path (a path from the root to a
 	 *            success node)
-	 * @param costEstimator CostEstimator<LinearPlan>
+	 * @param costEstimator CostEstimator<LeftDeepPlan>
 	 * @return a linear plan that corresponds to the input path to success
 	 */
-	public static <T extends SearchNode> LinearPlan createLinearPlan(IndexedDirectedGraph<T> nodesSet, List<Integer> path, CostEstimator<LinearPlan> costEstimator, boolean projection) {
+	public static <T extends SearchNode> LeftDeepPlan createLinearPlan(IndexedDirectedGraph<T> nodesSet, List<Integer> path, CostEstimator<LeftDeepPlan> costEstimator, boolean projection) {
 		Preconditions.checkArgument(path != null && !path.isEmpty());
 		List<T> nodes = LinearUtility.createPath(nodesSet, path);
-		LinearPlan plan = LinearPlanGenerator.createLinearPlan(nodes);
+		LeftDeepPlan plan = LinearPlanGenerator.createLinearPlan(nodes);
 		T snode = nodes.get(nodes.size()-1);
 		if(snode.getStatus().equals(NodeStatus.SUCCESSFUL) && projection) {
 			Projection project = Operators.createFinalProjection(snode.getConfiguration().getQuery(), plan.getOperator());
