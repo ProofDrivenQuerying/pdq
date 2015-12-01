@@ -18,7 +18,7 @@ import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import com.google.common.collect.Lists;
 
 /**
- * A configuration which uses the chase as a proof system 
+ * A planner configuration which uses the chase as a proof system 
  * @author Efthymia Tsamoura
  *
  */

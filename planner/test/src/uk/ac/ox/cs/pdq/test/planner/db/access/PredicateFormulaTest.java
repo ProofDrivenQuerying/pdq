@@ -10,8 +10,8 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Skolem;
-import uk.ac.ox.cs.pdq.planner.db.access.AccessibleSchema.AccessibleRelation;
-import uk.ac.ox.cs.pdq.planner.db.access.AccessibleSchema.InferredAccessibleRelation;
+import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema.AccessibleRelation;
+import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema.InferredAccessibleRelation;
 
 import com.google.common.collect.Lists;
 

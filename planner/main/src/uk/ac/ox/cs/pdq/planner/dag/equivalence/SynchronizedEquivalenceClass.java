@@ -10,9 +10,9 @@ import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.planner.dag.ApplyRule;
 import uk.ac.ox.cs.pdq.planner.dag.ConfigurationUtility;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.dominance.Dominance;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.equivalence.FastStructuralEquivalence;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.equivalence.StructuralEquivalence;
+import uk.ac.ox.cs.pdq.planner.dominance.Dominance;
+import uk.ac.ox.cs.pdq.planner.equivalence.FastStructuralEquivalence;
+import uk.ac.ox.cs.pdq.planner.equivalence.StructuralEquivalence;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;

@@ -6,7 +6,7 @@ import java.util.Map;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Variable;
-import uk.ac.ox.cs.pdq.planner.db.access.AccessibilityAxiom;
+import uk.ac.ox.cs.pdq.planner.accessible.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.reasoning.Match;
 /**
  * Creates Match objects

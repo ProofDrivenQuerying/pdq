@@ -12,10 +12,10 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Signature;
 import uk.ac.ox.cs.pdq.fol.Term;
-import uk.ac.ox.cs.pdq.planner.db.access.AccessibilityAxiom;
-import uk.ac.ox.cs.pdq.planner.db.access.AccessibleSchema;
-import uk.ac.ox.cs.pdq.planner.db.access.AccessibleSchema.AccessibleRelation;
-import uk.ac.ox.cs.pdq.planner.db.access.AccessibleSchema.InferredAccessibleRelation;
+import uk.ac.ox.cs.pdq.planner.accessible.AccessibilityAxiom;
+import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema;
+import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema.AccessibleRelation;
+import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema.InferredAccessibleRelation;
 import uk.ac.ox.cs.pdq.reasoning.chase.FiringGraph;
 
 import com.google.common.collect.LinkedHashMultimap;

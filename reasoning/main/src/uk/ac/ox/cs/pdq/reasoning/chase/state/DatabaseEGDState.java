@@ -167,6 +167,7 @@ public class DatabaseEGDState extends DatabaseChaseState implements ListState {
 		}
 
 		this.facts.removeAll(obsoleteFacts);
+		this.manager.deleteFacts(obsoleteFacts);
 		this.addFacts(created);
 		return !this._isFailed;
 	}

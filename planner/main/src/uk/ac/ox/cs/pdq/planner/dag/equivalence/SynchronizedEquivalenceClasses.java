@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.dominance.Dominance;
+import uk.ac.ox.cs.pdq.planner.dominance.Dominance;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;

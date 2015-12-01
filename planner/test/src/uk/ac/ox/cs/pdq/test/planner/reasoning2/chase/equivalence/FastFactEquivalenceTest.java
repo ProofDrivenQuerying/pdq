@@ -10,7 +10,7 @@ import org.mockito.MockitoAnnotations;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Skolem;
 import uk.ac.ox.cs.pdq.plan.DoubleCost;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.equivalence.FastFactEquivalence;
+import uk.ac.ox.cs.pdq.planner.equivalence.FastFactEquivalence;
 import uk.ac.ox.cs.pdq.test.planner.TestObjects1;
 
 import com.google.common.collect.Lists;

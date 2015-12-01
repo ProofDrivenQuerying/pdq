@@ -469,7 +469,7 @@ public class DBHomomorphismManager implements HomomorphismManager {
 			}
 			sqlStatement.executeBatch();
 		} catch (SQLException ex) {
-			throw new IllegalStateException(ex.getMessage(), ex);
+			//throw new IllegalStateException(ex.getMessage(), ex);
 		}
 	}
 

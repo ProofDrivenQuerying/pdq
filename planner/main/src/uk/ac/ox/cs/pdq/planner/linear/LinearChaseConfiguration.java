@@ -15,8 +15,8 @@ import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
-import uk.ac.ox.cs.pdq.planner.db.access.AccessibilityAxiom;
-import uk.ac.ox.cs.pdq.planner.db.access.AccessibleSchema;
+import uk.ac.ox.cs.pdq.planner.accessible.AccessibilityAxiom;
+import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.Candidate;
 import uk.ac.ox.cs.pdq.planner.reasoning.Configuration;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState;
@@ -75,7 +75,7 @@ public class LinearChaseConfiguration extends ChaseConfiguration<LeftDeepPlan> i
 			matches.add(candidate.getMatch());
 		}
 		this.chaseStep(matches);
-		LeftDeepPlan plan = LeftDeepPlanGenerator.createLinearPlan(this, this.parent.getPlan());
+		LeftDeepPlan plan = LeftDeepPlanGenerator.createLeftDeepPlan(this, this.parent.getPlan());
 		this.setPlan(plan);
 	}
 

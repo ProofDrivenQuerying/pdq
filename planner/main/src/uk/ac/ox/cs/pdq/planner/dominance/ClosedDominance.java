@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.planner.reasoning.chase.dominance;
+package uk.ac.ox.cs.pdq.planner.dominance;
 
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.SimpleCostEstimator;

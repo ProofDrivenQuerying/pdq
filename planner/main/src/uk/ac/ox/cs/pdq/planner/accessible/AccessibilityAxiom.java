@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.planner.db.access;
+package uk.ac.ox.cs.pdq.planner.accessible;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,8 +14,8 @@ import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
-import uk.ac.ox.cs.pdq.planner.db.access.AccessibleSchema.AccessibleRelation;
-import uk.ac.ox.cs.pdq.planner.db.access.AccessibleSchema.InferredAccessibleRelation;
+import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema.AccessibleRelation;
+import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema.InferredAccessibleRelation;
 
 /**
  * An accessibility axiom

@@ -27,7 +27,7 @@ import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
-import uk.ac.ox.cs.pdq.planner.db.access.AccessibleSchema;
+import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.linear.LinearConfiguration;
 import uk.ac.ox.cs.pdq.planner.linear.LinearUtility;
 import uk.ac.ox.cs.pdq.planner.linear.cost.BlackBoxPropagator;
@@ -329,6 +329,7 @@ public class LinearOptimized extends LinearExplorer {
 		if ((this.bestPlan == null && successfulPlan != null) || 
 				(this.bestPlan != null && successfulPlan != null && successfulPlan.getCost().lessThan(this.bestPlan.getCost()))) {
 			this.bestPlan = successfulPlan;
+			this.bestConfigurationsList = this.getConfigurations(this.costPropagator.getBestPath());
 			this.eventBus.post(this.getBestPlan());
 		
 			if(this.postPruning != null && !this.prunedPaths.contains(this.costPropagator.getBestPath())) {
@@ -344,6 +345,7 @@ public class LinearOptimized extends LinearExplorer {
 					if ((this.bestPlan == null && successfulPlan != null) || 
 							(this.bestPlan != null && successfulPlan != null && successfulPlan.getCost().lessThan(this.bestPlan.getCost()))) {
 						this.bestPlan = successfulPlan;
+						this.bestConfigurationsList = this.getConfigurations(this.costPropagator.getBestPath());
 						this.eventBus.post(this.getBestPlan());
 					}
 					this.prunedPaths.add(this.costPropagator.getBestPath());
@@ -351,7 +353,8 @@ public class LinearOptimized extends LinearExplorer {
 			}
 			log.trace("\t+++BEST PLAN: " + this.bestPlan.getAccesses() + " " + this.bestPlan.getCost());
 
-			BestPlanMetadata successMetadata = new BestPlanMetadata(parentNode, this.bestPlan, this.costPropagator.getBestPath(), this.getElapsedTime());
+			BestPlanMetadata successMetadata = new BestPlanMetadata(parentNode, this.bestPlan, this.costPropagator.getBestPath(), 
+					this.bestConfigurationsList, this.getElapsedTime());
 			freshNode.setMetadata(successMetadata);
 			this.eventBus.post(freshNode);
 		}
@@ -365,10 +368,12 @@ public class LinearOptimized extends LinearExplorer {
 			|| (this.bestPlan != null && successfulPlan != null 
 				&& successfulPlan.getCost().lessThan(this.bestPlan.getCost()))) {
 			this.bestPlan = successfulPlan;
+			this.bestConfigurationsList = this.getConfigurations(this.costPropagator.getBestPath());
 			this.eventBus.post(this.getBestPlan());
 			log.trace("\t+++BEST PLAN: " + this.bestPlan.getAccesses() + " " + this.bestPlan.getCost());
 
-			BestPlanMetadata successMetadata = new BestPlanMetadata(parentNode, this.bestPlan, this.costPropagator.getBestPath(), this.getElapsedTime());
+			BestPlanMetadata successMetadata = new BestPlanMetadata(parentNode, this.bestPlan, this.costPropagator.getBestPath(), 
+					this.bestConfigurationsList, this.getElapsedTime());
 			freshNode.setMetadata(successMetadata);
 			this.eventBus.post(freshNode);
 		}
@@ -405,7 +410,7 @@ public class LinearOptimized extends LinearExplorer {
 
 			List<Integer> pathFromRoot = deadDescendant.getPathFromRoot();
 			List<Integer> equivalencePath = this.createPath(representativePath, path, pathFromRoot);
-			LeftDeepPlan equivalencePlan = PropagatorUtils.createLinearPlan(this.planTree, equivalencePath, this.costPropagator.getCostEstimator());
+			LeftDeepPlan equivalencePlan = PropagatorUtils.createLeftDeepPlan(this.planTree, equivalencePath, this.costPropagator.getCostEstimator());
 
 			if(equivalencePlan.getCost().lessThan(deadDescendant.getBestPlanFromRoot().getCost())) {
 				deadDescendant.setBestPathFromRoot(equivalencePath);

@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.Map.Entry;
 
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.dominance.Dominance;
+import uk.ac.ox.cs.pdq.planner.dominance.Dominance;
 
 
 /**

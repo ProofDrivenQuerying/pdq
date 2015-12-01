@@ -41,8 +41,6 @@ import com.google.common.collect.Multimap;
 
 /**
  * Creates SQL statements for relation database-backed homomorphism detectors.
- *
- * @author George Konstantinidis
  * @author Efthymia Tsamoura
  */
 public abstract class SQLStatementBuilder {

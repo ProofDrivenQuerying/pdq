@@ -86,10 +86,10 @@ public class DerbyStatementBuilder extends SQLStatementBuilder {
 		result.append("CREATE TABLE  ").append(this.encodeName(relation.getName())).append('(');
 		for (int it = 0; it < relation.getAttributes().size(); ++it) {
 			result.append(' ').append(relation.getAttributes().get(it).getName());
-			if(relation.getAttribute(it).getType().toString().contains("java.lang.String")) {
+			if (relation.getAttribute(it).getType() instanceof Class && String.class.isAssignableFrom((Class) relation.getAttribute(it).getType())) {
 				result.append(" VARCHAR(500),");
 			}
-			else if(relation.getAttribute(it).getType().toString().contains("java.lang.Integer")) {
+			else if (relation.getAttribute(it).getType() instanceof Class && Integer.class.isAssignableFrom((Class) relation.getAttribute(it).getType())) {
 				result.append(" int,");
 			}
 			else {

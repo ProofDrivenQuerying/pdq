@@ -1,6 +1,7 @@
 package uk.ac.ox.cs.pdq.ui.proof;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -10,7 +11,9 @@ import java.util.Set;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.plan.Plan;
-import uk.ac.ox.cs.pdq.planner.db.access.AccessibilityAxiom;
+import uk.ac.ox.cs.pdq.planner.accessible.AccessibilityAxiom;
+import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.Candidate;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Objects;
@@ -29,23 +32,29 @@ public class Proof {
 	/** List of state that lead to a query match (full proof). */
 	private final List<State> states = new ArrayList<>();
 
-	/** The goal of the proof. */
-	private final Map<Variable, Constant> queryMatch;
+//	/** The goal of the proof. */
+//	private final Map<Variable, Constant> queryMatch;
 
-	/**
-	 * @param queryMatch
-	 */
-	public Proof(Map<Variable, Constant> queryMatch) {
-		this.queryMatch = queryMatch;
-	}
+//	/**
+//	 * @param queryMatch
+//	 */
+//	public Proof(Map<Variable, Constant> queryMatch) {
+//		this.queryMatch = queryMatch;
+//	}
 
 	/**
 	 * @param match
 	 * @param states
 	 */
-	private Proof(Map<Variable, Constant> match, List<State> states) {
+//	private Proof(Map<Variable, Constant> match, List<State> states) {
+//		Preconditions.checkArgument(states != null);
+//		this.queryMatch = match;
+//		for (State s : states) {
+//			this.addState(s);
+//		}
+//	}
+	private Proof(List<State> states) {
 		Preconditions.checkArgument(states != null);
-		this.queryMatch = match;
 		for (State s : states) {
 			this.addState(s);
 		}
@@ -65,12 +74,12 @@ public class Proof {
 		return this.states;
 	}
 
-	/**
-	 * @return the query match of this proof
-	 */
-	public Map<Variable, Constant> getQueryMatch() {
-		return this.queryMatch;
-	}
+//	/**
+//	 * @return the query match of this proof
+//	 */
+//	public Map<Variable, Constant> getQueryMatch() {
+//		return this.queryMatch;
+//	}
 
 	/**
 	 * @return a fresh proof builder.
@@ -85,9 +94,10 @@ public class Proof {
 	 */
 	@Override
 	public String toString() {
-		return Joiner.on("\n").join(this.states) + "\nQUERY MATCH: " + this.queryMatch.toString();
+//		return Joiner.on("\n").join(this.states) + "\nQUERY MATCH: " + this.queryMatch.toString();
+		return Joiner.on("\n").join(this.states);
 	}
-	
+
 	/**
 	 * 
 	 * @param head
@@ -121,7 +131,7 @@ public class Proof {
 			return false;
 		}
 		return this.getClass().isInstance(o)
-				&& this.queryMatch.equals(((Proof) o).queryMatch)
+//				&& this.queryMatch.equals(((Proof) o).queryMatch)
 				&& this.states.equals(((Proof) o).states);
 	}
 
@@ -130,7 +140,8 @@ public class Proof {
 	 */
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(this.queryMatch, this.states);
+//		return Objects.hashCode(this.queryMatch, this.states);
+		return Objects.hashCode(this.states);
 	}
 
 	/**
@@ -211,7 +222,7 @@ public class Proof {
 		@Override
 		public String toString() {
 			return "ACCESSIBILITY AXIOM: " + this.axiom + "\n\tGROUNDING: "
-						+ Joiner.on("\n\tGROUNDING: ").join(this.matches);
+					+ Joiner.on("\n\tGROUNDING: ").join(this.matches);
 		}
 
 		/**
@@ -300,11 +311,30 @@ public class Proof {
 		@Override
 		public Proof build() {
 			this.addState();
-			return new Proof(this.queryMatch, this.states);
+//			return new Proof(this.queryMatch, this.states);
+			return new Proof(this.states);
 		}
 	}
-	
-	public static Proof toProof(Plan plan) {
-		throw new java.lang.UnsupportedOperationException();
+
+	/**
+	 * Creates a proof from a list of candidates and a query match
+	 * @param candidates
+	 * @param queryMatch
+	 * @return
+	 */
+	public static Proof toProof(List<LinearChaseConfiguration> configurations) {
+		Proof.Builder builder = Proof.builder();
+		for (LinearChaseConfiguration configuration:configurations) {
+			Collection<Candidate> exposedCandidates = configuration.getExposedCandidates();
+			if (exposedCandidates != null) {
+				Candidate first = exposedCandidates.iterator().next();
+				builder.addAxiom(first.getRule());
+				for (Candidate candidate: exposedCandidates) {
+					builder.addMatch(candidate.getMatch().getMapping());
+				}
+			}
+		}
+		return builder.build();
 	}
+
 }

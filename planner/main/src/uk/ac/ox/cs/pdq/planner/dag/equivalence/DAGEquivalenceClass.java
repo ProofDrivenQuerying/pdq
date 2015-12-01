@@ -3,7 +3,7 @@ package uk.ac.ox.cs.pdq.planner.dag.equivalence;
 import java.util.Collection;
 
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.dominance.Dominance;
+import uk.ac.ox.cs.pdq.planner.dominance.Dominance;
 
 /**
  * Class of structurally equivalent configurations

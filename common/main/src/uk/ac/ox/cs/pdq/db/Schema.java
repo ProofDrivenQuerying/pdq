@@ -154,7 +154,7 @@ public class Schema {
 	 * @return List<Relation>
 	 */
 	public List<Relation> getRelations() {
-		return Lists.newArrayList(this.relations);
+		return this.relations;
 	}
 
 	/**

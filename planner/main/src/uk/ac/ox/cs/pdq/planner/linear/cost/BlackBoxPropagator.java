@@ -102,7 +102,7 @@ public class BlackBoxPropagator extends CostPropagator<BlackBoxNode> {
 			Set<List<Integer>> paths = node.getPathsToSuccess();
 			if (paths != null) {
 				for (List<Integer> path:paths) {
-					LeftDeepPlan plan = PropagatorUtils.createLinearPlan(planTree, path, this.costEstimator);
+					LeftDeepPlan plan = PropagatorUtils.createLeftDeepPlan(planTree, path, this.costEstimator);
 					Preconditions.checkState(plan != null);
 					if (this.bestPlan == null || plan.getCost().lessThan(this.bestPlan.getCost())) {
 						this.bestPlan = plan;

@@ -134,7 +134,7 @@ public class NodePropertiesDialog extends JFrame {
 
 		Metadata metadata = node.getMetadata();
 		if(metadata instanceof BestPlanMetadata) {
-			PopupUtils.addBorderAndTextToContainer(titledBorders, BorderFactory.createTitledBorder("Found proof"), Proof.toProof(((BestPlanMetadata) metadata).getPlan()).toString());
+			PopupUtils.addBorderAndTextToContainer(titledBorders, BorderFactory.createTitledBorder("Found proof"), Proof.toProof(((BestPlanMetadata) metadata).getConfigurations()).toString());
 			PopupUtils.addBorderAndTextToContainer(titledBorders, BorderFactory.createTitledBorder("Found plan"), ((BestPlanMetadata) metadata).getPlan().toString());
 			PopupUtils.addBorderAndTextToContainer(titledBorders, BorderFactory.createTitledBorder("Found plan's cost"), ((BestPlanMetadata) metadata).getPlan().getCost().toString());
 		}

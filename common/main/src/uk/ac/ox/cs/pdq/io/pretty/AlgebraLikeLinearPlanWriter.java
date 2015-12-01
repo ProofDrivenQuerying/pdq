@@ -67,7 +67,7 @@ public class AlgebraLikeLinearPlanWriter extends PrettyWriter<LeftDeepPlan> impl
 	/**
 	 * Writes the given plan to the given output.
 	 * @param out
-	 * @param plan LinearPlan
+	 * @param plan LeftDeepPlan
 	 */
 	public void writePlan(PrintStream out, LeftDeepPlan plan) {
 		if (plan != null) {
@@ -114,7 +114,7 @@ public class AlgebraLikeLinearPlanWriter extends PrettyWriter<LeftDeepPlan> impl
 	/**
 	 * Writes the given command to the given output.
 	 * @param out
-	 * @param plan LinearPlan
+	 * @param plan LeftDeepPlan
 	 * @param alias String
 	 * @param aliases Map<LogicalOperator,String>
 	 */
@@ -126,7 +126,7 @@ public class AlgebraLikeLinearPlanWriter extends PrettyWriter<LeftDeepPlan> impl
 
 	/**
 	 * @param out PrintStream
-	 * @param o LinearPlan
+	 * @param o LeftDeepPlan
 	 */
 	@Override
 	public void write(PrintStream out, LeftDeepPlan o) {
@@ -134,7 +134,7 @@ public class AlgebraLikeLinearPlanWriter extends PrettyWriter<LeftDeepPlan> impl
 	}
 
 	/**
-	 * @param p LinearPlan
+	 * @param p LeftDeepPlan
 	 */
 	@Override
 	public void write(LeftDeepPlan p) {

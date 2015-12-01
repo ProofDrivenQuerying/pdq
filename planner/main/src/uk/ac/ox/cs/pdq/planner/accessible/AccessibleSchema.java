@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.planner.db.access;
+package uk.ac.ox.cs.pdq.planner.accessible;
 
 import java.util.ArrayList;
 import java.util.Collection;
