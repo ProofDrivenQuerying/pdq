@@ -11,7 +11,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
 /**
- * A tree-structured plan implementation
+ * A tree-structured plan.
  *
  * @author Efthymia Tsamoura
  */
@@ -20,7 +20,6 @@ public final class TreePlan extends DAGPlan {
 	/**
 	 * 
 	 * @param operator The input top-level logical operator
-	 * @param cf The plan's control flow
 	 * @param parent The parent plan
 	 * @param children The input child subplans
 	 */
@@ -31,7 +30,6 @@ public final class TreePlan extends DAGPlan {
 	/**
 	 * 
 	 * @param operator The input top-level logical operator
-	 * @param cf The plan's control flow
 	 * @param parent The parent plan
 	 */
 	public TreePlan(RelationalOperator operator, DAGPlan parent) {
@@ -41,7 +39,6 @@ public final class TreePlan extends DAGPlan {
 	/**
 	 * Creates a tree plan with no parent or child subplans
 	 * @param operator The input top-level logical operator
-	 * @param cf The plan's control flow
 	 */
 	public TreePlan(RelationalOperator operator) {
 		this(operator, null, null);
@@ -53,7 +50,6 @@ public final class TreePlan extends DAGPlan {
 	 *  	The plan's inputs
 	 * @param operator
 	 * 		The input top-level logical operator
-	 * @param cf The plan's control flow
 	 */
 	public TreePlan(Collection<? extends Term> inputs, RelationalOperator operator) {
 		this(inputs, operator, null, Lists.<DAGPlan>newArrayList());
@@ -64,7 +60,6 @@ public final class TreePlan extends DAGPlan {
 	 * @param inputs The plan's inputs
 	 * @param operator
 	 * 		The input top-level logical operator
-	 * @param cf The plan's control flow
 	 * @param parent The parent plan
 	 * @param children The input child subplans
 	 */
@@ -85,6 +80,10 @@ public final class TreePlan extends DAGPlan {
 		return Lists.newArrayList(plan);
 	}
 
+	/**
+	 * @return 
+	 * the parent of this plan
+	 */
 	public TreePlan getParent() {
 		return (TreePlan) this.parents.get(0);
 	}
