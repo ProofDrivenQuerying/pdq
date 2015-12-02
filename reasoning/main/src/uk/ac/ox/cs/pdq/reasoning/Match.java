@@ -11,11 +11,13 @@ import com.google.common.base.Preconditions;
 
 
 /**
- * Keeps information related to homomorphisms
- * It maintains the Evaluatable object that was matched and
- * a mapping of the query's variables to constants.
- *
- * It is created when detecting homomorphisms during chasing.
+ * A trigger or query match.
+ * 
+ * (From modern dependency theory notes)
+ * Consider an instance I, a set Base of values, and a TGD
+ * \delta = \forall x  \sigma(\vec{x}) --> \exists y  \tau(\vec{x}, \vec{y})
+ * A trigger for \delta in I is a homomorphism h of \sigma into I.
+ *  
  *
  * @author Efthymia Tsamoura
  * @author Julien Leblay
@@ -23,9 +25,12 @@ import com.google.common.base.Preconditions;
  */
 public class Match {
 
+	/** The dependency or query that will be grounded using an homomorphism**/
 	protected final Evaluatable query;
 
-	/** Mapping of the query variables to chase constants */
+	/** The homomorphism that will used to ground the given query or dependency.
+	 * 
+	 * */
 	protected final Map<Variable, Constant> mapping;
 
 	/**

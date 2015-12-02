@@ -21,9 +21,17 @@ import com.google.common.base.Preconditions;
 
 
 /**
- * The restricted chase algorithm.
- * According to this, a dependency is fired unless it is already satisfied.
- * The facts that are being generated after each chase step are kept in a list.
+ * (From modern dependency theory notes)
+ * Runs the chase algorithm applying only active triggers. 
+ * Consider an instance I, a set Base of values, and a TGD
+ * \delta = \forall x  \sigma(\vec{x}) --> \exists y  \tau(\vec{x}, \vec{y})
+ * A trigger for \delta in I is a homomorphism h of \sigma into I. A trigger is active if it
+ * does not extend to a homomorphism h0 into I. Informally, a trigger is a tuple \vec{c}
+ * satisfying \sigma, and it is active if there is no witness \vec{y} that makes \tau holds.
+ * A chase step appends to I additional facts that were produced during grounding \delta. 
+ * The output of the chase step is a new instance in which h is no longer an active trigger.
+ * 
+ * The facts that are generated during chasing are stored in a list.
  *
  * @author Efthymia Tsamoura
  *

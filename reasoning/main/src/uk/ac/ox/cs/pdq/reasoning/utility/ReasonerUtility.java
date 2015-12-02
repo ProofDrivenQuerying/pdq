@@ -93,7 +93,14 @@ public class ReasonerUtility {
 	 * @param match
 	 * @param s
 	 * @return
-	 * 		true if the input match is active
+	 * 		true if the input trigger is active.
+	 * 
+	 * (From modern dependency theory notes)
+	 * Consider an instance I, a set Base of values, and a TGD
+		\delta = \forall x  \sigma(\vec{x}) --> \exists y  \tau(\vec{x}, \vec{y})
+		A trigger for \delta in I is a homomorphism h of \sigma into I. A trigger is active if it
+		does not extend to a homomorphism h0 into I. Informally, a trigger is a tuple \vec{c}
+		satisfying \sigma, and it is active if there is no witness \vec{y} that makes \tau holds.
 	 */
 	public boolean isActiveTrigger(Match match, ChaseState s) {
 		Preconditions.checkNotNull(match);
@@ -142,7 +149,7 @@ public class ReasonerUtility {
 	
 	/**
 	 * @return
-	 * 		true if the constraint kept in the input match is already fired with the input homomorphism  
+	 * 		true if the constraint kept in the input match has been already fired with the input homomorphism  
 	 */
 	public boolean isOpenTrigger(Match match, ChaseState s) {
 		Map<Variable, Constant> mapping = match.getMapping();

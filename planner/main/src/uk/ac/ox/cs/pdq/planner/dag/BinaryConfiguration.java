@@ -13,7 +13,13 @@ import com.google.common.base.Preconditions;
 
 
 /**
- * A binary configuration. Corresponds to the join or the cross product of two configurations 
+ * Instances of binary DAG configurations.
+ * 	They are of the form Binary(x,y), where x and y can be either binary of unary DAG configurations. 
+ * 	Binary(x,y) has input I1 \cup (I2-O1) and output
+	O1 \cup O2, and output facts all facts that are consequences of
+	the union of the facts in x and y under the copy of the integrity
+	constraints on the InfAcc relations. Similar to unary dag configurations, 
+	calculating the set of facts requires the use of consequence closure.
  * @author Efthymia Tsamoura
  *
  */

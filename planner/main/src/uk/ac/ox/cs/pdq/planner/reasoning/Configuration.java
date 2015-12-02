@@ -5,7 +5,8 @@ import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.util.Costable;
 
 /**
- * A sequence of chase states and the associated subplan
+ * Configurations represent derivation of implicit information using constraints.
+ * Configurations have a direct correspondence with a query plan.
  *
  * @author Efthymia Tsamoura
  * @author Julien Leblay

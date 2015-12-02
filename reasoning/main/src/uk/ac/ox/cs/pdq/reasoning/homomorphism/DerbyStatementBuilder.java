@@ -6,8 +6,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import com.google.common.collect.BiMap;
-
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.Evaluatable;
@@ -15,6 +13,9 @@ import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager.DBRelation;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismConstraint.TopKConstraint;
+
+import com.google.common.base.Joiner;
+import com.google.common.collect.BiMap;
 
 /**
  * Builds queries for detecting homomorphisms in Derby
@@ -111,18 +112,58 @@ public class DerbyStatementBuilder extends SQLStatementBuilder {
 		for (Predicate fact : facts) {
 			DBRelation rel = dbrelations.get(fact.getName());
 			List<Term> terms = fact.getTerms();
-			String insertInto = "INSERT INTO " + this.encodeName(rel.getName()) + " " + "VALUES ( ";
+			
+			//Create the VALUES field of the source data table
+			String values = "VALUES(";
 			for (Term term : terms) {
 				if (!term.isVariable()) {
-					insertInto += "'" + term + "'" + ",";
+					values += "'" + term + "'" + ",";
 				}
 			}
-			insertInto += 0 + ",";
-			insertInto += fact.getId();
-			insertInto += ")";
-			result.add(insertInto);
+			values += 0 + ",";
+			values += fact.getId();
+			values += ")";
+		
+			//Create the table header of the source data table 
+			String sourceHeader = "(" + Joiner.on(",").join(rel.getAttributes()) + ")";
+			
+			String insertedValues = "";
+			for(int i = 0; i < rel.getAttributes().size(); ++i) {
+				insertedValues += "source." + rel.getAttributes().get(i);
+				if(i < rel.getAttributes().size()-1) {
+					insertedValues += ",";
+				}
+			}
+			insertedValues = "(" + insertedValues + ")";
+			
+			//Create the MERGE statement
+			String mergeStatement = "MERGE INTO " + "\n" +
+					this.encodeName(rel.getName()) + "\n" + 
+					"USING (" + values + ")" + " AS source" + sourceHeader + "\n" + 
+					"ON " + this.encodeName(rel.getName()) + "." + rel.getAttribute(rel.getAttributes().size()-1) + "=" + "source" + "." + rel.getAttribute(rel.getAttributes().size()-1) + "\n" +
+					"WHEN NOT MATCHED THEN " + "\n" +
+					"INSERT " + sourceHeader + "\n" +
+					"VALUES " + insertedValues;
+			result.add(mergeStatement);
 		}
 		return result;
+		
+		
+		/**
+		 * MERGE 
+			   member_topic
+			USING ( 
+			    VALUES (0, 110, 'test')
+			) AS foo (mt_member, mt_topic, mt_notes) 
+			ON member_topic.mt_member = foo.mt_member 
+			   AND member_topic.mt_topic = foo.mt_topic
+			WHEN MATCHED THEN
+			   UPDATE SET mt_notes = foo.mt_notes
+			WHEN NOT MATCHED THEN
+			   INSERT (mt_member, mt_topic, mt_notes)
+			   VALUES (mt_member, mt_topic, mt_notes)
+			;
+		 */
 	}
 	
 	/**

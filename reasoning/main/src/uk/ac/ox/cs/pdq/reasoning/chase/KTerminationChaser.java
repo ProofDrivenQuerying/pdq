@@ -15,11 +15,10 @@ import com.google.common.base.Preconditions;
 
 
 /**
- * A non-blocking chase algorithm which runs for k chase steps.
- * The difference between this algorithm and the restricted chase one is
- * that this algorithm performs k chase rounds prior to stopping.
- *
- *
+ * Runs the chase for k chase rounds.
+ * The difference with the restricted chase algorithm is
+ * that this implementation performs k chase rounds prior to stopping.
+ * 
  * @author Efthymia Tsamoura
  *
  */

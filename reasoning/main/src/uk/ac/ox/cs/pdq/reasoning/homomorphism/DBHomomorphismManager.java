@@ -49,6 +49,7 @@ import com.google.common.collect.Sets;
  * corresponds to the bag (if it exists) where this fact is placed in.
  *
  * @author Efthymia Tsamoura
+ * @author Konstantinidis
  *
  */
 public class DBHomomorphismManager implements HomomorphismManager {
@@ -469,7 +470,7 @@ public class DBHomomorphismManager implements HomomorphismManager {
 			}
 			sqlStatement.executeBatch();
 		} catch (SQLException ex) {
-			//throw new IllegalStateException(ex.getMessage(), ex);
+			throw new IllegalStateException(ex.getMessage(), ex);
 		}
 	}
 

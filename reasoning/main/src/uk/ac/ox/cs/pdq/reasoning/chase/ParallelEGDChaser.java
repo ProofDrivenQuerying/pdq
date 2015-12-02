@@ -26,9 +26,22 @@ import com.google.common.collect.Sets;
 
 
 /**
- * Runs the parallel EGD chase.
- * TODO add description
- *
+ * Runs EGD chase using parallel chase steps.
+ * (From modern dependency theory notes)
+ * 
+ * A trigger for and EGD \delta = \sigma --> x_i = x_j in I is again a homomorphism h in
+	\sigma into I. A trigger is active if it does not extend to a homomorphism h0 into I.
+	Given trigger h
+	for \delta in I, a chase pre-step marks the pair h(x_i) and h(x_j) as equal. Formally,
+	it appends the pair h(x_i), h(x_j) to a set of pairs MarkedEqual.
+	An EGD parallel chase step on instance I for a set of constraints C is performed
+	as follows.
+	i. A chase pre-step is performed for every constraint \delta in C and every active
+	trigger h in I.
+	ii. The resulting set of marked pairs is closed under reflexivity and transitivity
+	to get an equivalence relation.
+	iii. If we try to equate two different schema constants, then the chase fails. 
+	
  * @author Efthymia Tsamoura
  *
  */
@@ -45,7 +58,9 @@ public class ParallelEGDChaser extends Chaser {
 	}
 
 	/**
-	 * Chases the input state until termination
+	 * Chases the input state until termination.
+	 * The EGDs and the TGDs are applied in rounds, i.e., during even round we apply parallel EGD chase steps,
+	 * while during odd rounds we apply parallel TGD chase steps.  
 	 * @param s
 	 * @param target
 	 * @param dependencies

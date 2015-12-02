@@ -12,6 +12,8 @@ import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
 import com.google.common.base.Preconditions;
 
 /**
+ * Type of configurations met in the DAG world. 
+ * DAG configurations are built up compositionally and can be either unary or binary.
  * 
  * @author Efthymia Tsamoura
  *

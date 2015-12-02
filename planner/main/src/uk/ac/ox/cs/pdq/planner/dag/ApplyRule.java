@@ -22,7 +22,21 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 /**
- * An ApplyRule configuration. Corresponds to an access
+ * Instances of unary DAG configurations.
+ * 	They are of the form ApplyRule(R,\vec{b}), where R is
+	an accessibility axiom corresponding to method mt on relation
+	R, and \vec{b} is a binding of the universally quantified variables
+	of R to chase constants or schema constants. The input
+	constants are all those chase constants in \vec{b} where the
+	corresponding variable of R occurs within the R atoms of
+	R at an input position of method mt. The outputs facts
+	of the configuration are any inferred accessible facts produced
+	be applying R with binding \vec{b}, as well as all facts that
+	are consequences from these under the copy of the integrity
+	constraints. Calculating these output facts requires a consequence
+	closure procedure.
+ *  
+ *  
  * @author Efthymia Tsamoura
  *
  */
@@ -101,7 +115,7 @@ public class ApplyRule extends DAGChaseConfiguration {
 	}
 	
 	/**
-	 * Generates the initial state of this configuration
+	 * Generates the initial chase facts of this configuration
 	 */
 	public void generate(Chaser chaser, Query<?> query, AccessibleSchema accessibleSchema) {
 		this.getState().generate(accessibleSchema, this.rule, this.facts);

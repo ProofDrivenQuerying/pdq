@@ -23,9 +23,8 @@ import com.google.common.collect.Sets;
 
 /**
  *
- *	The facts of this chase state are organised into a list of facts. This type of
- *  state is used in non-blocking chase implementations.
- * 	It keeps the facts of this state in a database.
+ *	Organises the facts during chasing into a list. 
+ *	This type of state is used in terminating chase implementations.
  * 
  *  @author Efthymia Tsamoura
  */

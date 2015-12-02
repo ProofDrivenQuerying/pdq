@@ -26,7 +26,13 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 
 /**
- * 
+ *
+ * 	Organises the facts during chasing into a list. 
+ *	This type of state is used in terminating chase implementations.
+ *	It also maintains the classes of equal chase constants that are derived after chasing with EGDs.
+ *
+ * @TODO merge this class with DatabaseListState
+ *
  * @author Efthymia Tsamoura
  *
  */

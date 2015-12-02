@@ -14,8 +14,8 @@ import com.google.common.base.Preconditions;
 
 /**
  *
- * Top-level class for database-backed chase states.
- * This implementation keeps the facts of this state in a database.
+ * This implementation keeps the facts produced during chasing in a database.
+ * Homomorphisms are detected using the DBMS the stores the chase facts. 
  *
  * @author Efthymia Tsamoura
  *

@@ -21,8 +21,7 @@ import com.google.common.base.Preconditions;
 
 
 /**
- * Runs the parallel EGD chase.
- * TODO add description
+ * @TODO delete this class. It is actually the same with RestrictedChaser
  *
  * @author Efthymia Tsamoura
  *

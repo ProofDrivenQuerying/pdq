@@ -12,7 +12,8 @@ import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismConstraint;
 
 /**
  *
- * The state of a chase configuration. 
+ * A collection of facts produced during chasing.
+ * It also keeps a graph of the rule firings that took place during chasing.
  *
  * @author Efthymia Tsamoura
  *
@@ -91,7 +92,8 @@ public interface ChaseState {
 	
 	
 	/**
-	 * Applies the input match to this state
+	 * Applies the input rule firing.
+	 * A chase step appends to a database instance additional facts that were produced during grounding a dependency. 
 	 * @param match
 	 * @return
 	 * 		true if the step has been applied successfully 
@@ -99,7 +101,8 @@ public interface ChaseState {
 	boolean chaseStep(Match match);
 	
 	/**
-	 * Applies the input matches to this state
+	 * Applies the input rule firings.
+	 * A chase step appends to a database instance additional facts that were produced during grounding a dependency. 
 	 * @param match
 	 * @return
 	 * 		true if the step has been applied successfully 
