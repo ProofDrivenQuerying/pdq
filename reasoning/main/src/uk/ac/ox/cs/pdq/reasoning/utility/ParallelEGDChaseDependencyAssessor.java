@@ -13,8 +13,11 @@ import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState;
  *
  */
 
-public interface RestrictedDependencyAssessor {
+public interface ParallelEGDChaseDependencyAssessor {
 
-	Collection<? extends Constraint> getDependencies(ChaseState state);
+	
+	public static enum EGDROUND{EGD, TGD};
+	
+	Collection<? extends Constraint> getDependencies(ChaseState state, EGDROUND round);
 	
 }

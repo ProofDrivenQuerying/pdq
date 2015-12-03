@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.planner.db.access;
+package uk.ac.ox.cs.pdq.planner.accessible;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,11 +14,16 @@ import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
-import uk.ac.ox.cs.pdq.planner.db.access.AccessibleSchema.AccessibleRelation;
-import uk.ac.ox.cs.pdq.planner.db.access.AccessibleSchema.InferredAccessibleRelation;
+import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema.AccessibleRelation;
+import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema.InferredAccessibleRelation;
 
 /**
- * An accessibility axiom
+ * 
+ * 	for each access method mt on relation
+	R of arity n with input positions j1, ..., jm an accessibility axiom is a rule of the form
+	accessible(x_{j_1}) \wegde ... \wedge accessible(x_{j_m}) \wedge R(x_1, ..., x_n) -->
+	InferredAccessible R(x_1, ..., x_n) \wedge \Wedge_{j} accessible(x_j)
+ * 
  *
  * @author Efthymia Tsamoura
  */

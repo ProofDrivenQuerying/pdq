@@ -6,10 +6,10 @@ import java.util.Map;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Variable;
-import uk.ac.ox.cs.pdq.planner.db.access.AccessibilityAxiom;
+import uk.ac.ox.cs.pdq.planner.accessible.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.reasoning.Match;
+
 /**
- * Creates Match objects
  *
  * @author Efthymia Tsamoura
  */
@@ -23,10 +23,7 @@ public class MatchFactory {
 	 * 		a match given the input accessibility axiom and the input fact
 	 */
 	public static Match getMatch(AccessibilityAxiom axiom, Predicate fact) {
-		Map<Variable, Constant> map = createMap(axiom, fact);
-//		if(fact instanceof BagBoundPredicate) {
-//			return new BagMatch(axiom, map, ((BagBoundPredicate) fact).getBag());
-//		}
+		Map<Variable, Constant> map = createMapping(axiom, fact);
 		return new Match(axiom, map);
 	}
 
@@ -35,7 +32,7 @@ public class MatchFactory {
 	 * @param fact PredicateFormula
 	 * @return Map<Variable, Constant>
 	 */
-	private static Map<Variable, Constant> createMap(AccessibilityAxiom axiom, Predicate fact) {
+	private static Map<Variable, Constant> createMapping(AccessibilityAxiom axiom, Predicate fact) {
 		Map<Variable, Constant> map = new LinkedHashMap<>();
 		int i = 0;
 		for(Variable variable:axiom.getGuard().getVariables()) {

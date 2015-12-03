@@ -16,9 +16,9 @@ import com.google.common.base.Supplier;
 
 
 /**
- * A bounded chase algorithm. This implementation
- * finds the maximum number of chase rounds k during chasing the input schema
- * and then performs only k rounds of chasing during chasing the accessible schema.
+ * Runs the chase algorithm for a given set of rounds. 
+ * First, it finds the maximum number of chase rounds k during chasing the input schema
+ * and then it performs only k rounds of chasing during chasing the accessible schema.
  *
  * @author Efthymia Tsamoura
  *

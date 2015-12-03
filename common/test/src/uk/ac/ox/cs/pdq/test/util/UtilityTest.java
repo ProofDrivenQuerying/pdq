@@ -1,96 +1,30 @@
 package uk.ac.ox.cs.pdq.test.util;
 
-import org.junit.Ignore;
+import java.util.List;
+
+import org.junit.Assert;
 import org.junit.Test;
 
+import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.db.TypedConstant;
+import uk.ac.ox.cs.pdq.util.Typed;
+import uk.ac.ox.cs.pdq.util.Utility;
+
+import com.google.common.collect.Lists;
+
 /**
- * Utilit unit test
+ * Utility unit test
  *
  * @author Julien Leblay
- *
  */
-@Ignore
 public class UtilityTest {
 
-
-	@Test public void search() {
-	}
-
-	@Test public void containsElement() {
-	}
-
-	@Test public void removeDuplicates() {
-	}
-
-	@Test public void extract() {
-	}
-
-	@Test public void typedToTerms() {
-	}
-
-	@Test public void typedToTerm() {
-	}
-
-	@Test public void getTypedConstants() {
-	}
-
-	@Test public void typedToVariableTerms() {
-	}
-
-	@Test public void getVariables() {
-	}
-
-	@Test public void getConstantsCollection() {
-	}
-
-	@Test public void getConstantsPredicateFormula() {
-	}
-
-	@Test public void getTerms() {
-	}
-
-	@Test public void generateVariables() {
-	}
-
-	@Test public void termsToAttributes1() {
-	}
-
-	@Test public void termsToTyped() {
-	}
-
-	@Test public void termToTyped() {
-	}
-
-	@Test public void termsToAttributes2() {
-	}
-
-	@Test public void canonicalAttributes() {
-	}
-
-	@Test public void cast() {
-	}
-
-	@Test public void toStrings() {
-	}
-
-	@Test public void getTupleType() {
-	}
-
-	@Test public void meanDist() {
-	}
-
-	@Test public void retain() {
-	}
-
-	@Test public void connectedComponents() {
-	}
-
-	@Test public void deepCopy() {
-	}
-
-	@Test public void format1() {
-	}
-
-	@Test public void format2() {
+	@Test public void testToTypedConstant() {
+		TypedConstant<?> t1 = new TypedConstant<>("str");
+		Attribute t2 = new Attribute(Integer.class, "1");
+		List<Typed> typed = Lists.newArrayList(t1, t2);
+		List<TypedConstant<?>> constants = Utility.toTypedConstants(typed);
+		Assert.assertSame(constants.get(0), t1);
+		Assert.assertEquals(constants.get(1), new TypedConstant<>(1));
 	}
 }

@@ -17,14 +17,30 @@ import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 
 import com.google.common.collect.Lists;
 
+
 /**
- * A configuration which uses the chase as a proof system 
+ * 	Proof configurations or configurations are associated with
+	(i) a collection of facts using initial chase constants called the output
+	facts OF, which will always implicitly include the initial chase
+	facts, (ii) a subset of the initial chase constants, called the input
+	chase constants IC. IC will represent hypotheses that the proof uses
+	about which values are accessible. We can derive from the output
+	facts the collection of output chase constants OC of the configuration:
+	those that are mentioned in the facts OF. A configuration
+	with input constants IC and output facts OF represents a proof of
+	OF using the rules of AcSch, starting from the hypothesis that each
+	c \in IC is accessible.
+	The (output) facts are all stored inside the state member field.
+ * 
+ * 
  * @author Efthymia Tsamoura
  *
+ * @param <P>
+ * 		type of configuration plans. Plans depending on the type of proof configuration can be either DAG or sequential.
  */
 public abstract class ChaseConfiguration<P extends Plan> implements Configuration<P> {
 
-	/** The configuration's state. This can be either a tree of bags or a list of facts */
+	/** The configuration's chase state. Keeps the output facts of this configuration */
 	protected final AccessibleChaseState state;
 
 	/** The plan that corresponds to this configuration */
@@ -118,7 +134,8 @@ public abstract class ChaseConfiguration<P extends Plan> implements Configuratio
 	}
 	
 	/**
-	 * Closes this.configuration using the input dependencies
+	 * Finds all consequences this.configuration using the input dependencies and the chase algorithm as a proof system.
+	 * 
 	 * @throws PlannerException
 	 * @throws LimitReachedException
 	 */
@@ -159,6 +176,16 @@ public abstract class ChaseConfiguration<P extends Plan> implements Configuratio
 		return this.input.isEmpty();
 	}
 	
+	/**
+	 * 
+	 * @param query
+	 * @return
+	 * 		true if the configuration matches the input query.
+	 * 	 	(Conjunctive query match definition) If Q′ is a conjunctive query and v is a chase configuration
+			having elements for each free variable of Q′, then a homomorphism of Q′ into v
+			mapping each free variable into the corresponding element is called a match for Q′ in
+			v. 
+	 */
 	@Override
 	public boolean isSuccessful(Query<?> query) {
 		try {

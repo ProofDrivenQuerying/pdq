@@ -17,7 +17,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 
 /**
- * Class of equal constants created during EGD chasing
+ * Class of chase constants that are equal under the schema constraints.
  * @author Efthymia Tsamoura
  *
  */
@@ -60,6 +60,8 @@ public class EqualConstantsClass {
 			//If both inputs are chase constants
 			this.constants.addAll(equality.getTerms());
 		}
+		//Find out the representative. 
+		this.setRepresentative();
 	}
 
 	private EqualConstantsClass(Collection<Term> constants, Term representative, TypedConstant<?> schemaConstant) {
@@ -125,9 +127,47 @@ public class EqualConstantsClass {
 
 			}
 		}
+		//Find out the representative. 
+		this.setRepresentative();
 		return true;
 	}
 
+	
+	/**
+	 * Picks the representative of this class
+		The representatives are picked in the following priority:
+		Schema constants
+		Constants from the canonical database
+		Other labelled nulls not produced after firing EGDs
+	 */
+	private void setRepresentative() {
+		this.representative = null;
+		if(this.schemaConstant != null) {
+			this.representative = this.schemaConstant;
+		}
+		else {
+			if(this.representative == null || this.representative instanceof Skolem && !((Skolem) this.representative).getName().startsWith("c")) {
+				for(Term constant:this.constants) {
+					if(constant instanceof Skolem && ((Skolem) constant).getName().startsWith("c")) {
+						this.representative = constant;
+						break;
+					}
+				}
+			}
+			if(this.representative == null) {
+				for(Term constant:this.constants) {
+					if(constant instanceof Skolem && ((Skolem) constant).getName().startsWith("k")) {
+						this.representative = constant;
+						break;
+					}
+				}
+				if(this.representative == null) {
+					this.representative = this.constants.iterator().next();
+				}
+			}
+		}	
+	}
+	
 	public boolean contains(Term constant) {
 		return (this.schemaConstant!= null && this.schemaConstant.equals(constant)) 
 				|| this.constants.contains(constant);
@@ -151,6 +191,8 @@ public class EqualConstantsClass {
 		} else {
 			this.constants.addAll(target.getConstants());
 			this.schemaConstant = target.schemaConstant;
+			//Update the representative
+			this.setRepresentative();
 			return true;
 		}
 	}
@@ -207,40 +249,6 @@ public class EqualConstantsClass {
 	 * Otherwise, the first (in order of appearance) canonical constant
 	 */
 	public Term getRepresentative() {
-		if(this.representative == null) {
-			if(this.schemaConstant != null) {
-				this.representative = this.schemaConstant;
-			}
-			else {
-				for(Term constant:this.constants) {
-					if(constant instanceof Skolem && ((Skolem) constant).getName().startsWith("c")) {
-						this.representative = constant;
-						return this.representative;
-					}
-				}
-				this.representative = this.constants.iterator().next();
-			}	
-		}
-		else {
-			if(this.schemaConstant != null) {
-				this.representative = this.schemaConstant;
-				return this.representative;
-			}
-			if(this.representative instanceof TypedConstant) {
-				return this.representative;
-			}
-			else if(this.representative instanceof Skolem && ((Skolem) this.representative).getName().startsWith("c")) {
-				return this.representative;
-			}
-			else {
-				for(Term constant:this.constants) {
-					if(constant instanceof Skolem && ((Skolem) constant).getName().startsWith("c")) {
-						this.representative = constant;
-						return this.representative;
-					}
-				}
-			}
-		}
 		return this.representative;
 	}
 }

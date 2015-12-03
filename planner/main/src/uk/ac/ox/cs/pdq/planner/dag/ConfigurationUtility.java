@@ -12,16 +12,16 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.plan.DAGPlan;
+import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema;
+import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema.InferredAccessibleRelation;
 import uk.ac.ox.cs.pdq.planner.dag.BinaryConfiguration.BinaryConfigurationTypes;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator;
-import uk.ac.ox.cs.pdq.planner.db.access.AccessibleSchema;
-import uk.ac.ox.cs.pdq.planner.db.access.AccessibleSchema.InferredAccessibleRelation;
+import uk.ac.ox.cs.pdq.planner.dominance.Dominance;
+import uk.ac.ox.cs.pdq.planner.dominance.FactDominance;
+import uk.ac.ox.cs.pdq.planner.dominance.FastFactDominance;
+import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominance;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.dominance.Dominance;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.dominance.FactDominance;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.dominance.FastFactDominance;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.dominance.SuccessDominance;
 import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.collect.Lists;
@@ -345,7 +345,7 @@ public class ConfigurationUtility {
 			if(bestPlan == null) {
 				return true;
 			}
-			DAGPlan plan = PlanGenerator.toPlan(left, right, type);
+			DAGPlan plan = DAGPlanGenerator.toDAGPlan(left, right, type);
 			costEstimator.cost(plan);
 			return !successDominance.isDominated(plan, bestPlan);
 		}

@@ -8,8 +8,8 @@ import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
 import com.google.common.collect.Lists;
 
 /**
- * A SearchNode class implementation where the best path to success is kept.
- * Used when employing a simple cost function to cost plans
+ * Nodes that keep a singlepath to success.
+ * Used when costing plans using a simple cost function.
  *
  * @author Efthymia Tsamoura
  */

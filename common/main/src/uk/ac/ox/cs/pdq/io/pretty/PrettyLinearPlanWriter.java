@@ -44,7 +44,7 @@ public class PrettyLinearPlanWriter extends PrettyWriter<LeftDeepPlan> implement
 	
 	/**
 	 * @param out PrintStream
-	 * @param plan LinearPlan
+	 * @param plan LeftDeepPlan
 	 */
 	@Override
 	public void write(PrintStream out, LeftDeepPlan plan) {
@@ -52,7 +52,7 @@ public class PrettyLinearPlanWriter extends PrettyWriter<LeftDeepPlan> implement
 	}
 	
 	/**
-	 * @param q LinearPlan
+	 * @param q LeftDeepPlan
 	 */
 	@Override
 	public void write(LeftDeepPlan q) {
@@ -67,7 +67,7 @@ public class PrettyLinearPlanWriter extends PrettyWriter<LeftDeepPlan> implement
 //		try(InputStream sin = new FileInputStream("../dag_benchmark/test/runtime/tpch/postgresql/inputs/blackbox/tpch_001/schemas/fk_inputs/queries/case_005/schema.xml");
 //			InputStream qin = new FileInputStream("../dag_benchmark/test/runtime/tpch/postgresql/inputs/blackbox/tpch_001/schemas/fk_inputs/queries/case_005/expected-plan.xml")) {
 //			Schema s = Readers.from(sin).read();
-//			LinearPlan p = Readers.from(qin).with(s).read();
+//			LeftDeepPlan p = Readers.from(qin).with(s).read();
 //			PrettyLinearPlanWriter.to(System.out).write(p);
 //		} catch (IOException e) {
 //			e.printStackTrace();

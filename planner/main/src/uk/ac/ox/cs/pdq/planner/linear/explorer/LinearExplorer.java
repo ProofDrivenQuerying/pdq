@@ -1,5 +1,7 @@
 package uk.ac.ox.cs.pdq.planner.linear.explorer;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 import org.jgrapht.graph.DefaultEdge;
@@ -9,8 +11,9 @@ import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
-import uk.ac.ox.cs.pdq.planner.db.access.AccessibleSchema;
+import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.explorer.Explorer;
+import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.linear.metadata.CreationMetadata;
 import uk.ac.ox.cs.pdq.planner.linear.node.NodeFactory;
 import uk.ac.ox.cs.pdq.planner.linear.node.PlanTree;
@@ -23,6 +26,7 @@ import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
 import com.google.common.eventbus.EventBus;
 
 
@@ -68,6 +72,8 @@ public abstract class LinearExplorer extends Explorer<LeftDeepPlan> {
 
 	/** Maximum exploration depth  */
 	protected final int depth;
+	
+	protected List<LinearChaseConfiguration> bestConfigurationsList;
 
 	/**
 	 * 
@@ -193,4 +199,27 @@ public abstract class LinearExplorer extends Explorer<LeftDeepPlan> {
 	public NodeFactory getNodeFactory() {
 		return this.nodeFactory;
 	}
+	
+	/**
+	 * 
+	 * @param path
+	 * @return
+	 * 		the configuration of each node in the input path.
+	 * 		The nodes are indexed using their ids.
+	 */
+	protected List<LinearChaseConfiguration> getConfigurations(List<Integer> path) {
+		Preconditions.checkArgument(path != null && !path.isEmpty());
+		List<LinearChaseConfiguration> configurations = Lists.newArrayList();
+		for (Integer n: path) {
+			SearchNode node = this.planTree.getVertex(n);
+			Preconditions.checkNotNull(node);
+			configurations.add(node.getConfiguration());
+		}
+		return configurations;
+	}
+	
+	public List<LinearChaseConfiguration> getBestConfigurationsList() {
+		return this.bestConfigurationsList;
+	}
+	
 }

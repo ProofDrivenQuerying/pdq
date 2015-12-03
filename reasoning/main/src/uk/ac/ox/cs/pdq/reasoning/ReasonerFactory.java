@@ -10,7 +10,6 @@ import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.ParallelEGDChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.KTerminationChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
-import uk.ac.ox.cs.pdq.reasoning.chase.SequentialEGDChaser;
 
 import com.google.common.base.Preconditions;
 import com.google.common.eventbus.EventBus;
@@ -98,7 +97,7 @@ public class ReasonerFactory {
 					this.collectStatistics == true ? new StatisticsCollector(this.collectStatistics, this.eventBus) : null);
 			
 		case SEQUENTIAL_EGD_CHASE:
-			return new SequentialEGDChaser(
+			return new RestrictedChaser(
 					this.collectStatistics == true ? new StatisticsCollector(this.collectStatistics, this.eventBus) : null);
 			
 		case KTERMINATION_CHASE:

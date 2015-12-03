@@ -26,7 +26,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 /**
- * An equality generating dependency
+ * A dependency of the form \delta = \sigma --> x_i = x_j where 
  *
  * @author Efthymia Tsamoura
  */

@@ -17,7 +17,7 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 
 /**
- * Keeps the different classes of equal constants created during EGD chasing
+ * Keeps the multiple classes of equal constants created during EGD chasing
  * @author Efthymia Tsamoura
  *
  */

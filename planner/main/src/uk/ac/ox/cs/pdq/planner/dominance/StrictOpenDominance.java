@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.planner.reasoning.chase.dominance;
+package uk.ac.ox.cs.pdq.planner.dominance;
 
 import com.google.common.base.Preconditions;
 
@@ -6,9 +6,9 @@ import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.SimpleCostEstimator;
 import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.planner.dag.ApplyRule;
+import uk.ac.ox.cs.pdq.planner.equivalence.FactEquivalence;
+import uk.ac.ox.cs.pdq.planner.equivalence.FastFactEquivalence;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.equivalence.FactEquivalence;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.equivalence.FastFactEquivalence;
 
 /**
  * Open configuration domination. A configuration c dominates a configuration c',

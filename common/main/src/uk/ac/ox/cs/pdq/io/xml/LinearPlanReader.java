@@ -63,7 +63,7 @@ public class LinearPlanReader extends AbstractXMLReader<LeftDeepPlan> {
 
 	/**
 	 * @param in InputStream
-	 * @return LinearPlan
+	 * @return LeftDeepPlan
 	 * @see uk.ac.ox.cs.pdq.io.Reader#read(InputStream)
 	 */
 	@Override
@@ -126,8 +126,8 @@ public class LinearPlanReader extends AbstractXMLReader<LeftDeepPlan> {
 			this.operator = this.operatorReader.getOperator();
 			Collection<AccessOperator> accesses = RelationalOperator.getAccesses(this.operator);
 			this.access = Iterators.getLast(accesses.iterator());
-			//this.plan = new LinearPlan(this.operator, this.access, this.plan, null);
-			this.plan = new LeftDeepPlan(this.operator, this.plan, null);
+			this.plan = new LeftDeepPlan(this.operator, this.access, this.plan, null);
+			//this.plan = new LeftDeepPlan(this.operator, this.plan, null);
 			this.aliases.put(this.name, this.operator);
 			this.name = null;
 			break;

@@ -39,8 +39,8 @@ public class LeftDeepPlanGenerator {
 	 * @param parent 
 	 * @return 
 	 */
-	public static LeftDeepPlan createLinearPlan(LinearChaseConfiguration configuration, LeftDeepPlan parent) {
-		return create(configuration, parent, inferOutputChaseConstants(configuration));
+	public static LeftDeepPlan createLeftDeepPlan(LinearChaseConfiguration configuration, LeftDeepPlan parent) {
+		return createLeftDeepPlan(configuration, parent, inferOutputChaseConstants(configuration));
 	}
 
 	/**
@@ -48,10 +48,10 @@ public class LeftDeepPlanGenerator {
 	 * @param nodes List<T>
 	 * @return 
 	 */
-	public static<T extends SearchNode> LeftDeepPlan createLinearPlan(List<T> nodes) {
+	public static<T extends SearchNode> LeftDeepPlan createLeftDeepPlan(List<T> nodes) {
 		LeftDeepPlan parentPlan = null;
 		for (T node: nodes) {
-			parentPlan = LeftDeepPlanGenerator.createLinearPlan(node.getConfiguration(), parentPlan);
+			parentPlan = LeftDeepPlanGenerator.createLeftDeepPlan(node.getConfiguration(), parentPlan);
 			
 		}
 		return parentPlan;
@@ -66,7 +66,7 @@ public class LeftDeepPlanGenerator {
 	 * 		Terms to project in the resulting plan
 	 * @return 
 	 */
-	private static LeftDeepPlan create(LinearConfiguration configuration,
+	private static LeftDeepPlan createLeftDeepPlan(LinearConfiguration configuration,
 			LeftDeepPlan parent,
 			List<Term> toProject) {
 		Preconditions.checkArgument(configuration.getExposedCandidates() != null);
@@ -110,7 +110,7 @@ public class LeftDeepPlanGenerator {
 				op1 = new Join(predAlias, op1);
 			}
 		}
-		LeftDeepPlan lp = new LeftDeepPlan(op1);
+		LeftDeepPlan lp = new LeftDeepPlan(op1, access);
 		if (parent != null) {
 			lp.addPrefix(parent);
 			parent.addSuffix(lp);

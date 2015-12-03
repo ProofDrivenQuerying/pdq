@@ -2,7 +2,7 @@ package uk.ac.ox.cs.pdq.planner.linear.pruning;
 
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.PostPruningTypes;
-import uk.ac.ox.cs.pdq.planner.db.access.AccessibleSchema;
+import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.linear.node.NodeFactory;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 

@@ -2,7 +2,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>uk.ac.ox.cs.pdq</groupId>
-	<artifactId>pdq-reasoning</artifactId>
+	<artifactId>sizeestimation.reasoning</artifactId>
 	<version>1.0.0-Beta</version>
 	<build>
 		<sourceDirectory>main/src</sourceDirectory>
@@ -18,14 +18,14 @@
 				<directory>main/src/resources</directory>
 				<filtering>true</filtering>
 				<includes>
-					<include>**/reasoning.version</include>
+					<include>**/common.version</include>
 				</includes>
 			</resource>
 			<resource>
 				<directory>main/src/resources</directory>
 				<filtering>false</filtering>
 				<excludes>
-					<exclude>**/reasoning.version</exclude>
+					<exclude>**/common.version</exclude>
 				</excludes>
 			</resource>
 		</resources>
@@ -39,49 +39,13 @@
 					<encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.6</version>
-				<configuration>
-					<archive>
-						<manifest>
-							<addClasspath>true</addClasspath>
-							<mainClass>uk.ac.ox.cs.pdq.planner.Bootstrap</mainClass>
-						</manifest>
-					</archive>
-				</configuration>
-			</plugin>
-			<plugin>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<groupId>org.apache.maven.plugins</groupId>
-				<version>2.4.1</version>
-				<executions>
-					<execution>
-						<id>make-executable-jar-with-dependencies</id>
-						<phase>package</phase>
-						<goals>
-							<goal>single</goal>
-						</goals>
-						<configuration>
-							<archive>
-								<manifest>
-									<addClasspath>true</addClasspath>
-									<mainClass>uk.ac.ox.cs.pdq.planner.Bootstrap</mainClass>
-								</manifest>
-							</archive>
-							<descriptorRefs>
-								<descriptorRef>jar-with-dependencies</descriptorRef>
-							</descriptorRefs>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
 		</plugins>
 	</build>
-	<name>PDQ reasoning library</name>
-	<description>The reasoning library features classes and algorithm for reasoning purposes.
-Currently, the only implementation reasoning algorithm is the Chase.</description>
+	<name>PDQ common library</name>
+	<description>The common library features the packages and classes used across the whole 
+application. It features high-level interfaces and basic code for handling,
+FOL formulas, relation algebra, etc.
+</description>
 	<url>http://www.cs.ox.ac.uk/pdq/</url>
 	<organization>
 		<name>Oxford University - Department of Computer Science</name>
@@ -90,7 +54,7 @@ Currently, the only implementation reasoning algorithm is the Chase.</descriptio
 	<dependencies>
 		<dependency>
 			<groupId>uk.ac.ox.cs.pdq</groupId>
-			<artifactId>pdq-common</artifactId>
+			<artifactId>sizeestimation.common</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.beust</groupId>
@@ -107,13 +71,9 @@ Currently, the only implementation reasoning algorithm is the Chase.</descriptio
 		<dependencies>
 			<dependency>
 				<groupId>uk.ac.ox.cs.pdq</groupId>
-				<artifactId>pdq-common</artifactId>
+				<artifactId>sizeestimation.common</artifactId>
 				<version>1.0.0-Beta</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
-	<issueManagement>
-		<system>GitHub</system>
-		<url>https://github.com/michaelbenedikt/pdq/issues/</url>
-	</issueManagement>
 </project>

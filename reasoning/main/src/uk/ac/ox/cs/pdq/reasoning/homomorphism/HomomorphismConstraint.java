@@ -8,7 +8,7 @@ import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Variable;
 
 /**
- * Super class for all constraints that can be passed for homomorphism detection
+ * Super class for all constraints that an homomorphism should satisfy
  *
  * @author Julien Leblay
  * @author Efthymia Tsamoura

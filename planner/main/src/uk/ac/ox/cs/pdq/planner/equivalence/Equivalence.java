@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.planner.reasoning.chase.equivalence;
+package uk.ac.ox.cs.pdq.planner.equivalence;
 
 import uk.ac.ox.cs.pdq.planner.reasoning.Configuration;
 

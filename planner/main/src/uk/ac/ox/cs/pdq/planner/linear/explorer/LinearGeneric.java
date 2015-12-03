@@ -15,7 +15,7 @@ import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
-import uk.ac.ox.cs.pdq.planner.db.access.AccessibleSchema;
+import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.linear.LinearConfiguration;
 import uk.ac.ox.cs.pdq.planner.linear.metadata.BestPlanMetadata;
 import uk.ac.ox.cs.pdq.planner.linear.metadata.CreationMetadata;
@@ -124,6 +124,7 @@ public class LinearGeneric extends LinearExplorer {
 		Metadata metadata = new CreationMetadata(selectedNode, this.getElapsedTime());
 		freshNode.setMetadata(metadata);
 		this.eventBus.post(freshNode);
+		
 
 		this.planTree.addVertex(freshNode);
 		this.planTree.addEdge(selectedNode, freshNode, new DefaultEdge());
@@ -141,10 +142,10 @@ public class LinearGeneric extends LinearExplorer {
 			// Update the best plan found so far
 			if (this.bestPlan == null || (this.bestPlan != null && successfulPlan.getCost().lessThan(this.bestPlan.getCost()))) {
 				this.bestPlan = successfulPlan;
-				
+				this.bestConfigurationsList = this.getConfigurations(freshNode.getBestPathFromRoot());
 				this.eventBus.post(freshNode.getConfiguration().getPlan());
-
-				metadata = new BestPlanMetadata(selectedNode, this.bestPlan, freshNode.getBestPathFromRoot(), this.getElapsedTime());
+				metadata = new BestPlanMetadata(selectedNode, this.bestPlan, freshNode.getBestPathFromRoot(), 
+						this.bestConfigurationsList, this.getElapsedTime());
 				freshNode.setMetadata(metadata);
 				this.eventBus.post(freshNode);
 			}

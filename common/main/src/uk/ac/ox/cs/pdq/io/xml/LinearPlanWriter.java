@@ -33,7 +33,7 @@ public class LinearPlanWriter extends AbstractXMLWriter<LeftDeepPlan> {
 	/**
 	 * Writes the given plan to the given output.
 	 * @param out
-	 * @param plan LinearPlan
+	 * @param plan LeftDeepPlan
 	 */
 	public void writePlan(PrintStream out, LeftDeepPlan plan) {
 		Map<QNames, String> att = new LinkedHashMap<>();
@@ -68,7 +68,7 @@ public class LinearPlanWriter extends AbstractXMLWriter<LeftDeepPlan> {
 	/**
 	 * Writes the given command to the given output.
 	 * @param out
-	 * @param plan LinearPlan
+	 * @param plan LeftDeepPlan
 	 * @param alias String
 	 * @param aliases Map<LogicalOperator,String>
 	 */
@@ -82,7 +82,7 @@ public class LinearPlanWriter extends AbstractXMLWriter<LeftDeepPlan> {
 
 	/**
 	 * @param out PrintStream
-	 * @param o LinearPlan
+	 * @param o LeftDeepPlan
 	 */
 	@Override
 	public void write(PrintStream out, LeftDeepPlan o) {

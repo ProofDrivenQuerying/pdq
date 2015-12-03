@@ -19,6 +19,7 @@ import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.plan.DAGPlan;
+import uk.ac.ox.cs.pdq.plan.TreePlan;
 import uk.ac.ox.cs.pdq.planner.dag.BinaryConfiguration.BinaryConfigurationTypes;
 
 import com.google.common.base.Preconditions;
@@ -30,7 +31,7 @@ import com.google.common.collect.Sets;
  * @author Julien Leblay
  *
  */
-public class PlanGenerator {
+public class DAGPlanGenerator {
 
 	/**
 	 * @param left DAGConfiguration<S>
@@ -39,11 +40,11 @@ public class PlanGenerator {
 	 * @param cf ControlFlows
 	 * @return DAGPlan
 	 */
-	public static DAGPlan toPlan(DAGChaseConfiguration left, DAGChaseConfiguration right, BinaryConfigurationTypes type) {
+	public static DAGPlan toDAGPlan(DAGChaseConfiguration left, DAGChaseConfiguration right, BinaryConfigurationTypes type) {
 		Set<Constant> inputs = Sets.newLinkedHashSet(right.getInput());
 		inputs.removeAll(left.getOutput());
 		inputs.addAll(left.getInput());
-		return toPlan(inputs, left, right, type);
+		return toDAGPlan(inputs, left, right, type);
 	}
 
 	/**
@@ -52,8 +53,8 @@ public class PlanGenerator {
 	 * @param config BinaryConfiguration<S>
 	 * @return a relational expression equivalent to the given linear plan
 	 */
-	public static DAGPlan toPlan(BinaryConfiguration config) {
-		return toPlan(config, config.getInput(), config.getLeft(), config.getRight(), config.getType());
+	public static DAGPlan toDAGPlan(BinaryConfiguration config) {
+		return toDAGPlan(config, config.getInput(), config.getLeft(), config.getRight(), config.getType());
 	}
 
 	/**
@@ -65,8 +66,8 @@ public class PlanGenerator {
 	 * @param type BinaryConfigurationTypes
 	 * @return a relational expression equivalent to the given linear plan
 	 */
-	private static DAGPlan toPlan(Collection<? extends Term> inputs, DAGChaseConfiguration left, DAGChaseConfiguration right, BinaryConfigurationTypes type) {
-		return toPlan(null, inputs, left, right, type);
+	private static DAGPlan toDAGPlan(Collection<? extends Term> inputs, DAGChaseConfiguration left, DAGChaseConfiguration right, BinaryConfigurationTypes type) {
+		return toDAGPlan(null, inputs, left, right, type);
 	}
 
 	/**
@@ -79,7 +80,7 @@ public class PlanGenerator {
 	 * @param type BinaryConfigurationTypes
 	 * @return a relational expression equivalent to the given linear plan
 	 */
-	private static DAGPlan toPlan(DAGChaseConfiguration config, Collection<? extends Term> inputs, DAGChaseConfiguration left, DAGChaseConfiguration right, BinaryConfigurationTypes type) {
+	private static DAGPlan toDAGPlan(DAGChaseConfiguration config, Collection<? extends Term> inputs, DAGChaseConfiguration left, DAGChaseConfiguration right, BinaryConfigurationTypes type) {
 		RelationalOperator lOp = left.getPlan().getOperator();
 		RelationalOperator rOp = right.getPlan().getOperator();
 		RelationalOperator operator = null;
@@ -113,11 +114,11 @@ public class PlanGenerator {
 	 * @param config DAGConfiguration<S>
 	 * @return a relational expression equivalent to the given linear plan
 	 */
-	public static DAGPlan toPlan(DAGChaseConfiguration config) {
+	public static DAGPlan toDAGPlan(DAGChaseConfiguration config) {
 		if (config instanceof ApplyRule) {
-			return toPlan((ApplyRule) config);
+			return toDAGPlan((ApplyRule) config);
 		} else if (config instanceof BinaryConfiguration) {
-			return toPlan((BinaryConfiguration) config);
+			return toDAGPlan((BinaryConfiguration) config);
 		}
 		throw new IllegalStateException("DAGConfiguration type " + config + " not supported.");
 	}
@@ -125,10 +126,10 @@ public class PlanGenerator {
 	/**
 	 * Creates a top-down physical plan from a DAG plan.
 	 *
-	 * @param config ApplyRule<S>
+	 * @param config ApplyRule
 	 * @return a relational expression equivalent to the given linear plan
 	 */
-	private static DAGPlan toPlan(ApplyRule config) {
+	private static DAGPlan toDAGPlan(ApplyRule config) {
 		Relation relation = config.getRelation();
 		AccessMethod binding = config.getBindingPositions();
 		Collection<Predicate> facts = config.getFacts();

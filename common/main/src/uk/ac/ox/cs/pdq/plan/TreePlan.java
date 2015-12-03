@@ -1,11 +1,10 @@
-package uk.ac.ox.cs.pdq.planner.dag;
+package uk.ac.ox.cs.pdq.plan;
 
 import java.util.Collection;
 import java.util.List;
 
 import uk.ac.ox.cs.pdq.algebra.RelationalOperator;
 import uk.ac.ox.cs.pdq.fol.Term;
-import uk.ac.ox.cs.pdq.plan.DAGPlan;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;

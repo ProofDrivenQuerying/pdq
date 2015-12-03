@@ -49,6 +49,7 @@ import com.google.common.collect.Sets;
  * corresponds to the bag (if it exists) where this fact is placed in.
  *
  * @author Efthymia Tsamoura
+ * @author Konstantinidis
  *
  */
 public class DBHomomorphismManager implements HomomorphismManager {
@@ -131,7 +132,7 @@ public class DBHomomorphismManager implements HomomorphismManager {
 
 		this.queries = this.makeQueries(query, schema);
 		this.constants = schema.getConstants();
-		this.relations = schema.getRelations();
+		this.relations = Lists.newArrayList(schema.getRelations());
 		this.aliases = new LinkedHashMap<>();
 	}
 

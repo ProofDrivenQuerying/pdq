@@ -21,15 +21,17 @@ import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.fol.Signature;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
-import uk.ac.ox.cs.pdq.planner.db.access.AccessibilityAxiom;
-import uk.ac.ox.cs.pdq.planner.db.access.AccessibleSchema;
-import uk.ac.ox.cs.pdq.planner.db.access.AccessibleSchema.AccessibleRelation;
-import uk.ac.ox.cs.pdq.planner.db.access.AccessibleSchema.InferredAccessibleRelation;
+import uk.ac.ox.cs.pdq.planner.accessible.AccessibilityAxiom;
+import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema;
+import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema.AccessibleRelation;
+import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema.InferredAccessibleRelation;
 import uk.ac.ox.cs.pdq.planner.reasoning.MatchFactory;
 import uk.ac.ox.cs.pdq.reasoning.Match;
 import uk.ac.ox.cs.pdq.reasoning.chase.FiringGraph;
 import uk.ac.ox.cs.pdq.reasoning.chase.MapFiringGraph;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseListState;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager;
+import uk.ac.ox.cs.pdq.reasoning.utility.EqualConstantsClasses;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.LinkedHashMultimap;
@@ -67,6 +69,7 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 		this(manager, 
 				createInitialFacts(query, schema), 
 				new MapFiringGraph(),
+				inferEqualConstantsClasses(createInitialFacts(query, schema)),
 				Utility.inferInferred(createInitialFacts(query, schema)),
 				Utility.inferDerivedInferred(),
 				Utility.inferSignatureGroups(createInitialFacts(query, schema)),
@@ -111,12 +114,13 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 			DBHomomorphismManager manager,
 			Collection<Predicate> facts,
 			FiringGraph graph,
+			EqualConstantsClasses constantClasses,
 			Collection<String> inferred,
 			Collection<Predicate> derivedInferred,
 			Multimap<Signature, Predicate> signatureGroups,
 			Multimap<Term,Predicate> accessibleTerms
 			) {
-		super(manager, facts, graph);
+		super(manager, facts, graph, constantClasses);
 		this.inferred = inferred;
 		this.derivedInferred = derivedInferred;
 		this.signatureGroups = signatureGroups;
@@ -298,6 +302,7 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 	public AccessibleDatabaseListState clone() {
 		return new AccessibleDatabaseListState(this.manager, Sets.newHashSet(this.facts), 
 				this.graph.clone(),
+				this.constantClasses.clone(),
 				new LinkedHashSet<>(this.inferred),
 				new LinkedHashSet<>(this.derivedInferred), 
 				LinkedHashMultimap.create(this.signatureGroups), 
@@ -317,10 +322,15 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 		Multimap<Term,Predicate> accessibleTerms = LinkedHashMultimap.create(this.accessibleTerms);
 		accessibleTerms.putAll(((AccessibleDatabaseListState)s).accessibleTerms);
 		
+		EqualConstantsClasses classes = this.constantClasses.clone();
+		if(!classes.merge(((DatabaseListState)s).getConstantClasses())) {
+			return null;
+		}
 		return new AccessibleDatabaseListState(
 				this.getManager(),
 				facts, 
 				this.getFiringGraph().merge(s.getFiringGraph()),
+				classes,
 				inferred,
 				derivedInferred, 
 				signatureGroups, 

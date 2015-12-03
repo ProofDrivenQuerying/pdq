@@ -8,7 +8,9 @@ import uk.ac.ox.cs.pdq.planner.reasoning.Configuration;
 
 
 /**
- * Dag configuration
+ * Type of configurations met in the DAG world. 
+ * DAG configurations are built up compositionally and can be either unary or binary.
+ * 
  * @author Efthymia Tsamoura
  *
  */

@@ -19,21 +19,35 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 
 /**
- * 
- * @author Efthymia Tsamoura
- *
- */
-public final class DefaultRestrictedDependencyAssessor implements RestrictedDependencyAssessor{
+	Finds for each chase round which dependencies
+	are most likely to be fired and returns those dependencies.
+	It works as follows: after
+	each rule firing this class keeps track of the generated facts. After a chase round is
+	completed it returns all the dependencies that have in their left-hand side at
+	least one atom with predicate that matches one of the predicates in the
+	generated facts.
+*    
+* @author Efthymia Tsamoura
+*
+*/
 
+public final class DefaultRestrictedChaseDependencyAssessor implements RestrictedChaseDependencyAssessor{
+
+	/** The facts of this database instance**/
 	private Collection<Predicate> stateFacts = null;
 
+	/** Maps of predicate names to EGDs. Given an EGD \delta = \sigma --> x_i = x_j, we 
+	 * create a new entry in the map for each R in \sigma **/
 	private final Multimap<String, EGD> egdMap = ArrayListMultimap.create();
 
+	/** Maps of predicate names to EGDs. Given a TGD \delta = \forall x  \sigma(\vec{x}) --> \exists y  \tau(\vec{x}, \vec{y})
+	 * we create a new entry in the map for each R in \sigma **/
 	private final Multimap<String, TGD> tgdMap = ArrayListMultimap.create();
 	
+	/** All schema dependencies **/
 	private final Collection<Constraint> dependencies;
 
-	public DefaultRestrictedDependencyAssessor(Collection<? extends Constraint> dependencies) {
+	public DefaultRestrictedChaseDependencyAssessor(Collection<? extends Constraint> dependencies) {
 		Preconditions.checkNotNull(dependencies);
 		this.dependencies = Lists.newArrayList();
 		List<Constraint> egds = Lists.newArrayList();
@@ -57,6 +71,13 @@ public final class DefaultRestrictedDependencyAssessor implements RestrictedDepe
 		this.dependencies.addAll(tgds);
 	}
 
+	/**
+	 * 
+	 * @param state
+	 * 		A collection of chase facts
+	 * @return
+	 * 		the dependencies that are most likely to be fired in the next chase round.  
+	 */
 	@Override
 	public Collection<? extends Constraint> getDependencies(ChaseState state) {
 		Collection<Constraint> constraints = Sets.newLinkedHashSet();

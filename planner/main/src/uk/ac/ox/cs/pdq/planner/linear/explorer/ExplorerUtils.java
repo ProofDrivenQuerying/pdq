@@ -6,11 +6,11 @@ import java.util.LinkedHashSet;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 
+import uk.ac.ox.cs.pdq.planner.equivalence.FactEquivalence;
+import uk.ac.ox.cs.pdq.planner.equivalence.FastFactEquivalence;
 import uk.ac.ox.cs.pdq.planner.linear.node.PlanTree;
 import uk.ac.ox.cs.pdq.planner.linear.node.SearchNode;
 import uk.ac.ox.cs.pdq.planner.linear.node.SearchNode.NodeStatus;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.equivalence.FactEquivalence;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.equivalence.FastFactEquivalence;
 
 import com.google.common.base.Preconditions;
 

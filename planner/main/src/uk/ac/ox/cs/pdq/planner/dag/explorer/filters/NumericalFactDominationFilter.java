@@ -7,8 +7,8 @@ import java.util.List;
 
 import uk.ac.ox.cs.pdq.planner.dag.ApplyRule;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
+import uk.ac.ox.cs.pdq.planner.dominance.NumericalFactDominance;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.dominance.NumericalFactDominance;
 
 
 /**

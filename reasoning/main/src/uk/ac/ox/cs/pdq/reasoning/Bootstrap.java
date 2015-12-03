@@ -130,12 +130,7 @@ public class Bootstrap {
 								
 			Chaser reasoner = reasonerFactory.getInstance();
 //			//Creates a chase state that consists of the canonical database of the input query.
-//			if(reasoningParams.getReasoningType().equals(ReasoningTypes.BLOCKING_CHASE)) {
-//				BagsTree.setBagFactory(new uk.ac.ox.cs.pdq.reasoning.chase.BagFactory(schema));
-//			}
 			ChaseState state = 
-//					reasoningParams.getReasoningType().equals(ReasoningTypes.BLOCKING_CHASE) == true ?
-//			new DatabaseTreeState(query, (DBHomomorphismManager) detector) : 
 			new DatabaseListState(query, (DBHomomorphismManager) detector);
 			reasoner.reasonUntilTermination(state, query, schema.getDependencies());
 			

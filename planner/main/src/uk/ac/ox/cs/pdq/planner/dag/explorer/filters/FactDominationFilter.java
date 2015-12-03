@@ -7,7 +7,7 @@ import java.util.List;
 
 import uk.ac.ox.cs.pdq.planner.dag.ApplyRule;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.dominance.FastFactDominance;
+import uk.ac.ox.cs.pdq.planner.dominance.FastFactDominance;
 
 /**
  * Filters out the fact dominated configurations

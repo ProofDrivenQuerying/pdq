@@ -17,24 +17,38 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 
 /**
- * 
- * @author Efthymia Tsamoura
- *
- */
-public final class DefaultParallelEGDDependencyAssessor implements ParallelEGDDependencyAssessor{
+	Finds for each chase round which dependencies
+	are most likely to be fired and returns those dependencies.
+	It works as follows: after
+	each rule firing this class keeps track of the generated facts. After a chase round is
+	completed it returns all the dependencies that have in their left-hand side at
+	least one atom with predicate that matches one of the predicates in the
+	generated facts.
+*    
+* @author Efthymia Tsamoura
+*
+*/
+public final class DefaultParallelEGDChaseDependencyAssessor implements ParallelEGDChaseDependencyAssessor{
 
+	/** The facts of this database instance**/
 	private Collection<Predicate> stateFacts = null;
 
+	/** Maps of predicate names to EGDs. Given an EGD \delta = \sigma --> x_i = x_j, we 
+	 * create a new entry in the map for each R in \sigma **/
 	private final Multimap<String, EGD> egdMap = ArrayListMultimap.create();
 
+	/** Maps of predicate names to EGDs. Given a TGD \delta = \forall x  \sigma(\vec{x}) --> \exists y  \tau(\vec{x}, \vec{y})
+	 * we create a new entry in the map for each R in \sigma **/
 	private final Multimap<String, TGD> tgdMap = ArrayListMultimap.create();
 	
+	/** True if it is the first time we will perform an EGD round**/
 	private boolean firstEGDRound = true;
 	
+	/** True if it is the first time we will perform a TGD round**/
 	private boolean firstTGDRound = true;
 	
 
-	public DefaultParallelEGDDependencyAssessor(Collection<? extends Constraint> dependencies) {
+	public DefaultParallelEGDChaseDependencyAssessor(Collection<? extends Constraint> dependencies) {
 		Preconditions.checkNotNull(dependencies);
 		//Build the dependency map
 		for(Constraint dependency:dependencies) {
@@ -50,6 +64,13 @@ public final class DefaultParallelEGDDependencyAssessor implements ParallelEGDDe
 		}
 	}
 	
+	/**
+	 * 
+	 * @param state
+	 * 		A collection of chase facts
+	 * @return
+	 * 		the dependencies that are most likely to be fired in the next chase round.  
+	 */
 	@Override
 	public Collection<? extends Constraint> getDependencies(ChaseState state, EGDROUND round) {
 		Collection<Constraint> constraints = Sets.newHashSet();

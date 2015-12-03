@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.planner.db.access;
+package uk.ac.ox.cs.pdq.planner.accessible;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -10,12 +10,12 @@ import uk.ac.ox.cs.pdq.fol.Disjunction;
 import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Negation;
 import uk.ac.ox.cs.pdq.fol.Predicate;
-import uk.ac.ox.cs.pdq.planner.db.access.AccessibleSchema.InferredAccessibleRelation;
+import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema.InferredAccessibleRelation;
 import uk.ac.ox.cs.pdq.rewrite.Rewriter;
 
 
 /**
- * An inferred accessible axiom
+ * Copy of each of the original integrity constraints, with each relation R replaced by InfAccR.
  *
  * @author Efthymia Tsamoura
  * @author Julien Leblay
@@ -43,8 +43,7 @@ public class InferredAccessibleAxiom extends TGD {
 		return new InferredAccessibleRelationSubstituter<T>(predToInfAcc).rewrite(f);
 	}
 
-	/**
-	 */
+
 	private static class InferredAccessibleRelationSubstituter<T extends Formula> implements Rewriter<T, T> {
 		final Map<Predicate, InferredAccessibleRelation> predToInfAcc;
 

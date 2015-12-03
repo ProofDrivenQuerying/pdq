@@ -10,8 +10,8 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 /**
- * A BlackBoxNode class implementation where every path to success is being kept.
- * Used when employing a black-box cost function to cost plans
+ * Nodes that keep every path to success.
+ * Used when costing plans using a blackbox cost function.
  * @author Efthymia Tsamoura
  *
  */
