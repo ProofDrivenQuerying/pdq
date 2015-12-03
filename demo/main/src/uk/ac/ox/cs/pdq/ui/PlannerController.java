@@ -58,7 +58,7 @@ import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.planner.Planner;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
-import uk.ac.ox.cs.pdq.planner.db.access.AccessibleSchema;
+import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.Candidate;
 import uk.ac.ox.cs.pdq.planner.linear.metadata.BestPlanMetadata;
 import uk.ac.ox.cs.pdq.planner.linear.metadata.DominanceMetadata;
@@ -559,7 +559,7 @@ public class PlannerController {
 			ByteArrayOutputStream prBos = new ByteArrayOutputStream();
 			ByteArrayOutputStream plBos = new ByteArrayOutputStream();
 			AlgebraLikeLinearPlanWriter.to(new PrintStream(plBos)).write((LeftDeepPlan) metadata.getPlan());
-			ExtendedPrettyProofWriter.to(new PrintStream(prBos), this.accSchema).write(Proof.toProof(metadata.getPlan()));
+			ExtendedPrettyProofWriter.to(new PrintStream(prBos), this.accSchema).write(Proof.toProof(metadata.getConfigurations()));
 			this.searchSpaceMetadataSuccessTab.setDisable(false);
 			this.searchSpaceMetadataSuccess.setText(
 					"*******************\n* Proof \n*******************\n" + prBos + "\n\n" +

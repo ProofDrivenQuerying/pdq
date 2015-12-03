@@ -61,13 +61,13 @@ public class ParallelEGDChaser extends Chaser {
 	 * Chases the input state until termination.
 	 * The EGDs and the TGDs are applied in rounds, i.e., during even round we apply parallel EGD chase steps,
 	 * while during odd rounds we apply parallel TGD chase steps.  
-	 * @param s
+	 * @param instance
 	 * @param target
 	 * @param dependencies
 	 */
 	@Override
-	public <S extends ChaseState> void reasonUntilTermination(S s,  Query<?> target, Collection<? extends Constraint> dependencies) {
-		Preconditions.checkArgument(s instanceof ListState);
+	public <S extends ChaseState> void reasonUntilTermination(S instance,  Query<?> target, Collection<? extends Constraint> dependencies) {
+		Preconditions.checkArgument(instance instanceof ListState);
 		ParallelEGDChaseDependencyAssessor accessor = new DefaultParallelEGDChaseDependencyAssessor(dependencies);
 		
 		Collection<TGD> tgds = Sets.newHashSet();
@@ -91,16 +91,16 @@ public class ParallelEGDChaser extends Chaser {
 		do {
 			++step;
 			//Find all active triggers
-			Collection<? extends Constraint> d = step % 2 == 0 ? accessor.getDependencies(s, EGDROUND.TGD):accessor.getDependencies(s, EGDROUND.EGD);
-			List<Match> matches = s.getMaches(d);
+			Collection<? extends Constraint> d = step % 2 == 0 ? accessor.getDependencies(instance, EGDROUND.TGD):accessor.getDependencies(instance, EGDROUND.EGD);
+			List<Match> matches = instance.getMaches(d);
 			
 			List<Match> activeTriggers = Lists.newArrayList();
 			for(Match match:matches) {
-				if(new ReasonerUtility().isActiveTrigger(match, s)){
+				if(new ReasonerUtility().isActiveTrigger(match, instance)){
 					activeTriggers.add(match);
 				}
 			}
-			boolean succeeds = s.chaseStep(activeTriggers);
+			boolean succeeds = instance.chaseStep(activeTriggers);
 			if(!succeeds) {
 				break;
 			}

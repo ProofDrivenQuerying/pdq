@@ -3,7 +3,7 @@
 <command name="T1">
 <operator type="PROJECT">
 <outputs>
-<attribute name="c636" type="java.lang.Integer"/>
+<attribute name="c619" type="java.lang.Integer"/>
 </outputs>
 <project>
 <attribute name="woeid" type="java.lang.Integer"/>
@@ -39,22 +39,22 @@
 <command name="T2">
 <operator type="DEPENDENT_JOIN" param="0">
 <outputs>
-<attribute name="c636" type="java.lang.Integer"/>
-<attribute name="c636" type="java.lang.Integer"/>
-<attribute name="c637" type="java.lang.Integer"/>
-<attribute name="c638" type="java.lang.String"/>
-<attribute name="c639" type="java.lang.String"/>
-<attribute name="c640" type="java.lang.String"/>
+<attribute name="c619" type="java.lang.Integer"/>
+<attribute name="c619" type="java.lang.Integer"/>
+<attribute name="c620" type="java.lang.Integer"/>
+<attribute name="c621" type="java.lang.String"/>
+<attribute name="c622" type="java.lang.String"/>
+<attribute name="c623" type="java.lang.String"/>
 </outputs>
 <children>
 <operator type="ALIAS" name="T1"/>
 <operator type="PROJECT">
 <outputs>
-<attribute name="c636" type="java.lang.Integer"/>
-<attribute name="c637" type="java.lang.Integer"/>
-<attribute name="c638" type="java.lang.String"/>
-<attribute name="c639" type="java.lang.String"/>
-<attribute name="c640" type="java.lang.String"/>
+<attribute name="c619" type="java.lang.Integer"/>
+<attribute name="c620" type="java.lang.Integer"/>
+<attribute name="c621" type="java.lang.String"/>
+<attribute name="c622" type="java.lang.String"/>
+<attribute name="c623" type="java.lang.String"/>
 </outputs>
 <project>
 <attribute name="of" type="java.lang.Integer"/>
@@ -100,59 +100,59 @@
 <command name="T3">
 <operator type="DEPENDENT_JOIN" param="2">
 <outputs>
+<attribute name="c619" type="java.lang.Integer"/>
+<attribute name="c619" type="java.lang.Integer"/>
+<attribute name="c620" type="java.lang.Integer"/>
+<attribute name="c621" type="java.lang.String"/>
+<attribute name="c622" type="java.lang.String"/>
+<attribute name="c623" type="java.lang.String"/>
+<attribute name="c620" type="java.lang.Integer"/>
+<attribute name="c624" type="java.lang.String"/>
+<attribute name="c625" type="java.lang.String"/>
+<attribute name="c626" type="java.lang.String"/>
+<attribute name="c627" type="java.lang.String"/>
+<attribute name="c628" type="java.lang.String"/>
+<attribute name="c629" type="java.lang.String"/>
+<attribute name="c630" type="java.lang.String"/>
+<attribute name="c631" type="java.lang.Integer"/>
+<attribute name="c632" type="java.lang.Integer"/>
+<attribute name="c633" type="java.lang.String"/>
+<attribute name="c634" type="java.lang.Double"/>
+<attribute name="c635" type="java.lang.Double"/>
 <attribute name="c636" type="java.lang.Integer"/>
-<attribute name="c636" type="java.lang.Integer"/>
-<attribute name="c637" type="java.lang.Integer"/>
+<attribute name="c637" type="java.lang.Double"/>
 <attribute name="c638" type="java.lang.String"/>
 <attribute name="c639" type="java.lang.String"/>
 <attribute name="c640" type="java.lang.String"/>
-<attribute name="c637" type="java.lang.Integer"/>
-<attribute name="c641" type="java.lang.String"/>
+<attribute name="c641" type="java.lang.Double"/>
 <attribute name="c642" type="java.lang.String"/>
-<attribute name="c643" type="java.lang.String"/>
-<attribute name="c644" type="java.lang.String"/>
-<attribute name="c645" type="java.lang.String"/>
-<attribute name="c646" type="java.lang.String"/>
-<attribute name="c647" type="java.lang.String"/>
-<attribute name="c648" type="java.lang.Integer"/>
-<attribute name="c649" type="java.lang.Integer"/>
-<attribute name="c650" type="java.lang.String"/>
-<attribute name="c651" type="java.lang.Double"/>
-<attribute name="c652" type="java.lang.Double"/>
-<attribute name="c653" type="java.lang.Integer"/>
-<attribute name="c654" type="java.lang.Double"/>
-<attribute name="c655" type="java.lang.String"/>
-<attribute name="c656" type="java.lang.String"/>
-<attribute name="c657" type="java.lang.String"/>
-<attribute name="c658" type="java.lang.Double"/>
-<attribute name="c659" type="java.lang.String"/>
-<attribute name="c660" type="java.lang.Integer"/>
+<attribute name="c643" type="java.lang.Integer"/>
 </outputs>
 <children>
 <operator type="ALIAS" name="T2"/>
 <operator type="PROJECT">
 <outputs>
-<attribute name="c637" type="java.lang.Integer"/>
-<attribute name="c641" type="java.lang.String"/>
+<attribute name="c620" type="java.lang.Integer"/>
+<attribute name="c624" type="java.lang.String"/>
+<attribute name="c625" type="java.lang.String"/>
+<attribute name="c626" type="java.lang.String"/>
+<attribute name="c627" type="java.lang.String"/>
+<attribute name="c628" type="java.lang.String"/>
+<attribute name="c629" type="java.lang.String"/>
+<attribute name="c630" type="java.lang.String"/>
+<attribute name="c631" type="java.lang.Integer"/>
+<attribute name="c632" type="java.lang.Integer"/>
+<attribute name="c633" type="java.lang.String"/>
+<attribute name="c634" type="java.lang.Double"/>
+<attribute name="c635" type="java.lang.Double"/>
+<attribute name="c636" type="java.lang.Integer"/>
+<attribute name="c637" type="java.lang.Double"/>
+<attribute name="c638" type="java.lang.String"/>
+<attribute name="c639" type="java.lang.String"/>
+<attribute name="c640" type="java.lang.String"/>
+<attribute name="c641" type="java.lang.Double"/>
 <attribute name="c642" type="java.lang.String"/>
-<attribute name="c643" type="java.lang.String"/>
-<attribute name="c644" type="java.lang.String"/>
-<attribute name="c645" type="java.lang.String"/>
-<attribute name="c646" type="java.lang.String"/>
-<attribute name="c647" type="java.lang.String"/>
-<attribute name="c648" type="java.lang.Integer"/>
-<attribute name="c649" type="java.lang.Integer"/>
-<attribute name="c650" type="java.lang.String"/>
-<attribute name="c651" type="java.lang.Double"/>
-<attribute name="c652" type="java.lang.Double"/>
-<attribute name="c653" type="java.lang.Integer"/>
-<attribute name="c654" type="java.lang.Double"/>
-<attribute name="c655" type="java.lang.String"/>
-<attribute name="c656" type="java.lang.String"/>
-<attribute name="c657" type="java.lang.String"/>
-<attribute name="c658" type="java.lang.Double"/>
-<attribute name="c659" type="java.lang.String"/>
-<attribute name="c660" type="java.lang.Integer"/>
+<attribute name="c643" type="java.lang.Integer"/>
 </outputs>
 <project>
 <attribute name="woeid" type="java.lang.Integer"/>

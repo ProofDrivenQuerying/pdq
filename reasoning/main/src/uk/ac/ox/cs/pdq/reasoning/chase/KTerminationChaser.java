@@ -47,16 +47,16 @@ public class KTerminationChaser extends RestrictedChaser {
 	 * @param dependencies Collection<? extends Constraint>
 	 */
 	@Override
-	public <S extends ChaseState> void reasonUntilTermination(S s, Query<?> target, Collection<? extends Constraint> dependencies) {
-		Preconditions.checkArgument(s instanceof ListState);
+	public <S extends ChaseState> void reasonUntilTermination(S instance, Query<?> target, Collection<? extends Constraint> dependencies) {
+		Preconditions.checkArgument(instance instanceof ListState);
 		int rounds = 0;
 		boolean appliedStep = true;
 		while (rounds < this.k && appliedStep) {
 			appliedStep = false;
-			List<Match> matches = s.getMaches(dependencies);
+			List<Match> matches = instance.getMaches(dependencies);
 			for (Match match: matches) {
-				if(new ReasonerUtility().isActiveTrigger(match, s)){
-					s.chaseStep(match);
+				if(new ReasonerUtility().isActiveTrigger(match, instance)){
+					instance.chaseStep(match);
 					appliedStep = true;
 				}
 			}

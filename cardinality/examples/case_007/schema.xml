@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema>
+	<sources>
+		<source name="tpch" discoverer="uk.ac.ox.cs.pdq.sql.PostgresqlSchemaDiscoverer"
+			url="jdbc:postgresql://localhost/" database="tpch_0001" username="root"
+			password="root" />
+	</sources>
+	<relations>
+		<relation name="customer" source="tpch">
+		</relation>
+		<relation name="part" source="tpch">
+		</relation>
+		<relation name="supplier" source="tpch">
+		</relation>
+		<relation name="partsupp" source="tpch">
+		</relation>
+		<relation name="nation" source="tpch">
+		</relation>
+		<relation name="region" source="tpch">
+		</relation>
+		<relation name="orders" source="tpch">
+		</relation>
+		<relation name="lineitem" source="tpch">
+		</relation>
+		<!-- <relation name="v1" source="tpch"> </relation> <relation name="v2" 
+			source="tpch"> </relation> -->
+
+		<view name="v1">
+			<attribute name="lorderkey" type="java.lang.Integer" />
+			<attribute name="llinenumber" type="java.lang.Integer" />
+		</view>
+
+		<view name="v2">
+			<attribute name="lorderkey" type="java.lang.Integer" />
+			<attribute name="llinenumber" type="java.lang.Integer" />
+			<attribute name="partkey" type="java.lang.Integer" />
+		</view>
+
+	</relations>
+	<dependencies>
+
+		<!--CREATE VIEW V8 WITH SCHEMABINDING AS SELECT LINEITEM.L_ORDERKEY, LINEITEM.L_LINENUMBER 
+			FROM dbo.LINEITEM WHERE LINEITEM.L_RETURNFLAG = 'N' AND LINEITEM.L_LINESTATUS 
+			= 'O' AND LINEITEM.L_SHIPINSTRUCT = 'TAKE_BACK_RETURN' AND LINEITEM.L_SHIPDATE=LINEITEM.L_COMMITDATE; -->
+		<dependency>
+			<body>
+				<atom name="v1">
+					<variable name="lorderkey" />
+					<variable name="llinenumber" />
+				</atom>
+			</body>
+			<head>
+				<atom name="lineitem">
+					<variable name="orderkey" />
+					<variable name="partkey" />
+					<variable name="suppkey" />
+					<variable name="llinenumber" />
+					<variable name="lquantity" />
+					<variable name="lextendedprice" />
+					<variable name="ldiscount" />
+					<variable name="ltax" />
+					<constant value="N" />
+					<constant value="O" />
+					<variable name="date" />
+					<variable name="date" />
+					<variable name="lreceiptdate" />
+					<constant value="TAKE_BACK_RETURN" />
+					<variable name="lshipmode" />
+					<variable name="lcomment" />
+				</atom>
+			</head>
+		</dependency>
+		<dependency>
+			<body>
+				<atom name="lineitem">
+					<variable name="orderkey" />
+					<variable name="partkey" />
+					<variable name="suppkey" />
+					<variable name="llinenumber" />
+					<variable name="lquantity" />
+					<variable name="lextendedprice" />
+					<variable name="ldiscount" />
+					<variable name="ltax" />
+					<constant value="N" />
+					<constant value="O" />
+					<variable name="date" />
+					<variable name="date" />
+					<variable name="lreceiptdate" />
+					<constant value="TAKE_BACK_RETURN" />
+					<variable name="lshipmode" />
+					<variable name="lcomment" />
+				</atom>
+			</body>
+			<head>
+				<atom name="v1">
+					<variable name="lorderkey" />
+					<variable name="llinenumber" />
+				</atom>
+			</head>
+		</dependency>
+
+
+		<!-- CREATE VIEW V9 WITH SCHEMABINDING AS SELECT LINEITEM.L_ORDERKEY, LINEITEM.L_LINENUMBER, 
+			PART.P_PARTKEY FROM dbo.LINEITEM, dbo.ORDERS, dbo.PART WHERE LINEITEM.L_ORDERKEY 
+			= ORDERS.O_ORDERKEY AND LINEITEM.L_PARTKEY = PART.P_PARTKEY AND PART.P_MFGR 
+			= 'Manufacturer#1'; -->
+		<dependency>
+			<body>
+				<atom name="v2">
+					<variable name="orderkey" />
+					<variable name="llinenumber" />
+					<variable name="partkey" />
+				</atom>
+			</body>
+			<head>
+				<atom name="orders">
+					<variable name="orderkey" />
+					<variable name="ckey" />
+					<variable name="ostatus" />
+					<variable name="ototalprice" />
+					<variable name="orderdate" />
+					<variable name="opriority" />
+					<variable name="oclerk" />
+					<variable name="oshipprio" />
+					<variable name="ocomment" />
+				</atom>
+
+				<atom name="part">
+					<variable name="partkey" />
+					<variable name="pname" />
+					<constant value="Manufacturer1" />
+					<variable name="pbrand" />
+					<variable name="ptype" />
+					<variable name="psize" />
+					<variable name="pcontainer" />
+					<variable name="pretailprice" />
+					<variable name="pcomment" />
+				</atom>
+
+				<atom name="lineitem">
+					<variable name="orderkey" />
+					<variable name="partkey" />
+					<variable name="suppkey" />
+					<variable name="llinenumber" />
+					<variable name="lquantity" />
+					<variable name="lextendedprice" />
+					<variable name="ldiscount" />
+					<variable name="ltax" />
+					<variable name="lreturnflag" />
+					<variable name="llinestatus" />
+					<variable name="lshipdate" />
+					<variable name="lcommitdate" />
+					<variable name="lreceiptdate" />
+					<variable name="lshipinstruct" />
+					<variable name="lshipmode" />
+					<variable name="lcomment" />
+				</atom>
+			</head>
+		</dependency>
+		<dependency>
+			<body>
+				<atom name="orders">
+					<variable name="orderkey" />
+					<variable name="ckey" />
+					<variable name="ostatus" />
+					<variable name="ototalprice" />
+					<variable name="orderdate" />
+					<variable name="opriority" />
+					<variable name="oclerk" />
+					<variable name="oshipprio" />
+					<variable name="ocomment" />
+				</atom>
+
+				<atom name="part">
+					<variable name="partkey" />
+					<variable name="pname" />
+					<constant value="Manufacturer1" />
+					<variable name="pbrand" />
+					<variable name="ptype" />
+					<variable name="psize" />
+					<variable name="pcontainer" />
+					<variable name="pretailprice" />
+					<variable name="pcomment" />
+				</atom>
+
+				<atom name="lineitem">
+					<variable name="orderkey" />
+					<variable name="partkey" />
+					<variable name="suppkey" />
+					<variable name="llinenumber" />
+					<variable name="lquantity" />
+					<variable name="lextendedprice" />
+					<variable name="ldiscount" />
+					<variable name="ltax" />
+					<variable name="lreturnflag" />
+					<variable name="llinestatus" />
+					<variable name="lshipdate" />
+					<variable name="lcommitdate" />
+					<variable name="lreceiptdate" />
+					<variable name="lshipinstruct" />
+					<variable name="lshipmode" />
+					<variable name="lcomment" />
+				</atom>
+			</body>
+			<head>
+				<atom name="v2">
+					<variable name="orderkey" />
+					<variable name="llinenumber" />
+					<variable name="partkey" />
+				</atom>
+			</head>
+		</dependency>
+	</dependencies>
+</schema>

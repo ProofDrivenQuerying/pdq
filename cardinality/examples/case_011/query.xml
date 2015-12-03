@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<query>
+	<!-- Supply cost of parts available in quantity 10 -->
+	<body>
+
+		<atom name="orders">
+			<variable name="okey" />
+			<variable name="ckey" />
+			<variable name="ostatus" />
+			<variable name="ototalprice" />
+			<variable name="orderdate" />
+			<variable name="opriority" />
+			<variable name="oclerk" />
+			<variable name="oshipprio" />
+			<variable name="ocomment" />
+		</atom>
+
+		<atom name="lineitem">
+			<variable name="okey" />
+			<variable name="partkey" />
+			<variable name="suppkey" />
+			<variable name="llinenumber" />
+			<variable name="lquantity" />
+			<variable name="lextendedprice" />
+			<variable name="ldiscount" />
+			<variable name="ltax" />
+			<constant value="N" />
+			<constant value="O" />
+			<variable name="lshipdate" />
+			<variable name="lcommitdate" />
+			<variable name="lreceiptdate" />
+			<constant value="TAKE_BACK_RETURN" />
+			<constant value="MAIL" />
+			<variable name="lcomment" />
+		</atom>
+
+		<atom name="part">
+			<variable name="partkey" />
+			<variable name="pname" />
+			<constant value="Manufacturer1" />
+			<variable name="pbrand" />
+			<variable name="ptype" />
+			<variable name="psize" />
+			<variable name="pcontainer" />
+			<variable name="pretailprice" />
+			<variable name="pcomment" />
+		</atom>
+
+		<atom name="supplier">
+			<variable name="suppkey" />
+			<variable name="sname" />
+			<variable name="saddress" />
+			<variable name="nkey" />
+			<variable name="sphone" />
+			<variable name="acctbal" />
+			<variable name="scomment" />
+		</atom>
+
+		<atom name="customer">
+			<variable name="ckey" />
+			<variable name="cname" />
+			<variable name="caddress" />
+			<variable name="nkey" />
+			<variable name="cphone" />
+			<variable name="acctbal" />
+			<variable name="mktsegment" />
+			<variable name="ccomment" />
+		</atom>
+
+		<atom name="nation">
+			<variable name="nkey" />
+			<constant value="United" />
+			<variable name="rkey" />
+			<variable name="ncomment" />
+		</atom>
+
+	</body>
+	<head name="Q">
+		<variable name="okey" />
+		<variable name="partkey" />
+		<variable name="ckey" />
+		<variable name="nkey" />
+	</head>
+</query>

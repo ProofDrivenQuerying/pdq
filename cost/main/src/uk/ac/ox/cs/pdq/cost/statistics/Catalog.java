@@ -74,6 +74,21 @@ public interface Catalog {
 	Collection<Query<?>> getStatisticsExpressions();
 	
 	
+	/**
+	 * 
+	 * @param relation
+	 * @param attribute
+	 * @return
+	 * 		the histogram of the input relation attribute pair
+	 */
+	Histogram getHistogram(Relation relation, Attribute attribute);
+	
+	/**
+	 * 
+	 * @param relation
+	 * @return
+	 * 		the quality of size estimate of the input relation
+	 */
 	double getQuality(Relation relation);
 	
 	

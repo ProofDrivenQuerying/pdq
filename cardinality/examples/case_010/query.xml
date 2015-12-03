@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<query>
+	<!-- Supply cost of parts available in quantity 10 -->
+	<body>
+
+		<atom name="part">
+			<variable name="partkey" />
+			<variable name="pname" />
+			<constant value="Manufacturer1" />
+			<constant value="Brand13" />
+			<variable name="ptype" />
+			<variable name="psize" />
+			<variable name="pcontainer" />
+			<variable name="pretailprice" />
+			<variable name="pcomment" />
+		</atom>
+
+		<atom name="supplier">
+			<variable name="suppkey" />
+			<variable name="sname" />
+			<variable name="saddress" />
+			<variable name="nkey" />
+			<variable name="sphone" />
+			<constant value="2000" />
+			<variable name="scomment" />
+		</atom>
+
+		<atom name="partsupp">
+			<variable name="partkey" />
+			<variable name="suppkey" />
+			<variable name="psavailqty" />
+			<variable name="supplycost" />
+			<variable name="pscomment" />
+		</atom>
+
+		<atom name="nation">
+			<variable name="nkey" />
+			<constant value="United" />
+			<variable name="rkey" />
+			<variable name="ncomment" />
+		</atom>
+
+	</body>
+	<head name="Q">
+		<variable name="partkey" />
+		<variable name="suppkey" />
+	</head>
+</query>

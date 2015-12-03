@@ -2,7 +2,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>uk.ac.ox.cs.pdq</groupId>
-	<artifactId>pdq-cost</artifactId>
+	<artifactId>sizeestimation.cost</artifactId>
 	<version>1.0.0-Beta</version>
 	<build>
 		<sourceDirectory>main/src</sourceDirectory>
@@ -18,14 +18,14 @@
 				<directory>main/src/resources</directory>
 				<filtering>true</filtering>
 				<includes>
-					<include>**/cost.version</include>
+					<include>**/common.version</include>
 				</includes>
 			</resource>
 			<resource>
 				<directory>main/src/resources</directory>
 				<filtering>false</filtering>
 				<excludes>
-					<exclude>**/cost.version</exclude>
+					<exclude>**/common.version</exclude>
 				</excludes>
 			</resource>
 		</resources>
@@ -41,8 +41,11 @@
 			</plugin>
 		</plugins>
 	</build>
-	<name>PDQ cost library</name>
-	<description>The cost library features the packages and classes used to compute cost information.</description>
+	<name>PDQ common library</name>
+	<description>The common library features the packages and classes used across the whole 
+application. It features high-level interfaces and basic code for handling,
+FOL formulas, relation algebra, etc.
+</description>
 	<url>http://www.cs.ox.ac.uk/pdq/</url>
 	<organization>
 		<name>Oxford University - Department of Computer Science</name>
@@ -51,23 +54,28 @@
 	<dependencies>
 		<dependency>
 			<groupId>uk.ac.ox.cs.pdq</groupId>
-			<artifactId>pdq-common</artifactId>
+			<artifactId>sizeestimation.common</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>uk.ac.ox.cs.pdq</groupId>
-			<artifactId>pdq-reasoning</artifactId>
+			<artifactId>sizeestimation.reasoning</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.36</version>
 		</dependency>
 	</dependencies>
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
 				<groupId>uk.ac.ox.cs.pdq</groupId>
-				<artifactId>pdq-common</artifactId>
+				<artifactId>sizeestimation.common</artifactId>
 				<version>1.0.0-Beta</version>
 			</dependency>
 			<dependency>
 				<groupId>uk.ac.ox.cs.pdq</groupId>
-				<artifactId>pdq-reasoning</artifactId>
+				<artifactId>sizeestimation.reasoning</artifactId>
 				<version>1.0.0-Beta</version>
 			</dependency>
 		</dependencies>

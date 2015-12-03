@@ -2,7 +2,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>uk.ac.ox.cs.pdq</groupId>
-	<artifactId>pdq-datasources</artifactId>
+	<artifactId>sizeestimation.datasources</artifactId>
 	<version>1.0.0-Beta</version>
 	<name>PDQ data sources library</name>
 	<url>http://www.cs.ox.ac.uk/pdq/</url>
@@ -92,14 +92,14 @@
 		</dependency>
 		<dependency>
 			<groupId>uk.ac.ox.cs.pdq</groupId>
-			<artifactId>pdq-common</artifactId>
+			<artifactId>sizeestimation.common</artifactId>
 		</dependency>
 	</dependencies>
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
 				<groupId>uk.ac.ox.cs.pdq</groupId>
-				<artifactId>pdq-common</artifactId>
+				<artifactId>sizeestimation.common</artifactId>
 				<version>1.0.0-Beta</version>
 			</dependency>
 		</dependencies>

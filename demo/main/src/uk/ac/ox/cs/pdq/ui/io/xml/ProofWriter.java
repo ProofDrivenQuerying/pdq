@@ -13,7 +13,7 @@ import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.io.xml.AbstractXMLWriter;
 import uk.ac.ox.cs.pdq.io.xml.QNames;
-import uk.ac.ox.cs.pdq.planner.db.access.AccessibilityAxiom;
+import uk.ac.ox.cs.pdq.planner.accessible.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.ui.proof.Proof;
 
 /**
@@ -35,7 +35,7 @@ public class ProofWriter extends AbstractXMLWriter<Proof> {
 		for (Proof.State state: proof.getStates()) {
 			this.writeState(out, state);
 		}
-		this.writeQueryMatch(out, proof.getQueryMatch());
+//		this.writeQueryMatch(out, proof.getQueryMatch());
 		close(out, QNames.PROOF);
 	}
 

@@ -49,23 +49,23 @@ public class RestrictedChaser extends Chaser {
 
 	/**
 	 * Chases the input state until termination
-	 * @param s
+	 * @param instance
 	 * @param target
 	 * @param dependencies
 	 */
 	@Override
-	public <S extends ChaseState> void reasonUntilTermination(S s,  Query<?> target, Collection<? extends Constraint> dependencies) {
-		Preconditions.checkArgument(s instanceof ListState);
+	public <S extends ChaseState> void reasonUntilTermination(S instance,  Query<?> target, Collection<? extends Constraint> dependencies) {
+		Preconditions.checkArgument(instance instanceof ListState);
 		RestrictedChaseDependencyAssessor accessor = new DefaultRestrictedChaseDependencyAssessor(dependencies);
 		boolean appliedStep = false;
 		do {
 			appliedStep = false;
-			Collection<? extends Constraint> d = accessor.getDependencies(s);
-			List<Match> matches = s.getMaches(d);
+			Collection<? extends Constraint> d = accessor.getDependencies(instance);
+			List<Match> matches = instance.getMaches(d);
 			for (Match match: matches) {
-				if(new ReasonerUtility().isActiveTrigger(match, s)){
+				if(new ReasonerUtility().isActiveTrigger(match, instance)){
 					//A single chase step
-					s.chaseStep(match);
+					instance.chaseStep(match);
 					appliedStep = true;
 				}
 			}

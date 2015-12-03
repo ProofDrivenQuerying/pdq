@@ -38,11 +38,11 @@ public abstract class Chaser {
 
 	/**
 	 * Chases the input state until termination
-	 * @param s
+	 * @param instance
 	 * @param target
 	 * @param dependencies
 	 */
-	public abstract <S extends ChaseState> void reasonUntilTermination(S s, Query<?> target, Collection<? extends Constraint> dependencies);
+	public abstract <S extends ChaseState> void reasonUntilTermination(S instance, Query<?> target, Collection<? extends Constraint> dependencies);
 	
 	/**
 	 * 

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<query>
+	<!-- Supply cost of parts available in quantity 10 -->
+	<body>
+		<atom name="orders">
+			<variable name="orderkey" />
+			<variable name="ckey" />
+			<variable name="ostatus" />
+			<variable name="price" />
+			<variable name="orderdate" />
+			<variable name="opriority" />
+			<variable name="oclerk" />
+			<variable name="oshipprio" />
+			<variable name="ocomment" />
+		</atom>
+
+		<atom name="part">
+			<variable name="ppartkey" />
+			<variable name="pname" />
+			<variable name="pmfgr" />
+			<variable name="pbrand" />
+			<variable name="ptype" />
+			<variable name="psize" />
+			<variable name="pcontainer" />
+			<variable name="price" />
+			<variable name="pcomment" />
+		</atom>
+
+		<atom name="lineitem">
+			<variable name="orderkey" />
+			<variable name="lpartkey" />
+			<variable name="suppkey" />
+			<variable name="llinenumber" />
+			<variable name="lquantity" />
+			<variable name="lextendedprice" />
+			<variable name="ldiscount" />
+			<variable name="ltax" />
+			<constant value="N" />
+			<constant value="O" />
+			<variable name="date" />
+			<variable name="date" />
+			<variable name="lreceiptdate" />
+			<variable name="lshipinstruct" />
+			<variable name="lshipmode" />
+			<variable name="lcomment" />
+		</atom>
+
+	</body>
+	<head name="Q">
+		<variable name="orderkey" />
+		<variable name="llinenumber" />
+	</head>
+</query>

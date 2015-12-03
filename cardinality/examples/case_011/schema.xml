@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema>
+	<sources>
+		<source name="tpch" discoverer="uk.ac.ox.cs.pdq.sql.PostgresqlSchemaDiscoverer"
+			url="jdbc:postgresql://localhost/" database="tpch_0001" username="root"
+			password="root" />
+	</sources>
+	<relations>
+		<relation name="customer" source="tpch">
+		</relation>
+		<relation name="part" source="tpch">
+		</relation>
+		<relation name="supplier" source="tpch">
+		</relation>
+		<relation name="partsupp" source="tpch">
+		</relation>
+		<relation name="nation" source="tpch">
+		</relation>
+		<relation name="region" source="tpch">
+		</relation>
+		<relation name="orders" source="tpch">
+		</relation>
+		<relation name="lineitem" source="tpch">
+		</relation>
+		<!-- <relation name="v1" source="tpch"> </relation> <relation name="v2" 
+			source="tpch"> </relation> -->
+
+		<view name="v11">
+			<attribute name="okey" type="java.lang.Integer" />
+			<attribute name="llinenumber" type="java.lang.Integer" />
+		</view>
+
+		<view name="v12">
+			<attribute name="okey" type="java.lang.Integer" />
+			<attribute name="llinenumber" type="java.lang.Integer" />
+			<attribute name="partkey" type="java.lang.Integer" />
+		</view>
+
+		<view name="v21">
+			<attribute name="suppkey" type="java.lang.Integer" />
+			<attribute name="nkey" type="java.lang.Integer" />
+
+		</view>
+
+		<view name="v22">
+			<attribute name="suppkey" type="java.lang.Integer" />
+			<attribute name="ckey" type="java.lang.Integer" />
+		</view>
+
+	</relations>
+	<dependencies>
+
+		<!--CREATE VIEW V11 WITH SCHEMABINDING AS SELECT LINEITEM.L_ORDERKEY, LINEITEM.L_LINENUMBER, 
+			ORDERS.O_ORDERKEY FROM dbo.LINEITEM, dbo.ORDERS WHERE LINEITEM.L_ORDERKEY 
+			= ORDERS.O_ORDERKEY AND LINEITEM.L_RETURNFLAG = 'N' AND LINEITEM.L_LINESTATUS 
+			= 'O' AND LINEITEM.L_SHIPINSTRUCT = 'TAKE_BACK_RETURN' AND LINEITEM.L_SHIPMODE 
+			= 'MAIL'; -->
+		<dependency>
+			<body>
+				<atom name="v11">
+					<variable name="okey" />
+					<variable name="llinenumber" />
+				</atom>
+			</body>
+			<head>
+				<atom name="orders">
+					<variable name="okey" />
+					<variable name="ckey" />
+					<variable name="ostatus" />
+					<variable name="ototalprice" />
+					<variable name="orderdate" />
+					<variable name="opriority" />
+					<variable name="oclerk" />
+					<variable name="oshipprio" />
+					<variable name="ocomment" />
+				</atom>
+
+				<atom name="lineitem">
+					<variable name="okey" />
+					<variable name="partkey" />
+					<variable name="suppkey" />
+					<variable name="llinenumber" />
+					<variable name="lquantity" />
+					<variable name="lextendedprice" />
+					<variable name="ldiscount" />
+					<variable name="ltax" />
+					<constant value="N" />
+					<constant value="O" />
+					<variable name="lshipdate" />
+					<variable name="lcommitdate" />
+					<variable name="lreceiptdate" />
+					<constant value="TAKE_BACK_RETURN" />
+					<constant value="MAIL" />
+					<variable name="lcomment" />
+				</atom>
+			</head>
+		</dependency>
+		<dependency>
+			<body>
+				<atom name="orders">
+					<variable name="okey" />
+					<variable name="ckey" />
+					<variable name="ostatus" />
+					<variable name="ototalprice" />
+					<variable name="orderdate" />
+					<variable name="opriority" />
+					<variable name="oclerk" />
+					<variable name="oshipprio" />
+					<variable name="ocomment" />
+				</atom>
+
+				<atom name="lineitem">
+					<variable name="okey" />
+					<variable name="partkey" />
+					<variable name="suppkey" />
+					<variable name="llinenumber" />
+					<variable name="lquantity" />
+					<variable name="lextendedprice" />
+					<variable name="ldiscount" />
+					<variable name="ltax" />
+					<constant value="N" />
+					<constant value="O" />
+					<variable name="lshipdate" />
+					<variable name="lcommitdate" />
+					<variable name="lreceiptdate" />
+					<constant value="TAKE_BACK_RETURN" />
+					<constant value="MAIL" />
+					<variable name="lcomment" />
+				</atom>
+			</body>
+			<head>
+				<atom name="v11">
+					<variable name="okey" />
+					<variable name="llinenumber" />
+				</atom>
+			</head>
+		</dependency>
+
+
+		<!-- CREATE VIEW V12 WITH SCHEMABINDING AS SELECT LINEITEM.L_ORDERKEY, 
+			LINEITEM.L_LINENUMBER, PART.P_PARTKEY FROM dbo.LINEITEM, dbo.PART WHERE LINEITEM.L_PARTKEY 
+			= PART.P_PARTKEY AND PART.P_MFGR = 'Manufacturer#1'; -->
+		<dependency>
+			<body>
+				<atom name="v12">
+					<variable name="okey" />
+					<variable name="llinenumber" />
+					<variable name="partkey" />
+				</atom>
+			</body>
+			<head>
+				<atom name="lineitem">
+					<variable name="okey" />
+					<variable name="partkey" />
+					<variable name="suppkey" />
+					<variable name="llinenumber" />
+					<variable name="lquantity" />
+					<variable name="lextendedprice" />
+					<variable name="ldiscount" />
+					<variable name="ltax" />
+					<variable name="lreturnflag" />
+					<variable name="llinestatus" />
+					<variable name="lshipdate" />
+					<variable name="lcommitdate" />
+					<variable name="lreceiptdate" />
+					<variable name="lshipinstruct" />
+					<variable name="lshipmode" />
+					<variable name="lcomment" />
+				</atom>
+
+				<atom name="part">
+					<variable name="partkey" />
+					<variable name="pname" />
+					<constant value="Manufacturer1" />
+					<variable name="pbrand" />
+					<variable name="ptype" />
+					<variable name="psize" />
+					<variable name="pcontainer" />
+					<variable name="pretailprice" />
+					<variable name="pcomment" />
+				</atom>
+			</head>
+		</dependency>
+		<dependency>
+			<body>
+				<atom name="lineitem">
+					<variable name="okey" />
+					<variable name="partkey" />
+					<variable name="suppkey" />
+					<variable name="llinenumber" />
+					<variable name="lquantity" />
+					<variable name="lextendedprice" />
+					<variable name="ldiscount" />
+					<variable name="ltax" />
+					<variable name="lreturnflag" />
+					<variable name="llinestatus" />
+					<variable name="lshipdate" />
+					<variable name="lcommitdate" />
+					<variable name="lreceiptdate" />
+					<variable name="lshipinstruct" />
+					<variable name="lshipmode" />
+					<variable name="lcomment" />
+				</atom>
+
+				<atom name="part">
+					<variable name="partkey" />
+					<variable name="pname" />
+					<constant value="Manufacturer1" />
+					<variable name="pbrand" />
+					<variable name="ptype" />
+					<variable name="psize" />
+					<variable name="pcontainer" />
+					<variable name="pretailprice" />
+					<variable name="pcomment" />
+				</atom>
+			</body>
+			<head>
+				<atom name="v12">
+					<variable name="okey" />
+					<variable name="llinenumber" />
+					<variable name="partkey" />
+				</atom>
+			</head>
+		</dependency>
+
+
+		<!-- CREATE VIEW V21 WITH SCHEMABINDING AS SELECT SUPPLIER.S_SUPPKEY, NATION.N_NATIONKEY 
+			FROM dbo.SUPPLIER, dbo.NATION WHERE SUPPLIER.S_NATIONKEY = NATION.N_NATIONKEY 
+			AND NATION.N_NAME LIKE 'United%'; -->
+		<dependency>
+			<body>
+				<atom name="v21">
+					<variable name="suppkey" />
+					<variable name="nkey" />
+				</atom>
+			</body>
+			<head>
+				<atom name="supplier">
+					<variable name="suppkey" />
+					<variable name="sname" />
+					<variable name="saddress" />
+					<variable name="nkey" />
+					<variable name="sphone" />
+					<variable name="acctbal" />
+					<variable name="scomment" />
+				</atom>
+
+				<atom name="nation">
+					<variable name="nkey" />
+					<constant value="United" />
+					<variable name="rkey" />
+					<variable name="ncomment" />
+				</atom>
+			</head>
+		</dependency>
+
+		<dependency>
+			<body>
+				<atom name="supplier">
+					<variable name="suppkey" />
+					<variable name="sname" />
+					<variable name="saddress" />
+					<variable name="nkey" />
+					<variable name="sphone" />
+					<variable name="acctbal" />
+					<variable name="scomment" />
+				</atom>
+
+				<atom name="nation">
+					<variable name="nkey" />
+					<constant value="United" />
+					<variable name="rkey" />
+					<variable name="ncomment" />
+				</atom>
+
+			</body>
+			<head>
+				<atom name="v21">
+					<variable name="suppkey" />
+					<variable name="nkey" />
+				</atom>
+			</head>
+		</dependency>
+
+
+		<!-- CREATE VIEW V22 WITH SCHEMABINDING AS SELECT SUPPLIER.S_SUPPKEY, CUSTOMER.C_CUSTKEY 
+			FROM dbo.SUPPLIER, dbo.CUSTOMER WHERE SUPPLIER.S_ACCTBAL = CUSTOMER.C_ACCTBAL; -->
+		<dependency>
+			<body>
+				<atom name="v22">
+					<variable name="suppkey" />
+					<variable name="ckey" />
+				</atom>
+			</body>
+			<head>
+				<atom name="supplier">
+					<variable name="suppkey" />
+					<variable name="sname" />
+					<variable name="saddress" />
+					<variable name="nkey" />
+					<variable name="sphone" />
+					<variable name="acctbal" />
+					<variable name="scomment" />
+				</atom>
+				<atom name="customer">
+					<variable name="ckey" />
+					<variable name="cname" />
+					<variable name="caddress" />
+					<variable name="nkey" />
+					<variable name="cphone" />
+					<variable name="acctbal" />
+					<variable name="mktsegment" />
+					<variable name="ccomment" />
+				</atom>
+			</head>
+		</dependency>
+
+		<dependency>
+			<body>
+				<atom name="supplier">
+					<variable name="suppkey" />
+					<variable name="sname" />
+					<variable name="saddress" />
+					<variable name="nkey" />
+					<variable name="sphone" />
+					<variable name="acctbal" />
+					<variable name="scomment" />
+				</atom>
+
+				<atom name="customer">
+					<variable name="ckey" />
+					<variable name="cname" />
+					<variable name="caddress" />
+					<variable name="nkey" />
+					<variable name="cphone" />
+					<variable name="acctbal" />
+					<variable name="mktsegment" />
+					<variable name="ccomment" />
+				</atom>
+			</body>
+			<head>
+				<atom name="v22">
+					<variable name="suppkey" />
+					<variable name="ckey" />
+				</atom>
+			</head>
+		</dependency>
+
+
+	</dependencies>
+</schema>
