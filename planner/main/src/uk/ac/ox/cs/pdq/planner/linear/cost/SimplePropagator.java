@@ -8,9 +8,9 @@ import org.jgrapht.graph.DefaultEdge;
 import uk.ac.ox.cs.pdq.cost.estimators.SimpleCostEstimator;
 import uk.ac.ox.cs.pdq.plan.Cost;
 import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
-import uk.ac.ox.cs.pdq.planner.linear.node.PlanTree;
-import uk.ac.ox.cs.pdq.planner.linear.node.SearchNode.NodeStatus;
-import uk.ac.ox.cs.pdq.planner.linear.node.SimpleNode;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.PlanTree;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SimpleNode;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode.NodeStatus;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
@@ -51,7 +51,7 @@ public class SimplePropagator extends CostPropagator<SimpleNode> {
 	 *
 	 * @param node SimpleNode
 	 * @param planTree PlanTree<SimpleNode>
-	 * @see uk.ac.ox.cs.pdq.plan.cost.CostPropagator#propagate(uk.ac.ox.cs.pdq.planner.linear.node.SearchNode, org.jgrapht.DirectedGraph, uk.ac.ox.cs.pdq.planner.linear.node.SearchNode)
+	 * @see uk.ac.ox.cs.pdq.plan.cost.CostPropagator#propagate(uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode, org.jgrapht.DirectedGraph, uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode)
 	 */
 	@Override
 	public void propagate(SimpleNode node, PlanTree<SimpleNode> planTree) {

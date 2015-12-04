@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.planner.linear.pruning;
+package uk.ac.ox.cs.pdq.planner.linear.explorer.pruning;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -21,9 +21,9 @@ import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.accessible.InferredAccessibleAxiom;
 import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema.AccessibleRelation;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.Candidate;
-import uk.ac.ox.cs.pdq.planner.linear.node.NodeFactory;
-import uk.ac.ox.cs.pdq.planner.linear.node.SearchNode;
-import uk.ac.ox.cs.pdq.planner.linear.node.SearchNode.NodeStatus;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.NodeFactory;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode.NodeStatus;
 import uk.ac.ox.cs.pdq.reasoning.Match;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.util.Utility;
@@ -33,21 +33,27 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 /**
- * An improved path post pruning algorithm.
- * The latter aims at removing not only the redundant accesses but also the redundant follow-up joins.
+ * Removes the redundant accesses and the redundant follow-up joins from a successful configuration path
  *
  * @author Efthymia Tsamoura
  */
 public final class PostPruningRemoveFollowUps extends PostPruning {
 	
+	/** Runs the chase. Finds the consequences of newly created nodes **/
 	private final Chaser chaser;
+	/** The input query**/
 	private final Query<?> query;
+
 	/**
-	 * Constructor for PlanPostPruningImprovedImplementation.
-	 * @param nodeFactory NodeFactory<S,N>
-	 * @param accessibleSchema AccessibleSchema
+	 * 
+	 * @param nodeFactory
+	 * 		Factory of tree nodes
+	 * @param accessibleSchema
+	 * 		The accessible counterpart of the input schema
+	 * @param chaser
+	 * @param query
 	 */
-	public PostPruningRemoveFollowUps(NodeFactory nodeFactory, Chaser chaser, Query<?> query, AccessibleSchema accessibleSchema) {
+	public PostPruningRemoveFollowUps(NodeFactory nodeFactory, AccessibleSchema accessibleSchema, Chaser chaser, Query<?> query) {
 		super(nodeFactory, accessibleSchema);
 		Preconditions.checkNotNull(chaser);
 		Preconditions.checkNotNull(query);
@@ -56,11 +62,17 @@ public final class PostPruningRemoveFollowUps extends PostPruning {
 	}
 
 	/**
-	 * Creates a post-pruned path given the input exposed facts
-	 * @param path Input path
-	 * @param factsToExpose The facts that will be exposed
+	 * Creates a post-pruned query path 
+	 * @param root
+	 * 		The root of the plan tree
+	 * @param path
+	 * 		The path that will be post-pruned 
+	 * @param factsToExpose
+	 * 		The facts that we will expose 
 	 * @throws PlannerException
+	 * @throws LimitReachedException
 	 */
+	@Override
 	protected void createPath(SearchNode root, List<SearchNode> path, Collection<Predicate> factsToExpose) throws PlannerException, LimitReachedException {
 		if(this.isPruned) {
 			this.path = new ArrayList<>();
@@ -80,13 +92,13 @@ public final class PostPruningRemoveFollowUps extends PostPruning {
 					SearchNode freshNode;
 					if(i > 0) {
 						SearchNode parentNode = path.get(i-1);
-						//freshNode = this.nodeFactory.getInstance(parentNode, mustBeExposed);
 						freshNode = this.nodeFactory.getInstance(parentNode, Sets.newHashSet(alreadyExposed));
 					}
 					else {
 						freshNode = this.nodeFactory.getInstance(root, Sets.newHashSet(alreadyExposed));
 					}
 					freshNode.setStatus(NodeStatus.FAKE_TERMINAL);
+					//Find the consequences of the newly created node
 					freshNode.close(this.chaser, this.query, this.accessibleSchema.getAccessibilityAxioms());
 					this.path.add(freshNode);
 					nodeIds.add(freshNode.getId());
@@ -106,9 +118,13 @@ public final class PostPruningRemoveFollowUps extends PostPruning {
 	}
 
 	/**
-	 * @param path List<N>
-	 * @param queryFacts Collection<PredicateFormula>
-	 * @return Collection<PredicateFormula>
+	 * 
+	 * @param path
+	 * 		A successful path 
+	 * @param queryFacts
+	 * 		The facts in the query match 
+	 * @return
+	 * 		the facts that are sufficient to produce the input queryFacts
 	 */
 	@Override
 	protected Collection<Predicate> findFactsToExpose(List<SearchNode> path, Collection<Predicate> queryFacts) {
@@ -144,7 +160,7 @@ public final class PostPruningRemoveFollowUps extends PostPruning {
 	 * @param queryMatch 
 	 * 		The facts of a query match
 	 * @param successNode 
-	 * 		A success node (i.e., a node where the query match is being found)
+	 * 		A node with configuration that matches the input query
 	 * @return 
 	 * 		a minimal set of facts that have to be exposed in order to make each input fact accessible */
 	private Collection<Predicate> getMinimalFacts(Collection<Predicate> queryMatch, SearchNode successNode) {
@@ -157,7 +173,7 @@ public final class PostPruningRemoveFollowUps extends PostPruning {
 	}
 
 	/**
-	 * This function aims at minimising the set of facts that have to be exposed in order to make each input fact accessible
+	 * Minimises the set of facts that have to be exposed in order to make each input fact accessible
 	 *
 	 * @param facts
 	 * 		A list of accessible, inferred accessible and accessed atoms

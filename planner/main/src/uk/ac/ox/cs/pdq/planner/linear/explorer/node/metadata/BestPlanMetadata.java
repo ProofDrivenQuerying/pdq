@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.planner.linear.metadata;
+package uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata;
 
 import java.util.List;
 import java.util.Map;
@@ -7,7 +7,7 @@ import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
-import uk.ac.ox.cs.pdq.planner.linear.node.SearchNode;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
 
 import com.google.common.base.Preconditions;
 

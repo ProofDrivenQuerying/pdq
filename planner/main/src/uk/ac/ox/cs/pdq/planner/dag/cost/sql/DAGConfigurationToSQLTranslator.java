@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.planner.dag.sql;
+package uk.ac.ox.cs.pdq.planner.dag.cost.sql;
 
 import java.util.Collection;
 import java.util.HashMap;

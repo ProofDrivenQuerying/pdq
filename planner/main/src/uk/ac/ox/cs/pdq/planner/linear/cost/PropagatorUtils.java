@@ -8,7 +8,7 @@ import uk.ac.ox.cs.pdq.cost.estimators.SimpleCostEstimator;
 import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.planner.linear.LeftDeepPlanGenerator;
 import uk.ac.ox.cs.pdq.planner.linear.LinearUtility;
-import uk.ac.ox.cs.pdq.planner.linear.node.SearchNode;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
 import uk.ac.ox.cs.pdq.util.IndexedDirectedGraph;
 
 import com.google.common.base.Preconditions;

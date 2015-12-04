@@ -9,9 +9,9 @@ import org.jgrapht.graph.DefaultEdge;
 
 import uk.ac.ox.cs.pdq.cost.estimators.BlackBoxCostEstimator;
 import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
-import uk.ac.ox.cs.pdq.planner.linear.node.BlackBoxNode;
-import uk.ac.ox.cs.pdq.planner.linear.node.PlanTree;
-import uk.ac.ox.cs.pdq.planner.linear.node.SearchNode.NodeStatus;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.BlackBoxNode;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.PlanTree;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode.NodeStatus;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;

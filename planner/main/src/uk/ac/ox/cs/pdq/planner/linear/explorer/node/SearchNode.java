@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.planner.linear.node;
+package uk.ac.ox.cs.pdq.planner.linear.explorer.node;
 
 import java.util.Collection;
 import java.util.List;
@@ -12,7 +12,7 @@ import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.dominance.FactDominance;
 import uk.ac.ox.cs.pdq.planner.dominance.FastFactDominance;
 import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
-import uk.ac.ox.cs.pdq.planner.linear.metadata.Metadata;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.Metadata;
 import uk.ac.ox.cs.pdq.reasoning.Match;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 

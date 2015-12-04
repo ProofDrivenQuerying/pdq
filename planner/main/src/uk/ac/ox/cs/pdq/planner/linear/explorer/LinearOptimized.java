@@ -34,18 +34,18 @@ import uk.ac.ox.cs.pdq.planner.linear.cost.BlackBoxPropagator;
 import uk.ac.ox.cs.pdq.planner.linear.cost.CostPropagator;
 import uk.ac.ox.cs.pdq.planner.linear.cost.PropagatorUtils;
 import uk.ac.ox.cs.pdq.planner.linear.cost.SimplePropagator;
-import uk.ac.ox.cs.pdq.planner.linear.equivalence.LinearEquivalenceClasses;
-import uk.ac.ox.cs.pdq.planner.linear.equivalence.LinearEquivalenceClasses.EquivalenceClass;
-import uk.ac.ox.cs.pdq.planner.linear.metadata.BestPlanMetadata;
-import uk.ac.ox.cs.pdq.planner.linear.metadata.CreationMetadata;
-import uk.ac.ox.cs.pdq.planner.linear.metadata.DominanceMetadata;
-import uk.ac.ox.cs.pdq.planner.linear.metadata.EquivalenceMetadata;
-import uk.ac.ox.cs.pdq.planner.linear.metadata.Metadata;
-import uk.ac.ox.cs.pdq.planner.linear.metadata.StatusUpdateMetadata;
-import uk.ac.ox.cs.pdq.planner.linear.node.NodeFactory;
-import uk.ac.ox.cs.pdq.planner.linear.node.SearchNode;
-import uk.ac.ox.cs.pdq.planner.linear.node.SearchNode.NodeStatus;
-import uk.ac.ox.cs.pdq.planner.linear.pruning.PostPruning;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.NodeFactory;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode.NodeStatus;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.equivalence.PathEquivalenceClasses;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.equivalence.PathEquivalenceClasses.PathEquivalenceClass;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.BestPlanMetadata;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.CreationMetadata;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.DominanceMetadata;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.EquivalenceMetadata;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.Metadata;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.StatusUpdateMetadata;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.pruning.PostPruning;
 import uk.ac.ox.cs.pdq.reasoning.Match;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
@@ -84,7 +84,7 @@ public class LinearOptimized extends LinearExplorer {
 	private final boolean zombification;
 
 	/** Classes of equivalent configurations */
-	private LinearEquivalenceClasses equivalenceClasses = new LinearEquivalenceClasses();
+	private PathEquivalenceClasses equivalenceClasses = new PathEquivalenceClasses();
 
 	private final Queue<SearchNode> unexploredDescendants = new PriorityQueue<>(10, new Comparator<SearchNode>() {
 		@Override
@@ -288,7 +288,7 @@ public class LinearOptimized extends LinearExplorer {
 			if (parentEquivalent != null && !parentEquivalent.getStatus().equals(NodeStatus.SUCCESSFUL)) {
 				freshNode.setPointer(parentEquivalent);
 				if(this.zombification) {
-					EquivalenceClass equivalenceClass = this.equivalenceClasses.addEntry(parentEquivalent, freshNode);
+					PathEquivalenceClass equivalenceClass = this.equivalenceClasses.addEntry(parentEquivalent, freshNode);
 					if (this.costPropagator instanceof BlackBoxPropagator) {
 						this.wakeupDescendants(freshNode.getPathFromRoot(), equivalenceClass);
 					}
@@ -390,7 +390,7 @@ public class LinearOptimized extends LinearExplorer {
 	 * @param equivalenceClass
 	 * @throws PlannerException
 	 */
-	private void wakeupDescendants(List<Integer> path, EquivalenceClass equivalenceClass) 
+	private void wakeupDescendants(List<Integer> path, PathEquivalenceClass equivalenceClass) 
 			throws PlannerException, LimitReachedException  {
 		this.wakeupDescendants(path, equivalenceClass, Sets.<List<Integer>>newHashSet());
 	}
@@ -401,7 +401,7 @@ public class LinearOptimized extends LinearExplorer {
 	 * @param visitedPaths Set<List<Integer>>
 	 * @throws PlannerException
 	 */
-	private void wakeupDescendants(List<Integer> path, EquivalenceClass equivalenceClass, 
+	private void wakeupDescendants(List<Integer> path, PathEquivalenceClass equivalenceClass, 
 			Set<List<Integer>> visitedPaths)
 					throws PlannerException, LimitReachedException  {
 		List<Integer> representativePath = equivalenceClass.getRepresentativePath();
@@ -443,8 +443,8 @@ public class LinearOptimized extends LinearExplorer {
 		for(List<Integer> otherPath:otherPaths) {
 			if(!visitedPaths.contains(otherPath)) {
 				visitedPaths.add(otherPath);
-				List<Entry<EquivalenceClass, List<Integer>>> isPrefixOf = this.equivalenceClasses.isPrefixOf(otherPath);
-				for(Entry<EquivalenceClass, List<Integer>> entry:isPrefixOf) {
+				List<Entry<PathEquivalenceClass, List<Integer>>> isPrefixOf = this.equivalenceClasses.isPrefixOf(otherPath);
+				for(Entry<PathEquivalenceClass, List<Integer>> entry:isPrefixOf) {
 					if(!entry.getKey().equals(equivalenceClass)) {
 						List<Integer> existingPath = entry.getValue();
 						List<Integer> outputPath = this.createPath(otherPath, path, existingPath);

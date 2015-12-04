@@ -20,7 +20,7 @@ import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.explorer.CostEstimatorFactory;
 import uk.ac.ox.cs.pdq.planner.explorer.Explorer;
 import uk.ac.ox.cs.pdq.planner.explorer.ExplorerFactory;
-import uk.ac.ox.cs.pdq.planner.linear.node.SearchNode;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
 import uk.ac.ox.cs.pdq.planner.logging.performance.ConstantsStatistics;
 import uk.ac.ox.cs.pdq.planner.logging.performance.EventDrivenExplorerStatistics;
 import uk.ac.ox.cs.pdq.planner.logging.performance.PlannerStatKeys;

@@ -9,11 +9,18 @@ import uk.ac.ox.cs.pdq.planner.dominance.Dominance;
 
 
 /**
- * A collection of equivalence classes
+ * Collections of DAG configuration equivalence classes.
+ * 
+ *  A mapping h from the chase constants of one configuration
+	conf to the chase constants of another configuration conf'
+	is fact-preserving if it preserves inferred accessible output facts
+	in going from conf to conf' and if the h image of every input
+	constant of conf is an input constant of conf'.
+	Configurations conf, conf' are fact-equivalent 
+	if there is a bijective fact-preserving mapping h between them.
  *
  * @author Efthymia Tsamoura
  *
- * @param 
  */
 public interface DAGEquivalenceClasses {
 

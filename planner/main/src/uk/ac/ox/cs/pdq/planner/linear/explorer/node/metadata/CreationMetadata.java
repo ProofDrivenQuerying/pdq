@@ -1,6 +1,6 @@
-package uk.ac.ox.cs.pdq.planner.linear.metadata;
+package uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata;
 
-import uk.ac.ox.cs.pdq.planner.linear.node.SearchNode;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
 
 
 /**

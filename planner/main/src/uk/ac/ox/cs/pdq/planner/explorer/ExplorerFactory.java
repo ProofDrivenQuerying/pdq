@@ -40,9 +40,9 @@ import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominanceFactory;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.LinearGeneric;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.LinearKChase;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.LinearOptimized;
-import uk.ac.ox.cs.pdq.planner.linear.node.NodeFactory;
-import uk.ac.ox.cs.pdq.planner.linear.pruning.PostPruning;
-import uk.ac.ox.cs.pdq.planner.linear.pruning.PostPruningFactory;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.NodeFactory;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.pruning.PostPruning;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.pruning.PostPruningFactory;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
 

@@ -14,12 +14,12 @@ import javax.swing.border.Border;
 
 import uk.ac.ox.cs.pdq.io.pretty.AlgebraLikeLinearPlanWriter;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.Candidate;
-import uk.ac.ox.cs.pdq.planner.linear.metadata.BestPlanMetadata;
-import uk.ac.ox.cs.pdq.planner.linear.metadata.DominanceMetadata;
-import uk.ac.ox.cs.pdq.planner.linear.metadata.DominanceMetadata.PruningTypes;
-import uk.ac.ox.cs.pdq.planner.linear.metadata.EquivalenceMetadata;
-import uk.ac.ox.cs.pdq.planner.linear.metadata.Metadata;
-import uk.ac.ox.cs.pdq.planner.linear.node.SearchNode;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.BestPlanMetadata;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.DominanceMetadata;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.EquivalenceMetadata;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.Metadata;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.DominanceMetadata.PruningTypes;
 import uk.ac.ox.cs.pdq.ui.proof.Proof;
 
 

@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.planner.linear.pruning;
+package uk.ac.ox.cs.pdq.planner.linear.explorer.pruning;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -16,21 +16,22 @@ import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema.AccessibleRelation;
 import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema.InferredAccessibleRelation;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.Candidate;
-import uk.ac.ox.cs.pdq.planner.linear.node.NodeFactory;
-import uk.ac.ox.cs.pdq.planner.linear.node.PlanTree;
-import uk.ac.ox.cs.pdq.planner.linear.node.SearchNode;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.NodeFactory;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.PlanTree;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
 
 import com.google.common.base.Preconditions;
 
 /**
- * Plan post pruning class
+ * Removes the redundant accesses and the redundant follow-up joins from a successful configuration path
  *
  * @author Efthymia Tsamoura
  */
 public abstract class PostPruning {
 
-	/** Creates tree nodes */
+	/** Factory of tree nodes */
 	protected final NodeFactory nodeFactory;
+	/** The accessible counterpart of the input schema **/
 	protected final AccessibleSchema accessibleSchema;
 	/** True if the input path is pruned */
 	protected Boolean isPruned = false;
@@ -40,7 +41,9 @@ public abstract class PostPruning {
 
 	/**
 	 * @param nodeFactory
+	 * 		Factory of tree nodes
 	 * @param accessibleSchema
+	 * 		The accessible counterpart of the input schema
 	 */
 	public PostPruning(NodeFactory nodeFactory, AccessibleSchema accessibleSchema) {
 		Preconditions.checkArgument(nodeFactory != null);
@@ -49,13 +52,18 @@ public abstract class PostPruning {
 		this.accessibleSchema = accessibleSchema;
 	}
 
+	
 	/**
-	 * Post-prunes the input path and adds it to the input plan tree
-	 * @param planTree
+	 * Post-prunes the input nodes path
+	 * @param root
+	 * 		The root of the linear path tree
 	 * @param path
-	 * @param queryFacts facts of a query match
-	 * @return true if the input path is postpruned
+	 * 		The path of nodes to be prostpruned 
+	 * @param queryFacts
+	 * 		The facts of the query match
+	 * @return
 	 * @throws PlannerException
+	 * @throws LimitReachedException
 	 */
 	public boolean prune(SearchNode root, List<SearchNode> path, Collection<Predicate> queryFacts) throws PlannerException, LimitReachedException {
 		Preconditions.checkArgument(path != null);
@@ -79,9 +87,9 @@ public abstract class PostPruning {
 	}
 
 	/**
-	 * @param candidates Exposed candidates
+	 * @param candidates 
 	 * @param minimalFacts
-	 * @return the candidates that correspond to the input facts
+	 * @return the candidates that produced the input facts
 	 */
 	protected static Set<Candidate> getUtilisedCandidates(Collection<Candidate> candidates, Collection<Predicate> minimalFacts) {
 		Set<Candidate> useful = new HashSet<>();
@@ -94,12 +102,15 @@ public abstract class PostPruning {
 		return useful;
 	}
 
+	
 	/**
+	 * 
+	 * @param planTree
+	 * 		The input tree of paths
+	 * @param parentNode
+	 * 		The node below which we will add the input path
 	 * @param path
-	 * 		A path that must be added to the plan tree
-	 * 		If the root of this path is not the root of the plan tree, then an exception is thrown
-	 * @param planTree DirectedGraph<N,DefaultEdge>
-	 * @param parentNode N
+	 * 		The path to the add to the input tree
 	 */
 	public void addPrunedPathToTree(PlanTree<SearchNode> planTree, SearchNode parentNode, List<SearchNode> path) {
 		Preconditions.checkArgument(path != null);
@@ -129,18 +140,26 @@ public abstract class PostPruning {
 	}
 
 	/**
-	 * Method findFactsToExpose.
-	 * @param path List<N>
-	 * @param queryFacts Collection<PredicateFormula>
-	 * @return Collection<PredicateFormula>
+	 * 
+	 * @param path
+	 * 		A successful path 
+	 * @param queryFacts
+	 * 		The facts in the query match 
+	 * @return
+	 * 		the facts that are sufficient to produce the input queryFacts
 	 */
 	protected abstract Collection<Predicate> findFactsToExpose(List<SearchNode> path, Collection<Predicate> queryFacts);
 	
 	/**
-	 * Creates a post-pruned path given the input exposed facts
-	 * @param path Input path
-	 * @param factsToExpose The facts that will be exposed
+	 * Creates a post-pruned query path 
+	 * @param root
+	 * 		The root of the plan tree
+	 * @param path
+	 * 		The path that will be post-pruned 
+	 * @param factsToExpose
+	 * 		The facts that we will expose 
 	 * @throws PlannerException
+	 * @throws LimitReachedException
 	 */
 	protected abstract void createPath(SearchNode root, List<SearchNode> path, Collection<Predicate> factsToExpose) throws PlannerException, LimitReachedException;
 }
