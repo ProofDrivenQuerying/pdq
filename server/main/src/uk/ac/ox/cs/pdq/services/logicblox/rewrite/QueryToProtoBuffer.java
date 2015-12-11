@@ -338,33 +338,28 @@ public class QueryToProtoBuffer implements Rewriter<Query<?>, Rule> {
 		if (type instanceof Class<?>) {
 			Class<?> cl = (Class<?>) type;
 			builder.setKind(PRIMITIVE);
+			com.logicblox.common.protocol.CommonProto.PrimitiveType.Builder primitive =
+			PrimitiveType.newBuilder().setCapacity(64);
 			if (cl.isAssignableFrom(String.class)) {
-				return builder.setPrimitive(PrimitiveType.newBuilder()
-						.setKind(STRING).build()).build();
+				return builder.setPrimitive(primitive.setKind(STRING).build()).build();
 			}
 			if (cl.isAssignableFrom(Boolean.class)) {
-				return builder.setPrimitive(PrimitiveType.newBuilder()
-						.setKind(BOOL).build()).build();
+				return builder.setPrimitive(primitive.setKind(BOOL).build()).build();
 			}
 			if (cl.isAssignableFrom(Integer.class)) {
-				return builder.setPrimitive(PrimitiveType.newBuilder()
-						.setKind(INT).build()).build();
+				return builder.setPrimitive(primitive.setKind(INT).build()).build();
 			}
 			if (cl.isAssignableFrom(Long.class)) {
-				return builder.setPrimitive(PrimitiveType.newBuilder()
-						.setKind(UINT).build()).build();
+				return builder.setPrimitive(primitive.setKind(UINT).build()).build();
 			}
 			if (cl.isAssignableFrom(Float.class)) {
-				return builder.setPrimitive(PrimitiveType.newBuilder()
-						.setKind(FLOAT).build()).build();
+				return builder.setPrimitive(primitive.setKind(FLOAT).build()).build();
 			}
 			if (cl.isAssignableFrom(Double.class)) {
-				return builder.setPrimitive(PrimitiveType.newBuilder()
-						.setKind(DECIMAL).build()).build();
+				return builder.setPrimitive(primitive.setKind(DECIMAL).build()).build();
 			}
 			if (cl.isAssignableFrom(Date.class)) {
-				return builder.setPrimitive(PrimitiveType.newBuilder()
-						.setKind(DATETIME).build()).build();
+				return builder.setPrimitive(primitive.setKind(DATETIME).build()).build();
 			}
 		}
 		return builder.build();
