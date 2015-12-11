@@ -83,13 +83,13 @@ public class GeneratorThird extends AbstractGenerator{
 					
 					System.out.print(queryFile);
 					planParams.setMaxDepth(1);
-					Planner planner = new Planner(planParams, costParams, reasoningParams, schema, query);
-					if (planner.search() != null) {
+					Planner planner = new Planner(planParams, costParams, reasoningParams, schema);
+					if (planner.search(query) != null) {
 						System.out.print(" not answerable without constraints");
 					}
 					planParams.setMaxDepth(10);
-					planner = new Planner(planParams, costParams, reasoningParams, schema, query);
-					if (planner.search() != null) {
+					planner = new Planner(planParams, costParams, reasoningParams, schema);
+					if (planner.search(query) != null) {
 						System.out.print(", not answerable with constraints (depth=10)");
 					}
 					System.out.println();

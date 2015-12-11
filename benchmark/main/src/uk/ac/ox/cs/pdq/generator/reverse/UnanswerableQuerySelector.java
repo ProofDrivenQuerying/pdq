@@ -43,7 +43,7 @@ public class UnanswerableQuerySelector implements QuerySelector {
 	@Override
 	public boolean accept(Query<?> q) {
 		try {
-			return new Planner(this.planParams, this.costParams, this.reasoningParams, this.schema, q).search(true) != null;
+			return new Planner(this.planParams, this.costParams, this.reasoningParams, this.schema).search(q,true) != null;
 		} catch (PlannerException e) {
 			log.error(e);
 			return false;

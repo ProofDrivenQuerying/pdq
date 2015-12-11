@@ -212,7 +212,7 @@ public class PlannerBenchmark extends Runner {
 		}
 	    printSystemSettings(out);
 		printHeader(out);
-		Planner planner = new Planner(plannerParams, costParams, reasoningParams, schema, query, stats);
+		Planner planner = new Planner(plannerParams, costParams, reasoningParams, schema, stats);
 
 		IntervalEventDrivenLogger logger = new IntervalEventDrivenLogger(stats, plannerParams.getLogIntervals(), plannerParams.getShortLogIntervals());
 		planner.registerEventHandler(logger);
@@ -229,7 +229,7 @@ public class PlannerBenchmark extends Runner {
 
 		Plan bestPlan = null;
 		try {
-			bestPlan = planner.search(this.isNoDependencies());
+			bestPlan = planner.search(query,this.isNoDependencies());
 			if (bestPlan == null) {
 				log.info("No plan found.");
 			}

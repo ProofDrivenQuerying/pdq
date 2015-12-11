@@ -34,12 +34,14 @@ import uk.ac.ox.cs.pdq.planner.reasoning.chase.dominance.SuccessDominanceFactory
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.state.AccessibleChaseState;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.state.DatabaseListState;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.state.DatabaseTreeState;
+import uk.ac.ox.cs.pdq.reasoning.HomomorphismException;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters.ReasoningTypes;
 import uk.ac.ox.cs.pdq.reasoning.chase.BagsTree;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismManagerFactory;
 
 import com.google.common.eventbus.EventBus;
@@ -50,6 +52,7 @@ import com.google.common.eventbus.EventBus;
  *
  * @author Julien Leblay
  * @author Efthymia Tsamoura
+ * @author George Konstantinidis
  *
  */
 public class Planner {
@@ -73,10 +76,11 @@ public class Planner {
 	/** The schema */
 	private Schema schema;
 
-	/** The query */
-	private Query<?> query;
 
 	private CostEstimator<?> externalCostEstimator = null;
+
+	private AccessibleSchema accessibleSchema;
+	private HomomorphismManager detector;
 	
 	/**
 	 * 
@@ -85,8 +89,8 @@ public class Planner {
 	 * @param schema
 	 * @param query
 	 */
-	public Planner(PlannerParameters planParams, CostParameters costParams, ReasoningParameters reasoningParams, Schema schema, Query<?> query) {
-		this(planParams, costParams, reasoningParams, schema, query, null);
+	public Planner(PlannerParameters planParams, CostParameters costParams, ReasoningParameters reasoningParams, Schema schema) {
+		this(planParams, costParams, reasoningParams, schema, null);
 	}
 
 	/**
@@ -97,14 +101,22 @@ public class Planner {
 	 * @param query
 	 * @param statsLogger
 	 */
-	public Planner(PlannerParameters params, CostParameters costParams, ReasoningParameters reasoningParams, Schema schema, Query<?> query, ChainedStatistics statsLogger) {
+	public Planner(PlannerParameters params, CostParameters costParams, ReasoningParameters reasoningParams, Schema schema, ChainedStatistics statsLogger) {
 		checkParametersConsistency(params, costParams, reasoningParams);
 		this.plannerParams = params;
 		this.costParams = costParams;
 		this.reasoningParams = reasoningParams;
 		this.schema = schema;
-		this.query = query;
 		this.statsLogger = statsLogger;
+		this.schema = schema;
+		
+		accessibleSchema = new AccessibleSchema(schema);
+		try {
+			this.detector = new HomomorphismManagerFactory().getInstance(accessibleSchema, this.reasoningParams);
+		} catch (HomomorphismException e) {
+			//TODO what to do here?
+			throw new RuntimeException(e);
+		}
 	}
 
 	/**
@@ -153,8 +165,8 @@ public class Planner {
 	 * @throws IOException
 	 * @throws ProofEvent
 	 */
-	public <P extends Plan> P search() throws PlannerException {
-		return this.search(false);
+	public <P extends Plan> P search(Query<?> query) throws PlannerException {
+		return this.search(query,false);
 	}
 	
 	/**
@@ -173,22 +185,27 @@ public class Planner {
 	 * @throws SQLException
 	 * @throws ProofEvent
 	 */
-	public <S extends AccessibleChaseState, P extends Plan> P search(boolean noDep) throws PlannerException {
-		Schema schema = this.schema;
-		if (noDep) {
+	public <S extends AccessibleChaseState, P extends Plan> P search(Query<?> query, boolean noDep) throws PlannerException {
+		
+		boolean collectStats = this.statsLogger != null;
+		
+		if (noDep) 
+		{
 			schema = Schema.builder(schema).disableDependencies().build();
+			schema.updateConstants(query.getSchemaConstants());
+			accessibleSchema = new AccessibleSchema(schema);
+		}
+		else
+		{
+			schema.updateConstants(query.getSchemaConstants());
+			accessibleSchema.updateConstants(query.getSchemaConstants());
 		}
 
-		boolean collectStats = this.statsLogger != null;
-		schema.updateConstants(this.query.getSchemaConstants());
-		AccessibleSchema accessibleSchema = new AccessibleSchema(schema);
-		Query<?> accessibleQuery = accessibleSchema.accessible(this.query, this.query.getVariables2Canonical());
-
-
+		detector.addQuery(query);
+		Query<?> accessibleQuery = accessibleSchema.accessible(query, query.getVariables2Canonical());
+		
 		Explorer<P> explorer = null;
-		try (HomomorphismDetector detector =
-				new HomomorphismManagerFactory().getInstance(accessibleSchema, accessibleQuery, this.reasoningParams)) {
-
+		try{
 			// Top-level initialisations
 			CostEstimator<P> costEstimator = (CostEstimator<P>) this.externalCostEstimator;
 			if (costEstimator == null) {
@@ -200,13 +217,14 @@ public class Planner {
 					this.reasoningParams);
 			Chaser reasoner = reasonerFactory.getInstance();
 			if(this.reasoningParams.getReasoningType().equals(ReasoningTypes.BLOCKING_CHASE)) {
-				BagsTree.setBagFactory(new ExtendedBagFactory(accessibleSchema, this.query));
+				BagsTree.setBagFactory(new ExtendedBagFactory(accessibleSchema, query));
 			}
 			AccessibleChaseState state = this.reasoningParams.getReasoningType().equals(ReasoningTypes.BLOCKING_CHASE) == true ?
-			(uk.ac.ox.cs.pdq.planner.reasoning.chase.state.AccessibleChaseState) new DatabaseTreeState(this.query, this.schema, (DBHomomorphismManager) detector) : 
-			(uk.ac.ox.cs.pdq.planner.reasoning.chase.state.AccessibleChaseState) new DatabaseListState(this.query, this.schema, (DBHomomorphismManager) detector);
+			(uk.ac.ox.cs.pdq.planner.reasoning.chase.state.AccessibleChaseState) new DatabaseTreeState(query, this.schema, (DBHomomorphismManager) detector) : 
+			(uk.ac.ox.cs.pdq.planner.reasoning.chase.state.AccessibleChaseState) new DatabaseListState(query, this.schema, (DBHomomorphismManager) detector);
 			reasoner.reasonUntilTermination(state, accessibleQuery, this.schema.getDependencies());
-
+			detector.clearQuery();
+			
 			DominanceFactory dominanceFactory = new DominanceFactory(
 					this.plannerParams.getDominanceType());
 
@@ -229,7 +247,7 @@ public class Planner {
 					collectStats,
 					this.schema,
 					accessibleSchema,
-					this.query,
+					query,
 					state,
 					reasonerFactory,
 					detector,
@@ -261,6 +279,7 @@ public class Planner {
 			explorer.setMaxElapsedTime(this.plannerParams.getTimeout());
 			explorer.explore();
 			return explorer.getBestPlan();
+			
 		} catch (PlannerException e) {
 			this.handleEarlyTermination(explorer);
 			throw e;
@@ -310,13 +329,6 @@ public class Planner {
 	 */
 	public Schema getSchema() {
 		return this.schema;
-	}
-
-	/**
-	 * @return the planner's underlying query
-	 */
-	public Query<?> getQuery() {
-		return this.query;
 	}
 
 	/**

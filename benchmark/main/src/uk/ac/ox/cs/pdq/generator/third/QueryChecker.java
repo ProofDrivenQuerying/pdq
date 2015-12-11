@@ -68,15 +68,15 @@ public class QueryChecker implements Runnable {
 						ReasoningParameters r = new ReasoningParameters();
 						
 						p.setTimeout(600000);
-						Planner plannerNoDep = new Planner(p, c, r, schemaNoDep, query);
-						Plan planNoDep = plannerNoDep.search();
+						Planner plannerNoDep = new Planner(p, c, r, schemaNoDep);
+						Plan planNoDep = plannerNoDep.search(query);
 						if (planNoDep != null) {
 							System.out.print("+++ Answerable w/o IC ");
 						} else {
 							System.out.print("--- Not answerable w/o IC ");
 						}
-						Planner planner = new Planner(p, c, r, this.schema, query);
-						Plan plan = planner.search();
+						Planner planner = new Planner(p, c, r, this.schema);
+						Plan plan = planner.search(query);
 						if (plan != null) {
 							System.out.println("\t+++ Answerable " + plan.getCost() + " ");
 							AlgebraLikeLinearPlanWriter.to(System.out).write((LeftDeepPlan) plan);

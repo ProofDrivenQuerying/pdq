@@ -179,7 +179,7 @@ public class SemanticOptimizationService implements Service {
 		}
 		
 		/**
-		 * Handles the actual service call by receive the incoming message, 
+		 * Handles the actual service call by receiving the incoming message, 
 		 * delegating it to the appropriate handler and return the resulting
 		 * response message.
 		 * @return GeneratedMessage

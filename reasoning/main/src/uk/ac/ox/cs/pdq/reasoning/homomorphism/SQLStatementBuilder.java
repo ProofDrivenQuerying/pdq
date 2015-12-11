@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 
@@ -162,7 +163,7 @@ public abstract class SQLStatementBuilder {
 	 * @param columns
 	 * @return a SQL statement that creates an index for the columns of the input relation
 	 */
-	protected String createTableIndex(DBRelation relation, Integer... columns) {
+	protected Pair<String,String> createTableIndex(DBRelation relation, Integer... columns) {
 		StringBuilder indexName = new StringBuilder();
 		StringBuilder indexColumns = new StringBuilder();
 		String sep1 = "", sep2 = "";
@@ -172,9 +173,22 @@ public abstract class SQLStatementBuilder {
 			sep1 = "_";
 			sep2 = ",";
 		}
-		String ret ="CREATE INDEX idx_" + this.encodeName(relation.getName()) + "_" + indexName +
+		String create ="CREATE INDEX idx_" + this.encodeName(relation.getName()) + "_" + indexName +
 				" ON " + this.encodeName(relation.getName()) + "(" + indexColumns + ")";
-		return ret;
+		String drop ="DROP INDEX idx_" + this.encodeName(relation.getName()) + "_" + indexName +
+				" ON " + this.encodeName(relation.getName());
+		return new ImmutablePair<String, String>(create,drop);
+	}
+	
+	public Collection<String> clearTables(List<Predicate> queryRelations, Map<String, DBRelation> relationMap) {
+		Set<String> result = new LinkedHashSet<>();
+		for(Predicate pred: queryRelations)
+			result.add(this.createClearTable(relationMap.get(pred.getName())));
+		return result;
+	}
+
+	private String createClearTable(DBRelation dbRelation) {
+		return "TRUNCATE TABLE  "+this.encodeName(dbRelation.getName());
 	}
 
 	/**
@@ -192,7 +206,7 @@ public abstract class SQLStatementBuilder {
 	 * @param rule
 	 * @return
 	 */
-	protected Collection<String> createTableIndexes(Map<String, DBRelation> relationMap, Evaluatable rule) {
+	protected Pair<Collection<String>,Collection<String>> createTableIndexes(Map<String, DBRelation> relationMap, Evaluatable rule) {
 		Conjunction<?> body = null;
 		if (rule.getBody() instanceof Predicate) {
 			body = Conjunction.of((Predicate) rule.getBody());
@@ -201,7 +215,8 @@ public abstract class SQLStatementBuilder {
 		} else {
 			throw new UnsupportedOperationException("Homomorphism check only supported on conjunction of atomic predicate formulas for now.");
 		}
-		Set<String> result = new LinkedHashSet<>();
+		Set<String> createIndices = new LinkedHashSet<>();
+		Set<String> dropIndices = new LinkedHashSet<>();
 		Multimap<Variable, Predicate> clusters = LinkedHashMultimap.create();
 		for (Formula subFormula: body) {
 			if (subFormula instanceof Predicate) {
@@ -220,13 +235,15 @@ public abstract class SQLStatementBuilder {
 				for (Predicate atom: atoms) {
 					for (int i = 0, l = atom.getTermsCount(); i < l; i++) {
 						if (atom.getTerm(i).equals(t)) {
-							result.add(this.createTableIndex(relationMap.get(atom.getName()), i));
+							Pair<String,String> createAndDropIndices = this.createTableIndex(relationMap.get(atom.getName()), i);
+							createIndices.add(createAndDropIndices.getLeft());
+							dropIndices.add(createAndDropIndices.getRight());
 						}
 					}
 				}
 			}
 		}
-		return result;
+		return new ImmutablePair<Collection<String>, Collection<String>>(createIndices, dropIndices);
 	}
 
 	protected abstract String translateLimitConstraints(Evaluatable source, HomomorphismConstraint... constraints);
@@ -309,10 +326,11 @@ public abstract class SQLStatementBuilder {
 				int f = 1;
 				Map<Variable, Constant> map = new LinkedHashMap<>();
 				for(Entry<String, Variable> entry:projectionStatementsAndVariables.entrySet()) {
+					Variable var = entry.getValue();
 					String assigned = resultSet.getString(f);
 					TypedConstant<?> constant = constants.get(assigned);
 					Constant constantTerm = constant != null ? constant : new Skolem(assigned);
-					map.put(entry.getValue(), constantTerm);
+					map.put(var, constantTerm);
 					f++;
 				}
 				maps.add(map);
@@ -586,6 +604,5 @@ public abstract class SQLStatementBuilder {
 		result.append(alias==null ? relation.getName():alias);
 		return result.toString();
 	}
-
 
 }

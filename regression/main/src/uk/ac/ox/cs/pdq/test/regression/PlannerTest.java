@@ -153,12 +153,12 @@ public class PlannerTest extends RegressionTest {
 			
 			Plan observedPlan = null;
 			try(ProgressLogger pLog = new SimpleProgressLogger(this.out)) {
-				Planner planner = new Planner(plannerParams, costParams, reasoningParams, schema, query);
+				Planner planner = new Planner(plannerParams, costParams, reasoningParams, schema);
 				planner.registerEventHandler(
 						new IntervalEventDrivenLogger(
 								pLog, plannerParams.getLogIntervals(),
 								plannerParams.getShortLogIntervals()));
-				observedPlan = planner.search();
+				observedPlan = planner.search(query);
 			} catch (LimitReachedException lre) {
 				log.warn(lre);
 			}
@@ -351,9 +351,9 @@ public class PlannerTest extends RegressionTest {
 			
 			Plan plan = null;
 			try(ProgressLogger pLog = new SimpleProgressLogger(this.out)) {
-				Planner planner = new Planner(plannerParams, costParams, reasoningParams, schema, query);
+				Planner planner = new Planner(plannerParams, costParams, reasoningParams, schema);
 				planner.registerEventHandler(new IntervalEventDrivenLogger(pLog, plannerParams.getLogIntervals(), plannerParams.getShortLogIntervals()));
-				plan = planner.search();
+				plan = planner.search(query);
 			} catch (LimitReachedException lre) {
 				log.warn(lre);
 			}

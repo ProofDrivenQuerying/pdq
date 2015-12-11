@@ -26,6 +26,7 @@ import uk.ac.ox.cs.pdq.reasoning.chase.BagsTree;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismManagerFactory;
 
 import com.google.common.eventbus.EventBus;
@@ -79,9 +80,10 @@ public class ReverseQueryGenerator implements Runnable {
 			Runtime.getRuntime().addShutdownHook(new MatchReport(mm));
 
 			Query<?> accessibleQuery = accessibleSchema.accessible(this.query);
-			try(HomomorphismDetector detector =
-				new HomomorphismManagerFactory().getInstance(accessibleSchema, accessibleQuery, reasoningParams)) {
+			try(HomomorphismManager detector =
+				new HomomorphismManagerFactory().getInstance(accessibleSchema, reasoningParams)) {
 				
+				detector.addQuery(accessibleQuery);
 				AccessibleChaseState state = reasoningParams.getReasoningType().equals(ReasoningTypes.BLOCKING_CHASE) == true ?
 				(uk.ac.ox.cs.pdq.planner.reasoning.chase.state.AccessibleChaseState) new DatabaseTreeState(query, accessibleSchema, (DBHomomorphismManager) detector) : 
 				(uk.ac.ox.cs.pdq.planner.reasoning.chase.state.AccessibleChaseState) new DatabaseListState(query, accessibleSchema, (DBHomomorphismManager) detector);
@@ -94,6 +96,7 @@ public class ReverseQueryGenerator implements Runnable {
 						accessibleSchema.getAccessibilityAxioms(),
 						accessibleSchema.getInferredAccessibilityAxioms()));
 				log.info("Reasoning complete.");
+				detector.clearQuery();
 		}
 			
 		} catch (Exception e) {

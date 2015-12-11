@@ -19,6 +19,7 @@ import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseListState;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseTreeState;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismManagerFactory;
 
 import com.beust.jcommander.DynamicParameter;
@@ -123,8 +124,10 @@ public class Bootstrap {
 			}
 			schema.updateConstants(query.getSchemaConstants());
 			
-			HomomorphismDetector detector =
-					new HomomorphismManagerFactory().getInstance(schema, query, reasoningParams);
+			HomomorphismManager detector =
+					new HomomorphismManagerFactory().getInstance(schema, reasoningParams);
+			
+			detector.addQuery(query);
 			
 			ReasonerFactory reasonerFactory = new ReasonerFactory(
 					new EventBus(),
@@ -141,6 +144,7 @@ public class Bootstrap {
 			new DatabaseListState(query, (DBHomomorphismManager) detector);
 			reasoner.reasonUntilTermination(state, query, schema.getDependencies());
 			
+			detector.clearQuery();
 			//TODO show something 
 			
 		} catch (Throwable e) {

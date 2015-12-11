@@ -229,10 +229,10 @@ public class PlanGenerationTest extends RegressionTest {
 			}
 
 			try (ProgressLogger pLog = new SimpleProgressLogger(this.out)) {
-				Planner planner = new Planner(planParams, costParams, reasoningParams, schema, query);
+				Planner planner = new Planner(planParams, costParams, reasoningParams, schema);
 				planner.registerEventHandler(new IntervalEventDrivenLogger(pLog, planParams.getLogIntervals(), planParams.getShortLogIntervals()));
 				planner.registerEventHandler(new ProofEventHandler(directory.getAbsolutePath() + '/' + PROOF_FILE));
-				planner.search();
+				planner.search(query);
 			}
 		} catch (FileNotFoundException e) {
 			log.debug(e);

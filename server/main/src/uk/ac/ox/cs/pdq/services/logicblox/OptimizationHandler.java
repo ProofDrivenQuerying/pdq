@@ -133,12 +133,12 @@ public class OptimizationHandler implements MessageHandler<ExternalRuleOptimizat
 		ReasoningParameters reasoningParams = new ReasoningParameters();
 		
 		try {
-			Planner planner = new Planner(plannerParams, costParams, reasoningParams, schema, query);
+			Planner planner = new Planner(plannerParams, costParams, reasoningParams, schema);
 			planner.setCostEstimator(estimator);
 			for (EventHandler eh: handlers) {
 				planner.registerEventHandler(eh);
 			}
-			DAGPlan result = planner.search();
+			DAGPlan result = planner.search(query);
 			log.debug("Best plan:" + result);
 			return result;
 		} catch (PlannerException e) {

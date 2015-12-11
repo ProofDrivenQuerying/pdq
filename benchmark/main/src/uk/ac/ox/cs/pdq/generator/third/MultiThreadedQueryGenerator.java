@@ -75,15 +75,15 @@ public class MultiThreadedQueryGenerator implements Runnable {
 					CostParameters cParams = new CostParameters();
 					ReasoningParameters reasoningParams = new ReasoningParameters();
 					params.setTimeout(60000);
-					Planner plannerNoDep = new Planner(pParams, cParams, reasoningParams, schemaNoDep, query);
-					Plan planNoDep = plannerNoDep.search();
+					Planner plannerNoDep = new Planner(pParams, cParams, reasoningParams, schemaNoDep);
+					Plan planNoDep = plannerNoDep.search(query);
 					if (planNoDep != null) {
 						fos.print("+++ Answerable w/o IC ");
 					} else {
 						fos.print("--- Not answerable w/o IC ");
 					}
-					Planner planner = new Planner(pParams, cParams, reasoningParams, this.schema, query);
-					Plan plan = planner.search();
+					Planner planner = new Planner(pParams, cParams, reasoningParams, this.schema);
+					Plan plan = planner.search(query);
 					if (plan != null) {
 						fos.println("\t+++ Answerable " + plan.getCost() + " ");
 						AlgebraLikeLinearPlanWriter.to(fos).write((LeftDeepPlan) plan);

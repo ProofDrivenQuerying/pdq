@@ -16,6 +16,7 @@ import com.google.common.base.Strings;
  * Returns an instance of HomomorphismDetector depending on the input parameters
  *
  * @author Efthymia Tsamoura
+ * @author George Konstantinidis
  */
 public class HomomorphismManagerFactory {
 
@@ -39,11 +40,9 @@ public class HomomorphismManagerFactory {
 	 */
 	public synchronized HomomorphismManager getInstance(
 			Schema schema, 
-			Query<?> query, 
 			ReasoningParameters parameters)
 					throws HomomorphismException {
 		return getInstance(schema, 
-				query, 
 				parameters.getHomomorphismDetectorType(), 
 				parameters.getDatabaseDriver(), 
 				parameters.getConnectionUrl(),
@@ -69,7 +68,6 @@ public class HomomorphismManagerFactory {
 	 */
 	public synchronized HomomorphismManager getInstance(
 			Schema schema, 
-			Query<?> query,
 			HomomorphismDetectorTypes type,
 			String driver,
 			String url,
@@ -104,7 +102,7 @@ public class HomomorphismManagerFactory {
 					}
 					result = new DBHomomorphismManager(
 							driver, url, database, username, password, builder,
-							schema, query);
+							schema);
 					result.initialize();
 					return result;
 				}
@@ -119,7 +117,7 @@ public class HomomorphismManagerFactory {
 		try {
 			result = new DBHomomorphismManager("org.apache.derby.jdbc.EmbeddedDriver",
 					"jdbc:derby:memory:{1};create=true", "chase", username, "", new DerbyStatementBuilder(),
-					schema, query);
+					schema);
 			result.initialize();
 			return result;
 		} catch (SQLException e) {
