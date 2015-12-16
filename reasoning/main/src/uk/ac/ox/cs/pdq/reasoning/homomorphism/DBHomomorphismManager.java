@@ -271,6 +271,26 @@ public class DBHomomorphismManager implements HomomorphismManager {
 		}
 	}
 
+
+	public void consolidateBaseTables(Collection<Table> tables) throws SQLException {
+		try(Statement sqlStatement = this.connection.createStatement()) {
+			try {
+				DBRelation dbRelation = null;
+				for (Table table:tables) {
+					dbRelation = this.toDBRelation(table);
+					this.aliases.put(table.getName(), dbRelation);
+					sqlStatement.addBatch(this.builder.createTableStatement(dbRelation));
+				}
+				sqlStatement.executeBatch();
+			} catch (SQLException ex) {
+				throw new IllegalStateException(ex.getMessage(), ex);
+			}
+		} catch (SQLException ex) {
+			throw new IllegalStateException(ex.getMessage(), ex);
+		}
+	}
+	
+	
 	private void createEqualityTable(Statement stmt) throws SQLException
 	{
 		DBRelation equality = this.createEquality();
