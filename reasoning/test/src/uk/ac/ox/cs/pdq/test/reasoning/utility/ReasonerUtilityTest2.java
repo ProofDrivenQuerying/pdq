@@ -3,21 +3,18 @@ package uk.ac.ox.cs.pdq.test.reasoning.utility;
 import junit.framework.Assert;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.junit.Ignore;
 import org.junit.Test;
 
+import uk.ac.ox.cs.pdq.algebra.Access;
+import uk.ac.ox.cs.pdq.algebra.Join;
 import uk.ac.ox.cs.pdq.algebra.predicates.ConjunctivePredicate;
 import uk.ac.ox.cs.pdq.algebra.predicates.ConstantEqualityPredicate;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
-import uk.ac.ox.cs.pdq.plan.Access;
 import uk.ac.ox.cs.pdq.plan.Command;
-import uk.ac.ox.cs.pdq.plan.Join;
 import uk.ac.ox.cs.pdq.plan.SequentialPlan;
-import uk.ac.ox.cs.pdq.plan.Project;
-import uk.ac.ox.cs.pdq.plan.Select;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.utility.ReasonerUtility;
 
