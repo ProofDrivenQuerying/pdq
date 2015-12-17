@@ -5,6 +5,9 @@ package uk.ac.ox.cs.pdq;
  * Access exception implementation 
  *
  * @author Julien Leblay
+ * 
+ * 
+ * ....
  */
 public class AccessException extends RuntimeException {
 
