@@ -44,7 +44,6 @@ public abstract class ConstraintCardinalityEstimator0 {
 			this.detector = 
 					new HomomorphismManagerFactory().getInstance(
 							this.schema, 
-							null, 
 							HomomorphismDetectorTypes.DATABASE,
 							this.driver,
 							this.url,
