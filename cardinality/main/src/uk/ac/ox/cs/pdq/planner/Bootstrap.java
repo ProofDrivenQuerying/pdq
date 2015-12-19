@@ -35,7 +35,7 @@ public class Bootstrap {
 	/** Logger. */
 	private static Logger log = Logger.getLogger(Bootstrap.class); 
 	
-	private static final String PROGRAM_NAME = "pdq-planner-<version>.jar";
+	private static final String PROGRAM_NAME = "pdq-cardinality-<version>.jar";
 	
 	@Parameter(names = { "-h", "--help" }, help = true, description = "Displays this help message.")
 	private boolean help;

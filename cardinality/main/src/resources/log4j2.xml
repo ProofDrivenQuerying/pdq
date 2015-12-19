@@ -35,6 +35,9 @@
             <AppenderRef ref="CONSOLE" />
         </Logger>
         
+        <Logger name=" uk.ac.ox.cs.pdq.reasoning" level="trace">
+            <AppenderRef ref="CONSOLE" />
+        </Logger>
        
 
 <!-- 
@@ -42,7 +45,7 @@
             <AppenderRef ref="CONSOLE" />
         </Logger>
  -->         
-        <Root level="info">
+        <Root level="trace">
             <AppenderRef ref="FILE" />
         </Root>
     </Loggers>

@@ -15,11 +15,11 @@ import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.reasoning.Match;
-import uk.ac.ox.cs.pdq.reasoning.chase.FiringGraph;
-import uk.ac.ox.cs.pdq.reasoning.chase.MapFiringGraph;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.utility.EqualConstantsClass;
 import uk.ac.ox.cs.pdq.reasoning.utility.EqualConstantsClasses;
+import uk.ac.ox.cs.pdq.reasoning.utility.FiringGraph;
+import uk.ac.ox.cs.pdq.reasoning.utility.MapFiringGraph;
 
 import com.beust.jcommander.internal.Lists;
 import com.google.common.base.Preconditions;

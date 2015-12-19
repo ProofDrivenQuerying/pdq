@@ -69,7 +69,7 @@ public abstract class SQLStatementBuilder {
 
 	/**
 	 * @param databaseName
-	 * @return the complete list of SQL statements required to set up the fact database
+	 * @return the complete list of SQL statements required to set up the facts database
 	 */
 	public abstract Collection<String> setupStatements(String databaseName);
 
@@ -82,7 +82,7 @@ public abstract class SQLStatementBuilder {
 	/**
 	 *
 	 * @param relation the table to drop
-	 * @return a SQL statement for dropping the facts table of the given relation
+	 * @return a SQL statement for dropping the input table
 	 */
 	protected String dropTableStatement(DBRelation relation) {
 		return "DROP TABLE " + this.encodeName(relation.getName());
@@ -100,27 +100,39 @@ public abstract class SQLStatementBuilder {
 	}
 
 	/**
+	 * 
 	 * @param facts
-	 * @return insert statements that add the input fact to the facts database.
+	 * 		Facts to insert in the database
+	 * @param aliases
+	 * 		Map of schema relation names to *clean* names
+	 * @return
+	 * 		 a set of insert statements that insert the input facts to the facts database.
 	 */
 	protected abstract Collection<String> makeInserts(Collection<? extends Predicate> facts, Map<String, DBRelation> aliases);
 	
 	/**
+	 * 
 	 * @param facts
-	 * @return delete statements that delete the input facts from the fact database.
+	 * 		Facts to delete from the database
+	 * @param aliases
+	 * 		Map of schema relation names to *clean* names
+	 * @return
+	 * 		a set of statements that delete the input facts from the fact database.
 	 */
 	protected abstract Collection<String> makeDeletes(Collection<? extends Predicate> facts, Map<String, DBRelation> aliases);
 	
 	/**
 	 * @param relation the table to create
-	 * @return a SQL statement that creates the fact table of the given relation
+	 * @return a SQL statement that creates the input table
 	 */
 	protected abstract String createTableStatement(Relation relation);
 
 	/**
+	 * 
 	 * @param relation
 	 * @param columns
-	 * @return a SQL statement that creates an index for the columns of the input relation
+	 * @return
+	 * 		a SQL statement that creates an index for the columns of the input relation
 	 */
 	protected String createTableIndex(DBRelation relation, Integer... columns) {
 		StringBuilder indexName = new StringBuilder();
@@ -139,7 +151,7 @@ public abstract class SQLStatementBuilder {
 
 	/**
 	 * @param relation
-	 * @return a SQL statement that creates an index for the bag and fact attributes of the database tables
+	 * @return a SQL statement that creates an index for the input column
 	 */
 	protected String createTableNonJoinIndexes(DBRelation relation, Attribute column) {
 		return "CREATE INDEX idx_" + this.encodeName(relation.getName()) + "_" + 
@@ -148,16 +160,19 @@ public abstract class SQLStatementBuilder {
 
 	/**
 	 * 
-	 * @param relationMap
-	 * @param rule
+	 * @param aliases
+	 * 		Map of schema relation names to *clean* names
+	 * @param expression
+	 * 		a conjunctive formula
 	 * @return
+	 * 		statements that create indices on the join variables on the input expression
 	 */
-	protected Collection<String> createTableIndexes(Map<String, DBRelation> relationMap, Evaluatable rule) {
+	protected Collection<String> createTableIndexes(Map<String, DBRelation> aliases, Evaluatable expression) {
 		Conjunction<?> body = null;
-		if (rule.getBody() instanceof Predicate) {
-			body = Conjunction.of((Predicate) rule.getBody());
-		} else if (rule.getBody() instanceof Conjunction<?>) {
-			body = (Conjunction) rule.getBody();
+		if (expression.getBody() instanceof Predicate) {
+			body = Conjunction.of((Predicate) expression.getBody());
+		} else if (expression.getBody() instanceof Conjunction<?>) {
+			body = (Conjunction) expression.getBody();
 		} else {
 			throw new UnsupportedOperationException("Homomorphism check only supported on conjunction of atomic predicate formulas for now.");
 		}
@@ -180,7 +195,7 @@ public abstract class SQLStatementBuilder {
 				for (Predicate atom: atoms) {
 					for (int i = 0, l = atom.getTermsCount(); i < l; i++) {
 						if (atom.getTerm(i).equals(t)) {
-							result.add(this.createTableIndex(relationMap.get(atom.getName()), i));
+							result.add(this.createTableIndex(aliases.get(atom.getName()), i));
 						}
 					}
 				}
@@ -189,13 +204,23 @@ public abstract class SQLStatementBuilder {
 		return result;
 	}
 
+	/**
+	 * Creates a statement that narrows down the number of homomorphisms returned for the source formula to the facts of the database. 
+	 * @param source
+	 * 		An input formula
+	 * @param constraints
+	 * 		A set of constraints that should be satisfied by the homomorphisms of the input formula to the facts of the database 
+	 * @return
+	 * 		an SQL LIMIT statement 
+	 */
 	protected abstract String translateLimitConstraints(Evaluatable source, HomomorphismConstraint... constraints);
 
 	/**
 	 * Creates and runs an SQL statement that detects homomorphisms of the input query to facts kept in a database
 	 * @param source
+	 * 		An input formula
 	 * @param constraints
-	 * 			The homomorphism constraints that should be satisfied
+	 * 		A set of constraints that should be satisfied by the homomorphisms of the input formula to the facts of the database 
 	 * @return homomorphisms of the input query to facts kept in a database.
 	 */
 	public Set<Map<Variable, Constant>> findHomomorphismsThroughSQL(Evaluatable source, HomomorphismConstraint[] constraints, Map<String, TypedConstant<?>> constants, Connection connection) {
@@ -502,12 +527,6 @@ public abstract class SQLStatementBuilder {
 		return result.toString();
 	}
 	
-
-	/**
-	 * 
-	 *
-	 *
-	 */
 	protected String createTableAliasingExpression(String alias, Relation relation) {
 		Preconditions.checkNotNull(relation);
 		StringBuilder result = new StringBuilder();

@@ -5,14 +5,16 @@ import java.util.Collection;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 
 /**
- *	Organises the chase facts into a list.
+ * 	A collection of facts produced during chasing.
+ *	The facts into a list.
+ *	This chase state is used for non-blocking chase implementations 
  * 	@author Efthymia Tsamoura
  *
  */
 public interface ListState extends ChaseState{
 	
 	/**
-	 * Adds the facts into a database instance. 
+	 * Augments the internal facts with the new ones
 	 * @param facts
 	 */
 	void addFacts(Collection<Predicate> facts);

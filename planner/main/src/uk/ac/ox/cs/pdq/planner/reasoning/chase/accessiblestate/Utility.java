@@ -16,7 +16,7 @@ import uk.ac.ox.cs.pdq.planner.accessible.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema.AccessibleRelation;
 import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema.InferredAccessibleRelation;
-import uk.ac.ox.cs.pdq.reasoning.chase.FiringGraph;
+import uk.ac.ox.cs.pdq.reasoning.utility.FiringGraph;
 
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
