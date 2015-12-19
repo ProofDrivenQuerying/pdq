@@ -70,7 +70,6 @@ public abstract class Explorer<P extends Plan> {
 	 *
 	 * @throws PlannerException
 	 * @throws LimitReachedException
-	 * @throws ProofEvent An event that logs the best plan's proof
 	 */
 	public void explore() throws PlannerException, LimitReachedException {
 		this.tick = System.nanoTime();

@@ -4,7 +4,7 @@ import uk.ac.ox.cs.pdq.cost.estimators.SimpleCostEstimator;
 import uk.ac.ox.cs.pdq.plan.Plan;
 
 /**
- * Open success domination.
+ * Open success dominance.
  * A plan p success dominates another closed plan ', if p is successful and has cost < the cost of p'.
  * If either of the plans is open, then a simple plan cost estimator is used to assess their cost;
  * otherwise, the costs of their corresponding (closed) plans are considered.

@@ -4,7 +4,7 @@ import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
 
 
 /**
- * Performs fast equivalence checks.
+ * Fast equivalence.
  * According to this implementation two configurations c and c' are equivalent if the have the same inferred accessible facts.
  * In order to perform this kind of check Skolem constants must be assigned to formula variables during chasing.
  *

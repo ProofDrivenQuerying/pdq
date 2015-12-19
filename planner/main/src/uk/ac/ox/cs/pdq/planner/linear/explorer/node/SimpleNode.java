@@ -8,7 +8,7 @@ import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
 import com.google.common.collect.Lists;
 
 /**
- * Nodes that keep a singlepath to success.
+ * Tree nodes that keep the single best path to success.
  * Used when costing plans using a simple cost function.
  *
  * @author Efthymia Tsamoura

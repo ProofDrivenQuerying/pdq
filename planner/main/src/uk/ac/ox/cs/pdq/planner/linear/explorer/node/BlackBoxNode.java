@@ -10,7 +10,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 /**
- * Nodes that keep every path to success.
+ * Tree nodes that keep every path to success.
  * Used when costing plans using a blackbox cost function.
  * @author Efthymia Tsamoura
  *

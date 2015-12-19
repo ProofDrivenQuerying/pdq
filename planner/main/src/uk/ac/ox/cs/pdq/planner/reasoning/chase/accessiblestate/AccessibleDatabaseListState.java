@@ -43,8 +43,14 @@ import com.google.common.collect.Sets;
  *
  * @author Efthymia Tsamoura
  *
- *	The facts of this configuration are organised into a list of facts. This type of
- *  state is used in non-blocking chase implementations.
+ * 	Organises the facts during chasing into a list. 
+ *	This type of state is used in terminating chase implementations.
+ *	It also maintains the classes of equal chase constants that are derived after chasing with EGDs.
+ *	This implementation does not store equality facts into the database, but when a class of equal constants is created
+ *	the database facts are updated; update includes replacing every chase constant c, with a constant c' that is equal to c
+ *	under the constraints and c' is a representative.
+ *	The database is cleared from the obsolete facts after a chase step is applied.
+ *
  */
 public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseListState implements AccessibleChaseState {
 

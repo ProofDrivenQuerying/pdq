@@ -3,7 +3,7 @@ package uk.ac.ox.cs.pdq.planner.dominance;
 import uk.ac.ox.cs.pdq.plan.Plan;
 
 /**
- * Closed success domination. A closed plan p success dominates another closed plan p', if p is successful and has cost < the cost of p'.
+ * Closed success dominance. A closed plan p success dominates another closed plan p', if p is successful and has cost < the cost of p'.
  *
  * @author Efthymia Tsamoura
  */

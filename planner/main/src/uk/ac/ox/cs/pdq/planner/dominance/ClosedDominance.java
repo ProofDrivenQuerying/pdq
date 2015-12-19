@@ -9,7 +9,7 @@ import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
 import com.google.common.base.Preconditions;
 
 /**
- * Closed domination. A closed configuration c dominates a closed configuration c', if c both cost- and fact- dominates c'.
+ * Closed dominance. A closed configuration c dominates a closed configuration c', if c both cost- and fact- dominates c'.
  *
  * @author Efthymia Tsamoura
  */

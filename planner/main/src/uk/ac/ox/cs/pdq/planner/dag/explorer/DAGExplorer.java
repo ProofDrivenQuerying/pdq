@@ -32,7 +32,7 @@ import com.google.common.collect.Sets;
 import com.google.common.eventbus.EventBus;
 
 /**
- * Abstract DAG explorer
+ * Explores the space of DAG proofs.
  * @author Efthymia Tsamoura
  *
  */

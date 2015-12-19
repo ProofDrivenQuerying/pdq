@@ -12,7 +12,6 @@ import uk.ac.ox.cs.pdq.planner.accessible.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema;
 import uk.ac.ox.cs.pdq.reasoning.Match;
 
-
 /**
  *
  * Extends the state of a chase configuration with methods specific to the accessible schema

@@ -12,8 +12,6 @@ import uk.ac.ox.cs.pdq.planner.dominance.FastFactDominance;
 /**
  * Filters out the fact dominated configurations
  * @author Efthymia Tsamoura
-
- * @param 
  */
 public class FactDominationFilter implements Filter {
 
