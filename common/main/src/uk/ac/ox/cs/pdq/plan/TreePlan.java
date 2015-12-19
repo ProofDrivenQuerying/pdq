@@ -10,7 +10,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
 /**
- * A tree-structured plan implementation
+ * Tree-shaped plans
  *
  * @author Efthymia Tsamoura
  */
@@ -19,7 +19,6 @@ public final class TreePlan extends DAGPlan {
 	/**
 	 * 
 	 * @param operator The input top-level logical operator
-	 * @param cf The plan's control flow
 	 * @param parent The parent plan
 	 * @param children The input child subplans
 	 */
@@ -30,7 +29,6 @@ public final class TreePlan extends DAGPlan {
 	/**
 	 * 
 	 * @param operator The input top-level logical operator
-	 * @param cf The plan's control flow
 	 * @param parent The parent plan
 	 */
 	public TreePlan(RelationalOperator operator, DAGPlan parent) {
@@ -38,9 +36,8 @@ public final class TreePlan extends DAGPlan {
 	}
 
 	/**
-	 * Creates a tree plan with no parent or child subplans
+	 * Creates a tree plan with no parent or children subplans
 	 * @param operator The input top-level logical operator
-	 * @param cf The plan's control flow
 	 */
 	public TreePlan(RelationalOperator operator) {
 		this(operator, null, null);
@@ -52,7 +49,6 @@ public final class TreePlan extends DAGPlan {
 	 *  	The plan's inputs
 	 * @param operator
 	 * 		The input top-level logical operator
-	 * @param cf The plan's control flow
 	 */
 	public TreePlan(Collection<? extends Term> inputs, RelationalOperator operator) {
 		this(inputs, operator, null, Lists.<DAGPlan>newArrayList());
@@ -63,31 +59,18 @@ public final class TreePlan extends DAGPlan {
 	 * @param inputs The plan's inputs
 	 * @param operator
 	 * 		The input top-level logical operator
-	 * @param cf The plan's control flow
 	 * @param parent The parent plan
 	 * @param children The input child subplans
 	 */
 	public TreePlan(Collection<? extends Term> inputs, RelationalOperator operator, DAGPlan parent, List<DAGPlan> children) {
-		super(inputs, operator, createList(parent), children);
+		super(inputs, operator, parent == null ? Lists.<DAGPlan>newArrayList() : Lists.newArrayList(parent), children);
 		Preconditions.checkArgument(this.parents.size() <= 1);
 	}
 
-	/**
-	 * Utility function
-	 * @param plan 
-	 * @return 
-	 */
-	public static List<DAGPlan> createList(DAGPlan plan) {
-		if(plan == null) {
-			return Lists.<DAGPlan>newArrayList();
-		}
-		return Lists.newArrayList(plan);
-	}
 
 	public TreePlan getParent() {
 		return (TreePlan) this.parents.get(0);
 	}
-
 
 	/**
 	 * 	Adds the input plan in the list of this plan's children

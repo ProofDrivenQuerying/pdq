@@ -27,11 +27,11 @@ import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema.AccessibleRelation;
 import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema.InferredAccessibleRelation;
 import uk.ac.ox.cs.pdq.planner.reasoning.MatchFactory;
 import uk.ac.ox.cs.pdq.reasoning.Match;
-import uk.ac.ox.cs.pdq.reasoning.chase.FiringGraph;
-import uk.ac.ox.cs.pdq.reasoning.chase.MapFiringGraph;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseListState;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.utility.EqualConstantsClasses;
+import uk.ac.ox.cs.pdq.reasoning.utility.FiringGraph;
+import uk.ac.ox.cs.pdq.reasoning.utility.MapFiringGraph;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.LinkedHashMultimap;

@@ -258,17 +258,17 @@ public class DBHomomorphismManager implements HomomorphismManager {
 
 	/**
 	 * @param relations List<Relation>
-	 * @param stmt Statement
+	 * @param statement Statement
 	 * @throws SQLException
 	 */
-	private void createBaseTables(List<Relation> relations, Statement stmt) throws SQLException {
+	private void createBaseTables(List<Relation> relations, Statement statement) throws SQLException {
 		DBRelation dbRelation = null;
 		for (Relation relation:relations) {
 			dbRelation = this.createDBRelation(relation);
 			this.aliases.put(relation.getName(), dbRelation);
-			stmt.addBatch(this.builder.createTableStatement(dbRelation));
-			stmt.addBatch(this.builder.createTableNonJoinIndexes(dbRelation, this.Bag));
-			stmt.addBatch(this.builder.createTableNonJoinIndexes(dbRelation, this.Fact));
+			statement.addBatch(this.builder.createTableStatement(dbRelation));
+			statement.addBatch(this.builder.createTableNonJoinIndexes(dbRelation, this.Bag));
+			statement.addBatch(this.builder.createTableNonJoinIndexes(dbRelation, this.Fact));
 		}
 	}
 
@@ -354,10 +354,13 @@ public class DBHomomorphismManager implements HomomorphismManager {
 	/**
 	 * 
 	 * @param source
+	 * 		An input formula
 	 * @param aliases
+	 * 		Map of schema relation names to *clean* names
 	 * @param constraints
+	 * 		A set of constraints that should be satisfied by the homomorphisms of the input formula to the facts of the database 
 	 * @return 
-	 * 		a converted formula using the input mapping aliases
+	 * 		a formula that uses the input *clean* names 
 	 */
 	private <Q extends Evaluatable> Q convert(Q source, Map<String, DBRelation> aliases, HomomorphismConstraint... constraints) {
 		boolean singleBag = false;
@@ -464,13 +467,29 @@ public class DBHomomorphismManager implements HomomorphismManager {
 	 */
 	@Override
 	public void addFacts(Collection<? extends Predicate> facts) {
-		try (Statement sqlStatement = this.connection.createStatement()) {
-			for (String stmt : this.builder.makeInserts(facts, this.aliases)) {
-				sqlStatement.addBatch(stmt);
+		if(this.builder instanceof MySQLStatementBuilder) {
+			try (Statement sqlStatement = this.connection.createStatement()) {
+				for (String statement:this.builder.makeInserts(facts, this.aliases)) {
+					sqlStatement.addBatch(statement);
+				}
+				sqlStatement.executeBatch();
+			} catch (SQLException ex) {
+				throw new IllegalStateException(ex.getMessage(), ex);
 			}
-			sqlStatement.executeBatch();
-		} catch (SQLException ex) {
-			throw new IllegalStateException(ex.getMessage(), ex);
+		}
+		else if(this.builder instanceof DerbyStatementBuilder) {
+			for (String statement : this.builder.makeInserts(facts, this.aliases)) {
+				try (Statement sqlStatement = this.connection.createStatement()) {
+					sqlStatement.executeUpdate(statement);
+				} catch (SQLException ex) {
+					if(!ex.getCause().getMessage().contains("duplicate key value")) {
+						throw new IllegalStateException(ex.getMessage(), ex);
+					}
+				}
+			}
+		}
+		else {
+			throw new java.lang.IllegalStateException("Unknown statement builder");
 		}
 	}
 

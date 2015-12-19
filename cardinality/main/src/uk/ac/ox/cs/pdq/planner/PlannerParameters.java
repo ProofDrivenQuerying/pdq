@@ -23,7 +23,7 @@ public class PlannerParameters extends Parameters {
 	private static Logger log = Logger.getLogger(PlannerParameters.class);
 
 	/** Properties file name */
-	static final String DEFAULT_CONFIG_FILE_NAME = "pdq-planner.properties";
+	static final String DEFAULT_CONFIG_FILE_NAME = "pdq-cardinality.properties";
 
 	/** Properties file path */
 	static final String DEFAULT_CONFIG_FILE_PATH = "./" + DEFAULT_CONFIG_FILE_NAME;

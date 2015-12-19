@@ -6,6 +6,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import com.google.common.collect.BiMap;
 
 import uk.ac.ox.cs.pdq.db.Attribute;
@@ -24,6 +26,8 @@ import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismConstraint.TopKConstra
  */
 public class MySQLStatementBuilder extends SQLStatementBuilder {
 
+	private static Logger log = Logger.getLogger(MySQLStatementBuilder.class);
+	
 	public MySQLStatementBuilder() {
 		super();
 	}
@@ -42,6 +46,7 @@ public class MySQLStatementBuilder extends SQLStatementBuilder {
 		result.add("DROP DATABASE IF EXISTS " + databaseName);
 		result.add("CREATE DATABASE " + databaseName);
 		result.add("USE " + databaseName);
+		log.trace(result);
 		return result;
 	}
 
@@ -53,6 +58,7 @@ public class MySQLStatementBuilder extends SQLStatementBuilder {
 	public Collection<String> cleanupStatements(String databaseName) {
 		Collection<String> result = new LinkedList<>();
 		result.add("DROP DATABASE " + databaseName);
+		log.trace(result);
 		return result;
 	}
 	
@@ -81,7 +87,7 @@ public class MySQLStatementBuilder extends SQLStatementBuilder {
 
 	/**
 	 * @param relation the table to create
-	 * @return a SQL statement that creates the fact table of the given relation
+	 * @return an SQL statement that creates the fact table of the given relation
 	 */
 	protected String createTableStatement(Relation relation) {
 		StringBuilder result = new StringBuilder();
@@ -100,12 +106,19 @@ public class MySQLStatementBuilder extends SQLStatementBuilder {
 		}
 		result.append(" PRIMARY KEY ").append("(").append("Fact").append(")");
 		result.append(')');
+		log.trace(relation);
+		log.trace(result);
 		return result.toString();
 	}
 	
 	/**
+	 * 
 	 * @param facts
-	 * @return insert statements that add the input fact to the fact database.
+	 * 		Facts to insert in the database
+	 * @param aliases
+	 * 		Map of schema relation names to *clean* names
+	 * @return
+	 * 		 a set of insert statements that insert the input facts to the facts database.
 	 */
 	@Override
 	protected Collection<String> makeInserts(Collection<? extends Predicate> facts, Map<String, DBRelation> dbrelations) {
@@ -124,12 +137,18 @@ public class MySQLStatementBuilder extends SQLStatementBuilder {
 			insertInto += ")";
 			result.add(insertInto);
 		}
+		log.trace(result);
 		return result;
 	}
 	
 	/**
+	 * 
 	 * @param facts
-	 * @return delete statements that delete the input facts from the fact database.
+	 * 		Facts to delete from the database
+	 * @param aliases
+	 * 		Map of schema relation names to *clean* names
+	 * @return
+	 * 		a set of statements that delete the input facts from the fact database.
 	 */
 	@Override
 	protected Collection<String> makeDeletes(Collection<? extends Predicate> facts, Map<String, DBRelation> aliases) {
@@ -141,6 +160,7 @@ public class MySQLStatementBuilder extends SQLStatementBuilder {
 			delete += attribute.getName() + "=" + fact.getId();
 			result.add(delete);
 		}
+		log.trace(result);
 		return result;
 	}
 }

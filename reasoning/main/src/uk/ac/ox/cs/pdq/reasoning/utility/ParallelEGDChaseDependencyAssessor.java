@@ -18,6 +18,13 @@ public interface ParallelEGDChaseDependencyAssessor {
 	
 	public static enum EGDROUND{EGD, TGD};
 	
+	/**
+	 * 
+	 * @param state
+	 * 		A collection of chase facts
+	 * @return
+	 * 		the dependencies that are most likely to be fired in the next chase round.  
+	 */
 	Collection<? extends Constraint> getDependencies(ChaseState state, EGDROUND round);
 	
 }

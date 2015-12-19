@@ -14,6 +14,8 @@ import com.google.common.base.Preconditions;
 
 /**
  *
+ * A collection of facts produced during chasing.
+ * It also keeps a graph of the rule firings that took place during chasing.
  * This implementation keeps the facts produced during chasing in a database.
  * Homomorphisms are detected using the DBMS the stores the chase facts. 
  *
