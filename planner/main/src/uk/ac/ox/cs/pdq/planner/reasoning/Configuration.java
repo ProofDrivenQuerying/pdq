@@ -5,8 +5,9 @@ import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.util.Costable;
 
 /**
- * Configurations represent derivation of implicit information using constraints.
- * Configurations have a direct correspondence with a query plan.
+ * Configurations represent derivation of implicit information using constraints
+ * and have a direct correspondence with a query plan. 
+ * This interface is generic as it does not bind a reasoning mechanism to the configuration.  
  *
  * @author Efthymia Tsamoura
  * @author Julien Leblay

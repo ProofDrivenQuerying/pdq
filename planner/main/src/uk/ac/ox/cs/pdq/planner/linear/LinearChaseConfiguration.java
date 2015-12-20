@@ -29,9 +29,10 @@ import com.google.common.collect.Sets;
 
 /**
  * Type of configurations met in the linear world.
- * Each linear chase configuration is associated with a set of facts a rule firing and a set of generated facts p – 
+ * Each linear chase configuration is associated with a set of facts, a rule firing, and a set of generated facts p – 
  * the ones produced by the last rule firing.
  * The (output) facts are all stored inside the state member field.
+ * 
  *
  * @author Efthymia Tsamoura
  */

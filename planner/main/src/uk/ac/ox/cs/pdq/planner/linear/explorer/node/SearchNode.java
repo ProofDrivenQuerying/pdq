@@ -19,7 +19,9 @@ import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import com.google.common.collect.Lists;
 
 /**
- * A node in the plan tree.
+ * 	The linear plans that are visited during exploration are organised into a tree. 
+	The nodes of this tree correspond to (partial) linear configurations. 
+	This class provides an abstract node class.
  *
  * @author Efthymia Tsamoura
  * @author Julien Leblay

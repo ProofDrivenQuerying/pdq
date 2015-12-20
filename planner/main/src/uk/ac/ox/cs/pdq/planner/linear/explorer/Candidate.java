@@ -19,8 +19,8 @@ import com.google.common.collect.Lists;
 
 
 /**
- * A fact that could be exposed at that point as all its chase constants are already accessible.
- * 
+ * Informally, a fact is candidate for exposure if all its input chase constants are already accessible. 
+ * The formal definition of candidate facts is given below:
  * 	A fact R(c1, ..., cm) in a linear configuration v is a candidate for exposure in v 
  * 	if AccessedR(c1, ..., cm) is not yet in v and and there is an access
 	method mt on R with input positions j1, ..., jm such that

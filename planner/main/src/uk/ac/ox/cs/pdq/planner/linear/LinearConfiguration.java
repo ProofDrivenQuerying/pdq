@@ -8,7 +8,9 @@ import uk.ac.ox.cs.pdq.planner.linear.explorer.Candidate;
 import uk.ac.ox.cs.pdq.planner.reasoning.Configuration;
 
 /**
- * A linear configuration
+ * Configurations represent derivation of implicit information using constraints and
+ * have a direct correspondence with a query plan.
+ * Linear configurations are mapped to left-deep plans.
  *
  * @author Efthymia Tsamoura
  * @author Julien Leblay
@@ -43,7 +45,7 @@ public interface LinearConfiguration extends Configuration<LeftDeepPlan> {
 
 	/**
 	 * @param candidate
-	 * @return a list of candidates sharing the same constants in their input positions with this configuration
+	 * @return a list of candidates sharing the same chase constants in their input positions with this configuration
 	 */
 	Set<Candidate> getSimilarCandidates(Candidate candidate);
 	

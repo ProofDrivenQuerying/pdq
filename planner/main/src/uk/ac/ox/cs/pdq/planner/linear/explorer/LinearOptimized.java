@@ -58,7 +58,7 @@ import com.google.common.collect.Sets;
 import com.google.common.eventbus.EventBus;
 
 /**
- * Searches the plan space employing several optimisations (like plan dominance, global dominance and global equivalence)
+ * Searches the proof space employing several optimisations heuristics
  * in order to reach faster the best plan.
  * For more information see
  * "Michael Benedikt, Balder ten Cate, Efthymia Tsamoura. Generating Low-cost Plans From Proofs"

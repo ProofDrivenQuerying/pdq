@@ -31,7 +31,7 @@ import com.google.common.eventbus.EventBus;
 
 
 /**
- * Exhaustively searches the plan space
+ * Exhaustively searches the proof space
  * For more information see
  * "Michael Benedikt, Balder ten Cate, Efthymia Tsamoura. Generating Low-cost Plans From Proofs"
  *

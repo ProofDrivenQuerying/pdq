@@ -33,6 +33,11 @@ import com.google.common.eventbus.EventBus;
 
 /**
  * Explores the space of DAG proofs.
+ * Exploration proceeds roughly as follows.
+ * First, create all unary configurations. Unary configuration correspond to single access plans.
+ * Then in every exploration step, create a new binary configuration by combining two other configurations. 
+ * Saturate the new configuration using the constraints of the accessible schema. 
+ * Finally, check if the newly configuration matches the accessible query and update the best configuration appropriately.   
  * @author Efthymia Tsamoura
  *
  */

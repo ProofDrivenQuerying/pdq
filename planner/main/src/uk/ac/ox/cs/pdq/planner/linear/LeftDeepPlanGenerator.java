@@ -27,7 +27,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
 /**
- * Creates left deep plans
+ * Transforms linear chase configurations to left-deep plans. 
  *
  * @author Efthymia Tsamoura
  */
