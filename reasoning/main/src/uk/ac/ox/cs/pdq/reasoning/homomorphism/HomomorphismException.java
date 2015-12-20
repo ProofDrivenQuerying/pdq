@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.reasoning;
+package uk.ac.ox.cs.pdq.reasoning.homomorphism;
 
 /**
  * Exception that occurred during homomorphism detection.

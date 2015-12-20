@@ -6,9 +6,9 @@ import java.util.List;
 import uk.ac.ox.cs.pdq.db.Constraint;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.logging.performance.StatisticsCollector;
-import uk.ac.ox.cs.pdq.reasoning.Match;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ListState;
+import uk.ac.ox.cs.pdq.reasoning.utility.Match;
 import uk.ac.ox.cs.pdq.reasoning.utility.ReasonerUtility;
 
 import com.google.common.base.Preconditions;

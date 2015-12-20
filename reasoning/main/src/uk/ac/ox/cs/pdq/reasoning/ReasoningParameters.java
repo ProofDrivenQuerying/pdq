@@ -10,7 +10,7 @@ import org.apache.log4j.Logger;
 import uk.ac.ox.cs.pdq.Parameters;
 
 /**
- * Holds the parameters of a planning session.
+ * Holds the parameters of a reasoning session.
  *
  * @author Efthymia Tsamoura
  */

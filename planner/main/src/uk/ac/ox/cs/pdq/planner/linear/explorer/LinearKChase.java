@@ -35,14 +35,14 @@ import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.DominanceMetadata;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.EquivalenceMetadata;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.Metadata;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.StatusUpdateMetadata;
-import uk.ac.ox.cs.pdq.reasoning.Match;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
+import uk.ac.ox.cs.pdq.reasoning.utility.Match;
 
 import com.google.common.eventbus.EventBus;
 
 /**
- * Searches the plan space employing several optimisations (similar to the OptimizedExplorer) in order to reach faster the best plan.
+ * Searches the proof space employing several optimisations (similar to the OptimizedExplorer) in order to reach faster the best proof.
  * Performs chasing at intervals
  *
  * @author Efthymia Tsamoura

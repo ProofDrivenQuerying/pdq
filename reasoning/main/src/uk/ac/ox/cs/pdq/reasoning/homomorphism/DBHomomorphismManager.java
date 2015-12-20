@@ -32,8 +32,7 @@ import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.io.xml.QNames;
-import uk.ac.ox.cs.pdq.reasoning.HomomorphismException;
-import uk.ac.ox.cs.pdq.reasoning.Match;
+import uk.ac.ox.cs.pdq.reasoning.utility.Match;
 import uk.ac.ox.cs.pdq.util.Table;
 
 import com.google.common.base.Preconditions;

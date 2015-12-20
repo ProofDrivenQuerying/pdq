@@ -11,11 +11,11 @@ import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.logging.performance.StatisticsCollector;
-import uk.ac.ox.cs.pdq.reasoning.Match;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ListState;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismConstraint;
 import uk.ac.ox.cs.pdq.reasoning.utility.DefaultParallelEGDChaseDependencyAssessor;
+import uk.ac.ox.cs.pdq.reasoning.utility.Match;
 import uk.ac.ox.cs.pdq.reasoning.utility.ParallelEGDChaseDependencyAssessor;
 import uk.ac.ox.cs.pdq.reasoning.utility.ParallelEGDChaseDependencyAssessor.EGDROUND;
 import uk.ac.ox.cs.pdq.reasoning.utility.ReasonerUtility;
@@ -41,6 +41,7 @@ import com.google.common.collect.Sets;
 	ii. The resulting set of marked pairs is closed under reflexivity and transitivity
 	to get an equivalence relation.
 	iii. If we try to equate two different schema constants, then the chase fails. 
+	The facts that are generated during chasing are stored in a list.
 	
  * @author Efthymia Tsamoura
  *

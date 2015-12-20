@@ -22,7 +22,6 @@ import uk.ac.ox.cs.pdq.fol.Signature;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.plan.CommandToTGDTranslator;
-import uk.ac.ox.cs.pdq.reasoning.Match;
 import uk.ac.ox.cs.pdq.reasoning.chase.ParallelEGDChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState;

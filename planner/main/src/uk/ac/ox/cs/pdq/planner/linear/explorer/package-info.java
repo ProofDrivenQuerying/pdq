@@ -4,6 +4,14 @@ package uk.ac.ox.cs.pdq.planner.linear.explorer;
 	@author Efthymia Tsamoura
 
 	This package contains classes that explore the space of linear proofs.
+	The configurations that are explored are stored in a tree and each configuration maps to a plan. 
+	Exploration proceeds roughly as follows:
+	In each step of the exploration phase, select a configuration to expand.  
+	A partial proof can be expanded if it contains schema facts that are not already exposed, and their input chase constants are accessible. 
+	Create a new configuration with facts the facts of the parent configuration \sub the the newly exposed facts.
+	Saturate the new configuration using the constraints of the accessible schema. 
+	Finally, check if the newly configuration matches the accessible query and update the best configuration appropriately.    
+	
 	The LinearGeneric class explores the space of linear proofs exhaustively. 
 	The LinearOptimized class employs several heuristics to cut down the search space. 
 	The first heuristic prunes the configurations that map to plans with cost >= to the best plan found so far.

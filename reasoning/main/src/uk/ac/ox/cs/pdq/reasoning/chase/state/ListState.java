@@ -6,7 +6,7 @@ import uk.ac.ox.cs.pdq.fol.Predicate;
 
 /**
  * 	A collection of facts produced during chasing.
- *	The facts into a list.
+ *	The facts are organised into a list.
  *	This chase state is used for non-blocking chase implementations 
  * 	@author Efthymia Tsamoura
  *

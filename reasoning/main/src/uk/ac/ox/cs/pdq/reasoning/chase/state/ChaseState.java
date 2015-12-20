@@ -6,9 +6,9 @@ import java.util.List;
 import uk.ac.ox.cs.pdq.db.Constraint;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Query;
-import uk.ac.ox.cs.pdq.reasoning.Match;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismConstraint;
 import uk.ac.ox.cs.pdq.reasoning.utility.FiringGraph;
+import uk.ac.ox.cs.pdq.reasoning.utility.Match;
 
 /**
  *

@@ -4,7 +4,7 @@ package uk.ac.ox.cs.pdq.planner.dag.explorer.filters;
 	@author Efthymia Tsamoura
 
 	This package contains classes that given a set of DAG configurations 
-	they filter out the configurations that do not certain criteria. 
+	they filter out the configurations that do not satisfy certain criteria. 
 	
 	The FactDominationFilter class filters out the fact dominated configurations.
 	A configuration c and c' is fact dominated by another configuration c' 

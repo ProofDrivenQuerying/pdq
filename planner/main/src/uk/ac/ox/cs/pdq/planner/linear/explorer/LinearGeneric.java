@@ -23,15 +23,15 @@ import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode.NodeStatus;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.BestPlanMetadata;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.CreationMetadata;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.Metadata;
-import uk.ac.ox.cs.pdq.reasoning.Match;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
+import uk.ac.ox.cs.pdq.reasoning.utility.Match;
 
 import com.google.common.eventbus.EventBus;
 
 
 /**
- * Exhaustively searches the plan space
+ * Exhaustively searches the proof space
  * For more information see
  * "Michael Benedikt, Balder ten Cate, Efthymia Tsamoura. Generating Low-cost Plans From Proofs"
  *

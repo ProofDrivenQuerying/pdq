@@ -10,7 +10,7 @@ import uk.ac.ox.cs.pdq.db.Constraint;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.planner.accessible.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema;
-import uk.ac.ox.cs.pdq.reasoning.Match;
+import uk.ac.ox.cs.pdq.reasoning.utility.Match;
 
 /**
  *

@@ -13,13 +13,15 @@ import uk.ac.ox.cs.pdq.planner.dominance.FactDominance;
 import uk.ac.ox.cs.pdq.planner.dominance.FastFactDominance;
 import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.Metadata;
-import uk.ac.ox.cs.pdq.reasoning.Match;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
+import uk.ac.ox.cs.pdq.reasoning.utility.Match;
 
 import com.google.common.collect.Lists;
 
 /**
- * A node in the plan tree.
+ * 	The linear plans that are visited during exploration are organised into a tree. 
+	The nodes of this tree correspond to (partial) linear configurations. 
+	This class provides an abstract node class.
  *
  * @author Efthymia Tsamoura
  * @author Julien Leblay

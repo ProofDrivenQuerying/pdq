@@ -11,9 +11,9 @@ import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.reasoning.Configuration;
-import uk.ac.ox.cs.pdq.reasoning.Match;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState;
+import uk.ac.ox.cs.pdq.reasoning.utility.Match;
 
 /**
  * A configuration which uses the chase as a proof system 

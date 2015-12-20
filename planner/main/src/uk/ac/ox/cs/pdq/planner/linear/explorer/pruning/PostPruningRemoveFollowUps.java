@@ -24,8 +24,8 @@ import uk.ac.ox.cs.pdq.planner.linear.explorer.Candidate;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.NodeFactory;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode.NodeStatus;
-import uk.ac.ox.cs.pdq.reasoning.Match;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
+import uk.ac.ox.cs.pdq.reasoning.utility.Match;
 import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.base.Preconditions;

@@ -14,7 +14,7 @@ import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState;
 
 /**
  * (From A. C. Onet) 
- * The chase procedure is an iteration a chase steps that either adds a new tuple to satisfy
+ * The chase procedure is an iteration of steps that either adds a new tuple to satisfy
 	a TGD, either changes the instance to model some equality-generating-dependency,
 	or fails when the instance could not be changed to satisfy an equality-generating dependency. 
  * @author Efthymia Tsamoura
