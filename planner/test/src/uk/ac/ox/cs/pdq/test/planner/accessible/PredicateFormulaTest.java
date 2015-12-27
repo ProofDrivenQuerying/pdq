@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.test.planner.db.access;
+package uk.ac.ox.cs.pdq.test.planner.accessible;
 
 import java.util.Random;
 
