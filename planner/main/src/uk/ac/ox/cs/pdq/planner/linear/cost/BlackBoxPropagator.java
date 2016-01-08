@@ -35,7 +35,7 @@ public class BlackBoxPropagator extends CostPropagator<BlackBoxNode> {
 
 	/**
 	 * Empty constructor
-	 * @param estimator BlackBoxCostEstimator<LinearPlan,?>
+	 * @param estimator BlackBoxCostEstimator<LeftDeepPlan,?>
 	 */
 	public BlackBoxPropagator(BlackBoxCostEstimator<LeftDeepPlan> estimator) {
 		super(estimator);
@@ -110,7 +110,7 @@ public class BlackBoxPropagator extends CostPropagator<BlackBoxNode> {
 					}
 				}
 			}
-		}
+		} 
 
 		else {
 			for (DefaultEdge edge: planTree.incomingEdgesOf(node)) {

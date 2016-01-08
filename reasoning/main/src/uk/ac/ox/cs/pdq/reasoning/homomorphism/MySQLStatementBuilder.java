@@ -162,6 +162,6 @@ public class MySQLStatementBuilder extends SQLStatementBuilder {
 		}
 		log.trace(result);
 		return result;
-	}
+	} 
 }
 

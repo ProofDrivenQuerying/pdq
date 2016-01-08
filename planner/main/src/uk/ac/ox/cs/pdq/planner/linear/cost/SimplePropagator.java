@@ -35,7 +35,7 @@ public class SimplePropagator extends CostPropagator<SimpleNode> {
 	
 	/**
 	 * Empty constructor
-	 * @param estimator SimpleCostEstimator<LinearPlan>
+	 * @param estimator SimpleCostEstimator<LeftDeepPlan>
 	 */
 	public SimplePropagator(SimpleCostEstimator<LeftDeepPlan> estimator) {
 		super(estimator);

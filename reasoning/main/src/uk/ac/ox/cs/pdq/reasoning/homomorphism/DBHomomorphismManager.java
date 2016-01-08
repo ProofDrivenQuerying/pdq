@@ -48,7 +48,7 @@ import com.google.common.collect.Sets;
  * corresponds to the bag (if it exists) where this fact is placed in.
  *
  * @author Efthymia Tsamoura
- * @author Konstantinidis
+ * @author George Konstantinidis
  *
  */
 public class DBHomomorphismManager implements HomomorphismManager {
@@ -277,6 +277,26 @@ public class DBHomomorphismManager implements HomomorphismManager {
 		stmt.addBatch(this.builder.createTableStatement(equality));
 		stmt.addBatch(this.builder.createTableNonJoinIndexes(equality, this.Bag));
 		stmt.addBatch(this.builder.createTableNonJoinIndexes(equality, this.Fact));
+	}
+
+
+
+	public void consolidateBaseTables(Collection<Table> tables) throws SQLException {
+		try(Statement sqlStatement = this.connection.createStatement()) {
+			try {
+				DBRelation dbRelation = null;
+				for (Table table:tables) {
+					dbRelation = this.toDBRelation(table);
+					this.aliases.put(table.getName(), dbRelation);
+					sqlStatement.addBatch(this.builder.createTableStatement(dbRelation));
+				}
+				sqlStatement.executeBatch();
+			} catch (SQLException ex) {
+				throw new IllegalStateException(ex.getMessage(), ex);
+			}
+		} catch (SQLException ex) {
+			throw new IllegalStateException(ex.getMessage(), ex);
+		}
 	}
 
 	/**

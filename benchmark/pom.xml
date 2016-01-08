@@ -3,7 +3,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>uk.ac.ox.cs.pdq</groupId>
-	<artifactId>sizeestimation.benchmark</artifactId>
+	<artifactId>pdq-benchmark</artifactId>
 	<version>1.0.0-Beta</version>
 	<name>PDQ benchmark library</name>
 	<description>The PDQ benchmark library gathers packages and classes for benchmarking and schema/query generation purposes.</description>
@@ -33,6 +33,19 @@
 			</resource>
 		</resources>
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.6</version>
+				<configuration>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<mainClass>uk.ac.ox.cs.pdq.benchmark.Runner</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.1</version>
@@ -81,41 +94,41 @@
 		</dependency>
 		<dependency>
 			<groupId>uk.ac.ox.cs.pdq</groupId>
-			<artifactId>sizeestimation.common</artifactId>
+			<artifactId>pdq-common</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>uk.ac.ox.cs.pdq</groupId>
-			<artifactId>sizeestimation.runtime</artifactId>
+			<artifactId>pdq-runtime</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>uk.ac.ox.cs.pdq</groupId>
-			<artifactId>sizeestimation.planner</artifactId>
+			<artifactId>pdq-planner</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>uk.ac.ox.cs.pdq</groupId>
-			<artifactId>sizeestimation.datasources</artifactId>
+			<artifactId>pdq-datasources</artifactId>
 		</dependency>
 	</dependencies>
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
 				<groupId>uk.ac.ox.cs.pdq</groupId>
-				<artifactId>sizeestimation.common</artifactId>
+				<artifactId>pdq-common</artifactId>
 				<version>1.0.0-Beta</version>
 			</dependency>
 			<dependency>
 				<groupId>uk.ac.ox.cs.pdq</groupId>
-				<artifactId>sizeestimation.planner</artifactId>
+				<artifactId>pdq-planner</artifactId>
 				<version>1.0.0-Beta</version>
 			</dependency>
 			<dependency>
 				<groupId>uk.ac.ox.cs.pdq</groupId>
-				<artifactId>sizeestimation.runtime</artifactId>
+				<artifactId>pdq-runtime</artifactId>
 				<version>1.0.0-Beta</version>
 			</dependency>
 			<dependency>
 				<groupId>uk.ac.ox.cs.pdq</groupId>
-				<artifactId>sizeestimation.datasources</artifactId>
+				<artifactId>pdq-datasources</artifactId>
 				<version>1.0.0-Beta</version>
 			</dependency>
 		</dependencies>

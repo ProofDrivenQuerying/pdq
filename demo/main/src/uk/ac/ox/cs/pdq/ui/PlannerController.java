@@ -569,7 +569,7 @@ public class PlannerController {
 			this.searchSpaceMetadataSuccess.setText("");
 			this.searchSpaceMetadataSuccessTab.setDisable(true);
 		}
-	}
+	} 
 
 	public void updateEdgeMetadata(EdgeTypes type, SearchNode node) {
 		String str = "Type: " + type + "\n";

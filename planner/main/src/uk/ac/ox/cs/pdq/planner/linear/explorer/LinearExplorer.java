@@ -1,6 +1,6 @@
 package uk.ac.ox.cs.pdq.planner.linear.explorer;
 
-import java.util.List;
+import java.util.List; 
 import java.util.Set;
 
 import org.jgrapht.graph.DefaultEdge;

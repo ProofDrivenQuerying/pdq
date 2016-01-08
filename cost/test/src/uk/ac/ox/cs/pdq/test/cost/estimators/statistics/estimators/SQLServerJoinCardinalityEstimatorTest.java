@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.test.cost.statistics.estimators;
+package uk.ac.ox.cs.pdq.test.cost.estimators.statistics.estimators;
 
 import java.math.BigInteger;
 

@@ -39,7 +39,7 @@ public abstract class CostPropagator<T extends SearchNode> {
 	
 	public List<Integer> getBestPath() {
 		return this.bestPath;
-	}
+	} 
 
 	/**
 	 * Propagates a path-to-success (if it exists) to the root of the input plan

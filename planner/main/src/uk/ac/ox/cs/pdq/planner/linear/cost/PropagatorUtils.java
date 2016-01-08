@@ -46,7 +46,7 @@ public class PropagatorUtils {
 		Preconditions.checkArgument(path != null && !path.isEmpty());
 		List<T> nodes = LinearUtility.createPath(nodesSet, path);
 		LeftDeepPlan plan = LeftDeepPlanGenerator.createLeftDeepPlan(nodes);
-		costEstimator.cost(plan);
+		costEstimator.cost(plan); 
 
 		for (T next:nodes) {
 			costEstimator.cost(next.getConfiguration().getPlan());

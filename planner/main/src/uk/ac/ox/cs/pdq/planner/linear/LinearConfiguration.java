@@ -50,6 +50,6 @@ public interface LinearConfiguration extends Configuration<LeftDeepPlan> {
 	Set<Candidate> getSimilarCandidates(Candidate candidate);
 	
 	@Override
-	LinearConfiguration clone();
+	LinearConfiguration clone(); 
 
 }

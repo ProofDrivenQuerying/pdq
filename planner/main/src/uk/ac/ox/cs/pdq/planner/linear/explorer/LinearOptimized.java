@@ -146,7 +146,7 @@ public class LinearOptimized extends LinearExplorer {
 		this.zombification = zombification;
 	}
 
-	/**
+	/** 
 	 * @throws PlannerException
 	 */
 	@Override

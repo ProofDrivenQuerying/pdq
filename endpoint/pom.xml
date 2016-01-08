@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>uk.ac.ox.cs.pdq</groupId>
-  <artifactId>sizeestimation.endpoint</artifactId>
+  <artifactId>pdq-endpoint</artifactId>
   <version>1.0.0-Beta</version>
   <packaging>war</packaging>
   <build>
@@ -13,20 +13,20 @@
           <exclude>**/*.java</exclude>
         </excludes>
       </resource>
-			<resource>
-				<directory>main/src/resources</directory>
-				<filtering>true</filtering>
-				<includes>
-					<include>**/planner.version</include>
-				</includes>
-			</resource>
-			<resource>
-				<directory>main/src/resources</directory>
-				<filtering>false</filtering>
-				<excludes>
-					<exclude>**/planner.version</exclude>
-				</excludes>
-			</resource>
+     <resource>
+       <directory>main/src/resources</directory>
+       <filtering>true</filtering>
+       <includes>
+         <include>**/endpoint.version</include>
+       </includes>
+     </resource>
+     <resource>
+       <directory>main/src/resources</directory>
+       <filtering>false</filtering>
+       <excludes>
+         <exclude>**/endpoint.version</exclude>
+       </excludes>
+     </resource>
     </resources>
     <plugins>
       <plugin>
@@ -51,50 +51,55 @@
   <url>http://www.cs.ox.ac.uk/pdq/</url>
   <description>This project is the web frontend for PDQ.</description>
   <organization>
-  	<name>Oxford University - Department of Computer Science</name>
-  	<url>http://www.cs.ox.ac.uk</url>
+   <name>Oxford University - Department of Computer Science</name>
+   <url>http://www.cs.ox.ac.uk</url>
   </organization>
   <dependencies>
-  	<dependency>
-  		<groupId>javax.servlet</groupId>
-  		<artifactId>javax.servlet-api</artifactId>
-  		<version>3.1.0</version>
-  	</dependency>
-  	<dependency>
-  		<groupId>uk.ac.ox.cs.pdq</groupId>
-  		<artifactId>sizeestimation.planner</artifactId>
-  	</dependency>
-  	<dependency>
-  		<groupId>uk.ac.ox.cs.pdq</groupId>
-  		<artifactId>sizeestimation.common</artifactId>
-  	</dependency>
-  	<dependency>
-  		<groupId>uk.ac.ox.cs.pdq</groupId>
-  		<artifactId>sizeestimation.runtime</artifactId>
-  	</dependency>
-  	<dependency>
-  		<groupId>javax.servlet</groupId>
-  		<artifactId>jsp-api</artifactId>
-  		<version>2.0</version>
-  	</dependency>
+   <dependency>
+     <groupId>javax.servlet</groupId>
+     <artifactId>javax.servlet-api</artifactId>
+     <version>3.1.0</version>
+   </dependency>
+   <dependency>
+     <groupId>uk.ac.ox.cs.pdq</groupId>
+     <artifactId>pdq-planner</artifactId>
+   </dependency>
+   <dependency>
+     <groupId>uk.ac.ox.cs.pdq</groupId>
+     <artifactId>pdq-common</artifactId>
+   </dependency>
+   <dependency>
+     <groupId>uk.ac.ox.cs.pdq</groupId>
+     <artifactId>pdq-runtime</artifactId>
+   </dependency>
+   <dependency>
+     <groupId>javax.servlet</groupId>
+     <artifactId>jsp-api</artifactId>
+     <version>2.0</version>
+   </dependency>
+   <dependency>
+   	<groupId>uk.ac.ox.cs.pdq</groupId>
+   	<artifactId>pdq-reasoning</artifactId>
+   	<version>1.0.0-Beta</version>
+   </dependency>
   </dependencies>
   <dependencyManagement>
-  	<dependencies>
-  		<dependency>
-  			<groupId>uk.ac.ox.cs.pdq</groupId>
-  			<artifactId>sizeestimation.common</artifactId>
-  			<version>1.0.0-Beta</version>
-  		</dependency>
-  		<dependency>
-  			<groupId>uk.ac.ox.cs.pdq</groupId>
-  			<artifactId>sizeestimation.planner</artifactId>
-  			<version>1.0.0-Beta</version>
-  		</dependency>
-  		<dependency>
-  			<groupId>uk.ac.ox.cs.pdq</groupId>
-  			<artifactId>sizeestimation.runtime</artifactId>
-  			<version>1.0.0-Beta</version>
-  		</dependency>
-  	</dependencies>
+   <dependencies>
+     <dependency>
+       <groupId>uk.ac.ox.cs.pdq</groupId>
+       <artifactId>pdq-common</artifactId>
+       <version>1.0.0-Beta</version>
+     </dependency>
+     <dependency>
+       <groupId>uk.ac.ox.cs.pdq</groupId>
+       <artifactId>pdq-planner</artifactId>
+       <version>1.0.0-Beta</version>
+     </dependency>
+     <dependency>
+       <groupId>uk.ac.ox.cs.pdq</groupId>
+       <artifactId>pdq-runtime</artifactId>
+       <version>1.0.0-Beta</version>
+     </dependency>
+   </dependencies>
   </dependencyManagement>
 </project>

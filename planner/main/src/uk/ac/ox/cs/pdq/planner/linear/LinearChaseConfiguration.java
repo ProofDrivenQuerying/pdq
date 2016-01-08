@@ -29,7 +29,7 @@ import com.google.common.collect.Sets;
 
 /**
  * Type of configurations met in the linear world.
- * Each linear chase configuration is associated with a set of facts, a rule firing, and a set of generated facts p – 
+ * Each linear chase configuration is associated with a set of facts, a rule firing, and a set of generated facts p ï¿½ 
  * the ones produced by the last rule firing.
  * The (output) facts are all stored inside the state member field.
  * 
@@ -272,5 +272,5 @@ public class LinearChaseConfiguration extends ChaseConfiguration<LeftDeepPlan> i
 	@Override
 	public int compareTo(Configuration<LeftDeepPlan> o) {
 		return this.getPlan().compareTo(o.getPlan());
-	}
+	} 
 }
