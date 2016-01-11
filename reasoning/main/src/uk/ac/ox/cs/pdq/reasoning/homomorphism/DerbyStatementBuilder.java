@@ -2,14 +2,19 @@ package uk.ac.ox.cs.pdq.reasoning.homomorphism;
 
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
+import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.Evaluatable;
+import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager.DBRelation;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismConstraint.TopK;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismConstraint.TopKConstraint;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
@@ -27,6 +32,10 @@ public class DerbyStatementBuilder extends SQLStatementBuilder {
 	 */
 	public DerbyStatementBuilder() {
 		super();
+	}
+	
+	protected DerbyStatementBuilder(BiMap<String, String> cleanMap) {
+		super(cleanMap);
 	}
 
 	/*
@@ -51,8 +60,8 @@ public class DerbyStatementBuilder extends SQLStatementBuilder {
 	@Override
 	protected String translateLimitConstraints(Evaluatable source, HomomorphismConstraint... constraints) {
 		for(HomomorphismConstraint c:constraints) {
-			if(c instanceof TopK) {
-				return "FETCH NEXT " + ((TopK) c).k + " ROWS ONLY  ";
+			if(c instanceof TopKConstraint) {
+				return "FETCH NEXT " + ((TopKConstraint) c).k + " ROWS ONLY  ";
 			}
 		}
 		return null;
@@ -63,7 +72,7 @@ public class DerbyStatementBuilder extends SQLStatementBuilder {
 	 */
 	@Override
 	public DerbyStatementBuilder clone() {
-		return new DerbyStatementBuilder();
+		return new DerbyStatementBuilder(this.cleanMap);
 	}
 
 	@Override
@@ -90,5 +99,5 @@ public class DerbyStatementBuilder extends SQLStatementBuilder {
 				" ON " + this.encodeName(relation.getName()) + "(" + indexColumns + ")";
 		String drop ="DROP INDEX idx_" + this.encodeName(relation.getName()) + "_" + indexName;
 		return new ImmutablePair<String, String>(create,drop);
-	}
+	}	
 }

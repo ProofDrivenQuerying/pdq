@@ -6,13 +6,14 @@ import java.util.List;
 import uk.ac.ox.cs.pdq.db.Constraint;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Query;
-import uk.ac.ox.cs.pdq.reasoning.Match;
-import uk.ac.ox.cs.pdq.reasoning.chase.FiringGraph;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismConstraint;
+import uk.ac.ox.cs.pdq.reasoning.utility.FiringGraph;
+import uk.ac.ox.cs.pdq.reasoning.utility.Match;
 
 /**
  *
- * The state of a chase configuration. 
+ * A collection of facts produced during chasing.
+ * It also keeps a graph of the rule firings that took place during chasing.
  *
  * @author Efthymia Tsamoura
  *
@@ -21,6 +22,10 @@ public interface ChaseState {
 
 	/**
 	 *
+	 * (Conjunctive query match definition) If Q′ is a conjunctive query and v is a chase configuration
+	 * having elements for each free variable of Q′, then a homomorphism of Q′ into v
+	 * mapping each free variable into the corresponding element is called a match for Q′ in
+	 * v.
 	 * @param query
 	 * 		An input query
 	 * @return
@@ -29,7 +34,11 @@ public interface ChaseState {
 	List<Match> getMatches(Query<?> query);
 	
 	/**
-	 *
+	 * (Conjunctive query match definition) If Q′ is a conjunctive query and v is a chase configuration
+	 * having elements for each free variable of Q′, then a homomorphism of Q′ into v
+	 * mapping each free variable into the corresponding element is called a match for Q′ in
+	 * v.
+	 * 
 	 * @param query
 	 * 		An input query
 	 * @return
@@ -38,39 +47,47 @@ public interface ChaseState {
 	List<Match> getMatches(Query<?> query, HomomorphismConstraint... constraints);
 
 	/**
-	 * 
+	 * (Candidate match definition).
+	 * Given a set of facts I and a TGD
+		delta = \forall x_1, ..., x_j \phi(\vec{x}) --> \exists  y_1, ..., y_k \rho(\vec{x},\vec{y})
+		a candidate match for d is \vec{e} such that \phi(\vec{e}) holds but there is no \vec{f} such that \rho(\vec{e},\vec{f})
+		holds in I.
 	 * @param dependency
 	 * @param constraints
 	 * 		The homomorphism constraints that should be satisfied 
 	 * @return
-	 * 		the list of matches of the input dependency to the facts of this state.
+	 * 		the list of matches (both candidates and not candidates) of the input dependency in this database instance.
 	 * 		
 	 */
 	List<Match> getMaches(Constraint dependency, HomomorphismConstraint... constraints);
 	
 	/**
-	 * 
-	 * @param dependency
+	 * (Candidate match definition).
+	 * Given a set of facts I and a TGD
+		delta = \forall x_1, ..., x_j \phi(\vec{x}) --> \exists  y_1, ..., y_k \rho(\vec{x},\vec{y})
+		a candidate match for d is \vec{e} such that \phi(\vec{e}) holds but there is no \vec{f} such that \rho(\vec{e},\vec{f})
+		holds in I.
+	 * @param dependencies
 	 * @param constraints
 	 * 		The homomorphism constraints that should be satisfied 
 	 * @return
-	 * 		the list of matches of the input dependency to the facts of this state.
+	 * 		the list of matches (both candidates and not candidates) of the input dependencies in this database instance.
 	 * 		
 	 */
-	List<Match> getMaches(Collection<? extends Constraint> dependency, HomomorphismConstraint... constraints);
+	List<Match> getMaches(Collection<? extends Constraint> dependencies, HomomorphismConstraint... constraints);
 	
 	/**
 	 * 
 	 * @return
-	 * 		true if the input state is successful
+	 * 		true if this database instance is successful
 	 */
-	boolean isSuccessful();
+	boolean isSuccessful(Query<?> query);
 	
 	
 	/**
 	 * 
 	 * @return
-	 * 		true if the input state is failed
+	 * 		true if this database instance is failed
 	 */
 	boolean isFailed();
 	
@@ -78,33 +95,55 @@ public interface ChaseState {
 	/**
 	 *
 	 * @return
-	 * 		the rule firings that took place in this state
+	 * 		the rule firings that took place in this instance
 	 */
 	FiringGraph  getFiringGraph();
 	
 
 	
 	/**
-	 * @return the facts of this state
+	 * @return the facts of this instance
 	 */
 	Collection<Predicate> getFacts();
 	
 	
 	/**
-	 * Applies the input match to this state
-	 * @param match
+	 * 
+	 * Performs a chase step.
+	 * 	(From modern dependency theory notes) Given trigger h for a dependency \delta = \forall x  \sigma(\vec{x}) --> \exists y  \tau(\vec{x}, \vec{y})
+		in I, a chase step appends to I additional facts for every atom R(\vec{x}, \vec{y}) in \tau ,
+		with a position containing a variable x_i filled with h(x_i), a position containing a
+		variable y_i filled with a value c_i that is distinct from each value in I and from
+		each other c_j, and a position containing the constant using the corresponding
+		constant.
+	 * @param trigger
 	 * @return
 	 * 		true if the step has been applied successfully 
 	 */
-	boolean chaseStep(Match match);
+	boolean chaseStep(Match trigger);
 	
 	/**
-	 * Applies the input matches to this state
-	 * @param match
+	 * Performs multiple chase steps.
+	 * 	(From modern dependency theory notes) Given trigger h for a dependency \delta = \forall x  \sigma(\vec{x}) --> \exists y  \tau(\vec{x}, \vec{y})
+		in I, a chase step appends to I additional facts for every atom R(\vec{x}, \vec{y}) in \tau ,
+		with a position containing a variable x_i filled with h(x_i), a position containing a
+		variable y_i filled with a value c_i that is distinct from each value in I and from
+		each other c_j, and a position containing the constant using the corresponding
+		constant.
+	 * @param triggers
 	 * @return
-	 * 		true if the step has been applied successfully 
+	 * 		true if the steps have been applied successfully 
 	 */
-	boolean chaseStep(Collection<Match> matches);
+	boolean chaseStep(Collection<Match> triggers);
+	
+	/**
+	 *
+	 * @param s
+	 * 		An input chase configuration
+	 * @return
+	 * 		a database instance with facts the union of the facts of the two database instances.  
+	 */
+	ChaseState merge(ChaseState s);
 
 	ChaseState clone();
 }

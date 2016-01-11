@@ -18,29 +18,21 @@ import uk.ac.ox.cs.pdq.logging.performance.ChainedStatistics;
 import uk.ac.ox.cs.pdq.logging.performance.DynamicStatistics;
 import uk.ac.ox.cs.pdq.logging.performance.StatKey;
 import uk.ac.ox.cs.pdq.plan.Plan;
-import uk.ac.ox.cs.pdq.planner.db.access.AccessibleSchema;
-import uk.ac.ox.cs.pdq.planner.explorer.ConfigurationFactory;
+import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.explorer.CostEstimatorFactory;
 import uk.ac.ox.cs.pdq.planner.explorer.Explorer;
 import uk.ac.ox.cs.pdq.planner.explorer.ExplorerFactory;
-import uk.ac.ox.cs.pdq.planner.linear.node.SearchNode;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
 import uk.ac.ox.cs.pdq.planner.logging.performance.ConstantsStatistics;
 import uk.ac.ox.cs.pdq.planner.logging.performance.EventDrivenExplorerStatistics;
 import uk.ac.ox.cs.pdq.planner.logging.performance.PlannerStatKeys;
 import uk.ac.ox.cs.pdq.planner.reasoning.ReasonerFactory;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.ExtendedBagFactory;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.dominance.DominanceFactory;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.dominance.SuccessDominanceFactory;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.state.AccessibleChaseState;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.state.DatabaseListState;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.state.DatabaseTreeState;
-import uk.ac.ox.cs.pdq.reasoning.HomomorphismException;
+import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
-import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters.ReasoningTypes;
-import uk.ac.ox.cs.pdq.reasoning.chase.BagsTree;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismException;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismManagerFactory;
 
@@ -111,12 +103,13 @@ public class Planner {
 		this.schema = schema;
 		
 		accessibleSchema = new AccessibleSchema(schema);
-		try {
-			this.detector = new HomomorphismManagerFactory().getInstance(accessibleSchema, this.reasoningParams);
-		} catch (HomomorphismException e) {
-			//TODO what to do here?
-			throw new RuntimeException(e);
-		}
+			try {
+				this.detector = new HomomorphismManagerFactory().getInstance(accessibleSchema, this.reasoningParams);
+			} catch (HomomorphismException e) {
+				// TODO what to throw here?
+				throw new RuntimeException(e);
+			}
+		
 	}
 
 	/**
@@ -211,36 +204,14 @@ public class Planner {
 			if (costEstimator == null) {
 				costEstimator = CostEstimatorFactory.getEstimator(this.plannerParams, this.costParams, schema);
 			}
-			ReasonerFactory reasonerFactory = new ReasonerFactory(
+			Chaser reasoner = new ReasonerFactory(
 					this.eventBus, 
 					collectStats,
-					this.reasoningParams);
-			Chaser reasoner = reasonerFactory.getInstance();
-			if(this.reasoningParams.getReasoningType().equals(ReasoningTypes.BLOCKING_CHASE)) {
-				BagsTree.setBagFactory(new ExtendedBagFactory(accessibleSchema, query));
-			}
-			AccessibleChaseState state = this.reasoningParams.getReasoningType().equals(ReasoningTypes.BLOCKING_CHASE) == true ?
-			(uk.ac.ox.cs.pdq.planner.reasoning.chase.state.AccessibleChaseState) new DatabaseTreeState(query, this.schema, (DBHomomorphismManager) detector) : 
-			(uk.ac.ox.cs.pdq.planner.reasoning.chase.state.AccessibleChaseState) new DatabaseListState(query, this.schema, (DBHomomorphismManager) detector);
-			reasoner.reasonUntilTermination(state, accessibleQuery, this.schema.getDependencies());
-			detector.clearQuery();
+					this.reasoningParams).getInstance();
 			
-			DominanceFactory dominanceFactory = new DominanceFactory(
-					this.plannerParams.getDominanceType());
-
-			SuccessDominanceFactory<P> successDominanceFactory =
-					new SuccessDominanceFactory<>(costEstimator, this.plannerParams.getSuccessDominanceType());
-
-			ConfigurationFactory<P> configFactory = new ConfigurationFactory<>(
-					this.eventBus, collectStats,
-					accessibleSchema,
-					accessibleQuery, 
-					state,
-					reasoner,
-					costEstimator,
-					dominanceFactory,
-					successDominanceFactory,
-					this.plannerParams);
+			
+			//reasoner.reasonUntilTermination(state, accessibleQuery, this.schema.getDependencies());
+			
 			
 			explorer = ExplorerFactory.createExplorer(
 					this.eventBus, 
@@ -248,13 +219,14 @@ public class Planner {
 					this.schema,
 					accessibleSchema,
 					query,
-					state,
-					reasonerFactory,
+					accessibleQuery,
+					reasoner,
 					detector,
 					costEstimator,
-					configFactory,
-					successDominanceFactory,
 					this.plannerParams);
+			
+			detector.clearQuery();
+			
 
 			// Chain all statistics collectors
 			if (collectStats) {

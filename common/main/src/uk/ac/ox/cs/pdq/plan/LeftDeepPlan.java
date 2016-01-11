@@ -48,8 +48,8 @@ public final class LeftDeepPlan extends Plan implements Iterable<LeftDeepPlan>, 
 	 * @param operator
 	 * 		The top-level operator of the plan
 	 */
-	public LeftDeepPlan(RelationalOperator operator) {
-		this(operator, null, null);
+	public LeftDeepPlan(RelationalOperator operator, AccessOperator access) {
+		this(operator, access, null, null);
 	}
 
 	/**
@@ -62,13 +62,13 @@ public final class LeftDeepPlan extends Plan implements Iterable<LeftDeepPlan>, 
 	 * @param suffix
 	 * 		The suffix sub-plan
 	 */
-	public LeftDeepPlan(RelationalOperator operator, LeftDeepPlan prefix, LeftDeepPlan suffix) {
+	public LeftDeepPlan(RelationalOperator operator, AccessOperator access, LeftDeepPlan prefix, LeftDeepPlan suffix) {
 		super();
 		Preconditions.checkArgument(operator != null);
 		Preconditions.checkArgument(RelationalOperator.getAccesses(operator) != null);
 		Preconditions.checkArgument(RelationalOperator.getAccesses(operator).size() == 1);
 		this.operator = operator;
-		this.access = RelationalOperator.getAccesses(operator).iterator().next();
+		this.access = access;
 		if (prefix == null) {
 			this.first = this;
 		}
@@ -105,7 +105,7 @@ public final class LeftDeepPlan extends Plan implements Iterable<LeftDeepPlan>, 
 	 */
 	public LeftDeepPlan projectLast(Projection proj) {
 		Preconditions.checkArgument(proj.getChild() == this.last.operator);
-		return new LeftDeepPlan(proj, this.last.prefix, null);
+		return new LeftDeepPlan(proj,  this.last.access, this.last.prefix, null);
 	}
 
 	/**
@@ -191,7 +191,7 @@ public final class LeftDeepPlan extends Plan implements Iterable<LeftDeepPlan>, 
 	 */
 	@Override
 	public LeftDeepPlan clone() {
-		return new LeftDeepPlan(this.operator, this.prefix, this.suffix);
+		return new LeftDeepPlan(this.operator, this.access, this.prefix, this.suffix);
 	}
 
 	/*

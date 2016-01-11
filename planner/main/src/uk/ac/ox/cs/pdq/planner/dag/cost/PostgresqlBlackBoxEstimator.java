@@ -18,7 +18,7 @@ import uk.ac.ox.cs.pdq.logging.performance.StatisticsCollector;
 import uk.ac.ox.cs.pdq.plan.Cost;
 import uk.ac.ox.cs.pdq.plan.DoubleCost;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
-import uk.ac.ox.cs.pdq.planner.dag.sql.DAGConfigurationToSQLTranslator;
+import uk.ac.ox.cs.pdq.planner.dag.cost.sql.DAGConfigurationToSQLTranslator;
 
 import com.google.common.eventbus.EventBus;
 

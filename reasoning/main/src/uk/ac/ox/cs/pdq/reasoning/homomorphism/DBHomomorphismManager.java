@@ -18,6 +18,7 @@ import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Constraint;
+import uk.ac.ox.cs.pdq.db.EGD;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TGD;
@@ -25,16 +26,14 @@ import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
+import uk.ac.ox.cs.pdq.fol.Equality;
 import uk.ac.ox.cs.pdq.fol.Evaluatable;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.io.xml.QNames;
-import uk.ac.ox.cs.pdq.reasoning.HomomorphismException;
-import uk.ac.ox.cs.pdq.reasoning.Match;
-import uk.ac.ox.cs.pdq.reasoning.chase.BagMatch;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismConstraint.BagScope;
+import uk.ac.ox.cs.pdq.reasoning.utility.Match;
 import uk.ac.ox.cs.pdq.util.Table;
 
 import com.google.common.base.Preconditions;
@@ -57,11 +56,11 @@ public class DBHomomorphismManager implements HomomorphismManager {
 
 	/** Logger. */
 	private static Logger log = Logger.getLogger(DBHomomorphismManager.class);
-	
+
 	private final Attribute Bag = new Attribute(Integer.class, "Bag");
 	private final Attribute Fact = new Attribute(Integer.class, "Fact");
 	private String attrPrefix = "x";
-	
+
 	/** Collection of expected queries. */
 	//protected Set<Evaluatable> queries;
 	
@@ -139,7 +138,7 @@ public class DBHomomorphismManager implements HomomorphismManager {
 		this.builder = builder;
 		this.constraints = this.getConstraints(schema);
 		this.constants = schema.getConstants();
-		this.relations = schema.getRelations();
+		this.relations = Lists.newArrayList(schema.getRelations());
 		this.aliases = new LinkedHashMap<>();
 	}
 	
@@ -352,15 +351,20 @@ public class DBHomomorphismManager implements HomomorphismManager {
 		Preconditions.checkNotNull(source);
 		List<Match> result = new LinkedList<>();
 		Q s = this.convert(source, this.aliases, constraints);
-		Set<Map<Variable, Constant>> maps = this.builder.findHomomorphismsThroughSQL(s, constraints, this.constants, this.connection);
+			
+		HomomorphismConstraint[] c = null;
+		if(source instanceof EGD) {
+			c = new HomomorphismConstraint[constraints.length+1];
+			System.arraycopy(constraints, 0, c, 0, constraints.length);
+			c[constraints.length] = HomomorphismConstraint.createEGDHomomorphismConstraint();
+		}
+		else {
+			c = constraints;
+		}
 		
+		Set<Map<Variable, Constant>> maps = this.builder.findHomomorphismsThroughSQL(s, constraints, this.constants, this.connection);
 		for(Map<Variable, Constant> map:maps) {
-			if(map.containsKey(new Variable(this.Bag.getName()))) {
-				Constant bagId = map.get(new Variable(this.Bag.getName()));
-				result.add(new BagMatch(source, map, new Integer(bagId.toString())));
-			} else {
-				result.add(new Match(source, map));
-			}
+			result.add(new Match(source, map));
 		}
 		return result;
 	}
@@ -386,20 +390,16 @@ public class DBHomomorphismManager implements HomomorphismManager {
 	/**
 	 * 
 	 * @param source
+	 * 		An input formula
 	 * @param aliases
+	 * 		Map of schema relation names to *clean* names
 	 * @param constraints
+	 * 		A set of constraints that should be satisfied by the homomorphisms of the input formula to the facts of the database 
 	 * @return 
-	 * 		a converted formula using the input mapping aliases
+	 * 		a formula that uses the input *clean* names 
 	 */
 	private <Q extends Evaluatable> Q convert(Q source, Map<String, DBRelation> aliases, HomomorphismConstraint... constraints) {
 		boolean singleBag = false;
-		for(HomomorphismConstraint c:constraints) {
-			if(c instanceof BagScope) {
-				if(((BagScope) c).singleBag==true) {
-					singleBag = true;
-				}
-			}
-		}
 		if(source instanceof Constraint) {
 			int f = 0;
 			int b = 0;
@@ -502,6 +502,23 @@ public class DBHomomorphismManager implements HomomorphismManager {
 	public void addFacts(Collection<? extends Predicate> facts) {
 		try (Statement sqlStatement = this.connection.createStatement()) {
 			for (String stmt : this.builder.makeInserts(facts, this.aliases)) {
+				sqlStatement.addBatch(stmt);
+			}
+			sqlStatement.executeBatch();
+		} catch (SQLException ex) {
+			if(!ex.getCause().getMessage().contains("duplicate key value")) 
+				throw new IllegalStateException(ex.getMessage(), ex);		
+		}
+	}
+	
+	/**
+	 * Deletes the facts of the list in the database
+	 * @param facts Input list of facts
+	 */
+	@Override
+	public void deleteFacts(Collection<? extends Predicate> facts) {
+		try (Statement sqlStatement = this.connection.createStatement()) {
+			for (String stmt : this.builder.makeDeletes(facts, this.aliases)) {
 				sqlStatement.addBatch(stmt);
 			}
 			sqlStatement.executeBatch();

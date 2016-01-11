@@ -5,7 +5,6 @@ import java.util.List;
 
 import uk.ac.ox.cs.pdq.planner.dag.ConfigurationUtility;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.state.AccessibleChaseState;
 
 /**
  * Requires the input pair of configurations to be non trivial
@@ -54,7 +53,7 @@ public class DefaultValidator implements Validator{
 	 * @param input
 	 * @return a deep copy of the input validators list
 	 */
-	public static <S extends AccessibleChaseState> List<Validator> deepCopy(List<Validator> input) {
+	public static List<Validator> deepCopy(List<Validator> input) {
 		List<Validator> list = new ArrayList<>();
 		for(int i = 0; i < input.size(); ++i) {
 			list.add(input.get(i).clone());

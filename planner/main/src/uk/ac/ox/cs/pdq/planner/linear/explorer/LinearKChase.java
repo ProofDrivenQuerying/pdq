@@ -17,30 +17,32 @@ import org.jgrapht.graph.DefaultEdge;
 
 import uk.ac.ox.cs.pdq.LimitReachedException;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
-import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
+import uk.ac.ox.cs.pdq.db.Schema;
+import uk.ac.ox.cs.pdq.fol.Query;
+import uk.ac.ox.cs.pdq.plan.LeftDeepPlan; 
 import uk.ac.ox.cs.pdq.planner.PlannerException;
-import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
+import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.linear.LinearConfiguration;
 import uk.ac.ox.cs.pdq.planner.linear.cost.CostPropagator;
 import uk.ac.ox.cs.pdq.planner.linear.cost.PropagatorUtils;
 import uk.ac.ox.cs.pdq.planner.linear.cost.SimplePropagator;
-import uk.ac.ox.cs.pdq.planner.linear.metadata.BestPlanMetadata;
-import uk.ac.ox.cs.pdq.planner.linear.metadata.CreationMetadata;
-import uk.ac.ox.cs.pdq.planner.linear.metadata.DominanceMetadata;
-import uk.ac.ox.cs.pdq.planner.linear.metadata.EquivalenceMetadata;
-import uk.ac.ox.cs.pdq.planner.linear.metadata.Metadata;
-import uk.ac.ox.cs.pdq.planner.linear.metadata.StatusUpdateMetadata;
-import uk.ac.ox.cs.pdq.planner.linear.node.NodeFactory;
-import uk.ac.ox.cs.pdq.planner.linear.node.SearchNode;
-import uk.ac.ox.cs.pdq.planner.linear.node.SearchNode.NodeStatus;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.state.AccessibleChaseState;
-import uk.ac.ox.cs.pdq.reasoning.Match;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.NodeFactory;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode.NodeStatus;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.BestPlanMetadata;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.CreationMetadata;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.DominanceMetadata;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.EquivalenceMetadata;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.Metadata;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.StatusUpdateMetadata;
+import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
+import uk.ac.ox.cs.pdq.reasoning.utility.Match;
 
-import com.google.common.base.Preconditions;
 import com.google.common.eventbus.EventBus;
 
 /**
- * Searches the plan space employing several optimisations (similar to the OptimizedExplorer) in order to reach faster the best plan.
+ * Searches the proof space employing several optimisations (similar to the OptimizedExplorer) in order to reach faster the best proof.
  * Performs chasing at intervals
  *
  * @author Efthymia Tsamoura
@@ -60,34 +62,39 @@ public class LinearKChase extends LinearExplorer {
 	 * 
 	 * @param eventBus
 	 * @param collectStats
-	 * @param schema
-	 * @param accessibleSchema
 	 * @param query
+	 * 		The input user query
 	 * @param accessibleQuery
+	 * 		The accessible counterpart of the user query
+	 * @param schema
+	 * 		The input schema
+	 * @param accessibleSchema
+	 * 		The accessible counterpart of the input schema
+	 * @param chaser
+	 * 		Runs the chase algorithm
+	 * @param detector
+	 * 		Detects homomorphisms during chasing
 	 * @param costEstimator
-	 * 		Estimates the cost of the plans found
-	 * @param configurationFactory
-	 * 		Returns the configuration of the root node
+	 * 		Estimates the cost of a plan
 	 * @param nodeFactory
-	 * 		Creates nodes
 	 * @param depth
-	 * 		Maximum exploration depth
 	 * @param chaseInterval
-	 * 		How often to perform chasing
-	 * @param planPostPruning
-	 * 		Performs plan post-pruning
 	 * @throws PlannerException
 	 */
 	public LinearKChase(
-			EventBus eventBus, boolean collectStats,
+			EventBus eventBus, 
+			boolean collectStats,
+			Query<?> query,
+			Query<?> accessibleQuery,
+			Schema schema,
+			AccessibleSchema accessibleSchema, 
+			Chaser chaser,
+			HomomorphismDetector detector,
 			CostEstimator<LeftDeepPlan> costEstimator,
-			LinearChaseConfiguration configuration,
 			NodeFactory nodeFactory,
 			int depth,
 			int chaseInterval) throws PlannerException {
-		super(eventBus, collectStats, configuration, nodeFactory, depth);
-		Preconditions.checkArgument(costEstimator != null);
-
+		super(eventBus, collectStats, query, accessibleQuery, schema, accessibleSchema, chaser, detector, costEstimator, nodeFactory, depth);
 		this.costPropagator = PropagatorUtils.getPropagator(costEstimator);
 		this.chaseInterval = chaseInterval;
 	}
@@ -132,6 +139,11 @@ public class LinearKChase extends LinearExplorer {
 
 			// Create a new node from the exposed facts and add it to the plan tree
 			SearchNode freshNode = this.getNodeFactory().getInstance(selectedNode, similarCandidates);	
+			freshNode.getConfiguration().detectCandidates(this.accessibleSchema);
+			if (!freshNode.getConfiguration().hasCandidates()) {
+				freshNode.setStatus(NodeStatus.TERMINAL);
+			}
+			this.costEstimator.cost(freshNode.getConfiguration().getPlan());
 			
 			Metadata metadata = new CreationMetadata(selectedNode, this.getElapsedTime());
 			freshNode.setMetadata(metadata);
@@ -180,7 +192,7 @@ public class LinearKChase extends LinearExplorer {
 			log.debug("Number of partially generated leaves " + leaves.size());
 			this.stats.start(MILLI_CLOSE);
 			for(SearchNode leaf:leaves) {
-				leaf.close();
+				leaf.close(this.chaser, this.accessibleQuery, this.accessibleSchema.getInferredAccessibilityAxioms());
 				log.debug("Close leaf: " + leaf);
 			}	
 			this.stats.stop(MILLI_CLOSE);
@@ -215,7 +227,7 @@ public class LinearKChase extends LinearExplorer {
 			for (SearchNode leaf: leaves) {
 				if((leaf.getStatus() == NodeStatus.TERMINAL || leaf.getStatus() == NodeStatus.ONGOING) && leaf.getPointer() == null) {
 					this.stats.start(MILLI_QUERY_MATCH);
-					List<Match> matches = leaf.matchesQuery();//this.getAccessibleQuery(), this.getQuery().getFreeToCanonical()
+					List<Match> matches = leaf.matchesQuery(this.accessibleQuery);
 					this.stats.stop(MILLI_QUERY_MATCH);
 
 					// If there exists at least one query match
@@ -235,12 +247,11 @@ public class LinearKChase extends LinearExplorer {
 		if ((this.bestPlan == null && successfulPlan != null) || 
 				(this.bestPlan != null && successfulPlan != null && successfulPlan.getCost().lessThan(this.bestPlan.getCost()))) {
 			this.bestPlan = successfulPlan;
+			this.bestConfigurationsList = this.getConfigurations(freshNode.getBestPathFromRoot());
 			this.eventBus.post(this.getBestPlan());
-			this.bestProof = this.costPropagator.getBestProof(); 
-			this.eventBus.post(this.bestProof);
 			log.trace("\t+++BEST PLAN: " + this.bestPlan.getAccesses() + " " + this.bestPlan.getCost());
-
-			BestPlanMetadata successMetadata = new BestPlanMetadata(parentNode, this.bestPlan, this.bestProof, this.costPropagator.getBestPath(), this.getElapsedTime());
+			BestPlanMetadata successMetadata = new BestPlanMetadata(parentNode, this.bestPlan, this.costPropagator.getBestPath(), 
+					this.getConfigurations(this.costPropagator.getBestPath()), this.getElapsedTime());
 			freshNode.setMetadata(successMetadata);
 			this.eventBus.post(freshNode);
 		}

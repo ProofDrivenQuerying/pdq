@@ -21,32 +21,29 @@ import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.PlannerTypes;
+import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.DAGOptimized;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.filters.ExistenceFilter;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.filters.Filter;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.filters.FilterFactory;
+import uk.ac.ox.cs.pdq.planner.dag.explorer.parallel.IterativeExecutor;
+import uk.ac.ox.cs.pdq.planner.dag.explorer.parallel.IterativeExecutorFactory;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.DefaultValidator;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.ExistenceValidator;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.LinearValidator;
-import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.ReachabilityValidator;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.ValidatorFactory;
-import uk.ac.ox.cs.pdq.planner.dag.potential.DefaultPotentialAssessor;
-import uk.ac.ox.cs.pdq.planner.dag.priority.PriorityAssessor;
-import uk.ac.ox.cs.pdq.planner.dag.priority.PriorityAssessorFactory;
-import uk.ac.ox.cs.pdq.planner.db.access.AccessibleSchema;
+import uk.ac.ox.cs.pdq.planner.dominance.Dominance;
+import uk.ac.ox.cs.pdq.planner.dominance.DominanceFactory;
+import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominance;
+import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominanceFactory;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.LinearGeneric;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.LinearKChase;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.LinearOptimized;
-import uk.ac.ox.cs.pdq.planner.linear.node.NodeFactory;
-import uk.ac.ox.cs.pdq.planner.linear.node.SearchNode;
-import uk.ac.ox.cs.pdq.planner.linear.pruning.PostPruningFactory;
-import uk.ac.ox.cs.pdq.planner.parallel.IterativeExecutor;
-import uk.ac.ox.cs.pdq.planner.parallel.IterativeExecutorFactory;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.dominance.SuccessDominanceFactory;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.state.AccessibleChaseState;
-import uk.ac.ox.cs.pdq.reasoning.ReasonerFactory;
-import uk.ac.ox.cs.pdq.reasoning.chase.FiringGraph;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.NodeFactory;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.pruning.PostPruning;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.pruning.PostPruningFactory;
+import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
 
 import com.google.common.eventbus.EventBus;
@@ -59,60 +56,49 @@ import com.google.common.eventbus.EventBus;
 public class ExplorerFactory {
 
 	/**
-	 *
+	 * 
 	 * @param eventBus
 	 * @param collectStats
 	 * @param schema
 	 * @param accessibleSchema
 	 * @param query
-	 * @param accessibleQuery
-	 * @param state
-	 * 		The state of a configuration
-	 * @param reasonerFactory
-	 * 		Creates reasoners
+	 * @param chaser
 	 * @param detector
-	 * 		Detects homomorphisms
 	 * @param costEstimator
-	 * 		Estimates a plan's cost
-	 * @param configurationFactory
-	 * 		Creates configurations
-	 * @param successDominanceFactory
-	 * 		Creates success dominance detectors
 	 * @param parameters
-	 * @return Explorer<P>
+	 * @return
 	 * @throws Exception
 	 */
 	public static <P extends Plan> Explorer<P> createExplorer(
-			EventBus eventBus, boolean collectStats,
+			EventBus eventBus, 
+			boolean collectStats,
 			Schema schema,
 			AccessibleSchema accessibleSchema,
 			Query<?> query,
-			AccessibleChaseState state,
-			ReasonerFactory reasonerFactory,
+			Query<?> accessibleQuery,
+			Chaser chaser,
 			HomomorphismDetector detector,
 			CostEstimator<P> costEstimator,
-			ConfigurationFactory<P> configurationFactory,
-			SuccessDominanceFactory<P> successDominanceFactory,
 			PlannerParameters parameters) throws Exception {
 
-		NodeFactory nf = null;
-		PostPruningFactory ppf = null;
+		Dominance[] dominance = new DominanceFactory(parameters.getDominanceType(), (CostEstimator<Plan>) costEstimator).getInstance();
+		SuccessDominance successDominance = new SuccessDominanceFactory<>(costEstimator, parameters.getSuccessDominanceType()).getInstance();
+		
+		NodeFactory nodeFactory = null;
+		PostPruning postPruning = null;
 		IterativeExecutor executor0 = null;
 		IterativeExecutor executor1 = null;
-		PriorityAssessor pra = null;
 		List<Validator> validators = new ArrayList<>();
 		Filter filter = null;
 
 		if (parameters.getPlannerType().equals(PlannerTypes.LINEAR_GENERIC)
 				|| parameters.getPlannerType().equals(PlannerTypes.LINEAR_KCHASE)
 				|| parameters.getPlannerType().equals(PlannerTypes.LINEAR_OPTIMIZED)) {
-			nf = new NodeFactory((ConfigurationFactory<LeftDeepPlan>) configurationFactory);
-			ppf = new PostPruningFactory(parameters.getPostPruningType(), nf, accessibleSchema);
+			nodeFactory = new NodeFactory(parameters, (CostEstimator<LeftDeepPlan>) costEstimator);
+			postPruning = new PostPruningFactory(parameters.getPostPruningType(), nodeFactory, chaser, query, accessibleSchema).getInstance();
 		}
 		else {
-
-			Validator validator = (Validator) new ValidatorFactory<>(parameters.getValidatorType(), parameters.getDepthThreshold()).getInstance();
-			
+			Validator validator = (Validator) new ValidatorFactory(parameters.getValidatorType(), parameters.getDepthThreshold()).getInstance();
 			if(parameters.getAccessFile() != null) {
 				List<Pair<Relation, AccessMethod>> accesses = readAccesses(schema, parameters.getAccessFile());
 				filter = new ExistenceFilter<>(accesses);
@@ -123,63 +109,71 @@ public class ExplorerFactory {
 			}
 			else {
 				validators.add(validator);
-				if(parameters.getReachabilityFiltering()) {
-					ReachabilityValidator rv = new ReachabilityValidator(query,
-							configurationFactory.getDAGInstances(),
-							(FiringGraph) state.getFiringGraph());
-					validators.add(rv);
-				}
-				filter = (Filter) new FilterFactory<>(parameters.getFilterType()).getInstance();
+				filter = (Filter) new FilterFactory(parameters.getFilterType()).getInstance();
 			}
-
-			DefaultPotentialAssessor dpa = new DefaultPotentialAssessor(null, (CostEstimator<DAGPlan>) costEstimator, successDominanceFactory.getInstance());
-			pra = PriorityAssessorFactory.createPriorityAssessor(parameters,
-					validators,
-					dpa,
-					query,
-					state,
-					parameters.getSeed());
 
 			executor0 = IterativeExecutorFactory.createIterativeExecutor(
 					parameters.getIterativeExecutorType(),
 					parameters.getFirstPhaseThreads(),
-					reasonerFactory,
+					chaser,
 					detector,
 					(CostEstimator<DAGPlan>) costEstimator,
-					successDominanceFactory.getInstance(),
-					eventBus, collectStats);
+					successDominance,
+					dominance,
+					validators);
 
 			executor1 = IterativeExecutorFactory.createIterativeExecutor(
 					parameters.getIterativeExecutorType(),
 					parameters.getSecondPhaseThreads(),
-					reasonerFactory,
+					chaser,
 					detector,
 					(CostEstimator<DAGPlan>) costEstimator,
-					successDominanceFactory.getInstance(),
-					eventBus, collectStats);
+					successDominance,
+					dominance,
+					validators);
 		}
 
 		switch(parameters.getPlannerType()) {
 		case LINEAR_GENERIC:
 			return (Explorer<P>) new LinearGeneric(
-					eventBus, collectStats,
+					eventBus, 
+					collectStats,
+					query, 
+					accessibleQuery,
+					schema,
+					accessibleSchema, 
+					chaser, 
+					detector, 
 					(CostEstimator<LeftDeepPlan>) costEstimator,
-					configurationFactory.getLinearInstance(),
-					nf,
+					nodeFactory,
 					parameters.getMaxDepth());
 		case LINEAR_KCHASE:
 			return (Explorer<P>) new LinearKChase(
-					eventBus, collectStats,
+					eventBus, 
+					collectStats,
+					query, 
+					accessibleQuery,
+					schema,
+					accessibleSchema, 
+					chaser, 
+					detector, 
 					(CostEstimator<LeftDeepPlan>) costEstimator,
-					configurationFactory.getLinearInstance(),
-					nf,
+					nodeFactory,
 					parameters.getMaxDepth(),
 					parameters.getChaseInterval());
 
 		case DAG_GENERIC:
 			return (Explorer<P>) new uk.ac.ox.cs.pdq.planner.dag.explorer.DAGGeneric(
 					eventBus, collectStats,
-					configurationFactory.getDAGInstances(),
+					parameters,
+					query, 
+					accessibleQuery,
+					schema,
+					accessibleSchema, 
+					chaser,
+					detector,
+					(CostEstimator<DAGPlan>) costEstimator,
+					successDominance,
 					filter,
 					validators,
 					parameters.getMaxDepth(),
@@ -188,7 +182,16 @@ public class ExplorerFactory {
 		case DAG_SIMPLEDP:
 			return (Explorer<P>) new uk.ac.ox.cs.pdq.planner.dag.explorer.DAGSimpleDP(
 					eventBus, collectStats,
-					configurationFactory.getDAGInstances(),
+					parameters,
+					query, 
+					accessibleQuery,
+					schema,
+					accessibleSchema, 
+					chaser,
+					detector,
+					(CostEstimator<DAGPlan>) costEstimator,
+					successDominance,
+					dominance,
 					filter,
 					validators,
 					parameters.getMaxDepth(),
@@ -197,8 +200,17 @@ public class ExplorerFactory {
 		case DAG_CHASEFRIENDLYDP:
 			return (Explorer<P>) new uk.ac.ox.cs.pdq.planner.dag.explorer.DAGChaseFriendlyDP(
 					eventBus, collectStats,
-					configurationFactory.getDAGInstances(),
-					filter, 
+					parameters,
+					query, 
+					accessibleQuery,
+					schema,
+					accessibleSchema, 
+					chaser,
+					detector,
+					(CostEstimator<DAGPlan>) costEstimator,
+					successDominance,
+					dominance,
+					filter,
 					validators,
 					parameters.getMaxDepth(),
 					parameters.getOrderAware());
@@ -206,27 +218,39 @@ public class ExplorerFactory {
 		case DAG_OPTIMIZED:
 			return (Explorer<P>) new DAGOptimized(
 					eventBus, collectStats,
-					configurationFactory.getDAGInstances(),
+					parameters,
+					query, 
+					accessibleQuery,
+					schema,
+					accessibleSchema, 
+					chaser,
+					detector,
+					(CostEstimator<DAGPlan>) costEstimator,
 					filter,
-					pra, executor0, executor1,
+					executor0, executor1,
 					parameters.getMaxDepth());
 
 		case LINEAR_OPTIMIZED:
 			return (Explorer<P>) new LinearOptimized(
-					eventBus, collectStats,
+					eventBus, 
+					collectStats,
+					query, 
+					accessibleQuery,
+					schema,
+					accessibleSchema, 
+					chaser,
+					detector,
 					(CostEstimator<LeftDeepPlan>) costEstimator,
-					configurationFactory.getLinearInstance(),
-					nf,
+					nodeFactory,
 					parameters.getMaxDepth(),
 					parameters.getQueryMatchInterval(),
-					ppf.getInstance(),
+					postPruning,
 					parameters.getZombification());
 
 		default:
 			throw new IllegalStateException("Unsupported planner type " + parameters.getPlannerType());
 		}
 	}
-
 
 	private static List<Pair<Relation, AccessMethod>> readAccesses(Schema schema, String fileName) {
 		String line = null;
@@ -271,8 +295,6 @@ public class ExplorerFactory {
 			}
 		}
 		throw new java.lang.IllegalArgumentException("CANNOT PARSE " + line);
-	}
-
-
+	} 
 
 }

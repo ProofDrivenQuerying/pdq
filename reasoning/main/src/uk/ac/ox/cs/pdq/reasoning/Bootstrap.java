@@ -11,12 +11,9 @@ import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.io.xml.QueryReader;
 import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
-import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters.ReasoningTypes;
-import uk.ac.ox.cs.pdq.reasoning.chase.BagsTree;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseListState;
-import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseTreeState;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismManager;
@@ -39,7 +36,7 @@ public class Bootstrap {
 	/** Logger. */
 	private static Logger log = Logger.getLogger(Bootstrap.class); 
 	
-	private static final String PROGRAM_NAME = "pdq-reasoner-<version>.jar";
+	private static final String PROGRAM_NAME = "pdq-reasoning-<version>.jar";
 	
 	@Parameter(names = { "-h", "--help" }, help = true, description = "Displays this help message.")
 	private boolean help;
@@ -135,12 +132,8 @@ public class Bootstrap {
 					reasoningParams);
 								
 			Chaser reasoner = reasonerFactory.getInstance();
-			//Creates a chase state that consists of the canonical database of the input query.
-			if(reasoningParams.getReasoningType().equals(ReasoningTypes.BLOCKING_CHASE)) {
-				BagsTree.setBagFactory(new uk.ac.ox.cs.pdq.reasoning.chase.BagFactory(schema));
-			}
-			ChaseState state = reasoningParams.getReasoningType().equals(ReasoningTypes.BLOCKING_CHASE) == true ?
-			new DatabaseTreeState(query, (DBHomomorphismManager) detector) : 
+//			//Creates a chase state that consists of the canonical database of the input query.
+			ChaseState state = 
 			new DatabaseListState(query, (DBHomomorphismManager) detector);
 			reasoner.reasonUntilTermination(state, query, schema.getDependencies());
 			

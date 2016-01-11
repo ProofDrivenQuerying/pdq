@@ -8,9 +8,9 @@ import org.jgrapht.graph.DefaultEdge;
 import uk.ac.ox.cs.pdq.cost.estimators.SimpleCostEstimator;
 import uk.ac.ox.cs.pdq.plan.Cost;
 import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
-import uk.ac.ox.cs.pdq.planner.linear.node.PlanTree;
-import uk.ac.ox.cs.pdq.planner.linear.node.SearchNode.NodeStatus;
-import uk.ac.ox.cs.pdq.planner.linear.node.SimpleNode;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.PlanTree;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SimpleNode;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode.NodeStatus;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
@@ -51,7 +51,7 @@ public class SimplePropagator extends CostPropagator<SimpleNode> {
 	 *
 	 * @param node SimpleNode
 	 * @param planTree PlanTree<SimpleNode>
-	 * @see uk.ac.ox.cs.pdq.plan.cost.CostPropagator#propagate(uk.ac.ox.cs.pdq.planner.linear.node.SearchNode, org.jgrapht.DirectedGraph, uk.ac.ox.cs.pdq.planner.linear.node.SearchNode)
+	 * @see uk.ac.ox.cs.pdq.plan.cost.CostPropagator#propagate(uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode, org.jgrapht.DirectedGraph, uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode)
 	 */
 	@Override
 	public void propagate(SimpleNode node, PlanTree<SimpleNode> planTree) {
@@ -65,17 +65,17 @@ public class SimplePropagator extends CostPropagator<SimpleNode> {
 
 		} else {
 			Cost currentCost = node.getPathToSuccess() == null ? null: 
-			PropagatorUtils.createLinearPlan(planTree, node.getPathToSuccess(), this.costEstimator, false).getCost();
+			PropagatorUtils.createLeftDeepPlan(planTree, node.getPathToSuccess(), this.costEstimator).getCost();
 			// Iterate over all children of the given node.
 			for (DefaultEdge edge:planTree.outgoingEdgesOf(node)) {
 				SimpleNode child = planTree.getEdgeTarget(edge);
 				if (child.getPathToSuccess() != null) {
 					List<Integer> sequence = Lists.newArrayList(child.getId());
 					sequence.addAll(child.getPathToSuccess());
-					Cost childCost = PropagatorUtils.createLinearPlan(planTree, sequence, this.costEstimator, false).getCost();
+					Cost childCost = PropagatorUtils.createLeftDeepPlan(planTree, sequence, this.costEstimator).getCost();
 					if (currentCost == null || childCost.lessThan(currentCost)) {
 						node.setPathToSuccess(sequence);
-						currentCost = PropagatorUtils.createLinearPlan(planTree, node.getPathToSuccess(), this.costEstimator, false).getCost();
+						currentCost = PropagatorUtils.createLeftDeepPlan(planTree, node.getPathToSuccess(), this.costEstimator).getCost();
 					}
 				}
 			}
@@ -84,11 +84,9 @@ public class SimplePropagator extends CostPropagator<SimpleNode> {
 
 		// Update the best plan at the root if necessary
 		if (node.equals(planTree.getRoot()) && node.getPathToSuccess() != null) {
-			this.bestPlan = PropagatorUtils.createLinearPlan(planTree, node.getPathToSuccess(), this.costEstimator, true);
-			this.bestProof = PropagatorUtils.createProof(planTree, node.getPathToSuccess());
+			this.bestPlan = PropagatorUtils.createLeftDeepPlan(planTree, node.getPathToSuccess(), this.costEstimator);
 			this.bestPath = node.getPathToSuccess();
 			Preconditions.checkState(this.bestPlan != null);
-			Preconditions.checkState(this.bestProof != null);
 			Preconditions.checkState(this.bestPath != null);
 		} else {
 			for (DefaultEdge edge: planTree.incomingEdgesOf(node)) {

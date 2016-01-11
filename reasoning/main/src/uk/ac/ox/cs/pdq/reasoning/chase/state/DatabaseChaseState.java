@@ -6,16 +6,18 @@ import java.util.List;
 import uk.ac.ox.cs.pdq.db.Constraint;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.Query;
-import uk.ac.ox.cs.pdq.reasoning.Match;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismConstraint;
+import uk.ac.ox.cs.pdq.reasoning.utility.Match;
 
 import com.google.common.base.Preconditions;
 
 /**
  *
- * Top-level class for database-backed chase states.
- * This implementation keeps the facts of this state in a database.
+ * A collection of facts produced during chasing.
+ * It also keeps a graph of the rule firings that took place during chasing.
+ * This implementation keeps the facts produced during chasing in a database.
+ * Homomorphisms are detected using the DBMS the stores the chase facts. 
  *
  * @author Efthymia Tsamoura
  *
@@ -60,9 +62,9 @@ public abstract class DatabaseChaseState implements ChaseState {
 	public List<Match> getMatches(Query<?> query) {
 		return this.manager.getMatches(
 				query,
-				HomomorphismConstraint.topK(1),
-				HomomorphismConstraint.factScope(Conjunction.of(this.getFacts())),
-				HomomorphismConstraint.satisfies(query.getFree2Canonical()));
+				HomomorphismConstraint.createTopKConstraint(1),
+				HomomorphismConstraint.createFactConstraint(Conjunction.of(this.getFacts())),
+				HomomorphismConstraint.createMapConstraint(query.getFree2Canonical()));
 	}
 	
 	/**
@@ -76,7 +78,7 @@ public abstract class DatabaseChaseState implements ChaseState {
 	public List<Match> getMatches(Query<?> query, HomomorphismConstraint... constraints) {
 		HomomorphismConstraint[] c = new HomomorphismConstraint[constraints.length+1];
 		System.arraycopy(constraints, 0, c, 0, constraints.length);
-		c[constraints.length] = HomomorphismConstraint.factScope(Conjunction.of(this.getFacts()));
+		c[constraints.length] = HomomorphismConstraint.createFactConstraint(Conjunction.of(this.getFacts()));
 		return this.manager.getMatches(query, c);
 	}
 	
@@ -92,7 +94,7 @@ public abstract class DatabaseChaseState implements ChaseState {
 	public List<Match> getMaches(Constraint dependency, HomomorphismConstraint... constraints) {
 		HomomorphismConstraint[] c = new HomomorphismConstraint[constraints.length+1];
 		System.arraycopy(constraints, 0, c, 0, constraints.length);
-		c[constraints.length] = HomomorphismConstraint.factScope(Conjunction.of(this.getFacts()));
+		c[constraints.length] = HomomorphismConstraint.createFactConstraint(Conjunction.of(this.getFacts()));
 		return this.manager.getMatches(dependency, c);
 	}
 
@@ -108,7 +110,7 @@ public abstract class DatabaseChaseState implements ChaseState {
 	public List<Match> getMaches(Collection<? extends Constraint> dependencies, HomomorphismConstraint... constraints) {
 		HomomorphismConstraint[] c = new HomomorphismConstraint[constraints.length+1];
 		System.arraycopy(constraints, 0, c, 0, constraints.length);
-		c[constraints.length] = HomomorphismConstraint.factScope(Conjunction.of(this.getFacts()));
+		c[constraints.length] = HomomorphismConstraint.createFactConstraint(Conjunction.of(this.getFacts()));
 		return this.manager.getMatches(dependencies, c);
 	}
 

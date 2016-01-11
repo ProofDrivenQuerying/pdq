@@ -1,33 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<plan type="linear" cost="1.820032679738562E7">
+<plan type="linear" cost="1.8194444444444444E7">
 <command name="T1">
 <operator type="PROJECT">
 <outputs>
-<attribute name="c225" type="java.lang.String"/>
-</outputs>
-<project>
-<attribute name="c225" type="java.lang.String"/>
-</project>
-<child>
-<operator type="PROJECT">
-<outputs>
-<attribute name="c222" type="java.lang.Integer"/>
-<attribute name="c223" type="java.lang.Integer"/>
-<attribute name="c224" type="java.lang.String"/>
-<attribute name="c225" type="java.lang.String"/>
-<attribute name="c226" type="java.lang.String"/>
-<attribute name="c227" type="java.lang.String"/>
-<attribute name="c228" type="java.lang.String"/>
-<attribute name="c229" type="java.lang.String"/>
-<attribute name="c230" type="java.lang.String"/>
-<attribute name="c231" type="java.lang.String"/>
-<attribute name="c232" type="java.lang.Double"/>
-<attribute name="c233" type="java.lang.Double"/>
-<attribute name="c234" type="java.lang.Double"/>
-<attribute name="c235" type="java.lang.Double"/>
-<attribute name="c236" type="java.lang.Double"/>
-<attribute name="c237" type="java.lang.Double"/>
-<attribute name="c238" type="java.lang.String"/>
+<attribute name="c1597" type="java.lang.Integer"/>
+<attribute name="c1598" type="java.lang.Integer"/>
+<attribute name="c1599" type="java.lang.String"/>
+<attribute name="c1600" type="java.lang.String"/>
+<attribute name="c1601" type="java.lang.String"/>
+<attribute name="c1602" type="java.lang.String"/>
+<attribute name="c1603" type="java.lang.String"/>
+<attribute name="c1604" type="java.lang.String"/>
+<attribute name="c1605" type="java.lang.String"/>
+<attribute name="c1606" type="java.lang.String"/>
+<attribute name="c1607" type="java.lang.Double"/>
+<attribute name="c1608" type="java.lang.Double"/>
+<attribute name="c1609" type="java.lang.Double"/>
+<attribute name="c1610" type="java.lang.Double"/>
+<attribute name="c1611" type="java.lang.Double"/>
+<attribute name="c1612" type="java.lang.Double"/>
+<attribute name="c1613" type="java.lang.String"/>
 </outputs>
 <project>
 <attribute name="woeid" type="java.lang.Integer"/>
@@ -98,8 +90,6 @@
 <static-input>
 <input attribute="1" value="Eiffel Tower" type="java.lang.String"/>
 </static-input>
-</operator>
-</child>
 </operator>
 </child>
 </operator>

@@ -4,7 +4,7 @@ import prefuse.action.assignment.DataColorAction;
 import prefuse.util.ColorLib;
 import prefuse.visual.NodeItem;
 import prefuse.visual.VisualItem;
-import uk.ac.ox.cs.pdq.planner.linear.node.SearchNode.NodeStatus;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode.NodeStatus;
 
 public class NodeColorAction extends DataColorAction{
 

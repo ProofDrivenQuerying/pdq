@@ -10,6 +10,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -159,10 +161,10 @@ public class RestrictedChaserTest {
 		this.test(this.schemata1, this.queries1, this.facts1);
 	}
 
-//	@Test
-//	public void test2() {
-//		this.test(this.schemata2, this.queries2, this.facts2);
-//	}
+	@Test
+	public void test2() {
+		this.test(this.schemata2, this.queries2, this.facts2);
+	}
 
 	public void test(String[] schemata, String[] queries, String[] facts) {
 		for(int i = 0; i < schemata.length; ++i) {
@@ -194,7 +196,7 @@ public class RestrictedChaserTest {
 			    detector.addQuery(query);
 				ReasoningParameters reasoningParameters = new ReasoningParameters();
 				reasoningParameters.setReasoningType(ReasoningTypes.RESTRICTED_CHASE);
-				ListState state = new DatabaseListState(null, (DBHomomorphismManager) detector);				
+				ListState state = new DatabaseListState(query, (DBHomomorphismManager) detector);				
 				reasoner.reasonUntilTermination(state, query, schema.getDependencies());
 				detector.clearQuery();
 
@@ -202,7 +204,7 @@ public class RestrictedChaserTest {
 				
 				System.out.println("EXPECTED " + expected);
 				System.out.println("ACTUAL " + state.getFacts());
-//				Assert.assertEquals(expected, state.getFacts());
+				Assert.assertEquals(expected, state.getFacts());
 
 			} catch (FileNotFoundException e) {
 				System.out.println("Cannot find input files");

@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Constraint;
@@ -14,14 +15,14 @@ import uk.ac.ox.cs.pdq.db.TGD;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
+import uk.ac.ox.cs.pdq.fol.Equality;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.fol.Signature;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.plan.CommandToTGDTranslator;
-import uk.ac.ox.cs.pdq.reasoning.Match;
-import uk.ac.ox.cs.pdq.reasoning.chase.EGDChaser;
+import uk.ac.ox.cs.pdq.reasoning.chase.ParallelEGDChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseListState;
@@ -40,6 +41,8 @@ import com.google.common.base.Preconditions;
  */
 public class ReasonerUtility {
 
+	protected static Logger log = Logger.getLogger(ReasonerUtility.class);
+	
 	/**
 	 * 
 	 * @param left
@@ -69,7 +72,7 @@ public class ReasonerUtility {
 	 * @return
 	 * 		true if the input set of attributes is a key of the input table
 	 */
-	public boolean isKey(Table table, List<Attribute> candidateKeys, Collection<? extends Constraint> constraints, EGDChaser egdChaser, DBHomomorphismManager detector) {
+	public boolean isKey(Table table, List<Attribute> candidateKeys, Collection<? extends Constraint> constraints, ParallelEGDChaser egdChaser, DBHomomorphismManager detector) {
 		//Create the set of EGDs that correspond to the given table and keys
 		EGD egd = EGD.getEGDs(new Signature(table.getName(),table.getHeader().size()), (List<Attribute>) table.getHeader(), candidateKeys);
 		
@@ -82,16 +85,44 @@ public class ReasonerUtility {
 		ListState state = new DatabaseListState(lquery, detector);
 		return egdChaser.entails(state, lquery.getFree2Canonical(), rquery, constraints);
 	}
-	
+		
 	/**
 	 * 
 	 * @param match
 	 * @param s
 	 * @return
-	 * 		true if the input match is active
+	 * 		true if the input trigger is active.
+	 * 
+	 * (From modern dependency theory notes)
+	 * Consider an instance I, a set Base of values, and a TGD
+		\delta = \forall x  \sigma(\vec{x}) --> \exists y  \tau(\vec{x}, \vec{y})
+		A trigger for \delta in I is a homomorphism h of \sigma into I. A trigger is active if it
+		does not extend to a homomorphism h0 into I. Informally, a trigger is a tuple \vec{c}
+		satisfying \sigma, and it is active if there is no witness \vec{y} that makes \tau holds.
 	 */
 	public boolean isActiveTrigger(Match match, ChaseState s) {
 		Preconditions.checkNotNull(match);
+		if(match.getQuery() instanceof EGD) {
+			
+			Preconditions.checkArgument(s instanceof DatabaseListState);
+			for(Equality equality:((EGD)match.getQuery()).getRight()) {
+				Term leftTerm = equality.getTerms().get(0);
+				Term rightTerm = equality.getTerms().get(1);
+				Constant leftConstant = match.getMapping().get(leftTerm);
+				Constant rightConstant = match.getMapping().get(rightTerm);
+				Preconditions.checkArgument(rightConstant != null && rightConstant != null);
+
+				if(((DatabaseListState)s).getConstantClasses().getClass(leftConstant) == null ||
+				((DatabaseListState)s).getConstantClasses().getClass(rightConstant) == null	|| 
+				!((DatabaseListState)s).getConstantClasses().getClass(leftConstant).equals(((DatabaseListState)s).getConstantClasses().getClass(rightConstant))) {
+					log.trace("Match " + match + " is active ");
+					return true;
+				}
+			}
+			log.trace("Match " + match + " is not active ");
+			return false;
+		}
+		
 		Map<Variable, Constant> mapping = match.getMapping();
 		Constraint constraint = ((Constraint)match.getQuery());
 		Map<Variable, ? extends Term> input = Utility.retain(mapping, constraint.getBothSideVariables());
@@ -116,7 +147,7 @@ public class ReasonerUtility {
 	
 	/**
 	 * @return
-	 * 		true if the constraint kept in the input match is already fired with the input homomorphism  
+	 * 		true if the constraint kept in the input match has been already fired with the input homomorphism  
 	 */
 	public boolean isOpenTrigger(Match match, ChaseState s) {
 		Map<Variable, Constant> mapping = match.getMapping();

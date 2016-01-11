@@ -46,7 +46,7 @@ public class PagingLimit implements UsagePolicy,
 	protected int pageIndex;
 	
 	/** The total number of items expected to scroll. */
-	protected int totalItems = -1;
+	protected int totalItems = 0;
 	
 	/** The attribute where the page size is defined. */
 	protected RESTAttribute pageSizeAttributes;
@@ -73,8 +73,8 @@ public class PagingLimit implements UsagePolicy,
 		Preconditions.checkArgument(pageSizeAtt.getInputMethod() != null);
 		Preconditions.checkArgument(pageIndex.getInputMethod() != null);
 		this.pageSize = pageSize;
-		this.startIndex = startIndex;
-		this.pageIndex = startIndex;
+		this.startIndex = 0;
+		this.pageIndex = 0;
 		this.pageSizeAttributes = pageSizeAtt;
 		this.pageIndexAttributes = pageIndex;
 		this.totalItemsAttributes = totalItems;
@@ -147,11 +147,13 @@ public class PagingLimit implements UsagePolicy,
 	public void processAccessResponse(RESTResponseEvent event) {
 		this.increment();
 		if (event.getOutput().size() < this.pageSize) {
+		//if(this.totalItems > 200000) {
 			event.getAccess().isComplete(true);
 			this.pageIndex = this.startIndex;
 		} else {
 			event.getAccess().isComplete(false);
 		}
+		this.totalItems += event.getOutput().size();
 	}
 	
 	protected void increment() {

@@ -6,9 +6,11 @@ import java.util.LinkedHashSet;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 
-import uk.ac.ox.cs.pdq.planner.linear.node.PlanTree;
-import uk.ac.ox.cs.pdq.planner.linear.node.SearchNode;
-import uk.ac.ox.cs.pdq.planner.linear.node.SearchNode.NodeStatus;
+import uk.ac.ox.cs.pdq.planner.equivalence.FactEquivalence;
+import uk.ac.ox.cs.pdq.planner.equivalence.FastFactEquivalence;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.PlanTree;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode.NodeStatus;
 
 import com.google.common.base.Preconditions;
 
@@ -27,6 +29,7 @@ public class ExplorerUtils {
 	 * @return a parent node that is globally equivalent to the input node
 	 */
 	public static <N extends SearchNode> N isEquivalent(Collection<N> parentsNodes, N childNode) {
+		FactEquivalence factEquivalence = new FastFactEquivalence();
 		N equivalent = null;
 		Preconditions.checkArgument(childNode.isFullyGenerated());
 		for (N parentNode: parentsNodes) {
@@ -35,7 +38,7 @@ public class ExplorerUtils {
 					&& parentNode.getPointer() == null
 					&& !parentNode.getStatus().equals(NodeStatus.TERMINAL)
 					&& !parentNode.getStatus().equals(NodeStatus.FAKE_TERMINAL)
-					&& childNode.getConfiguration().isEquivalentTo(parentNode.getConfiguration())) {
+					&& factEquivalence.isEquivalent(childNode.getConfiguration(), parentNode.getConfiguration())) {
 				if (equivalent == null) {
 					equivalent = parentNode;
 				} else {

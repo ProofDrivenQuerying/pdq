@@ -4,9 +4,8 @@ import java.util.List;
 
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
-import uk.ac.ox.cs.pdq.planner.linear.node.PlanTree;
-import uk.ac.ox.cs.pdq.planner.linear.node.SearchNode;
-import uk.ac.ox.cs.pdq.planner.reasoning.Proof;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.PlanTree;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
 
 /**
  * 
@@ -20,9 +19,6 @@ import uk.ac.ox.cs.pdq.planner.reasoning.Proof;
 public abstract class CostPropagator<T extends SearchNode> {
 
 	protected final CostEstimator<LeftDeepPlan> costEstimator;
-
-	/** The proof of the bestPlan */
-	protected Proof bestProof = null;
 	
 	/** The best plan found after propagation. It is null if no plan is found */
 	protected LeftDeepPlan bestPlan = null;
@@ -40,14 +36,10 @@ public abstract class CostPropagator<T extends SearchNode> {
 	public LeftDeepPlan getBestPlan() {
 		return this.bestPlan;
 	}
-
-	public Proof getBestProof() {
-		return this.bestProof;
-	}
 	
 	public List<Integer> getBestPath() {
 		return this.bestPath;
-	}
+	} 
 
 	/**
 	 * Propagates a path-to-success (if it exists) to the root of the input plan

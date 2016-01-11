@@ -3,8 +3,8 @@
 <command name="T1">
 <operator type="PROJECT">
 <outputs>
-<attribute name="c1852" type="java.lang.Integer"/>
-<attribute name="c1854" type="java.lang.String"/>
+<attribute name="c11065" type="java.lang.Integer"/>
+<attribute name="c11067" type="java.lang.String"/>
 </outputs>
 <project>
 <attribute name="employeeid" type="java.lang.Integer"/>
@@ -21,29 +21,21 @@
 </operator>
 </command>
 <command name="T2">
-<operator type="PROJECT">
-<outputs>
-<attribute name="c1854" type="java.lang.String"/>
-</outputs>
-<project>
-<attribute name="c1854" type="java.lang.String"/>
-</project>
-<child>
 <operator type="DEPENDENT_JOIN" param="0">
 <outputs>
-<attribute name="c1852" type="java.lang.Integer"/>
-<attribute name="c1854" type="java.lang.String"/>
-<attribute name="c1852" type="java.lang.Integer"/>
-<attribute name="c1853" type="java.lang.Integer"/>
-<attribute name="c1854" type="java.lang.String"/>
+<attribute name="c11065" type="java.lang.Integer"/>
+<attribute name="c11067" type="java.lang.String"/>
+<attribute name="c11065" type="java.lang.Integer"/>
+<attribute name="c11066" type="java.lang.Integer"/>
+<attribute name="c11067" type="java.lang.String"/>
 </outputs>
 <children>
 <operator type="ALIAS" name="T1"/>
 <operator type="PROJECT">
 <outputs>
-<attribute name="c1852" type="java.lang.Integer"/>
-<attribute name="c1853" type="java.lang.Integer"/>
-<attribute name="c1854" type="java.lang.String"/>
+<attribute name="c11065" type="java.lang.Integer"/>
+<attribute name="c11066" type="java.lang.Integer"/>
+<attribute name="c11067" type="java.lang.String"/>
 </outputs>
 <project>
 <attribute name="employeeid" type="java.lang.Integer"/>
@@ -61,8 +53,6 @@
 </child>
 </operator>
 </children>
-</operator>
-</child>
 </operator>
 </command>
 </plan>

@@ -1,12 +1,17 @@
 package uk.ac.ox.cs.pdq.ui.model;
 
+import java.util.List;
+
+import com.beust.jcommander.internal.Maps;
+
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableNumberValue;
 import javafx.beans.value.ObservableValue;
 import uk.ac.ox.cs.pdq.plan.Plan;
-import uk.ac.ox.cs.pdq.planner.reasoning.Proof;
+import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
+import uk.ac.ox.cs.pdq.ui.proof.Proof;
 
 /**
  * Representation a Planner's search space state.
@@ -36,9 +41,9 @@ public class ObservableSearchState {
 	 * @param pl
 	 * @param resources.settings
 	 */
-	public ObservableSearchState(Double time, Integer rounds, Plan pl, Proof pr) {
+	public ObservableSearchState(Double time, Integer rounds, Plan pl, List<LinearChaseConfiguration> bestConfigurationsList) {
 		this.plan.set(pl);
-		this.proof.set(pr);
+		this.proof.set(bestConfigurationsList == null ? null : Proof.toProof(bestConfigurationsList));
 		this.cost.set(pl == null || pl.isEmpty() ? null : pl.getCost().getValue());
 		this.time.set(time);
 		this.iterations.set(rounds);

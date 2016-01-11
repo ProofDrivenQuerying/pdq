@@ -15,15 +15,23 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
 import uk.ac.ox.cs.pdq.LimitReachedException;
+import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
+import uk.ac.ox.cs.pdq.db.Schema;
+import uk.ac.ox.cs.pdq.fol.Query;
+import uk.ac.ox.cs.pdq.plan.DAGPlan;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
+import uk.ac.ox.cs.pdq.planner.PlannerParameters;
+import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.dag.ApplyRule;
 import uk.ac.ox.cs.pdq.planner.dag.BinaryConfiguration;
 import uk.ac.ox.cs.pdq.planner.dag.ConfigurationUtility;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.filters.Filter;
-import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.ReachabilityValidator;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.state.AccessibleChaseState;
+import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominance;
+import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState;
+import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
@@ -36,7 +44,7 @@ import com.google.common.eventbus.EventBus;
  *
  */
 public class DAGGeneric extends DAGExplorer {
-
+	
 	/**
 	 * The maximum depth we can explore. The exploration ends when
 	 * there does not exist any configuration with depth < maxDepth
@@ -61,35 +69,65 @@ public class DAGGeneric extends DAGExplorer {
 	/** Returns pairs of configurations to combine */
 	protected PairSelector selector;
 
+	/** Removes success dominated configurations **/
+	protected final SuccessDominance successDominance;
+
 	/**
 	 * 
 	 * @param eventBus
 	 * @param collectStats
-	 * @param initialConfigurations
-	 * 		ApplyRule configurations to initialise the explorer
+	 * @param parameters
+	 * @param query
+	 * 		The input user query
+	 * @param accessibleQuery
+	 * 		The accessible counterpart of the user query
+	 * @param schema
+	 * 		The input schema
+	 * @param accessibleSchema
+	 * 		The accessible counterpart of the input schema
+	 * @param chaser
+	 * 		Runs the chase algorithm
+	 * @param detector
+	 * 		Detects homomorphisms during chasing
+	 * @param costEstimator
+	 * 		Estimates the cost of a plan
+	 * @param successDominance
+	 * 		Removes success dominated configurations
 	 * @param filter
 	 * 		Filters out configurations at the end of each iteration
-	 * @param validator
+	 * @param validators
 	 * 		Validates pairs of configurations to be composed
 	 * @param maxDepth
 	 * 		The maximum depth to explore
-	 * @param orderAware True if pair selection is order aware
+	 * @param orderAware
 	 * @throws PlannerException
 	 */
 	public DAGGeneric(
-			EventBus eventBus, boolean collectStats,
-			List<DAGChaseConfiguration> initialConfigurations,
+			EventBus eventBus, 
+			boolean collectStats,
+			PlannerParameters parameters,
+			Query<?> query,
+			Query<?> accessibleQuery,
+			Schema schema,
+			AccessibleSchema accessibleSchema, 
+			Chaser chaser,
+			HomomorphismDetector detector,
+			CostEstimator<DAGPlan> costEstimator,
+			SuccessDominance successDominance,
 			Filter filter,
 			List<Validator> validators,
 			int maxDepth,
 			boolean orderAware) throws PlannerException {
-		super(eventBus, collectStats);
-		this.checkFilterAndValidator(filter, validators);
+		super(eventBus, collectStats, parameters, query, accessibleQuery, schema, accessibleSchema, chaser, detector, costEstimator);
+		Preconditions.checkNotNull(successDominance);
+		Preconditions.checkArgument(validators != null);
+		Preconditions.checkArgument(!validators.isEmpty());
+		this.successDominance = successDominance;
 		this.filter = filter;
 		this.validators = validators;
 		this.orderAware = orderAware;
 		this.maxDepth = maxDepth;
-
+		List<DAGChaseConfiguration> initialConfigurations = this.createInitialConfigurations();
 		if(this.filter != null) {
 			Collection<DAGChaseConfiguration> toDelete = this.filter.filter(initialConfigurations);
 			initialConfigurations.removeAll(toDelete);
@@ -114,10 +152,11 @@ public class DAGGeneric extends DAGExplorer {
 		//Check the ApplyRule configurations for success
 		if (this.depth == 1) {
 			for (DAGChaseConfiguration configuration:this.right) {
+				this.costEstimator.cost(configuration.getPlan());
 				if (configuration.isClosed()
 						&& (this.bestPlan == null
 						|| configuration.getPlan().getCost().lessThan(this.bestPlan.getCost()))
-						&& configuration.isSuccessful()) {
+						&& configuration.isSuccessful(this.accessibleQuery)) {
 					this.setBestPlan(configuration);
 				}
 			}
@@ -163,20 +202,14 @@ public class DAGGeneric extends DAGExplorer {
 			if(!last.containsKey(pair)) {
 				//Create a new binary configuration
 				BinaryConfiguration configuration = new BinaryConfiguration(
-						pair.getLeft().getAccessibleSchema(),
-						pair.getLeft().getQuery(),
-						pair.getLeft().getChaser(),
-						null,
-						pair.getLeft().getDominanceDetectors(),
-						pair.getLeft().getSuccessDominanceDetector(),
-						pair.getLeft().getCostEstimator(),
 						pair.getLeft(),
-						pair.getRight(),
-						true);
+						pair.getRight());
+				this.costEstimator.cost(configuration.getPlan());
+				configuration.reasonUntilTermination(this.chaser, this.accessibleQuery, this.accessibleSchema.getInferredAccessibilityAxioms());
 				//If the newly created binary configuration has the potential to lead to the optimal plan
-				if (ExplorerUtils.getPotential(configuration, this.bestPlan)) {
+				if (this.bestPlan == null || !this.successDominance.isDominated(configuration.getPlan(), this.bestPlan)) {
 					//If it is closed and has a match, update the best configuration
-					if (configuration.isClosed() && configuration.isSuccessful()) {
+					if (configuration.isClosed() && configuration.isSuccessful(this.accessibleQuery)) {
 						this.setBestPlan(configuration);
 					} else {
 						last.put(pair, configuration);
@@ -320,20 +353,6 @@ public class DAGGeneric extends DAGExplorer {
 	 */
 	public List<DAGChaseConfiguration> getRight() {
 		return this.right;
-	}
-
-	/**
-	 * @param filter
-	 * @param validator
-	 * @return true if both the input filter and validator satisfy given type restrictions
-	 */
-	protected boolean checkFilterAndValidator(Filter filter, List<Validator> validators) {
-		Preconditions.checkArgument(validators != null);
-		Preconditions.checkArgument(!validators.isEmpty());
-		for(Validator validator: validators) {
-			Preconditions.checkState(!(validator instanceof ReachabilityValidator));
-		}
-		return true;
 	}
 
 }

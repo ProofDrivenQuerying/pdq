@@ -2,7 +2,6 @@ package uk.ac.ox.cs.pdq.planner.dag.explorer.validators;
 
 import uk.ac.ox.cs.pdq.planner.dag.ConfigurationUtility;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.state.AccessibleChaseState;
 
 
 /**
@@ -11,7 +10,7 @@ import uk.ac.ox.cs.pdq.planner.reasoning.chase.state.AccessibleChaseState;
  *
  * @param 
  */
-public class RightDepthValidator<S extends AccessibleChaseState> implements Validator{
+public class RightDepthValidator implements Validator{
 
 	private final int depthThreshold;
 
@@ -56,7 +55,7 @@ public class RightDepthValidator<S extends AccessibleChaseState> implements Vali
 	 */
 	@Override
 	public Validator clone() {
-		return new RightDepthValidator<>(this.depthThreshold);
+		return new RightDepthValidator(this.depthThreshold);
 	}
 
 }

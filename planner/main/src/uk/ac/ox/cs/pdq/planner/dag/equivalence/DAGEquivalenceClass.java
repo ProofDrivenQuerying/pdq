@@ -3,13 +3,19 @@ package uk.ac.ox.cs.pdq.planner.dag.equivalence;
 import java.util.Collection;
 
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
+import uk.ac.ox.cs.pdq.planner.dominance.Dominance;
 
 /**
- * Class of structurally equivalent configurations
- *
+ * Class of equivalent configurations.
+ *  A mapping h from the chase constants of one configuration
+	conf to the chase constants of another configuration conf'
+	is fact-preserving if it preserves inferred accessible output facts
+	in going from conf to conf' and if the h image of every input
+	constant of conf is an input constant of conf'.
+	Configurations conf, conf' are fact-equivalent 
+	if there is a bijective fact-preserving mapping h between them.
  * @author Efthymia Tsamoura
  *
- * @param  
  */
 public abstract class DAGEquivalenceClass {
 
@@ -44,7 +50,7 @@ public abstract class DAGEquivalenceClass {
 	 * @param configuration
 	 * @return the class configurations that are dominated by the input configuration
 	 */
-	public abstract Collection<DAGChaseConfiguration> dominatedBy(DAGChaseConfiguration configuration);
+	public abstract Collection<DAGChaseConfiguration> dominatedBy(Dominance[] dominance, DAGChaseConfiguration configuration);
 
 
 	/**
@@ -57,7 +63,7 @@ public abstract class DAGEquivalenceClass {
 	 * @param configuration
 	 * @return the configurations that dominate the input configuration
 	 */
-	public abstract DAGChaseConfiguration dominate(DAGChaseConfiguration configuration);
+	public abstract DAGChaseConfiguration dominate(Dominance[] dominance, DAGChaseConfiguration configuration);
 
 	/**
 	 *

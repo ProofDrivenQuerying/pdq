@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<plan type="linear" cost="2.2118580482085184E14">
+<plan type="linear" cost="2.2100061963566666E14">
 <command name="T1">
 <operator type="PROJECT">
 <outputs>
@@ -98,22 +98,6 @@
 </operator>
 </command>
 <command name="T3">
-<operator type="PROJECT">
-<outputs>
-<attribute name="c6" type="java.lang.String"/>
-<attribute name="c7" type="java.lang.String"/>
-<attribute name="c8" type="java.lang.String"/>
-<attribute name="c23" type="java.lang.Double"/>
-<attribute name="c24" type="java.lang.String"/>
-</outputs>
-<project>
-<attribute name="c6" type="java.lang.String"/>
-<attribute name="c7" type="java.lang.String"/>
-<attribute name="c8" type="java.lang.String"/>
-<attribute name="c23" type="java.lang.Double"/>
-<attribute name="c24" type="java.lang.String"/>
-</project>
-<child>
 <operator type="DEPENDENT_JOIN" param="2">
 <outputs>
 <attribute name="c1" type="java.lang.Integer"/>
@@ -222,8 +206,6 @@
 </child>
 </operator>
 </children>
-</operator>
-</child>
 </operator>
 </command>
 </plan>

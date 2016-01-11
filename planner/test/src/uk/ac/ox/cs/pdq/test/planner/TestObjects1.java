@@ -7,8 +7,9 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Skolem;
 import uk.ac.ox.cs.pdq.plan.DAGPlan;
+import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
-import uk.ac.ox.cs.pdq.planner.db.access.AccessibleSchema;
+import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState;
 
 import com.google.common.collect.Lists;
 
@@ -70,16 +71,22 @@ public class TestObjects1 {
 
 	@Mock protected DAGChaseConfiguration config11;
 	@Mock protected DAGChaseConfiguration config12;
+	@Mock protected AccessibleChaseState config11State;
+	@Mock protected AccessibleChaseState config12State;
 	@Mock protected DAGPlan plan11;
 	@Mock protected DAGPlan plan12;
 
 	@Mock protected DAGChaseConfiguration config21;
 	@Mock protected DAGChaseConfiguration config22;
+	@Mock protected AccessibleChaseState config21State;
+	@Mock protected AccessibleChaseState config22State;
 	@Mock protected DAGPlan plan21;
 	@Mock protected DAGPlan plan22;
 
 	@Mock protected DAGChaseConfiguration config31;
 	@Mock protected DAGChaseConfiguration config32;
+	@Mock protected AccessibleChaseState config31State;
+	@Mock protected AccessibleChaseState config32State;
 	@Mock protected DAGPlan plan31;
 	@Mock protected DAGPlan plan32;
 }

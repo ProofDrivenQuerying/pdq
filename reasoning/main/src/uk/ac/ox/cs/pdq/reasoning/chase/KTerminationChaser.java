@@ -6,20 +6,19 @@ import java.util.List;
 import uk.ac.ox.cs.pdq.db.Constraint;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.logging.performance.StatisticsCollector;
-import uk.ac.ox.cs.pdq.reasoning.Match;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ListState;
+import uk.ac.ox.cs.pdq.reasoning.utility.Match;
 import uk.ac.ox.cs.pdq.reasoning.utility.ReasonerUtility;
 
 import com.google.common.base.Preconditions;
 
 
 /**
- * A non-blocking chase algorithm which runs for k chase steps.
- * The difference between this algorithm and the restricted chase one is
- * that this algorithm performs k chase rounds prior to stopping.
- *
- *
+ * Runs the chase for k chase rounds.
+ * The difference with the restricted chase algorithm is
+ * that this implementation performs k chase rounds prior to stopping.
+ * 
  * @author Efthymia Tsamoura
  *
  */
@@ -48,16 +47,16 @@ public class KTerminationChaser extends RestrictedChaser {
 	 * @param dependencies Collection<? extends Constraint>
 	 */
 	@Override
-	public <S extends ChaseState> void reasonUntilTermination(S s, Query<?> target, Collection<? extends Constraint> dependencies) {
-		Preconditions.checkArgument(s instanceof ListState);
+	public <S extends ChaseState> void reasonUntilTermination(S instance, Query<?> target, Collection<? extends Constraint> dependencies) {
+		Preconditions.checkArgument(instance instanceof ListState);
 		int rounds = 0;
 		boolean appliedStep = true;
 		while (rounds < this.k && appliedStep) {
 			appliedStep = false;
-			List<Match> matches = s.getMaches(dependencies);
+			List<Match> matches = instance.getMaches(dependencies);
 			for (Match match: matches) {
-				if(new ReasonerUtility().isActiveTrigger(match, s)){
-					s.chaseStep(match);
+				if(new ReasonerUtility().isActiveTrigger(match, instance)){
+					instance.chaseStep(match);
 					appliedStep = true;
 				}
 			}
