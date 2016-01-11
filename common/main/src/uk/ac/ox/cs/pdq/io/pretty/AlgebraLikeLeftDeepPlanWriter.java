@@ -24,7 +24,7 @@ import com.google.common.collect.Lists;
  * @author Julien Leblay
  *
  */
-public class AlgebraLikeLinearPlanWriter extends PrettyWriter<LeftDeepPlan> implements Writer<LeftDeepPlan> {
+public class AlgebraLikeLeftDeepPlanWriter extends PrettyWriter<LeftDeepPlan> implements Writer<LeftDeepPlan> {
 
 	public static final String SUBPLAN_ALIAS = "T"; 
 	public static final String ASSIGN = " := ";
@@ -43,7 +43,7 @@ public class AlgebraLikeLinearPlanWriter extends PrettyWriter<LeftDeepPlan> impl
 	/**
 	 * Default constructor.
 	 */
-	public AlgebraLikeLinearPlanWriter() {
+	public AlgebraLikeLeftDeepPlanWriter() {
 		this(System.out);
 	}
 	
@@ -51,17 +51,17 @@ public class AlgebraLikeLinearPlanWriter extends PrettyWriter<LeftDeepPlan> impl
 	 * Default constructor.
 	 * @param out PrintStream
 	 */
-	private AlgebraLikeLinearPlanWriter(PrintStream out) {
+	private AlgebraLikeLeftDeepPlanWriter(PrintStream out) {
 		this.out = out;
 		this.operatorWriter = new RelationalOperatorWriter();
 	}
 	
 	/**
 	 * @param out PrintStream
-	 * @return AlgebraLikeLinearPlanWriter
+	 * @return AlgebraLikeLeftDeepPlanWriter
 	 */
-	public static AlgebraLikeLinearPlanWriter to(PrintStream out) {
-		return new AlgebraLikeLinearPlanWriter(out);
+	public static AlgebraLikeLeftDeepPlanWriter to(PrintStream out) {
+		return new AlgebraLikeLeftDeepPlanWriter(out);
 	}
 
 	/**

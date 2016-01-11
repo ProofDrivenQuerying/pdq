@@ -28,7 +28,7 @@ import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
  * 
  * @author Julien Leblay
  */
-public class LinearPlanReader extends AbstractXMLReader<LeftDeepPlan> {
+public class LeftDeepPlanReader extends AbstractXMLReader<LeftDeepPlan> {
 	
 	/** The plan's cost. */
 	private Double cost = null;
@@ -57,7 +57,7 @@ public class LinearPlanReader extends AbstractXMLReader<LeftDeepPlan> {
 	 * Default constructor
 	 * @param schema Schema
 	 */
-	public LinearPlanReader(Schema schema) {
+	public LeftDeepPlanReader(Schema schema) {
 		this.schema = schema;
 	}
 

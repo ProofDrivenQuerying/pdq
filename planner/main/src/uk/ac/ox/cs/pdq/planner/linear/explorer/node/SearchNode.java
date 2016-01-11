@@ -213,7 +213,7 @@ public abstract class SearchNode implements Cloneable{
 	}
 
 	/**
-	 * @return LinearPlan
+	 * @return LeftDeepPlan
 	 */
 	public LeftDeepPlan getBestPlanFromRoot() {
 		return this.bestPlanFromRoot;
@@ -227,21 +227,21 @@ public abstract class SearchNode implements Cloneable{
 	}
 
 	/**
-	 * @param planFromRoot LinearPlan
+	 * @param planFromRoot LeftDeepPlan
 	 */
 	public void setBestPlanFromRoot(LeftDeepPlan planFromRoot) {
 		this.bestPlanFromRoot = planFromRoot;
 	}
 
 	/**
-	 * @return LinearPlan
+	 * @return LeftDeepPlan
 	 */
 	public LeftDeepPlan getDominancePlan() {
 		return this.dominancePlan;
 	}
 
 	/**
-	 * @param dominancePlan LinearPlan
+	 * @param dominancePlan LeftDeepPlan
 	 */
 	public void setDominancePlan(LeftDeepPlan dominancePlan) {
 		this.dominancePlan = dominancePlan;
