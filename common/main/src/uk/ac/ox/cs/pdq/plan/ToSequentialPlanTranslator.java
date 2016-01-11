@@ -16,7 +16,7 @@ import com.google.common.collect.Lists;
  * @author Efthymia Tsamoura
  *
  */
-public class ToNormalisedPlanTranslator {
+public class ToSequentialPlanTranslator {
 	
 	public SequentialPlan translate(RelationalOperator operator) {
 		if(operator instanceof uk.ac.ox.cs.pdq.algebra.Join) {
