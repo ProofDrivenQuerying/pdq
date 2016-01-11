@@ -307,29 +307,29 @@ public final class LeftDeepPlan extends Plan implements Iterable<LeftDeepPlan>, 
 	 */
 	@Override
 	public Iterator<LeftDeepPlan> iterator() {
-		return new LinearPlanIterator(this);
+		return new LeftDeepPlanIterator(this);
 	}
 
 	/**
 	 * @return Iterator<LeftDeepPlan>
 	 */
 	public Iterator<LeftDeepPlan> descendingIterator() {
-		return new DescendingLinearPlanIterator(this);
+		return new DescendingLeftDeepPlanIterator(this);
 	}
 
 	/**
 	 * Ascending iterator for Linear plans, i.e. from first to last.
 	 * @author Julien Leblay
 	 */
-	private static class LinearPlanIterator implements Iterator<LeftDeepPlan> {
+	private static class LeftDeepPlanIterator implements Iterator<LeftDeepPlan> {
 
 		private LeftDeepPlan next = null;
 
 		/**
-		 * Constructor for LinearPlanIterator.
+		 * Constructor for LeftDeepPlanIterator.
 		 * @param p LeftDeepPlan
 		 */
-		public LinearPlanIterator(LeftDeepPlan p) {
+		public LeftDeepPlanIterator(LeftDeepPlan p) {
 			Preconditions.checkArgument(p != null);
 			this.next = p.getFirst();
 		}
@@ -370,15 +370,15 @@ public final class LeftDeepPlan extends Plan implements Iterable<LeftDeepPlan>, 
 	 * Descending iterator for Linear plans, i.e. from last to first.
 	 * @author Julien Leblay
 	 */
-	private static class DescendingLinearPlanIterator implements Iterator<LeftDeepPlan> {
+	private static class DescendingLeftDeepPlanIterator implements Iterator<LeftDeepPlan> {
 
 		private LeftDeepPlan prev = null;
 
 		/**
-		 * Constructor for DescendingLinearPlanIterator.
+		 * Constructor for DescendingLeftDeepPlanIterator.
 		 * @param p LeftDeepPlan
 		 */
-		public DescendingLinearPlanIterator(LeftDeepPlan p) {
+		public DescendingLeftDeepPlanIterator(LeftDeepPlan p) {
 			Preconditions.checkArgument(p != null);
 			this.prev = p.getLast();
 		}

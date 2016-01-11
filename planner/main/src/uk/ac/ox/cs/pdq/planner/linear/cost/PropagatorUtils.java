@@ -39,7 +39,7 @@ public class PropagatorUtils {
 	 *            A successful path (sequence of nodes). The corresponding nodes must
 	 *            correspond to a successful path (a path from the root to a
 	 *            success node)
-	 * @param costEstimator CostEstimator<LinearPlan>
+	 * @param costEstimator CostEstimator<LeftDeepPlan>
 	 * @return a linear plan that corresponds to the input path to success
 	 */
 	public static <T extends SearchNode> LeftDeepPlan createLeftDeepPlan(IndexedDirectedGraph<T> nodesSet, List<Integer> path, CostEstimator<LeftDeepPlan> costEstimator) {

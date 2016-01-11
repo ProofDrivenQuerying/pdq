@@ -17,7 +17,7 @@ import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.generator.second.QueryGeneratorSecond;
-import uk.ac.ox.cs.pdq.io.pretty.AlgebraLikeLinearPlanWriter;
+import uk.ac.ox.cs.pdq.io.pretty.AlgebraLikeLeftDeepPlanWriter;
 import uk.ac.ox.cs.pdq.io.pretty.VeryPrettyQueryWriter;
 import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
 import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
@@ -86,7 +86,7 @@ public class MultiThreadedQueryGenerator implements Runnable {
 					Plan plan = planner.search();
 					if (plan != null) {
 						fos.println("\t+++ Answerable " + plan.getCost() + " ");
-						AlgebraLikeLinearPlanWriter.to(fos).write((LeftDeepPlan) plan);
+						AlgebraLikeLeftDeepPlanWriter.to(fos).write((LeftDeepPlan) plan);
 					} else {
 						fos.println("\t--- Not answerable");
 					}

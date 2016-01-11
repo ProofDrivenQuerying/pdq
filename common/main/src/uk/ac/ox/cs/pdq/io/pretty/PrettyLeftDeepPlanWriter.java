@@ -11,7 +11,7 @@ import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
  * @author Julien Leblay
  *
  */
-public class PrettyLinearPlanWriter extends PrettyWriter<LeftDeepPlan> implements Writer<LeftDeepPlan> {
+public class PrettyLeftDeepPlanWriter extends PrettyWriter<LeftDeepPlan> implements Writer<LeftDeepPlan> {
 	/**
 	 * The default out to which plans should be written, if not 
 	 * explicitly provided at write time.
@@ -22,24 +22,24 @@ public class PrettyLinearPlanWriter extends PrettyWriter<LeftDeepPlan> implement
 	 * 
 	 * @param out the default output
 	 */
-	PrettyLinearPlanWriter(PrintStream out) {
+	PrettyLeftDeepPlanWriter(PrintStream out) {
 		this.out = out;
 	}
 
 	/**
 	 * 
 	 */
-	public PrettyLinearPlanWriter() {
+	public PrettyLeftDeepPlanWriter() {
 		this(System.out);
 	}
 	
 	/**
 	 * Fluent pretty writer provider.
 	 * @param out
-	 * @return a new PrettyLinearPlanWriter with the given default output.
+	 * @return a new PrettyLeftDeepPlanWriter with the given default output.
 	 */
-	public static PrettyLinearPlanWriter to(PrintStream out) {
-		return new PrettyLinearPlanWriter(out);
+	public static PrettyLeftDeepPlanWriter to(PrintStream out) {
+		return new PrettyLeftDeepPlanWriter(out);
 	}
 	
 	/**
@@ -68,7 +68,7 @@ public class PrettyLinearPlanWriter extends PrettyWriter<LeftDeepPlan> implement
 //			InputStream qin = new FileInputStream("../dag_benchmark/test/runtime/tpch/postgresql/inputs/blackbox/tpch_001/schemas/fk_inputs/queries/case_005/expected-plan.xml")) {
 //			Schema s = Readers.from(sin).read();
 //			LeftDeepPlan p = Readers.from(qin).with(s).read();
-//			PrettyLinearPlanWriter.to(System.out).write(p);
+//			PrettyLeftDeepPlanWriter.to(System.out).write(p);
 //		} catch (IOException e) {
 //			e.printStackTrace();
 //		}

@@ -14,7 +14,7 @@ import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.io.pretty.DataReader;
 import uk.ac.ox.cs.pdq.io.xml.DAGPlanReader;
-import uk.ac.ox.cs.pdq.io.xml.LinearPlanReader;
+import uk.ac.ox.cs.pdq.io.xml.LeftDeepPlanReader;
 import uk.ac.ox.cs.pdq.io.xml.QueryReader;
 import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
 import uk.ac.ox.cs.pdq.plan.Plan;
@@ -168,7 +168,7 @@ public class Bootstrap {
 	private Plan obtainPlan(Schema schema, String planPath) {
 		try (FileInputStream pis = new FileInputStream(planPath)) {
 			try {
-				return new LinearPlanReader(schema).read(pis); 
+				return new LeftDeepPlanReader(schema).read(pis); 
 			} catch (Exception re) {
 				try (FileInputStream bis = new FileInputStream(planPath)) {
 					return new DAGPlanReader(schema).read(bis); 

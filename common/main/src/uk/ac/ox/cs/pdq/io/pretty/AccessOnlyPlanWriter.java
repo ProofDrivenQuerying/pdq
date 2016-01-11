@@ -36,7 +36,7 @@ public class AccessOnlyPlanWriter extends PrettyWriter<LeftDeepPlan> implements 
 	/**
 	 * Fluent pretty writer provider.
 	 * @param out
-	 * @return a new PrettyLinearPlanWriter with the given default output.
+	 * @return a new PrettyLeftDeepPlanWriter with the given default output.
 	 */
 	public static AccessOnlyPlanWriter to(PrintStream out) {
 		return new AccessOnlyPlanWriter(out);
@@ -45,7 +45,7 @@ public class AccessOnlyPlanWriter extends PrettyWriter<LeftDeepPlan> implements 
 	/**
 	 * Fluent pretty writer provider.
 	 * @param out
-	 * @return a new PrettyLinearPlanWriter with the given default output.
+	 * @return a new PrettyLeftDeepPlanWriter with the given default output.
 	 */
 	public static AccessOnlyPlanWriter to(java.io.Writer out) {
 		return new AccessOnlyPlanWriter(new PrintStream(new WriterOutputStream(out)));
