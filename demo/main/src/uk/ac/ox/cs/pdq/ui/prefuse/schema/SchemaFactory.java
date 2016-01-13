@@ -6,8 +6,8 @@ import prefuse.data.Schema;
 import prefuse.data.Table;
 import prefuse.visual.AggregateTable;
 import prefuse.visual.VisualItem;
-import uk.ac.ox.cs.pdq.planner.linear.node.SearchNode;
-import uk.ac.ox.cs.pdq.planner.linear.node.SearchNode.NodeStatus;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode.NodeStatus;
 import uk.ac.ox.cs.pdq.ui.prefuse.types.EdgeTypes;
 import uk.ac.ox.cs.pdq.ui.prefuse.types.PathTypes;
 

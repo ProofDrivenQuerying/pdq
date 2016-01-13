@@ -19,6 +19,12 @@ public interface HomomorphismManager extends HomomorphismDetector {
 	 * @param facts Input list of facts
 	 */
 	void addFacts(Collection<? extends Predicate> facts);
+	
+	/**
+	 * Deletes the facts of the list in the database
+	 * @param facts Input list of facts
+	 */
+	void deleteFacts(Collection<? extends Predicate> facts);
 
 	/**
 	 * Initialises the manager.
@@ -29,7 +35,7 @@ public interface HomomorphismManager extends HomomorphismDetector {
 	 * Initialises the manager with queries.
 	 * @param queries
 	 */
-	void initialize(Collection<Evaluatable> queries);
+	void initialize(Collection<Evaluatable> queries); 
 
 	/**
 	 * This method initializes the homomomorphism machinery (e.g., any indices) needed to later find a homomorphism from a specific query

@@ -13,9 +13,10 @@ import uk.ac.ox.cs.pdq.logging.performance.StatisticsCollector;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState;
 
 /**
- *
- * The chase algorithm
- *
+ * (From A. C. Onet) 
+ * The chase procedure is an iteration of steps that either adds a new tuple to satisfy
+	a TGD, either changes the instance to model some equality-generating-dependency,
+	or fails when the instance could not be changed to satisfy an equality-generating dependency. 
  * @author Efthymia Tsamoura
  */
 public abstract class Chaser {
@@ -37,11 +38,11 @@ public abstract class Chaser {
 
 	/**
 	 * Chases the input state until termination
-	 * @param s
+	 * @param instance
 	 * @param target
 	 * @param dependencies
 	 */
-	public abstract <S extends ChaseState> void reasonUntilTermination(S s, Query<?> target, Collection<? extends Constraint> dependencies);
+	public abstract <S extends ChaseState> void reasonUntilTermination(S instance, Query<?> target, Collection<? extends Constraint> dependencies);
 	
 	/**
 	 * 
@@ -67,4 +68,6 @@ public abstract class Chaser {
 	 */
 	public abstract <S extends ChaseState> boolean entails(Query<?> source, Query<?> target, Collection<? extends Constraint> constraints);
 	
+
+	public abstract Chaser clone();
 }

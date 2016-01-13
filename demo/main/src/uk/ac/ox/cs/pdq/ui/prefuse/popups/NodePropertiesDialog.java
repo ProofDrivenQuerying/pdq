@@ -12,14 +12,15 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.border.Border;
 
-import uk.ac.ox.cs.pdq.io.pretty.AlgebraLikeLinearPlanWriter;
+import uk.ac.ox.cs.pdq.io.pretty.AlgebraLikeLeftDeepPlanWriter;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.Candidate;
-import uk.ac.ox.cs.pdq.planner.linear.metadata.BestPlanMetadata;
-import uk.ac.ox.cs.pdq.planner.linear.metadata.DominanceMetadata;
-import uk.ac.ox.cs.pdq.planner.linear.metadata.DominanceMetadata.PruningTypes;
-import uk.ac.ox.cs.pdq.planner.linear.metadata.EquivalenceMetadata;
-import uk.ac.ox.cs.pdq.planner.linear.metadata.Metadata;
-import uk.ac.ox.cs.pdq.planner.linear.node.SearchNode;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.BestPlanMetadata;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.DominanceMetadata;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.EquivalenceMetadata;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.Metadata;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.DominanceMetadata.PruningTypes;
+import uk.ac.ox.cs.pdq.ui.proof.Proof;
 
 
 public class NodePropertiesDialog extends JFrame {
@@ -60,7 +61,7 @@ public class NodePropertiesDialog extends JFrame {
 		titledBorders.setBorder(border);
 		titledBorders.setLayout(new BoxLayout(titledBorders, BoxLayout.Y_AXIS));
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		AlgebraLikeLinearPlanWriter.to(new PrintStream(bos)).write(this.node.getConfiguration().getPlan());
+		AlgebraLikeLeftDeepPlanWriter.to(new PrintStream(bos)).write(this.node.getConfiguration().getPlan());
 		PopupUtils.addBorderAndTextToContainer(titledBorders, BorderFactory.createTitledBorder("Type"), this.node.getStatus().toString());
 		PopupUtils.addBorderAndTextToContainer(titledBorders, BorderFactory.createTitledBorder("Access command"), bos.toString());
 		return titledBorders;
@@ -133,7 +134,7 @@ public class NodePropertiesDialog extends JFrame {
 
 		Metadata metadata = node.getMetadata();
 		if(metadata instanceof BestPlanMetadata) {
-			PopupUtils.addBorderAndTextToContainer(titledBorders, BorderFactory.createTitledBorder("Found proof"), ((BestPlanMetadata) metadata).getProof().toString());
+			PopupUtils.addBorderAndTextToContainer(titledBorders, BorderFactory.createTitledBorder("Found proof"), Proof.toProof(((BestPlanMetadata) metadata).getConfigurations()).toString());
 			PopupUtils.addBorderAndTextToContainer(titledBorders, BorderFactory.createTitledBorder("Found plan"), ((BestPlanMetadata) metadata).getPlan().toString());
 			PopupUtils.addBorderAndTextToContainer(titledBorders, BorderFactory.createTitledBorder("Found plan's cost"), ((BestPlanMetadata) metadata).getPlan().getCost().toString());
 		}

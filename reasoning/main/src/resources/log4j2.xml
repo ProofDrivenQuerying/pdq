@@ -13,10 +13,10 @@
  		</RollingFile>
     </Appenders>
     <Loggers>
-        <Logger name="uk.ac.ox.cs.pdq" level="warn">
+        <Logger name="uk.ac.ox.cs.pdq.reasoning" level="trace">
             <AppenderRef ref="CONSOLE" />
         </Logger>
-        <Root level="info">
+        <Root level="trace">
             <AppenderRef ref="FILE" />
         </Root>
     </Loggers>

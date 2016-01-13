@@ -37,6 +37,7 @@ public interface Catalog {
 	 */
 	int getCardinality(Relation relation, Attribute attribute);
 	
+	
 	/**
 	 * 
 	 * @param access
@@ -51,7 +52,6 @@ public interface Catalog {
 	 */
 	int getERPSI(Relation relation, AccessMethod method, Map<Integer, TypedConstant<?>> inputs);
 		
-	
 	/**
 	 * 
 	 * @param access
@@ -66,20 +66,30 @@ public interface Catalog {
 	 */
 	double getCost(Relation relation, AccessMethod method, Map<Integer, TypedConstant<?>> inputs);
 	
-	
 	/**
 	 * 
 	 * @return
 	 * 		the schema statistics in form of queries 
 	 */
-	Collection<Query<?>> getExpressions();
+	Collection<Query<?>> getStatisticsExpressions();
+	
 	
 	/**
 	 * 
+	 * @param relation
+	 * @param attribute
 	 * @return
-	 * 		the length of the input statistics expression
+	 * 		the histogram of the input relation attribute pair
 	 */
-	int size(Query<?> query);
+	Histogram getHistogram(Relation relation, Attribute attribute);
+	
+	/**
+	 * 
+	 * @param relation
+	 * @return
+	 * 		the quality of size estimate of the input relation
+	 */
+	double getQuality(Relation relation);
 	
 	
 	Catalog clone();

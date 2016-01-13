@@ -2,10 +2,9 @@ package uk.ac.ox.cs.pdq.reasoning.homomorphism;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 import uk.ac.ox.cs.pdq.fol.Evaluatable;
-import uk.ac.ox.cs.pdq.reasoning.Match;
+import uk.ac.ox.cs.pdq.reasoning.utility.Match;
 
 /**
  * Top level interface for detecting homomorphisms.

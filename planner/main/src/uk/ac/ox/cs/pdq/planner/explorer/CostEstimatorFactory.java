@@ -34,10 +34,11 @@ import com.google.common.eventbus.EventBus;
 public class CostEstimatorFactory {
 
 	/**
-	 * @param params
+	 * 
+	 * @param planParams
+	 * @param costParams
 	 * @param schema
-	 * @return a cost estimator implementation corresponding to that specified
-	 * in the initialConfig.
+	 * @return
 	 * @throws SQLException
 	 */
 	public static <P extends Plan> CostEstimator<P> getEstimator(PlannerParameters planParams, CostParameters costParams, Schema schema) throws SQLException {
@@ -45,12 +46,13 @@ public class CostEstimatorFactory {
 	}
 
 	/**
+	 * 
+	 * @param eventBus
+	 * @param collectStats
 	 * @param planParams
+	 * @param costParams
 	 * @param schema
-	 * @param eventBus EventBus
-	 * @param collectStats boolean
-	 * @return a cost estimator implementation corresponding to that specified
-	 * in the initialConfig.
+	 * @return
 	 * @throws SQLException
 	 */
 	public static <P extends Plan> CostEstimator<P> getInstance(
@@ -91,8 +93,8 @@ public class CostEstimatorFactory {
 			}
 			throw new UnsupportedOperationException("BLACKBOX_DB cost estimator is supported for the provided schema.");
 		case SIMPLE_ERSPI:
-			Preconditions.checkNotNull(costParams.getCatalog());
-			Catalog catalog = new SimpleCatalog(schema, costParams.getCatalog());
+			Preconditions.checkNotNull(costParams.getDatabaseCatalog());
+			Catalog catalog = new SimpleCatalog(schema, costParams.getDatabaseCatalog());
 			result = new TotalERSPICostEstimator(new StatisticsCollector(collectStats, eventBus), catalog);
 			break;
 		case SIMPLE_CONSTANT:

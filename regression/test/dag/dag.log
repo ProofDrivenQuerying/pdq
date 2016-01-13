@@ -1,0 +1,2153 @@
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\benchmark\case_001'
+.......
+uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException: Planning timeout reached: 60001.16785>60000.0
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:260)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:147)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.compare(PlannerTest.java:146)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.run(PlannerTest.java:111)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:47)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest$PlannerTestCommand.execute(PlannerTest.java:82)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.<init>(Bootstrap.java:86)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.main(Bootstrap.java:181)
+Caused by: uk.ac.ox.cs.pdq.LimitReachedException: Planning timeout reached: 60001.16785>60000.0
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.checkLimitReached(Explorer.java:112)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGGeneric.mainLoop(DAGGeneric.java:187)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGGeneric._explore(DAGGeneric.java:129)
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.explore(Explorer.java:87)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:252)
+	... 9 more
+2015-08-02 16:26:12,356 WARN  [main] (PlannerTest.java:169) - uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException: Planning timeout reached: 60001.16785>60000.0
+EXCEPTION: PlannerException uk.ac.ox.cs.pdq.LimitReachedException: Planning timeout reached: 60001.16785>60000.0
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\benchmark\case_002'
+............
+Using ApproximateCostAcceptanceCheck: PASS
+	expected: 4140.0 - [Scan(region), DependentAccess{nation[3]}, DependentAccess{supplier[4]}, DependentAccess{partsupp[2]}, Scan(part)]
+	observed: 5916.0 - [DependentAccess{supplier[]}, DependentAccess{partsupp[2]}, DependentAccess{part[]}]
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\benchmark\case_003'
+.........
+uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException: Planning timeout reached: 60055.605208>60000.0
+2015-08-02 16:27:58,779 WARN  [main] (PlannerTest.java:169) - uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException: Planning timeout reached: 60055.605208>60000.0
+EXCEPTION: PlannerException uk.ac.ox.cs.pdq.LimitReachedException: Planning timeout reached: 60055.605208>60000.0
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:260)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:147)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.compare(PlannerTest.java:146)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.run(PlannerTest.java:111)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:47)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest$PlannerTestCommand.execute(PlannerTest.java:82)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.<init>(Bootstrap.java:86)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.main(Bootstrap.java:181)
+Caused by: uk.ac.ox.cs.pdq.LimitReachedException: Planning timeout reached: 60055.605208>60000.0
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.checkLimitReached(Explorer.java:112)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGChaseFriendlyDP.mainLoop(DAGChaseFriendlyDP.java:90)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGGeneric._explore(DAGGeneric.java:129)
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.explore(Explorer.java:87)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:252)
+	... 9 more
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\benchmark\case_004'
+...........
+Using ApproximateCostAcceptanceCheck: PASS
+	expected: 4646.875 - [Scan(part), Scan(region_nation), DependentAccess{supplier[4]}, DependentAccess{partsupp[2]}]
+	observed: 7864.375 - [DependentAccess{part[]}, DependentAccess{region_nation[]}, DependentAccess{supplier[]}, DependentAccess{partsupp[2]}]
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\benchmark\case_005'
+...........
+Using SameCostAcceptanceCheck: PASS
+	Plans differ, but have same costs. - 
+	diff: 
+	Costs: 4356.666666666666 <-> 4356.666666666666
+	Leaves:
+		[Scan(region), DependentAccess{nation[3]}, DependentAccess{supplier[4]}, DependentAccess{partsupp[2]}, Scan(part)]
+		[DependentAccess{region[]}, DependentAccess{nation[3]}, DependentAccess{supplier[4]}, DependentAccess{partsupp[2]}, DependentAccess{part[]}]
+	
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\benchmark\case_006'
+.....
+Using SameCostAcceptanceCheck: PASS
+	Plans differ, but have same costs. - 
+	diff: 
+	Costs: 275.0 <-> 275.0
+	Leaves:
+		[Scan(part), Scan(supplier), DependentAccess{partsupp[1,2]}, DependentAccess{customer[4]}]
+		[DependentAccess{part[]}, DependentAccess{supplier[]}, DependentAccess{partsupp[1,2]}, DependentAccess{customer[4]}]
+	
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\benchmark\case_007'
+..
+uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:260)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:147)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.compare(PlannerTest.java:146)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.run(PlannerTest.java:111)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:47)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest$PlannerTestCommand.execute(PlannerTest.java:82)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.<init>(Bootstrap.java:86)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.main(Bootstrap.java:181)
+Caused by: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.parallel.MultiThreadedExecutor.finalIteration(MultiThreadedExecutor.java:244)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGILP._explore(DAGILP.java:268)
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.explore(Explorer.java:87)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:252)
+	... 9 more
+2015-08-02 16:29:40,534 WARN  [main] (PlannerTest.java:169) - uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+EXCEPTION: PlannerException uk.ac.ox.cs.pdq.LimitReachedException
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\benchmark\case_008'
+.....
+Using SameCostAcceptanceCheck: PASS
+	Plans differ, but have same costs. - 
+	diff: 
+	Costs: 200.0 <-> 200.0
+	Leaves:
+		[Scan(region_nation), DependentAccess{customer[4]}, DependentAccess{orders[2]}]
+		[DependentAccess{region_nation[]}, DependentAccess{customer[4]}, DependentAccess{orders[2]}]
+	
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\benchmark\case_009'
+..........
+Using ApproximateCostAcceptanceCheck: PASS
+	expected: 78490.625 - [Scan(region_nation), DependentAccess{customer[4]}, DependentAccess{orders[2]}]
+	observed: 78552.5 - [DependentAccess{region_nation[]}, DependentAccess{customer[4]}, DependentAccess{customer[4]}, DependentAccess{orders[2]}, DependentAccess{orders[2]}]
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\benchmark\case_010'
+....uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException: Planning timeout reached: 60018.603062>60000.0
+
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:260)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:147)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.compare(PlannerTest.java:146)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.run(PlannerTest.java:111)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:47)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest$PlannerTestCommand.execute(PlannerTest.java:82)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.<init>(Bootstrap.java:86)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.main(Bootstrap.java:181)
+Caused by: uk.ac.ox.cs.pdq.LimitReachedException: Planning timeout reached: 60018.603062>60000.0
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.checkLimitReached(Explorer.java:112)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGSimpleDP.mainLoop(DAGSimpleDP.java:91)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGGeneric._explore(DAGGeneric.java:129)
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.explore(Explorer.java:87)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:252)
+	... 9 more
+2015-08-02 16:31:11,138 WARN  [main] (PlannerTest.java:169) - uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException: Planning timeout reached: 60018.603062>60000.0
+EXCEPTION: PlannerException uk.ac.ox.cs.pdq.LimitReachedException: Planning timeout reached: 60018.603062>60000.0
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\benchmark\case_011'
+...uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException: Planning timeout reached: 64526.166931>60000.0
+
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:260)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:147)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.compare(PlannerTest.java:146)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.run(PlannerTest.java:111)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:47)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest$PlannerTestCommand.execute(PlannerTest.java:82)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.<init>(Bootstrap.java:86)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.main(Bootstrap.java:181)
+Caused by: uk.ac.ox.cs.pdq.LimitReachedException: Planning timeout reached: 64526.166931>60000.0
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.checkLimitReached(Explorer.java:112)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGChaseFriendlyDP.mainLoop(DAGChaseFriendlyDP.java:90)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGGeneric._explore(DAGGeneric.java:129)
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.explore(Explorer.java:87)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:252)
+	... 9 more
+2015-08-02 16:32:46,403 WARN  [main] (PlannerTest.java:169) - uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException: Planning timeout reached: 64526.166931>60000.0
+EXCEPTION: PlannerException uk.ac.ox.cs.pdq.LimitReachedException: Planning timeout reached: 64526.166931>60000.0
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\benchmark\case_012'
+.........
+Using ApproximateCostAcceptanceCheck: PASS
+	expected: 150.0 - [Scan(region_nation), DependentAccess{order_customer[3]}]
+	observed: 150.0 - [DependentAccess{region_nation[]}, DependentAccess{order_customer[3]}]
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\benchmark\case_013'
+.....
+uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:260)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:147)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.compare(PlannerTest.java:146)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.run(PlannerTest.java:111)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:47)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest$PlannerTestCommand.execute(PlannerTest.java:82)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.<init>(Bootstrap.java:86)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.main(Bootstrap.java:181)
+Caused by: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.parallel.MultiThreadedExecutor.chaseOrPropagate(MultiThreadedExecutor.java:141)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGOptimized._explore(DAGOptimized.java:146)
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.explore(Explorer.java:87)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:252)
+	... 9 more
+2015-08-02 16:34:52,818 WARN  [main] (PlannerTest.java:169) - uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+EXCEPTION: PlannerException uk.ac.ox.cs.pdq.LimitReachedException
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\benchmark\std_002'
+...
+uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:260)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:147)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.compare(PlannerTest.java:146)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.run(PlannerTest.java:111)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:47)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest$PlannerTestCommand.execute(PlannerTest.java:82)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.<init>(Bootstrap.java:86)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.main(Bootstrap.java:181)
+Caused by: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.parallel.MultiThreadedExecutor.finalIteration(MultiThreadedExecutor.java:244)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGILP._explore(DAGILP.java:268)
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.explore(Explorer.java:87)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:252)
+	... 9 more
+2015-08-02 16:36:03,394 WARN  [main] (PlannerTest.java:169) - uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+EXCEPTION: PlannerException uk.ac.ox.cs.pdq.LimitReachedException
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\benchmark\std_005'
+..
+uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:260)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:147)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.compare(PlannerTest.java:146)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.run(PlannerTest.java:111)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:47)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest$PlannerTestCommand.execute(PlannerTest.java:82)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.<init>(Bootstrap.java:86)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.main(Bootstrap.java:181)
+Caused by: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.parallel.MultiThreadedExecutor.chaseOrPropagate(MultiThreadedExecutor.java:141)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGILP.runChaseOrPropagatePhase(DAGILP.java:341)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGILP._explore(DAGILP.java:250)
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.explore(Explorer.java:87)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:252)
+	... 9 more
+2015-08-02 16:37:23,955 WARN  [main] (PlannerTest.java:169) - uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+EXCEPTION: PlannerException uk.ac.ox.cs.pdq.LimitReachedException
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\benchmark\std_006'
+.....
+Using SameCostAcceptanceCheck: PASS
+	Plans differ, but have same costs. - 
+	diff: 
+	Costs: 150.0 <-> 150.0
+	Leaves:
+		[Scan(supplier), DependentAccess{lineitem[3]}]
+		[DependentAccess{part[]}, DependentAccess{lineitem[2]}]
+	
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\benchmark\std_008'
+.....uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+
+2015-08-02 16:39:22,398 WARN  [main] (PlannerTest.java:169) - uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+EXCEPTION: PlannerException uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:260)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:147)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.compare(PlannerTest.java:146)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.run(PlannerTest.java:111)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:47)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest$PlannerTestCommand.execute(PlannerTest.java:82)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.<init>(Bootstrap.java:86)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.main(Bootstrap.java:181)
+Caused by: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.parallel.MultiThreadedExecutor.chaseOrPropagate(MultiThreadedExecutor.java:141)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGOptimized._explore(DAGOptimized.java:146)
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.explore(Explorer.java:87)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:252)
+	... 9 more
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\benchmark\std_012'
+.....
+uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:260)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:147)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.compare(PlannerTest.java:146)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.run(PlannerTest.java:111)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:47)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest$PlannerTestCommand.execute(PlannerTest.java:82)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.<init>(Bootstrap.java:86)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.main(Bootstrap.java:181)
+Caused by: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.parallel.MultiThreadedExecutor.chaseOrPropagate(MultiThreadedExecutor.java:141)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGOptimized._explore(DAGOptimized.java:146)
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.explore(Explorer.java:87)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:252)
+	... 9 more
+2015-08-02 16:40:35,335 WARN  [main] (PlannerTest.java:169) - uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+EXCEPTION: PlannerException uk.ac.ox.cs.pdq.LimitReachedException
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\benchmark\std_014'
+.......
+Using ApproximateCostAcceptanceCheck: PASS
+	expected: 1946450.0 - [Scan(part), DependentAccess{lineitem[2]}]
+	observed: 1946450.0 - [DependentAccess{part[]}, DependentAccess{lineitem[2]}]
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\benchmark\std_020'
+.....
+uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:260)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:147)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.compare(PlannerTest.java:146)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.run(PlannerTest.java:111)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:47)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest$PlannerTestCommand.execute(PlannerTest.java:82)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.<init>(Bootstrap.java:86)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.main(Bootstrap.java:181)
+Caused by: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.parallel.MultiThreadedExecutor.chaseOrPropagate(MultiThreadedExecutor.java:141)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGOptimized._explore(DAGOptimized.java:146)
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.explore(Explorer.java:87)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:252)
+	... 9 more
+2015-08-02 16:42:05,307 WARN  [main] (PlannerTest.java:169) - uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+EXCEPTION: PlannerException uk.ac.ox.cs.pdq.LimitReachedException
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\bio\BLACKBOX\case_001a'
+.......
+Using SameCostAcceptanceCheck: PASS
+	Plans differ, but have same costs. - 
+	diff: 
+	Costs: 2.104226275E7 <-> 2.104226275E7
+	Leaves:
+		[DependentAccess{TargetComponentLimited[5]}, DependentAccess{PublicationShort[18]}]
+		[DependentAccess{TargetComponentLimited[5]}, DependentAccess{PublicationShort[18]}]
+	
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\bio\BLACKBOX\case_002a'
+........
+Using SameCostAcceptanceCheck: PASS
+	Plans differ, but have same costs. - 
+	diff: 
+	Costs: 9.25022980576923E7 <-> 9.25022980576923E7
+	Leaves:
+		[DependentAccess{TargetComponentLimited[5]}, DependentAccess{PublicationShort[18]}, DependentAccess{Citation[12,13]}]
+		[DependentAccess{TargetComponentLimited[5]}, DependentAccess{PublicationShort[18]}, DependentAccess{Citation[12,13]}]
+	
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\bio\BLACKBOX\case_003a'
+........
+Using SameCostAcceptanceCheck: FAIL
+	expected: 1.00475544E9 - [Scan(OrganismFree), DependentAccess{PathwayBySpecies[8]}, DependentAccess{PublicationShort[17]}]
+	observed: 3.6954065625E9 - [DependentAccess{OrganismFree[]}, DependentAccess{PublicationShort[17]}, DependentAccess{PathwayBySpecies[8]}]
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\bio\BLACKBOX\case_004a'
+..........
+Using SameCostAcceptanceCheck: FAIL
+	expected: 1.0047322675725E13 - [Scan(OrganismFree), DependentAccess{PathwayBySpecies[8]}, DependentAccess{ProteinLimited[4]}, DependentAccess{PublicationShort[18]}]
+	observed: 1.004757840015E13 - [DependentAccess{OrganismFree[]}, DependentAccess{ProteinLimited[4]}, DependentAccess{PathwayBySpecies[8]}, DependentAccess{PublicationShort[18]}]
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\bio\BLACKBOX\case_004b'
+........
+Using SameCostAcceptanceCheck: PASS
+	Plans differ, but have same costs. - 
+	diff: 
+	Costs: 7.36977554E11 <-> 7.36977554E11
+	Leaves:
+		[DependentAccess{ProteinLimited[4]}, DependentAccess{PublicationShort[18]}, DependentAccess{PathwayBySpecies[8]}]
+		[DependentAccess{ProteinLimited[4]}, DependentAccess{PublicationShort[18]}, DependentAccess{PathwayBySpecies[8]}]
+	
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\bio\BLACKBOX\case_006a'
+.........
+Using SameCostAcceptanceCheck: PASS
+	Plans differ, but have same costs. - 
+	diff: 
+	Costs: 66712.5 <-> 66712.5
+	Leaves:
+		[Scan(OrganismFree), DependentAccess{PathwayBySpecies[8]}, DependentAccess{TargetLimited[1]}]
+		[DependentAccess{OrganismFree[]}, DependentAccess{TargetLimited[1]}, DependentAccess{PathwayBySpecies[8]}]
+	
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\bio\BLACKBOX\case_008a'
+........
+Using SameCostAcceptanceCheck: PASS
+	Plans differ, but have same costs. - 
+	diff: 
+	Costs: 3.957672196936364E7 <-> 3.957672196936364E7
+	Leaves:
+		[Scan(AssayFree), DependentAccess{DocumentLimited[3]}, Scan(TargetFree)]
+		[DependentAccess{AssayFree[]}, DependentAccess{DocumentLimited[3]}, DependentAccess{TargetFree[]}]
+	
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\bio\BLACKBOX\case_008b'
+........
+Using SameCostAcceptanceCheck: PASS
+	Plans differ, but have same costs. - 
+	diff: 
+	Costs: 5.1285949575E7 <-> 5.1285949575E7
+	Leaves:
+		[Scan(DocumentFree), DependentAccess{AssayLimited[17]}, Scan(TargetFree)]
+		[DependentAccess{DocumentFree[]}, DependentAccess{AssayLimited[17]}, DependentAccess{TargetFree[]}]
+	
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\bio\BLACKBOX\case_009a'
+......
+uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:260)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:147)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.compare(PlannerTest.java:146)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.run(PlannerTest.java:111)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:47)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest$PlannerTestCommand.execute(PlannerTest.java:82)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.<init>(Bootstrap.java:86)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.main(Bootstrap.java:181)
+Caused by: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.parallel.MultiThreadedExecutor.chaseOrPropagate(MultiThreadedExecutor.java:141)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGOptimized._explore(DAGOptimized.java:146)
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.explore(Explorer.java:87)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:252)
+	... 10 more
+2015-08-02 16:48:00,782 WARN  [main] (PlannerTest.java:169) - uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+EXCEPTION: PlannerException uk.ac.ox.cs.pdq.LimitReachedException
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\bio\BLACKBOX\case_009b'
+......
+uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:260)2015-08-02 16:49:42,581 WARN  [main] (PlannerTest.java:169) - uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+EXCEPTION: PlannerException uk.ac.ox.cs.pdq.LimitReachedException
+
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:147)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.compare(PlannerTest.java:146)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.run(PlannerTest.java:111)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:47)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest$PlannerTestCommand.execute(PlannerTest.java:82)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.<init>(Bootstrap.java:86)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.main(Bootstrap.java:181)
+Caused by: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.parallel.MultiThreadedExecutor.chaseOrPropagate(MultiThreadedExecutor.java:141)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGOptimized._explore(DAGOptimized.java:146)
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.explore(Explorer.java:87)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:252)
+	... 10 more
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\bio\BLACKBOX\case_010a'
+......
+uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+2015-08-02 16:51:18,371 WARN  [main] (PlannerTest.java:169) - uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+EXCEPTION: PlannerException uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:260)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:147)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.compare(PlannerTest.java:146)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.run(PlannerTest.java:111)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:47)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest$PlannerTestCommand.execute(PlannerTest.java:82)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.<init>(Bootstrap.java:86)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.main(Bootstrap.java:181)
+Caused by: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.parallel.MultiThreadedExecutor.chaseOrPropagate(MultiThreadedExecutor.java:141)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGOptimized._explore(DAGOptimized.java:146)
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.explore(Explorer.java:87)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:252)
+	... 10 more
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\bio\BLACKBOX\case_010b'
+......
+uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:260)2015-08-02 16:52:53,371 WARN  [main] (PlannerTest.java:169) - uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+EXCEPTION: PlannerException uk.ac.ox.cs.pdq.LimitReachedException
+
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:147)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.compare(PlannerTest.java:146)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.run(PlannerTest.java:111)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:47)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest$PlannerTestCommand.execute(PlannerTest.java:82)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.<init>(Bootstrap.java:86)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.main(Bootstrap.java:181)
+Caused by: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.parallel.MultiThreadedExecutor.chaseOrPropagate(MultiThreadedExecutor.java:141)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGOptimized._explore(DAGOptimized.java:146)
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.explore(Explorer.java:87)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:252)
+	... 10 more
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\bio\BLACKBOX\case_010c'
+......
+uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:260)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:147)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.compare(PlannerTest.java:146)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.run(PlannerTest.java:111)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:47)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest$PlannerTestCommand.execute(PlannerTest.java:82)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.<init>(Bootstrap.java:86)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.main(Bootstrap.java:181)
+Caused by: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.parallel.MultiThreadedExecutor.chaseOrPropagate(MultiThreadedExecutor.java:141)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGOptimized._explore(DAGOptimized.java:146)
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.explore(Explorer.java:87)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:252)
+	... 10 more
+2015-08-02 16:54:27,636 WARN  [main] (PlannerTest.java:169) - uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+EXCEPTION: PlannerException uk.ac.ox.cs.pdq.LimitReachedException
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\bio\BLACKBOX\case_015a'
+......
+uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:260)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:147)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.compare(PlannerTest.java:146)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.run(PlannerTest.java:111)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:47)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest$PlannerTestCommand.execute(PlannerTest.java:82)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.<init>(Bootstrap.java:86)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.main(Bootstrap.java:181)
+Caused by: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.parallel.MultiThreadedExecutor.chaseOrPropagate(MultiThreadedExecutor.java:141)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGOptimized._explore(DAGOptimized.java:146)
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.explore(Explorer.java:87)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:252)
+	... 10 more
+2015-08-02 16:56:09,998 WARN  [main] (PlannerTest.java:169) - uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+EXCEPTION: PlannerException uk.ac.ox.cs.pdq.LimitReachedException
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\bio\BLACKBOX\case_019a'
+......
+uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:260)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:147)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.compare(PlannerTest.java:146)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.run(PlannerTest.java:111)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:47)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest$PlannerTestCommand.execute(PlannerTest.java:82)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.<init>(Bootstrap.java:86)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.main(Bootstrap.java:181)
+Caused by: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.parallel.MultiThreadedExecutor.chaseOrPropagate(MultiThreadedExecutor.java:141)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGOptimized._explore(DAGOptimized.java:146)
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.explore(Explorer.java:87)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:252)
+	... 10 more
+2015-08-02 16:57:53,708 WARN  [main] (PlannerTest.java:169) - uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+EXCEPTION: PlannerException uk.ac.ox.cs.pdq.LimitReachedException
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\bio\SIMPLE_ERSPI\case_001a'
+.......
+Using SameCostAcceptanceCheck: PASS
+	Plans differ, but have same costs. - 
+	diff: 
+	Costs: 261.86588429752067 <-> 261.86588429752067
+	Leaves:
+		[DependentAccess{TargetComponentLimited[5]}, DependentAccess{PublicationShort[18]}]
+		[DependentAccess{TargetComponentLimited[5]}, DependentAccess{PublicationShort[18]}]
+	
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\bio\SIMPLE_ERSPI\case_002a'
+........
+Using SameCostAcceptanceCheck: PASS
+	Plans differ, but have same costs. - 
+	diff: 
+	Costs: 1261.8658842975206 <-> 1261.8658842975206
+	Leaves:
+		[DependentAccess{TargetComponentLimited[5]}, DependentAccess{PublicationFull[25]}, DependentAccess{Citation[12,13]}]
+		[DependentAccess{TargetComponentLimited[5]}, DependentAccess{PublicationFull[25]}, DependentAccess{Citation[12,13]}]
+	
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\bio\SIMPLE_ERSPI\case_003a'
+........
+Using SameCostAcceptanceCheck: PASS
+	Plans differ, but have same costs. - 
+	diff: 
+	Costs: 2027.741935483871 <-> 2027.741935483871
+	Leaves:
+		[Scan(OrganismFree), DependentAccess{PublicationFull[24]}, DependentAccess{PathwayBySpecies[8]}]
+		[DependentAccess{OrganismFree[]}, DependentAccess{PublicationShort[17]}, DependentAccess{PathwayBySpecies[8]}]
+	
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\bio\SIMPLE_ERSPI\case_004a'
+..........
+Using SameCostAcceptanceCheck: PASS
+	Plans differ, but have same costs. - 
+	diff: 
+	Costs: 2832.5378842975206 <-> 2832.5378842975206
+	Leaves:
+		[Scan(OrganismFree), DependentAccess{ProteinLimited[4]}, DependentAccess{PublicationShort[18]}, DependentAccess{PathwayBySpecies[8]}]
+		[DependentAccess{OrganismFree[]}, DependentAccess{ProteinLimited[4]}, DependentAccess{PublicationFull[25]}, DependentAccess{PathwayBySpecies[8]}]
+	
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\bio\SIMPLE_ERSPI\case_004b'
+.........
+Using SameCostAcceptanceCheck: PASS
+	Plans differ, but have same costs. - 
+	diff: 
+	Costs: 2812.5378842975206 <-> 2812.5378842975206
+	Leaves:
+		[DependentAccess{ProteinLimited[4]}, DependentAccess{PublicationFull[25]}, DependentAccess{PathwayBySpecies[8]}]
+		[DependentAccess{ProteinLimited[4]}, DependentAccess{PublicationFull[25]}, DependentAccess{PathwayBySpecies[8]}]
+	
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\bio\SIMPLE_ERSPI\case_006a'
+.........
+Using SameCostAcceptanceCheck: PASS
+	Plans differ, but have same costs. - 
+	diff: 
+	Costs: 1064.4891666666667 <-> 1064.4891666666667
+	Leaves:
+		[Scan(OrganismFree), DependentAccess{PathwayBySpecies[8]}, DependentAccess{TargetLimited[1]}]
+		[DependentAccess{OrganismFree[]}, DependentAccess{TargetLimited[1]}, DependentAccess{PathwayBySpecies[8]}]
+	
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\bio\SIMPLE_ERSPI\case_008a'
+........
+Using SameCostAcceptanceCheck: PASS
+	Plans differ, but have same costs. - 
+	diff: 
+	Costs: 10889.8942 <-> 10889.8942
+	Leaves:
+		[Scan(TargetFree), DependentAccess{AssayLimited[22]}, DependentAccess{DocumentLimited[3]}]
+		[DependentAccess{TargetFree[]}, DependentAccess{AssayLimited[22]}, DependentAccess{DocumentLimited[3]}]
+	
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\bio\SIMPLE_ERSPI\case_008b'
+........
+Using SameCostAcceptanceCheck: PASS
+	Plans differ, but have same costs. - 
+	diff: 
+	Costs: 10889.8942 <-> 10889.8942
+	Leaves:
+		[Scan(TargetFree), DependentAccess{AssayLimited[22]}, DependentAccess{DocumentLimited[3]}]
+		[DependentAccess{TargetFree[]}, DependentAccess{AssayLimited[22]}, DependentAccess{DocumentLimited[3]}]
+	
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\bio\SIMPLE_ERSPI\case_008c'
+........
+Using SameCostAcceptanceCheck: PASS
+	Plans differ, but have same costs. - 
+	diff: 
+	Costs: 10889.8942 <-> 10889.8942
+	Leaves:
+		[Scan(TargetFree), DependentAccess{AssayLimited[22]}, DependentAccess{DocumentLimited[3]}]
+		[DependentAccess{TargetFree[]}, DependentAccess{AssayLimited[22]}, DependentAccess{DocumentLimited[3]}]
+	
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\bio\SIMPLE_ERSPI\case_009a'
+......
+uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:260)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:147)2015-08-02 17:04:33,971 WARN  [main] (PlannerTest.java:169) - uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+EXCEPTION: PlannerException uk.ac.ox.cs.pdq.LimitReachedException
+
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.compare(PlannerTest.java:146)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.run(PlannerTest.java:111)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:47)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest$PlannerTestCommand.execute(PlannerTest.java:82)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.<init>(Bootstrap.java:86)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.main(Bootstrap.java:181)
+Caused by: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.parallel.MultiThreadedExecutor.chaseOrPropagate(MultiThreadedExecutor.java:141)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGOptimized._explore(DAGOptimized.java:146)
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.explore(Explorer.java:87)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:252)
+	... 10 more
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\bio\SIMPLE_ERSPI\case_009b'
+......
+uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:260)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:147)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.compare(PlannerTest.java:146)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.run(PlannerTest.java:111)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:47)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest$PlannerTestCommand.execute(PlannerTest.java:82)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.<init>(Bootstrap.java:86)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.main(Bootstrap.java:181)
+Caused by: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.parallel.MultiThreadedExecutor.chaseOrPropagate(MultiThreadedExecutor.java:141)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGOptimized._explore(DAGOptimized.java:146)
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.explore(Explorer.java:87)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:252)
+	... 10 more
+2015-08-02 17:06:17,010 WARN  [main] (PlannerTest.java:169) - uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+EXCEPTION: PlannerException uk.ac.ox.cs.pdq.LimitReachedException
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\bio\SIMPLE_ERSPI\case_010a'
+......
+uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:260)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:147)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.compare(PlannerTest.java:146)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.run(PlannerTest.java:111)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:47)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest$PlannerTestCommand.execute(PlannerTest.java:82)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.<init>(Bootstrap.java:86)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.main(Bootstrap.java:181)
+Caused by: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.parallel.MultiThreadedExecutor.chaseOrPropagate(MultiThreadedExecutor.java:141)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGOptimized._explore(DAGOptimized.java:146)
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.explore(Explorer.java:87)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:252)
+	... 10 more
+2015-08-02 17:07:50,791 WARN  [main] (PlannerTest.java:169) - uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+EXCEPTION: PlannerException uk.ac.ox.cs.pdq.LimitReachedException
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\bio\SIMPLE_ERSPI\case_010b'
+......
+uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:260)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:147)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.compare(PlannerTest.java:146)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.run(PlannerTest.java:111)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:47)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest$PlannerTestCommand.execute(PlannerTest.java:82)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.<init>(Bootstrap.java:86)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.main(Bootstrap.java:181)
+Caused by: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.parallel.MultiThreadedExecutor.chaseOrPropagate(MultiThreadedExecutor.java:141)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGOptimized._explore(DAGOptimized.java:146)
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.explore(Explorer.java:87)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:252)
+	... 10 more
+2015-08-02 17:09:24,998 WARN  [main] (PlannerTest.java:169) - uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+EXCEPTION: PlannerException uk.ac.ox.cs.pdq.LimitReachedException
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\bio\SIMPLE_ERSPI\case_010c'
+......
+uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:260)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:147)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.compare(PlannerTest.java:146)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.run(PlannerTest.java:111)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:47)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest$PlannerTestCommand.execute(PlannerTest.java:82)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.<init>(Bootstrap.java:86)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.main(Bootstrap.java:181)
+Caused by: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.parallel.MultiThreadedExecutor.chaseOrPropagate(MultiThreadedExecutor.java:141)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGOptimized._explore(DAGOptimized.java:146)
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.explore(Explorer.java:87)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:252)
+	... 10 more
+2015-08-02 17:10:59,545 WARN  [main] (PlannerTest.java:169) - uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+EXCEPTION: PlannerException uk.ac.ox.cs.pdq.LimitReachedException
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\bio\SIMPLE_ERSPI\case_012a'
+........
+uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:260)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:147)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.compare(PlannerTest.java:146)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.run(PlannerTest.java:111)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:47)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest$PlannerTestCommand.execute(PlannerTest.java:82)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.<init>(Bootstrap.java:86)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.main(Bootstrap.java:181)
+Caused by: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.parallel.MultiThreadedExecutor.chaseOrPropagate(MultiThreadedExecutor.java:141)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGOptimized._explore(DAGOptimized.java:146)
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.explore(Explorer.java:87)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:252)
+	... 10 more
+2015-08-02 17:12:24,936 WARN  [main] (PlannerTest.java:169) - uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+EXCEPTION: PlannerException uk.ac.ox.cs.pdq.LimitReachedException
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\bio\SIMPLE_ERSPI\case_015a'
+......
+uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:260)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:147)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.compare(PlannerTest.java:146)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.run(PlannerTest.java:111)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:47)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest$PlannerTestCommand.execute(PlannerTest.java:82)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.<init>(Bootstrap.java:86)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.main(Bootstrap.java:181)
+Caused by: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.parallel.MultiThreadedExecutor.chaseOrPropagate(MultiThreadedExecutor.java:141)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGOptimized._explore(DAGOptimized.java:146)
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.explore(Explorer.java:87)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:252)
+	... 10 more
+2015-08-02 17:14:07,491 WARN  [main] (PlannerTest.java:169) - uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+EXCEPTION: PlannerException uk.ac.ox.cs.pdq.LimitReachedException
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\bio\SIMPLE_ERSPI\case_018'
+........
+Using SameCostAcceptanceCheck: PASS
+	Plans differ, but have same costs. - 
+	diff: 
+	Costs: 10889.8942 <-> 10889.8942
+	Leaves:
+		[Scan(TargetFree), DependentAccess{AssayLimited[22]}, DependentAccess{DocumentLimited[3]}]
+		[DependentAccess{TargetFree[]}, DependentAccess{AssayLimited[22]}, DependentAccess{DocumentLimited[3]}]
+	
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\bio\SIMPLE_ERSPI\case_018a'
+........
+Using SameCostAcceptanceCheck: PASS
+	Plans differ, but have same costs. - 
+	diff: 
+	Costs: 10889.8942 <-> 10889.8942
+	Leaves:
+		[Scan(TargetFree), DependentAccess{AssayLimited[22]}, DependentAccess{DocumentLimited[3]}]
+		[DependentAccess{TargetFree[]}, DependentAccess{AssayLimited[22]}, DependentAccess{DocumentLimited[3]}]
+	
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\bio\SIMPLE_ERSPI\case_018b'
+.......
+Using SameCostAcceptanceCheck: PASS
+	Plans differ, but have same costs. - 
+	diff: 
+	Costs: 10888.8942 <-> 10888.8942
+	Leaves:
+		[Scan(TargetFree), DependentAccess{AssayLimited[22]}]
+		[DependentAccess{TargetFree[]}, DependentAccess{AssayLimited[22]}]
+	
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\bio\SIMPLE_ERSPI\case_018c'
+........
+Using SameCostAcceptanceCheck: PASS
+	Plans differ, but have same costs. - 
+	diff: 
+	Costs: 10889.8942 <-> 10889.8942
+	Leaves:
+		[Scan(TargetFree), DependentAccess{AssayLimited[22]}, DependentAccess{DocumentLimited[3]}]
+		[DependentAccess{TargetFree[]}, DependentAccess{AssayLimited[22]}, DependentAccess{DocumentLimited[3]}]
+	
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\bio\SIMPLE_ERSPI\case_019a'
+......
+uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:260)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:147)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.compare(PlannerTest.java:146)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.run(PlannerTest.java:111)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:47)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest$PlannerTestCommand.execute(PlannerTest.java:82)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.<init>(Bootstrap.java:86)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.main(Bootstrap.java:181)
+Caused by: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.parallel.MultiThreadedExecutor.chaseOrPropagate(MultiThreadedExecutor.java:141)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGOptimized._explore(DAGOptimized.java:146)
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.explore(Explorer.java:87)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:252)
+	... 10 more
+2015-08-02 17:17:24,109 WARN  [main] (PlannerTest.java:169) - uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+EXCEPTION: PlannerException uk.ac.ox.cs.pdq.LimitReachedException
+SKIP: ('test\dag\bio\SIMPLE_ERSPI\catalog' not a valid case directory)
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\bio\SIMPLE_ERSPI\site'
+..........
+Using SameCostAcceptanceCheck: PASS
+	Plans differ, but have same costs. - 
+	diff: 
+	Costs: 2276.450460625 <-> 2276.450460625
+	Leaves:
+		[Scan(MechanismFree), DependentAccess{ActivityLimited[13]}, DependentAccess{AssayLimited[3]}, DependentAccess{MoleculeLimited[15]}]
+		[DependentAccess{MechanismFree[]}, DependentAccess{ActivityLimited[13]}, DependentAccess{AssayLimited[3]}, DependentAccess{MoleculeLimited[15]}]
+	
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\generated\TGD\cost_type_BLACKBOX\rel_5x3\1_bindings+0.5_freeacc\dep_3x3\query_ACYCLIC_3'
+.....
+uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:260)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:147)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.compare(PlannerTest.java:146)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.run(PlannerTest.java:111)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:47)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest$PlannerTestCommand.execute(PlannerTest.java:82)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.<init>(Bootstrap.java:86)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.main(Bootstrap.java:181)
+Caused by: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.parallel.MultiThreadedExecutor.chaseOrPropagate(MultiThreadedExecutor.java:141)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGOptimized._explore(DAGOptimized.java:146)
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.explore(Explorer.java:87)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:252)
+	... 14 more
+2015-08-02 17:19:34,897 WARN  [main] (PlannerTest.java:169) - uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+EXCEPTION: PlannerException uk.ac.ox.cs.pdq.LimitReachedException
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\generated\TGD\cost_type_BLACKBOX\rel_5x3\1_bindings+0.5_freeacc\dep_3x3\query_GUARDED_3'
+.........
+Using SameCostAcceptanceCheck: FAIL
+	expected: 53005.6 - [Scan(R0), DependentAccess{R4[2,3]}, DependentAccess{R2[1]}, Scan(R1)]
+	observed: 95695.0 - [DependentAccess{R0[]}, DependentAccess{R4[2,3]}, DependentAccess{R1[1]}, DependentAccess{R2[]}]
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\generated\TGD\cost_type_BLACKBOX\rel_5x3\1_bindings+1.0_freeacc\dep_3x3\query_ACYCLIC_3'
+..........
+Using SameCostAcceptanceCheck: FAIL
+	expected: 264168.12 - [Scan(R0), DependentAccess{R3[2]}, Scan(R4)]
+	observed: 1885271.5200000003 - [DependentAccess{R0[]}, DependentAccess{R3[]}, DependentAccess{R4[]}]
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\generated\TGD\cost_type_BLACKBOX\rel_5x3\1_bindings+1.0_freeacc\dep_3x3\query_GUARDED_3'
+.....uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:260)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:147)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.compare(PlannerTest.java:146)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.run(PlannerTest.java:111)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:47)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest$PlannerTestCommand.execute(PlannerTest.java:82)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.<init>(Bootstrap.java:86)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.main(Bootstrap.java:181)
+Caused by: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.parallel.MultiThreadedExecutor.chaseOrPropagate(MultiThreadedExecutor.java:141)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGOptimized._explore(DAGOptimized.java:146)
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.explore(Explorer.java:87)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:252)
+	... 14 more
+2015-08-02 17:22:29,571 WARN  [main] (PlannerTest.java:169) - uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+EXCEPTION: PlannerException uk.ac.ox.cs.pdq.LimitReachedException
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\generated\TGD\cost_type_SIMPLE_CONSTANT\rel_5x3\1_bindings+0.5_freeacc\dep_3x3\query_ACYCLIC_3'
+............
+Using ApproximateCostAcceptanceCheck: PASS
+	No plan found
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\generated\TGD\cost_type_SIMPLE_CONSTANT\rel_5x3\1_bindings+0.5_freeacc\dep_3x3\query_GUARDED_3'
+......
+uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:260)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:147)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.compare(PlannerTest.java:146)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.run(PlannerTest.java:111)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:47)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest$PlannerTestCommand.execute(PlannerTest.java:82)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.<init>(Bootstrap.java:86)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.main(Bootstrap.java:181)
+Caused by: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.parallel.MultiThreadedExecutor.chaseOrPropagate(MultiThreadedExecutor.java:141)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGOptimized._explore(DAGOptimized.java:146)
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.explore(Explorer.java:87)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:252)
+	... 14 more
+2015-08-02 17:23:58,744 WARN  [main] (PlannerTest.java:169) - uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+EXCEPTION: PlannerException uk.ac.ox.cs.pdq.LimitReachedException
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\generated\TGD\cost_type_SIMPLE_CONSTANT\rel_5x3\1_bindings+1.0_freeacc\dep_3x3\query_ACYCLIC_3'
+.......
+uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:260)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:147)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.compare(PlannerTest.java:146)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.run(PlannerTest.java:111)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:47)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest$PlannerTestCommand.execute(PlannerTest.java:82)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.<init>(Bootstrap.java:86)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.main(Bootstrap.java:181)
+Caused by: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.parallel.MultiThreadedExecutor.chaseOrPropagate(MultiThreadedExecutor.java:141)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGOptimized._explore(DAGOptimized.java:146)
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.explore(Explorer.java:87)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:252)
+	... 14 more
+2015-08-02 17:25:03,626 WARN  [main] (PlannerTest.java:169) - uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+EXCEPTION: PlannerException uk.ac.ox.cs.pdq.LimitReachedException
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\generated\TGD\cost_type_SIMPLE_CONSTANT\rel_5x3\1_bindings+1.0_freeacc\dep_3x3\query_GUARDED_3'
+.....
+uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:260)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:147)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.compare(PlannerTest.java:146)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.run(PlannerTest.java:111)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:47)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest$PlannerTestCommand.execute(PlannerTest.java:82)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.<init>(Bootstrap.java:86)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.main(Bootstrap.java:181)
+Caused by: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.parallel.MultiThreadedExecutor.chaseOrPropagate(MultiThreadedExecutor.java:141)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGOptimized._explore(DAGOptimized.java:146)
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.explore(Explorer.java:87)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:252)
+	... 14 more
+2015-08-02 17:26:11,892 WARN  [main] (PlannerTest.java:169) - uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+EXCEPTION: PlannerException uk.ac.ox.cs.pdq.LimitReachedException
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\generated\VIEW\cost_type_BLACKBOX\rel_5x3\1_bindings+0.5_freeacc\dep_3x3\query_GUARDED_3'
+......
+Using SameCostAcceptanceCheck: PASS
+	No plan found
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\generated\VIEW\cost_type_BLACKBOX\rel_5x3\1_bindings+1.0_freeacc\dep_3x3\query_GUARDED_3'
+......
+Using SameCostAcceptanceCheck: PASS
+	No plan found
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\generated\VIEW\cost_type_SIMPLE_CONSTANT\rel_5x3\1_bindings+0.5_freeacc\dep_3x3\query_GUARDED_3'
+.....
+Using ApproximateCostAcceptanceCheck: PASS
+	expected: 5.0 - [Scan(V23)]
+	observed: 5.0 - [DependentAccess{V23[]}]
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\generated\VIEW\cost_type_SIMPLE_CONSTANT\rel_5x3\1_bindings+1.0_freeacc\dep_3x3\query_GUARDED_3'
+.....
+Using ApproximateCostAcceptanceCheck: PASS
+	expected: 5.0 - [Scan(V39)]
+	observed: 5.0 - [DependentAccess{V39[]}]
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\manual\case_000'
+.......
+Using ApproximateCostAcceptanceCheck: PASS
+	No plan found
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\manual\case_001'
+........
+Using ApproximateCostAcceptanceCheck: PASS
+	expected: 3.0 - [Scan(r1), DependentAccess{r3[2,3]}, Scan(r2)]
+	observed: 3.0 - [DependentAccess{r1[]}, DependentAccess{r2[]}, DependentAccess{r3[2,3]}]
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\manual\case_002'
+....
+Using ApproximateCostAcceptanceCheck: PASS
+	No plan found
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\manual\case_003'
+......
+uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException: Planning timeout reached: 61228.68899>60000.0
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:260)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:147)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.compare(PlannerTest.java:146)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.run(PlannerTest.java:111)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:47)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest$PlannerTestCommand.execute(PlannerTest.java:82)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.<init>(Bootstrap.java:86)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.main(Bootstrap.java:181)
+Caused by: uk.ac.ox.cs.pdq.LimitReachedException: Planning timeout reached: 61228.68899>60000.0
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.checkLimitReached(Explorer.java:112)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGGeneric.mainLoop(DAGGeneric.java:187)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGGeneric._explore(DAGGeneric.java:129)
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.explore(Explorer.java:87)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:252)
+	... 9 more
+2015-08-02 17:27:43,309 WARN  [main] (PlannerTest.java:169) - uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException: Planning timeout reached: 61228.68899>60000.0
+EXCEPTION: PlannerException uk.ac.ox.cs.pdq.LimitReachedException: Planning timeout reached: 61228.68899>60000.0
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\manual\case_004'
+..
+Using ApproximateCostAcceptanceCheck: PASS
+	expected: 1.0 - [Scan(V3)]
+	observed: 1.0 - [DependentAccess{V3[]}]
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\manual\case_005'
+..
+Using ApproximateCostAcceptanceCheck: PASS
+	expected: 1.0 - [Scan(V555)]
+	observed: 1.0 - [DependentAccess{V555[]}]
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\pods\example_01'
+....
+Using ApproximateCostAcceptanceCheck: FAIL
+	expected: 2.0 - [Scan(Udirectory), DependentAccess{Profinfo[1]}]
+	observed: null
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\pods\example_01b'
+.....
+Using ApproximateCostAcceptanceCheck: FAIL
+	expected: 2.0 - [Scan(Udirectory1), DependentAccess{Profinfo[1]}]
+	observed: null
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\pods\example_02'
+........
+Using ApproximateCostAcceptanceCheck: PASS
+	expected: 4.0 - [Scan(Names), Scan(Ids), DependentAccess{Direct1[1,3]}, DependentAccess{Direct2[1,2]}]
+	observed: 4.0 - [DependentAccess{Names[]}, DependentAccess{Ids[]}, DependentAccess{Direct1[1,3]}, DependentAccess{Direct2[1,2]}]
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\pods\example_03'
+....
+Using ApproximateCostAcceptanceCheck: FAIL
+	expected: 2.0 - [Scan(Udirectory), DependentAccess{Profinfo[1]}]
+	observed: null
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\pods\example_03b'
+....
+Using ApproximateCostAcceptanceCheck: FAIL
+	expected: 2.0 - [DependentAccess{Udirectory[2]}, DependentAccess{Profinfo[1,2]}]
+	observed: null
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\blackbox\case_001'
+.....
+Using SameCostAcceptanceCheck: PASS
+	Plans differ, but have same costs. - 
+	diff: 
+	Costs: 2000.0 <-> 2000.0
+	Leaves:
+		[Scan(part)]
+		[DependentAccess{part[]}]
+	
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\blackbox\case_002'
+.......
+uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException: Planning timeout reached: 60002.433626>60000.0
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:260)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:147)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.compare(PlannerTest.java:146)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.run(PlannerTest.java:111)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:47)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest$PlannerTestCommand.execute(PlannerTest.java:82)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.<init>(Bootstrap.java:86)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.main(Bootstrap.java:181)
+Caused by: uk.ac.ox.cs.pdq.LimitReachedException: Planning timeout reached: 60002.433626>60000.0
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.checkLimitReached(Explorer.java:112)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGSimpleDP.mainLoop(DAGSimpleDP.java:91)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGGeneric._explore(DAGGeneric.java:129)
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.explore(Explorer.java:87)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:252)
+	... 10 more
+2015-08-02 17:30:03,215 WARN  [main] (PlannerTest.java:169) - uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException: Planning timeout reached: 60002.433626>60000.0
+EXCEPTION: PlannerException uk.ac.ox.cs.pdq.LimitReachedException: Planning timeout reached: 60002.433626>60000.0
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\blackbox\case_003'
+........
+uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException: Planning timeout reached: 60002.658985>60000.0
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:260)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:147)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.compare(PlannerTest.java:146)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.run(PlannerTest.java:111)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:47)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest$PlannerTestCommand.execute(PlannerTest.java:82)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.<init>(Bootstrap.java:86)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.main(Bootstrap.java:181)
+Caused by: uk.ac.ox.cs.pdq.LimitReachedException: Planning timeout reached: 60002.658985>60000.0
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.checkLimitReached(Explorer.java:112)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGChaseFriendlyDP.mainLoop(DAGChaseFriendlyDP.java:90)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGGeneric._explore(DAGGeneric.java:129)
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.explore(Explorer.java:87)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:252)
+	... 10 more
+2015-08-02 17:31:24,867 WARN  [main] (PlannerTest.java:169) - uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException: Planning timeout reached: 60002.658985>60000.0
+EXCEPTION: PlannerException uk.ac.ox.cs.pdq.LimitReachedException: Planning timeout reached: 60002.658985>60000.0
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\blackbox\case_004'
+......
+2015-08-02 17:32:45,616 WARN  [main] (PlannerTest.java:169) - uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+EXCEPTION: PlannerException uk.ac.ox.cs.pdq.LimitReachedException
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\blackbox\case_005'
+uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:260)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:147)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.compare(PlannerTest.java:146)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.run(PlannerTest.java:111)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:47)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest$PlannerTestCommand.execute(PlannerTest.java:82)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.<init>(Bootstrap.java:86)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.main(Bootstrap.java:181)
+Caused by: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.parallel.MultiThreadedExecutor.finalIteration(MultiThreadedExecutor.java:244)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGOptimized._explore(DAGOptimized.java:163)
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.explore(Explorer.java:87)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:252)
+	... 10 more
+.uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:260)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:147)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.compare(PlannerTest.java:146)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.run(PlannerTest.java:111)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:47)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest$PlannerTestCommand.execute(PlannerTest.java:82)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.<init>(Bootstrap.java:86)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.main(Bootstrap.java:181)
+Caused by: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.parallel.MultiThreadedExecutor.finalIteration(MultiThreadedExecutor.java:244)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGILP._explore(DAGILP.java:268)
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.explore(Explorer.java:87)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:252)
+	... 10 more
+.
+2015-08-02 17:34:06,328 WARN  [main] (PlannerTest.java:169) - uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+EXCEPTION: PlannerException uk.ac.ox.cs.pdq.LimitReachedException
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\blackbox\case_006'
+.....
+uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException: Planning timeout reached: 60000.776143>60000.0
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:260)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:147)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.compare(PlannerTest.java:146)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.run(PlannerTest.java:111)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:47)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest$PlannerTestCommand.execute(PlannerTest.java:82)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.<init>(Bootstrap.java:86)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.main(Bootstrap.java:181)
+Caused by: uk.ac.ox.cs.pdq.LimitReachedException: Planning timeout reached: 60000.776143>60000.0
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.checkLimitReached(Explorer.java:112)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGGeneric.mainLoop(DAGGeneric.java:187)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGGeneric._explore(DAGGeneric.java:129)
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.explore(Explorer.java:87)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:252)
+	... 10 more
+2015-08-02 17:35:27,206 WARN  [main] (PlannerTest.java:169) - uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException: Planning timeout reached: 60000.776143>60000.0
+EXCEPTION: PlannerException uk.ac.ox.cs.pdq.LimitReachedException: Planning timeout reached: 60000.776143>60000.0
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\blackbox\case_007'
+.....
+uk.ac.ox.cs.pdq.planner.PlannerException: java.lang.IllegalStateException
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:260)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:147)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.compare(PlannerTest.java:146)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.run(PlannerTest.java:111)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:47)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest$PlannerTestCommand.execute(PlannerTest.java:82)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.<init>(Bootstrap.java:86)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.main(Bootstrap.java:181)
+Caused by: java.lang.IllegalStateException
+	at com.google.common.base.Preconditions.checkState(Preconditions.java:161)
+	at uk.ac.ox.cs.pdq.planner.dag.BinaryConfiguration.<init>(BinaryConfiguration.java:112)
+	at uk.ac.ox.cs.pdq.planner.dag.parallel.DefaultThread.merge(DefaultThread.java:113)
+	at uk.ac.ox.cs.pdq.planner.dag.parallel.ChaseOrPropagateThread.call(ChaseOrPropagateThread.java:124)
+	at uk.ac.ox.cs.pdq.planner.dag.parallel.ChaseOrPropagateThread.call(ChaseOrPropagateThread.java:1)
+	at java.util.concurrent.FutureTask$Sync.innerRun(FutureTask.java:334)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:166)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:724)
+2015-08-02 17:35:47,022 WARN  [main] (PlannerTest.java:169) - uk.ac.ox.cs.pdq.planner.PlannerException: java.lang.IllegalStateException
+EXCEPTION: PlannerException java.lang.IllegalStateException
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\blackbox\case_008'
+..........
+Using ApproximateCostAcceptanceCheck: PASS
+	expected: 3626.0 - [Scan(partsupp)]
+	observed: 3626.0 - [DependentAccess{partsupp[]}]
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\blackbox\case_009'
+.......
+Using SameCostAcceptanceCheck: PASS
+	No plan found
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\blackbox\case_010'
+.........
+Using ApproximateCostAcceptanceCheck: PASS
+	expected: 8987.52380952381 - [Scan(partsupp), Scan(supplier), Scan(nation), DependentAccess{region[2]}]
+	observed: 10638.619047619048 - [DependentAccess{region[]}, DependentAccess{region[]}, DependentAccess{supplier[]}, DependentAccess{supplier[]}, DependentAccess{partsupp[]}, DependentAccess{nation[]}, DependentAccess{nation[]}]
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\blackbox\case_011'
+......
+Using ApproximateCostAcceptanceCheck: PASS
+	expected: 2000.0 - [Scan(part)]
+	observed: 2000.0 - [DependentAccess{part[]}]
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\blackbox\case_012'
+...........
+Using ApproximateCostAcceptanceCheck: PASS
+	expected: 262550.0 - [Scan(region), Scan(nation), Scan(partsupp), Scan(supplier), Scan(part)]
+	observed: 124505.0 - [DependentAccess{region[]}, DependentAccess{nation[]}, DependentAccess{partsupp[]}, DependentAccess{supplier[]}, DependentAccess{supplier[]}, DependentAccess{part[]}]
+	writing plan: Projection[c6389355,c6389348,c6389354,c6389359,c6389352,c6389360](Join_SYMMETRIC_HASH(#0=#5)[Projection[r_regionkey/c6389358,r_name/c6389360,r_comment/c6389361](DependentAccess{region[]}),Join_SYMMETRIC_HASH(#0=#12)[Projection[n_nationkey/c6389353,n_name/c6389357,n_regionkey/c6389358,n_comment/c6389359](DependentAccess{nation[]}),Join_SYMMETRIC_HASH(#0=#19&#1=#5)[Projection[ps_partkey/c6389346,ps_suppkey/c6389347,ps_availqty/c6389348,ps_supplycost/c6389349,ps_comment/c6389350](DependentAccess{partsupp[]}),Join_SYMMETRIC_HASH(#1=#8)[Projection[s_suppkey/c6389347,s_name/c6389351,s_address/c6389352,s_nationkey/c6389353,s_phone/c6389354,s_acctbal/c6389355,s_comment/c6389356](DependentAccess{supplier[]}),Join_SYMMETRIC_HASH[Projection[s_suppkey/c6389362,s_name/c6389351,s_address/c6389363,s_nationkey/c6389364,s_phone/c6389365,s_acctbal/c6389366,s_comment/c6389367](DependentAccess{supplier[]}),Projection[p_partkey/c6389346,p_name/k6389380,p_mfgr/k6389381,p_brand/k6389382,p_type/k6389383,p_size/k6389384,p_container/k6389385,p_retailprice/k6389386,p_comment/k6389387](DependentAccess{part[]})]]]]]):124505.0 124505.0
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\blackbox\case_013'
+......
+Using SameCostAcceptanceCheck: PASS
+	Plans differ, but have same costs. - 
+	diff: 
+	Costs: 125.0 <-> 125.0
+	Leaves:
+		[Scan(region_nation)]
+		[DependentAccess{region_nation[]}]
+	
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\blackbox\case_014'
+.......
+Using ApproximateCostAcceptanceCheck: PASS
+	expected: 21704.375 - [Scan(region_nation), DependentAccess{order_customer[3]}]
+	observed: 21704.375 - [DependentAccess{region_nation[]}, DependentAccess{order_customer[3]}]
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\blackbox\case_015'
+...........
+uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:260)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:147)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.compare(PlannerTest.java:146)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.run(PlannerTest.java:111)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:47)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest$PlannerTestCommand.execute(PlannerTest.java:82)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.<init>(Bootstrap.java:86)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.main(Bootstrap.java:181)
+Caused by: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.parallel.MultiThreadedExecutor.finalIteration(MultiThreadedExecutor.java:244)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGOptimized._explore(DAGOptimized.java:163)
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.explore(Explorer.java:87)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:252)
+	... 10 more
+2015-08-02 17:38:05,929 WARN  [main] (PlannerTest.java:169) - uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+EXCEPTION: PlannerException uk.ac.ox.cs.pdq.LimitReachedException
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\blackbox\case_016'
+......
+Using ApproximateCostAcceptanceCheck: PASS
+	expected: 130.0 - [Scan(region), Scan(nation)]
+	observed: 130.0 - [DependentAccess{region[]}, DependentAccess{nation[]}]
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\blackbox_db_with\case_001'
+......
+Using SameCostAcceptanceCheck: PASS
+	Plans differ, but have same costs. - 
+	diff: 
+	Costs: 7.0 <-> 7.0
+	Leaves:
+		[Scan(part)]
+		[DependentAccess{part[]}]
+	
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\blackbox_db_with\case_002'
+........
+uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:260)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:147)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.compare(PlannerTest.java:146)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.run(PlannerTest.java:111)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:47)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest$PlannerTestCommand.execute(PlannerTest.java:82)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.<init>(Bootstrap.java:86)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.main(Bootstrap.java:181)
+Caused by: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.parallel.MultiThreadedExecutor.finalIteration(MultiThreadedExecutor.java:244)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGOptimized._explore(DAGOptimized.java:163)
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.explore(Explorer.java:87)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:252)
+	... 10 more
+2015-08-02 17:39:27,540 WARN  [main] (PlannerTest.java:169) - uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+EXCEPTION: PlannerException uk.ac.ox.cs.pdq.LimitReachedException
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\blackbox_db_with\case_003'
+........
+uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:260)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:147)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.compare(PlannerTest.java:146)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.run(PlannerTest.java:111)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:47)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest$PlannerTestCommand.execute(PlannerTest.java:82)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.<init>(Bootstrap.java:86)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.main(Bootstrap.java:181)
+Caused by: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.parallel.MultiThreadedExecutor.finalIteration(MultiThreadedExecutor.java:244)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGOptimized._explore(DAGOptimized.java:163)
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.explore(Explorer.java:87)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:252)
+	... 10 more
+2015-08-02 17:40:41,984 WARN  [main] (PlannerTest.java:169) - uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+EXCEPTION: PlannerException uk.ac.ox.cs.pdq.LimitReachedException
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\blackbox_db_with\case_004'
+.....uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:260)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:147)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.compare(PlannerTest.java:146)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.run(PlannerTest.java:111)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:47)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest$PlannerTestCommand.execute(PlannerTest.java:82)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.<init>(Bootstrap.java:86)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.main(Bootstrap.java:181)
+Caused by: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.parallel.MultiThreadedExecutor.finalIteration(MultiThreadedExecutor.java:244)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGOptimized._explore(DAGOptimized.java:163)
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.explore(Explorer.java:87)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:252)
+	... 10 more
+.
+2015-08-02 17:41:49,307 WARN  [main] (PlannerTest.java:169) - uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+EXCEPTION: PlannerException uk.ac.ox.cs.pdq.LimitReachedException
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\blackbox_db_with\case_005'
+.....uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:260)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:147)
+.
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.compare(PlannerTest.java:146)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.run(PlannerTest.java:111)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:47)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest$PlannerTestCommand.execute(PlannerTest.java:82)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.<init>(Bootstrap.java:86)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.main(Bootstrap.java:181)
+Caused by: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.parallel.MultiThreadedExecutor.chaseOrPropagate(MultiThreadedExecutor.java:141)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGOptimized._explore(DAGOptimized.java:146)
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.explore(Explorer.java:87)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:252)
+	... 10 more
+2015-08-02 17:43:23,469 WARN  [main] (PlannerTest.java:169) - uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+EXCEPTION: PlannerException uk.ac.ox.cs.pdq.LimitReachedException
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\blackbox_db_with\case_006'
+.....uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:260)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:147)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.compare(PlannerTest.java:146)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.run(PlannerTest.java:111)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:47)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest$PlannerTestCommand.execute(PlannerTest.java:82)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.<init>(Bootstrap.java:86)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.main(Bootstrap.java:181)
+Caused by: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.parallel.MultiThreadedExecutor.finalIteration(MultiThreadedExecutor.java:244)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGOptimized._explore(DAGOptimized.java:163)
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.explore(Explorer.java:87)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:252)
+	... 10 more
+.
+2015-08-02 17:44:31,223 WARN  [main] (PlannerTest.java:169) - uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+EXCEPTION: PlannerException uk.ac.ox.cs.pdq.LimitReachedException
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\blackbox_db_with\case_010'
+.....uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:260)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:147)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.compare(PlannerTest.java:146)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.run(PlannerTest.java:111)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:47)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest$PlannerTestCommand.execute(PlannerTest.java:82)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.<init>(Bootstrap.java:86)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.main(Bootstrap.java:181)
+Caused by: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.parallel.MultiThreadedExecutor.chaseOrPropagate(MultiThreadedExecutor.java:141)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGOptimized._explore(DAGOptimized.java:146)
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.explore(Explorer.java:87)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:252)
+	... 10 more
+.
+2015-08-02 17:45:38,726 WARN  [main] (PlannerTest.java:169) - uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+EXCEPTION: PlannerException uk.ac.ox.cs.pdq.LimitReachedException
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\fk_inputs\case_001'
+......
+Using SameCostAcceptanceCheck: PASS
+	Plans differ, but have same costs. - 
+	diff: 
+	Costs: 2000.0 <-> 2000.0
+	Leaves:
+		[Scan(part)]
+		[DependentAccess{part[]}]
+	
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\fk_inputs\case_002'
+.......uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:260)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:147)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.compare(PlannerTest.java:146)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.run(PlannerTest.java:111)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:47)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest$PlannerTestCommand.execute(PlannerTest.java:82)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.<init>(Bootstrap.java:86)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.main(Bootstrap.java:181)
+Caused by: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.parallel.MultiThreadedExecutor.finalIteration(MultiThreadedExecutor.java:244)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGOptimized._explore(DAGOptimized.java:163)
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.explore(Explorer.java:87)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:252)
+	... 10 more
+.
+2015-08-02 17:46:54,176 WARN  [main] (PlannerTest.java:169) - uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+EXCEPTION: PlannerException uk.ac.ox.cs.pdq.LimitReachedException
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\fk_inputs\case_003'
+.......uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:260)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:147)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.compare(PlannerTest.java:146)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.run(PlannerTest.java:111)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:47)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest$PlannerTestCommand.execute(PlannerTest.java:82)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.<init>(Bootstrap.java:86)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.main(Bootstrap.java:181)
+Caused by: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.parallel.MultiThreadedExecutor.finalIteration(MultiThreadedExecutor.java:244)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGOptimized._explore(DAGOptimized.java:163)
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.explore(Explorer.java:87)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:252)
+	... 10 more
+.
+2015-08-02 17:48:01,555 WARN  [main] (PlannerTest.java:169) - uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+EXCEPTION: PlannerException uk.ac.ox.cs.pdq.LimitReachedException
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\fk_inputs\case_004'
+........
+2015-08-02 17:49:09,473 WARN  [main] (PlannerTest.java:169) - uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+EXCEPTION: PlannerException uk.ac.ox.cs.pdq.LimitReachedException
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\fk_inputs\case_005'
+uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:260)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:147)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.compare(PlannerTest.java:146)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.run(PlannerTest.java:111)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:47)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest$PlannerTestCommand.execute(PlannerTest.java:82)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.<init>(Bootstrap.java:86)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.main(Bootstrap.java:181)
+Caused by: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.parallel.MultiThreadedExecutor.finalIteration(MultiThreadedExecutor.java:244)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGOptimized._explore(DAGOptimized.java:163)
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.explore(Explorer.java:87)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:252)
+	... 10 more
+.....uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:260)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:147)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.compare(PlannerTest.java:146)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.run(PlannerTest.java:111)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:47)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest$PlannerTestCommand.execute(PlannerTest.java:82)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.<init>(Bootstrap.java:86)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.main(Bootstrap.java:181)
+Caused by: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.parallel.MultiThreadedExecutor.finalIteration(MultiThreadedExecutor.java:244)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGOptimized._explore(DAGOptimized.java:163)
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.explore(Explorer.java:87)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:252)
+	... 10 more
+.
+2015-08-02 17:50:17,405 WARN  [main] (PlannerTest.java:169) - uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+EXCEPTION: PlannerException uk.ac.ox.cs.pdq.LimitReachedException
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\fk_inputs\case_006'
+......
+2015-08-02 17:51:24,013 WARN  [main] (PlannerTest.java:169) - uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+EXCEPTION: PlannerException uk.ac.ox.cs.pdq.LimitReachedException
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\fk_inputs\case_007'
+uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:260)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:147)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.compare(PlannerTest.java:146)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.run(PlannerTest.java:111)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:47)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest$PlannerTestCommand.execute(PlannerTest.java:82)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.<init>(Bootstrap.java:86)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.main(Bootstrap.java:181)
+Caused by: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.parallel.MultiThreadedExecutor.finalIteration(MultiThreadedExecutor.java:244)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGOptimized._explore(DAGOptimized.java:163)
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.explore(Explorer.java:87)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:252)
+	... 10 more
+........uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:260)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:147)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.compare(PlannerTest.java:146)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.run(PlannerTest.java:111)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:47)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest$PlannerTestCommand.execute(PlannerTest.java:82)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.<init>(Bootstrap.java:86)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.main(Bootstrap.java:181)
+Caused by: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.parallel.MultiThreadedExecutor.finalIteration(MultiThreadedExecutor.java:244)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGOptimized._explore(DAGOptimized.java:163)
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.explore(Explorer.java:87)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:252)
+	... 10 more
+.
+2015-08-02 17:52:30,054 WARN  [main] (PlannerTest.java:169) - uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+EXCEPTION: PlannerException uk.ac.ox.cs.pdq.LimitReachedException
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\fk_inputs\case_008'
+.......uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:260)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:147)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.compare(PlannerTest.java:146)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.run(PlannerTest.java:111)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:47)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest$PlannerTestCommand.execute(PlannerTest.java:82)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.<init>(Bootstrap.java:86)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.main(Bootstrap.java:181)
+Caused by: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.parallel.MultiThreadedExecutor.finalIteration(MultiThreadedExecutor.java:244)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGOptimized._explore(DAGOptimized.java:163)
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.explore(Explorer.java:87)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:252)
+	... 10 more
+.
+2015-08-02 17:53:36,666 WARN  [main] (PlannerTest.java:169) - uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+EXCEPTION: PlannerException uk.ac.ox.cs.pdq.LimitReachedException
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\fk_inputs\case_009'
+........
+2015-08-02 17:54:44,645 WARN  [main] (PlannerTest.java:169) - uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+EXCEPTION: PlannerException uk.ac.ox.cs.pdq.LimitReachedException
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\fk_inputs\case_010'
+uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:260)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:147)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.compare(PlannerTest.java:146)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.run(PlannerTest.java:111)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:47)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest$PlannerTestCommand.execute(PlannerTest.java:82)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.<init>(Bootstrap.java:86)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.main(Bootstrap.java:181)
+Caused by: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.parallel.MultiThreadedExecutor.finalIteration(MultiThreadedExecutor.java:244)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGOptimized._explore(DAGOptimized.java:163)
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.explore(Explorer.java:87)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:252)
+	... 10 more
+.....uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:260)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:147)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.compare(PlannerTest.java:146)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.run(PlannerTest.java:111)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:47)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest$PlannerTestCommand.execute(PlannerTest.java:82)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.<init>(Bootstrap.java:86)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.main(Bootstrap.java:181)
+Caused by: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.parallel.MultiThreadedExecutor.finalIteration(MultiThreadedExecutor.java:244)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGOptimized._explore(DAGOptimized.java:163)
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.explore(Explorer.java:87)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:252)
+	... 10 more
+.
+2015-08-02 17:55:53,264 WARN  [main] (PlannerTest.java:169) - uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+EXCEPTION: PlannerException uk.ac.ox.cs.pdq.LimitReachedException
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\fk_inputs\case_011'
+.........
+Using SameCostAcceptanceCheck: PASS
+	Plans differ, but have same costs. - 
+	diff: 
+	Costs: 75.0 <-> 75.0
+	Leaves:
+		[Scan(region), DependentAccess{nation[3]}]
+		[DependentAccess{region[]}, DependentAccess{nation[3]}]
+	
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\fk_inputs\case_012'
+......
+uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:260)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:147)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.compare(PlannerTest.java:146)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.run(PlannerTest.java:111)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:47)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest$PlannerTestCommand.execute(PlannerTest.java:82)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.<init>(Bootstrap.java:86)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.main(Bootstrap.java:181)
+Caused by: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.parallel.MultiThreadedExecutor.chaseOrPropagate(MultiThreadedExecutor.java:141)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGOptimized._explore(DAGOptimized.java:146)
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.explore(Explorer.java:87)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:252)
+	... 10 more
+2015-08-02 17:57:15,888 WARN  [main] (PlannerTest.java:169) - uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+EXCEPTION: PlannerException uk.ac.ox.cs.pdq.LimitReachedException
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\fk_inputs_BLACKBOX_DB\case_001'
+......
+Using SameCostAcceptanceCheck: PASS
+	Plans differ, but have same costs. - 
+	diff: 
+	Costs: 7.0 <-> 7.0
+	Leaves:
+		[Scan(part)]
+		[DependentAccess{part[]}]
+	
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\fk_inputs_BLACKBOX_DB\case_002'
+........
+Using SameCostAcceptanceCheck: FAIL
+	Plan found while expected none
+	writing plan: Projection[c8503443,c8503445,c8503448](DependentJoin_SYMMETRIC_HASH(#0=#9)[Projection[p_partkey/c8503436,p_name/c8503441,p_mfgr/c8503442,p_brand/c8503443,p_type/c8503444,p_size/c8503445,p_container/c8503446,p_retailprice/c8503447,p_comment/c8503448](DependentAccess{part[]}),Projection[ps_partkey/c8503436,ps_suppkey/c8503437,ps_availqty/c8503438,ps_supplycost/c8503439,ps_comment/c8503440](DependentAccess{partsupp[1]})]):42.13 42.13
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\fk_inputs_BLACKBOX_DB\case_003'
+.........
+Using SameCostAcceptanceCheck: FAIL
+	Plan found while expected none
+	writing plan: Projection[c8503622,c8503618,c8503616,c8503625](DependentJoin_SYMMETRIC_HASH(#7=#15)[DependentJoin_SYMMETRIC_HASH(#3=#10)[DependentJoin_SYMMETRIC_HASH(#0=#5)[Projection[r_regionkey/c8503625,r_name/k8503644,r_comment/k8503645](DependentAccess{region[]}),Projection[n_nationkey/c8503620,n_name/c8503624,n_regionkey/c8503625,n_comment/c8503626](DependentAccess{nation[3]})],Projection[s_suppkey/c8503614,s_name/c8503618,s_address/c8503619,s_nationkey/c8503620,s_phone/c8503621,s_acctbal/c8503622,s_comment/c8503623](DependentAccess{supplier[4]})],Projection[ps_partkey/c8503613,ps_suppkey/c8503614,ps_availqty/c8503615,ps_supplycost/c8503616,ps_comment/c8503617](DependentAccess{partsupp[2]})]):47.29 47.29
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\fk_inputs_BLACKBOX_DB\case_004'
+.........
+Using SameCostAcceptanceCheck: FAIL
+	Plan found while expected none
+	writing plan: Projection[c8504154,c8504143,c8504150,c8504144](DependentJoin_SYMMETRIC_HASH(#7=#15)[DependentJoin_SYMMETRIC_HASH(#3=#10)[DependentJoin_SYMMETRIC_HASH(#0=#5)[Projection[r_regionkey/c8504152,r_name/c8504154,r_comment/c8504155](DependentAccess{region[]}),Projection[n_nationkey/c8504147,n_name/c8504151,n_regionkey/c8504152,n_comment/c8504153](DependentAccess{nation[3]})],Projection[s_suppkey/c8504141,s_name/c8504145,s_address/c8504146,s_nationkey/c8504147,s_phone/c8504148,s_acctbal/c8504149,s_comment/c8504150](DependentAccess{supplier[4]})],Projection[ps_partkey/c8504140,ps_suppkey/c8504141,ps_availqty/c8504142,ps_supplycost/c8504143,ps_comment/c8504144](DependentAccess{partsupp[2]})]):47.29 47.29
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\fk_inputs_BLACKBOX_DB\case_005'
+...........
+Using SameCostAcceptanceCheck: FAIL
+	Plan found while expected none
+	writing plan: Projection[c8504778,c8504771,c8504777,c8504782,c8504775,c8504783](DependentJoin_SYMMETRIC_HASH(#7=#15)[DependentJoin_SYMMETRIC_HASH(#3=#10)[DependentJoin_SYMMETRIC_HASH(#0=#5)[Projection[r_regionkey/c8504781,r_name/c8504783,r_comment/c8504784](DependentAccess{region[]}),Projection[n_nationkey/c8504776,n_name/c8504780,n_regionkey/c8504781,n_comment/c8504782](DependentAccess{nation[3]})],Projection[s_suppkey/c8504770,s_name/c8504774,s_address/c8504775,s_nationkey/c8504776,s_phone/c8504777,s_acctbal/c8504778,s_comment/c8504779](DependentAccess{supplier[4]})],Projection[ps_partkey/c8504769,ps_suppkey/c8504770,ps_availqty/c8504771,ps_supplycost/c8504772,ps_comment/c8504773](DependentAccess{partsupp[2]})]):47.29 47.29
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\fk_inputs_BLACKBOX_DB\case_006'
+..............
+Using SameCostAcceptanceCheck: FAIL
+	Plan found while expected none
+	writing plan: Projection[c8509544,c8509532,c8509540,c8509533](DependentJoin_SYMMETRIC_HASH(#31=#38)[DependentJoin_SYMMETRIC_HASH(#0=#33)[DependentJoin_SYMMETRIC_HASH(#6=#26)[DependentJoin_SYMMETRIC_HASH(#6=#19&#15=#22)[DependentJoin_SYMMETRIC_HASH(#3=#17)[Join_SYMMETRIC_HASH[Join_SYMMETRIC_HASH[Projection[r_regionkey/c8509542,r_name/c8509544,r_comment/c8509545](DependentAccess{region[]}),Projection[r_regionkey/k8509566,r_name/k8509568,r_comment/k8509569](DependentAccess{region[]})],Projection[p_partkey/c8509530,p_name/k8509555,p_mfgr/k8509556,p_brand/k8509557,p_type/k8509558,p_size/k8509559,p_container/k8509560,p_retailprice/k8509561,p_comment/k8509562](DependentAccess{part[]})],Projection[n_nationkey/k8509551,n_name/k8509565,n_regionkey/k8509566,n_comment/k8509567](DependentAccess{nation[3]})],Projection[s_suppkey/c8509530,s_name/k8509549,s_address/k8509550,s_nationkey/k8509551,s_phone/k8509552,s_acctbal/k8509553,s_comment/k8509554](DependentAccess{supplier[4]})],Projection[ps_partkey/c8509530,ps_suppkey/c8509530,ps_availqty/c8509531,ps_supplycost/c8509532,ps_comment/c8509533](Selection{(#0=#1)}(DependentAccess{partsupp[1]}))],Projection[n_nationkey/c8509537,n_name/c8509541,n_regionkey/c8509542,n_comment/c8509543](DependentAccess{nation[3]})],Projection[s_suppkey/c8509534,s_name/c8509535,s_address/c8509536,s_nationkey/c8509537,s_phone/c8509538,s_acctbal/c8509539,s_comment/c8509540](DependentAccess{supplier[4]})]):34.75 34.75
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\fk_inputs_BLACKBOX_DB\case_007'
+........
+Using SameCostAcceptanceCheck: FAIL
+	Plan found while expected none
+	writing plan: Projection[c8533306](DependentJoin_SYMMETRIC_HASH(#0=#9)[Projection[p_partkey/c8533306,p_name/k8533317,p_mfgr/k8533318,p_brand/k8533319,p_type/k8533320,p_size/k8533321,p_container/k8533322,p_retailprice/k8533323,p_comment/k8533324](DependentAccess{part[]}),Projection[ps_partkey/c8533306,ps_suppkey/c8533307,ps_availqty/c8533308,ps_supplycost/c8533309,ps_comment/c8533310](DependentAccess{partsupp[1]})]):42.13 42.13
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\fk_inputs_BLACKBOX_DB\case_008'
+.........
+Using SameCostAcceptanceCheck: FAIL
+	Plan found while expected none
+	writing plan: Projection[c8533405](Projection[ps_partkey/c8533405,ps_availqty/c8533406,ps_supplycost/c8533407,ps_comment/c8533408](Selection{(#1=5)}(DependentAccess{partsupp[2]}))):21.69 21.69
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\fk_inputs_BLACKBOX_DB\case_009'
+.........
+Using SameCostAcceptanceCheck: FAIL
+	Plan found while expected none
+	writing plan: Projection[c8533499,c8533495,c8533493,c8533501](DependentJoin_SYMMETRIC_HASH(#6=#14)[DependentJoin_SYMMETRIC_HASH(#3=#9)[DependentJoin_SYMMETRIC_HASH(#0=#4)[Projection[r_regionkey/c8533501,r_name/k8533520,r_comment/k8533521](DependentAccess{region[]}),Projection[n_nationkey/c8533497,n_regionkey/c8533501,n_comment/c8533502](Selection{(#1=UNITED STATES)}(DependentAccess{nation[3]}))],Projection[s_suppkey/c8533491,s_name/c8533495,s_address/c8533496,s_nationkey/c8533497,s_phone/c8533498,s_acctbal/c8533499,s_comment/c8533500](DependentAccess{supplier[4]})],Projection[ps_partkey/c8533490,ps_suppkey/c8533491,ps_availqty/c8533492,ps_supplycost/c8533493,ps_comment/c8533494](DependentAccess{partsupp[2]})]):20.58 20.58
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\fk_inputs_BLACKBOX_DB\case_010'
+............
+Using SameCostAcceptanceCheck: FAIL
+	Plan found while expected none
+	writing plan: Projection[c8534002,c8534001,c8534006,c8533999](DependentJoin_SYMMETRIC_HASH(#6=#27)[DependentJoin_SYMMETRIC_HASH(#7=#21&#16=#23)[DependentJoin_SYMMETRIC_HASH(#13=#18)[Join_SYMMETRIC_HASH[DependentJoin_SYMMETRIC_HASH(#2=#9)[DependentJoin_SYMMETRIC_HASH(#0=#4)[Projection[r_regionkey/c8534005,r_comment/c8534007](Selection{(#1=AMERICA)}(DependentAccess{region[]})),Projection[n_nationkey/c8534000,n_name/c8534004,n_regionkey/c8534005,n_comment/c8534006](DependentAccess{nation[3]})],Projection[s_suppkey/c8533995,s_name/c8533998,s_address/c8533999,s_nationkey/c8534000,s_phone/c8534001,s_acctbal/c8534002,s_comment/c8534003](DependentAccess{supplier[4]})],Projection[r_regionkey/k8534017,r_name/k8534035,r_comment/k8534036](DependentAccess{region[]})],Projection[n_nationkey/c8534010,n_name/k8534016,n_regionkey/k8534017,n_comment/k8534018](DependentAccess{nation[3]})],Projection[s_suppkey/c8534008,s_name/c8533998,s_address/c8534009,s_nationkey/c8534010,s_phone/c8534011,s_comment/c8534012](Selection{(#5=5755.94)}(DependentAccess{supplier[4]}))],Projection[ps_partkey/c8533994,ps_suppkey/c8533995,ps_supplycost/c8533996,ps_comment/c8533997](Selection{(#2=7340)}(DependentAccess{partsupp[2]}))]):18.55 18.55
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\fk_inputs_BLACKBOX_DB\case_011'
+.......
+Using SameCostAcceptanceCheck: FAIL
+	Plan found while expected none
+	writing plan: Projection[c8555468,c8555469,c8555470,c8555472](DependentJoin_SYMMETRIC_HASH(#0=#4&#1=#5&#2=#6)[Projection[c8555468,c8555469,c8555470,c8555472](Projection[nation_key/c8555468,nation_name/c8555469,region_key/c8555470,region_name/c8555472](DependentAccess{region_nation[]})),Projection[n_nationkey/c8555468,n_name/c8555469,n_regionkey/c8555470,n_comment/c8555471](DependentAccess{nation[3]})]):5.32 5.32
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\fk_inputs_BLACKBOX_DB\case_012'
+............
+Using SameCostAcceptanceCheck: FAIL
+	expected: 253.32 - [Scan(order_customer), Scan(region_nation)]
+	observed: 17.2 - [DependentAccess{order_customer[]}, DependentAccess{customer[4]}, DependentAccess{region_nation[]}]
+	writing plan: Projection[c8555550,c8555551,c8555557](Join_SYMMETRIC_HASH(#2=#21)[DependentJoin_SYMMETRIC_HASH(#0=#14&#1=#15&#2=#16&#3=#18)[Projection[cname/c8555550,caddress/c8555551,cnation/c8555552,cactbal/c8555554,opriority/c8555531,oclerk/c8555532,pname/k8555590,pbrand/k8555592,ptype/k8555593,lextendedprice/c8555539,ldiscount/c8555540,ltax/c8555541,lflag/c8555542](DependentAccess{order_customer[]}),Projection[c_custkey/c8555527,c_name/c8555550,c_address/c8555551,c_nationkey/c8555552,c_phone/c8555553,c_acctbal/c8555554,c_mktsegment/c8555555,c_comment/c8555556](DependentAccess{customer[4]})],Projection[nation_key/c8555552,nation_name/c8555557,region_key/c8555558](Selection{(#3=AMERICA)}(DependentAccess{region_nation[]}))]):17.2 17.2
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\fk_view\case_001'
+..........
+Using SameCostAcceptanceCheck: PASS
+	Plans differ, but have same costs. - 
+	diff: 
+	Costs: 1940.0 <-> 1940.0
+	Leaves:
+		[Scan(region), DependentAccess{nation[3]}, DependentAccess{supplier[4]}, DependentAccess{partsupp[2]}]
+		[DependentAccess{region[]}, DependentAccess{nation[3]}, DependentAccess{supplier[4]}, DependentAccess{partsupp[2]}]
+	
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\fk_view\case_002'
+............
+Using SameCostAcceptanceCheck: PASS
+	Plans differ, but have same costs. - 
+	diff: 
+	Costs: 4140.0 <-> 4140.0
+	Leaves:
+		[Scan(region), DependentAccess{nation[3]}, DependentAccess{supplier[4]}, DependentAccess{partsupp[2]}, Scan(part)]
+		[DependentAccess{region[]}, DependentAccess{nation[3]}, DependentAccess{supplier[4]}, DependentAccess{partsupp[2]}, DependentAccess{part[]}]
+	
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\fk_view\case_003'
+.........
+Using SameCostAcceptanceCheck: PASS
+	Plans differ, but have same costs. - 
+	diff: 
+	Costs: 1246.875 <-> 1246.875
+	Leaves:
+		[Scan(region_nation), DependentAccess{supplier[4]}, DependentAccess{partsupp[2]}]
+		[DependentAccess{region_nation[]}, DependentAccess{supplier[4]}, DependentAccess{partsupp[2]}]
+	
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\fk_view\case_004'
+..........
+Using SameCostAcceptanceCheck: PASS
+	Plans differ, but have same costs. - 
+	diff: 
+	Costs: 4646.875 <-> 4646.875
+	Leaves:
+		[Scan(region_nation), DependentAccess{supplier[4]}, DependentAccess{partsupp[2]}, Scan(part)]
+		[DependentAccess{region_nation[]}, DependentAccess{supplier[4]}, DependentAccess{partsupp[2]}, DependentAccess{part[]}]
+	
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\fk_view\case_005'
+...........
+Using SameCostAcceptanceCheck: PASS
+	Plans differ, but have same costs. - 
+	diff: 
+	Costs: 4356.666666666666 <-> 4356.666666666666
+	Leaves:
+		[Scan(region), DependentAccess{nation[3]}, DependentAccess{supplier[4]}, DependentAccess{partsupp[2]}, Scan(part)]
+		[DependentAccess{region[]}, DependentAccess{nation[3]}, DependentAccess{supplier[4]}, DependentAccess{partsupp[2]}, DependentAccess{part[]}]
+	
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\fk_view\case_006'
+............
+Using SameCostAcceptanceCheck: PASS
+	Plans differ, but have same costs. - 
+	diff: 
+	Costs: 11315.0 <-> 11315.0
+	Leaves:
+		[Scan(region), DependentAccess{nation[3]}, DependentAccess{supplier[4]}, DependentAccess{customer[4]}, DependentAccess{partsupp[2]}, Scan(part)]
+		[DependentAccess{region[]}, DependentAccess{nation[3]}, DependentAccess{supplier[4]}, DependentAccess{customer[4]}, DependentAccess{partsupp[2]}, DependentAccess{part[]}]
+	
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\fk_view\case_007'
+................
+Using SameCostAcceptanceCheck: PASS
+	Plans differ, but have same costs. - 
+	diff: 
+	Costs: 179818.75 <-> 179818.75
+	Leaves:
+		[Scan(region), DependentAccess{nation[3]}, Scan(region_nation), DependentAccess{customer[4]}, DependentAccess{orders[2]}]
+		[DependentAccess{region[]}, DependentAccess{nation[3]}, DependentAccess{region[]}, DependentAccess{region_nation[]}, DependentAccess{customer[4]}, DependentAccess{orders[2]}, DependentAccess{customer[4]}, DependentAccess{orders[2]}]
+	
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\fk_view\case_008'
+............
+Using SameCostAcceptanceCheck: PASS
+	Plans differ, but have same costs. - 
+	diff: 
+	Costs: 71103.125 <-> 71103.125
+	Leaves:
+		[Scan(region), DependentAccess{nation[3]}, DependentAccess{customer[4]}, DependentAccess{orders[2]}]
+		[DependentAccess{region[]}, DependentAccess{nation[3]}, DependentAccess{customer[4]}, DependentAccess{orders[2]}, DependentAccess{customer[4]}, DependentAccess{orders[2]}]
+	
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\fk_view\case_009'
+...........
+Using SameCostAcceptanceCheck: PASS
+	Plans differ, but have same costs. - 
+	diff: 
+	Costs: 70811.875 <-> 70811.875
+	Leaves:
+		[Scan(region_nation), DependentAccess{customer[4]}, DependentAccess{orders[2]}]
+		[DependentAccess{region_nation[]}, DependentAccess{customer[4]}, DependentAccess{orders[2]}, DependentAccess{customer[4]}, DependentAccess{orders[2]}]
+	
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\fk_view\case_010'
+.......
+uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+2015-08-02 18:03:55,273 WARN  [main] (PlannerTest.java:169) - uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+EXCEPTION: PlannerException uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:260)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:147)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.compare(PlannerTest.java:146)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.run(PlannerTest.java:111)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:47)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest$PlannerTestCommand.execute(PlannerTest.java:82)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.<init>(Bootstrap.java:86)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.main(Bootstrap.java:181)
+Caused by: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.parallel.MultiThreadedExecutor.chaseOrPropagate(MultiThreadedExecutor.java:141)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGOptimized._explore(DAGOptimized.java:146)
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.explore(Explorer.java:87)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:252)
+	... 10 more
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\fk_view\std_002'
+...........
+uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:260)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:147)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.compare(PlannerTest.java:146)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.run(PlannerTest.java:111)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:47)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest$PlannerTestCommand.execute(PlannerTest.java:82)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.<init>(Bootstrap.java:86)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.main(Bootstrap.java:181)
+Caused by: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.parallel.MultiThreadedExecutor.chaseOrPropagate(MultiThreadedExecutor.java:141)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGOptimized._explore(DAGOptimized.java:146)
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.explore(Explorer.java:87)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:252)
+	... 10 more
+2015-08-02 18:05:05,820 WARN  [main] (PlannerTest.java:169) - uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+EXCEPTION: PlannerException uk.ac.ox.cs.pdq.LimitReachedException
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\fk_view\std_005'
+.....
+uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+2015-08-02 18:06:28,799 WARN  [main] (PlannerTest.java:169) - uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+EXCEPTION: PlannerException uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:260)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:147)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.compare(PlannerTest.java:146)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.run(PlannerTest.java:111)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:47)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest$PlannerTestCommand.execute(PlannerTest.java:82)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.<init>(Bootstrap.java:86)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.main(Bootstrap.java:181)
+Caused by: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.parallel.MultiThreadedExecutor.chaseOrPropagate(MultiThreadedExecutor.java:141)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGOptimized._explore(DAGOptimized.java:146)
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.explore(Explorer.java:87)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:252)
+	... 10 more
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\fk_view\std_006'
+.................
+Using SameCostAcceptanceCheck: PASS
+	Plans differ, but have same costs. - 
+	diff: 
+	Costs: 48212.25 <-> 48212.25
+	Leaves:
+		[Scan(region), DependentAccess{nation[3]}, DependentAccess{supplier[4]}, DependentAccess{lineitem[3]}]
+		[DependentAccess{region[]}, DependentAccess{nation[3]}, DependentAccess{supplier[4]}, DependentAccess{lineitem[3]}]
+	
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\fk_view\std_012'
+.....
+uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:260)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:147)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.compare(PlannerTest.java:146)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.run(PlannerTest.java:111)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:47)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest$PlannerTestCommand.execute(PlannerTest.java:82)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.<init>(Bootstrap.java:86)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.main(Bootstrap.java:181)
+Caused by: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.parallel.MultiThreadedExecutor.chaseOrPropagate(MultiThreadedExecutor.java:141)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGOptimized._explore(DAGOptimized.java:146)
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.explore(Explorer.java:87)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:252)
+	... 10 more
+2015-08-02 18:09:04,396 WARN  [main] (PlannerTest.java:169) - uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+EXCEPTION: PlannerException uk.ac.ox.cs.pdq.LimitReachedException
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\fk_view\std_014'
+......
+uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:260)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:147)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.compare(PlannerTest.java:146)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.run(PlannerTest.java:111)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:47)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest$PlannerTestCommand.execute(PlannerTest.java:82)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.<init>(Bootstrap.java:86)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.main(Bootstrap.java:181)
+Caused by: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.parallel.MultiThreadedExecutor.chaseOrPropagate(MultiThreadedExecutor.java:141)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGOptimized._explore(DAGOptimized.java:146)
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.explore(Explorer.java:87)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:252)
+	... 10 more
+2015-08-02 18:10:24,528 WARN  [main] (PlannerTest.java:169) - uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+EXCEPTION: PlannerException uk.ac.ox.cs.pdq.LimitReachedException
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\fk_view\std_020'
+.....
+uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+2015-08-02 18:11:45,500 WARN  [main] (PlannerTest.java:169) - uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+EXCEPTION: PlannerException uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:260)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:147)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.compare(PlannerTest.java:146)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.run(PlannerTest.java:111)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:47)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest$PlannerTestCommand.execute(PlannerTest.java:82)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.<init>(Bootstrap.java:86)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.main(Bootstrap.java:181)
+Caused by: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.parallel.MultiThreadedExecutor.chaseOrPropagate(MultiThreadedExecutor.java:141)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGOptimized._explore(DAGOptimized.java:146)
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.explore(Explorer.java:87)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:252)
+	... 10 more
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\simple\case_001'
+.....
+Using ApproximateCostAcceptanceCheck: PASS
+	expected: 1.0 - [Scan(part)]
+	observed: 1.0 - [DependentAccess{part[]}]
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\simple\case_002'
+......
+Using ApproximateCostAcceptanceCheck: PASS
+	expected: 25.0 - [Scan(part), Scan(partsupp)]
+	observed: 25.0 - [DependentAccess{part[]}, DependentAccess{partsupp[]}]
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\simple\case_003'
+.......
+Using ApproximateCostAcceptanceCheck: PASS
+	expected: 3.0 - [Scan(supplier), Scan(partsupp), Scan(nation)]
+	observed: 3.0 - [DependentAccess{partsupp[]}, DependentAccess{nation[]}, DependentAccess{supplier[]}]
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\simple\case_004'
+.........
+Using ApproximateCostAcceptanceCheck: PASS
+	expected: 4.0 - [Scan(nation), Scan(supplier), Scan(region), Scan(partsupp)]
+	observed: 4.0 - [DependentAccess{region[]}, DependentAccess{nation[]}, DependentAccess{partsupp[]}, DependentAccess{supplier[]}]
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\simple\case_005'
+...
+uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+2015-08-02 18:15:30,570 WARN  [main] (PlannerTest.java:169) - uk.ac.ox.cs.pdq.planner.PlannerException: uk.ac.ox.cs.pdq.LimitReachedException
+EXCEPTION: PlannerException uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:260)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:147)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.compare(PlannerTest.java:146)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest.run(PlannerTest.java:111)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:47)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.RegressionTest.recursiveRun(RegressionTest.java:42)
+	at uk.ac.ox.cs.pdq.test.regression.PlannerTest$PlannerTestCommand.execute(PlannerTest.java:82)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.<init>(Bootstrap.java:86)
+	at uk.ac.ox.cs.pdq.test.regression.Bootstrap.main(Bootstrap.java:181)
+Caused by: uk.ac.ox.cs.pdq.LimitReachedException
+	at uk.ac.ox.cs.pdq.planner.parallel.MultiThreadedExecutor.chaseOrPropagate(MultiThreadedExecutor.java:141)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGILP.runChaseOrPropagatePhase(DAGILP.java:341)
+	at uk.ac.ox.cs.pdq.planner.dag.explorer.DAGILP._explore(DAGILP.java:250)
+	at uk.ac.ox.cs.pdq.planner.explorer.Explorer.explore(Explorer.java:87)
+	at uk.ac.ox.cs.pdq.planner.Planner.search(Planner.java:252)
+	... 10 more
+
+Starting case 'C:\Users\tsamoura\workspace2\dev3.regression\test\dag\tpch\simple\case_006'
+...

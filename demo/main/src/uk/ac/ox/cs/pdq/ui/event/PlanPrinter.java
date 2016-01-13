@@ -1,7 +1,7 @@
 package uk.ac.ox.cs.pdq.ui.event;
 
 import uk.ac.ox.cs.pdq.EventHandler;
-import uk.ac.ox.cs.pdq.io.pretty.PrettyLinearPlanWriter;
+import uk.ac.ox.cs.pdq.io.pretty.PrettyLeftDeepPlanWriter;
 import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 
 import com.google.common.eventbus.Subscribe;
@@ -33,7 +33,7 @@ public class PlanPrinter implements EventHandler {
 	public void process(LeftDeepPlan plan) {
 		if (this.lastPlan == null || !this.lastPlan.getCost().equals(plan.getCost())) {
 			this.lastPlan = plan;
-			PrettyLinearPlanWriter.to(System.out).write(plan);
+			PrettyLeftDeepPlanWriter.to(System.out).write(plan);
 		}
 	}
 }

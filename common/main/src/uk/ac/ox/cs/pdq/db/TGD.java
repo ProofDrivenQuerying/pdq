@@ -25,7 +25,8 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 /**
- * A tuple generating dependency
+ * A dependency of the form \delta = \forall x  \sigma(\vec{x}) --> \exists y  \tau(\vec{x}, \vec{y})
+ * where \sigma and \tau are conjunctions of atoms.
  *
  * @author Julien Leblay
  * @author Efthymia Tsamoura

@@ -40,7 +40,7 @@ public abstract class PlanWriter {
 		
 		public void write(Plan plan) {
 			if (plan instanceof LeftDeepPlan) {
-				new LinearPlanWriter().write(out, (LeftDeepPlan) plan);
+				new LeftDeepPlanWriter().write(out, (LeftDeepPlan) plan);
 				return;
 			}
 			new DAGPlanWriter().write(out, (DAGPlan) plan);

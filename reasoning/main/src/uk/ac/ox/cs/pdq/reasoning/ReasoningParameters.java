@@ -10,7 +10,7 @@ import org.apache.log4j.Logger;
 import uk.ac.ox.cs.pdq.Parameters;
 
 /**
- * Holds the parameters of a planning session.
+ * Holds the parameters of a reasoning session.
  *
  * @author Efthymia Tsamoura
  */
@@ -328,7 +328,10 @@ public class ReasoningParameters extends Parameters {
 		BOUNDED_CHASE,
 		
 		@EnumParameterValue(description = "Runs the parallel EGD chase algorithm")
-		EGD_CHASE
+		PARALLEL_EGD_CHASE,
+		
+		@EnumParameterValue(description = "Runs a sequential version of the EGD chase algorithm")
+		SEQUENTIAL_EGD_CHASE
 	}
 
 	/** */

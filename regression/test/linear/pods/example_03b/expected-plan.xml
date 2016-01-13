@@ -3,7 +3,7 @@
 <command name="T1">
 <operator type="PROJECT">
 <outputs>
-<attribute name="c1862" type="java.lang.Integer"/>
+<attribute name="c11132" type="java.lang.Integer"/>
 </outputs>
 <project>
 <attribute name="employeeid" type="java.lang.Integer"/>
@@ -33,22 +33,16 @@
 </operator>
 </command>
 <command name="T2">
-<operator type="PROJECT">
-<outputs>
-</outputs>
-<project>
-</project>
-<child>
 <operator type="DEPENDENT_JOIN" param="0">
 <outputs>
-<attribute name="c1862" type="java.lang.Integer"/>
-<attribute name="c1862" type="java.lang.Integer"/>
+<attribute name="c11132" type="java.lang.Integer"/>
+<attribute name="c11132" type="java.lang.Integer"/>
 </outputs>
 <children>
 <operator type="ALIAS" name="T1"/>
 <operator type="PROJECT">
 <outputs>
-<attribute name="c1862" type="java.lang.Integer"/>
+<attribute name="c11132" type="java.lang.Integer"/>
 </outputs>
 <project>
 <attribute name="employeeid" type="java.lang.Integer"/>
@@ -77,8 +71,6 @@
 </child>
 </operator>
 </children>
-</operator>
-</child>
 </operator>
 </command>
 </plan>

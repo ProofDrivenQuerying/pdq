@@ -77,26 +77,26 @@ import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.View;
 import uk.ac.ox.cs.pdq.db.builder.QueryBuilder;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.io.pretty.AlgebraLikeLinearPlanWriter;
+import uk.ac.ox.cs.pdq.io.pretty.AlgebraLikeLeftDeepPlanWriter;
 import uk.ac.ox.cs.pdq.io.pretty.VeryShortDependencyWriter;
-import uk.ac.ox.cs.pdq.io.xml.LinearPlanReader;
+import uk.ac.ox.cs.pdq.io.xml.LeftDeepPlanReader;
 import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.PlannerTypes;
-import uk.ac.ox.cs.pdq.planner.io.pretty.PrettyProofWriter;
-import uk.ac.ox.cs.pdq.planner.io.xml.ProofReader;
-import uk.ac.ox.cs.pdq.planner.reasoning.Proof;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters.ReasoningTypes;
 import uk.ac.ox.cs.pdq.runtime.RuntimeParameters.ExecutorTypes;
 import uk.ac.ox.cs.pdq.services.Service;
 import uk.ac.ox.cs.pdq.ui.io.ObservableQueryReader;
 import uk.ac.ox.cs.pdq.ui.io.ObservableSchemaReader;
+import uk.ac.ox.cs.pdq.ui.io.pretty.PrettyProofWriter;
 import uk.ac.ox.cs.pdq.ui.io.sql.SQLLikeQueryWriter;
+import uk.ac.ox.cs.pdq.ui.io.xml.ProofReader;
 import uk.ac.ox.cs.pdq.ui.model.ObservablePlan;
 import uk.ac.ox.cs.pdq.ui.model.ObservableQuery;
 import uk.ac.ox.cs.pdq.ui.model.ObservableSchema;
+import uk.ac.ox.cs.pdq.ui.proof.Proof;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
@@ -828,7 +828,7 @@ public class PDQController {
 		PDQController.this.planViewArea.getItems().clear();
 		if (p instanceof LeftDeepPlan) {
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			AlgebraLikeLinearPlanWriter.to(new PrintStream(bos)).write((LeftDeepPlan) p);
+			AlgebraLikeLeftDeepPlanWriter.to(new PrintStream(bos)).write((LeftDeepPlan) p);
 			for (String line: bos.toString().split("\n")) {
 				Text t = new Text(line);
 				PDQController.this.planViewArea.getItems().add(t);
@@ -1038,7 +1038,7 @@ public class PDQController {
 							continue;
 						}
 						ObservablePlan p = new ObservablePlan(
-								new LinearPlanReader(s.getSchema()).read(in),
+								new LeftDeepPlanReader(s.getSchema()).read(in),
 								new PlannerParameters(settings),
 								new CostParameters(settings),
 								new ReasoningParameters(settings));

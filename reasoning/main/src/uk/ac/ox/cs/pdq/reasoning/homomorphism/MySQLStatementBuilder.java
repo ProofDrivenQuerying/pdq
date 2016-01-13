@@ -1,10 +1,22 @@
+
 package uk.ac.ox.cs.pdq.reasoning.homomorphism;
 
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
+import org.apache.log4j.Logger;
+
+import com.google.common.collect.BiMap;
+
+import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.Evaluatable;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismConstraint.TopK;
+import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Term;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager.DBRelation;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismConstraint.TopKConstraint;
 
 /**
  * Builds queries for detecting homomorphisms in MySQL
@@ -14,8 +26,14 @@ import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismConstraint.TopK;
  */
 public class MySQLStatementBuilder extends SQLStatementBuilder {
 
+	private static Logger log = Logger.getLogger(MySQLStatementBuilder.class);
+	
 	public MySQLStatementBuilder() {
 		super();
+	}
+	
+	protected MySQLStatementBuilder(BiMap<String, String> cleanMap) {
+		super(cleanMap);
 	}
 
 	/*
@@ -28,6 +46,7 @@ public class MySQLStatementBuilder extends SQLStatementBuilder {
 		result.add("DROP DATABASE IF EXISTS " + databaseName);
 		result.add("CREATE DATABASE " + databaseName);
 		result.add("USE " + databaseName);
+		log.trace(result);
 		return result;
 	}
 
@@ -39,14 +58,15 @@ public class MySQLStatementBuilder extends SQLStatementBuilder {
 	public Collection<String> cleanupStatements(String databaseName) {
 		Collection<String> result = new LinkedList<>();
 		result.add("DROP DATABASE " + databaseName);
+		log.trace(result);
 		return result;
 	}
 	
 	@Override
 	protected String translateLimitConstraints(Evaluatable source, HomomorphismConstraint... constraints) {
 		for(HomomorphismConstraint c:constraints) {
-			if(c instanceof TopK) {
-				return "LIMIT " + ((TopK) c).k;
+			if(c instanceof TopKConstraint) {
+				return "LIMIT " + ((TopKConstraint) c).k;
 			}
 		}
 		return null;
@@ -57,7 +77,7 @@ public class MySQLStatementBuilder extends SQLStatementBuilder {
 	 */
 	@Override
 	public MySQLStatementBuilder clone() {
-		return new MySQLStatementBuilder();
+		return new MySQLStatementBuilder(this.cleanMap);
 	}
 
 	@Override
@@ -65,3 +85,4 @@ public class MySQLStatementBuilder extends SQLStatementBuilder {
 		return super.encodeName(name);
 	}
 }
+

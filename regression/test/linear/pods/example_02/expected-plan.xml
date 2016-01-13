@@ -3,7 +3,7 @@
 <command name="T1">
 <operator type="PROJECT">
 <outputs>
-<attribute name="c1855" type="java.lang.String"/>
+<attribute name="c11083" type="java.lang.String"/>
 </outputs>
 <project>
 <attribute name="uname" type="java.lang.String"/>
@@ -20,14 +20,14 @@
 <command name="T2">
 <operator type="CROSS_PRODUCT">
 <outputs>
-<attribute name="c1855" type="java.lang.String"/>
-<attribute name="k1858" type="java.lang.Integer"/>
+<attribute name="c11083" type="java.lang.String"/>
+<attribute name="k11086" type="java.lang.Integer"/>
 </outputs>
 <children>
 <operator type="ALIAS" name="T1"/>
 <operator type="PROJECT">
 <outputs>
-<attribute name="k1858" type="java.lang.Integer"/>
+<attribute name="k11086" type="java.lang.Integer"/>
 </outputs>
 <project>
 <attribute name="uid" type="java.lang.Integer"/>
@@ -46,19 +46,19 @@
 <command name="T3">
 <operator type="DEPENDENT_JOIN" param="0,1">
 <outputs>
-<attribute name="c1855" type="java.lang.String"/>
-<attribute name="k1858" type="java.lang.Integer"/>
-<attribute name="c1855" type="java.lang.String"/>
-<attribute name="c1856" type="java.lang.String"/>
-<attribute name="k1858" type="java.lang.Integer"/>
+<attribute name="c11083" type="java.lang.String"/>
+<attribute name="k11086" type="java.lang.Integer"/>
+<attribute name="c11083" type="java.lang.String"/>
+<attribute name="c11084" type="java.lang.String"/>
+<attribute name="k11086" type="java.lang.Integer"/>
 </outputs>
 <children>
 <operator type="ALIAS" name="T2"/>
 <operator type="PROJECT">
 <outputs>
-<attribute name="c1855" type="java.lang.String"/>
-<attribute name="c1856" type="java.lang.String"/>
-<attribute name="k1858" type="java.lang.Integer"/>
+<attribute name="c11083" type="java.lang.String"/>
+<attribute name="c11084" type="java.lang.String"/>
+<attribute name="k11086" type="java.lang.Integer"/>
 </outputs>
 <project>
 <attribute name="uname" type="java.lang.String"/>
@@ -79,32 +79,24 @@
 </operator>
 </command>
 <command name="T4">
-<operator type="PROJECT">
-<outputs>
-<attribute name="c1857" type="java.lang.String"/>
-</outputs>
-<project>
-<attribute name="c1857" type="java.lang.String"/>
-</project>
-<child>
 <operator type="DEPENDENT_JOIN" param="0,3">
 <outputs>
-<attribute name="c1855" type="java.lang.String"/>
-<attribute name="k1858" type="java.lang.Integer"/>
-<attribute name="c1855" type="java.lang.String"/>
-<attribute name="c1856" type="java.lang.String"/>
-<attribute name="k1858" type="java.lang.Integer"/>
-<attribute name="c1855" type="java.lang.String"/>
-<attribute name="c1856" type="java.lang.String"/>
-<attribute name="c1857" type="java.lang.String"/>
+<attribute name="c11083" type="java.lang.String"/>
+<attribute name="k11086" type="java.lang.Integer"/>
+<attribute name="c11083" type="java.lang.String"/>
+<attribute name="c11084" type="java.lang.String"/>
+<attribute name="k11086" type="java.lang.Integer"/>
+<attribute name="c11083" type="java.lang.String"/>
+<attribute name="c11084" type="java.lang.String"/>
+<attribute name="c11085" type="java.lang.String"/>
 </outputs>
 <children>
 <operator type="ALIAS" name="T3"/>
 <operator type="PROJECT">
 <outputs>
-<attribute name="c1855" type="java.lang.String"/>
-<attribute name="c1856" type="java.lang.String"/>
-<attribute name="c1857" type="java.lang.String"/>
+<attribute name="c11083" type="java.lang.String"/>
+<attribute name="c11084" type="java.lang.String"/>
+<attribute name="c11085" type="java.lang.String"/>
 </outputs>
 <project>
 <attribute name="uname" type="java.lang.String"/>
@@ -122,8 +114,6 @@
 </child>
 </operator>
 </children>
-</operator>
-</child>
 </operator>
 </command>
 </plan>

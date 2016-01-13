@@ -12,7 +12,7 @@ import prefuse.util.ColorMap;
 import prefuse.util.DataLib;
 import prefuse.util.MathLib;
 import prefuse.visual.VisualItem;
-import uk.ac.ox.cs.pdq.planner.linear.node.SearchNode.NodeStatus;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode.NodeStatus;
 
 /**
  * <p>

@@ -22,30 +22,33 @@ import org.jgrapht.graph.DefaultEdge;
 
 import uk.ac.ox.cs.pdq.LimitReachedException;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
+import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
-import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
+import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.linear.LinearConfiguration;
 import uk.ac.ox.cs.pdq.planner.linear.LinearUtility;
 import uk.ac.ox.cs.pdq.planner.linear.cost.BlackBoxPropagator;
 import uk.ac.ox.cs.pdq.planner.linear.cost.CostPropagator;
 import uk.ac.ox.cs.pdq.planner.linear.cost.PropagatorUtils;
 import uk.ac.ox.cs.pdq.planner.linear.cost.SimplePropagator;
-import uk.ac.ox.cs.pdq.planner.linear.equivalence.LinearEquivalenceClasses;
-import uk.ac.ox.cs.pdq.planner.linear.equivalence.LinearEquivalenceClasses.EquivalenceClass;
-import uk.ac.ox.cs.pdq.planner.linear.metadata.BestPlanMetadata;
-import uk.ac.ox.cs.pdq.planner.linear.metadata.CreationMetadata;
-import uk.ac.ox.cs.pdq.planner.linear.metadata.DominanceMetadata;
-import uk.ac.ox.cs.pdq.planner.linear.metadata.EquivalenceMetadata;
-import uk.ac.ox.cs.pdq.planner.linear.metadata.Metadata;
-import uk.ac.ox.cs.pdq.planner.linear.metadata.StatusUpdateMetadata;
-import uk.ac.ox.cs.pdq.planner.linear.node.NodeFactory;
-import uk.ac.ox.cs.pdq.planner.linear.node.SearchNode;
-import uk.ac.ox.cs.pdq.planner.linear.node.SearchNode.NodeStatus;
-import uk.ac.ox.cs.pdq.planner.linear.pruning.PostPruning;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.state.AccessibleChaseState;
-import uk.ac.ox.cs.pdq.reasoning.Match;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.NodeFactory;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode.NodeStatus;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.equivalence.PathEquivalenceClasses;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.equivalence.PathEquivalenceClasses.PathEquivalenceClass;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.BestPlanMetadata;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.CreationMetadata;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.DominanceMetadata;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.EquivalenceMetadata;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.Metadata;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.StatusUpdateMetadata;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.pruning.PostPruning;
+import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
+import uk.ac.ox.cs.pdq.reasoning.utility.Match;
 import uk.ac.ox.cs.pdq.util.IndexedDirectedGraph;
 
 import com.google.common.base.Joiner;
@@ -55,7 +58,7 @@ import com.google.common.collect.Sets;
 import com.google.common.eventbus.EventBus;
 
 /**
- * Searches the plan space employing several optimisations (like plan dominance, global dominance and global equivalence)
+ * Searches the proof space employing several optimisations heuristics
  * in order to reach faster the best plan.
  * For more information see
  * "Michael Benedikt, Balder ten Cate, Efthymia Tsamoura. Generating Low-cost Plans From Proofs"
@@ -81,7 +84,7 @@ public class LinearOptimized extends LinearExplorer {
 	private final boolean zombification;
 
 	/** Classes of equivalent configurations */
-	private LinearEquivalenceClasses equivalenceClasses = new LinearEquivalenceClasses();
+	private PathEquivalenceClasses equivalenceClasses = new PathEquivalenceClasses();
 
 	private final Queue<SearchNode> unexploredDescendants = new PriorityQueue<>(10, new Comparator<SearchNode>() {
 		@Override
@@ -93,39 +96,57 @@ public class LinearOptimized extends LinearExplorer {
 		}
 	});
 
+
 	/**
-	 *
+	 * 
 	 * @param eventBus
 	 * @param collectStats
+	 * @param query
+	 * 		The input user query
+	 * @param accessibleQuery
+	 * 		The accessible counterpart of the user query
+	 * @param schema
+	 * 		The input schema
+	 * @param accessibleSchema
+	 * 		The accessible counterpart of the input schema
+	 * @param chaser
+	 * 		Runs the chase algorithm
+	 * @param detector
+	 * 		Detects homomorphisms during chasing
 	 * @param costEstimator
-	 * 		Estimates the cost of the plans found
-	 * @param configuration The configuration of the root of the plan tree
-	 * @param nodeFactory Creates new nodes
-	 * @param depth Maximum exploration depth
+	 * 		Estimates the cost of a plan
+	 * @param nodeFactory
+	 * @param depth
 	 * @param queryMatchInterval
-	 * 		How often we check for query matches
 	 * @param postPruning
-	 * 		Performs plan post-pruning
+	 * 		Removes the redundant follow up joins and accesses from a plan
+	 * @param zombification
+	 * 		True if we wake up previously terminal nodes
 	 * @throws PlannerException
 	 */
 	public LinearOptimized(
-			EventBus eventBus, boolean collectStats,
+			EventBus eventBus, 
+			boolean collectStats,
+			Query<?> query,
+			Query<?> accessibleQuery,
+			Schema schema,
+			AccessibleSchema accessibleSchema, 
+			Chaser chaser,
+			HomomorphismDetector detector,
 			CostEstimator<LeftDeepPlan> costEstimator,
-			LinearChaseConfiguration configuration,
 			NodeFactory nodeFactory,
 			int depth,
 			int queryMatchInterval, 
 			PostPruning postPruning,
 			boolean zombification) throws PlannerException {
-		super(eventBus, collectStats, configuration, nodeFactory, depth);
-		Preconditions.checkArgument(costEstimator != null);
+		super(eventBus, collectStats, query, accessibleQuery, schema, accessibleSchema, chaser, detector, costEstimator, nodeFactory, depth);
 		this.costPropagator = PropagatorUtils.getPropagator(costEstimator);
 		this.queryMatchInterval = queryMatchInterval;
 		this.postPruning = postPruning;
 		this.zombification = zombification;
 	}
 
-	/**
+	/** 
 	 * @throws PlannerException
 	 */
 	@Override
@@ -183,7 +204,11 @@ public class LinearOptimized extends LinearExplorer {
 
 		// Create a new node from the exposed facts and add it to the plan tree
 		SearchNode freshNode = this.getNodeFactory().getInstance(selectedNode, similarCandidates);	
-
+		freshNode.getConfiguration().detectCandidates(this.accessibleSchema);
+		if (!freshNode.getConfiguration().hasCandidates()) {
+			freshNode.setStatus(NodeStatus.TERMINAL);
+		}
+		this.costEstimator.cost(freshNode.getConfiguration().getPlan());
 
 		log.info("SELECTED NODE: " + selectedNode);
 		log.info("EXPOSED CANDIDATES\t");
@@ -240,7 +265,7 @@ public class LinearOptimized extends LinearExplorer {
 
 		// Close the newly created node using the inferred accessible dependencies of the accessible schema
 		this.stats.start(MILLI_CLOSE);
-		freshNode.close();
+		freshNode.close(this.chaser, this.accessibleQuery, this.accessibleSchema.getInferredAccessibilityAxioms());
 		this.stats.stop(MILLI_CLOSE);
 
 		if (domination) {
@@ -263,7 +288,7 @@ public class LinearOptimized extends LinearExplorer {
 			if (parentEquivalent != null && !parentEquivalent.getStatus().equals(NodeStatus.SUCCESSFUL)) {
 				freshNode.setPointer(parentEquivalent);
 				if(this.zombification) {
-					EquivalenceClass equivalenceClass = this.equivalenceClasses.addEntry(parentEquivalent, freshNode);
+					PathEquivalenceClass equivalenceClass = this.equivalenceClasses.addEntry(parentEquivalent, freshNode);
 					if (this.costPropagator instanceof BlackBoxPropagator) {
 						this.wakeupDescendants(freshNode.getPathFromRoot(), equivalenceClass);
 					}
@@ -283,7 +308,7 @@ public class LinearOptimized extends LinearExplorer {
 				/* Check for query match */
 				if (this.rounds % this.queryMatchInterval == 0) {
 					this.stats.start(MILLI_QUERY_MATCH);
-					List<Match> matches = freshNode.matchesQuery();
+					List<Match> matches = freshNode.matchesQuery(this.accessibleQuery);
 					this.stats.stop(MILLI_QUERY_MATCH);
 
 					// If there exists at least one query match
@@ -304,14 +329,13 @@ public class LinearOptimized extends LinearExplorer {
 		if ((this.bestPlan == null && successfulPlan != null) || 
 				(this.bestPlan != null && successfulPlan != null && successfulPlan.getCost().lessThan(this.bestPlan.getCost()))) {
 			this.bestPlan = successfulPlan;
+			this.bestConfigurationsList = this.getConfigurations(this.costPropagator.getBestPath());
 			this.eventBus.post(this.getBestPlan());
-			this.bestProof = this.costPropagator.getBestProof(); 
-			this.eventBus.post(this.bestProof);
 		
 			if(this.postPruning != null && !this.prunedPaths.contains(this.costPropagator.getBestPath())) {
 				this.prunedPaths.add(this.costPropagator.getBestPath());
 				List<SearchNode> path = LinearUtility.createPath(this.planTree, this.costPropagator.getBestPath());
-				List<Predicate> queryFacts = freshNode.getConfiguration().getQuery().ground(match.getMapping()).getPredicates();
+				List<Predicate> queryFacts = this.accessibleQuery.ground(match.getMapping()).getPredicates();
 				boolean isPruned = this.postPruning.prune(this.planTree.getRoot(), path, queryFacts);
 				if(isPruned) {
 					this.postPruning.addPrunedPathToTree(this.planTree, this.planTree.getRoot(), this.postPruning.getPath());
@@ -321,16 +345,16 @@ public class LinearOptimized extends LinearExplorer {
 					if ((this.bestPlan == null && successfulPlan != null) || 
 							(this.bestPlan != null && successfulPlan != null && successfulPlan.getCost().lessThan(this.bestPlan.getCost()))) {
 						this.bestPlan = successfulPlan;
+						this.bestConfigurationsList = this.getConfigurations(this.costPropagator.getBestPath());
 						this.eventBus.post(this.getBestPlan());
-						this.bestProof = this.costPropagator.getBestProof(); 
-						this.eventBus.post(this.bestProof);
 					}
 					this.prunedPaths.add(this.costPropagator.getBestPath());
 				}
 			}
 			log.trace("\t+++BEST PLAN: " + this.bestPlan.getAccesses() + " " + this.bestPlan.getCost());
 
-			BestPlanMetadata successMetadata = new BestPlanMetadata(parentNode, this.bestPlan, this.bestProof, this.costPropagator.getBestPath(), this.getElapsedTime());
+			BestPlanMetadata successMetadata = new BestPlanMetadata(parentNode, this.bestPlan, this.costPropagator.getBestPath(), 
+					this.bestConfigurationsList, this.getElapsedTime());
 			freshNode.setMetadata(successMetadata);
 			this.eventBus.post(freshNode);
 		}
@@ -344,12 +368,12 @@ public class LinearOptimized extends LinearExplorer {
 			|| (this.bestPlan != null && successfulPlan != null 
 				&& successfulPlan.getCost().lessThan(this.bestPlan.getCost()))) {
 			this.bestPlan = successfulPlan;
+			this.bestConfigurationsList = this.getConfigurations(this.costPropagator.getBestPath());
 			this.eventBus.post(this.getBestPlan());
-			this.bestProof = this.costPropagator.getBestProof(); 
-			this.eventBus.post(this.bestProof);
 			log.trace("\t+++BEST PLAN: " + this.bestPlan.getAccesses() + " " + this.bestPlan.getCost());
 
-			BestPlanMetadata successMetadata = new BestPlanMetadata(parentNode, this.bestPlan, this.bestProof, this.costPropagator.getBestPath(), this.getElapsedTime());
+			BestPlanMetadata successMetadata = new BestPlanMetadata(parentNode, this.bestPlan, this.costPropagator.getBestPath(), 
+					this.bestConfigurationsList, this.getElapsedTime());
 			freshNode.setMetadata(successMetadata);
 			this.eventBus.post(freshNode);
 		}
@@ -366,7 +390,7 @@ public class LinearOptimized extends LinearExplorer {
 	 * @param equivalenceClass
 	 * @throws PlannerException
 	 */
-	private void wakeupDescendants(List<Integer> path, EquivalenceClass equivalenceClass) 
+	private void wakeupDescendants(List<Integer> path, PathEquivalenceClass equivalenceClass) 
 			throws PlannerException, LimitReachedException  {
 		this.wakeupDescendants(path, equivalenceClass, Sets.<List<Integer>>newHashSet());
 	}
@@ -377,7 +401,7 @@ public class LinearOptimized extends LinearExplorer {
 	 * @param visitedPaths Set<List<Integer>>
 	 * @throws PlannerException
 	 */
-	private void wakeupDescendants(List<Integer> path, EquivalenceClass equivalenceClass, 
+	private void wakeupDescendants(List<Integer> path, PathEquivalenceClass equivalenceClass, 
 			Set<List<Integer>> visitedPaths)
 					throws PlannerException, LimitReachedException  {
 		List<Integer> representativePath = equivalenceClass.getRepresentativePath();
@@ -386,7 +410,7 @@ public class LinearOptimized extends LinearExplorer {
 
 			List<Integer> pathFromRoot = deadDescendant.getPathFromRoot();
 			List<Integer> equivalencePath = this.createPath(representativePath, path, pathFromRoot);
-			LeftDeepPlan equivalencePlan = PropagatorUtils.createLinearPlan(this.planTree, equivalencePath, this.costPropagator.getCostEstimator(), true);
+			LeftDeepPlan equivalencePlan = PropagatorUtils.createLeftDeepPlan(this.planTree, equivalencePath, this.costPropagator.getCostEstimator());
 
 			if(equivalencePlan.getCost().lessThan(deadDescendant.getBestPlanFromRoot().getCost())) {
 				deadDescendant.setBestPathFromRoot(equivalencePath);
@@ -397,7 +421,7 @@ public class LinearOptimized extends LinearExplorer {
 					(this.bestPlan != null && equivalencePlan.getCost().lessThan(this.bestPlan.getCost()))	) {
 
 				this.stats.start(MILLI_QUERY_MATCH);
-				List<Match> matches = deadDescendant.matchesQuery();
+				List<Match> matches = deadDescendant.matchesQuery(this.accessibleQuery);
 				this.stats.stop(MILLI_QUERY_MATCH);
 
 				SearchNode parent = this.planTree.getParent(deadDescendant);
@@ -419,8 +443,8 @@ public class LinearOptimized extends LinearExplorer {
 		for(List<Integer> otherPath:otherPaths) {
 			if(!visitedPaths.contains(otherPath)) {
 				visitedPaths.add(otherPath);
-				List<Entry<EquivalenceClass, List<Integer>>> isPrefixOf = this.equivalenceClasses.isPrefixOf(otherPath);
-				for(Entry<EquivalenceClass, List<Integer>> entry:isPrefixOf) {
+				List<Entry<PathEquivalenceClass, List<Integer>>> isPrefixOf = this.equivalenceClasses.isPrefixOf(otherPath);
+				for(Entry<PathEquivalenceClass, List<Integer>> entry:isPrefixOf) {
 					if(!entry.getKey().equals(equivalenceClass)) {
 						List<Integer> existingPath = entry.getValue();
 						List<Integer> outputPath = this.createPath(otherPath, path, existingPath);

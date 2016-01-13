@@ -6,7 +6,7 @@ import java.io.IOException;
 
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.io.xml.DAGPlanReader;
-import uk.ac.ox.cs.pdq.io.xml.LinearPlanReader;
+import uk.ac.ox.cs.pdq.io.xml.LeftDeepPlanReader;
 import uk.ac.ox.cs.pdq.plan.Plan;
 
 /**
@@ -27,7 +27,7 @@ public class CostEstimatorTest {
 				BufferedInputStream bis = new BufferedInputStream(pis)) {
 			try {
 				bis.mark(1024);
-				return new LinearPlanReader(schema).read(bis); 
+				return new LeftDeepPlanReader(schema).read(bis); 
 			} catch (Exception re) {
 				bis.reset();
 			}

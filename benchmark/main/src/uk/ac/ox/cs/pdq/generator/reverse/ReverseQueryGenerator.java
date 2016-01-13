@@ -14,15 +14,12 @@ import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.io.xml.QueryReader;
 import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
-import uk.ac.ox.cs.pdq.planner.db.access.AccessibleSchema;
+import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.reasoning.ReasonerFactory;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.ExtendedBagFactory;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.state.AccessibleChaseState;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.state.DatabaseListState;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.state.DatabaseTreeState;
+import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState;
+import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleDatabaseListState;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters.ReasoningTypes;
-import uk.ac.ox.cs.pdq.reasoning.chase.BagsTree;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
@@ -84,10 +81,8 @@ public class ReverseQueryGenerator implements Runnable {
 				new HomomorphismManagerFactory().getInstance(accessibleSchema, reasoningParams)) {
 				
 				detector.addQuery(accessibleQuery);
-				AccessibleChaseState state = reasoningParams.getReasoningType().equals(ReasoningTypes.BLOCKING_CHASE) == true ?
-				(uk.ac.ox.cs.pdq.planner.reasoning.chase.state.AccessibleChaseState) new DatabaseTreeState(query, accessibleSchema, (DBHomomorphismManager) detector) : 
-				(uk.ac.ox.cs.pdq.planner.reasoning.chase.state.AccessibleChaseState) new DatabaseListState(query, accessibleSchema, (DBHomomorphismManager) detector);
-				BagsTree.setBagFactory(new ExtendedBagFactory(accessibleSchema, accessibleQuery));
+				AccessibleChaseState state =  
+				(uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState) new AccessibleDatabaseListState(query, accessibleSchema, (DBHomomorphismManager) detector);
 				
 				log.info("Phase 1");
 				reasoner.reasonUntilTermination(state, accessibleQuery, this.schema.getDependencies());

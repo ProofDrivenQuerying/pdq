@@ -11,23 +11,27 @@ import org.jgrapht.graph.DefaultEdge;
 
 import uk.ac.ox.cs.pdq.LimitReachedException;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
-import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
+import uk.ac.ox.cs.pdq.db.Schema;
+import uk.ac.ox.cs.pdq.fol.Query;
+import uk.ac.ox.cs.pdq.plan.LeftDeepPlan; 
 import uk.ac.ox.cs.pdq.planner.PlannerException;
-import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
+import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.linear.LinearConfiguration;
-import uk.ac.ox.cs.pdq.planner.linear.metadata.BestPlanMetadata;
-import uk.ac.ox.cs.pdq.planner.linear.metadata.CreationMetadata;
-import uk.ac.ox.cs.pdq.planner.linear.metadata.Metadata;
-import uk.ac.ox.cs.pdq.planner.linear.node.NodeFactory;
-import uk.ac.ox.cs.pdq.planner.linear.node.SearchNode;
-import uk.ac.ox.cs.pdq.planner.linear.node.SearchNode.NodeStatus;
-import uk.ac.ox.cs.pdq.reasoning.Match;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.NodeFactory;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode.NodeStatus;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.BestPlanMetadata;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.CreationMetadata;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.Metadata;
+import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
+import uk.ac.ox.cs.pdq.reasoning.utility.Match;
 
 import com.google.common.eventbus.EventBus;
 
 
 /**
- * Exhaustively searches the plan space
+ * Exhaustively searches the proof space
  * For more information see
  * "Michael Benedikt, Balder ten Cate, Efthymia Tsamoura. Generating Low-cost Plans From Proofs"
  *
@@ -38,24 +42,42 @@ public class LinearGeneric extends LinearExplorer {
 	/** Logger. */
 	private static Logger log = Logger.getLogger(LinearGeneric.class);
 
+
 	/**
 	 * 
 	 * @param eventBus
 	 * @param collectStats
-	 * @param costEstimator Estimates the cost of the plans found
-	 * @param configuration The configuration of the root of the plan tree
-	 * @param nodeFactory Creates new nodes
-	 * @param depth Maximum exploration depth
+	 * @param query
+	 * 		The input user query
+	 * @param accessibleQuery
+	 * 		The accessible counterpart of the user query
+	 * @param schema
+	 * 		The input schema
+	 * @param accessibleSchema
+	 * 		The accessible counterpart of the input schema
+	 * @param chaser
+	 * 		Runs the chase algorithm
+	 * @param detector
+	 * 		Detects homomorphisms during chasing
+	 * @param costEstimator
+	 * 		Estimates the cost of a plan
+	 * @param nodeFactory
+	 * @param depth
 	 * @throws PlannerException
 	 */
 	public LinearGeneric(
-			EventBus eventBus, boolean collectStats,
+			EventBus eventBus, 
+			boolean collectStats,
+			Query<?> query,
+			Query<?> accessibleQuery,
+			Schema schema,
+			AccessibleSchema accessibleSchema, 
+			Chaser chaser,
+			HomomorphismDetector detector,
 			CostEstimator<LeftDeepPlan> costEstimator,
-			LinearChaseConfiguration configuration,
 			NodeFactory nodeFactory,
 			int depth) throws PlannerException {
-		super(eventBus, collectStats, 
-				configuration, nodeFactory, depth);
+		super(eventBus, collectStats, query, accessibleQuery, schema, accessibleSchema, chaser, detector, costEstimator, nodeFactory, depth);
 	}
 
 	/**
@@ -89,22 +111,27 @@ public class LinearGeneric extends LinearExplorer {
 
 		// Create a new node from the exposed facts and add it to the plan tree
 		SearchNode freshNode = this.getNodeFactory().getInstance(selectedNode, similarCandidates);
+		freshNode.getConfiguration().detectCandidates(this.accessibleSchema);
+		if (!freshNode.getConfiguration().hasCandidates()) {
+			freshNode.setStatus(NodeStatus.TERMINAL);
+		}
+		this.costEstimator.cost(freshNode.getConfiguration().getPlan());
+		
 		this.stats.start(MILLI_CLOSE);
-		freshNode.close();
+		freshNode.close(this.chaser, this.accessibleQuery, this.accessibleSchema.getInferredAccessibilityAxioms());
 		this.stats.stop(MILLI_CLOSE);
 		
 		Metadata metadata = new CreationMetadata(selectedNode, this.getElapsedTime());
 		freshNode.setMetadata(metadata);
 		this.eventBus.post(freshNode);
-
+		
 
 		this.planTree.addVertex(freshNode);
 		this.planTree.addEdge(selectedNode, freshNode, new DefaultEdge());
 
-
 		// Check for query match
 		this.stats.start(MILLI_QUERY_MATCH);
-		List<Match> matches = freshNode.matchesQuery();//this.getAccessibleQuery(), this.getQuery().getFreeToCanonical()
+		List<Match> matches = freshNode.matchesQuery(this.accessibleQuery);
 		this.stats.stop(MILLI_QUERY_MATCH);
 
 		// If there exists at least one query match
@@ -115,12 +142,10 @@ public class LinearGeneric extends LinearExplorer {
 			// Update the best plan found so far
 			if (this.bestPlan == null || (this.bestPlan != null && successfulPlan.getCost().lessThan(this.bestPlan.getCost()))) {
 				this.bestPlan = successfulPlan;
-				
+				this.bestConfigurationsList = this.getConfigurations(freshNode.getBestPathFromRoot());
 				this.eventBus.post(freshNode.getConfiguration().getPlan());
-				this.bestProof = freshNode.getConfiguration().getProof();
-				this.eventBus.post(this.bestProof);
-				
-				metadata = new BestPlanMetadata(selectedNode, this.bestPlan, this.bestProof, freshNode.getBestPathFromRoot(), this.getElapsedTime());
+				metadata = new BestPlanMetadata(selectedNode, this.bestPlan, freshNode.getBestPathFromRoot(), 
+						this.bestConfigurationsList, this.getElapsedTime());
 				freshNode.setMetadata(metadata);
 				this.eventBus.post(freshNode);
 			}

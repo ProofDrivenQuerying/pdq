@@ -44,7 +44,17 @@ public class TuplePrinter implements EventHandler {
 	@Subscribe
 	public void print(Tuple tuple) {
 		if (this.out != null) {
-			this.out.println(String.valueOf(tuple));
+			//this.out.println(String.valueOf(tuple));
+			String s = "";
+			int i = 0;
+			for(Object value:tuple.getValues()) {
+				s += value==null ? "": value.toString();
+				if(i < tuple.size() - 1) {
+					s += "£";
+				}
+				i++;
+			}
+			this.out.println(s);
 		} else {
 			log.info(tuple);
 		}

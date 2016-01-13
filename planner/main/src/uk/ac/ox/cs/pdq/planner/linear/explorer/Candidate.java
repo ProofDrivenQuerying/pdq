@@ -10,16 +10,21 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
-import uk.ac.ox.cs.pdq.planner.db.access.AccessibleSchema;
-import uk.ac.ox.cs.pdq.planner.db.access.AccessibilityAxiom;
+import uk.ac.ox.cs.pdq.planner.accessible.AccessibilityAxiom;
+import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.util.PlannerUtility;
-import uk.ac.ox.cs.pdq.reasoning.Match;
+import uk.ac.ox.cs.pdq.reasoning.utility.Match;
 
 import com.google.common.collect.Lists;
 
 
 /**
- * A candidate fact
+ * Informally, a fact is candidate for exposure if all its input chase constants are already accessible. 
+ * The formal definition of candidate facts is given below:
+ * 	A fact R(c1, ..., cm) in a linear configuration v is a candidate for exposure in v 
+ * 	if AccessedR(c1, ..., cm) is not yet in v and and there is an access
+	method mt on R with input positions j1, ..., jm such that
+	accessible(c_{j_1}), ..., accessible(c_{j_m}) all hold in v.
  * @author Efthymia Tsamoura
  *
  */
@@ -29,11 +34,13 @@ public class Candidate implements Cloneable{
 	 *  e.g., the grounding of its variables to constants */
 	private final Match match;
 
+	/** The accessible counterpart of the input schema **/
 	private final AccessibleSchema accessibleSchema;
 
+	/** The axiom that will be fired given this candidate fact**/
 	private final AccessibilityAxiom rule;
 
-	/** The fact*/
+	/** The fact itself*/
 	private final Predicate fact;
 
 	/** Input constants */
@@ -49,9 +56,13 @@ public class Candidate implements Cloneable{
 	/**
 	 * Constructor for Candidate.
 	 * @param accessibleSchema AccessibleSchema
+	 * 		The accessible counterpart of the input schema
 	 * @param rule AccessibilityAxiom
-	 * @param fact PredicateFormula
+	 * 		The axiom that will be fired given this candidate fact
+	 * @param fact Predicate
+	 * 		The fact itself
 	 * @param matching Matching
+	 * 		Keeps information relevant to the exposed fact
 	 */
 	public Candidate(AccessibleSchema accessibleSchema, AccessibilityAxiom rule, Predicate fact, Match matching) {
 		this.accessibleSchema = accessibleSchema;
@@ -140,7 +151,7 @@ public class Candidate implements Cloneable{
 	/**
 	 * @return AccessMethod
 	 */
-	public AccessMethod getBinding() {
+	public AccessMethod getAccessMethod() {
 		return this.rule.getAccessMethod();
 	}
 

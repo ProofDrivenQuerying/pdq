@@ -13,7 +13,7 @@ import prefuse.controls.ControlAdapter;
 import prefuse.visual.EdgeItem;
 import prefuse.visual.NodeItem;
 import prefuse.visual.VisualItem;
-import uk.ac.ox.cs.pdq.planner.linear.node.SearchNode;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
 import uk.ac.ox.cs.pdq.ui.prefuse.popups.EdgePropertiesDialog;
 import uk.ac.ox.cs.pdq.ui.prefuse.popups.NodeMenu;
 import uk.ac.ox.cs.pdq.ui.prefuse.types.EdgeTypes;

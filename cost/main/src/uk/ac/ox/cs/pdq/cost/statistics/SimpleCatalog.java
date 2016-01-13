@@ -6,6 +6,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -32,6 +34,7 @@ import uk.ac.ox.cs.pdq.plan.CommandToTGDTranslator;
 
 
 
+
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
@@ -46,10 +49,11 @@ public class SimpleCatalog implements Catalog{
 
 	/** Logger. */
 	private static Logger log = Logger.getLogger(SimpleCatalog.class);
-
-	public static double DEFAULT_EQUIJOIN_SELECTIVITY = 0.001;
+	
+	public static double DEFAULT_ATTRIBUTE_EQUALITY_SELECTIVITY = 0.1;
 
 	private static int DEFAULT_CARDINALITY = 1000000;
+	private static double DEFAULT_QUALITY = 0.0;
 	private static int DEFAULT_COLUMN_CARDINALITY = 1000;
 	private static double DEFAULT_COST = 1.0;
 	private static String CATALOG_FILE_NAME = "catalog/catalog.properties";
@@ -59,6 +63,7 @@ public class SimpleCatalog implements Catalog{
 	private static String READ_COLUMN_SELECTIVITY = "^(RE:(\\w+)(\\s+)AT:(\\w+)(\\s+)SE:(\\d+(\\.\\d+)?))";
 	private static String READ_ERSPI = "^(RE:(\\w+)(\\s+)BI:(\\w+)(\\s+)ERSPI:(\\d+(\\.\\d+)?))";
 	private static String READ_COST = "^(RE:(\\w+)(\\s+)BI:(\\w+)(\\s+)RT:(\\d+(\\.\\d+)?))";
+	private static String READ_SQLSERVERHISTOGRAM = "^(RE:(\\w+)(\\s+)AT:(\\w+)(\\s+)SQLH:(([a-zA-Z]:)?(\\\\[a-zA-Z0-9._-]+)+\\\\?))";
 
 	/** Cardinalities of the schema relations*/
 	private final Map<Relation,Integer> cardinalities;
@@ -71,17 +76,19 @@ public class SimpleCatalog implements Catalog{
 	/** The selectivity of each attribute*/
 	private final Map<Pair<Relation,Attribute>,Double> columnSelectivity;
 	/** The frequency histogram of each attribute*/
-	private final Map<Pair<Relation,Attribute>, Histogram> histograms;
+	private final Map<Pair<Relation,Attribute>, SimpleFrequencyMap> frequencyMaps;
+	/** The SQL Server histograms of each attribute*/
+	private final Map<Pair<Relation,Attribute>, SQLServerHistogram> SQLServerHistograms;
 	/** 
 	 * The queries correspond to cardinality expressions. 
 	 * This structure maps cardinality queries to its size. 
 	 * This implementation keeps only cardinality expressions coming from single relations-single attribute.*/
 	private final Map<Query<?>,Integer> queries; 
-
+	/** The schema of the input database */
 	private final Schema schema;
 
 	/**
-	 * 
+	 * Creates a catalog by loading metadata located at "catalog/catalog.properties"
 	 * @param schema
 	 */
 	public SimpleCatalog(Schema schema) {
@@ -89,7 +96,7 @@ public class SimpleCatalog implements Catalog{
 	}
 
 	/**
-	 * 
+	 * Creates a catalog by loading schema metadata located at the input file
 	 * @param schema
 	 * @param fileName
 	 */
@@ -101,12 +108,13 @@ public class SimpleCatalog implements Catalog{
 		this.columnSelectivity = new HashMap<>();
 		this.cardinalities = new HashMap<>();
 		this.columnCardinalities = new HashMap<>();
-		this.histograms = new HashMap<>();
+		this.frequencyMaps = new HashMap<>();
+		this.SQLServerHistograms = new HashMap<>();
 		this.read(schema, fileName);
 		this.queries = SimpleCatalog.getQueries(this.columnCardinalities);
-		this.queries.putAll(SimpleCatalog.getQueriesFromHistograms(this.histograms));
+		this.queries.putAll(SimpleCatalog.getQueriesFromHistograms(this.frequencyMaps));
 	}
-	
+
 	/**
 	 * 
 	 * @param columnCardinalities
@@ -123,19 +131,19 @@ public class SimpleCatalog implements Catalog{
 		}
 		return ret;
 	}
-	
+
 	/**
 	 * 
 	 * @param columnCardinalities
 	 * @return
 	 * 		query expressions for the input set of histograms
 	 */
-	private static Map<Query<?>,Integer> getQueriesFromHistograms(Map<Pair<Relation,Attribute>, Histogram> histograms) {
+	private static Map<Query<?>,Integer> getQueriesFromHistograms(Map<Pair<Relation,Attribute>, SimpleFrequencyMap> histograms) {
 		Map<Query<?>,Integer> ret = Maps.newHashMap();
-		for(Entry<Pair<Relation, Attribute>, Histogram> entry:histograms.entrySet()) {
+		for(Entry<Pair<Relation, Attribute>, SimpleFrequencyMap> entry:histograms.entrySet()) {
 			Relation relation = entry.getKey().getLeft();
 			Attribute attribute = entry.getKey().getRight();
-			Histogram histogram = entry.getValue();
+			SimpleFrequencyMap histogram = entry.getValue();
 			for(Entry<String, Integer> frequency:histogram.getFrequencies().entrySet()) {
 				Map<Attribute, TypedConstant> constantsMap = new HashMap<>();
 				constantsMap.put(attribute, new TypedConstant(frequency.getKey()));
@@ -287,9 +295,34 @@ public class SimpleCatalog implements Catalog{
 			return;
 		}
 
-		Histogram h = Histogram.build(schema, line);
+		SimpleFrequencyMap h = SimpleFrequencyMap.build(schema, line);
 		if(h != null) {
-			this.histograms.put(Pair.of(h.getRelation(), h.getAttibute()), h);
+			this.frequencyMaps.put(Pair.of(h.getRelation(), h.getAttibute()), h);
+			return;
+		}
+		
+		
+		p = Pattern.compile(READ_SQLSERVERHISTOGRAM);
+		m = p.matcher(line);
+		if (m.find()) {
+			String relation = m.group(2);
+			String column = m.group(4);
+			String histogramFile = m.group(6);
+			if(schema.contains(relation)) {
+				Relation r = schema.getRelation(relation);
+				if(r.getAttribute(column) != null) {
+					Attribute attribute = r.getAttribute(column);
+					SQLServerHistogram histogram = SQLServerHistogramLoader.load(attribute.getType(), histogramFile);
+					this.SQLServerHistograms.put(Pair.of(r, attribute), histogram);
+					log.info("RELATION: " + relation + " ATTRIBUTE: " + attribute + " Histogram file: " + histogramFile);
+				}
+				else {
+					throw new java.lang.IllegalArgumentException();
+				}
+			}
+			else {
+				throw new java.lang.IllegalArgumentException();
+			}
 			return;
 		}
 
@@ -306,26 +339,45 @@ public class SimpleCatalog implements Catalog{
 	private SimpleCatalog(Schema schema, Map<Relation,Integer> cardinalities, Map<Pair<Relation,AccessMethod>,Integer> erpsi, Map<Pair<Relation,AccessMethod>,Double> responseTimes,
 			Map<Pair<Relation,Attribute>,Double> columnSelectivity, Map<Pair<Relation,Attribute>,Integer> columnCardinalities, 
 			Map<Query<?>,Integer> queries,
-			Map<Pair<Relation,Attribute>, Histogram> histograms) {
+			Map<Pair<Relation,Attribute>, SimpleFrequencyMap> frequencyMaps,
+			Map<Pair<Relation,Attribute>, SQLServerHistogram> SQLServerHistograms
+			) {
 		Preconditions.checkNotNull(schema);
 		Preconditions.checkNotNull(cardinalities);
 		Preconditions.checkNotNull(erpsi);
 		Preconditions.checkNotNull(responseTimes);
 		Preconditions.checkNotNull(columnSelectivity);
 		Preconditions.checkNotNull(columnCardinalities);
-		Preconditions.checkNotNull(histograms);
+		Preconditions.checkNotNull(frequencyMaps);
+		Preconditions.checkNotNull(SQLServerHistograms);
 		this.schema = schema;
 		this.cardinalities = Maps.newHashMap(cardinalities);
 		this.erpsi = Maps.newHashMap(erpsi);
 		this.costs = Maps.newHashMap(responseTimes);
 		this.columnSelectivity = Maps.newHashMap(columnSelectivity);
 		this.columnCardinalities = Maps.newHashMap(columnCardinalities);
-		this.histograms = Maps.newHashMap(histograms);
+		this.frequencyMaps = Maps.newHashMap(frequencyMaps);
+		this.SQLServerHistograms = Maps.newHashMap(SQLServerHistograms);
 		this.queries = Maps.newHashMap(queries);
 	}
 
 	public Double getSelectivity(Relation relation, Attribute attribute, TypedConstant<?> constant) {
-		return null;
+		Preconditions.checkNotNull(relation);
+		Preconditions.checkNotNull(attribute);
+		Preconditions.checkNotNull(constant);
+
+		SimpleFrequencyMap histogram = this.frequencyMaps.get(Pair.of(relation, attribute));
+		String search = constant.toString();
+		if(constant.getType() instanceof Class && BigDecimal.class.isAssignableFrom((Class) constant.getType())) {
+			BigInteger integer = new BigDecimal(constant.toString()).toBigInteger();
+			search = integer.toString();
+		}
+		if(histogram != null && histogram.getFrequency(search) != null) {
+			int erpsi = histogram.getFrequency(search);
+			log.info("RELATION: " + relation.getName() + " ATTRIBUTE: " + attribute + " CONSTANTS: " + constant);
+			return (double)erpsi/this.getCardinality(relation);
+		}
+		return this.getSelectivity(relation, attribute);
 	}
 
 	public double getSelectivity(Relation relation, Attribute attribute) {
@@ -401,7 +453,7 @@ public class SimpleCatalog implements Catalog{
 		Preconditions.checkNotNull(inputs);
 		if(inputs.size() == 1 && method.getZeroBasedInputs().size() == 1) {
 			Attribute attribute = relation.getAttribute(method.getZeroBasedInputs().get(0));
-			Histogram histogram = this.histograms.get(Pair.of(relation, attribute));
+			SimpleFrequencyMap histogram = this.frequencyMaps.get(Pair.of(relation, attribute));
 			if(histogram != null && histogram.getFrequency(inputs.get(0).toString()) != null) {
 				int erpsi = histogram.getFrequency(inputs.get(0).toString());
 				log.info("RELATION: " + relation.getName() + " ACCESS: " + method + " INPUTS: " + inputs + " ERPSI: " + erpsi);
@@ -430,7 +482,7 @@ public class SimpleCatalog implements Catalog{
 		log.info("RELATION: " + relation.getName() + " ATTRIBUTE: " + attribute + " CARDINALITY: " + DEFAULT_COLUMN_CARDINALITY);
 		return DEFAULT_COLUMN_CARDINALITY;
 	}
-	
+
 	@Override
 	public double getCost(Relation relation, AccessMethod method) {
 		Preconditions.checkNotNull(relation);		
@@ -446,7 +498,7 @@ public class SimpleCatalog implements Catalog{
 		double erpsi = -1;
 		if(inputs.size() == 1) {
 			Attribute attribute = relation.getAttribute(method.getZeroBasedInputs().get(0));
-			Histogram histogram = this.histograms.get(Pair.of(relation, attribute));
+			SimpleFrequencyMap histogram = this.frequencyMaps.get(Pair.of(relation, attribute));
 			if(histogram != null && histogram.getFrequency(inputs.get(0).toString()) != null) {
 				erpsi = histogram.getFrequency(inputs.get(0).toString());
 				log.info("RELATION: " + relation.getName() + " ACCESS: " + method + " INPUTS: " + inputs + " ERPSI: " + erpsi);
@@ -460,49 +512,62 @@ public class SimpleCatalog implements Catalog{
 		log.info("RELATION: " + relation.getName() + " ACCESS METHOD: " + method + " COST: " + cost);
 		return erpsi > 0 ? erpsi * cost : cost;
 	}
-	
 
 	@Override
-	public Collection<Query<?>> getExpressions() {
+	public Collection<Query<?>> getStatisticsExpressions() {
 		return this.queries.keySet();
-	}
-
-	@Override
-	public int size(Query<?> query) {
-		Preconditions.checkNotNull(this.queries.get(query), "Undentified input query");
-		return this.queries.get(query);
 	}
 
 	@Override
 	public SimpleCatalog clone() {
 		return new SimpleCatalog(this.schema, this.cardinalities, this.erpsi, this.costs, this.columnSelectivity, 
-				this.columnCardinalities, this.queries, this.histograms);
+				this.columnCardinalities, this.queries, this.frequencyMaps, this.SQLServerHistograms);
 	}
+
+	@Override
+	public double getQuality(Relation relation) {
+		return DEFAULT_QUALITY;
+	}
+	
+	public SQLServerHistogram getSQLServerHistogram(Relation relation, Attribute attribute) {
+		Preconditions.checkNotNull(relation);
+		Preconditions.checkNotNull(attribute);
+		return this.SQLServerHistograms.get(Pair.of(relation, attribute));
+	}
+	
+	@Override
+	public Histogram getHistogram(Relation relation, Attribute attribute) {
+		Preconditions.checkNotNull(relation);
+		Preconditions.checkNotNull(attribute);
+		return this.SQLServerHistograms.get(Pair.of(relation, attribute));
+	}
+
 	/**
+	 * Frequency histograms.
 	 * @author Efthymia Tsamoura
 	 *
 	 */
-	private static class Histogram {
+	private static class SimpleFrequencyMap {
 
 		private static String READ_RELATION_COLUMN = "^(RE:(\\w+)(\\s+)AT:(\\w+)(\\s+)HH:)";
 		/** Reads single-word constants **/
 		private static String READ_BINS = "(\\(VA:(\\w+)(\\s+)FR:(\\d+)\\))+";
 		/** Reads two-word constants **/
 		private static String READ_BINS_ALT = "(\\(VA:(\\w+)(\\s+)(\\w+)(\\s+)FR:(\\d+)\\))+";
-		
+
 		private final Relation relation;
 		private final Attribute attibute;
 		private final Map<String,Integer> frequencies;
 
-		private Histogram(Relation relation, Attribute attibute, Map<String,Integer> values) {
+		private SimpleFrequencyMap(Relation relation, Attribute attibute, Map<String,Integer> values) {
 			this.relation = relation;
 			this.attibute = attibute;
 			this.frequencies = values;
 		}
 
-		public static Histogram build(Schema schema, String histogram) {			
+		public static SimpleFrequencyMap build(Schema schema, String histogram) {			
 			Triple<Relation, Attribute, Map<String, Integer>> h = parse(schema, histogram);
-			return h == null ? null : new Histogram(h.getLeft(), h.getMiddle(), h.getRight());			
+			return h == null ? null : new SimpleFrequencyMap(h.getLeft(), h.getMiddle(), h.getRight());			
 		}
 
 		private static Triple<Relation,Attribute,Map<String,Integer>> parse(Schema schema, String histogram) {
@@ -558,7 +623,7 @@ public class SimpleCatalog implements Catalog{
 			Preconditions.checkNotNull(this.frequencies.get(entry));
 			return this.frequencies.get(entry);
 		}
-		
+
 		public Map<String, Integer> getFrequencies() {
 			return this.frequencies;
 		}
@@ -580,7 +645,7 @@ public class SimpleCatalog implements Catalog{
 	@Override
 	public String toString() {
 		return new String(
-						"\n============RELATION CARDINALITIES==========\n" + 
+				"\n============RELATION CARDINALITIES==========\n" + 
 						Joiner.on("\n").join(this.cardinalities.entrySet()) + 
 
 						"\n============COLUMN CARDINALITIES============\n" + 
@@ -596,7 +661,7 @@ public class SimpleCatalog implements Catalog{
 						Joiner.on("\n").join(this.columnSelectivity.entrySet()) +
 
 						"\n==============COLUMN HISTOGRAMS=============\n" + 
-						Joiner.on("\n").join(this.histograms.entrySet()) );
+						Joiner.on("\n").join(this.frequencyMaps.entrySet()) );
 	}
 
 	public static void main(String... args) {
@@ -627,5 +692,4 @@ public class SimpleCatalog implements Catalog{
 			System.exit(-1);
 		}
 	}
-
 }

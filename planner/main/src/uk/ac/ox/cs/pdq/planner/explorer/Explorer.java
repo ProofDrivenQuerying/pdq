@@ -8,7 +8,6 @@ import uk.ac.ox.cs.pdq.LimitReachedException.Reasons;
 import uk.ac.ox.cs.pdq.logging.performance.StatisticsCollector;
 import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
-import uk.ac.ox.cs.pdq.planner.reasoning.Proof;
 
 import com.google.common.base.Preconditions;
 import com.google.common.eventbus.EventBus;
@@ -25,10 +24,7 @@ public abstract class Explorer<P extends Plan> {
 
 	/** The best plan*/
 	protected P bestPlan = null;
-
-	/** The proof of the best plan*/
-	protected Proof bestProof = null;
-
+	
 	/** If true then the explorer must terminate immediately */
 	protected boolean forcedTermination = false;
 
@@ -74,7 +70,6 @@ public abstract class Explorer<P extends Plan> {
 	 *
 	 * @throws PlannerException
 	 * @throws LimitReachedException
-	 * @throws ProofEvent An event that logs the best plan's proof
 	 */
 	public void explore() throws PlannerException, LimitReachedException {
 		this.tick = System.nanoTime();
@@ -144,13 +139,6 @@ public abstract class Explorer<P extends Plan> {
 	 */
 	public P getBestPlan() {
 		return this.bestPlan;
-	}
-
-	/**
-	 * @return Proof
-	 */
-	public Proof getBestProof() {
-		return this.bestProof;
 	}
 
 	/**

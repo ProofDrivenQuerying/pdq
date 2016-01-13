@@ -9,9 +9,9 @@ import org.jgrapht.graph.DefaultEdge;
 
 import uk.ac.ox.cs.pdq.cost.estimators.BlackBoxCostEstimator;
 import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
-import uk.ac.ox.cs.pdq.planner.linear.node.BlackBoxNode;
-import uk.ac.ox.cs.pdq.planner.linear.node.PlanTree;
-import uk.ac.ox.cs.pdq.planner.linear.node.SearchNode.NodeStatus;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.BlackBoxNode;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.PlanTree;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode.NodeStatus;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
@@ -102,16 +102,15 @@ public class BlackBoxPropagator extends CostPropagator<BlackBoxNode> {
 			Set<List<Integer>> paths = node.getPathsToSuccess();
 			if (paths != null) {
 				for (List<Integer> path:paths) {
-					LeftDeepPlan plan = PropagatorUtils.createLinearPlan(planTree, path, this.costEstimator, true);
+					LeftDeepPlan plan = PropagatorUtils.createLeftDeepPlan(planTree, path, this.costEstimator);
 					Preconditions.checkState(plan != null);
 					if (this.bestPlan == null || plan.getCost().lessThan(this.bestPlan.getCost())) {
 						this.bestPlan = plan;
-						this.bestProof = PropagatorUtils.createProof(planTree, path);
 						this.bestPath = path;
 					}
 				}
 			}
-		}
+		} 
 
 		else {
 			for (DefaultEdge edge: planTree.incomingEdgesOf(node)) {

@@ -139,12 +139,6 @@ public class PlannerParameters extends Parameters {
 			defaultValue = "Integer.MAX_VALUE")
 	protected Integer maxBushiness = Integer.MAX_VALUE;
 
-	@Parameter(description = "Range configurations to consider as inputs to "
-			+ "each subsequent phase of a DAG planning algorithm.\n"
-			+ "Use in conjunction to DISTANCE2CORETOPK priority assessor",
-			defaultValue = "Integer.MAX_VALUE")
-	protected Integer range = Integer.MAX_VALUE;
-
 	@Parameter(description = 
 			"If true, a LimitReachedException is thrown during planning if a "
 			+ "limit (e.g. time or max no. interactions) is reached.\n"
@@ -156,11 +150,6 @@ public class PlannerParameters extends Parameters {
 			+ "conjunction with DAG planning algorithms",
 			defaultValue = "DEFAULT")
 	protected ValidatorTypes validatorType = ValidatorTypes.DEFAULT_VALIDATOR;
-
-	@Parameter(description = "Type of priority assessor to use. Only required "
-			+ "in conjunction with DAG planning algorithms",
-			defaultValue = "DEFAULT")
-	protected PriorityAssessorTypes priorityAssessorType = PriorityAssessorTypes.DEFAULT;
 
 	@Parameter(description = "Type of filter to use. Only required in "
 			+ "conjunction with DAG planning algorithms")
@@ -200,25 +189,6 @@ public class PlannerParameters extends Parameters {
 	@Parameter(description = "Threshold for the DEPTH_THROTTLING validator",
 			defaultValue = "2")
 	protected Integer depthThreshold = 2;
-
-	@Parameter(description = "Top-K configurations to consider as inputs to "
-			+ "each subsequent phase of a DAG planning algorithm.\n"
-			+ "Use in conjunction to ILP SI planning algorithm",
-			defaultValue = "4")
-	protected Integer topk = 4;
-
-	@Parameter(description = "Top configurations to consider as inputs to "
-			+ "each subsequent phase of a DAG planning algorithm.\n"
-			+ "Use in conjunction to DISTANCE2CORETOPK priority assessor",
-			defaultValue = "Integer.MAX_VALUE")
-	protected Integer topConfigurations = Integer.MAX_VALUE;
-
-	@Parameter(description = "If true, relation that are not reachable from "
-			+ "the input query through the firing of constraints are not "
-			+ "considered in the plan search.\n Only applies to DAG planning "
-			+ "algorithms",
-			defaultValue = "false")
-	protected Boolean reachabilityFiltering = false;
 
 	@Parameter(description = "If true, all join orders are considered during "
 			+ "plan search",
@@ -429,23 +399,6 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
-	 * @return Integer
-	 */
-	public Integer getRange() {
-		if (this.range == null) {
-			return Integer.MAX_VALUE;
-		}
-		return this.range;
-	}
-
-	/**
-	 * @param range Number
-	 */
-	public void setRange(Number range) {
-		this.range = range != null ? range.intValue() : null;
-	}
-
-	/**
 	 * @return Boolean
 	 */
 	public Boolean getExceptionOnLimit() {
@@ -551,32 +504,6 @@ public class PlannerParameters extends Parameters {
 		} catch (IllegalArgumentException e) {
 			log.warn("Setting post pruning type to " + null, e);
 			this.successDominanceType = null;
-		}
-	}
-
-	/**
-	 * @return PriorityAssessorTypes
-	 */
-	public PriorityAssessorTypes getPriorityAssessorType() {
-		return this.priorityAssessorType;
-	}
-
-	/**
-	 * @param priorityAssessorType PriorityAssessorTypes
-	 */
-	public void setPriorityAssessorType(PriorityAssessorTypes priorityAssessorType) {
-		this.priorityAssessorType = priorityAssessorType;
-	}
-
-	/**
-	 * @param priorityAssessorType String
-	 */
-	public void setPriorityAssessorType(String priorityAssessorType) {
-		try {
-			this.priorityAssessorType = PriorityAssessorTypes.valueOf(priorityAssessorType);
-		} catch (IllegalArgumentException e) {
-			log.warn("Setting post pruning type to " + null, e);
-			this.priorityAssessorType = null;
 		}
 	}
 
@@ -688,62 +615,6 @@ public class PlannerParameters extends Parameters {
 	 */
 	public void setDepthThreshold(Number depthThreshold) {
 		this.depthThreshold = depthThreshold != null ? depthThreshold.intValue() : null;
-	}
-
-	/**
-	 * @return Integer
-	 */
-	public Integer getTopk() {
-		return this.topk;
-	}
-
-	/**
-	 * @param topk Integer
-	 */
-	public void setTopk(Integer topk) {
-		this.topk = topk;
-	}
-
-	/**
-	 * @param topk Number
-	 */
-	public void setTopk(Number topk) {
-		this.topk = topk != null ? topk.intValue() : null;
-	}
-
-	/**
-	 * @return Integer
-	 */
-	public Integer getTopConfigurations() {
-		return this.topConfigurations;
-	}
-
-	/**
-	 * @param topConfigurations Number
-	 */
-	public void setTopConfigurations(Number topConfigurations) {
-		this.topConfigurations = topConfigurations != null ? topConfigurations.intValue() : null;
-	}
-
-	/**
-	 * @param topConfigurations Integer
-	 */
-	public void setTopConfigurations(Integer topConfigurations) {
-		this.topConfigurations = topConfigurations;
-	}
-
-	/**
-	 * @return Boolean
-	 */
-	public Boolean getReachabilityFiltering() {
-		return this.reachabilityFiltering;
-	}
-
-	/**
-	 * @param reachabilityFiltering Boolean
-	 */
-	public void setReachabilityFiltering(Boolean reachabilityFiltering) {
-		this.reachabilityFiltering = reachabilityFiltering;
 	}
 	
 	/**
@@ -882,19 +753,19 @@ public class PlannerParameters extends Parameters {
 		MULTITHREADED
 	}
 
-	/** */
-	public static enum PriorityAssessorTypes {
-		@EnumParameterValue(description = "Default (no-op) priority assessor")
-		DEFAULT,
-
-		@EnumParameterValue(description =
-				"Assessor given priority to the K configurations that are "
-				+ "closest to the core")
-		DISTANCE2CORETOPK,
-
-		@EnumParameterValue(description =
-				"Assessor given priority to some range of configurations that "
-				+ "are closest to the core")
-		DISTANCE2CORERANGE
-	}
+//	/** */
+//	public static enum PriorityAssessorTypes {
+//		@EnumParameterValue(description = "Default (no-op) priority assessor")
+//		DEFAULT,
+//
+//		@EnumParameterValue(description =
+//				"Assessor given priority to the K configurations that are "
+//				+ "closest to the core")
+//		DISTANCE2CORETOPK,
+//
+//		@EnumParameterValue(description =
+//				"Assessor given priority to some range of configurations that "
+//				+ "are closest to the core")
+//		DISTANCE2CORERANGE
+//	}
 }

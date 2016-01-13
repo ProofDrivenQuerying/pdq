@@ -6,9 +6,9 @@ import java.util.List;
 import uk.ac.ox.cs.pdq.db.Constraint;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.logging.performance.StatisticsCollector;
-import uk.ac.ox.cs.pdq.reasoning.Match;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ListState;
+import uk.ac.ox.cs.pdq.reasoning.utility.Match;
 import uk.ac.ox.cs.pdq.reasoning.utility.ReasonerUtility;
 
 import com.google.common.base.Preconditions;
@@ -16,9 +16,9 @@ import com.google.common.base.Supplier;
 
 
 /**
- * A bounded chase algorithm. This implementation
- * finds the maximum number of chase rounds k during chasing the input schema
- * and then performs only k rounds of chasing during chasing the accessible schema.
+ * Runs the chase algorithm for a given set of rounds. 
+ * First, it finds the maximum number of chase rounds k during chasing the input schema
+ * and then it performs only k rounds of chasing during chasing the accessible schema.
  *
  * @author Efthymia Tsamoura
  *
@@ -55,12 +55,12 @@ public class BoundedChaser extends RestrictedChaser {
 
 	/**
 	 * 
-	 * @param state
+	 * @param instance
 	 * @param target
 	 * @param constraints
 	 */
 	public void initialize(
-			ChaseState state, 
+			ChaseState instance, 
 			Query<?> target, 
 			Collection<? extends Constraint> constraints) {
 		synchronized (this.k) {
@@ -68,7 +68,7 @@ public class BoundedChaser extends RestrictedChaser {
 			if (this.fullInitialization) {
 				this.k.set(Integer.MAX_VALUE);
 			}
-			this.reasonUntilTermination(state, target, constraints);
+			this.reasonUntilTermination(instance, target, constraints);
 			this.k.set(Math.min(oldK, this.lastRound));
 			this.k.freeze();
 		}
@@ -76,21 +76,21 @@ public class BoundedChaser extends RestrictedChaser {
 
 	/**
 	 * Chases the input state until termination
-	 * @param s
+	 * @param intance
 	 * @param target
 	 * @param dependencies
 	 */
 	@Override
-	public <S extends ChaseState> void reasonUntilTermination(S s,  Query<?> target, Collection<? extends Constraint> dependencies) {
-		Preconditions.checkArgument(s instanceof ListState);
+	public <S extends ChaseState> void reasonUntilTermination(S intance,  Query<?> target, Collection<? extends Constraint> dependencies) {
+		Preconditions.checkArgument(intance instanceof ListState);
 		int rounds = 0;
 		boolean appliedStep = true;
 		while (rounds < this.k.get() && appliedStep) {
 			appliedStep = false;
-			List<Match> matches = s.getMaches(dependencies);
+			List<Match> matches = intance.getMaches(dependencies);
 			for (Match match: matches) {
-				if(new ReasonerUtility().isActiveTrigger(match, s)){
-					s.chaseStep(match);
+				if(new ReasonerUtility().isActiveTrigger(match, intance)){
+					intance.chaseStep(match);
 					appliedStep = true;
 				}
 			}

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plan type="linear" cost="20.0" control-flow="TOP_DOWN">
+<command name="T1">
+<operator type="PROJECT">
+<outputs>
+<attribute name="c2" type="java.lang.Integer"/>
+</outputs>
+<project>
+<attribute name="r2.1" type="java.lang.Integer"/>
+</project>
+<child>
+<operator type="ACCESS" relation="r2" access-method="m3">
+<outputs>
+<attribute name="r2.1" type="java.lang.Integer"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</command>
+<command name="T2">
+<operator type="JOIN" variant="SYMMETRIC_HASH">
+<outputs>
+<attribute name="c2" type="java.lang.Integer"/>
+<attribute name="c1" type="java.lang.Integer"/>
+<attribute name="c2" type="java.lang.Integer"/>
+</outputs>
+<conjunction>
+<predicate type="equality" left="0" right="2"/>
+</conjunction>
+<children>
+<operator type="ALIAS" name="T1"/>
+<operator type="PROJECT">
+<outputs>
+<attribute name="c1" type="java.lang.Integer"/>
+<attribute name="c2" type="java.lang.Integer"/>
+</outputs>
+<project>
+<attribute name="r1.1" type="java.lang.Integer"/>
+<attribute name="r1.2" type="java.lang.Integer"/>
+</project>
+<child>
+<operator type="ACCESS" relation="r1" access-method="m1">
+<outputs>
+<attribute name="r1.1" type="java.lang.Integer"/>
+<attribute name="r1.2" type="java.lang.Integer"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</children>
+</operator>
+</command>
+<command name="T3">
+<operator type="DEPENDENT_JOIN" param="1,0">
+<outputs>
+<attribute name="c2" type="java.lang.Integer"/>
+<attribute name="c1" type="java.lang.Integer"/>
+<attribute name="c2" type="java.lang.Integer"/>
+<attribute name="c3" type="java.lang.Integer"/>
+<attribute name="c1" type="java.lang.Integer"/>
+<attribute name="c2" type="java.lang.Integer"/>
+</outputs>
+<children>
+<operator type="ALIAS" name="T2"/>
+<operator type="PROJECT">
+<outputs>
+<attribute name="c3" type="java.lang.Integer"/>
+<attribute name="c1" type="java.lang.Integer"/>
+<attribute name="c2" type="java.lang.Integer"/>
+</outputs>
+<project>
+<attribute name="r3.1" type="java.lang.Integer"/>
+<attribute name="r3.2" type="java.lang.Integer"/>
+<attribute name="r3.3" type="java.lang.Integer"/>
+</project>
+<child>
+<operator type="ACCESS" relation="r3" access-method="m4">
+<outputs>
+<attribute name="r3.1" type="java.lang.Integer"/>
+<attribute name="r3.2" type="java.lang.Integer"/>
+<attribute name="r3.3" type="java.lang.Integer"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</children>
+</operator>
+</command>
+<command name="T4">
+<operator type="PROJECT">
+<outputs>
+<attribute name="c3" type="java.lang.Integer"/>
+<attribute name="c2" type="java.lang.Integer"/>
+</outputs>
+<project>
+<attribute name="c3" type="java.lang.Integer"/>
+<attribute name="c2" type="java.lang.Integer"/>
+</project>
+<child>
+<operator type="DEPENDENT_JOIN" param="1,3">
+<outputs>
+<attribute name="c2" type="java.lang.Integer"/>
+<attribute name="c1" type="java.lang.Integer"/>
+<attribute name="c2" type="java.lang.Integer"/>
+<attribute name="c3" type="java.lang.Integer"/>
+<attribute name="c1" type="java.lang.Integer"/>
+<attribute name="c2" type="java.lang.Integer"/>
+<attribute name="c2" type="java.lang.Integer"/>
+<attribute name="c1" type="java.lang.Integer"/>
+<attribute name="c3" type="java.lang.Integer"/>
+</outputs>
+<children>
+<operator type="ALIAS" name="T3"/>
+<operator type="PROJECT">
+<outputs>
+<attribute name="c2" type="java.lang.Integer"/>
+<attribute name="c1" type="java.lang.Integer"/>
+<attribute name="c3" type="java.lang.Integer"/>
+</outputs>
+<project>
+<attribute name="r3.1" type="java.lang.Integer"/>
+<attribute name="r3.2" type="java.lang.Integer"/>
+<attribute name="r3.3" type="java.lang.Integer"/>
+</project>
+<child>
+<operator type="ACCESS" relation="r3" access-method="m4">
+<outputs>
+<attribute name="r3.1" type="java.lang.Integer"/>
+<attribute name="r3.2" type="java.lang.Integer"/>
+<attribute name="r3.3" type="java.lang.Integer"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</children>
+</operator>
+</child>
+</operator>
+</command>
+</plan>

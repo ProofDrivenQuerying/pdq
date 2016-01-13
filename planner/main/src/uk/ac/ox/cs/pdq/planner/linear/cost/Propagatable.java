@@ -1,6 +1,6 @@
 package uk.ac.ox.cs.pdq.planner.linear.cost;
 
-import uk.ac.ox.cs.pdq.planner.linear.node.SearchNode;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
 
 /**
  * Property of a cost model to be propagated across node of a search space.

@@ -8,7 +8,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 
 import prefuse.visual.NodeItem;
-import uk.ac.ox.cs.pdq.planner.linear.node.SearchNode;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
 
 
 public class NodePropertiesItem extends JMenuItem {

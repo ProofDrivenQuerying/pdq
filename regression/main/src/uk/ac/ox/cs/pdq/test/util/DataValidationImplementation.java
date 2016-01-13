@@ -12,9 +12,9 @@ import uk.ac.ox.cs.pdq.db.wrappers.RelationAccessWrapper;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
-import uk.ac.ox.cs.pdq.reasoning.Match;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismConstraint;
+import uk.ac.ox.cs.pdq.reasoning.utility.Match;
 import uk.ac.ox.cs.pdq.runtime.exec.AccessException;
 import uk.ac.ox.cs.pdq.util.Table;
 import uk.ac.ox.cs.pdq.util.Tuple;
@@ -104,7 +104,7 @@ public final class DataValidationImplementation extends DataValidation{
 			 * there exists another set of facts F2 that satisfies the right-hand side of the input dependency w.r.t F1 
 			 */
 			for (Match m: matchings) {
-				List<Match> subMatchings = this.manager.getMatches(this.invert(constraint), HomomorphismConstraint.satisfies(m.getMapping()));
+				List<Match> subMatchings = this.manager.getMatches(this.invert(constraint), HomomorphismConstraint.createMapConstraint(m.getMapping()));
 				if (subMatchings.isEmpty()) {
 					throw new java.lang.IllegalArgumentException("Data does not satisfy constraint " + constraint.toString() );
 				}
