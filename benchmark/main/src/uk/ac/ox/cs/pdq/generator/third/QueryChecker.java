@@ -60,7 +60,7 @@ public class QueryChecker implements Runnable {
 			for (ConjunctiveQuery query : this.queries) {
 
 				if (query != null) {
-					System.out.println("######################################");
+					log.trace("######################################");
 					VeryPrettyQueryWriter.to(System.out).write(query);
 					try {
 						PlannerParameters p = new PlannerParameters();
@@ -78,19 +78,19 @@ public class QueryChecker implements Runnable {
 						Planner planner = new Planner(p, c, r, this.schema);
 						Plan plan = planner.search(query);
 						if (plan != null) {
-							System.out.println("\t+++ Answerable " + plan.getCost() + " ");
+							log.trace("\t+++ Answerable " + plan.getCost() + " ");
 							AlgebraLikeLeftDeepPlanWriter.to(System.out).write((LeftDeepPlan) plan);
 						} else {
-							System.out.println("\t--- Not answerable");
+							log.trace("\t--- Not answerable");
 						}
 						if (planNoDep == null && plan != null) {
-							System.out.println(":):):):):):):):):):):):):):):):)");
+							log.trace(":):):):):):):):):):):):):):):):)");
 						}
 					} catch (PlannerException e) {
-						System.out.println("Exception " + e);
+						log.trace("Exception " + e);
 					}
 					
-					System.out.println("######################################");
+					log.trace("######################################");
 				}
 			}
 		} catch (Exception e) {
