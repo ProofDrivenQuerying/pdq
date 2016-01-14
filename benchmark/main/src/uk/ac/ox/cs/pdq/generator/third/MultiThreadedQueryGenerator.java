@@ -11,9 +11,12 @@ import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.apache.log4j.Logger;
+
 import uk.ac.ox.cs.pdq.benchmark.BenchmarkParameters;
 import uk.ac.ox.cs.pdq.benchmark.BenchmarkParameters.QueryTypes;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
+import uk.ac.ox.cs.pdq.cost.statistics.SQLServerJoinCardinalityEstimator;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.generator.second.QueryGeneratorSecond;
@@ -36,6 +39,8 @@ import com.google.common.collect.Sets;
  */
 public class MultiThreadedQueryGenerator implements Runnable {
 
+	protected static Logger log = Logger.getLogger(MultiThreadedQueryGenerator.class);
+	
 	private static Integer seeds = 0;
 
 	private final Schema schema;
@@ -99,7 +104,7 @@ public class MultiThreadedQueryGenerator implements Runnable {
 				
 				fos.println("######################################");
 				fos.flush();
-				System.out.println("Thread " + this.threadId + ": done " + (++this.done) + " cases.");
+				log.trace("Thread " + this.threadId + ": done " + (++this.done) + " cases.");
 				}
 		} catch (FileNotFoundException e1) {
 			throw new IllegalStateException();
