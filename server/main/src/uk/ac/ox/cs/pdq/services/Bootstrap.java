@@ -129,7 +129,7 @@ public class Bootstrap {
 				int errorCode = Integer.parseInt(response);
 				result &= (errorCode != ExecuteCommandCall.FAILURE);
 			} catch (NumberFormatException e) {
-				System.out.println(response);
+				log.trace(response);
 				result &= true;
 			}
 		} catch (IOException e) {

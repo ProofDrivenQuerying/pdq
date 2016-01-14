@@ -14,7 +14,7 @@ import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
  * @author Julien Leblay
  * 
  */
-public class LinearPlanWriter extends AbstractXMLWriter<LeftDeepPlan> {
+public class LeftDeepPlanWriter extends AbstractXMLWriter<LeftDeepPlan> {
 
 	public static final String TYPE_MARKER = "linear"; 
 
@@ -26,7 +26,7 @@ public class LinearPlanWriter extends AbstractXMLWriter<LeftDeepPlan> {
 	/**
 	 * Default constructor.
 	 */
-	LinearPlanWriter() {
+	LeftDeepPlanWriter() {
 		this.operatorWriter = new OperatorWriter();
 	}
 

@@ -175,7 +175,7 @@ public class SymmetricMemoryHashJoinTest extends NaryIteratorTest {
 		expected.add(child1To2Type.createTuple("B", 20, 1, "D", 1, "C"));
 		Set<Tuple> observed = new LinkedHashSet<>();
 //		while (this.iterator.hasNext()) {
-//			System.out.println(this.iterator.next());
+//			log.trace(this.iterator.next());
 //		}
 		for (int i = 0, l = 10; i < l; i++) {
 			Assert.assertTrue(this.iterator.hasNext()); observed.add(this.iterator.next());  

@@ -45,7 +45,7 @@ public class PrettyDAGPlanWriter extends PrettyWriter<DAGPlan> implements Writer
 	/**
 	 * Fluent pretty writer provider.
 	 * @param out
-	 * @return a new PrettyLinearPlanWriter with the given default output.
+	 * @return a new PrettyLeftDeepPlanWriter with the given default output.
 	 */
 	public static PrettyDAGPlanWriter to(PrintStream out) {
 		return new PrettyDAGPlanWriter(out);

@@ -16,7 +16,7 @@ import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.io.xml.DAGPlanReader;
-import uk.ac.ox.cs.pdq.io.xml.LinearPlanReader;
+import uk.ac.ox.cs.pdq.io.xml.LeftDeepPlanReader;
 import uk.ac.ox.cs.pdq.io.xml.PlanWriter;
 import uk.ac.ox.cs.pdq.io.xml.QueryReader;
 import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
@@ -168,7 +168,7 @@ public class UserPlannerTest extends RegressionTest {
 			BufferedInputStream bis = new BufferedInputStream(pis)) {
 			try {
 				bis.mark(1024);
-				return new LinearPlanReader(schema).read(bis); 
+				return new LeftDeepPlanReader(schema).read(bis); 
 			} catch (Exception re) {
 				bis.reset();
 			}

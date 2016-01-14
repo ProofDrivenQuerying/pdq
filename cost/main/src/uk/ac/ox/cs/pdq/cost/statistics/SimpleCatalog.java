@@ -680,14 +680,14 @@ public class SimpleCatalog implements Catalog{
 			}
 			schema.updateConstants(query.getSchemaConstants());
 			SimpleCatalog catalog = new SimpleCatalog(schema, catalogfile);
-			System.out.println(catalog.toString());
+			log.trace(catalog.toString());
 		} catch (FileNotFoundException e) {
-			System.out.println("Cannot find input files");
+			log.trace("Cannot find input files");
 		} catch (Exception e) {
-			System.out.println("EXCEPTION: " + e.getClass().getSimpleName() + " " + e.getMessage());
+			log.trace("EXCEPTION: " + e.getClass().getSimpleName() + " " + e.getMessage());
 			e.printStackTrace();
 		} catch (Error e) {
-			System.out.println("ERROR: " + e.getClass().getSimpleName() + " " + e.getMessage());
+			log.trace("ERROR: " + e.getClass().getSimpleName() + " " + e.getMessage());
 			e.printStackTrace();
 			System.exit(-1);
 		}

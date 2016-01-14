@@ -14,7 +14,7 @@ import com.google.common.base.Preconditions;
  *
  * @author Efthymia Tsamoura
  */
-public class Equality extends Predicate {
+public final class Equality extends Predicate {
 
 	/**
 	 * Constructor for Equality.

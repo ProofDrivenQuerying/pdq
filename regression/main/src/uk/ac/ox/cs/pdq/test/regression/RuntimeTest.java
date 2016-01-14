@@ -17,7 +17,7 @@ import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.io.pretty.DataReader;
 import uk.ac.ox.cs.pdq.io.xml.DAGPlanReader;
-import uk.ac.ox.cs.pdq.io.xml.LinearPlanReader;
+import uk.ac.ox.cs.pdq.io.xml.LeftDeepPlanReader;
 import uk.ac.ox.cs.pdq.io.xml.QueryReader;
 import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
 import uk.ac.ox.cs.pdq.logging.ProgressLogger;
@@ -171,7 +171,7 @@ public class RuntimeTest extends RegressionTest {
 		}
 		try (FileInputStream pis = new FileInputStream(directory.getAbsolutePath() + '/' + PLAN_FILE)) {
 			try {
-				return new LinearPlanReader(schema).read(pis); 
+				return new LeftDeepPlanReader(schema).read(pis); 
 			} catch (Exception re) {
 				try (FileInputStream bis = new FileInputStream(directory.getAbsolutePath() + '/' + PLAN_FILE)) {
 					return new DAGPlanReader(schema).read(bis); 

@@ -13,7 +13,7 @@ import org.apache.log4j.Logger;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.io.pretty.AlgebraLikeLinearPlanWriter;
+import uk.ac.ox.cs.pdq.io.pretty.AlgebraLikeLeftDeepPlanWriter;
 import uk.ac.ox.cs.pdq.io.pretty.VeryPrettyQueryWriter;
 import uk.ac.ox.cs.pdq.io.xml.QueryReader;
 import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
@@ -60,7 +60,7 @@ public class QueryChecker implements Runnable {
 			for (ConjunctiveQuery query : this.queries) {
 
 				if (query != null) {
-					System.out.println("######################################");
+					log.trace("######################################");
 					VeryPrettyQueryWriter.to(System.out).write(query);
 					try {
 						PlannerParameters p = new PlannerParameters();
@@ -78,19 +78,19 @@ public class QueryChecker implements Runnable {
 						Planner planner = new Planner(p, c, r, this.schema, query);
 						Plan plan = planner.search();
 						if (plan != null) {
-							System.out.println("\t+++ Answerable " + plan.getCost() + " ");
-							AlgebraLikeLinearPlanWriter.to(System.out).write((LeftDeepPlan) plan);
+							log.trace("\t+++ Answerable " + plan.getCost() + " ");
+							AlgebraLikeLeftDeepPlanWriter.to(System.out).write((LeftDeepPlan) plan);
 						} else {
-							System.out.println("\t--- Not answerable");
+							log.trace("\t--- Not answerable");
 						}
 						if (planNoDep == null && plan != null) {
-							System.out.println(":):):):):):):):):):):):):):):):)");
+							log.trace(":):):):):):):):):):):):):):):):)");
 						}
 					} catch (PlannerException e) {
-						System.out.println("Exception " + e);
+						log.trace("Exception " + e);
 					}
 					
-					System.out.println("######################################");
+					log.trace("######################################");
 				}
 			}
 		} catch (Exception e) {

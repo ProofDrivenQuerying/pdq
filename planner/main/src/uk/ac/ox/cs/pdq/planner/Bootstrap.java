@@ -136,7 +136,7 @@ public class Bootstrap {
 				PlanWriter.to(System.out).write(plan);
 				return;
 			} 
-			System.out.println("No plan found.");
+			log.trace("No plan found.");
 		} catch (Throwable e) {
 			log.error("Planning aborted: " + e.getMessage());
 			e.printStackTrace();

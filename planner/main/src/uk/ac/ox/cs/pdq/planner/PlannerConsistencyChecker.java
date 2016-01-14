@@ -22,7 +22,7 @@ public class PlannerConsistencyChecker implements ConsistencyChecker<PlannerPara
 	public void check(PlannerParameters p, CostParameters c, ReasoningParameters r) throws InconsistentParametersException {
 	}
 	
-	private boolean isLinearPlanner(PlannerParameters p) {
+	private boolean isLeftDeepPlanner(PlannerParameters p) {
 		switch(p.getPlannerType()) {
 		case DAG_GENERIC:
 		case DAG_SIMPLEDP:
