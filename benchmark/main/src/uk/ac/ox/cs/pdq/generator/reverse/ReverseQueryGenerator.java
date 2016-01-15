@@ -92,7 +92,7 @@ public class ReverseQueryGenerator implements Runnable {
 		}
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 		}
 	}
 
@@ -107,9 +107,9 @@ public class ReverseQueryGenerator implements Runnable {
 			exec.submit(new ShowStopper(timeout));
 			exec.shutdown();
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 		}
 	}
 
@@ -156,7 +156,7 @@ public class ReverseQueryGenerator implements Runnable {
 					Thread.sleep(this.timeout);
 					Runtime.getRuntime().exit(-1);
 				} catch (InterruptedException e) {
-					e.printStackTrace();
+					log.error(e.getMessage(),e);
 				}
 			}
 		}

@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Arrays;
 
+import org.apache.log4j.Logger;
+
 import uk.ac.ox.cs.pdq.benchmark.BenchmarkParameters;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -30,6 +32,8 @@ import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
  */
 public class GeneratorThird extends AbstractGenerator{
 
+	private static Logger log = Logger.getLogger(GeneratorThird.class);
+	
 	public GeneratorThird(BenchmarkParameters parameters, String schemaFile, String queryFile, PrintStream out) {
 		super(parameters, schemaFile, queryFile, out);
 	}
@@ -97,11 +101,11 @@ public class GeneratorThird extends AbstractGenerator{
 			}
 		} catch (PlannerException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 		}
 	}
 }

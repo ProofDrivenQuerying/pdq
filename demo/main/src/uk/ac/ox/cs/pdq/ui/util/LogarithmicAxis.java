@@ -155,7 +155,7 @@ public class LogarithmicAxis extends ValueAxis<Number> {
 			try {
 				this.validateBounds(lowerBound.doubleValue(), upperBound.doubleValue());
 			} catch (IllegalLogarithmicRangeException e) {
-				e.printStackTrace();
+				log.error(e.getMessage(),e);
 			}
 			if (animate) {
 				try {

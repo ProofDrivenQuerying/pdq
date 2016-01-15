@@ -1,5 +1,7 @@
 package uk.ac.ox.cs.pdq.benchmark;
 
+import org.apache.log4j.Logger;
+
 import uk.ac.ox.cs.pdq.planner.logging.IntervalEventDrivenLogger;
 
 
@@ -11,6 +13,8 @@ import uk.ac.ox.cs.pdq.planner.logging.IntervalEventDrivenLogger;
  *
  */
 public class ShowStopper extends Thread {
+	
+	private static Logger log = Logger.getLogger(ShowStopper.class);
 
 	private long timeout = -1L;
 	private final IntervalEventDrivenLogger logger;
@@ -36,7 +40,7 @@ public class ShowStopper extends Thread {
 				}
 				Runtime.getRuntime().exit(-3);
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				log.error(e.getMessage(),e);
 			}
 		}
 	}

@@ -97,7 +97,7 @@ public class ObservableQueryReader extends AbstractXMLReader<ObservableQuery> {
 			ObservableQuery q = new ObservableQueryReader(s.getSchema()).read(qin);
 			new ObservableQueryWriter().write(System.out, q);
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 		}
 	}
 }

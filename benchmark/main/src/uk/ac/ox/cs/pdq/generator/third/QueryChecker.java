@@ -94,7 +94,7 @@ public class QueryChecker implements Runnable {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 		}
 	}
 
@@ -115,9 +115,9 @@ public class QueryChecker implements Runnable {
 			exec.submit(new QueryChecker(1, schema, queries));
 			exec.shutdown();
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 		}
 	}
 

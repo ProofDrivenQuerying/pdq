@@ -135,8 +135,7 @@ public class Bootstrap {
 				plan = planner.search();
 			}
 		} catch (Throwable e) {
-			log.error("Planning aborted: " + e.getMessage());
-			e.printStackTrace();
+			log.error("Planning aborted: " + e.getMessage(),e);
 			System.exit(-1);
 		}
 	}

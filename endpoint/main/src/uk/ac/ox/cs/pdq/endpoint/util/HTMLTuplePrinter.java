@@ -49,7 +49,7 @@ public class HTMLTuplePrinter implements EventHandler {
 				}
 				this.out.println("</tr>");
 			} catch (IOException e) {
-				e.printStackTrace();
+				log.error(e.getMessage(),e);
 				throw new IllegalStateException(e);
 			}
 		} else {
