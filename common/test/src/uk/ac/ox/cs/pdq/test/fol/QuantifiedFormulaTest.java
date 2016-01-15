@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.db.TypedConstant;
@@ -14,6 +15,7 @@ import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.QuantifiedFormula;
 import uk.ac.ox.cs.pdq.fol.QuantifiedFormula.ExistentiallyQuantifiedFormula;
 import uk.ac.ox.cs.pdq.fol.QuantifiedFormula.UniversallyQuantifiedFormula;
+import uk.ac.ox.cs.pdq.util.Utility;
 import uk.ac.ox.cs.pdq.fol.Signature;
 import uk.ac.ox.cs.pdq.fol.Skolem;
 import uk.ac.ox.cs.pdq.fol.Term;
@@ -22,6 +24,14 @@ import uk.ac.ox.cs.pdq.fol.Variable;
 import com.google.common.collect.Lists;
 
 public class QuantifiedFormulaTest {
+	
+	/**
+	 * Makes sure assertions are enabled
+	 */
+	@Before 
+	public void setup() {
+		Utility.assertsEnabled();
+	}
 
 	@Test public void testUniversal() {
 		Signature s = new Signature("s", 5);

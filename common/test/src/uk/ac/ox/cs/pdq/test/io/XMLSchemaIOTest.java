@@ -23,6 +23,7 @@ import uk.ac.ox.cs.pdq.fol.FormulaEquivalence;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
 import uk.ac.ox.cs.pdq.io.xml.SchemaWriter;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.collect.Lists;
 
@@ -54,6 +55,7 @@ public class XMLSchemaIOTest {
 	ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
 	@Before public void setup() {
+		Utility.assertsEnabled();
 		this.bos = new ByteArrayOutputStream();
 	}
 

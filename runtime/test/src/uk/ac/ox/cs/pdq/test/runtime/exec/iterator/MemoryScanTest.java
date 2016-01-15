@@ -18,6 +18,7 @@ import uk.ac.ox.cs.pdq.runtime.exec.iterator.MemoryScan;
 import uk.ac.ox.cs.pdq.util.Tuple;
 import uk.ac.ox.cs.pdq.util.TupleType;
 import uk.ac.ox.cs.pdq.util.Typed;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.collect.Lists;
 
@@ -36,6 +37,7 @@ public class MemoryScanTest {
 	Predicate filter3;
 	
 	@Before public void setup() {
+		Utility.assertsEnabled();
 		a = new Attribute(Integer.class, "a");
 		b = new Attribute(String.class, "b");
 		c = new Attribute(String.class, "c");

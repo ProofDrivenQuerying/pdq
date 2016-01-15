@@ -32,6 +32,7 @@ public class AccessTest extends UnaryOperatorTest {
 	AccessMethod free, m1, m2;
 
 	@Before public void setup() throws RelationalOperatorException {
+		super.setup();
         MockitoAnnotations.initMocks(this);
 		when(child.getColumns()).thenReturn(outputTerms);
 		when(child.getType()).thenReturn(outputType);

@@ -36,7 +36,8 @@ public class CrossProductTest extends NaryIteratorTest {
 	TupleIterator nonMock1, nonMock2, nonMock3, nonMock4;
 
 	@Before public void setup() {
-        MockitoAnnotations.initMocks(this);
+		super.setup();
+       MockitoAnnotations.initMocks(this);
         
         when(child1.getColumns()).thenReturn(child1Columns);
         when(child1.getInputColumns()).thenReturn(child1InputColumns);

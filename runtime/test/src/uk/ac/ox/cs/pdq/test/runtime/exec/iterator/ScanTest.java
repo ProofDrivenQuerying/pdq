@@ -19,6 +19,7 @@ import uk.ac.ox.cs.pdq.db.wrappers.InMemoryTableWrapper;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.Scan;
 import uk.ac.ox.cs.pdq.util.Tuple;
 import uk.ac.ox.cs.pdq.util.TupleType;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.collect.Lists;
 
@@ -44,6 +45,7 @@ public class ScanTest {
 	Predicate filter3 = new ConjunctivePredicate<>(Lists.newArrayList(filter1, filter2));
 	
 	@Before public void setup() {
+		Utility.assertsEnabled();
 		this.relation.load(Lists.newArrayList(
 				outputType.createTuple(1, "x", "one"), 
 				outputType.createTuple(2, "x", "two"), 

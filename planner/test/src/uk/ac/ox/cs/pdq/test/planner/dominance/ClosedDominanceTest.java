@@ -24,6 +24,7 @@ public class ClosedDominanceTest extends TestObjects1{
 	ClosedDominance cdomominance = new ClosedDominance(new AccessCountCostEstimator());
 
 	@Before public void setup() {
+		super.setup();
         MockitoAnnotations.initMocks(this);
         
         when(config11.getState()).thenReturn(config11State);

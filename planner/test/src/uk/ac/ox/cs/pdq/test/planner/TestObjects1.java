@@ -1,5 +1,6 @@
 package uk.ac.ox.cs.pdq.test.planner;
 
+import org.junit.Before;
 import org.mockito.Mock;
 
 import uk.ac.ox.cs.pdq.db.Attribute;
@@ -10,6 +11,7 @@ import uk.ac.ox.cs.pdq.plan.DAGPlan;
 import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.collect.Lists;
 
@@ -18,7 +20,15 @@ import com.google.common.collect.Lists;
  *
  */
 public class TestObjects1 {
-
+	
+	/**
+	 * Makes sure assertions are enabled
+	 */
+	@Before 
+	public void setup() {
+		Utility.assertsEnabled();
+	}
+	
 			protected Relation r1 = new Relation("R1", 
 			Lists.newArrayList(new Attribute(String.class, "a1"), new Attribute(String.class, "a2"), new Attribute(String.class, "a3"))) {};
 	

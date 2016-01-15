@@ -46,6 +46,7 @@ public class ProjectionTest extends UnaryIteratorTest {
 			d = new Attribute(Integer.class, "d");
 	
 	@Before public void setup() {
+        super.setup();
 		this.projectedType = TupleType.DefaultFactory.create(Integer.class, String.class, String.class);
 		this.projected = Lists.<Typed>newArrayList(b, new TypedConstant<>("x"), a);
 		this.relation = new InMemoryTableWrapper("test", Lists.newArrayList(a, b, c, d));

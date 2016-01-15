@@ -12,6 +12,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import uk.ac.ox.cs.pdq.algebra.predicates.ConjunctivePredicate;
 import uk.ac.ox.cs.pdq.algebra.predicates.Predicate;
 import uk.ac.ox.cs.pdq.util.Tuple;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.collect.Lists;
 
@@ -27,6 +28,7 @@ public class ConjunctivePredicateTest {
 
 	@Before
 	public void setup() {
+		Utility.assertsEnabled();
         MockitoAnnotations.initMocks(this);
 		Mockito.when(subPred1.isSatisfied(t)).thenReturn(true);
 		Mockito.when(subPred2.isSatisfied(t)).thenReturn(true);

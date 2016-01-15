@@ -8,11 +8,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.builder.BuilderException;
 import uk.ac.ox.cs.pdq.sql.MySQLSchemaDiscoverer;
+import uk.ac.ox.cs.pdq.util.Utility;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.AccessMethod.Types;
 import uk.ac.ox.cs.pdq.db.Attribute;
@@ -94,6 +96,14 @@ import com.google.common.collect.Lists;
 		this.schema = disco.discover();
 	}
 	
+	/**
+	 * Makes sure assertions are enabled
+	 */
+	@Before 
+	public void setup() {
+		Utility.assertsEnabled();
+	}
+		
 	@Test
 	public void testNumberOfRelations() {
 		assertEquals(this.schema.getRelations().size(), this.relationNames.size());

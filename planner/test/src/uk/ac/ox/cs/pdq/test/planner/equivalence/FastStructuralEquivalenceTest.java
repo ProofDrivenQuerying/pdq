@@ -26,6 +26,7 @@ public class FastStructuralEquivalenceTest  extends TestObjects1{
 	FastStructuralEquivalence cdomominance = new FastStructuralEquivalence();
 
 	@Before public void setup() {
+		super.setup();
         MockitoAnnotations.initMocks(this);
         
         when(config11.getState()).thenReturn(config11State);

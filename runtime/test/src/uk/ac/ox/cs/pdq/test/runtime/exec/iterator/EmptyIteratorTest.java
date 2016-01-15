@@ -11,6 +11,7 @@ import uk.ac.ox.cs.pdq.algebra.RelationalOperatorException;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.EmptyIterator;
 import uk.ac.ox.cs.pdq.util.Tuple;
 import uk.ac.ox.cs.pdq.util.TupleType;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 /**
  * 
@@ -19,6 +20,7 @@ import uk.ac.ox.cs.pdq.util.TupleType;
 public class EmptyIteratorTest {
 
 	@Before public void setup() {
+		Utility.assertsEnabled();
 	}
 	
 	@Test public void initEmpty() {
