@@ -470,10 +470,10 @@ public class DBHomomorphismManager implements HomomorphismManager {
 				throw new IllegalStateException("Could not load chase database driver '" + driver + "'");
 			} catch (InstantiationException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.error(e.getMessage(),e);
 			} catch (IllegalAccessException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.error(e.getMessage(),e);
 			}
 		}
 		String u = null;
@@ -545,7 +545,7 @@ public class DBHomomorphismManager implements HomomorphismManager {
 			this.clones.add(ret.connection);
 			return ret;
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 			return null;
 		}
 	}

@@ -391,7 +391,7 @@ public abstract class Parameters extends Properties {
 				} catch (IllegalArgumentException e) {
 					log.warn("Could not invoke target on field " + f.getName() + ".", e);
 				} catch (Exception e) {
-					e.printStackTrace();
+					log.error(e.getMessage(),e);
 				}
 			}
 		}

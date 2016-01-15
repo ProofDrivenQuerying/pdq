@@ -54,7 +54,7 @@ public class PlanSearchVisualizer implements EventHandler {
 					try {
 						this.dataQueue.wait();
 					} catch (InterruptedException e) {
-						e.printStackTrace();
+						log.error(e.getMessage(),e);
 					}
 				}
 			}

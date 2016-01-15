@@ -173,8 +173,7 @@ public class RuntimeBenchmark extends Runner {
 			} catch (EvaluationException e) {
 			    throw new BenchmarkException(e.getMessage(), e);
 			} catch (RuntimeException e) {
-			    e.printStackTrace();
-			    log.error(e);
+				log.error(e.getMessage(),e);
 			    //throw new BenchmarkException(e.getMessage(), e);
 			}
 		}
@@ -262,9 +261,8 @@ public class RuntimeBenchmark extends Runner {
 		    } catch (TimeoutException e) {
 			    printLine(out, "T/O", this.nbRuns);
 		    } catch (OutOfMemoryError e) {
-		    	e.printStackTrace();
 			    printLine(out, "O/M", this.nbRuns);
-			    log.error(e.getMessage());
+				log.error(e.getMessage(),e);
 			    throw e;
 		    } catch (Exception e) {
 		    	String msg = e.getMessage();
@@ -339,7 +337,7 @@ public class RuntimeBenchmark extends Runner {
 		try {
 			new RuntimeBenchmark(args);
 		} catch (Exception  e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 			System.exit(ERROR_CODE);
 		}
 		System.exit(0);

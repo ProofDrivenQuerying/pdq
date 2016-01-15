@@ -363,7 +363,7 @@ public class PDQController {
     	        dialog.setOnCloseRequest((WindowEvent arg0) -> plannerController.interruptPlanningThreads());
     	        dialog.showAndWait();
     		} catch (IOException e) {
-    			e.printStackTrace();
+    			log.error(e.getMessage(),e);
     			throw new UserInterfaceException(e.getMessage());
     		}
     	}

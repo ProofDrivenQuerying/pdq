@@ -131,7 +131,7 @@ public class MultiThreadedQueryGenerator implements Runnable {
 			}
 			exec.shutdown();
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 		}
 	}
 

@@ -67,7 +67,7 @@ public class AttributeEqualityPredicate implements EqualityPredicate {
 			}
 			return sourceValue.equals(targetValue);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 		}
 
 		return false;

@@ -83,7 +83,7 @@ public class TestService implements Service {
 			}
 			System.out.println("Done.");
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 		}
 	}
 }

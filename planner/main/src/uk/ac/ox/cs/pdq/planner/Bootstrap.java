@@ -138,8 +138,7 @@ public class Bootstrap {
 			} 
 			log.trace("No plan found.");
 		} catch (Throwable e) {
-			log.error("Planning aborted: " + e.getMessage());
-			e.printStackTrace();
+			log.error("Planning aborted: " + e.getMessage(), e);
 			System.exit(-1);
 		}
 	}

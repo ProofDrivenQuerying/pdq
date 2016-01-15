@@ -90,7 +90,6 @@ public final class PostgresqlRelationWrapper extends SQLRelationWrapper {
 			}
 		} catch (SQLException e) {
 			log.warn(sql, e);
-			e.printStackTrace();
 		}
 		return -1.0;
 	}

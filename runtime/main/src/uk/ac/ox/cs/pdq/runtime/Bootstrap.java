@@ -153,8 +153,7 @@ public class Bootstrap {
 			}
 			counter.report();
 		} catch (Throwable e) {
-			log.error("Evaluation aborted: " + e.getMessage());
-			e.printStackTrace();
+			log.error("Evaluation aborted: " + e.getMessage(),e);
 			System.exit(-1);
 		}
 	}

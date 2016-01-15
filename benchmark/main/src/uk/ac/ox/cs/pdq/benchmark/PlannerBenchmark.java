@@ -78,10 +78,8 @@ public class PlannerBenchmark extends Runner {
 		try {
 			this.recursiveRun(new File(this.getInputFile()));
 		} catch (RuntimeException e) {
-			e.printStackTrace();
 			log.error(e.getMessage());
 		} catch (BenchmarkException | ReflectiveOperationException | IOException e) {
-			e.printStackTrace();
 			log.error(Thread.currentThread().getName() + " stopping due to " + e.getMessage());
 		}
 	}
@@ -234,7 +232,6 @@ public class PlannerBenchmark extends Runner {
 				log.info("No plan found.");
 			}
 		} catch (PlannerException e) {
-			e.printStackTrace();
 			stats.addSuffix("reason", "exception");
 			stats.addSuffix("detail", e.getClass().getSimpleName());
 			log.error(Thread.currentThread().getName() + " stopping due to " + e.getMessage() +
@@ -348,7 +345,7 @@ public class PlannerBenchmark extends Runner {
 		} catch (IOException
 				| ReflectiveOperationException
 				| BenchmarkException e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 			System.exit(ERROR_CODE);
 		}
 	}

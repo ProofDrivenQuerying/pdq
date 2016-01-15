@@ -213,7 +213,7 @@ public class Planner {
 			throw e;
 		} catch (Exception e) {
 			this.handleEarlyTermination(explorer);
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 			throw new PlannerException(e);
 		} catch (Throwable e) {
 			this.handleEarlyTermination(explorer);

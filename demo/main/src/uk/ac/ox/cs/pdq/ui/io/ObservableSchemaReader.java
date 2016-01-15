@@ -91,7 +91,7 @@ public class ObservableSchemaReader extends AbstractXMLReader<ObservableSchema> 
 			ObservableSchema s = new ObservableSchemaReader().read(in);
 			new ObservableSchemaWriter().write(System.out, s);
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 		}
 	}
 }

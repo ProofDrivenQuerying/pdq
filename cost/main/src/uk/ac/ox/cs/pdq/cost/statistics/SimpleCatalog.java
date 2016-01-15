@@ -682,13 +682,11 @@ public class SimpleCatalog implements Catalog{
 			SimpleCatalog catalog = new SimpleCatalog(schema, catalogfile);
 			log.trace(catalog.toString());
 		} catch (FileNotFoundException e) {
-			log.trace("Cannot find input files");
+			log.error("Cannot find input files");
 		} catch (Exception e) {
-			log.trace("EXCEPTION: " + e.getClass().getSimpleName() + " " + e.getMessage());
-			e.printStackTrace();
+			log.error("EXCEPTION: " + e.getClass().getSimpleName() + " " + e.getMessage());
 		} catch (Error e) {
-			log.trace("ERROR: " + e.getClass().getSimpleName() + " " + e.getMessage());
-			e.printStackTrace();
+			log.error("ERROR: " + e.getClass().getSimpleName() + " " + e.getMessage());
 			System.exit(-1);
 		}
 	}
