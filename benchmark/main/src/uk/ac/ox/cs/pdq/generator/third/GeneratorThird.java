@@ -96,7 +96,7 @@ public class GeneratorThird extends AbstractGenerator{
 					if (planner.search() != null) {
 						log.trace(", not answerable with constraints (depth=10)");
 					}
-					log.trace();
+					log.trace("\n");
 				}
 			}
 		} catch (PlannerException e) {
