@@ -7,11 +7,21 @@ import static org.junit.Assert.assertTrue;
 import java.util.HashSet;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.fol.Variable;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 public class VariableTest {
+	
+	/**
+	 * Makes sure assertions are enabled
+	 */
+	@Before 
+	public void setup() {
+		Utility.assertsEnabled();
+	}
 
 	@Test public void testVariableIsVariable() {
 		Assert.assertTrue("Variable.isVariable must be always true", new Variable("v").isVariable());

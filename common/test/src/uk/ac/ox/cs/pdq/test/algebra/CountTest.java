@@ -25,6 +25,7 @@ public class CountTest extends UnaryOperatorTest {
 	TupleType singleIntegerType = TupleType.DefaultFactory.create(Integer.class);
 	
 	@Before public void setup() throws RelationalOperatorException {
+		super.setup();
         MockitoAnnotations.initMocks(this);
 		Mockito.when(child.getColumns()).thenReturn(outputTerms);
 		Mockito.when(child.getType()).thenReturn(outputType);

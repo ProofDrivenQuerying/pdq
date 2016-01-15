@@ -28,6 +28,7 @@ public class SelectionTest extends UnaryOperatorTest {
 	@Mock Predicate predicate;
 	
 	@Before public void setup() throws RelationalOperatorException {
+		super.setup();
         MockitoAnnotations.initMocks(this);
 
         when(child.getColumns()).thenReturn(outputTerms);

@@ -28,6 +28,7 @@ import uk.ac.ox.cs.pdq.util.Table;
 import uk.ac.ox.cs.pdq.util.Tuple;
 import uk.ac.ox.cs.pdq.util.TupleType;
 import uk.ac.ox.cs.pdq.util.Typed;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.collect.Lists;
 
@@ -48,6 +49,7 @@ public class IteratorTest {
 
 	@Before
 	public void prepare() {
+		Utility.assertsEnabled();
 		this.columns = Lists.<Attribute>newArrayList(
 				new Attribute(String.class, "Col1"),
 				new Attribute(Integer.class, "Col2"),

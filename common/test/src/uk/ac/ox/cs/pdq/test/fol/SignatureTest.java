@@ -4,9 +4,11 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.fol.Signature;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 /**
  * A predicate's signature, associate a symbol with an arity..
@@ -15,6 +17,14 @@ import uk.ac.ox.cs.pdq.fol.Signature;
  */
 public class SignatureTest {
 
+	/**
+	 * Makes sure assertions are enabled
+	 */
+	@Before 
+	public void setup() {
+		Utility.assertsEnabled();
+	}
+	
 	@Test public void testSignatureValid() {
 		Signature s = new Signature("s", 1);
 		Assert.assertEquals("Signature must have name 's'", "s", s.getName());

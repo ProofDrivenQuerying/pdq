@@ -11,6 +11,7 @@ import java.util.Random;
 import java.util.Set;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.db.Attribute;
@@ -22,6 +23,7 @@ import uk.ac.ox.cs.pdq.fol.Signature;
 import uk.ac.ox.cs.pdq.fol.Skolem;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -29,6 +31,14 @@ import com.google.common.collect.Sets;
 public class PredicateFormulaTest {
 
 	private Random random = new Random();
+	
+	/**
+	 * Makes sure assertions are enabled
+	 */
+	@Before 
+	public void setup() {
+		Utility.assertsEnabled();
+	}
 
 	@Test
 	public void testHashCode() {

@@ -3,6 +3,7 @@ package uk.ac.ox.cs.pdq.test.util;
 import java.util.List;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.db.Attribute;
@@ -18,6 +19,15 @@ import com.google.common.collect.Lists;
  * @author Julien Leblay
  */
 public class UtilityTest {
+	
+	
+	/**
+	 * Makes sure assertions are enabled
+	 */
+	@Before 
+	public void setup() {
+		Utility.assertsEnabled();
+	}
 
 	@Test public void testToTypedConstant() {
 		TypedConstant<?> t1 = new TypedConstant<>("str");

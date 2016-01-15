@@ -48,6 +48,7 @@ public abstract class NaryOperatorTest extends RelationalOperatorTest {
 	
 	
 	@Before public void setup() throws RelationalOperatorException {
+		super.setup();
         MockitoAnnotations.initMocks(this);
 		Mockito.when(child1.getColumns()).thenReturn(outputTerms1);
 		Mockito.when(child1.getType()).thenReturn(outputType1);

@@ -1,11 +1,21 @@
 package uk.ac.ox.cs.pdq.test.util;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.util.Periods;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 public class PeriodsTest {
+	
+	/**
+	 * Makes sure assertions are enabled
+	 */
+	@Before 
+	public void setup() {
+		Utility.assertsEnabled();
+	}
 
 	@Test 
 	public void testParseSeconds() {

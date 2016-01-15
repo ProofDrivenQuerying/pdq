@@ -45,6 +45,7 @@ public class BindJoinTest extends NaryIteratorTest {
 	Set<Tuple> expected12, expected21, expected34;
 
 	@Before public void setup() {
+		super.setup();
         MockitoAnnotations.initMocks(this);
 		d = new Attribute(String.class, "d");
 		out12 = Lists.newArrayList(a, b, c, d, c, e);

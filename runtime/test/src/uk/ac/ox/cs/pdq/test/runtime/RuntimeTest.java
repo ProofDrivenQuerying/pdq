@@ -2,6 +2,7 @@ package uk.ac.ox.cs.pdq.test.runtime;
 
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -13,6 +14,7 @@ import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.runtime.EvaluationException;
 import uk.ac.ox.cs.pdq.runtime.RuntimeParameters;
 import uk.ac.ox.cs.pdq.runtime.exec.PlanExecutor.ExecutionModes;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 /**
  * 
@@ -20,7 +22,15 @@ import uk.ac.ox.cs.pdq.runtime.exec.PlanExecutor.ExecutionModes;
  */
 @Ignore
 public class RuntimeTest {
-
+	
+	/**
+	 * Makes sure assertions are enabled
+	 */
+	@Before 
+	public void setup() {
+		Utility.assertsEnabled();
+	}
+	
 	@Test public void initRuntime(RuntimeParameters params, Schema schema, List<Predicate> facts) {
 	}
 	

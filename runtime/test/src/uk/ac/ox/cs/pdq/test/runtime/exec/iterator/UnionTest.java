@@ -22,6 +22,7 @@ public class UnionTest extends NaryIteratorTest {
 	Union iterator;
 	
 	@Before public void setup() {
+		super.setup();
         MockitoAnnotations.initMocks(this);
         
         when(child2.getColumns()).thenReturn(child2Columns);

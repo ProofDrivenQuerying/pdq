@@ -21,6 +21,7 @@ import uk.ac.ox.cs.pdq.runtime.exec.iterator.TopDownAccess;
 import uk.ac.ox.cs.pdq.util.Tuple;
 import uk.ac.ox.cs.pdq.util.TupleType;
 import uk.ac.ox.cs.pdq.util.Typed;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.collect.Lists;
 
@@ -53,6 +54,7 @@ public class TopDownAccessTest {
 	Map<Integer, TypedConstant<?>> static5 = new LinkedHashMap<>();
 	
 	@Before public void setup() {
+		Utility.assertsEnabled();
 		this.outputColumns = Lists.<Typed>newArrayList(a, b, c, d);
 		this.outputType = TupleType.DefaultFactory.create(Integer.class, String.class, String.class, Integer.class);
 		this.inputColumns = Lists.<Typed>newArrayList(b, a);

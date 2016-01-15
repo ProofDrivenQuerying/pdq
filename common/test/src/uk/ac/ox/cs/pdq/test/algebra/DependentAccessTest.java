@@ -45,6 +45,7 @@ public class DependentAccessTest extends RelationalOperatorTest {
 	Map<Integer, TypedConstant<?>> staticInputs= new LinkedHashMap<>();
 
 	@Before public void setup() throws RelationalOperatorException {
+		super.setup();
 		staticInputs.put(2, (TypedConstant<?>) outputTerms.get(2));
 
 		free = new AccessMethod();

@@ -3,16 +3,26 @@ package uk.ac.ox.cs.pdq.test.runtime.exec.iterator;
 import java.util.Iterator;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator;
 import uk.ac.ox.cs.pdq.util.TupleType;
 import uk.ac.ox.cs.pdq.util.Typed;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 /**
  * @author Julien Leblay
  */
 public abstract class TupleIteratorTest {
+	
+	/**
+	 * Makes sure assertions are enabled
+	 */
+	@Before 
+	public void setup() {
+		Utility.assertsEnabled();
+	}
 
 	protected abstract TupleIterator getIterator();
 	

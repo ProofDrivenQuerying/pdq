@@ -44,6 +44,7 @@ public class ProjectionTest extends UnaryOperatorTest {
 	List<Term> renamedInput = Lists.<Term>newArrayList(new Variable("d"), new Skolem("e"));
 	
 	@Before public void setup() throws RelationalOperatorException {
+		super.setup();
 		int i = 0;
 		for (Term t: renamedInput) {
 	    	this.renaming.put(i++, t);

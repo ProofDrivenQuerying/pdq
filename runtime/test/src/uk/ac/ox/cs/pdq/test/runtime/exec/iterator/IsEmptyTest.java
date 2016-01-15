@@ -32,6 +32,7 @@ public class IsEmptyTest extends UnaryIteratorTest {
 	@Mock TupleIterator emptyChild;
 	
 	@Before public void setup() {
+		super.setup();
         MockitoAnnotations.initMocks(this);
         when(child.getColumns()).thenReturn(outputColumns);
 		when(child.getType()).thenReturn(outputType);

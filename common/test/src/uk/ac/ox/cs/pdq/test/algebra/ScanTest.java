@@ -29,6 +29,7 @@ public class ScanTest extends RelationalOperatorTest {
 	AccessMethod free, m1;
 
 	@Before public void setup() throws RelationalOperatorException {
+		super.setup();
 		free = new AccessMethod();
 		m1 = new AccessMethod("m1", Types.BOOLEAN, Lists.newArrayList(1));
 		
