@@ -85,18 +85,18 @@ public class GeneratorThird extends AbstractGenerator{
 				try(FileInputStream qis = new FileInputStream("test/output/" + queryFile)) {
 					ConjunctiveQuery query = new QueryReader(schema).read(qis);
 					
-					System.out.print(queryFile);
+					log.trace(queryFile);
 					planParams.setMaxDepth(1);
 					Planner planner = new Planner(planParams, costParams, reasoningParams, schema, query);
 					if (planner.search() != null) {
-						System.out.print(" not answerable without constraints");
+						log.trace(" not answerable without constraints");
 					}
 					planParams.setMaxDepth(10);
 					planner = new Planner(planParams, costParams, reasoningParams, schema, query);
 					if (planner.search() != null) {
-						System.out.print(", not answerable with constraints (depth=10)");
+						log.trace(", not answerable with constraints (depth=10)");
 					}
-					System.out.println();
+					log.trace();
 				}
 			}
 		} catch (PlannerException e) {
