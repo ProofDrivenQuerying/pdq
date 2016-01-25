@@ -11,6 +11,7 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.chart.ValueAxis;
 import javafx.util.Duration;
+import org.apache.log4j.Logger;
 
 /**
  * A logarithmic axis implementation for JavaFX 2 charts<br>
@@ -21,6 +22,7 @@ import javafx.util.Duration;
  */
 public class LogarithmicAxis extends ValueAxis<Number> {
 
+	private static Logger log = Logger.getLogger(LogarithmicAxis.class);
 	/**
 	 * The time of animation in ms
 	 */

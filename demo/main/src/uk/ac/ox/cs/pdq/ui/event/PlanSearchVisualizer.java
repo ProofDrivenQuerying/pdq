@@ -2,10 +2,13 @@ package uk.ac.ox.cs.pdq.ui.event;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import org.apache.log4j.Logger;
+
 import uk.ac.ox.cs.pdq.EventHandler;
 import uk.ac.ox.cs.pdq.planner.explorer.Explorer;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.LinearExplorer;
 import uk.ac.ox.cs.pdq.ui.model.ObservableSearchState;
+import uk.ac.ox.cs.pdq.ui.util.LogarithmicAxis;
 
 import com.google.common.base.Preconditions;
 import com.google.common.eventbus.Subscribe;
@@ -19,6 +22,7 @@ import com.google.common.eventbus.Subscribe;
  */
 public class PlanSearchVisualizer implements EventHandler {
 
+	private static Logger log = Logger.getLogger(PlanSearchVisualizer.class);
 	/** Queue holding the next dataQueue point to be display on the plan/search views by the main thread */
 	private final ConcurrentLinkedQueue dataQueue;
 
