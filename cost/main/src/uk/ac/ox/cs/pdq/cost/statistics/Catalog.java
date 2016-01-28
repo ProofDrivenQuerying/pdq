@@ -23,10 +23,22 @@ public interface Catalog {
 	 * @param relation
 	 * @param attribute
 	 * @param constant
-	 * @return
-	 * 		The selectivity of the filtering predicate attribute=constant
+	 * @return	
+	 * 		the number of tuples in relation which satisfy relation.attribute=constant divided by |relation|.
+	 * 
 	 */
 	public Double getSelectivity(Relation relation, Attribute attribute, TypedConstant<?> constant);
+	
+	/**
+	 * 
+	 * @param relation
+	 * @param attribute
+	 * @param constant
+	 * @return	
+	 * 		the number of tuples in relation which satisfy relation.attribute=constant
+	 * 
+	 */
+	public int getSize(Relation relation, Attribute attribute, TypedConstant<?> constant);
 	
 	/**
 	 * 

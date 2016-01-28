@@ -63,7 +63,7 @@ public class SimpleCatalog implements Catalog{
 	private static String READ_COLUMN_SELECTIVITY = "^(RE:(\\w+)(\\s+)AT:(\\w+)(\\s+)SE:(\\d+(\\.\\d+)?))";
 	private static String READ_ERSPI = "^(RE:(\\w+)(\\s+)BI:(\\w+)(\\s+)ERSPI:(\\d+(\\.\\d+)?))";
 	private static String READ_COST = "^(RE:(\\w+)(\\s+)BI:(\\w+)(\\s+)RT:(\\d+(\\.\\d+)?))";
-	private static String READ_SQLSERVERHISTOGRAM = "^(RE:(\\w+)(\\s+)AT:(\\w+)(\\s+)SQLH:(([a-zA-Z]:)?(\\\\[a-zA-Z0-9._-]+)+\\\\?))";
+	private static String READ_SQLSERVERHISTOGRAM = "^(RE:(\\w+)(\\s+)AT:(\\w+)(\\s+)SQLH:((/[a-zA-Z0-9._-]+)+/?))";
 
 	/** Cardinalities of the schema relations*/
 	private final Map<Relation,Integer> cardinalities;
@@ -379,6 +379,29 @@ public class SimpleCatalog implements Catalog{
 		}
 		return this.getSelectivity(relation, attribute);
 	}
+	
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.cost.statistics.Catalog#getSize(uk.ac.ox.cs.pdq.db.Relation, uk.ac.ox.cs.pdq.db.Attribute, uk.ac.ox.cs.pdq.db.TypedConstant)
+	 */
+	@Override
+	public int getSize(Relation relation, Attribute attribute, TypedConstant<?> constant) {
+		Preconditions.checkNotNull(relation);
+		Preconditions.checkNotNull(attribute);
+		Preconditions.checkNotNull(constant);
+
+		SimpleFrequencyMap histogram = this.frequencyMaps.get(Pair.of(relation, attribute));
+		String search = constant.toString();
+		if(constant.getType() instanceof Class && BigDecimal.class.isAssignableFrom((Class) constant.getType())) {
+			BigInteger integer = new BigDecimal(constant.toString()).toBigInteger();
+			search = integer.toString();
+		}
+		if(histogram != null && histogram.getFrequency(search) != null) {
+			int erpsi = histogram.getFrequency(search);
+			log.info("RELATION: " + relation.getName() + " ATTRIBUTE: " + attribute + " CONSTANTS: " + constant);
+			return erpsi;
+		}
+		return SimpleCatalog.DEFAULT_COLUMN_CARDINALITY;
+	}
 
 	public double getSelectivity(Relation relation, Attribute attribute) {
 		Preconditions.checkNotNull(attribute);
@@ -540,106 +563,6 @@ public class SimpleCatalog implements Catalog{
 		Preconditions.checkNotNull(relation);
 		Preconditions.checkNotNull(attribute);
 		return this.SQLServerHistograms.get(Pair.of(relation, attribute));
-	}
-
-	/**
-	 * Frequency histograms.
-	 * @author Efthymia Tsamoura
-	 *
-	 */
-	private static class SimpleFrequencyMap {
-
-		private static String READ_RELATION_COLUMN = "^(RE:(\\w+)(\\s+)AT:(\\w+)(\\s+)HH:)";
-		/** Reads single-word constants **/
-		private static String READ_BINS = "(\\(VA:(\\w+)(\\s+)FR:(\\d+)\\))+";
-		/** Reads two-word constants **/
-		private static String READ_BINS_ALT = "(\\(VA:(\\w+)(\\s+)(\\w+)(\\s+)FR:(\\d+)\\))+";
-
-		private final Relation relation;
-		private final Attribute attibute;
-		private final Map<String,Integer> frequencies;
-
-		private SimpleFrequencyMap(Relation relation, Attribute attibute, Map<String,Integer> values) {
-			this.relation = relation;
-			this.attibute = attibute;
-			this.frequencies = values;
-		}
-
-		public static SimpleFrequencyMap build(Schema schema, String histogram) {			
-			Triple<Relation, Attribute, Map<String, Integer>> h = parse(schema, histogram);
-			return h == null ? null : new SimpleFrequencyMap(h.getLeft(), h.getMiddle(), h.getRight());			
-		}
-
-		private static Triple<Relation,Attribute,Map<String,Integer>> parse(Schema schema, String histogram) {
-			Preconditions.checkNotNull(schema);
-			Preconditions.checkNotNull(histogram);
-			Pattern p = Pattern.compile(READ_RELATION_COLUMN);
-			Matcher m = p.matcher(histogram);
-			if (m.find()) {
-				String relation = m.group(2);
-				String attribute = m.group(4);
-				if(schema.contains(relation)) {
-					Relation r = schema.getRelation(relation);
-					Attribute a = r.getAttribute(attribute);
-					if(a == null) {
-						throw new java.lang.IllegalStateException("RELATION " + relation + " DOES NOT CONTAINT ATTRIBUTE " + attribute);
-					}
-
-					Map<String,Integer> frequencies = new HashMap<>();
-					Pattern p2 = Pattern.compile(READ_BINS);
-					Matcher m2 = p2.matcher(histogram);
-					while (m2.find()) {
-						String value = m2.group(2);
-						String freq = m2.group(4);
-						frequencies.put(value, Integer.parseInt(freq));
-					}
-					if(!frequencies.isEmpty()) {
-						return Triple.of(r, a, frequencies);
-					}
-					else {
-						p2 = Pattern.compile(READ_BINS_ALT);
-						m2 = p2.matcher(histogram);
-						while (m2.find()) {
-							String value = m2.group(2) + m2.group(3) + m2.group(4);
-							String freq = m2.group(6);
-							frequencies.put(value, Integer.parseInt(freq));
-						}
-						if(!frequencies.isEmpty()) {
-							return Triple.of(r, a, frequencies);
-						}
-						else {
-							throw new java.lang.IllegalStateException("UNPARSABLE INPUT LINE " + histogram);
-						}
-					}
-				}
-				else {
-					throw new java.lang.IllegalStateException("SCHEMA DOES NOT CONTAINT RELATION " + relation);
-				}
-			}
-			return null;
-		}
-
-		public Integer getFrequency(String entry) {
-			Preconditions.checkNotNull(this.frequencies.get(entry));
-			return this.frequencies.get(entry);
-		}
-
-		public Map<String, Integer> getFrequencies() {
-			return this.frequencies;
-		}
-
-		public Relation getRelation() {
-			return this.relation;
-		}
-
-		public Attribute getAttibute() {
-			return this.attibute;
-		}
-
-		@Override
-		public String toString() {
-			return Joiner.on("\t").join(this.frequencies.entrySet());
-		}
 	}
 
 	@Override
