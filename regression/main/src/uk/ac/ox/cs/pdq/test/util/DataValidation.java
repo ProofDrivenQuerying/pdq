@@ -5,7 +5,7 @@ import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.runtime.exec.AccessException;
 
 /**
- * Class that is checks if the data are consistent w.r.t. the schema dependencies
+ * Class that checks if the data are consistent w.r.t. the schema dependencies
  * @author Efi Tsamoura
  *
  */

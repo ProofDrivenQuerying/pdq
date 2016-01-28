@@ -20,12 +20,14 @@ import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.PlannerTypes;
 import uk.ac.ox.cs.pdq.planner.logging.IntervalEventDrivenLogger;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
-import uk.ac.ox.cs.pdq.test.planner.Bootstrap.Command;
+import uk.ac.ox.cs.pdq.test.RegressionTest;
+import uk.ac.ox.cs.pdq.test.RegressionTestException;
+import uk.ac.ox.cs.pdq.test.Bootstrap.Command;
 
 /**
- * Runs regression tests for the optimised explorer. Run a search with and
+ * Runs regression tests for the optimised explorer. Runs a search with and
  * without optimisation (global equivalence, global dominance) and compares the
- * resulting plans.
+ * resulting plans. An exception is thrown when the plans are different.
  * 
  * @author Efthymia Tsamoura
  */

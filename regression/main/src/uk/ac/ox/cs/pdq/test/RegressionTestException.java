@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.test.planner;
+package uk.ac.ox.cs.pdq.test;
 
 /**
  * Exception that occurred during a regression test.

@@ -34,17 +34,19 @@ import uk.ac.ox.cs.pdq.planner.PlannerParameters.DominanceTypes;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.SuccessDominanceTypes;
 import uk.ac.ox.cs.pdq.planner.logging.IntervalEventDrivenLogger;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
+import uk.ac.ox.cs.pdq.test.RegressionTest;
+import uk.ac.ox.cs.pdq.test.RegressionTestException;
+import uk.ac.ox.cs.pdq.test.Bootstrap.Command;
 import uk.ac.ox.cs.pdq.test.acceptance.AcceptanceCriterion;
 import uk.ac.ox.cs.pdq.test.acceptance.ApproximateCostAcceptanceCheck;
 import uk.ac.ox.cs.pdq.test.acceptance.SameCostAcceptanceCheck;
-import uk.ac.ox.cs.pdq.test.planner.Bootstrap.Command;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 import com.google.common.base.Strings;
 
 /**
- * Runs regression tests.
+ * Runs regression tests regarding the planner.
  * 
  * @author Julien Leblay
  */

@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.test.planner;
+package uk.ac.ox.cs.pdq.test;
 
 import java.io.File;
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.test.planner;
+package uk.ac.ox.cs.pdq.test;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,18 +11,17 @@ import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.ParametersException;
 import uk.ac.ox.cs.pdq.test.planner.PlannerTest.PlannerTestCommand;
-import uk.ac.ox.cs.pdq.test.planner.RuntimeTest.RuntimeTestCommand;
 import uk.ac.ox.cs.pdq.test.planner.UserPlannerTest.UserPlannerTestCommand;
+import uk.ac.ox.cs.pdq.test.runtime.RuntimeTest.RuntimeTestCommand;
 
 import com.beust.jcommander.DynamicParameter;
 import com.beust.jcommander.IParameterValidator;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
-import com.beust.jcommander.Parameters;
 
 /**
- * Runs regression tests.
+ * The entry point for the regression package
  * 
  * @author Julien Leblay
  */

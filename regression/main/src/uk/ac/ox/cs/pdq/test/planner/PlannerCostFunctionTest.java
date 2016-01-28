@@ -20,19 +20,20 @@ import uk.ac.ox.cs.pdq.planner.Planner;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.logging.IntervalEventDrivenLogger;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
-import uk.ac.ox.cs.pdq.test.planner.Bootstrap.Command;
+import uk.ac.ox.cs.pdq.test.RegressionTest;
+import uk.ac.ox.cs.pdq.test.RegressionTestException;
+import uk.ac.ox.cs.pdq.test.Bootstrap.Command;
 
 /**
- * Runs regression tests for the explorer with varying cost estimators.
- * Run a search with simple and black box cost estimators and compares the
- * resulting plans.
+ * Runs the planner with simple and black box cost estimators and compares the resulting plans.
+ * An exception is thrown when the planner finds a plan in one case but not the other. 
  * 
  * @author Julien Leblay
  */
-public class CostTest extends RegressionTest {
+public class PlannerCostFunctionTest extends RegressionTest {
 
 	/** Runner's logger. */
-	private static Logger log = Logger.getLogger(CostTest.class);
+	private static Logger log = Logger.getLogger(PlannerCostFunctionTest.class);
 
 	/** File name where planning related parameters must be stored in a test case directory */
 	private static final String PLAN_PARAMETERS_FILE = "case.properties";
@@ -51,7 +52,7 @@ public class CostTest extends RegressionTest {
 
 		@Override
 		public void execute() throws RegressionTestException, IOException, ReflectiveOperationException {
-			new CostTest().recursiveRun(new File(getInput()));
+			new PlannerCostFunctionTest().recursiveRun(new File(getInput()));
 		}
 	}
 
