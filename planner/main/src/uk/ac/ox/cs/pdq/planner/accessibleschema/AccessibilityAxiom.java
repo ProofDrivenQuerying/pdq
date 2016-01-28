@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.planner.accessible;
+package uk.ac.ox.cs.pdq.planner.accessibleschema;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,47 +14,56 @@ import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
-import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema.AccessibleRelation;
-import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema.InferredAccessibleRelation;
+import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema.AccessibleRelation;
+import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema.InferredAccessibleRelation;
 
 /**
  * 
- * 	For an access method mt on relation
-	R of arity n with input positions j1, ..., jm an accessibility axiom is a rule of the form
-	accessible(x_{j_1}) \wegde ... \wedge accessible(x_{j_m}) \wedge R(x_1, ..., x_n) -->
-	InferredAccessible R(x_1, ..., x_n) \wedge \Wedge_{j} accessible(x_j)
+ * For an access method mt on relation R of arity n with input positions j1, ..., jm 
+ * an accessibility axiom is a rule of the form
+ * accessible(x_{j_1}) \wegde ... \wedge accessible(x_{j_m}) \wedge R(x_1, ..., x_n) -->
+ * InferredAccessible R(x_1, ..., x_n) \wedge \Wedge_{j} accessible(x_j)
  * 
  *
  * @author Efthymia Tsamoura
  */
 public class AccessibilityAxiom extends TGD implements GuardedDependency {
 
+	/** The inferred accessible relation of the axiom **/
 	private final InferredAccessibleRelation infAccRelation;
-	private final AccessMethod binding;
+	/** The access method that this axiom maps to **/
+	private final AccessMethod method;
 
 	/**
+	 * 
 	 * @param infAccRel
-	 * @param binding
+	 * 		An inferred accessible relation
+	 * @param method
+	 * 		A method to access this relation
 	 */
-	public AccessibilityAxiom(InferredAccessibleRelation infAccRel, AccessMethod binding) {
-		super(createLeft(infAccRel.getBaseRelation(), binding), createRight(infAccRel, binding));
-		this.binding = binding;
+	public AccessibilityAxiom(InferredAccessibleRelation infAccRel, AccessMethod method) {
+		super(createLeft(infAccRel.getBaseRelation(), method), createRight(infAccRel, method));
+		this.method = method;
 		this.infAccRelation = infAccRel;
 	}
 
 	/**
+	 * 
 	 * @param relation
-	 * @param binding
-	 * @return Conjunction<PredicateFormula>
+	 * 		A schema relation 
+	 * @param method
+	 * 		A method to access this relation
+	 * @return
+	 * 		the atoms of the left-hand side of the accessibility axiom that corresponds to the input relation and the input access method
 	 */
-	private static Conjunction<Predicate> createLeft(Relation relation, AccessMethod binding) {
+	private static Conjunction<Predicate> createLeft(Relation relation, AccessMethod method) {
 		List<Predicate> leftAtoms = new ArrayList<>();
-		List<Integer> bindingPositions = binding.getInputs();
+		List<Integer> bindingPositions = method.getInputs();
 		Relation r = AccessibleRelation.getInstance();
 		Predicate f = relation.createAtoms();
 		List<Term> terms = f.getTerms();
 		for (int bindingPos: bindingPositions) {
-			if (binding.getType() != Types.FREE) {
+			if (method.getType() != Types.FREE) {
 				leftAtoms.add(new Predicate(r, terms.get(bindingPos - 1)));
 			}
 		}
@@ -63,9 +72,13 @@ public class AccessibilityAxiom extends TGD implements GuardedDependency {
 	}
 
 	/**
-	 * @param infAccRel
-	 * @param binding
-	 * @return Conjunction<PredicateFormula>
+	 * 
+	 * @param relation
+	 * 		A schema relation 
+	 * @param method
+	 * 		A method to access this relation
+	 * @return
+	 * 		the atoms of the right-hand side of the accessibility axiom that corresponds to the input relation and the input access method
 	 */
 	private static Conjunction<Predicate> createRight(InferredAccessibleRelation infAccRel, AccessMethod binding) {
 		Relation relation = infAccRel.getBaseRelation();
@@ -101,7 +114,7 @@ public class AccessibilityAxiom extends TGD implements GuardedDependency {
 	 * @return the access method of the accessibility axiom.
 	 */
 	public AccessMethod getAccessMethod() {
-		return this.binding;
+		return this.method;
 	}
 	
 	/**

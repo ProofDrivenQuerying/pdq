@@ -19,21 +19,26 @@ import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
 
 /**
- * Iterates over the input collection of configurations to identify the minimum-cost one
+ * Iterates over the input collection of configurations to identify the minimum-cost one.
+ * Given a set if input configuration C it removes from C the dominated and success dominated configurations 
+ * and returns the minimum cost configurations.
+ * 
  *
  * @author Efthymia Tsamoura
  *
  */
 public class ExplorationThread implements Callable<DAGChaseConfiguration> {
 
+	/** The input query**/
 	private final Query<?> query;
 	
 	/** Performs success dominance checks*/
 	private final SuccessDominance successDominance;
 	
+	/** Performs domination checks**/
 	private final Dominance[] dominance;
 
-	/** Detects homomorphisms*/
+	/** Detects query matches*/
 	private final HomomorphismDetector detector;
 
 	/** Input configurations*/
@@ -60,7 +65,7 @@ public class ExplorationThread implements Callable<DAGChaseConfiguration> {
 	 * @param best
 	 * 		The minimum cost closed and successful configuration found so far
 	 * @param detector
-	 * 		Detects homomorphisms
+	 * 		 Detects query matches
 	 * @param successDominance
 	 * 		Performs success dominance checks
 	 * @param output

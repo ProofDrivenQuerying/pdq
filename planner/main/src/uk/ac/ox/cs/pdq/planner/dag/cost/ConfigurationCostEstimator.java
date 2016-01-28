@@ -5,12 +5,16 @@ import uk.ac.ox.cs.pdq.plan.Cost;
 import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.planner.reasoning.Configuration;
 
-
-public class PlanBackedConfigurationCostEstimator implements CostEstimator<Configuration> {
+/**
+ * @deprecated
+ * @author Efthymia Tsamoura
+ *
+ */
+public class ConfigurationCostEstimator implements CostEstimator<Configuration> {
 
 	private final CostEstimator<Plan> estimator;
 	
-	public PlanBackedConfigurationCostEstimator(CostEstimator<Plan> ce) {
+	public ConfigurationCostEstimator(CostEstimator<Plan> ce) {
 		this.estimator = ce;
 	}
 	
@@ -26,6 +30,6 @@ public class PlanBackedConfigurationCostEstimator implements CostEstimator<Confi
 
 	@Override
 	public CostEstimator<Configuration> clone() {
-		return new PlanBackedConfigurationCostEstimator(this.estimator);
+		return new ConfigurationCostEstimator(this.estimator);
 	}
 }

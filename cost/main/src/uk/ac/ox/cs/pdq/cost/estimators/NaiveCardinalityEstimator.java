@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.cost.statistics.estimators;
+package uk.ac.ox.cs.pdq.cost.estimators;
 
 import uk.ac.ox.cs.pdq.algebra.Access;
 import uk.ac.ox.cs.pdq.algebra.DependentAccess;
@@ -42,7 +42,7 @@ public class NaiveCardinalityEstimator extends AbstractCardinalityEstimator<Naiv
 
 	/**
 	 * @return NaiveCardinalityEstimator
-	 * @see uk.ac.ox.cs.pdq.cost.statistics.estimators.CardinalityEstimator#clone()
+	 * @see uk.ac.ox.cs.pdq.cost.estimators.CardinalityEstimator#clone()
 	 */
 	@Override
 	public NaiveCardinalityEstimator clone() {

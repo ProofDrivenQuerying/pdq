@@ -19,8 +19,7 @@ import com.google.common.base.Preconditions;
 /**
  * Requires the input pair of configurations to be non trivial and ...
  * @author Efthymia Tsamoura
- *
- * @param 
+
  */
 public class ExistenceValidator implements Validator{
 

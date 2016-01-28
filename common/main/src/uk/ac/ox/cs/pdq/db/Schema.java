@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.alg.CycleDetector;
 import org.jgrapht.graph.DefaultDirectedGraph;
@@ -23,22 +22,24 @@ import com.google.common.collect.Lists;
 
 /**
  *
- * A relational schema
+ * A database schema
  * @author Efthymia Tsamoura
  * @author Julien Leblay
  */
 public class Schema {
 
-	/** Relations */
+	/** Relations indexed based on their name*/
 	private final Map<String, Relation> relIndex;
+	/** The list of schema relations**/
 	protected final List<Relation> relations;
 
 	/** Distribution of relations by arity */
 	private final List<Relation>[] arityDistribution;
 
-	/** Tuple generating dependencies */
+	/** The schema dependencies indexed based on their id*/
 	private final Map<Integer, Constraint> dependencyIndex;
 
+	/** The schema dependencies */
 	protected final List<Constraint> schemaDependencies;
 
 	/** True if the schema contains at least one view */
@@ -47,30 +48,34 @@ public class Schema {
 	/** True if the schema contains cycles*/
 	protected Boolean isCyclic = null;
 
-	/** Constants that appear to the schema dependencies*/
+	/** Schema constants*/
 	protected Collection<TypedConstant<?>> dependencyConstants = null;
 
-	/** A map of the string representation of a constant to the constant*/
+	/** A map from a constant's name to the constant object*/
 	protected Map<String, TypedConstant<?>> constants = new LinkedHashMap<>();
 	
+	/** The EGDs of the keys**/
 	protected final Collection<EGD> keyDependencies = Lists.newArrayList();
 
+	/** The views of the input schema**/
 	protected final List<Constraint> views;
 
+	/**
+	 * Empty schema constructor
+	 */
 	public Schema() {
 		this(new ArrayList<Relation>(), new ArrayList<Constraint>());
 	}
 
 	/**
-	 * Constructor for Schema.
-	 * @param relations Collection<Relation>
+	 * Builds a schema with the input relations	
 	 */
 	public Schema(Collection<Relation> relations) {
 		this(relations, new ArrayList<Constraint>());
 	}
 
 	/**
-	 * Schema constructor
+	 * Builds a schema with the input relations	and dependencies
 	 * @param relations
 	 * 		The input relations
 	 * @param dependencies
@@ -120,6 +125,9 @@ public class Schema {
 		this.loadConstants();
 	}
 	
+	/**
+	 * Extracts the EGDs of the relation keys
+	 */
 	public void consolidateKeys() {
 		for(Relation relation:this.relations) {
 			if(!relation.getKey().isEmpty()) {
@@ -129,58 +137,79 @@ public class Schema {
 	}
 
 	/**
-	 * @return List<IC>
+	 * 
+	 * @return
+	 * 		the schema views
 	 */
 	public List<Constraint> getViews() {
 		return this.views;
 	}
 
+
 	/**
-	 * @return boolean
+	 * 
+	 * @return
+	 * 		true if the schema contains views
 	 */
 	public boolean containsViews() {
 		return this.containsViews;
 	}
 
 	/**
-	 * @param i int
-	 * @return List<Relation>
+	 * 
+	 * @param i
+	 * @return
+	 * 		all relations having the input arity
 	 */
 	public List<Relation> getRelationsByArity(int i) {
 		return this.arityDistribution[i];
 	}
 
 	/**
-	 * @return List<Relation>
+	 * 
+	 * @return
+	 * 		all schema relations
 	 */
 	public List<Relation> getRelations() {
 		return this.relations;
 	}
 
 	/**
-	 * @return int
+	 * 
+	 * @return
+	 * 		the maximum relation arity
 	 */
 	public int getMaxArity() {
 		return this.arityDistribution.length;
 	}
 
 	/**
-	 * @return List<IC>
+	 * 
+	 * @return
+	 * 		the schema dependencies
 	 */
 	public List<Constraint> getDependencies() {
 		return this.schemaDependencies;
 	}
 	
+	/**
+	 * 
+	 * @return
+	 * 		the EGDs that come from the relations keys
+	 */
 	public Collection<EGD> getKeyDependencies() {
 		return this.keyDependencies;
 	}
 
 	/**
-	 * @param relationName String
-	 * @return Relation
+	 * 
+	 * @param name
+	 * @return
+	 * 		the relation with the input name
+	 * 		
 	 */
-	public Relation getRelation(String relationName) {
-		return this.relIndex.get(relationName);
+	public Relation getRelation(String name) {
+		return this.relIndex.get(name);
 	}
 
 	/**
@@ -251,7 +280,7 @@ public class Schema {
 	}
 
 	/**
-	 * @return the constants appearing in the schema dependencies
+	 * @return the constants of the schema dependencies
 	 */
 	public Collection<TypedConstant<?>> getDependencyConstants() {
 		if (this.dependencyConstants == null) {
@@ -271,10 +300,10 @@ public class Schema {
 			this.constants.put(constant.toString(), constant);
 		}
 	}
-
+	
 	/**
-	 * Updates the map of dependency constants
-	 * @param constants Collection<TypedConstant<?>>
+	 * Updates the schema constants with the input map
+	 * @param constants
 	 */
 	public void updateConstants(Collection<TypedConstant<?>> constants) {
 		for (TypedConstant<?> constant: constants) {
@@ -283,26 +312,31 @@ public class Schema {
 	}
 
 	/**
-	 * @return Map<String,TypedConstant<?>>
+	 * 
+	 * @return
+	 * 		the schema constants
 	 */
 	public Map<String, TypedConstant<?>> getConstants() {
 		return this.constants;
 	}
 
+
 	/**
-	 * @param constant String
-	 * @return TypedConstant<?>
+	 * 
+	 * @param name
+	 * @return
+	 * 		the constant with the given name
 	 */
-	public TypedConstant<?> getConstant(String constant) {
-		return this.constants.get(constant);
+	public TypedConstant<?> getConstant(String name) {
+		return this.constants.get(name);
 	}
 
 	/**
 	 * @param relation
 	 * @return true if the given relation is part of the schema.
 	 */
-	public boolean contains(String relationName) {
-		return this.relIndex.containsKey(relationName);
+	public boolean contains(String name) {
+		return this.relIndex.containsKey(name);
 	}
 
 	/*

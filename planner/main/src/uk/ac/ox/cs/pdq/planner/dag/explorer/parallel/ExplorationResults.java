@@ -12,41 +12,38 @@ import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
  *
  */
 public class ExplorationResults {
+	/** The list of non-dominated configurations that the IterativeExecutor.finalIteration method outputs.  **/
 	private final List<DAGChaseConfiguration> output;
+	/** The list of non-dominated configurations that the IterativeExecutor.finalIteration method outputs and are also successful. **/
 	private final Set<DAGChaseConfiguration> successful;
+	/** The lowest cost configuration**/
 	private final DAGChaseConfiguration best;
 
 	/**
-	 * Constructor for FinalIterationThreadResults.
-	 * @param output List<DAGChaseConfiguration>
-	 * @param successfulConfigurations Set<DAGChaseConfiguration>
-	 * @param bestConfiguration DAGChaseConfiguration
+	 * 
+	 * @param output
+	 * 		The list of non-dominated configurations that the IterativeExecutor.finalIteration method outputs.
+	 * @param successful
+	 * 		The list of non-dominated configurations that the IterativeExecutor.finalIteration method outputs and are also successful.
+	 * @param bestConfiguration
+	 * 		The lowest cost configuration
 	 */
 	public ExplorationResults(List<DAGChaseConfiguration> output,
-			Set<DAGChaseConfiguration> successfulConfigurations,
+			Set<DAGChaseConfiguration> successful,
 			DAGChaseConfiguration bestConfiguration) {
 		this.output = output;
 		this.best = bestConfiguration;
-		this.successful = successfulConfigurations;
+		this.successful = successful;
 	}
 
-	/**
-	 * @return List<DAGChaseConfiguration>
-	 */
 	public List<DAGChaseConfiguration> getOutput() {
 		return this.output;
 	}
 
-	/**
-	 * @return DAGChaseConfiguration
-	 */
 	public DAGChaseConfiguration getBest() {
 		return this.best;
 	}
 
-	/**
-	 * @return Set<DAGChaseConfiguration>
-	 */
 	public Set<DAGChaseConfiguration> getSuccessful() {
 		return this.successful;
 	}

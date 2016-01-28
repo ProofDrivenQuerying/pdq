@@ -10,6 +10,7 @@ import uk.ac.ox.cs.pdq.planner.PlannerParameters.ValidatorTypes;
  */
 public class ValidatorFactory {
 
+	/** The type of the target validator object**/
 	private final ValidatorTypes type;
 
 	private final int depthThreshold;

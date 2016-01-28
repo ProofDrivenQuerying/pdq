@@ -14,11 +14,13 @@ import uk.ac.ox.cs.pdq.planner.dominance.Dominance;
 public class ExplorerUtils {
 
 	/**
-	 *
+	 * 
+	 * @param dominance
+	 * 		A list of objects that perform dominance checks
 	 * @param targets
 	 * @param source
 	 * @return
-	 * 		the configuration that dominates the input
+	 * 		the target configuration that dominates the source
 	 */
 	public static DAGChaseConfiguration isDominated(Dominance[] dominance, Collection<DAGChaseConfiguration> targets, DAGChaseConfiguration source) {
 		for(DAGChaseConfiguration target:targets) {

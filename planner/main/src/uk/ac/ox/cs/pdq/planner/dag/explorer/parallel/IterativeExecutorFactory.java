@@ -12,7 +12,9 @@ import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
 
 /**
- * Creates IterativeExecutor objects
+ * Creates IterativeExecutor objects.
+ * An IterativeExecutor object provides methods to create binary configurations or to
+ * identify the minimum-cost configuration among a given set of configurations
  *
  * @author Efthymia Tsamoura
  */

@@ -21,7 +21,7 @@ import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.io.ReaderException;
 import uk.ac.ox.cs.pdq.io.xml.AbstractXMLReader;
 import uk.ac.ox.cs.pdq.io.xml.QNames;
-import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema;
+import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.ui.proof.Proof;
 
 /**

@@ -15,8 +15,8 @@ import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
-import uk.ac.ox.cs.pdq.planner.accessible.AccessibilityAxiom;
-import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema;
+import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
+import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.Candidate;
 import uk.ac.ox.cs.pdq.planner.reasoning.Configuration;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState;
@@ -29,10 +29,8 @@ import com.google.common.collect.Sets;
 
 /**
  * Type of configurations met in the linear world.
- * Each linear chase configuration is associated with a set of facts, a rule firing, and a set of generated facts p � 
- * the ones produced by the last rule firing.
+ * Each linear chase configuration is associated with a set of facts, a rule firing, and a set of generated facts p � the ones produced by the last rule firing.
  * The (output) facts are all stored inside the state member field.
- * 
  *
  * @author Efthymia Tsamoura
  */

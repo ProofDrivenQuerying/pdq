@@ -8,8 +8,8 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import uk.ac.ox.cs.pdq.db.Constraint;
 import uk.ac.ox.cs.pdq.fol.Predicate;
-import uk.ac.ox.cs.pdq.planner.accessible.AccessibilityAxiom;
-import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema;
+import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
+import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.reasoning.utility.Match;
 
 /**
@@ -84,9 +84,9 @@ public interface AccessibleChaseState extends uk.ac.ox.cs.pdq.reasoning.chase.st
 	/**
 	 *
 	 * @param s
-	 * 		An input chase configuration
+	 * 		An input chase state
 	 * @return
-	 * 		a merged state
+	 * 		a state that is the union of this state and the input one
 	 */
 	AccessibleChaseState merge(AccessibleChaseState s);
 	

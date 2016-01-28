@@ -16,8 +16,8 @@ import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.plan.DAGPlan;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
-import uk.ac.ox.cs.pdq.planner.accessible.AccessibilityAxiom;
-import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema;
+import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
+import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.dag.ApplyRule;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.explorer.Explorer;
@@ -83,7 +83,7 @@ public abstract class DAGExplorer extends Explorer<DAGPlan> {
 	 * @param accessibleSchema
 	 * 		The accessible counterpart of the input schema
 	 * @param chaser
-	 * 		Runs the chase algorithm
+	 * 		Saturates configurations using the chase algorithm
 	 * @param detector
 	 * 		Detects homomorphisms during chasing
 	 * @param costEstimator
@@ -172,7 +172,6 @@ public abstract class DAGExplorer extends Explorer<DAGPlan> {
 		state = (uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState) 
 				new AccessibleDatabaseListState(this.query, this.schema, (DBHomomorphismManager) this.detector);
 		this.chaser.reasonUntilTermination(state, this.query, this.schema.getDependencies());
-
 
 		List<DAGChaseConfiguration> collection = new ArrayList<>();
 		Collection<Pair<AccessibilityAxiom,Collection<Predicate>>> pairs = state.groupByBinding(this.accessibleSchema.getAccessibilityAxioms());

@@ -23,7 +23,7 @@ import uk.ac.ox.cs.pdq.planner.dag.cost.sql.DAGConfigurationToSQLTranslator;
 import com.google.common.eventbus.EventBus;
 
 /**
- * Blackbox cost estimator which translates a configuration directly to an SQL
+ * Translates a configuration directly to an SQL
  * query which is further provided to PostgreSQL for cost analysis
  *
  * @author Efthymia Tsamoura

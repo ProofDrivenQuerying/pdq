@@ -5,9 +5,7 @@ package uk.ac.ox.cs.pdq.reasoning.chase;
 
 	This package contains several implementations of the chase algorithm: 
 	
-	-Restricted chase:
-	
-	Runs the chase algorithm applying only active triggers. 
+	-Restricted chase: Runs the chase algorithm applying only active triggers. 
  	Consider an instance I, a set Base of values, and a TGD
 	\delta = \forall x  \sigma(\vec{x}) --> \exists y  \tau(\vec{x}, \vec{y})
 	a trigger for \delta in I is a homomorphism h of \sigma into I. A trigger is active if it
@@ -17,8 +15,7 @@ package uk.ac.ox.cs.pdq.reasoning.chase;
 	The output of the chase step is a new instance in which h is no longer an active trigger.
 	The facts that are generated during chasing are stored in a list.
 	
-	-Parallel EGD chase: 
-	 Runs EGD chase using parallel chase steps.
+	-Parallel EGD chase: Runs EGD chase using parallel chase steps.
 	 (From modern dependency theory notes)
  	 A trigger for and EGD \delta = \sigma --> x_i = x_j in I is again a homomorphism h in
 	 \sigma into I. A trigger is active if it does not extend to a homomorphism h0 into I.

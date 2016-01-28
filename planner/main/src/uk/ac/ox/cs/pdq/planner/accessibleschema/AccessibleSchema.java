@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.planner.accessible;
+package uk.ac.ox.cs.pdq.planner.accessibleschema;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -30,9 +30,8 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
 /**
- * Given schema S_0, the Accessible Schema for S_0, denoted
-	AcSch(S_0), is the schema without any access restrictions, such
-	that:
+ * Given schema S_0, the Accessible Schema for S_0, denoted AcSch(S_0), 
+ * is the schema without any access restrictions, such that:
 	i. The constants are those of S_0.
 	ii.The relations are those of S_0, a copy of each relation R
 	denoted AccessedR (the “accessible version of R”), a unary
@@ -51,26 +50,29 @@ public class AccessibleSchema extends Schema {
 	/** The accessible relations*/
 	private final List<AccessibleRelation> accessibleRelations;
 
-	/** Mapping from schema relations to the corresponding inferred accessed relations*/
+	/** Mapping from schema relations to the corresponding inferred accessible relations*/
 	private final Map<String, InferredAccessibleRelation> infAccessibleRelations;
 
-	/** Mapping from a relation binding pair to an accessibility axioms, not relying on AccessedRelations */
+	/** Mapping from a relation-access method pair to an accessibility axioms */
 	private final Map<Pair<? extends Relation, AccessMethod>, AccessibilityAxiom> accessibilityAxioms;
 
-	/** Mapping from a dependency to its inferred accessible version*/
+	/** Mapping from a dependency to its inferred accessible counterpart*/
 	private final Map<Constraint, InferredAccessibleAxiom> infAccessibilityAxioms;
 
+	/** The inferred accessible axioms**/
 	private final List<InferredAccessibleAxiom> infAccessibleViews = new ArrayList<>();
-
+	
 	/**
-	 *
+	 * 
 	 * @param relations
 	 * 		List of schema relations
-	 * @param ics
-	 * 		list if schema ICs
+	 * @param dependencies
+	 * 		list if schema dependencies
+	 * @param constantsMap
+	 * 		Map of schema constant names to constants 
 	 */
-	public AccessibleSchema(List<Relation> relations, List<Constraint> ics, Map<String, TypedConstant<?>> constantsMap) {
-		super(relations, ics);
+	public AccessibleSchema(List<Relation> relations, List<Constraint> dependencies, Map<String, TypedConstant<?>> constantsMap) {
+		super(relations, dependencies);
 		this.constants = constantsMap;
 		ImmutableMap.Builder<String, InferredAccessibleRelation> b2 = ImmutableMap.builder();
 		ImmutableMap.Builder<Pair<? extends Relation, AccessMethod>, AccessibilityAxiom> f4 = ImmutableMap.builder();
@@ -88,7 +90,7 @@ public class AccessibleSchema extends Schema {
 		this.infAccessibleRelations = b2.build();
 
 		// Inferred accessible axioms the schema ICs
-		for (Constraint<?, ?> ic: ics) {
+		for (Constraint<?, ?> ic: dependencies) {
 			Map<Predicate, InferredAccessibleRelation> predicateToInfAccessibleRelation = new LinkedHashMap<>();
 			for (Predicate p: ic.getPredicates()) {
 				predicateToInfAccessibleRelation.put(p, this.infAccessibleRelations.get(p.getName()));
@@ -118,22 +120,25 @@ public class AccessibleSchema extends Schema {
 	}
 	
 	/**
-	 * @return the inferred accessible versions of the schema dependencies
+	 * @return the inferred accessible counterparts of the schema dependencies
 	 */
 	public Collection<InferredAccessibleAxiom> getInferredAccessibilityAxioms() {
 		return this.infAccessibilityAxioms.values();
 	}
 
-
 	/**
-	 * @return List<InferredAccessibleAxiom>
+	 * 
+	 * @return
+	 * 		the inferred accessible views of this accessible schema
 	 */
 	public List<InferredAccessibleAxiom> getInferredAccessibleViews() {
 		return this.infAccessibleViews;
 	}
 
 	/**
-	 * @return Collection<AccessibilityAxiom>
+	 * 
+	 * @return
+	 * 		the accessibility axioms of this schema
 	 */
 	public Collection<AccessibilityAxiom> getAccessibilityAxioms() {
 		return this.accessibilityAxioms.values();
@@ -141,16 +146,13 @@ public class AccessibleSchema extends Schema {
 
 	/**
 	 * @param r Input relation
-	 * @param b Input binding
-	 * @return The accessibility axiom that corresponds to the relation-binding pair
+	 * @param b Input access method
+	 * @return The accessibility axiom that corresponds to the relation-access method pair
 	 */
 	public AccessibilityAxiom getAccessibilityAxiom(Relation r, AccessMethod b) {
 		return this.accessibilityAxioms.get(Pair.of(r, b));
 	}
 	
-	/**
-	 * @return List<Relation>
-	 */
 	@Override
 	public List<Relation> getRelations() {
 		return Lists.newArrayList(

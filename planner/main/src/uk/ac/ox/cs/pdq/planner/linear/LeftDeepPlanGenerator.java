@@ -59,17 +59,24 @@ public class LeftDeepPlanGenerator {
 
 	/**
 	 * Creates a linear plan by appending the access and middlewares commands of the input configuration to the input parent plan.
-	 * The top level operator is a projection that projects the input terms
-	 * @param configuration 
+	 * The top level operator is a projection that projects the terms toProject.
+	 * 
+	 * The newly created access and middleware command are created as follows:
+	 * For an exposed fact f, If f has been exposed by an input-free accessibility axiom (access method), 
+	 * then create an input-free access else create a dependent access operator.
+	 * If f has schema constants in output positions or repeated constants, then these schema constants map to filtering predicates.
+	 * Finally, project the variables that correspond to output chase constants. 
+	 * @param c 
 	 * @param parent 
+	 * 		The input parent plan. This is the plan of the parent configuration of c, i.e., the configuration that is augmented with the exposed facts of c.
 	 * @param toProject 
 	 * 		Terms to project in the resulting plan
 	 * @return 
 	 */
-	private static LeftDeepPlan createLeftDeepPlan(LinearConfiguration configuration,
+	private static LeftDeepPlan createLeftDeepPlan(LinearConfiguration c,
 			LeftDeepPlan parent,
 			List<Term> toProject) {
-		Preconditions.checkArgument(configuration.getExposedCandidates() != null);
+		Preconditions.checkArgument(c.getExposedCandidates() != null);
 		RelationalOperator op1 = null;
 		AccessOperator access = null;
 		RelationalOperator predAlias = null;
@@ -77,8 +84,11 @@ public class LeftDeepPlanGenerator {
 			predAlias = new SubPlanAlias(parent);
 		}
 
-		for (Candidate candidate: configuration.getExposedCandidates()) {
+		//Iterate over each exposed fact
+		for (Candidate candidate: c.getExposedCandidates()) {
 			if (access == null) {
+				//If this fact has been exposed by an input-free accessibility axiom (access method), then create an input-free access
+				//else create a dependent access operator
 				if (candidate.getAccessMethod().getType() == Types.FREE) {
 					access = new Scan(candidate.getRelation());
 				} else {
@@ -86,10 +96,13 @@ public class LeftDeepPlanGenerator {
 				}
 			}
 			RelationalOperator op2 = (RelationalOperator) access;
+			//Find if this fact has schema constants in output positions or repeated constants
+			//If yes, then these schema constants map to filtering predicates
 			uk.ac.ox.cs.pdq.algebra.predicates.Predicate selectPredicates = Operators.createSelectPredicates(candidate.getFact().getTerms());
 			if (selectPredicates != null) {
 				op2 = new Selection(selectPredicates, op2);
 			}
+			//Project the variables that correspond to output chase constants 
 			LinkedHashMap<Integer, Term> renaming = getOutputMap(candidate, toProject);
 			if (renaming.size() != op2.getColumns().size()
 					|| !renaming.values().containsAll(op2.getColumns())

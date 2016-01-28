@@ -21,7 +21,6 @@ import uk.ac.ox.cs.pdq.algebra.SubPlanAlias;
 import uk.ac.ox.cs.pdq.algebra.UnaryOperator;
 import uk.ac.ox.cs.pdq.algebra.predicates.ConjunctivePredicate;
 import uk.ac.ox.cs.pdq.algebra.predicates.Predicate;
-import uk.ac.ox.cs.pdq.cost.statistics.estimators.CardinalityEstimator;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.logging.performance.StatisticsCollector;
 import uk.ac.ox.cs.pdq.plan.Cost;

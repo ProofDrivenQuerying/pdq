@@ -18,6 +18,14 @@ import uk.ac.ox.cs.pdq.fol.Query;
  */
 public interface Catalog {
 	
+	/**
+	 * 
+	 * @param relation
+	 * @param attribute
+	 * @param constant
+	 * @return
+	 * 		The selectivity of the filtering predicate attribute=constant
+	 */
 	public Double getSelectivity(Relation relation, Attribute attribute, TypedConstant<?> constant);
 	
 	/**
