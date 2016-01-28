@@ -72,7 +72,6 @@ public class DependencyGeneratorFirst extends AbstractDependencyGenerator implem
 	 * @return 
 	 * 		a list of dependencies
 	 */
-	
 	private List<Constraint> generateTGDs(ConjunctiveQuery query) {
 		List<Constraint> dependencies = new ArrayList<>();
 		List<Predicate> queryBodyAtoms = query.getBody().getPredicates();
@@ -83,15 +82,18 @@ public class DependencyGeneratorFirst extends AbstractDependencyGenerator implem
 			//Select a random subset of conjunctions of the input query's body
 			int selection = this.random.nextInt(powerSet.size());
 			List<Predicate> leftConjuncts = Lists.newArrayList(powerSet.get(selection));
+			//Add the guard of the query in the left-hand side of the dependency
 			if(!leftConjuncts.isEmpty()) {
 				if (leftConjuncts.size() > 1 && !leftConjuncts.contains(guard)) {
 					leftConjuncts.add(guard);
 				}
+				//Create the variables V that will appear in the right-hand side of the dependency  
 				List<Variable> existential = this.createVariables(
 						this.params.getQueryConjuncts() * this.params.getArity(),
 						Utility.getVariables(leftConjuncts));
 
-				//Create the conjunction in the right-hand side of the dependency 
+				//Create the conjunction in the right-hand side of the dependency populating its atoms
+				//with variables from V
 				ConjunctionInfo rightSide = this.createUnGuardedConjunction(existential,
 						this.params.getDependencyConjuncts(), leftConjuncts, this.params.getRepeatedRelations());
 

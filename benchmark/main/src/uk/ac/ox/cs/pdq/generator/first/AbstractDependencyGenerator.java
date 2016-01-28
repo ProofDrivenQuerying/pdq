@@ -241,7 +241,7 @@ public abstract class AbstractDependencyGenerator {
 	 * 
 	 * @param atoms
 	 * @return
-	 * 		a list of chain predicates coming from the input relations. Each predicate has one join variable with its successor
+	 * 		a list of chain atoms coming from the input relations. Each atom has one join variable with its successor
 	 */
 	protected List<Predicate> createChainConjuncts(List<Predicate> atoms) {
 		int xCounter = 0;
@@ -260,7 +260,6 @@ public abstract class AbstractDependencyGenerator {
 			}
 			chainAtoms.add(new Predicate(atom.getSignature(), nTerms));
 		}
-
 		return chainAtoms;
 	}
 

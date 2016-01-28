@@ -25,8 +25,8 @@ import uk.ac.ox.cs.pdq.util.Utility;
 import com.google.common.collect.Lists;
 
 /**
- * Creates guarded (queries having a guard in their body), 
- * chain guarded (a chain query with a guard) or acyclic queries given the relations of an input schema  
+ * Creates guarded (queries having a guard in their body), chain guarded (a chain query with a guard) 
+ * or acyclic queries given the relations of an input schema.  
  * 
  * @author Efthymia Tsamoura
  * 
@@ -57,6 +57,13 @@ public class QueryGeneratorFirst extends AbstractDependencyGenerator implements 
 	}
 
 	/**
+	 * 
+	 * Creates acyclic queries having a given number of conjuncts.
+	 * The algorithms starts by randomly selecting the predicates that will appear in the query's body, 
+	 * along with their variables. Different predicates are associated with different variables.
+	 * The user can choose whether a query will have repeated predicates or not.
+	 * Then the algorithm continues by populating the body of the query with atoms.
+	 * Two atoms A_i and A_i+1 join have only one join variable. 
 	 * 
 	 * @return
 	 * 		an acyclic query of the target number of conjunctions 
@@ -115,13 +122,20 @@ public class QueryGeneratorFirst extends AbstractDependencyGenerator implements 
 		Signature relationQ = new Signature("Q", free.size());
 		Predicate atom = new Predicate(relationQ, free);
 		return new AcyclicQuery(atom, Conjunction.of(body));
-
 	}
 
 	/**
+	 * Creates conjunctive guarded queries having a given number of conjuncts.
+	 * The algorithm starts by creating a list of variables V.
+	 * These variables are passed to a method for creating the body of the query.
+	 * The body is then created as follows: 
+	 * the algorithm picks a random sets of relations.
+	 * These relations form atoms with variables randomly selected variables from V. 
+	 * The relation of the maximum arity forms the guard which is populated with all 
+	 * variables from V. 
 	 * 
 	 * @return
-	 * 		a guarded query of the target number of conjunctions 
+	 * 		a guarded query having the target number of conjunctions 
 	 */
 	private ConjunctiveQuery generateGuardedQuery() {
 		List<Variable> variables = this.createVariables(this.schema.getMaxArity());
@@ -136,7 +150,16 @@ public class QueryGeneratorFirst extends AbstractDependencyGenerator implements 
 		return new ConjunctiveQuery(atom, Conjunction.of(queryBodyAtoms));
 	}
 
+	
 	/**
+	 * TODO This method seems to return a chain query not a chain guarded query.
+	 * Creates chain guarded queries having a given number of conjuncts.
+	 * The algorithm starts by creating a list of variables V.
+	 * These variables are passed to a method for creating the body of the query.
+	 * The body is then created as follows: 
+	 * the algorithm picks a random sets of relations.
+	 * These relations form atoms with variables randomly selected variables from V. 
+	 * Two atoms A_i and A_i+1 join have only one join variable. 
 	 * 
 	 * @return
 	 * 		a chain guarded query of the target number of conjunctions 
