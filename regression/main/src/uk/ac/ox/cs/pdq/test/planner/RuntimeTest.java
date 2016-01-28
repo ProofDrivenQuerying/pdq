@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.test.regression;
+package uk.ac.ox.cs.pdq.test.planner;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -44,7 +44,7 @@ import uk.ac.ox.cs.pdq.test.acceptance.AcceptanceCriterion.AcceptanceLevels;
 import uk.ac.ox.cs.pdq.test.acceptance.AcceptanceCriterion.AcceptanceResult;
 import uk.ac.ox.cs.pdq.test.acceptance.ExpectedCardinalityAcceptanceCheck;
 import uk.ac.ox.cs.pdq.test.acceptance.SetEquivalentResultSetsAcceptanceCheck;
-import uk.ac.ox.cs.pdq.test.regression.Bootstrap.Command;
+import uk.ac.ox.cs.pdq.test.planner.Bootstrap.Command;
 import uk.ac.ox.cs.pdq.test.util.DataValidationImplementation;
 import uk.ac.ox.cs.pdq.util.Result;
 

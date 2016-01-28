@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.test.regression;
+package uk.ac.ox.cs.pdq.test.planner;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -20,7 +20,7 @@ import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.logging.IntervalEventDrivenLogger;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters.ReasoningTypes;
-import uk.ac.ox.cs.pdq.test.regression.Bootstrap.Command;
+import uk.ac.ox.cs.pdq.test.planner.Bootstrap.Command;
 
 /**
  * Runs regression tests for the optimized explorer. 

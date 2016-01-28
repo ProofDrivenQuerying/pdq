@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.test.regression;
+package uk.ac.ox.cs.pdq.test.planner;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -8,6 +8,7 @@ import java.io.IOException;
 import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.cost.CostParameters;
+import uk.ac.ox.cs.pdq.cost.CostParameters.CostTypes;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.io.xml.QueryReader;
@@ -17,22 +18,21 @@ import uk.ac.ox.cs.pdq.logging.SimpleProgressLogger;
 import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.planner.Planner;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
-import uk.ac.ox.cs.pdq.planner.PlannerParameters.PlannerTypes;
 import uk.ac.ox.cs.pdq.planner.logging.IntervalEventDrivenLogger;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
-import uk.ac.ox.cs.pdq.test.regression.Bootstrap.Command;
+import uk.ac.ox.cs.pdq.test.planner.Bootstrap.Command;
 
 /**
- * Runs regression tests for the optimised explorer. Run a search with and
- * without optimisation (global equivalence, global dominance) and compares the
+ * Runs regression tests for the explorer with varying cost estimators.
+ * Run a search with simple and black box cost estimators and compares the
  * resulting plans.
  * 
- * @author Efthymia Tsamoura
+ * @author Julien Leblay
  */
-public class DAGExplorersTest extends RegressionTest {
+public class CostTest extends RegressionTest {
 
 	/** Runner's logger. */
-	private static Logger log = Logger.getLogger(DAGExplorersTest.class);
+	private static Logger log = Logger.getLogger(CostTest.class);
 
 	/** File name where planning related parameters must be stored in a test case directory */
 	private static final String PLAN_PARAMETERS_FILE = "case.properties";
@@ -44,14 +44,14 @@ public class DAGExplorersTest extends RegressionTest {
 	private static final String QUERY_FILE = "query.xml";
 
 
-	public static class DAGExplorersCommand extends Command {
-		public DAGExplorersCommand() {
-			super("dagexp");
+	public static class CostCommand extends Command {
+		public CostCommand() {
+			super("cost");
 		}
 
 		@Override
 		public void execute() throws RegressionTestException, IOException, ReflectiveOperationException {
-			new DAGExplorersTest().recursiveRun(new File(getInput()));
+			new CostTest().recursiveRun(new File(getInput()));
 		}
 	}
 
@@ -74,8 +74,7 @@ public class DAGExplorersTest extends RegressionTest {
 	 */
 	protected boolean compare(File directory) {
 		boolean result = true;
-		try (
-				FileInputStream sis = new FileInputStream(directory.getAbsolutePath() + '/' + SCHEMA_FILE);
+		try(FileInputStream sis = new FileInputStream(directory.getAbsolutePath() + '/' + SCHEMA_FILE);
 				FileInputStream qis = new FileInputStream(directory.getAbsolutePath() + '/' + QUERY_FILE)) {
 
 			this.out.println("\nStarting case '" + directory.getAbsolutePath() + "'");
@@ -85,7 +84,7 @@ public class DAGExplorersTest extends RegressionTest {
 			PlannerParameters planParams = new PlannerParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
 			CostParameters costParams = new CostParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
 			ReasoningParameters reasoningParams = new ReasoningParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
-
+			
 			// Loading query
 			ConjunctiveQuery query = new QueryReader(schema).read(qis);
 			if (schema == null || query == null) {
@@ -93,39 +92,31 @@ public class DAGExplorersTest extends RegressionTest {
 				return true;
 			}
 
-			Plan plan = null;
-			PlannerTypes masterType = null;
-			for (PlannerTypes type: PlannerTypes.values()) {
-				if (type.toString().startsWith("DAG")) {
-					try (ProgressLogger pLog = new SimpleProgressLogger(this.out)) {
-						planParams.setPlannerType(type);
-						Planner planner1 = new Planner(planParams, costParams, reasoningParams, schema);
-						planner1.registerEventHandler(new IntervalEventDrivenLogger(pLog, planParams.getLogIntervals(), planParams.getShortLogIntervals()));
-						Plan p = planner1.search(query);
-						if (plan == null) {
-							masterType = type;
-							plan = p;
-						} else {
-							this.out.println("\nComparing " + masterType + " with " + type);
-							switch (plan.howDifferent(p)) {
-							case IDENTICAL:
-								this.out.println("PASS: " + directory.getAbsolutePath());
-								break;
-							case EQUIVALENT:
-								this.out.println("PASS: Results differ, but are equivalent - "
-										+ directory.getAbsolutePath());
-								this.out.println("\tdiff: " + plan.diff(p));
-								break;
-							default:
-								this.out.println("FAIL: " + directory.getAbsolutePath());
-								this.out.println("\tPlan returned by first explorer: " + plan);
-								this.out.println("\tPlan returned by this explorer: " + p);
-								return false;
-							}
+			Plan plan1, plan2;
+			try (ProgressLogger pLog = new SimpleProgressLogger(this.out)) {
+				costParams.setCostType(CostTypes.SIMPLE_CONSTANT);
+				Planner planner1 = new Planner(planParams, costParams, reasoningParams, schema);
+				planner1.registerEventHandler(new IntervalEventDrivenLogger(pLog, planParams.getLogIntervals(), planParams.getShortLogIntervals()));
+				plan1 = planner1.search(query);
+			}
+			try (ProgressLogger pLog = new SimpleProgressLogger(this.out)) {
+				costParams.setCostType(CostTypes.BLACKBOX);
+				Planner planner2 = new Planner(planParams, costParams, reasoningParams, schema);
+				planner2.registerEventHandler(new IntervalEventDrivenLogger(pLog, planParams.getLogIntervals(), planParams.getShortLogIntervals()));
+				plan2 = planner2.search(query);
+			}
 
-						}
-					}
-				}
+			if (plan1 == null && plan2 == null) {
+				this.out.println("PASS: " + directory.getAbsolutePath());
+			} else if ((plan1 != null && plan2 == null)
+					|| (plan1 == null && plan2 != null)) {
+				this.out.println("FAIL: " + directory.getAbsolutePath());
+				this.out.println("\tPlan returned by simple cost: " + plan1);
+				this.out.println("\tPlan returned by black box: " + plan2);
+			}
+
+			else {
+				this.out.println("PASS: " + directory.getAbsolutePath());
 			}
 			return true;
 

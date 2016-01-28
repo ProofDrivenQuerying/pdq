@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.test.regression;
+package uk.ac.ox.cs.pdq.test.planner;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -32,7 +32,7 @@ import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.test.acceptance.AcceptanceCriterion;
 import uk.ac.ox.cs.pdq.test.acceptance.ApproximateCostAcceptanceCheck;
 import uk.ac.ox.cs.pdq.test.acceptance.SameCostAcceptanceCheck;
-import uk.ac.ox.cs.pdq.test.regression.Bootstrap.Command;
+import uk.ac.ox.cs.pdq.test.planner.Bootstrap.Command;
 
 import com.beust.jcommander.Parameter;
 

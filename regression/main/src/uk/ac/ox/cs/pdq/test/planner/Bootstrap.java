@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.test.regression;
+package uk.ac.ox.cs.pdq.test.planner;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,9 +10,9 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.ParametersException;
-import uk.ac.ox.cs.pdq.test.regression.PlannerTest.PlannerTestCommand;
-import uk.ac.ox.cs.pdq.test.regression.RuntimeTest.RuntimeTestCommand;
-import uk.ac.ox.cs.pdq.test.regression.UserPlannerTest.UserPlannerTestCommand;
+import uk.ac.ox.cs.pdq.test.planner.PlannerTest.PlannerTestCommand;
+import uk.ac.ox.cs.pdq.test.planner.RuntimeTest.RuntimeTestCommand;
+import uk.ac.ox.cs.pdq.test.planner.UserPlannerTest.UserPlannerTestCommand;
 
 import com.beust.jcommander.DynamicParameter;
 import com.beust.jcommander.IParameterValidator;
