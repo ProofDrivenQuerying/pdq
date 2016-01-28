@@ -65,7 +65,7 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 	 * 		The query's body
 	 */
 	public ConjunctiveQuery(Predicate head, Conjunction<Predicate> body) {
-		this(head, body, createGrounding(body));
+		this(head, body, generateCanonicalMapping(body));
 	}
 	
 	/**
@@ -144,9 +144,9 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 	 * @return
 	 * 		a mapping of variables of the input conjunction to constants. 
 	 * 		A fresh constant is created for each variable of the conjunction. 
-	 * 		This method is invoked by the conjunctive query constructor when the constructor is called with empty input mapping. 
+	 * 		This method is invoked by the conjunctive query constructor when the constructor is called with empty input canonical mapping. 
 	 */
-	private static Map<Variable, Constant> createGrounding(Conjunction<Predicate> body) {
+	private static Map<Variable, Constant> generateCanonicalMapping(Conjunction<Predicate> body) {
 		Map<Variable, Constant> canonicalMapping = new LinkedHashMap<>();
 			for (Predicate p: body) {
 				for (Term t: p.getTerms()) {
