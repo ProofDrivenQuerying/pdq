@@ -17,7 +17,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.lang3.tuple.Triple;
 import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.db.AccessMethod;
@@ -31,10 +30,6 @@ import uk.ac.ox.cs.pdq.io.xml.QueryReader;
 import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
 import uk.ac.ox.cs.pdq.plan.CommandToTGDTranslator;
 
-
-
-
-
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
@@ -42,6 +37,15 @@ import com.google.common.collect.Maps;
 
 /**
  * Holds unconditional statistics.
+ * The statistics that are maintained are:
+ * -the relation cardinalities,
+ * -cardinalities of single attributes
+ * -the size of output per invocation of an access method
+ * -the cost of an access method
+ * -selectivities of single attribute filtering predicates
+ * -frequency maps of single attributes
+ * -and SQL Server 2014 single attribute histograms.
+ * All the statistics are loaded by default from a catalog.properties file
  * @author Efthymia Tsamoura
  *
  */
