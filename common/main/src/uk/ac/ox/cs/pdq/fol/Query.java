@@ -7,7 +7,11 @@ import java.util.Map;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 
 /**
- * An fol query
+ * By a query we mean a mapping from relation instances of some schema
+ * to instances of some other relation. A boolean query is a query where the output is a
+ * relation of arity 0. Since there are only two instances for a relation of arity 0, a boolean
+ * query is a mapping where the output takes one of two values, denoted True and False.
+ * Given a query Q and instance I, Q(I) is the result of evaluating Q on I.
  *
  * @author Efthymia Tsamoura
  * @author Julien Leblay
