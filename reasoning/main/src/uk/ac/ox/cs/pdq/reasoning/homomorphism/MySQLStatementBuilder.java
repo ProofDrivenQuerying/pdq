@@ -84,5 +84,30 @@ public class MySQLStatementBuilder extends SQLStatementBuilder {
 	public String encodeName(String name) {
 		return super.encodeName(name);
 	}
+	
+	/**
+	 * @param facts
+	 * @return insert statements that add the input fact to the fact database.
+	 */
+	@Override
+	protected Collection<String> makeInserts(Collection<? extends Predicate> facts, Map<String, DBRelation> dbrelations) {
+		Collection<String> result = new LinkedList<>();
+		for (Predicate fact : facts) {
+			DBRelation rel = dbrelations.get(fact.getName());
+			List<Term> terms = fact.getTerms();
+			String insertInto = "INSERT IGNORE INTO " + this.encodeName(rel.getName()) + " " + "VALUES ( ";
+			for (Term term : terms) {
+				if (!term.isVariable()) {
+					insertInto += "'" + term + "'" + ",";
+				}
+			}
+			insertInto += 0 + ",";
+			insertInto += fact.getId();
+			insertInto += ")";
+			result.add(insertInto);
+		}
+		log.trace(result);
+		return result;
+	}
 }
 
