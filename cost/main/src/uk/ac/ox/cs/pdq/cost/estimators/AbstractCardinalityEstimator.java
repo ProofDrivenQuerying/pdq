@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.cost.statistics.estimators;
+package uk.ac.ox.cs.pdq.cost.estimators;
 
 import uk.ac.ox.cs.pdq.algebra.Access;
 import uk.ac.ox.cs.pdq.algebra.Count;
@@ -20,7 +20,7 @@ import uk.ac.ox.cs.pdq.plan.EstimateProvider;
 import com.google.common.base.Preconditions;
 
 /**
- * Compute the estimated input and output cardinalities of a logical operator
+ * Computes the estimated input and output cardinalities of a logical operator
  * and its descendants, for non-error-prone operators (e.g. aggregates, cross
  * products and static operators).
  *
@@ -30,14 +30,14 @@ public abstract class AbstractCardinalityEstimator<M extends EstimateProvider<Re
 
 	/**
 	 * @return AbstractCardinalityEstimator<M>
-	 * @see uk.ac.ox.cs.pdq.cost.statistics.estimators.CardinalityEstimator#clone()
+	 * @see uk.ac.ox.cs.pdq.cost.estimators.CardinalityEstimator#clone()
 	 */
 	@Override
 	public abstract AbstractCardinalityEstimator<M> clone();
 
 	/**
 	 * @param logOp LogicalOperator
-	 * @see uk.ac.ox.cs.pdq.cost.statistics.estimators.CardinalityEstimator#estimateIfNeeded(RelationalOperator)
+	 * @see uk.ac.ox.cs.pdq.cost.estimators.CardinalityEstimator#estimateIfNeeded(RelationalOperator)
 	 */
 	@Override
 	public void estimateIfNeeded(RelationalOperator logOp) {
@@ -49,7 +49,7 @@ public abstract class AbstractCardinalityEstimator<M extends EstimateProvider<Re
 
 	/**
 	 * @param logOp LogicalOperator
-	 * @see uk.ac.ox.cs.pdq.cost.statistics.estimators.CardinalityEstimator#estimate(RelationalOperator)
+	 * @see uk.ac.ox.cs.pdq.cost.estimators.CardinalityEstimator#estimate(RelationalOperator)
 	 */
 	@Override
 	public void estimate(RelationalOperator logOp) {

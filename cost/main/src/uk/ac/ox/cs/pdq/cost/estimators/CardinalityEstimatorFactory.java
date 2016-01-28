@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.cost.statistics.estimators;
+package uk.ac.ox.cs.pdq.cost.estimators;
 
 
 import uk.ac.ox.cs.pdq.cost.CostParameters.CardinalityEstimationTypes;

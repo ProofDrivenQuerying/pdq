@@ -1,11 +1,12 @@
-package uk.ac.ox.cs.pdq.planner.explorer;
+package uk.ac.ox.cs.pdq.cost;
 
 
 import java.sql.SQLException;
 import java.util.Properties;
 
-import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.cost.estimators.AccessCountCostEstimator;
+import uk.ac.ox.cs.pdq.cost.estimators.CardinalityEstimator;
+import uk.ac.ox.cs.pdq.cost.estimators.CardinalityEstimatorFactory;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.LengthBasedCostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.PerInputCostEstimator;
@@ -13,19 +14,25 @@ import uk.ac.ox.cs.pdq.cost.estimators.TotalERSPICostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.WhiteBoxCostEstimator;
 import uk.ac.ox.cs.pdq.cost.statistics.Catalog;
 import uk.ac.ox.cs.pdq.cost.statistics.SimpleCatalog;
-import uk.ac.ox.cs.pdq.cost.statistics.estimators.CardinalityEstimator;
-import uk.ac.ox.cs.pdq.cost.statistics.estimators.CardinalityEstimatorFactory;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.logging.performance.StatisticsCollector;
 import uk.ac.ox.cs.pdq.plan.Plan;
-import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 
 import com.google.common.base.Preconditions;
 import com.google.common.eventbus.EventBus;
 
 /**
- * A factory of cost estimation objects
+ * A factory of cost estimation objects.
+ * 	The following types of plan cost estimators are supported:
+	-SIMPLE_CONSTANT: Estimates the cost as the sum of the cost of all accesses in a plan, \n where access cost are provided externally	
+	-SIMPLE_RANDOM: Estimates the cost as the sum of the cost of all accesses in a plan, \n where cost are assigned randomly
+	-SIMPLE_GIVEN: Estimates the cost as the sum of the cost of all accesses in a plan, \n where cost are measured automatically from the underlying datasources	
+	-SIMPLE_COUNT: Estimates the cost as the sum of all accesses in a plan	
+	-BLACKBOX: Estimates the cost through some externally defined cost function.\nCurrently, this defaults to the white box cost functions relying on textbox cost estimation techniques	
+	-BLACKBOX_DB Estimates the cost by translating the query to SQL and asking its cost to a DBMS. The current implementation supports Postgres 
+	-INVERSE_LENGTH: Experimental: estimates the cost as the number of atoms in a plan
+	-SIMPLE_ERSPI Estimates the cost as the sum of the estimated result size per invocation associated to each access method used in a plan.
  *
  * @author Julien Leblay
  * @author Efthymia Tsamoura 
@@ -35,37 +42,35 @@ public class CostEstimatorFactory {
 
 	/**
 	 * 
-	 * @param planParams
 	 * @param costParams
+	 * 		Parameters that specify the type of plan cost estimation object that will be created 
 	 * @param schema
+	 * 		The database schema
 	 * @return
 	 * @throws SQLException
 	 */
-	public static <P extends Plan> CostEstimator<P> getEstimator(PlannerParameters planParams, CostParameters costParams, Schema schema) throws SQLException {
-		return getInstance(null, false, planParams, costParams, schema);
+	public static <P extends Plan> CostEstimator<P> getEstimator(CostParameters costParams, Schema schema) throws SQLException {
+		return getInstance(null, false, costParams, schema);
 	}
 
 	/**
 	 * 
 	 * @param eventBus
 	 * @param collectStats
-	 * @param planParams
 	 * @param costParams
+	 * 		Parameters that specify the type of plan cost estimation object that will be created
 	 * @param schema
+	 * 		The database schema
 	 * @return
 	 * @throws SQLException
 	 */
 	public static <P extends Plan> CostEstimator<P> getInstance(
 			EventBus eventBus, 
 			boolean collectStats,
-			PlannerParameters planParams, 
 			CostParameters costParams, 
 			Schema schema) throws SQLException {
 		Preconditions.checkArgument(costParams.getCostType() != null, "Cost type param must is not defined.");
 		Properties properties = null;
-//		boolean isLinear = planParams.getPlannerType().equals(PlannerTypes.LINEAR_GENERIC) ||
-//				planParams.getPlannerType().equals(PlannerTypes.LINEAR_KCHASE) ||
-//				planParams.getPlannerType().equals(PlannerTypes.LINEAR_OPTIMIZED);
 		CostEstimator<P> result = null;
 		switch (costParams.getCostType()) {
 		case BLACKBOX:
@@ -86,9 +91,6 @@ public class CostEstimatorFactory {
 						prop.put("password", costParams.getBlackBoxDatabasePassword());
 					}
 				}
-//				if (!isLinear) {
-//					return new uk.ac.ox.cs.pdq.planner.dag.cost.PostgresqlBlackBoxEstimator(eventBus, collectStats, properties, costParams.getBlackBoxQueryType());
-//				}
 				result = new uk.ac.ox.cs.pdq.cost.estimators.PostgresqlBlackBoxEstimator(new StatisticsCollector(collectStats, eventBus), properties, costParams.getBlackBoxQueryType());
 				break;
 			}

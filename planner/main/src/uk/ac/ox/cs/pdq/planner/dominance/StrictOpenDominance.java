@@ -14,8 +14,7 @@ import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
  * Open configuration dominance. A configuration c dominates a configuration c',
  * if c both cost- and fact- dominates c' with one of the two being strict.
  * When both configurations are open, then a simple plan cost estimator is used
- * to assess the configurations' costs;
- * otherwise, the costs of their corresponding (closed) plans are considered.
+ * to assess the configurations' costs; otherwise, the costs of their corresponding (closed) plans are considered.
  *
  * @author Efthymia Tsamoura
  */

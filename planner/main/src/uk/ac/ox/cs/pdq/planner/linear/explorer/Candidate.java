@@ -10,8 +10,8 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
-import uk.ac.ox.cs.pdq.planner.accessible.AccessibilityAxiom;
-import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema;
+import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
+import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.util.PlannerUtility;
 import uk.ac.ox.cs.pdq.reasoning.utility.Match;
 
@@ -21,10 +21,9 @@ import com.google.common.collect.Lists;
 /**
  * Informally, a fact is candidate for exposure if all its input chase constants are already accessible. 
  * The formal definition of candidate facts is given below:
- * 	A fact R(c1, ..., cm) in a linear configuration v is a candidate for exposure in v 
- * 	if AccessedR(c1, ..., cm) is not yet in v and and there is an access
-	method mt on R with input positions j1, ..., jm such that
-	accessible(c_{j_1}), ..., accessible(c_{j_m}) all hold in v.
+ * A fact R(c1, ..., cm) in a linear configuration v is a candidate for exposure in v 
+ * if AccessedR(c1, ..., cm) is not yet in v and and there is an access method mt on R with input positions j1, ..., jm such that
+ * accessible(c_{j_1}), ..., accessible(c_{j_m}) all hold in v.
  * @author Efthymia Tsamoura
  *
  */

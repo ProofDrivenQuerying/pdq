@@ -19,9 +19,9 @@ import uk.ac.ox.cs.pdq.reasoning.utility.Match;
 import com.google.common.collect.Lists;
 
 /**
- * 	The linear plans that are visited during exploration are organised into a tree. 
-	The nodes of this tree correspond to (partial) linear configurations. 
-	This class provides an abstract node class.
+ * The linear plans that are visited during exploration are organised into a tree. 
+ * The nodes of this tree correspond to (partial) linear configurations. 
+ * This class provides an abstract node class.
  *
  * @author Efthymia Tsamoura
  * @author Julien Leblay

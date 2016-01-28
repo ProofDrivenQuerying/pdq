@@ -18,7 +18,7 @@ public interface DAGConfiguration extends Configuration<DAGPlan> {
 	
 	/**
 	 * 
-	 * @return the high of this configuration
+	 * @return the hight of this configuration
 	 */
 	Integer getHeight();
 	/**

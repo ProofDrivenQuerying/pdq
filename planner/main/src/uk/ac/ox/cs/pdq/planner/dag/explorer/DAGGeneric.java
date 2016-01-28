@@ -21,7 +21,7 @@ import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.plan.DAGPlan;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
-import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema;
+import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.dag.ApplyRule;
 import uk.ac.ox.cs.pdq.planner.dag.BinaryConfiguration;
 import uk.ac.ox.cs.pdq.planner.dag.ConfigurationUtility;
@@ -50,25 +50,18 @@ public class DAGGeneric extends DAGExplorer {
 	 * there does not exist any configuration with depth < maxDepth
 	 */
 	protected final int maxDepth;
-
 	/** Filters out configurations at the end of each iteration*/
 	private final Filter filter;
-
-	/** Validates pairs of configurations to be composed*/
+	/** Check whether the binary configuration composed from a given configuration pair satisfies given shape restrictions.*/
 	private final List<Validator> validators;
-
 	private final List<DAGChaseConfiguration> left;
 	private final List<DAGChaseConfiguration> right;
-
 	/** The current exploration depth */
 	protected int depth = 1;
-
 	/** True if pair selection is order aware */
 	protected boolean orderAware;
-
 	/** Returns pairs of configurations to combine */
 	protected PairSelector selector;
-
 	/** Removes success dominated configurations **/
 	protected final SuccessDominance successDominance;
 
@@ -86,7 +79,7 @@ public class DAGGeneric extends DAGExplorer {
 	 * @param accessibleSchema
 	 * 		The accessible counterpart of the input schema
 	 * @param chaser
-	 * 		Runs the chase algorithm
+	 * 		Saturates the newly created configurations
 	 * @param detector
 	 * 		Detects homomorphisms during chasing
 	 * @param costEstimator
@@ -96,7 +89,7 @@ public class DAGGeneric extends DAGExplorer {
 	 * @param filter
 	 * 		Filters out configurations at the end of each iteration
 	 * @param validators
-	 * 		Validates pairs of configurations to be composed
+	 * 		Checks whether the binary configuration composed from a given configuration pair satisfies given shape restrictions.
 	 * @param maxDepth
 	 * 		The maximum depth to explore
 	 * @param orderAware
@@ -191,8 +184,10 @@ public class DAGGeneric extends DAGExplorer {
 	}
 
 	/**
-	 * @return Collection<DAGChaseConfiguration>
+	 * 
+	 * @return
 	 * @throws PlannerException
+	 * @throws LimitReachedException
 	 */
 	protected Collection<DAGChaseConfiguration> mainLoop() throws PlannerException, LimitReachedException {
 		Map<Pair<DAGChaseConfiguration, DAGChaseConfiguration>, DAGChaseConfiguration> last = new HashMap<>();
@@ -233,26 +228,25 @@ public class DAGGeneric extends DAGExplorer {
 	protected static class PairSelector<S extends AccessibleChaseState> {
 		/** Configurations to consider on the left*/
 		private List<DAGChaseConfiguration> left;
-
 		/** Configurations to consider on the right*/
 		private List<DAGChaseConfiguration> right;
-
-		/** Validates pairs of configurations to be composed*/
+		/** Checks whether the binary configuration composed from a given configuration pair satisfies given shape restrictions. */
 		private final List<Validator> validators;
 		private final boolean orderAware;
-
 		private final Set<Set<Integer>> cache = Sets.newLinkedHashSet();
-
 		private Pair<DAGChaseConfiguration, DAGChaseConfiguration> reverse = null;
 		private int i = 0;
 		private int j = 0;
 		private boolean sendReverse = false;
 
 		/**
-		 * Constructor for PairSelector.
-		 * @param left List<DAGChaseConfiguration>
-		 * @param right List<DAGChaseConfiguration>
-		 * @param validator Validator
+		 * 
+		 * @param left
+		 * 		Configurations to consider on the left
+		 * @param right
+		 * 		Configurations to consider on the right
+		 * @param validators
+		 * 		Checks whether the binary configuration composed from a given configuration pair satisfies given shape restrictions
 		 */
 		public PairSelector(List<DAGChaseConfiguration> left,
 				List<DAGChaseConfiguration> right, List<Validator> validators) {
@@ -260,10 +254,13 @@ public class DAGGeneric extends DAGExplorer {
 		}
 
 		/**
-		 * Constructor for PairSelector.
-		 * @param left List<DAGChaseConfiguration>
-		 * @param right List<DAGChaseConfiguration>
-		 * @param validator Validator
+		 * 
+		 * @param left
+		 * 		Configurations to consider on the left
+		 * @param right
+		 * 		Configurations to consider on the right
+		 * @param validators
+		 * 		Checks whether the binary configuration composed from a given configuration pair satisfies given shape restrictions
 		 * @param orderAware
 		 */
 		public PairSelector(
@@ -349,7 +346,8 @@ public class DAGGeneric extends DAGExplorer {
 	}
 
 	/**
-	 * @return List<DAGChaseConfiguration>
+	 * 
+	 * @return
 	 */
 	public List<DAGChaseConfiguration> getRight() {
 		return this.right;

@@ -2,24 +2,22 @@ package uk.ac.ox.cs.pdq.planner;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Collection;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.EventHandler;
+import uk.ac.ox.cs.pdq.cost.CostEstimatorFactory;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.cost.CostStatKeys;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.logging.performance.ChainedStatistics;
 import uk.ac.ox.cs.pdq.logging.performance.DynamicStatistics;
 import uk.ac.ox.cs.pdq.logging.performance.StatKey;
 import uk.ac.ox.cs.pdq.plan.Plan;
-import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema;
-import uk.ac.ox.cs.pdq.planner.explorer.CostEstimatorFactory;
+import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.explorer.Explorer;
 import uk.ac.ox.cs.pdq.planner.explorer.ExplorerFactory;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
@@ -30,8 +28,6 @@ import uk.ac.ox.cs.pdq.planner.reasoning.ReasonerFactory;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismException;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismManagerFactory;
@@ -184,25 +180,25 @@ public class Planner {
 		
 		if (noDep) 
 		{
-			schema = Schema.builder(schema).disableDependencies().build();
-			schema.updateConstants(query.getSchemaConstants());
-			accessibleSchema = new AccessibleSchema(schema);
+			this.schema = Schema.builder(this.schema).disableDependencies().build();
+			this.schema.updateConstants(query.getSchemaConstants());
+			this.accessibleSchema = new AccessibleSchema(this.schema);
 		}
 		else
 		{
-			schema.updateConstants(query.getSchemaConstants());
-			accessibleSchema.updateConstants(query.getSchemaConstants());
+			this.schema.updateConstants(query.getSchemaConstants());
+			this.accessibleSchema.updateConstants(query.getSchemaConstants());
 		}
 
-		detector.addQuery(query);
-		Query<?> accessibleQuery = accessibleSchema.accessible(query, query.getVariables2Canonical());
+		this.detector.addQuery(query);
+		Query<?> accessibleQuery = this.accessibleSchema.accessible(query, query.getVariables2Canonical());
 		
 		Explorer<P> explorer = null;
 		try{
 			// Top-level initialisations
 			CostEstimator<P> costEstimator = (CostEstimator<P>) this.externalCostEstimator;
 			if (costEstimator == null) {
-				costEstimator = CostEstimatorFactory.getEstimator(this.plannerParams, this.costParams, schema);
+				costEstimator = CostEstimatorFactory.getEstimator(this.costParams, this.schema);
 			}
 			Chaser reasoner = new ReasonerFactory(
 					this.eventBus, 
@@ -217,15 +213,15 @@ public class Planner {
 					this.eventBus, 
 					collectStats,
 					this.schema,
-					accessibleSchema,
+					this.accessibleSchema,
 					query,
 					accessibleQuery,
 					reasoner,
-					detector,
+					this.detector,
 					costEstimator,
 					this.plannerParams);
 			
-			detector.clearQuery();
+			this.detector.clearQuery();
 			
 
 			// Chain all statistics collectors

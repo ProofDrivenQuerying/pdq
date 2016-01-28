@@ -28,20 +28,28 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 
 /**
- * Creates new binary configurations
+ * Creates new binary configurations.
+ * Given two lists of configurations L and R, the algorithm creates a new binary configuration c=Binary(l,r) by 
+ * taking one configuration l from L and one configuration r from R.
+ * First, the thread estimates the cost of c, without saturating it.
+ * If the cost of c is lower than the cost of the best plan found so far, c is saturated using the chase algorithm. 
+ * Otherwise, c is dropped.
+ * 
  *
  * @author Efthymia Tsamoura
  */
 public class ReasoningThread implements Callable<Boolean> {
 
+	/** The input query**/
 	protected final Query<?> query;
 	
+	/** The schema dependencies**/
 	protected final Collection<? extends Constraint> dependencies;
 	
-	/** Performs reasoning. Closes newly created binary configurations*/
+	/** Saturates newly created binary configurations using the chase reasoning tool*/
 	protected final Chaser chaser;
 
-	/** Detects homomorphisms*/
+	/** Detects homomorphisms during chasing*/
 	protected final HomomorphismDetector detector;
 
 	/** Estimates the cost of the plans */
@@ -66,11 +74,16 @@ public class ReasoningThread implements Callable<Boolean> {
 	/** The configurations to consider on the right */
 	private final Collection<DAGChaseConfiguration> right;
 	
+	/** The best configuration of the previous exploration round.**/
 	private final DAGChaseConfiguration best;
 	
+	/** 
+	 * Performs success domination checks.
+	 * We do not bother exploring configurations that would map to a plan with cost higher than the cost of the best plan.
+	 **/
 	private final SuccessDominance successDominance;
 	
-	/** Validates pairs of configurations to be composed*/
+	/** Checks whether the binary configuration composed from a given configuration pair satisfies given shape restrictions. */
 	private final List<Validator> validators;
 	
 	/** The output configurations*/

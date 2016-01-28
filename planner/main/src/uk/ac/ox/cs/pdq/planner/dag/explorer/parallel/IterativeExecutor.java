@@ -12,7 +12,7 @@ import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.dag.equivalence.DAGEquivalenceClasses;
 
 /**
- * Provides functions to create binary configurations or to
+ * Provides methods to create binary configurations or to
  * identify the minimum-cost configuration among a given set of configurations
  *
  * @author Efthymia Tsamoura

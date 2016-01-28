@@ -16,7 +16,7 @@ I. Requirements
 II. Dependencies
  
 Internal: (pdq-)common
-External: derby-10.10, mysql-connector-5.1.30
+External: derby-10.10.1.1, mysql-connector-5.1.30
 	
 III. Installing & running the planner
 
@@ -24,5 +24,29 @@ Under the top directory, type:
 
 	mvn install
 
-The JAR will be places under the "target/" directory.
+Two JARs will be built and placed in the project's "target/" directory.
 
+	- pdq-reasoning-<version>.jar, contains the bytecode for the reasoner
+	  only, i.e. you need to make sure all dependencies are on the CLASSPATH to
+	  run it.
+
+	- pdq-reasoning-<version>.one-jar.jar, is fully self-contained, and can be
+	  run directly.
+
+To run the planner, type:
+
+	java -jar /path/to/JAR/file --help
+	
+This will printout all required command line arguments.
+
+Most reasoning parameters can be passed through the command line, however, you 
+may want to set those parameters in a separate file.
+See pdq-reasoning.properties for an overview of all parameters that can be used.
+
+Example:
+	mvn install
+	java -jar target/pdq-reasoning-<version>.one-jar.jar \
+			-c examples/example_01/case.properties     \
+			-s examples/example_01/schema.xml          \
+			-q examples/example_01/query.xml           \
+			-v

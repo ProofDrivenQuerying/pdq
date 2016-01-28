@@ -132,7 +132,7 @@ public class Bootstrap {
 									pLog, planParams.getLogIntervals(),
 									planParams.getShortLogIntervals()));
 				}
-				plan = planner.search();
+				plan = planner.search(query);
 			}
 		} catch (Throwable e) {
 			log.error("Planning aborted: " + e.getMessage(),e);

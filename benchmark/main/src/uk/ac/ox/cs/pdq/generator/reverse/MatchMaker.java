@@ -23,8 +23,8 @@ import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.io.pretty.VeryPrettyQueryWriter;
 import uk.ac.ox.cs.pdq.io.xml.QueryWriter;
-import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema.AccessibleRelation;
-import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema.InferredAccessibleRelation;
+import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema.AccessibleRelation;
+import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema.InferredAccessibleRelation;
 import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.collect.LinkedHashMultimap;

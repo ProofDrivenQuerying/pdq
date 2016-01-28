@@ -53,21 +53,12 @@
 			<groupId>uk.ac.ox.cs.pdq</groupId>
 			<artifactId>pdq-common</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>uk.ac.ox.cs.pdq</groupId>
-			<artifactId>pdq-reasoning</artifactId>
-		</dependency>
 	</dependencies>
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
 				<groupId>uk.ac.ox.cs.pdq</groupId>
 				<artifactId>pdq-common</artifactId>
-				<version>1.0.0-Beta</version>
-			</dependency>
-			<dependency>
-				<groupId>uk.ac.ox.cs.pdq</groupId>
-				<artifactId>pdq-reasoning</artifactId>
 				<version>1.0.0-Beta</version>
 			</dependency>
 		</dependencies>

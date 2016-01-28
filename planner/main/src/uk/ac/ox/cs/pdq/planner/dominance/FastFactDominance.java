@@ -7,9 +7,7 @@ import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
  * Performs fast fact dominance checks.
  * A source configuration is fact dominated by a target configuration if any
  * inferred accessible fact plus in the source configuration also appears
- * in the target configuration.
- * In order to perform this kind of check Skolem constants must be assigned to 
- * formula variables during chasing.
+ * in the target configuration. In order to perform this kind of check Skolem constants must be assigned to formula variables during chasing.
  *
  * @author Efthymia Tsamoura
  */

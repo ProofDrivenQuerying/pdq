@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.planner.accessible;
+package uk.ac.ox.cs.pdq.planner.accessibleschema;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -10,7 +10,7 @@ import uk.ac.ox.cs.pdq.fol.Disjunction;
 import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Negation;
 import uk.ac.ox.cs.pdq.fol.Predicate;
-import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema.InferredAccessibleRelation;
+import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema.InferredAccessibleRelation;
 import uk.ac.ox.cs.pdq.rewrite.Rewriter;
 
 

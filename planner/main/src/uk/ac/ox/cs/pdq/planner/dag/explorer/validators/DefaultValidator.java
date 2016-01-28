@@ -7,10 +7,11 @@ import uk.ac.ox.cs.pdq.planner.dag.ConfigurationUtility;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 
 /**
- * Requires the input pair of configurations to be non trivial
+ * Requires the input pair of configurations to be non trivial.
+ * An ordered pair of configurations (left, right) is non-trivial 
+ * if the output facts of the right configuration are not included in the output facts of left configuration and vice versa.
  * @author Efthymia Tsamoura
  *
- * @param 
  */
 public class DefaultValidator implements Validator{
 

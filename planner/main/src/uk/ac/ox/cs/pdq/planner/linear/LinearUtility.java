@@ -26,14 +26,14 @@ public class LinearUtility {
 
 	/**
 	 * 
-	 * @param exposedCandidates
+	 * @param exposed
 	 * @return
 	 * 		the input constants of the input candidate facts
 	 */
-	public static Collection<Constant> getInputConstants(Set<Candidate> exposedCandidates) {
-		Preconditions.checkNotNull(exposedCandidates);
-		Preconditions.checkArgument(exposedCandidates.size() > 0);
-		Candidate candidate = exposedCandidates.iterator().next();
+	public static Collection<Constant> getInputConstants(Set<Candidate> exposed) {
+		Preconditions.checkNotNull(exposed);
+		Preconditions.checkArgument(exposed.size() > 0);
+		Candidate candidate = exposed.iterator().next();
 		return PlannerUtility.getInputConstants(candidate.getRule(), Sets.newHashSet(candidate.getFact()));
 	}
 	

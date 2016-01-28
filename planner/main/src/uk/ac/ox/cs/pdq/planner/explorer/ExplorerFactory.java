@@ -21,7 +21,7 @@ import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.PlannerTypes;
-import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema;
+import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.DAGOptimized;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.filters.ExistenceFilter;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.filters.Filter;
@@ -49,7 +49,28 @@ import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
 import com.google.common.eventbus.EventBus;
 
 /**
- * Creates an explorer given the input arguments
+ * Creates an explorer given the input arguments. The following types of explorers are available:
+	
+	-The LinearGeneric class explores the space of linear proofs exhaustively. 
+	-The LinearOptimized class employs several heuristics to cut down the search space. 
+	The first heuristic prunes the configurations that map to plans with cost >= to the best plan found so far.
+	The second heuristic prunes the cost dominated configurations.
+	A configuration c and c' is fact dominated by another configuration c' 
+	if there exists an homomorphism from the facts of c to the facts of c' and the input constants are preserved.
+	A configuration c is cost dominated by c' if it is fact dominated by c and maps to a plan with cost >= the cost of the plan of c'.
+	The LinearOptimized class also employs the notion of equivalence in order not to revisit configurations already visited before.
+	Both the LinearGeneric and LinearOptimized perform reasoning every time a new node is added to the plan tree. 
+	-The LinearKChase class works similarly to the LinearOptimized class.
+	However, it does not perform reasoning every time a new node is added to the plan tree but every k steps.  
+
+	-The DAGGeneric class explores the space of proofs exhaustively.
+	-The DAGOptimized, DAGSimpleDP and DAGChaseFriendlyDP employ two DP-like heuristics to cut down the search space.
+	The first heuristic prunes the configurations that map to plans with cost >= to the best plan found so far.
+	The second heuristic prunes the cost dominated configurations. A configuration c and c' is fact dominated by another configuration c' 
+	if there exists an homomorphism from the facts of c to the facts of c' and the input constants are preserved.
+	A configuration c is cost dominated by c' if it is fact dominated by c and maps to a plan with cost >= the cost of the plan of c'.
+	-The DAGOptimized class employs further techniques to speed up the planning process like reasoning in parallel and re-use of reasoning results.
+ * 
  * @author Efthymia Tsamoura
  *
  */
