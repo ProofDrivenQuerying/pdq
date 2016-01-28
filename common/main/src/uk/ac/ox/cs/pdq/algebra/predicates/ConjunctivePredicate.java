@@ -100,7 +100,7 @@ public class ConjunctivePredicate<T extends Predicate> implements Predicate, Ite
 	 * @return a collection of predicate remove the nesting of conjunction that
 	 * it may contain.
 	 */
-	private Collection<Predicate> flatten(Predicate predicate) {
+	public Collection<Predicate> flatten(Predicate predicate) {
 		Collection<Predicate> result = new LinkedList<Predicate>();
 		if (predicate != null) {
 			if (predicate instanceof ConjunctivePredicate) {

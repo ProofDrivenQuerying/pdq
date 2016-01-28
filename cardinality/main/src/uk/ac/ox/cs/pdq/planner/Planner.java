@@ -6,10 +6,8 @@ import java.sql.SQLException;
 import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.EventHandler;
-import uk.ac.ox.cs.pdq.cost.CostEstimatorFactory;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.cost.CostStatKeys;
-import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.cost.statistics.Catalog;
 import uk.ac.ox.cs.pdq.cost.statistics.SimpleCatalog;
 import uk.ac.ox.cs.pdq.db.Attribute;
@@ -30,7 +28,6 @@ import uk.ac.ox.cs.pdq.planner.logging.performance.PlannerStatKeys;
 import uk.ac.ox.cs.pdq.planner.reasoning.ReasonerFactory;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismException;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismManagerFactory;
@@ -194,10 +191,6 @@ public class Planner {
 					this.eventBus, 
 					collectStats,
 					this.reasoningParams).getInstance();
-			
-			
-			//reasoner.reasonUntilTermination(state, accessibleQuery, this.schema.getDependencies());
-			
 			
 			explorer = ExplorerFactory.createExplorer(
 					this.eventBus, 

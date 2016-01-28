@@ -87,17 +87,6 @@ public class ConstantEqualityPredicate implements EqualityPredicate {
 	public TypedConstant<?> getValue() {
 		return this.constant;
 	}
-	
-	/**
-	 * @param predicate the (possibly nested) predicate to flatten, if null the empty collection is returned.
-	 * @return a collection of predicate remove the nesting of conjunction that
-	 * it may contain.
-	 */
-	public Collection<Predicate> flatten() {
-		Collection<Predicate> result = new LinkedList<Predicate>();
-		result.add(this);
-		return result;
-	}
 
 	/*
 	 * (non-Javadoc)

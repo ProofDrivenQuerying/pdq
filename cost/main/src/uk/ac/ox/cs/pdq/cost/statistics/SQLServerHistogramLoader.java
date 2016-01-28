@@ -7,7 +7,10 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 
@@ -37,31 +40,54 @@ public class SQLServerHistogramLoader {
 	public static SQLServerHistogram load(Type type, String fileName) {
 		String line = null;
 		try {
+			fileName = fileName.substring(1);
 			List<SQLServerBucket> buckets = Lists.newArrayList();
 			FileReader fileReader = new FileReader(fileName);
 			BufferedReader bufferedReader = new BufferedReader(fileReader);
 			
 			try{
-			while((line = bufferedReader.readLine()) != null) {
-				String[] elements = line.split("\\s+");
-				Object range_hi_key = Types.cast(type, elements[0]);
-				BigInteger range_rows;
-//				try {
-//					range_rows = new BigDecimal(elements[1]).toBigInteger();
-//				}
-//				catch(Exception ex) {
-//					range_rows = new BigInteger(elements[1]);
-//				}
-				range_rows = new BigDecimal(elements[1]).toBigInteger();
-				BigInteger eq_rows = new BigDecimal(elements[2]).toBigInteger();
-				BigInteger distinct_range_rows = new BigDecimal(elements[3]).toBigInteger();
-				double avg_range_rows = new Double(elements[4]); 
-				SQLServerBucket bucket = new SQLServerBucket(range_hi_key, range_rows, eq_rows, distinct_range_rows, avg_range_rows);
-				buckets.add(bucket);
-			}
+				while((line = bufferedReader.readLine()) != null) {
+					String regex = null;
+					List<Integer> groupIndex = null;
+					if(type instanceof Class && String.class.isAssignableFrom((Class) type)) {
+						regex = "^((.+)(\\s+)(\\d+(\\.\\d+)?)(\\s+)(\\d+(\\.\\d+)?)(\\s+)(\\d+(\\.\\d+)?)(\\s+)(\\d+(\\.\\d+)?))";
+						groupIndex = Lists.newArrayList(2, 4, 7, 10, 13);
+					}
+					else if(type instanceof Class && Number.class.isAssignableFrom((Class) type)) {
+						regex = "^(([+-]?\\d+(\\.\\d+)?)(\\s+)(\\d+(\\.\\d+)?)(\\s+)(\\d+(\\.\\d+)?)(\\s+)(\\d+(\\.\\d+)?)(\\s+)(\\d+(\\.\\d+)?))";
+						groupIndex = Lists.newArrayList(2, 5, 8, 11, 14);
+					}
+					else if(type instanceof Class && Date.class.isAssignableFrom((Class) type)) {
+						regex = "^((\\d+/\\d+/\\d+ 00:00:00)(\\s+)(\\d+(\\.\\d+)?)(\\s+)(\\d+(\\.\\d+)?)(\\s+)(\\d+(\\.\\d+)?)(\\s+)(\\d+(\\.\\d+)?))";
+						groupIndex = Lists.newArrayList(2, 4, 7, 10, 13);
+					}
+					
+					String[] elements = new String[5];
+					Pattern p = Pattern.compile(regex);
+					Matcher m = p.matcher(line);
+					if (m.find()) {
+						elements[0] = m.group(groupIndex.get(0));
+						elements[1] = m.group(groupIndex.get(1));
+						elements[2] = m.group(groupIndex.get(2));
+						elements[3] = m.group(groupIndex.get(3));
+						elements[4] = m.group(groupIndex.get(4));
+					}
+					else {
+						new java.lang.IllegalStateException("Unsupported data type");
+					}
+					
+					Object range_hi_key = Types.cast(type, elements[0]);
+					BigInteger range_rows;
+					range_rows = new BigDecimal(elements[1]).toBigInteger();
+					BigInteger eq_rows = new BigDecimal(elements[2]).toBigInteger();
+					BigInteger distinct_range_rows = new BigDecimal(elements[3]).toBigInteger();
+					double avg_range_rows = new Double(elements[4]); 
+					SQLServerBucket bucket = new SQLServerBucket(range_hi_key, range_rows, eq_rows, distinct_range_rows, avg_range_rows);
+					buckets.add(bucket);
+				}
 			}
 			catch(Exception ex){
-				ex.printStackTrace();
+				ex.printStackTrace();;
 			}
 			bufferedReader.close(); 
 			return new SQLServerHistogram(buckets);
@@ -74,5 +100,11 @@ public class SQLServerHistogramLoader {
 		}
 		return null;
 	}
+	
+	public static void main(String[] args) {
+
+	}
+
+	
 
 }

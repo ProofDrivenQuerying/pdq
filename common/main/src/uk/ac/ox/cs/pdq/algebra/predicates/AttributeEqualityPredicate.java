@@ -89,17 +89,6 @@ public class AttributeEqualityPredicate implements EqualityPredicate {
 	public int getOther() {
 		return this.other;
 	}
-	
-	/**
-	 * @param predicate the (possibly nested) predicate to flatten, if null the empty collection is returned.
-	 * @return a collection of predicate remove the nesting of conjunction that
-	 * it may contain.
-	 */
-	public Collection<Predicate> flatten() {
-		Collection<Predicate> result = new LinkedList<Predicate>();
-		result.add(this);
-		return result;
-	}
 
 	/*
 	 * (non-Javadoc)
