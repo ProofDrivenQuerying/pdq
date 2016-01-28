@@ -85,18 +85,6 @@ these may be moved to a separate project later on.</description>
 	</organization>
 	<dependencies>
 		<dependency>
-			<groupId>org.apache.derby</groupId>
-			<artifactId>derby</artifactId>
-			<version>10.11.1.1</version>
-			<scope>runtime</scope>
-		</dependency>
-		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<version>5.1.30</version>
-			<scope>runtime</scope>
-		</dependency>
-		<dependency>
 			<groupId>com.beust</groupId>
 			<artifactId>jcommander</artifactId>
 			<version>1.35</version>
@@ -112,10 +100,6 @@ these may be moved to a separate project later on.</description>
 		<dependency>
 			<groupId>uk.ac.ox.cs.pdq</groupId>
 			<artifactId>pdq-reasoning</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>uk.ac.ox.cs.pdq</groupId>
-			<artifactId>pdq-datasources</artifactId>
 		</dependency>
 	</dependencies>
 	<dependencyManagement>
@@ -133,11 +117,6 @@ these may be moved to a separate project later on.</description>
 			<dependency>
 				<groupId>uk.ac.ox.cs.pdq</groupId>
 				<artifactId>pdq-reasoning</artifactId>
-				<version>1.0.0-Beta</version>
-			</dependency>
-			<dependency>
-				<groupId>uk.ac.ox.cs.pdq</groupId>
-				<artifactId>pdq-datasources</artifactId>
 				<version>1.0.0-Beta</version>
 			</dependency>
 		</dependencies>
