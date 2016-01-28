@@ -191,7 +191,7 @@ public class Planner {
 		}
 
 		this.detector.addQuery(query);
-		Query<?> accessibleQuery = this.accessibleSchema.accessible(query, query.getVariables2Canonical());
+		Query<?> accessibleQuery = this.accessibleSchema.accessible(query, query.getVariablesToCanonical());
 		
 		Explorer<P> explorer = null;
 		try{

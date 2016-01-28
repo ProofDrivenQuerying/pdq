@@ -42,13 +42,17 @@ public interface Query<S extends Formula> extends Formula, Evaluatable, Rule<S, 
 
 	/**
 	 * @return a map of query's free variables to its canonical constants.
+	 * Given a CQ Q, the canonical database of Q is the instance which has for each atom R(\vec{v}) 
+	 * in Q a corresponding fact for relation R with \vec{v} as a tuple. The canonical constants are the constants of the canonical database of Q
 	 */
-	Map<Variable, Constant> getFree2Canonical();
+	Map<Variable, Constant> getFreeToCanonical();
 	
 	/**
-	 * @return a map of query's variables both free and quantified to chase constants appear in the canonical query
+	 * @return a map of query's variables both free and quantified to chase constants appear in the canonical query.
+	 * Given a CQ Q, the canonical database of Q is the instance which has for each atom R(\vec{v}) 
+	 * in Q a corresponding fact for relation R with \vec{v} as a tuple. The canonical constants are the constants of the canonical database of Q
 	 */
-	Map<Variable, Constant> getVariables2Canonical();
+	Map<Variable, Constant> getVariablesToCanonical();
 
 	/**
 	 *
@@ -61,10 +65,17 @@ public interface Query<S extends Formula> extends Formula, Evaluatable, Rule<S, 
 
 	/**
 	 *
-	 * @return the canonical query
+	 * @return the canonical database of this query.
+	 * Given a CQ Q, the canonical database of Q is the instance which has for each atom R(\vec{v}) 
+	 * in Q a corresponding fact for relation R with \vec{v} as a tuple. The canonical constants are the constants of the canonical database of Q
 	 */
 	S getCanonical();
 	
+	/**
+	 * 
+	 * @param grounding
+	 * Grounds this query using the input mapping of free variables to constants
+	 */
 	void setGrounding(Map<Variable, Constant> grounding);
 	
 	/**

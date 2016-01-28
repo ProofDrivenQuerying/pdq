@@ -69,8 +69,8 @@ public class Operators {
 		List<Term> toProject = new ArrayList<>();
 		for (Term term: freeTerms) {
 			if (term.isVariable()) {
-				Constant constant = query.getFree2Canonical().get(term);
-				Preconditions.checkState(childOp.getColumns().contains(constant), constant + " not in " + childOp.getColumns() + "\nQuery: " + query + "\nCanonical Mapping: " + query.getFree2Canonical() + "\nSubplan: " + childOp);
+				Constant constant = query.getFreeToCanonical().get(term);
+				Preconditions.checkState(childOp.getColumns().contains(constant), constant + " not in " + childOp.getColumns() + "\nQuery: " + query + "\nCanonical Mapping: " + query.getFreeToCanonical() + "\nSubplan: " + childOp);
 				toProject.add(constant);
 			} else {
 				toProject.add(term);

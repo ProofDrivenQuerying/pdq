@@ -5,7 +5,7 @@ import java.util.List;
 
 
 /**
- * An acyclic query
+ * A conjunctive query Q is cyclic (acyclic) if its associated hypergraph H(Q) is cyclic (acyclic).
  *
  * @author Efthymia Tsamoura
  */

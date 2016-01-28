@@ -139,7 +139,7 @@ public class RuntimeTest extends RegressionTest {
 		PlannerParameters plParams = new PlannerParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
 		ReasoningParameters reasoningParams = new ReasoningParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
 		AccessibleSchema accessibleSchema = new AccessibleSchema(schema);
-		Query<?> accessibleQuery = accessibleSchema.accessible(query, query.getVariables2Canonical());
+		Query<?> accessibleQuery = accessibleSchema.accessible(query, query.getVariablesToCanonical());
 		try (HomomorphismManager manager = new HomomorphismManagerFactory().getInstance(accessibleSchema, reasoningParams)) {
 			manager.addQuery(accessibleQuery);
 			DataValidationImplementation dataValidator = new DataValidationImplementation(schema, (DBHomomorphismManager) manager);
