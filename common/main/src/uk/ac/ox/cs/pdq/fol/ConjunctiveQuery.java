@@ -20,8 +20,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 /**
- * A conjunctive query (CQ) is a first order formula of the form
-\exists x_1, \ldots, x_n \WEdge A_i,
+ * A conjunctive query (CQ) is a first order formula of the for \exists x_1, \ldots, x_n \Wedge A_i,
 where A_i are atoms with arguments that are either variables or constants.
 
  * @author Efthymia Tsamoura

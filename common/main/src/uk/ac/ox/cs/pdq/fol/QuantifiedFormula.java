@@ -13,7 +13,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
 /**
- * A quantifier formula
+ * A quantified formula
  * @author Efthymia Tsamoura
  * @author Julien Leblay
  *

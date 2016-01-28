@@ -7,7 +7,7 @@ import java.util.Map;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 
 /**
- * Query interface
+ * An fol query
  *
  * @author Efthymia Tsamoura
  * @author Julien Leblay
