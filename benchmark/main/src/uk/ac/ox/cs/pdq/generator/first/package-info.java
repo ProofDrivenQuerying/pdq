@@ -2,7 +2,7 @@ package uk.ac.ox.cs.pdq.generator.first;
 
 /**
  * 
- * This package defines a generator which creates tuple generating dependencies or views given an input query.
+ * This package defines a generator which creates tuple generating dependencies given an input query.
  * In brief the generation process proceeds as follows:
  * The generator creates the relations of the schema along with their access methods. 
  * Second, given the schema relations, the generator creates the query and, finally, the dependencies.
@@ -73,14 +73,6 @@ package uk.ac.ox.cs.pdq.generator.first;
  * 
  * If the number of dependencies that are created that way are less than D,
  * then the algorithm creates new guarded dependencies as described above. 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
  * 
  * 
  * 

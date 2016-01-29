@@ -80,8 +80,12 @@ public class QueryGeneratorSecond extends QueryGeneratorFirst{
 			assert false : "Input schema has no inclusion dependency.";
 		}
 
+		//Relations with a free access
 		Set<InclusionDependencyGraphNode> freeAccessNodes = new LinkedHashSet<>();
-		// Create dependency graph
+		//Create an inclusion dependency graph
+		//The vertices of this graph are the atom predicates
+		//There is an edge from P_i to P_j
+		//if there is an inclusion dependency P_i(.) --> P_j(.) 
 		Map<String, InclusionDependencyGraphNode> nodes = new TreeMap<>();
 		for (LinearGuarded guardedDependency:guardedDependencies) {
 			Predicate l = guardedDependency.getLeft().getPredicates().get(0);

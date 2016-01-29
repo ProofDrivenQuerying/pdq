@@ -83,7 +83,6 @@ public class DependencyGeneratorSecond extends AbstractDependencyGenerator imple
 
 		for(int i = 0; i < relations.size(); ++i) {
 			for(int j = 0; j < relations.size(); ++j) {
-
 				if(i != j && this.params.getConnectivity() > this.random.nextDouble()) {
 					Relation r1 = relations.get(i);
 					Relation r2 = relations.get(j);
