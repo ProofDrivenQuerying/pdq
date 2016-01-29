@@ -612,7 +612,6 @@ public class DBHomomorphismManager implements HomomorphismManager {
 		if(!clearedLastQuery)
 			throw new RuntimeException("Method clearQuery should be called in order to clear previous query's tables from the database.");
 		clearedLastQuery = false;
-		this.clearQuery();
 		
 		try(Statement sqlStatement = this.connection.createStatement()) {
 			try {
