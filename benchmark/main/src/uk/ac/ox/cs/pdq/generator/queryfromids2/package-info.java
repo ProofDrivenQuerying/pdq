@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.generator.second;
+package uk.ac.ox.cs.pdq.generator.queryfromids2;
 
 /**
  * 
@@ -23,9 +23,11 @@ package uk.ac.ox.cs.pdq.generator.second;
 	     	For j=1 to k
 	          	Make access to R_i with positions made free/bound with probability Free
 	
-			For each R_i, R_j
-			        With probability Conn, make an ID between R_i and R_j,
-			        projecting out a position with probability Proj
+	while(#created dependencies < user-defined #constraints)
+		Pick two relations R_i and R_j
+		Pick attributes A_i from R_i and attribute A_j from R_j
+		and create a fk dependency from R_i.A_i to R_j.A_j;
+		
 			       
 			       
 			       
@@ -33,21 +35,16 @@ package uk.ac.ox.cs.pdq.generator.second;
 	
 	Input parameters
 	NumAtoms
-	Dist= max distance to a free access
-	JoinTest= probability of joining
-	
-	Given this we generate a query as follows:
-	
-	For each i in NumAtoms
-	        Choose j randomly in [1,Dist]
-	        Let F=relations with a free access
-	        Let R_j= relations that have a path in the dependency graph
-	        to a relation in F of distance at most j, and also a path from
-	        a relation in F of distance at most j
-	        Choose relation R randomly from R_j
-	        For each position of R,
-	               with probability join, choose an existing variable (uniformly at random)
-	               otherwise choose a fresh variable
+
+	Q <-- \emptyset.
+	L <-- 0
+	Create an inclusion dependency graph.
+	The vertices of this graph are the atoms of the inclusion dependencies.
+	There is an edge from P_i to P_j if there is an inclusion dependency P_i(.) --> P_j(.).
+	Start from a node in the dependency graph and return a connected path of nodes N of length equal to |Q|-L.
+	With probability 0.5, either add the atoms of N to the query as they are,
+	or create join predicates between the atoms in the query and the atoms in N.
+	Set N <-- |Q| and repeat the above steps until |Q| = NumAtoms. 
 	
  *  
  * 

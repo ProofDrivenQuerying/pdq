@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.generator.first;
+package uk.ac.ox.cs.pdq.generator.tgdsfromquery;
 
 /**
  * 

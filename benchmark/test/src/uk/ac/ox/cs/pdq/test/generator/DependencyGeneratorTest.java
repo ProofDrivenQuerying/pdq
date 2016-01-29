@@ -26,9 +26,9 @@ import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.generator.QueryGenerator;
 import uk.ac.ox.cs.pdq.generator.SchemaGenerator;
-import uk.ac.ox.cs.pdq.generator.first.DependencyGeneratorFirst;
-import uk.ac.ox.cs.pdq.generator.first.QueryGeneratorFirst;
-import uk.ac.ox.cs.pdq.generator.first.SchemaGeneratorFirst;
+import uk.ac.ox.cs.pdq.generator.tgdsfromquery.DependencyGeneratorFirst;
+import uk.ac.ox.cs.pdq.generator.tgdsfromquery.QueryGeneratorFirst;
+import uk.ac.ox.cs.pdq.generator.tgdsfromquery.SchemaGeneratorFirst;
 
 /**
  * Generates query or views based on an input Schema, and external parameters.

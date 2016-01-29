@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.generator.third;
+package uk.ac.ox.cs.pdq.generator.queryfromids2;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +17,7 @@ import uk.ac.ox.cs.pdq.fol.Signature;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.generator.QueryGenerator;
-import uk.ac.ox.cs.pdq.generator.first.AbstractDependencyGenerator;
+import uk.ac.ox.cs.pdq.generator.tgdsfromquery.AbstractDependencyGenerator;
 import uk.ac.ox.cs.pdq.generator.utils.InclusionDependencyGraphNode;
 
 import com.google.common.collect.LinkedHashMultimap;

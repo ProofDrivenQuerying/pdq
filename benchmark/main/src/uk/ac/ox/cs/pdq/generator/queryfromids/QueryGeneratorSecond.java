@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.generator.second;
+package uk.ac.ox.cs.pdq.generator.queryfromids;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -17,7 +17,7 @@ import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Signature;
 import uk.ac.ox.cs.pdq.fol.Variable;
-import uk.ac.ox.cs.pdq.generator.first.QueryGeneratorFirst;
+import uk.ac.ox.cs.pdq.generator.tgdsfromquery.QueryGeneratorFirst;
 import uk.ac.ox.cs.pdq.generator.utils.InclusionDependencyGraphNode;
 
 import com.beust.jcommander.internal.Lists;

@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.generator.third;
+package uk.ac.ox.cs.pdq.generator.queryfromids2;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,7 +15,7 @@ import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.generator.AbstractGenerator;
-import uk.ac.ox.cs.pdq.generator.first.SchemaGeneratorFirst;
+import uk.ac.ox.cs.pdq.generator.tgdsfromquery.SchemaGeneratorFirst;
 import uk.ac.ox.cs.pdq.io.xml.QueryReader;
 import uk.ac.ox.cs.pdq.io.xml.QueryWriter;
 import uk.ac.ox.cs.pdq.io.xml.SchemaReader;

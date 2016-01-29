@@ -10,9 +10,9 @@ import org.apache.log4j.Logger;
 import org.junit.runner.Runner;
 
 import uk.ac.ox.cs.pdq.benchmark.BenchmarkParameters;
-import uk.ac.ox.cs.pdq.generator.first.GeneratorFirst;
-import uk.ac.ox.cs.pdq.generator.second.GeneratorSecond;
-import uk.ac.ox.cs.pdq.generator.third.GeneratorThird;
+import uk.ac.ox.cs.pdq.generator.queryfromids.GeneratorSecond;
+import uk.ac.ox.cs.pdq.generator.queryfromids2.GeneratorThird;
+import uk.ac.ox.cs.pdq.generator.tgdsfromquery.GeneratorFirst;
 
 import com.beust.jcommander.DynamicParameter;
 import com.beust.jcommander.JCommander;

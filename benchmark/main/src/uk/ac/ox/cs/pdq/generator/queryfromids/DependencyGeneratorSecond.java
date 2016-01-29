@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.generator.second;
+package uk.ac.ox.cs.pdq.generator.queryfromids;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +15,7 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.builder.SchemaBuilder;
 import uk.ac.ox.cs.pdq.generator.DependencyGenerator;
-import uk.ac.ox.cs.pdq.generator.first.AbstractDependencyGenerator;
+import uk.ac.ox.cs.pdq.generator.tgdsfromquery.AbstractDependencyGenerator;
 
 /**
  * Creates inclusion dependencies.
