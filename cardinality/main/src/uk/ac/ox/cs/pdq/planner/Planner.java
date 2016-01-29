@@ -64,8 +64,6 @@ public class Planner {
 	/** The schema */
 	private Schema schema;
 
-	/** The query */
-	private Query<?> query;
 	
 	private HomomorphismManager detector;
 	
@@ -94,7 +92,6 @@ public class Planner {
 		this.costParams = costParams;
 		this.reasoningParams = reasoningParams;
 		this.schema = schema;
-		this.query = query;
 		this.statsLogger = statsLogger;
 		
 		try {
@@ -196,7 +193,7 @@ public class Planner {
 					this.eventBus, 
 					collectStats,
 					this.schema,
-					this.query,
+					query,
 					reasoner,
 					this.detector,
 					cardinalityEstimator,
@@ -280,12 +277,7 @@ public class Planner {
 		return this.schema;
 	}
 
-	/**
-	 * @return the planner's underlying query
-	 */
-	public Query<?> getQuery() {
-		return this.query;
-	}
+
 	
 	public void addKeys(Schema schema) {
 		Relation region = schema.getRelation("region");
