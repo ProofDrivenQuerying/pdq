@@ -47,7 +47,8 @@ public class SchemaGeneratorFirst implements SchemaGenerator {
 	}
 
 	/**
-	 * Generates schema relations
+	 * Generates schema relations.
+	 * The method reads from a 
 	 * 
 	 * @return 
 	 * the list of generated relations
@@ -108,11 +109,11 @@ public class SchemaGeneratorFirst implements SchemaGenerator {
 	}
 
 	/**
-	 * Generates a binding pattern
+	 * Generates an access method
 	 * 
 	 * @param type
 	 *            the type of binding pattern to generate among {FREE, LIMITED,
-	 *            INACCESSIBLE, BOOLEAN}
+	 *            BOOLEAN}
 	 * @param arity
 	 *            the arity of the relation
 	 *            
