@@ -275,7 +275,7 @@ public class DefaultCardinalityEstimator implements CardinalityEstimator {
 	@Override
 	public double adjustedQualityOf(DAGAnnotatedPlan configuration, Query<?> query, boolean matchesQuery) {		
 		if(matchesQuery) {
-			if(configuration.getExportedConstants().equals(Sets.newHashSet(query.getFree2Canonical().values()))) {
+			if(configuration.getExportedConstants().equals(Sets.newHashSet(query.getFreeToCanonical().values()))) {
 				return configuration.getQuality();
 			}
 			else {
@@ -283,10 +283,10 @@ public class DefaultCardinalityEstimator implements CardinalityEstimator {
 			}
 		}
 		else {
-			if(configuration.getExportedConstants().equals(Sets.newHashSet(query.getFree2Canonical().values()))) {
+			if(configuration.getExportedConstants().equals(Sets.newHashSet(query.getFreeToCanonical().values()))) {
 				return configuration.getQuality() + this.subsumptionPenalty;
 			}
-			else if(configuration.getExportedConstants().containsAll(query.getFree2Canonical().values())){
+			else if(configuration.getExportedConstants().containsAll(query.getFreeToCanonical().values())){
 				return configuration.getQuality() + this.subsumptionPenalty + this.projectionPenalty;
 			}
 		}
@@ -602,11 +602,11 @@ public class DefaultCardinalityEstimator implements CardinalityEstimator {
 	 * 		where the selectivity of the unary annotate plan is estimated as the size of the annotated plan to the size of the base relation.  
 	 */
 	protected BigInteger cardinalityOfIndependentEstimate(DAGAnnotatedPlan configuration, Query<?> query) {
-		if(configuration.getExportedConstants().containsAll(query.getFree2Canonical().values())) {
+		if(configuration.getExportedConstants().containsAll(query.getFreeToCanonical().values())) {
 			if(!query.getFree().isEmpty()) {
 				BigDecimal cardinality = BigDecimal.ONE;
 				//Estimate the cardinality of each attribute in the final projection of the input query 
-				for(Constant constant:query.getFree2Canonical().values()) {
+				for(Constant constant:query.getFreeToCanonical().values()) {
 					//Find the relation attribute pair with the highest quality that map to the projected constant  
 					Pair<UnaryAnnotatedPlan, Attribute> pair = this.getHighestQualityAnnotatedPlan(configuration, constant);
 					//Find the cardinality of the attribute that maps to the projected constant
@@ -648,14 +648,14 @@ public class DefaultCardinalityEstimator implements CardinalityEstimator {
 	 * 
 	 */
 	protected BigInteger cardinalityOfGroupEstimate(DAGAnnotatedPlan configuration, Query<?> query) {
-		if(configuration.getExportedConstants().containsAll(query.getFree2Canonical().values())) {
+		if(configuration.getExportedConstants().containsAll(query.getFreeToCanonical().values())) {
 			if(!query.getFree().isEmpty()) {
 				//Try to assign the maximum number of query's variables to a single annotated plan 
 
 				//Keeps the unary annotated plans to query free variables assignments
 				Map<UnaryAnnotatedPlan, Collection<Constant>> assignments = Maps.newHashMap();
 				Collection<UnaryAnnotatedPlan> unaryPlans = Sets.newHashSet(configuration.getUnaryAnnotatedPlans());
-				Collection<Constant> constants = Sets.newHashSet(query.getFree2Canonical().values());
+				Collection<Constant> constants = Sets.newHashSet(query.getFreeToCanonical().values());
 				Iterator<Constant> constantsIterator = constants.iterator();
 				while(constantsIterator.hasNext()) {
 					UnaryAnnotatedPlan maximalCover = null;
