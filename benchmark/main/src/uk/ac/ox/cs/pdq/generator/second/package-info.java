@@ -30,6 +30,7 @@ package uk.ac.ox.cs.pdq.generator.second;
 			       
 			       
 	For query generation we follow the steps below:
+	
 	Input parameters
 	NumAtoms
 	Dist= max distance to a free access

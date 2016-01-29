@@ -32,6 +32,7 @@ package uk.ac.ox.cs.pdq.generator.third;
 			       
 			       
 	For query generation we follow the steps below:
+	
 	Input parameters
 	NumAtoms
 
