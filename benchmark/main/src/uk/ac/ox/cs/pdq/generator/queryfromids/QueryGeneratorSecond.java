@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.generator.second;
+package uk.ac.ox.cs.pdq.generator.queryfromids;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -17,7 +17,7 @@ import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Signature;
 import uk.ac.ox.cs.pdq.fol.Variable;
-import uk.ac.ox.cs.pdq.generator.first.QueryGeneratorFirst;
+import uk.ac.ox.cs.pdq.generator.tgdsfromquery.QueryGeneratorFirst;
 import uk.ac.ox.cs.pdq.generator.utils.InclusionDependencyGraphNode;
 
 import com.beust.jcommander.internal.Lists;
@@ -80,8 +80,12 @@ public class QueryGeneratorSecond extends QueryGeneratorFirst{
 			assert false : "Input schema has no inclusion dependency.";
 		}
 
+		//Relations with a free access
 		Set<InclusionDependencyGraphNode> freeAccessNodes = new LinkedHashSet<>();
-		// Create dependency graph
+		//Create an inclusion dependency graph
+		//The vertices of this graph are the atom predicates
+		//There is an edge from P_i to P_j
+		//if there is an inclusion dependency P_i(.) --> P_j(.) 
 		Map<String, InclusionDependencyGraphNode> nodes = new TreeMap<>();
 		for (LinearGuarded guardedDependency:guardedDependencies) {
 			Predicate l = guardedDependency.getLeft().getPredicates().get(0);

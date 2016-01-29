@@ -1,40 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<plan type="linear" cost="45.0" control-flow="TOP_DOWN">
+<plan type="linear" cost="45.0">
 <command name="T1">
 <operator type="CROSS_PRODUCT">
 <outputs>
-<attribute name="k1601" type="java.lang.Integer"/>
-<attribute name="k1619" type="java.lang.String"/>
-<attribute name="k1620" type="java.lang.String"/>
-<attribute name="c1589" type="java.lang.Integer"/>
-<attribute name="c1591" type="java.lang.String"/>
+<attribute name="c11014" type="java.lang.Integer"/>
+<attribute name="c11016" type="java.lang.String"/>
+<attribute name="k11023" type="java.lang.Integer"/>
+<attribute name="k11033" type="java.lang.String"/>
+<attribute name="k11034" type="java.lang.String"/>
 </outputs>
 <children>
 <operator type="PROJECT">
 <outputs>
-<attribute name="k1601" type="java.lang.Integer"/>
-<attribute name="k1619" type="java.lang.String"/>
-<attribute name="k1620" type="java.lang.String"/>
-</outputs>
-<project>
-<attribute name="r_regionkey" type="java.lang.Integer"/>
-<attribute name="r_name" type="java.lang.String"/>
-<attribute name="r_comment" type="java.lang.String"/>
-</project>
-<child>
-<operator type="ACCESS" relation="region" access-method="m12">
-<outputs>
-<attribute name="r_regionkey" type="java.lang.Integer"/>
-<attribute name="r_name" type="java.lang.String"/>
-<attribute name="r_comment" type="java.lang.String"/>
-</outputs>
-</operator>
-</child>
-</operator>
-<operator type="PROJECT">
-<outputs>
-<attribute name="c1589" type="java.lang.Integer"/>
-<attribute name="c1591" type="java.lang.String"/>
+<attribute name="c11014" type="java.lang.Integer"/>
+<attribute name="c11016" type="java.lang.String"/>
 </outputs>
 <project>
 <attribute name="r_regionkey" type="java.lang.Integer"/>
@@ -62,50 +41,71 @@
 </operator>
 </child>
 </operator>
+<operator type="PROJECT">
+<outputs>
+<attribute name="k11023" type="java.lang.Integer"/>
+<attribute name="k11033" type="java.lang.String"/>
+<attribute name="k11034" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="r_regionkey" type="java.lang.Integer"/>
+<attribute name="r_name" type="java.lang.String"/>
+<attribute name="r_comment" type="java.lang.String"/>
+</project>
+<child>
+<operator type="ACCESS" relation="region" access-method="m12">
+<outputs>
+<attribute name="r_regionkey" type="java.lang.Integer"/>
+<attribute name="r_name" type="java.lang.String"/>
+<attribute name="r_comment" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
 </children>
 </operator>
 </command>
 <command name="T2">
 <operator type="JOIN" variant="SYMMETRIC_HASH">
 <outputs>
-<attribute name="k1601" type="java.lang.Integer"/>
-<attribute name="k1619" type="java.lang.String"/>
-<attribute name="k1620" type="java.lang.String"/>
-<attribute name="c1589" type="java.lang.Integer"/>
-<attribute name="c1591" type="java.lang.String"/>
-<attribute name="c1594" type="java.lang.Integer"/>
-<attribute name="k1600" type="java.lang.String"/>
-<attribute name="k1601" type="java.lang.Integer"/>
-<attribute name="k1602" type="java.lang.String"/>
-<attribute name="c1584" type="java.lang.Integer"/>
-<attribute name="c1588" type="java.lang.String"/>
-<attribute name="c1589" type="java.lang.Integer"/>
-<attribute name="c1590" type="java.lang.String"/>
+<attribute name="c11014" type="java.lang.Integer"/>
+<attribute name="c11016" type="java.lang.String"/>
+<attribute name="k11023" type="java.lang.Integer"/>
+<attribute name="k11033" type="java.lang.String"/>
+<attribute name="k11034" type="java.lang.String"/>
+<attribute name="c11019" type="java.lang.Integer"/>
+<attribute name="k11022" type="java.lang.String"/>
+<attribute name="k11023" type="java.lang.Integer"/>
+<attribute name="k11024" type="java.lang.String"/>
+<attribute name="c11009" type="java.lang.Integer"/>
+<attribute name="c11013" type="java.lang.String"/>
+<attribute name="c11014" type="java.lang.Integer"/>
+<attribute name="c11015" type="java.lang.String"/>
 </outputs>
 <conjunction>
-<predicate type="equality" left="0" right="7"/>
-<predicate type="equality" left="3" right="11"/>
+<predicate type="equality" left="0" right="11"/>
+<predicate type="equality" left="2" right="7"/>
 </conjunction>
 <children>
 <operator type="ALIAS" name="T1"/>
 <operator type="CROSS_PRODUCT">
 <outputs>
-<attribute name="c1594" type="java.lang.Integer"/>
-<attribute name="k1600" type="java.lang.String"/>
-<attribute name="k1601" type="java.lang.Integer"/>
-<attribute name="k1602" type="java.lang.String"/>
-<attribute name="c1584" type="java.lang.Integer"/>
-<attribute name="c1588" type="java.lang.String"/>
-<attribute name="c1589" type="java.lang.Integer"/>
-<attribute name="c1590" type="java.lang.String"/>
+<attribute name="c11019" type="java.lang.Integer"/>
+<attribute name="k11022" type="java.lang.String"/>
+<attribute name="k11023" type="java.lang.Integer"/>
+<attribute name="k11024" type="java.lang.String"/>
+<attribute name="c11009" type="java.lang.Integer"/>
+<attribute name="c11013" type="java.lang.String"/>
+<attribute name="c11014" type="java.lang.Integer"/>
+<attribute name="c11015" type="java.lang.String"/>
 </outputs>
 <children>
 <operator type="PROJECT">
 <outputs>
-<attribute name="c1594" type="java.lang.Integer"/>
-<attribute name="k1600" type="java.lang.String"/>
-<attribute name="k1601" type="java.lang.Integer"/>
-<attribute name="k1602" type="java.lang.String"/>
+<attribute name="c11019" type="java.lang.Integer"/>
+<attribute name="k11022" type="java.lang.String"/>
+<attribute name="k11023" type="java.lang.Integer"/>
+<attribute name="k11024" type="java.lang.String"/>
 </outputs>
 <project>
 <attribute name="n_nationkey" type="java.lang.Integer"/>
@@ -126,10 +126,10 @@
 </operator>
 <operator type="PROJECT">
 <outputs>
-<attribute name="c1584" type="java.lang.Integer"/>
-<attribute name="c1588" type="java.lang.String"/>
-<attribute name="c1589" type="java.lang.Integer"/>
-<attribute name="c1590" type="java.lang.String"/>
+<attribute name="c11009" type="java.lang.Integer"/>
+<attribute name="c11013" type="java.lang.String"/>
+<attribute name="c11014" type="java.lang.Integer"/>
+<attribute name="c11015" type="java.lang.String"/>
 </outputs>
 <project>
 <attribute name="n_nationkey" type="java.lang.Integer"/>
@@ -156,100 +156,67 @@
 <command name="T3">
 <operator type="JOIN" variant="SYMMETRIC_HASH">
 <outputs>
-<attribute name="k1601" type="java.lang.Integer"/>
-<attribute name="k1619" type="java.lang.String"/>
-<attribute name="k1620" type="java.lang.String"/>
-<attribute name="c1589" type="java.lang.Integer"/>
-<attribute name="c1591" type="java.lang.String"/>
-<attribute name="c1594" type="java.lang.Integer"/>
-<attribute name="k1600" type="java.lang.String"/>
-<attribute name="k1601" type="java.lang.Integer"/>
-<attribute name="k1602" type="java.lang.String"/>
-<attribute name="c1584" type="java.lang.Integer"/>
-<attribute name="c1588" type="java.lang.String"/>
-<attribute name="c1589" type="java.lang.Integer"/>
-<attribute name="c1590" type="java.lang.String"/>
-<attribute name="c1579" type="java.lang.Integer"/>
-<attribute name="c1582" type="java.lang.String"/>
-<attribute name="c1583" type="java.lang.String"/>
-<attribute name="c1584" type="java.lang.Integer"/>
-<attribute name="c1585" type="java.lang.String"/>
-<attribute name="c1586" type="java.math.BigDecimal"/>
-<attribute name="c1587" type="java.lang.String"/>
-<attribute name="c1592" type="java.lang.Integer"/>
-<attribute name="c1582" type="java.lang.String"/>
-<attribute name="c1593" type="java.lang.String"/>
-<attribute name="c1594" type="java.lang.Integer"/>
-<attribute name="c1595" type="java.lang.String"/>
-<attribute name="c1596" type="java.lang.String"/>
+<attribute name="c11014" type="java.lang.Integer"/>
+<attribute name="c11016" type="java.lang.String"/>
+<attribute name="k11023" type="java.lang.Integer"/>
+<attribute name="k11033" type="java.lang.String"/>
+<attribute name="k11034" type="java.lang.String"/>
+<attribute name="c11019" type="java.lang.Integer"/>
+<attribute name="k11022" type="java.lang.String"/>
+<attribute name="k11023" type="java.lang.Integer"/>
+<attribute name="k11024" type="java.lang.String"/>
+<attribute name="c11009" type="java.lang.Integer"/>
+<attribute name="c11013" type="java.lang.String"/>
+<attribute name="c11014" type="java.lang.Integer"/>
+<attribute name="c11015" type="java.lang.String"/>
+<attribute name="c11017" type="java.lang.Integer"/>
+<attribute name="c11007" type="java.lang.String"/>
+<attribute name="c11018" type="java.lang.String"/>
+<attribute name="c11019" type="java.lang.Integer"/>
+<attribute name="c11020" type="java.lang.String"/>
+<attribute name="c11021" type="java.lang.String"/>
+<attribute name="c11004" type="java.lang.Integer"/>
+<attribute name="c11007" type="java.lang.String"/>
+<attribute name="c11008" type="java.lang.String"/>
+<attribute name="c11009" type="java.lang.Integer"/>
+<attribute name="c11010" type="java.lang.String"/>
+<attribute name="c11011" type="java.math.BigDecimal"/>
+<attribute name="c11012" type="java.lang.String"/>
 </outputs>
 <conjunction>
-<predicate type="equality" left="5" right="23"/>
-<predicate type="equality" left="9" right="16"/>
+<predicate type="equality" left="5" right="16"/>
+<predicate type="equality" left="9" right="22"/>
 </conjunction>
 <children>
 <operator type="ALIAS" name="T2"/>
 <operator type="JOIN" variant="SYMMETRIC_HASH">
 <outputs>
-<attribute name="c1579" type="java.lang.Integer"/>
-<attribute name="c1582" type="java.lang.String"/>
-<attribute name="c1583" type="java.lang.String"/>
-<attribute name="c1584" type="java.lang.Integer"/>
-<attribute name="c1585" type="java.lang.String"/>
-<attribute name="c1586" type="java.math.BigDecimal"/>
-<attribute name="c1587" type="java.lang.String"/>
-<attribute name="c1592" type="java.lang.Integer"/>
-<attribute name="c1582" type="java.lang.String"/>
-<attribute name="c1593" type="java.lang.String"/>
-<attribute name="c1594" type="java.lang.Integer"/>
-<attribute name="c1595" type="java.lang.String"/>
-<attribute name="c1596" type="java.lang.String"/>
+<attribute name="c11017" type="java.lang.Integer"/>
+<attribute name="c11007" type="java.lang.String"/>
+<attribute name="c11018" type="java.lang.String"/>
+<attribute name="c11019" type="java.lang.Integer"/>
+<attribute name="c11020" type="java.lang.String"/>
+<attribute name="c11021" type="java.lang.String"/>
+<attribute name="c11004" type="java.lang.Integer"/>
+<attribute name="c11007" type="java.lang.String"/>
+<attribute name="c11008" type="java.lang.String"/>
+<attribute name="c11009" type="java.lang.Integer"/>
+<attribute name="c11010" type="java.lang.String"/>
+<attribute name="c11011" type="java.math.BigDecimal"/>
+<attribute name="c11012" type="java.lang.String"/>
 </outputs>
 <conjunction>
-<predicate type="equality" left="1" right="8"/>
+<predicate type="equality" left="1" right="7"/>
 </conjunction>
 <children>
 <operator type="PROJECT">
 <outputs>
-<attribute name="c1579" type="java.lang.Integer"/>
-<attribute name="c1582" type="java.lang.String"/>
-<attribute name="c1583" type="java.lang.String"/>
-<attribute name="c1584" type="java.lang.Integer"/>
-<attribute name="c1585" type="java.lang.String"/>
-<attribute name="c1586" type="java.math.BigDecimal"/>
-<attribute name="c1587" type="java.lang.String"/>
-</outputs>
-<project>
-<attribute name="s_suppkey" type="java.lang.Integer"/>
-<attribute name="s_name" type="java.lang.String"/>
-<attribute name="s_address" type="java.lang.String"/>
-<attribute name="s_nationkey" type="java.lang.Integer"/>
-<attribute name="s_phone" type="java.lang.String"/>
-<attribute name="s_acctbal" type="java.math.BigDecimal"/>
-<attribute name="s_comment" type="java.lang.String"/>
-</project>
-<child>
-<operator type="ACCESS" relation="supplier" access-method="m6">
-<outputs>
-<attribute name="s_suppkey" type="java.lang.Integer"/>
-<attribute name="s_name" type="java.lang.String"/>
-<attribute name="s_address" type="java.lang.String"/>
-<attribute name="s_nationkey" type="java.lang.Integer"/>
-<attribute name="s_phone" type="java.lang.String"/>
-<attribute name="s_acctbal" type="java.math.BigDecimal"/>
-<attribute name="s_comment" type="java.lang.String"/>
-</outputs>
-</operator>
-</child>
-</operator>
-<operator type="PROJECT">
-<outputs>
-<attribute name="c1592" type="java.lang.Integer"/>
-<attribute name="c1582" type="java.lang.String"/>
-<attribute name="c1593" type="java.lang.String"/>
-<attribute name="c1594" type="java.lang.Integer"/>
-<attribute name="c1595" type="java.lang.String"/>
-<attribute name="c1596" type="java.lang.String"/>
+<attribute name="c11017" type="java.lang.Integer"/>
+<attribute name="c11007" type="java.lang.String"/>
+<attribute name="c11018" type="java.lang.String"/>
+<attribute name="c11019" type="java.lang.Integer"/>
+<attribute name="c11020" type="java.lang.String"/>
+<attribute name="c11021" type="java.lang.String"/>
 </outputs>
 <project>
 <attribute name="s_suppkey" type="java.lang.Integer"/>
@@ -289,70 +256,178 @@
 </operator>
 </child>
 </operator>
+<operator type="PROJECT">
+<outputs>
+<attribute name="c11004" type="java.lang.Integer"/>
+<attribute name="c11007" type="java.lang.String"/>
+<attribute name="c11008" type="java.lang.String"/>
+<attribute name="c11009" type="java.lang.Integer"/>
+<attribute name="c11010" type="java.lang.String"/>
+<attribute name="c11011" type="java.math.BigDecimal"/>
+<attribute name="c11012" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="s_suppkey" type="java.lang.Integer"/>
+<attribute name="s_name" type="java.lang.String"/>
+<attribute name="s_address" type="java.lang.String"/>
+<attribute name="s_nationkey" type="java.lang.Integer"/>
+<attribute name="s_phone" type="java.lang.String"/>
+<attribute name="s_acctbal" type="java.math.BigDecimal"/>
+<attribute name="s_comment" type="java.lang.String"/>
+</project>
+<child>
+<operator type="ACCESS" relation="supplier" access-method="m6">
+<outputs>
+<attribute name="s_suppkey" type="java.lang.Integer"/>
+<attribute name="s_name" type="java.lang.String"/>
+<attribute name="s_address" type="java.lang.String"/>
+<attribute name="s_nationkey" type="java.lang.Integer"/>
+<attribute name="s_phone" type="java.lang.String"/>
+<attribute name="s_acctbal" type="java.math.BigDecimal"/>
+<attribute name="s_comment" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
 </children>
 </operator>
 </children>
 </operator>
 </command>
 <command name="T4">
-<operator type="PROJECT">
+<operator type="CROSS_PRODUCT">
 <outputs>
-<attribute name="c1586" type="java.math.BigDecimal"/>
-<attribute name="c1585" type="java.lang.String"/>
-<attribute name="c1590" type="java.lang.String"/>
-<attribute name="c1583" type="java.lang.String"/>
+<attribute name="c11014" type="java.lang.Integer"/>
+<attribute name="c11016" type="java.lang.String"/>
+<attribute name="k11023" type="java.lang.Integer"/>
+<attribute name="k11033" type="java.lang.String"/>
+<attribute name="k11034" type="java.lang.String"/>
+<attribute name="c11019" type="java.lang.Integer"/>
+<attribute name="k11022" type="java.lang.String"/>
+<attribute name="k11023" type="java.lang.Integer"/>
+<attribute name="k11024" type="java.lang.String"/>
+<attribute name="c11009" type="java.lang.Integer"/>
+<attribute name="c11013" type="java.lang.String"/>
+<attribute name="c11014" type="java.lang.Integer"/>
+<attribute name="c11015" type="java.lang.String"/>
+<attribute name="c11017" type="java.lang.Integer"/>
+<attribute name="c11007" type="java.lang.String"/>
+<attribute name="c11018" type="java.lang.String"/>
+<attribute name="c11019" type="java.lang.Integer"/>
+<attribute name="c11020" type="java.lang.String"/>
+<attribute name="c11021" type="java.lang.String"/>
+<attribute name="c11004" type="java.lang.Integer"/>
+<attribute name="c11007" type="java.lang.String"/>
+<attribute name="c11008" type="java.lang.String"/>
+<attribute name="c11009" type="java.lang.Integer"/>
+<attribute name="c11010" type="java.lang.String"/>
+<attribute name="c11011" type="java.math.BigDecimal"/>
+<attribute name="c11012" type="java.lang.String"/>
+<attribute name="c11003" type="java.lang.Integer"/>
+<attribute name="k11025" type="java.lang.String"/>
+<attribute name="k11026" type="java.lang.String"/>
+<attribute name="k11027" type="java.lang.String"/>
+<attribute name="k11028" type="java.lang.String"/>
+<attribute name="k11029" type="java.lang.Integer"/>
+<attribute name="k11030" type="java.lang.String"/>
+<attribute name="k11031" type="java.math.BigDecimal"/>
+<attribute name="k11032" type="java.lang.String"/>
 </outputs>
-<project>
-<attribute name="c1586" type="java.math.BigDecimal"/>
-<attribute name="c1585" type="java.lang.String"/>
-<attribute name="c1590" type="java.lang.String"/>
-<attribute name="c1583" type="java.lang.String"/>
-</project>
-<child>
-<operator type="JOIN" variant="SYMMETRIC_HASH">
-<outputs>
-<attribute name="k1601" type="java.lang.Integer"/>
-<attribute name="k1619" type="java.lang.String"/>
-<attribute name="k1620" type="java.lang.String"/>
-<attribute name="c1589" type="java.lang.Integer"/>
-<attribute name="c1591" type="java.lang.String"/>
-<attribute name="c1594" type="java.lang.Integer"/>
-<attribute name="k1600" type="java.lang.String"/>
-<attribute name="k1601" type="java.lang.Integer"/>
-<attribute name="k1602" type="java.lang.String"/>
-<attribute name="c1584" type="java.lang.Integer"/>
-<attribute name="c1588" type="java.lang.String"/>
-<attribute name="c1589" type="java.lang.Integer"/>
-<attribute name="c1590" type="java.lang.String"/>
-<attribute name="c1579" type="java.lang.Integer"/>
-<attribute name="c1582" type="java.lang.String"/>
-<attribute name="c1583" type="java.lang.String"/>
-<attribute name="c1584" type="java.lang.Integer"/>
-<attribute name="c1585" type="java.lang.String"/>
-<attribute name="c1586" type="java.math.BigDecimal"/>
-<attribute name="c1587" type="java.lang.String"/>
-<attribute name="c1592" type="java.lang.Integer"/>
-<attribute name="c1582" type="java.lang.String"/>
-<attribute name="c1593" type="java.lang.String"/>
-<attribute name="c1594" type="java.lang.Integer"/>
-<attribute name="c1595" type="java.lang.String"/>
-<attribute name="c1596" type="java.lang.String"/>
-<attribute name="c1578" type="java.lang.Integer"/>
-<attribute name="c1579" type="java.lang.Integer"/>
-<attribute name="c1580" type="java.math.BigDecimal"/>
-<attribute name="c1581" type="java.lang.String"/>
-</outputs>
-<conjunction>
-<predicate type="equality" left="13" right="27"/>
-</conjunction>
 <children>
 <operator type="ALIAS" name="T3"/>
 <operator type="PROJECT">
 <outputs>
-<attribute name="c1578" type="java.lang.Integer"/>
-<attribute name="c1579" type="java.lang.Integer"/>
-<attribute name="c1580" type="java.math.BigDecimal"/>
-<attribute name="c1581" type="java.lang.String"/>
+<attribute name="c11003" type="java.lang.Integer"/>
+<attribute name="k11025" type="java.lang.String"/>
+<attribute name="k11026" type="java.lang.String"/>
+<attribute name="k11027" type="java.lang.String"/>
+<attribute name="k11028" type="java.lang.String"/>
+<attribute name="k11029" type="java.lang.Integer"/>
+<attribute name="k11030" type="java.lang.String"/>
+<attribute name="k11031" type="java.math.BigDecimal"/>
+<attribute name="k11032" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="p_partkey" type="java.lang.Integer"/>
+<attribute name="p_name" type="java.lang.String"/>
+<attribute name="p_mfgr" type="java.lang.String"/>
+<attribute name="p_brand" type="java.lang.String"/>
+<attribute name="p_type" type="java.lang.String"/>
+<attribute name="p_size" type="java.lang.Integer"/>
+<attribute name="p_container" type="java.lang.String"/>
+<attribute name="p_retailprice" type="java.math.BigDecimal"/>
+<attribute name="p_comment" type="java.lang.String"/>
+</project>
+<child>
+<operator type="ACCESS" relation="part" access-method="m4">
+<outputs>
+<attribute name="p_partkey" type="java.lang.Integer"/>
+<attribute name="p_name" type="java.lang.String"/>
+<attribute name="p_mfgr" type="java.lang.String"/>
+<attribute name="p_brand" type="java.lang.String"/>
+<attribute name="p_type" type="java.lang.String"/>
+<attribute name="p_size" type="java.lang.Integer"/>
+<attribute name="p_container" type="java.lang.String"/>
+<attribute name="p_retailprice" type="java.math.BigDecimal"/>
+<attribute name="p_comment" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</children>
+</operator>
+</command>
+<command name="T5">
+<operator type="DEPENDENT_JOIN" param="26">
+<outputs>
+<attribute name="c11014" type="java.lang.Integer"/>
+<attribute name="c11016" type="java.lang.String"/>
+<attribute name="k11023" type="java.lang.Integer"/>
+<attribute name="k11033" type="java.lang.String"/>
+<attribute name="k11034" type="java.lang.String"/>
+<attribute name="c11019" type="java.lang.Integer"/>
+<attribute name="k11022" type="java.lang.String"/>
+<attribute name="k11023" type="java.lang.Integer"/>
+<attribute name="k11024" type="java.lang.String"/>
+<attribute name="c11009" type="java.lang.Integer"/>
+<attribute name="c11013" type="java.lang.String"/>
+<attribute name="c11014" type="java.lang.Integer"/>
+<attribute name="c11015" type="java.lang.String"/>
+<attribute name="c11017" type="java.lang.Integer"/>
+<attribute name="c11007" type="java.lang.String"/>
+<attribute name="c11018" type="java.lang.String"/>
+<attribute name="c11019" type="java.lang.Integer"/>
+<attribute name="c11020" type="java.lang.String"/>
+<attribute name="c11021" type="java.lang.String"/>
+<attribute name="c11004" type="java.lang.Integer"/>
+<attribute name="c11007" type="java.lang.String"/>
+<attribute name="c11008" type="java.lang.String"/>
+<attribute name="c11009" type="java.lang.Integer"/>
+<attribute name="c11010" type="java.lang.String"/>
+<attribute name="c11011" type="java.math.BigDecimal"/>
+<attribute name="c11012" type="java.lang.String"/>
+<attribute name="c11003" type="java.lang.Integer"/>
+<attribute name="k11025" type="java.lang.String"/>
+<attribute name="k11026" type="java.lang.String"/>
+<attribute name="k11027" type="java.lang.String"/>
+<attribute name="k11028" type="java.lang.String"/>
+<attribute name="k11029" type="java.lang.Integer"/>
+<attribute name="k11030" type="java.lang.String"/>
+<attribute name="k11031" type="java.math.BigDecimal"/>
+<attribute name="k11032" type="java.lang.String"/>
+<attribute name="c11003" type="java.lang.Integer"/>
+<attribute name="c11004" type="java.lang.Integer"/>
+<attribute name="c11005" type="java.math.BigDecimal"/>
+<attribute name="c11006" type="java.lang.String"/>
+</outputs>
+<children>
+<operator type="ALIAS" name="T4"/>
+<operator type="PROJECT">
+<outputs>
+<attribute name="c11003" type="java.lang.Integer"/>
+<attribute name="c11004" type="java.lang.Integer"/>
+<attribute name="c11005" type="java.math.BigDecimal"/>
+<attribute name="c11006" type="java.lang.String"/>
 </outputs>
 <project>
 <attribute name="ps_partkey" type="java.lang.Integer"/>
@@ -373,7 +448,7 @@
 <predicate type="equality" left="2" value="7340"/>
 </conjunction>
 <child>
-<operator type="ACCESS" relation="partsupp" access-method="m8">
+<operator type="ACCESS" relation="partsupp" access-method="m9">
 <outputs>
 <attribute name="ps_partkey" type="java.lang.Integer"/>
 <attribute name="ps_suppkey" type="java.lang.Integer"/>
@@ -381,14 +456,15 @@
 <attribute name="ps_supplycost" type="java.math.BigDecimal"/>
 <attribute name="ps_comment" type="java.lang.String"/>
 </outputs>
+<static-input>
+<input attribute="2" value="7340" type="java.lang.Integer"/>
+</static-input>
 </operator>
 </child>
 </operator>
 </child>
 </operator>
 </children>
-</operator>
-</child>
 </operator>
 </command>
 </plan>

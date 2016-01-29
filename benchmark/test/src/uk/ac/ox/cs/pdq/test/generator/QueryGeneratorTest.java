@@ -33,9 +33,9 @@ import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Signature;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
-import uk.ac.ox.cs.pdq.generator.first.QueryGeneratorFirst;
-import uk.ac.ox.cs.pdq.generator.first.SchemaGeneratorFirst;
-import uk.ac.ox.cs.pdq.generator.second.QueryGeneratorSecond;
+import uk.ac.ox.cs.pdq.generator.queryfromids.QueryGeneratorSecond;
+import uk.ac.ox.cs.pdq.generator.tgdsfromquery.QueryGeneratorFirst;
+import uk.ac.ox.cs.pdq.generator.tgdsfromquery.SchemaGeneratorFirst;
 import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
 
 import com.beust.jcommander.internal.Lists;

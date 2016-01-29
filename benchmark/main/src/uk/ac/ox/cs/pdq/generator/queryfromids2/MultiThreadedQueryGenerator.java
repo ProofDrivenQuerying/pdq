@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.generator.third;
+package uk.ac.ox.cs.pdq.generator.queryfromids2;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -19,7 +19,7 @@ import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.cost.statistics.SQLServerJoinCardinalityEstimator;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.generator.second.QueryGeneratorSecond;
+import uk.ac.ox.cs.pdq.generator.queryfromids.QueryGeneratorSecond;
 import uk.ac.ox.cs.pdq.io.pretty.AlgebraLikeLeftDeepPlanWriter;
 import uk.ac.ox.cs.pdq.io.pretty.VeryPrettyQueryWriter;
 import uk.ac.ox.cs.pdq.io.xml.SchemaReader;

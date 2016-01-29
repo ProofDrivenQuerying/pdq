@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.generator.second;
+package uk.ac.ox.cs.pdq.generator.queryfromids;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +9,7 @@ import uk.ac.ox.cs.pdq.db.AccessMethod.Types;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.metadata.RelationMetadata;
 import uk.ac.ox.cs.pdq.db.metadata.StaticMetadata;
-import uk.ac.ox.cs.pdq.generator.first.SchemaGeneratorFirst;
+import uk.ac.ox.cs.pdq.generator.tgdsfromquery.SchemaGeneratorFirst;
 
 /**
  * Creates the relations of a schema

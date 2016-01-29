@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<plan type="linear" cost="10.0" control-flow="TOP_DOWN">
+<plan type="linear" cost="10.0">
 <command name="T1">
 <operator type="PROJECT">
 <outputs>
-<attribute name="c2246" type="java.lang.Integer"/>
-<attribute name="c2249" type="java.lang.String"/>
-<attribute name="c2250" type="java.lang.String"/>
+<attribute name="c15431" type="java.lang.Integer"/>
+<attribute name="c15434" type="java.lang.String"/>
+<attribute name="c15435" type="java.lang.String"/>
 </outputs>
 <project>
 <attribute name="r_regionkey" type="java.lang.Integer"/>
@@ -24,25 +24,15 @@
 </operator>
 </command>
 <command name="T2">
-<operator type="PROJECT">
-<outputs>
-<attribute name="c2247" type="java.lang.String"/>
-<attribute name="c2249" type="java.lang.String"/>
-</outputs>
-<project>
-<attribute name="c2247" type="java.lang.String"/>
-<attribute name="c2249" type="java.lang.String"/>
-</project>
-<child>
 <operator type="JOIN" variant="SYMMETRIC_HASH">
 <outputs>
-<attribute name="c2246" type="java.lang.Integer"/>
-<attribute name="c2249" type="java.lang.String"/>
-<attribute name="c2250" type="java.lang.String"/>
-<attribute name="c2246" type="java.lang.Integer"/>
-<attribute name="c2247" type="java.lang.String"/>
-<attribute name="c2246" type="java.lang.Integer"/>
-<attribute name="c2248" type="java.lang.String"/>
+<attribute name="c15431" type="java.lang.Integer"/>
+<attribute name="c15434" type="java.lang.String"/>
+<attribute name="c15435" type="java.lang.String"/>
+<attribute name="c15431" type="java.lang.Integer"/>
+<attribute name="c15432" type="java.lang.String"/>
+<attribute name="c15431" type="java.lang.Integer"/>
+<attribute name="c15433" type="java.lang.String"/>
 </outputs>
 <conjunction>
 <predicate type="equality" left="0" right="3"/>
@@ -51,10 +41,10 @@
 <operator type="ALIAS" name="T1"/>
 <operator type="PROJECT">
 <outputs>
-<attribute name="c2246" type="java.lang.Integer"/>
-<attribute name="c2247" type="java.lang.String"/>
-<attribute name="c2246" type="java.lang.Integer"/>
-<attribute name="c2248" type="java.lang.String"/>
+<attribute name="c15431" type="java.lang.Integer"/>
+<attribute name="c15432" type="java.lang.String"/>
+<attribute name="c15431" type="java.lang.Integer"/>
+<attribute name="c15433" type="java.lang.String"/>
 </outputs>
 <project>
 <attribute name="n_nationkey" type="java.lang.Integer"/>
@@ -87,8 +77,6 @@
 </child>
 </operator>
 </children>
-</operator>
-</child>
 </operator>
 </command>
 </plan>

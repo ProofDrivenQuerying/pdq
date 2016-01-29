@@ -3,8 +3,8 @@
 <command name="T1">
 <operator type="PROJECT">
 <outputs>
-<attribute name="c11065" type="java.lang.Integer"/>
-<attribute name="c11067" type="java.lang.String"/>
+<attribute name="c1030" type="java.lang.Integer"/>
+<attribute name="c1032" type="java.lang.String"/>
 </outputs>
 <project>
 <attribute name="employeeid" type="java.lang.Integer"/>
@@ -23,19 +23,19 @@
 <command name="T2">
 <operator type="DEPENDENT_JOIN" param="0">
 <outputs>
-<attribute name="c11065" type="java.lang.Integer"/>
-<attribute name="c11067" type="java.lang.String"/>
-<attribute name="c11065" type="java.lang.Integer"/>
-<attribute name="c11066" type="java.lang.Integer"/>
-<attribute name="c11067" type="java.lang.String"/>
+<attribute name="c1030" type="java.lang.Integer"/>
+<attribute name="c1032" type="java.lang.String"/>
+<attribute name="c1030" type="java.lang.Integer"/>
+<attribute name="c1031" type="java.lang.Integer"/>
+<attribute name="c1032" type="java.lang.String"/>
 </outputs>
 <children>
 <operator type="ALIAS" name="T1"/>
 <operator type="PROJECT">
 <outputs>
-<attribute name="c11065" type="java.lang.Integer"/>
-<attribute name="c11066" type="java.lang.Integer"/>
-<attribute name="c11067" type="java.lang.String"/>
+<attribute name="c1030" type="java.lang.Integer"/>
+<attribute name="c1031" type="java.lang.Integer"/>
+<attribute name="c1032" type="java.lang.String"/>
 </outputs>
 <project>
 <attribute name="employeeid" type="java.lang.Integer"/>

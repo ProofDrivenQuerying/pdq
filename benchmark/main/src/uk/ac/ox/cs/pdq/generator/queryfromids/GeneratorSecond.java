@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.generator.second;
+package uk.ac.ox.cs.pdq.generator.queryfromids;
 
 import java.io.FileInputStream;
 import java.io.IOException;

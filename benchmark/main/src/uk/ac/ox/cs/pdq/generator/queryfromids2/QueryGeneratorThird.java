@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.generator.third;
+package uk.ac.ox.cs.pdq.generator.queryfromids2;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +17,7 @@ import uk.ac.ox.cs.pdq.fol.Signature;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.generator.QueryGenerator;
-import uk.ac.ox.cs.pdq.generator.first.AbstractDependencyGenerator;
+import uk.ac.ox.cs.pdq.generator.tgdsfromquery.AbstractDependencyGenerator;
 import uk.ac.ox.cs.pdq.generator.utils.InclusionDependencyGraphNode;
 
 import com.google.common.collect.LinkedHashMultimap;
@@ -61,7 +61,10 @@ public class QueryGeneratorThird extends AbstractDependencyGenerator implements 
 			assert false : "Input schema has no inclusion dependency.";
 		}
 
-		// Create dependency graph
+		//Create an inclusion dependency graph
+		//The vertices of this graph are the atom predicates
+		//There is an edge from P_i to P_j
+		//if there is an inclusion dependency P_i(.) --> P_j(.) 
 		Map<String, InclusionDependencyGraphNode> nodes = new TreeMap<>();
 		for (LinearGuarded guardedDependency:guardedDependencies) {
 			Predicate l = guardedDependency.getLeft().getPredicates().get(0);
