@@ -1,15 +1,111 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<plan type="linear" cost="40.0" control-flow="TOP_DOWN">
+<plan type="linear" cost="40.0">
 <command name="T1">
 <operator type="PROJECT">
 <outputs>
-<attribute name="c1157" type="java.lang.Integer"/>
-<attribute name="c1161" type="java.lang.String"/>
-<attribute name="c1162" type="java.lang.String"/>
-<attribute name="c1163" type="java.lang.Integer"/>
-<attribute name="c1164" type="java.lang.String"/>
-<attribute name="c1165" type="java.math.BigDecimal"/>
-<attribute name="c1166" type="java.lang.String"/>
+<attribute name="c6373" type="java.lang.Integer"/>
+<attribute name="c6374" type="java.lang.Integer"/>
+<attribute name="c6375" type="java.lang.Integer"/>
+<attribute name="c6376" type="java.math.BigDecimal"/>
+<attribute name="c6377" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="ps_partkey" type="java.lang.Integer"/>
+<attribute name="ps_suppkey" type="java.lang.Integer"/>
+<attribute name="ps_availqty" type="java.lang.Integer"/>
+<attribute name="ps_supplycost" type="java.math.BigDecimal"/>
+<attribute name="ps_comment" type="java.lang.String"/>
+</project>
+<child>
+<operator type="ACCESS" relation="partsupp" access-method="m8">
+<outputs>
+<attribute name="ps_partkey" type="java.lang.Integer"/>
+<attribute name="ps_suppkey" type="java.lang.Integer"/>
+<attribute name="ps_availqty" type="java.lang.Integer"/>
+<attribute name="ps_supplycost" type="java.math.BigDecimal"/>
+<attribute name="ps_comment" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</command>
+<command name="T2">
+<operator type="CROSS_PRODUCT">
+<outputs>
+<attribute name="c6373" type="java.lang.Integer"/>
+<attribute name="c6374" type="java.lang.Integer"/>
+<attribute name="c6375" type="java.lang.Integer"/>
+<attribute name="c6376" type="java.math.BigDecimal"/>
+<attribute name="c6377" type="java.lang.String"/>
+<attribute name="c6380" type="java.lang.Integer"/>
+<attribute name="c6384" type="java.lang.String"/>
+<attribute name="c6385" type="java.lang.Integer"/>
+<attribute name="c6386" type="java.lang.String"/>
+</outputs>
+<children>
+<operator type="ALIAS" name="T1"/>
+<operator type="PROJECT">
+<outputs>
+<attribute name="c6380" type="java.lang.Integer"/>
+<attribute name="c6384" type="java.lang.String"/>
+<attribute name="c6385" type="java.lang.Integer"/>
+<attribute name="c6386" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="n_nationkey" type="java.lang.Integer"/>
+<attribute name="n_name" type="java.lang.String"/>
+<attribute name="n_regionkey" type="java.lang.Integer"/>
+<attribute name="n_comment" type="java.lang.String"/>
+</project>
+<child>
+<operator type="ACCESS" relation="nation" access-method="m10">
+<outputs>
+<attribute name="n_nationkey" type="java.lang.Integer"/>
+<attribute name="n_name" type="java.lang.String"/>
+<attribute name="n_regionkey" type="java.lang.Integer"/>
+<attribute name="n_comment" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</children>
+</operator>
+</command>
+<command name="T3">
+<operator type="JOIN" variant="SYMMETRIC_HASH">
+<outputs>
+<attribute name="c6373" type="java.lang.Integer"/>
+<attribute name="c6374" type="java.lang.Integer"/>
+<attribute name="c6375" type="java.lang.Integer"/>
+<attribute name="c6376" type="java.math.BigDecimal"/>
+<attribute name="c6377" type="java.lang.String"/>
+<attribute name="c6380" type="java.lang.Integer"/>
+<attribute name="c6384" type="java.lang.String"/>
+<attribute name="c6385" type="java.lang.Integer"/>
+<attribute name="c6386" type="java.lang.String"/>
+<attribute name="c6374" type="java.lang.Integer"/>
+<attribute name="c6378" type="java.lang.String"/>
+<attribute name="c6379" type="java.lang.String"/>
+<attribute name="c6380" type="java.lang.Integer"/>
+<attribute name="c6381" type="java.lang.String"/>
+<attribute name="c6382" type="java.math.BigDecimal"/>
+<attribute name="c6383" type="java.lang.String"/>
+</outputs>
+<conjunction>
+<predicate type="equality" left="1" right="9"/>
+<predicate type="equality" left="5" right="12"/>
+</conjunction>
+<children>
+<operator type="ALIAS" name="T2"/>
+<operator type="PROJECT">
+<outputs>
+<attribute name="c6374" type="java.lang.Integer"/>
+<attribute name="c6378" type="java.lang.String"/>
+<attribute name="c6379" type="java.lang.String"/>
+<attribute name="c6380" type="java.lang.Integer"/>
+<attribute name="c6381" type="java.lang.String"/>
+<attribute name="c6382" type="java.math.BigDecimal"/>
+<attribute name="c6383" type="java.lang.String"/>
 </outputs>
 <project>
 <attribute name="s_suppkey" type="java.lang.Integer"/>
@@ -34,123 +130,7 @@
 </operator>
 </child>
 </operator>
-</command>
-<command name="T2">
-<operator type="JOIN" variant="SYMMETRIC_HASH">
-<outputs>
-<attribute name="c1157" type="java.lang.Integer"/>
-<attribute name="c1161" type="java.lang.String"/>
-<attribute name="c1162" type="java.lang.String"/>
-<attribute name="c1163" type="java.lang.Integer"/>
-<attribute name="c1164" type="java.lang.String"/>
-<attribute name="c1165" type="java.math.BigDecimal"/>
-<attribute name="c1166" type="java.lang.String"/>
-<attribute name="c1163" type="java.lang.Integer"/>
-<attribute name="c1167" type="java.lang.String"/>
-<attribute name="c1168" type="java.lang.Integer"/>
-<attribute name="c1169" type="java.lang.String"/>
-</outputs>
-<conjunction>
-<predicate type="equality" left="3" right="7"/>
-</conjunction>
-<children>
-<operator type="ALIAS" name="T1"/>
-<operator type="PROJECT">
-<outputs>
-<attribute name="c1163" type="java.lang.Integer"/>
-<attribute name="c1167" type="java.lang.String"/>
-<attribute name="c1168" type="java.lang.Integer"/>
-<attribute name="c1169" type="java.lang.String"/>
-</outputs>
-<project>
-<attribute name="n_nationkey" type="java.lang.Integer"/>
-<attribute name="n_name" type="java.lang.String"/>
-<attribute name="n_regionkey" type="java.lang.Integer"/>
-<attribute name="n_comment" type="java.lang.String"/>
-</project>
-<child>
-<operator type="ACCESS" relation="nation" access-method="m10">
-<outputs>
-<attribute name="n_nationkey" type="java.lang.Integer"/>
-<attribute name="n_name" type="java.lang.String"/>
-<attribute name="n_regionkey" type="java.lang.Integer"/>
-<attribute name="n_comment" type="java.lang.String"/>
-</outputs>
-</operator>
-</child>
-</operator>
 </children>
-</operator>
-</command>
-<command name="T3">
-<operator type="PROJECT">
-<outputs>
-<attribute name="c1165" type="java.math.BigDecimal"/>
-<attribute name="c1161" type="java.lang.String"/>
-<attribute name="c1159" type="java.math.BigDecimal"/>
-<attribute name="c1168" type="java.lang.Integer"/>
-</outputs>
-<project>
-<attribute name="c1165" type="java.math.BigDecimal"/>
-<attribute name="c1161" type="java.lang.String"/>
-<attribute name="c1159" type="java.math.BigDecimal"/>
-<attribute name="c1168" type="java.lang.Integer"/>
-</project>
-<child>
-<operator type="JOIN" variant="SYMMETRIC_HASH">
-<outputs>
-<attribute name="c1157" type="java.lang.Integer"/>
-<attribute name="c1161" type="java.lang.String"/>
-<attribute name="c1162" type="java.lang.String"/>
-<attribute name="c1163" type="java.lang.Integer"/>
-<attribute name="c1164" type="java.lang.String"/>
-<attribute name="c1165" type="java.math.BigDecimal"/>
-<attribute name="c1166" type="java.lang.String"/>
-<attribute name="c1163" type="java.lang.Integer"/>
-<attribute name="c1167" type="java.lang.String"/>
-<attribute name="c1168" type="java.lang.Integer"/>
-<attribute name="c1169" type="java.lang.String"/>
-<attribute name="c1156" type="java.lang.Integer"/>
-<attribute name="c1157" type="java.lang.Integer"/>
-<attribute name="c1158" type="java.lang.Integer"/>
-<attribute name="c1159" type="java.math.BigDecimal"/>
-<attribute name="c1160" type="java.lang.String"/>
-</outputs>
-<conjunction>
-<predicate type="equality" left="0" right="12"/>
-</conjunction>
-<children>
-<operator type="ALIAS" name="T2"/>
-<operator type="PROJECT">
-<outputs>
-<attribute name="c1156" type="java.lang.Integer"/>
-<attribute name="c1157" type="java.lang.Integer"/>
-<attribute name="c1158" type="java.lang.Integer"/>
-<attribute name="c1159" type="java.math.BigDecimal"/>
-<attribute name="c1160" type="java.lang.String"/>
-</outputs>
-<project>
-<attribute name="ps_partkey" type="java.lang.Integer"/>
-<attribute name="ps_suppkey" type="java.lang.Integer"/>
-<attribute name="ps_availqty" type="java.lang.Integer"/>
-<attribute name="ps_supplycost" type="java.math.BigDecimal"/>
-<attribute name="ps_comment" type="java.lang.String"/>
-</project>
-<child>
-<operator type="ACCESS" relation="partsupp" access-method="m8">
-<outputs>
-<attribute name="ps_partkey" type="java.lang.Integer"/>
-<attribute name="ps_suppkey" type="java.lang.Integer"/>
-<attribute name="ps_availqty" type="java.lang.Integer"/>
-<attribute name="ps_supplycost" type="java.math.BigDecimal"/>
-<attribute name="ps_comment" type="java.lang.String"/>
-</outputs>
-</operator>
-</child>
-</operator>
-</children>
-</operator>
-</child>
 </operator>
 </command>
 </plan>

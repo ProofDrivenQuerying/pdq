@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<plan type="linear" cost="25.0" control-flow="TOP_DOWN">
+<plan type="linear" cost="25.0">
 <command name="T1">
 <operator type="PROJECT">
 <outputs>
-<attribute name="c1098" type="java.lang.Integer"/>
-<attribute name="c1103" type="java.lang.String"/>
-<attribute name="c1104" type="java.lang.String"/>
-<attribute name="c1105" type="java.lang.String"/>
-<attribute name="c1106" type="java.lang.String"/>
-<attribute name="c1107" type="java.lang.Integer"/>
-<attribute name="c1108" type="java.lang.String"/>
-<attribute name="c1109" type="java.math.BigDecimal"/>
-<attribute name="c1110" type="java.lang.String"/>
+<attribute name="c5966" type="java.lang.Integer"/>
+<attribute name="c5971" type="java.lang.String"/>
+<attribute name="c5972" type="java.lang.String"/>
+<attribute name="c5973" type="java.lang.String"/>
+<attribute name="c5974" type="java.lang.String"/>
+<attribute name="c5975" type="java.lang.Integer"/>
+<attribute name="c5976" type="java.lang.String"/>
+<attribute name="c5977" type="java.math.BigDecimal"/>
+<attribute name="c5978" type="java.lang.String"/>
 </outputs>
 <project>
 <attribute name="p_partkey" type="java.lang.Integer"/>
@@ -42,34 +42,22 @@
 </operator>
 </command>
 <command name="T2">
-<operator type="PROJECT">
-<outputs>
-<attribute name="c1105" type="java.lang.String"/>
-<attribute name="c1107" type="java.lang.Integer"/>
-<attribute name="c1110" type="java.lang.String"/>
-</outputs>
-<project>
-<attribute name="c1105" type="java.lang.String"/>
-<attribute name="c1107" type="java.lang.Integer"/>
-<attribute name="c1110" type="java.lang.String"/>
-</project>
-<child>
 <operator type="JOIN" variant="SYMMETRIC_HASH">
 <outputs>
-<attribute name="c1098" type="java.lang.Integer"/>
-<attribute name="c1103" type="java.lang.String"/>
-<attribute name="c1104" type="java.lang.String"/>
-<attribute name="c1105" type="java.lang.String"/>
-<attribute name="c1106" type="java.lang.String"/>
-<attribute name="c1107" type="java.lang.Integer"/>
-<attribute name="c1108" type="java.lang.String"/>
-<attribute name="c1109" type="java.math.BigDecimal"/>
-<attribute name="c1110" type="java.lang.String"/>
-<attribute name="c1098" type="java.lang.Integer"/>
-<attribute name="c1099" type="java.lang.Integer"/>
-<attribute name="c1100" type="java.lang.Integer"/>
-<attribute name="c1101" type="java.math.BigDecimal"/>
-<attribute name="c1102" type="java.lang.String"/>
+<attribute name="c5966" type="java.lang.Integer"/>
+<attribute name="c5971" type="java.lang.String"/>
+<attribute name="c5972" type="java.lang.String"/>
+<attribute name="c5973" type="java.lang.String"/>
+<attribute name="c5974" type="java.lang.String"/>
+<attribute name="c5975" type="java.lang.Integer"/>
+<attribute name="c5976" type="java.lang.String"/>
+<attribute name="c5977" type="java.math.BigDecimal"/>
+<attribute name="c5978" type="java.lang.String"/>
+<attribute name="c5966" type="java.lang.Integer"/>
+<attribute name="c5967" type="java.lang.Integer"/>
+<attribute name="c5968" type="java.lang.Integer"/>
+<attribute name="c5969" type="java.math.BigDecimal"/>
+<attribute name="c5970" type="java.lang.String"/>
 </outputs>
 <conjunction>
 <predicate type="equality" left="0" right="9"/>
@@ -78,11 +66,11 @@
 <operator type="ALIAS" name="T1"/>
 <operator type="PROJECT">
 <outputs>
-<attribute name="c1098" type="java.lang.Integer"/>
-<attribute name="c1099" type="java.lang.Integer"/>
-<attribute name="c1100" type="java.lang.Integer"/>
-<attribute name="c1101" type="java.math.BigDecimal"/>
-<attribute name="c1102" type="java.lang.String"/>
+<attribute name="c5966" type="java.lang.Integer"/>
+<attribute name="c5967" type="java.lang.Integer"/>
+<attribute name="c5968" type="java.lang.Integer"/>
+<attribute name="c5969" type="java.math.BigDecimal"/>
+<attribute name="c5970" type="java.lang.String"/>
 </outputs>
 <project>
 <attribute name="ps_partkey" type="java.lang.Integer"/>
@@ -104,8 +92,6 @@
 </child>
 </operator>
 </children>
-</operator>
-</child>
 </operator>
 </command>
 </plan>
