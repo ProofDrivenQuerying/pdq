@@ -5,7 +5,7 @@
 <schema>
 	<sources>
 		<source name="tpch_001" discoverer="uk.ac.ox.cs.pdq.sql.MySQLSchemaDiscoverer"
-			driver="org.postgresql.Driver" url="jdbc:mysql://localhost/"
+			driver=com.mysql.jdbc.Driver url="jdbc:mysql://localhost/"
 			database="tpch_001" username="root" password="root" />
 	</sources>
 	<relations>
