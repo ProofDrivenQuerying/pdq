@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<query type="conjunctive">
+	<body>
+		<atom name="Profinfo">
+			<variable name="x" />
+			<variable name="y" />
+			<constant value="smith" />
+		</atom>
+	</body>
+	<head name="Q">
+		<variable name="x" />
+	</head>
+</query>
+

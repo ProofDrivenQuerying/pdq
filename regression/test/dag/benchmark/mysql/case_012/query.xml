@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<query>
+	<!--
+		 Name, address and nation of customers in America who passed 'urgent' 
+		 orders and their respective extended price of line items.
+	 -->
+	<body>
+		<atom name="orders">
+			<variable name="okey" />
+			<variable name="ckey" />
+			<variable name="ostatus" />
+			<variable name="ototalprice" />
+			<variable name="orderdate" />
+			<constant value="1-URGENT" />
+			<variable name="oclerk" />
+			<variable name="oshipprio" />
+			<variable name="ocomment" />
+		</atom>
+		<atom name="lineitem">
+			<variable name="okey" />
+			<variable name="pkey" />
+			<variable name="skey" />
+			<variable name="linenumber" />
+			<variable name="lquantity" />
+			<variable name="lextendedprice" />
+			<variable name="ldiscount" />
+			<variable name="ltax" />
+			<variable name="lflag" />
+			<variable name="lstatus" />
+			<variable name="lshipdata" />
+			<variable name="lcommitdate" />
+			<variable name="lreceiptdate" />
+			<variable name="lshipinstruct" />
+			<variable name="lshipmode" />
+			<variable name="lcomment" />
+		</atom>
+		<atom name="customer">
+			<variable name="ckey" />
+			<variable name="cname" />
+			<variable name="caddress" />
+			<variable name="cnation" />
+			<variable name="cphone" />
+			<variable name="cacctbal" />
+			<variable name="cmktsegment" />
+			<variable name="ccomment" />
+		</atom>
+		<atom name="nation">
+			<variable name="cnation" />
+			<variable name="nname" />
+			<variable name="nregion" />
+			<variable name="ncomment" />
+		</atom>
+		<atom name="region">
+			<variable name="nregion" />
+			<constant value="AMERICA" />
+			<variable name="rcomment" />
+		</atom>
+	</body>
+	<head name="Q">
+		<variable name="cname" />
+		<variable name="caddress" />
+		<variable name="nname" />
+		<variable name="lextendedprice" />
+	</head>
+</query>

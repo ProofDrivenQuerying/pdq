@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plan type="linear" cost="10.0">
+<command name="T1">
+<operator type="PROJECT">
+<outputs>
+<attribute name="c1017" type="java.lang.Integer"/>
+<attribute name="c1019" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="employeeid" type="java.lang.Integer"/>
+<attribute name="lastname" type="java.lang.String"/>
+</project>
+<child>
+<operator type="ACCESS" relation="Udirectory" access-method="m3">
+<outputs>
+<attribute name="employeeid" type="java.lang.Integer"/>
+<attribute name="lastname" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</command>
+<command name="T2">
+<operator type="DEPENDENT_JOIN" param="0">
+<outputs>
+<attribute name="c1017" type="java.lang.Integer"/>
+<attribute name="c1019" type="java.lang.String"/>
+<attribute name="c1017" type="java.lang.Integer"/>
+<attribute name="c1018" type="java.lang.Integer"/>
+<attribute name="c1019" type="java.lang.String"/>
+</outputs>
+<children>
+<operator type="ALIAS" name="T1"/>
+<operator type="PROJECT">
+<outputs>
+<attribute name="c1017" type="java.lang.Integer"/>
+<attribute name="c1018" type="java.lang.Integer"/>
+<attribute name="c1019" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="employeeid" type="java.lang.Integer"/>
+<attribute name="officenumber" type="java.lang.Integer"/>
+<attribute name="lastname" type="java.lang.String"/>
+</project>
+<child>
+<operator type="ACCESS" relation="Profinfo" access-method="m2">
+<outputs>
+<attribute name="employeeid" type="java.lang.Integer"/>
+<attribute name="officenumber" type="java.lang.Integer"/>
+<attribute name="lastname" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</children>
+</operator>
+</command>
+</plan>

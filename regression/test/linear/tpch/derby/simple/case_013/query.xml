@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<query>
+	<body>
+		<atom name="nation">
+			<variable name="x0" />
+			<variable name="x1" />
+			<variable name="x2" />
+			<variable name="x3" />
+		</atom>
+		<atom name="region">
+			<variable name="x2" />
+			<variable name="x4" />
+			<variable name="x5" />
+		</atom>
+	</body>
+	<head name="Q">
+		<variable name="x0" />
+		<variable name="x1" />
+		<variable name="x2" />
+		<variable name="x4" />
+	</head>
+</query>

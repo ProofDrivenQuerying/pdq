@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plan type="dag" control-flow="BOTTOM_UP">
+<operator type="PROJECT">
+<outputs>
+<attribute name="c330" type="java.lang.Integer"/>
+<attribute name="c331" type="java.lang.String"/>
+<attribute name="c332" type="java.lang.Integer"/>
+<attribute name="c334" type="java.lang.String"/>
+</outputs>
+<child>
+<operator type="RENAME">
+<outputs>
+<attribute name="c330" type="java.lang.Integer"/>
+<attribute name="c331" type="java.lang.String"/>
+<attribute name="c332" type="java.lang.Integer"/>
+<attribute name="c334" type="java.lang.String"/>
+</outputs>
+<child>
+<operator type="ACCESS" relation="region_nation">
+<outputs>
+<attribute name="nation_key" type="java.lang.Integer"/>
+<attribute name="nation_name" type="java.lang.String"/>
+<attribute name="region_key" type="java.lang.Integer"/>
+<attribute name="region_name" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</child>
+</operator>
+</plan>

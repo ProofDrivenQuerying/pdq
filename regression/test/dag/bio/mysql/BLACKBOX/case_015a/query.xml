@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<query name="Example 1" description="" type="conjunctive">
+	<body>
+		<atom name="Activity">
+			<variable name="activity_comment" />
+			<variable name="activity_id" />
+			<variable name="assay_chembl_id" />
+			<variable name="assay_description" />
+			<variable name="assay_type" />
+			<variable name="bao_endpoint" />
+			<variable name="bao_format" />
+			<variable name="canonical_smiles" />
+			<variable name="data_validity_comment" />
+			<variable name="document_chembl_id" />
+			<variable name="document_journal" />
+			<variable name="document_year" />
+			<variable name="molecule_chembl_id" />
+			<variable name="pchembl_value" />
+			<variable name="potential_duplicate" />
+			<variable name="published_relation" />
+			<variable name="published_type" />
+			<variable name="published_units" />
+			<variable name="published_value" />
+			<variable name="qudt_units" />
+			<variable name="record_id" />
+			<variable name="standard_flag" />
+			<variable name="standard_relation" />
+			<variable name="standard_type" />
+			<variable name="standard_units" />
+			<variable name="standard_value" />
+			<variable name="target_chembl_id" />
+			<variable name="organism" />
+			<variable name="target_pref_name" />
+			<variable name="uo_units" />
+		</atom>
+		
+		<atom name="Citation">
+			<variable name="cit_id" />
+			<variable name="cit_source" />
+			<variable name="cit_citationType" />
+			<variable name="cit_title" />
+			<variable name="cit_authorString" />
+			<variable name="cit_journalAbbreviation" />
+			<constant value="2008" />
+			<variable name="cit_journalVolume" />
+			<variable name="cit_issue" />
+			<variable name="cit_pageInfo" />
+			<variable name="cit_citedByCount" />
+			<constant value="MED" />
+			<variable name="ext_id" />
+		</atom>
+
+		<atom name="Document">
+			<variable name="authors" />
+			<constant value="PUBLICATION" />
+			<variable name="document_chembl_id" />
+			<variable name="doi" />
+			<variable name="first_page" />
+			<variable name="issue" />
+			<variable name="document_journal" />
+			<variable name="last_page" />
+			<variable name="ext_id" />
+			<variable name="title" />
+			<variable name="volume" />
+			<constant value="2007" />
+		</atom>
+		
+		<atom name="Protein">
+			<variable />
+			<variable name="target_component_accession" />
+			<variable name="entry_name" />
+			<variable name="organism" />
+		</atom>
+
+	</body>
+	<head name="Q">
+			<variable name="cit_id" />
+			<variable name="cit_source" />
+			<variable name="cit_citationType" />
+			<variable name="cit_title" />
+			<variable name="cit_authorString" />
+			<variable name="cit_journalAbbreviation" />
+			
+			<variable name="cit_journalVolume" />
+			<variable name="cit_issue" />
+			<variable name="cit_pageInfo" />
+			<variable name="cit_citedByCount" />
+			
+			<variable name="target_component_accession" />
+			<variable name="entry_name" />
+			<variable name="organism" />
+
+
+
+	</head>
+
+</query>
