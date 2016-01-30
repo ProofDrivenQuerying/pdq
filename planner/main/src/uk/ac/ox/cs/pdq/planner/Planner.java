@@ -18,8 +18,6 @@ import uk.ac.ox.cs.pdq.logging.performance.DynamicStatistics;
 import uk.ac.ox.cs.pdq.logging.performance.StatKey;
 import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
-import uk.ac.ox.cs.pdq.planner.explorer.Explorer;
-import uk.ac.ox.cs.pdq.planner.explorer.ExplorerFactory;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
 import uk.ac.ox.cs.pdq.planner.logging.performance.ConstantsStatistics;
 import uk.ac.ox.cs.pdq.planner.logging.performance.EventDrivenExplorerStatistics;

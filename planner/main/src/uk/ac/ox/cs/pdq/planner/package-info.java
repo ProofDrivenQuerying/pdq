@@ -35,6 +35,9 @@ package uk.ac.ox.cs.pdq.planner;
 	A configuration c is cost dominated by c' if it is fact dominated by c and maps to a plan with cost >= the cost of the plan of c'.
 	-The DAGOptimized employs further techniques to speed up the planning process like reasoning in parallel and re-use of reasoning results. 
 	
+	Explorer is the top-level explorer class.
+	Explorer are created using the ExplorerFactory class.
+	
 	The PlannerParameters class holds the parameters or a planning session.
 	The package structure is the following one:
 	The linear.* packages contain classes related to creating and exploring linear proofs
