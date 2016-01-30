@@ -20,7 +20,7 @@ import uk.ac.ox.cs.pdq.io.xml.QueryReader;
 import uk.ac.ox.cs.pdq.io.xml.QueryWriter;
 import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
 import uk.ac.ox.cs.pdq.io.xml.SchemaWriter;
-import uk.ac.ox.cs.pdq.planner.Planner;
+import uk.ac.ox.cs.pdq.planner.ExplorationSetUp;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
@@ -87,12 +87,12 @@ public class GeneratorThird extends AbstractGenerator{
 					
 					log.trace(queryFile);
 					planParams.setMaxDepth(1);
-					Planner planner = new Planner(planParams, costParams, reasoningParams, schema);
+					ExplorationSetUp planner = new ExplorationSetUp(planParams, costParams, reasoningParams, schema);
 					if (planner.search(query) != null) {
 						log.trace(" not answerable without constraints");
 					}
 					planParams.setMaxDepth(10);
-					planner = new Planner(planParams, costParams, reasoningParams, schema);
+					planner = new ExplorationSetUp(planParams, costParams, reasoningParams, schema);
 					if (planner.search(query) != null) {
 						log.trace(", not answerable with constraints (depth=10)");
 					}

@@ -23,7 +23,7 @@ import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
 import uk.ac.ox.cs.pdq.logging.ProgressLogger;
 import uk.ac.ox.cs.pdq.logging.SimpleProgressLogger;
 import uk.ac.ox.cs.pdq.plan.Plan;
-import uk.ac.ox.cs.pdq.planner.Planner;
+import uk.ac.ox.cs.pdq.planner.ExplorationSetUp;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.logging.IntervalEventDrivenLogger;
@@ -168,7 +168,7 @@ public class RuntimeTest extends RegressionTest {
 			ReasoningParameters reasoningParams = new ReasoningParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
 			
 			try (ProgressLogger pLog = new SimpleProgressLogger(this.out)) {
-				Planner planner = new Planner(plParams, costParams, reasoningParams, schema);
+				ExplorationSetUp planner = new ExplorationSetUp(plParams, costParams, reasoningParams, schema);
 				planner.registerEventHandler(new IntervalEventDrivenLogger(pLog, plParams.getLogIntervals(), plParams.getShortLogIntervals()));
 				return planner.search(query);
 			} catch (Exception e) {

@@ -16,7 +16,7 @@ import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
 import uk.ac.ox.cs.pdq.logging.ProgressLogger;
 import uk.ac.ox.cs.pdq.logging.SimpleProgressLogger;
 import uk.ac.ox.cs.pdq.plan.Plan;
-import uk.ac.ox.cs.pdq.planner.Planner;
+import uk.ac.ox.cs.pdq.planner.ExplorationSetUp;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.logging.IntervalEventDrivenLogger;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
@@ -96,13 +96,13 @@ public class PlannerCostFunctionTest extends RegressionTest {
 			Plan plan1, plan2;
 			try (ProgressLogger pLog = new SimpleProgressLogger(this.out)) {
 				costParams.setCostType(CostTypes.SIMPLE_CONSTANT);
-				Planner planner1 = new Planner(planParams, costParams, reasoningParams, schema);
+				ExplorationSetUp planner1 = new ExplorationSetUp(planParams, costParams, reasoningParams, schema);
 				planner1.registerEventHandler(new IntervalEventDrivenLogger(pLog, planParams.getLogIntervals(), planParams.getShortLogIntervals()));
 				plan1 = planner1.search(query);
 			}
 			try (ProgressLogger pLog = new SimpleProgressLogger(this.out)) {
 				costParams.setCostType(CostTypes.BLACKBOX);
-				Planner planner2 = new Planner(planParams, costParams, reasoningParams, schema);
+				ExplorationSetUp planner2 = new ExplorationSetUp(planParams, costParams, reasoningParams, schema);
 				planner2.registerEventHandler(new IntervalEventDrivenLogger(pLog, planParams.getLogIntervals(), planParams.getShortLogIntervals()));
 				plan2 = planner2.search(query);
 			}

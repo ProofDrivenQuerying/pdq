@@ -16,7 +16,7 @@ import java.util.Properties;
 import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.ParametersException;
-import uk.ac.ox.cs.pdq.planner.Planner;
+import uk.ac.ox.cs.pdq.planner.ExplorationSetUp;
 import uk.ac.ox.cs.pdq.services.ServiceManager.Actions;
 import uk.ac.ox.cs.pdq.services.ServiceManager.Command;
 import uk.ac.ox.cs.pdq.services.ServiceManager.ExecuteCommandCall;
@@ -202,7 +202,7 @@ public class Bootstrap {
 	 */
 	public static String getVersion() {
 		String path = "/server.version";
-		try (InputStream stream = Planner.class.getResourceAsStream(path)) {
+		try (InputStream stream = ExplorationSetUp.class.getResourceAsStream(path)) {
 			if (stream == null) {
 				return "UNKNOWN";
 			}

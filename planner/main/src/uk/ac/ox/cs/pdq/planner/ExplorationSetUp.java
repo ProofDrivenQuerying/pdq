@@ -41,9 +41,9 @@ import com.google.common.eventbus.EventBus;
  * @author George Konstantinidis
  *
  */
-public class Planner {
+public class ExplorationSetUp {
 
-	protected static Logger log = Logger.getLogger(Planner.class);
+	protected static Logger log = Logger.getLogger(ExplorationSetUp.class);
 
 	/** Input parameters */
 	private PlannerParameters plannerParams;
@@ -75,7 +75,7 @@ public class Planner {
 	 * @param schema
 	 * @param query
 	 */
-	public Planner(PlannerParameters planParams, CostParameters costParams, ReasoningParameters reasoningParams, Schema schema) {
+	public ExplorationSetUp(PlannerParameters planParams, CostParameters costParams, ReasoningParameters reasoningParams, Schema schema) {
 		this(planParams, costParams, reasoningParams, schema, null);
 	}
 
@@ -87,7 +87,7 @@ public class Planner {
 	 * @param query
 	 * @param statsLogger
 	 */
-	public Planner(PlannerParameters params, CostParameters costParams, ReasoningParameters reasoningParams, Schema schema, ChainedStatistics statsLogger) {
+	public ExplorationSetUp(PlannerParameters params, CostParameters costParams, ReasoningParameters reasoningParams, Schema schema, ChainedStatistics statsLogger) {
 		checkParametersConsistency(params, costParams, reasoningParams);
 		this.plannerParams = params;
 		this.costParams = costParams;
@@ -235,7 +235,7 @@ public class Planner {
 				this.statsLogger.addStatistics(cs);
 
 				// Append dynamic statistics to logs
-				DynamicStatistics ds = new DynamicStatistics(Planner.displayColumns());
+				DynamicStatistics ds = new DynamicStatistics(ExplorationSetUp.displayColumns());
 				this.registerEventHandler(ds);
 				this.statsLogger.addStatistics(ds);
 			}

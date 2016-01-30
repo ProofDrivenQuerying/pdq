@@ -25,7 +25,7 @@ import uk.ac.ox.cs.pdq.io.pretty.VeryPrettyQueryWriter;
 import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
 import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.plan.Plan;
-import uk.ac.ox.cs.pdq.planner.Planner;
+import uk.ac.ox.cs.pdq.planner.ExplorationSetUp;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
@@ -80,14 +80,14 @@ public class MultiThreadedQueryGenerator implements Runnable {
 					CostParameters cParams = new CostParameters();
 					ReasoningParameters reasoningParams = new ReasoningParameters();
 					params.setTimeout(60000);
-					Planner plannerNoDep = new Planner(pParams, cParams, reasoningParams, schemaNoDep);
+					ExplorationSetUp plannerNoDep = new ExplorationSetUp(pParams, cParams, reasoningParams, schemaNoDep);
 					Plan planNoDep = plannerNoDep.search(query);
 					if (planNoDep != null) {
 						fos.print("+++ Answerable w/o IC ");
 					} else {
 						fos.print("--- Not answerable w/o IC ");
 					}
-					Planner planner = new Planner(pParams, cParams, reasoningParams, this.schema);
+					ExplorationSetUp planner = new ExplorationSetUp(pParams, cParams, reasoningParams, this.schema);
 					Plan plan = planner.search(query);
 					if (plan != null) {
 						fos.println("\t+++ Answerable " + plan.getCost() + " ");

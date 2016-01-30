@@ -27,7 +27,7 @@ import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
 import uk.ac.ox.cs.pdq.logging.ProgressLogger;
 import uk.ac.ox.cs.pdq.logging.SimpleProgressLogger;
 import uk.ac.ox.cs.pdq.plan.Plan;
-import uk.ac.ox.cs.pdq.planner.Planner;
+import uk.ac.ox.cs.pdq.planner.ExplorationSetUp;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.DominanceTypes;
@@ -154,7 +154,7 @@ public class PlannerTest extends RegressionTest {
 			
 			Plan observedPlan = null;
 			try(ProgressLogger pLog = new SimpleProgressLogger(this.out)) {
-				Planner planner = new Planner(plannerParams, costParams, reasoningParams, schema);
+				ExplorationSetUp planner = new ExplorationSetUp(plannerParams, costParams, reasoningParams, schema);
 				planner.registerEventHandler(
 						new IntervalEventDrivenLogger(
 								pLog, plannerParams.getLogIntervals(),
@@ -353,7 +353,7 @@ public class PlannerTest extends RegressionTest {
 			
 			Plan plan = null;
 			try(ProgressLogger pLog = new SimpleProgressLogger(this.out)) {
-				Planner planner = new Planner(plannerParams, costParams, reasoningParams, schema);
+				ExplorationSetUp planner = new ExplorationSetUp(plannerParams, costParams, reasoningParams, schema);
 				planner.registerEventHandler(new IntervalEventDrivenLogger(pLog, plannerParams.getLogIntervals(), plannerParams.getShortLogIntervals()));
 				plan = planner.search(query);
 			} catch (LimitReachedException lre) {
