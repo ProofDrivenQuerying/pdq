@@ -12,8 +12,8 @@ package uk.ac.ox.cs.pdq.planner.linear.explorer;
 	Saturate the new configuration using the constraints of the accessible schema. 
 	Finally, check if the newly configuration matches the accessible query and update the best configuration appropriately.    
 	
-	-The LinearGeneric class explores the space of linear proofs exhaustively. 
-	-The LinearOptimized class employs several heuristics to cut down the search space. 
+	-The LinearGeneric explores the space of linear proofs exhaustively. 
+	-The LinearOptimized employs several heuristics to cut down the search space. 
 	The first heuristic prunes the configurations that map to plans with cost >= to the best plan found so far.
 	The second heuristic prunes the cost dominated configurations. A configuration c and c' is fact dominated by another configuration c' 
 	if there exists an homomorphism from the facts of c to the facts of c' and the input constants are preserved.

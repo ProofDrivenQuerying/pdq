@@ -277,7 +277,7 @@ public class PlannerController {
 		this.params.setQueryMatchInterval(this.plan.getQueryMatchInterval());
 		this.costParams.setCostType(this.plan.getCostType());
 		this.reasoningParams.setReasoningType(this.plan.getReasoningType());
-		this.reasoningParams.setBlockingInterval(this.plan.getBlockingInterval());
+//		this.reasoningParams.setBlockingInterval(this.plan.getBlockingInterval());
 	}
 
 	private void setSearchSpaceVisualizer(final Planner planner) {

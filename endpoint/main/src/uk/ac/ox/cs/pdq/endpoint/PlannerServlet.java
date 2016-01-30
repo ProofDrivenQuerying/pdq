@@ -123,7 +123,7 @@ public class PlannerServlet extends PDQServlet {
     		
     		costParams.setCostType(CostTypes.valueOf(request.getParameter(RequestParameters.COST)));
     		
-    		reasoningParams.setBlockingInterval(Integer.parseInt(request.getParameter(RequestParameters.BLOCKING_INTERVAL)));
+//    		reasoningParams.setBlockingInterval(Integer.parseInt(request.getParameter(RequestParameters.BLOCKING_INTERVAL)));
 
     		// Launch planner
     		try (WebBasedStatisticsLogger pLog = new WebBasedStatisticsLogger()) {

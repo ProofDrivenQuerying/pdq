@@ -410,12 +410,6 @@ public class CostParameters extends uk.ac.ox.cs.pdq.Parameters {
 		/** The naive. */
 		@EnumParameterValue(description = "Naive cardinality estimation, based on external defined constant join/selectivity reduction factors")
 		NAIVE,
-
-//		@EnumParameterValue(description = "Cardinality estimation based on the min/max method described in the literature")
-//		MIN_MAX, 
-//
-//		@EnumParameterValue(description = "Histogram-based cardinality estimation")
-//		HISTOGRAMS
 	}
 
 }

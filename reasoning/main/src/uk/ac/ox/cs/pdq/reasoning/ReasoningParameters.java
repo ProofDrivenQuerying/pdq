@@ -109,10 +109,6 @@ public class ReasoningParameters extends Parameters {
 	@Parameter(description="Password for the internal database used by the reasoner")
 	protected String databasePassword;
 
-	@Parameter(description="Number of exploration interval to wait for between "
-			+ "blocking checks.")
-	protected Integer blockingInterval;
-
 	@Parameter(description="Type of reasoning to use.", defaultValue="RESTRICTED_CHASE")
 	protected ReasoningTypes reasoningType = ReasoningTypes.RESTRICTED_CHASE;
 
@@ -208,20 +204,6 @@ public class ReasoningParameters extends Parameters {
 	}
 
 	/**
-	 * @return Integer
-	 */
-	public Integer getBlockingInterval() {
-		return this.blockingInterval;
-	}
-
-	/**
-	 * @param blockingInterval Number
-	 */
-	public void setBlockingInterval(Number blockingInterval) {
-		this.blockingInterval = blockingInterval != null ? blockingInterval.intValue() : null;
-	}
-
-	/**
 	 * @return ReasoningTypes
 	 */
 	public ReasoningTypes getReasoningType() {
@@ -314,9 +296,6 @@ public class ReasoningParameters extends Parameters {
 
 	/** */
 	public static enum ReasoningTypes {
-		
-		@EnumParameterValue(description = "Blocking chase algorithm. Used in cases where the schema contains cycles.")
-		BLOCKING_CHASE, 
 		
 		@EnumParameterValue(description = "Restricted chase algorithm. Fires only dependencies that are not already satisfied.")
 		RESTRICTED_CHASE, 
