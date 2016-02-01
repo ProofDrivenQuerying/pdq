@@ -1,4 +1,4 @@
-PDQ web services connectors library
+PDQ web services and dbms connector libraries
 
 The source code is available for free for non-commercial use.
 See the LICENCE file for details.

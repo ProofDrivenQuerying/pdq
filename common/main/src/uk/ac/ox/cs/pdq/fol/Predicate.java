@@ -19,7 +19,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
 /**
- * A predicate
+ * A formula that contains no logical connectives.
+ * An atomic formula is a formula of the form P (t_1, \ldots, t_n) for P a predicate, and the t_i terms.)
  *
  * @author Efthymia Tsamoura
  * @author Julien Leblay
@@ -27,19 +28,19 @@ import com.google.common.collect.Lists;
 public class Predicate extends AbstractFormula implements Formula {
 
 	/**
-	 * The signature of the predicate.
+	 * The signature of the predicate of this atom.
 	 * A signature bridges the predicate with the real-word relation it comes from.
 	 * If it does not correspond to a real-word relation, the signature is a dummy one.
 	 */
 	private final Signature signature;
 
-	/** Signature name */
+	/** Signature's name */
 	private final String name;
 
-	/** Signature arity */
+	/** Signature's arity */
 	private final int arity;
 
-	/** The terms of this predicate */
+	/** The terms of this atom */
 	private final List<Term> terms;
 
 	/**  Cashed string representation of the atom */
@@ -48,7 +49,7 @@ public class Predicate extends AbstractFormula implements Formula {
 	private Integer hash;
 
 	/**
-	 * Constructor for PredicateFormula
+	 * Constructor for Atomic formulae
 	 * @param signature Signature
 	 * @param terms Collection<? extends Term>
 	 */
@@ -78,14 +79,14 @@ public class Predicate extends AbstractFormula implements Formula {
 	}
 
 	/**
-	 * @return true, if the predicate acts as an equality
+	 * @return true, if the atom acts as an equality
 	 */
 	public boolean isEquality() {
 		return this.signature.isEquality();
 	}
 
 	/**
-	 * @return the predicate's signature
+	 * @return the atom's signature
 	 */
 	public Signature getSignature() {
 		return this.signature;
@@ -93,14 +94,14 @@ public class Predicate extends AbstractFormula implements Formula {
 
 
 	/**
-	 * @return the predicate's name
+	 * @return the atom's predicate
 	 */
 	public String getName() {
 		return this.name;
 	}
 
 	/**
-	 * @return the predicate's arity
+	 * @return the atom's arity
 	 */
 	public int getTermsCount() {
 		return this.arity;
@@ -108,7 +109,7 @@ public class Predicate extends AbstractFormula implements Formula {
 
 	/**
 	 * @param n int
-	 * @return the predicate's nth Term
+	 * @return the atom's n-th term
 	 */
 	public Term getTerm(int n) {
 		return this.terms.get(n);

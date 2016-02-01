@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema>
+	<relations>
+		<relation name="Direct1">
+			<attribute name="uname" type="java.lang.String" />
+			<attribute name="addr" type="java.lang.String" />
+			<attribute name="uid" type="java.lang.Integer" />
+			<access-method name="m3" type="LIMITED" inputs="1,3"
+				cost="5" />
+		</relation>
+		<relation name="Ids">
+			<attribute name="uid" type="java.lang.Integer" />
+			<access-method name="m4" type="FREE" cost="5" />
+		</relation>
+		<relation name="Direct2">
+			<attribute name="uname" type="java.lang.String" />
+			<attribute name="addr" type="java.lang.String" />
+			<attribute name="phone" type="java.lang.String" />
+			<access-method name="m5" type="LIMITED" inputs="1,2"
+				cost="5" />
+		</relation>
+		<relation name="Names">
+			<attribute name="uname" type="java.lang.String" />
+			<access-method name="m6" type="FREE" cost="5" />
+		</relation>
+	</relations>
+	<dependencies>
+		<dependency>
+			<body>
+				<atom name="Direct1">
+					<variable name="x" />
+					<variable name="y" />
+					<variable name="z" />
+				</atom>
+			</body>
+			<head>
+				<atom name="Ids">
+					<variable name="z" />
+				</atom>
+			</head>
+		</dependency>
+		<dependency>
+			<body>
+				<atom name="Direct2">
+					<variable name="x" />
+					<variable name="y" />
+					<variable name="z" />
+				</atom>
+			</body>
+			<head>
+				<atom name="Names">
+					<variable name="x" />
+				</atom>
+			</head>
+		</dependency>
+		<dependency>
+			<body>
+				<atom name="Direct2">
+					<variable name="x" />
+					<variable name="y" />
+					<variable name="z" />
+				</atom>
+			</body>
+			<head>
+				<atom name="Direct1">
+					<variable name="x" />
+					<variable name="y" />
+					<variable name="w" />
+				</atom>
+			</head>
+		</dependency>
+	</dependencies>
+</schema>

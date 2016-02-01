@@ -354,7 +354,7 @@ public class PDQController {
     	        pl.setTimeout(toDouble(this.settingsTimeoutTextField.getText()));
     	        pl.setMaxIterations(toDouble(this.settingsMaxIterationsTextField.getText()));
     	        pl.setQueryMatchInterval(toInteger(this.settingsQueryMatchIntervalTextField.getText()));
-    	        pl.setBlockingInterval(toInteger(this.settingsBlockingIntervalTextField.getText()));
+//    	        pl.setBlockingInterval(toInteger(this.settingsBlockingIntervalTextField.getText()));
     	        plannerController.setPlan(pl);
     	        plannerController.setPlanQueue(this.dataQueue);
     	        plannerController.setSchema(this.currentSchema.get());
@@ -730,7 +730,7 @@ public class PDQController {
 		this.settingsCostTypeList.getItems().clear();
 		this.settingsExecutorTypeList.getItems().clear();
 		this.settingsPlannerTypeList.getItems().addAll(PlannerTypes.LINEAR_GENERIC, PlannerTypes.LINEAR_OPTIMIZED, PlannerTypes.LINEAR_KCHASE);
-		this.settingsReasoningTypeList.getItems().addAll(ReasoningTypes.RESTRICTED_CHASE, ReasoningTypes.KTERMINATION_CHASE, ReasoningTypes.BLOCKING_CHASE);
+		this.settingsReasoningTypeList.getItems().addAll(ReasoningTypes.RESTRICTED_CHASE, ReasoningTypes.KTERMINATION_CHASE);
 		this.settingsCostTypeList.getItems().addAll(CostTypes.values());
 		this.settingsExecutorTypeList.getItems().addAll(ExecutorTypes.values());
 		this.settingsExecutorTypeList.getSelectionModel().select(ExecutorTypes.PIPELINED);
@@ -855,7 +855,7 @@ public class PDQController {
 		PDQController.this.settingsTimeoutTextField.setText(PDQController.nullToEmpty(p.getTimeout()));
 		PDQController.this.settingsMaxIterationsTextField.setText(PDQController.nullToEmpty(p.getMaxIterations()));
 		PDQController.this.settingsQueryMatchIntervalTextField.setText(PDQController.nullToEmpty(p.getQueryMatchInterval()));
-		PDQController.this.settingsBlockingIntervalTextField.setText(PDQController.nullToEmpty(p.getBlockingInterval()));
+//		PDQController.this.settingsBlockingIntervalTextField.setText(PDQController.nullToEmpty(p.getBlockingInterval()));
 		PDQController.this.settingsPlannerTypeList.getSelectionModel().select(p.getPlannerType());
 		PDQController.this.settingsReasoningTypeList.getSelectionModel().select(p.getReasoningType());
 		PDQController.this.settingsCostTypeList.getSelectionModel().select(p.getCostType());

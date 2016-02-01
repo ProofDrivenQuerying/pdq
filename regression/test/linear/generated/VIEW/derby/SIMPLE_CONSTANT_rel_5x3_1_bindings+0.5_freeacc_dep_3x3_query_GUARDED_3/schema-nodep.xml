@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema>
+	<relations>
+		<relation name="R0" size="948">
+			<attribute name="x0" type="java.lang.String" />
+		</relation>
+		<relation name="R1" size="447">
+			<attribute name="x0" type="java.lang.String" />
+			<attribute name="x1" type="java.lang.String" />
+		</relation>
+		<relation name="R2" size="53">
+			<attribute name="x0" type="java.lang.String" />
+			<attribute name="x1" type="java.lang.String" />
+			<attribute name="x2" type="java.lang.String" />
+		</relation>
+		<relation name="R3" size="491">
+			<attribute name="x0" type="java.lang.String" />
+			<attribute name="x1" type="java.lang.String" />
+			<attribute name="x2" type="java.lang.String" />
+		</relation>
+		<relation name="R4" size="761">
+			<attribute name="x0" type="java.lang.String" />
+			<attribute name="x1" type="java.lang.String" />
+			<attribute name="x2" type="java.lang.String" />
+		</relation>
+	</relations>
+	<dependencies>
+	</dependencies>
+</schema>

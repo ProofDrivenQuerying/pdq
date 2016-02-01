@@ -6,9 +6,8 @@ package uk.ac.ox.cs.pdq.planner.dag.explorer.validators;
 	The classes of this package check whether a pair of configurations c and c' will satisfy 
 	given shape restrictions after combined into a new binary configuration Binary(c,c').
 
-	-The DefaultValidator class requires the left and right configurations to be non-trivial:
-	an ordered pair of configurations (left, right) is non-trivial if the output facts of the right configuration are not included in
-	the output facts of left configuration and vice versa.
+	-The DefaultValidator requires the left and right configurations to be non-trivial:
+	an ordered pair of configurations (left, right) is non-trivial if the output facts of the right configuration are not included in the output facts of left configuration and vice versa.
 	-The ApplyRuleDepthValidator requires the input pair of configurations to be non trivial, their combined depth to be <= the depth threshold
 	and at least one of the input configurations to be an ApplyRule.
 	-The ApplyRuleValidator requires the input pair of configurations to be non trivial and at least one of the input configurations to be an ApplyRule.

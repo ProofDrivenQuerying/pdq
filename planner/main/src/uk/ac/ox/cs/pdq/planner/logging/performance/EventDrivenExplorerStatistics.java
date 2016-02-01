@@ -3,7 +3,7 @@ package uk.ac.ox.cs.pdq.planner.logging.performance;
 import uk.ac.ox.cs.pdq.EventHandler;
 import uk.ac.ox.cs.pdq.logging.performance.StatisticsLogger;
 import uk.ac.ox.cs.pdq.plan.Plan;
-import uk.ac.ox.cs.pdq.planner.explorer.Explorer;
+import uk.ac.ox.cs.pdq.planner.Explorer;
 
 import com.google.common.eventbus.Subscribe;
 

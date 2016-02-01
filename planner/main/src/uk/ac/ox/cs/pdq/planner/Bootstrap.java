@@ -123,7 +123,7 @@ public class Bootstrap {
 			ConjunctiveQuery query = new QueryReader(schema).read(qis);
 			Plan plan = null;
 			try(ProgressLogger pLog = new SimpleProgressLogger(System.out)) {
-				Planner planner = new Planner(planParams, costParams, reasoningParams, schema);
+				ExplorationSetUp planner = new ExplorationSetUp(planParams, costParams, reasoningParams, schema);
 				if (verbose) {
 					planner.registerEventHandler(
 							new IntervalEventDrivenLogger(

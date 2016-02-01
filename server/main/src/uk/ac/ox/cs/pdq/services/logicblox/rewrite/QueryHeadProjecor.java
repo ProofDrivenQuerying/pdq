@@ -25,7 +25,7 @@ public class QueryHeadProjecor implements Rewriter<ConjunctiveQuery, Conjunctive
 		this.terms = new HashSet<>();
 		for (Term t: query.getFree()) {
 			if (t.isVariable()) {
-				this.terms.add(query.getFree2Canonical().get(t));
+				this.terms.add(query.getFreeToCanonical().get(t));
 			} else {
 				this.terms.add(t);
 			}

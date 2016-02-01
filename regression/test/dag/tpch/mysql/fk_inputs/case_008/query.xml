@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<query>
+	<body>
+		<atom name="partsupp">
+			<variable name="x0" />
+			<constant value="5" />
+			<variable name="x2" />
+			<variable name="x3" />
+			<variable name="x4" />
+		</atom>
+	</body>
+	<head name="Q">
+		<variable name="x0" />
+	</head>
+</query>

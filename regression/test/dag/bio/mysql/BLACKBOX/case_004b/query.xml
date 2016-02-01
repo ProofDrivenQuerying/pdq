@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<query name="Example 1" description="" type="conjunctive">
+	<body>
+
+		<atom name="Pathway">
+			<variable name="pathwayId" />
+			<variable name="pathwayName" />
+			<variable name="stableIdentifier" />
+			<variable name="goBiologicalProcess" />
+			<variable name="isInDisease" />
+			<variable name="isInferred" />
+			<variable name="organismId" />
+			<constant value="Homo sapiens" />
+			<variable name="pdoi" />
+			<variable name="hasDiagram" />
+		</atom>
+		
+		<atom name="Protein">
+			<variable />
+			<variable name="accession" />
+			<variable name="entry_name" />
+			<constant value="Homo sapiens" />
+		</atom>
+
+		<atom name="Publication">
+			<variable name="publicationId" />
+			<variable name="source" />
+			<variable name="pmid" />
+			<variable name="pmcid" />
+			<variable name="DOI" />
+			<variable name="title" />
+			<variable name="authorString" />
+			<variable name="journalTitle" />
+			<variable name="issue" />
+			<variable name="journalVolume" />
+			<variable name="pubYear" />
+			<variable name="journalIssn" />
+			<variable name="pubType" />
+			<variable name="inEPMC" />
+			<variable name="inPMC" />
+			<variable name="citedByCount" />
+			<variable name="hasReferences" />
+			<variable name="hasTextMinedTerms" />
+			<variable name="hasDbCrossReferences" />
+			<variable name="hasLabsLinks" />
+			<variable name="hasTMAccessionNumbers" />
+			<variable />
+			<variable />
+			<variable />
+			<variable name="accession" />
+		</atom>
+
+	</body>
+	<head name="Q">
+
+		<variable name="publicationId" />
+		<variable name="source" />
+		<variable name="pmid" />
+
+		<variable name="accession" />
+		<variable name="entry_name" />
+		
+
+		<variable name="pathwayId" />
+		<variable name="pathwayName" />
+		<variable name="stableIdentifier" />
+		<variable name="goBiologicalProcess" />
+		<variable name="isInDisease" />
+		<variable name="isInferred" />
+		<variable name="organismId" />
+		
+		<variable name="pdoi" />
+		<variable name="hasDiagram" />
+
+
+	</head>
+
+</query>

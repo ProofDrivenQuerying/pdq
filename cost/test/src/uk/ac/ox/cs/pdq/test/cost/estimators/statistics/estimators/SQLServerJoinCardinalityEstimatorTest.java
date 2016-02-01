@@ -19,32 +19,64 @@ import uk.ac.ox.cs.pdq.util.Utility;
 public class SQLServerJoinCardinalityEstimatorTest {
 
 	@Before public void setup() {
-		Utility.assertsEnabled();		
+		Utility.assertsEnabled();
         MockitoAnnotations.initMocks(this);
 	}
 
 	@Test public void test1() {
-		SQLServerHistogram hl = SQLServerHistogramLoader.load(Integer.class, "test/input/V1Histogram.rpt");
-		SQLServerHistogram hr = SQLServerHistogramLoader.load(Integer.class, "test/input/V2Histogram.rpt");
+		SQLServerHistogram hl = SQLServerHistogramLoader.load(Integer.class, "/test/input/V1Histogram.rpt");
+		SQLServerHistogram hr = SQLServerHistogramLoader.load(Integer.class, "/test/input/V2Histogram.rpt");
 		
 		SQLServerJoinCardinalityEstimator estimator = new SQLServerJoinCardinalityEstimator();
 		BigInteger cardinality = estimator.estimateIntersectionCardinality(hl, hr);
 	}
 	
 	@Test public void test2() {
-		SQLServerHistogram hl = SQLServerHistogramLoader.load(Integer.class, "test/input/V1Histogram.rpt");
-		SQLServerHistogram hr = SQLServerHistogramLoader.load(Integer.class, "test/input/PK_PARTSUPP.rpt");
+		SQLServerHistogram hl = SQLServerHistogramLoader.load(Integer.class, "/test/input/V1Histogram.rpt");
+		SQLServerHistogram hr = SQLServerHistogramLoader.load(Integer.class, "/test/input/PK_PARTSUPP.rpt");
 		
 		SQLServerJoinCardinalityEstimator estimator = new SQLServerJoinCardinalityEstimator();
 		BigInteger cardinality = estimator.estimateSingleJoinAttributeCardinality(hl, hr);
 	}
 	
 	@Test public void test3() {
-		SQLServerHistogram hl = SQLServerHistogramLoader.load(Integer.class, "test/input/V1Histogram.rpt");
-		SQLServerHistogram hr = SQLServerHistogramLoader.load(Integer.class, "test/input/PK_PARTSUPP.rpt");
+		SQLServerHistogram hl = SQLServerHistogramLoader.load(Integer.class, "/test/input/V1Histogram.rpt");
+		SQLServerHistogram hr = SQLServerHistogramLoader.load(Integer.class, "/test/input/PK_PARTSUPP.rpt");
 		
 		SQLServerJoinCardinalityEstimator estimator = new SQLServerJoinCardinalityEstimator();
 		BigInteger cardinality = estimator.estimateIntersectionCardinality(hl, hr);
+	}
+	
+	@Test public void test4() {
+		SQLServerHistogram hl = SQLServerHistogramLoader.load(Integer.class, "/test/input/HIST_V6_c_custkey");
+		SQLServerHistogram hr = SQLServerHistogramLoader.load(Integer.class, "/test/input/HIST_V3_c_custkey");
+		
+		SQLServerJoinCardinalityEstimator estimator = new SQLServerJoinCardinalityEstimator();
+		BigInteger cardinality = estimator.estimateIntersectionCardinality(hl, hr);
+	}
+	
+	@Test public void test5() {
+		SQLServerHistogram hl = SQLServerHistogramLoader.load(Integer.class, "/test/input/HIST_V10_ps_suppkey");
+		SQLServerHistogram hr = SQLServerHistogramLoader.load(Integer.class, "/test/input/LINEITEM_L_SUPPKEY");
+		
+		SQLServerJoinCardinalityEstimator estimator = new SQLServerJoinCardinalityEstimator();
+		BigInteger cardinality = estimator.estimateSingleJoinAttributeCardinality(hl, hr);
+	}
+	
+	@Test public void test6() {
+		SQLServerHistogram hl = SQLServerHistogramLoader.load(Double.class, "/test/input/ORDERS_O_TOTALPRICE");
+		SQLServerHistogram hr = SQLServerHistogramLoader.load(Double.class, "/test/input/PART_P_RETAILPRICE");
+		
+		SQLServerJoinCardinalityEstimator estimator = new SQLServerJoinCardinalityEstimator();
+		BigInteger cardinality = estimator.estimateSingleJoinAttributeCardinality(hl, hr);
+	}
+	
+	@Test public void test7() {
+		SQLServerHistogram hl = SQLServerHistogramLoader.load(Double.class, "/test/input/ORDERS_O_ORDERKEY");
+		SQLServerHistogram hr = SQLServerHistogramLoader.load(Double.class, "/test/input/HIST_V7_o_orderkey");
+
+		SQLServerJoinCardinalityEstimator estimator = new SQLServerJoinCardinalityEstimator();
+		BigInteger cardinality = estimator.estimateSingleJoinAttributeCardinality(hl, hr);
 	}
 	
 }

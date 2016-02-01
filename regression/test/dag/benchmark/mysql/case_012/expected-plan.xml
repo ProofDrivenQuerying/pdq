@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plan type="dag" cost="150.0" control-flow="TOP_DOWN">
+<operator type="PROJECT">
+<outputs>
+<attribute name="c2961" type="java.lang.String"/>
+<attribute name="c2962" type="java.lang.String"/>
+<attribute name="c2968" type="java.lang.String"/>
+<attribute name="c2950" type="java.math.BigDecimal"/>
+</outputs>
+<project>
+<attribute name="c2961" type="java.lang.String"/>
+<attribute name="c2962" type="java.lang.String"/>
+<attribute name="c2968" type="java.lang.String"/>
+<attribute name="c2950" type="java.math.BigDecimal"/>
+</project>
+<child>
+<operator type="DEPENDENT_JOIN" param="4">
+<outputs>
+<attribute name="k2997" type="java.lang.Integer"/>
+<attribute name="k3011" type="java.lang.String"/>
+<attribute name="k3012" type="java.lang.Integer"/>
+<attribute name="k3014" type="java.lang.String"/>
+<attribute name="c2963" type="java.lang.Integer"/>
+<attribute name="c2968" type="java.lang.String"/>
+<attribute name="c2969" type="java.lang.Integer"/>
+<attribute name="c2961" type="java.lang.String"/>
+<attribute name="c2962" type="java.lang.String"/>
+<attribute name="c2963" type="java.lang.Integer"/>
+<attribute name="c2965" type="java.math.BigDecimal"/>
+<attribute name="c2943" type="java.lang.String"/>
+<attribute name="k3001" type="java.lang.String"/>
+<attribute name="k3003" type="java.lang.String"/>
+<attribute name="k3004" type="java.lang.String"/>
+<attribute name="c2950" type="java.math.BigDecimal"/>
+<attribute name="c2951" type="java.math.BigDecimal"/>
+<attribute name="c2952" type="java.math.BigDecimal"/>
+<attribute name="c2953" type="java.lang.String"/>
+</outputs>
+<children>
+<operator type="CROSS_PRODUCT">
+<outputs>
+<attribute name="k2997" type="java.lang.Integer"/>
+<attribute name="k3011" type="java.lang.String"/>
+<attribute name="k3012" type="java.lang.Integer"/>
+<attribute name="k3014" type="java.lang.String"/>
+<attribute name="c2963" type="java.lang.Integer"/>
+<attribute name="c2968" type="java.lang.String"/>
+<attribute name="c2969" type="java.lang.Integer"/>
+</outputs>
+<children>
+<operator type="PROJECT">
+<outputs>
+<attribute name="k2997" type="java.lang.Integer"/>
+<attribute name="k3011" type="java.lang.String"/>
+<attribute name="k3012" type="java.lang.Integer"/>
+<attribute name="k3014" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="nation_key" type="java.lang.Integer"/>
+<attribute name="nation_name" type="java.lang.String"/>
+<attribute name="region_key" type="java.lang.Integer"/>
+<attribute name="region_name" type="java.lang.String"/>
+</project>
+<child>
+<operator type="ACCESS" relation="region_nation" access-method="m13">
+<outputs>
+<attribute name="nation_key" type="java.lang.Integer"/>
+<attribute name="nation_name" type="java.lang.String"/>
+<attribute name="region_key" type="java.lang.Integer"/>
+<attribute name="region_name" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+<operator type="PROJECT">
+<outputs>
+<attribute name="c2963" type="java.lang.Integer"/>
+<attribute name="c2968" type="java.lang.String"/>
+<attribute name="c2969" type="java.lang.Integer"/>
+</outputs>
+<project>
+<attribute name="nation_key" type="java.lang.Integer"/>
+<attribute name="nation_name" type="java.lang.String"/>
+<attribute name="region_key" type="java.lang.Integer"/>
+</project>
+<child>
+<operator type="SELECT">
+<outputs>
+<attribute name="nation_key" type="java.lang.Integer"/>
+<attribute name="nation_name" type="java.lang.String"/>
+<attribute name="region_key" type="java.lang.Integer"/>
+<attribute name="region_name" type="java.lang.String"/>
+</outputs>
+<conjunction>
+<predicate type="equality" left="3" value="AMERICA"/>
+</conjunction>
+<child>
+<operator type="ACCESS" relation="region_nation" access-method="m13">
+<outputs>
+<attribute name="nation_key" type="java.lang.Integer"/>
+<attribute name="nation_name" type="java.lang.String"/>
+<attribute name="region_key" type="java.lang.Integer"/>
+<attribute name="region_name" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</child>
+</operator>
+</children>
+</operator>
+<operator type="PROJECT">
+<outputs>
+<attribute name="c2961" type="java.lang.String"/>
+<attribute name="c2962" type="java.lang.String"/>
+<attribute name="c2963" type="java.lang.Integer"/>
+<attribute name="c2965" type="java.math.BigDecimal"/>
+<attribute name="c2943" type="java.lang.String"/>
+<attribute name="k3001" type="java.lang.String"/>
+<attribute name="k3003" type="java.lang.String"/>
+<attribute name="k3004" type="java.lang.String"/>
+<attribute name="c2950" type="java.math.BigDecimal"/>
+<attribute name="c2951" type="java.math.BigDecimal"/>
+<attribute name="c2952" type="java.math.BigDecimal"/>
+<attribute name="c2953" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="cname" type="java.lang.String"/>
+<attribute name="caddress" type="java.lang.String"/>
+<attribute name="cnation" type="java.lang.Integer"/>
+<attribute name="cactbal" type="java.math.BigDecimal"/>
+<attribute name="oclerk" type="java.lang.String"/>
+<attribute name="pname" type="java.lang.String"/>
+<attribute name="pbrand" type="java.lang.String"/>
+<attribute name="ptype" type="java.lang.String"/>
+<attribute name="lextendedprice" type="java.math.BigDecimal"/>
+<attribute name="ldiscount" type="java.math.BigDecimal"/>
+<attribute name="ltax" type="java.math.BigDecimal"/>
+<attribute name="lflag" type="java.lang.String"/>
+</project>
+<child>
+<operator type="SELECT">
+<outputs>
+<attribute name="cname" type="java.lang.String"/>
+<attribute name="caddress" type="java.lang.String"/>
+<attribute name="cnation" type="java.lang.Integer"/>
+<attribute name="cactbal" type="java.math.BigDecimal"/>
+<attribute name="opriority" type="java.lang.String"/>
+<attribute name="oclerk" type="java.lang.String"/>
+<attribute name="pname" type="java.lang.String"/>
+<attribute name="pbrand" type="java.lang.String"/>
+<attribute name="ptype" type="java.lang.String"/>
+<attribute name="lextendedprice" type="java.math.BigDecimal"/>
+<attribute name="ldiscount" type="java.math.BigDecimal"/>
+<attribute name="ltax" type="java.math.BigDecimal"/>
+<attribute name="lflag" type="java.lang.String"/>
+</outputs>
+<conjunction>
+<predicate type="equality" left="4" value="1-URGENT"/>
+</conjunction>
+<child>
+<operator type="ACCESS" relation="order_customer" access-method="m14">
+<outputs>
+<attribute name="cname" type="java.lang.String"/>
+<attribute name="caddress" type="java.lang.String"/>
+<attribute name="cnation" type="java.lang.Integer"/>
+<attribute name="cactbal" type="java.math.BigDecimal"/>
+<attribute name="opriority" type="java.lang.String"/>
+<attribute name="oclerk" type="java.lang.String"/>
+<attribute name="pname" type="java.lang.String"/>
+<attribute name="pbrand" type="java.lang.String"/>
+<attribute name="ptype" type="java.lang.String"/>
+<attribute name="lextendedprice" type="java.math.BigDecimal"/>
+<attribute name="ldiscount" type="java.math.BigDecimal"/>
+<attribute name="ltax" type="java.math.BigDecimal"/>
+<attribute name="lflag" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</child>
+</operator>
+</children>
+</operator>
+</child>
+</operator>
+</plan>

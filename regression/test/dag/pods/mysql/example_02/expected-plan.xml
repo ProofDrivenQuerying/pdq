@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plan type="dag" cost="4.0" control-flow="TOP_DOWN">
+<operator type="PROJECT">
+<outputs>
+<attribute name="c72288" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="c72288" type="java.lang.String"/>
+</project>
+<child>
+<operator type="DEPENDENT_JOIN" param="0,3">
+<outputs>
+<attribute name="c72286" type="java.lang.String"/>
+<attribute name="k72289" type="java.lang.Integer"/>
+<attribute name="c72286" type="java.lang.String"/>
+<attribute name="c72287" type="java.lang.String"/>
+<attribute name="k72289" type="java.lang.Integer"/>
+<attribute name="c72286" type="java.lang.String"/>
+<attribute name="c72287" type="java.lang.String"/>
+<attribute name="c72288" type="java.lang.String"/>
+</outputs>
+<children>
+<operator type="DEPENDENT_JOIN" param="0">
+<outputs>
+<attribute name="c72286" type="java.lang.String"/>
+<attribute name="k72289" type="java.lang.Integer"/>
+<attribute name="c72286" type="java.lang.String"/>
+<attribute name="c72287" type="java.lang.String"/>
+<attribute name="k72289" type="java.lang.Integer"/>
+</outputs>
+<children>
+<operator type="PROJECT">
+<outputs>
+<attribute name="c72286" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="uname" type="java.lang.String"/>
+</project>
+<child>
+<operator type="ACCESS" relation="Names" access-method="m6">
+<outputs>
+<attribute name="uname" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+<operator type="DEPENDENT_JOIN" param="-1,0">
+<outputs>
+<attribute name="k72289" type="java.lang.Integer"/>
+<attribute name="c72286" type="java.lang.String"/>
+<attribute name="c72287" type="java.lang.String"/>
+<attribute name="k72289" type="java.lang.Integer"/>
+</outputs>
+<children>
+<operator type="PROJECT">
+<outputs>
+<attribute name="k72289" type="java.lang.Integer"/>
+</outputs>
+<project>
+<attribute name="uid" type="java.lang.Integer"/>
+</project>
+<child>
+<operator type="ACCESS" relation="Ids" access-method="m4">
+<outputs>
+<attribute name="uid" type="java.lang.Integer"/>
+</outputs>
+</operator>
+</child>
+</operator>
+<operator type="PROJECT">
+<outputs>
+<attribute name="c72286" type="java.lang.String"/>
+<attribute name="c72287" type="java.lang.String"/>
+<attribute name="k72289" type="java.lang.Integer"/>
+</outputs>
+<project>
+<attribute name="uname" type="java.lang.String"/>
+<attribute name="addr" type="java.lang.String"/>
+<attribute name="uid" type="java.lang.Integer"/>
+</project>
+<child>
+<operator type="ACCESS" relation="Direct1" access-method="m3">
+<outputs>
+<attribute name="uname" type="java.lang.String"/>
+<attribute name="addr" type="java.lang.String"/>
+<attribute name="uid" type="java.lang.Integer"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</children>
+</operator>
+</children>
+</operator>
+<operator type="PROJECT">
+<outputs>
+<attribute name="c72286" type="java.lang.String"/>
+<attribute name="c72287" type="java.lang.String"/>
+<attribute name="c72288" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="uname" type="java.lang.String"/>
+<attribute name="addr" type="java.lang.String"/>
+<attribute name="phone" type="java.lang.String"/>
+</project>
+<child>
+<operator type="ACCESS" relation="Direct2" access-method="m5">
+<outputs>
+<attribute name="uname" type="java.lang.String"/>
+<attribute name="addr" type="java.lang.String"/>
+<attribute name="phone" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</children>
+</operator>
+</child>
+</operator>
+</plan>

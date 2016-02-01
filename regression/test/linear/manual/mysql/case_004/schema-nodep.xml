@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema>
+	<relations>
+		<relation name="R1">
+			<attribute name="x0" type="java.lang.String" />
+			<access-method type="LIMITED" inputs="1" cost="5.0" />
+		</relation>
+		<relation name="R2">
+			<attribute name="x0" type="java.lang.String" />
+			<access-method type="LIMITED" inputs="1" cost="5.0" />
+		</relation>
+		<relation name="R3">
+			<attribute name="x0" type="java.lang.String" />
+			<access-method type="LIMITED" inputs="1" cost="5.0" />
+			<access-method type="FREE" cost="5.0" />
+		</relation>
+		<relation name="R5">
+			<attribute name="x0" type="java.lang.String" />
+			<access-method type="LIMITED" inputs="1" cost="5.0" />
+		</relation>
+		<relation name="R10">
+			<attribute name="x0" type="java.lang.String" />
+			<access-method type="LIMITED" inputs="1" cost="5.0" />
+		</relation>
+		<relation name="R11">
+			<attribute name="x0" type="java.lang.String" />
+			<access-method type="LIMITED" inputs="1" cost="5.0" />
+			<access-method type="FREE" cost="5.0" />
+		</relation>
+		<relation name="R12">
+			<attribute name="x0" type="java.lang.String" />
+			<access-method type="LIMITED" inputs="1" cost="5.0" />
+		</relation>
+		<relation name="R14">
+			<attribute name="x0" type="java.lang.String" />
+			<access-method type="LIMITED" inputs="1" cost="5.0" />
+		</relation>
+		<relation name="R17">
+			<attribute name="x0" type="java.lang.String" />
+			<access-method type="LIMITED" inputs="1" cost="5.0" />
+		</relation>
+		<relation name="R18">
+			<attribute name="x0" type="java.lang.String" />
+			<access-method type="LIMITED" inputs="1" cost="5.0" />
+		</relation>
+		<relation name="R19">
+			<attribute name="x0" type="java.lang.String" />
+			<access-method type="LIMITED" inputs="1" cost="5.0" />
+		</relation>
+		<relation name="R0">
+			<attribute name="x0" type="java.lang.String" />
+			<attribute name="x1" type="java.lang.String" />
+			<access-method type="LIMITED" inputs="1" cost="5.0" />
+			<access-method type="FREE" cost="5.0" />
+		</relation>
+		<relation name="R4">
+			<attribute name="x0" type="java.lang.String" />
+			<attribute name="x1" type="java.lang.String" />
+			<access-method type="LIMITED" inputs="2" cost="5.0" />
+			<access-method type="FREE" cost="5.0" />
+		</relation>
+		<relation name="R6">
+			<attribute name="x0" type="java.lang.String" />
+			<attribute name="x1" type="java.lang.String" />
+			<access-method type="LIMITED" inputs="2" cost="5.0" />
+		</relation>
+		<relation name="R7">
+			<attribute name="x0" type="java.lang.String" />
+			<attribute name="x1" type="java.lang.String" />
+			<access-method type="LIMITED" inputs="1" cost="5.0" />
+		</relation>
+		<relation name="R8">
+			<attribute name="x0" type="java.lang.String" />
+			<attribute name="x1" type="java.lang.String" />
+			<access-method type="LIMITED" inputs="1" cost="5.0" />
+		</relation>
+		<relation name="R9">
+			<attribute name="x0" type="java.lang.String" />
+			<attribute name="x1" type="java.lang.String" />
+			<access-method type="LIMITED" inputs="2" cost="5.0" />
+			<access-method type="FREE" cost="5.0" />
+		</relation>
+		<relation name="R13">
+			<attribute name="x0" type="java.lang.String" />
+			<attribute name="x1" type="java.lang.String" />
+			<access-method type="LIMITED" inputs="2" cost="5.0" />
+		</relation>
+		<relation name="R15">
+			<attribute name="x0" type="java.lang.String" />
+			<attribute name="x1" type="java.lang.String" />
+			<access-method type="LIMITED" inputs="1" cost="5.0" />
+		</relation>
+		<relation name="R16">
+			<attribute name="x0" type="java.lang.String" />
+			<attribute name="x1" type="java.lang.String" />
+			<access-method type="LIMITED" inputs="2" cost="5.0" />
+		</relation>
+	</relations>
+	<views>
+	</views>
+	<dependencies>
+	</dependencies>
+</schema>

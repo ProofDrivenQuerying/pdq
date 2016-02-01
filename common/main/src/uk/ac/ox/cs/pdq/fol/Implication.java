@@ -5,7 +5,7 @@ import java.util.Map;
 import org.apache.commons.lang3.tuple.Pair;
 
 /**
- * An implication
+ * A logical implication
  * @author Efthymia Tsamoura
  * @author Julien Leblay
  *

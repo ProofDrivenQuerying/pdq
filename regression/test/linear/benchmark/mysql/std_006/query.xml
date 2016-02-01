@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SELECT sum(l_extendedprice * l_discount) as revenue FROM lineitem WHERE 
+	l_shipdate >= date '' AND l_shipdate < date '' + interval '1' year AND l_discount 
+	between - 0.01 and + 0.01 AND l_quantity < 10; -->
+<query>
+	<body>
+		<atom name="lineitem">
+			<variable name="o_orderkey" />
+			<variable name="l_partkey" />
+			<variable name="s_suppkey" />
+			<variable name="l_linenumber" />
+			<constant value="10" />
+			<variable name="l_extendedprice" />
+			<variable name="l_discount" />
+			<variable name="l_tax" />
+			<variable name="l_returnflag" />
+			<variable name="l_linestatus" />
+			<variable name="l_shipdate" />
+			<variable name="l_commitdate" />
+			<variable name="l_receiptdate" />
+			<variable name="l_shipinstruct" />
+			<variable name="l_shipmode" />
+			<variable name="l_comment" />
+		</atom>
+	</body>
+	<head name="Q">
+		<variable name="l_extendedprice" />
+		<variable name="l_discount" />
+	</head>
+</query>

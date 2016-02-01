@@ -14,6 +14,7 @@ import com.google.common.collect.Lists;
  *
  * @author Julien Leblay
  */
+@Deprecated
 public class SubPlanAlias extends RelationalOperator {
 
 	private static int globalId = 0;

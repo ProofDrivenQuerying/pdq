@@ -19,9 +19,9 @@ import uk.ac.ox.cs.pdq.db.View;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Predicate;
-import uk.ac.ox.cs.pdq.generator.first.QueryGeneratorFirst;
-import uk.ac.ox.cs.pdq.generator.first.SchemaGeneratorFirst;
-import uk.ac.ox.cs.pdq.generator.first.ViewGeneratorFirst;
+import uk.ac.ox.cs.pdq.generator.tgdsfromquery.QueryGeneratorFirst;
+import uk.ac.ox.cs.pdq.generator.tgdsfromquery.SchemaGeneratorFirst;
+import uk.ac.ox.cs.pdq.generator.tgdsfromquery.ViewGeneratorFirst;
 
 /**
  * Generates query or views based on an input Schema, and external parameters.

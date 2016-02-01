@@ -8,7 +8,8 @@ import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Variable;
 
 /**
- * A linear guarded dependency
+ * A dependency of the form \delta = \forall x  \sigma(\vec{x}) --> \exists y  \tau(\vec{x}, \vec{y})
+ * where \sigma is a single atim and \tau is a conjunction of atoms.
  *
  * @author Efthymia Tsamoura
  * @author Julien Leblay

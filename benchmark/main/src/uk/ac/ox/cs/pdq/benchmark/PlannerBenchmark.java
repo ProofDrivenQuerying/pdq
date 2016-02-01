@@ -21,7 +21,7 @@ import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.logging.performance.ChainedStatistics;
 import uk.ac.ox.cs.pdq.plan.Plan;
-import uk.ac.ox.cs.pdq.planner.Planner;
+import uk.ac.ox.cs.pdq.planner.ExplorationSetUp;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.events.BestPlanWriter;
@@ -210,7 +210,7 @@ public class PlannerBenchmark extends Runner {
 		}
 	    printSystemSettings(out);
 		printHeader(out);
-		Planner planner = new Planner(plannerParams, costParams, reasoningParams, schema, stats);
+		ExplorationSetUp planner = new ExplorationSetUp(plannerParams, costParams, reasoningParams, schema, stats);
 
 		IntervalEventDrivenLogger logger = new IntervalEventDrivenLogger(stats, plannerParams.getLogIntervals(), plannerParams.getShortLogIntervals());
 		planner.registerEventHandler(logger);

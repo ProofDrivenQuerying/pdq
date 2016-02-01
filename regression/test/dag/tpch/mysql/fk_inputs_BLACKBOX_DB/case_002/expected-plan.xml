@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plan type="dag" cost="42.13">
+<operator type="PROJECT">
+<outputs>
+<attribute name="c8503443" type="java.lang.String"/>
+<attribute name="c8503445" type="java.lang.Integer"/>
+<attribute name="c8503448" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="c8503443" type="java.lang.String"/>
+<attribute name="c8503445" type="java.lang.Integer"/>
+<attribute name="c8503448" type="java.lang.String"/>
+</project>
+<child>
+<operator type="DEPENDENT_JOIN" param="0">
+<outputs>
+<attribute name="c8503436" type="java.lang.Integer"/>
+<attribute name="c8503441" type="java.lang.String"/>
+<attribute name="c8503442" type="java.lang.String"/>
+<attribute name="c8503443" type="java.lang.String"/>
+<attribute name="c8503444" type="java.lang.String"/>
+<attribute name="c8503445" type="java.lang.Integer"/>
+<attribute name="c8503446" type="java.lang.String"/>
+<attribute name="c8503447" type="java.math.BigDecimal"/>
+<attribute name="c8503448" type="java.lang.String"/>
+<attribute name="c8503436" type="java.lang.Integer"/>
+<attribute name="c8503437" type="java.lang.Integer"/>
+<attribute name="c8503438" type="java.lang.Integer"/>
+<attribute name="c8503439" type="java.math.BigDecimal"/>
+<attribute name="c8503440" type="java.lang.String"/>
+</outputs>
+<children>
+<operator type="PROJECT">
+<outputs>
+<attribute name="c8503436" type="java.lang.Integer"/>
+<attribute name="c8503441" type="java.lang.String"/>
+<attribute name="c8503442" type="java.lang.String"/>
+<attribute name="c8503443" type="java.lang.String"/>
+<attribute name="c8503444" type="java.lang.String"/>
+<attribute name="c8503445" type="java.lang.Integer"/>
+<attribute name="c8503446" type="java.lang.String"/>
+<attribute name="c8503447" type="java.math.BigDecimal"/>
+<attribute name="c8503448" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="p_partkey" type="java.lang.Integer"/>
+<attribute name="p_name" type="java.lang.String"/>
+<attribute name="p_mfgr" type="java.lang.String"/>
+<attribute name="p_brand" type="java.lang.String"/>
+<attribute name="p_type" type="java.lang.String"/>
+<attribute name="p_size" type="java.lang.Integer"/>
+<attribute name="p_container" type="java.lang.String"/>
+<attribute name="p_retailprice" type="java.math.BigDecimal"/>
+<attribute name="p_comment" type="java.lang.String"/>
+</project>
+<child>
+<operator type="ACCESS" relation="part" access-method="m2">
+<outputs>
+<attribute name="p_partkey" type="java.lang.Integer"/>
+<attribute name="p_name" type="java.lang.String"/>
+<attribute name="p_mfgr" type="java.lang.String"/>
+<attribute name="p_brand" type="java.lang.String"/>
+<attribute name="p_type" type="java.lang.String"/>
+<attribute name="p_size" type="java.lang.Integer"/>
+<attribute name="p_container" type="java.lang.String"/>
+<attribute name="p_retailprice" type="java.math.BigDecimal"/>
+<attribute name="p_comment" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+<operator type="PROJECT">
+<outputs>
+<attribute name="c8503436" type="java.lang.Integer"/>
+<attribute name="c8503437" type="java.lang.Integer"/>
+<attribute name="c8503438" type="java.lang.Integer"/>
+<attribute name="c8503439" type="java.math.BigDecimal"/>
+<attribute name="c8503440" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="ps_partkey" type="java.lang.Integer"/>
+<attribute name="ps_suppkey" type="java.lang.Integer"/>
+<attribute name="ps_availqty" type="java.lang.Integer"/>
+<attribute name="ps_supplycost" type="java.math.BigDecimal"/>
+<attribute name="ps_comment" type="java.lang.String"/>
+</project>
+<child>
+<operator type="ACCESS" relation="partsupp" access-method="m4">
+<outputs>
+<attribute name="ps_partkey" type="java.lang.Integer"/>
+<attribute name="ps_suppkey" type="java.lang.Integer"/>
+<attribute name="ps_availqty" type="java.lang.Integer"/>
+<attribute name="ps_supplycost" type="java.math.BigDecimal"/>
+<attribute name="ps_comment" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</children>
+</operator>
+</child>
+</operator>
+</plan>

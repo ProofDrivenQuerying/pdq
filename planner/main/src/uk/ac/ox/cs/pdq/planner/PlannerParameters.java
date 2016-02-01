@@ -264,20 +264,6 @@ public class PlannerParameters extends Parameters {
 			defaultValue = "2")
 	protected Integer depthThreshold = 2;
 
-	/** The topk. */
-	@Parameter(description = "Top-K configurations to consider as inputs to "
-			+ "each subsequent phase of a DAG planning algorithm.\n"
-			+ "Use in conjunction to ILP SI planning algorithm",
-			defaultValue = "4")
-	protected Integer topk = 4;
-
-	/** The top configurations. */
-	@Parameter(description = "Top configurations to consider as inputs to "
-			+ "each subsequent phase of a DAG planning algorithm.\n"
-			+ "Use in conjunction to DISTANCE2CORETOPK priority assessor",
-			defaultValue = "Integer.MAX_VALUE")
-	protected Integer topConfigurations = Integer.MAX_VALUE;
-
 	/** The termination k. */
 	@Parameter(description = "Number of rounds of rule firings to perform, in "
 			+ "a single application of the chase. "
@@ -291,14 +277,6 @@ public class PlannerParameters extends Parameters {
 			+ "Only applies to DAG planning algorithms",
 			defaultValue = "false")
 	protected Boolean fullInitialization = Boolean.FALSE;
-
-	/** The reachability filtering. */
-	@Parameter(description = "If true, relation that are not reachable from "
-			+ "the input query through the firing of constraints are not "
-			+ "considered in the plan search.\n Only applies to DAG planning "
-			+ "algorithms",
-			defaultValue = "false")
-	protected Boolean reachabilityFiltering = false;
 
 	/** The order aware. */
 	@Parameter(description = "If true, all join orders are considered during "
@@ -1070,33 +1048,6 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
-	 * Gets the topk.
-	 *
-	 * @return Integer
-	 */
-	public Integer getTopk() {
-		return this.topk;
-	}
-
-	/**
-	 * Sets the topk.
-	 *
-	 * @param topk Integer
-	 */
-	public void setTopk(Integer topk) {
-		this.topk = topk;
-	}
-
-	/**
-	 * Sets the topk.
-	 *
-	 * @param topk Number
-	 */
-	public void setTopk(Number topk) {
-		this.topk = topk != null ? topk.intValue() : null;
-	}
-
-	/**
 	 * Gets the full initialization.
 	 *
 	 * @return Boolean
@@ -1133,57 +1084,12 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
-	 * Gets the top configurations.
-	 *
-	 * @return Integer
-	 */
-	public Integer getTopConfigurations() {
-		return this.topConfigurations;
-	}
-
-	/**
-	 * Sets the top configurations.
-	 *
-	 * @param topConfigurations Number
-	 */
-	public void setTopConfigurations(Number topConfigurations) {
-		this.topConfigurations = topConfigurations != null ? topConfigurations.intValue() : null;
-	}
-
-	/**
-	 * Sets the top configurations.
-	 *
-	 * @param topConfigurations Integer
-	 */
-	public void setTopConfigurations(Integer topConfigurations) {
-		this.topConfigurations = topConfigurations;
-	}
-
-	/**
 	 * Sets the full initialization.
 	 *
 	 * @param b Boolean
 	 */
 	public void setFullInitialization(Boolean b) {
 		this.fullInitialization = b;
-	}
-
-	/**
-	 * Gets the reachability filtering.
-	 *
-	 * @return Boolean
-	 */
-	public Boolean getReachabilityFiltering() {
-		return this.reachabilityFiltering;
-	}
-
-	/**
-	 * Sets the reachability filtering.
-	 *
-	 * @param reachabilityFiltering Boolean
-	 */
-	public void setReachabilityFiltering(Boolean reachabilityFiltering) {
-		this.reachabilityFiltering = reachabilityFiltering;
 	}
 	
 	/**
@@ -1330,32 +1236,31 @@ public class PlannerParameters extends Parameters {
 	public static enum ValidatorTypes {
 		
 		/** The default validator. */
-		@EnumParameterValue(description = "No shape or type restriction")
+		@EnumParameterValue(description = "requires the left and right configurations to be non-trivial:\n"
+				+ "an ordered pair of configurations (left, right) is non-trivial if the output facts of the right configuration are not included in the output facts of left configuration and vice versa.")
 		DEFAULT_VALIDATOR,
 		
 		/** The applyrule validator. */
-		@EnumParameterValue(description = "Requires at least one of the input configurations to be an ApplyRule")
+		@EnumParameterValue(description = "Requires the input pair of configurations to be non trivial and at least one of the input configurations to be an ApplyRule.")
 		APPLYRULE_VALIDATOR,
 		
 		/** The depth validator. */
-		@EnumParameterValue(description = "Restricts the depth of the plans visited ")
+		@EnumParameterValue(description = "Requires the input pair of configurations to be non trivial and their combined depth to be <= the depth threshold.")
 		DEPTH_VALIDATOR,
 		
 		/** The right depth validator. */
-		@EnumParameterValue(description = "Restricts the depth of the RHS plans used")
+		@EnumParameterValue(description = "Requires the input pair of configurations to be non trivial and the right's depth to be <= the depth threshold")
 		RIGHT_DEPTH_VALIDATOR,
 		
 		/** The applyrule depth validator. */
-		@EnumParameterValue(description = "Combination of APPLYRULE_VALIDATOR and DEPTH_VALIDATOR")
+		@EnumParameterValue(description = "Requires the input pair of configurations to be non trivial, their combined depth to be <= the depth threshold"
+				+ "and at least one of the input configurations to be an ApplyRule.")
 		APPLYRULE_DEPTH_VALIDATOR,
 		
 		/** The linear validator. */
-		@EnumParameterValue(description = "Restricts the shape of plans to left-deep ones")
+		@EnumParameterValue(description = "Requires the input pair of configurations to be non trivial and their composition to be a closed left-deep configuration")
 		LINEAR_VALIDATOR,
 		
-		/** The strict inclusion. */
-		@EnumParameterValue(description = "Miscellaneous")
-		STRICT_INCLUSION
 	}
 
 	/**

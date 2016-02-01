@@ -196,19 +196,10 @@ public class SQLServerJoinCardinalityEstimator {
 			//Find the left and right boundaries of the current target bucket
 			Object leftCurrentBoundary = target.getBucket(j-1).getRange_hi_key();
 			Object rightCurrentBoundary = target.getBucket(j).getRange_hi_key();
-			if(leftBoundary instanceof Comparable && leftCurrentBoundary instanceof Comparable) {
-				if( ((Comparable)leftCurrentBoundary).compareTo(leftBoundary) <= 0 &&
-						((Comparable)leftBoundary).compareTo(rightCurrentBoundary) <= 0) {
-					lowestBound = j;
-					break;
-				}
-			}
-			if(rightBoundary instanceof Comparable && leftCurrentBoundary instanceof Comparable) {
-				if( ((Comparable)leftCurrentBoundary).compareTo(rightBoundary) <= 0 &&
-						((Comparable)rightBoundary).compareTo(rightCurrentBoundary) <= 0) {
-					lowestBound = j;
-					break;
-				}
+			//Check if the two buckets intersect
+			if(this.doIntersect(leftBoundary, rightBoundary, leftCurrentBoundary, rightCurrentBoundary)) {
+				lowestBound = j;
+				break;
 			}
 		}
 
@@ -221,17 +212,10 @@ public class SQLServerJoinCardinalityEstimator {
 			//Find the left and right boundaries of the current target bucket
 			Object leftCurrentBoundary = target.getBucket(j-1).getRange_hi_key();
 			Object rightCurrentBoundary = target.getBucket(j).getRange_hi_key();
-			if(rightBoundary instanceof Comparable && leftCurrentBoundary instanceof Comparable) {
-				if( ((Comparable)leftCurrentBoundary).compareTo(rightBoundary) <= 0 &&
-						((Comparable)rightBoundary).compareTo(rightCurrentBoundary) <= 0) {
-					highestBound = j;
-					break;
-				}
-				if( ((Comparable)leftCurrentBoundary).compareTo(leftBoundary) <= 0 &&
-						((Comparable)leftBoundary).compareTo(rightCurrentBoundary) <= 0) {
-					highestBound = j;
-					break;
-				}
+			//Check if the two buckets intersect
+			if(this.doIntersect(leftBoundary, rightBoundary, leftCurrentBoundary, rightCurrentBoundary)) {
+				highestBound = j;
+				break;
 			}
 		}
 
@@ -244,6 +228,49 @@ public class SQLServerJoinCardinalityEstimator {
 		log.trace("Buckets intersecting " + source.getBucket(bucketIndex));
 		log.trace(Joiner.on("\n").join(intersectingBuckets));
 		return intersectingBuckets;
+	}
+	
+	
+	/**
+	 * 
+	 * @param l1 left boundary of a object 1
+	 * @param r1 right boundary of a object 1
+	 * @param l2 left boundary of a object 2
+	 * @param r2 right boundary of a object 2
+	 * @return
+	 * 		true if the object boundaries intersect
+	 */
+	boolean doIntersect(Object l1, Object r1, Object l2, Object r2) {
+		if(l1 instanceof Comparable && r1 instanceof Comparable &&
+				l2 instanceof Comparable && r2 instanceof Comparable) {
+						
+			if(((Comparable)r1).compareTo(l2) >= 0 && ((Comparable)r1).compareTo(r2) <= 0) {
+				return true;
+			}
+			
+			if(((Comparable)r2).compareTo(l1) >= 0 && ((Comparable)r2).compareTo(r1) <= 0) {
+				return true;
+			}
+			
+			if(((Comparable)l1).compareTo(l2) >= 0 && ((Comparable)l1).compareTo(r2) <= 0) {
+				return true;
+			}
+			
+			if(((Comparable)l2).compareTo(l1) >= 0 && ((Comparable)l2).compareTo(r1) <= 0) {
+				return true;
+			}
+			
+			
+			if(((Comparable)l1).compareTo(l2) <= 0 && ((Comparable)r1).compareTo(r2) >= 0) {
+				return true;
+			}
+			
+			if(((Comparable)l2).compareTo(l1) <= 0 && ((Comparable)r2).compareTo(r1) >= 0) {
+				return true;
+			}
+		}
+	
+		return false;
 	}
 
 }

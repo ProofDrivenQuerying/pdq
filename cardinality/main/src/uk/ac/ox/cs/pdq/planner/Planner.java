@@ -6,10 +6,8 @@ import java.sql.SQLException;
 import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.EventHandler;
-import uk.ac.ox.cs.pdq.cost.CostEstimatorFactory;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.cost.CostStatKeys;
-import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.cost.statistics.Catalog;
 import uk.ac.ox.cs.pdq.cost.statistics.SimpleCatalog;
 import uk.ac.ox.cs.pdq.db.Attribute;
@@ -30,7 +28,6 @@ import uk.ac.ox.cs.pdq.planner.logging.performance.PlannerStatKeys;
 import uk.ac.ox.cs.pdq.planner.reasoning.ReasonerFactory;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismException;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismManagerFactory;
@@ -67,8 +64,6 @@ public class Planner {
 	/** The schema */
 	private Schema schema;
 
-	/** The query */
-	private Query<?> query;
 	
 	private HomomorphismManager detector;
 	
@@ -97,7 +92,6 @@ public class Planner {
 		this.costParams = costParams;
 		this.reasoningParams = reasoningParams;
 		this.schema = schema;
-		this.query = query;
 		this.statsLogger = statsLogger;
 		
 		try {
@@ -195,15 +189,11 @@ public class Planner {
 					collectStats,
 					this.reasoningParams).getInstance();
 			
-			
-			//reasoner.reasonUntilTermination(state, accessibleQuery, this.schema.getDependencies());
-			
-			
 			explorer = ExplorerFactory.createExplorer(
 					this.eventBus, 
 					collectStats,
 					this.schema,
-					this.query,
+					query,
 					reasoner,
 					this.detector,
 					cardinalityEstimator,
@@ -287,12 +277,7 @@ public class Planner {
 		return this.schema;
 	}
 
-	/**
-	 * @return the planner's underlying query
-	 */
-	public Query<?> getQuery() {
-		return this.query;
-	}
+
 	
 	public void addKeys(Schema schema) {
 		Relation region = schema.getRelation("region");

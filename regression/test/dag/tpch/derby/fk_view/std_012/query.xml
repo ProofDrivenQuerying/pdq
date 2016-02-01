@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+	SELECT l_shipmode,
+	       sum(case when o_orderpriority = '1-URGENT' or o_orderpriority = '2-HIGH' then 1 else 0 end) as high_line_count,
+	       sum(case when o_orderpriority <> '1-URGENT' and o_orderpriority <> '2-HIGH' then 1 else 0 end) as low_line_count
+	FROM   orders, lineitem
+	WHERE  o_orderkey = l_orderkey
+	AND    l_shipmode in ('MAIL')
+	AND    l_commitdate < l_receiptdate
+	AND    l_shipdate < l_commitdate
+	AND    l_receiptdate >= date ''
+	AND    l_receiptdate < date '' + interval '1' year
+	GROUP BY l_shipmode
+	ORDER BY l_shipmode;
+ -->
+<query>
+	<body>
+		<atom name="orders">
+			<variable name="o_orderkey" />
+			<variable name="o_custkey" />
+			<variable name="o_orderstatus" />
+			<variable name="o_totalprice" />
+			<variable name="o_orderdate" />
+			<variable name="o_orderpriority" />
+			<variable name="o_clerk" />
+			<variable name="o_shippriority" />
+			<variable name="o_comment" />
+		</atom>
+		<atom name="lineitem">
+			<variable name="o_orderkey" />
+			<variable name="l_partkey" />
+			<variable name="l_suppkey" />
+			<variable name="l_linenumber" />
+			<variable name="l_quantity" />
+			<variable name="l_extendedprice" />
+			<variable name="l_discount" />
+			<variable name="l_tax" />
+			<variable name="l_returnflag" />
+			<variable name="l_linestatus" />
+			<variable name="l_shipdate" />
+			<variable name="l_shipdate" />
+			<constant value="1995-01-01" />
+			<variable name="l_shipinstruct" />
+			<constant value="MAIL" />
+			<variable name="l_comment" />
+		</atom>
+
+	</body>
+	<head name="Q">
+		<variable name="o_orderpriority" />
+	</head>
+</query>

@@ -8,8 +8,7 @@ import java.util.Objects;
 import com.google.common.base.Preconditions;
 
 /**
- * A AccessMethod method
- * Stores the positions of a relation's attributes whose values are required to access the relation.
+ * An access method defines the positions of a relation's attributes whose values are required to access the relation.
  *
  * @author Efthymia Tsamoura
  * @author Julien Leblay
