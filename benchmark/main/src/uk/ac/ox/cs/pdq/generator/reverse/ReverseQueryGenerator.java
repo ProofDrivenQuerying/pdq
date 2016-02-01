@@ -13,48 +13,72 @@ import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.io.xml.QueryReader;
 import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
-import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.reasoning.ReasonerFactory;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleDatabaseListState;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
-import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters.ReasoningTypes;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismManagerFactory;
 
 import com.google.common.eventbus.EventBus;
 
+/**
+ * The reverse query generator attempts to find query answerable for some 
+ * given schema, access restrictions and dependencies, by running a reasoning
+ * procedures on an arbitrarily large query, and extracting relevant sub-queries
+ * from each partial proof.
+ * 
+ * Queries are then filter using a conjunctive set of QuerySelector which
+ * rule out queries not satisfying certain properties.
+ * 
+ * 
+ * @author Julien Leblay
+ */
 public class ReverseQueryGenerator implements Runnable {
 
 	/** Logger. */
 	private static Logger log = Logger.getLogger(ReverseQueryGenerator.class);
 
+	/** The randomizer seed. */
 	private static Integer seeds = 0;
 
-	private final Integer threadId;
+	/** The schema. */
 	private final Schema schema;
-	private final ConjunctiveQuery query;
-
-	private Integer done = 0;
 	
+	/** The query. */
+	private final ConjunctiveQuery query;
+	
+	/**
+	 * Instantiates a new reverse query generator.
+	 *
+	 * @param threadId the thread id
+	 * @param schema the schema
+	 * @param query the query
+	 */
 	public ReverseQueryGenerator(Integer threadId, Schema schema, ConjunctiveQuery query) {
-		this.threadId = threadId;
 		this.schema = schema;
 		this.query = query;
 	}
 
+	/**
+	 * Gets the seed.
+	 *
+	 * @return the randomizer seed currently in use.
+	 */
 	public static synchronized Integer getSeed() {
 		return seeds++;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * @see java.lang.Runnable#run()
+	 */
 	@Override
 	public void run() {
 		try {
-			PlannerParameters params = new PlannerParameters();
 			ReasoningParameters reasoningParams = new ReasoningParameters();
 			this.schema.updateConstants(this.query.getSchemaConstants());
 			AccessibleSchema accessibleSchema = new AccessibleSchema(this.schema);
@@ -81,8 +105,8 @@ public class ReverseQueryGenerator implements Runnable {
 				new HomomorphismManagerFactory().getInstance(accessibleSchema, reasoningParams)) {
 				
 				detector.addQuery(accessibleQuery);
-				AccessibleChaseState state =  
-				(uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState) new AccessibleDatabaseListState(query, accessibleSchema, (DBHomomorphismManager) detector);
+				AccessibleChaseState state = (AccessibleChaseState) 
+						new AccessibleDatabaseListState(query, accessibleSchema, (DBHomomorphismManager) detector);
 				
 				log.info("Phase 1");
 				reasoner.reasonUntilTermination(state, accessibleQuery, this.schema.getDependencies());
@@ -99,6 +123,11 @@ public class ReverseQueryGenerator implements Runnable {
 		}
 	}
 
+	/**
+	 * Runs the reverse generator from command line.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String... args) {
 		long timeout = 120000;
 		try(FileInputStream fis = new FileInputStream("../pdq.benchmark/test/dag/web/schemas/schema-all.xml");
@@ -117,18 +146,28 @@ public class ReverseQueryGenerator implements Runnable {
 	}
 
 	/**
-	 * Report the finding of a MatchMaker
-	 * 
+	 * Report the finding of a MatchMaker.
+	 *
 	 * @author Julien Leblay
 	 */
 	public static class MatchReport extends Thread {
 
+		/** The match maker. */
 		private final MatchMaker mm;
 
+		/**
+		 * Instantiates a new match report.
+		 *
+		 * @param mm the mm
+		 */
 		public MatchReport(MatchMaker mm) {
 			this.mm = mm;
 		}
 		
+		/**
+		 * {@inheritDoc}
+		 * @see java.lang.Thread#run()
+		 */
 		@Override
 		public void run() {
 			this.mm.report();
@@ -145,13 +184,23 @@ public class ReverseQueryGenerator implements Runnable {
 	 */
 	public static class ShowStopper extends Thread {
 	
+		/** The timeout (in milliseconds). */
 		private long timeout = -1L;
 		
+		/**
+		 * Instantiates a new show stopper.
+		 *
+		 * @param timeout the timeout
+		 */
 		public ShowStopper(long timeout) {
 			this.setDaemon(true);
 			this.timeout = timeout;
 		}
 		
+		/**
+		 * {@inheritDoc}
+		 * @see java.lang.Thread#run()
+		 */
 		@Override
 		public void run() {
 			if (this.timeout > 0l) {

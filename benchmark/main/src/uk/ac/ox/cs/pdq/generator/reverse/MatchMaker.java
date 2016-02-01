@@ -44,20 +44,47 @@ public class MatchMaker implements EventHandler {
 	/** Logger. */
 	private static Logger log = Logger.getLogger(ReverseQueryGenerator.class);
 	
+	/** The interval between which the program outputs results. */
 	private static final int INTERVAL = 10;
+	
+	/** A counter. */
 	private int counter;
+	
+	/** A symbol representing in the output what kind results who bind found in the last round
+	 * BY default '-' means nothing happened, '*' means some new infacc atom has been added,
+	 * '+' means some new constant has been made accessible. */
 	private char toPrint = '-';
 	
+	/** The out. */
 	private final PrintStream out;
+	
+	/** The accessible constants. */
 	private final LinkedHashSet<Term> accConstants = new LinkedHashSet<>();
+
+	/** The inferred-accessible facts. */
 	private final LinkedHashMap<FactSignature, Predicate> infAccFacts = new LinkedHashMap<>();
+	
+	/** The clusters. */
 	private final Multimap<Term, Predicate> clusters = LinkedHashMultimap.create();
+	
+	/** The selectors. */
 	private final List<QuerySelector> selectors = new LinkedList<>();
 	
+	/**
+	 * Instantiates a new match maker.
+	 *
+	 * @param selectors the selectors
+	 */
 	public MatchMaker(QuerySelector... selectors) {
 		this(System.out, selectors);
 	}
 	
+	/**
+	 * Instantiates a new match maker.
+	 *
+	 * @param out the out
+	 * @param selectors the selectors
+	 */
 	public MatchMaker(PrintStream out, QuerySelector... selectors) {
 		this.out = out;
 		for (QuerySelector s: selectors) {
@@ -65,6 +92,11 @@ public class MatchMaker implements EventHandler {
 		}
 	}
 	
+	/**
+	 * Handle inferred-accessible facts.
+	 *
+	 * @param facts the facts
+	 */
 	@Subscribe
 	public void handleInfAccFacts(Collection<Predicate> facts) {
 		if (facts != null) {
@@ -100,7 +132,9 @@ public class MatchMaker implements EventHandler {
 	}
 	
 	/**
-	 * @param q
+	 * Checks wether the given query passes all selection tests.
+	 *
+	 * @param q the q
 	 * @return true if all the matcher's selectors have accepted the query q
 	 */
 	protected boolean accept(Query<?> q) {
@@ -113,7 +147,7 @@ public class MatchMaker implements EventHandler {
 	}
 
 	/**
-	 * Prints a report of the matcher's status 
+	 * Prints a report of the matcher's status.
 	 */
 	public void report() {
 		this.out.println();

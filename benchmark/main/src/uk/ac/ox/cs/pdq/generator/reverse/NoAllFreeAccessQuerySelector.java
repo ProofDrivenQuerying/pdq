@@ -12,13 +12,12 @@ import uk.ac.ox.cs.pdq.fol.Signature;
  * predicate refers to some none-free access relation.
  * 
  * @author Julien Leblay
- *
  */
 public class NoAllFreeAccessQuerySelector implements QuerySelector {
 
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.builder.generator.reverse.QuerySelector#accept(uk.ac.ox.cs.pdq.formula.Query)
+	/**
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.generator.reverse.QuerySelector#accept(uk.ac.ox.cs.pdq.fol.Query)
 	 */
 	@Override
 	public boolean accept(Query<?> q) {

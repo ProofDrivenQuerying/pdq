@@ -15,8 +15,13 @@ import uk.ac.ox.cs.pdq.fol.Query;
  */
 public class DiversityQuerySelector implements QuerySelector {
 
+	/** TODO: The signatures. */
 	private Set<SortedSet<FactSignature>> signatures = new LinkedHashSet<>();
 	
+	/**
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.generator.reverse.QuerySelector#accept(uk.ac.ox.cs.pdq.fol.Query)
+	 */
 	/*
 	 * (non-Javadoc)
 	 * @see uk.ac.ox.cs.pdq.builder.generator.reverse.QuerySelector#accept(uk.ac.ox.cs.pdq.formula.Query)

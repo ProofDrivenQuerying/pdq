@@ -33,9 +33,9 @@ public class JoinOnVariableQuerySelector implements QuerySelector {
 	/** Logger. */
 	private static Logger log = Logger.getLogger(JoinOnVariableQuerySelector.class);
 
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.builder.generator.reverse.QuerySelector#accept(uk.ac.ox.cs.pdq.formula.Query)
+	/**
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.generator.reverse.QuerySelector#accept(uk.ac.ox.cs.pdq.fol.Query)
 	 */
 	@Override
 	public boolean accept(Query<?> q) {
@@ -62,6 +62,12 @@ public class JoinOnVariableQuerySelector implements QuerySelector {
 		return true;
 	}
 
+	/**
+	 * Enumerate conjunctions.
+	 *
+	 * @param formula the formula
+	 * @return the collection
+	 */
 	private Collection<Conjunction<Predicate>> enumerateConjunctions(Formula formula) {
 		Preconditions.checkArgument(formula != null);
 		if (formula instanceof Conjunction) {
@@ -80,11 +86,16 @@ public class JoinOnVariableQuerySelector implements QuerySelector {
 		throw new IllegalStateException();
 	}
 
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String... args) {
 		QueryBuilder qb = new QueryBuilder();
 		qb.setName("Q");
 		qb.addBodyAtom(new Predicate(new Signature("A", 2), Lists.newArrayList(new TypedConstant<>("Continent"), new Variable("x"))));
-		qb.addBodyAtom(new Predicate(new Signature("B", 2), Lists.newArrayList(new TypedConstant<>("Continsent"), new Variable("x"))));
+		qb.addBodyAtom(new Predicate(new Signature("B", 2), Lists.newArrayList(new TypedConstant<>("Continent"), new Variable("x"))));
 		log.trace(new JoinOnVariableQuerySelector().accept(qb.build()));
 	}
 }

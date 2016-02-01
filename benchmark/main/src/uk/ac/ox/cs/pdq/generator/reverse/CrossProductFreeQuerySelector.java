@@ -24,9 +24,9 @@ import com.google.common.collect.Sets;
  */
 public class CrossProductFreeQuerySelector implements QuerySelector {
 
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.builder.generator.reverse.QuerySelector#accept(uk.ac.ox.cs.pdq.formula.Query)
+	/**
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.generator.reverse.QuerySelector#accept(uk.ac.ox.cs.pdq.fol.Query)
 	 */
 	@Override
 	public boolean accept(Query<?> q) {
@@ -48,6 +48,12 @@ public class CrossProductFreeQuerySelector implements QuerySelector {
 		return true;
 	}
 
+	/**
+	 * Gets a collection of conjunction of atoms found in the given formula.
+	 *
+	 * @param formula the formula
+	 * @return the collection
+	 */
 	private Collection<Conjunction<Predicate>> enumerateConjunctions(Formula formula) {
 		Preconditions.checkArgument(formula != null);
 		if (formula instanceof Conjunction) {

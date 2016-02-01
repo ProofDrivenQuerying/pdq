@@ -22,22 +22,34 @@ import com.google.common.collect.ImmutableList;
  */
 public class FactSignature implements Comparable<FactSignature> {
 	
+	/** The signature. */
 	final Signature sig;
 	
+	/** The constants. */
 	final List<TypedConstant<?>> constants;
 	
+	/**
+	 * Makes a fact signature from a given fact.
+	 *
+	 * @param fact the fact
+	 * @return the fact signature
+	 */
 	public static FactSignature make(Predicate fact) {
 		List<TypedConstant<?>> constants = new LinkedList<>();
-		int i = 0;
 		for (Term t: fact.getConstants()) {
 			if (!t.isVariable() && !t.isSkolem()) {
 				constants.add((TypedConstant<?>) t);
 			}
-			i++;
 		}
 		return new FactSignature(fact.getSignature(), ImmutableList.copyOf(constants));
 	}
 	
+	/**
+	 * Makes a sorted set of fact signatures from a given iterable of facts.
+	 *
+	 * @param facts the facts
+	 * @return the sorted set
+	 */
 	public static SortedSet<FactSignature> make(Iterable<Predicate> facts) {
 		TreeSet<FactSignature> result = new TreeSet<>();
 		for (Predicate f: facts) {
@@ -46,6 +58,12 @@ public class FactSignature implements Comparable<FactSignature> {
 		return result;
 	}
 	
+	/**
+	 * Instantiates a new fact signature.
+	 *
+	 * @param s a signature
+	 * @param c a list of typed constants
+	 */
 	private FactSignature(Signature s, List<TypedConstant<?>> c) {
 		Preconditions.checkArgument(s != null);
 		Preconditions.checkArgument(c != null);
@@ -53,11 +71,19 @@ public class FactSignature implements Comparable<FactSignature> {
 		this.constants = c;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 * @see java.lang.Object#hashCode()
+	 */
 	@Override
 	public int hashCode() {
 		return Objects.hash(this.sig, this.constants);
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object o) {
 		if (o == null) {
@@ -68,6 +94,10 @@ public class FactSignature implements Comparable<FactSignature> {
 				&& this.constants.equals(((FactSignature) o).constants);
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
 		StringBuilder result = new StringBuilder();
@@ -76,11 +106,26 @@ public class FactSignature implements Comparable<FactSignature> {
 		return result.toString();
 	}
 	
+	/**
+	 * Checks if the given signature cover the current one, i.e. they have the 
+	 * same name, and the constants of the given are included in this fact
+	 * constants. 
+	 *
+	 * @param o the o
+	 * @return true, if successful
+	 */
 	public boolean covers(FactSignature o) {
 		return this.sig.equals(o.sig)
 				&& this.constants.containsAll(o.constants);
 	}
 
+	/**
+	 * Compares two signatures based on the lexicographical ordering of their
+	 * String representations.
+	 * 
+	 * {@inheritDoc}
+	 * @see java.lang.Comparable#compareTo(java.lang.Object)
+	 */
 	@Override
 	public int compareTo(FactSignature o) {
 		Preconditions.checkArgument(o != null);

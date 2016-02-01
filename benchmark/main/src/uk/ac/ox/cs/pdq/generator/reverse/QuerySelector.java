@@ -2,20 +2,19 @@ package uk.ac.ox.cs.pdq.generator.reverse;
 
 import uk.ac.ox.cs.pdq.fol.Query;
 
-
 /**
- * Functional interface for accepting or rejected query based on arbirtary 
+ * Functional interface for accepting or rejected query based on arbitrary 
  * criteria.
- * 
- * @author Julien Leblay
  *
- * @param <Q>
+ * @author Julien Leblay
  */
 public interface QuerySelector {
 
 	/**
-	 * @param q
-	 * @return true, if q satisfied some arbitrary criterion.
+	 * Checks if the given query passes the query-selection test.
+	 *
+	 * @param q the q
+	 * @return true, iff the given query passes the query-selection test.
 	 */
 	public boolean accept(Query<?> q);
 }

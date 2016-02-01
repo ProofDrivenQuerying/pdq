@@ -23,22 +23,35 @@ public class UnanswerableQuerySelector implements QuerySelector {
 	/** Logger. */
 	private static Logger log = Logger.getLogger(ReverseQueryGenerator.class);
 
+	/** The plan params. */
 	private final PlannerParameters planParams;
-	private final CostParameters costParams;
-	private final ReasoningParameters reasoningParams;
-	private final Schema schema;
 	
+	/** The cost params. */
+	private final CostParameters costParams;
+	
+	/** The schema. */
+	private final Schema schema;
+	private final ReasoningParameters reasoningParams;
+
+	/**
+	 * Instantiates a new unanswerable query selector.
+	 *
+	 * @param p the p
+	 * @param c the c
+	 * @param r the r
+	 * @param s the s
+	 */
 	public UnanswerableQuerySelector(PlannerParameters p, CostParameters c, ReasoningParameters r, Schema s) {
 		this.planParams = (PlannerParameters) p.clone();
 		this.costParams = (CostParameters) c.clone();
-		this.reasoningParams = (ReasoningParameters) r.clone();
 		this.planParams.setTimeout(10000);
+		this.reasoningParams = (ReasoningParameters) r.clone();
 		this.schema = s;
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.builder.generator.reverse.QuerySelector#accept(uk.ac.ox.cs.pdq.formula.Query)
+	/**
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.generator.reverse.QuerySelector#accept(uk.ac.ox.cs.pdq.fol.Query)
 	 */
 	@Override
 	public boolean accept(Query<?> q) {

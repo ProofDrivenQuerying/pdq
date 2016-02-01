@@ -12,15 +12,21 @@ import uk.ac.ox.cs.pdq.fol.Query;
  */
 public class ConstantRatioQuerySelector implements QuerySelector {
 
+	/** The ratio. */
 	private final double ratio;
 	
+	/**
+	 * Instantiates a new constant ratio query selector.
+	 *
+	 * @param ratio the ratio
+	 */
 	public ConstantRatioQuerySelector(double ratio) {
 		this.ratio = ratio;
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.builder.generator.reverse.QuerySelector#accept(uk.ac.ox.cs.pdq.formula.Query)
+	/**
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.generator.reverse.QuerySelector#accept(uk.ac.ox.cs.pdq.fol.Query)
 	 */
 	@Override
 	public boolean accept(Query<?> q) {
