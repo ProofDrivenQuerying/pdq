@@ -90,11 +90,20 @@ public class BindJoin extends Join {
 		CompositeCacheManager ccm = CompositeCacheManager.getUnconfiguredInstance(); 
 		Properties properties = new Properties(); 
 		try {
-			properties.load(ClassLoader.getSystemResourceAsStream("resources/cache.ccf"));
+			properties.load(ClassLoader.getSystemResourceAsStream("resources/runtime-cache.ccf"));
+			// Julien: Quickfix-#4: This whole cache initialization business must
+			// done outside this class.
+			Class.forName(properties.getProperty("jcs.default.cacheattributes"));
+			Class.forName(properties.getProperty("jcs.default.cacheattributes.MemoryCacheName"));
+			Class.forName(properties.getProperty("jcs.region.bindjoin.cacheattributes"));
+			Class.forName(properties.getProperty("jcs.region.bindjoin.cacheattributes.MemoryCacheName"));
+			Class.forName(properties.getProperty("jcs.auxiliary.DC"));
+			Class.forName(properties.getProperty("jcs.auxiliary.DC.attributes"));
+			// End-of-fix
 			ccm.configure(properties); 
 			this.cache = JCS.getInstance("bindjoin");
-		} catch (IOException | CacheException e) {
-			throw new IllegalStateException("Cache not properly initialized.");
+		} catch (IOException | CacheException | ClassNotFoundException e) {
+			throw new IllegalStateException("Cache not properly initialized.", e);
 		}
 	}
 

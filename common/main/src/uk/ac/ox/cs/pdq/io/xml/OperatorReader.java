@@ -72,32 +72,58 @@ public class OperatorReader extends AbstractXMLReader<RelationalOperator> {
 	/** The schema from which the relation come. */
 	protected Schema schema = null;
 	
+	/** The type. */
 	protected Types type;
+	
+	/** The variant. */
 	protected Join.Variants variant;
 	
+	/** The predicate. */
 	protected Predicate predicate = null;
 
+	/** The conjunction. */
 	protected List<Predicate> conjunction = Lists.newLinkedList();
+	
+	/** The sideways. */
 	protected List<Integer> sideways = Lists.newLinkedList();
+	
+	/** The outputs. */
 	protected List<Typed> outputs = Lists.newLinkedList();
+	
+	/** The projection. */
 	protected List<Term> projection = Lists.newLinkedList();
+	
+	/** The static inputs. */
 	protected Map<Integer, TypedConstant<?>> staticInputs = Maps.newLinkedHashMap();
+	
+	/** The children. */
 	protected List<RelationalOperator> children = Lists.newLinkedList();
 	
+	/** The relation name. */
 	protected String relationName;
+	
+	/** The access method name. */
 	protected String accessMethodName;
 	
+	/** Boolean tracking wither the reader is current reading conjunctions. */
 	private boolean inConjunction = false;
+	
+	/** Boolean tracking wither the reader is current reading outputs. */
 	private boolean inOutputs = false;
+	
+	/** Boolean tracking wither the reader is current reading options. */
 	private boolean inOptions = false;
 
+	/** The aliases. */
 	private final Map<String, RelationalOperator> aliases;
+	
+	/** The alias. */
 	private String alias;
 	
-	/** The child operator reader */
+	/**  The child operator reader. */
 	private OperatorReader childReader;
 	
-	/** The parent operator reader */
+	/**  The parent operator reader. */
 	private OperatorReader parentReader;
 
 	/**
@@ -138,15 +164,19 @@ public class OperatorReader extends AbstractXMLReader<RelationalOperator> {
 		this.parentReader = parent;
 	}
 	
+	/**
+	 * Adds A child.
+	 *
+	 * @param i the i
+	 */
 	public void addChild(RelationalOperator i) {
 		this.children.add(i);
 		this.childReader = new OperatorReader(this.schema, this.aliases, this);
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see uk.ac.ox.cs.pdq.provider.io.AbstractReader#load(java.io.InputStream)
+	/**
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.io.Reader#read(java.io.InputStream)
 	 */
 	@Override
 	public RelationalOperator read(InputStream in) {
@@ -168,9 +198,9 @@ public class OperatorReader extends AbstractXMLReader<RelationalOperator> {
 		return this.operator;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.xml.sax.helpers.DefaultHandler#startElement(java.lang.String, java.lang.String, java.lang.String)
+	/**
+	 * {@inheritDoc}
+	 * @see org.xml.sax.helpers.DefaultHandler#startElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
 	 */
 	@Override
 	public void startElement(String uri, String localName, String qName, Attributes atts) {
@@ -300,12 +330,17 @@ public class OperatorReader extends AbstractXMLReader<RelationalOperator> {
 		}				
 	}
 
+	/**
+	 * Checks if is processing child.
+	 *
+	 * @return true, if is processing child
+	 */
 	private boolean isProcessingChild() {
 		return this.childReader != null;
 	}
 	
-	/*
-	 * (non-Javadoc)
+	/**
+	 * {@inheritDoc}
 	 * @see org.xml.sax.helpers.DefaultHandler#endElement(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override

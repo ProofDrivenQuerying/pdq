@@ -28,7 +28,8 @@ public class PrettyDAGPlanWriter extends PrettyWriter<DAGPlan> implements Writer
 	private final PrintStream out;
 	
 	/**
-	 * 
+	 * Instantiates a new pretty dag plan writer.
+	 *
 	 * @param out the default output
 	 */
 	PrettyDAGPlanWriter(PrintStream out) {
@@ -36,7 +37,7 @@ public class PrettyDAGPlanWriter extends PrettyWriter<DAGPlan> implements Writer
 	}
 
 	/**
-	 * 
+	 * Instantiates a new pretty dag plan writer.
 	 */
 	public PrettyDAGPlanWriter() {
 		this(System.out);
@@ -52,6 +53,7 @@ public class PrettyDAGPlanWriter extends PrettyWriter<DAGPlan> implements Writer
 	}
 	
 	/**
+	 * Writes a plan to the given output stream.
 	 * @param out PrintStream
 	 * @param plan DAGPlan
 	 */
@@ -62,6 +64,7 @@ public class PrettyDAGPlanWriter extends PrettyWriter<DAGPlan> implements Writer
 	}
 	
 	/**
+	 * Writes a plan to the given output stream with a prefix.
 	 * @param out PrintStream
 	 * @param op LogicalOperator
 	 * @param prefix String
@@ -108,6 +111,7 @@ public class PrettyDAGPlanWriter extends PrettyWriter<DAGPlan> implements Writer
 	}
 	
 	/**
+	 * Writes a plan to the output stream set.
 	 * @param q DAGPlan
 	 */
 	@Override

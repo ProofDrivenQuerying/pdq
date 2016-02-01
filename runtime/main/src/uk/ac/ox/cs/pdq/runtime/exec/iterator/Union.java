@@ -14,23 +14,24 @@ import uk.ac.ox.cs.pdq.util.Typed;
 
 import com.google.common.base.Preconditions;
 
+
 /**
- * Unions the results of its children
- * 
+ * Unions the results of its children.
+ *
  * @author Julien Leblay
  */
 public class Union extends NaryIterator {
 
-	/** The iteratorCache */
+	/**  The iteratorCache. */
 	private Set<Tuple> cache = new LinkedHashSet<>();
 
-	/** The next result to return */
+	/**  The next result to return. */
 	private Tuple nextTuple = null;
 
-	/** The iterator of the current operator's children */
+	/**  The iterator of the current operator's children. */
 	private Iterator<TupleIterator> childIterator = null;
 
-	/** The iterator of the current children */
+	/**  The iterator of the current children. */
 	private TupleIterator currentChild = null;
 		
 	/**
@@ -68,6 +69,12 @@ public class Union extends NaryIterator {
 		Preconditions.checkArgument(sameTypes(this.children), "Attempting to instantiate union operator with inconsistent types.");
 	}
 	
+	/**
+	 * Same types.
+	 *
+	 * @param children the children
+	 * @return true, if successful
+	 */
 	private static boolean sameTypes(Collection<TupleIterator> children) {
 		TupleType type = null;
 		for (TupleIterator i: children) {

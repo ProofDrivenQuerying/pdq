@@ -19,7 +19,8 @@ import uk.ac.ox.cs.pdq.io.Writer;
  * 
  * @author Julien Leblay
  */
-public class VeryShortDependencyWriter<T extends Constraint> extends PrettyWriter<T> implements Writer<T> {
+public class VeryShortDependencyWriter<T extends Constraint> 
+		extends PrettyWriter<T> implements Writer<T> {
 
 	/**
 	 * The default out to which dependencies should be written, if not 
@@ -28,7 +29,8 @@ public class VeryShortDependencyWriter<T extends Constraint> extends PrettyWrite
 	private PrintStream out;
 
 	/**
-	 * 
+	 * Instantiates a new very short dependency writer.
+	 *
 	 * @param out the default output
 	 */
 	private VeryShortDependencyWriter(PrintStream out) {
@@ -44,18 +46,18 @@ public class VeryShortDependencyWriter<T extends Constraint> extends PrettyWrite
 		return new VeryShortDependencyWriter<>(out);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.provider.io.Writer#write(java.io.PrintStream, java.lang.Object)
+	/**
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.io.Writer#write(java.io.PrintStream, java.lang.Object)
 	 */
 	@Override
 	public void write(PrintStream out, T tgd) {
 		out.print(this.toString(tgd));
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.builder.io.PrettyWriter#write(java.lang.Object)
+	/**
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.io.pretty.PrettyWriter#write(java.lang.Object)
 	 */
 	@Override
 	public void write(T t) {
@@ -65,8 +67,9 @@ public class VeryShortDependencyWriter<T extends Constraint> extends PrettyWrite
 	/**
 	 * Returns a short String representation of the given dependency. This
 	 * by-passes toString which is too verbose for non-debug purpose.
-	 * 
-	 * @param ic
+	 *
+	 * @param <T> the generic type
+	 * @param t the t
 	 * @return a short String representation of the dependency.
 	 */
 	public static <T extends Constraint> String convert(T t) {
@@ -76,8 +79,12 @@ public class VeryShortDependencyWriter<T extends Constraint> extends PrettyWrite
 		return baos.toString();
 	}
 	
-	/*
-	 * 
+	/**
+	 * Gets a string representation of the given TGD.
+	 *
+	 * @param <T> the generic type
+	 * @param tgd the tgd
+	 * @return the string representation of the given TGD.
 	 */
 	private <T extends Constraint> String toString(T tgd) {
 		if (tgd instanceof LinearGuarded) {
@@ -104,8 +111,11 @@ public class VeryShortDependencyWriter<T extends Constraint> extends PrettyWrite
 		return result.toString();
 	}
 	
-	/*
-	 * 
+	/**
+	 * Gets a string representation of the given LinearGuarded TGD.
+	 *
+	 * @param tgd the tgd
+	 * @return the string representation of the given LinearGuarded TGD.
 	 */
 	private String toString(LinearGuarded tgd) {
 		try {

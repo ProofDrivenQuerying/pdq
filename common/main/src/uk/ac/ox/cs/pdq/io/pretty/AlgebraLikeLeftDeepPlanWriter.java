@@ -57,6 +57,7 @@ public class AlgebraLikeLeftDeepPlanWriter extends PrettyWriter<LeftDeepPlan> im
 	}
 	
 	/**
+	 * Sets the output to the given printstream.
 	 * @param out PrintStream
 	 * @return AlgebraLikeLeftDeepPlanWriter
 	 */
@@ -125,6 +126,7 @@ public class AlgebraLikeLeftDeepPlanWriter extends PrettyWriter<LeftDeepPlan> im
 	}
 
 	/**
+	 * Writes the given to the given output.
 	 * @param out PrintStream
 	 * @param o LeftDeepPlan
 	 */
@@ -134,6 +136,7 @@ public class AlgebraLikeLeftDeepPlanWriter extends PrettyWriter<LeftDeepPlan> im
 	}
 
 	/**
+	 * Writes the given to the last output set.
 	 * @param p LeftDeepPlan
 	 */
 	@Override

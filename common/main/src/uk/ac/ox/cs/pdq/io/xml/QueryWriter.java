@@ -58,7 +58,7 @@ public class QueryWriter extends AbstractXMLWriter<ConjunctiveQuery> {
 	/**
 	 * Writes the given body to the given output.
 	 * @param out
-	 * @param body Conjunction<PredicateFormula>
+	 * @param body Conjunction<Predicate>
 	 */
 	public void writeBody(PrintStream out, Conjunction<Predicate> body) {
 		Map<QNames, String> att = new LinkedHashMap<>();
@@ -72,7 +72,7 @@ public class QueryWriter extends AbstractXMLWriter<ConjunctiveQuery> {
 	/**
 	 * Writes the given predicate to the given output.
 	 * @param out
-	 * @param p PredicateFormula
+	 * @param p Predicate
 	 */
 	public void writePredicate(PrintStream out, Predicate p) {
 		Map<QNames, String> att = new LinkedHashMap<>();
@@ -94,7 +94,7 @@ public class QueryWriter extends AbstractXMLWriter<ConjunctiveQuery> {
 	/**
 	 * Writes the given head to the given output.
 	 * @param out
-	 * @param p PredicateFormula
+	 * @param p Predicate
 	 */
 	public void writeHead(PrintStream out, Predicate p) {
 		Map<QNames, String> att = new LinkedHashMap<>();

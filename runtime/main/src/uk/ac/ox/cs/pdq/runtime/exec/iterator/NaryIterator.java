@@ -17,6 +17,7 @@ import com.google.common.collect.Maps;
 import com.google.common.eventbus.EventBus;
 
 
+
 /**
  * Superclass to all n-ary physical open operator.
  * Factorises the open, close, reset methods and the default constructor.
@@ -33,12 +34,12 @@ public abstract class NaryIterator extends TupleIterator {
 	
 	/**
 	 * Instantiates a new operator.
-	 * 
-	 * @param children
-	 *            the children
+	 *
+	 * @param inputType the input type
 	 * @param inputs List<Typed>
 	 * @param outputType TupleType
 	 * @param outputColumns List<Typed>
+	 * @param children            the children
 	 */
 	public NaryIterator(
 			TupleType inputType, List<Typed> inputs,
@@ -51,6 +52,8 @@ public abstract class NaryIterator extends TupleIterator {
 	}
 	
 	/**
+	 * Infer type.
+	 *
 	 * @param children Collection<TupleIterator>
 	 * @return TupleType
 	 */
@@ -67,6 +70,8 @@ public abstract class NaryIterator extends TupleIterator {
 	}
 	
 	/**
+	 * Infer input type.
+	 *
 	 * @param children Collection<TupleIterator>
 	 * @return TupleType
 	 */
@@ -83,6 +88,8 @@ public abstract class NaryIterator extends TupleIterator {
 	}
 	
 	/**
+	 * Infer columns.
+	 *
 	 * @param children Collection<TupleIterator>
 	 * @return List<Typed>
 	 */
@@ -96,6 +103,8 @@ public abstract class NaryIterator extends TupleIterator {
 	}
 	
 	/**
+	 * Infer input columns.
+	 *
 	 * @param children Collection<TupleIterator>
 	 * @return List<Typed>
 	 */
@@ -109,6 +118,8 @@ public abstract class NaryIterator extends TupleIterator {
 	}
 	
 	/**
+	 * First child.
+	 *
 	 * @param children Collection<TupleIterator>
 	 * @return The output columns of the first child
 	 */
@@ -119,6 +130,8 @@ public abstract class NaryIterator extends TupleIterator {
 	}
 	
 	/**
+	 * Infer type first child.
+	 *
 	 * @param children Collection<TupleIterator>
 	 * @return The type of the first child
 	 */
@@ -128,6 +141,12 @@ public abstract class NaryIterator extends TupleIterator {
 		return children.iterator().next().getType();
 	}
 
+	/**
+	 * To list.
+	 *
+	 * @param children the children
+	 * @return the list
+	 */
 	protected static List<TupleIterator> toList(TupleIterator... children) {
 		Preconditions.checkArgument(children != null);
 		for (TupleIterator i: children) {
@@ -137,6 +156,8 @@ public abstract class NaryIterator extends TupleIterator {
 	}
 	
 	/**
+	 * Infer input mappings.
+	 *
 	 * @param inputColumns List<? extends Typed>
 	 * @param operators Collection<TupleIterator>
 	 * @return Map<TupleIterator,List<Integer>>
@@ -164,6 +185,8 @@ public abstract class NaryIterator extends TupleIterator {
 	}
 	
 	/**
+	 * Project.
+	 *
 	 * @param op TupleIterator
 	 * @param input Tuple
 	 * @return Tuple

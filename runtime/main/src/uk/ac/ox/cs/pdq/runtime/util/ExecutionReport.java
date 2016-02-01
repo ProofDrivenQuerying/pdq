@@ -9,6 +9,7 @@ import uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator;
 
 import com.google.common.eventbus.Subscribe;
 
+
 /**
  * Prints a report of a physical operator tree usage.
  * 
@@ -19,11 +20,13 @@ public class ExecutionReport implements EventHandler {
 	/** PrintStream where to print tuples. */
 	private final PrintStream out;
 	
+	/** The counters. */
 	Map<TupleIterator, Integer> counters = new LinkedHashMap<>();
 
 	/**
-	 * Default constructor
-	 * @param out
+	 * Default constructor.
+	 *
+	 * @param out the out
 	 */
 	public ExecutionReport(PrintStream out) {
 		this.out = out;
@@ -49,10 +52,16 @@ public class ExecutionReport implements EventHandler {
 		this.counters.put(t, ++i);
 	}
 	
+	/**
+	 * Reset.
+	 */
 	public void reset() {
 		this.counters = new LinkedHashMap<>();
 	}
 	
+	/**
+	 * Report.
+	 */
 	public void report() {
 		for (TupleIterator t: this.counters.keySet()) {
 			Integer i = this.counters.get(t);

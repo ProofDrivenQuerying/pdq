@@ -81,28 +81,12 @@ public class LeftDeepPlanWriter extends AbstractXMLWriter<LeftDeepPlan> {
 	}
 
 	/**
-	 * @param out PrintStream
-	 * @param o LeftDeepPlan
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.io.Writer#write(java.io.PrintStream, java.lang.Object)
 	 */
 	@Override
 	public void write(PrintStream out, LeftDeepPlan o) {
 		out.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
 		this.writePlan(out, o);
 	}
-	
-//	/**
-//	 * @param args String[]
-//	 */
-//	public static void main(String... args) {
-//		try (	FileInputStream sis = new FileInputStream("./test/input/schema-postgresql-tpch.xml");
-//				FileInputStream pis = new FileInputStream("./test/input/dag-plan2.xml")) {
-//
-//			// Loading schema
-//			Schema schema = Readers.from(sis).read();
-//			DAGPlan p = Readers.from(pis).with(schema).read();
-//			Writers.xml().write(p);
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//	}
 }

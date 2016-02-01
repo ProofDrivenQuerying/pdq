@@ -26,7 +26,8 @@ public class PrettyFormulaWriter<T extends Formula> extends PrettyWriter<T> impl
 	private boolean indented = false;
 	
 	/**
-	 * 
+	 * Instantiates a new pretty formula writer.
+	 *
 	 * @param out the default output
 	 */
 	private PrettyFormulaWriter(PrintStream out) {
@@ -46,7 +47,7 @@ public class PrettyFormulaWriter<T extends Formula> extends PrettyWriter<T> impl
 	 * Fluent set to make the printer indented..
 	 * @return this PrettyWriter after making it indented.
 	 */
-	public PrettyFormulaWriter indented() {
+	public PrettyFormulaWriter<T> indented() {
 		this.indented = true;
 		return this;
 	}
@@ -58,15 +59,15 @@ public class PrettyFormulaWriter<T extends Formula> extends PrettyWriter<T> impl
 	@Override
 	public void write(PrintStream out, Formula formula) {
 		if (formula instanceof NaryFormula) {
-			this.write(out, (NaryFormula) formula);
+			this.write(out, (NaryFormula<?>) formula);
 			return;
 		}
 		if (formula instanceof BinaryFormula) {
-			this.write(out, (BinaryFormula) formula);
+			this.write(out, (BinaryFormula<?, ?>) formula);
 			return;
 		}
 		if (formula instanceof UnaryFormula) {
-			this.write(out, (UnaryFormula) formula);
+			this.write(out, (UnaryFormula<?>) formula);
 			return;
 		}
 		if (formula instanceof Predicate) {

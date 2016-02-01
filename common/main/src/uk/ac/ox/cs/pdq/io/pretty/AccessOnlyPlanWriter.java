@@ -75,18 +75,4 @@ public class AccessOnlyPlanWriter extends PrettyWriter<LeftDeepPlan> implements 
 	public void write(LeftDeepPlan q) {
 		this.write(this.out, q);
 	}
-	
-//	/**
-//	 * @param args String[]
-//	 */
-//	public static void main(String... args) {
-//		try(FileInputStream sis = new FileInputStream(args[0]);
-//			FileInputStream pis = new FileInputStream(args[1])) {
-//			Schema schema = new SchemaReader().read(sis);
-//			LeftDeepPlan plan = Readers.with(schema).from(pis).read();
-//			new AccessOnlyPlanWriter(System.out).write(plan);
-//		} catch ( IOException e) {
-//			e.printStackTrace();
-//		}
-//	}
 }

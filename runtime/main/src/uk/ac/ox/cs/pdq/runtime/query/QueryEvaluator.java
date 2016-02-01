@@ -5,6 +5,7 @@ import uk.ac.ox.cs.pdq.util.Result;
 
 import com.google.common.eventbus.EventBus;
 
+
 /**
  * Interface for all query evaluators. Provides a mean to evaluate a query
  * and get its result.
@@ -14,14 +15,17 @@ import com.google.common.eventbus.EventBus;
 public interface QueryEvaluator {
 
 	/**
+	 * Evaluate.
+	 *
 	 * @return the result of the evaluation of q
-	 * @throws EvaluationException
+	 * @throws EvaluationException the evaluation exception
 	 */
 	Result evaluate() throws EvaluationException;
 	
 	/**
-	 * Sets an event bus for the evaluator
-	 * @param eb
+	 * Sets an event bus for the evaluator.
+	 *
+	 * @param eb the new event bus
 	 */
 	void setEventBus(EventBus eb);
 }

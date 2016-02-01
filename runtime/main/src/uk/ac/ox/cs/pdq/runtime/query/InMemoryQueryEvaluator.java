@@ -41,6 +41,7 @@ import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.eventbus.EventBus;
 
+
 /**
  * In-memory query evaluator.
  * 
@@ -49,13 +50,13 @@ import com.google.common.eventbus.EventBus;
  */
 public class InMemoryQueryEvaluator implements QueryEvaluator {
 
-	/** The logger */
+	/**  The logger. */
 	public static Logger log = Logger.getLogger(InMemoryQueryEvaluator.class);
 
-	/** The evaluator's event bus */
+	/**  The evaluator's event bus. */
 	private EventBus eventBus;
 	
-	/** The query to be evaluated */
+	/**  The query to be evaluated. */
 	private final Query<?> query;
 
 	/**
@@ -67,6 +68,8 @@ public class InMemoryQueryEvaluator implements QueryEvaluator {
 	}
 	
 	/**
+	 * Sets the event bus.
+	 *
 	 * @param eventBus EventBus
 	 * @see uk.ac.ox.cs.pdq.runtime.query.QueryEvaluator#setEventBus(EventBus)
 	 */
@@ -80,8 +83,10 @@ public class InMemoryQueryEvaluator implements QueryEvaluator {
 	 * @see uk.ac.ox.cs.pdq.benchmark.eval.QueryEvaluator#evaluate(uk.ac.ox.cs.pdq.formula.ConjunctiveQuery)
 	 */
 	/**
+	 * Evaluate.
+	 *
 	 * @return Result
-	 * @throws EvaluationException
+	 * @throws EvaluationException the evaluation exception
 	 * @see uk.ac.ox.cs.pdq.runtime.query.QueryEvaluator#evaluate()
 	 */
 	@Override
@@ -112,7 +117,9 @@ public class InMemoryQueryEvaluator implements QueryEvaluator {
 	}
 
 	/**
-	 * @param q
+	 * Make physical plan.
+	 *
+	 * @param q the q
 	 * @return a physical plan as a tuple iterator.
 	 * @throws EvaluationException if the statement could not be generated.
 	 */
@@ -144,9 +151,11 @@ public class InMemoryQueryEvaluator implements QueryEvaluator {
 	}
 	
 	/**
-	 * @param p PredicateFormula
+	 * Make scans.
+	 *
+	 * @param p Predicate
 	 * @return TupleIterator
-	 * @throws EvaluationException
+	 * @throws EvaluationException the evaluation exception
 	 */
 	private TupleIterator makeScans(Predicate p) throws EvaluationException {
 		if (!(p.getSignature() instanceof InMemoryTableWrapper)) {
@@ -165,7 +174,8 @@ public class InMemoryQueryEvaluator implements QueryEvaluator {
 	}
 
 	/**
-	 * 
+	 * Make selection predicates.
+	 *
 	 * @param attributes List<Attribute>
 	 * @param terms List<Term>
 	 * @return List<Predicate>
@@ -191,11 +201,11 @@ public class InMemoryQueryEvaluator implements QueryEvaluator {
 	}
 	
 	/**
-	 * 
-	 * @param scans
-	 * @param clusters
+	 * Make joins.
+	 *
+	 * @param scans the scans
+	 * @param clusters the clusters
 	 * @return a join/cross product relation tree
-	 * @throws TupleIteratorException
 	 */
 	private TupleIterator makeJoins(
 			Map<Predicate, TupleIterator> scans,
@@ -228,6 +238,8 @@ public class InMemoryQueryEvaluator implements QueryEvaluator {
 	}
 	
 	/**
+	 * Make natural join predicate.
+	 *
 	 * @param left TupleIterator
 	 * @param right TupleIterator
 	 * @return ConjunctivePredicate<AttributeEqualityPredicate>

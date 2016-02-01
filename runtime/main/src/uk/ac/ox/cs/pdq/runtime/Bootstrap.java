@@ -37,61 +37,112 @@ public class Bootstrap {
 	/** Logger. */
 	private static Logger log = Logger.getLogger(Bootstrap.class); 
 	
+	/** The Constant PROGRAM_NAME. */
 	private static final String PROGRAM_NAME = "pdq-runtime-<version>.jar";
 	
+	/** The help. */
 	@Parameter(names = { "-h", "--help" }, help = true, description = "Displays this help message.")
 	private boolean help;
+	
+	/**
+	 * Checks if is help.
+	 *
+	 * @return true, if is help
+	 */
 	public boolean isHelp() {
 		return this.help;
 	}
 	
+	/** The schema path. */
 	@Parameter(names = { "-s", "--schema" }, required = true,
 			validateWith=FileValidator.class,
 			description ="Path to the input schema definition file.")
 	private String schemaPath;
+	
+	/**
+	 * Gets the schema path.
+	 *
+	 * @return the schema path
+	 */
 	public String getSchemaPath() {
 		return this.schemaPath;
 	}
 	
+	/** The query path. */
 	@Parameter(names = { "-q", "--query" }, required = true,
 			validateWith=FileValidator.class,
 			description ="Path to the input query definition file.")
 	private String queryPath;
+	
+	/**
+	 * Gets the query path.
+	 *
+	 * @return the query path
+	 */
 	public String getQueryPath() {
 		return this.queryPath;
 	}
 	
+	/** The plan path. */
 	@Parameter(names = { "-p", "--plan" }, required = true,
 			validateWith=FileValidator.class,
 			description ="Path to the input plan definition file.")
 	private String planPath;
+	
+	/**
+	 * Gets the plan path.
+	 *
+	 * @return the plan path
+	 */
 	public String getPlanPath() {
 		return this.planPath;
 	}
 	
+	/** The data path. */
 	@Parameter(names = { "-d", "--data" }, required = false,
 		validateWith=FileValidator.class,
 		description ="Path to the input data file (for in-memory relation).")
 	private String dataPath;
+	
+	/**
+	 * Gets the data path.
+	 *
+	 * @return the data path
+	 */
 	public String getDataPath() {
 		return this.dataPath;
 	}
 	
+	/** The config file. */
 	@Parameter(names = { "-c", "--config" }, validateWith=FileValidator.class,
 		description = "Path to a configuration file. If none is specified, "
 		+ "A file with default name will be looked for in the current directory.")
 	private File configFile;
+	
+	/**
+	 * Gets the config file.
+	 *
+	 * @return the config file
+	 */
 	public File getConfigFile() {
 		return this.configFile;
 	}
 	
+	/** The verbose mode. */
 	@Parameter(names = { "-v", "--verbose" }, required = false,
 		description ="Path to the input query definition file.")
 	private boolean verbose = false;
+	
+	/**
+	 * Checks if is verbose.
+	 *
+	 * @return true, if is verbose
+	 */
 	public boolean isVerbose() {
 		return this.verbose;
 	}
 
+	/** The dynamic params. */
 	@DynamicParameter(names = "-D", description = "Dynamic parameters. Override values defined in the configuration files.")
 	protected Map<String, String> dynamicParams = new LinkedHashMap<>();
 
@@ -158,10 +209,10 @@ public class Bootstrap {
 		}
 	}
 	/**
-	 * @param directory File
+	 * Obtain plan.
+	 *
 	 * @param schema Schema
-	 * @param query Query
-	 * @param full boolean
+	 * @param planPath the plan path
 	 * @return Plan
 	 */
 	private Plan obtainPlan(Schema schema, String planPath) {
@@ -198,7 +249,8 @@ public class Bootstrap {
 	}
 
 	/**
-	 * Instantiates the bootstrap
+	 * Instantiates the bootstrap.
+	 *
 	 * @param args String[]
 	 */
 	public static void main(String... args) {

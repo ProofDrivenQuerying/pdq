@@ -21,6 +21,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
+
 /**
  * Access over a relation, where the input are provided by the parent operator.
  * 
@@ -85,6 +86,14 @@ public class TopDownAccess extends TupleIterator {
 		Preconditions.checkArgument(isStaticInputsConsistentWithAccessMethod(relation, accessMethod, staticInputs));
 	}
 
+	/**
+	 * Checks if is static inputs consistent with access method.
+	 *
+	 * @param relation the relation
+	 * @param mt the mt
+	 * @param staticInputs the static inputs
+	 * @return the boolean
+	 */
 	private static Boolean isStaticInputsConsistentWithAccessMethod(
 			RelationAccessWrapper relation, AccessMethod mt, Map<Integer, TypedConstant<?>> staticInputs) {
 		for (Integer i: mt.getZeroBasedInputs()) {
@@ -99,12 +108,20 @@ public class TopDownAccess extends TupleIterator {
 		return remains.isEmpty();
 	}
 
+	/**
+	 * Key set.
+	 *
+	 * @param m the m
+	 * @return the sets the
+	 */
 	private static Set<Integer> keySet(Map<Integer, ?> m) {
 		Preconditions.checkArgument(m != null);
 		return m.keySet();
 	}
 	
 	/**
+	 * Infer input.
+	 *
 	 * @param relation RelationAccessWrapper
 	 * @param accessMethod AccessMethod
 	 * @param staticInputs Set<Integer>
@@ -199,6 +216,9 @@ public class TopDownAccess extends TupleIterator {
 		return result;
 	}
 
+	/**
+	 * Next tuple.
+	 */
 	public void nextTuple() {
 		this.nextTuple = null;
 		if (this.interrupted) {
@@ -223,6 +243,8 @@ public class TopDownAccess extends TupleIterator {
 	}
 
 	/**
+	 * Bind.
+	 *
 	 * @param input Tuple
 	 */
 	@Override
@@ -249,8 +271,9 @@ public class TopDownAccess extends TupleIterator {
 	}
 
 	/**
-	 * @param dynamicInput
-
+	 * Make input.
+	 *
+	 * @param dynamicInput the dynamic input
 	 * @return an tuple obtained by mixing input from dynamicInput with inputs
 	 * defined statically for this access.
 	 */
@@ -269,6 +292,8 @@ public class TopDownAccess extends TupleIterator {
 	}
 
 	/**
+	 * Gets the relation.
+	 *
 	 * @return the relation being accessed.
 	 */
 	public RelationAccessWrapper getRelation() {
@@ -276,6 +301,8 @@ public class TopDownAccess extends TupleIterator {
 	}
 
 	/**
+	 * Gets the access method.
+	 *
 	 * @return the access method in use
 	 */
 	public AccessMethod getAccessMethod() {
@@ -283,6 +310,8 @@ public class TopDownAccess extends TupleIterator {
 	}
 
 	/**
+	 * Gets the static inputs.
+	 *
 	 * @return the static inputs
 	 */
 	public Map<Integer, TypedConstant<?>> getStaticInputs() {
@@ -299,6 +328,8 @@ public class TopDownAccess extends TupleIterator {
 	}
 
 	/**
+	 * Close.
+	 *
 	 * @see java.lang.AutoCloseable#close()
 	 */
 	@Override
@@ -312,6 +343,9 @@ public class TopDownAccess extends TupleIterator {
 		this.outputs = null;
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#interrupt()
+	 */
 	@Override
 	public void interrupt() {
 		Preconditions.checkState(this.open != null && this.open);

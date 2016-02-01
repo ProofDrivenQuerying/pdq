@@ -33,6 +33,7 @@ import uk.ac.ox.cs.pdq.util.Utility;
 import com.google.common.base.Preconditions;
 import com.google.common.eventbus.EventBus;
 
+
 /**
  * Generic SQL evaluator. Builds SQL statements from conjunctive queries, and
  * runs them on some underlying database.
@@ -41,30 +42,34 @@ import com.google.common.eventbus.EventBus;
  */
 public class SQLQueryEvaluator implements QueryEvaluator {
 
-	/** The logger */
+	/**  The logger. */
 	public static Logger log = Logger.getLogger(SQLQueryEvaluator.class);
 	
-	/** The database connection */
+	/**  The database connection. */
 	private final Connection connection;
 	
-	/** The query to be evaluated */
+	/**  The query to be evaluated. */
 	private final Query<?> query;
 
-	/** The evaluator's event bus */
+	/**  The evaluator's event bus. */
 	private EventBus eventBus;
 	
 	/**
-	 * Default construction
-	 * @param conn the database connection to use for the query evaluation.
+	 * Default construction.
+	 *
+	 * @param connection the connection
+	 * @throws SQLException the SQL exception
 	 */
 	private SQLQueryEvaluator(Connection connection)  throws SQLException {
 		this(connection, null);
 	}
 	
 	/**
-	 * Default construction
-	 * @param conn the database connection to use for the query evaluation.
+	 * Default construction.
+	 *
+	 * @param connection the connection
 	 * @param query Query
+	 * @throws SQLException the SQL exception
 	 */
 	private SQLQueryEvaluator(Connection connection, Query<?> query)  throws SQLException {
 		this.connection = connection;
@@ -72,6 +77,8 @@ public class SQLQueryEvaluator implements QueryEvaluator {
 	}
 
 	/**
+	 * Sets the event bus.
+	 *
 	 * @param eventBus EventBus
 	 * @see uk.ac.ox.cs.pdq.runtime.query.QueryEvaluator#setEventBus(EventBus)
 	 */
@@ -81,17 +88,23 @@ public class SQLQueryEvaluator implements QueryEvaluator {
 	}
 
 	/**
+	 * New evaluator.
+	 *
 	 * @param connection Connection
 	 * @return SQLQueryEvaluator
+	 * @throws SQLException the SQL exception
 	 */
 	public static SQLQueryEvaluator newEvaluator(Connection connection) throws SQLException {
 		return new SQLQueryEvaluator(connection);
 	}
 
 	/**
-	 * @param connection Connection
+	 * New evaluator.
+	 *
 	 * @param query Query
 	 * @return SQLQueryEvaluator
+	 * @throws SQLException the SQL exception
+	 * @throws EvaluationException the evaluation exception
 	 */
 	public static SQLQueryEvaluator newEvaluator(Query<?> query) throws SQLException, EvaluationException {
 		Properties prop = findRelationalProperties(query);
@@ -103,10 +116,11 @@ public class SQLQueryEvaluator implements QueryEvaluator {
 	
 	/**
 	 * Evalue the given SQL query and return the result into a table.
-	 * @param sql
+	 *
+	 * @param sql the sql
 	 * @param output List<Typed>
 	 * @return a table containing the result of the query
-	 * @throws EvaluationException
+	 * @throws EvaluationException the evaluation exception
 	 */
 	public Table evaluate(String sql, List<Typed> output) throws EvaluationException {
 		try(Statement stmt = this.connection.createStatement();
@@ -144,8 +158,10 @@ public class SQLQueryEvaluator implements QueryEvaluator {
 	}
 
 	/**
+	 * Evaluate.
+	 *
 	 * @return Result
-	 * @throws EvaluationException
+	 * @throws EvaluationException the evaluation exception
 	 * @see uk.ac.ox.cs.pdq.runtime.query.QueryEvaluator#evaluate()
 	 */
 	@Override
@@ -215,9 +231,11 @@ public class SQLQueryEvaluator implements QueryEvaluator {
 	}
 
 	/**
-	 * @param properties
+	 * Gets the connection.
+	 *
+	 * @param properties the properties
 	 * @return a connection database connection for the given properties.
-	 * @throws SQLException
+	 * @throws SQLException the SQL exception
 	 */
 	public static Connection getConnection(Properties properties) throws SQLException {
 		String url = properties.getProperty("url");
@@ -228,7 +246,9 @@ public class SQLQueryEvaluator implements QueryEvaluator {
 	}
 
 	/**
-	 * @param plan Plan
+	 * Find relational properties.
+	 *
+	 * @param query the query
 	 * @return the schema underlying relational's properties if all of the
 	 * relations in the schema have the same properties, null otherwise.
 	 */

@@ -17,6 +17,7 @@ public class DAGPlanWriter extends AbstractXMLWriter<DAGPlan> {
 	
 	public static final String TYPE_MARKER = "dag"; 
 	
+	/** The operator writer. */
 	private final OperatorWriter operatorWriter;
 	
 	/**

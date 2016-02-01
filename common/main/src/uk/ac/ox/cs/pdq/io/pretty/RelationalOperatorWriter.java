@@ -40,7 +40,8 @@ import com.google.common.collect.Maps;
  * 
  * @author Julien Leblay
  */
-public class RelationalOperatorWriter extends PrettyWriter<RelationalOperator> implements Writer<RelationalOperator> {
+public class RelationalOperatorWriter extends PrettyWriter<RelationalOperator> 
+			implements Writer<RelationalOperator> {
 
 	public static final String T = "T";
 	public static final String EQUALITY = "=";
@@ -63,9 +64,6 @@ public class RelationalOperatorWriter extends PrettyWriter<RelationalOperator> i
 	public static final String COMMA = ",";
 	public static final String SINGLE_QUOTE = "'";
 	public static final String DOUBLE_QUOTE = "\"";
-
-	/** Logger. */
-	private static Logger log = Logger.getLogger(RelationalOperatorWriter.class);
 
 	/**
 	 * The default out to which operator should be written, if not 
@@ -168,6 +166,12 @@ public class RelationalOperatorWriter extends PrettyWriter<RelationalOperator> i
 		}
 	}
 	
+	/**
+	 * Gets the type of the given operator.
+	 *
+	 * @param operator the operator
+	 * @return the types
+	 */
 	static Types typeOf(RelationalOperator operator) {
 		if (operator instanceof Selection) {
 			return Types.SELECT;
@@ -224,12 +228,26 @@ public class RelationalOperatorWriter extends PrettyWriter<RelationalOperator> i
 		}
 	}
 
+	/**
+	 * Format the predicate of the given selection in the given string builder.
+	 *
+	 * @param sb the sb
+	 * @param selection the selection
+	 */
 	private void formatPredicate(StringBuilder sb, Selection selection) {
 		Predicate predicate = selection.getPredicate();
 		List<Term> columns = selection.getColumns();
 		this.formatPredicate(sb, predicate, columns);
 	}
 
+	/**
+	 * Format the conjunctive predicate of the given selections in the given 
+	 * string builder.
+	 *
+	 * @param sb the sb
+	 * @param conjunction the conjunction
+	 * @param columns the columns
+	 */
 	private void formatConjunctivePredicate(StringBuilder sb, ConjunctivePredicate<Predicate> conjunction, List<Term> columns) {
 		String sep = "";
 		for (Predicate predicate : conjunction) {
@@ -239,6 +257,13 @@ public class RelationalOperatorWriter extends PrettyWriter<RelationalOperator> i
 		}
 	}
 
+	/**
+	 * Format predicate.
+	 *
+	 * @param sb the sb
+	 * @param predicate the predicate
+	 * @param columns the columns
+	 */
 	private void formatPredicate(StringBuilder sb, Predicate predicate, List<Term> columns) {
 		if (predicate instanceof ConjunctivePredicate) {
 			this.formatConjunctivePredicate(sb, (ConjunctivePredicate) predicate, columns);
@@ -255,6 +280,13 @@ public class RelationalOperatorWriter extends PrettyWriter<RelationalOperator> i
 		}
 	}
 
+	/**
+	 * Format the predicate of the given join in the given string builder.
+	 *
+	 * @param sb the sb
+	 * @param join the join
+	 * @param aliases the aliases
+	 */
 	private void formatPredicate(StringBuilder sb, Join join, Map<RelationalOperator, String> aliases) {
 		Predicate predicate = join.getPredicate();
 		List<Term> columns = join.getColumns();
@@ -265,6 +297,12 @@ public class RelationalOperatorWriter extends PrettyWriter<RelationalOperator> i
 		this.formatJoinPredicate(sb, predicate, lAlias, rAlias, columns);
 	}
 	
+	/**
+	 * Find sub plan alias.
+	 *
+	 * @param logOp the log op
+	 * @return the relational operator
+	 */
 	private RelationalOperator findSubPlanAlias(RelationalOperator logOp) {
 		if (logOp instanceof AccessOperator) {
 			return logOp;
@@ -283,6 +321,15 @@ public class RelationalOperatorWriter extends PrettyWriter<RelationalOperator> i
 		return null;
 	}
 
+	/**
+	 * Format join predicate.
+	 *
+	 * @param sb the sb
+	 * @param predicate the predicate
+	 * @param left the left
+	 * @param right the right
+	 * @param terms the terms
+	 */
 	private void formatJoinPredicate(StringBuilder sb, Predicate predicate, String left, String right, List<Term> terms) {
 		if (predicate instanceof ConjunctivePredicate) {
 			this.formatJoinConjunctivePredicate(sb, (ConjunctivePredicate) predicate, left, right, terms);
@@ -315,6 +362,15 @@ public class RelationalOperatorWriter extends PrettyWriter<RelationalOperator> i
 		}
 	}
 
+	/**
+	 * Format join conjunctive predicate.
+	 *
+	 * @param sb the sb
+	 * @param conjunction the conjunction
+	 * @param left the left
+	 * @param right the right
+	 * @param columns the columns
+	 */
 	private void formatJoinConjunctivePredicate(StringBuilder sb, ConjunctivePredicate<Predicate> conjunction, String left, String right, List<Term> columns) {
 		String sep = "";
 		for (Predicate predicate : conjunction) {
@@ -324,6 +380,12 @@ public class RelationalOperatorWriter extends PrettyWriter<RelationalOperator> i
 		}
 	}
 	
+	/**
+	 * Format tuples.
+	 *
+	 * @param sb the sb
+	 * @param tuples the tuples
+	 */
 	static void formatTuples(StringBuilder sb, Collection<Tuple> tuples) {
 		for (Tuple t: tuples) {
 			String sep = OPEN;
@@ -335,9 +397,9 @@ public class RelationalOperatorWriter extends PrettyWriter<RelationalOperator> i
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.benchmark.io.AbstractWriter#save(java.io.PrintStream, java.lang.Object)
+	/**
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.io.Writer#write(java.io.PrintStream, java.lang.Object)
 	 */
 	@Override
 	public void write(PrintStream out, RelationalOperator o) {
@@ -346,6 +408,10 @@ public class RelationalOperatorWriter extends PrettyWriter<RelationalOperator> i
 		out.print(sb);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.io.pretty.PrettyWriter#write(java.lang.Object)
+	 */
 	@Override
 	public void write(RelationalOperator o) {
 		this.write(this.out, o);

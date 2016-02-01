@@ -38,6 +38,11 @@ public interface PlanExecutor {
 	 */
 	void setEventBus(EventBus eb);
 	
+	/**
+	 * Sets the tuples limit.
+	 *
+	 * @param tuples the new tuples limit
+	 */
 	void setTuplesLimit(int tuples);
 	
 	public void setCache(boolean doCache);

@@ -9,6 +9,7 @@ import uk.ac.ox.cs.pdq.util.Tuple;
 
 import com.google.common.eventbus.Subscribe;
 
+
 /**
  * Prints tuple to the given print stream, if provided, log.info otherwise.
  * 
@@ -22,11 +23,13 @@ public class TupleCounter implements EventHandler {
 	/** PrintStream where to print tuples. */
 	private final PrintStream out;
 
+	/** The count. */
 	private long count = 0;
 	
 	/**
-	 * Default constructor
-	 * @param out
+	 * Default constructor.
+	 *
+	 * @param out the out
 	 */
 	public TupleCounter(PrintStream out) {
 		this.out = out;
@@ -41,17 +44,24 @@ public class TupleCounter implements EventHandler {
 
 	/**
 	 * Counts the given tuple.
-	 * @param tuple
+	 *
+	 * @param tuple the tuple
 	 */
 	@Subscribe
 	public void count(Tuple tuple) {
 		this.count++;
 	}
 	
+	/**
+	 * Reset.
+	 */
 	public void reset() {
 		this.count = 0;
 	}
 	
+	/**
+	 * Report.
+	 */
 	public void report() {
 		String message = "Tuple count: " + this.count;
 		if (this.out != null) {

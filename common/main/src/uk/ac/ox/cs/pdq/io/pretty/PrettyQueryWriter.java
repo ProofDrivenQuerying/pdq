@@ -25,7 +25,8 @@ public class PrettyQueryWriter extends PrettyWriter<ConjunctiveQuery> implements
 	private PrintStream out;
 
 	/**
-	 * 
+	 * Instantiates a new pretty query writer.
+	 *
 	 * @param out the default output
 	 */
 	PrettyQueryWriter(PrintStream out) {
@@ -33,7 +34,7 @@ public class PrettyQueryWriter extends PrettyWriter<ConjunctiveQuery> implements
 	}
 
 	/**
-	 * 
+	 * Instantiates a new pretty query writer.
 	 */
 	public PrettyQueryWriter() {
 		this(System.out);

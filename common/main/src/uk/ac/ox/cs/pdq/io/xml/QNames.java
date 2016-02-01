@@ -52,7 +52,7 @@ public enum QNames {
 	}
 
 	/**
-	 * @param lowerHyphen
+	 * @param lowerHyphen the qname in lower hyphen case.
 	 * @return the enum item corresponding to given param, in lower-case, hyphenated form.
 	 */
 	public static QNames parse(String lowerHyphen) {

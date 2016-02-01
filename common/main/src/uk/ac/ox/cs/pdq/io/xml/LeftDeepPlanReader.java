@@ -62,9 +62,8 @@ public class LeftDeepPlanReader extends AbstractXMLReader<LeftDeepPlan> {
 	}
 
 	/**
-	 * @param in InputStream
-	 * @return LeftDeepPlan
-	 * @see uk.ac.ox.cs.pdq.io.Reader#read(InputStream)
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.io.Reader#read(java.io.InputStream)
 	 */
 	@Override
 	public LeftDeepPlan read(InputStream in) {
@@ -78,8 +77,9 @@ public class LeftDeepPlanReader extends AbstractXMLReader<LeftDeepPlan> {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 
+	 * {@inheritDoc}
 	 * @see org.xml.sax.helpers.DefaultHandler#startElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
 	 */
 	@Override
@@ -105,8 +105,8 @@ public class LeftDeepPlanReader extends AbstractXMLReader<LeftDeepPlan> {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * {@inheritDoc}
 	 * @see org.xml.sax.helpers.DefaultHandler#endElement(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override

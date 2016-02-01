@@ -11,6 +11,7 @@ import com.google.common.collect.Lists;
 import com.google.common.eventbus.EventBus;
 
 
+
 /**
  * Superclass to all unary physical operator.
  * 
@@ -18,7 +19,7 @@ import com.google.common.eventbus.EventBus;
  */
 public abstract class UnaryIterator extends TupleIterator {
 
-	/** The sole child of the operator */
+	/**  The sole child of the operator. */
 	protected TupleIterator child = null;
 	
 	/**
@@ -52,7 +53,8 @@ public abstract class UnaryIterator extends TupleIterator {
 	
 	/**
 	 * Instantiates a new operator.
-	 * 
+	 *
+	 * @param inputs the inputs
 	 * @param typeOverride TupleType
 	 * @param columns List<Typed>
 	 * @param child TupleIterator
@@ -94,6 +96,9 @@ public abstract class UnaryIterator extends TupleIterator {
 		this.open = true;
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#close()
+	 */
 	/*
 	 * @see java.lang.AutoCloseable#close()
 	 */
@@ -127,6 +132,8 @@ public abstract class UnaryIterator extends TupleIterator {
 	}
 	
 	/**
+	 * Bind.
+	 *
 	 * @param t Tuple
 	 */
 	@Override

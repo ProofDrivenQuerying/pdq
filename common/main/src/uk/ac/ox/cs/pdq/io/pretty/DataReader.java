@@ -18,7 +18,8 @@ import uk.ac.ox.cs.pdq.io.ReaderException;
 import uk.ac.ox.cs.pdq.util.Types;
 
 /**
- * Read facts from input stream, and returns then as Collections of PredicateFormulas.
+ * Read facts from input stream, and returns then as Collections of Atoms.
+ * 
  * @author Julien Leblay
  */
 public class DataReader implements Reader<Collection<Predicate>> {
@@ -34,9 +35,9 @@ public class DataReader implements Reader<Collection<Predicate>> {
 		this.schema = schema;
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.builder.io.Reader#read(java.io.InputStream)
+	/**
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.io.Reader#read(java.io.InputStream)
 	 */
 	@Override
 	public List<Predicate> read(InputStream in) {

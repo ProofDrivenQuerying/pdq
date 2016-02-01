@@ -28,6 +28,7 @@ import com.google.common.base.Preconditions;
 
 /**
  * A pretty reader for dependencies.
+ * 
  * @author Julien Leblay
  */
 public class PrettyDependencyReader implements Reader<TGD> {
@@ -47,6 +48,8 @@ public class PrettyDependencyReader implements Reader<TGD> {
 	}
 	
 	/**
+	 * Read a TGD from the input stream.
+	 *
 	 * @param in InputStream
 	 * @return TGD
 	 * @see uk.ac.ox.cs.pdq.io.Reader#read(InputStream)
@@ -65,6 +68,8 @@ public class PrettyDependencyReader implements Reader<TGD> {
 	}
 
 	/**
+	 * Parses a TGD from the input String.
+	 *
 	 * @param s String
 	 * @return TGD
 	 */
@@ -84,8 +89,10 @@ public class PrettyDependencyReader implements Reader<TGD> {
 	}
 	
 	/**
+	 * Parses a conjunction of atoms from the given String.
+	 *
 	 * @param s String
-	 * @return Conjunction<PredicateFormula>
+	 * @return Conjunction<Predicate>
 	 */
 	public Conjunction<Predicate> parseConjunction(String s) {
 		String[] sAtoms = s.split(LogicalSymbols.AND.toString());

@@ -10,6 +10,7 @@ import uk.ac.ox.cs.pdq.algebra.predicates.Predicate;
 import uk.ac.ox.cs.pdq.util.Tuple;
 import uk.ac.ox.cs.pdq.util.Typed;
 
+
 /**
  * Nested loop implementation for n-ary joins.
  * 
@@ -23,6 +24,7 @@ public class NestedLoopJoin extends Join {
 	 */
 	protected Deque<Tuple> tupleStack = new ArrayDeque<>();
 
+	/** The has next. */
 	protected boolean hasNext = true;
 
 	/**
@@ -58,10 +60,9 @@ public class NestedLoopJoin extends Join {
 
 	/**
 	 * Instantiates a new nested loop multi-join.
-	 * 
-	 * @param children
-	 *            the children
+	 *
 	 * @param inputs List<Typed>
+	 * @param children            the children
 	 */
 	public NestedLoopJoin(List<Typed> inputs, List<TupleIterator> children) {
 		this(inferNaturalJoin(children), inputs, children);

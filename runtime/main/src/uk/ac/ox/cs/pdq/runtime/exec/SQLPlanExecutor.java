@@ -19,6 +19,7 @@ import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.eventbus.EventBus;
 
+
 /**
  * Alternate executor for Linear plan, which first translates a linear plan
  * into a logical relation tree, then translates the logical tree plan into a 
@@ -32,21 +33,37 @@ import com.google.common.eventbus.EventBus;
  */
 public class SQLPlanExecutor implements PlanExecutor {
 
+	/** The properties. */
 	protected final Properties properties;
+	
+	/** The plan. */
 	protected final Plan plan;
+	
+	/** The query. */
 	protected final Query<?> query;
+	
+	/** The semantics. */
 	protected final Semantics semantics;
+	
+	/** The event bus. */
 	protected EventBus eventBus;
+	
+	/** The universal table. */
 	protected Table universalTable = null;
+	
+	/** The tuple limit. */
 	protected int tupleLimit = -1;
+	
+	/** The do cache. */
 	private boolean doCache;
 
 	/**
-	 * Default constructor
-	 * @param plan
-	 * @param query
-	 * @param properties
+	 * Default constructor.
+	 *
+	 * @param plan the plan
+	 * @param query the query
 	 * @param sem Semantics
+	 * @param properties the properties
 	 */
 	public SQLPlanExecutor(Plan plan, Query<?> query, Semantics sem, Properties properties) {
 		this.plan = plan;
@@ -56,6 +73,8 @@ public class SQLPlanExecutor implements PlanExecutor {
 	}
 
 	/**
+	 * Sets the event bus.
+	 *
 	 * @param eventBus EventBus
 	 * @see uk.ac.ox.cs.pdq.runtime.exec.PlanExecutor#setEventBus(EventBus)
 	 */
@@ -111,6 +130,8 @@ public class SQLPlanExecutor implements PlanExecutor {
 	}
 	
 	/**
+	 * Resolve dialect.
+	 *
 	 * @param prop Properties
 	 * @return SQLTranslator.SupportedDialect
 	 */
@@ -122,11 +143,17 @@ public class SQLPlanExecutor implements PlanExecutor {
 		return SupportedDialect.SQL92;
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.runtime.exec.PlanExecutor#setTuplesLimit(int)
+	 */
 	@Override
 	public void setTuplesLimit(int limit) {
 		this.tupleLimit = limit;
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.runtime.exec.PlanExecutor#setCache(boolean)
+	 */
 	@Override
 	public void setCache(boolean doCache) {
 	}

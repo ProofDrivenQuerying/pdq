@@ -18,6 +18,8 @@ public class EvaluationException extends Exception {
 	}
 
 	/**
+	 * Instantiates a new evaluation exception.
+	 *
 	 * @param msg exception message.
 	 */
 	public EvaluationException(String msg) {

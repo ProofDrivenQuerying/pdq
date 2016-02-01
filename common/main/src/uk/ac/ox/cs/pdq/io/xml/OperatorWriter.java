@@ -97,6 +97,12 @@ public class OperatorWriter extends AbstractXMLWriter<RelationalOperator> {
 		close(out, QNames.OPERATOR);
 	}
 	
+	/**
+	 * Gets the type of the given operator.
+	 *
+	 * @param operator the operator
+	 * @return the types
+	 */
 	static Types typeOf(RelationalOperator operator) {
 		if (operator instanceof Selection) {
 			return Types.SELECT;
@@ -142,8 +148,10 @@ public class OperatorWriter extends AbstractXMLWriter<RelationalOperator> {
 
 	/**
 	 * Writes the given plan to the given output.
-	 * @param out
-	 * @param relation
+	 *
+	 * @param out the out
+	 * @param operator the operator
+	 * @param aliases the aliases
 	 */
 	public void writeChildren(PrintStream out, RelationalOperator operator, Map<RelationalOperator, String> aliases) {
 		if (operator instanceof UnaryOperator) {
@@ -192,8 +200,10 @@ public class OperatorWriter extends AbstractXMLWriter<RelationalOperator> {
 	
 	/**
 	 * Writes the given plan to the given output.
-	 * @param out
-	 * @param relation
+	 *
+	 * @param out the out
+	 * @param operator the operator
+	 * @param type the type
 	 */
 	public void writeOptions(PrintStream out, RelationalOperator operator, Types type) {
 		switch (type) {
@@ -306,9 +316,9 @@ public class OperatorWriter extends AbstractXMLWriter<RelationalOperator> {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.benchmark.io.AbstractWriter#save(java.io.PrintStream, java.lang.Object)
+	/**
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.io.Writer#write(java.io.PrintStream, java.lang.Object)
 	 */
 	@Override
 	public void write(PrintStream out, RelationalOperator o) {

@@ -167,6 +167,8 @@ public class Projection extends UnaryIterator {
 	}
 
 	/**
+	 * Gets the columns display.
+	 *
 	 * @return a list of human readable column headers.
 	 */
 	@Override

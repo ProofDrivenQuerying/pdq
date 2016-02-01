@@ -11,6 +11,7 @@ import uk.ac.ox.cs.pdq.util.Typed;
 import com.google.common.base.Preconditions;
 import com.google.common.eventbus.EventBus;
 
+
 /**
  * TupleIterator defines a top-level class for all physical operators.
  * 
@@ -30,13 +31,14 @@ public abstract class TupleIterator  implements AutoCloseable, ResetableIterator
 	/** The iterator's input type. */
 	protected final TupleType inputType;
 	
-	/** Tells whether the operator was voluntarily interrupted */
+	/**  Tells whether the operator was voluntarily interrupted. */
 	protected boolean interrupted = false;
 	
 	/** Tells whether the operator has been open. If null, the iterator has not
 	 * been yet either opened or closed. */
 	protected Boolean open = null;
 
+	/** The event bus. */
 	protected EventBus eventBus;
 
 	/**
@@ -71,21 +73,45 @@ public abstract class TupleIterator  implements AutoCloseable, ResetableIterator
 		this.inputType = inputType;
 	}
 
+	/**
+	 * Output columns.
+	 *
+	 * @param i the i
+	 * @return the list
+	 */
 	protected static List<Typed> outputColumns(TupleIterator i) {
 		Preconditions.checkArgument(i != null);
 		return i.getColumns();
 	}
 
+	/**
+	 * Input columns.
+	 *
+	 * @param i the i
+	 * @return the list
+	 */
 	protected static List<Typed> inputColumns(TupleIterator i) {
 		Preconditions.checkArgument(i != null);
 		return i.getInputColumns();
 	}
 
+	/**
+	 * Output type.
+	 *
+	 * @param i the i
+	 * @return the tuple type
+	 */
 	protected static TupleType outputType(TupleIterator i) {
 		Preconditions.checkArgument(i != null);
 		return i.getType();
 	}
 
+	/**
+	 * Input type.
+	 *
+	 * @param i the i
+	 * @return the tuple type
+	 */
 	protected static TupleType inputType(TupleIterator i) {
 		Preconditions.checkArgument(i != null);
 		return i.getType();
@@ -93,8 +119,8 @@ public abstract class TupleIterator  implements AutoCloseable, ResetableIterator
 
 	/**
 	 * Deep copy.
+	 *
 	 * @return a deep copy of the operator.
-	 * @throws TupleIteratorException
 	 * @see uk.ac.ox.cs.pdq.util.ResetableIterator#deepCopy()
 	 */
 	@Override
@@ -119,6 +145,8 @@ public abstract class TupleIterator  implements AutoCloseable, ResetableIterator
 	}
 	
 	/**
+	 * Bind.
+	 *
 	 * @param t Tuple
 	 */
 	public abstract void bind(Tuple t);
@@ -160,7 +188,9 @@ public abstract class TupleIterator  implements AutoCloseable, ResetableIterator
 	}
 
 	/**
-	 * @throws UnsupportedOperationException
+	 * Removes the.
+	 *
+	 * @throws UnsupportedOperationException the unsupported operation exception
 	 * @see java.util.Iterator#remove()
 	 */
 	@Override
@@ -169,7 +199,8 @@ public abstract class TupleIterator  implements AutoCloseable, ResetableIterator
 	}
 
 	/**
-	 * Tells whether the operator was voluntarily interrupted 
+	 * Tells whether the operator was voluntarily interrupted .
+	 *
 	 * @return boolean
 	 */
 	public boolean isInterrupted() {
@@ -177,6 +208,8 @@ public abstract class TupleIterator  implements AutoCloseable, ResetableIterator
 	}
 	
 	/**
+	 * Gets the columns display.
+	 *
 	 * @return a list of human readable column headers.
 	 */
 	public List<String> getColumnsDisplay() {

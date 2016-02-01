@@ -20,7 +20,8 @@ public class PrettySchemaWriter extends PrettyWriter<Schema> implements Writer<S
 	private PrintStream out;
 
 	/**
-	 * 
+	 * Instantiates a new pretty schema writer.
+	 *
 	 * @param out the default output
 	 */
 	PrettySchemaWriter(PrintStream out) {
@@ -28,7 +29,7 @@ public class PrettySchemaWriter extends PrettyWriter<Schema> implements Writer<S
 	}
 
 	/**
-	 * 
+	 * Instantiates a new pretty schema writer.
 	 */
 	public PrettySchemaWriter() {
 		this(System.out);

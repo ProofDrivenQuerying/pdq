@@ -3,7 +3,6 @@ package uk.ac.ox.cs.pdq.runtime.exec.iterator;
 import java.util.ArrayList;
 import java.util.List;
 
-import uk.ac.ox.cs.pdq.algebra.RelationalOperator;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.AccessMethod.Types;
 import uk.ac.ox.cs.pdq.db.Attribute;
@@ -15,6 +14,7 @@ import uk.ac.ox.cs.pdq.util.Typed;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
+
 
 /**
  * Access over a relation, where the input are provided by the child operator.
@@ -53,12 +53,20 @@ public class BottomUpAccess extends UnaryIterator {
 		this.accessMethod = mt;
 	}
 	
+	/**
+	 * Attributes.
+	 *
+	 * @param relation the relation
+	 * @return the list
+	 */
 	private static List<Typed> attributes(RelationAccessWrapper relation) {
 		Preconditions.checkArgument(relation != null);
 		return Lists.<Typed>newArrayList(relation.getAttributes());
 	}
 
 	/**
+	 * Gets the relation.
+	 *
 	 * @return the relation being accessed
 	 */
 	public RelationAccessWrapper getRelation() {
@@ -66,6 +74,8 @@ public class BottomUpAccess extends UnaryIterator {
 	}
 
 	/**
+	 * Gets the access method.
+	 *
 	 * @return the access method being used
 	 */
 	public AccessMethod getAccessMethod() {

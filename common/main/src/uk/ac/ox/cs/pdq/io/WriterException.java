@@ -1,14 +1,14 @@
 package uk.ac.ox.cs.pdq.io;
 
+
 /**
  * Exception that occurred during write operations.
  *
  * @author Julien Leblay
- *
  */
 public class WriterException extends RuntimeException {
 
-	/** */
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -315472460756924167L;
 
 	/**
@@ -19,6 +19,8 @@ public class WriterException extends RuntimeException {
 	}
 
 	/**
+	 * Instantiates a new writer exception.
+	 *
 	 * @param msg exception message.
 	 */
 	public WriterException(String msg) {
@@ -26,6 +28,8 @@ public class WriterException extends RuntimeException {
 	}
 
 	/**
+	 * Instantiates a new writer exception.
+	 *
 	 * @param msg exception's message
 	 * @param cause root cause of the problem.
 	 */

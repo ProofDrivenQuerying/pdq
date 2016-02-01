@@ -108,6 +108,9 @@ public class EmptyIterator extends TupleIterator {
 		this.interrupted = true;
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#bind(uk.ac.ox.cs.pdq.util.Tuple)
+	 */
 	@Override
 	public void bind(Tuple t) {
 		Preconditions.checkState(this.open != null && this.open);

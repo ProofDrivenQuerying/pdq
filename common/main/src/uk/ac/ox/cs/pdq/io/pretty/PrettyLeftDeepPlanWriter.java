@@ -58,19 +58,4 @@ public class PrettyLeftDeepPlanWriter extends PrettyWriter<LeftDeepPlan> impleme
 	public void write(LeftDeepPlan q) {
 		this.write(this.out, q);
 	}
-	
-//	/**
-//	 * For simple test purpose only.
-//	 * @param args
-//	 */
-//	public static void main(String... args) {
-//		try(InputStream sin = new FileInputStream("../dag_benchmark/test/runtime/tpch/postgresql/inputs/blackbox/tpch_001/schemas/fk_inputs/queries/case_005/schema.xml");
-//			InputStream qin = new FileInputStream("../dag_benchmark/test/runtime/tpch/postgresql/inputs/blackbox/tpch_001/schemas/fk_inputs/queries/case_005/expected-plan.xml")) {
-//			Schema s = Readers.from(sin).read();
-//			LeftDeepPlan p = Readers.from(qin).with(s).read();
-//			PrettyLeftDeepPlanWriter.to(System.out).write(p);
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//	}
 }

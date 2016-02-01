@@ -103,8 +103,8 @@ public class DependencyReader extends AbstractXMLReader<Constraint> {
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * {@inheritDoc}
 	 * @see org.xml.sax.helpers.DefaultHandler#startElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
 	 */
 	@Override
@@ -147,8 +147,8 @@ public class DependencyReader extends AbstractXMLReader<Constraint> {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * {@inheritDoc}
 	 * @see org.xml.sax.helpers.DefaultHandler#endElement(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -199,7 +199,7 @@ public class DependencyReader extends AbstractXMLReader<Constraint> {
 	}
 
 	/**
-	 * @return TGD
+	 * @return the TGD read
 	 */
 	public TGD getDependency() {
 		return this.builder.build();

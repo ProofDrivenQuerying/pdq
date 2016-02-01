@@ -11,6 +11,7 @@ import uk.ac.ox.cs.pdq.util.Typed;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
+
 /**
  * Scan over a relation
  * Julien: although this class is only marginally used, please do not delete.
@@ -26,7 +27,7 @@ public class Scan extends TupleIterator {
 	/** The underlying relation. */
 	protected RelationAccessWrapper relation = null;	
 
-	/** The next tuple to return */
+	/**  The next tuple to return. */
 	private Tuple nextTuple;
 	
 	/** The filter. */
@@ -55,6 +56,8 @@ public class Scan extends TupleIterator {
 	}
 
 	/**
+	 * Gets the relation.
+	 *
 	 * @return the relation being scanned
 	 */
 	public RelationAccessWrapper getRelation() {
@@ -62,6 +65,8 @@ public class Scan extends TupleIterator {
 	}
 
 	/**
+	 * Gets the filter.
+	 *
 	 * @return the filter for this scan if any
 	 */
 	public Predicate getFilter() {
@@ -90,7 +95,7 @@ public class Scan extends TupleIterator {
 	 */
 	@Override
 	public void open() {
-		Preconditions.checkState(this.open == null);
+		Preconditions.checkState(this.open == null || this.open);
 		this.open = true;
 		this.tupleIterator = this.relation.iterator();
 		this.tupleIterator.open();
@@ -98,7 +103,7 @@ public class Scan extends TupleIterator {
 	}
 
 	/**
-	 * Moves to the next valid tuple to return
+	 * Moves to the next valid tuple to return.
 	 */
 	private void nextTuple() {
 		while (this.tupleIterator.hasNext()) {
@@ -182,6 +187,8 @@ public class Scan extends TupleIterator {
 	}
 
 	/**
+	 * Bind.
+	 *
 	 * @param t Tuple
 	 */
 	@Override

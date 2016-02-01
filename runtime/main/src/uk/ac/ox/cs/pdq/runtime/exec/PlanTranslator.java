@@ -46,7 +46,8 @@ public class PlanTranslator {
 	
 	/**
 	 * Translate a logical plan to a bottom-up physical plan.
-	 * @param logOp
+	 *
+	 * @param logOp the logical operator
 	 * @return a physical that corresponds exactly to the given logical plan.
 	 * In particular, not further optimization is applied to the resulting plan.
 	 * It uses hash join as default for equijoins and NestedLoopJoin for 

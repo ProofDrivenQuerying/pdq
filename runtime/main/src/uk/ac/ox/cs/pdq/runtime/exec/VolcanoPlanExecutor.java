@@ -22,6 +22,7 @@ import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.eventbus.EventBus;
 
+
 /**
  * Alternate executor for plans, based on the Volcano iterator model.
  * The input logical plan into a physical operator tree, 
@@ -35,20 +36,35 @@ public class VolcanoPlanExecutor implements PlanExecutor {
 	/** Logger. */
 	private static Logger log = Logger.getLogger(VolcanoPlanExecutor.class);
 
+	/** The universal table. */
 	private Table universalTable = null;
+	
+	/** The plan. */
 	private final Plan plan;
+	
+	/** The query. */
 	private final Query<?> query;
+	
+	/** The semantics. */
 	private final Semantics semantics;
+	
+	/** The event bus. */
 	private EventBus eventBus;
+	
+	/** The timeout. */
 	private Long timeout;
+	
+	/** The tuple limit. */
 	private int tupleLimit = -1;
+	
+	/** The do cache. */
 	private boolean doCache;
 
 	/**
-	 * Default constructor
-	 * 
-	 * @param plan
-	 * @param query
+	 * Default constructor.
+	 *
+	 * @param plan the plan
+	 * @param query the query
 	 * @param sem Semantics
 	 * @param timeout Long
 	 */
@@ -60,10 +76,10 @@ public class VolcanoPlanExecutor implements PlanExecutor {
 	}
 
 	/**
-	 * Default constructor
-	 * 
-	 * @param plan
-	 * @param query
+	 * Default constructor.
+	 *
+	 * @param plan the plan
+	 * @param query the query
 	 * @param sem Semantics
 	 */
 	public VolcanoPlanExecutor(Plan plan, Query<?> query, Semantics sem) {
@@ -71,6 +87,8 @@ public class VolcanoPlanExecutor implements PlanExecutor {
 	}
 
 	/**
+	 * Sets the event bus.
+	 *
 	 * @param eventBus EventBus
 	 * @see uk.ac.ox.cs.pdq.runtime.exec.PlanExecutor#setEventBus(EventBus)
 	 */
@@ -133,6 +151,8 @@ public class VolcanoPlanExecutor implements PlanExecutor {
 	}
 
 	/**
+	 * Attempt post.
+	 *
 	 * @param t Tuple
 	 */
 	private void attemptPost(Tuple t) {
@@ -142,11 +162,17 @@ public class VolcanoPlanExecutor implements PlanExecutor {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.runtime.exec.PlanExecutor#setTuplesLimit(int)
+	 */
 	@Override
 	public void setTuplesLimit(int limit) {
 		this.tupleLimit = limit;
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.runtime.exec.PlanExecutor#setCache(boolean)
+	 */
 	@Override
 	public void setCache(boolean doCache) {
 		this.doCache = doCache; 
@@ -160,7 +186,10 @@ public class VolcanoPlanExecutor implements PlanExecutor {
 	 */
 	public class TimeoutChecker extends Thread {
 
+		/** The timeout. */
 		private final long timeout;
+		
+		/** The iterator. */
 		private final TupleIterator iterator;
 
 		/**
@@ -176,6 +205,8 @@ public class VolcanoPlanExecutor implements PlanExecutor {
 		}
 
 		/**
+		 * Run.
+		 *
 		 * @see java.lang.Runnable#run()
 		 */
 		@Override

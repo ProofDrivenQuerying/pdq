@@ -14,6 +14,7 @@ import uk.ac.ox.cs.pdq.util.Typed;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 
+
 /**
  * CrossProduct implements a n-ary cartesian product in a nested-loop fashion.
  * 
@@ -32,8 +33,7 @@ public class CrossProduct extends NaryIterator {
 
 	/**
 	 * Instantiates a new cross product.
-	 * 
-	 * @param inputs the input parameters
+	 *
 	 * @param children the children
 	 */
 	public CrossProduct(TupleIterator... children) {
@@ -42,8 +42,7 @@ public class CrossProduct extends NaryIterator {
 
 	/**
 	 * Instantiates a new cross product.
-	 * 
-	 * @param inputs the input parameters
+	 *
 	 * @param children the children
 	 */
 	public CrossProduct(List<TupleIterator> children) {
@@ -52,10 +51,9 @@ public class CrossProduct extends NaryIterator {
 
 	/**
 	 * Instantiates a new cross product.
-	 * 
-	 * @param children
-	 *            the children
+	 *
 	 * @param inputs List<Typed>
+	 * @param children            the children
 	 */
 	public CrossProduct(List<Typed> inputs, List<TupleIterator> children) {
 		super(TupleType.DefaultFactory.createFromTyped(inputs), inputs,

@@ -1,5 +1,6 @@
 package uk.ac.ox.cs.pdq.runtime;
 
+
 /**
  * Exception that occurred when an evaluation time out is reached.
  * 
@@ -7,7 +8,7 @@ package uk.ac.ox.cs.pdq.runtime;
  */
 public class TimeoutException extends EvaluationException {
 
-	/** */
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -315472460756924167L;
 
 	/**
@@ -18,6 +19,8 @@ public class TimeoutException extends EvaluationException {
 	}
 
 	/**
+	 * Instantiates a new timeout exception.
+	 *
 	 * @param msg exception message.
 	 */
 	public TimeoutException(String msg) {
@@ -25,6 +28,8 @@ public class TimeoutException extends EvaluationException {
 	}
 
 	/**
+	 * Instantiates a new timeout exception.
+	 *
 	 * @param cause Throwable
 	 */
 	public TimeoutException(Throwable cause) {
@@ -32,6 +37,8 @@ public class TimeoutException extends EvaluationException {
 	}
 
 	/**
+	 * Instantiates a new timeout exception.
+	 *
 	 * @param msg exception's message
 	 * @param cause root cause of the problem.
 	 */

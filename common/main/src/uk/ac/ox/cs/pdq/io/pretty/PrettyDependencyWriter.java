@@ -42,7 +42,7 @@ public class PrettyDependencyWriter extends PrettyWriter<Constraint> implements 
 	
 	/**
 	 * Fluent set to make the printer indented..
-	 * @param out
+	 *
 	 * @return this PrettyWriter after making it indented.
 	 */
 	public PrettyDependencyWriter indented() {
@@ -50,9 +50,9 @@ public class PrettyDependencyWriter extends PrettyWriter<Constraint> implements 
 		return this;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.provider.io.Writer#write(java.io.PrintStream, java.lang.Object)
+	/**
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.io.Writer#write(java.io.PrintStream, java.lang.Object)
 	 */
 	@Override
 	public void write(PrintStream out, Constraint tgd) {
@@ -72,9 +72,9 @@ public class PrettyDependencyWriter extends PrettyWriter<Constraint> implements 
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.builder.io.PrettyWriter#write(java.lang.Object)
+	/**
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.io.pretty.PrettyWriter#write(java.lang.Object)
 	 */
 	@Override
 	public void write(Constraint t) {

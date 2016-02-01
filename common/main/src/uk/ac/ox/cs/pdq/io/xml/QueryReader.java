@@ -48,9 +48,8 @@ public class QueryReader extends AbstractXMLReader<ConjunctiveQuery> {
 	}
 	
 	/**
-	 * @param in
-	 * @return a conjunctive query read from the given input stream
-	 * @see uk.ac.ox.cs.pdq.io.Reader#read(InputStream)
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.io.Reader#read(java.io.InputStream)
 	 */
 	@Override
 	public ConjunctiveQuery read(InputStream in) {
@@ -64,8 +63,8 @@ public class QueryReader extends AbstractXMLReader<ConjunctiveQuery> {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * {@inheritDoc}
 	 * @see org.xml.sax.helpers.DefaultHandler#startElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
 	 */
 	@Override
@@ -115,8 +114,8 @@ public class QueryReader extends AbstractXMLReader<ConjunctiveQuery> {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * {@inheritDoc}
 	 * @see org.xml.sax.helpers.DefaultHandler#endElement(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override

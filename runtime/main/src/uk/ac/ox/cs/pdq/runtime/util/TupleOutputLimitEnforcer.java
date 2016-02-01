@@ -6,6 +6,7 @@ import uk.ac.ox.cs.pdq.util.Tuple;
 
 import com.google.common.eventbus.Subscribe;
 
+
 /**
  * Counts output tuples from of physical and interrupts when a limit is reached.
  * 
@@ -13,15 +14,20 @@ import com.google.common.eventbus.Subscribe;
  */
 public class TupleOutputLimitEnforcer implements EventHandler {
 
+	/** The count. */
 	private long count = 0;
 	
+	/** The iterator. */
 	private final TupleIterator iterator;
 
+	/** The limit. */
 	private final long limit;
 	
 	/**
-	 * Default constructor
-	 * @param out
+	 * Default constructor.
+	 *
+	 * @param i the i
+	 * @param l the l
 	 */
 	public TupleOutputLimitEnforcer(TupleIterator i, long l) {
 		this.iterator = i;
@@ -30,7 +36,8 @@ public class TupleOutputLimitEnforcer implements EventHandler {
 
 	/**
 	 * Counts the given tuple.
-	 * @param tuple
+	 *
+	 * @param tuple the tuple
 	 */
 	@Subscribe
 	public void count(Tuple tuple) {

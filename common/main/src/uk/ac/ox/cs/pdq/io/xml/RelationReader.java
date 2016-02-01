@@ -64,12 +64,16 @@ public class RelationReader extends AbstractXMLReader<Relation> {
 	/** Temporary map of binding patterns to their per-tuple costs. */
 	private Map<AccessMethod, Cost> accessCosts = new LinkedHashMap<>();
 
+	/** The schema. */
 	protected SchemaBuilder schema;
 	
+	/** Boolean tracing with the relation being read is a view. */
 	protected boolean isView = false;
 	
+	/** The size. */
 	protected Long size;
 	
+	/** The discovered. */
 	protected Map<String, SchemaDiscoverer> discovered = null;
 
 	/**
@@ -90,9 +94,8 @@ public class RelationReader extends AbstractXMLReader<Relation> {
 	}
 	
 	/**
-	 * @param in InputStream
-	 * @return Relation
-	 * @see uk.ac.ox.cs.pdq.io.Reader#read(InputStream)
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.io.Reader#read(java.io.InputStream)
 	 */
 	@Override
 	public Relation read(InputStream in) {
@@ -107,8 +110,8 @@ public class RelationReader extends AbstractXMLReader<Relation> {
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * {@inheritDoc}
 	 * @see org.xml.sax.helpers.DefaultHandler#startElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
 	 */
 	@Override
@@ -192,8 +195,8 @@ public class RelationReader extends AbstractXMLReader<Relation> {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * {@inheritDoc}
 	 * @see org.xml.sax.helpers.DefaultHandler#endElement(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override

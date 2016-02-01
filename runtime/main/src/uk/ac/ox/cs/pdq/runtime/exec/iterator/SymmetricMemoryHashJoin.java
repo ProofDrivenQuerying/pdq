@@ -21,6 +21,7 @@ import uk.ac.ox.cs.pdq.util.Typed;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 
+
 /**
  * SymmetricMemoryHashJoin inspired from the ViP2P implementation. The buckets are build on
  * the left operator, and the iteration run over the right one.
@@ -38,7 +39,7 @@ public class SymmetricMemoryHashJoin extends Join {
 	/** Tuple iterator on the current bucket. */
 	protected Iterator<Tuple> bucketIterator = null;
 
-	/** The partial next tuple to return */
+	/**  The partial next tuple to return. */
 	protected Tuple partialTuple = null;
 
 	/** The join keys for the left child. */
@@ -47,17 +48,21 @@ public class SymmetricMemoryHashJoin extends Join {
 	/** The join keys for the right child. */
 	protected Integer[] rightKeys;
 
-	/** Index of the last child */
+	/**  Index of the last child. */
 	protected int lastChild = 1;
 
+	/** The side. */
 	protected boolean side = true;
 
+	/** The left. */
 	protected final TupleIterator left;
 
+	/** The right. */
 	protected final TupleIterator right;
 
 	/**
-	 * Constructor an unbound array of children
+	 * Constructor an unbound array of children.
+	 *
 	 * @param left TupleIterator
 	 * @param right TupleIterator
 	 */
@@ -67,7 +72,8 @@ public class SymmetricMemoryHashJoin extends Join {
 	}
 
 	/**
-	 * Constructor an unbound array of children
+	 * Constructor an unbound array of children.
+	 *
 	 * @param predicate ConjunctivePredicate<AttributeEqualityPredicate>
 	 * @param left TupleIterator
 	 * @param right TupleIterator
@@ -78,7 +84,8 @@ public class SymmetricMemoryHashJoin extends Join {
 	}
 
 	/**
-	 * Constructor an unbound array of children
+	 * Constructor an unbound array of children.
+	 *
 	 * @param inputs List<Typed>
 	 * @param left TupleIterator
 	 * @param right TupleIterator
@@ -89,7 +96,8 @@ public class SymmetricMemoryHashJoin extends Join {
 	}
 
 	/**
-	 * Constructor an unbound array of children
+	 * Constructor an unbound array of children.
+	 *
 	 * @param predicate ConjunctivePredicate<AttributeEqualityPredicate>
 	 * @param inputs List<Typed>
 	 * @param left TupleIterator
@@ -155,9 +163,10 @@ public class SymmetricMemoryHashJoin extends Join {
 	}
 
 	/**
-	 * Build a variableName-to-value binding from the given join key and tuple
-	 * @param keys
-	 * @param tuple
+	 * Build a variableName-to-value binding from the given join key and tuple.
+	 *
+	 * @param keys the keys
+	 * @param tuple the tuple
 	 * @return JoinKey
 	 */
 	protected JoinKey joinKeys(Integer[] keys, Tuple tuple) {
@@ -192,6 +201,12 @@ public class SymmetricMemoryHashJoin extends Join {
 		return result;
 	}
 	
+	/**
+	 * List attribute equality predicates.
+	 *
+	 * @param predicate the predicate
+	 * @return the iterable
+	 */
 	private Iterable<AttributeEqualityPredicate> listAttributeEqualityPredicates(Predicate predicate) {
 		Set<AttributeEqualityPredicate> result = new LinkedHashSet<>();
 		if (predicate instanceof ConjunctivePredicate) {
@@ -210,6 +225,8 @@ public class SymmetricMemoryHashJoin extends Join {
 	}
 
 	/**
+	 * Make left key.
+	 *
 	 * @return Integer[]
 	 */
 	protected Integer[] makeLeftKey() {
@@ -221,6 +238,8 @@ public class SymmetricMemoryHashJoin extends Join {
 	}
 
 	/**
+	 * Make right key.
+	 *
 	 * @param offset int
 	 * @return Integer[]
 	 */
@@ -267,13 +286,16 @@ public class SymmetricMemoryHashJoin extends Join {
 	 */
 	protected class JoinKey {
 
-		/** Mapping between columns names and values */
+		/**  Mapping between columns names and values. */
 		private final List<Object> joinValues;
+		
+		/** The hash code. */
 		private final int hashCode;
 
 		/**
 		 * Instantiates a JoinKey form a tuple of bindings.
-		 * @param joinValues
+		 *
+		 * @param joinValues the join values
 		 */
 		JoinKey(List<Object> joinValues) {
 			this.joinValues = joinValues;
@@ -281,6 +303,8 @@ public class SymmetricMemoryHashJoin extends Join {
 		}
 
 		/**
+		 * Hash code.
+		 *
 		 * @return int
 		 */
 		@Override
@@ -289,6 +313,8 @@ public class SymmetricMemoryHashJoin extends Join {
 		}
 
 		/**
+		 * Equals.
+		 *
 		 * @param o Object
 		 * @return boolean
 		 */
@@ -302,6 +328,8 @@ public class SymmetricMemoryHashJoin extends Join {
 		}
 
 		/**
+		 * To string.
+		 *
 		 * @return String
 		 */
 		@Override

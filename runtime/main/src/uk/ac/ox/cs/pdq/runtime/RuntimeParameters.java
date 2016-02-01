@@ -119,7 +119,7 @@ public class RuntimeParameters extends uk.ac.ox.cs.pdq.Parameters {
 	/**
 	 * Constructor for RuntimeParameters.
 	 * @param config path to the configuration file to read
-	 * @param strict if true, param loading problem will throw an exception
+	 * @param verbose the verbose
 	 */
 	public RuntimeParameters(File config, boolean verbose) {
 		this(config, false, verbose, false);

@@ -23,6 +23,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 
+
 /**
  * Join is a top-level class for all join implementations.
  * 
@@ -30,6 +31,7 @@ import com.google.common.collect.Lists;
  */
 public abstract class Join extends NaryIterator {
 
+	/** The predicate. */
 	protected Predicate predicate;
 	
 	/** Determines whether the operator is known to have an empty result. */
@@ -40,10 +42,9 @@ public abstract class Join extends NaryIterator {
 
 	/**
 	 * Instantiates a new join.
-	 * 
-	 * @param children
-	 *            the children
+	 *
 	 * @param inputs List<Typed>
+	 * @param children            the children
 	 */
 	protected Join(List<Typed> inputs, TupleIterator... children) {
 		this(inferNaturalJoin(Lists.newArrayList(children)), inputs, Lists.newArrayList(children));
@@ -51,10 +52,9 @@ public abstract class Join extends NaryIterator {
 	
 	/**
 	 * Instantiates a new join.
-	 * 
-	 * @param children
-	 *            the children
+	 *
 	 * @param inputs List<Typed>
+	 * @param children            the children
 	 */
 	protected Join(List<Typed> inputs, List<TupleIterator> children) {
 		this(inferNaturalJoin(children), inputs, children);
@@ -77,9 +77,10 @@ public abstract class Join extends NaryIterator {
 	}
 	
 	/**
-	 * 
-	 * @param predicate
-	 * @param columns
+	 * Checks if is predicate consistent.
+	 *
+	 * @param predicate the predicate
+	 * @param columns the columns
 	 * @return true if the predicate if position-consistent with columns.
 	 */
 	private static boolean isPredicateConsistent(Predicate predicate, List<Typed> columns) {
@@ -108,6 +109,8 @@ public abstract class Join extends NaryIterator {
 	}
 	
 	/**
+	 * Gets the predicate.
+	 *
 	 * @return the join predicate
 	 */
 	public Predicate getPredicate() {

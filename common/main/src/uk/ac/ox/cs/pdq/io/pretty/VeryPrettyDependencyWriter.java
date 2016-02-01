@@ -11,7 +11,8 @@ import uk.ac.ox.cs.pdq.io.Writer;
  * 
  * @author Julien Leblay
  */
-public class VeryPrettyDependencyWriter extends PrettyWriter<Constraint> implements Writer<Constraint> {
+public class VeryPrettyDependencyWriter 
+		extends PrettyWriter<Constraint> implements Writer<Constraint> {
 
 	public static final String AND = " \u2227 ";
 	public static final String IMPLIES = " \u21D2 ";
@@ -26,7 +27,8 @@ public class VeryPrettyDependencyWriter extends PrettyWriter<Constraint> impleme
 	private boolean indented = false;
 	
 	/**
-	 * 
+	 * Instantiates a new very pretty dependency writer.
+	 *
 	 * @param out the default output
 	 */
 	private VeryPrettyDependencyWriter(PrintStream out) {
@@ -44,7 +46,7 @@ public class VeryPrettyDependencyWriter extends PrettyWriter<Constraint> impleme
 	
 	/**
 	 * Fluent set to make the printer indented..
-	 * @param out
+	 *
 	 * @return this PrettyWriter after making it indented.
 	 */
 	public VeryPrettyDependencyWriter indented() {
@@ -52,9 +54,9 @@ public class VeryPrettyDependencyWriter extends PrettyWriter<Constraint> impleme
 		return this;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.provider.io.Writer#write(java.io.PrintStream, java.lang.Object)
+	/**
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.io.Writer#write(java.io.PrintStream, java.lang.Object)
 	 */
 	@Override
 	public void write(PrintStream out, Constraint tgd) {
@@ -88,9 +90,9 @@ public class VeryPrettyDependencyWriter extends PrettyWriter<Constraint> impleme
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.builder.io.PrettyWriter#write(java.lang.Object)
+	/**
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.io.pretty.PrettyWriter#write(java.lang.Object)
 	 */
 	@Override
 	public void write(Constraint t) {

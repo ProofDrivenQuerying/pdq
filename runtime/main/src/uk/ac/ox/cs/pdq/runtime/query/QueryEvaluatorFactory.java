@@ -10,6 +10,7 @@ import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.runtime.EvaluationException;
 
+
 /**
  * This factory create query evaluators that may be specific to relation 
  * databases, web services, etc or a combination of those.
@@ -22,10 +23,12 @@ import uk.ac.ox.cs.pdq.runtime.EvaluationException;
 public class QueryEvaluatorFactory {
 
 	/**
-	 * @param schema
+	 * New evaluator.
+	 *
+	 * @param schema the schema
 	 * @param query Query
 	 * @return QueryEvaluator
-	 * @throws EvaluationException
+	 * @throws EvaluationException the evaluation exception
 	 */
 	public static QueryEvaluator newEvaluator(Schema schema, Query<?> query) throws EvaluationException {
 //		if (!checkConsistency(schema)) {
@@ -48,7 +51,9 @@ public class QueryEvaluatorFactory {
 	}
 
 	/**
-	 * @param schema
+	 * Check consistency.
+	 *
+	 * @param schema the schema
 	 * @return true if all the relation in the given schema are of the same
 	 * most-specific type.
 	 */

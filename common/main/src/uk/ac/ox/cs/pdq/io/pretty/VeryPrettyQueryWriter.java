@@ -27,7 +27,8 @@ public class VeryPrettyQueryWriter extends PrettyWriter<ConjunctiveQuery> implem
 	private PrintStream out;
 
 	/**
-	 * 
+	 * Instantiates a new very pretty query writer.
+	 *
 	 * @param out the default output
 	 */
 	VeryPrettyQueryWriter(PrintStream out) {
@@ -35,7 +36,7 @@ public class VeryPrettyQueryWriter extends PrettyWriter<ConjunctiveQuery> implem
 	}
 
 	/**
-	 * 
+	 * Instantiates a new very pretty query writer.
 	 */
 	VeryPrettyQueryWriter() {
 		this(System.out);

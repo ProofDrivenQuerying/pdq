@@ -9,6 +9,7 @@ import uk.ac.ox.cs.pdq.util.Tuple;
 
 import com.google.common.eventbus.Subscribe;
 
+
 /**
  * Prints tuple to the given print stream, if provided, log.info otherwise.
  * 
@@ -23,8 +24,9 @@ public class TuplePrinter implements EventHandler {
 	private final PrintStream out;
 
 	/**
-	 * Default constructor
-	 * @param out
+	 * Default constructor.
+	 *
+	 * @param out the out
 	 */
 	public TuplePrinter(PrintStream out) {
 		this.out = out;
@@ -39,7 +41,8 @@ public class TuplePrinter implements EventHandler {
 
 	/**
 	 * Prints the given tuple of the default print stream, or log.info if null.
-	 * @param tuple
+	 *
+	 * @param tuple the tuple
 	 */
 	@Subscribe
 	public void print(Tuple tuple) {
@@ -50,7 +53,7 @@ public class TuplePrinter implements EventHandler {
 			for(Object value:tuple.getValues()) {
 				s += value==null ? "": value.toString();
 				if(i < tuple.size() - 1) {
-					s += "£";
+					s += "ï¿½";
 				}
 				i++;
 			}
