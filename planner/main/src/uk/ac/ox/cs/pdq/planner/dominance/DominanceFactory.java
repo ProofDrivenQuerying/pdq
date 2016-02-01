@@ -13,8 +13,11 @@ import uk.ac.ox.cs.pdq.planner.PlannerParameters.DominanceTypes;
 /**
  * Creates cost dominance detectors using the input parameters.
  * The available options are:
- * 		CLOSED for closed dominance and
- * 		OPEN for open dominance (an open configuration may dominate a closed one)
+ * 		-CLOSED for closed dominance. A closed configuration c dominates a closed configuration c', if c both cost- and fact- dominates c'.
+ * 		-OPEN for open dominance. A configuration c dominates a configuration c',
+ * 		if c both cost- and fact- dominates c' with one of the two being strict. When both configurations are open, then a simple plan cost estimator is used
+ * 		to assess the configurations' costs; otherwise, the costs of their corresponding (closed) plans are considered.
+ * 
  *
  * @author Efthymia Tsamoura
  */

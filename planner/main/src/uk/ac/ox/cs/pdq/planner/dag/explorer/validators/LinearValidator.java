@@ -7,11 +7,9 @@ import uk.ac.ox.cs.pdq.planner.dag.DAGConfiguration;
 
 
 /**
- * Requires the input pair of configurations to be non trivial
- * and their composition to be a closed left-deep configuration
+ * Requires the input pair of configurations to be non trivial and their composition to be a closed left-deep configuration
  * @author Efthymia Tsamoura
  *
- * @param 
  */
 public class LinearValidator implements Validator{
 

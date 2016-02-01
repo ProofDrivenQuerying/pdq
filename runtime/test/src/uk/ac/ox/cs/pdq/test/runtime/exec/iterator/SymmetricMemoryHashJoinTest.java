@@ -37,6 +37,7 @@ public class SymmetricMemoryHashJoinTest extends NaryIteratorTest {
 
 	
 	@Before public void setup() {
+        super.setup();
         MockitoAnnotations.initMocks(this);
         when(child1.getColumns()).thenReturn(child1Columns);
         when(child1.getInputColumns()).thenReturn(child1InputColumns);

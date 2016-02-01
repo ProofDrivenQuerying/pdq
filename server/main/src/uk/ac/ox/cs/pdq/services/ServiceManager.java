@@ -177,10 +177,9 @@ public class ServiceManager implements Service {
 				this.execService.submit(
 					new ExecuteCommandCall(this, this.serverSocket.accept()));
 			} catch (IOException e) {
-				log.error(e);
+				log.error(e.getMessage(),e);
 			} catch (Exception e) {
-				e.printStackTrace();
-				log.error(e);
+				log.error(e.getMessage(),e);
 			}
 		}
 		log.trace(this.params.getServiceName() + " stopped");
@@ -383,7 +382,7 @@ public class ServiceManager implements Service {
 				log.trace("Admin call complete.");
 				return SUCCESS;
 			} catch (Exception e) {
-				e.printStackTrace();
+				log.error(e.getMessage(),e);
 				return FAILURE;
 			} finally {
 				try {

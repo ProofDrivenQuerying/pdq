@@ -1,10 +1,12 @@
-
 package uk.ac.ox.cs.pdq.reasoning.homomorphism;
 
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
@@ -15,6 +17,7 @@ import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager.DBRelation;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismConstraint.TopKConstraint;
 
 import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 
 /**
  * Builds queries for detecting homomorphisms in Derby
@@ -77,78 +80,24 @@ public class DerbyStatementBuilder extends SQLStatementBuilder {
 		return super.encodeName(name);
 	}
 	
-	/**
-	 * @param relation the table to create
-	 * @return a SQL statement that creates the fact table of the given relation
-	 */
-	protected String createTableStatement(Relation relation) {
-		StringBuilder result = new StringBuilder();
-		result.append("CREATE TABLE  ").append(this.encodeName(relation.getName())).append('(');
-		for (int it = 0; it < relation.getAttributes().size(); ++it) {
-			result.append(' ').append(relation.getAttributes().get(it).getName());
-			if (relation.getAttribute(it).getType() instanceof Class && String.class.isAssignableFrom((Class) relation.getAttribute(it).getType())) {
-				result.append(" VARCHAR(500),");
-			}
-			else if (relation.getAttribute(it).getType() instanceof Class && Integer.class.isAssignableFrom((Class) relation.getAttribute(it).getType())) {
-				result.append(" int,");
-			}
-			else {
-				throw new java.lang.IllegalArgumentException();
-			}
-		}
-		result.append(" PRIMARY KEY ").append("(").append("Fact").append(")");
-		result.append(')');
-		return result.toString();
-	}
 	
 	/**
 	 * 
-	 * @param facts
-	 * 		Facts to insert in the database
-	 * @param aliases
-	 * 		Map of schema relation names to *clean* names
-	 * @return
-	 * 		 a set of insert statements that insert the input facts to the facts database.
 	 */
 	@Override
-	protected Collection<String> makeInserts(Collection<? extends Predicate> facts, Map<String, DBRelation> dbrelations) {
-		Collection<String> result = new LinkedList<>();
-		for (Predicate fact : facts) {
-			DBRelation rel = dbrelations.get(fact.getName());
-			List<Term> terms = fact.getTerms();
-			String insertInto = "INSERT INTO " + this.encodeName(rel.getName()) + " " + "VALUES ( ";
-			for (Term term : terms) {
-				if (!term.isVariable()) {
-					insertInto += "'" + term + "'" + ",";
-				}
-			}
-			insertInto += 0 + ",";
-			insertInto += fact.getId();
-			insertInto += ")";
-			result.add(insertInto);
+	protected Pair<String,String> createTableIndex(DBRelation relation, Integer... columns) {
+		StringBuilder indexName = new StringBuilder();
+		StringBuilder indexColumns = new StringBuilder();
+		String sep1 = "", sep2 = "";
+		for (Integer i: columns) {
+			indexName.append(sep1).append(relation.getAttribute(i).getName());
+			indexColumns.append(sep2).append(relation.getAttribute(i).getName());
+			sep1 = "_";
+			sep2 = ",";
 		}
-		return result;
-	} 
-	
-	/**
-	 * 
-	 * @param facts
-	 * 		Facts to delete from the database
-	 * @param aliases
-	 * 		Map of schema relation names to *clean* names
-	 * @return
-	 * 		a set of statements that delete the input facts from the fact database.
-	 */
-	@Override
-	protected Collection<String> makeDeletes(Collection<? extends Predicate> facts, Map<String, DBRelation> aliases) {
-		Collection<String> result = new LinkedList<>();
-		for (Predicate fact : facts) {
-			Relation alias = aliases.get(fact.getName());
-			String delete = "DELETE FROM " + this.encodeName(alias.getName()) + " " + "WHERE ";
-			Attribute attribute = alias.getAttributes().get(alias.getAttributes().size()-1);
-			delete += attribute.getName() + "=" + fact.getId();
-			result.add(delete);
-		}
-		return result;
-	}
+		String create ="CREATE INDEX idx_" + this.encodeName(relation.getName()) + "_" + indexName +
+				" ON " + this.encodeName(relation.getName()) + "(" + indexColumns + ")";
+		String drop ="DROP INDEX idx_" + this.encodeName(relation.getName()) + "_" + indexName;
+		return new ImmutablePair<String, String>(create,drop);
+	}	
 }

@@ -218,7 +218,7 @@ public class Generator {
 		try {
 			new Generator(System.out, args).make();
 		} catch (IOException | ReflectiveOperationException e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 			System.exit(ERROR_CODE);
 		}
 	}

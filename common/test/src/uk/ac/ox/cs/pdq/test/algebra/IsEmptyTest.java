@@ -27,6 +27,7 @@ public class IsEmptyTest extends UnaryOperatorTest {
 	TupleType singleBooleanType = TupleType.DefaultFactory.create(Boolean.class);
 	
 	@Before public void setup() throws RelationalOperatorException {
+		super.setup();
         MockitoAnnotations.initMocks(this);
 		Mockito.when(child.getColumns()).thenReturn(outputTerms);
 		Mockito.when(child.getType()).thenReturn(outputType);

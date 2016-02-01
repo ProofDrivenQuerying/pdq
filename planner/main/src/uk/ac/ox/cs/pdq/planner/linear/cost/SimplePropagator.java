@@ -17,10 +17,8 @@ import com.google.common.collect.Lists;
 
 /**
  *
- * Simple cost propagator. According to this propagation
- * paradigm, each node keeps at most one path-to-success (the one that
- * corresponds to the minimum cost sub-plan).
- *
+ * Simple cost propagator. According to this propagation paradigm, 
+ * each node keeps at most one path-to-success (the one that corresponds to the minimum cost sub-plan).
  * The nodes of the input plan tree must be of SimpleNode type; otherwise,
  * a runtime exception is thrown. For more information about this type of
  * propagation see "Michael Benedikt, Balder ten Cate, Efthymia Tsamoura.

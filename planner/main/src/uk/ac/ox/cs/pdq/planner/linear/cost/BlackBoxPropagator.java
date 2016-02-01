@@ -19,9 +19,8 @@ import com.google.common.collect.Sets;
 
 /**
  *
- * Black box cost propagator. According to this propagation
- * paradigm, each node keeps all the paths-to-success. The nodes of the input plan
- * tree must be of BlackBoxNode type; otherwise, a runtime exception is thrown.
+ * Black box cost propagator. According to this propagation paradigm, each node keeps all the paths-to-success. 
+ * The nodes of the input plan tree must be of BlackBoxNode type; otherwise, a runtime exception is thrown.
  * For more information about this type of propagation see
  * "Michael Benedikt, Balder ten Cate, Efthymia Tsamoura. Generating Low-cost Plans From Proofs"
  *

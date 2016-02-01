@@ -14,7 +14,7 @@ import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.io.xml.QueryReader;
 import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
-import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema;
+import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.reasoning.ReasonerFactory;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleDatabaseListState;
@@ -23,6 +23,7 @@ import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters.ReasoningTypes;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismManagerFactory;
 
 import com.google.common.eventbus.EventBus;
@@ -76,9 +77,10 @@ public class ReverseQueryGenerator implements Runnable {
 			Runtime.getRuntime().addShutdownHook(new MatchReport(mm));
 
 			Query<?> accessibleQuery = accessibleSchema.accessible(this.query);
-			try(HomomorphismDetector detector =
-				new HomomorphismManagerFactory().getInstance(accessibleSchema, accessibleQuery, reasoningParams)) {
+			try(HomomorphismManager detector =
+				new HomomorphismManagerFactory().getInstance(accessibleSchema, reasoningParams)) {
 				
+				detector.addQuery(accessibleQuery);
 				AccessibleChaseState state =  
 				(uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState) new AccessibleDatabaseListState(query, accessibleSchema, (DBHomomorphismManager) detector);
 				
@@ -89,10 +91,11 @@ public class ReverseQueryGenerator implements Runnable {
 						accessibleSchema.getAccessibilityAxioms(),
 						accessibleSchema.getInferredAccessibilityAxioms()));
 				log.info("Reasoning complete.");
+				detector.clearQuery();
 		}
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 		}
 	}
 
@@ -107,9 +110,9 @@ public class ReverseQueryGenerator implements Runnable {
 			exec.submit(new ShowStopper(timeout));
 			exec.shutdown();
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 		}
 	}
 
@@ -156,7 +159,7 @@ public class ReverseQueryGenerator implements Runnable {
 					Thread.sleep(this.timeout);
 					Runtime.getRuntime().exit(-1);
 				} catch (InterruptedException e) {
-					e.printStackTrace();
+					log.error(e.getMessage(),e);
 				}
 			}
 		}

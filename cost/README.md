@@ -1,8 +1,6 @@
 PDQ Common library
 
-The common library features the packages and classes used across the whole 
-application. It features high-level interfaces and basic code for handling,
-FOL formulas, relation algebra, etc.
+The cost library features the packages and classes for plan cost estimation
 
 The source code is available for free for non-commercial use.
 See the LICENCE file for details.
@@ -16,10 +14,7 @@ I. Requirements
 
 II. Dependencies
 
-External dependencies are managed by Maven automatically. If you wish to build
-the projects outside Maven, make sure the following are on the CLASSPATH:
-	- cost:    junit-4.11, log4j2-1.2, guava-16, commons-lang3-3.3.1, 
-	             commons-collections4-4.0
+Internal: (pdq-)common
 	
 III. Installation
 

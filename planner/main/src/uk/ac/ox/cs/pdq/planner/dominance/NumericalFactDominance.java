@@ -4,7 +4,6 @@ import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
 
 /**
  * Numerical success dominance. A configuration c dominates a configuration c', if c has >= facts than c'.
- *
  * @author Efthymia Tsamoura
  */
 public class NumericalFactDominance implements FactDominance{

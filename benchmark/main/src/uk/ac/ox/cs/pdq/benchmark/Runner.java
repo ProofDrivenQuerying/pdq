@@ -488,7 +488,7 @@ public abstract class Runner implements Runnable {
 		} catch (IOException
 				| ReflectiveOperationException
 				| BenchmarkException e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 			System.exit(ERROR_CODE);
 		}
 		System.exit(0);

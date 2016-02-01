@@ -483,5 +483,14 @@ public class Utility {
 		}
 		return "'" + o + "'";
 	}
+	
+	public static void assertsEnabled()
+	{
+		boolean assertsEnabled = false;
+		assert assertsEnabled = true; // Intentional side effect!!!
+		if (!assertsEnabled)
+			throw new RuntimeException("Assertions must be enabled in the VM");
+
+	}
 
 }

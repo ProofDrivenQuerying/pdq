@@ -4,11 +4,9 @@ import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 
 
 /**
- * Validates pairs of configurations to be composed, for example,
- * it checks whether the binary configuration composed from the given pair satisfies given shape restrictions or not.
+ * Checks whether the binary configuration Binary(c,c') composed from a given pair of configurations c, c' satisfies given shape restrictions or not.
  * @author Efthymia Tsamoura
  *
- * @param 
  */
 public interface Validator {
 	/**

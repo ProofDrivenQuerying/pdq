@@ -9,6 +9,7 @@ import org.mockito.MockitoAnnotations;
 import uk.ac.ox.cs.pdq.cost.statistics.SQLServerHistogram;
 import uk.ac.ox.cs.pdq.cost.statistics.SQLServerHistogramLoader;
 import uk.ac.ox.cs.pdq.cost.statistics.SQLServerJoinCardinalityEstimator;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 /**
  * 
@@ -18,6 +19,7 @@ import uk.ac.ox.cs.pdq.cost.statistics.SQLServerJoinCardinalityEstimator;
 public class SQLServerJoinCardinalityEstimatorTest {
 
 	@Before public void setup() {
+		Utility.assertsEnabled();		
         MockitoAnnotations.initMocks(this);
 	}
 

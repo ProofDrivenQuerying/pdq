@@ -82,6 +82,7 @@ public class PostgresqlBlackBoxEstimator<P extends Plan> implements BlackBoxCost
 	 */
 	public Connection getConnection() throws SQLException {
 		String url = this.properties.getProperty("url");
+		String driver = this.properties.getProperty("driver");
 		String database = this.properties.getProperty("database");
 		String username = this.properties.getProperty("username");
 		String password = this.properties.getProperty("password");
@@ -144,4 +145,4 @@ public class PostgresqlBlackBoxEstimator<P extends Plan> implements BlackBoxCost
 		return new DoubleCost(result);
 	}
 }
-
+

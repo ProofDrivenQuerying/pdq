@@ -85,6 +85,6 @@ public class JoinOnVariableQuerySelector implements QuerySelector {
 		qb.setName("Q");
 		qb.addBodyAtom(new Predicate(new Signature("A", 2), Lists.newArrayList(new TypedConstant<>("Continent"), new Variable("x"))));
 		qb.addBodyAtom(new Predicate(new Signature("B", 2), Lists.newArrayList(new TypedConstant<>("Continsent"), new Variable("x"))));
-		System.out.println(new JoinOnVariableQuerySelector().accept(qb.build()));
+		log.trace(new JoinOnVariableQuerySelector().accept(qb.build()));
 	}
 }

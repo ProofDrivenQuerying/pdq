@@ -137,10 +137,9 @@ public class SemanticOptimizationService implements Service {
 				this.execService.submit(
 					new DefaultServiceCall(this, this.serverSocket.accept()));
 			} catch (IOException e) {
-				log.error(e);
+				log.error(e.getMessage(),e);
 			} catch (Exception e) {
-				e.printStackTrace();
-				log.error(e);
+				log.error(e.getMessage(),e);
 			}
 		}
 		log.trace(this.params.getServiceName() + " stopped");
@@ -179,7 +178,7 @@ public class SemanticOptimizationService implements Service {
 		}
 		
 		/**
-		 * Handles the actual service call by receive the incoming message, 
+		 * Handles the actual service call by receiving the incoming message, 
 		 * delegating it to the appropriate handler and return the resulting
 		 * response message.
 		 * @return GeneratedMessage

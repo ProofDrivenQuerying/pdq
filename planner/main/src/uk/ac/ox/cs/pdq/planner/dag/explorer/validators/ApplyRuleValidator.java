@@ -11,7 +11,6 @@ import uk.ac.ox.cs.pdq.planner.dag.DAGConfiguration;
  * and at least one of the input configurations to be an ApplyRule
  * @author Efthymia Tsamoura
  *
- * @param 
  */
 public class ApplyRuleValidator implements Validator{
 

@@ -58,7 +58,7 @@ public abstract class ChaseConfiguration<P extends Plan> implements Configuratio
 	/**
 	 * 
 	 * @param state
-	 * 		The state of this configuration.
+	 * 		The chase state of this configuration.
 	 * @param input
 	 * 		The input constants
 	 * @param output
@@ -74,7 +74,12 @@ public abstract class ChaseConfiguration<P extends Plan> implements Configuratio
 		this.output = output;
 		this.properOutput = getProperOutput(input, output);
 	}
-
+	/**
+	 * 
+	 * @param input
+	 * @param output
+	 * @return
+	 */
 	private static Collection<Constant> getProperOutput(Collection<Constant> input, Collection<Constant> output) {
 		Collection<Constant> properOutput;
 		if(input != null && output != null) {
@@ -87,6 +92,11 @@ public abstract class ChaseConfiguration<P extends Plan> implements Configuratio
 		return properOutput;
 	}
 	
+	/**
+	 * 
+	 * @return
+	 * 		the chase state of this configuration.
+	 */
 	public AccessibleChaseState getState() {
 		return this.state;
 	}
@@ -134,7 +144,7 @@ public abstract class ChaseConfiguration<P extends Plan> implements Configuratio
 	}
 	
 	/**
-	 * Finds all consequences this.configuration using the input dependencies and the chase algorithm as a proof system.
+	 * Finds all consequences of this.configuration using the input dependencies and the chase algorithm as a proof system.
 	 * 
 	 * @throws PlannerException
 	 * @throws LimitReachedException
@@ -144,7 +154,7 @@ public abstract class ChaseConfiguration<P extends Plan> implements Configuratio
 	}
 
 	/**
-	 * Fires the dependencies in the input matches
+	 * Applies the input triggers
 	 * @param matches
 	 */
 	public void chaseStep(List<Match> matches) {
@@ -152,8 +162,12 @@ public abstract class ChaseConfiguration<P extends Plan> implements Configuratio
 	}
 
 	/**
+	 * Conjunctive query match definition) If Q′ is a conjunctive query and v is a chase configuration
+	 * having elements for each free variable of Q′, then a homomorphism of Q′ into v
+	 * mapping each free variable into the corresponding element is called a match for Q′ in v.
 	 * 
 	 * @param query
+	 * 		An input query
 	 * @return
 	 * 		the list of query matches
 	 * @throws PlannerException
@@ -163,7 +177,7 @@ public abstract class ChaseConfiguration<P extends Plan> implements Configuratio
 	}
 
 	/**
-	 * @return true if the configuration filters 
+	 * @return true if the configuration is a filter 
 	 */
 	public Boolean isFilter() {
 		return this.properOutput.isEmpty();
@@ -180,11 +194,10 @@ public abstract class ChaseConfiguration<P extends Plan> implements Configuratio
 	 * 
 	 * @param query
 	 * @return
-	 * 		true if the configuration matches the input query.
-	 * 	 	(Conjunctive query match definition) If Q′ is a conjunctive query and v is a chase configuration
-			having elements for each free variable of Q′, then a homomorphism of Q′ into v
-			mapping each free variable into the corresponding element is called a match for Q′ in
-			v. 
+	 * true if the configuration matches the input query.
+	 * (Conjunctive query match definition) If Q′ is a conjunctive query and v is a chase configuration
+	 * having elements for each free variable of Q′, then a homomorphism of Q′ into v
+	 * mapping each free variable into the corresponding element is called a match for Q′ in v. 
 	 */
 	@Override
 	public boolean isSuccessful(Query<?> query) {
@@ -196,7 +209,7 @@ public abstract class ChaseConfiguration<P extends Plan> implements Configuratio
 	}
 
 	/**
-	 * @return ChaseConfiguration<S,P>
+	 * @return ChaseConfiguration<S>
 	 * @see uk.ac.ox.cs.pdq.reasoning.Configuration#clone()
 	 */
 	@Override

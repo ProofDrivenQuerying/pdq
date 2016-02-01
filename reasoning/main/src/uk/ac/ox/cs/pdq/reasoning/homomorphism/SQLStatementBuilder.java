@@ -8,15 +8,20 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 
+import uk.ac.ox.cs.pdq.algebra.predicates.EqualityPredicate;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
+import uk.ac.ox.cs.pdq.db.TGD;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.Constant;
@@ -41,6 +46,7 @@ import com.google.common.collect.Multimap;
 
 /**
  * Creates SQL statements for relation database-backed homomorphism detectors.
+ *
  * @author George Konstantinidis
  * @author Efthymia Tsamoura
  */
@@ -101,15 +107,28 @@ public abstract class SQLStatementBuilder {
 	}
 
 	/**
-	 * 
 	 * @param facts
-	 * 		Facts to insert in the database
-	 * @param aliases
-	 * 		Map of schema relation names to *clean* names
-	 * @return
-	 * 		 a set of insert statements that insert the input facts to the facts database.
+	 * @return insert statements that add the input fact to the fact database.
 	 */
-	protected abstract Collection<String> makeInserts(Collection<? extends Predicate> facts, Map<String, DBRelation> aliases);
+	protected Collection<String> makeInserts(Collection<? extends Predicate> facts, Map<String, DBRelation> dbrelations) {
+		Collection<String> result = new LinkedList<>();
+		for (Predicate fact : facts) {
+			DBRelation rel = dbrelations.get(fact.getName());
+			List<Term> terms = fact.getTerms();
+			String insertInto = "INSERT INTO " + this.encodeName(rel.getName()) + " " + "VALUES ( ";
+			for (Term term : terms) {
+				if (!term.isVariable()) {
+					insertInto += "'" + term + "'" + ",";
+				}
+			}
+			insertInto += 0 + ",";
+			insertInto += fact.getId();
+			insertInto += ")";
+			result.add(insertInto);
+		}
+		log.trace(result);
+		return result;
+	}
 	
 	/**
 	 * 
@@ -120,22 +139,50 @@ public abstract class SQLStatementBuilder {
 	 * @return
 	 * 		a set of statements that delete the input facts from the fact database.
 	 */
-	protected abstract Collection<String> makeDeletes(Collection<? extends Predicate> facts, Map<String, DBRelation> aliases);
-	
-	/**
-	 * @param relation the table to create
-	 * @return a SQL statement that creates the input table
-	 */
-	protected abstract String createTableStatement(Relation relation);
+	protected Collection<String> makeDeletes(Collection<? extends Predicate> facts, Map<String, DBRelation> aliases) {
+		Collection<String> result = new LinkedList<>();
+		for (Predicate fact : facts) {
+			Relation alias = aliases.get(fact.getName());
+			String delete = "DELETE FROM " + this.encodeName(alias.getName()) + " " + "WHERE ";
+			Attribute attribute = alias.getAttributes().get(alias.getAttributes().size()-1);
+			delete += attribute.getName() + "=" + fact.getId();
+			result.add(delete);
+		}
+		return result;
+	}
 
 	/**
-	 * 
+	 * @param relation the table to create
+	 * @return a SQL statement that creates the fact table of the given relation
+	 */
+	protected String createTableStatement(DBRelation relation) {
+		StringBuilder result = new StringBuilder();
+		result.append("CREATE TABLE  ").append(this.encodeName(relation.getName())).append('(');
+		for (int it = 0; it < relation.getAttributes().size(); ++it) {
+			result.append(' ').append(relation.getAttributes().get(it).getName());
+			if (relation.getAttribute(it).getType() instanceof Class && String.class.isAssignableFrom((Class) relation.getAttribute(it).getType())) {
+				result.append(" VARCHAR(500),");
+			}
+			else if (relation.getAttribute(it).getType() instanceof Class && Integer.class.isAssignableFrom((Class) relation.getAttribute(it).getType())) {
+				result.append(" int,");
+			}
+			else {
+				throw new java.lang.IllegalArgumentException();
+			}
+		}
+		result.append(" PRIMARY KEY ").append("(").append("Fact").append(")");
+		result.append(')');
+		log.trace(relation);
+		log.trace(result);
+		return result.toString();
+	}
+
+	/**
 	 * @param relation
 	 * @param columns
-	 * @return
-	 * 		a SQL statement that creates an index for the columns of the input relation
+	 * @return a SQL statement that creates an index for the columns of the input relation
 	 */
-	protected String createTableIndex(DBRelation relation, Integer... columns) {
+	protected Pair<String,String> createTableIndex(DBRelation relation, Integer... columns) {
 		StringBuilder indexName = new StringBuilder();
 		StringBuilder indexColumns = new StringBuilder();
 		String sep1 = "", sep2 = "";
@@ -145,14 +192,27 @@ public abstract class SQLStatementBuilder {
 			sep1 = "_";
 			sep2 = ",";
 		}
-		String ret ="CREATE INDEX idx_" + this.encodeName(relation.getName()) + "_" + indexName +
+		String create ="CREATE INDEX idx_" + this.encodeName(relation.getName()) + "_" + indexName +
 				" ON " + this.encodeName(relation.getName()) + "(" + indexColumns + ")";
-		return ret;
+		String drop ="DROP INDEX idx_" + this.encodeName(relation.getName()) + "_" + indexName +
+				" ON " + this.encodeName(relation.getName());
+		return new ImmutablePair<String, String>(create,drop);
+	}
+	
+	public Collection<String> clearTables(List<Predicate> queryRelations, Map<String, DBRelation> relationMap) {
+		Set<String> result = new LinkedHashSet<>();
+		for(Predicate pred: queryRelations)
+			result.add(this.createClearTable(relationMap.get(pred.getName())));
+		return result;
+	}
+
+	private String createClearTable(DBRelation dbRelation) {
+		return "TRUNCATE TABLE  "+this.encodeName(dbRelation.getName());
 	}
 
 	/**
 	 * @param relation
-	 * @return a SQL statement that creates an index for the input column
+	 * @return a SQL statement that creates an index for the bag and fact attributes of the database tables
 	 */
 	protected String createTableNonJoinIndexes(DBRelation relation, Attribute column) {
 		return "CREATE INDEX idx_" + this.encodeName(relation.getName()) + "_" + 
@@ -161,23 +221,21 @@ public abstract class SQLStatementBuilder {
 
 	/**
 	 * 
-	 * @param aliases
-	 * 		Map of schema relation names to *clean* names
-	 * @param expression
-	 * 		a conjunctive formula
+	 * @param relationMap
+	 * @param rule
 	 * @return
-	 * 		statements that create indices on the join variables on the input expression
 	 */
-	protected Collection<String> createTableIndexes(Map<String, DBRelation> aliases, Evaluatable expression) {
+	protected Pair<Collection<String>,Collection<String>> createTableIndexes(Map<String, DBRelation> relationMap, Evaluatable rule) {
 		Conjunction<?> body = null;
-		if (expression.getBody() instanceof Predicate) {
-			body = Conjunction.of((Predicate) expression.getBody());
-		} else if (expression.getBody() instanceof Conjunction<?>) {
-			body = (Conjunction) expression.getBody();
+		if (rule.getBody() instanceof Predicate) {
+			body = Conjunction.of((Predicate) rule.getBody());
+		} else if (rule.getBody() instanceof Conjunction<?>) {
+			body = (Conjunction) rule.getBody();
 		} else {
 			throw new UnsupportedOperationException("Homomorphism check only supported on conjunction of atomic predicate formulas for now.");
 		}
-		Set<String> result = new LinkedHashSet<>();
+		Set<String> createIndices = new LinkedHashSet<>();
+		Set<String> dropIndices = new LinkedHashSet<>();
 		Multimap<Variable, Predicate> clusters = LinkedHashMultimap.create();
 		for (Formula subFormula: body) {
 			if (subFormula instanceof Predicate) {
@@ -196,13 +254,15 @@ public abstract class SQLStatementBuilder {
 				for (Predicate atom: atoms) {
 					for (int i = 0, l = atom.getTermsCount(); i < l; i++) {
 						if (atom.getTerm(i).equals(t)) {
-							result.add(this.createTableIndex(aliases.get(atom.getName()), i));
+							Pair<String,String> createAndDropIndices = this.createTableIndex(relationMap.get(atom.getName()), i);
+							createIndices.add(createAndDropIndices.getLeft());
+							dropIndices.add(createAndDropIndices.getRight());
 						}
 					}
 				}
 			}
 		}
-		return result;
+		return new ImmutablePair<Collection<String>, Collection<String>>(createIndices, dropIndices);
 	}
 
 	/**
@@ -219,7 +279,6 @@ public abstract class SQLStatementBuilder {
 	/**
 	 * Creates and runs an SQL statement that detects homomorphisms of the input query to facts kept in a database
 	 * @param source
-	 * 		An input formula
 	 * @param constraints
 	 * 		A set of constraints that should be satisfied by the homomorphisms of the input formula to the facts of the database 
 	 * @return homomorphisms of the input query to facts kept in a database.
@@ -279,13 +338,15 @@ public abstract class SQLStatementBuilder {
 		try(Statement sqlStatement = connection.createStatement();
 				ResultSet resultSet = sqlStatement.executeQuery(query)) {
 			while (resultSet.next()) {
+
 				int f = 1;
 				Map<Variable, Constant> map = new LinkedHashMap<>();
 				for(Entry<String, Variable> entry:projectionStatementsAndVariables.entrySet()) {
+					Variable var = entry.getValue();
 					String assigned = resultSet.getString(f);
 					TypedConstant<?> constant = constants.get(assigned);
 					Constant constantTerm = constant != null ? constant : new Skolem(assigned);
-					map.put(entry.getValue(), constantTerm);
+					map.put(var, constantTerm);
 					f++;
 				}
 				maps.add(map);
@@ -295,10 +356,10 @@ public abstract class SQLStatementBuilder {
 			throw new IllegalStateException(ex.getMessage(), ex);
 		}
 
-		log.trace(maps + "\n\n");
 		return maps;
 	}
 
+	
 	/**
 	 * 
 	 * @param source
@@ -485,7 +546,7 @@ public abstract class SQLStatementBuilder {
 		}
 		return null;
 	}
-	
+
 	private String createSQLMembershipExpression(int position, List<Object> values, Relation relation, String alias) {
 		
 		StringBuilder result = new StringBuilder();
@@ -511,7 +572,7 @@ public abstract class SQLStatementBuilder {
 		append(" IN ").append("(").append(set).append(")");
 		return result.toString();
 	
-	} 
+	}
 
 	/**
 	 * @return SQLStatementBuilder
@@ -528,6 +589,12 @@ public abstract class SQLStatementBuilder {
 		return result.toString();
 	}
 	
+
+	/**
+	 * 
+	 *
+	 *
+	 */
 	protected String createTableAliasingExpression(String alias, Relation relation) {
 		Preconditions.checkNotNull(relation);
 		StringBuilder result = new StringBuilder();
@@ -535,4 +602,5 @@ public abstract class SQLStatementBuilder {
 		result.append(alias==null ? relation.getName():alias);
 		return result.toString();
 	}
+
 }

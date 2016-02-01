@@ -12,8 +12,8 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.plan.DAGPlan;
-import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema;
-import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema.InferredAccessibleRelation;
+import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
+import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema.InferredAccessibleRelation;
 import uk.ac.ox.cs.pdq.planner.dag.BinaryConfiguration.BinaryConfigurationTypes;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator;
 import uk.ac.ox.cs.pdq.planner.dominance.Dominance;
@@ -186,7 +186,7 @@ public class ConfigurationUtility {
 	/**
 	 * @param left
 	 * @param right
-	 * @return a merged state
+	 * @return a state that is the union of the left and right input states
 	 */
 	public static AccessibleChaseState merge(DAGChaseConfiguration left, DAGChaseConfiguration right) {
 		return left.getState().merge(right.getState());
@@ -254,18 +254,6 @@ public class ConfigurationUtility {
 	}
 
 	/**
-	 * @param input
-	 * @return a deep copy of the input array of dominance objects
-	 */
-	public static Dominance[] arrayCopy(Dominance[] input) {
-		Dominance[] array = new Dominance[input.length];
-		for(int i = 0; i < input.length; ++i) {
-			array[i] = input[i].clone();
-		}
-		return array;
-	}
-
-	/**
 	 * @param left
 	 * @param right
 	 * @param validators
@@ -330,7 +318,7 @@ public class ConfigurationUtility {
 	/**
 	 * @param left
 	 * @param right
-	 * @param bestPlan Best plan
+	 * @param bestPlan Best plan found so far
 	 * @param costEstimator Estimates a plan's cost
 	 * @param successDominance Success dominance checks
 	 * @return true if the configuration composed from the left and right input configurations is not success dominated by the best plan

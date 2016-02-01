@@ -73,7 +73,7 @@ public class PlanDowloadServlet extends PDQServlet {
         		PlanWriter.to(ps).write(plan);
     		}
     	} catch (Exception e) {
-    		e.printStackTrace();
+    		log.error(e.getMessage(),e);
     		this.returnError(response, "Unidentified error.");
     		return;
     	}

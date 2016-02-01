@@ -36,6 +36,7 @@ import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.io.xml.OperatorReader;
 import uk.ac.ox.cs.pdq.io.xml.OperatorWriter;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.collect.Lists;
 
@@ -61,6 +62,7 @@ public class XMLRelationOperatorIOTest {
 	ByteArrayOutputStream bos;
 
 	@Before public void setup() {
+		Utility.assertsEnabled();
 		this.writer = new OperatorWriter();
 		this.reader = new OperatorReader(s);
 		this.bos = new ByteArrayOutputStream();

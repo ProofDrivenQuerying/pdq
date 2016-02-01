@@ -6,8 +6,10 @@ import java.sql.SQLException;
 import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.EventHandler;
+import uk.ac.ox.cs.pdq.cost.CostEstimatorFactory;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.cost.CostStatKeys;
+import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.cost.statistics.Catalog;
 import uk.ac.ox.cs.pdq.cost.statistics.SimpleCatalog;
 import uk.ac.ox.cs.pdq.db.Attribute;
@@ -29,6 +31,8 @@ import uk.ac.ox.cs.pdq.planner.reasoning.ReasonerFactory;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismException;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismManagerFactory;
 
 import com.google.common.collect.Lists;
@@ -66,6 +70,8 @@ public class Planner {
 	/** The query */
 	private Query<?> query;
 	
+	private HomomorphismManager detector;
+	
 	/**
 	 * 
 	 * @param planParams
@@ -93,6 +99,13 @@ public class Planner {
 		this.schema = schema;
 		this.query = query;
 		this.statsLogger = statsLogger;
+		
+		try {
+			this.detector = new HomomorphismManagerFactory().getInstance(schema, this.reasoningParams);
+		} catch (HomomorphismException e) {
+			// TODO what to throw here?
+			throw new RuntimeException(e);
+		}
 	}
 
 	/**
@@ -134,8 +147,8 @@ public class Planner {
 	 * @throws IOException
 	 * @throws ProofEvent
 	 */
-	public <P extends Plan> P search() throws PlannerException {
-		return this.search(false);
+	public <P extends Plan> P search(Query<?> query) throws PlannerException {
+		return this.search(query,false);
 	}
 	
 	/**
@@ -154,18 +167,25 @@ public class Planner {
 	 * @throws SQLException
 	 * @throws ProofEvent
 	 */
-	public <P extends Plan> P search(boolean noDep) throws PlannerException {
-		Schema schema = this.schema;
-		if (noDep) {
-			schema = Schema.builder(schema).disableDependencies().build();
-		}
+	public <P extends Plan> P search(Query<?> query, boolean noDep) throws PlannerException {
+		
 		boolean collectStats = this.statsLogger != null;
-		schema.updateConstants(this.query.getSchemaConstants());
+		
+		if (noDep) 
+		{
+			this.schema = Schema.builder(this.schema).disableDependencies().build();
+			this.schema.updateConstants(query.getSchemaConstants());
+		}
+		else
+		{
+			this.schema.updateConstants(query.getSchemaConstants());
+		}
 		this.addKeys(schema);
+		
+		this.detector.addQuery(query);
+	
 		Explorer<P> explorer = null;
-		try (HomomorphismDetector detector =
-				new HomomorphismManagerFactory().getInstance(schema, this.query, this.reasoningParams)) {
-
+		try{
 			// Top-level initialisations
 			Catalog catalog = new SimpleCatalog(schema, this.costParams.getDatabaseCatalog());
 			CardinalityEstimator cardinalityEstimator = CardinalityEstimatorFactory.getInstance(this.plannerParams.getCardinalityEstimatorType(), catalog);
@@ -175,15 +195,22 @@ public class Planner {
 					collectStats,
 					this.reasoningParams).getInstance();
 			
+			
+			//reasoner.reasonUntilTermination(state, accessibleQuery, this.schema.getDependencies());
+			
+			
 			explorer = ExplorerFactory.createExplorer(
 					this.eventBus, 
 					collectStats,
 					this.schema,
 					this.query,
 					reasoner,
-					detector,
+					this.detector,
 					cardinalityEstimator,
 					this.plannerParams);
+			
+			this.detector.clearQuery();
+			
 
 			// Chain all statistics collectors
 			if (collectStats) {
@@ -208,12 +235,13 @@ public class Planner {
 			explorer.setMaxElapsedTime(this.plannerParams.getTimeout());
 			explorer.explore();
 			return explorer.getBestPlan();
+			
 		} catch (PlannerException e) {
 			this.handleEarlyTermination(explorer);
 			throw e;
 		} catch (Exception e) {
 			this.handleEarlyTermination(explorer);
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 			throw new PlannerException(e);
 		} catch (Throwable e) {
 			this.handleEarlyTermination(explorer);

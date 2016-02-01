@@ -3,6 +3,7 @@ package uk.ac.ox.cs.pdq.test.planner.accessible;
 import java.util.Random;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.db.Attribute;
@@ -10,15 +11,24 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Skolem;
-import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema.AccessibleRelation;
-import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema.InferredAccessibleRelation;
+import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema.AccessibleRelation;
+import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema.InferredAccessibleRelation;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.collect.Lists;
 
 public class PredicateFormulaTest {
 
 	private Random random = new Random();
-
+	
+	/**
+	 * Makes sure assertions are enabled
+	 */
+	@Before 
+	public void setup() {
+		Utility.assertsEnabled();
+	}
+	
 	@Test public void testIsSchemaFact() {
 		Relation r = new Relation("r", Lists.newArrayList(
 				new Attribute(String.class, "a1"), new Attribute(String.class, "a2"))) {};

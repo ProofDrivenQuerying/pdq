@@ -58,7 +58,7 @@ import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.planner.Planner;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
-import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema;
+import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.Candidate;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode.NodeStatus;
@@ -318,7 +318,7 @@ public class PlannerController {
 		Preconditions.checkNotNull(this.query);
 		if (this.pauser == null) {
 
-			final Planner planner = new Planner(this.params, this.costParams, this.reasoningParams, this.schema, this.query);
+			final Planner planner = new Planner(this.params, this.costParams, this.reasoningParams, this.schema);
 			this.setSearchSpaceVisualizer(planner);
 			
 			planner.registerEventHandler(new PlanSearchVisualizer(this.dataQueue, this.params.getShortLogIntervals()));
@@ -328,7 +328,7 @@ public class PlannerController {
 			this.future = executor.submit(() -> {
 					try {
 						log.debug("Searching plan...");
-						Plan bestPlan = planner.search();
+						Plan bestPlan = planner.search(this.query);
 						PlannerController.this.bestPlan = bestPlan;
 						log.debug("Best plan: " + bestPlan);
 						ObservablePlan p = PlannerController.this.plan.copy();

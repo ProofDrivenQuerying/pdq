@@ -8,7 +8,6 @@ import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
  * Requires the input pair of configurations to be non trivial and the right's depth to be <= the depth threshold
  * @author Efthymia Tsamoura
  *
- * @param 
  */
 public class RightDepthValidator implements Validator{
 

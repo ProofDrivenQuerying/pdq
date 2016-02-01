@@ -57,7 +57,7 @@ public class SourceContextListener implements ServletContextListener {
 				| InstantiationException
 				| IllegalAccessException
 				| ClassNotFoundException e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 //			throw new IllegalStateException();
 		}
 	}

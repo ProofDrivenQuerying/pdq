@@ -8,8 +8,7 @@ import uk.ac.ox.cs.pdq.planner.linear.explorer.Candidate;
 import uk.ac.ox.cs.pdq.planner.reasoning.Configuration;
 
 /**
- * Configurations represent derivation of implicit information using constraints and
- * have a direct correspondence with a query plan.
+ * Configurations represent derivation of implicit information using constraints and have a direct correspondence with a query plan.
  * Linear configurations are mapped to left-deep plans.
  *
  * @author Efthymia Tsamoura

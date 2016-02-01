@@ -7,11 +7,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 import com.google.common.collect.Sets;
+
+import uk.ac.ox.cs.pdq.util.Utility;
 
 /**
  *
@@ -19,6 +22,17 @@ import com.google.common.collect.Sets;
  */
 @RunWith(Parameterized.class)
 public abstract class ParameterizedTest {
+	
+	
+	/**
+	 * Makes sure assertions are enabled
+	 */
+	@Before 
+	public void setup() {
+		System.out.println("here");
+		Utility.assertsEnabled();
+	}
+	
 
 	@Parameters
 	public static Collection<Object[]> getParameters(Set<?>... sets) {

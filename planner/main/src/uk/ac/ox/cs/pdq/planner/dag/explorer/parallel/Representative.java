@@ -18,7 +18,6 @@ import uk.ac.ox.cs.pdq.planner.dag.equivalence.DAGEquivalenceClasses;
  * 
  * @author Efthymia Tsamoura
  *
- * @param 
  */
 public class Representative {
 	

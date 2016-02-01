@@ -16,6 +16,7 @@
   	<module>reasoning</module>
   	<module>cost</module>
   	<module>planner</module>
+  	<module>cardinality</module>
   	<module>runtime</module>
   	<module>datasources</module>
   	<module>regression</module>
@@ -23,8 +24,7 @@
   	<module>demo</module>
 	<module>endpoint</module>
     <!--
-	// the server is not build by default as it depends on proprietary libraries (logicblox).
+	// the server depends on proprietary libraries (logicblox), so comment it out if you cannot build.-->
 	<module>server</module>
-    -->
   </modules>
 </project>

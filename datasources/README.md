@@ -12,7 +12,7 @@ I. Requirements
 
 II. Dependencies
 
-Internal: common, cost
+Internal: common
 External: MySQL, Postgresql, org.apache.jcs, javax.ws.rs, 
 	com.fasterxml.jackson.core, com.fasterxml.jackson.jaxrs, 
 	com.fasterxml.jackson.dataformat, org.glassfish.jersey.core, 

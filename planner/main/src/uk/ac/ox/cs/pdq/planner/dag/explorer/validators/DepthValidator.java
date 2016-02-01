@@ -8,7 +8,6 @@ import uk.ac.ox.cs.pdq.planner.dag.DAGConfiguration;
  * Requires the input pair of configurations to be non trivial and their combined depth to be <= the depth threshold
  * @author Efthymia Tsamoura
  *
- * @param 
  */
 public class DepthValidator implements Validator{
 

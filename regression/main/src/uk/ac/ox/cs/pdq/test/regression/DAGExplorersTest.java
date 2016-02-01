@@ -99,9 +99,9 @@ public class DAGExplorersTest extends RegressionTest {
 				if (type.toString().startsWith("DAG")) {
 					try (ProgressLogger pLog = new SimpleProgressLogger(this.out)) {
 						planParams.setPlannerType(type);
-						Planner planner1 = new Planner(planParams, costParams, reasoningParams, schema, query);
+						Planner planner1 = new Planner(planParams, costParams, reasoningParams, schema);
 						planner1.registerEventHandler(new IntervalEventDrivenLogger(pLog, planParams.getLogIntervals(), planParams.getShortLogIntervals()));
-						Plan p = planner1.search();
+						Plan p = planner1.search(query);
 						if (plan == null) {
 							masterType = type;
 							plan = p;

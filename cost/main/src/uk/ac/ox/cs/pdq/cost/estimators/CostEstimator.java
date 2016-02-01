@@ -5,7 +5,7 @@ import uk.ac.ox.cs.pdq.util.Costable;
 
 
 /**
- * Returns the cost of an input plan.
+ * Returns the cost of a plan.
  *
  * @author Efthymia Tsamoura
  * @author Julien Leblay

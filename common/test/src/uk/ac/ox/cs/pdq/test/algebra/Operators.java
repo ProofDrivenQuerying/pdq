@@ -14,6 +14,7 @@ import uk.ac.ox.cs.pdq.db.AccessMethod.Types;
 import uk.ac.ox.cs.pdq.db.EntityRelation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.builder.SchemaBuilder;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 public class Operators {
 
@@ -26,6 +27,7 @@ public class Operators {
 
 	@Before
 	public void before() throws IOException {
+		 Utility.assertsEnabled();
 		 schema = new SchemaBuilder()
 			.addRelation(P)
 			.addRelation(Q)

@@ -7,9 +7,11 @@ import static org.junit.Assert.assertTrue;
 import java.util.HashSet;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.fol.Skolem;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 
 /**
@@ -18,6 +20,14 @@ import uk.ac.ox.cs.pdq.fol.Skolem;
  *
  */
 public final class SkolemTest {
+	
+	/**
+	 * Makes sure assertions are enabled
+	 */
+	@Before 
+	public void setup() {
+		Utility.assertsEnabled();
+	}
 
 	@Test public void testNoTwoSimilaryGeneratedSkolems() {
 		Assert.assertNotEquals(

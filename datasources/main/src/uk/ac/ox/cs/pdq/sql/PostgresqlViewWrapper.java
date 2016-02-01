@@ -89,7 +89,6 @@ public final class PostgresqlViewWrapper extends SQLViewWrapper {
 			}
 		} catch (SQLException e) {
 			log.warn(sql, e);
-			e.printStackTrace();
 		}
 		return -1.0;
 	}

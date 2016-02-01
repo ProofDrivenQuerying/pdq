@@ -33,6 +33,7 @@ import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseListState;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ListState;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismManagerFactory;
 
 import com.google.common.eventbus.EventBus;
@@ -183,21 +184,21 @@ public class RestrictedChaserTest {
 				schema.updateConstants(query.getSchemaConstants());
 				RestrictedChaser reasoner = new RestrictedChaser(
 						new StatisticsCollector(true, this.eventBus));
-				HomomorphismDetector detector =
+				HomomorphismManager detector =
 						new HomomorphismManagerFactory().getInstance(
 								schema, 
-								query, 
 								HomomorphismDetectorTypes.DATABASE,
 								this.driver,
 								this.url,
 								this.database,
 								this.username,			
 								this.password);
-				
+			    detector.addQuery(query);
 				ReasoningParameters reasoningParameters = new ReasoningParameters();
 				reasoningParameters.setReasoningType(ReasoningTypes.RESTRICTED_CHASE);
 				ListState state = new DatabaseListState(query, (DBHomomorphismManager) detector);				
 				reasoner.reasonUntilTermination(state, query, schema.getDependencies());
+				detector.clearQuery();
 
 				Collection<Predicate> expected = loadFacts(PATH + f, schema);
 				

@@ -78,10 +78,8 @@ public class PlannerBenchmark extends Runner {
 		try {
 			this.recursiveRun(new File(this.getInputFile()));
 		} catch (RuntimeException e) {
-			e.printStackTrace();
 			log.error(e.getMessage());
 		} catch (BenchmarkException | ReflectiveOperationException | IOException e) {
-			e.printStackTrace();
 			log.error(Thread.currentThread().getName() + " stopping due to " + e.getMessage());
 		}
 	}
@@ -212,7 +210,7 @@ public class PlannerBenchmark extends Runner {
 		}
 	    printSystemSettings(out);
 		printHeader(out);
-		Planner planner = new Planner(plannerParams, costParams, reasoningParams, schema, query, stats);
+		Planner planner = new Planner(plannerParams, costParams, reasoningParams, schema, stats);
 
 		IntervalEventDrivenLogger logger = new IntervalEventDrivenLogger(stats, plannerParams.getLogIntervals(), plannerParams.getShortLogIntervals());
 		planner.registerEventHandler(logger);
@@ -229,12 +227,11 @@ public class PlannerBenchmark extends Runner {
 
 		Plan bestPlan = null;
 		try {
-			bestPlan = planner.search(this.isNoDependencies());
+			bestPlan = planner.search(query,this.isNoDependencies());
 			if (bestPlan == null) {
 				log.info("No plan found.");
 			}
 		} catch (PlannerException e) {
-			e.printStackTrace();
 			stats.addSuffix("reason", "exception");
 			stats.addSuffix("detail", e.getClass().getSimpleName());
 			log.error(Thread.currentThread().getName() + " stopping due to " + e.getMessage() +
@@ -348,7 +345,7 @@ public class PlannerBenchmark extends Runner {
 		} catch (IOException
 				| ReflectiveOperationException
 				| BenchmarkException e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 			System.exit(ERROR_CODE);
 		}
 	}

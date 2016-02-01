@@ -12,6 +12,7 @@ import uk.ac.ox.cs.pdq.db.DatabasePredicate;
 import uk.ac.ox.cs.pdq.db.EntityRelation;
 import uk.ac.ox.cs.pdq.util.Tuple;
 import uk.ac.ox.cs.pdq.util.TupleType;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 /**
  *
@@ -26,6 +27,7 @@ public class AttributeEqualityPredicateTest {
 	
 	@Before
 	public void setup() {
+		Utility.assertsEnabled();
 		t1 = TupleType.DefaultFactory.create(
 				Integer.class, 
 				Integer.class).createTuple(1, 2);

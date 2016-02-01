@@ -11,9 +11,9 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import uk.ac.ox.cs.pdq.util.Types;
+import com.google.common.collect.Lists;
 
-import com.beust.jcommander.internal.Lists;
+import uk.ac.ox.cs.pdq.util.Types;
 
 /**
  * Loads SQL Server 2014 histograms

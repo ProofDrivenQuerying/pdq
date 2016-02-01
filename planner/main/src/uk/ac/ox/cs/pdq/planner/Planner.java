@@ -7,6 +7,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.EventHandler;
+import uk.ac.ox.cs.pdq.cost.CostEstimatorFactory;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.cost.CostStatKeys;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
@@ -16,8 +17,7 @@ import uk.ac.ox.cs.pdq.logging.performance.ChainedStatistics;
 import uk.ac.ox.cs.pdq.logging.performance.DynamicStatistics;
 import uk.ac.ox.cs.pdq.logging.performance.StatKey;
 import uk.ac.ox.cs.pdq.plan.Plan;
-import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema;
-import uk.ac.ox.cs.pdq.planner.explorer.CostEstimatorFactory;
+import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.explorer.Explorer;
 import uk.ac.ox.cs.pdq.planner.explorer.ExplorerFactory;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
@@ -28,7 +28,8 @@ import uk.ac.ox.cs.pdq.planner.reasoning.ReasonerFactory;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismException;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismManagerFactory;
 
 import com.google.common.eventbus.EventBus;
@@ -39,6 +40,7 @@ import com.google.common.eventbus.EventBus;
  *
  * @author Julien Leblay
  * @author Efthymia Tsamoura
+ * @author George Konstantinidis
  *
  */
 public class Planner {
@@ -62,10 +64,11 @@ public class Planner {
 	/** The schema */
 	private Schema schema;
 
-	/** The query */
-	private Query<?> query;
 
 	private CostEstimator<?> externalCostEstimator = null;
+
+	private AccessibleSchema accessibleSchema;
+	private HomomorphismManager detector;
 	
 	/**
 	 * 
@@ -74,8 +77,8 @@ public class Planner {
 	 * @param schema
 	 * @param query
 	 */
-	public Planner(PlannerParameters planParams, CostParameters costParams, ReasoningParameters reasoningParams, Schema schema, Query<?> query) {
-		this(planParams, costParams, reasoningParams, schema, query, null);
+	public Planner(PlannerParameters planParams, CostParameters costParams, ReasoningParameters reasoningParams, Schema schema) {
+		this(planParams, costParams, reasoningParams, schema, null);
 	}
 
 	/**
@@ -86,14 +89,23 @@ public class Planner {
 	 * @param query
 	 * @param statsLogger
 	 */
-	public Planner(PlannerParameters params, CostParameters costParams, ReasoningParameters reasoningParams, Schema schema, Query<?> query, ChainedStatistics statsLogger) {
+	public Planner(PlannerParameters params, CostParameters costParams, ReasoningParameters reasoningParams, Schema schema, ChainedStatistics statsLogger) {
 		checkParametersConsistency(params, costParams, reasoningParams);
 		this.plannerParams = params;
 		this.costParams = costParams;
 		this.reasoningParams = reasoningParams;
 		this.schema = schema;
-		this.query = query;
 		this.statsLogger = statsLogger;
+		this.schema = schema;
+		
+		accessibleSchema = new AccessibleSchema(schema);
+			try {
+				this.detector = new HomomorphismManagerFactory().getInstance(accessibleSchema, this.reasoningParams);
+			} catch (HomomorphismException e) {
+				// TODO what to throw here?
+				throw new RuntimeException(e);
+			}
+		
 	}
 
 	/**
@@ -142,8 +154,8 @@ public class Planner {
 	 * @throws IOException
 	 * @throws ProofEvent
 	 */
-	public <P extends Plan> P search() throws PlannerException {
-		return this.search(false);
+	public <P extends Plan> P search(Query<?> query) throws PlannerException {
+		return this.search(query,false);
 	}
 	
 	/**
@@ -162,43 +174,55 @@ public class Planner {
 	 * @throws SQLException
 	 * @throws ProofEvent
 	 */
-	public <S extends AccessibleChaseState, P extends Plan> P search(boolean noDep) throws PlannerException {
-		Schema schema = this.schema;
-		if (noDep) {
-			schema = Schema.builder(schema).disableDependencies().build();
+	public <S extends AccessibleChaseState, P extends Plan> P search(Query<?> query, boolean noDep) throws PlannerException {
+		
+		boolean collectStats = this.statsLogger != null;
+		
+		if (noDep) 
+		{
+			this.schema = Schema.builder(this.schema).disableDependencies().build();
+			this.schema.updateConstants(query.getSchemaConstants());
+			this.accessibleSchema = new AccessibleSchema(this.schema);
+		}
+		else
+		{
+			this.schema.updateConstants(query.getSchemaConstants());
+			this.accessibleSchema.updateConstants(query.getSchemaConstants());
 		}
 
-		boolean collectStats = this.statsLogger != null;
-		schema.updateConstants(this.query.getSchemaConstants());
-		AccessibleSchema accessibleSchema = new AccessibleSchema(schema);
-		Query<?> accessibleQuery = accessibleSchema.accessible(this.query, this.query.getVariables2Canonical());
-
-
+		this.detector.addQuery(query);
+		Query<?> accessibleQuery = this.accessibleSchema.accessible(query, query.getVariables2Canonical());
+		
 		Explorer<P> explorer = null;
-		try (HomomorphismDetector detector =
-				new HomomorphismManagerFactory().getInstance(accessibleSchema, accessibleQuery, this.reasoningParams)) {
-
+		try{
 			// Top-level initialisations
 			CostEstimator<P> costEstimator = (CostEstimator<P>) this.externalCostEstimator;
 			if (costEstimator == null) {
-				costEstimator = CostEstimatorFactory.getEstimator(this.plannerParams, this.costParams, schema);
+				costEstimator = CostEstimatorFactory.getEstimator(this.costParams, this.schema);
 			}
 			Chaser reasoner = new ReasonerFactory(
 					this.eventBus, 
 					collectStats,
 					this.reasoningParams).getInstance();
 			
+			
+			//reasoner.reasonUntilTermination(state, accessibleQuery, this.schema.getDependencies());
+			
+			
 			explorer = ExplorerFactory.createExplorer(
 					this.eventBus, 
 					collectStats,
 					this.schema,
-					accessibleSchema,
-					this.query,
+					this.accessibleSchema,
+					query,
 					accessibleQuery,
 					reasoner,
-					detector,
+					this.detector,
 					costEstimator,
 					this.plannerParams);
+			
+			this.detector.clearQuery();
+			
 
 			// Chain all statistics collectors
 			if (collectStats) {
@@ -223,12 +247,13 @@ public class Planner {
 			explorer.setMaxElapsedTime(this.plannerParams.getTimeout());
 			explorer.explore();
 			return explorer.getBestPlan();
+			
 		} catch (PlannerException e) {
 			this.handleEarlyTermination(explorer);
 			throw e;
 		} catch (Exception e) {
 			this.handleEarlyTermination(explorer);
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 			throw new PlannerException(e);
 		} catch (Throwable e) {
 			this.handleEarlyTermination(explorer);
@@ -272,13 +297,6 @@ public class Planner {
 	 */
 	public Schema getSchema() {
 		return this.schema;
-	}
-
-	/**
-	 * @return the planner's underlying query
-	 */
-	public Query<?> getQuery() {
-		return this.query;
 	}
 
 	/**

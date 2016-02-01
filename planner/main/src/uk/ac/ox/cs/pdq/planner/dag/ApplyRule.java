@@ -9,8 +9,8 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.plan.DAGPlan;
-import uk.ac.ox.cs.pdq.planner.accessible.AccessibilityAxiom;
-import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema;
+import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
+import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState;
 import uk.ac.ox.cs.pdq.planner.util.PlannerUtility;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
@@ -23,18 +23,13 @@ import com.google.common.collect.Sets;
 
 /**
  * Instances of unary DAG configurations.
- * 	They are of the form ApplyRule(R,\vec{b}), where R is
-	an accessibility axiom corresponding to method mt on relation
-	R, and \vec{b} is a binding of the universally quantified variables
-	of R to chase constants or schema constants. The input
-	constants are all those chase constants in \vec{b} where the
-	corresponding variable of R occurs within the R atoms of
-	R at an input position of method mt. The outputs facts
-	of the configuration are any inferred accessible facts produced
-	be applying R with binding \vec{b}, as well as all facts that
-	are consequences from these under the copy of the integrity
-	constraints. Calculating these output facts requires a consequence
-	closure procedure.
+ * They are of the form ApplyRule(R,\vec{b}), where R is an accessibility axiom corresponding to method mt on relation R, 
+ * and \vec{b} is a binding of the universally quantified variables
+ * of R to chase constants or schema constants. The input constants are all those chase constants in \vec{b} where the
+ * corresponding variable of R occurs within the R atoms of R at an input position of method mt. The outputs facts
+ * of the configuration are any inferred accessible facts produced
+ * be applying R with binding \vec{b}, as well as all facts that are consequences from these under the copy of the integrity
+ * constraints. Calculating these output facts requires a consequence closure procedure.
  *  
  *  
  * @author Efthymia Tsamoura

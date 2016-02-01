@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,6 +15,7 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 import uk.ac.ox.cs.pdq.benchmark.BenchmarkParameters.QueryTypes;
+import uk.ac.ox.cs.pdq.util.Utility;
 import uk.ac.ox.cs.pdq.benchmark.PlannerBenchmark;
 import uk.ac.ox.cs.pdq.benchmark.Runner;
 
@@ -26,6 +28,15 @@ import com.google.common.collect.Sets;
 @Ignore
 @RunWith(Parameterized.class) 
 public class RunnerTest {
+	
+	
+	/**
+	 * Makes sure assertions are enabled
+	 */
+	@Before 
+	public void setup() {
+		Utility.assertsEnabled();
+	}
 
 	@Parameters
 	public static Collection<Object[]> getParameters() {

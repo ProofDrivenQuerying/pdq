@@ -24,8 +24,7 @@ public interface ChaseState {
 	 *
 	 * (Conjunctive query match definition) If Q′ is a conjunctive query and v is a chase configuration
 	 * having elements for each free variable of Q′, then a homomorphism of Q′ into v
-	 * mapping each free variable into the corresponding element is called a match for Q′ in
-	 * v.
+	 * mapping each free variable into the corresponding element is called a match for Q′ in v.
 	 * @param query
 	 * 		An input query
 	 * @return

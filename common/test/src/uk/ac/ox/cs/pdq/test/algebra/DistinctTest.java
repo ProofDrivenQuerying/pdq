@@ -26,6 +26,7 @@ public class DistinctTest extends UnaryOperatorTest {
 	Distinct operator;
 	
 	@Before public void setup() throws RelationalOperatorException {
+		super.setup();
         MockitoAnnotations.initMocks(this);
 		when(child.getColumns()).thenReturn(outputTerms);
 		when(child.getType()).thenReturn(outputType);

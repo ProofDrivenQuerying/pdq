@@ -38,6 +38,7 @@ public class BottomUpAccessTest extends UnaryIteratorTest {
 	Attribute a, b, c, d;
 	
 	@Before public void setup() {
+		super.setup();
 		a = new Attribute(Integer.class, "a");
 		b = new Attribute(String.class, "b");
 		c = new Attribute(String.class, "c");

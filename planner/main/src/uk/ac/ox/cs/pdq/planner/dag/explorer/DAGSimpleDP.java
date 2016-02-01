@@ -14,7 +14,7 @@ import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.plan.DAGPlan;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
-import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema;
+import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.dag.BinaryConfiguration;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.filters.Filter;
@@ -55,7 +55,7 @@ public class DAGSimpleDP extends DAGGeneric {
 	 * @param accessibleSchema
 	 * 		The accessible counterpart of the input schema
 	 * @param chaser
-	 * 		Runs the chase algorithm
+	 * 		Saturates configurations using the chase algorithm
 	 * @param detector
 	 * 		Detects homomorphisms during chasing
 	 * @param costEstimator
@@ -65,7 +65,7 @@ public class DAGSimpleDP extends DAGGeneric {
 	 * @param filter
 	 * 		Filters out configurations at the end of each iteration
 	 * @param validators
-	 * 		Validates pairs of configurations to be composed
+	 * 		Checks whether the binary configuration composed from a given configuration pair satisfies given shape restrictions.
 	 * @param maxDepth
 	 * 		The maximum depth to explore
 	 * @param orderAware

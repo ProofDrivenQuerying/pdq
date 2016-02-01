@@ -123,14 +123,14 @@ public class Bootstrap {
 			ConjunctiveQuery query = new QueryReader(schema).read(qis);
 			Plan plan = null;
 			try(ProgressLogger pLog = new SimpleProgressLogger(System.out)) {
-				Planner planner = new Planner(planParams, costParams, reasoningParams, schema, query);
+				Planner planner = new Planner(planParams, costParams, reasoningParams, schema);
 				if (verbose) {
 					planner.registerEventHandler(
 							new IntervalEventDrivenLogger(
 									pLog, planParams.getLogIntervals(),
 									planParams.getShortLogIntervals()));
 				}
-				plan = planner.search();
+				plan = planner.search(query);
 			}
 			if (plan != null) {
 				PlanWriter.to(System.out).write(plan);
@@ -138,8 +138,7 @@ public class Bootstrap {
 			} 
 			log.trace("No plan found.");
 		} catch (Throwable e) {
-			log.error("Planning aborted: " + e.getMessage());
-			e.printStackTrace();
+			log.error("Planning aborted: " + e.getMessage(), e);
 			System.exit(-1);
 		}
 	}

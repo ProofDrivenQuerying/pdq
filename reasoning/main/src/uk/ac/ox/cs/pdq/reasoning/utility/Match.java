@@ -12,17 +12,14 @@ import com.google.common.base.Preconditions;
 
 /**
  * A trigger or query match.
- * 
  * (From modern dependency theory notes)
  * Consider an instance I, a set Base of values, and a TGD
  * \delta = \forall x  \sigma(\vec{x}) --> \exists y  \tau(\vec{x}, \vec{y})
  * A trigger for \delta in I is a homomorphism h of \sigma into I.
  * 
- * 
  * (Query match definition) If Q′ is a conjunctive query and v is a chase configuration
-	having elements for each free variable of Q′, then a homomorphism of Q′ into v
-	mapping each free variable into the corresponding element is called a match for Q′ in
-	v.
+ * having elements for each free variable of Q′, then a homomorphism of Q′ into v
+ * mapping each free variable into the corresponding element is called a match for Q′ in v.
  *  
  *
  * @author Efthymia Tsamoura

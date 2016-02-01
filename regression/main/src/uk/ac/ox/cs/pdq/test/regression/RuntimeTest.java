@@ -25,11 +25,12 @@ import uk.ac.ox.cs.pdq.logging.SimpleProgressLogger;
 import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.planner.Planner;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
-import uk.ac.ox.cs.pdq.planner.accessible.AccessibleSchema;
+import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.logging.IntervalEventDrivenLogger;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismManagerFactory;
 import uk.ac.ox.cs.pdq.runtime.EvaluationException;
 import uk.ac.ox.cs.pdq.runtime.Runtime;
@@ -139,9 +140,11 @@ public class RuntimeTest extends RegressionTest {
 		ReasoningParameters reasoningParams = new ReasoningParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
 		AccessibleSchema accessibleSchema = new AccessibleSchema(schema);
 		Query<?> accessibleQuery = accessibleSchema.accessible(query, query.getVariables2Canonical());
-		try (HomomorphismDetector manager = new HomomorphismManagerFactory().getInstance(accessibleSchema, accessibleQuery, reasoningParams)) {
+		try (HomomorphismManager manager = new HomomorphismManagerFactory().getInstance(accessibleSchema, reasoningParams)) {
+			manager.addQuery(accessibleQuery);
 			DataValidationImplementation dataValidator = new DataValidationImplementation(schema, (DBHomomorphismManager) manager);
 			dataValidator.validate();
+			manager.clearQuery();
 		} catch (Exception e) {
 			throw new EvaluationException(e.getMessage(), e);
 		}
@@ -161,9 +164,9 @@ public class RuntimeTest extends RegressionTest {
 			ReasoningParameters reasoningParams = new ReasoningParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
 			
 			try (ProgressLogger pLog = new SimpleProgressLogger(this.out)) {
-				Planner planner = new Planner(plParams, costParams, reasoningParams, schema, query);
+				Planner planner = new Planner(plParams, costParams, reasoningParams, schema);
 				planner.registerEventHandler(new IntervalEventDrivenLogger(pLog, plParams.getLogIntervals(), plParams.getShortLogIntervals()));
-				return planner.search();
+				return planner.search(query);
 			} catch (Exception e) {
 				log.debug(e);
 				return null;

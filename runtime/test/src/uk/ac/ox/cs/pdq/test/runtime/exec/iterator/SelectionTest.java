@@ -37,6 +37,7 @@ public class SelectionTest extends UnaryIteratorTest {
 	Predicate filter4 = new ConstantEqualityPredicate(3, new TypedConstant<>("unrelated"));
 	
 	@Before public void setup() {
+        super.setup();
         MockitoAnnotations.initMocks(this);
         when(child.getColumns()).thenReturn(outputColumns);
 		when(child.getType()).thenReturn(outputType);

@@ -350,48 +350,60 @@ public abstract class Parameters extends Properties {
 		for (Field f : this.getAllFields()) {
 			Annotation a = f.getAnnotation(Parameter.class);
 			if (a != null) {
-				Parameter p = (Parameter) a;
-				if (verbose) {
-					result.append("#\n# ")
-						.append(p.description().replace("\n", "\n# "))
-						.append("\n# Type: ")
-						.append(f.getType().getSimpleName());
-					if (!p.defaultValue().isEmpty()) {
-						result.append("\n# Default: ").append(p.defaultValue());
-					} else {
-						result.append("\n# (Optional)");
-					}
-					result.append("\n");
-					if (f.getType().isEnum()) {
-						result.append("# Possible value:\n");
-						for (Object o: f.getType().getEnumConstants()) {
-							assert o instanceof Enum;
-							Enum<?> e = (Enum<?>) o;
-							try {
-								Annotation v = e.getClass().getField(e.name()).getAnnotation(EnumParameterValue.class);
-								EnumParameterValue pv = (EnumParameterValue) v;
-								result.append("#\t- ")
-										.append(e.name()).append(": ")
-										.append(pv.description().replace("\n", "\n#\t  "))
-										.append("\n");
-							} catch (NoSuchFieldException | SecurityException e1) {
-								// TODO Auto-generated catch block
-								e1.printStackTrace();
-							}
-						}
-					}
-				}
 				try {
 					String canonicalName = toCanonicalName(f.getName());
 					Object value = this.get(canonicalName);
-					if (verbose || value != null) {
+					Parameter p = (Parameter) a;
+					if (value == null && !p.defaultValue().isEmpty()) {
+						value = p.defaultValue();
+					}
+					// Don't output params that are optional and whose value
+					// is currently unassigned.
+					if (value != null && !"".equals(value)) {
+						if (verbose) {
+							result.append("#\n# ")
+									.append(p.description().replace("\n", "\n# ")).append("\n# Type: ")
+									.append(f.getType().getSimpleName());
+							if (!p.defaultValue().isEmpty()) {
+								result.append("\n# Default: ").append(p.defaultValue());
+							} else {
+								result.append("\n# (Optional)");
+							}
+							result.append("\n");
+							if (f.getType().isEnum()) {
+								result.append("# Possible value:\n");
+								for (Object o : f.getType().getEnumConstants()) {
+									assert o instanceof Enum;
+									Enum<?> e = (Enum<?>) o;
+									try {
+										Annotation v = e
+												.getClass()
+												.getField(e.name())
+												.getAnnotation(
+														EnumParameterValue.class);
+										EnumParameterValue pv = (EnumParameterValue) v;
+										result.append("#\t- ")
+												.append(e.name())
+												.append(": ")
+												.append(pv.description()
+														.replace("\n",
+																"\n#\t  "))
+												.append("\n");
+									} catch (NoSuchFieldException
+											| SecurityException e1) {
+										// TODO Auto-generated catch block
+										e1.printStackTrace();
+									}
+								}
+							}
+						}
 						result.append(canonicalName + " = ");
 						result.append(value).append('\n');
 					}
 				} catch (IllegalArgumentException e) {
 					log.warn("Could not invoke target on field " + f.getName() + ".", e);
 				} catch (Exception e) {
-					e.printStackTrace();
+					log.error(e.getMessage(),e);
 				}
 			}
 		}

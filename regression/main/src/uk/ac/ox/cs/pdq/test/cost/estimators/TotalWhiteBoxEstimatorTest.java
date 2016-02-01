@@ -10,9 +10,9 @@ import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.cost.CostParameters.CardinalityEstimationTypes;
 import uk.ac.ox.cs.pdq.cost.CostParameters.CostTypes;
+import uk.ac.ox.cs.pdq.cost.estimators.CardinalityEstimator;
+import uk.ac.ox.cs.pdq.cost.estimators.CardinalityEstimatorFactory;
 import uk.ac.ox.cs.pdq.cost.estimators.WhiteBoxCostEstimator;
-import uk.ac.ox.cs.pdq.cost.statistics.estimators.CardinalityEstimator;
-import uk.ac.ox.cs.pdq.cost.statistics.estimators.CardinalityEstimatorFactory;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
 import uk.ac.ox.cs.pdq.logging.performance.StatisticsCollector;

@@ -94,7 +94,7 @@ public class PlannerServlet extends PDQServlet {
     	}
 
     	// Parsing query
-		Query<?> query = null;
+		final Query<?> query;
     	try(InputStream qis = queryFile.getInputStream()) {
 			query = new QueryReader(schema).read(qis);
     	} catch (ReaderException e) {
@@ -127,7 +127,7 @@ public class PlannerServlet extends PDQServlet {
 
     		// Launch planner
     		try (WebBasedStatisticsLogger pLog = new WebBasedStatisticsLogger()) {
-        		final Planner planner = new Planner(plannerParams, costParams, reasoningParams, schema, query, pLog);
+        		final Planner planner = new Planner(plannerParams, costParams, reasoningParams, schema, pLog);
         		EventHandler eventLogger = new IntervalEventDrivenLogger(pLog, 5, 10); 
         		planner.registerEventHandler(eventLogger);
         		String planningSessionId = Long.toHexString(System.nanoTime());
@@ -138,7 +138,7 @@ public class PlannerServlet extends PDQServlet {
     				@Override
     				public Plan call() {
     					try {
-    						return planner.search();
+    						return planner.search(query);
     					} catch (PlannerException e) {
     						try {
         						PlannerServlet.this.returnError(response, "An error occured while planning", e);

@@ -22,13 +22,37 @@ public class MultiThreadedContext implements Context{
 
 	/** Number of parallel threads*/
 	private final int parallelThreads;
+	/** Saturate configurations using the chase algorithm**/
 	private final Chaser[] reasoners;
+	/** Detect homomorphisms during chasing**/
 	private final HomomorphismDetector[] detectors;
+	/** Estimate the cost of a plan**/
 	private final CostEstimator<DAGPlan>[] costEstimators;
+	/** Perform success domination checks**/
 	private final SuccessDominance[] successDominances;
+	/** Checks whether the binary configuration composed from a given configuration pair satisfies given shape restrictions.**/
 	private final List<Validator>[] validators;
+	/** Perform domination checks**/
 	private final Dominance[][] dominances;
 
+	/**
+	 * 
+	 * @param parallelThreads
+	 * 		Number of parallel threads
+	 * @param chaser
+	 * 		Saturates configurations using the chase algorithm
+	 * @param detector
+	 * 		Detects homomorphisms during chasing
+	 * @param costEstimator
+	 * 		Estimates the cost of a plan
+	 * @param successDominance
+	 * 		Performs success domination checks
+	 * @param dominance		
+	 * 		Perform domination checks
+	 * @param validators
+	 * 		Checks whether the binary configuration composed from a given configuration pair satisfies given shape restrictions.
+	 * @throws Exception
+	 */
 	public MultiThreadedContext(int parallelThreads,
 			Chaser chaser,
 			HomomorphismDetector detector,

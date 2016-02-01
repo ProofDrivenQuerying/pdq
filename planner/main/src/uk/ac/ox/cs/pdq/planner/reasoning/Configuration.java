@@ -28,11 +28,10 @@ public interface Configuration<P extends Plan> extends Costable, Cloneable, Comp
 	 * 
 	 * @param query
 	 * @return
-	 * 		true if the configuration matches the input query.
-	 * 	 	(Conjunctive query match definition) If Q′ is a conjunctive query and v is a chase configuration
-			having elements for each free variable of Q′, then a homomorphism of Q′ into v
-			mapping each free variable into the corresponding element is called a match for Q′ in
-			v. 
+	 * true if the configuration matches the input query.
+	 * (Conjunctive query match definition) If Q′ is a conjunctive query and v is a chase configuration
+	 * having elements for each free variable of Q′, then a homomorphism of Q′ into v
+	 * mapping each free variable into the corresponding element is called a match for Q′ in v. 
 	 */
 	boolean isSuccessful(Query<?> query);
 

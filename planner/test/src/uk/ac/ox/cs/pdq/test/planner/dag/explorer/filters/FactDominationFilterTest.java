@@ -29,6 +29,7 @@ public class FactDominationFilterTest extends TestObjects1{
 	FactDominationFilter filter = new FactDominationFilter();
 
 	@Before public void setup() {
+		super.setup();
 		MockitoAnnotations.initMocks(this);
 	}
 

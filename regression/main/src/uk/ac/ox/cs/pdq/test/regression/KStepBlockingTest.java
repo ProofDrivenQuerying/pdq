@@ -103,15 +103,15 @@ public class KStepBlockingTest extends RegressionTest {
 			
 			Plan plan1, plan2;
 			try (ProgressLogger pLog = new SimpleProgressLogger(this.out)) {
-				Planner planner1 = new Planner(planParams, costParams, reasoningParams, schema, query);
+				Planner planner1 = new Planner(planParams, costParams, reasoningParams, schema);
 				planner1.registerEventHandler(new IntervalEventDrivenLogger(pLog, planParams.getLogIntervals(), planParams.getShortLogIntervals()));
-				plan1 = planner1.search();
+				plan1 = planner1.search(query);
 			}
 			try (ProgressLogger pLog = new SimpleProgressLogger(this.out)) {
 				reasoningParams.setReasoningType(ReasoningTypes.KTERMINATION_CHASE);			
-				Planner planner2 = new Planner(planParams, costParams, reasoningParams, schema, query);
+				Planner planner2 = new Planner(planParams, costParams, reasoningParams, schema);
 				planner2.registerEventHandler(new IntervalEventDrivenLogger(pLog, planParams.getLogIntervals(), planParams.getShortLogIntervals()));
-				plan2 = planner2.search();
+				plan2 = planner2.search(query);
 			}
 
 			if (plan1 != null) {

@@ -8,40 +8,52 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
+
 /**
- * Hold the cost-related parameters
- * 
+ * Hold the cost-related parameters.
+ *
  * @author Julien Leblay
  * @author Efthymia Tsamoura
  */
 public class CostParameters extends uk.ac.ox.cs.pdq.Parameters {
 
-	/** */
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -5183026336708644030L;
 
 	/** Logger. */
 	private static Logger log = Logger.getLogger(CostParameters.class);
 	
+	/** The black box query type. */
 	@Parameter(description="Type of query translator to use in the BLACKBOX_DB"
 			+ "cost estimator (required if the cost_type=BLACKBOX_DB)")
 	protected BlackBoxQueryTypes blackBoxQueryType;
 	
+	/** The black box connection url. */
 	@Parameter(description="Connection URL for the database used by "
 			+ "the BLACKBOX_DB cost estimator (required if the cost_type=BLACKBOX_DB)")
 	protected String blackBoxConnectionUrl;
 
+	/** The black box database name. */
 	@Parameter(description="Name of the database used by the BLACKBOX_DB cost "
 			+ "estimator (required if the cost_type=BLACKBOX_DB)")
 	protected String blackBoxDatabaseName;
 
+	/** The black box database driver. */
+	@Parameter(description="Driver for the database used by the BLACKBOX_DB cost "
+			+ "estimator (required if the cost_type=BLACKBOX_DB)")
+	protected String blackBoxDatabaseDriver;
+
+	/** The black box database user. */
 	@Parameter(description="Username for the database used by the BLACKBOX_DB "
 			+ "cost estimator (required if the cost_type=BLACKBOX_DB)")
 	protected String blackBoxDatabaseUser;
 
+	/** The black box database password. */
 	@Parameter(description="Password for the database used by the BLACKBOX_DB "
 			+ "cost estimator (required if the cost_type=BLACKBOX_DB)")
 	protected String blackBoxDatabasePassword;
 	
+	/** The cost type. */
 	@Parameter(description="Type of cost estimation to use. This has an "
 			+ "influence on the requirements of other planner parameters.\n"
 			+ "If such requirements are violated, a PlannerException will be "
@@ -49,17 +61,19 @@ public class CostParameters extends uk.ac.ox.cs.pdq.Parameters {
 			defaultValue = "BLACKBOX")
 	protected CostTypes costType = CostTypes.BLACKBOX;
 	
+	/** The cardinality estimation type. */
 	@Parameter(description="Type of cardinality estimation to use.",
 			defaultValue = "NAIVE")
 	protected CardinalityEstimationTypes cardinalityEstimationType = CardinalityEstimationTypes.NAIVE;
 	
+	/** The catalog. */
 	@Parameter(description="File which stores the database metadata ")
-	protected String databaseCatalog;
+	protected String catalog;
 
-	/** Properties file name */
+	/**  Properties file name. */
 	static final String DEFAULT_CONFIG_FILE_NAME = "pdq-cost.properties";
 
-	/** Properties file path */
+	/**  Properties file path. */
 	static final String DEFAULT_CONFIG_FILE_PATH = "./" + DEFAULT_CONFIG_FILE_NAME;
 
 	/**
@@ -70,6 +84,8 @@ public class CostParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 	
 	/**
+	 * Gets the version.
+	 *
 	 * @return the version of the planner code, as given by Maven
 	 */
 	public static String getVersion() {
@@ -130,6 +146,8 @@ public class CostParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 	
 	/**
+	 * Gets the black box query type.
+	 *
 	 * @return BlackBoxQueryTypes
 	 */
 	public BlackBoxQueryTypes getBlackBoxQueryType() {
@@ -140,6 +158,8 @@ public class CostParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 
 	/**
+	 * Sets the black box query type.
+	 *
 	 * @param sqlQueryType BlackBoxQueryTypes
 	 */
 	public void setBlackBoxQueryType(BlackBoxQueryTypes sqlQueryType) {
@@ -147,6 +167,8 @@ public class CostParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 
 	/**
+	 * Sets the black box query type.
+	 *
 	 * @param queryType String
 	 */
 	public void setBlackBoxQueryType(String queryType) {
@@ -159,6 +181,8 @@ public class CostParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 	
 	/**
+	 * Gets the black box connection url.
+	 *
 	 * @return String
 	 */
 	public String getBlackBoxConnectionUrl() {
@@ -166,6 +190,8 @@ public class CostParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 
 	/**
+	 * Gets the black box database name.
+	 *
 	 * @return String
 	 */
 	public String getBlackBoxDatabaseName() {
@@ -173,6 +199,17 @@ public class CostParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 
 	/**
+	 * Gets the black box database driver.
+	 *
+	 * @return String
+	 */
+	public String getBlackBoxDatabaseDriver() {
+		return this.blackBoxDatabaseDriver;
+	}
+
+	/**
+	 * Gets the black box database password.
+	 *
 	 * @return String
 	 */
 	public String getBlackBoxDatabasePassword() {
@@ -180,6 +217,8 @@ public class CostParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 
 	/**
+	 * Gets the black box database user.
+	 *
 	 * @return String
 	 */
 	public String getBlackBoxDatabaseUser() {
@@ -187,6 +226,8 @@ public class CostParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 	
 	/**
+	 * Sets the black box connection url.
+	 *
 	 * @param connectionUrl String
 	 */
 	public void setBlackBoxConnectionUrl(String connectionUrl) {
@@ -194,6 +235,17 @@ public class CostParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 
 	/**
+	 * Sets the black box database driver.
+	 *
+	 * @param databaseName String
+	 */
+	public void setBlackBoxDatabaseDriver(String databaseDriver) {
+		this.blackBoxDatabaseDriver = databaseDriver;
+	}
+
+	/**
+	 * Sets the black box database name.
+	 *
 	 * @param databaseName String
 	 */
 	public void setBlackBoxDatabaseName(String databaseName) {
@@ -201,6 +253,8 @@ public class CostParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 
 	/**
+	 * Sets the black box database password.
+	 *
 	 * @param databasePassword String
 	 */
 	public void setBlackBoxDatabasePassword(String databasePassword) {
@@ -208,21 +262,35 @@ public class CostParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 
 	/**
+	 * Sets the black box database user.
+	 *
 	 * @param databaseUser String
 	 */
 	public void setBlackBoxDatabaseUser(String databaseUser) {
 		this.blackBoxDatabaseUser = databaseUser;
 	}
 	
+	/**
+	 * Sets the catalog.
+	 *
+	 * @param catalog the new catalog
+	 */
 	public void setDatabaseCatalog(String catalog) {
-		this.databaseCatalog = catalog;
-	}
-	
-	public String getDatabaseCatalog() {
-		return this.databaseCatalog;
+		this.catalog = catalog;
 	}
 	
 	/**
+	 * Gets the catalog.
+	 *
+	 * @return the catalog
+	 */
+	public String getDatabaseCatalog() {
+		return this.catalog;
+	}
+	
+	/**
+	 * Gets the cost type.
+	 *
 	 * @return CostTypes
 	 */
 	public CostTypes getCostType() {
@@ -230,6 +298,8 @@ public class CostParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 
 	/**
+	 * Sets the cost type.
+	 *
 	 * @param costType String
 	 */
 	public void setCostType(String costType) {
@@ -242,6 +312,8 @@ public class CostParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 
 	/**
+	 * Sets the cost type.
+	 *
 	 * @param costType CostTypes
 	 */
 	public void setCostType(CostTypes costType) {
@@ -249,6 +321,8 @@ public class CostParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 	
 	/**
+	 * Gets the cardinality estimation type.
+	 *
 	 * @return CardinalityEstimationTypes
 	 */
 	public CardinalityEstimationTypes getCardinalityEstimationType() {
@@ -256,6 +330,8 @@ public class CostParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 
 	/**
+	 * Sets the cardinality estimation type.
+	 *
 	 * @param cardEstType String
 	 */
 	public void setCardinalityEstimationType(String cardEstType) {
@@ -268,6 +344,8 @@ public class CostParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 
 	/**
+	 * Sets the cardinality estimation type.
+	 *
 	 * @param cardEstType CardinalityEstimationTypes
 	 */
 	public void setCardinalityEstimationType(CardinalityEstimationTypes cardEstType) {
@@ -276,35 +354,60 @@ public class CostParameters extends uk.ac.ox.cs.pdq.Parameters {
 	
 	/** The types of SQL queries the SQL estimator can use. */
 	public static enum BlackBoxQueryTypes {
+		
+		/** The default. */
 		@EnumParameterValue(description = "Default translator from DAG plan to SQL for blackbox cost estimation")
 		DEFAULT,
 
+		/** The sql with. */
 		@EnumParameterValue(description = "Translator from DAG plan to SQL WITH query for blackbox cost estimation")
 		SQL_WITH
 	}
 	
-	/** */
+	/**
+	 * The Enum CostTypes.
+	 */
 	public static enum CostTypes {
+		
+		/** The simple constant. */
 		@EnumParameterValue(description = "Estimates the cost as the sum of the cost of all accesses in a plan, \n where access cost are provided externally")
 		SIMPLE_CONSTANT,
+		
+		/** The simple random. */
 		@EnumParameterValue(description = "Estimates the cost as the sum of the cost of all accesses in a plan, \n where cost are assigned randomly")
 		SIMPLE_RANDOM,
+		
+		/** The simple given. */
 		@EnumParameterValue(description = "Estimates the cost as the sum of the cost of all accesses in a plan, \n where cost are measured automatically from the underlying datasources")
 		SIMPLE_GIVEN,
+		
+		/** The simple count. */
 		@EnumParameterValue(description = "Estimates the cost as the sum of all accesses in a plan")
 		SIMPLE_COUNT,
+		
+		/** The blackbox. */
 		@EnumParameterValue(description = "Estimates the cost through some externally defined cost function.\nCurrently, this defaults to the white box cost functions relying on textbox cost estimation techniques")
 		BLACKBOX,
+		
+		/** The blackbox db. */
 		@EnumParameterValue(description = "Estimates the cost by translating the query to SQL and asking its cost to a database")
 		BLACKBOX_DB,
+		
+		/** The inverse length. */
 		@EnumParameterValue(description = "Experimental: estimates the cost as the number of atoms in a plan")
 		INVERSE_LENGTH,
+		
+		/** The simple erspi. */
 		@EnumParameterValue(description = "Estimates the cost as the sum of the estimated result size per invocation associated to each access method used in a plan")
 		SIMPLE_ERSPI
 	}
 
-	/** */
+	/**
+	 * The Enum CardinalityEstimationTypes.
+	 */
 	public static enum CardinalityEstimationTypes {
+		
+		/** The naive. */
 		@EnumParameterValue(description = "Naive cardinality estimation, based on external defined constant join/selectivity reduction factors")
 		NAIVE,
 

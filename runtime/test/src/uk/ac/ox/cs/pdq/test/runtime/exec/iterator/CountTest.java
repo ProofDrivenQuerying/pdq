@@ -31,7 +31,8 @@ public class CountTest extends UnaryIteratorTest {
 	@Mock TupleIterator emptyChild;
 	
 	@Before public void setup() {
-        MockitoAnnotations.initMocks(this);
+		super.setup();
+		MockitoAnnotations.initMocks(this);
         when(child.getColumns()).thenReturn(outputColumns);
 		when(child.getType()).thenReturn(outputType);
 		when(child.getInputColumns()).thenReturn(inputColumns);

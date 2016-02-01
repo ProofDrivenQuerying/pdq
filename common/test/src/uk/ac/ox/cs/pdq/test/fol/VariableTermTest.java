@@ -7,11 +7,21 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.fol.Variable;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 public class VariableTermTest {
+	
+	/**
+	 * Makes sure assertions are enabled
+	 */
+	@Before 
+	public void setup() {
+		Utility.assertsEnabled();
+	}
 
 	@Test
 	public void testHashCode() {

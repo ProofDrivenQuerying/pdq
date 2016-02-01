@@ -8,7 +8,7 @@ import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.io.Writer;
 import uk.ac.ox.cs.pdq.io.pretty.PrettyFormulaWriter;
 import uk.ac.ox.cs.pdq.io.pretty.PrettyWriter;
-import uk.ac.ox.cs.pdq.planner.accessible.AccessibilityAxiom;
+import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.ui.proof.Proof;
 import uk.ac.ox.cs.pdq.ui.proof.Proof.State;
 

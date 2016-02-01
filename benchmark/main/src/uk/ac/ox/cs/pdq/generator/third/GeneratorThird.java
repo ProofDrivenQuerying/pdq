@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Arrays;
 
+import org.apache.log4j.Logger;
+
 import uk.ac.ox.cs.pdq.benchmark.BenchmarkParameters;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -30,6 +32,8 @@ import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
  */
 public class GeneratorThird extends AbstractGenerator{
 
+	private static Logger log = Logger.getLogger(GeneratorThird.class);
+	
 	public GeneratorThird(BenchmarkParameters parameters, String schemaFile, String queryFile, PrintStream out) {
 		super(parameters, schemaFile, queryFile, out);
 	}
@@ -81,27 +85,27 @@ public class GeneratorThird extends AbstractGenerator{
 				try(FileInputStream qis = new FileInputStream("test/output/" + queryFile)) {
 					ConjunctiveQuery query = new QueryReader(schema).read(qis);
 					
-					System.out.print(queryFile);
+					log.trace(queryFile);
 					planParams.setMaxDepth(1);
-					Planner planner = new Planner(planParams, costParams, reasoningParams, schema, query);
-					if (planner.search() != null) {
-						System.out.print(" not answerable without constraints");
+					Planner planner = new Planner(planParams, costParams, reasoningParams, schema);
+					if (planner.search(query) != null) {
+						log.trace(" not answerable without constraints");
 					}
 					planParams.setMaxDepth(10);
-					planner = new Planner(planParams, costParams, reasoningParams, schema, query);
-					if (planner.search() != null) {
-						System.out.print(", not answerable with constraints (depth=10)");
+					planner = new Planner(planParams, costParams, reasoningParams, schema);
+					if (planner.search(query) != null) {
+						log.trace(", not answerable with constraints (depth=10)");
 					}
-					System.out.println();
+					log.trace("\n");
 				}
 			}
 		} catch (PlannerException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 		}
 	}
 }
