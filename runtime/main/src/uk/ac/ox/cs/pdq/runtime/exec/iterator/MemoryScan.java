@@ -63,8 +63,9 @@ public class MemoryScan extends TupleIterator {
 		return this.filter;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 
+	 * {@inheritDoc}
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -77,9 +78,10 @@ public class MemoryScan extends TupleIterator {
 		return result.toString();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#open()
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.util.ResetableIterator#open()
 	 */
 	@Override
 	public void open() {
@@ -102,8 +104,9 @@ public class MemoryScan extends TupleIterator {
 		this.nextTuple = null;
 	}
 	
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 
+	 * {@inheritDoc}
 	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#close()
 	 */
 	@Override
@@ -112,9 +115,10 @@ public class MemoryScan extends TupleIterator {
 		super.close();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#reset()
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.util.ResetableIterator#reset()
 	 */
 	@Override
 	public void reset() {
@@ -124,10 +128,10 @@ public class MemoryScan extends TupleIterator {
 		this.nextTuple();
 	}
 
-
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#next()
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see java.util.Iterator#next()
 	 */
 	@Override
 	public Tuple next() {
@@ -154,8 +158,9 @@ public class MemoryScan extends TupleIterator {
 		return !this.interrupted && this.nextTuple != null;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 
+	 * {@inheritDoc}
 	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#deepCopy()
 	 */
 	@Override
@@ -163,8 +168,9 @@ public class MemoryScan extends TupleIterator {
 		return new MemoryScan(this.columns, this.data, this.filter);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 
+	 * {@inheritDoc}
 	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#interrupt()
 	 */
 	@Override

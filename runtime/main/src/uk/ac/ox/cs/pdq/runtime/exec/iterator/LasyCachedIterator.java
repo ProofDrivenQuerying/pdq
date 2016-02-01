@@ -39,8 +39,8 @@ public class LasyCachedIterator extends TupleIterator {
 		this.inner = inner;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * {@inheritDoc}
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -51,9 +51,9 @@ public class LasyCachedIterator extends TupleIterator {
 		return result.toString();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.UnaryIterator#open()
+	/**
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.util.ResetableIterator#open()
 	 */
 	@Override
 	public void open() {
@@ -61,9 +61,10 @@ public class LasyCachedIterator extends TupleIterator {
 		this.isReset = false;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.UnaryIterator#reset()
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.util.ResetableIterator#reset()
 	 */
 	@Override
 	public void reset() {
@@ -73,9 +74,10 @@ public class LasyCachedIterator extends TupleIterator {
 		this.iterator = this.cache.iterator();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.UnaryIterator#hasNext()
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see java.util.Iterator#hasNext()
 	 */
 	@Override
 	public boolean hasNext() {
@@ -89,9 +91,10 @@ public class LasyCachedIterator extends TupleIterator {
 		return this.inner.hasNext();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#next()
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see java.util.Iterator#next()
 	 */
 	@Override
 	public Tuple next() {
@@ -105,8 +108,9 @@ public class LasyCachedIterator extends TupleIterator {
 		return result;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 
+	 * {@inheritDoc}
 	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#remove()
 	 */
 	@Override
@@ -116,8 +120,9 @@ public class LasyCachedIterator extends TupleIterator {
 		}
 	}
 	
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 
+	 * {@inheritDoc}
 	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#deepCopy()
 	 */
 	@Override
@@ -125,8 +130,9 @@ public class LasyCachedIterator extends TupleIterator {
 		return new LasyCachedIterator(this.inner);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 
+	 * {@inheritDoc}
 	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#interrupt()
 	 */
 	@Override
@@ -136,8 +142,9 @@ public class LasyCachedIterator extends TupleIterator {
 		this.interrupted = true;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 
+	 * {@inheritDoc}
 	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#bind(uk.ac.ox.cs.pdq.util.Tuple)
 	 */
 	@Override

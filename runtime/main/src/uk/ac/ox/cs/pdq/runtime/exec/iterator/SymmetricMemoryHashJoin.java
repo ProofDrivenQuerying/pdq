@@ -114,8 +114,9 @@ public class SymmetricMemoryHashJoin extends Join {
 		this.rightKeys = this.makeRightKey(left.getType().size());
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 
+	 * {@inheritDoc}
 	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.Join#nextTuple()
 	 */
 	@Override
@@ -251,8 +252,9 @@ public class SymmetricMemoryHashJoin extends Join {
 		return result.toArray(new Integer[result.size()]);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 
+	 * {@inheritDoc}
 	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#deepCopy()
 	 */
 	@Override
@@ -267,9 +269,10 @@ public class SymmetricMemoryHashJoin extends Join {
 				this.left, this.right);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#reset()
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.NaryIterator#reset()
 	 */
 	@Override
 	public void reset() {

@@ -30,8 +30,8 @@ public class Distinct extends UnaryIterator {
 		super(child);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * {@inheritDoc}
 	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#deepCopy()
 	 */
 	@Override
@@ -39,8 +39,8 @@ public class Distinct extends UnaryIterator {
 		return new Distinct(this.child.deepCopy());
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * {@inheritDoc}
 	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.UnaryIterator#open()
 	 */
 	@Override
@@ -68,9 +68,9 @@ public class Distinct extends UnaryIterator {
 		}
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.UnaryIterator#hasNext()
+	/**
+	 * {@inheritDoc}
+	 * @see java.util.Iterator#hasNext()
 	 */
 	@Override
 	public boolean hasNext() {
@@ -78,9 +78,9 @@ public class Distinct extends UnaryIterator {
 		return !this.interrupted && this.nextResult != null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#next()
+	/**
+	 * {@inheritDoc}
+	 * @see java.util.Iterator#next()
 	 */
 	@Override
 	public Tuple next() {
@@ -94,8 +94,8 @@ public class Distinct extends UnaryIterator {
 		return result;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * {@inheritDoc}
 	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.UnaryIterator#reset()
 	 */
 	@Override
@@ -105,9 +105,9 @@ public class Distinct extends UnaryIterator {
 		this.nextTuple();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#interrupt()
+	/**
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.UnaryIterator#interrupt()
 	 */
 	@Override
 	public void interrupt() {

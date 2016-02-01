@@ -60,7 +60,8 @@ public class ExecutionReport implements EventHandler {
 	}
 	
 	/**
-	 * Report.
+	 * Reports, i.e. print from description of ongoing process to the last set 
+	 * output stream.
 	 */
 	public void report() {
 		for (TupleIterator t: this.counters.keySet()) {

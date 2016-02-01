@@ -158,9 +158,9 @@ public class BindJoin extends Join {
 		return this.right.getInputType().createTuple(result);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.NaryIterator#toString()
+	/**
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.Join#toString()
 	 */
 	@Override
 	public String toString() {

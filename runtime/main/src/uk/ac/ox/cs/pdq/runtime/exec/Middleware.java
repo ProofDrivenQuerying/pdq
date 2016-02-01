@@ -79,5 +79,4 @@ public final class Middleware {
 		}
 		return result;
 	}
-
 }

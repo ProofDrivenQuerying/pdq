@@ -39,7 +39,6 @@ import com.google.common.collect.Lists;
  * Translate logical plans to physical relation plans.
  * 
  * @author Julien Leblay
- *
  */
 public class PlanTranslator {
 	

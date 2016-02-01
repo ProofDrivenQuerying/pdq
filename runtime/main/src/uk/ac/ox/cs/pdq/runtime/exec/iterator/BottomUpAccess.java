@@ -82,8 +82,8 @@ public class BottomUpAccess extends UnaryIterator {
 		return this.accessMethod;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * {@inheritDoc}
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -96,8 +96,8 @@ public class BottomUpAccess extends UnaryIterator {
 		return result.toString();
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * {@inheritDoc}
 	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.UnaryIterator#open()
 	 */
 	@Override
@@ -106,8 +106,8 @@ public class BottomUpAccess extends UnaryIterator {
 		this.outputs = null;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * {@inheritDoc}
 	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.UnaryIterator#reset()
 	 */
 	@Override
@@ -116,9 +116,9 @@ public class BottomUpAccess extends UnaryIterator {
 		this.outputs = null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.UnaryIterator#hasNext()
+	/**
+	 * {@inheritDoc}
+	 * @see java.util.Iterator#hasNext()
 	 */
 	@Override
 	public boolean hasNext() {
@@ -130,9 +130,9 @@ public class BottomUpAccess extends UnaryIterator {
 		return this.outputs.hasNext();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#next()
+	/**
+	 * {@inheritDoc}
+	 * @see java.util.Iterator#next()
 	 */
 	@Override
 	public Tuple next() {
@@ -145,7 +145,7 @@ public class BottomUpAccess extends UnaryIterator {
 	}
 
 	/**
-	 * Initializes the operator by performing the access and preloading the
+	 * Initializes the operator by performing the access and pre-loading the
 	 * results into iteratorCache.
 	 */
 	private void init() {
@@ -160,8 +160,8 @@ public class BottomUpAccess extends UnaryIterator {
 		this.outputs.open();
 	}
 	
-	/*
-	 * (non-Javadoc)
+	/**
+	 * {@inheritDoc}
 	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#deepCopy()
 	 */
 	@Override

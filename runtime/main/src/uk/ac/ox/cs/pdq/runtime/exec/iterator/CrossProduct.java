@@ -61,9 +61,9 @@ public class CrossProduct extends NaryIterator {
 		this.relativeInputPositions = ImmutableMap.copyOf(inferInputMappings(inputs, children));
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#open()
+	/**
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.NaryIterator#open()
 	 */
 	@Override
 	public void open() {
@@ -126,8 +126,8 @@ public class CrossProduct extends NaryIterator {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * {@inheritDoc}
 	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#deepCopy()
 	 */
 	@Override
@@ -139,8 +139,9 @@ public class CrossProduct extends NaryIterator {
 		return new CrossProduct(this.inputColumns, clones);
 	}
 
-	/* (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#hasNext()
+	/**
+	 * {@inheritDoc}
+	 * @see java.util.Iterator#hasNext()
 	 */
 	@Override
 	public boolean hasNext() {
@@ -158,8 +159,9 @@ public class CrossProduct extends NaryIterator {
 		return this.nextTuple != null;
 	}
 
-	/* (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#next()
+	/**
+	 * {@inheritDoc}
+	 * @see java.util.Iterator#next()
 	 */
 	@Override
 	public Tuple next() {

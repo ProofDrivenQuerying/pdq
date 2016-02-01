@@ -73,8 +73,10 @@ public class Scan extends TupleIterator {
 		return this.filter;
 	}
 	
-	/* (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#toString()
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
@@ -89,9 +91,10 @@ public class Scan extends TupleIterator {
 		return result.toString();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#open()
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.util.ResetableIterator#open()
 	 */
 	@Override
 	public void open() {
@@ -115,8 +118,9 @@ public class Scan extends TupleIterator {
 		this.nextTuple = null;
 	}
 	
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 
+	 * {@inheritDoc}
 	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#close()
 	 */
 	@Override
@@ -125,9 +129,10 @@ public class Scan extends TupleIterator {
 		super.close();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#reset()
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.util.ResetableIterator#reset()
 	 */
 	@Override
 	public void reset() {
@@ -137,9 +142,10 @@ public class Scan extends TupleIterator {
 		this.nextTuple();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#hasNext()
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see java.util.Iterator#hasNext()
 	 */
 	@Override
 	public boolean hasNext() {
@@ -147,9 +153,10 @@ public class Scan extends TupleIterator {
 		return !this.interrupted && this.nextTuple != null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#next()
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see java.util.Iterator#next()
 	 */
 	@Override
 	public Tuple next() {
@@ -166,8 +173,9 @@ public class Scan extends TupleIterator {
 		return result;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 
+	 * {@inheritDoc}
 	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#deepCopy()
 	 */
 	@Override
@@ -175,8 +183,9 @@ public class Scan extends TupleIterator {
 		return new Scan(this.relation, this.filter);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 
+	 * {@inheritDoc}
 	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#interrupt()
 	 */
 	@Override

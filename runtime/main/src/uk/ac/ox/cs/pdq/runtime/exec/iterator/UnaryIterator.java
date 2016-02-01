@@ -75,8 +75,9 @@ public abstract class UnaryIterator extends TupleIterator {
 		return this.child;
 	}
 	
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 
+	 * {@inheritDoc}
 	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#setEventBus(com.google.common.eventbus.EventBus)
 	 */
 	@Override
@@ -85,9 +86,10 @@ public abstract class UnaryIterator extends TupleIterator {
 		this.child.setEventBus(eb);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#open()
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.util.ResetableIterator#open()
 	 */
 	@Override
 	public void open() {
@@ -96,11 +98,10 @@ public abstract class UnaryIterator extends TupleIterator {
 		this.open = true;
 	}
 
-	/* (non-Javadoc)
+	/**
+	 * 
+	 * {@inheritDoc}
 	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#close()
-	 */
-	/*
-	 * @see java.lang.AutoCloseable#close()
 	 */
 	@Override
 	public void close() {
@@ -109,9 +110,10 @@ public abstract class UnaryIterator extends TupleIterator {
 		this.child.close();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#reset()
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.util.ResetableIterator#reset()
 	 */
 	@Override
 	public void reset() {
@@ -120,8 +122,9 @@ public abstract class UnaryIterator extends TupleIterator {
 		this.child.reset();
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 
+	 * {@inheritDoc}
 	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#interrupt()
 	 */
 	@Override
@@ -132,9 +135,9 @@ public abstract class UnaryIterator extends TupleIterator {
 	}
 	
 	/**
-	 * Bind.
-	 *
-	 * @param t Tuple
+	 * 
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#bind(uk.ac.ox.cs.pdq.util.Tuple)
 	 */
 	@Override
 	public void bind(Tuple t) {

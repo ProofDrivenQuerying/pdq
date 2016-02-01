@@ -97,20 +97,18 @@ public class VolcanoPlanExecutor implements PlanExecutor {
 		this.eventBus = eventBus;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see uk.ac.ox.cs.pdq.runtime.plan.PlanExecutor#execute()
+	/**
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.runtime.exec.PlanExecutor#execute()
 	 */
 	@Override
 	public Result execute() throws EvaluationException {
 		return this.execute(ExecutionModes.DEFAULT);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see uk.ac.ox.cs.pdq.runtime.plan.PlanExecutor#execute(ExecutionModes mode)
+	/**
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.runtime.exec.PlanExecutor#execute(uk.ac.ox.cs.pdq.runtime.exec.PlanExecutor.ExecutionModes)
 	 */
 	@Override
 	public Result execute(ExecutionModes mode) throws EvaluationException {
@@ -162,7 +160,8 @@ public class VolcanoPlanExecutor implements PlanExecutor {
 		}
 	}
 
-	/* (non-Javadoc)
+	/**
+	 * {@inheritDoc}
 	 * @see uk.ac.ox.cs.pdq.runtime.exec.PlanExecutor#setTuplesLimit(int)
 	 */
 	@Override
@@ -170,7 +169,8 @@ public class VolcanoPlanExecutor implements PlanExecutor {
 		this.tupleLimit = limit;
 	}
 
-	/* (non-Javadoc)
+	/**
+	 * {@inheritDoc}
 	 * @see uk.ac.ox.cs.pdq.runtime.exec.PlanExecutor#setCache(boolean)
 	 */
 	@Override

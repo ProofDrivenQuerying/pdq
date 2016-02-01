@@ -25,8 +25,8 @@ public class EmptyIterator extends TupleIterator {
 		super(new LinkedList<Typed>(), new LinkedList<Typed>());
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * {@inheritDoc}
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -36,9 +36,9 @@ public class EmptyIterator extends TupleIterator {
 		return result.toString();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#open()
+	/**
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.util.ResetableIterator#open()
 	 */
 	@Override
 	public void open() {
@@ -46,8 +46,8 @@ public class EmptyIterator extends TupleIterator {
 		this.open = true;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * {@inheritDoc}
 	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#close()
 	 */
 	@Override
@@ -56,9 +56,9 @@ public class EmptyIterator extends TupleIterator {
 		this.open = false;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#reset()
+	/**
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.util.ResetableIterator#reset()
 	 */
 	@Override
 	public void reset() {
@@ -66,9 +66,9 @@ public class EmptyIterator extends TupleIterator {
 		Preconditions.checkState(!this.interrupted);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#hasNext()
+	/**
+	 * {@inheritDoc}
+	 * @see java.util.Iterator#hasNext()
 	 */
 	@Override
 	public boolean hasNext() {
@@ -77,9 +77,9 @@ public class EmptyIterator extends TupleIterator {
 		return false;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#next()
+	/**
+	 * {@inheritDoc}
+	 * @see java.util.Iterator#next()
 	 */
 	@Override
 	public Tuple next() {
@@ -88,8 +88,8 @@ public class EmptyIterator extends TupleIterator {
 		throw new NoSuchElementException();
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * {@inheritDoc}
 	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#deepCopy()
 	 */
 	@Override
@@ -97,8 +97,8 @@ public class EmptyIterator extends TupleIterator {
 		return new EmptyIterator();
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * {@inheritDoc}
 	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#interrupt()
 	 */
 	@Override
@@ -108,7 +108,8 @@ public class EmptyIterator extends TupleIterator {
 		this.interrupted = true;
 	}
 
-	/* (non-Javadoc)
+	/**
+	 * {@inheritDoc}
 	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#bind(uk.ac.ox.cs.pdq.util.Tuple)
 	 */
 	@Override

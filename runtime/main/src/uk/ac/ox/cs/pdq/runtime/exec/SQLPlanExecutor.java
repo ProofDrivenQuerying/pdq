@@ -29,7 +29,6 @@ import com.google.common.eventbus.EventBus;
  * are backed by relations in the same database instance.
  * 
  * @author Julien Leblay
- *
  */
 public class SQLPlanExecutor implements PlanExecutor {
 
@@ -73,30 +72,26 @@ public class SQLPlanExecutor implements PlanExecutor {
 	}
 
 	/**
-	 * Sets the event bus.
-	 *
-	 * @param eventBus EventBus
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.PlanExecutor#setEventBus(EventBus)
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.runtime.exec.PlanExecutor#setEventBus(com.google.common.eventbus.EventBus)
 	 */
 	@Override
 	public void setEventBus(EventBus eventBus) {
 		this.eventBus = eventBus;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see uk.ac.ox.cs.pdq.runtime.plan.PlanExecutor#execute()
+	/**
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.runtime.exec.PlanExecutor#execute()
 	 */
 	@Override
 	public Result execute() throws EvaluationException {
 		return this.execute(ExecutionModes.DEFAULT);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see uk.ac.ox.cs.pdq.runtime.plan.PlanExecutor#execute(ExecutionModes mode)
+	/**
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.runtime.exec.PlanExecutor#execute(uk.ac.ox.cs.pdq.runtime.exec.PlanExecutor.ExecutionModes)
 	 */
 	@Override
 	public Result execute(ExecutionModes mode) throws EvaluationException {
@@ -143,7 +138,8 @@ public class SQLPlanExecutor implements PlanExecutor {
 		return SupportedDialect.SQL92;
 	}
 
-	/* (non-Javadoc)
+	/**
+	 * {@inheritDoc}
 	 * @see uk.ac.ox.cs.pdq.runtime.exec.PlanExecutor#setTuplesLimit(int)
 	 */
 	@Override
@@ -151,7 +147,9 @@ public class SQLPlanExecutor implements PlanExecutor {
 		this.tupleLimit = limit;
 	}
 
-	/* (non-Javadoc)
+	/**
+	 * 
+	 * {@inheritDoc}
 	 * @see uk.ac.ox.cs.pdq.runtime.exec.PlanExecutor#setCache(boolean)
 	 */
 	@Override

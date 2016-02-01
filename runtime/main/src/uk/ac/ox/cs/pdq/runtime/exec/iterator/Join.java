@@ -117,9 +117,9 @@ public abstract class Join extends NaryIterator {
 		return this.predicate;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#open()
+	/**
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.NaryIterator#open()
 	 */
 	@Override
 	public void open() {
@@ -170,8 +170,8 @@ public abstract class Join extends NaryIterator {
 		return new ConjunctivePredicate<>(equalities);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * {@inheritDoc}
 	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.NaryIterator#toString()
 	 */
 	@Override
@@ -191,12 +191,12 @@ public abstract class Join extends NaryIterator {
 
 	/**
 	 * Move the iterator forward and prepares the next tuple to be returned.
-	 * 
 	 */
 	protected abstract void nextTuple() ;
 
-	/* (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#hasNext()
+	/**
+	 * {@inheritDoc}
+	 * @see java.util.Iterator#hasNext()
 	 */
 	@Override
 	public boolean hasNext() {
@@ -214,8 +214,9 @@ public abstract class Join extends NaryIterator {
 		return this.nextTuple != null;
 	}
 
-	/* (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#next()
+	/**
+	 * {@inheritDoc}
+	 * @see java.util.Iterator#next()
 	 */
 	@Override
 	public Tuple next() {
@@ -233,9 +234,9 @@ public abstract class Join extends NaryIterator {
 	}
 
 	
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#bind(Tuple)
+	/**
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.NaryIterator#bind(uk.ac.ox.cs.pdq.util.Tuple)
 	 */
 	@Override
 	public void bind(Tuple t) {

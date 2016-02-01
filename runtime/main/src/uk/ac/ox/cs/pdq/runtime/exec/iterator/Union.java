@@ -70,7 +70,7 @@ public class Union extends NaryIterator {
 	}
 	
 	/**
-	 * Same types.
+	 * Checks whether all the given operators are of the same types.
 	 *
 	 * @param children the children
 	 * @return true, if successful
@@ -87,8 +87,9 @@ public class Union extends NaryIterator {
 		return true;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 
+	 * {@inheritDoc}
 	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#deepCopy()
 	 */
 	@Override
@@ -100,8 +101,9 @@ public class Union extends NaryIterator {
 		return new Union(clones);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 
+	 * {@inheritDoc}
 	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.NaryIterator#open()
 	 */
 	@Override
@@ -137,9 +139,10 @@ public class Union extends NaryIterator {
 		this.nextTuple = null;
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#hasNext()
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see java.util.Iterator#hasNext()
 	 */
 	@Override
 	public boolean hasNext() {
@@ -150,9 +153,10 @@ public class Union extends NaryIterator {
 		return this.nextTuple != null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#next()
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see java.util.Iterator#next()
 	 */
 	@Override
 	public Tuple next() {
@@ -165,8 +169,9 @@ public class Union extends NaryIterator {
 		return result;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 
+	 * {@inheritDoc}
 	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.NaryIterator#reset()
 	 */
 	@Override

@@ -115,7 +115,7 @@ public class SQLQueryEvaluator implements QueryEvaluator {
 	}
 	
 	/**
-	 * Evalue the given SQL query and return the result into a table.
+	 * Evaluates the given SQL query and return the result into a table.
 	 *
 	 * @param sql the sql
 	 * @param output List<Typed>
@@ -158,10 +158,7 @@ public class SQLQueryEvaluator implements QueryEvaluator {
 	}
 
 	/**
-	 * Evaluate.
-	 *
-	 * @return Result
-	 * @throws EvaluationException the evaluation exception
+	 * {@inheritDoc}
 	 * @see uk.ac.ox.cs.pdq.runtime.query.QueryEvaluator#evaluate()
 	 */
 	@Override

@@ -139,8 +139,9 @@ public class TopDownAccess extends TupleIterator {
 		return result;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 
+	 * {@inheritDoc}
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -152,9 +153,10 @@ public class TopDownAccess extends TupleIterator {
 		return result.toString();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.UnaryIterator#open()
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.util.ResetableIterator#open()
 	 */
 	@Override
 	public void open() {
@@ -167,9 +169,10 @@ public class TopDownAccess extends TupleIterator {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.UnaryIterator#reset()
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.util.ResetableIterator#reset()
 	 */
 	@Override
 	public void reset() {
@@ -179,9 +182,10 @@ public class TopDownAccess extends TupleIterator {
 		this.nextTuple();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.UnaryIterator#hasNext()
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see java.util.Iterator#hasNext()
 	 */
 	@Override
 	public boolean hasNext() {
@@ -196,9 +200,10 @@ public class TopDownAccess extends TupleIterator {
 		return this.nextTuple != null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#next()
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see java.util.Iterator#next()
 	 */
 	@Override
 	public Tuple next() {
@@ -243,9 +248,9 @@ public class TopDownAccess extends TupleIterator {
 	}
 
 	/**
-	 * Bind.
-	 *
-	 * @param input Tuple
+	 * 
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#bind(uk.ac.ox.cs.pdq.util.Tuple)
 	 */
 	@Override
 	public void bind(Tuple input) {
@@ -318,8 +323,9 @@ public class TopDownAccess extends TupleIterator {
 		return this.staticInputs;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 
+	 * {@inheritDoc}
 	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#deepCopy()
 	 */
 	@Override
@@ -343,7 +349,9 @@ public class TopDownAccess extends TupleIterator {
 		this.outputs = null;
 	}
 
-	/* (non-Javadoc)
+	/**
+	 * 
+	 * {@inheritDoc}
 	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#interrupt()
 	 */
 	@Override

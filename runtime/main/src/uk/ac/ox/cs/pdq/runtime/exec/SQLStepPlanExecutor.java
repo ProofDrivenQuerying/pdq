@@ -42,20 +42,18 @@ public class SQLStepPlanExecutor extends SQLPlanExecutor {
 		super(plan, q, sem, properties);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see uk.ac.ox.cs.pdq.runtime.plan.PlanExecutor#execute()
+	/**
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.runtime.exec.SQLPlanExecutor#execute()
 	 */
 	@Override
 	public Result execute() throws EvaluationException {
 		return this.execute(ExecutionModes.DEFAULT);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see uk.ac.ox.cs.pdq.runtime.plan.PlanExecutor#execute(ExecutionModes mode)
+	/**
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.runtime.exec.SQLPlanExecutor#execute(uk.ac.ox.cs.pdq.runtime.exec.PlanExecutor.ExecutionModes)
 	 */
 	@Override
 	public Result execute(ExecutionModes mode) throws EvaluationException {

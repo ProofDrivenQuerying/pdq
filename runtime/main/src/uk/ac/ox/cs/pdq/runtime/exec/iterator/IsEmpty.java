@@ -33,8 +33,8 @@ public class IsEmpty extends UnaryIterator {
 				child);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * {@inheritDoc}
 	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#deepCopy()
 	 */
 	@Override
@@ -42,9 +42,9 @@ public class IsEmpty extends UnaryIterator {
 		return new IsEmpty(this.child.deepCopy());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.UnaryIterator#hasNext()
+	/**
+	 * {@inheritDoc}
+	 * @see java.util.Iterator#hasNext()
 	 */
 	@Override
 	public boolean hasNext() {
@@ -52,9 +52,9 @@ public class IsEmpty extends UnaryIterator {
 		return !this.interrupted && this.nextTuple == null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#next()
+	/**
+	 * {@inheritDoc}
+	 * @see java.util.Iterator#next()
 	 */
 	@Override
 	public Tuple next() {
@@ -67,8 +67,8 @@ public class IsEmpty extends UnaryIterator {
 		throw new NoSuchElementException("End of operator reached.");
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * {@inheritDoc}
 	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.UnaryIterator#reset()
 	 */
 	@Override
@@ -77,8 +77,8 @@ public class IsEmpty extends UnaryIterator {
 		this.nextTuple = null;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * {@inheritDoc}
 	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#getColumnsDisplay()
 	 */
 	@Override

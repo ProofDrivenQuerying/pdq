@@ -209,7 +209,9 @@ public abstract class NaryIterator extends TupleIterator {
 		return this.children;
 	}
 	
-	/* (non-Javadoc)
+	/**
+	 * 
+	 * {@inheritDoc}
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -226,8 +228,9 @@ public abstract class NaryIterator extends TupleIterator {
 		return result.toString();
 	}
 	
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 
+	 * {@inheritDoc}
 	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#setEventBus(com.google.common.eventbus.EventBus)
 	 */
 	@Override
@@ -238,9 +241,10 @@ public abstract class NaryIterator extends TupleIterator {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#open()
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.util.ResetableIterator#open()
 	 */
 	@Override
 	public void open() {
@@ -251,8 +255,9 @@ public abstract class NaryIterator extends TupleIterator {
 		this.open = true;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 
+	 * {@inheritDoc}
 	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#close()
 	 */
 	@Override
@@ -263,9 +268,10 @@ public abstract class NaryIterator extends TupleIterator {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#reset()
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.util.ResetableIterator#reset()
 	 */
 	@Override
 	public void reset() {
@@ -276,8 +282,9 @@ public abstract class NaryIterator extends TupleIterator {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 
+	 * {@inheritDoc}
 	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#interrupt()
 	 */
 	@Override
@@ -290,9 +297,10 @@ public abstract class NaryIterator extends TupleIterator {
 		}
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#bind(uk.ac.ox.cs.pdq.structures.Tuple)
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#bind(uk.ac.ox.cs.pdq.util.Tuple)
 	 */
 	@Override
 	public void bind(Tuple t) {

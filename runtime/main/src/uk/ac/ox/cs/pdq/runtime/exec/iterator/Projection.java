@@ -112,13 +112,9 @@ public class Projection extends UnaryIterator {
 		return projected;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.open.OpenUnaryIterator#nextTuple(uk.ac.ox.cs.pdq.structures.Tuple)
-	 */
 	/**
-	 * Method hasNext.
-	 * @return boolean
+	 * 
+	 * {@inheritDoc}
 	 * @see java.util.Iterator#hasNext()
 	 */
 	@Override
@@ -127,9 +123,10 @@ public class Projection extends UnaryIterator {
 		return !this.interrupted && this.child.hasNext();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#next()
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see java.util.Iterator#next()
 	 */
 	@Override
 	public Tuple next() {
@@ -154,8 +151,9 @@ public class Projection extends UnaryIterator {
 		return this.outputType.createTuple(result);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 
+	 * {@inheritDoc}
 	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#deepCopy()
 	 */
 	@Override
@@ -186,7 +184,9 @@ public class Projection extends UnaryIterator {
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/**
+	 * 
+	 * {@inheritDoc}
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

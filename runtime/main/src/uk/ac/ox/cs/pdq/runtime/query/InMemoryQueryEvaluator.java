@@ -68,25 +68,17 @@ public class InMemoryQueryEvaluator implements QueryEvaluator {
 	}
 	
 	/**
-	 * Sets the event bus.
-	 *
-	 * @param eventBus EventBus
-	 * @see uk.ac.ox.cs.pdq.runtime.query.QueryEvaluator#setEventBus(EventBus)
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.runtime.query.QueryEvaluator#setEventBus(com.google.common.eventbus.EventBus)
 	 */
 	@Override
 	public void setEventBus(EventBus eventBus) {
 		this.eventBus = eventBus;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.benchmark.eval.QueryEvaluator#evaluate(uk.ac.ox.cs.pdq.formula.ConjunctiveQuery)
-	 */
 	/**
-	 * Evaluate.
-	 *
-	 * @return Result
-	 * @throws EvaluationException the evaluation exception
+	 * 
+	 * {@inheritDoc}
 	 * @see uk.ac.ox.cs.pdq.runtime.query.QueryEvaluator#evaluate()
 	 */
 	@Override

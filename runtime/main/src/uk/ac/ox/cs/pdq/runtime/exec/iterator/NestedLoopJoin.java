@@ -79,8 +79,8 @@ public class NestedLoopJoin extends Join {
 		super(predicate, inputs, children);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * {@inheritDoc}
 	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.Join#open()
 	 */
 	@Override
@@ -89,9 +89,10 @@ public class NestedLoopJoin extends Join {
 		this.hasNext = true;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.Join#reset()
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.NaryIterator#reset()
 	 */
 	@Override
 	public void reset() {
@@ -99,8 +100,9 @@ public class NestedLoopJoin extends Join {
 		this.hasNext = true;
 	}
 	
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 
+	 * {@inheritDoc}
 	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.Join#hasNext()
 	 */
 	public boolean hasNext() {
@@ -163,8 +165,9 @@ public class NestedLoopJoin extends Join {
 		} while (!this.predicate.isSatisfied(this.nextTuple));
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 
+	 * {@inheritDoc}
 	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#deepCopy()
 	 */
 	@Override

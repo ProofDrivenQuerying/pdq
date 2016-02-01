@@ -31,9 +31,6 @@ public class QueryEvaluatorFactory {
 	 * @throws EvaluationException the evaluation exception
 	 */
 	public static QueryEvaluator newEvaluator(Schema schema, Query<?> query) throws EvaluationException {
-//		if (!checkConsistency(schema)) {
-//			throw new EvaluationException("Currently query evaluation for heterogeneous sources is not supported.");
-//		}
 		try {
 			QueryEvaluator result = null;
 			for (Predicate p: ((ConjunctiveQuery) query).getBody()) {
@@ -49,25 +46,4 @@ public class QueryEvaluatorFactory {
 			throw new EvaluationException(e.getMessage(), e);
 		}
 	}
-
-	/**
-	 * Check consistency.
-	 *
-	 * @param schema the schema
-	 * @return true if all the relation in the given schema are of the same
-	 * most-specific type.
-	 */
-	@Deprecated
-	private static boolean checkConsistency(Schema schema) {
-		Class<?> cl = null;
-		for (Relation r: schema.getRelations()) {
-			if (cl == null) {
-				cl = r.getClass();
-			} else if (!cl.equals(r.getClass())) {
-				return false;
-			}
-		}
-		return true;
-	}
-
 }

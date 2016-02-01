@@ -37,10 +37,9 @@ public class Bootstrap {
 	/** Logger. */
 	private static Logger log = Logger.getLogger(Bootstrap.class); 
 	
-	/** The Constant PROGRAM_NAME. */
+	/** The program name. */
 	private static final String PROGRAM_NAME = "pdq-runtime-<version>.jar";
 	
-	/** The help. */
 	@Parameter(names = { "-h", "--help" }, help = true, description = "Displays this help message.")
 	private boolean help;
 	
@@ -53,7 +52,6 @@ public class Bootstrap {
 		return this.help;
 	}
 	
-	/** The schema path. */
 	@Parameter(names = { "-s", "--schema" }, required = true,
 			validateWith=FileValidator.class,
 			description ="Path to the input schema definition file.")
