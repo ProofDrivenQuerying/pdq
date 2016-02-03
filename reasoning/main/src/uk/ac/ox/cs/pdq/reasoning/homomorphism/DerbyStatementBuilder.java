@@ -78,7 +78,7 @@ public class DerbyStatementBuilder extends SQLStatementBuilder {
 	 * 
 	 */
 	@Override
-	protected Pair<String,String> createTableIndex(DBRelation relation, Integer... columns) {
+	protected Pair<String,String> createTableIndex(boolean isForQuery, DBRelation relation, Integer... columns) {
 		StringBuilder indexName = new StringBuilder();
 		StringBuilder indexColumns = new StringBuilder();
 		String sep1 = "", sep2 = "";
@@ -88,6 +88,9 @@ public class DerbyStatementBuilder extends SQLStatementBuilder {
 			sep1 = "_";
 			sep2 = ",";
 		}
+		if(isForQuery)
+			indexName.append("Q");
+		
 		String create ="CREATE INDEX idx_" + this.encodeName(relation.getName()) + "_" + indexName +
 				" ON " + this.encodeName(relation.getName()) + "(" + indexColumns + ")";
 		String drop ="DROP INDEX idx_" + this.encodeName(relation.getName()) + "_" + indexName;

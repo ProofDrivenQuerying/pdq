@@ -182,7 +182,7 @@ public abstract class SQLStatementBuilder {
 	 * @param columns
 	 * @return a SQL statement that creates an index for the columns of the input relation
 	 */
-	protected Pair<String,String> createTableIndex(DBRelation relation, Integer... columns) {
+	protected Pair<String,String> createTableIndex(boolean isForQuery,DBRelation relation, Integer... columns) {
 		StringBuilder indexName = new StringBuilder();
 		StringBuilder indexColumns = new StringBuilder();
 		String sep1 = "", sep2 = "";
@@ -192,6 +192,8 @@ public abstract class SQLStatementBuilder {
 			sep1 = "_";
 			sep2 = ",";
 		}
+		if(isForQuery)
+			indexName.append("Q");
 		String create ="CREATE INDEX idx_" + this.encodeName(relation.getName()) + "_" + indexName +
 				" ON " + this.encodeName(relation.getName()) + "(" + indexColumns + ")";
 		String drop ="DROP INDEX idx_" + this.encodeName(relation.getName()) + "_" + indexName +
@@ -221,11 +223,12 @@ public abstract class SQLStatementBuilder {
 
 	/**
 	 * 
+	 * @param b 
 	 * @param relationMap
 	 * @param rule
 	 * @return
 	 */
-	protected Pair<Collection<String>,Collection<String>> createTableIndexes(Map<String, DBRelation> relationMap, Evaluatable rule) {
+	protected Pair<Collection<String>,Collection<String>> createTableIndexes(boolean isForQuery, Map<String, DBRelation> relationMap, Evaluatable rule) {
 		Conjunction<?> body = null;
 		if (rule.getBody() instanceof Predicate) {
 			body = Conjunction.of((Predicate) rule.getBody());
@@ -254,7 +257,7 @@ public abstract class SQLStatementBuilder {
 				for (Predicate atom: atoms) {
 					for (int i = 0, l = atom.getTermsCount(); i < l; i++) {
 						if (atom.getTerm(i).equals(t)) {
-							Pair<String,String> createAndDropIndices = this.createTableIndex(relationMap.get(atom.getName()), i);
+							Pair<String,String> createAndDropIndices = this.createTableIndex(isForQuery,relationMap.get(atom.getName()), i);
 							createIndices.add(createAndDropIndices.getLeft());
 							dropIndices.add(createAndDropIndices.getRight());
 						}

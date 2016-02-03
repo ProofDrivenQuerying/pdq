@@ -310,7 +310,7 @@ public class DBHomomorphismManager implements HomomorphismManager {
 	private void createJoinIndexes(Statement stmt) throws SQLException {
 		Set<String> joinIndexes = Sets.newLinkedHashSet();
 		for (Evaluatable constraint:this.constraints) {
-			joinIndexes.addAll(this.builder.createTableIndexes(this.aliases, constraint).getLeft());
+			joinIndexes.addAll(this.builder.createTableIndexes(false,this.aliases, constraint).getLeft());
 		}
 		for (String b: joinIndexes) {
 			stmt.addBatch(b);
@@ -320,7 +320,7 @@ public class DBHomomorphismManager implements HomomorphismManager {
 	private void createAndDropStatementsforQueryJoinIndexes(Query query,Statement stmt) throws SQLException {
 		Set<String> joinIndexes = Sets.newLinkedHashSet();
 		
-		Pair<Collection<String>, Collection<String>> dropAndCreateStms = this.builder.createTableIndexes(this.aliases, query);
+		Pair<Collection<String>, Collection<String>> dropAndCreateStms = this.builder.createTableIndexes(true,this.aliases, query);
 		
 		this.dropIndexes.addAll(dropAndCreateStms.getRight());
 		joinIndexes.addAll(dropAndCreateStms.getLeft());
