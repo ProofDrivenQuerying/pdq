@@ -22,8 +22,8 @@ import com.google.common.collect.Lists;
  * @author Julien Leblay
  * @author Efthymia Tsamoura
  */
-//Efi: Why so we need this class?
-//TODO: Consider removing
+
+@Deprecated
 public class Access extends UnaryOperator implements AccessOperator {
 
 	/** The input table of the access. */

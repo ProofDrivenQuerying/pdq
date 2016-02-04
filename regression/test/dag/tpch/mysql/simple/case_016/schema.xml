@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema>
+	<sources>
+		<source name="tpch"
+			discoverer="uk.ac.ox.cs.pdq.sql.PostgresqlSchemaDiscoverer"
+			driver="org.postgresql.Driver"
+			url="jdbc:postgresql://localhost/" database="tpch_0001" username="root"
+			password="root" />
+	</sources>
+	<relations>
+		<relation name="nation" source="tpch">
+			<access-method name="m10" type="FREE" cost="5" />
+		</relation>
+		<relation name="region" source="tpch">
+			<access-method name="m12" type="FREE" cost="5" />
+		</relation>
+	</relations>
+</schema>

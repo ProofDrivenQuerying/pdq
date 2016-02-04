@@ -5,7 +5,7 @@ import org.apache.log4j.Logger;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Query;
-import uk.ac.ox.cs.pdq.planner.Planner;
+import uk.ac.ox.cs.pdq.planner.ExplorationSetUp;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
@@ -56,7 +56,7 @@ public class UnanswerableQuerySelector implements QuerySelector {
 	@Override
 	public boolean accept(Query<?> q) {
 		try {
-			return new Planner(this.planParams, this.costParams, this.reasoningParams, this.schema).search(q,true) != null;
+			return new ExplorationSetUp(this.planParams, this.costParams, this.reasoningParams, this.schema).search(q,true) != null;
 		} catch (PlannerException e) {
 			log.error(e);
 			return false;

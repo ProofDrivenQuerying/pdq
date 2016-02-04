@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plan type="dag" cost="5.32">
+<operator type="PROJECT">
+<outputs>
+<attribute name="c8555468" type="java.lang.Integer"/>
+<attribute name="c8555469" type="java.lang.String"/>
+<attribute name="c8555470" type="java.lang.Integer"/>
+<attribute name="c8555472" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="c8555468" type="java.lang.Integer"/>
+<attribute name="c8555469" type="java.lang.String"/>
+<attribute name="c8555470" type="java.lang.Integer"/>
+<attribute name="c8555472" type="java.lang.String"/>
+</project>
+<child>
+<operator type="DEPENDENT_JOIN" param="2">
+<outputs>
+<attribute name="c8555468" type="java.lang.Integer"/>
+<attribute name="c8555469" type="java.lang.String"/>
+<attribute name="c8555470" type="java.lang.Integer"/>
+<attribute name="c8555472" type="java.lang.String"/>
+<attribute name="c8555468" type="java.lang.Integer"/>
+<attribute name="c8555469" type="java.lang.String"/>
+<attribute name="c8555470" type="java.lang.Integer"/>
+<attribute name="c8555471" type="java.lang.String"/>
+</outputs>
+<children>
+<operator type="PROJECT">
+<outputs>
+<attribute name="c8555468" type="java.lang.Integer"/>
+<attribute name="c8555469" type="java.lang.String"/>
+<attribute name="c8555470" type="java.lang.Integer"/>
+<attribute name="c8555472" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="c8555468" type="java.lang.Integer"/>
+<attribute name="c8555469" type="java.lang.String"/>
+<attribute name="c8555470" type="java.lang.Integer"/>
+<attribute name="c8555472" type="java.lang.String"/>
+</project>
+<child>
+<operator type="PROJECT">
+<outputs>
+<attribute name="c8555468" type="java.lang.Integer"/>
+<attribute name="c8555469" type="java.lang.String"/>
+<attribute name="c8555470" type="java.lang.Integer"/>
+<attribute name="c8555472" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="nation_key" type="java.lang.Integer"/>
+<attribute name="nation_name" type="java.lang.String"/>
+<attribute name="region_key" type="java.lang.Integer"/>
+<attribute name="region_name" type="java.lang.String"/>
+</project>
+<child>
+<operator type="ACCESS" relation="region_nation" access-method="m1">
+<outputs>
+<attribute name="nation_key" type="java.lang.Integer"/>
+<attribute name="nation_name" type="java.lang.String"/>
+<attribute name="region_key" type="java.lang.Integer"/>
+<attribute name="region_name" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</child>
+</operator>
+<operator type="PROJECT">
+<outputs>
+<attribute name="c8555468" type="java.lang.Integer"/>
+<attribute name="c8555469" type="java.lang.String"/>
+<attribute name="c8555470" type="java.lang.Integer"/>
+<attribute name="c8555471" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="n_nationkey" type="java.lang.Integer"/>
+<attribute name="n_name" type="java.lang.String"/>
+<attribute name="n_regionkey" type="java.lang.Integer"/>
+<attribute name="n_comment" type="java.lang.String"/>
+</project>
+<child>
+<operator type="ACCESS" relation="nation" access-method="m7">
+<outputs>
+<attribute name="n_nationkey" type="java.lang.Integer"/>
+<attribute name="n_name" type="java.lang.String"/>
+<attribute name="n_regionkey" type="java.lang.Integer"/>
+<attribute name="n_comment" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</children>
+</operator>
+</child>
+</operator>
+</plan>

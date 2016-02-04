@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<query name="Example 1" description="" type="conjunctive">
+	<body>
+
+		<atom name="Assay">
+			<variable name="assay_category" />
+			<variable name="assay_cell_type" />
+			<variable name="assay_chembl_id" />
+			<variable name="organism" />
+			<variable name="assay_strain" />
+			<variable name="assay_subcellular_fraction" />
+			<variable name="assay_tax_id" />
+			<variable name="assay_test_type" />
+			<constant value="Liver" />
+			<variable name="assay_type" />
+			<variable name="assay_type_description" />
+			<variable name="bao_format" />
+			<variable name="cell_chembl_id" />
+			<variable name="confidence_description" />
+			<variable name="confidence_score" />
+			<variable name="description" />
+			<variable name="document_chembl_id" />
+			<variable name="relationship_description" />
+			<variable name="relationship_type" />
+			<variable name="src_assay_id" />
+			<variable name="src_id" />
+			<variable name="target_chembl_id" />
+		</atom>
+
+		<atom name="Target">
+			<variable name="organism" />
+			<variable name="pref_name" />
+			<variable name="species_group_flag" />
+			<variable name="target_chembl_id" />
+			<variable name="target_component_accession" />
+			<variable name="target_component_id" />
+			<variable name="target_component_type" />
+			<variable name="target_type" />
+		</atom>
+
+		<atom name="Document">
+			<variable name="authors" />
+			<variable name="doc_type" />
+			<variable name="document_chembl_id" />
+			<variable name="doi" />
+			<variable name="first_page" />
+			<variable name="issue" />
+			<variable name="document_journal" />
+			<variable name="last_page" />
+			<variable name="pubmed_id" />
+			<variable name="title" />
+			<variable name="volume" />
+			<variable name="document_year" />
+		</atom>
+
+	</body>
+	<head name="Q">
+
+		<variable name="document_year" />
+		<variable name="authors" />
+		<variable name="doc_type" />
+		<variable name="document_chembl_id" />
+		
+		<variable name="assay_category" />
+		<variable name="assay_cell_type" />
+		<variable name="assay_chembl_id" />
+		<variable name="organism" />
+		<variable name="assay_strain" />
+		<variable name="assay_subcellular_fraction" />
+		<variable name="assay_tax_id" />
+
+		<variable name="organism" />
+		<variable name="pref_name" />
+		<variable name="species_group_flag" />
+		<variable name="target_chembl_id" />
+		<variable name="target_component_accession" />
+		<variable name="target_component_id" />
+		<variable name="target_component_type" />
+		<variable name="target_type" />
+
+	</head>
+
+</query>

@@ -55,7 +55,7 @@ import uk.ac.ox.cs.pdq.io.pretty.AccessOnlyPlanWriter;
 import uk.ac.ox.cs.pdq.io.pretty.AlgebraLikeLeftDeepPlanWriter;
 import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.plan.Plan;
-import uk.ac.ox.cs.pdq.planner.Planner;
+import uk.ac.ox.cs.pdq.planner.ExplorationSetUp;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
@@ -277,10 +277,10 @@ public class PlannerController {
 		this.params.setQueryMatchInterval(this.plan.getQueryMatchInterval());
 		this.costParams.setCostType(this.plan.getCostType());
 		this.reasoningParams.setReasoningType(this.plan.getReasoningType());
-		this.reasoningParams.setBlockingInterval(this.plan.getBlockingInterval());
+//		this.reasoningParams.setBlockingInterval(this.plan.getBlockingInterval());
 	}
 
-	private void setSearchSpaceVisualizer(final Planner planner) {
+	private void setSearchSpaceVisualizer(final ExplorationSetUp planner) {
         final SwingNode swingNode = new SwingNode();
         SwingUtilities.invokeLater(new Runnable() {
             @Override
@@ -318,7 +318,7 @@ public class PlannerController {
 		Preconditions.checkNotNull(this.query);
 		if (this.pauser == null) {
 
-			final Planner planner = new Planner(this.params, this.costParams, this.reasoningParams, this.schema);
+			final ExplorationSetUp planner = new ExplorationSetUp(this.params, this.costParams, this.reasoningParams, this.schema);
 			this.setSearchSpaceVisualizer(planner);
 			
 			planner.registerEventHandler(new PlanSearchVisualizer(this.dataQueue, this.params.getShortLogIntervals()));

@@ -5,7 +5,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.EventHandler;
-import uk.ac.ox.cs.pdq.planner.explorer.Explorer;
+import uk.ac.ox.cs.pdq.planner.Explorer;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.LinearExplorer;
 import uk.ac.ox.cs.pdq.ui.model.ObservableSearchState;
 import uk.ac.ox.cs.pdq.ui.util.LogarithmicAxis;

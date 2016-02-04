@@ -26,7 +26,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 /**
- * A dependency of the form \delta = \sigma --> x_i = x_j where 
+ * A dependency of the form \delta = \forall \vec{x} \rho(\vec{x}) --> x_i = x_j where \rho is a conjunction of atoms
  *
  * @author Efthymia Tsamoura
  */

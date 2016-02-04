@@ -38,7 +38,7 @@ public class ObservablePlan {
 	private final SimpleObjectProperty<CostTypes> costType = new SimpleObjectProperty<>(this, "costType");
 	private final SimpleObjectProperty<Double> timeout = new SimpleObjectProperty<>(this, "timeout");
 	private final SimpleObjectProperty<Double> maxIterations = new SimpleObjectProperty<>(this, "maxIterations");
-	private final SimpleObjectProperty<Integer> blockingInterval = new SimpleObjectProperty<>(this, "blockingInterval");
+	//private final SimpleObjectProperty<Integer> blockingInterval = new SimpleObjectProperty<>(this, "blockingInterval");
 	private final SimpleObjectProperty<Integer> queryMatchInterval = new SimpleObjectProperty<>(this, "queryMatchInterval");
 	private final SimpleObjectProperty<Cost> cost = new SimpleObjectProperty<>(this, "cost");
 
@@ -92,7 +92,7 @@ public class ObservablePlan {
 		this.queryMatchInterval.set(settings.getQueryMatchInterval());
 		this.cost.set(pl == null || pl.isEmpty() ? null : pl.getCost());
 		this.chaserType.set(reasoningParams.getReasoningType() != null ? reasoningParams.getReasoningType() : ReasoningTypes.RESTRICTED_CHASE);
-		this.blockingInterval.set(reasoningParams.getBlockingInterval());
+//		this.blockingInterval.set(reasoningParams.getBlockingInterval());
 	}
 
 	public SimpleObjectProperty<Plan> planProperty() {
@@ -123,9 +123,9 @@ public class ObservablePlan {
 		return this.maxIterations;
 	}
 	
-	public SimpleObjectProperty<Integer> blockingIntervalProperty() {
-		return this.blockingInterval;
-	}
+//	public SimpleObjectProperty<Integer> blockingIntervalProperty() {
+//		return this.blockingInterval;
+//	}
 	
 	public SimpleObjectProperty<Integer> queryMatchIntervalProperty() {
 		return this.queryMatchInterval;
@@ -163,9 +163,9 @@ public class ObservablePlan {
 		return this.maxIterations.get();
 	}
 
-	public Integer getBlockingInterval() {
-		return this.blockingInterval.get();
-	}
+//	public Integer getBlockingInterval() {
+//		return this.blockingInterval.get();
+//	}
 
 	public Integer getQueryMatchInterval() {
 		return this.queryMatchInterval.get();
@@ -193,7 +193,7 @@ public class ObservablePlan {
 	public ReasoningParameters getReasoningSettings() {
 		ReasoningParameters result = new ReasoningParameters();
 		result.setReasoningType(this.getReasoningType());
-		result.setBlockingInterval(this.getBlockingInterval());
+//		result.setBlockingInterval(this.getBlockingInterval());
 		return result;
 	}
 	
@@ -237,9 +237,9 @@ public class ObservablePlan {
 		this.maxIterations.set(o);
 	}
 
-	public void setBlockingInterval(Integer o) {
-		this.blockingInterval.set(o);
-	}
+//	public void setBlockingInterval(Integer o) {
+//		this.blockingInterval.set(o);
+//	}
 
 	public void setQueryMatchInterval(Integer o) {
 		this.queryMatchInterval.set(o);

@@ -123,13 +123,13 @@ public class DefaultCardinalityEstimator implements CardinalityEstimator {
 		//Estimate the joint selectivity of the predicates using SQL 2014 server's formula.
 		//The formula is described below (from SQL 2014 tutorial):
 		//In an effort to assume some correlation, the new CE in SQL Server 2014 lessens the independence assumption slightly for conjunctions of predicates. 
-		//The process used to model this correlation is called “exponential back-off”. 
-		//Note: “Exponential back-off” is used with disjunctions as well. The system calculates this value by first transforming disjunctions to a negation of conjunctions. 
+		//The process used to model this correlation is called “exponential back-off�?. 
+		//Note: “Exponential back-off�? is used with disjunctions as well. The system calculates this value by first transforming disjunctions to a negation of conjunctions. 
 		//The formula below represents the new CE computation of selectivity for a conjunction of predicates. 
-		//“P0” represents the most selective predicate and is followed by the three most selective predicates:
-		//p_0⋅〖p_1〗^(1⁄2)⋅〖p_2〗^(1⁄4)⋅〖p_3〗^(1⁄8)
+		//“P0�? represents the most selective predicate and is followed by the three most selective predicates:
+		//p_0⋅〖p_1〗^(1�?�2)⋅〖p_2〗^(1�?�4)⋅〖p_3〗^(1�?�8)
 		//The new CE sorts predicates by selectivity and keeps the four most selective predicates for use in the calculation. 
-		//The CE then “moderates” each successive predicate by taking larger square roots. 
+		//The CE then “moderates�? each successive predicate by taking larger square roots. 
 		if(!selectivities.isEmpty()) {
 			Collections.sort(selectivities);
 			double globalSelectivity = 1;
@@ -167,7 +167,7 @@ public class DefaultCardinalityEstimator implements CardinalityEstimator {
 		Boolean leftKey = this.isKey(constants, left, egd, detector, dependencies);
 		
 		if(!constants.isEmpty() && CardinalityUtility.hasID(constants, left, right, detector) && rightKey) {
-			log.trace("ID: " + left + " " + right + "\tSize quality: " + Pair.of(right.getSize(), right.getQuality()));
+			log.trace("ID: " + left + " " + right + "\tSize quality: " + Pair.of(left.getSize(), left.getQuality()));
 			return Pair.of(left.getSize(), left.getQuality());
 		}
 		else if(!constants.isEmpty() && CardinalityUtility.hasID(constants, right, left, detector) && leftKey) {
@@ -275,7 +275,7 @@ public class DefaultCardinalityEstimator implements CardinalityEstimator {
 	@Override
 	public double adjustedQualityOf(DAGAnnotatedPlan configuration, Query<?> query, boolean matchesQuery) {		
 		if(matchesQuery) {
-			if(configuration.getExportedConstants().equals(Sets.newHashSet(query.getFree2Canonical().values()))) {
+			if(configuration.getExportedConstants().equals(Sets.newHashSet(query.getFreeToCanonical().values()))) {
 				return configuration.getQuality();
 			}
 			else {
@@ -283,10 +283,10 @@ public class DefaultCardinalityEstimator implements CardinalityEstimator {
 			}
 		}
 		else {
-			if(configuration.getExportedConstants().equals(Sets.newHashSet(query.getFree2Canonical().values()))) {
+			if(configuration.getExportedConstants().equals(Sets.newHashSet(query.getFreeToCanonical().values()))) {
 				return configuration.getQuality() + this.subsumptionPenalty;
 			}
-			else if(configuration.getExportedConstants().containsAll(query.getFree2Canonical().values())){
+			else if(configuration.getExportedConstants().containsAll(query.getFreeToCanonical().values())){
 				return configuration.getQuality() + this.subsumptionPenalty + this.projectionPenalty;
 			}
 		}
@@ -318,12 +318,17 @@ public class DefaultCardinalityEstimator implements CardinalityEstimator {
 		Preconditions.checkNotNull(keys);
 		Preconditions.checkArgument(!keys.isEmpty());
 
+		//If the candidate keys are all the output constants of the input configuration
+		//then return true
 		if(CollectionUtils.containsAll(keys, configuration.getOutput())) {
 			this.keyIndex.put(configuration, keys);
 			return true;
 		}
 
 		//Search the key cache
+		//Get all the detected keys for the input configuration
+		//If the candidate keys are a superset of the detected keys
+		//then return true
 		if(!this.keyIndex.get(configuration).isEmpty()) {			
 			Collection<Collection<Constant>> observedKeysets = this.keyIndex.get(configuration);
 			for(Collection<Constant> keySet:observedKeysets) {
@@ -335,6 +340,26 @@ public class DefaultCardinalityEstimator implements CardinalityEstimator {
 			}
 		}
 
+
+		//Search the nonkey cache
+		//Get all the detected keys for the input configuration
+		//If the candidate keys are a subset of the tried and failed keys
+		//then return false
+		if(!this.notkeyIndex.get(configuration).isEmpty()) {			
+			Collection<Collection<Constant>> observedFailures = this.notkeyIndex.get(configuration);
+			for(Collection<Constant> failed:observedFailures) {
+				if (failed.containsAll(keys)) {
+					log.trace("Cache hit:  " + keys + "\t" + configuration + " = " + false);
+					return false;
+				}
+			}
+		}
+
+		//If the input configuration is a binary configuration 
+		//then search the key cache for each subconfiguration. 
+		//If the input candidate keys are keys for both subconfigurations 
+		//and if the join constants are a subset of the candidate keys 
+		//then return true
 		if(configuration instanceof BinaryAnnotatedPlan) {
 			boolean isLeftKey = false;
 			boolean isRightKey = false;
@@ -362,11 +387,12 @@ public class DefaultCardinalityEstimator implements CardinalityEstimator {
 
 			if(isLeftKey && isRightKey && keys.containsAll(joinConstants)) {
 				this.keyIndex.put(configuration, keys);
-				log.trace("Cache hit isKey " + keys + "\t" + configuration);
+				log.trace("Cache hit: " + keys + "\t" + configuration);
 				return true;
 			}
 		}
 
+		//Otherwise, detect keys through the egd chase algorithm
 		log.trace("No cache hit for " + keys + " " + configuration);
 		boolean isKey = CardinalityUtility.isKey(keys, configuration, egd, detector, dependencies);
 		if(isKey) {
@@ -576,11 +602,11 @@ public class DefaultCardinalityEstimator implements CardinalityEstimator {
 	 * 		where the selectivity of the unary annotate plan is estimated as the size of the annotated plan to the size of the base relation.  
 	 */
 	protected BigInteger cardinalityOfIndependentEstimate(DAGAnnotatedPlan configuration, Query<?> query) {
-		if(configuration.getExportedConstants().containsAll(query.getFree2Canonical().values())) {
+		if(configuration.getExportedConstants().containsAll(query.getFreeToCanonical().values())) {
 			if(!query.getFree().isEmpty()) {
 				BigDecimal cardinality = BigDecimal.ONE;
 				//Estimate the cardinality of each attribute in the final projection of the input query 
-				for(Constant constant:query.getFree2Canonical().values()) {
+				for(Constant constant:query.getFreeToCanonical().values()) {
 					//Find the relation attribute pair with the highest quality that map to the projected constant  
 					Pair<UnaryAnnotatedPlan, Attribute> pair = this.getHighestQualityAnnotatedPlan(configuration, constant);
 					//Find the cardinality of the attribute that maps to the projected constant
@@ -622,14 +648,14 @@ public class DefaultCardinalityEstimator implements CardinalityEstimator {
 	 * 
 	 */
 	protected BigInteger cardinalityOfGroupEstimate(DAGAnnotatedPlan configuration, Query<?> query) {
-		if(configuration.getExportedConstants().containsAll(query.getFree2Canonical().values())) {
+		if(configuration.getExportedConstants().containsAll(query.getFreeToCanonical().values())) {
 			if(!query.getFree().isEmpty()) {
 				//Try to assign the maximum number of query's variables to a single annotated plan 
 
 				//Keeps the unary annotated plans to query free variables assignments
 				Map<UnaryAnnotatedPlan, Collection<Constant>> assignments = Maps.newHashMap();
 				Collection<UnaryAnnotatedPlan> unaryPlans = Sets.newHashSet(configuration.getUnaryAnnotatedPlans());
-				Collection<Constant> constants = Sets.newHashSet(query.getFree2Canonical().values());
+				Collection<Constant> constants = Sets.newHashSet(query.getFreeToCanonical().values());
 				Iterator<Constant> constantsIterator = constants.iterator();
 				while(constantsIterator.hasNext()) {
 					UnaryAnnotatedPlan maximalCover = null;

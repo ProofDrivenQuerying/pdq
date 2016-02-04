@@ -64,7 +64,7 @@ public abstract class DatabaseChaseState implements ChaseState {
 				query,
 				HomomorphismConstraint.createTopKConstraint(1),
 				HomomorphismConstraint.createFactConstraint(Conjunction.of(this.getFacts())),
-				HomomorphismConstraint.createMapConstraint(query.getFree2Canonical()));
+				HomomorphismConstraint.createMapConstraint(query.getFreeToCanonical()));
 	}
 	
 	/**

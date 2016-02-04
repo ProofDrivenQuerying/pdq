@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plan type="linear" cost="1.5050012256944444E14">
+<command name="T1">
+<operator type="PROJECT">
+<outputs>
+<attribute name="c1057" type="java.lang.Integer"/>
+<attribute name="c1058" type="java.lang.Integer"/>
+<attribute name="c1059" type="java.lang.String"/>
+<attribute name="c1060" type="java.lang.String"/>
+<attribute name="c1061" type="java.lang.String"/>
+<attribute name="c1062" type="java.lang.String"/>
+<attribute name="c1063" type="java.lang.String"/>
+<attribute name="c1064" type="java.lang.String"/>
+<attribute name="c1065" type="java.lang.String"/>
+<attribute name="c1066" type="java.lang.String"/>
+<attribute name="c1067" type="java.lang.Double"/>
+<attribute name="c1068" type="java.lang.Double"/>
+<attribute name="c1069" type="java.lang.Double"/>
+<attribute name="c1070" type="java.lang.Double"/>
+<attribute name="c1071" type="java.lang.Double"/>
+<attribute name="c1072" type="java.lang.Double"/>
+<attribute name="c1073" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="woeid" type="java.lang.Integer"/>
+<attribute name="type" type="java.lang.Integer"/>
+<attribute name="placeTypeName" type="java.lang.String"/>
+<attribute name="country" type="java.lang.String"/>
+<attribute name="admin1" type="java.lang.String"/>
+<attribute name="admin2" type="java.lang.String"/>
+<attribute name="admin3" type="java.lang.String"/>
+<attribute name="locality1" type="java.lang.String"/>
+<attribute name="locality2" type="java.lang.String"/>
+<attribute name="postal" type="java.lang.String"/>
+<attribute name="centroid_lat" type="java.lang.Double"/>
+<attribute name="centroid_lng" type="java.lang.Double"/>
+<attribute name="bboxNorth" type="java.lang.Double"/>
+<attribute name="bboxSouth" type="java.lang.Double"/>
+<attribute name="bboxEast" type="java.lang.Double"/>
+<attribute name="bboxWest" type="java.lang.Double"/>
+<attribute name="timezone" type="java.lang.String"/>
+</project>
+<child>
+<operator type="SELECT">
+<outputs>
+<attribute name="woeid" type="java.lang.Integer"/>
+<attribute name="name" type="java.lang.String"/>
+<attribute name="type" type="java.lang.Integer"/>
+<attribute name="placeTypeName" type="java.lang.String"/>
+<attribute name="country" type="java.lang.String"/>
+<attribute name="admin1" type="java.lang.String"/>
+<attribute name="admin2" type="java.lang.String"/>
+<attribute name="admin3" type="java.lang.String"/>
+<attribute name="locality1" type="java.lang.String"/>
+<attribute name="locality2" type="java.lang.String"/>
+<attribute name="postal" type="java.lang.String"/>
+<attribute name="centroid_lat" type="java.lang.Double"/>
+<attribute name="centroid_lng" type="java.lang.Double"/>
+<attribute name="bboxNorth" type="java.lang.Double"/>
+<attribute name="bboxSouth" type="java.lang.Double"/>
+<attribute name="bboxEast" type="java.lang.Double"/>
+<attribute name="bboxWest" type="java.lang.Double"/>
+<attribute name="timezone" type="java.lang.String"/>
+</outputs>
+<conjunction>
+<predicate type="equality" left="1" value="Asia"/>
+</conjunction>
+<child>
+<operator type="ACCESS" relation="YahooPlaces" access-method="yh_geo_name">
+<outputs>
+<attribute name="woeid" type="java.lang.Integer"/>
+<attribute name="name" type="java.lang.String"/>
+<attribute name="type" type="java.lang.Integer"/>
+<attribute name="placeTypeName" type="java.lang.String"/>
+<attribute name="country" type="java.lang.String"/>
+<attribute name="admin1" type="java.lang.String"/>
+<attribute name="admin2" type="java.lang.String"/>
+<attribute name="admin3" type="java.lang.String"/>
+<attribute name="locality1" type="java.lang.String"/>
+<attribute name="locality2" type="java.lang.String"/>
+<attribute name="postal" type="java.lang.String"/>
+<attribute name="centroid_lat" type="java.lang.Double"/>
+<attribute name="centroid_lng" type="java.lang.Double"/>
+<attribute name="bboxNorth" type="java.lang.Double"/>
+<attribute name="bboxSouth" type="java.lang.Double"/>
+<attribute name="bboxEast" type="java.lang.Double"/>
+<attribute name="bboxWest" type="java.lang.Double"/>
+<attribute name="timezone" type="java.lang.String"/>
+</outputs>
+<static-input>
+<input attribute="1" value="Asia" type="java.lang.String"/>
+</static-input>
+</operator>
+</child>
+</operator>
+</child>
+</operator>
+</command>
+<command name="T2">
+<operator type="CROSS_PRODUCT">
+<outputs>
+<attribute name="c1057" type="java.lang.Integer"/>
+<attribute name="c1058" type="java.lang.Integer"/>
+<attribute name="c1059" type="java.lang.String"/>
+<attribute name="c1060" type="java.lang.String"/>
+<attribute name="c1061" type="java.lang.String"/>
+<attribute name="c1062" type="java.lang.String"/>
+<attribute name="c1063" type="java.lang.String"/>
+<attribute name="c1064" type="java.lang.String"/>
+<attribute name="c1065" type="java.lang.String"/>
+<attribute name="c1066" type="java.lang.String"/>
+<attribute name="c1067" type="java.lang.Double"/>
+<attribute name="c1068" type="java.lang.Double"/>
+<attribute name="c1069" type="java.lang.Double"/>
+<attribute name="c1070" type="java.lang.Double"/>
+<attribute name="c1071" type="java.lang.Double"/>
+<attribute name="c1072" type="java.lang.Double"/>
+<attribute name="c1073" type="java.lang.String"/>
+<attribute name="c1074" type="java.lang.Integer"/>
+<attribute name="c1076" type="java.lang.Integer"/>
+<attribute name="c1075" type="java.lang.String"/>
+</outputs>
+<children>
+<operator type="ALIAS" name="T1"/>
+<operator type="PROJECT">
+<outputs>
+<attribute name="c1074" type="java.lang.Integer"/>
+<attribute name="c1076" type="java.lang.Integer"/>
+<attribute name="c1075" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="woeid" type="java.lang.Integer"/>
+<attribute name="placeType" type="java.lang.Integer"/>
+<attribute name="name" type="java.lang.String"/>
+</project>
+<child>
+<operator type="SELECT">
+<outputs>
+<attribute name="woeid" type="java.lang.Integer"/>
+<attribute name="placeType" type="java.lang.Integer"/>
+<attribute name="placeTypeName" type="java.lang.String"/>
+<attribute name="name" type="java.lang.String"/>
+</outputs>
+<conjunction>
+<predicate type="equality" left="2" value="Country"/>
+</conjunction>
+<child>
+<operator type="ACCESS" relation="YahooCountries" access-method="yh_geo_country">
+<outputs>
+<attribute name="woeid" type="java.lang.Integer"/>
+<attribute name="placeType" type="java.lang.Integer"/>
+<attribute name="placeTypeName" type="java.lang.String"/>
+<attribute name="name" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</child>
+</operator>
+</children>
+</operator>
+</command>
+<command name="T3">
+<operator type="DEPENDENT_JOIN" param="17">
+<outputs>
+<attribute name="c1057" type="java.lang.Integer"/>
+<attribute name="c1058" type="java.lang.Integer"/>
+<attribute name="c1059" type="java.lang.String"/>
+<attribute name="c1060" type="java.lang.String"/>
+<attribute name="c1061" type="java.lang.String"/>
+<attribute name="c1062" type="java.lang.String"/>
+<attribute name="c1063" type="java.lang.String"/>
+<attribute name="c1064" type="java.lang.String"/>
+<attribute name="c1065" type="java.lang.String"/>
+<attribute name="c1066" type="java.lang.String"/>
+<attribute name="c1067" type="java.lang.Double"/>
+<attribute name="c1068" type="java.lang.Double"/>
+<attribute name="c1069" type="java.lang.Double"/>
+<attribute name="c1070" type="java.lang.Double"/>
+<attribute name="c1071" type="java.lang.Double"/>
+<attribute name="c1072" type="java.lang.Double"/>
+<attribute name="c1073" type="java.lang.String"/>
+<attribute name="c1074" type="java.lang.Integer"/>
+<attribute name="c1076" type="java.lang.Integer"/>
+<attribute name="c1075" type="java.lang.String"/>
+<attribute name="c1074" type="java.lang.Integer"/>
+<attribute name="c1057" type="java.lang.Integer"/>
+<attribute name="c1091" type="java.lang.String"/>
+<attribute name="c1092" type="java.lang.String"/>
+<attribute name="c1093" type="java.lang.String"/>
+</outputs>
+<children>
+<operator type="ALIAS" name="T2"/>
+<operator type="PROJECT">
+<outputs>
+<attribute name="c1074" type="java.lang.Integer"/>
+<attribute name="c1057" type="java.lang.Integer"/>
+<attribute name="c1091" type="java.lang.String"/>
+<attribute name="c1092" type="java.lang.String"/>
+<attribute name="c1093" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="source" type="java.lang.Integer"/>
+<attribute name="target" type="java.lang.Integer"/>
+<attribute name="placeTypeName" type="java.lang.String"/>
+<attribute name="name" type="java.lang.String"/>
+<attribute name="uri" type="java.lang.String"/>
+</project>
+<child>
+<operator type="ACCESS" relation="YahooBelongsTo" access-method="yh_geo_belongs">
+<outputs>
+<attribute name="source" type="java.lang.Integer"/>
+<attribute name="target" type="java.lang.Integer"/>
+<attribute name="placeTypeName" type="java.lang.String"/>
+<attribute name="name" type="java.lang.String"/>
+<attribute name="uri" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</children>
+</operator>
+</command>
+</plan>

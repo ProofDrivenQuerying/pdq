@@ -164,7 +164,7 @@ public class ExplorationThread implements Callable<DAGAnnotatedPlan> {
 						this.successful.add(configuration);
 						this.setBestConfiguration(configuration, matchesQuery);
 					}
-					if(!matchesQuery && configuration.getOutput().containsAll(this.query.getFree2Canonical().values())) {
+					if(!matchesQuery && configuration.getOutput().containsAll(this.query.getFreeToCanonical().values())) {
 						log.trace("CONTAINMENT: " + configuration + "\t\t" + 
 								"Size: " + configuration.getSize() + "\t" + "Cardinality: " + configuration.getCardinality() + "\t" +  
 								"Quality: " + configuration.getQuality() + "\t" + 

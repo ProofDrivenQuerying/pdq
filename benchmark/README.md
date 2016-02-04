@@ -16,7 +16,7 @@ I. Requirements
 
 II. Dependencies
 
-Internal: runtime, planner 
+Internal: common, reasoning, runtime, planner, datasources 
 
 External: jcommander-1.35
 	
@@ -28,7 +28,7 @@ Under the top directory, type:
 	
 Two JARs will be built and placed in the project's "target/" directory.
 
-	- pdq-benchmark-<version>.jar, contains the bytecode for the planner
+	- pdq-benchmark-<version>.jar, contains the bytecode for the benchmark
 	  only, i.e. you need to make sure all dependencies are on the CLASSPATH to
 	  run it.
 
@@ -41,9 +41,9 @@ To run the benchmark, type:
 	
 This will printout all required command line arguments.
 
-Regression parameters can be passed through the command line, however, you 
+Benchmark parameters can be passed through the command line, however, you 
 may want to set those parameters in a separate file.
-See pdq-regression.properties for an overview of all parameters that can be 
+See pdq-benchmark.properties for an overview of all parameters that can be 
 used.
 In addition to those, planner- and runtime-specific parameters can be set in
 specific files.

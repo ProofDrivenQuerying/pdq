@@ -81,7 +81,7 @@ public class TGD
 	 */
 	@Override
 	public List<Term> getFree() {
-		return Lists.<Term>newArrayList(this.universal);
+		return Lists.<Term>newArrayList();
 	}
 
 	/**

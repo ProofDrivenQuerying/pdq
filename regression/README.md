@@ -27,7 +27,7 @@ Under the top directory, type:
 	
 Two JARs will be built and placed in the project's "target/" directory.
 
-	- pdq-regression-<version>.jar, contains the bytecode for the planner
+	- pdq-regression-<version>.jar, contains the bytecode for the regression project
 	  only, i.e. you need to make sure all dependencies are on the CLASSPATH to
 	  run it.
 

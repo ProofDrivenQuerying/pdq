@@ -1,0 +1,694 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plan type="dag" cost="550.0" control-flow="TOP_DOWN">
+<operator type="PROJECT">
+<outputs>
+<attribute name="c1217" type="java.lang.String"/>
+<attribute name="c1218" type="java.lang.String"/>
+<attribute name="c1201" type="java.lang.String"/>
+<attribute name="c1211" type="java.lang.String"/>
+<attribute name="c1183" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="c1217" type="java.lang.String"/>
+<attribute name="c1218" type="java.lang.String"/>
+<attribute name="c1201" type="java.lang.String"/>
+<attribute name="c1211" type="java.lang.String"/>
+<attribute name="c1183" type="java.lang.String"/>
+</project>
+<child>
+<operator type="DEPENDENT_JOIN" param="0">
+<outputs>
+<attribute name="c1224" type="java.lang.Integer"/>
+<attribute name="k1246" type="java.lang.String"/>
+<attribute name="k1247" type="java.lang.String"/>
+<attribute name="k1230" type="java.lang.Integer"/>
+<attribute name="k1266" type="java.lang.String"/>
+<attribute name="k1267" type="java.lang.String"/>
+<attribute name="c1186" type="java.lang.Integer"/>
+<attribute name="c1201" type="java.lang.String"/>
+<attribute name="c1202" type="java.lang.String"/>
+<attribute name="c1203" type="java.lang.String"/>
+<attribute name="c1204" type="java.lang.String"/>
+<attribute name="c1205" type="java.lang.Integer"/>
+<attribute name="c1206" type="java.lang.String"/>
+<attribute name="c1207" type="java.math.BigDecimal"/>
+<attribute name="c1208" type="java.lang.String"/>
+<attribute name="c1187" type="java.lang.Integer"/>
+<attribute name="c1211" type="java.lang.String"/>
+<attribute name="c1212" type="java.lang.String"/>
+<attribute name="c1213" type="java.lang.Integer"/>
+<attribute name="c1214" type="java.lang.String"/>
+<attribute name="c1215" type="java.math.BigDecimal"/>
+<attribute name="c1216" type="java.lang.String"/>
+<attribute name="c1219" type="java.lang.Integer"/>
+<attribute name="c1224" type="java.lang.Integer"/>
+<attribute name="c1225" type="java.lang.String"/>
+<attribute name="c1186" type="java.lang.Integer"/>
+<attribute name="c1187" type="java.lang.Integer"/>
+<attribute name="c1189" type="java.lang.Integer"/>
+<attribute name="c1209" type="java.math.BigDecimal"/>
+<attribute name="c1210" type="java.lang.String"/>
+<attribute name="c1177" type="java.lang.Integer"/>
+<attribute name="c1186" type="java.lang.Integer"/>
+<attribute name="c1187" type="java.lang.Integer"/>
+<attribute name="c1188" type="java.lang.Integer"/>
+<attribute name="c1189" type="java.math.BigDecimal"/>
+<attribute name="c1190" type="java.math.BigDecimal"/>
+<attribute name="c1191" type="java.math.BigDecimal"/>
+<attribute name="c1192" type="java.math.BigDecimal"/>
+<attribute name="c1193" type="java.lang.String"/>
+<attribute name="c1194" type="java.lang.String"/>
+<attribute name="c1195" type="java.sql.Date"/>
+<attribute name="c1196" type="java.sql.Date"/>
+<attribute name="c1197" type="java.sql.Date"/>
+<attribute name="c1198" type="java.lang.String"/>
+<attribute name="c1199" type="java.lang.String"/>
+<attribute name="c1200" type="java.lang.String"/>
+<attribute name="c1178" type="java.lang.Integer"/>
+<attribute name="c1217" type="java.lang.String"/>
+<attribute name="c1218" type="java.lang.String"/>
+<attribute name="c1219" type="java.lang.Integer"/>
+<attribute name="c1220" type="java.lang.String"/>
+<attribute name="c1221" type="java.math.BigDecimal"/>
+<attribute name="c1222" type="java.lang.String"/>
+<attribute name="c1223" type="java.lang.String"/>
+<attribute name="c1177" type="java.lang.Integer"/>
+<attribute name="c1178" type="java.lang.Integer"/>
+<attribute name="c1179" type="java.lang.String"/>
+<attribute name="c1180" type="java.math.BigDecimal"/>
+<attribute name="c1181" type="java.sql.Date"/>
+<attribute name="c1182" type="java.lang.String"/>
+<attribute name="c1183" type="java.lang.String"/>
+<attribute name="c1184" type="java.lang.Integer"/>
+<attribute name="c1185" type="java.lang.String"/>
+</outputs>
+<children>
+<operator type="CROSS_PRODUCT">
+<outputs>
+<attribute name="c1224" type="java.lang.Integer"/>
+<attribute name="k1246" type="java.lang.String"/>
+<attribute name="k1247" type="java.lang.String"/>
+<attribute name="k1230" type="java.lang.Integer"/>
+<attribute name="k1266" type="java.lang.String"/>
+<attribute name="k1267" type="java.lang.String"/>
+</outputs>
+<children>
+<operator type="PROJECT">
+<outputs>
+<attribute name="c1224" type="java.lang.Integer"/>
+<attribute name="k1246" type="java.lang.String"/>
+<attribute name="k1247" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="r_regionkey" type="java.lang.Integer"/>
+<attribute name="r_name" type="java.lang.String"/>
+<attribute name="r_comment" type="java.lang.String"/>
+</project>
+<child>
+<operator type="ACCESS" relation="region" access-method="m8">
+<outputs>
+<attribute name="r_regionkey" type="java.lang.Integer"/>
+<attribute name="r_name" type="java.lang.String"/>
+<attribute name="r_comment" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+<operator type="PROJECT">
+<outputs>
+<attribute name="k1230" type="java.lang.Integer"/>
+<attribute name="k1266" type="java.lang.String"/>
+<attribute name="k1267" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="r_regionkey" type="java.lang.Integer"/>
+<attribute name="r_name" type="java.lang.String"/>
+<attribute name="r_comment" type="java.lang.String"/>
+</project>
+<child>
+<operator type="ACCESS" relation="region" access-method="m8">
+<outputs>
+<attribute name="r_regionkey" type="java.lang.Integer"/>
+<attribute name="r_name" type="java.lang.String"/>
+<attribute name="r_comment" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</children>
+</operator>
+<operator type="JOIN" variant="SYMMETRIC_HASH">
+<outputs>
+<attribute name="c1186" type="java.lang.Integer"/>
+<attribute name="c1201" type="java.lang.String"/>
+<attribute name="c1202" type="java.lang.String"/>
+<attribute name="c1203" type="java.lang.String"/>
+<attribute name="c1204" type="java.lang.String"/>
+<attribute name="c1205" type="java.lang.Integer"/>
+<attribute name="c1206" type="java.lang.String"/>
+<attribute name="c1207" type="java.math.BigDecimal"/>
+<attribute name="c1208" type="java.lang.String"/>
+<attribute name="c1187" type="java.lang.Integer"/>
+<attribute name="c1211" type="java.lang.String"/>
+<attribute name="c1212" type="java.lang.String"/>
+<attribute name="c1213" type="java.lang.Integer"/>
+<attribute name="c1214" type="java.lang.String"/>
+<attribute name="c1215" type="java.math.BigDecimal"/>
+<attribute name="c1216" type="java.lang.String"/>
+<attribute name="c1219" type="java.lang.Integer"/>
+<attribute name="c1224" type="java.lang.Integer"/>
+<attribute name="c1225" type="java.lang.String"/>
+<attribute name="c1186" type="java.lang.Integer"/>
+<attribute name="c1187" type="java.lang.Integer"/>
+<attribute name="c1189" type="java.lang.Integer"/>
+<attribute name="c1209" type="java.math.BigDecimal"/>
+<attribute name="c1210" type="java.lang.String"/>
+<attribute name="c1177" type="java.lang.Integer"/>
+<attribute name="c1186" type="java.lang.Integer"/>
+<attribute name="c1187" type="java.lang.Integer"/>
+<attribute name="c1188" type="java.lang.Integer"/>
+<attribute name="c1189" type="java.math.BigDecimal"/>
+<attribute name="c1190" type="java.math.BigDecimal"/>
+<attribute name="c1191" type="java.math.BigDecimal"/>
+<attribute name="c1192" type="java.math.BigDecimal"/>
+<attribute name="c1193" type="java.lang.String"/>
+<attribute name="c1194" type="java.lang.String"/>
+<attribute name="c1195" type="java.sql.Date"/>
+<attribute name="c1196" type="java.sql.Date"/>
+<attribute name="c1197" type="java.sql.Date"/>
+<attribute name="c1198" type="java.lang.String"/>
+<attribute name="c1199" type="java.lang.String"/>
+<attribute name="c1200" type="java.lang.String"/>
+<attribute name="c1178" type="java.lang.Integer"/>
+<attribute name="c1217" type="java.lang.String"/>
+<attribute name="c1218" type="java.lang.String"/>
+<attribute name="c1219" type="java.lang.Integer"/>
+<attribute name="c1220" type="java.lang.String"/>
+<attribute name="c1221" type="java.math.BigDecimal"/>
+<attribute name="c1222" type="java.lang.String"/>
+<attribute name="c1223" type="java.lang.String"/>
+<attribute name="c1177" type="java.lang.Integer"/>
+<attribute name="c1178" type="java.lang.Integer"/>
+<attribute name="c1179" type="java.lang.String"/>
+<attribute name="c1180" type="java.math.BigDecimal"/>
+<attribute name="c1181" type="java.sql.Date"/>
+<attribute name="c1182" type="java.lang.String"/>
+<attribute name="c1183" type="java.lang.String"/>
+<attribute name="c1184" type="java.lang.Integer"/>
+<attribute name="c1185" type="java.lang.String"/>
+</outputs>
+<conjunction>
+<predicate type="equality" left="0" right="19"/>
+</conjunction>
+<children>
+<operator type="PROJECT">
+<outputs>
+<attribute name="c1186" type="java.lang.Integer"/>
+<attribute name="c1201" type="java.lang.String"/>
+<attribute name="c1202" type="java.lang.String"/>
+<attribute name="c1203" type="java.lang.String"/>
+<attribute name="c1204" type="java.lang.String"/>
+<attribute name="c1205" type="java.lang.Integer"/>
+<attribute name="c1206" type="java.lang.String"/>
+<attribute name="c1207" type="java.math.BigDecimal"/>
+<attribute name="c1208" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="p_partkey" type="java.lang.Integer"/>
+<attribute name="p_name" type="java.lang.String"/>
+<attribute name="p_mfgr" type="java.lang.String"/>
+<attribute name="p_brand" type="java.lang.String"/>
+<attribute name="p_type" type="java.lang.String"/>
+<attribute name="p_size" type="java.lang.Integer"/>
+<attribute name="p_container" type="java.lang.String"/>
+<attribute name="p_retailprice" type="java.math.BigDecimal"/>
+<attribute name="p_comment" type="java.lang.String"/>
+</project>
+<child>
+<operator type="ACCESS" relation="part" access-method="m2">
+<outputs>
+<attribute name="p_partkey" type="java.lang.Integer"/>
+<attribute name="p_name" type="java.lang.String"/>
+<attribute name="p_mfgr" type="java.lang.String"/>
+<attribute name="p_brand" type="java.lang.String"/>
+<attribute name="p_type" type="java.lang.String"/>
+<attribute name="p_size" type="java.lang.Integer"/>
+<attribute name="p_container" type="java.lang.String"/>
+<attribute name="p_retailprice" type="java.math.BigDecimal"/>
+<attribute name="p_comment" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+<operator type="DEPENDENT_JOIN" param="-1,0,0">
+<outputs>
+<attribute name="c1187" type="java.lang.Integer"/>
+<attribute name="c1211" type="java.lang.String"/>
+<attribute name="c1212" type="java.lang.String"/>
+<attribute name="c1213" type="java.lang.Integer"/>
+<attribute name="c1214" type="java.lang.String"/>
+<attribute name="c1215" type="java.math.BigDecimal"/>
+<attribute name="c1216" type="java.lang.String"/>
+<attribute name="c1219" type="java.lang.Integer"/>
+<attribute name="c1224" type="java.lang.Integer"/>
+<attribute name="c1225" type="java.lang.String"/>
+<attribute name="c1186" type="java.lang.Integer"/>
+<attribute name="c1187" type="java.lang.Integer"/>
+<attribute name="c1189" type="java.lang.Integer"/>
+<attribute name="c1209" type="java.math.BigDecimal"/>
+<attribute name="c1210" type="java.lang.String"/>
+<attribute name="c1177" type="java.lang.Integer"/>
+<attribute name="c1186" type="java.lang.Integer"/>
+<attribute name="c1187" type="java.lang.Integer"/>
+<attribute name="c1188" type="java.lang.Integer"/>
+<attribute name="c1189" type="java.math.BigDecimal"/>
+<attribute name="c1190" type="java.math.BigDecimal"/>
+<attribute name="c1191" type="java.math.BigDecimal"/>
+<attribute name="c1192" type="java.math.BigDecimal"/>
+<attribute name="c1193" type="java.lang.String"/>
+<attribute name="c1194" type="java.lang.String"/>
+<attribute name="c1195" type="java.sql.Date"/>
+<attribute name="c1196" type="java.sql.Date"/>
+<attribute name="c1197" type="java.sql.Date"/>
+<attribute name="c1198" type="java.lang.String"/>
+<attribute name="c1199" type="java.lang.String"/>
+<attribute name="c1200" type="java.lang.String"/>
+<attribute name="c1178" type="java.lang.Integer"/>
+<attribute name="c1217" type="java.lang.String"/>
+<attribute name="c1218" type="java.lang.String"/>
+<attribute name="c1219" type="java.lang.Integer"/>
+<attribute name="c1220" type="java.lang.String"/>
+<attribute name="c1221" type="java.math.BigDecimal"/>
+<attribute name="c1222" type="java.lang.String"/>
+<attribute name="c1223" type="java.lang.String"/>
+<attribute name="c1177" type="java.lang.Integer"/>
+<attribute name="c1178" type="java.lang.Integer"/>
+<attribute name="c1179" type="java.lang.String"/>
+<attribute name="c1180" type="java.math.BigDecimal"/>
+<attribute name="c1181" type="java.sql.Date"/>
+<attribute name="c1182" type="java.lang.String"/>
+<attribute name="c1183" type="java.lang.String"/>
+<attribute name="c1184" type="java.lang.Integer"/>
+<attribute name="c1185" type="java.lang.String"/>
+</outputs>
+<children>
+<operator type="PROJECT">
+<outputs>
+<attribute name="c1187" type="java.lang.Integer"/>
+<attribute name="c1211" type="java.lang.String"/>
+<attribute name="c1212" type="java.lang.String"/>
+<attribute name="c1213" type="java.lang.Integer"/>
+<attribute name="c1214" type="java.lang.String"/>
+<attribute name="c1215" type="java.math.BigDecimal"/>
+<attribute name="c1216" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="s_suppkey" type="java.lang.Integer"/>
+<attribute name="s_name" type="java.lang.String"/>
+<attribute name="s_address" type="java.lang.String"/>
+<attribute name="s_nationkey" type="java.lang.Integer"/>
+<attribute name="s_phone" type="java.lang.String"/>
+<attribute name="s_acctbal" type="java.math.BigDecimal"/>
+<attribute name="s_comment" type="java.lang.String"/>
+</project>
+<child>
+<operator type="ACCESS" relation="supplier" access-method="m20">
+<outputs>
+<attribute name="s_suppkey" type="java.lang.Integer"/>
+<attribute name="s_name" type="java.lang.String"/>
+<attribute name="s_address" type="java.lang.String"/>
+<attribute name="s_nationkey" type="java.lang.Integer"/>
+<attribute name="s_phone" type="java.lang.String"/>
+<attribute name="s_acctbal" type="java.math.BigDecimal"/>
+<attribute name="s_comment" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+<operator type="DEPENDENT_JOIN" param="-1,-1,0">
+<outputs>
+<attribute name="c1219" type="java.lang.Integer"/>
+<attribute name="c1224" type="java.lang.Integer"/>
+<attribute name="c1225" type="java.lang.String"/>
+<attribute name="c1186" type="java.lang.Integer"/>
+<attribute name="c1187" type="java.lang.Integer"/>
+<attribute name="c1189" type="java.lang.Integer"/>
+<attribute name="c1209" type="java.math.BigDecimal"/>
+<attribute name="c1210" type="java.lang.String"/>
+<attribute name="c1177" type="java.lang.Integer"/>
+<attribute name="c1186" type="java.lang.Integer"/>
+<attribute name="c1187" type="java.lang.Integer"/>
+<attribute name="c1188" type="java.lang.Integer"/>
+<attribute name="c1189" type="java.math.BigDecimal"/>
+<attribute name="c1190" type="java.math.BigDecimal"/>
+<attribute name="c1191" type="java.math.BigDecimal"/>
+<attribute name="c1192" type="java.math.BigDecimal"/>
+<attribute name="c1193" type="java.lang.String"/>
+<attribute name="c1194" type="java.lang.String"/>
+<attribute name="c1195" type="java.sql.Date"/>
+<attribute name="c1196" type="java.sql.Date"/>
+<attribute name="c1197" type="java.sql.Date"/>
+<attribute name="c1198" type="java.lang.String"/>
+<attribute name="c1199" type="java.lang.String"/>
+<attribute name="c1200" type="java.lang.String"/>
+<attribute name="c1178" type="java.lang.Integer"/>
+<attribute name="c1217" type="java.lang.String"/>
+<attribute name="c1218" type="java.lang.String"/>
+<attribute name="c1219" type="java.lang.Integer"/>
+<attribute name="c1220" type="java.lang.String"/>
+<attribute name="c1221" type="java.math.BigDecimal"/>
+<attribute name="c1222" type="java.lang.String"/>
+<attribute name="c1223" type="java.lang.String"/>
+<attribute name="c1177" type="java.lang.Integer"/>
+<attribute name="c1178" type="java.lang.Integer"/>
+<attribute name="c1179" type="java.lang.String"/>
+<attribute name="c1180" type="java.math.BigDecimal"/>
+<attribute name="c1181" type="java.sql.Date"/>
+<attribute name="c1182" type="java.lang.String"/>
+<attribute name="c1183" type="java.lang.String"/>
+<attribute name="c1184" type="java.lang.Integer"/>
+<attribute name="c1185" type="java.lang.String"/>
+</outputs>
+<children>
+<operator type="PROJECT">
+<outputs>
+<attribute name="c1219" type="java.lang.Integer"/>
+<attribute name="c1224" type="java.lang.Integer"/>
+<attribute name="c1225" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="n_nationkey" type="java.lang.Integer"/>
+<attribute name="n_regionkey" type="java.lang.Integer"/>
+<attribute name="n_comment" type="java.lang.String"/>
+</project>
+<child>
+<operator type="SELECT">
+<outputs>
+<attribute name="n_nationkey" type="java.lang.Integer"/>
+<attribute name="n_name" type="java.lang.String"/>
+<attribute name="n_regionkey" type="java.lang.Integer"/>
+<attribute name="n_comment" type="java.lang.String"/>
+</outputs>
+<conjunction>
+<predicate type="equality" left="1" value="UNITED STATES"/>
+</conjunction>
+<child>
+<operator type="ACCESS" relation="nation" access-method="m7">
+<outputs>
+<attribute name="n_nationkey" type="java.lang.Integer"/>
+<attribute name="n_name" type="java.lang.String"/>
+<attribute name="n_regionkey" type="java.lang.Integer"/>
+<attribute name="n_comment" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</child>
+</operator>
+<operator type="JOIN" variant="SYMMETRIC_HASH">
+<outputs>
+<attribute name="c1186" type="java.lang.Integer"/>
+<attribute name="c1187" type="java.lang.Integer"/>
+<attribute name="c1189" type="java.lang.Integer"/>
+<attribute name="c1209" type="java.math.BigDecimal"/>
+<attribute name="c1210" type="java.lang.String"/>
+<attribute name="c1177" type="java.lang.Integer"/>
+<attribute name="c1186" type="java.lang.Integer"/>
+<attribute name="c1187" type="java.lang.Integer"/>
+<attribute name="c1188" type="java.lang.Integer"/>
+<attribute name="c1189" type="java.math.BigDecimal"/>
+<attribute name="c1190" type="java.math.BigDecimal"/>
+<attribute name="c1191" type="java.math.BigDecimal"/>
+<attribute name="c1192" type="java.math.BigDecimal"/>
+<attribute name="c1193" type="java.lang.String"/>
+<attribute name="c1194" type="java.lang.String"/>
+<attribute name="c1195" type="java.sql.Date"/>
+<attribute name="c1196" type="java.sql.Date"/>
+<attribute name="c1197" type="java.sql.Date"/>
+<attribute name="c1198" type="java.lang.String"/>
+<attribute name="c1199" type="java.lang.String"/>
+<attribute name="c1200" type="java.lang.String"/>
+<attribute name="c1178" type="java.lang.Integer"/>
+<attribute name="c1217" type="java.lang.String"/>
+<attribute name="c1218" type="java.lang.String"/>
+<attribute name="c1219" type="java.lang.Integer"/>
+<attribute name="c1220" type="java.lang.String"/>
+<attribute name="c1221" type="java.math.BigDecimal"/>
+<attribute name="c1222" type="java.lang.String"/>
+<attribute name="c1223" type="java.lang.String"/>
+<attribute name="c1177" type="java.lang.Integer"/>
+<attribute name="c1178" type="java.lang.Integer"/>
+<attribute name="c1179" type="java.lang.String"/>
+<attribute name="c1180" type="java.math.BigDecimal"/>
+<attribute name="c1181" type="java.sql.Date"/>
+<attribute name="c1182" type="java.lang.String"/>
+<attribute name="c1183" type="java.lang.String"/>
+<attribute name="c1184" type="java.lang.Integer"/>
+<attribute name="c1185" type="java.lang.String"/>
+</outputs>
+<conjunction>
+<predicate type="equality" left="0" right="6"/>
+<predicate type="equality" left="1" right="7"/>
+<predicate type="equality" left="2" right="9"/>
+</conjunction>
+<children>
+<operator type="PROJECT">
+<outputs>
+<attribute name="c1186" type="java.lang.Integer"/>
+<attribute name="c1187" type="java.lang.Integer"/>
+<attribute name="c1189" type="java.lang.Integer"/>
+<attribute name="c1209" type="java.math.BigDecimal"/>
+<attribute name="c1210" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="ps_partkey" type="java.lang.Integer"/>
+<attribute name="ps_suppkey" type="java.lang.Integer"/>
+<attribute name="ps_availqty" type="java.lang.Integer"/>
+<attribute name="ps_supplycost" type="java.math.BigDecimal"/>
+<attribute name="ps_comment" type="java.lang.String"/>
+</project>
+<child>
+<operator type="ACCESS" relation="partsupp" access-method="m5">
+<outputs>
+<attribute name="ps_partkey" type="java.lang.Integer"/>
+<attribute name="ps_suppkey" type="java.lang.Integer"/>
+<attribute name="ps_availqty" type="java.lang.Integer"/>
+<attribute name="ps_supplycost" type="java.math.BigDecimal"/>
+<attribute name="ps_comment" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+<operator type="JOIN" variant="SYMMETRIC_HASH">
+<outputs>
+<attribute name="c1177" type="java.lang.Integer"/>
+<attribute name="c1186" type="java.lang.Integer"/>
+<attribute name="c1187" type="java.lang.Integer"/>
+<attribute name="c1188" type="java.lang.Integer"/>
+<attribute name="c1189" type="java.math.BigDecimal"/>
+<attribute name="c1190" type="java.math.BigDecimal"/>
+<attribute name="c1191" type="java.math.BigDecimal"/>
+<attribute name="c1192" type="java.math.BigDecimal"/>
+<attribute name="c1193" type="java.lang.String"/>
+<attribute name="c1194" type="java.lang.String"/>
+<attribute name="c1195" type="java.sql.Date"/>
+<attribute name="c1196" type="java.sql.Date"/>
+<attribute name="c1197" type="java.sql.Date"/>
+<attribute name="c1198" type="java.lang.String"/>
+<attribute name="c1199" type="java.lang.String"/>
+<attribute name="c1200" type="java.lang.String"/>
+<attribute name="c1178" type="java.lang.Integer"/>
+<attribute name="c1217" type="java.lang.String"/>
+<attribute name="c1218" type="java.lang.String"/>
+<attribute name="c1219" type="java.lang.Integer"/>
+<attribute name="c1220" type="java.lang.String"/>
+<attribute name="c1221" type="java.math.BigDecimal"/>
+<attribute name="c1222" type="java.lang.String"/>
+<attribute name="c1223" type="java.lang.String"/>
+<attribute name="c1177" type="java.lang.Integer"/>
+<attribute name="c1178" type="java.lang.Integer"/>
+<attribute name="c1179" type="java.lang.String"/>
+<attribute name="c1180" type="java.math.BigDecimal"/>
+<attribute name="c1181" type="java.sql.Date"/>
+<attribute name="c1182" type="java.lang.String"/>
+<attribute name="c1183" type="java.lang.String"/>
+<attribute name="c1184" type="java.lang.Integer"/>
+<attribute name="c1185" type="java.lang.String"/>
+</outputs>
+<conjunction>
+<predicate type="equality" left="0" right="24"/>
+</conjunction>
+<children>
+<operator type="PROJECT">
+<outputs>
+<attribute name="c1177" type="java.lang.Integer"/>
+<attribute name="c1186" type="java.lang.Integer"/>
+<attribute name="c1187" type="java.lang.Integer"/>
+<attribute name="c1188" type="java.lang.Integer"/>
+<attribute name="c1189" type="java.math.BigDecimal"/>
+<attribute name="c1190" type="java.math.BigDecimal"/>
+<attribute name="c1191" type="java.math.BigDecimal"/>
+<attribute name="c1192" type="java.math.BigDecimal"/>
+<attribute name="c1193" type="java.lang.String"/>
+<attribute name="c1194" type="java.lang.String"/>
+<attribute name="c1195" type="java.sql.Date"/>
+<attribute name="c1196" type="java.sql.Date"/>
+<attribute name="c1197" type="java.sql.Date"/>
+<attribute name="c1198" type="java.lang.String"/>
+<attribute name="c1199" type="java.lang.String"/>
+<attribute name="c1200" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="l_orderkey" type="java.lang.Integer"/>
+<attribute name="l_partkey" type="java.lang.Integer"/>
+<attribute name="l_suppkey" type="java.lang.Integer"/>
+<attribute name="l_linenumber" type="java.lang.Integer"/>
+<attribute name="l_quantity" type="java.math.BigDecimal"/>
+<attribute name="l_extendedprice" type="java.math.BigDecimal"/>
+<attribute name="l_discount" type="java.math.BigDecimal"/>
+<attribute name="l_tax" type="java.math.BigDecimal"/>
+<attribute name="l_returnflag" type="java.lang.String"/>
+<attribute name="l_linestatus" type="java.lang.String"/>
+<attribute name="l_shipdate" type="java.sql.Date"/>
+<attribute name="l_commitdate" type="java.sql.Date"/>
+<attribute name="l_receiptdate" type="java.sql.Date"/>
+<attribute name="l_shipinstruct" type="java.lang.String"/>
+<attribute name="l_shipmode" type="java.lang.String"/>
+<attribute name="l_comment" type="java.lang.String"/>
+</project>
+<child>
+<operator type="ACCESS" relation="lineitem" access-method="m11">
+<outputs>
+<attribute name="l_orderkey" type="java.lang.Integer"/>
+<attribute name="l_partkey" type="java.lang.Integer"/>
+<attribute name="l_suppkey" type="java.lang.Integer"/>
+<attribute name="l_linenumber" type="java.lang.Integer"/>
+<attribute name="l_quantity" type="java.math.BigDecimal"/>
+<attribute name="l_extendedprice" type="java.math.BigDecimal"/>
+<attribute name="l_discount" type="java.math.BigDecimal"/>
+<attribute name="l_tax" type="java.math.BigDecimal"/>
+<attribute name="l_returnflag" type="java.lang.String"/>
+<attribute name="l_linestatus" type="java.lang.String"/>
+<attribute name="l_shipdate" type="java.sql.Date"/>
+<attribute name="l_commitdate" type="java.sql.Date"/>
+<attribute name="l_receiptdate" type="java.sql.Date"/>
+<attribute name="l_shipinstruct" type="java.lang.String"/>
+<attribute name="l_shipmode" type="java.lang.String"/>
+<attribute name="l_comment" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+<operator type="DEPENDENT_JOIN" param="0">
+<outputs>
+<attribute name="c1178" type="java.lang.Integer"/>
+<attribute name="c1217" type="java.lang.String"/>
+<attribute name="c1218" type="java.lang.String"/>
+<attribute name="c1219" type="java.lang.Integer"/>
+<attribute name="c1220" type="java.lang.String"/>
+<attribute name="c1221" type="java.math.BigDecimal"/>
+<attribute name="c1222" type="java.lang.String"/>
+<attribute name="c1223" type="java.lang.String"/>
+<attribute name="c1177" type="java.lang.Integer"/>
+<attribute name="c1178" type="java.lang.Integer"/>
+<attribute name="c1179" type="java.lang.String"/>
+<attribute name="c1180" type="java.math.BigDecimal"/>
+<attribute name="c1181" type="java.sql.Date"/>
+<attribute name="c1182" type="java.lang.String"/>
+<attribute name="c1183" type="java.lang.String"/>
+<attribute name="c1184" type="java.lang.Integer"/>
+<attribute name="c1185" type="java.lang.String"/>
+</outputs>
+<children>
+<operator type="PROJECT">
+<outputs>
+<attribute name="c1178" type="java.lang.Integer"/>
+<attribute name="c1217" type="java.lang.String"/>
+<attribute name="c1218" type="java.lang.String"/>
+<attribute name="c1219" type="java.lang.Integer"/>
+<attribute name="c1220" type="java.lang.String"/>
+<attribute name="c1221" type="java.math.BigDecimal"/>
+<attribute name="c1222" type="java.lang.String"/>
+<attribute name="c1223" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="c_custkey" type="java.lang.Integer"/>
+<attribute name="c_name" type="java.lang.String"/>
+<attribute name="c_address" type="java.lang.String"/>
+<attribute name="c_nationkey" type="java.lang.Integer"/>
+<attribute name="c_phone" type="java.lang.String"/>
+<attribute name="c_acctbal" type="java.math.BigDecimal"/>
+<attribute name="c_mktsegment" type="java.lang.String"/>
+<attribute name="c_comment" type="java.lang.String"/>
+</project>
+<child>
+<operator type="ACCESS" relation="customer" access-method="m1">
+<outputs>
+<attribute name="c_custkey" type="java.lang.Integer"/>
+<attribute name="c_name" type="java.lang.String"/>
+<attribute name="c_address" type="java.lang.String"/>
+<attribute name="c_nationkey" type="java.lang.Integer"/>
+<attribute name="c_phone" type="java.lang.String"/>
+<attribute name="c_acctbal" type="java.math.BigDecimal"/>
+<attribute name="c_mktsegment" type="java.lang.String"/>
+<attribute name="c_comment" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+<operator type="PROJECT">
+<outputs>
+<attribute name="c1177" type="java.lang.Integer"/>
+<attribute name="c1178" type="java.lang.Integer"/>
+<attribute name="c1179" type="java.lang.String"/>
+<attribute name="c1180" type="java.math.BigDecimal"/>
+<attribute name="c1181" type="java.sql.Date"/>
+<attribute name="c1182" type="java.lang.String"/>
+<attribute name="c1183" type="java.lang.String"/>
+<attribute name="c1184" type="java.lang.Integer"/>
+<attribute name="c1185" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="o_orderkey" type="java.lang.Integer"/>
+<attribute name="o_custkey" type="java.lang.Integer"/>
+<attribute name="o_orderstatus" type="java.lang.String"/>
+<attribute name="o_totalprice" type="java.math.BigDecimal"/>
+<attribute name="o_orderdate" type="java.sql.Date"/>
+<attribute name="o_orderpriority" type="java.lang.String"/>
+<attribute name="o_clerk" type="java.lang.String"/>
+<attribute name="o_shippriority" type="java.lang.Integer"/>
+<attribute name="o_comment" type="java.lang.String"/>
+</project>
+<child>
+<operator type="ACCESS" relation="orders" access-method="m9">
+<outputs>
+<attribute name="o_orderkey" type="java.lang.Integer"/>
+<attribute name="o_custkey" type="java.lang.Integer"/>
+<attribute name="o_orderstatus" type="java.lang.String"/>
+<attribute name="o_totalprice" type="java.math.BigDecimal"/>
+<attribute name="o_orderdate" type="java.sql.Date"/>
+<attribute name="o_orderpriority" type="java.lang.String"/>
+<attribute name="o_clerk" type="java.lang.String"/>
+<attribute name="o_shippriority" type="java.lang.Integer"/>
+<attribute name="o_comment" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</children>
+</operator>
+</children>
+</operator>
+</children>
+</operator>
+</children>
+</operator>
+</children>
+</operator>
+</children>
+</operator>
+</children>
+</operator>
+</child>
+</operator>
+</plan>

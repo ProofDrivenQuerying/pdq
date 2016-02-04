@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plan type="linear" cost="15.0" control-flow="TOP_DOWN">
+<command name="T1">
+<operator type="PROJECT">
+<outputs>
+<attribute name="c1428" type="java.lang.Integer"/>
+</outputs>
+<project>
+<attribute name="c1428" type="java.lang.Integer"/>
+</project>
+<child>
+<operator type="PROJECT">
+<outputs>
+<attribute name="c1428" type="java.lang.Integer"/>
+<attribute name="c1429" type="java.lang.Integer"/>
+<attribute name="c1430" type="java.lang.Integer"/>
+<attribute name="c1431" type="java.math.BigDecimal"/>
+<attribute name="c1432" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="ps_partkey" type="java.lang.Integer"/>
+<attribute name="ps_suppkey" type="java.lang.Integer"/>
+<attribute name="ps_availqty" type="java.lang.Integer"/>
+<attribute name="ps_supplycost" type="java.math.BigDecimal"/>
+<attribute name="ps_comment" type="java.lang.String"/>
+</project>
+<child>
+<operator type="ACCESS" relation="partsupp" access-method="m8">
+<outputs>
+<attribute name="ps_partkey" type="java.lang.Integer"/>
+<attribute name="ps_suppkey" type="java.lang.Integer"/>
+<attribute name="ps_availqty" type="java.lang.Integer"/>
+<attribute name="ps_supplycost" type="java.math.BigDecimal"/>
+<attribute name="ps_comment" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</child>
+</operator>
+</command>
+</plan>

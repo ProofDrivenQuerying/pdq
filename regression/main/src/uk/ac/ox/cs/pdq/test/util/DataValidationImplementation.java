@@ -23,11 +23,9 @@ import com.google.common.base.Preconditions;
 
 /**
  * Class that checks if the data is consistent w.r.t. the schema dependencies
- * @author Efthymia Tsamoura
- * 
  * The homomorphisms are found using SQL queries. The database facts (relation tuples) have to be stored in a database.
- * This database is created by a DBHomomorphismManager object  
- *
+ * This database is created by a DBHomomorphismManager object.
+ * @author Efthymia Tsamoura
  */
 
 public final class DataValidationImplementation extends DataValidation{

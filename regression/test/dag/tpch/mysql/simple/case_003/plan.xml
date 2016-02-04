@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plan type="dag" control-flow="TOP_DOWN">
+<operator type="PROJECT">
+<outputs>
+<attribute name="c1516" type="java.math.BigDecimal"/>
+<attribute name="c1512" type="java.lang.String"/>
+<attribute name="c1510" type="java.math.BigDecimal"/>
+<attribute name="c1519" type="java.lang.Integer"/>
+</outputs>
+<child>
+<operator type="JOIN" variant="SYMMETRIC_HASH">
+<outputs>
+<attribute name="k1548" type="java.lang.Integer"/>
+<attribute name="k1554" type="java.lang.String"/>
+<attribute name="k1555" type="java.lang.Integer"/>
+<attribute name="k1556" type="java.lang.String"/>
+<attribute name="c1514" type="java.lang.Integer"/>
+<attribute name="k1535" type="java.lang.String"/>
+<attribute name="k1536" type="java.lang.Integer"/>
+<attribute name="k1537" type="java.lang.String"/>
+<attribute name="c1514" type="java.lang.Integer"/>
+<attribute name="c1518" type="java.lang.String"/>
+<attribute name="c1519" type="java.lang.Integer"/>
+<attribute name="c1520" type="java.lang.String"/>
+<attribute name="c1508" type="java.lang.Integer"/>
+<attribute name="c1512" type="java.lang.String"/>
+<attribute name="c1513" type="java.lang.String"/>
+<attribute name="c1514" type="java.lang.Integer"/>
+<attribute name="c1515" type="java.lang.String"/>
+<attribute name="c1516" type="java.math.BigDecimal"/>
+<attribute name="c1517" type="java.lang.String"/>
+<attribute name="c1508" type="java.lang.Integer"/>
+<attribute name="k1546" type="java.lang.String"/>
+<attribute name="k1547" type="java.lang.String"/>
+<attribute name="k1548" type="java.lang.Integer"/>
+<attribute name="k1549" type="java.lang.String"/>
+<attribute name="k1550" type="java.math.BigDecimal"/>
+<attribute name="k1551" type="java.lang.String"/>
+<attribute name="c1507" type="java.lang.Integer"/>
+<attribute name="c1508" type="java.lang.Integer"/>
+<attribute name="c1509" type="java.lang.Integer"/>
+<attribute name="c1510" type="java.math.BigDecimal"/>
+<attribute name="c1511" type="java.lang.String"/>
+</outputs>
+<conjunction>
+<predicate type="equality" left="12" right="27"/>
+</conjunction>
+<children>
+<operator type="JOIN" variant="SYMMETRIC_HASH">
+<outputs>
+<attribute name="k1548" type="java.lang.Integer"/>
+<attribute name="k1554" type="java.lang.String"/>
+<attribute name="k1555" type="java.lang.Integer"/>
+<attribute name="k1556" type="java.lang.String"/>
+<attribute name="c1514" type="java.lang.Integer"/>
+<attribute name="k1535" type="java.lang.String"/>
+<attribute name="k1536" type="java.lang.Integer"/>
+<attribute name="k1537" type="java.lang.String"/>
+<attribute name="c1514" type="java.lang.Integer"/>
+<attribute name="c1518" type="java.lang.String"/>
+<attribute name="c1519" type="java.lang.Integer"/>
+<attribute name="c1520" type="java.lang.String"/>
+<attribute name="c1508" type="java.lang.Integer"/>
+<attribute name="c1512" type="java.lang.String"/>
+<attribute name="c1513" type="java.lang.String"/>
+<attribute name="c1514" type="java.lang.Integer"/>
+<attribute name="c1515" type="java.lang.String"/>
+<attribute name="c1516" type="java.math.BigDecimal"/>
+<attribute name="c1517" type="java.lang.String"/>
+<attribute name="c1508" type="java.lang.Integer"/>
+<attribute name="k1546" type="java.lang.String"/>
+<attribute name="k1547" type="java.lang.String"/>
+<attribute name="k1548" type="java.lang.Integer"/>
+<attribute name="k1549" type="java.lang.String"/>
+<attribute name="k1550" type="java.math.BigDecimal"/>
+<attribute name="k1551" type="java.lang.String"/>
+</outputs>
+<conjunction>
+<predicate type="equality" left="0" right="22"/>
+<predicate type="equality" left="4" right="15"/>
+</conjunction>
+<children>
+<operator type="JOIN" variant="SYMMETRIC_HASH">
+<outputs>
+<attribute name="k1548" type="java.lang.Integer"/>
+<attribute name="k1554" type="java.lang.String"/>
+<attribute name="k1555" type="java.lang.Integer"/>
+<attribute name="k1556" type="java.lang.String"/>
+<attribute name="c1514" type="java.lang.Integer"/>
+<attribute name="k1535" type="java.lang.String"/>
+<attribute name="k1536" type="java.lang.Integer"/>
+<attribute name="k1537" type="java.lang.String"/>
+<attribute name="c1514" type="java.lang.Integer"/>
+<attribute name="c1518" type="java.lang.String"/>
+<attribute name="c1519" type="java.lang.Integer"/>
+<attribute name="c1520" type="java.lang.String"/>
+</outputs>
+<conjunction>
+<predicate type="equality" left="4" right="8"/>
+</conjunction>
+<children>
+<operator type="JOIN" variant="SYMMETRIC_HASH">
+<outputs>
+<attribute name="k1548" type="java.lang.Integer"/>
+<attribute name="k1554" type="java.lang.String"/>
+<attribute name="k1555" type="java.lang.Integer"/>
+<attribute name="k1556" type="java.lang.String"/>
+<attribute name="c1514" type="java.lang.Integer"/>
+<attribute name="k1535" type="java.lang.String"/>
+<attribute name="k1536" type="java.lang.Integer"/>
+<attribute name="k1537" type="java.lang.String"/>
+</outputs>
+<conjunction>
+</conjunction>
+<children>
+<operator type="RENAME">
+<outputs>
+<attribute name="k1548" type="java.lang.Integer"/>
+<attribute name="k1554" type="java.lang.String"/>
+<attribute name="k1555" type="java.lang.Integer"/>
+<attribute name="k1556" type="java.lang.String"/>
+</outputs>
+<child>
+<operator type="ACCESS" relation="nation" access-method="m10">
+<outputs>
+<attribute name="k1548" type="java.lang.Integer"/>
+<attribute name="k1554" type="java.lang.String"/>
+<attribute name="k1555" type="java.lang.Integer"/>
+<attribute name="k1556" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+<operator type="RENAME">
+<outputs>
+<attribute name="c1514" type="java.lang.Integer"/>
+<attribute name="k1535" type="java.lang.String"/>
+<attribute name="k1536" type="java.lang.Integer"/>
+<attribute name="k1537" type="java.lang.String"/>
+</outputs>
+<child>
+<operator type="ACCESS" relation="nation" access-method="m10">
+<outputs>
+<attribute name="k1548" type="java.lang.Integer"/>
+<attribute name="k1554" type="java.lang.String"/>
+<attribute name="k1555" type="java.lang.Integer"/>
+<attribute name="k1556" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</children>
+</operator>
+<operator type="RENAME">
+<outputs>
+<attribute name="c1514" type="java.lang.Integer"/>
+<attribute name="c1518" type="java.lang.String"/>
+<attribute name="c1519" type="java.lang.Integer"/>
+<attribute name="c1520" type="java.lang.String"/>
+</outputs>
+<child>
+<operator type="ACCESS" relation="nation" access-method="m10">
+<outputs>
+<attribute name="k1548" type="java.lang.Integer"/>
+<attribute name="k1554" type="java.lang.String"/>
+<attribute name="k1555" type="java.lang.Integer"/>
+<attribute name="k1556" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</children>
+</operator>
+<operator type="JOIN" variant="SYMMETRIC_HASH">
+<outputs>
+<attribute name="c1508" type="java.lang.Integer"/>
+<attribute name="c1512" type="java.lang.String"/>
+<attribute name="c1513" type="java.lang.String"/>
+<attribute name="c1514" type="java.lang.Integer"/>
+<attribute name="c1515" type="java.lang.String"/>
+<attribute name="c1516" type="java.math.BigDecimal"/>
+<attribute name="c1517" type="java.lang.String"/>
+<attribute name="c1508" type="java.lang.Integer"/>
+<attribute name="k1546" type="java.lang.String"/>
+<attribute name="k1547" type="java.lang.String"/>
+<attribute name="k1548" type="java.lang.Integer"/>
+<attribute name="k1549" type="java.lang.String"/>
+<attribute name="k1550" type="java.math.BigDecimal"/>
+<attribute name="k1551" type="java.lang.String"/>
+</outputs>
+<conjunction>
+<predicate type="equality" left="0" right="7"/>
+</conjunction>
+<children>
+<operator type="RENAME">
+<outputs>
+<attribute name="c1508" type="java.lang.Integer"/>
+<attribute name="c1512" type="java.lang.String"/>
+<attribute name="c1513" type="java.lang.String"/>
+<attribute name="c1514" type="java.lang.Integer"/>
+<attribute name="c1515" type="java.lang.String"/>
+<attribute name="c1516" type="java.math.BigDecimal"/>
+<attribute name="c1517" type="java.lang.String"/>
+</outputs>
+<child>
+<operator type="ACCESS" relation="supplier" access-method="m6">
+<outputs>
+<attribute name="c1508" type="java.lang.Integer"/>
+<attribute name="c1512" type="java.lang.String"/>
+<attribute name="c1513" type="java.lang.String"/>
+<attribute name="c1514" type="java.lang.Integer"/>
+<attribute name="c1515" type="java.lang.String"/>
+<attribute name="c1516" type="java.math.BigDecimal"/>
+<attribute name="c1517" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+<operator type="RENAME">
+<outputs>
+<attribute name="c1508" type="java.lang.Integer"/>
+<attribute name="k1546" type="java.lang.String"/>
+<attribute name="k1547" type="java.lang.String"/>
+<attribute name="k1548" type="java.lang.Integer"/>
+<attribute name="k1549" type="java.lang.String"/>
+<attribute name="k1550" type="java.math.BigDecimal"/>
+<attribute name="k1551" type="java.lang.String"/>
+</outputs>
+<child>
+<operator type="ACCESS" relation="supplier" access-method="m6">
+<outputs>
+<attribute name="c1508" type="java.lang.Integer"/>
+<attribute name="c1512" type="java.lang.String"/>
+<attribute name="c1513" type="java.lang.String"/>
+<attribute name="c1514" type="java.lang.Integer"/>
+<attribute name="c1515" type="java.lang.String"/>
+<attribute name="c1516" type="java.math.BigDecimal"/>
+<attribute name="c1517" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</children>
+</operator>
+</children>
+</operator>
+<operator type="RENAME">
+<outputs>
+<attribute name="c1507" type="java.lang.Integer"/>
+<attribute name="c1508" type="java.lang.Integer"/>
+<attribute name="c1509" type="java.lang.Integer"/>
+<attribute name="c1510" type="java.math.BigDecimal"/>
+<attribute name="c1511" type="java.lang.String"/>
+</outputs>
+<child>
+<operator type="ACCESS" relation="partsupp" access-method="m8">
+<outputs>
+<attribute name="c1507" type="java.lang.Integer"/>
+<attribute name="c1508" type="java.lang.Integer"/>
+<attribute name="c1509" type="java.lang.Integer"/>
+<attribute name="c1510" type="java.math.BigDecimal"/>
+<attribute name="c1511" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</children>
+</operator>
+</child>
+</operator>
+</plan>

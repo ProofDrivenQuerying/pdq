@@ -34,7 +34,7 @@ import uk.ac.ox.cs.pdq.io.ReaderException;
 import uk.ac.ox.cs.pdq.io.xml.QueryReader;
 import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
 import uk.ac.ox.cs.pdq.plan.Plan;
-import uk.ac.ox.cs.pdq.planner.Planner;
+import uk.ac.ox.cs.pdq.planner.ExplorationSetUp;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.PlannerTypes;
@@ -123,11 +123,11 @@ public class PlannerServlet extends PDQServlet {
     		
     		costParams.setCostType(CostTypes.valueOf(request.getParameter(RequestParameters.COST)));
     		
-    		reasoningParams.setBlockingInterval(Integer.parseInt(request.getParameter(RequestParameters.BLOCKING_INTERVAL)));
+//    		reasoningParams.setBlockingInterval(Integer.parseInt(request.getParameter(RequestParameters.BLOCKING_INTERVAL)));
 
     		// Launch planner
     		try (WebBasedStatisticsLogger pLog = new WebBasedStatisticsLogger()) {
-        		final Planner planner = new Planner(plannerParams, costParams, reasoningParams, schema, pLog);
+        		final ExplorationSetUp planner = new ExplorationSetUp(plannerParams, costParams, reasoningParams, schema, pLog);
         		EventHandler eventLogger = new IntervalEventDrivenLogger(pLog, 5, 10); 
         		planner.registerEventHandler(eventLogger);
         		String planningSessionId = Long.toHexString(System.nanoTime());

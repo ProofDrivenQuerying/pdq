@@ -1,0 +1,634 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plan type="dag" control-flow="BOTTOM_UP">
+<operator type="PROJECT">
+<outputs>
+<attribute name="c27" type="java.math.BigDecimal"/>
+<attribute name="c26" type="java.lang.String"/>
+<attribute name="c31" type="java.lang.String"/>
+<attribute name="c24" type="java.lang.String"/>
+</outputs>
+<child>
+<operator type="JOIN" variant="SYMMETRIC_HASH">
+<outputs>
+<attribute name="c20" type="java.lang.Integer"/>
+<attribute name="k71" type="java.lang.String"/>
+<attribute name="k72" type="java.lang.String"/>
+<attribute name="k73" type="java.lang.Integer"/>
+<attribute name="k74" type="java.lang.String"/>
+<attribute name="k75" type="java.math.BigDecimal"/>
+<attribute name="k76" type="java.lang.String"/>
+<attribute name="c33" type="java.lang.Integer"/>
+<attribute name="c23" type="java.lang.String"/>
+<attribute name="c34" type="java.lang.String"/>
+<attribute name="c35" type="java.lang.Integer"/>
+<attribute name="c36" type="java.lang.String"/>
+<attribute name="5755.94" type="java.math.BigDecimal"/>
+<attribute name="c37" type="java.lang.String"/>
+<attribute name="c20" type="java.lang.Integer"/>
+<attribute name="c23" type="java.lang.String"/>
+<attribute name="c24" type="java.lang.String"/>
+<attribute name="c25" type="java.lang.Integer"/>
+<attribute name="c26" type="java.lang.String"/>
+<attribute name="c27" type="java.math.BigDecimal"/>
+<attribute name="c28" type="java.lang.String"/>
+<attribute name="c25" type="java.lang.Integer"/>
+<attribute name="k57" type="java.lang.String"/>
+<attribute name="k58" type="java.lang.Integer"/>
+<attribute name="k59" type="java.lang.String"/>
+<attribute name="c25" type="java.lang.Integer"/>
+<attribute name="c29" type="java.lang.String"/>
+<attribute name="c30" type="java.lang.Integer"/>
+<attribute name="c31" type="java.lang.String"/>
+<attribute name="k73" type="java.lang.Integer"/>
+<attribute name="k79" type="java.lang.String"/>
+<attribute name="k80" type="java.lang.Integer"/>
+<attribute name="k81" type="java.lang.String"/>
+<attribute name="c35" type="java.lang.Integer"/>
+<attribute name="k60" type="java.lang.String"/>
+<attribute name="k61" type="java.lang.Integer"/>
+<attribute name="k62" type="java.lang.String"/>
+<attribute name="c19" type="java.lang.Integer"/>
+<attribute name="c20" type="java.lang.Integer"/>
+<attribute name="7340" type="java.lang.Integer"/>
+<attribute name="c21" type="java.math.BigDecimal"/>
+<attribute name="c22" type="java.lang.String"/>
+<attribute name="c30" type="java.lang.Integer"/>
+<attribute name="AMERICA" type="java.lang.String"/>
+<attribute name="c32" type="java.lang.String"/>
+<attribute name="k80" type="java.lang.Integer"/>
+<attribute name="k86" type="java.lang.String"/>
+<attribute name="k87" type="java.lang.String"/>
+<attribute name="c30" type="java.lang.Integer"/>
+<attribute name="k77" type="java.lang.String"/>
+<attribute name="k78" type="java.lang.String"/>
+<attribute name="k58" type="java.lang.Integer"/>
+<attribute name="k82" type="java.lang.String"/>
+<attribute name="k83" type="java.lang.String"/>
+<attribute name="k61" type="java.lang.Integer"/>
+<attribute name="k84" type="java.lang.String"/>
+<attribute name="k85" type="java.lang.String"/>
+</outputs>
+<conjunction>
+<predicate type="equality" left="0" right="38"/>
+<predicate type="equality" left="23" right="51"/>
+<predicate type="equality" left="27" right="42"/>
+<predicate type="equality" left="31" right="45"/>
+<predicate type="equality" left="35" right="54"/>
+</conjunction>
+<children>
+<operator type="JOIN" variant="SYMMETRIC_HASH">
+<outputs>
+<attribute name="c20" type="java.lang.Integer"/>
+<attribute name="k71" type="java.lang.String"/>
+<attribute name="k72" type="java.lang.String"/>
+<attribute name="k73" type="java.lang.Integer"/>
+<attribute name="k74" type="java.lang.String"/>
+<attribute name="k75" type="java.math.BigDecimal"/>
+<attribute name="k76" type="java.lang.String"/>
+<attribute name="c33" type="java.lang.Integer"/>
+<attribute name="c23" type="java.lang.String"/>
+<attribute name="c34" type="java.lang.String"/>
+<attribute name="c35" type="java.lang.Integer"/>
+<attribute name="c36" type="java.lang.String"/>
+<attribute name="5755.94" type="java.math.BigDecimal"/>
+<attribute name="c37" type="java.lang.String"/>
+<attribute name="c20" type="java.lang.Integer"/>
+<attribute name="c23" type="java.lang.String"/>
+<attribute name="c24" type="java.lang.String"/>
+<attribute name="c25" type="java.lang.Integer"/>
+<attribute name="c26" type="java.lang.String"/>
+<attribute name="c27" type="java.math.BigDecimal"/>
+<attribute name="c28" type="java.lang.String"/>
+<attribute name="c25" type="java.lang.Integer"/>
+<attribute name="k57" type="java.lang.String"/>
+<attribute name="k58" type="java.lang.Integer"/>
+<attribute name="k59" type="java.lang.String"/>
+<attribute name="c25" type="java.lang.Integer"/>
+<attribute name="c29" type="java.lang.String"/>
+<attribute name="c30" type="java.lang.Integer"/>
+<attribute name="c31" type="java.lang.String"/>
+<attribute name="k73" type="java.lang.Integer"/>
+<attribute name="k79" type="java.lang.String"/>
+<attribute name="k80" type="java.lang.Integer"/>
+<attribute name="k81" type="java.lang.String"/>
+<attribute name="c35" type="java.lang.Integer"/>
+<attribute name="k60" type="java.lang.String"/>
+<attribute name="k61" type="java.lang.Integer"/>
+<attribute name="k62" type="java.lang.String"/>
+</outputs>
+<conjunction>
+<predicate type="equality" left="3" right="29"/>
+<predicate type="equality" left="10" right="33"/>
+<predicate type="equality" left="17" right="21"/>
+</conjunction>
+<children>
+<operator type="JOIN" variant="SYMMETRIC_HASH">
+<outputs>
+<attribute name="c20" type="java.lang.Integer"/>
+<attribute name="k71" type="java.lang.String"/>
+<attribute name="k72" type="java.lang.String"/>
+<attribute name="k73" type="java.lang.Integer"/>
+<attribute name="k74" type="java.lang.String"/>
+<attribute name="k75" type="java.math.BigDecimal"/>
+<attribute name="k76" type="java.lang.String"/>
+<attribute name="c33" type="java.lang.Integer"/>
+<attribute name="c23" type="java.lang.String"/>
+<attribute name="c34" type="java.lang.String"/>
+<attribute name="c35" type="java.lang.Integer"/>
+<attribute name="c36" type="java.lang.String"/>
+<attribute name="5755.94" type="java.math.BigDecimal"/>
+<attribute name="c37" type="java.lang.String"/>
+<attribute name="c20" type="java.lang.Integer"/>
+<attribute name="c23" type="java.lang.String"/>
+<attribute name="c24" type="java.lang.String"/>
+<attribute name="c25" type="java.lang.Integer"/>
+<attribute name="c26" type="java.lang.String"/>
+<attribute name="c27" type="java.math.BigDecimal"/>
+<attribute name="c28" type="java.lang.String"/>
+</outputs>
+<conjunction>
+<predicate type="equality" left="0" right="14"/>
+<predicate type="equality" left="8" right="15"/>
+</conjunction>
+<children>
+<operator type="JOIN" variant="SYMMETRIC_HASH">
+<outputs>
+<attribute name="c20" type="java.lang.Integer"/>
+<attribute name="k71" type="java.lang.String"/>
+<attribute name="k72" type="java.lang.String"/>
+<attribute name="k73" type="java.lang.Integer"/>
+<attribute name="k74" type="java.lang.String"/>
+<attribute name="k75" type="java.math.BigDecimal"/>
+<attribute name="k76" type="java.lang.String"/>
+<attribute name="c33" type="java.lang.Integer"/>
+<attribute name="c23" type="java.lang.String"/>
+<attribute name="c34" type="java.lang.String"/>
+<attribute name="c35" type="java.lang.Integer"/>
+<attribute name="c36" type="java.lang.String"/>
+<attribute name="5755.94" type="java.math.BigDecimal"/>
+<attribute name="c37" type="java.lang.String"/>
+</outputs>
+<conjunction>
+</conjunction>
+<children>
+<operator type="RENAME">
+<outputs>
+<attribute name="c20" type="java.lang.Integer"/>
+<attribute name="k71" type="java.lang.String"/>
+<attribute name="k72" type="java.lang.String"/>
+<attribute name="k73" type="java.lang.Integer"/>
+<attribute name="k74" type="java.lang.String"/>
+<attribute name="k75" type="java.math.BigDecimal"/>
+<attribute name="k76" type="java.lang.String"/>
+</outputs>
+<child>
+<operator type="ACCESS" relation="supplier">
+<outputs>
+<attribute name="s_suppkey" type="java.lang.Integer"/>
+<attribute name="s_name" type="java.lang.String"/>
+<attribute name="s_address" type="java.lang.String"/>
+<attribute name="s_nationkey" type="java.lang.Integer"/>
+<attribute name="s_phone" type="java.lang.String"/>
+<attribute name="s_acctbal" type="java.math.BigDecimal"/>
+<attribute name="s_comment" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+<operator type="RENAME">
+<outputs>
+<attribute name="c33" type="java.lang.Integer"/>
+<attribute name="c23" type="java.lang.String"/>
+<attribute name="c34" type="java.lang.String"/>
+<attribute name="c35" type="java.lang.Integer"/>
+<attribute name="c36" type="java.lang.String"/>
+<attribute name="5755.94" type="java.math.BigDecimal"/>
+<attribute name="c37" type="java.lang.String"/>
+</outputs>
+<child>
+<operator type="SELECT">
+<outputs>
+<attribute name="s_suppkey" type="java.lang.Integer"/>
+<attribute name="s_name" type="java.lang.String"/>
+<attribute name="s_address" type="java.lang.String"/>
+<attribute name="s_nationkey" type="java.lang.Integer"/>
+<attribute name="s_phone" type="java.lang.String"/>
+<attribute name="s_acctbal" type="java.math.BigDecimal"/>
+<attribute name="s_comment" type="java.lang.String"/>
+</outputs>
+<conjunction>
+<predicate type="equality" left="5" value="5755.94"/>
+</conjunction>
+<child>
+<operator type="ACCESS" relation="supplier">
+<outputs>
+<attribute name="s_suppkey" type="java.lang.Integer"/>
+<attribute name="s_name" type="java.lang.String"/>
+<attribute name="s_address" type="java.lang.String"/>
+<attribute name="s_nationkey" type="java.lang.Integer"/>
+<attribute name="s_phone" type="java.lang.String"/>
+<attribute name="s_acctbal" type="java.math.BigDecimal"/>
+<attribute name="s_comment" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</child>
+</operator>
+</children>
+</operator>
+<operator type="RENAME">
+<outputs>
+<attribute name="c20" type="java.lang.Integer"/>
+<attribute name="c23" type="java.lang.String"/>
+<attribute name="c24" type="java.lang.String"/>
+<attribute name="c25" type="java.lang.Integer"/>
+<attribute name="c26" type="java.lang.String"/>
+<attribute name="c27" type="java.math.BigDecimal"/>
+<attribute name="c28" type="java.lang.String"/>
+</outputs>
+<child>
+<operator type="ACCESS" relation="supplier">
+<outputs>
+<attribute name="s_suppkey" type="java.lang.Integer"/>
+<attribute name="s_name" type="java.lang.String"/>
+<attribute name="s_address" type="java.lang.String"/>
+<attribute name="s_nationkey" type="java.lang.Integer"/>
+<attribute name="s_phone" type="java.lang.String"/>
+<attribute name="s_acctbal" type="java.math.BigDecimal"/>
+<attribute name="s_comment" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</children>
+</operator>
+<operator type="JOIN" variant="SYMMETRIC_HASH">
+<outputs>
+<attribute name="c25" type="java.lang.Integer"/>
+<attribute name="k57" type="java.lang.String"/>
+<attribute name="k58" type="java.lang.Integer"/>
+<attribute name="k59" type="java.lang.String"/>
+<attribute name="c25" type="java.lang.Integer"/>
+<attribute name="c29" type="java.lang.String"/>
+<attribute name="c30" type="java.lang.Integer"/>
+<attribute name="c31" type="java.lang.String"/>
+<attribute name="k73" type="java.lang.Integer"/>
+<attribute name="k79" type="java.lang.String"/>
+<attribute name="k80" type="java.lang.Integer"/>
+<attribute name="k81" type="java.lang.String"/>
+<attribute name="c35" type="java.lang.Integer"/>
+<attribute name="k60" type="java.lang.String"/>
+<attribute name="k61" type="java.lang.Integer"/>
+<attribute name="k62" type="java.lang.String"/>
+</outputs>
+<conjunction>
+</conjunction>
+<children>
+<operator type="JOIN" variant="SYMMETRIC_HASH">
+<outputs>
+<attribute name="c25" type="java.lang.Integer"/>
+<attribute name="k57" type="java.lang.String"/>
+<attribute name="k58" type="java.lang.Integer"/>
+<attribute name="k59" type="java.lang.String"/>
+<attribute name="c25" type="java.lang.Integer"/>
+<attribute name="c29" type="java.lang.String"/>
+<attribute name="c30" type="java.lang.Integer"/>
+<attribute name="c31" type="java.lang.String"/>
+<attribute name="k73" type="java.lang.Integer"/>
+<attribute name="k79" type="java.lang.String"/>
+<attribute name="k80" type="java.lang.Integer"/>
+<attribute name="k81" type="java.lang.String"/>
+</outputs>
+<conjunction>
+</conjunction>
+<children>
+<operator type="JOIN" variant="SYMMETRIC_HASH">
+<outputs>
+<attribute name="c25" type="java.lang.Integer"/>
+<attribute name="k57" type="java.lang.String"/>
+<attribute name="k58" type="java.lang.Integer"/>
+<attribute name="k59" type="java.lang.String"/>
+<attribute name="c25" type="java.lang.Integer"/>
+<attribute name="c29" type="java.lang.String"/>
+<attribute name="c30" type="java.lang.Integer"/>
+<attribute name="c31" type="java.lang.String"/>
+</outputs>
+<conjunction>
+<predicate type="equality" left="0" right="4"/>
+</conjunction>
+<children>
+<operator type="RENAME">
+<outputs>
+<attribute name="c25" type="java.lang.Integer"/>
+<attribute name="k57" type="java.lang.String"/>
+<attribute name="k58" type="java.lang.Integer"/>
+<attribute name="k59" type="java.lang.String"/>
+</outputs>
+<child>
+<operator type="ACCESS" relation="nation">
+<outputs>
+<attribute name="n_nationkey" type="java.lang.Integer"/>
+<attribute name="n_name" type="java.lang.String"/>
+<attribute name="n_regionkey" type="java.lang.Integer"/>
+<attribute name="n_comment" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+<operator type="RENAME">
+<outputs>
+<attribute name="c25" type="java.lang.Integer"/>
+<attribute name="c29" type="java.lang.String"/>
+<attribute name="c30" type="java.lang.Integer"/>
+<attribute name="c31" type="java.lang.String"/>
+</outputs>
+<child>
+<operator type="ACCESS" relation="nation">
+<outputs>
+<attribute name="n_nationkey" type="java.lang.Integer"/>
+<attribute name="n_name" type="java.lang.String"/>
+<attribute name="n_regionkey" type="java.lang.Integer"/>
+<attribute name="n_comment" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</children>
+</operator>
+<operator type="RENAME">
+<outputs>
+<attribute name="k73" type="java.lang.Integer"/>
+<attribute name="k79" type="java.lang.String"/>
+<attribute name="k80" type="java.lang.Integer"/>
+<attribute name="k81" type="java.lang.String"/>
+</outputs>
+<child>
+<operator type="ACCESS" relation="nation">
+<outputs>
+<attribute name="n_nationkey" type="java.lang.Integer"/>
+<attribute name="n_name" type="java.lang.String"/>
+<attribute name="n_regionkey" type="java.lang.Integer"/>
+<attribute name="n_comment" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</children>
+</operator>
+<operator type="RENAME">
+<outputs>
+<attribute name="c35" type="java.lang.Integer"/>
+<attribute name="k60" type="java.lang.String"/>
+<attribute name="k61" type="java.lang.Integer"/>
+<attribute name="k62" type="java.lang.String"/>
+</outputs>
+<child>
+<operator type="ACCESS" relation="nation">
+<outputs>
+<attribute name="n_nationkey" type="java.lang.Integer"/>
+<attribute name="n_name" type="java.lang.String"/>
+<attribute name="n_regionkey" type="java.lang.Integer"/>
+<attribute name="n_comment" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</children>
+</operator>
+</children>
+</operator>
+<operator type="JOIN" variant="SYMMETRIC_HASH">
+<outputs>
+<attribute name="c19" type="java.lang.Integer"/>
+<attribute name="c20" type="java.lang.Integer"/>
+<attribute name="7340" type="java.lang.Integer"/>
+<attribute name="c21" type="java.math.BigDecimal"/>
+<attribute name="c22" type="java.lang.String"/>
+<attribute name="c30" type="java.lang.Integer"/>
+<attribute name="AMERICA" type="java.lang.String"/>
+<attribute name="c32" type="java.lang.String"/>
+<attribute name="k80" type="java.lang.Integer"/>
+<attribute name="k86" type="java.lang.String"/>
+<attribute name="k87" type="java.lang.String"/>
+<attribute name="c30" type="java.lang.Integer"/>
+<attribute name="k77" type="java.lang.String"/>
+<attribute name="k78" type="java.lang.String"/>
+<attribute name="k58" type="java.lang.Integer"/>
+<attribute name="k82" type="java.lang.String"/>
+<attribute name="k83" type="java.lang.String"/>
+<attribute name="k61" type="java.lang.Integer"/>
+<attribute name="k84" type="java.lang.String"/>
+<attribute name="k85" type="java.lang.String"/>
+</outputs>
+<conjunction>
+</conjunction>
+<children>
+<operator type="RENAME">
+<outputs>
+<attribute name="c19" type="java.lang.Integer"/>
+<attribute name="c20" type="java.lang.Integer"/>
+<attribute name="7340" type="java.lang.Integer"/>
+<attribute name="c21" type="java.math.BigDecimal"/>
+<attribute name="c22" type="java.lang.String"/>
+</outputs>
+<child>
+<operator type="SELECT">
+<outputs>
+<attribute name="ps_partkey" type="java.lang.Integer"/>
+<attribute name="ps_suppkey" type="java.lang.Integer"/>
+<attribute name="ps_availqty" type="java.lang.Integer"/>
+<attribute name="ps_supplycost" type="java.math.BigDecimal"/>
+<attribute name="ps_comment" type="java.lang.String"/>
+</outputs>
+<conjunction>
+<predicate type="equality" left="2" value="7340"/>
+</conjunction>
+<child>
+<operator type="ACCESS" relation="partsupp">
+<outputs>
+<attribute name="ps_partkey" type="java.lang.Integer"/>
+<attribute name="ps_suppkey" type="java.lang.Integer"/>
+<attribute name="ps_availqty" type="java.lang.Integer"/>
+<attribute name="ps_supplycost" type="java.math.BigDecimal"/>
+<attribute name="ps_comment" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</child>
+</operator>
+<operator type="JOIN" variant="SYMMETRIC_HASH">
+<outputs>
+<attribute name="c30" type="java.lang.Integer"/>
+<attribute name="AMERICA" type="java.lang.String"/>
+<attribute name="c32" type="java.lang.String"/>
+<attribute name="k80" type="java.lang.Integer"/>
+<attribute name="k86" type="java.lang.String"/>
+<attribute name="k87" type="java.lang.String"/>
+<attribute name="c30" type="java.lang.Integer"/>
+<attribute name="k77" type="java.lang.String"/>
+<attribute name="k78" type="java.lang.String"/>
+<attribute name="k58" type="java.lang.Integer"/>
+<attribute name="k82" type="java.lang.String"/>
+<attribute name="k83" type="java.lang.String"/>
+<attribute name="k61" type="java.lang.Integer"/>
+<attribute name="k84" type="java.lang.String"/>
+<attribute name="k85" type="java.lang.String"/>
+</outputs>
+<conjunction>
+</conjunction>
+<children>
+<operator type="JOIN" variant="SYMMETRIC_HASH">
+<outputs>
+<attribute name="c30" type="java.lang.Integer"/>
+<attribute name="AMERICA" type="java.lang.String"/>
+<attribute name="c32" type="java.lang.String"/>
+<attribute name="k80" type="java.lang.Integer"/>
+<attribute name="k86" type="java.lang.String"/>
+<attribute name="k87" type="java.lang.String"/>
+<attribute name="c30" type="java.lang.Integer"/>
+<attribute name="k77" type="java.lang.String"/>
+<attribute name="k78" type="java.lang.String"/>
+<attribute name="k58" type="java.lang.Integer"/>
+<attribute name="k82" type="java.lang.String"/>
+<attribute name="k83" type="java.lang.String"/>
+</outputs>
+<conjunction>
+</conjunction>
+<children>
+<operator type="JOIN" variant="SYMMETRIC_HASH">
+<outputs>
+<attribute name="c30" type="java.lang.Integer"/>
+<attribute name="AMERICA" type="java.lang.String"/>
+<attribute name="c32" type="java.lang.String"/>
+<attribute name="k80" type="java.lang.Integer"/>
+<attribute name="k86" type="java.lang.String"/>
+<attribute name="k87" type="java.lang.String"/>
+<attribute name="c30" type="java.lang.Integer"/>
+<attribute name="k77" type="java.lang.String"/>
+<attribute name="k78" type="java.lang.String"/>
+</outputs>
+<conjunction>
+<predicate type="equality" left="0" right="6"/>
+</conjunction>
+<children>
+<operator type="JOIN" variant="SYMMETRIC_HASH">
+<outputs>
+<attribute name="c30" type="java.lang.Integer"/>
+<attribute name="AMERICA" type="java.lang.String"/>
+<attribute name="c32" type="java.lang.String"/>
+<attribute name="k80" type="java.lang.Integer"/>
+<attribute name="k86" type="java.lang.String"/>
+<attribute name="k87" type="java.lang.String"/>
+</outputs>
+<conjunction>
+</conjunction>
+<children>
+<operator type="RENAME">
+<outputs>
+<attribute name="c30" type="java.lang.Integer"/>
+<attribute name="AMERICA" type="java.lang.String"/>
+<attribute name="c32" type="java.lang.String"/>
+</outputs>
+<child>
+<operator type="SELECT">
+<outputs>
+<attribute name="r_regionkey" type="java.lang.Integer"/>
+<attribute name="r_name" type="java.lang.String"/>
+<attribute name="r_comment" type="java.lang.String"/>
+</outputs>
+<conjunction>
+<predicate type="equality" left="1" value="AMERICA"/>
+</conjunction>
+<child>
+<operator type="ACCESS" relation="region">
+<outputs>
+<attribute name="r_regionkey" type="java.lang.Integer"/>
+<attribute name="r_name" type="java.lang.String"/>
+<attribute name="r_comment" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</child>
+</operator>
+<operator type="RENAME">
+<outputs>
+<attribute name="k80" type="java.lang.Integer"/>
+<attribute name="k86" type="java.lang.String"/>
+<attribute name="k87" type="java.lang.String"/>
+</outputs>
+<child>
+<operator type="ACCESS" relation="region">
+<outputs>
+<attribute name="r_regionkey" type="java.lang.Integer"/>
+<attribute name="r_name" type="java.lang.String"/>
+<attribute name="r_comment" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</children>
+</operator>
+<operator type="RENAME">
+<outputs>
+<attribute name="c30" type="java.lang.Integer"/>
+<attribute name="k77" type="java.lang.String"/>
+<attribute name="k78" type="java.lang.String"/>
+</outputs>
+<child>
+<operator type="ACCESS" relation="region">
+<outputs>
+<attribute name="r_regionkey" type="java.lang.Integer"/>
+<attribute name="r_name" type="java.lang.String"/>
+<attribute name="r_comment" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</children>
+</operator>
+<operator type="RENAME">
+<outputs>
+<attribute name="k58" type="java.lang.Integer"/>
+<attribute name="k82" type="java.lang.String"/>
+<attribute name="k83" type="java.lang.String"/>
+</outputs>
+<child>
+<operator type="ACCESS" relation="region">
+<outputs>
+<attribute name="r_regionkey" type="java.lang.Integer"/>
+<attribute name="r_name" type="java.lang.String"/>
+<attribute name="r_comment" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</children>
+</operator>
+<operator type="RENAME">
+<outputs>
+<attribute name="k61" type="java.lang.Integer"/>
+<attribute name="k84" type="java.lang.String"/>
+<attribute name="k85" type="java.lang.String"/>
+</outputs>
+<child>
+<operator type="ACCESS" relation="region">
+<outputs>
+<attribute name="r_regionkey" type="java.lang.Integer"/>
+<attribute name="r_name" type="java.lang.String"/>
+<attribute name="r_comment" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</children>
+</operator>
+</children>
+</operator>
+</children>
+</operator>
+</child>
+</operator>
+</plan>

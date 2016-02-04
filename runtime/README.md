@@ -26,6 +26,15 @@ Under the top directory, type:
 
 	mvn install
 	
+Two JARs will be built and placed in the project's "target/" directory.
+
+	- pdq-runtime-<version>.jar, contains the bytecode for the runtime
+	  only, i.e. you need to make sure all dependencies are on the CLASSPATH to
+	  run it.
+
+	- pdq-runtime-<version>.one-jar.jar, is fully self-contained, and can be
+	  run directly.
+	
 The JAR will be built and placed in the project's "target/" directory under the
 name pdq-runtime-<version>.jar.
 

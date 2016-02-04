@@ -16,7 +16,7 @@ import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.plan.Cost;
 import uk.ac.ox.cs.pdq.plan.DAGPlan;
-import uk.ac.ox.cs.pdq.planner.Planner;
+import uk.ac.ox.cs.pdq.planner.ExplorationSetUp;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
@@ -133,7 +133,7 @@ public class OptimizationHandler implements MessageHandler<ExternalRuleOptimizat
 		ReasoningParameters reasoningParams = new ReasoningParameters();
 		
 		try {
-			Planner planner = new Planner(plannerParams, costParams, reasoningParams, schema);
+			ExplorationSetUp planner = new ExplorationSetUp(plannerParams, costParams, reasoningParams, schema);
 			planner.setCostEstimator(estimator);
 			for (EventHandler eh: handlers) {
 				planner.registerEventHandler(eh);

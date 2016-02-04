@@ -144,7 +144,7 @@ public class DAGOptimized extends DAGExplorer {
 				BigInteger cardinality = this.cardinalityEstimator.cardinalityOf(configuration, this.query);
 				configuration.setCardinality(cardinality);	
 
-				if (matchesQuery || configuration.getOutput().containsAll(this.query.getFree2Canonical().values())) {
+				if (matchesQuery || configuration.getOutput().containsAll(this.query.getFreeToCanonical().values())) {
 					this.setBestPlan(configuration);
 				}
 			}

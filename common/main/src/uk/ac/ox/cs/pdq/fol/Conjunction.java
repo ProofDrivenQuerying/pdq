@@ -9,7 +9,7 @@ import java.util.Map;
 import com.google.common.collect.Lists;
 
 /**
- * A conjunction
+ * A conjunctive formula
  * @author Efthymia Tsamoura
  * @author Julien Leblay
  *

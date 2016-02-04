@@ -58,7 +58,7 @@ public class ReasonerUtility {
 		List<Attribute> _toShare = Lists.newArrayList();
 		_toShare.addAll((Collection<? extends Attribute>) CollectionUtils.intersection(left.getHeader(),right.getHeader()));
 		Query<?> rquery = new CommandToTGDTranslator().toQuery(right, _toShare);
-		Map<Variable, Constant> _toPreserve = Utility.retain(lquery.getFree2Canonical(), Utility.typedToVariable(_toShare));
+		Map<Variable, Constant> _toPreserve = Utility.retain(lquery.getFreeToCanonical(), Utility.typedToVariable(_toShare));
 	
 		//Creates a chase state that consists of the canonical database of the input query.
 		ListState state = new DatabaseListState(lquery, detector);
@@ -83,7 +83,7 @@ public class ReasonerUtility {
 		
 		//Creates a chase state that consists of the canonical database of the input query.
 		ListState state = new DatabaseListState(lquery, detector);
-		return egdChaser.entails(state, lquery.getFree2Canonical(), rquery, constraints);
+		return egdChaser.entails(state, lquery.getFreeToCanonical(), rquery, constraints);
 	}
 		
 	/**

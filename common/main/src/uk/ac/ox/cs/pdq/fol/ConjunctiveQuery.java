@@ -20,7 +20,9 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 /**
- * A conjunctive query
+ * A conjunctive query (CQ) is a first order formula of the form \exists x_1, \ldots, x_n \Wedge A_i,
+ * where A_i are atoms with arguments that are either variables or constants.
+
  * @author Efthymia Tsamoura
  * @author Julien Leblay
  *
@@ -54,17 +56,20 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 	protected Map<Variable, Constant> grounding;
 
 	/**
+	 * Builds a conjunctive query given the input head and body.
+	 * The query is grounded by assigning fresh chase constants to its variables 
 	 * @param head
 	 * 		The query's head
 	 * @param body
 	 * 		The query's body
 	 */
 	public ConjunctiveQuery(Predicate head, Conjunction<Predicate> body) {
-		this(head, body, inferGrounding(body));
+		this(head, body, generateCanonicalMapping(body));
 	}
 	
 	/**
-	 *
+	 * Builds a conjunctive query given the input head variables and body.
+	 * The query is grounded by assigning fresh chase constants to its variables 
 	 * @param name
 	 * 		The query's name
 	 * @param headTerms
@@ -77,7 +82,9 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 	}
 
 	/**
-	 * 
+	 * Builds a conjunctive query given the input head variables and body.
+	 * The query is grounded using the input mapping of variables to constants.
+	 *  
 	 * @param head
 	 * 		The query's head
 	 * @param body
@@ -111,8 +118,10 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 	}
 
 	/**
-	 * @param right Conjunction<PredicateFormula>
-	 * @return Collection<TypedConstant<?>>
+	 * 
+	 * @param right
+	 * @return
+	 * 		returns the schema constants of the input conjunction of atoms
 	 */
 	private static Collection<TypedConstant<?>> getSchemaConstants(Conjunction<Predicate> right) {
 		Collection<TypedConstant<?>> constants = new LinkedHashSet<>();
@@ -129,9 +138,14 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 	}
 
 	/**
-	 * @return Map<Variable,Constant>
+	 * 
+	 * @param body
+	 * @return
+	 * 		a mapping of variables of the input conjunction to constants. 
+	 * 		A fresh constant is created for each variable of the conjunction. 
+	 * 		This method is invoked by the conjunctive query constructor when the constructor is called with empty input canonical mapping. 
 	 */
-	private static Map<Variable, Constant> inferGrounding(Conjunction<Predicate> body) {
+	private static Map<Variable, Constant> generateCanonicalMapping(Conjunction<Predicate> body) {
 		Map<Variable, Constant> canonicalMapping = new LinkedHashMap<>();
 			for (Predicate p: body) {
 				for (Term t: p.getTerms()) {
@@ -147,10 +161,17 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 		return canonicalMapping;
 	}
 	
-	private static Map<Variable, Constant> getFreeToCanonical(Predicate head, Map<Variable, Constant> canonicalMapping) {
+	/**
+	 * 
+	 * @param head
+	 * @param canonical
+	 * @return
+	 * 		a mapping of query free variables to canonical constants 
+	 */
+	private static Map<Variable, Constant> getFreeToCanonical(Predicate head, Map<Variable, Constant> canonical) {
 		Map<Variable, Constant> freeToCanonical = new LinkedHashMap<>();
 		for(Term headTerm: head.getTerms()) {
-			Constant chaseTerm  = canonicalMapping.get(headTerm);
+			Constant chaseTerm  = canonical.get(headTerm);
 			if (chaseTerm != null && !chaseTerm.isSkolem()) {
 				throw new java.lang.IllegalStateException("Chase Term " + headTerm + ", " + head.getTerms());
 			}
@@ -304,15 +325,15 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 
 	/**
 	 * @return Map<Variable,Term>
-	 * @see uk.ac.ox.cs.pdq.fol.Query#getFree2Canonical()
+	 * @see uk.ac.ox.cs.pdq.fol.Query#getFreeToCanonical()
 	 */
 	@Override
-	public Map<Variable, Constant> getFree2Canonical() {
+	public Map<Variable, Constant> getFreeToCanonical() {
 		return this.freeToCanonical;
 	}
 	
 	@Override
-	public Map<Variable, Constant> getVariables2Canonical() {
+	public Map<Variable, Constant> getVariablesToCanonical() {
 		return this.grounding;
 	}
 

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plan type="linear" cost="25.0">
+<command name="T1">
+<operator type="PROJECT">
+<outputs>
+<attribute name="c5966" type="java.lang.Integer"/>
+<attribute name="c5971" type="java.lang.String"/>
+<attribute name="c5972" type="java.lang.String"/>
+<attribute name="c5973" type="java.lang.String"/>
+<attribute name="c5974" type="java.lang.String"/>
+<attribute name="c5975" type="java.lang.Integer"/>
+<attribute name="c5976" type="java.lang.String"/>
+<attribute name="c5977" type="java.math.BigDecimal"/>
+<attribute name="c5978" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="p_partkey" type="java.lang.Integer"/>
+<attribute name="p_name" type="java.lang.String"/>
+<attribute name="p_mfgr" type="java.lang.String"/>
+<attribute name="p_brand" type="java.lang.String"/>
+<attribute name="p_type" type="java.lang.String"/>
+<attribute name="p_size" type="java.lang.Integer"/>
+<attribute name="p_container" type="java.lang.String"/>
+<attribute name="p_retailprice" type="java.math.BigDecimal"/>
+<attribute name="p_comment" type="java.lang.String"/>
+</project>
+<child>
+<operator type="ACCESS" relation="part" access-method="m4">
+<outputs>
+<attribute name="p_partkey" type="java.lang.Integer"/>
+<attribute name="p_name" type="java.lang.String"/>
+<attribute name="p_mfgr" type="java.lang.String"/>
+<attribute name="p_brand" type="java.lang.String"/>
+<attribute name="p_type" type="java.lang.String"/>
+<attribute name="p_size" type="java.lang.Integer"/>
+<attribute name="p_container" type="java.lang.String"/>
+<attribute name="p_retailprice" type="java.math.BigDecimal"/>
+<attribute name="p_comment" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</command>
+<command name="T2">
+<operator type="JOIN" variant="SYMMETRIC_HASH">
+<outputs>
+<attribute name="c5966" type="java.lang.Integer"/>
+<attribute name="c5971" type="java.lang.String"/>
+<attribute name="c5972" type="java.lang.String"/>
+<attribute name="c5973" type="java.lang.String"/>
+<attribute name="c5974" type="java.lang.String"/>
+<attribute name="c5975" type="java.lang.Integer"/>
+<attribute name="c5976" type="java.lang.String"/>
+<attribute name="c5977" type="java.math.BigDecimal"/>
+<attribute name="c5978" type="java.lang.String"/>
+<attribute name="c5966" type="java.lang.Integer"/>
+<attribute name="c5967" type="java.lang.Integer"/>
+<attribute name="c5968" type="java.lang.Integer"/>
+<attribute name="c5969" type="java.math.BigDecimal"/>
+<attribute name="c5970" type="java.lang.String"/>
+</outputs>
+<conjunction>
+<predicate type="equality" left="0" right="9"/>
+</conjunction>
+<children>
+<operator type="ALIAS" name="T1"/>
+<operator type="PROJECT">
+<outputs>
+<attribute name="c5966" type="java.lang.Integer"/>
+<attribute name="c5967" type="java.lang.Integer"/>
+<attribute name="c5968" type="java.lang.Integer"/>
+<attribute name="c5969" type="java.math.BigDecimal"/>
+<attribute name="c5970" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="ps_partkey" type="java.lang.Integer"/>
+<attribute name="ps_suppkey" type="java.lang.Integer"/>
+<attribute name="ps_availqty" type="java.lang.Integer"/>
+<attribute name="ps_supplycost" type="java.math.BigDecimal"/>
+<attribute name="ps_comment" type="java.lang.String"/>
+</project>
+<child>
+<operator type="ACCESS" relation="partsupp" access-method="m8">
+<outputs>
+<attribute name="ps_partkey" type="java.lang.Integer"/>
+<attribute name="ps_suppkey" type="java.lang.Integer"/>
+<attribute name="ps_availqty" type="java.lang.Integer"/>
+<attribute name="ps_supplycost" type="java.math.BigDecimal"/>
+<attribute name="ps_comment" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</children>
+</operator>
+</command>
+</plan>
