@@ -1,5 +1,5 @@
 /**
- * Utilities for the runtime project.
+ * Contains utilities for the runtime project.
  * 
  * These typically include post-processing class to be used along with executor,
  * for tuple counting, tuple printing, or other reporting purposes. 
