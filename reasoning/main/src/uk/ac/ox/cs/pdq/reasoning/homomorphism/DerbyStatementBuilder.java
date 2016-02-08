@@ -78,19 +78,7 @@ public class DerbyStatementBuilder extends SQLStatementBuilder {
 	 * 
 	 */
 	@Override
-	protected Pair<String,String> createTableIndex(DBRelation relation, Integer... columns) {
-		StringBuilder indexName = new StringBuilder();
-		StringBuilder indexColumns = new StringBuilder();
-		String sep1 = "", sep2 = "";
-		for (Integer i: columns) {
-			indexName.append(sep1).append(relation.getAttribute(i).getName());
-			indexColumns.append(sep2).append(relation.getAttribute(i).getName());
-			sep1 = "_";
-			sep2 = ",";
-		}
-		String create ="CREATE INDEX idx_" + this.encodeName(relation.getName()) + "_" + indexName +
-				" ON " + this.encodeName(relation.getName()) + "(" + indexColumns + ")";
-		String drop ="DROP INDEX idx_" + this.encodeName(relation.getName()) + "_" + indexName;
-		return new ImmutablePair<String, String>(create,drop);
-	}	
+	protected String indexDropStatement(DBRelation relation, StringBuilder indexName, StringBuilder indexColumns) {
+		return "DROP INDEX idx_" + this.encodeName(relation.getName()) + "_" + indexName ;
+	}
 }

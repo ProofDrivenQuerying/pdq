@@ -182,7 +182,7 @@ public abstract class SQLStatementBuilder {
 	 * @param columns
 	 * @return a SQL statement that creates an index for the columns of the input relation
 	 */
-	protected Pair<String,String> createTableIndex(DBRelation relation, Integer... columns) {
+	protected Pair<String,String> createTableIndex(boolean isForQuery,Set<String> constraintIndices,DBRelation relation, Integer... columns) {
 		StringBuilder indexName = new StringBuilder();
 		StringBuilder indexColumns = new StringBuilder();
 		String sep1 = "", sep2 = "";
@@ -192,13 +192,31 @@ public abstract class SQLStatementBuilder {
 			sep1 = "_";
 			sep2 = ",";
 		}
-		String create ="CREATE INDEX idx_" + this.encodeName(relation.getName()) + "_" + indexName +
-				" ON " + this.encodeName(relation.getName()) + "(" + indexColumns + ")";
-		String drop ="DROP INDEX idx_" + this.encodeName(relation.getName()) + "_" + indexName +
-				" ON " + this.encodeName(relation.getName());
+		
+		if(isForQuery) //if the index is created for the query
+		{
+			//and is not already existing due to the constraints
+			if(constraintIndices.contains(this.encodeName(relation.getName()) + "_" + indexName))
+				return new ImmutablePair<String, String>(null,null);
+		}else{
+			constraintIndices.add(this.encodeName(relation.getName()) + "_" + indexName );
+		}
+		String create = indexCreateStatement(relation,indexName,indexColumns);		
+		String drop =  indexDropStatement(relation,indexName,indexColumns);
+		
 		return new ImmutablePair<String, String>(create,drop);
 	}
 	
+	protected String indexCreateStatement(DBRelation relation, StringBuilder indexName, StringBuilder indexColumns) {
+		return "CREATE INDEX idx_" + this.encodeName(relation.getName()) + "_" + indexName +
+		" ON " + this.encodeName(relation.getName()) + "(" + indexColumns + ")";
+	}
+	
+	protected String indexDropStatement(DBRelation relation, StringBuilder indexName, StringBuilder indexColumns) {
+		return "DROP INDEX idx_" + this.encodeName(relation.getName()) + "_" + indexName +
+				" ON " + this.encodeName(relation.getName());
+	}
+
 	public Collection<String> clearTables(List<Predicate> queryRelations, Map<String, DBRelation> relationMap) {
 		Set<String> result = new LinkedHashSet<>();
 		for(Predicate pred: queryRelations)
@@ -221,11 +239,13 @@ public abstract class SQLStatementBuilder {
 
 	/**
 	 * 
+	 * @param b 
 	 * @param relationMap
 	 * @param rule
+	 * @param constraintIndices 
 	 * @return
 	 */
-	protected Pair<Collection<String>,Collection<String>> createTableIndexes(Map<String, DBRelation> relationMap, Evaluatable rule) {
+	protected Pair<Collection<String>,Collection<String>> createTableIndexes(boolean isForQuery, Map<String, DBRelation> relationMap, Evaluatable rule, Set<String> constraintIndices) {
 		Conjunction<?> body = null;
 		if (rule.getBody() instanceof Predicate) {
 			body = Conjunction.of((Predicate) rule.getBody());
@@ -254,9 +274,11 @@ public abstract class SQLStatementBuilder {
 				for (Predicate atom: atoms) {
 					for (int i = 0, l = atom.getTermsCount(); i < l; i++) {
 						if (atom.getTerm(i).equals(t)) {
-							Pair<String,String> createAndDropIndices = this.createTableIndex(relationMap.get(atom.getName()), i);
-							createIndices.add(createAndDropIndices.getLeft());
-							dropIndices.add(createAndDropIndices.getRight());
+							Pair<String,String> createAndDropIndices = this.createTableIndex(isForQuery,constraintIndices, relationMap.get(atom.getName()), i);
+							if(createAndDropIndices.getLeft() != null)
+								createIndices.add(createAndDropIndices.getLeft());
+							if(isForQuery && createAndDropIndices.getRight()!=null)
+								dropIndices.add(createAndDropIndices.getRight());
 						}
 					}
 				}

@@ -2,12 +2,14 @@ package uk.ac.ox.cs.pdq.reasoning.homomorphism;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -95,6 +97,8 @@ public class DBHomomorphismManager implements HomomorphismManager {
 	protected List<Connection> clones = new ArrayList<>();
 
 	private boolean clearedLastQuery = true;
+	
+	private Set<String> constraintIndices =  new LinkedHashSet<String>();
 	
 	Evaluatable currentQuery = null;
 	
@@ -310,7 +314,7 @@ public class DBHomomorphismManager implements HomomorphismManager {
 	private void createJoinIndexes(Statement stmt) throws SQLException {
 		Set<String> joinIndexes = Sets.newLinkedHashSet();
 		for (Evaluatable constraint:this.constraints) {
-			joinIndexes.addAll(this.builder.createTableIndexes(this.aliases, constraint).getLeft());
+			joinIndexes.addAll(this.builder.createTableIndexes(false,this.aliases, constraint, constraintIndices).getLeft());
 		}
 		for (String b: joinIndexes) {
 			stmt.addBatch(b);
@@ -320,7 +324,7 @@ public class DBHomomorphismManager implements HomomorphismManager {
 	private void createAndDropStatementsforQueryJoinIndexes(Query query,Statement stmt) throws SQLException {
 		Set<String> joinIndexes = Sets.newLinkedHashSet();
 		
-		Pair<Collection<String>, Collection<String>> dropAndCreateStms = this.builder.createTableIndexes(this.aliases, query);
+		Pair<Collection<String>, Collection<String>> dropAndCreateStms = this.builder.createTableIndexes(true,this.aliases, query,constraintIndices);
 		
 		this.dropIndexes.addAll(dropAndCreateStms.getRight());
 		joinIndexes.addAll(dropAndCreateStms.getLeft());
