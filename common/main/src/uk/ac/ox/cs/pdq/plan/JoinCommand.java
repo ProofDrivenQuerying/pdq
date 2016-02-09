@@ -40,9 +40,6 @@ public class JoinCommand implements Command{
 	/** The join predicates**/
 	private final Predicate predicates;
 	
-	/** Caches the constraint that captures this access command **/
-	private final TGD command;
-	
 	public JoinCommand(Table left, Table right) {
 		this(left, right, initNaturalJoin(left, right));
 	}
@@ -64,7 +61,6 @@ public class JoinCommand implements Command{
 		attributes.addAll((List<Attribute>)this.right.getHeader());
 		this.output = new Table(attributes);
 		this.predicates = predicates;
-		this.command = new CommandToTGDTranslator().toTGD(this);
 	}
 	
 	/**
@@ -148,13 +144,5 @@ public class JoinCommand implements Command{
 	@Override
 	public int hashCode() {
 		return Objects.hash(this.left, this.right, this.predicates);
-	}
-
-	/**
-	 * @return String
-	 */
-	@Override
-	public String toString() {
-		return this.command.toString();
 	}
 }

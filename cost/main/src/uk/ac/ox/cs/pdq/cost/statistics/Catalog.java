@@ -2,14 +2,12 @@
 package uk.ac.ox.cs.pdq.cost.statistics;
 
 
-import java.util.Collection;
 import java.util.Map;
 
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
-import uk.ac.ox.cs.pdq.fol.Query;
 
 /**
  * The database statistics 
@@ -85,13 +83,6 @@ public interface Catalog {
 	 * @return the estimated cost of the input access
 	 */
 	double getCost(Relation relation, AccessMethod method, Map<Integer, TypedConstant<?>> inputs);
-	
-	/**
-	 * 
-	 * @return
-	 * 		the schema statistics in form of queries 
-	 */
-	Collection<Query<?>> getStatisticsExpressions();
 	
 	
 	/**

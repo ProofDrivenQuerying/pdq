@@ -212,42 +212,6 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 	}
 
 	/**
-	 * @return List<Query<Conjunction<PredicateFormula>>>
-	 * @see uk.ac.ox.cs.pdq.fol.Query#getImportantSubqueries()
-	 */
-	@Override
-	public List<Query<Conjunction<Predicate>>> getImportantSubqueries() {
-		List<Query<Conjunction<Predicate>>> queries = new ArrayList<>();
-		Set<Predicate> sets = new LinkedHashSet<>();
-		sets.addAll(this.body.getChildren());
-		Set<Set<Predicate>> subQueries = Sets.powerSet(sets);
-		Iterator<Set<Predicate>> subQueryIterator = subQueries.iterator();
-		while (subQueryIterator.hasNext()) {
-			Set<Predicate> queryConjuncts = subQueryIterator.next();
-			if(!queryConjuncts.isEmpty())
-			{
-				List<Variable> variables = Utility.getVariables(queryConjuncts);
-				List<Variable> appearingBound = Lists.newArrayList(this.bound);
-				appearingBound.retainAll(variables);
-
-				Set<Set<Variable>> appearingBoundSets = Sets.powerSet(Sets.newLinkedHashSet(appearingBound));
-				Iterator<Set<Variable>> appearingBoundIterator = appearingBoundSets.iterator();
-				while (appearingBoundIterator.hasNext()) {
-					Set<Variable> v = appearingBoundIterator.next();
-					List<Variable> myfree = Lists.newArrayList(variables);
-					myfree.removeAll(v);
-
-					ConjunctiveQuery cq = new ConjunctiveQuery(
-							new Predicate(new Signature("Q", myfree.size()), new ArrayList<>(myfree)),
-							Conjunction.of(queryConjuncts));
-					queries.add(cq);
-				}
-			}
-		}
-		return queries;
-	}
-
-	/**
 	 * @return List<PredicateFormula>
 	 * @see uk.ac.ox.cs.pdq.fol.Formula#getPredicates()
 	 */
