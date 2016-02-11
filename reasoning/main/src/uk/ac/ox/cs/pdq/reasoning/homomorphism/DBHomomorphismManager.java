@@ -366,7 +366,7 @@ public class DBHomomorphismManager implements HomomorphismManager {
 			c = constraints;
 		}
 		
-		Set<Map<Variable, Constant>> maps = this.builder.findHomomorphismsThroughSQL(s, constraints, this.constants, this.connection);
+		Set<Map<Variable, Constant>> maps = this.builder.findHomomorphismsThroughSQL(s, c, this.constants, this.connection);
 		for(Map<Variable, Constant> map:maps) {
 			result.add(new Match(source, map));
 		}
@@ -504,15 +504,42 @@ public class DBHomomorphismManager implements HomomorphismManager {
 	 */
 	@Override
 	public void addFacts(Collection<? extends Predicate> facts) {
-		try (Statement sqlStatement = this.connection.createStatement()) {
-			for (String stmt : this.builder.makeInserts(facts, this.aliases)) {
-				sqlStatement.addBatch(stmt);
+//		THIS COMMENT IS AN EFFORT TO OPTIMIZE THE CODE BELOW BUT FAILS
+//		try (Statement sqlStatement = this.connection.createStatement()) {
+//			for (String stmt : this.builder.makeInserts(facts, this.aliases)) {
+//				sqlStatement.addBatch(stmt);
+//			}
+//			sqlStatement.executeBatch();
+//		} catch (SQLException ex) {
+//			if(!ex.getCause().getMessage().contains("duplicate key value")) 
+//				throw new IllegalStateException(ex.getMessage(), ex);		
+//		}
+//
+		if(this.builder instanceof MySQLStatementBuilder) {
+			try (Statement sqlStatement = this.connection.createStatement()) {
+				for (String statement:this.builder.makeInserts(facts, this.aliases)) {
+					sqlStatement.addBatch(statement);
+				}
+				sqlStatement.executeBatch();
+			} catch (SQLException ex) {
+				throw new IllegalStateException(ex.getMessage(), ex);
 			}
-			sqlStatement.executeBatch();
-		} catch (SQLException ex) {
-			if(!ex.getCause().getMessage().contains("duplicate key value")) 
-				throw new IllegalStateException(ex.getMessage(), ex);		
 		}
+		else if(this.builder instanceof DerbyStatementBuilder) {
+			for (String statement : this.builder.makeInserts(facts, this.aliases)) {
+				try (Statement sqlStatement = this.connection.createStatement()) {
+					sqlStatement.executeUpdate(statement);
+				} catch (SQLException ex) {
+					if(!ex.getCause().getMessage().contains("duplicate key value")) {
+						throw new IllegalStateException(ex.getMessage(), ex);
+					}
+				}
+			}
+		}
+		else {
+			throw new java.lang.IllegalStateException("Unknown statement builder");
+		}
+		
 	}
 	
 	/**
