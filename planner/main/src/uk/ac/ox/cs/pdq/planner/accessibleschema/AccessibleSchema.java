@@ -34,10 +34,10 @@ import com.google.common.collect.Lists;
  * is the schema without any access restrictions, such that:
 	i. The constants are those of S_0.
 	ii.The relations are those of S_0, a copy of each relation R
-	denoted AccessedR (the “accessible version of R”), a unary
-	relation accessible(x) (“x is an accessible value”) plus another
+	denoted AccessedR (the "accessible version of R"), a unary
+	relation accessible(x) ("x is an accessible value") plus another
 	copy of each relation R of S0 called InferredAccR
-	– the “inferred accessible version of R”. 
+	" the "inferred accessible version of R". 
 	iii.The constraints are the constraints of S_0 plus inferred accessible copies of the those constraints
 	and accessibility axioms created from the schema access methods. 
  *
