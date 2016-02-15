@@ -219,7 +219,7 @@ public class ExplorationSetUp {
 					costEstimator,
 					this.plannerParams);
 			
-			this.detector.clearQuery();
+			
 			
 
 			// Chain all statistics collectors
@@ -244,7 +244,9 @@ public class ExplorationSetUp {
 			explorer.setMaxRounds(this.plannerParams.getMaxIterations().doubleValue());
 			explorer.setMaxElapsedTime(this.plannerParams.getTimeout());
 			explorer.explore();
+			this.detector.clearQuery();
 			return explorer.getBestPlan();
+			
 			
 		} catch (PlannerException e) {
 			this.handleEarlyTermination(explorer);

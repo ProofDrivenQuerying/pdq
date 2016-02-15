@@ -199,7 +199,6 @@ public class Planner {
 					cardinalityEstimator,
 					this.plannerParams);
 			
-			this.detector.clearQuery();
 			
 
 			// Chain all statistics collectors
@@ -224,6 +223,7 @@ public class Planner {
 			explorer.setMaxRounds(this.plannerParams.getMaxIterations().doubleValue());
 			explorer.setMaxElapsedTime(this.plannerParams.getTimeout());
 			explorer.explore();
+			this.detector.clearQuery();
 			return explorer.getBestPlan();
 			
 		} catch (PlannerException e) {
