@@ -105,6 +105,11 @@ public abstract class SQLStatementBuilder {
 			this.cleanMap.put(dirtyRelationName, "cleanR"+cleanNameCounter++);
 		return this.cleanMap.get(dirtyRelationName);
 	}
+	
+	public String decodeName(String cleanRelationName) {
+		return this.cleanMap.inverse().get(cleanRelationName);
+	}
+	
 
 	/**
 	 * @param facts
