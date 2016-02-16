@@ -10,6 +10,7 @@ import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismConstraint;
 import uk.ac.ox.cs.pdq.reasoning.utility.FiringGraph;
 import uk.ac.ox.cs.pdq.reasoning.utility.Match;
 
+// TODO: Auto-generated Javadoc
 /**
  *
  * A collection of facts produced during chasing.
@@ -37,112 +38,113 @@ public interface ChaseState {
 	 * having elements for each free variable of Q′, then a homomorphism of Q′ into v
 	 * mapping each free variable into the corresponding element is called a match for Q′ in
 	 * v.
-	 * 
-	 * @param query
-	 * 		An input query
-	 * @return
-	 * 		the list of matches of the input query to the facts of this state that satisfy the input constraints
+	 *
+	 * @param query 		An input query
+	 * @param constraints the constraints
+	 * @return 		the list of matches of the input query to the facts of this state that satisfy the input constraints
 	 */
 	List<Match> getMatches(Query<?> query, HomomorphismConstraint... constraints);
 
 	/**
 	 * (Candidate match definition).
 	 * Given a set of facts I and a TGD
-		delta = \forall x_1, ..., x_j \phi(\vec{x}) --> \exists  y_1, ..., y_k \rho(\vec{x},\vec{y})
-		a candidate match for d is \vec{e} such that \phi(\vec{e}) holds but there is no \vec{f} such that \rho(\vec{e},\vec{f})
-		holds in I.
-	 * @param dependency
-	 * @param constraints
-	 * 		The homomorphism constraints that should be satisfied 
-	 * @return
-	 * 		the list of matches (both candidates and not candidates) of the input dependency in this database instance.
-	 * 		
+	 * 		delta = \forall x_1, ..., x_j \phi(\vec{x}) --> \exists  y_1, ..., y_k \rho(\vec{x},\vec{y})
+	 * 		a candidate match for d is \vec{e} such that \phi(\vec{e}) holds but there is no \vec{f} such that \rho(\vec{e},\vec{f})
+	 * 		holds in I.
+	 *
+	 * @param dependency the dependency
+	 * @param constraints 		The homomorphism constraints that should be satisfied 
+	 * @return 		the list of matches (both candidates and not candidates) of the input dependency in this database instance.
 	 */
 	List<Match> getMaches(Constraint dependency, HomomorphismConstraint... constraints);
 	
 	/**
 	 * (Candidate match definition).
 	 * Given a set of facts I and a TGD
-		delta = \forall x_1, ..., x_j \phi(\vec{x}) --> \exists  y_1, ..., y_k \rho(\vec{x},\vec{y})
-		a candidate match for d is \vec{e} such that \phi(\vec{e}) holds but there is no \vec{f} such that \rho(\vec{e},\vec{f})
-		holds in I.
-	 * @param dependencies
-	 * @param constraints
-	 * 		The homomorphism constraints that should be satisfied 
-	 * @return
-	 * 		the list of matches (both candidates and not candidates) of the input dependencies in this database instance.
-	 * 		
+	 * 		delta = \forall x_1, ..., x_j \phi(\vec{x}) --> \exists  y_1, ..., y_k \rho(\vec{x},\vec{y})
+	 * 		a candidate match for d is \vec{e} such that \phi(\vec{e}) holds but there is no \vec{f} such that \rho(\vec{e},\vec{f})
+	 * 		holds in I.
+	 *
+	 * @param dependencies the dependencies
+	 * @param constraints 		The homomorphism constraints that should be satisfied 
+	 * @return 		the list of matches (both candidates and not candidates) of the input dependencies in this database instance.
 	 */
 	List<Match> getMaches(Collection<? extends Constraint> dependencies, HomomorphismConstraint... constraints);
 	
 	/**
-	 * 
-	 * @return
-	 * 		true if this database instance is successful
+	 * Checks if is successful.
+	 *
+	 * @param query the query
+	 * @return 		true if this database instance is successful
 	 */
 	boolean isSuccessful(Query<?> query);
 	
 	
 	/**
-	 * 
-	 * @return
-	 * 		true if this database instance is failed
+	 * Checks if is failed.
+	 *
+	 * @return 		true if this database instance is failed
 	 */
 	boolean isFailed();
 	
 	
 	/**
+	 * Gets the firing graph.
 	 *
-	 * @return
-	 * 		the rule firings that took place in this instance
+	 * @return 		the rule firings that took place in this instance
 	 */
 	FiringGraph  getFiringGraph();
 	
 
 	
 	/**
+	 * Gets the facts.
+	 *
 	 * @return the facts of this instance
 	 */
 	Collection<Predicate> getFacts();
 	
 	
 	/**
-	 * 
 	 * Performs a chase step.
 	 * 	(From modern dependency theory notes) Given trigger h for a dependency \delta = \forall x  \sigma(\vec{x}) --> \exists y  \tau(\vec{x}, \vec{y})
-		in I, a chase step appends to I additional facts for every atom R(\vec{x}, \vec{y}) in \tau ,
-		with a position containing a variable x_i filled with h(x_i), a position containing a
-		variable y_i filled with a value c_i that is distinct from each value in I and from
-		each other c_j, and a position containing the constant using the corresponding
-		constant.
-	 * @param trigger
-	 * @return
-	 * 		true if the step has been applied successfully 
+	 * 		in I, a chase step appends to I additional facts for every atom R(\vec{x}, \vec{y}) in \tau ,
+	 * 		with a position containing a variable x_i filled with h(x_i), a position containing a
+	 * 		variable y_i filled with a value c_i that is distinct from each value in I and from
+	 * 		each other c_j, and a position containing the constant using the corresponding
+	 * 		constant.
+	 *
+	 * @param trigger the trigger
+	 * @return 		true if the step has been applied successfully
 	 */
 	boolean chaseStep(Match trigger);
 	
 	/**
 	 * Performs multiple chase steps.
 	 * 	(From modern dependency theory notes) Given trigger h for a dependency \delta = \forall x  \sigma(\vec{x}) --> \exists y  \tau(\vec{x}, \vec{y})
-		in I, a chase step appends to I additional facts for every atom R(\vec{x}, \vec{y}) in \tau ,
-		with a position containing a variable x_i filled with h(x_i), a position containing a
-		variable y_i filled with a value c_i that is distinct from each value in I and from
-		each other c_j, and a position containing the constant using the corresponding
-		constant.
-	 * @param triggers
-	 * @return
-	 * 		true if the steps have been applied successfully 
+	 * 		in I, a chase step appends to I additional facts for every atom R(\vec{x}, \vec{y}) in \tau ,
+	 * 		with a position containing a variable x_i filled with h(x_i), a position containing a
+	 * 		variable y_i filled with a value c_i that is distinct from each value in I and from
+	 * 		each other c_j, and a position containing the constant using the corresponding
+	 * 		constant.
+	 *
+	 * @param triggers the triggers
+	 * @return 		true if the steps have been applied successfully
 	 */
 	boolean chaseStep(Collection<Match> triggers);
 	
 	/**
+	 * Merge.
 	 *
-	 * @param s
-	 * 		An input chase configuration
-	 * @return
-	 * 		a database instance with facts the union of the facts of the two database instances.  
+	 * @param s 		An input chase configuration
+	 * @return 		a database instance with facts the union of the facts of the two database instances.
 	 */
 	ChaseState merge(ChaseState s);
 
+	/**
+	 * Clone.
+	 *
+	 * @return the chase state
+	 */
 	ChaseState clone();
 }

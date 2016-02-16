@@ -12,8 +12,9 @@ import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismConstraint.TopKConstra
 
 import com.google.common.collect.BiMap;
 
+// TODO: Auto-generated Javadoc
 /**
- * Builds queries for detecting homomorphisms in Derby
+ * Builds queries for detecting homomorphisms in Derby.
  *
  * @author Efthymia Tsamoura
  * @author Julien leblay
@@ -21,12 +22,17 @@ import com.google.common.collect.BiMap;
 public class DerbyStatementBuilder extends SQLStatementBuilder {
 
 	/**
-	 * Default constructor
+	 * Default constructor.
 	 */
 	public DerbyStatementBuilder() {
 		super();
 	}
 	
+	/**
+	 * Instantiates a new derby statement builder.
+	 *
+	 * @param cleanMap the clean map
+	 */
 	protected DerbyStatementBuilder(BiMap<String, String> cleanMap) {
 		super(cleanMap);
 	}
@@ -50,6 +56,9 @@ public class DerbyStatementBuilder extends SQLStatementBuilder {
 	}
 	
 	
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.reasoning.homomorphism.SQLStatementBuilder#translateLimitConstraints(uk.ac.ox.cs.pdq.fol.Evaluatable, uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismConstraint[])
+	 */
 	@Override
 	protected String translateLimitConstraints(Evaluatable source, HomomorphismConstraint... constraints) {
 		for(HomomorphismConstraint c:constraints) {
@@ -61,6 +70,8 @@ public class DerbyStatementBuilder extends SQLStatementBuilder {
 	}
 
 	/**
+	 * Clone.
+	 *
 	 * @return DerbyHomomorphismStatementBuilder
 	 */
 	@Override
@@ -68,14 +79,17 @@ public class DerbyStatementBuilder extends SQLStatementBuilder {
 		return new DerbyStatementBuilder(this.cleanMap);
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.reasoning.homomorphism.SQLStatementBuilder#encodeName(java.lang.String)
+	 */
 	@Override
 	public String encodeName(String name) {
 		return super.encodeName(name);
 	}
 	
 	
-	/**
-	 * 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.reasoning.homomorphism.SQLStatementBuilder#indexDropStatement(uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager.DBRelation, java.lang.StringBuilder, java.lang.StringBuilder)
 	 */
 	@Override
 	protected String indexDropStatement(DBRelation relation, StringBuilder indexName, StringBuilder indexColumns) {

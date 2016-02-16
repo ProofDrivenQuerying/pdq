@@ -4,6 +4,7 @@ import javax.xml.namespace.QName;
 
 import com.google.common.base.CaseFormat;
 
+// TODO: Auto-generated Javadoc
 /**
  * Gather all the qualified names required for reading and writing schemas,
  * queries, dependencies, etc.
@@ -14,29 +15,179 @@ import com.google.common.base.CaseFormat;
  */
 public enum QNames {
 
+	/** The schema. */
 	// Schema, relation and access
-	SCHEMA, DISCOVERER, RELATIONS, RELATION, VIEWS, VIEW, DEPENDENCIES,
-	DEPENDENCY, ACCESS_METHOD, ATTRIBUTE, ATTRIBUTES,
-
-	// Access types
-	ACCESS, JOIN, SELECT, PROJECT, ASSIGN, RENAME, 
+	SCHEMA, 
+ /** The discoverer. */
+ DISCOVERER, 
+ /** The relations. */
+ RELATIONS, 
+ /** The relation. */
+ RELATION, 
+ /** The views. */
+ VIEWS, 
+ /** The view. */
+ VIEW, 
+ /** The dependencies. */
+ DEPENDENCIES,
 	
+	/** The dependency. */
+	DEPENDENCY, 
+ /** The access method. */
+ ACCESS_METHOD, 
+ /** The attribute. */
+ ATTRIBUTE, 
+ /** The attributes. */
+ ATTRIBUTES,
+
+	/** The access. */
+	// Access types
+	ACCESS, 
+ /** The join. */
+ JOIN, 
+ /** The select. */
+ SELECT, 
+ /** The project. */
+ PROJECT, 
+ /** The assign. */
+ ASSIGN, 
+ /** The rename. */
+ RENAME, 
+	
+	/** The formula. */
 	// FOL, query
-	FORMULA, AXIOM, QUERY, HEAD, BODY, STATE, ATOM, VARIABLE, CONSTANT,
+	FORMULA, 
+ /** The axiom. */
+ AXIOM, 
+ /** The query. */
+ QUERY, 
+ /** The head. */
+ HEAD, 
+ /** The body. */
+ BODY, 
+ /** The state. */
+ STATE, 
+ /** The atom. */
+ ATOM, 
+ /** The variable. */
+ VARIABLE, 
+ /** The constant. */
+ CONSTANT,
 
+	/** The proof. */
 	// Plan, proof
-	PROOF, CANDIDATE, CHILDREN, CHILD, MATCH, PLAN, OPERATOR, COMMAND, ENTRY,
-	INPUTS, OUTPUTS, PREDICATE, CONJUNCTION,
+	PROOF, 
+ /** The candidate. */
+ CANDIDATE, 
+ /** The children. */
+ CHILDREN, 
+ /** The child. */
+ CHILD, 
+ /** The match. */
+ MATCH, 
+ /** The plan. */
+ PLAN, 
+ /** The operator. */
+ OPERATOR, 
+ /** The command. */
+ COMMAND, 
+ /** The entry. */
+ ENTRY,
+	
+	/** The inputs. */
+	INPUTS, 
+ /** The outputs. */
+ OUTPUTS, 
+ /** The predicate. */
+ PREDICATE, 
+ /** The conjunction. */
+ CONJUNCTION,
 
+	/** The services. */
 	// Services
-	SERVICES, SERVICE, PROTOCOL, PARAM, METHOD, PATH, STATIC, RANGE,
-	USAGE_POLICIES, POLICY, RESULT_DELIMITER, BATCH_DELIMITER, BATCH_SIZE,
-	INPUT_METHODS, INPUT_METHOD, STATIC_INPUT, TEMPLATE, MEDIA_TYPE,
+	SERVICES, 
+ /** The service. */
+ SERVICE, 
+ /** The protocol. */
+ PROTOCOL, 
+ /** The param. */
+ PARAM, 
+ /** The method. */
+ METHOD, 
+ /** The path. */
+ PATH, 
+ /** The static. */
+ STATIC, 
+ /** The range. */
+ RANGE,
+	
+	/** The usage policies. */
+	USAGE_POLICIES, 
+ /** The policy. */
+ POLICY, 
+ /** The result delimiter. */
+ RESULT_DELIMITER, 
+ /** The batch delimiter. */
+ BATCH_DELIMITER, 
+ /** The batch size. */
+ BATCH_SIZE,
+	
+	/** The input methods. */
+	INPUT_METHODS, 
+ /** The input method. */
+ INPUT_METHOD, 
+ /** The static input. */
+ STATIC_INPUT, 
+ /** The template. */
+ TEMPLATE, 
+ /** The media type. */
+ MEDIA_TYPE,
 
+	/** The type. */
 	// Misc.
-	TYPE, URL, USERNAME, PASSWORD, SOURCES, SOURCE, TARGET, NAME, DESCRIPTION,
-	SIZE, COST, KEY, VALUE, LEFT, RIGHT, INPUT, OUTPUT, VARIANT, CONTROL_FLOW, 
-	EMPTY, EQUALITY;
+	TYPE, 
+ /** The url. */
+ URL, 
+ /** The username. */
+ USERNAME, 
+ /** The password. */
+ PASSWORD, 
+ /** The sources. */
+ SOURCES, 
+ /** The source. */
+ SOURCE, 
+ /** The target. */
+ TARGET, 
+ /** The name. */
+ NAME, 
+ /** The description. */
+ DESCRIPTION,
+	
+	/** The size. */
+	SIZE, 
+ /** The cost. */
+ COST, 
+ /** The key. */
+ KEY, 
+ /** The value. */
+ VALUE, 
+ /** The left. */
+ LEFT, 
+ /** The right. */
+ RIGHT, 
+ /** The input. */
+ INPUT, 
+ /** The output. */
+ OUTPUT, 
+ /** The variant. */
+ VARIANT, 
+ /** The control flow. */
+ CONTROL_FLOW, 
+	
+	/** The empty. */
+	EMPTY, 
+ /** The equality. */
+ EQUALITY;
 
 	/** The qname associated with this enum item. */
 	private final QName qname;
@@ -52,6 +203,8 @@ public enum QNames {
 	}
 
 	/**
+	 * Parses the.
+	 *
 	 * @param lowerHyphen the qname in lower hyphen case.
 	 * @return the enum item corresponding to given param, in lower-case, hyphenated form.
 	 */
@@ -62,6 +215,8 @@ public enum QNames {
 	}
 
 	/**
+	 * Format.
+	 *
 	 * @return the String serialization of qname associated with this enum item
 	 */
 	public String format() {

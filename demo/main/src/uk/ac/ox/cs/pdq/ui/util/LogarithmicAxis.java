@@ -13,31 +13,47 @@ import javafx.scene.chart.ValueAxis;
 import javafx.util.Duration;
 import org.apache.log4j.Logger;
 
+// TODO: Auto-generated Javadoc
 /**
  * A logarithmic axis implementation for JavaFX 2 charts<br>
- * <br>
- * 
+ * <br>.
+ *
  * @author Kevin Senechal
- * 
  */
 public class LogarithmicAxis extends ValueAxis<Number> {
 
+	/** The log. */
 	private static Logger log = Logger.getLogger(LogarithmicAxis.class);
-	/**
-	 * The time of animation in ms
-	 */
+	
+	/** The time of animation in ms. */
 	private static final double ANIMATION_TIME = 2000;
+	
+	/** The lower range timeline. */
 	private final Timeline lowerRangeTimeline = new Timeline();
+	
+	/** The upper range timeline. */
 	private final Timeline upperRangeTimeline = new Timeline();
 
+	/** The log upper bound. */
 	private final DoubleProperty logUpperBound = new SimpleDoubleProperty();
+	
+	/** The log lower bound. */
 	private final DoubleProperty logLowerBound = new SimpleDoubleProperty();
 
+	/**
+	 * Instantiates a new logarithmic axis.
+	 */
 	public LogarithmicAxis() {
 		super(1, 100);
 		this.bindLogBoundsToDefaultBounds();
 	}
 
+	/**
+	 * Instantiates a new logarithmic axis.
+	 *
+	 * @param lowerBound the lower bound
+	 * @param upperBound the upper bound
+	 */
 	public LogarithmicAxis(double lowerBound, double upperBound) {
 		super(lowerBound, upperBound);
 		try {
@@ -80,10 +96,10 @@ public class LogarithmicAxis extends ValueAxis<Number> {
 	/**
 	 * Validate the bounds by throwing an exception if the values are not
 	 * conform to the mathematics log interval: ]0,Double.MAX_VALUE]
-	 * 
-	 * @param lowerBound
-	 * @param upperBound
-	 * @throws IllegalLogarithmicRangeException
+	 *
+	 * @param lowerBound the lower bound
+	 * @param upperBound the upper bound
+	 * @throws IllegalLogarithmicRangeException the illegal logarithmic range exception
 	 */
 	private void validateBounds(double lowerBound, double upperBound) throws IllegalLogarithmicRangeException {
 		if (lowerBound < 0 || upperBound < 0 || lowerBound > upperBound) {
@@ -136,11 +152,17 @@ public class LogarithmicAxis extends ValueAxis<Number> {
 		return tickPositions;
 	}
 
+	/* (non-Javadoc)
+	 * @see javafx.scene.chart.Axis#getRange()
+	 */
 	@Override
 	protected Number[] getRange() {
 		return new Number[] { this.lowerBoundProperty().get(), this.upperBoundProperty().get() };
 	}
 
+	/* (non-Javadoc)
+	 * @see javafx.scene.chart.Axis#getTickMarkLabel(java.lang.Object)
+	 */
 	@Override
 	protected String getTickMarkLabel(Number value) {
 		return this.getTickLabelFormatter().toString(value);
@@ -187,6 +209,9 @@ public class LogarithmicAxis extends ValueAxis<Number> {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see javafx.scene.chart.ValueAxis#getValueForDisplay(double)
+	 */
 	@Override
 	public Number getValueForDisplay(double displayPosition) {
 		double delta = this.logUpperBound.get() - this.logLowerBound.get();
@@ -197,6 +222,9 @@ public class LogarithmicAxis extends ValueAxis<Number> {
 		return Math.pow(10, (((displayPosition / this.getWidth()) * delta) + this.logLowerBound.get()));
 	}
 
+	/* (non-Javadoc)
+	 * @see javafx.scene.chart.ValueAxis#getDisplayPosition(java.lang.Number)
+	 */
 	@Override
 	public double getDisplayPosition(Number value) {
 		double delta = this.logUpperBound.get() - this.logLowerBound.get();

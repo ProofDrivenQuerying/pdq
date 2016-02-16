@@ -11,6 +11,7 @@ import uk.ac.ox.cs.pdq.io.xml.QNames;
 import uk.ac.ox.cs.pdq.io.xml.SchemaWriter;
 import uk.ac.ox.cs.pdq.ui.model.ObservableSchema;
 
+// TODO: Auto-generated Javadoc
 /**
  * Writes an observable schemas to XML.
  * 
@@ -22,7 +23,7 @@ public class ObservableSchemaWriter extends AbstractXMLWriter<ObservableSchema> 
 	/** Logger. */
 	private static Logger log = Logger.getLogger(ObservableSchemaWriter.class);
 
-	/** Schema writer */
+	/**  Schema writer. */
 	private SchemaWriter schemaWriter = null;
 	
 	/**
@@ -44,8 +45,9 @@ public class ObservableSchemaWriter extends AbstractXMLWriter<ObservableSchema> 
 
 	/**
 	 * Writes the given schema to the given output.
-	 * @param out
-	 * @param s
+	 *
+	 * @param out the out
+	 * @param s the s
 	 */
 	private void writeSchema(PrintStream out, ObservableSchema s) {
 		Map<QNames, String> att = new LinkedHashMap<>();

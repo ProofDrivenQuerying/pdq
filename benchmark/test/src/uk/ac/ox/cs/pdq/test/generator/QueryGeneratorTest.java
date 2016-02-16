@@ -42,6 +42,7 @@ import com.beust.jcommander.internal.Lists;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.SetMultimap;
 
+// TODO: Auto-generated Javadoc
 /**
  * Generates query or views based on an input Schema, and external parameters.
  * 
@@ -53,6 +54,11 @@ import com.google.common.collect.SetMultimap;
 @RunWith(Parameterized.class) 
 public class QueryGeneratorTest extends ParameterizedTest {
 
+	/**
+	 * Gets the parameters.
+	 *
+	 * @return the parameters
+	 */
 	@Parameters
 	public static Collection<Object[]> getParameters() {
 		return ParameterizedTest.getParameters(
@@ -63,15 +69,28 @@ public class QueryGeneratorTest extends ParameterizedTest {
 				);
 	}
 
+	/** The input schemas. */
 	private static String[] inputSchemas = new String[] {
 		"test/unit/schema-mysql-tpch.xml",
 		"test/unit/schema-postgresql-tpch.xml"
 	};
 	
 
+	/** The params. */
 	private BenchmarkParameters params;
+	
+	/** The schema. */
 	private Schema schema;
 
+	/**
+	 * Instantiates a new query generator test.
+	 *
+	 * @param seed the seed
+	 * @param nbRelations the nb relations
+	 * @param arity the arity
+	 * @param inputSchema the input schema
+	 * @throws Exception the exception
+	 */
 	public QueryGeneratorTest(Integer seed, Integer nbRelations, Integer arity, String inputSchema) throws Exception {
 		this.params = new BenchmarkParameters();
 		this.params.setSeed(seed);
@@ -84,6 +103,12 @@ public class QueryGeneratorTest extends ParameterizedTest {
 		}
 	}
 
+	/**
+	 * Test generate query orthogonal to underlying database.
+	 *
+	 * @throws FileNotFoundException the file not found exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	@Test
 	public void testGenerateQueryOrthogonalToUnderlyingDatabase() throws FileNotFoundException, IOException {
 		try(InputStream in1 = new FileInputStream(inputSchemas[0]);
@@ -100,6 +125,9 @@ public class QueryGeneratorTest extends ParameterizedTest {
 		}
 	}
 
+	/**
+	 * Test generate query from inlusion dependencies.
+	 */
 	@Test
 	public void testGenerateQueryFromInlusionDependencies() {
 		Variable.resetCounter();
@@ -125,6 +153,9 @@ public class QueryGeneratorTest extends ParameterizedTest {
 
 	}
 
+	/**
+	 * Test generate guarded query.
+	 */
 	@Test
 	public void testGenerateGuardedQuery() {
 		Variable.resetCounter();
@@ -143,6 +174,9 @@ public class QueryGeneratorTest extends ParameterizedTest {
 		assertTrue("Different queries (from inclusion deps) generated from same inputs " + q1 + "\n vs. " + q2,  q1.equals(q2));
 	}
 
+	/**
+	 * Test generate acyclic query.
+	 */
 	@Test
 	public void testGenerateAcyclicQuery() {
 		Variable.resetCounter();
@@ -162,6 +196,11 @@ public class QueryGeneratorTest extends ParameterizedTest {
 		assertTrue("Different queries (from inclusion deps) generated from same inputs " + q1 + "\n vs. " + q2,  q1.equals(q2));
 	}
 	
+	/**
+	 * Test each relation in generate query.
+	 *
+	 * @param q the q
+	 */
 	public void testEachRelationInGenerateQuery(ConjunctiveQuery q) {
 		List<String> relationNames = new ArrayList<>();
 		for (Relation r: this.schema.getRelations()) {
@@ -173,6 +212,11 @@ public class QueryGeneratorTest extends ParameterizedTest {
 		}
 	}
 	
+	/**
+	 * Test free variable ratio.
+	 *
+	 * @param q the q
+	 */
 	public void testFreeVariableRatio(ConjunctiveQuery q) {
 		Set<Term> terms = new LinkedHashSet<>();
 		for (Predicate a : q.getBody()) {
@@ -182,6 +226,11 @@ public class QueryGeneratorTest extends ParameterizedTest {
 				terms.size() * this.params.getFreeVariable() == q.getFree().size());
 	}
 
+	/**
+	 * Test query is guarded.
+	 *
+	 * @param q the q
+	 */
 	public void testQueryIsGuarded(ConjunctiveQuery q) {
 		List<Term> freeVars = q.getHead().getTerms();
 		for (Predicate a : q.getBody().getPredicates()) {
@@ -195,7 +244,8 @@ public class QueryGeneratorTest extends ParameterizedTest {
 
 	/**
 	 * Checks whether the given query contains a cycle.
-	 * @param q
+	 *
+	 * @param q the q
 	 */
 	public void testQueryAcyclic(ConjunctiveQuery q) {
 		// Building variable clusters
@@ -227,7 +277,8 @@ public class QueryGeneratorTest extends ParameterizedTest {
 	/**
 	 * Test whether the query has cartesian product by checking if there is
 	 * more than 1 connected component in the query body.
-	 * @param q
+	 *
+	 * @param q the q
 	 */
 	public void testQueryHasNoCartesianProducts(ConjunctiveQuery q) {
 		Map<Variable, Set<Predicate>> joins = new LinkedHashMap<>();
@@ -248,7 +299,9 @@ public class QueryGeneratorTest extends ParameterizedTest {
 
 	
 	/**
-	 * @param clusters
+	 * Connected components.
+	 *
+	 * @param clusters the clusters
 	 * @return return a partition of the given clusters, such that all
 	 * predicates in the each component are connected, and no predicates part
 	 * of distinct component are connected.
@@ -273,6 +326,11 @@ public class QueryGeneratorTest extends ParameterizedTest {
 		return result;
 	}
 
+	/**
+	 * Test no repeated relation query.
+	 *
+	 * @param q the q
+	 */
 	public void testNoRepeatedRelationQuery(ConjunctiveQuery q) {
 		Set<Signature> signatures = new LinkedHashSet<>();
 		for (Predicate p: q.getBody()) {
@@ -284,6 +342,11 @@ public class QueryGeneratorTest extends ParameterizedTest {
 		}
 	}
 
+	/**
+	 * Test no repeated variables in query.
+	 *
+	 * @param q the q
+	 */
 	public void testNoRepeatedVariablesInQuery(ConjunctiveQuery q) {
 		List<Term> vars = new ArrayList<>();
 		for (Predicate a: q.getBody()) {

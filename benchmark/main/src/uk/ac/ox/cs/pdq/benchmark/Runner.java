@@ -41,6 +41,7 @@ import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
 /**
  * Reads settings from the command line and parameter file(s) and run the
  * program.
@@ -70,9 +71,18 @@ public abstract class Runner implements Runnable {
 	/** Default file name for input configuration. */
 	protected static final String CONFIGURATION_FILE = "configuration.txt";
 
+	/** The types. */
 	@Parameter(required = true, description = "The type of test requested among 'planner', 'runtime' or 'lindag'.")
 	private List<String> types = Lists.newArrayList(Types.planner.toString());
-	private enum Types {planner, runtime}//, lindag, dag
+	
+	/**
+	 * The Enum Types.
+	 */
+	private enum Types {
+/** The planner. */
+planner, 
+ /** The runtime. */
+ runtime}//, lindag, dag
 
 	/** Default error code. */
 	protected static final int ERROR_CODE = -1;
@@ -80,38 +90,43 @@ public abstract class Runner implements Runnable {
 	/** Period in ms to wait before terminating all threads. */
 	public static final long GRACE_PERIOD = 30000;
 
+	/** The help. */
 	@Parameter(names = { "-h", "--help" }, help = true, description = "Displays this help message.")
 	protected boolean help;
 
+	/** The verbose. */
 	@Parameter(names = { "-v", "--verbose" }, required = false, description = "If true, environment settings, the schema and query used will be printed to stdout before each case.")
 	protected boolean verbose;
 
+	/** The input. */
 	@Parameter(names = { "-i", "--input" }, required = true, description = "Path to a case folder.")
 	protected String input;
 
+	/** The output. */
 	@Parameter(names = { "-o", "--output" }, required = false, description = "Path to the output file. If omitted, STDOUT is used.")
 	protected String output;
 
+	/** The filters. */
 	@Parameter(names = { "-f", "--filter-by" }, required = false, description = "Comma-separated list of parameters to include on the log in order to filter them.")
 	protected List<String> filters;
 
+	/** The nb threads. */
 	@Parameter(names = { "-t", "--threads" }, required = false, description = "The numbder of search thread to execute in parallel.")
 	protected int nbThreads = 1;
 
+	/** The overall timeout. */
 	@Parameter(names = { "-to", "--timeout" }, required = false, description = "The overall timeout for all threads to complete. Default is 24h")
 	protected long overallTimeout = 24*3600000;
 
+	/** The dynamic params. */
 	@DynamicParameter(names = "-D", description = "Dynamic parameters. Override values defined in the initialConfig files.")
 	protected Map<String, String> dynamicParams = new LinkedHashMap<>();
 
 	/**
 	 * Sets up an experiment sample using external parameters (file and
 	 * command-line arguments).
-	 * 
-	 * @param args
-	 *            the command line parameters as given by the main method.
-	 * @throws IOException
-	 * @throws ReflectiveOperationException
+	 *
+	 * @param args            the command line parameters as given by the main method.
 	 */
 	public Runner(String... args) {
 		log.debug("Parsing command line parameters...");
@@ -131,13 +146,36 @@ public abstract class Runner implements Runnable {
 		}
 	}
 
+	/**
+	 * Gets the lock filename.
+	 *
+	 * @return the lock filename
+	 */
 	protected abstract String getLockFilename();
+	
+	/**
+	 * Gets the output filename.
+	 *
+	 * @return the output filename
+	 */
 	protected abstract String getOutputFilename();
+	
+	/**
+	 * Run.
+	 *
+	 * @param directory the directory
+	 * @throws BenchmarkException the benchmark exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public abstract void run(File directory) throws BenchmarkException, IOException;
 
 	/**
-	 * Runs all the test case in the given directory
-	 * @param directory
+	 * Runs all the test case in the given directory.
+	 *
+	 * @param directory the directory
+	 * @throws BenchmarkException the benchmark exception
+	 * @throws ReflectiveOperationException the reflective operation exception
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	protected void recursiveRun(File directory) throws BenchmarkException, ReflectiveOperationException, IOException {
 		boolean isLeaf = true;
@@ -161,9 +199,10 @@ public abstract class Runner implements Runnable {
 
 	/**
 	 * Create a schema as described in the input parameters.
-	 * 
+	 *
+	 * @param params the params
 	 * @return a schema which complies to the input parameters.
-	 * @throws IOException
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	protected Pair<Schema, ConjunctiveQuery> makeSchemaQuery(Parameters params) throws IOException {
 		return this.makeSchemaQuery(params, null, null);
@@ -171,9 +210,11 @@ public abstract class Runner implements Runnable {
 
 	/**
 	 * Create a schema as described in the input parameters.
-	 * 
+	 *
+	 * @param params the params
+	 * @param inputSchema the input schema
 	 * @return a schema which complies to the input parameters.
-	 * @throws IOException
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	protected Pair<Schema, ConjunctiveQuery>  makeSchemaQuery(Parameters params, String inputSchema) throws IOException {
 		return this.makeSchemaQuery(params, inputSchema, null);
@@ -181,9 +222,12 @@ public abstract class Runner implements Runnable {
 
 	/**
 	 * Create a schema as described in the input parameters.
-	 * 
+	 *
+	 * @param params the params
+	 * @param inputSchema the input schema
+	 * @param inputQuery the input query
 	 * @return a schema which complies to the input parameters.
-	 * @throws IOException
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	protected Pair<Schema, ConjunctiveQuery>  makeSchemaQuery(Parameters params, String inputSchema, String inputQuery) throws IOException {
 		// Loading schema
@@ -211,8 +255,8 @@ public abstract class Runner implements Runnable {
 
 	/**
 	 * Print some system environment information to the given output.
-	 * 
-	 * @param out
+	 *
+	 * @param out the out
 	 */
 	public static void printSystemSettings(PrintStream out) {
 		StringBuilder result = new StringBuilder();
@@ -228,9 +272,9 @@ public abstract class Runner implements Runnable {
 
 	/**
 	 * Print the experiment's input parameters to the given output.
-	 * 
-	 * @param out
-	 * @param params
+	 *
+	 * @param out the out
+	 * @param params the params
 	 */
 	public static void printParameters(PrintStream out, Parameters params) {
 		StringBuilder result = new StringBuilder();
@@ -244,11 +288,10 @@ public abstract class Runner implements Runnable {
 
 	/**
 	 * Prints the experiments case (schema and query) to the given output.
-	 * 
-	 * @param out
-	 *            the output
-	 * @param schema
-	 * @param query
+	 *
+	 * @param out            the output
+	 * @param schema the schema
+	 * @param query the query
 	 */
 	public static void printCase(PrintStream out, Schema schema, ConjunctiveQuery query) {
 		printCase(out, schema, null, query);
@@ -257,11 +300,11 @@ public abstract class Runner implements Runnable {
 	/**
 	 * Prints the experiments case (schema, accessible schema (if not null) and
 	 * query) to the given output.
-	 * 
-	 * @param out
-	 * @param schema
-	 * @param accSchema
-	 * @param q
+	 *
+	 * @param out the out
+	 * @param schema the schema
+	 * @param accSchema the acc schema
+	 * @param q the q
 	 */
 	public static void printCase(PrintStream out, Schema schema, Schema accSchema, ConjunctiveQuery q) {
 		StringBuilder result = new StringBuilder();
@@ -300,8 +343,8 @@ public abstract class Runner implements Runnable {
 	/**
 	 * Returns a short String representation of the given query. This by-passes
 	 * toString which is too verbose for non-debug purpose.
-	 * 
-	 * @param q
+	 *
+	 * @param q the q
 	 * @return a short String representation of the query.
 	 */
 	protected static String toShortString(ConjunctiveQuery q) {
@@ -314,8 +357,8 @@ public abstract class Runner implements Runnable {
 	/**
 	 * Returns a short String representation of the given dependency. This
 	 * by-passes toString which is too verbose for non-debug purpose.
-	 * 
-	 * @param query
+	 *
+	 * @param ic the ic
 	 * @return a short String representation of the dependency.
 	 */
 	private static String toShortString(TGD ic) {
@@ -327,8 +370,9 @@ public abstract class Runner implements Runnable {
 
 	/**
 	 * Prints the given plan the output.
-	 * 
-	 * @param p
+	 *
+	 * @param p the p
+	 * @param out the out
 	 */
 	protected void printPlan(Plan p, PrintStream out) {
 		StringBuilder result = new StringBuilder();
@@ -344,6 +388,8 @@ public abstract class Runner implements Runnable {
 	}
 
 	/**
+	 * Obtain plan.
+	 *
 	 * @param directory File
 	 * @param schema Schema
 	 * @param query Query
@@ -364,6 +410,8 @@ public abstract class Runner implements Runnable {
 	}
 
 	/**
+	 * Checks if is help.
+	 *
 	 * @return true if the line command asked for help.
 	 */
 	public boolean isHelp() {
@@ -371,13 +419,17 @@ public abstract class Runner implements Runnable {
 	}
 
 	/**
-	 * @param help
+	 * Sets the help.
+	 *
+	 * @param help the new help
 	 */
 	public void setHelp(boolean help) {
 		this.help = help;
 	}
 
 	/**
+	 * Gets the output file.
+	 *
 	 * @return the path to the output file, if any. If none, System.out is used
 	 *         as the output.
 	 */
@@ -386,13 +438,17 @@ public abstract class Runner implements Runnable {
 	}
 
 	/**
-	 * @param output
+	 * Sets the output file.
+	 *
+	 * @param outputFile the new output file
 	 */
 	public void setOutputFile(String outputFile) {
 		this.output = outputFile;
 	}
 
 	/**
+	 * Gets the input file.
+	 *
 	 * @return the path to the input file, if any. If none, System.out is used
 	 *         as the output.
 	 */
@@ -401,13 +457,17 @@ public abstract class Runner implements Runnable {
 	}
 
 	/**
-	 * @param input
+	 * Sets the input file.
+	 *
+	 * @param inputFile the new input file
 	 */
 	public void setInputFile(String inputFile) {
 		this.input = inputFile;
 	}
 
 	/**
+	 * Checks if is verbose.
+	 *
 	 * @return true, if the runner runs in verbose mode
 	 */
 	public boolean isVerbose() {
@@ -416,13 +476,16 @@ public abstract class Runner implements Runnable {
 
 	/**
 	 * Set the runner's verbose mode.
-	 * @param verbose
+	 *
+	 * @param verbose the new verbose
 	 */
 	public void setVerbose(boolean verbose) {
 		this.verbose = verbose;
 	}
 
 	/**
+	 * Gets the nb threads.
+	 *
 	 * @return the number of threads running in parallel
 	 */
 	public int getNbThreads() {
@@ -430,14 +493,17 @@ public abstract class Runner implements Runnable {
 	}
 
 	/**
-	 * Set the number of threads to run in parallel
-	 * @param verbose
+	 * Set the number of threads to run in parallel.
+	 *
+	 * @param nbThreads the new nb threads
 	 */
 	public void setNbThreads(int nbThreads) {
 		this.nbThreads = nbThreads;
 	}
 
 	/**
+	 * Gets the overall timeout.
+	 *
 	 * @return the overall timeout for threads to complete
 	 */
 	public long getOverallTimeout() {
@@ -445,8 +511,9 @@ public abstract class Runner implements Runnable {
 	}
 
 	/**
-	 * Sets the overall timeout for threads to complete
-	 * @param verbose
+	 * Sets the overall timeout for threads to complete.
+	 *
+	 * @param nbThreads the new overall timeout
 	 */
 	public void setOverallTimeout(long nbThreads) {
 		this.overallTimeout = nbThreads;
@@ -454,7 +521,8 @@ public abstract class Runner implements Runnable {
 
 	/**
 	 * Instantiates an experiment and runs it.
-	 * @param args
+	 *
+	 * @param args the arguments
 	 */
 	public static void main(String... args) {
 		try {
@@ -494,6 +562,11 @@ public abstract class Runner implements Runnable {
 		System.exit(0);
 	}
 
+	/**
+	 * Prints the header.
+	 *
+	 * @param out the out
+	 */
 	protected static void printHeader(PrintStream out) {
 		out.print("# PDQ Common (version:" + Parameters.getVersion() + ") ");
 		out.print("- PDQ Planner (version:" + PlannerParameters.getVersion() + ") ");

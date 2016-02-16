@@ -57,6 +57,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.common.eventbus.EventBus;
 
+// TODO: Auto-generated Javadoc
 /**
  * Searches the proof space employing several optimisations heuristics
  * in order to reach faster the best plan.
@@ -71,21 +72,25 @@ public class LinearOptimized extends LinearExplorer {
 	/** Logger. */
 	private static Logger log = Logger.getLogger(LinearOptimized.class);
 
-	/** Propagates to the root of the plan tree the best plan found so far */
+	/**  Propagates to the root of the plan tree the best plan found so far. */
 	protected final CostPropagator costPropagator;
 
-	/** How often we check for query matches */
+	/**  How often we check for query matches. */
 	protected final int queryMatchInterval;
 
-	/** Performs plan post-pruning */
+	/**  Performs plan post-pruning. */
 	private final PostPruning postPruning;
+	
+	/** The pruned paths. */
 	private final Set<List<Integer>> prunedPaths = new HashSet<>(); 
 
+	/** The zombification. */
 	private final boolean zombification;
 
-	/** Classes of equivalent configurations */
+	/**  Classes of equivalent configurations. */
 	private PathEquivalenceClasses equivalenceClasses = new PathEquivalenceClasses();
 
+	/** The unexplored descendants. */
 	private final Queue<SearchNode> unexploredDescendants = new PriorityQueue<>(10, new Comparator<SearchNode>() {
 		@Override
 		public int compare(SearchNode o1, SearchNode o2) {
@@ -98,31 +103,23 @@ public class LinearOptimized extends LinearExplorer {
 
 
 	/**
-	 * 
-	 * @param eventBus
-	 * @param collectStats
-	 * @param query
-	 * 		The input user query
-	 * @param accessibleQuery
-	 * 		The accessible counterpart of the user query
-	 * @param schema
-	 * 		The input schema
-	 * @param accessibleSchema
-	 * 		The accessible counterpart of the input schema
-	 * @param chaser
-	 * 		Runs the chase algorithm
-	 * @param detector
-	 * 		Detects homomorphisms during chasing
-	 * @param costEstimator
-	 * 		Estimates the cost of a plan
-	 * @param nodeFactory
-	 * @param depth
-	 * @param queryMatchInterval
-	 * @param postPruning
-	 * 		Removes the redundant follow up joins and accesses from a plan
-	 * @param zombification
-	 * 		True if we wake up previously terminal nodes
-	 * @throws PlannerException
+	 * Instantiates a new linear optimized.
+	 *
+	 * @param eventBus the event bus
+	 * @param collectStats the collect stats
+	 * @param query 		The input user query
+	 * @param accessibleQuery 		The accessible counterpart of the user query
+	 * @param schema 		The input schema
+	 * @param accessibleSchema 		The accessible counterpart of the input schema
+	 * @param chaser 		Runs the chase algorithm
+	 * @param detector 		Detects homomorphisms during chasing
+	 * @param costEstimator 		Estimates the cost of a plan
+	 * @param nodeFactory the node factory
+	 * @param depth the depth
+	 * @param queryMatchInterval the query match interval
+	 * @param postPruning 		Removes the redundant follow up joins and accesses from a plan
+	 * @param zombification 		True if we wake up previously terminal nodes
+	 * @throws PlannerException the planner exception
 	 */
 	public LinearOptimized(
 			EventBus eventBus, 
@@ -146,8 +143,11 @@ public class LinearOptimized extends LinearExplorer {
 		this.zombification = zombification;
 	}
 
-	/** 
-	 * @throws PlannerException
+	/**
+	 *  
+	 *
+	 * @throws PlannerException the planner exception
+	 * @throws LimitReachedException the limit reached exception
 	 */
 	@Override
 	protected void _explore() throws PlannerException, LimitReachedException {
@@ -173,9 +173,12 @@ public class LinearOptimized extends LinearExplorer {
 	}
 
 	/**
+	 * Exploration step.
+	 *
 	 * @param selectedNode Node to expand
 	 * @return the newly created node that is added below the input one in the plan tree
-	 * @throws PlannerException
+	 * @throws PlannerException the planner exception
+	 * @throws LimitReachedException the limit reached exception
 	 */
 	protected SearchNode explorationStep(SearchNode selectedNode) throws PlannerException, LimitReachedException  {
 
@@ -323,6 +326,15 @@ public class LinearOptimized extends LinearExplorer {
 		return freshNode;
 	}
 
+	/**
+	 * Update best plan.
+	 *
+	 * @param parentNode the parent node
+	 * @param freshNode the fresh node
+	 * @param match the match
+	 * @throws PlannerException the planner exception
+	 * @throws LimitReachedException the limit reached exception
+	 */
 	private void updateBestPlan(SearchNode parentNode, SearchNode freshNode, Match match) throws PlannerException, LimitReachedException {
 		this.costPropagator.propagate(freshNode, this.planTree);
 		LeftDeepPlan successfulPlan = this.costPropagator.getBestPlan();
@@ -361,6 +373,14 @@ public class LinearOptimized extends LinearExplorer {
 	}
 	
 	
+	/**
+	 * Update best plan.
+	 *
+	 * @param parentNode the parent node
+	 * @param freshNode the fresh node
+	 * @throws PlannerException the planner exception
+	 * @throws LimitReachedException the limit reached exception
+	 */
 	private void updateBestPlan(SearchNode parentNode, SearchNode freshNode) throws PlannerException, LimitReachedException {
 		this.costPropagator.propagate(freshNode, this.planTree);
 		LeftDeepPlan successfulPlan = this.costPropagator.getBestPlan();
@@ -386,9 +406,10 @@ public class LinearOptimized extends LinearExplorer {
 	 * the cost of the plan built up from the path a_1, a_2, ..., a_i, b_{j+1} is lower than the best plan found so far
 	 * then we wake up the zombie path
 	 *
-	 * @param path
-	 * @param equivalenceClass
-	 * @throws PlannerException
+	 * @param path the path
+	 * @param equivalenceClass the equivalence class
+	 * @throws PlannerException the planner exception
+	 * @throws LimitReachedException the limit reached exception
 	 */
 	private void wakeupDescendants(List<Integer> path, PathEquivalenceClass equivalenceClass) 
 			throws PlannerException, LimitReachedException  {
@@ -396,10 +417,13 @@ public class LinearOptimized extends LinearExplorer {
 	}
 
 	/**
+	 * Wakeup descendants.
+	 *
 	 * @param path List<Integer>
 	 * @param equivalenceClass EquivalenceClass
 	 * @param visitedPaths Set<List<Integer>>
-	 * @throws PlannerException
+	 * @throws PlannerException the planner exception
+	 * @throws LimitReachedException the limit reached exception
 	 */
 	private void wakeupDescendants(List<Integer> path, PathEquivalenceClass equivalenceClass, 
 			Set<List<Integer>> visitedPaths)
@@ -458,6 +482,8 @@ public class LinearOptimized extends LinearExplorer {
 	}
 
 	/**
+	 * Creates the path.
+	 *
 	 * @param target List<Integer>
 	 * @param replacement List<Integer>
 	 * @param source List<Integer>
@@ -471,6 +497,8 @@ public class LinearOptimized extends LinearExplorer {
 	}
 
 	/**
+	 * Gets the dead descendants.
+	 *
 	 * @param representativeNode N
 	 * @param planTree IndexedDirectedGraph<N>
 	 * @return Set<N>
@@ -482,9 +510,12 @@ public class LinearOptimized extends LinearExplorer {
 	}
 
 	/**
+	 * Gets the dead descendants recursive.
+	 *
 	 * @param representativeNode N
 	 * @param planTree IndexedDirectedGraph<N>
 	 * @param deadDescendants Set<N>
+	 * @return the dead descendants recursive
 	 */
 	private void getDeadDescendantsRecursive(SearchNode representativeNode, IndexedDirectedGraph<SearchNode> planTree, Set<SearchNode> deadDescendants) {
 		for(DefaultEdge edge:planTree.outgoingEdgesOf(representativeNode)) {

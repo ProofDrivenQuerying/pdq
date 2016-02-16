@@ -43,6 +43,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
+// TODO: Auto-generated Javadoc
 /**
  * Detects homomorphisms from a conjunction to a set of facts (e.g., facts produced during chasing).
  * For each schema/accessible schema relation of N attributes it creates a table
@@ -59,8 +60,13 @@ public class DBHomomorphismManager implements HomomorphismManager {
 	/** Logger. */
 	private static Logger log = Logger.getLogger(DBHomomorphismManager.class);
 
+	/** The Bag. */
 	private final Attribute Bag = new Attribute(Integer.class, "Bag");
+	
+	/** The Fact. */
 	private final Attribute Fact = new Attribute(Integer.class, "Fact");
+	
+	/** The attr prefix. */
 	private String attrPrefix = "x";
 
 	/** Collection of expected queries. */
@@ -68,61 +74,65 @@ public class DBHomomorphismManager implements HomomorphismManager {
 	
 	protected Set<Evaluatable> constraints;
 	
+	/** The relations. */
 	protected final List<Relation> relations;
 	
-	/** A map of the string representation of a constant to the constant*/
+	/**  A map of the string representation of a constant to the constant. */
 	protected final Map<String, TypedConstant<?>> constants;
 	
-	/** Statement builder */
+	/**  Statement builder. */
 	protected final SQLStatementBuilder builder;
-	/**
-	 * A map from the schema relation names to the created relations (the ones that
-	 * correspond to the created database tables)
-	 */
+	
+	/** A map from the schema relation names to the created relations (the ones that correspond to the created database tables). */
 	protected final Map<String, DBRelation> aliases;
 	
-	/** Connection to the database */
+	/**  Connection to the database. */
 	protected Connection connection;
 	
-	/** Chase database name */
+	/**  Chase database name. */
 	protected final String database;
 	
-	/** Information to connect to the facts database*/
+	/**  Information to connect to the facts database. */
 	protected final String driver;
+	
+	/** The url. */
 	protected final String url;
+	
+	/** The username. */
 	protected final String username;
+	
+	/** The password. */
 	protected final String password;
+	
+	/** The is initialized. */
 	protected boolean isInitialized = false;
 
+	/** The clones. */
 	protected List<Connection> clones = new ArrayList<>();
 
+	/** The cleared last query. */
 	private boolean clearedLastQuery = true;
 	
+	/** The constraint indices. */
 	private Set<String> constraintIndices =  new LinkedHashSet<String>();
 	
+	/** The current query. */
 	Evaluatable currentQuery = null;
 	
+	/** The drop indexes. */
 	Set<String> dropIndexes = Sets.newLinkedHashSet();
 
 	/**
-	 * 
-	 * @param driver
-	 * 		Database driver
-	 * @param url
-	 * 		Database url
-	 * @param database
-	 * 		Database name
-	 * @param username
-	 * 		Database user
-	 * @param password
-	 * 		Database pass
-	 * @param builder
-	 * 		Builds SQL queries that detect homomorphisms
-	 * @param schema
-	 * 		Input schema
-	 * @param query
-	 * 		Input query
-	 * @throws SQLException
+	 * Instantiates a new DB homomorphism manager.
+	 *
+	 * @param driver 		Database driver
+	 * @param url 		Database url
+	 * @param database 		Database name
+	 * @param username 		Database user
+	 * @param password 		Database pass
+	 * @param builder 		Builds SQL queries that detect homomorphisms
+	 * @param schema 		Input schema
+	 * @throws SQLException the SQL exception
 	 */
 	public DBHomomorphismManager(
 			String driver, 
@@ -147,29 +157,20 @@ public class DBHomomorphismManager implements HomomorphismManager {
 	}
 	
 	/**
-	 * 
-	 * @param driver
-	 * 		Database driver
-	 * @param url
-	 * 		Database url
-	 * @param database
-	 * 		Database name
-	 * @param username
-	 * 		Database user
-	 * @param password
-	 * 		Database pass
-	 * @param builder
-	 * 		Builds SQL queries that detect homomorphisms
-	 * @param relations
-	 * 		Database relations
-	 * @param constants
-	 * 		Schema constants
-	 * @param aliases
-	 * 		A map from the schema relation names to the created relations (the ones that
+	 * Instantiates a new DB homomorphism manager.
+	 *
+	 * @param driver 		Database driver
+	 * @param url 		Database url
+	 * @param database 		Database name
+	 * @param username 		Database user
+	 * @param password 		Database pass
+	 * @param builder 		Builds SQL queries that detect homomorphisms
+	 * @param relations 		Database relations
+	 * @param constants 		Schema constants
+	 * @param aliases 		A map from the schema relation names to the created relations (the ones that
 	 * 		correspond to the created database tables)
-	 * @param queries
-	 * 		Cached queries of interest
-	 * @throws SQLException
+	 * @param constraints the constraints
+	 * @throws SQLException the SQL exception
 	 */
 	protected DBHomomorphismManager(
 			String driver, 
@@ -196,11 +197,10 @@ public class DBHomomorphismManager implements HomomorphismManager {
 	}
 
 	/**
-	 * 
-	 * @param query
-	 * @param schema
-	 * @return
-	 * 		queries of interest
+	 * Gets the constraints.
+	 *
+	 * @param schema the schema
+	 * @return 		queries of interest
 	 */
 	protected Set<Evaluatable> getConstraints(
 			Schema schema
@@ -213,6 +213,8 @@ public class DBHomomorphismManager implements HomomorphismManager {
 	}
 
 	/**
+	 * Initialize.
+	 *
 	 * @see uk.ac.ox.cs.pdq.homomorphism.HomomorphismManager#initialize()
 	 */
 	@Override
@@ -224,6 +226,8 @@ public class DBHomomorphismManager implements HomomorphismManager {
 	}
 
 	/**
+	 * Initialize.
+	 *
 	 * @param queries Collection<Evaluatable>
 	 * @see uk.ac.ox.cs.pdq.homomorphism.HomomorphismManager#initialize(Collection<Evaluatable>)
 	 */
@@ -235,7 +239,7 @@ public class DBHomomorphismManager implements HomomorphismManager {
 	}
 
 	/**
-	 * Sets up the database that will store the facts
+	 * Sets up the database that will store the facts.
 	 */
 	private void setup() {
 		try(Statement sqlStatement = this.connection.createStatement()) {
@@ -263,9 +267,11 @@ public class DBHomomorphismManager implements HomomorphismManager {
 	}
 
 	/**
+	 * Creates the base tables.
+	 *
 	 * @param relations List<Relation>
 	 * @param stmt Statement
-	 * @throws SQLException
+	 * @throws SQLException the SQL exception
 	 */
 	private void createBaseTables(List<Relation> relations, Statement stmt) throws SQLException {
 		DBRelation dbRelation = null;
@@ -279,6 +285,12 @@ public class DBHomomorphismManager implements HomomorphismManager {
 	}
 
 
+	/**
+	 * Consolidate base tables.
+	 *
+	 * @param tables the tables
+	 * @throws SQLException the SQL exception
+	 */
 	public void consolidateBaseTables(Collection<Table> tables) throws SQLException {
 		try(Statement sqlStatement = this.connection.createStatement()) {
 			try {
@@ -298,6 +310,12 @@ public class DBHomomorphismManager implements HomomorphismManager {
 	}
 	
 	
+	/**
+	 * Creates the equality table.
+	 *
+	 * @param stmt the stmt
+	 * @throws SQLException the SQL exception
+	 */
 	private void createEqualityTable(Statement stmt) throws SQLException
 	{
 		DBRelation equality = this.createEquality();
@@ -308,8 +326,10 @@ public class DBHomomorphismManager implements HomomorphismManager {
 	}
 
 	/**
+	 * Creates the join indexes.
+	 *
 	 * @param stmt Statement
-	 * @throws SQLException
+	 * @throws SQLException the SQL exception
 	 */
 	private void createJoinIndexes(Statement stmt) throws SQLException {
 		Set<String> joinIndexes = Sets.newLinkedHashSet();
@@ -321,6 +341,13 @@ public class DBHomomorphismManager implements HomomorphismManager {
 		}
 	}
 	
+	/**
+	 * Creates the and drop statementsfor query join indexes.
+	 *
+	 * @param query the query
+	 * @param stmt the stmt
+	 * @throws SQLException the SQL exception
+	 */
 	private void createAndDropStatementsforQueryJoinIndexes(Query query,Statement stmt) throws SQLException {
 		Set<String> joinIndexes = Sets.newLinkedHashSet();
 		
@@ -335,8 +362,9 @@ public class DBHomomorphismManager implements HomomorphismManager {
 	}
 
 	/**
-	 * Cleans up the database
-	 * @throws HomomorphismException
+	 * Cleans up the database.
+	 *
+	 * @throws HomomorphismException the homomorphism exception
 	 */
 	protected void cleanupDB() throws HomomorphismException {
 		try (Statement sqlStatement = this.connection.createStatement();) {
@@ -350,6 +378,9 @@ public class DBHomomorphismManager implements HomomorphismManager {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector#getMatches(uk.ac.ox.cs.pdq.fol.Evaluatable, uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismConstraint[])
+	 */
 	@Override
 	public <Q extends Evaluatable> List<Match> getMatches(Q source, HomomorphismConstraint... constraints) {
 		Preconditions.checkNotNull(source);
@@ -374,6 +405,9 @@ public class DBHomomorphismManager implements HomomorphismManager {
 	}
 	
 	/**
+	 * Gets the matches.
+	 *
+	 * @param <Q> the generic type
 	 * @param queries Collection<Q>
 	 * @param constraints HomomorphismConstraint[]
 	 * @return Map<Q,List<Matching>>
@@ -392,15 +426,13 @@ public class DBHomomorphismManager implements HomomorphismManager {
 	}
 	
 	/**
-	 * 
-	 * @param source
-	 * 		An input formula
-	 * @param aliases
-	 * 		Map of schema relation names to *clean* names
-	 * @param constraints
-	 * 		A set of constraints that should be satisfied by the homomorphisms of the input formula to the facts of the database 
-	 * @return 
-	 * 		a formula that uses the input *clean* names 
+	 * Convert.
+	 *
+	 * @param <Q> the generic type
+	 * @param source 		An input formula
+	 * @param aliases 		Map of schema relation names to *clean* names
+	 * @param constraints 		A set of constraints that should be satisfied by the homomorphisms of the input formula to the facts of the database 
+	 * @return 		a formula that uses the input *clean* names
 	 */
 	private <Q extends Evaluatable> Q convert(Q source, Map<String, DBRelation> aliases, HomomorphismConstraint... constraints) {
 		boolean singleBag = false;
@@ -458,13 +490,15 @@ public class DBHomomorphismManager implements HomomorphismManager {
 	}
 
 	/**
-	 * @param url
-	 * @param database
-	 * @param username
-	 * @param password
+	 * Gets the connection.
+	 *
 	 * @param driver String
+	 * @param url the url
+	 * @param database the database
+	 * @param username the username
+	 * @param password the password
 	 * @return a connection database connection for the given properties.
-	 * @throws SQLException
+	 * @throws SQLException the SQL exception
 	 */
 	public static Connection getConnection(String driver, String url, String database, String username, String password) throws SQLException {
 		if (!Strings.isNullOrEmpty(driver)) {
@@ -499,6 +533,8 @@ public class DBHomomorphismManager implements HomomorphismManager {
 	}
 
 	/**
+	 * Adds the facts.
+	 *
 	 * @param facts Collection<? extends PredicateFormula>
 	 * @see uk.ac.ox.cs.pdq.homomorphism.HomomorphismManager#addFacts(Collection<? extends PredicateFormula>)
 	 */
@@ -543,7 +579,8 @@ public class DBHomomorphismManager implements HomomorphismManager {
 	}
 	
 	/**
-	 * Deletes the facts of the list in the database
+	 * Deletes the facts of the list in the database.
+	 *
 	 * @param facts Input list of facts
 	 */
 	@Override
@@ -559,6 +596,8 @@ public class DBHomomorphismManager implements HomomorphismManager {
 	}
 	
 	/**
+	 * Clone.
+	 *
 	 * @return DBHomomorphismManager
 	 * @see uk.ac.ox.cs.pdq.homomorphism.HomomorphismDetector#clone()
 	 */
@@ -582,12 +621,13 @@ public class DBHomomorphismManager implements HomomorphismManager {
 	}
 	
 	/**
-	 * A relation built-up for homomorphism detection 
-	 * @author Efthymia Tsamoura
+	 * A relation built-up for homomorphism detection .
 	 *
+	 * @author Efthymia Tsamoura
 	 */
 	protected static class DBRelation extends Relation {
 		
+		/** The Constant serialVersionUID. */
 		private static final long serialVersionUID = 3503553786085749666L;
 
 		/**
@@ -601,7 +641,9 @@ public class DBHomomorphismManager implements HomomorphismManager {
 	}
 	
 	/**
-	 * @param relation 
+	 * Creates the db relation.
+	 *
+	 * @param relation the relation
 	 * @return a new database relation with attributes x0,x1,...,x_{N-1}, Bag, Fact where
 	 *         x_i maps to the i-th relation's attribute
 	 */
@@ -615,6 +657,12 @@ public class DBHomomorphismManager implements HomomorphismManager {
 		return new DBRelation(relation.getName(), attributes);
 	}
 	
+	/**
+	 * To db relation.
+	 *
+	 * @param table the table
+	 * @return the DB relation
+	 */
 	protected DBRelation toDBRelation(Table table) {
 		List<Attribute> attributes = new ArrayList<>();
 		for (int index = 0, l = table.getHeader().size(); index < l; ++index) {
@@ -625,6 +673,11 @@ public class DBHomomorphismManager implements HomomorphismManager {
 		return new DBRelation(table.getName(), attributes);
 	}
 	
+	/**
+	 * Creates the equality.
+	 *
+	 * @return the DB relation
+	 */
 	protected DBRelation createEquality() {
 		List<Attribute> attributes = new ArrayList<>();
 		attributes.add(new Attribute(String.class, this.attrPrefix + 0));
@@ -636,7 +689,9 @@ public class DBHomomorphismManager implements HomomorphismManager {
 
 	/**
 	 * This method initializes the database tables needed to later find a homomorphism from a specific query
-	 * In this implementation after you detect the homomorphisms from a query you have "consumed" any related machinery and have to add the query again
+	 * In this implementation after you detect the homomorphisms from a query you have "consumed" any related machinery and have to add the query again.
+	 *
+	 * @param query the query
 	 */
 	@Override
 	public void addQuery(Query<?> query) {

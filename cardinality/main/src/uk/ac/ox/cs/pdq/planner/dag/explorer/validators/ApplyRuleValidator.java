@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package uk.ac.ox.cs.pdq.planner.dag.explorer.validators;
 
 import uk.ac.ox.cs.pdq.planner.dag.ConfigurationUtility;
@@ -6,19 +9,24 @@ import uk.ac.ox.cs.pdq.planner.dag.DAGConfiguration;
 import uk.ac.ox.cs.pdq.planner.dag.UnaryAnnotatedPlan;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * Requires the input pair of configurations to be non trivial
- * and at least one of the input configurations to be an UnaryAnnotatedPlan
- * @author Efthymia Tsamoura
+ * and at least one of the input configurations to be an UnaryAnnotatedPlan.
  *
- * @param 
+ * @author Efthymia Tsamoura
  */
 public class ApplyRuleValidator implements Validator{
 
+	/**
+	 * Instantiates a new apply rule validator.
+	 */
 	public ApplyRuleValidator() {
 	}
 
 	/**
+	 * Validate.
+	 *
 	 * @param left DAGConfiguration
 	 * @param right DAGConfiguration
 	 * @return boolean
@@ -31,6 +39,8 @@ public class ApplyRuleValidator implements Validator{
 	}
 
 	/**
+	 * Validate.
+	 *
 	 * @param left DAGConfiguration
 	 * @param right DAGConfiguration
 	 * @param depth int
@@ -43,6 +53,8 @@ public class ApplyRuleValidator implements Validator{
 	}
 
 	/**
+	 * Clone.
+	 *
 	 * @return Validator
 	 * @see uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator#clone()
 	 */

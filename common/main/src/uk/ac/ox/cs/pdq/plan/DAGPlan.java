@@ -18,30 +18,32 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
+// TODO: Auto-generated Javadoc
 /**
- * A dag-structured plan 
+ * A dag-structured plan .
  *
  * @author Efthymia Tsamoura
  */
 public class DAGPlan extends Plan implements Rewritable {
 
-	/** The top-level operator of the plan*/
+	/**  The top-level operator of the plan. */
 	protected final RelationalOperator operator;
 
-	/** The parent plans **/
+	/**  The parent plans *. */
 	protected final List<DAGPlan> parents;
 
-	/** The child plans **/
+	/**  The child plans *. */
 	protected final List<DAGPlan> children;
 
-	/** The plan's leaves */
+	/**  The plan's leaves. */
 	protected final Collection<AccessOperator> leaves;
 
-	/** The plan's accesses */
+	/**  The plan's accesses. */
 	protected final Collection<AccessOperator> accesses;
 
 	/**
-	 * Creates a dag plan with no parent or child subplans
+	 * Creates a dag plan with no parent or child subplans.
+	 *
 	 * @param operator The input top-level logical operator
 	 */
 	public DAGPlan(RelationalOperator operator) {
@@ -50,26 +52,22 @@ public class DAGPlan extends Plan implements Rewritable {
 
 
 	/**
-	 * Creates a dag plan with no parent or child subplans
-	 * @param inputs
-	 *  	The plan's inputs
-	 * @param operator
-	 * 		The input top-level logical operator
+	 * Creates a dag plan with no parent or child subplans.
+	 *
+	 * @param inputs  	The plan's inputs
+	 * @param operator 		The input top-level logical operator
 	 */
 	public DAGPlan(Collection<? extends Term> inputs, RelationalOperator operator) {
 		this(inputs, operator, Lists.<DAGPlan>newArrayList(), Lists.<DAGPlan>newArrayList());
 	}
 
 	/**
-	 * Creates a dag plan
-	 * @param inputs
-	 *  	The plan's inputs
-	 * @param operator
-	 * 		The input top-level logical operator
-	 * @param parents
-	 * 		The input parent subplans
-	 * @param children
-	 * 		The input child subplans
+	 * Creates a dag plan.
+	 *
+	 * @param inputs  	The plan's inputs
+	 * @param operator 		The input top-level logical operator
+	 * @param parents 		The input parent subplans
+	 * @param children 		The input child subplans
 	 */
 	public DAGPlan(Collection<? extends Term> inputs, RelationalOperator operator, List<DAGPlan> parents, List<DAGPlan> children) {
 		super(inferInputTerms(inputs, operator));
@@ -87,10 +85,11 @@ public class DAGPlan extends Plan implements Rewritable {
 	}
 
 	/**
-	 * Returns the input terms of the input operator 
-	 * @param inputs
-	 * @param operator
-	 * @return
+	 * Returns the input terms of the input operator .
+	 *
+	 * @param inputs the inputs
+	 * @param operator the operator
+	 * @return the list
 	 */
 	private static List<Term> inferInputTerms(Collection<? extends Term> inputs, RelationalOperator operator) {
 		List<Term> result = new ArrayList<>();
@@ -103,9 +102,9 @@ public class DAGPlan extends Plan implements Rewritable {
 	}
 
 	/**
-	 * Adds the input plan in the list of this plan's children
-	 * @param child
+	 * Adds the input plan in the list of this plan's children.
 	 *
+	 * @param child the child
 	 */
 	public void addChild(DAGPlan child) {
 		this.children.add(child);
@@ -117,14 +116,17 @@ public class DAGPlan extends Plan implements Rewritable {
 	}
 
 	/**
-	 * Adds the input plan in the list of this plan's parents
-	 * @param plan
+	 * Adds the input plan in the list of this plan's parents.
+	 *
+	 * @param plan the plan
 	 */
 	public void addParent(DAGPlan plan) {
 		this.parents.add(plan);
 	}
 
 	/**
+	 * Gets the ancestors.
+	 *
 	 * @return the ancestor plans
 	 */
 	public Collection<DAGPlan> getAncestors() {
@@ -137,6 +139,8 @@ public class DAGPlan extends Plan implements Rewritable {
 	}
 
 	/**
+	 * Gets the descendants.
+	 *
 	 * @return the descendant plans
 	 */
 	public Collection<DAGPlan> getDescendants() {
@@ -149,18 +153,30 @@ public class DAGPlan extends Plan implements Rewritable {
 	}
 
 
+	/**
+	 * Gets the parents.
+	 *
+	 * @return the parents
+	 */
 	public List<DAGPlan> getParents() {
 		return this.parents;
 	}
 
 
+	/**
+	 * Gets the children.
+	 *
+	 * @return the children
+	 */
 	public List<DAGPlan> getChildren() {
 		return this.children;
 	}
 
 
 	/**
-	 * The top-level operator of this plan
+	 * The top-level operator of this plan.
+	 *
+	 * @return the operator
 	 */
 	@Override
 	public RelationalOperator getOperator() {
@@ -168,6 +184,8 @@ public class DAGPlan extends Plan implements Rewritable {
 	}
 
 	/**
+	 * Gets the effective operator.
+	 *
 	 * @return LogicalOperator
 	 */
 	@Override
@@ -176,6 +194,9 @@ public class DAGPlan extends Plan implements Rewritable {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#clone()
+	 */
 	@Override
 	public DAGPlan clone() {
 		// TODO: Consider a deep copy for the operator.
@@ -187,6 +208,8 @@ public class DAGPlan extends Plan implements Rewritable {
 	}
 
 	/**
+	 * Gets the leaves.
+	 *
 	 * @return the leaf operators of this plan
 	 */
 	public Collection<AccessOperator> getLeaves() {
@@ -194,6 +217,8 @@ public class DAGPlan extends Plan implements Rewritable {
 	}
 
 	/**
+	 * Gets the accesses.
+	 *
 	 * @return the plan's accesses
 	 */
 	@Override
@@ -229,6 +254,8 @@ public class DAGPlan extends Plan implements Rewritable {
 	}
 
 	/**
+	 * Size.
+	 *
 	 * @param plan DAGPlan
 	 * @return the number of subplans
 	 */
@@ -248,6 +275,8 @@ public class DAGPlan extends Plan implements Rewritable {
 	}
 
 	/**
+	 * Gets the output.
+	 *
 	 * @return the output terms of this plan
 	 */
 	@Override
@@ -256,6 +285,8 @@ public class DAGPlan extends Plan implements Rewritable {
 	}
 
 	/**
+	 * Gets the output attributes.
+	 *
 	 * @return the output attributes of this plan
 	 */
 	@Override
@@ -264,7 +295,9 @@ public class DAGPlan extends Plan implements Rewritable {
 	}
 
 	/**
-	 * @return if the plan has no input 
+	 * Checks if is closed.
+	 *
+	 * @return if the plan has no input
 	 */
 	@Override
 	public boolean isClosed() {
@@ -272,6 +305,8 @@ public class DAGPlan extends Plan implements Rewritable {
 	}
 
 	/**
+	 * Compare to.
+	 *
 	 * @param plan Plan
 	 * @return int
 	 */

@@ -9,29 +9,31 @@ import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.TGD;
 import uk.ac.ox.cs.pdq.util.Table;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
- * @author Efthymia Tsamoura
+ * The Class ProjectCommand.
  *
+ * @author Efthymia Tsamoura
  */
 public class ProjectCommand implements Command{
 	
-	/** The input table **/
+	/**  The input table *. */
 	private final Table input;
 	
-	/** The output table **/
+	/**  The output table *. */
 	private final Table output;
 	
-	/** The attributes to project **/
+	/**  The attributes to project *. */
 	private final List<Attribute> toProject;
 	
-	/** Caches the constraint that captures this access command **/
+	/**  Caches the constraint that captures this access command *. */
 	private final TGD command;
 	
 	/**
-	 * Creates a project command based on the input table and the input attributes that will be projected
-	 * @param toProject
-	 * @param input
+	 * Creates a project command based on the input table and the input attributes that will be projected.
+	 *
+	 * @param toProject the to project
+	 * @param input the input
 	 */
 	public ProjectCommand(List<Attribute> toProject, Table input) {
 		Preconditions.checkNotNull(toProject);
@@ -42,20 +44,35 @@ public class ProjectCommand implements Command{
 		this.command = new CommandToTGDTranslator().toTGD(this);
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.plan.Command#getOutput()
+	 */
 	@Override
 	public Table getOutput() {
 		return this.output;
 	}
 
+	/**
+	 * Gets the input.
+	 *
+	 * @return the input
+	 */
 	public Table getInput() {
 		return input;
 	}
 
+	/**
+	 * Gets the to project.
+	 *
+	 * @return the to project
+	 */
 	public List<Attribute> getToProject() {
 		return toProject;
 	}
 	
 	/**
+	 * Equals.
+	 *
 	 * @param o Object
 	 * @return boolean
 	 */
@@ -73,6 +90,8 @@ public class ProjectCommand implements Command{
 	}
 
 	/**
+	 * Hash code.
+	 *
 	 * @return int
 	 */
 	@Override
@@ -81,6 +100,8 @@ public class ProjectCommand implements Command{
 	}
 
 	/**
+	 * To string.
+	 *
 	 * @return String
 	 */
 	@Override

@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.logging.performance.ChainedStatistics;
 
+// TODO: Auto-generated Javadoc
 /**
  * Statistics logger that works by appending logs from a sequence of delegate
  * loggers.
@@ -17,17 +18,20 @@ import uk.ac.ox.cs.pdq.logging.performance.ChainedStatistics;
  */
 public final class WebBasedStatisticsLogger extends ChainedStatistics implements BufferedProgressLogger {
 
-	/** */
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -4623356935725604341L;
 
+	/** The log. */
 	protected static Logger log = Logger.getLogger(WebBasedStatisticsLogger.class);
 
+	/** The buffer. */
 	protected StringBuilder buffer = new StringBuilder();
 
+	/** The baos. */
 	private ByteArrayOutputStream baos;
 	
 	/**
-	 * Default constructor
+	 * Default constructor.
 	 */
 	public WebBasedStatisticsLogger() {
 		super();
@@ -35,6 +39,9 @@ public final class WebBasedStatisticsLogger extends ChainedStatistics implements
 		this.out = new HTMLOutputStream(this.baos);
 	}
 	
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.logging.performance.ChainedStatistics#close()
+	 */
 	@Override
 	public void close() {
 		super.close();
@@ -45,14 +52,26 @@ public final class WebBasedStatisticsLogger extends ChainedStatistics implements
 		}
 	}
 
+	/**
+	 * The Class HTMLOutputStream.
+	 */
 	private class HTMLOutputStream extends PrintStream {
 
+		/** The started. */
 		boolean started = false;
 		
+		/**
+		 * Instantiates a new HTML output stream.
+		 *
+		 * @param os the os
+		 */
 		public HTMLOutputStream(OutputStream os) {
 			super(os);
 		}
 
+		/* (non-Javadoc)
+		 * @see java.io.PrintStream#println(java.lang.String)
+		 */
 		@Override
 		public void println(String s) {
 			String w = s;
@@ -69,6 +88,9 @@ public final class WebBasedStatisticsLogger extends ChainedStatistics implements
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.endpoint.util.BufferedProgressLogger#getLog()
+	 */
 	@Override
 	public String getLog() {
 		return this.buffer.toString();

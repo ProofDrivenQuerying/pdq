@@ -9,6 +9,7 @@ import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
+// TODO: Auto-generated Javadoc
 /**
  * Tree nodes that keep every path to success.
  * Used when costing plans using a blackbox cost function.
@@ -22,8 +23,9 @@ public class BlackBoxNode extends SearchNode {
 
 	/**
 	 * Constructor for BlackBoxNode.
+	 *
 	 * @param configuration LinearConfiguration
-	 * @throws PlannerException
+	 * @throws PlannerException the planner exception
 	 */
 	public BlackBoxNode(LinearChaseConfiguration configuration) throws PlannerException {
 		super(configuration);
@@ -31,15 +33,18 @@ public class BlackBoxNode extends SearchNode {
 
 	/**
 	 * Constructor for BlackBoxNode.
+	 *
 	 * @param parent BlackBoxNode
 	 * @param configuration LinearConfiguration
-	 * @throws PlannerException
+	 * @throws PlannerException the planner exception
 	 */
 	public BlackBoxNode(BlackBoxNode parent, LinearChaseConfiguration configuration) throws PlannerException {
 		super(parent, configuration);
 	}
 
 	/**
+	 * Gets the paths to success.
+	 *
 	 * @return Set<List<Integer>>
 	 */
 	public Set<List<Integer>> getPathsToSuccess() {
@@ -47,6 +52,8 @@ public class BlackBoxNode extends SearchNode {
 	}
 
 	/**
+	 * Sets the paths to success.
+	 *
 	 * @param pathsToSuccess Set<List<Integer>>
 	 */
 	public void setPathsToSuccess(Set<List<Integer>> pathsToSuccess) {
@@ -54,6 +61,8 @@ public class BlackBoxNode extends SearchNode {
 	}
 
 	/**
+	 * Sets the path to success.
+	 *
 	 * @param pathToSuccess List<Integer>
 	 */
 	@Override
@@ -65,6 +74,9 @@ public class BlackBoxNode extends SearchNode {
 		}
 	}
 
+	/**
+	 * Ground.
+	 */
 	public void ground() {
 		this.pathsToSuccess = Sets.newLinkedHashSet();
 		List<Integer> l = Lists.newArrayList();
@@ -72,6 +84,8 @@ public class BlackBoxNode extends SearchNode {
 	}
 
 	/**
+	 * Adds the paths to success.
+	 *
 	 * @param paths List<List<Integer>>
 	 */
 	public void addPathsToSuccess(List<List<Integer>> paths) {
@@ -79,6 +93,8 @@ public class BlackBoxNode extends SearchNode {
 	}
 
 	/**
+	 * Adds the path to success.
+	 *
 	 * @param pathToSuccess List<Integer>
 	 */
 	public void addPathToSuccess(List<Integer> pathToSuccess) {
@@ -89,6 +105,8 @@ public class BlackBoxNode extends SearchNode {
 	}
 
 	/**
+	 * Gets the pointer.
+	 *
 	 * @return BlackBoxNode
 	 */
 	@Override

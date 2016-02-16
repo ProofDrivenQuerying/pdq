@@ -29,6 +29,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
 /**
  * Given schema S_0, the Accessible Schema for S_0, denoted AcSch(S_0), 
  * is the schema without any access restrictions, such that:
@@ -47,29 +48,27 @@ import com.google.common.collect.Lists;
  */
 public class AccessibleSchema extends Schema {
 
-	/** The accessible relations*/
+	/**  The accessible relations. */
 	private final List<AccessibleRelation> accessibleRelations;
 
-	/** Mapping from schema relations to the corresponding inferred accessible relations*/
+	/**  Mapping from schema relations to the corresponding inferred accessible relations. */
 	private final Map<String, InferredAccessibleRelation> infAccessibleRelations;
 
-	/** Mapping from a relation-access method pair to an accessibility axioms */
+	/**  Mapping from a relation-access method pair to an accessibility axioms. */
 	private final Map<Pair<? extends Relation, AccessMethod>, AccessibilityAxiom> accessibilityAxioms;
 
-	/** Mapping from a dependency to its inferred accessible counterpart*/
+	/**  Mapping from a dependency to its inferred accessible counterpart. */
 	private final Map<Constraint, InferredAccessibleAxiom> infAccessibilityAxioms;
 
-	/** The inferred accessible axioms**/
+	/**  The inferred accessible axioms*. */
 	private final List<InferredAccessibleAxiom> infAccessibleViews = new ArrayList<>();
 	
 	/**
-	 * 
-	 * @param relations
-	 * 		List of schema relations
-	 * @param dependencies
-	 * 		list if schema dependencies
-	 * @param constantsMap
-	 * 		Map of schema constant names to constants 
+	 * Instantiates a new accessible schema.
+	 *
+	 * @param relations 		List of schema relations
+	 * @param dependencies 		list if schema dependencies
+	 * @param constantsMap 		Map of schema constant names to constants
 	 */
 	public AccessibleSchema(List<Relation> relations, List<Constraint> dependencies, Map<String, TypedConstant<?>> constantsMap) {
 		super(relations, dependencies);
@@ -120,6 +119,8 @@ public class AccessibleSchema extends Schema {
 	}
 	
 	/**
+	 * Gets the inferred accessibility axioms.
+	 *
 	 * @return the inferred accessible counterparts of the schema dependencies
 	 */
 	public Collection<InferredAccessibleAxiom> getInferredAccessibilityAxioms() {
@@ -127,24 +128,26 @@ public class AccessibleSchema extends Schema {
 	}
 
 	/**
-	 * 
-	 * @return
-	 * 		the inferred accessible views of this accessible schema
+	 * Gets the inferred accessible views.
+	 *
+	 * @return 		the inferred accessible views of this accessible schema
 	 */
 	public List<InferredAccessibleAxiom> getInferredAccessibleViews() {
 		return this.infAccessibleViews;
 	}
 
 	/**
-	 * 
-	 * @return
-	 * 		the accessibility axioms of this schema
+	 * Gets the accessibility axioms.
+	 *
+	 * @return 		the accessibility axioms of this schema
 	 */
 	public Collection<AccessibilityAxiom> getAccessibilityAxioms() {
 		return this.accessibilityAxioms.values();
 	}
 
 	/**
+	 * Gets the accessibility axiom.
+	 *
 	 * @param r Input relation
 	 * @param b Input access method
 	 * @return The accessibility axiom that corresponds to the relation-access method pair
@@ -153,6 +156,9 @@ public class AccessibleSchema extends Schema {
 		return this.accessibilityAxioms.get(Pair.of(r, b));
 	}
 	
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.db.Schema#getRelations()
+	 */
 	@Override
 	public List<Relation> getRelations() {
 		return Lists.newArrayList(
@@ -163,6 +169,8 @@ public class AccessibleSchema extends Schema {
 	}
 
 	/**
+	 * Gets the relation.
+	 *
 	 * @param relationName String
 	 * @return Relation
 	 */
@@ -179,6 +187,8 @@ public class AccessibleSchema extends Schema {
 	}
 
 	/**
+	 * Gets the accessible relation.
+	 *
 	 * @return AccessibleRelation
 	 */
 	public AccessibleRelation getAccessibleRelation() {
@@ -186,6 +196,8 @@ public class AccessibleSchema extends Schema {
 	}
 
 	/**
+	 * Gets the inferred accessible relation.
+	 *
 	 * @param r Relation
 	 * @return InferredAccessibleRelation
 	 */
@@ -194,6 +206,8 @@ public class AccessibleSchema extends Schema {
 	}
 
 	/**
+	 * Gets the dependencies.
+	 *
 	 * @return all the accessible schema dependencies including the ones of the original schema
 	 */
 	@Override
@@ -205,7 +219,10 @@ public class AccessibleSchema extends Schema {
 	}
 
 	/**
-	 * @param accessibleSchema AccessibleSchema
+	 * Accessible.
+	 *
+	 * @param <Q> the generic type
+	 * @param query the query
 	 * @return the accessible query
 	 * @see uk.ac.ox.cs.pdq.fol.Query#accessible(AccessibleSchema)
 	 */
@@ -222,7 +239,11 @@ public class AccessibleSchema extends Schema {
 	}
 	
 	/**
-	 * @param accessibleSchema AccessibleSchema
+	 * Accessible.
+	 *
+	 * @param <Q> the generic type
+	 * @param query the query
+	 * @param canonicalMapping the canonical mapping
 	 * @return the accessible query
 	 * @see uk.ac.ox.cs.pdq.fol.Query#accessible(AccessibleSchema)
 	 */
@@ -239,6 +260,8 @@ public class AccessibleSchema extends Schema {
 	}
 	
 	/**
+	 * To string.
+	 *
 	 * @return String
 	 */
 	@Override
@@ -278,18 +301,24 @@ public class AccessibleSchema extends Schema {
 	}
 
 	/**
+	 * Accessible relations implementation.
 	 *
-	 * Accessible relations implementation
 	 * @author Efthymia Tsamoura
-	 *
 	 */
 	public static class AccessibleRelation extends Relation {
 
-		/** */
+		/** The Constant serialVersionUID. */
 		private static final long serialVersionUID = 5762653825140737301L;
+		
+		/** The Constant PREFIX. */
 		public static final String PREFIX = "Access";
+		
+		/** The singleton. */
 		private static AccessibleRelation singleton = null;
 
+		/**
+		 * Instantiates a new accessible relation.
+		 */
 		private AccessibleRelation() {
 			super(PREFIX, asList(new Attribute(String.class, "x0")),
 					Lists.newArrayList(
@@ -302,6 +331,8 @@ public class AccessibleSchema extends Schema {
 		}
 
 		/**
+		 * Gets the accessible fact.
+		 *
 		 * @param constant TypedConstant<?>
 		 * @return PredicateFormula
 		 */
@@ -310,6 +341,8 @@ public class AccessibleSchema extends Schema {
 		}
 
 		/**
+		 * As list.
+		 *
 		 * @param a Attribute
 		 * @return List<Attribute>
 		 */
@@ -320,6 +353,8 @@ public class AccessibleSchema extends Schema {
 		}
 
 		/**
+		 * Gets the single instance of AccessibleRelation.
+		 *
 		 * @return AccessibleRelation
 		 */
 		public static AccessibleRelation getInstance() {
@@ -331,16 +366,19 @@ public class AccessibleSchema extends Schema {
 	}
 
 	/**
+	 * Inferred accessible relations implementation.
 	 *
-	 * Inferred accessible relations implementation
 	 * @author Efthymia Tsamoura
-	 *
 	 */
 	public static class InferredAccessibleRelation extends Relation {
 
-		/** */
+		/** The Constant serialVersionUID. */
 		private static final long serialVersionUID = 5612488076416617646L;
+		
+		/** The Constant PREFIX. */
 		public static final String PREFIX = "InferredAccessible";
+		
+		/** The base relation. */
 		private final Relation baseRelation;
 
 		/**
@@ -375,6 +413,8 @@ public class AccessibleSchema extends Schema {
 		}
 
 		/**
+		 * Gets the base relation.
+		 *
 		 * @return Relation
 		 */
 		public Relation getBaseRelation() {

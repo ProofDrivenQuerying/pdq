@@ -38,17 +38,22 @@ import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismManagerFactory;
 
 import com.google.common.eventbus.EventBus;
 
+// TODO: Auto-generated Javadoc
 /**
- * Tests the restricted chase implementation
- * @author Efthymia Tsamoura
+ * Tests the restricted chase implementation.
  *
+ * @author Efthymia Tsamoura
  */
 
 public class RestrictedChaserTest {
 
+	/** The event bus. */
 	private EventBus eventBus = new EventBus();
 
+	/** The path. */
 	private static String PATH = "test/restricted_chaser/";
+	
+	/** The schemata1. */
 	String[] schemata1 = {
 			"schema_fk_view.xml",
 			"schema_fk_view.xml",
@@ -62,6 +67,7 @@ public class RestrictedChaserTest {
 			"schema_fk_view.xml"
 	};
 
+	/** The schemata2. */
 	String[] schemata2 = {
 			"schema_demo.xml",
 			"schema_demo.xml",
@@ -81,6 +87,8 @@ public class RestrictedChaserTest {
 			"schema_bio.xml",
 			"schema_bio.xml"
 	};
+	
+	/** The queries1. */
 	String[] queries1 = {
 			"query_fk_view_1.xml",
 			"query_fk_view_2.xml",
@@ -93,6 +101,8 @@ public class RestrictedChaserTest {
 			"query_fk_view_9.xml",
 			"query_fk_view_10.xml"
 	};
+	
+	/** The queries2. */
 	String[] queries2 = {
 			"query_demo_1.xml",
 			"query_demo_2.xml",
@@ -112,6 +122,8 @@ public class RestrictedChaserTest {
 			"query_bio_14.xml",
 			"query_bio_15.xml"
 	};
+	
+	/** The facts1. */
 	String[] facts1 = {
 			"facts_fk_view_1.txt",
 			"facts_fk_view_2.txt",
@@ -125,6 +137,7 @@ public class RestrictedChaserTest {
 			"facts_fk_view_10.txt"
 	};
 
+	/** The facts2. */
 	String[] facts2 = {
 			"facts_demo_1.txt",
 			"facts_demo_2.txt",
@@ -145,27 +158,54 @@ public class RestrictedChaserTest {
 			"facts_bio_15.txt"
 	};
 
+	/** The canonical names. */
 	boolean canonicalNames = true;
+	
+	/** The driver. */
 	String driver = null;
+	
+	/** The url. */
 	String url = "jdbc:mysql://localhost/";
+	
+	/** The database. */
 	String database = "pdq_chase";
+	
+	/** The username. */
 	String username = "root";
+	
+	/** The password. */
 	String password ="root";
 
+	/**
+	 * Prepare.
+	 */
 	@Before
 	public void prepare() {
 	}
 
+	/**
+	 * Test1.
+	 */
 	@Test
 	public void test1() {
 		this.test(this.schemata1, this.queries1, this.facts1);
 	}
 
+	/**
+	 * Test2.
+	 */
 	@Test
 	public void test2() {
 		this.test(this.schemata2, this.queries2, this.facts2);
 	}
 
+	/**
+	 * Test.
+	 *
+	 * @param schemata the schemata
+	 * @param queries the queries
+	 * @param facts the facts
+	 */
 	public void test(String[] schemata, String[] queries, String[] facts) {
 		for(int i = 0; i < schemata.length; ++i) {
 			String s = schemata[i];
@@ -219,6 +259,13 @@ public class RestrictedChaserTest {
 		}
 	}
 
+	/**
+	 * Load facts.
+	 *
+	 * @param fileName the file name
+	 * @param schema the schema
+	 * @return the collection
+	 */
 	private Collection<Predicate> loadFacts(String fileName, Schema schema) {
 		Collection<Predicate> predicates = new HashSet<>();
 		String line = null;
@@ -243,6 +290,13 @@ public class RestrictedChaserTest {
 		return null;
 	}
 
+	/**
+	 * Load fact.
+	 *
+	 * @param predicate the predicate
+	 * @param schema the schema
+	 * @return the predicate
+	 */
 	private Predicate loadFact(String predicate, Schema schema) {		
 		int index1 = predicate.indexOf("(");
 		int index2 = predicate.indexOf(")");

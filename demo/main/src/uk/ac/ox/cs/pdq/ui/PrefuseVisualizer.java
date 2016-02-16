@@ -54,6 +54,7 @@ import uk.ac.ox.cs.pdq.ui.prefuse.layout.AggregateLayout;
 import uk.ac.ox.cs.pdq.ui.prefuse.renderer.EdgeShapeRenderer;
 import uk.ac.ox.cs.pdq.ui.prefuse.schema.SchemaFactory;
 
+// TODO: Auto-generated Javadoc
 /**
  * Runs regression tests.
  * 
@@ -64,32 +65,70 @@ public class PrefuseVisualizer extends JComponent {
 	/** Runner's logger. */
 	private static Logger log = Logger.getLogger(PrefuseVisualizer.class);
 
+	/** The graph. */
 	private static String GRAPH = "graph";
+	
+	/** The edges. */
 	private static String EDGES = "graph.edges";
+	
+	/** The nodes. */
 	private static String NODES = "graph.nodes";
+	
+	/** The aggregates. */
 	private static String AGGREGATES = "aggregates";
+	
+	/** The aggregate predicate. */
 	private static String AGGREGATE_PREDICATE = "ingroup('aggregates')";
 	
+	/** The highlight successful. */
 	private static String HIGHLIGHT_SUCCESSFUL = "LEFT(type, 1) == 'S'";
+	
+	/** The highlight ongoing. */
 	private static String HIGHLIGHT_ONGOING = "LEFT(type, 1) == 'O'";
+	
+	/** The highlight nocandidates. */
 	private static String HIGHLIGHT_NOCANDIDATES = "LEFT(type, 1) == 'N'";
+	
+	/** The highlight terminal. */
 	private static String HIGHLIGHT_TERMINAL = "LEFT(type, 1) == 'T'";
+	
+	/** The highlight dead. */
 	private static String HIGHLIGHT_DEAD = "LEFT(type, 1) == 'D'";
 	
+	/** The color action. */
 	private static String COLOR_ACTION = "color";
+	
+	/** The layout action. */
 	private static String LAYOUT_ACTION = "layout";
 	
+	/** The controls. */
 	private final JPanel controls;
+	
+	/** The display. */
 	private final Display display;
+	
+	/** The graph. */
 	private final Graph graph;
+	
+	/** The visualization. */
 	private final Visualization visualization;
+	
+	/** The aggregate table. */
 	private final AggregateTable aggregateTable;
+	
+	/** The path highlight control. */
 	private final PathHighlightControl pathHighlightControl;
 	
+	/** The path highlight slider. */
 	private final JSlider pathHighlightSlider;
+	
+	/** The fish. */
 	private final Distortion fish;
 	
 	
+	/**
+	 * Instantiates a new prefuse visualizer.
+	 */
 	public PrefuseVisualizer() {
 		super();
 
@@ -120,6 +159,9 @@ public class PrefuseVisualizer extends JComponent {
 		}).start();
 	}
 
+	/**
+	 * Setup renderers.
+	 */
 	private void setupRenderers() {
 		LabelRenderer r = new LabelRenderer("id");
 		r.setRoundedCorner(8, 8); // round the corners
@@ -146,6 +188,11 @@ public class PrefuseVisualizer extends JComponent {
 		this.visualization.setRendererFactory(rendererFactory);
 	}
 	
+	/**
+	 * Setup controls.
+	 *
+	 * @return the j panel
+	 */
 	private JPanel setupControls() {
 		Palettes palettes = new Palettes();
 
@@ -286,24 +333,54 @@ public class PrefuseVisualizer extends JComponent {
 		return result;
 	}
 	
+	/**
+	 * Setup display.
+	 *
+	 * @return the display
+	 */
 	private Display setupDisplay() {
 		Display result = new Display(this.visualization);
 		result.setHighQuality(true);
 		return result;
 	}
 
+	/**
+	 * Adds the control.
+	 *
+	 * @param ctrl the ctrl
+	 */
 	public void addControl(Control ctrl) {
 		this.display.addControlListener(ctrl);
 	}
 	
+	/**
+	 * The listener interface for receiving pathDisplayChange events.
+	 * The class that is interested in processing a pathDisplayChange
+	 * event implements this interface, and the object created
+	 * with that class is registered with a component using the
+	 * component's <code>addPathDisplayChangeListener<code> method. When
+	 * the pathDisplayChange event occurs, that object's appropriate
+	 * method is invoked.
+	 *
+	 * @see PathDisplayChangeEvent
+	 */
 	public static class PathDisplayChangeListener implements ChangeListener {
 		
+		/** The visualizer. */
 		private final PrefuseVisualizer visualizer;
 
+		/**
+		 * Instantiates a new path display change listener.
+		 *
+		 * @param viz the viz
+		 */
 		public PathDisplayChangeListener(PrefuseVisualizer viz) {
 			this.visualizer = viz;
 		}
 		
+		/* (non-Javadoc)
+		 * @see javax.swing.event.ChangeListener#stateChanged(javax.swing.event.ChangeEvent)
+		 */
 		@Override
 		public void stateChanged(ChangeEvent e) {
 			int rank = ((JSlider) e.getSource()).getValue();
@@ -321,6 +398,11 @@ public class PrefuseVisualizer extends JComponent {
 			this.visualizer.visualization.run(COLOR_ACTION);
 		}
 		
+		/**
+		 * Select path.
+		 *
+		 * @param rank the rank
+		 */
 		private void selectPath(int rank) {
 			AggregateItem aggregate = (AggregateItem) this.visualizer.aggregateTable.getItem(rank);
 			if (this.allItemsVisible(aggregate)) {
@@ -334,6 +416,12 @@ public class PrefuseVisualizer extends JComponent {
 			}
 		}
 
+		/**
+		 * Show or hide aggregates.
+		 *
+		 * @param aggregateTable the aggregate table
+		 * @param visible the visible
+		 */
 		private void showOrHideAggregates(AggregateTable aggregateTable, boolean visible) {
 			int rows = aggregateTable.getRowCount();
 			if(rows > 0) {
@@ -350,6 +438,12 @@ public class PrefuseVisualizer extends JComponent {
 			}
 		}
 
+		/**
+		 * All items visible.
+		 *
+		 * @param aggregate the aggregate
+		 * @return true, if successful
+		 */
 		private boolean allItemsVisible(AggregateItem aggregate) {
 			Iterator<VisualItem> iterator = aggregate.items();
 			while ( iterator.hasNext() ) {
@@ -362,26 +456,56 @@ public class PrefuseVisualizer extends JComponent {
 		}
 	}
 
+	/**
+	 * Gets the graph.
+	 *
+	 * @return the graph
+	 */
 	public Graph getGraph() {
 		return this.graph;
 	}
 
+	/**
+	 * Gets the visualization.
+	 *
+	 * @return the visualization
+	 */
 	public Visualization getVisualization() {
 		return this.visualization;
 	}
 
+	/**
+	 * Gets the aggregate table.
+	 *
+	 * @return the aggregate table
+	 */
 	public AggregateTable getAggregateTable() {
 		return this.aggregateTable;
 	}
 
+	/**
+	 * Gets the path highlight control.
+	 *
+	 * @return the path highlight control
+	 */
 	public PathHighlightControl getPathHighlightControl() {
 		return this.pathHighlightControl;
 	}
 	
+	/**
+	 * Gets the paths highlight box.
+	 *
+	 * @return the paths highlight box
+	 */
 	public JSlider getPathsHighlightBox() {
 		return this.pathHighlightSlider;
 	}
 	
+	/**
+	 * Gets the distortion.
+	 *
+	 * @return the distortion
+	 */
 	public Distortion getDistortion() {
 		return this.fish;
 	}

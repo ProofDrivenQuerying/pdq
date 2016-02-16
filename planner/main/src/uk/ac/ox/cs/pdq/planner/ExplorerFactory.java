@@ -47,6 +47,7 @@ import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
 
 import com.google.common.eventbus.EventBus;
 
+// TODO: Auto-generated Javadoc
 /**
  * Creates an explorer given the input arguments. The following types of explorers are available:
 	
@@ -76,18 +77,21 @@ import com.google.common.eventbus.EventBus;
 public class ExplorerFactory {
 
 	/**
-	 * 
-	 * @param eventBus
-	 * @param collectStats
-	 * @param schema
-	 * @param accessibleSchema
-	 * @param query
-	 * @param chaser
-	 * @param detector
-	 * @param costEstimator
-	 * @param parameters
-	 * @return
-	 * @throws Exception
+	 * Creates a new Explorer object.
+	 *
+	 * @param <P> the generic type
+	 * @param eventBus the event bus
+	 * @param collectStats the collect stats
+	 * @param schema the schema
+	 * @param accessibleSchema the accessible schema
+	 * @param query the query
+	 * @param accessibleQuery the accessible query
+	 * @param chaser the chaser
+	 * @param detector the detector
+	 * @param costEstimator the cost estimator
+	 * @param parameters the parameters
+	 * @return the explorer< p>
+	 * @throws Exception the exception
 	 */
 	public static <P extends Plan> Explorer<P> createExplorer(
 			EventBus eventBus, 
@@ -272,6 +276,13 @@ public class ExplorerFactory {
 		}
 	}
 
+	/**
+	 * Read accesses.
+	 *
+	 * @param schema the schema
+	 * @param fileName the file name
+	 * @return the list
+	 */
 	private static List<Pair<Relation, AccessMethod>> readAccesses(Schema schema, String fileName) {
 		String line = null;
 		try {
@@ -293,6 +304,13 @@ public class ExplorerFactory {
 		return null;
 	}
 
+	/**
+	 * Read access.
+	 *
+	 * @param schema the schema
+	 * @param line the line
+	 * @return the pair
+	 */
 	private static Pair<Relation, AccessMethod> readAccess(Schema schema, String line) {
 		String READ_ERSPI = "^(RE:(\\w+)(\\s+)BI:(\\w+))";
 		Pattern p = Pattern.compile(READ_ERSPI);

@@ -6,26 +6,38 @@ import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.util.Utility;
 
+// TODO: Auto-generated Javadoc
 /**
+ * The Class PagingLimitTest.
+ *
  * @author Julien Leblay
  */
 @Ignore
 public class PagingLimitTest {
 	
 	/**
-	 * Makes sure assertions are enabled
+	 * Makes sure assertions are enabled.
 	 */
 	@Before 
 	public void setup() {
 		Utility.assertsEnabled();
 	}
 	
+	/**
+	 * Copy.
+	 */
 	@Test public void copy() {
 	}
 
+	/**
+	 * Process access request.
+	 */
 	@Test public void processAccessRequest() {
 	}
 
+	/**
+	 * Process access response.
+	 */
 	@Test public void processAccessResponse() {
 	}
 }

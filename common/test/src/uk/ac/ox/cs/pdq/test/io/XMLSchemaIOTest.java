@@ -27,38 +27,60 @@ import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class XMLSchemaIOTest.
+ */
 public class XMLSchemaIOTest {
 	
+	/** The bool. */
 	AccessMethod 
 		free = new AccessMethod("mt1", Types.FREE, Lists.<Integer>newArrayList()),
 		limited = new AccessMethod("mt2", Types.LIMITED, Lists.newArrayList(1)),
 		bool = new AccessMethod("mt3", Types.BOOLEAN, Lists.newArrayList(1));
+	
+	/** The c. */
 	Attribute 
 		a = new Attribute(String.class, "a"),
 		b = new Attribute(Integer.class, "b"), 
 		c = new Attribute(Double.class, "c");
+	
+	/** The r3. */
 	Relation 
 		r1 = new Relation("r1", Lists.newArrayList(a), Lists.newArrayList(free)) {}, 
 		r2 = new Relation("r2", Lists.newArrayList(a, b), Lists.newArrayList(limited, bool)) {},
 		r3 = new Relation("r3", Lists.newArrayList(a, b, c)) {};
+	
+	/** The s. */
 	Schema s = Schema.builder()
 			.addRelation(r1)
 			.addRelation(r2)
 			.addRelation(r3)
 			.build();
+	
+	/** The c5. */
 	Constraint c1, c2, c3, c4, c5;
+	
+	/** The v3. */
 	View 
 		v1 = new View("v1", Lists.newArrayList(a), Lists.newArrayList(free)) {}, 
 		v2 = new View("v2", Lists.newArrayList(a, b), Lists.newArrayList(limited, bool)) {},
 		v3 = new View("v3", Lists.newArrayList(a, b, c)) {};
 
+	/** The bos. */
 	ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
+	/**
+	 * Setup.
+	 */
 	@Before public void setup() {
 		Utility.assertsEnabled();
 		this.bos = new ByteArrayOutputStream();
 	}
 
+	/**
+	 * Test read write schema relations only.
+	 */
 	@Test
 	public void testReadWriteSchemaRelationsOnly() {
 		SchemaWriter writer = new SchemaWriter();
@@ -75,6 +97,9 @@ public class XMLSchemaIOTest {
 		Assert.assertEquals(s.isCyclic(), observed.isCyclic());
 	}
 
+	/**
+	 * Test read write schema without views.
+	 */
 	@Test
 	public void testReadWriteSchemaWithoutViews() {
 		Predicate atom1 = r1.createAtoms();

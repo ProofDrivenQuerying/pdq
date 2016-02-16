@@ -21,6 +21,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
+// TODO: Auto-generated Javadoc
 /**
  * Instances of unary DAG configurations.
  * They are of the form ApplyRule(R,\vec{b}), where R is an accessibility axiom corresponding to method mt on relation R, 
@@ -37,23 +38,21 @@ import com.google.common.collect.Sets;
  */
 public class ApplyRule extends DAGChaseConfiguration {
 
-	/** An accessibility axiom  */
+	/**  An accessibility axiom. */
 	private final AccessibilityAxiom rule;
 	
 	/** The facts of this configuration. These must share the same constants for the input positions of the accessibility axiom */
 	private final Set<Predicate> facts;
 
-	/** The string representation of this configuration*/
+	/**  The string representation of this configuration. */
 	private String toString;
 	
 	/**
-	 * 
-	 * @param state
-	 * 		The state of this configuration.
-	 * @param rule
-	 * 		Input accessibility axiom
-	 * @param facts
-	 * 		Input facts. These must share the same constants for the input positions of the input accessibility axiom
+	 * Instantiates a new apply rule.
+	 *
+	 * @param state 		The state of this configuration.
+	 * @param rule 		Input accessibility axiom
+	 * @param facts 		Input facts. These must share the same constants for the input positions of the input accessibility axiom
 	 */
 	public ApplyRule(
 			AccessibleChaseState state,
@@ -76,6 +75,8 @@ public class ApplyRule extends DAGChaseConfiguration {
 	}
 
 	/**
+	 * Gets the rule.
+	 *
 	 * @return AccessibilityAxiom
 	 */
 	public AccessibilityAxiom getRule() {
@@ -84,33 +85,38 @@ public class ApplyRule extends DAGChaseConfiguration {
 
 
 	/**
-	 * 
-	 * @return
-	 * 		the facts of this configuration
+	 * Gets the facts.
+	 *
+	 * @return 		the facts of this configuration
 	 */
 	public Collection<Predicate> getFacts() {
 		return this.facts;
 	}
 
 	/**
-	 * 
-	 * @return
-	 * 		the access method
+	 * Gets the binding positions.
+	 *
+	 * @return 		the access method
 	 */
 	public AccessMethod getBindingPositions() {
 		return this.rule.getAccessMethod();
 	}
 
 	/**
-	 * @return 
-	 * 		the relation of this configuration
+	 * Gets the relation.
+	 *
+	 * @return 		the relation of this configuration
 	 */
 	public Relation getRelation() {
 		return this.rule.getBaseRelation();
 	}
 	
 	/**
-	 * Generates the initial chase facts of this configuration
+	 * Generates the initial chase facts of this configuration.
+	 *
+	 * @param chaser the chaser
+	 * @param query the query
+	 * @param accessibleSchema the accessible schema
 	 */
 	public void generate(Chaser chaser, Query<?> query, AccessibleSchema accessibleSchema) {
 		this.getState().generate(accessibleSchema, this.rule, this.facts);
@@ -118,6 +124,8 @@ public class ApplyRule extends DAGChaseConfiguration {
 	}
 	
 	/**
+	 * To string.
+	 *
 	 * @return String
 	 */
 	@Override
@@ -131,6 +139,8 @@ public class ApplyRule extends DAGChaseConfiguration {
 	}
 
 	/**
+	 * Clone.
+	 *
 	 * @return ApplyRule<S>
 	 * @see uk.ac.ox.cs.pdq.reasoning.Configuration#clone()
 	 */
@@ -142,10 +152,16 @@ public class ApplyRule extends DAGChaseConfiguration {
 				Sets.newHashSet(this.facts));
 	}
 	
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.planner.dag.DAGConfiguration#getApplyRules()
+	 */
 	public Collection<ApplyRule> getApplyRules() {
 		return Sets.newHashSet(this);
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.planner.dag.DAGConfiguration#getApplyRulesList()
+	 */
 	public List<ApplyRule> getApplyRulesList() {
 		return Lists.newArrayList(this);
 	}

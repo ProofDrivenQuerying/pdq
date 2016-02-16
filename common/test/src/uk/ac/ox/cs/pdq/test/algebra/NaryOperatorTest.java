@@ -20,33 +20,73 @@ import uk.ac.ox.cs.pdq.util.TupleType;
 
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class NaryOperatorTest.
+ */
 public abstract class NaryOperatorTest extends RelationalOperatorTest {
 	
+	/** The r. */
 	EntityRelation R = new EntityRelation("R");
+	
+	/** The s. */
 	EntityRelation S = new EntityRelation("S");
 
+	/** The child4. */
 	@Mock RelationalOperator child1, child2, child3, child4;
+	
+	/** The output terms1. */
 	List<Term> outputTerms1 = Lists.<Term>newArrayList(new Variable("a"));
+	
+	/** The input terms1. */
 	List<Term> inputTerms1 = Lists.<Term>newArrayList(new Variable("a"));
+	
+	/** The output type1. */
 	TupleType outputType1 = TupleType.DefaultFactory.create(Integer.class);
+	
+	/** The input type1. */
 	TupleType inputType1 = TupleType.DefaultFactory.create(Integer.class);
 	
+	/** The output terms2. */
 	List<Term> outputTerms2 = Lists.<Term>newArrayList(new Variable("a"), new Skolem("b"), new TypedConstant<>("c"));
+	
+	/** The input terms2. */
 	List<Term> inputTerms2 = Lists.<Term>newArrayList();
+	
+	/** The output type2. */
 	TupleType outputType2 = TupleType.DefaultFactory.create(Integer.class, R, String.class);
+	
+	/** The input type2. */
 	TupleType inputType2 = TupleType.EmptyTupleType;
 	
+	/** The output terms3. */
 	List<Term> outputTerms3 = Lists.<Term>newArrayList(new Skolem("b"), new TypedConstant<>("d"));
+	
+	/** The input terms3. */
 	List<Term> inputTerms3 = Lists.<Term>newArrayList(new Skolem("b"));
+	
+	/** The output type3. */
 	TupleType outputType3 = TupleType.DefaultFactory.create(R, String.class);
+	
+	/** The input type3. */
 	TupleType inputType3 = TupleType.DefaultFactory.create(R);
 
+	/** The output terms. */
 	List<Term> outputTerms = Lists.<Term>newArrayList(new Variable("a"), new Variable("a"), new Skolem("b"), new TypedConstant<>("c"), new Skolem("b"), new TypedConstant<>("d"));
+	
+	/** The input terms. */
 	List<Term> inputTerms = Lists.<Term>newArrayList(new Variable("a"), new Skolem("b"));
+	
+	/** The output type. */
 	TupleType outputType = TupleType.DefaultFactory.create(Integer.class, Integer.class, R, String.class, R, String.class);
+	
+	/** The input type. */
 	TupleType inputType = TupleType.DefaultFactory.create(Integer.class, R);
 	
 	
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.test.algebra.RelationalOperatorTest#setup()
+	 */
 	@Before public void setup() throws RelationalOperatorException {
 		super.setup();
         MockitoAnnotations.initMocks(this);
@@ -75,6 +115,11 @@ public abstract class NaryOperatorTest extends RelationalOperatorTest {
 		Mockito.when(child4.deepCopy()).thenReturn(child4);
 	}
 
+	/**
+	 * Gets the depth.
+	 *
+	 * @return the depth
+	 */
 	@Test public void getDepth() {
 		Mockito.when(child1.getDepth()).thenReturn(10);
 		Mockito.when(child2.getDepth()).thenReturn(1000);
@@ -89,6 +134,11 @@ public abstract class NaryOperatorTest extends RelationalOperatorTest {
 		Assert.assertEquals("Operator's depth must be exactly that of deepest child + 1", depth, getOperator().getDepth());
 	}
 
+	/**
+	 * Gets the depth negative.
+	 *
+	 * @return the depth negative
+	 */
 	@Test(expected=AssertionError.class) 
 	public void getDepthNegative() {
 		Mockito.when(child1.getDepth()).thenReturn(10);
@@ -97,11 +147,19 @@ public abstract class NaryOperatorTest extends RelationalOperatorTest {
 		getOperator().getDepth();
 	}
 
+	/**
+	 * Gets the negative column.
+	 *
+	 * @return the negative column
+	 */
 	@Test(expected=IllegalArgumentException.class) 
 	public void getNegativeColumn() {
 		getOperator().getColumn(-1);
 	}
 
+	/**
+	 * Checks if is closed.
+	 */
 	@Test public void isClosed() {
 		Mockito.when(child1.isClosed()).thenReturn(true);
 		Mockito.when(child2.isClosed()).thenReturn(true);
@@ -119,6 +177,9 @@ public abstract class NaryOperatorTest extends RelationalOperatorTest {
 		Assert.assertFalse("Operator isClosed when all its children are", getOperator().isClosed());
 	}
 
+	/**
+	 * Checks if is quasi leaf.
+	 */
 	@Test public void isQuasiLeaf() {
 		Mockito.when(child1.isQuasiLeaf()).thenReturn(true);
 		Mockito.when(child2.isQuasiLeaf()).thenReturn(true);
@@ -136,6 +197,9 @@ public abstract class NaryOperatorTest extends RelationalOperatorTest {
 		Assert.assertFalse("NaryOperator's are never quasi-leaves", getOperator().isQuasiLeaf());
 	}
 
+	/**
+	 * Checks if is left deep.
+	 */
 	@Test public void isLeftDeep() {
 		Mockito.when(child1.isQuasiLeaf()).thenReturn(false); Mockito.when(child1.isLeftDeep()).thenReturn(true);
 		Mockito.when(child2.isQuasiLeaf()).thenReturn(false); Mockito.when(child2.isLeftDeep()).thenReturn(true);
@@ -158,6 +222,9 @@ public abstract class NaryOperatorTest extends RelationalOperatorTest {
 		Assert.assertTrue("NaryOperator's are left-deep if only the left-most child is, or all are quasi-leaves", getOperator().isLeftDeep());
 	}
 
+	/**
+	 * Checks if is right deep.
+	 */
 	@Test public void isRightDeep() {
 		Mockito.when(child1.isQuasiLeaf()).thenReturn(false); Mockito.when(child1.isRightDeep()).thenReturn(true);
 		Mockito.when(child2.isQuasiLeaf()).thenReturn(false); Mockito.when(child2.isRightDeep()).thenReturn(true);

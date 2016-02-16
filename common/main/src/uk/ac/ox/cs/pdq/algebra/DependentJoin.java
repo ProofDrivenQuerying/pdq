@@ -9,8 +9,9 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
 
+// TODO: Auto-generated Javadoc
 /**
- * A dependent join operator
+ * A dependent join operator.
  *
  * @author Efthymia Tsamoura
  * @author Julien Leblay
@@ -21,9 +22,10 @@ public class DependentJoin extends Join {
 	protected final List<Integer> sidewaysInput;
 
 	/**
-	 * Instantiates a new join given the input left and right children
-	 * @param left
-	 * @param right
+	 * Instantiates a new join given the input left and right children.
+	 *
+	 * @param left the left
+	 * @param right the right
 	 */
 	public DependentJoin(RelationalOperator left, RelationalOperator right) {
 		this(Lists.newArrayList(left, right), inferSidewaysInputs(left, right));
@@ -41,9 +43,10 @@ public class DependentJoin extends Join {
 	}
 
 	/**
-	 * Instantiates a new join given the input children
-	 * @param children
-	 * @param sidewaysInput
+	 * Instantiates a new join given the input children.
+	 *
+	 * @param children the children
+	 * @param sidewaysInput the sideways input
 	 */
 	private DependentJoin(List<RelationalOperator> children, List<Integer> sidewaysInput) {
 		super(inferInputTerms(children, sidewaysInput), children);
@@ -54,7 +57,8 @@ public class DependentJoin extends Join {
 
 	/**
 	 * Infer the tuple type of the given collection of children.
-	 * @param children
+	 *
+	 * @param children the children
 	 * @param sidewaysInput List<Integer>
 	 * @return List<Term>
 	 */
@@ -72,6 +76,8 @@ public class DependentJoin extends Join {
 	}
 
 	/**
+	 * Gets the left.
+	 *
 	 * @return LogicalOperator
 	 */
 	public RelationalOperator getLeft() {
@@ -79,6 +85,8 @@ public class DependentJoin extends Join {
 	}
 
 	/**
+	 * Gets the right.
+	 *
 	 * @return LogicalOperator
 	 */
 	public RelationalOperator getRight() {
@@ -87,7 +95,10 @@ public class DependentJoin extends Join {
 
 
 	/**
-	 * @param children
+	 * Infer sideways inputs.
+	 *
+	 * @param left the left
+	 * @param right the right
 	 * @return List<Integer>
 	 */
 	private static List<Integer> inferSidewaysInputs(RelationalOperator left, RelationalOperator right) {
@@ -102,8 +113,9 @@ public class DependentJoin extends Join {
 
 	/**
 	 * Deep copy.
+	 *
 	 * @return a deep copy of the operator.
-	 * @throws RelationalOperatorException
+	 * @throws RelationalOperatorException the relational operator exception
 	 */
 	@Override
 	public DependentJoin deepCopy() throws RelationalOperatorException {
@@ -111,6 +123,8 @@ public class DependentJoin extends Join {
 	}
 
 	/**
+	 * Gets the sideways input.
+	 *
 	 * @return List<Integer>
 	 */
 	public List<Integer> getSidewaysInput() {
@@ -118,6 +132,8 @@ public class DependentJoin extends Join {
 	}
 
 	/**
+	 * Checks for sideways inputs.
+	 *
 	 * @return true if the right child has at least one input coming from the left child.
 	 */
 	public boolean hasSidewaysInputs() {

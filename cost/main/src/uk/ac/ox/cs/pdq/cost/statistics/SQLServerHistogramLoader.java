@@ -18,10 +18,11 @@ import com.google.common.collect.Lists;
 
 import uk.ac.ox.cs.pdq.util.Types;
 
+// TODO: Auto-generated Javadoc
 /**
- * Loads SQL Server 2014 histograms
- * @author Efthymia Tsamoura
+ * Loads SQL Server 2014 histograms.
  *
+ * @author Efthymia Tsamoura
  */
 public class SQLServerHistogramLoader {
 
@@ -29,13 +30,12 @@ public class SQLServerHistogramLoader {
 	private static Logger log = Logger.getLogger(SQLServerHistogramLoader.class);
 
 	/**
-	 * @param type
-	 * 		The type of the histogram values
-	 * @param fileName
-	 * 		Each line should correspond to a buckets. The data in each line should appear in the following orders
+	 * Load.
+	 *
+	 * @param type 		The type of the histogram values
+	 * @param fileName 		Each line should correspond to a buckets. The data in each line should appear in the following orders
 	 * 		RANGE_HI_KEY RANGE_ROWS    EQ_ROWS       DISTINCT_RANGE_ROWS  AVG_RANGE_ROWS 
-	 * @return
-	 * 
+	 * @return the SQL server histogram
 	 */
 	public static SQLServerHistogram load(Type type, String fileName) {
 		String line = null;
@@ -101,6 +101,11 @@ public class SQLServerHistogramLoader {
 		return null;
 	}
 	
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String[] args) {
 
 	}

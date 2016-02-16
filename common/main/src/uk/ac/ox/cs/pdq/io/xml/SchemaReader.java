@@ -22,6 +22,7 @@ import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.builder.SchemaBuilder;
 import uk.ac.ox.cs.pdq.io.ReaderException;
 
+// TODO: Auto-generated Javadoc
 /**
  * Reads schemas from XML.
  * 
@@ -30,10 +31,10 @@ import uk.ac.ox.cs.pdq.io.ReaderException;
  */
 public class SchemaReader extends AbstractXMLReader<Schema> {
 
-	/** The relation reader */
+	/**  The relation reader. */
 	private RelationReader relationReader = null;
 
-	/** The dependency reader */
+	/**  The dependency reader. */
 	private DependencyReader dependencyReader;
 	
 	/** The builder to build and return. */
@@ -67,6 +68,8 @@ public class SchemaReader extends AbstractXMLReader<Schema> {
 	}
 
 	/**
+	 * Read.
+	 *
 	 * @param in InputStream
 	 * @return Schema
 	 * @see uk.ac.ox.cs.pdq.io.Reader#read(InputStream)
@@ -170,6 +173,8 @@ public class SchemaReader extends AbstractXMLReader<Schema> {
 	}
 	
 	/**
+	 * Gets the schema.
+	 *
 	 * @return a instantiation of the builder being in built.
 	 */
 	public Schema getSchema() {

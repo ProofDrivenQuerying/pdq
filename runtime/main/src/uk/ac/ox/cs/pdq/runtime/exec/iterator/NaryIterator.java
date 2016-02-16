@@ -18,6 +18,7 @@ import com.google.common.eventbus.EventBus;
 
 
 
+// TODO: Auto-generated Javadoc
 /**
  * Superclass to all n-ary physical open operator.
  * Factorises the open, close, reset methods and the default constructor.

@@ -11,44 +11,46 @@ import uk.ac.ox.cs.pdq.plan.Plan;
 import com.google.common.base.Preconditions;
 import com.google.common.eventbus.EventBus;
 
+// TODO: Auto-generated Javadoc
 /**
  * Searches for a feasible plan w.r.t. the relations' bindings and the schema dependencies.
  *
  * @author Efthymia Tsamoura
- *
+ * @param <P> the generic type
  */
 public abstract class Explorer<P extends Plan> {
 
+	/** The log. */
 	protected static Logger log = Logger.getLogger(Explorer.class);
 
-	/** The best plan*/
+	/**  The best plan. */
 	protected P bestPlan = null;
 	
-	/** If true then the explorer must terminate immediately */
+	/**  If true then the explorer must terminate immediately. */
 	protected boolean forcedTermination = false;
 
-	/** Exploration time elapsed so far (in nanoseconds) */
+	/**  Exploration time elapsed so far (in nanoseconds). */
 	protected double elapsedTime = 0;
 
-	/** Clock mark to computer the elapsed time */
+	/**  Clock mark to computer the elapsed time. */
 	protected double tick;
 
-	/** Number of iterations*/
+	/**  Number of iterations. */
 	protected int rounds = 0;
 
-	/** Maximum time the explorer could search for a plan (in milliseconds) */
+	/**  Maximum time the explorer could search for a plan (in milliseconds). */
 	protected boolean exceptionOnLimit = false;
 
-	/** Maximum time the explorer could search for a plan (in milliseconds) */
+	/**  Maximum time the explorer could search for a plan (in milliseconds). */
 	protected double maxElapsedTime = Double.POSITIVE_INFINITY;
 
-	/** Maximum number of iterations the explorer could search for a plan */
+	/**  Maximum number of iterations the explorer could search for a plan. */
 	protected double maxRounds = Double.POSITIVE_INFINITY;
 
-	/** Event bus shared across explorer elements */
+	/**  Event bus shared across explorer elements. */
 	protected final EventBus eventBus;
 
-	/** Event bus shared across explorer elements */
+	/**  Event bus shared across explorer elements. */
 	protected final StatisticsCollector stats;
 
 	/**
@@ -65,10 +67,10 @@ public abstract class Explorer<P extends Plan> {
 	/**
 	 * Explores the search space until termination:
 	 * 		 -the maximum elapsed time/the maximum number of iterations has reached or
-	 * 		 -the best plan is found
+	 * 		 -the best plan is found.
 	 *
-	 * @throws PlannerException
-	 * @throws LimitReachedException
+	 * @throws PlannerException the planner exception
+	 * @throws LimitReachedException the limit reached exception
 	 */
 	public void explore() throws PlannerException, LimitReachedException {
 		this.tick = System.nanoTime();
@@ -87,7 +89,7 @@ public abstract class Explorer<P extends Plan> {
 	}
 
 	/**
-	 *
+	 * Update clock.
 	 */
 	public void updateClock() {
 		long tack = System.nanoTime();
@@ -96,8 +98,10 @@ public abstract class Explorer<P extends Plan> {
 	}
 
 	/**
+	 * Check limit reached.
+	 *
 	 * @return true if the time or iteration limit is reached.
-	 * @throws LimitReachedException
+	 * @throws LimitReachedException the limit reached exception
 	 */
 	protected boolean checkLimitReached() throws LimitReachedException {
 		this.updateClock();
@@ -112,6 +116,9 @@ public abstract class Explorer<P extends Plan> {
 		return hasTimedOut || hasReachMaxRounds;
 	}
 
+	/**
+	 * Post.
+	 */
 	protected void post() {
 		this.updateClock();
 		this.eventBus.post(this);
@@ -122,18 +129,23 @@ public abstract class Explorer<P extends Plan> {
 	}
 
 	/**
+	 * Terminates.
+	 *
 	 * @return true if termination is reached. For more details look at specific implementations
 	 */
 	protected abstract boolean terminates();
 
 	/**
 	 * Does the actual exploration. For more details look at specific implementations
-	 * @throws PlannerException
-	 * @throws LimitReachedException
+	 *
+	 * @throws PlannerException the planner exception
+	 * @throws LimitReachedException the limit reached exception
 	 */
 	protected abstract void _explore() throws PlannerException, LimitReachedException ;
 
 	/**
+	 * Gets the best plan.
+	 *
 	 * @return P
 	 */
 	public P getBestPlan() {
@@ -141,6 +153,8 @@ public abstract class Explorer<P extends Plan> {
 	}
 
 	/**
+	 * Sets the max elapsed time.
+	 *
 	 * @param maxElapsedTime double
 	 */
 	public void setMaxElapsedTime(double maxElapsedTime) {
@@ -148,6 +162,8 @@ public abstract class Explorer<P extends Plan> {
 	}
 
 	/**
+	 * Sets the max rounds.
+	 *
 	 * @param maxRounds Double
 	 */
 	public void setMaxRounds(Double maxRounds) {
@@ -155,6 +171,8 @@ public abstract class Explorer<P extends Plan> {
 	}
 
 	/**
+	 * Gets the rounds.
+	 *
 	 * @return int
 	 */
 	public int getRounds() {
@@ -162,6 +180,8 @@ public abstract class Explorer<P extends Plan> {
 	}
 
 	/**
+	 * Sets the exception on limit.
+	 *
 	 * @param exceptionOnLimit Boolean
 	 */
 	public void setExceptionOnLimit(Boolean exceptionOnLimit) {
@@ -169,6 +189,8 @@ public abstract class Explorer<P extends Plan> {
 	}
 
 	/**
+	 * Gets the exception on limit.
+	 *
 	 * @return boolean
 	 */
 	public boolean getExceptionOnLimit() {
@@ -176,6 +198,8 @@ public abstract class Explorer<P extends Plan> {
 	}
 
 	/**
+	 * Gets the elapsed time.
+	 *
 	 * @return double
 	 */
 	public double getElapsedTime() {

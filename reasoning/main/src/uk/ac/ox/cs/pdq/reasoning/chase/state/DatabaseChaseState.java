@@ -12,6 +12,7 @@ import uk.ac.ox.cs.pdq.reasoning.utility.Match;
 
 import com.google.common.base.Preconditions;
 
+// TODO: Auto-generated Javadoc
 /**
  *
  * A collection of facts produced during chasing.
@@ -24,7 +25,7 @@ import com.google.common.base.Preconditions;
  */
 public abstract class DatabaseChaseState implements ChaseState {
 
-	/** Queries and updates the database of facts **/
+	/**  Queries and updates the database of facts *. */
 	protected DBHomomorphismManager manager;
 
 	/**
@@ -38,6 +39,8 @@ public abstract class DatabaseChaseState implements ChaseState {
 	}
 
 	/**
+	 * Gets the manager.
+	 *
 	 * @return DBHomomorphismManager
 	 */
 	public DBHomomorphismManager getManager() {
@@ -45,6 +48,8 @@ public abstract class DatabaseChaseState implements ChaseState {
 	}
 
 	/**
+	 * Sets the manager.
+	 *
 	 * @param manager DBHomomorphismManager
 	 */
 	public void setManager(DBHomomorphismManager manager) {
@@ -70,7 +75,9 @@ public abstract class DatabaseChaseState implements ChaseState {
 	/**
 	 * Calls the manager to detect homomorphisms of the input query to facts in this state.
 	 * The manager detects homomorphisms using a database backend.
+	 *
 	 * @param query Query
+	 * @param constraints the constraints
 	 * @return List<Match>
 	 * @see uk.ac.ox.cs.pdq.chase.state.ChaseState#getMatches(Query)
 	 */
@@ -115,6 +122,8 @@ public abstract class DatabaseChaseState implements ChaseState {
 	}
 
 	/**
+	 * Clone.
+	 *
 	 * @return DatabaseChaseState
 	 * @see uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState#clone()
 	 */

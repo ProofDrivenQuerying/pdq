@@ -22,19 +22,36 @@ import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.util.Types;
 
+// TODO: Auto-generated Javadoc
 /**
+ * The Class ConjunctiveQueryBodyBuilder.
+ *
  * @author Gonzalo Diaz
  */
 public class ConjunctiveQueryBodyBuilder {
+	
+	/** The log. */
 	private static Logger log = Logger.getLogger(ConjunctiveQueryBodyBuilder.class);
 
+	/** The alias to predicate formulas. */
 	private Map<String, Predicate> aliasToPredicateFormulas = new HashMap<>();
 
+	/** The schema. */
 	private Schema              schema;
+	
+	/** The alias to relations. */
 	private Map<String, String> aliasToRelations;
+	
+	/** The result predicate. */
 	private Predicate    resultPredicate;
+	
+	/** The q name. */
 	private String              qName;
+	
+	/** The conj query. */
 	private ConjunctiveQuery    conjQuery; 
+	
+	/** The returns all vars. */
 	private boolean             returnsAllVars;
 	
 
@@ -81,9 +98,11 @@ public class ConjunctiveQueryBodyBuilder {
 	}
 
 	/**
+	 * Adds the constraint.
+	 *
 	 * @param left ConstraintTerm
 	 * @param right ConstraintTerm
-	 * @throws Exception
+	 * @throws Exception the exception
 	 */
 	public void addConstraint(ConstraintTerm left, ConstraintTerm right) throws Exception {
 
@@ -113,9 +132,11 @@ public class ConjunctiveQueryBodyBuilder {
 	}
 
 	/**
+	 * _add constraint.
+	 *
 	 * @param leftConst ConstantConstraintTerm
 	 * @param rightAliasAttr AliasAttrConstraintTerm
-	 * @throws Exception
+	 * @throws Exception the exception
 	 */
 	private void _addConstraint(ConstantConstraintTerm leftConst, AliasAttrConstraintTerm rightAliasAttr) throws Exception {
 
@@ -147,9 +168,11 @@ public class ConjunctiveQueryBodyBuilder {
 	}
 
 	/**
+	 * _add constraint.
+	 *
 	 * @param leftAliasAttr AliasAttrConstraintTerm
 	 * @param rightAliasAttr AliasAttrConstraintTerm
-	 * @throws Exception
+	 * @throws Exception the exception
 	 */
 	private void _addConstraint(AliasAttrConstraintTerm leftAliasAttr, AliasAttrConstraintTerm rightAliasAttr) throws Exception {
 
@@ -211,8 +234,8 @@ public class ConjunctiveQueryBodyBuilder {
 	}
 
 	/**
-	 * Replace a term for a constant in all predicates
-	 * 
+	 * Replace a term for a constant in all predicates.
+	 *
 	 * @param oldTerm Term
 	 * @param newTerm Term
 	 */
@@ -241,6 +264,9 @@ public class ConjunctiveQueryBodyBuilder {
 
 	}
 	
+	/**
+	 * Return all vars.
+	 */
 	public void returnAllVars() {
 		this.returnsAllVars = true;
 		
@@ -256,6 +282,8 @@ public class ConjunctiveQueryBodyBuilder {
 	}
 	
 	/**
+	 * Adds the result column.
+	 *
 	 * @param aliasName String
 	 * @param attrName String
 	 */
@@ -289,6 +317,8 @@ public class ConjunctiveQueryBodyBuilder {
 	}
 	
 	/**
+	 * _find term.
+	 *
 	 * @param aliasName String
 	 * @param attrName String
 	 * @return Term
@@ -302,6 +332,8 @@ public class ConjunctiveQueryBodyBuilder {
 	}
 		
 	/**
+	 * To conjunctive query.
+	 *
 	 * @return ConjunctiveQuery
 	 */
 	public ConjunctiveQuery toConjunctiveQuery() {
@@ -312,6 +344,8 @@ public class ConjunctiveQueryBodyBuilder {
 	}
 
 	/**
+	 * To string.
+	 *
 	 * @return String
 	 */
 	@Override
@@ -329,22 +363,31 @@ public class ConjunctiveQueryBodyBuilder {
 
 
 	/**
+	 * The Class ConstraintTerm.
 	 */
 	public static abstract class ConstraintTerm {
+		
 		/**
+		 * Checks if is constant.
+		 *
 		 * @return boolean
 		 */
 		public abstract boolean isConstant();
 
 		/**
+		 * Checks if is alias attr.
+		 *
 		 * @return boolean
 		 */
 		public abstract boolean isAliasAttr();
 	}
 
 	/**
+	 * The Class ConstantConstraintTerm.
 	 */
 	public static class ConstantConstraintTerm extends ConstraintTerm {
+		
+		/** The constant. */
 		private final String constant;
 		/**
 		 * Constructor for ConstantConstraintTerm.
@@ -353,26 +396,40 @@ public class ConjunctiveQueryBodyBuilder {
 		public ConstantConstraintTerm(String constant) {
 			this.constant = constant;
 		}
+		
 		/**
+		 * Gets the constant.
+		 *
 		 * @return String
 		 */
 		public String getConstant() {
 			return this.constant;
 		}
+		
 		/**
+		 * Checks if is constant.
+		 *
 		 * @return boolean
 		 */
 		@Override public boolean isConstant() { return true; }
+		
 		/**
+		 * Checks if is alias attr.
+		 *
 		 * @return boolean
 		 */
 		@Override public boolean isAliasAttr() { return false; }
 	}
 
 	/**
+	 * The Class AliasAttrConstraintTerm.
 	 */
 	public static class AliasAttrConstraintTerm extends ConstraintTerm {
+		
+		/** The alias. */
 		private final String alias;
+		
+		/** The attr. */
 		private final String attr;
 		/**
 		 * Constructor for AliasAttrConstraintTerm.
@@ -383,19 +440,28 @@ public class ConjunctiveQueryBodyBuilder {
 			this.alias = aliasName;
 			this.attr = attrName;
 		}
+		
 		/**
+		 * Gets the alias.
+		 *
 		 * @return String
 		 */
 		public String getAlias() {
 			return this.alias;
 		}
+		
 		/**
+		 * Gets the attr.
+		 *
 		 * @return String
 		 */
 		public String getAttr() {
 			return this.attr;
 		}
+		
 		/**
+		 * Checks if is constant.
+		 *
 		 * @return boolean
 		 */
 		@Override public boolean isConstant() { return false; }

@@ -29,6 +29,7 @@ import com.google.common.collect.Lists;
 import com.google.common.eventbus.EventBus;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * Explores the linear space of configurations. 
  * The configurations that are explored are stored in a tree and each configuration maps to a plan. 
@@ -45,28 +46,28 @@ import com.google.common.eventbus.EventBus;
  */
 public abstract class LinearExplorer extends Explorer<LeftDeepPlan> {
 
-	/** The input user query **/
+	/**  The input user query *. */
 	protected final Query<?> query;
 	
-	/** The accessible counterpart of the user query **/
+	/**  The accessible counterpart of the user query *. */
 	protected final Query<?> accessibleQuery;
 
-	/** The input schema **/
+	/**  The input schema *. */
 	protected final Schema schema;
 	
-	/** The accessible counterpart of the input schema **/
+	/**  The accessible counterpart of the input schema *. */
 	protected final AccessibleSchema accessibleSchema;
 
-	/** Runs the chase algorithm **/
+	/**  Runs the chase algorithm *. */
 	protected final Chaser chaser;
 
-	/** Detects homomorphisms during chasing**/
+	/**  Detects homomorphisms during chasing*. */
 	protected final HomomorphismDetector detector;
 
-	/** Estimates the cost of a plan **/
+	/**  Estimates the cost of a plan *. */
 	protected final CostEstimator<LeftDeepPlan> costEstimator;
 
-	/** Creates new nodes */
+	/**  Creates new nodes. */
 	private final NodeFactory nodeFactory;
 
 	/**
@@ -77,33 +78,27 @@ public abstract class LinearExplorer extends Explorer<LeftDeepPlan> {
 	 */
 	protected final PlanTree<SearchNode> planTree = new PlanTree<>(DefaultEdge.class);
 
-	/** Maximum exploration depth  */
+	/**  Maximum exploration depth. */
 	protected final int depth;
 	
+	/** The best configurations list. */
 	protected List<LinearChaseConfiguration> bestConfigurationsList;
 
 	/**
-	 * 
-	 * @param eventBus
-	 * @param collectStats
-	 * @param query
-	 * 		The input user query
-	 * @param accessibleQuery
-	 * 		The accessible counterpart of the user query
-	 * @param schema
-	 * 		The input schema
-	 * @param accessibleSchema
-	 * 		The accessible counterpart of the input schema
-	 * @param chaser
-	 * 		Runs the chase algorithm
-	 * @param detector
-	 * 		Detects homomorphisms during chasing
-	 * @param costEstimator
-	 * 		Estimates the cost of a plan
-	 * @param nodeFactory
-	 * @param depth
-	 * 		Maximum exploration depth
-	 * @throws PlannerException
+	 * Instantiates a new linear explorer.
+	 *
+	 * @param eventBus the event bus
+	 * @param collectStats the collect stats
+	 * @param query 		The input user query
+	 * @param accessibleQuery 		The accessible counterpart of the user query
+	 * @param schema 		The input schema
+	 * @param accessibleSchema 		The accessible counterpart of the input schema
+	 * @param chaser 		Runs the chase algorithm
+	 * @param detector 		Detects homomorphisms during chasing
+	 * @param costEstimator 		Estimates the cost of a plan
+	 * @param nodeFactory the node factory
+	 * @param depth 		Maximum exploration depth
+	 * @throws PlannerException the planner exception
 	 */
 	public LinearExplorer(EventBus eventBus, 
 			boolean collectStats,
@@ -140,8 +135,9 @@ public abstract class LinearExplorer extends Explorer<LeftDeepPlan> {
 	}
 
 	/**
-	 * Initialises the plan tree
-	 * @throws PlannerException
+	 * Initialises the plan tree.
+	 *
+	 * @throws PlannerException the planner exception
 	 */
 	private void initialise() throws PlannerException {
 		AccessibleChaseState state = null;
@@ -164,7 +160,8 @@ public abstract class LinearExplorer extends Explorer<LeftDeepPlan> {
 
 	/**
 	 * Returns true if there does not exist at least one ongoing node (a node that has at least one unexplored candidate)
-	 * or there does not exist at least one node with depth lower than the input depth-threshold
+	 * or there does not exist at least one node with depth lower than the input depth-threshold.
+	 *
 	 * @return boolean
 	 */
 	@Override
@@ -185,6 +182,8 @@ public abstract class LinearExplorer extends Explorer<LeftDeepPlan> {
 
 
 	/**
+	 * Choose node.
+	 *
 	 * @return a vertex in the plan tree that has status ONGOING and has maximal Id (this corresponds to exploring the nodes in DFS order)
 	 */
 	protected SearchNode chooseNode() {
@@ -200,18 +199,19 @@ public abstract class LinearExplorer extends Explorer<LeftDeepPlan> {
 	}
 
 	/**
-	 * 
-	 * @return
+	 * Gets the node factory.
+	 *
+	 * @return the node factory
 	 */
 	public NodeFactory getNodeFactory() {
 		return this.nodeFactory;
 	}
 	
 	/**
-	 * 
-	 * @param path
-	 * @return
-	 * 		the configuration of each node in the input path.
+	 * Gets the configurations.
+	 *
+	 * @param path the path
+	 * @return 		the configuration of each node in the input path.
 	 * 		The nodes are indexed using their ids.
 	 */
 	protected List<LinearChaseConfiguration> getConfigurations(List<Integer> path) {
@@ -225,6 +225,11 @@ public abstract class LinearExplorer extends Explorer<LeftDeepPlan> {
 		return configurations;
 	}
 	
+	/**
+	 * Gets the best configurations list.
+	 *
+	 * @return the best configurations list
+	 */
 	public List<LinearChaseConfiguration> getBestConfigurationsList() {
 		return this.bestConfigurationsList;
 	}

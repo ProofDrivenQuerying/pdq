@@ -19,19 +19,27 @@ import uk.ac.ox.cs.pdq.plan.Plan;
 
 import com.google.common.eventbus.EventBus;
 
+// TODO: Auto-generated Javadoc
 /**
- * Tests the WhiteBox cost estimator
- * @author Efthymia Tsamoura
+ * Tests the WhiteBox cost estimator.
  *
+ * @author Efthymia Tsamoura
  */
 public class TotalERSPICostEstimatorTest extends CostEstimatorTest{
 
+	/** The event bus. */
 	private EventBus eventBus = new EventBus();
 	
+	/** The shema path. */
 	private static String SHEMA_PATH = "test/cost/";
+	
+	/** The plan path. */
 	private static String PLAN_PATH = "test/cost/erspi/";
+	
+	/** The catalog. */
 	private static String CATALOG = "test/cost/erspi/catalog/catalog.properties";
 	
+	/** The schemata. */
 	String[] schemata = {
 			"schema_bio.xml",
 			"schema_bio.xml",
@@ -45,6 +53,7 @@ public class TotalERSPICostEstimatorTest extends CostEstimatorTest{
 			"schema_bio.xml",
 			};
 	
+	/** The plans. */
 	String[] plans = {
 			"plan_bio_1.xml",
 			"plan_bio_2.xml",
@@ -57,18 +66,36 @@ public class TotalERSPICostEstimatorTest extends CostEstimatorTest{
 			"plan_bio_9.xml",
 			"plan_bio_10.xml",
 			};
+	
+	/** The canonical names. */
 	boolean canonicalNames = true;
+	
+	/** The driver. */
 	String driver = null;
+	
+	/** The url. */
 	String url = "jdbc:mysql://localhost/";
+	
+	/** The database. */
 	String database = "pdq_chase";
+	
+	/** The username. */
 	String username = "root";
+	
+	/** The password. */
 	String password ="root";
 
+	/**
+	 * Prepare.
+	 */
 	@Before
 	public void prepare() {
 
 	}
 
+	/**
+	 * Test.
+	 */
 	@Test
 	public void test() {
 

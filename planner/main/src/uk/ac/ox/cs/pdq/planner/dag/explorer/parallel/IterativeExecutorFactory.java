@@ -11,6 +11,7 @@ import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominance;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
 
+// TODO: Auto-generated Javadoc
 /**
  * Creates IterativeExecutor objects.
  * An IterativeExecutor object provides methods to create binary configurations or to
@@ -21,21 +22,18 @@ import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
 public class IterativeExecutorFactory {
 
 	/**
-	 * 
-	 * @param executorType
-	 * @param parallelThreads
-	 * @param chaser
-	 * 		Runs the chase algorithm
-	 * @param detector
-	 * 		Detects homomorphisms during chasing
-	 * @param estimator
-	 * 		Estimates the cost of a plan
-	 * @param successDominance
-	 * 		Removes success dominated configurations
-	 * @param validators
-	 * 		Validates pairs of configurations to be composed
-	 * @return
-	 * @throws Exception
+	 * Creates a new IterativeExecutor object.
+	 *
+	 * @param executorType the executor type
+	 * @param parallelThreads the parallel threads
+	 * @param chaser 		Runs the chase algorithm
+	 * @param detector 		Detects homomorphisms during chasing
+	 * @param estimator 		Estimates the cost of a plan
+	 * @param successDominance 		Removes success dominated configurations
+	 * @param dominance the dominance
+	 * @param validators 		Validates pairs of configurations to be composed
+	 * @return the iterative executor
+	 * @throws Exception the exception
 	 */
 	public static IterativeExecutor createIterativeExecutor (
 			IterativeExecutorTypes executorType,

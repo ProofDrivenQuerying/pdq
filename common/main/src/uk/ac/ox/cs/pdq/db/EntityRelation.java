@@ -8,6 +8,7 @@ import uk.ac.ox.cs.pdq.util.TupleType;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
 //Efi: This class seems strange to me.
 //Consider deleting
 /**
@@ -16,13 +17,16 @@ import com.google.common.collect.Lists;
  */
 public class EntityRelation extends Relation implements DataType {
 
+	/** The attribute. */
 	private final Attribute attribute;
+	
+	/** The attributes. */
 	private final List<Attribute> attributes;
 	
 	/**
 	 * Construction for an inaccessible entity relation.
-	 * @param name
-	 * @param am
+	 *
+	 * @param name the name
 	 */
 	public EntityRelation(String name) {
 		super(name, Lists.<Attribute>newArrayList(new Attribute(EntityRelation.class, "_")),
@@ -34,8 +38,9 @@ public class EntityRelation extends Relation implements DataType {
 
 	/**
 	 * Constructor for an accessible rentity relation.
-	 * @param name
-	 * @param am
+	 *
+	 * @param name the name
+	 * @param am the am
 	 */
 	public EntityRelation(String name, Types am) {
 		super(name, Lists.<Attribute>newArrayList(new Attribute(EntityRelation.class, "_")),
@@ -47,11 +52,17 @@ public class EntityRelation extends Relation implements DataType {
 		this.attributes = ImmutableList.of(this.attribute);
 	}
 	
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.db.Relation#getAttributes()
+	 */
 	@Override
 	public List<Attribute> getAttributes() {
 		return this.attributes;
 	}
 	
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.db.Relation#getAttribute(int)
+	 */
 	@Override
 	public Attribute getAttribute(int i) {
 		return this.attributes.get(i);
@@ -75,12 +86,17 @@ public class EntityRelation extends Relation implements DataType {
 	}
 
 	/**
+	 * Gets the type.
+	 *
 	 * @return the entity relation's type, i.e. the current instance.
 	 */
 	public TupleType getType() {
 		return TupleType.DefaultFactory.create(this);
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.db.DataType#isAssignableFrom(java.lang.Object)
+	 */
 	@Override
 	public boolean isAssignableFrom(Object o) {
 		if (o == null) {

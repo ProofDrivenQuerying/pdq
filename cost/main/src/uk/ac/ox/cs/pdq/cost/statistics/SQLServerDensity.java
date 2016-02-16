@@ -8,6 +8,7 @@ import uk.ac.ox.cs.pdq.db.Attribute;
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 
+// TODO: Auto-generated Javadoc
 /**
  * Density vectors for SQL Server 2014.
  * For more details see https://msdn.microsoft.com/en-gb/library/ms174384.aspx 
@@ -37,10 +38,20 @@ public class SQLServerDensity {
 		this.density = density;
 	}
 
+	/**
+	 * Gets the attributes.
+	 *
+	 * @return the attributes
+	 */
 	public List<Attribute> getAttributes() {
 		return this.attributes;
 	}
 
+	/**
+	 * Gets the density.
+	 *
+	 * @return the density
+	 */
 	public double getDensity() {
 		return this.density;
 	}
@@ -54,6 +65,8 @@ public class SQLServerDensity {
 	}
 
 	/**
+	 * Equals.
+	 *
 	 * @param o Object
 	 * @return boolean
 	 */
@@ -68,6 +81,8 @@ public class SQLServerDensity {
 	}
 
 	/**
+	 * Hash code.
+	 *
 	 * @return int
 	 */
 	@Override

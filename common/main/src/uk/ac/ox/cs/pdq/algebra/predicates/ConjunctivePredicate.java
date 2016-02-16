@@ -10,26 +10,29 @@ import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
 /**
  * Evaluates a Collection of predicates conjunctively, i.e. all the underlying
  * predicates must be satisfied for this predicate to be satisfied.
  *
  * @author Julien Leblay
+ * @param <T> the generic type
  */
 public class ConjunctivePredicate<T extends Predicate> implements Predicate, Iterable<T> {
 
-	/** The value to which the tuple must be equals at the given position */
+	/**  The value to which the tuple must be equals at the given position. */
 	private final Collection<T> predicates;
 
 	/**
-	 * Default constructor
+	 * Default constructor.
 	 */
 	public ConjunctivePredicate() {
 		this.predicates = Lists.<T>newArrayList();
 	}
 
 	/**
-	 * Default constructor
+	 * Default constructor.
+	 *
 	 * @param predicate T
 	 */
 	public ConjunctivePredicate(T predicate) {
@@ -38,8 +41,9 @@ public class ConjunctivePredicate<T extends Predicate> implements Predicate, Ite
 	}
 
 	/**
-	 * Default constructor
-	 * @param predicates
+	 * Default constructor.
+	 *
+	 * @param predicates the predicates
 	 */
 	public ConjunctivePredicate(Collection<T> predicates) {
 		this();
@@ -50,6 +54,8 @@ public class ConjunctivePredicate<T extends Predicate> implements Predicate, Ite
 	}
 
 	/**
+	 * Size.
+	 *
 	 * @return the number of predicates in the conjunction
 	 */
 	public int size() {
@@ -57,6 +63,8 @@ public class ConjunctivePredicate<T extends Predicate> implements Predicate, Ite
 	}
 
 	/**
+	 * Checks if is empty.
+	 *
 	 * @return true if the predicate is empty
 	 */
 	public boolean isEmpty() {
@@ -64,8 +72,9 @@ public class ConjunctivePredicate<T extends Predicate> implements Predicate, Ite
 	}
 
 	/**
-	 * Adds the given predicate to the conjunction
-	 * @param p
+	 * Adds the given predicate to the conjunction.
+	 *
+	 * @param p the p
 	 */
 	public void addPredicate(T p) {
 		Preconditions.checkArgument(p != null);
@@ -87,7 +96,8 @@ public class ConjunctivePredicate<T extends Predicate> implements Predicate, Ite
 	}
 	
 	/**
-	 * @param predicate the (possibly nested) predicate to flatten, if null the empty collection is returned.
+	 * Flatten.
+	 *
 	 * @return a collection of predicate remove the nesting of conjunction that
 	 * it may contain.
 	 */
@@ -96,6 +106,8 @@ public class ConjunctivePredicate<T extends Predicate> implements Predicate, Ite
 	}
 	
 	/**
+	 * Flatten.
+	 *
 	 * @param predicate the (possibly nested) predicate to flatten, if null the empty collection is returned.
 	 * @return a collection of predicate remove the nesting of conjunction that
 	 * it may contain.

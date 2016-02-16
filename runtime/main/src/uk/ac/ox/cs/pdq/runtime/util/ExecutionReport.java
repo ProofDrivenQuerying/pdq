@@ -10,6 +10,7 @@ import uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator;
 import com.google.common.eventbus.Subscribe;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * Prints a report of a physical operator tree usage.
  * 

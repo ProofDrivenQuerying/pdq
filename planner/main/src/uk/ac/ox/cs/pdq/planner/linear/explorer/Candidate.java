@@ -18,6 +18,7 @@ import uk.ac.ox.cs.pdq.reasoning.utility.Match;
 import com.google.common.collect.Lists;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * Informally, a fact is candidate for exposure if all its input chase constants are already accessible. 
  * The formal definition of candidate facts is given below:
@@ -33,22 +34,22 @@ public class Candidate implements Cloneable{
 	 *  e.g., the grounding of its variables to constants */
 	private final Match match;
 
-	/** The accessible counterpart of the input schema **/
+	/**  The accessible counterpart of the input schema *. */
 	private final AccessibleSchema accessibleSchema;
 
-	/** The axiom that will be fired given this candidate fact**/
+	/**  The axiom that will be fired given this candidate fact*. */
 	private final AccessibilityAxiom rule;
 
-	/** The fact itself*/
+	/**  The fact itself. */
 	private final Predicate fact;
 
-	/** Input constants */
+	/**  Input constants. */
 	private final List<Constant> input;
 
-	/** Output constants */
+	/**  Output constants. */
 	private final List<Constant> output;
 
-	/** Proper output constants */
+	/**  Proper output constants. */
 	private final List<Constant> properOutput;
 
 
@@ -75,6 +76,8 @@ public class Candidate implements Cloneable{
 	}
 
 	/**
+	 * Gets the input.
+	 *
 	 * @return List<Constant>
 	 */
 	public List<Constant> getInput() {
@@ -82,6 +85,8 @@ public class Candidate implements Cloneable{
 	}
 
 	/**
+	 * Gets the output.
+	 *
 	 * @return Collection<Constant>
 	 */
 	public Collection<Constant> getOutput() {
@@ -89,6 +94,8 @@ public class Candidate implements Cloneable{
 	}
 
 	/**
+	 * Gets the proper output.
+	 *
 	 * @return Collection<Constant>
 	 */
 	public Collection<Constant> getProperOutput() {
@@ -96,6 +103,8 @@ public class Candidate implements Cloneable{
 	}
 
 	/**
+	 * Gets the fact.
+	 *
 	 * @return PredicateFormula
 	 */
 	public Predicate getFact() {
@@ -103,6 +112,8 @@ public class Candidate implements Cloneable{
 	}
 
 	/**
+	 * Gets the rule.
+	 *
 	 * @return AccessibilityAxiom
 	 */
 	public AccessibilityAxiom getRule() {
@@ -110,6 +121,8 @@ public class Candidate implements Cloneable{
 	}
 
 	/**
+	 * Gets the output chase constants.
+	 *
 	 * @return the constants in the output positions of the fact
 	 */
 	public LinkedHashMap<Integer, Term> getOutputChaseConstants() {
@@ -125,6 +138,8 @@ public class Candidate implements Cloneable{
 	}
 
 	/**
+	 * Gets the match.
+	 *
 	 * @return Matching
 	 */
 	public Match getMatch() {
@@ -132,6 +147,8 @@ public class Candidate implements Cloneable{
 	}
 
 	/**
+	 * Gets the inferred accessible fact.
+	 *
 	 * @return the inferred accessible counterpart of the fact
 	 */
 	public Predicate getInferredAccessibleFact() {
@@ -141,6 +158,8 @@ public class Candidate implements Cloneable{
 	}
 
 	/**
+	 * Gets the relation.
+	 *
 	 * @return Relation
 	 */
 	public Relation getRelation() {
@@ -148,6 +167,8 @@ public class Candidate implements Cloneable{
 	}
 
 	/**
+	 * Gets the access method.
+	 *
 	 * @return AccessMethod
 	 */
 	public AccessMethod getAccessMethod() {
@@ -155,6 +176,8 @@ public class Candidate implements Cloneable{
 	}
 
 	/**
+	 * Equals.
+	 *
 	 * @param o Object
 	 * @return boolean
 	 */
@@ -172,6 +195,8 @@ public class Candidate implements Cloneable{
 	}
 
 	/**
+	 * Hash code.
+	 *
 	 * @return int
 	 */
 	@Override
@@ -180,6 +205,8 @@ public class Candidate implements Cloneable{
 	}
 
 	/**
+	 * To string.
+	 *
 	 * @return String
 	 */
 	@Override
@@ -193,6 +220,8 @@ public class Candidate implements Cloneable{
 	}
 
 	/**
+	 * Clone.
+	 *
 	 * @return Candidate
 	 */
 	@Override

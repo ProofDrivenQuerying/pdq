@@ -10,6 +10,7 @@ import uk.ac.ox.cs.pdq.algebra.predicates.ConstantEqualityPredicate;
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 
+// TODO: Auto-generated Javadoc
 /**
  * Histograms for SQL Server 2014.
  * @author Efthymia Tsamoura
@@ -22,23 +23,29 @@ public class SQLServerHistogram implements Histogram{
 	
 	
 	/**
-	 * Constructs histograms given the input buckets 
-	 * @param buckets
+	 * Constructs histograms given the input buckets .
+	 *
+	 * @param buckets the buckets
 	 */
 	public SQLServerHistogram(List<SQLServerBucket> buckets) {
 		Preconditions.checkArgument(buckets != null && !buckets.isEmpty() );
 		this.buckets = buckets;
 	}
 
+	/**
+	 * Gets the buckets.
+	 *
+	 * @return the buckets
+	 */
 	public List<SQLServerBucket> getBuckets() {
 		return this.buckets;
 	}
 	
 	/**
-	 * 
-	 * @param bucketIndex
-	 * @return
-	 * 		the buckets at the bucketIndex-th position of the histogram
+	 * Gets the bucket.
+	 *
+	 * @param bucketIndex the bucket index
+	 * @return 		the buckets at the bucketIndex-th position of the histogram
 	 */
 	public SQLServerBucket getBucket(int bucketIndex) {
 		Preconditions.checkArgument(this.buckets.size() > bucketIndex);
@@ -46,10 +53,10 @@ public class SQLServerHistogram implements Histogram{
 	}
 	
 	/**
-	 * 
-	 * @param predicate
-	 * @return
-	 * 		the number of database tuples that satisfy the input constant equality predicate
+	 * Gets the rows.
+	 *
+	 * @param predicate the predicate
+	 * @return 		the number of database tuples that satisfy the input constant equality predicate
 	 */
 	public BigInteger getRows(ConstantEqualityPredicate predicate) {
 		throw new java.lang.UnsupportedOperationException();
@@ -57,10 +64,10 @@ public class SQLServerHistogram implements Histogram{
 	
 	
 	/**
-	 * 
-	 * @param predicate
-	 * @return
-	 * 		the number of database tuples that satisfy the input attribute equality predicate
+	 * Gets the rows.
+	 *
+	 * @param predicate the predicate
+	 * @return 		the number of database tuples that satisfy the input attribute equality predicate
 	 */
 	public BigInteger getRows(AttributeEqualityPredicate predicate) {
 		throw new java.lang.UnsupportedOperationException();
@@ -76,6 +83,8 @@ public class SQLServerHistogram implements Histogram{
 	}
 
 	/**
+	 * Equals.
+	 *
 	 * @param o Object
 	 * @return boolean
 	 */
@@ -89,6 +98,8 @@ public class SQLServerHistogram implements Histogram{
 	}
 
 	/**
+	 * Hash code.
+	 *
 	 * @return int
 	 */
 	@Override

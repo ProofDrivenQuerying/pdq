@@ -4,6 +4,7 @@ import static uk.ac.ox.cs.pdq.test.acceptance.AcceptanceCriterion.AcceptanceLeve
 import static uk.ac.ox.cs.pdq.test.acceptance.AcceptanceCriterion.AcceptanceLevels.PASS;
 import uk.ac.ox.cs.pdq.util.Result;
 
+// TODO: Auto-generated Javadoc
 /**
  * Acceptance test request the expected and observed results to be equivalent
  * under set semantics.
@@ -13,6 +14,8 @@ import uk.ac.ox.cs.pdq.util.Result;
 public class ExpectedCardinalityAcceptanceCheck implements AcceptanceCriterion<Integer, Result> {
 
 	/**
+	 * Check.
+	 *
 	 * @param expected Integer
 	 * @param observed Result
 	 * @return AcceptanceResult

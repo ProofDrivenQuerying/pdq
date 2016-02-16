@@ -25,11 +25,11 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
+// TODO: Auto-generated Javadoc
 /**
- * Writes a concise representation of a query to the given output
- * 
- * @author Julien Leblay
+ * Writes a concise representation of a query to the given output.
  *
+ * @author Julien Leblay
  */
 public class ExtendedPrettyProofWriter extends PrettyWriter<Proof> implements Writer<Proof> {
 
@@ -39,10 +39,12 @@ public class ExtendedPrettyProofWriter extends PrettyWriter<Proof> implements Wr
 	 */
 	private PrintStream out;
 	
+	/** The acc schema. */
 	private final AccessibleSchema accSchema;
 
 	/**
-	 * 
+	 * Instantiates a new extended pretty proof writer.
+	 *
 	 * @param out the default output
 	 * @param accSchema AccessibleSchema
 	 */
@@ -53,7 +55,8 @@ public class ExtendedPrettyProofWriter extends PrettyWriter<Proof> implements Wr
 	
 	/**
 	 * Fluent pretty writer provider.
-	 * @param out
+	 *
+	 * @param out the out
 	 * @param accSchema AccessibleSchema
 	 * @return a new PrettyQueryWriter with the given default output.
 	 */
@@ -62,6 +65,8 @@ public class ExtendedPrettyProofWriter extends PrettyWriter<Proof> implements Wr
 	}
 	
 	/**
+	 * Write.
+	 *
 	 * @param out PrintStream
 	 * @param p Proof
 	 */
@@ -86,6 +91,8 @@ public class ExtendedPrettyProofWriter extends PrettyWriter<Proof> implements Wr
 	}
 	
 	/**
+	 * Trace back.
+	 *
 	 * @param proof Proof
 	 * @param target Iterable<? extends PredicateFormula>
 	 * @return String
@@ -117,6 +124,8 @@ public class ExtendedPrettyProofWriter extends PrettyWriter<Proof> implements Wr
 	 * @see uk.ac.ox.cs.pdq.builder.io.PrettyWriter#write(java.lang.Object)
 	 */
 	/**
+	 * Write.
+	 *
 	 * @param q Proof
 	 */
 	@Override

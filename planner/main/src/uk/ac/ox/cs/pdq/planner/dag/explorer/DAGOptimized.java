@@ -31,6 +31,7 @@ import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
 import com.google.common.base.Preconditions;
 import com.google.common.eventbus.EventBus;
 
+// TODO: Auto-generated Javadoc
 /**
  * Very chase friendly dynamic programming dag explorer. It performs parallel chasing and
  * (success-)dominance, equivalence and success checks in parallel
@@ -45,53 +46,43 @@ public class DAGOptimized extends DAGExplorer {
 	 */
 	protected final int maxDepth;
 
-	/** The current exploration depth */
+	/**  The current exploration depth. */
 	protected int depth;
 
-	/** Performs parallel chasing */
+	/**  Performs parallel chasing. */
 	private final IterativeExecutor reasoningThreads;
 
-	/** Iterate over all newly created configurations in parallel and returns the best configuration*/
+	/**  Iterate over all newly created configurations in parallel and returns the best configuration. */
 	private final IterativeExecutor explorationThreads;
 
-	/** Filters out configurations at the end of each iteration*/
+	/**  Filters out configurations at the end of each iteration. */
 	private final Filter filter;
 
-	/** Configurations produced during the previous round*/
+	/**  Configurations produced during the previous round. */
 	private final Queue<DAGChaseConfiguration> left;
 
-	/** Classes of structurally equivalent configurations*/
+	/**  Classes of structurally equivalent configurations. */
 	private final DAGEquivalenceClasses equivalenceClasses;
 
 	
 	/**
-	 * 
-	 * @param eventBus
-	 * @param collectStats
-	 * @param parameters
-	 * @param query
-	 * 		The input user query
-	 * @param accessibleQuery
-	 * 		The accessible counterpart of the user query
-	 * @param schema
-	 * 		The input schema
-	 * @param accessibleSchema
-	 * 		The accessible counterpart of the input schema
-	 * @param chaser
-	 * 		Runs the chase algorithm
-	 * @param detector
-	 * 		Detects homomorphisms during chasing
-	 * @param costEstimator
-	 * 		Estimates the cost of a plan
-	 * @param filter
-	 * 		Filters out configurations at the end of each iteration
-	 * @param reasoningThreads
-	 * 		Performs parallel chasing
-	 * @param explorationThreads
-	 * 		Iterates over all newly created configurations in parallel and returns the best configuration
-	 * @param maxDepth
-	 * 		The maximum depth to explore
-	 * @throws PlannerException
+	 * Instantiates a new DAG optimized.
+	 *
+	 * @param eventBus the event bus
+	 * @param collectStats the collect stats
+	 * @param parameters the parameters
+	 * @param query 		The input user query
+	 * @param accessibleQuery 		The accessible counterpart of the user query
+	 * @param schema 		The input schema
+	 * @param accessibleSchema 		The accessible counterpart of the input schema
+	 * @param chaser 		Runs the chase algorithm
+	 * @param detector 		Detects homomorphisms during chasing
+	 * @param costEstimator 		Estimates the cost of a plan
+	 * @param filter 		Filters out configurations at the end of each iteration
+	 * @param reasoningThreads 		Performs parallel chasing
+	 * @param explorationThreads 		Iterates over all newly created configurations in parallel and returns the best configuration
+	 * @param maxDepth 		The maximum depth to explore
+	 * @throws PlannerException the planner exception
 	 */
 	public DAGOptimized(
 			EventBus eventBus, 
@@ -130,7 +121,10 @@ public class DAGOptimized extends DAGExplorer {
 	}
 
 	/**
-	 * @throws PlannerException
+	 * _explore.
+	 *
+	 * @throws PlannerException the planner exception
+	 * @throws LimitReachedException the limit reached exception
 	 */
 	@Override
 	protected void _explore() throws PlannerException, LimitReachedException {

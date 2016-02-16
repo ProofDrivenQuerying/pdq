@@ -5,6 +5,7 @@ import java.util.Collection;
 import uk.ac.ox.cs.pdq.db.Constraint;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState;
 
+// TODO: Auto-generated Javadoc
 /**
 	Finds for each chase round which dependencies
 	are most likely to be fired and returns those dependencies.
@@ -16,11 +17,10 @@ import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState;
 public interface RestrictedChaseDependencyAssessor {
 
 	/**
-	 * 
-	 * @param state
-	 * 		A collection of chase facts
-	 * @return
-	 * 		the dependencies that are most likely to be fired in the next chase round.  
+	 * Gets the dependencies.
+	 *
+	 * @param state 		A collection of chase facts
+	 * @return 		the dependencies that are most likely to be fired in the next chase round.
 	 */
 	Collection<? extends Constraint> getDependencies(ChaseState state);
 	

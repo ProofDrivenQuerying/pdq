@@ -84,59 +84,128 @@ import uk.ac.ox.cs.pdq.ui.util.LogarithmicAxis;
 
 import com.google.common.base.Preconditions;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class PlannerController.
+ */
 public class PlannerController {
 
 	/** PlannerController's logger. */
 	private static Logger log = Logger.getLogger(PlannerController.class);
 	
-	enum Status {NOT_STARTED, STARTED, PAUSED, COMPLETE}
+	/**
+	 * The Enum Status.
+	 */
+	enum Status {/** The not started. */
+NOT_STARTED, /** The started. */
+ STARTED, /** The paused. */
+ PAUSED, /** The complete. */
+ COMPLETE}
 
-	/** Icon for the pause button */
+	/**  Icon for the pause button. */
 	private final Image pauseIcon = new Image(this.getClass().getResourceAsStream("/resources/icons/suspend.gif"));
 	
-	/** Icon for the play button */
+	/**  Icon for the play button. */
 	private final Image playIcon = new Image(this.getClass().getResourceAsStream("/resources/icons/resume.gif"));
 
+	/** The cost reduction chart. */
 	// This controller's widgets
 	@FXML private LineChart<Number, Number> costReductionChart;
+	
+	/** The plan statistics table. */
 	@FXML private TableView<ObservableSearchState> planStatisticsTable;
+	
+	/** The col stats cost. */
 	@FXML private TableColumn<ObservableSearchState, Number> colStatsCost;
+	
+	/** The col stats iterations. */
 	@FXML private TableColumn<ObservableSearchState, Integer> colStatsIterations;
+	
+	/** The col stats time. */
 	@FXML private TableColumn<ObservableSearchState, Double> colStatsTime;
+	
+	/** The planner pause button. */
 	@FXML private Button plannerPauseButton;
+	
+	/** The planner start button. */
 	@FXML private Button plannerStartButton;
+	
+	/** The search space controls. */
 	@FXML private VBox searchSpaceControls;
+	
+	/** The search space vizualization area. */
 	@FXML private AnchorPane searchSpaceVizualizationArea;
+    
+    /** The planner messages. */
     @FXML private Label plannerMessages;
+	
+	/** The plan view area. */
 	@FXML private ListView<Text> planViewArea;
+	
+	/** The proof view area. */
 	@FXML private TextArea proofViewArea;
+	
+	/** The planner tabs. */
 	@FXML private TabPane plannerTabs;
+	
+	/** The planner tab space. */
 	@FXML private Tab plannerTabSpace;
+	
+	/** The planner tab cost. */
 	@FXML private Tab plannerTabCost;
+	
+	/** The planner tab plan. */
 	@FXML private Tab plannerTabPlan;
+    
+    /** The search space split pane. */
     @FXML private SplitPane searchSpaceSplitPane;
+    
+    /** The search space metadata general. */
     @FXML private TextArea searchSpaceMetadataGeneral;
+    
+    /** The search space metadata candidates. */
     @FXML private TextArea searchSpaceMetadataCandidates;
+
+/** The search space metadata dominance. */
 //    @FXML private TextArea searchSpaceMetadataEquivalence;
     @FXML private TextArea searchSpaceMetadataDominance;
+    
+    /** The search space metadata success. */
     @FXML private TextArea searchSpaceMetadataSuccess;
+    
+    /** The search space metadata tabs. */
     @FXML private TabPane searchSpaceMetadataTabs;
+    
+    /** The search space metadata general tab. */
     @FXML private Tab searchSpaceMetadataGeneralTab;
+    
+    /** The search space metadata candidates tab. */
     @FXML private Tab searchSpaceMetadataCandidatesTab;
+
+/** The search space metadata dominance tab. */
 //    @FXML private Tab searchSpaceMetadataEquivalenceTab;
     @FXML private Tab searchSpaceMetadataDominanceTab;
+    
+    /** The search space metadata success tab. */
     @FXML private Tab searchSpaceMetadataSuccessTab;
+	
+	/** The plan proof tab. */
 	@FXML private Tab planProofTab;
 	
+    /** The plan selection. */
     @FXML private ComboBox<String> planSelection = new ComboBox();
+	
+	/** The selected plan view area. */
 	@FXML private ListView<Text> selectedPlanViewArea;
+	
+	/** The selected proof view area. */
 	@FXML private TextArea selectedProofViewArea;
 	
-	/** Sorted set of the plans found **/
+	/**  Sorted set of the plans found *. */
 	private TreeSet<ObservableSearchState> plansFound = new TreeSet<>(new PlanComparator());
 	
 	/**
-	 * Controller's widget's initialization
+	 * Controller's widget's initialization.
 	 */
 	@FXML void initialize() {
 		assert this.costReductionChart != null : "fx:id=\"costReductionChart\" was not injected: check your FXML file 'planner-window.fxml'.";
@@ -169,25 +238,25 @@ public class PlannerController {
 		this.planSelection.getItems().clear();
 	}
 
-	/** The parameters to be used during this planning session */
+	/**  The parameters to be used during this planning session. */
 	private PlannerParameters params;
 
-	/** The cost parameters to be used by the cost function */
+	/**  The cost parameters to be used by the cost function. */
 	private CostParameters costParams;
 	
-	/** Keeps the reasoning parameters */
+	/**  Keeps the reasoning parameters. */
 	private ReasoningParameters reasoningParams;
 	
-	/** The schema to be used during this planning session */
+	/**  The schema to be used during this planning session. */
 	private Schema schema;
 	
-	/** A copy of the accessible schema to be used during this planning session */
+	/**  A copy of the accessible schema to be used during this planning session. */
 	private AccessibleSchema accSchema;
 	
-	/** The query to be used during this planning session */
+	/**  The query to be used during this planning session. */
 	private Query query;
 
-	/** The previous plan obtained with the setting of this planning session */
+	/**  The previous plan obtained with the setting of this planning session. */
 	private ObservablePlan plan;
 	
 	/** Queue containing the plan found. */
@@ -199,37 +268,41 @@ public class PlannerController {
 	/** The data series of the cost reduction chart. */
 	private final XYChart.Series<Number, Number> costReductionSeries = new Series<>();
 
-	/** Cost of the first plan found */
+	/**  Cost of the first plan found. */
 	private Number initialCost = null;
 	
-	/** The pauser */
+	/**  The pauser. */
 	private Pauser pauser;
 	
-	/** The future */
+	/**  The future. */
 	private Future<?> future;
 
+	/** The best plan. */
 	private Plan bestPlan;
 
+	/** The best proof. */
 	private Proof bestProof;
 	
 	/**
-	 * Default constructor, start the animation timer
+	 * Default constructor, start the animation timer.
 	 */
 	public PlannerController() {
 		this.prepareTimeline();
 	}
 
 	/**
-	 * Sets the query backing this planning session
-	 * @param query
+	 * Sets the query backing this planning session.
+	 *
+	 * @param query the new query
 	 */
 	void setQuery(ObservableQuery query) {
 		this.query = query.getQuery();
 	}
 
 	/**
-	 * Sets the schema backing this planning session
-	 * @param schema
+	 * Sets the schema backing this planning session.
+	 *
+	 * @param schema the new schema
 	 */
 	void setSchema(ObservableSchema schema) {
 		this.schema = schema.getSchema();
@@ -238,7 +311,8 @@ public class PlannerController {
 
 	/**
 	 * Sets the original plan if any of this planning session.
-	 * @param plan
+	 *
+	 * @param q the new plan queue
 	 */
 	void setPlanQueue(ConcurrentLinkedQueue q) {
 		this.planQueue = q;
@@ -246,7 +320,8 @@ public class PlannerController {
 
 	/**
 	 * Sets the original plan if any of this planning session.
-	 * @param plan
+	 *
+	 * @param plan the new plan
 	 */
 	void setPlan(ObservablePlan plan) {
 		String homeDir = System.getenv("HOME");
@@ -280,6 +355,11 @@ public class PlannerController {
 //		this.reasoningParams.setBlockingInterval(this.plan.getBlockingInterval());
 	}
 
+	/**
+	 * Sets the search space visualizer.
+	 *
+	 * @param planner the new search space visualizer
+	 */
 	private void setSearchSpaceVisualizer(final ExplorationSetUp planner) {
         final SwingNode swingNode = new SwingNode();
         SwingUtilities.invokeLater(new Runnable() {
@@ -309,8 +389,9 @@ public class PlannerController {
 	}
 
 	/**
-	 * Starts or resumes the search thread
-	 * @param event
+	 * Starts or resumes the search thread.
+	 *
+	 * @param event the event
 	 */
 	@FXML void startPlanning(ActionEvent event) {
 		Preconditions.checkNotNull(this.params);
@@ -353,8 +434,9 @@ public class PlannerController {
 	}
 
 	/**
-	 * Pauses the search thread
-	 * @param event
+	 * Pauses the search thread.
+	 *
+	 * @param event the event
 	 */
 	@FXML void pausePlanning(ActionEvent event) {
 		Preconditions.checkNotNull(this.pauser);
@@ -363,6 +445,9 @@ public class PlannerController {
 		this.plannerPauseButton.setDisable(true);
 	}
 
+	/**
+	 * Interrupt planning threads.
+	 */
 	public void interruptPlanningThreads() {
 		if (this.future != null) {
 			this.future.cancel(true);
@@ -370,7 +455,7 @@ public class PlannerController {
 	}
 	
 	/**
-	 * Update the plan/search views 
+	 * Update the plan/search views.
 	 */
 	private void udpateWidgets() {
 		while (this.dataQueue != null && !this.dataQueue.isEmpty()) {
@@ -399,6 +484,11 @@ public class PlannerController {
 		}
 	}
 	
+	/**
+	 * Update plans found.
+	 *
+	 * @param p the p
+	 */
 	void updatePlansFound(ObservableSearchState p) {
 		if(!this.plansFound.contains(p)) {
 			this.plansFound.add(p);
@@ -425,6 +515,11 @@ public class PlannerController {
     		this.displayProof(this.selectedProofViewArea, p.getProof());
 	};
 
+	/**
+	 * Update plan tab.
+	 *
+	 * @param pplan the pplan
+	 */
 	private void updatePlanTab(Plan pplan) {
 		this.planViewArea.getItems().clear();
 		if (pplan != null && pplan instanceof LeftDeepPlan) {
@@ -442,6 +537,11 @@ public class PlannerController {
 		}
 	}
 
+	/**
+	 * Update proof tab.
+	 *
+	 * @param pr the pr
+	 */
 	private void updateProofTab(Proof pr) {
 		this.proofViewArea.clear();
 		if (pr != null) {
@@ -452,6 +552,11 @@ public class PlannerController {
 		}
 	}
 	
+	/**
+	 * Update cost tab.
+	 *
+	 * @param state the state
+	 */
 	private void updateCostTab(ObservableSearchState state) {
 		Number cost = state.getCost();
 		if (cost != null) {
@@ -474,6 +579,12 @@ public class PlannerController {
 		}
 	}
 		
+	/**
+	 * Display plan.
+	 *
+	 * @param area the area
+	 * @param p the p
+	 */
 	void displayPlan(ListView<Text> area, Plan p) {
 		area.getItems().clear();
 		if (p instanceof LeftDeepPlan) {
@@ -491,6 +602,12 @@ public class PlannerController {
 		} 					
 	}
 
+	/**
+	 * Display proof.
+	 *
+	 * @param area the area
+	 * @param p the p
+	 */
 	void displayProof(TextArea area, Proof p) {
 		area.clear();
 		if (p != null) {
@@ -500,6 +617,9 @@ public class PlannerController {
 		} 					
 	}
 
+	/**
+	 * Display status complete.
+	 */
 	private void displayStatusComplete() {
 		this.plannerMessages.setText("Plan search complete.");
 		this.plannerPauseButton.setDisable(true);
@@ -510,6 +630,11 @@ public class PlannerController {
 //		sm.select(PlannerController.this.plannerTabPlan);
 	}
 
+	/**
+	 * Display search node info.
+	 *
+	 * @param n the n
+	 */
 	private void displaySearchNodeInfo(SearchNode n) {
 		this.searchSpaceSplitPane.setDividerPositions(.66);
 		this.updateGeneralMetadata(n);
@@ -520,12 +645,22 @@ public class PlannerController {
 		this.searchSpaceMetadataTabs.getSelectionModel().select(0);
 	}
 
+	/**
+	 * Display search edge info.
+	 *
+	 * @param e the e
+	 */
 	private void displaySearchEdgeInfo(SearchEdge e) {
 		this.searchSpaceSplitPane.setDividerPositions(.66);
 		this.updateEdgeMetadata(e.edge, e.node);
 		this.searchSpaceMetadataTabs.getSelectionModel().select(0);
 	}
 	
+	/**
+	 * Update general metadata.
+	 *
+	 * @param node the node
+	 */
 	public void updateGeneralMetadata(SearchNode node) {
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		//AccessOnlyPlanWriter.to(new PrintStream(bos)).write(node.getConfiguration().getPlan());
@@ -535,6 +670,11 @@ public class PlannerController {
 				"Middleware query commands:\n" + bos);
 	}
 
+	/**
+	 * Update candidates metadata.
+	 *
+	 * @param node the node
+	 */
 	public void updateCandidatesMetadata(SearchNode node) {
 		if (node != null && node.getStatus() == NodeStatus.ONGOING) {
 			if (!node.getConfiguration().getCandidates().isEmpty()) {
@@ -552,6 +692,11 @@ public class PlannerController {
 		this.searchSpaceMetadataCandidates.setText("No candidate");
 	}
 
+	/**
+	 * Update success metadata.
+	 *
+	 * @param node the node
+	 */
 	public void updateSuccessMetadata(SearchNode node) {
 		Metadata m = node.getMetadata();
 		if (m instanceof BestPlanMetadata && ((BestPlanMetadata) m).getPlan() != null) {
@@ -571,6 +716,12 @@ public class PlannerController {
 		}
 	} 
 
+	/**
+	 * Update edge metadata.
+	 *
+	 * @param type the type
+	 * @param node the node
+	 */
 	public void updateEdgeMetadata(EdgeTypes type, SearchNode node) {
 		String str = "Type: " + type + "\n";
 		if (type != EdgeTypes.POINTER) {
@@ -587,6 +738,11 @@ public class PlannerController {
 	}
 
 
+	/**
+	 * Update pruning metadata.
+	 *
+	 * @param node the node
+	 */
 	public void updatePruningMetadata(SearchNode node) {
 		Metadata metadata = node.getMetadata();
 		if (metadata instanceof DominanceMetadata) {
@@ -638,16 +794,33 @@ public class PlannerController {
 	 *
 	 */
 	public static class SearchEdge {
+		
+		/** The node. */
 		final SearchNode node;
+		
+		/** The edge. */
 		final EdgeTypes edge;
 		
+		/**
+		 * Instantiates a new search edge.
+		 *
+		 * @param node the node
+		 * @param edge the edge
+		 */
 		public SearchEdge(SearchNode node, EdgeTypes edge) {
 			this.node = node;
 			this.edge = edge;
 		}
 	}
 	
+	/**
+	 * The Class PlanComparator.
+	 */
 	public static class PlanComparator implements Comparator<ObservableSearchState>{
+		
+		/* (non-Javadoc)
+		 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
+		 */
 		@Override
 		public int compare(ObservableSearchState o1, ObservableSearchState o2) {
 			if(o1.getCost().doubleValue() > o2.getCost().doubleValue()) {

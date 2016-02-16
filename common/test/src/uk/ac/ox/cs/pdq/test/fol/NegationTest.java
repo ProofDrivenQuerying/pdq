@@ -20,21 +20,25 @@ import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
 /**
- * @author Julien Leblay
+ * The Class NegationTest.
  *
- * @param <T>
+ * @author Julien Leblay
  */
 public final class NegationTest {
 	
 	/**
-	 * Makes sure assertions are enabled
+	 * Makes sure assertions are enabled.
 	 */
 	@Before 
 	public void setup() {
 		Utility.assertsEnabled();
 	}
 
+	/**
+	 * Test of.
+	 */
 	@Test public void testOf() {
 		Signature s = new Signature("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
@@ -49,6 +53,9 @@ public final class NegationTest {
 		Assert.assertEquals("Negation subformulation must match that of construction ", p, n.getChild());
 	}
 
+	/**
+	 * Test equals.
+	 */
 	@Test public void testEquals() {
 		Signature s1 = new Signature("s", 5);
 		List<Term> t1 = Lists.<Term>newArrayList(
@@ -73,6 +80,9 @@ public final class NegationTest {
 		Assert.assertTrue("Negation subformulation must match that of construction ", n1.equals(n2));
 	}
 
+	/**
+	 * Test not equals.
+	 */
 	@Test public void testNotEquals() {
 		Signature s1 = new Signature("s", 5);
 		List<Term> t1 = Lists.<Term>newArrayList(
@@ -97,6 +107,9 @@ public final class NegationTest {
 		Assert.assertFalse("Negation subformulation must match that of construction ", n1.equals(n2));
 	}
 
+	/**
+	 * Test ground.
+	 */
 	@Test public void testGround() {
 		Signature s = new Signature("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(

@@ -10,20 +10,23 @@ import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 
+// TODO: Auto-generated Javadoc
 /**
  * A builder for dependencies (e.g. integrity constraints, axioms, ...).
  * @author Julien Leblay
  */
 public class DependencyBuilder implements Builder<TGD> {
 
-	/** The left hand part of the dependency */
+	/**  The left hand part of the dependency. */
 	private List<Predicate> left = new LinkedList<>();
 
-	/** The right hand part of the dependency */
+	/**  The right hand part of the dependency. */
 	private List<Predicate> right = new LinkedList<>();
 	
 	/**
-	 * @param p Formula
+	 * Adds the left.
+	 *
+	 * @param f the f
 	 * @return DependencyBuilder
 	 */
 	public DependencyBuilder addLeft(Formula f) {
@@ -37,7 +40,9 @@ public class DependencyBuilder implements Builder<TGD> {
 	}
 	
 	/**
-	 * @param p Formula
+	 * Adds the right.
+	 *
+	 * @param f the f
 	 * @return DependencyBuilder
 	 */
 	public DependencyBuilder addRight(Formula f) {
@@ -51,6 +56,8 @@ public class DependencyBuilder implements Builder<TGD> {
 	}
 	
 	/**
+	 * Adds the left conjunction.
+	 *
 	 * @param p Conjunction of PredicateFormula
 	 * @return DependencyBuilder
 	 */
@@ -60,6 +67,8 @@ public class DependencyBuilder implements Builder<TGD> {
 	}
 	
 	/**
+	 * Adds the right conjunction.
+	 *
 	 * @param p Conjunction of PredicateFormula
 	 * @return DependencyBuilder
 	 */
@@ -69,6 +78,8 @@ public class DependencyBuilder implements Builder<TGD> {
 	}
 	
 	/**
+	 * Adds the left atom.
+	 *
 	 * @param p PredicateFormula
 	 * @return DependencyBuilder
 	 */
@@ -78,6 +89,8 @@ public class DependencyBuilder implements Builder<TGD> {
 	}
 	
 	/**
+	 * Adds the right atom.
+	 *
 	 * @param p PredicateFormula
 	 * @return DependencyBuilder
 	 */

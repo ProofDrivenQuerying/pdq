@@ -15,6 +15,7 @@ import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TGD;
 import uk.ac.ox.cs.pdq.io.WriterException;
 
+// TODO: Auto-generated Javadoc
 /**
  * Writes schemas to XML.
  * 
@@ -22,10 +23,10 @@ import uk.ac.ox.cs.pdq.io.WriterException;
  */
 public class SchemaWriter extends AbstractXMLWriter<Schema> {
 
-	/** Relations writer */
+	/**  Relations writer. */
 	private RelationWriter relationWriter = null;
 
-	/** Dependency writer */
+	/**  Dependency writer. */
 	private DependencyWriter dependencyWriter = null;
 	
 	/**
@@ -37,6 +38,8 @@ public class SchemaWriter extends AbstractXMLWriter<Schema> {
 	}
 	
 	/**
+	 * Write.
+	 *
 	 * @param out PrintStream
 	 * @param o Schema
 	 */
@@ -49,10 +52,11 @@ public class SchemaWriter extends AbstractXMLWriter<Schema> {
 
 	/**
 	 * Writes schema to the given stream with some additional attributes in the root
-	 * element
-	 * @param out
-	 * @param o
-	 * @param atts
+	 * element.
+	 *
+	 * @param out the out
+	 * @param o the o
+	 * @param atts the atts
 	 */
 	public void write(PrintStream out, Schema o, Map<QNames, String> atts) {
 		this.writeSchema(out, o, atts);
@@ -60,8 +64,9 @@ public class SchemaWriter extends AbstractXMLWriter<Schema> {
 
 	/**
 	 * Writes the given schema to the given output.
-	 * @param out
-	 * @param s
+	 *
+	 * @param out the out
+	 * @param s the s
 	 */
 	private void writeSchema(PrintStream out, Schema s) {
 		this.writeSchema(out, s, new LinkedHashMap<QNames, String>());
@@ -69,8 +74,9 @@ public class SchemaWriter extends AbstractXMLWriter<Schema> {
 
 	/**
 	 * Writes the given schema to the given output.
-	 * @param out
-	 * @param s
+	 *
+	 * @param out the out
+	 * @param s the s
 	 * @param atts Map<QNames,String>
 	 */
 	private void writeSchema(PrintStream out, Schema s, Map<QNames, String> atts) {
@@ -83,7 +89,8 @@ public class SchemaWriter extends AbstractXMLWriter<Schema> {
 
 	/**
 	 * Writes the given collection of relations to the given output.
-	 * @param out
+	 *
+	 * @param out the out
 	 * @param rs Collection<Relation>
 	 */
 	private void writeSources(PrintStream out, Collection<Relation> rs) {
@@ -107,7 +114,8 @@ public class SchemaWriter extends AbstractXMLWriter<Schema> {
 
 	/**
 	 * Writes the given collection of relations to the given output.
-	 * @param out
+	 *
+	 * @param out the out
 	 * @param rs Collection<Relation>
 	 */
 	private void writeRelations(PrintStream out, Collection<Relation> rs) {
@@ -120,8 +128,9 @@ public class SchemaWriter extends AbstractXMLWriter<Schema> {
 
 	/**
 	 * Write the schema's dependencies to the given output.
-	 * @param out
-	 * @param ds
+	 *
+	 * @param out the out
+	 * @param ds the ds
 	 */
 	private void writeDependencies(PrintStream out, Collection<Constraint> ds) {
 		open(out, QNames.DEPENDENCIES);

@@ -2,6 +2,7 @@ package uk.ac.ox.cs.pdq.services;
 
 import java.io.File;
 
+// TODO: Auto-generated Javadoc
 /**
  * Holds server-related parameters.
  * 
@@ -9,13 +10,13 @@ import java.io.File;
  */
 public class ServiceParameters extends uk.ac.ox.cs.pdq.Parameters {
 
-	/** */
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1481542784450218004L;
 
-	/** Properties file name */
+	/**  Properties file name. */
 	static final String DEFAULT_CONFIG_FILE_NAME = "pdq-manager-service.properties";
 
-	/** Properties file path */
+	/**  Properties file path. */
 	static final String DEFAULT_CONFIG_FILE_PATH = "./" + DEFAULT_CONFIG_FILE_NAME;
 
 	/**
@@ -68,15 +69,19 @@ public class ServiceParameters extends uk.ac.ox.cs.pdq.Parameters {
 		}
 	}
 
+	/** The service name. */
 	@Parameter(description=
 			"Name of the service. Among others, this name is used to refer to "
 			+ "this service when issuing commands to it from a console")
 	protected String serviceName;
 
+	/** The port. */
 	@Parameter(description="Port on which the service will listen.")
 	protected Integer port;
 	
 	/**
+	 * Gets the service name.
+	 *
 	 * @return String
 	 */
 	public String getServiceName() {
@@ -84,6 +89,8 @@ public class ServiceParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 	
 	/**
+	 * Sets the service name.
+	 *
 	 * @param name String
 	 */
 	public void setServiceName(String name) {
@@ -91,6 +98,8 @@ public class ServiceParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 	
 	/**
+	 * Gets the port.
+	 *
 	 * @return Integer
 	 */
 	public Integer getPort() {
@@ -98,6 +107,8 @@ public class ServiceParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 	
 	/**
+	 * Sets the port.
+	 *
 	 * @param port Integer
 	 */
 	public void setPort(Integer port) {
@@ -105,6 +116,8 @@ public class ServiceParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 	
 	/**
+	 * Sets the port.
+	 *
 	 * @param port Number
 	 */
 	public void setPort(Number port) {

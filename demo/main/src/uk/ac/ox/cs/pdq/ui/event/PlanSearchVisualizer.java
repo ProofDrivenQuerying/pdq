@@ -13,6 +13,7 @@ import uk.ac.ox.cs.pdq.ui.util.LogarithmicAxis;
 import com.google.common.base.Preconditions;
 import com.google.common.eventbus.Subscribe;
 
+// TODO: Auto-generated Javadoc
 /**
  * Event-handler for capturing an displaying data point generated during a 
  * planning phase.
@@ -22,15 +23,20 @@ import com.google.common.eventbus.Subscribe;
  */
 public class PlanSearchVisualizer implements EventHandler {
 
+	/** The log. */
 	private static Logger log = Logger.getLogger(PlanSearchVisualizer.class);
-	/** Queue holding the next dataQueue point to be display on the plan/search views by the main thread */
+	
+	/**  Queue holding the next dataQueue point to be display on the plan/search views by the main thread. */
 	private final ConcurrentLinkedQueue dataQueue;
 
-	/** Number of rounds to wait before updating */
+	/**  Number of rounds to wait before updating. */
 	private final int interval;
 
 	/**
-	 * @param q
+	 * Instantiates a new plan search visualizer.
+	 *
+	 * @param q the q
+	 * @param interval the interval
 	 */
 	public PlanSearchVisualizer(ConcurrentLinkedQueue q, int interval) {
 		Preconditions.checkArgument(q != null);
@@ -41,7 +47,8 @@ public class PlanSearchVisualizer implements EventHandler {
 
 	/**
 	 * Update the queue of dataQueue point to display next on the plan/search views.
-	 * @param explorer
+	 *
+	 * @param explorer the explorer
 	 */
 	@Subscribe
 	public void processExplorerIteration(Explorer explorer) {

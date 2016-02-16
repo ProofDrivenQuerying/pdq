@@ -10,6 +10,7 @@ import javax.ws.rs.client.WebTarget;
 
 import com.fasterxml.jackson.jaxrs.json.annotation.JacksonFeatures;
 
+// TODO: Auto-generated Javadoc
 /**
  * Represents an access to a REST service. This class can be used as a request 
  * builder, i.e. for modifying a request until it is eventually sent.
@@ -17,9 +18,7 @@ import com.fasterxml.jackson.jaxrs.json.annotation.JacksonFeatures;
  */
 public class RESTAccess implements uk.ac.ox.cs.pdq.builder.Builder<WebTarget> {
 
-	/**
-	 * The access's URL
-	 */
+	/** The access's URL. */
 	private final String baseUrl;
 	
 	/**
@@ -42,8 +41,7 @@ public class RESTAccess implements uk.ac.ox.cs.pdq.builder.Builder<WebTarget> {
 	 */
 	private final Map<String, Object> pathParams = new LinkedHashMap<>();
 	
-	/** true unless the access must be followed by at least one other request for
-	 * to be complete */
+	/**  true unless the access must be followed by at least one other request for to be complete. */
 	private boolean isComplete = true;
 	
 	/**
@@ -56,6 +54,8 @@ public class RESTAccess implements uk.ac.ox.cs.pdq.builder.Builder<WebTarget> {
 	}
 	
 	/**
+	 * Builds the.
+	 *
 	 * @return a WebTarget forms by append the input params respecting
 	 * input parameters and methods.
 	 * @see uk.ac.ox.cs.pdq.builder.Builder#build()
@@ -81,8 +81,9 @@ public class RESTAccess implements uk.ac.ox.cs.pdq.builder.Builder<WebTarget> {
 	 * parameters. The formatting only considers PATH_ELEMENT type input 
 	 * methods.
 	 * For URL parameters, use processURLParams
-	 * @param methods
-	 * @param inputParams
+	 *
+	 * @param methods the methods
+	 * @param inputParams the input params
 	 */
 	public void processParams(Set<InputMethod> methods, Map<String, Object> inputParams) {
 		for (InputMethod m: methods) {
@@ -97,6 +98,8 @@ public class RESTAccess implements uk.ac.ox.cs.pdq.builder.Builder<WebTarget> {
 	}
 
 	/**
+	 * Checks if is complete.
+	 *
 	 * @return boolean
 	 */
 	public boolean isComplete() {
@@ -104,6 +107,8 @@ public class RESTAccess implements uk.ac.ox.cs.pdq.builder.Builder<WebTarget> {
 	}
 
 	/**
+	 * Checks if is complete.
+	 *
 	 * @param b boolean
 	 */
 	public void isComplete(boolean b) {

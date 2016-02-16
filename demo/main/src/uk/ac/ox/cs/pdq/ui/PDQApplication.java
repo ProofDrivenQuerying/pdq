@@ -16,44 +16,86 @@ import javafx.stage.WindowEvent;
 
 import org.apache.log4j.Logger;
 
+// TODO: Auto-generated Javadoc
 /**
- * Top level class for the GUI
- * 
- * @author Julien Leblay
+ * Top level class for the GUI.
  *
+ * @author Julien Leblay
  */
 public class PDQApplication extends Application {
 
 	/** PDQApplication's logger. */
 	private static Logger log = Logger.getLogger(PDQApplication.class);
 
+	/** The Constant APPLICATION_NAME. */
 	public static final String APPLICATION_NAME = "PDQ";
+	
+	/** The Constant WORK_DIRECTORY. */
 	public static final String WORK_DIRECTORY = ".pdq";
+	
+	/** The Constant PATH_TO_DEFAULT_SETTINGS. */
 	public static final String PATH_TO_DEFAULT_SETTINGS = "/resources/settings/defaults.zip";
+	
+	/** The Constant DEFAULT_CONFIGURATION. */
 	public static final String DEFAULT_CONFIGURATION = "pdq-demo.properties";
+	
+	/** The Constant PATH_TO_ROOT_WINDOW_DEFINITION. */
 	public static final String PATH_TO_ROOT_WINDOW_DEFINITION = "/resources/layouts/root-window.fxml";
+	
+	/** The Constant PATH_TO_RESOURCE_BUNDLE. */
 	public static final String PATH_TO_RESOURCE_BUNDLE = "resources.i18n.ui";
+	
+	/** The Constant GLOBAL_SCHEMA. */
 	public static final String GLOBAL_SCHEMA = "global-schema.xml";
+	
+	/** The Constant SCHEMA_DIRECTORY. */
 	public static final String SCHEMA_DIRECTORY = "schemas";
+	
+	/** The Constant SCHEMA_FILENAME_PREFIX. */
 	public static final String SCHEMA_FILENAME_PREFIX = "schema";
+	
+	/** The Constant QUERY_FILENAME_PREFIX. */
 	public static final String QUERY_FILENAME_PREFIX = "query";
+	
+	/** The Constant PLAN_FILENAME_PREFIX. */
 	public static final String PLAN_FILENAME_PREFIX = "plan";
+	
+	/** The Constant SCHEMA_FILENAME_SUFFIX. */
 	public static final String SCHEMA_FILENAME_SUFFIX = ".s";
+	
+	/** The Constant QUERY_FILENAME_SUFFIX. */
 	public static final String QUERY_FILENAME_SUFFIX = ".q";
+	
+	/** The Constant PLAN_FILENAME_SUFFIX. */
 	public static final String PLAN_FILENAME_SUFFIX = ".p";
+	
+	/** The Constant PROOF_FILENAME_SUFFIX. */
 	public static final String PROOF_FILENAME_SUFFIX = ".pr";
+	
+	/** The Constant FILENAME_SUFFIX. */
 	public static final String FILENAME_SUFFIX = ".xml";
+	
+	/** The Constant PROPERTIES_SUFFIX. */
 	public static final String PROPERTIES_SUFFIX = ".properties";
+	
+	/** The Constant QUERY_DIRECTORY. */
 	public static final String QUERY_DIRECTORY = "queries";
+	
+	/** The Constant PLAN_DIRECTORY. */
 	public static final String PLAN_DIRECTORY = "plans";
 
     /**
+     * The main method.
+     *
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         Application.launch(PDQApplication.class, (java.lang.String[])null);
     }
 
+    /* (non-Javadoc)
+     * @see javafx.application.Application#start(javafx.stage.Stage)
+     */
     @Override
     public void start(Stage primaryStage) {
         try {
@@ -109,6 +151,12 @@ public class PDQApplication extends Application {
 		return workDir;
 	}
 	
+	/**
+	 * Unzip defaults.
+	 *
+	 * @param dir the dir
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private static void unzipDefaults(File dir) throws IOException {
 		byte[] buffer = new byte[2048];
 		try (ZipInputStream in = new ZipInputStream(PDQApplication.class.getResourceAsStream(PATH_TO_DEFAULT_SETTINGS))) {

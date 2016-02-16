@@ -21,17 +21,20 @@ import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.rewrite.Rewriter;
 import uk.ac.ox.cs.pdq.services.logicblox.cost.LogicBloxDelegateCostEstimator;
 
+// TODO: Auto-generated Javadoc
 /**
  * Deskolemizes an input formula, by replacing any Skolem term into a fresh
  * variables.
+ *
  * @author Julien LEBLAY
+ * @param <F> the generic type
  */
 public class Deskolemizer<F extends Formula> implements Rewriter<F, F> {
 
 	/** Logger. */
 	static final Logger log = Logger.getLogger(LogicBloxDelegateCostEstimator.class);
 
-	/** Locally stores all know implementation*/
+	/**  Locally stores all know implementation. */
 	private static final Map<Class<?>, Class<?>> repository = new LinkedHashMap<>();
 	static {
 		for (Class<?> c: Deskolemizer.class.getDeclaredClasses()) {
@@ -43,9 +46,12 @@ public class Deskolemizer<F extends Formula> implements Rewriter<F, F> {
 		}
 	}
 
+	/** The mapping. */
 	protected Map<Skolem, Variable> mapping = new LinkedHashMap<>();
 
 	/**
+	 * Rewrite.
+	 *
 	 * @param input F
 	 * @return a deskolemize for formula
 	 */
@@ -75,6 +81,8 @@ public class Deskolemizer<F extends Formula> implements Rewriter<F, F> {
 	
 	/**
 	 * Find the proper Deskolimizer implementation to the given input.
+	 *
+	 * @param <F> the generic type
 	 * @param input F
 	 * @param mapping Map<Skolem,Variable>
 	 * @return a specialized Desolemizer implementation, suited for the input
@@ -100,12 +108,14 @@ public class Deskolemizer<F extends Formula> implements Rewriter<F, F> {
 	}
 	
 	/**
-	 * Deskolemizer implementation for ConjunctiveQuery
+	 * Deskolemizer implementation for ConjunctiveQuery.
 	 */
 	public static class QueryDeskolemizer extends Deskolemizer<ConjunctiveQuery> {
 		static { repository.put(ConjunctiveQuery.class, QueryDeskolemizer.class); }
 
 		/**
+		 * Rewrite.
+		 *
 		 * @param input ConjunctiveQuery
 		 * @return ConjunctiveQuery
 		 */
@@ -126,12 +136,14 @@ public class Deskolemizer<F extends Formula> implements Rewriter<F, F> {
 	}
 	
 	/**
-	 * Deskolemizer implementation for Implication
+	 * Deskolemizer implementation for Implication.
 	 */
 	public static class ImplicationDeskolemizer extends Deskolemizer<Implication<?, ?>> {
 		static { repository.put(Implication.class, ImplicationDeskolemizer.class); }
 
 		/**
+		 * Rewrite.
+		 *
 		 * @param input Implication<?,?>
 		 * @return Implication<?,?>
 		 */
@@ -146,12 +158,14 @@ public class Deskolemizer<F extends Formula> implements Rewriter<F, F> {
 	}
 	
 	/**
-	 * Deskolemizer implementation for Conjunction
+	 * Deskolemizer implementation for Conjunction.
 	 */
 	public static class ConjunctionDeskolemizer extends Deskolemizer<Conjunction<?>> {
 		static { repository.put(Conjunction.class, ConjunctionDeskolemizer.class); }
 
 		/**
+		 * Rewrite.
+		 *
 		 * @param input Conjunction<?>
 		 * @return Conjunction<?>
 		 */
@@ -167,12 +181,14 @@ public class Deskolemizer<F extends Formula> implements Rewriter<F, F> {
 	}
 	
 	/**
-	 * Deskolemizer implementation for Disjunction
+	 * Deskolemizer implementation for Disjunction.
 	 */
 	public static class DisjunctionDeskolemizer extends Deskolemizer<Disjunction<?>> {
 		static { repository.put(Disjunction.class, DisjunctionDeskolemizer.class); }
 
 		/**
+		 * Rewrite.
+		 *
 		 * @param input Disjunction<?>
 		 * @return Disjunction<?>
 		 */
@@ -188,12 +204,14 @@ public class Deskolemizer<F extends Formula> implements Rewriter<F, F> {
 	}
 	
 	/**
-	 * Deskolemizer implementation for Negation
+	 * Deskolemizer implementation for Negation.
 	 */
 	public static class NegationDeskolemizer extends Deskolemizer<Negation<?>> {
 		static { repository.put(Negation.class, NegationDeskolemizer.class); }
 
 		/**
+		 * Rewrite.
+		 *
 		 * @param input Negation<?>
 		 * @return Negation<?>
 		 */
@@ -206,12 +224,14 @@ public class Deskolemizer<F extends Formula> implements Rewriter<F, F> {
 	}
 	
 	/**
-	 * Deskolemizer implementation for Atoms
+	 * Deskolemizer implementation for Atoms.
 	 */
 	public static class AtomDeskolemizer extends Deskolemizer<Predicate> {
 		static { repository.put(Predicate.class, AtomDeskolemizer.class); }
 
 		/**
+		 * Rewrite.
+		 *
 		 * @param input PredicateFormula
 		 * @return PredicateFormula
 		 */

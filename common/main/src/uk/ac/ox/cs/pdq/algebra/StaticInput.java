@@ -15,6 +15,7 @@ import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
 /**
  * Logical operator representation of an scan over a statically defined
  * collection of tuples.
@@ -70,8 +71,9 @@ public class StaticInput extends RelationalOperator {
 	}
 
 	/**
+	 * Gets the consistent type.
 	 *
-	 * @param tuples
+	 * @param tuples the tuples
 	 * @return true, if all the tuples in the given collection have consistent
 	 * types.
 	 */
@@ -91,6 +93,8 @@ public class StaticInput extends RelationalOperator {
 	}
 
 	/**
+	 * Gets the tuples.
+	 *
 	 * @return the tuples scanned by the operator
 	 */
 	public Collection<Tuple> getTuples() {
@@ -98,6 +102,8 @@ public class StaticInput extends RelationalOperator {
 	}
 
 	/**
+	 * Gets the depth.
+	 *
 	 * @return Integer
 	 */
 	@Override
@@ -144,6 +150,8 @@ public class StaticInput extends RelationalOperator {
 	}
 
 	/**
+	 * Gets the input terms.
+	 *
 	 * @return List<Term>
 	 */
 	@Override
@@ -152,6 +160,8 @@ public class StaticInput extends RelationalOperator {
 	}
 
 	/**
+	 * Equals.
+	 *
 	 * @param o Object
 	 * @return boolean
 	 */
@@ -165,6 +175,8 @@ public class StaticInput extends RelationalOperator {
 	}
 
 	/**
+	 * Hash code.
+	 *
 	 * @return int
 	 */
 	@Override
@@ -174,6 +186,8 @@ public class StaticInput extends RelationalOperator {
 	}
 
 	/**
+	 * Checks if is closed.
+	 *
 	 * @return boolean
 	 */
 	@Override
@@ -182,6 +196,8 @@ public class StaticInput extends RelationalOperator {
 	}
 
 	/**
+	 * Checks if is quasi leaf.
+	 *
 	 * @return boolean
 	 */
 	@Override

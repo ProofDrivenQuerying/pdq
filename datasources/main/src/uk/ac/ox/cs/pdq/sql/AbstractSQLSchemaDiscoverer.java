@@ -28,6 +28,7 @@ import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.View;
 import uk.ac.ox.cs.pdq.db.metadata.StaticMetadata;
 
+// TODO: Auto-generated Javadoc
 /**
  * This class factorises functionalities common to all SQLSchemaDiscorer.
  *  
@@ -36,14 +37,18 @@ import uk.ac.ox.cs.pdq.db.metadata.StaticMetadata;
  */
 public abstract class AbstractSQLSchemaDiscoverer implements SchemaDiscoverer {
 
-	/** The logger */
+	/**  The logger. */
 	public static Logger log = Logger.getLogger(AbstractSQLSchemaDiscoverer.class);
 
+	/** The properties. */
 	protected Properties properties = null;
 
+	/** The discovered. */
 	protected Schema discovered = null;
 	
 	/**
+	 * Sets the properties.
+	 *
 	 * @param p Properties
 	 * @see uk.ac.ox.cs.pdq.builder.SchemaDiscoverer#setProperties(Properties)
 	 */
@@ -53,6 +58,8 @@ public abstract class AbstractSQLSchemaDiscoverer implements SchemaDiscoverer {
 	}
 
 	/**
+	 * Gets the properties.
+	 *
 	 * @return Properties
 	 * @see uk.ac.ox.cs.pdq.builder.SchemaDiscoverer#getProperties()
 	 */
@@ -62,9 +69,10 @@ public abstract class AbstractSQLSchemaDiscoverer implements SchemaDiscoverer {
 	}
 
 	/**
+	 * Discover.
+	 *
 	 * @return the schema discovered from the given properties
-	 * @throws BuilderException
-	 * @throws SQLException
+	 * @throws BuilderException the builder exception
 	 * @see uk.ac.ox.cs.pdq.builder.SchemaDiscoverer#discover()
 	 */
 	@Override
@@ -94,16 +102,20 @@ public abstract class AbstractSQLSchemaDiscoverer implements SchemaDiscoverer {
 	}
 	
 	/**
-	 * @param databaseName
-	 * @return a database-specific SQL statement to extract relation names of 
+	 * Gets the relations discovery statement.
+	 *
+	 * @param databaseName the database name
+	 * @return a database-specific SQL statement to extract relation names of
 	 * the given database.
 	 */
 	protected abstract String getRelationsDiscoveryStatement(String databaseName);
 	
 	/**
+	 * Discover relations.
+	 *
 	 * @return a collection of relations stored in the underlying database
-	 * @throws SQLException
-	 * @throws ClassNotFoundException
+	 * @throws SQLException the SQL exception
+	 * @throws ClassNotFoundException the class not found exception
 	 */
 	private Collection<Relation> discoverRelations() throws SQLException, ClassNotFoundException {
 
@@ -132,8 +144,10 @@ public abstract class AbstractSQLSchemaDiscoverer implements SchemaDiscoverer {
 	}
 	
 	/**
-	 * @param relationName
-	 * @return a database-specific SQL statement to extract the description of 
+	 * Gets the relation discovery statement.
+	 *
+	 * @param relationName the relation name
+	 * @return a database-specific SQL statement to extract the description of
 	 * the given relation.
 	 */
 	protected String getRelationDiscoveryStatement(String relationName) {
@@ -141,15 +155,19 @@ public abstract class AbstractSQLSchemaDiscoverer implements SchemaDiscoverer {
 	}
 	
 	/**
-	 * @param relationName
-	 * @param attributes
+	 * Gets the relation instance.
+	 *
 	 * @param p Properties
+	 * @param relationName the relation name
+	 * @param attributes the attributes
 	 * @return an database-specific instance of Relation
 	 */
 	protected abstract Relation getRelationInstance(Properties p,
 			String relationName, List<Attribute> attributes);
 	
 	/**
+	 * Gets the view instance.
+	 *
 	 * @param p Properties
 	 * @param viewName String
 	 * @param relationMap Map<String,Relation>
@@ -159,10 +177,11 @@ public abstract class AbstractSQLSchemaDiscoverer implements SchemaDiscoverer {
 			String viewName, Map<String, Relation> relationMap);
 	
 	/**
-	 * @param relationName
+	 * Discover relation.
+	 *
+	 * @param relationName the relation name
 	 * @return the relation which has the given relationName in the underlying database
-	 * @throws BuilderException
-	 * @throws SQLException, ClassNotFoundException
+	 * @throws BuilderException the builder exception
 	 */
 	public Relation discoverRelation(String relationName) throws BuilderException {
 		try(Connection connection = getConnection(this.properties);
@@ -184,8 +203,10 @@ public abstract class AbstractSQLSchemaDiscoverer implements SchemaDiscoverer {
 	}
 	
 	/**
-	 * @param relationName
-	 * @return a database-specific SQL statement to extract relation names of 
+	 * Gets the relation size discovery statement.
+	 *
+	 * @param relationName the relation name
+	 * @return a database-specific SQL statement to extract relation names of
 	 * the given relation.
 	 */
 	protected String getRelationSizeDiscoveryStatement(String relationName) {
@@ -194,9 +215,11 @@ public abstract class AbstractSQLSchemaDiscoverer implements SchemaDiscoverer {
 
 	
 	/**
-	 * @param relationName
+	 * Discover relation size.
+	 *
+	 * @param relationName the relation name
 	 * @return the relation which has the given relationName in the underlying database * @throws SQLException
-	 * @throws SQLException, ClassNotFoundException
+	 * @throws SQLException the SQL exception
 	 */
 	public int discoverRelationSize(String relationName) throws SQLException {
 		try(Connection connection = getConnection(this.properties);
@@ -214,16 +237,19 @@ public abstract class AbstractSQLSchemaDiscoverer implements SchemaDiscoverer {
 	}
 	
 	/**
-	 * @param relationName
-	 * @return a database-specific SQL statement to extract the foreign keys of 
+	 * Gets the foreign key discovery statement.
+	 *
+	 * @param relationName the relation name
+	 * @return a database-specific SQL statement to extract the foreign keys of
 	 * the given relation.
 	 */
 	protected abstract String getForeignKeyDiscoveryStatement(String relationName);
 
 	/**
+	 * Discover foreign keys.
+	 *
 	 * @param relationMap a map from relation names to their corresponding instances
-	 * @throws BuilderException
-	 * @throws SQLException
+	 * @throws BuilderException the builder exception
 	 */
 	public void discoverForeignKeys(Map<String, Relation> relationMap) throws BuilderException {
 		for (String relationName: relationMap.keySet()) {
@@ -271,13 +297,17 @@ public abstract class AbstractSQLSchemaDiscoverer implements SchemaDiscoverer {
 	}
 	
 	/**
-	 * @param databaseName
-	 * @return a database-specific SQL statement to extract the views of 
+	 * Gets the views discovery statement.
+	 *
+	 * @param databaseName the database name
+	 * @return a database-specific SQL statement to extract the views of
 	 * the given database.
 	 */
 	protected abstract String getViewsDiscoveryStatement(String databaseName);
 	
 	/**
+	 * Gets the view definition.
+	 *
 	 * @param viewName String
 	 * @return a database-specific SQL statement to extract the description of
 	 * the given view.
@@ -285,9 +315,11 @@ public abstract class AbstractSQLSchemaDiscoverer implements SchemaDiscoverer {
 	protected abstract String getViewDefinition(String viewName);
 	
 	/**
+	 * Discover views.
+	 *
 	 * @param relationMap Map<String,Relation>
 	 * @return a collection of views stored in the underlying database
-	 * @throws SQLException
+	 * @throws SQLException the SQL exception
 	 */
 	private Collection<View> discoverViews(Map<String, Relation> relationMap) throws SQLException {
 		Collection<View> result = new LinkedHashSet<>();
@@ -309,10 +341,12 @@ public abstract class AbstractSQLSchemaDiscoverer implements SchemaDiscoverer {
 	}
 	
 	/**
-	 * @param viewName
+	 * Discover view.
+	 *
+	 * @param viewName the view name
 	 * @param relationMap Map<String,Relation>
 	 * @return the view which has the given viewName in the underlying database
-	 * @throws BuilderException
+	 * @throws BuilderException the builder exception
 	 */
 	public View discoverView(String viewName, Map<String, Relation> relationMap) throws BuilderException  {
 		try(Connection connection = getConnection(this.properties);
@@ -334,9 +368,11 @@ public abstract class AbstractSQLSchemaDiscoverer implements SchemaDiscoverer {
 	}
 
 	/**
-	 * @param properties
+	 * Gets the connection.
+	 *
+	 * @param properties the properties
 	 * @return a connection database connection for the given properties.
-	 * @throws SQLException
+	 * @throws SQLException the SQL exception
 	 */
 	protected static Connection getConnection(Properties properties) throws SQLException {
 		String url = properties.getProperty("url");

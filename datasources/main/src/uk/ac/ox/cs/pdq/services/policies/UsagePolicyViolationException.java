@@ -4,6 +4,7 @@ import uk.ac.ox.cs.pdq.AccessException;
 
 
 
+// TODO: Auto-generated Javadoc
 /**
  * Exception thrown when a usage policy is violated. Detailed on the violation
  * should be provided in the message.
@@ -13,8 +14,12 @@ import uk.ac.ox.cs.pdq.AccessException;
  */
 public class UsagePolicyViolationException extends AccessException {
 
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -8611823447617411625L;
 
+	/**
+	 * Instantiates a new usage policy violation exception.
+	 */
 	public UsagePolicyViolationException() {
 		super();
 	}

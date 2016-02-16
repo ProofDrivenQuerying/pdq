@@ -19,6 +19,7 @@ import uk.ac.ox.cs.pdq.services.rest.RESTResponseEvent;
 
 import com.google.common.base.Preconditions;
 
+// TODO: Auto-generated Javadoc
 /**
  * This usage policy incorporates paging constraints on the access to be 
  * performed. It set the access 'isComplete' fields to false until the last
@@ -30,19 +31,28 @@ import com.google.common.base.Preconditions;
 public class PagingLimit implements UsagePolicy, 
 		AccessPreProcessor<RESTRequestEvent>, AccessPostProcessor<RESTResponseEvent>  {
 
+	/** The Constant PAGE_SIZE. */
 	protected static final String PAGE_SIZE = "limit";
+	
+	/** The Constant START_INDEX. */
 	protected static final String START_INDEX = "start-index";
+	
+	/** The Constant PAGE_SIZE_ATTRIBUTE. */
 	protected static final String PAGE_SIZE_ATTRIBUTE = "page-size";
+	
+	/** The Constant PAGE_INDEX_ATTRIBUTE. */
 	protected static final String PAGE_INDEX_ATTRIBUTE = "page-index";
+	
+	/** The Constant TOTAL_ITEMS_ATTRIBUTE. */
 	protected static final String TOTAL_ITEMS_ATTRIBUTE = "total-items";
 
-	/** Size of a single page */
+	/**  Size of a single page. */
 	protected final int pageSize;
 	
 	/** The index of the first page (usually 0 or 1). */
 	protected final int startIndex;
 
-	/** The current page index*/
+	/**  The current page index. */
 	protected int pageIndex;
 	
 	/** The total number of items expected to scroll. */
@@ -57,16 +67,17 @@ public class PagingLimit implements UsagePolicy,
 	/** The attribute where the total number of items is defined (not currently used, consider removing). */
 	protected RESTAttribute totalItemsAttributes;
 
-	/** The set of input method used page the instance */
+	/**  The set of input method used page the instance. */
 	private Set<InputMethod> inputMethods = new LinkedHashSet<>();		
 	
 	/**
 	 * Default constructor.
-	 * @param pageSize
-	 * @param startIndex
-	 * @param pageSizeAtt
-	 * @param pageIndex
-	 * @param totalItems
+	 *
+	 * @param pageSize the page size
+	 * @param startIndex the start index
+	 * @param pageSizeAtt the page size att
+	 * @param pageIndex the page index
+	 * @param totalItems the total items
 	 */
 	protected PagingLimit(int pageSize, int startIndex, RESTAttribute pageSizeAtt, RESTAttribute pageIndex, RESTAttribute totalItems) {
 		super();
@@ -84,8 +95,9 @@ public class PagingLimit implements UsagePolicy,
 	
 	/**
 	 * Constructor used by the usage policy factory.
-	 * @param repo
-	 * @param properties
+	 *
+	 * @param repo the repo
+	 * @param properties the properties
 	 */
 	public PagingLimit(ServiceRepository repo, Properties properties) {
 		this(Integer.parseInt(properties.getProperty(PAGE_SIZE)),
@@ -104,8 +116,10 @@ public class PagingLimit implements UsagePolicy,
 	}
 
 	/**
-	 * @param repo
-	 * @param name
+	 * Gets the input method.
+	 *
+	 * @param repo the repo
+	 * @param name the name
 	 * @return the input method the given name in the given repository.
 	 */
 	private static InputMethod getInputMethod(ServiceRepository repo, String name) {
@@ -117,6 +131,9 @@ public class PagingLimit implements UsagePolicy,
 	}
 	
 	/**
+	 * Copy.
+	 *
+	 * @return the usage policy
 	 * @see uk.ac.ox.cs.pdq.runtime.wrappers.service.UsagePolicy#copy()
 	 */
 	@Override
@@ -127,6 +144,8 @@ public class PagingLimit implements UsagePolicy,
 	}
 
 	/**
+	 * Process access request.
+	 *
 	 * @param event RESTRequestEvent
 	 * @see uk.ac.ox.cs.pdq.runtime.wrappers.service.AccessPreProcessor#processAccessRequest(uk.ac.ox.cs.pdq.runtime.wrappers.service.RequestEvent)
 	 */
@@ -140,6 +159,8 @@ public class PagingLimit implements UsagePolicy,
 	}
 
 	/**
+	 * Process access response.
+	 *
 	 * @param event RESTResponseEvent
 	 * @see uk.ac.ox.cs.pdq.runtime.wrappers.service.AccessPostProcessor#processAccessResponse(uk.ac.ox.cs.pdq.runtime.wrappers.service.ResponseEvent)
 	 */
@@ -156,6 +177,9 @@ public class PagingLimit implements UsagePolicy,
 		this.totalItems += event.getOutput().size();
 	}
 	
+	/**
+	 * Increment.
+	 */
 	protected void increment() {
 		this.pageIndex ++;
 	}

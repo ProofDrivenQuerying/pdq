@@ -16,14 +16,24 @@ import uk.ac.ox.cs.pdq.algebra.RelationalOperator;
 import uk.ac.ox.cs.pdq.algebra.RelationalOperatorException;
 import uk.ac.ox.cs.pdq.util.TupleType;
 
+// TODO: Auto-generated Javadoc
 /**
+ * The Class CountTest.
+ *
  * @author Julien Leblay
  */
 @RunWith(MockitoJUnitRunner.class)
 public class CountTest extends UnaryOperatorTest {
+	
+	/** The operator. */
 	Count operator;
+	
+	/** The single integer type. */
 	TupleType singleIntegerType = TupleType.DefaultFactory.create(Integer.class);
 	
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.test.algebra.RelationalOperatorTest#setup()
+	 */
 	@Before public void setup() throws RelationalOperatorException {
 		super.setup();
         MockitoAnnotations.initMocks(this);
@@ -36,10 +46,16 @@ public class CountTest extends UnaryOperatorTest {
 		this.operator = new Count(child);
 	}
 	
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.test.algebra.RelationalOperatorTest#getOperator()
+	 */
 	RelationalOperator getOperator() {
 		return this.operator;
 	}
 	
+	/**
+	 * Inits the count test.
+	 */
 	@Test public void initCountTest() {
 		Assert.assertEquals("Child must match that used for initialization", child, this.operator.getChild());
 		Assert.assertEquals("Count operator type must be a single integer", singleIntegerType, this.operator.getType());
@@ -47,11 +63,19 @@ public class CountTest extends UnaryOperatorTest {
 		Assert.assertEquals("Count operator input type must match that of child", inputType, this.operator.getInputType());
 	}
 	
+	/**
+	 * Inits the count test null argument.
+	 */
 	@Test(expected=NullPointerException.class)
 	public void initCountTestNullArgument() {
 		new Count(null);
 	}
 
+	/**
+	 * Deep copy.
+	 *
+	 * @throws RelationalOperatorException the relational operator exception
+	 */
 	@Test public void deepCopy() throws RelationalOperatorException {
 		Count copy = this.operator.deepCopy();
 		Assert.assertEquals("Count operators deep copy must be equals to itself", this.operator, copy);
@@ -61,15 +85,30 @@ public class CountTest extends UnaryOperatorTest {
 		Assert.assertEquals("Count operator input type must match that of child", inputType, copy.getInputType());
 	}
 
+	/**
+	 * Gets the column.
+	 *
+	 * @return the column
+	 */
 	@Test public void getColumn() {
 		Assert.assertNotNull("Count operator's only column has type Integer", this.operator.getColumn(0));
 	}
 
+	/**
+	 * Gets the bad column.
+	 *
+	 * @return the bad column
+	 */
 	@Test(expected=IllegalArgumentException.class) 
 	public void getBadColumn() {
 		this.operator.getColumn(1);
 	}
 
+	/**
+	 * Test hash code.
+	 *
+	 * @throws RelationalOperatorException the relational operator exception
+	 */
 	@Test public void testHashCode() throws RelationalOperatorException {
 		Set<RelationalOperator> s = new LinkedHashSet<>();
 

@@ -24,25 +24,26 @@ import uk.ac.ox.cs.pdq.util.Utility;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
+// TODO: Auto-generated Javadoc
 /**
- * Creates tuple generating dependencies given a set of relations and an input query
- * 
+ * Creates tuple generating dependencies given a set of relations and an input query.
+ *
  * @author Efthymia Tsamoura
- * 
  */
 public class DependencyGeneratorFirst extends AbstractDependencyGenerator implements DependencyGenerator{
 
 	/** Logger. */
 	private static Logger log = Logger.getLogger(DependencyGeneratorFirst.class);
 	
-	/** The query that will guide the creation of the dependencies */
+	/**  The query that will guide the creation of the dependencies. */
 	private final ConjunctiveQuery query;
 	
 	/**
-	 * 
-	 * @param schema
-	 * @param query
-	 * @param params
+	 * Instantiates a new dependency generator first.
+	 *
+	 * @param schema the schema
+	 * @param query the query
+	 * @param params the params
 	 */
 	public DependencyGeneratorFirst(Schema schema, ConjunctiveQuery query, BenchmarkParameters params) {
 		super(schema, params);
@@ -50,6 +51,9 @@ public class DependencyGeneratorFirst extends AbstractDependencyGenerator implem
 	}
 	
 	
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.generator.DependencyGenerator#generate()
+	 */
 	@Override
 	public Schema generate() {
 		SchemaBuilder sb = Schema.builder(this.schema);
@@ -67,10 +71,9 @@ public class DependencyGeneratorFirst extends AbstractDependencyGenerator implem
 	 * while its right-hand side is a randomly created conjunction.
 	 * If the number of requested dependencies is higher than the dependencies that we can create using the conjunctions 
 	 * from the query's body, then we randomly create additional dependencies 
-	 * 
-	 * @param query
-	 * @return 
-	 * 		a list of dependencies
+	 *
+	 * @param query the query
+	 * @return 		a list of dependencies
 	 */
 	private List<Constraint> generateTGDs(ConjunctiveQuery query) {
 		List<Constraint> dependencies = new ArrayList<>();
@@ -118,12 +121,11 @@ public class DependencyGeneratorFirst extends AbstractDependencyGenerator implem
 	 * while its right-hand side is a randomly created conjunction.
 	 * If the number of requested dependencies is higher than the dependencies that we can create using the conjunctions 
 	 * from the query's body, then we randomly create additional dependencies 
-	 * 
-	 * @TODO the method to generate dependencies from a query must be put back 
+	 *
+	 * @param query the query
+	 * @return 		a list of dependencies
+	 * @TODO the method to generate dependencies from a query must be put back
 	 * @TODO create the class AcyclicQuery
-	 * @param query
-	 * @return
-	 * 		a list of dependencies
 	 */
 	private List<Constraint> generateTGDs(AcyclicQuery query) {
 		List<Constraint> ret = new ArrayList<>();
@@ -152,12 +154,11 @@ public class DependencyGeneratorFirst extends AbstractDependencyGenerator implem
 	}
 	
 	/**
-	 * 
-	 * @param input
-	 * @param dependencies
-	 * 		The number of dependencies to create
-	 * @return
-	 * 		randomly created guarded dependencies. None of the output dependencies must already exist in the input collection 
+	 * Generate guarded tg ds.
+	 *
+	 * @param input the input
+	 * @param dependencies 		The number of dependencies to create
+	 * @return 		randomly created guarded dependencies. None of the output dependencies must already exist in the input collection
 	 */
 	private List<Constraint> generateGuardedTGDs(Collection<Constraint> input, int dependencies) {
 		List<Constraint> ret = new ArrayList<>();

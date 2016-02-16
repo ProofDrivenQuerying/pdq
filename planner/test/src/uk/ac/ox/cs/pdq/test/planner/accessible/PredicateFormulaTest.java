@@ -17,18 +17,26 @@ import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class PredicateFormulaTest.
+ */
 public class PredicateFormulaTest {
 
+	/** The random. */
 	private Random random = new Random();
 	
 	/**
-	 * Makes sure assertions are enabled
+	 * Makes sure assertions are enabled.
 	 */
 	@Before 
 	public void setup() {
 		Utility.assertsEnabled();
 	}
 	
+	/**
+	 * Test is schema fact.
+	 */
 	@Test public void testIsSchemaFact() {
 		Relation r = new Relation("r", Lists.newArrayList(
 				new Attribute(String.class, "a1"), new Attribute(String.class, "a2"))) {};
@@ -39,6 +47,9 @@ public class PredicateFormulaTest {
 				Predicate p = new Predicate(r, Lists.newArrayList(s, c));
 	}
 
+	/**
+	 * Test is accessible fact.
+	 */
 	@Test public void testIsAccessibleFact() {
 		Relation r = AccessibleRelation.getInstance();
 		Skolem s = new Skolem("s");
@@ -46,6 +57,9 @@ public class PredicateFormulaTest {
 				new Predicate(r, Lists.newArrayList(s)).getSignature() instanceof AccessibleRelation);
 	}
 
+	/**
+	 * Test is inferred accessible fact.
+	 */
 	@Test public void testIsInferredAccessibleFact() {
 		Relation r = new InferredAccessibleRelation(
 				new Relation("r", Lists.newArrayList(

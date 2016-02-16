@@ -14,6 +14,7 @@ import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema.InferredAccessi
 import uk.ac.ox.cs.pdq.rewrite.Rewriter;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * Copy of each of the original integrity constraints, with each relation R replaced by InfAccR.
  *
@@ -23,9 +24,10 @@ import uk.ac.ox.cs.pdq.rewrite.Rewriter;
 public class InferredAccessibleAxiom extends TGD {
 
 	/**
-	 * Creates an inferred accessible axiom
-	 * @param dependency
-	 * @param predToInfAcc
+	 * Creates an inferred accessible axiom.
+	 *
+	 * @param dependency the dependency
+	 * @param predToInfAcc the pred to inf acc
 	 */
 	public InferredAccessibleAxiom(TGD dependency, Map<Predicate, InferredAccessibleRelation> predToInfAcc) {
 		super(substitute(dependency.getLeft(), predToInfAcc),
@@ -33,7 +35,9 @@ public class InferredAccessibleAxiom extends TGD {
 	}
 
 	/**
-	 * Creates the left-hand side of an inferred accessible axiom for the input dependency
+	 * Creates the left-hand side of an inferred accessible axiom for the input dependency.
+	 *
+	 * @param <T> the generic type
 	 * @param f Formula
 	 * @param predToInfAcc Map<PredicateFormula,InferredAccessibleRelation>
 	 * @return a conjunction of predicates corresponding to the LHS of an
@@ -44,7 +48,14 @@ public class InferredAccessibleAxiom extends TGD {
 	}
 
 
+	/**
+	 * The Class InferredAccessibleRelationSubstituter.
+	 *
+	 * @param <T> the generic type
+	 */
 	private static class InferredAccessibleRelationSubstituter<T extends Formula> implements Rewriter<T, T> {
+		
+		/** The pred to inf acc. */
 		final Map<Predicate, InferredAccessibleRelation> predToInfAcc;
 
 		/**
@@ -56,6 +67,8 @@ public class InferredAccessibleAxiom extends TGD {
 		}
 
 		/**
+		 * Rewrite.
+		 *
 		 * @param input T
 		 * @return T
 		 */
@@ -65,6 +78,8 @@ public class InferredAccessibleAxiom extends TGD {
 		}
 
 		/**
+		 * Substitute.
+		 *
 		 * @param f Formula
 		 * @return Formula
 		 */
@@ -85,6 +100,8 @@ public class InferredAccessibleAxiom extends TGD {
 		}
 
 		/**
+		 * Substitute.
+		 *
 		 * @param conjunction Conjunction<Formula>
 		 * @return Conjunction<Formula>
 		 */
@@ -97,6 +114,8 @@ public class InferredAccessibleAxiom extends TGD {
 		}
 
 		/**
+		 * Substitute.
+		 *
 		 * @param disjunction Disjunction<Formula>
 		 * @return Disjunction<Formula>
 		 */
@@ -109,6 +128,8 @@ public class InferredAccessibleAxiom extends TGD {
 		}
 
 		/**
+		 * Substitute.
+		 *
 		 * @param neg Negation<Formula>
 		 * @return Negation<Formula>
 		 */
@@ -117,6 +138,8 @@ public class InferredAccessibleAxiom extends TGD {
 		}
 
 		/**
+		 * Substitute.
+		 *
 		 * @param pred PredicateFormula
 		 * @return PredicateFormula
 		 */

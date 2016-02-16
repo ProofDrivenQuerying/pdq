@@ -19,6 +19,7 @@ import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.io.ReaderException;
 
+// TODO: Auto-generated Javadoc
 /**
  * Reads queries from XML.
  * 
@@ -26,7 +27,7 @@ import uk.ac.ox.cs.pdq.io.ReaderException;
  */
 public class QueryReader extends AbstractXMLReader<ConjunctiveQuery> {
 
-	/** Query builder */
+	/**  Query builder. */
 	private QueryBuilder builder = new QueryBuilder();
 	
 	/** True if the parse is in the body. */
@@ -35,11 +36,12 @@ public class QueryReader extends AbstractXMLReader<ConjunctiveQuery> {
 	/** Temporary list of atoms being built. */
 	private List<Predicate> atoms = null;
 
-	/** The atom reader */
+	/**  The atom reader. */
 	private AtomReader atomReader = null;
 
 	/**
-	 * Default constructor
+	 * Default constructor.
+	 *
 	 * @param schema Schema
 	 */
 	public QueryReader(Schema schema) {
@@ -137,6 +139,8 @@ public class QueryReader extends AbstractXMLReader<ConjunctiveQuery> {
 	}
 	
 	/**
+	 * Gets the query.
+	 *
 	 * @return a instantiation of the query being in built.
 	 */
 	public ConjunctiveQuery getQuery() {

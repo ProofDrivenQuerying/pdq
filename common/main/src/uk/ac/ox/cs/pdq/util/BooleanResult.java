@@ -1,5 +1,6 @@
 package uk.ac.ox.cs.pdq.util;
 
+// TODO: Auto-generated Javadoc
 /**
  * Representation of a Boolean query/plan result.
  *
@@ -7,12 +8,13 @@ package uk.ac.ox.cs.pdq.util;
  */
 public final class BooleanResult implements Result {
 
-	/** The internal value of the boolean result */
+	/**  The internal value of the boolean result. */
 	private boolean value;
 
 	/**
-	 * Default constructor
-	 * @param value
+	 * Default constructor.
+	 *
+	 * @param value the value
 	 */
 	public BooleanResult(boolean value) {
 		this.value = value;
@@ -46,6 +48,8 @@ public final class BooleanResult implements Result {
 	}
 
 	/**
+	 * Gets the value.
+	 *
 	 * @return the internal value of the BooleanResult
 	 */
 	public Boolean getValue() {

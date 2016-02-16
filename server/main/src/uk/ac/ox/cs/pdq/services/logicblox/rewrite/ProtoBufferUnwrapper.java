@@ -48,6 +48,7 @@ import com.logicblox.common.protocol.CommonProto.VariableDeclaration;
 import com.logicblox.compiler.ProtoBuf.CompilationUnit;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * Builds a partial schema from a compile result.
  * 
@@ -64,7 +65,7 @@ public class ProtoBufferUnwrapper {
 	/** Variables recorded so far. */
 	private final Map<String , Pair<Variable, Object>> variables = new LinkedHashMap<>();
 
-	/** Known entity relations */
+	/**  Known entity relations. */
 	private final Map<String , EntityRelation> entityTypes = new LinkedHashMap<>();
 	
 	/**
@@ -84,6 +85,8 @@ public class ProtoBufferUnwrapper {
 	}
 
 	/**
+	 * Unwrap schema.
+	 *
 	 * @param cu CompilationUnit
 	 * @return Schema
 	 */
@@ -126,6 +129,8 @@ public class ProtoBufferUnwrapper {
 	}
 	
 	/**
+	 * Unwrap queries.
+	 *
 	 * @param cu CompilationUnit
 	 * @return Collection<ConjunctiveQuery>
 	 */
@@ -149,6 +154,8 @@ public class ProtoBufferUnwrapper {
 	}
 	
 	/**
+	 * Unwrap predicate declarations.
+	 *
 	 * @param predList List<PredicateDeclaration>
 	 */
 	private void unwrapPredicateDeclarations(List<PredicateDeclaration> predList) {
@@ -168,7 +175,10 @@ public class ProtoBufferUnwrapper {
 	}
 
 	/**
+	 * Unwrap constraint.
+	 *
 	 * @param constraint Constraint
+	 * @return the uk.ac.ox.cs.pdq.db. constraint
 	 */
 	public uk.ac.ox.cs.pdq.db.Constraint unwrapConstraint(Constraint constraint) {
 		this.variables.clear();
@@ -190,8 +200,9 @@ public class ProtoBufferUnwrapper {
 	}
 
 	/**
+	 * Rule to constraint.
+	 *
 	 * @param rule Rule
-	 * @param forget boolean
 	 * @return Collection<ConjunctiveQuery>
 	 */
 	public uk.ac.ox.cs.pdq.db.Constraint ruleToConstraint(Rule rule) {
@@ -219,8 +230,9 @@ public class ProtoBufferUnwrapper {
 	}
 
 	/**
+	 * Rule to view.
+	 *
 	 * @param rule Rule
-	 * @param forget boolean
 	 * @return View
 	 */
 	public View ruleToView(Rule rule) {
@@ -232,8 +244,9 @@ public class ProtoBufferUnwrapper {
 	}
 
 	/**
+	 * Rule to query.
+	 *
 	 * @param rule Rule
-	 * @param forget boolean
 	 * @return Collection<ConjunctiveQuery>
 	 */
 	public ConjunctiveQuery ruleToQuery(Rule rule) {
@@ -245,9 +258,12 @@ public class ProtoBufferUnwrapper {
 	}
 
 	/**
+	 * Unwrap rule.
+	 *
 	 * @param rule Rule
 	 * @param forget boolean if true, the return rule is not recorded into the
 	 * schema. This is typically useful when rule are actually queries.
+	 * @param strict the strict
 	 * @return Collection<Rule>
 	 */
 	public Collection<uk.ac.ox.cs.pdq.fol.Rule> unwrapRule(Rule rule, boolean forget, boolean strict) {
@@ -305,6 +321,8 @@ public class ProtoBufferUnwrapper {
 	}
 
 	/**
+	 * Unwrap p2 p.
+	 *
 	 * @param p2p P2PMapping
 	 */
 	private void unwrapP2P(P2PMapping p2p) {
@@ -312,6 +330,8 @@ public class ProtoBufferUnwrapper {
 	}
 	
 	/**
+	 * Unwrap predicate declaration.
+	 *
 	 * @param predDecl PredicateDeclaration
 	 * @return Relation
 	 */
@@ -374,6 +394,8 @@ public class ProtoBufferUnwrapper {
 	}
 	
 	/**
+	 * Unwrap formula.
+	 *
 	 * @param formula Formula
 	 * @return uk.ac.ox.cs.pdq.formula.Formula
 	 */
@@ -404,7 +426,10 @@ public class ProtoBufferUnwrapper {
 	}
 
 	/**
+	 * Unwrap atom.
+	 *
 	 * @param atom Atom
+	 * @param strict the strict
 	 * @return PredicateFormula
 	 */
 	private Predicate unwrapAtom(Atom atom, boolean strict) {
@@ -427,6 +452,8 @@ public class ProtoBufferUnwrapper {
 	}
 	
 	/**
+	 * Gets the relation.
+	 *
 	 * @param atom Atom
 	 * @return Relation
 	 */
@@ -439,7 +466,10 @@ public class ProtoBufferUnwrapper {
 	}
 
 	/**
+	 * Unwrap head atom.
+	 *
 	 * @param atom HeadAtom
+	 * @param strict the strict
 	 * @return PredicateFormula
 	 */
 	private Predicate unwrapHeadAtom(HeadAtom atom, boolean strict) {
@@ -450,6 +480,8 @@ public class ProtoBufferUnwrapper {
 	}
 
 	/**
+	 * Unwrap term.
+	 *
 	 * @param term Term
 	 * @return uk.ac.ox.cs.pdq.formula.Term
 	 */
@@ -479,6 +511,8 @@ public class ProtoBufferUnwrapper {
 	
 
 	/**
+	 * Unwrap variable declarations.
+	 *
 	 * @param declarations List<VariableDeclaration>
 	 * @return Map<String,Pair<Variable,Object>>
 	 */
@@ -492,6 +526,8 @@ public class ProtoBufferUnwrapper {
 	}
 
 	/**
+	 * Unwrap type.
+	 *
 	 * @param type com.logicblox.common.protocol.CommonProto.Type
 	 * @return Object
 	 */
@@ -523,7 +559,7 @@ public class ProtoBufferUnwrapper {
 	 */
 	public static class ParserException extends RuntimeException {
 
-		/** generated */
+		/**  generated. */
 		private static final long serialVersionUID = 1453097478156826396L;
 
 		/**

@@ -25,6 +25,7 @@ import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
 
+// TODO: Auto-generated Javadoc
 /**
  * Bootstrapping class for starting the planner. 
  * 
@@ -35,45 +36,82 @@ public class Bootstrap {
 	/** Logger. */
 	private static Logger log = Logger.getLogger(Bootstrap.class); 
 	
+	/** The Constant PROGRAM_NAME. */
 	private static final String PROGRAM_NAME = "pdq-planner-<version>.jar";
 	
+	/** The help. */
 	@Parameter(names = { "-h", "--help" }, help = true, description = "Displays this help message.")
 	private boolean help;
+	
+	/**
+	 * Checks if is help.
+	 *
+	 * @return true, if is help
+	 */
 	public boolean isHelp() {
 		return this.help;
 	}
 	
+	/** The schema path. */
 	@Parameter(names = { "-s", "--schema" }, required = true,
 			 validateWith=FileValidator.class,
 		description ="Path to the input schema definition file.")
 	private String schemaPath;
+	
+	/**
+	 * Gets the schema path.
+	 *
+	 * @return the schema path
+	 */
 	public String getSchemaPath() {
 		return this.schemaPath;
 	}
 	
+	/** The query path. */
 	@Parameter(names = { "-q", "--query" }, required = true,
 			 validateWith=FileValidator.class,
 		description ="Path to the input query definition file.")
 	private String queryPath;
+	
+	/**
+	 * Gets the query path.
+	 *
+	 * @return the query path
+	 */
 	public String getQueryPath() {
 		return this.queryPath;
 	}
 	
+	/** The config file. */
 	@Parameter(names = { "-c", "--config" }, validateWith=FileValidator.class,
 			description = "Directory where to look for configuration files. "
 			+ "Default is the current directory.")
 	private File configFile;
+	
+	/**
+	 * Gets the config file.
+	 *
+	 * @return the config file
+	 */
 	public File getConfigFile() {
 		return this.configFile;
 	}
 	
+	/** The verbose. */
 	@Parameter(names = { "-v", "--verbose" }, required = false,
 		description ="Path to the input query definition file.")
 	private boolean verbose = false;
+	
+	/**
+	 * Checks if is verbose.
+	 *
+	 * @return true, if is verbose
+	 */
 	public boolean isVerbose() {
 		return this.verbose;
 	}
 
+	/** The dynamic params. */
 	@DynamicParameter(names = "-D", description = "Dynamic parameters. Override values defined in the configuration files.")
 	protected Map<String, String> dynamicParams = new LinkedHashMap<>();
 
@@ -148,6 +186,10 @@ public class Bootstrap {
 	 * @author Julien LEBLAY
 	 */
 	public static class FileValidator implements IParameterValidator {
+		
+		/* (non-Javadoc)
+		 * @see com.beust.jcommander.IParameterValidator#validate(java.lang.String, java.lang.String)
+		 */
 		@Override
 		public void validate(String name, String value) throws ParameterException {
 			try {
@@ -162,7 +204,8 @@ public class Bootstrap {
 	}
 
 	/**
-	 * Instantiates the bootstrap
+	 * Instantiates the bootstrap.
+	 *
 	 * @param args String[]
 	 */
 	public static void main(String... args) {

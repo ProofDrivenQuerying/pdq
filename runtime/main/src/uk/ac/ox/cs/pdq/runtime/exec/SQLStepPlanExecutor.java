@@ -18,6 +18,7 @@ import uk.ac.ox.cs.pdq.util.BooleanResult;
 import uk.ac.ox.cs.pdq.util.Result;
 import uk.ac.ox.cs.pdq.util.Utility;
 
+// TODO: Auto-generated Javadoc
 /**
  * SQL-backed plan executor. Translates a linear plan a sequence of SQL 
  * statement, when each step of the plan materialized a table, and inputs of
@@ -32,11 +33,12 @@ import uk.ac.ox.cs.pdq.util.Utility;
 public class SQLStepPlanExecutor extends SQLPlanExecutor {
 
 	/**
-	 * Default constructor
-	 * @param plan
-	 * @param q
-	 * @param properties
+	 * Default constructor.
+	 *
+	 * @param plan the plan
+	 * @param q the q
 	 * @param sem Semantics
+	 * @param properties the properties
 	 */
 	public SQLStepPlanExecutor(LeftDeepPlan plan, Query<?> q, Semantics sem, Properties properties) {
 		super(plan, q, sem, properties);
@@ -116,8 +118,9 @@ public class SQLStepPlanExecutor extends SQLPlanExecutor {
 
 	/**
 	 * Delete temporary table created through an execution (and given as argument).
+	 *
 	 * @param tables Set<String>
-	 * @throws EvaluationException
+	 * @throws EvaluationException the evaluation exception
 	 */
 	public void cleanUp(Set<String> tables) throws EvaluationException {
 		try (Connection connection = SQLQueryEvaluator.getConnection(this.properties);

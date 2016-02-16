@@ -17,18 +17,34 @@ import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
 import uk.ac.ox.cs.pdq.ui.prefuse.types.EdgeTypes;
 
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class EdgePropertiesDialog.
+ */
 public class EdgePropertiesDialog extends JFrame {
 
+	/** The type. */
 	private EdgeTypes type;
+	
+	/** The node. */
 	private SearchNode node;
 	
-	/** Creates the GUI shown inside the frame's content pane. */
+	/**
+	 *  Creates the GUI shown inside the frame's content pane.
+	 *
+	 * @param frame the frame
+	 * @param type the type
+	 * @param node the node
+	 */
 	public EdgePropertiesDialog(JFrame frame, EdgeTypes type, SearchNode node) {
 		this.type = type;
 		this.node = node;
 		this.initialise();
 	}
 
+	/**
+	 * Initialise.
+	 */
 	private void initialise() {
 
 		Border border = BorderFactory.createEmptyBorder(20,20,5,20);
@@ -43,6 +59,13 @@ public class EdgePropertiesDialog extends JFrame {
 
 	}
 
+	/**
+	 * Creates the general panel.
+	 *
+	 * @param node the node
+	 * @param border the border
+	 * @return the j panel
+	 */
 	private JPanel createGeneralPanel(SearchNode node, Border border) {
 		JPanel titledBorders = new JPanel();
 		titledBorders.setBorder(border);

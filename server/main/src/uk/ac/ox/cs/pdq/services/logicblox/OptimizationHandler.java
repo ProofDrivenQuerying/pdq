@@ -39,6 +39,7 @@ import com.logicblox.connect.BloxCommand.ExternalRuleOptimization;
 import com.logicblox.connect.BloxCommand.ExternalRuleOptimizationResponse;
 import com.logicblox.connect.BloxCommand.ExternalRuleOptimizationResponse.Status;
 
+// TODO: Auto-generated Javadoc
 /**
  * Handles commands coming from client (typically optimization requests
  * and cost estimates).
@@ -50,10 +51,21 @@ public class OptimizationHandler implements MessageHandler<ExternalRuleOptimizat
 	/** Logger. */
 	static final Logger log = Logger.getLogger(OptimizationHandler.class);
 
+	/** The in. */
 	private final InputStream in;
+	
+	/** The out. */
 	private final OutputStream out;
+	
+	/** The master. */
 	private final SemanticOptimizationService master;
 
+	/**
+	 * Instantiates a new optimization handler.
+	 *
+	 * @param master the master
+	 * @param socket the socket
+	 */
 	public OptimizationHandler(SemanticOptimizationService master, Socket socket) {
 		this.master = master;
 		try {
@@ -64,6 +76,9 @@ public class OptimizationHandler implements MessageHandler<ExternalRuleOptimizat
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.services.MessageHandler#handle(com.google.protobuf.GeneratedMessage)
+	 */
 	@Override
 	public GeneratedMessage handle(ExternalRuleOptimization command) {
 		Rule result;
@@ -119,6 +134,8 @@ public class OptimizationHandler implements MessageHandler<ExternalRuleOptimizat
 	
 	/**
 	 * Runs the actual optimization by calling PDQ.
+	 *
+	 * @param schema the schema
 	 * @param query Query<?>
 	 * @param estimator CostEstimator<?>
 	 * @param handlers EventHandler[]

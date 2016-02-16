@@ -17,6 +17,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 
+// TODO: Auto-generated Javadoc
 /**
  * Join is a top-level class for all join operators.
  *
@@ -24,14 +25,25 @@ import com.google.common.collect.Sets;
  */
 public class Join extends NaryOperator implements PredicateBasedOperator {
 
-	/** */
+	/**
+	 * The Enum Variants.
+	 */
 	public static enum Variants {
-		NESTED_LOOP, MERGE, ASYMMETRIC_HASH, SYMMETRIC_HASH
+		
+		/** The nested loop. */
+		NESTED_LOOP, 
+ /** The merge. */
+ MERGE, 
+ /** The asymmetric hash. */
+ ASYMMETRIC_HASH, 
+ /** The symmetric hash. */
+ SYMMETRIC_HASH
 	}
 
 	/** The predicate associated with this join, null if this is a natural join. */
 	private final Predicate predicate;
 
+	/** The variant. */
 	protected Variants variant = Variants.SYMMETRIC_HASH;
 
 	/**
@@ -47,9 +59,7 @@ public class Join extends NaryOperator implements PredicateBasedOperator {
 	/**
 	 * Instantiates a new join.
 	 *
-	 * @param children
-	 *            the children
-	 * @throws RelationalOperatorException
+	 * @param children            the children
 	 */
 	public Join(List<RelationalOperator> children) {
 		super(children);
@@ -59,9 +69,8 @@ public class Join extends NaryOperator implements PredicateBasedOperator {
 	/**
 	 * Instantiates a new join.
 	 *
-	 * @param children the children
 	 * @param inputTerms List<Term>
-	 * @throws RelationalOperatorException
+	 * @param children the children
 	 */
 	protected Join(List<Term> inputTerms, List<RelationalOperator> children) {
 		super(inputTerms, inferType(children), children);
@@ -71,9 +80,8 @@ public class Join extends NaryOperator implements PredicateBasedOperator {
 	/**
 	 * Instantiates a new join.
 	 *
-	 * @param children the children
 	 * @param pred Predicate
-	 * @throws RelationalOperatorException
+	 * @param children the children
 	 */
 	public Join(Predicate pred, List<RelationalOperator> children) {
 		super(children);
@@ -84,9 +92,8 @@ public class Join extends NaryOperator implements PredicateBasedOperator {
 	/**
 	 * Instantiates a new join.
 	 *
-	 * @param children the children
 	 * @param pred Predicate
-	 * @throws RelationalOperatorException
+	 * @param children the children
 	 */
 	public Join(Predicate pred, RelationalOperator... children) {
 		this(pred, Lists.newArrayList(children));
@@ -132,6 +139,8 @@ public class Join extends NaryOperator implements PredicateBasedOperator {
 	}
 
 	/**
+	 * Gets the variant.
+	 *
 	 * @return Variants
 	 */
 	public Variants getVariant() {
@@ -139,6 +148,8 @@ public class Join extends NaryOperator implements PredicateBasedOperator {
 	}
 
 	/**
+	 * Sets the variant.
+	 *
 	 * @param variant Variants
 	 */
 	public void setVariant(Variants variant) {
@@ -147,6 +158,8 @@ public class Join extends NaryOperator implements PredicateBasedOperator {
 	}
 
 	/**
+	 * Gets the predicate.
+	 *
 	 * @return Predicate
 	 * @see uk.ac.ox.cs.pdq.algebra.PredicateBasedOperator#getPredicate()
 	 */
@@ -156,7 +169,8 @@ public class Join extends NaryOperator implements PredicateBasedOperator {
 	}
 
 	/**
-
+	 * Checks for predicate.
+	 *
 	 * @return boolean
 	 */
 	public boolean hasPredicate() {
@@ -166,8 +180,10 @@ public class Join extends NaryOperator implements PredicateBasedOperator {
 	}
 
 	/**
-	 * @param from
-	 * @param to
+	 * Checks for common terms.
+	 *
+	 * @param from the from
+	 * @param to the to
 	 * @return true, if there is at least one common variable between the lists of terms from and to.
 	 */
 	private static boolean hasCommonTerms(List<? extends Term> from, List<? extends Term> to) {

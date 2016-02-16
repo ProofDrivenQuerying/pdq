@@ -6,15 +6,19 @@ import uk.ac.ox.cs.pdq.db.Constraint;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.io.Writer;
 
+// TODO: Auto-generated Javadoc
 /**
- * Writes a concise representation of a dependency to the given output
- * 
+ * Writes a concise representation of a dependency to the given output.
+ *
  * @author Julien Leblay
  */
 public class VeryPrettyDependencyWriter 
 		extends PrettyWriter<Constraint> implements Writer<Constraint> {
 
+	/** The Constant AND. */
 	public static final String AND = " \u2227 ";
+	
+	/** The Constant IMPLIES. */
 	public static final String IMPLIES = " \u21D2 ";
 	
 	/**
@@ -37,7 +41,8 @@ public class VeryPrettyDependencyWriter
 	
 	/**
 	 * Fluent pretty writer provider.
-	 * @param out
+	 *
+	 * @param out the out
 	 * @return a new PrettyQueryWriter with the given default output.
 	 */
 	public static VeryPrettyDependencyWriter to(PrintStream out) {

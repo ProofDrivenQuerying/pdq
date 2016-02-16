@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package uk.ac.ox.cs.pdq.planner.dag.explorer.filters;
 
 import java.util.ArrayList;
@@ -9,17 +12,20 @@ import uk.ac.ox.cs.pdq.planner.dag.DAGAnnotatedPlan;
 import uk.ac.ox.cs.pdq.planner.dag.UnaryAnnotatedPlan;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.dominance.FastFactDominance;
 
+// TODO: Auto-generated Javadoc
 /**
- * Filters out the fact dominated configurations
+ * Filters out the fact dominated configurations.
+ *
  * @author Efthymia Tsamoura
-
- * @param 
  */
 public class FactDominationFilter implements Filter {
 
+	/** The fact dominance. */
 	private final FastFactDominance factDominance = new FastFactDominance(false);
 
 	/**
+	 * Filter.
+	 *
 	 * @param configurations Collection<DAGConfiguration>
 	 * @return Collection<DAGConfiguration>
 	 * @see uk.ac.ox.cs.pdq.dag.explorer.filters.Filter#filter(Collection<DAGConfiguration>)

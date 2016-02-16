@@ -14,21 +14,25 @@ import uk.ac.ox.cs.pdq.fol.Skolem;
 import uk.ac.ox.cs.pdq.util.Utility;
 
 
+// TODO: Auto-generated Javadoc
 /**
+ * The Class SkolemTest.
  *
  * @author Julien Leblay
- *
  */
 public final class SkolemTest {
 	
 	/**
-	 * Makes sure assertions are enabled
+	 * Makes sure assertions are enabled.
 	 */
 	@Before 
 	public void setup() {
 		Utility.assertsEnabled();
 	}
 
+	/**
+	 * Test no two similary generated skolems.
+	 */
 	@Test public void testNoTwoSimilaryGeneratedSkolems() {
 		Assert.assertNotEquals(
 				"Two Skolem generated consecutively must not be equals",
@@ -36,6 +40,9 @@ public final class SkolemTest {
 				Skolem.getFreshConstant());
 	}
 
+	/**
+	 * Test generated skolems similar after reset.
+	 */
 	@Test public void testGeneratedSkolemsSimilarAfterReset() {
 		Skolem.resetCounter();
 		Skolem s1 = Skolem.getFreshConstant();
@@ -47,29 +54,47 @@ public final class SkolemTest {
 	}
 
 
+	/**
+	 * Test skolem is skolem.
+	 */
 	@Test public void testSkolemIsSkolem() {
 		Assert.assertTrue("Skolem.isSkolem must be always true", new Skolem("v").isSkolem());
 	}
 
+	/**
+	 * Test skolem is not variable.
+	 */
 	@Test public void testSkolemIsNotVariable() {
 		Assert.assertFalse("Skolem.isVariable must be always false", new Skolem("v").isVariable());
 	}
 
+	/**
+	 * Test skolem valid.
+	 */
 	@Test public void testSkolemValid() {
 		Skolem v = new Skolem("v");
 		Assert.assertEquals("Skolem must have name 'v'", "v", v.getName());
 	}
 
+	/**
+	 * Test skolem empty name.
+	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void testSkolemEmptyName() {
 		new Skolem("");
 	}
 
+	/**
+	 * Test skolem null name.
+	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void testSkolemNullName() {
 		new Skolem(null);
 	}
 
+	/**
+	 * Test hash code.
+	 */
 	@Test public void testHashCode() {
 		int n = 100;
 		HashSet<Skolem> terms = new HashSet<>();
@@ -89,6 +114,9 @@ public final class SkolemTest {
 		}
 	}
 
+	/**
+	 * Test equals.
+	 */
 	@Test public void testEquals() {
 		int n = 100;
 		for (int i = 0; i < n; i++) {
@@ -96,6 +124,9 @@ public final class SkolemTest {
 		}
 	}
 
+	/**
+	 * Test not equals.
+	 */
 	@Test public void testNotEquals() {
 		int n = 100;
 		for (int i = 0; i < n; i++) {

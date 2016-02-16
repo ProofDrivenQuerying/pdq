@@ -18,6 +18,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
 /**
  * A formula that contains no logical connectives.
  * An atomic formula is a formula of the form P (t_1, \ldots, t_n) for P a predicate, and the t_i terms.)
@@ -34,22 +35,24 @@ public class Predicate extends AbstractFormula implements Formula {
 	 */
 	private final Signature signature;
 
-	/** Signature's name */
+	/**  Signature's name. */
 	private final String name;
 
-	/** Signature's arity */
+	/**  Signature's arity. */
 	private final int arity;
 
-	/** The terms of this atom */
+	/**  The terms of this atom. */
 	private final List<Term> terms;
 
-	/**  Cashed string representation of the atom */
+	/**   Cashed string representation of the atom. */
 	private final String toString;
 
+	/** The hash. */
 	private Integer hash;
 
 	/**
-	 * Constructor for Atomic formulae
+	 * Constructor for Atomic formulae.
+	 *
 	 * @param signature Signature
 	 * @param terms Collection<? extends Term>
 	 */
@@ -71,6 +74,8 @@ public class Predicate extends AbstractFormula implements Formula {
 	}
 	
 	/**
+	 * Instantiates a new predicate.
+	 *
 	 * @param signature Signature
 	 * @param term Term[]
 	 */
@@ -79,6 +84,8 @@ public class Predicate extends AbstractFormula implements Formula {
 	}
 
 	/**
+	 * Checks if is equality.
+	 *
 	 * @return true, if the atom acts as an equality
 	 */
 	public boolean isEquality() {
@@ -86,6 +93,8 @@ public class Predicate extends AbstractFormula implements Formula {
 	}
 
 	/**
+	 * Gets the signature.
+	 *
 	 * @return the atom's signature
 	 */
 	public Signature getSignature() {
@@ -94,6 +103,8 @@ public class Predicate extends AbstractFormula implements Formula {
 
 
 	/**
+	 * Gets the name.
+	 *
 	 * @return the atom's predicate
 	 */
 	public String getName() {
@@ -101,6 +112,8 @@ public class Predicate extends AbstractFormula implements Formula {
 	}
 
 	/**
+	 * Gets the terms count.
+	 *
 	 * @return the atom's arity
 	 */
 	public int getTermsCount() {
@@ -108,6 +121,8 @@ public class Predicate extends AbstractFormula implements Formula {
 	}
 
 	/**
+	 * Gets the term.
+	 *
 	 * @param n int
 	 * @return the atom's n-th term
 	 */
@@ -116,6 +131,8 @@ public class Predicate extends AbstractFormula implements Formula {
 	}
 
 	/**
+	 * Gets the terms.
+	 *
 	 * @return the list of terms
 	 * @see uk.ac.ox.cs.pdq.fol.Formula#getTerms()
 	 */
@@ -126,6 +143,8 @@ public class Predicate extends AbstractFormula implements Formula {
 
 
 	/**
+	 * Gets the terms.
+	 *
 	 * @param positions List<Integer>
 	 * @return the Set<Term> at the given positions.
 	 */
@@ -138,6 +157,8 @@ public class Predicate extends AbstractFormula implements Formula {
 	}
 
 	/**
+	 * Gets the constants.
+	 *
 	 * @param positions List<Integer>
 	 * @return the List<Constant> at the given positions.
 	 */
@@ -155,6 +176,8 @@ public class Predicate extends AbstractFormula implements Formula {
 	}
 
 	/**
+	 * Gets the variables.
+	 *
 	 * @return List<Variable>
 	 */
 	public List<Variable> getVariables() {
@@ -168,6 +191,8 @@ public class Predicate extends AbstractFormula implements Formula {
 	}
 
 	/**
+	 * Gets the constants.
+	 *
 	 * @return Collection<Constant>
 	 */
 	public Collection<Constant> getConstants() {
@@ -181,6 +206,8 @@ public class Predicate extends AbstractFormula implements Formula {
 	}
 
 	/**
+	 * Gets the schema constants.
+	 *
 	 * @return Collection<TypedConstant<?>>
 	 */
 	public Collection<TypedConstant<?>> getSchemaConstants() {
@@ -194,6 +221,8 @@ public class Predicate extends AbstractFormula implements Formula {
 	}
 
 	/**
+	 * Gets the predicates.
+	 *
 	 * @return List<PredicateFormula>
 	 * @see uk.ac.ox.cs.pdq.fol.Formula#getPredicates()
 	 */
@@ -204,6 +233,8 @@ public class Predicate extends AbstractFormula implements Formula {
 	}
 
 	/**
+	 * Ground.
+	 *
 	 * @param mapping Map<Variable,Term>
 	 * @return PredicateFormula
 	 * @see uk.ac.ox.cs.pdq.formula.Formula#ground(Map<Variable,Term>)
@@ -222,6 +253,8 @@ public class Predicate extends AbstractFormula implements Formula {
 	}
 
 	/**
+	 * Gets the term positions.
+	 *
 	 * @param term Term
 	 * @return List<Integer>
 	 */
@@ -230,6 +263,8 @@ public class Predicate extends AbstractFormula implements Formula {
 	}
 
 	/**
+	 * Checks if is fact.
+	 *
 	 * @return Boolean
 	 */
 	public Boolean isFact() {
@@ -242,6 +277,8 @@ public class Predicate extends AbstractFormula implements Formula {
 	}
 
 	/**
+	 * Equals.
+	 *
 	 * @param o Object
 	 * @return boolean
 	 */
@@ -259,6 +296,8 @@ public class Predicate extends AbstractFormula implements Formula {
 	}
 
 	/**
+	 * Hash code.
+	 *
 	 * @return int
 	 */
 	@Override
@@ -270,6 +309,8 @@ public class Predicate extends AbstractFormula implements Formula {
 	}
 
 	/**
+	 * To string.
+	 *
 	 * @return String
 	 */
 	@Override
@@ -278,6 +319,8 @@ public class Predicate extends AbstractFormula implements Formula {
 	}
 
 	/**
+	 * Gets the id.
+	 *
 	 * @return int
 	 */
 	@Override
@@ -286,6 +329,8 @@ public class Predicate extends AbstractFormula implements Formula {
 	}
 
 	/**
+	 * Make fact.
+	 *
 	 * @param signature Signature
 	 * @param tuple Tuple
 	 * @return PredicateFormula
@@ -297,7 +342,10 @@ public class Predicate extends AbstractFormula implements Formula {
 		}
 		return new Predicate(signature, terms);
 	}
+	
 	/**
+	 * Builder.
+	 *
 	 * @return a generic formula builder.
 	 */
 	public static Builder builder() {
@@ -305,13 +353,19 @@ public class Predicate extends AbstractFormula implements Formula {
 	}
 
 	/**
+	 * The Class Builder.
 	 */
 	public static class Builder implements uk.ac.ox.cs.pdq.builder.Builder<Predicate> {
 
+		/** The terms. */
 		private Collection<Term> terms = new LinkedList<>();
+		
+		/** The signature. */
 		private Signature signature = null;
 
 		/**
+		 * Sets the signature.
+		 *
 		 * @param signature Signature
 		 * @return Builder
 		 */
@@ -322,6 +376,8 @@ public class Predicate extends AbstractFormula implements Formula {
 		}
 
 		/**
+		 * Adds the term.
+		 *
 		 * @param t Term
 		 * @return Builder
 		 */
@@ -332,6 +388,8 @@ public class Predicate extends AbstractFormula implements Formula {
 		}
 
 		/**
+		 * Gets the term count.
+		 *
 		 * @return the number of terms added so far.
 		 */
 		public int getTermCount() {
@@ -339,6 +397,8 @@ public class Predicate extends AbstractFormula implements Formula {
 		}
 
 		/**
+		 * Builds the.
+		 *
 		 * @return PredicateFormula
 		 * @see uk.ac.ox.cs.pdq.builder.Builder#build()
 		 */
@@ -352,6 +412,8 @@ public class Predicate extends AbstractFormula implements Formula {
 	}
 
 	/**
+	 * Gets the children.
+	 *
 	 * @return Collection<Formula>
 	 * @see uk.ac.ox.cs.pdq.fol.Formula#getSubFormulas()
 	 */

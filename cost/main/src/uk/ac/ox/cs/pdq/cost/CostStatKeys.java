@@ -5,6 +5,7 @@ import uk.ac.ox.cs.pdq.logging.performance.StatKey;
 import com.google.common.base.CaseFormat;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * Static collection of key to be used in planning statistics collections.
  *
@@ -12,9 +13,13 @@ import com.google.common.base.CaseFormat;
  */
 public enum CostStatKeys implements StatKey {
 
-	COST_ESTIMATION_TIME, COST_ESTIMATION_COUNT;
+	/** The cost estimation time. */
+	COST_ESTIMATION_TIME, /** The cost estimation count. */
+ COST_ESTIMATION_COUNT;
 
 	/**
+	 * To string.
+	 *
 	 * @return String
 	 */
 	@Override

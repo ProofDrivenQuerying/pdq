@@ -15,21 +15,25 @@ import uk.ac.ox.cs.pdq.generator.SchemaGenerator;
 import uk.ac.ox.cs.pdq.plan.DoubleCost;
 import uk.ac.ox.cs.pdq.util.Utility;
 
+// TODO: Auto-generated Javadoc
 /**
- * Creates the relations of a schema
- * 
+ * Creates the relations of a schema.
+ *
  * @author Efthymia Tsamoura
  * @author Julien LEBLAY
- * 
  */
 public class SchemaGeneratorFirst implements SchemaGenerator {
 
+	/** The params. */
 	protected final BenchmarkParameters params;
+	
+	/** The random. */
 	protected final Random random;
 
 	/**
-	 * 
-	 * @param params
+	 * Instantiates a new schema generator first.
+	 *
+	 * @param params the params
 	 */
 	public SchemaGeneratorFirst(BenchmarkParameters params) {
 		this.params = params;
@@ -37,8 +41,8 @@ public class SchemaGeneratorFirst implements SchemaGenerator {
 	}
 
 	/**
-	 * Generates the relations of a random schema 
-	 * 
+	 * Generates the relations of a random schema .
+	 *
 	 * @return the newly generated schema.
 	 */
 	@Override
@@ -73,6 +77,12 @@ public class SchemaGeneratorFirst implements SchemaGenerator {
 		return relations;
 	}
 	
+	/**
+	 * Adds the metadata.
+	 *
+	 * @param relation the relation
+	 * @param binding the binding
+	 */
 	protected void addMetadata(Relation relation, AccessMethod binding) {
 		switch (this.params.getCostType()) {
 		case SIMPLE_CONSTANT:
@@ -84,6 +94,11 @@ public class SchemaGeneratorFirst implements SchemaGenerator {
 		}
 	}
 
+	/**
+	 * Adds the access methods.
+	 *
+	 * @param relation the relation
+	 */
 	protected void addAccessMethods(Relation relation) {
 		if (this.params.getNumberOfViews() == 0 || this.params.getNumberOfAccessMethods() > 0) {
 			List<AccessMethod> bindings = new ArrayList<>();
@@ -109,17 +124,14 @@ public class SchemaGeneratorFirst implements SchemaGenerator {
 	}
 
 	/**
-	 * Generates an access method
-	 * 
-	 * @param type
-	 *            the type of binding pattern to generate among {FREE, LIMITED,
+	 * Generates an access method.
+	 *
+	 * @param type            the type of binding pattern to generate among {FREE, LIMITED,
 	 *            BOOLEAN}
-	 * @param arity
-	 *            the arity of the relation
+	 * @param arity            the arity of the relation
 	 *            
-	 * @param inputProbability
-	 *            the probability that a position is input (only used for type=LIMITED)
-	 * @return
+	 * @param inputProbability            the probability that a position is input (only used for type=LIMITED)
+	 * @return the access method
 	 */
 	protected AccessMethod generateAccessMethod(Types type, int arity, double inputProbability) {
 		List<Integer> positions = new ArrayList<>();

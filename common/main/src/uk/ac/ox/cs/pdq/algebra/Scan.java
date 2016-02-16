@@ -14,6 +14,7 @@ import uk.ac.ox.cs.pdq.util.Utility;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
 /**
  * Logical operator representation of an scan (input free access).
  *
@@ -44,6 +45,8 @@ public class Scan extends RelationalOperator implements AccessOperator {
 	}
 
 	/**
+	 * Find free access method.
+	 *
 	 * @param relation Relation
 	 * @return AccessMethod
 	 */
@@ -64,6 +67,7 @@ public class Scan extends RelationalOperator implements AccessOperator {
 	 *
 	 * @param relation Relation
 	 * @param accessMethod AccessMethod
+	 * @param outputTerms the output terms
 	 */
 	protected Scan(Relation relation, AccessMethod accessMethod, List<Term> outputTerms) {
 		super(TupleType.DefaultFactory.createFromTyped(relation.getAttributes()));
@@ -77,6 +81,8 @@ public class Scan extends RelationalOperator implements AccessOperator {
 	}
 
 	/**
+	 * Gets the relation.
+	 *
 	 * @return the relation scanned by the operator
 	 * @see uk.ac.ox.cs.pdq.plan.AccessOperator#getRelation()
 	 */
@@ -106,6 +112,8 @@ public class Scan extends RelationalOperator implements AccessOperator {
 	}
 
 	/**
+	 * Gets the depth.
+	 *
 	 * @return Integer
 	 */
 	@Override
@@ -133,6 +141,8 @@ public class Scan extends RelationalOperator implements AccessOperator {
 	}
 
 	/**
+	 * Gets the input terms.
+	 *
 	 * @return List<Term>
 	 */
 	@Override
@@ -141,6 +151,8 @@ public class Scan extends RelationalOperator implements AccessOperator {
 	}
 
 	/**
+	 * Equals.
+	 *
 	 * @param o Object
 	 * @return boolean
 	 */
@@ -154,6 +166,8 @@ public class Scan extends RelationalOperator implements AccessOperator {
 	}
 
 	/**
+	 * Hash code.
+	 *
 	 * @return int
 	 */
 	@Override
@@ -163,6 +177,8 @@ public class Scan extends RelationalOperator implements AccessOperator {
 	}
 
 	/**
+	 * Gets the access method.
+	 *
 	 * @return AccessMethod
 	 * @see uk.ac.ox.cs.pdq.plan.AccessOperator#getAccessMethod()
 	 */
@@ -172,6 +188,8 @@ public class Scan extends RelationalOperator implements AccessOperator {
 	}
 
 	/**
+	 * Checks if is closed.
+	 *
 	 * @return boolean
 	 */
 	@Override
@@ -180,6 +198,8 @@ public class Scan extends RelationalOperator implements AccessOperator {
 	}
 
 	/**
+	 * Checks if is quasi leaf.
+	 *
 	 * @return boolean
 	 */
 	@Override

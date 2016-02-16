@@ -10,6 +10,7 @@ import com.logicblox.connect.BloxCommand.TopoOrderUpdate;
 import com.logicblox.connect.BloxCommand.TopoOrderUpdate.Entry;
 import com.logicblox.connect.BloxCommand.TopoOrderUpdateResponse;
 
+// TODO: Auto-generated Javadoc
 /**
  * Handles update message on the topological ordering of predicates and rules,
  * in the database-lifetime execution graph.
@@ -21,17 +22,21 @@ public class TopoOrderUpdateHandler implements MessageHandler<TopoOrderUpdate> {
 	/** Logger. */
 	static final Logger log = Logger.getLogger(TopoOrderUpdateHandler.class);
 
-	/** Handle on the LogicBlox service */
+	/**  Handle on the LogicBlox service. */
 	private final SemanticOptimizationService master;
 
 	/**
-	 * Default constructor
-	 * @param master
+	 * Default constructor.
+	 *
+	 * @param master the master
 	 */
 	public TopoOrderUpdateHandler(SemanticOptimizationService master) {
 		this.master = master;
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.services.MessageHandler#handle(com.google.protobuf.GeneratedMessage)
+	 */
 	@Override
 	public GeneratedMessage handle(TopoOrderUpdate command) {
 	    log.debug("TopoOrderUpdate: " + command.getWorkspace() + ": "

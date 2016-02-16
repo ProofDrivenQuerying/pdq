@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package uk.ac.ox.cs.pdq.planner.dag.explorer.validators;
 
 import uk.ac.ox.cs.pdq.planner.dag.ConfigurationUtility;
@@ -5,17 +8,21 @@ import uk.ac.ox.cs.pdq.planner.dag.DAGAnnotatedPlan;
 import uk.ac.ox.cs.pdq.planner.dag.DAGConfiguration;
 import uk.ac.ox.cs.pdq.planner.dag.UnaryAnnotatedPlan;
 
+// TODO: Auto-generated Javadoc
 /**
  * Requires the input pair of configurations to be non trivial, their combined depth to be <= the depth threshold
- * and at least one of the input configurations to be an ApplyRule
- * @author Efthymia Tsamoura
+ * and at least one of the input configurations to be an ApplyRule.
  *
- * @param 
+ * @author Efthymia Tsamoura
  */
 public class ApplyRuleDepthValidator implements Validator{
 
+	/** The depth threshold. */
 	private final int depthThreshold;
 
+	/**
+	 * Instantiates a new apply rule depth validator.
+	 */
 	public ApplyRuleDepthValidator() {
 		this.depthThreshold = 3;
 	}
@@ -29,6 +36,8 @@ public class ApplyRuleDepthValidator implements Validator{
 	}
 
 	/**
+	 * Validate.
+	 *
 	 * @param left DAGConfiguration
 	 * @param right DAGConfiguration
 	 * @return boolean
@@ -42,6 +51,8 @@ public class ApplyRuleDepthValidator implements Validator{
 	}
 
 	/**
+	 * Validate.
+	 *
 	 * @param left DAGConfiguration
 	 * @param right DAGConfiguration
 	 * @param depth int
@@ -54,6 +65,8 @@ public class ApplyRuleDepthValidator implements Validator{
 	}
 
 	/**
+	 * Clone.
+	 *
 	 * @return Validator
 	 * @see uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator#clone()
 	 */

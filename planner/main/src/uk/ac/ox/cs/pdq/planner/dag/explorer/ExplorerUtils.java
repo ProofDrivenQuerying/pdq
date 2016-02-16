@@ -6,21 +6,21 @@ import uk.ac.ox.cs.pdq.planner.dag.ConfigurationUtility;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.dominance.Dominance;
 
+// TODO: Auto-generated Javadoc
 /**
- * Utility class
- * @author Efthymia Tsamoura
+ * Utility class.
  *
+ * @author Efthymia Tsamoura
  */
 public class ExplorerUtils {
 
 	/**
-	 * 
-	 * @param dominance
-	 * 		A list of objects that perform dominance checks
-	 * @param targets
-	 * @param source
-	 * @return
-	 * 		the target configuration that dominates the source
+	 * Checks if is dominated.
+	 *
+	 * @param dominance 		A list of objects that perform dominance checks
+	 * @param targets the targets
+	 * @param source the source
+	 * @return 		the target configuration that dominates the source
 	 */
 	public static DAGChaseConfiguration isDominated(Dominance[] dominance, Collection<DAGChaseConfiguration> targets, DAGChaseConfiguration source) {
 		for(DAGChaseConfiguration target:targets) {

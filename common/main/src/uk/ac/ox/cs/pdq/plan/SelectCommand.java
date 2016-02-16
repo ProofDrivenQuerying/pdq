@@ -15,29 +15,31 @@ import uk.ac.ox.cs.pdq.util.Table;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
- * @author Efthymia Tsamoura
+ * The Class SelectCommand.
  *
+ * @author Efthymia Tsamoura
  */
 public class SelectCommand implements Command{
 
-	/** The input table **/
+	/**  The input table *. */
 	private final Table input;
 	
-	/** The output table **/
+	/**  The output table *. */
 	private final Table output;
 	
-	/** The selection predicates **/
+	/**  The selection predicates *. */
 	private final Predicate predicates;
 	
-	/** Caches the constraint that captures this access command **/
+	/**  Caches the constraint that captures this access command *. */
 	private final TGD command;
 	
 	/**
-	 * Creates a project command based on the input table and the input selection predicates
-	 * @param predicates
-	 * @param input
+	 * Creates a project command based on the input table and the input selection predicates.
+	 *
+	 * @param predicates the predicates
+	 * @param input the input
 	 */
 	public SelectCommand(Predicate predicates, Table input) {
 		Preconditions.checkNotNull(predicates);
@@ -69,20 +71,35 @@ public class SelectCommand implements Command{
 		this.command = new CommandToTGDTranslator().toTGD(this);
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.plan.Command#getOutput()
+	 */
 	@Override
 	public Table getOutput() {
 		return this.output;
 	}
 
+	/**
+	 * Gets the input.
+	 *
+	 * @return the input
+	 */
 	public Table getInput() {
 		return input;
 	}
 
+	/**
+	 * Gets the predicates.
+	 *
+	 * @return the predicates
+	 */
 	public Predicate getPredicates() {
 		return predicates;
 	}
 	
 	/**
+	 * Equals.
+	 *
 	 * @param o Object
 	 * @return boolean
 	 */
@@ -100,6 +117,8 @@ public class SelectCommand implements Command{
 	}
 
 	/**
+	 * Hash code.
+	 *
 	 * @return int
 	 */
 	@Override
@@ -108,6 +127,8 @@ public class SelectCommand implements Command{
 	}
 
 	/**
+	 * To string.
+	 *
 	 * @return String
 	 */
 	@Override

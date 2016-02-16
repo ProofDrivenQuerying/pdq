@@ -14,17 +14,29 @@ import uk.ac.ox.cs.pdq.util.Tuple;
 import uk.ac.ox.cs.pdq.util.TupleType;
 import uk.ac.ox.cs.pdq.util.Utility;
 
+// TODO: Auto-generated Javadoc
 /**
+ * The Class AttributeEqualityPredicateTest.
  *
  * @author Julien Leblay
  */
 public class AttributeEqualityPredicateTest {
 	
+	/** The pred. */
 	AttributeEqualityPredicate pred;
+	
+	/** The t5. */
 	Tuple t1, t2, t3, t4, t5;
+	
+	/** The s. */
 	EntityRelation R = new EntityRelation("R"), S = new EntityRelation("S");
+	
+	/** The s. */
 	DatabasePredicate r = R.createAtoms(), s = S.createAtoms();
 	
+	/**
+	 * Setup.
+	 */
 	@Before
 	public void setup() {
 		Utility.assertsEnabled();
@@ -47,6 +59,9 @@ public class AttributeEqualityPredicateTest {
 		t5 = TupleType.DefaultFactory.create().createTuple();
 	}
 	
+	/**
+	 * Inits the attribute equality predicate test.
+	 */
 	@Test public void initAttributeEqualityPredicateTest() {
 		pred = new AttributeEqualityPredicate(0, 0) ;
 		Assert.assertEquals("Initial parameters are found in getters", 0, pred.getPosition());
@@ -62,11 +77,17 @@ public class AttributeEqualityPredicateTest {
 	}
 	
 	
+	/**
+	 * Inits the attribute equality predicate negative parameters.
+	 */
 	@Test(expected=AssertionError.class)
 	public void initAttributeEqualityPredicateNegativeParameters() {
 		new AttributeEqualityPredicate(0, -1) ;
 	}
 
+	/**
+	 * Checks if is satisfied same positions.
+	 */
 	@Test public void isSatisfiedSamePositions() {
 		pred = new AttributeEqualityPredicate(0, 0) ;
 		Assert.assertTrue("Equality on oneself is always satisfied", pred.isSatisfied(t1));
@@ -78,6 +99,9 @@ public class AttributeEqualityPredicateTest {
 		Assert.assertTrue("Equality on oneself is always satisfied", pred.isSatisfied(t3));
 	}
 
+	/**
+	 * Checks if is satisfied distinct positions.
+	 */
 	@Test public void isSatisfiedDistinctPositions() {
 		pred = new AttributeEqualityPredicate(0, 1) ;
 		Assert.assertTrue("Equality on integers ", pred.isSatisfied(t2));
@@ -89,6 +113,9 @@ public class AttributeEqualityPredicateTest {
 		Assert.assertTrue("Equality on entity relations ", pred.isSatisfied(t4));
 	}
 
+	/**
+	 * Checks if is not satisfied.
+	 */
 	@Test public void isNotSatisfied() {
 		pred = new AttributeEqualityPredicate(0, 1) ;
 		Assert.assertFalse("Non-equality on integers ", pred.isSatisfied(t1));
@@ -106,24 +133,36 @@ public class AttributeEqualityPredicateTest {
 		Assert.assertFalse("Non-equality across similar integers and string ", pred.isSatisfied(t3));
 	}
 
+	/**
+	 * Checks if is satisfied with illegal argument.
+	 */
 	@Test(expected=AssertionError.class)
 	public void isSatisfiedWithIllegalArgument() {
 		pred = new AttributeEqualityPredicate(0, 10);
 		pred.isSatisfied(t1);
 	}
 
+	/**
+	 * Checks if is satisfied with illegal empty tuple argument.
+	 */
 	@Test(expected=AssertionError.class)
 	public void isSatisfiedWithIllegalEmptyTupleArgument() {
 		pred = new AttributeEqualityPredicate(0, 0);
 		pred.isSatisfied(t5);
 	}
 
+	/**
+	 * Equals.
+	 */
 	@Test public void equals() {
 		pred = new AttributeEqualityPredicate(0, 1) ;
 		Assert.assertEquals("Equality on attribute equality predicates ", pred, new AttributeEqualityPredicate(0, 1));
 		Assert.assertNotEquals("Non-equality on attribute equality predicates ", pred, new AttributeEqualityPredicate(0, 2));
 	}
 
+	/**
+	 * Test hash code.
+	 */
 	@Test public void testHashCode() {
 		Set<AttributeEqualityPredicate> s = new LinkedHashSet<>();
 		s.add(new AttributeEqualityPredicate(0, 1));

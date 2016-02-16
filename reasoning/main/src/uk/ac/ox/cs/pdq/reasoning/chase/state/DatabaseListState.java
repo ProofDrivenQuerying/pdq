@@ -25,6 +25,7 @@ import com.beust.jcommander.internal.Lists;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 
+// TODO: Auto-generated Javadoc
 /**
  *
  * 	Organises the facts during chasing into a list. 
@@ -42,23 +43,26 @@ import com.google.common.collect.Sets;
 public class DatabaseListState extends DatabaseChaseState implements ListState {
 
 
+	/** The _is failed. */
 	private boolean _isFailed = false;
 
-	/** The state's facts*/
+	/**  The state's facts. */
 	protected Collection<Predicate> facts;
 
-	/** The firings that took place in this state*/
+	/**  The firings that took place in this state. */
 	protected FiringGraph graph;
 
-	/** Keeps the classes of equal constants **/
+	/**  Keeps the classes of equal constants *. */
 	protected EqualConstantsClasses constantClasses;
 	
+	/** The canonical names. */
 	protected final boolean canonicalNames = true;
 
 	/**
-	 * 
-	 * @param query
-	 * @param manager
+	 * Instantiates a new database list state.
+	 *
+	 * @param query the query
+	 * @param manager the manager
 	 */
 	public DatabaseListState(Query<?> query, DBHomomorphismManager manager) {
 		this(manager, Sets.newHashSet(query.getCanonical().getPredicates()), new MapFiringGraph(), inferEqualConstantsClasses(query.getCanonical().getPredicates()));
@@ -66,9 +70,10 @@ public class DatabaseListState extends DatabaseChaseState implements ListState {
 	}
 
 	/**
-	 * 
-	 * @param manager
-	 * @param facts
+	 * Instantiates a new database list state.
+	 *
+	 * @param manager the manager
+	 * @param facts the facts
 	 */
 	public DatabaseListState(
 			DBHomomorphismManager manager,
@@ -78,11 +83,12 @@ public class DatabaseListState extends DatabaseChaseState implements ListState {
 	}
 
 	/**
-	 * 
-	 * @param manager
-	 * @param facts
-	 * @param graph
-	 * @param constantClasses
+	 * Instantiates a new database list state.
+	 *
+	 * @param manager the manager
+	 * @param facts the facts
+	 * @param graph the graph
+	 * @param constantClasses the constant classes
 	 */
 	protected DatabaseListState(
 			DBHomomorphismManager manager,
@@ -98,6 +104,12 @@ public class DatabaseListState extends DatabaseChaseState implements ListState {
 		this.constantClasses = constantClasses;
 	}
 
+	/**
+	 * Infer equal constants classes.
+	 *
+	 * @param facts the facts
+	 * @return the equal constants classes
+	 */
 	public static EqualConstantsClasses inferEqualConstantsClasses(Collection<Predicate> facts) {
 		EqualConstantsClasses constantClasses = new EqualConstantsClasses();
 		for(Predicate fact:facts) {
@@ -110,14 +122,18 @@ public class DatabaseListState extends DatabaseChaseState implements ListState {
 
 	/**
 	 * Updates that state given the input match. 
-	 * @param match
-	 * @return
+	 *
+	 * @param match the match
+	 * @return true, if successful
 	 */
 	@Override
 	public boolean chaseStep(Match match) {	
 		return this.chaseStep(Sets.newHashSet(match));
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState#chaseStep(java.util.Collection)
+	 */
 	@Override
 	public boolean chaseStep(Collection<Match> matches) {
 		Preconditions.checkNotNull(matches);
@@ -184,30 +200,50 @@ public class DatabaseListState extends DatabaseChaseState implements ListState {
 		return !this._isFailed;
 	}
 
+	/**
+	 * Gets the constant classes.
+	 *
+	 * @return the constant classes
+	 */
 	public EqualConstantsClasses getConstantClasses() {
 		return this.constantClasses;
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState#isFailed()
+	 */
 	@Override
 	public boolean isFailed() {
 		return this._isFailed;
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState#isSuccessful(uk.ac.ox.cs.pdq.fol.Query)
+	 */
 	@Override
 	public boolean isSuccessful(Query<?> query) {
 		return !this.getMatches(query).isEmpty();
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState#getFiringGraph()
+	 */
 	@Override
 	public FiringGraph getFiringGraph() {
 		return this.graph;
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState#getFacts()
+	 */
 	@Override
 	public Collection<Predicate> getFacts() {
 		return this.facts;
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState#merge(uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState)
+	 */
 	@Override
 	public ChaseState merge(ChaseState s) {
 		Preconditions.checkState(s instanceof DatabaseListState);
@@ -224,12 +260,18 @@ public class DatabaseListState extends DatabaseChaseState implements ListState {
 				this.getFiringGraph().merge(s.getFiringGraph()), classes);
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.reasoning.chase.state.ListState#addFacts(java.util.Collection)
+	 */
 	@Override
 	public void addFacts(Collection<Predicate> facts) {
 		this.manager.addFacts(facts);
 		this.facts.addAll(facts);
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseState#clone()
+	 */
 	@Override
 	public DatabaseListState clone() {
 		return new DatabaseListState(this.manager, Sets.newHashSet(this.facts), this.graph.clone(), this.constantClasses.clone());

@@ -15,6 +15,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Supplier;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * Runs the chase algorithm for a given set of rounds. 
  * First, it finds the maximum number of chase rounds k during chasing the input schema
@@ -35,12 +36,11 @@ public class BoundedChaser extends RestrictedChaser {
 	private Integer lastRound;
 
 	/**
-	 * 
-	 * @param statistics
-	 * @param k
-	 * 		Factor of number of rounds to chase before stopping.
-	 * @param fullInitialize
-	 * 		If true, the initialisation phase is not bounded by k.
+	 * Instantiates a new bounded chaser.
+	 *
+	 * @param statistics the statistics
+	 * @param k 		Factor of number of rounds to chase before stopping.
+	 * @param fullInitialize 		If true, the initialisation phase is not bounded by k.
 	 */
 	public BoundedChaser(
 			StatisticsCollector statistics,
@@ -54,10 +54,11 @@ public class BoundedChaser extends RestrictedChaser {
 
 
 	/**
-	 * 
-	 * @param instance
-	 * @param target
-	 * @param constraints
+	 * Initialize.
+	 *
+	 * @param instance the instance
+	 * @param target the target
+	 * @param constraints the constraints
 	 */
 	public void initialize(
 			ChaseState instance, 
@@ -75,10 +76,12 @@ public class BoundedChaser extends RestrictedChaser {
 	}
 
 	/**
-	 * Chases the input state until termination
-	 * @param intance
-	 * @param target
-	 * @param dependencies
+	 * Chases the input state until termination.
+	 *
+	 * @param <S> the generic type
+	 * @param intance the intance
+	 * @param target the target
+	 * @param dependencies the dependencies
 	 */
 	@Override
 	public <S extends ChaseState> void reasonUntilTermination(S intance,  Query<?> target, Collection<? extends Constraint> dependencies) {
@@ -112,10 +115,10 @@ public class BoundedChaser extends RestrictedChaser {
 	 */
 	public static class KSupplier implements Supplier<Integer> {
 
-		/** If true, any future modification of the supplied value will throw an exception */
+		/**  If true, any future modification of the supplied value will throw an exception. */
 		private boolean frozen = false;
 
-		/** The supplied integer */
+		/**  The supplied integer. */
 		private Integer k = null;
 
 		/**
@@ -135,6 +138,8 @@ public class BoundedChaser extends RestrictedChaser {
 		}
 
 		/**
+		 * Sets the.
+		 *
 		 * @param k Integer
 		 */
 		public void set(Integer k) {
@@ -144,6 +149,8 @@ public class BoundedChaser extends RestrictedChaser {
 		}
 
 		/**
+		 * Gets the.
+		 *
 		 * @return Integer
 		 * @see com.google.common.base.Supplier#get()
 		 */

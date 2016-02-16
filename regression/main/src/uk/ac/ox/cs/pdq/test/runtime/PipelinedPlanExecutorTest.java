@@ -26,17 +26,24 @@ import uk.ac.ox.cs.pdq.util.Result;
 import com.google.common.eventbus.EventBus;
 
 
+// TODO: Auto-generated Javadoc
 /**
- * Tests the correctness of pipelined executor
- * @author Efthymia Tsamoura
+ * Tests the correctness of pipelined executor.
  *
+ * @author Efthymia Tsamoura
  */
 public class PipelinedPlanExecutorTest {
 
+	/** The path. */
 	private static String PATH = "test/runtime/caching/";
+	
+	/** The event bus. */
 	EventBus eventBus = new EventBus();
 
+	/** The tuples. */
 	Integer[] tuples = {1363,325,6962,4606,4290,7425,87};
+	
+	/** The schemata. */
 	String schemata[] = {
 			"schema.xml",
 			"schema.xml",
@@ -47,6 +54,8 @@ public class PipelinedPlanExecutorTest {
 			"schema.xml",
 
 	};
+	
+	/** The queries. */
 	String queries[] = {
 			"query0.xml",
 			"query1.xml",
@@ -57,6 +66,8 @@ public class PipelinedPlanExecutorTest {
 			"query9.xml",
 
 	};
+	
+	/** The plans. */
 	String plans[] = {
 			"plan0.xml",
 			"plan1.xml",
@@ -68,6 +79,9 @@ public class PipelinedPlanExecutorTest {
 	};
 
 
+	/**
+	 * Test caching.
+	 */
 	@Test
 	public void testCaching() {
 
@@ -114,7 +128,9 @@ public class PipelinedPlanExecutorTest {
 	}
 
 	/**
-	 * @param directory File
+	 * Read plan.
+	 *
+	 * @param plan the plan
 	 * @param schema Schema
 	 * @param query Query
 	 * @return Plan
@@ -130,11 +146,14 @@ public class PipelinedPlanExecutorTest {
 
 	/**
 	 * Evaluates the given plan and returns its result. 
+	 *
+	 * @param runtimeParams the runtime params
 	 * @param p Plan
 	 * @param query Query
 	 * @param mode ExecutionModes
 	 * @return the result of the plan evaluation.
-	 * @throws EvaluationException */
+	 * @throws EvaluationException the evaluation exception
+	 */
 	private Result evaluatePlan(RuntimeParameters runtimeParams, Plan p, Query<?> query, ExecutionModes mode)
 			throws EvaluationException {
 		//this.eventBus.register(new TuplePrinterTest(System.out));

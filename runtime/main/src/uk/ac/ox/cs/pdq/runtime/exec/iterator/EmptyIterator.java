@@ -8,6 +8,7 @@ import uk.ac.ox.cs.pdq.util.Typed;
 
 import com.google.common.base.Preconditions;
 
+// TODO: Auto-generated Javadoc
 /**
  * The empty iterator is used to model iterator of an empty set.
  * Its hasNext() method always return false, next() throws a 

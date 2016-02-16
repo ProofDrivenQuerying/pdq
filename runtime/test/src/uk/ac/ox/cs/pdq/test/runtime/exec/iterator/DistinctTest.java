@@ -15,15 +15,23 @@ import uk.ac.ox.cs.pdq.runtime.exec.iterator.Distinct;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator;
 import uk.ac.ox.cs.pdq.util.Tuple;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
+ * The Class DistinctTest.
+ *
  * @author Julien LEBLAY
  */
 public class DistinctTest extends UnaryIteratorTest {
+	
+	/** The iterator. */
 	Distinct iterator;
 
+	/** The empty child. */
 	@Mock TupleIterator emptyChild;
 	
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.test.runtime.exec.iterator.TupleIteratorTest#setup()
+	 */
 	@Before public void setup() {
 		super.setup();
         MockitoAnnotations.initMocks(this);
@@ -44,6 +52,9 @@ public class DistinctTest extends UnaryIteratorTest {
 		this.iterator = new Distinct(child);
 	}
 	
+	/**
+	 * Inits the count.
+	 */
 	@Test public void initCount() {
 		this.iterator = new Distinct(child);
 		Assert.assertEquals("Distinct child must match that of initialization", this.child, this.iterator.getChild());
@@ -53,11 +64,19 @@ public class DistinctTest extends UnaryIteratorTest {
 		Assert.assertEquals("Distinct output type must match that of initialization", this.outputType, this.iterator.getType());
 	}
 	
+	/**
+	 * Inits the distinct null child.
+	 */
 	@Test(expected=IllegalArgumentException.class) 
 	public void initDistinctNullChild() {
 		new Distinct(null);
 	}
 	
+	/**
+	 * Deep copy.
+	 *
+	 * @throws RelationalOperatorException the relational operator exception
+	 */
 	@Test public void deepCopy() throws RelationalOperatorException {
 		this.iterator = new Distinct(child);
 		Distinct copy = this.iterator.deepCopy();
@@ -68,6 +87,9 @@ public class DistinctTest extends UnaryIteratorTest {
 		Assert.assertEquals("Distinct iterator input type must match that of child", this.iterator.getInputType(), copy.getInputType());
 	}
 
+	/**
+	 * Checks for next for not empty.
+	 */
 	@Test public void hasNextForNotEmpty() {
 		this.iterator = new Distinct(child);
 		this.iterator.open();
@@ -77,12 +99,18 @@ public class DistinctTest extends UnaryIteratorTest {
 		Assert.assertFalse(this.iterator.hasNext());
 	}
 
+	/**
+	 * Checks for next for empty.
+	 */
 	@Test public void hasNextForEmpty() {
 		this.iterator = new Distinct(emptyChild);
 		this.iterator.open();
 		Assert.assertFalse(this.iterator.hasNext());
 	}
 
+	/**
+	 * Next for not empty.
+	 */
 	@Test public void nextForNotEmpty() {
 		this.iterator = new Distinct(child);
 		this.iterator.open();
@@ -91,6 +119,9 @@ public class DistinctTest extends UnaryIteratorTest {
 		Assert.assertEquals(outputType.createTuple("two", 2, "str", 6), this.iterator.next());
 	}
 
+	/**
+	 * Next for empty.
+	 */
 	@Test(expected=NoSuchElementException.class) 
 	public void nextForEmpty() {
 		this.iterator = new Distinct(emptyChild);
@@ -98,6 +129,9 @@ public class DistinctTest extends UnaryIteratorTest {
 		this.iterator.next();
 	}
 
+	/**
+	 * Next not empty too many.
+	 */
 	@Test(expected=NoSuchElementException.class) 
 	public void nextNotEmptyTooMany() {
 		this.iterator = new Distinct(child);
@@ -107,6 +141,9 @@ public class DistinctTest extends UnaryIteratorTest {
 		}
 	}
 
+	/**
+	 * Reset not empty.
+	 */
 	@Test public void resetNotEmpty() {
 		this.iterator = new Distinct(child);
 		this.iterator.open();
@@ -135,6 +172,9 @@ public class DistinctTest extends UnaryIteratorTest {
 		Assert.assertFalse(this.iterator.hasNext());
 	}
 
+	/**
+	 * Reset empty.
+	 */
 	@Test public void resetEmpty() {
 		this.iterator = new Distinct(emptyChild);
 		this.iterator.open();
@@ -143,6 +183,9 @@ public class DistinctTest extends UnaryIteratorTest {
 		Assert.assertFalse(this.iterator.hasNext());
 	}
 
+	/**
+	 * Bind null.
+	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void bindNull() {
 		this.iterator = new Distinct(child);
@@ -150,12 +193,18 @@ public class DistinctTest extends UnaryIteratorTest {
 		this.iterator.bind(null);
 	}
 	
+	/**
+	 * Bind on unopened.
+	 */
 	@Test(expected=IllegalStateException.class)
 	public void bindOnUnopened() {
 		this.iterator = new Distinct(child);
 		this.iterator.bind(Tuple.EmptyTuple);
 	}
 	
+	/**
+	 * Bind illegal type.
+	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void bindIllegalType() {
 		this.iterator = new Distinct(child);
@@ -163,6 +212,9 @@ public class DistinctTest extends UnaryIteratorTest {
 		this.iterator.bind(outputType.createTuple("four", 4));
 	}
 	
+	/**
+	 * Bind empty tuple.
+	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void bindEmptyTuple() {
 		this.iterator = new Distinct(child);
@@ -170,6 +222,9 @@ public class DistinctTest extends UnaryIteratorTest {
 		this.iterator.bind(Tuple.EmptyTuple);
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.test.runtime.exec.iterator.TupleIteratorTest#getIterator()
+	 */
 	@Override
 	protected TupleIterator getIterator() {
 		return this.iterator;

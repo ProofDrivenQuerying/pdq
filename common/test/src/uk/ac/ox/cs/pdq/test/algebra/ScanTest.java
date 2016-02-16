@@ -19,15 +19,26 @@ import uk.ac.ox.cs.pdq.util.TupleType;
 
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
 /**
+ * The Class ScanTest.
+ *
  * @author Julien Leblay
  */
 public class ScanTest extends RelationalOperatorTest {
 
+	/** The operator. */
 	Scan operator;
+	
+	/** The r9. */
 	Relation r1, r2, r3, r4, r5, r6, r7, r8, r9;
+	
+	/** The m1. */
 	AccessMethod free, m1;
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.test.algebra.RelationalOperatorTest#setup()
+	 */
 	@Before public void setup() throws RelationalOperatorException {
 		super.setup();
 		free = new AccessMethod();
@@ -43,40 +54,64 @@ public class ScanTest extends RelationalOperatorTest {
 		r8 = new Relation("R8", Lists.newArrayList(new Attribute(Integer.class, "a1"), new Attribute(Integer.class, "a2"), new Attribute(Integer.class, "a3")), Lists.newArrayList(m1)) {};
 	}
 	
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.test.algebra.RelationalOperatorTest#getOperator()
+	 */
 	RelationalOperator getOperator() {
 		return this.operator;
 	}
 	
+	/**
+	 * Inits the scan test null argument.
+	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void initScanTestNullArgument() {
 		new Scan(null);
 	}
 	
+	/**
+	 * Inits the scan test inaccessible relation0.
+	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void initScanTestInaccessibleRelation0() {
 		new Scan(r1);
 	}
 	
+	/**
+	 * Inits the scan test inaccessible relation1.
+	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void initScanTestInaccessibleRelation1() {
 		new Scan(r3);
 	}
 	
+	/**
+	 * Inits the scan test inaccessible relation3.
+	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void initScanTestInaccessibleRelation3() {
 		new Scan(r6);
 	}
 	
+	/**
+	 * Inits the scan test non free relation1.
+	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void initScanTestNonFreeRelation1() {
 		new Scan(r5);
 	}
 	
+	/**
+	 * Inits the scan test non free relation2.
+	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void initScanTestNonFreeRelation2() {
 		new Scan(r8);
 	}
 	
+	/**
+	 * Inits the scan test arity nil.
+	 */
 	@Test public void initScanTestArityNil() {
 		this.operator = new Scan(r2);
 		Assert.assertEquals("Scan operator relation must match that of initialization", r2, this.operator.getRelation());
@@ -86,6 +121,9 @@ public class ScanTest extends RelationalOperatorTest {
 		Assert.assertEquals("Scan operator input type must match that of child", TupleType.EmptyTupleType, this.operator.getInputType());
 	}
 	
+	/**
+	 * Inits the scan test arity one.
+	 */
 	@Test public void initScanTestArityOne() {
 		this.operator = new Scan(r4);
 		Assert.assertEquals("Scan operator relation must match that of initialization", r4, this.operator.getRelation());
@@ -95,6 +133,9 @@ public class ScanTest extends RelationalOperatorTest {
 		Assert.assertEquals("Scan operator input type must match that of child", TupleType.EmptyTupleType, this.operator.getInputType());
 	}
 	
+	/**
+	 * Inits the scan test arity more than one.
+	 */
 	@Test public void initScanTestArityMoreThanOne() {
 		this.operator = new Scan(r7);
 		Assert.assertEquals("Scan operator relation must match that of initialization", r7, this.operator.getRelation());
@@ -104,6 +145,11 @@ public class ScanTest extends RelationalOperatorTest {
 		Assert.assertEquals("Scan operator input type must match that of child", TupleType.EmptyTupleType, this.operator.getInputType());
 	}
 	
+	/**
+	 * Deep copy arity nil.
+	 *
+	 * @throws RelationalOperatorException the relational operator exception
+	 */
 	@Test public void deepCopyArityNil() throws RelationalOperatorException {
 		this.operator = new Scan(r2);
 		Scan copy = this.operator.deepCopy();
@@ -136,24 +182,44 @@ public class ScanTest extends RelationalOperatorTest {
 		Assert.assertEquals("Scan operator access method must match that of child", this.operator.getAccessMethod(), copy.getAccessMethod());
 	}
 	
+	/**
+	 * Gets the bad column nil arity.
+	 *
+	 * @return the bad column nil arity
+	 */
 	@Test(expected=IllegalArgumentException.class) 
 	public void getBadColumnNilArity() {
 		this.operator = new Scan(r2);
 		this.operator.getColumn(this.r2.getArity());
 	}
 	
+	/**
+	 * Gets the bad column arity one.
+	 *
+	 * @return the bad column arity one
+	 */
 	@Test(expected=IllegalArgumentException.class) 
 	public void getBadColumnArityOne() {
 		this.operator = new Scan(r4);
 		this.operator.getColumn(this.r4.getArity());
 	}
 	
+	/**
+	 * Gets the bad column arity more than one.
+	 *
+	 * @return the bad column arity more than one
+	 */
 	@Test(expected=IllegalArgumentException.class) 
 	public void getBadColumnArityMoreThanOne() {
 		this.operator = new Scan(r7);
 		this.operator.getColumn(this.r7.getArity());
 	}
 	
+	/**
+	 * Test hash code.
+	 *
+	 * @throws RelationalOperatorException the relational operator exception
+	 */
 	@Test public void testHashCode() throws RelationalOperatorException {
 		Set<RelationalOperator> s = new LinkedHashSet<>();
 		this.operator = new Scan(r2);
@@ -172,6 +238,11 @@ public class ScanTest extends RelationalOperatorTest {
 	}
 
 	
+	/**
+	 * Gets the depth.
+	 *
+	 * @return the depth
+	 */
 	@Test public void getDepth() {
 		this.operator = new Scan(r2);
 		Assert.assertEquals("Scan depth must be exactly that of 1", (int) 1, (int) this.operator.getDepth());
@@ -181,24 +252,36 @@ public class ScanTest extends RelationalOperatorTest {
 		Assert.assertEquals("Scan depth must be exactly that of 1", (int) 1, (int) this.operator.getDepth());
 	}
 
+	/**
+	 * Checks if is closed.
+	 */
 	@Test public void isClosed() {
 		Assert.assertTrue("Scan isClosed must match always be true", new Scan(r2).isClosed());
 		Assert.assertTrue("Scan isClosed must match always be true", new Scan(r4).isClosed());
 		Assert.assertTrue("Scan isClosed must match always be true", new Scan(r7).isClosed());
 	}
 
+	/**
+	 * Checks if is quasi leaf.
+	 */
 	@Test public void isQuasiLeaf() {
 		Assert.assertTrue("Scan isQuasiLeaf must match always be true", new Scan(r2).isQuasiLeaf());
 		Assert.assertTrue("Scan isQuasiLeaf must match always be true", new Scan(r4).isQuasiLeaf());
 		Assert.assertTrue("Scan isQuasiLeaf must match always be true", new Scan(r7).isQuasiLeaf());
 	}
 
+	/**
+	 * Checks if is left deep.
+	 */
 	@Test public void isLeftDeep() {
 		Assert.assertTrue("Scan isLeftDeep must match always be true", new Scan(r2).isLeftDeep());
 		Assert.assertTrue("Scan isLeftDeep must match always be true", new Scan(r4).isLeftDeep());
 		Assert.assertTrue("Scan isLeftDeep must match always be true", new Scan(r7).isLeftDeep());
 	}
 
+	/**
+	 * Checks if is right deep.
+	 */
 	@Test public void isRightDeep() {
 		Assert.assertTrue("Scan isRightDeep must match always be true", new Scan(r2).isRightDeep());
 		Assert.assertTrue("Scan isRightDeep must match always be true", new Scan(r4).isRightDeep());

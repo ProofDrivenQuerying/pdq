@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package uk.ac.ox.cs.pdq.planner.reasoning.chase.dominance;
 
 import java.util.ArrayList;
@@ -6,6 +9,7 @@ import uk.ac.ox.cs.pdq.planner.PlannerParameters.DominanceTypes;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.SuccessDominanceTypes;
 import uk.ac.ox.cs.pdq.planner.cardinality.CardinalityEstimator;
 
+// TODO: Auto-generated Javadoc
 /**
  * Creates cost dominance detectors using the input parameters.
  * The available options are:
@@ -17,10 +21,11 @@ import uk.ac.ox.cs.pdq.planner.cardinality.CardinalityEstimator;
 public class DominanceFactory {
 
 	/**
-	 * 
-	 * @param type
-	 * @param cardinalityEstimator
-	 * @return
+	 * Gets the single instance of DominanceFactory.
+	 *
+	 * @param type the type
+	 * @param cardinalityEstimator the cardinality estimator
+	 * @return single instance of DominanceFactory
 	 */
 	public static Dominance[] getInstance(DominanceTypes type, CardinalityEstimator cardinalityEstimator) {
 		ArrayList<Dominance> detector = new ArrayList<>();
@@ -37,10 +42,11 @@ public class DominanceFactory {
 	}
 	
 	/**
-	 * 
-	 * @param type
-	 * @param cardinalityEstimator
-	 * @return
+	 * Gets the single instance of DominanceFactory.
+	 *
+	 * @param type the type
+	 * @param cardinalityEstimator the cardinality estimator
+	 * @return single instance of DominanceFactory
 	 */
 	public static Dominance getInstance(SuccessDominanceTypes type, CardinalityEstimator cardinalityEstimator) {
 		switch(type) {

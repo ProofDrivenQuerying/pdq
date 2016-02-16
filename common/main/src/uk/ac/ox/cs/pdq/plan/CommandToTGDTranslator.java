@@ -27,13 +27,20 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
+// TODO: Auto-generated Javadoc
 /**
- * Translates normalised plan commands to tgds
- * @author Efthymia Tsamoura
+ * Translates normalised plan commands to tgds.
  *
+ * @author Efthymia Tsamoura
  */
 public class CommandToTGDTranslator {
 	
+	/**
+	 * To tgd.
+	 *
+	 * @param plan the plan
+	 * @return the collection
+	 */
 	public Collection<TGD> toTGD(SequentialPlan plan) {
 		Preconditions.checkNotNull(plan);
 		Collection<TGD> tgds = Sets.newLinkedHashSet();
@@ -43,6 +50,12 @@ public class CommandToTGDTranslator {
 		return tgds;
 	}
 
+	/**
+	 * To tgd.
+	 *
+	 * @param command the command
+	 * @return the tgd
+	 */
 	public TGD toTGD(Command command) {
 		if(command instanceof AccessCommand) {
 			return this.toTGD((AccessCommand)command); 
@@ -63,6 +76,12 @@ public class CommandToTGDTranslator {
 	}
 
 
+	/**
+	 * To tgd.
+	 *
+	 * @param command the command
+	 * @return the tgd
+	 */
 	public TGD toTGD(AccessCommand command) {
 		//The access is input free
 		if(command.getInput() == null) {
@@ -96,6 +115,12 @@ public class CommandToTGDTranslator {
 		}
 	}
 
+	/**
+	 * To tgd.
+	 *
+	 * @param command the command
+	 * @return the tgd
+	 */
 	public TGD toTGD(ProjectCommand command) {
 		//Get the attributes to project and create variables
 		List<Term> projected = Utility.typedToTerms(command.getOutput().getHeader());
@@ -107,6 +132,12 @@ public class CommandToTGDTranslator {
 		return new TGD(Conjunction.of(tj), Conjunction.of(ti));
 	}
 
+	/**
+	 * To tgd.
+	 *
+	 * @param command the command
+	 * @return the tgd
+	 */
 	public TGD toTGD(SelectCommand command) {		
 		List<Term> inputs = Utility.typedToTerms(command.getInput().getHeader());
 		uk.ac.ox.cs.pdq.algebra.predicates.Predicate predicates = command.getPredicates();
@@ -134,6 +165,12 @@ public class CommandToTGDTranslator {
 		return new TGD(Conjunction.of(tj), Conjunction.of(ti));
 	}
 
+	/**
+	 * To tgd.
+	 *
+	 * @param command the command
+	 * @return the tgd
+	 */
 	public TGD toTGD(JoinCommand command) {
 		List<Term> outputs = Utility.typedToTerms(command.getOutput().getHeader());
 		Predicate ti = new Predicate(new Signature(command.getOutput().getName(), outputs.size()), outputs);
@@ -147,6 +184,12 @@ public class CommandToTGDTranslator {
 		return new TGD(Conjunction.of(tj, tk), Conjunction.of(ti));
 	}
 
+	/**
+	 * To tgd.
+	 *
+	 * @param command the command
+	 * @return the tgd
+	 */
 	public TGD toTGD(RenameCommand command) {
 		//Get the renamed attributes and create variables
 		List<Term> renamed = Utility.typedToTerms(command.getOutput().getHeader());
@@ -159,16 +202,23 @@ public class CommandToTGDTranslator {
 	}
 	
 	/**
-	 * 
-	 * @param table
-	 * @return
-	 * 		a query created from the input table.
+	 * To query.
+	 *
+	 * @param table the table
+	 * @return 		a query created from the input table.
 	 * 		The query's free variables are the all the terms created from the table's attributes
 	 */
 	public Query<?> toQuery(Table table) {
 		return this.toQuery(table, (List<Attribute>) table.getHeader());
 	}
 	
+	/**
+	 * To query.
+	 *
+	 * @param table the table
+	 * @param free the free
+	 * @return the query
+	 */
 	public Query<?> toQuery(Table table, List<Attribute> free) {
 		//Get the attributes to project and create variables
 		List<Term> _free = Utility.typedToTerms(free);
@@ -177,6 +227,13 @@ public class CommandToTGDTranslator {
 		return new ConjunctiveQuery("Q", _free, Conjunction.of(ti));
 	}
 	
+	/**
+	 * To query.
+	 *
+	 * @param free the free
+	 * @param tables the tables
+	 * @return the query
+	 */
 	public Query<?> toQuery(List<Term> free, Table... tables) {
 		Collection<Predicate> ti = Lists.newArrayList();
 		for(Table table:tables) {
@@ -186,10 +243,24 @@ public class CommandToTGDTranslator {
 		return new ConjunctiveQuery("Q", free, Conjunction.of(ti));
 	}
 	
+	/**
+	 * To query.
+	 *
+	 * @param relation the relation
+	 * @param free the free
+	 * @return the query
+	 */
 	public Query<?> toQuery(Relation relation, Attribute... free) {
 		return this.toQuery(relation, Lists.newArrayList(free));
 	}
 	
+	/**
+	 * To query.
+	 *
+	 * @param relation the relation
+	 * @param free the free
+	 * @return the query
+	 */
 	public Query<?> toQuery(Relation relation, List<Attribute> free) {
 		Collection<Predicate> ti = Lists.newArrayList();
 		List<Term> _free = Utility.typedToTerms(free);
@@ -198,6 +269,14 @@ public class CommandToTGDTranslator {
 		return new ConjunctiveQuery("Q", _free, Conjunction.of(ti));
 	}
 	
+	/**
+	 * To query.
+	 *
+	 * @param relation the relation
+	 * @param constantsMap the constants map
+	 * @param free the free
+	 * @return the query
+	 */
 	public Query<?> toQuery(Relation relation, Map<Attribute, TypedConstant> constantsMap, List<Attribute> free) {
 		Collection<Predicate> ti = Lists.newArrayList();
 		List<Term> _free = Utility.typedToTerms(free);

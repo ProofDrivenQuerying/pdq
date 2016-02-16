@@ -36,6 +36,7 @@ import uk.ac.ox.cs.pdq.util.Types;
 import com.google.common.base.Preconditions;
 import com.google.common.eventbus.EventBus;
 
+// TODO: Auto-generated Javadoc
 /**
  * 
  * Top level class for runtime evaluating plans and queries.
@@ -48,15 +49,16 @@ import com.google.common.eventbus.EventBus;
  */
 public class Runtime {
 
-	/** Runtime's parameters */
+	/**  Runtime's parameters. */
 	private RuntimeParameters params;
 	
-	/** Runtime's internal schema */
+	/**  Runtime's internal schema. */
 	private Schema schema;
 
-	/** In-memory facts */
+	/**  In-memory facts. */
 	private List<Predicate> facts;
 	
+	/** The event bus. */
 	private EventBus eventBus;
 	
 	/**
@@ -86,16 +88,18 @@ public class Runtime {
 	}
 	
 	/**
-	 * Register the given event handler
-	 * @param handler
+	 * Register the given event handler.
+	 *
+	 * @param handler the handler
 	 */
 	public void registerEventHandler(EventHandler handler) {
 		this.eventBus.register(handler);
 	}
 	
 	/**
-	 * Register the given event handler
-	 * @param handler
+	 * Register the given event handler.
+	 *
+	 * @param handler the handler
 	 */
 	public void unregisterEventHandler(EventHandler handler) {
 		this.eventBus.unregister(handler);
@@ -103,8 +107,8 @@ public class Runtime {
 
 	/**
 	 * Sets up a database from the list of facts, if provided.
+	 *
 	 * @param s Schema
-	 * @throws EvaluationException
 	 */
 	private void loadFacts(Schema s) {
 		Set<InMemoryViewWrapper> views = new LinkedHashSet<>();
@@ -155,11 +159,11 @@ public class Runtime {
 	}
 
 	/**
-	 * Loads fact in the corresponding views
-	 * @param views
-	 * @param relations
-	 * @param dataDist
-	 * @throws EvaluationException
+	 * Loads fact in the corresponding views.
+	 *
+	 * @param views the views
+	 * @param relations the relations
+	 * @param dataDist the data dist
 	 */
 	private void loadViewFacts(Set<InMemoryViewWrapper> views,
 			Map<String, InMemoryRelation> relations,
@@ -189,10 +193,11 @@ public class Runtime {
 
 	/**
 	 * Evaluates the given plan and returns its result. 
+	 *
 	 * @param p Plan
 	 * @param query Query
 	 * @return the result of the plan evaluation.
-	 * @throws EvaluationException
+	 * @throws EvaluationException the evaluation exception
 	 */
 	public Result evaluatePlan(Plan p, Query<?> query)
 			throws EvaluationException {
@@ -201,11 +206,13 @@ public class Runtime {
 
 	/**
 	 * Evaluates the given plan and returns its result. 
+	 *
 	 * @param p Plan
 	 * @param query Query
 	 * @param mode ExecutionModes
 	 * @return the result of the plan evaluation.
-	 * @throws EvaluationException */
+	 * @throws EvaluationException the evaluation exception
+	 */
 	public Result evaluatePlan(Plan p, Query<?> query, ExecutionModes mode)
 			throws EvaluationException {
 		PlanExecutor executor = Middleware.newExecutor(this.params, p, query);
@@ -217,9 +224,10 @@ public class Runtime {
 
 	/**
 	 * Evaluates the given query, and returns its result.
-	 * @param query
+	 *
+	 * @param query the query
 	 * @return the result of the query evaluation.
-	 * @throws EvaluationException
+	 * @throws EvaluationException the evaluation exception
 	 */
 	public Result evaluateQuery(Query<?> query) throws EvaluationException {
 		QueryEvaluator evaluator = QueryEvaluatorFactory.newEvaluator(this.schema, query);
@@ -231,6 +239,8 @@ public class Runtime {
 	}
 	
 	/**
+	 * To tuple.
+	 *
 	 * @param type TupleType
 	 * @param attributes List<Attribute>
 	 * @param values Constant[]

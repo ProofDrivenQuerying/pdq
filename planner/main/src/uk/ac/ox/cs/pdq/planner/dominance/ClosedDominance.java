@@ -8,6 +8,7 @@ import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
 
 import com.google.common.base.Preconditions;
 
+// TODO: Auto-generated Javadoc
 /**
  * Closed dominance. A closed configuration c dominates a closed configuration c', if c both cost- and fact- dominates c'.
  *
@@ -15,9 +16,17 @@ import com.google.common.base.Preconditions;
  */
 public class ClosedDominance implements Dominance<ChaseConfiguration>{
 
+	/** The cost estimator. */
 	private final CostEstimator<Plan> costEstimator;
+	
+	/** The fact dominance. */
 	private final FactDominance factDominance;
 
+	/**
+	 * Instantiates a new closed dominance.
+	 *
+	 * @param costEstimator the cost estimator
+	 */
 	public ClosedDominance(CostEstimator<Plan> costEstimator){
 		Preconditions.checkNotNull(costEstimator);
 		this.costEstimator = costEstimator;
@@ -26,6 +35,8 @@ public class ClosedDominance implements Dominance<ChaseConfiguration>{
 
 	/**
 	 * Constructor for ClosedDominance.
+	 *
+	 * @param costEstimator the cost estimator
 	 * @param factDominance FactDominance<DAGConfiguration<?>>
 	 */
 	public ClosedDominance(CostEstimator costEstimator, FactDominance factDominance){
@@ -36,6 +47,8 @@ public class ClosedDominance implements Dominance<ChaseConfiguration>{
 	}
 
 	/**
+	 * Checks if is dominated.
+	 *
 	 * @param source DAGConfiguration<?>
 	 * @param target DAGConfiguration<?>
 	 * @return Boolean
@@ -62,6 +75,8 @@ public class ClosedDominance implements Dominance<ChaseConfiguration>{
 	}
 
 	/**
+	 * Clone.
+	 *
 	 * @return ClosedDominance
 	 * @see uk.ac.ox.cs.pdq.dag.dominance.Dominance#clone()
 	 */

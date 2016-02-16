@@ -8,6 +8,7 @@ import uk.ac.ox.cs.pdq.EventHandler;
 import com.google.common.base.Preconditions;
 import com.google.common.eventbus.Subscribe;
 
+// TODO: Auto-generated Javadoc
 /**
  * A dynamic statistics logger allows logging data point as key-value pair,
  * i.e. without prior knowledge of what is to be logged.
@@ -22,8 +23,9 @@ public class DynamicStatistics extends StatisticsLogger implements EventHandler 
 	private final Map<StatKey, Object> values = new LinkedHashMap<>();
 
 	/**
+	 * Instantiates a new dynamic statistics.
 	 *
-	 * @param presets
+	 * @param presets the presets
 	 */
 	public DynamicStatistics(StatKey... presets) {
 		if (presets != null) {
@@ -36,7 +38,8 @@ public class DynamicStatistics extends StatisticsLogger implements EventHandler 
 	/**
 	 * Increases the value of the data point whose key is define in the
 	 * increment i by the value defined in i.
-	 * @param i
+	 *
+	 * @param i the i
 	 */
 	@Subscribe
 	public void increase(Increment i) {
@@ -64,9 +67,10 @@ public class DynamicStatistics extends StatisticsLogger implements EventHandler 
 	}
 
 	/**
-	 * Adds n to value, without prior knowledge of their actual type
-	 * @param n
-	 * @param m
+	 * Adds n to value, without prior knowledge of their actual type.
+	 *
+	 * @param n the n
+	 * @param m the m
 	 * @return the some of n + m, typed as m
 	 */
 	private static Number add(Number n, Number m) {
@@ -125,7 +129,11 @@ public class DynamicStatistics extends StatisticsLogger implements EventHandler 
 	 * @author Julien Leblay
 	 */
 	public static class Increment {
+		
+		/** The key. */
 		public final StatKey key;
+		
+		/** The value. */
 		public final Number value;
 		/**
 		 * Constructor for Increment.
@@ -148,7 +156,11 @@ public class DynamicStatistics extends StatisticsLogger implements EventHandler 
 	 * @author Julien Leblay
 	 */
 	public static class Assignment {
+		
+		/** The key. */
 		public final StatKey key;
+		
+		/** The value. */
 		public final Object value;
 		/**
 		 * Constructor for Assignment.

@@ -27,6 +27,7 @@ import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
 import com.google.common.base.Preconditions;
 import com.google.common.eventbus.EventBus;
 
+// TODO: Auto-generated Javadoc
 /**
  * Simple dag explorer. The exploration proceeds similarly to the GenericExplorer.
  * First, it creates a new binary configuration and checks whether or not it could lead to the optimal solution.
@@ -38,38 +39,29 @@ import com.google.common.eventbus.EventBus;
  */
 public class DAGSimpleDP extends DAGGeneric {
 
-	/** Removes dominated configurations **/
+	/**  Removes dominated configurations *. */
 	private final Dominance[] dominance;
 	
 	/**
-	 * 
-	 * @param eventBus
-	 * @param collectStats
-	 * @param parameters
-	 * @param query
-	 * 		The input user query
-	 * @param accessibleQuery
-	 * 		The accessible counterpart of the user query
-	 * @param schema
-	 * 		The input schema
-	 * @param accessibleSchema
-	 * 		The accessible counterpart of the input schema
-	 * @param chaser
-	 * 		Saturates configurations using the chase algorithm
-	 * @param detector
-	 * 		Detects homomorphisms during chasing
-	 * @param costEstimator
-	 * 		Estimates the cost of a plan
-	 * @param successDominance
-	 * 		Removes success dominated configurations
-	 * @param filter
-	 * 		Filters out configurations at the end of each iteration
-	 * @param validators
-	 * 		Checks whether the binary configuration composed from a given configuration pair satisfies given shape restrictions.
-	 * @param maxDepth
-	 * 		The maximum depth to explore
-	 * @param orderAware
-	 * @throws PlannerException
+	 * Instantiates a new DAG simple dp.
+	 *
+	 * @param eventBus the event bus
+	 * @param collectStats the collect stats
+	 * @param parameters the parameters
+	 * @param query 		The input user query
+	 * @param accessibleQuery 		The accessible counterpart of the user query
+	 * @param schema 		The input schema
+	 * @param accessibleSchema 		The accessible counterpart of the input schema
+	 * @param chaser 		Saturates configurations using the chase algorithm
+	 * @param detector 		Detects homomorphisms during chasing
+	 * @param costEstimator 		Estimates the cost of a plan
+	 * @param successDominance 		Removes success dominated configurations
+	 * @param dominance the dominance
+	 * @param filter 		Filters out configurations at the end of each iteration
+	 * @param validators 		Checks whether the binary configuration composed from a given configuration pair satisfies given shape restrictions.
+	 * @param maxDepth 		The maximum depth to explore
+	 * @param orderAware the order aware
+	 * @throws PlannerException the planner exception
 	 */
 	public DAGSimpleDP(
 			EventBus eventBus, 
@@ -94,8 +86,11 @@ public class DAGSimpleDP extends DAGGeneric {
 	}
 
 	/**
+	 * Main loop.
+	 *
 	 * @return Collection<DAGChaseConfiguration>
-	 * @throws PlannerException
+	 * @throws PlannerException the planner exception
+	 * @throws LimitReachedException the limit reached exception
 	 */
 	@Override
 	protected Collection<DAGChaseConfiguration> mainLoop() throws PlannerException, LimitReachedException {

@@ -22,21 +22,20 @@ import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
- * @author Efthymia Tsamoura
+ * The Class Utility.
  *
+ * @author Efthymia Tsamoura
  */
 public class Utility {
 	
 	/**
+	 * Group by binding.
 	 *
-	 * @param axioms
-	 * 		Input accessibility axioms
-	 * @param signatureToSchemaFact
-	 * 		Maps each schema signature (relation) to its chase facts
-	 * @return
-	 * 		pairs of accessibility axioms to chase facts.
+	 * @param axioms 		Input accessibility axioms
+	 * @param signatureToSchemaFact 		Maps each schema signature (relation) to its chase facts
+	 * @return 		pairs of accessibility axioms to chase facts.
 	 */
 	public List<Pair<AccessibilityAxiom, Collection<Predicate>>> groupByBinding(
 			Collection<AccessibilityAxiom> axioms, 
@@ -61,11 +60,15 @@ public class Utility {
 
 	//TODO Update the firing history of the accessed and accessible facts
 	/**
-	 * @param schema
-	 * @param axiom
-	 * @param facts
-	 * @return
-	 * 		the corresponding accessed, accessible and inferred accessible facts for each fact in the input collection
+	 * Generate facts.
+	 *
+	 * @param schema the schema
+	 * @param axiom the axiom
+	 * @param facts the facts
+	 * @param inferred the inferred
+	 * @param derivedInferred the derived inferred
+	 * @param graph the graph
+	 * @return 		the corresponding accessed, accessible and inferred accessible facts for each fact in the input collection
 	 */
 	public Collection<Predicate> generateFacts(AccessibleSchema schema, 
 			AccessibilityAxiom axiom, 
@@ -92,6 +95,12 @@ public class Utility {
 		return createdFacts;
 	}
 
+	/**
+	 * Infer inferred.
+	 *
+	 * @param facts the facts
+	 * @return the collection
+	 */
 	public static Collection<String> inferInferred(Collection<Predicate> facts) {
 		Collection<String> inferred = new LinkedHashSet<>();
 		for(Predicate fact:facts) {
@@ -102,10 +111,21 @@ public class Utility {
 		return inferred;
 	}
 	
+	/**
+	 * Infer derived inferred.
+	 *
+	 * @return the collection
+	 */
 	public static Collection<Predicate> inferDerivedInferred() {
 		return new LinkedHashSet<>();
 	}
 
+	/**
+	 * Infer signature groups.
+	 *
+	 * @param facts the facts
+	 * @return the multimap
+	 */
 	public static Multimap<Signature, Predicate> inferSignatureGroups(Collection<Predicate> facts) {
 		Multimap<Signature, Predicate> signatureGroups = LinkedHashMultimap.create();
 		for(Predicate fact:facts) {
@@ -117,6 +137,12 @@ public class Utility {
 		return signatureGroups;
 	}
 
+	/**
+	 * Infer accessible terms.
+	 *
+	 * @param facts the facts
+	 * @return the multimap
+	 */
 	public static Multimap<Term,Predicate> inferAccessibleTerms(Collection<Predicate> facts) {
 		Multimap<Term,Predicate> accessibleTerms = LinkedHashMultimap.create();
 		for(Predicate fact:facts) {
@@ -127,6 +153,12 @@ public class Utility {
 		return accessibleTerms;
 	}
 	
+	/**
+	 * Infer terms.
+	 *
+	 * @param facts the facts
+	 * @return the collection
+	 */
 	public static Collection<Term> inferTerms(Collection<Predicate> facts) {
 		Collection<Term> terms = new LinkedHashSet<>();
 		for(Predicate fact:facts) {

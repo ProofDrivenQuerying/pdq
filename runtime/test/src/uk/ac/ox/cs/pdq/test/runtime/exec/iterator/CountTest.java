@@ -19,17 +19,29 @@ import uk.ac.ox.cs.pdq.util.TupleType;
 
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
+ * The Class CountTest.
+ *
  * @author Julien LEBLAY
  */
 public class CountTest extends UnaryIteratorTest {
 
+	/** The iterator. */
 	Count iterator;
+	
+	/** The count column. */
 	Attribute countColumn = new Attribute(Integer.class, Count.class.getSimpleName());
+	
+	/** The int type. */
 	TupleType intType = TupleType.DefaultFactory.create(Integer.class);
+	
+	/** The empty child. */
 	@Mock TupleIterator emptyChild;
 	
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.test.runtime.exec.iterator.TupleIteratorTest#setup()
+	 */
 	@Before public void setup() {
 		super.setup();
 		MockitoAnnotations.initMocks(this);
@@ -47,6 +59,9 @@ public class CountTest extends UnaryIteratorTest {
 		this.iterator = new Count(child);
 	}
 	
+	/**
+	 * Inits the count.
+	 */
 	@Test public void initCount() {
 		this.iterator = new Count(child);
 		Assert.assertEquals("Count child must match that of initialization", this.child, this.iterator.getChild());
@@ -56,11 +71,19 @@ public class CountTest extends UnaryIteratorTest {
 		Assert.assertEquals("Count output type must match that of initialization", intType, this.iterator.getType());
 	}
 	
+	/**
+	 * Inits the count null child.
+	 */
 	@Test(expected=IllegalArgumentException.class) 
 	public void initCountNullChild() {
 		new Count(null);
 	}
 	
+	/**
+	 * Deep copy.
+	 *
+	 * @throws RelationalOperatorException the relational operator exception
+	 */
 	@Test public void deepCopy() throws RelationalOperatorException {
 		this.iterator = new Count(child);
 		Count copy = this.iterator.deepCopy();
@@ -71,6 +94,9 @@ public class CountTest extends UnaryIteratorTest {
 		Assert.assertEquals("Count iterator input type must match that of child", this.iterator.getInputType(), copy.getInputType());
 	}
 
+	/**
+	 * Checks for next for not empty.
+	 */
 	@Test public void hasNextForNotEmpty() {
 		this.iterator = new Count(child);
 		this.iterator.open();
@@ -78,6 +104,9 @@ public class CountTest extends UnaryIteratorTest {
 		Assert.assertFalse(this.iterator.hasNext());
 	}
 
+	/**
+	 * Checks for next for empty.
+	 */
 	@Test public void hasNextForEmpty() {
 		this.iterator = new Count(emptyChild);
 		this.iterator.open();
@@ -85,18 +114,27 @@ public class CountTest extends UnaryIteratorTest {
 		Assert.assertFalse(this.iterator.hasNext());
 	}
 
+	/**
+	 * Next for not empty.
+	 */
 	@Test public void nextForNotEmpty() {
 		this.iterator = new Count(child);
 		this.iterator.open();
 		Assert.assertEquals(intType.createTuple(3), this.iterator.next());
 	}
 
+	/**
+	 * Next for empty.
+	 */
 	@Test public void nextForEmpty() {
 		this.iterator = new Count(emptyChild);
 		this.iterator.open();
 		Assert.assertEquals(intType.createTuple(0), this.iterator.next());
 	}
 
+	/**
+	 * Next no more than one result not empty.
+	 */
 	@Test(expected=NoSuchElementException.class) 
 	public void nextNoMoreThanOneResultNotEmpty() {
 		this.iterator = new Count(child);
@@ -105,6 +143,9 @@ public class CountTest extends UnaryIteratorTest {
 		this.iterator.next();
 	}
 
+	/**
+	 * Next no more than one result empty.
+	 */
 	@Test(expected=NoSuchElementException.class) 
 	public void nextNoMoreThanOneResultEmpty() {
 		this.iterator = new Count(emptyChild);
@@ -113,6 +154,9 @@ public class CountTest extends UnaryIteratorTest {
 		this.iterator.next();
 	}
 
+	/**
+	 * Reset not empty.
+	 */
 	@Test public void resetNotEmpty() {
 		this.iterator = new Count(child);
 		this.iterator.open();
@@ -126,6 +170,9 @@ public class CountTest extends UnaryIteratorTest {
 		Assert.assertFalse(this.iterator.hasNext());
 	}
 
+	/**
+	 * Reset empty.
+	 */
 	@Test public void resetEmpty() {
 		this.iterator = new Count(emptyChild);
 		this.iterator.open();
@@ -138,6 +185,9 @@ public class CountTest extends UnaryIteratorTest {
 		Assert.assertFalse(this.iterator.hasNext());
 	}
 
+	/**
+	 * Bind null.
+	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void bindNull() {
 		this.iterator = new Count(child);
@@ -145,12 +195,18 @@ public class CountTest extends UnaryIteratorTest {
 		this.iterator.bind(null);
 	}
 	
+	/**
+	 * Bind on unopened.
+	 */
 	@Test(expected=IllegalStateException.class)
 	public void bindOnUnopened() {
 		this.iterator = new Count(child);
 		this.iterator.bind(Tuple.EmptyTuple);
 	}
 	
+	/**
+	 * Bind illegal type.
+	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void bindIllegalType() {
 		this.iterator = new Count(child);
@@ -158,6 +214,9 @@ public class CountTest extends UnaryIteratorTest {
 		this.iterator.bind(outputType.createTuple("four", 4));
 	}
 	
+	/**
+	 * Bind empty tuple.
+	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void bindEmptyTuple() {
 		this.iterator = new Count(child);
@@ -165,6 +224,9 @@ public class CountTest extends UnaryIteratorTest {
 		this.iterator.bind(Tuple.EmptyTuple);
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.test.runtime.exec.iterator.TupleIteratorTest#getIterator()
+	 */
 	@Override
 	protected TupleIterator getIterator() {
 		return this.iterator;

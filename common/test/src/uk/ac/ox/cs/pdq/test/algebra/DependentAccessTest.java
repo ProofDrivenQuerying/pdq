@@ -28,22 +28,44 @@ import uk.ac.ox.cs.pdq.util.TupleType;
 import com.google.common.collect.Lists;
 
 
+// TODO: Auto-generated Javadoc
 /**
+ * The Class DependentAccessTest.
+ *
  * @author Julien Leblay
  */
 public class DependentAccessTest extends RelationalOperatorTest {
 
+	/** The output terms. */
 	List<Term> outputTerms = Lists.<Term>newArrayList(new Variable("a"), new Skolem("b"), new TypedConstant<>("c"));
+	
+	/** The input terms. */
 	List<Term> inputTerms = Lists.<Term>newArrayList(new Variable("a"), new Skolem("b"));
+	
+	/** The r. */
 	EntityRelation R = new EntityRelation("R");
+	
+	/** The output type. */
 	TupleType outputType = TupleType.DefaultFactory.create(Integer.class, R, String.class);
+	
+	/** The input type. */
 	TupleType inputType = TupleType.DefaultFactory.create(Integer.class, R);
 
+	/** The operator. */
 	DependentAccess operator;
+	
+	/** The r9. */
 	Relation r1, r2, r3, r4, r5, r6, r7, r8, r9;
+	
+	/** The m2. */
 	AccessMethod free, m1, m2;
+	
+	/** The static inputs. */
 	Map<Integer, TypedConstant<?>> staticInputs= new LinkedHashMap<>();
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.test.algebra.RelationalOperatorTest#setup()
+	 */
 	@Before public void setup() throws RelationalOperatorException {
 		super.setup();
 		staticInputs.put(2, (TypedConstant<?>) outputTerms.get(2));
@@ -62,90 +84,144 @@ public class DependentAccessTest extends RelationalOperatorTest {
 		r8 = new Relation("R8", Lists.newArrayList(new Attribute(Integer.class, "a1"), new Attribute(R, "a2"), new Attribute(String.class, "a3")), Lists.newArrayList(m2)) {};
 	}
 	
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.test.algebra.RelationalOperatorTest#getOperator()
+	 */
 	RelationalOperator getOperator() {
 		return this.operator;
 	}
 	
+	/**
+	 * Inits the dependent access test2 arguments inconsistent access method1.
+	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void initDependentAccessTest2ArgumentsInconsistentAccessMethod1() {
 		new DependentAccess(r1, free);
 	}
 	
+	/**
+	 * Inits the dependent access test2 arguments inconsistent access method2.
+	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void initDependentAccessTest2ArgumentsInconsistentAccessMethod2() {
 		new DependentAccess(r4, m1);
 	}
 	
+	/**
+	 * Inits the dependent access test2 arguments inconsistent access method3.
+	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void initDependentAccessTest2ArgumentsInconsistentAccessMethod3() {
 		new DependentAccess(r8, free);
 	}
 	
+	/**
+	 * Inits the dependent access test2 arguments inconsistent access method4.
+	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void initDependentAccessTest2ArgumentsInconsistentAccessMethod4() {
 		new DependentAccess(r8, m1);
 	}
 	
+	/**
+	 * Inits the dependent access test3 arguments inconsistent access method1.
+	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void initDependentAccessTest3ArgumentsInconsistentAccessMethod1() {
 		new DependentAccess(r2, free, staticInputs);
 	}
 	
+	/**
+	 * Inits the dependent access test3 arguments inconsistent access method2.
+	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void initDependentAccessTest3ArgumentsInconsistentAccessMethod2() {
 		new DependentAccess(r4, free, staticInputs);
 	}
 	
+	/**
+	 * Inits the dependent access test3 arguments inconsistent access method3.
+	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void initDependentAccessTest3ArgumentsInconsistentAccessMethod3() {
 		new DependentAccess(r7, free, staticInputs);
 	}
 	
+	/**
+	 * Inits the dependent access test null2 arguments1.
+	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void initDependentAccessTestNull2Arguments1() {
 		new DependentAccess(null, free);
 	}
 	
+	/**
+	 * Inits the dependent access test null2 arguments2.
+	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void initDependentAccessTestNull2Arguments2() {
 		new DependentAccess(r2, null);
 	}
 	
+	/**
+	 * Inits the dependent access test null2 arguments.
+	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void initDependentAccessTestNull2Arguments() {
 		new DependentAccess(null, null);
 	}
 	
+	/**
+	 * Inits the dependent access test null arguments1.
+	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void initDependentAccessTestNullArguments1() {
 		new DependentAccess(null, null, (List) null);
 	}
 	
+	/**
+	 * Inits the dependent access test null arguments2.
+	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void initDependentAccessTestNullArguments2() {
 		new DependentAccess(null, null, (Map) null);
 	}
 	
+	/**
+	 * Inits the dependent access test null argument1.
+	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void initDependentAccessTestNullArgument1() {
 		new DependentAccess(null, free, staticInputs);
 	}
 	
+	/**
+	 * Inits the dependent access test null argument2.
+	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void initDependentAccessTestNullArgument2() {
 		new DependentAccess(r2, null, staticInputs);
 	}
 	
+	/**
+	 * Inits the dependent access test null argument3.
+	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void initDependentAccessTestNullArgument3() {
 		new DependentAccess(r5, m1, (List) null);
 	}
 	
+	/**
+	 * Inits the dependent access test null argument3bis.
+	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void initDependentAccessTestNullArgument3bis() {
 		new DependentAccess(r5, m1, (Map) null);
 	}
 	
+	/**
+	 * Inits the dependent access test2 args arity nil.
+	 */
 	@Test public void initDependentAccessTest2ArgsArityNil() {
 		this.operator = new DependentAccess(r2, free);
 		Assert.assertEquals("DependentAccess operator type must match that of initialization", r2.getType(), this.operator.getType());
@@ -156,6 +232,9 @@ public class DependentAccessTest extends RelationalOperatorTest {
 		Assert.assertTrue("DependentAccess operator static inputs must be empty", this.operator.getStaticInputs().isEmpty());
 	}
 	
+	/**
+	 * Inits the dependent access test2 args arity one.
+	 */
 	@Test public void initDependentAccessTest2ArgsArityOne() {
 		this.operator = new DependentAccess(r4, free);
 		Assert.assertEquals("DependentAccess operator type must match that of initialization", r4.getType(), this.operator.getType());
@@ -166,6 +245,9 @@ public class DependentAccessTest extends RelationalOperatorTest {
 		Assert.assertTrue("DependentAccess operator static inputs must be empty", this.operator.getStaticInputs().isEmpty());
 	}
 	
+	/**
+	 * Inits the dependent access test2 args arity more than one.
+	 */
 	@Test public void initDependentAccessTest2ArgsArityMoreThanOne() {
 		this.operator = new DependentAccess(r7, free);
 		Assert.assertEquals("DependentAccess operator type must match that of initialization", r7.getType(), this.operator.getType());
@@ -176,6 +258,9 @@ public class DependentAccessTest extends RelationalOperatorTest {
 		Assert.assertTrue("DependentAccess operator static inputs must be empty", this.operator.getStaticInputs().isEmpty());
 	}
 	
+	/**
+	 * Inits the dependent access test3 args arity one.
+	 */
 	@Test public void initDependentAccessTest3ArgsArityOne() {
 		this.operator = new DependentAccess(r5, m1);
 		Assert.assertEquals("DependentAccess operator type must match that of child", r5.getType(), this.operator.getType());
@@ -186,6 +271,9 @@ public class DependentAccessTest extends RelationalOperatorTest {
 		Assert.assertTrue("DependentAccess operator static inputs must be empty", this.operator.getStaticInputs().isEmpty());
 	}
 	
+	/**
+	 * Inits the dependent access test3 args arity more than one.
+	 */
 	@Test public void initDependentAccessTest3ArgsArityMoreThanOne() {
 		this.operator = new DependentAccess(r8, m2, staticInputs);
 		Assert.assertEquals("DependentAccess operator type must match that of child", r8.getType(), this.operator.getType());
@@ -194,6 +282,9 @@ public class DependentAccessTest extends RelationalOperatorTest {
 		Assert.assertEquals("DependentAccess operator static inputs must match that of initialization", this.staticInputs, this.operator.getStaticInputs());
 	}
 	
+	/**
+	 * Inits the dependent access test3 args arity more than one2.
+	 */
 	@Test public void initDependentAccessTest3ArgsArityMoreThanOne2() {
 		this.operator = new DependentAccess(r8, m2, outputTerms);
 		Assert.assertEquals("DependentAccess operator type must match that of child", r8.getType(), this.operator.getType());
@@ -202,6 +293,11 @@ public class DependentAccessTest extends RelationalOperatorTest {
 		Assert.assertEquals("DependentAccess operator static inputs must match that of initialization", this.staticInputs, this.operator.getStaticInputs());
 	}
 	
+	/**
+	 * Deep copy.
+	 *
+	 * @throws RelationalOperatorException the relational operator exception
+	 */
 	@Test public void deepCopy() throws RelationalOperatorException {
 		this.operator = new DependentAccess(r2, free);
 		DependentAccess copy = this.operator.deepCopy();
@@ -270,18 +366,33 @@ public class DependentAccessTest extends RelationalOperatorTest {
 		Assert.assertEquals("DependentAccess copy static inputs must match that of operator", this.operator.getStaticInputs(), copy.getStaticInputs());
 	}
 	
+	/**
+	 * Gets the bad column nil arity.
+	 *
+	 * @return the bad column nil arity
+	 */
 	@Test(expected=IllegalArgumentException.class) 
 	public void getBadColumnNilArity() {
 		this.operator = new DependentAccess(r2, free);
 		this.operator.getColumn(this.r2.getArity());
 	}
 	
+	/**
+	 * Gets the bad column arity one.
+	 *
+	 * @return the bad column arity one
+	 */
 	@Test(expected=IllegalArgumentException.class) 
 	public void getBadColumnArityOne() {
 		this.operator = new DependentAccess(r5, m1);
 		this.operator.getColumn(this.r4.getArity());
 	}
 	
+	/**
+	 * Gets the bad column arity more than one.
+	 *
+	 * @return the bad column arity more than one
+	 */
 	@Test(expected=IllegalArgumentException.class) 
 	public void getBadColumnArityMoreThanOne() {
 		this.operator = new DependentAccess(r8, m2, staticInputs);
@@ -289,6 +400,11 @@ public class DependentAccessTest extends RelationalOperatorTest {
 	}
 
 	
+	/**
+	 * Gets the depth.
+	 *
+	 * @return the depth
+	 */
 	@Test public void getDepth() {
 		this.operator = new DependentAccess(r2, free);
 		Assert.assertEquals("DependentAccess depth must be exactly that of 1", (int) 1, (int) this.operator.getDepth());
@@ -302,12 +418,20 @@ public class DependentAccessTest extends RelationalOperatorTest {
 		Assert.assertEquals("DependentAccess depth must be exactly that of 1", (int) 1, (int) this.operator.getDepth());
 	}
 
+	/**
+	 * Gets the negative column.
+	 *
+	 * @return the negative column
+	 */
 	@Test(expected=IllegalArgumentException.class) 
 	public void getNegativeColumn() {
 		this.operator = new DependentAccess(r2, free);
 		this.operator.getColumn(-1);
 	}
 
+	/**
+	 * Checks if is closed.
+	 */
 	@Test public void isClosed() {
 		Assert.assertTrue("DependentAccess must closed on free access methods", new DependentAccess(r2, free).isClosed());
 		Assert.assertTrue("DependentAccess must closed on free access methods", new DependentAccess(r4, free).isClosed());
@@ -321,6 +445,9 @@ public class DependentAccessTest extends RelationalOperatorTest {
 		Assert.assertTrue("DependentAccess must closed on non-free access methods where all inputs are statically satisfied", new DependentAccess(r8, m2, inputs).isClosed());
 	}
 
+	/**
+	 * Checks if is quasi leaf.
+	 */
 	@Test public void isQuasiLeaf() {
 		Assert.assertTrue("Operator's isQuasiLeaf must match always be true", new DependentAccess(r2, free).isQuasiLeaf());
 		Assert.assertTrue("Operator's isQuasiLeaf must match always be true", new DependentAccess(r4, free).isQuasiLeaf());
@@ -329,6 +456,9 @@ public class DependentAccessTest extends RelationalOperatorTest {
 		Assert.assertTrue("Operator's isQuasiLeaf must match always be true", new DependentAccess(r8, m2).isQuasiLeaf());
 	}
 
+	/**
+	 * Checks if is left deep.
+	 */
 	@Test public void isLeftDeep() {
 		Assert.assertTrue("Operator's isLeftDeep must match always be true", new DependentAccess(r2, free).isLeftDeep());
 		Assert.assertTrue("Operator's isLeftDeep must match always be true", new DependentAccess(r4, free).isLeftDeep());
@@ -337,6 +467,9 @@ public class DependentAccessTest extends RelationalOperatorTest {
 		Assert.assertTrue("Operator's isLeftDeep must match always be true", new DependentAccess(r8, m2).isLeftDeep());
 	}
 
+	/**
+	 * Checks if is right deep.
+	 */
 	@Test public void isRightDeep() {
 		Assert.assertTrue("Operator's isRightDeep must match always be true", new DependentAccess(r2, free).isRightDeep());
 		Assert.assertTrue("Operator's isRightDeep must match always be true", new DependentAccess(r4, free).isRightDeep());

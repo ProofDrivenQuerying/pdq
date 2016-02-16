@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package uk.ac.ox.cs.pdq.planner.explorer;
 
 import java.util.ArrayList;
@@ -23,25 +26,28 @@ import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
 
 import com.google.common.eventbus.EventBus;
 
+// TODO: Auto-generated Javadoc
 /**
- * Creates an explorer given the input arguments
- * @author Efthymia Tsamoura
+ * Creates an explorer given the input arguments.
  *
+ * @author Efthymia Tsamoura
  */
 public class ExplorerFactory {
 
 	/**
-	 * 
-	 * @param eventBus
-	 * @param collectStats
-	 * @param schema
-	 * @param query
-	 * @param chaser
-	 * @param detector
-	 * @param cardinalityEstimator
-	 * @param parameters
-	 * @return
-	 * @throws Exception
+	 * Creates a new Explorer object.
+	 *
+	 * @param <P> the generic type
+	 * @param eventBus the event bus
+	 * @param collectStats the collect stats
+	 * @param schema the schema
+	 * @param query the query
+	 * @param chaser the chaser
+	 * @param detector the detector
+	 * @param cardinalityEstimator the cardinality estimator
+	 * @param parameters the parameters
+	 * @return the explorer< p>
+	 * @throws Exception the exception
 	 */
 	public static <P extends Plan> Explorer<P> createExplorer(
 			EventBus eventBus, 

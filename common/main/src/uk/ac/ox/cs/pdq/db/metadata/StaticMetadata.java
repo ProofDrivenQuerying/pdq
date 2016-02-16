@@ -11,19 +11,24 @@ import uk.ac.ox.cs.pdq.util.Tuple;
 
 
 
+// TODO: Auto-generated Javadoc
 /**
- * Implementation of relation statistics
+ * Implementation of relation statistics.
+ *
  * @author Efthymia Tsamoura
  * @author Julien Leblay
- *
  */
 public class StaticMetadata implements RelationMetadata {
 
-	/** The size (in tuples of the relation) */
+	/**  The size (in tuples of the relation). */
 	private long size;
 
+	/** The per input tuple cost. */
 	private final Map<AccessMethod, Cost> perInputTupleCost;
 
+	/**
+	 * Instantiates a new static metadata.
+	 */
 	public StaticMetadata() {
 		this(0L, new LinkedHashMap<AccessMethod, Cost>());
 	}
@@ -55,6 +60,8 @@ public class StaticMetadata implements RelationMetadata {
 	}
 
 	/**
+	 * Gets the size.
+	 *
 	 * @return Long
 	 * @see uk.ac.ox.cs.pdq.db.metadata.RelationMetadata#getSize()
 	 */
@@ -64,6 +71,8 @@ public class StaticMetadata implements RelationMetadata {
 	}
 
 	/**
+	 * Gets the selectivity.
+	 *
 	 * @param positions List<Integer>
 	 * @return Double
 	 * @see uk.ac.ox.cs.pdq.costs.statistics.RelationMetadata#getSelectivity(List<Integer>)
@@ -74,6 +83,8 @@ public class StaticMetadata implements RelationMetadata {
 	}
 
 	/**
+	 * Gets the selectivity.
+	 *
 	 * @param positions List<Integer>
 	 * @param tuple Tuple
 	 * @return Double
@@ -85,6 +96,8 @@ public class StaticMetadata implements RelationMetadata {
 	}
 
 	/**
+	 * Gets the per input tuple cost.
+	 *
 	 * @param binding AccessMethod
 	 * @return Cost
 	 * @see uk.ac.ox.cs.pdq.db.metadata.RelationMetadata#getPerInputTupleCost(AccessMethod)
@@ -99,6 +112,8 @@ public class StaticMetadata implements RelationMetadata {
 	}
 
 	/**
+	 * Sets the per input tuple cost.
+	 *
 	 * @param binding AccessMethod
 	 * @param c Cost
 	 * @see uk.ac.ox.cs.pdq.db.metadata.RelationMetadata#setPerInputTupleCost(AccessMethod, Cost)
@@ -109,6 +124,8 @@ public class StaticMetadata implements RelationMetadata {
 	}
 
 	/**
+	 * Sets the per input tuple costs.
+	 *
 	 * @param accessCosts Map<AccessMethod,Cost>
 	 * @see uk.ac.ox.cs.pdq.costs.statistics.RelationMetadata#setPerInputTupleCosts(Map<AccessMethod,Cost>)
 	 */
@@ -118,6 +135,8 @@ public class StaticMetadata implements RelationMetadata {
 	}
 
 	/**
+	 * Sets the size.
+	 *
 	 * @param s Long
 	 * @see uk.ac.ox.cs.pdq.db.metadata.RelationMetadata#setSize(Long)
 	 */

@@ -6,17 +6,23 @@ import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.dag.DAGConfiguration;
 
 
+// TODO: Auto-generated Javadoc
 /**
- * Requires the input pair of configurations to be non trivial and their composition to be a closed left-deep configuration
- * @author Efthymia Tsamoura
+ * Requires the input pair of configurations to be non trivial and their composition to be a closed left-deep configuration.
  *
+ * @author Efthymia Tsamoura
  */
 public class LinearValidator implements Validator{
 
+	/**
+	 * Instantiates a new linear validator.
+	 */
 	public LinearValidator() {
 	}
 
 	/**
+	 * Validate.
+	 *
 	 * @param left DAGConfiguration
 	 * @param right DAGConfiguration
 	 * @return boolean
@@ -31,6 +37,8 @@ public class LinearValidator implements Validator{
 	}
 
 	/**
+	 * Validate.
+	 *
 	 * @param left DAGConfiguration
 	 * @param right DAGConfiguration
 	 * @param depth int
@@ -43,6 +51,8 @@ public class LinearValidator implements Validator{
 	}
 
 	/**
+	 * Clone.
+	 *
 	 * @return Validator
 	 * @see uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator#clone()
 	 */

@@ -17,6 +17,7 @@ import uk.ac.ox.cs.pdq.util.TupleType;
 import uk.ac.ox.cs.pdq.util.Typed;
 import uk.ac.ox.cs.pdq.util.Types;
 
+// TODO: Auto-generated Javadoc
 /**
  * Provide utility function for translating from/to SQL.
  *
@@ -26,14 +27,20 @@ import uk.ac.ox.cs.pdq.util.Types;
  */
 public class PostgresqlTranslator extends SQL92Translator {
 
-	/** The logger */
+	/**  The logger. */
 	public static Logger log = Logger.getLogger(PostgresqlTranslator.class);
 
+	/**
+	 * Instantiates a new postgresql translator.
+	 */
 	protected PostgresqlTranslator() {}
 
 	/**
-	 * @param plan
+	 * To sql.
+	 *
+	 * @param op the op
 	 * @return a SQL statement equivalent to the given plan
+	 * @throws RewriterException the rewriter exception
 	 */
 	@Override
 	public String toSQL(Operator op) throws RewriterException {
@@ -41,8 +48,11 @@ public class PostgresqlTranslator extends SQL92Translator {
 	}
 
 	/**
-	 * @param plan
+	 * To sql with.
+	 *
+	 * @param op the op
 	 * @return a SQL statement equivalent to the given plan
+	 * @throws RewriterException the rewriter exception
 	 */
 	@Override
 	public String toSQLWith(Operator op) throws RewriterException {
@@ -58,9 +68,10 @@ public class PostgresqlTranslator extends SQL92Translator {
 	public class TreeTranslator extends SQL92Translator.TreeTranslator {
 
 		/**
+		 * Make aliases columns.
 		 *
-		 * @param s
-		 * @param columns
+		 * @param s the s
+		 * @param columns the columns
 		 * @param type TupleType
 		 * @param renaming Map<Integer,Term>
 		 * @return a comma-separated list of terms prefix with the given alias.
@@ -98,8 +109,10 @@ public class PostgresqlTranslator extends SQL92Translator {
 
 	/**
 	 * Format the given value so as to call the proper postgresql type conversion function.
-	 * @param targetType
+	 *
+	 * @param <T> the generic type
 	 * @param o Object
+	 * @param targetType the target type
 	 * @return a string representation a call to the given postgres-specific
 	 * target type conversion function onto the given value;
 	 */

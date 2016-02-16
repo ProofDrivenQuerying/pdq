@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package uk.ac.ox.cs.pdq.planner.dag.explorer.parallel;
 
 import java.math.BigInteger;
@@ -29,29 +32,33 @@ import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 
+// TODO: Auto-generated Javadoc
 /**
- * Creates new binary configurations
+ * Creates new binary configurations.
  *
  * @author Efthymia Tsamoura
  */
 public class ReasoningThread implements Callable<Boolean> {
 
+	/** The log. */
 	protected static Logger log = Logger.getLogger(ReasoningThread.class);
 
+	/** The query. */
 	protected final Query<?> query;
 
+	/** The schema. */
 	protected final Schema schema;
 
 	/** Performs reasoning. Closes newly created binary configurations*/
 	protected final Chaser chaser;
 
-	/** Detects homomorphisms*/
+	/**  Detects homomorphisms. */
 	protected final HomomorphismDetector detector;
 
-	/** Estimates the cost of the plans */
+	/**  Estimates the cost of the plans. */
 	protected final CardinalityEstimator cardinalityEstimator;
 
-	/** Classes of structurally equivalent configurations*/
+	/**  Classes of structurally equivalent configurations. */
 	protected final DAGAnnotatedPlanClasses equivalenceClasses;
 
 	/** Map of representatives. For each configuration c = BinConfiguration(c_1,c_2) we create a map from the
@@ -61,52 +68,48 @@ public class ReasoningThread implements Callable<Boolean> {
 		then we copy the state of c to the state of c' = BinConfiguration(c'_1,c'_2).*/
 	protected final AnnotatedPlanRepresentative representatives;
 
-	/** The depth of the output configurations */
+	/**  The depth of the output configurations. */
 	private final int depth;
 
-	/** The configurations to consider on the left */
+	/**  The configurations to consider on the left. */
 	private final Queue<DAGAnnotatedPlan> left;
 
-	/** The configurations to consider on the right */
+	/**  The configurations to consider on the right. */
 	private final Collection<DAGAnnotatedPlan> right;
 
+	/** The best. */
 	private final DAGAnnotatedPlan best;
 
+	/** The success dominance. */
 	private final Dominance<DAGAnnotatedPlan> successDominance;
 
-	/** Validates pairs of configurations to be composed*/
+	/**  Validates pairs of configurations to be composed. */
 	private final List<Validator> validators;
 
-	/** The output configurations*/
+	/**  The output configurations. */
 	private final Map<Pair<DAGAnnotatedPlan, DAGAnnotatedPlan>, DAGAnnotatedPlan> output;
 
 	/**
+	 * Instantiates a new reasoning thread.
 	 *
-	 * @param depth
-	 * 		The depth of the output configurations
-	 * @param left
-	 * 		The configurations to consider on the left
-	 * @param right
-	 * 		The configurations to consider on the right
-	 * @param chaser
-	 * 		Performs reasoning. Closes newly created binary configurations
-	 * @param detector
-	 * 		Detects homomorphisms
-	 * @param cardinalityEstimator
-	 * 		Estimates the cost of the plans
-	 * @param representatives
-	 * 		Map of representatives. For each configuration c = BinConfiguration(c_1,c_2) we create a map from the
-			equivalence classes of c and c' to c''. This map helps us reducing the chasing time, i.e.,
-			if c'_1 and c'_2 are structurally equivalent to c_1 and c_2, respectively,
-			and c = BinConfiguration(c_1,c_2) has already been fully chased,
-			then we copy the state of c to the state of c' = BinConfiguration(c'_1,c'_2).
-	   @param templates
-	 * 		Maps each configuration to its constituting ApplyRule configurations. Used to speed up chasing, i.e.,
-	 * 		when we are about to create a new binary configuration c''= BinaryConfiguration(c,c')
-	 * 		from c and c' and there exists another configuration c^(3) with ApplyRules
-	 * 		the ApplyRules of c and c' and c^(3) is already chased then we use c^(3)'s state as the state of c''
-	 * @param output
-	 * 		The output configurations
+	 * @param depth 		The depth of the output configurations
+	 * @param left 		The configurations to consider on the left
+	 * @param right 		The configurations to consider on the right
+	 * @param query the query
+	 * @param schema the schema
+	 * @param chaser 		Performs reasoning. Closes newly created binary configurations
+	 * @param detector 		Detects homomorphisms
+	 * @param cardinalityEstimator 		Estimates the cost of the plans
+	 * @param successDominance the success dominance
+	 * @param best the best
+	 * @param validators the validators
+	 * @param equivalenceClasses the equivalence classes
+	 * @param representatives 		Map of representatives. For each configuration c = BinConfiguration(c_1,c_2) we create a map from the
+	 * 			equivalence classes of c and c' to c''. This map helps us reducing the chasing time, i.e.,
+	 * 			if c'_1 and c'_2 are structurally equivalent to c_1 and c_2, respectively,
+	 * 			and c = BinConfiguration(c_1,c_2) has already been fully chased,
+	 * 			then we copy the state of c to the state of c' = BinConfiguration(c'_1,c'_2).
+	 * @param output 		The output configurations
 	 */
 	public ReasoningThread(
 			int depth,
@@ -152,6 +155,8 @@ public class ReasoningThread implements Callable<Boolean> {
 	}
 
 	/**
+	 * Call.
+	 *
 	 * @return Boolean
 	 * @see java.util.concurrent.Callable#call()
 	 */
@@ -183,6 +188,15 @@ public class ReasoningThread implements Callable<Boolean> {
 		return true;
 	}
 
+	/**
+	 * Select.
+	 *
+	 * @param left the left
+	 * @param right the right
+	 * @param equivalenceClasses the equivalence classes
+	 * @param depth the depth
+	 * @return the collection
+	 */
 	private Collection<DAGAnnotatedPlan> select(DAGAnnotatedPlan left, Collection<DAGAnnotatedPlan> right, DAGAnnotatedPlanClasses equivalenceClasses, int depth) {
 		Set<DAGAnnotatedPlan> selected = Sets.newLinkedHashSet();
 		for(DAGAnnotatedPlan configuration:right) {
@@ -196,11 +210,12 @@ public class ReasoningThread implements Callable<Boolean> {
 	}
 
 	/**
-	 * @param left
-	 * @param right
-	 * @param depth
-	 * @return
-	 * 		true if the binary configuration composed from the left and right input configurations passes the validation tests,
+	 * Validate.
+	 *
+	 * @param left the left
+	 * @param right the right
+	 * @param depth the depth
+	 * @return 		true if the binary configuration composed from the left and right input configurations passes the validation tests,
 	 * 		i.e., satisfies given shape restrictions.
 	 * 		If depth > 0, then the corresponding binary configuration must be of the given depth.
 	 */
@@ -209,8 +224,10 @@ public class ReasoningThread implements Callable<Boolean> {
 	}
 
 	/**
-	 * @param left
-	 * @param right
+	 * Merge.
+	 *
+	 * @param left the left
+	 * @param right the right
 	 * @return a new binary configuration BinConfiguration(left, right)
 	 */
 	protected DAGAnnotatedPlan merge(DAGAnnotatedPlan left, DAGAnnotatedPlan right) {	

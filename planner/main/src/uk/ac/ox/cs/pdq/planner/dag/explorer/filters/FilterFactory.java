@@ -2,6 +2,7 @@ package uk.ac.ox.cs.pdq.planner.dag.explorer.filters;
 
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.FilterTypes;
 
+// TODO: Auto-generated Javadoc
 /**
  * Creates filters based on the input arguments.
 
@@ -10,6 +11,7 @@ import uk.ac.ox.cs.pdq.planner.PlannerParameters.FilterTypes;
  */
 public class FilterFactory {
 
+	/** The type. */
 	private final FilterTypes type;
 
 
@@ -22,6 +24,8 @@ public class FilterFactory {
 	}
 
 	/**
+	 * Gets the single instance of FilterFactory.
+	 *
 	 * @return Filter
 	 */
 	public Filter getInstance() {

@@ -18,27 +18,41 @@ import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class SchemaBuilderTest.
+ */
 public class SchemaBuilderTest {
 	
+	/** The schema. */
 	private Schema schema = null;
 	
+	/** The relation names. */
 	private List<String> relationNames = Lists.newArrayList(
 			new String[] {"r1", "r2", "r3", "r4"}
 	);
+	
+	/** The relation arities. */
 	private List<Integer> relationArities = Lists.newArrayList(
 			new Integer[] {2, 1, 3, 2}
 	);
+	
+	/** The binding types. */
 	private List<Types> bindingTypes = Lists.newArrayList(
 			new Types[] {
 					Types.FREE, Types.BOOLEAN,
 					Types.LIMITED
 			}
 	);
+	
+	/** The binding positions. */
 	private List<Integer[]> bindingPositions = Lists.newArrayList(
 			new Integer[][] {
 					{}, {1}, {2, 3}, {}
 			}
 	);
+	
+	/** The attributes. */
 	private List<Attribute[]> attributes = Lists.newArrayList(
 			new Attribute[][] {
 					{new Attribute(String.class, "r1.1"), new Attribute(Integer.class, "r1.1")},
@@ -48,10 +62,21 @@ public class SchemaBuilderTest {
 			}
 	);
 	
+	/**
+	 * Instantiates a new schema builder test.
+	 *
+	 * @throws ReflectiveOperationException the reflective operation exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public SchemaBuilderTest() throws ReflectiveOperationException, IOException {
 		this.schema = this.build();
 	}
 	
+	/**
+	 * Builds the.
+	 *
+	 * @return the schema
+	 */
 	private Schema build() {
 		SchemaBuilder result = Schema.builder();
 		for (int i = 0, l = this.relationNames.size(); i < l; i++) {
@@ -65,18 +90,24 @@ public class SchemaBuilderTest {
 	}
 	
 	/**
-	 * Makes sure assertions are enabled
+	 * Makes sure assertions are enabled.
 	 */
 	@Before 
 	public void setup() {
 		Utility.assertsEnabled();
 	}
 	
+	/**
+	 * Test number of relations.
+	 */
 	@Test
 	public void testNumberOfRelations() {
 		assertEquals(this.schema.getRelations().size(), 4);
 	}
 	
+	/**
+	 * Test relation names.
+	 */
 	@Test
 	public void testRelationNames() {
 		int i = 0;
@@ -85,6 +116,9 @@ public class SchemaBuilderTest {
 		}
 	}
 	
+	/**
+	 * Test relation arities.
+	 */
 	@Test
 	public void testRelationArities() {
 		int i = 0;
@@ -93,6 +127,9 @@ public class SchemaBuilderTest {
 		}
 	}
 	
+	/**
+	 * Test attribute names.
+	 */
 	@Test
 	public void testAttributeNames() {
 		int i = 0;
@@ -105,6 +142,9 @@ public class SchemaBuilderTest {
 		}
 	}
 
+	/**
+	 * Test access method methods.
+	 */
 	@Test
 	public void testAccessMethodMethods() {
 		int i = 0;

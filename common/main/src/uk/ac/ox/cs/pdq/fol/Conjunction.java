@@ -8,12 +8,13 @@ import java.util.Map;
 
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
 /**
- * A conjunctive formula
+ * A conjunctive formula.
+ *
  * @author Efthymia Tsamoura
  * @author Julien Leblay
- *
- * @param <T>
+ * @param <T> the generic type
  */
 public final class Conjunction<T extends Formula> extends NaryFormula<T> {
 
@@ -34,6 +35,9 @@ public final class Conjunction<T extends Formula> extends NaryFormula<T> {
 	}
 
 	/**
+	 * Of.
+	 *
+	 * @param <T> the generic type
 	 * @param children T[]
 	 * @return Conjunction<T>
 	 */
@@ -42,6 +46,9 @@ public final class Conjunction<T extends Formula> extends NaryFormula<T> {
 	}
 
 	/**
+	 * Of.
+	 *
+	 * @param <T> the generic type
 	 * @param children Collection<T>
 	 * @return Conjunction<T>
 	 */
@@ -50,6 +57,8 @@ public final class Conjunction<T extends Formula> extends NaryFormula<T> {
 	}
 
 	/**
+	 * Ground.
+	 *
 	 * @param mapping Map<Variable,Term>
 	 * @return Formula
 	 * @see uk.ac.ox.cs.pdq.formula.Formula#ground(Map<Variable,Term>)
@@ -64,6 +73,8 @@ public final class Conjunction<T extends Formula> extends NaryFormula<T> {
 	}
 
 	/**
+	 * Builder.
+	 *
 	 * @return a generic formula builder.
 	 */
 	public static Builder builder() {
@@ -77,9 +88,12 @@ public final class Conjunction<T extends Formula> extends NaryFormula<T> {
 	 */
 	public static class Builder implements uk.ac.ox.cs.pdq.builder.Builder<Conjunction<?>> {
 
+		/** The current. */
 		private LinkedList<Formula> current = new LinkedList<>();
 
 		/**
+		 * And.
+		 *
 		 * @param conjuncts Formula[]
 		 * @return Builder
 		 */
@@ -88,6 +102,8 @@ public final class Conjunction<T extends Formula> extends NaryFormula<T> {
 		}
 
 		/**
+		 * And.
+		 *
 		 * @param conjuncts List<Formula>
 		 * @return Builder
 		 */
@@ -99,6 +115,8 @@ public final class Conjunction<T extends Formula> extends NaryFormula<T> {
 		}
 
 		/**
+		 * Builds the.
+		 *
 		 * @return Conjunction<?>
 		 * @see uk.ac.ox.cs.pdq.builder.Builder#build()
 		 */

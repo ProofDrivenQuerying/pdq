@@ -9,6 +9,7 @@ import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 
+// TODO: Auto-generated Javadoc
 /**
  * Writes dependencies to XML.
  * 
@@ -18,7 +19,8 @@ public class DependencyWriter extends AbstractXMLWriter<Constraint> {
 
 	/**
 	 * Writes the given relation to the given output.
-	 * @param out
+	 *
+	 * @param out the out
 	 * @param dep TGD
 	 */
 	public void writeDependency(PrintStream out, Constraint dep) {
@@ -39,7 +41,8 @@ public class DependencyWriter extends AbstractXMLWriter<Constraint> {
 
 	/**
 	 * Writes the given relation to the given output.
-	 * @param out
+	 *
+	 * @param out the out
 	 * @param a PredicateFormula
 	 */
 	public void writePredicate(PrintStream out, Predicate a) {
@@ -61,7 +64,9 @@ public class DependencyWriter extends AbstractXMLWriter<Constraint> {
 	}
 
 	/**
- 	 * @param out PrintStream
+	 * Write.
+	 *
+	 * @param out PrintStream
 	 * @param o TGD
 	 */
 	@Override

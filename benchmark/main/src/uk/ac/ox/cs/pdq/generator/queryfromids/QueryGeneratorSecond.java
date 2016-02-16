@@ -22,49 +22,57 @@ import uk.ac.ox.cs.pdq.generator.utils.InclusionDependencyGraphNode;
 
 import com.beust.jcommander.internal.Lists;
 
+// TODO: Auto-generated Javadoc
 /**
  * Creates queries given a set of inclusion dependencies
  * 
  * 
  * 	Input parameters
-	NumAtoms
-	Dist= max distance to a free access
-	JoinTest= probability of joining
-	
-	Given this we generate a query as follows:
-	
-	For each i in NumAtoms
-	        Choose j randomly in [1,Dist]
-	        Let F=relations with a free access
-	        Let R_j= relations that have a path in the dependency graph
-	        to a relation in F of distance at most j, and also a path from
-	        a relation in F of distance at most j
-	        Choose relation R randomly from R_j
-	        For each position of R,
-	               with probability join, choose an existing variable (uniformly at random)
-	               otherwise choose a fresh variable
-               
-               
+ * 	NumAtoms
+ * 	Dist= max distance to a free access
+ * 	JoinTest= probability of joining
+ * 	
+ * 	Given this we generate a query as follows:
+ * 	
+ * 	For each i in NumAtoms
+ * 	        Choose j randomly in [1,Dist]
+ * 	        Let F=relations with a free access
+ * 	        Let R_j= relations that have a path in the dependency graph
+ * 	        to a relation in F of distance at most j, and also a path from
+ * 	        a relation in F of distance at most j
+ * 	        Choose relation R randomly from R_j
+ * 	        For each position of R,
+ * 	               with probability join, choose an existing variable (uniformly at random)
+ * 	               otherwise choose a fresh variable.
+ *
  * @author Efthymia Tsamoura
- * 
  */
 public class QueryGeneratorSecond extends QueryGeneratorFirst{
 
 
 	/**
 	 * Default constructor.
-	 * 
-	 * @param schema
+	 *
+	 * @param schema the schema
+	 * @param params the params
 	 */
 	public QueryGeneratorSecond(Schema schema, BenchmarkParameters params) {
 		super(schema, params);
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.generator.tgdsfromquery.QueryGeneratorFirst#generate()
+	 */
 	@Override
 	public ConjunctiveQuery generate() {
 		return this.generateQueryFromInclusionDependencies();
 	}
 
+	/**
+	 * Generate query from inclusion dependencies.
+	 *
+	 * @return the conjunctive query
+	 */
 	private ConjunctiveQuery generateQueryFromInclusionDependencies() {
 		List<LinearGuarded> guardedDependencies = new ArrayList<>();
 		// Filter out non-inclusion dependencies

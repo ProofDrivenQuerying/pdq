@@ -42,6 +42,7 @@ import uk.ac.ox.cs.pdq.util.Utility;
 import com.google.common.eventbus.EventBus;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * In-memory query evaluator.
  * 

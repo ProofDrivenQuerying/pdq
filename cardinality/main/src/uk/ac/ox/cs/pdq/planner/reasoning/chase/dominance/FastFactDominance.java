@@ -1,9 +1,13 @@
+/*
+ * 
+ */
 package uk.ac.ox.cs.pdq.planner.reasoning.chase.dominance;
 
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.AnnotatedPlan;
 
 
 
+// TODO: Auto-generated Javadoc
 /**
  * Performs fast fact dominance checks.
  * A source configuration is fact dominated by a target configuration if any
@@ -16,6 +20,7 @@ import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.AnnotatedPlan;
  */
 public class FastFactDominance implements FactDominance{
 
+	/** The is strict. */
 	private final boolean isStrict;
 
 	/**
@@ -27,6 +32,8 @@ public class FastFactDominance implements FactDominance{
 	}
 
 	/**
+	 * Checks if is dominated.
+	 *
 	 * @param source C
 	 * @param target C
 	 * @return true if the source configuration is dominated by target configuration
@@ -45,6 +52,8 @@ public class FastFactDominance implements FactDominance{
 	}
 
 	/**
+	 * Clone.
+	 *
 	 * @return FastFactDominance<C>
 	 */
 	@Override

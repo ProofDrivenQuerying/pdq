@@ -3,6 +3,7 @@ package uk.ac.ox.cs.pdq.util;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+// TODO: Auto-generated Javadoc
 /**
  * Helper class for reprensentation time interavals of various granularities.
  * 
@@ -10,10 +11,10 @@ import java.util.regex.Pattern;
  */
 public class Periods {
 
-	/** Regular expression group name */
+	/**  Regular expression group name. */
 	private static final String INTERVAL_GROUP = "interval";
 
-	/** Regular expression group name */
+	/**  Regular expression group name. */
 	private static final String SCALE_GROUP = "scale";
 
 	/**
@@ -33,7 +34,8 @@ public class Periods {
 	 * 	- w: weeks
 	 * 	- M: months
 	 * 	- y: years
-	 * @param period
+	 *
+	 * @param period the period
 	 * @return a representation in ms of the given period String
 	 */
 	public static long parse(String period) {

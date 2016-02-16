@@ -16,6 +16,7 @@ import uk.ac.ox.cs.pdq.io.xml.QNames;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.ui.proof.Proof;
 
+// TODO: Auto-generated Javadoc
 /**
  * Writes proofs to XML.
  * 
@@ -26,8 +27,9 @@ public class ProofWriter extends AbstractXMLWriter<Proof> {
 
 	/**
 	 * Writes the given proof to the given output.
-	 * @param out
-	 * @param proof
+	 *
+	 * @param out the out
+	 * @param proof the proof
 	 */
 	public void writeProof(PrintStream out, Proof proof) {
 		Map<QNames, String> att = new LinkedHashMap<>();
@@ -41,8 +43,9 @@ public class ProofWriter extends AbstractXMLWriter<Proof> {
 
 	/**
 	 * Writes the given proof state to the given output.
-	 * @param out
-	 * @param state
+	 *
+	 * @param out the out
+	 * @param state the state
 	 */
 	public void writeState(PrintStream out, Proof.State state) {
 		Map<QNames, String> att = new LinkedHashMap<>();
@@ -56,8 +59,9 @@ public class ProofWriter extends AbstractXMLWriter<Proof> {
 
 	/**
 	 * Writes the given accessibility axiom to the given output.
-	 * @param out
-	 * @param axiom
+	 *
+	 * @param out the out
+	 * @param axiom the axiom
 	 */
 	public void writeAxiom(PrintStream out, AccessibilityAxiom axiom) {
 		Map<QNames, String> att = new LinkedHashMap<>();
@@ -68,8 +72,9 @@ public class ProofWriter extends AbstractXMLWriter<Proof> {
 
 	/**
 	 * Writes the given candidate to the given output.
-	 * @param out
-	 * @param mapping
+	 *
+	 * @param out the out
+	 * @param mapping the mapping
 	 */
 	public void writeCandidate(PrintStream out, Map<Variable, Constant> mapping) {
 		Map<QNames, String> att = new LinkedHashMap<>();
@@ -82,8 +87,9 @@ public class ProofWriter extends AbstractXMLWriter<Proof> {
 
 	/**
 	 * Writes the given query match to the given output.
-	 * @param out
-	 * @param mapping
+	 *
+	 * @param out the out
+	 * @param mapping the mapping
 	 */
 	public void writeQueryMatch(PrintStream out, Map<Variable, Constant> mapping) {
 		Map<QNames, String> att = new LinkedHashMap<>();
@@ -96,8 +102,9 @@ public class ProofWriter extends AbstractXMLWriter<Proof> {
 
 	/**
 	 * Writes the given map entry to the given output.
-	 * @param out
-	 * @param entry
+	 *
+	 * @param out the out
+	 * @param entry the entry
 	 */
 	public void writeEntry(PrintStream out, Map.Entry<Variable, Constant> entry) {
 		Map<QNames, String> att = new LinkedHashMap<>();
@@ -108,8 +115,9 @@ public class ProofWriter extends AbstractXMLWriter<Proof> {
 
 	/**
 	 * Writes the given predicate to the given output.
-	 * @param out
-	 * @param p
+	 *
+	 * @param out the out
+	 * @param p the p
 	 */
 	public void writePredicate(PrintStream out, Predicate p) {
 		Map<QNames, String> att = new LinkedHashMap<>();
@@ -129,6 +137,8 @@ public class ProofWriter extends AbstractXMLWriter<Proof> {
 	}
 
 	/**
+	 * Write.
+	 *
 	 * @param out PrintStream
 	 * @param o Proof
 	 */
@@ -139,8 +149,9 @@ public class ProofWriter extends AbstractXMLWriter<Proof> {
 	}
 	
 	/**
-	 * For test purpose only
-	 * @param tgd
+	 * For test purpose only.
+	 *
+	 * @param tgd the tgd
 	 * @return Map<Variable,Term>
 	 */
 	private static Map<Variable, Constant> ground(TGD tgd) {

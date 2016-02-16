@@ -11,6 +11,7 @@ import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominance;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
 
+// TODO: Auto-generated Javadoc
 /**
  * Passes information to MultiThreadedExecutor objects.
  * Creates clones of reasoners, homomorphism detectors and cost estimators.
@@ -20,38 +21,37 @@ import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
  */
 public class MultiThreadedContext implements Context{
 
-	/** Number of parallel threads*/
+	/**  Number of parallel threads. */
 	private final int parallelThreads;
-	/** Saturate configurations using the chase algorithm**/
+	
+	/**  Saturate configurations using the chase algorithm*. */
 	private final Chaser[] reasoners;
-	/** Detect homomorphisms during chasing**/
+	
+	/**  Detect homomorphisms during chasing*. */
 	private final HomomorphismDetector[] detectors;
-	/** Estimate the cost of a plan**/
+	
+	/**  Estimate the cost of a plan*. */
 	private final CostEstimator<DAGPlan>[] costEstimators;
-	/** Perform success domination checks**/
+	
+	/**  Perform success domination checks*. */
 	private final SuccessDominance[] successDominances;
 	/** Checks whether the binary configuration composed from a given configuration pair satisfies given shape restrictions.**/
 	private final List<Validator>[] validators;
-	/** Perform domination checks**/
+	
+	/**  Perform domination checks*. */
 	private final Dominance[][] dominances;
 
 	/**
-	 * 
-	 * @param parallelThreads
-	 * 		Number of parallel threads
-	 * @param chaser
-	 * 		Saturates configurations using the chase algorithm
-	 * @param detector
-	 * 		Detects homomorphisms during chasing
-	 * @param costEstimator
-	 * 		Estimates the cost of a plan
-	 * @param successDominance
-	 * 		Performs success domination checks
-	 * @param dominance		
-	 * 		Perform domination checks
-	 * @param validators
-	 * 		Checks whether the binary configuration composed from a given configuration pair satisfies given shape restrictions.
-	 * @throws Exception
+	 * Instantiates a new multi threaded context.
+	 *
+	 * @param parallelThreads 		Number of parallel threads
+	 * @param chaser 		Saturates configurations using the chase algorithm
+	 * @param detector 		Detects homomorphisms during chasing
+	 * @param costEstimator 		Estimates the cost of a plan
+	 * @param successDominance 		Performs success domination checks
+	 * @param dominance 		Perform domination checks
+	 * @param validators 		Checks whether the binary configuration composed from a given configuration pair satisfies given shape restrictions.
+	 * @throws Exception the exception
 	 */
 	public MultiThreadedContext(int parallelThreads,
 			Chaser chaser,
@@ -79,7 +79,9 @@ public class MultiThreadedContext implements Context{
 	}
 	
 	/**
-	 * @param input
+	 * Deep copy.
+	 *
+	 * @param validators the validators
 	 * @return a deep copy of the input array of dominance objects
 	 */
 	private List<Validator> deepCopy(List<Validator> validators) {
@@ -91,7 +93,9 @@ public class MultiThreadedContext implements Context{
 	}
 	
 	/**
-	 * @param input
+	 * Deep copy.
+	 *
+	 * @param input the input
 	 * @return a deep copy of the input array of dominance objects
 	 */
 	private Dominance[] deepCopy(Dominance[] input) {
@@ -104,6 +108,8 @@ public class MultiThreadedContext implements Context{
 	
 
 	/**
+	 * Gets the parallel threads.
+	 *
 	 * @return int
 	 */
 	public int getParallelThreads() {
@@ -111,6 +117,8 @@ public class MultiThreadedContext implements Context{
 	}
 
 	/**
+	 * Gets the reasoners.
+	 *
 	 * @return Reasoner[]
 	 */
 	public Chaser[] getReasoners() {
@@ -118,6 +126,8 @@ public class MultiThreadedContext implements Context{
 	}
 
 	/**
+	 * Gets the detectors.
+	 *
 	 * @return HomomorphismDetector[]
 	 */
 	public HomomorphismDetector[] getDetectors() {
@@ -125,20 +135,37 @@ public class MultiThreadedContext implements Context{
 	}
 
 	/**
+	 * Gets the cost estimators.
+	 *
 	 * @return CostEstimator<DAGPlan>[]
 	 */
 	public CostEstimator<DAGPlan>[] getCostEstimators() {
 		return this.costEstimators;
 	}
 
+	/**
+	 * Gets the success dominances.
+	 *
+	 * @return the success dominances
+	 */
 	public SuccessDominance[] getSuccessDominances() {
 		return this.successDominances;
 	}
 	
+	/**
+	 * Gets the dominances.
+	 *
+	 * @return the dominances
+	 */
 	public Dominance[][] getDominances() {
 		return this.dominances;
 	}
 
+	/**
+	 * Gets the validators.
+	 *
+	 * @return the validators
+	 */
 	public List<Validator>[] getValidators() {
 		return this.validators;
 	}

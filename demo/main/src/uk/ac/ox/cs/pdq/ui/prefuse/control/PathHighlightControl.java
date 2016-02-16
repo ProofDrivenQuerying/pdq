@@ -14,6 +14,7 @@ import uk.ac.ox.cs.pdq.ui.prefuse.types.PathTypes;
 import uk.ac.ox.cs.pdq.ui.prefuse.utils.Path;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * <p>
  * A ControlListener that sets the highlighted status (using the
@@ -27,9 +28,13 @@ import uk.ac.ox.cs.pdq.ui.prefuse.utils.Path;
  */
 public class PathHighlightControl extends ControlAdapter {
 
+	/** The paths. */
 	private Queue<Path> paths = null;
 
+	/** The activity. */
 	private String activity = null;
+	
+	/** The highlight with invisible edge. */
 	private boolean highlightWithInvisibleEdge = false;
 
 	/**
@@ -49,6 +54,10 @@ public class PathHighlightControl extends ControlAdapter {
 	}
 
 	/**
+	 * Item entered.
+	 *
+	 * @param item the item
+	 * @param e the e
 	 * @see prefuse.controls.Control#itemEntered(prefuse.visual.VisualItem, java.awt.event.MouseEvent)
 	 */
 	public void itemEntered(VisualItem item, MouseEvent e) {
@@ -57,6 +66,10 @@ public class PathHighlightControl extends ControlAdapter {
 	}
 
 	/**
+	 * Item exited.
+	 *
+	 * @param item the item
+	 * @param e the e
 	 * @see prefuse.controls.Control#itemExited(prefuse.visual.VisualItem, java.awt.event.MouseEvent)
 	 */
 	public void itemExited(VisualItem item, MouseEvent e) {
@@ -86,6 +99,12 @@ public class PathHighlightControl extends ControlAdapter {
 		}
 	}
 
+	/**
+	 * Sets the neighbor highlight.
+	 *
+	 * @param toHighlight the to highlight
+	 * @param state the state
+	 */
 	protected void setNeighborHighlight(Collection<NodeItem> toHighlight, boolean state) {
 		for(NodeItem n:toHighlight) {
 			n.setHighlighted(state);
@@ -125,6 +144,11 @@ public class PathHighlightControl extends ControlAdapter {
 		this.highlightWithInvisibleEdge = highlightWithInvisibleEdge;
 	}
 	
+	/**
+	 * Sets the paths.
+	 *
+	 * @param paths the new paths
+	 */
 	public void setPaths(Queue<Path> paths) {
 		this.paths = paths;
 	}

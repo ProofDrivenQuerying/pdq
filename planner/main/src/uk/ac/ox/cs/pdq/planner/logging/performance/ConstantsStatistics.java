@@ -12,14 +12,15 @@ import uk.ac.ox.cs.pdq.logging.performance.StatisticsLogger;
 import com.google.common.base.Preconditions;
 import com.google.common.eventbus.Subscribe;
 
+// TODO: Auto-generated Javadoc
 /**
- * Keeps a set of constant observed so far and report on its cardinality
+ * Keeps a set of constant observed so far and report on its cardinality.
  *
  * @author Julien Leblay
  */
 public class ConstantsStatistics extends StatisticsLogger implements EventHandler {
 
-	/** The set of constants observed so far */
+	/**  The set of constants observed so far. */
 	private Set<Constant> constants = new LinkedHashSet<>();
 
 	/**
@@ -31,6 +32,8 @@ public class ConstantsStatistics extends StatisticsLogger implements EventHandle
 	}
 
 	/**
+	 * Gets the constants number.
+	 *
 	 * @return the number of constants observed so far.
 	 */
 	public int getConstantsNumber() {
@@ -62,7 +65,8 @@ public class ConstantsStatistics extends StatisticsLogger implements EventHandle
 	/**
 	 * Event-triggered, catches an increment i, contained some new constants,
 	 * and adds them to the set.
-	 * @param i
+	 *
+	 * @param i the i
 	 */
 	@Subscribe
 	public void process(Increment i) {
@@ -79,9 +83,11 @@ public class ConstantsStatistics extends StatisticsLogger implements EventHandle
 	public static class Increment {
 		/** The set of new constant to add. */
 		private final Collection<Constant> subset = new LinkedHashSet<>();
+		
 		/**
 		 * Default constructor.
-		 * @param subset
+		 *
+		 * @param subset the subset
 		 */
 		public Increment(Collection<Term> subset) {
 			Preconditions.checkArgument(subset != null);

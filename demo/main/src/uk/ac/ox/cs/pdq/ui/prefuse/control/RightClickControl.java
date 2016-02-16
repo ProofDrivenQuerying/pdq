@@ -18,16 +18,30 @@ import uk.ac.ox.cs.pdq.ui.prefuse.popups.EdgePropertiesDialog;
 import uk.ac.ox.cs.pdq.ui.prefuse.popups.NodeMenu;
 import uk.ac.ox.cs.pdq.ui.prefuse.types.EdgeTypes;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class RightClickControl.
+ */
 public class RightClickControl extends ControlAdapter implements Control {
 
 	/** Class' logger. */
 	private static Logger log = Logger.getLogger(RightClickControl.class);
 
+	/** The frame. */
 	private final JFrame frame;
+	
+	/**
+	 * Instantiates a new right click control.
+	 *
+	 * @param frame the frame
+	 */
 	public RightClickControl(JFrame frame) {
 		this.frame = frame;
 	}
 	
+	/* (non-Javadoc)
+	 * @see prefuse.controls.ControlAdapter#itemClicked(prefuse.visual.VisualItem, java.awt.event.MouseEvent)
+	 */
 	@Override
 	public void itemClicked(VisualItem item, MouseEvent e) {
 		log.debug("Clicked " + e);

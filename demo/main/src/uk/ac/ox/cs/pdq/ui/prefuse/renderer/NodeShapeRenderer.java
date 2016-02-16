@@ -8,11 +8,19 @@ import java.awt.geom.Ellipse2D;
 import prefuse.render.AbstractShapeRenderer;
 import prefuse.visual.VisualItem;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class NodeShapeRenderer.
+ */
 public class NodeShapeRenderer extends AbstractShapeRenderer
 {
 
+	/** The m_box. */
 	protected Ellipse2D m_box = new Ellipse2D.Double();
 
+	/* (non-Javadoc)
+	 * @see prefuse.render.AbstractShapeRenderer#getRawShape(prefuse.visual.VisualItem)
+	 */
 	@Override
 	protected Shape getRawShape(VisualItem item) 
 	{	

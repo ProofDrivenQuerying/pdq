@@ -13,14 +13,20 @@ import org.mockito.MockitoAnnotations;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.Union;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
+ * The Class UnionTest.
+ *
  * @author Julien LEBLAY
  */
 public class UnionTest extends NaryIteratorTest {
 
+	/** The iterator. */
 	Union iterator;
 	
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.test.runtime.exec.iterator.TupleIteratorTest#setup()
+	 */
 	@Before public void setup() {
 		super.setup();
         MockitoAnnotations.initMocks(this);
@@ -54,26 +60,41 @@ public class UnionTest extends NaryIteratorTest {
         this.iterator = new Union(child2, child4);
 	}
 	
+	/**
+	 * Inits the inconsistent children.
+	 */
 	@Test(expected=IllegalArgumentException.class) 
 	public void initInconsistentChildren() {
         new Union(child2, child3, child4);
 	}
 	
+	/**
+	 * Inits the null children1.
+	 */
 	@Test(expected=IllegalArgumentException.class) 
 	public void initNullChildren1() {
         new Union(null, child3, child4);
 	}
 	
+	/**
+	 * Inits the null children2.
+	 */
 	@Test(expected=IllegalArgumentException.class) 
 	public void initNullChildren2() {
         new Union(child3, null, child4);
 	}
 	
+	/**
+	 * Inits the null children3.
+	 */
 	@Test(expected=IllegalArgumentException.class) 
 	public void initNullChildren3() {
         new Union(child3, child4, null);
 	}
 
+	/**
+	 * Checks for next one child.
+	 */
 	@Test public void hasNextOneChild() {
 		this.iterator = new Union(child2);
 		this.iterator.open();
@@ -83,6 +104,9 @@ public class UnionTest extends NaryIteratorTest {
 		Assert.assertFalse(this.iterator.hasNext()); 
 	}
 
+	/**
+	 * Next one child.
+	 */
 	@Test public void nextOneChild() {
 		this.iterator = new Union(child2);
 		this.iterator.open();
@@ -91,6 +115,9 @@ public class UnionTest extends NaryIteratorTest {
 		Assert.assertEquals(child2Type.createTuple(1, "B"), this.iterator.next());
 	}
 
+	/**
+	 * Next one child too many.
+	 */
 	@Test(expected=NoSuchElementException.class) 
 	public void nextOneChildTooMany() {
 		this.iterator = new Union(child2);
@@ -101,6 +128,9 @@ public class UnionTest extends NaryIteratorTest {
 		this.iterator.next();
 	}
 
+	/**
+	 * Reset one child.
+	 */
 	@Ignore public void resetOneChild() {
 		this.iterator = new Union(child2);
 		this.iterator.open();
@@ -127,6 +157,9 @@ public class UnionTest extends NaryIteratorTest {
 		Assert.assertFalse(this.iterator.hasNext());
 	}
 
+	/**
+	 * Checks for next two children.
+	 */
 	@Test public void hasNextTwoChildren() {
 		this.iterator = new Union(child2, child4);
 		this.iterator.open();
@@ -138,6 +171,9 @@ public class UnionTest extends NaryIteratorTest {
 		Assert.assertFalse(this.iterator.hasNext()); 
 	}
 
+	/**
+	 * Next two children.
+	 */
 	@Test public void nextTwoChildren() {
 		this.iterator = new Union(child2, child4);
 		this.iterator.open();
@@ -148,6 +184,9 @@ public class UnionTest extends NaryIteratorTest {
 		Assert.assertEquals(child2Type.createTuple(3, "B"), this.iterator.next());
 	}
 
+	/**
+	 * Next two children too many.
+	 */
 	@Test(expected=NoSuchElementException.class) 
 	public void nextTwoChildrenTooMany() {
 		this.iterator = new Union(child2, child4);
@@ -160,6 +199,9 @@ public class UnionTest extends NaryIteratorTest {
 		this.iterator.next();
 	}
 
+	/**
+	 * Reset two children.
+	 */
 	@Ignore public void resetTwoChildren() {
 		this.iterator = new Union(child2, child4);
 		this.iterator.open();
@@ -186,6 +228,9 @@ public class UnionTest extends NaryIteratorTest {
 		Assert.assertFalse(this.iterator.hasNext());
 	}
 	
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.test.runtime.exec.iterator.TupleIteratorTest#getIterator()
+	 */
 	@Override
 	protected TupleIterator getIterator() {
 		return this.iterator;

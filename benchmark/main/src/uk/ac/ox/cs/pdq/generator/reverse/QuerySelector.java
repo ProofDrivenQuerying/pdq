@@ -2,6 +2,7 @@ package uk.ac.ox.cs.pdq.generator.reverse;
 
 import uk.ac.ox.cs.pdq.fol.Query;
 
+// TODO: Auto-generated Javadoc
 /**
  * Functional interface for accepting or rejected query based on arbitrary 
  * criteria.

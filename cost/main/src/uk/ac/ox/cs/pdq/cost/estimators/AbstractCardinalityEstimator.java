@@ -19,16 +19,20 @@ import uk.ac.ox.cs.pdq.plan.EstimateProvider;
 
 import com.google.common.base.Preconditions;
 
+// TODO: Auto-generated Javadoc
 /**
  * Computes the estimated input and output cardinalities of a logical operator
  * and its descendants, for non-error-prone operators (e.g. aggregates, cross
  * products and static operators).
  *
  * @author Julien Leblay
+ * @param <M> the generic type
  */
 public abstract class AbstractCardinalityEstimator<M extends EstimateProvider<RelationalOperator>> implements CardinalityEstimator {
 
 	/**
+	 * Clone.
+	 *
 	 * @return AbstractCardinalityEstimator<M>
 	 * @see uk.ac.ox.cs.pdq.cost.estimators.CardinalityEstimator#clone()
 	 */
@@ -36,6 +40,8 @@ public abstract class AbstractCardinalityEstimator<M extends EstimateProvider<Re
 	public abstract AbstractCardinalityEstimator<M> clone();
 
 	/**
+	 * Estimate if needed.
+	 *
 	 * @param logOp LogicalOperator
 	 * @see uk.ac.ox.cs.pdq.cost.estimators.CardinalityEstimator#estimateIfNeeded(RelationalOperator)
 	 */
@@ -48,6 +54,8 @@ public abstract class AbstractCardinalityEstimator<M extends EstimateProvider<Re
 	}
 
 	/**
+	 * Estimate.
+	 *
 	 * @param logOp LogicalOperator
 	 * @see uk.ac.ox.cs.pdq.cost.estimators.CardinalityEstimator#estimate(RelationalOperator)
 	 */
@@ -137,6 +145,8 @@ public abstract class AbstractCardinalityEstimator<M extends EstimateProvider<Re
 	}
 
 	/**
+	 * Inits the metadata.
+	 *
 	 * @param o the operator
 	 * @return the dataguide associated with this operator. This cannot be null,
 	 * i.e. implementation should returned a fresh dataguide object if none
@@ -145,6 +155,8 @@ public abstract class AbstractCardinalityEstimator<M extends EstimateProvider<Re
 	protected abstract M initMetadata(RelationalOperator o);
 
 	/**
+	 * Gets the metadata.
+	 *
 	 * @param o LogicalOperator
 	 * @return M
 	 */
@@ -157,42 +169,56 @@ public abstract class AbstractCardinalityEstimator<M extends EstimateProvider<Re
 	}
 
 	/**
+	 * Estimate output.
+	 *
 	 * @param o the operator
 	 * @return the estimated output cardinality of a Scan operator
 	 */
 	protected abstract Double estimateOutput(Scan o);
 
 	/**
+	 * Estimate output.
+	 *
 	 * @param o the operator
 	 * @return the estimated output cardinality of a Access operator
 	 */
 	protected abstract Double estimateOutput(Access o);
 
 	/**
+	 * Estimate output.
+	 *
 	 * @param o the operator
 	 * @return the estimated output cardinality of a DependentAccess operator
 	 */
 	protected abstract Double estimateOutput(DependentAccess o);
 
 	/**
+	 * Estimate output.
+	 *
 	 * @param o the operator
 	 * @return the estimated output cardinality of a Join operator
 	 */
 	protected abstract Double estimateOutput(Join o);
 
 	/**
+	 * Estimate output.
+	 *
 	 * @param o the operator
 	 * @return the estimated output cardinality of a Selection operator
 	 */
 	protected abstract Double estimateOutput(Selection o);
 
 	/**
+	 * Estimate output.
+	 *
 	 * @param o the operator
 	 * @return the estimated output cardinality of a Distinct operator
 	 */
 	protected abstract Double estimateOutput(Distinct o);
 
 	/**
+	 * Estimate output.
+	 *
 	 * @param o the operator
 	 * @return the estimated output cardinality of a Union operator
 	 */

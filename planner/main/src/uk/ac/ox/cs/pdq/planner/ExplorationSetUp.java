@@ -32,6 +32,7 @@ import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismManagerFactory;
 
 import com.google.common.eventbus.EventBus;
 
+// TODO: Auto-generated Javadoc
 /**
  * Provides high level functions for finding an optimal plan for a query with
  * respect to a schema, dependencies and access restrictions.
@@ -43,49 +44,57 @@ import com.google.common.eventbus.EventBus;
  */
 public class ExplorationSetUp {
 
+	/** The log. */
 	protected static Logger log = Logger.getLogger(ExplorationSetUp.class);
 
-	/** Input parameters */
+	/**  Input parameters. */
 	private PlannerParameters plannerParams;
 	
-	/** Input parameters */
+	/**  Input parameters. */
 	private CostParameters costParams;
 	
+	/** The reasoning params. */
 	private ReasoningParameters reasoningParams;
 
-	/** Event bus */
+	/**  Event bus. */
 	private EventBus eventBus = new EventBus();
 
-	/** Statistics collector */
+	/**  Statistics collector. */
 	private ChainedStatistics statsLogger;
 
-	/** The schema */
+	/**  The schema. */
 	private Schema schema;
 
 
+	/** The external cost estimator. */
 	private CostEstimator<?> externalCostEstimator = null;
 
+	/** The accessible schema. */
 	private AccessibleSchema accessibleSchema;
+	
+	/** The detector. */
 	private HomomorphismManager detector;
 	
 	/**
-	 * 
-	 * @param planParams
-	 * @param costParams
-	 * @param schema
-	 * @param query
+	 * Instantiates a new exploration set up.
+	 *
+	 * @param planParams the plan params
+	 * @param costParams the cost params
+	 * @param reasoningParams the reasoning params
+	 * @param schema the schema
 	 */
 	public ExplorationSetUp(PlannerParameters planParams, CostParameters costParams, ReasoningParameters reasoningParams, Schema schema) {
 		this(planParams, costParams, reasoningParams, schema, null);
 	}
 
 	/**
-	 * 
-	 * @param params
-	 * @param costParams
-	 * @param schema
-	 * @param query
-	 * @param statsLogger
+	 * Instantiates a new exploration set up.
+	 *
+	 * @param params the params
+	 * @param costParams the cost params
+	 * @param reasoningParams the reasoning params
+	 * @param schema the schema
+	 * @param statsLogger the stats logger
 	 */
 	public ExplorationSetUp(PlannerParameters params, CostParameters costParams, ReasoningParameters reasoningParams, Schema schema, ChainedStatistics statsLogger) {
 		checkParametersConsistency(params, costParams, reasoningParams);
@@ -107,7 +116,11 @@ public class ExplorationSetUp {
 	}
 
 	/**
+	 * Check parameters consistency.
+	 *
 	 * @param params PlannerParameters
+	 * @param costParams the cost params
+	 * @param reasoningParams the reasoning params
 	 * @return boolean
 	 */
 	private static void checkParametersConsistency(PlannerParameters params, CostParameters costParams, ReasoningParameters reasoningParams) {
@@ -115,6 +128,7 @@ public class ExplorationSetUp {
 	}
 
 	/**
+	 * Register event handler.
 	 *
 	 * @param handler EventHandler
 	 */
@@ -123,7 +137,7 @@ public class ExplorationSetUp {
 	}
 
 	/**
-	 * Register the given event homoChecker
+	 * Register the given event homoChecker.
 	 *
 	 * @param handler EventHandler
 	 */
@@ -132,6 +146,8 @@ public class ExplorationSetUp {
 	}
 
 	/**
+	 * Sets the cost estimator.
+	 *
 	 * @param estimator CostEstimator<?>
 	 */
 	public void setCostEstimator(CostEstimator<?> estimator) {
@@ -141,16 +157,13 @@ public class ExplorationSetUp {
 	/**
 	 * Search a best plan for the given schema and query.
 	 *
+	 * @param <P> the generic type
+	 * @param query the query
 	 * @return a pair whose first element is the best plan found if any, null
 	 *         otherwise, and the second is a mapping from the variables of the
 	 *         input query to the constant generated in the initial grounded
 	 *         operation.
-	 * @throws PlannerException
-	 * @throws IllegalAccessException
-	 * @throws SQLException
-	 * @throws ReflectiveOperationException
-	 * @throws IOException
-	 * @throws ProofEvent
+	 * @throws PlannerException the planner exception
 	 */
 	public <P extends Plan> P search(Query<?> query) throws PlannerException {
 		return this.search(query,false);
@@ -159,18 +172,16 @@ public class ExplorationSetUp {
 	/**
 	 * Search a best plan for the given schema and query.
 	 *
+	 * @param <S> the generic type
+	 * @param <P> the generic type
+	 * @param query the query
 	 * @param noDep if true, dependencies in the schema are disabled and
 	 *         planning occur taking only into account access-based axioms.
 	 * @return a pair whose first element is the best plan found if any, null
 	 *         otherwise, and the second is a mapping from the variables of the
 	 *         input query to the constant generated in the initial grounded
 	 *         operation.
-	 * @throws PlannerException
-	 * @throws ReflectiveOperationException
-	 * @throws IOException
-	 * @throws IllegalAccessException
-	 * @throws SQLException
-	 * @throws ProofEvent
+	 * @throws PlannerException the planner exception
 	 */
 	public <S extends AccessibleChaseState, P extends Plan> P search(Query<?> query, boolean noDep) throws PlannerException {
 		
@@ -262,6 +273,8 @@ public class ExplorationSetUp {
 	}
 
 	/**
+	 * Display columns.
+	 *
 	 * @return StatKeys[]
 	 */
 	private static StatKey[] displayColumns() {
@@ -281,6 +294,8 @@ public class ExplorationSetUp {
 	}
 
 	/**
+	 * Handle early termination.
+	 *
 	 * @param ex Explorer<?>
 	 */
 	private void handleEarlyTermination(Explorer<?> ex) {
@@ -293,6 +308,8 @@ public class ExplorationSetUp {
 	}
 
 	/**
+	 * Gets the schema.
+	 *
 	 * @return the planner's underlying schema
 	 */
 	public Schema getSchema() {
@@ -305,9 +322,6 @@ public class ExplorationSetUp {
 	 * node may be used later as parameters to the resumeSearch method.
 	 *
 	 * @return the best plan found and the search node in which it was found.
-	 * @throws IOException
-	 * @throws ReflectiveOperationException
-	 * @throws SQLException
 	 */
 	public Pair<Plan, SearchNode> dynamicSearch() {
 		throw new UnsupportedOperationException();
@@ -317,7 +331,7 @@ public class ExplorationSetUp {
 	 * Resumes the search from the given node and return the new best plan
 	 * found.
 	 *
-	 * @param node
+	 * @param node the node
 	 * @return the best plan found from the given search node, after discarding
 	 *         the plan that was previously found at that node, and the search
 	 *         node where it was found.

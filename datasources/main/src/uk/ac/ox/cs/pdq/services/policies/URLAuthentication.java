@@ -16,6 +16,7 @@ import uk.ac.ox.cs.pdq.services.rest.RESTRequestEvent;
 
 import com.google.common.base.Preconditions;
 
+// TODO: Auto-generated Javadoc
 /**
  * Authentication policy than passes credential as URL parameters.
  * 
@@ -24,17 +25,19 @@ import com.google.common.base.Preconditions;
  */
 public class URLAuthentication  implements UsagePolicy, AccessPreProcessor<RESTRequestEvent> {
 
+	/** The Constant INPUT_METHOD. */
 	protected static final String INPUT_METHOD = "input-method";
 
 	/** The request attribute where the credential is defined. */
 	protected RESTAttribute keyAttributes;
 
-	/** The set of input methods used by this policy */
+	/**  The set of input methods used by this policy. */
 	private Set<InputMethod> inputMethods = new LinkedHashSet<>();		
 	
 	/**
-	 * Default constructor
-	 * @param keyAtt
+	 * Default constructor.
+	 *
+	 * @param keyAtt the key att
 	 */
 	protected URLAuthentication(RESTAttribute keyAtt) {
 		super();
@@ -46,8 +49,9 @@ public class URLAuthentication  implements UsagePolicy, AccessPreProcessor<RESTR
 
 	/**
 	 * Constructor used by the usage policy factory.
-	 * @param repo
-	 * @param properties
+	 *
+	 * @param repo the repo
+	 * @param properties the properties
 	 */
 	public URLAuthentication(ServiceRepository repo, Properties properties) {
 		this(new RESTAttribute(
@@ -66,8 +70,10 @@ public class URLAuthentication  implements UsagePolicy, AccessPreProcessor<RESTR
 	}
 
 	/**
+	 * Process access request.
+	 *
 	 * @param event RESTRequestEvent
-	 * @throws UsagePolicyViolationException
+	 * @throws UsagePolicyViolationException the usage policy violation exception
 	 */
 	@Override
 	public void processAccessRequest(RESTRequestEvent event) throws UsagePolicyViolationException {

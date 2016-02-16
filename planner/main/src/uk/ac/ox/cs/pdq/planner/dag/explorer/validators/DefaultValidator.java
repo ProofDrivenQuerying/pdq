@@ -6,6 +6,7 @@ import java.util.List;
 import uk.ac.ox.cs.pdq.planner.dag.ConfigurationUtility;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 
+// TODO: Auto-generated Javadoc
 /**
  * Requires the input pair of configurations to be non trivial.
  * An ordered pair of configurations (left, right) is non-trivial 
@@ -15,10 +16,15 @@ import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
  */
 public class DefaultValidator implements Validator{
 
+	/**
+	 * Instantiates a new default validator.
+	 */
 	public DefaultValidator() {
 	}
 
 	/**
+	 * Validate.
+	 *
 	 * @param left DAGConfiguration
 	 * @param right DAGConfiguration
 	 * @return boolean
@@ -30,6 +36,8 @@ public class DefaultValidator implements Validator{
 	}
 
 	/**
+	 * Validate.
+	 *
 	 * @param left DAGConfiguration
 	 * @param right DAGConfiguration
 	 * @param depth int
@@ -42,6 +50,8 @@ public class DefaultValidator implements Validator{
 	}
 
 	/**
+	 * Clone.
+	 *
 	 * @return Validator
 	 * @see uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator#clone()
 	 */
@@ -51,7 +61,9 @@ public class DefaultValidator implements Validator{
 	}
 
 	/**
-	 * @param input
+	 * Deep copy.
+	 *
+	 * @param input the input
 	 * @return a deep copy of the input validators list
 	 */
 	public static List<Validator> deepCopy(List<Validator> input) {

@@ -20,21 +20,25 @@ import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
 /**
- * @author Julien Leblay
+ * The Class DisjunctionTest.
  *
- * @param <T>
+ * @author Julien Leblay
  */
 public final class DisjunctionTest {
 	
 	/**
-	 * Makes sure assertions are enabled
+	 * Makes sure assertions are enabled.
 	 */
 	@Before 
 	public void setup() {
 		Utility.assertsEnabled();
 	}
 
+	/**
+	 * Test of.
+	 */
 	@Test public void testOf() {
 		Signature s1 = new Signature("s", 5);
 		List<Term> t1 = Lists.<Term>newArrayList(
@@ -55,6 +59,9 @@ public final class DisjunctionTest {
 				Lists.newArrayList(p1, p2), i.getPredicates());
 	}
 
+	/**
+	 * Test equals.
+	 */
 	@Test public void testEquals() {
 		Signature s1 = new Signature("s", 5);
 		List<Term> t1 = Lists.<Term>newArrayList(
@@ -79,6 +86,9 @@ public final class DisjunctionTest {
 		Assert.assertTrue("Disjunctions must match be equal ", i1.equals(i2));
 	}
 
+	/**
+	 * Test not equals.
+	 */
 	@Test public void testNotEquals() {
 		Signature s1 = new Signature("s", 5);
 		List<Term> t1 = Lists.<Term>newArrayList(
@@ -112,6 +122,9 @@ public final class DisjunctionTest {
 		Assert.assertFalse("Disjunctions must match be equal ", i1.equals(i2));
 	}
 
+	/**
+	 * Test ground.
+	 */
 	@Test public void testGround() {
 		Signature s1 = new Signature("s", 5);
 		List<Term> t1 = Lists.<Term>newArrayList(

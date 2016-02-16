@@ -8,6 +8,7 @@ import uk.ac.ox.cs.pdq.util.TupleType;
 
 import com.google.common.base.Preconditions;
 
+// TODO: Auto-generated Javadoc
 /**
  * Superclass to all unary logical operator.
  *
@@ -15,6 +16,7 @@ import com.google.common.base.Preconditions;
  */
 public abstract class UnaryOperator extends RelationalOperator {
 
+	/** The child. */
 	protected RelationalOperator child;
 
 	/** The columns. */
@@ -76,6 +78,8 @@ public abstract class UnaryOperator extends RelationalOperator {
 	}
 
 	/**
+	 * Gets the child.
+	 *
 	 * @return the unique child of this operator
 	 */
 	public RelationalOperator getChild() {
@@ -102,6 +106,8 @@ public abstract class UnaryOperator extends RelationalOperator {
 	}
 
 	/**
+	 * Gets the input terms.
+	 *
 	 * @return List<Term>
 	 */
 	@Override
@@ -110,6 +116,8 @@ public abstract class UnaryOperator extends RelationalOperator {
 	}
 
 	/**
+	 * Gets the depth.
+	 *
 	 * @return Integer
 	 */
 	@Override
@@ -133,6 +141,8 @@ public abstract class UnaryOperator extends RelationalOperator {
 	}
 
 	/**
+	 * Equals.
+	 *
 	 * @param o Object
 	 * @return boolean
 	 */
@@ -148,6 +158,8 @@ public abstract class UnaryOperator extends RelationalOperator {
 	}
 
 	/**
+	 * Hash code.
+	 *
 	 * @return int
 	 */
 	@Override
@@ -157,6 +169,8 @@ public abstract class UnaryOperator extends RelationalOperator {
 	}
 
 	/**
+	 * Checks if is closed.
+	 *
 	 * @return boolean
 	 */
 	@Override
@@ -165,6 +179,8 @@ public abstract class UnaryOperator extends RelationalOperator {
 	}
 
 	/**
+	 * Checks if is quasi leaf.
+	 *
 	 * @return boolean
 	 */
 	@Override

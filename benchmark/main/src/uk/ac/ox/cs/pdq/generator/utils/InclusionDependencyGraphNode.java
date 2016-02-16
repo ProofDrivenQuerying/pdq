@@ -18,6 +18,7 @@ import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
 /**
  * Graph representation of foreign key dependencies.
  * 
@@ -26,12 +27,20 @@ import com.google.common.collect.Lists;
  */
 public class InclusionDependencyGraphNode {
 
+	/** The node. */
 	Relation node;
 
+	/** The neighbors. */
 	SortedSet<InclusionDependencyGraphNode> neighbors;
 
+	/** The back neighbors. */
 	SortedSet<InclusionDependencyGraphNode> backNeighbors;
 
+	/**
+	 * Instantiates a new inclusion dependency graph node.
+	 *
+	 * @param n the n
+	 */
 	public InclusionDependencyGraphNode(Relation n) {
 		this.node = n;
 		this.neighbors = new TreeSet<>(new NodeComparator());
@@ -39,10 +48,18 @@ public class InclusionDependencyGraphNode {
 		
 	}
 	
+	/**
+	 * Gets the relation.
+	 *
+	 * @return the relation
+	 */
 	public Relation getRelation() {
 		return this.node;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
 		StringBuilder result = new StringBuilder();
@@ -55,12 +72,22 @@ public class InclusionDependencyGraphNode {
 		return result.toString();
 	}
 
+	/**
+	 * Adds the neighbor.
+	 *
+	 * @param neighbor the neighbor
+	 */
 	public void addNeighbor(InclusionDependencyGraphNode neighbor) {
 		if (!this.neighbors.contains(neighbor)) {
 			this.neighbors.add(neighbor);
 		}
 	}
 
+	/**
+	 * Adds the back neighbor.
+	 *
+	 * @param neighbor the neighbor
+	 */
 	public void addBackNeighbor(InclusionDependencyGraphNode neighbor) {
 		if (!this.backNeighbors.contains(neighbor)) {
 			this.backNeighbors.add(neighbor);
@@ -69,9 +96,11 @@ public class InclusionDependencyGraphNode {
 
 	/**
 	 * Randomly traverse the dependency graph and return the path used.
-	 * 
-	 * @param random
-	 * @param maxDepth
+	 *
+	 * @param random the random
+	 * @param maxDepth the max depth
+	 * @param prevPred the prev pred
+	 * @param prevRel the prev rel
 	 * @return a random path in the dependency graph.
 	 */
 	public List<Predicate> traverseRandom(
@@ -105,6 +134,12 @@ public class InclusionDependencyGraphNode {
 		return result;
 	}
 
+	/**
+	 * Traverse backwards.
+	 *
+	 * @param maxDistance the max distance
+	 * @return the list
+	 */
 	public List<InclusionDependencyGraphNode> traverseBackwards(int maxDistance) {
 		Set<InclusionDependencyGraphNode> ret = new LinkedHashSet<>();
 		if(maxDistance >= 1) {
@@ -117,6 +152,13 @@ public class InclusionDependencyGraphNode {
 	}
 
 
+	/**
+	 * Traverse backwards.
+	 *
+	 * @param maxDistance the max distance
+	 * @param currentDistance the current distance
+	 * @return the sets the
+	 */
 	private Set<InclusionDependencyGraphNode> traverseBackwards(int maxDistance, int currentDistance) {
 		Set<InclusionDependencyGraphNode> ret = new LinkedHashSet<>();
 		if(maxDistance >= currentDistance) {
@@ -129,8 +171,14 @@ public class InclusionDependencyGraphNode {
 	}
 	
 	
+	/**
+	 * The Class NodeComparator.
+	 */
 	private static class NodeComparator implements Comparator<InclusionDependencyGraphNode> {
 
+		/* (non-Javadoc)
+		 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
+		 */
 		@Override
 		public int compare(InclusionDependencyGraphNode o1, InclusionDependencyGraphNode o2) {
 			if (!o1.node.equals(o2)) {

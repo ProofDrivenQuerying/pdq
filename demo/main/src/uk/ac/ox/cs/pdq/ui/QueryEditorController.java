@@ -19,25 +19,44 @@ import uk.ac.ox.cs.pdq.ui.io.sql.SQLLikeQueryWriter;
 import uk.ac.ox.cs.pdq.ui.model.ObservableQuery;
 import uk.ac.ox.cs.pdq.ui.model.ObservableSchema;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class QueryEditorController.
+ */
 public class QueryEditorController {
 
 	/** QueryEditorController's logger. */
 	private static Logger log = Logger.getLogger(QueryEditorController.class);
 
+	/** The query edit area. */
 	// This controller's widgets
 	@FXML private TextArea  queryEditArea;
+	
+	/** The status label. */
 	@FXML private Label     statusLabel;
+	
+	/** The ok button. */
 	@FXML private Button    okButton;
+	
+	/** The query name text field. */
 	@FXML private TextField queryNameTextField;
 	
+	/** The query. */
 	private ObservableQuery  query;
+	
+	/** The schema. */
 	private ObservableSchema schema;
+	
+	/** The queries list. */
 	private ObservableList<ObservableQuery> queriesList;
 	
+	/**
+	 * Instantiates a new query editor controller.
+	 */
 	public QueryEditorController() { }
 
 	/**
-	 * Controller's widget's initialization
+	 * Controller's widget's initialization.
 	 */
 	@FXML void initialize() {
 		this.queryNameTextField.setEditable(true);
@@ -68,6 +87,11 @@ public class QueryEditorController {
 		
 	}
 	
+	/**
+	 * Sets the query.
+	 *
+	 * @param query the new query
+	 */
 	public void setQuery(ObservableQuery query) {
 		if (query == null) {
 			this.queryEditArea.setText("Error. No query currently selected");
@@ -79,14 +103,29 @@ public class QueryEditorController {
 		this.queryEditArea.setText(SQLLikeQueryWriter.convert(this.query.getQuery()));
 	}
 	
+	/**
+	 * Sets the schema.
+	 *
+	 * @param schema the new schema
+	 */
 	public void setSchema(ObservableSchema schema) {
 		this.schema = schema;
 	}
 	
+	/**
+	 * Sets the queries list view.
+	 *
+	 * @param queriesView the new queries list view
+	 */
 	public void setQueriesListView(ListView<ObservableQuery> queriesView) {
 		this.queriesList = queriesView.getItems();
 	}
 	
+	/**
+	 * Validate query.
+	 *
+	 * @return true, if successful
+	 */
 	private boolean validateQuery() {
 		SQLLikeQueryReader queryReader = new SQLLikeQueryReader(this.schema.getSchema());
 		
@@ -106,6 +145,11 @@ public class QueryEditorController {
 		return false;
 	}
 	
+	/**
+	 * Validate query name.
+	 *
+	 * @return true, if successful
+	 */
 	private boolean validateQueryName() {
 		String name = this.queryNameTextField.getText();
 		if( name == null || name.length() == 0 ) {
@@ -116,6 +160,12 @@ public class QueryEditorController {
 		return true;
 	}
 	
+	/**
+	 * Validate query name.
+	 *
+	 * @param name the name
+	 * @return true, if successful
+	 */
 	private boolean validateQueryName(String name) {
 		if( name == null || name.length() == 0 ) {
 			log.error("validateQueryName. Empty name!");
@@ -131,6 +181,11 @@ public class QueryEditorController {
 		return true;
 	}
 	
+	/**
+	 * Ok button pressed.
+	 *
+	 * @param event the event
+	 */
 	@FXML void okButtonPressed(ActionEvent event) {
 		Stage stage = (Stage) this.okButton.getScene().getWindow();
 		stage.close();

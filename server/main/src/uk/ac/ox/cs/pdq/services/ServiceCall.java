@@ -4,8 +4,9 @@ import java.util.concurrent.Callable;
 
 /**
  * A call performed within a service.
- * @author Julien Leblay
  *
+ * @author Julien Leblay
+ * @param <T> the generic type
  */
 public interface ServiceCall<T> extends Callable<T> {
 }

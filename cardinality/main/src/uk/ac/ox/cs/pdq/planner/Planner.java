@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package uk.ac.ox.cs.pdq.planner;
 
 import java.io.IOException;
@@ -35,6 +38,7 @@ import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismManagerFactory;
 import com.google.common.collect.Lists;
 import com.google.common.eventbus.EventBus;
 
+// TODO: Auto-generated Javadoc
 /**
  * Provides high level functions for finding an optimal plan for a query with
  * respect to a schema, dependencies and access restrictions.
@@ -45,46 +49,53 @@ import com.google.common.eventbus.EventBus;
  */
 public class Planner {
 
+	/** The log. */
 	protected static Logger log = Logger.getLogger(Planner.class);
 
-	/** Input parameters */
+	/**  Input parameters. */
 	private PlannerParameters plannerParams;
 	
-	/** Input parameters */
+	/**  Input parameters. */
 	private CostParameters costParams;
 	
+	/** The reasoning params. */
 	private ReasoningParameters reasoningParams;
 
-	/** Event bus */
+	/**  Event bus. */
 	private EventBus eventBus = new EventBus();
 
-	/** Statistics collector */
+	/**  Statistics collector. */
 	private ChainedStatistics statsLogger;
 
-	/** The schema */
+	/**  The schema. */
 	private Schema schema;
 
 	
+	/** The detector. */
 	private HomomorphismManager detector;
 	
 	/**
-	 * 
-	 * @param planParams
-	 * @param costParams
-	 * @param schema
-	 * @param query
+	 * Instantiates a new planner.
+	 *
+	 * @param planParams the plan params
+	 * @param costParams the cost params
+	 * @param reasoningParams the reasoning params
+	 * @param schema the schema
+	 * @param query the query
 	 */
 	public Planner(PlannerParameters planParams, CostParameters costParams, ReasoningParameters reasoningParams, Schema schema, Query<?> query) {
 		this(planParams, costParams, reasoningParams, schema, query, null);
 	}
 
 	/**
-	 * 
-	 * @param params
-	 * @param costParams
-	 * @param schema
-	 * @param query
-	 * @param statsLogger
+	 * Instantiates a new planner.
+	 *
+	 * @param params the params
+	 * @param costParams the cost params
+	 * @param reasoningParams the reasoning params
+	 * @param schema the schema
+	 * @param query the query
+	 * @param statsLogger the stats logger
 	 */
 	public Planner(PlannerParameters params, CostParameters costParams, ReasoningParameters reasoningParams, Schema schema, Query<?> query, ChainedStatistics statsLogger) {
 		checkParametersConsistency(params, costParams, reasoningParams);
@@ -103,7 +114,11 @@ public class Planner {
 	}
 
 	/**
+	 * Check parameters consistency.
+	 *
 	 * @param params PlannerParameters
+	 * @param costParams the cost params
+	 * @param reasoningParams the reasoning params
 	 * @return boolean
 	 */
 	private static void checkParametersConsistency(PlannerParameters params, CostParameters costParams, ReasoningParameters reasoningParams) {
@@ -111,6 +126,7 @@ public class Planner {
 	}
 
 	/**
+	 * Register event handler.
 	 *
 	 * @param handler EventHandler
 	 */
@@ -119,7 +135,7 @@ public class Planner {
 	}
 
 	/**
-	 * Register the given event homoChecker
+	 * Register the given event homoChecker.
 	 *
 	 * @param handler EventHandler
 	 */
@@ -130,16 +146,13 @@ public class Planner {
 	/**
 	 * Search a best plan for the given schema and query.
 	 *
+	 * @param <P> the generic type
+	 * @param query the query
 	 * @return a pair whose first element is the best plan found if any, null
 	 *         otherwise, and the second is a mapping from the variables of the
 	 *         input query to the constant generated in the initial grounded
 	 *         operation.
-	 * @throws PlannerException
-	 * @throws IllegalAccessException
-	 * @throws SQLException
-	 * @throws ReflectiveOperationException
-	 * @throws IOException
-	 * @throws ProofEvent
+	 * @throws PlannerException the planner exception
 	 */
 	public <P extends Plan> P search(Query<?> query) throws PlannerException {
 		return this.search(query,false);
@@ -148,18 +161,15 @@ public class Planner {
 	/**
 	 * Search a best plan for the given schema and query.
 	 *
+	 * @param <P> the generic type
+	 * @param query the query
 	 * @param noDep if true, dependencies in the schema are disabled and
 	 *         planning occur taking only into account access-based axioms.
 	 * @return a pair whose first element is the best plan found if any, null
 	 *         otherwise, and the second is a mapping from the variables of the
 	 *         input query to the constant generated in the initial grounded
 	 *         operation.
-	 * @throws PlannerException
-	 * @throws ReflectiveOperationException
-	 * @throws IOException
-	 * @throws IllegalAccessException
-	 * @throws SQLException
-	 * @throws ProofEvent
+	 * @throws PlannerException the planner exception
 	 */
 	public <P extends Plan> P search(Query<?> query, boolean noDep) throws PlannerException {
 		
@@ -240,6 +250,8 @@ public class Planner {
 	}
 
 	/**
+	 * Display columns.
+	 *
 	 * @return StatKeys[]
 	 */
 	private static StatKey[] displayColumns() {
@@ -259,6 +271,8 @@ public class Planner {
 	}
 
 	/**
+	 * Handle early termination.
+	 *
 	 * @param ex Explorer<?>
 	 */
 	private void handleEarlyTermination(Explorer<?> ex) {
@@ -271,6 +285,8 @@ public class Planner {
 	}
 
 	/**
+	 * Gets the schema.
+	 *
 	 * @return the planner's underlying schema
 	 */
 	public Schema getSchema() {
@@ -279,6 +295,11 @@ public class Planner {
 
 
 	
+	/**
+	 * Adds the keys.
+	 *
+	 * @param schema the schema
+	 */
 	public void addKeys(Schema schema) {
 		Relation region = schema.getRelation("region");
 		Attribute r_regionkey = region.getAttribute(0);

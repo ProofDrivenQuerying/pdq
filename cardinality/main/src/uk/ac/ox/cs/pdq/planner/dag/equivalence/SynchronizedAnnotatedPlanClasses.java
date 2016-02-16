@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package uk.ac.ox.cs.pdq.planner.dag.equivalence;
 
 import java.util.Arrays;
@@ -16,6 +19,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * A collection of structurally equivalent classes that supports multi-threading.
  * According to this implementation different threads can add, remove or perform domination detection inside each class concurrently.
@@ -25,14 +29,19 @@ import com.google.common.collect.Sets;
  */
 public class SynchronizedAnnotatedPlanClasses implements DAGAnnotatedPlanClasses{
 	
-	/** Maps each configuration to its class*/
+	/**  Maps each configuration to its class. */
 	private final Map<DAGAnnotatedPlan, SynchronizedAnnotatedPlanClass> configurationToEquivalenceClass;
 
+	/**
+	 * Instantiates a new synchronized annotated plan classes.
+	 */
 	public SynchronizedAnnotatedPlanClasses() {
 		this.configurationToEquivalenceClass = new ConcurrentHashMap<>(100, 10, 100);
 	}
 
 	/**
+	 * Adds the entry.
+	 *
 	 * @param configuration DAGAnnotatedPlan
 	 * @see uk.ac.ox.cs.pdq.planner.dag.equivalence.DAGAnnotatedPlanClasses.dag.AnnotatedPlanClasses#addEntry(DAGAnnotatedPlan)
 	 */
@@ -51,6 +60,8 @@ public class SynchronizedAnnotatedPlanClasses implements DAGAnnotatedPlanClasses
 	}
 
 	/**
+	 * Removes the entry.
+	 *
 	 * @param configuration DAGAnnotatedPlan
 	 * @see uk.ac.ox.cs.pdq.planner.dag.equivalence.DAGAnnotatedPlanClasses.dag.AnnotatedPlanClasses#removeEntry(DAGAnnotatedPlan)
 	 */
@@ -60,6 +71,8 @@ public class SynchronizedAnnotatedPlanClasses implements DAGAnnotatedPlanClasses
 	}
 
 	/**
+	 * Gets the configurations.
+	 *
 	 * @return Collection<DAGAnnotatedPlan>
 	 * @see uk.DAGAnnotatedPlanClasses.ac.ox.cs.pdq.planner.dag.equivalence.AnnotatedPlanClasses#getConfigurations()
 	 */
@@ -69,6 +82,8 @@ public class SynchronizedAnnotatedPlanClasses implements DAGAnnotatedPlanClasses
 	}
 
 	/**
+	 * Removes the all.
+	 *
 	 * @param configurations Collection<DAGAnnotatedPlan>
 	 * @see uk.ac.ox.cs.pdq.equivalence.dag.AnnotatedPlanClasses#removeAll(Collection<DAGAnnotatedPlan>)
 	 */
@@ -84,6 +99,9 @@ public class SynchronizedAnnotatedPlanClasses implements DAGAnnotatedPlanClasses
 	}
 
 	/**
+	 * Dominated by.
+	 *
+	 * @param dominance the dominance
 	 * @param configuration DAGAnnotatedPlan
 	 * @return Collection<DAGAnnotatedPlan>
 	 * @see uk.ac.ox.cs.pdq.planner.dag.equivalence.DAGAnnotatedPlanClasses.dag.AnnotatedPlanClasses#dominatedBy(DAGAnnotatedPlan)
@@ -98,6 +116,8 @@ public class SynchronizedAnnotatedPlanClasses implements DAGAnnotatedPlanClasses
 	}
 
 	/**
+	 * Structurally equivalent to.
+	 *
 	 * @param configuration DAGAnnotatedPlan
 	 * @return DAGAnnotatedPlan
 	 * @see uk.ac.ox.cs.pdq.planner.dag.equivalence.DAGAnnotatedPlanClasses.dag.AnnotatedPlanClasses#structurallyEquivalentTo(DAGAnnotatedPlan)
@@ -113,6 +133,9 @@ public class SynchronizedAnnotatedPlanClasses implements DAGAnnotatedPlanClasses
 	}
 
 	/**
+	 * Dominate.
+	 *
+	 * @param dominance the dominance
 	 * @param configuration DAGAnnotatedPlan
 	 * @return DAGAnnotatedPlan
 	 * @see uk.ac.ox.cs.pdq.planner.dag.equivalence.DAGAnnotatedPlanClasses.dag.AnnotatedPlanClasses#dominate(DAGAnnotatedPlan)
@@ -130,6 +153,8 @@ public class SynchronizedAnnotatedPlanClasses implements DAGAnnotatedPlanClasses
 
 
 	/**
+	 * Gets the equivalence classes.
+	 *
 	 * @return Collection<AnnotatedPlanClass>
 	 * @see uk.DAGAnnotatedPlanClasses.ac.ox.cs.pdq.planner.dag.equivalence.AnnotatedPlanClasses#getEquivalenceClasses()
 	 */
@@ -139,6 +164,8 @@ public class SynchronizedAnnotatedPlanClasses implements DAGAnnotatedPlanClasses
 	}
 
 	/**
+	 * Gets the equivalence class.
+	 *
 	 * @param configuration DAGAnnotatedPlan
 	 * @return AnnotatedPlanClass
 	 * @see uk.ac.ox.cs.pdq.planner.dag.equivalence.DAGAnnotatedPlanClasses.dag.AnnotatedPlanClasses#getEquivalenceClass(DAGAnnotatedPlan)
@@ -149,6 +176,8 @@ public class SynchronizedAnnotatedPlanClasses implements DAGAnnotatedPlanClasses
 	}
 
 	/**
+	 * Checks if is empty.
+	 *
 	 * @return boolean
 	 * @see uk.DAGAnnotatedPlanClasses.ac.ox.cs.pdq.planner.dag.equivalence.AnnotatedPlanClasses#isEmpty()
 	 */
@@ -158,6 +187,8 @@ public class SynchronizedAnnotatedPlanClasses implements DAGAnnotatedPlanClasses
 	}
 
 	/**
+	 * Size.
+	 *
 	 * @return int
 	 * @see uk.DAGAnnotatedPlanClasses.ac.ox.cs.pdq.planner.dag.equivalence.AnnotatedPlanClasses#size()
 	 */
@@ -167,6 +198,8 @@ public class SynchronizedAnnotatedPlanClasses implements DAGAnnotatedPlanClasses
 	}
 
 	/**
+	 * Contains.
+	 *
 	 * @param configuration DAGAnnotatedPlan
 	 * @return boolean
 	 * @see uk.ac.ox.cs.pdq.planner.dag.equivalence.DAGAnnotatedPlanClasses.dag.AnnotatedPlanClasses#contains(DAGAnnotatedPlan)
@@ -177,6 +210,8 @@ public class SynchronizedAnnotatedPlanClasses implements DAGAnnotatedPlanClasses
 	}
 
 	/**
+	 * Iterator.
+	 *
 	 * @return Iterator<Entry<DAGAnnotatedPlan,SynchronizedAnnotatedPlanClass>>
 	 * @see uk.DAGAnnotatedPlanClasses.ac.ox.cs.pdq.planner.dag.equivalence.AnnotatedPlanClasses#iterator()
 	 */
@@ -186,6 +221,8 @@ public class SynchronizedAnnotatedPlanClasses implements DAGAnnotatedPlanClasses
 	}
 
 	/**
+	 * Clear.
+	 *
 	 * @see uk.DAGAnnotatedPlanClasses.ac.ox.cs.pdq.planner.dag.equivalence.AnnotatedPlanClasses#clear()
 	 */
 	@Override
@@ -194,6 +231,8 @@ public class SynchronizedAnnotatedPlanClasses implements DAGAnnotatedPlanClasses
 	}
 
 	/**
+	 * Average class size.
+	 *
 	 * @return double
 	 * @see uk.DAGAnnotatedPlanClasses.ac.ox.cs.pdq.planner.dag.equivalence.AnnotatedPlanClasses#averageClassSize()
 	 */
@@ -207,6 +246,8 @@ public class SynchronizedAnnotatedPlanClasses implements DAGAnnotatedPlanClasses
 	}
 
 	/**
+	 * Median class size.
+	 *
 	 * @return int
 	 * @see uk.DAGAnnotatedPlanClasses.ac.ox.cs.pdq.planner.dag.equivalence.AnnotatedPlanClasses#medianClassSize()
 	 */
@@ -225,6 +266,8 @@ public class SynchronizedAnnotatedPlanClasses implements DAGAnnotatedPlanClasses
 	}
 
 	/**
+	 * Retain all.
+	 *
 	 * @param configurations Collection<DAGAnnotatedPlan>
 	 * @see uk.ac.ox.cs.pdq.equivalence.dag.AnnotatedPlanClasses#retainAll(Collection<DAGAnnotatedPlan>)
 	 */

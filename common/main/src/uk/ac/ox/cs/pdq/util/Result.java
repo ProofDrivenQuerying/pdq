@@ -1,6 +1,7 @@
 package uk.ac.ox.cs.pdq.util;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * Common interface to query/plan results.
  *
@@ -8,13 +9,23 @@ package uk.ac.ox.cs.pdq.util;
  */
 public interface Result extends Cloneable, Differentiable<Result> {
 
-	/** @return true, if this result is empty. */
+	/**
+	 * Checks if is empty.
+	 *
+	 * @return true, if this result is empty.
+	 */
 	boolean isEmpty();
 
-	/** @return the size of the result. */
+	/**
+	 * Size.
+	 *
+	 * @return the size of the result.
+	 */
 	int size();
 
 	/**
+	 * Diff.
+	 *
 	 * @param o Result
 	 * @return a String representation of the difference between this object and
 	 *         o.
@@ -23,6 +34,8 @@ public interface Result extends Cloneable, Differentiable<Result> {
 	String diff(Result o);
 
 	/**
+	 * How different.
+	 *
 	 * @param o Result
 	 * @return true, if this object is a equivalent to o.
 	 */

@@ -1,5 +1,6 @@
 package uk.ac.ox.cs.pdq;
 
+// TODO: Auto-generated Javadoc
 /**
  * Exception that occurred when an evaluation time out is reached.
  *
@@ -7,15 +8,24 @@ package uk.ac.ox.cs.pdq;
  */
 public class LimitReachedException extends Exception {
 
-	/** */
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -315472460756924167L;
 
-	/** */
-	public static enum Reasons {TIMEOUT, MAX_ITERATION}
+	/**
+	 * The Enum Reasons.
+	 */
+	public static enum Reasons {
+/** The timeout. */
+TIMEOUT, 
+ /** The max iteration. */
+ MAX_ITERATION}
 
+	/** The reason. */
 	private final Reasons reason;
 
 	/**
+	 * Instantiates a new limit reached exception.
+	 *
 	 * @param msg exception message.
 	 * @param reason Reasons
 	 */
@@ -25,6 +35,8 @@ public class LimitReachedException extends Exception {
 	}
 
 	/**
+	 * Instantiates a new limit reached exception.
+	 *
 	 * @param reason Reasons
 	 */
 	public LimitReachedException(Reasons reason) {
@@ -33,6 +45,8 @@ public class LimitReachedException extends Exception {
 	}
 
 	/**
+	 * Gets the reason.
+	 *
 	 * @return Reasons
 	 */
 	public Reasons getReason() {

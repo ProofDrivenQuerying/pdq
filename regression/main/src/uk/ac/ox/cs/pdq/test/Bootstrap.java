@@ -20,9 +20,10 @@ import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
 
+// TODO: Auto-generated Javadoc
 /**
- * The entry point for the regression package
- * 
+ * The entry point for the regression package.
+ *
  * @author Julien Leblay
  */
 public class Bootstrap {
@@ -36,18 +37,17 @@ public class Bootstrap {
 	/** Default error code. */
 	public static final int ERROR_CODE = -1;
 
+	/** The help. */
 	@Parameter(names = { "-h", "--help" }, help = true, description = "Displays this help message.")
 	private boolean help;
 	
+	/** The out. */
 	protected PrintStream out;
 
 	/**
 	 * Sets up a regression test for the given test case directory.
-	 * 
+	 *
 	 * @param args the command line parameters as given by the main method.
-	 * @throws ReflectiveOperationException
-	 * @throws IOException
-	 * @throws RegressionTestException
 	 */
 	public Bootstrap(String... args) {
 
@@ -101,23 +101,34 @@ public class Bootstrap {
 	 */
 	public static abstract class Command {
 
+		/** The name. */
 		public final String name;
 		
+		/** The input. */
 		@Parameter(names = { "-i", "--input" }, required = true,
 				description = "Path to the regression test case directories.",
 				validateWith=DirectoryValidator.class)
 		private String input;
 
+		/** The params. */
 		@DynamicParameter(names = "-D", required = false, 
 				description = "Force the given parameters across all the test in the suite, "
 						+ "ignoring those that may be specified in each parameter file. "
 						+ "For instance, '-Dtimeout=10000' force a timeout 10s seconds on all tests.")
 		private Map<String, String> params = new HashMap<>();
 		
+		/**
+		 * Instantiates a new command.
+		 *
+		 * @param name the name
+		 */
 		public Command(String name) {
 			this.name = name;
 		}
 		
+		/* (non-Javadoc)
+		 * @see java.lang.Object#toString()
+		 */
 		@Override
 		public String toString() {
 			StringBuilder result = new StringBuilder();
@@ -128,6 +139,8 @@ public class Bootstrap {
 		}
 
 		/**
+		 * Gets the input.
+		 *
 		 * @return the path the initialConfig file to use.
 		 */
 		public String getInput() {
@@ -135,7 +148,9 @@ public class Bootstrap {
 		}
 
 		/**
-		 * @param input String
+		 * Gets the parameter overrides.
+		 *
+		 * @return the parameter overrides
 		 */
 		public Map<String, String> getParameterOverrides() {
 			return this.params;
@@ -144,13 +159,22 @@ public class Bootstrap {
 		/**
 		 * Executes the command action on the list of modules. If the module 
 		 * list is empty, the action is performed on the service manager itself.
-		 * @param sm
-		 * @throws ReflectiveOperationException 
+		 *
+		 * @throws RegressionTestException the regression test exception
+		 * @throws IOException Signals that an I/O exception has occurred.
+		 * @throws ReflectiveOperationException the reflective operation exception
 		 */
 		public abstract void execute() throws RegressionTestException, IOException, ReflectiveOperationException;
 	}
 
+	/**
+	 * The Class DirectoryValidator.
+	 */
 	public static class DirectoryValidator implements IParameterValidator {
+		
+		/* (non-Javadoc)
+		 * @see com.beust.jcommander.IParameterValidator#validate(java.lang.String, java.lang.String)
+		 */
 		@Override
 		public void validate(String name, String value) throws ParameterException {
 			try {
@@ -166,6 +190,8 @@ public class Bootstrap {
 	}
 
 	/**
+	 * Checks if is help.
+	 *
 	 * @return true if the line command asked for help.
 	 */
 	public boolean isHelp() {
@@ -173,7 +199,9 @@ public class Bootstrap {
 	}
 
 	/**
-	 * @param help
+	 * Sets the help.
+	 *
+	 * @param help the new help
 	 */
 	public void setHelp(boolean help) {
 		this.help = help;
@@ -181,7 +209,8 @@ public class Bootstrap {
 
 	/**
 	 * Instantiates an experiment and runs it.
-	 * @param args
+	 *
+	 * @param args the arguments
 	 */
 	public static void main(String... args) {
 		new Bootstrap(args);

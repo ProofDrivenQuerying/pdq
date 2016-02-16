@@ -26,6 +26,7 @@ import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
 /**
  * Transforms linear chase configurations to left-deep plans. 
  *
@@ -34,19 +35,22 @@ import com.google.common.collect.Lists;
 public class LeftDeepPlanGenerator {
 
 	/**
-	 * Creates a linear plan by appending the access and middlewares commands of the input configuration to the input parent plan
-	 * @param configuration 
-	 * @param parent 
-	 * @return 
+	 * Creates a linear plan by appending the access and middlewares commands of the input configuration to the input parent plan.
+	 *
+	 * @param configuration the configuration
+	 * @param parent the parent
+	 * @return the left deep plan
 	 */
 	public static LeftDeepPlan createLeftDeepPlan(LinearChaseConfiguration configuration, LeftDeepPlan parent) {
 		return createLeftDeepPlan(configuration, parent, inferOutputChaseConstants(configuration));
 	}
 
 	/**
-	 * Creates a linear plan using the subplans of the input sequence of nodes
+	 * Creates a linear plan using the subplans of the input sequence of nodes.
+	 *
+	 * @param <T> the generic type
 	 * @param nodes List<T>
-	 * @return 
+	 * @return the left deep plan
 	 */
 	public static<T extends SearchNode> LeftDeepPlan createLeftDeepPlan(List<T> nodes) {
 		LeftDeepPlan parentPlan = null;
@@ -66,12 +70,11 @@ public class LeftDeepPlanGenerator {
 	 * then create an input-free access else create a dependent access operator.
 	 * If f has schema constants in output positions or repeated constants, then these schema constants map to filtering predicates.
 	 * Finally, project the variables that correspond to output chase constants. 
-	 * @param c 
-	 * @param parent 
-	 * 		The input parent plan. This is the plan of the parent configuration of c, i.e., the configuration that is augmented with the exposed facts of c.
-	 * @param toProject 
-	 * 		Terms to project in the resulting plan
-	 * @return 
+	 *
+	 * @param c the c
+	 * @param parent 		The input parent plan. This is the plan of the parent configuration of c, i.e., the configuration that is augmented with the exposed facts of c.
+	 * @param toProject 		Terms to project in the resulting plan
+	 * @return the left deep plan
 	 */
 	private static LeftDeepPlan createLeftDeepPlan(LinearConfiguration c,
 			LeftDeepPlan parent,
@@ -133,7 +136,9 @@ public class LeftDeepPlanGenerator {
 
 
 	/**
-	 * @param configuration 
+	 * Infer output chase constants.
+	 *
+	 * @param configuration the configuration
 	 * @return the output constants of the input configuration
 	 */
 	public static List<Term> inferOutputChaseConstants(LinearChaseConfiguration configuration) {
@@ -149,10 +154,11 @@ public class LeftDeepPlanGenerator {
 	}
 
 	/**
-	 * @param candidate 
-	 * @param toProject 
-	 * @return
-	 * 		a map of positions to terms of a candidate fact
+	 * Gets the output map.
+	 *
+	 * @param candidate the candidate
+	 * @param toProject the to project
+	 * @return 		a map of positions to terms of a candidate fact
 	 */
 	private static LinkedHashMap<Integer, Term> getOutputMap(Candidate candidate, List<? extends Term> toProject) {
 		LinkedHashMap<Integer, Term> ret = new LinkedHashMap();

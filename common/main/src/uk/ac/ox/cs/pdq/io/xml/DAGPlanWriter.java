@@ -8,6 +8,7 @@ import uk.ac.ox.cs.pdq.plan.DAGPlan;
 
 import com.google.common.base.Preconditions;
 
+// TODO: Auto-generated Javadoc
 /**
  * Writes plans to XML.
  * 
@@ -15,6 +16,7 @@ import com.google.common.base.Preconditions;
  */
 public class DAGPlanWriter extends AbstractXMLWriter<DAGPlan> {
 	
+	/** The Constant TYPE_MARKER. */
 	public static final String TYPE_MARKER = "dag"; 
 	
 	/** The operator writer. */
@@ -29,7 +31,8 @@ public class DAGPlanWriter extends AbstractXMLWriter<DAGPlan> {
 
 	/**
 	 * Writes the given plan to the given output.
-	 * @param out
+	 *
+	 * @param out the out
 	 * @param plan DAGPlan
 	 */
 	public void writePlan(PrintStream out, DAGPlan plan) {
@@ -44,6 +47,8 @@ public class DAGPlanWriter extends AbstractXMLWriter<DAGPlan> {
 	}
 
 	/**
+	 * Write.
+	 *
 	 * @param out PrintStream
 	 * @param o DAGPlan
 	 */

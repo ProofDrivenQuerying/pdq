@@ -9,6 +9,7 @@ import com.logicblox.connect.BloxCommand.CommandResponse;
 import com.logicblox.connect.BloxCommand.SynchronizeWorkspace;
 import com.logicblox.connect.BloxCommand.SynchronizeWorkspaceResponse;
 
+// TODO: Auto-generated Javadoc
 /**
  * Handles workspace synchronization requests coming from the client. 
  * 
@@ -19,17 +20,21 @@ public class SynchronizationHandler implements MessageHandler<SynchronizeWorkspa
 	/** Logger. */
 	static final Logger log = Logger.getLogger(SynchronizationHandler.class);
 
-	/** Handle on the LogicBlox service */
+	/**  Handle on the LogicBlox service. */
 	private final SemanticOptimizationService master;
 
 	/**
-	 * Default constructor
-	 * @param master
+	 * Default constructor.
+	 *
+	 * @param master the master
 	 */
 	public SynchronizationHandler(SemanticOptimizationService master) {
 		this.master = master;
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.services.MessageHandler#handle(com.google.protobuf.GeneratedMessage)
+	 */
 	@Override
 	public GeneratedMessage handle(SynchronizeWorkspace command) {
 	    log.debug("Synchronizing workspace: ");

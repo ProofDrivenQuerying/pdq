@@ -25,6 +25,7 @@ import uk.ac.ox.cs.pdq.planner.dag.BinaryConfiguration.BinaryConfigurationTypes;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 
+// TODO: Auto-generated Javadoc
 /**
  * Implement algorithms 1 and 2 from the dependent join notes.
  *
@@ -34,10 +35,11 @@ import com.google.common.collect.Sets;
 public class DAGPlanGenerator {
 
 	/**
+	 * To dag plan.
+	 *
 	 * @param left DAGConfiguration<S>
 	 * @param right DAGConfiguration<S>
 	 * @param type BinaryConfigurationTypes
-	 * @param cf ControlFlows
 	 * @return DAGPlan
 	 */
 	public static DAGPlan toDAGPlan(DAGChaseConfiguration left, DAGChaseConfiguration right, BinaryConfigurationTypes type) {
@@ -154,6 +156,8 @@ public class DAGPlanGenerator {
 	}
 
 	/**
+	 * Rename all variables.
+	 *
 	 * @param from List<Term>
 	 * @param to List<Term>
 	 * @return Map<Integer,Term>

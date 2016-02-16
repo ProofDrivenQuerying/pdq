@@ -12,14 +12,23 @@ import uk.ac.ox.cs.pdq.algebra.Union;
 
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
 /**
+ * The Class UnionTest.
+ *
  * @author Julien Leblay
  */
 public class UnionTest extends NaryOperatorTest {
 
+	/** The operator. */
 	Union operator;
+	
+	/** The children. */
 	List<RelationalOperator> children;
 	
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.test.algebra.NaryOperatorTest#setup()
+	 */
 	@Before public void setup() throws RelationalOperatorException {
         super.setup();
         
@@ -28,26 +37,41 @@ public class UnionTest extends NaryOperatorTest {
 	}
 	
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.test.algebra.RelationalOperatorTest#getOperator()
+	 */
 	@Override
 	RelationalOperator getOperator() {
 		return this.operator;
 	}
 
+	/**
+	 * Inits the union test null argument1.
+	 */
 	@Test(expected=NullPointerException.class) 
 	public void initUnionTestNullArgument1() {
 		new Union((List) null);
 	}
 
+	/**
+	 * Inits the union test null argument2.
+	 */
 	@Test(expected=NullPointerException.class) 
 	public void initUnionTestNullArgument2() {
 		new Union((RelationalOperator[]) null);
 	}
 
+	/**
+	 * Inits the union test empty argument.
+	 */
 	@Test(expected=IllegalArgumentException.class) 
 	public void initUnionTestEmptyArgument() {
 		new Union(Lists.<RelationalOperator>newArrayList());
 	}
 
+	/**
+	 * Inits the union test.
+	 */
 	@Test public void initUnionTest() {
 		Assert.assertEquals("Union children must match that of initialiazation", children, this.operator.getChildren());
 		Assert.assertEquals("Union output must match the concatenation of childrens", outputTerms, this.operator.getColumns());
@@ -56,6 +80,11 @@ public class UnionTest extends NaryOperatorTest {
 		Assert.assertEquals("Union input type must match the concatenation of childrens", inputType, this.operator.getInputType());
 	}
 
+	/**
+	 * Deep copy.
+	 *
+	 * @throws RelationalOperatorException the relational operator exception
+	 */
 	@Test public void deepCopy() throws RelationalOperatorException {
 		Union copy = this.operator.deepCopy();
 		Assert.assertEquals("Union copy's children must match that of operator", this.operator.getChildren(), copy.getChildren());

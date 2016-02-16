@@ -5,16 +5,26 @@ import uk.ac.ox.cs.pdq.plan.EstimateProvider;
 
 import com.google.common.base.Preconditions;
 
+// TODO: Auto-generated Javadoc
 /**
+ * The Class NaiveMetadata.
+ *
  * @author Julien Leblay
  */
 public class NaiveMetadata implements EstimateProvider<RelationalOperator> {
 
+	/** The input card. */
 	private double inputCard = 0L;
+	
+	/** The output card. */
 	private double outputCard = -1L;
+	
+	/** The parent. */
 	private RelationalOperator parent;
 
 	/**
+	 * Gets the parent.
+	 *
 	 * @return LogicalOperator
 	 * @see uk.ac.ox.cs.pdq.plan.EstimateProvider#getParent()
 	 */
@@ -24,6 +34,8 @@ public class NaiveMetadata implements EstimateProvider<RelationalOperator> {
 	}
 
 	/**
+	 * Sets the parent.
+	 *
 	 * @param o LogicalOperator
 	 * @see uk.ac.ox.cs.pdq.plan.EstimateProvider#setParent(RelationalOperator)
 	 */
@@ -33,6 +45,8 @@ public class NaiveMetadata implements EstimateProvider<RelationalOperator> {
 	}
 
 	/**
+	 * Gets the input cardinality.
+	 *
 	 * @return the last estimated input cardinality of the operator
 	 * @see uk.ac.ox.cs.pdq.plan.EstimateProvider#getInputCardinality()
 	 */
@@ -42,6 +56,8 @@ public class NaiveMetadata implements EstimateProvider<RelationalOperator> {
 	}
 
 	/**
+	 * Gets the output cardinality.
+	 *
 	 * @return the last estimated output cardinality of the operator
 	 * @see uk.ac.ox.cs.pdq.plan.EstimateProvider#getOutputCardinality()
 	 */
@@ -51,6 +67,8 @@ public class NaiveMetadata implements EstimateProvider<RelationalOperator> {
 	}
 
 	/**
+	 * Sets the input cardinality.
+	 *
 	 * @param l Double
 	 * @see uk.ac.ox.cs.pdq.plan.EstimateProvider#setInputCardinality(Double)
 	 */
@@ -61,6 +79,8 @@ public class NaiveMetadata implements EstimateProvider<RelationalOperator> {
 	}
 
 	/**
+	 * Sets the output cardinality.
+	 *
 	 * @param l Double
 	 * @see uk.ac.ox.cs.pdq.plan.EstimateProvider#setOutputCardinality(Double)
 	 */

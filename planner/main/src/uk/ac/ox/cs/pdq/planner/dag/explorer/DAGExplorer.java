@@ -31,6 +31,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 import com.google.common.eventbus.EventBus;
 
+// TODO: Auto-generated Javadoc
 /**
  * Explores the space of DAG proofs.
  * Exploration proceeds roughly as follows.
@@ -43,51 +44,46 @@ import com.google.common.eventbus.EventBus;
  */
 public abstract class DAGExplorer extends Explorer<DAGPlan> {
 
-	/** The input user query **/
+	/**  The input user query *. */
 	protected final Query<?> query;
 	
-	/** The accessible counterpart of the user query **/
+	/**  The accessible counterpart of the user query *. */
 	protected final Query<?> accessibleQuery;
 
-	/** The input schema **/
+	/**  The input schema *. */
 	protected final Schema schema;
 	
-	/** The accessible counterpart of the input schema **/
+	/**  The accessible counterpart of the input schema *. */
 	protected final AccessibleSchema accessibleSchema;
 
-	/** Runs the chase algorithm **/
+	/**  Runs the chase algorithm *. */
 	protected final Chaser chaser;
 
-	/** Detects homomorphisms during chasing**/
+	/**  Detects homomorphisms during chasing*. */
 	protected final HomomorphismDetector detector;
 
-	/** Estimates the cost of a plan **/
+	/**  Estimates the cost of a plan *. */
 	protected final CostEstimator<DAGPlan> costEstimator;
 
-	/** The minimum cost configuration */
+	/**  The minimum cost configuration. */
 	protected DAGChaseConfiguration bestConfiguration = null;
 
+	/** The parameters. */
 	protected final PlannerParameters parameters; 
 
 	/**
-	 * 
-	 * @param eventBus
-	 * @param collectStats
-	 * @param parameters
-	 * @param query
-	 * 		The input user query
-	 * @param accessibleQuery
-	 * 		The accessible counterpart of the user query
-	 * @param schema
-	 * 		The input schema
-	 * @param accessibleSchema
-	 * 		The accessible counterpart of the input schema
-	 * @param chaser
-	 * 		Saturates configurations using the chase algorithm
-	 * @param detector
-	 * 		Detects homomorphisms during chasing
-	 * @param costEstimator
-	 * 		Estimates the cost of a plan
+	 * Instantiates a new DAG explorer.
+	 *
+	 * @param eventBus the event bus
+	 * @param collectStats the collect stats
+	 * @param parameters the parameters
+	 * @param query 		The input user query
+	 * @param accessibleQuery 		The accessible counterpart of the user query
+	 * @param schema 		The input schema
+	 * @param accessibleSchema 		The accessible counterpart of the input schema
+	 * @param chaser 		Saturates configurations using the chase algorithm
+	 * @param detector 		Detects homomorphisms during chasing
+	 * @param costEstimator 		Estimates the cost of a plan
 	 */
 	public DAGExplorer(EventBus eventBus, 
 			boolean collectStats, 
@@ -120,8 +116,9 @@ public abstract class DAGExplorer extends Explorer<DAGPlan> {
 	}
 
 	/**
-	 * Updates the minimum cost configuration/plan
-	 * @param configuration
+	 * Updates the minimum cost configuration/plan.
+	 *
+	 * @param configuration the configuration
 	 * @return true if the best configuration/plan is updated
 	 */
 	public boolean setBestPlan(DAGChaseConfiguration configuration) {
@@ -143,6 +140,9 @@ public abstract class DAGExplorer extends Explorer<DAGPlan> {
 		return true;
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.planner.Explorer#getBestPlan()
+	 */
 	@Override
 	public DAGPlan getBestPlan() {
 		if (this.bestConfiguration == null) {
@@ -151,11 +151,18 @@ public abstract class DAGExplorer extends Explorer<DAGPlan> {
 		return this.bestPlan;
 	}
 
+	/**
+	 * Gets the best configuration.
+	 *
+	 * @return the best configuration
+	 */
 	public DAGChaseConfiguration getBestConfiguration() {
 		return this.bestConfiguration;
 	}
 
 	/**
+	 * Terminates.
+	 *
 	 * @return true if the planner terminates
 	 */
 	@Override
@@ -164,8 +171,10 @@ public abstract class DAGExplorer extends Explorer<DAGPlan> {
 	}
 
 	/**
+	 * Creates the initial configurations.
+	 *
 	 * @return a list of ApplyRule configurations based on the facts derived after chasing the input schema with the canonical database of the query
-	 * @throws PlannerException
+	 * @throws PlannerException the planner exception
 	 */
 	protected List<DAGChaseConfiguration> createInitialConfigurations() throws PlannerException {
 		AccessibleChaseState state = null;

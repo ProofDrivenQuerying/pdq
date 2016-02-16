@@ -21,36 +21,38 @@ import uk.ac.ox.cs.pdq.util.Table;
 import com.google.common.base.Preconditions;
 
 
+// TODO: Auto-generated Javadoc
 /**
- * The cost of the plan equals the total number of output tuples per access 
- * @author Efthymia Tsamoura
+ * The cost of the plan equals the total number of output tuples per access .
  *
+ * @author Efthymia Tsamoura
+ * @param <P> the generic type
  */
 public class TotalAccessCostEstimator<P extends Plan> implements BlackBoxCostEstimator<P>{
 
+	/** The stats. */
 	protected final StatisticsCollector stats;
 
+	/** The log. */
 	private static Logger log = Logger.getLogger(TotalAccessCostEstimator.class);
 
-	/** The database statistics */
+	/**  The database statistics. */
 	protected final Catalog catalog;
 
 	/**
-	 * 
-	 * @param eventBus
-	 * @param collectStats
-	 * @param catalog
-	 * 		The database statistics
+	 * Instantiates a new total access cost estimator.
+	 *
+	 * @param catalog 		The database statistics
 	 */
 	public TotalAccessCostEstimator(Catalog catalog) {
 		this(null, catalog);
 	}
 
 	/**
-	 * 
-	 * @param stats
-	 * @param catalog
-	 * 		The database statistics
+	 * Instantiates a new total access cost estimator.
+	 *
+	 * @param stats the stats
+	 * @param catalog 		The database statistics
 	 */
 	public TotalAccessCostEstimator(StatisticsCollector stats, Catalog catalog) {
 		this.stats = stats;

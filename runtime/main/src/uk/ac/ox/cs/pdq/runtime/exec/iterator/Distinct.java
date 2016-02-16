@@ -8,6 +8,7 @@ import uk.ac.ox.cs.pdq.util.Tuple;
 
 import com.google.common.base.Preconditions;
 
+// TODO: Auto-generated Javadoc
 /**
  * Distinct removes duplicates in a result set.
  * 
@@ -15,10 +16,10 @@ import com.google.common.base.Preconditions;
  */
 public class Distinct extends UnaryIterator {
 
-	/** The iteratorCache */
+	/**  The iteratorCache. */
 	private Set<Tuple> cache = new LinkedHashSet<>();
 	
-	/** The next result to return */
+	/**  The next result to return. */
 	private Tuple nextResult = null;
 	
 	/**

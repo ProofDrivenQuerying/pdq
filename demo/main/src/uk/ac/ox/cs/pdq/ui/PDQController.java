@@ -101,6 +101,7 @@ import uk.ac.ox.cs.pdq.ui.proof.Proof;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
 /**
  * Controller class for the main PDQ window.
  * 
@@ -116,60 +117,114 @@ public class PDQController {
 	 * JavaFX-specific initializations
 	 */
 	
-	/** Default icon for relations */
+	/**  Default icon for relations. */
 	private final Image dbRelationIcon = new Image(this.getClass().getResourceAsStream("/resources/icons/table.gif"));
 	
-	/** Icon for views */
+	/**  Icon for views. */
 	private final Image dbViewIcon = new Image(this.getClass().getResourceAsStream("/resources/icons/view.png"));
 	
-	/** Icon for online relations */
+	/**  Icon for online relations. */
 	private final Image webRelationIcon = new Image(this.getClass().getResourceAsStream("/resources/icons/web-relation.png"));
 	
-	/** Default icon for dependency */
+	/**  Default icon for dependency. */
 	private final Image dependencyIcon = new Image(this.getClass().getResourceAsStream("/resources/icons/dependency.gif"));
 	
-	/** Icon for FK dependencies */
+	/**  Icon for FK dependencies. */
 	private final Image fkIcon = new Image(this.getClass().getResourceAsStream("/resources/icons/fk-dependency.gif"));
 	
-	/** Icon for the edit buttons */
+	/**  Icon for the edit buttons. */
 	private final Image editIcon = new Image(this.getClass().getResourceAsStream("/resources/icons/write.gif"));
 	
-	/** Icon for the planner buttons */
+	/**  Icon for the planner buttons. */
 	private final Image planIcon = new Image(this.getClass().getResourceAsStream("/resources/icons/plan.gif"));
 	
-	/** Icon for the runtime buttons */
+	/**  Icon for the runtime buttons. */
 	private final Image runIcon = new Image(this.getClass().getResourceAsStream("/resources/icons/run.gif"));
 
+	/** The schemas tree view. */
 	// Widgets
 	@FXML private TreeView<String> schemasTreeView;
+	
+	/** The queries list view. */
 	@FXML private ListView<ObservableQuery> queriesListView;
+    
+    /** The col search type. */
     @FXML private TableColumn<ObservablePlan, PlannerTypes> colSearchType;
+    
+    /** The col reasoning type. */
     @FXML private TableColumn<ObservablePlan, ReasoningTypes> colReasoningType;
+    
+    /** The col cost type. */
     @FXML private TableColumn<ObservablePlan, CostTypes> colCostType;
+    
+    /** The col cost. */
     @FXML private TableColumn<ObservablePlan, String> colCost;
+    
+    /** The settings timeout text field. */
     @FXML private TextField settingsTimeoutTextField;
+    
+    /** The settings max iterations text field. */
     @FXML private TextField settingsMaxIterationsTextField;
+    
+    /** The settings query match interval text field. */
     @FXML private TextField settingsQueryMatchIntervalTextField;
+    
+    /** The settings blocking interval text field. */
     @FXML private TextField settingsBlockingIntervalTextField;
+    
+    /** The settings output tuples text field. */
     @FXML private TextField settingsOutputTuplesTextField;
+    
+    /** The settings planner type list. */
     @FXML private ComboBox<PlannerTypes> settingsPlannerTypeList;
+    
+    /** The settings reasoning type list. */
     @FXML private ComboBox<ReasoningTypes> settingsReasoningTypeList;
+    
+    /** The settings cost type list. */
     @FXML private ComboBox<CostTypes> settingsCostTypeList;
+    
+    /** The query text area. */
     @FXML private TextArea queryTextArea;
+	
+	/** The query plan area. */
 	@FXML private SplitPane queryPlanArea;
+	
+	/** The plan settings area. */
 	@FXML private HBox planSettingsArea;
+	
+	/** The plan view area. */
 	@FXML private ListView<Text> planViewArea;
+	
+	/** The proof view area. */
 	@FXML private TextArea proofViewArea;
+	
+	/** The plans table view. */
 	@FXML TableView<ObservablePlan> plansTableView;
+    
+    /** The settings executor type list. */
     @FXML ComboBox<ExecutorTypes> settingsExecutorTypeList;
+    
+    /** The run planner button. */
     @FXML Button runPlannerButton;
+    
+    /** The run runtime button. */
     @FXML Button runRuntimeButton;
+	
+	/** The queries edit menu button. */
 	@FXML private MenuButton queriesEditMenuButton;
+	
+	/** The schemas edit menu button. */
 	@FXML private MenuButton schemasEditMenuButton;
     
 	/** Queue containing the next widget to refresh on the interface. */
 	private ConcurrentLinkedQueue<Object> dataQueue = new ConcurrentLinkedQueue<>();
 
+    /**
+     * Delete selected schemas.
+     *
+     * @param event the event
+     */
     @FXML
     void deleteSelectedSchemas(ActionEvent event) {
     	if (!event.isConsumed()) {
@@ -207,7 +262,8 @@ public class PDQController {
     
     /**
      * Delete the schema and all associated query/plans from the system.
-     * @param schema
+     *
+     * @param schema the schema
      */
     private void deleteSchema(ObservableSchema schema) {
 		if (schema != null ) {
@@ -226,8 +282,9 @@ public class PDQController {
     
     /**
      * Delete the given relation from the given schema.
-     * @param schema
-     * @param relation
+     *
+     * @param schema the schema
+     * @param relation the relation
      */
     private void deleteRelation(ObservableSchema schema, Relation relation) {
 		// TODO
@@ -236,14 +293,20 @@ public class PDQController {
     
     /**
      * Delete the given dependency from the given schema.
-     * @param schema
-     * @param dependency
+     *
+     * @param schema the schema
+     * @param dependency the dependency
      */
     private void deleteDependency(ObservableSchema schema, Constraint dependency) {
 		// TODO
     	log.warn("Attempting to delete " + dependency + " from " + schema);
     }
 
+    /**
+     * Delete selected queries.
+     *
+     * @param event the event
+     */
     @FXML
     void deleteSelectedQueries(ActionEvent event) {
     	if (!event.isConsumed()) {
@@ -259,8 +322,9 @@ public class PDQController {
 
     /**
      * Delete the query and all associated plans from the system.
-     * @param schema
-     * @param query
+     *
+     * @param schema the schema
+     * @param query the query
      */
     private void deleteQuery(ObservableSchema schema, ObservableQuery query) {
 		if (query != null ) {
@@ -280,8 +344,8 @@ public class PDQController {
     
     /**
      * Called from the query list view context menu. Opens an empty query.
-     * 
-     * @param event
+     *
+     * @param event the event
      */
     @FXML void newQueryPressed(ActionEvent event) {
     	Schema schema = this.currentSchema.get().getSchema();
@@ -291,6 +355,11 @@ public class PDQController {
 		this.dataQueue.add(query);
     }
    
+    /**
+     * Duplicate selected query pressed.
+     *
+     * @param event the event
+     */
     @FXML void duplicateSelectedQueryPressed(ActionEvent event) {
     	ObservableList<ObservableQuery> selected = this.queriesListView.getSelectionModel().getSelectedItems();
     	
@@ -303,6 +372,11 @@ public class PDQController {
     	}
     }
 
+    /**
+     * Delete selected plans.
+     *
+     * @param event the event
+     */
     @FXML void deleteSelectedPlans(ActionEvent event) {
     	if (!event.isConsumed()) {
     		event.consume();
@@ -318,8 +392,10 @@ public class PDQController {
 
     /**
      * Delete the plan and associated configuration from the system.
-     * @param schema
-     * @param query
+     *
+     * @param schema the schema
+     * @param query the query
+     * @param plan the plan
      */
     private void deletePlan(ObservableSchema schema, ObservableQuery query, ObservablePlan plan) {
 		plan.destroy();
@@ -328,7 +404,8 @@ public class PDQController {
 
 	/**
 	 * Action that open's the planner window and start a new planning session.
-	 * @param event
+	 *
+	 * @param event the event
 	 */
     @FXML void openPlannerWindow(ActionEvent event) {
     	if (!event.isConsumed()) {
@@ -369,6 +446,12 @@ public class PDQController {
     	}
     }
     
+	/**
+	 * To double.
+	 *
+	 * @param s the s
+	 * @return the double
+	 */
 	private static Double toDouble(String s) {
 		try {
 			return NumberFormat.getInstance().parse(s).doubleValue();
@@ -377,6 +460,12 @@ public class PDQController {
 		}
 	}
     
+	/**
+	 * To integer.
+	 *
+	 * @param s the s
+	 * @return the integer
+	 */
 	private static Integer toInteger(String s) {
 		try {
 			return NumberFormat.getInstance().parse(s).intValue();
@@ -387,7 +476,8 @@ public class PDQController {
 
 	/**
 	 * Action that open's either the relation or dependencies inspector window.
-	 * @param event
+	 *
+	 * @param event the event
 	 */
 	@FXML void openSchemaDetails(MouseEvent event) {
     	if (!event.isConsumed()) {
@@ -458,7 +548,8 @@ public class PDQController {
 
 	/**
 	 * Action that open's the query inspector window.
-	 * @param event
+	 *
+	 * @param event the event
 	 */
 	@FXML void openQueryDetails(MouseEvent event) {
     	if (!event.isConsumed()) {
@@ -499,7 +590,8 @@ public class PDQController {
 
 	/**
 	 * Action that open's the runtime window and start a new runtime session.
-	 * @param event
+	 *
+	 * @param event the event
 	 */
     @FXML void openRuntimeWindow(ActionEvent event) {
     	if (!event.isConsumed()) {
@@ -533,7 +625,8 @@ public class PDQController {
 
 	/**
 	 * Action that open's the runtime window and start a new runtime session.
-	 * @param event
+	 *
+	 * @param event the event
 	 */
     @FXML void openImportSchemaWindow(ActionEvent event) {
     	if (!event.isConsumed()) {
@@ -569,7 +662,8 @@ public class PDQController {
 
 	/**
 	 * Action that open's the runtime window and start a new runtime session.
-	 * @param event
+	 *
+	 * @param event the event
 	 */
     @FXML void openImportQueryWindow(ActionEvent event) {
     	if (!event.isConsumed()) {
@@ -605,7 +699,8 @@ public class PDQController {
 
 	/**
 	 * Action that create a new planning configuration in the plan table view.
-	 * @param event
+	 *
+	 * @param event the event
 	 */
     @FXML void newSettings(ActionEvent event) {
     	PlannerParameters params = new PlannerParameters();
@@ -623,8 +718,9 @@ public class PDQController {
     }
    
     /**
-     * 
-     * @param e
+     * Gets the originating window.
+     *
+     * @param e the e
      * @return the window the given event was generated from.
      */
     private Window getOriginatingWindow(Event e) {
@@ -748,8 +844,9 @@ public class PDQController {
 		};
 
 	/**
-	 * Selects a schema from the UI
-	 * @param newValue
+	 * Selects a schema from the UI.
+	 *
+	 * @param newValue the new value
 	 */
 	void schemaSelected(TreeItem<String> newValue) {
 		String oldName = null;
@@ -824,6 +921,11 @@ public class PDQController {
 			}
 		};
 
+    /**
+     * Display plan.
+     *
+     * @param p the p
+     */
     void displayPlan(Plan p) {
 		PDQController.this.planViewArea.getItems().clear();
 		if (p instanceof LeftDeepPlan) {
@@ -841,6 +943,11 @@ public class PDQController {
 		} 					
     }
 
+    /**
+     * Display proof.
+     *
+     * @param p the p
+     */
     void displayProof(Proof p) {
 		PDQController.this.proofViewArea.clear();
 		if (p != null) {
@@ -851,6 +958,11 @@ public class PDQController {
     }
     
 
+    /**
+     * Display settings.
+     *
+     * @param p the p
+     */
     void displaySettings(ObservablePlan p) {
 		PDQController.this.settingsTimeoutTextField.setText(PDQController.nullToEmpty(p.getTimeout()));
 		PDQController.this.settingsMaxIterationsTextField.setText(PDQController.nullToEmpty(p.getMaxIterations()));
@@ -861,6 +973,11 @@ public class PDQController {
 		PDQController.this.settingsCostTypeList.getSelectionModel().select(p.getCostType());
     }
 
+    /**
+     * Sets the settings editable.
+     *
+     * @param editable the new settings editable
+     */
     void setSettingsEditable(boolean editable) {
 		PDQController.this.settingsTimeoutTextField.setEditable(editable);
 		PDQController.this.settingsMaxIterationsTextField.setEditable(editable);
@@ -871,40 +988,47 @@ public class PDQController {
 		PDQController.this.settingsCostTypeList.setDisable(!editable);
     }
 
-    /** The application's user-specific work directory */
+    /**  The application's user-specific work directory. */
 	private final File workDirectory;
 
-    /** The user's schema collection */
+    /**  The user's schema collection. */
 	final Map<String, ObservableSchema> schemas = new LinkedHashMap<>();
 
-    /** The user's query collection */
+    /**  The user's query collection. */
 	final Map<String, ObservableList<ObservableQuery>> queries = new HashMap<>();
 
-    /** The user's plan collection */
+    /**  The user's plan collection. */
 	final Map<Pair<ObservableSchema, ObservableQuery>, ObservableList<ObservablePlan>> plans = new HashMap<>();
 	
-	/** The schema currently selected */
+	/**  The schema currently selected. */
 	SimpleObjectProperty<ObservableSchema> currentSchema = new SimpleObjectProperty<>();
 	
-	/** The schema currently selected tree cells */
+	/**  The schema currently selected tree cells. */
 	private TreeItem<String> currentSchemaViewitems;
 	
-	/** The query currently selected */
+	/**  The query currently selected. */
 	SimpleObjectProperty<ObservableQuery> currentQuery = new SimpleObjectProperty<>();
 	
-	/** The plan currently selected */
+	/**  The plan currently selected. */
 	SimpleObjectProperty<ObservablePlan> currentPlan = new SimpleObjectProperty<>();
 
 	/**
 	 * Default construction, sets up the work directory, and loads all of its
 	 * content.
-	 * @throws UserInterfaceException
+	 *
+	 * @throws UserInterfaceException the user interface exception
 	 */
 	public PDQController() throws UserInterfaceException {
 		this.workDirectory = PDQApplication.setupWorkDirectory();
 		this.prepareTimeline();
 	}
 	
+	/**
+	 * Null to empty.
+	 *
+	 * @param o the o
+	 * @return the string
+	 */
 	private static String nullToEmpty(Object o) {
 		String result = String.valueOf(o).trim();
 		if (o == null || result.isEmpty()) {
@@ -914,7 +1038,7 @@ public class PDQController {
 	}
 	
 	/**
-	 * Loads schemas present in the work directory
+	 * Loads schemas present in the work directory.
 	 */
 	private void loadSchemas() {
 		File schemaDir = new File(this.workDirectory.getAbsolutePath() + '/' + SCHEMA_DIRECTORY);
@@ -931,7 +1055,9 @@ public class PDQController {
 	}
 	
 	/**
-	 * Saves a schema
+	 * Saves a schema.
+	 *
+	 * @param schema the schema
 	 */
 	private void saveSchema(ObservableSchema schema) {
 		File file = schema.getFile();
@@ -949,7 +1075,9 @@ public class PDQController {
 	}
 	
 	/**
-	 * Saves a query
+	 * Saves a query.
+	 *
+	 * @param query the query
 	 */
 	private void saveQuery(ObservableQuery query) {
 		File file = query.getFile();
@@ -967,7 +1095,9 @@ public class PDQController {
 	}
 	
 	/**
-	 * Saves a plan
+	 * Saves a plan.
+	 *
+	 * @param plan the plan
 	 */
 	void savePlan(ObservablePlan plan) {
 		File file = plan.getPlanFile();
@@ -991,7 +1121,7 @@ public class PDQController {
 	}
 	
 	/**
-	 * Loads queries present in the work directory
+	 * Loads queries present in the work directory.
 	 */
 	private void loadQueries() {
 		File queryDir = new File(this.workDirectory.getAbsolutePath() + '/' + QUERY_DIRECTORY);
@@ -1014,12 +1144,18 @@ public class PDQController {
 		}
 	}
 	
+	/**
+	 * Make prefix.
+	 *
+	 * @param schema the schema
+	 * @return the string
+	 */
 	private static String makePrefix(ObservableSchema schema) {
 		return schema.getFile().getName().replace(SCHEMA_FILENAME_SUFFIX, "") + "_";
 	}
 	
 	/**
-	 * Loads queries present in the work directory
+	 * Loads queries present in the work directory.
 	 */
 	private void loadPlans() {
 		File planDir = new File(this.workDirectory.getAbsolutePath() + '/' + PLAN_DIRECTORY);
@@ -1061,10 +1197,24 @@ public class PDQController {
 		}
 	}
 	
+	/**
+	 * Make prefix.
+	 *
+	 * @param query the query
+	 * @return the string
+	 */
 	private static String makePrefix(ObservableQuery query) {
 		return query.getFile().getName().replace(QUERY_FILENAME_SUFFIX, "") + "_";
 	}
 	
+	/**
+	 * Replace suffix.
+	 *
+	 * @param f the f
+	 * @param oldSuffix the old suffix
+	 * @param newSuffix the new suffix
+	 * @return the string
+	 */
 	private static String replaceSuffix(File f, String oldSuffix, String newSuffix) {
 		return f.getParentFile().getAbsolutePath() + '/' + f.getName().replace(oldSuffix, newSuffix);
 	}
@@ -1083,6 +1233,9 @@ public class PDQController {
 	
 	/**
 	 * Loads the schema into the left-hand side tree view.
+	 *
+	 * @param s the s
+	 * @return the tree item
 	 */
 	private TreeItem<String> loadTreeItem(ObservableSchema s) {
 		TreeItem<String> result = new TreeItem<>(s.getName());
@@ -1093,6 +1246,9 @@ public class PDQController {
 	
 	/**
 	 * Reloads the schema into the left-hand side tree view.
+	 *
+	 * @param item the item
+	 * @param s the s
 	 */
 	private void reloadTreeItem(TreeItem<String> item, ObservableSchema s) {
 		item.getChildren().clear();
@@ -1145,6 +1301,14 @@ public class PDQController {
 		}
 	}
 
+	/**
+	 * List files.
+	 *
+	 * @param directory the directory
+	 * @param prefix the prefix
+	 * @param suffix the suffix
+	 * @return the file[]
+	 */
 	private static File[] listFiles(File directory, final String prefix, final String suffix) {
 		Preconditions.checkArgument(directory.isDirectory(), "Invalid internal schema directory " + directory.getAbsolutePath());
 		return directory.listFiles(new FilenameFilter() {
@@ -1156,7 +1320,7 @@ public class PDQController {
 	}
 
 	/**
-	 * Update the plan/search views 
+	 * Update the plan/search views.
 	 */
 	void updateWidgets() {
 		while (this.dataQueue != null && !this.dataQueue.isEmpty()) {

@@ -5,6 +5,7 @@ import uk.ac.ox.cs.pdq.InconsistentParametersException;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 
+// TODO: Auto-generated Javadoc
 /**
  * Check high-level planner parameters consistency.
  *
@@ -13,15 +14,24 @@ import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 public class PlannerConsistencyChecker implements ConsistencyChecker<PlannerParameters, CostParameters, ReasoningParameters> {
 
 	/**
+	 * Check.
+	 *
 	 * @param p PlannerParameters
 	 * @param c CostParameters
-	 * @throws InconsistentParametersException
+	 * @param r the r
+	 * @throws InconsistentParametersException the inconsistent parameters exception
 	 * @see uk.ac.ox.cs.pdq.ConsistencyChecker#check(PlannerParameters)
 	 */
 	@Override
 	public void check(PlannerParameters p, CostParameters c, ReasoningParameters r) throws InconsistentParametersException {
 	}
 	
+	/**
+	 * Checks if is left deep planner.
+	 *
+	 * @param p the p
+	 * @return true, if is left deep planner
+	 */
 	private boolean isLeftDeepPlanner(PlannerParameters p) {
 		switch(p.getPlannerType()) {
 		case DAG_GENERIC:

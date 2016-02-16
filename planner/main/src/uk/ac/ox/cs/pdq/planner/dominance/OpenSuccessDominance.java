@@ -3,6 +3,7 @@ package uk.ac.ox.cs.pdq.planner.dominance;
 import uk.ac.ox.cs.pdq.cost.estimators.SimpleCostEstimator;
 import uk.ac.ox.cs.pdq.plan.Plan;
 
+// TODO: Auto-generated Javadoc
 /**
  * Open success dominance.
  * A plan p success dominates another closed plan ', if p is successful and has cost < the cost of p'.
@@ -13,7 +14,10 @@ import uk.ac.ox.cs.pdq.plan.Plan;
  */
 public class OpenSuccessDominance extends SuccessDominance{
 
+	/** The estimator. */
 	private final SimpleCostEstimator<Plan> estimator;
+	
+	/** The closed dominance. */
 	private final ClosedSuccessDominance closedDominance;
 
 	/**
@@ -28,8 +32,10 @@ public class OpenSuccessDominance extends SuccessDominance{
 	}
 
 	/**
-	 * @param source
-	 * @param target
+	 * Checks if is dominated.
+	 *
+	 * @param source the source
+	 * @param target the target
 	 * @return true if the source plan is success dominated by the target
 	 */
 	@Override
@@ -45,6 +51,8 @@ public class OpenSuccessDominance extends SuccessDominance{
 	}
 
 	/**
+	 * Clone.
+	 *
 	 * @return OpenSuccessDominance
 	 */
 	@Override

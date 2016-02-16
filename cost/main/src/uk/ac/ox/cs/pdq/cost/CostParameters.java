@@ -9,6 +9,7 @@ import java.util.Properties;
 import org.apache.log4j.Logger;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * Hold the cost-related parameters.
  *
@@ -237,7 +238,7 @@ public class CostParameters extends uk.ac.ox.cs.pdq.Parameters {
 	/**
 	 * Sets the black box database driver.
 	 *
-	 * @param databaseName String
+	 * @param databaseDriver the new black box database driver
 	 */
 	public void setBlackBoxDatabaseDriver(String databaseDriver) {
 		this.blackBoxDatabaseDriver = databaseDriver;

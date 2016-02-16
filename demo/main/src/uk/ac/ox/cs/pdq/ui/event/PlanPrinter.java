@@ -6,6 +6,7 @@ import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 
 import com.google.common.eventbus.Subscribe;
 
+// TODO: Auto-generated Javadoc
 /**
  * Statistics logger to high-level explorer informations.
  * 
@@ -13,11 +14,12 @@ import com.google.common.eventbus.Subscribe;
  */
 public class PlanPrinter implements EventHandler {
 
+	/** The last plan. */
 	private LeftDeepPlan lastPlan = null;
 	
 
 	/**
-	 * Default constructor
+	 * Default constructor.
 	 */
 	public PlanPrinter() {
 		super();
@@ -27,7 +29,8 @@ public class PlanPrinter implements EventHandler {
 	/**
 	 * Event-triggered, records information about the first/best plan found so
 	 * far. 
-	 * @param plan
+	 *
+	 * @param plan the plan
 	 */
 	@Subscribe
 	public void process(LeftDeepPlan plan) {

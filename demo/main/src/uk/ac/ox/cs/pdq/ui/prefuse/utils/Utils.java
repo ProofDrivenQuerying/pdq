@@ -17,8 +17,19 @@ import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
 import uk.ac.ox.cs.pdq.ui.prefuse.types.EdgeTypes;
 import uk.ac.ox.cs.pdq.ui.prefuse.types.PathTypes;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Utils.
+ */
 public class Utils {
 	
+	/**
+	 * Adds the node.
+	 *
+	 * @param graph the graph
+	 * @param searchNode the search node
+	 * @return the node
+	 */
 	public static Node addNode(Graph graph, SearchNode searchNode) {
 		Node n = graph.addNode();
 		n.set("id", searchNode.getId());
@@ -30,6 +41,15 @@ public class Utils {
 		return n;
 	}
 	
+	/**
+	 * Adds the edge.
+	 *
+	 * @param graph the graph
+	 * @param source the source
+	 * @param target the target
+	 * @param type the type
+	 * @return the edge
+	 */
 	public static Edge addEdge(Graph graph, SearchNode source, SearchNode target, EdgeTypes type) {
 		Node s = toNode(graph, source); 
 		Node t = toNode(graph, target); 
@@ -43,6 +63,13 @@ public class Utils {
 	}
 	
 	
+	/**
+	 * To node.
+	 *
+	 * @param graph the graph
+	 * @param searchNode the search node
+	 * @return the node
+	 */
 	public static Node toNode(Graph graph, SearchNode searchNode) {
 		for(int n = 0; n < graph.getNodeCount(); ++n) {
 			Node node = graph.getNode(n);
@@ -54,6 +81,13 @@ public class Utils {
 	}
 	
 	
+	/**
+	 * To node.
+	 *
+	 * @param graph the graph
+	 * @param id the id
+	 * @return the node
+	 */
 	public static Node toNode(Graph graph, Integer id) {
 		for(int n = 0; n < graph.getNodeCount(); ++n) {
 			Node node = graph.getNode(n);
@@ -64,6 +98,14 @@ public class Utils {
 		return null;
 	}
 	
+	/**
+	 * Modify node property.
+	 *
+	 * @param graph the graph
+	 * @param nodeId the node id
+	 * @param attribute the attribute
+	 * @param value the value
+	 */
 	public static void modifyNodeProperty(Graph graph, Integer nodeId, String attribute, Object value) {
 		for(int n = 0; n < graph.getNodeCount(); ++n) {
 			Node node = graph.getNode(n);
@@ -73,6 +115,14 @@ public class Utils {
 		}
 	}
 	
+	/**
+	 * Modify node property.
+	 *
+	 * @param graph the graph
+	 * @param nodeIds the node ids
+	 * @param attribute the attribute
+	 * @param value the value
+	 */
 	public static void modifyNodeProperty(Graph graph, Collection<Integer> nodeIds, String attribute, Object value) {
 		for(int n = 0; n < graph.getNodeCount(); ++n) {
 			Node node = graph.getNode(n);
@@ -83,6 +133,13 @@ public class Utils {
 	}
 	
 	
+	/**
+	 * To node.
+	 *
+	 * @param graph the graph
+	 * @param nodeIds the node ids
+	 * @return the list
+	 */
 	public static List<Node> toNode(Graph graph, List<Integer> nodeIds) {
 		if(nodeIds == null) {
 			return null;
@@ -94,6 +151,15 @@ public class Utils {
 		return n;
 	}
 	
+	/**
+	 * To node item.
+	 *
+	 * @param visualization the visualization
+	 * @param nodeGroup the node group
+	 * @param graph the graph
+	 * @param nodeIds the node ids
+	 * @return the list
+	 */
 	public static List<NodeItem> toNodeItem(Visualization visualization, String nodeGroup, Graph graph, List<Integer> nodeIds) {
 		if(nodeIds == null) {
 			return null;
@@ -108,6 +174,17 @@ public class Utils {
 	}
 	
 	
+	/**
+	 * Update aggregate table.
+	 *
+	 * @param visualization the visualization
+	 * @param nodeGroup the node group
+	 * @param graph the graph
+	 * @param at the at
+	 * @param nodes the nodes
+	 * @param isVisible the is visible
+	 * @return the aggregate table
+	 */
 	public static AggregateTable updateAggregateTable(Visualization visualization, String nodeGroup, Graph graph, AggregateTable at, List<List<Integer>> nodes, Boolean isVisible) {
 		at.clear();
 		int i = 0;

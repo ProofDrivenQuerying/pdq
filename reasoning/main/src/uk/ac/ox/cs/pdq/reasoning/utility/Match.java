@@ -10,6 +10,7 @@ import uk.ac.ox.cs.pdq.fol.Variable;
 import com.google.common.base.Preconditions;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * A trigger or query match.
  * (From modern dependency theory notes)
@@ -28,7 +29,7 @@ import com.google.common.base.Preconditions;
  */
 public class Match {
 
-	/** The dependency or query that will be grounded using an homomorphism**/
+	/**  The dependency or query that will be grounded using an homomorphism*. */
 	protected final Evaluatable query;
 
 	/** The mapping of query's variables to chase constants.*/
@@ -46,6 +47,8 @@ public class Match {
 	}
 
 	/**
+	 * Gets the mapping.
+	 *
 	 * @return Map<Variable,Constant>
 	 */
 	public Map<Variable, Constant> getMapping() {
@@ -54,6 +57,8 @@ public class Match {
 
 
 	/**
+	 * Gets the query.
+	 *
 	 * @return Evaluatable
 	 */
 	public Evaluatable getQuery() {
@@ -61,6 +66,8 @@ public class Match {
 	}
 
 	/**
+	 * Equals.
+	 *
 	 * @param o Object
 	 * @return boolean
 	 */
@@ -78,6 +85,8 @@ public class Match {
 	}
 
 	/**
+	 * Hash code.
+	 *
 	 * @return int
 	 */
 	@Override
@@ -86,6 +95,8 @@ public class Match {
 	}
 
 	/**
+	 * To string.
+	 *
 	 * @return String
 	 */
 	@Override

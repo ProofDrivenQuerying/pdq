@@ -12,6 +12,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * Scan over a relation
  * Julien: although this class is only marginally used, please do not delete.

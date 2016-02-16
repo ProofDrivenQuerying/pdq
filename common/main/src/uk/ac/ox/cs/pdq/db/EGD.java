@@ -25,8 +25,9 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
+// TODO: Auto-generated Javadoc
 /**
- * A dependency of the form \delta = \forall \vec{x} \rho(\vec{x}) --> x_i = x_j where \rho is a conjunction of atoms
+ * A dependency of the form \delta = \forall \vec{x} \rho(\vec{x}) --> x_i = x_j where \rho is a conjunction of atoms.
  *
  * @author Efthymia Tsamoura
  */
@@ -34,13 +35,15 @@ public class EGD
 		extends Implication<Conjunction<Predicate>, Conjunction<Equality>>
 		implements Constraint<Conjunction<Predicate>, Conjunction<Equality>> {
 
-	/** The dependency's universally quantified variables */
+	/**  The dependency's universally quantified variables. */
 	protected List<Variable> universal;
 	
-	/** The dependency's constants */
+	/**  The dependency's constants. */
 	protected Collection<TypedConstant<?>> constants = new LinkedHashSet<>();
 	
 	/**
+	 * Instantiates a new egd.
+	 *
 	 * @param left The left-hand side conjunction of the dependency
 	 * @param right The right-hand side conjunction of the dependency
 	 */
@@ -55,6 +58,8 @@ public class EGD
 	}
 	
 	/**
+	 * Gets the universal.
+	 *
 	 * @return List<Variable>
 	 */
 	public List<Variable> getUniversal() {
@@ -62,6 +67,8 @@ public class EGD
 	}
 
 	/**
+	 * Gets the free.
+	 *
 	 * @return List<Term>
 	 * @see uk.ac.ox.cs.pdq.fol.Evaluatable#getFree()
 	 */
@@ -71,6 +78,8 @@ public class EGD
 	}
 
 	/**
+	 * Gets the left.
+	 *
 	 * @return L
 	 * @see uk.ac.ox.cs.pdq.db.Constraint#getLeft()
 	 */
@@ -80,6 +89,8 @@ public class EGD
 	}
 
 	/**
+	 * Gets the right.
+	 *
 	 * @return R
 	 * @see uk.ac.ox.cs.pdq.db.Constraint#getRight()
 	 */
@@ -89,6 +100,8 @@ public class EGD
 	}
 
 	/**
+	 * Gets the terms.
+	 *
 	 * @return List<Term>
 	 * @see uk.ac.ox.cs.pdq.fol.Formula#getTerms()
 	 */
@@ -102,6 +115,8 @@ public class EGD
 
 
 	/**
+	 * Gets the schema constants.
+	 *
 	 * @return Collection<TypedConstant<?>>
 	 * @see uk.ac.ox.cs.pdq.db.Constraint#getSchemaConstants()
 	 */
@@ -111,6 +126,8 @@ public class EGD
 	}
 
 	/**
+	 * Fire.
+	 *
 	 * @param mapping Map<Variable,Term>
 	 * @param canonicalNames boolean
 	 * @return TGD<L,R>
@@ -122,9 +139,10 @@ public class EGD
 	}
 
 	/**
-	 * @param mapping
-	 * @return
-	 * 		If canonicalNames is TRUE returns a copy of the input mapping
+	 * Skolemize mapping.
+	 *
+	 * @param mapping the mapping
+	 * @return 		If canonicalNames is TRUE returns a copy of the input mapping
 	 * 		augmented such that Skolem constants are produced for
 	 *      the existentially quantified variables
 	 */
@@ -138,11 +156,11 @@ public class EGD
 	}
 
 	/**
-	 * @param mapping
-	 * @param canonicalNames
-	 * 		True if we assign Skolem constants to the existentially quantified variables
-	 * @return
-	 * 		the grounded dependency using the input mapping.
+	 * Ground.
+	 *
+	 * @param mapping the mapping
+	 * @param canonicalNames 		True if we assign Skolem constants to the existentially quantified variables
+	 * @return 		the grounded dependency using the input mapping.
 	 *      If canonicalNames is TRUE then skolem constants are produced for
 	 *      the existentially quantified variables
 	 */
@@ -151,6 +169,8 @@ public class EGD
 	}
 
 	/**
+	 * Ground.
+	 *
 	 * @param mapping Map<Variable,Term>
 	 * @return TGD<L,R>
 	 * @see uk.ac.ox.cs.pdq.formula.Formula#ground(Map<Variable,Term>)
@@ -161,6 +181,8 @@ public class EGD
 	}
 
 	/**
+	 * Gets the both side variables.
+	 *
 	 * @return Set<Variable>
 	 * @see uk.ac.ox.cs.pdq.db.Constraint#getBothSideVariables()
 	 */
@@ -175,11 +197,11 @@ public class EGD
 	 * Let R be a relation of arity n and x_k be its key.
 	 * The EGD that captures the EGD dependency is given by
 	 * R(x_1,...,x_k,...x_n) ^ R(x_1',...,x_k,...x_n') --> \Wedge_{i \neq k} x_i=x_i'
-	 * @param signature
-	 * @param attributes
-	 * @param keys
-	 * @return
-	 * 		a collection of EGDs for the input relation and keys
+	 *
+	 * @param signature the signature
+	 * @param attributes the attributes
+	 * @param keys the keys
+	 * @return 		a collection of EGDs for the input relation and keys
 	 */
 	public static EGD getEGDs(Signature signature, List<Attribute> attributes, Collection<Attribute> keys) {
 		List<Term> leftTerms = Utility.typedToTerms(attributes);
@@ -208,11 +230,20 @@ public class EGD
 		return new EGD(head, Conjunction.of(equalityPredicates));
 	}
 	
+	/**
+	 * Gets the EG ds.
+	 *
+	 * @param relation the relation
+	 * @param keys the keys
+	 * @return the EG ds
+	 */
 	public static EGD getEGDs(Relation relation, Collection<Attribute> keys) {
 		return getEGDs(new Signature(relation.getName(), relation.getArity()), relation.getAttributes(), keys);
 	}
 
 	/**
+	 * Equals.
+	 *
 	 * @param o Object
 	 * @return boolean
 	 */
@@ -231,6 +262,8 @@ public class EGD
 	}
 
 	/**
+	 * Hash code.
+	 *
 	 * @return int
 	 */
 	@Override
@@ -239,6 +272,8 @@ public class EGD
 	}
 
 	/**
+	 * To string.
+	 *
 	 * @return String
 	 */
 	@Override

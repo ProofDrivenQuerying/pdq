@@ -21,37 +21,45 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
- * @author Efthymia Tsamoura
+ * The Class JoinCommand.
  *
+ * @author Efthymia Tsamoura
  */
 public class JoinCommand implements Command{
 
-	/** The left input table **/
+	/**  The left input table *. */
 	private final Table left;
 	
-	/** The right input table **/
+	/**  The right input table *. */
 	private final Table right;
 	
-	/** The output table **/
+	/**  The output table *. */
 	private final Table output;
 	
-	/** The join predicates**/
+	/**  The join predicates*. */
 	private final Predicate predicates;
 	
-	/** Caches the constraint that captures this access command **/
+	/**  Caches the constraint that captures this access command *. */
 	private final TGD command;
 	
+	/**
+	 * Instantiates a new join command.
+	 *
+	 * @param left the left
+	 * @param right the right
+	 */
 	public JoinCommand(Table left, Table right) {
 		this(left, right, initNaturalJoin(left, right));
 	}
 	
 	/**
-	 * Creates a join command with the given input tables and input join predicates
-	 * @param left
-	 * @param right
-	 * @param predicates
+	 * Creates a join command with the given input tables and input join predicates.
+	 *
+	 * @param left the left
+	 * @param right the right
+	 * @param predicates the predicates
 	 */
 	public JoinCommand(Table left, Table right, Predicate predicates) {
 		Preconditions.checkNotNull(left);
@@ -68,10 +76,11 @@ public class JoinCommand implements Command{
 	}
 	
 	/**
-	 * Finds the equijoin predicates based on the attribute names of the input tables
-	 * @param ltable
-	 * @param rtable
-	 * @return
+	 * Finds the equijoin predicates based on the attribute names of the input tables.
+	 *
+	 * @param ltable the ltable
+	 * @param rtable the rtable
+	 * @return the predicate
 	 */
 	private static Predicate initNaturalJoin(Table ltable, Table rtable) {
 		Multimap<Typed, Integer> joinVariables = LinkedHashMultimap.create();
@@ -107,24 +116,44 @@ public class JoinCommand implements Command{
 		return new ConjunctivePredicate<>(equalities);
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.plan.Command#getOutput()
+	 */
 	@Override
 	public Table getOutput() {
 		return this.output;
 	}
 	
+	/**
+	 * Gets the left.
+	 *
+	 * @return the left
+	 */
 	public Table getLeft() {
 		return this.left;
 	}
 	
+	/**
+	 * Gets the right.
+	 *
+	 * @return the right
+	 */
 	public Table getRight() {
 		return this.right;
 	}
 
+	/**
+	 * Gets the predicates.
+	 *
+	 * @return the predicates
+	 */
 	public Predicate getPredicates() {
 		return predicates;
 	}
 	
 	/**
+	 * Equals.
+	 *
 	 * @param o Object
 	 * @return boolean
 	 */
@@ -143,6 +172,8 @@ public class JoinCommand implements Command{
 	}
 
 	/**
+	 * Hash code.
+	 *
 	 * @return int
 	 */
 	@Override
@@ -151,6 +182,8 @@ public class JoinCommand implements Command{
 	}
 
 	/**
+	 * To string.
+	 *
 	 * @return String
 	 */
 	@Override

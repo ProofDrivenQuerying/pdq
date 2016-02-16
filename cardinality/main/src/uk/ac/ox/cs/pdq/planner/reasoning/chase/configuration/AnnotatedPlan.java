@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration;
 
 import java.util.Collection;
@@ -15,28 +18,29 @@ import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState;
 import uk.ac.ox.cs.pdq.reasoning.utility.Match;
 
+// TODO: Auto-generated Javadoc
 /**
- * A configuration which uses the chase as a proof system 
- * @author Efthymia Tsamoura
+ * A configuration which uses the chase as a proof system .
  *
+ * @author Efthymia Tsamoura
+ * @param <P> the generic type
  */
 public abstract class AnnotatedPlan<P extends Plan> implements Configuration<P> {
 
 	/** The configuration's state. This can be either a tree of bags or a list of facts */
 	protected final ChaseState state;
 
-	/** The plan that corresponds to this configuration */
+	/**  The plan that corresponds to this configuration. */
 	protected P plan;
 
-	/** Output constants */
+	/**  Output constants. */
 	protected final Collection<Constant> output;
 
 	/**
-	 * 
-	 * @param state
-	 * 		The state of this configuration.
-	 * @param output
-	 * 		The output constants
+	 * Instantiates a new annotated plan.
+	 *
+	 * @param state 		The state of this configuration.
+	 * @param output 		The output constants
 	 */
 	public AnnotatedPlan(
 			ChaseState state,
@@ -46,11 +50,18 @@ public abstract class AnnotatedPlan<P extends Plan> implements Configuration<P> 
 		this.output = output;
 	}
 	
+	/**
+	 * Gets the state.
+	 *
+	 * @return the state
+	 */
 	public ChaseState getState() {
 		return this.state;
 	}
 
 	/**
+	 * Gets the plan.
+	 *
 	 * @return P
 	 * @see uk.ac.ox.cs.pdq.reasoning.Configuration#getPlan()
 	 */
@@ -59,12 +70,17 @@ public abstract class AnnotatedPlan<P extends Plan> implements Configuration<P> 
 		return this.plan;
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.planner.reasoning.Configuration#setPlan(uk.ac.ox.cs.pdq.plan.Plan)
+	 */
 	@Override
 	public void setPlan(P plan) {
 		this.plan = plan;
 	}
 
 	/**
+	 * Gets the output.
+	 *
 	 * @return the configuration's output facts
 	 */
 	public Collection<Constant> getOutput() {
@@ -72,6 +88,8 @@ public abstract class AnnotatedPlan<P extends Plan> implements Configuration<P> 
 	}
 
 	/**
+	 * Gets the output facts.
+	 *
 	 * @return the configuration's output facts
 	 */
 	public Collection<Predicate> getOutputFacts() {
@@ -80,32 +98,40 @@ public abstract class AnnotatedPlan<P extends Plan> implements Configuration<P> 
 	
 	/**
 	 * Closes this.configuration using the input dependencies
-	 * @throws PlannerException
-	 * @throws LimitReachedException
+	 *
+	 * @param chaser the chaser
+	 * @param query the query
+	 * @param dependencies the dependencies
+	 * @throws PlannerException the planner exception
+	 * @throws LimitReachedException the limit reached exception
 	 */
 	public void reasonUntilTermination(Chaser chaser, Query<?> query, Collection<? extends Constraint> dependencies) throws PlannerException, LimitReachedException {
 		chaser.reasonUntilTermination(this.state, query, dependencies);
 	}
 
 	/**
-	 * Fires the dependencies in the input matches
-	 * @param matches
+	 * Fires the dependencies in the input matches.
+	 *
+	 * @param matches the matches
 	 */
 	public void chaseStep(List<Match> matches) {
 		this.state.chaseStep(matches);
 	}
 
 	/**
-	 * 
-	 * @param query
-	 * @return
-	 * 		the list of query matches
-	 * @throws PlannerException
+	 * Matches query.
+	 *
+	 * @param query the query
+	 * @return 		the list of query matches
+	 * @throws PlannerException the planner exception
 	 */
 	public List<Match> matchesQuery(Query<?> query) throws PlannerException {
 		return this.state.getMatches(query);
 	}
 	
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.planner.reasoning.Configuration#isSuccessful(uk.ac.ox.cs.pdq.fol.Query)
+	 */
 	@Override
 	public boolean isSuccessful(Query<?> query) {
 		try {
@@ -116,6 +142,8 @@ public abstract class AnnotatedPlan<P extends Plan> implements Configuration<P> 
 	}
 
 	/**
+	 * Clone.
+	 *
 	 * @return ChaseConfiguration<S,P>
 	 * @see uk.ac.ox.cs.pdq.reasoning.Configuration#clone()
 	 */

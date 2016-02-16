@@ -17,7 +17,9 @@ import com.google.common.collect.Sets;
 import uk.ac.ox.cs.pdq.algebra.RelationalOperatorException;
 import uk.ac.ox.cs.pdq.util.Utility;
 
+// TODO: Auto-generated Javadoc
 /**
+ * The Class ParameterizedTest.
  *
  * @author Julien Leblay
  */
@@ -25,13 +27,19 @@ import uk.ac.ox.cs.pdq.util.Utility;
 public abstract class ParameterizedTest {
 	
 	/**
-	 * Makes sure assertions are enabled
+	 * Makes sure assertions are enabled.
 	 */
 	@Before 
 	public void setup() {
 		Utility.assertsEnabled();
 	}
 
+	/**
+	 * Gets the parameters.
+	 *
+	 * @param sets the sets
+	 * @return the parameters
+	 */
 	@Parameters
 	public static Collection<Object[]> getParameters(Set<?>... sets) {
 		List<Set<?>> params = new ArrayList<>();
@@ -45,6 +53,13 @@ public abstract class ParameterizedTest {
 		return result;
 	}
 
+	/**
+	 * As set.
+	 *
+	 * @param <T> the generic type
+	 * @param array the array
+	 * @return the sets the
+	 */
 	protected static <T> Set<T> asSet(T... array) {
 		Set<T> result = new LinkedHashSet<>();
 		for (T i: array) {

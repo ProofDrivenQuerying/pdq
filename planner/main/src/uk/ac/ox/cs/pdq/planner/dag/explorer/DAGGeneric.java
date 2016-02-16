@@ -37,6 +37,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 import com.google.common.eventbus.EventBus;
 
+// TODO: Auto-generated Javadoc
 /**
  * Simple dag explorer. It searches the space of binary configurations exhaustively
  *
@@ -50,50 +51,49 @@ public class DAGGeneric extends DAGExplorer {
 	 * there does not exist any configuration with depth < maxDepth
 	 */
 	protected final int maxDepth;
-	/** Filters out configurations at the end of each iteration*/
+	
+	/**  Filters out configurations at the end of each iteration. */
 	private final Filter filter;
 	/** Check whether the binary configuration composed from a given configuration pair satisfies given shape restrictions.*/
 	private final List<Validator> validators;
+	
+	/** The left. */
 	private final List<DAGChaseConfiguration> left;
+	
+	/** The right. */
 	private final List<DAGChaseConfiguration> right;
-	/** The current exploration depth */
+	
+	/**  The current exploration depth. */
 	protected int depth = 1;
-	/** True if pair selection is order aware */
+	
+	/**  True if pair selection is order aware. */
 	protected boolean orderAware;
-	/** Returns pairs of configurations to combine */
+	
+	/**  Returns pairs of configurations to combine. */
 	protected PairSelector selector;
-	/** Removes success dominated configurations **/
+	
+	/**  Removes success dominated configurations *. */
 	protected final SuccessDominance successDominance;
 
 	/**
-	 * 
-	 * @param eventBus
-	 * @param collectStats
-	 * @param parameters
-	 * @param query
-	 * 		The input user query
-	 * @param accessibleQuery
-	 * 		The accessible counterpart of the user query
-	 * @param schema
-	 * 		The input schema
-	 * @param accessibleSchema
-	 * 		The accessible counterpart of the input schema
-	 * @param chaser
-	 * 		Saturates the newly created configurations
-	 * @param detector
-	 * 		Detects homomorphisms during chasing
-	 * @param costEstimator
-	 * 		Estimates the cost of a plan
-	 * @param successDominance
-	 * 		Removes success dominated configurations
-	 * @param filter
-	 * 		Filters out configurations at the end of each iteration
-	 * @param validators
-	 * 		Checks whether the binary configuration composed from a given configuration pair satisfies given shape restrictions.
-	 * @param maxDepth
-	 * 		The maximum depth to explore
-	 * @param orderAware
-	 * @throws PlannerException
+	 * Instantiates a new DAG generic.
+	 *
+	 * @param eventBus the event bus
+	 * @param collectStats the collect stats
+	 * @param parameters the parameters
+	 * @param query 		The input user query
+	 * @param accessibleQuery 		The accessible counterpart of the user query
+	 * @param schema 		The input schema
+	 * @param accessibleSchema 		The accessible counterpart of the input schema
+	 * @param chaser 		Saturates the newly created configurations
+	 * @param detector 		Detects homomorphisms during chasing
+	 * @param costEstimator 		Estimates the cost of a plan
+	 * @param successDominance 		Removes success dominated configurations
+	 * @param filter 		Filters out configurations at the end of each iteration
+	 * @param validators 		Checks whether the binary configuration composed from a given configuration pair satisfies given shape restrictions.
+	 * @param maxDepth 		The maximum depth to explore
+	 * @param orderAware the order aware
+	 * @throws PlannerException the planner exception
 	 */
 	public DAGGeneric(
 			EventBus eventBus, 
@@ -133,7 +133,10 @@ public class DAGGeneric extends DAGExplorer {
 	}
 
 	/**
-	 * @throws PlannerException
+	 * _explore.
+	 *
+	 * @throws PlannerException the planner exception
+	 * @throws LimitReachedException the limit reached exception
 	 */
 	@Override
 	protected void _explore() throws PlannerException, LimitReachedException {
@@ -184,10 +187,11 @@ public class DAGGeneric extends DAGExplorer {
 	}
 
 	/**
-	 * 
-	 * @return
-	 * @throws PlannerException
-	 * @throws LimitReachedException
+	 * Main loop.
+	 *
+	 * @return the collection
+	 * @throws PlannerException the planner exception
+	 * @throws LimitReachedException the limit reached exception
 	 */
 	protected Collection<DAGChaseConfiguration> mainLoop() throws PlannerException, LimitReachedException {
 		Map<Pair<DAGChaseConfiguration, DAGChaseConfiguration>, DAGChaseConfiguration> last = new HashMap<>();
@@ -221,32 +225,45 @@ public class DAGGeneric extends DAGExplorer {
 
 
 	/**
-	 * Returns pairs of configurations to combine
+	 * Returns pairs of configurations to combine.
 	 *
 	 * @author Efthymia Tsamoura
+	 * @param <S> the generic type
 	 */
 	protected static class PairSelector<S extends AccessibleChaseState> {
-		/** Configurations to consider on the left*/
+		
+		/**  Configurations to consider on the left. */
 		private List<DAGChaseConfiguration> left;
-		/** Configurations to consider on the right*/
+		
+		/**  Configurations to consider on the right. */
 		private List<DAGChaseConfiguration> right;
 		/** Checks whether the binary configuration composed from a given configuration pair satisfies given shape restrictions. */
 		private final List<Validator> validators;
+		
+		/** The order aware. */
 		private final boolean orderAware;
+		
+		/** The cache. */
 		private final Set<Set<Integer>> cache = Sets.newLinkedHashSet();
+		
+		/** The reverse. */
 		private Pair<DAGChaseConfiguration, DAGChaseConfiguration> reverse = null;
+		
+		/** The i. */
 		private int i = 0;
+		
+		/** The j. */
 		private int j = 0;
+		
+		/** The send reverse. */
 		private boolean sendReverse = false;
 
 		/**
-		 * 
-		 * @param left
-		 * 		Configurations to consider on the left
-		 * @param right
-		 * 		Configurations to consider on the right
-		 * @param validators
-		 * 		Checks whether the binary configuration composed from a given configuration pair satisfies given shape restrictions
+		 * Instantiates a new pair selector.
+		 *
+		 * @param left 		Configurations to consider on the left
+		 * @param right 		Configurations to consider on the right
+		 * @param validators 		Checks whether the binary configuration composed from a given configuration pair satisfies given shape restrictions
 		 */
 		public PairSelector(List<DAGChaseConfiguration> left,
 				List<DAGChaseConfiguration> right, List<Validator> validators) {
@@ -254,14 +271,12 @@ public class DAGGeneric extends DAGExplorer {
 		}
 
 		/**
-		 * 
-		 * @param left
-		 * 		Configurations to consider on the left
-		 * @param right
-		 * 		Configurations to consider on the right
-		 * @param validators
-		 * 		Checks whether the binary configuration composed from a given configuration pair satisfies given shape restrictions
-		 * @param orderAware
+		 * Instantiates a new pair selector.
+		 *
+		 * @param left 		Configurations to consider on the left
+		 * @param right 		Configurations to consider on the right
+		 * @param validators 		Checks whether the binary configuration composed from a given configuration pair satisfies given shape restrictions
+		 * @param orderAware the order aware
 		 */
 		public PairSelector(
 				List<DAGChaseConfiguration> left,
@@ -279,7 +294,9 @@ public class DAGGeneric extends DAGExplorer {
 
 
 		/**
-		 * @param depth
+		 * Gets the next.
+		 *
+		 * @param depth the depth
 		 * @return the next pair of configurations of the given combined depth
 		 */
 		public Pair<DAGChaseConfiguration, DAGChaseConfiguration> getNext(int depth) {
@@ -326,6 +343,9 @@ public class DAGGeneric extends DAGExplorer {
 			return this.reverse;
 		}
 
+		/**
+		 * Forward.
+		 */
 		private void forward() {
 			this.j++;
 			if (this.j >= this.right.size()) {
@@ -334,6 +354,12 @@ public class DAGGeneric extends DAGExplorer {
 			}
 		}
 
+		/**
+		 * Make cache key.
+		 *
+		 * @param configs the configs
+		 * @return the sets the
+		 */
 		private Set<Integer> makeCacheKey(DAGChaseConfiguration... configs) {
 			Set<Integer> result = new HashSet<>();
 			for (DAGChaseConfiguration config: configs) {
@@ -346,8 +372,9 @@ public class DAGGeneric extends DAGExplorer {
 	}
 
 	/**
-	 * 
-	 * @return
+	 * Gets the right.
+	 *
+	 * @return the right
 	 */
 	public List<DAGChaseConfiguration> getRight() {
 		return this.right;

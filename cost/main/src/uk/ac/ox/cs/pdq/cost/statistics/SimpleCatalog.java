@@ -35,6 +35,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
+// TODO: Auto-generated Javadoc
 /**
  * Holds unconditional statistics.
  * The statistics that are maintained are:
@@ -54,55 +55,85 @@ public class SimpleCatalog implements Catalog{
 	/** Logger. */
 	private static Logger log = Logger.getLogger(SimpleCatalog.class);
 	
+	/** The default attribute equality selectivity. */
 	public static double DEFAULT_ATTRIBUTE_EQUALITY_SELECTIVITY = 0.1;
 
+	/** The default cardinality. */
 	private static int DEFAULT_CARDINALITY = 1000000;
+	
+	/** The default quality. */
 	private static double DEFAULT_QUALITY = 0.0;
+	
+	/** The default column cardinality. */
 	private static int DEFAULT_COLUMN_CARDINALITY = 1000;
+	
+	/** The default cost. */
 	private static double DEFAULT_COST = 1.0;
+	
+	/** The catalog file name. */
 	private static String CATALOG_FILE_NAME = "catalog/catalog.properties";
 
+	/** The read cardinality. */
 	private static String READ_CARDINALITY = "^(RE:(\\w+)(\\s+)CA:(\\d+))";
+	
+	/** The read column cardinality. */
 	private static String READ_COLUMN_CARDINALITY = "^(RE:(\\w+)(\\s+)AT:(\\w+)(\\s+)CC:(\\d+))";
+	
+	/** The read column selectivity. */
 	private static String READ_COLUMN_SELECTIVITY = "^(RE:(\\w+)(\\s+)AT:(\\w+)(\\s+)SE:(\\d+(\\.\\d+)?))";
+	
+	/** The read erspi. */
 	private static String READ_ERSPI = "^(RE:(\\w+)(\\s+)BI:(\\w+)(\\s+)ERSPI:(\\d+(\\.\\d+)?))";
+	
+	/** The read cost. */
 	private static String READ_COST = "^(RE:(\\w+)(\\s+)BI:(\\w+)(\\s+)RT:(\\d+(\\.\\d+)?))";
+	
+	/** The read sqlserverhistogram. */
 	private static String READ_SQLSERVERHISTOGRAM = "^(RE:(\\w+)(\\s+)AT:(\\w+)(\\s+)SQLH:((/[a-zA-Z0-9._-]+)+/?))";
 
-	/** Cardinalities of the schema relations*/
+	/**  Cardinalities of the schema relations. */
 	private final Map<Relation,Integer> cardinalities;
-	/** Cardinalities of the relations' attributes*/
+	
+	/**  Cardinalities of the relations' attributes. */
 	private final Map<Pair<Relation,Attribute>,Integer> columnCardinalities;
-	/** The estimated result size per invocation of each access method*/
+	
+	/**  The estimated result size per invocation of each access method. */
 	private final Map<Pair<Relation,AccessMethod>,Integer> erpsi;
-	/** The response time of each access method*/
+	
+	/**  The response time of each access method. */
 	private final Map<Pair<Relation,AccessMethod>,Double> costs;
-	/** The selectivity of each attribute*/
+	
+	/**  The selectivity of each attribute. */
 	private final Map<Pair<Relation,Attribute>,Double> columnSelectivity;
-	/** The frequency histogram of each attribute*/
+	
+	/**  The frequency histogram of each attribute. */
 	private final Map<Pair<Relation,Attribute>, SimpleFrequencyMap> frequencyMaps;
-	/** The SQL Server histograms of each attribute*/
+	
+	/**  The SQL Server histograms of each attribute. */
 	private final Map<Pair<Relation,Attribute>, SQLServerHistogram> SQLServerHistograms;
 	/** 
 	 * The queries correspond to cardinality expressions. 
 	 * This structure maps cardinality queries to its size. 
 	 * This implementation keeps only cardinality expressions coming from single relations-single attribute.*/
 	private final Map<Query<?>,Integer> queries; 
-	/** The schema of the input database */
+	
+	/**  The schema of the input database. */
 	private final Schema schema;
 
 	/**
 	 * Creates a catalog by loading metadata located at "catalog/catalog.properties"
-	 * @param schema
+	 *
+	 * @param schema the schema
 	 */
 	public SimpleCatalog(Schema schema) {
 		this(schema, SimpleCatalog.CATALOG_FILE_NAME);
 	}
 
 	/**
-	 * Creates a catalog by loading schema metadata located at the input file
-	 * @param schema
-	 * @param fileName
+	 * Creates a catalog by loading schema metadata located at the input file.
+	 *
+	 * @param schema the schema
+	 * @param fileName the file name
 	 */
 	public SimpleCatalog(Schema schema, String fileName) {
 		Preconditions.checkNotNull(schema);
@@ -120,10 +151,10 @@ public class SimpleCatalog implements Catalog{
 	}
 
 	/**
-	 * 
-	 * @param columnCardinalities
-	 * @return
-	 * 		query expressions for the input set of column cardinalities
+	 * Gets the queries.
+	 *
+	 * @param columnCardinalities the column cardinalities
+	 * @return 		query expressions for the input set of column cardinalities
 	 */
 	private static Map<Query<?>,Integer> getQueries(Map<Pair<Relation,Attribute>,Integer> columnCardinalities) {
 		Map<Query<?>,Integer> ret = Maps.newHashMap();
@@ -137,10 +168,10 @@ public class SimpleCatalog implements Catalog{
 	}
 
 	/**
-	 * 
-	 * @param columnCardinalities
-	 * @return
-	 * 		query expressions for the input set of histograms
+	 * Gets the queries from histograms.
+	 *
+	 * @param histograms the histograms
+	 * @return 		query expressions for the input set of histograms
 	 */
 	private static Map<Query<?>,Integer> getQueriesFromHistograms(Map<Pair<Relation,Attribute>, SimpleFrequencyMap> histograms) {
 		Map<Query<?>,Integer> ret = Maps.newHashMap();
@@ -161,10 +192,10 @@ public class SimpleCatalog implements Catalog{
 	}
 
 	/**
-	 * 
-	 * @param schema
-	 * @param fileName
-	 * 		The file that stores the statistics 
+	 * Read.
+	 *
+	 * @param schema the schema
+	 * @param fileName 		The file that stores the statistics
 	 */
 	private void read(Schema schema, String fileName) {
 		String line = null;
@@ -185,9 +216,10 @@ public class SimpleCatalog implements Catalog{
 	}
 
 	/**
-	 * Parses the statistics file
-	 * @param schema
-	 * @param line
+	 * Parses the statistics file.
+	 *
+	 * @param schema the schema
+	 * @param line the line
 	 */
 	private void parse(Schema schema, String line) {
 		Pattern p = Pattern.compile(READ_CARDINALITY);
@@ -333,12 +365,17 @@ public class SimpleCatalog implements Catalog{
 	}
 
 	/**
-	 * 
-	 * @param cardinalities
-	 * @param erpsi
-	 * @param responseTimes
-	 * @param columnSelectivity
-	 * @param columnCardinalities
+	 * Instantiates a new simple catalog.
+	 *
+	 * @param schema the schema
+	 * @param cardinalities the cardinalities
+	 * @param erpsi the erpsi
+	 * @param responseTimes the response times
+	 * @param columnSelectivity the column selectivity
+	 * @param columnCardinalities the column cardinalities
+	 * @param queries the queries
+	 * @param frequencyMaps the frequency maps
+	 * @param SQLServerHistograms the SQL server histograms
 	 */
 	private SimpleCatalog(Schema schema, Map<Relation,Integer> cardinalities, Map<Pair<Relation,AccessMethod>,Integer> erpsi, Map<Pair<Relation,AccessMethod>,Double> responseTimes,
 			Map<Pair<Relation,Attribute>,Double> columnSelectivity, Map<Pair<Relation,Attribute>,Integer> columnCardinalities, 
@@ -365,6 +402,9 @@ public class SimpleCatalog implements Catalog{
 		this.queries = Maps.newHashMap(queries);
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.cost.statistics.Catalog#getSelectivity(uk.ac.ox.cs.pdq.db.Relation, uk.ac.ox.cs.pdq.db.Attribute, uk.ac.ox.cs.pdq.db.TypedConstant)
+	 */
 	public Double getSelectivity(Relation relation, Attribute attribute, TypedConstant<?> constant) {
 		Preconditions.checkNotNull(relation);
 		Preconditions.checkNotNull(attribute);
@@ -407,6 +447,13 @@ public class SimpleCatalog implements Catalog{
 		return SimpleCatalog.DEFAULT_COLUMN_CARDINALITY;
 	}
 
+	/**
+	 * Gets the selectivity.
+	 *
+	 * @param relation the relation
+	 * @param attribute the attribute
+	 * @return the selectivity
+	 */
 	public double getSelectivity(Relation relation, Attribute attribute) {
 		Preconditions.checkNotNull(attribute);
 		Preconditions.checkNotNull(relation);
@@ -426,6 +473,15 @@ public class SimpleCatalog implements Catalog{
 		}
 	}
 
+	/**
+	 * Gets the selectivity.
+	 *
+	 * @param left the left
+	 * @param right the right
+	 * @param leftAttribute the left attribute
+	 * @param rightAttribute the right attribute
+	 * @return the selectivity
+	 */
 	public double getSelectivity(Relation left, Relation right, Attribute leftAttribute, Attribute rightAttribute) {
 		Preconditions.checkNotNull(left);
 		Preconditions.checkNotNull(right);
@@ -443,6 +499,9 @@ public class SimpleCatalog implements Catalog{
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.cost.statistics.Catalog#getERPSI(uk.ac.ox.cs.pdq.db.Relation, uk.ac.ox.cs.pdq.db.AccessMethod)
+	 */
 	@Override
 	public int getERPSI(Relation relation, AccessMethod method) {
 		Preconditions.checkNotNull(relation);
@@ -474,6 +533,9 @@ public class SimpleCatalog implements Catalog{
 	}
 
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.cost.statistics.Catalog#getERPSI(uk.ac.ox.cs.pdq.db.Relation, uk.ac.ox.cs.pdq.db.AccessMethod, java.util.Map)
+	 */
 	@Override
 	public int getERPSI(Relation relation, AccessMethod method, Map<Integer, TypedConstant<?>> inputs) {
 		Preconditions.checkNotNull(relation);
@@ -492,6 +554,9 @@ public class SimpleCatalog implements Catalog{
 		return erpsi;
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.cost.statistics.Catalog#getCardinality(uk.ac.ox.cs.pdq.db.Relation)
+	 */
 	@Override
 	public int getCardinality(Relation relation) {
 		if(this.cardinalities.get(relation) != null) {
@@ -500,6 +565,9 @@ public class SimpleCatalog implements Catalog{
 		return DEFAULT_CARDINALITY;
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.cost.statistics.Catalog#getCardinality(uk.ac.ox.cs.pdq.db.Relation, uk.ac.ox.cs.pdq.db.Attribute)
+	 */
 	@Override
 	public int getCardinality(Relation relation, Attribute attribute) {
 		if(this.columnCardinalities.get(Pair.of(relation, attribute)) != null) {
@@ -510,6 +578,9 @@ public class SimpleCatalog implements Catalog{
 		return DEFAULT_COLUMN_CARDINALITY;
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.cost.statistics.Catalog#getCost(uk.ac.ox.cs.pdq.db.Relation, uk.ac.ox.cs.pdq.db.AccessMethod)
+	 */
 	@Override
 	public double getCost(Relation relation, AccessMethod method) {
 		Preconditions.checkNotNull(relation);		
@@ -518,6 +589,9 @@ public class SimpleCatalog implements Catalog{
 		return cost == null ? DEFAULT_COST : cost;
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.cost.statistics.Catalog#getCost(uk.ac.ox.cs.pdq.db.Relation, uk.ac.ox.cs.pdq.db.AccessMethod, java.util.Map)
+	 */
 	@Override
 	public double getCost(Relation relation, AccessMethod method, Map<Integer, TypedConstant<?>> inputs) {
 		Preconditions.checkNotNull(relation);		
@@ -540,28 +614,47 @@ public class SimpleCatalog implements Catalog{
 		return erpsi > 0 ? erpsi * cost : cost;
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.cost.statistics.Catalog#getStatisticsExpressions()
+	 */
 	@Override
 	public Collection<Query<?>> getStatisticsExpressions() {
 		return this.queries.keySet();
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#clone()
+	 */
 	@Override
 	public SimpleCatalog clone() {
 		return new SimpleCatalog(this.schema, this.cardinalities, this.erpsi, this.costs, this.columnSelectivity, 
 				this.columnCardinalities, this.queries, this.frequencyMaps, this.SQLServerHistograms);
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.cost.statistics.Catalog#getQuality(uk.ac.ox.cs.pdq.db.Relation)
+	 */
 	@Override
 	public double getQuality(Relation relation) {
 		return DEFAULT_QUALITY;
 	}
 	
+	/**
+	 * Gets the SQL server histogram.
+	 *
+	 * @param relation the relation
+	 * @param attribute the attribute
+	 * @return the SQL server histogram
+	 */
 	public SQLServerHistogram getSQLServerHistogram(Relation relation, Attribute attribute) {
 		Preconditions.checkNotNull(relation);
 		Preconditions.checkNotNull(attribute);
 		return this.SQLServerHistograms.get(Pair.of(relation, attribute));
 	}
 	
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.cost.statistics.Catalog#getHistogram(uk.ac.ox.cs.pdq.db.Relation, uk.ac.ox.cs.pdq.db.Attribute)
+	 */
 	@Override
 	public Histogram getHistogram(Relation relation, Attribute attribute) {
 		Preconditions.checkNotNull(relation);
@@ -569,6 +662,9 @@ public class SimpleCatalog implements Catalog{
 		return this.SQLServerHistograms.get(Pair.of(relation, attribute));
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
 		return new String(
@@ -591,6 +687,11 @@ public class SimpleCatalog implements Catalog{
 						Joiner.on("\n").join(this.frequencyMaps.entrySet()) );
 	}
 
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String... args) {
 		String PATH = "SCHEMA AND QUERY PATH";
 		String schemafile = "SCHEMA FILE";

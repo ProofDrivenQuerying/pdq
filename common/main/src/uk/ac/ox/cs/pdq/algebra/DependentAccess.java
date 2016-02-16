@@ -22,6 +22,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * Logical operator representation of a dependent access.
  *
@@ -36,32 +37,34 @@ public class DependentAccess  extends RelationalOperator implements AccessOperat
 	/** The access method to use. */
 	private final AccessMethod accessMethod;
 
-	/** The output columns */
+	/**  The output columns. */
 	protected final List<Term> columns;
 
-	/** The input terms*/
+	/**  The input terms. */
 	protected final List<Term> inputTerms;
 
-	/** The constants used to call the underlying access method */
+	/**  The constants used to call the underlying access method. */
 	protected final Map<Integer, TypedConstant<?>> staticInputs;
 
-	/** The output terms of this access*/
+	/**  The output terms of this access. */
 	protected final List<Term> outputTerms;
 
 	/**
+	 * Instantiates a new dependent access.
 	 *
-	 * @param relation
-	 * @param accessMethod
+	 * @param relation the relation
+	 * @param accessMethod the access method
 	 */
 	public DependentAccess(Relation relation, AccessMethod accessMethod) {
 		this(relation, accessMethod, Utility.typedToTerms(attributesOf(relation)));
 	}
 
 	/**
+	 * Instantiates a new dependent access.
 	 *
-	 * @param relation
-	 * @param accessMethod
-	 * @param terms
+	 * @param relation the relation
+	 * @param accessMethod the access method
+	 * @param terms the terms
 	 */
 	public DependentAccess(Relation relation, AccessMethod accessMethod, List<Term> terms) {
 		this(relation, accessMethod, terms, inferStaticInput(terms, accessMethod));
@@ -83,6 +86,7 @@ public class DependentAccess  extends RelationalOperator implements AccessOperat
 	 *
 	 * @param relation Relation
 	 * @param accessMethod AccessMethod
+	 * @param outputTerms the output terms
 	 * @param staticInput Map<Integer,TypedConstant<?>>
 	 */
 	public DependentAccess(Relation relation, AccessMethod accessMethod, List<Term> outputTerms, Map<Integer, TypedConstant<?>> staticInput) {
@@ -99,17 +103,31 @@ public class DependentAccess  extends RelationalOperator implements AccessOperat
 
 	}
 
+	/**
+	 * Attributes of.
+	 *
+	 * @param relation the relation
+	 * @return the list
+	 */
 	private static List<Attribute> attributesOf(Relation relation) {
 		Preconditions.checkArgument(relation != null);
 		return relation.getAttributes();
 	}
 
+	/**
+	 * Key set of.
+	 *
+	 * @param inputs the inputs
+	 * @return the sets the
+	 */
 	private static Set<Integer> keySetOf(Map<Integer, TypedConstant<?>> inputs) {
 		Preconditions.checkArgument(inputs != null);
 		return inputs.keySet();
 	}
 
 	/**
+	 * Infer static input.
+	 *
 	 * @param columns List<Term>
 	 * @param accessMethod AccessMethod
 	 * @return Map<Integer,TypedConstant<?>>
@@ -128,6 +146,8 @@ public class DependentAccess  extends RelationalOperator implements AccessOperat
 	}
 
 	/**
+	 * Infer input type.
+	 *
 	 * @param columns List<Attribute>
 	 * @param accessMethod AccessMethod
 	 * @param exclude Set<Integer>
@@ -141,6 +161,8 @@ public class DependentAccess  extends RelationalOperator implements AccessOperat
 	}
 
 	/**
+	 * Infer input terms.
+	 *
 	 * @param columns List<Attribute>
 	 * @param binding AccessMethod
 	 * @param exclude Set<Integer>
@@ -157,6 +179,8 @@ public class DependentAccess  extends RelationalOperator implements AccessOperat
 	}
 
 	/**
+	 * Gets the depth.
+	 *
 	 * @return Integer
 	 */
 	@Override
@@ -165,6 +189,8 @@ public class DependentAccess  extends RelationalOperator implements AccessOperat
 	}
 
 	/**
+	 * Gets the static inputs.
+	 *
 	 * @return the static inputs of this access.
 	 */
 	public Map<Integer, TypedConstant<?>> getStaticInputs() {
@@ -172,6 +198,8 @@ public class DependentAccess  extends RelationalOperator implements AccessOperat
 	}
 
 	/**
+	 * Gets the relation.
+	 *
 	 * @return the accessed relation
 	 * @see uk.ac.ox.cs.pdq.plan.AccessOperator#getRelation()
 	 */
@@ -181,6 +209,8 @@ public class DependentAccess  extends RelationalOperator implements AccessOperat
 	}
 
 	/**
+	 * Gets the access method.
+	 *
 	 * @return the access method used
 	 * @see uk.ac.ox.cs.pdq.plan.AccessOperator#getAccessMethod()
 	 */
@@ -191,6 +221,8 @@ public class DependentAccess  extends RelationalOperator implements AccessOperat
 
 
 	/**
+	 * Gets the column.
+	 *
 	 * @param i int
 	 * @return Term
 	 */
@@ -201,6 +233,8 @@ public class DependentAccess  extends RelationalOperator implements AccessOperat
 	}
 
 	/**
+	 * Gets the columns.
+	 *
 	 * @return List<Term>
 	 */
 	@Override
@@ -209,6 +243,8 @@ public class DependentAccess  extends RelationalOperator implements AccessOperat
 	}
 
 	/**
+	 * Gets the input terms.
+	 *
 	 * @return List<Term>
 	 */
 	@Override
@@ -239,6 +275,8 @@ public class DependentAccess  extends RelationalOperator implements AccessOperat
 	}
 
 	/**
+	 * Equals.
+	 *
 	 * @param o Object
 	 * @return boolean
 	 */
@@ -253,6 +291,8 @@ public class DependentAccess  extends RelationalOperator implements AccessOperat
 	}
 
 	/**
+	 * Hash code.
+	 *
 	 * @return int
 	 */
 	@Override
@@ -262,6 +302,8 @@ public class DependentAccess  extends RelationalOperator implements AccessOperat
 	}
 
 	/**
+	 * Checks if is closed.
+	 *
 	 * @return boolean
 	 */
 	@Override
@@ -270,6 +312,8 @@ public class DependentAccess  extends RelationalOperator implements AccessOperat
 	}
 
 	/**
+	 * Checks if is quasi leaf.
+	 *
 	 * @return boolean
 	 */
 	@Override

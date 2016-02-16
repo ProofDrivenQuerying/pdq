@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package uk.ac.ox.cs.pdq.planner.dag.explorer.parallel;
 
 import java.util.ArrayList;
@@ -9,6 +12,7 @@ import uk.ac.ox.cs.pdq.planner.reasoning.chase.dominance.Dominance;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
 
+// TODO: Auto-generated Javadoc
 /**
  * Passes information to MultiThreadedExecutor objects.
  * Creates clones of reasoners, homomorphism detectors and cost estimators.
@@ -18,15 +22,39 @@ import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
  */
 public class MultiThreadedContext implements Context{
 
-	/** Number of parallel threads*/
+	/**  Number of parallel threads. */
 	private final int parallelThreads;
+	
+	/** The reasoners. */
 	private final Chaser[] reasoners;
+	
+	/** The detectors. */
 	private final HomomorphismDetector[] detectors;
+	
+	/** The cardinality estimators. */
 	private final CardinalityEstimator[] cardinalityEstimators;
+	
+	/** The quality dominances. */
 	private final Dominance[] qualityDominances;
+	
+	/** The dominances. */
 	private final Dominance[][] dominances;
+	
+	/** The validators. */
 	private final List<Validator>[] validators;
 	
+	/**
+	 * Instantiates a new multi threaded context.
+	 *
+	 * @param parallelThreads the parallel threads
+	 * @param chaser the chaser
+	 * @param detector the detector
+	 * @param cardinalityEstimator the cardinality estimator
+	 * @param qualityDominance the quality dominance
+	 * @param dominance the dominance
+	 * @param validators the validators
+	 * @throws Exception the exception
+	 */
 	public MultiThreadedContext(int parallelThreads,
 			Chaser chaser,
 			HomomorphismDetector detector,
@@ -53,7 +81,9 @@ public class MultiThreadedContext implements Context{
 	}
 	
 	/**
-	 * @param input
+	 * Deep copy.
+	 *
+	 * @param validators the validators
 	 * @return a deep copy of the input array of dominance objects
 	 */
 	private List<Validator> deepCopy(List<Validator> validators) {
@@ -65,7 +95,9 @@ public class MultiThreadedContext implements Context{
 	}
 	
 	/**
-	 * @param input
+	 * Deep copy.
+	 *
+	 * @param input the input
 	 * @return a deep copy of the input array of dominance objects
 	 */
 	private Dominance[] deepCopy(Dominance[] input) {
@@ -77,6 +109,8 @@ public class MultiThreadedContext implements Context{
 	}
 	
 	/**
+	 * Gets the parallel threads.
+	 *
 	 * @return int
 	 */
 	public int getParallelThreads() {
@@ -84,6 +118,8 @@ public class MultiThreadedContext implements Context{
 	}
 
 	/**
+	 * Gets the reasoners.
+	 *
 	 * @return Reasoner[]
 	 */
 	public Chaser[] getReasoners() {
@@ -91,6 +127,8 @@ public class MultiThreadedContext implements Context{
 	}
 
 	/**
+	 * Gets the detectors.
+	 *
 	 * @return HomomorphismDetector[]
 	 */
 	public HomomorphismDetector[] getDetectors() {
@@ -98,20 +136,37 @@ public class MultiThreadedContext implements Context{
 	}
 
 	/**
+	 * Gets the cardinality estimators.
+	 *
 	 * @return CostEstimator<DAGPlan>[]
 	 */
 	public CardinalityEstimator[] getCardinalityEstimators() {
 		return this.cardinalityEstimators;
 	}
 
+	/**
+	 * Gets the quality dominances.
+	 *
+	 * @return the quality dominances
+	 */
 	public Dominance[] getQualityDominances() {
 		return this.qualityDominances;
 	}
 	
+	/**
+	 * Gets the dominances.
+	 *
+	 * @return the dominances
+	 */
 	public Dominance[][] getDominances() {
 		return this.dominances;
 	}
 
+	/**
+	 * Gets the validators.
+	 *
+	 * @return the validators
+	 */
 	public List<Validator>[] getValidators() {
 		return this.validators;
 	}

@@ -20,24 +20,19 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 
+// TODO: Auto-generated Javadoc
 /**
- * Implementation of a FiringGraph
+ * Implementation of a FiringGraph.
  *
  * @author Efthymia Tsamoura
- *
- * @param 
  */
 
 public class MapFiringGraph implements FiringGraph{
 
-	/**
-	 * Keeps for each dependency, the facts that were used to fire it, as well as, the consequence facts
-	 */
+	/** Keeps for each dependency, the facts that were used to fire it, as well as, the consequence facts. */
 	private final MultiValueMap<Collection<Predicate>, Collection<Predicate>> map;
 
-	/**
-	 * Chase graph
-	 */
+	/** Chase graph. */
 	private final Graph<Predicate, DefaultEdge> graph;
 
 	/**
@@ -45,11 +40,12 @@ public class MapFiringGraph implements FiringGraph{
 	 */
 	private final Map<Predicate, Pair<Constraint, Collection<Predicate>>> provenance;
 
-	/**
-	 * Keeps the set of facts that were used to fire each dependency
-	 */
+	/** Keeps the set of facts that were used to fire each dependency. */
 	private final Multimap<Collection<Predicate>, Constraint> firings;
 
+	/**
+	 * Instantiates a new map firing graph.
+	 */
 	public MapFiringGraph() {
 		this.map = new MultiValueMap<>();
 		this.provenance = new LinkedHashMap<>();
@@ -76,10 +72,11 @@ public class MapFiringGraph implements FiringGraph{
 	}
 
 	/**
+	 * Put.
+	 *
 	 * @param dependency IC
 	 * @param sources Collection<PredicateFormula>
 	 * @param targets Collection<PredicateFormula>
-	 * @param initialState boolean
 	 * @see uk.ac.ox.cs.pdq.chase.FiringGraph#put(IC, Collection<PredicateFormula>, Collection<PredicateFormula>, boolean)
 	 */
 	@Override
@@ -95,10 +92,11 @@ public class MapFiringGraph implements FiringGraph{
 	}
 
 	/**
+	 * Put.
+	 *
 	 * @param dependency IC
 	 * @param source PredicateFormula
 	 * @param target PredicateFormula
-	 * @param initialState boolean
 	 * @see uk.ac.ox.cs.pdq.reasoning.utility.FiringGraph#put(Constraint, Predicate, Predicate, boolean)
 	 */
 	@Override
@@ -107,6 +105,8 @@ public class MapFiringGraph implements FiringGraph{
 	}
 
 	/**
+	 * Clone.
+	 *
 	 * @return MapFiringGraph
 	 * @see uk.ac.ox.cs.pdq.reasoning.utility.FiringGraph#clone()
 	 */
@@ -119,6 +119,8 @@ public class MapFiringGraph implements FiringGraph{
 	}
 
 	/**
+	 * Gets the graph.
+	 *
 	 * @return Graph<PredicateFormula,DefaultEdge>
 	 * @see uk.ac.ox.cs.pdq.reasoning.utility.FiringGraph#getGraph()
 	 */
@@ -128,6 +130,8 @@ public class MapFiringGraph implements FiringGraph{
 	}
 
 	/**
+	 * Update graph.
+	 *
 	 * @param sources Collection<PredicateFormula>
 	 * @param targets Collection<PredicateFormula>
 	 */
@@ -146,6 +150,8 @@ public class MapFiringGraph implements FiringGraph{
 	}
 
 	/**
+	 * Clone.
+	 *
 	 * @param graph0 Graph<PredicateFormula,DefaultEdge>
 	 * @return Graph<PredicateFormula,DefaultEdge>
 	 */
@@ -161,6 +167,8 @@ public class MapFiringGraph implements FiringGraph{
 	}
 
 	/**
+	 * Merge.
+	 *
 	 * @param graph0 Graph<PredicateFormula,DefaultEdge>
 	 * @param graph1 Graph<PredicateFormula,DefaultEdge>
 	 * @return Graph<PredicateFormula,DefaultEdge>
@@ -183,6 +191,8 @@ public class MapFiringGraph implements FiringGraph{
 	}
 
 	/**
+	 * Gets the fact provenance.
+	 *
 	 * @param fact PredicateFormula
 	 * @return Pair<IC,Collection<PredicateFormula>>
 	 * @see uk.ac.ox.cs.pdq.reasoning.utility.FiringGraph#getFactProvenance(Predicate)
@@ -193,6 +203,8 @@ public class MapFiringGraph implements FiringGraph{
 	}
 
 	/**
+	 * Checks if is fired.
+	 *
 	 * @param dependency IC
 	 * @param facts Collection<PredicateFormula>
 	 * @return boolean
@@ -204,6 +216,8 @@ public class MapFiringGraph implements FiringGraph{
 	}
 
 	/**
+	 * Merge.
+	 *
 	 * @param source FiringGraph
 	 * @return FiringGraph
 	 * @see uk.ac.ox.cs.pdq.reasoning.utility.chase.FiringGraph#merge(FiringGraph)
@@ -223,6 +237,8 @@ public class MapFiringGraph implements FiringGraph{
 	}
 
 	/**
+	 * Gets the map.
+	 *
 	 * @return MultiValueMap<Collection<PredicateFormula>,Collection<PredicateFormula>>
 	 */
 	public MultiValueMap<Collection<Predicate>, Collection<Predicate>> getMap() {
@@ -230,6 +246,8 @@ public class MapFiringGraph implements FiringGraph{
 	}
 
 	/**
+	 * Gets the fact provenance.
+	 *
 	 * @return Map<PredicateFormula,Pair<IC,Collection<PredicateFormula>>>
 	 * @see uk.ac.ox.cs.pdq.reasoning.utility.FiringGraph#getFactProvenance()
 	 */
@@ -239,16 +257,24 @@ public class MapFiringGraph implements FiringGraph{
 	}
 
 	/**
+	 * Gets the fired dependencies.
+	 *
 	 * @return Multimap<Collection<PredicateFormula>,IC>
 	 */
 	public Multimap<Collection<Predicate>, Constraint> getFiredDependencies() {
 		return this.firings;
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.reasoning.utility.FiringGraph#getPreconditions()
+	 */
 	public Set<Collection<Predicate>> getPreconditions() {
 		return this.map.keySet();
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.reasoning.utility.FiringGraph#getConsequences(java.util.Collection)
+	 */
 	public Collection<Collection<Predicate>> getConsequences(Collection<Predicate> key) {
 		return this.map.getCollection(key);
 	}

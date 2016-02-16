@@ -25,27 +25,37 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 
 
+// TODO: Auto-generated Javadoc
 /**
- * 
- * @author Julien LEBLAY
+ * The Class QueryGeneratorThird.
  *
+ * @author Julien LEBLAY
  */
 public class QueryGeneratorThird extends AbstractDependencyGenerator implements QueryGenerator{
 	
 	/**
 	 * Default constructor.
-	 * 
-	 * @param schema
+	 *
+	 * @param schema the schema
+	 * @param params the params
 	 */
 	public QueryGeneratorThird(Schema schema, BenchmarkParameters params) {
 		super(schema, params);
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.generator.QueryGenerator#generate()
+	 */
 	@Override
 	public ConjunctiveQuery generate() {
 		return this.generateQueryFromInclusionDependencies();
 	}
 
+	/**
+	 * Generate query from inclusion dependencies.
+	 *
+	 * @return the conjunctive query
+	 */
 	private ConjunctiveQuery generateQueryFromInclusionDependencies() {
 		List<LinearGuarded> guardedDependencies = new ArrayList<>();
 		// Filter out non-inclusion dependencies
@@ -119,9 +129,9 @@ public class QueryGeneratorThird extends AbstractDependencyGenerator implements 
 	 * Attempts to join two lists of atoms on predicate/attributes
 	 * with common signature and name, such that no pre-existing join variable 
 	 * was used in the operation.
-	 * 
-	 * @param leftAtoms
-	 * @param rightAtoms
+	 *
+	 * @param leftAtoms the left atoms
+	 * @param rightAtoms the right atoms
 	 * @return true if the two list of atoms could be joined
 	 */
 	private Boolean join(List<Predicate> leftAtoms, List<Predicate> rightAtoms) {

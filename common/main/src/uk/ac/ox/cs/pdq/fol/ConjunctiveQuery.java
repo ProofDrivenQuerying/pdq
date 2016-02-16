@@ -19,6 +19,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
+// TODO: Auto-generated Javadoc
 /**
  * A conjunctive query (CQ) is a first order formula of the form \exists x_1, \ldots, x_n \Wedge A_i,
  * where A_i are atoms with arguments that are either variables or constants.
@@ -29,30 +30,31 @@ import com.google.common.collect.Sets;
  */
 public class ConjunctiveQuery extends AbstractFormula implements Query<Conjunction<Predicate>> {
 
-	/** The query's head part*/
+	/**  The query's head part. */
 	protected final Predicate head;
 
-	/** The query's body part*/
+	/**  The query's body part. */
 	protected final Conjunction<Predicate> body;
 
-	/** The terms in the head of the query*/
+	/**  The terms in the head of the query. */
 	protected final List<Term> freeTerms;
 
 	/** The query's free variables i.e. head variables */
 	protected final List<Variable> free;
 
-	/** The query's bound variables*/
+	/**  The query's bound variables. */
 	protected final List<Variable> bound;
 
-	/** Map of query's free variables to chase constants*/
+	/**  Map of query's free variables to chase constants. */
 	protected final Map<Variable, Constant> freeToCanonical;
 
-	/** The constants that appear in the query's body*/
+	/**  The constants that appear in the query's body. */
 	protected final Collection<TypedConstant<?>> constants;
 
-	/** The canonical database of the query*/
+	/**  The canonical database of the query. */
 	protected Conjunction<Predicate> canonical;
 
+	/** The grounding. */
 	protected Map<Variable, Constant> grounding;
 
 	/**
@@ -118,10 +120,10 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 	}
 
 	/**
-	 * 
-	 * @param right
-	 * @return
-	 * 		returns the schema constants of the input conjunction of atoms
+	 * Gets the schema constants.
+	 *
+	 * @param right the right
+	 * @return 		returns the schema constants of the input conjunction of atoms
 	 */
 	private static Collection<TypedConstant<?>> getSchemaConstants(Conjunction<Predicate> right) {
 		Collection<TypedConstant<?>> constants = new LinkedHashSet<>();
@@ -138,12 +140,12 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 	}
 
 	/**
-	 * 
-	 * @param body
-	 * @return
-	 * 		a mapping of variables of the input conjunction to constants. 
+	 * Generate canonical mapping.
+	 *
+	 * @param body the body
+	 * @return 		a mapping of variables of the input conjunction to constants. 
 	 * 		A fresh constant is created for each variable of the conjunction. 
-	 * 		This method is invoked by the conjunctive query constructor when the constructor is called with empty input canonical mapping. 
+	 * 		This method is invoked by the conjunctive query constructor when the constructor is called with empty input canonical mapping.
 	 */
 	private static Map<Variable, Constant> generateCanonicalMapping(Conjunction<Predicate> body) {
 		Map<Variable, Constant> canonicalMapping = new LinkedHashMap<>();
@@ -162,11 +164,11 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 	}
 	
 	/**
-	 * 
-	 * @param head
-	 * @param canonical
-	 * @return
-	 * 		a mapping of query free variables to canonical constants 
+	 * Gets the free to canonical.
+	 *
+	 * @param head the head
+	 * @param canonical the canonical
+	 * @return 		a mapping of query free variables to canonical constants
 	 */
 	private static Map<Variable, Constant> getFreeToCanonical(Predicate head, Map<Variable, Constant> canonical) {
 		Map<Variable, Constant> freeToCanonical = new LinkedHashMap<>();
@@ -182,6 +184,9 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 		return freeToCanonical;
 	}
 	
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.fol.Query#setGrounding(java.util.Map)
+	 */
 	@Override
 	public void setGrounding(Map<Variable, Constant> grounding) {
 		this.grounding = grounding;
@@ -203,6 +208,8 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 
 
 	/**
+	 * Gets the canonical.
+	 *
 	 * @return Conjunction<PredicateFormula>
 	 * @see uk.ac.ox.cs.pdq.fol.Query#getCanonical()
 	 */
@@ -212,6 +219,8 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 	}
 
 	/**
+	 * Gets the important subqueries.
+	 *
 	 * @return List<Query<Conjunction<PredicateFormula>>>
 	 * @see uk.ac.ox.cs.pdq.fol.Query#getImportantSubqueries()
 	 */
@@ -248,6 +257,8 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 	}
 
 	/**
+	 * Gets the predicates.
+	 *
 	 * @return List<PredicateFormula>
 	 * @see uk.ac.ox.cs.pdq.fol.Formula#getPredicates()
 	 */
@@ -260,6 +271,8 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 	}
 
 	/**
+	 * Gets the terms.
+	 *
 	 * @return List<Term>
 	 * @see uk.ac.ox.cs.pdq.fol.Formula#getTerms()
 	 */
@@ -272,6 +285,8 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 	}
 
 	/**
+	 * Checks if is boolean.
+	 *
 	 * @return boolean
 	 * @see uk.ac.ox.cs.pdq.fol.Query#isBoolean()
 	 */
@@ -281,6 +296,8 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 	}
 
 	/**
+	 * Gets the body.
+	 *
 	 * @return Conjunction<PredicateFormula>
 	 * @see uk.ac.ox.cs.pdq.fol.Query#getBody()
 	 */
@@ -290,6 +307,8 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 	}
 
 	/**
+	 * Gets the head.
+	 *
 	 * @return PredicateFormula
 	 * @see uk.ac.ox.cs.pdq.fol.Query#getHead()
 	 */
@@ -299,6 +318,8 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 	}
 
 	/**
+	 * Gets the bound.
+	 *
 	 * @return List<Variable>
 	 */
 	public List<Variable> getBound() {
@@ -306,6 +327,8 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 	}
 
 	/**
+	 * Gets the free.
+	 *
 	 * @return List<Term>
 	 * @see uk.ac.ox.cs.pdq.fol.Evaluatable#getFree()
 	 */
@@ -315,6 +338,8 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 	}
 
 	/**
+	 * Gets the schema constants.
+	 *
 	 * @return Collection<TypedConstant<?>>
 	 * @see uk.ac.ox.cs.pdq.fol.Query#getSchemaConstants()
 	 */
@@ -324,6 +349,8 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 	}
 
 	/**
+	 * Gets the free to canonical.
+	 *
 	 * @return Map<Variable,Term>
 	 * @see uk.ac.ox.cs.pdq.fol.Query#getFreeToCanonical()
 	 */
@@ -332,12 +359,17 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 		return this.freeToCanonical;
 	}
 	
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.fol.Query#getVariablesToCanonical()
+	 */
 	@Override
 	public Map<Variable, Constant> getVariablesToCanonical() {
 		return this.grounding;
 	}
 
 	/**
+	 * Equals.
+	 *
 	 * @param o Object
 	 * @return boolean
 	 */
@@ -357,6 +389,8 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 	}
 
 	/**
+	 * Hash code.
+	 *
 	 * @return int
 	 */
 	@Override
@@ -365,6 +399,8 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 	}
 
 	/**
+	 * To string.
+	 *
 	 * @return String
 	 */
 	@Override
@@ -373,6 +409,8 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 	}
 
 	/**
+	 * Gets the children.
+	 *
 	 * @return Collection<PredicateFormula>
 	 * @see uk.ac.ox.cs.pdq.fol.Formula#getSubFormulas()
 	 */

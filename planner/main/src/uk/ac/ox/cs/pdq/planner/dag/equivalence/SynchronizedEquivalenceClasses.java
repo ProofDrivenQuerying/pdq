@@ -17,6 +17,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * A collection of structurally equivalent classes that supports multi-threading.
  * According to this implementation different threads can add, remove or perform domination detection inside each class concurrently.
@@ -26,14 +27,19 @@ import com.google.common.collect.Sets;
  */
 public class SynchronizedEquivalenceClasses implements DAGEquivalenceClasses{
 	
-	/** Maps each configuration to its class*/
+	/**  Maps each configuration to its class. */
 	private final Map<DAGChaseConfiguration, SynchronizedEquivalenceClass> configurationToEquivalenceClass;
 
+	/**
+	 * Instantiates a new synchronized equivalence classes.
+	 */
 	public SynchronizedEquivalenceClasses() {
 		this.configurationToEquivalenceClass = new ConcurrentHashMap<>(100, 10, 100);
 	}
 
 	/**
+	 * Adds the entry.
+	 *
 	 * @param configuration DAGChaseConfiguration
 	 * @see uk.ac.ox.cs.pdq.equivalence.dag.DAGEquivalenceClasses#addEntry(DAGChaseConfiguration)
 	 */
@@ -52,6 +58,8 @@ public class SynchronizedEquivalenceClasses implements DAGEquivalenceClasses{
 	}
 
 	/**
+	 * Removes the entry.
+	 *
 	 * @param configuration DAGChaseConfiguration
 	 * @see uk.ac.ox.cs.pdq.equivalence.dag.DAGEquivalenceClasses#removeEntry(DAGChaseConfiguration)
 	 */
@@ -61,6 +69,8 @@ public class SynchronizedEquivalenceClasses implements DAGEquivalenceClasses{
 	}
 
 	/**
+	 * Gets the configurations.
+	 *
 	 * @return Collection<DAGChaseConfiguration>
 	 * @see uk.ac.ox.cs.pdq.planner.dag.equivalence.DAGEquivalenceClasses#getConfigurations()
 	 */
@@ -70,6 +80,8 @@ public class SynchronizedEquivalenceClasses implements DAGEquivalenceClasses{
 	}
 
 	/**
+	 * Removes the all.
+	 *
 	 * @param configurations Collection<DAGChaseConfiguration>
 	 * @see uk.ac.ox.cs.pdq.equivalence.dag.DAGEquivalenceClasses#removeAll(Collection<DAGChaseConfiguration>)
 	 */
@@ -85,6 +97,9 @@ public class SynchronizedEquivalenceClasses implements DAGEquivalenceClasses{
 	}
 
 	/**
+	 * Dominated by.
+	 *
+	 * @param dominance the dominance
 	 * @param configuration DAGChaseConfiguration
 	 * @return Collection<DAGChaseConfiguration>
 	 * @see uk.ac.ox.cs.pdq.equivalence.dag.DAGEquivalenceClasses#dominatedBy(DAGChaseConfiguration)
@@ -99,6 +114,8 @@ public class SynchronizedEquivalenceClasses implements DAGEquivalenceClasses{
 	}
 
 	/**
+	 * Structurally equivalent to.
+	 *
 	 * @param configuration DAGChaseConfiguration
 	 * @return DAGChaseConfiguration
 	 * @see uk.ac.ox.cs.pdq.equivalence.dag.DAGEquivalenceClasses#structurallyEquivalentTo(DAGChaseConfiguration)
@@ -114,6 +131,9 @@ public class SynchronizedEquivalenceClasses implements DAGEquivalenceClasses{
 	}
 
 	/**
+	 * Dominate.
+	 *
+	 * @param dominance the dominance
 	 * @param configuration DAGChaseConfiguration
 	 * @return DAGChaseConfiguration
 	 * @see uk.ac.ox.cs.pdq.equivalence.dag.DAGEquivalenceClasses#dominate(DAGChaseConfiguration)
@@ -131,6 +151,8 @@ public class SynchronizedEquivalenceClasses implements DAGEquivalenceClasses{
 
 
 	/**
+	 * Gets the equivalence classes.
+	 *
 	 * @return Collection<DAGEquivalenceClass>
 	 * @see uk.ac.ox.cs.pdq.planner.dag.equivalence.DAGEquivalenceClasses#getEquivalenceClasses()
 	 */
@@ -140,6 +162,8 @@ public class SynchronizedEquivalenceClasses implements DAGEquivalenceClasses{
 	}
 
 	/**
+	 * Gets the equivalence class.
+	 *
 	 * @param configuration DAGChaseConfiguration
 	 * @return DAGEquivalenceClass
 	 * @see uk.ac.ox.cs.pdq.equivalence.dag.DAGEquivalenceClasses#getEquivalenceClass(DAGChaseConfiguration)
@@ -150,6 +174,8 @@ public class SynchronizedEquivalenceClasses implements DAGEquivalenceClasses{
 	}
 
 	/**
+	 * Checks if is empty.
+	 *
 	 * @return boolean
 	 * @see uk.ac.ox.cs.pdq.planner.dag.equivalence.DAGEquivalenceClasses#isEmpty()
 	 */
@@ -159,6 +185,8 @@ public class SynchronizedEquivalenceClasses implements DAGEquivalenceClasses{
 	}
 
 	/**
+	 * Wakeup sleep.
+	 *
 	 * @param plan Plan
 	 */
 	public void wakeupSleep(Plan plan) {
@@ -168,6 +196,8 @@ public class SynchronizedEquivalenceClasses implements DAGEquivalenceClasses{
 	}
 
 	/**
+	 * Size.
+	 *
 	 * @return int
 	 * @see uk.ac.ox.cs.pdq.planner.dag.equivalence.DAGEquivalenceClasses#size()
 	 */
@@ -177,6 +207,8 @@ public class SynchronizedEquivalenceClasses implements DAGEquivalenceClasses{
 	}
 
 	/**
+	 * Contains.
+	 *
 	 * @param configuration DAGChaseConfiguration
 	 * @return boolean
 	 * @see uk.ac.ox.cs.pdq.equivalence.dag.DAGEquivalenceClasses#contains(DAGChaseConfiguration)
@@ -187,6 +219,8 @@ public class SynchronizedEquivalenceClasses implements DAGEquivalenceClasses{
 	}
 
 	/**
+	 * Iterator.
+	 *
 	 * @return Iterator<Entry<DAGChaseConfiguration,SynchronizedEquivalenceClass>>
 	 * @see uk.ac.ox.cs.pdq.planner.dag.equivalence.DAGEquivalenceClasses#iterator()
 	 */
@@ -196,6 +230,8 @@ public class SynchronizedEquivalenceClasses implements DAGEquivalenceClasses{
 	}
 
 	/**
+	 * Clear.
+	 *
 	 * @see uk.ac.ox.cs.pdq.planner.dag.equivalence.DAGEquivalenceClasses#clear()
 	 */
 	@Override
@@ -204,6 +240,8 @@ public class SynchronizedEquivalenceClasses implements DAGEquivalenceClasses{
 	}
 
 	/**
+	 * Average class size.
+	 *
 	 * @return double
 	 * @see uk.ac.ox.cs.pdq.planner.dag.equivalence.DAGEquivalenceClasses#averageClassSize()
 	 */
@@ -217,6 +255,8 @@ public class SynchronizedEquivalenceClasses implements DAGEquivalenceClasses{
 	}
 
 	/**
+	 * Median class size.
+	 *
 	 * @return int
 	 * @see uk.ac.ox.cs.pdq.planner.dag.equivalence.DAGEquivalenceClasses#medianClassSize()
 	 */
@@ -235,6 +275,8 @@ public class SynchronizedEquivalenceClasses implements DAGEquivalenceClasses{
 	}
 
 	/**
+	 * Retain all.
+	 *
 	 * @param configurations Collection<DAGChaseConfiguration>
 	 * @see uk.ac.ox.cs.pdq.equivalence.dag.DAGEquivalenceClasses#retainAll(Collection<DAGChaseConfiguration>)
 	 */

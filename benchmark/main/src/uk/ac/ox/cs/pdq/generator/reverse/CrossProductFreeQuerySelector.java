@@ -17,6 +17,7 @@ import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 
+// TODO: Auto-generated Javadoc
 /**
  * A QuerySelector that accept only conjunctive queries without cross products.
  * 

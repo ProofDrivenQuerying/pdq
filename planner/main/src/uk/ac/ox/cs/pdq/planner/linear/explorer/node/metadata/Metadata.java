@@ -2,6 +2,7 @@ package uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata;
 
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
 
+// TODO: Auto-generated Javadoc
 /**
  * Top-level class for node dataguide. This main currently mainly used in the
  * use interface.
@@ -10,7 +11,10 @@ import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
  */
 public class Metadata {
 
+	/** The parent. */
 	protected final SearchNode parent;
+	
+	/** The time created. */
 	protected final double timeCreated;
 
 	/**
@@ -24,6 +28,8 @@ public class Metadata {
 	}
 
 	/**
+	 * Gets the parent.
+	 *
 	 * @return SearchNode
 	 */
 	public SearchNode getParent() {
@@ -31,6 +37,8 @@ public class Metadata {
 	}
 
 	/**
+	 * Gets the time created.
+	 *
 	 * @return double
 	 */
 	public double getTimeCreated() {

@@ -1,5 +1,6 @@
 package uk.ac.ox.cs.pdq.test;
 
+// TODO: Auto-generated Javadoc
 /**
  * Exception that occurred during a regression test.
  * 
@@ -8,7 +9,7 @@ package uk.ac.ox.cs.pdq.test;
  */
 public class RegressionTestException extends Exception {
 
-	/** */
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -315472460756924167L;
 
 	/**
@@ -19,6 +20,8 @@ public class RegressionTestException extends Exception {
 	}
 
 	/**
+	 * Instantiates a new regression test exception.
+	 *
 	 * @param msg exception message.
 	 */
 	public RegressionTestException(String msg) {
@@ -26,6 +29,8 @@ public class RegressionTestException extends Exception {
 	}
 
 	/**
+	 * Instantiates a new regression test exception.
+	 *
 	 * @param msg exception's message
 	 * @param cause root cause of the problem.
 	 */

@@ -11,6 +11,7 @@ import uk.ac.ox.cs.pdq.util.Tuple;
 
 import com.google.common.base.Objects;
 
+// TODO: Auto-generated Javadoc
 /**
  * Compares the value at a given position pairs in a tuple.
  *
@@ -18,12 +19,13 @@ import com.google.common.base.Objects;
  */
 public class AttributeEqualityPredicate implements EqualityPredicate {
 
+	/** The log. */
 	private static Logger log = Logger.getLogger(AttributeEqualityPredicate.class);
 
-	/** The position on which the predicate is evaluated */
+	/**  The position on which the predicate is evaluated. */
 	private final int position;
 
-	/** The other position to which position must be equals for a given tuple */
+	/**  The other position to which position must be equals for a given tuple. */
 	private final int other;
 
 	/**
@@ -39,7 +41,9 @@ public class AttributeEqualityPredicate implements EqualityPredicate {
 	}
 
 	/**
-	 * @param t
+	 * Checks if is satisfied.
+	 *
+	 * @param t the t
 	 * @return true if the tuple t satisfies the predicate
 	 * @see uk.ac.ox.cs.pdq.algebra.predicates.Predicate#isSatisfied(Tuple)
 	 */
@@ -75,6 +79,8 @@ public class AttributeEqualityPredicate implements EqualityPredicate {
 	
 
 	/**
+	 * Gets the position.
+	 *
 	 * @return the first position of the attribute to compare
 	 * @see uk.ac.ox.cs.pdq.algebra.predicates.EqualityPredicate#getPosition()
 	 */
@@ -84,6 +90,8 @@ public class AttributeEqualityPredicate implements EqualityPredicate {
 	}
 
 	/**
+	 * Gets the other.
+	 *
 	 * @return the second position of the attribute to compare
 	 */
 	public int getOther() {

@@ -17,6 +17,7 @@ import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema.AccessibleRelation;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema.InferredAccessibleRelation;
 
+// TODO: Auto-generated Javadoc
 /**
  * 
  * For an access method mt on relation R of arity n with input positions j1, ..., jm 
@@ -29,17 +30,17 @@ import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema.InferredAccessi
  */
 public class AccessibilityAxiom extends TGD implements GuardedDependency {
 
-	/** The inferred accessible relation of the axiom **/
+	/**  The inferred accessible relation of the axiom *. */
 	private final InferredAccessibleRelation infAccRelation;
-	/** The access method that this axiom maps to **/
+	
+	/**  The access method that this axiom maps to *. */
 	private final AccessMethod method;
 
 	/**
-	 * 
-	 * @param infAccRel
-	 * 		An inferred accessible relation
-	 * @param method
-	 * 		A method to access this relation
+	 * Instantiates a new accessibility axiom.
+	 *
+	 * @param infAccRel 		An inferred accessible relation
+	 * @param method 		A method to access this relation
 	 */
 	public AccessibilityAxiom(InferredAccessibleRelation infAccRel, AccessMethod method) {
 		super(createLeft(infAccRel.getBaseRelation(), method), createRight(infAccRel, method));
@@ -48,13 +49,11 @@ public class AccessibilityAxiom extends TGD implements GuardedDependency {
 	}
 
 	/**
-	 * 
-	 * @param relation
-	 * 		A schema relation 
-	 * @param method
-	 * 		A method to access this relation
-	 * @return
-	 * 		the atoms of the left-hand side of the accessibility axiom that corresponds to the input relation and the input access method
+	 * Creates the left.
+	 *
+	 * @param relation 		A schema relation 
+	 * @param method 		A method to access this relation
+	 * @return 		the atoms of the left-hand side of the accessibility axiom that corresponds to the input relation and the input access method
 	 */
 	private static Conjunction<Predicate> createLeft(Relation relation, AccessMethod method) {
 		List<Predicate> leftAtoms = new ArrayList<>();
@@ -72,13 +71,11 @@ public class AccessibilityAxiom extends TGD implements GuardedDependency {
 	}
 
 	/**
-	 * 
-	 * @param relation
-	 * 		A schema relation 
-	 * @param method
-	 * 		A method to access this relation
-	 * @return
-	 * 		the atoms of the right-hand side of the accessibility axiom that corresponds to the input relation and the input access method
+	 * Creates the right.
+	 *
+	 * @param infAccRel the inf acc rel
+	 * @param binding the binding
+	 * @return 		the atoms of the right-hand side of the accessibility axiom that corresponds to the input relation and the input access method
 	 */
 	private static Conjunction<Predicate> createRight(InferredAccessibleRelation infAccRel, AccessMethod binding) {
 		Relation relation = infAccRel.getBaseRelation();
@@ -97,6 +94,8 @@ public class AccessibilityAxiom extends TGD implements GuardedDependency {
 	}
 
 	/**
+	 * Gets the inferred accessible relation.
+	 *
 	 * @return the inferred accessible relation of the accessibility axiom.
 	 */
 	public InferredAccessibleRelation getInferredAccessibleRelation() {
@@ -104,6 +103,8 @@ public class AccessibilityAxiom extends TGD implements GuardedDependency {
 	}
 
 	/**
+	 * Gets the base relation.
+	 *
 	 * @return the base relation of the accessibility axiom.
 	 */
 	public Relation getBaseRelation() {
@@ -111,6 +112,8 @@ public class AccessibilityAxiom extends TGD implements GuardedDependency {
 	}
 
 	/**
+	 * Gets the access method.
+	 *
 	 * @return the access method of the accessibility axiom.
 	 */
 	public AccessMethod getAccessMethod() {
@@ -118,11 +121,11 @@ public class AccessibilityAxiom extends TGD implements GuardedDependency {
 	}
 	
 	/**
-	 * @param mapping
-	 * @param canonicalNames
-	 * 		True if we assign Skolem constants to the existentially quantified variables
-	 * @return
-	 * 		the grounded dependency using the input mapping.
+	 * Ground.
+	 *
+	 * @param mapping the mapping
+	 * @param canonicalNames 		True if we assign Skolem constants to the existentially quantified variables
+	 * @return 		the grounded dependency using the input mapping.
 	 *      If canonicalNames is TRUE then skolem constants are produced for
 	 *      the existentially quantified variables
 	 */
@@ -134,6 +137,8 @@ public class AccessibilityAxiom extends TGD implements GuardedDependency {
 	}
 
 	/**
+	 * Gets the guard.
+	 *
 	 * @return PredicateFormula
 	 * @see uk.ac.ox.cs.pdq.db.GuardedDependency#getGuard()
 	 */

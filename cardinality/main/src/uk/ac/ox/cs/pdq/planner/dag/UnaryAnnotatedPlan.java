@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package uk.ac.ox.cs.pdq.planner.dag;
 
 import java.util.Collection;
@@ -13,6 +16,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
+// TODO: Auto-generated Javadoc
 /**
  * An ApplyRule configuration. Corresponds to an access
  * @author Efthymia Tsamoura
@@ -23,7 +27,7 @@ public class UnaryAnnotatedPlan extends DAGAnnotatedPlan {
 	/** The facts of this configuration. These must share the same constants for the input positions of the accessibility axiom */
 	private final Predicate fact;
 
-	/** The string representation of this configuration*/
+	/**  The string representation of this configuration. */
 	private String toString;
 	
 	/** The constants of this annotated plan that appear on the facts used to build up the constituting unary annotated plans.
@@ -31,11 +35,10 @@ public class UnaryAnnotatedPlan extends DAGAnnotatedPlan {
 	private final Collection<Constant> exportedConstants;
 	
 	/**
-	 * 
-	 * @param state
-	 * 		The state of this configuration.
-	 * @param fact
-	 * 		Input facts. These must share the same constants for the input positions of the input accessibility axiom
+	 * Instantiates a new unary annotated plan.
+	 *
+	 * @param state 		The state of this configuration.
+	 * @param fact 		Input facts. These must share the same constants for the input positions of the input accessibility axiom
 	 */
 	public UnaryAnnotatedPlan(
 			ChaseState state,
@@ -51,23 +54,26 @@ public class UnaryAnnotatedPlan extends DAGAnnotatedPlan {
 	}
 
 	/**
-	 * 
-	 * @return
-	 * 		the fact of this configuration
+	 * Gets the fact.
+	 *
+	 * @return 		the fact of this configuration
 	 */
 	public Predicate getFact() {
 		return this.fact;
 	}
 	
 	/**
-	 * 
-	 * @return the base relation associated with the fact that is exposed    
+	 * Gets the relation.
+	 *
+	 * @return the base relation associated with the fact that is exposed
 	 */
 	public Relation getRelation() {
 		return (Relation)this.fact.getSignature();
 	}
 	
 	/**
+	 * To string.
+	 *
 	 * @return String
 	 */
 	@Override
@@ -79,6 +85,8 @@ public class UnaryAnnotatedPlan extends DAGAnnotatedPlan {
 	}
 
 	/**
+	 * Clone.
+	 *
 	 * @return UnaryAnnotatedPlan
 	 * @see uk.ac.ox.cs.pdq.reasoning.Configuration#clone()
 	 */
@@ -95,21 +103,28 @@ public class UnaryAnnotatedPlan extends DAGAnnotatedPlan {
 		return clone;
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.planner.dag.DAGConfiguration#getUnaryAnnotatedPlans()
+	 */
 	@Override
 	public Collection<UnaryAnnotatedPlan> getUnaryAnnotatedPlans() {
 		return Sets.newHashSet(this);
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.planner.dag.DAGConfiguration#getUnaryAnnotatedPlansList()
+	 */
 	@Override
 	public List<UnaryAnnotatedPlan> getUnaryAnnotatedPlansList() {
 		return Lists.newArrayList(this);
 	}
 
 	/**
-	 * 
-	 * @return the constants of this annotated plan that appear on the facts 
+	 * Gets the exported constants.
+	 *
+	 * @return the constants of this annotated plan that appear on the facts
 	 * used to build up the constituting unary annotated plans.
-	 * The new chase constants that are produced during chasing are not returned.  
+	 * The new chase constants that are produced during chasing are not returned.
 	 */
 	@Override
 	public Collection<Constant> getExportedConstants() {

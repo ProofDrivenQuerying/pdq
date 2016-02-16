@@ -41,6 +41,7 @@ import uk.ac.ox.cs.pdq.planner.PlannerParameters.PlannerTypes;
 import uk.ac.ox.cs.pdq.planner.logging.IntervalEventDrivenLogger;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 
+// TODO: Auto-generated Javadoc
 /**
  * This servlet functions like an endpoint. It simply execute a given query on 
  * a given datasource (passed as parameters) and output the results as the 
@@ -51,22 +52,27 @@ import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 @MultipartConfig
 public class PlannerServlet extends PDQServlet {
 
-	/** */
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -2476124495066132007L;
 
-	/** Static logger */
+	/**  Static logger. */
 	private static final Logger log = Logger.getLogger(PlannerServlet.class);
 
+	/* (non-Javadoc)
+	 * @see javax.servlet.http.HttpServlet#doPost(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+	 */
 	@Override
 	public final void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		this.processRequest(request, response);
 	}
 
 	/**
-	 * @param request
-	 * @param response
-	 * @throws ServletException
-	 * @throws IOException
+	 * Process request.
+	 *
+	 * @param request the request
+	 * @param response the response
+	 * @throws ServletException the servlet exception
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public void processRequest(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException {
 		super.processRequest(request, response);
@@ -163,11 +169,12 @@ public class PlannerServlet extends PDQServlet {
 	/**
 	 * Stores the given schema, query, future and logger in a new planning session
 	 * and in the session under the given id.
-	 * @param planningId
-	 * @param schema
-	 * @param query
-	 * @param future
-	 * @param logger
+	 *
+	 * @param planningId the planning id
+	 * @param schema the schema
+	 * @param query the query
+	 * @param future the future
+	 * @param logger the logger
 	 */
 	private void savePlanningSession(String planningId, Schema schema, Query query, Future<Plan> future, BufferedProgressLogger logger) {
 		this.session.setAttribute(SessionAttributes.LAST_PLANNING_SESSION, planningId);

@@ -4,6 +4,7 @@ import java.util.Objects;
 
 import com.google.common.base.Preconditions;
 
+// TODO: Auto-generated Javadoc
 /**
  * A predicate's signature, associate a symbol with an arity.
  *
@@ -14,16 +15,16 @@ public class Signature {
 	/** Cached instance hash (only possible because signatures are immutable). */
 	protected final int hash;
 
-	/** Cached string representation of the signature */
+	/**  Cached string representation of the signature. */
 	protected String rep;
 
-	/** Signature name */
+	/**  Signature name. */
 	protected final String name;
 
-	/** Signature arity */
+	/**  Signature arity. */
 	protected final int arity;
 
-	/** true, if this is the signature for an equality predicate */
+	/**  true, if this is the signature for an equality predicate. */
 	protected final boolean equality;
 
 	/**
@@ -53,6 +54,8 @@ public class Signature {
 	}
 
 	/**
+	 * Gets the name.
+	 *
 	 * @return the name of the predicate this signature underlies.
 	 */
 	public String getName() {
@@ -60,6 +63,8 @@ public class Signature {
 	}
 
 	/**
+	 * Gets the arity.
+	 *
 	 * @return the arity of the predicate this signature underlies.
 	 */
 	public int getArity() {
@@ -67,6 +72,8 @@ public class Signature {
 	}
 
 	/**
+	 * Checks if is equality.
+	 *
 	 * @return true if the signature is of an equality predicate,
 	 * false otherwise
 	 */
@@ -75,6 +82,8 @@ public class Signature {
 	}
 
 	/**
+	 * Equals.
+	 *
 	 * @param o Object
 	 * @return boolean
 	 */
@@ -92,6 +101,8 @@ public class Signature {
 	}
 
 	/**
+	 * Hash code.
+	 *
 	 * @return int
 	 */
 	@Override
@@ -100,6 +111,8 @@ public class Signature {
 	}
 
 	/**
+	 * To string.
+	 *
 	 * @return String
 	 */
 	@Override
@@ -108,6 +121,8 @@ public class Signature {
 	}
 
 	/**
+	 * Make string.
+	 *
 	 * @return String
 	 */
 	private String makeString() {

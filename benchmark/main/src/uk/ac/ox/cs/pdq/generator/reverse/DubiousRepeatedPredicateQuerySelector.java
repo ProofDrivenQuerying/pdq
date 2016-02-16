@@ -8,6 +8,7 @@ import uk.ac.ox.cs.pdq.fol.Query;
 
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
 /**
  * A QuerySelector that accepts only conjunctive query where no two predicate
  * have the same name and their sequence of constants cover one another.

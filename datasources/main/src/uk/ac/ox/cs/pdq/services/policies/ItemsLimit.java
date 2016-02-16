@@ -5,6 +5,7 @@ import java.util.Properties;
 import uk.ac.ox.cs.pdq.services.ServiceRepository;
 import uk.ac.ox.cs.pdq.services.rest.RESTAttribute;
 
+// TODO: Auto-generated Javadoc
 /**
  * Variant of the PagingLimit usage policy, where the start of a window is 
  * given by item index rather than page index.
@@ -36,6 +37,8 @@ public class ItemsLimit extends PagingLimit {
 	}
 
 	/**
+	 * Copy.
+	 *
 	 * @return UsagePolicy
 	 * @see uk.ac.ox.cs.pdq.services.policies.UsagePolicy#copy()
 	 */
@@ -44,6 +47,9 @@ public class ItemsLimit extends PagingLimit {
 		return new ItemsLimit(this.pageSize, this.startIndex, this.pageSizeAttributes, this.pageIndexAttributes, this.totalItemsAttributes);
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.services.policies.PagingLimit#increment()
+	 */
 	@Override
 	protected void increment() {
 		this.pageIndex += this.pageSize;

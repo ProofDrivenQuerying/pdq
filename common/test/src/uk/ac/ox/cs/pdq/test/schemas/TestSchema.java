@@ -22,16 +22,21 @@ import uk.ac.ox.cs.pdq.fol.Variable;
 import com.google.common.collect.Lists;
 
 
+// TODO: Auto-generated Javadoc
 /**
- * 
- * @author Efthymia Tsamoura
+ * The Class TestSchema.
  *
+ * @author Efthymia Tsamoura
  */
 
 public final class TestSchema {
 
+	/** The schema. */
 	private final Schema schema;
 
+	/**
+	 * Instantiates a new test schema.
+	 */
 	public TestSchema() {
 		Attribute activity_comment = new Attribute(String.class, "activity_comment");
 		Attribute activity_id = new Attribute(String.class, "activity_id");
@@ -503,6 +508,12 @@ public final class TestSchema {
 	}
 
 
+	/**
+	 * Define dependencies.
+	 *
+	 * @param schema the schema
+	 * @return the collection
+	 */
 	private Collection<Constraint> defineDependencies(Schema schema) {
 		Term activity_comment = new Variable("activity_comment");
 		Term activity_id = new Variable("activity_id");
@@ -1015,6 +1026,11 @@ public final class TestSchema {
 	}
 
 
+	/**
+	 * Gets the schema.
+	 *
+	 * @return the schema
+	 */
 	public Schema getSchema() {
 		return schema;
 	}

@@ -13,6 +13,7 @@ import uk.ac.ox.cs.pdq.services.rest.InputMethod;
 
 import com.google.common.base.Preconditions;
 
+// TODO: Auto-generated Javadoc
 /**
  * A collection of Services, with shared usage policies and input methods.
  * 
@@ -36,14 +37,15 @@ public class ServiceRepository {
 	private final Map<String, InputMethod> inputMethods = new LinkedHashMap<>();
 
 	/**
-	 * Default constructor
+	 * Default constructor.
 	 */
 	public ServiceRepository() {}
 	
 	/**
-	 * Registers a service
-	 * @param name
-	 * @param service
+	 * Registers a service.
+	 *
+	 * @param name the name
+	 * @param service the service
 	 */
 	public void registerService(String name, Service service) {
 		Preconditions.checkArgument(name != null);
@@ -52,8 +54,9 @@ public class ServiceRepository {
 	}
 	
 	/**
-	 * Unregisters a service
-	 * @param name
+	 * Unregisters a service.
+	 *
+	 * @param name the name
 	 */
 	public void unregisterService(String name) {
 		Preconditions.checkArgument(name != null);
@@ -61,8 +64,9 @@ public class ServiceRepository {
 	}
 	
 	/**
-	 * Registers a common usage policy
-	 * @param name
+	 * Registers a common usage policy.
+	 *
+	 * @param name the name
 	 * @param policy UsagePolicy
 	 */
 	public void registerUsagePolicy(String name, UsagePolicy policy) {
@@ -72,8 +76,9 @@ public class ServiceRepository {
 	}
 	
 	/**
-	 * Registers a common usage policy
-	 * @param name
+	 * Registers a common usage policy.
+	 *
+	 * @param name the name
 	 * @param cl Class<UsagePolicy>
 	 * @param properties Properties
 	 */
@@ -85,8 +90,9 @@ public class ServiceRepository {
 	}
 	
 	/**
-	 * Registers a common input method
-	 * @param name
+	 * Registers a common input method.
+	 *
+	 * @param name the name
 	 * @param method InputMethod
 	 */
 	public void registerInputMethod(String name, InputMethod method) {
@@ -96,8 +102,9 @@ public class ServiceRepository {
 	}
 	
 	/**
-	 * Unregisters a common input method
-	 * @param name
+	 * Unregisters a common input method.
+	 *
+	 * @param name the name
 	 */
 	public void unregisterInputMethod(String name) {
 		Preconditions.checkArgument(name != null);
@@ -107,7 +114,8 @@ public class ServiceRepository {
 	/**
 	 * Resolves a parameterised input method, and a returns a pair contained 
 	 * that method and its parameters in an array of Strings.
-	 * @param att
+	 *
+	 * @param att the att
 	 * @return Pair<InputMethod,String[]>
 	 */
 	public Pair<InputMethod, String[]> parseInputMethod(String att) {
@@ -132,7 +140,9 @@ public class ServiceRepository {
 	}
 
 	/**
-	 * @param name
+	 * Gets the service.
+	 *
+	 * @param name the name
 	 * @return the service by the given name
 	 */
 	public Service getService(String name) {
@@ -141,7 +151,9 @@ public class ServiceRepository {
 	}
 	
 	/**
-	 * @param name
+	 * Gets the usage policy.
+	 *
+	 * @param name the name
 	 * @return the usage policy by the given name
 	 */
 	public UsagePolicy getUsagePolicy(String name) {
@@ -150,7 +162,9 @@ public class ServiceRepository {
 	}
 	
 	/**
-	 * @param name
+	 * Gets the input method.
+	 *
+	 * @param name the name
 	 * @return the input method by the given name
 	 */
 	public InputMethod getInputMethod(String name) {
@@ -163,6 +177,8 @@ public class ServiceRepository {
 	}
 
 	/**
+	 * Gets the services.
+	 *
 	 * @return a Collection of all the service in the repository.
 	 */
 	public Collection<Service> getServices() {

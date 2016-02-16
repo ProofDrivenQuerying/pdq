@@ -12,20 +12,24 @@ import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.rewrite.Rewriter;
 import uk.ac.ox.cs.pdq.rewrite.RewriterException;
 
+// TODO: Auto-generated Javadoc
 /**
  * Attempts to rewrite a sentence into a TGD. If the sentence of found
  * not to be top-level conjunction, with a single negation sub-formula,
  * the rewrite operation is aborted and null is returned
- * 
- * @author Julien Leblay
  *
+ * @author Julien Leblay
+ * @param <T> the generic type
  */
 public class SentenceToRule<T extends Formula> implements Rewriter<T, TGD>{
 
 	/**
+	 * Rewrite.
+	 *
 	 * @param input T
 	 * @return if the input formula is a conjunction with a single negated atom,
 	 * returns an equivalent TGD, otherwise returns null.
+	 * @throws RewriterException the rewriter exception
 	 */
 	@Override
 	public TGD rewrite(T input) throws RewriterException {

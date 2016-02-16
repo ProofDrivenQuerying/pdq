@@ -25,6 +25,7 @@ import com.google.common.collect.Multimap;
 import com.logicblox.common.protocol.CommonProto.PredicateDeclaration;
 import com.logicblox.common.protocol.CommonProto.Rule;
 
+// TODO: Auto-generated Javadoc
 /**
  * The context holds information about Logicblox workspaces. It is in charge 
  * of converting and storing LB-data structures to PDQ-data structures.
@@ -36,7 +37,7 @@ public class Context {
 	/** Logger. */
 	static Logger log = Logger.getLogger(Context.class);
 
-	/** LB workspace pointer */
+	/**  LB workspace pointer. */
 	private final Workspace workspace;
 
 	/** Schema associated with the context's workspace. */
@@ -67,6 +68,8 @@ public class Context {
 	private boolean hasModifs = true;
 
 	/**
+	 * Gets the workspace.
+	 *
 	 * @return Workspace
 	 */
 	public Workspace getWorkspace() {
@@ -74,6 +77,8 @@ public class Context {
 	}
 	
 	/**
+	 * Gets the schema.
+	 *
 	 * @return Schema
 	 */
 	public Schema getSchema() {
@@ -121,7 +126,8 @@ public class Context {
 	 * such that predicate preceeding the query's body predicates in the 
 	 * execution graph's topological sort orders are made inaccessible, while
 	 * all other relations have free access.
-	 * @param query
+	 *
+	 * @param query the query
 	 * @return a copy of the schema, with the newly modified access methods.
 	 */
 	public Schema setAccesses(Query<?> query) {
@@ -153,7 +159,8 @@ public class Context {
 	 * Removes the object(s) under the given name present in the index.
 	 * The object might be relations, views, dependencies. This method
 	 * has no effect if the index contains no such entry.
-	 * @param name
+	 *
+	 * @param name the name
 	 */
 	public void remove(String name) {
 		log.info("Removing " + name + " from " + this.workspace.name);
@@ -178,9 +185,10 @@ public class Context {
 	}
 
 	/**
-	 * Add a new PredicateDeclaration to the collection of pending ones
-	 * @param name
-	 * @param predDecl
+	 * Add a new PredicateDeclaration to the collection of pending ones.
+	 *
+	 * @param name the name
+	 * @param predDecl the pred decl
 	 */
 	public void putRelation(String name, PredicateDeclaration predDecl) {
 		if (!this.index.containsKey(name)) {
@@ -191,9 +199,10 @@ public class Context {
 	}
 
 	/**
-	 * Add a new View to the collection of pending ones
-	 * @param name
-	 * @param rule
+	 * Add a new View to the collection of pending ones.
+	 *
+	 * @param name the name
+	 * @param rule the rule
 	 */
 	public void putView(String name, Rule rule) {
 		if (!this.index.containsKey(name)) {
@@ -204,9 +213,10 @@ public class Context {
 	}
 
 	/**
-	 * Add a new Constraint to the collection of pending ones
-	 * @param name
-	 * @param rule
+	 * Add a new Constraint to the collection of pending ones.
+	 *
+	 * @param name the name
+	 * @param rule the rule
 	 */
 	public void putDependency(String name, Rule rule) {
 		if (!this.index.containsKey(name)) {
@@ -318,7 +328,8 @@ public class Context {
 	
 	/**
 	 * Removes the rank of the object by the given from the topological order.
-	 * @param name
+	 *
+	 * @param name the name
 	 */
 	public void removeRank(String name) {
 		this.topoOrder.remove(name);
@@ -326,8 +337,9 @@ public class Context {
 
 	/**
 	 * Updates the rank of the object by the given from the topological order.
-	 * @param name
-	 * @param rank
+	 *
+	 * @param name the name
+	 * @param rank the rank
 	 */
 	public void updateRank(String name, Long rank) {
 		this.topoOrder.forcePut(name, rank);
@@ -338,6 +350,7 @@ public class Context {
 	 */
 	public static class Workspace {
 
+		/** The name. */
 		private final String name;
 
 		/**
@@ -350,6 +363,8 @@ public class Context {
 		}
 
 		/**
+		 * Gets the name.
+		 *
 		 * @return String
 		 */
 		public String getName() {

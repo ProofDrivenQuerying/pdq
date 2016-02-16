@@ -28,23 +28,41 @@ import uk.ac.ox.cs.pdq.util.Typed;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
+ * The Class ProjectionTest.
+ *
  * @author Julien LEBLAY
  */
 public class ProjectionTest extends UnaryIteratorTest {
 
+	/** The iterator. */
 	Projection iterator;
+	
+	/** The projected type. */
 	TupleType projectedType;
+	
+	/** The projected. */
 	List<Typed> projected;
+	
+	/** The renaming. */
 	Map<Integer, Typed> renaming;
+	
+	/** The relation. */
 	InMemoryTableWrapper relation;
+	
+	/** The mt. */
 	AccessMethod mt;
+	
+	/** The d. */
 	Attribute A = new Attribute(String.class, "A"), 
 			B = new Attribute(Integer.class, "B"), 
 			c = new Attribute(String.class, "c"), 
 			d = new Attribute(Integer.class, "d");
 	
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.test.runtime.exec.iterator.TupleIteratorTest#setup()
+	 */
 	@Before public void setup() {
         super.setup();
 		this.projectedType = TupleType.DefaultFactory.create(Integer.class, String.class, String.class);
@@ -75,12 +93,18 @@ public class ProjectionTest extends UnaryIteratorTest {
 		this.iterator = new Projection(projected, renaming, child);
 	}
 
+	/**
+	 * Inits the projection.
+	 */
 	@Test public void initProjection() {
 		this.iterator = new Projection(projected, child);
 		Assert.assertEquals("Projection header match that of initialization", this.projected, this.iterator.getColumns());
 		Assert.assertEquals("Projection child match that of initialization", this.child, this.iterator.getChild());
 	}
 
+	/**
+	 * Inits the projection with renaming.
+	 */
 	@Test public void initProjectionWithRenaming() {
 		this.iterator = new Projection(projected, renaming, child);
 		List<Typed> renamedOutput = Lists.<Typed>newArrayList(B, new TypedConstant<>("x"), A);
@@ -92,16 +116,27 @@ public class ProjectionTest extends UnaryIteratorTest {
 		Assert.assertEquals("Projection renamed input must match that of initialization", renamedInput, this.iterator.getInputColumns());
 	}
 	
+	/**
+	 * Inits the selection null child.
+	 */
 	@Test(expected=IllegalArgumentException.class) 
 	public void initSelectionNullChild() {
 		new Projection(projected, renaming, null);
 	}
 	
+	/**
+	 * Inits the selection null header.
+	 */
 	@Test(expected=IllegalArgumentException.class) 
 	public void initSelectionNullHeader() {
 		new Projection(null, renaming, child);
 	}
 		
+	/**
+	 * Deep copy.
+	 *
+	 * @throws RelationalOperatorException the relational operator exception
+	 */
 	@Test public void deepCopy() throws RelationalOperatorException {
 		this.iterator = new Projection(projected, renaming, child);
 		Projection copy = this.iterator.deepCopy();
@@ -112,6 +147,9 @@ public class ProjectionTest extends UnaryIteratorTest {
 		Assert.assertEquals("Projection iterator input type must match that of child", this.iterator.getInputType(), copy.getInputType());
 	}
 
+	/**
+	 * Checks for next.
+	 */
 	@Test public void hasNext() {
 		this.iterator = new Projection(projected, renaming, new Scan(relation));
 		this.iterator.open();
@@ -121,6 +159,9 @@ public class ProjectionTest extends UnaryIteratorTest {
 		Assert.assertFalse(this.iterator.hasNext()); this.iterator.reset();
 	}
 
+	/**
+	 * Next.
+	 */
 	@Test public void next() {
 		this.iterator = new Projection(projected, renaming, child);
 		this.iterator.open();
@@ -129,6 +170,9 @@ public class ProjectionTest extends UnaryIteratorTest {
 		Assert.assertEquals(projectedType.createTuple(3, "x", "three"), this.iterator.next());
 	}
 
+	/**
+	 * Reset.
+	 */
 	@Test public void reset() {
 		this.iterator = new Projection(projected, renaming, new Scan(relation));
 		this.iterator.open();
@@ -151,6 +195,9 @@ public class ProjectionTest extends UnaryIteratorTest {
 		Assert.assertFalse(this.iterator.hasNext());
 	}
 	
+	/**
+	 * Bind null.
+	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void bindNull() {
 		this.iterator = new Projection(projected, renaming, new TopDownAccess(relation, mt));
@@ -158,12 +205,18 @@ public class ProjectionTest extends UnaryIteratorTest {
 		this.iterator.bind(null);
 	}
 	
+	/**
+	 * Bind on unopened.
+	 */
 	@Test(expected=IllegalStateException.class)
 	public void bindOnUnopened() {
 		this.iterator = new Projection(projected, renaming, new TopDownAccess(relation, mt));
 		this.iterator.bind(inputType.createTuple(4, "four"));
 	}
 	
+	/**
+	 * Bind illegal type.
+	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void bindIllegalType() {
 		this.iterator = new Projection(projected, renaming, new TopDownAccess(relation, mt));
@@ -171,6 +224,9 @@ public class ProjectionTest extends UnaryIteratorTest {
 		this.iterator.bind(inputType.createTuple("four", 4));
 	}
 	
+	/**
+	 * Bind empty tuple.
+	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void bindEmptyTuple() {
 		this.iterator = new Projection(projected, renaming, new TopDownAccess(relation, mt));
@@ -178,6 +234,9 @@ public class ProjectionTest extends UnaryIteratorTest {
 		this.iterator.bind(Tuple.EmptyTuple);
 	}
 	
+	/**
+	 * Bind.
+	 */
 	@Test public void bind() {
 		this.iterator = new Projection(projected, renaming, new TopDownAccess(relation, mt));
 		this.iterator.open();
@@ -202,6 +261,9 @@ public class ProjectionTest extends UnaryIteratorTest {
 		Assert.assertFalse(this.iterator.hasNext());
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.test.runtime.exec.iterator.TupleIteratorTest#getIterator()
+	 */
 	@Override
 	protected TupleIterator getIterator() {
 		return this.iterator;

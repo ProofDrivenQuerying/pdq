@@ -12,25 +12,25 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
 /**
- * A quantified formula
+ * A quantified formula.
+ *
  * @author Efthymia Tsamoura
  * @author Julien Leblay
- *
+ * @param <T> the generic type
  */
 public abstract class QuantifiedFormula<T extends Formula> extends UnaryFormula<T> {
 
-	/** The quantified variables*/
+	/**  The quantified variables. */
 	protected final List<Variable> variables;
 
 	/**
+	 * Instantiates a new quantified formula.
 	 *
-	 * @param operator
-	 * 		Input quantifier operator
-	 * @param variables
-	 * 		Input quantified variables
-	 * @param child
-	 * 		Input child
+	 * @param operator 		Input quantifier operator
+	 * @param variables 		Input quantified variables
+	 * @param child 		Input child
 	 * 		Throws illegal argument exception when the input operator is not a quantifier one
 	 */
 	protected QuantifiedFormula(LogicalSymbols operator, List<Variable> variables, T child) {
@@ -41,6 +41,8 @@ public abstract class QuantifiedFormula<T extends Formula> extends UnaryFormula<
 	}
 
 	/**
+	 * Equals.
+	 *
 	 * @param o Object
 	 * @return boolean
 	 */
@@ -59,6 +61,8 @@ public abstract class QuantifiedFormula<T extends Formula> extends UnaryFormula<
 	}
 
 	/**
+	 * Hash code.
+	 *
 	 * @return int
 	 */
 	@Override
@@ -67,6 +71,8 @@ public abstract class QuantifiedFormula<T extends Formula> extends UnaryFormula<
 	}
 
 	/**
+	 * To string.
+	 *
 	 * @return java.lang.String
 	 */
 	@Override
@@ -77,6 +83,8 @@ public abstract class QuantifiedFormula<T extends Formula> extends UnaryFormula<
 	}
 
 	/**
+	 * Gets the variables.
+	 *
 	 * @return List<Variable>
 	 */
 	public List<Variable> getVariables() {
@@ -84,6 +92,8 @@ public abstract class QuantifiedFormula<T extends Formula> extends UnaryFormula<
 	}
 
 	/**
+	 * Checks if is universal.
+	 *
 	 * @return boolean
 	 */
 	public boolean isUniversal() {
@@ -92,6 +102,8 @@ public abstract class QuantifiedFormula<T extends Formula> extends UnaryFormula<
 
 
 	/**
+	 * Checks if is existential.
+	 *
 	 * @return boolean
 	 */
 	public boolean isExistential() {
@@ -100,8 +112,11 @@ public abstract class QuantifiedFormula<T extends Formula> extends UnaryFormula<
 
 	/**
 	 * Constructor for UniversallyQuantifiedFormula.
+	 *
+	 * @param <T> the generic type
 	 * @param variables List<Variable>
 	 * @param child T
+	 * @return the universally quantified formula
 	 */
 	public static <T extends Formula> UniversallyQuantifiedFormula<T> forAll(List<Variable> variables, T child) {
 		return new UniversallyQuantifiedFormula<>(variables, child);
@@ -109,14 +124,20 @@ public abstract class QuantifiedFormula<T extends Formula> extends UnaryFormula<
 
 	/**
 	 * Constructor for ExistentiallyQuantifiedFormula.
+	 *
+	 * @param <T> the generic type
 	 * @param variables List<Variable>
 	 * @param child T
+	 * @return the existentially quantified formula
 	 */
 	public static <T extends Formula> ExistentiallyQuantifiedFormula<T> thereExists(List<Variable> variables, T child) {
 		return new ExistentiallyQuantifiedFormula<>(variables, child);
 	}
 
 	/**
+	 * The Class UniversallyQuantifiedFormula.
+	 *
+	 * @param <T> the generic type
 	 */
 	public static final class UniversallyQuantifiedFormula<T extends Formula> extends QuantifiedFormula<T>{
 
@@ -130,6 +151,8 @@ public abstract class QuantifiedFormula<T extends Formula> extends UnaryFormula<
 		}
 
 		/**
+		 * Ground.
+		 *
 		 * @param mapping Map<Variable,Term>
 		 * @return Formula
 		 * @see uk.ac.ox.cs.pdq.formula.Formula#ground(Map<Variable,Term>)
@@ -144,6 +167,9 @@ public abstract class QuantifiedFormula<T extends Formula> extends UnaryFormula<
 	}
 
 	/**
+	 * The Class ExistentiallyQuantifiedFormula.
+	 *
+	 * @param <T> the generic type
 	 */
 	public static final class ExistentiallyQuantifiedFormula<T extends Formula> extends QuantifiedFormula<T>{
 
@@ -157,6 +183,8 @@ public abstract class QuantifiedFormula<T extends Formula> extends UnaryFormula<
 		}
 
 		/**
+		 * Ground.
+		 *
 		 * @param mapping Map<Variable,Term>
 		 * @return Formula
 		 * @see uk.ac.ox.cs.pdq.formula.Formula#ground(Map<Variable,Term>)

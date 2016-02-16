@@ -15,6 +15,7 @@ import uk.ac.ox.cs.pdq.util.BooleanResult;
 import uk.ac.ox.cs.pdq.util.Result;
 import uk.ac.ox.cs.pdq.util.Utility;
 
+// TODO: Auto-generated Javadoc
 /**
  * SQL-backed plan executor. Translates a linear plan a single SQL WITH 
  * statement, and runs in against the database. 
@@ -29,10 +30,11 @@ public class SQLWithPlanExecutor extends SQLPlanExecutor {
 
 	/**
 	 * Default constructor.
-	 * @param plan
-	 * @param q
-	 * @param properties
+	 *
+	 * @param plan the plan
+	 * @param q the q
 	 * @param sem Semantics
+	 * @param properties the properties
 	 */
 	public SQLWithPlanExecutor(Plan plan, Query<?> q, Semantics sem, Properties properties) {
 		super(plan, q, sem, properties);

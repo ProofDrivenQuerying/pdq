@@ -31,6 +31,7 @@ import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 
 import com.beust.jcommander.Parameter;
 
+// TODO: Auto-generated Javadoc
 /**
  * Reads settings from the command line and parameter file(s) and run the
  * program.
@@ -42,12 +43,15 @@ public class PlannerBenchmark extends Runner {
 	/** Runner's logger. */
 	private static Logger log = Logger.getLogger(PlannerBenchmark.class);
 
+	/** The write plan. */
 	@Parameter(names = { "-w", "--write-plan" }, required = false, description = "If true, write the resulting plan to a plan.xml file.")
 	protected boolean writePlan;
 
+	/** The write plan multiple. */
 	@Parameter(names = { "-W", "--write-multiple-plans" }, required = false, description = "If true, write the resulting plan to a plan.xml file.")
 	protected boolean writePlanMultiple;
 
+	/** The no dep. */
 	@Parameter(names = { "-n", "--no-dependencies" }, required = false, description = "If true, the planner will be run without taking dependencies into account.")
 	protected boolean noDep;
 
@@ -60,19 +64,20 @@ public class PlannerBenchmark extends Runner {
 	/**
 	 * Sets up an experiment sample using external parameters (file and
 	 * command-line arguments).
-	 * 
-	 * @param args
-	 *            the command line parameters as given by the main method.
-	 * @throws IOException
-	 * @throws ReflectiveOperationException
-	 * @throws BenchmarkException 
-	 * @throws ProofException 
+	 *
+	 * @param args            the command line parameters as given by the main method.
+	 * @throws BenchmarkException the benchmark exception
+	 * @throws ReflectiveOperationException the reflective operation exception
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public PlannerBenchmark(String... args) throws BenchmarkException, 
 			ReflectiveOperationException, IOException {
 		super(args);
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Runnable#run()
+	 */
 	@Override
 	public void run() {
 		try {
@@ -84,17 +89,26 @@ public class PlannerBenchmark extends Runner {
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.benchmark.Runner#getLockFilename()
+	 */
 	@Override
 	protected String getLockFilename() {
 		return PLANNER_LOCK;
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.benchmark.Runner#getOutputFilename()
+	 */
 	@Override
 	protected String getOutputFilename() {
 		return PLANNER_OUTPUT_FILENAME.replace("{datetime}", new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss").format(new Date(System.currentTimeMillis())));
 	}
 	
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.benchmark.Runner#run(java.io.File)
+	 */
 	@Override
 	public void run(File directory) throws BenchmarkException, IOException {
 		String threadName = Thread.currentThread().getName();
@@ -190,15 +204,17 @@ public class PlannerBenchmark extends Runner {
 	 * Run an experiments and returns as a result a pair containing the result
 	 * of the evaluation of the best plan found, and the result of the original
 	 * query evaluation, respectively.
-	 * @param directory
-	 * @param plannerParams
-	 * @param costParams
-	 * @param schema
-	 * @param query
-	 * @param stats
-	 * @param out
-	 * @throws BenchmarkException
-	 * @throws IOException
+	 *
+	 * @param directory the directory
+	 * @param plannerParams the planner params
+	 * @param costParams the cost params
+	 * @param reasoningParams the reasoning params
+	 * @param schema the schema
+	 * @param query the query
+	 * @param stats the stats
+	 * @param out the out
+	 * @throws BenchmarkException the benchmark exception
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public void run(File directory, PlannerParameters plannerParams, CostParameters costParams, 
 			ReasoningParameters reasoningParams, Schema schema, ConjunctiveQuery query, ChainedStatistics stats, PrintStream out)
@@ -257,7 +273,10 @@ public class PlannerBenchmark extends Runner {
 	}
 
 	/**
-	 * 
+	 * Count cross products.
+	 *
+	 * @param op the op
+	 * @return the int
 	 */
 	public int countCrossProducts(RelationalOperator op) {
 		int result = 0;
@@ -277,7 +296,10 @@ public class PlannerBenchmark extends Runner {
 	}
 
 	/**
-	 * 
+	 * Bushiness.
+	 *
+	 * @param op the op
+	 * @return the int
 	 */
 	public int bushiness(RelationalOperator op) {
 		int result = 0;
@@ -298,6 +320,8 @@ public class PlannerBenchmark extends Runner {
 	}
 
 	/**
+	 * Checks if is write plan.
+	 *
 	 * @return true if the plan found is to be written to a file.
 	 */
 	public boolean isWritePlan() {
@@ -305,6 +329,8 @@ public class PlannerBenchmark extends Runner {
 	}
 
 	/**
+	 * Checks if is write plan multiple.
+	 *
 	 * @return true if all the best plans found are to be written to separate files.
 	 */
 	public boolean isWritePlanMultiple() {
@@ -312,14 +338,17 @@ public class PlannerBenchmark extends Runner {
 	}
 
 	/**
-	 * Set the plan write policy
-	 * @param b
+	 * Set the plan write policy.
+	 *
+	 * @param b the new write plan
 	 */
 	public void setWritePlan(boolean b) {
 		this.writePlan = b;
 	}
 
 	/**
+	 * Checks if is no dependencies.
+	 *
 	 * @return true if dependencies should be taken into account or not during planning.
 	 */
 	public boolean isNoDependencies() {
@@ -328,7 +357,8 @@ public class PlannerBenchmark extends Runner {
 
 	/**
 	 * Set whether dependencies should be taken into account or not during planning.
-	 * @param b
+	 *
+	 * @param b the new no dependencies
 	 */
 	public void setNoDependencies(boolean b) {
 		this.noDep = b;
@@ -336,8 +366,8 @@ public class PlannerBenchmark extends Runner {
     
 	/**
 	 * Instantiates an experiment and runs it.
-	 * 
-	 * @param args
+	 *
+	 * @param args the arguments
 	 */
 	public static void main(String... args) {
 		try {

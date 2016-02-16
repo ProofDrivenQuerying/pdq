@@ -34,6 +34,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.eventbus.EventBus;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * Generic SQL evaluator. Builds SQL statements from conjunctive queries, and
  * runs them on some underlying database.

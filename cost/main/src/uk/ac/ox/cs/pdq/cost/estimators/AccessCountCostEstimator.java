@@ -11,14 +11,17 @@ import uk.ac.ox.cs.pdq.plan.DoubleCost;
 import uk.ac.ox.cs.pdq.plan.Plan;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * A simple cost estimator.
  * According to this implementation, the cost of a plan equals the number of the accesses.
  *
  * @author Efthymia Tsamoura
+ * @param <P> the generic type
  */
 public class AccessCountCostEstimator<P extends Plan> implements SimpleCostEstimator<P> {
 
+	/** The stats. */
 	protected final StatisticsCollector stats;
 	
 	/**
@@ -30,14 +33,17 @@ public class AccessCountCostEstimator<P extends Plan> implements SimpleCostEstim
 
 
 	/**
-	 * Constructor
-	 * @param stats
+	 * Constructor.
+	 *
+	 * @param stats the stats
 	 */
 	public AccessCountCostEstimator(StatisticsCollector stats) {
 		this.stats = stats;
 	}
 
 	/**
+	 * Clone.
+	 *
 	 * @return SimpleCountCostEstimator<P,S>
 	 * @see uk.ac.ox.cs.pdq.cost.estimators.SimpleCostEstimator#clone()
 	 */
@@ -47,6 +53,8 @@ public class AccessCountCostEstimator<P extends Plan> implements SimpleCostEstim
 	}
 
 	/**
+	 * Cost.
+	 *
 	 * @param plan P
 	 * @return DoubleCost
 	 * @see uk.ac.ox.cs.pdq.cost.estimators.CostEstimator#cost(P)
@@ -59,6 +67,8 @@ public class AccessCountCostEstimator<P extends Plan> implements SimpleCostEstim
 	}
 
 	/**
+	 * Estimate cost.
+	 *
 	 * @param plan P
 	 * @return Cost
 	 * @see uk.ac.ox.cs.pdq.cost.estimators.SimpleCostEstimator#estimateCost(P)
@@ -69,6 +79,8 @@ public class AccessCountCostEstimator<P extends Plan> implements SimpleCostEstim
 	}
 
 	/**
+	 * Cost.
+	 *
 	 * @param accesses Collection<AccessOperator>
 	 * @return DoubleCost
 	 * @see uk.ac.ox.cs.pdq.costs.SimpleCostEstimator#cost(Collection<AccessOperator>)

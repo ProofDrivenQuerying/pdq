@@ -32,28 +32,30 @@ import uk.ac.ox.cs.pdq.plan.Plan;
 import com.google.common.collect.Lists;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * A whitebox cost estimation implementation.
  * According to this, the cost of a plan equals the number of the accesses.
  * Based on cost estimation as defined in the "Database Management System" by
  * Ramakrishnan and Gehrke.
- *
+ * 
  * Roughly speaking, the cost of a plan is the sum of the cost of its sub-plans,
  * plus it own IO cost multiple by an estimation of its cardinality.
  *
  * @author Julien Leblay
- *
+ * @param <P> the generic type
  */
 public class WhiteBoxCostEstimator<P extends Plan> implements BlackBoxCostEstimator<P> {
 
+	/** The stats. */
 	protected final StatisticsCollector stats;
 
+	/** The card estimator. */
 	protected final CardinalityEstimator cardEstimator;
 
 	/**
-	 * Default constructor
-	 * @param eventBus
-	 * @param collectStats
+	 * Default constructor.
+	 *
 	 * @param ce CardinalityEstimator
 	 */
 	public WhiteBoxCostEstimator(CardinalityEstimator ce) {
@@ -61,8 +63,9 @@ public class WhiteBoxCostEstimator<P extends Plan> implements BlackBoxCostEstima
 	}
 
 	/**
-	 * Constructor
-	 * @param stats
+	 * Constructor.
+	 *
+	 * @param stats the stats
 	 * @param ce CardinalityEstimator
 	 */
 	public WhiteBoxCostEstimator(StatisticsCollector stats, CardinalityEstimator ce) {
@@ -80,6 +83,8 @@ public class WhiteBoxCostEstimator<P extends Plan> implements BlackBoxCostEstima
 	}
 
 	/**
+	 * Gets the cardinality estimator.
+	 *
 	 * @return CardinalityEstimator
 	 */
 	public CardinalityEstimator getCardinalityEstimator() {
@@ -88,7 +93,8 @@ public class WhiteBoxCostEstimator<P extends Plan> implements BlackBoxCostEstima
 
 	/**
 	 * Recursively computes the cost of the given plan.
-	 * @param plan
+	 *
+	 * @param plan the plan
 	 * @return the cost of the given plan.
 	 */
 	private double recursiveCost(P plan) {
@@ -111,7 +117,8 @@ public class WhiteBoxCostEstimator<P extends Plan> implements BlackBoxCostEstima
 	/**
 	 * Recursively computes the cost of the given operator, assuming an empty
 	 * descendant collection and an input cardinality of 0.
-	 * @param logOp
+	 *
+	 * @param logOp the log op
 	 * @return the cost of the given operator.
 	 */
 	public double recursiveCost(RelationalOperator logOp) {
@@ -120,8 +127,9 @@ public class WhiteBoxCostEstimator<P extends Plan> implements BlackBoxCostEstima
 
 	/**
 	 * Recursively computes the cost of the given operator.
-	 * @param logOp
-	 * @param descendants
+	 *
+	 * @param logOp the log op
+	 * @param descendants the descendants
 	 * @return the cost of the given operator.
 	 */
 	private double recursiveCost(RelationalOperator logOp, Collection<DAGPlan> descendants) {
@@ -195,7 +203,9 @@ public class WhiteBoxCostEstimator<P extends Plan> implements BlackBoxCostEstima
 	}
 
 	/**
-	 * @param o
+	 * Per output tuple cost.
+	 *
+	 * @param o the o
 	 * @return the per-output tuple I/O cost of the given operator.
 	 */
 	private static Double perOutputTupleCost(RelationalOperator o) {
@@ -232,6 +242,9 @@ public class WhiteBoxCostEstimator<P extends Plan> implements BlackBoxCostEstima
 		return (double) o.getColumns().size();
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.cost.estimators.CostEstimator#estimateCost(uk.ac.ox.cs.pdq.util.Costable)
+	 */
 	@Override
 	public Cost estimateCost(P plan) {
 		if(this.stats != null){this.stats.start(COST_ESTIMATION_TIME);}
@@ -243,6 +256,8 @@ public class WhiteBoxCostEstimator<P extends Plan> implements BlackBoxCostEstima
 	}
 	
 	/**
+	 * Cost.
+	 *
 	 * @param plan P
 	 * @return DoubleCost
 	 * @see uk.ac.ox.cs.pdq.cost.estimators.CostEstimator#cost(P)

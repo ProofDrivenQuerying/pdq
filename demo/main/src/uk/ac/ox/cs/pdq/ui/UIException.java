@@ -1,5 +1,6 @@
 package uk.ac.ox.cs.pdq.ui;
 
+// TODO: Auto-generated Javadoc
 /**
  * Exception that occurred during a planning operation.
  * 
@@ -8,7 +9,7 @@ package uk.ac.ox.cs.pdq.ui;
  */
 public class UIException extends Exception {
 
-	/** */
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -315472460756924167L;
 
 	/**
@@ -19,6 +20,8 @@ public class UIException extends Exception {
 	}
 
 	/**
+	 * Instantiates a new UI exception.
+	 *
 	 * @param msg exception message.
 	 */
 	public UIException(String msg) {
@@ -26,6 +29,8 @@ public class UIException extends Exception {
 	}
 
 	/**
+	 * Instantiates a new UI exception.
+	 *
 	 * @param msg exception's message
 	 * @param cause root cause of the problem.
 	 */

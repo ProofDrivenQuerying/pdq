@@ -7,6 +7,7 @@ import java.util.Objects;
 
 import com.google.common.base.Preconditions;
 
+// TODO: Auto-generated Javadoc
 /**
  * An access method defines the positions of a relation's attributes whose values are required to access the relation.
  *
@@ -15,28 +16,38 @@ import com.google.common.base.Preconditions;
  */
 public class AccessMethod implements Serializable {
 
-	/** Generated serial number */
+	/**  Generated serial number. */
 	private static final long serialVersionUID = 1946416951995219490L;
 
-	/** Types of access restrictions */
+	/**
+	 *  Types of access restrictions.
+	 */
 	public static enum Types {
-		FREE, LIMITED, BOOLEAN
+		
+		/** The free. */
+		FREE, 
+ /** The limited. */
+ LIMITED, 
+ /** The boolean. */
+ BOOLEAN
 	}
 
+	/** The Constant DEFAULT_PREFIX. */
 	public static final String DEFAULT_PREFIX = "mt_";
 
+	/** The global counter. */
 	private static int globalCounter = 0;
 
-	/** Input attribute positions */
+	/**  Input attribute positions. */
 	private final List<Integer> inputs;
 
-	/** Access restriction */
+	/**  Access restriction. */
 	private final Types type;
 
-	/** Name of the access restrictions */
+	/**  Name of the access restrictions. */
 	private final String name;
 
-	/** String representation of the object */
+	/**  String representation of the object. */
 	private String rep = null;
 
 	/**
@@ -55,18 +66,21 @@ public class AccessMethod implements Serializable {
 	}
 
 	/**
-	 * @param type
-	 * @param bindingPositions
+	 * Instantiates a new access method.
+	 *
+	 * @param type the type
+	 * @param bindingPositions the binding positions
 	 */
 	public AccessMethod(Types type, List<Integer> bindingPositions) {
 		this(DEFAULT_PREFIX + globalCounter++, type, bindingPositions);
 	}
 
 	/**
+	 * Instantiates a new access method.
 	 *
-	 * @param name
-	 * @param type
-	 * @param bindingPositions
+	 * @param name the name
+	 * @param type the type
+	 * @param bindingPositions the binding positions
 	 */
 	public AccessMethod(String name, Types type, List<Integer> bindingPositions) {
 		Preconditions.checkArgument(type == Types.FREE ? bindingPositions.isEmpty() : true);
@@ -81,6 +95,8 @@ public class AccessMethod implements Serializable {
 	}
 
 	/**
+	 * Gets the inputs.
+	 *
 	 * @return the positions that are required inputs
 	 */
 	public List<Integer> getInputs() {
@@ -88,6 +104,8 @@ public class AccessMethod implements Serializable {
 	}
 
 	/**
+	 * Gets the zero based inputs.
+	 *
 	 * @return the positions that are required inputs
 	 */
 	public List<Integer> getZeroBasedInputs() {
@@ -99,6 +117,8 @@ public class AccessMethod implements Serializable {
 	}
 
 	/**
+	 * Gets the type.
+	 *
 	 * @return the type of the access restriction
 	 */
 	public Types getType() {
@@ -106,6 +126,8 @@ public class AccessMethod implements Serializable {
 	}
 
 	/**
+	 * Gets the name.
+	 *
 	 * @return the binding's name.
 	 */
 	public String getName() {
@@ -113,6 +135,8 @@ public class AccessMethod implements Serializable {
 	}
 
 	/**
+	 * Equals.
+	 *
 	 * @param o Object
 	 * @return boolean
 	 */
@@ -131,6 +155,8 @@ public class AccessMethod implements Serializable {
 	}
 
 	/**
+	 * Hash code.
+	 *
 	 * @return int
 	 */
 	@Override
@@ -139,6 +165,8 @@ public class AccessMethod implements Serializable {
 	}
 
 	/**
+	 * To string.
+	 *
 	 * @return String
 	 */
 	@Override

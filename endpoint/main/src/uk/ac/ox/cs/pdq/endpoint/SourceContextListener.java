@@ -17,6 +17,7 @@ import org.apache.log4j.Logger;
 import uk.ac.ox.cs.pdq.builder.SchemaDiscoverer;
 import uk.ac.ox.cs.pdq.endpoint.util.ServletContextAttributes;
 
+// TODO: Auto-generated Javadoc
 /**
  * Servlet listener uses to perform various initializations common to all XR
  * servlets.
@@ -25,12 +26,13 @@ import uk.ac.ox.cs.pdq.endpoint.util.ServletContextAttributes;
  */
 public class SourceContextListener implements ServletContextListener {
 
-	/** Static logger */
+	/**  Static logger. */
 	private static final Logger log = Logger.getLogger(SourceContextListener.class);
 
 	/**
 	 * Remove all custom attributes from the servlet context.
-	 * 
+	 *
+	 * @param sce the sce
 	 * @see javax.servlet.ServletContextListener#contextDestroyed(javax.servlet.ServletContextEvent)
 	 */
 	@Override
@@ -47,6 +49,8 @@ public class SourceContextListener implements ServletContextListener {
 	/**
 	 * Initializes available data sources, prefixes and page cache, and stores
 	 * them in the servlet context.
+	 *
+	 * @param sce the sce
 	 */
 	@Override
 	public void contextInitialized(ServletContextEvent sce) {
@@ -93,16 +97,14 @@ public class SourceContextListener implements ServletContextListener {
 //	}
 
 	/**
-	 * Initialized default data sources
-	 * 
-	 * @param sc
-	 *            the servlet context
-	 * @throws IOException 
-	 * @throws ClassNotFoundException 
-	 * @throws IllegalAccessException 
-	 * @throws InstantiationException 
-	 * @throws XRException
-	 */
+ * Initialized default data sources.
+ *
+ * @param sc            the servlet context
+ * @throws IOException Signals that an I/O exception has occurred.
+ * @throws InstantiationException the instantiation exception
+ * @throws IllegalAccessException the illegal access exception
+ * @throws ClassNotFoundException the class not found exception
+ */
 	private void initSources(ServletContext sc) throws IOException, InstantiationException, IllegalAccessException, ClassNotFoundException {
 		Map<String, SchemaDiscoverer> sources = new LinkedHashMap<>();
 		for (Enumeration<String> en = sc.getInitParameterNames(); en.hasMoreElements();) {
@@ -119,13 +121,15 @@ public class SourceContextListener implements ServletContextListener {
 	}
 
 	/**
-	 * 
-	 * @param properties
-	 * @return
-	 * @throws ClassNotFoundException
-	 * @throws IllegalAccessException
-	 * @throws InstantiationException
-	 * @throws MalformedURLException 
+	 * Discover schema.
+	 *
+	 * @param properties the properties
+	 * @param sc the sc
+	 * @return the schema discoverer
+	 * @throws InstantiationException the instantiation exception
+	 * @throws IllegalAccessException the illegal access exception
+	 * @throws ClassNotFoundException the class not found exception
+	 * @throws MalformedURLException the malformed url exception
 	 */
 	private SchemaDiscoverer discoverSchema(Properties properties, ServletContext sc)
 			throws InstantiationException, IllegalAccessException, ClassNotFoundException, MalformedURLException {
@@ -139,10 +143,11 @@ public class SourceContextListener implements ServletContextListener {
 	}
 
 	/**
-	 * 
-	 * @param params
-	 * @return
-	 * @throws IOException
+	 * As properties.
+	 *
+	 * @param params the params
+	 * @return the properties
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	private static Properties asProperties(String params) throws IOException {
 		Properties result = new Properties();

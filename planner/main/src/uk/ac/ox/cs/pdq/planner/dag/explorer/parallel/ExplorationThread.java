@@ -18,6 +18,7 @@ import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseState;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
 
+// TODO: Auto-generated Javadoc
 /**
  * Iterates over the input collection of configurations to identify the minimum-cost one.
  * Given a set if input configuration C it removes from C the dominated and success dominated configurations 
@@ -29,49 +30,45 @@ import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
  */
 public class ExplorationThread implements Callable<DAGChaseConfiguration> {
 
-	/** The input query**/
+	/**  The input query*. */
 	private final Query<?> query;
 	
-	/** Performs success dominance checks*/
+	/**  Performs success dominance checks. */
 	private final SuccessDominance successDominance;
 	
-	/** Performs domination checks**/
+	/**  Performs domination checks*. */
 	private final Dominance[] dominance;
 
-	/** Detects query matches*/
+	/**  Detects query matches. */
 	private final HomomorphismDetector detector;
 
-	/** Input configurations*/
+	/**  Input configurations. */
 	private final Queue<DAGChaseConfiguration> input;
 
-	/** Classes of structurally equivalent configurations */
+	/**  Classes of structurally equivalent configurations. */
 	private final DAGEquivalenceClasses equivalenceClasses;
 
-	/** The minimum cost closed and successful configuration found so far */
+	/**  The minimum cost closed and successful configuration found so far. */
 	private DAGChaseConfiguration best = null;
 
-	/** The output non-dominated and not successful configurations */
+	/**  The output non-dominated and not successful configurations. */
 	private final Set<DAGChaseConfiguration> output;
 
-	/** The output non-dominated and successful (and not closed) configurations */
+	/**  The output non-dominated and successful (and not closed) configurations. */
 	private final Set<DAGChaseConfiguration> successful;
 
 	/**
+	 * Instantiates a new exploration thread.
 	 *
-	 * @param input
-	 * 		Input configurations
-	 * @param equivalenceClasses
-	 * 		Classes of structurally equivalent configurations
-	 * @param best
-	 * 		The minimum cost closed and successful configuration found so far
-	 * @param detector
-	 * 		 Detects query matches
-	 * @param successDominance
-	 * 		Performs success dominance checks
-	 * @param output
-	 * 		The output non-dominated and not successful configurations
-	 * @param successfulConfigurations
-	 * 		The output non-dominated and successful (and not closed) configurations
+	 * @param query the query
+	 * @param input 		Input configurations
+	 * @param equivalenceClasses 		Classes of structurally equivalent configurations
+	 * @param best 		The minimum cost closed and successful configuration found so far
+	 * @param detector 		 Detects query matches
+	 * @param successDominance 		Performs success dominance checks
+	 * @param dominance the dominance
+	 * @param output 		The output non-dominated and not successful configurations
+	 * @param successfulConfigurations 		The output non-dominated and successful (and not closed) configurations
 	 */
 	public ExplorationThread(
 			Query<?> query,
@@ -99,8 +96,10 @@ public class ExplorationThread implements Callable<DAGChaseConfiguration> {
 	}
 
 	/**
+	 * Call.
+	 *
 	 * @return DAGChaseConfiguration
-	 * @throws Exception
+	 * @throws Exception the exception
 	 * @see java.util.concurrent.Callable#call()
 	 */
 	@Override
@@ -147,6 +146,8 @@ public class ExplorationThread implements Callable<DAGChaseConfiguration> {
 	}
 
 	/**
+	 * Sets the best configuration.
+	 *
 	 * @param configuration DAGChaseConfiguration
 	 */
 	private void setBestConfiguration(DAGChaseConfiguration configuration) {
@@ -158,12 +159,11 @@ public class ExplorationThread implements Callable<DAGChaseConfiguration> {
 	}
 	
 	/**
+	 * Gets the potential.
 	 *
-	 * @param configuration
-	 * @param bestPlan
-	 * 		Best plan found so far
-	 * @param successDominance
-	 * 		Performs success dominance checks
+	 * @param configuration the configuration
+	 * @param bestPlan 		Best plan found so far
+	 * @param successDominance 		Performs success dominance checks
 	 * @return true if the input configuration is not success dominated by the best plan
 	 */
 	protected Boolean getPotential(DAGChaseConfiguration configuration, DAGPlan bestPlan, SuccessDominance successDominance) {

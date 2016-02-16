@@ -24,6 +24,7 @@ import uk.ac.ox.cs.pdq.test.RegressionTest;
 import uk.ac.ox.cs.pdq.test.RegressionTestException;
 import uk.ac.ox.cs.pdq.test.Bootstrap.Command;
 
+// TODO: Auto-generated Javadoc
 /**
  * Runs regression tests for the optimised explorer. Runs a search with and
  * without optimisation (global equivalence, global dominance) and compares the
@@ -36,21 +37,31 @@ public class DAGExplorersTest extends RegressionTest {
 	/** Runner's logger. */
 	private static Logger log = Logger.getLogger(DAGExplorersTest.class);
 
-	/** File name where planning related parameters must be stored in a test case directory */
+	/**  File name where planning related parameters must be stored in a test case directory. */
 	private static final String PLAN_PARAMETERS_FILE = "case.properties";
 
-	/** File name where the schema must be stored in a test case directory */
+	/**  File name where the schema must be stored in a test case directory. */
 	private static final String SCHEMA_FILE = "schema.xml";
 
-	/** File name where the query must be stored in a test case directory */
+	/**  File name where the query must be stored in a test case directory. */
 	private static final String QUERY_FILE = "query.xml";
 
 
+	/**
+	 * The Class DAGExplorersCommand.
+	 */
 	public static class DAGExplorersCommand extends Command {
+		
+		/**
+		 * Instantiates a new DAG explorers command.
+		 */
 		public DAGExplorersCommand() {
 			super("dagexp");
 		}
 
+		/* (non-Javadoc)
+		 * @see uk.ac.ox.cs.pdq.test.Bootstrap.Command#execute()
+		 */
 		@Override
 		public void execute() throws RegressionTestException, IOException, ReflectiveOperationException {
 			new DAGExplorersTest().recursiveRun(new File(getInput()));
@@ -69,9 +80,9 @@ public class DAGExplorersTest extends RegressionTest {
 	}
 
 	/**
-	 * Runs all the test case in the given directory
-	 * 
-	 * @param directory
+	 * Runs all the test case in the given directory.
+	 *
+	 * @param directory the directory
 	 * @return boolean
 	 */
 	protected boolean compare(File directory) {

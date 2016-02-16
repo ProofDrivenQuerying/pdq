@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package uk.ac.ox.cs.pdq.planner.cardinality;
 
 import java.util.Collection;
@@ -36,13 +39,15 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 
+// TODO: Auto-generated Javadoc
 /**
- * 
- * @author Efthymia Tsamoura
+ * The Class CardinalityUtility.
  *
+ * @author Efthymia Tsamoura
  */
 public class CardinalityUtility {
 
+	/** The log. */
 	protected static Logger log = Logger.getLogger(CardinalityUtility.class);
 	
 
@@ -52,18 +57,13 @@ public class CardinalityUtility {
 	 * to the fact annotations in AnnPlan a copy of all fact annotations containing some
 	 * constant in keys, with any constant c in keys being renamed to a fresh copy c′. We then
 	 * chase with the constraints and see if for every c_i \in keys′, c_i = c′ i is derived.
-	 * 
-	 * @param keys
-	 * 		Input candidate keys
-	 * @param configuration
-	 * @param egd
-	 * 		Runs the EGD chasing algorithm 
-	 * @param detector
-	 * 		Detects homomorphisms during chasing
-	 * @param dependencies
-	 * 		Dependencies to consider during chasing
-	 * @return
-	 * 		true if the input collection of constants is a key for the input annotated plan
+	 *
+	 * @param keys 		Input candidate keys
+	 * @param configuration the configuration
+	 * @param egd 		Runs the EGD chasing algorithm 
+	 * @param detector 		Detects homomorphisms during chasing
+	 * @param dependencies 		Dependencies to consider during chasing
+	 * @return 		true if the input collection of constants is a key for the input annotated plan
 	 */
 	public static boolean isKey(Collection<Constant> keys, DAGAnnotatedPlan configuration, Chaser egd, HomomorphismDetector detector, Collection<? extends Constraint> dependencies) {
 		Preconditions.checkNotNull(keys);
@@ -131,14 +131,12 @@ public class CardinalityUtility {
 	 * right on constants”. It holds if there is a mapping of the non-schema constants
 	 * of right to the non-schema constants of left that is the identity on constants
 	 * and which preserves all fact annotations of right.
-	 * 
-	 * @param constants
-	 * @param target
-	 * @param source
-	 * @param detector
-	 * 		Detects homomorphisms
-	 * @return
-	 * 		true if there is an inclusion dependency of left into right on constants
+	 *
+	 * @param constants the constants
+	 * @param source the source
+	 * @param target the target
+	 * @param detector 		Detects homomorphisms
+	 * @return 		true if there is an inclusion dependency of left into right on constants
 	 */
 	public static boolean hasID(Collection<Constant> constants, DAGAnnotatedPlan source, DAGAnnotatedPlan target, HomomorphismDetector detector) {
 		Preconditions.checkNotNull(constants);

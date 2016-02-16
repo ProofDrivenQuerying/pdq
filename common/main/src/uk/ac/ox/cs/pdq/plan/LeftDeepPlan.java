@@ -18,6 +18,7 @@ import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.base.Preconditions;
 
+// TODO: Auto-generated Javadoc
 /**
  * A sequence of access subplans, where each subplan consists of a single access operator and (optionally) selections and projections. 
  *
@@ -25,28 +26,29 @@ import com.google.common.base.Preconditions;
  */
 public final class LeftDeepPlan extends Plan implements Iterable<LeftDeepPlan>, Rewritable {
 
-	/** The top-most access */
+	/**  The top-most access. */
 	protected final AccessOperator access;
 
-	/** The top-level operator of the plan*/
+	/**  The top-level operator of the plan. */
 	protected final RelationalOperator operator;
 
-	/** The prefix sub-plan */
+	/**  The prefix sub-plan. */
 	protected LeftDeepPlan prefix;
 
-	/** The suffix sub-plan */
+	/**  The suffix sub-plan. */
 	protected LeftDeepPlan suffix;
 
-	/** The first linear subplan **/
+	/**  The first linear subplan *. */
 	protected LeftDeepPlan last;
 
-	/** The last linear subplan **/
+	/**  The last linear subplan *. */
 	protected LeftDeepPlan first;
 
 	/**
 	 * Creates a linear plan having the input relational operator at its top level.
-	 * @param operator
-	 * 		The top-level operator of the plan
+	 *
+	 * @param operator 		The top-level operator of the plan
+	 * @param access the access
 	 */
 	public LeftDeepPlan(RelationalOperator operator, AccessOperator access) {
 		this(operator, access, null, null);
@@ -55,12 +57,11 @@ public final class LeftDeepPlan extends Plan implements Iterable<LeftDeepPlan>, 
 	/**
 	 * Creates a linear plan that is suffixed and prefixed by the input subplans.
 	 * The output linear plan looks like <prefix,LeftDeepPlan(operator), suffix> 
-	 * @param operator
-	 * 		The top-level operator of the plan
-	 * @param prefix
-	 * 		The prefix sub-plan
-	 * @param suffix
-	 * 		The suffix sub-plan
+	 *
+	 * @param operator 		The top-level operator of the plan
+	 * @param access the access
+	 * @param prefix 		The prefix sub-plan
+	 * @param suffix 		The suffix sub-plan
 	 */
 	public LeftDeepPlan(RelationalOperator operator, AccessOperator access, LeftDeepPlan prefix, LeftDeepPlan suffix) {
 		super();
@@ -100,6 +101,8 @@ public final class LeftDeepPlan extends Plan implements Iterable<LeftDeepPlan>, 
 	}
 
 	/**
+	 * Project last.
+	 *
 	 * @param proj Projection
 	 * @return LeftDeepPlan
 	 */
@@ -109,6 +112,8 @@ public final class LeftDeepPlan extends Plan implements Iterable<LeftDeepPlan>, 
 	}
 
 	/**
+	 * Adds the suffix.
+	 *
 	 * @param suff LeftDeepPlan
 	 */
 	public void addSuffix(LeftDeepPlan suff) {
@@ -119,6 +124,8 @@ public final class LeftDeepPlan extends Plan implements Iterable<LeftDeepPlan>, 
 	}
 
 	/**
+	 * Adds the prefix.
+	 *
 	 * @param pref LeftDeepPlan
 	 */
 	public void addPrefix(LeftDeepPlan pref) {
@@ -129,6 +136,8 @@ public final class LeftDeepPlan extends Plan implements Iterable<LeftDeepPlan>, 
 	}
 
 	/**
+	 * Gets the leaf operators.
+	 *
 	 * @return List<AccessOperator>
 	 */
 	public List<AccessOperator> getLeafOperators() {
@@ -136,6 +145,8 @@ public final class LeftDeepPlan extends Plan implements Iterable<LeftDeepPlan>, 
 	}
 
 	/**
+	 * Gets the operator.
+	 *
 	 * @return the local logical operator for this plan
 	 */
 	@Override
@@ -144,6 +155,8 @@ public final class LeftDeepPlan extends Plan implements Iterable<LeftDeepPlan>, 
 	}
 
 	/**
+	 * Gets the effective operator.
+	 *
 	 * @return the top level logical operator for this plan
 	 */
 	@Override
@@ -152,6 +165,8 @@ public final class LeftDeepPlan extends Plan implements Iterable<LeftDeepPlan>, 
 	}
 
 	/**
+	 * Gets the access.
+	 *
 	 * @return AccessOperator
 	 */
 	public AccessOperator getAccess() {
@@ -159,6 +174,8 @@ public final class LeftDeepPlan extends Plan implements Iterable<LeftDeepPlan>, 
 	}
 
 	/**
+	 * Gets the prefix.
+	 *
 	 * @return LeftDeepPlan
 	 */
 	public LeftDeepPlan getPrefix() {
@@ -166,6 +183,8 @@ public final class LeftDeepPlan extends Plan implements Iterable<LeftDeepPlan>, 
 	}
 
 	/**
+	 * Gets the suffix.
+	 *
 	 * @return LeftDeepPlan
 	 */
 	public LeftDeepPlan getSuffix() {
@@ -173,6 +192,8 @@ public final class LeftDeepPlan extends Plan implements Iterable<LeftDeepPlan>, 
 	}
 
 	/**
+	 * Gets the last.
+	 *
 	 * @return LeftDeepPlan
 	 */
 	public LeftDeepPlan getLast() {
@@ -180,6 +201,8 @@ public final class LeftDeepPlan extends Plan implements Iterable<LeftDeepPlan>, 
 	}
 
 	/**
+	 * Gets the first.
+	 *
 	 * @return LeftDeepPlan
 	 */
 	public LeftDeepPlan getFirst() {
@@ -187,6 +210,8 @@ public final class LeftDeepPlan extends Plan implements Iterable<LeftDeepPlan>, 
 	}
 
 	/**
+	 * Clone.
+	 *
 	 * @return LeftDeepPlan
 	 */
 	@Override
@@ -240,6 +265,8 @@ public final class LeftDeepPlan extends Plan implements Iterable<LeftDeepPlan>, 
 	}
 
 	/**
+	 * Size.
+	 *
 	 * @return the size of the size, in number of commands.
 	 */
 	@Override
@@ -248,6 +275,8 @@ public final class LeftDeepPlan extends Plan implements Iterable<LeftDeepPlan>, 
 	}
 
 	/**
+	 * Size.
+	 *
 	 * @param plan LeftDeepPlan
 	 * @return Integer
 	 */
@@ -265,6 +294,8 @@ public final class LeftDeepPlan extends Plan implements Iterable<LeftDeepPlan>, 
 	}
 
 	/**
+	 * Gets the accesses.
+	 *
 	 * @return Collection<AccessOperator>
 	 */
 	@Override
@@ -277,6 +308,8 @@ public final class LeftDeepPlan extends Plan implements Iterable<LeftDeepPlan>, 
 	}
 
 	/**
+	 * Gets the output.
+	 *
 	 * @return List<? extends Term>
 	 */
 	@Override
@@ -285,6 +318,8 @@ public final class LeftDeepPlan extends Plan implements Iterable<LeftDeepPlan>, 
 	}
 
 	/**
+	 * Gets the output attributes.
+	 *
 	 * @return List<Typed>
 	 */
 	@Override
@@ -294,6 +329,8 @@ public final class LeftDeepPlan extends Plan implements Iterable<LeftDeepPlan>, 
 	}
 
 	/**
+	 * Checks if is closed.
+	 *
 	 * @return true, as linear plans are always closed.
 	 */
 	@Override
@@ -311,6 +348,8 @@ public final class LeftDeepPlan extends Plan implements Iterable<LeftDeepPlan>, 
 	}
 
 	/**
+	 * Descending iterator.
+	 *
 	 * @return Iterator<LeftDeepPlan>
 	 */
 	public Iterator<LeftDeepPlan> descendingIterator() {
@@ -323,6 +362,7 @@ public final class LeftDeepPlan extends Plan implements Iterable<LeftDeepPlan>, 
 	 */
 	private static class LeftDeepPlanIterator implements Iterator<LeftDeepPlan> {
 
+		/** The next. */
 		private LeftDeepPlan next = null;
 
 		/**
@@ -335,6 +375,8 @@ public final class LeftDeepPlan extends Plan implements Iterable<LeftDeepPlan>, 
 		}
 
 		/**
+		 * Checks for next.
+		 *
 		 * @return boolean
 		 * @see java.util.Iterator#hasNext()
 		 */
@@ -344,6 +386,8 @@ public final class LeftDeepPlan extends Plan implements Iterable<LeftDeepPlan>, 
 		}
 
 		/**
+		 * Next.
+		 *
 		 * @return LeftDeepPlan
 		 * @see java.util.Iterator#next()
 		 */
@@ -358,6 +402,8 @@ public final class LeftDeepPlan extends Plan implements Iterable<LeftDeepPlan>, 
 		}
 
 		/**
+		 * Removes the.
+		 *
 		 * @see java.util.Iterator#remove()
 		 */
 		@Override
@@ -372,6 +418,7 @@ public final class LeftDeepPlan extends Plan implements Iterable<LeftDeepPlan>, 
 	 */
 	private static class DescendingLeftDeepPlanIterator implements Iterator<LeftDeepPlan> {
 
+		/** The prev. */
 		private LeftDeepPlan prev = null;
 
 		/**
@@ -384,6 +431,8 @@ public final class LeftDeepPlan extends Plan implements Iterable<LeftDeepPlan>, 
 		}
 
 		/**
+		 * Checks for next.
+		 *
 		 * @return boolean
 		 * @see java.util.Iterator#hasNext()
 		 */
@@ -393,6 +442,8 @@ public final class LeftDeepPlan extends Plan implements Iterable<LeftDeepPlan>, 
 		}
 
 		/**
+		 * Next.
+		 *
 		 * @return LeftDeepPlan
 		 * @see java.util.Iterator#next()
 		 */
@@ -407,6 +458,8 @@ public final class LeftDeepPlan extends Plan implements Iterable<LeftDeepPlan>, 
 		}
 
 		/**
+		 * Removes the.
+		 *
 		 * @see java.util.Iterator#remove()
 		 */
 		@Override
@@ -416,6 +469,8 @@ public final class LeftDeepPlan extends Plan implements Iterable<LeftDeepPlan>, 
 	}
 
 	/**
+	 * Compare to.
+	 *
 	 * @param plan Plan
 	 * @return int
 	 */

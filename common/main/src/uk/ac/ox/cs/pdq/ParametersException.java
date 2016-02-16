@@ -3,6 +3,7 @@ package uk.ac.ox.cs.pdq;
 
 
 
+// TODO: Auto-generated Javadoc
 /**
  * Exception that occurred when parameters cannot be loaded or set properly.
  *
@@ -10,10 +11,12 @@ package uk.ac.ox.cs.pdq;
  */
 public class ParametersException extends RuntimeException {
 
-	/** */
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -315472460756924167L;
 
 	/**
+	 * Instantiates a new parameters exception.
+	 *
 	 * @param msg exception message.
 	 */
 	public ParametersException(String msg) {
@@ -21,6 +24,7 @@ public class ParametersException extends RuntimeException {
 	}
 
 	/**
+	 * Instantiates a new parameters exception.
 	 */
 	public ParametersException() {
 		super();

@@ -7,6 +7,7 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
+// TODO: Auto-generated Javadoc
 /**
  * Hold the initialConfig of an execution.
  * 
@@ -14,16 +15,16 @@ import org.apache.log4j.Logger;
  */
 public class RegressionParameters extends uk.ac.ox.cs.pdq.Parameters {
 
-	/** */
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 7756663320915095016L;
 
 	/** Logger. */
 	private static Logger log = Logger.getLogger(RegressionParameters.class); 
 
-	/** Properties file name */
+	/**  Properties file name. */
 	static final String DEFAULT_CONFIG_FILE_NAME = "pdq-regression.properties";
 
-	/** Properties file path */
+	/**  Properties file path. */
 	static final String DEFAULT_CONFIG_FILE_PATH = "./" + DEFAULT_CONFIG_FILE_NAME;
 
 	/**
@@ -74,6 +75,7 @@ public class RegressionParameters extends uk.ac.ox.cs.pdq.Parameters {
 		}
 	}
 	
+	/** The expected cardinality. */
 	@Parameter(description =
 			"The expected cardinality of a plan execution result.\n"
 			+ "This can be used for instance when there is way to execute the "
@@ -81,6 +83,7 @@ public class RegressionParameters extends uk.ac.ox.cs.pdq.Parameters {
 			defaultValue = "-1")
 	private Integer expectedCardinality = -1;
 	
+	/** The skip runtime. */
 	@Parameter(description =
 			"If true, skip the runtime test.\n"
 			+ "This can be used for case for actually testing runtime can be "
@@ -89,6 +92,8 @@ public class RegressionParameters extends uk.ac.ox.cs.pdq.Parameters {
 	private Boolean skipRuntime = false;
 	
 	/**
+	 * Gets the expected cardinality.
+	 *
 	 * @return Integer
 	 */
 	public Integer getExpectedCardinality() {
@@ -96,6 +101,8 @@ public class RegressionParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 	
 	/**
+	 * Sets the expected cardinality.
+	 *
 	 * @param i Integer
 	 */
 	public void setExpectedCardinality(Integer i) {
@@ -103,6 +110,8 @@ public class RegressionParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 	
 	/**
+	 * Gets the skip runtime.
+	 *
 	 * @return Boolean
 	 */
 	public Boolean getSkipRuntime() {
@@ -110,6 +119,8 @@ public class RegressionParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 	
 	/**
+	 * Sets the skip runtime.
+	 *
 	 * @param b Boolean
 	 */
 	public void setSkipRuntime(Boolean b) {
@@ -117,6 +128,8 @@ public class RegressionParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 	
 	/**
+	 * Sets the expected cardinality.
+	 *
 	 * @param i Integer
 	 */
 	public void setExpectedCardinality(Number i) {
@@ -124,6 +137,8 @@ public class RegressionParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 
 	/**
+	 * Gets the version.
+	 *
 	 * @return the version of the builders code, as given by Maven
 	 */
 	public static String getVersion() {

@@ -11,17 +11,21 @@ import uk.ac.ox.cs.pdq.planner.dominance.NumericalFactDominance;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState;
 
 
+// TODO: Auto-generated Javadoc
 /**
- * Filters out the numerically fact dominated configurations
- * @author Efthymia Tsamoura
+ * Filters out the numerically fact dominated configurations.
  *
- * @param 
+ * @author Efthymia Tsamoura
+ * @param <S> the generic type
  */
 public class NumericalFactDominationFilter<S extends AccessibleChaseState> implements Filter {
 
+	/** The fact dominance. */
 	private final NumericalFactDominance factDominance = new NumericalFactDominance();
 
 	/**
+	 * Filter.
+	 *
 	 * @param configurations Collection<DAGConfiguration>
 	 * @return Collection<DAGConfiguration>
 	 * @see uk.ac.ox.cs.pdq.dag.explorer.filters.Filter#filter(Collection<DAGConfiguration>)

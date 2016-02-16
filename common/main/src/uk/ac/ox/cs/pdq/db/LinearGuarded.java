@@ -7,6 +7,7 @@ import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Variable;
 
+// TODO: Auto-generated Javadoc
 /**
  * A dependency of the form \delta = \forall x  \sigma(\vec{x}) --> \exists y  \tau(\vec{x}, \vec{y})
  * where \sigma is a single atim and \tau is a conjunction of atoms.
@@ -17,11 +18,10 @@ import uk.ac.ox.cs.pdq.fol.Variable;
 public class LinearGuarded extends TGD implements GuardedDependency {
 
 	/**
+	 * Instantiates a new linear guarded.
 	 *
-	 * @param left
-	 * 		The left-hand side predicate of the dependency
-	 * @param right
-	 * 		The right-hand side predicate of the dependency
+	 * @param left 		The left-hand side predicate of the dependency
+	 * @param right 		The right-hand side predicate of the dependency
 	 */
 	public LinearGuarded(Predicate left, Conjunction<Predicate> right) {
 		super(Conjunction.of(left), right);
@@ -29,9 +29,9 @@ public class LinearGuarded extends TGD implements GuardedDependency {
 
 	/**
 	 * Constructs a guarded dependency based on the input key-foreign key
-	 * dependency
+	 * dependency.
 	 *
-	 * @param relation
+	 * @param relation the relation
 	 * @param foreignKey One of the foreign keys of this relation
 	 */
 	public LinearGuarded(Relation relation, ForeignKey foreignKey) {
@@ -39,6 +39,8 @@ public class LinearGuarded extends TGD implements GuardedDependency {
 	}
 
 	/**
+	 * Creates the left.
+	 *
 	 * @param relation Relation
 	 * @return the left-hand side predicate of a linear guarded dependency for the given relation
 	 */
@@ -53,9 +55,10 @@ public class LinearGuarded extends TGD implements GuardedDependency {
 	}
 
 	/**
+	 * Creates the right.
 	 *
-	 * @param relation
-	 * @param foreignKey
+	 * @param relation the relation
+	 * @param foreignKey the foreign key
 	 * @return the right-hand side of a linear guarded dependency for the given relation and foreign key constraint
 	 */
 	private static Conjunction<Predicate> createRight(Relation relation, ForeignKey foreignKey) {
@@ -84,6 +87,8 @@ public class LinearGuarded extends TGD implements GuardedDependency {
 
 
 	/**
+	 * Gets the guard.
+	 *
 	 * @return PredicateFormula
 	 * @see uk.ac.ox.cs.pdq.db.GuardedDependency#getGuard()
 	 */

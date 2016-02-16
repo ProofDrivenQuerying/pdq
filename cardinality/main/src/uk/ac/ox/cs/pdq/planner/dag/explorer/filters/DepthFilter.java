@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package uk.ac.ox.cs.pdq.planner.dag.explorer.filters;
 
 import java.util.Collection;
@@ -5,17 +8,20 @@ import java.util.LinkedHashSet;
 
 import uk.ac.ox.cs.pdq.planner.dag.DAGAnnotatedPlan;
 
+// TODO: Auto-generated Javadoc
 /**
- * Filters out the configurations with depth > the depth threshold
- * @author Efthymia Tsamoura
+ * Filters out the configurations with depth > the depth threshold.
  *
- * @param 
+ * @author Efthymia Tsamoura
  */
 public class DepthFilter implements Filter {
 
 	/** Depth threshold. Configurations with depth > this threshold will be filtered out*/
 	private final int depthThreshold;
 
+	/**
+	 * Instantiates a new depth filter.
+	 */
 	public DepthFilter() {
 		this.depthThreshold = 3;
 	}
@@ -29,6 +35,8 @@ public class DepthFilter implements Filter {
 	}
 
 	/**
+	 * Filter.
+	 *
 	 * @param configurations Collection<DAGConfiguration>
 	 * @return Collection<DAGConfiguration>
 	 * @see uk.ac.ox.cs.pdq.dag.explorer.filters.Filter#filter(Collection<DAGConfiguration>)

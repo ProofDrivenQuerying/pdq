@@ -16,15 +16,35 @@ import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.builder.SchemaBuilder;
 import uk.ac.ox.cs.pdq.util.Utility;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Operators.
+ */
 public class Operators {
 
+	/** The p. */
 	EntityRelation P = new EntityRelation("P", Types.FREE);
+	
+	/** The q. */
 	EntityRelation Q = new EntityRelation("Q", Types.BOOLEAN);
+	
+	/** The r. */
 	EntityRelation R = new EntityRelation("R", Types.FREE);
+	
+	/** The s. */
 	EntityRelation S = new EntityRelation("S", Types.BOOLEAN);
+	
+	/** The t. */
 	EntityRelation T = new EntityRelation("T", Types.FREE);
+	
+	/** The schema. */
 	Schema schema;
 
+	/**
+	 * Before.
+	 *
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	@Before
 	public void before() throws IOException {
 		 Utility.assertsEnabled();
@@ -37,6 +57,9 @@ public class Operators {
 			.build();
 	}
 
+	/**
+	 * Test left deep1.
+	 */
 	@Test
 	public void testLeftDeep1() {
 		Scan b1 = new Scan(P);
@@ -51,6 +74,9 @@ public class Operators {
 		Assert.assertFalse("Plan is expected not (quasi)-right deep", j3.isRightDeep());
 	}
 
+	/**
+	 * Test right deep1.
+	 */
 	@Test
 	public void testRightDeep1() {
 		Scan b1 = new Scan(P);
@@ -65,6 +91,9 @@ public class Operators {
 		Assert.assertTrue("Plan is expected (quasi)-right deep", j3.isRightDeep());
 	}
 
+	/**
+	 * Test bushy1.
+	 */
 	@Test
 	public void testBushy1() {
 		Scan b1 = new Scan(P);

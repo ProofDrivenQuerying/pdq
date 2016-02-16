@@ -5,17 +5,24 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 
+// TODO: Auto-generated Javadoc
 /**
  * High-level acceptance criterion.
- * 
- * @author leblay
  *
+ * @author leblay
+ * @param <Expected> the generic type
+ * @param <Observed> the generic type
  */
 public interface AcceptanceCriterion<Expected, Observed> {
 
 	/**
+	 * The Enum AcceptanceLevels.
 	 */
-	enum AcceptanceLevels { PASS, FAIL }
+	enum AcceptanceLevels { 
+ /** The pass. */
+ PASS, 
+ /** The fail. */
+ FAIL }
 	
 	/**
 	 * The result of an acceptance criterion check. 
@@ -25,13 +32,18 @@ public interface AcceptanceCriterion<Expected, Observed> {
 	 * @author Julien Leblay
 	 */
 	static class AcceptanceResult {
+		
+		/** The level. */
 		private final AcceptanceLevels level;
+		
+		/** The supporting info. */
 		private final List<String> supportingInfo;
 		
 		/**
-		 * Default constructor 
-		 * @param level
-		 * @param supportingInfo
+		 * Default constructor .
+		 *
+		 * @param level the level
+		 * @param supportingInfo the supporting info
 		 */
 		AcceptanceResult(AcceptanceLevels level, String... supportingInfo) {
 			this.level = level;
@@ -39,8 +51,9 @@ public interface AcceptanceCriterion<Expected, Observed> {
 		}
 		
 		/**
-		 * Prints a report of the acceptance result to the given output stream
-		 * @param out
+		 * Prints a report of the acceptance result to the given output stream.
+		 *
+		 * @param out the out
 		 */
 		public void report(PrintStream out) {
 			out.println(this.level);
@@ -50,6 +63,8 @@ public interface AcceptanceCriterion<Expected, Observed> {
 		}
 		
 		/**
+		 * Gets the level.
+		 *
 		 * @return the acceptance level of the result
 		 */
 		public AcceptanceLevels getLevel() {
@@ -58,6 +73,8 @@ public interface AcceptanceCriterion<Expected, Observed> {
 	}
 	
 	/**
+	 * Check.
+	 *
 	 * @param e expected object
 	 * @param o observed object
 	 * @return true, iff the observed object satisfies the acceptance criterion.

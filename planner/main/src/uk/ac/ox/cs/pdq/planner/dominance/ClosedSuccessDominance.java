@@ -2,6 +2,7 @@ package uk.ac.ox.cs.pdq.planner.dominance;
 
 import uk.ac.ox.cs.pdq.plan.Plan;
 
+// TODO: Auto-generated Javadoc
 /**
  * Closed success dominance. A closed plan p success dominates another closed plan p', if p is successful and has cost < the cost of p'.
  *
@@ -18,6 +19,8 @@ public class ClosedSuccessDominance extends SuccessDominance{
 	}
 
 	/**
+	 * Checks if is dominated.
+	 *
 	 * @param source Plan
 	 * @param target Plan
 	 * @return true if the source plan is success dominated by the target
@@ -33,6 +36,8 @@ public class ClosedSuccessDominance extends SuccessDominance{
 	}
 
 	/**
+	 * Clone.
+	 *
 	 * @return ClosedSuccessDominance
 	 */
 	@Override

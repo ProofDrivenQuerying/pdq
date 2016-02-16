@@ -16,22 +16,31 @@ import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseSt
 
 import com.google.common.base.Preconditions;
 
+// TODO: Auto-generated Javadoc
 /**
- * Filters out the fact dominated configurations
+ * Filters out the fact dominated configurations.
+ *
  * @author Efthymia Tsamoura
-
- * @param 
+ * @param <S> the generic type
  */
 public class ExistenceFilter<S extends AccessibleChaseState> implements Filter {
 
+	/** The accesses. */
 	private final List<Pair<Relation,AccessMethod>> accesses;
 
+	/**
+	 * Instantiates a new existence filter.
+	 *
+	 * @param accesses the accesses
+	 */
 	public ExistenceFilter(List<Pair<Relation,AccessMethod>> accesses) {
 		Preconditions.checkArgument(accesses != null && !accesses.isEmpty());
 		this.accesses = accesses;
 	}
 	
 	/**
+	 * Filter.
+	 *
 	 * @param configurations Collection<DAGConfiguration>
 	 * @return Collection<DAGConfiguration>
 	 * @see uk.ac.ox.cs.pdq.dag.explorer.filters.Filter#filter(Collection<DAGConfiguration>)

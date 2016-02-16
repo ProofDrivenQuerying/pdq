@@ -17,6 +17,7 @@ import uk.ac.ox.cs.pdq.planner.equivalence.StructuralEquivalence;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
 /**
  * A class of structurally equivalent configurations that supports multi-threading.
  * According to this implementation different threads can add, remove or perform domination detection inside the class concurrently.
@@ -26,23 +27,28 @@ import com.google.common.collect.Lists;
  */
 public class SynchronizedEquivalenceClass extends DAGEquivalenceClass{
 
-	/** The non-representative configurations*/
+	/**  The non-representative configurations. */
 	Collection<DAGChaseConfiguration> nonRepresentatives = new LinkedHashSet<>();
 
-	/** The minimum cost configurations*/
+	/**  The minimum cost configurations. */
 	private DAGChaseConfiguration minCostConfiguration = null;
 
 	/** True if the class is sleeping. */
 	private boolean isSleeping = false;
 
-	/** True if the class contains an ApplyRule configuration*/
+	/**  True if the class contains an ApplyRule configuration. */
 	private boolean applyRule = false;
 	
-	/** Performs structural equivalence checks */
+	/**  Performs structural equivalence checks. */
 	private final StructuralEquivalence structuralEquivalence = new FastStructuralEquivalence();
 
+	/** The read write lock. */
 	private final ReentrantReadWriteLock readWriteLock =  new ReentrantReadWriteLock();
+	
+	/** The read. */
 	private final Lock read  = this.readWriteLock.readLock();
+	
+	/** The write. */
 	private final Lock write = this.readWriteLock.writeLock();
 
 	/**
@@ -61,6 +67,8 @@ public class SynchronizedEquivalenceClass extends DAGEquivalenceClass{
 	}
 
 	/**
+	 * Adds the entry.
+	 *
 	 * @param configuration DAGChaseConfiguration
 	 */
 	@Override
@@ -90,6 +98,8 @@ public class SynchronizedEquivalenceClass extends DAGEquivalenceClass{
 	}
 
 	/**
+	 * Removes the entry.
+	 *
 	 * @param configuration DAGChaseConfiguration
 	 */
 	@Override
@@ -98,6 +108,8 @@ public class SynchronizedEquivalenceClass extends DAGEquivalenceClass{
 	}
 
 	/**
+	 * Removes the all.
+	 *
 	 * @param configurations Collection<DAGChaseConfiguration>
 	 */
 	@Override
@@ -150,6 +162,8 @@ public class SynchronizedEquivalenceClass extends DAGEquivalenceClass{
 	}
 
 	/**
+	 * Gets the all.
+	 *
 	 * @return Collection<DAGChaseConfiguration>
 	 */
 	@Override
@@ -168,6 +182,9 @@ public class SynchronizedEquivalenceClass extends DAGEquivalenceClass{
 	}
 
 	/**
+	 * Dominated by.
+	 *
+	 * @param dominance the dominance
 	 * @param input DAGChaseConfiguration
 	 * @return Collection<DAGChaseConfiguration>
 	 */
@@ -193,6 +210,8 @@ public class SynchronizedEquivalenceClass extends DAGEquivalenceClass{
 	}
 
 	/**
+	 * Structurally equivalent to.
+	 *
 	 * @param configuration DAGChaseConfiguration
 	 * @return boolean
 	 */
@@ -207,6 +226,9 @@ public class SynchronizedEquivalenceClass extends DAGEquivalenceClass{
 	}
 
 	/**
+	 * Dominate.
+	 *
+	 * @param dominance the dominance
 	 * @param input DAGChaseConfiguration
 	 * @return DAGChaseConfiguration
 	 */
@@ -231,6 +253,8 @@ public class SynchronizedEquivalenceClass extends DAGEquivalenceClass{
 	}
 
 	/**
+	 * Checks if is sleeping.
+	 *
 	 * @return boolean
 	 */
 	@Override
@@ -244,6 +268,8 @@ public class SynchronizedEquivalenceClass extends DAGEquivalenceClass{
 	}
 
 	/**
+	 * Wakeup sleep.
+	 *
 	 * @param bestPlan Plan
 	 */
 	public void wakeupSleep(Plan bestPlan) {
@@ -260,6 +286,8 @@ public class SynchronizedEquivalenceClass extends DAGEquivalenceClass{
 	}
 
 	/**
+	 * Checks if is empty.
+	 *
 	 * @return boolean
 	 */
 	@Override
@@ -273,6 +301,8 @@ public class SynchronizedEquivalenceClass extends DAGEquivalenceClass{
 	}
 
 	/**
+	 * Size.
+	 *
 	 * @return int
 	 */
 	@Override
@@ -290,6 +320,8 @@ public class SynchronizedEquivalenceClass extends DAGEquivalenceClass{
 	}
 
 	/**
+	 * To string.
+	 *
 	 * @return String
 	 */
 	@Override

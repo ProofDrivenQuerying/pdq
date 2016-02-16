@@ -9,10 +9,12 @@ import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.UnaryFormula;
 import uk.ac.ox.cs.pdq.io.Writer;
 
+// TODO: Auto-generated Javadoc
 /**
- * Writes a concise representation of a dependency to the given output
- * 
+ * Writes a concise representation of a dependency to the given output.
+ *
  * @author Julien Leblay
+ * @param <T> the generic type
  */
 public class PrettyFormulaWriter<T extends Formula> extends PrettyWriter<T> implements Writer<T> {
 
@@ -36,7 +38,8 @@ public class PrettyFormulaWriter<T extends Formula> extends PrettyWriter<T> impl
 	
 	/**
 	 * Fluent pretty writer provider.
-	 * @param out
+	 *
+	 * @param out the out
 	 * @return a new PrettyQueryWriter with the given default output.
 	 */
 	public static PrettyFormulaWriter to(PrintStream out) {
@@ -53,6 +56,8 @@ public class PrettyFormulaWriter<T extends Formula> extends PrettyWriter<T> impl
 	}
 
 	/**
+	 * Write.
+	 *
 	 * @param out PrintStream
 	 * @param formula Formula
 	 */
@@ -78,6 +83,8 @@ public class PrettyFormulaWriter<T extends Formula> extends PrettyWriter<T> impl
 	}
 
 	/**
+	 * Write.
+	 *
 	 * @param out PrintStream
 	 * @param formula NaryFormula<Formula>
 	 */
@@ -91,6 +98,8 @@ public class PrettyFormulaWriter<T extends Formula> extends PrettyWriter<T> impl
 	}
 
 	/**
+	 * Write.
+	 *
 	 * @param out PrintStream
 	 * @param formula BinaryFormula<Formula,Formula>
 	 */
@@ -106,6 +115,8 @@ public class PrettyFormulaWriter<T extends Formula> extends PrettyWriter<T> impl
 	}
 
 	/**
+	 * Write.
+	 *
 	 * @param out PrintStream
 	 * @param formula UnaryFormula<Formula>
 	 */
@@ -118,6 +129,8 @@ public class PrettyFormulaWriter<T extends Formula> extends PrettyWriter<T> impl
 	}
 
 	/**
+	 * Write.
+	 *
 	 * @param out PrintStream
 	 * @param formula AtomicFormula
 	 */
@@ -127,6 +140,8 @@ public class PrettyFormulaWriter<T extends Formula> extends PrettyWriter<T> impl
 	}
 
 	/**
+	 * Write.
+	 *
 	 * @param t Formula
 	 */
 	@Override

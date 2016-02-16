@@ -4,17 +4,19 @@ import java.util.Collection;
 
 import uk.ac.ox.cs.pdq.db.Attribute;
 
+// TODO: Auto-generated Javadoc
 /**
  * A static attribute is an attribute whose value does not change at
  * runtime, and is not consider an actual attribute of relation.
  * However, it share some of its behaviour with RESTAttributes, in
  * particular in the way input method are used. 
- * @author Julien Leblay
  *
+ * @author Julien Leblay
+ * @param <T> the generic type
  */
 public class RESTStaticInput<T> extends RESTAttribute implements StaticInput<T> {
 	
-	/** The input's default value */
+	/**  The input's default value. */
 	private final T defaultValue;
 
 	/**
@@ -59,7 +61,8 @@ public class RESTStaticInput<T> extends RESTAttribute implements StaticInput<T> 
 	}
 
 	/**
-	 * 
+	 * Gets the default value.
+	 *
 	 * @return T
 	 * @see uk.ac.ox.cs.pdq.services.rest.StaticInput#getDefaultValue()
 	 */

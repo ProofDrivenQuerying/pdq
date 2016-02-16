@@ -4,10 +4,18 @@ import java.io.Serializable;
 
 import uk.ac.ox.cs.pdq.logging.ProgressLogger;
 
+// TODO: Auto-generated Javadoc
 /**
- * @author Julien Leblay
+ * The Interface BufferedProgressLogger.
  *
+ * @author Julien Leblay
  */
 public interface BufferedProgressLogger extends ProgressLogger, Serializable {
+	
+	/**
+	 * Gets the log.
+	 *
+	 * @return the log
+	 */
 	public String getLog();
 }

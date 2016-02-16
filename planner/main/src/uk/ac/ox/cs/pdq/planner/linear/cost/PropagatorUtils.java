@@ -14,13 +14,20 @@ import uk.ac.ox.cs.pdq.util.IndexedDirectedGraph;
 import com.google.common.base.Preconditions;
 
 
+// TODO: Auto-generated Javadoc
 /**
- * 
- * @author Efthymia Tsamoura
+ * The Class PropagatorUtils.
  *
+ * @author Efthymia Tsamoura
  */
 public class PropagatorUtils {
 	
+	/**
+	 * Gets the propagator.
+	 *
+	 * @param e the e
+	 * @return the propagator
+	 */
 	public static CostPropagator getPropagator(CostEstimator<LeftDeepPlan> e) {
 		if (e instanceof BlackBoxCostEstimator) {
 			return new BlackBoxPropagator((BlackBoxCostEstimator) e);
@@ -33,10 +40,11 @@ public class PropagatorUtils {
 	
 
 	/**
-	 * @param nodesSet
-	 *            The nodes of the plan tree
-	 * @param path
-	 *            A successful path (sequence of nodes). The corresponding nodes must
+	 * Creates the left deep plan.
+	 *
+	 * @param <T> the generic type
+	 * @param nodesSet            The nodes of the plan tree
+	 * @param path            A successful path (sequence of nodes). The corresponding nodes must
 	 *            correspond to a successful path (a path from the root to a
 	 *            success node)
 	 * @param costEstimator CostEstimator<LeftDeepPlan>

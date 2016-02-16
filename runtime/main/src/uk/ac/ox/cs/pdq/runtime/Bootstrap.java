@@ -27,6 +27,7 @@ import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
 
+// TODO: Auto-generated Javadoc
 /**
  * Bootstrapping class for starting the runtime. 
  * 
@@ -40,6 +41,7 @@ public class Bootstrap {
 	/** The program name. */
 	private static final String PROGRAM_NAME = "pdq-runtime-<version>.jar";
 	
+	/** The help. */
 	@Parameter(names = { "-h", "--help" }, help = true, description = "Displays this help message.")
 	private boolean help;
 	
@@ -52,6 +54,7 @@ public class Bootstrap {
 		return this.help;
 	}
 	
+	/** The schema path. */
 	@Parameter(names = { "-s", "--schema" }, required = true,
 			validateWith=FileValidator.class,
 			description ="Path to the input schema definition file.")
@@ -233,6 +236,10 @@ public class Bootstrap {
 	 * @author Julien LEBLAY
 	 */
 	public static class FileValidator implements IParameterValidator {
+		
+		/* (non-Javadoc)
+		 * @see com.beust.jcommander.IParameterValidator#validate(java.lang.String, java.lang.String)
+		 */
 		@Override
 		public void validate(String name, String value) throws ParameterException {
 			try {

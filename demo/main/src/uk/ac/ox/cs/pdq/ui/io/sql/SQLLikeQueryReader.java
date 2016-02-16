@@ -17,20 +17,46 @@ import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.ui.io.sql.antlr.SQLiteLexer;
 import uk.ac.ox.cs.pdq.ui.io.sql.antlr.SQLiteParser;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class SQLLikeQueryReader.
+ */
 public class SQLLikeQueryReader {
+	
+	/** The log. */
 	private static Logger log = Logger.getLogger(SQLLikeQueryReader.class);
 	
+	/** The schema. */
 	private Schema schema;
+	
+	/** The alias to tables. */
 	private Map<String, String> aliasToTables;
 	
+	/**
+	 * Instantiates a new SQL like query reader.
+	 *
+	 * @param schema the schema
+	 */
 	public SQLLikeQueryReader(Schema schema) {
 		this.schema = schema;
 	}
 	
+	/**
+	 * Gets the alias to tables.
+	 *
+	 * @return the alias to tables
+	 */
 	public Map<String, String> getAliasToTables() {
 		return this.aliasToTables;
 	}
 	
+	/**
+	 * From string.
+	 *
+	 * @param str the str
+	 * @return the conjunctive query
+	 * @throws Exception the exception
+	 */
 	public ConjunctiveQuery fromString(String str) throws Exception {
 		
 		CharStream stream = new ANTLRInputStream(str);

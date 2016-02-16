@@ -12,6 +12,7 @@ import uk.ac.ox.cs.pdq.util.Typed;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
 /**
  * MemoryScan over an in-memory relation or simply a collection of tuples.
  * 
@@ -25,7 +26,7 @@ public class MemoryScan extends TupleIterator {
 	/** The next tuple to return. */
 	protected Iterable<Tuple> data = null;
 
-	/** The next tuple to return */
+	/**  The next tuple to return. */
 	private Tuple nextTuple;
 	
 	/** The filter. */
@@ -56,7 +57,10 @@ public class MemoryScan extends TupleIterator {
 	public MemoryScan(List<Typed> columns, Iterable<Tuple> data) {
 		this(columns, data, null);
 	}
+	
 	/**
+	 * Gets the filter.
+	 *
 	 * @return the filter for this scan if any
 	 */
 	public Predicate getFilter() {
@@ -92,7 +96,7 @@ public class MemoryScan extends TupleIterator {
 	}
 
 	/**
-	 * Moves to the next valid tuple to return
+	 * Moves to the next valid tuple to return.
 	 */
 	private void nextTuple() {
 		while (this.tupleIterator.hasNext()) {
@@ -149,6 +153,8 @@ public class MemoryScan extends TupleIterator {
 	}
 
 	/**
+	 * Checks for next.
+	 *
 	 * @return boolean
 	 * @see java.util.Iterator#hasNext()
 	 */
@@ -181,6 +187,8 @@ public class MemoryScan extends TupleIterator {
 	}
 
 	/**
+	 * Bind.
+	 *
 	 * @param t Tuple
 	 */
 	@Override

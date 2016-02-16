@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package uk.ac.ox.cs.pdq.planner.dag;
 
 import java.util.Collection;
@@ -14,6 +17,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * A binary configuration. Corresponds to the join or the cross product of two configurations 
  * @author Efthymia Tsamoura
@@ -21,19 +25,19 @@ import com.google.common.collect.Sets;
  */
 public class BinaryAnnotatedPlan extends DAGAnnotatedPlan {
 
-	/** The left sub-configuration */
+	/**  The left sub-configuration. */
 	private final DAGAnnotatedPlan left;
 
-	/** The right sub-configuration */
+	/**  The right sub-configuration. */
 	private final DAGAnnotatedPlan right;
 
-	/** The string representation if this configuration*/
+	/**  The string representation if this configuration. */
 	private String toString;
 	
-	/** The configuration's ApplyRule sub-configurations */
+	/**  The configuration's ApplyRule sub-configurations. */
 	private final Collection<UnaryAnnotatedPlan> rules;
 
-	/** The configuration's ApplyRule sub-configurations ordered according to their appearance */
+	/**  The configuration's ApplyRule sub-configurations ordered according to their appearance. */
 	private final List<UnaryAnnotatedPlan> rulesList;
 	
 	/** The constants of this annotated plan that appear on the facts used to build up the constituting unary annotated plans.
@@ -41,11 +45,10 @@ public class BinaryAnnotatedPlan extends DAGAnnotatedPlan {
 	private final Collection<Constant> exportedConstants;
 	
 	/**
-	 * 
-	 * @param left
-	 * 		The left sub-configuration
-	 * @param right
-	 * 		The right sub-configuration
+	 * Instantiates a new binary annotated plan.
+	 *
+	 * @param left 		The left sub-configuration
+	 * @param right 		The right sub-configuration
 	 */
 	public BinaryAnnotatedPlan(
 			DAGAnnotatedPlan left,
@@ -70,13 +73,11 @@ public class BinaryAnnotatedPlan extends DAGAnnotatedPlan {
 	}
 	
 	/**
-	 * 
-	 * @param left
-	 * 		The left sub-configuration
-	 * @param right
-	 * 		The right sub-configuration
-	 * @param state
-	 * 		The chase state of the new annotated plan
+	 * Instantiates a new binary annotated plan.
+	 *
+	 * @param left 		The left sub-configuration
+	 * @param right 		The right sub-configuration
+	 * @param state 		The chase state of the new annotated plan
 	 */
 	public BinaryAnnotatedPlan(
 			DAGAnnotatedPlan left,
@@ -102,13 +103,19 @@ public class BinaryAnnotatedPlan extends DAGAnnotatedPlan {
 	}
 
 	/**
-	 * Chases the configuration using the input dependencies
+	 * Chases the configuration using the input dependencies.
+	 *
+	 * @param chaser the chaser
+	 * @param query the query
+	 * @param dependencies the dependencies
 	 */
 	public void reasonUntilTermination(Chaser chaser, Query<?> query, Collection<? extends Constraint> dependencies) {
 		chaser.reasonUntilTermination(this.getState(), query, dependencies);
 	}
 
 	/**
+	 * Gets the left.
+	 *
 	 * @return the left sub-configuration
 	 */
 	public DAGAnnotatedPlan getLeft() {
@@ -116,6 +123,8 @@ public class BinaryAnnotatedPlan extends DAGAnnotatedPlan {
 	}
 
 	/**
+	 * Gets the right.
+	 *
 	 * @return the right sub-configuration
 	 */
 	public DAGAnnotatedPlan getRight() {
@@ -123,6 +132,8 @@ public class BinaryAnnotatedPlan extends DAGAnnotatedPlan {
 	}
 
 	/**
+	 * To string.
+	 *
 	 * @return String
 	 */
 	@Override
@@ -135,6 +146,8 @@ public class BinaryAnnotatedPlan extends DAGAnnotatedPlan {
 	}
 	
 	/**
+	 * Clone.
+	 *
 	 * @return BinaryConfiguration<S>
 	 * @see uk.ac.ox.cs.pdq.reasoning.Configuration#clone()
 	 */
@@ -151,21 +164,28 @@ public class BinaryAnnotatedPlan extends DAGAnnotatedPlan {
 		return clone;
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.planner.dag.DAGConfiguration#getUnaryAnnotatedPlans()
+	 */
 	@Override
 	public Collection<UnaryAnnotatedPlan> getUnaryAnnotatedPlans() {
 		return this.rules;
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.planner.dag.DAGConfiguration#getUnaryAnnotatedPlansList()
+	 */
 	@Override
 	public List<UnaryAnnotatedPlan> getUnaryAnnotatedPlansList() {
 		return this.rulesList;
 	}
 
 	/**
-	 * 
-	 * @return the constants of this annotated plan that appear on the facts 
+	 * Gets the exported constants.
+	 *
+	 * @return the constants of this annotated plan that appear on the facts
 	 * used to build up the constituting unary annotated plans.
-	 * The new chase constants that are produced during chasing are not returned.  
+	 * The new chase constants that are produced during chasing are not returned.
 	 */
 	@Override
 	public Collection<Constant> getExportedConstants() {

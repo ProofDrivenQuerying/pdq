@@ -12,8 +12,19 @@ import javax.swing.border.Border;
 import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Highlighter;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class PopupUtils.
+ */
 public class PopupUtils {
 
+	/**
+	 * Adds the border and text to container.
+	 *
+	 * @param container the container
+	 * @param border the border
+	 * @param text the text
+	 */
 	public static void addBorderAndTextToContainer(Container container, Border border, String text) {
 		JPanel component = new JPanel(new GridLayout(1, 1), false);
 

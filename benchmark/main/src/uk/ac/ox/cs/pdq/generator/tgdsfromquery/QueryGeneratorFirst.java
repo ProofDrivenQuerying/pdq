@@ -24,6 +24,7 @@ import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
 /**
  * Creates guarded (queries having a guard in their body), chain guarded (a chain query with a guard) 
  * or acyclic queries given the relations of an input schema.  
@@ -34,14 +35,18 @@ import com.google.common.collect.Lists;
 public class QueryGeneratorFirst extends AbstractDependencyGenerator implements QueryGenerator{
 	
 	/**
-	 * 
-	 * @param schema
-	 * @param params
+	 * Instantiates a new query generator first.
+	 *
+	 * @param schema the schema
+	 * @param params the params
 	 */
 	public QueryGeneratorFirst(Schema schema, BenchmarkParameters params) {
 		super(schema, params);
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.generator.QueryGenerator#generate()
+	 */
 	@Override
 	public ConjunctiveQuery generate() {
 		switch (this.params.getQueryType()) {

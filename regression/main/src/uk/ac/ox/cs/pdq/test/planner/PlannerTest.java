@@ -45,6 +45,7 @@ import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 import com.google.common.base.Strings;
 
+// TODO: Auto-generated Javadoc
 /**
  * Runs regression tests regarding the planner.
  * 
@@ -55,38 +56,58 @@ public class PlannerTest extends RegressionTest {
 	/** Runner's logger. */
 	private static Logger log = Logger.getLogger(PlannerTest.class);
 
-	private static enum Modes {COMPARE, PREPARE, VALIDATE};
+	/**
+	 * The Enum Modes.
+	 */
+	private static enum Modes {/** The compare. */
+COMPARE, /** The prepare. */
+ PREPARE, /** The validate. */
+ VALIDATE};
 	
-	/** File name where planning related parameters must be stored in a test case directory */
+	/**  File name where planning related parameters must be stored in a test case directory. */
 	private static final String PLAN_PARAMETERS_FILE = "case.properties";
 	
-	/** File name where the schema must be stored in a test case directory */
+	/**  File name where the schema must be stored in a test case directory. */
 	private static final String SCHEMA_FILE = "schema.xml";
 
-	/** File name where the query must be stored in a test case directory */
+	/**  File name where the query must be stored in a test case directory. */
 	private static final String QUERY_FILE = "query.xml";
 
-	/** File name where the expected plan must be stored in a test case directory */
+	/**  File name where the expected plan must be stored in a test case directory. */
 	private static final String PLAN_FILE = "expected-plan.xml";
 
+	/** The mode. */
 	private final Modes mode;
 
+	/** The param overrides. */
 	private Map<String, String> paramOverrides = new HashMap<>();
 	
+	/**
+	 * The Class PlannerTestCommand.
+	 */
 	@Parameters(separators = ",", commandDescription = "Runs regression tests on the planner libraries.")
 	public static class PlannerTestCommand extends Command {
+		
+		/** The prepare. */
 		@Parameter(names = { "-p", "--prepare" }, required = false, 
 				description = "Prepare test case (outputs a plan.xml file in the input directory), without actually checking anything.")
 		private boolean prepare = false;
 
+		/** The validate. */
 		@Parameter(names = { "-v", "--validate" }, required = false, 
 				description = "Does not actually runs test, but merely checks whether the settings are correct.")
 		private boolean validate = false;
 
+		/**
+		 * Instantiates a new planner test command.
+		 */
 		public PlannerTestCommand() {
 			super("planner");
 		}
 
+		/* (non-Javadoc)
+		 * @see uk.ac.ox.cs.pdq.test.Bootstrap.Command#execute()
+		 */
 		@Override
 		public void execute() throws RegressionTestException, IOException, ReflectiveOperationException {
 			new PlannerTest(
@@ -97,11 +118,12 @@ public class PlannerTest extends RegressionTest {
 	
 	/**
 	 * Sets up a regression test for the given test case directory.
-	 * 
-	 * @param input the command line parameters as given by the main method.
-	 * @throws ReflectiveOperationException 
-	 * @throws IOException
-	 * @throws RegressionTestException 
+	 *
+	 * @param mode the mode
+	 * @param paramOverrides the param overrides
+	 * @throws ReflectiveOperationException the reflective operation exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws RegressionTestException the regression test exception
 	 */
 	public PlannerTest(Modes mode, Map<String, String> paramOverrides) throws ReflectiveOperationException, IOException, RegressionTestException {
 		super();
@@ -126,11 +148,11 @@ public class PlannerTest extends RegressionTest {
 	}
 
 	/**
-	 * Runs a single test case base on the 
-	 * @param directory
+	 * Runs a single test case base on the .
+	 *
+	 * @param directory the directory
 	 * @return boolean
-	 * @throws ReflectiveOperationException
-	 * @throws SQLException
+	 * @throws ReflectiveOperationException the reflective operation exception
 	 */
 	private boolean compare(File directory) throws ReflectiveOperationException {
 		try(FileInputStream sis = new FileInputStream(directory.getAbsolutePath() + '/' + SCHEMA_FILE);
@@ -181,6 +203,13 @@ public class PlannerTest extends RegressionTest {
 		return true;
 	}
 
+	/**
+	 * Handle exception.
+	 *
+	 * @param e the e
+	 * @param directory the directory
+	 * @return true, if successful
+	 */
 	private boolean handleException(Throwable e, File directory) {
 		if (e instanceof InconsistentParametersException) {
 			log.debug(e);
@@ -221,6 +250,8 @@ public class PlannerTest extends RegressionTest {
 	}
 	
 	/**
+	 * Obtain plan.
+	 *
 	 * @param directory File
 	 * @param schema Schema
 	 * @param query Query
@@ -252,7 +283,10 @@ public class PlannerTest extends RegressionTest {
 	}
 	
 	/**
+	 * Acceptance.
+	 *
 	 * @param params planning parameters
+	 * @param cost the cost
 	 * @return a acceptance matching the given parameters
 	 */
 	private static AcceptanceCriterion<Plan, Plan> acceptance(
@@ -283,6 +317,8 @@ public class PlannerTest extends RegressionTest {
 	}
 	
 	/**
+	 * Checks if is prepare.
+	 *
 	 * @return the value of the prepare argument
 	 */
 	public boolean isPrepare() {
@@ -290,6 +326,8 @@ public class PlannerTest extends RegressionTest {
 	}
 	
 	/**
+	 * Checks if is validate.
+	 *
 	 * @return the value of the valide argument
 	 */
 	public boolean isValidate() {
@@ -297,11 +335,11 @@ public class PlannerTest extends RegressionTest {
 	}
 
 	/**
-	 * Runs a single test case base on the 
-	 * @param directory
+	 * Runs a single test case base on the .
+	 *
+	 * @param directory the directory
 	 * @return boolean
-	 * @throws ReflectiveOperationException
-	 * @throws SQLException
+	 * @throws ReflectiveOperationException the reflective operation exception
 	 */
 	private boolean validate(File directory) throws ReflectiveOperationException {
 		try(FileInputStream sis = new FileInputStream(directory.getAbsolutePath() + '/' + SCHEMA_FILE);
@@ -331,11 +369,11 @@ public class PlannerTest extends RegressionTest {
 	}
 
 	/**
-	 * Runs a single test case base on the 
-	 * @param directory
+	 * Runs a single test case base on the .
+	 *
+	 * @param directory the directory
 	 * @return boolean
-	 * @throws ReflectiveOperationException
-	 * @throws SQLException
+	 * @throws ReflectiveOperationException the reflective operation exception
 	 */
 	private boolean prepare(File directory) throws ReflectiveOperationException {
 		try(FileInputStream sis = new FileInputStream(directory.getAbsolutePath() + '/' + SCHEMA_FILE);

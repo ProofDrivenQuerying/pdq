@@ -9,18 +9,20 @@ import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.reasoning.utility.Match;
 
+// TODO: Auto-generated Javadoc
 /**
+ * A factory for creating Match objects.
  *
  * @author Efthymia Tsamoura
  */
 public class MatchFactory {
 
 	/**
+	 * Gets the match.
 	 *
-	 * @param axiom
-	 * @param fact
-	 * @return
-	 * 		a match given the input accessibility axiom and the input fact
+	 * @param axiom the axiom
+	 * @param fact the fact
+	 * @return 		a match given the input accessibility axiom and the input fact
 	 */
 	public static Match getMatch(AccessibilityAxiom axiom, Predicate fact) {
 		Map<Variable, Constant> map = createMapping(axiom, fact);
@@ -28,6 +30,8 @@ public class MatchFactory {
 	}
 
 	/**
+	 * Creates a new Match object.
+	 *
 	 * @param axiom AccessibilityAxiom
 	 * @param fact PredicateFormula
 	 * @return Map<Variable, Constant>

@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+// TODO: Auto-generated Javadoc
 /**
  * Produces services based of their name and their implementation given in 
  * registered classes.
@@ -14,14 +15,15 @@ import java.util.Map;
  */
 public class ServiceFactory {
 	
-	/** Registered service implementations, indexed by name */
+	/**  Registered service implementations, indexed by name. */
 	private static Map<String, Class<? extends Service>>
 			registeredNamedServices = new LinkedHashMap<>();
 
 	/**
 	 * Registers a new service implementation under the given name.
-	 * @param name
-	 * @param service
+	 *
+	 * @param name the name
+	 * @param service the service
 	 */
 	public static void register(String name, String service) {
 		assert name != null;
@@ -36,7 +38,9 @@ public class ServiceFactory {
 	}
 
 	/**
-	 * @param name
+	 * Checks if is registered.
+	 *
+	 * @param name the name
 	 * @return true if the service by the given name is currently registered.
 	 */
 	public static boolean isRegistered(String name) {
@@ -46,8 +50,9 @@ public class ServiceFactory {
 	
 	/**
 	 * Instantiates a service registered under the given name. 
-	 * @param configDir
-	 * @param name
+	 *
+	 * @param configDir the config dir
+	 * @param name the name
 	 * @return Service
 	 */
 	public static Service create(File configDir, String name) {

@@ -12,11 +12,11 @@ import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.ui.proof.Proof;
 import uk.ac.ox.cs.pdq.ui.proof.Proof.State;
 
+// TODO: Auto-generated Javadoc
 /**
- * Writes a concise representation of a query to the given output
- * 
- * @author Julien Leblay
+ * Writes a concise representation of a query to the given output.
  *
+ * @author Julien Leblay
  */
 public class PrettyProofWriter extends PrettyWriter<Proof> implements Writer<Proof> {
 
@@ -27,7 +27,8 @@ public class PrettyProofWriter extends PrettyWriter<Proof> implements Writer<Pro
 	private PrintStream out;
 
 	/**
-	 * 
+	 * Instantiates a new pretty proof writer.
+	 *
 	 * @param out the default output
 	 */
 	private PrettyProofWriter(PrintStream out) {
@@ -36,7 +37,8 @@ public class PrettyProofWriter extends PrettyWriter<Proof> implements Writer<Pro
 	
 	/**
 	 * Fluent pretty writer provider.
-	 * @param out
+	 *
+	 * @param out the out
 	 * @return a new PrettyQueryWriter with the given default output.
 	 */
 	public static PrettyProofWriter to(PrintStream out) {
@@ -44,6 +46,8 @@ public class PrettyProofWriter extends PrettyWriter<Proof> implements Writer<Pro
 	}
 	
 	/**
+	 * Write.
+	 *
 	 * @param out PrintStream
 	 * @param p Proof
 	 */
@@ -67,6 +71,8 @@ public class PrettyProofWriter extends PrettyWriter<Proof> implements Writer<Pro
 	}
 	
 	/**
+	 * Write.
+	 *
 	 * @param q Proof
 	 */
 	@Override

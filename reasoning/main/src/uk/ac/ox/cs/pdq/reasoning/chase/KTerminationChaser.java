@@ -14,6 +14,7 @@ import uk.ac.ox.cs.pdq.reasoning.utility.ReasonerUtility;
 import com.google.common.base.Preconditions;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * Runs the chase for k chase rounds.
  * The difference with the restricted chase algorithm is
@@ -29,10 +30,10 @@ public class KTerminationChaser extends RestrictedChaser {
 
 
 	/**
-	 * 
-	 * @param statistics
-	 * @param k
-	 * 		Factor of number of rounds to chase for before stop the chase.
+	 * Instantiates a new k termination chaser.
+	 *
+	 * @param statistics the statistics
+	 * @param k 		Factor of number of rounds to chase for before stop the chase.
 	 */
 	public KTerminationChaser(
 			StatisticsCollector statistics,
@@ -43,7 +44,11 @@ public class KTerminationChaser extends RestrictedChaser {
 	}
 
 	/**
-	 * @param state S
+	 * Reason until termination.
+	 *
+	 * @param <S> the generic type
+	 * @param instance the instance
+	 * @param target the target
 	 * @param dependencies Collection<? extends Constraint>
 	 */
 	@Override

@@ -9,15 +9,20 @@ import uk.ac.ox.cs.pdq.planner.dag.ApplyRule;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.dominance.FastFactDominance;
 
+// TODO: Auto-generated Javadoc
 /**
- * Filters out the fact dominated configurations
+ * Filters out the fact dominated configurations.
+ *
  * @author Efthymia Tsamoura
  */
 public class FactDominationFilter implements Filter {
 
+	/** The fact dominance. */
 	private final FastFactDominance factDominance = new FastFactDominance(false);
 
 	/**
+	 * Filter.
+	 *
 	 * @param configurations Collection<DAGConfiguration>
 	 * @return Collection<DAGConfiguration>
 	 * @see uk.ac.ox.cs.pdq.dag.explorer.filters.Filter#filter(Collection<DAGConfiguration>)

@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package uk.ac.ox.cs.pdq.planner.dag.explorer;
 
 import java.util.ArrayList;
@@ -25,38 +28,46 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 import com.google.common.eventbus.EventBus;
 
+// TODO: Auto-generated Javadoc
 /**
- * Abstract DAG explorer
- * @author Efthymia Tsamoura
+ * Abstract DAG explorer.
  *
+ * @author Efthymia Tsamoura
  */
 public abstract class DAGExplorer extends Explorer<DAGPlan> {
 
+	/** The query. */
 	protected final Query<?> query;
 
+	/** The schema. */
 	protected final Schema schema;
 
+	/** The chaser. */
 	protected final Chaser chaser;
 
+	/** The detector. */
 	protected final HomomorphismDetector detector;
 
+	/** The cardinality estimator. */
 	protected final CardinalityEstimator cardinalityEstimator;
 
-	/** The minimum cost configuration */
+	/**  The minimum cost configuration. */
 	protected DAGAnnotatedPlan bestConfiguration = null;
 
+	/** The parameters. */
 	protected final PlannerParameters parameters; 
 
 	/**
-	 * 
-	 * @param eventBus
-	 * @param collectStats
-	 * @param parameters
-	 * @param query
-	 * @param schema
-	 * @param chaser
-	 * @param detector
-	 * @param cardinalityEstimator
+	 * Instantiates a new DAG explorer.
+	 *
+	 * @param eventBus the event bus
+	 * @param collectStats the collect stats
+	 * @param parameters the parameters
+	 * @param query the query
+	 * @param schema the schema
+	 * @param chaser the chaser
+	 * @param detector the detector
+	 * @param cardinalityEstimator the cardinality estimator
 	 */
 	public DAGExplorer(EventBus eventBus, 
 			boolean collectStats, 
@@ -82,10 +93,10 @@ public abstract class DAGExplorer extends Explorer<DAGPlan> {
 	}
 
 	/**
-	 * Updates the minimum cost configuration/plan
-	 * @param configuration
+	 * Updates the minimum cost configuration/plan.
+	 *
+	 * @param configuration the configuration
 	 * @return true if the best configuration/plan is updated
-	 * @throws PlannerException 
 	 */
 	public boolean setBestPlan(DAGAnnotatedPlan configuration) {
 		if(this.bestConfiguration != null && configuration != null &&
@@ -103,6 +114,9 @@ public abstract class DAGExplorer extends Explorer<DAGPlan> {
 		return true;
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.planner.explorer.Explorer#getBestPlan()
+	 */
 	@Override
 	public DAGPlan getBestPlan() {
 		if (this.bestConfiguration == null) {
@@ -111,11 +125,18 @@ public abstract class DAGExplorer extends Explorer<DAGPlan> {
 		return this.bestPlan;
 	}
 
+	/**
+	 * Gets the best configuration.
+	 *
+	 * @return the best configuration
+	 */
 	public DAGAnnotatedPlan getBestConfiguration() {
 		return this.bestConfiguration;
 	}
 
 	/**
+	 * Terminates.
+	 *
 	 * @return true if the planner terminates
 	 */
 	@Override
@@ -124,8 +145,10 @@ public abstract class DAGExplorer extends Explorer<DAGPlan> {
 	}
 
 	/**
+	 * Creates the initial configurations.
+	 *
 	 * @return a list of ApplyRule configurations based on the facts derived after chasing the input schema with the canonical database of the query
-	 * @throws PlannerException
+	 * @throws PlannerException the planner exception
 	 */
 	protected List<DAGAnnotatedPlan> createInitialConfigurations() throws PlannerException {
 		ChaseState state = null;

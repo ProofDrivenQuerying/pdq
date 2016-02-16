@@ -6,28 +6,34 @@ import uk.ac.ox.cs.pdq.util.Named;
 
 import com.google.common.base.Preconditions;
 
+// TODO: Auto-generated Javadoc
 /**
- * A variable term
+ * A variable term.
  *
  * @author Efthymia Tsamoura
  * @author Julien Leblay
  */
 public class Variable implements Named, Term {
 
-	/** The default prefix of the variable terms */
+	/**  The default prefix of the variable terms. */
 	public static final String DEFAULT_VARIABLE_PREFIX = "_";
 
-	/** A counter used to create new variable terms */
+	/**  A counter used to create new variable terms. */
 	private static int freshVariableCounter = 0;
 
-	/** The variable's name*/
+	/**  The variable's name. */
 	private final String name;
 
+	/**
+	 * Reset counter.
+	 */
 	public static void resetCounter() {
 		Variable.freshVariableCounter = 0;
 	}
 
 	/**
+	 * Gets the fresh variable.
+	 *
 	 * @return a new variable using the default variable prefix an integer
 	 */
 	public static Variable getFreshVariable() {
@@ -35,6 +41,8 @@ public class Variable implements Named, Term {
 	}
 
 	/**
+	 * Instantiates a new variable.
+	 *
 	 * @param name The name of this variable
 	 */
 	public Variable(String name) {
@@ -44,6 +52,8 @@ public class Variable implements Named, Term {
 	}
 
 	/**
+	 * Checks if is variable.
+	 *
 	 * @return boolean
 	 * @see uk.ac.ox.cs.pdq.fol.Term#isVariable()
 	 */
@@ -53,6 +63,8 @@ public class Variable implements Named, Term {
 	}
 
 	/**
+	 * Checks if is skolem.
+	 *
 	 * @return boolean
 	 * @see uk.ac.ox.cs.pdq.fol.Term#isSkolem()
 	 */
@@ -62,6 +74,8 @@ public class Variable implements Named, Term {
 	}
 
 	/**
+	 * Equals.
+	 *
 	 * @param o Object
 	 * @return boolean
 	 */
@@ -78,6 +92,8 @@ public class Variable implements Named, Term {
 	}
 
 	/**
+	 * Hash code.
+	 *
 	 * @return int
 	 */
 	@Override
@@ -86,6 +102,8 @@ public class Variable implements Named, Term {
 	}
 
 	/**
+	 * To string.
+	 *
 	 * @return String
 	 */
 	@Override
@@ -94,6 +112,8 @@ public class Variable implements Named, Term {
 	}
 
 	/**
+	 * Gets the name.
+	 *
 	 * @return String
 	 * @see uk.ac.ox.cs.pdq.util.Named#getName()
 	 */

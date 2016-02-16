@@ -28,26 +28,27 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
+// TODO: Auto-generated Javadoc
 /**
- * A normalised plan
- * 
- * @author Efthymia Tsamoura
+ * A normalised plan.
  *
+ * @author Efthymia Tsamoura
  */
 public class SequentialPlan {
 
-	/** The list of commands of the plan**/
+	/**  The list of commands of the plan*. */
 	private final List<Command> commands;
 
-	/** Maps each table to the command that produced it and the order of appearance of the command**/
+	/**  Maps each table to the command that produced it and the order of appearance of the command*. */
 	private final Map<Table, Pair<Command,Integer>> tables;
 	
-	/** The list of access commands of this plan**/
+	/**  The list of access commands of this plan*. */
 	private final List<AccessCommand> accessCommands = Lists.newArrayList();
 	
 	/**
-	 * Creates a normalised plan consisting of a single command
-	 * @param command
+	 * Creates a normalised plan consisting of a single command.
+	 *
+	 * @param command the command
 	 */
 	public SequentialPlan(Command command) {
 		Preconditions.checkNotNull(command);
@@ -60,8 +61,9 @@ public class SequentialPlan {
 	}
 
 	/**
-	 * Creates a normalised plan consisting of a list of commands
-	 * @param commands
+	 * Creates a normalised plan consisting of a list of commands.
+	 *
+	 * @param commands the commands
 	 */
 	public SequentialPlan(List<Command> commands) {
 		Preconditions.checkNotNull(commands);
@@ -77,9 +79,10 @@ public class SequentialPlan {
 	}
 
 	/**
-	 * Creates a normalised plan by appending the input list of commands to the input normalised plan
-	 * @param plan
-	 * @param command
+	 * Creates a normalised plan by appending the input list of commands to the input normalised plan.
+	 *
+	 * @param plan the plan
+	 * @param command the command
 	 */
 	public SequentialPlan(SequentialPlan plan, Command command) {
 		Preconditions.checkNotNull(plan);
@@ -97,9 +100,10 @@ public class SequentialPlan {
 	}
 	
 	/**
-	 * Creates a normalised plan by appending the input list of commands to the input normalised plan
-	 * @param plan
-	 * @param commands
+	 * Creates a normalised plan by appending the input list of commands to the input normalised plan.
+	 *
+	 * @param plan the plan
+	 * @param commands the commands
 	 */
 	public SequentialPlan(SequentialPlan plan, Command... commands) {
 		Preconditions.checkNotNull(plan);
@@ -119,8 +123,9 @@ public class SequentialPlan {
 	}
 	
 	/**
-	 * Appends the input command to the plan
-	 * @param command
+	 * Appends the input command to the plan.
+	 *
+	 * @param command the command
 	 */
 	public void addCommand(Command command) {
 		Preconditions.checkNotNull(command);
@@ -132,7 +137,8 @@ public class SequentialPlan {
 	}
 
 	/**
-	 * 
+	 * Gets the commands.
+	 *
 	 * @return this plan's commands
 	 */
 	public List<Command> getCommands() {
@@ -140,7 +146,8 @@ public class SequentialPlan {
 	}
 
 	/**
-	 * 
+	 * Gets the first.
+	 *
 	 * @return the first command
 	 */
 	public Command getFirst() {
@@ -148,7 +155,8 @@ public class SequentialPlan {
 	}
 
 	/**
-	 * 
+	 * Gets the last.
+	 *
 	 * @return the last command
 	 */
 	public Command getLast() {
@@ -156,10 +164,10 @@ public class SequentialPlan {
 	}
 	
 	/**
-	 * 
-	 * @param table
-	 * @return
-	 * 		the command that produced the input table
+	 * Gets the command.
+	 *
+	 * @param table the table
+	 * @return 		the command that produced the input table
 	 */
 	public Command getCommand(Table table) {
 		Preconditions.checkNotNull(table);
@@ -167,15 +175,20 @@ public class SequentialPlan {
 		return this.tables.get(table).getLeft();
 	}
 	
+	/**
+	 * Gets the access commands.
+	 *
+	 * @return the access commands
+	 */
 	public List<AccessCommand> getAccessCommands() {
 		return this.accessCommands;
 	}
 	
 	/**
-	 * 
-	 * @param table
-	 * @return
-	 * 		a normalised plan that consists of the commands of this plan up to the command that produced the input table 
+	 * Gets the ancestor.
+	 *
+	 * @param table the table
+	 * @return 		a normalised plan that consists of the commands of this plan up to the command that produced the input table
 	 */
 	public SequentialPlan getAncestor(Table table) {
 		Preconditions.checkNotNull(table);
@@ -185,10 +198,10 @@ public class SequentialPlan {
 	}
 	
 	/**
-	 * 
-	 * @param table
-	 * @return
-	 * 		a normalised plan that consists of the commands of this plan up to the command that produced the input table 
+	 * Gets the ancestor exclusive.
+	 *
+	 * @param table the table
+	 * @return 		a normalised plan that consists of the commands of this plan up to the command that produced the input table
 	 */
 	public SequentialPlan getAncestorExclusive(Table table) {
 		Preconditions.checkNotNull(table);
@@ -198,10 +211,10 @@ public class SequentialPlan {
 	}
 	
 	/**
-	 * 
-	 * @param command
-	 * @return
-	 * 		a normalised plan that consists of the commands of this plan up to the input command
+	 * Gets the ancestor.
+	 *
+	 * @param command the command
+	 * @return 		a normalised plan that consists of the commands of this plan up to the input command
 	 */
 	public SequentialPlan getAncestor(Command command) {
 		Preconditions.checkNotNull(command);
@@ -209,11 +222,18 @@ public class SequentialPlan {
 		return new SequentialPlan(this.commands.subList(0, order));
 	}
 	
+	/**
+	 * Gets the tables.
+	 *
+	 * @return the tables
+	 */
 	public Collection<Table> getTables() {
 		return this.tables.keySet();
 	}
 	
 	/**
+	 * Equals.
+	 *
 	 * @param o Object
 	 * @return boolean
 	 */
@@ -230,6 +250,8 @@ public class SequentialPlan {
 	}
 
 	/**
+	 * Hash code.
+	 *
 	 * @return int
 	 */
 	@Override
@@ -238,6 +260,8 @@ public class SequentialPlan {
 	}
 
 	/**
+	 * To string.
+	 *
 	 * @return String
 	 */
 	@Override
@@ -245,6 +269,9 @@ public class SequentialPlan {
 		return Joiner.on("\n").join(this.commands);
 	}
 	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#clone()
+	 */
 	@Override
 	public SequentialPlan clone() {
 		return new SequentialPlan(this);

@@ -20,6 +20,7 @@ import uk.ac.ox.cs.pdq.util.Typed;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
 /**
  * BindJoinTest is an implementation of a physical dependent open join.
  * 
@@ -28,26 +29,40 @@ import com.google.common.collect.Lists;
  */
 public class BindJoin extends Join {
 
+	/** The input sideways mapping. */
 	protected final List<Integer> inputSidewaysMapping;
 
+	/** The left. */
 	protected final TupleIterator left;
+	
+	/** The right. */
 	protected final TupleIterator right;
+	
+	/** The cached iterator. */
 	protected TupleIterator cachedIterator;
 
-	/** All RHS tuples that have been acquired so far*/
+	/**  All RHS tuples that have been acquired so far. */
 	private CacheAccess cache = null;
 
-	/** RHS tuples acquired given the current left tuple */
+	/**  RHS tuples acquired given the current left tuple. */
 	private Deque<Tuple> cached = null;
 
-	/** True if the currently acquired RHS tuples are not present in the cache */
+	/**  True if the currently acquired RHS tuples are not present in the cache. */
 	private boolean doCache = false;
 
+	/** The left tuple. */
 	protected Tuple leftTuple = null;
+	
+	/** The current input. */
 	protected Tuple currentInput = null;
+	
+	/** The r input. */
 	private Tuple rInput = null;
 	
+	/** The join ids. */
 	private static Integer joinIds = 0;
+	
+	/** The join id. */
 	private final Integer joinId;
 
 	/**
@@ -108,8 +123,10 @@ public class BindJoin extends Join {
 	}
 
 	/**
-	 * @param leftOutput
-	 * @param rightInput
+	 * Infer input mappings.
+	 *
+	 * @param leftOutput the left output
+	 * @param rightInput the right input
 	 * @return a mapping from right input position to their position on the left output.
 	 * Right input positions that comes from the parent are distinguished as negative numbers.
 	 */
@@ -141,8 +158,10 @@ public class BindJoin extends Join {
 	}
 
 	/**
-	 * @param currentInput
-	 * @param leftInput	
+	 * Project.
+	 *
+	 * @param currentInput the current input
+	 * @param leftInput the left input
 	 * @return an input tuple obtained by mixing inputs coming from the parent
 	 * (currentInput) and the LHS (leftInput).
 	 */
@@ -239,6 +258,8 @@ public class BindJoin extends Join {
 	}
 
 	/**
+	 * Deep copy.
+	 *
 	 * @return BindJoinTest
 	 * @see uk.ac.ox.cs.pdq.util.ResetableIterator#deepCopy()
 	 */
@@ -248,6 +269,8 @@ public class BindJoin extends Join {
 	}
 
 	/**
+	 * Bind.
+	 *
 	 * @param t Tuple
 	 */
 	@Override

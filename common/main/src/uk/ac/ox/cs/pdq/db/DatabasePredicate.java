@@ -5,6 +5,7 @@ import java.util.Collection;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
 
+// TODO: Auto-generated Javadoc
 /**
  * Convenience class, referring to a predicate whose relation symbol is a
  * database relation.
@@ -32,6 +33,8 @@ public class DatabasePredicate extends Predicate {
 	}
 
 	/**
+	 * Gets the signature.
+	 *
 	 * @return Relation
 	 * @see uk.ac.ox.cs.pdq.fol.AtomicFormula#getSignature()
 	 */

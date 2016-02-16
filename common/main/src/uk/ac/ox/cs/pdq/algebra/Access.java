@@ -16,6 +16,7 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
 /**
  * Logical operator representation of an access.
  *
@@ -32,7 +33,7 @@ public class Access extends UnaryOperator implements AccessOperator {
 	/** The access method to use. */
 	private final AccessMethod accessMethod;
 	
-	/** The output terms of this access*/
+	/**  The output terms of this access. */
 	protected final List<Term> outputTerms;
 
 	/**
@@ -61,6 +62,7 @@ public class Access extends UnaryOperator implements AccessOperator {
 	 *
 	 * @param relation Relation
 	 * @param accessMethod AccessMethod
+	 * @param outputTerms the output terms
 	 * @param child LogicalOperator
 	 */
 	public Access(Relation relation, AccessMethod accessMethod, List<Term> outputTerms, RelationalOperator child) {
@@ -80,17 +82,31 @@ public class Access extends UnaryOperator implements AccessOperator {
 		this.outputTerms = Lists.newArrayList(outputTerms);
 	}
 	
+	/**
+	 * Attributes of.
+	 *
+	 * @param relation the relation
+	 * @return the list
+	 */
 	private static List<Attribute> attributesOf(Relation relation) {
 		Preconditions.checkArgument(relation != null);
 		return relation.getAttributes();
 	}
 	
+	/**
+	 * Gets the output terms.
+	 *
+	 * @param relation the relation
+	 * @return the output terms
+	 */
 	private static List<Term> getOutputTerms(Relation relation) {
 		Preconditions.checkArgument(relation != null);
 		return Utility.typedToTerms(relation.getAttributes());
 	}
 
 	/**
+	 * Gets the relation.
+	 *
 	 * @return the relation accessed by this operator.
 	 * @see uk.ac.ox.cs.pdq.plan.AccessOperator#getRelation()
 	 */
@@ -100,6 +116,8 @@ public class Access extends UnaryOperator implements AccessOperator {
 	}
 
 	/**
+	 * Gets the access method.
+	 *
 	 * @return the access method used by this operator.
 	 * @see uk.ac.ox.cs.pdq.plan.AccessOperator#getAccessMethod()
 	 */
@@ -118,6 +136,8 @@ public class Access extends UnaryOperator implements AccessOperator {
 	}
 
 	/**
+	 * Sets the child.
+	 *
 	 * @param c LogicalOperator
 	 */
 	public void setChild(RelationalOperator c) {
@@ -141,6 +161,8 @@ public class Access extends UnaryOperator implements AccessOperator {
 	}
 
 	/**
+	 * Equals.
+	 *
 	 * @param o Object
 	 * @return boolean
 	 */
@@ -155,6 +177,8 @@ public class Access extends UnaryOperator implements AccessOperator {
 	}
 
 	/**
+	 * Hash code.
+	 *
 	 * @return int
 	 */
 	@Override

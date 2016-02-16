@@ -14,21 +14,30 @@ import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseSt
 
 import com.google.common.base.Preconditions;
 
+// TODO: Auto-generated Javadoc
 /**
- * Creates plan tree nodes 
+ * Creates plan tree nodes .
  *
  * @author Efthymia Tsamoura
  */
 public final class NodeFactory {
 	
+	/** The planner parameters. */
 	private final PlannerParameters plannerParameters;
 	
 	/** Estimates the cost of linear plan visited during exploration.
 	 * If  instance of SimpleCostEstimator, then the factory returns a simple node. Otherwise, a blackbox one. **/
 	private final CostEstimator<LeftDeepPlan> costEstimator;
 	
+	/** The random. */
 	private final Random random;
 
+	/**
+	 * Instantiates a new node factory.
+	 *
+	 * @param parameters the parameters
+	 * @param costEstimator the cost estimator
+	 */
 	public NodeFactory(PlannerParameters parameters, CostEstimator<LeftDeepPlan> costEstimator) {
 		Preconditions.checkNotNull(parameters);
 		Preconditions.checkNotNull(costEstimator);
@@ -38,10 +47,11 @@ public final class NodeFactory {
 	}
 	
 	/**
-	 * 
-	 * @param state
+	 * Gets the single instance of NodeFactory.
+	 *
+	 * @param state the state
 	 * @return a node with the input accessible chase state
-	 * @throws PlannerException
+	 * @throws PlannerException the planner exception
 	 */
 	public SearchNode getInstance(AccessibleChaseState state) throws PlannerException {
 		Preconditions.checkNotNull(state);
@@ -53,10 +63,12 @@ public final class NodeFactory {
 	}
 
 	/**
-	 * @param parent
-	 * @param exposedCandidates
+	 * Gets the single instance of NodeFactory.
+	 *
+	 * @param parent the parent
+	 * @param exposedCandidates the exposed candidates
 	 * @return a node that exposes the input candidate facts and has as parent the input node
-	 * @throws PlannerException
+	 * @throws PlannerException the planner exception
 	 */
 	public SearchNode getInstance(SearchNode parent, Set<Candidate> exposedCandidates) throws PlannerException {
 		LinearChaseConfiguration configuration = new LinearChaseConfiguration(

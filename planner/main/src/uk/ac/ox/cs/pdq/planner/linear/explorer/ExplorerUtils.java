@@ -15,17 +15,21 @@ import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode.NodeStatus;
 import com.google.common.base.Preconditions;
 
 
+// TODO: Auto-generated Javadoc
 /**
- * Utility class
- * @author Efthymia Tsamoura
+ * Utility class.
  *
+ * @author Efthymia Tsamoura
  */
 
 public class ExplorerUtils {
 
 	/**
-	 * @param parentsNodes
-	 * @param childNode
+	 * Checks if is equivalent.
+	 *
+	 * @param <N> the number type
+	 * @param parentsNodes the parents nodes
+	 * @param childNode the child node
 	 * @return a parent node that is globally equivalent to the input node
 	 */
 	public static <N extends SearchNode> N isEquivalent(Collection<N> parentsNodes, N childNode) {
@@ -52,8 +56,11 @@ public class ExplorerUtils {
 	}
 
 	/**
-	 * @param parentsNodes
-	 * @param childNode
+	 * Checks if is dominated.
+	 *
+	 * @param <N> the number type
+	 * @param parentsNodes the parents nodes
+	 * @param childNode the child node
 	 * @return a parent node that dominates the child
 	 */
 	public static <N extends SearchNode> N isDominated(Collection<N> parentsNodes, N childNode) {
@@ -68,7 +75,10 @@ public class ExplorerUtils {
 	}
 
 	/**
-	 * @param planTree
+	 * Gets the fully generated nodes.
+	 *
+	 * @param <N> the number type
+	 * @param planTree the plan tree
 	 * @return the fully generate nodes
 	 */
 	public static <N extends SearchNode> Collection<N> getFullyGeneratedNodes(DirectedGraph<N, DefaultEdge> planTree) {
@@ -82,7 +92,10 @@ public class ExplorerUtils {
 	}
 
 	/**
-	 * @param planTree
+	 * Gets the partially generated leaves.
+	 *
+	 * @param <N> the number type
+	 * @param planTree the plan tree
 	 * @return the partially generated leaves
 	 */
 	public static <N extends SearchNode> Collection<N> getPartiallyGeneratedLeaves(DirectedGraph<N, DefaultEdge> planTree) {
@@ -97,6 +110,8 @@ public class ExplorerUtils {
 
 	/**
 	 * Julien: Quick fix to avoid cycles in propagation.
+	 *
+	 * @param <N> the number type
 	 * @param planTree PlanTree<N>
 	 * @param node N
 	 * @return a collection of all node in the search space after removing the
@@ -110,6 +125,10 @@ public class ExplorerUtils {
 
 	/**
 	 * Julien: Quick fix to avoid cycles in propagation.
+	 *
+	 * @param <N> the number type
+	 * @param planTree the plan tree
+	 * @param node the node
 	 * @return a collection of the ancestors of snode
 	 */
 	public static <N extends SearchNode> Collection<N> ancestorsOf(PlanTree<N> planTree, N node) {

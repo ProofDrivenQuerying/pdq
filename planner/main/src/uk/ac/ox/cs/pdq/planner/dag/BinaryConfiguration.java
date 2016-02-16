@@ -12,6 +12,7 @@ import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import com.google.common.base.Preconditions;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * Instances of binary DAG configurations.
  * They are of the form Binary(x,y), where x and y can be either binary of unary DAG configurations. 
@@ -24,41 +25,48 @@ import com.google.common.base.Preconditions;
 public class BinaryConfiguration extends DAGChaseConfiguration {
 
 	/**
-	 * Binary configuration types
-	 * @author Efthymia Tsamoura
+	 * Binary configuration types.
 	 *
+	 * @author Efthymia Tsamoura
 	 */
 	public enum BinaryConfigurationTypes {
+		
+		/** The pcompose. */
 		PCOMPOSE,
+		
+		/** The jcompose. */
 		JCOMPOSE,
+		
+		/** The merge. */
 		MERGE,
+		
+		/** The gencompose. */
 		GENCOMPOSE;
 	}
 
 	/** The type of the binary configuration, e.g., Merge, PCompose, JCompose, GenCompose */
 	private final BinaryConfigurationTypes type;
 
-	/** The left sub-configuration */
+	/**  The left sub-configuration. */
 	private final DAGChaseConfiguration left;
 
-	/** The right sub-configuration */
+	/**  The right sub-configuration. */
 	private final DAGChaseConfiguration right;
 
-	/** The string representation if this configuration*/
+	/**  The string representation if this configuration. */
 	private String toString;
 	
-	/** The configuration's ApplyRule sub-configurations */
+	/**  The configuration's ApplyRule sub-configurations. */
 	private final Collection<ApplyRule> rules;
 
-	/** The configuration's ApplyRule sub-configurations ordered according to their appearance */
+	/**  The configuration's ApplyRule sub-configurations ordered according to their appearance. */
 	private final List<ApplyRule> rulesList;
 	
 	/**
-	 * 
-	 * @param left
-	 * 		The left sub-configuration
-	 * @param right
-	 * 		The right sub-configuration
+	 * Instantiates a new binary configuration.
+	 *
+	 * @param left 		The left sub-configuration
+	 * @param right 		The right sub-configuration
 	 */
 	public BinaryConfiguration(
 			DAGChaseConfiguration left,
@@ -84,13 +92,11 @@ public class BinaryConfiguration extends DAGChaseConfiguration {
 	}
 	
 	/**
-	 * 
-	 * @param left
-	 * 		The left sub-configuration
-	 * @param right
-	 * 		The right sub-configuration
-	 * @param state
-	 * 		The state of the new binary configuration
+	 * Instantiates a new binary configuration.
+	 *
+	 * @param left 		The left sub-configuration
+	 * @param right 		The right sub-configuration
+	 * @param state 		The state of the new binary configuration
 	 */
 	public BinaryConfiguration(
 			DAGChaseConfiguration left,
@@ -117,13 +123,19 @@ public class BinaryConfiguration extends DAGChaseConfiguration {
 	}
 
 	/**
-	 * Chases the configuration using the input dependencies
+	 * Chases the configuration using the input dependencies.
+	 *
+	 * @param chaser the chaser
+	 * @param query the query
+	 * @param dependencies the dependencies
 	 */
 	public void reasonUntilTermination(Chaser chaser, Query<?> query, Collection<? extends Constraint> dependencies) {
 		chaser.reasonUntilTermination(this.getState(), query, dependencies);
 	}
 
 	/**
+	 * Gets the type.
+	 *
 	 * @return the type of the binary configuration, e.g., Merge, PCompose, JCompose, GenCompose
 	 */
 	public BinaryConfigurationTypes getType() {
@@ -131,6 +143,8 @@ public class BinaryConfiguration extends DAGChaseConfiguration {
 	}
 
 	/**
+	 * Gets the left.
+	 *
 	 * @return the left sub-configuration
 	 */
 	public DAGChaseConfiguration getLeft() {
@@ -138,6 +152,8 @@ public class BinaryConfiguration extends DAGChaseConfiguration {
 	}
 
 	/**
+	 * Gets the right.
+	 *
 	 * @return the right sub-configuration
 	 */
 	public DAGChaseConfiguration getRight() {
@@ -145,6 +161,8 @@ public class BinaryConfiguration extends DAGChaseConfiguration {
 	}
 
 	/**
+	 * To string.
+	 *
 	 * @return String
 	 */
 	@Override
@@ -157,6 +175,8 @@ public class BinaryConfiguration extends DAGChaseConfiguration {
 	}
 	
 	/**
+	 * Clone.
+	 *
 	 * @return BinaryConfiguration<S>
 	 * @see uk.ac.ox.cs.pdq.reasoning.Configuration#clone()
 	 */
@@ -168,10 +188,16 @@ public class BinaryConfiguration extends DAGChaseConfiguration {
 				);
 	}
 	
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.planner.dag.DAGConfiguration#getApplyRules()
+	 */
 	public Collection<ApplyRule> getApplyRules() {
 		return this.rules;
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.planner.dag.DAGConfiguration#getApplyRulesList()
+	 */
 	public List<ApplyRule> getApplyRulesList() {
 		return this.rulesList;
 	}

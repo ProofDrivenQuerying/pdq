@@ -28,18 +28,26 @@ import uk.ac.ox.cs.pdq.util.Utility;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class PredicateFormulaTest.
+ */
 public class PredicateFormulaTest {
 
+	/** The random. */
 	private Random random = new Random();
 	
 	/**
-	 * Makes sure assertions are enabled
+	 * Makes sure assertions are enabled.
 	 */
 	@Before 
 	public void setup() {
 		Utility.assertsEnabled();
 	}
 
+	/**
+	 * Test hash code.
+	 */
 	@Test
 	public void testHashCode() {
 		int n = 100, m = 10;
@@ -65,6 +73,9 @@ public class PredicateFormulaTest {
 		}
 	}
 
+	/**
+	 * Test predicate formula valid.
+	 */
 	@Test public void testPredicateFormulaValid() {
 		Signature s = new Signature("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
@@ -76,6 +87,9 @@ public class PredicateFormulaTest {
 		Assert.assertEquals("Predicate must have name terms " + t, t, p.getTerms());
 	}
 
+	/**
+	 * Test predicate formula zero arity.
+	 */
 	@Test public void testPredicateFormulaZeroArity() {
 		Signature s = new Signature("s", 0);
 		List<Term> t = Lists.newArrayList();
@@ -84,6 +98,9 @@ public class PredicateFormulaTest {
 		Assert.assertEquals("Predicate must have name terms " + t, t, p.getTerms());
 	}
 
+	/**
+	 * Test predicate formula arity mistmatch1.
+	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void testPredicateFormulaArityMistmatch1() {
 		new Predicate(
@@ -91,6 +108,9 @@ public class PredicateFormulaTest {
 				Lists.newArrayList(new Variable("x")));
 	}
 
+	/**
+	 * Test predicate formula arity mistmatch2.
+	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void testPredicateFormulaArityMistmatch2() {
 		new Predicate(
@@ -98,6 +118,9 @@ public class PredicateFormulaTest {
 				Lists.<Term>newArrayList());
 	}
 
+	/**
+	 * Test predicate formula valid relation1.
+	 */
 	@Test
 	public void testPredicateFormulaValidRelation1() {
 		Relation r = new Relation("s",
@@ -108,6 +131,9 @@ public class PredicateFormulaTest {
 		Assert.assertEquals("Predicate must have name terms " + t, t, p.getTerms());
 	}
 
+	/**
+	 * Test predicate formula valid relation2.
+	 */
 	@Test
 	public void testPredicateFormulaValidRelation2() {
 		Relation r = new Relation("s",
@@ -118,6 +144,9 @@ public class PredicateFormulaTest {
 		Assert.assertEquals("Predicate must have name terms " + t, t, p.getTerms());
 	}
 
+	/**
+	 * Test equality.
+	 */
 	@Test public void testEquality() {
 		Relation r = new Relation("s",
 				Lists.newArrayList(new Attribute(String.class, "a"))) {};
@@ -127,6 +156,9 @@ public class PredicateFormulaTest {
 		Assert.assertTrue("PredicateFormula p1 and p2 must be the same", p1.equals(p2));
 	}
 
+	/**
+	 * Test equality wrong arity.
+	 */
 	@Test public void testEqualityWrongArity() {
 		Relation r1 = new Relation("r", Lists.newArrayList(
 				new Attribute(String.class, "a1"), new Attribute(String.class, "a2"))) {};
@@ -139,6 +171,9 @@ public class PredicateFormulaTest {
 		Assert.assertFalse("PredicateFormula p1 and p2 have different arities", p1.equals(p2));
 	}
 
+	/**
+	 * Test equality wrong name.
+	 */
 	@Test public void testEqualityWrongName() {
 		Relation r1 = new Relation("r1", Lists.newArrayList(
 				new Attribute(String.class, "a1"), new Attribute(String.class, "a2"))) {};
@@ -151,6 +186,9 @@ public class PredicateFormulaTest {
 		Assert.assertFalse("PredicateFormula p1 and p2 have different names", p1.equals(p2));
 	}
 
+	/**
+	 * Test hash duplicates.
+	 */
 	@Test public void testHashDuplicates() {
 		Set<Predicate> set = new LinkedHashSet<>();
 		Relation r = new Relation("r", Lists.newArrayList(
@@ -170,6 +208,9 @@ public class PredicateFormulaTest {
 		Assert.assertEquals("PredicateFormula set must have 4 elements", 4, set.size());
 	}
 
+	/**
+	 * Test hash no duplicates.
+	 */
 	@Test public void testHashNoDuplicates() {
 		Set<Predicate> set = new LinkedHashSet<>();
 		Relation r = new Relation("r", Lists.newArrayList(
@@ -188,6 +229,9 @@ public class PredicateFormulaTest {
 		Assert.assertEquals("PredicateFormula set must have 8 elements", 8, set.size());
 	}
 
+	/**
+	 * Test get term count.
+	 */
 	@Test public void testGetTermCount() {
 		Signature s = new Signature("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
@@ -199,6 +243,9 @@ public class PredicateFormulaTest {
 				t.size(), p.getTermsCount());
 	}
 
+	/**
+	 * Test get term.
+	 */
 	@Test public void testGetTerm() {
 		Signature s = new Signature("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
@@ -212,6 +259,9 @@ public class PredicateFormulaTest {
 		}
 	}
 
+	/**
+	 * Test get term out of range1.
+	 */
 	@Test (expected=IndexOutOfBoundsException.class)
 	public void testGetTermOutOfRange1() {
 		Signature s = new Signature("s", 5);
@@ -222,6 +272,9 @@ public class PredicateFormulaTest {
 		new Predicate(s, t).getTerm(-1);
 	}
 
+	/**
+	 * Test get term out of range2.
+	 */
 	@Test (expected=IndexOutOfBoundsException.class)
 	public void testGetTermOutOfRange2() {
 		Signature s = new Signature("s", 5);
@@ -232,6 +285,9 @@ public class PredicateFormulaTest {
 		new Predicate(s, t).getTerm(5);
 	}
 
+	/**
+	 * Test get terms.
+	 */
 	@Test public void testGetTerms() {
 		Signature s = new Signature("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
@@ -243,6 +299,9 @@ public class PredicateFormulaTest {
 				t, p.getTerms());
 	}
 
+	/**
+	 * Test get selected terms.
+	 */
 	@Test public void testGetSelectedTerms() {
 		Signature s = new Signature("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
@@ -261,6 +320,9 @@ public class PredicateFormulaTest {
 				p.getTerms(Lists.<Integer>newArrayList(2, 3, 4)));
 	}
 
+	/**
+	 * Test get selected terms outof range1.
+	 */
 	@Test(expected=IndexOutOfBoundsException.class)
 	public void testGetSelectedTermsOutofRange1() {
 		Signature s = new Signature("s", 5);
@@ -271,6 +333,9 @@ public class PredicateFormulaTest {
 		new Predicate(s, t).getTerms(Lists.<Integer>newArrayList(0, 2, -1));
 	}
 
+	/**
+	 * Test get selected terms outof range2.
+	 */
 	@Test(expected=IndexOutOfBoundsException.class)
 	public void testGetSelectedTermsOutofRange2() {
 		Signature s = new Signature("s", 5);
@@ -281,6 +346,9 @@ public class PredicateFormulaTest {
 		new Predicate(s, t).getTerms(Lists.<Integer>newArrayList(2, 1, 5));
 	}
 
+	/**
+	 * Test get constants.
+	 */
 	@Test public void testGetConstants() {
 		Signature s = new Signature("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
@@ -292,6 +360,9 @@ public class PredicateFormulaTest {
 				p.getConstants(Lists.newArrayList(3, 4)));
 	}
 
+	/**
+	 * Test get constants invalid.
+	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void testGetConstantsInvalid() {
 		Signature s = new Signature("s", 5);
@@ -301,6 +372,9 @@ public class PredicateFormulaTest {
 		new Predicate(s, t).getConstants(Lists.newArrayList(0, 1));
 	}
 
+	/**
+	 * Test get variable.
+	 */
 	@Test public void testGetVariable() {
 		Signature s = new Signature("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
@@ -313,6 +387,9 @@ public class PredicateFormulaTest {
 				p.getVariables());
 	}
 
+	/**
+	 * Test get all constants.
+	 */
 	@Test public void testGetAllConstants() {
 		Signature s = new Signature("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
@@ -325,6 +402,11 @@ public class PredicateFormulaTest {
 				p.getConstants());
 	}
 
+	/**
+	 * Gets the schema constants.
+	 *
+	 * @return the schema constants
+	 */
 	@Test public void getSchemaConstants() {
 		Signature s = new Signature("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
@@ -337,6 +419,9 @@ public class PredicateFormulaTest {
 				p.getSchemaConstants());
 	}
 
+	/**
+	 * Test get predicates.
+	 */
 	@Test public void testGetPredicates() {
 		Signature s = new Signature("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
@@ -348,6 +433,9 @@ public class PredicateFormulaTest {
 				Lists.newArrayList(p), p.getPredicates());
 	}
 
+	/**
+	 * Test get atoms.
+	 */
 	@Test public void testGetAtoms() {
 		Signature s = new Signature("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
@@ -359,6 +447,9 @@ public class PredicateFormulaTest {
 				Lists.newArrayList(p), p.getPredicates());
 	}
 
+	/**
+	 * Test ground.
+	 */
 	@Test public void testGround() {
 		Signature s = new Signature("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
@@ -377,6 +468,9 @@ public class PredicateFormulaTest {
 		Assert.assertEquals("Grounded negation must comply to mapping ",g, p.ground(m).getTerms());
 	}
 
+	/**
+	 * Test get term positions.
+	 */
 	@Test public void testGetTermPositions() {
 		Signature s = new Signature("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
@@ -390,6 +484,11 @@ public class PredicateFormulaTest {
 		Assert.assertEquals("Predicate x4 term positions must match", Lists.newArrayList(4), p.getTermPositions(new TypedConstant<>("x4")));
 	}
 
+	/**
+	 * Gets the term positions not found.
+	 *
+	 * @return the term positions not found
+	 */
 	@Test public void getTermPositionsNotFound() {
 		Signature s = new Signature("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
@@ -402,6 +501,9 @@ public class PredicateFormulaTest {
 
 	}
 
+	/**
+	 * Test is fact.
+	 */
 	@Test public void testIsFact() {
 		Signature s = new Signature("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
@@ -412,6 +514,9 @@ public class PredicateFormulaTest {
 		Assert.assertTrue("Fact terms must contain schema constants only", p.isFact());
 	}
 
+	/**
+	 * Test is not fact.
+	 */
 	@Test public void testIsNotFact() {
 		Signature s = new Signature("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(

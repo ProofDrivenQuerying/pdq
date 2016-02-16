@@ -7,9 +7,10 @@ import uk.ac.ox.cs.pdq.fol.LogicalSymbols;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.io.Writer;
 
+// TODO: Auto-generated Javadoc
 /**
- * Writes a concise representation of a dependency to the given output
- * 
+ * Writes a concise representation of a dependency to the given output.
+ *
  * @author Julien Leblay
  */
 public class PrettyDependencyWriter extends PrettyWriter<Constraint> implements Writer<Constraint> {
@@ -24,7 +25,8 @@ public class PrettyDependencyWriter extends PrettyWriter<Constraint> implements 
 	private boolean indented = false;
 	
 	/**
-	 * 
+	 * Instantiates a new pretty dependency writer.
+	 *
 	 * @param out the default output
 	 */
 	private PrettyDependencyWriter(PrintStream out) {
@@ -33,7 +35,8 @@ public class PrettyDependencyWriter extends PrettyWriter<Constraint> implements 
 	
 	/**
 	 * Fluent pretty writer provider.
-	 * @param out
+	 *
+	 * @param out the out
 	 * @return a new PrettyQueryWriter with the given default output.
 	 */
 	public static PrettyDependencyWriter to(PrintStream out) {

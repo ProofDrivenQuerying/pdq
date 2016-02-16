@@ -33,8 +33,10 @@ import uk.ac.ox.cs.pdq.ui.prefuse.utils.Utils;
 import com.google.common.base.Joiner;
 import com.google.common.eventbus.Subscribe;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
+ * The Class PrefuseEventHandler.
+ *
  * @author Efi Tsamoura
  */
 public class PrefuseEventHandler implements EventHandler {
@@ -42,17 +44,49 @@ public class PrefuseEventHandler implements EventHandler {
 	/** Class' logger. */
 	private static Logger log = Logger.getLogger(PrefuseEventHandler.class);
 
+	/** The graph. */
 	private Graph graph;
+	
+	/** The aggregate table. */
 	private AggregateTable aggregateTable;
+	
+	/** The visualization. */
 	private Visualization visualization;
+	
+	/** The path highlight control. */
 	private PathHighlightControl pathHighlightControl;
+	
+	/** The aggregate group. */
 	private String aggregateGroup;
+	
+	/** The node group. */
 	private String nodeGroup;
+	
+	/** The color action. */
 	private String colorAction;
+	
+	/** The layout action. */
 	private String layoutAction;
+	
+	/** The path highlight slider. */
 	private JSlider pathHighlightSlider;
+	
+	/** The paths. */
 	private final SortedSet<Path> paths = new TreeSet<Path>(new PathComparator());
 
+	/**
+	 * Instantiates a new prefuse event handler.
+	 *
+	 * @param graph the graph
+	 * @param aggregateTable the aggregate table
+	 * @param visualization the visualization
+	 * @param aggregateGroup the aggregate group
+	 * @param nodeGroup the node group
+	 * @param colorAction the color action
+	 * @param layoutAction the layout action
+	 * @param pathHighlightControl the path highlight control
+	 * @param pathsHighlightSlider the paths highlight slider
+	 */
 	public PrefuseEventHandler(
 			Graph graph, AggregateTable aggregateTable, Visualization visualization,
 			String aggregateGroup, String nodeGroup, String colorAction, String layoutAction,
@@ -71,6 +105,11 @@ public class PrefuseEventHandler implements EventHandler {
 	}
 
 	
+	/**
+	 * Process node.
+	 *
+	 * @param node the node
+	 */
 	@Subscribe
 	public void processNode(SearchNode node) {
 
@@ -112,6 +151,9 @@ public class PrefuseEventHandler implements EventHandler {
 	}
 	
 	
+	/**
+	 * Update path highlight control.
+	 */
 	public void updatePathHighlightControl() {
 		Queue<Path> paths = new PriorityQueue<Path>(10, new PathComparator());
 		int i = 0;
@@ -132,6 +174,9 @@ public class PrefuseEventHandler implements EventHandler {
 		this.pathHighlightControl.setPaths(paths);
 	}
 	
+	/**
+	 * Update path highlight slider.
+	 */
 	public void updatePathHighlightSlider() {
 		Hashtable<Integer, JLabel> labelTable = new Hashtable<>();
 		labelTable.put( new Integer( 0 ), new JLabel("0") );
@@ -146,6 +191,9 @@ public class PrefuseEventHandler implements EventHandler {
 		this.pathHighlightSlider.setMaximum(i + 1);
 	}
 	
+	/**
+	 * Update aggregate table.
+	 */
 	public void updateAggregateTable() {
 		List<List<Integer>> integerPaths = new ArrayList<>();
 		for(Path path:this.paths) {

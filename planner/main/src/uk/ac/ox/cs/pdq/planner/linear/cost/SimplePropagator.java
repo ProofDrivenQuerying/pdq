@@ -15,6 +15,7 @@ import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode.NodeStatus;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
 /**
  *
  * Simple cost propagator. According to this propagation paradigm, 
@@ -32,7 +33,8 @@ public class SimplePropagator extends CostPropagator<SimpleNode> {
 	private static Logger log = Logger.getLogger(SimplePropagator.class);
 	
 	/**
-	 * Empty constructor
+	 * Empty constructor.
+	 *
 	 * @param estimator SimpleCostEstimator<LeftDeepPlan>
 	 */
 	public SimplePropagator(SimpleCostEstimator<LeftDeepPlan> estimator) {

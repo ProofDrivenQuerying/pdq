@@ -11,34 +11,34 @@ import uk.ac.ox.cs.pdq.db.metadata.RelationMetadata;
 import uk.ac.ox.cs.pdq.db.metadata.StaticMetadata;
 import uk.ac.ox.cs.pdq.generator.tgdsfromquery.SchemaGeneratorFirst;
 
+// TODO: Auto-generated Javadoc
 /**
  * Creates the relations of a schema
  * 
  *  Input parameters
  * 	NR=number of relations
-	MAR=max arity
-	MaxAcc= maximal number of accesses
-	MaxCost
-	Acc=accessibility: probability that a relation has any access at all
-	Free=free-ness: probability that a position in a limited access is free
-	
+ * 	MAR=max arity
+ * 	MaxAcc= maximal number of accesses
+ * 	MaxCost
+ * 	Acc=accessibility: probability that a relation has any access at all
+ * 	Free=free-ness: probability that a position in a limited access is free.
+ *
  * @author Efthymia Tsamoura
- * 
  */
 public class SchemaGeneratorSecond extends  SchemaGeneratorFirst{
 
 	/**
 	 * Default constructor.
-	 * 
-	 * @param schema
+	 *
+	 * @param params the params
 	 */
 	public SchemaGeneratorSecond(BenchmarkParameters params) {
 		super(params);
 	}
 
 	/**
-	 * Generates schema relations
-	 * 
+	 * Generates schema relations.
+	 *
 	 * @return the list of generated relations
 	 */
 	@Override
@@ -57,6 +57,9 @@ public class SchemaGeneratorSecond extends  SchemaGeneratorFirst{
 		return relations;
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.generator.tgdsfromquery.SchemaGeneratorFirst#addAccessMethods(uk.ac.ox.cs.pdq.db.Relation)
+	 */
 	@Override
 	protected void addAccessMethods(Relation relation) {
 		if(this.params.getAccessibility() > this.random.nextDouble()) {
@@ -75,14 +78,12 @@ public class SchemaGeneratorSecond extends  SchemaGeneratorFirst{
 	}
 
 	/**
-	 * Generates a binding pattern
-	 * 
-	 * @param arity
-	 *            the arity of the relation
+	 * Generates a binding pattern.
+	 *
+	 * @param arity            the arity of the relation
 	 *            
-	 * @param freeProbability
-	 *            the probability that a position is free
-	 * @return
+	 * @param freeProbability            the probability that a position is free
+	 * @return the access method
 	 */
 	protected AccessMethod generateAccessMethod(int arity, double freeProbability) {
 		List<Integer> positions = new ArrayList<>();

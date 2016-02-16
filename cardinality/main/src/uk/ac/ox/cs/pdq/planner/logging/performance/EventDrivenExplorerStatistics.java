@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package uk.ac.ox.cs.pdq.planner.logging.performance;
 
 import uk.ac.ox.cs.pdq.EventHandler;
@@ -7,6 +10,7 @@ import uk.ac.ox.cs.pdq.planner.explorer.Explorer;
 
 import com.google.common.eventbus.Subscribe;
 
+// TODO: Auto-generated Javadoc
 /**
  * Statistics logger to high-level explorer informations.
  *
@@ -14,34 +18,35 @@ import com.google.common.eventbus.Subscribe;
  */
 public class EventDrivenExplorerStatistics extends StatisticsLogger implements EventHandler {
 
-	/** The number of round the explorer has performed so far*/
+	/**  The number of round the explorer has performed so far. */
 	protected int round = 0;
 
-	/** The cost of the best plan so far */
+	/**  The cost of the best plan so far. */
 	protected String bestCost = "N/A";
 
-	/** The best plan so far */
+	/**  The best plan so far. */
 	protected Plan bestPlan = null;
 
-	/** The total exploration time */
+	/**  The total exploration time. */
 	protected double milliTotal = 0;
 
-	/** The time to the first match found */
+	/**  The time to the first match found. */
 	protected double milliFirstMatch = 0;
 
-	/** The time to the best match found so far */
+	/**  The time to the best match found so far. */
 	protected double milliBestMatch = 0;
 
-	/** The number of rounds to the first match */
+	/**  The number of rounds to the first match. */
 	protected int roundFirstMatch = 0;
 
-	/** The number of rounds to the best match found so far */
+	/**  The number of rounds to the best match found so far. */
 	protected int roundBestMatch = 0;
 
 	/**
 	 * Event-triggered, records the number of rounds and total time of the
 	 * given explorer.
-	 * @param explorer
+	 *
+	 * @param explorer the explorer
 	 */
 	@Subscribe
 	public void process(Explorer<?> explorer) {

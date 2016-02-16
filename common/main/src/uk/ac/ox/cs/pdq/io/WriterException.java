@@ -1,6 +1,7 @@
 package uk.ac.ox.cs.pdq.io;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * Exception that occurred during write operations.
  *

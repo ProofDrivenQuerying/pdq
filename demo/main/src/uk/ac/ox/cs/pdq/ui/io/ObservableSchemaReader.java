@@ -18,6 +18,7 @@ import uk.ac.ox.cs.pdq.io.xml.QNames;
 import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
 import uk.ac.ox.cs.pdq.ui.model.ObservableSchema;
 
+// TODO: Auto-generated Javadoc
 /**
  * Reads schemas from XML.
  * 
@@ -29,8 +30,10 @@ public class ObservableSchemaReader extends AbstractXMLReader<ObservableSchema> 
 	/** Logger. */
 	private static Logger log = Logger.getLogger(ObservableSchemaReader.class);
 
+	/** The name. */
 	private String name;
 
+	/** The description. */
 	private String description;
 	
 	/** A conventional schema reader. */
@@ -83,8 +86,9 @@ public class ObservableSchemaReader extends AbstractXMLReader<ObservableSchema> 
 	}
 	
 	/**
-	 * For test purpose only
-	 * @param args
+	 * For test purpose only.
+	 *
+	 * @param args the arguments
 	 */
 	public static void main(String... args) {
 		try (InputStream in = new FileInputStream("test/input/schema-mysql-tpch.xml")) {

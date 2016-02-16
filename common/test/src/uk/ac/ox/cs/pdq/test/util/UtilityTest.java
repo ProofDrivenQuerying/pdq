@@ -13,8 +13,9 @@ import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
 /**
- * Utility unit test
+ * Utility unit test.
  *
  * @author Julien Leblay
  */
@@ -22,13 +23,16 @@ public class UtilityTest {
 	
 	
 	/**
-	 * Makes sure assertions are enabled
+	 * Makes sure assertions are enabled.
 	 */
 	@Before 
 	public void setup() {
 		Utility.assertsEnabled();
 	}
 
+	/**
+	 * Test to typed constant.
+	 */
 	@Test public void testToTypedConstant() {
 		TypedConstant<?> t1 = new TypedConstant<>("str");
 		Attribute t2 = new Attribute(Integer.class, "1");

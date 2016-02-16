@@ -16,19 +16,21 @@ import uk.ac.ox.cs.pdq.planner.dag.DAGConfiguration;
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 
+// TODO: Auto-generated Javadoc
 /**
- * Translates a left-deep configuration, where all ApplyRule configurations have input-free bindings, into an SQL query
+ * Translates a left-deep configuration, where all ApplyRule configurations have input-free bindings, into an SQL query.
  *
  * @author Efthymia Tsamoura
  */
 public class DAGConfigurationToSQLTranslator {
 
+	/** The Constant APPLYRULE_ALIAS_PREFIX. */
 	private static final String APPLYRULE_ALIAS_PREFIX = "c";
 
-	/** The configuration to translate*/
+	/**  The configuration to translate. */
 	private final DAGConfiguration configuration;
 
-	/** The SQL translation*/
+	/**  The SQL translation. */
 	private String sql;
 
 	/**
@@ -43,12 +45,17 @@ public class DAGConfigurationToSQLTranslator {
 	}
 
 	/**
+	 * Gets the sql.
+	 *
 	 * @return String
 	 */
 	public String getSql() {
 		return this.sql;
 	}
 
+	/**
+	 * Translate.
+	 */
 	private void translate() {
 
 		Map<ApplyRule, String> applyRuleToAlias = this.makeAliases(this.configuration);
@@ -69,8 +76,9 @@ public class DAGConfigurationToSQLTranslator {
 	}
 
 	/**
+	 * Make aliases.
 	 *
-	 * @param configuration
+	 * @param configuration the configuration
 	 * @return an alias for each ApplyRule configuration
 	 */
 	private Map<ApplyRule,String> makeAliases(DAGConfiguration configuration) {
@@ -83,7 +91,9 @@ public class DAGConfigurationToSQLTranslator {
 	}
 
 	/**
-	 * @param configuration
+	 * Find join constants.
+	 *
+	 * @param configuration the configuration
 	 * @return the constants that appear in multiple ApplyRule configurations
 	 */
 	private Collection<Constant> findJoinConstants(DAGConfiguration configuration) {
@@ -98,16 +108,12 @@ public class DAGConfigurationToSQLTranslator {
 	}
 
 	/**
+	 * Make join conditions.
 	 *
-	 * @param configuration
-	 * 		Configuration to translate
-	 * @param joinConstants
-	 * 		Constants that appear in multiple ApplyRule configurations
-	 * @param applyRuleToAlias
-	 * 		Aliases for the ApplyRule queries
-	 * @param applyRuleToTranslator
-	 * 		Translates an ApplyRule into an SQL query
-	 *
+	 * @param configuration 		Configuration to translate
+	 * @param joinConstants 		Constants that appear in multiple ApplyRule configurations
+	 * @param applyRuleToAlias 		Aliases for the ApplyRule queries
+	 * @param applyRuleToTranslator 		Translates an ApplyRule into an SQL query
 	 * @return join predicates among different ApplyRules
 	 */
 	private Set<String> makeJoinConditions(DAGConfiguration configuration, Collection<Constant> joinConstants,
@@ -133,10 +139,11 @@ public class DAGConfigurationToSQLTranslator {
 	}
 
 	/**
+	 * Make from statement.
 	 *
-	 * @param applyRules
-	 * @param applyRuleToAlias
-	 * @param applyRuleToTranslator
+	 * @param applyRules the apply rules
+	 * @param applyRuleToAlias the apply rule to alias
+	 * @param applyRuleToTranslator the apply rule to translator
 	 * @return a FROM statement
 	 */
 	private String makeFromStatement(List<ApplyRule> applyRules, Map<ApplyRule, String> applyRuleToAlias, Map<ApplyRule, ApplyRuleToSQLTranslator> applyRuleToTranslator) {
@@ -155,7 +162,9 @@ public class DAGConfigurationToSQLTranslator {
 	}
 
 	/**
-	 * @param joinConditions
+	 * Make where statement.
+	 *
+	 * @param joinConditions the join conditions
 	 * @return a WHERE statement
 	 */
 	private String makeWhereStatement(Set<String> joinConditions) {
@@ -168,6 +177,8 @@ public class DAGConfigurationToSQLTranslator {
 	}
 
 	/**
+	 * Make select statement.
+	 *
 	 * @return a SELECT statement
 	 */
 	private String makeSelectStatement() {

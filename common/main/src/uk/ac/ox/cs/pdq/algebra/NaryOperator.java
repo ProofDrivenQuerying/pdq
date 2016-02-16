@@ -15,6 +15,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
 /**
  * NaryOperator defines a top-class for all operators with multiple children.
  *
@@ -54,9 +55,9 @@ public abstract class NaryOperator extends RelationalOperator {
 	/**
 	 * Instantiates a new operator.
 	 *
-	 * @param children the children
 	 * @param inputType TupleType
 	 * @param outputOverride TupleType
+	 * @param children the children
 	 */
 	public NaryOperator(TupleType inputType, TupleType outputOverride, RelationalOperator... children) {
 		this(inputType, outputOverride, Lists.newArrayList(children));
@@ -65,9 +66,9 @@ public abstract class NaryOperator extends RelationalOperator {
 	/**
 	 * Instantiates a new operator.
 	 *
-	 * @param children the children
 	 * @param inputType TupleType
 	 * @param outputOverride TupleType
+	 * @param children the children
 	 */
 	public NaryOperator(TupleType inputType, TupleType outputOverride, Collection<RelationalOperator> children) {
 		this(inferInputTerms(children), outputOverride, children);
@@ -76,10 +77,9 @@ public abstract class NaryOperator extends RelationalOperator {
 	/**
 	 * Instantiates a new operator.
 	 *
-	 * @param children
-	 *            the children
 	 * @param inputTerms List<Term>
 	 * @param typeOverride TupleType
+	 * @param children            the children
 	 */
 	public NaryOperator(List<Term> inputTerms, TupleType typeOverride, Collection<RelationalOperator> children) {
 		super(inferType(inputTerms, children), typeOverride);
@@ -96,7 +96,8 @@ public abstract class NaryOperator extends RelationalOperator {
 
 	/**
 	 * Infer the tuple type of the given collection of children.
-	 * @param children
+	 *
+	 * @param children the children
 	 * @return TupleType
 	 */
 	protected static TupleType inferType(Collection<RelationalOperator> children) {
@@ -112,8 +113,9 @@ public abstract class NaryOperator extends RelationalOperator {
 
 	/**
 	 * Infer the tuple type of the given collection of children.
-	 * @param children
+	 *
 	 * @param terms List<Term>
+	 * @param children the children
 	 * @return TupleType
 	 */
 	protected static TupleType inferType(List<Term> terms, Collection<RelationalOperator> children) {
@@ -137,7 +139,8 @@ public abstract class NaryOperator extends RelationalOperator {
 
 	/**
 	 * Infer the tuple type of the given collection of children.
-	 * @param children
+	 *
+	 * @param children the children
 	 * @return TupleType
 	 */
 	protected static TupleType inferInputType(Collection<RelationalOperator> children) {
@@ -153,7 +156,8 @@ public abstract class NaryOperator extends RelationalOperator {
 
 	/**
 	 * Infer the tuple type of the given collection of children.
-	 * @param children
+	 *
+	 * @param children the children
 	 * @return List<Term>
 	 */
 	protected static List<Term> inferInputTerms(Collection<RelationalOperator> children) {
@@ -167,8 +171,9 @@ public abstract class NaryOperator extends RelationalOperator {
 
 	/**
 	 * Deep copy.
+	 *
 	 * @return a deep copy of the operator.
-	 * @throws RelationalOperatorException
+	 * @throws RelationalOperatorException the relational operator exception
 	 */
 	@Override
 	public abstract NaryOperator deepCopy() throws RelationalOperatorException;
@@ -205,6 +210,8 @@ public abstract class NaryOperator extends RelationalOperator {
 	}
 
 	/**
+	 * Gets the input terms.
+	 *
 	 * @return List<Term>
 	 */
 	@Override
@@ -213,6 +220,8 @@ public abstract class NaryOperator extends RelationalOperator {
 	}
 
 	/**
+	 * Gets the type.
+	 *
 	 * @return the tuple Type of this operator
 	 */
 	@Override
@@ -251,6 +260,8 @@ public abstract class NaryOperator extends RelationalOperator {
 	}
 
 	/**
+	 * Equals.
+	 *
 	 * @param o Object
 	 * @return boolean
 	 */
@@ -266,6 +277,8 @@ public abstract class NaryOperator extends RelationalOperator {
 	}
 
 	/**
+	 * Hash code.
+	 *
 	 * @return int
 	 */
 	@Override
@@ -275,6 +288,8 @@ public abstract class NaryOperator extends RelationalOperator {
 	}
 
 	/**
+	 * Gets the depth.
+	 *
 	 * @return Integer
 	 */
 	@Override
@@ -289,6 +304,8 @@ public abstract class NaryOperator extends RelationalOperator {
 	}
 
 	/**
+	 * Checks if is closed.
+	 *
 	 * @return boolean
 	 */
 	@Override
@@ -302,6 +319,8 @@ public abstract class NaryOperator extends RelationalOperator {
 	}
 
 	/**
+	 * Checks if is quasi leaf.
+	 *
 	 * @return boolean
 	 */
 	@Override

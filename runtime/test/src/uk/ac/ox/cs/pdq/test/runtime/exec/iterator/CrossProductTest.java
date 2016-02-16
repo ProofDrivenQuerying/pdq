@@ -26,15 +26,24 @@ import uk.ac.ox.cs.pdq.util.TupleType;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
 /**
+ * The Class CrossProductTest.
+ *
  * @author Julien LEBLAY
  */
 public class CrossProductTest extends NaryIteratorTest {
 
+	/** The iterator. */
 	CrossProduct iterator;
+	
+	/** The non mock4. */
 	// Non-mock
 	TupleIterator nonMock1, nonMock2, nonMock3, nonMock4;
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.test.runtime.exec.iterator.TupleIteratorTest#setup()
+	 */
 	@Before public void setup() {
 		super.setup();
        MockitoAnnotations.initMocks(this);
@@ -82,16 +91,25 @@ public class CrossProductTest extends NaryIteratorTest {
         this.iterator = new CrossProduct(child1, child2, child3, child4);
 	}
 	
+	/**
+	 * Inits the null children1.
+	 */
 	@Test(expected=IllegalArgumentException.class) 
 	public void initNullChildren1() {
         new CrossProduct(child4, child3, null);
 	}
 	
+	/**
+	 * Inits the null children2.
+	 */
 	@Test(expected=IllegalArgumentException.class) 
 	public void initNullChildren2() {
         new CrossProduct(child3, null, child4);
 	}
 
+	/**
+	 * Inits the two children.
+	 */
 	@Test public void initTwoChildren() {
 		this.iterator = new CrossProduct(child1, child2);
 		Assert.assertEquals("CrossProduct iterator columns must match that of the concatenation of its children",child1To2, this.iterator.getColumns());
@@ -101,6 +119,9 @@ public class CrossProductTest extends NaryIteratorTest {
 		Assert.assertEquals("CrossProduct iterator children must match that of initialization", Lists.newArrayList(child1, child2), this.iterator.getChildren());
 	}
 
+	/**
+	 * Inits the many children.
+	 */
 	@Test public void initManyChildren() {
 		this.iterator = new CrossProduct(child1, child2, child3, child4);
 		Assert.assertEquals("CrossProduct iterator columns must match that of the concatenation of its children", child1To4, this.iterator.getColumns());
@@ -110,6 +131,9 @@ public class CrossProductTest extends NaryIteratorTest {
 		Assert.assertEquals("CrossProduct iterator children must match that of initialization", Lists.newArrayList(child1, child2, child3, child4), this.iterator.getChildren());
 	}
 
+	/**
+	 * Inits the two children closed.
+	 */
 	@Test public void initTwoChildrenClosed() {
 		this.iterator = new CrossProduct(nonMock1, nonMock2);
 		Assert.assertEquals("CrossProduct iterator columns must match that of the concatenation of its children",child1To2, this.iterator.getColumns());
@@ -119,6 +143,9 @@ public class CrossProductTest extends NaryIteratorTest {
 		Assert.assertEquals("CrossProduct iterator children must match that of initialization", Lists.newArrayList(nonMock1, nonMock2), this.iterator.getChildren());
 	}
 
+	/**
+	 * Inits the many children closed.
+	 */
 	@Test public void initManyChildrenClosed() {
 		this.iterator = new CrossProduct(nonMock1, nonMock2, nonMock3, nonMock4);
 		Assert.assertEquals("CrossProduct iterator columns must match that of the concatenation of its children", child1To4, this.iterator.getColumns());
@@ -128,6 +155,9 @@ public class CrossProductTest extends NaryIteratorTest {
 		Assert.assertEquals("CrossProduct iterator children must match that of initialization", Lists.newArrayList(nonMock1, nonMock2, nonMock3, nonMock4), this.iterator.getChildren());
 	}
 
+	/**
+	 * Iterate two children.
+	 */
 	@Test public void iterateTwoChildren() {
 		this.iterator = new CrossProduct(nonMock1, nonMock2);
 		this.iterator.open();
@@ -139,6 +169,9 @@ public class CrossProductTest extends NaryIteratorTest {
 		Assert.assertEquals(expected16, observed);
 	}
 
+	/**
+	 * Next two children too many.
+	 */
 	@Test(expected=NoSuchElementException.class) 
 	public void nextTwoChildrenTooMany() {
 		this.iterator = new CrossProduct(nonMock1, nonMock2);
@@ -148,6 +181,9 @@ public class CrossProductTest extends NaryIteratorTest {
 		}
 	}
 
+	/**
+	 * Reset two children.
+	 */
 	@Test public void resetTwoChildren() {
 		this.iterator = new CrossProduct(nonMock1, nonMock2);
 		this.iterator.open();	
@@ -167,12 +203,18 @@ public class CrossProductTest extends NaryIteratorTest {
 		Assert.assertEquals(expected16, observed);
 	}
 	
+	/**
+	 * Iterate with empty child.
+	 */
 	@Test public void iterateWithEmptyChild() {
 		this.iterator = new CrossProduct(nonMock1, nonMock2, new EmptyIterator());
 		this.iterator.open();
 		Assert.assertFalse(this.iterator.hasNext());
 	}
 
+	/**
+	 * Next with empty child too many.
+	 */
 	@Test(expected=NoSuchElementException.class) 
 	public void nextWithEmptyChildTooMany() {
 		this.iterator = new CrossProduct(nonMock1, nonMock2, new EmptyIterator());
@@ -180,6 +222,9 @@ public class CrossProductTest extends NaryIteratorTest {
 		this.iterator.next(); 
 	}
 
+	/**
+	 * Reset with empty child.
+	 */
 	@Test public void resetWithEmptyChild() {
 		this.iterator = new CrossProduct(nonMock1, nonMock2, new EmptyIterator());
 		this.iterator.open();
@@ -189,6 +234,9 @@ public class CrossProductTest extends NaryIteratorTest {
 		Assert.assertFalse(this.iterator.hasNext());
 	}
 
+	/**
+	 * Iterate four children.
+	 */
 	@Test public void iterateFourChildren() {
 		this.iterator = new CrossProduct(nonMock1, nonMock2, nonMock3, nonMock4);
 		this.iterator.open();
@@ -201,6 +249,9 @@ public class CrossProductTest extends NaryIteratorTest {
 		Assert.assertEquals(expected256, observed);
 	}
 
+	/**
+	 * Next four children too many.
+	 */
 	@Test(expected=NoSuchElementException.class) 
 	public void nextFourChildrenTooMany() {
 		this.iterator = new CrossProduct(nonMock1, nonMock2, nonMock3, nonMock4);
@@ -210,6 +261,9 @@ public class CrossProductTest extends NaryIteratorTest {
 		}
 	}
 
+	/**
+	 * Reset four children.
+	 */
 	@Test public void resetFourChildren() {
 		this.iterator = new CrossProduct(nonMock1, nonMock2, nonMock3, nonMock4);
 		this.iterator.open();
@@ -229,11 +283,15 @@ public class CrossProductTest extends NaryIteratorTest {
 		Assert.assertEquals(expected256, observed);
 	}
 	
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.test.runtime.exec.iterator.TupleIteratorTest#getIterator()
+	 */
 	@Override
 	protected TupleIterator getIterator() {
 		return this.iterator;
 	}
 	
+	/** The expected16. */
 	Set<Tuple> expected16 = Sets.newSet(
 			child1To2Type.createTuple("A", 10, 1, "D", 1, "A"),
 			child1To2Type.createTuple("A", 10, 1, "D", 2, "B"),
@@ -252,6 +310,8 @@ public class CrossProductTest extends NaryIteratorTest {
 			child1To2Type.createTuple("B", 20, 1, "D", 1, "B"),
 			child1To2Type.createTuple("B", 20, 1, "D", 1, "C")
 	);	
+	
+	/** The expected256. */
 	Set<Tuple> expected256 = Sets.newSet(
 			child1To4Type.createTuple("A", 10, 1, "D", 1, "A", "B", 1, "A"),
 			child1To4Type.createTuple("A", 10, 1, "D", 2, "B", "B", 1, "A"),

@@ -6,23 +6,32 @@ import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.util.Utility;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
- * @author Julien Leblay
+ * The Class ResultAllowanceTest.
  *
+ * @author Julien Leblay
  */
 @Ignore
 public class ResultAllowanceTest {
 	
 	/**
-	 * Makes sure assertions are enabled
+	 * Makes sure assertions are enabled.
 	 */
 	@Before 
 	public void setup() {
 		Utility.assertsEnabled();
 	}
 	
+	/**
+	 * Copy.
+	 */
 	@Test public void copy() {}
 
+	/**
+	 * Gets the amount.
+	 *
+	 * @return the amount
+	 */
 	@Test public void getAmount() {}
 }

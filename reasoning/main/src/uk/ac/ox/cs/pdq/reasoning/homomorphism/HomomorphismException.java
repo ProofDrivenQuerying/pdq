@@ -1,5 +1,6 @@
 package uk.ac.ox.cs.pdq.reasoning.homomorphism;
 
+// TODO: Auto-generated Javadoc
 /**
  * Exception that occurred during homomorphism detection.
  *
@@ -8,7 +9,7 @@ package uk.ac.ox.cs.pdq.reasoning.homomorphism;
  */
 public class HomomorphismException extends Exception {
 
-	/** */
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -315472460756924167L;
 
 	/**
@@ -19,6 +20,8 @@ public class HomomorphismException extends Exception {
 	}
 
 	/**
+	 * Instantiates a new homomorphism exception.
+	 *
 	 * @param msg exception message.
 	 */
 	public HomomorphismException(String msg) {
@@ -26,6 +29,8 @@ public class HomomorphismException extends Exception {
 	}
 
 	/**
+	 * Instantiates a new homomorphism exception.
+	 *
 	 * @param msg exception's message
 	 * @param cause root cause of the problem.
 	 */
@@ -34,6 +39,8 @@ public class HomomorphismException extends Exception {
 	}
 
 	/**
+	 * Instantiates a new homomorphism exception.
+	 *
 	 * @param cause root cause of the problem.
 	 */
 	public HomomorphismException(Throwable cause) {

@@ -12,11 +12,11 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 
+// TODO: Auto-generated Javadoc
 /**
- * Writes a concise representation of a query to the given output
- * 
- * @author Julien Leblay
+ * Writes a concise representation of a query to the given output.
  *
+ * @author Julien Leblay
  */
 public class VeryPrettyQueryWriter extends PrettyWriter<ConjunctiveQuery> implements Writer<ConjunctiveQuery> {
 
@@ -44,7 +44,8 @@ public class VeryPrettyQueryWriter extends PrettyWriter<ConjunctiveQuery> implem
 		
 	/**
 	 * Fluent pretty writer provider.
-	 * @param out
+	 *
+	 * @param out the out
 	 * @return a new PrettyQueryWriter with the given default output.
 	 */
 	public static VeryPrettyQueryWriter to(PrintStream out) {
@@ -52,6 +53,8 @@ public class VeryPrettyQueryWriter extends PrettyWriter<ConjunctiveQuery> implem
 	}
 	
 	/**
+	 * Write.
+	 *
 	 * @param out PrintStream
 	 * @param q ConjunctiveQuery
 	 */
@@ -84,6 +87,8 @@ public class VeryPrettyQueryWriter extends PrettyWriter<ConjunctiveQuery> implem
 	}
 	
 	/**
+	 * Write.
+	 *
 	 * @param q ConjunctiveQuery
 	 */
 	@Override

@@ -1,5 +1,9 @@
+/*
+ * 
+ */
 package uk.ac.ox.cs.pdq.planner;
 
+// TODO: Auto-generated Javadoc
 /**
  * Exception that occurred during a planning operation.
  *
@@ -8,7 +12,7 @@ package uk.ac.ox.cs.pdq.planner;
  */
 public class PlannerException extends Exception {
 
-	/** */
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -315472460756924167L;
 
 	/**
@@ -19,6 +23,8 @@ public class PlannerException extends Exception {
 	}
 
 	/**
+	 * Instantiates a new planner exception.
+	 *
 	 * @param msg exception message.
 	 */
 	public PlannerException(String msg) {
@@ -26,6 +32,8 @@ public class PlannerException extends Exception {
 	}
 
 	/**
+	 * Instantiates a new planner exception.
+	 *
 	 * @param msg exception's message
 	 * @param cause root cause of the problem.
 	 */
@@ -34,6 +42,8 @@ public class PlannerException extends Exception {
 	}
 
 	/**
+	 * Instantiates a new planner exception.
+	 *
 	 * @param cause root cause of the problem.
 	 */
 	public PlannerException(Throwable cause) {

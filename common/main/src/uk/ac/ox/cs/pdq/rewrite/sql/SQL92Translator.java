@@ -57,6 +57,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
+// TODO: Auto-generated Javadoc
 /**
  * Provide utility function for translating from/to SQL.
  *
@@ -64,21 +65,30 @@ import com.google.common.collect.Sets;
  */
 public class SQL92Translator extends SQLTranslator {
 
-	/** The logger */
+	/**  The logger. */
 	public static Logger log = Logger.getLogger(SQL92Translator.class);
 
 
+	/** The Constant RELATION_ALIAS_PREFIX. */
 	private static final String RELATION_ALIAS_PREFIX = "r";
+	
+	/** The Constant COLUMN_ALIAS_PREFIX. */
 	private static final String COLUMN_ALIAS_PREFIX = "a";
 
-	/** Counter for generated SQL aliases */
+	/**  Counter for generated SQL aliases. */
 	private static int aliasCounter = 0;
 
+	/**
+	 * Instantiates a new SQ l92 translator.
+	 */
 	protected SQL92Translator() {}
 
 	/**
-	 * @param q
+	 * To sql.
+	 *
+	 * @param q the q
 	 * @return a String representation of a SQL statement for the given query * @throws ConversionException if the statement could not be generated.
+	 * @throws RewriterException the rewriter exception
 	 */
 	@Override
 	public String toSQL(Evaluatable q) throws RewriterException {
@@ -149,7 +159,9 @@ public class SQL92Translator extends SQLTranslator {
 	}
 
 	/**
-	 * @param q
+	 * Make aliases.
+	 *
+	 * @param q the q
 	 * @return a map from each predication in the input query to an alias.
 	 * @throws RewriterException if any atomic formula in the query is not
 	 * a predicate formula.
@@ -164,8 +176,10 @@ public class SQL92Translator extends SQLTranslator {
 	}
 
 	/**
-	 * @param q
-	 * @param aliases
+	 * Map terms.
+	 *
+	 * @param q the q
+	 * @param aliases the aliases
 	 * @return a map from each term of the input query to a triple
 	 * featuring the corresponding relation, its alias in the final query and
 	 * the index of the term with the relation attributes.
@@ -198,8 +212,11 @@ public class SQL92Translator extends SQLTranslator {
 	}
 
 	/**
-	 * @param plan
+	 * To sql.
+	 *
+	 * @param op the op
 	 * @return a SQL statement equivalent to the given plan
+	 * @throws RewriterException the rewriter exception
 	 */
 	@Override
 	public String toSQL(Operator op) throws RewriterException {
@@ -207,8 +224,11 @@ public class SQL92Translator extends SQLTranslator {
 	}
 
 	/**
-	 * @param plan
+	 * To sql with.
+	 *
+	 * @param op the op
 	 * @return a SQL statement equivalent to the given plan
+	 * @throws RewriterException the rewriter exception
 	 */
 	@Override
 	public String toSQLWith(Operator op) throws RewriterException {
@@ -216,6 +236,8 @@ public class SQL92Translator extends SQLTranslator {
 	}
 
 	/**
+	 * To string.
+	 *
 	 * @param terms List<? extends Term>
 	 * @return List<String>
 	 */
@@ -228,8 +250,10 @@ public class SQL92Translator extends SQLTranslator {
 	}
 
 	/**
-	 * @param projected
-	 * @param fullList
+	 * Gets the positions.
+	 *
+	 * @param projected the projected
+	 * @param fullList the full list
 	 * @param renaming Map<Integer,Term>
 	 * @return a list of position of the projected terms in fullList.
 	 */
@@ -258,8 +282,10 @@ public class SQL92Translator extends SQLTranslator {
 	}
 
 	/**
-	 * @param projected
-	 * @param fullList
+	 * Gets the positions.
+	 *
+	 * @param projected the projected
+	 * @param fullList the full list
 	 * @return a list of position of the projected terms in fullList.
 	 */
 	private static Pair<List<Term>, List<Integer>> getPositions(List<? extends Term> projected, List<? extends Term> fullList) {
@@ -267,8 +293,10 @@ public class SQL92Translator extends SQLTranslator {
 	}
 
 	/**
-	 * @param columns
-	 * @param positions
+	 * Project by positions.
+	 *
+	 * @param columns the columns
+	 * @param positions the positions
 	 * @return a list that is a projection of columns on the given positions.
 	 */
 	private static List<String> projectByPositions(List<String> columns, Pair<List<Term>, List<Integer>> positions) {
@@ -293,14 +321,16 @@ public class SQL92Translator extends SQLTranslator {
 	 */
 	public class TreeTranslator implements Rewriter<Operator, String> {
 
-		/** List of column aliases */
+		/**  List of column aliases. */
 		private Map<String, String> aliases = new LinkedHashMap<>();
 
-		/** List of column that have being re-aliased due to duplicate names */
+		/**  List of column that have being re-aliased due to duplicate names. */
 		private Map<String, String> reAliased = new LinkedHashMap<>();
 
 		/**
-		 * @param logOp
+		 * To sql.
+		 *
+		 * @param logOp the log op
 		 * @return a SQL statement equivalent to the given relational expression
 		 */
 		private Pair<String, List<String>> toSQL(Operator logOp) {
@@ -345,8 +375,10 @@ public class SQL92Translator extends SQLTranslator {
 		}
 
 		/**
-		 * @param s
-		 * @param columns
+		 * Make aliases columns.
+		 *
+		 * @param s the s
+		 * @param columns the columns
 		 * @param type TupleType
 		 * @param renaming Map<Integer,Term>
 		 * @return a comma-separated list of terms prefix with the given alias.
@@ -381,7 +413,9 @@ public class SQL92Translator extends SQLTranslator {
 		}
 
 		/**
-		 * @param access
+		 * Access to sql.
+		 *
+		 * @param access the access
 		 * @return the SQL statement for an access command
 		 */
 		private Pair<String, List<String>> accessToSQL(Access access) {
@@ -433,7 +467,9 @@ public class SQL92Translator extends SQLTranslator {
 		}
 
 		/**
-		 * @param proj
+		 * Projection to sql.
+		 *
+		 * @param proj the proj
 		 * @return the SQL statement for an projection command
 		 */
 		private Pair<String, List<String>> projectionToSQL(Projection proj) {
@@ -452,6 +488,8 @@ public class SQL92Translator extends SQLTranslator {
 		}
 
 		/**
+		 * Selection to sql.
+		 *
 		 * @param select Selection
 		 * @return the SQL statement for an selection command
 		 */
@@ -476,7 +514,9 @@ public class SQL92Translator extends SQLTranslator {
 		}
 
 		/**
-		 * @param join
+		 * Join to sql.
+		 *
+		 * @param join the join
 		 * @return the SQL statement for an join command
 		 */
 		private Pair<String, List<String>> joinToSQL(Join join) {
@@ -511,7 +551,9 @@ public class SQL92Translator extends SQLTranslator {
 		}
 
 		/**
-		 * @param product
+		 * Product to sql.
+		 *
+		 * @param product the product
 		 * @return the SQL statement for an Cartesian product command
 		 */
 		private Pair<String, List<String>> productToSQL(CrossProduct product) {
@@ -538,10 +580,11 @@ public class SQL92Translator extends SQLTranslator {
 		}
 
 		/**
+		 * Predicate to sql.
 		 *
-		 * @param predicate
-		 * @param columns
-		 * @param type
+		 * @param predicate the predicate
+		 * @param columns the columns
+		 * @param type the type
 		 * @param relAlias String
 		 * @return the SQL clause for the given predicate (currently only conjunctive predicates are supported).
 		 */
@@ -581,12 +624,13 @@ public class SQL92Translator extends SQLTranslator {
 		}
 
 		/**
+		 * Predicate to sql.
 		 *
-		 * @param predicate
-		 * @param lColumns
-		 * @param rColumns
-		 * @param lAlias
-		 * @param rAlias
+		 * @param predicate the predicate
+		 * @param lColumns the l columns
+		 * @param rColumns the r columns
+		 * @param lAlias the l alias
+		 * @param rAlias the r alias
 		 * @return the SQL clause for the given predicate referring the relations
 		 * aliases as lAlias (left) and rAlias (right).
 		 * Currently only conjunctive predicates are supported.
@@ -614,7 +658,9 @@ public class SQL92Translator extends SQLTranslator {
 		}
 
 		/**
-		 * @param t
+		 * Gets the column alias.
+		 *
+		 * @param t the t
 		 * @return a fresh column alias for the given column, and stores the
 		 * relationship in an instance map.
 		 */
@@ -628,9 +674,10 @@ public class SQL92Translator extends SQLTranslator {
 		}
 
 		/**
+		 * Make aliases columns.
 		 *
-		 * @param s
-		 * @param columns
+		 * @param s the s
+		 * @param columns the columns
 		 * @param rColumns List<String>
 		 * @return a comma-separated list of terms prefix with the given alias,
 		 * when redundant columns are renamed.
@@ -656,9 +703,10 @@ public class SQL92Translator extends SQLTranslator {
 		}
 
 		/**
+		 * Make aliases columns.
 		 *
-		 * @param s
-		 * @param columns
+		 * @param s the s
+		 * @param columns the columns
 		 * @param type TupleType
 		 * @return a comma-separated list of terms prefix with the given alias.
 		 */
@@ -667,8 +715,9 @@ public class SQL92Translator extends SQLTranslator {
 		}
 
 		/**
+		 * Process attribute name.
 		 *
-		 * @param s
+		 * @param s the s
 		 * @return the given string, prefixed with a "_" if it does not start with
 		 * a letter of a underscore bar.
 		 */
@@ -689,6 +738,9 @@ public class SQL92Translator extends SQLTranslator {
 			return result;
 		}
 
+		/* (non-Javadoc)
+		 * @see uk.ac.ox.cs.pdq.rewrite.Rewriter#rewrite(java.lang.Object)
+		 */
 		@Override
 		public String rewrite(Operator input) throws RewriterException {
 			return toSQL(input).getLeft();
@@ -703,13 +755,19 @@ public class SQL92Translator extends SQLTranslator {
 	 */
 	public class WithTranslator implements Rewriter<Operator, String> {
 
+		/** The op2stmt. */
 		private Map<RelationalOperator, Statement.Builder> op2stmt = Maps.newLinkedHashMap();
+		
+		/** The stmt2alias. */
 		private Map<Statement.Builder, String> stmt2alias = Maps.newLinkedHashMap();
+		
+		/** The alias2rel. */
 		private Map<String, String> alias2rel = Maps.newLinkedHashMap();
 
 		/**
+		 * Rewrite.
 		 *
-		 * @param logOp
+		 * @param logOp the log op
 		 * @return a SQL-With statement equivalent to the given logical operator,
 		 * where the nesting reflects that of the given logical operator
 		 */
@@ -726,7 +784,9 @@ public class SQL92Translator extends SQLTranslator {
 		}
 
 		/**
-		 * @param stmt
+		 * Temp relation.
+		 *
+		 * @param stmt the stmt
 		 * @return a temporary relation corresponding to the (materialization
 		 * of the) given statement.
 		 */
@@ -738,8 +798,9 @@ public class SQL92Translator extends SQLTranslator {
 
 		/**
 		 * Recursive SQL construction.
-		 * @param logOp
-		 * @param str
+		 *
+		 * @param logOp the log op
+		 * @param str the str
 		 * @return Statement.Builder
 		 */
 		private Statement.Builder toSQL(RelationalOperator logOp, StringBuilder str) {
@@ -841,21 +902,30 @@ public class SQL92Translator extends SQLTranslator {
 	 */
 	public static final class Statement {
 
+		/** The rel alias counter. */
 		private static int relAliasCounter = 0;
+		
+		/** The col alias counter. */
 		private static int colAliasCounter = 0;
 
-		/** List of column alias to be projected (as will appear in the SELECT clause) */
+		/**  List of column alias to be projected (as will appear in the SELECT clause). */
 		private final List<String> projection = Lists.newLinkedList();
-		/** Bijective map from column aliases to the representation) */
+		
+		/**  Bijective map from column aliases to the representation). */
 		private final BiMap<String, Column> columns = HashBiMap.create();
-		/** Bijective map from columns the term they origination from) */
+		
+		/**  Bijective map from columns the term they origination from). */
 		private final BiMap<Column, Term> columnTerms = HashBiMap.create();
-		/** Map from relation aliases to their representations  */
+		
+		/**  Map from relation aliases to their representations. */
 		private final Map<String, Relation> relations = new LinkedHashMap<>();
-		/** Collection of conditions to be applied to the statement */
+		
+		/**  Collection of conditions to be applied to the statement. */
 		private final Collection<Condition> conditions = Sets.newLinkedHashSet();
 
 		/**
+		 * Gets the column.
+		 *
 		 * @param index int
 		 * @return Column
 		 */
@@ -864,6 +934,8 @@ public class SQL92Translator extends SQLTranslator {
 		}
 
 		/**
+		 * Adds the select.
+		 *
 		 * @param alias String
 		 * @param att Attribute
 		 */
@@ -880,6 +952,8 @@ public class SQL92Translator extends SQLTranslator {
 		}
 
 		/**
+		 * Adds the from.
+		 *
 		 * @param rel Relation
 		 * @return String
 		 */
@@ -893,6 +967,8 @@ public class SQL92Translator extends SQLTranslator {
 		}
 
 		/**
+		 * Adds the condition.
+		 *
 		 * @param cond Condition
 		 */
 		private void addCondition(Condition cond) {
@@ -900,6 +976,8 @@ public class SQL92Translator extends SQLTranslator {
 		}
 
 		/**
+		 * Adds the conditions.
+		 *
 		 * @param conds Collection<Condition>
 		 */
 		private void addConditions(Collection<Condition> conds) {
@@ -907,6 +985,8 @@ public class SQL92Translator extends SQLTranslator {
 		}
 
 		/**
+		 * Clone.
+		 *
 		 * @return Statement
 		 */
 		@Override
@@ -920,6 +1000,8 @@ public class SQL92Translator extends SQLTranslator {
 		}
 
 		/**
+		 * To string.
+		 *
 		 * @return String
 		 */
 		@Override
@@ -958,6 +1040,8 @@ public class SQL92Translator extends SQLTranslator {
 		}
 
 		/**
+		 * Builder.
+		 *
 		 * @return Statement.Builder
 		 */
 		private static Statement.Builder builder() {
@@ -971,10 +1055,15 @@ public class SQL92Translator extends SQLTranslator {
 		 */
 		private static final class Builder implements uk.ac.ox.cs.pdq.builder.Builder<Statement> {
 
+			/** The result. */
 			private Statement result = new Statement();
+			
+			/** The conditions. */
 			private Collection<Condition.Builder> conditions = new LinkedHashSet<>();
 
 			/**
+			 * To string.
+			 *
 			 * @return String
 			 */
 			@Override
@@ -983,6 +1072,8 @@ public class SQL92Translator extends SQLTranslator {
 			}
 
 			/**
+			 * Gets the column.
+			 *
 			 * @param index int
 			 * @return Column
 			 */
@@ -991,6 +1082,8 @@ public class SQL92Translator extends SQLTranslator {
 			}
 
 			/**
+			 * Gets the attributes.
+			 *
 			 * @return List<Attribute>
 			 */
 			public List<Attribute> getAttributes() {
@@ -1002,6 +1095,8 @@ public class SQL92Translator extends SQLTranslator {
 			}
 
 			/**
+			 * Copy.
+			 *
 			 * @param other Statement.Builder
 			 * @return Builder
 			 */
@@ -1015,6 +1110,8 @@ public class SQL92Translator extends SQLTranslator {
 			}
 
 			/**
+			 * Project.
+			 *
 			 * @param projected List<Term>
 			 * @param renaming Map<Integer,Term>
 			 * @param columns List<Term>
@@ -1055,6 +1152,8 @@ public class SQL92Translator extends SQLTranslator {
 			}
 
 			/**
+			 * From.
+			 *
 			 * @param pred Relation
 			 * @return Builder
 			 */
@@ -1064,6 +1163,8 @@ public class SQL92Translator extends SQLTranslator {
 			}
 
 			/**
+			 * From.
+			 *
 			 * @param preds Relation[]
 			 * @return Builder
 			 */
@@ -1072,6 +1173,8 @@ public class SQL92Translator extends SQLTranslator {
 			}
 
 			/**
+			 * From.
+			 *
 			 * @param preds Collection<Relation>
 			 * @return Builder
 			 */
@@ -1083,6 +1186,8 @@ public class SQL92Translator extends SQLTranslator {
 			}
 
 			/**
+			 * Where.
+			 *
 			 * @param pred Predicate
 			 * @return Builder
 			 */
@@ -1100,6 +1205,8 @@ public class SQL92Translator extends SQLTranslator {
 			}
 
 			/**
+			 * Where.
+			 *
 			 * @param pred ConjunctivePredicate<Predicate>
 			 * @return Builder
 			 */
@@ -1111,6 +1218,8 @@ public class SQL92Translator extends SQLTranslator {
 			}
 
 			/**
+			 * Where.
+			 *
 			 * @param pred AttributeEqualityPredicate
 			 * @return Builder
 			 */
@@ -1122,6 +1231,8 @@ public class SQL92Translator extends SQLTranslator {
 			}
 
 			/**
+			 * Where.
+			 *
 			 * @param pred ConstantEqualityPredicate
 			 * @return Builder
 			 */
@@ -1132,6 +1243,8 @@ public class SQL92Translator extends SQLTranslator {
 			}
 
 			/**
+			 * Where.
+			 *
 			 * @param column Column[]
 			 * @return Condition.Builder
 			 */
@@ -1142,6 +1255,8 @@ public class SQL92Translator extends SQLTranslator {
 			}
 
 			/**
+			 * Builds the.
+			 *
 			 * @return Statement
 			 * @see uk.ac.ox.cs.pdq.builder.Builder#build()
 			 */
@@ -1162,7 +1277,10 @@ public class SQL92Translator extends SQLTranslator {
 		 *
 		 */
 		protected static abstract class Column {
+			
 			/**
+			 * Gets the type.
+			 *
 			 * @return Type
 			 */
 			public abstract Type getType();
@@ -1175,7 +1293,11 @@ public class SQL92Translator extends SQLTranslator {
 			 * @author Julien Leblay
 			 */
 			protected static class AttributeColumn extends Column {
+				
+				/** The relation alias. */
 				final String relationAlias;
+				
+				/** The attribute. */
 				final Attribute attribute;
 				/**
 				 * Constructor for AttributeColumn.
@@ -1186,7 +1308,10 @@ public class SQL92Translator extends SQLTranslator {
 					this.relationAlias = ra;
 					this.attribute = a;
 				}
+				
 				/**
+				 * To string.
+				 *
 				 * @return String
 				 */
 				@Override
@@ -1198,7 +1323,10 @@ public class SQL92Translator extends SQLTranslator {
 					result.append(this.attribute.getName());
 					return result.toString();
 				}
+				
 				/**
+				 * Gets the type.
+				 *
 				 * @return Type
 				 */
 				@Override
@@ -1212,6 +1340,8 @@ public class SQL92Translator extends SQLTranslator {
 			 * @author Julien Leblay
 			 */
 			protected static class ConstantColumn extends Column {
+				
+				/** The constant. */
 				final TypedConstant<?> constant;
 
 				/**
@@ -1223,6 +1353,8 @@ public class SQL92Translator extends SQLTranslator {
 				}
 
 				/**
+				 * To string.
+				 *
 				 * @return String
 				 */
 				@Override
@@ -1233,6 +1365,8 @@ public class SQL92Translator extends SQLTranslator {
 				}
 
 				/**
+				 * Gets the type.
+				 *
 				 * @return Type
 				 */
 				@Override
@@ -1248,6 +1382,8 @@ public class SQL92Translator extends SQLTranslator {
 		 * @author Julien Leblay
 		 */
 		private static abstract class Condition {
+			
+			/** The column. */
 			final Column[] column;
 
 			/**
@@ -1259,6 +1395,8 @@ public class SQL92Translator extends SQLTranslator {
 			}
 
 			/**
+			 * To string.
+			 *
 			 * @return String
 			 */
 			@Override
@@ -1281,6 +1419,8 @@ public class SQL92Translator extends SQLTranslator {
 			 * @author Julien Leblay
 			 */
 			protected static final class Equality extends Condition {
+				
+				/** The target. */
 				final Object target;
 
 				/**
@@ -1294,6 +1434,8 @@ public class SQL92Translator extends SQLTranslator {
 				}
 
 				/**
+				 * To string.
+				 *
 				 * @return String
 				 */
 				@Override
@@ -1314,6 +1456,8 @@ public class SQL92Translator extends SQLTranslator {
 			 * @author Julien Leblay
 			 */
 			protected static final class Membership extends Condition {
+				
+				/** The targets. */
 				final Collection<Object> targets;
 
 				/**
@@ -1327,6 +1471,8 @@ public class SQL92Translator extends SQLTranslator {
 				}
 
 				/**
+				 * To string.
+				 *
 				 * @return String
 				 */
 				@Override
@@ -1361,6 +1507,8 @@ public class SQL92Translator extends SQLTranslator {
 			}
 
 			/**
+			 * Columns.
+			 *
 			 * @param cols Column[]
 			 * @return Condition.Builder
 			 */
@@ -1375,8 +1523,13 @@ public class SQL92Translator extends SQLTranslator {
 			 */
 			private static final class Builder implements uk.ac.ox.cs.pdq.builder.Builder<Collection<Condition>> {
 
+				/** The column. */
 				final Column[] column;
+				
+				/** The equals to. */
 				final Collection<Object> equalsTo = new LinkedList<>();
+				
+				/** The belongs to. */
 				final Collection<Object> belongsTo = new LinkedList<>();
 
 				/**
@@ -1388,6 +1541,8 @@ public class SQL92Translator extends SQLTranslator {
 				}
 
 				/**
+				 * Equals to.
+				 *
 				 * @param o Object
 				 * @return Builder
 				 */
@@ -1397,6 +1552,8 @@ public class SQL92Translator extends SQLTranslator {
 				}
 
 				/**
+				 * Belongs to.
+				 *
 				 * @param o Object
 				 * @return Builder
 				 */
@@ -1410,6 +1567,8 @@ public class SQL92Translator extends SQLTranslator {
 				}
 
 				/**
+				 * Builds the.
+				 *
 				 * @return Collection<Condition>
 				 * @see uk.ac.ox.cs.pdq.builder.Builder#build()
 				 */
@@ -1426,6 +1585,8 @@ public class SQL92Translator extends SQLTranslator {
 				}
 
 				/**
+				 * To string.
+				 *
 				 * @return String
 				 */
 				@Override

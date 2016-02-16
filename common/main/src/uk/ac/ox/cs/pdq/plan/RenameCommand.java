@@ -9,29 +9,31 @@ import uk.ac.ox.cs.pdq.util.Table;
 
 import com.google.common.base.Preconditions;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
- * @author Efthymia Tsamoura
+ * The Class RenameCommand.
  *
+ * @author Efthymia Tsamoura
  */
 public class RenameCommand implements Command {
 
-	/** The input table **/
+	/**  The input table *. */
 	private final Table input;
 	
-	/** The output table **/
+	/**  The output table *. */
 	private final Table output;
 	
-	/** The attributes after the renaming **/
+	/**  The attributes after the renaming *. */
 	private final List<Attribute> toRename;
 	
-	/** Caches the constraint that captures this access command **/
+	/**  Caches the constraint that captures this access command *. */
 	private final TGD command;
 	
 	/**
-	 * Creates a project command based on the input table and the input new attributes
-	 * @param toRename
-	 * @param input
+	 * Creates a project command based on the input table and the input new attributes.
+	 *
+	 * @param toRename the to rename
+	 * @param input the input
 	 */
 	public RenameCommand(List<Attribute> toRename, Table input) {
 		Preconditions.checkNotNull(toRename);
@@ -43,16 +45,26 @@ public class RenameCommand implements Command {
 		this.command = new CommandToTGDTranslator().toTGD(this);
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.plan.Command#getOutput()
+	 */
 	@Override
 	public Table getOutput() {
 		return this.output;
 	}
 
+	/**
+	 * Gets the input.
+	 *
+	 * @return the input
+	 */
 	public Table getInput() {
 		return input;
 	}
 	
 	/**
+	 * Equals.
+	 *
 	 * @param o Object
 	 * @return boolean
 	 */
@@ -70,6 +82,8 @@ public class RenameCommand implements Command {
 	}
 
 	/**
+	 * Hash code.
+	 *
 	 * @return int
 	 */
 	@Override
@@ -78,6 +92,8 @@ public class RenameCommand implements Command {
 	}
 
 	/**
+	 * To string.
+	 *
 	 * @return String
 	 */
 	@Override

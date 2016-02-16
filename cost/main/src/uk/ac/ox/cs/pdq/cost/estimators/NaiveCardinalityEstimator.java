@@ -16,6 +16,7 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.plan.EstimateProvider;
 
+// TODO: Auto-generated Javadoc
 /**
  * Compute the estimated input and output cardinalities of a logical operator
  * and its descendants, based on a naive criteria, in particular using fixed
@@ -25,11 +26,19 @@ import uk.ac.ox.cs.pdq.plan.EstimateProvider;
  */
 public class NaiveCardinalityEstimator extends AbstractCardinalityEstimator<NaiveMetadata> {
 
+	/** The Constant UNION_REDUCTION. */
 	public static final Double UNION_REDUCTION = 2.0;
+	
+	/** The Constant SELECTIVITY_REDUCTION. */
 	public static final Double SELECTIVITY_REDUCTION = 10.0;
+	
+	/** The Constant DISTINCT_REDUCTION. */
 	public static final Double DISTINCT_REDUCTION = 2.0;
+	
+	/** The Constant JOIN_REDUCTION. */
 	public static final Double JOIN_REDUCTION = 10.0;
 
+	/** The schema. */
 	protected final Schema schema;
 
 	/**
@@ -41,6 +50,8 @@ public class NaiveCardinalityEstimator extends AbstractCardinalityEstimator<Naiv
 	}
 
 	/**
+	 * Clone.
+	 *
 	 * @return NaiveCardinalityEstimator
 	 * @see uk.ac.ox.cs.pdq.cost.estimators.CardinalityEstimator#clone()
 	 */
@@ -50,6 +61,8 @@ public class NaiveCardinalityEstimator extends AbstractCardinalityEstimator<Naiv
 	}
 
 	/**
+	 * Inits the metadata.
+	 *
 	 * @param o LogicalOperator
 	 * @return NaiveMetadata
 	 */
@@ -59,6 +72,8 @@ public class NaiveCardinalityEstimator extends AbstractCardinalityEstimator<Naiv
 	}
 
 	/**
+	 * Estimate output.
+	 *
 	 * @param o Scan
 	 * @return Double
 	 */
@@ -68,6 +83,8 @@ public class NaiveCardinalityEstimator extends AbstractCardinalityEstimator<Naiv
 	}
 
 	/**
+	 * Gets the parent input cardinality.
+	 *
 	 * @param o LogicalOperator
 	 * @return Double
 	 */
@@ -81,6 +98,8 @@ public class NaiveCardinalityEstimator extends AbstractCardinalityEstimator<Naiv
 	}
 
 	/**
+	 * Estimate output.
+	 *
 	 * @param o Join
 	 * @return Double
 	 */
@@ -118,6 +137,8 @@ public class NaiveCardinalityEstimator extends AbstractCardinalityEstimator<Naiv
 	}
 
 	/**
+	 * Estimate output.
+	 *
 	 * @param o Access
 	 * @return Double
 	 */
@@ -134,6 +155,8 @@ public class NaiveCardinalityEstimator extends AbstractCardinalityEstimator<Naiv
 	}
 
 	/**
+	 * Estimate output.
+	 *
 	 * @param o DependentAccess
 	 * @return Double
 	 */
@@ -149,6 +172,8 @@ public class NaiveCardinalityEstimator extends AbstractCardinalityEstimator<Naiv
 	}
 
 	/**
+	 * Estimate output.
+	 *
 	 * @param o Selection
 	 * @return Double
 	 */
@@ -167,6 +192,8 @@ public class NaiveCardinalityEstimator extends AbstractCardinalityEstimator<Naiv
 	}
 
 	/**
+	 * Estimate output.
+	 *
 	 * @param o Distinct
 	 * @return Double
 	 */
@@ -182,6 +209,8 @@ public class NaiveCardinalityEstimator extends AbstractCardinalityEstimator<Naiv
 	}
 
 	/**
+	 * Estimate output.
+	 *
 	 * @param o Union
 	 * @return Double
 	 */

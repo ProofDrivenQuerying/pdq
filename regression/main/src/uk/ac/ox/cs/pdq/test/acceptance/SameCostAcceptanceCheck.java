@@ -4,6 +4,7 @@ import static uk.ac.ox.cs.pdq.test.acceptance.AcceptanceCriterion.AcceptanceLeve
 import static uk.ac.ox.cs.pdq.test.acceptance.AcceptanceCriterion.AcceptanceLevels.PASS;
 import uk.ac.ox.cs.pdq.plan.Plan;
 
+// TODO: Auto-generated Javadoc
 /**
  * Acceptance test request the expected and observed plans to have the same cost
  * to pass.
@@ -13,6 +14,8 @@ import uk.ac.ox.cs.pdq.plan.Plan;
 public class SameCostAcceptanceCheck implements AcceptanceCriterion<Plan, Plan> {
 
 	/**
+	 * Check.
+	 *
 	 * @param expectedPlan Plan
 	 * @param observedPlan Plan
 	 * @return AcceptanceResult

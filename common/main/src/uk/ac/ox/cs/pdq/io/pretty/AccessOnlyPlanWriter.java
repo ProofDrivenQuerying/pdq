@@ -11,11 +11,11 @@ import uk.ac.ox.cs.pdq.io.Writer;
 import uk.ac.ox.cs.pdq.plan.AccessOperator;
 import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 
+// TODO: Auto-generated Javadoc
 /**
- * Writes a concise representation of a plan to the given output
- * 
- * @author Julien Leblay
+ * Writes a concise representation of a plan to the given output.
  *
+ * @author Julien Leblay
  */
 public class AccessOnlyPlanWriter extends PrettyWriter<LeftDeepPlan> implements Writer<LeftDeepPlan> {
 
@@ -26,7 +26,8 @@ public class AccessOnlyPlanWriter extends PrettyWriter<LeftDeepPlan> implements 
 	private PrintStream out;
 
 	/**
-	 * 
+	 * Instantiates a new access only plan writer.
+	 *
 	 * @param out the default output
 	 */
 	private AccessOnlyPlanWriter(PrintStream out) {
@@ -35,7 +36,8 @@ public class AccessOnlyPlanWriter extends PrettyWriter<LeftDeepPlan> implements 
 	
 	/**
 	 * Fluent pretty writer provider.
-	 * @param out
+	 *
+	 * @param out the out
 	 * @return a new PrettyLeftDeepPlanWriter with the given default output.
 	 */
 	public static AccessOnlyPlanWriter to(PrintStream out) {
@@ -44,7 +46,8 @@ public class AccessOnlyPlanWriter extends PrettyWriter<LeftDeepPlan> implements 
 
 	/**
 	 * Fluent pretty writer provider.
-	 * @param out
+	 *
+	 * @param out the out
 	 * @return a new PrettyLeftDeepPlanWriter with the given default output.
 	 */
 	public static AccessOnlyPlanWriter to(java.io.Writer out) {
@@ -52,6 +55,8 @@ public class AccessOnlyPlanWriter extends PrettyWriter<LeftDeepPlan> implements 
 	}
 
 	/**
+	 * Write.
+	 *
 	 * @param out PrintStream
 	 * @param plan LeftDeepPlan
 	 */
@@ -69,6 +74,8 @@ public class AccessOnlyPlanWriter extends PrettyWriter<LeftDeepPlan> implements 
 	}
 	
 	/**
+	 * Write.
+	 *
 	 * @param q LeftDeepPlan
 	 */
 	@Override

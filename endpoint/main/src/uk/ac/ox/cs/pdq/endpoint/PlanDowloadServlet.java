@@ -16,6 +16,7 @@ import uk.ac.ox.cs.pdq.endpoint.util.SessionAttributes;
 import uk.ac.ox.cs.pdq.io.xml.PlanWriter;
 import uk.ac.ox.cs.pdq.plan.Plan;
 
+// TODO: Auto-generated Javadoc
 /**
  * This servlet functions like an endpoint. It simply execute a given query on 
  * a given datasource (passed as parameters) and output the results as the 
@@ -24,22 +25,27 @@ import uk.ac.ox.cs.pdq.plan.Plan;
  */
 public class PlanDowloadServlet extends PDQServlet {
 
-	/** */
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -5686246345051239612L;
 
-	/** Static logger */
+	/**  Static logger. */
 	private static final Logger log = Logger.getLogger(PlanDowloadServlet.class);
 
+	/* (non-Javadoc)
+	 * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+	 */
 	@Override
 	public final void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		this.processRequest(request, response);
 	}
 
 	/**
-	 * @param request
-	 * @param response
-	 * @throws ServletException
-	 * @throws IOException
+	 * Process request.
+	 *
+	 * @param request the request
+	 * @param response the response
+	 * @throws ServletException the servlet exception
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		super.processRequest(request, response);

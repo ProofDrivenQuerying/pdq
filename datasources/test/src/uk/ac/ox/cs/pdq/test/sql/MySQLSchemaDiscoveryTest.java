@@ -22,25 +22,45 @@ import uk.ac.ox.cs.pdq.db.Schema;
 
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class MySQLSchemaDiscoveryTest.
+ */
 @Ignore public class MySQLSchemaDiscoveryTest {
 
+	/** The schema. */
 	private Schema schema = null;
 	
+	/**
+	 * The Class Relation.
+	 */
 	private static class Relation {
+		
+		/** The name. */
 		String name;
+		
+		/** The attributes. */
 		List<String> attributes;
+		
+		/** The bindings. */
 		List<AccessMethod> bindings;
 	}
 	
+	/** The relations. */
 	private Map<String, Relation> relations = new LinkedHashMap<>();
 	
+	/** The relation names. */
 	private List<String> relationNames = Lists.newArrayList(
 			new String[] {"customer", "lineitem", "nation", "orders",
 					"part", "partsupp", "region", "supplier"}
 	);
+	
+	/** The relation arities. */
 	private List<Integer> relationArities = Lists.newArrayList(
 			new Integer[] {8, 16, 4, 9, 9, 5, 3, 7}
 	);
+	
+	/** The binding types. */
 	private List<Types> bindingTypes = Lists.newArrayList(
 			new Types[] {
 					Types.FREE, Types.FREE, Types.FREE, 
@@ -48,9 +68,13 @@ import com.google.common.collect.Lists;
 					Types.FREE, Types.FREE
 			}
 	);
+	
+	/** The binding positions. */
 	private List<Integer[]> bindingPositions = Lists.newArrayList(
 			new Integer[][] {{}, {}, {}, {}, {}, {}, {}, {}}
 	);
+	
+	/** The attributes names. */
 	private List<String[]> attributesNames = Lists.newArrayList(
 			new String[][] {
 					{"c_custkey", "c_name", "c_address", "c_nationkey", 
@@ -74,6 +98,11 @@ import com.google.common.collect.Lists;
 			}
 	);
 	
+	/**
+	 * Instantiates a new my sql schema discovery test.
+	 *
+	 * @throws BuilderException the builder exception
+	 */
 	public MySQLSchemaDiscoveryTest() throws BuilderException {
 		Properties properties = new Properties();
 		properties.put("url", "jdbc:mysql://localhost/");
@@ -97,18 +126,24 @@ import com.google.common.collect.Lists;
 	}
 	
 	/**
-	 * Makes sure assertions are enabled
+	 * Makes sure assertions are enabled.
 	 */
 	@Before 
 	public void setup() {
 		Utility.assertsEnabled();
 	}
 		
+	/**
+	 * Test number of relations.
+	 */
 	@Test
 	public void testNumberOfRelations() {
 		assertEquals(this.schema.getRelations().size(), this.relationNames.size());
 	}
 	
+	/**
+	 * Test relation names.
+	 */
 	@Test
 	public void testRelationNames() {
 		for (uk.ac.ox.cs.pdq.db.Relation r: this.schema.getRelations()) {
@@ -116,6 +151,9 @@ import com.google.common.collect.Lists;
 		}
 	}
 	
+	/**
+	 * Test relation arities.
+	 */
 	@Test
 	public void testRelationArities() {
 		for (uk.ac.ox.cs.pdq.db.Relation r: this.schema.getRelations()) {
@@ -123,6 +161,9 @@ import com.google.common.collect.Lists;
 		}
 	}
 	
+	/**
+	 * Test attribute names.
+	 */
 	@Test
 	public void testAttributeNames() {
 		for (uk.ac.ox.cs.pdq.db.Relation r: this.schema.getRelations()) {
@@ -133,6 +174,9 @@ import com.google.common.collect.Lists;
 		}
 	}
 
+	/**
+	 * Test access method methods.
+	 */
 	@Test
 	public void testAccessMethodMethods() {
 		for (uk.ac.ox.cs.pdq.db.Relation r: this.schema.getRelations()) {

@@ -32,21 +32,46 @@ import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class IteratorTest.
+ */
 @Ignore
 public class IteratorTest {
 
+	/** The empty. */
 	final Table empty = new Table();
+	
+	/** The boolean tuple. */
 	final TupleType booleanTuple = TupleType.DefaultFactory.create(Boolean.class);
+	
+	/** The int tuple. */
 	final TupleType intTuple = TupleType.DefaultFactory.create(Integer.class);
 
+	/** The columns. */
 	List<Attribute> columns;
+	
+	/** The type. */
 	TupleType type;
+	
+	/** The tuples. */
 	Table tuples;
+	
+	/** The relation. */
 	RelationAccessWrapper relation;
+	
+	/** The empty relation. */
 	RelationAccessWrapper emptyRelation;
+	
+	/** The access method. */
 	AccessMethod accessMethod;
+	
+	/** The inputs. */
 	Collection<Tuple> inputs;
 
+	/**
+	 * Prepare.
+	 */
 	@Before
 	public void prepare() {
 		Utility.assertsEnabled();
@@ -85,6 +110,9 @@ public class IteratorTest {
 		this.inputs.add(this.intTuple.createTuple(5));
 	}
 
+	/**
+	 * Test access.
+	 */
 	@Test
 	public void testAccess() {
 		try(TupleIterator it = new TopDownAccess(this.relation, this.accessMethod)) {
@@ -101,6 +129,9 @@ public class IteratorTest {
 		}
 	}
 
+	/**
+	 * Test bind join.
+	 */
 	@Test
 	public void testBindJoin() {
 		try(MemoryScan c1 = new MemoryScan(Lists.<Typed>newArrayList(new Attribute(Integer.class, "Col2")), this.inputs);
@@ -116,6 +147,9 @@ public class IteratorTest {
 		}
 	}
 
+	/**
+	 * Test selection non empty result.
+	 */
 	@Test
 	public void testSelectionNonEmptyResult() {
 		try(TupleIterator c1 = new MemoryScan(Lists.<Typed>newArrayList(new Attribute(Integer.class, "Col2")), this.inputs);
@@ -134,6 +168,9 @@ public class IteratorTest {
 		}
 	}
 
+	/**
+	 * Test selection no predicate.
+	 */
 	@Test
 	public void testSelectionNoPredicate() {
 		try(TupleIterator c1 = new MemoryScan(Lists.<Typed>newArrayList(new Attribute(Integer.class, "Col2")), this.inputs);
@@ -151,6 +188,9 @@ public class IteratorTest {
 		}
 	}
 
+	/**
+	 * Test selection empty result.
+	 */
 	@Test
 	public void testSelectionEmptyResult() {
 		try(TupleIterator c1 = new MemoryScan(Lists.<Typed>newArrayList(new Attribute(Integer.class, "Col2")), this.inputs);
@@ -168,6 +208,9 @@ public class IteratorTest {
 		}
 	}
 
+	/**
+	 * Test selection empty child.
+	 */
 	@Test
 	public void testSelectionEmptyChild() {
 		try(TupleIterator c1 = new MemoryScan(Lists.<Typed>newArrayList(new Attribute(Integer.class, "Col2")), this.inputs);
@@ -185,6 +228,9 @@ public class IteratorTest {
 		}
 	}
 
+	/**
+	 * Test projection retain all.
+	 */
 	@Test
 	public void testProjectionRetainAll() {
 		try(TupleIterator c1 = new MemoryScan(Lists.<Typed>newArrayList(new Attribute(Integer.class, "Col2")), this.inputs);
@@ -200,6 +246,9 @@ public class IteratorTest {
 		}
 	}
 
+	/**
+	 * Test projection remove all.
+	 */
 	@Test
 	public void testProjectionRemoveAll() {
 		try(TupleIterator c1 = new MemoryScan(Lists.<Typed>newArrayList(new Attribute(Integer.class, "Col2")), this.inputs);
@@ -215,6 +264,9 @@ public class IteratorTest {
 		}
 	}
 
+	/**
+	 * Test projection first column.
+	 */
 	@Test
 	public void testProjectionFirstColumn() {
 		try(TupleIterator c1 = new MemoryScan(Lists.<Typed>newArrayList(new Attribute(Integer.class, "Col2")), this.inputs);
@@ -232,6 +284,9 @@ public class IteratorTest {
 		}
 	}
 
+	/**
+	 * Test nested loop empty1.
+	 */
 	@Test
 	public void testNestedLoopEmpty1() {
 		try(TupleIterator c1 = new MemoryScan(Lists.<Typed>newArrayList(new Attribute(Integer.class, "Col2")), this.inputs);
@@ -249,6 +304,9 @@ public class IteratorTest {
 		}
 	}
 
+	/**
+	 * Test nested loop empty2.
+	 */
 	@Test
 	public void testNestedLoopEmpty2() {
 		try(TupleIterator c1 = new MemoryScan(Lists.<Typed>newArrayList(new Attribute(Integer.class, "Col2")), this.inputs);
@@ -266,6 +324,9 @@ public class IteratorTest {
 		}
 	}
 
+	/**
+	 * Test nested loop.
+	 */
 	@Test
 	public void testNestedLoop() {
 		try(TupleIterator c1 = new MemoryScan(Lists.<Typed>newArrayList(new Attribute(Integer.class, "Col2")), this.inputs);
@@ -283,6 +344,9 @@ public class IteratorTest {
 		}
 	}
 
+	/**
+	 * Test symmetric hash join empty1.
+	 */
 	@Test
 	public void testSymmetricHashJoinEmpty1() {
 		try(TupleIterator c1 = new MemoryScan(Lists.<Typed>newArrayList(new Attribute(Integer.class, "Col2")), this.inputs);
@@ -300,6 +364,9 @@ public class IteratorTest {
 		}
 	}
 
+	/**
+	 * Test symmetric hash join empty2.
+	 */
 	@Test
 	public void testSymmetricHashJoinEmpty2() {
 		try(TupleIterator c1 = new MemoryScan(Lists.<Typed>newArrayList(new Attribute(Integer.class, "Col2")), this.inputs);
@@ -317,6 +384,9 @@ public class IteratorTest {
 		}
 	}
 
+	/**
+	 * Test symmetric hash join.
+	 */
 	@Test
 	public void testSymmetricHashJoin() {
 		try(TupleIterator c1 = new MemoryScan(Lists.<Typed>newArrayList(new Attribute(Integer.class, "Col2")), this.inputs);

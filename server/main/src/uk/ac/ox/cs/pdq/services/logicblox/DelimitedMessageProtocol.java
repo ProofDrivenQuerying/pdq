@@ -14,6 +14,7 @@ import com.logicblox.common.Option;
 import com.logicblox.common.Streams;
 import com.logicblox.connect.BloxCommand.Command;
 
+// TODO: Auto-generated Javadoc
 /**
  * Simple protocol for send sequences of Protocol Buffer messages over the same
  * input/output stream. For this, the protocol buffer message needs to be
@@ -33,10 +34,11 @@ public class DelimitedMessageProtocol {
 			.getLogger(DelimitedMessageProtocol.class);
 
 	/**
-	 * @param istream
-	 *            InputStream
+	 * Receive.
+	 *
+	 * @param istream            InputStream
 	 * @return Option<? extends GeneratedMessage>
-	 * @throws IOException
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public static Option<? extends GeneratedMessage> receive(
 			InputStream istream) throws IOException {
@@ -65,12 +67,10 @@ public class DelimitedMessageProtocol {
 
 	/**
 	 * Send a message on the given output stream.
-	 * 
-	 * @param ostream
-	 *            OutputStream
-	 * @param message
-	 *            GeneratedMessage
-	 * @throws IOException
+	 *
+	 * @param ostream            OutputStream
+	 * @param message            GeneratedMessage
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public static void send(OutputStream ostream, GeneratedMessage message)
 			throws IOException {

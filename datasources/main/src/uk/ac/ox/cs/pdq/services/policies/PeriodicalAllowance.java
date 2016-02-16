@@ -12,6 +12,7 @@ import uk.ac.ox.cs.pdq.services.rest.RESTRequestEvent;
 import uk.ac.ox.cs.pdq.services.rest.RESTResponseEvent;
 import uk.ac.ox.cs.pdq.util.Periods;
 
+// TODO: Auto-generated Javadoc
 /**
  * This class factorizes the behavior of usage policies that check if some
  * feature of a sequence of accesses exceed a certain threshold for a given 
@@ -24,6 +25,8 @@ public abstract class PeriodicalAllowance
 					AccessPostProcessor<RESTResponseEvent> {
 
 	/**
+	 * Gets the total.
+	 *
 	 * @return int
 	 */
 	public int getTotal() {
@@ -33,19 +36,19 @@ public abstract class PeriodicalAllowance
 	/** Logger. */
 	private static Logger log = Logger.getLogger(PeriodicalAllowance.class);
 
-	/** Properties key for the limit attribute */
+	/**  Properties key for the limit attribute. */
 	private static final String LIMIT = "limit";
 	
-	/** Properties key for the period attribute */
+	/**  Properties key for the period attribute. */
 	private static final String PERIOD = "period";
 
-	/** Properties key for the wait attribute */
+	/**  Properties key for the wait attribute. */
 	private static final String WAIT = "wait";
 	
-	/** Allowance limit */
+	/**  Allowance limit. */
 	private final int limit;
 	
-	/** Period through which the allowance applies */
+	/**  Period through which the allowance applies. */
 	private final long period;
 
 	/**
@@ -54,7 +57,7 @@ public abstract class PeriodicalAllowance
 	 */
 	private final boolean wait;
 	
-	/** History of the requests, mapping a timestamp to the amount collected then */
+	/**  History of the requests, mapping a timestamp to the amount collected then. */
 	private TreeMap<Long, Integer> history = new TreeMap<>();
 	
 	/** Total number of items recorded so far. */
@@ -62,9 +65,10 @@ public abstract class PeriodicalAllowance
 
 	/**
 	 * Default constructor.
-	 * @param limit
-	 * @param period
-	 * @param wait
+	 *
+	 * @param limit the limit
+	 * @param period the period
+	 * @param wait the wait
 	 */
 	public PeriodicalAllowance(int limit, long period, boolean wait) {
 		this.limit = limit;
@@ -74,7 +78,8 @@ public abstract class PeriodicalAllowance
 	
 	/**
 	 * Properties-based constructor.
-	 * @param properties
+	 *
+	 * @param properties the properties
 	 */
 	public PeriodicalAllowance(Properties properties) {
 		this(Integer.parseInt(properties.getProperty(LIMIT, "-1")),
@@ -87,8 +92,10 @@ public abstract class PeriodicalAllowance
 	 * @see uk.ac.ox.cs.pdq.runtime.wrappers.service.AccessPreProcessor#processAccessRequest(uk.ac.ox.cs.pdq.runtime.wrappers.service.RequestEvent)
 	 */
 	/**
+	 * Process access request.
+	 *
 	 * @param event RESTRequestEvent
-	 * @throws UsagePolicyViolationException
+	 * @throws UsagePolicyViolationException the usage policy violation exception
 	 */
 	@Override
 	public void processAccessRequest(RESTRequestEvent event) throws UsagePolicyViolationException {
@@ -124,7 +131,9 @@ public abstract class PeriodicalAllowance
 	}
 	
 	/**
-	 * @param event
+	 * Gets the amount.
+	 *
+	 * @param event the event
 	 * @return the amount associated with the given response event.
 	 */
 	protected abstract int getAmount(RESTResponseEvent event);
@@ -134,8 +143,10 @@ public abstract class PeriodicalAllowance
 	 * @see uk.ac.ox.cs.pdq.runtime.wrappers.service.AccessPostProcessor#processAccessResponse(uk.ac.ox.cs.pdq.runtime.wrappers.service.ResponseEvent)
 	 */
 	/**
+	 * Process access response.
+	 *
 	 * @param event RESTResponseEvent
-	 * @throws UsagePolicyViolationException
+	 * @throws UsagePolicyViolationException the usage policy violation exception
 	 */
 	@Override
 	public void processAccessResponse(RESTResponseEvent event) throws UsagePolicyViolationException {
@@ -145,7 +156,7 @@ public abstract class PeriodicalAllowance
 	}
 
 	/**
-	 * Remove obsolete entries in the request history
+	 * Remove obsolete entries in the request history.
 	 */
 	private void updateHistory() {
 		Iterator<Long> i = this.history.keySet().iterator();
@@ -158,8 +169,9 @@ public abstract class PeriodicalAllowance
 	}
 	
 	/**
-	 * 
-	 * @return a waiting period in millisecond by check the last request 
+	 * Gets the wait period.
+	 *
+	 * @return a waiting period in millisecond by check the last request
 	 * timestamp when the limit was not exceeded.
 	 */
 	private Long getWaitPeriod() {
@@ -174,6 +186,8 @@ public abstract class PeriodicalAllowance
 	}
 
 	/**
+	 * Checks if is wait.
+	 *
 	 * @return boolean
 	 */
 	public boolean isWait() {
@@ -181,6 +195,8 @@ public abstract class PeriodicalAllowance
 	}
 
 	/**
+	 * Gets the limit.
+	 *
 	 * @return int
 	 */
 	public int getLimit() {
@@ -188,6 +204,8 @@ public abstract class PeriodicalAllowance
 	}
 
 	/**
+	 * Gets the period.
+	 *
 	 * @return long
 	 */
 	public long getPeriod() {

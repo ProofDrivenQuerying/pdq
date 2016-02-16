@@ -49,6 +49,7 @@ import com.google.common.collect.Lists;
 import com.google.common.eventbus.EventBus;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * Wrapper class for RESTful accessible relations.
  * 
@@ -58,7 +59,7 @@ import com.google.common.eventbus.EventBus;
  */
 public final class RESTRelation extends Relation implements Service, Pipelineable, RelationAccessWrapper {
 
-	/**  */
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -5829653747851001121L;
 
 	/** Logger. */
@@ -73,29 +74,32 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 	/** Event bus where pre- and post-process event are propagated. */
 	private final EventBus eventBus = new EventBus(new UsageViolationExceptionHandler());
 
-	/** The service's expected media type (currently, only XML and JSON are supported) */
+	/**  The service's expected media type (currently, only XML and JSON are supported). */
 	private final MediaType mediaType;
 
-	/** The service's base URL */
+	/**  The service's base URL. */
 	private final String url;
 
-	/** The service's result delimiter */
+	/**  The service's result delimiter. */
 	private final String resultDelimiter;
 
-	/** All tuples that have been accessed so far*/
+	/**  All tuples that have been accessed so far. */
 	private CacheAccess cache = null;
 
+	/** The serial. */
 	private Integer serial = 0;
 
 	/**
 	 * Default constructor.
-	 * @param name
-	 * @param attributes
-	 * @param accessMethods
-	 * @param allAttributes
-	 * @param policies
+	 *
+	 * @param name the name
+	 * @param attributes the attributes
+	 * @param accessMethods the access methods
+	 * @param allAttributes the all attributes
 	 * @param url String
+	 * @param mimeType the mime type
 	 * @param resultDelim String
+	 * @param policies the policies
 	 */
 	public RESTRelation(
 			String name, List<RESTAttribute> attributes,
@@ -128,6 +132,8 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 	}
 
 	/**
+	 * Iterator.
+	 *
 	 * @param inputAttributes List<? extends Attribute>
 	 * @param inputs ResetableIterator<Tuple>
 	 * @return ResetableIterator<Tuple>
@@ -148,8 +154,10 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 	}
 
 	/**
-	 * @param inputHeader
-	 * @param inputTuples
+	 * Access.
+	 *
+	 * @param inputHeader the input header
+	 * @param inputTuples the input tuples
 	 * @return Table
 	 * @see uk.ac.ox.cs.pdq.services.Service#access(Table)
 	 */
@@ -170,6 +178,8 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 	}
 
 	/**
+	 * Access.
+	 *
 	 * @return Table
 	 * @see uk.ac.ox.cs.pdq.services.Service#access(Table)
 	 */
@@ -185,6 +195,8 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 	}
 
 	/**
+	 * Gets the media type.
+	 *
 	 * @return the relation's media type
 	 */
 	public MediaType getMediaType() {
@@ -192,8 +204,10 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 	}
 
 	/**
-	 * @param inputs
-	 * @return the set of input methods appearing in the given REST attributes 
+	 * Gets the input method.
+	 *
+	 * @param inputs the inputs
+	 * @return the set of input methods appearing in the given REST attributes
 	 * list.
 	 */
 	private Set<InputMethod> getInputMethod(List<RESTAttribute> inputs) {
@@ -210,9 +224,11 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 	}
 
 	/**
-	 * @param inputs
+	 * Gets the input params.
+	 *
+	 * @param inputs the inputs
 	 * @param tuples Table
-	 * @return a map containing input parameter to be use to build a service 
+	 * @return a map containing input parameter to be use to build a service
 	 * request. The parameters include static parameters and access-specific
 	 * parameters. The key of the map correspond to either input method names,
 	 * template entries or the input attribute names themselves.
@@ -248,9 +264,11 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 	}
 
 	/**
-	 * @param inputs
-	 * @param tuple
-	 * @return a map containing input parameter to be use to build a service 
+	 * Gets the input params.
+	 *
+	 * @param inputs the inputs
+	 * @param tuple the tuple
+	 * @return a map containing input parameter to be use to build a service
 	 * request. The parameters include static parameters and access-specific
 	 * parameters. The key of the map correspond to either input method names,
 	 * template entries or the input attribute names themselves.
@@ -293,7 +311,8 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 
 	/**
 	 * Performs an access to the service for a batch of input tuples.
-	 * @param inputAttributes
+	 *
+	 * @param inputAttributes the input attributes
 	 * @param inputTuples Table
 	 * @return the dynamic table resulting from the access.
 	 */
@@ -373,12 +392,12 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 
 	/**
 	 * Performs an access to the service for a single input tuple.
-	 * @param inputAttributes
-	 * @param inputTuple
+	 *
+	 * @param inputAttributes the input attributes
+	 * @param inputTuple the input tuple
 	 * @return the dynamic table resulting from the access.
-	 * @throws IOException 
-	 * @throws JsonMappingException 
-	 * @throws JsonParseException 
+	 * @throws AccessException the access exception
+	 * @throws ProcessingException the processing exception
 	 */
 	RESTResponseEvent accessSingleInput(List<RESTAttribute> inputAttributes, Tuple inputTuple) throws AccessException, ProcessingException {
 		Preconditions.checkArgument(inputTuple != null ?
@@ -401,10 +420,10 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 
 	/**
 	 * Performs an access to the service for a single input tuple.
+	 *
 	 * @return the dynamic table resulting from the access.
-	 * @throws IOException 
-	 * @throws JsonMappingException 
-	 * @throws JsonParseException 
+	 * @throws AccessException the access exception
+	 * @throws ProcessingException the processing exception
 	 */
 	RESTResponseEvent accessInputFree() throws AccessException, ProcessingException {
 		List<RESTAttribute> inputAttributes = new LinkedList<>();
@@ -420,11 +439,11 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 
 	/**
 	 * Processes an access request and response events in a row.
-	 * @param requestEvent
+	 *
+	 * @param requestEvent the request event
 	 * @return RESTResponseEvent
-	 * @throws IOException 
-	 * @throws JsonMappingException 
-	 * @throws JsonParseException 
+	 * @throws AccessException the access exception
+	 * @throws ProcessingException the processing exception
 	 */
 	RESTResponseEvent proceedAccess(RESTRequestEvent requestEvent) throws AccessException, ProcessingException {
 		this.eventBus.post(requestEvent);
@@ -443,13 +462,12 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 	/**
 	 * Parse the response of a service call, so as to fit it is a dynamic table
 	 * according to the output methods defined externally.
-	 * @param response
+	 *
+	 * @param response the response
 	 * @param inputs Table
-	 * @return a DynamicTable whose data has been extract from the given 
+	 * @return a DynamicTable whose data has been extract from the given
 	 * response, using the output methods defined externally.
-	 * @throws IOException 
-	 * @throws JsonMappingException 
-	 * @throws JsonParseException 
+	 * @throws AccessException the access exception
 	 */
 	Table parseResponse(Response response, Table inputs) throws AccessException {
 		Table result = new Table(this.getAttributes());
@@ -485,11 +503,12 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 	 * Parse the response of a service call, assuming it is Json-formatted,
 	 * so as to fit it is a dynamic table according to the output methods 
 	 * defined externally.
-	 * @param response
-	 * @return a DynamicTable whose data has been extract from the given 
+	 *
+	 * @param response the response
+	 * @param inputs the inputs
+	 * @return a DynamicTable whose data has been extract from the given
 	 * response, using the output methods defined externally.
-	 * @throws IOException 
-	 * @throws JsonParseException 
+	 * @throws AccessException the access exception
 	 */
 	Table parseJson(Response response, Table inputs) throws AccessException {
 		Table result = new Table(this.getAttributes());
@@ -524,12 +543,12 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 	 * Parse the response of a service call, assuming it is XML-formatted,
 	 * so as to fit it is a dynamic table according to the output methods 
 	 * defined externally.
-	 * @param response
-	 * @return a DynamicTable whose data has been extract from the given 
+	 *
+	 * @param response the response
+	 * @param inputs the inputs
+	 * @return a DynamicTable whose data has been extract from the given
 	 * response, using the output methods defined externally.
-	 * @throws IOException 
-	 * @throws JsonMappingException 
-	 * @throws JsonParseException 
+	 * @throws AccessException the access exception
 	 */
 	Table parseXml(Response response, Table inputs) throws AccessException {
 		Table result = new Table(this.getAttributes());
@@ -567,7 +586,9 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 	}
 
 	/**
-	 * @return a list of string representation path where the collection of 
+	 * Gets the result delimiter.
+	 *
+	 * @return a list of string representation path where the collection of
 	 * results can be found in a reponse.
 	 */
 	private List<String> getResultDelimiter() {
@@ -580,12 +601,14 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 
 	/**
 	 * Converts a collection of a loosely-typed maps to a collection of tuples.
-	 * @param type
+	 *
 	 * @param delimiters List<String>
 	 * @param response Object
+	 * @param type the type
 	 * @param inputTable Table
 	 * @return a collection of tuple representations of the given map,
 	 * matching the given header and type.
+	 * @throws AccessException the access exception
 	 */
 	private Collection<Tuple> processItems (
 			List<String> delimiters, Object response, TupleType type,
@@ -626,8 +649,9 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 
 	/**
 	 * Converts the content of a loosely-typed map to a tuple.
-	 * @param item
-	 * @param type
+	 *
+	 * @param item the item
+	 * @param type the type
 	 * @param inputTable Table
 	 * @return a tuple representation of the given map, matching the given header and type.
 	 */
@@ -656,6 +680,8 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 	}
 
 	/**
+	 * Register.
+	 *
 	 * @param p UsagePolicy
 	 * @see uk.ac.ox.cs.pdq.services.Service#register(UsagePolicy)
 	 */
@@ -665,6 +691,8 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 	}
 
 	/**
+	 * Unregister.
+	 *
 	 * @param p UsagePolicy
 	 * @see uk.ac.ox.cs.pdq.services.Service#unregister(UsagePolicy)
 	 */
@@ -685,7 +713,7 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 		/** Iterator over the input tuples. */
 		private final ResetableIterator<Tuple> inputs;
 
-		/** The list of input attributes */
+		/**  The list of input attributes. */
 		private final List<RESTAttribute> inputAttributes;
 
 		/** Iterator over a subset of the output tuples. */
@@ -700,14 +728,16 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 		 */
 		private Tuple nextTuple;
 
-		/** The access event that occurred */
+		/**  The access event that occurred. */
 		private RESTResponseEvent event = null;
 
-		/** The last collection tuple considered as input */
+		/**  The last collection tuple considered as input. */
 		private Collection<Tuple> lastInput = null;
 
+		/** The failed tuple. */
 		private Tuple failedTuple = null;
 
+		/** The failed request. */
 		private RESTRequestEvent failedRequest = null; 
 
 		/**
@@ -718,7 +748,8 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 		}
 
 		/**
-		 * Constructor with input tuple iterator
+		 * Constructor with input tuple iterator.
+		 *
 		 * @param inputAttributes List<RESTAttribute>
 		 * @param inputTuples ResetableIterator<Tuple>
 		 */
@@ -766,6 +797,8 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 		}
 
 		/**
+		 * Deep copy.
+		 *
 		 * @return AccessIterator
 		 * @see uk.ac.ox.cs.pdq.util.ResetableIterator#deepCopy()
 		 */
@@ -777,6 +810,8 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 		}
 
 		/**
+		 * Checks for next.
+		 *
 		 * @return boolean
 		 * @see java.util.Iterator#hasNext()
 		 */
@@ -788,6 +823,8 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 		}
 
 		/**
+		 * Next.
+		 *
 		 * @return Tuple
 		 * @see java.util.Iterator#next()
 		 */
@@ -828,6 +865,8 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 		 * Set the next tuple to the following item on the output iterator, 
 		 * using the next input tuple if necessary.
 		 * The nextTuple is set to null, if the iterator has reached the end.
+		 *
+		 * @throws AccessException the access exception
 		 */
 		public void nextTuple() throws AccessException {
 			this.nextTuple = null;
@@ -876,6 +915,8 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 		}
 
 		/**
+		 * Proceed.
+		 *
 		 * @return Tuple
 		 */
 		private Tuple proceed() {
@@ -902,6 +943,9 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 			return result.toString();
 		}
 
+		/* (non-Javadoc)
+		 * @see java.util.Iterator#remove()
+		 */
 		/*
 		 * @see java.util.Iterator#remove()
 		 */

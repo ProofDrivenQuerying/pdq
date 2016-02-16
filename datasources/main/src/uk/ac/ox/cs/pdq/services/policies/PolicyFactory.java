@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.services.ServiceRepository;
 
+// TODO: Auto-generated Javadoc
 /**
  * Factory for usage policies.
  * Assume all the relevant class have a constructor taking a single Properties
@@ -20,8 +21,10 @@ public class PolicyFactory {
 	private static Logger log = Logger.getLogger(PolicyFactory.class);
 
 	/**
-	 * @param cl
-	 * @param properties
+	 * Gets the single instance of PolicyFactory.
+	 *
+	 * @param cl the cl
+	 * @param properties the properties
 	 * @return a instance of the given usage policy class, initialized with the
 	 * given properties.
 	 */
@@ -38,9 +41,11 @@ public class PolicyFactory {
 	}
 
 	/**
-	 * @param cl
-	 * @param properties
+	 * Gets the single instance of PolicyFactory.
+	 *
 	 * @param repo ServiceRepository
+	 * @param cl the cl
+	 * @param properties the properties
 	 * @return a instance of the given usage policy class, initialised with the
 	 * given properties.
 	 */

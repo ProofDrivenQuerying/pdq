@@ -59,13 +59,16 @@ import com.logicblox.common.protocol.CommonProto.UnaryPredicateType;
 import com.logicblox.common.protocol.CommonProto.UnsignedIntConstant;
 import com.logicblox.common.protocol.CommonProto.VariableDeclaration;
 
+// TODO: Auto-generated Javadoc
 /**
  * Converts query to Logicblox-ready protocol buffer messages.
  */
 public class QueryToProtoBuffer implements Rewriter<Query<?>, Rule> {
 
+	/** The var types. */
 	private final Map<Term, Object> varTypes = new LinkedHashMap<>();
 
+	/** The schema. */
 	private final Schema schema;
 	
 	/**
@@ -77,8 +80,11 @@ public class QueryToProtoBuffer implements Rewriter<Query<?>, Rule> {
 	}
 	
 	/**
+	 * Rewrite.
+	 *
 	 * @param input Query<?>
 	 * @return ProtocolBuffer rule, representing the input query.
+	 * @throws RewriterException the rewriter exception
 	 */
 	@Override
 	public Rule rewrite(Query<?> input) throws RewriterException {
@@ -90,8 +96,11 @@ public class QueryToProtoBuffer implements Rewriter<Query<?>, Rule> {
 	}
 	
 	/**
+	 * Rewrite variable declarations.
+	 *
 	 * @param input Query<?>
 	 * @return Collection<VariableDeclaration> base on the input query
+	 * @throws RewriterException the rewriter exception
 	 */
 	private Collection<VariableDeclaration> rewriteVariableDeclarations(Query<?> input) throws RewriterException {
 		Collection<VariableDeclaration> result = new LinkedList<>();
@@ -107,6 +116,8 @@ public class QueryToProtoBuffer implements Rewriter<Query<?>, Rule> {
 	}
 
 	/**
+	 * Rewrite head.
+	 *
 	 * @param input Query<?>
 	 * @return ClauseHead
 	 */
@@ -118,6 +129,8 @@ public class QueryToProtoBuffer implements Rewriter<Query<?>, Rule> {
 	}
 	
 	/**
+	 * Rewrite body.
+	 *
 	 * @param input Query<?>
 	 * @return ClauseBody
 	 */
@@ -128,6 +141,8 @@ public class QueryToProtoBuffer implements Rewriter<Query<?>, Rule> {
 	}
 
 	/**
+	 * Rewrite formula.
+	 *
 	 * @param formula uk.ac.ox.cs.pdq.formula.Formula
 	 * @return Formula
 	 */
@@ -157,6 +172,8 @@ public class QueryToProtoBuffer implements Rewriter<Query<?>, Rule> {
 	}
 	
 	/**
+	 * Rewrite conjunction.
+	 *
 	 * @param formula Conjunction<?>
 	 * @return com.logicblox.common.protocol.CommonProto.Conjunction
 	 */
@@ -170,6 +187,8 @@ public class QueryToProtoBuffer implements Rewriter<Query<?>, Rule> {
 	}
 	
 	/**
+	 * Rewrite disjunction.
+	 *
 	 * @param formula Disjunction<?>
 	 * @return com.logicblox.common.protocol.CommonProto.Disjunction
 	 */
@@ -183,6 +202,8 @@ public class QueryToProtoBuffer implements Rewriter<Query<?>, Rule> {
 	}
 	
 	/**
+	 * Rewrite negation.
+	 *
 	 * @param formula Negation<?>
 	 * @return com.logicblox.common.protocol.CommonProto.Negation
 	 */
@@ -195,6 +216,8 @@ public class QueryToProtoBuffer implements Rewriter<Query<?>, Rule> {
 
 	
 	/**
+	 * Rewrite atom.
+	 *
 	 * @param predicate PredicateFormula
 	 * @return Atom
 	 */
@@ -218,6 +241,8 @@ public class QueryToProtoBuffer implements Rewriter<Query<?>, Rule> {
 	}
 	
 	/**
+	 * Resolve type.
+	 *
 	 * @param signature Relation
 	 * @param i int
 	 * @return the type of the ith term
@@ -245,6 +270,8 @@ public class QueryToProtoBuffer implements Rewriter<Query<?>, Rule> {
 	}
 	
 	/**
+	 * Rewrite term.
+	 *
 	 * @param term Term
 	 * @return com.logicblox.common.protocol.CommonProto.Term
 	 */
@@ -267,6 +294,8 @@ public class QueryToProtoBuffer implements Rewriter<Query<?>, Rule> {
 	}
 
 	/**
+	 * Rewrite constant.
+	 *
 	 * @param constant TypedConstant<?>
 	 * @return com.logicblox.common.protocol.CommonProto.Constant
 	 */
@@ -313,8 +342,11 @@ public class QueryToProtoBuffer implements Rewriter<Query<?>, Rule> {
 	}
 	
 	/**
+	 * Rewrite type.
+	 *
 	 * @param term Term
 	 * @return com.logicblox.common.protocol.CommonProto.Type
+	 * @throws RewriterException the rewriter exception
 	 */
 	private com.logicblox.common.protocol.CommonProto.Type rewriteType(Term term) throws RewriterException {
 		com.logicblox.common.protocol.CommonProto.Type.Builder builder =

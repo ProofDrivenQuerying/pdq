@@ -39,37 +39,40 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 
+// TODO: Auto-generated Javadoc
 /**
+ * The Class AccessibleDatabaseListState.
  *
  * @author Efthymia Tsamoura
- *
+ * 
  * 	Organises the facts during chasing into a list. 
- *	This type of state is used in terminating chase implementations.
- *	It also maintains the classes of equal chase constants that are derived after chasing with EGDs.
- *	This implementation does not store equality facts into the database, but when a class of equal constants is created
- *	the database facts are updated; update includes replacing every chase constant c, with a constant c' that is equal to c
- *	under the constraints and c' is a representative.
- *	The database is cleared from the obsolete facts after a chase step is applied.
- *
+ * 	This type of state is used in terminating chase implementations.
+ * 	It also maintains the classes of equal chase constants that are derived after chasing with EGDs.
+ * 	This implementation does not store equality facts into the database, but when a class of equal constants is created
+ * 	the database facts are updated; update includes replacing every chase constant c, with a constant c' that is equal to c
+ * 	under the constraints and c' is a representative.
+ * 	The database is cleared from the obsolete facts after a chase step is applied.
  */
 public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseListState implements AccessibleChaseState {
 
-	/** String signatures of the inferred accessible facts*/
+	/**  String signatures of the inferred accessible facts. */
 	private final Collection<String> inferred;
 
 	/** The inferred accessible facts that were derived when chasing this.state **/
 	protected final Collection<Predicate> derivedInferred;
 
-	/** Maps each schema signature (relation) to its chase facts*/
+	/**  Maps each schema signature (relation) to its chase facts. */
 	private final Multimap<Signature, Predicate> signatureGroups;
 
-	/** Maps each chase constant the Accessed facts it appears*/
+	/**  Maps each chase constant the Accessed facts it appears. */
 	private final Multimap<Term,Predicate> accessibleTerms;
 
 	/**
-	 * 
-	 * @param query
-	 * @param manager
+	 * Instantiates a new accessible database list state.
+	 *
+	 * @param query the query
+	 * @param schema the schema
+	 * @param manager the manager
 	 */
 	public AccessibleDatabaseListState(Query<?> query, Schema schema, DBHomomorphismManager manager) {
 		this(manager, 
@@ -84,11 +87,11 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 	}
 
 	/**
-	 * 
-	 * @param query
-	 * @param schema
-	 * @return 
-	 * 		the facts of the canonical query and the Accessible(.) facts of the schema constants
+	 * Creates the initial facts.
+	 *
+	 * @param query the query
+	 * @param schema the schema
+	 * @return 		the facts of the canonical query and the Accessible(.) facts of the schema constants
 	 */
 	private static Collection<Predicate> createInitialFacts(Query<?> query, Schema schema) {
 		// Gets the canonical database of the query
@@ -106,15 +109,16 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 
 
 	/**
-	 * 
-	 * @param accessibleQuery
-	 * @param manager
-	 * @param facts
-	 * @param graph
-	 * @param inferred
-	 * @param derivedInferred
-	 * @param signatureGroups
-	 * @param accessibleTerms
+	 * Instantiates a new accessible database list state.
+	 *
+	 * @param manager the manager
+	 * @param facts the facts
+	 * @param graph the graph
+	 * @param constantClasses the constant classes
+	 * @param inferred the inferred
+	 * @param derivedInferred the derived inferred
+	 * @param signatureGroups the signature groups
+	 * @param accessibleTerms the accessible terms
 	 */
 	private AccessibleDatabaseListState(
 			DBHomomorphismManager manager,
@@ -134,6 +138,8 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 	}
 
 	/**
+	 * Gets the inferred.
+	 *
 	 * @return Collection<String>
 	 * @see uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState#getInferred()
 	 */
@@ -143,6 +149,8 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 	}
 
 	/**
+	 * Gets the derived inferred.
+	 *
 	 * @return Collection<PredicateFormula>
 	 * @see uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState#getDerivedInferred()
 	 */
@@ -152,6 +160,8 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 	}
 
 	/**
+	 * Gets the signature groups.
+	 *
 	 * @return Multimap<Signature,PredicateFormula>
 	 */
 	protected Multimap<Signature, Predicate> getSignatureGroups() {
@@ -159,6 +169,8 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 	}
 
 	/**
+	 * Gets the accessible terms.
+	 *
 	 * @return Multimap<Term,PredicateFormula>
 	 */
 	protected Multimap<Term,Predicate> getAccessibleTerms() {
@@ -167,13 +179,18 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 
 	/**
 	 * Updates this.state
-	 * 		
+	 *
+	 * @param match the match
+	 * @return true, if successful
 	 */
 	@Override
 	public boolean chaseStep(Match match) {
 		return this.chaseStep(Sets.newHashSet(match));
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseListState#chaseStep(java.util.Collection)
+	 */
 	@Override
 	public boolean chaseStep(Collection<Match> matches) {
 		super.chaseStep(matches);
@@ -208,10 +225,9 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 	 * For each input accessibility axiom, it
 	 * groups the corresponding state facts based on the chase constants assigned to their input positions.
 	 * This function is called when creating the initial ApplyRule configurations
-	 * @param axioms
 	 *
-	 * @return
-	 * 		pairs of accessibility axioms to chase facts
+	 * @param axioms the axioms
+	 * @return 		pairs of accessibility axioms to chase facts
 	 * @see uk.ac.ox.cs.pdq.chase.state.ChaseState#groupByBinding(Collection<AccessibilityAxiom>)
 	 */
 	@Override
@@ -220,11 +236,10 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 	}
 
 	/**
+	 * Gets the unexposed facts.
 	 *
-	 * @param accessibleSchema
-	 * @param axioms
-	 * @return
-	 * 		the unexposed facts and information to expose them
+	 * @param accessibleSchema the accessible schema
+	 * @return 		the unexposed facts and information to expose them
 	 * @see uk.ac.ox.cs.pdq.chase.state.ChaseState#getUnExposedFacts(AccessibleSchema, Collection<AccessibilityAxiom>)
 	 */
 	@Override
@@ -232,6 +247,9 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 		return this.getUnexposedFacts(accessibleSchema, this.getSignatureGroups(), this.getAccessibleTerms(), this.getFiringGraph());
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState#generate(uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema, uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom, java.util.Collection)
+	 */
 	@Override
 	public void generate(AccessibleSchema schema, AccessibilityAxiom axiom, Collection<Predicate> facts) {
 		Collection<Predicate> generatedFacts = new Utility().generateFacts(schema, axiom, facts, this.getInferred(), this.getDerivedInferred(), this.getFiringGraph());
@@ -240,15 +258,13 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 
 
 	/**
+	 * Gets the unexposed facts.
 	 *
-	 * @param accessibleSchema
-	 * @param axioms
-	 * @param signatureGroups
-	 * 		Maps each schema signature (relation) to its chase facts
-	 * @param accessibleTerms
-	 * 		Maps each chase constant the Accessed facts it appears
-	 * @return
-	 * 		the non-fired accessibility axioms of the state and information to fire them
+	 * @param accessibleSchema the accessible schema
+	 * @param signatureGroups 		Maps each schema signature (relation) to its chase facts
+	 * @param accessibleTerms 		Maps each chase constant the Accessed facts it appears
+	 * @param graph the graph
+	 * @return 		the non-fired accessibility axioms of the state and information to fire them
 	 */
 	private Map<AccessibilityAxiom, List<Match>> getUnexposedFacts(
 			AccessibleSchema accessibleSchema,
@@ -281,6 +297,8 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 	}
 
 	/**
+	 * Gets the provenance.
+	 *
 	 * @return Map<PredicateFormula,Pair<Constraint,Collection<PredicateFormula>>>
 	 * @see uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState#getProvenance()
 	 */
@@ -291,6 +309,8 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 
 
 	/**
+	 * Gets the provenance.
+	 *
 	 * @param fact PredicateFormula
 	 * @return Pair<Constraint,Collection<PredicateFormula>>
 	 * @see uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState#getProvenance(Predicate)
@@ -301,6 +321,8 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 	}
 
 	/**
+	 * Clone.
+	 *
 	 * @return DatabaseListState
 	 * @see uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState#clone()
 	 */
@@ -315,6 +337,9 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 				LinkedHashMultimap.create(this.accessibleTerms));
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState#merge(uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState)
+	 */
 	@Override
 	public AccessibleChaseState merge(AccessibleChaseState s) {
 		Preconditions.checkState(s instanceof AccessibleDatabaseListState);

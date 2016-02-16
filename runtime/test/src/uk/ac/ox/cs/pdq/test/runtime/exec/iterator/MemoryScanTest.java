@@ -22,20 +22,38 @@ import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
+ * The Class MemoryScanTest.
+ *
  * @author Julien LEBLAY
  */
 public class MemoryScanTest {
 
+	/** The c. */
 	Attribute a, b, c;
+	
+	/** The output columns. */
 	List<Typed> outputColumns;
+	
+	/** The output type. */
 	TupleType outputType;
+	
+	/** The data. */
 	Collection<Tuple> data;
+	
+	/** The filter1. */
 	Predicate filter1;
+	
+	/** The filter2. */
 	Predicate filter2;
+	
+	/** The filter3. */
 	Predicate filter3;
 	
+	/**
+	 * Setup.
+	 */
 	@Before public void setup() {
 		Utility.assertsEnabled();
 		a = new Attribute(Integer.class, "a");
@@ -57,16 +75,25 @@ public class MemoryScanTest {
         MockitoAnnotations.initMocks(this);
 	}
 	
+	/**
+	 * Inits the memory scan.
+	 */
 	@Test public void initMemoryScan() {
 		MemoryScan scan = new MemoryScan(outputColumns, data);
 		Assert.assertNull(scan.getFilter());
 	}
 	
+	/**
+	 * Inits the memory scan null data.
+	 */
 	@Test(expected=IllegalArgumentException.class) 
 	public void initMemoryScanNullData() {
 		MemoryScan scan = new MemoryScan(outputColumns, null);
 	}
 	
+	/**
+	 * Inits the memory scan data type mismatch.
+	 */
 	@Test(expected=IllegalArgumentException.class) 
 	public void initMemoryScanDataTypeMismatch() {
 		TupleType badType = TupleType.DefaultFactory.create(
@@ -78,21 +105,35 @@ public class MemoryScanTest {
 				badType.createTuple(3, "x")));
 	}
 	
+	/**
+	 * Inits the memory scan filtered1.
+	 */
 	@Test public void initMemoryScanFiltered1() {
 		MemoryScan scan = new MemoryScan(outputColumns, data, filter1);
 		Assert.assertEquals(filter1, scan.getFilter());
 	}
 	
+	/**
+	 * Inits the memory scan filtered2.
+	 */
 	@Test public void initMemoryScanFiltered2() {
 		MemoryScan scan = new MemoryScan(outputColumns, data, filter2);
 		Assert.assertEquals(filter2, scan.getFilter());
 	}
 	
+	/**
+	 * Inits the memory scan filtered3.
+	 */
 	@Test public void initMemoryScanFiltered3() {
 		MemoryScan scan = new MemoryScan(outputColumns, data, filter3);
 		Assert.assertEquals(filter3, scan.getFilter());
 	}
 
+	/**
+	 * Deep copy.
+	 *
+	 * @throws RelationalOperatorException the relational operator exception
+	 */
 	@Test public void deepCopy() throws RelationalOperatorException {
 		MemoryScan scan = new MemoryScan(outputColumns, data, filter3);
 		MemoryScan copy = scan.deepCopy();
@@ -106,6 +147,9 @@ public class MemoryScanTest {
 		Assert.assertEquals("MemoryScan next item must match", scan.next(), copy.next());
 	}
 
+	/**
+	 * Checks for next.
+	 */
 	@Test public void hasNext() {
 		MemoryScan scan = new MemoryScan(outputColumns, data);
 		scan.open();
@@ -119,6 +163,9 @@ public class MemoryScanTest {
 		scan.reset();
 	}
 
+	/**
+	 * Checks for next filtered1.
+	 */
 	@Test public void hasNextFiltered1() {
 		MemoryScan scan = new MemoryScan(outputColumns, data, filter1);
 		scan.open();
@@ -128,6 +175,9 @@ public class MemoryScanTest {
 		scan.reset();
 	}
 
+	/**
+	 * Checks for next filtered2.
+	 */
 	@Test public void hasNextFiltered2() {
 		MemoryScan scan = new MemoryScan(outputColumns, data, filter2);
 		scan.open();
@@ -141,6 +191,9 @@ public class MemoryScanTest {
 		scan.reset();
 	}
 
+	/**
+	 * Checks for next filtered3.
+	 */
 	@Test public void hasNextFiltered3() {
 		MemoryScan scan = new MemoryScan(outputColumns, data, filter3);
 		scan.open();
@@ -150,6 +203,9 @@ public class MemoryScanTest {
 		scan.reset();
 	}
 
+	/**
+	 * Next.
+	 */
 	@Test public void next() {
 		MemoryScan scan = new MemoryScan(outputColumns, data);
 		scan.open();
@@ -158,12 +214,18 @@ public class MemoryScanTest {
 		Assert.assertEquals(outputType.createTuple(3, "x", "three"), scan.next());
 	}
 
+	/**
+	 * Next filtered1.
+	 */
 	@Test public void nextFiltered1() {
 		MemoryScan scan = new MemoryScan(outputColumns, data, filter1);
 		scan.open();
 		Assert.assertEquals(outputType.createTuple(2, "x", "two"), scan.next());
 	}
 
+	/**
+	 * Next filtered2.
+	 */
 	@Test public void nextFiltered2() {
 		MemoryScan scan = new MemoryScan(outputColumns, data, filter2);
 		scan.open();
@@ -172,12 +234,18 @@ public class MemoryScanTest {
 		Assert.assertEquals(outputType.createTuple(3, "x", "three"), scan.next());
 	}
 
+	/**
+	 * Next filtered3.
+	 */
 	@Test public void nextFiltered3() {
 		MemoryScan scan = new MemoryScan(outputColumns, data, filter3);
 		scan.open();
 		Assert.assertEquals(outputType.createTuple(2, "x", "two"), scan.next());
 	}
 
+	/**
+	 * Reset.
+	 */
 	@Test public void reset() {
 		MemoryScan scan = new MemoryScan(outputColumns, data);
 		scan.open();
@@ -200,6 +268,9 @@ public class MemoryScanTest {
 		Assert.assertFalse(scan.hasNext());
 	}
 
+	/**
+	 * Reset filtered1.
+	 */
 	@Test public void resetFiltered1() {
 		MemoryScan scan = new MemoryScan(outputColumns, data, filter1);
 		scan.open();
@@ -214,6 +285,9 @@ public class MemoryScanTest {
 		Assert.assertFalse(scan.hasNext());
 	}
 
+	/**
+	 * Reset filtered2.
+	 */
 	@Test public void resetFiltered2() {
 		MemoryScan scan = new MemoryScan(outputColumns, data, filter2);
 		scan.open();
@@ -236,6 +310,9 @@ public class MemoryScanTest {
 		Assert.assertFalse(scan.hasNext());
 	}
 
+	/**
+	 * Reset filtered3.
+	 */
 	@Test public void resetFiltered3() {
 		MemoryScan scan = new MemoryScan(outputColumns, data, filter3);
 		scan.open();
@@ -250,6 +327,9 @@ public class MemoryScanTest {
 		Assert.assertFalse(scan.hasNext());
 	}
 
+	/**
+	 * Bind null.
+	 */
 	@Test(expected=NullPointerException.class)
 	public void bindNull() {
 		MemoryScan scan = new MemoryScan(outputColumns, data, filter3);
@@ -257,12 +337,18 @@ public class MemoryScanTest {
 		scan.bind(null);
 	}
 	
+	/**
+	 * Bind on unopened.
+	 */
 	@Test(expected=IllegalStateException.class)
 	public void bindOnUnopened() {
 		MemoryScan scan = new MemoryScan(outputColumns, data, filter3);
 		scan.bind(Tuple.EmptyTuple);
 	}
 	
+	/**
+	 * Bind illegal type.
+	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void bindIllegalType() {
 		MemoryScan scan = new MemoryScan(outputColumns, data, filter3);
@@ -270,6 +356,9 @@ public class MemoryScanTest {
 		scan.bind(outputType.createTuple("four", 4));
 	}
 	
+	/**
+	 * Bind empty tuple.
+	 */
 	@Test public void bindEmptyTuple() {
 		MemoryScan scan = new MemoryScan(outputColumns, data, filter3);
 		scan.open();

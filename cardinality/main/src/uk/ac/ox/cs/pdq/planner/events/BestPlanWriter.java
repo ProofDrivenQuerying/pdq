@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package uk.ac.ox.cs.pdq.planner.events;
 
 import java.io.FileNotFoundException;
@@ -9,6 +12,7 @@ import uk.ac.ox.cs.pdq.plan.Plan;
 
 import com.google.common.eventbus.Subscribe;
 
+// TODO: Auto-generated Javadoc
 /**
  * Writes plans to some given output. 
  * @author Julien Leblay
@@ -16,12 +20,23 @@ import com.google.common.eventbus.Subscribe;
  */
 public class BestPlanWriter implements EventHandler {
 	
+	/** The output. */
 	private final String output;
 	
+	/**
+	 * Instantiates a new best plan writer.
+	 *
+	 * @param f the f
+	 */
 	public BestPlanWriter(String f) {
 		this.output = f;
 	}
 	
+	/**
+	 * Write plan.
+	 *
+	 * @param plan the plan
+	 */
 	@Subscribe
 	public void writePlan(Plan plan) {
 		if (plan != null) {

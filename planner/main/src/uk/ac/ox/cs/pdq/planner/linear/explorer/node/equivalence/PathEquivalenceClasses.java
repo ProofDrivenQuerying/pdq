@@ -15,6 +15,7 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.Sets;
 
+// TODO: Auto-generated Javadoc
 /**
  * Collections of paths that have equivalent configurations.
  * Each node of the path is saturated using the chase and is associated with a unique configuration.
@@ -30,14 +31,18 @@ public class PathEquivalenceClasses {
 	/** Maps each node to the equivalence class it belongs. This implementation keeps only the final node of each path*/
 	private final BiMap<SearchNode,PathEquivalenceClass> entries;
 
+	/**
+	 * Instantiates a new path equivalence classes.
+	 */
 	public PathEquivalenceClasses() {
 		this.entries = HashBiMap.create();
 	}
 
 	/**
-	 * Adds the child to the equivalence class of the parent
-	 * @param parent
-	 * @param child
+	 * Adds the child to the equivalence class of the parent.
+	 *
+	 * @param parent the parent
+	 * @param child the child
 	 * @return the parent's equivalence class
 	 */
 	public PathEquivalenceClass addEntry(SearchNode parent, SearchNode child) {
@@ -48,17 +53,19 @@ public class PathEquivalenceClasses {
 	}
 
 	/**
-	 * Creates a new class given the input node
-	 * @param parent
+	 * Creates a new class given the input node.
+	 *
+	 * @param parent the parent
 	 */
 	public void addEntry(SearchNode parent) {
 		this.entries.put(parent, new PathEquivalenceClass(parent));
 	}
 
 	/**
-	 * Adds the path to the given equivalence class
-	 * @param path
-	 * @param equivalenceClass
+	 * Adds the path to the given equivalence class.
+	 *
+	 * @param path the path
+	 * @param equivalenceClass the equivalence class
 	 */
 	public void addEntry(List<Integer> path, PathEquivalenceClass equivalenceClass) {
 		Preconditions.checkArgument(this.entries.containsValue(equivalenceClass));
@@ -66,7 +73,9 @@ public class PathEquivalenceClasses {
 	}
 
 	/**
-	 * @param path
+	 * Checks if is prefix of.
+	 *
+	 * @param path the path
 	 * @return the paths (and their associated equivalence classes) that have the input path as prefix
 	 */
 	public List<Entry<PathEquivalenceClass,List<Integer>>> isPrefixOf(List<Integer> path) {
@@ -82,6 +91,8 @@ public class PathEquivalenceClasses {
 	}
 
 	/**
+	 * To string.
+	 *
 	 * @return String
 	 */
 	@Override
@@ -90,21 +101,25 @@ public class PathEquivalenceClasses {
 	}
 
 	/**
-	 * A collection of equivalent paths
+	 * A collection of equivalent paths.
 	 *
 	 * @author Efthymia Tsamoura
 	 */
 	public static class PathEquivalenceClass {
-		/** The representative node of this class*/
+		
+		/**  The representative node of this class. */
 		private final SearchNode representativeNode;
-		/** The representative path of this class*/
+		
+		/**  The representative path of this class. */
 		private final List<Integer> representativePath;
-		/** Set of equivalent paths*/
+		
+		/**  Set of equivalent paths. */
 		private final Set<List<Integer>> paths;
 
 		/**
-		 * Creates a new class setting the input node as representative
-		 * @param representativeNode
+		 * Creates a new class setting the input node as representative.
+		 *
+		 * @param representativeNode the representative node
 		 */
 		public PathEquivalenceClass(SearchNode representativeNode) {
 			this.representativeNode = representativeNode;
@@ -114,6 +129,8 @@ public class PathEquivalenceClasses {
 		}
 
 		/**
+		 * Gets the representative node.
+		 *
 		 * @return SearchNode
 		 */
 		public SearchNode getRepresentativeNode() {
@@ -121,6 +138,8 @@ public class PathEquivalenceClasses {
 		}
 
 		/**
+		 * Gets the representative path.
+		 *
 		 * @return List<Integer>
 		 */
 		public List<Integer> getRepresentativePath() {
@@ -128,6 +147,8 @@ public class PathEquivalenceClasses {
 		}
 
 		/**
+		 * Gets the paths.
+		 *
 		 * @return Set<List<Integer>>
 		 */
 		public Set<List<Integer>> getPaths() {
@@ -135,6 +156,8 @@ public class PathEquivalenceClasses {
 		}
 
 		/**
+		 * Adds the path.
+		 *
 		 * @param otherPath List<Integer>
 		 */
 		public void addPath(List<Integer> otherPath) {
@@ -142,6 +165,8 @@ public class PathEquivalenceClasses {
 		}
 
 		/**
+		 * Equals.
+		 *
 		 * @param o Object
 		 * @return boolean
 		 */
@@ -160,6 +185,8 @@ public class PathEquivalenceClasses {
 		}
 
 		/**
+		 * To string.
+		 *
 		 * @return String
 		 */
 		@Override

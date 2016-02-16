@@ -23,6 +23,7 @@ import com.beust.jcommander.ParameterException;
 import com.beust.jcommander.Parameters;
 import com.beust.jcommander.internal.Lists;
 
+// TODO: Auto-generated Javadoc
 /**
  * Top-level service that provides the means of managing other services
  * (starting, stop, status, etc.)
@@ -35,7 +36,7 @@ public class ServiceManager implements Service {
 	/** Logger. */
 	private static Logger log = Logger.getLogger(ServiceManager.class); 
 
-	/** External parameters */
+	/**  External parameters. */
 	private final ServiceParameters params;
 
 	/** The services currently running, indexed by name. */
@@ -44,24 +45,33 @@ public class ServiceManager implements Service {
 	/** The executors for sub-services. */
 	public final ExecutorService execService = Executors.newCachedThreadPool();
 	
-	/***/
+	/** The server socket. */
 	private ServerSocket serverSocket;
 	
 	/** Verbose mode. False by default. */
 	private boolean verbose = false;
 	
+	/** The is interrupted. */
 	private boolean isInterrupted = false;
 
+	/** The config dir. */
 	private File configDir = new File(".");
+	
+	/** The host. */
 	private final String host;
+	
+	/** The port number. */
 	private final Integer portNumber;
+	
+	/** The delayed commands. */
 	private Command[] delayedCommands;
 	
 	/**
 	 * Instantiates a ServiceManager, with an array of sub-services to launch
 	 * along the way. Verbose mode is false.
-	 * @param services
-	 * @param commands
+	 *
+	 * @param paramDir the param dir
+	 * @param commands the commands
 	 */
 	public ServiceManager(File paramDir, Command... commands) {
 		this(new ServiceParameters(paramDir), false, commands);
@@ -71,9 +81,10 @@ public class ServiceManager implements Service {
 	/**
 	 * Instantiates a ServiceManager, with an array of sub-services to launch
 	 * along the way, with external parameters.
-	 * @param params
-	 * @param verbose
-	 * @param services
+	 *
+	 * @param params the params
+	 * @param verbose the verbose
+	 * @param commands the commands
 	 */
 	public ServiceManager(ServiceParameters params, boolean verbose, Command... commands) {
 		this.params = params;
@@ -85,7 +96,8 @@ public class ServiceManager implements Service {
 	
 	/**
 	 * Execute the given commands on the service manager.
-	 * @param commands
+	 *
+	 * @param commands the commands
 	 */
 	private void execute(Command... commands) {
 		for (Command command: commands) {
@@ -96,7 +108,9 @@ public class ServiceManager implements Service {
 	
 	/**
 	 * Execute the given commands on the service manager.
-	 * @param commands
+	 *
+	 * @param out the out
+	 * @param commands the commands
 	 */
 	private void execute(PrintStream out, Command... commands) {
 		for (Command command: commands) {
@@ -106,6 +120,8 @@ public class ServiceManager implements Service {
 	}
 	
 	/**
+	 * Gets the host.
+	 *
 	 * @return the host on which the service manager is running.
 	 */
 	public String getHost() {
@@ -113,6 +129,8 @@ public class ServiceManager implements Service {
 	}
 	
 	/**
+	 * Gets the port number.
+	 *
 	 * @return the port number on which the service manager is running.
 	 */
 	public Integer getPortNumber() {
@@ -120,7 +138,8 @@ public class ServiceManager implements Service {
 	}
 	
 	/**
-	 * Print this service's status to the given PrintStream
+	 * Print this service's status to the given PrintStream.
+	 *
 	 * @param out PrintStream
 	 * @see uk.ac.ox.cs.pdq.services.Service#status(PrintStream)
 	 */
@@ -136,6 +155,8 @@ public class ServiceManager implements Service {
 	}
 	
 	/**
+	 * Stop.
+	 *
 	 * @see uk.ac.ox.cs.pdq.services.Service#stop()
 	 */
 	@Override
@@ -154,6 +175,8 @@ public class ServiceManager implements Service {
 	}
 	
 	/**
+	 * Run.
+	 *
 	 * @see java.lang.Runnable#run()
 	 */
 	@Override
@@ -186,6 +209,8 @@ public class ServiceManager implements Service {
 	}
 
 	/**
+	 * Gets the name.
+	 *
 	 * @return this service's name (as defined in external parameters).
 	 * @see uk.ac.ox.cs.pdq.services.Service#getName()
 	 */
@@ -194,7 +219,13 @@ public class ServiceManager implements Service {
 		return this.params.getServiceName();
 	}
 	
-	public enum Actions { START, STOP, STATUS }
+	/**
+	 * The Enum Actions.
+	 */
+	public enum Actions { /** The start. */
+ START, /** The stop. */
+ STOP, /** The status. */
+ STATUS }
 
 	/**
 	 * A command to the service manager. Consists of an action and a list of
@@ -206,22 +237,40 @@ public class ServiceManager implements Service {
 	 */
 	@Parameters(separators = ",", commandDescription = "Applies action to a list of modules.")
 	public static class Command {
+		
+		/** The action. */
 		public final Actions action;
 
+		/** The modules. */
 		@Parameter(
 //				validateWith = ModuleValidator.class,
 				description = "The list of modules to act on.")
 		private List<String> modules;
 
+		/**
+		 * Instantiates a new command.
+		 *
+		 * @param action the action
+		 * @param modules the modules
+		 */
 		public Command(Actions action, String... modules) {
 			this(action, Lists.newArrayList(modules));
 		}
 		
+		/**
+		 * Instantiates a new command.
+		 *
+		 * @param action the action
+		 * @param modules the modules
+		 */
 		public Command(Actions action, List<String> modules) {
 			this.action = action;
 			this.modules = modules;
 		}
 		
+		/* (non-Javadoc)
+		 * @see java.lang.Object#toString()
+		 */
 		@Override
 		public String toString() {
 			StringBuilder result = new StringBuilder();
@@ -236,7 +285,8 @@ public class ServiceManager implements Service {
 		/**
 		 * Executes the command action on the list of modules. If the module 
 		 * list is empty, the action is performed on the service manager itself.
-		 * @param sm
+		 *
+		 * @param sm the sm
 		 */
 		public void execute(ServiceManager sm) {
 			this.execute(sm, System.out);
@@ -245,8 +295,9 @@ public class ServiceManager implements Service {
 		/**
 		 * Executes the command action on the list of modules. If the module 
 		 * list is empty, the action is performed on the service manager itself.
-		 * @param sm
-		 * @param out
+		 *
+		 * @param sm the sm
+		 * @param out the out
 		 */
 		public void execute(ServiceManager sm, PrintStream out) {
 			switch (this.action) {
@@ -304,7 +355,14 @@ public class ServiceManager implements Service {
 			}
 		}
 		
+		/**
+		 * The Class ModuleValidator.
+		 */
 		public static class ModuleValidator implements IParameterValidator {
+			
+			/* (non-Javadoc)
+			 * @see com.beust.jcommander.IParameterValidator#validate(java.lang.String, java.lang.String)
+			 */
 			@Override
 			public void validate(String name, String value) throws ParameterException {
 				if (!ServiceFactory.isRegistered(value)) {
@@ -315,14 +373,27 @@ public class ServiceManager implements Service {
 		}
 	}
 	
+	/**
+	 * The Class ExecuteCommandCall.
+	 */
 	public static class ExecuteCommandCall implements ServiceCall<Integer> {
 
+		/** The Constant SUCCESS. */
 		public static final Integer SUCCESS = 0;
+		
+		/** The Constant FAILURE. */
 		public static final Integer FAILURE = -1;
 		
+		/** The socket. */
 		private final Socket socket;
+		
+		/** The in. */
 		private final BufferedReader in;
+		
+		/** The out. */
 		private final OutputStream out;
+		
+		/** The master. */
 		private final ServiceManager master;
 		
 		/**
@@ -343,6 +414,13 @@ public class ServiceManager implements Service {
 			}
 		}
 
+		/**
+		 * Parses the.
+		 *
+		 * @param s the s
+		 * @return the command
+		 * @throws ParameterException the parameter exception
+		 */
 		private Command parse(String s) throws ParameterException {
 			assert s != null;
 			String[] array = s.split(" ");
@@ -367,8 +445,10 @@ public class ServiceManager implements Service {
 		}
 		
 		/**
+		 * Call.
+		 *
 		 * @return GeneratedMessage
-		 * @throws ServiceException
+		 * @throws ServiceException the service exception
 		 * @see java.util.concurrent.Callable#call()
 		 */
 		@Override

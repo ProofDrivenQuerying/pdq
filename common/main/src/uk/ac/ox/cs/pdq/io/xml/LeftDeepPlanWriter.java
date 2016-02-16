@@ -8,6 +8,7 @@ import uk.ac.ox.cs.pdq.algebra.RelationalOperator;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 
+// TODO: Auto-generated Javadoc
 /**
  * Writes plans to XML.
  * 
@@ -16,11 +17,13 @@ import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
  */
 public class LeftDeepPlanWriter extends AbstractXMLWriter<LeftDeepPlan> {
 
+	/** The Constant TYPE_MARKER. */
 	public static final String TYPE_MARKER = "linear"; 
 
+	/** The Constant SUBPLAN_ALIAS. */
 	public static final String SUBPLAN_ALIAS = "T"; 
 
-	/** Relations writer */
+	/**  Relations writer. */
 	private OperatorWriter operatorWriter = null;
 	
 	/**
@@ -32,7 +35,8 @@ public class LeftDeepPlanWriter extends AbstractXMLWriter<LeftDeepPlan> {
 
 	/**
 	 * Writes the given plan to the given output.
-	 * @param out
+	 *
+	 * @param out the out
 	 * @param plan LeftDeepPlan
 	 */
 	public void writePlan(PrintStream out, LeftDeepPlan plan) {
@@ -56,8 +60,9 @@ public class LeftDeepPlanWriter extends AbstractXMLWriter<LeftDeepPlan> {
 	
 	/**
 	 * Writes the given relation to the given output.
-	 * @param out
-	 * @param attribute
+	 *
+	 * @param out the out
+	 * @param attribute the attribute
 	 */
 	public void writeAttribute(PrintStream out, Attribute attribute) {
 		Map<QNames, String> att = new LinkedHashMap<>();
@@ -67,7 +72,8 @@ public class LeftDeepPlanWriter extends AbstractXMLWriter<LeftDeepPlan> {
 
 	/**
 	 * Writes the given command to the given output.
-	 * @param out
+	 *
+	 * @param out the out
 	 * @param plan LeftDeepPlan
 	 * @param alias String
 	 * @param aliases Map<LogicalOperator,String>

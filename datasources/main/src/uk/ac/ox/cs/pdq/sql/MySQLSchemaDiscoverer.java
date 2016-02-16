@@ -36,6 +36,7 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
 /**
  * MySQL-specific class for automatically discover a schema.
  *  
@@ -44,7 +45,7 @@ import com.google.common.collect.Lists;
  */
 public class MySQLSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 
-	/** The logger */
+	/**  The logger. */
 	public static Logger log = Logger.getLogger(MySQLSchemaDiscoverer.class);
 	
 	/*
@@ -97,6 +98,8 @@ public class MySQLSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 	}
 
 	/**
+	 * Gets the view instance.
+	 *
 	 * @param props Properties
 	 * @param viewName String
 	 * @param relationMap Map<String,Relation>
@@ -110,6 +113,8 @@ public class MySQLSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 	}
 
 	/**
+	 * Gets the view definition.
+	 *
 	 * @param viewName String
 	 * @return String
 	 */
@@ -133,7 +138,8 @@ public class MySQLSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 	/**
 	 * Parse a SQL statement featuring a conjunctive view definition and returns
 	 * the corresponding linear guarded dependency.
-	 * @param viewDef
+	 *
+	 * @param viewDef the view def
 	 * @param relationMap Map<String,Relation>
 	 * @return the corresponding linear guarded dependency representation of the
 	 * given SQL view definition.
@@ -142,16 +148,24 @@ public class MySQLSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 		throw new UnsupportedOperationException();
 	}
 	
+	/** The Constant TOP_PATTERN. */
 	private static final String TOP_PATTERN = "select (?<select>.*) from (?<from>.*) where (?<where>.*)";
+	
+	/** The Constant ALIAS_PATTERN. */
 	private static final String ALIAS_PATTERN = "((?<alias>\\w*)\\.)?(?<attribute>\\w*)(\\s*as\\s*(?<renamed>\\w*))?";
+	
+	/** The Constant NESTED_CONJUNCTION_PATTERN. */
 	private static final String NESTED_CONJUNCTION_PATTERN = "\\((?<condition>.*)(\\s*and\\s*(?<rest>.*))+?\\)";
+	
+	/** The Constant CONDITION_PATTERN. */
 	private static final String CONDITION_PATTERN = "\\((?<condition>.*)\\)";
 
 	/**
 	 * Parse a SQL statement featuring a conjunctive view definition and returns
 	 * the corresponding linear guarded dependency.
-	 * @param viewDef
+	 *
 	 * @param viewName String
+	 * @param viewDef the view def
 	 * @param relationMap Map<String,Relation>
 	 * @return the corresponding linear guarded dependency representation of the
 	 * given SQL view definition.
@@ -189,8 +203,9 @@ public class MySQLSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 	/**
 	 * Parse a SQL from clause and returns a map from relation aliases to 
 	 * predicates featuring fresh variables.
-	 * @param fromClause
-	 * @param relationMap
+	 *
+	 * @param fromClause the from clause
+	 * @param relationMap the relation map
 	 * @return a map from relation aliases to predicates with fresh variables
 	 */
 	private BiMap<String, Predicate> makePredicate(String fromClause, Map<String, Relation> relationMap) {
@@ -215,7 +230,8 @@ public class MySQLSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 	/**
 	 * Parse a SQL where clause and returns a map from relation aliases to 
 	 * predicates featuring fresh variables.
-	 * @param whereClause
+	 *
+	 * @param whereClause the where clause
 	 * @param predMap BiMap<String,PredicateFormula>
 	 */
 	private void makeJoins(String whereClause, BiMap<String, Predicate> predMap) {
@@ -261,7 +277,8 @@ public class MySQLSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 	/**
 	 * Parse a SQL select clause and returns a list of corresponding free 
 	 * variables from the given predicates collection.
-	 * @param selectClause
+	 *
+	 * @param selectClause the select clause
 	 * @param predMap Map<String,PredicateFormula>
 	 * @return a map from relation aliases to predicates with fresh variables
 	 */
@@ -283,6 +300,8 @@ public class MySQLSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 	}
 	
 	/**
+	 * Parses the alias.
+	 *
 	 * @param token String
 	 * @param predMap Map<String,PredicateFormula>
 	 * @return Triple<PredicateFormula,Integer,Attribute>
@@ -329,9 +348,11 @@ public class MySQLSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 	}
 	
 	/**
-	 * @param predicates
+	 * Parses the constant.
+	 *
 	 * @param token String
-	 * @return the first predicate found in the given collection featuring the 
+	 * @param predicates the predicates
+	 * @return the first predicate found in the given collection featuring the
 	 * given attribute and its position.
 	 */
 	private Pair<Term, Attribute> parseConstant(String token, Collection<Predicate> predicates) {

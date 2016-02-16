@@ -2,6 +2,7 @@ package uk.ac.ox.cs.pdq.plan;
 
 import uk.ac.ox.cs.pdq.util.Table;
 
+// TODO: Auto-generated Javadoc
 /**
  * Interface for access or middleware commands.
  * 
@@ -35,5 +36,10 @@ import uk.ac.ox.cs.pdq.util.Table;
  */
 public interface Command {
 
+	/**
+	 * Gets the output.
+	 *
+	 * @return the output
+	 */
 	Table getOutput();
 }

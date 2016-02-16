@@ -10,28 +10,30 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
 /**
- * Estimates the cardinality of the join of two attributes using their histograms 
- * @author Efthymia Tsamoura
+ * Estimates the cardinality of the join of two attributes using their histograms .
  *
+ * @author Efthymia Tsamoura
  */
 public class SQLServerJoinCardinalityEstimator {
 
+	/** The log. */
 	protected static Logger log = Logger.getLogger(SQLServerJoinCardinalityEstimator.class);
 	
 	/**
-	 * 
-	 * @param left
-	 * @param right
-	 * @return
-	 * 		the estimated cardinality of the join of the input histograms. 
+	 * Estimate single join attribute cardinality.
+	 *
+	 * @param left the left
+	 * @param right the right
+	 * @return 		the estimated cardinality of the join of the input histograms. 
 	 * 		Let the buckets of the histogram are the same after the bucket alignment, namely B = {b1,...,bK}. The returned estimate is
-			SizeOf(AnnPlan)=\Sum{i\leqK} AvgSize(R1[bi]) \times AvgSize(R2[bi]) \times min{NumDistinct(R1[bi]),NumDistinct(R2[bi])}
-			where AvgSize(Rj[bi]) is the average number of tuples in Rj per element in the bucket
-			bi and NumDistinct(Rj[bi]) is the number of distinct values of the position corresponding
-			to chase constant c in bucket bi of Rj.
+	 * 			SizeOf(AnnPlan)=\Sum{i\leqK} AvgSize(R1[bi]) \times AvgSize(R2[bi]) \times min{NumDistinct(R1[bi]),NumDistinct(R2[bi])}
+	 * 			where AvgSize(Rj[bi]) is the average number of tuples in Rj per element in the bucket
+	 * 			bi and NumDistinct(Rj[bi]) is the number of distinct values of the position corresponding
+	 * 			to chase constant c in bucket bi of Rj.
 	 * 		Very course histogram alignment takes place; a bucket b from the first histogram is aligned with a set of buckets B from the
-	 * 		second histogram if b intersects with B. The cardinality estimation algorithm relies on the containment assumption. 
+	 * 		second histogram if b intersects with B. The cardinality estimation algorithm relies on the containment assumption.
 	 */
 	public BigInteger estimateSingleJoinAttributeCardinality(SQLServerHistogram left, SQLServerHistogram right) {
 		double cardinality = 0;
@@ -89,21 +91,21 @@ public class SQLServerJoinCardinalityEstimator {
 
 
 	/**
-	 * 
-	 * @param left
-	 * @param right
-	 * @return
-	 * 		the estimated cardinality of the intersection of the input histograms. 
+	 * Estimate intersection cardinality.
+	 *
+	 * @param left the left
+	 * @param right the right
+	 * @return 		the estimated cardinality of the intersection of the input histograms. 
 	 * 		Let the buckets of the histogram are the same after the bucket alignment, namely B = {b1,...,bK}. The returned estimate is
-
-			SizeOf(AnnPlan) = \Sum_{i\leqK}
-			min{AvgSize(R1[bi]) \times NumDistinct(R1[bi]),AvgSize(R2[bi]) \time NumDistinct(R2[bi])}
-
-			where AvgSize(Rj[bi]) is the average number of tuples in Rj per element in the bucket
-			bi and NumDistinct(Rj[bi]) is the number of distinct values of the position corresponding
-			to chase constant c in bucket bi of Rj.
+	 * 
+	 * 			SizeOf(AnnPlan) = \Sum_{i\leqK}
+	 * 			min{AvgSize(R1[bi]) \times NumDistinct(R1[bi]),AvgSize(R2[bi]) \time NumDistinct(R2[bi])}
+	 * 
+	 * 			where AvgSize(Rj[bi]) is the average number of tuples in Rj per element in the bucket
+	 * 			bi and NumDistinct(Rj[bi]) is the number of distinct values of the position corresponding
+	 * 			to chase constant c in bucket bi of Rj.
 	 * 		Very course histogram alignment takes place; a bucket b from the first histogram is aligned with a set of buckets B from the
-	 * 		second histogram if b intersects with B. The cardinality estimation algorithm relies on the containment assumption. 
+	 * 		second histogram if b intersects with B. The cardinality estimation algorithm relies on the containment assumption.
 	 */
 	public BigInteger estimateIntersectionCardinality(SQLServerHistogram left, SQLServerHistogram right) {
 		double cardinality = 0;
@@ -165,15 +167,14 @@ public class SQLServerJoinCardinalityEstimator {
 
 
 	/**
-	 * 
-	 * @param source
-	 * @param bucketIndex
-	 * @param target
-	 * @return
-	 * 		the buckets of the target histogram that intersect with the bucketIndex-th bucket of the source histogram.
+	 * Find overlapping buckets.
+	 *
+	 * @param source the source
+	 * @param bucketIndex the bucket index
+	 * @param target the target
+	 * @return 		the buckets of the target histogram that intersect with the bucketIndex-th bucket of the source histogram.
 	 * 		The SQL Server histograms do not keep the leftmost boundaries of their buckets. Due to this limitation, we never deal
 	 * 		with the lowest buckets in the input histogram. For the lowest buckets we apply specific join cardinality estimations. 
-	 * 		
 	 */
 	public List<SQLServerBucket> findOverlappingBuckets(SQLServerHistogram source, int bucketIndex, SQLServerHistogram target) {
 		Preconditions.checkArgument(source != null);
@@ -232,13 +233,13 @@ public class SQLServerJoinCardinalityEstimator {
 	
 	
 	/**
-	 * 
+	 * Do intersect.
+	 *
 	 * @param l1 left boundary of a object 1
 	 * @param r1 right boundary of a object 1
 	 * @param l2 left boundary of a object 2
 	 * @param r2 right boundary of a object 2
-	 * @return
-	 * 		true if the object boundaries intersect
+	 * @return 		true if the object boundaries intersect
 	 */
 	boolean doIntersect(Object l1, Object r1, Object l2, Object r2) {
 		if(l1 instanceof Comparable && r1 instanceof Comparable &&

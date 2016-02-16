@@ -30,20 +30,42 @@ import uk.ac.ox.cs.pdq.util.Typed;
 
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
 /**
+ * The Class BindJoinTest.
  */
 public class BindJoinTest extends NaryIteratorTest {
 
+	/** The iterator. */
 	BindJoin iterator;
+	
+	/** The in34. */
 	List<Typed> out12, out21, in21, out34, in34;
+	
+	/** The free. */
 	AccessMethod free ;
+	
+	/** The mt1. */
 	AccessMethod mt1;
+	
+	/** The mt2. */
 	AccessMethod mt2;
+	
+	/** The mt3. */
 	AccessMethod mt3;
+	
+	/** The rel1. */
 	InMemoryTableWrapper rel1;
+	
+	/** The rel2. */
 	InMemoryTableWrapper rel2;
+	
+	/** The expected34. */
 	Set<Tuple> expected12, expected21, expected34;
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.test.runtime.exec.iterator.TupleIteratorTest#setup()
+	 */
 	@Before public void setup() {
 		super.setup();
         MockitoAnnotations.initMocks(this);
@@ -118,16 +140,25 @@ public class BindJoinTest extends NaryIteratorTest {
 
 	}
 	
+	/**
+	 * Inits the null children1.
+	 */
 	@Test(expected=IllegalArgumentException.class) 
 	public void initNullChildren1() {
         new BindJoin(child4, null);
 	}
 	
+	/**
+	 * Inits the null children2.
+	 */
 	@Test(expected=IllegalArgumentException.class) 
 	public void initNullChildren2() {
         new BindJoin(null, child4);
 	}
 
+	/**
+	 * Inits the two children12.
+	 */
 	@Test public void initTwoChildren12() {
 		Predicate natural = new ConjunctivePredicate<>(new AttributeEqualityPredicate(2, 4));
 		this.iterator = new BindJoin(child1, child2);
@@ -139,6 +170,9 @@ public class BindJoinTest extends NaryIteratorTest {
 		Assert.assertEquals("BindJoin iterator predicate must match that of natural join", natural, this.iterator.getPredicate());
 	}
 
+	/**
+	 * Inits the two children21.
+	 */
 	@Test public void initTwoChildren21() {
 		Predicate natural = new ConjunctivePredicate<>(new AttributeEqualityPredicate(0, 4));
 		this.iterator = new BindJoin(child2, child1);
@@ -150,6 +184,9 @@ public class BindJoinTest extends NaryIteratorTest {
 		Assert.assertEquals("BindJoin iterator predicate must match that of natural join", natural, this.iterator.getPredicate());
 	}
 
+	/**
+	 * Inits the two children34.
+	 */
 	@Test public void initTwoChildren34() {
 		Predicate natural = new ConjunctivePredicate<>(new AttributeEqualityPredicate(0, 4));
 		this.iterator = new BindJoin(child3, child4);
@@ -161,6 +198,9 @@ public class BindJoinTest extends NaryIteratorTest {
 		Assert.assertEquals("BindJoin iterator predicate must match that of natural join", natural, this.iterator.getPredicate());
 	}
 
+	/**
+	 * Inits the with inconsistent predicate.
+	 */
 	@Test(expected=AssertionError.class)
 	public void initWithInconsistentPredicate() {
 		Predicate c1Toc2 = new AttributeEqualityPredicate(2, 4);
@@ -169,6 +209,9 @@ public class BindJoinTest extends NaryIteratorTest {
 		new BindJoin(conjunct, child1, child2);
 	}
 
+	/**
+	 * Inits the with inconsistent predicate2.
+	 */
 	@Test(expected=AssertionError.class)
 	public void initWithInconsistentPredicate2() {
 		Predicate c1Toc2 = new AttributeEqualityPredicate(2, 4);
@@ -177,6 +220,9 @@ public class BindJoinTest extends NaryIteratorTest {
 		new BindJoin(conjunct, child1, child2);
 	}
 
+	/**
+	 * Iterate12.
+	 */
 	@Test public void iterate12() {
 		this.iterator = new BindJoin(child1, child2);
 		this.iterator.open();
@@ -188,6 +234,9 @@ public class BindJoinTest extends NaryIteratorTest {
 		Assert.assertEquals(expected12, observed);
 	}
 	
+	/**
+	 * Next12 too many.
+	 */
 	@Test(expected=NoSuchElementException.class) 
 	public void next12TooMany() {
 		this.iterator = new BindJoin(child1, child2);
@@ -197,6 +246,9 @@ public class BindJoinTest extends NaryIteratorTest {
 		}
 	}
 
+	/**
+	 * Reset12.
+	 */
 	@Test public void reset12() {
 		this.iterator = new BindJoin(child1, child2);
 		this.iterator.open();
@@ -216,6 +268,9 @@ public class BindJoinTest extends NaryIteratorTest {
 		Assert.assertEquals(expected12, observed);
 	}
 
+	/**
+	 * Iterate21 unbound.
+	 */
 	@Test(expected=IllegalStateException.class) 
 	public void iterate21Unbound() {
 		this.iterator = new BindJoin(child2, child1);
@@ -223,6 +278,9 @@ public class BindJoinTest extends NaryIteratorTest {
 		this.iterator.next();  
 	}
 
+	/**
+	 * Iterate21 illegal binding.
+	 */
 	@Test(expected=IllegalArgumentException.class) 
 	public void iterate21IllegalBinding() {
 		this.iterator = new BindJoin(child2, child1);
@@ -230,6 +288,9 @@ public class BindJoinTest extends NaryIteratorTest {
 		this.iterator.bind(TupleType.DefaultFactory.create(String.class).createTuple("A"));
 	}
 
+	/**
+	 * Iterate21.
+	 */
 	@Test public void iterate21() {
 		this.iterator = new BindJoin(child2, child1);
 		this.iterator.open();
@@ -247,6 +308,9 @@ public class BindJoinTest extends NaryIteratorTest {
 		Assert.assertEquals(expected21, observed);
 	}
 	
+	/**
+	 * Next21 too many.
+	 */
 	@Test(expected=NoSuchElementException.class) 
 	public void next21TooMany() {
 		this.iterator = new BindJoin(child2, child1);
@@ -255,6 +319,9 @@ public class BindJoinTest extends NaryIteratorTest {
 		this.iterator.next();
 	}
 
+	/**
+	 * Reset21.
+	 */
 	@Test public void reset21() {
 		this.iterator = new BindJoin(child2, child1);
 		this.iterator.open();
@@ -286,6 +353,9 @@ public class BindJoinTest extends NaryIteratorTest {
 		Assert.assertEquals(expected21, observed);
 	}
 
+	/**
+	 * Iterate34 unbound.
+	 */
 	@Test(expected=IllegalStateException.class) 
 	public void iterate34Unbound() {
 		this.iterator = new BindJoin(child3, child4);
@@ -293,6 +363,9 @@ public class BindJoinTest extends NaryIteratorTest {
 		this.iterator.next();  
 	}
 
+	/**
+	 * Iterate34 illegal binding.
+	 */
 	@Test(expected=IllegalArgumentException.class) 
 	public void iterate34IllegalBinding() {
 		this.iterator = new BindJoin(child3, child4);
@@ -300,6 +373,9 @@ public class BindJoinTest extends NaryIteratorTest {
 		this.iterator.bind(TupleType.DefaultFactory.create(String.class).createTuple("X"));
 	}
 
+	/**
+	 * Iterate34.
+	 */
 	@Test public void iterate34() {
 		this.iterator = new BindJoin(child3, child4);
 		this.iterator.open();
@@ -341,6 +417,9 @@ public class BindJoinTest extends NaryIteratorTest {
 		Assert.assertEquals(expected34, observed);
 	}
 	
+	/**
+	 * Next34 too many.
+	 */
 	@Test(expected=NoSuchElementException.class) 
 	public void next34TooMany() {
 		this.iterator = new BindJoin(child3, child4);
@@ -349,6 +428,9 @@ public class BindJoinTest extends NaryIteratorTest {
 		this.iterator.next();
 	}
 
+	/**
+	 * Reset34.
+	 */
 	@Test public void reset34() {
 		this.iterator = new BindJoin(child3, child4);
 		this.iterator.open();
@@ -425,12 +507,18 @@ public class BindJoinTest extends NaryIteratorTest {
 		Assert.assertFalse(this.iterator.hasNext());
 	}
 
+	/**
+	 * Iterate natural with empty child.
+	 */
 	@Test public void iterateNaturalWithEmptyChild() {
 		this.iterator = new BindJoin(child1, new EmptyIterator());
 		this.iterator.open();
 		Assert.assertFalse(this.iterator.hasNext());
 	}
 
+	/**
+	 * Next natural with empty child too many.
+	 */
 	@Test(expected=NoSuchElementException.class) 
 	public void nextNaturalWithEmptyChildTooMany() {
 		this.iterator = new BindJoin(child1, new EmptyIterator());
@@ -438,6 +526,9 @@ public class BindJoinTest extends NaryIteratorTest {
 		this.iterator.next(); 
 	}
 
+	/**
+	 * Reset natural with empty child.
+	 */
 	@Test public void resetNaturalWithEmptyChild() {
 		this.iterator = new BindJoin(child1, new EmptyIterator());
 		this.iterator.open();
@@ -447,6 +538,9 @@ public class BindJoinTest extends NaryIteratorTest {
 		Assert.assertFalse(this.iterator.hasNext());
 	}
 	
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.test.runtime.exec.iterator.TupleIteratorTest#getIterator()
+	 */
 	@Override
 	protected TupleIterator getIterator() {
 		return this.iterator;

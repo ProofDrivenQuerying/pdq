@@ -7,6 +7,7 @@ import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
 
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
 /**
  * Tree nodes that keep the single best path to success.
  * Used when costing plans using a simple cost function.
@@ -20,8 +21,9 @@ public class SimpleNode extends SearchNode {
 
 	/**
 	 * Constructor for SimpleNode.
+	 *
 	 * @param configuration LinearConfiguration
-	 * @throws PlannerException
+	 * @throws PlannerException the planner exception
 	 */
 	public SimpleNode(LinearChaseConfiguration configuration) throws PlannerException {
 		super(configuration);
@@ -29,15 +31,18 @@ public class SimpleNode extends SearchNode {
 
 	/**
 	 * Constructor for SimpleNode.
+	 *
 	 * @param parent SimpleNode
 	 * @param configuration LinearConfiguration
-	 * @throws PlannerException
+	 * @throws PlannerException the planner exception
 	 */
 	public SimpleNode(SimpleNode parent, LinearChaseConfiguration configuration) throws PlannerException {
 		super(parent, configuration);
 	}
 
 	/**
+	 * Gets the path to success.
+	 *
 	 * @return List<Integer>
 	 */
 	public List<Integer> getPathToSuccess() {
@@ -45,6 +50,8 @@ public class SimpleNode extends SearchNode {
 	}
 
 	/**
+	 * Sets the path to success.
+	 *
 	 * @param pathToSuccess List<Integer>
 	 */
 	@Override
@@ -52,11 +59,16 @@ public class SimpleNode extends SearchNode {
 		this.pathToSuccess = pathToSuccess;
 	}
 
+	/**
+	 * Ground.
+	 */
 	public void ground() {
 		this.pathToSuccess = Lists.newArrayList();
 	}
 
 	/**
+	 * Gets the pointer.
+	 *
 	 * @return SimpleNode
 	 */
 	@Override

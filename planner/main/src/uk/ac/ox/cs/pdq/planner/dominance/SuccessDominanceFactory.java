@@ -7,16 +7,21 @@ import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.SuccessDominanceTypes;
 import uk.ac.ox.cs.pdq.util.Costable;
 
+// TODO: Auto-generated Javadoc
 /**
  * Creates success dominance detectors using the input parameters.
  * The available options are:
  * 		uk.ac.ox.cs.pdq.dominance.ClosedPlanCostDominance
  *
  * @author Efthymia Tsamoura
+ * @param <P> the generic type
  */
 public class SuccessDominanceFactory<P extends Costable> {
 
+	/** The estimator. */
 	private final CostEstimator<P> estimator;
+	
+	/** The type. */
 	private final SuccessDominanceTypes type;
 
 	/**
@@ -30,6 +35,8 @@ public class SuccessDominanceFactory<P extends Costable> {
 	}
 
 	/**
+	 * Gets the single instance of SuccessDominanceFactory.
+	 *
 	 * @return SuccessDominance
 	 */
 	public SuccessDominance getInstance() {

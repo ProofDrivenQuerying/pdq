@@ -10,8 +10,9 @@ import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters.HomomorphismDetectorTypes;
 
 import com.google.common.base.Strings;
 
+// TODO: Auto-generated Javadoc
 /**
- * Returns an instance of HomomorphismDetector depending on the input parameters
+ * Returns an instance of HomomorphismDetector depending on the input parameters.
  *
  * @author Efthymia Tsamoura
  * @author George Konstantinidis
@@ -28,13 +29,13 @@ public class HomomorphismManagerFactory {
 	private static Integer counter = 0;
 
 	/**
-	 * 
-	 * @param schema
-	 * @param query
-	 * @param parameters
+	 * Gets the single instance of HomomorphismManagerFactory.
+	 *
+	 * @param schema the schema
+	 * @param parameters the parameters
 	 * @return an instance of homomorphism HomomorphismDetector instantiated according to
 	 *         contextual information
-	 * @throws HomomorphismException
+	 * @throws HomomorphismException the homomorphism exception
 	 */
 	public synchronized HomomorphismManager getInstance(
 			Schema schema, 
@@ -51,18 +52,18 @@ public class HomomorphismManagerFactory {
 	}
 	
 	/**
-	 * 
-	 * @param schema
-	 * @param query
-	 * @param type
-	 * @param driver
-	 * @param url
-	 * @param database
-	 * @param username
-	 * @param password
+	 * Gets the single instance of HomomorphismManagerFactory.
+	 *
+	 * @param schema the schema
+	 * @param type the type
+	 * @param driver the driver
+	 * @param url the url
+	 * @param database the database
+	 * @param username the username
+	 * @param password the password
 	 * @return an instance of homomorphism HomomorphismManager instantiated according to
 	 *         contextual information
-	 * @throws HomomorphismException
+	 * @throws HomomorphismException the homomorphism exception
 	 */
 	public synchronized HomomorphismManager getInstance(
 			Schema schema, 

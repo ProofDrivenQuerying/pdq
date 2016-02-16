@@ -20,66 +20,69 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
 /**
+ * A database schema.
  *
- * A database schema
  * @author Efthymia Tsamoura
  * @author Julien Leblay
  */
 public class Schema {
 
-	/** Relations indexed based on their name*/
+	/**  Relations indexed based on their name. */
 	private final Map<String, Relation> relIndex;
-	/** The list of schema relations**/
+	
+	/**  The list of schema relations*. */
 	protected final List<Relation> relations;
 
-	/** Distribution of relations by arity */
+	/**  Distribution of relations by arity. */
 	private final List<Relation>[] arityDistribution;
 
-	/** The schema dependencies indexed based on their id*/
+	/**  The schema dependencies indexed based on their id. */
 	private final Map<Integer, Constraint> dependencyIndex;
 
-	/** The schema dependencies */
+	/**  The schema dependencies. */
 	protected final List<Constraint> schemaDependencies;
 
-	/** True if the schema contains at least one view */
+	/**  True if the schema contains at least one view. */
 	private final boolean containsViews;
 
-	/** True if the schema contains cycles*/
+	/**  True if the schema contains cycles. */
 	protected Boolean isCyclic = null;
 
-	/** Schema constants*/
+	/**  Schema constants. */
 	protected Collection<TypedConstant<?>> dependencyConstants = null;
 
-	/** A map from a constant's name to the constant object*/
+	/**  A map from a constant's name to the constant object. */
 	protected Map<String, TypedConstant<?>> constants = new LinkedHashMap<>();
 	
-	/** The EGDs of the keys**/
+	/**  The EGDs of the keys*. */
 	protected final Collection<EGD> keyDependencies = Lists.newArrayList();
 
-	/** The views of the input schema**/
+	/**  The views of the input schema*. */
 	protected final List<Constraint> views;
 
 	/**
-	 * Empty schema constructor
+	 * Empty schema constructor.
 	 */
 	public Schema() {
 		this(new ArrayList<Relation>(), new ArrayList<Constraint>());
 	}
 
 	/**
-	 * Builds a schema with the input relations	
+	 * Builds a schema with the input relations.
+	 *
+	 * @param relations the relations
 	 */
 	public Schema(Collection<Relation> relations) {
 		this(relations, new ArrayList<Constraint>());
 	}
 
 	/**
-	 * Builds a schema with the input relations	and dependencies
-	 * @param relations
-	 * 		The input relations
-	 * @param dependencies
-	 * 		The input dependencies
+	 * Builds a schema with the input relations	and dependencies.
+	 *
+	 * @param relations 		The input relations
+	 * @param dependencies 		The input dependencies
 	 */
 	public Schema(Collection<Relation> relations, Collection<Constraint> dependencies) {
 		int maxArity = 0;
@@ -126,7 +129,7 @@ public class Schema {
 	}
 	
 	/**
-	 * Extracts the EGDs of the relation keys
+	 * Extracts the EGDs of the relation keys.
 	 */
 	public void consolidateKeys() {
 		for(Relation relation:this.relations) {
@@ -137,9 +140,9 @@ public class Schema {
 	}
 
 	/**
-	 * 
-	 * @return
-	 * 		the schema views
+	 * Gets the views.
+	 *
+	 * @return 		the schema views
 	 */
 	public List<Constraint> getViews() {
 		return this.views;
@@ -147,72 +150,73 @@ public class Schema {
 
 
 	/**
-	 * 
-	 * @return
-	 * 		true if the schema contains views
+	 * Contains views.
+	 *
+	 * @return 		true if the schema contains views
 	 */
 	public boolean containsViews() {
 		return this.containsViews;
 	}
 
 	/**
-	 * 
-	 * @param i
-	 * @return
-	 * 		all relations having the input arity
+	 * Gets the relations by arity.
+	 *
+	 * @param i the i
+	 * @return 		all relations having the input arity
 	 */
 	public List<Relation> getRelationsByArity(int i) {
 		return this.arityDistribution[i];
 	}
 
 	/**
-	 * 
-	 * @return
-	 * 		all schema relations
+	 * Gets the relations.
+	 *
+	 * @return 		all schema relations
 	 */
 	public List<Relation> getRelations() {
 		return this.relations;
 	}
 
 	/**
-	 * 
-	 * @return
-	 * 		the maximum relation arity
+	 * Gets the max arity.
+	 *
+	 * @return 		the maximum relation arity
 	 */
 	public int getMaxArity() {
 		return this.arityDistribution.length;
 	}
 
 	/**
-	 * 
-	 * @return
-	 * 		the schema dependencies
+	 * Gets the dependencies.
+	 *
+	 * @return 		the schema dependencies
 	 */
 	public List<Constraint> getDependencies() {
 		return this.schemaDependencies;
 	}
 	
 	/**
-	 * 
-	 * @return
-	 * 		the EGDs that come from the relations keys
+	 * Gets the key dependencies.
+	 *
+	 * @return 		the EGDs that come from the relations keys
 	 */
 	public Collection<EGD> getKeyDependencies() {
 		return this.keyDependencies;
 	}
 
 	/**
-	 * 
-	 * @param name
-	 * @return
-	 * 		the relation with the input name
-	 * 		
+	 * Gets the relation.
+	 *
+	 * @param name the name
+	 * @return 		the relation with the input name
 	 */
 	public Relation getRelation(String name) {
 		return this.relIndex.get(name);
 	}
 
 	/**
+	 * To string.
+	 *
 	 * @return String
 	 */
 	@Override
@@ -238,6 +242,8 @@ public class Schema {
 	}
 
 	/**
+	 * Checks if is cyclic.
+	 *
 	 * @return true if the schema contains cycles
 	 */
 	public boolean isCyclic() {
@@ -264,6 +270,8 @@ public class Schema {
 	}
 
 	/**
+	 * Search dependency graph.
+	 *
 	 * @param simpleDepedencyGraph A schema dependency graph
 	 * @param atom An input atom
 	 * @return the atom which has the same predicate with the input one
@@ -280,6 +288,8 @@ public class Schema {
 	}
 
 	/**
+	 * Gets the dependency constants.
+	 *
 	 * @return the constants of the schema dependencies
 	 */
 	public Collection<TypedConstant<?>> getDependencyConstants() {
@@ -302,8 +312,9 @@ public class Schema {
 	}
 	
 	/**
-	 * Updates the schema constants with the input map
-	 * @param constants
+	 * Updates the schema constants with the input map.
+	 *
+	 * @param constants the constants
 	 */
 	public void updateConstants(Collection<TypedConstant<?>> constants) {
 		for (TypedConstant<?> constant: constants) {
@@ -312,9 +323,9 @@ public class Schema {
 	}
 
 	/**
-	 * 
-	 * @return
-	 * 		the schema constants
+	 * Gets the constants.
+	 *
+	 * @return 		the schema constants
 	 */
 	public Map<String, TypedConstant<?>> getConstants() {
 		return this.constants;
@@ -322,17 +333,19 @@ public class Schema {
 
 
 	/**
-	 * 
-	 * @param name
-	 * @return
-	 * 		the constant with the given name
+	 * Gets the constant.
+	 *
+	 * @param name the name
+	 * @return 		the constant with the given name
 	 */
 	public TypedConstant<?> getConstant(String name) {
 		return this.constants.get(name);
 	}
 
 	/**
-	 * @param relation
+	 * Contains.
+	 *
+	 * @param name the name
 	 * @return true if the given relation is part of the schema.
 	 */
 	public boolean contains(String name) {
@@ -368,6 +381,8 @@ public class Schema {
 	}
 
 	/**
+	 * Builder.
+	 *
 	 * @return a new schema builder
 	 */
 	public static SchemaBuilder builder() {
@@ -375,7 +390,9 @@ public class Schema {
 	}
 
 	/**
-	 * @param schema
+	 * Builder.
+	 *
+	 * @param schema the schema
 	 * @return a new schema builder containing all the relations and
 	 *         dependencies already in the given schema
 	 */

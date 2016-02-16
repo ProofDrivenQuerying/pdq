@@ -20,17 +20,29 @@ import uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator;
 import uk.ac.ox.cs.pdq.util.Tuple;
 import uk.ac.ox.cs.pdq.util.TupleType;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
+ * The Class IsEmptyTest.
+ *
  * @author Julien LEBLAY
  */
 public class IsEmptyTest extends UnaryIteratorTest {
 
+	/** The iterator. */
 	IsEmpty iterator;
+	
+	/** The is empty column. */
 	Attribute isEmptyColumn = new Attribute(Boolean.class, IsEmpty.class.getSimpleName());
+	
+	/** The boolean type. */
 	TupleType booleanType = TupleType.DefaultFactory.create(Boolean.class);
+	
+	/** The empty child. */
 	@Mock TupleIterator emptyChild;
 	
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.test.runtime.exec.iterator.TupleIteratorTest#setup()
+	 */
 	@Before public void setup() {
 		super.setup();
         MockitoAnnotations.initMocks(this);
@@ -48,6 +60,9 @@ public class IsEmptyTest extends UnaryIteratorTest {
 		this.iterator = new IsEmpty(child);
 	}
 	
+	/**
+	 * Inits the is empty.
+	 */
 	@Test public void initIsEmpty() {
 		this.iterator = new IsEmpty(child);
 		Assert.assertEquals("IsEmpty child must match that of initialization", this.child, this.iterator.getChild());
@@ -57,11 +72,19 @@ public class IsEmptyTest extends UnaryIteratorTest {
 		Assert.assertEquals("IsEmpty output type must match that of initialization", booleanType, this.iterator.getType());
 	}
 	
+	/**
+	 * Inits the is empty null child.
+	 */
 	@Test(expected=IllegalArgumentException.class) 
 	public void initIsEmptyNullChild() {
 		new IsEmpty(null);
 	}
 	
+	/**
+	 * Deep copy.
+	 *
+	 * @throws RelationalOperatorException the relational operator exception
+	 */
 	@Test public void deepCopy() throws RelationalOperatorException {
 		this.iterator = new IsEmpty(child);
 		IsEmpty copy = this.iterator.deepCopy();
@@ -75,6 +98,9 @@ public class IsEmptyTest extends UnaryIteratorTest {
 		Assert.assertEquals("IsEmpty next item must match", this.iterator.next(), copy.next());
 	}
 
+	/**
+	 * Checks for next for not empty.
+	 */
 	@Test public void hasNextForNotEmpty() {
 		this.iterator = new IsEmpty(child);
 		this.iterator.open();
@@ -82,6 +108,9 @@ public class IsEmptyTest extends UnaryIteratorTest {
 		Assert.assertFalse(this.iterator.hasNext());
 	}
 
+	/**
+	 * Checks for next for empty.
+	 */
 	@Test public void hasNextForEmpty() {
 		this.iterator = new IsEmpty(emptyChild);
 		this.iterator.open();
@@ -89,18 +118,27 @@ public class IsEmptyTest extends UnaryIteratorTest {
 		Assert.assertFalse(this.iterator.hasNext());
 	}
 
+	/**
+	 * Next for not empty.
+	 */
 	@Test public void nextForNotEmpty() {
 		this.iterator = new IsEmpty(child);
 		this.iterator.open();
 		Assert.assertEquals(booleanType.createTuple(false), this.iterator.next());
 	}
 
+	/**
+	 * Next for empty.
+	 */
 	@Test public void nextForEmpty() {
 		this.iterator = new IsEmpty(emptyChild);
 		this.iterator.open();
 		Assert.assertEquals(booleanType.createTuple(true), this.iterator.next());
 	}
 
+	/**
+	 * Next no more than one result not empty.
+	 */
 	@Test(expected=NoSuchElementException.class) 
 	public void nextNoMoreThanOneResultNotEmpty() {
 		this.iterator = new IsEmpty(child);
@@ -109,6 +147,9 @@ public class IsEmptyTest extends UnaryIteratorTest {
 		this.iterator.next();
 	}
 
+	/**
+	 * Next no more than one result empty.
+	 */
 	@Test(expected=NoSuchElementException.class) 
 	public void nextNoMoreThanOneResultEmpty() {
 		this.iterator = new IsEmpty(emptyChild);
@@ -117,6 +158,9 @@ public class IsEmptyTest extends UnaryIteratorTest {
 		this.iterator.next();
 	}
 
+	/**
+	 * Reset not empty.
+	 */
 	@Test public void resetNotEmpty() {
 		this.iterator = new IsEmpty(child);
 		this.iterator.open();
@@ -129,6 +173,9 @@ public class IsEmptyTest extends UnaryIteratorTest {
 		Assert.assertFalse(this.iterator.hasNext());
 	}
 
+	/**
+	 * Reset empty.
+	 */
 	@Test public void resetEmpty() {
 		this.iterator = new IsEmpty(emptyChild);
 		this.iterator.open();
@@ -141,6 +188,9 @@ public class IsEmptyTest extends UnaryIteratorTest {
 		Assert.assertFalse(this.iterator.hasNext());
 	}
 
+	/**
+	 * Bind null.
+	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void bindNull() {
 		this.iterator = new IsEmpty(child);
@@ -148,12 +198,18 @@ public class IsEmptyTest extends UnaryIteratorTest {
 		this.iterator.bind(null);
 	}
 	
+	/**
+	 * Bind on unopened.
+	 */
 	@Test(expected=IllegalStateException.class)
 	public void bindOnUnopened() {
 		this.iterator = new IsEmpty(child);
 		this.iterator.bind(Tuple.EmptyTuple);
 	}
 	
+	/**
+	 * Bind illegal type.
+	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void bindIllegalType() {
 		this.iterator = new IsEmpty(child);
@@ -161,6 +217,9 @@ public class IsEmptyTest extends UnaryIteratorTest {
 		this.iterator.bind(outputType.createTuple("four", 4));
 	}
 	
+	/**
+	 * Bind empty tuple.
+	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void bindEmptyTuple() {
 		this.iterator = new IsEmpty(child);
@@ -168,6 +227,9 @@ public class IsEmptyTest extends UnaryIteratorTest {
 		this.iterator.bind(Tuple.EmptyTuple);
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.test.runtime.exec.iterator.TupleIteratorTest#getIterator()
+	 */
 	@Override
 	protected TupleIterator getIterator() {
 		return this.iterator;

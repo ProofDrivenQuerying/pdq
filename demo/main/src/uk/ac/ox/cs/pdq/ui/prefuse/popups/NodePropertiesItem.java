@@ -11,11 +11,24 @@ import prefuse.visual.NodeItem;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
 
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class NodePropertiesItem.
+ */
 public class NodePropertiesItem extends JMenuItem {
 
+	/** The node. */
 	private NodeItem node;
+    
+    /** The frame. */
     private JFrame frame;
     
+    /**
+     * Instantiates a new node properties item.
+     *
+     * @param frame the frame
+     * @param node the node
+     */
     public NodePropertiesItem(JFrame frame, NodeItem node) {
     	super("Properties...");
     	this.frame = frame;
@@ -23,12 +36,31 @@ public class NodePropertiesItem extends JMenuItem {
     	this.setAction(new PropertiesListener(this.node));
     }
 	
+    /**
+     * The listener interface for receiving properties events.
+     * The class that is interested in processing a properties
+     * event implements this interface, and the object created
+     * with that class is registered with a component using the
+     * component's <code>addPropertiesListener<code> method. When
+     * the properties event occurs, that object's appropriate
+     * method is invoked.
+     *
+     * @see PropertiesEvent
+     */
     private class PropertiesListener extends AbstractAction {
     	
-    	public PropertiesListener(NodeItem node) {
+    	/**
+	     * Instantiates a new properties listener.
+	     *
+	     * @param node the node
+	     */
+	    public PropertiesListener(NodeItem node) {
     		super("Properties...");
     	}
 
+		/* (non-Javadoc)
+		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			SearchNode root = (SearchNode) NodePropertiesItem.this.node.get("data");

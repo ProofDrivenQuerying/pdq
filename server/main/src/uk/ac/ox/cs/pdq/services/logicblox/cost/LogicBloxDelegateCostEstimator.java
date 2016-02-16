@@ -31,7 +31,11 @@ import com.logicblox.connect.BloxCommand.ExternalRuleOptimizationResponse.Status
 import com.logicblox.connect.BloxCommand.RuleCostEstimate;
 import com.logicblox.connect.ProtoBufException.ExceptionContainer;
 
+// TODO: Auto-generated Javadoc
 /**
+ * The Class LogicBloxDelegateCostEstimator.
+ *
+ * @param <S> the generic type
  */
 public class LogicBloxDelegateCostEstimator<S extends AccessibleChaseState>
 		implements BlackBoxCostEstimator<DAGPlan> {
@@ -39,14 +43,23 @@ public class LogicBloxDelegateCostEstimator<S extends AccessibleChaseState>
 	/** Logger. */
 	static final Logger log = Logger.getLogger(LogicBloxDelegateCostEstimator.class);
 
+	/** The in. */
 	private final InputStream in;
+	
+	/** The out. */
 	private final OutputStream out;
+	
+	/** The schema. */
 	private final Schema schema;
+	
+	/** The query. */
 	private final ConjunctiveQuery query;
 	
 	/**
 	 * Default constructor. Ignores statistic collection.
+	 *
 	 * @param schema Schema
+	 * @param query the query
 	 * @param in InputStream
 	 * @param out OutputStream
 	 */
@@ -68,6 +81,12 @@ public class LogicBloxDelegateCostEstimator<S extends AccessibleChaseState>
 	    return new LogicBloxDelegateCostEstimator<>(this.schema, this.query, this.in, this.out);
 	}
 
+	/**
+	 * Checks if is recursive.
+	 *
+	 * @param q the q
+	 * @return true, if is recursive
+	 */
 	private boolean isRecursive(ConjunctiveQuery q) {
 		for (Predicate pred : q.getBody().getPredicates()) {
 			if (this.query.getHead().getSignature().equals(pred.getSignature())
@@ -137,7 +156,8 @@ public class LogicBloxDelegateCostEstimator<S extends AccessibleChaseState>
 	/**
 	 * Converts the input plan to a conjunctive query amenable to cost 
 	 * estimation by LogicBlox.
-	 * @param plan DAGPlan
+	 *
+	 * @param p the p
 	 * @return the cost of the input plan as estimated by LogicBlox.
 	 */
 	@Override

@@ -32,33 +32,57 @@ import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 
 import com.google.common.collect.Sets;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
- * @author Julien LEBLAY
+ * The Class MultiThreadedQueryGenerator.
  *
+ * @author Julien LEBLAY
  */
 public class MultiThreadedQueryGenerator implements Runnable {
 
+	/** The log. */
 	protected static Logger log = Logger.getLogger(MultiThreadedQueryGenerator.class);
 	
+	/** The seeds. */
 	private static Integer seeds = 0;
 
+	/** The schema. */
 	private final Schema schema;
+	
+	/** The thread id. */
 	private final Integer threadId;
+	
+	/** The configs. */
 	private final Set<List<Object>> configs;
 
+	/** The done. */
 	private Integer done = 0;
 	
+	/**
+	 * Instantiates a new multi threaded query generator.
+	 *
+	 * @param threadId the thread id
+	 * @param schema the schema
+	 * @param configs the configs
+	 */
 	public MultiThreadedQueryGenerator(Integer threadId, Schema schema, Set<List<Object>> configs) {
 		this.threadId = threadId;
 		this.schema = schema;
 		this.configs = configs;
 	}
 
+	/**
+	 * Gets the seed.
+	 *
+	 * @return the seed
+	 */
 	public static synchronized Integer getSeed() {
 		return seeds++;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Runnable#run()
+	 */
 	@Override
 	public void run() {
 		BenchmarkParameters params = new BenchmarkParameters();
@@ -113,6 +137,11 @@ public class MultiThreadedQueryGenerator implements Runnable {
 		}
 	}
 
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String... args) {
 		try (FileInputStream fis = new FileInputStream("test/input/web-schema-02.xml")) {
 			Schema schema = new SchemaReader().read(fis);

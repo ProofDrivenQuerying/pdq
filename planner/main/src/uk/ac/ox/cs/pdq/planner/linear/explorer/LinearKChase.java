@@ -41,6 +41,7 @@ import uk.ac.ox.cs.pdq.reasoning.utility.Match;
 
 import com.google.common.eventbus.EventBus;
 
+// TODO: Auto-generated Javadoc
 /**
  * Searches the proof space employing several optimisations (similar to the OptimizedExplorer) in order to reach faster the best proof.
  * Performs chasing at intervals
@@ -52,34 +53,28 @@ public class LinearKChase extends LinearExplorer {
 	/** Logger. */
 	private static Logger log = Logger.getLogger(LinearKChase.class);
 
-	/** Propagates to the root of the plan tree the best plan found so far */
+	/**  Propagates to the root of the plan tree the best plan found so far. */
 	protected final CostPropagator costPropagator;
 
-	/** How often to perform chasing */
+	/**  How often to perform chasing. */
 	private final Integer chaseInterval;
 
 	/**
-	 * 
-	 * @param eventBus
-	 * @param collectStats
-	 * @param query
-	 * 		The input user query
-	 * @param accessibleQuery
-	 * 		The accessible counterpart of the user query
-	 * @param schema
-	 * 		The input schema
-	 * @param accessibleSchema
-	 * 		The accessible counterpart of the input schema
-	 * @param chaser
-	 * 		Runs the chase algorithm
-	 * @param detector
-	 * 		Detects homomorphisms during chasing
-	 * @param costEstimator
-	 * 		Estimates the cost of a plan
-	 * @param nodeFactory
-	 * @param depth
-	 * @param chaseInterval
-	 * @throws PlannerException
+	 * Instantiates a new linear k chase.
+	 *
+	 * @param eventBus the event bus
+	 * @param collectStats the collect stats
+	 * @param query 		The input user query
+	 * @param accessibleQuery 		The accessible counterpart of the user query
+	 * @param schema 		The input schema
+	 * @param accessibleSchema 		The accessible counterpart of the input schema
+	 * @param chaser 		Runs the chase algorithm
+	 * @param detector 		Detects homomorphisms during chasing
+	 * @param costEstimator 		Estimates the cost of a plan
+	 * @param nodeFactory the node factory
+	 * @param depth the depth
+	 * @param chaseInterval the chase interval
+	 * @throws PlannerException the planner exception
 	 */
 	public LinearKChase(
 			EventBus eventBus, 
@@ -100,7 +95,10 @@ public class LinearKChase extends LinearExplorer {
 	}
 
 	/**
-	 * @throws PlannerException
+	 * _explore.
+	 *
+	 * @throws PlannerException the planner exception
+	 * @throws LimitReachedException the limit reached exception
 	 */
 	@Override
 	protected void _explore() throws PlannerException, LimitReachedException {
@@ -241,6 +239,12 @@ public class LinearKChase extends LinearExplorer {
 		}
 	}
 	
+	/**
+	 * Update best plan.
+	 *
+	 * @param parentNode the parent node
+	 * @param freshNode the fresh node
+	 */
 	private void updateBestPlan(SearchNode parentNode, SearchNode freshNode) {
 		this.costPropagator.propagate(freshNode, this.planTree);
 		LeftDeepPlan successfulPlan = this.costPropagator.getBestPlan();

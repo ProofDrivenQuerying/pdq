@@ -10,6 +10,7 @@ import uk.ac.ox.cs.pdq.planner.equivalence.FactEquivalence;
 import uk.ac.ox.cs.pdq.planner.equivalence.FastFactEquivalence;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
 
+// TODO: Auto-generated Javadoc
 /**
  * Open configuration dominance. A configuration c dominates a configuration c',
  * if c both cost- and fact- dominates c' with one of the two being strict.
@@ -20,19 +21,28 @@ import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
  */
 public class StrictOpenDominance implements Dominance<ChaseConfiguration> {
 
+	/** The cost estimator. */
 	private final CostEstimator<Plan> costEstimator;
-	/** Performs fact dominance */
+	
+	/**  Performs fact dominance. */
 	private final FactDominance factDominance = new FastFactDominance(false);
+	
+	/** The fact equivalence. */
 	private final FactEquivalence factEquivalence = new FastFactEquivalence();
-	/** Performs strict fact dominance */
+	
+	/**  Performs strict fact dominance. */
 	private final FactDominance strictFactDominance = new FastFactDominance(true);
-	/** Simple plan cost estimator*/
+	
+	/**  Simple plan cost estimator. */
 	private final SimpleCostEstimator<Plan> simpleEstimator;
-	/** True if we allow open to closed comparison*/
+	
+	/**  True if we allow open to closed comparison. */
 	private final boolean openToClosedComparison;
 	
 	/**
 	 * Constructor for StrictOpenDominance.
+	 *
+	 * @param costEstimator the cost estimator
 	 * @param simpleCostEstimator SimpleCostEstimator<Plan>
 	 * @param openToClosedComparison boolean
 	 */
@@ -45,6 +55,8 @@ public class StrictOpenDominance implements Dominance<ChaseConfiguration> {
 	}
 
 	/**
+	 * Checks if is dominated.
+	 *
 	 * @param source DAGConfiguration<?>
 	 * @param target DAGConfiguration<?>
 	 * @return Boolean
@@ -82,6 +94,8 @@ public class StrictOpenDominance implements Dominance<ChaseConfiguration> {
 	}
 
 	/**
+	 * Clone.
+	 *
 	 * @return StrictOpenDominance
 	 * @see uk.ac.ox.cs.pdq.dag.dominance.Dominance#clone()
 	 */

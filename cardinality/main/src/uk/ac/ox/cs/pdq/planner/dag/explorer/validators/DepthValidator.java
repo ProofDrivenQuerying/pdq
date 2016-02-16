@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package uk.ac.ox.cs.pdq.planner.dag.explorer.validators;
 
 
@@ -5,16 +8,20 @@ import uk.ac.ox.cs.pdq.planner.dag.ConfigurationUtility;
 import uk.ac.ox.cs.pdq.planner.dag.DAGAnnotatedPlan;
 import uk.ac.ox.cs.pdq.planner.dag.DAGConfiguration;
 
+// TODO: Auto-generated Javadoc
 /**
- * Requires the input pair of configurations to be non trivial and their combined depth to be <= the depth threshold
- * @author Efthymia Tsamoura
+ * Requires the input pair of configurations to be non trivial and their combined depth to be <= the depth threshold.
  *
- * @param 
+ * @author Efthymia Tsamoura
  */
 public class DepthValidator implements Validator{
 
+	/** The depth threshold. */
 	private final int depthThreshold;
 
+	/**
+	 * Instantiates a new depth validator.
+	 */
 	public DepthValidator() {
 		this.depthThreshold = 3;
 	}
@@ -28,6 +35,8 @@ public class DepthValidator implements Validator{
 	}
 
 	/**
+	 * Validate.
+	 *
 	 * @param left DAGConfiguration
 	 * @param right DAGConfiguration
 	 * @return boolean
@@ -39,6 +48,8 @@ public class DepthValidator implements Validator{
 	}
 
 	/**
+	 * Validate.
+	 *
 	 * @param left DAGConfiguration
 	 * @param right DAGConfiguration
 	 * @param depth int
@@ -51,6 +62,8 @@ public class DepthValidator implements Validator{
 	}
 
 	/**
+	 * Clone.
+	 *
 	 * @return Validator
 	 * @see uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator#clone()
 	 */

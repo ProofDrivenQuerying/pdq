@@ -1,5 +1,6 @@
 package uk.ac.ox.cs.pdq.builder;
 
+// TODO: Auto-generated Javadoc
 /**
  * Interface common to builder class.
  * Builder are typically use to instantiate object that are too complex to
@@ -16,6 +17,8 @@ package uk.ac.ox.cs.pdq.builder;
 public interface Builder<T> {
 
 	/**
+	 * Builds the.
+	 *
 	 * @return a newly instantiated object.
 	 */
 	T build();

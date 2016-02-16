@@ -16,6 +16,7 @@ import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.util.Named;
 
+// TODO: Auto-generated Javadoc
 /**
  * Builder for conjunctive queries.
  * 
@@ -23,16 +24,16 @@ import uk.ac.ox.cs.pdq.util.Named;
  */
 public class QueryBuilder implements Builder<ConjunctiveQuery> {
 
-	/** The temporary query name */
+	/**  The temporary query name. */
 	private String name = null;
 
-	/** The temporary query type */
+	/**  The temporary query type. */
 	private String type = null;
 
-	/** The temporary query head */
+	/**  The temporary query head. */
 	private List<Term> head = new LinkedList<>();
 
-	/** The temporary query body */
+	/**  The temporary query body. */
 	private List<Predicate> body = new LinkedList<>();
 
 	/** An index from variable name to their respective instances. */
@@ -42,8 +43,8 @@ public class QueryBuilder implements Builder<ConjunctiveQuery> {
 	 * Replaces the variable of a predicate by variable instances present in
 	 * the builder's variable index. This method allows several predicates to
 	 * share the same variables instance, make comparison more efficient.
-	 * 
-	 * @param p
+	 *
+	 * @param p the p
 	 * @return a PredicateFormula identical to p, in which variables are those
 	 * appearing the instance's variable index.
 	 */
@@ -66,6 +67,8 @@ public class QueryBuilder implements Builder<ConjunctiveQuery> {
 	}
 	
 	/**
+	 * Adds the body atom.
+	 *
 	 * @param p PredicateFormula
 	 * @return QueryBuilder
 	 */
@@ -75,6 +78,8 @@ public class QueryBuilder implements Builder<ConjunctiveQuery> {
 	}
 	
 	/**
+	 * Sets the name.
+	 *
 	 * @param n String
 	 * @return QueryBuilder
 	 */
@@ -84,6 +89,8 @@ public class QueryBuilder implements Builder<ConjunctiveQuery> {
 	}
 	
 	/**
+	 * Sets the type.
+	 *
 	 * @param n String
 	 * @return QueryBuilder
 	 */
@@ -93,6 +100,8 @@ public class QueryBuilder implements Builder<ConjunctiveQuery> {
 	}
 	
 	/**
+	 * Adds the head term.
+	 *
 	 * @param term Term
 	 * @return QueryBuilder
 	 */

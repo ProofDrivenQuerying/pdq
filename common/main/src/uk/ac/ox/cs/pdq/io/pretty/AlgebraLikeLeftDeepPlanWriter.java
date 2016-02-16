@@ -18,17 +18,24 @@ import uk.ac.ox.cs.pdq.util.TupleType;
 
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
 /**
- * Writes a concise representation of a plan to the given output
- * 
- * @author Julien Leblay
+ * Writes a concise representation of a plan to the given output.
  *
+ * @author Julien Leblay
  */
 public class AlgebraLikeLeftDeepPlanWriter extends PrettyWriter<LeftDeepPlan> implements Writer<LeftDeepPlan> {
 
+	/** The Constant SUBPLAN_ALIAS. */
 	public static final String SUBPLAN_ALIAS = "T"; 
+	
+	/** The Constant ASSIGN. */
 	public static final String ASSIGN = " := ";
+	
+	/** The Constant EMPTY. */
 	public static final String EMPTY = " \u2205";
+	
+	/** The Constant INPUT. */
 	public static final String INPUT = " \u21D0 ";
 
 	/**
@@ -37,7 +44,7 @@ public class AlgebraLikeLeftDeepPlanWriter extends PrettyWriter<LeftDeepPlan> im
 	 */
 	private PrintStream out;
 
-	/** Relations writer */
+	/**  Relations writer. */
 	private RelationalOperatorWriter operatorWriter = null;
 	
 	/**
@@ -67,7 +74,8 @@ public class AlgebraLikeLeftDeepPlanWriter extends PrettyWriter<LeftDeepPlan> im
 
 	/**
 	 * Writes the given plan to the given output.
-	 * @param out
+	 *
+	 * @param out the out
 	 * @param plan LeftDeepPlan
 	 */
 	public void writePlan(PrintStream out, LeftDeepPlan plan) {
@@ -114,7 +122,8 @@ public class AlgebraLikeLeftDeepPlanWriter extends PrettyWriter<LeftDeepPlan> im
 
 	/**
 	 * Writes the given command to the given output.
-	 * @param out
+	 *
+	 * @param out the out
 	 * @param plan LeftDeepPlan
 	 * @param alias String
 	 * @param aliases Map<LogicalOperator,String>

@@ -16,14 +16,18 @@ import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.BestPlanMetadata;
 
 import com.google.common.base.Preconditions;
 
+// TODO: Auto-generated Javadoc
 /**
- * Interactive drag control that is "aggregate-aware"
+ * Interactive drag control that is "aggregate-aware".
  */
 public class HoverControl extends ControlAdapter {
 
 	/**
 	 * Creates a new drag control that issues repaint requests as an item
 	 * is dragged.
+	 *
+	 * @param item the item
+	 * @param evt the evt
 	 */
 	@Override
 	public void itemEntered(VisualItem item, MouseEvent evt) {
@@ -56,6 +60,9 @@ public class HoverControl extends ControlAdapter {
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see prefuse.controls.ControlAdapter#itemExited(prefuse.visual.VisualItem, java.awt.event.MouseEvent)
+	 */
 	@Override
 	public void itemExited(VisualItem item, MouseEvent evt) {
 		if (item instanceof NodeItem) {

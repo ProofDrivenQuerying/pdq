@@ -24,6 +24,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
+// TODO: Auto-generated Javadoc
 /**
  * A dependency of the form \delta = \forall x  \sigma(\vec{x}) --> \exists y  \tau(\vec{x}, \vec{y})
  * where \sigma and \tau are conjunctions of atoms.
@@ -35,16 +36,18 @@ public class TGD
 		extends Implication<Conjunction<Predicate>, Conjunction<Predicate>>
 		implements Constraint<Conjunction<Predicate>, Conjunction<Predicate>> {
 
-	/** The dependency's universally quantified variables */
+	/**  The dependency's universally quantified variables. */
 	protected final List<Variable> universal;
 
-	/** The dependency's existentially quantified variables */
+	/**  The dependency's existentially quantified variables. */
 	protected final List<Variable> existential;
 
-	/** The dependency's constants */
+	/**  The dependency's constants. */
 	protected final Collection<TypedConstant<?>> constants = new LinkedHashSet<>();
 
 	/**
+	 * Instantiates a new tgd.
+	 *
 	 * @param left The left-hand side conjunction of the dependency
 	 * @param right The right-hand side conjunction of the dependency
 	 */
@@ -62,6 +65,8 @@ public class TGD
 	}
 
 	/**
+	 * Invert.
+	 *
 	 * @return the inverse dependency
 	 */
 	public TGD invert() {
@@ -69,6 +74,8 @@ public class TGD
 	}
 
 	/**
+	 * Gets the universal.
+	 *
 	 * @return List<Variable>
 	 */
 	public List<Variable> getUniversal() {
@@ -76,6 +83,8 @@ public class TGD
 	}
 
 	/**
+	 * Gets the free.
+	 *
 	 * @return List<Term>
 	 * @see uk.ac.ox.cs.pdq.fol.Evaluatable#getFree()
 	 */
@@ -85,6 +94,8 @@ public class TGD
 	}
 
 	/**
+	 * Gets the existential.
+	 *
 	 * @return List<Variable>
 	 */
 	public List<Variable> getExistential() {
@@ -92,6 +103,8 @@ public class TGD
 	}
 
 	/**
+	 * Gets the left.
+	 *
 	 * @return L
 	 * @see uk.ac.ox.cs.pdq.db.Constraint#getLeft()
 	 */
@@ -101,6 +114,8 @@ public class TGD
 	}
 
 	/**
+	 * Gets the right.
+	 *
 	 * @return R
 	 * @see uk.ac.ox.cs.pdq.db.Constraint#getRight()
 	 */
@@ -110,6 +125,8 @@ public class TGD
 	}
 
 	/**
+	 * Gets the terms.
+	 *
 	 * @return List<Term>
 	 * @see uk.ac.ox.cs.pdq.fol.Formula#getTerms()
 	 */
@@ -123,6 +140,8 @@ public class TGD
 
 
 	/**
+	 * Gets the schema constants.
+	 *
 	 * @return Collection<TypedConstant<?>>
 	 * @see uk.ac.ox.cs.pdq.db.Constraint#getSchemaConstants()
 	 */
@@ -132,6 +151,8 @@ public class TGD
 	}
 
 	/**
+	 * Fire.
+	 *
 	 * @param mapping Map<Variable,Term>
 	 * @param canonicalNames boolean
 	 * @return TGD<L,R>
@@ -143,9 +164,10 @@ public class TGD
 	}
 
 	/**
-	 * @param mapping
-	 * @return
-	 * 		If canonicalNames is TRUE returns a copy of the input mapping
+	 * Skolemize mapping.
+	 *
+	 * @param mapping the mapping
+	 * @return 		If canonicalNames is TRUE returns a copy of the input mapping
 	 * 		augmented such that Skolem constants are produced for
 	 *      the existentially quantified variables
 	 */
@@ -171,11 +193,11 @@ public class TGD
 	}
 
 	/**
-	 * @param mapping
-	 * @param canonicalNames
-	 * 		True if we assign Skolem constants to the existentially quantified variables
-	 * @return
-	 * 		the grounded dependency using the input mapping.
+	 * Ground.
+	 *
+	 * @param mapping the mapping
+	 * @param canonicalNames 		True if we assign Skolem constants to the existentially quantified variables
+	 * @return 		the grounded dependency using the input mapping.
 	 *      If canonicalNames is TRUE then skolem constants are produced for
 	 *      the existentially quantified variables
 	 */
@@ -184,6 +206,8 @@ public class TGD
 	}
 
 	/**
+	 * Ground.
+	 *
 	 * @param mapping Map<Variable,Term>
 	 * @return TGD<L,R>
 	 * @see uk.ac.ox.cs.pdq.formula.Formula#ground(Map<Variable,Term>)
@@ -196,6 +220,8 @@ public class TGD
 	}
 
 	/**
+	 * Gets the both side variables.
+	 *
 	 * @return Set<Variable>
 	 * @see uk.ac.ox.cs.pdq.db.Constraint#getBothSideVariables()
 	 */
@@ -207,6 +233,8 @@ public class TGD
 	}
 
 	/**
+	 * Equals.
+	 *
 	 * @param o Object
 	 * @return boolean
 	 */
@@ -226,6 +254,8 @@ public class TGD
 	}
 
 	/**
+	 * Hash code.
+	 *
 	 * @return int
 	 */
 	@Override
@@ -234,6 +264,8 @@ public class TGD
 	}
 
 	/**
+	 * To string.
+	 *
 	 * @return String
 	 */
 	@Override

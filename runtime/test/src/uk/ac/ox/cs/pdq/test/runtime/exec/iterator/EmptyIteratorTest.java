@@ -13,16 +13,24 @@ import uk.ac.ox.cs.pdq.util.Tuple;
 import uk.ac.ox.cs.pdq.util.TupleType;
 import uk.ac.ox.cs.pdq.util.Utility;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
+ * The Class EmptyIteratorTest.
+ *
  * @author Julien LEBLAY
  */
 public class EmptyIteratorTest {
 
+	/**
+	 * Setup.
+	 */
 	@Before public void setup() {
 		Utility.assertsEnabled();
 	}
 	
+	/**
+	 * Inits the empty.
+	 */
 	@Test public void initEmpty() {
 		EmptyIterator empty = new EmptyIterator();
 		Assert.assertEquals("Empty input columns must match that of initialization", Collections.EMPTY_LIST, empty.getInputColumns());
@@ -31,6 +39,11 @@ public class EmptyIteratorTest {
 		Assert.assertEquals("Empty output type must match that of initialization", TupleType.EmptyTupleType, empty.getType());
 	}
 	
+	/**
+	 * Deep copy.
+	 *
+	 * @throws RelationalOperatorException the relational operator exception
+	 */
 	@Test public void deepCopy() throws RelationalOperatorException {
 		EmptyIterator empty = new EmptyIterator();
 		EmptyIterator copy = empty.deepCopy();
@@ -43,6 +56,9 @@ public class EmptyIteratorTest {
 		Assert.assertEquals("Empty next item must match", empty.hasNext(), copy.hasNext());
 	}
 
+	/**
+	 * Checks for next.
+	 */
 	@Test public void hasNext() {
 		EmptyIterator empty = new EmptyIterator();
 		empty.open();
@@ -50,6 +66,9 @@ public class EmptyIteratorTest {
 	}
 
 
+	/**
+	 * Next.
+	 */
 	@Test(expected=NoSuchElementException.class) 
 	public void next() {
 		EmptyIterator empty = new EmptyIterator();
@@ -57,12 +76,18 @@ public class EmptyIteratorTest {
 		empty.next();
 	}
 
+	/**
+	 * Reset filtered1.
+	 */
 	@Test public void resetFiltered1() {
 		EmptyIterator empty = new EmptyIterator();
 		empty.open();
 		empty.reset();
 	}
 
+	/**
+	 * Bind null.
+	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void bindNull() {
 		EmptyIterator empty = new EmptyIterator();
@@ -70,12 +95,18 @@ public class EmptyIteratorTest {
 		empty.bind(null);
 	}
 	
+	/**
+	 * Bind on unopened.
+	 */
 	@Test(expected=IllegalStateException.class)
 	public void bindOnUnopened() {
 		EmptyIterator empty = new EmptyIterator();
 		empty.bind(Tuple.EmptyTuple);
 	}
 	
+	/**
+	 * Bind on interrupted.
+	 */
 	@Test(expected=IllegalStateException.class)
 	public void bindOnInterrupted() {
 		EmptyIterator empty = new EmptyIterator();
@@ -84,6 +115,9 @@ public class EmptyIteratorTest {
 		empty.bind(Tuple.EmptyTuple);
 	}
 	
+	/**
+	 * Bind on closed.
+	 */
 	@Test(expected=IllegalStateException.class)
 	public void bindOnClosed() {
 		EmptyIterator empty = new EmptyIterator();
@@ -92,6 +126,9 @@ public class EmptyIteratorTest {
 		empty.bind(Tuple.EmptyTuple);
 	}
 	
+	/**
+	 * Bind illegal type.
+	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void bindIllegalType() {
 		EmptyIterator empty = new EmptyIterator();

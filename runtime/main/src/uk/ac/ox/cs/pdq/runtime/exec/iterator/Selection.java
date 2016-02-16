@@ -8,6 +8,7 @@ import uk.ac.ox.cs.pdq.util.Tuple;
 import com.google.common.base.Preconditions;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * Selection operator.
  * 

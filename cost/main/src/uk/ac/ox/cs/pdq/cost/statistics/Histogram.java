@@ -1,9 +1,9 @@
 package uk.ac.ox.cs.pdq.cost.statistics;
 
 /**
- * 
- * @author Efthymia Tsamoura
+ * The Interface Histogram.
  *
+ * @author Efthymia Tsamoura
  */
 public interface Histogram {
 

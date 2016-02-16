@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 import com.google.common.base.Preconditions;
 import com.google.common.eventbus.EventBus;
 
+// TODO: Auto-generated Javadoc
 /**
  * This class help collecting statics without prior knowledge of what is to be
  * logged.
@@ -20,7 +21,8 @@ import com.google.common.eventbus.EventBus;
  *
  */
 public class StatisticsCollector implements Cloneable {
-	/** Logger */
+	
+	/**  Logger. */
 	protected static Logger log = Logger.getLogger(StatisticsCollector.class);
 
 	/** If false, no statistics are actually collected, i.e. most method have no effect. */
@@ -34,7 +36,8 @@ public class StatisticsCollector implements Cloneable {
 
 	/**
 	 * Initialising a non-collecting instance.
-	 * @param eventBus
+	 *
+	 * @param eventBus the event bus
 	 */
 	public StatisticsCollector(EventBus eventBus) {
 		this(false, eventBus);
@@ -42,8 +45,9 @@ public class StatisticsCollector implements Cloneable {
 
 	/**
 	 * Default constructor.
-	 * @param collecting
-	 * @param eventBus
+	 *
+	 * @param collecting the collecting
+	 * @param eventBus the event bus
 	 */
 	public StatisticsCollector(boolean collecting, EventBus eventBus) {
 		super();
@@ -53,6 +57,8 @@ public class StatisticsCollector implements Cloneable {
 	}
 
 	/**
+	 * Clone.
+	 *
 	 * @return StatisticsCollector
 	 */
 	@Override
@@ -63,7 +69,8 @@ public class StatisticsCollector implements Cloneable {
 	/**
 	 * Turns on/off the statistics collection. When set to false, methods
 	 * start, stop, increase and set have no effect.
-	 * @param collectStats
+	 *
+	 * @param collectStats the collect stats
 	 */
 	public void collect(boolean collectStats) {
 		Preconditions.checkArgument(collectStats ? this.eventBus != null : true, "Statisitics collection enabled while event bus is not initialized");
@@ -72,7 +79,8 @@ public class StatisticsCollector implements Cloneable {
 
 	/**
 	 * Starts a timer for the given key.
-	 * @param key
+	 *
+	 * @param key the key
 	 */
 	public void start(StatKey key) {
 		if (this.collecting) {
@@ -84,7 +92,8 @@ public class StatisticsCollector implements Cloneable {
 	/**
 	 * Stops the timer for the given key, and posts the corresponding event to
 	 * the bus.
-	 * @param key
+	 *
+	 * @param key the key
 	 */
 	public void stop(StatKey key) {
 		if (this.collecting) {
@@ -97,8 +106,9 @@ public class StatisticsCollector implements Cloneable {
 
 	/**
 	 * Post the given key/value pair to the event bus as a value increment.
-	 * @param key
-	 * @param value
+	 *
+	 * @param key the key
+	 * @param value the value
 	 */
 	public void increase(StatKey key, Number value) {
 		if (this.collecting) {
@@ -108,8 +118,9 @@ public class StatisticsCollector implements Cloneable {
 
 	/**
 	 * Post the given key/value pair to the event bus as a value assignment.
-	 * @param key
-	 * @param value
+	 *
+	 * @param key the key
+	 * @param value the value
 	 */
 	public void set(StatKey key, Object value) {
 		if (this.collecting) {
@@ -118,6 +129,8 @@ public class StatisticsCollector implements Cloneable {
 	}
 
 	/**
+	 * Checks if is collecting.
+	 *
 	 * @return boolean
 	 */
 	public boolean isCollecting() {

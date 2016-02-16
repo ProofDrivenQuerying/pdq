@@ -17,36 +17,38 @@ import uk.ac.ox.cs.pdq.plan.DoubleCost;
 import uk.ac.ox.cs.pdq.plan.Plan;
 
 
+// TODO: Auto-generated Javadoc
 /**
- * The cost of the plan equals the total number of output tuples per access 
- * @author Efthymia Tsamoura
+ * The cost of the plan equals the total number of output tuples per access .
  *
+ * @author Efthymia Tsamoura
+ * @param <P> the generic type
  */
 public class TotalERSPICostEstimator<P extends Plan> implements SimpleCostEstimator<P>{
 
+	/** The stats. */
 	protected final StatisticsCollector stats;
 
+	/** The log. */
 	private static Logger log = Logger.getLogger(TotalERSPICostEstimator.class);
 
-	/** The database statistics */
+	/**  The database statistics. */
 	protected final Catalog catalog;
 
 	/**
-	 * 
-	 * @param eventBus
-	 * @param collectStats
-	 * @param catalog
-	 * 		The database statistics
+	 * Instantiates a new total erspi cost estimator.
+	 *
+	 * @param catalog 		The database statistics
 	 */
 	public TotalERSPICostEstimator(Catalog catalog) {
 		this(null, catalog);
 	}
 
 	/**
-	 * 
-	 * @param stats
-	 * @param catalog
-	 * 		The database statistics
+	 * Instantiates a new total erspi cost estimator.
+	 *
+	 * @param stats the stats
+	 * @param catalog 		The database statistics
 	 */
 	public TotalERSPICostEstimator(StatisticsCollector stats, Catalog catalog) {
 		this.stats = stats;

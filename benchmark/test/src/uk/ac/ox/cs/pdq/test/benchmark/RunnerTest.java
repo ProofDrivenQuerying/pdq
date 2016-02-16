@@ -21,8 +21,10 @@ import uk.ac.ox.cs.pdq.benchmark.Runner;
 
 import com.google.common.collect.Sets;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
+ * The Class RunnerTest.
+ *
  * @author Julien Leblay
  */
 @Ignore
@@ -31,13 +33,18 @@ public class RunnerTest {
 	
 	
 	/**
-	 * Makes sure assertions are enabled
+	 * Makes sure assertions are enabled.
 	 */
 	@Before 
 	public void setup() {
 		Utility.assertsEnabled();
 	}
 
+	/**
+	 * Gets the parameters.
+	 *
+	 * @return the parameters
+	 */
 	@Parameters
 	public static Collection<Object[]> getParameters() {
 		List<Set<?>> params = new ArrayList<>();
@@ -52,19 +59,38 @@ public class RunnerTest {
 		return result;
 	}
 	
+	/** The seeds. */
 	private static Set<Integer> seeds = asLinkedSet(1, 2, 3, 4, 5);
+	
+	/** The input schemas. */
 	private static Set<String> inputSchemas = asLinkedSet("test/input/schema-mysql-tpch.xml", "");
+	
+	/** The nb query conjuncts. */
 	private static Set<Integer> nbQueryConjuncts = asLinkedSet(1, 2, 3, 4, 5);
+	
+	/** The query types. */
 	private static Set<QueryTypes> queryTypes = asSet(QueryTypes.class);
 	
+	/** The seed. */
 	private int seed;
 	
+	/** The nb query conjunct. */
 	private int nbQueryConjunct;
 	
+	/** The input schema. */
 	private String inputSchema;
 	
+	/** The query type. */
 	private QueryTypes queryType;
 	
+	/**
+	 * Instantiates a new runner test.
+	 *
+	 * @param schema the schema
+	 * @param qt the qt
+	 * @param q the q
+	 * @param s the s
+	 */
 	public RunnerTest(String schema, QueryTypes qt, int q, int s) {
 		this.seed = s;
 		this.nbQueryConjunct = q;
@@ -72,6 +98,11 @@ public class RunnerTest {
 		this.queryType = qt;
 	}
 	
+	/**
+	 * Test minimal run.
+	 *
+	 * @throws Exception the exception
+	 */
 	@Test
 	public void testMinimalRun() throws Exception {
 		List<String> params = new LinkedList<>();
@@ -85,6 +116,13 @@ public class RunnerTest {
 		Runner r = new PlannerBenchmark(params.toArray(new String[params.size()]));
 	}
 
+	/**
+	 * As linked set.
+	 *
+	 * @param <T> the generic type
+	 * @param array the array
+	 * @return the sets the
+	 */
 	private static <T> Set<T> asLinkedSet(T... array) {
 		Set<T> result = new LinkedHashSet<>();
 		for (T i: array) {
@@ -93,6 +131,13 @@ public class RunnerTest {
 		return result;
 	}
 
+	/**
+	 * As set.
+	 *
+	 * @param <T> the generic type
+	 * @param e the e
+	 * @return the sets the
+	 */
 	private static <T extends Enum<?>> Set<T> asSet(Class<T> e) {
 		Set<T> result = new LinkedHashSet<>();
 		for (T i: e.getEnumConstants()) {

@@ -22,6 +22,7 @@ import uk.ac.ox.cs.pdq.plan.Plan;
 import com.google.common.base.Preconditions;
 import com.google.common.eventbus.EventBus;
 
+// TODO: Auto-generated Javadoc
 /**
  * A factory of cost estimation objects.
  * 	The following types of plan cost estimators are supported:
@@ -41,28 +42,28 @@ import com.google.common.eventbus.EventBus;
 public class CostEstimatorFactory {
 
 	/**
-	 * 
-	 * @param costParams
-	 * 		Parameters that specify the type of plan cost estimation object that will be created 
-	 * @param schema
-	 * 		The database schema
-	 * @return
-	 * @throws SQLException
+	 * Gets the estimator.
+	 *
+	 * @param <P> the generic type
+	 * @param costParams 		Parameters that specify the type of plan cost estimation object that will be created 
+	 * @param schema 		The database schema
+	 * @return the estimator
+	 * @throws SQLException the SQL exception
 	 */
 	public static <P extends Plan> CostEstimator<P> getEstimator(CostParameters costParams, Schema schema) throws SQLException {
 		return getInstance(null, false, costParams, schema);
 	}
 
 	/**
-	 * 
-	 * @param eventBus
-	 * @param collectStats
-	 * @param costParams
-	 * 		Parameters that specify the type of plan cost estimation object that will be created
-	 * @param schema
-	 * 		The database schema
-	 * @return
-	 * @throws SQLException
+	 * Gets the single instance of CostEstimatorFactory.
+	 *
+	 * @param <P> the generic type
+	 * @param eventBus the event bus
+	 * @param collectStats the collect stats
+	 * @param costParams 		Parameters that specify the type of plan cost estimation object that will be created
+	 * @param schema 		The database schema
+	 * @return single instance of CostEstimatorFactory
+	 * @throws SQLException the SQL exception
 	 */
 	public static <P extends Plan> CostEstimator<P> getInstance(
 			EventBus eventBus, 
@@ -115,7 +116,9 @@ public class CostEstimatorFactory {
 	}
 
 	/**
-	 * @param schema
+	 * Find relational properties.
+	 *
+	 * @param schema the schema
 	 * @return the schema underlying relational's properties if all of the
 	 * relations in the schema have the same properties, null otherwise.
 	 */

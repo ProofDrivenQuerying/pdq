@@ -9,6 +9,7 @@ import uk.ac.ox.cs.pdq.util.TupleType;
 
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
 /**
  * Count counts the number of tuples in a result set and returns it.
  *

@@ -15,6 +15,7 @@ import uk.ac.ox.cs.pdq.util.Table;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
+// TODO: Auto-generated Javadoc
 /**
  * The event of a RESTAccess response. Holds the requestEvent itself, 
  * the response http response, and the output table extracted from it.
@@ -24,34 +25,39 @@ import com.fasterxml.jackson.databind.JsonMappingException;
  */
 public class RESTResponseEvent implements ResponseEvent {
 
-	public static enum RESTResponseStatus{SUCCESS,FAILURE};
+	/**
+	 * The Enum RESTResponseStatus.
+	 */
+	public static enum RESTResponseStatus{/** The success. */
+SUCCESS,/** The failure. */
+FAILURE};
 	
 	/** Logger. */
 	private static Logger log = Logger.getLogger(RESTResponseEvent.class);
 	
-	/** The rest relation */
+	/**  The rest relation. */
 	private final RESTRelation relation;
  
-	/** The request event this response event is associated with */
+	/**  The request event this response event is associated with. */
 	private final RESTRequestEvent requestEvent;
  
-	/** The requestEvent output table of the requestEvent */
+	/**  The requestEvent output table of the requestEvent. */
 	private final Table output;
 
-	/** The response */
+	/**  The response. */
 	private final Response response;
 	
-	/** A message set of there was any violation associated with this event */
+	/**  A message set of there was any violation associated with this event. */
 	private String violationMessage = null;
 
 	/**
 	 * Default constructor.
-	 * @param requestEvent
-	 * @param response
+	 *
 	 * @param relation RESTRelation
-	 * @throws IOException 
-	 * @throws JsonMappingException 
-	 * @throws JsonParseException 
+	 * @param requestEvent the request event
+	 * @param response the response
+	 * @throws AccessException the access exception
+	 * @throws ProcessingException the processing exception
 	 */
 	public RESTResponseEvent(RESTRelation relation, RESTRequestEvent requestEvent, Response response) throws AccessException, ProcessingException {
 		super();
@@ -76,6 +82,8 @@ public class RESTResponseEvent implements ResponseEvent {
 	}
 	
 	/**
+	 * Gets the access.
+	 *
 	 * @return RESTAccess
 	 */
 	public RESTAccess getAccess() {
@@ -83,6 +91,8 @@ public class RESTResponseEvent implements ResponseEvent {
 	}
 
 	/**
+	 * Gets the request event.
+	 *
 	 * @return RESTRequestEvent
 	 */
 	public RESTRequestEvent getRequestEvent() {
@@ -90,6 +100,8 @@ public class RESTResponseEvent implements ResponseEvent {
 	}
 
 	/**
+	 * Gets the output.
+	 *
 	 * @return Table
 	 */
 	public Table getOutput() {
@@ -97,6 +109,8 @@ public class RESTResponseEvent implements ResponseEvent {
 	}
 
 	/**
+	 * Sets the usage violation message.
+	 *
 	 * @param msg String
 	 * @see uk.ac.ox.cs.pdq.services.AccessEvent#setUsageViolationMessage(String)
 	 */
@@ -106,6 +120,8 @@ public class RESTResponseEvent implements ResponseEvent {
 	}
 
 	/**
+	 * Gets the usage violation message.
+	 *
 	 * @return String
 	 * @see uk.ac.ox.cs.pdq.services.AccessEvent#getUsageViolationMessage()
 	 */
@@ -115,6 +131,8 @@ public class RESTResponseEvent implements ResponseEvent {
 	}
 
 	/**
+	 * Checks for usage violation message.
+	 *
 	 * @return boolean
 	 * @see uk.ac.ox.cs.pdq.services.AccessEvent#hasUsageViolationMessage()
 	 */
@@ -124,6 +142,8 @@ public class RESTResponseEvent implements ResponseEvent {
 	}
 
 	/**
+	 * Checks for more request events.
+	 *
 	 * @return boolean
 	 * @see uk.ac.ox.cs.pdq.services.ResponseEvent#hasMoreRequestEvents()
 	 */
@@ -133,6 +153,8 @@ public class RESTResponseEvent implements ResponseEvent {
 	}
 
 	/**
+	 * Gets the response.
+	 *
 	 * @return Response
 	 */
 	public Response getResponse() {
@@ -140,6 +162,8 @@ public class RESTResponseEvent implements ResponseEvent {
 	}
 
 	/**
+	 * Next request event.
+	 *
 	 * @return RESTRequestEvent
 	 * @see uk.ac.ox.cs.pdq.services.ResponseEvent#nextRequestEvent()
 	 */

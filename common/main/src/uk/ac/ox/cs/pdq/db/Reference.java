@@ -24,6 +24,7 @@ import java.io.Serializable;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+// TODO: Auto-generated Javadoc
 /**
  * Represents a reference between a column in the local table and a column in
  * another table.

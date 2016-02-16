@@ -40,27 +40,46 @@ import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class XMLRelationOperatorIOTest.
+ */
 public class XMLRelationOperatorIOTest {
 	
+	/** The limited. */
 	AccessMethod 
 		free = new AccessMethod(),
 		limited = new AccessMethod(Types.LIMITED, Lists.newArrayList(1));
+	
+	/** The c. */
 	Attribute 
 		a = new Attribute(String.class, "a"),
 		b = new Attribute(Integer.class, "b"), 
 		c = new Attribute(Double.class, "c");
+	
+	/** The r2. */
 	Relation 
 		r1 = new Relation("r1", Lists.newArrayList(a, c), Lists.newArrayList(free)) {}, 
 		r2 = new Relation("r2", Lists.newArrayList(a, b, c), Lists.newArrayList(limited)) {};
+	
+	/** The s. */
 	Schema s = Schema.builder()
 			.addRelation(r1)
 			.addRelation(r2)
 			.build();
 	
+	/** The writer. */
 	OperatorWriter writer;
+	
+	/** The reader. */
 	OperatorReader reader;
+	
+	/** The bos. */
 	ByteArrayOutputStream bos;
 
+	/**
+	 * Setup.
+	 */
 	@Before public void setup() {
 		Utility.assertsEnabled();
 		this.writer = new OperatorWriter();
@@ -68,6 +87,9 @@ public class XMLRelationOperatorIOTest {
 		this.bos = new ByteArrayOutputStream();
 	}
 	
+	/**
+	 * Test read write top down access.
+	 */
 	@Test
 	public void testReadWriteTopDownAccess() {
 		DependentAccess expected = new DependentAccess(r2, limited);
@@ -83,6 +105,9 @@ public class XMLRelationOperatorIOTest {
 		Assert.assertEquals(expected.getType(), observed.getType());
 	}
 	
+	/**
+	 * Test read write scan.
+	 */
 	@Test
 	public void testReadWriteScan() {
 		Scan expected = new Scan(r1);
@@ -98,6 +123,9 @@ public class XMLRelationOperatorIOTest {
 		Assert.assertEquals(expected.getType(), observed.getType());
 	}
 	
+	/**
+	 * Test read write bottom up access.
+	 */
 	@Test
 	public void testReadWriteBottomUpAccess() {
 		Scan scan = new Scan(r1);
@@ -115,6 +143,9 @@ public class XMLRelationOperatorIOTest {
 		Assert.assertEquals(expected.getType(), observed.getType());
 	}
 	
+	/**
+	 * Test read write projection.
+	 */
 	@Test
 	public void testReadWriteProjection() {
 		Scan scan = new Scan(r1);
@@ -130,6 +161,9 @@ public class XMLRelationOperatorIOTest {
 		Assert.assertEquals(expected.getType(), observed.getType());
 	}
 	
+	/**
+	 * Test read write open projection.
+	 */
 	@Test
 	public void testReadWriteOpenProjection() {
 		DependentAccess scan = new DependentAccess(r2, limited);
@@ -145,6 +179,9 @@ public class XMLRelationOperatorIOTest {
 		Assert.assertEquals(expected.getType(), observed.getType());
 	}
 	
+	/**
+	 * Test read write projection with constant.
+	 */
 	@Test
 	public void testReadWriteProjectionWithConstant() {
 		Scan scan = new Scan(r1);
@@ -160,6 +197,9 @@ public class XMLRelationOperatorIOTest {
 		Assert.assertEquals(expected.getType(), observed.getType());
 	}
 	
+	/**
+	 * Test read write projection with constant and renaming.
+	 */
 	@Test
 	public void testReadWriteProjectionWithConstantAndRenaming() {
 		Scan scan = new Scan(r1);
@@ -179,6 +219,9 @@ public class XMLRelationOperatorIOTest {
 		Assert.assertEquals(expected.getType(), observed.getType());
 	}
 	
+	/**
+	 * Test read write selection.
+	 */
 	@Test
 	public void testReadWriteSelection() {
 		Scan scan = new Scan(r1);
@@ -198,6 +241,9 @@ public class XMLRelationOperatorIOTest {
 		Assert.assertEquals(expected.getType(), observed.getType());
 	}
 	
+	/**
+	 * Test read write open selection.
+	 */
 	@Test
 	public void testReadWriteOpenSelection() {
 		DependentAccess access = new DependentAccess(r2, limited);
@@ -217,6 +263,9 @@ public class XMLRelationOperatorIOTest {
 		Assert.assertEquals(expected.getType(), observed.getType());
 	}
 	
+	/**
+	 * Test read write distinct.
+	 */
 	@Test
 	public void testReadWriteDistinct() {
 		Scan scan = new Scan(r1);
@@ -232,6 +281,9 @@ public class XMLRelationOperatorIOTest {
 		Assert.assertEquals(expected.getType(), observed.getType());
 	}
 	
+	/**
+	 * Test read write open distinct.
+	 */
 	@Test
 	public void testReadWriteOpenDistinct() {
 		DependentAccess access = new DependentAccess(r2, limited);
@@ -247,6 +299,9 @@ public class XMLRelationOperatorIOTest {
 		Assert.assertEquals(expected.getType(), observed.getType());
 	}
 	
+	/**
+	 * Test read write is empty.
+	 */
 	@Test
 	public void testReadWriteIsEmpty() {
 		Scan scan = new Scan(r1);
@@ -262,6 +317,9 @@ public class XMLRelationOperatorIOTest {
 		Assert.assertEquals(expected.getType(), observed.getType());
 	}
 	
+	/**
+	 * Test read write open is empty.
+	 */
 	@Test
 	public void testReadWriteOpenIsEmpty() {
 		DependentAccess access = new DependentAccess(r2, limited);
@@ -277,6 +335,9 @@ public class XMLRelationOperatorIOTest {
 		Assert.assertEquals(expected.getType(), observed.getType());
 	}
 	
+	/**
+	 * Test read write count.
+	 */
 	@Test
 	public void testReadWriteCount() {
 		Scan scan = new Scan(r1);
@@ -292,6 +353,9 @@ public class XMLRelationOperatorIOTest {
 		Assert.assertEquals(expected.getType(), observed.getType());
 	}
 	
+	/**
+	 * Test read write open count.
+	 */
 	@Test
 	public void testReadWriteOpenCount() {
 		DependentAccess access = new DependentAccess(r2, limited);
@@ -307,6 +371,9 @@ public class XMLRelationOperatorIOTest {
 		Assert.assertEquals(expected.getType(), observed.getType());
 	}
 	
+	/**
+	 * Test read write static input.
+	 */
 	@Test
 	public void testReadWriteStaticInput() {
 		StaticInput expected = new StaticInput(Lists.<TypedConstant<?>>newArrayList(
@@ -324,6 +391,9 @@ public class XMLRelationOperatorIOTest {
 		Assert.assertEquals(expected.getType(), observed.getType());
 	}
 	
+	/**
+	 * Test read write union.
+	 */
 	@Test
 	public void testReadWriteUnion() {
 		Scan scan1 = new Scan(r1);
@@ -340,6 +410,9 @@ public class XMLRelationOperatorIOTest {
 		Assert.assertEquals(expected.getType(), observed.getType());
 	}
 	
+	/**
+	 * Test read write open union.
+	 */
 	@Test
 	public void testReadWriteOpenUnion() {
 		Scan scan = new Scan(r1);
@@ -358,6 +431,9 @@ public class XMLRelationOperatorIOTest {
 		Assert.assertEquals(expected.getType(), observed.getType());
 	}
 	
+	/**
+	 * Test read write cross product.
+	 */
 	@Test
 	public void testReadWriteCrossProduct() {
 		Scan scan1 = new Scan(r1);
@@ -374,6 +450,9 @@ public class XMLRelationOperatorIOTest {
 		Assert.assertEquals(expected.getType(), observed.getType());
 	}
 	
+	/**
+	 * Test read write open cross product.
+	 */
 	@Test
 	public void testReadWriteOpenCrossProduct() {
 		Scan scan = new Scan(r1);
@@ -390,6 +469,9 @@ public class XMLRelationOperatorIOTest {
 		Assert.assertEquals(expected.getType(), observed.getType());
 	}
 	
+	/**
+	 * Test read write join.
+	 */
 	@Test
 	public void testReadWriteJoin() {
 		Scan scan1 = new Scan(r1);
@@ -406,6 +488,9 @@ public class XMLRelationOperatorIOTest {
 		Assert.assertEquals(expected.getType(), observed.getType());
 	}
 	
+	/**
+	 * Test read write open join.
+	 */
 	@Test
 	public void testReadWriteOpenJoin() {
 		Scan scan = new Scan(r1);
@@ -423,6 +508,9 @@ public class XMLRelationOperatorIOTest {
 		Assert.assertEquals(expected.getType(), observed.getType());
 	}
 	
+	/**
+	 * Test read write dependent join.
+	 */
 	@Test
 	public void testReadWriteDependentJoin() {
 		Scan scan = new Scan(r1);
@@ -440,6 +528,9 @@ public class XMLRelationOperatorIOTest {
 		Assert.assertEquals(expected.getType(), observed.getType());
 	}
 	
+	/**
+	 * Test read write join with alt predicate.
+	 */
 	@Test
 	public void testReadWriteJoinWithAltPredicate() {
 		Scan scan = new Scan(r1);
@@ -460,6 +551,9 @@ public class XMLRelationOperatorIOTest {
 		Assert.assertEquals(expected.getType(), observed.getType());
 	}
 	
+	/**
+	 * Test read write deep unary.
+	 */
 	@Test
 	public void testReadWriteDeepUnary() {
 		Scan scan = new Scan(r1);

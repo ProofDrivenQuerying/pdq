@@ -16,18 +16,27 @@ import com.beust.jcommander.internal.Sets;
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 
+// TODO: Auto-generated Javadoc
 /**
- * Keeps the multiple classes of equal constants created during EGD chasing
- * @author Efthymia Tsamoura
+ * Keeps the multiple classes of equal constants created during EGD chasing.
  *
+ * @author Efthymia Tsamoura
  */
 public class EqualConstantsClasses {
 
-	/** The classes of equal constants**/
+	/**  The classes of equal constants*. */
 	private final Set<EqualConstantsClass> classes = new HashSet<>();
 
+	/**
+	 * Instantiates a new equal constants classes.
+	 */
 	public EqualConstantsClasses() {}
 
+	/**
+	 * Instantiates a new equal constants classes.
+	 *
+	 * @param classes the classes
+	 */
 	private EqualConstantsClasses(Set<EqualConstantsClass> classes) {
 		Preconditions.checkNotNull(classes);
 		this.classes.addAll(classes);
@@ -37,10 +46,10 @@ public class EqualConstantsClasses {
 	}
 
 	/**
-	 * 
-	 * @param equality
-	 * @return
-	 * 		true if the input equality does not cause chase failure
+	 * Adds the.
+	 *
+	 * @param equality the equality
+	 * @return 		true if the input equality does not cause chase failure
 	 */
 	public boolean add(Equality equality) { 
 		List<Term> terms = equality.getTerms();
@@ -73,10 +82,21 @@ public class EqualConstantsClasses {
 		return true;
 	}
 
+	/**
+	 * Size.
+	 *
+	 * @return the int
+	 */
 	public int size() {
 		return this.classes.size();
 	}
 
+	/**
+	 * Gets the class.
+	 *
+	 * @param term the term
+	 * @return the class
+	 */
 	public EqualConstantsClass getClass(Term term) {
 		for(EqualConstantsClass c:this.classes) {
 			if(c.contains(term)) {
@@ -87,6 +107,8 @@ public class EqualConstantsClasses {
 	}
 
 	/**
+	 * Equals.
+	 *
 	 * @param o Object
 	 * @return boolean
 	 */
@@ -103,6 +125,8 @@ public class EqualConstantsClasses {
 	}
 
 	/**
+	 * Hash code.
+	 *
 	 * @return int
 	 */
 	@Override
@@ -111,6 +135,8 @@ public class EqualConstantsClasses {
 	}
 
 	/**
+	 * To string.
+	 *
 	 * @return String
 	 */
 	@Override
@@ -118,6 +144,9 @@ public class EqualConstantsClasses {
 		return Joiner.on("\n").join(this.classes);
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#clone()
+	 */
 	@Override
 	public EqualConstantsClasses clone() {
 		Set<EqualConstantsClass> classes = new HashSet<>();
@@ -128,10 +157,10 @@ public class EqualConstantsClasses {
 	}
 
 	/**
-	 * 
-	 * @param classes
-	 * @return
-	 * 		true if the input collection of classes of equal constants has been successfully merged with this collection.
+	 * Merge.
+	 *
+	 * @param classes the classes
+	 * @return 		true if the input collection of classes of equal constants has been successfully merged with this collection.
 	 * 		Two classes of equal constants fail to merge if they contain different schema constants.
 	 */
 	public boolean merge(EqualConstantsClasses classes) {

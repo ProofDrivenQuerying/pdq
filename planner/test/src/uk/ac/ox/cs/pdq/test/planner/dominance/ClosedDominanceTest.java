@@ -14,15 +14,21 @@ import uk.ac.ox.cs.pdq.test.planner.TestObjects1;
 
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
 /**
- * @author Efthymia Tsamoura
+ * The Class ClosedDominanceTest.
  *
+ * @author Efthymia Tsamoura
  */
 
 public class ClosedDominanceTest extends TestObjects1{
 
+	/** The cdomominance. */
 	ClosedDominance cdomominance = new ClosedDominance(new AccessCountCostEstimator());
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.test.planner.TestObjects1#setup()
+	 */
 	@Before public void setup() {
 		super.setup();
         MockitoAnnotations.initMocks(this);
@@ -64,16 +70,25 @@ public class ClosedDominanceTest extends TestObjects1{
 		when(config32.isClosed()).thenReturn(true);
 	}
 
+	/**
+	 * Test1.
+	 */
 	@Test public void test1() {
 		Assert.assertEquals(cdomominance.isDominated(config11, config12), false);
 		Assert.assertEquals(cdomominance.isDominated(config12, config11), false);
 	}
 
+	/**
+	 * Test2.
+	 */
 	@Test public void test2() {
 		Assert.assertEquals(cdomominance.isDominated(config21, config22), false);
 		Assert.assertEquals(cdomominance.isDominated(config22, config21), false);
 	}
 
+	/**
+	 * Test3.
+	 */
 	@Test public void test3() {
 		Assert.assertEquals(cdomominance.isDominated(config31, config32), false);
 		Assert.assertEquals(cdomominance.isDominated(config32, config31), true);

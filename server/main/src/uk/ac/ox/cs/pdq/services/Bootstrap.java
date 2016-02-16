@@ -26,6 +26,7 @@ import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
 
+// TODO: Auto-generated Javadoc
 /**
  * Bootstrapping class for start PDQ services from command line. 
  * 
@@ -36,23 +37,42 @@ public class Bootstrap {
 	/** Logger. */
 	private static Logger log = Logger.getLogger(Bootstrap.class); 
 	
+	/** The Constant PROGRAM_NAME. */
 	private static final String PROGRAM_NAME = "pdq-server.jar";
+	
+	/** The Constant THREAD_GROUP. */
 	private static final String THREAD_GROUP = "PDQ-services";
+	
+	/** The Constant THREAD_NAME. */
 	private static final String THREAD_NAME = "PDQ-server-master";
 	
+	/** The help. */
 	@Parameter(names = { "-h", "--help" }, help = true, 
 			description = "Displays this help message.")
 	private boolean help;
+	
+	/**
+	 * Checks if is help.
+	 *
+	 * @return true, if is help
+	 */
 	public boolean isHelp() {
 		return this.help;
 	}
 	
+	/** The config dir. */
 	@Parameter(names = { "-c", "--config" },
 			validateWith=DirectoryValidator.class,
 			description =
 			"Directory where to look for service configuration files. "
 			+ "Default is the current diredctory.")
 	private File configDir = new File(".");
+	
+	/**
+	 * Gets the config dir.
+	 *
+	 * @return the config dir
+	 */
 	public File getConfigDir() {
 		return this.configDir;
 	}
@@ -97,7 +117,9 @@ public class Bootstrap {
 	}
 	
 	/**
-	 * @return true, if the 'status' command on the service manager was 
+	 * Checks if is service manager up.
+	 *
+	 * @return true, if the 'status' command on the service manager was
 	 * successful
 	 */
 	private boolean isServiceManagerUp() {
@@ -106,8 +128,9 @@ public class Bootstrap {
 
 	/**
 	 * Connects to the service manager and attempts to execute the given 
-	 * commands
-	 * @param commands
+	 * commands.
+	 *
+	 * @param commands the commands
 	 * @return true if all the commands were executed successfully
 	 */
 	private boolean sendCommands(Command... commands) {
@@ -140,8 +163,9 @@ public class Bootstrap {
 	}
 	
 	/**
-	 * Launch the service manager daemon
-	 * @param commands
+	 * Launch the service manager daemon.
+	 *
+	 * @param commands the commands
 	 */
 	private void launchServiceManager(Command... commands) {
 		Thread t = new Thread(
@@ -154,7 +178,9 @@ public class Bootstrap {
 	
 	/**
 	 * Loads parameters files, and registered every services associated with 
-	 * them
+	 * them.
+	 *
+	 * @param configDir the config dir
 	 */
 	private void loadServiceParameters(File configDir) {
 		for (File propertiesFile: configDir.listFiles(new FileFilter() {
@@ -174,7 +200,14 @@ public class Bootstrap {
 		}
 	}
 	
+	/**
+	 * The Class DirectoryValidator.
+	 */
 	public static class DirectoryValidator implements IParameterValidator {
+		
+		/* (non-Javadoc)
+		 * @see com.beust.jcommander.IParameterValidator#validate(java.lang.String, java.lang.String)
+		 */
 		@Override
 		public void validate(String name, String value) throws ParameterException {
 			try {
@@ -190,7 +223,8 @@ public class Bootstrap {
 	}
 	
 	/**
-	 * Instantiates the bootstrap
+	 * Instantiates the bootstrap.
+	 *
 	 * @param args String[]
 	 */
 	public static void main(String... args) {
@@ -198,6 +232,8 @@ public class Bootstrap {
 	}
 
 	/**
+	 * Gets the version.
+	 *
 	 * @return the version of the builders code, as given by Maven
 	 */
 	public static String getVersion() {

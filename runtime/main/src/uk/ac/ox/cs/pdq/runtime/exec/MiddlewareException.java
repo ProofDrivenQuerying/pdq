@@ -2,6 +2,7 @@ package uk.ac.ox.cs.pdq.runtime.exec;
 
 import uk.ac.ox.cs.pdq.runtime.EvaluationException;
 
+// TODO: Auto-generated Javadoc
 /**
  * Exception that occurred in the middleware.
  * 
@@ -9,7 +10,7 @@ import uk.ac.ox.cs.pdq.runtime.EvaluationException;
  */
 public class MiddlewareException extends EvaluationException {
 
-	/** */
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -315472460756924167L;
 
 	/**
@@ -20,6 +21,8 @@ public class MiddlewareException extends EvaluationException {
 	}
 
 	/**
+	 * Instantiates a new middleware exception.
+	 *
 	 * @param msg exception message.
 	 */
 	public MiddlewareException(String msg) {
@@ -27,6 +30,8 @@ public class MiddlewareException extends EvaluationException {
 	}
 
 	/**
+	 * Instantiates a new middleware exception.
+	 *
 	 * @param cause the root cause.
 	 */
 	public MiddlewareException(Throwable cause) {
@@ -34,6 +39,8 @@ public class MiddlewareException extends EvaluationException {
 	}
 
 	/**
+	 * Instantiates a new middleware exception.
+	 *
 	 * @param msg exception's message
 	 * @param cause root cause of the problem.
 	 */

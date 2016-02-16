@@ -18,13 +18,21 @@ import uk.ac.ox.cs.pdq.algebra.RelationalOperator;
 import uk.ac.ox.cs.pdq.algebra.RelationalOperatorException;
 
 
+// TODO: Auto-generated Javadoc
 /**
+ * The Class DistinctTest.
+ *
  * @author Julien Leblay
  */
 @RunWith(MockitoJUnitRunner.class)
 public class DistinctTest extends UnaryOperatorTest {
+	
+	/** The operator. */
 	Distinct operator;
 	
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.test.algebra.RelationalOperatorTest#setup()
+	 */
 	@Before public void setup() throws RelationalOperatorException {
 		super.setup();
         MockitoAnnotations.initMocks(this);
@@ -37,15 +45,24 @@ public class DistinctTest extends UnaryOperatorTest {
 		this.operator = new Distinct(child);
 	}
 	
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.test.algebra.RelationalOperatorTest#getOperator()
+	 */
 	RelationalOperator getOperator() {
 		return this.operator;
 	}
 	
+	/**
+	 * Inits the count test null argument.
+	 */
 	@Test(expected=NullPointerException.class)
 	public void initCountTestNullArgument() {
 		new Distinct(null);
 	}
 
+	/**
+	 * Inits the distinct test.
+	 */
 	@Test public void initDistinctTest() {
 		Assert.assertEquals("Child must match that used for initialization", child, this.operator.getChild());
 		Assert.assertEquals("Distinct operator type must match that of child", child.getType(), this.operator.getType());
@@ -53,6 +70,11 @@ public class DistinctTest extends UnaryOperatorTest {
 		Assert.assertEquals("Distinct operator input type must match that of child", child.getInputType(), this.operator.getInputType());
 	}
 
+	/**
+	 * Deep copy.
+	 *
+	 * @throws RelationalOperatorException the relational operator exception
+	 */
 	@Test public void deepCopy() throws RelationalOperatorException {
 		Distinct copy = this.operator.deepCopy();
 		Assert.assertEquals("Distinct operators deep copy must be equals to itself", this.operator, copy);
@@ -62,17 +84,32 @@ public class DistinctTest extends UnaryOperatorTest {
 		Assert.assertEquals("Distinct operator input type must match that of child", this.inputType, copy.getInputType());
 	}
 
+	/**
+	 * Gets the column.
+	 *
+	 * @return the column
+	 */
 	@Test public void getColumn() {
 		for (int i = 0, l = this.outputTerms.size(); i < l; i++) {
 			Assert.assertEquals("Distinct operator's " + i + "th column must match that of child", this.child.getColumns().get(i), this.operator.getColumn(i));
 		}
 	}
 
+	/**
+	 * Gets the bad column.
+	 *
+	 * @return the bad column
+	 */
 	@Test(expected=IllegalArgumentException.class) 
 	public void getBadColumn() {
 		this.operator.getColumn(this.outputTerms.size() + 1);
 	}
 
+	/**
+	 * Test hash code.
+	 *
+	 * @throws RelationalOperatorException the relational operator exception
+	 */
 	@Test public void testHashCode() throws RelationalOperatorException {
 		Set<RelationalOperator> s = new LinkedHashSet<>();
 

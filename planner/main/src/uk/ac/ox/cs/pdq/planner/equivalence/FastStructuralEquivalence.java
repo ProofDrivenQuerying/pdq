@@ -3,6 +3,7 @@ package uk.ac.ox.cs.pdq.planner.equivalence;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * Fast equivalence.
  * According to this implementation two configurations c and c' are equivalent if the have the same inferred accessible facts.
@@ -13,6 +14,8 @@ import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
 public class FastStructuralEquivalence implements StructuralEquivalence{
 
 	/**
+	 * Checks if is equivalent.
+	 *
 	 * @param source ChaseConfiguration
 	 * @param target ChaseConfiguration
 	 * @return true if source and target configurations are structurally equivalent
@@ -26,6 +29,8 @@ public class FastStructuralEquivalence implements StructuralEquivalence{
 	}
 	
 	/**
+	 * Clone.
+	 *
 	 * @return FastFactDominance
 	 */
 	@Override

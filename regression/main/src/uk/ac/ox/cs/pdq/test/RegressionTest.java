@@ -12,6 +12,7 @@ import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.Parameters;
 
+// TODO: Auto-generated Javadoc
 /**
  * Runs regression tests.
  * 
@@ -22,20 +23,46 @@ public abstract class RegressionTest {
 	/** Runner's logger. */
 	private static Logger log = Logger.getLogger(RegressionTest.class);
 
-	/** */
+	/**
+	 * The Enum Types.
+	 */
 	enum Types {
-		planner, kstepblocking, runtime, proof, plangen, user_driven,
-		optimizations, cost, jungvis, prefusevis, dag_explorers}
+		
+		/** The planner. */
+		planner, 
+ /** The kstepblocking. */
+ kstepblocking, 
+ /** The runtime. */
+ runtime, 
+ /** The proof. */
+ proof, 
+ /** The plangen. */
+ plangen, 
+ /** The user_driven. */
+ user_driven,
+		
+		/** The optimizations. */
+		optimizations, 
+ /** The cost. */
+ cost, 
+ /** The jungvis. */
+ jungvis, 
+ /** The prefusevis. */
+ prefusevis, 
+ /** The dag_explorers. */
+ dag_explorers}
 
+	/** The out. */
 	protected PrintStream out = System.out;
 
 	/**
-	 * Runs all the test case in the given directory
-	 * @param directory
+	 * Runs all the test case in the given directory.
+	 *
+	 * @param directory the directory
 	 * @return boolean
-	 * @throws RegressionTestException
-	 * @throws IOException
-	 * @throws ReflectiveOperationException
+	 * @throws RegressionTestException the regression test exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws ReflectiveOperationException the reflective operation exception
 	 */
 	protected boolean recursiveRun(File directory) throws RegressionTestException, IOException, ReflectiveOperationException {
 		boolean result = true;
@@ -56,8 +83,9 @@ public abstract class RegressionTest {
 	
 	/**
 	 * Overrides the given params with the given maps entries.
-	 * @param params
-	 * @param overrides
+	 *
+	 * @param params the params
+	 * @param overrides the overrides
 	 */
 	protected static void override(Parameters params, Map<String, String> overrides) {
 		Preconditions.checkArgument(params != null);
@@ -68,11 +96,13 @@ public abstract class RegressionTest {
 	}
 
 	/**
+	 * Run.
+	 *
 	 * @param directory File
 	 * @return boolean
-	 * @throws RegressionTestException
-	 * @throws IOException
-	 * @throws ReflectiveOperationException
+	 * @throws RegressionTestException the regression test exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws ReflectiveOperationException the reflective operation exception
 	 */
 	protected abstract boolean run(File directory) throws RegressionTestException, IOException, ReflectiveOperationException ; 
 }

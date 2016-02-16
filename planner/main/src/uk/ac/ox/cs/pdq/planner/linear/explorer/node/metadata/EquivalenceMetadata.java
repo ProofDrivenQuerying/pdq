@@ -2,6 +2,7 @@ package uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata;
 
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
 
+// TODO: Auto-generated Javadoc
 /**
  * Equivalence-related information.
  *
@@ -9,12 +10,13 @@ import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
  */
 public class EquivalenceMetadata extends Metadata {
 
+	/** The time equivalent. */
 	private final double timeEquivalent;
 
 	/**
 	 * Constructor for EquivalenceMetadata.
+	 *
 	 * @param parent SearchNode
-	 * @param timeAdded double
 	 * @param timeEquivalent double
 	 */
 	public EquivalenceMetadata(SearchNode parent, double timeEquivalent) {
@@ -23,6 +25,8 @@ public class EquivalenceMetadata extends Metadata {
 	}
 
 	/**
+	 * Gets the time equivalent.
+	 *
 	 * @return double
 	 */
 	public double getTimeEquivalent() {

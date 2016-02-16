@@ -23,6 +23,7 @@ import uk.ac.ox.cs.pdq.util.Utility;
 import com.google.common.eventbus.EventBus;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * Alternate executor for plans, based on the Volcano iterator model.
  * The input logical plan into a physical operator tree, 

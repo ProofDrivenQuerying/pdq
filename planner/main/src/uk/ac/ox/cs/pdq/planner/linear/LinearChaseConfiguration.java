@@ -27,6 +27,7 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 
+// TODO: Auto-generated Javadoc
 /**
  * Type of configurations met in the linear world.
  * Each linear chase configuration is associated with a set of facts, a rule firing, and a set of generated facts p � the ones produced by the last rule firing.
@@ -36,25 +37,24 @@ import com.google.common.collect.Sets;
  */
 public class LinearChaseConfiguration extends ChaseConfiguration<LeftDeepPlan> implements LinearConfiguration {
 
-	/** The parent linear configuration*/
+	/**  The parent linear configuration. */
 	private final LinearChaseConfiguration parent;
 
-	/** The (un)exposed candidate facts */
+	/**  The (un)exposed candidate facts. */
 	private List<Candidate> candidates;
 
-	/** The candidate facts exposed in this configuration */
+	/**  The candidate facts exposed in this configuration. */
 	private final Set<Candidate> exposedCandidates;
 
 	/** Random engine. Used when selecting candidate facts to expose*/
 	protected final Random random;
 
 	/**
-	 * 
-	 * @param parent
-	 * 		The parent linear configuration
-	 * @param exposedCandidates
-	 * 		The candidate facts exposed in this configuration
-	 * @param random
+	 * Instantiates a new linear chase configuration.
+	 *
+	 * @param parent 		The parent linear configuration
+	 * @param exposedCandidates 		The candidate facts exposed in this configuration
+	 * @param random the random
 	 */
 	public LinearChaseConfiguration(
 			LinearChaseConfiguration parent,
@@ -84,8 +84,9 @@ public class LinearChaseConfiguration extends ChaseConfiguration<LeftDeepPlan> i
 	/**
 	 * Creates a linear chase configuration using the input accessible chase state that has no parent configuration.
 	 * Used when creating the root of the linear plan tree.
-	 * @param state
-	 * @param random
+	 *
+	 * @param state the state
+	 * @param random the random
 	 */
 	public LinearChaseConfiguration(
 			AccessibleChaseState state,
@@ -101,10 +102,10 @@ public class LinearChaseConfiguration extends ChaseConfiguration<LeftDeepPlan> i
 	}
 
 	/**
-	 * 
-	 * @param candidate
-	 * @return
-	 * 		true of the input candidate has been already exposed 
+	 * Checks if is exposed.
+	 *
+	 * @param candidate the candidate
+	 * @return 		true of the input candidate has been already exposed
 	 */
 	public boolean isExposed(Candidate candidate) {
 		Predicate infAcc = candidate.getInferredAccessibleFact();
@@ -112,6 +113,8 @@ public class LinearChaseConfiguration extends ChaseConfiguration<LeftDeepPlan> i
 	}
 	
 	/**
+	 * Removes the candidates.
+	 *
 	 * @param candidates Set<Candidate>
 	 * @see uk.ac.ox.cs.pdq.linear.configuration.LinearConfiguration#removeCandidates(Set<Candidate>)
 	 */
@@ -121,9 +124,11 @@ public class LinearChaseConfiguration extends ChaseConfiguration<LeftDeepPlan> i
 	}
 
 	/**
-	 * Detects the configuration's candidate facts
+	 * Detects the configuration's candidate facts.
+	 *
+	 * @param accessibleSchema the accessible schema
 	 * @return List<Candidate>
-	 * @throws PlannerException
+	 * @throws PlannerException the planner exception
 	 */
 	public void detectCandidates(AccessibleSchema accessibleSchema) throws PlannerException {
 		List<Candidate> result = new ArrayList<>();
@@ -139,6 +144,8 @@ public class LinearChaseConfiguration extends ChaseConfiguration<LeftDeepPlan> i
 	}
 
 	/**
+	 * Gets the similar candidates.
+	 *
 	 * @param candidate Input candidate fact
 	 * @return a list of candidates sharing the same constants in their input positions with this configuration * @see uk.ac.ox.cs.pdq.linear.configuration.LinearConfiguration#getSimilarCandidates(Candidate)
 	 */
@@ -172,6 +179,8 @@ public class LinearChaseConfiguration extends ChaseConfiguration<LeftDeepPlan> i
 
 
 	/**
+	 * Gets the candidates.
+	 *
 	 * @return List<Candidate>
 	 * @see uk.ac.ox.cs.pdq.planner.linear.LinearConfiguration#getCandidates()
 	 */
@@ -181,6 +190,8 @@ public class LinearChaseConfiguration extends ChaseConfiguration<LeftDeepPlan> i
 	}
 
 	/**
+	 * Gets the exposed candidates.
+	 *
 	 * @return Collection<Candidate>
 	 * @see uk.ac.ox.cs.pdq.planner.linear.LinearConfiguration#getExposedCandidates()
 	 */
@@ -191,6 +202,8 @@ public class LinearChaseConfiguration extends ChaseConfiguration<LeftDeepPlan> i
 
 
 	/**
+	 * Checks for candidates.
+	 *
 	 * @return Boolean
 	 * @see uk.ac.ox.cs.pdq.planner.linear.LinearConfiguration#hasCandidates()
 	 */
@@ -200,6 +213,8 @@ public class LinearChaseConfiguration extends ChaseConfiguration<LeftDeepPlan> i
 	}
 
 	/**
+	 * Choose candidate.
+	 *
 	 * @return Candidate
 	 * @see uk.ac.ox.cs.pdq.planner.linear.LinearConfiguration#chooseCandidate()
 	 */
@@ -219,6 +234,8 @@ public class LinearChaseConfiguration extends ChaseConfiguration<LeftDeepPlan> i
 	}
 
 	/**
+	 * Equals.
+	 *
 	 * @param o Object
 	 * @return boolean
 	 */
@@ -235,6 +252,8 @@ public class LinearChaseConfiguration extends ChaseConfiguration<LeftDeepPlan> i
 	}
 
 	/**
+	 * Hash code.
+	 *
 	 * @return int
 	 */
 	@Override
@@ -243,6 +262,8 @@ public class LinearChaseConfiguration extends ChaseConfiguration<LeftDeepPlan> i
 	}
 
 	/**
+	 * To string.
+	 *
 	 * @return String
 	 */
 	@Override
@@ -251,6 +272,8 @@ public class LinearChaseConfiguration extends ChaseConfiguration<LeftDeepPlan> i
 	}
 
 	/**
+	 * Clone.
+	 *
 	 * @return LinearChaseConfiguration
 	 * @see uk.ac.ox.cs.pdq.planner.linear.LinearConfiguration#clone()
 	 */
@@ -267,6 +290,9 @@ public class LinearChaseConfiguration extends ChaseConfiguration<LeftDeepPlan> i
 				this.random);
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.planner.reasoning.Configuration#compareTo(uk.ac.ox.cs.pdq.planner.reasoning.Configuration)
+	 */
 	@Override
 	public int compareTo(Configuration<LeftDeepPlan> o) {
 		return this.getPlan().compareTo(o.getPlan());

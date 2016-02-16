@@ -3,9 +3,12 @@ package uk.ac.ox.cs.pdq.ui.io.sql.antlr;
 import org.antlr.v4.runtime.misc.NotNull;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
+// TODO: Auto-generated Javadoc
 /**
  * This interface defines a complete listener for a parse tree produced by
  * {@link SQLiteParser}.
+ *
+ * @see SQLiteEvent
  */
 public interface SQLiteListener extends ParseTreeListener {
 	/**

@@ -3,25 +3,26 @@ package uk.ac.ox.cs.pdq.util;
 import java.lang.reflect.Type;
 import java.util.Arrays;
 
+// TODO: Auto-generated Javadoc
 /**
+ * A tuple implementation.
  *
- * A tuple implementation
  * @author Efthymia Tsamoura
  * @author Julien Leblay
- *
  */
 class TupleImpl implements Tuple {
 
-	/** The type of the tuple */
+	/**  The type of the tuple. */
 	private final TupleType type;
 
-	/** The underlying object of the tuple */
+	/**  The underlying object of the tuple. */
 	private final Object[] values;
 
 	/**
 	 * Default constructor.
-	 * @param type
-	 * @param values
+	 *
+	 * @param type the type
+	 * @param values the values
 	 */
 	TupleImpl(TupleType type, Object... values) {
 		this.type = type;

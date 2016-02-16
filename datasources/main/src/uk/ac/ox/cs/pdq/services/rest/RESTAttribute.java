@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import uk.ac.ox.cs.pdq.db.Attribute;
 
+// TODO: Auto-generated Javadoc
 /**
  * A REST attribute is an attribute whose behavior includes ways to produce 
  * inputs on a service access.
@@ -12,13 +13,13 @@ import uk.ac.ox.cs.pdq.db.Attribute;
  */
 public class RESTAttribute extends Attribute {
 	
-	/** The input method of this attribute */
+	/**  The input method of this attribute. */
 	private final InputMethod inputMethod;
 	
-	/** The output method of this attribute */
+	/**  The output method of this attribute. */
 	private final OutputMethod outputMethod;
 	
-	/** The parameters associated with this input method */
+	/**  The parameters associated with this input method. */
 	private final Collection<String> inputParams;
 	
 	/**
@@ -74,6 +75,8 @@ public class RESTAttribute extends Attribute {
 	}
 	
 	/**
+	 * Gets the input method.
+	 *
 	 * @return InputMethod
 	 */
 	public InputMethod getInputMethod() {
@@ -81,6 +84,8 @@ public class RESTAttribute extends Attribute {
 	}
 
 	/**
+	 * Gets the output method.
+	 *
 	 * @return OutputMethod
 	 */
 	public OutputMethod getOutputMethod() {
@@ -88,6 +93,8 @@ public class RESTAttribute extends Attribute {
 	}
 
 	/**
+	 * Gets the input params.
+	 *
 	 * @return Collection<String>
 	 */
 	public Collection<String> getInputParams() {
@@ -95,7 +102,9 @@ public class RESTAttribute extends Attribute {
 	}
 
 	/**
-	 * @return if the attribute's input method allows batch input, i.e. has 
+	 * Allows batch.
+	 *
+	 * @return if the attribute's input method allows batch input, i.e. has
 	 * a batch delimiter defined, and an output method.
 	 */
 	public boolean allowsBatch() {

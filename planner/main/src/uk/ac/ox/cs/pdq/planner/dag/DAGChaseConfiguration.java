@@ -11,6 +11,7 @@ import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
 
 import com.google.common.base.Preconditions;
 
+// TODO: Auto-generated Javadoc
 /**
  * Type of configurations met in the DAG world that use the chase as a proof system. 
  * DAG configurations are built up compositionally and can be either unary or binary.
@@ -20,34 +21,32 @@ import com.google.common.base.Preconditions;
  */
 public abstract class DAGChaseConfiguration extends ChaseConfiguration<DAGPlan> implements DAGConfiguration {
 
+	/** The id. */
 	private final Integer id;
 
+	/** The global id. */
 	private static Integer globalId = 0;
 	
-	/** The depth of this configuration */
+	/**  The depth of this configuration. */
 	private final Integer high;
 
-	/** The bushiness of this configuration */
+	/**  The bushiness of this configuration. */
 	private final Integer bushiness;
 	
-	/** True if the configuration is a left-deep one*/
+	/**  True if the configuration is a left-deep one. */
 	private Boolean isLeftDeep = null;
 	
-	/** The configuration's sub-configurations */
+	/**  The configuration's sub-configurations. */
 	private Collection<DAGConfiguration> subconfigurations = null;
 	
 	/**
-	 * 
-	 * @param state
-	 * 		The state of this configuration.
-	 * @param input
-	 * 		The input constants
-	 * @param output
-	 * 		The output constants
-	 * @param high
-	 * 		The depth of this configuration
-	 * @param bushiness
-	 * 		The bushiness of this configuration
+	 * Instantiates a new DAG chase configuration.
+	 *
+	 * @param state 		The state of this configuration.
+	 * @param input 		The input constants
+	 * @param output 		The output constants
+	 * @param high 		The depth of this configuration
+	 * @param bushiness 		The bushiness of this configuration
 	 */
 	public DAGChaseConfiguration(
 			AccessibleChaseState state, 
@@ -64,24 +63,39 @@ public abstract class DAGChaseConfiguration extends ChaseConfiguration<DAGPlan> 
 		this.bushiness = bushiness;
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration#clone()
+	 */
 	@Override
 	public abstract DAGChaseConfiguration clone();
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.planner.dag.DAGConfiguration#getHeight()
+	 */
 	@Override
 	public Integer getHeight() {
 		return this.high;
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.planner.dag.DAGConfiguration#getBushiness()
+	 */
 	@Override
 	public Integer getBushiness() {
 		return this.bushiness;
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.planner.dag.DAGConfiguration#getId()
+	 */
 	@Override
 	public Integer getId() {
 		return this.id;
 	}
 	
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.planner.dag.DAGConfiguration#getSubconfigurations()
+	 */
 	@Override
 	public Collection<DAGConfiguration> getSubconfigurations() {
 		if(this.subconfigurations == null) {
@@ -90,6 +104,9 @@ public abstract class DAGChaseConfiguration extends ChaseConfiguration<DAGPlan> 
 		return this.subconfigurations;
 	}
 	
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.planner.dag.DAGConfiguration#isLeftDeep()
+	 */
 	@Override
 	public Boolean isLeftDeep() {
 		if(this.isLeftDeep == null) {
@@ -98,11 +115,17 @@ public abstract class DAGChaseConfiguration extends ChaseConfiguration<DAGPlan> 
 		return this.isLeftDeep;
 	}
 	
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.planner.reasoning.Configuration#compareTo(uk.ac.ox.cs.pdq.planner.reasoning.Configuration)
+	 */
 	@Override
 	public int compareTo(Configuration o) {
 		return this.getPlan().compareTo(o.getPlan());
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) {
@@ -115,6 +138,9 @@ public abstract class DAGChaseConfiguration extends ChaseConfiguration<DAGPlan> 
 				&& this.id.equals(((DAGChaseConfiguration) o).getId());
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
 	@Override
 	public int hashCode() {
 		return Objects.hash(this.id);

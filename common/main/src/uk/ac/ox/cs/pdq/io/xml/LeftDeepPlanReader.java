@@ -23,6 +23,7 @@ import uk.ac.ox.cs.pdq.plan.AccessOperator;
 import uk.ac.ox.cs.pdq.plan.DoubleCost;
 import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 
+// TODO: Auto-generated Javadoc
 /**
  * Reads plans from XML.
  * 
@@ -33,28 +34,30 @@ public class LeftDeepPlanReader extends AbstractXMLReader<LeftDeepPlan> {
 	/** The plan's cost. */
 	private Double cost = null;
 	
-	/** The pan being built */
+	/**  The pan being built. */
 	private LeftDeepPlan plan = null;
 	
-	/** The operator if the command being read */
+	/**  The operator if the command being read. */
 	private RelationalOperator operator = null;
 	
-	/** The current access operator being read */
+	/**  The current access operator being read. */
 	private AccessOperator access = null;
 	
-	/** The map from logical operator to aliases */
+	/**  The map from logical operator to aliases. */
 	private Map<String, RelationalOperator> aliases = new LinkedHashMap<>();
 	
-	/** The last operator name read */
+	/**  The last operator name read. */
 	private String name;
 
-	/** The operator reader */
+	/**  The operator reader. */
 	private OperatorReader operatorReader;
 
+	/** The schema. */
 	private Schema schema;
 	
 	/**
-	 * Default constructor
+	 * Default constructor.
+	 *
 	 * @param schema Schema
 	 */
 	public LeftDeepPlanReader(Schema schema) {

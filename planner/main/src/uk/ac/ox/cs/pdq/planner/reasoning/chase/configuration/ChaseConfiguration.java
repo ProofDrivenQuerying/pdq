@@ -18,6 +18,7 @@ import uk.ac.ox.cs.pdq.reasoning.utility.Match;
 import com.google.common.collect.Lists;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * 	Proof configurations or configurations are associated with
 	(i) a collection of facts using initial chase constants called the output
@@ -43,26 +44,24 @@ public abstract class ChaseConfiguration<P extends Plan> implements Configuratio
 	/** The configuration's chase state. Keeps the output facts of this configuration */
 	protected final AccessibleChaseState state;
 
-	/** The plan that corresponds to this configuration */
+	/**  The plan that corresponds to this configuration. */
 	protected P plan;
 
-	/** Input constants */
+	/**  Input constants. */
 	protected final Collection<Constant> input;
 
-	/** Output constants */
+	/**  Output constants. */
 	protected final Collection<Constant> output;
 
-	/** Proper output constants */
+	/**  Proper output constants. */
 	protected final Collection<Constant> properOutput;
 	
 	/**
-	 * 
-	 * @param state
-	 * 		The chase state of this configuration.
-	 * @param input
-	 * 		The input constants
-	 * @param output
-	 * 		The output constants
+	 * Instantiates a new chase configuration.
+	 *
+	 * @param state 		The chase state of this configuration.
+	 * @param input 		The input constants
+	 * @param output 		The output constants
 	 */
 	public ChaseConfiguration(
 			AccessibleChaseState state,
@@ -74,11 +73,13 @@ public abstract class ChaseConfiguration<P extends Plan> implements Configuratio
 		this.output = output;
 		this.properOutput = getProperOutput(input, output);
 	}
+	
 	/**
-	 * 
-	 * @param input
-	 * @param output
-	 * @return
+	 * Gets the proper output.
+	 *
+	 * @param input the input
+	 * @param output the output
+	 * @return the proper output
 	 */
 	private static Collection<Constant> getProperOutput(Collection<Constant> input, Collection<Constant> output) {
 		Collection<Constant> properOutput;
@@ -93,15 +94,17 @@ public abstract class ChaseConfiguration<P extends Plan> implements Configuratio
 	}
 	
 	/**
-	 * 
-	 * @return
-	 * 		the chase state of this configuration.
+	 * Gets the state.
+	 *
+	 * @return 		the chase state of this configuration.
 	 */
 	public AccessibleChaseState getState() {
 		return this.state;
 	}
 
 	/**
+	 * Gets the plan.
+	 *
 	 * @return P
 	 * @see uk.ac.ox.cs.pdq.reasoning.Configuration#getPlan()
 	 */
@@ -110,12 +113,17 @@ public abstract class ChaseConfiguration<P extends Plan> implements Configuratio
 		return this.plan;
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.planner.reasoning.Configuration#setPlan(uk.ac.ox.cs.pdq.plan.Plan)
+	 */
 	@Override
 	public void setPlan(P plan) {
 		this.plan = plan;
 	}
 
 	/**
+	 * Gets the input.
+	 *
 	 * @return the configuration's input constants
 	 */
 	public Collection<Constant> getInput() {
@@ -123,6 +131,8 @@ public abstract class ChaseConfiguration<P extends Plan> implements Configuratio
 	}
 
 	/**
+	 * Gets the output.
+	 *
 	 * @return the configuration's output facts
 	 */
 	public Collection<Constant> getOutput() {
@@ -130,6 +140,8 @@ public abstract class ChaseConfiguration<P extends Plan> implements Configuratio
 	}
 
 	/**
+	 * Gets the proper output.
+	 *
 	 * @return the configuration's proper output facts
 	 */
 	public Collection<Constant> getProperOutput() {
@@ -137,6 +149,8 @@ public abstract class ChaseConfiguration<P extends Plan> implements Configuratio
 	}
 
 	/**
+	 * Gets the output facts.
+	 *
 	 * @return the configuration's output facts
 	 */
 	public Collection<Predicate> getOutputFacts() {
@@ -145,17 +159,21 @@ public abstract class ChaseConfiguration<P extends Plan> implements Configuratio
 	
 	/**
 	 * Finds all consequences of this.configuration using the input dependencies and the chase algorithm as a proof system.
-	 * 
-	 * @throws PlannerException
-	 * @throws LimitReachedException
+	 *
+	 * @param chaser the chaser
+	 * @param query the query
+	 * @param dependencies the dependencies
+	 * @throws PlannerException the planner exception
+	 * @throws LimitReachedException the limit reached exception
 	 */
 	public void reasonUntilTermination(Chaser chaser, Query<?> query, Collection<? extends Constraint> dependencies) throws PlannerException, LimitReachedException {
 		chaser.reasonUntilTermination(this.state, query, dependencies);
 	}
 
 	/**
-	 * Applies the input triggers
-	 * @param matches
+	 * Applies the input triggers.
+	 *
+	 * @param matches the matches
 	 */
 	public void chaseStep(List<Match> matches) {
 		this.state.chaseStep(matches);
@@ -165,25 +183,27 @@ public abstract class ChaseConfiguration<P extends Plan> implements Configuratio
 	 * Conjunctive query match definition) If Q′ is a conjunctive query and v is a chase configuration
 	 * having elements for each free variable of Q′, then a homomorphism of Q′ into v
 	 * mapping each free variable into the corresponding element is called a match for Q′ in v.
-	 * 
-	 * @param query
-	 * 		An input query
-	 * @return
-	 * 		the list of query matches
-	 * @throws PlannerException
+	 *
+	 * @param query 		An input query
+	 * @return 		the list of query matches
+	 * @throws PlannerException the planner exception
 	 */
 	public List<Match> matchesQuery(Query<?> query) throws PlannerException {
 		return this.state.getMatches(query);
 	}
 
 	/**
-	 * @return true if the configuration is a filter 
+	 * Checks if is filter.
+	 *
+	 * @return true if the configuration is a filter
 	 */
 	public Boolean isFilter() {
 		return this.properOutput.isEmpty();
 	}
 
 	/**
+	 * Checks if is closed.
+	 *
 	 * @return true if the configuration has no input constants
 	 */
 	public Boolean isClosed() {
@@ -191,13 +211,13 @@ public abstract class ChaseConfiguration<P extends Plan> implements Configuratio
 	}
 	
 	/**
-	 * 
-	 * @param query
-	 * @return
-	 * true if the configuration matches the input query.
+	 * Checks if is successful.
+	 *
+	 * @param query the query
+	 * @return true if the configuration matches the input query.
 	 * (Conjunctive query match definition) If Q′ is a conjunctive query and v is a chase configuration
 	 * having elements for each free variable of Q′, then a homomorphism of Q′ into v
-	 * mapping each free variable into the corresponding element is called a match for Q′ in v. 
+	 * mapping each free variable into the corresponding element is called a match for Q′ in v.
 	 */
 	@Override
 	public boolean isSuccessful(Query<?> query) {
@@ -209,6 +229,8 @@ public abstract class ChaseConfiguration<P extends Plan> implements Configuratio
 	}
 
 	/**
+	 * Clone.
+	 *
 	 * @return ChaseConfiguration<S>
 	 * @see uk.ac.ox.cs.pdq.reasoning.Configuration#clone()
 	 */

@@ -14,10 +14,12 @@ import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.io.Writer;
 
+// TODO: Auto-generated Javadoc
 /**
- * Writes a concise representation of a dependency to the given output
- * 
+ * Writes a concise representation of a dependency to the given output.
+ *
  * @author Julien Leblay
+ * @param <T> the generic type
  */
 public class VeryShortDependencyWriter<T extends Constraint> 
 		extends PrettyWriter<T> implements Writer<T> {
@@ -39,7 +41,8 @@ public class VeryShortDependencyWriter<T extends Constraint>
 	
 	/**
 	 * Fluent pretty writer provider.
-	 * @param out
+	 *
+	 * @param out the out
 	 * @return a new SQLLikeQueryWriter with the given default output.
 	 */
 	public static VeryShortDependencyWriter to(PrintStream out) {

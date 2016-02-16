@@ -9,20 +9,32 @@ import prefuse.visual.AggregateItem;
 import prefuse.visual.AggregateTable;
 import prefuse.visual.VisualItem;
 
+// TODO: Auto-generated Javadoc
 /**
  * Layout algorithm that computes a convex hull surrounding
  * aggregate items and saves it in the "_polygon" field.
  */
 public class AggregateLayout extends Layout {
 
+	/** The m_margin. */
 	private int m_margin = 5; // convex hull pixel margin
+	
+	/** The m_pts. */
 	private double[] m_pts;   // buffer for computing convex hulls
 
+	/**
+	 * Instantiates a new aggregate layout.
+	 *
+	 * @param aggrGroup the aggr group
+	 */
 	public AggregateLayout(String aggrGroup) {
 		super(aggrGroup);
 	}
 
 	/**
+	 * Run.
+	 *
+	 * @param frac the frac
 	 * @see edu.berkeley.guir.prefuse.action.Action#run(edu.berkeley.guir.prefuse.ItemRegistry, double)
 	 */
 	public void run(double frac) {
@@ -77,6 +89,14 @@ public class AggregateLayout extends Layout {
 		}
 	}
 
+	/**
+	 * Adds the point.
+	 *
+	 * @param pts the pts
+	 * @param idx the idx
+	 * @param item the item
+	 * @param growth the growth
+	 */
 	private static void addPoint(double[] pts, int idx, VisualItem item, int growth) {
 		Rectangle2D b = item.getBounds();
 		double minX = (b.getMinX())-growth, minY = (b.getMinY())-growth;

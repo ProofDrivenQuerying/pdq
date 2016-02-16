@@ -6,19 +6,21 @@ import java.util.List;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
- * @author Efthymia Tsamoura
+ * The Class Utility.
  *
+ * @author Efthymia Tsamoura
  */
 public class Utility {
 
 	/**
 	 * Creates a relation with the given name, arity and all attributes of
 	 * String type.
-	 * @param name
-	 * @param arity
-	 * @return 
+	 *
+	 * @param name the name
+	 * @param arity the arity
+	 * @return the relation
 	 */
 	public static Relation createStringsRelation(String name, int arity) {
 		List<Attribute> attributes = new ArrayList<>();

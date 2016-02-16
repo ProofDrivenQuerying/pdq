@@ -5,11 +5,11 @@ import java.io.PrintStream;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.io.Writer;
 
+// TODO: Auto-generated Javadoc
 /**
- * Writes a concise representation of a schema to the given output
- * 
- * @author Julien Leblay
+ * Writes a concise representation of a schema to the given output.
  *
+ * @author Julien Leblay
  */
 public class PrettySchemaWriter extends PrettyWriter<Schema> implements Writer<Schema> {
 
@@ -37,7 +37,8 @@ public class PrettySchemaWriter extends PrettyWriter<Schema> implements Writer<S
 		
 	/**
 	 * Fluent pretty writer provider.
-	 * @param out
+	 *
+	 * @param out the out
 	 * @return a new PrettyQueryWriter with the given default output.
 	 */
 	public static PrettySchemaWriter to(PrintStream out) {
@@ -45,6 +46,8 @@ public class PrettySchemaWriter extends PrettyWriter<Schema> implements Writer<S
 	}
 	
 	/**
+	 * Write.
+	 *
 	 * @param out PrintStream
 	 * @param s Schema
 	 */
@@ -54,6 +57,8 @@ public class PrettySchemaWriter extends PrettyWriter<Schema> implements Writer<S
 	}
 	
 	/**
+	 * Write.
+	 *
 	 * @param q Schema
 	 */
 	@Override

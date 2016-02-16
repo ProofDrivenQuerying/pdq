@@ -25,19 +25,32 @@ import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 
+// TODO: Auto-generated Javadoc
 /**
- * Creates inclusion dependencies and then queries using the previously created dependencies
- * @author Efthymia Tsamoura
+ * Creates inclusion dependencies and then queries using the previously created dependencies.
  *
+ * @author Efthymia Tsamoura
  */
 public class GeneratorThird extends AbstractGenerator{
 
+	/** The log. */
 	private static Logger log = Logger.getLogger(GeneratorThird.class);
 	
+	/**
+	 * Instantiates a new generator third.
+	 *
+	 * @param parameters the parameters
+	 * @param schemaFile the schema file
+	 * @param queryFile the query file
+	 * @param out the out
+	 */
 	public GeneratorThird(BenchmarkParameters parameters, String schemaFile, String queryFile, PrintStream out) {
 		super(parameters, schemaFile, queryFile, out);
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.generator.AbstractGenerator#make()
+	 */
 	@Override
 	public void make() throws IOException {
 		// Load the statistic collector/logger
@@ -57,7 +70,8 @@ public class GeneratorThird extends AbstractGenerator{
 
 	/**
 	 * Makes a query from the given parameters.
-	 * 
+	 *
+	 * @return the schema
 	 */
 	public Schema makeSchema() {
 		// Loading schema
@@ -70,6 +84,11 @@ public class GeneratorThird extends AbstractGenerator{
 		return schema;
 	}
 
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main (String... args) {
 		try(FileInputStream fis = new FileInputStream("test/input/web-schema.xml")) {
 			PlannerParameters planParams = new PlannerParameters();

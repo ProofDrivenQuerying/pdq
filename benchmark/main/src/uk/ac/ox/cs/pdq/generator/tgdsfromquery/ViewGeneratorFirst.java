@@ -25,31 +25,36 @@ import uk.ac.ox.cs.pdq.util.Utility;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
+// TODO: Auto-generated Javadoc
 /**
- * Generates views given a set of relations and an input query
- * 
+ * Generates views given a set of relations and an input query.
+ *
  * @author Efthymia Tsamoura
  * @author Julien LEBLAY
- * 
  */
 public class ViewGeneratorFirst extends AbstractDependencyGenerator implements ViewGenerator{
 
+	/** The global view id. */
 	protected static int globalViewId = 0;
 	
-	/** The query that will guide the creation of the dependencies */
+	/**  The query that will guide the creation of the dependencies. */
 	private final ConjunctiveQuery query;
 
 	/**
-	 * 
-	 * @param schema
-	 * @param query
-	 * @param params
+	 * Instantiates a new view generator first.
+	 *
+	 * @param schema the schema
+	 * @param query the query
+	 * @param params the params
 	 */
 	public ViewGeneratorFirst(Schema schema, ConjunctiveQuery query, BenchmarkParameters params) {
 		super(schema, params);
 		this.query = query;
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.generator.ViewGenerator#generate()
+	 */
 	@Override
 	public Schema generate() {
 		SchemaBuilder sb = Schema.builder(this.schema);
@@ -61,9 +66,8 @@ public class ViewGeneratorFirst extends AbstractDependencyGenerator implements V
 	 * The view's body is a randomly chosen subset of conjunctions of the input query's body, 
 	 * while its right-hand is a randomly created conjunction of atoms. 
 	 * For each 
-	 * @param q
-	 * @return 
-	 * 		a list of dependencies defining views
+	 *
+	 * @return 		a list of dependencies defining views
 	 */
 	public List<View> generateViews() {
 		List<View> result = new ArrayList<>();
@@ -99,11 +103,11 @@ public class ViewGeneratorFirst extends AbstractDependencyGenerator implements V
 	
 	
 	/**
-	 * 
-	 * @param conjunction
-	 * @param viewArguments
-	 * @return
-	 * 		a view definition given the input conjunction and the variables to expose
+	 * Creates the view instance.
+	 *
+	 * @param conjunction the conjunction
+	 * @param viewArguments the view arguments
+	 * @return 		a view definition given the input conjunction and the variables to expose
 	 */
 	private View createViewInstance(Set<Predicate> conjunction, Set<Variable> viewArguments) {
 		List<Predicate> conjuncts = Lists.newArrayList(conjunction);

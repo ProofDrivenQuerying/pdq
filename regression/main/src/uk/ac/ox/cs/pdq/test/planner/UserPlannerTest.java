@@ -38,6 +38,7 @@ import uk.ac.ox.cs.pdq.test.acceptance.SameCostAcceptanceCheck;
 
 import com.beust.jcommander.Parameter;
 
+// TODO: Auto-generated Javadoc
 /**
  * Runs regression tests.
  * 
@@ -48,26 +49,36 @@ public class UserPlannerTest extends RegressionTest {
 	/** Runner's logger. */
 	private static Logger log = Logger.getLogger(UserPlannerTest.class);
 
-	/** File name where planning related parameters must be stored in a test case directory */
+	/**  File name where planning related parameters must be stored in a test case directory. */
 	private static final String PLAN_PARAMETERS_FILE = "case.properties";
 	
+	/** The Constant ACCESS_PLAN_FILE. */
 	private static final String ACCESS_PLAN_FILE = "expected-plan.txt";
 
-	/** File name where the schema must be stored in a test case directory */
+	/**  File name where the schema must be stored in a test case directory. */
 	private static final String SCHEMA_FILE = "schema.xml";
 
-	/** File name where the query must be stored in a test case directory */
+	/**  File name where the query must be stored in a test case directory. */
 	private static final String QUERY_FILE = "query.xml";
 
-	/** File name where the expected plan must be stored in a test case directory */
+	/**  File name where the expected plan must be stored in a test case directory. */
 	private static final String PLAN_FILE = "expected-plan.xml";
 	
+	/**
+	 * The Class UserPlannerTestCommand.
+	 */
 	public static class UserPlannerTestCommand extends Command {
 
+		/**
+		 * Instantiates a new user planner test command.
+		 */
 		public UserPlannerTestCommand() {
 			super("user_driven");
 		}
 
+		/* (non-Javadoc)
+		 * @see uk.ac.ox.cs.pdq.test.Bootstrap.Command#execute()
+		 */
 		@Override
 		public void execute() throws RegressionTestException, IOException, ReflectiveOperationException {
 			new UserPlannerTest().recursiveRun(new File(getInput()));
@@ -76,11 +87,10 @@ public class UserPlannerTest extends RegressionTest {
 
 	/**
 	 * Sets up a regression test for the given test case directory.
-	 * 
-	 * @param input the command line parameters as given by the main method.
-	 * @throws ReflectiveOperationException 
-	 * @throws IOException
-	 * @throws RegressionTestException 
+	 *
+	 * @throws ReflectiveOperationException the reflective operation exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws RegressionTestException the regression test exception
 	 */
 	public UserPlannerTest() throws ReflectiveOperationException, IOException, RegressionTestException {
 		super();
@@ -96,11 +106,11 @@ public class UserPlannerTest extends RegressionTest {
 	}
 
 	/**
-	 * Runs a single test case base on the 
-	 * @param directory
+	 * Runs a single test case base on the .
+	 *
+	 * @param directory the directory
 	 * @return boolean
-	 * @throws ReflectiveOperationException
-	 * @throws SQLException
+	 * @throws ReflectiveOperationException the reflective operation exception
 	 */
 	private boolean compare(File directory) throws ReflectiveOperationException {
 		try(FileInputStream sis = new FileInputStream(directory.getAbsolutePath() + '/' + SCHEMA_FILE);
@@ -160,6 +170,8 @@ public class UserPlannerTest extends RegressionTest {
 	}
 
 	/**
+	 * Obtain plan.
+	 *
 	 * @param directory File
 	 * @param schema Schema
 	 * @param query Query
@@ -191,6 +203,8 @@ public class UserPlannerTest extends RegressionTest {
 	}
 	
 	/**
+	 * Acceptance.
+	 *
 	 * @param params planning parameters
 	 * @return a acceptance matching the given parameters
 	 */

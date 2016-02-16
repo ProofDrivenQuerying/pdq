@@ -50,6 +50,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
+// TODO: Auto-generated Javadoc
 /**
  * Reads physical operators from XML.
  * 
@@ -60,10 +61,41 @@ public class OperatorReader extends AbstractXMLReader<RelationalOperator> {
 	/** Logger. */
 	private static Logger log = Logger.getLogger(OperatorReader.class);
 
+	/**
+	 * The Enum Types.
+	 */
 	public static enum Types {
-		SELECT, PROJECT, RENAME, STATIC_INPUT, CROSS_PRODUCT,
-		DEPENDENT_ACCESS, ACCESS, DEPENDENT_JOIN, JOIN, ALIAS,
-		DISTINCT, COUNT, IS_EMPTY, UNION
+		
+		/** The select. */
+		SELECT, 
+ /** The project. */
+ PROJECT, 
+ /** The rename. */
+ RENAME, 
+ /** The static input. */
+ STATIC_INPUT, 
+ /** The cross product. */
+ CROSS_PRODUCT,
+		
+		/** The dependent access. */
+		DEPENDENT_ACCESS, 
+ /** The access. */
+ ACCESS, 
+ /** The dependent join. */
+ DEPENDENT_JOIN, 
+ /** The join. */
+ JOIN, 
+ /** The alias. */
+ ALIAS,
+		
+		/** The distinct. */
+		DISTINCT, 
+ /** The count. */
+ COUNT, 
+ /** The is empty. */
+ IS_EMPTY, 
+ /** The union. */
+ UNION
 	}
 	
 	/** The operator being built. */
@@ -127,36 +159,40 @@ public class OperatorReader extends AbstractXMLReader<RelationalOperator> {
 	private OperatorReader parentReader;
 
 	/**
-	 * Default constructor
-	 * 
-	 * @param dependencies
+	 * Default constructor.
+	 *
+	 * @param schema the schema
 	 */
 	public OperatorReader(Schema schema) {
 		this(schema, Maps.<String, RelationalOperator>newHashMap(), null);
 	}
 
 	/**
-	 * Default constructor
-	 * 
-	 * @param dependencies
+	 * Default constructor.
+	 *
+	 * @param schema the schema
+	 * @param aliases the aliases
 	 */
 	public OperatorReader(Schema schema, Map<String, RelationalOperator> aliases) {
 		this(schema, aliases, null);
 	}
 
 	/**
-	 * Default constructor
-	 * 
-	 * @param dependencies
+	 * Default constructor.
+	 *
+	 * @param schema the schema
+	 * @param parent the parent
 	 */
 	public OperatorReader(Schema schema, OperatorReader parent) {
 		this(schema, Maps.<String, RelationalOperator>newHashMap(), parent);
 	}
 
 	/**
-	 * Default constructor
-	 * 
-	 * @param dependencies
+	 * Default constructor.
+	 *
+	 * @param schema the schema
+	 * @param aliases the aliases
+	 * @param parent the parent
 	 */
 	OperatorReader(Schema schema, Map<String, RelationalOperator> aliases, OperatorReader parent) {
 		this.schema = schema;
@@ -192,6 +228,8 @@ public class OperatorReader extends AbstractXMLReader<RelationalOperator> {
 	}
 
 	/**
+	 * Gets the operator.
+	 *
 	 * @return the operator under construction
 	 */
 	public RelationalOperator getOperator() {

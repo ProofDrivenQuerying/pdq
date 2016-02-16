@@ -9,6 +9,7 @@ import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.dag.equivalence.DAGEquivalenceClass;
 import uk.ac.ox.cs.pdq.planner.dag.equivalence.DAGEquivalenceClasses;
 
+// TODO: Auto-generated Javadoc
 /**
  * Map of representatives. For each configuration c = BinConfiguration(c_1,c_2) we create a map from the
  * equivalence classes of c and c' to c''. This map helps us reducing the chasing time, i.e.,
@@ -21,8 +22,17 @@ import uk.ac.ox.cs.pdq.planner.dag.equivalence.DAGEquivalenceClasses;
  */
 public class Representative {
 	
+	/** The representatives. */
 	private final Map<Pair<DAGEquivalenceClass,DAGEquivalenceClass>,DAGChaseConfiguration> representatives  = new ConcurrentHashMap<>();
 
+	/**
+	 * Gets the representative.
+	 *
+	 * @param eclasses the eclasses
+	 * @param left the left
+	 * @param right the right
+	 * @return the representative
+	 */
 	public DAGChaseConfiguration getRepresentative(DAGEquivalenceClasses eclasses, DAGChaseConfiguration left, DAGChaseConfiguration right) {
 		//The equivalence class of the left input configuration
 		DAGEquivalenceClass rep0 = eclasses.getEquivalenceClass(left);
@@ -33,6 +43,14 @@ public class Representative {
 		return this.representatives.get(Pair.of(rep0, rep1));
 	}
 	
+	/**
+	 * Put.
+	 *
+	 * @param eclasses the eclasses
+	 * @param left the left
+	 * @param right the right
+	 * @param representative the representative
+	 */
 	public void put(DAGEquivalenceClasses eclasses, DAGChaseConfiguration left, DAGChaseConfiguration right, DAGChaseConfiguration representative) {
 		this.representatives.put(Pair.of(eclasses.getEquivalenceClass(left), eclasses.getEquivalenceClass(right)), representative);
 	}

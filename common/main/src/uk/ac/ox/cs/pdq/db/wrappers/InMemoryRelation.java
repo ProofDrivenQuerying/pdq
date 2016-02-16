@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import uk.ac.ox.cs.pdq.util.Tuple;
 
+// TODO: Auto-generated Javadoc
 /**
  * Common interface to all in-memory relations (table, views, etc.).
  * 
@@ -11,7 +12,11 @@ import uk.ac.ox.cs.pdq.util.Tuple;
  */
 public interface InMemoryRelation {
 
-	/** @return the name of the relation */
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name of the relation
+	 */
 	String getName();
 
 	/**

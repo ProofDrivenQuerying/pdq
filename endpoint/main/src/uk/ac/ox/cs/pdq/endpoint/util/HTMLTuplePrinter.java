@@ -13,6 +13,7 @@ import uk.ac.ox.cs.pdq.util.Tuple;
 import com.google.common.base.Preconditions;
 import com.google.common.eventbus.Subscribe;
 
+// TODO: Auto-generated Javadoc
 /**
  * Prints tuple to the given print stream, if provided, log.info otherwise.
  * 
@@ -27,8 +28,9 @@ public class HTMLTuplePrinter implements EventHandler {
 	private final JspWriter out;
 
 	/**
-	 * Default constructor
-	 * @param out
+	 * Default constructor.
+	 *
+	 * @param out the out
 	 */
 	public HTMLTuplePrinter(JspWriter out) {
 		Preconditions.checkArgument(out != null);
@@ -37,7 +39,8 @@ public class HTMLTuplePrinter implements EventHandler {
 
 	/**
 	 * Prints the given tuple of the default print stream, or log.info if null.
-	 * @param tuple
+	 *
+	 * @param tuple the tuple
 	 */
 	@Subscribe
 	public void print(Tuple tuple) {

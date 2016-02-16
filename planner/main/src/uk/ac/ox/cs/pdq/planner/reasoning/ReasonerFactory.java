@@ -7,22 +7,24 @@ import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 
 import com.google.common.eventbus.EventBus;
 
+// TODO: Auto-generated Javadoc
 /**
- * Creates reasoners based on the input arguments
+ * Creates reasoners based on the input arguments.
  *
  * @author Efthymia Tsamoura
  * @author Julien Leblay
- *
  */
 public final class ReasonerFactory extends uk.ac.ox.cs.pdq.reasoning.ReasonerFactory{
 
+	/** The log. */
 	protected static Logger log = Logger.getLogger(ReasonerFactory.class);
 
 	/**
+	 * Instantiates a new reasoner factory.
 	 *
-	 * @param eventBus
-	 * @param collectStats
-	 * @param params
+	 * @param eventBus the event bus
+	 * @param collectStats the collect stats
+	 * @param params the params
 	 */
 	public ReasonerFactory(
 			EventBus eventBus,
@@ -32,8 +34,9 @@ public final class ReasonerFactory extends uk.ac.ox.cs.pdq.reasoning.ReasonerFac
 	}
 
 	/**
-	 * @return
-	 * 		a fresh instance of reasoner. Currently, all reasoners
+	 * Gets the single instance of ReasonerFactory.
+	 *
+	 * @return 		a fresh instance of reasoner. Currently, all reasoners
 	 *      implement the Chaser interface.
 	 */
 	public Chaser getInstance() {

@@ -22,6 +22,7 @@ import uk.ac.ox.cs.pdq.util.TupleType;
 
 import com.google.common.base.Preconditions;
 
+// TODO: Auto-generated Javadoc
 /**
  * In memory relation wrapper. This is the default implementation of a relation,
  * where the data associated with a relation resides in memory, and does not
@@ -32,13 +33,15 @@ import com.google.common.base.Preconditions;
 public class InMemoryTableWrapper extends Relation
 		implements Pipelineable, RelationAccessWrapper, InMemoryRelation {
 
-	/** */
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -3167783211904676965L;
 
-	/** The underlying data */
+	/**  The underlying data. */
 	private Collection<Tuple> data = new ArrayList<>();
 	
 	/**
+	 * Instantiates a new in memory table wrapper.
+	 *
 	 * @param relation Relation
 	 */
 	public InMemoryTableWrapper(Relation relation) {
@@ -47,9 +50,12 @@ public class InMemoryTableWrapper extends Relation
 	}
 	
 	/**
+	 * Instantiates a new in memory table wrapper.
+	 *
 	 * @param name String
 	 * @param attributes List<Attribute>
 	 * @param bm List<AccessMethod>
+	 * @param isEquality the is equality
 	 */
 	public InMemoryTableWrapper(String name, List<Attribute> attributes,
 			List<AccessMethod> bm, boolean isEquality) {
@@ -57,6 +63,8 @@ public class InMemoryTableWrapper extends Relation
 	}
 	
 	/**
+	 * Instantiates a new in memory table wrapper.
+	 *
 	 * @param name String
 	 * @param attributes List<Attribute>
 	 * @param bm List<AccessMethod>
@@ -67,14 +75,19 @@ public class InMemoryTableWrapper extends Relation
 	}
 	
 	/**
+	 * Instantiates a new in memory table wrapper.
+	 *
 	 * @param name String
 	 * @param attributes List<Attribute>
+	 * @param isEquality the is equality
 	 */
 	public InMemoryTableWrapper(String name, List<Attribute> attributes, boolean isEquality) {
 		this(name, attributes, new LinkedList<AccessMethod>(), isEquality);
 	}
 	
 	/**
+	 * Instantiates a new in memory table wrapper.
+	 *
 	 * @param name String
 	 * @param attributes List<Attribute>
 	 */
@@ -103,6 +116,8 @@ public class InMemoryTableWrapper extends Relation
 	}
 	
 	/**
+	 * Gets the data.
+	 *
 	 * @return the collection of tuple stored in memory for this relation
 	 */
 	public Collection<Tuple> getData() {
@@ -110,8 +125,10 @@ public class InMemoryTableWrapper extends Relation
 	}
 	
 	/**
-	 * @param inputHeader 
-	 * @param inputTuples 
+	 * Access.
+	 *
+	 * @param inputHeader the input header
+	 * @param inputTuples the input tuples
 	 * @return Table
 	 * @see uk.ac.ox.cs.pdq.runtime.RelationAccessWrapper#access(Table)
 	 */
@@ -132,7 +149,9 @@ public class InMemoryTableWrapper extends Relation
 	}
 
 	/**
-	 * @return the content of the view materialized in memory 
+	 * Access.
+	 *
+	 * @return the content of the view materialized in memory
 	 * @see uk.ac.ox.cs.pdq.runtime.RelationAccessWrapper#access()
 	 */
 	@Override
@@ -156,6 +175,8 @@ public class InMemoryTableWrapper extends Relation
 	}
 
 	/**
+	 * Iterator.
+	 *
 	 * @param inputAttributes List<? extends Attribute>
 	 * @param inputs ResetableIterator<Tuple>
 	 * @return ResetableIterator<Tuple>
@@ -167,6 +188,8 @@ public class InMemoryTableWrapper extends Relation
 	}
 
 	/**
+	 * Iterator.
+	 *
 	 * @return ResetableIterator<Tuple>
 	 * @see uk.ac.ox.cs.pdq.runtime.Pipelineable#iterator()
 	 */
@@ -181,7 +204,7 @@ public class InMemoryTableWrapper extends Relation
 	 */
 	private class AccessIterator implements ResetableIterator<Tuple> {
 
-		/** The list of input attributes */
+		/**  The list of input attributes. */
 		private final List<Attribute> inputAttributes;
 		
 		/** Iterator over a set of the input tuples. */
@@ -190,10 +213,13 @@ public class InMemoryTableWrapper extends Relation
 		/** Iterator over a set of the output tuples. */
 		private Iterator<Tuple> outputs;
 
+		/** The input type. */
 		private final TupleType inputType;
 		
+		/** The filter. */
 		private Set<Tuple> filter = new LinkedHashSet<>();
 		
+		/** The next tuple. */
 		private Tuple nextTuple = null;
 
 		/**
@@ -204,7 +230,8 @@ public class InMemoryTableWrapper extends Relation
 		}
 		
 		/**
-		 * Constructor with input tuple iterator
+		 * Constructor with input tuple iterator.
+		 *
 		 * @param inputAttributes List<Attribute>
 		 * @param inputTuples ResetableIterator<Tuple>
 		 */
@@ -245,6 +272,8 @@ public class InMemoryTableWrapper extends Relation
 		}
 
 		/**
+		 * Deep copy.
+		 *
 		 * @return AccessIterator
 		 * @see uk.ac.ox.cs.pdq.util.ResetableIterator#deepCopy()
 		 */
@@ -256,6 +285,8 @@ public class InMemoryTableWrapper extends Relation
 		}
 		
 		/**
+		 * Checks for next.
+		 *
 		 * @return boolean
 		 * @see java.util.Iterator#hasNext()
 		 */
@@ -267,6 +298,8 @@ public class InMemoryTableWrapper extends Relation
 		}
 
 		/**
+		 * Next.
+		 *
 		 * @return Tuple
 		 * @see java.util.Iterator#next()
 		 */
@@ -297,6 +330,9 @@ public class InMemoryTableWrapper extends Relation
 			return result.toString();
 		}
 		
+		/* (non-Javadoc)
+		 * @see java.util.Iterator#remove()
+		 */
 		/*
 		 * @see java.util.Iterator#remove()
 		 */

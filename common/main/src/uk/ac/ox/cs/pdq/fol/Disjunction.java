@@ -8,11 +8,12 @@ import java.util.Map;
 
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
 /**
- * A disjunction
- * @author Julien Leblay
+ * A disjunction.
  *
- * @param <T>
+ * @author Julien Leblay
+ * @param <T> the generic type
  */
 public final class Disjunction<T extends Formula> extends NaryFormula<T> {
 
@@ -33,6 +34,9 @@ public final class Disjunction<T extends Formula> extends NaryFormula<T> {
 	}
 
 	/**
+	 * Of.
+	 *
+	 * @param <T> the generic type
 	 * @param subFormulas T[]
 	 * @return Disjunction<T>
 	 */
@@ -41,6 +45,9 @@ public final class Disjunction<T extends Formula> extends NaryFormula<T> {
 	}
 
 	/**
+	 * Of.
+	 *
+	 * @param <T> the generic type
 	 * @param subFormulas Collection<T>
 	 * @return Disjunction<T>
 	 */
@@ -49,6 +56,8 @@ public final class Disjunction<T extends Formula> extends NaryFormula<T> {
 	}
 
 	/**
+	 * Ground.
+	 *
 	 * @param mapping Map<Variable,Term>
 	 * @return Formula
 	 * @see uk.ac.ox.cs.pdq.formula.Formula#ground(Map<Variable,Term>)
@@ -63,6 +72,8 @@ public final class Disjunction<T extends Formula> extends NaryFormula<T> {
 	}
 
 	/**
+	 * Builder.
+	 *
 	 * @return a generic formula builder.
 	 */
 	public static Builder builder() {
@@ -76,9 +87,12 @@ public final class Disjunction<T extends Formula> extends NaryFormula<T> {
 	 */
 	public static class Builder implements uk.ac.ox.cs.pdq.builder.Builder<Disjunction<?>> {
 
+		/** The current. */
 		private LinkedList<Formula> current = new LinkedList<>();
 
 		/**
+		 * Or.
+		 *
 		 * @param disjuncts Formula[]
 		 * @return Builder
 		 */
@@ -87,6 +101,8 @@ public final class Disjunction<T extends Formula> extends NaryFormula<T> {
 		}
 
 		/**
+		 * Or.
+		 *
 		 * @param disjuncts List<Formula>
 		 * @return Builder
 		 */
@@ -98,6 +114,8 @@ public final class Disjunction<T extends Formula> extends NaryFormula<T> {
 		}
 
 		/**
+		 * Builds the.
+		 *
 		 * @return Disjunction<?>
 		 * @see uk.ac.ox.cs.pdq.builder.Builder#build()
 		 */

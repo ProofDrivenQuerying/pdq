@@ -17,18 +17,19 @@ import uk.ac.ox.cs.pdq.util.Utility;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
- * @author Efthymia Tsamoura
+ * The Class LinearUtility.
  *
+ * @author Efthymia Tsamoura
  */
 public class LinearUtility {
 
 	/**
-	 * 
-	 * @param exposed
-	 * @return
-	 * 		the input constants of the input candidate facts
+	 * Gets the input constants.
+	 *
+	 * @param exposed the exposed
+	 * @return 		the input constants of the input candidate facts
 	 */
 	public static Collection<Constant> getInputConstants(Set<Candidate> exposed) {
 		Preconditions.checkNotNull(exposed);
@@ -38,10 +39,10 @@ public class LinearUtility {
 	}
 	
 	/**
-	 * 
-	 * @param candidates
-	 * @return
-	 * 		the output constants of the input candidate facts
+	 * Gets the output constants.
+	 *
+	 * @param candidates the candidates
+	 * @return 		the output constants of the input candidate facts
 	 */
 	public static Collection<Constant> getOutputConstants(Set<Candidate> candidates) {
 		Set<Predicate> facts = new HashSet<>();
@@ -52,12 +53,12 @@ public class LinearUtility {
 	}
 	
 	/**
-	 * 
-	 * @param tree
-	 * 		the input node tree
-	 * @param ids
-	 * @return
-	 * 		a sequence of nodes having the input node ids
+	 * Creates the path.
+	 *
+	 * @param <T> the generic type
+	 * @param tree 		the input node tree
+	 * @param ids the ids
+	 * @return 		a sequence of nodes having the input node ids
 	 */
 	public static <T extends SearchNode> List<T> createPath(IndexedDirectedGraph<T> tree, List<Integer> ids){
 		Preconditions.checkArgument(ids != null && !ids.isEmpty());

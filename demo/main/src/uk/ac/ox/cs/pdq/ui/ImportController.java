@@ -27,6 +27,7 @@ import uk.ac.ox.cs.pdq.ui.io.ObservableSchemaReader;
 import uk.ac.ox.cs.pdq.ui.model.ObservableQuery;
 import uk.ac.ox.cs.pdq.ui.model.ObservableSchema;
 
+// TODO: Auto-generated Javadoc
 /**
  * Controller class for file imports (schema, queries, etc.)
  * @author Julien Leblay
@@ -37,20 +38,39 @@ public class ImportController {
 	/** ImportController's logger. */
 	private static Logger log = Logger.getLogger(ImportController.class);
 
-	/** Default icon for relations */
+	/**  Default icon for relations. */
 	final Image errorIcon = new Image(this.getClass().getResourceAsStream("/resources/icons/error.gif"));
 
+	/** The bundle. */
 	@FXML ResourceBundle bundle;
 
+	/** The details label. */
 	@FXML Label detailsLabel;
+	
+	/** The details image. */
 	@FXML ImageView detailsImage;
+	
+	/** The cancel button. */
 	@FXML Button cancelButton;
+	
+	/** The ok button. */
 	@FXML Button okButton;
+    
+    /** The import choose file button. */
     @FXML Button importChooseFileButton;
+    
+    /** The import file field. */
     @FXML TextField importFileField;
+    
+    /** The import name field. */
     @FXML TextField importNameField;
+    
+    /** The root pane. */
     @FXML GridPane rootPane;
 
+	/**
+	 * Initialize.
+	 */
 	@FXML
 	void initialize() {
 		assert this.cancelButton != null : "fx:id=\"cancelButton\" was not injected: check your FXML file 'import-dialog.fxml'.";
@@ -68,6 +88,7 @@ public class ImportController {
 	}
 
 	
+	/** The import validator. */
 	private ChangeListener<String> importValidator = new ChangeListener<String>() {
 		@Override
 		public void changed(ObservableValue<? extends String> arg0, String arg1, String arg2) {
@@ -110,7 +131,8 @@ public class ImportController {
 	
 	/**
 	 * Save the current selection and closes the dialog window.
-	 * @param event
+	 *
+	 * @param event the event
 	 */
 	@FXML
 	void saveAndClose(ActionEvent event) {
@@ -142,7 +164,8 @@ public class ImportController {
 
 	/**
 	 * Close the dialog window without further action.
-	 * @param event
+	 *
+	 * @param event the event
 	 */
 	@FXML
 	void cancel(ActionEvent event) {
@@ -154,7 +177,8 @@ public class ImportController {
 
 	/**
 	 * Opens a file chooser window, and handle the returned selected file.
-	 * @param event
+	 *
+	 * @param event the event
 	 */
 	@FXML
 	void chooseFile(ActionEvent event) {
@@ -169,20 +193,35 @@ public class ImportController {
 	/** The schema currently selected. If null, we are importing a schema, other a query. */
 	private ObservableSchema schema = null;
 
-	/** Queue containing the object(s) to import */
+	/**  Queue containing the object(s) to import. */
 	ConcurrentLinkedQueue dataQueue;
 
 	/** Collection of forbidden names (e.g. already in use) */
 	Collection<String> forbiddenNames = new LinkedHashSet<>();
 	
+	/**
+	 * Sets the queue.
+	 *
+	 * @param q the new queue
+	 */
 	public void setQueue(ConcurrentLinkedQueue<?> q) {
 		this.dataQueue = q;
 	}
 	
+	/**
+	 * Sets the forbidden names.
+	 *
+	 * @param names the new forbidden names
+	 */
 	public void setForbiddenNames(Collection<String> names) {
 		this.forbiddenNames.addAll(names);
 	}
 	
+	/**
+	 * Sets the schema.
+	 *
+	 * @param schema the new schema
+	 */
 	public void setSchema(ObservableSchema schema) {
 		this.schema = schema;
 	}

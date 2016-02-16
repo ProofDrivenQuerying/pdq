@@ -10,6 +10,7 @@ import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 
 import com.google.common.collect.Sets;
 
+// TODO: Auto-generated Javadoc
 /**
  * 
  * Maps each configuration to its constituting ApplyRule configurations. Used to speed up chasing, i.e.,
@@ -21,18 +22,34 @@ import com.google.common.collect.Sets;
  */
 public final class Template {
 
+	/** The templates. */
 	private final Map<Collection<ApplyRule>,DAGChaseConfiguration> templates = new ConcurrentHashMap<>();
 	
+	/**
+	 * Gets the template.
+	 *
+	 * @param left the left
+	 * @param right the right
+	 * @return the template
+	 */
 	public DAGChaseConfiguration getTemplate(DAGChaseConfiguration left, DAGChaseConfiguration right) {
 		Collection<ApplyRule> applyRules = this.getApplyRules(left, right);
 		return this.templates.get(applyRules);
 	}
 	
+	/**
+	 * Put.
+	 *
+	 * @param rules the rules
+	 * @param template the template
+	 */
 	public void put(Collection<ApplyRule> rules, DAGChaseConfiguration template) {
 		this.templates.put(rules, template);
 	}
 	
 	/**
+	 * Put.
+	 *
 	 * @param configurations List<DAGChaseConfiguration>
 	 */
 	public void put(Collection<DAGChaseConfiguration> configurations) {
@@ -41,10 +58,22 @@ public final class Template {
 		}
 	}
 
+	/**
+	 * Put.
+	 *
+	 * @param configuration the configuration
+	 */
 	public void put(DAGChaseConfiguration configuration) {
 		this.put(Sets.newHashSet(configuration));
 	}
 	
+	/**
+	 * Gets the apply rules.
+	 *
+	 * @param left the left
+	 * @param right the right
+	 * @return the apply rules
+	 */
 	private Collection<ApplyRule> getApplyRules(DAGChaseConfiguration left, DAGChaseConfiguration right) {
 		Collection<ApplyRule> applyRules = new HashSet<>();
 		for(ApplyRule rule:left.getApplyRules()) {
@@ -56,6 +85,12 @@ public final class Template {
 		return applyRules;
 	}
 	
+	/**
+	 * Gets the apply rules.
+	 *
+	 * @param left the left
+	 * @return the apply rules
+	 */
 	private Collection<ApplyRule> getApplyRules(DAGChaseConfiguration left) {
 		Collection<ApplyRule> applyRules = new HashSet<>();
 		for(ApplyRule rule:left.getApplyRules()) {

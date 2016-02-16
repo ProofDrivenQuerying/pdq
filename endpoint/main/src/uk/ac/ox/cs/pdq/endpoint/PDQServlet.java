@@ -16,6 +16,7 @@ import uk.ac.ox.cs.pdq.endpoint.util.SessionAttributes;
 
 import com.google.common.base.Preconditions;
 
+// TODO: Auto-generated Javadoc
 /**
  * This abstract servlet is a parent of all PDQ servlets.
  *  
@@ -23,20 +24,22 @@ import com.google.common.base.Preconditions;
  */
 public abstract class PDQServlet extends HttpServlet {
 
-	/** */
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -6537846117607060962L;
 
-	/** Static logger */
+	/**  Static logger. */
 	private static final Logger log = Logger.getLogger(PDQServlet.class);
 
-	/** The session */
+	/**  The session. */
 	protected HttpSession session = null;
 
 	/**
-	 * @param request
-	 * @param response
-	 * @throws ServletException
-	 * @throws IOException
+	 * Process request.
+	 *
+	 * @param request the request
+	 * @param response the response
+	 * @throws ServletException the servlet exception
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public void processRequest(ServletRequest request, ServletResponse response) throws ServletException, IOException {
 		this.session = ((HttpServletRequest) request).getSession();
@@ -44,10 +47,25 @@ public abstract class PDQServlet extends HttpServlet {
 		this.session.removeAttribute(SessionAttributes.MESSAGE);
 	}
 	
+	/**
+	 * Return error.
+	 *
+	 * @param response the response
+	 * @param general the general
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public void returnError(HttpServletResponse response, String general) throws IOException {
 		this.returnError(response, general, null);
 	}
 	
+	/**
+	 * Return error.
+	 *
+	 * @param response the response
+	 * @param general the general
+	 * @param exception the exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public void returnError(HttpServletResponse response, String general, Exception exception) throws IOException {
 		Preconditions.checkArgument(response != null);
 		Preconditions.checkArgument(general != null);

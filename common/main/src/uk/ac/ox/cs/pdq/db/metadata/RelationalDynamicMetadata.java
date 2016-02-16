@@ -12,23 +12,28 @@ import uk.ac.ox.cs.pdq.util.Tuple;
 
 
 
+// TODO: Auto-generated Javadoc
 /**
- * Implementation of relation statistics
+ * Implementation of relation statistics.
+ *
  * @author Efthymia Tsamoura
  * @author Julien Leblay
- *
  */
 public class RelationalDynamicMetadata implements RelationMetadata {
 
+	/** The relation. */
 	private Relation relation;
 
-	/** The size (in tuples of the relation) */
+	/**  The size (in tuples of the relation). */
 	private long size;
 
+	/** The per input tuple cost. */
 	private Map<AccessMethod, Cost> perInputTupleCost;
 
+	/** The position selectivity. */
 	private Map<List<Integer>, Double> positionSelectivity;
 
+	/** The value selectivity. */
 	private Map<Pair<List<Integer>, Tuple>, Double> valueSelectivity;
 
 	/**
@@ -40,10 +45,15 @@ public class RelationalDynamicMetadata implements RelationMetadata {
 		this.collectStatistics();
 	}
 
+	/**
+	 * Collect statistics.
+	 */
 	private void collectStatistics() {
 	}
 
 	/**
+	 * Gets the size.
+	 *
 	 * @return Long
 	 * @see uk.ac.ox.cs.pdq.db.metadata.RelationMetadata#getSize()
 	 */
@@ -53,6 +63,8 @@ public class RelationalDynamicMetadata implements RelationMetadata {
 	}
 
 	/**
+	 * Gets the selectivity.
+	 *
 	 * @param positions List<Integer>
 	 * @return Double
 	 * @see uk.ac.ox.cs.pdq.costs.statistics.RelationMetadata#getSelectivity(List<Integer>)
@@ -67,6 +79,8 @@ public class RelationalDynamicMetadata implements RelationMetadata {
 	}
 
 	/**
+	 * Gets the selectivity.
+	 *
 	 * @param positions List<Integer>
 	 * @param tuple Tuple
 	 * @return Double
@@ -82,6 +96,8 @@ public class RelationalDynamicMetadata implements RelationMetadata {
 	}
 
 	/**
+	 * Sets the per input tuple cost.
+	 *
 	 * @param accessMethod AccessMethod
 	 * @param c Cost
 	 * @see uk.ac.ox.cs.pdq.db.metadata.RelationMetadata#setPerInputTupleCost(AccessMethod, Cost)
@@ -92,6 +108,8 @@ public class RelationalDynamicMetadata implements RelationMetadata {
 	}
 
 	/**
+	 * Sets the per input tuple costs.
+	 *
 	 * @param accessCosts Map<AccessMethod,Cost>
 	 * @see uk.ac.ox.cs.pdq.costs.statistics.RelationMetadata#setPerInputTupleCosts(Map<AccessMethod,Cost>)
 	 */
@@ -101,6 +119,8 @@ public class RelationalDynamicMetadata implements RelationMetadata {
 	}
 
 	/**
+	 * Sets the size.
+	 *
 	 * @param s Long
 	 * @see uk.ac.ox.cs.pdq.db.metadata.RelationMetadata#setSize(Long)
 	 */
@@ -110,6 +130,8 @@ public class RelationalDynamicMetadata implements RelationMetadata {
 	}
 
 	/**
+	 * Gets the per input tuple cost.
+	 *
 	 * @param accessMethod AccessMethod
 	 * @return Cost
 	 * @see uk.ac.ox.cs.pdq.db.metadata.RelationMetadata#getPerInputTupleCost(AccessMethod)

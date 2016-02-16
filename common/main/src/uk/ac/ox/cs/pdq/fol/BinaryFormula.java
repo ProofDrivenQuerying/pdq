@@ -10,23 +10,27 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.google.common.collect.ImmutableList;
 
 
+// TODO: Auto-generated Javadoc
 /**
- * A binary formula
+ * A binary formula.
+ *
  * @author Efthymia Tsamoura
  * @author Julien Leblay
- *
+ * @param <S> the generic type
+ * @param <T> the generic type
  */
 public abstract class BinaryFormula<S extends Formula, T extends Formula> extends AbstractFormula {
 
-	/** The binary operator*/
+	/**  The binary operator. */
 	protected final LogicalSymbols operator;
 
-	/** The left operand*/
+	/**  The left operand. */
 	protected final S left;
 
-	/** The right operand*/
+	/**  The right operand. */
 	protected final T right;
 
+	/** The children. */
 	protected final Collection<Formula> children;
 
 	/**
@@ -52,6 +56,8 @@ public abstract class BinaryFormula<S extends Formula, T extends Formula> extend
 	}
 
 	/**
+	 * Equals.
+	 *
 	 * @param o Object
 	 * @return boolean
 	 */
@@ -71,6 +77,8 @@ public abstract class BinaryFormula<S extends Formula, T extends Formula> extend
 
 
 	/**
+	 * Hash code.
+	 *
 	 * @return int
 	 */
 	@Override
@@ -79,6 +87,8 @@ public abstract class BinaryFormula<S extends Formula, T extends Formula> extend
 	}
 
 	/**
+	 * To string.
+	 *
 	 * @return String
 	 */
 	@Override
@@ -88,6 +98,8 @@ public abstract class BinaryFormula<S extends Formula, T extends Formula> extend
 
 
 	/**
+	 * Gets the operator.
+	 *
 	 * @return LogicalSymbols
 	 */
 	public LogicalSymbols getOperator() {
@@ -96,6 +108,8 @@ public abstract class BinaryFormula<S extends Formula, T extends Formula> extend
 
 
 	/**
+	 * Gets the left.
+	 *
 	 * @return S
 	 */
 	public S getLeft() {
@@ -104,6 +118,8 @@ public abstract class BinaryFormula<S extends Formula, T extends Formula> extend
 
 
 	/**
+	 * Gets the right.
+	 *
 	 * @return T
 	 */
 	public T getRight() {
@@ -111,6 +127,8 @@ public abstract class BinaryFormula<S extends Formula, T extends Formula> extend
 	}
 
 	/**
+	 * Gets the predicates.
+	 *
 	 * @return List<PredicateFormula>
 	 * @see uk.ac.ox.cs.pdq.fol.Formula#getPredicates()
 	 */
@@ -123,6 +141,8 @@ public abstract class BinaryFormula<S extends Formula, T extends Formula> extend
 	}
 
 	/**
+	 * Gets the terms.
+	 *
 	 * @return List<Term>
 	 * @see uk.ac.ox.cs.pdq.fol.Formula#getTerms()
 	 */
@@ -135,6 +155,8 @@ public abstract class BinaryFormula<S extends Formula, T extends Formula> extend
 	}
 
 	/**
+	 * Checks if is conjunction.
+	 *
 	 * @return boolean
 	 */
 	public boolean isConjunction() {
@@ -142,6 +164,8 @@ public abstract class BinaryFormula<S extends Formula, T extends Formula> extend
 	}
 
 	/**
+	 * Checks if is equivalence.
+	 *
 	 * @return boolean
 	 */
 	public boolean isEquivalence() {
@@ -149,6 +173,8 @@ public abstract class BinaryFormula<S extends Formula, T extends Formula> extend
 	}
 
 	/**
+	 * Checks if is implication.
+	 *
 	 * @return boolean
 	 */
 	public boolean isImplication() {
@@ -156,6 +182,8 @@ public abstract class BinaryFormula<S extends Formula, T extends Formula> extend
 	}
 
 	/**
+	 * Checks if is disjunction.
+	 *
 	 * @return boolean
 	 */
 	public boolean isDisjunction() {
@@ -163,6 +191,8 @@ public abstract class BinaryFormula<S extends Formula, T extends Formula> extend
 	}
 
 	/**
+	 * Gets the symbol.
+	 *
 	 * @return LogicalSymbols
 	 */
 	public LogicalSymbols getSymbol() {
@@ -170,6 +200,8 @@ public abstract class BinaryFormula<S extends Formula, T extends Formula> extend
 	}
 
 	/**
+	 * Gets the children.
+	 *
 	 * @return Collection<Formula>
 	 * @see uk.ac.ox.cs.pdq.fol.Formula#getSubFormulas()
 	 */

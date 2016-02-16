@@ -19,13 +19,22 @@ import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class SQLiteParser.
+ */
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class SQLiteParser extends Parser {
 	static { RuntimeMetaData.checkVersion("4.3", RuntimeMetaData.VERSION); }
 
+	/** The Constant _decisionToDFA. */
 	protected static final DFA[] _decisionToDFA;
+	
+	/** The Constant _sharedContextCache. */
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
+	
+	/** The Constant UNEXPECTED_CHAR. */
 	public static final int
 		SCOL=1, DOT=2, OPEN_PAR=3, CLOSE_PAR=4, COMMA=5, ASSIGN=6, STAR=7, PLUS=8, 
 		MINUS=9, TILDE=10, PIPE2=11, DIV=12, MOD=13, LT2=14, GT2=15, AMP=16, PIPE=17, 
@@ -53,6 +62,8 @@ public class SQLiteParser extends Parser {
 		K_WHEN=145, K_WHERE=146, K_WITH=147, K_WITHOUT=148, IDENTIFIER=149, NUMERIC_LITERAL=150, 
 		BIND_PARAMETER=151, STRING_LITERAL=152, BLOB_LITERAL=153, SINGLE_LINE_COMMENT=154, 
 		MULTILINE_COMMENT=155, SPACES=156, UNEXPECTED_CHAR=157;
+	
+	/** The Constant tokenNames. */
 	public static final String[] tokenNames = {
 		"<INVALID>", "';'", "'.'", "'('", "')'", "','", "'='", "'*'", "'+'", "'-'", 
 		"'~'", "'||'", "'/'", "'%'", "'<<'", "'>>'", "'&'", "'|'", "'<'", "'<='", 
@@ -79,6 +90,8 @@ public class SQLiteParser extends Parser {
 		"NUMERIC_LITERAL", "BIND_PARAMETER", "STRING_LITERAL", "BLOB_LITERAL", 
 		"SINGLE_LINE_COMMENT", "MULTILINE_COMMENT", "SPACES", "UNEXPECTED_CHAR"
 	};
+	
+	/** The Constant RULE_any_name. */
 	public static final int
 		RULE_parse = 0, RULE_error = 1, RULE_sql_stmt_list = 2, RULE_sql_stmt = 3, 
 		RULE_alter_table_stmt = 4, RULE_analyze_stmt = 5, RULE_attach_stmt = 6, 
@@ -106,6 +119,8 @@ public class SQLiteParser extends Parser {
 		RULE_foreign_table = 72, RULE_index_name = 73, RULE_trigger_name = 74, 
 		RULE_view_name = 75, RULE_module_name = 76, RULE_pragma_name = 77, RULE_savepoint_name = 78, 
 		RULE_table_alias = 79, RULE_transaction_name = 80, RULE_any_name = 81;
+	
+	/** The Constant ruleNames. */
 	public static final String[] ruleNames = {
 		"parse", "error", "sql_stmt_list", "sql_stmt", "alter_table_stmt", "analyze_stmt", 
 		"attach_stmt", "begin_stmt", "commit_stmt", "compound_select_stmt", "create_index_stmt", 
@@ -127,53 +142,134 @@ public class SQLiteParser extends Parser {
 		"pragma_name", "savepoint_name", "table_alias", "transaction_name", "any_name"
 	};
 
+	/* (non-Javadoc)
+	 * @see org.antlr.v4.runtime.Recognizer#getGrammarFileName()
+	 */
 	@Override
 	public String getGrammarFileName() { return "SQLite.g4"; }
 
+	/* (non-Javadoc)
+	 * @see org.antlr.v4.runtime.Recognizer#getTokenNames()
+	 */
 	@Override
 	public String[] getTokenNames() { return tokenNames; }
 
+	/* (non-Javadoc)
+	 * @see org.antlr.v4.runtime.Recognizer#getRuleNames()
+	 */
 	@Override
 	public String[] getRuleNames() { return ruleNames; }
 
+	/* (non-Javadoc)
+	 * @see org.antlr.v4.runtime.Recognizer#getSerializedATN()
+	 */
 	@Override
 	public String getSerializedATN() { return _serializedATN; }
 
+	/* (non-Javadoc)
+	 * @see org.antlr.v4.runtime.Recognizer#getATN()
+	 */
 	@Override
 	public ATN getATN() { return _ATN; }
 
+	/**
+	 * Instantiates a new SQ lite parser.
+	 *
+	 * @param input the input
+	 */
 	public SQLiteParser(TokenStream input) {
 		super(input);
 		_interp = new ParserATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
 	}
+	
+	/**
+	 * The Class ParseContext.
+	 */
 	public static class ParseContext extends ParserRuleContext {
+		
+		/**
+		 * Sql_stmt_list.
+		 *
+		 * @return the list
+		 */
 		public List<Sql_stmt_listContext> sql_stmt_list() {
 			return getRuleContexts(Sql_stmt_listContext.class);
 		}
+		
+		/**
+		 * Error.
+		 *
+		 * @param i the i
+		 * @return the error context
+		 */
 		public ErrorContext error(int i) {
 			return getRuleContext(ErrorContext.class,i);
 		}
+		
+		/**
+		 * Sql_stmt_list.
+		 *
+		 * @param i the i
+		 * @return the sql_stmt_list context
+		 */
 		public Sql_stmt_listContext sql_stmt_list(int i) {
 			return getRuleContext(Sql_stmt_listContext.class,i);
 		}
+		
+		/**
+		 * Eof.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode EOF() { return getToken(SQLiteParser.EOF, 0); }
+		
+		/**
+		 * Error.
+		 *
+		 * @return the list
+		 */
 		public List<ErrorContext> error() {
 			return getRuleContexts(ErrorContext.class);
 		}
+		
+		/**
+		 * Instantiates a new parses the context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public ParseContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_parse; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterParse(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitParse(this);
 		}
 	}
 
+	/**
+	 * Parses the.
+	 *
+	 * @return the parses the context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final ParseContext parse() throws RecognitionException {
 		ParseContext _localctx = new ParseContext(_ctx, getState());
 		enterRule(_localctx, 0, RULE_parse);
@@ -243,23 +339,59 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class ErrorContext.
+	 */
 	public static class ErrorContext extends ParserRuleContext {
+		
+		/** The unexpected char. */
 		public Token UNEXPECTED_CHAR;
+		
+		/**
+		 * Unexpected char.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode UNEXPECTED_CHAR() { return getToken(SQLiteParser.UNEXPECTED_CHAR, 0); }
+		
+		/**
+		 * Instantiates a new error context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public ErrorContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_error; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterError(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitError(this);
 		}
 	}
 
+	/**
+	 * Error.
+	 *
+	 * @return the error context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final ErrorContext error() throws RecognitionException {
 		ErrorContext _localctx = new ErrorContext(_ctx, getState());
 		enterRule(_localctx, 2, RULE_error);
@@ -283,27 +415,68 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Sql_stmt_listContext.
+	 */
 	public static class Sql_stmt_listContext extends ParserRuleContext {
+		
+		/**
+		 * Sql_stmt.
+		 *
+		 * @return the list
+		 */
 		public List<Sql_stmtContext> sql_stmt() {
 			return getRuleContexts(Sql_stmtContext.class);
 		}
+		
+		/**
+		 * Sql_stmt.
+		 *
+		 * @param i the i
+		 * @return the sql_stmt context
+		 */
 		public Sql_stmtContext sql_stmt(int i) {
 			return getRuleContext(Sql_stmtContext.class,i);
 		}
+		
+		/**
+		 * Instantiates a new sql_stmt_list context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Sql_stmt_listContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_sql_stmt_list; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterSql_stmt_list(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitSql_stmt_list(this);
 		}
 	}
 
+	/**
+	 * Sql_stmt_list.
+	 *
+	 * @return the sql_stmt_list context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Sql_stmt_listContext sql_stmt_list() throws RecognitionException {
 		Sql_stmt_listContext _localctx = new Sql_stmt_listContext(_ctx, getState());
 		enterRule(_localctx, 4, RULE_sql_stmt_list);
@@ -382,114 +555,340 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Sql_stmtContext.
+	 */
 	public static class Sql_stmtContext extends ParserRuleContext {
+		
+		/**
+		 * Savepoint_stmt.
+		 *
+		 * @return the savepoint_stmt context
+		 */
 		public Savepoint_stmtContext savepoint_stmt() {
 			return getRuleContext(Savepoint_stmtContext.class,0);
 		}
+		
+		/**
+		 * Alter_table_stmt.
+		 *
+		 * @return the alter_table_stmt context
+		 */
 		public Alter_table_stmtContext alter_table_stmt() {
 			return getRuleContext(Alter_table_stmtContext.class,0);
 		}
+		
+		/**
+		 * Attach_stmt.
+		 *
+		 * @return the attach_stmt context
+		 */
 		public Attach_stmtContext attach_stmt() {
 			return getRuleContext(Attach_stmtContext.class,0);
 		}
+		
+		/**
+		 * Vacuum_stmt.
+		 *
+		 * @return the vacuum_stmt context
+		 */
 		public Vacuum_stmtContext vacuum_stmt() {
 			return getRuleContext(Vacuum_stmtContext.class,0);
 		}
+		
+		/**
+		 * Commit_stmt.
+		 *
+		 * @return the commit_stmt context
+		 */
 		public Commit_stmtContext commit_stmt() {
 			return getRuleContext(Commit_stmtContext.class,0);
 		}
+		
+		/**
+		 * Create_index_stmt.
+		 *
+		 * @return the create_index_stmt context
+		 */
 		public Create_index_stmtContext create_index_stmt() {
 			return getRuleContext(Create_index_stmtContext.class,0);
 		}
+		
+		/**
+		 * K explain.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_EXPLAIN() { return getToken(SQLiteParser.K_EXPLAIN, 0); }
+		
+		/**
+		 * Reindex_stmt.
+		 *
+		 * @return the reindex_stmt context
+		 */
 		public Reindex_stmtContext reindex_stmt() {
 			return getRuleContext(Reindex_stmtContext.class,0);
 		}
+		
+		/**
+		 * K query.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_QUERY() { return getToken(SQLiteParser.K_QUERY, 0); }
+		
+		/**
+		 * Detach_stmt.
+		 *
+		 * @return the detach_stmt context
+		 */
 		public Detach_stmtContext detach_stmt() {
 			return getRuleContext(Detach_stmtContext.class,0);
 		}
+		
+		/**
+		 * Begin_stmt.
+		 *
+		 * @return the begin_stmt context
+		 */
 		public Begin_stmtContext begin_stmt() {
 			return getRuleContext(Begin_stmtContext.class,0);
 		}
+		
+		/**
+		 * Create_trigger_stmt.
+		 *
+		 * @return the create_trigger_stmt context
+		 */
 		public Create_trigger_stmtContext create_trigger_stmt() {
 			return getRuleContext(Create_trigger_stmtContext.class,0);
 		}
+		
+		/**
+		 * Update_stmt_limited.
+		 *
+		 * @return the update_stmt_limited context
+		 */
 		public Update_stmt_limitedContext update_stmt_limited() {
 			return getRuleContext(Update_stmt_limitedContext.class,0);
 		}
+		
+		/**
+		 * Drop_view_stmt.
+		 *
+		 * @return the drop_view_stmt context
+		 */
 		public Drop_view_stmtContext drop_view_stmt() {
 			return getRuleContext(Drop_view_stmtContext.class,0);
 		}
+		
+		/**
+		 * Factored_select_stmt.
+		 *
+		 * @return the factored_select_stmt context
+		 */
 		public Factored_select_stmtContext factored_select_stmt() {
 			return getRuleContext(Factored_select_stmtContext.class,0);
 		}
+		
+		/**
+		 * Insert_stmt.
+		 *
+		 * @return the insert_stmt context
+		 */
 		public Insert_stmtContext insert_stmt() {
 			return getRuleContext(Insert_stmtContext.class,0);
 		}
+		
+		/**
+		 * Delete_stmt_limited.
+		 *
+		 * @return the delete_stmt_limited context
+		 */
 		public Delete_stmt_limitedContext delete_stmt_limited() {
 			return getRuleContext(Delete_stmt_limitedContext.class,0);
 		}
+		
+		/**
+		 * Delete_stmt.
+		 *
+		 * @return the delete_stmt context
+		 */
 		public Delete_stmtContext delete_stmt() {
 			return getRuleContext(Delete_stmtContext.class,0);
 		}
+		
+		/**
+		 * Create_table_stmt.
+		 *
+		 * @return the create_table_stmt context
+		 */
 		public Create_table_stmtContext create_table_stmt() {
 			return getRuleContext(Create_table_stmtContext.class,0);
 		}
+		
+		/**
+		 * Release_stmt.
+		 *
+		 * @return the release_stmt context
+		 */
 		public Release_stmtContext release_stmt() {
 			return getRuleContext(Release_stmtContext.class,0);
 		}
+		
+		/**
+		 * Rollback_stmt.
+		 *
+		 * @return the rollback_stmt context
+		 */
 		public Rollback_stmtContext rollback_stmt() {
 			return getRuleContext(Rollback_stmtContext.class,0);
 		}
+		
+		/**
+		 * Drop_index_stmt.
+		 *
+		 * @return the drop_index_stmt context
+		 */
 		public Drop_index_stmtContext drop_index_stmt() {
 			return getRuleContext(Drop_index_stmtContext.class,0);
 		}
+		
+		/**
+		 * K plan.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_PLAN() { return getToken(SQLiteParser.K_PLAN, 0); }
+		
+		/**
+		 * Drop_trigger_stmt.
+		 *
+		 * @return the drop_trigger_stmt context
+		 */
 		public Drop_trigger_stmtContext drop_trigger_stmt() {
 			return getRuleContext(Drop_trigger_stmtContext.class,0);
 		}
+		
+		/**
+		 * Drop_table_stmt.
+		 *
+		 * @return the drop_table_stmt context
+		 */
 		public Drop_table_stmtContext drop_table_stmt() {
 			return getRuleContext(Drop_table_stmtContext.class,0);
 		}
+		
+		/**
+		 * Analyze_stmt.
+		 *
+		 * @return the analyze_stmt context
+		 */
 		public Analyze_stmtContext analyze_stmt() {
 			return getRuleContext(Analyze_stmtContext.class,0);
 		}
+		
+		/**
+		 * Create_virtual_table_stmt.
+		 *
+		 * @return the create_virtual_table_stmt context
+		 */
 		public Create_virtual_table_stmtContext create_virtual_table_stmt() {
 			return getRuleContext(Create_virtual_table_stmtContext.class,0);
 		}
+		
+		/**
+		 * Update_stmt.
+		 *
+		 * @return the update_stmt context
+		 */
 		public Update_stmtContext update_stmt() {
 			return getRuleContext(Update_stmtContext.class,0);
 		}
+		
+		/**
+		 * Pragma_stmt.
+		 *
+		 * @return the pragma_stmt context
+		 */
 		public Pragma_stmtContext pragma_stmt() {
 			return getRuleContext(Pragma_stmtContext.class,0);
 		}
+		
+		/**
+		 * Compound_select_stmt.
+		 *
+		 * @return the compound_select_stmt context
+		 */
 		public Compound_select_stmtContext compound_select_stmt() {
 			return getRuleContext(Compound_select_stmtContext.class,0);
 		}
+		
+		/**
+		 * Simple_select_stmt.
+		 *
+		 * @return the simple_select_stmt context
+		 */
 		public Simple_select_stmtContext simple_select_stmt() {
 			return getRuleContext(Simple_select_stmtContext.class,0);
 		}
+		
+		/**
+		 * Select_stmt.
+		 *
+		 * @return the select_stmt context
+		 */
 		public Select_stmtContext select_stmt() {
 			return getRuleContext(Select_stmtContext.class,0);
 		}
+		
+		/**
+		 * Create_view_stmt.
+		 *
+		 * @return the create_view_stmt context
+		 */
 		public Create_view_stmtContext create_view_stmt() {
 			return getRuleContext(Create_view_stmtContext.class,0);
 		}
+		
+		/**
+		 * Instantiates a new sql_stmt context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Sql_stmtContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_sql_stmt; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterSql_stmt(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitSql_stmt(this);
 		}
 	}
 
+	/**
+	 * Sql_stmt.
+	 *
+	 * @return the sql_stmt context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Sql_stmtContext sql_stmt() throws RecognitionException {
 		Sql_stmtContext _localctx = new Sql_stmtContext(_ctx, getState());
 		enterRule(_localctx, 6, RULE_sql_stmt);
@@ -709,39 +1108,127 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Alter_table_stmtContext.
+	 */
 	public static class Alter_table_stmtContext extends ParserRuleContext {
+		
+		/**
+		 * K rename.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_RENAME() { return getToken(SQLiteParser.K_RENAME, 0); }
+		
+		/**
+		 * K alter.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_ALTER() { return getToken(SQLiteParser.K_ALTER, 0); }
+		
+		/**
+		 * K table.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_TABLE() { return getToken(SQLiteParser.K_TABLE, 0); }
+		
+		/**
+		 * Table_name.
+		 *
+		 * @return the table_name context
+		 */
 		public Table_nameContext table_name() {
 			return getRuleContext(Table_nameContext.class,0);
 		}
+		
+		/**
+		 * K column.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_COLUMN() { return getToken(SQLiteParser.K_COLUMN, 0); }
+		
+		/**
+		 * K to.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_TO() { return getToken(SQLiteParser.K_TO, 0); }
+		
+		/**
+		 * New_table_name.
+		 *
+		 * @return the new_table_name context
+		 */
 		public New_table_nameContext new_table_name() {
 			return getRuleContext(New_table_nameContext.class,0);
 		}
+		
+		/**
+		 * Database_name.
+		 *
+		 * @return the database_name context
+		 */
 		public Database_nameContext database_name() {
 			return getRuleContext(Database_nameContext.class,0);
 		}
+		
+		/**
+		 * Column_def.
+		 *
+		 * @return the column_def context
+		 */
 		public Column_defContext column_def() {
 			return getRuleContext(Column_defContext.class,0);
 		}
+		
+		/**
+		 * K add.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_ADD() { return getToken(SQLiteParser.K_ADD, 0); }
+		
+		/**
+		 * Instantiates a new alter_table_stmt context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Alter_table_stmtContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_alter_table_stmt; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterAlter_table_stmt(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitAlter_table_stmt(this);
 		}
 	}
 
+	/**
+	 * Alter_table_stmt.
+	 *
+	 * @return the alter_table_stmt context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Alter_table_stmtContext alter_table_stmt() throws RecognitionException {
 		Alter_table_stmtContext _localctx = new Alter_table_stmtContext(_ctx, getState());
 		enterRule(_localctx, 8, RULE_alter_table_stmt);
@@ -799,28 +1286,74 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Analyze_stmtContext.
+	 */
 	public static class Analyze_stmtContext extends ParserRuleContext {
+		
+		/**
+		 * K analyze.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_ANALYZE() { return getToken(SQLiteParser.K_ANALYZE, 0); }
+		
+		/**
+		 * Table_or_index_name.
+		 *
+		 * @return the table_or_index_name context
+		 */
 		public Table_or_index_nameContext table_or_index_name() {
 			return getRuleContext(Table_or_index_nameContext.class,0);
 		}
+		
+		/**
+		 * Database_name.
+		 *
+		 * @return the database_name context
+		 */
 		public Database_nameContext database_name() {
 			return getRuleContext(Database_nameContext.class,0);
 		}
+		
+		/**
+		 * Instantiates a new analyze_stmt context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Analyze_stmtContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_analyze_stmt; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterAnalyze_stmt(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitAnalyze_stmt(this);
 		}
 	}
 
+	/**
+	 * Analyze_stmt.
+	 *
+	 * @return the analyze_stmt context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Analyze_stmtContext analyze_stmt() throws RecognitionException {
 		Analyze_stmtContext _localctx = new Analyze_stmtContext(_ctx, getState());
 		enterRule(_localctx, 10, RULE_analyze_stmt);
@@ -863,30 +1396,88 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Attach_stmtContext.
+	 */
 	public static class Attach_stmtContext extends ParserRuleContext {
+		
+		/**
+		 * K as.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_AS() { return getToken(SQLiteParser.K_AS, 0); }
+		
+		/**
+		 * K database.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_DATABASE() { return getToken(SQLiteParser.K_DATABASE, 0); }
+		
+		/**
+		 * Expr.
+		 *
+		 * @return the expr context
+		 */
 		public ExprContext expr() {
 			return getRuleContext(ExprContext.class,0);
 		}
+		
+		/**
+		 * K attach.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_ATTACH() { return getToken(SQLiteParser.K_ATTACH, 0); }
+		
+		/**
+		 * Database_name.
+		 *
+		 * @return the database_name context
+		 */
 		public Database_nameContext database_name() {
 			return getRuleContext(Database_nameContext.class,0);
 		}
+		
+		/**
+		 * Instantiates a new attach_stmt context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Attach_stmtContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_attach_stmt; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterAttach_stmt(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitAttach_stmt(this);
 		}
 	}
 
+	/**
+	 * Attach_stmt.
+	 *
+	 * @return the attach_stmt context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Attach_stmtContext attach_stmt() throws RecognitionException {
 		Attach_stmtContext _localctx = new Attach_stmtContext(_ctx, getState());
 		enterRule(_localctx, 12, RULE_attach_stmt);
@@ -918,29 +1509,93 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Begin_stmtContext.
+	 */
 	public static class Begin_stmtContext extends ParserRuleContext {
+		
+		/**
+		 * K exclusive.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_EXCLUSIVE() { return getToken(SQLiteParser.K_EXCLUSIVE, 0); }
+		
+		/**
+		 * Transaction_name.
+		 *
+		 * @return the transaction_name context
+		 */
 		public Transaction_nameContext transaction_name() {
 			return getRuleContext(Transaction_nameContext.class,0);
 		}
+		
+		/**
+		 * K begin.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_BEGIN() { return getToken(SQLiteParser.K_BEGIN, 0); }
+		
+		/**
+		 * K deferred.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_DEFERRED() { return getToken(SQLiteParser.K_DEFERRED, 0); }
+		
+		/**
+		 * K transaction.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_TRANSACTION() { return getToken(SQLiteParser.K_TRANSACTION, 0); }
+		
+		/**
+		 * K immediate.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_IMMEDIATE() { return getToken(SQLiteParser.K_IMMEDIATE, 0); }
+		
+		/**
+		 * Instantiates a new begin_stmt context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Begin_stmtContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_begin_stmt; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterBegin_stmt(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitBegin_stmt(this);
 		}
 	}
 
+	/**
+	 * Begin_stmt.
+	 *
+	 * @return the begin_stmt context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Begin_stmtContext begin_stmt() throws RecognitionException {
 		Begin_stmtContext _localctx = new Begin_stmtContext(_ctx, getState());
 		enterRule(_localctx, 14, RULE_begin_stmt);
@@ -991,27 +1646,79 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Commit_stmtContext.
+	 */
 	public static class Commit_stmtContext extends ParserRuleContext {
+		
+		/**
+		 * Transaction_name.
+		 *
+		 * @return the transaction_name context
+		 */
 		public Transaction_nameContext transaction_name() {
 			return getRuleContext(Transaction_nameContext.class,0);
 		}
+		
+		/**
+		 * K commit.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_COMMIT() { return getToken(SQLiteParser.K_COMMIT, 0); }
+		
+		/**
+		 * K end.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_END() { return getToken(SQLiteParser.K_END, 0); }
+		
+		/**
+		 * K transaction.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_TRANSACTION() { return getToken(SQLiteParser.K_TRANSACTION, 0); }
+		
+		/**
+		 * Instantiates a new commit_stmt context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Commit_stmtContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_commit_stmt; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterCommit_stmt(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitCommit_stmt(this);
 		}
 	}
 
+	/**
+	 * Commit_stmt.
+	 *
+	 * @return the commit_stmt context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Commit_stmtContext commit_stmt() throws RecognitionException {
 		Commit_stmtContext _localctx = new Commit_stmtContext(_ctx, getState());
 		enterRule(_localctx, 16, RULE_commit_stmt);
@@ -1054,67 +1761,235 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Compound_select_stmtContext.
+	 */
 	public static class Compound_select_stmtContext extends ParserRuleContext {
+		
+		/**
+		 * K except.
+		 *
+		 * @param i the i
+		 * @return the terminal node
+		 */
 		public TerminalNode K_EXCEPT(int i) {
 			return getToken(SQLiteParser.K_EXCEPT, i);
 		}
+		
+		/**
+		 * K all.
+		 *
+		 * @param i the i
+		 * @return the terminal node
+		 */
 		public TerminalNode K_ALL(int i) {
 			return getToken(SQLiteParser.K_ALL, i);
 		}
+		
+		/**
+		 * Select_core.
+		 *
+		 * @return the list
+		 */
 		public List<Select_coreContext> select_core() {
 			return getRuleContexts(Select_coreContext.class);
 		}
+		
+		/**
+		 * Ordering_term.
+		 *
+		 * @return the list
+		 */
 		public List<Ordering_termContext> ordering_term() {
 			return getRuleContexts(Ordering_termContext.class);
 		}
+		
+		/**
+		 * K recursive.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_RECURSIVE() { return getToken(SQLiteParser.K_RECURSIVE, 0); }
+		
+		/**
+		 * Expr.
+		 *
+		 * @param i the i
+		 * @return the expr context
+		 */
 		public ExprContext expr(int i) {
 			return getRuleContext(ExprContext.class,i);
 		}
+		
+		/**
+		 * K intersect.
+		 *
+		 * @return the list
+		 */
 		public List<TerminalNode> K_INTERSECT() { return getTokens(SQLiteParser.K_INTERSECT); }
+		
+		/**
+		 * K limit.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_LIMIT() { return getToken(SQLiteParser.K_LIMIT, 0); }
+		
+		/**
+		 * K with.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_WITH() { return getToken(SQLiteParser.K_WITH, 0); }
+		
+		/**
+		 * K union.
+		 *
+		 * @param i the i
+		 * @return the terminal node
+		 */
 		public TerminalNode K_UNION(int i) {
 			return getToken(SQLiteParser.K_UNION, i);
 		}
+		
+		/**
+		 * Select_core.
+		 *
+		 * @param i the i
+		 * @return the select_core context
+		 */
 		public Select_coreContext select_core(int i) {
 			return getRuleContext(Select_coreContext.class,i);
 		}
+		
+		/**
+		 * Ordering_term.
+		 *
+		 * @param i the i
+		 * @return the ordering_term context
+		 */
 		public Ordering_termContext ordering_term(int i) {
 			return getRuleContext(Ordering_termContext.class,i);
 		}
+		
+		/**
+		 * K all.
+		 *
+		 * @return the list
+		 */
 		public List<TerminalNode> K_ALL() { return getTokens(SQLiteParser.K_ALL); }
+		
+		/**
+		 * Expr.
+		 *
+		 * @return the list
+		 */
 		public List<ExprContext> expr() {
 			return getRuleContexts(ExprContext.class);
 		}
+		
+		/**
+		 * K order.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_ORDER() { return getToken(SQLiteParser.K_ORDER, 0); }
+		
+		/**
+		 * K intersect.
+		 *
+		 * @param i the i
+		 * @return the terminal node
+		 */
 		public TerminalNode K_INTERSECT(int i) {
 			return getToken(SQLiteParser.K_INTERSECT, i);
 		}
+		
+		/**
+		 * K by.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_BY() { return getToken(SQLiteParser.K_BY, 0); }
+		
+		/**
+		 * K except.
+		 *
+		 * @return the list
+		 */
 		public List<TerminalNode> K_EXCEPT() { return getTokens(SQLiteParser.K_EXCEPT); }
+		
+		/**
+		 * K union.
+		 *
+		 * @return the list
+		 */
 		public List<TerminalNode> K_UNION() { return getTokens(SQLiteParser.K_UNION); }
+		
+		/**
+		 * Common_table_expression.
+		 *
+		 * @return the list
+		 */
 		public List<Common_table_expressionContext> common_table_expression() {
 			return getRuleContexts(Common_table_expressionContext.class);
 		}
+		
+		/**
+		 * Common_table_expression.
+		 *
+		 * @param i the i
+		 * @return the common_table_expression context
+		 */
 		public Common_table_expressionContext common_table_expression(int i) {
 			return getRuleContext(Common_table_expressionContext.class,i);
 		}
+		
+		/**
+		 * K offset.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_OFFSET() { return getToken(SQLiteParser.K_OFFSET, 0); }
+		
+		/**
+		 * Instantiates a new compound_select_stmt context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Compound_select_stmtContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_compound_select_stmt; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterCompound_select_stmt(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitCompound_select_stmt(this);
 		}
 	}
 
+	/**
+	 * Compound_select_stmt.
+	 *
+	 * @return the compound_select_stmt context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Compound_select_stmtContext compound_select_stmt() throws RecognitionException {
 		Compound_select_stmtContext _localctx = new Compound_select_stmtContext(_ctx, getState());
 		enterRule(_localctx, 18, RULE_compound_select_stmt);
@@ -1255,47 +2130,160 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Create_index_stmtContext.
+	 */
 	public static class Create_index_stmtContext extends ParserRuleContext {
+		
+		/**
+		 * Indexed_column.
+		 *
+		 * @return the list
+		 */
 		public List<Indexed_columnContext> indexed_column() {
 			return getRuleContexts(Indexed_columnContext.class);
 		}
+		
+		/**
+		 * K if.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_IF() { return getToken(SQLiteParser.K_IF, 0); }
+		
+		/**
+		 * K where.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_WHERE() { return getToken(SQLiteParser.K_WHERE, 0); }
+		
+		/**
+		 * K exists.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_EXISTS() { return getToken(SQLiteParser.K_EXISTS, 0); }
+		
+		/**
+		 * K index.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_INDEX() { return getToken(SQLiteParser.K_INDEX, 0); }
+		
+		/**
+		 * Indexed_column.
+		 *
+		 * @param i the i
+		 * @return the indexed_column context
+		 */
 		public Indexed_columnContext indexed_column(int i) {
 			return getRuleContext(Indexed_columnContext.class,i);
 		}
+		
+		/**
+		 * K on.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_ON() { return getToken(SQLiteParser.K_ON, 0); }
+		
+		/**
+		 * Expr.
+		 *
+		 * @return the expr context
+		 */
 		public ExprContext expr() {
 			return getRuleContext(ExprContext.class,0);
 		}
+		
+		/**
+		 * K create.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_CREATE() { return getToken(SQLiteParser.K_CREATE, 0); }
+		
+		/**
+		 * Table_name.
+		 *
+		 * @return the table_name context
+		 */
 		public Table_nameContext table_name() {
 			return getRuleContext(Table_nameContext.class,0);
 		}
+		
+		/**
+		 * Index_name.
+		 *
+		 * @return the index_name context
+		 */
 		public Index_nameContext index_name() {
 			return getRuleContext(Index_nameContext.class,0);
 		}
+		
+		/**
+		 * K unique.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_UNIQUE() { return getToken(SQLiteParser.K_UNIQUE, 0); }
+		
+		/**
+		 * K not.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_NOT() { return getToken(SQLiteParser.K_NOT, 0); }
+		
+		/**
+		 * Database_name.
+		 *
+		 * @return the database_name context
+		 */
 		public Database_nameContext database_name() {
 			return getRuleContext(Database_nameContext.class,0);
 		}
+		
+		/**
+		 * Instantiates a new create_index_stmt context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Create_index_stmtContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_create_index_stmt; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterCreate_index_stmt(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitCreate_index_stmt(this);
 		}
 	}
 
+	/**
+	 * Create_index_stmt.
+	 *
+	 * @return the create_index_stmt context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Create_index_stmtContext create_index_stmt() throws RecognitionException {
 		Create_index_stmtContext _localctx = new Create_index_stmtContext(_ctx, getState());
 		enterRule(_localctx, 20, RULE_create_index_stmt);
@@ -1374,52 +2362,184 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Create_table_stmtContext.
+	 */
 	public static class Create_table_stmtContext extends ParserRuleContext {
+		
+		/**
+		 * K table.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_TABLE() { return getToken(SQLiteParser.K_TABLE, 0); }
+		
+		/**
+		 * K if.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_IF() { return getToken(SQLiteParser.K_IF, 0); }
+		
+		/**
+		 * Table_constraint.
+		 *
+		 * @param i the i
+		 * @return the table_constraint context
+		 */
 		public Table_constraintContext table_constraint(int i) {
 			return getRuleContext(Table_constraintContext.class,i);
 		}
+		
+		/**
+		 * K exists.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_EXISTS() { return getToken(SQLiteParser.K_EXISTS, 0); }
+		
+		/**
+		 * K temp.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_TEMP() { return getToken(SQLiteParser.K_TEMP, 0); }
+		
+		/**
+		 * K as.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_AS() { return getToken(SQLiteParser.K_AS, 0); }
+		
+		/**
+		 * K create.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_CREATE() { return getToken(SQLiteParser.K_CREATE, 0); }
+		
+		/**
+		 * Table_name.
+		 *
+		 * @return the table_name context
+		 */
 		public Table_nameContext table_name() {
 			return getRuleContext(Table_nameContext.class,0);
 		}
+		
+		/**
+		 * Table_constraint.
+		 *
+		 * @return the list
+		 */
 		public List<Table_constraintContext> table_constraint() {
 			return getRuleContexts(Table_constraintContext.class);
 		}
+		
+		/**
+		 * K without.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_WITHOUT() { return getToken(SQLiteParser.K_WITHOUT, 0); }
+		
+		/**
+		 * Column_def.
+		 *
+		 * @param i the i
+		 * @return the column_def context
+		 */
 		public Column_defContext column_def(int i) {
 			return getRuleContext(Column_defContext.class,i);
 		}
+		
+		/**
+		 * K not.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_NOT() { return getToken(SQLiteParser.K_NOT, 0); }
+		
+		/**
+		 * Identifier.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode IDENTIFIER() { return getToken(SQLiteParser.IDENTIFIER, 0); }
+		
+		/**
+		 * Select_stmt.
+		 *
+		 * @return the select_stmt context
+		 */
 		public Select_stmtContext select_stmt() {
 			return getRuleContext(Select_stmtContext.class,0);
 		}
+		
+		/**
+		 * Database_name.
+		 *
+		 * @return the database_name context
+		 */
 		public Database_nameContext database_name() {
 			return getRuleContext(Database_nameContext.class,0);
 		}
+		
+		/**
+		 * K temporary.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_TEMPORARY() { return getToken(SQLiteParser.K_TEMPORARY, 0); }
+		
+		/**
+		 * Column_def.
+		 *
+		 * @return the list
+		 */
 		public List<Column_defContext> column_def() {
 			return getRuleContexts(Column_defContext.class);
 		}
+		
+		/**
+		 * Instantiates a new create_table_stmt context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Create_table_stmtContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_create_table_stmt; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterCreate_table_stmt(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitCreate_table_stmt(this);
 		}
 	}
 
+	/**
+	 * Create_table_stmt.
+	 *
+	 * @return the create_table_stmt context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Create_table_stmtContext create_table_stmt() throws RecognitionException {
 		Create_table_stmtContext _localctx = new Create_table_stmtContext(_ctx, getState());
 		enterRule(_localctx, 22, RULE_create_table_stmt);
@@ -1533,90 +2653,347 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Create_trigger_stmtContext.
+	 */
 	public static class Create_trigger_stmtContext extends ParserRuleContext {
+		
+		/**
+		 * K insert.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_INSERT() { return getToken(SQLiteParser.K_INSERT, 0); }
+		
+		/**
+		 * Trigger_name.
+		 *
+		 * @return the trigger_name context
+		 */
 		public Trigger_nameContext trigger_name() {
 			return getRuleContext(Trigger_nameContext.class,0);
 		}
+		
+		/**
+		 * K exists.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_EXISTS() { return getToken(SQLiteParser.K_EXISTS, 0); }
+		
+		/**
+		 * K delete.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_DELETE() { return getToken(SQLiteParser.K_DELETE, 0); }
+		
+		/**
+		 * K temp.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_TEMP() { return getToken(SQLiteParser.K_TEMP, 0); }
+		
+		/**
+		 * K instead.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_INSTEAD() { return getToken(SQLiteParser.K_INSTEAD, 0); }
+		
+		/**
+		 * Delete_stmt.
+		 *
+		 * @param i the i
+		 * @return the delete_stmt context
+		 */
 		public Delete_stmtContext delete_stmt(int i) {
 			return getRuleContext(Delete_stmtContext.class,i);
 		}
+		
+		/**
+		 * Table_name.
+		 *
+		 * @return the table_name context
+		 */
 		public Table_nameContext table_name() {
 			return getRuleContext(Table_nameContext.class,0);
 		}
+		
+		/**
+		 * Insert_stmt.
+		 *
+		 * @return the list
+		 */
 		public List<Insert_stmtContext> insert_stmt() {
 			return getRuleContexts(Insert_stmtContext.class);
 		}
+		
+		/**
+		 * Insert_stmt.
+		 *
+		 * @param i the i
+		 * @return the insert_stmt context
+		 */
 		public Insert_stmtContext insert_stmt(int i) {
 			return getRuleContext(Insert_stmtContext.class,i);
 		}
+		
+		/**
+		 * K for.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_FOR() { return getToken(SQLiteParser.K_FOR, 0); }
+		
+		/**
+		 * K when.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_WHEN() { return getToken(SQLiteParser.K_WHEN, 0); }
+		
+		/**
+		 * Delete_stmt.
+		 *
+		 * @return the list
+		 */
 		public List<Delete_stmtContext> delete_stmt() {
 			return getRuleContexts(Delete_stmtContext.class);
 		}
+		
+		/**
+		 * Database_name.
+		 *
+		 * @param i the i
+		 * @return the database_name context
+		 */
 		public Database_nameContext database_name(int i) {
 			return getRuleContext(Database_nameContext.class,i);
 		}
+		
+		/**
+		 * K temporary.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_TEMPORARY() { return getToken(SQLiteParser.K_TEMPORARY, 0); }
+		
+		/**
+		 * K before.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_BEFORE() { return getToken(SQLiteParser.K_BEFORE, 0); }
+		
+		/**
+		 * K if.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_IF() { return getToken(SQLiteParser.K_IF, 0); }
+		
+		/**
+		 * K after.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_AFTER() { return getToken(SQLiteParser.K_AFTER, 0); }
+		
+		/**
+		 * Select_stmt.
+		 *
+		 * @param i the i
+		 * @return the select_stmt context
+		 */
 		public Select_stmtContext select_stmt(int i) {
 			return getRuleContext(Select_stmtContext.class,i);
 		}
+		
+		/**
+		 * K begin.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_BEGIN() { return getToken(SQLiteParser.K_BEGIN, 0); }
+		
+		/**
+		 * K of.
+		 *
+		 * @return the list
+		 */
 		public List<TerminalNode> K_OF() { return getTokens(SQLiteParser.K_OF); }
+		
+		/**
+		 * K each.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_EACH() { return getToken(SQLiteParser.K_EACH, 0); }
+		
+		/**
+		 * K row.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_ROW() { return getToken(SQLiteParser.K_ROW, 0); }
+		
+		/**
+		 * Update_stmt.
+		 *
+		 * @param i the i
+		 * @return the update_stmt context
+		 */
 		public Update_stmtContext update_stmt(int i) {
 			return getRuleContext(Update_stmtContext.class,i);
 		}
+		
+		/**
+		 * K of.
+		 *
+		 * @param i the i
+		 * @return the terminal node
+		 */
 		public TerminalNode K_OF(int i) {
 			return getToken(SQLiteParser.K_OF, i);
 		}
+		
+		/**
+		 * Column_name.
+		 *
+		 * @param i the i
+		 * @return the column_name context
+		 */
 		public Column_nameContext column_name(int i) {
 			return getRuleContext(Column_nameContext.class,i);
 		}
+		
+		/**
+		 * Update_stmt.
+		 *
+		 * @return the list
+		 */
 		public List<Update_stmtContext> update_stmt() {
 			return getRuleContexts(Update_stmtContext.class);
 		}
+		
+		/**
+		 * K on.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_ON() { return getToken(SQLiteParser.K_ON, 0); }
+		
+		/**
+		 * Expr.
+		 *
+		 * @return the expr context
+		 */
 		public ExprContext expr() {
 			return getRuleContext(ExprContext.class,0);
 		}
+		
+		/**
+		 * Column_name.
+		 *
+		 * @return the list
+		 */
 		public List<Column_nameContext> column_name() {
 			return getRuleContexts(Column_nameContext.class);
 		}
+		
+		/**
+		 * K create.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_CREATE() { return getToken(SQLiteParser.K_CREATE, 0); }
+		
+		/**
+		 * K update.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_UPDATE() { return getToken(SQLiteParser.K_UPDATE, 0); }
+		
+		/**
+		 * K not.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_NOT() { return getToken(SQLiteParser.K_NOT, 0); }
+		
+		/**
+		 * K end.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_END() { return getToken(SQLiteParser.K_END, 0); }
+		
+		/**
+		 * Database_name.
+		 *
+		 * @return the list
+		 */
 		public List<Database_nameContext> database_name() {
 			return getRuleContexts(Database_nameContext.class);
 		}
+		
+		/**
+		 * Select_stmt.
+		 *
+		 * @return the list
+		 */
 		public List<Select_stmtContext> select_stmt() {
 			return getRuleContexts(Select_stmtContext.class);
 		}
+		
+		/**
+		 * K trigger.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_TRIGGER() { return getToken(SQLiteParser.K_TRIGGER, 0); }
+		
+		/**
+		 * Instantiates a new create_trigger_stmt context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Create_trigger_stmtContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_create_trigger_stmt; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterCreate_trigger_stmt(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitCreate_trigger_stmt(this);
 		}
 	}
 
+	/**
+	 * Create_trigger_stmt.
+	 *
+	 * @return the create_trigger_stmt context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Create_trigger_stmtContext create_trigger_stmt() throws RecognitionException {
 		Create_trigger_stmtContext _localctx = new Create_trigger_stmtContext(_ctx, getState());
 		enterRule(_localctx, 24, RULE_create_trigger_stmt);
@@ -1811,38 +3188,132 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Create_view_stmtContext.
+	 */
 	public static class Create_view_stmtContext extends ParserRuleContext {
+		
+		/**
+		 * K as.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_AS() { return getToken(SQLiteParser.K_AS, 0); }
+		
+		/**
+		 * K create.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_CREATE() { return getToken(SQLiteParser.K_CREATE, 0); }
+		
+		/**
+		 * K if.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_IF() { return getToken(SQLiteParser.K_IF, 0); }
+		
+		/**
+		 * View_name.
+		 *
+		 * @return the view_name context
+		 */
 		public View_nameContext view_name() {
 			return getRuleContext(View_nameContext.class,0);
 		}
+		
+		/**
+		 * K view.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_VIEW() { return getToken(SQLiteParser.K_VIEW, 0); }
+		
+		/**
+		 * K exists.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_EXISTS() { return getToken(SQLiteParser.K_EXISTS, 0); }
+		
+		/**
+		 * K not.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_NOT() { return getToken(SQLiteParser.K_NOT, 0); }
+		
+		/**
+		 * K temp.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_TEMP() { return getToken(SQLiteParser.K_TEMP, 0); }
+		
+		/**
+		 * Select_stmt.
+		 *
+		 * @return the select_stmt context
+		 */
 		public Select_stmtContext select_stmt() {
 			return getRuleContext(Select_stmtContext.class,0);
 		}
+		
+		/**
+		 * Database_name.
+		 *
+		 * @return the database_name context
+		 */
 		public Database_nameContext database_name() {
 			return getRuleContext(Database_nameContext.class,0);
 		}
+		
+		/**
+		 * K temporary.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_TEMPORARY() { return getToken(SQLiteParser.K_TEMPORARY, 0); }
+		
+		/**
+		 * Instantiates a new create_view_stmt context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Create_view_stmtContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_create_view_stmt; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterCreate_view_stmt(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitCreate_view_stmt(this);
 		}
 	}
 
+	/**
+	 * Create_view_stmt.
+	 *
+	 * @return the create_view_stmt context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Create_view_stmtContext create_view_stmt() throws RecognitionException {
 		Create_view_stmtContext _localctx = new Create_view_stmtContext(_ctx, getState());
 		enterRule(_localctx, 26, RULE_create_view_stmt);
@@ -1900,43 +3371,144 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Create_virtual_table_stmtContext.
+	 */
 	public static class Create_virtual_table_stmtContext extends ParserRuleContext {
+		
+		/**
+		 * Module_argument.
+		 *
+		 * @param i the i
+		 * @return the module_argument context
+		 */
 		public Module_argumentContext module_argument(int i) {
 			return getRuleContext(Module_argumentContext.class,i);
 		}
+		
+		/**
+		 * K virtual.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_VIRTUAL() { return getToken(SQLiteParser.K_VIRTUAL, 0); }
+		
+		/**
+		 * K create.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_CREATE() { return getToken(SQLiteParser.K_CREATE, 0); }
+		
+		/**
+		 * K table.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_TABLE() { return getToken(SQLiteParser.K_TABLE, 0); }
+		
+		/**
+		 * Table_name.
+		 *
+		 * @return the table_name context
+		 */
 		public Table_nameContext table_name() {
 			return getRuleContext(Table_nameContext.class,0);
 		}
+		
+		/**
+		 * K if.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_IF() { return getToken(SQLiteParser.K_IF, 0); }
+		
+		/**
+		 * K exists.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_EXISTS() { return getToken(SQLiteParser.K_EXISTS, 0); }
+		
+		/**
+		 * K using.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_USING() { return getToken(SQLiteParser.K_USING, 0); }
+		
+		/**
+		 * Module_argument.
+		 *
+		 * @return the list
+		 */
 		public List<Module_argumentContext> module_argument() {
 			return getRuleContexts(Module_argumentContext.class);
 		}
+		
+		/**
+		 * K not.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_NOT() { return getToken(SQLiteParser.K_NOT, 0); }
+		
+		/**
+		 * Database_name.
+		 *
+		 * @return the database_name context
+		 */
 		public Database_nameContext database_name() {
 			return getRuleContext(Database_nameContext.class,0);
 		}
+		
+		/**
+		 * Module_name.
+		 *
+		 * @return the module_name context
+		 */
 		public Module_nameContext module_name() {
 			return getRuleContext(Module_nameContext.class,0);
 		}
+		
+		/**
+		 * Instantiates a new create_virtual_table_stmt context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Create_virtual_table_stmtContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_create_virtual_table_stmt; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterCreate_virtual_table_stmt(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitCreate_virtual_table_stmt(this);
 		}
 	}
 
+	/**
+	 * Create_virtual_table_stmt.
+	 *
+	 * @return the create_virtual_table_stmt context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Create_virtual_table_stmtContext create_virtual_table_stmt() throws RecognitionException {
 		Create_virtual_table_stmtContext _localctx = new Create_virtual_table_stmtContext(_ctx, getState());
 		enterRule(_localctx, 28, RULE_create_virtual_table_stmt);
@@ -2006,33 +3578,97 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Delete_stmtContext.
+	 */
 	public static class Delete_stmtContext extends ParserRuleContext {
+		
+		/**
+		 * Expr.
+		 *
+		 * @return the expr context
+		 */
 		public ExprContext expr() {
 			return getRuleContext(ExprContext.class,0);
 		}
+		
+		/**
+		 * K where.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_WHERE() { return getToken(SQLiteParser.K_WHERE, 0); }
+		
+		/**
+		 * With_clause.
+		 *
+		 * @return the with_clause context
+		 */
 		public With_clauseContext with_clause() {
 			return getRuleContext(With_clauseContext.class,0);
 		}
+		
+		/**
+		 * Qualified_table_name.
+		 *
+		 * @return the qualified_table_name context
+		 */
 		public Qualified_table_nameContext qualified_table_name() {
 			return getRuleContext(Qualified_table_nameContext.class,0);
 		}
+		
+		/**
+		 * K from.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_FROM() { return getToken(SQLiteParser.K_FROM, 0); }
+		
+		/**
+		 * K delete.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_DELETE() { return getToken(SQLiteParser.K_DELETE, 0); }
+		
+		/**
+		 * Instantiates a new delete_stmt context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Delete_stmtContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_delete_stmt; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterDelete_stmt(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitDelete_stmt(this);
 		}
 	}
 
+	/**
+	 * Delete_stmt.
+	 *
+	 * @return the delete_stmt context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Delete_stmtContext delete_stmt() throws RecognitionException {
 		Delete_stmtContext _localctx = new Delete_stmtContext(_ctx, getState());
 		enterRule(_localctx, 30, RULE_delete_stmt);
@@ -2073,46 +3709,154 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Delete_stmt_limitedContext.
+	 */
 	public static class Delete_stmt_limitedContext extends ParserRuleContext {
+		
+		/**
+		 * Ordering_term.
+		 *
+		 * @return the list
+		 */
 		public List<Ordering_termContext> ordering_term() {
 			return getRuleContexts(Ordering_termContext.class);
 		}
+		
+		/**
+		 * K where.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_WHERE() { return getToken(SQLiteParser.K_WHERE, 0); }
+		
+		/**
+		 * Expr.
+		 *
+		 * @param i the i
+		 * @return the expr context
+		 */
 		public ExprContext expr(int i) {
 			return getRuleContext(ExprContext.class,i);
 		}
+		
+		/**
+		 * K from.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_FROM() { return getToken(SQLiteParser.K_FROM, 0); }
+		
+		/**
+		 * K limit.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_LIMIT() { return getToken(SQLiteParser.K_LIMIT, 0); }
+		
+		/**
+		 * K delete.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_DELETE() { return getToken(SQLiteParser.K_DELETE, 0); }
+		
+		/**
+		 * Ordering_term.
+		 *
+		 * @param i the i
+		 * @return the ordering_term context
+		 */
 		public Ordering_termContext ordering_term(int i) {
 			return getRuleContext(Ordering_termContext.class,i);
 		}
+		
+		/**
+		 * Expr.
+		 *
+		 * @return the list
+		 */
 		public List<ExprContext> expr() {
 			return getRuleContexts(ExprContext.class);
 		}
+		
+		/**
+		 * K order.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_ORDER() { return getToken(SQLiteParser.K_ORDER, 0); }
+		
+		/**
+		 * With_clause.
+		 *
+		 * @return the with_clause context
+		 */
 		public With_clauseContext with_clause() {
 			return getRuleContext(With_clauseContext.class,0);
 		}
+		
+		/**
+		 * Qualified_table_name.
+		 *
+		 * @return the qualified_table_name context
+		 */
 		public Qualified_table_nameContext qualified_table_name() {
 			return getRuleContext(Qualified_table_nameContext.class,0);
 		}
+		
+		/**
+		 * K by.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_BY() { return getToken(SQLiteParser.K_BY, 0); }
+		
+		/**
+		 * K offset.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_OFFSET() { return getToken(SQLiteParser.K_OFFSET, 0); }
+		
+		/**
+		 * Instantiates a new delete_stmt_limited context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Delete_stmt_limitedContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_delete_stmt_limited; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterDelete_stmt_limited(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitDelete_stmt_limited(this);
 		}
 	}
 
+	/**
+	 * Delete_stmt_limited.
+	 *
+	 * @return the delete_stmt_limited context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Delete_stmt_limitedContext delete_stmt_limited() throws RecognitionException {
 		Delete_stmt_limitedContext _localctx = new Delete_stmt_limitedContext(_ctx, getState());
 		enterRule(_localctx, 32, RULE_delete_stmt_limited);
@@ -2200,26 +3944,72 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Detach_stmtContext.
+	 */
 	public static class Detach_stmtContext extends ParserRuleContext {
+		
+		/**
+		 * K database.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_DATABASE() { return getToken(SQLiteParser.K_DATABASE, 0); }
+		
+		/**
+		 * K detach.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_DETACH() { return getToken(SQLiteParser.K_DETACH, 0); }
+		
+		/**
+		 * Database_name.
+		 *
+		 * @return the database_name context
+		 */
 		public Database_nameContext database_name() {
 			return getRuleContext(Database_nameContext.class,0);
 		}
+		
+		/**
+		 * Instantiates a new detach_stmt context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Detach_stmtContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_detach_stmt; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterDetach_stmt(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitDetach_stmt(this);
 		}
 	}
 
+	/**
+	 * Detach_stmt.
+	 *
+	 * @return the detach_stmt context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Detach_stmtContext detach_stmt() throws RecognitionException {
 		Detach_stmtContext _localctx = new Detach_stmtContext(_ctx, getState());
 		enterRule(_localctx, 34, RULE_detach_stmt);
@@ -2249,31 +4039,95 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Drop_index_stmtContext.
+	 */
 	public static class Drop_index_stmtContext extends ParserRuleContext {
+		
+		/**
+		 * K index.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_INDEX() { return getToken(SQLiteParser.K_INDEX, 0); }
+		
+		/**
+		 * K if.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_IF() { return getToken(SQLiteParser.K_IF, 0); }
+		
+		/**
+		 * Index_name.
+		 *
+		 * @return the index_name context
+		 */
 		public Index_nameContext index_name() {
 			return getRuleContext(Index_nameContext.class,0);
 		}
+		
+		/**
+		 * K drop.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_DROP() { return getToken(SQLiteParser.K_DROP, 0); }
+		
+		/**
+		 * K exists.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_EXISTS() { return getToken(SQLiteParser.K_EXISTS, 0); }
+		
+		/**
+		 * Database_name.
+		 *
+		 * @return the database_name context
+		 */
 		public Database_nameContext database_name() {
 			return getRuleContext(Database_nameContext.class,0);
 		}
+		
+		/**
+		 * Instantiates a new drop_index_stmt context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Drop_index_stmtContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_drop_index_stmt; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterDrop_index_stmt(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitDrop_index_stmt(this);
 		}
 	}
 
+	/**
+	 * Drop_index_stmt.
+	 *
+	 * @return the drop_index_stmt context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Drop_index_stmtContext drop_index_stmt() throws RecognitionException {
 		Drop_index_stmtContext _localctx = new Drop_index_stmtContext(_ctx, getState());
 		enterRule(_localctx, 36, RULE_drop_index_stmt);
@@ -2314,31 +4168,95 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Drop_table_stmtContext.
+	 */
 	public static class Drop_table_stmtContext extends ParserRuleContext {
+		
+		/**
+		 * K table.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_TABLE() { return getToken(SQLiteParser.K_TABLE, 0); }
+		
+		/**
+		 * Table_name.
+		 *
+		 * @return the table_name context
+		 */
 		public Table_nameContext table_name() {
 			return getRuleContext(Table_nameContext.class,0);
 		}
+		
+		/**
+		 * K if.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_IF() { return getToken(SQLiteParser.K_IF, 0); }
+		
+		/**
+		 * K drop.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_DROP() { return getToken(SQLiteParser.K_DROP, 0); }
+		
+		/**
+		 * K exists.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_EXISTS() { return getToken(SQLiteParser.K_EXISTS, 0); }
+		
+		/**
+		 * Database_name.
+		 *
+		 * @return the database_name context
+		 */
 		public Database_nameContext database_name() {
 			return getRuleContext(Database_nameContext.class,0);
 		}
+		
+		/**
+		 * Instantiates a new drop_table_stmt context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Drop_table_stmtContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_drop_table_stmt; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterDrop_table_stmt(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitDrop_table_stmt(this);
 		}
 	}
 
+	/**
+	 * Drop_table_stmt.
+	 *
+	 * @return the drop_table_stmt context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Drop_table_stmtContext drop_table_stmt() throws RecognitionException {
 		Drop_table_stmtContext _localctx = new Drop_table_stmtContext(_ctx, getState());
 		enterRule(_localctx, 38, RULE_drop_table_stmt);
@@ -2379,31 +4297,95 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Drop_trigger_stmtContext.
+	 */
 	public static class Drop_trigger_stmtContext extends ParserRuleContext {
+		
+		/**
+		 * K if.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_IF() { return getToken(SQLiteParser.K_IF, 0); }
+		
+		/**
+		 * Trigger_name.
+		 *
+		 * @return the trigger_name context
+		 */
 		public Trigger_nameContext trigger_name() {
 			return getRuleContext(Trigger_nameContext.class,0);
 		}
+		
+		/**
+		 * K drop.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_DROP() { return getToken(SQLiteParser.K_DROP, 0); }
+		
+		/**
+		 * K exists.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_EXISTS() { return getToken(SQLiteParser.K_EXISTS, 0); }
+		
+		/**
+		 * Database_name.
+		 *
+		 * @return the database_name context
+		 */
 		public Database_nameContext database_name() {
 			return getRuleContext(Database_nameContext.class,0);
 		}
+		
+		/**
+		 * K trigger.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_TRIGGER() { return getToken(SQLiteParser.K_TRIGGER, 0); }
+		
+		/**
+		 * Instantiates a new drop_trigger_stmt context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Drop_trigger_stmtContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_drop_trigger_stmt; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterDrop_trigger_stmt(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitDrop_trigger_stmt(this);
 		}
 	}
 
+	/**
+	 * Drop_trigger_stmt.
+	 *
+	 * @return the drop_trigger_stmt context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Drop_trigger_stmtContext drop_trigger_stmt() throws RecognitionException {
 		Drop_trigger_stmtContext _localctx = new Drop_trigger_stmtContext(_ctx, getState());
 		enterRule(_localctx, 40, RULE_drop_trigger_stmt);
@@ -2444,31 +4426,95 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Drop_view_stmtContext.
+	 */
 	public static class Drop_view_stmtContext extends ParserRuleContext {
+		
+		/**
+		 * K if.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_IF() { return getToken(SQLiteParser.K_IF, 0); }
+		
+		/**
+		 * View_name.
+		 *
+		 * @return the view_name context
+		 */
 		public View_nameContext view_name() {
 			return getRuleContext(View_nameContext.class,0);
 		}
+		
+		/**
+		 * K drop.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_DROP() { return getToken(SQLiteParser.K_DROP, 0); }
+		
+		/**
+		 * K view.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_VIEW() { return getToken(SQLiteParser.K_VIEW, 0); }
+		
+		/**
+		 * K exists.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_EXISTS() { return getToken(SQLiteParser.K_EXISTS, 0); }
+		
+		/**
+		 * Database_name.
+		 *
+		 * @return the database_name context
+		 */
 		public Database_nameContext database_name() {
 			return getRuleContext(Database_nameContext.class,0);
 		}
+		
+		/**
+		 * Instantiates a new drop_view_stmt context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Drop_view_stmtContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_drop_view_stmt; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterDrop_view_stmt(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitDrop_view_stmt(this);
 		}
 	}
 
+	/**
+	 * Drop_view_stmt.
+	 *
+	 * @return the drop_view_stmt context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Drop_view_stmtContext drop_view_stmt() throws RecognitionException {
 		Drop_view_stmtContext _localctx = new Drop_view_stmtContext(_ctx, getState());
 		enterRule(_localctx, 42, RULE_drop_view_stmt);
@@ -2509,57 +4555,186 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Factored_select_stmtContext.
+	 */
 	public static class Factored_select_stmtContext extends ParserRuleContext {
+		
+		/**
+		 * Select_core.
+		 *
+		 * @return the list
+		 */
 		public List<Select_coreContext> select_core() {
 			return getRuleContexts(Select_coreContext.class);
 		}
+		
+		/**
+		 * Ordering_term.
+		 *
+		 * @return the list
+		 */
 		public List<Ordering_termContext> ordering_term() {
 			return getRuleContexts(Ordering_termContext.class);
 		}
+		
+		/**
+		 * K recursive.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_RECURSIVE() { return getToken(SQLiteParser.K_RECURSIVE, 0); }
+		
+		/**
+		 * Expr.
+		 *
+		 * @param i the i
+		 * @return the expr context
+		 */
 		public ExprContext expr(int i) {
 			return getRuleContext(ExprContext.class,i);
 		}
+		
+		/**
+		 * K limit.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_LIMIT() { return getToken(SQLiteParser.K_LIMIT, 0); }
+		
+		/**
+		 * Compound_operator.
+		 *
+		 * @param i the i
+		 * @return the compound_operator context
+		 */
 		public Compound_operatorContext compound_operator(int i) {
 			return getRuleContext(Compound_operatorContext.class,i);
 		}
+		
+		/**
+		 * K with.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_WITH() { return getToken(SQLiteParser.K_WITH, 0); }
+		
+		/**
+		 * Select_core.
+		 *
+		 * @param i the i
+		 * @return the select_core context
+		 */
 		public Select_coreContext select_core(int i) {
 			return getRuleContext(Select_coreContext.class,i);
 		}
+		
+		/**
+		 * Ordering_term.
+		 *
+		 * @param i the i
+		 * @return the ordering_term context
+		 */
 		public Ordering_termContext ordering_term(int i) {
 			return getRuleContext(Ordering_termContext.class,i);
 		}
+		
+		/**
+		 * Expr.
+		 *
+		 * @return the list
+		 */
 		public List<ExprContext> expr() {
 			return getRuleContexts(ExprContext.class);
 		}
+		
+		/**
+		 * K order.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_ORDER() { return getToken(SQLiteParser.K_ORDER, 0); }
+		
+		/**
+		 * K by.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_BY() { return getToken(SQLiteParser.K_BY, 0); }
+		
+		/**
+		 * Common_table_expression.
+		 *
+		 * @return the list
+		 */
 		public List<Common_table_expressionContext> common_table_expression() {
 			return getRuleContexts(Common_table_expressionContext.class);
 		}
+		
+		/**
+		 * Compound_operator.
+		 *
+		 * @return the list
+		 */
 		public List<Compound_operatorContext> compound_operator() {
 			return getRuleContexts(Compound_operatorContext.class);
 		}
+		
+		/**
+		 * Common_table_expression.
+		 *
+		 * @param i the i
+		 * @return the common_table_expression context
+		 */
 		public Common_table_expressionContext common_table_expression(int i) {
 			return getRuleContext(Common_table_expressionContext.class,i);
 		}
+		
+		/**
+		 * K offset.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_OFFSET() { return getToken(SQLiteParser.K_OFFSET, 0); }
+		
+		/**
+		 * Instantiates a new factored_select_stmt context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Factored_select_stmtContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_factored_select_stmt; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterFactored_select_stmt(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitFactored_select_stmt(this);
 		}
 	}
 
+	/**
+	 * Factored_select_stmt.
+	 *
+	 * @return the factored_select_stmt context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Factored_select_stmtContext factored_select_stmt() throws RecognitionException {
 		Factored_select_stmtContext _localctx = new Factored_select_stmtContext(_ctx, getState());
 		enterRule(_localctx, 44, RULE_factored_select_stmt);
@@ -2673,55 +4848,193 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Insert_stmtContext.
+	 */
 	public static class Insert_stmtContext extends ParserRuleContext {
+		
+		/**
+		 * K into.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_INTO() { return getToken(SQLiteParser.K_INTO, 0); }
+		
+		/**
+		 * Expr.
+		 *
+		 * @param i the i
+		 * @return the expr context
+		 */
 		public ExprContext expr(int i) {
 			return getRuleContext(ExprContext.class,i);
 		}
+		
+		/**
+		 * K insert.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_INSERT() { return getToken(SQLiteParser.K_INSERT, 0); }
+		
+		/**
+		 * K default.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_DEFAULT() { return getToken(SQLiteParser.K_DEFAULT, 0); }
+		
+		/**
+		 * K rollback.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_ROLLBACK() { return getToken(SQLiteParser.K_ROLLBACK, 0); }
+		
+		/**
+		 * K fail.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_FAIL() { return getToken(SQLiteParser.K_FAIL, 0); }
+		
+		/**
+		 * Column_name.
+		 *
+		 * @param i the i
+		 * @return the column_name context
+		 */
 		public Column_nameContext column_name(int i) {
 			return getRuleContext(Column_nameContext.class,i);
 		}
+		
+		/**
+		 * Expr.
+		 *
+		 * @return the list
+		 */
 		public List<ExprContext> expr() {
 			return getRuleContexts(ExprContext.class);
 		}
+		
+		/**
+		 * Column_name.
+		 *
+		 * @return the list
+		 */
 		public List<Column_nameContext> column_name() {
 			return getRuleContexts(Column_nameContext.class);
 		}
+		
+		/**
+		 * K ignore.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_IGNORE() { return getToken(SQLiteParser.K_IGNORE, 0); }
+		
+		/**
+		 * Table_name.
+		 *
+		 * @return the table_name context
+		 */
 		public Table_nameContext table_name() {
 			return getRuleContext(Table_nameContext.class,0);
 		}
+		
+		/**
+		 * K values.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_VALUES() { return getToken(SQLiteParser.K_VALUES, 0); }
+		
+		/**
+		 * With_clause.
+		 *
+		 * @return the with_clause context
+		 */
 		public With_clauseContext with_clause() {
 			return getRuleContext(With_clauseContext.class,0);
 		}
+		
+		/**
+		 * K or.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_OR() { return getToken(SQLiteParser.K_OR, 0); }
+		
+		/**
+		 * K abort.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_ABORT() { return getToken(SQLiteParser.K_ABORT, 0); }
+		
+		/**
+		 * Select_stmt.
+		 *
+		 * @return the select_stmt context
+		 */
 		public Select_stmtContext select_stmt() {
 			return getRuleContext(Select_stmtContext.class,0);
 		}
+		
+		/**
+		 * Database_name.
+		 *
+		 * @return the database_name context
+		 */
 		public Database_nameContext database_name() {
 			return getRuleContext(Database_nameContext.class,0);
 		}
+		
+		/**
+		 * K replace.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_REPLACE() { return getToken(SQLiteParser.K_REPLACE, 0); }
+		
+		/**
+		 * Instantiates a new insert_stmt context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Insert_stmtContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_insert_stmt; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterInsert_stmt(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitInsert_stmt(this);
 		}
 	}
 
+	/**
+	 * Insert_stmt.
+	 *
+	 * @return the insert_stmt context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Insert_stmtContext insert_stmt() throws RecognitionException {
 		Insert_stmtContext _localctx = new Insert_stmtContext(_ctx, getState());
 		enterRule(_localctx, 46, RULE_insert_stmt);
@@ -2907,31 +5220,83 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Pragma_stmtContext.
+	 */
 	public static class Pragma_stmtContext extends ParserRuleContext {
+		
+		/**
+		 * Pragma_value.
+		 *
+		 * @return the pragma_value context
+		 */
 		public Pragma_valueContext pragma_value() {
 			return getRuleContext(Pragma_valueContext.class,0);
 		}
+		
+		/**
+		 * Pragma_name.
+		 *
+		 * @return the pragma_name context
+		 */
 		public Pragma_nameContext pragma_name() {
 			return getRuleContext(Pragma_nameContext.class,0);
 		}
+		
+		/**
+		 * Database_name.
+		 *
+		 * @return the database_name context
+		 */
 		public Database_nameContext database_name() {
 			return getRuleContext(Database_nameContext.class,0);
 		}
+		
+		/**
+		 * K pragma.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_PRAGMA() { return getToken(SQLiteParser.K_PRAGMA, 0); }
+		
+		/**
+		 * Instantiates a new pragma_stmt context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Pragma_stmtContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_pragma_stmt; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterPragma_stmt(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitPragma_stmt(this);
 		}
 	}
 
+	/**
+	 * Pragma_stmt.
+	 *
+	 * @return the pragma_stmt context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Pragma_stmtContext pragma_stmt() throws RecognitionException {
 		Pragma_stmtContext _localctx = new Pragma_stmtContext(_ctx, getState());
 		enterRule(_localctx, 48, RULE_pragma_stmt);
@@ -3007,34 +5372,92 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Reindex_stmtContext.
+	 */
 	public static class Reindex_stmtContext extends ParserRuleContext {
+		
+		/**
+		 * Collation_name.
+		 *
+		 * @return the collation_name context
+		 */
 		public Collation_nameContext collation_name() {
 			return getRuleContext(Collation_nameContext.class,0);
 		}
+		
+		/**
+		 * Table_name.
+		 *
+		 * @return the table_name context
+		 */
 		public Table_nameContext table_name() {
 			return getRuleContext(Table_nameContext.class,0);
 		}
+		
+		/**
+		 * Index_name.
+		 *
+		 * @return the index_name context
+		 */
 		public Index_nameContext index_name() {
 			return getRuleContext(Index_nameContext.class,0);
 		}
+		
+		/**
+		 * K reindex.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_REINDEX() { return getToken(SQLiteParser.K_REINDEX, 0); }
+		
+		/**
+		 * Database_name.
+		 *
+		 * @return the database_name context
+		 */
 		public Database_nameContext database_name() {
 			return getRuleContext(Database_nameContext.class,0);
 		}
+		
+		/**
+		 * Instantiates a new reindex_stmt context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Reindex_stmtContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_reindex_stmt; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterReindex_stmt(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitReindex_stmt(this);
 		}
 	}
 
+	/**
+	 * Reindex_stmt.
+	 *
+	 * @return the reindex_stmt context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Reindex_stmtContext reindex_stmt() throws RecognitionException {
 		Reindex_stmtContext _localctx = new Reindex_stmtContext(_ctx, getState());
 		enterRule(_localctx, 50, RULE_reindex_stmt);
@@ -3091,26 +5514,72 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Release_stmtContext.
+	 */
 	public static class Release_stmtContext extends ParserRuleContext {
+		
+		/**
+		 * K savepoint.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_SAVEPOINT() { return getToken(SQLiteParser.K_SAVEPOINT, 0); }
+		
+		/**
+		 * K release.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_RELEASE() { return getToken(SQLiteParser.K_RELEASE, 0); }
+		
+		/**
+		 * Savepoint_name.
+		 *
+		 * @return the savepoint_name context
+		 */
 		public Savepoint_nameContext savepoint_name() {
 			return getRuleContext(Savepoint_nameContext.class,0);
 		}
+		
+		/**
+		 * Instantiates a new release_stmt context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Release_stmtContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_release_stmt; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterRelease_stmt(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitRelease_stmt(this);
 		}
 	}
 
+	/**
+	 * Release_stmt.
+	 *
+	 * @return the release_stmt context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Release_stmtContext release_stmt() throws RecognitionException {
 		Release_stmtContext _localctx = new Release_stmtContext(_ctx, getState());
 		enterRule(_localctx, 52, RULE_release_stmt);
@@ -3140,31 +5609,95 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Rollback_stmtContext.
+	 */
 	public static class Rollback_stmtContext extends ParserRuleContext {
+		
+		/**
+		 * K savepoint.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_SAVEPOINT() { return getToken(SQLiteParser.K_SAVEPOINT, 0); }
+		
+		/**
+		 * Transaction_name.
+		 *
+		 * @return the transaction_name context
+		 */
 		public Transaction_nameContext transaction_name() {
 			return getRuleContext(Transaction_nameContext.class,0);
 		}
+		
+		/**
+		 * Savepoint_name.
+		 *
+		 * @return the savepoint_name context
+		 */
 		public Savepoint_nameContext savepoint_name() {
 			return getRuleContext(Savepoint_nameContext.class,0);
 		}
+		
+		/**
+		 * K to.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_TO() { return getToken(SQLiteParser.K_TO, 0); }
+		
+		/**
+		 * K transaction.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_TRANSACTION() { return getToken(SQLiteParser.K_TRANSACTION, 0); }
+		
+		/**
+		 * K rollback.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_ROLLBACK() { return getToken(SQLiteParser.K_ROLLBACK, 0); }
+		
+		/**
+		 * Instantiates a new rollback_stmt context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Rollback_stmtContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_rollback_stmt; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterRollback_stmt(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitRollback_stmt(this);
 		}
 	}
 
+	/**
+	 * Rollback_stmt.
+	 *
+	 * @return the rollback_stmt context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Rollback_stmtContext rollback_stmt() throws RecognitionException {
 		Rollback_stmtContext _localctx = new Rollback_stmtContext(_ctx, getState());
 		enterRule(_localctx, 54, RULE_rollback_stmt);
@@ -3219,25 +5752,65 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Savepoint_stmtContext.
+	 */
 	public static class Savepoint_stmtContext extends ParserRuleContext {
+		
+		/**
+		 * K savepoint.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_SAVEPOINT() { return getToken(SQLiteParser.K_SAVEPOINT, 0); }
+		
+		/**
+		 * Savepoint_name.
+		 *
+		 * @return the savepoint_name context
+		 */
 		public Savepoint_nameContext savepoint_name() {
 			return getRuleContext(Savepoint_nameContext.class,0);
 		}
+		
+		/**
+		 * Instantiates a new savepoint_stmt context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Savepoint_stmtContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_savepoint_stmt; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterSavepoint_stmt(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitSavepoint_stmt(this);
 		}
 	}
 
+	/**
+	 * Savepoint_stmt.
+	 *
+	 * @return the savepoint_stmt context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Savepoint_stmtContext savepoint_stmt() throws RecognitionException {
 		Savepoint_stmtContext _localctx = new Savepoint_stmtContext(_ctx, getState());
 		enterRule(_localctx, 56, RULE_savepoint_stmt);
@@ -3259,48 +5832,157 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Simple_select_stmtContext.
+	 */
 	public static class Simple_select_stmtContext extends ParserRuleContext {
+		
+		/**
+		 * Select_core.
+		 *
+		 * @return the select_core context
+		 */
 		public Select_coreContext select_core() {
 			return getRuleContext(Select_coreContext.class,0);
 		}
+		
+		/**
+		 * Ordering_term.
+		 *
+		 * @return the list
+		 */
 		public List<Ordering_termContext> ordering_term() {
 			return getRuleContexts(Ordering_termContext.class);
 		}
+		
+		/**
+		 * K recursive.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_RECURSIVE() { return getToken(SQLiteParser.K_RECURSIVE, 0); }
+		
+		/**
+		 * Expr.
+		 *
+		 * @param i the i
+		 * @return the expr context
+		 */
 		public ExprContext expr(int i) {
 			return getRuleContext(ExprContext.class,i);
 		}
+		
+		/**
+		 * K limit.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_LIMIT() { return getToken(SQLiteParser.K_LIMIT, 0); }
+		
+		/**
+		 * K with.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_WITH() { return getToken(SQLiteParser.K_WITH, 0); }
+		
+		/**
+		 * Ordering_term.
+		 *
+		 * @param i the i
+		 * @return the ordering_term context
+		 */
 		public Ordering_termContext ordering_term(int i) {
 			return getRuleContext(Ordering_termContext.class,i);
 		}
+		
+		/**
+		 * Expr.
+		 *
+		 * @return the list
+		 */
 		public List<ExprContext> expr() {
 			return getRuleContexts(ExprContext.class);
 		}
+		
+		/**
+		 * K order.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_ORDER() { return getToken(SQLiteParser.K_ORDER, 0); }
+		
+		/**
+		 * K by.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_BY() { return getToken(SQLiteParser.K_BY, 0); }
+		
+		/**
+		 * Common_table_expression.
+		 *
+		 * @return the list
+		 */
 		public List<Common_table_expressionContext> common_table_expression() {
 			return getRuleContexts(Common_table_expressionContext.class);
 		}
+		
+		/**
+		 * Common_table_expression.
+		 *
+		 * @param i the i
+		 * @return the common_table_expression context
+		 */
 		public Common_table_expressionContext common_table_expression(int i) {
 			return getRuleContext(Common_table_expressionContext.class,i);
 		}
+		
+		/**
+		 * K offset.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_OFFSET() { return getToken(SQLiteParser.K_OFFSET, 0); }
+		
+		/**
+		 * Instantiates a new simple_select_stmt context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Simple_select_stmtContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_simple_select_stmt; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterSimple_select_stmt(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitSimple_select_stmt(this);
 		}
 	}
 
+	/**
+	 * Simple_select_stmt.
+	 *
+	 * @return the simple_select_stmt context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Simple_select_stmtContext simple_select_stmt() throws RecognitionException {
 		Simple_select_stmtContext _localctx = new Simple_select_stmtContext(_ctx, getState());
 		enterRule(_localctx, 58, RULE_simple_select_stmt);
@@ -3400,57 +6082,186 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Select_stmtContext.
+	 */
 	public static class Select_stmtContext extends ParserRuleContext {
+		
+		/**
+		 * Select_or_values.
+		 *
+		 * @param i the i
+		 * @return the select_or_values context
+		 */
 		public Select_or_valuesContext select_or_values(int i) {
 			return getRuleContext(Select_or_valuesContext.class,i);
 		}
+		
+		/**
+		 * Ordering_term.
+		 *
+		 * @return the list
+		 */
 		public List<Ordering_termContext> ordering_term() {
 			return getRuleContexts(Ordering_termContext.class);
 		}
+		
+		/**
+		 * K recursive.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_RECURSIVE() { return getToken(SQLiteParser.K_RECURSIVE, 0); }
+		
+		/**
+		 * Expr.
+		 *
+		 * @param i the i
+		 * @return the expr context
+		 */
 		public ExprContext expr(int i) {
 			return getRuleContext(ExprContext.class,i);
 		}
+		
+		/**
+		 * K limit.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_LIMIT() { return getToken(SQLiteParser.K_LIMIT, 0); }
+		
+		/**
+		 * Compound_operator.
+		 *
+		 * @param i the i
+		 * @return the compound_operator context
+		 */
 		public Compound_operatorContext compound_operator(int i) {
 			return getRuleContext(Compound_operatorContext.class,i);
 		}
+		
+		/**
+		 * K with.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_WITH() { return getToken(SQLiteParser.K_WITH, 0); }
+		
+		/**
+		 * Ordering_term.
+		 *
+		 * @param i the i
+		 * @return the ordering_term context
+		 */
 		public Ordering_termContext ordering_term(int i) {
 			return getRuleContext(Ordering_termContext.class,i);
 		}
+		
+		/**
+		 * Expr.
+		 *
+		 * @return the list
+		 */
 		public List<ExprContext> expr() {
 			return getRuleContexts(ExprContext.class);
 		}
+		
+		/**
+		 * K order.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_ORDER() { return getToken(SQLiteParser.K_ORDER, 0); }
+		
+		/**
+		 * Select_or_values.
+		 *
+		 * @return the list
+		 */
 		public List<Select_or_valuesContext> select_or_values() {
 			return getRuleContexts(Select_or_valuesContext.class);
 		}
+		
+		/**
+		 * K by.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_BY() { return getToken(SQLiteParser.K_BY, 0); }
+		
+		/**
+		 * Common_table_expression.
+		 *
+		 * @return the list
+		 */
 		public List<Common_table_expressionContext> common_table_expression() {
 			return getRuleContexts(Common_table_expressionContext.class);
 		}
+		
+		/**
+		 * Compound_operator.
+		 *
+		 * @return the list
+		 */
 		public List<Compound_operatorContext> compound_operator() {
 			return getRuleContexts(Compound_operatorContext.class);
 		}
+		
+		/**
+		 * Common_table_expression.
+		 *
+		 * @param i the i
+		 * @return the common_table_expression context
+		 */
 		public Common_table_expressionContext common_table_expression(int i) {
 			return getRuleContext(Common_table_expressionContext.class,i);
 		}
+		
+		/**
+		 * K offset.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_OFFSET() { return getToken(SQLiteParser.K_OFFSET, 0); }
+		
+		/**
+		 * Instantiates a new select_stmt context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Select_stmtContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_select_stmt; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterSelect_stmt(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitSelect_stmt(this);
 		}
 	}
 
+	/**
+	 * Select_stmt.
+	 *
+	 * @return the select_stmt context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Select_stmtContext select_stmt() throws RecognitionException {
 		Select_stmtContext _localctx = new Select_stmtContext(_ctx, getState());
 		enterRule(_localctx, 60, RULE_select_stmt);
@@ -3564,51 +6375,178 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Select_or_valuesContext.
+	 */
 	public static class Select_or_valuesContext extends ParserRuleContext {
+		
+		/**
+		 * K where.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_WHERE() { return getToken(SQLiteParser.K_WHERE, 0); }
+		
+		/**
+		 * Expr.
+		 *
+		 * @param i the i
+		 * @return the expr context
+		 */
 		public ExprContext expr(int i) {
 			return getRuleContext(ExprContext.class,i);
 		}
+		
+		/**
+		 * Result_column.
+		 *
+		 * @return the list
+		 */
 		public List<Result_columnContext> result_column() {
 			return getRuleContexts(Result_columnContext.class);
 		}
+		
+		/**
+		 * Result_column.
+		 *
+		 * @param i the i
+		 * @return the result_column context
+		 */
 		public Result_columnContext result_column(int i) {
 			return getRuleContext(Result_columnContext.class,i);
 		}
+		
+		/**
+		 * K from.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_FROM() { return getToken(SQLiteParser.K_FROM, 0); }
+		
+		/**
+		 * Join_clause.
+		 *
+		 * @return the join_clause context
+		 */
 		public Join_clauseContext join_clause() {
 			return getRuleContext(Join_clauseContext.class,0);
 		}
+		
+		/**
+		 * K all.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_ALL() { return getToken(SQLiteParser.K_ALL, 0); }
+		
+		/**
+		 * Expr.
+		 *
+		 * @return the list
+		 */
 		public List<ExprContext> expr() {
 			return getRuleContexts(ExprContext.class);
 		}
+		
+		/**
+		 * K group.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_GROUP() { return getToken(SQLiteParser.K_GROUP, 0); }
+		
+		/**
+		 * K distinct.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_DISTINCT() { return getToken(SQLiteParser.K_DISTINCT, 0); }
+		
+		/**
+		 * K having.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_HAVING() { return getToken(SQLiteParser.K_HAVING, 0); }
+		
+		/**
+		 * K values.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_VALUES() { return getToken(SQLiteParser.K_VALUES, 0); }
+		
+		/**
+		 * Table_or_subquery.
+		 *
+		 * @return the list
+		 */
 		public List<Table_or_subqueryContext> table_or_subquery() {
 			return getRuleContexts(Table_or_subqueryContext.class);
 		}
+		
+		/**
+		 * K select.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_SELECT() { return getToken(SQLiteParser.K_SELECT, 0); }
+		
+		/**
+		 * K by.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_BY() { return getToken(SQLiteParser.K_BY, 0); }
+		
+		/**
+		 * Table_or_subquery.
+		 *
+		 * @param i the i
+		 * @return the table_or_subquery context
+		 */
 		public Table_or_subqueryContext table_or_subquery(int i) {
 			return getRuleContext(Table_or_subqueryContext.class,i);
 		}
+		
+		/**
+		 * Instantiates a new select_or_values context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Select_or_valuesContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_select_or_values; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterSelect_or_values(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitSelect_or_values(this);
 		}
 	}
 
+	/**
+	 * Select_or_values.
+	 *
+	 * @return the select_or_values context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Select_or_valuesContext select_or_values() throws RecognitionException {
 		Select_or_valuesContext _localctx = new Select_or_valuesContext(_ctx, getState());
 		enterRule(_localctx, 62, RULE_select_or_values);
@@ -3796,48 +6734,168 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Update_stmtContext.
+	 */
 	public static class Update_stmtContext extends ParserRuleContext {
+		
+		/**
+		 * Expr.
+		 *
+		 * @param i the i
+		 * @return the expr context
+		 */
 		public ExprContext expr(int i) {
 			return getRuleContext(ExprContext.class,i);
 		}
+		
+		/**
+		 * K where.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_WHERE() { return getToken(SQLiteParser.K_WHERE, 0); }
+		
+		/**
+		 * K rollback.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_ROLLBACK() { return getToken(SQLiteParser.K_ROLLBACK, 0); }
+		
+		/**
+		 * K fail.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_FAIL() { return getToken(SQLiteParser.K_FAIL, 0); }
+		
+		/**
+		 * Column_name.
+		 *
+		 * @param i the i
+		 * @return the column_name context
+		 */
 		public Column_nameContext column_name(int i) {
 			return getRuleContext(Column_nameContext.class,i);
 		}
+		
+		/**
+		 * Column_name.
+		 *
+		 * @return the list
+		 */
 		public List<Column_nameContext> column_name() {
 			return getRuleContexts(Column_nameContext.class);
 		}
+		
+		/**
+		 * Expr.
+		 *
+		 * @return the list
+		 */
 		public List<ExprContext> expr() {
 			return getRuleContexts(ExprContext.class);
 		}
+		
+		/**
+		 * K ignore.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_IGNORE() { return getToken(SQLiteParser.K_IGNORE, 0); }
+		
+		/**
+		 * With_clause.
+		 *
+		 * @return the with_clause context
+		 */
 		public With_clauseContext with_clause() {
 			return getRuleContext(With_clauseContext.class,0);
 		}
+		
+		/**
+		 * K update.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_UPDATE() { return getToken(SQLiteParser.K_UPDATE, 0); }
+		
+		/**
+		 * Qualified_table_name.
+		 *
+		 * @return the qualified_table_name context
+		 */
 		public Qualified_table_nameContext qualified_table_name() {
 			return getRuleContext(Qualified_table_nameContext.class,0);
 		}
+		
+		/**
+		 * K set.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_SET() { return getToken(SQLiteParser.K_SET, 0); }
+		
+		/**
+		 * K or.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_OR() { return getToken(SQLiteParser.K_OR, 0); }
+		
+		/**
+		 * K abort.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_ABORT() { return getToken(SQLiteParser.K_ABORT, 0); }
+		
+		/**
+		 * K replace.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_REPLACE() { return getToken(SQLiteParser.K_REPLACE, 0); }
+		
+		/**
+		 * Instantiates a new update_stmt context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Update_stmtContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_update_stmt; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterUpdate_stmt(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitUpdate_stmt(this);
 		}
 	}
 
+	/**
+	 * Update_stmt.
+	 *
+	 * @return the update_stmt context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Update_stmtContext update_stmt() throws RecognitionException {
 		Update_stmtContext _localctx = new Update_stmtContext(_ctx, getState());
 		enterRule(_localctx, 64, RULE_update_stmt);
@@ -3934,58 +6992,215 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Update_stmt_limitedContext.
+	 */
 	public static class Update_stmt_limitedContext extends ParserRuleContext {
+		
+		/**
+		 * Ordering_term.
+		 *
+		 * @return the list
+		 */
 		public List<Ordering_termContext> ordering_term() {
 			return getRuleContexts(Ordering_termContext.class);
 		}
+		
+		/**
+		 * Expr.
+		 *
+		 * @param i the i
+		 * @return the expr context
+		 */
 		public ExprContext expr(int i) {
 			return getRuleContext(ExprContext.class,i);
 		}
+		
+		/**
+		 * K where.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_WHERE() { return getToken(SQLiteParser.K_WHERE, 0); }
+		
+		/**
+		 * K limit.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_LIMIT() { return getToken(SQLiteParser.K_LIMIT, 0); }
+		
+		/**
+		 * K rollback.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_ROLLBACK() { return getToken(SQLiteParser.K_ROLLBACK, 0); }
+		
+		/**
+		 * K fail.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_FAIL() { return getToken(SQLiteParser.K_FAIL, 0); }
+		
+		/**
+		 * Column_name.
+		 *
+		 * @param i the i
+		 * @return the column_name context
+		 */
 		public Column_nameContext column_name(int i) {
 			return getRuleContext(Column_nameContext.class,i);
 		}
+		
+		/**
+		 * Ordering_term.
+		 *
+		 * @param i the i
+		 * @return the ordering_term context
+		 */
 		public Ordering_termContext ordering_term(int i) {
 			return getRuleContext(Ordering_termContext.class,i);
 		}
+		
+		/**
+		 * Column_name.
+		 *
+		 * @return the list
+		 */
 		public List<Column_nameContext> column_name() {
 			return getRuleContexts(Column_nameContext.class);
 		}
+		
+		/**
+		 * Expr.
+		 *
+		 * @return the list
+		 */
 		public List<ExprContext> expr() {
 			return getRuleContexts(ExprContext.class);
 		}
+		
+		/**
+		 * K ignore.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_IGNORE() { return getToken(SQLiteParser.K_IGNORE, 0); }
+		
+		/**
+		 * K order.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_ORDER() { return getToken(SQLiteParser.K_ORDER, 0); }
+		
+		/**
+		 * With_clause.
+		 *
+		 * @return the with_clause context
+		 */
 		public With_clauseContext with_clause() {
 			return getRuleContext(With_clauseContext.class,0);
 		}
+		
+		/**
+		 * K update.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_UPDATE() { return getToken(SQLiteParser.K_UPDATE, 0); }
+		
+		/**
+		 * Qualified_table_name.
+		 *
+		 * @return the qualified_table_name context
+		 */
 		public Qualified_table_nameContext qualified_table_name() {
 			return getRuleContext(Qualified_table_nameContext.class,0);
 		}
+		
+		/**
+		 * K set.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_SET() { return getToken(SQLiteParser.K_SET, 0); }
+		
+		/**
+		 * K by.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_BY() { return getToken(SQLiteParser.K_BY, 0); }
+		
+		/**
+		 * K or.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_OR() { return getToken(SQLiteParser.K_OR, 0); }
+		
+		/**
+		 * K abort.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_ABORT() { return getToken(SQLiteParser.K_ABORT, 0); }
+		
+		/**
+		 * K replace.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_REPLACE() { return getToken(SQLiteParser.K_REPLACE, 0); }
+		
+		/**
+		 * K offset.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_OFFSET() { return getToken(SQLiteParser.K_OFFSET, 0); }
+		
+		/**
+		 * Instantiates a new update_stmt_limited context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Update_stmt_limitedContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_update_stmt_limited; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterUpdate_stmt_limited(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitUpdate_stmt_limited(this);
 		}
 	}
 
+	/**
+	 * Update_stmt_limited.
+	 *
+	 * @return the update_stmt_limited context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Update_stmt_limitedContext update_stmt_limited() throws RecognitionException {
 		Update_stmt_limitedContext _localctx = new Update_stmt_limitedContext(_ctx, getState());
 		enterRule(_localctx, 66, RULE_update_stmt_limited);
@@ -4129,22 +7344,56 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Vacuum_stmtContext.
+	 */
 	public static class Vacuum_stmtContext extends ParserRuleContext {
+		
+		/**
+		 * K vacuum.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_VACUUM() { return getToken(SQLiteParser.K_VACUUM, 0); }
+		
+		/**
+		 * Instantiates a new vacuum_stmt context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Vacuum_stmtContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_vacuum_stmt; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterVacuum_stmt(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitVacuum_stmt(this);
 		}
 	}
 
+	/**
+	 * Vacuum_stmt.
+	 *
+	 * @return the vacuum_stmt context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Vacuum_stmtContext vacuum_stmt() throws RecognitionException {
 		Vacuum_stmtContext _localctx = new Vacuum_stmtContext(_ctx, getState());
 		enterRule(_localctx, 68, RULE_vacuum_stmt);
@@ -4165,33 +7414,86 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Column_defContext.
+	 */
 	public static class Column_defContext extends ParserRuleContext {
+		
+		/**
+		 * Column_name.
+		 *
+		 * @return the column_name context
+		 */
 		public Column_nameContext column_name() {
 			return getRuleContext(Column_nameContext.class,0);
 		}
+		
+		/**
+		 * Type_name.
+		 *
+		 * @return the type_name context
+		 */
 		public Type_nameContext type_name() {
 			return getRuleContext(Type_nameContext.class,0);
 		}
+		
+		/**
+		 * Column_constraint.
+		 *
+		 * @return the list
+		 */
 		public List<Column_constraintContext> column_constraint() {
 			return getRuleContexts(Column_constraintContext.class);
 		}
+		
+		/**
+		 * Column_constraint.
+		 *
+		 * @param i the i
+		 * @return the column_constraint context
+		 */
 		public Column_constraintContext column_constraint(int i) {
 			return getRuleContext(Column_constraintContext.class,i);
 		}
+		
+		/**
+		 * Instantiates a new column_def context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Column_defContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_column_def; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterColumn_def(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitColumn_def(this);
 		}
 	}
 
+	/**
+	 * Column_def.
+	 *
+	 * @return the column_def context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Column_defContext column_def() throws RecognitionException {
 		Column_defContext _localctx = new Column_defContext(_ctx, getState());
 		enterRule(_localctx, 70, RULE_column_def);
@@ -4234,33 +7536,87 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Type_nameContext.
+	 */
 	public static class Type_nameContext extends ParserRuleContext {
+		
+		/**
+		 * Name.
+		 *
+		 * @param i the i
+		 * @return the name context
+		 */
 		public NameContext name(int i) {
 			return getRuleContext(NameContext.class,i);
 		}
+		
+		/**
+		 * Signed_number.
+		 *
+		 * @param i the i
+		 * @return the signed_number context
+		 */
 		public Signed_numberContext signed_number(int i) {
 			return getRuleContext(Signed_numberContext.class,i);
 		}
+		
+		/**
+		 * Signed_number.
+		 *
+		 * @return the list
+		 */
 		public List<Signed_numberContext> signed_number() {
 			return getRuleContexts(Signed_numberContext.class);
 		}
+		
+		/**
+		 * Name.
+		 *
+		 * @return the list
+		 */
 		public List<NameContext> name() {
 			return getRuleContexts(NameContext.class);
 		}
+		
+		/**
+		 * Instantiates a new type_name context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Type_nameContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_type_name; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterType_name(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitType_name(this);
 		}
 	}
 
+	/**
+	 * Type_name.
+	 *
+	 * @return the type_name context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Type_nameContext type_name() throws RecognitionException {
 		Type_nameContext _localctx = new Type_nameContext(_ctx, getState());
 		enterRule(_localctx, 72, RULE_type_name);
@@ -4320,54 +7676,196 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Column_constraintContext.
+	 */
 	public static class Column_constraintContext extends ParserRuleContext {
+		
+		/**
+		 * K collate.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_COLLATE() { return getToken(SQLiteParser.K_COLLATE, 0); }
+		
+		/**
+		 * K default.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_DEFAULT() { return getToken(SQLiteParser.K_DEFAULT, 0); }
+		
+		/**
+		 * K autoincrement.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_AUTOINCREMENT() { return getToken(SQLiteParser.K_AUTOINCREMENT, 0); }
+		
+		/**
+		 * K desc.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_DESC() { return getToken(SQLiteParser.K_DESC, 0); }
+		
+		/**
+		 * K primary.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_PRIMARY() { return getToken(SQLiteParser.K_PRIMARY, 0); }
+		
+		/**
+		 * Expr.
+		 *
+		 * @return the expr context
+		 */
 		public ExprContext expr() {
 			return getRuleContext(ExprContext.class,0);
 		}
+		
+		/**
+		 * Literal_value.
+		 *
+		 * @return the literal_value context
+		 */
 		public Literal_valueContext literal_value() {
 			return getRuleContext(Literal_valueContext.class,0);
 		}
+		
+		/**
+		 * Collation_name.
+		 *
+		 * @return the collation_name context
+		 */
 		public Collation_nameContext collation_name() {
 			return getRuleContext(Collation_nameContext.class,0);
 		}
+		
+		/**
+		 * K check.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_CHECK() { return getToken(SQLiteParser.K_CHECK, 0); }
+		
+		/**
+		 * K null.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_NULL() { return getToken(SQLiteParser.K_NULL, 0); }
+		
+		/**
+		 * Signed_number.
+		 *
+		 * @return the signed_number context
+		 */
 		public Signed_numberContext signed_number() {
 			return getRuleContext(Signed_numberContext.class,0);
 		}
+		
+		/**
+		 * K unique.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_UNIQUE() { return getToken(SQLiteParser.K_UNIQUE, 0); }
+		
+		/**
+		 * K key.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_KEY() { return getToken(SQLiteParser.K_KEY, 0); }
+		
+		/**
+		 * K constraint.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_CONSTRAINT() { return getToken(SQLiteParser.K_CONSTRAINT, 0); }
+		
+		/**
+		 * Name.
+		 *
+		 * @return the name context
+		 */
 		public NameContext name() {
 			return getRuleContext(NameContext.class,0);
 		}
+		
+		/**
+		 * Conflict_clause.
+		 *
+		 * @return the conflict_clause context
+		 */
 		public Conflict_clauseContext conflict_clause() {
 			return getRuleContext(Conflict_clauseContext.class,0);
 		}
+		
+		/**
+		 * K not.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_NOT() { return getToken(SQLiteParser.K_NOT, 0); }
+		
+		/**
+		 * K asc.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_ASC() { return getToken(SQLiteParser.K_ASC, 0); }
+		
+		/**
+		 * Foreign_key_clause.
+		 *
+		 * @return the foreign_key_clause context
+		 */
 		public Foreign_key_clauseContext foreign_key_clause() {
 			return getRuleContext(Foreign_key_clauseContext.class,0);
 		}
+		
+		/**
+		 * Instantiates a new column_constraint context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Column_constraintContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_column_constraint; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterColumn_constraint(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitColumn_constraint(this);
 		}
 	}
 
+	/**
+	 * Column_constraint.
+	 *
+	 * @return the column_constraint context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Column_constraintContext column_constraint() throws RecognitionException {
 		Column_constraintContext _localctx = new Column_constraintContext(_ctx, getState());
 		enterRule(_localctx, 74, RULE_column_constraint);
@@ -4497,28 +7995,98 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Conflict_clauseContext.
+	 */
 	public static class Conflict_clauseContext extends ParserRuleContext {
+		
+		/**
+		 * K on.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_ON() { return getToken(SQLiteParser.K_ON, 0); }
+		
+		/**
+		 * K ignore.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_IGNORE() { return getToken(SQLiteParser.K_IGNORE, 0); }
+		
+		/**
+		 * K conflict.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_CONFLICT() { return getToken(SQLiteParser.K_CONFLICT, 0); }
+		
+		/**
+		 * K abort.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_ABORT() { return getToken(SQLiteParser.K_ABORT, 0); }
+		
+		/**
+		 * K rollback.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_ROLLBACK() { return getToken(SQLiteParser.K_ROLLBACK, 0); }
+		
+		/**
+		 * K fail.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_FAIL() { return getToken(SQLiteParser.K_FAIL, 0); }
+		
+		/**
+		 * K replace.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_REPLACE() { return getToken(SQLiteParser.K_REPLACE, 0); }
+		
+		/**
+		 * Instantiates a new conflict_clause context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Conflict_clauseContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_conflict_clause; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterConflict_clause(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitConflict_clause(this);
 		}
 	}
 
+	/**
+	 * Conflict_clause.
+	 *
+	 * @return the conflict_clause context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Conflict_clauseContext conflict_clause() throws RecognitionException {
 		Conflict_clauseContext _localctx = new Conflict_clauseContext(_ctx, getState());
 		enterRule(_localctx, 76, RULE_conflict_clause);
@@ -4554,92 +8122,364 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class ExprContext.
+	 */
 	public static class ExprContext extends ParserRuleContext {
+		
+		/**
+		 * Expr.
+		 *
+		 * @param i the i
+		 * @return the expr context
+		 */
 		public ExprContext expr(int i) {
 			return getRuleContext(ExprContext.class,i);
 		}
+		
+		/**
+		 * Bind parameter.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode BIND_PARAMETER() { return getToken(SQLiteParser.BIND_PARAMETER, 0); }
+		
+		/**
+		 * Type_name.
+		 *
+		 * @return the type_name context
+		 */
 		public Type_nameContext type_name() {
 			return getRuleContext(Type_nameContext.class,0);
 		}
+		
+		/**
+		 * K collate.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_COLLATE() { return getToken(SQLiteParser.K_COLLATE, 0); }
+		
+		/**
+		 * K exists.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_EXISTS() { return getToken(SQLiteParser.K_EXISTS, 0); }
+		
+		/**
+		 * K case.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_CASE() { return getToken(SQLiteParser.K_CASE, 0); }
+		
+		/**
+		 * K match.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_MATCH() { return getToken(SQLiteParser.K_MATCH, 0); }
+		
+		/**
+		 * Function_name.
+		 *
+		 * @return the function_name context
+		 */
 		public Function_nameContext function_name() {
 			return getRuleContext(Function_nameContext.class,0);
 		}
+		
+		/**
+		 * K is.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_IS() { return getToken(SQLiteParser.K_IS, 0); }
+		
+		/**
+		 * K isnull.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_ISNULL() { return getToken(SQLiteParser.K_ISNULL, 0); }
+		
+		/**
+		 * Table_name.
+		 *
+		 * @return the table_name context
+		 */
 		public Table_nameContext table_name() {
 			return getRuleContext(Table_nameContext.class,0);
 		}
+		
+		/**
+		 * K null.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_NULL() { return getToken(SQLiteParser.K_NULL, 0); }
+		
+		/**
+		 * K or.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_OR() { return getToken(SQLiteParser.K_OR, 0); }
+		
+		/**
+		 * K when.
+		 *
+		 * @return the list
+		 */
 		public List<TerminalNode> K_WHEN() { return getTokens(SQLiteParser.K_WHEN); }
+		
+		/**
+		 * K between.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_BETWEEN() { return getToken(SQLiteParser.K_BETWEEN, 0); }
+		
+		/**
+		 * K then.
+		 *
+		 * @param i the i
+		 * @return the terminal node
+		 */
 		public TerminalNode K_THEN(int i) {
 			return getToken(SQLiteParser.K_THEN, i);
 		}
+		
+		/**
+		 * K cast.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_CAST() { return getToken(SQLiteParser.K_CAST, 0); }
+		
+		/**
+		 * K regexp.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_REGEXP() { return getToken(SQLiteParser.K_REGEXP, 0); }
+		
+		/**
+		 * Unary_operator.
+		 *
+		 * @return the unary_operator context
+		 */
 		public Unary_operatorContext unary_operator() {
 			return getRuleContext(Unary_operatorContext.class,0);
 		}
+		
+		/**
+		 * K when.
+		 *
+		 * @param i the i
+		 * @return the terminal node
+		 */
 		public TerminalNode K_WHEN(int i) {
 			return getToken(SQLiteParser.K_WHEN, i);
 		}
+		
+		/**
+		 * K like.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_LIKE() { return getToken(SQLiteParser.K_LIKE, 0); }
+		
+		/**
+		 * K glob.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_GLOB() { return getToken(SQLiteParser.K_GLOB, 0); }
+		
+		/**
+		 * Raise_function.
+		 *
+		 * @return the raise_function context
+		 */
 		public Raise_functionContext raise_function() {
 			return getRuleContext(Raise_functionContext.class,0);
 		}
+		
+		/**
+		 * K as.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_AS() { return getToken(SQLiteParser.K_AS, 0); }
+		
+		/**
+		 * K else.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_ELSE() { return getToken(SQLiteParser.K_ELSE, 0); }
+		
+		/**
+		 * Expr.
+		 *
+		 * @return the list
+		 */
 		public List<ExprContext> expr() {
 			return getRuleContexts(ExprContext.class);
 		}
+		
+		/**
+		 * Literal_value.
+		 *
+		 * @return the literal_value context
+		 */
 		public Literal_valueContext literal_value() {
 			return getRuleContext(Literal_valueContext.class,0);
 		}
+		
+		/**
+		 * Column_name.
+		 *
+		 * @return the column_name context
+		 */
 		public Column_nameContext column_name() {
 			return getRuleContext(Column_nameContext.class,0);
 		}
+		
+		/**
+		 * K distinct.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_DISTINCT() { return getToken(SQLiteParser.K_DISTINCT, 0); }
+		
+		/**
+		 * Collation_name.
+		 *
+		 * @return the collation_name context
+		 */
 		public Collation_nameContext collation_name() {
 			return getRuleContext(Collation_nameContext.class,0);
 		}
+		
+		/**
+		 * K in.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_IN() { return getToken(SQLiteParser.K_IN, 0); }
+		
+		/**
+		 * K and.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_AND() { return getToken(SQLiteParser.K_AND, 0); }
+		
+		/**
+		 * K not.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_NOT() { return getToken(SQLiteParser.K_NOT, 0); }
+		
+		/**
+		 * K escape.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_ESCAPE() { return getToken(SQLiteParser.K_ESCAPE, 0); }
+		
+		/**
+		 * Database_name.
+		 *
+		 * @return the database_name context
+		 */
 		public Database_nameContext database_name() {
 			return getRuleContext(Database_nameContext.class,0);
 		}
+		
+		/**
+		 * Select_stmt.
+		 *
+		 * @return the select_stmt context
+		 */
 		public Select_stmtContext select_stmt() {
 			return getRuleContext(Select_stmtContext.class,0);
 		}
+		
+		/**
+		 * K end.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_END() { return getToken(SQLiteParser.K_END, 0); }
+		
+		/**
+		 * K notnull.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_NOTNULL() { return getToken(SQLiteParser.K_NOTNULL, 0); }
+		
+		/**
+		 * K then.
+		 *
+		 * @return the list
+		 */
 		public List<TerminalNode> K_THEN() { return getTokens(SQLiteParser.K_THEN); }
+		
+		/**
+		 * Instantiates a new expr context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public ExprContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_expr; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterExpr(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitExpr(this);
 		}
 	}
 
+	/**
+	 * Expr.
+	 *
+	 * @return the expr context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final ExprContext expr() throws RecognitionException {
 		return expr(0);
 	}
 
+	/**
+	 * Expr.
+	 *
+	 * @param _p the _p
+	 * @return the expr context
+	 * @throws RecognitionException the recognition exception
+	 */
 	private ExprContext expr(int _p) throws RecognitionException {
 		ParserRuleContext _parentctx = _ctx;
 		int _parentState = getState();
@@ -5355,86 +9195,325 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Foreign_key_clauseContext.
+	 */
 	public static class Foreign_key_clauseContext extends ParserRuleContext {
+		
+		/**
+		 * Name.
+		 *
+		 * @param i the i
+		 * @return the name context
+		 */
 		public NameContext name(int i) {
 			return getRuleContext(NameContext.class,i);
 		}
+		
+		/**
+		 * K restrict.
+		 *
+		 * @return the list
+		 */
 		public List<TerminalNode> K_RESTRICT() { return getTokens(SQLiteParser.K_RESTRICT); }
+		
+		/**
+		 * K no.
+		 *
+		 * @param i the i
+		 * @return the terminal node
+		 */
 		public TerminalNode K_NO(int i) {
 			return getToken(SQLiteParser.K_NO, i);
 		}
+		
+		/**
+		 * K cascade.
+		 *
+		 * @return the list
+		 */
 		public List<TerminalNode> K_CASCADE() { return getTokens(SQLiteParser.K_CASCADE); }
+		
+		/**
+		 * K default.
+		 *
+		 * @return the list
+		 */
 		public List<TerminalNode> K_DEFAULT() { return getTokens(SQLiteParser.K_DEFAULT); }
+		
+		/**
+		 * K restrict.
+		 *
+		 * @param i the i
+		 * @return the terminal node
+		 */
 		public TerminalNode K_RESTRICT(int i) {
 			return getToken(SQLiteParser.K_RESTRICT, i);
 		}
+		
+		/**
+		 * K action.
+		 *
+		 * @param i the i
+		 * @return the terminal node
+		 */
 		public TerminalNode K_ACTION(int i) {
 			return getToken(SQLiteParser.K_ACTION, i);
 		}
+		
+		/**
+		 * K delete.
+		 *
+		 * @return the list
+		 */
 		public List<TerminalNode> K_DELETE() { return getTokens(SQLiteParser.K_DELETE); }
+		
+		/**
+		 * K default.
+		 *
+		 * @param i the i
+		 * @return the terminal node
+		 */
 		public TerminalNode K_DEFAULT(int i) {
 			return getToken(SQLiteParser.K_DEFAULT, i);
 		}
+		
+		/**
+		 * K set.
+		 *
+		 * @param i the i
+		 * @return the terminal node
+		 */
 		public TerminalNode K_SET(int i) {
 			return getToken(SQLiteParser.K_SET, i);
 		}
+		
+		/**
+		 * K on.
+		 *
+		 * @param i the i
+		 * @return the terminal node
+		 */
 		public TerminalNode K_ON(int i) {
 			return getToken(SQLiteParser.K_ON, i);
 		}
+		
+		/**
+		 * K match.
+		 *
+		 * @return the list
+		 */
 		public List<TerminalNode> K_MATCH() { return getTokens(SQLiteParser.K_MATCH); }
+		
+		/**
+		 * K initially.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_INITIALLY() { return getToken(SQLiteParser.K_INITIALLY, 0); }
+		
+		/**
+		 * K deferrable.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_DEFERRABLE() { return getToken(SQLiteParser.K_DEFERRABLE, 0); }
+		
+		/**
+		 * K set.
+		 *
+		 * @return the list
+		 */
 		public List<TerminalNode> K_SET() { return getTokens(SQLiteParser.K_SET); }
+		
+		/**
+		 * K null.
+		 *
+		 * @return the list
+		 */
 		public List<TerminalNode> K_NULL() { return getTokens(SQLiteParser.K_NULL); }
+		
+		/**
+		 * Name.
+		 *
+		 * @return the list
+		 */
 		public List<NameContext> name() {
 			return getRuleContexts(NameContext.class);
 		}
+		
+		/**
+		 * K null.
+		 *
+		 * @param i the i
+		 * @return the terminal node
+		 */
 		public TerminalNode K_NULL(int i) {
 			return getToken(SQLiteParser.K_NULL, i);
 		}
+		
+		/**
+		 * Foreign_table.
+		 *
+		 * @return the foreign_table context
+		 */
 		public Foreign_tableContext foreign_table() {
 			return getRuleContext(Foreign_tableContext.class,0);
 		}
+		
+		/**
+		 * K delete.
+		 *
+		 * @param i the i
+		 * @return the terminal node
+		 */
 		public TerminalNode K_DELETE(int i) {
 			return getToken(SQLiteParser.K_DELETE, i);
 		}
+		
+		/**
+		 * K no.
+		 *
+		 * @return the list
+		 */
 		public List<TerminalNode> K_NO() { return getTokens(SQLiteParser.K_NO); }
+		
+		/**
+		 * K update.
+		 *
+		 * @param i the i
+		 * @return the terminal node
+		 */
 		public TerminalNode K_UPDATE(int i) {
 			return getToken(SQLiteParser.K_UPDATE, i);
 		}
+		
+		/**
+		 * K deferred.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_DEFERRED() { return getToken(SQLiteParser.K_DEFERRED, 0); }
+		
+		/**
+		 * K immediate.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_IMMEDIATE() { return getToken(SQLiteParser.K_IMMEDIATE, 0); }
+		
+		/**
+		 * Column_name.
+		 *
+		 * @param i the i
+		 * @return the column_name context
+		 */
 		public Column_nameContext column_name(int i) {
 			return getRuleContext(Column_nameContext.class,i);
 		}
+		
+		/**
+		 * K on.
+		 *
+		 * @return the list
+		 */
 		public List<TerminalNode> K_ON() { return getTokens(SQLiteParser.K_ON); }
+		
+		/**
+		 * Column_name.
+		 *
+		 * @return the list
+		 */
 		public List<Column_nameContext> column_name() {
 			return getRuleContexts(Column_nameContext.class);
 		}
+		
+		/**
+		 * K references.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_REFERENCES() { return getToken(SQLiteParser.K_REFERENCES, 0); }
+		
+		/**
+		 * K cascade.
+		 *
+		 * @param i the i
+		 * @return the terminal node
+		 */
 		public TerminalNode K_CASCADE(int i) {
 			return getToken(SQLiteParser.K_CASCADE, i);
 		}
+		
+		/**
+		 * K update.
+		 *
+		 * @return the list
+		 */
 		public List<TerminalNode> K_UPDATE() { return getTokens(SQLiteParser.K_UPDATE); }
+		
+		/**
+		 * K match.
+		 *
+		 * @param i the i
+		 * @return the terminal node
+		 */
 		public TerminalNode K_MATCH(int i) {
 			return getToken(SQLiteParser.K_MATCH, i);
 		}
+		
+		/**
+		 * K action.
+		 *
+		 * @return the list
+		 */
 		public List<TerminalNode> K_ACTION() { return getTokens(SQLiteParser.K_ACTION); }
+		
+		/**
+		 * K not.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_NOT() { return getToken(SQLiteParser.K_NOT, 0); }
+		
+		/**
+		 * Instantiates a new foreign_key_clause context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Foreign_key_clauseContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_foreign_key_clause; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterForeign_key_clause(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitForeign_key_clause(this);
 		}
 	}
 
+	/**
+	 * Foreign_key_clause.
+	 *
+	 * @return the foreign_key_clause context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Foreign_key_clauseContext foreign_key_clause() throws RecognitionException {
 		Foreign_key_clauseContext _localctx = new Foreign_key_clauseContext(_ctx, getState());
 		enterRule(_localctx, 80, RULE_foreign_key_clause);
@@ -5582,29 +9661,93 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Raise_functionContext.
+	 */
 	public static class Raise_functionContext extends ParserRuleContext {
+		
+		/**
+		 * Error_message.
+		 *
+		 * @return the error_message context
+		 */
 		public Error_messageContext error_message() {
 			return getRuleContext(Error_messageContext.class,0);
 		}
+		
+		/**
+		 * K ignore.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_IGNORE() { return getToken(SQLiteParser.K_IGNORE, 0); }
+		
+		/**
+		 * K abort.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_ABORT() { return getToken(SQLiteParser.K_ABORT, 0); }
+		
+		/**
+		 * K raise.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_RAISE() { return getToken(SQLiteParser.K_RAISE, 0); }
+		
+		/**
+		 * K rollback.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_ROLLBACK() { return getToken(SQLiteParser.K_ROLLBACK, 0); }
+		
+		/**
+		 * K fail.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_FAIL() { return getToken(SQLiteParser.K_FAIL, 0); }
+		
+		/**
+		 * Instantiates a new raise_function context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Raise_functionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_raise_function; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterRaise_function(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitRaise_function(this);
 		}
 	}
 
+	/**
+	 * Raise_function.
+	 *
+	 * @return the raise_function context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Raise_functionContext raise_function() throws RecognitionException {
 		Raise_functionContext _localctx = new Raise_functionContext(_ctx, getState());
 		enterRule(_localctx, 82, RULE_raise_function);
@@ -5652,30 +9795,88 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Indexed_columnContext.
+	 */
 	public static class Indexed_columnContext extends ParserRuleContext {
+		
+		/**
+		 * Column_name.
+		 *
+		 * @return the column_name context
+		 */
 		public Column_nameContext column_name() {
 			return getRuleContext(Column_nameContext.class,0);
 		}
+		
+		/**
+		 * Collation_name.
+		 *
+		 * @return the collation_name context
+		 */
 		public Collation_nameContext collation_name() {
 			return getRuleContext(Collation_nameContext.class,0);
 		}
+		
+		/**
+		 * K collate.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_COLLATE() { return getToken(SQLiteParser.K_COLLATE, 0); }
+		
+		/**
+		 * K desc.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_DESC() { return getToken(SQLiteParser.K_DESC, 0); }
+		
+		/**
+		 * K asc.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_ASC() { return getToken(SQLiteParser.K_ASC, 0); }
+		
+		/**
+		 * Instantiates a new indexed_column context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Indexed_columnContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_indexed_column; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterIndexed_column(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitIndexed_column(this);
 		}
 	}
 
+	/**
+	 * Indexed_column.
+	 *
+	 * @return the indexed_column context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Indexed_columnContext indexed_column() throws RecognitionException {
 		Indexed_columnContext _localctx = new Indexed_columnContext(_ctx, getState());
 		enterRule(_localctx, 84, RULE_indexed_column);
@@ -5719,51 +9920,165 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Table_constraintContext.
+	 */
 	public static class Table_constraintContext extends ParserRuleContext {
+		
+		/**
+		 * Indexed_column.
+		 *
+		 * @return the list
+		 */
 		public List<Indexed_columnContext> indexed_column() {
 			return getRuleContexts(Indexed_columnContext.class);
 		}
+		
+		/**
+		 * K foreign.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_FOREIGN() { return getToken(SQLiteParser.K_FOREIGN, 0); }
+		
+		/**
+		 * K primary.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_PRIMARY() { return getToken(SQLiteParser.K_PRIMARY, 0); }
+		
+		/**
+		 * Indexed_column.
+		 *
+		 * @param i the i
+		 * @return the indexed_column context
+		 */
 		public Indexed_columnContext indexed_column(int i) {
 			return getRuleContext(Indexed_columnContext.class,i);
 		}
+		
+		/**
+		 * Column_name.
+		 *
+		 * @param i the i
+		 * @return the column_name context
+		 */
 		public Column_nameContext column_name(int i) {
 			return getRuleContext(Column_nameContext.class,i);
 		}
+		
+		/**
+		 * Expr.
+		 *
+		 * @return the expr context
+		 */
 		public ExprContext expr() {
 			return getRuleContext(ExprContext.class,0);
 		}
+		
+		/**
+		 * Column_name.
+		 *
+		 * @return the list
+		 */
 		public List<Column_nameContext> column_name() {
 			return getRuleContexts(Column_nameContext.class);
 		}
+		
+		/**
+		 * K check.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_CHECK() { return getToken(SQLiteParser.K_CHECK, 0); }
+		
+		/**
+		 * K unique.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_UNIQUE() { return getToken(SQLiteParser.K_UNIQUE, 0); }
+		
+		/**
+		 * K key.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_KEY() { return getToken(SQLiteParser.K_KEY, 0); }
+		
+		/**
+		 * K constraint.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_CONSTRAINT() { return getToken(SQLiteParser.K_CONSTRAINT, 0); }
+		
+		/**
+		 * Name.
+		 *
+		 * @return the name context
+		 */
 		public NameContext name() {
 			return getRuleContext(NameContext.class,0);
 		}
+		
+		/**
+		 * Conflict_clause.
+		 *
+		 * @return the conflict_clause context
+		 */
 		public Conflict_clauseContext conflict_clause() {
 			return getRuleContext(Conflict_clauseContext.class,0);
 		}
+		
+		/**
+		 * Foreign_key_clause.
+		 *
+		 * @return the foreign_key_clause context
+		 */
 		public Foreign_key_clauseContext foreign_key_clause() {
 			return getRuleContext(Foreign_key_clauseContext.class,0);
 		}
+		
+		/**
+		 * Instantiates a new table_constraint context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Table_constraintContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_table_constraint; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterTable_constraint(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitTable_constraint(this);
 		}
 	}
 
+	/**
+	 * Table_constraint.
+	 *
+	 * @return the table_constraint context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Table_constraintContext table_constraint() throws RecognitionException {
 		Table_constraintContext _localctx = new Table_constraintContext(_ctx, getState());
 		enterRule(_localctx, 86, RULE_table_constraint);
@@ -5869,39 +10184,118 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class With_clauseContext.
+	 */
 	public static class With_clauseContext extends ParserRuleContext {
+		
+		/**
+		 * K with.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_WITH() { return getToken(SQLiteParser.K_WITH, 0); }
+		
+		/**
+		 * K as.
+		 *
+		 * @return the list
+		 */
 		public List<TerminalNode> K_AS() { return getTokens(SQLiteParser.K_AS); }
+		
+		/**
+		 * K recursive.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_RECURSIVE() { return getToken(SQLiteParser.K_RECURSIVE, 0); }
+		
+		/**
+		 * K as.
+		 *
+		 * @param i the i
+		 * @return the terminal node
+		 */
 		public TerminalNode K_AS(int i) {
 			return getToken(SQLiteParser.K_AS, i);
 		}
+		
+		/**
+		 * Select_stmt.
+		 *
+		 * @param i the i
+		 * @return the select_stmt context
+		 */
 		public Select_stmtContext select_stmt(int i) {
 			return getRuleContext(Select_stmtContext.class,i);
 		}
+		
+		/**
+		 * Cte_table_name.
+		 *
+		 * @param i the i
+		 * @return the cte_table_name context
+		 */
 		public Cte_table_nameContext cte_table_name(int i) {
 			return getRuleContext(Cte_table_nameContext.class,i);
 		}
+		
+		/**
+		 * Cte_table_name.
+		 *
+		 * @return the list
+		 */
 		public List<Cte_table_nameContext> cte_table_name() {
 			return getRuleContexts(Cte_table_nameContext.class);
 		}
+		
+		/**
+		 * Select_stmt.
+		 *
+		 * @return the list
+		 */
 		public List<Select_stmtContext> select_stmt() {
 			return getRuleContexts(Select_stmtContext.class);
 		}
+		
+		/**
+		 * Instantiates a new with_clause context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public With_clauseContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_with_clause; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterWith_clause(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitWith_clause(this);
 		}
 	}
 
+	/**
+	 * With_clause.
+	 *
+	 * @return the with_clause context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final With_clauseContext with_clause() throws RecognitionException {
 		With_clauseContext _localctx = new With_clauseContext(_ctx, getState());
 		enterRule(_localctx, 88, RULE_with_clause);
@@ -5954,33 +10348,97 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Qualified_table_nameContext.
+	 */
 	public static class Qualified_table_nameContext extends ParserRuleContext {
+		
+		/**
+		 * K indexed.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_INDEXED() { return getToken(SQLiteParser.K_INDEXED, 0); }
+		
+		/**
+		 * Table_name.
+		 *
+		 * @return the table_name context
+		 */
 		public Table_nameContext table_name() {
 			return getRuleContext(Table_nameContext.class,0);
 		}
+		
+		/**
+		 * Index_name.
+		 *
+		 * @return the index_name context
+		 */
 		public Index_nameContext index_name() {
 			return getRuleContext(Index_nameContext.class,0);
 		}
+		
+		/**
+		 * K by.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_BY() { return getToken(SQLiteParser.K_BY, 0); }
+		
+		/**
+		 * K not.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_NOT() { return getToken(SQLiteParser.K_NOT, 0); }
+		
+		/**
+		 * Database_name.
+		 *
+		 * @return the database_name context
+		 */
 		public Database_nameContext database_name() {
 			return getRuleContext(Database_nameContext.class,0);
 		}
+		
+		/**
+		 * Instantiates a new qualified_table_name context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Qualified_table_nameContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_qualified_table_name; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterQualified_table_name(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitQualified_table_name(this);
 		}
 	}
 
+	/**
+	 * Qualified_table_name.
+	 *
+	 * @return the qualified_table_name context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Qualified_table_nameContext qualified_table_name() throws RecognitionException {
 		Qualified_table_nameContext _localctx = new Qualified_table_nameContext(_ctx, getState());
 		enterRule(_localctx, 90, RULE_qualified_table_name);
@@ -6059,30 +10517,88 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Ordering_termContext.
+	 */
 	public static class Ordering_termContext extends ParserRuleContext {
+		
+		/**
+		 * Expr.
+		 *
+		 * @return the expr context
+		 */
 		public ExprContext expr() {
 			return getRuleContext(ExprContext.class,0);
 		}
+		
+		/**
+		 * Collation_name.
+		 *
+		 * @return the collation_name context
+		 */
 		public Collation_nameContext collation_name() {
 			return getRuleContext(Collation_nameContext.class,0);
 		}
+		
+		/**
+		 * K collate.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_COLLATE() { return getToken(SQLiteParser.K_COLLATE, 0); }
+		
+		/**
+		 * K desc.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_DESC() { return getToken(SQLiteParser.K_DESC, 0); }
+		
+		/**
+		 * K asc.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_ASC() { return getToken(SQLiteParser.K_ASC, 0); }
+		
+		/**
+		 * Instantiates a new ordering_term context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Ordering_termContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_ordering_term; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterOrdering_term(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitOrdering_term(this);
 		}
 	}
 
+	/**
+	 * Ordering_term.
+	 *
+	 * @return the ordering_term context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Ordering_termContext ordering_term() throws RecognitionException {
 		Ordering_termContext _localctx = new Ordering_termContext(_ctx, getState());
 		enterRule(_localctx, 92, RULE_ordering_term);
@@ -6126,28 +10642,74 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Pragma_valueContext.
+	 */
 	public static class Pragma_valueContext extends ParserRuleContext {
+		
+		/**
+		 * Signed_number.
+		 *
+		 * @return the signed_number context
+		 */
 		public Signed_numberContext signed_number() {
 			return getRuleContext(Signed_numberContext.class,0);
 		}
+		
+		/**
+		 * String literal.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode STRING_LITERAL() { return getToken(SQLiteParser.STRING_LITERAL, 0); }
+		
+		/**
+		 * Name.
+		 *
+		 * @return the name context
+		 */
 		public NameContext name() {
 			return getRuleContext(NameContext.class,0);
 		}
+		
+		/**
+		 * Instantiates a new pragma_value context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Pragma_valueContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_pragma_value; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterPragma_value(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitPragma_value(this);
 		}
 	}
 
+	/**
+	 * Pragma_value.
+	 *
+	 * @return the pragma_value context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Pragma_valueContext pragma_value() throws RecognitionException {
 		Pragma_valueContext _localctx = new Pragma_valueContext(_ctx, getState());
 		enterRule(_localctx, 94, RULE_pragma_value);
@@ -6187,34 +10749,93 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Common_table_expressionContext.
+	 */
 	public static class Common_table_expressionContext extends ParserRuleContext {
+		
+		/**
+		 * Column_name.
+		 *
+		 * @param i the i
+		 * @return the column_name context
+		 */
 		public Column_nameContext column_name(int i) {
 			return getRuleContext(Column_nameContext.class,i);
 		}
+		
+		/**
+		 * K as.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_AS() { return getToken(SQLiteParser.K_AS, 0); }
+		
+		/**
+		 * Column_name.
+		 *
+		 * @return the list
+		 */
 		public List<Column_nameContext> column_name() {
 			return getRuleContexts(Column_nameContext.class);
 		}
+		
+		/**
+		 * Table_name.
+		 *
+		 * @return the table_name context
+		 */
 		public Table_nameContext table_name() {
 			return getRuleContext(Table_nameContext.class,0);
 		}
+		
+		/**
+		 * Select_stmt.
+		 *
+		 * @return the select_stmt context
+		 */
 		public Select_stmtContext select_stmt() {
 			return getRuleContext(Select_stmtContext.class,0);
 		}
+		
+		/**
+		 * Instantiates a new common_table_expression context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Common_table_expressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_common_table_expression; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterCommon_table_expression(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitCommon_table_expression(this);
 		}
 	}
 
+	/**
+	 * Common_table_expression.
+	 *
+	 * @return the common_table_expression context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Common_table_expressionContext common_table_expression() throws RecognitionException {
 		Common_table_expressionContext _localctx = new Common_table_expressionContext(_ctx, getState());
 		enterRule(_localctx, 96, RULE_common_table_expression);
@@ -6264,31 +10885,83 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Result_columnContext.
+	 */
 	public static class Result_columnContext extends ParserRuleContext {
+		
+		/**
+		 * K as.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_AS() { return getToken(SQLiteParser.K_AS, 0); }
+		
+		/**
+		 * Expr.
+		 *
+		 * @return the expr context
+		 */
 		public ExprContext expr() {
 			return getRuleContext(ExprContext.class,0);
 		}
+		
+		/**
+		 * Table_name.
+		 *
+		 * @return the table_name context
+		 */
 		public Table_nameContext table_name() {
 			return getRuleContext(Table_nameContext.class,0);
 		}
+		
+		/**
+		 * Column_alias.
+		 *
+		 * @return the column_alias context
+		 */
 		public Column_aliasContext column_alias() {
 			return getRuleContext(Column_aliasContext.class,0);
 		}
+		
+		/**
+		 * Instantiates a new result_column context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Result_columnContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_result_column; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterResult_column(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitResult_column(this);
 		}
 	}
 
+	/**
+	 * Result_column.
+	 *
+	 * @return the result_column context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Result_columnContext result_column() throws RecognitionException {
 		Result_columnContext _localctx = new Result_columnContext(_ctx, getState());
 		enterRule(_localctx, 98, RULE_result_column);
@@ -6347,49 +11020,150 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Table_or_subqueryContext.
+	 */
 	public static class Table_or_subqueryContext extends ParserRuleContext {
+		
+		/**
+		 * K indexed.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_INDEXED() { return getToken(SQLiteParser.K_INDEXED, 0); }
+		
+		/**
+		 * K as.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_AS() { return getToken(SQLiteParser.K_AS, 0); }
+		
+		/**
+		 * Table_name.
+		 *
+		 * @return the table_name context
+		 */
 		public Table_nameContext table_name() {
 			return getRuleContext(Table_nameContext.class,0);
 		}
+		
+		/**
+		 * Index_name.
+		 *
+		 * @return the index_name context
+		 */
 		public Index_nameContext index_name() {
 			return getRuleContext(Index_nameContext.class,0);
 		}
+		
+		/**
+		 * Table_or_subquery.
+		 *
+		 * @return the list
+		 */
 		public List<Table_or_subqueryContext> table_or_subquery() {
 			return getRuleContexts(Table_or_subqueryContext.class);
 		}
+		
+		/**
+		 * K by.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_BY() { return getToken(SQLiteParser.K_BY, 0); }
+		
+		/**
+		 * Join_clause.
+		 *
+		 * @return the join_clause context
+		 */
 		public Join_clauseContext join_clause() {
 			return getRuleContext(Join_clauseContext.class,0);
 		}
+		
+		/**
+		 * K not.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_NOT() { return getToken(SQLiteParser.K_NOT, 0); }
+		
+		/**
+		 * Table_or_subquery.
+		 *
+		 * @param i the i
+		 * @return the table_or_subquery context
+		 */
 		public Table_or_subqueryContext table_or_subquery(int i) {
 			return getRuleContext(Table_or_subqueryContext.class,i);
 		}
+		
+		/**
+		 * Table_alias.
+		 *
+		 * @return the table_alias context
+		 */
 		public Table_aliasContext table_alias() {
 			return getRuleContext(Table_aliasContext.class,0);
 		}
+		
+		/**
+		 * Database_name.
+		 *
+		 * @return the database_name context
+		 */
 		public Database_nameContext database_name() {
 			return getRuleContext(Database_nameContext.class,0);
 		}
+		
+		/**
+		 * Select_stmt.
+		 *
+		 * @return the select_stmt context
+		 */
 		public Select_stmtContext select_stmt() {
 			return getRuleContext(Select_stmtContext.class,0);
 		}
+		
+		/**
+		 * Instantiates a new table_or_subquery context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Table_or_subqueryContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_table_or_subquery; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterTable_or_subquery(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitTable_or_subquery(this);
 		}
 	}
 
+	/**
+	 * Table_or_subquery.
+	 *
+	 * @return the table_or_subquery context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Table_or_subqueryContext table_or_subquery() throws RecognitionException {
 		Table_or_subqueryContext _localctx = new Table_or_subqueryContext(_ctx, getState());
 		enterRule(_localctx, 100, RULE_table_or_subquery);
@@ -6579,39 +11353,106 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Join_clauseContext.
+	 */
 	public static class Join_clauseContext extends ParserRuleContext {
+		
+		/**
+		 * Join_operator.
+		 *
+		 * @return the list
+		 */
 		public List<Join_operatorContext> join_operator() {
 			return getRuleContexts(Join_operatorContext.class);
 		}
+		
+		/**
+		 * Join_constraint.
+		 *
+		 * @param i the i
+		 * @return the join_constraint context
+		 */
 		public Join_constraintContext join_constraint(int i) {
 			return getRuleContext(Join_constraintContext.class,i);
 		}
+		
+		/**
+		 * Join_operator.
+		 *
+		 * @param i the i
+		 * @return the join_operator context
+		 */
 		public Join_operatorContext join_operator(int i) {
 			return getRuleContext(Join_operatorContext.class,i);
 		}
+		
+		/**
+		 * Table_or_subquery.
+		 *
+		 * @return the list
+		 */
 		public List<Table_or_subqueryContext> table_or_subquery() {
 			return getRuleContexts(Table_or_subqueryContext.class);
 		}
+		
+		/**
+		 * Table_or_subquery.
+		 *
+		 * @param i the i
+		 * @return the table_or_subquery context
+		 */
 		public Table_or_subqueryContext table_or_subquery(int i) {
 			return getRuleContext(Table_or_subqueryContext.class,i);
 		}
+		
+		/**
+		 * Join_constraint.
+		 *
+		 * @return the list
+		 */
 		public List<Join_constraintContext> join_constraint() {
 			return getRuleContexts(Join_constraintContext.class);
 		}
+		
+		/**
+		 * Instantiates a new join_clause context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Join_clauseContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_join_clause; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterJoin_clause(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitJoin_clause(this);
 		}
 	}
 
+	/**
+	 * Join_clause.
+	 *
+	 * @return the join_clause context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Join_clauseContext join_clause() throws RecognitionException {
 		Join_clauseContext _localctx = new Join_clauseContext(_ctx, getState());
 		enterRule(_localctx, 102, RULE_join_clause);
@@ -6648,27 +11489,91 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Join_operatorContext.
+	 */
 	public static class Join_operatorContext extends ParserRuleContext {
+		
+		/**
+		 * K cross.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_CROSS() { return getToken(SQLiteParser.K_CROSS, 0); }
+		
+		/**
+		 * K outer.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_OUTER() { return getToken(SQLiteParser.K_OUTER, 0); }
+		
+		/**
+		 * K inner.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_INNER() { return getToken(SQLiteParser.K_INNER, 0); }
+		
+		/**
+		 * K natural.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_NATURAL() { return getToken(SQLiteParser.K_NATURAL, 0); }
+		
+		/**
+		 * K join.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_JOIN() { return getToken(SQLiteParser.K_JOIN, 0); }
+		
+		/**
+		 * K left.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_LEFT() { return getToken(SQLiteParser.K_LEFT, 0); }
+		
+		/**
+		 * Instantiates a new join_operator context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Join_operatorContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_join_operator; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterJoin_operator(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitJoin_operator(this);
 		}
 	}
 
+	/**
+	 * Join_operator.
+	 *
+	 * @return the join_operator context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Join_operatorContext join_operator() throws RecognitionException {
 		Join_operatorContext _localctx = new Join_operatorContext(_ctx, getState());
 		enterRule(_localctx, 104, RULE_join_operator);
@@ -6745,32 +11650,91 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Join_constraintContext.
+	 */
 	public static class Join_constraintContext extends ParserRuleContext {
+		
+		/**
+		 * Column_name.
+		 *
+		 * @param i the i
+		 * @return the column_name context
+		 */
 		public Column_nameContext column_name(int i) {
 			return getRuleContext(Column_nameContext.class,i);
 		}
+		
+		/**
+		 * K on.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_ON() { return getToken(SQLiteParser.K_ON, 0); }
+		
+		/**
+		 * Expr.
+		 *
+		 * @return the expr context
+		 */
 		public ExprContext expr() {
 			return getRuleContext(ExprContext.class,0);
 		}
+		
+		/**
+		 * Column_name.
+		 *
+		 * @return the list
+		 */
 		public List<Column_nameContext> column_name() {
 			return getRuleContexts(Column_nameContext.class);
 		}
+		
+		/**
+		 * K using.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_USING() { return getToken(SQLiteParser.K_USING, 0); }
+		
+		/**
+		 * Instantiates a new join_constraint context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Join_constraintContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_join_constraint; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterJoin_constraint(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitJoin_constraint(this);
 		}
 	}
 
+	/**
+	 * Join_constraint.
+	 *
+	 * @return the join_constraint context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Join_constraintContext join_constraint() throws RecognitionException {
 		Join_constraintContext _localctx = new Join_constraintContext(_ctx, getState());
 		enterRule(_localctx, 106, RULE_join_constraint);
@@ -6865,51 +11829,178 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Select_coreContext.
+	 */
 	public static class Select_coreContext extends ParserRuleContext {
+		
+		/**
+		 * K where.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_WHERE() { return getToken(SQLiteParser.K_WHERE, 0); }
+		
+		/**
+		 * Expr.
+		 *
+		 * @param i the i
+		 * @return the expr context
+		 */
 		public ExprContext expr(int i) {
 			return getRuleContext(ExprContext.class,i);
 		}
+		
+		/**
+		 * Result_column.
+		 *
+		 * @return the list
+		 */
 		public List<Result_columnContext> result_column() {
 			return getRuleContexts(Result_columnContext.class);
 		}
+		
+		/**
+		 * Result_column.
+		 *
+		 * @param i the i
+		 * @return the result_column context
+		 */
 		public Result_columnContext result_column(int i) {
 			return getRuleContext(Result_columnContext.class,i);
 		}
+		
+		/**
+		 * K from.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_FROM() { return getToken(SQLiteParser.K_FROM, 0); }
+		
+		/**
+		 * Join_clause.
+		 *
+		 * @return the join_clause context
+		 */
 		public Join_clauseContext join_clause() {
 			return getRuleContext(Join_clauseContext.class,0);
 		}
+		
+		/**
+		 * K all.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_ALL() { return getToken(SQLiteParser.K_ALL, 0); }
+		
+		/**
+		 * Expr.
+		 *
+		 * @return the list
+		 */
 		public List<ExprContext> expr() {
 			return getRuleContexts(ExprContext.class);
 		}
+		
+		/**
+		 * K group.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_GROUP() { return getToken(SQLiteParser.K_GROUP, 0); }
+		
+		/**
+		 * K distinct.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_DISTINCT() { return getToken(SQLiteParser.K_DISTINCT, 0); }
+		
+		/**
+		 * K having.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_HAVING() { return getToken(SQLiteParser.K_HAVING, 0); }
+		
+		/**
+		 * K values.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_VALUES() { return getToken(SQLiteParser.K_VALUES, 0); }
+		
+		/**
+		 * Table_or_subquery.
+		 *
+		 * @return the list
+		 */
 		public List<Table_or_subqueryContext> table_or_subquery() {
 			return getRuleContexts(Table_or_subqueryContext.class);
 		}
+		
+		/**
+		 * K select.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_SELECT() { return getToken(SQLiteParser.K_SELECT, 0); }
+		
+		/**
+		 * K by.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_BY() { return getToken(SQLiteParser.K_BY, 0); }
+		
+		/**
+		 * Table_or_subquery.
+		 *
+		 * @param i the i
+		 * @return the table_or_subquery context
+		 */
 		public Table_or_subqueryContext table_or_subquery(int i) {
 			return getRuleContext(Table_or_subqueryContext.class,i);
 		}
+		
+		/**
+		 * Instantiates a new select_core context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Select_coreContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_select_core; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterSelect_core(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitSelect_core(this);
 		}
 	}
 
+	/**
+	 * Select_core.
+	 *
+	 * @return the select_core context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Select_coreContext select_core() throws RecognitionException {
 		Select_coreContext _localctx = new Select_coreContext(_ctx, getState());
 		enterRule(_localctx, 108, RULE_select_core);
@@ -7097,25 +12188,77 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Compound_operatorContext.
+	 */
 	public static class Compound_operatorContext extends ParserRuleContext {
+		
+		/**
+		 * K all.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_ALL() { return getToken(SQLiteParser.K_ALL, 0); }
+		
+		/**
+		 * K intersect.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_INTERSECT() { return getToken(SQLiteParser.K_INTERSECT, 0); }
+		
+		/**
+		 * K except.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_EXCEPT() { return getToken(SQLiteParser.K_EXCEPT, 0); }
+		
+		/**
+		 * K union.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_UNION() { return getToken(SQLiteParser.K_UNION, 0); }
+		
+		/**
+		 * Instantiates a new compound_operator context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Compound_operatorContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_compound_operator; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterCompound_operator(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitCompound_operator(this);
 		}
 	}
 
+	/**
+	 * Compound_operator.
+	 *
+	 * @return the compound_operator context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Compound_operatorContext compound_operator() throws RecognitionException {
 		Compound_operatorContext _localctx = new Compound_operatorContext(_ctx, getState());
 		enterRule(_localctx, 110, RULE_compound_operator);
@@ -7163,30 +12306,77 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Cte_table_nameContext.
+	 */
 	public static class Cte_table_nameContext extends ParserRuleContext {
+		
+		/**
+		 * Column_name.
+		 *
+		 * @param i the i
+		 * @return the column_name context
+		 */
 		public Column_nameContext column_name(int i) {
 			return getRuleContext(Column_nameContext.class,i);
 		}
+		
+		/**
+		 * Column_name.
+		 *
+		 * @return the list
+		 */
 		public List<Column_nameContext> column_name() {
 			return getRuleContexts(Column_nameContext.class);
 		}
+		
+		/**
+		 * Table_name.
+		 *
+		 * @return the table_name context
+		 */
 		public Table_nameContext table_name() {
 			return getRuleContext(Table_nameContext.class,0);
 		}
+		
+		/**
+		 * Instantiates a new cte_table_name context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Cte_table_nameContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_cte_table_name; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterCte_table_name(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitCte_table_name(this);
 		}
 	}
 
+	/**
+	 * Cte_table_name.
+	 *
+	 * @return the cte_table_name context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Cte_table_nameContext cte_table_name() throws RecognitionException {
 		Cte_table_nameContext _localctx = new Cte_table_nameContext(_ctx, getState());
 		enterRule(_localctx, 112, RULE_cte_table_name);
@@ -7232,22 +12422,56 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Signed_numberContext.
+	 */
 	public static class Signed_numberContext extends ParserRuleContext {
+		
+		/**
+		 * Numeric literal.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode NUMERIC_LITERAL() { return getToken(SQLiteParser.NUMERIC_LITERAL, 0); }
+		
+		/**
+		 * Instantiates a new signed_number context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Signed_numberContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_signed_number; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterSigned_number(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitSigned_number(this);
 		}
 	}
 
+	/**
+	 * Signed_number.
+	 *
+	 * @return the signed_number context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Signed_numberContext signed_number() throws RecognitionException {
 		Signed_numberContext _localctx = new Signed_numberContext(_ctx, getState());
 		enterRule(_localctx, 114, RULE_signed_number);
@@ -7282,28 +12506,98 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Literal_valueContext.
+	 */
 	public static class Literal_valueContext extends ParserRuleContext {
+		
+		/**
+		 * K current date.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_CURRENT_DATE() { return getToken(SQLiteParser.K_CURRENT_DATE, 0); }
+		
+		/**
+		 * Numeric literal.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode NUMERIC_LITERAL() { return getToken(SQLiteParser.NUMERIC_LITERAL, 0); }
+		
+		/**
+		 * K null.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_NULL() { return getToken(SQLiteParser.K_NULL, 0); }
+		
+		/**
+		 * String literal.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode STRING_LITERAL() { return getToken(SQLiteParser.STRING_LITERAL, 0); }
+		
+		/**
+		 * K current timestamp.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_CURRENT_TIMESTAMP() { return getToken(SQLiteParser.K_CURRENT_TIMESTAMP, 0); }
+		
+		/**
+		 * K current time.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_CURRENT_TIME() { return getToken(SQLiteParser.K_CURRENT_TIME, 0); }
+		
+		/**
+		 * Blob literal.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode BLOB_LITERAL() { return getToken(SQLiteParser.BLOB_LITERAL, 0); }
+		
+		/**
+		 * Instantiates a new literal_value context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Literal_valueContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_literal_value; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterLiteral_value(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitLiteral_value(this);
 		}
 	}
 
+	/**
+	 * Literal_value.
+	 *
+	 * @return the literal_value context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Literal_valueContext literal_value() throws RecognitionException {
 		Literal_valueContext _localctx = new Literal_valueContext(_ctx, getState());
 		enterRule(_localctx, 116, RULE_literal_value);
@@ -7330,22 +12624,56 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Unary_operatorContext.
+	 */
 	public static class Unary_operatorContext extends ParserRuleContext {
+		
+		/**
+		 * K not.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_NOT() { return getToken(SQLiteParser.K_NOT, 0); }
+		
+		/**
+		 * Instantiates a new unary_operator context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Unary_operatorContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_unary_operator; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterUnary_operator(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitUnary_operator(this);
 		}
 	}
 
+	/**
+	 * Unary_operator.
+	 *
+	 * @return the unary_operator context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Unary_operatorContext unary_operator() throws RecognitionException {
 		Unary_operatorContext _localctx = new Unary_operatorContext(_ctx, getState());
 		enterRule(_localctx, 118, RULE_unary_operator);
@@ -7372,22 +12700,56 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Error_messageContext.
+	 */
 	public static class Error_messageContext extends ParserRuleContext {
+		
+		/**
+		 * String literal.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode STRING_LITERAL() { return getToken(SQLiteParser.STRING_LITERAL, 0); }
+		
+		/**
+		 * Instantiates a new error_message context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Error_messageContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_error_message; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterError_message(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitError_message(this);
 		}
 	}
 
+	/**
+	 * Error_message.
+	 *
+	 * @return the error_message context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Error_messageContext error_message() throws RecognitionException {
 		Error_messageContext _localctx = new Error_messageContext(_ctx, getState());
 		enterRule(_localctx, 120, RULE_error_message);
@@ -7408,27 +12770,67 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Module_argumentContext.
+	 */
 	public static class Module_argumentContext extends ParserRuleContext {
+		
+		/**
+		 * Expr.
+		 *
+		 * @return the expr context
+		 */
 		public ExprContext expr() {
 			return getRuleContext(ExprContext.class,0);
 		}
+		
+		/**
+		 * Column_def.
+		 *
+		 * @return the column_def context
+		 */
 		public Column_defContext column_def() {
 			return getRuleContext(Column_defContext.class,0);
 		}
+		
+		/**
+		 * Instantiates a new module_argument context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Module_argumentContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_module_argument; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterModule_argument(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitModule_argument(this);
 		}
 	}
 
+	/**
+	 * Module_argument.
+	 *
+	 * @return the module_argument context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Module_argumentContext module_argument() throws RecognitionException {
 		Module_argumentContext _localctx = new Module_argumentContext(_ctx, getState());
 		enterRule(_localctx, 122, RULE_module_argument);
@@ -7461,23 +12863,63 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Column_aliasContext.
+	 */
 	public static class Column_aliasContext extends ParserRuleContext {
+		
+		/**
+		 * String literal.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode STRING_LITERAL() { return getToken(SQLiteParser.STRING_LITERAL, 0); }
+		
+		/**
+		 * Identifier.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode IDENTIFIER() { return getToken(SQLiteParser.IDENTIFIER, 0); }
+		
+		/**
+		 * Instantiates a new column_alias context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Column_aliasContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_column_alias; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterColumn_alias(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitColumn_alias(this);
 		}
 	}
 
+	/**
+	 * Column_alias.
+	 *
+	 * @return the column_alias context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Column_aliasContext column_alias() throws RecognitionException {
 		Column_aliasContext _localctx = new Column_aliasContext(_ctx, getState());
 		enterRule(_localctx, 124, RULE_column_alias);
@@ -7504,145 +12946,917 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class KeywordContext.
+	 */
 	public static class KeywordContext extends ParserRuleContext {
+		
+		/**
+		 * K indexed.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_INDEXED() { return getToken(SQLiteParser.K_INDEXED, 0); }
+		
+		/**
+		 * K recursive.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_RECURSIVE() { return getToken(SQLiteParser.K_RECURSIVE, 0); }
+		
+		/**
+		 * K detach.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_DETACH() { return getToken(SQLiteParser.K_DETACH, 0); }
+		
+		/**
+		 * K cascade.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_CASCADE() { return getToken(SQLiteParser.K_CASCADE, 0); }
+		
+		/**
+		 * K collate.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_COLLATE() { return getToken(SQLiteParser.K_COLLATE, 0); }
+		
+		/**
+		 * K vacuum.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_VACUUM() { return getToken(SQLiteParser.K_VACUUM, 0); }
+		
+		/**
+		 * K column.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_COLUMN() { return getToken(SQLiteParser.K_COLUMN, 0); }
+		
+		/**
+		 * K drop.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_DROP() { return getToken(SQLiteParser.K_DROP, 0); }
+		
+		/**
+		 * K view.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_VIEW() { return getToken(SQLiteParser.K_VIEW, 0); }
+		
+		/**
+		 * K constraint.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_CONSTRAINT() { return getToken(SQLiteParser.K_CONSTRAINT, 0); }
+		
+		/**
+		 * K temporary.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_TEMPORARY() { return getToken(SQLiteParser.K_TEMPORARY, 0); }
+		
+		/**
+		 * K virtual.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_VIRTUAL() { return getToken(SQLiteParser.K_VIRTUAL, 0); }
+		
+		/**
+		 * K autoincrement.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_AUTOINCREMENT() { return getToken(SQLiteParser.K_AUTOINCREMENT, 0); }
+		
+		/**
+		 * K begin.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_BEGIN() { return getToken(SQLiteParser.K_BEGIN, 0); }
+		
+		/**
+		 * K of.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_OF() { return getToken(SQLiteParser.K_OF, 0); }
+		
+		/**
+		 * K cross.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_CROSS() { return getToken(SQLiteParser.K_CROSS, 0); }
+		
+		/**
+		 * K current date.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_CURRENT_DATE() { return getToken(SQLiteParser.K_CURRENT_DATE, 0); }
+		
+		/**
+		 * K create.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_CREATE() { return getToken(SQLiteParser.K_CREATE, 0); }
+		
+		/**
+		 * K in.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_IN() { return getToken(SQLiteParser.K_IN, 0); }
+		
+		/**
+		 * K values.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_VALUES() { return getToken(SQLiteParser.K_VALUES, 0); }
+		
+		/**
+		 * K union.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_UNION() { return getToken(SQLiteParser.K_UNION, 0); }
+		
+		/**
+		 * K raise.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_RAISE() { return getToken(SQLiteParser.K_RAISE, 0); }
+		
+		/**
+		 * K add.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_ADD() { return getToken(SQLiteParser.K_ADD, 0); }
+		
+		/**
+		 * K offset.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_OFFSET() { return getToken(SQLiteParser.K_OFFSET, 0); }
+		
+		/**
+		 * K replace.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_REPLACE() { return getToken(SQLiteParser.K_REPLACE, 0); }
+		
+		/**
+		 * K trigger.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_TRIGGER() { return getToken(SQLiteParser.K_TRIGGER, 0); }
+		
+		/**
+		 * K savepoint.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_SAVEPOINT() { return getToken(SQLiteParser.K_SAVEPOINT, 0); }
+		
+		/**
+		 * K database.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_DATABASE() { return getToken(SQLiteParser.K_DATABASE, 0); }
+		
+		/**
+		 * K insert.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_INSERT() { return getToken(SQLiteParser.K_INSERT, 0); }
+		
+		/**
+		 * K limit.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_LIMIT() { return getToken(SQLiteParser.K_LIMIT, 0); }
+		
+		/**
+		 * K commit.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_COMMIT() { return getToken(SQLiteParser.K_COMMIT, 0); }
+		
+		/**
+		 * K exists.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_EXISTS() { return getToken(SQLiteParser.K_EXISTS, 0); }
+		
+		/**
+		 * K conflict.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_CONFLICT() { return getToken(SQLiteParser.K_CONFLICT, 0); }
+		
+		/**
+		 * K desc.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_DESC() { return getToken(SQLiteParser.K_DESC, 0); }
+		
+		/**
+		 * K temp.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_TEMP() { return getToken(SQLiteParser.K_TEMP, 0); }
+		
+		/**
+		 * K to.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_TO() { return getToken(SQLiteParser.K_TO, 0); }
+		
+		/**
+		 * K transaction.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_TRANSACTION() { return getToken(SQLiteParser.K_TRANSACTION, 0); }
+		
+		/**
+		 * K query.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_QUERY() { return getToken(SQLiteParser.K_QUERY, 0); }
+		
+		/**
+		 * K is.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_IS() { return getToken(SQLiteParser.K_IS, 0); }
+		
+		/**
+		 * K release.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_RELEASE() { return getToken(SQLiteParser.K_RELEASE, 0); }
+		
+		/**
+		 * K deferrable.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_DEFERRABLE() { return getToken(SQLiteParser.K_DEFERRABLE, 0); }
+		
+		/**
+		 * K ignore.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_IGNORE() { return getToken(SQLiteParser.K_IGNORE, 0); }
+		
+		/**
+		 * K select.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_SELECT() { return getToken(SQLiteParser.K_SELECT, 0); }
+		
+		/**
+		 * K for.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_FOR() { return getToken(SQLiteParser.K_FOR, 0); }
+		
+		/**
+		 * K except.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_EXCEPT() { return getToken(SQLiteParser.K_EXCEPT, 0); }
+		
+		/**
+		 * K or.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_OR() { return getToken(SQLiteParser.K_OR, 0); }
+		
+		/**
+		 * K before.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_BEFORE() { return getToken(SQLiteParser.K_BEFORE, 0); }
+		
+		/**
+		 * K rename.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_RENAME() { return getToken(SQLiteParser.K_RENAME, 0); }
+		
+		/**
+		 * K into.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_INTO() { return getToken(SQLiteParser.K_INTO, 0); }
+		
+		/**
+		 * K where.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_WHERE() { return getToken(SQLiteParser.K_WHERE, 0); }
+		
+		/**
+		 * K intersect.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_INTERSECT() { return getToken(SQLiteParser.K_INTERSECT, 0); }
+		
+		/**
+		 * K from.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_FROM() { return getToken(SQLiteParser.K_FROM, 0); }
+		
+		/**
+		 * K each.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_EACH() { return getToken(SQLiteParser.K_EACH, 0); }
+		
+		/**
+		 * K glob.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_GLOB() { return getToken(SQLiteParser.K_GLOB, 0); }
+		
+		/**
+		 * K rollback.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_ROLLBACK() { return getToken(SQLiteParser.K_ROLLBACK, 0); }
+		
+		/**
+		 * K left.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_LEFT() { return getToken(SQLiteParser.K_LEFT, 0); }
+		
+		/**
+		 * K full.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_FULL() { return getToken(SQLiteParser.K_FULL, 0); }
+		
+		/**
+		 * K group.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_GROUP() { return getToken(SQLiteParser.K_GROUP, 0); }
+		
+		/**
+		 * K references.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_REFERENCES() { return getToken(SQLiteParser.K_REFERENCES, 0); }
+		
+		/**
+		 * K update.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_UPDATE() { return getToken(SQLiteParser.K_UPDATE, 0); }
+		
+		/**
+		 * K action.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_ACTION() { return getToken(SQLiteParser.K_ACTION, 0); }
+		
+		/**
+		 * K current time.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_CURRENT_TIME() { return getToken(SQLiteParser.K_CURRENT_TIME, 0); }
+		
+		/**
+		 * K end.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_END() { return getToken(SQLiteParser.K_END, 0); }
+		
+		/**
+		 * K asc.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_ASC() { return getToken(SQLiteParser.K_ASC, 0); }
+		
+		/**
+		 * K then.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_THEN() { return getToken(SQLiteParser.K_THEN, 0); }
+		
+		/**
+		 * K restrict.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_RESTRICT() { return getToken(SQLiteParser.K_RESTRICT, 0); }
+		
+		/**
+		 * K foreign.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_FOREIGN() { return getToken(SQLiteParser.K_FOREIGN, 0); }
+		
+		/**
+		 * K explain.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_EXPLAIN() { return getToken(SQLiteParser.K_EXPLAIN, 0); }
+		
+		/**
+		 * K instead.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_INSTEAD() { return getToken(SQLiteParser.K_INSTEAD, 0); }
+		
+		/**
+		 * K with.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_WITH() { return getToken(SQLiteParser.K_WITH, 0); }
+		
+		/**
+		 * K isnull.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_ISNULL() { return getToken(SQLiteParser.K_ISNULL, 0); }
+		
+		/**
+		 * K order.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_ORDER() { return getToken(SQLiteParser.K_ORDER, 0); }
+		
+		/**
+		 * K outer.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_OUTER() { return getToken(SQLiteParser.K_OUTER, 0); }
+		
+		/**
+		 * K set.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_SET() { return getToken(SQLiteParser.K_SET, 0); }
+		
+		/**
+		 * K unique.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_UNIQUE() { return getToken(SQLiteParser.K_UNIQUE, 0); }
+		
+		/**
+		 * K key.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_KEY() { return getToken(SQLiteParser.K_KEY, 0); }
+		
+		/**
+		 * K cast.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_CAST() { return getToken(SQLiteParser.K_CAST, 0); }
+		
+		/**
+		 * K no.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_NO() { return getToken(SQLiteParser.K_NO, 0); }
+		
+		/**
+		 * K after.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_AFTER() { return getToken(SQLiteParser.K_AFTER, 0); }
+		
+		/**
+		 * K plan.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_PLAN() { return getToken(SQLiteParser.K_PLAN, 0); }
+		
+		/**
+		 * K row.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_ROW() { return getToken(SQLiteParser.K_ROW, 0); }
+		
+		/**
+		 * K immediate.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_IMMEDIATE() { return getToken(SQLiteParser.K_IMMEDIATE, 0); }
+		
+		/**
+		 * K primary.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_PRIMARY() { return getToken(SQLiteParser.K_PRIMARY, 0); }
+		
+		/**
+		 * K on.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_ON() { return getToken(SQLiteParser.K_ON, 0); }
+		
+		/**
+		 * K distinct.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_DISTINCT() { return getToken(SQLiteParser.K_DISTINCT, 0); }
+		
+		/**
+		 * K having.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_HAVING() { return getToken(SQLiteParser.K_HAVING, 0); }
+		
+		/**
+		 * K alter.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_ALTER() { return getToken(SQLiteParser.K_ALTER, 0); }
+		
+		/**
+		 * K current timestamp.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_CURRENT_TIMESTAMP() { return getToken(SQLiteParser.K_CURRENT_TIMESTAMP, 0); }
+		
+		/**
+		 * K notnull.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_NOTNULL() { return getToken(SQLiteParser.K_NOTNULL, 0); }
+		
+		/**
+		 * K default.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_DEFAULT() { return getToken(SQLiteParser.K_DEFAULT, 0); }
+		
+		/**
+		 * K inner.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_INNER() { return getToken(SQLiteParser.K_INNER, 0); }
+		
+		/**
+		 * K delete.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_DELETE() { return getToken(SQLiteParser.K_DELETE, 0); }
+		
+		/**
+		 * K right.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_RIGHT() { return getToken(SQLiteParser.K_RIGHT, 0); }
+		
+		/**
+		 * K case.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_CASE() { return getToken(SQLiteParser.K_CASE, 0); }
+		
+		/**
+		 * K match.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_MATCH() { return getToken(SQLiteParser.K_MATCH, 0); }
+		
+		/**
+		 * K initially.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_INITIALLY() { return getToken(SQLiteParser.K_INITIALLY, 0); }
+		
+		/**
+		 * K exclusive.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_EXCLUSIVE() { return getToken(SQLiteParser.K_EXCLUSIVE, 0); }
+		
+		/**
+		 * K check.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_CHECK() { return getToken(SQLiteParser.K_CHECK, 0); }
+		
+		/**
+		 * K null.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_NULL() { return getToken(SQLiteParser.K_NULL, 0); }
+		
+		/**
+		 * K reindex.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_REINDEX() { return getToken(SQLiteParser.K_REINDEX, 0); }
+		
+		/**
+		 * K by.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_BY() { return getToken(SQLiteParser.K_BY, 0); }
+		
+		/**
+		 * K abort.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_ABORT() { return getToken(SQLiteParser.K_ABORT, 0); }
+		
+		/**
+		 * K when.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_WHEN() { return getToken(SQLiteParser.K_WHEN, 0); }
+		
+		/**
+		 * K between.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_BETWEEN() { return getToken(SQLiteParser.K_BETWEEN, 0); }
+		
+		/**
+		 * K regexp.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_REGEXP() { return getToken(SQLiteParser.K_REGEXP, 0); }
+		
+		/**
+		 * K if.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_IF() { return getToken(SQLiteParser.K_IF, 0); }
+		
+		/**
+		 * K table.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_TABLE() { return getToken(SQLiteParser.K_TABLE, 0); }
+		
+		/**
+		 * K like.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_LIKE() { return getToken(SQLiteParser.K_LIKE, 0); }
+		
+		/**
+		 * K deferred.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_DEFERRED() { return getToken(SQLiteParser.K_DEFERRED, 0); }
+		
+		/**
+		 * K analyze.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_ANALYZE() { return getToken(SQLiteParser.K_ANALYZE, 0); }
+		
+		/**
+		 * K join.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_JOIN() { return getToken(SQLiteParser.K_JOIN, 0); }
+		
+		/**
+		 * K fail.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_FAIL() { return getToken(SQLiteParser.K_FAIL, 0); }
+		
+		/**
+		 * K pragma.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_PRAGMA() { return getToken(SQLiteParser.K_PRAGMA, 0); }
+		
+		/**
+		 * K index.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_INDEX() { return getToken(SQLiteParser.K_INDEX, 0); }
+		
+		/**
+		 * K as.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_AS() { return getToken(SQLiteParser.K_AS, 0); }
+		
+		/**
+		 * K else.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_ELSE() { return getToken(SQLiteParser.K_ELSE, 0); }
+		
+		/**
+		 * K all.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_ALL() { return getToken(SQLiteParser.K_ALL, 0); }
+		
+		/**
+		 * K attach.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_ATTACH() { return getToken(SQLiteParser.K_ATTACH, 0); }
+		
+		/**
+		 * K and.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_AND() { return getToken(SQLiteParser.K_AND, 0); }
+		
+		/**
+		 * K using.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_USING() { return getToken(SQLiteParser.K_USING, 0); }
+		
+		/**
+		 * K without.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_WITHOUT() { return getToken(SQLiteParser.K_WITHOUT, 0); }
+		
+		/**
+		 * K natural.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_NATURAL() { return getToken(SQLiteParser.K_NATURAL, 0); }
+		
+		/**
+		 * K not.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_NOT() { return getToken(SQLiteParser.K_NOT, 0); }
+		
+		/**
+		 * K escape.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode K_ESCAPE() { return getToken(SQLiteParser.K_ESCAPE, 0); }
+		
+		/**
+		 * Instantiates a new keyword context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public KeywordContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_keyword; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterKeyword(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitKeyword(this);
 		}
 	}
 
+	/**
+	 * Keyword.
+	 *
+	 * @return the keyword context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final KeywordContext keyword() throws RecognitionException {
 		KeywordContext _localctx = new KeywordContext(_ctx, getState());
 		enterRule(_localctx, 126, RULE_keyword);
@@ -7669,24 +13883,58 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class NameContext.
+	 */
 	public static class NameContext extends ParserRuleContext {
+		
+		/**
+		 * Any_name.
+		 *
+		 * @return the any_name context
+		 */
 		public Any_nameContext any_name() {
 			return getRuleContext(Any_nameContext.class,0);
 		}
+		
+		/**
+		 * Instantiates a new name context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public NameContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_name; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterName(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitName(this);
 		}
 	}
 
+	/**
+	 * Name.
+	 *
+	 * @return the name context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final NameContext name() throws RecognitionException {
 		NameContext _localctx = new NameContext(_ctx, getState());
 		enterRule(_localctx, 128, RULE_name);
@@ -7707,24 +13955,58 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Function_nameContext.
+	 */
 	public static class Function_nameContext extends ParserRuleContext {
+		
+		/**
+		 * Any_name.
+		 *
+		 * @return the any_name context
+		 */
 		public Any_nameContext any_name() {
 			return getRuleContext(Any_nameContext.class,0);
 		}
+		
+		/**
+		 * Instantiates a new function_name context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Function_nameContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_function_name; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterFunction_name(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitFunction_name(this);
 		}
 	}
 
+	/**
+	 * Function_name.
+	 *
+	 * @return the function_name context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Function_nameContext function_name() throws RecognitionException {
 		Function_nameContext _localctx = new Function_nameContext(_ctx, getState());
 		enterRule(_localctx, 130, RULE_function_name);
@@ -7745,24 +14027,58 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Database_nameContext.
+	 */
 	public static class Database_nameContext extends ParserRuleContext {
+		
+		/**
+		 * Any_name.
+		 *
+		 * @return the any_name context
+		 */
 		public Any_nameContext any_name() {
 			return getRuleContext(Any_nameContext.class,0);
 		}
+		
+		/**
+		 * Instantiates a new database_name context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Database_nameContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_database_name; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterDatabase_name(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitDatabase_name(this);
 		}
 	}
 
+	/**
+	 * Database_name.
+	 *
+	 * @return the database_name context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Database_nameContext database_name() throws RecognitionException {
 		Database_nameContext _localctx = new Database_nameContext(_ctx, getState());
 		enterRule(_localctx, 132, RULE_database_name);
@@ -7783,24 +14099,58 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Table_nameContext.
+	 */
 	public static class Table_nameContext extends ParserRuleContext {
+		
+		/**
+		 * Any_name.
+		 *
+		 * @return the any_name context
+		 */
 		public Any_nameContext any_name() {
 			return getRuleContext(Any_nameContext.class,0);
 		}
+		
+		/**
+		 * Instantiates a new table_name context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Table_nameContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_table_name; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterTable_name(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitTable_name(this);
 		}
 	}
 
+	/**
+	 * Table_name.
+	 *
+	 * @return the table_name context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Table_nameContext table_name() throws RecognitionException {
 		Table_nameContext _localctx = new Table_nameContext(_ctx, getState());
 		enterRule(_localctx, 134, RULE_table_name);
@@ -7821,24 +14171,58 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Table_or_index_nameContext.
+	 */
 	public static class Table_or_index_nameContext extends ParserRuleContext {
+		
+		/**
+		 * Any_name.
+		 *
+		 * @return the any_name context
+		 */
 		public Any_nameContext any_name() {
 			return getRuleContext(Any_nameContext.class,0);
 		}
+		
+		/**
+		 * Instantiates a new table_or_index_name context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Table_or_index_nameContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_table_or_index_name; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterTable_or_index_name(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitTable_or_index_name(this);
 		}
 	}
 
+	/**
+	 * Table_or_index_name.
+	 *
+	 * @return the table_or_index_name context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Table_or_index_nameContext table_or_index_name() throws RecognitionException {
 		Table_or_index_nameContext _localctx = new Table_or_index_nameContext(_ctx, getState());
 		enterRule(_localctx, 136, RULE_table_or_index_name);
@@ -7859,24 +14243,58 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class New_table_nameContext.
+	 */
 	public static class New_table_nameContext extends ParserRuleContext {
+		
+		/**
+		 * Any_name.
+		 *
+		 * @return the any_name context
+		 */
 		public Any_nameContext any_name() {
 			return getRuleContext(Any_nameContext.class,0);
 		}
+		
+		/**
+		 * Instantiates a new new_table_name context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public New_table_nameContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_new_table_name; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterNew_table_name(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitNew_table_name(this);
 		}
 	}
 
+	/**
+	 * New_table_name.
+	 *
+	 * @return the new_table_name context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final New_table_nameContext new_table_name() throws RecognitionException {
 		New_table_nameContext _localctx = new New_table_nameContext(_ctx, getState());
 		enterRule(_localctx, 138, RULE_new_table_name);
@@ -7897,24 +14315,58 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Column_nameContext.
+	 */
 	public static class Column_nameContext extends ParserRuleContext {
+		
+		/**
+		 * Any_name.
+		 *
+		 * @return the any_name context
+		 */
 		public Any_nameContext any_name() {
 			return getRuleContext(Any_nameContext.class,0);
 		}
+		
+		/**
+		 * Instantiates a new column_name context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Column_nameContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_column_name; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterColumn_name(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitColumn_name(this);
 		}
 	}
 
+	/**
+	 * Column_name.
+	 *
+	 * @return the column_name context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Column_nameContext column_name() throws RecognitionException {
 		Column_nameContext _localctx = new Column_nameContext(_ctx, getState());
 		enterRule(_localctx, 140, RULE_column_name);
@@ -7935,24 +14387,58 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Collation_nameContext.
+	 */
 	public static class Collation_nameContext extends ParserRuleContext {
+		
+		/**
+		 * Any_name.
+		 *
+		 * @return the any_name context
+		 */
 		public Any_nameContext any_name() {
 			return getRuleContext(Any_nameContext.class,0);
 		}
+		
+		/**
+		 * Instantiates a new collation_name context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Collation_nameContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_collation_name; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterCollation_name(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitCollation_name(this);
 		}
 	}
 
+	/**
+	 * Collation_name.
+	 *
+	 * @return the collation_name context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Collation_nameContext collation_name() throws RecognitionException {
 		Collation_nameContext _localctx = new Collation_nameContext(_ctx, getState());
 		enterRule(_localctx, 142, RULE_collation_name);
@@ -7973,24 +14459,58 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Foreign_tableContext.
+	 */
 	public static class Foreign_tableContext extends ParserRuleContext {
+		
+		/**
+		 * Any_name.
+		 *
+		 * @return the any_name context
+		 */
 		public Any_nameContext any_name() {
 			return getRuleContext(Any_nameContext.class,0);
 		}
+		
+		/**
+		 * Instantiates a new foreign_table context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Foreign_tableContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_foreign_table; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterForeign_table(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitForeign_table(this);
 		}
 	}
 
+	/**
+	 * Foreign_table.
+	 *
+	 * @return the foreign_table context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Foreign_tableContext foreign_table() throws RecognitionException {
 		Foreign_tableContext _localctx = new Foreign_tableContext(_ctx, getState());
 		enterRule(_localctx, 144, RULE_foreign_table);
@@ -8011,24 +14531,58 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Index_nameContext.
+	 */
 	public static class Index_nameContext extends ParserRuleContext {
+		
+		/**
+		 * Any_name.
+		 *
+		 * @return the any_name context
+		 */
 		public Any_nameContext any_name() {
 			return getRuleContext(Any_nameContext.class,0);
 		}
+		
+		/**
+		 * Instantiates a new index_name context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Index_nameContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_index_name; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterIndex_name(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitIndex_name(this);
 		}
 	}
 
+	/**
+	 * Index_name.
+	 *
+	 * @return the index_name context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Index_nameContext index_name() throws RecognitionException {
 		Index_nameContext _localctx = new Index_nameContext(_ctx, getState());
 		enterRule(_localctx, 146, RULE_index_name);
@@ -8049,24 +14603,58 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Trigger_nameContext.
+	 */
 	public static class Trigger_nameContext extends ParserRuleContext {
+		
+		/**
+		 * Any_name.
+		 *
+		 * @return the any_name context
+		 */
 		public Any_nameContext any_name() {
 			return getRuleContext(Any_nameContext.class,0);
 		}
+		
+		/**
+		 * Instantiates a new trigger_name context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Trigger_nameContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_trigger_name; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterTrigger_name(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitTrigger_name(this);
 		}
 	}
 
+	/**
+	 * Trigger_name.
+	 *
+	 * @return the trigger_name context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Trigger_nameContext trigger_name() throws RecognitionException {
 		Trigger_nameContext _localctx = new Trigger_nameContext(_ctx, getState());
 		enterRule(_localctx, 148, RULE_trigger_name);
@@ -8087,24 +14675,58 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class View_nameContext.
+	 */
 	public static class View_nameContext extends ParserRuleContext {
+		
+		/**
+		 * Any_name.
+		 *
+		 * @return the any_name context
+		 */
 		public Any_nameContext any_name() {
 			return getRuleContext(Any_nameContext.class,0);
 		}
+		
+		/**
+		 * Instantiates a new view_name context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public View_nameContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_view_name; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterView_name(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitView_name(this);
 		}
 	}
 
+	/**
+	 * View_name.
+	 *
+	 * @return the view_name context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final View_nameContext view_name() throws RecognitionException {
 		View_nameContext _localctx = new View_nameContext(_ctx, getState());
 		enterRule(_localctx, 150, RULE_view_name);
@@ -8125,24 +14747,58 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Module_nameContext.
+	 */
 	public static class Module_nameContext extends ParserRuleContext {
+		
+		/**
+		 * Any_name.
+		 *
+		 * @return the any_name context
+		 */
 		public Any_nameContext any_name() {
 			return getRuleContext(Any_nameContext.class,0);
 		}
+		
+		/**
+		 * Instantiates a new module_name context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Module_nameContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_module_name; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterModule_name(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitModule_name(this);
 		}
 	}
 
+	/**
+	 * Module_name.
+	 *
+	 * @return the module_name context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Module_nameContext module_name() throws RecognitionException {
 		Module_nameContext _localctx = new Module_nameContext(_ctx, getState());
 		enterRule(_localctx, 152, RULE_module_name);
@@ -8163,24 +14819,58 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Pragma_nameContext.
+	 */
 	public static class Pragma_nameContext extends ParserRuleContext {
+		
+		/**
+		 * Any_name.
+		 *
+		 * @return the any_name context
+		 */
 		public Any_nameContext any_name() {
 			return getRuleContext(Any_nameContext.class,0);
 		}
+		
+		/**
+		 * Instantiates a new pragma_name context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Pragma_nameContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_pragma_name; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterPragma_name(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitPragma_name(this);
 		}
 	}
 
+	/**
+	 * Pragma_name.
+	 *
+	 * @return the pragma_name context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Pragma_nameContext pragma_name() throws RecognitionException {
 		Pragma_nameContext _localctx = new Pragma_nameContext(_ctx, getState());
 		enterRule(_localctx, 154, RULE_pragma_name);
@@ -8201,24 +14891,58 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Savepoint_nameContext.
+	 */
 	public static class Savepoint_nameContext extends ParserRuleContext {
+		
+		/**
+		 * Any_name.
+		 *
+		 * @return the any_name context
+		 */
 		public Any_nameContext any_name() {
 			return getRuleContext(Any_nameContext.class,0);
 		}
+		
+		/**
+		 * Instantiates a new savepoint_name context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Savepoint_nameContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_savepoint_name; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterSavepoint_name(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitSavepoint_name(this);
 		}
 	}
 
+	/**
+	 * Savepoint_name.
+	 *
+	 * @return the savepoint_name context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Savepoint_nameContext savepoint_name() throws RecognitionException {
 		Savepoint_nameContext _localctx = new Savepoint_nameContext(_ctx, getState());
 		enterRule(_localctx, 156, RULE_savepoint_name);
@@ -8239,24 +14963,58 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Table_aliasContext.
+	 */
 	public static class Table_aliasContext extends ParserRuleContext {
+		
+		/**
+		 * Any_name.
+		 *
+		 * @return the any_name context
+		 */
 		public Any_nameContext any_name() {
 			return getRuleContext(Any_nameContext.class,0);
 		}
+		
+		/**
+		 * Instantiates a new table_alias context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Table_aliasContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_table_alias; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterTable_alias(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitTable_alias(this);
 		}
 	}
 
+	/**
+	 * Table_alias.
+	 *
+	 * @return the table_alias context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Table_aliasContext table_alias() throws RecognitionException {
 		Table_aliasContext _localctx = new Table_aliasContext(_ctx, getState());
 		enterRule(_localctx, 158, RULE_table_alias);
@@ -8277,24 +15035,58 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Transaction_nameContext.
+	 */
 	public static class Transaction_nameContext extends ParserRuleContext {
+		
+		/**
+		 * Any_name.
+		 *
+		 * @return the any_name context
+		 */
 		public Any_nameContext any_name() {
 			return getRuleContext(Any_nameContext.class,0);
 		}
+		
+		/**
+		 * Instantiates a new transaction_name context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Transaction_nameContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_transaction_name; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterTransaction_name(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitTransaction_name(this);
 		}
 	}
 
+	/**
+	 * Transaction_name.
+	 *
+	 * @return the transaction_name context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Transaction_nameContext transaction_name() throws RecognitionException {
 		Transaction_nameContext _localctx = new Transaction_nameContext(_ctx, getState());
 		enterRule(_localctx, 160, RULE_transaction_name);
@@ -8315,29 +15107,81 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/**
+	 * The Class Any_nameContext.
+	 */
 	public static class Any_nameContext extends ParserRuleContext {
+		
+		/**
+		 * Keyword.
+		 *
+		 * @return the keyword context
+		 */
 		public KeywordContext keyword() {
 			return getRuleContext(KeywordContext.class,0);
 		}
+		
+		/**
+		 * String literal.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode STRING_LITERAL() { return getToken(SQLiteParser.STRING_LITERAL, 0); }
+		
+		/**
+		 * Any_name.
+		 *
+		 * @return the any_name context
+		 */
 		public Any_nameContext any_name() {
 			return getRuleContext(Any_nameContext.class,0);
 		}
+		
+		/**
+		 * Identifier.
+		 *
+		 * @return the terminal node
+		 */
 		public TerminalNode IDENTIFIER() { return getToken(SQLiteParser.IDENTIFIER, 0); }
+		
+		/**
+		 * Instantiates a new any_name context.
+		 *
+		 * @param parent the parent
+		 * @param invokingState the invoking state
+		 */
 		public Any_nameContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.RuleContext#getRuleIndex()
+		 */
 		@Override public int getRuleIndex() { return RULE_any_name; }
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#enterRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).enterAny_name(this);
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.antlr.v4.runtime.ParserRuleContext#exitRule(org.antlr.v4.runtime.tree.ParseTreeListener)
+		 */
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof SQLiteListener ) ((SQLiteListener)listener).exitAny_name(this);
 		}
 	}
 
+	/**
+	 * Any_name.
+	 *
+	 * @return the any_name context
+	 * @throws RecognitionException the recognition exception
+	 */
 	public final Any_nameContext any_name() throws RecognitionException {
 		Any_nameContext _localctx = new Any_nameContext(_ctx, getState());
 		enterRule(_localctx, 162, RULE_any_name);
@@ -8508,12 +15352,23 @@ public class SQLiteParser extends Parser {
 		return _localctx;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.antlr.v4.runtime.Recognizer#sempred(org.antlr.v4.runtime.RuleContext, int, int)
+	 */
 	public boolean sempred(RuleContext _localctx, int ruleIndex, int predIndex) {
 		switch (ruleIndex) {
 		case 39: return expr_sempred((ExprContext)_localctx, predIndex);
 		}
 		return true;
 	}
+	
+	/**
+	 * Expr_sempred.
+	 *
+	 * @param _localctx the _localctx
+	 * @param predIndex the pred index
+	 * @return true, if successful
+	 */
 	private boolean expr_sempred(ExprContext _localctx, int predIndex) {
 		switch (predIndex) {
 		case 0: return precpred(_ctx, 20);
@@ -8547,6 +15402,7 @@ public class SQLiteParser extends Parser {
 		return true;
 	}
 
+	/** The Constant _serializedATN. */
 	public static final String _serializedATN =
 		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\u009f\u06c6\4\2\t"+
 		"\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13"+
@@ -9260,6 +16116,8 @@ public class SQLiteParser extends Parser {
 		"\u05e5\u05e9\u05ed\u05f0\u05f6\u05f9\u05fb\u0604\u0609\u060d\u0611\u0614"+
 		"\u061f\u0624\u0628\u062f\u0638\u063c\u063e\u0642\u064b\u0650\u0652\u065b"+
 		"\u0666\u066d\u0670\u0677\u0680\u0685\u0688\u0694\u06c3";
+	
+	/** The Constant _ATN. */
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

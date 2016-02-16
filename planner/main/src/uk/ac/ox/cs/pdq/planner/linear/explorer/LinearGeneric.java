@@ -30,6 +30,7 @@ import uk.ac.ox.cs.pdq.reasoning.utility.Match;
 import com.google.common.eventbus.EventBus;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * Exhaustively searches the proof space
  * For more information see
@@ -44,26 +45,20 @@ public class LinearGeneric extends LinearExplorer {
 
 
 	/**
-	 * 
-	 * @param eventBus
-	 * @param collectStats
-	 * @param query
-	 * 		The input user query
-	 * @param accessibleQuery
-	 * 		The accessible counterpart of the user query
-	 * @param schema
-	 * 		The input schema
-	 * @param accessibleSchema
-	 * 		The accessible counterpart of the input schema
-	 * @param chaser
-	 * 		Runs the chase algorithm
-	 * @param detector
-	 * 		Detects homomorphisms during chasing
-	 * @param costEstimator
-	 * 		Estimates the cost of a plan
-	 * @param nodeFactory
-	 * @param depth
-	 * @throws PlannerException
+	 * Instantiates a new linear generic.
+	 *
+	 * @param eventBus the event bus
+	 * @param collectStats the collect stats
+	 * @param query 		The input user query
+	 * @param accessibleQuery 		The accessible counterpart of the user query
+	 * @param schema 		The input schema
+	 * @param accessibleSchema 		The accessible counterpart of the input schema
+	 * @param chaser 		Runs the chase algorithm
+	 * @param detector 		Detects homomorphisms during chasing
+	 * @param costEstimator 		Estimates the cost of a plan
+	 * @param nodeFactory the node factory
+	 * @param depth the depth
+	 * @throws PlannerException the planner exception
 	 */
 	public LinearGeneric(
 			EventBus eventBus, 
@@ -81,7 +76,10 @@ public class LinearGeneric extends LinearExplorer {
 	}
 
 	/**
-	 * @throws PlannerException
+	 * _explore.
+	 *
+	 * @throws PlannerException the planner exception
+	 * @throws LimitReachedException the limit reached exception
 	 */
 	@Override
 	protected void _explore() throws PlannerException, LimitReachedException {

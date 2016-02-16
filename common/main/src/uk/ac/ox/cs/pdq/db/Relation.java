@@ -23,19 +23,22 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
 /**
- * A schema relation
+ * A schema relation.
+ *
  * @author Efthymia Tsamoura
  * @author Julien Leblay
- *
  */
 public abstract class Relation extends Signature implements Serializable {
 
+	/** The log. */
 	protected static Logger log = Logger.getLogger(Relation.class);
 
-	/**  */
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -9222721018270749836L;
 
+	/** The global id. */
 	protected static int globalId = 0;
 
 	/**
@@ -43,13 +46,17 @@ public abstract class Relation extends Signature implements Serializable {
 	 */
 	protected final int relationId;
 
-	/** */
-	public static enum PropertyKeys { METADATA }
+	/**
+	 * The Enum PropertyKeys.
+	 */
+	public static enum PropertyKeys { 
+ /** The metadata. */
+ METADATA }
 
-	/** The relation's properties */
+	/**  The relation's properties. */
 	protected final Properties properties = new Properties();
 
-	/** The relation's attributes */
+	/**  The relation's attributes. */
 	protected final List<Attribute> attributes;
 
 	/**
@@ -64,6 +71,7 @@ public abstract class Relation extends Signature implements Serializable {
 	 */
 	protected Map<String, AccessMethod> accessMethods;
 	
+	/** The am view. */
 	protected List<AccessMethod> amView;
 
 	/**
@@ -71,8 +79,10 @@ public abstract class Relation extends Signature implements Serializable {
 	 */
 	protected List<ForeignKey> foreignKeys;
 	
+	/** The key. */
 	protected List<Attribute> key = Lists.newArrayList();
 	
+	/** The key positions. */
 	protected List<Integer> keyPositions = null;
 
 
@@ -80,8 +90,8 @@ public abstract class Relation extends Signature implements Serializable {
 	 * Constructor with input method.
 	 *
 	 * @param name Relation's name
-	 * @param accessMethods Relation's binding methods
 	 * @param attributes List<? extends Attribute>
+	 * @param accessMethods Relation's binding methods
 	 * @param foreignKeys List<ForeignKey>
 	 */
 	public Relation(String name, List<? extends Attribute> attributes,
@@ -93,9 +103,10 @@ public abstract class Relation extends Signature implements Serializable {
 	 * Constructor with input method.
 	 *
 	 * @param name Relation's name
-	 * @param accessMethods Relation's binding methods
 	 * @param attributes List<? extends Attribute>
+	 * @param accessMethods Relation's binding methods
 	 * @param foreignKeys List<ForeignKey>
+	 * @param isEquality the is equality
 	 */
 	public Relation(String name, List<? extends Attribute> attributes,
 			List<AccessMethod> accessMethods, List<ForeignKey> foreignKeys,
@@ -120,8 +131,8 @@ public abstract class Relation extends Signature implements Serializable {
 	 * Constructor with input method.
 	 *
 	 * @param name Relation's name
-	 * @param accessMethods Relation's binding methods
 	 * @param attributes List<? extends Attribute>
+	 * @param accessMethods Relation's binding methods
 	 */
 	public Relation(String name, List<? extends Attribute> attributes, List<AccessMethod> accessMethods) {
 		this(name, attributes, accessMethods, false);
@@ -131,8 +142,9 @@ public abstract class Relation extends Signature implements Serializable {
 	 * Constructor with input method.
 	 *
 	 * @param name Relation's name
-	 * @param accessMethods Relation's binding methods
 	 * @param attributes List<? extends Attribute>
+	 * @param accessMethods Relation's binding methods
+	 * @param isEquality the is equality
 	 */
 	public Relation(String name, List<? extends Attribute> attributes,
 			List<AccessMethod> accessMethods, boolean isEquality) {
@@ -144,6 +156,7 @@ public abstract class Relation extends Signature implements Serializable {
 	 *
 	 * @param name Relation's name
 	 * @param attributes List<? extends Attribute>
+	 * @param isEquality the is equality
 	 */
 	public Relation(String name, List<? extends Attribute> attributes, boolean isEquality) {
 		this(name, attributes, new ArrayList<AccessMethod>(), isEquality);
@@ -170,6 +183,8 @@ public abstract class Relation extends Signature implements Serializable {
 	}
 
 	/**
+	 * Gets the name.
+	 *
 	 * @return String
 	 */
 	@Override
@@ -179,6 +194,8 @@ public abstract class Relation extends Signature implements Serializable {
 	}
 
 	/**
+	 * Gets the arity.
+	 *
 	 * @return the arity of the relation.
 	 */
 	@Override
@@ -187,6 +204,8 @@ public abstract class Relation extends Signature implements Serializable {
 	}
 
 	/**
+	 * Gets the attributes.
+	 *
 	 * @return the relation's inputAttributes
 	 */
 	public List<Attribute> getAttributes() {
@@ -194,6 +213,8 @@ public abstract class Relation extends Signature implements Serializable {
 	}
 
 	/**
+	 * Gets the type.
+	 *
 	 * @return the relation's type
 	 */
 	public TupleType getType() {
@@ -201,10 +222,10 @@ public abstract class Relation extends Signature implements Serializable {
 	}
 	
 	/**
+	 * Gets the input attributes.
 	 *
-	 * @param b
-	 * @return
-	 * 		the relation's input attributes for input binding
+	 * @param b the b
+	 * @return 		the relation's input attributes for input binding
 	 */
 	public List<Attribute> getInputAttributes(AccessMethod b) {
 		Preconditions.checkArgument(this.accessMethods.containsKey(b.getName()));
@@ -216,6 +237,8 @@ public abstract class Relation extends Signature implements Serializable {
 	}
 
 	/**
+	 * Gets the attribute.
+	 *
 	 * @param index int
 	 * @return the relation's attribute at position index
 	 */
@@ -224,7 +247,9 @@ public abstract class Relation extends Signature implements Serializable {
 	}
 
 	/**
-	 * @param attributeName
+	 * Gets the attribute index.
+	 *
+	 * @param attributeName the attribute name
 	 * @return the index of the attribute whose name is given as parameter,
 	 *         returns -1 iff the relation has no such attribute
 	 */
@@ -233,7 +258,9 @@ public abstract class Relation extends Signature implements Serializable {
 	}
 
 	/**
-	 * @param attributeName
+	 * Gets the attribute.
+	 *
+	 * @param attributeName the attribute name
 	 * @return the index of the attribute whose name is given as parameter,
 	 *         returns -1 iff the relation has no such attribute
 	 */
@@ -246,6 +273,8 @@ public abstract class Relation extends Signature implements Serializable {
 	}
 
 	/**
+	 * Gets the access methods.
+	 *
 	 * @return the relation's accessMethods.
 	 */
 	public List<AccessMethod> getAccessMethods() {
@@ -253,6 +282,8 @@ public abstract class Relation extends Signature implements Serializable {
 	}
 
 	/**
+	 * Adds the foreign key.
+	 *
 	 * @param foreingKey ForeignKey
 	 */
 	public void addForeignKey(ForeignKey foreingKey) {
@@ -261,6 +292,8 @@ public abstract class Relation extends Signature implements Serializable {
 	}
 
 	/**
+	 * Adds the foreign keys.
+	 *
 	 * @param foreingKeys List<ForeignKey>
 	 */
 	public void addForeignKeys(List<ForeignKey> foreingKeys) {
@@ -269,6 +302,8 @@ public abstract class Relation extends Signature implements Serializable {
 	}
 
 	/**
+	 * Gets the foreign key.
+	 *
 	 * @param index int
 	 * @return ForeignKey
 	 */
@@ -277,6 +312,8 @@ public abstract class Relation extends Signature implements Serializable {
 	}
 
 	/**
+	 * Gets the foreign keys.
+	 *
 	 * @return List<ForeignKey>
 	 */
 	public List<ForeignKey> getForeignKeys() {
@@ -284,6 +321,8 @@ public abstract class Relation extends Signature implements Serializable {
 	}
 
 	/**
+	 * Gets the id.
+	 *
 	 * @return int
 	 */
 	public int getId() {
@@ -291,6 +330,8 @@ public abstract class Relation extends Signature implements Serializable {
 	}
 
 	/**
+	 * Adds the access method.
+	 *
 	 * @param bm AccessMethod
 	 */
 	public void addAccessMethod(AccessMethod bm) {
@@ -307,6 +348,8 @@ public abstract class Relation extends Signature implements Serializable {
 	}
 
 	/**
+	 * Sets the access methods.
+	 *
 	 * @param bindingMethods List<AccessMethod>
 	 * @param clearFirst boolean
 	 */
@@ -324,6 +367,8 @@ public abstract class Relation extends Signature implements Serializable {
 	}
 
 	/**
+	 * Sets the access methods.
+	 *
 	 * @param bindingMethods List<AccessMethod>
 	 */
 	public void setAccessMethods(List<AccessMethod> bindingMethods) {
@@ -331,6 +376,8 @@ public abstract class Relation extends Signature implements Serializable {
 	}
 
 	/**
+	 * Gets the access method.
+	 *
 	 * @param name String
 	 * @return AccessMethod
 	 */
@@ -339,6 +386,8 @@ public abstract class Relation extends Signature implements Serializable {
 	}
 
 	/**
+	 * Creates the atoms.
+	 *
 	 * @return an atom corresponding to this relation.
 	 */
 	public DatabasePredicate createAtoms() {
@@ -350,6 +399,8 @@ public abstract class Relation extends Signature implements Serializable {
 	}
 
 	/**
+	 * Checks for free access.
+	 *
 	 * @return Boolean
 	 */
 	public Boolean hasFreeAccess() {
@@ -363,14 +414,29 @@ public abstract class Relation extends Signature implements Serializable {
 		return false;
 	}
 	
+	/**
+	 * Sets the key.
+	 *
+	 * @param key the new key
+	 */
 	public void setKey(List<Attribute> key) {
 		this.key = key;
 	}
 	
+	/**
+	 * Gets the key.
+	 *
+	 * @return the key
+	 */
 	public List<Attribute> getKey() {
 		return this.key;
 	}
 	
+	/**
+	 * Gets the key positions.
+	 *
+	 * @return the key positions
+	 */
 	public List<Integer> getKeyPositions() {
 		if(this.keyPositions == null) {
 			this.keyPositions = Lists.newArrayList();
@@ -382,6 +448,8 @@ public abstract class Relation extends Signature implements Serializable {
 	}
 
 	/**
+	 * Equals.
+	 *
 	 * @param o Object
 	 * @return boolean
 	 */
@@ -400,6 +468,8 @@ public abstract class Relation extends Signature implements Serializable {
 	}
 
 	/**
+	 * Hash code.
+	 *
 	 * @return int
 	 */
 	@Override
@@ -408,6 +478,8 @@ public abstract class Relation extends Signature implements Serializable {
 	}
 
 	/**
+	 * To string.
+	 *
 	 * @return String
 	 */
 	@Override
@@ -460,6 +532,8 @@ public abstract class Relation extends Signature implements Serializable {
 	}
 
 	/**
+	 * Gets the metadata.
+	 *
 	 * @return RelationMetadata
 	 */
 	public RelationMetadata getMetadata() {
@@ -467,6 +541,8 @@ public abstract class Relation extends Signature implements Serializable {
 	}
 
 	/**
+	 * Sets the metadata.
+	 *
 	 * @param metadata RelationMetadata
 	 */
 	public void setMetadata(RelationMetadata metadata) {

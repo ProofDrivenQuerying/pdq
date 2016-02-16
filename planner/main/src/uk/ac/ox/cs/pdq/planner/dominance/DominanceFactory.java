@@ -10,6 +10,7 @@ import uk.ac.ox.cs.pdq.cost.estimators.SimpleCostEstimator;
 import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.DominanceTypes;
 
+// TODO: Auto-generated Javadoc
 /**
  * Creates cost dominance detectors using the input parameters.
  * The available options are:
@@ -23,13 +24,17 @@ import uk.ac.ox.cs.pdq.planner.PlannerParameters.DominanceTypes;
  */
 public class DominanceFactory {
 
+	/** The type. */
 	private final DominanceTypes type;
+	
+	/** The cost estimator. */
 	private final CostEstimator<Plan> costEstimator;
 
 	/**
 	 * Constructor for DominanceFactory.
+	 *
 	 * @param type DominanceTypes
-	 * @param openToClosedComparison boolean
+	 * @param costEstimator the cost estimator
 	 */
 	public DominanceFactory(DominanceTypes type, CostEstimator<Plan> costEstimator) {
 		Preconditions.checkNotNull(type);
@@ -39,6 +44,8 @@ public class DominanceFactory {
 	}
 
 	/**
+	 * Gets the single instance of DominanceFactory.
+	 *
 	 * @return Dominance[]
 	 */
 	public Dominance[] getInstance() {

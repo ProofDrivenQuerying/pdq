@@ -6,6 +6,7 @@ import uk.ac.ox.cs.pdq.fol.Evaluatable;
 import uk.ac.ox.cs.pdq.rewrite.RewriterException;
 import uk.ac.ox.cs.pdq.util.Operator;
 
+// TODO: Auto-generated Javadoc
 /**
  * Provide utility function for translating from/to SQL.
  *
@@ -15,13 +16,21 @@ import uk.ac.ox.cs.pdq.util.Operator;
  */
 public abstract class SQLTranslator {
 
-	/** */
-	public static enum SupportedDialect{ SQL92, POSTGRESQL }
+	/**
+	 * The Enum SupportedDialect.
+	 */
+	public static enum SupportedDialect{ 
+ /** The SQ l92. */
+ SQL92, 
+ /** The postgresql. */
+ POSTGRESQL }
 
-	/** The logger */
+	/**  The logger. */
 	public static Logger log = Logger.getLogger(SQLTranslator.class);
 
 	/**
+	 * Target.
+	 *
 	 * @param dialect SupportedDialect
 	 * @return SQLTranslator<S>
 	 */
@@ -35,6 +44,8 @@ public abstract class SQLTranslator {
 	}
 
 	/**
+	 * Target.
+	 *
 	 * @param dialect String
 	 * @return SQLTranslator<S>
 	 */
@@ -46,6 +57,8 @@ public abstract class SQLTranslator {
 	}
 
 	/**
+	 * Generic.
+	 *
 	 * @return SQLTranslator<S>
 	 */
 	public static SQLTranslator generic() {
@@ -53,7 +66,9 @@ public abstract class SQLTranslator {
 	}
 
 	/**
-	 * @param q
+	 * To sql.
+	 *
+	 * @param q the q
 	 * @return a String representation of a SQL statement for the given query
 	 * @throws RewriterException if the statement could not be generated.
 	 */
@@ -61,15 +76,21 @@ public abstract class SQLTranslator {
 
 
 	/**
-	 * @param plan
+	 * To sql with.
+	 *
+	 * @param op the op
 	 * @return a SQL statement equivalent to the given plan
+	 * @throws RewriterException the rewriter exception
 	 */
 	public abstract String toSQLWith(Operator op) throws RewriterException ;
 
 
 	/**
-	 * @param plan Plan
+	 * To sql.
+	 *
+	 * @param op the op
 	 * @return a SQL statement equivalent to the given relational expression
+	 * @throws RewriterException the rewriter exception
 	 */
 	public abstract String toSQL(Operator op) throws RewriterException ;
 }

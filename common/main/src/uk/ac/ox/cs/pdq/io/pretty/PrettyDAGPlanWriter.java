@@ -14,11 +14,11 @@ import uk.ac.ox.cs.pdq.io.Writer;
 import uk.ac.ox.cs.pdq.plan.DAGPlan;
 import uk.ac.ox.cs.pdq.plan.EstimateProvider;
  
+// TODO: Auto-generated Javadoc
 /**
- * Writes a concise representation of a plan to the given output
- * 
- * @author Julien Leblay
+ * Writes a concise representation of a plan to the given output.
  *
+ * @author Julien Leblay
  */
 public class PrettyDAGPlanWriter extends PrettyWriter<DAGPlan> implements Writer<DAGPlan> {
 	/**
@@ -45,7 +45,8 @@ public class PrettyDAGPlanWriter extends PrettyWriter<DAGPlan> implements Writer
 	
 	/**
 	 * Fluent pretty writer provider.
-	 * @param out
+	 *
+	 * @param out the out
 	 * @return a new PrettyLeftDeepPlanWriter with the given default output.
 	 */
 	public static PrettyDAGPlanWriter to(PrintStream out) {

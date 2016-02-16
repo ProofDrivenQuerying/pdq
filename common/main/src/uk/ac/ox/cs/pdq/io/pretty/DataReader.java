@@ -17,6 +17,7 @@ import uk.ac.ox.cs.pdq.io.Reader;
 import uk.ac.ox.cs.pdq.io.ReaderException;
 import uk.ac.ox.cs.pdq.util.Types;
 
+// TODO: Auto-generated Javadoc
 /**
  * Read facts from input stream, and returns then as Collections of Atoms.
  * 
@@ -24,12 +25,13 @@ import uk.ac.ox.cs.pdq.util.Types;
  */
 public class DataReader implements Reader<Collection<Predicate>> {
 
-	/** The schema that the facts read must comply with */
+	/**  The schema that the facts read must comply with. */
 	private final Schema schema;
 	
 	/**
 	 * Default constructor.
-	 * @param schema
+	 *
+	 * @param schema the schema
 	 */
 	public DataReader(Schema schema) {
 		this.schema = schema;
@@ -63,8 +65,9 @@ public class DataReader implements Reader<Collection<Predicate>> {
 
 	/**
 	 * Parse a single line, return the fact is contains (expected one fact per line). 
-	 * @param line
-	 * @param lineNumber
+	 *
+	 * @param line the line
+	 * @param lineNumber the line number
 	 * @return the fact read from the given line.
 	 */
 	private Predicate parseFact(String line, int lineNumber) {

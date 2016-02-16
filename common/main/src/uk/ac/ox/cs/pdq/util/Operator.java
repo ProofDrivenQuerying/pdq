@@ -5,6 +5,7 @@ import java.util.List;
 import uk.ac.ox.cs.pdq.fol.Term;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * Top-level interface for any operator accepting input and output types.
  * This can be fined-grained operator such as relational algebra operators,
@@ -14,8 +15,16 @@ import uk.ac.ox.cs.pdq.fol.Term;
  */
 public interface Operator extends Costable {
 
-	/** */
-	public static enum SortOrder { ASC, DESC, UNSORTED }
+	/**
+	 * The Enum SortOrder.
+	 */
+	public static enum SortOrder { 
+ /** The asc. */
+ ASC, 
+ /** The desc. */
+ DESC, 
+ /** The unsorted. */
+ UNSORTED }
 	
 //	/**
 //	 * @return a list of pair of column/sortorder, specifying how the output
@@ -24,16 +33,22 @@ public interface Operator extends Costable {
 //	List<Pair<Term, SortOrder>> getSortOrder();
 	
 	/**
-	 * @return TupleType
-	 */
+ * Gets the input type.
+ *
+ * @return TupleType
+ */
 	TupleType getInputType();
 
 	/**
+	 * Gets the type.
+	 *
 	 * @return Type
 	 */
 	TupleType getType();
 
 	/**
+	 * Gets the columns.
+	 *
 	 * @return TupleType
 	 */
 	List<Term> getColumns();

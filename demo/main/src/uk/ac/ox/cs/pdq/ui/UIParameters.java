@@ -7,6 +7,7 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
+// TODO: Auto-generated Javadoc
 /**
  * Specialises parameters for demo purpose.
  * 
@@ -17,13 +18,15 @@ public class UIParameters extends uk.ac.ox.cs.pdq.Parameters {
 	/** Logger. */
 	private static Logger log = Logger.getLogger(UIParameters.class);
 
-	/** Properties file name */
+	/**  Properties file name. */
 	static final String DEFAULT_CONFIG_FILE_NAME = "pdq-demo.properties";
 
-	/** Properties file path */
+	/**  Properties file path. */
 	static final String DEFAULT_CONFIG_FILE_PATH = "./" + DEFAULT_CONFIG_FILE_NAME;
 
 	/**
+	 * Gets the version.
+	 *
 	 * @return the version of the planner code, as given by Maven
 	 */
 	public static String getVersion() {
@@ -42,6 +45,9 @@ public class UIParameters extends uk.ac.ox.cs.pdq.Parameters {
 	    }
 	}
 
+	/**
+	 * Instantiates a new UI parameters.
+	 */
 	public UIParameters() {
 		this(new File(DEFAULT_CONFIG_FILE_PATH));
 	}

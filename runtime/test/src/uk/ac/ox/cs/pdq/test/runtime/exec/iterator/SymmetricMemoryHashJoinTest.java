@@ -24,18 +24,25 @@ import uk.ac.ox.cs.pdq.util.TupleType;
 
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
- * @author Julien LEBLAY
+ * The Class SymmetricMemoryHashJoinTest.
  *
+ * @author Julien LEBLAY
  */
 public class SymmetricMemoryHashJoinTest extends NaryIteratorTest {
 
+	/** The iterator. */
 	SymmetricMemoryHashJoin iterator;
+	
+	/** The non mock4. */
 	// Non-mock
 	TupleIterator nonMock1, nonMock2, nonMock4;
 
 	
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.test.runtime.exec.iterator.TupleIteratorTest#setup()
+	 */
 	@Before public void setup() {
         super.setup();
         MockitoAnnotations.initMocks(this);
@@ -77,16 +84,25 @@ public class SymmetricMemoryHashJoinTest extends NaryIteratorTest {
         this.iterator = new SymmetricMemoryHashJoin(child1, child2);
 	}
 	
+	/**
+	 * Inits the null children1.
+	 */
 	@Test(expected=IllegalArgumentException.class) 
 	public void initNullChildren1() {
         new SymmetricMemoryHashJoin(child1, null);
 	}
 	
+	/**
+	 * Inits the null children2.
+	 */
 	@Test(expected=IllegalArgumentException.class) 
 	public void initNullChildren2() {
         new SymmetricMemoryHashJoin(null, child1);
 	}
 
+	/**
+	 * Inits the semi join.
+	 */
 	@Test public void initSemiJoin() {
 		Predicate aEqualsE = new AttributeEqualityPredicate(0, 4);
 		Predicate predicate = new ConjunctivePredicate<>(Lists.newArrayList(aEqualsE));
@@ -99,6 +115,9 @@ public class SymmetricMemoryHashJoinTest extends NaryIteratorTest {
 		Assert.assertEquals("SymmetricMemoryHashJoin iterator predicate must match that of initialization", predicate , this.iterator.getPredicate());
 	}
 
+	/**
+	 * Inits the two children.
+	 */
 	@Test public void initTwoChildren() {
 		Predicate bEqualsC = new ConjunctivePredicate<>(new AttributeEqualityPredicate(1, 4));
 		this.iterator = new SymmetricMemoryHashJoin(bEqualsC, child1, child2);
@@ -110,6 +129,9 @@ public class SymmetricMemoryHashJoinTest extends NaryIteratorTest {
 		Assert.assertEquals("SymmetricMemoryHashJoin iterator predicate must match that of initialization", bEqualsC , this.iterator.getPredicate());
 	}
 
+	/**
+	 * Inits the two children natural join.
+	 */
 	@Test public void initTwoChildrenNaturalJoin() {
 		Predicate natural = new ConjunctivePredicate<>(new AttributeEqualityPredicate(2, 4));
 		this.iterator = new SymmetricMemoryHashJoin(child1, child2);
@@ -121,6 +143,9 @@ public class SymmetricMemoryHashJoinTest extends NaryIteratorTest {
 		Assert.assertEquals("SymmetricMemoryHashJoin iterator predicate must match that of natural join", natural, this.iterator.getPredicate());
 	}
 
+	/**
+	 * Inits the two children open.
+	 */
 	@Test public void initTwoChildrenOpen() {
 		Predicate bEqualsC = new ConjunctivePredicate<>(new AttributeEqualityPredicate(1, 4));
 		this.iterator = new SymmetricMemoryHashJoin(bEqualsC, nonMock1, nonMock2);
@@ -132,6 +157,9 @@ public class SymmetricMemoryHashJoinTest extends NaryIteratorTest {
 		Assert.assertEquals("SymmetricMemoryHashJoin iterator predicate must match that of initialization", bEqualsC , this.iterator.getPredicate());
 	}
 
+	/**
+	 * Inits the two children natural join open.
+	 */
 	@Test public void initTwoChildrenNaturalJoinOpen() {
 		Predicate natural = new ConjunctivePredicate<>(new AttributeEqualityPredicate(2, 4));
 		this.iterator = new SymmetricMemoryHashJoin(nonMock1, nonMock2);
@@ -143,6 +171,9 @@ public class SymmetricMemoryHashJoinTest extends NaryIteratorTest {
 		Assert.assertEquals("SymmetricMemoryHashJoin iterator predicate must match that of natural join", natural, this.iterator.getPredicate());
 	}
 
+	/**
+	 * Inits the with inconsistent predicate.
+	 */
 	@Test(expected=AssertionError.class)
 	public void initWithInconsistentPredicate() {
 		Predicate c1Toc2 = new AttributeEqualityPredicate(2, 4);
@@ -151,6 +182,9 @@ public class SymmetricMemoryHashJoinTest extends NaryIteratorTest {
 		new SymmetricMemoryHashJoin(conjunct, child1, child2);
 	}
 
+	/**
+	 * Inits the with inconsistent predicate2.
+	 */
 	@Test(expected=AssertionError.class)
 	public void initWithInconsistentPredicate2() {
 		Predicate c1Toc2 = new AttributeEqualityPredicate(2, 4);
@@ -159,6 +193,9 @@ public class SymmetricMemoryHashJoinTest extends NaryIteratorTest {
 		new SymmetricMemoryHashJoin(conjunct, child1, child2);
 	}
 	
+	/**
+	 * Iterate two children natural.
+	 */
 	@Test public void iterateTwoChildrenNatural() {
 		this.iterator = new SymmetricMemoryHashJoin(nonMock1, nonMock2);
 		this.iterator.open();
@@ -185,6 +222,9 @@ public class SymmetricMemoryHashJoinTest extends NaryIteratorTest {
 		Assert.assertEquals(expected, observed);
 	}
 	
+	/**
+	 * Iterate two children.
+	 */
 	@Test public void iterateTwoChildren() {
 		Predicate aEqualsE = new ConjunctivePredicate<>(new AttributeEqualityPredicate(0, 5));
 		this.iterator = new SymmetricMemoryHashJoin(aEqualsE, nonMock1, nonMock2);
@@ -203,6 +243,9 @@ public class SymmetricMemoryHashJoinTest extends NaryIteratorTest {
 		Assert.assertEquals(expected, observed);
 	}
 
+	/**
+	 * Next two children too many.
+	 */
 	@Test(expected=NoSuchElementException.class) 
 	public void nextTwoChildrenTooMany() {
 		Predicate aEqualsE = new ConjunctivePredicate<>(new AttributeEqualityPredicate(0, 5));
@@ -213,6 +256,9 @@ public class SymmetricMemoryHashJoinTest extends NaryIteratorTest {
 		}
 	}
 
+	/**
+	 * Next two children natural too many.
+	 */
 	@Test(expected=NoSuchElementException.class) 
 	public void nextTwoChildrenNaturalTooMany() {
 		this.iterator = new SymmetricMemoryHashJoin(nonMock1, nonMock2);
@@ -222,6 +268,9 @@ public class SymmetricMemoryHashJoinTest extends NaryIteratorTest {
 		}
 	}
 
+	/**
+	 * Reset two children.
+	 */
 	@Test public void resetTwoChildren() {
 		Predicate aEqualsE = new ConjunctivePredicate<>(new AttributeEqualityPredicate(0, 5));
 		this.iterator = new SymmetricMemoryHashJoin(aEqualsE, nonMock1, nonMock2);
@@ -248,6 +297,9 @@ public class SymmetricMemoryHashJoinTest extends NaryIteratorTest {
 		Assert.assertEquals(expected, observed);
 	}
 
+	/**
+	 * Reset two children natural.
+	 */
 	@Test public void resetTwoChildrenNatural() {
 		this.iterator = new SymmetricMemoryHashJoin(nonMock1, nonMock2);
 		this.iterator.open();
@@ -279,12 +331,18 @@ public class SymmetricMemoryHashJoinTest extends NaryIteratorTest {
 		Assert.assertEquals(expected, observed);
 	}
 	
+	/**
+	 * Iterate natural with empty child.
+	 */
 	@Test public void iterateNaturalWithEmptyChild() {
 		this.iterator = new SymmetricMemoryHashJoin(nonMock1, new EmptyIterator());
 		this.iterator.open();
 		Assert.assertFalse(this.iterator.hasNext());
 	}
 
+	/**
+	 * Next natural with empty child too many.
+	 */
 	@Test(expected=NoSuchElementException.class) 
 	public void nextNaturalWithEmptyChildTooMany() {
 		this.iterator = new SymmetricMemoryHashJoin(nonMock1, new EmptyIterator());
@@ -292,6 +350,9 @@ public class SymmetricMemoryHashJoinTest extends NaryIteratorTest {
 		this.iterator.next(); 
 	}
 
+	/**
+	 * Reset natural with empty child.
+	 */
 	@Test public void resetNaturalWithEmptyChild() {
 		this.iterator = new SymmetricMemoryHashJoin(nonMock1, new EmptyIterator());
 		this.iterator.open();
@@ -301,6 +362,9 @@ public class SymmetricMemoryHashJoinTest extends NaryIteratorTest {
 		Assert.assertFalse(this.iterator.hasNext());
 	}
 
+	/**
+	 * Iterate semi join.
+	 */
 	@Test public void iterateSemiJoin() {
 		Predicate aEqualsE = new AttributeEqualityPredicate(0, 5);
 		Predicate cEqualsC = new AttributeEqualityPredicate(2, 4);
@@ -319,6 +383,9 @@ public class SymmetricMemoryHashJoinTest extends NaryIteratorTest {
 		Assert.assertEquals(expected, observed);
 	}
 
+	/**
+	 * Next semi join too many.
+	 */
 	@Test(expected=NoSuchElementException.class) 
 	public void nextSemiJoinTooMany() {
 		Predicate aEqualsE = new AttributeEqualityPredicate(0, 5);
@@ -331,6 +398,9 @@ public class SymmetricMemoryHashJoinTest extends NaryIteratorTest {
 		}
 	}
 
+	/**
+	 * Reset semi join.
+	 */
 	@Test public void resetSemiJoin() {
 		Predicate aEqualsE = new AttributeEqualityPredicate(0, 5);
 		Predicate cEqualsC = new AttributeEqualityPredicate(2, 4);
@@ -357,6 +427,9 @@ public class SymmetricMemoryHashJoinTest extends NaryIteratorTest {
 		Assert.assertEquals(expected, observed);
 	}
 	
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.test.runtime.exec.iterator.TupleIteratorTest#getIterator()
+	 */
 	@Override
 	protected TupleIterator getIterator() {
 		return this.iterator;

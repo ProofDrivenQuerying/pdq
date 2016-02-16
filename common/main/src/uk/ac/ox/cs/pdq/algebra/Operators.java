@@ -17,6 +17,7 @@ import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.base.Preconditions;
 
+// TODO: Auto-generated Javadoc
 /**
  * Utility class for common stateless logical operator operators.
  *
@@ -25,10 +26,10 @@ import com.google.common.base.Preconditions;
 public class Operators {
 
 	/**
+	 * Creates the select predicates.
 	 *
 	 * @param terms List<Term>
-	 * @return
-	 * 	 	a conjunction of select conditions that the output values of a source must satisfy
+	 * @return 	 	a conjunction of select conditions that the output values of a source must satisfy
 	 * 		based on the exposed fact's terms.
 	 * 		The select conditions enforce value equality when two terms are equal
 	 * 		and equality to a constant when an exposed fact's term is mapped to a schema constant.
@@ -60,6 +61,8 @@ public class Operators {
 	}
 
 	/**
+	 * Creates the final projection.
+	 *
 	 * @param query Query
 	 * @param childOp LogicalOperator
 	 * @return Projection

@@ -21,6 +21,7 @@ import uk.ac.ox.cs.pdq.util.Tuple;
 
 import com.google.common.base.Preconditions;
 
+// TODO: Auto-generated Javadoc
 /**
  * Class that checks if the data is consistent w.r.t. the schema dependencies
  * The homomorphisms are found using SQL queries. The database facts (relation tuples) have to be stored in a database.
@@ -30,7 +31,10 @@ import com.google.common.base.Preconditions;
 
 public final class DataValidationImplementation extends DataValidation{
 
+	/** The manager. */
 	private final DBHomomorphismManager manager;
+	
+	/** The ics. */
 	private final List<Constraint> ics;
 
 	/**
@@ -47,9 +51,11 @@ public final class DataValidationImplementation extends DataValidation{
 	}
 
 	/**
+	 * Validate.
+	 *
 	 * @return Boolean
-	 * @throws AccessException
-	 * @throws PlannerException
+	 * @throws AccessException the access exception
+	 * @throws PlannerException the planner exception
 	 */
 	@Override
 	public Boolean validate() throws AccessException, PlannerException {
@@ -64,8 +70,9 @@ public final class DataValidationImplementation extends DataValidation{
 	/**
 	 * Saves each database fact in the database.
 	 * This is done by calling the updateDB function of the member AbstractHomomorphismStatementBuilder object
-	 * @throws AccessException
-	 * @throws PlannerException
+	 *
+	 * @throws AccessException the access exception
+	 * @throws PlannerException the planner exception
 	 */
 	private void save() throws AccessException, PlannerException {
 		for(Relation relation: this.schema.getRelations()) {
@@ -75,9 +82,11 @@ public final class DataValidationImplementation extends DataValidation{
 	}
 
 	/**
+	 * Save relation.
+	 *
 	 * @param relation Relation
 	 * @param table Table
-	 * @throws PlannerException
+	 * @throws PlannerException the planner exception
 	 */
 	private void saveRelation(Relation relation, Table table) throws PlannerException {
 		Collection<Predicate> atoms = new HashSet<>();
@@ -88,10 +97,11 @@ public final class DataValidationImplementation extends DataValidation{
 	}
 
 	/**
-	 * 
+	 * Validate.
+	 *
 	 * @param constraint Constraint
-	 * @throws PlannerException
-	 * @throws AccessException
+	 * @throws PlannerException the planner exception
+	 * @throws AccessException the access exception
 	 */
 	private void validate(Constraint constraint) throws PlannerException, AccessException {
 		// Checks if the there exists at least one set of facts that satisfies the left-hand side of the input dependency
@@ -111,6 +121,8 @@ public final class DataValidationImplementation extends DataValidation{
 	}
 	
 	/**
+	 * Invert.
+	 *
 	 * @param ic Constraint
 	 * @return Constraint
 	 */

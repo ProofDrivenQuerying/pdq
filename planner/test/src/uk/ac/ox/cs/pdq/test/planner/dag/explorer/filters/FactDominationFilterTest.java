@@ -18,21 +18,29 @@ import uk.ac.ox.cs.pdq.test.planner.TestObjects1;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
- * @author Efthymia Tsamoura
+ * The Class FactDominationFilterTest.
  *
+ * @author Efthymia Tsamoura
  */
 
 public class FactDominationFilterTest extends TestObjects1{
 
+	/** The filter. */
 	FactDominationFilter filter = new FactDominationFilter();
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.test.planner.TestObjects1#setup()
+	 */
 	@Before public void setup() {
 		super.setup();
 		MockitoAnnotations.initMocks(this);
 	}
 
+	/**
+	 * Test1.
+	 */
 	@Ignore public void test1() {
 		when(config11.getState()).thenReturn(config11State);
 		when(config11State.getInferred()).thenReturn(Lists.newArrayList(p1.toString(),p2.toString(),p3.toString()));
@@ -80,6 +88,9 @@ public class FactDominationFilterTest extends TestObjects1{
 				Sets.newHashSet(config11, config12, config21, config22));
 	}
 
+	/**
+	 * Test2.
+	 */
 	@Test public void test2() {
 		when(config11.getState()).thenReturn(config11State);
 		when(config11State.getInferred()).thenReturn(Lists.newArrayList(p1.toString(),p2.toString(),p3.toString()));
@@ -127,6 +138,9 @@ public class FactDominationFilterTest extends TestObjects1{
 				Sets.newHashSet(config11, config21, config22));
 	}
 
+	/**
+	 * Test3.
+	 */
 	@Test public void test3() {
 		when(config11.getState()).thenReturn(config11State);
 		when(config11State.getInferred()).thenReturn(Lists.newArrayList(p1.toString(),p2.toString(),p3.toString()));

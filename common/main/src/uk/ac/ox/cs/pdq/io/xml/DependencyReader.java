@@ -23,6 +23,7 @@ import uk.ac.ox.cs.pdq.io.ReaderException;
 
 import com.google.common.base.Preconditions;
 
+// TODO: Auto-generated Javadoc
 /**
  * Reads dependencies from XML.
  * 
@@ -45,10 +46,10 @@ public class DependencyReader extends AbstractXMLReader<Constraint> {
 	/** Temporary list of right atoms being built. */
 	private List<Predicate> rightAtoms = null;
 	
-	/** The atom reader for the left-hand side of the dependency */
+	/**  The atom reader for the left-hand side of the dependency. */
 	private AtomReader leftAtomsReader = null;
 	
-	/** The atom reader for the right-hand side of the dependency */
+	/**  The atom reader for the right-hand side of the dependency. */
 	private AtomReader rightAtomsReader = null;
 	
 	/** Number of time the parser reached a body element (should not exceed 1). */
@@ -57,12 +58,15 @@ public class DependencyReader extends AbstractXMLReader<Constraint> {
 	/** Number of time the parser reached a head element (should not exceed 1). */
 	private int inHead = 0;
 	
+	/** The schema. */
 	protected Schema schema = null;
 	
+	/** The schema builder. */
 	protected SchemaBuilder schemaBuilder = null;
 
 	/**
-	 * Default constructor
+	 * Default constructor.
+	 *
 	 * @param schema Schema
 	 */
 	public DependencyReader(Schema schema) {
@@ -74,7 +78,8 @@ public class DependencyReader extends AbstractXMLReader<Constraint> {
 	}
 
 	/**
-	 * Default constructor
+	 * Default constructor.
+	 *
 	 * @param sb Schema.Builder
 	 */
 	public DependencyReader(SchemaBuilder sb) {
@@ -86,6 +91,8 @@ public class DependencyReader extends AbstractXMLReader<Constraint> {
 	}
 
 	/**
+	 * Read.
+	 *
 	 * @param in InputStream
 	 * @return IC
 	 * @see uk.ac.ox.cs.pdq.io.Reader#read(InputStream)
@@ -199,6 +206,8 @@ public class DependencyReader extends AbstractXMLReader<Constraint> {
 	}
 
 	/**
+	 * Gets the dependency.
+	 *
 	 * @return the TGD read
 	 */
 	public TGD getDependency() {

@@ -1,5 +1,6 @@
 package uk.ac.ox.cs.pdq.services;
 
+// TODO: Auto-generated Javadoc
 /**
  * Top-level exception for anything happening at the service level.
  * 
@@ -7,7 +8,7 @@ package uk.ac.ox.cs.pdq.services;
  */
 public class ServiceException extends RuntimeException {
 
-	/** */
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -799260471165064397L;
 
 	/**

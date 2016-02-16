@@ -15,23 +15,25 @@ import uk.ac.ox.cs.pdq.plan.Plan;
 
 import com.google.common.base.Preconditions;
 
+// TODO: Auto-generated Javadoc
 /**
  * A simple cost estimator.
  * According to this implementation, the cost of a plan equals the sum of the costs of the
  * associated accesses
  *
  * @author Efthymia Tsamoura
- *
+ * @param <P> the generic type
  */
 public class PerInputCostEstimator<P extends Plan> implements SimpleCostEstimator<P>{
 
+	/** The stats. */
 	protected final StatisticsCollector stats;
 	
-	/** Logger */
+	/**  Logger. */
 	protected static Logger log = Logger.getLogger(PerInputCostEstimator.class);
 
 	/**
-	 * Default constructor
+	 * Default constructor.
 	 */
 	public PerInputCostEstimator() {
 		this(null);
@@ -39,7 +41,8 @@ public class PerInputCostEstimator<P extends Plan> implements SimpleCostEstimato
 
 
 	/**
-	 * Default constructor
+	 * Default constructor.
+	 *
 	 * @param stats StatisticsCollector
 	 */
 	public PerInputCostEstimator(StatisticsCollector stats) {
@@ -47,6 +50,8 @@ public class PerInputCostEstimator<P extends Plan> implements SimpleCostEstimato
 	}
 
 	/**
+	 * Clone.
+	 *
 	 * @return DefaultSimpleCostEstimator<P,S>
 	 * @see uk.ac.ox.cs.pdq.cost.estimators.SimpleCostEstimator#clone()
 	 */
@@ -56,6 +61,8 @@ public class PerInputCostEstimator<P extends Plan> implements SimpleCostEstimato
 	}
 
 	/**
+	 * Cost.
+	 *
 	 * @param plan P
 	 * @return DoubleCost
 	 * @see uk.ac.ox.cs.pdq.cost.estimators.CostEstimator#cost(P)
@@ -68,6 +75,8 @@ public class PerInputCostEstimator<P extends Plan> implements SimpleCostEstimato
 	}
 
 	/**
+	 * Estimate cost.
+	 *
 	 * @param plan P
 	 * @return Cost
 	 * @see uk.ac.ox.cs.pdq.cost.estimators.SimpleCostEstimator#estimateCost(P)
@@ -78,6 +87,8 @@ public class PerInputCostEstimator<P extends Plan> implements SimpleCostEstimato
 	}
 
 	/**
+	 * Cost.
+	 *
 	 * @param accesses Collection<AccessOperator>
 	 * @return DoubleCost
 	 * @see uk.ac.ox.cs.pdq.costs.SimpleCostEstimator#cost(Collection<AccessOperator>)

@@ -21,22 +21,26 @@ import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
 /**
- * A conjunctive query
- * @author Julien Leblay
- * @author Julien Leblay
+ * A conjunctive query.
  *
+ * @author Julien Leblay
+ * @author Julien Leblay
  */
 public class ConjunctiveQueryTest {
 	
 	/**
-	 * Makes sure assertions are enabled
+	 * Makes sure assertions are enabled.
 	 */
 	@Before 
 	public void setup() {
 		Utility.assertsEnabled();
 	}
 
+	/**
+	 * Test conjunctive query construction1.
+	 */
 	@Test public void testConjunctiveQueryConstruction1() {
 		Signature s1 = new Signature("r", 5);
 		List<Term> t1 = Lists.<Term>newArrayList(
@@ -68,6 +72,9 @@ public class ConjunctiveQueryTest {
 		Assert.assertEquals("ConjunctiveQuery terms must match that of construction", t1, q.getTerms());
 	}
 
+	/**
+	 * Test conjunctive query construction2.
+	 */
 	@Test public void testConjunctiveQueryConstruction2() {
 		Signature s1 = new Signature("r", 5);
 		List<Term> t1 = Lists.<Term>newArrayList(
@@ -99,6 +106,9 @@ public class ConjunctiveQueryTest {
 		Assert.assertEquals("ConjunctiveQuery terms must match that of construction", t1, q.getTerms());
 	}
 
+	/**
+	 * Test equals.
+	 */
 	@Test public void testEquals() {
 		Signature s1 = new Signature("r", 5);
 		List<Term> t1 = Lists.<Term>newArrayList(
@@ -124,6 +134,9 @@ public class ConjunctiveQueryTest {
 		Assert.assertTrue("Conjunctive queries must be equal ", q1.equals(q2));
 	}
 
+	/**
+	 * Test not equals.
+	 */
 	@Test public void testNotEquals() {
 		Signature s1 = new Signature("r", 5);
 		List<Term> t1 = Lists.<Term>newArrayList(
@@ -149,6 +162,9 @@ public class ConjunctiveQueryTest {
 		Assert.assertFalse("Conjunctive queries must not be equal ", q1.equals(q2));
 	}
 
+	/**
+	 * Test ground.
+	 */
 	@Test public void testGround() {
 		Signature s1 = new Signature("s", 5);
 		List<Term> t1 = Lists.<Term>newArrayList(
@@ -179,24 +195,45 @@ public class ConjunctiveQueryTest {
 		Assert.assertEquals("Grounded conjunction must comply to mapping ", g, i.ground(m).getTerms());
 	}
 
+	/**
+	 * Test get canonical.
+	 */
 	@Test public void testGetCanonical() {
 	}
 
+	/**
+	 * Test get important subqueries.
+	 */
 	@Test public void testGetImportantSubqueries() {
 	}
 
+	/**
+	 * Test canonical mapping.
+	 */
 	@Test public void testCanonicalMapping() {
 	}
 
+	/**
+	 * Test is boolean.
+	 */
 	@Test public void testIsBoolean() {
 	}
 
+	/**
+	 * Test get constants.
+	 */
 	@Test public void testGetConstants() {
 	}
 
+	/**
+	 * Test get free to canonical.
+	 */
 	@Test public void testGetFreeToCanonical() {
 	}
 
+	/**
+	 * Test hash code.
+	 */
 	@Test public void testHashCode() {
 	}
 }

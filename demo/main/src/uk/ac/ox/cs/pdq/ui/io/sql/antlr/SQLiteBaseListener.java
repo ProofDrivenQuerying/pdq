@@ -7,10 +7,13 @@ import org.antlr.v4.runtime.misc.NotNull;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
+// TODO: Auto-generated Javadoc
 /**
  * This class provides an empty implementation of {@link SQLiteListener},
  * which can be extended to create a listener which only needs to handle a subset
  * of the available methods.
+ *
+ * @see SQLiteBaseEvent
  */
 public class SQLiteBaseListener implements SQLiteListener {
 	/**

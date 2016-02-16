@@ -15,6 +15,7 @@ import uk.ac.ox.cs.pdq.util.Table;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
+// TODO: Auto-generated Javadoc
 /**
  * The event occurred directly before a RESTAccess request. Holds the access 
  * itself, and the input table to be used.
@@ -27,22 +28,24 @@ public class RESTRequestEvent implements RequestEvent {
 	/** Logger. */
 	private static Logger log = Logger.getLogger(RESTRequestEvent.class);
 
-	/** The relation */
+	/**  The relation. */
 	private final RESTRelation relation ;
 
-	/** The access */
+	/**  The access. */
 	private final RESTAccess access;
 
-	/** The input to the access */
+	/**  The input to the access. */
 	private final Table input;
 
+	/** The violation message. */
 	private String violationMessage = null;
 
 	/**
-	 * Default constructor
-	 * @param access
-	 * @param input
+	 * Default constructor.
+	 *
 	 * @param relation RESTRelation
+	 * @param access the access
+	 * @param input the input
 	 */
 	public RESTRequestEvent(RESTRelation relation, RESTAccess access, Table input) {
 		super();
@@ -52,6 +55,8 @@ public class RESTRequestEvent implements RequestEvent {
 	}
 
 	/**
+	 * Gets the access.
+	 *
 	 * @return RESTAccess
 	 */
 	public RESTAccess getAccess() {
@@ -59,6 +64,8 @@ public class RESTRequestEvent implements RequestEvent {
 	}
 
 	/**
+	 * Gets the input.
+	 *
 	 * @return Table
 	 */
 	public Table getInput() {
@@ -66,6 +73,8 @@ public class RESTRequestEvent implements RequestEvent {
 	}
 
 	/**
+	 * Sets the usage violation message.
+	 *
 	 * @param msg String
 	 * @see uk.ac.ox.cs.pdq.services.AccessEvent#setUsageViolationMessage(String)
 	 */
@@ -75,6 +84,8 @@ public class RESTRequestEvent implements RequestEvent {
 	}
 
 	/**
+	 * Gets the usage violation message.
+	 *
 	 * @return String
 	 * @see uk.ac.ox.cs.pdq.services.AccessEvent#getUsageViolationMessage()
 	 */
@@ -84,6 +95,8 @@ public class RESTRequestEvent implements RequestEvent {
 	}
 
 	/**
+	 * Checks for usage violation message.
+	 *
 	 * @return boolean
 	 * @see uk.ac.ox.cs.pdq.services.AccessEvent#hasUsageViolationMessage()
 	 */
@@ -93,10 +106,11 @@ public class RESTRequestEvent implements RequestEvent {
 	}
 
 	/**
+	 * Process request.
+	 *
 	 * @return RESTResponseEvent
-	 * @throws IOException 
-	 * @throws JsonMappingException 
-	 * @throws JsonParseException 
+	 * @throws AccessException the access exception
+	 * @throws ProcessingException the processing exception
 	 * @see uk.ac.ox.cs.pdq.services.RequestEvent#processRequest()
 	 */
 	@Override

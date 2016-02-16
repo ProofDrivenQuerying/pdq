@@ -55,6 +55,7 @@ import uk.ac.ox.cs.pdq.util.Result;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 
+// TODO: Auto-generated Javadoc
 /**
  * Runs regression tests for the runtime, evaluated plans may come in
  * pre-serialized plan files or directly from the planner.
@@ -66,40 +67,53 @@ public class RuntimeTest extends RegressionTest {
 	/** Runner's logger. */
 	private static Logger log = Logger.getLogger(RuntimeTest.class);
 
-	/** File name where planning related parameters must be stored in a test case directory */
+	/**  File name where planning related parameters must be stored in a test case directory. */
 	private static final String PLAN_PARAMETERS_FILE = "case.properties";
 
-	/** File name where the schema must be stored in a test case directory */
+	/**  File name where the schema must be stored in a test case directory. */
 	private static final String SCHEMA_FILE = "schema.xml";
 
-	/** File name where the query must be stored in a test case directory */
+	/**  File name where the query must be stored in a test case directory. */
 	private static final String QUERY_FILE = "query.xml";
 
-	/** File name where the expected plan must be stored in a test case directory */
+	/**  File name where the expected plan must be stored in a test case directory. */
 	private static final String PLAN_FILE = "expected-plan.xml";
 
-	/** File name where the input data must be stored in a test case directory */
+	/**  File name where the input data must be stored in a test case directory. */
 	private static final String DATA_FILE_EXTENSION = ".txt";
 
+	/** The full. */
 	private final boolean full;
 
+	/** The validation. */
 	private final boolean validation;
 
+	/**
+	 * The Class RuntimeTestCommand.
+	 */
 	@Parameters(separators = ",", commandDescription = "Runs regression tests on the runtime libraries.")
 	public static class RuntimeTestCommand extends Command {
 
+		/** The full. */
 		@Parameter(names = { "-f", "--full-run" }, required = false,
 				description = "If true, the planner is used to create a plan, otherwise the plan is read from file. Default is false")
 		private boolean full = false;
 
+		/** The validation. */
 		@Parameter(names = { "-d", "--data-validation" },
 				required = false, description = "If true, we check whether the data satisfy the schema dependencies or not. Default is false")
 		private boolean validation = false;
 
+		/**
+		 * Instantiates a new runtime test command.
+		 */
 		public RuntimeTestCommand() {
 			super("runtime");
 		}
 
+		/* (non-Javadoc)
+		 * @see uk.ac.ox.cs.pdq.test.Bootstrap.Command#execute()
+		 */
 		@Override
 		public void execute() throws RegressionTestException, IOException, ReflectiveOperationException {
 			new RuntimeTest(this.full, this.validation).recursiveRun(new File(getInput()));
@@ -108,11 +122,12 @@ public class RuntimeTest extends RegressionTest {
 
 	/**
 	 * Sets up a regression test for the given test case directory.
-	 * 
-	 * @param args the command line parameters as given by the main method.
-	 * @throws ReflectiveOperationException
-	 * @throws IOException
-	 * @throws RegressionTestException
+	 *
+	 * @param fr the fr
+	 * @param dv the dv
+	 * @throws ReflectiveOperationException the reflective operation exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws RegressionTestException the regression test exception
 	 */
 	public RuntimeTest(boolean fr, boolean dv) throws ReflectiveOperationException, IOException, RegressionTestException {
 		this.full = fr;
@@ -120,13 +135,13 @@ public class RuntimeTest extends RegressionTest {
 	}
 
 	/**
-	 * Runs all the test case in the given directory
-	 * 
-	 * @param directory
+	 * Runs all the test case in the given directory.
+	 *
+	 * @param directory the directory
 	 * @return boolean
-	 * @throws RegressionTestException
-	 * @throws IOException
-	 * @throws ReflectiveOperationException
+	 * @throws RegressionTestException the regression test exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws ReflectiveOperationException the reflective operation exception
 	 */
 	@Override
 	protected boolean run(File directory) throws RegressionTestException, IOException, ReflectiveOperationException {
@@ -134,10 +149,12 @@ public class RuntimeTest extends RegressionTest {
 	}
 	
 	/**
+	 * Validate data.
+	 *
 	 * @param directory File
 	 * @param schema Schema
 	 * @param query Query
-	 * @throws EvaluationException
+	 * @throws EvaluationException the evaluation exception
 	 */
 	private static void validateData(File directory, Schema schema, Query<?> query) throws EvaluationException {
 		PlannerParameters plParams = new PlannerParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
@@ -155,6 +172,8 @@ public class RuntimeTest extends RegressionTest {
 	}
 
 	/**
+	 * Obtain plan.
+	 *
 	 * @param directory File
 	 * @param schema Schema
 	 * @param query Query
@@ -191,14 +210,13 @@ public class RuntimeTest extends RegressionTest {
 	}
 	
 	/**
-	 * Runs a single test case base on the
-	 * 
-	 * @param directory
+	 * Runs a single test case base on the.
+	 *
+	 * @param directory the directory
 	 * @param full boolean
 	 * @return boolean
-	 * @throws ReflectiveOperationException
-	 * @throws SQLException
-	 * @throws AccessException
+	 * @throws ReflectiveOperationException the reflective operation exception
+	 * @throws AccessException the access exception
 	 */
 	private boolean loadCase(File directory, boolean full) throws ReflectiveOperationException {
 		boolean result = true;
@@ -261,6 +279,8 @@ public class RuntimeTest extends RegressionTest {
 	}
 	
 	/**
+	 * Compare result.
+	 *
 	 * @param params RuntimeParameters
 	 * @param s Schema
 	 * @param q Query
@@ -313,16 +333,16 @@ public class RuntimeTest extends RegressionTest {
 	}
 
 	/**
-	 * Runs a single case
-	 * 
-	 * @param directory
-	 * @param s
-	 * @param q
-	 * @param p
-	 * @param f
+	 * Runs a single case.
+	 *
+	 * @param directory the directory
+	 * @param s the s
+	 * @param q the q
+	 * @param p the p
+	 * @param f the f
 	 * @return boolean
-	 * @throws EvaluationException
-	 * @throws AccessException
+	 * @throws EvaluationException the evaluation exception
+	 * @throws AccessException the access exception
 	 */
 	private boolean run(File directory, Schema s, ConjunctiveQuery q, Plan p, List<Predicate> f)
 			throws EvaluationException, AccessException {
@@ -347,6 +367,8 @@ public class RuntimeTest extends RegressionTest {
 	}
 
 	/**
+	 * Gets the full run.
+	 *
 	 * @return the value of the "full-run" argument
 	 */
 	public boolean getFullRun() {

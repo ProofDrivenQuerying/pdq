@@ -1,6 +1,7 @@
 package uk.ac.ox.cs.pdq.algebra;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * Distinct removes duplicates in a result set.
  *
@@ -9,7 +10,8 @@ package uk.ac.ox.cs.pdq.algebra;
 public class Distinct extends UnaryOperator {
 
 	/**
-	 * Instantiates a new operator
+	 * Instantiates a new operator.
+	 *
 	 * @param child LogicalOperator
 	 */
 	public Distinct(RelationalOperator child) {

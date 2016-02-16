@@ -24,35 +24,40 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
 /**
- * Translates an ApplyRule configuration to an SQL query
+ * Translates an ApplyRule configuration to an SQL query.
  *
  * @author Efthymia Tsamoura
  */
 public class ApplyRuleToSQLTranslator {
 
+	/** The Constant RELATION_ALIAS_PREFIX. */
 	private static final String RELATION_ALIAS_PREFIX = "r";
+	
+	/** The Constant COLUMN_ALIAS_PREFIX. */
 	private static final String COLUMN_ALIAS_PREFIX = "a";
 
-	/** The configuration to translate*/
+	/**  The configuration to translate. */
 	private final ApplyRule configuration;
 
 	/** Constants that should be projected out. These are chase constants that appear in multiple ApplyRules of the same configuration*/
 	private final Collection<Constant> toProject;
 
-	/** The SQL translation*/
+	/**  The SQL translation. */
 	private String sql;
 
-	/** Aliases for the projected constants*/
+	/**  Aliases for the projected constants. */
 	private Map<Constant,String> toProjectToAlias;
+	
+	/** The to project to expression. */
 	private Map<Constant,String> toProjectToExpression;
 
 	/**
+	 * Instantiates a new apply rule to sql translator.
 	 *
-	 * @param configuration
-	 * 		The configuration to translate
-	 * @param toProject
-	 * 		 Constants that should be projected out. These are chase constants that appear in multiple ApplyRules of the same configuration
+	 * @param configuration 		The configuration to translate
+	 * @param toProject 		 Constants that should be projected out. These are chase constants that appear in multiple ApplyRules of the same configuration
 	 */
 	public ApplyRuleToSQLTranslator(ApplyRule configuration, Collection<Constant> toProject) {
 		Preconditions.checkNotNull(configuration);
@@ -62,6 +67,8 @@ public class ApplyRuleToSQLTranslator {
 	}
 
 	/**
+	 * Gets the sql.
+	 *
 	 * @return String
 	 */
 	public String getSql() {
@@ -69,12 +76,17 @@ public class ApplyRuleToSQLTranslator {
 	}
 
 	/**
+	 * Gets the to project to alias.
+	 *
 	 * @return Map<Constant,String>
 	 */
 	public Map<Constant,String> getToProjectToAlias() {
 		return this.toProjectToAlias;
 	}
 
+	/**
+	 * Translate.
+	 */
 	private void translate() {
 		Map<Predicate,String> factToAlias = this.makeAliases(this.configuration);
 		//Find possible join predicates among different facts of the ApplyRule
@@ -94,7 +106,9 @@ public class ApplyRuleToSQLTranslator {
 	}
 
 	/**
-	 * @param configuration
+	 * Make aliases.
+	 *
+	 * @param configuration the configuration
 	 * @return an alias for each input ApplyRule fact
 	 */
 	private Map<Predicate,String> makeAliases(ApplyRule configuration) {
@@ -107,8 +121,10 @@ public class ApplyRuleToSQLTranslator {
 	}
 
 	/**
-	 * @param configuration
-	 * @param factToAlias
+	 * Make join conditions.
+	 *
+	 * @param configuration the configuration
+	 * @param factToAlias the fact to alias
 	 * @return join and selection predicates based on the facts of the ApplyRule configuration
 	 */
 	private Set<String> makeJoinConditions(ApplyRule configuration, Map<Predicate,String> factToAlias) {
@@ -119,8 +135,10 @@ public class ApplyRuleToSQLTranslator {
 	}
 
 	/**
-	 * @param configuration
-	 * @param factToAlias
+	 * Make inter fact join conditions.
+	 *
+	 * @param configuration the configuration
+	 * @param factToAlias the fact to alias
 	 * @return join predicates among different facts of the ApplyRule configuration
 	 */
 	private Set<String> makeInterFactJoinConditions(ApplyRule configuration, Map<Predicate,String> factToAlias) {
@@ -146,8 +164,10 @@ public class ApplyRuleToSQLTranslator {
 	}
 
 	/**
-	 * @param configuration
-	 * @param factToAlias
+	 * Make intra fact join conditions.
+	 *
+	 * @param configuration the configuration
+	 * @param factToAlias the fact to alias
 	 * @return selection predicates within single facts of the ApplyRule configuration
 	 */
 	private Set<String> makeIntraFactJoinConditions(ApplyRule configuration, Map<Predicate,String> factToAlias) {
@@ -170,8 +190,10 @@ public class ApplyRuleToSQLTranslator {
 	}
 
 	/**
-	 * @param configuration
-	 * @param factToAlias
+	 * Make filtering conditions.
+	 *
+	 * @param configuration the configuration
+	 * @param factToAlias the fact to alias
 	 * @return filtering predicates based on the ApplyRule facts
 	 */
 	private Set<String> makeFilteringConditions(ApplyRule configuration, Map<Predicate,String> factToAlias) {
@@ -193,9 +215,11 @@ public class ApplyRuleToSQLTranslator {
 
 
 	/**
-	 * @param configuration
-	 * @param toProject
-	 * @param factToAlias
+	 * Make select conditions.
+	 *
+	 * @param configuration the configuration
+	 * @param toProject the to project
+	 * @param factToAlias the fact to alias
 	 * @return a SQL clause for each constant that will be projected out
 	 */
 	private Pair<Map<Constant,String>, Map<Constant,String>> makeSelectConditions(ApplyRule configuration, Collection<Constant> toProject, Map<Predicate,String> factToAlias) {
@@ -231,7 +255,9 @@ public class ApplyRuleToSQLTranslator {
 	}
 
 	/**
-	 * @param factToAlias
+	 * Make from statement.
+	 *
+	 * @param factToAlias the fact to alias
 	 * @return a FROM statement
 	 */
 	private String makeFromStatement(Map<Predicate,String> factToAlias) {
@@ -250,8 +276,10 @@ public class ApplyRuleToSQLTranslator {
 	}
 
 	/**
-	 * @param joinConditions
-	 * @param filteringConditions
+	 * Make where statement.
+	 *
+	 * @param joinConditions the join conditions
+	 * @param filteringConditions the filtering conditions
 	 * @return a WHERE statement
 	 */
 	private String makeWhereStatement(Set<String> joinConditions, Set<String> filteringConditions) {
@@ -268,7 +296,9 @@ public class ApplyRuleToSQLTranslator {
 	}
 
 	/**
-	 * @param toProjectToExpression
+	 * Make select statement.
+	 *
+	 * @param toProjectToExpression the to project to expression
 	 * @return a SELECT statement
 	 */
 	private String makeSelectStatement(Map<Constant,String> toProjectToExpression) {

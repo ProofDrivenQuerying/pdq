@@ -24,51 +24,45 @@ import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 
+// TODO: Auto-generated Javadoc
 /**
- * Removes redundant access commands and follow-up joins from a configuration that matches the input query
- * 
+ * Removes redundant access commands and follow-up joins from a configuration that matches the input query.
  *
  * @author Efthymia Tsamoura
- * @deprecated
+ * @deprecated 
  */
 public class ConfigurationPostPruning {
 
-	/** The accessible counterpart of the user query **/
+	/**  The accessible counterpart of the user query *. */
 	protected final Query<?> accessibleQuery;
 
-	/** The accessible counterpart of the input schema **/
+	/**  The accessible counterpart of the input schema *. */
 	protected final AccessibleSchema accessibleSchema;
 
-	/** Implements the chase reasoning algorithm**/
+	/**  Implements the chase reasoning algorithm*. */
 	protected final Chaser chaser;
 
-	/** Estimates the cost of a plan **/
+	/**  Estimates the cost of a plan *. */
 	protected final CostEstimator<DAGPlan> costEstimator;
 	
-	/** Facts that match the query */
+	/**  Facts that match the query. */
 	private final Collection<Predicate> queryFacts;
 	
-	/** A successful configuration*/
+	/**  A successful configuration. */
 	private final DAGChaseConfiguration configuration;
 
-	/** True if the input configuration is pruned */
+	/**  True if the input configuration is pruned. */
 	private Boolean isPruned = false;
 	
 	/**
-	 * Sets up a configuration postpruning object 
-	 * 
-	 * @param accessibleQuery
-	 * 		The accessible counterpart of the user query
-	 * @param accessibleSchema
-	 * 		The accessible counterpart of the input schema
-	 * @param chaser
-	 * 		Implements the chase reasoning algorithm
-	 * @param costEstimator
-	 * 		Estimates the cost of a plan
-	 * @param configuration
-	 * 		A successful configuration
-	 * @param queryFacts
-	 * 		Facts in the input configuration that match the query
+	 * Sets up a configuration postpruning object .
+	 *
+	 * @param accessibleQuery 		The accessible counterpart of the user query
+	 * @param accessibleSchema 		The accessible counterpart of the input schema
+	 * @param chaser 		Implements the chase reasoning algorithm
+	 * @param costEstimator 		Estimates the cost of a plan
+	 * @param configuration 		A successful configuration
+	 * @param queryFacts 		Facts in the input configuration that match the query
 	 * 
 	 * An exception is thrown if the input facts are not accessible or inferred accessible ones
 	 */
@@ -104,10 +98,10 @@ public class ConfigurationPostPruning {
 	}
 	
 	/**
-	 * Removes redundant access commands and follow-up joins from a configuration that matches the input query
-	 * @return
-	 * 		the post-pruned configuration
-	 * @throws PlannerException
+	 * Removes redundant access commands and follow-up joins from a configuration that matches the input query.
+	 *
+	 * @return 		the post-pruned configuration
+	 * @throws PlannerException the planner exception
 	 */
 	public DAGChaseConfiguration prune() throws PlannerException {
 		Collection<Predicate> infAccFacts
@@ -121,14 +115,12 @@ public class ConfigurationPostPruning {
 
 
 	/**
-	 * 
-	 * @param configuration
-	 * 		A successful configuration
-	 * @param queryFacts
-	 * 		Facts in the input configuration that match the query
-	 * @return
-	 * 		a configuration that performs only the accesses required to match the input query facts
-	 * @throws PlannerException
+	 * Prune recursive.
+	 *
+	 * @param configuration 		A successful configuration
+	 * @param queryFacts 		Facts in the input configuration that match the query
+	 * @return 		a configuration that performs only the accesses required to match the input query facts
+	 * @throws PlannerException the planner exception
 	 */
 	private DAGChaseConfiguration pruneRecursive(DAGChaseConfiguration configuration, Collection<Predicate> queryFacts) throws PlannerException {
 		
@@ -170,9 +162,10 @@ public class ConfigurationPostPruning {
 	}
 	
 	/**
-	 * 
-	 * @param input
-	 * @param state
+	 * Gets the accessibility axioms.
+	 *
+	 * @param input the input
+	 * @param state the state
 	 * @return the accessed facts that lead to the derivation of the input facts in the input chase state
 	 */
 	protected Collection<Predicate> getAccessibilityAxioms(Collection<Predicate> input, AccessibleChaseState state) {
@@ -196,7 +189,8 @@ public class ConfigurationPostPruning {
 
 
 	/**
-	 * 
+	 * Gets the checks if is pruned.
+	 *
 	 * @return true if the configuration provided in the constructor is post-pruned
 	 */
 	public Boolean getIsPruned() {
@@ -204,14 +198,14 @@ public class ConfigurationPostPruning {
 	}
 	
 	/**
-	 * 
-	 * @param applyRule
-	 * @param facts
-	 * @param chaser
-	 * @param query
-	 * @param accessibleSchema
-	 * @return
-	 * 		a configuration that comprises only the facts derived using only the input facts.
+	 * Prune.
+	 *
+	 * @param applyRule the apply rule
+	 * @param facts the facts
+	 * @param chaser the chaser
+	 * @param query the query
+	 * @param accessibleSchema the accessible schema
+	 * @return 		a configuration that comprises only the facts derived using only the input facts.
 	 * 		The input facts must be a subset of this configuration's facts
 	 */
 	private DAGChaseConfiguration prune(ApplyRule applyRule, Set<Predicate> facts, Chaser chaser, Query<?> query, AccessibleSchema accessibleSchema) {
@@ -224,7 +218,11 @@ public class ConfigurationPostPruning {
 	}
 	
 	/**
-	 * @param input
+	 * Gets the firings that expose facts.
+	 *
+	 * @param applyRule the apply rule
+	 * @param accessibleSchema the accessible schema
+	 * @param input the input
 	 * @return the facts that lead to the derivation of the input facts
 	 */
 	private Set<Predicate> getFiringsThatExposeFacts(ApplyRule applyRule, AccessibleSchema accessibleSchema, Collection<Predicate> input) {

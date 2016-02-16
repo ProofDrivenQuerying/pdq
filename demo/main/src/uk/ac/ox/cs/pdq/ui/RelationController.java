@@ -23,6 +23,7 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.ui.model.ObservableAccessMethod;
 import uk.ac.ox.cs.pdq.ui.model.ObservableAttribute;
 
+// TODO: Auto-generated Javadoc
 /**
  * Controller class for the relation's viewer/editor window.
  * @author Julien Leblay
@@ -33,13 +34,27 @@ public class RelationController {
 	/** RelationController logger. */
 	private static Logger log = Logger.getLogger(RelationController.class);
 
+    /** The relation access methods. */
     @FXML private TableView<ObservableAccessMethod> relationAccessMethods;
+    
+    /** The relation attributes. */
     @FXML private TableView<ObservableAttribute> relationAttributes;
+    
+    /** The col access method name. */
     @FXML private TableColumn<ObservableAccessMethod, String> colAccessMethodName;
+    
+    /** The col access method type. */
     @FXML private TableColumn<ObservableAccessMethod, Types> colAccessMethodType;
+    
+    /** The col attribute name. */
     @FXML private TableColumn<ObservableAttribute, String> colAttributeName;
+    
+    /** The col attribute type. */
     @FXML private TableColumn<ObservableAttribute, String> colAttributeType;
 
+    /**
+     * Initialize.
+     */
     @FXML void initialize() {
         assert this.relationAccessMethods != null : "fx:id=\"relationAccessMethods\" was not injected: check your FXML file 'relation-editor.fxml'.";
         assert this.relationAttributes != null : "fx:id=\"relationAttributes\" was not injected: check your FXML file 'relation-editor.fxml'.";
@@ -47,7 +62,7 @@ public class RelationController {
     }
 
 	/**
-	 * Initialisation of the attributes and access methods tables
+	 * Initialisation of the attributes and access methods tables.
 	 */
 	private void configureTables() {
 		this.relationAttributes.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -64,6 +79,7 @@ public class RelationController {
 	    this.relationAccessMethods.addEventHandler(MouseEvent.MOUSE_ENTERED, this.accessMethodMouseEntered);
 	}
 
+	/** The access method mouse entered. */
 	private EventHandler<MouseEvent> accessMethodMouseEntered = (MouseEvent arg0) -> {
 		SelectionModel<ObservableAccessMethod> bsm = RelationController.this.relationAccessMethods.getSelectionModel();
 		ObservableAccessMethod b = bsm.selectedItemProperty().get();
@@ -72,6 +88,7 @@ public class RelationController {
 		}
 	};
 
+	/** The access method selected. */
 	private ChangeListener<ObservableAccessMethod> accessMethodSelected =
 		(ObservableValue<? extends ObservableAccessMethod> arg0,
 			ObservableAccessMethod oldValue, ObservableAccessMethod newValue) -> {
@@ -80,6 +97,11 @@ public class RelationController {
 		}
 	};
 	
+	/**
+	 * Selected input attributes.
+	 *
+	 * @param inputs the inputs
+	 */
 	private void selectedInputAttributes(List<Integer> inputs) {
 		SelectionModel<ObservableAttribute> sm = RelationController.this.relationAttributes.getSelectionModel();
 		sm.clearSelection();
@@ -88,17 +110,31 @@ public class RelationController {
 		}
 	}
 	
+    /** The relation. */
     private Relation relation;
 
+	/**
+	 * Gets the relation.
+	 *
+	 * @return the relation
+	 */
 	public Relation getRelation() {
 		return this.relation;
 	}
 
+	/**
+	 * Sets the relation.
+	 *
+	 * @param relation the new relation
+	 */
 	public void setRelation(Relation relation) {
 		this.relation = relation;
 		this.refreshTables();
 	}
 
+	/**
+	 * Refresh tables.
+	 */
 	private void refreshTables() {
 		ObservableList<ObservableAttribute> attributes = this.relationAttributes.getItems();
 		attributes.clear();

@@ -14,13 +14,20 @@ import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
 /**
+ * The Class SchemaTest.
+ *
  * @author Julien Leblay
  */
 public class SchemaTest {
 	
+	/** The schema. */
 	Schema schema;
 	
+	/**
+	 * Setup.
+	 */
 	@Before public void setup() {
 		Utility.assertsEnabled();
 		SchemaBuilder builder = new SchemaBuilder();
@@ -30,6 +37,9 @@ public class SchemaTest {
 		this.schema = builder.build();
 	}
 	
+	/**
+	 * Test get relations.
+	 */
 	@Test public void testGetRelations() {
 		List<Relation> r1 = schema.getRelations();
 		List<Relation> r2 = schema.getRelations();

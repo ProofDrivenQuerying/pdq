@@ -10,6 +10,7 @@ import java.util.Map;
 
 import uk.ac.ox.cs.pdq.logging.ProgressLogger;
 
+// TODO: Auto-generated Javadoc
 /**
  * Statistics logger that works by appending logs from a sequence of delegate
  * loggers.
@@ -18,33 +19,37 @@ import uk.ac.ox.cs.pdq.logging.ProgressLogger;
  */
 public class ChainedStatistics extends StatisticsLogger implements ProgressLogger {
 
+	/** The filter separator. */
 	public static Character FILTER_SEPARATOR = ':';
 
+	/** The out. */
 	protected PrintStream out;
 
+	/** The print header. */
 	protected boolean printHeader = true;
 
-	/** Map of static key to insert in the log line for grepping purpose */
+	/**  Map of static key to insert in the log line for grepping purpose. */
 	private Map<String, Object> filters = new LinkedHashMap<>();
 
-	/** Map of static key to append in the log line for grepping purpose */
+	/**  Map of static key to append in the log line for grepping purpose. */
 	private Map<String, Object> suffixes = new LinkedHashMap<>();
 
-	/** Date formatter */
+	/**  Date formatter. */
 	private DateFormat df = new SimpleDateFormat("yyyy.MM.dd-HH:mm:ss.S");
 
 	/** The list of delegated loggers. */
 	private List<StatisticsLogger> stats = new LinkedList<>();
 
 	/**
-	 * Default constructor
+	 * Default constructor.
 	 */
 	public ChainedStatistics() {
 		this.out = System.out;
 	}
 
 	/**
-	 * Default constructor
+	 * Default constructor.
+	 *
 	 * @param out the stream where to print the logs
 	 */
 	public ChainedStatistics(PrintStream out) {
@@ -53,7 +58,8 @@ public class ChainedStatistics extends StatisticsLogger implements ProgressLogge
 
 	/**
 	 * Adds a delegate logger to the chain.
-	 * @param s
+	 *
+	 * @param s the s
 	 */
 	public void addStatistics(StatisticsLogger s) {
 		this.stats.add(s);
@@ -61,8 +67,9 @@ public class ChainedStatistics extends StatisticsLogger implements ProgressLogge
 
 	/**
 	 * Adds a filter to the chain.
-	 * @param s
-	 * @param o
+	 *
+	 * @param s the s
+	 * @param o the o
 	 */
 	public void addFilter(String s, Object o) {
 		this.filters.put(s, o);
@@ -70,9 +77,10 @@ public class ChainedStatistics extends StatisticsLogger implements ProgressLogge
 	}
 
 	/**
-	 * Adds a suffix to the chain
-	 * @param s
-	 * @param o
+	 * Adds a suffix to the chain.
+	 *
+	 * @param s the s
+	 * @param o the o
 	 */
 	public void addSuffix(String s, Object o) {
 		this.suffixes.put(s, o);
@@ -80,6 +88,8 @@ public class ChainedStatistics extends StatisticsLogger implements ProgressLogge
 	}
 
 	/**
+	 * Log.
+	 *
 	 * @see uk.ac.ox.cs.pdq.logging.ProgressLogger#log()
 	 */
 	@Override
@@ -93,6 +103,8 @@ public class ChainedStatistics extends StatisticsLogger implements ProgressLogge
 	}
 
 	/**
+	 * Log.
+	 *
 	 * @param suffix String
 	 * @see uk.ac.ox.cs.pdq.logging.ProgressLogger#log(String)
 	 */

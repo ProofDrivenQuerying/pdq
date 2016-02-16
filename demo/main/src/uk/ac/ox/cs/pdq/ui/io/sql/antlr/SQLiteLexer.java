@@ -9,13 +9,22 @@ import org.antlr.v4.runtime.atn.LexerATNSimulator;
 import org.antlr.v4.runtime.atn.PredictionContextCache;
 import org.antlr.v4.runtime.dfa.DFA;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class SQLiteLexer.
+ */
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class SQLiteLexer extends Lexer {
 	static { RuntimeMetaData.checkVersion("4.3", RuntimeMetaData.VERSION); }
 
+	/** The Constant _decisionToDFA. */
 	protected static final DFA[] _decisionToDFA;
+	
+	/** The Constant _sharedContextCache. */
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
+	
+	/** The Constant UNEXPECTED_CHAR. */
 	public static final int
 		SCOL=1, DOT=2, OPEN_PAR=3, CLOSE_PAR=4, COMMA=5, ASSIGN=6, STAR=7, PLUS=8, 
 		MINUS=9, TILDE=10, PIPE2=11, DIV=12, MOD=13, LT2=14, GT2=15, AMP=16, PIPE=17, 
@@ -43,10 +52,13 @@ public class SQLiteLexer extends Lexer {
 		K_WHEN=145, K_WHERE=146, K_WITH=147, K_WITHOUT=148, IDENTIFIER=149, NUMERIC_LITERAL=150, 
 		BIND_PARAMETER=151, STRING_LITERAL=152, BLOB_LITERAL=153, SINGLE_LINE_COMMENT=154, 
 		MULTILINE_COMMENT=155, SPACES=156, UNEXPECTED_CHAR=157;
+	
+	/** The mode names. */
 	public static String[] modeNames = {
 		"DEFAULT_MODE"
 	};
 
+	/** The Constant tokenNames. */
 	public static final String[] tokenNames = {
 		"'\\u0000'", "'\\u0001'", "'\\u0002'", "'\\u0003'", "'\\u0004'", "'\\u0005'", 
 		"'\\u0006'", "'\\u0007'", "'\b'", "'\t'", "'\n'", "'\\u000B'", "'\f'", 
@@ -69,6 +81,8 @@ public class SQLiteLexer extends Lexer {
 		"'\\u0093'", "'\\u0094'", "'\\u0095'", "'\\u0096'", "'\\u0097'", "'\\u0098'", 
 		"'\\u0099'", "'\\u009A'", "'\\u009B'", "'\\u009C'", "'\\u009D'"
 	};
+	
+	/** The Constant ruleNames. */
 	public static final String[] ruleNames = {
 		"SCOL", "DOT", "OPEN_PAR", "CLOSE_PAR", "COMMA", "ASSIGN", "STAR", "PLUS", 
 		"MINUS", "TILDE", "PIPE2", "DIV", "MOD", "LT2", "GT2", "AMP", "PIPE", 
@@ -99,29 +113,53 @@ public class SQLiteLexer extends Lexer {
 	};
 
 
+	/**
+	 * Instantiates a new SQ lite lexer.
+	 *
+	 * @param input the input
+	 */
 	public SQLiteLexer(CharStream input) {
 		super(input);
 		_interp = new LexerATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.antlr.v4.runtime.Recognizer#getGrammarFileName()
+	 */
 	@Override
 	public String getGrammarFileName() { return "SQLite.g4"; }
 
+	/* (non-Javadoc)
+	 * @see org.antlr.v4.runtime.Lexer#getTokenNames()
+	 */
 	@Override
 	public String[] getTokenNames() { return tokenNames; }
 
+	/* (non-Javadoc)
+	 * @see org.antlr.v4.runtime.Recognizer#getRuleNames()
+	 */
 	@Override
 	public String[] getRuleNames() { return ruleNames; }
 
+	/* (non-Javadoc)
+	 * @see org.antlr.v4.runtime.Recognizer#getSerializedATN()
+	 */
 	@Override
 	public String getSerializedATN() { return _serializedATN; }
 
+	/* (non-Javadoc)
+	 * @see org.antlr.v4.runtime.Lexer#getModeNames()
+	 */
 	@Override
 	public String[] getModeNames() { return modeNames; }
 
+	/* (non-Javadoc)
+	 * @see org.antlr.v4.runtime.Recognizer#getATN()
+	 */
 	@Override
 	public ATN getATN() { return _ATN; }
 
+	/** The Constant _serializedATN. */
 	public static final String _serializedATN =
 		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\2\u009f\u05ae\b\1\4"+
 		"\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n"+
@@ -726,6 +764,8 @@ public class SQLiteLexer extends Lexer {
 		"\2\34\2\u04f1\u04f3\u04fb\u04fd\u0505\u050d\u0510\u0515\u051b\u051e\u0522"+
 		"\u0527\u0529\u052f\u0533\u0538\u053a\u053c\u0542\u0547\u054d\u054f\u055d"+
 		"\u0568\u056e\3\2\3\2";
+	
+	/** The Constant _ATN. */
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

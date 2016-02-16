@@ -25,6 +25,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * Runs EGD chase using parallel chase steps.
  * (From modern dependency theory notes)
@@ -62,9 +63,11 @@ public class ParallelEGDChaser extends Chaser {
 	 * Chases the input state until termination.
 	 * The EGDs and the TGDs are applied in rounds, i.e., during even round we apply parallel EGD chase steps,
 	 * while during odd rounds we apply parallel TGD chase steps.  
-	 * @param instance
-	 * @param target
-	 * @param dependencies
+	 *
+	 * @param <S> the generic type
+	 * @param instance the instance
+	 * @param target the target
+	 * @param dependencies the dependencies
 	 */
 	@Override
 	public <S extends ChaseState> void reasonUntilTermination(S instance,  Query<?> target, Collection<? extends Constraint> dependencies) {
@@ -128,15 +131,14 @@ public class ParallelEGDChaser extends Chaser {
 
 
 	/**
-	 * 
-	 * @param instance
-	 * @param free
-	 * 		Mapping of query's free variables to constants
-	 * @param target
-	 * @param constraints
-	 * @return
-	 * 		true if the input instance with the given set of free variables and constraints implies the target query.
-	 * 		
+	 * Entails.
+	 *
+	 * @param <S> the generic type
+	 * @param instance the instance
+	 * @param free 		Mapping of query's free variables to constants
+	 * @param target the target
+	 * @param constraints the constraints
+	 * @return 		true if the input instance with the given set of free variables and constraints implies the target query.
 	 */
 	@Override
 	public <S extends ChaseState> boolean entails(S instance, Map<Variable, Constant> free, Query<?> target,
@@ -153,12 +155,13 @@ public class ParallelEGDChaser extends Chaser {
 	}
 
 	/**
-	 * 
-	 * @param source
-	 * @param target
-	 * @param constraints
-	 * @return
-	 * 		true if the source query entails the target query
+	 * Entails.
+	 *
+	 * @param <S> the generic type
+	 * @param source the source
+	 * @param target the target
+	 * @param constraints the constraints
+	 * @return 		true if the source query entails the target query
 	 */
 	@Override
 	public <S extends ChaseState> boolean entails(Query<?> source, Query<?> target,
@@ -167,6 +170,9 @@ public class ParallelEGDChaser extends Chaser {
 		return false;
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.reasoning.chase.Chaser#clone()
+	 */
 	@Override
 	public ParallelEGDChaser clone() {
 		return new ParallelEGDChaser(this.statistics);

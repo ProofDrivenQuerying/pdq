@@ -10,11 +10,11 @@ import uk.ac.ox.cs.pdq.io.Writer;
 
 import com.google.common.base.Joiner;
 
+// TODO: Auto-generated Javadoc
 /**
- * Writes a concise representation of a query to the given output
- * 
- * @author Julien Leblay
+ * Writes a concise representation of a query to the given output.
  *
+ * @author Julien Leblay
  */
 public class PrettyQueryWriter extends PrettyWriter<ConjunctiveQuery> implements Writer<ConjunctiveQuery> {
 
@@ -42,7 +42,8 @@ public class PrettyQueryWriter extends PrettyWriter<ConjunctiveQuery> implements
 		
 	/**
 	 * Fluent pretty writer provider.
-	 * @param out
+	 *
+	 * @param out the out
 	 * @return a new PrettyQueryWriter with the given default output.
 	 */
 	public static PrettyQueryWriter to(PrintStream out) {
@@ -50,6 +51,8 @@ public class PrettyQueryWriter extends PrettyWriter<ConjunctiveQuery> implements
 	}
 	
 	/**
+	 * Write.
+	 *
 	 * @param out PrintStream
 	 * @param q ConjunctiveQuery
 	 */
@@ -68,6 +71,8 @@ public class PrettyQueryWriter extends PrettyWriter<ConjunctiveQuery> implements
 	}
 	
 	/**
+	 * Write.
+	 *
 	 * @param q ConjunctiveQuery
 	 */
 	@Override

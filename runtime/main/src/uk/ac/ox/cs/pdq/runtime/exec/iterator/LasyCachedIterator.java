@@ -8,6 +8,7 @@ import uk.ac.ox.cs.pdq.util.Tuple;
 
 import com.google.common.base.Preconditions;
 
+// TODO: Auto-generated Javadoc
 /**
  * An iterator that wraps another iterator. Caches and return tuples from the
  * underlying iterator upon the first traversal. Any subsequent traversal, 

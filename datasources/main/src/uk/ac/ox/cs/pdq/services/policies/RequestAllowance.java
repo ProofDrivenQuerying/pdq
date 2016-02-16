@@ -4,6 +4,7 @@ import java.util.Properties;
 
 import uk.ac.ox.cs.pdq.services.rest.RESTResponseEvent;
 
+// TODO: Auto-generated Javadoc
 /**
  * Check whether the number of requests for a given period is satisfied, waits
  * or throws an exception if not.
@@ -32,6 +33,8 @@ public class RequestAllowance extends PeriodicalAllowance {
 	}
 
 	/**
+	 * Copy.
+	 *
 	 * @return UsagePolicy
 	 * @see uk.ac.ox.cs.pdq.services.policies.UsagePolicy#copy()
 	 */
@@ -41,6 +44,8 @@ public class RequestAllowance extends PeriodicalAllowance {
 	}
 
 	/**
+	 * Gets the amount.
+	 *
 	 * @param event RESTResponseEvent
 	 * @return int
 	 */

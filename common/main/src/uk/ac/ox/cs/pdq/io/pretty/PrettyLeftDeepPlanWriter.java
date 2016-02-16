@@ -5,11 +5,11 @@ import java.io.PrintStream;
 import uk.ac.ox.cs.pdq.io.Writer;
 import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 
+// TODO: Auto-generated Javadoc
 /**
- * Writes a concise representation of a plan to the given output
- * 
- * @author Julien Leblay
+ * Writes a concise representation of a plan to the given output.
  *
+ * @author Julien Leblay
  */
 public class PrettyLeftDeepPlanWriter extends PrettyWriter<LeftDeepPlan> implements Writer<LeftDeepPlan> {
 	/**
@@ -19,7 +19,8 @@ public class PrettyLeftDeepPlanWriter extends PrettyWriter<LeftDeepPlan> impleme
 	private PrintStream out;
 
 	/**
-	 * 
+	 * Instantiates a new pretty left deep plan writer.
+	 *
 	 * @param out the default output
 	 */
 	PrettyLeftDeepPlanWriter(PrintStream out) {
@@ -27,7 +28,7 @@ public class PrettyLeftDeepPlanWriter extends PrettyWriter<LeftDeepPlan> impleme
 	}
 
 	/**
-	 * 
+	 * Instantiates a new pretty left deep plan writer.
 	 */
 	public PrettyLeftDeepPlanWriter() {
 		this(System.out);
@@ -35,7 +36,8 @@ public class PrettyLeftDeepPlanWriter extends PrettyWriter<LeftDeepPlan> impleme
 	
 	/**
 	 * Fluent pretty writer provider.
-	 * @param out
+	 *
+	 * @param out the out
 	 * @return a new PrettyLeftDeepPlanWriter with the given default output.
 	 */
 	public static PrettyLeftDeepPlanWriter to(PrintStream out) {
@@ -43,6 +45,8 @@ public class PrettyLeftDeepPlanWriter extends PrettyWriter<LeftDeepPlan> impleme
 	}
 	
 	/**
+	 * Write.
+	 *
 	 * @param out PrintStream
 	 * @param plan LeftDeepPlan
 	 */
@@ -52,6 +56,8 @@ public class PrettyLeftDeepPlanWriter extends PrettyWriter<LeftDeepPlan> impleme
 	}
 	
 	/**
+	 * Write.
+	 *
 	 * @param q LeftDeepPlan
 	 */
 	@Override

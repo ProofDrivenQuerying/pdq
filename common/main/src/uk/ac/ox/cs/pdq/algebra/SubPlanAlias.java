@@ -9,6 +9,7 @@ import uk.ac.ox.cs.pdq.util.TupleType;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
 /**
  * Alias operator which acts as a pointed to other sub-plans.
  *
@@ -17,15 +18,22 @@ import com.google.common.collect.Lists;
 @Deprecated
 public class SubPlanAlias extends RelationalOperator {
 
+	/** The global id. */
 	private static int globalId = 0;
+	
+	/** The Constant ALIAS_PREFIX. */
 	private static final String ALIAS_PREFIX = "ALIAS";
 
 	/** The sub-plan this operator aliases to . */
 	public Plan subPlan;
 
+	/** The id. */
 	public final int id;
 
+	/** The output. */
 	private final List<? extends Term> output;
+	
+	/** The input. */
 	private final List<? extends Term> input;
 
 	/**
@@ -66,6 +74,8 @@ public class SubPlanAlias extends RelationalOperator {
 	}
 
 	/**
+	 * Sets the plan.
+	 *
 	 * @param p Plan
 	 */
 	public void setPlan(Plan p) {
@@ -96,6 +106,8 @@ public class SubPlanAlias extends RelationalOperator {
 	}
 
 	/**
+	 * Gets the plan.
+	 *
 	 * @return Plan
 	 */
 	public Plan getPlan() {
@@ -103,6 +115,8 @@ public class SubPlanAlias extends RelationalOperator {
 	}
 
 	/**
+	 * Gets the depth.
+	 *
 	 * @return Integer
 	 */
 	@Override
@@ -114,6 +128,8 @@ public class SubPlanAlias extends RelationalOperator {
 	}
 
 	/**
+	 * Checks if is closed.
+	 *
 	 * @return boolean
 	 */
 	@Override
@@ -125,6 +141,8 @@ public class SubPlanAlias extends RelationalOperator {
 	}
 
 	/**
+	 * Gets the column.
+	 *
 	 * @param i int
 	 * @return Term
 	 */
@@ -134,6 +152,8 @@ public class SubPlanAlias extends RelationalOperator {
 	}
 
 	/**
+	 * Gets the columns.
+	 *
 	 * @return List<Term>
 	 */
 	@Override
@@ -142,6 +162,8 @@ public class SubPlanAlias extends RelationalOperator {
 	}
 
 	/**
+	 * Gets the input terms.
+	 *
 	 * @return List<Term>
 	 */
 	@Override
@@ -150,6 +172,8 @@ public class SubPlanAlias extends RelationalOperator {
 	}
 
 	/**
+	 * Checks if is quasi leaf.
+	 *
 	 * @return boolean
 	 */
 	@Override

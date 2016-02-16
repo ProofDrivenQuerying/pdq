@@ -26,6 +26,7 @@ import com.logicblox.connect.BloxCommand.CommandResponse;
 import com.logicblox.connect.BloxCommand.LogMessageResponse;
 import com.logicblox.connect.ProtoBufException.ExceptionContainer;
 
+// TODO: Auto-generated Javadoc
 /**
  * A semantics optimization service for LogixBlox database.
  * 
@@ -37,24 +38,25 @@ public class SemanticOptimizationService implements Service {
 	/** Logger. */
 	static final Logger log = Logger.getLogger(SemanticOptimizationService.class);
 	
-	/** Thread execution pool */
+	/**  Thread execution pool. */
 	public final ExecutorService execService = Executors.newCachedThreadPool();
 	
-	/** Parameters for the logicblox service */
+	/**  Parameters for the logicblox service. */
 	private final LogicBloxParameters params;
 	
-	/** Server socket */
+	/**  Server socket. */
 	private final ServerSocket serverSocket;
 	
-	/** The context repository */
+	/**  The context repository. */
 	private final ContextRepository contextRepo = new ContextRepository();
 	
 	/** True if the service has been interrupted. */
 	private boolean isInterrupted = false;
 
 	/**
-	 * Default constructor
-	 * @param configDir
+	 * Default constructor.
+	 *
+	 * @param configDir the config dir
 	 */
 	public SemanticOptimizationService(File configDir) {
 		this(new LogicBloxParameters(configDir));
@@ -75,6 +77,8 @@ public class SemanticOptimizationService implements Service {
 	}
 
 	/**
+	 * Gets the context repository.
+	 *
 	 * @return ContextRepository
 	 */
 	public ContextRepository getContextRepository() {
@@ -82,6 +86,9 @@ public class SemanticOptimizationService implements Service {
 	}
 
 	/**
+	 * Resolve.
+	 *
+	 * @param path the path
 	 * @return Context
 	 */
 	public Context resolve(String path) {
@@ -89,6 +96,8 @@ public class SemanticOptimizationService implements Service {
 	}
 	
 	/**
+	 * Stop.
+	 *
 	 * @see uk.ac.ox.cs.pdq.services.Service#stop()
 	 */
 	@Override
@@ -103,6 +112,8 @@ public class SemanticOptimizationService implements Service {
 	}
 
 	/**
+	 * Status.
+	 *
 	 * @param out PrintStream
 	 * @see uk.ac.ox.cs.pdq.services.Service#status(PrintStream)
 	 */
@@ -118,6 +129,8 @@ public class SemanticOptimizationService implements Service {
 	}
 
 	/**
+	 * Gets the name.
+	 *
 	 * @return the service's name
 	 * @see uk.ac.ox.cs.pdq.services.Service#getName()
 	 */
@@ -127,6 +140,8 @@ public class SemanticOptimizationService implements Service {
 	}
 
 	/**
+	 * Run.
+	 *
 	 * @see java.lang.Runnable#run()
 	 */
 	@Override
@@ -154,9 +169,16 @@ public class SemanticOptimizationService implements Service {
 	 */
 	public static class DefaultServiceCall implements ServiceCall<GeneratedMessage> {
 
+		/** The socket. */
 		private final Socket socket;
+		
+		/** The in. */
 		private final InputStream in;
+		
+		/** The out. */
 		private final OutputStream out;
+		
+		/** The master. */
 		private final SemanticOptimizationService master;
 		
 		/**
@@ -181,8 +203,9 @@ public class SemanticOptimizationService implements Service {
 		 * Handles the actual service call by receiving the incoming message, 
 		 * delegating it to the appropriate handler and return the resulting
 		 * response message.
+		 *
 		 * @return GeneratedMessage
-		 * @throws ServiceException
+		 * @throws ServiceException the service exception
 		 * @see java.util.concurrent.Callable#call()
 		 */
 		@Override

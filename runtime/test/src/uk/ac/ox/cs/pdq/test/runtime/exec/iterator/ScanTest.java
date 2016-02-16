@@ -23,27 +23,46 @@ import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
+ * The Class ScanTest.
+ *
  * @author Julien LEBLAY
  */
 public class ScanTest {
 
+	/** The c. */
 	Attribute a = new Attribute(Integer.class, "a"), 
 			b = new Attribute(String.class, "b"), 
 			c = new Attribute(String.class, "c");
+	
+	/** The output columns. */
 	List<Attribute> outputColumns = Lists.newArrayList(a, b, c);
+	
+	/** The output type. */
 	TupleType outputType = TupleType.DefaultFactory.create(
 			Integer.class,
 			String.class,
 			String.class);
 	
+	/** The relation. */
 	InMemoryTableWrapper relation = new InMemoryTableWrapper("test", outputColumns);
+	
+	/** The mt. */
 	AccessMethod mt = new AccessMethod("mt", Types.LIMITED, Lists.newArrayList(2, 1));
+	
+	/** The filter1. */
 	Predicate filter1 = new ConstantEqualityPredicate(0, new TypedConstant<>(2));
+	
+	/** The filter2. */
 	Predicate filter2 = new ConstantEqualityPredicate(1, new TypedConstant<>("x"));
+	
+	/** The filter3. */
 	Predicate filter3 = new ConjunctivePredicate<>(Lists.newArrayList(filter1, filter2));
 	
+	/**
+	 * Setup.
+	 */
 	@Before public void setup() {
 		Utility.assertsEnabled();
 		this.relation.load(Lists.newArrayList(
@@ -55,30 +74,47 @@ public class ScanTest {
         MockitoAnnotations.initMocks(this);
 	}
 	
+	/**
+	 * Inits the scan.
+	 */
 	@Test public void initScan() {
 		Scan scan = new Scan(relation);
 		Assert.assertEquals(relation, scan.getRelation());
 		Assert.assertNull(scan.getFilter());
 	}
 	
+	/**
+	 * Inits the scan filtered1.
+	 */
 	@Test public void initScanFiltered1() {
 		Scan scan = new Scan(relation, filter1);
 		Assert.assertEquals(relation, scan.getRelation());
 		Assert.assertEquals(filter1, scan.getFilter());
 	}
 	
+	/**
+	 * Inits the scan filtered2.
+	 */
 	@Test public void initScanFiltered2() {
 		Scan scan = new Scan(relation, filter2);
 		Assert.assertEquals(relation, scan.getRelation());
 		Assert.assertEquals(filter2, scan.getFilter());
 	}
 	
+	/**
+	 * Inits the scan filtered3.
+	 */
 	@Test public void initScanFiltered3() {
 		Scan scan = new Scan(relation, filter3);
 		Assert.assertEquals(relation, scan.getRelation());
 		Assert.assertEquals(filter3, scan.getFilter());
 	}
 
+	/**
+	 * Deep copy.
+	 *
+	 * @throws RelationalOperatorException the relational operator exception
+	 */
 	@Test public void deepCopy() throws RelationalOperatorException {
 		Scan scan = new Scan(relation, filter3);
 		Scan copy = scan.deepCopy();
@@ -93,6 +129,9 @@ public class ScanTest {
 		Assert.assertEquals("Scan next item must match", scan.next(), copy.next());
 	}
 
+	/**
+	 * Checks for next.
+	 */
 	@Test public void hasNext() {
 		Scan scan = new Scan(relation);
 		scan.open();
@@ -106,6 +145,9 @@ public class ScanTest {
 		scan.reset();
 	}
 
+	/**
+	 * Checks for next filtered1.
+	 */
 	@Test public void hasNextFiltered1() {
 		Scan scan = new Scan(relation, filter1);
 		scan.open();
@@ -115,6 +157,9 @@ public class ScanTest {
 		scan.reset();
 	}
 
+	/**
+	 * Checks for next filtered2.
+	 */
 	@Test public void hasNextFiltered2() {
 		Scan scan = new Scan(relation, filter2);
 		scan.open();
@@ -128,6 +173,9 @@ public class ScanTest {
 		scan.reset();
 	}
 
+	/**
+	 * Checks for next filtered3.
+	 */
 	@Test public void hasNextFiltered3() {
 		Scan scan = new Scan(relation, filter3);
 		scan.open();
@@ -137,6 +185,9 @@ public class ScanTest {
 		scan.reset();
 	}
 
+	/**
+	 * Next.
+	 */
 	@Test public void next() {
 		Scan scan = new Scan(relation);
 		scan.open();
@@ -145,12 +196,18 @@ public class ScanTest {
 		Assert.assertEquals(outputType.createTuple(3, "x", "three"), scan.next());
 	}
 
+	/**
+	 * Next filtered1.
+	 */
 	@Test public void nextFiltered1() {
 		Scan scan = new Scan(relation, filter1);
 		scan.open();
 		Assert.assertEquals(outputType.createTuple(2, "x", "two"), scan.next());
 	}
 
+	/**
+	 * Next filtered2.
+	 */
 	@Test public void nextFiltered2() {
 		Scan scan = new Scan(relation, filter2);
 		scan.open();
@@ -159,12 +216,18 @@ public class ScanTest {
 		Assert.assertEquals(outputType.createTuple(3, "x", "three"), scan.next());
 	}
 
+	/**
+	 * Next filtered3.
+	 */
 	@Test public void nextFiltered3() {
 		Scan scan = new Scan(relation, filter3);
 		scan.open();
 		Assert.assertEquals(outputType.createTuple(2, "x", "two"), scan.next());
 	}
 
+	/**
+	 * Reset.
+	 */
 	@Test public void reset() {
 		Scan scan = new Scan(relation);
 		scan.open();
@@ -187,6 +250,9 @@ public class ScanTest {
 		Assert.assertFalse(scan.hasNext());
 	}
 
+	/**
+	 * Reset filtered1.
+	 */
 	@Test public void resetFiltered1() {
 		Scan scan = new Scan(relation, filter1);
 		scan.open();
@@ -201,6 +267,9 @@ public class ScanTest {
 		Assert.assertFalse(scan.hasNext());
 	}
 
+	/**
+	 * Reset filtered2.
+	 */
 	@Test public void resetFiltered2() {
 		Scan scan = new Scan(relation, filter2);
 		scan.open();
@@ -223,6 +292,9 @@ public class ScanTest {
 		Assert.assertFalse(scan.hasNext());
 	}
 
+	/**
+	 * Reset filtered3.
+	 */
 	@Test public void resetFiltered3() {
 		Scan scan = new Scan(relation, filter3);
 		scan.open();
@@ -237,6 +309,9 @@ public class ScanTest {
 		Assert.assertFalse(scan.hasNext());
 	}
 
+	/**
+	 * Bind null.
+	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void bindNull() {
 		Scan scan = new Scan(relation, filter3);
@@ -244,12 +319,18 @@ public class ScanTest {
 		scan.bind(null);
 	}
 	
+	/**
+	 * Bind on unopened.
+	 */
 	@Test(expected=IllegalStateException.class)
 	public void bindOnUnopened() {
 		Scan scan = new Scan(relation, filter3);
 		scan.bind(Tuple.EmptyTuple);
 	}
 	
+	/**
+	 * Bind illegal type.
+	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void bindIllegalType() {
 		Scan scan = new Scan(relation, filter3);
@@ -257,6 +338,9 @@ public class ScanTest {
 		scan.bind(outputType.createTuple("four", 4));
 	}
 	
+	/**
+	 * Bind empty tuple.
+	 */
 	@Test public void bindEmptyTuple() {
 		Scan scan = new Scan(relation, filter3);
 		scan.open();

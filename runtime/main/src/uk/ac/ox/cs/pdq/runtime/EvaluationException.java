@@ -1,5 +1,6 @@
 package uk.ac.ox.cs.pdq.runtime;
 
+// TODO: Auto-generated Javadoc
 /**
  * Exception that occurred during an evaluation (of plan or query).
  * 
@@ -7,7 +8,7 @@ package uk.ac.ox.cs.pdq.runtime;
  */
 public class EvaluationException extends Exception {
 
-	/** */
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -315472460756924167L;
 
 	/**
@@ -27,6 +28,8 @@ public class EvaluationException extends Exception {
 	}
 
 	/**
+	 * Instantiates a new evaluation exception.
+	 *
 	 * @param cause Throwable
 	 */
 	public EvaluationException(Throwable cause) {
@@ -34,6 +37,8 @@ public class EvaluationException extends Exception {
 	}
 
 	/**
+	 * Instantiates a new evaluation exception.
+	 *
 	 * @param msg exception's message
 	 * @param cause root cause of the problem.
 	 */

@@ -30,6 +30,7 @@ import uk.ac.ox.cs.pdq.generator.tgdsfromquery.DependencyGeneratorFirst;
 import uk.ac.ox.cs.pdq.generator.tgdsfromquery.QueryGeneratorFirst;
 import uk.ac.ox.cs.pdq.generator.tgdsfromquery.SchemaGeneratorFirst;
 
+// TODO: Auto-generated Javadoc
 /**
  * Generates query or views based on an input Schema, and external parameters.
  * 
@@ -41,20 +42,45 @@ import uk.ac.ox.cs.pdq.generator.tgdsfromquery.SchemaGeneratorFirst;
 @RunWith(Parameterized.class) 
 public class DependencyGeneratorTest extends ParameterizedTest {
 
+	/**
+	 * Gets the parameters.
+	 *
+	 * @return the parameters
+	 */
 	@Parameters
 	public static Collection<Object[]> getParameters() {
 		return ParameterizedTest.getParameters(seeds, numberOfTGDs, queryTypes);
 	}
 	
+	/** The seeds. */
 	private static Set<Integer> seeds = ParameterizedTest.asSet(1);
+	
+	/** The number of tg ds. */
 	private static Set<Integer> numberOfTGDs = ParameterizedTest.asSet(5, 10, 25);
+	
+	/** The query types. */
 	private static Set<QueryTypes> queryTypes = ParameterizedTest.asSet(QueryTypes.ACYCLIC, QueryTypes.GUARDED, QueryTypes.CHAINGUARDED);
 
+	/** The params. */
 	private BenchmarkParameters params;
+	
+	/** The schema. */
 	private Schema schema;
+	
+	/** The query. */
 	private ConjunctiveQuery query;
+	
+	/** The dependencies. */
 	private List<Constraint> dependencies;
 
+	/**
+	 * Instantiates a new dependency generator test.
+	 *
+	 * @param seed the seed
+	 * @param nbTGDs the nb tg ds
+	 * @param queryType the query type
+	 * @throws Exception the exception
+	 */
 	public DependencyGeneratorTest(Integer seed, Integer nbTGDs, QueryTypes queryType) throws Exception {
 		this.params = new BenchmarkParameters();
 		this.params.setSeed(seed);
@@ -70,6 +96,9 @@ public class DependencyGeneratorTest extends ParameterizedTest {
 		this.dependencies = this.schema.getDependencies(); 
 	}
 	
+	/**
+	 * Test each relation in generate dependencies.
+	 */
 	@Test
 	public void testEachRelationInGenerateDependencies() {
 		List<String> relationNames = new ArrayList<>();
@@ -84,6 +113,9 @@ public class DependencyGeneratorTest extends ParameterizedTest {
 		}
 	}
 
+	/**
+	 * Test no repeated variables in dependencies.
+	 */
 	@Test
 	public void testNoRepeatedVariablesInDependencies() {
 		List<Term> vars = new ArrayList<>();

@@ -4,10 +4,11 @@ import java.io.PrintStream;
 
 import org.apache.log4j.Logger;
 
+// TODO: Auto-generated Javadoc
 /**
- * Loads SQL Server 2014 histograms
- * @author Efthymia Tsamoura
+ * Loads SQL Server 2014 histograms.
  *
+ * @author Efthymia Tsamoura
  */
 public class SQLServerHistogramWriter {
 
@@ -19,8 +20,9 @@ public class SQLServerHistogramWriter {
 	 * Writes the input histogram to the specified output. 
 	 * For each bucket we output the following properties
 	 * 		RANGE_HI_KEY RANGE_ROWS    EQ_ROWS       DISTINCT_RANGE_ROWS  AVG_RANGE_ROWS 
-	 * @param histogram
-	 * @param out
+	 *
+	 * @param histogram the histogram
+	 * @param out the out
 	 */
 	public static void write(SQLServerHistogram histogram, PrintStream out) {
 		for(SQLServerBucket bucket:histogram.getBuckets()) {

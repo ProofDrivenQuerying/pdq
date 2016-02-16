@@ -14,6 +14,7 @@ import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
 import com.google.common.base.Preconditions;
 import com.google.common.eventbus.EventBus;
 
+// TODO: Auto-generated Javadoc
 /**
  * Creates reasoners based on the input arguments
  * 
@@ -52,21 +53,22 @@ import com.google.common.eventbus.EventBus;
  */
 public class ReasonerFactory {
 
+	/** The log. */
 	protected static Logger log = Logger.getLogger(ReasonerFactory.class);
 
-	/** The event bus that will be shared by all instances create by this factory */
+	/**  The event bus that will be shared by all instances create by this factory. */
 	private final EventBus eventBus;
 
 	/** If true, statistics are collected while the reasoner is used. */
 	private final boolean collectStatistics;
 
-	/** Type of reasoner */
+	/**  Type of reasoner. */
 	private final ReasoningTypes type;
 
-	/** K for the KTermination chase */
+	/**  K for the KTermination chase. */
 	private final Integer terminationK;
 
-	/** KSupplier to be shared across all BoundedChasers created by this factory */
+	/**  KSupplier to be shared across all BoundedChasers created by this factory. */
 	private KSupplier kSupplier = null;
 
 	/** true, if the reasoner initialisation shall be unrestricted. */
@@ -74,10 +76,11 @@ public class ReasonerFactory {
 
 
 	/**
+	 * Instantiates a new reasoner factory.
 	 *
-	 * @param eventBus
-	 * @param collectStats
-	 * @param params
+	 * @param eventBus the event bus
+	 * @param collectStats the collect stats
+	 * @param params the params
 	 */
 	public ReasonerFactory(
 			EventBus eventBus,
@@ -90,12 +93,13 @@ public class ReasonerFactory {
 	}
 
 	/**
+	 * Instantiates a new reasoner factory.
 	 *
-	 * @param eventBus
-	 * @param collectStats
-	 * @param type
-	 * @param k
-	 * @param fullInitialization
+	 * @param eventBus the event bus
+	 * @param collectStats the collect stats
+	 * @param type the type
+	 * @param k the k
+	 * @param fullInitialization the full initialization
 	 */
 	protected ReasonerFactory(
 			EventBus eventBus,
@@ -112,8 +116,9 @@ public class ReasonerFactory {
 	}
 
 	/**
-	 * @return
-	 * 		a fresh instance of reasoner. Currently, all reasoners
+	 * Gets the single instance of ReasonerFactory.
+	 *
+	 * @return 		a fresh instance of reasoner. Currently, all reasoners
 	 *      implement the Chaser interface.
 	 */
 	public Chaser getInstance() {
@@ -147,16 +152,28 @@ public class ReasonerFactory {
 	}
 
 	/**
+	 * Gets the event bus.
+	 *
 	 * @return the event bus associated with this factory
 	 */
 	public EventBus getEventBus() {
 		return this.eventBus;
 	}
 	
+	/**
+	 * Gets the type.
+	 *
+	 * @return the type
+	 */
 	public ReasoningTypes getType() {
 		return this.type;
 	}
 	
+	/**
+	 * Gets the collect statistics.
+	 *
+	 * @return the collect statistics
+	 */
 	public boolean getCollectStatistics() {
 		return this.collectStatistics;
 	}

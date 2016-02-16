@@ -20,6 +20,7 @@ import uk.ac.ox.cs.pdq.reasoning.utility.RestrictedChaseDependencyAssessor;
 import com.google.common.base.Preconditions;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * (From modern dependency theory notes)
  * Runs the chase algorithm applying only active triggers. 
@@ -40,7 +41,8 @@ public class RestrictedChaser extends Chaser {
 
 	/**
 	 * Constructor for RestrictedChaser.
-	 * @param statistics
+	 *
+	 * @param statistics the statistics
 	 */
 	public RestrictedChaser(
 			StatisticsCollector statistics) {
@@ -48,10 +50,12 @@ public class RestrictedChaser extends Chaser {
 	}
 
 	/**
-	 * Chases the input state until termination
-	 * @param instance
-	 * @param target
-	 * @param dependencies
+	 * Chases the input state until termination.
+	 *
+	 * @param <S> the generic type
+	 * @param instance the instance
+	 * @param target the target
+	 * @param dependencies the dependencies
 	 */
 	@Override
 	public <S extends ChaseState> void reasonUntilTermination(S instance,  Query<?> target, Collection<? extends Constraint> dependencies) {
@@ -73,15 +77,14 @@ public class RestrictedChaser extends Chaser {
 	}
 
 	/**
-	 * 
-	 * @param instance
-	 * @param free
-	 * 		Mapping of query's free variables to constants
-	 * @param target
-	 * @param constraints
-	 * @return
-	 * 		true if the input instance with the given set of free variables and constraints implies the target query.
-	 * 		
+	 * Entails.
+	 *
+	 * @param <S> the generic type
+	 * @param instance the instance
+	 * @param free 		Mapping of query's free variables to constants
+	 * @param target the target
+	 * @param constraints the constraints
+	 * @return 		true if the input instance with the given set of free variables and constraints implies the target query.
 	 */
 	@Override
 	public <S extends ChaseState> boolean entails(S instance, Map<Variable, Constant> free, Query<?> target,
@@ -98,12 +101,13 @@ public class RestrictedChaser extends Chaser {
 	}
 
 	/**
-	 * 
-	 * @param source
-	 * @param target
-	 * @param constraints
-	 * @return
-	 * 		true if the source query entails the target query
+	 * Entails.
+	 *
+	 * @param <S> the generic type
+	 * @param source the source
+	 * @param target the target
+	 * @param constraints the constraints
+	 * @return 		true if the source query entails the target query
 	 */
 	@Override
 	public <S extends ChaseState> boolean entails(Query<?> source, Query<?> target,
@@ -112,6 +116,9 @@ public class RestrictedChaser extends Chaser {
 		return false;
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.reasoning.chase.Chaser#clone()
+	 */
 	@Override
 	public RestrictedChaser clone() {
 		return new RestrictedChaser(this.statistics);

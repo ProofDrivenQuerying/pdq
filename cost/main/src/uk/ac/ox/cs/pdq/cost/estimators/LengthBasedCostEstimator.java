@@ -8,13 +8,16 @@ import uk.ac.ox.cs.pdq.plan.AccessOperator;
 import uk.ac.ox.cs.pdq.plan.DoubleCost;
 import uk.ac.ox.cs.pdq.plan.Plan;
 
+// TODO: Auto-generated Javadoc
 /**
  * Cost estimator favoring query with more atoms.
  *
  * @author Julien Leblay
+ * @param <P> the generic type
  */
 public class LengthBasedCostEstimator<P extends Plan> implements BlackBoxCostEstimator<P> {
 
+	/** The stats. */
 	protected final StatisticsCollector stats;
 	
 	/**
@@ -25,14 +28,17 @@ public class LengthBasedCostEstimator<P extends Plan> implements BlackBoxCostEst
 	}
 	
 	/**
-	 * Constructor
-	 * @param stats
+	 * Constructor.
+	 *
+	 * @param stats the stats
 	 */
 	public LengthBasedCostEstimator(StatisticsCollector stats) {
 		this.stats = stats;
 	}
 
 	/**
+	 * Clone.
+	 *
 	 * @return LengthBasedCostEstimator<P>
 	 * @see uk.ac.ox.cs.pdq.plan.cost.CostEstimator#clone()
 	 */
@@ -42,6 +48,8 @@ public class LengthBasedCostEstimator<P extends Plan> implements BlackBoxCostEst
 	}
 
 	/**
+	 * Cost.
+	 *
 	 * @param plan P
 	 * @return Cost
 	 * @see uk.ac.ox.cs.pdq.plan.cost.CostEstimator#cost(P)
@@ -54,6 +62,8 @@ public class LengthBasedCostEstimator<P extends Plan> implements BlackBoxCostEst
 	}
 
 	/**
+	 * Estimate cost.
+	 *
 	 * @param plan P
 	 * @return Cost
 	 * @see uk.ac.ox.cs.pdq.plan.cost.CostEstimator#estimateCost(P)

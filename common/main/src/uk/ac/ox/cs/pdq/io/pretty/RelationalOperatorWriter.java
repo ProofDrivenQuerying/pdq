@@ -35,6 +35,7 @@ import uk.ac.ox.cs.pdq.util.Tuple;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 
+// TODO: Auto-generated Javadoc
 /**
  * Writes plans to XML.
  * 
@@ -43,26 +44,67 @@ import com.google.common.collect.Maps;
 public class RelationalOperatorWriter extends PrettyWriter<RelationalOperator> 
 			implements Writer<RelationalOperator> {
 
+	/** The Constant T. */
 	public static final String T = "T";
+	
+	/** The Constant EQUALITY. */
 	public static final String EQUALITY = "=";
+	
+	/** The Constant SLASH. */
 	public static final String SLASH = "/";
+	
+	/** The Constant INDEX. */
 	public static final String INDEX = "#";
+	
+	/** The Constant SELECT. */
 	public static final String SELECT = "\u03C3";
+	
+	/** The Constant RENAME. */
 	public static final String RENAME = "\u03C1";
+	
+	/** The Constant PROJECT. */
 	public static final String PROJECT = "\u03C0";
+	
+	/** The Constant JOIN. */
 	public static final String JOIN = " \u22C8";
+	
+	/** The Constant CROSS_PRODUCT. */
 	public static final String CROSS_PRODUCT = " \u2A2F ";
+	
+	/** The Constant OPEN. */
 	public static final String OPEN = "(";
+	
+	/** The Constant CLOSE. */
 	public static final String CLOSE = ")";
+	
+	/** The Constant BRACKET_OPEN. */
 	public static final String BRACKET_OPEN = "[";
+	
+	/** The Constant BRACKET_CLOSE. */
 	public static final String BRACKET_CLOSE = "]";
+	
+	/** The Constant ASSIGN. */
 	public static final String ASSIGN = " \u21D0 ";
+	
+	/** The Constant EMPTY. */
 	public static final String EMPTY = " \u2205";
+	
+	/** The Constant CONJUNCTION. */
 	public static final String CONJUNCTION = " \u2227 ";
+	
+	/** The Constant NEW_LINE. */
 	public static final String NEW_LINE = "\n";
+	
+	/** The Constant PERIOD. */
 	public static final String PERIOD = ".";
+	
+	/** The Constant COMMA. */
 	public static final String COMMA = ",";
+	
+	/** The Constant SINGLE_QUOTE. */
 	public static final String SINGLE_QUOTE = "'";
+	
+	/** The Constant DOUBLE_QUOTE. */
 	public static final String DOUBLE_QUOTE = "\"";
 
 	/**
@@ -71,18 +113,27 @@ public class RelationalOperatorWriter extends PrettyWriter<RelationalOperator>
 	 */
 	private PrintStream out;
 	
+	/**
+	 * Instantiates a new relational operator writer.
+	 */
 	public RelationalOperatorWriter() {
 		this(System.out);
 	}
 	
+	/**
+	 * Instantiates a new relational operator writer.
+	 *
+	 * @param out the out
+	 */
 	public RelationalOperatorWriter(PrintStream out) {
 		this.out = out;
 	}
 
 	/**
 	 * Writes the given plan to the given output.
-	 * @param out
-	 * @param relation
+	 *
+	 * @param sb the sb
+	 * @param operator the operator
 	 */
 	public void writeOperator(StringBuilder sb, RelationalOperator operator) {
 		this.writeOperator(sb, operator, Maps.<RelationalOperator, String>newHashMap());
@@ -90,8 +141,10 @@ public class RelationalOperatorWriter extends PrettyWriter<RelationalOperator>
 
 	/**
 	 * Writes the given plan to the given output.
-	 * @param out
-	 * @param relation
+	 *
+	 * @param sb the sb
+	 * @param operator the operator
+	 * @param aliases the aliases
 	 */
 	public void writeOperator(StringBuilder sb, RelationalOperator operator, Map<RelationalOperator, String> aliases) {
 		Preconditions.checkArgument(this.out != null);
@@ -205,8 +258,9 @@ public class RelationalOperatorWriter extends PrettyWriter<RelationalOperator>
 
 	/**
 	 * Writes the given plan to the given output.
-	 * @param out
-	 * @param relation
+	 *
+	 * @param sb the sb
+	 * @param proj the proj
 	 */
 	public void writeProjectRename(StringBuilder sb, Projection proj) {
 		List<Term> projected = proj.getProjected();

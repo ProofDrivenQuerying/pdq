@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import uk.ac.ox.cs.pdq.fol.Predicate;
 
+// TODO: Auto-generated Javadoc
 /**
  * 	A collection of facts produced during chasing.
  *	The facts are organised into a list.
@@ -14,8 +15,9 @@ import uk.ac.ox.cs.pdq.fol.Predicate;
 public interface ListState extends ChaseState{
 	
 	/**
-	 * Augments the internal facts with the new ones
-	 * @param facts
+	 * Augments the internal facts with the new ones.
+	 *
+	 * @param facts the facts
 	 */
 	void addFacts(Collection<Predicate> facts);
 

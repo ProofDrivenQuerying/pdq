@@ -14,6 +14,7 @@ import uk.ac.ox.cs.pdq.fol.Term;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 
+// TODO: Auto-generated Javadoc
 /**
  * A signature for fact that does not distinguish between fact that 
  * have the same predicate name and sequence of schema constants.

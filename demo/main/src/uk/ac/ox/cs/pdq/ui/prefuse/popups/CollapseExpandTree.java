@@ -13,11 +13,20 @@ import uk.ac.ox.cs.pdq.ui.prefuse.utils.Utils;
 
 
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class CollapseExpandTree.
+ */
 public class CollapseExpandTree extends JCheckBox {
 
+	/** The node. */
 	private final NodeItem node;
 
-	/** Creates a new instance of DeleteVertexMenuItem */
+	/**
+	 *  Creates a new instance of DeleteVertexMenuItem.
+	 *
+	 * @param node the node
+	 */
 	public CollapseExpandTree(NodeItem node) {
 		super("Collapse...");
 		this.node = node;
@@ -26,20 +35,46 @@ public class CollapseExpandTree extends JCheckBox {
 	}
 
 
+	/**
+	 * The listener interface for receiving collapseExpand events.
+	 * The class that is interested in processing a collapseExpand
+	 * event implements this interface, and the object created
+	 * with that class is registered with a component using the
+	 * component's <code>addCollapseExpandListener<code> method. When
+	 * the collapseExpand event occurs, that object's appropriate
+	 * method is invoked.
+	 *
+	 * @see CollapseExpandEvent
+	 */
 	private class CollapseExpandListener extends AbstractAction {
 
+		/** The node. */
 		private final NodeItem node;
 
+		/**
+		 * Instantiates a new collapse expand listener.
+		 *
+		 * @param node the node
+		 */
 		public CollapseExpandListener(NodeItem node) {
 			super("Collapse...");
 			this.node = node;
 		}
 
+		/* (non-Javadoc)
+		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			this.updateTree(this.node, ((JCheckBox) e.getSource()).isSelected());
 		}
 
+		/**
+		 * Update tree.
+		 *
+		 * @param n the n
+		 * @param isVisible the is visible
+		 */
 		private void updateTree(NodeItem n, Boolean isVisible) {
 
 			Utils.modifyNodeProperty(n.getGraph(), (Integer) n.get("id"), "isCollapsed", isVisible);
@@ -47,6 +82,12 @@ public class CollapseExpandTree extends JCheckBox {
 
 		}
 
+		/**
+		 * Update tree recursive.
+		 *
+		 * @param n the n
+		 * @param isVisible the is visible
+		 */
 		private void updateTreeRecursive(NodeItem n, Boolean isVisible) {
 			if(n == null) {
 				return;

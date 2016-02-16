@@ -11,6 +11,7 @@ import uk.ac.ox.cs.pdq.rewrite.sql.SQLTranslator.SupportedDialect;
 
 import com.google.common.eventbus.Subscribe;
 
+// TODO: Auto-generated Javadoc
 /**
  * Writes the SQL translation of a plan to some given output. 
  * @author Julien Leblay
@@ -18,12 +19,23 @@ import com.google.common.eventbus.Subscribe;
  */
 public class BestSQLPlanWriter implements EventHandler {
 	
+	/** The output. */
 	private final String output;
 	
+	/**
+	 * Instantiates a new best sql plan writer.
+	 *
+	 * @param f the f
+	 */
 	public BestSQLPlanWriter(String f) {
 		this.output = f;
 	}
 	
+	/**
+	 * Write plan.
+	 *
+	 * @param config the config
+	 */
 	@Subscribe
 	public void writePlan(DAGChaseConfiguration config) {
 		if (config != null) {

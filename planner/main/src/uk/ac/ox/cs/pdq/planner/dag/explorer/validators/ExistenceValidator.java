@@ -16,6 +16,7 @@ import uk.ac.ox.cs.pdq.planner.dag.DAGConfiguration;
 import com.google.common.base.Preconditions;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * Requires the input pair of configurations to be non trivial and ...
  * @author Efthymia Tsamoura
@@ -23,15 +24,14 @@ import com.google.common.base.Preconditions;
  */
 public class ExistenceValidator implements Validator{
 
-	/**
-	 * List of accesses of the output plan
-	 */
+	/** List of accesses of the output plan. */
 	private final List<Pair<Relation,AccessMethod>> accesses;
 
 
 	/**
 	 * Constructor for ExistanceValidator.
-	 * @param accesses
+	 *
+	 * @param accesses the accesses
 	 */
 	public ExistenceValidator(List<Pair<Relation,AccessMethod>> accesses) {
 		Preconditions.checkArgument(accesses != null && !accesses.isEmpty());
@@ -39,6 +39,8 @@ public class ExistenceValidator implements Validator{
 	}
 
 	/**
+	 * Validate.
+	 *
 	 * @param left DAGConfiguration
 	 * @param right DAGConfiguration
 	 * @return boolean
@@ -50,6 +52,8 @@ public class ExistenceValidator implements Validator{
 	}
 
 	/**
+	 * Validate.
+	 *
 	 * @param left DAGConfiguration
 	 * @param right DAGConfiguration
 	 * @param depth int
@@ -62,6 +66,8 @@ public class ExistenceValidator implements Validator{
 	}
 
 	/**
+	 * Clone.
+	 *
 	 * @return Validator
 	 * @see uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator#clone()
 	 */
@@ -70,6 +76,13 @@ public class ExistenceValidator implements Validator{
 		return new ExistenceValidator(this.accesses);
 	}
 	
+	/**
+	 * Do exist.
+	 *
+	 * @param left the left
+	 * @param right the right
+	 * @return true, if successful
+	 */
 	private boolean doExist(DAGChaseConfiguration left, DAGChaseConfiguration right) {
 		List<Pair<Relation,AccessMethod>> accesses = new ArrayList<>();
 		for(ApplyRule applyRule:left.getApplyRulesList()) {

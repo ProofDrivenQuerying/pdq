@@ -8,18 +8,20 @@ import uk.ac.ox.cs.pdq.util.Typed;
 
 import com.google.common.base.Preconditions;
 
+// TODO: Auto-generated Javadoc
 /**
- * Schema constant
+ * Schema constant.
  *
  * @author Efthymia Tsamoura
  * @author Julien Leblay
+ * @param <T> the generic type
  */
 public class TypedConstant<T> implements Typed, Constant {
 
-	/** The constant's type */
+	/**  The constant's type. */
 	private final Type type;
 
-	/** The constant's value */
+	/**  The constant's value. */
 	public final T value;
 
 	/** Cached instance hash (only possible because variables are immutable). */
@@ -29,9 +31,9 @@ public class TypedConstant<T> implements Typed, Constant {
 	private String rep = null;
 
 	/**
-	 * Default constructor
-	 * @param value
-	 *            The constant's value
+	 * Default constructor.
+	 *
+	 * @param value            The constant's value
 	 */
 	public TypedConstant(T value) {
 		Preconditions.checkArgument(value != null);
@@ -40,8 +42,9 @@ public class TypedConstant<T> implements Typed, Constant {
 	}
 
 	/**
-	 * Copy constructor
-	 * @param constant
+	 * Copy constructor.
+	 *
+	 * @param constant the constant
 	 */
 	public TypedConstant(TypedConstant<T> constant) {
 		this.type = constant.type;
@@ -49,6 +52,8 @@ public class TypedConstant<T> implements Typed, Constant {
 	}
 
 	/**
+	 * Gets the type.
+	 *
 	 * @return Class<T>
 	 * @see uk.ac.ox.cs.pdq.util.Typed#getType()
 	 */
@@ -58,6 +63,8 @@ public class TypedConstant<T> implements Typed, Constant {
 	}
 
 	/**
+	 * Gets the value.
+	 *
 	 * @return T
 	 */
 	public T getValue() {
@@ -65,6 +72,8 @@ public class TypedConstant<T> implements Typed, Constant {
 	}
 
 	/**
+	 * Equals.
+	 *
 	 * @param o Object
 	 * @return boolean
 	 */
@@ -82,6 +91,8 @@ public class TypedConstant<T> implements Typed, Constant {
 	}
 
 	/**
+	 * Hash code.
+	 *
 	 * @return int
 	 */
 	@Override
@@ -93,6 +104,8 @@ public class TypedConstant<T> implements Typed, Constant {
 	}
 
 	/**
+	 * To string.
+	 *
 	 * @return String
 	 */
 	@Override
@@ -106,6 +119,8 @@ public class TypedConstant<T> implements Typed, Constant {
 	}
 
 	/**
+	 * Checks if is variable.
+	 *
 	 * @return boolean
 	 * @see uk.ac.ox.cs.pdq.fol.Term#isVariable()
 	 */
@@ -115,6 +130,8 @@ public class TypedConstant<T> implements Typed, Constant {
 	}
 
 	/**
+	 * Checks if is skolem.
+	 *
 	 * @return boolean
 	 * @see uk.ac.ox.cs.pdq.fol.Term#isSkolem()
 	 */

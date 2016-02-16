@@ -4,12 +4,14 @@ import java.util.Map;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+// TODO: Auto-generated Javadoc
 /**
- * A logical implication
+ * A logical implication.
+ *
  * @author Efthymia Tsamoura
  * @author Julien Leblay
- *
- * @param <T>
+ * @param <S> the generic type
+ * @param <T> the generic type
  */
 public class Implication<S extends Formula, T extends Formula>
 		extends BinaryFormula<S, T>
@@ -33,6 +35,10 @@ public class Implication<S extends Formula, T extends Formula>
 	}
 
 	/**
+	 * Of.
+	 *
+	 * @param <S> the generic type
+	 * @param <T> the generic type
 	 * @param body S
 	 * @param head T
 	 * @return Implication<S,T>
@@ -42,6 +48,10 @@ public class Implication<S extends Formula, T extends Formula>
 	}
 
 	/**
+	 * Of.
+	 *
+	 * @param <S> the generic type
+	 * @param <T> the generic type
 	 * @param pair Pair<S,T>
 	 * @return Implication<S,T>
 	 */
@@ -50,6 +60,8 @@ public class Implication<S extends Formula, T extends Formula>
 	}
 
 	/**
+	 * Ground.
+	 *
 	 * @param mapping Map<Variable,Term>
 	 * @return Formula
 	 * @see uk.ac.ox.cs.pdq.formula.Formula#ground(Map<Variable,Term>)
@@ -62,6 +74,8 @@ public class Implication<S extends Formula, T extends Formula>
 	}
 
 	/**
+	 * Gets the head.
+	 *
 	 * @return T
 	 * @see uk.ac.ox.cs.pdq.fol.Rule#getHead()
 	 */
@@ -71,6 +85,8 @@ public class Implication<S extends Formula, T extends Formula>
 	}
 
 	/**
+	 * Gets the body.
+	 *
 	 * @return S
 	 * @see uk.ac.ox.cs.pdq.fol.Rule#getBody()
 	 */

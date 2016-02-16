@@ -15,6 +15,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
+// TODO: Auto-generated Javadoc
 /**
  * OpenProjection operator.
  *
@@ -82,6 +83,8 @@ public class Projection extends UnaryOperator {
 	}
 
 	/**
+	 * Gets the columns.
+	 *
 	 * @param naming Map<Integer,Term>
 	 * @param operator LogicalOperator
 	 * @return List<Term>
@@ -95,9 +98,11 @@ public class Projection extends UnaryOperator {
 	}
 
 	/**
-	 * @param head
-	 * @param childType
-	 * @param childColumns
+	 * Infer type.
+	 *
+	 * @param head the head
+	 * @param childType the child type
+	 * @param childColumns the child columns
 	 * @return the type of the projected term list
 	 */
 	private static TupleType inferType(List<Term> head, TupleType childType, List<? extends Term> childColumns) {
@@ -117,6 +122,8 @@ public class Projection extends UnaryOperator {
 	}
 
 	/**
+	 * Rename terms.
+	 *
 	 * @param source List<Term>
 	 * @param target List<Term>
 	 * @param renaming Map<Integer,Term>
@@ -160,6 +167,8 @@ public class Projection extends UnaryOperator {
 	}
 
 	/**
+	 * Gets the columns display.
+	 *
 	 * @return a list of human readable column headers.
 	 */
 	@Override
@@ -172,6 +181,8 @@ public class Projection extends UnaryOperator {
 	}
 
 	/**
+	 * Gets the projected.
+	 *
 	 * @return List<Term>
 	 */
 	public List<Term> getProjected() {
@@ -179,6 +190,8 @@ public class Projection extends UnaryOperator {
 	}
 
 	/**
+	 * Gets the renaming.
+	 *
 	 * @return Map<Integer,Term>
 	 */
 	public Map<Integer, Term> getRenaming() {
@@ -186,6 +199,8 @@ public class Projection extends UnaryOperator {
 	}
 
 	/**
+	 * Equals.
+	 *
 	 * @param o Object
 	 * @return boolean
 	 */
@@ -201,6 +216,8 @@ public class Projection extends UnaryOperator {
 	}
 
 	/**
+	 * Hash code.
+	 *
 	 * @return int
 	 */
 	@Override

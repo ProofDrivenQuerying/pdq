@@ -20,6 +20,7 @@ import uk.ac.ox.cs.pdq.util.Utility;
 import com.google.common.eventbus.EventBus;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * Alternate executor for Linear plan, which first translates a linear plan
  * into a logical relation tree, then translates the logical tree plan into a 

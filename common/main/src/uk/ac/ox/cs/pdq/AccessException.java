@@ -1,8 +1,8 @@
 package uk.ac.ox.cs.pdq;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
- * Access exception implementation 
+ * Access exception implementation .
  *
  * @author Julien Leblay
  * 
@@ -11,7 +11,7 @@ package uk.ac.ox.cs.pdq;
  */
 public class AccessException extends RuntimeException {
 
-	/** */
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -315472460756924167L;
 
 
@@ -23,6 +23,8 @@ public class AccessException extends RuntimeException {
 	}
 
 	/**
+	 * Instantiates a new access exception.
+	 *
 	 * @param msg exception's message
 	 */
 	public AccessException(String msg) {
@@ -30,6 +32,8 @@ public class AccessException extends RuntimeException {
 	}
 
 	/**
+	 * Instantiates a new access exception.
+	 *
 	 * @param msg exception's message
 	 * @param cause root cause of the problem.
 	 */

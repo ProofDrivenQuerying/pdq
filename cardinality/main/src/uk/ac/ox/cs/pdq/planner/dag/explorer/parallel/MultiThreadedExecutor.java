@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package uk.ac.ox.cs.pdq.planner.dag.explorer.parallel;
 
 import java.util.ArrayList;
@@ -29,13 +32,15 @@ import uk.ac.ox.cs.pdq.planner.dag.equivalence.DAGAnnotatedPlanClasses;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
+// TODO: Auto-generated Javadoc
 /**
- * A IterativeExecutor that uses multi-threading on a single machine
+ * A IterativeExecutor that uses multi-threading on a single machine.
  *
  * @author Efthymia Tsamoura
  */
 public class MultiThreadedExecutor extends IterativeExecutor {
 
+	/** The mtcontext. */
 	private final MultiThreadedContext mtcontext;
 
 	/**
@@ -52,26 +57,21 @@ public class MultiThreadedExecutor extends IterativeExecutor {
 	 * If twoWay=TRUE the output configurations are of the form BinaryConfiguration(L,R) and BinaryConfiguration(R,L), where L belongs to the
 	 * left input collection and R to the right input collection, respectively.
 	 * Otherwise, they are of the form  BinaryConfiguration(L,R)
+	 *
 	 * @param depth the target depth of the created configurations
-	 * @param left
-	 * 		The configurations to consider on the left
-	 * @param right
-	 * 		The configurations to consider on the right
-	 * @param priority
-	 * 		Prioritises pairs of configurations
-	 * @param templates
-	 * 		Maps each configuration to its constituting ApplyRule configurations. Used to speed up chasing, i.e.,
-	 * 		when we are about to create a new binary configuration c''= BinaryConfiguration(c,c')
-	 * 		from c and c' and there exists another configuration c^(3) with ApplyRules
-	 * 		the ApplyRules of c and c' and c^(3) is already chased then we use c^(3)'s state as the state of c''
-	 * @param best
-	 * 	 	The minimum cost closed and successful configuration found so far. The plans that correspond to the
+	 * @param left 		The configurations to consider on the left
+	 * @param right 		The configurations to consider on the right
+	 * @param query the query
+	 * @param schema the schema
+	 * @param best 	 	The minimum cost closed and successful configuration found so far. The plans that correspond to the
 	 * 		returned configurations have cost < the bestConfiguration
-	 * @param twoWay
-	 * @param timeout
-	 * @param unit
+	 * @param classes the classes
+	 * @param twoWay the two way
+	 * @param timeout the timeout
+	 * @param unit the unit
 	 * @return Collection<DAGAnnotatedPlan>
-	 * @throws PlannerException
+	 * @throws PlannerException the planner exception
+	 * @throws LimitReachedException the limit reached exception
 	 */
 	@Override
 	public Collection<DAGAnnotatedPlan> reason(
@@ -162,22 +162,19 @@ public class MultiThreadedExecutor extends IterativeExecutor {
 	}
 
 	/**
-	 * Iterates over the input collection of configurations to identify the minimum-cost one
-	 * @param input
-	 * 		The input set of configurations
-	 * @param classes
-	 * 		Classes of structurally equivalent configurations
-	 * @param bestConfiguration
-	 * 		The minimum cost closed and successful configuration found so far. The plans that correspond to the
+	 * Iterates over the input collection of configurations to identify the minimum-cost one.
+	 *
+	 * @param query the query
+	 * @param input 		The input set of configurations
+	 * @param classes 		Classes of structurally equivalent configurations
+	 * @param bestConfiguration 		The minimum cost closed and successful configuration found so far. The plans that correspond to the
 	 * 		returned configurations have cost < the bestConfiguration
-	 * @param successDominance
-	 * 		Performs success dominance checks
-	 * @param timeout
-	 * @param unit
-	 * @return
-	 * 		the non-dominated configurations (that could lead to the minimum-cost configuration),
+	 * @param timeout the timeout
+	 * @param unit the unit
+	 * @return 		the non-dominated configurations (that could lead to the minimum-cost configuration),
 	 * 		the minimum-cost configuration with cost < the cost of the input bestConfiguration and the successful configurations
-	 * @throws PlannerException
+	 * @throws PlannerException the planner exception
+	 * @throws LimitReachedException the limit reached exception
 	 */
 	@Override
 	public ExplorationThreadResults explore(
@@ -255,8 +252,10 @@ public class MultiThreadedExecutor extends IterativeExecutor {
 	}
 
 	/**
+	 * Handle exceptions.
+	 *
 	 * @param e Exception
-	 * @throws PlannerException
+	 * @throws PlannerException the planner exception
 	 */
 	private static void handleExceptions(Exception e) throws PlannerException {
 		Throwable throwable = e.getCause();

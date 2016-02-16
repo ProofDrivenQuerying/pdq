@@ -3,8 +3,9 @@ package uk.ac.ox.cs.pdq.algebra;
 import java.util.ArrayList;
 import java.util.List;
 
+// TODO: Auto-generated Javadoc
 /**
- * Union the results of its children
+ * Union the results of its children.
  *
  * @author Julien Leblay
  */
@@ -14,7 +15,6 @@ public class Union extends NaryOperator {
 	 * Instantiates a new operator.
 	 *
 	 * @param children the children
-	 * @throws RelationalOperatorException
 	 */
 	public Union(RelationalOperator... children) {
 		super(children);
@@ -24,7 +24,6 @@ public class Union extends NaryOperator {
 	 * Instantiates a new operator.
 	 *
 	 * @param children the children
-	 * @throws RelationalOperatorException
 	 */
 	public Union(List<RelationalOperator> children) {
 		super(children);

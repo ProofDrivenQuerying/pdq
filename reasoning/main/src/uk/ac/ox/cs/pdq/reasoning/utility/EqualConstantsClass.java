@@ -16,6 +16,7 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 
+// TODO: Auto-generated Javadoc
 /**
  * Class of chase constants that are equal under the schema constraints.
  * @author Efthymia Tsamoura
@@ -23,15 +24,21 @@ import com.google.common.collect.Sets;
  */
 public class EqualConstantsClass {
 
-	/** Collection of equal constants **/
+	/**  Collection of equal constants *. */
 	private final Collection<Term> constants;
 
-	/** The schema constant that belongs to this class **/
+	/**  The schema constant that belongs to this class *. */
 	private TypedConstant<?> schemaConstant; 
 
 	/** The representative term. If this.schemaConstant <> null the representative should equal this.schemaConstant**/
 	private Term representative;
 
+	/**
+	 * Instantiates a new equal constants class.
+	 *
+	 * @param equality the equality
+	 * @throws ChaseException the chase exception
+	 */
 	public EqualConstantsClass(Equality equality) throws ChaseException{
 		this.constants = new LinkedHashSet<>();
 		List<Term> terms = equality.getTerms();
@@ -64,6 +71,13 @@ public class EqualConstantsClass {
 		this.setRepresentative();
 	}
 
+	/**
+	 * Instantiates a new equal constants class.
+	 *
+	 * @param constants the constants
+	 * @param representative the representative
+	 * @param schemaConstant the schema constant
+	 */
 	private EqualConstantsClass(Collection<Term> constants, Term representative, TypedConstant<?> schemaConstant) {
 		Preconditions.checkNotNull(constants);
 		this.constants = new LinkedHashSet<>();
@@ -73,12 +87,11 @@ public class EqualConstantsClass {
 	}
 
 	/**
-	 * 
-	 * @param input
-	 * @param inputClass
-	 * 		The class of the input constant
-	 * @return
-	 * 		true if the input constant has been successfully added.
+	 * Adds the.
+	 *
+	 * @param input the input
+	 * @param inputClass 		The class of the input constant
+	 * @return 		true if the input constant has been successfully added.
 	 * 		An input constant is successfully added only if we do not come up with cases
 	 * 		where two different schema constants should be equal
 	 */
@@ -135,10 +148,10 @@ public class EqualConstantsClass {
 	
 	/**
 	 * Picks the representative of this class
-		The representatives are picked in the following priority:
-		Schema constants
-		Constants from the canonical database
-		Other labelled nulls not produced after firing EGDs
+	 * 		The representatives are picked in the following priority:
+	 * 		Schema constants
+	 * 		Constants from the canonical database
+	 * 		Other labelled nulls not produced after firing EGDs.
 	 */
 	private void setRepresentative() {
 		this.representative = null;
@@ -168,20 +181,31 @@ public class EqualConstantsClass {
 		}	
 	}
 	
+	/**
+	 * Contains.
+	 *
+	 * @param constant the constant
+	 * @return true, if successful
+	 */
 	public boolean contains(Term constant) {
 		return (this.schemaConstant!= null && this.schemaConstant.equals(constant)) 
 				|| this.constants.contains(constant);
 	}
 
+	/**
+	 * Gets the schema constant.
+	 *
+	 * @return the schema constant
+	 */
 	public TypedConstant<?> getSchemaConstant() {
 		return this.schemaConstant;
 	}
 
 	/**
-	 * 
-	 * @param target
-	 * @return
-	 * 		true if the input class of equal constants has been successfully merged with this class.
+	 * Merge.
+	 *
+	 * @param target the target
+	 * @return 		true if the input class of equal constants has been successfully merged with this class.
 	 * 		Two classes of equal constants fail to merge if they contain different schema constants.
 	 */
 	public boolean merge(EqualConstantsClass target) {
@@ -197,11 +221,18 @@ public class EqualConstantsClass {
 		}
 	}
 
+	/**
+	 * Gets the constants.
+	 *
+	 * @return the constants
+	 */
 	public Collection<Term> getConstants() {
 		return this.constants;
 	}
 
 	/**
+	 * Equals.
+	 *
 	 * @param o Object
 	 * @return boolean
 	 */
@@ -221,6 +252,8 @@ public class EqualConstantsClass {
 	}
 
 	/**
+	 * Hash code.
+	 *
 	 * @return int
 	 */
 	@Override
@@ -229,6 +262,8 @@ public class EqualConstantsClass {
 	}
 
 	/**
+	 * To string.
+	 *
 	 * @return String
 	 */
 	@Override
@@ -236,13 +271,17 @@ public class EqualConstantsClass {
 		return "[" + Joiner.on(",").join(this.constants) + "," + this.schemaConstant + "]";
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#clone()
+	 */
 	@Override
 	public EqualConstantsClass clone() {
 		return new EqualConstantsClass(Sets.newHashSet(this.constants), this.representative, this.schemaConstant);
 	}
 
 	/**
-	 * 
+	 * Gets the representative.
+	 *
 	 * @return the representative term of this class.
 	 * If this.schemaConstant <> null the representative should equal this.schemaConstant.
 	 * If all constants are labelled nulls, then return a labelled null.

@@ -7,6 +7,7 @@ import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.fol.Signature;
 
+// TODO: Auto-generated Javadoc
 /**
  * A QuerySelector that accepts only conjunctive query where at least one 
  * predicate refers to some none-free access relation.

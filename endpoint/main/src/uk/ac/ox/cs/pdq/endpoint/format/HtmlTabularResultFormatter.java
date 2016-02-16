@@ -5,6 +5,7 @@ import java.util.List;
 
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator;
 
+// TODO: Auto-generated Javadoc
 /**
  * This class formats the result of a core query into an XHTML pages.
  * 
@@ -27,8 +28,9 @@ public class HtmlTabularResultFormatter implements ResultFormatter {
 	
 	/**
 	 * Writes a single data unit (or tuple).
-	 * @param o
-	 * @param buffer
+	 *
+	 * @param o the o
+	 * @param out the out
 	 */
 	private void writeRecord(Object o, PrintWriter out) {
 		out.write("<tr>");
@@ -38,8 +40,9 @@ public class HtmlTabularResultFormatter implements ResultFormatter {
 
 	/**
 	 * Writes a single value.
-	 * @param o
-	 * @param buffer
+	 *
+	 * @param o the o
+	 * @param out the out
 	 */
 	private void writeValue(Object o, PrintWriter out) {
 		out.write("<td>");
@@ -49,8 +52,10 @@ public class HtmlTabularResultFormatter implements ResultFormatter {
 	
 	/**
 	 * Writes the beginning of the result table.
-	 * @param o
-	 * @param buffer
+	 *
+	 * @param <T> the generic type
+	 * @param op the op
+	 * @param out the out
 	 */
 	private <T> void writeProlog(TupleIterator op, PrintWriter out) {
 		out.write("<table>");
@@ -68,8 +73,8 @@ public class HtmlTabularResultFormatter implements ResultFormatter {
 	
 	/**
 	 * Writes the end of the result table.
-	 * @param o
-	 * @param buffer
+	 *
+	 * @param out the out
 	 */
 	private void writeEpilog(PrintWriter out) {
 		out.write("</table>");

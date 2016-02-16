@@ -8,6 +8,10 @@ import prefuse.visual.EdgeItem;
 import prefuse.visual.VisualItem;
 import uk.ac.ox.cs.pdq.ui.prefuse.types.EdgeTypes;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class EdgeShapeRenderer.
+ */
 public class EdgeShapeRenderer extends EdgeRenderer{
 
 	/**
@@ -43,6 +47,10 @@ public class EdgeShapeRenderer extends EdgeRenderer{
     }
 
 	/**
+	 * Gets the raw shape.
+	 *
+	 * @param item the item
+	 * @return the raw shape
 	 * @see prefuse.render.AbstractShapeRenderer#getRawShape(prefuse.visual.VisualItem)
 	 */
 	protected Shape getRawShape(VisualItem item) {

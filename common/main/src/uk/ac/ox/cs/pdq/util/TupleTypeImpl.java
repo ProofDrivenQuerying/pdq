@@ -13,20 +13,22 @@ import uk.ac.ox.cs.pdq.db.TypedConstant;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
 /**
- * A tuple type implementation
+ * A tuple type implementation.
  *
  * @author Efthymia Tsamoura
  * @author Julien Leblay
  */
 class TupleTypeImpl implements TupleType {
 
-	/** The internal tuple type representation */
+	/**  The internal tuple type representation. */
 	private final Type[] types;
 
 	/**
-	 * Default constructor
-	 * @param types
+	 * Default constructor.
+	 *
+	 * @param types the types
 	 */
 	TupleTypeImpl(Type... types) {
 		this.types = (types != null ? types : new Class<?>[0]);
@@ -35,14 +37,17 @@ class TupleTypeImpl implements TupleType {
 	/**
 	 * Constructs a tuple table from a list of typed (e.g. attributes or
 	 * constants) rather than an array of classes.
-	 * @param items
+	 *
+	 * @param items the items
 	 */
 	TupleTypeImpl(List<? extends Typed> items) {
 		this(toClassArray(items));
 	}
 
 	/**
-	 * @param items
+	 * To class array.
+	 *
+	 * @param items the items
 	 * @return an array of Class corresponding to the given list of typed objects.
 	 */
 	private static Type[] toClassArray(List<? extends Typed> items) {
@@ -58,6 +63,8 @@ class TupleTypeImpl implements TupleType {
 	}
 
 	/**
+	 * Size.
+	 *
 	 * @return the number of sub-typed in the tuple type.
 	 * @see uk.ac.ox.cs.pdq.util.TupleType#size()
 	 */
@@ -67,6 +74,8 @@ class TupleTypeImpl implements TupleType {
 	}
 
 	/**
+	 * Gets the type.
+	 *
 	 * @param i int
 	 * @return the type of the ith element in the tuple type.
 	 * @see uk.ac.ox.cs.pdq.util.TupleType#getType(int)
@@ -77,6 +86,8 @@ class TupleTypeImpl implements TupleType {
 	}
 
 	/**
+	 * Gets the types.
+	 *
 	 * @return the underlying array of types.
 	 * @see uk.ac.ox.cs.pdq.util.TupleType#getTypes()
 	 */
@@ -86,6 +97,8 @@ class TupleTypeImpl implements TupleType {
 	}
 
 	/**
+	 * Creates the tuple.
+	 *
 	 * @param values Object[]
 	 * @return a fresh tuple, with this tuple type as type, from the give array
 	 *  of objects.
@@ -109,6 +122,8 @@ class TupleTypeImpl implements TupleType {
 	}
 
 	/**
+	 * Creates the tuple.
+	 *
 	 * @param values List<TypedConstant<?>>
 	 * @return a fresh tuple, with this tuple type as type, from the give list
 	 *  of constants.
@@ -126,6 +141,8 @@ class TupleTypeImpl implements TupleType {
 	}
 
 	/**
+	 * Append tuples.
+	 *
 	 * @param left Tuple
 	 * @param right Tuple
 	 * @return a fresh tuple, made by appending the given left and right tuples.
@@ -141,6 +158,8 @@ class TupleTypeImpl implements TupleType {
 	}
 
 	/**
+	 * Append.
+	 *
 	 * @param right TupleType
 	 * @return a fresh tuple type, made by appending the given left and right sub-types.
 	 * @see uk.ac.ox.cs.pdq.util.TupleType#append(TupleType)
@@ -154,6 +173,8 @@ class TupleTypeImpl implements TupleType {
 	}
 
 	/**
+	 * Checks if is assignable from.
+	 *
 	 * @param other TupleType
 	 * @return boolean
 	 * @see uk.ac.ox.cs.pdq.util.TupleType#isAssignableFrom(TupleType)
@@ -179,6 +200,8 @@ class TupleTypeImpl implements TupleType {
 	}
 
 	/**
+	 * Checks if is instance.
+	 *
 	 * @param other Tuple
 	 * @return boolean
 	 * @see uk.ac.ox.cs.pdq.util.TupleType#isInstance(Tuple)
@@ -189,6 +212,8 @@ class TupleTypeImpl implements TupleType {
 	}
 
 	/**
+	 * Checks if is instance.
+	 *
 	 * @param values Object[]
 	 * @return boolean
 	 * @see uk.ac.ox.cs.pdq.util.TupleType#isInstance(Object[])
@@ -248,6 +273,8 @@ class TupleTypeImpl implements TupleType {
 	}
 
 	/**
+	 * To string.
+	 *
 	 * @return String
 	 */
 	@Override

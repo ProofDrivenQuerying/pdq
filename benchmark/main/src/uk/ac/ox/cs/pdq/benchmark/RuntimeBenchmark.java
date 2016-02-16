@@ -27,6 +27,7 @@ import uk.ac.ox.cs.pdq.util.Result;
 
 import com.beust.jcommander.Parameter;
 
+// TODO: Auto-generated Javadoc
 /**
  * Reads settings from the command line and parameter file(s) and run the
  * program.
@@ -44,22 +45,20 @@ public class RuntimeBenchmark extends Runner {
 	/** Default file name for a case output file. */
 	protected static final String RUNTIME_OUTPUT_FILENAME = "runtime-{datetime}.log";
 
+	/** The nb runs. */
 	@Parameter(names = { "-n", "--nb-runs" }, required = false, description = "The number of runs performed for each plan. By default n=1, when n>1 the runtimes over a given plans are averaged.")
 	protected int nbRuns;
 
+	/** The run timeout. */
 	@Parameter(names = { "-rto", "--run-timeout" }, required = false, description = "Max time allocated to each single runs. None by default.")
 	protected long runTimeout;
 
 	/**
 	 * Sets up an experiment sample using external parameters (file and
 	 * command-line arguments).
-	 * 
-	 * @param args
-	 *            the command line parameters as given by the main method.
-	 * @throws IOException
-	 * @throws ReflectiveOperationException
-	 * @throws EvaluationException 
-	 * @throws AccessException 
+	 *
+	 * @param args            the command line parameters as given by the main method.
+	 * @throws AccessException the access exception
 	 */
 	public RuntimeBenchmark(String... args) {
 		super(args);
@@ -72,6 +71,9 @@ public class RuntimeBenchmark extends Runner {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Runnable#run()
+	 */
 	@Override
 	public void run() {
 		try {
@@ -81,16 +83,25 @@ public class RuntimeBenchmark extends Runner {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.benchmark.Runner#getLockFilename()
+	 */
 	@Override
 	protected String getLockFilename() {
 		return RUNTIME_LOCK;
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.benchmark.Runner#getOutputFilename()
+	 */
 	@Override
 	protected String getOutputFilename() {
 		return RUNTIME_OUTPUT_FILENAME.replace("{datetime}", new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss").format(new Date(System.currentTimeMillis())));
 	}
 	
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.benchmark.Runner#run(java.io.File)
+	 */
 	@Override
 	public void run(File directory) throws BenchmarkException, IOException {
 		RuntimeParameters runtimeParams = null;
@@ -184,18 +195,20 @@ public class RuntimeBenchmark extends Runner {
 	 * Run an experiments and returns as a result a pair containing the result
 	 * of the evaluation of the best plan found, and the result of the original
 	 * query evaluation, respectively.
-	 * 
-	 * @param searchOnly
+	 *
+	 * @param directory the directory
+	 * @param params the params
+	 * @param schema the schema
+	 * @param query the query
+	 * @param plan the plan
+	 * @param out the out
 	 * @return If searchOnly is true, returns null, otherwise returns a pair,
 	 *         whose first element is the result of the evaluation of the best
 	 *         plan found by the algorithm, and the result of the evaluation of
 	 *         the original query if it could be run. null otherwise.
-	 * @throws IOException
-	 * @throws SQLException
-	 * @throws ReflectiveOperationException
-	 * @throws AccessException
-	 * @throws EvaluationException
-	 * @throws ProofException 
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws EvaluationException the evaluation exception
+	 * @throws AccessException the access exception
 	 */
     public void run(File directory, RuntimeParameters params, Schema schema, ConjunctiveQuery query, Plan plan, PrintStream out) throws IOException, EvaluationException {
 		// Print experiments environment
@@ -283,6 +296,13 @@ public class RuntimeBenchmark extends Runner {
 		log.info("Complete.");
 	}
     
+    /**
+     * Prints the line.
+     *
+     * @param out the out
+     * @param message the message
+     * @param n the n
+     */
     private static void printLine(PrintStream out, String message, int n) {
     	for (int i = 0, l=n + 4; i<l; i++) {
 		    out.print("\t" + message);
@@ -290,6 +310,12 @@ public class RuntimeBenchmark extends Runner {
 	    out.println();
     }
    
+    /**
+     * Prints the header.
+     *
+     * @param out the out
+     * @param n the n
+     */
     protected static void printHeader(PrintStream out, int n) {
 		Runner.printHeader(out);
     	out.print("# case");
@@ -304,12 +330,19 @@ public class RuntimeBenchmark extends Runner {
 		out.println("\tmaxrtt");
     }
     
+    /**
+     * Gets the nb runs.
+     *
+     * @return the nb runs
+     */
     public int getNbRuns() {
     	return this.nbRuns;
     }
 	
 	/**
-	 * 
+	 * Checks if is schema all free access.
+	 *
+	 * @param schema the schema
 	 * @return true, if all the relation in the schema have free access.
 	 */
 	private boolean isSchemaAllFreeAccess(Schema schema) {
@@ -330,8 +363,8 @@ public class RuntimeBenchmark extends Runner {
 
 	/**
 	 * Instantiates an experiment and runs it.
-	 * 
-	 * @param args
+	 *
+	 * @param args the arguments
 	 */
 	public static void main(String... args) {
 		try {

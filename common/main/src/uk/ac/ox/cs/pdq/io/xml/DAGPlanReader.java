@@ -17,6 +17,7 @@ import uk.ac.ox.cs.pdq.io.ReaderException;
 import uk.ac.ox.cs.pdq.plan.DAGPlan;
 import uk.ac.ox.cs.pdq.plan.DoubleCost;
 
+// TODO: Auto-generated Javadoc
 /**
  * Reads plans from XML.
  * 
@@ -27,22 +28,24 @@ public class DAGPlanReader extends AbstractXMLReader<DAGPlan> {
 	/** Logger. */
 	private static Logger log = Logger.getLogger(DAGPlanReader.class);
 	
-	/** The plan being built */
+	/**  The plan being built. */
 	private DAGPlan plan = null;
 	
-	/** The plan cost*/
+	/**  The plan cost. */
 	private Double cost;
 	
-	/** The current operator being built */
+	/**  The current operator being built. */
 	private RelationalOperator operator = null;
 	
+	/** The schema. */
 	private Schema schema = null;
 
-	/** The operator reader */
+	/**  The operator reader. */
 	private final OperatorReader operatorReader;
 	
 	/**
-	 * Default constructor
+	 * Default constructor.
+	 *
 	 * @param schema Schema
 	 */
 	public DAGPlanReader(Schema schema) {
@@ -51,6 +54,8 @@ public class DAGPlanReader extends AbstractXMLReader<DAGPlan> {
 	}
 
 	/**
+	 * Read.
+	 *
 	 * @param in InputStream
 	 * @return DAGPlan
 	 * @see uk.ac.ox.cs.pdq.io.Reader#read(InputStream)

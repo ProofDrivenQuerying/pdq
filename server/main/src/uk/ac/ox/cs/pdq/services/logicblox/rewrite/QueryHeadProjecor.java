@@ -12,6 +12,7 @@ import uk.ac.ox.cs.pdq.rewrite.RewriterException;
 import com.beust.jcommander.internal.Lists;
 import com.logicblox.common.Sets;
 
+// TODO: Auto-generated Javadoc
 /**
  * Only keeps head terms that appear in a given list.
  * 
@@ -19,8 +20,14 @@ import com.logicblox.common.Sets;
  */
 public class QueryHeadProjecor implements Rewriter<ConjunctiveQuery, ConjunctiveQuery>{
 
+	/** The terms. */
 	private final Set<Term> terms;
 	
+	/**
+	 * Instantiates a new query head projecor.
+	 *
+	 * @param query the query
+	 */
 	public QueryHeadProjecor(Query<?> query) {
 		this.terms = new HashSet<>();
 		for (Term t: query.getFree()) {
@@ -33,9 +40,12 @@ public class QueryHeadProjecor implements Rewriter<ConjunctiveQuery, Conjunctive
 	}
 	
 	/**
+	 * Rewrite.
+	 *
 	 * @param input T
 	 * @return a copy of the input query where head terms have been reduced to
 	 * those of the list given at construction time..
+	 * @throws RewriterException the rewriter exception
 	 */
 	@Override
 	public ConjunctiveQuery rewrite(ConjunctiveQuery input) throws RewriterException {

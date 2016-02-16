@@ -12,6 +12,7 @@ import uk.ac.ox.cs.pdq.util.Tuple;
 
 import com.google.common.base.Objects;
 
+// TODO: Auto-generated Javadoc
 /**
  * Compares the value at a given position in a tuple with a value given by a
  * constant.
@@ -20,21 +21,23 @@ import com.google.common.base.Objects;
  */
 public class ConstantEqualityPredicate implements EqualityPredicate {
 
+	/** The log. */
 	private static Logger log = Logger.getLogger(ConstantEqualityPredicate.class);
 
-	/** The position on which the predicate is evaluated */
+	/**  The position on which the predicate is evaluated. */
 	private final int position;
 
-	/** The value to which the tuple must be equals at the given position */
+	/**  The value to which the tuple must be equals at the given position. */
 	private final TypedConstant<?> constant;
 
-	/** The value to which the tuple must be equals at the given position */
+	/**  The value to which the tuple must be equals at the given position. */
 	private final Object value;
 
 	/**
-	 * Default construction
-	 * @param position
-	 * @param value
+	 * Default construction.
+	 *
+	 * @param position the position
+	 * @param constant the constant
 	 */
 	public ConstantEqualityPredicate(int position, TypedConstant<?> constant) {
 		assert position >= 0 : 
@@ -45,7 +48,9 @@ public class ConstantEqualityPredicate implements EqualityPredicate {
 	}
 
 	/**
-	 * @param t
+	 * Checks if is satisfied.
+	 *
+	 * @param t the t
 	 * @return true if the tuple t satisfies the predicate
 	 * @see uk.ac.ox.cs.pdq.algebra.predicates.Predicate#isSatisfied(Tuple)
 	 */
@@ -73,6 +78,8 @@ public class ConstantEqualityPredicate implements EqualityPredicate {
 	}
 
 	/**
+	 * Gets the position.
+	 *
 	 * @return the position of the attribute to compare
 	 * @see uk.ac.ox.cs.pdq.algebra.predicates.EqualityPredicate#getPosition()
 	 */
@@ -82,6 +89,8 @@ public class ConstantEqualityPredicate implements EqualityPredicate {
 	}
 
 	/**
+	 * Gets the value.
+	 *
 	 * @return the constant value to compare with
 	 */
 	public TypedConstant<?> getValue() {

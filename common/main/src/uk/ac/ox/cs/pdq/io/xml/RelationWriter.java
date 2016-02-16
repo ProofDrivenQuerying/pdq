@@ -12,6 +12,7 @@ import uk.ac.ox.cs.pdq.db.View;
 import uk.ac.ox.cs.pdq.db.metadata.StaticMetadata;
 import uk.ac.ox.cs.pdq.util.Types;
 
+// TODO: Auto-generated Javadoc
 /**
  * Writes relations to XML.
  * 
@@ -21,8 +22,9 @@ public class RelationWriter extends AbstractXMLWriter<Relation> {
 
 	/**
 	 * Writes the given relation to the given output.
-	 * @param out
-	 * @param relation
+	 *
+	 * @param out the out
+	 * @param relation the relation
 	 */
 	public void writeRelation(PrintStream out, Relation relation) {
 		Map<QNames, String> att = new LinkedHashMap<>();
@@ -67,8 +69,9 @@ public class RelationWriter extends AbstractXMLWriter<Relation> {
 	
 	/**
 	 * Writes the given relation to the given output.
-	 * @param out
-	 * @param attribute
+	 *
+	 * @param out the out
+	 * @param attribute the attribute
 	 */
 	public void writeAttribute(PrintStream out, Attribute attribute) {
 		Map<QNames, String> att = new LinkedHashMap<>();
@@ -79,9 +82,10 @@ public class RelationWriter extends AbstractXMLWriter<Relation> {
 
 	/**
 	 * Writes the given binding pattern to the given output.
-	 * @param out
-	 * @param ar
+	 *
+	 * @param out the out
 	 * @param r Relation
+	 * @param ar the ar
 	 */
 	public void writeAccessMethod(PrintStream out, Relation r, AccessMethod ar) {
 		Map<QNames, String> att = new LinkedHashMap<>();
@@ -101,6 +105,8 @@ public class RelationWriter extends AbstractXMLWriter<Relation> {
 	}
 
 	/**
+	 * Write.
+	 *
 	 * @param out PrintStream
 	 * @param o Relation
 	 */

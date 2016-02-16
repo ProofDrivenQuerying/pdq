@@ -8,27 +8,37 @@ import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 
 import com.google.common.base.Preconditions;
 
+// TODO: Auto-generated Javadoc
 /**
- * Creates plan post-pruning objects
+ * Creates plan post-pruning objects.
  *
  * @author Efthymia Tsamoura
- *
  */
 public class PostPruningFactory {
 
+	/** The type. */
 	private final PostPruningTypes type;
+	
+	/** The node factory. */
 	private final NodeFactory nodeFactory;
+	
+	/** The accessible schema. */
 	private final AccessibleSchema accessibleSchema;
+	
+	/** The chaser. */
 	private final Chaser chaser;
+	
+	/** The query. */
 	private final Query<?> query;
 
 	/**
-	 * 
-	 * @param type
-	 * @param nodeFactory
-	 * @param chaser
-	 * @param query
-	 * @param accessibleSchema
+	 * Instantiates a new post pruning factory.
+	 *
+	 * @param type the type
+	 * @param nodeFactory the node factory
+	 * @param chaser the chaser
+	 * @param query the query
+	 * @param accessibleSchema the accessible schema
 	 */
 	public PostPruningFactory(PostPruningTypes type, NodeFactory nodeFactory, Chaser chaser, Query<?> query,
 			AccessibleSchema accessibleSchema) {
@@ -44,8 +54,9 @@ public class PostPruningFactory {
 	}
 
 	/**
-	 * 
-	 * @return
+	 * Gets the single instance of PostPruningFactory.
+	 *
+	 * @return single instance of PostPruningFactory
 	 */
 	public PostPruning getInstance() {
 		if(this.type == null) {

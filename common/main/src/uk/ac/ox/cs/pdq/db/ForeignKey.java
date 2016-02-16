@@ -30,6 +30,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Variable;
 
+// TODO: Auto-generated Javadoc
 /**
  * Represents a database foreign key.
  *

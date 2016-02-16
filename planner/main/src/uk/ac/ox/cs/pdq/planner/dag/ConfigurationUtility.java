@@ -28,20 +28,22 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 
+// TODO: Auto-generated Javadoc
 /**
- * Utility class
+ * Utility class.
  *
  * @author Efthymia Tsamoura
  */
 public class ConfigurationUtility {
 
-	/** Performs fact dominance checks */
+	/**  Performs fact dominance checks. */
 	private final static FactDominance factDominance = new FastFactDominance(false);
 	
 	/**
-	 * @param configuration
-	 * @return
-	 * 		true if the input configuration is a left-deep one
+	 * Checks if is left deep.
+	 *
+	 * @param configuration the configuration
+	 * @return 		true if the input configuration is a left-deep one
 	 */
 	public static boolean isLeftDeep(DAGConfiguration configuration) {
 		if(configuration instanceof BinaryConfiguration) {
@@ -54,9 +56,10 @@ public class ConfigurationUtility {
 	}
 
 	/**
-	 * @param configuration
-	 * @return
-	 * 		the ApplyRule sub-configurations of the input configuration
+	 * Gets the apply rules.
+	 *
+	 * @param configuration the configuration
+	 * @return 		the ApplyRule sub-configurations of the input configuration
 	 */
 	public static Collection<ApplyRule> getApplyRules(DAGConfiguration configuration) {
 		Collection<ApplyRule> ret = new LinkedHashSet<>();
@@ -71,9 +74,10 @@ public class ConfigurationUtility {
 	}
 
 	/**
-	 * @param configuration
-	 * @return 
-	 * 		the ApplyRule sub-configurations (ordered by appearance) of the input configuration
+	 * Gets the apply rules list.
+	 *
+	 * @param configuration the configuration
+	 * @return 		the ApplyRule sub-configurations (ordered by appearance) of the input configuration
 	 */
 	public static List<ApplyRule> getApplyRulesList(DAGConfiguration configuration) {
 		List<ApplyRule> ret = new ArrayList<>();
@@ -88,9 +92,10 @@ public class ConfigurationUtility {
 	}
 
 	/**
-	 * @param configuration
-	 * @return
-	 * 		the subconfigurations of the input configuration
+	 * Gets the subconfigurations.
+	 *
+	 * @param configuration the configuration
+	 * @return 		the subconfigurations of the input configuration
 	 */
 	public static Collection<DAGConfiguration> getSubconfigurations(DAGConfiguration configuration) {
 		Collection<DAGConfiguration> ret = new LinkedHashSet<>();
@@ -106,8 +111,10 @@ public class ConfigurationUtility {
 	}
 
 	/**
-	 * @param left
-	 * @param right
+	 * Checks if is composable.
+	 *
+	 * @param left the left
+	 * @param right the right
 	 * @return true if the input pair of configurations is composable
 	 */
 	public static Boolean isComposable(DAGChaseConfiguration left, DAGChaseConfiguration right) {
@@ -118,8 +125,10 @@ public class ConfigurationUtility {
 	}
 
 	/**
-	 * @param left
-	 * @param right
+	 * Checks if is output independent.
+	 *
+	 * @param left the left
+	 * @param right the right
 	 * @return true if the input pair of configurations is output independent
 	 */
 	public static Boolean isOutputIndependent(DAGChaseConfiguration left, DAGChaseConfiguration right) {
@@ -127,8 +136,10 @@ public class ConfigurationUtility {
 	}
 
 	/**
-	 * @param left
-	 * @param right
+	 * Checks if is mergeable.
+	 *
+	 * @param left the left
+	 * @param right the right
 	 * @return true if the input pair of configurations is mergeable
 	 */
 	public static Boolean isMergeable(DAGChaseConfiguration left, DAGChaseConfiguration right) {
@@ -140,14 +151,15 @@ public class ConfigurationUtility {
 	}
 
 	/**
-	 * @param left
-	 * @param right
-	 * @return
-	 * 		true if the input pair of configurations is non trivial.
+	 * Checks if is non trivial.
+	 *
+	 * @param left the left
+	 * @param right the right
+	 * @return 		true if the input pair of configurations is non trivial.
 	 * 		An ordered pair of configurations (left, right)
-			is non-trivial if the output facts of the right configuration are not included in
-			the output facts of left configuration and vice versa, and if the ApplyRule
-			subconfigurations of left and right do not overlap.
+	 * 			is non-trivial if the output facts of the right configuration are not included in
+	 * 			the output facts of left configuration and vice versa, and if the ApplyRule
+	 * 			subconfigurations of left and right do not overlap.
 	 */
 	public static Boolean isNonTrivial(DAGChaseConfiguration left, DAGChaseConfiguration right) {
 		if (left.equals(right)){
@@ -184,8 +196,10 @@ public class ConfigurationUtility {
 	}
 
 	/**
-	 * @param left
-	 * @param right
+	 * Merge.
+	 *
+	 * @param left the left
+	 * @param right the right
 	 * @return a state that is the union of the left and right input states
 	 */
 	public static AccessibleChaseState merge(DAGChaseConfiguration left, DAGChaseConfiguration right) {
@@ -193,8 +207,10 @@ public class ConfigurationUtility {
 	}
 	
 	/**
-	 * @param left
-	 * @param right
+	 * Gets the input.
+	 *
+	 * @param left the left
+	 * @param right the right
 	 * @return the input constants of the binary configuration composed from the left and right input configurations
 	 */
 	public static List<Constant> getInput(DAGChaseConfiguration left, DAGChaseConfiguration right) {
@@ -207,8 +223,10 @@ public class ConfigurationUtility {
 	}
 	
 	/**
-	 * @param left
-	 * @param right
+	 * Gets the output.
+	 *
+	 * @param left the left
+	 * @param right the right
 	 * @return the output constants of the binary configuration composed from the left and right input configurations
 	 */
 	public static List<Constant> getOutput(DAGChaseConfiguration left, DAGChaseConfiguration right) {
@@ -218,9 +236,10 @@ public class ConfigurationUtility {
 	}
 
 	/**
+	 * Gets the bushiness.
 	 *
-	 * @param left
-	 * @param right
+	 * @param left the left
+	 * @param right the right
 	 * @return the bushiness of the binary configuration composed from the left and right input configurations
 	 */
 	public static Integer getBushiness(DAGChaseConfiguration left, DAGChaseConfiguration right) {
@@ -232,8 +251,10 @@ public class ConfigurationUtility {
 	}
 
 	/**
-	 * @param left
-	 * @param right
+	 * Gets the combination type.
+	 *
+	 * @param left the left
+	 * @param right the right
 	 * @return the type of the binary configuration composed from the left and right input configurations
 	 */
 	public static BinaryConfigurationTypes getCombinationType(DAGChaseConfiguration left, DAGChaseConfiguration right) {
@@ -254,12 +275,13 @@ public class ConfigurationUtility {
 	}
 
 	/**
-	 * @param left
-	 * @param right
-	 * @param validators
-	 * @param depth
-	 * @return
-	 * 		true if the binary configuration composed from the left and right input configurations passes the validation tests,
+	 * Validate.
+	 *
+	 * @param left the left
+	 * @param right the right
+	 * @param validators the validators
+	 * @param depth the depth
+	 * @return 		true if the binary configuration composed from the left and right input configurations passes the validation tests,
 	 * 		i.e., satisfies given shape restrictions.
 	 * 		If depth > 0, then the corresponding binary configuration must be of the given depth.
 	 */
@@ -281,11 +303,12 @@ public class ConfigurationUtility {
 	}
 
 	/**
-	 * @param left
-	 * @param right
-	 * @param validators
-	 * @return
-	 * 		true if the binary configuration composed from the left and right input configurations passes the validation tests,
+	 * Validate.
+	 *
+	 * @param left the left
+	 * @param right the right
+	 * @param validators the validators
+	 * @return 		true if the binary configuration composed from the left and right input configurations passes the validation tests,
 	 * 		i.e., satisfies given shape restrictions.
 	 */
 	public static boolean validate(DAGChaseConfiguration left, DAGChaseConfiguration right, List<Validator> validators) {
@@ -293,7 +316,9 @@ public class ConfigurationUtility {
 	}
 
 	/**
-	 * @param configuration
+	 * Gets the potential.
+	 *
+	 * @param configuration the configuration
 	 * @param bestPlan Best plan found so far
 	 * @param successDominance Success dominance checks
 	 * @return true if the input configuration is not success dominated by the best plan
@@ -303,7 +328,11 @@ public class ConfigurationUtility {
 	}
 	
 	/**
-	 * @param target 
+	 * Checks if is dominated by.
+	 *
+	 * @param dominance the dominance
+	 * @param target the target
+	 * @param source the source
 	 * @return true if this configuration is dominated by the input one
 	 */
 	public static boolean isDominatedBy(Dominance[] dominance, DAGChaseConfiguration target, DAGChaseConfiguration source) {
@@ -316,8 +345,10 @@ public class ConfigurationUtility {
 	}
 
 	/**
-	 * @param left
-	 * @param right
+	 * Gets the potential.
+	 *
+	 * @param left the left
+	 * @param right the right
 	 * @param bestPlan Best plan found so far
 	 * @param costEstimator Estimates a plan's cost
 	 * @param successDominance Success dominance checks
@@ -341,9 +372,12 @@ public class ConfigurationUtility {
 	}
 	
 	/**
-	 * @param constants
-	 * @return
-	 * 		the output facts of the input configuration that are sufficient to make each input constant accessible
+	 * Gets the minimal set that exposes constants.
+	 *
+	 * @param configuration the configuration
+	 * @param constants the constants
+	 * @param accessibleSchema the accessible schema
+	 * @return 		the output facts of the input configuration that are sufficient to make each input constant accessible
 	 */
 	public static Collection<Set<Predicate>> getMinimalSetThatExposesConstants(DAGChaseConfiguration configuration, Collection<Constant> constants, AccessibleSchema accessibleSchema) {
 		Collection<Set<Predicate>> ret = new LinkedHashSet<>();

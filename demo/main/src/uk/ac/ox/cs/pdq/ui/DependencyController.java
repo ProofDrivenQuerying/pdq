@@ -26,17 +26,30 @@ import uk.ac.ox.cs.pdq.io.pretty.PrettyDependencyWriter;
 import uk.ac.ox.cs.pdq.ui.model.ObservableQuery;
 import uk.ac.ox.cs.pdq.ui.model.ObservableSchema;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class DependencyController.
+ */
 public class DependencyController {
 
 	/** DependencyController logger. */
 	private static Logger log = Logger.getLogger(DependencyController.class);
 
+    /** The dependency text area. */
     @FXML private TextArea dependencyTextArea;
+    
+    /** The dependency editor button. */
     @FXML private Button dependencyEditorButton;
+    
+    /** The dependency editor message. */
     @FXML private Label dependencyEditorMessage;
     
+    /** The invalid. */
     private SimpleBooleanProperty invalid = new SimpleBooleanProperty(false);
 
+    /**
+     * Initialize.
+     */
     @FXML void initialize() {
         assert this.dependencyTextArea != null : "fx:id=\"dependencyTextArea\" was not injected: check your FXML file 'dependency-window.fxml'.";
 
@@ -58,41 +71,83 @@ public class DependencyController {
 		});
     }
 
+    /** The dependency. */
     private Constraint dependency;
+    
+    /** The new dependency. */
     private Constraint newDependency;
+    
+    /** The schema. */
     private ObservableSchema schema;
+    
+    /** The queries. */
     private ObservableList<ObservableQuery> queries;
+    
+    /** The data queue. */
     private ConcurrentLinkedQueue dataQueue;
 
+	/**
+	 * Gets the dependency.
+	 *
+	 * @return the dependency
+	 */
 	public Constraint getDependency() {
 		return this.dependency;
 	}
 
+	/**
+	 * Sets the queue.
+	 *
+	 * @param q the new queue
+	 */
 	public void setQueue(ConcurrentLinkedQueue q) {
 		this.dataQueue = q;
 	}
 
+	/**
+	 * Sets the dependency.
+	 *
+	 * @param dependency the new dependency
+	 */
 	public void setDependency(Constraint dependency) {
 		this.dependency = dependency;
 		this.refreshEditor();
 	}
 
+	/**
+	 * Sets the schema.
+	 *
+	 * @param s the new schema
+	 */
 	public void setSchema(ObservableSchema s) {
 		this.schema = s;
 	}
 
+	/**
+	 * Sets the queries.
+	 *
+	 * @param queries the new queries
+	 */
 	public void setQueries(ObservableList<ObservableQuery> queries) {
 		this.queries = queries;
 		this.dependencyTextArea.editableProperty().set(queries.isEmpty());
 		this.invalid.set(!queries.isEmpty());
 	}
 
+	/**
+	 * Refresh editor.
+	 */
 	private void refreshEditor() {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		PrettyDependencyWriter.to(new PrintStream(out)).indented().write(this.dependency);
 		this.dependencyTextArea.setText(out.toString());
 	}
 
+	/**
+	 * Save and close.
+	 *
+	 * @param event the event
+	 */
 	@FXML
 	void saveAndClose(ActionEvent event) {
 	   	if (!event.isConsumed()) {

@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package uk.ac.ox.cs.pdq.planner;
 
 import java.io.File;
@@ -9,6 +12,7 @@ import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.Parameters;
 
+// TODO: Auto-generated Javadoc
 /**
  * Holds the parameters of a planning session.
  *
@@ -17,15 +21,16 @@ import uk.ac.ox.cs.pdq.Parameters;
  */
 public class PlannerParameters extends Parameters {
 
-	/** */
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -8077300774514524509L;
 
+	/** The log. */
 	private static Logger log = Logger.getLogger(PlannerParameters.class);
 
-	/** Properties file name */
+	/**  Properties file name. */
 	static final String DEFAULT_CONFIG_FILE_NAME = "pdq-cardinality.properties";
 
-	/** Properties file path */
+	/**  Properties file path. */
 	static final String DEFAULT_CONFIG_FILE_PATH = "./" + DEFAULT_CONFIG_FILE_NAME;
 
 	/**
@@ -36,6 +41,8 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
+	 * Gets the version.
+	 *
 	 * @return the version of the planner code, as given by Maven
 	 */
 	public static String getVersion() {
@@ -83,8 +90,10 @@ public class PlannerParameters extends Parameters {
 
 	/**
 	 * Constructor for PlannerParameters.
+	 *
 	 * @param config path to the configuration file to read
 	 * @param delay true if the loading of the given config file should be delayed
+	 * @param verbose the verbose
 	 * @param strict if true, param loading problem will throw an exception
 	 */
 	public PlannerParameters(File config, boolean delay, boolean verbose, boolean strict) {
@@ -94,34 +103,41 @@ public class PlannerParameters extends Parameters {
 		}
 	}
 
+	/** The max iterations. */
 	@Parameter(description="The maximum number of iterations to perform in "
 			+ "planning.\nThis may have different semantic depending of which "
 			+ "planning algorithm is used.",
 			defaultValue = "Integer.MAX_VALUE")
 	protected Integer maxIterations = Integer.MAX_VALUE;
 
+	/** The log intervals. */
 	@Parameter(description="Interval (in number of iterations) between "
 			+ "which detailed executions informations are logged.",
 			defaultValue = "10")
 	protected Integer logIntervals = 10;
 
+	/** The short log intervals. */
 	@Parameter(description="Interval (in number of iterations) between "
 			+ "which succint executions informations are logged.",
 			defaultValue = "1")
 	protected Integer shortLogIntervals = 1;
 
+	/** The output log path. */
 	@Parameter(description="Path of the output file where to store the logs "
 			+ "(optional). If missing, logs are printed to STDOUT")
 	protected String outputLogPath;
 
+	/** The planner type. */
 	@Parameter(description="Type of planning algorithm to use.")
 	protected PlannerTypes plannerType;
 
+	/** The max depth. */
 	@Parameter(description = 
 			"Maximum depth of the exploration.\nThis may have different "
 			+ "semantic depending of which planning algorithm is used.")
 	protected Integer maxDepth;
 
+	/** The exception on limit. */
 	@Parameter(description = 
 			"If true, a LimitReachedException is thrown during planning if a "
 			+ "limit (e.g. time or max no. interactions) is reached.\n"
@@ -129,56 +145,69 @@ public class PlannerParameters extends Parameters {
 			+ "gracefully")
 	protected Boolean exceptionOnLimit;
 
+	/** The validator type. */
 	@Parameter(description = "Type of validator to use. Only required in "
 			+ "conjunction with DAG planning algorithms",
 			defaultValue = "DEFAULT")
 	protected ValidatorTypes validatorType = ValidatorTypes.DEFAULT_VALIDATOR;
 
+	/** The filter type. */
 	@Parameter(description = "Type of filter to use. Only required in "
 			+ "conjunction with DAG planning algorithms")
 	protected FilterTypes filterType;
 
+	/** The dominance type. */
 	@Parameter(description = "Type of dominance checks to use. Only required "
 			+ "in conjunction with DAG planning algorithms",
 			defaultValue = "STRICT_OPEN")
 	protected DominanceTypes dominanceType = DominanceTypes.TIGHT;
 
+	/** The success dominance type. */
 	@Parameter(description =
 			"Type of sucess dominance checks to use. Only required in "
 			+ "conjunction with DAG planning algorithms",
 			defaultValue = "OPEN")
 	protected SuccessDominanceTypes successDominanceType = SuccessDominanceTypes.LOOSE;
 
+	/** The iterative executor type. */
 	@Parameter(description = "Type of iterative executor to use. Only applies "
 			+ "to DAG planning algorithms.",
 			defaultValue = "MULTITHREADED")
 	protected IterativeExecutorTypes iterativeExecutorType = IterativeExecutorTypes.MULTITHREADED;
 
+	/** The first phase threads. */
 	@Parameter(description = "Number of threads to use in the first phase of "
 			+ "a parallel DAG planning algorithm",
 			defaultValue = "50")
 	protected Integer firstPhaseThreads = 5;
 
+	/** The second phase threads. */
 	@Parameter(description = "Number of threads to use in the second phase of "
 			+ "a parallel DAG planning algorithm",
 			defaultValue = "50")
 	protected Integer secondPhaseThreads = 50;
 
+	/** The depth threshold. */
 	@Parameter(description = "Threshold for the DEPTH_THROTTLING validator",
 			defaultValue = "2")
 	protected Integer depthThreshold = 2;
 
+	/** The order aware. */
 	@Parameter(description = "If true, all join orders are considered during "
 			+ "plan search",
 			defaultValue = "true")
 	protected Boolean orderAware = true;
 	
+	/** The access file. */
 	@Parameter(description = "Contains the desired list of accesses")
 	protected String accessFile;
 	
+	/** The cardinality estimator type. */
 	protected CardinalityEstimatorTypes cardinalityEstimatorType = CardinalityEstimatorTypes.DEFAULT;
 
 	/**
+	 * Gets the log intervals.
+	 *
 	 * @return Integer
 	 */
 	public Integer getLogIntervals() {
@@ -186,6 +215,8 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
+	 * Gets the max iterations.
+	 *
 	 * @return Integer
 	 */
 	public Integer getMaxIterations() {
@@ -193,6 +224,8 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
+	 * Gets the short log intervals.
+	 *
 	 * @return Integer
 	 */
 	public Integer getShortLogIntervals() {
@@ -200,6 +233,8 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
+	 * Sets the log intervals.
+	 *
 	 * @param logIntervals Number
 	 */
 	public void setLogIntervals(Number logIntervals) {
@@ -207,6 +242,8 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
+	 * Sets the max iterations.
+	 *
 	 * @param maxIterations Number
 	 */
 	public void setMaxIterations(Number maxIterations) {
@@ -214,6 +251,8 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
+	 * Sets the max iterations.
+	 *
 	 * @param maxIterations String
 	 */
 	public void setMaxIterations(String maxIterations) {
@@ -222,6 +261,8 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
+	 * Sets the short log intervals.
+	 *
 	 * @param shortLogIntervals Number
 	 */
 	public void setShortLogIntervals(Number shortLogIntervals) {
@@ -229,6 +270,8 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
+	 * Sets the timeout.
+	 *
 	 * @param s String
 	 */
 	public void setTimeout(String s) {
@@ -237,6 +280,8 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
+	 * Gets the output log path.
+	 *
 	 * @return String
 	 */
 	public String getOutputLogPath() {
@@ -244,6 +289,8 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
+	 * Sets the output log path.
+	 *
 	 * @param outputLogPath String
 	 */
 	public void setOutputLogPath(String outputLogPath) {
@@ -251,6 +298,8 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
+	 * Gets the planner type.
+	 *
 	 * @return PlannerTypes
 	 */
 	public PlannerTypes getPlannerType() {
@@ -261,6 +310,8 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
+	 * Sets the planner type.
+	 *
 	 * @param plannerType PlannerTypes
 	 */
 	public void setPlannerType(PlannerTypes plannerType) {
@@ -268,6 +319,8 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
+	 * Sets the planner type.
+	 *
 	 * @param plannerType String
 	 */
 	public void setPlannerType(String plannerType) {
@@ -280,6 +333,8 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
+	 * Gets the max depth.
+	 *
 	 * @return Integer
 	 */
 	public Integer getMaxDepth() {
@@ -290,6 +345,8 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
+	 * Sets the max depth.
+	 *
 	 * @param maxDepth Number
 	 */
 	public void setMaxDepth(Number maxDepth) {
@@ -297,6 +354,8 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
+	 * Gets the exception on limit.
+	 *
 	 * @return Boolean
 	 */
 	public Boolean getExceptionOnLimit() {
@@ -304,6 +363,8 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
+	 * Sets the exception on limit.
+	 *
 	 * @param exceptionOnLimit Boolean
 	 */
 	public void setExceptionOnLimit(Boolean exceptionOnLimit) {
@@ -311,6 +372,8 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
+	 * Gets the validator type.
+	 *
 	 * @return ValidatorTypes
 	 */
 	public ValidatorTypes getValidatorType() {
@@ -318,6 +381,8 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
+	 * Sets the validator type.
+	 *
 	 * @param validatorType ValidatorTypes
 	 */
 	public void setValidatorType(ValidatorTypes validatorType) {
@@ -325,6 +390,8 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
+	 * Sets the validator type.
+	 *
 	 * @param validatorType String
 	 */
 	public void setValidatorType(String validatorType) {
@@ -332,6 +399,8 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
+	 * Gets the filter type.
+	 *
 	 * @return FilterTypes
 	 */
 	public FilterTypes getFilterType() {
@@ -339,6 +408,8 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
+	 * Sets the filter type.
+	 *
 	 * @param filterType FilterTypes
 	 */
 	public void setFilterType(FilterTypes filterType) {
@@ -346,6 +417,8 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
+	 * Sets the filter type.
+	 *
 	 * @param filterType String
 	 */
 	public void setFilterType(String filterType) {
@@ -353,6 +426,8 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
+	 * Gets the dominance type.
+	 *
 	 * @return DominanceTypes
 	 */
 	public DominanceTypes getDominanceType() {
@@ -368,6 +443,8 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
+	 * Sets the dominance type.
+	 *
 	 * @param dominanceType String
 	 */
 	public void setDominanceType(String dominanceType) {
@@ -380,6 +457,8 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
+	 * Gets the success dominance type.
+	 *
 	 * @return SuccessDominanceTypes
 	 */
 	public SuccessDominanceTypes getSuccessDominanceType() {
@@ -387,6 +466,8 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
+	 * Sets the success dominance type.
+	 *
 	 * @param successDominanceType SuccessDominanceTypes
 	 */
 	public void setSuccessDominanceType(SuccessDominanceTypes successDominanceType) {
@@ -394,6 +475,8 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
+	 * Sets the success dominance type.
+	 *
 	 * @param successDominanceType String
 	 */
 	public void setSuccessDominanceType(String successDominanceType) {
@@ -406,6 +489,8 @@ public class PlannerParameters extends Parameters {
 	}
 	
 	/**
+	 * Gets the cardinality estimator type.
+	 *
 	 * @return SuccessDominanceTypes
 	 */
 	public CardinalityEstimatorTypes getCardinalityEstimatorType() {
@@ -413,6 +498,8 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
+	 * Sets the cardinality estimator type.
+	 *
 	 * @param cardinalityEstimatorType SuccessDominanceTypes
 	 */
 	public void setCardinalityEstimatorType (CardinalityEstimatorTypes cardinalityEstimatorType) {
@@ -420,7 +507,9 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
-	 * @param successDominanceType String
+	 * Sets the cardinality estimator type.
+	 *
+	 * @param cardinalityEstimatorType the new cardinality estimator type
 	 */
 	public void setCardinalityEstimatorType(String cardinalityEstimatorType) {
 		try {
@@ -432,6 +521,8 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
+	 * Gets the iterative executor type.
+	 *
 	 * @return IterativeExecutorTypes
 	 */
 	public IterativeExecutorTypes getIterativeExecutorType() {
@@ -439,6 +530,8 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
+	 * Sets the iterative executor type.
+	 *
 	 * @param iterativeExecutorType IterativeExecutorTypes
 	 */
 	public void setIterativeExecutorType(IterativeExecutorTypes iterativeExecutorType) {
@@ -446,6 +539,8 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
+	 * Sets the iterative executor type.
+	 *
 	 * @param iterativeExecutorType String
 	 */
 	public void setIterativeExecutorType(String iterativeExecutorType) {
@@ -458,6 +553,8 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
+	 * Gets the first phase threads.
+	 *
 	 * @return Integer
 	 */
 	public Integer getFirstPhaseThreads() {
@@ -465,6 +562,8 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
+	 * Sets the first phase threads.
+	 *
 	 * @param i Number
 	 */
 	public void setFirstPhaseThreads(Number i) {
@@ -472,6 +571,8 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
+	 * Sets the first phase threads.
+	 *
 	 * @param i Integer
 	 */
 	public void setFirstPhaseThreads(Integer i) {
@@ -479,6 +580,8 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
+	 * Gets the second phase threads.
+	 *
 	 * @return Integer
 	 */
 	public Integer getSecondPhaseThreads() {
@@ -486,6 +589,8 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
+	 * Sets the second phase threads.
+	 *
 	 * @param i Number
 	 */
 	public void setSecondPhaseThreads(Number i) {
@@ -493,6 +598,8 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
+	 * Sets the second phase threads.
+	 *
 	 * @param i Integer
 	 */
 	public void setSecondPhaseThreads(Integer i) {
@@ -500,6 +607,8 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
+	 * Gets the depth threshold.
+	 *
 	 * @return Integer
 	 */
 	public Integer getDepthThreshold() {
@@ -507,6 +616,8 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
+	 * Sets the depth threshold.
+	 *
 	 * @param depthThreshold Integer
 	 */
 	public void setDepthThreshold(Integer depthThreshold) {
@@ -514,6 +625,8 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
+	 * Sets the depth threshold.
+	 *
 	 * @param depthThreshold Number
 	 */
 	public void setDepthThreshold(Number depthThreshold) {
@@ -521,6 +634,8 @@ public class PlannerParameters extends Parameters {
 	}
 	
 	/**
+	 * Gets the order aware.
+	 *
 	 * @return Boolean
 	 */
 	public Boolean getOrderAware() {
@@ -528,79 +643,114 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
-	 * @param orderAware Boolean
+	 * Sets the order aware.
+	 *
+	 * @param b the new order aware
 	 */
 	public void setOrderAware(Boolean b) {
 		this.orderAware = b;
 	}
 	
+	/**
+	 * Gets the access file.
+	 *
+	 * @return the access file
+	 */
 	public String getAccessFile() {
 		return this.accessFile;
 	}
 
+	/**
+	 * Sets the access file.
+	 *
+	 * @param accessFile the new access file
+	 */
 	public void setAccessFile(String accessFile) {
 		this.accessFile = accessFile;
 	}
 
 	/** Planning algorithm types. */
 	public static enum PlannerTypes {
+		
+		/** The linear generic. */
 		@EnumParameterValue(description = "Generic (exhaustive) linear planning algorithm")
 		LINEAR_GENERIC, 
 
+		/** The linear optimized. */
 		@EnumParameterValue(description = "Optimized linear planning algorithm. ")
 		LINEAR_OPTIMIZED, 
 
+		/** The linear kchase. */
 		@EnumParameterValue(description = "Linear planning algorithm relying on KTERMINATION_CHASE reasoning type. ")
 		LINEAR_KCHASE, 
 
+		/** The dag generic. */
 		@EnumParameterValue(description = "Generic (exhaustive) DAG planning algorithm")
 		DAG_GENERIC, 
 
+		/** The dag simpledp. */
 		@EnumParameterValue(description = "DAG planning algorithm, simulating classic DP plan optimization")
 		DAG_SIMPLEDP,
 
+		/** The dag chasefriendlydp. */
 		@EnumParameterValue(description = "DAG DP planning algorithm, avoiding redundant chasing")
 		DAG_CHASEFRIENDLYDP, 
 
+		/** The dag optimized. */
 		@EnumParameterValue(description = "DAG DP planning algorithm, relying on parallelism")
 		DAG_OPTIMIZED, 
 	}
 
-	/** */
+	/**
+	 * The Enum ValidatorTypes.
+	 */
 	public static enum ValidatorTypes {
 		
+		/** The default validator. */
 		@EnumParameterValue(description = "No shape or type restriction")
 		DEFAULT_VALIDATOR,
 		
+		/** The applyrule validator. */
 		@EnumParameterValue(description = "Requires at least one of the input configurations to be an ApplyRule")
 		APPLYRULE_VALIDATOR,
 		
+		/** The depth validator. */
 		@EnumParameterValue(description = "Restricts the depth of the plans visited ")
 		DEPTH_VALIDATOR,
 		
+		/** The right depth validator. */
 		@EnumParameterValue(description = "Restricts the depth of the RHS plans used")
 		RIGHT_DEPTH_VALIDATOR,
 		
+		/** The applyrule depth validator. */
 		@EnumParameterValue(description = "Combination of APPLYRULE_VALIDATOR and DEPTH_VALIDATOR")
 		APPLYRULE_DEPTH_VALIDATOR,
 		
+		/** The linear validator. */
 		@EnumParameterValue(description = "Restricts the shape of plans to left-deep ones")
 		LINEAR_VALIDATOR,
 	}
 
-	/** */
+	/**
+	 * The Enum FilterTypes.
+	 */
 	public static enum FilterTypes {
 		
+		/** The fact dominated filter. */
 		@EnumParameterValue(description = "Removes the fact dominated configurations after each exploration step")
 		FACT_DOMINATED_FILTER,
 		
+		/** The numerically dominated filter. */
 		@EnumParameterValue(description = "Removes the numerically fact dominated configurations after each exploration step")
 		NUMERICALLY_DOMINATED_FILTER,
 	}
 
-	/** */
+	/**
+	 * The Enum DominanceTypes.
+	 */
 	public static enum DominanceTypes {
 		
+		/** The tight. */
 		@EnumParameterValue(description = 
 				"Closed dominance. Given two closed configurations, one "
 				+ "dominate the other if its facts are contained in the facts "
@@ -608,21 +758,33 @@ public class PlannerParameters extends Parameters {
 		TIGHT,
 	}
 
-	/** */
+	/**
+	 * The Enum SuccessDominanceTypes.
+	 */
 	public static enum SuccessDominanceTypes {
+		
+		/** The loose. */
 		@EnumParameterValue(description = "Closed dominance on successful configurations.")
 		LOOSE,
 	}
 
-	/** */
+	/**
+	 * The Enum IterativeExecutorTypes.
+	 */
 	public static enum IterativeExecutorTypes {
+		
+		/** The multithreaded. */
 		@EnumParameterValue(description = "Multi-threaded executor for running"
 				+ "DAG planning rounds in parallel")
 		MULTITHREADED
 	}
 	
-	/** */
+	/**
+	 * The Enum CardinalityEstimatorTypes.
+	 */
 	public static enum CardinalityEstimatorTypes {
+		
+		/** The default. */
 		@EnumParameterValue(description = "")
 		DEFAULT
 	}

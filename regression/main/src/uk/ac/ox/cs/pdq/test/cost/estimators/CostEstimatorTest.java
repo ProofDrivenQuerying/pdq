@@ -9,17 +9,19 @@ import uk.ac.ox.cs.pdq.io.xml.DAGPlanReader;
 import uk.ac.ox.cs.pdq.io.xml.LeftDeepPlanReader;
 import uk.ac.ox.cs.pdq.plan.Plan;
 
+// TODO: Auto-generated Javadoc
 /**
- * Tests the cost estimators
- * @author Efthymia Tsamoura
+ * Tests the cost estimators.
  *
+ * @author Efthymia Tsamoura
  */
 public class CostEstimatorTest {
 
 	/**
-	 * @param directory File
+	 * Obtain plan.
+	 *
+	 * @param fileName the file name
 	 * @param schema Schema
-	 * @param query Query
 	 * @return Plan
 	 */
 	protected Plan obtainPlan(String fileName, Schema schema) {

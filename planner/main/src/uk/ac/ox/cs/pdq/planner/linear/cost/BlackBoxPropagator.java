@@ -17,6 +17,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
+// TODO: Auto-generated Javadoc
 /**
  *
  * Black box cost propagator. According to this propagation paradigm, each node keeps all the paths-to-success. 
@@ -30,10 +31,12 @@ import com.google.common.collect.Sets;
  */
 public class BlackBoxPropagator extends CostPropagator<BlackBoxNode> {
 
+	/** The updated. */
 	private Set<BlackBoxNode> updated = Sets.newHashSet();
 
 	/**
-	 * Empty constructor
+	 * Empty constructor.
+	 *
 	 * @param estimator BlackBoxCostEstimator<LeftDeepPlan,?>
 	 */
 	public BlackBoxPropagator(BlackBoxCostEstimator<LeftDeepPlan> estimator) {
@@ -44,12 +47,12 @@ public class BlackBoxPropagator extends CostPropagator<BlackBoxNode> {
 	/**
 	 * Iterate over all children and copy their corresponding paths-to-success,
 	 * then continue upwards, up to the plan tree root.
-	 *
+	 * 
 	 * At the root, it finds the paths-to-success with the minimal cost, and stores
 	 * it as the best plan.
 	 *
-	 * @param node
-	 * @param planTree
+	 * @param node the node
+	 * @param planTree the plan tree
 	 */
 	@Override
 	public void propagate(BlackBoxNode node, PlanTree<BlackBoxNode> planTree) {
@@ -58,6 +61,8 @@ public class BlackBoxPropagator extends CostPropagator<BlackBoxNode> {
 	}
 
 	/**
+	 * _propagate.
+	 *
 	 * @param node BlackBoxNode
 	 * @param planTree PlanTree<BlackBoxNode>
 	 */

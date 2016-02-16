@@ -34,21 +34,26 @@ import uk.ac.ox.cs.pdq.util.Utility;
 import com.beust.jcommander.internal.Lists;
 import com.google.common.base.Preconditions;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
- * @author Efthymia Tsamoura
+ * The Class ReasonerUtility.
  *
+ * @author Efthymia Tsamoura
  */
 public class ReasonerUtility {
 
+	/** The log. */
 	protected static Logger log = Logger.getLogger(ReasonerUtility.class);
 	
 	/**
-	 * 
-	 * @param left
-	 * @param right
-	 * @return
-	 * 		returns true if there is an inclusion dependency from left to right on the common variables 
+	 * Exists inclustion dependency.
+	 *
+	 * @param left the left
+	 * @param right the right
+	 * @param constraints the constraints
+	 * @param restrictedChaser the restricted chaser
+	 * @param detector the detector
+	 * @return 		returns true if there is an inclusion dependency from left to right on the common variables
 	 */
 	public boolean existsInclustionDependency(Table left, Table right, Collection<? extends Constraint> constraints, RestrictedChaser restrictedChaser, DBHomomorphismManager detector) {
 		Query<?> lquery = new CommandToTGDTranslator().toQuery(left);
@@ -66,11 +71,14 @@ public class ReasonerUtility {
 	}
 
 	/**
-	 * 
-	 * @param table
-	 * @param candidateKeys
-	 * @return
-	 * 		true if the input set of attributes is a key of the input table
+	 * Checks if is key.
+	 *
+	 * @param table the table
+	 * @param candidateKeys the candidate keys
+	 * @param constraints the constraints
+	 * @param egdChaser the egd chaser
+	 * @param detector the detector
+	 * @return 		true if the input set of attributes is a key of the input table
 	 */
 	public boolean isKey(Table table, List<Attribute> candidateKeys, Collection<? extends Constraint> constraints, ParallelEGDChaser egdChaser, DBHomomorphismManager detector) {
 		//Create the set of EGDs that correspond to the given table and keys
@@ -87,18 +95,18 @@ public class ReasonerUtility {
 	}
 		
 	/**
-	 * 
-	 * @param match
-	 * @param s
-	 * @return
-	 * 		true if the input trigger is active.
+	 * Checks if is active trigger.
+	 *
+	 * @param match the match
+	 * @param s the s
+	 * @return 		true if the input trigger is active.
 	 * 
 	 * (From modern dependency theory notes)
 	 * Consider an instance I, a set Base of values, and a TGD
-		\delta = \forall x  \sigma(\vec{x}) --> \exists y  \tau(\vec{x}, \vec{y})
-		A trigger for \delta in I is a homomorphism h of \sigma into I. A trigger is active if it
-		does not extend to a homomorphism h0 into I. Informally, a trigger is a tuple \vec{c}
-		satisfying \sigma, and it is active if there is no witness \vec{y} that makes \tau holds.
+	 * 		\delta = \forall x  \sigma(\vec{x}) --> \exists y  \tau(\vec{x}, \vec{y})
+	 * 		A trigger for \delta in I is a homomorphism h of \sigma into I. A trigger is active if it
+	 * 		does not extend to a homomorphism h0 into I. Informally, a trigger is a tuple \vec{c}
+	 * 		satisfying \sigma, and it is active if there is no witness \vec{y} that makes \tau holds.
 	 */
 	public boolean isActiveTrigger(Match match, ChaseState s) {
 		Preconditions.checkNotNull(match);
@@ -146,8 +154,11 @@ public class ReasonerUtility {
 	}
 	
 	/**
-	 * @return
-	 * 		true if the constraint kept in the input match has been already fired with the input homomorphism  
+	 * Checks if is open trigger.
+	 *
+	 * @param match the match
+	 * @param s the s
+	 * @return 		true if the constraint kept in the input match has been already fired with the input homomorphism
 	 */
 	public boolean isOpenTrigger(Match match, ChaseState s) {
 		Map<Variable, Constant> mapping = match.getMapping();

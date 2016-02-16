@@ -7,16 +7,20 @@ import uk.ac.ox.cs.pdq.db.Schema;
 
 import com.google.common.base.Preconditions;
 
+// TODO: Auto-generated Javadoc
 /**
- * A factory of relation cardinality estimators
+ * A factory of relation cardinality estimators.
  *
  * @author Julien Leblay
  */
 public class CardinalityEstimatorFactory {
 
 	/**
-	 * @param costType
-	 * @param schema
+	 * Gets the single instance of CardinalityEstimatorFactory.
+	 *
+	 * @param costType the cost type
+	 * @param cardType the card type
+	 * @param schema the schema
 	 * @return a cardinality estimator implementation corresponding to that specified
 	 * in the initialConfig.
 	 */

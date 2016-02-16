@@ -28,6 +28,7 @@ import uk.ac.ox.cs.pdq.fol.Predicate;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
 /**
  * Helper class for build schema. Allows incrementally construction, and 
  * performs various validations and checks upon initialization.
@@ -35,8 +36,13 @@ import com.google.common.collect.Lists;
  */
 public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 
+	/** The relations. */
 	private Map<String, Relation> relations = new LinkedHashMap<>();
+	
+	/** The dependencies. */
 	private Map<Integer, Constraint> dependencies = new LinkedHashMap<>();
+	
+	/** The disable dependencies. */
 	private boolean disableDependencies = false;
 
 	/**
@@ -47,7 +53,8 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 
 	/**
 	 * Instantiates a schema from an existing one.
-	 * @param schema
+	 *
+	 * @param schema the schema
 	 */
 	public SchemaBuilder(Schema schema) {
 		this.addRelations(schema.getRelations());
@@ -57,7 +64,8 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	/**
 	 * Add the given relation to the schema under construction iff no
 	 * relation other than TemporaryRelation under the name already exists.
-	 * @param r
+	 *
+	 * @param r the r
 	 * @return this builder
 	 */
 	public SchemaBuilder addRelation(Relation r) {
@@ -78,8 +86,9 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	 * If no access method is provided, the relation becomes inaccessible.
 	 * The method has no effect, if no relation by the given name currently
 	 * exists, and the relation is not a temporary one.
+	 *
 	 * @param name String
-	 * @param attributes List<Attribute>
+	 * @param am the am
 	 * @return this builder
 	 */
 	public SchemaBuilder setAccessMethods(String name, AccessMethod... am) {
@@ -106,8 +115,10 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	 * Add the given relation to the schema under construction, if it does
 	 * already exists. oOherwise, places a TemporaryRelation there under
 	 * that name.
+	 *
 	 * @param name String
 	 * @param attributes List<Attribute>
+	 * @param isEquality the is equality
 	 * @return this builder
 	 */
 	public Relation addOrReplaceRelation(String name, List<Attribute> attributes, boolean isEquality) {
@@ -122,6 +133,8 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	}
 
 	/**
+	 * Adds the entity relation.
+	 *
 	 * @param name String
 	 * @return the relation built
 	 */
@@ -133,6 +146,8 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	}
 
 	/**
+	 * Adds the dependency.
+	 *
 	 * @param dep IC
 	 * @return this builder
 	 */
@@ -148,6 +163,8 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	}
 
 	/**
+	 * Removes the dependency.
+	 *
 	 * @param ic IC
 	 * @return this builder
 	 */
@@ -166,6 +183,8 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	}
 
 	/**
+	 * Removes the relation.
+	 *
 	 * @param r the relation to remove
 	 * @return this builder
 	 */
@@ -175,7 +194,9 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	}
 
 	/**
-	 * @param ics
+	 * Adds the dependencies.
+	 *
+	 * @param ics the ics
 	 * @return this builder
 	 */
 	public SchemaBuilder addDependencies(Collection<Constraint> ics) {
@@ -195,7 +216,9 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	}
 
 	/**
-	 * @param relations
+	 * Adds the relations.
+	 *
+	 * @param relations the relations
 	 * @return this builder
 	 */
 	public SchemaBuilder addRelations(Collection<? extends Relation> relations) {
@@ -206,7 +229,9 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	}
 
 	/**
-	 * @param schema
+	 * Adds the schema.
+	 *
+	 * @param schema the schema
 	 * @return this builder
 	 */
 	public SchemaBuilder addSchema(Schema schema) {
@@ -216,7 +241,9 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	}
 
 	/**
-	 * @param name
+	 * Gets the relation.
+	 *
+	 * @param name the name
 	 * @return the relation currently held in the builder under the given name
 	 */
 	public Relation getRelation(String name) {
@@ -224,6 +251,8 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	}
 
 	/**
+	 * Gets the relations.
+	 *
 	 * @return a Collection of all relations currently held by the builder.
 	 */
 	public Collection<Relation> getRelations() {
@@ -231,6 +260,8 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	}
 
 	/**
+	 * Gets the relation map.
+	 *
 	 * @return a map from relation names to relations for all currently held
 	 *         by the builder.
 	 */
@@ -239,6 +270,8 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	}
 
 	/**
+	 * Gets the dependencies.
+	 *
 	 * @return Collection<IC>
 	 */
 	public Collection<Constraint> getDependencies() {
@@ -246,7 +279,8 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	}
 
 	/**
-	 * Derives the dependencies that correspond to the relation's keys
+	 * Derives the dependencies that correspond to the relation's keys.
+	 *
 	 * @return Map<Integer,IC>
 	 */
 	private Map<Integer, Constraint> deriveKeyDependencies() {
@@ -254,8 +288,9 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	}
 
 	/**
-	 * Ensure every view has its corresponding definition as constraints
-	 * @param view
+	 * Ensure every view has its corresponding definition as constraints.
+	 *
+	 * @param view the view
 	 */
 	private void ensureViewDefinition(View view) {
 		LinearGuarded d = view.getDependency();
@@ -285,7 +320,8 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	}
 
 	/**
-	 * Ensure every relation's foreign has its corresponding constraints
+	 * Ensure every relation's foreign has its corresponding constraints.
+	 *
 	 * @param relation Relation
 	 */
 	private void ensureForeignKeyDefinition(Relation relation) {
@@ -328,7 +364,7 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	}
 
 	/**
-	 * Derives the dependencies that correspond to the schema views
+	 * Derives the dependencies that correspond to the schema views.
 	 */
 	private void consolidateDependencies() {
 		for (Relation r : this.relations.values()) {
@@ -342,7 +378,9 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	}
 
 	/**
-	 * @param v
+	 * Find view dependency.
+	 *
+	 * @param v the v
 	 * @return the linear guarded dependency currently held in the builder
 	 *         for the given view. null if no such dependency was found.
 	 */
@@ -361,6 +399,8 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	}
 
 	/**
+	 * Find dependency.
+	 *
 	 * @param dep TGD
 	 * @return the dependency currently held in the builder that is equal
 	 *         (modulo the ID) to the given dependency.
@@ -377,7 +417,9 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	}
 
 	/**
-	 * @param gd
+	 * Find fk dependency.
+	 *
+	 * @param gd the gd
 	 * @return the guarded dependency that is equal to the given one.
 	 */
 	private GuardedDependency findFKDependency(GuardedDependency gd) {
@@ -392,6 +434,8 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	}
 
 	/**
+	 * Find fk dependency.
+	 *
 	 * @param r Relation
 	 * @return the guarded dependency that is equal to the given one.
 	 */
@@ -433,7 +477,8 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	 * @author Julien Leblay
 	 */
 	private static class TemporaryRelation extends Relation {
-		/** */
+		
+		/** The Constant serialVersionUID. */
 		private static final long serialVersionUID = 7049363904713889121L;
 
 		/**

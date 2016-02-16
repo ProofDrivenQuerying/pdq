@@ -11,6 +11,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
 /**
  * An output method that uses a path expression to extract an attributes values
  * from a JSON result.
@@ -20,27 +21,29 @@ import com.google.common.collect.Lists;
  */
 public class PathOutputMethod implements OutputMethod {
 
-	/** Path separator */
+	/**  Path separator. */
 	public static final String PATH_SEPARATOR = "(?<!\\\\)/";
 
-	/** Path element regexp named group */
+	/**  Path element regexp named group. */
 	public static final String PATHELEMENT_GROUP = "path";
 
-	/** Index regexp named group */
+	/**  Index regexp named group. */
 	public static final String INDEX_GROUP = "index";
 
-	/** indexed path element regexp */
+	/**  indexed path element regexp. */
 	public static final Pattern INDEXED_PARAM = Pattern.compile("(?<" + PATHELEMENT_GROUP + ">[ /\\w]+)(\\[(?<" + INDEX_GROUP + ">[=\\w]+)\\])?");
 
+	/** The Constant VALUE. */
 	public static final Pattern VALUE = Pattern.compile("\\(([^)]+)\\)");
 
-	/** The path as a list of string */
+	/**  The path as a list of string. */
 	private final List<String> path;
 
 	/**
 	 * Initialized an output method from the given path, with PATH_SEPARATOR is
 	 * is used to break the path down.
-	 * @param path
+	 *
+	 * @param path the path
 	 */
 	public PathOutputMethod(String path) {
 		super();
@@ -61,7 +64,9 @@ public class PathOutputMethod implements OutputMethod {
 	}
 
 	/**
-	 * @param p
+	 * Indexed path.
+	 *
+	 * @param p the p
 	 * @return a pair whose left element the input method referred to in p, and
 	 * the right is a string representation of its parameter also found in p.
 	 */
@@ -80,9 +85,10 @@ public class PathOutputMethod implements OutputMethod {
 	}
 
 	/**
-	 * 
-	 * @param wrapper
-	 * @param subPath
+	 * Extract.
+	 *
+	 * @param wrapper the wrapper
+	 * @param subPath the sub path
 	 * @return recursively extract an object form the given subPath
 	 */
 	private Object extract(Map<String, Object> wrapper, List<String> subPath) {
@@ -124,8 +130,9 @@ public class PathOutputMethod implements OutputMethod {
 	}
 
 	/**
-	 * 
-	 * @param wrapper
+	 * Extract.
+	 *
+	 * @param wrapper the wrapper
 	 * @param key String
 	 * @return recursively extract an object form the given subPath
 	 */
@@ -135,8 +142,9 @@ public class PathOutputMethod implements OutputMethod {
 	}
 
 	/**
-	 * 
-	 * @param wrapper
+	 * Extract.
+	 *
+	 * @param wrapper the wrapper
 	 * @param index String
 	 * @return recursively extract an object form the given subPath
 	 */
@@ -163,6 +171,8 @@ public class PathOutputMethod implements OutputMethod {
 	}
 
 	/**
+	 * To string.
+	 *
 	 * @return String
 	 */
 	@Override

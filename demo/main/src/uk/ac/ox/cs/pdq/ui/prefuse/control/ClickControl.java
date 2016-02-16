@@ -15,14 +15,27 @@ import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
 import uk.ac.ox.cs.pdq.ui.PlannerController;
 import uk.ac.ox.cs.pdq.ui.prefuse.types.EdgeTypes;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ClickControl.
+ */
 public class ClickControl extends ControlAdapter implements Control {
 
+	/** The data queue. */
 	private final ConcurrentLinkedQueue dataQueue;
 	
+	/**
+	 * Instantiates a new click control.
+	 *
+	 * @param q the q
+	 */
 	public ClickControl(ConcurrentLinkedQueue<?> q) {
 		this.dataQueue = q;
 	}
 	
+	/* (non-Javadoc)
+	 * @see prefuse.controls.ControlAdapter#itemClicked(prefuse.visual.VisualItem, java.awt.event.MouseEvent)
+	 */
 	@Override
 	public void itemClicked(VisualItem item, MouseEvent e) {
 		if(item instanceof NodeItem) {			
@@ -43,8 +56,9 @@ public class ClickControl extends ControlAdapter implements Control {
 	}
 	
 	/**
-	 * Collapse or expands the given depending on its current state 
-	 * @param n
+	 * Collapse or expands the given depending on its current state .
+	 *
+	 * @param n the n
 	 */
 	private void collapseExpandNode(NodeItem n) {
 		boolean isCollapsed = (boolean) n.get("isCollapsed");
@@ -53,9 +67,10 @@ public class ClickControl extends ControlAdapter implements Control {
 
 	/**
 	 * Recursively propagates the collapsing command to a node's descendants.
-	 * @param root
-	 * @param n
-	 * @param isCollapsed
+	 *
+	 * @param root the root
+	 * @param n the n
+	 * @param isCollapsed the is collapsed
 	 */
 	private void updateTreeRecursive(NodeItem root, NodeItem n, Boolean isCollapsed) {
 		if (n == null) {

@@ -26,6 +26,7 @@ import uk.ac.ox.cs.pdq.util.Types;
 
 import com.google.common.base.Preconditions;
 
+// TODO: Auto-generated Javadoc
 /**
  * Reads atoms from XML.
  * 
@@ -36,7 +37,10 @@ public class AtomReader extends AbstractXMLReader<Predicate> {
 	/** Logger. */
 	private static Logger log = Logger.getLogger(AtomReader.class);
 
+	/** The Constant UNBOUND_VARIABLE_PREFIX. */
 	private static final String UNBOUND_VARIABLE_PREFIX = "_";
+	
+	/** The counter. */
 	private static Integer counter = 0;
 	
 	/** List of atoms built so far. */
@@ -81,6 +85,8 @@ public class AtomReader extends AbstractXMLReader<Predicate> {
 	}
 
 	/**
+	 * Gets the atoms.
+	 *
 	 * @return List<PredicateFormula>
 	 */
 	public List<Predicate> getAtoms() {
@@ -88,6 +94,8 @@ public class AtomReader extends AbstractXMLReader<Predicate> {
 	}
 
 	/**
+	 * Sets the atoms.
+	 *
 	 * @param atoms List<PredicateFormula>
 	 */
 	public void setAtoms(List<Predicate> atoms) {
@@ -95,6 +103,8 @@ public class AtomReader extends AbstractXMLReader<Predicate> {
 	}
 	
 	/**
+	 * Read.
+	 *
 	 * @param in InputStream
 	 * @return PredicateFormula
 	 * @see uk.ac.ox.cs.pdq.io.Reader#read(InputStream)
@@ -171,7 +181,9 @@ public class AtomReader extends AbstractXMLReader<Predicate> {
 	}
 	
 	/**
-	 * @param name
+	 * Gets the relation.
+	 *
+	 * @param name the name
 	 * @return the relation the atom being built is backed.
 	 */
 	public Relation getRelation(String name) {
@@ -185,6 +197,8 @@ public class AtomReader extends AbstractXMLReader<Predicate> {
 	}
 	
 	/**
+	 * Generate variable.
+	 *
 	 * @return Variable
 	 */
 	private static Variable generateVariable() {

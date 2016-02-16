@@ -14,6 +14,7 @@ import prefuse.util.MathLib;
 import prefuse.visual.VisualItem;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode.NodeStatus;
 
+// TODO: Auto-generated Javadoc
 /**
  * <p>
  * Assignment Action that assigns color values for a group of items based upon
@@ -47,27 +48,47 @@ import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode.NodeStatus;
  */
 public class CustomColorAction extends ColorAction {
 
+	/** The node palette. */
 	private final int[] nodePalette = new int[] {
 			ColorLib.rgba(255,180,180,250), ColorLib.rgba(153,204,255,250), ColorLib.gray(150), ColorLib.gray(150), 
 			ColorLib.gray(50)
 	};
 	
+    /** The m_data field. */
     public String m_dataField;
+    
+    /** The m_type. */
     private int    m_type;
+    
+    /** The m_scale. */
     private int    m_scale = Constants.LINEAR_SCALE;
+    
+    /** The m_temp scale. */
     private int    m_tempScale;
     
+    /** The m_dist. */
     private double[] m_dist;
+    
+    /** The m_bins. */
     private int      m_bins = Constants.CONTINUOUS;
+    
+    /** The m_omap. */
     private Map      m_omap;
+    
+    /** The m_olist. */
     private Object[] m_olist;
+    
+    /** The m_cmap. */
     private ColorMap m_cmap = new ColorMap(null,0,1);
+    
+    /** The m_palette. */
     private int[]    m_palette;
     
     
     
     /**
-     * Create a new DataColorAction
+     * Create a new DataColorAction.
+     *
      * @param group the data group to process
      * @param dataField the data field to base size assignments on
      * @param dataType the data type to use for the data field. One of
@@ -85,7 +106,8 @@ public class CustomColorAction extends ColorAction {
     }
     
     /**
-     * Create a new DataColorAction
+     * Create a new DataColorAction.
+     *
      * @param group the data group to process
      * @param dataField the data field to base size assignments on
      * @param dataType the data type to use for the data field. One of
@@ -212,8 +234,10 @@ public class CustomColorAction extends ColorAction {
     /**
      * This operation is not supported by the DataColorAction type.
      * Calling this method will result in a thrown exception.
+     *
+     * @param color the new default color
+     * @throws UnsupportedOperationException the unsupported operation exception
      * @see prefuse.action.assignment.ColorAction#setDefaultColor(int)
-     * @throws UnsupportedOperationException
      */
     @Override
 	public void setDefaultColor(int color) {
@@ -284,6 +308,9 @@ public class CustomColorAction extends ColorAction {
         }
     }
     
+    /* (non-Javadoc)
+     * @see prefuse.action.EncoderAction#finish()
+     */
     @Override
 	protected void finish() {
         // reset scale in case it needed to be changed due to errors
@@ -293,6 +320,8 @@ public class CustomColorAction extends ColorAction {
     /**
      * Computes the distribution (either min/max or quantile values) used to
      * help assign colors to data values.
+     *
+     * @return the distribution
      */
     protected double[] getDistribution() {
         TupleSet ts = this.m_vis.getGroup(this.m_group);
@@ -319,6 +348,9 @@ public class CustomColorAction extends ColorAction {
     
     /**
      * Create a color palette of the requested type and size.
+     *
+     * @param size the size
+     * @return the int[]
      */
     protected int[] createPalette(int size) {
         switch ( this.m_type ) {
@@ -332,6 +364,10 @@ public class CustomColorAction extends ColorAction {
     }
     
     /**
+     * Gets the color.
+     *
+     * @param item the item
+     * @return the color
      * @see prefuse.action.assignment.ColorAction#getColor(prefuse.visual.VisualItem)
      */
     @Override

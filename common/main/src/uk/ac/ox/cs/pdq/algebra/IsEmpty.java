@@ -9,6 +9,7 @@ import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.util.TupleType;
 
+// TODO: Auto-generated Javadoc
 /**
  * IsEmpty of the boolean query operator. Return true if the database satisfies
  * the body of the query, false otherwise.

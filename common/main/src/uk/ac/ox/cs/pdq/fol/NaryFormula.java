@@ -9,28 +9,27 @@ import java.util.Objects;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 
+// TODO: Auto-generated Javadoc
 /**
- * A n-ary formula
+ * A n-ary formula.
  *
  * @author Efthymia Tsamoura
  * @author Julien Leblay
- *
  * @param <T> Type of input formulas
  */
 public abstract class NaryFormula<T extends Formula> extends AbstractFormula implements Iterable<T> {
 
-	/** The formula's head operator*/
+	/**  The formula's head operator. */
 	protected final LogicalSymbols operator;
 
-	/** The subformulae */
+	/**  The subformulae. */
 	protected final ImmutableList<T> children;
 
 	/**
+	 * Instantiates a new nary formula.
 	 *
-	 * @param operator
-	 * 		Input head operator
-	 * @param childen
-	 * 		Input subformulas
+	 * @param operator 		Input head operator
+	 * @param childen 		Input subformulas
 	 */
 	public NaryFormula(LogicalSymbols operator, Collection<T> childen) {
 		super();
@@ -39,6 +38,8 @@ public abstract class NaryFormula<T extends Formula> extends AbstractFormula imp
 	}
 
 	/**
+	 * Gets the children.
+	 *
 	 * @return Collection<T>
 	 * @see uk.ac.ox.cs.pdq.fol.Formula#getSubFormulas()
 	 */
@@ -48,6 +49,8 @@ public abstract class NaryFormula<T extends Formula> extends AbstractFormula imp
 	}
 
 	/**
+	 * Gets the terms.
+	 *
 	 * @return List<Term>
 	 * @see uk.ac.ox.cs.pdq.fol.Formula#getTerms()
 	 */
@@ -61,6 +64,8 @@ public abstract class NaryFormula<T extends Formula> extends AbstractFormula imp
 	}
 
 	/**
+	 * Gets the predicates.
+	 *
 	 * @return List<PredicateFormula>
 	 * @see uk.ac.ox.cs.pdq.fol.Formula#getPredicates()
 	 */
@@ -74,6 +79,8 @@ public abstract class NaryFormula<T extends Formula> extends AbstractFormula imp
 	}
 
 	/**
+	 * Equals.
+	 *
 	 * @param o Object
 	 * @return boolean
 	 */
@@ -91,6 +98,8 @@ public abstract class NaryFormula<T extends Formula> extends AbstractFormula imp
 	}
 
 	/**
+	 * Hash code.
+	 *
 	 * @return int
 	 */
 	@Override
@@ -99,6 +108,8 @@ public abstract class NaryFormula<T extends Formula> extends AbstractFormula imp
 	}
 
 	/**
+	 * To string.
+	 *
 	 * @return String
 	 */
 	@Override
@@ -107,6 +118,8 @@ public abstract class NaryFormula<T extends Formula> extends AbstractFormula imp
 	}
 
 	/**
+	 * Size.
+	 *
 	 * @return int
 	 */
 	public int size() {
@@ -114,6 +127,8 @@ public abstract class NaryFormula<T extends Formula> extends AbstractFormula imp
 	}
 
 	/**
+	 * Checks if is empty.
+	 *
 	 * @return boolean
 	 */
 	public boolean isEmpty() {
@@ -121,6 +136,8 @@ public abstract class NaryFormula<T extends Formula> extends AbstractFormula imp
 	}
 
 	/**
+	 * Gets the symbol.
+	 *
 	 * @return LogicalSymbols
 	 */
 	public LogicalSymbols getSymbol() {
@@ -128,6 +145,8 @@ public abstract class NaryFormula<T extends Formula> extends AbstractFormula imp
 	}
 
 	/**
+	 * Iterator.
+	 *
 	 * @return Iterator<T>
 	 * @see java.lang.Iterable#iterator()
 	 */

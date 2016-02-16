@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package uk.ac.ox.cs.pdq.planner.dag.explorer.parallel;
 
 import java.util.List;
@@ -9,24 +12,27 @@ import uk.ac.ox.cs.pdq.planner.reasoning.chase.dominance.Dominance;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
 
+// TODO: Auto-generated Javadoc
 /**
- * Creates IterativeExecutor objects
+ * Creates IterativeExecutor objects.
  *
  * @author Efthymia Tsamoura
  */
 public class IterativeExecutorFactory {
 
 	/**
-	 * 
-	 * @param executorType
-	 * @param parallelThreads
-	 * @param chaser
-	 * @param detector
-	 * @param estimator
-	 * @param qualityDominance
-	 * @param validators
-	 * @return
-	 * @throws Exception
+	 * Creates a new IterativeExecutor object.
+	 *
+	 * @param executorType the executor type
+	 * @param parallelThreads the parallel threads
+	 * @param chaser the chaser
+	 * @param detector the detector
+	 * @param estimator the estimator
+	 * @param qualityDominance the quality dominance
+	 * @param dominance the dominance
+	 * @param validators the validators
+	 * @return the iterative executor
+	 * @throws Exception the exception
 	 */
 	public static IterativeExecutor createIterativeExecutor (
 			IterativeExecutorTypes executorType,

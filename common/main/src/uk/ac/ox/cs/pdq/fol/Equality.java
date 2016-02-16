@@ -9,8 +9,9 @@ import uk.ac.ox.cs.pdq.io.xml.QNames;
 
 import com.google.common.base.Preconditions;
 
+// TODO: Auto-generated Javadoc
 /**
- * An equality
+ * An equality.
  *
  * @author Efthymia Tsamoura
  */
@@ -26,7 +27,8 @@ public final class Equality extends Predicate {
 	}
 	
 	/**
-	 * @param signature Signature
+	 * Instantiates a new equality.
+	 *
 	 * @param term Term[]
 	 */
 	public Equality(Term... term) {
@@ -35,6 +37,8 @@ public final class Equality extends Predicate {
 	}
 	
 	/**
+	 * Ground.
+	 *
 	 * @param mapping Map<Variable,Term>
 	 * @return PredicateFormula
 	 * @see uk.ac.ox.cs.pdq.formula.Formula#ground(Map<Variable,Term>)

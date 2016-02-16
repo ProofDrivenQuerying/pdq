@@ -32,8 +32,9 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
+// TODO: Auto-generated Javadoc
 /**
- * Removes the redundant accesses and the redundant follow-up joins from a successful configuration path
+ * Removes the redundant accesses and the redundant follow-up joins from a successful configuration path.
  *
  * @author Efthymia Tsamoura
  */
@@ -41,17 +42,17 @@ public final class PostPruningRemoveFollowUps extends PostPruning {
 	
 	/** Runs the chase. Finds the consequences of newly created nodes **/
 	private final Chaser chaser;
-	/** The input query**/
+	
+	/**  The input query*. */
 	private final Query<?> query;
 
 	/**
-	 * 
-	 * @param nodeFactory
-	 * 		Factory of tree nodes
-	 * @param accessibleSchema
-	 * 		The accessible counterpart of the input schema
-	 * @param chaser
-	 * @param query
+	 * Instantiates a new post pruning remove follow ups.
+	 *
+	 * @param nodeFactory 		Factory of tree nodes
+	 * @param accessibleSchema 		The accessible counterpart of the input schema
+	 * @param chaser the chaser
+	 * @param query the query
 	 */
 	public PostPruningRemoveFollowUps(NodeFactory nodeFactory, AccessibleSchema accessibleSchema, Chaser chaser, Query<?> query) {
 		super(nodeFactory, accessibleSchema);
@@ -62,15 +63,13 @@ public final class PostPruningRemoveFollowUps extends PostPruning {
 	}
 
 	/**
-	 * Creates a post-pruned query path 
-	 * @param root
-	 * 		The root of the plan tree
-	 * @param path
-	 * 		The path that will be post-pruned 
-	 * @param factsToExpose
-	 * 		The facts that we will expose 
-	 * @throws PlannerException
-	 * @throws LimitReachedException
+	 * Creates a post-pruned query path .
+	 *
+	 * @param root 		The root of the plan tree
+	 * @param path 		The path that will be post-pruned 
+	 * @param factsToExpose 		The facts that we will expose 
+	 * @throws PlannerException the planner exception
+	 * @throws LimitReachedException the limit reached exception
 	 */
 	@Override
 	protected void createPath(SearchNode root, List<SearchNode> path, Collection<Predicate> factsToExpose) throws PlannerException, LimitReachedException {
@@ -118,13 +117,11 @@ public final class PostPruningRemoveFollowUps extends PostPruning {
 	}
 
 	/**
-	 * 
-	 * @param path
-	 * 		A successful path 
-	 * @param queryFacts
-	 * 		The facts in the query match 
-	 * @return
-	 * 		the facts that are sufficient to produce the input queryFacts
+	 * Find facts to expose.
+	 *
+	 * @param path 		A successful path 
+	 * @param queryFacts 		The facts in the query match 
+	 * @return 		the facts that are sufficient to produce the input queryFacts
 	 */
 	@Override
 	protected Collection<Predicate> findFactsToExpose(List<SearchNode> path, Collection<Predicate> queryFacts) {
@@ -156,13 +153,12 @@ public final class PostPruningRemoveFollowUps extends PostPruning {
 	}
 
 	/**
+	 * Gets the minimal facts.
 	 *
-	 * @param queryMatch 
-	 * 		The facts of a query match
-	 * @param successNode 
-	 * 		A node with configuration that matches the input query
-	 * @return 
-	 * 		a minimal set of facts that have to be exposed in order to make each input fact accessible */
+	 * @param queryMatch 		The facts of a query match
+	 * @param successNode 		A node with configuration that matches the input query
+	 * @return 		a minimal set of facts that have to be exposed in order to make each input fact accessible
+	 */
 	private Collection<Predicate> getMinimalFacts(Collection<Predicate> queryMatch, SearchNode successNode) {
 		Preconditions.checkArgument(queryMatch != null);
 		Preconditions.checkArgument(successNode != null);
@@ -173,16 +169,12 @@ public final class PostPruningRemoveFollowUps extends PostPruning {
 	}
 
 	/**
-	 * Minimises the set of facts that have to be exposed in order to make each input fact accessible
+	 * Minimises the set of facts that have to be exposed in order to make each input fact accessible.
 	 *
-	 * @param facts
-	 * 		A list of accessible, inferred accessible and accessed atoms
-	 * @param inputTerms
-	 * 		The input constants of the input atoms (i.e., the constants that are required to expose the input atoms)
-	 * @param outputTerms
-	 * 		The output constants of the input atoms
-	 * @param factProvenance
-	 * 		Mapping of atoms F to pairs of dependencies and atoms.
+	 * @param facts 		A list of accessible, inferred accessible and accessed atoms
+	 * @param inputTerms 		The input constants of the input atoms (i.e., the constants that are required to expose the input atoms)
+	 * @param outputTerms 		The output constants of the input atoms
+	 * @param factProvenance 		Mapping of atoms F to pairs of dependencies and atoms.
 	 * 		Each pair corresponds to the dependency and the facts that were used to fire the former dependency and derive a fact in F.
 	 * @return a (minimal) list of inferred accessible facts.
 	 */
@@ -235,6 +227,8 @@ public final class PostPruningRemoveFollowUps extends PostPruning {
 	}
 
 	/**
+	 * Gets the element.
+	 *
 	 * @param facts Facts that were used to fire an accessibility axiom
 	 * @return A structure of
 	 * 				the accessible facts that were used to fire an accessibility axiom
@@ -268,11 +262,20 @@ public final class PostPruningRemoveFollowUps extends PostPruning {
 	}
 
 	/**
+	 * The Class Element.
 	 */
 	private class Element {
+		
+		/** The input terms. */
 		private final Collection<Constant> inputTerms;
+		
+		/** The output terms. */
 		private final Collection<Constant> outputTerms;
+		
+		/** The input accessible facts. */
 		private final Collection<Predicate> inputAccessibleFacts;
+		
+		/** The inferred accessible fact. */
 		private final Predicate inferredAccessibleFact;
 
 		/**
@@ -297,6 +300,8 @@ public final class PostPruningRemoveFollowUps extends PostPruning {
 		}
 
 		/**
+		 * Gets the input terms.
+		 *
 		 * @return Collection<Constant>
 		 */
 		public Collection<Constant> getInputTerms() {
@@ -304,6 +309,8 @@ public final class PostPruningRemoveFollowUps extends PostPruning {
 		}
 
 		/**
+		 * Gets the output terms.
+		 *
 		 * @return Collection<Constant>
 		 */
 		public Collection<Constant> getOutputTerms() {
@@ -311,6 +318,8 @@ public final class PostPruningRemoveFollowUps extends PostPruning {
 		}
 
 		/**
+		 * Gets the input accessible facts.
+		 *
 		 * @return Collection<PredicateFormula>
 		 */
 		public Collection<Predicate> getInputAccessibleFacts() {
@@ -318,6 +327,8 @@ public final class PostPruningRemoveFollowUps extends PostPruning {
 		}
 
 		/**
+		 * Gets the inferred accessible fact.
+		 *
 		 * @return PredicateFormula
 		 */
 		public Predicate getInferredAccessibleFact() {
@@ -325,6 +336,8 @@ public final class PostPruningRemoveFollowUps extends PostPruning {
 		}
 
 		/**
+		 * To string.
+		 *
 		 * @return String
 		 */
 		@Override

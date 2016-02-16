@@ -44,6 +44,7 @@ import com.google.common.collect.HashBiMap;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 
+// TODO: Auto-generated Javadoc
 /**
  * Creates SQL statements for relation database-backed homomorphism detectors.
  *
@@ -55,38 +56,55 @@ public abstract class SQLStatementBuilder {
 	/** Logger. */
 	private static Logger log = Logger.getLogger(SQLStatementBuilder.class);
 
-	/** Aliases for facts **/
+	/**  Aliases for facts *. */
 	protected BiMap<Predicate, String> aliases = HashBiMap.create();
 
+	/** The alias prefix. */
 	private String aliasPrefix = "A";
+	
+	/** The alias counter. */
 	private int aliasCounter = 0;
 
+	/** The clean name counter. */
 	public int cleanNameCounter = 0;
 	
-	/** maps all relation names to clean ones **/
+	/**  maps all relation names to clean ones *. */
 	protected BiMap<String, String> cleanMap = HashBiMap.create();
 	
+	/**
+	 * Instantiates a new SQL statement builder.
+	 */
 	public SQLStatementBuilder() {
 	}
 	
+	/**
+	 * Instantiates a new SQL statement builder.
+	 *
+	 * @param cleanMap the clean map
+	 */
 	protected SQLStatementBuilder(BiMap<String, String> cleanMap) {
 		Preconditions.checkNotNull(cleanMap);
 		this.cleanMap = cleanMap;
 	}
 
 	/**
-	 * @param databaseName
+	 * Setup statements.
+	 *
+	 * @param databaseName the database name
 	 * @return the complete list of SQL statements required to set up the facts database
 	 */
 	public abstract Collection<String> setupStatements(String databaseName);
 
 	/**
+	 * Cleanup statements.
+	 *
 	 * @param databaseName String
 	 * @return the complete list of SQL statements required to clean up the fact database
 	 */
 	public abstract Collection<String> cleanupStatements(String databaseName);
 
 	/**
+	 * Drop table statement.
 	 *
 	 * @param relation the table to drop
 	 * @return a SQL statement for dropping the input table
@@ -96,7 +114,9 @@ public abstract class SQLStatementBuilder {
 	}
 
 	/**
-	 * @param name
+	 * Encode name.
+	 *
+	 * @param dirtyRelationName the dirty relation name
 	 * @return a new String that is a copy of the given name modified such that
 	 * it is acceptable for the underlying system
 	 */
@@ -106,13 +126,22 @@ public abstract class SQLStatementBuilder {
 		return this.cleanMap.get(dirtyRelationName);
 	}
 	
+	/**
+	 * Decode name.
+	 *
+	 * @param cleanRelationName the clean relation name
+	 * @return the string
+	 */
 	public String decodeName(String cleanRelationName) {
 		return this.cleanMap.inverse().get(cleanRelationName);
 	}
 	
 
 	/**
-	 * @param facts
+	 * Make inserts.
+	 *
+	 * @param facts the facts
+	 * @param dbrelations the dbrelations
 	 * @return insert statements that add the input fact to the fact database.
 	 */
 	protected Collection<String> makeInserts(Collection<? extends Predicate> facts, Map<String, DBRelation> dbrelations) {
@@ -136,13 +165,11 @@ public abstract class SQLStatementBuilder {
 	}
 	
 	/**
-	 * 
-	 * @param facts
-	 * 		Facts to delete from the database
-	 * @param aliases
-	 * 		Map of schema relation names to *clean* names
-	 * @return
-	 * 		a set of statements that delete the input facts from the fact database.
+	 * Make deletes.
+	 *
+	 * @param facts 		Facts to delete from the database
+	 * @param aliases 		Map of schema relation names to *clean* names
+	 * @return 		a set of statements that delete the input facts from the fact database.
 	 */
 	protected Collection<String> makeDeletes(Collection<? extends Predicate> facts, Map<String, DBRelation> aliases) {
 		Collection<String> result = new LinkedList<>();
@@ -157,6 +184,8 @@ public abstract class SQLStatementBuilder {
 	}
 
 	/**
+	 * Creates the table statement.
+	 *
 	 * @param relation the table to create
 	 * @return a SQL statement that creates the fact table of the given relation
 	 */
@@ -183,8 +212,12 @@ public abstract class SQLStatementBuilder {
 	}
 
 	/**
-	 * @param relation
-	 * @param columns
+	 * Creates the table index.
+	 *
+	 * @param isForQuery the is for query
+	 * @param constraintIndices the constraint indices
+	 * @param relation the relation
+	 * @param columns the columns
 	 * @return a SQL statement that creates an index for the columns of the input relation
 	 */
 	protected Pair<String,String> createTableIndex(boolean isForQuery,Set<String> constraintIndices,DBRelation relation, Integer... columns) {
@@ -212,16 +245,39 @@ public abstract class SQLStatementBuilder {
 		return new ImmutablePair<String, String>(create,drop);
 	}
 	
+	/**
+	 * Index create statement.
+	 *
+	 * @param relation the relation
+	 * @param indexName the index name
+	 * @param indexColumns the index columns
+	 * @return the string
+	 */
 	protected String indexCreateStatement(DBRelation relation, StringBuilder indexName, StringBuilder indexColumns) {
 		return "CREATE INDEX idx_" + this.encodeName(relation.getName()) + "_" + indexName +
 		" ON " + this.encodeName(relation.getName()) + "(" + indexColumns + ")";
 	}
 	
+	/**
+	 * Index drop statement.
+	 *
+	 * @param relation the relation
+	 * @param indexName the index name
+	 * @param indexColumns the index columns
+	 * @return the string
+	 */
 	protected String indexDropStatement(DBRelation relation, StringBuilder indexName, StringBuilder indexColumns) {
 		return "DROP INDEX idx_" + this.encodeName(relation.getName()) + "_" + indexName +
 				" ON " + this.encodeName(relation.getName());
 	}
 
+	/**
+	 * Clear tables.
+	 *
+	 * @param queryRelations the query relations
+	 * @param relationMap the relation map
+	 * @return the collection
+	 */
 	public Collection<String> clearTables(List<Predicate> queryRelations, Map<String, DBRelation> relationMap) {
 		Set<String> result = new LinkedHashSet<>();
 		for(Predicate pred: queryRelations)
@@ -229,12 +285,21 @@ public abstract class SQLStatementBuilder {
 		return result;
 	}
 
+	/**
+	 * Creates the clear table.
+	 *
+	 * @param dbRelation the db relation
+	 * @return the string
+	 */
 	private String createClearTable(DBRelation dbRelation) {
 		return "TRUNCATE TABLE  "+this.encodeName(dbRelation.getName());
 	}
 
 	/**
-	 * @param relation
+	 * Creates the table non join indexes.
+	 *
+	 * @param relation the relation
+	 * @param column the column
 	 * @return a SQL statement that creates an index for the bag and fact attributes of the database tables
 	 */
 	protected String createTableNonJoinIndexes(DBRelation relation, Attribute column) {
@@ -243,12 +308,13 @@ public abstract class SQLStatementBuilder {
 	}
 
 	/**
-	 * 
-	 * @param b 
-	 * @param relationMap
-	 * @param rule
-	 * @param constraintIndices 
-	 * @return
+	 * Creates the table indexes.
+	 *
+	 * @param isForQuery the is for query
+	 * @param relationMap the relation map
+	 * @param rule the rule
+	 * @param constraintIndices the constraint indices
+	 * @return the pair
 	 */
 	protected Pair<Collection<String>,Collection<String>> createTableIndexes(boolean isForQuery, Map<String, DBRelation> relationMap, Evaluatable rule, Set<String> constraintIndices) {
 		Conjunction<?> body = null;
@@ -304,10 +370,12 @@ public abstract class SQLStatementBuilder {
 	protected abstract String translateLimitConstraints(Evaluatable source, HomomorphismConstraint... constraints);
 
 	/**
-	 * Creates and runs an SQL statement that detects homomorphisms of the input query to facts kept in a database
-	 * @param source
-	 * @param constraints
-	 * 		A set of constraints that should be satisfied by the homomorphisms of the input formula to the facts of the database 
+	 * Creates and runs an SQL statement that detects homomorphisms of the input query to facts kept in a database.
+	 *
+	 * @param source the source
+	 * @param constraints 		A set of constraints that should be satisfied by the homomorphisms of the input formula to the facts of the database 
+	 * @param constants the constants
+	 * @param connection the connection
 	 * @return homomorphisms of the input query to facts kept in a database.
 	 */
 	public Set<Map<Variable, Constant>> findHomomorphismsThroughSQL(Evaluatable source, HomomorphismConstraint[] constraints, Map<String, TypedConstant<?>> constants, Connection connection) {
@@ -388,10 +456,10 @@ public abstract class SQLStatementBuilder {
 
 	
 	/**
-	 * 
-	 * @param source
-	 * @return
-	 * 		a list of the table names that will be queried
+	 * Creates the content for from statement.
+	 *
+	 * @param source the source
+	 * @return 		a list of the table names that will be queried
 	 */
 	protected List<String> createContentForFromStatement(Evaluatable source) {
 		this.aliasCounter = 0;
@@ -407,12 +475,12 @@ public abstract class SQLStatementBuilder {
 	}
 
 	/**
-	 * 
-	 * @param source
-	 * @return
-	 * 		the attributes that will be projected. 
+	 * Creates the projection statements.
+	 *
+	 * @param source the source
+	 * @return 		the attributes that will be projected. 
 	 * 		If the input is an egd or tgd we project the attributes that map to universally quantified variables.
-	 * 		If the input is a query we project the attributes that map to its free variables. 
+	 * 		If the input is a query we project the attributes that map to its free variables.
 	 */
 	protected LinkedHashMap<String,Variable> createProjectionStatements(Evaluatable source) {
 		LinkedHashMap<String,Variable> projected = new LinkedHashMap<>();
@@ -432,10 +500,11 @@ public abstract class SQLStatementBuilder {
 	}
 
 	/**
-	 * 
-	 * @param source
-	 * @return
-	 * 		explicit equalities (String objects of the form A.x1 = B.x2) of the implicit equalities in the input conjunction (the latter is denoted by repetition of the same term)
+	 * Creates the attribute equalities.
+	 *
+	 * @param source the source
+	 * @param aliases2 the aliases2
+	 * @return 		explicit equalities (String objects of the form A.x1 = B.x2) of the implicit equalities in the input conjunction (the latter is denoted by repetition of the same term)
 	 */
 	protected List<String> createAttributeEqualities(Conjunction<Predicate> source, BiMap<Predicate, String> aliases2) {
 		List<String> attributePredicates = new ArrayList<String>();
@@ -471,10 +540,11 @@ public abstract class SQLStatementBuilder {
 
 
 	/**
-	 * 
-	 * @param source
-	 * @return
-	 * 		constant equality predicates 
+	 * Creates the equalities with constants.
+	 *
+	 * @param source the source
+	 * @param aliases2 the aliases2
+	 * @return 		constant equality predicates
 	 */
 	protected List<String> createEqualitiesWithConstants(Conjunction<Predicate> source, BiMap<Predicate, String> aliases2) {
 		List<String> constantPredicates = new ArrayList<>();
@@ -495,11 +565,12 @@ public abstract class SQLStatementBuilder {
 	}
 
 	/**
-	 * 
-	 * @param source
-	 * @param constraints
-	 * @return
-	 * 		predicates that correspond to fact constraints 
+	 * Translate fact constraints.
+	 *
+	 * @param source the source
+	 * @param aliases2 the aliases2
+	 * @param constraints the constraints
+	 * @return 		predicates that correspond to fact constraints
 	 */
 	protected List<String> translateFactConstraints(Evaluatable source, BiMap<Predicate, String> aliases2, HomomorphismConstraint... constraints) {
 		List<String> setPredicates = new ArrayList<>();
@@ -519,11 +590,12 @@ public abstract class SQLStatementBuilder {
 	}
 
 	/**
-	 * 
-	 * @param source
-	 * @param constraints
-	 * @return
-	 * 		predicates that correspond to canonical constraints
+	 * Creates the equalities for hom constraints.
+	 *
+	 * @param source the source
+	 * @param aliases2 the aliases2
+	 * @param constraints the constraints
+	 * @return 		predicates that correspond to canonical constraints
 	 */
 	protected List<String> createEqualitiesForHomConstraints(Evaluatable source, BiMap<Predicate, String> aliases2, HomomorphismConstraint... constraints) {
 		List<String> constantPredicates = new ArrayList<>();
@@ -548,11 +620,12 @@ public abstract class SQLStatementBuilder {
 
 	
 	/**
-	 * 
-	 * @param source
-	 * @param constraints
-	 * @return
-	 * 		predicates that correspond to fact constraints 
+	 * Translate egd homomorphism constraints.
+	 *
+	 * @param source the source
+	 * @param aliases the aliases
+	 * @param constraints the constraints
+	 * @return 		predicates that correspond to fact constraints
 	 */
 	protected String translateEGDHomomorphismConstraints(Evaluatable source, BiMap<Predicate, String> aliases, HomomorphismConstraint... constraints) {
 		for(HomomorphismConstraint c:constraints) {
@@ -574,6 +647,15 @@ public abstract class SQLStatementBuilder {
 		return null;
 	}
 
+	/**
+	 * Creates the sql membership expression.
+	 *
+	 * @param position the position
+	 * @param values the values
+	 * @param relation the relation
+	 * @param alias the alias
+	 * @return the string
+	 */
 	private String createSQLMembershipExpression(int position, List<Object> values, Relation relation, String alias) {
 		
 		StringBuilder result = new StringBuilder();
@@ -602,11 +684,21 @@ public abstract class SQLStatementBuilder {
 	}
 
 	/**
+	 * Clone.
+	 *
 	 * @return SQLStatementBuilder
 	 */
 	@Override
 	public abstract SQLStatementBuilder clone();
 
+	/**
+	 * Creates the projection statement for argument.
+	 *
+	 * @param position the position
+	 * @param relation the relation
+	 * @param alias the alias
+	 * @return the string
+	 */
 	protected String createProjectionStatementForArgument(int position, Relation relation, String alias) {
 		Preconditions.checkNotNull(relation);
 		Preconditions.checkArgument(position >= 0 && position < relation.getArity());
@@ -618,9 +710,11 @@ public abstract class SQLStatementBuilder {
 	
 
 	/**
-	 * 
+	 * Creates the table aliasing expression.
 	 *
-	 *
+	 * @param alias the alias
+	 * @param relation the relation
+	 * @return the string
 	 */
 	protected String createTableAliasingExpression(String alias, Relation relation) {
 		Preconditions.checkNotNull(relation);

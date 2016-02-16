@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package uk.ac.ox.cs.pdq.planner.dag.explorer.parallel;
 
 import java.util.Collection;
@@ -18,61 +21,63 @@ import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
 
 import com.google.common.base.Preconditions;
 
+// TODO: Auto-generated Javadoc
 /**
- * Iterates over the input collection of configurations to identify the minimum-cost one
+ * Iterates over the input collection of configurations to identify the minimum-cost one.
  *
  * @author Efthymia Tsamoura
- *
  */
 public class ExplorationThread implements Callable<DAGAnnotatedPlan> {
 
+	/** The log. */
 	protected static Logger log = Logger.getLogger(ExplorationThread.class);
 	
+	/** The query. */
 	private final Query<?> query;
 	
-	/** Performs success dominance checks*/
+	/**  Performs success dominance checks. */
 	private final Dominance qualityDominance;
 	
+	/** The dominance. */
 	private final Dominance[] dominance;
 
-	/** Detects homomorphisms*/
+	/**  Detects homomorphisms. */
 	private final HomomorphismDetector detector;
 
-	/** Input configurations*/
+	/**  Input configurations. */
 	private final Queue<DAGAnnotatedPlan> input;
 
-	/** Classes of structurally equivalent configurations */
+	/**  Classes of structurally equivalent configurations. */
 	private final DAGAnnotatedPlanClasses classes;
 
-	/** The minimum cost closed and successful configuration found so far */
+	/**  The minimum cost closed and successful configuration found so far. */
 	private DAGAnnotatedPlan best = null;
 	
+	/** The best query match. */
 	private boolean bestQueryMatch = false;
 
-	/** The output non-dominated and not successful configurations */
+	/**  The output non-dominated and not successful configurations. */
 	private final Set<DAGAnnotatedPlan> output;
 
-	/** The output non-dominated and successful (and not closed) configurations */
+	/**  The output non-dominated and successful (and not closed) configurations. */
 	private final Set<DAGAnnotatedPlan> successful;
 	
+	/** The cardinality estimator. */
 	private final CardinalityEstimator cardinalityEstimator;
 
 	/**
+	 * Instantiates a new exploration thread.
 	 *
-	 * @param input
-	 * 		Input configurations
-	 * @param classes
-	 * 		Classes of structurally equivalent configurations
-	 * @param best
-	 * 		The minimum cost closed and successful configuration found so far
-	 * @param detector
-	 * 		Detects homomorphisms
-	 * @param qualityDominance
-	 * 		Performs success dominance checks
-	 * @param output
-	 * 		The output non-dominated and not successful configurations
-	 * @param successfulConfigurations
-	 * 		The output non-dominated and successful (and not closed) configurations
+	 * @param query the query
+	 * @param input 		Input configurations
+	 * @param classes 		Classes of structurally equivalent configurations
+	 * @param best 		The minimum cost closed and successful configuration found so far
+	 * @param detector 		Detects homomorphisms
+	 * @param cardinalityEstimator the cardinality estimator
+	 * @param qualityDominance 		Performs success dominance checks
+	 * @param dominance the dominance
+	 * @param output 		The output non-dominated and not successful configurations
+	 * @param successfulConfigurations 		The output non-dominated and successful (and not closed) configurations
 	 */
 	public ExplorationThread(
 			Query<?> query,
@@ -102,8 +107,10 @@ public class ExplorationThread implements Callable<DAGAnnotatedPlan> {
 	}
 
 	/**
+	 * Call.
+	 *
 	 * @return DAGAnnotatedPlan
-	 * @throws Exception
+	 * @throws Exception the exception
 	 * @see java.util.concurrent.Callable#call()
 	 */
 	@Override
@@ -178,7 +185,10 @@ public class ExplorationThread implements Callable<DAGAnnotatedPlan> {
 	}
 
 	/**
+	 * Sets the best configuration.
+	 *
 	 * @param configuration DAGAnnotatedPlan
+	 * @param matchesQuery the matches query
 	 */
 	private void setBestConfiguration(DAGAnnotatedPlan configuration, boolean matchesQuery) {
 		if(this.best != null && configuration != null &&

@@ -9,15 +9,17 @@ import uk.ac.ox.cs.pdq.fol.Term;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
 /**
- * Tree-shaped plans
+ * Tree-shaped plans.
  *
  * @author Efthymia Tsamoura
  */
 public final class TreePlan extends DAGPlan {
 
 	/**
-	 * 
+	 * Instantiates a new tree plan.
+	 *
 	 * @param operator The input top-level logical operator
 	 * @param parent The parent plan
 	 * @param children The input child subplans
@@ -27,7 +29,8 @@ public final class TreePlan extends DAGPlan {
 	}
 
 	/**
-	 * 
+	 * Instantiates a new tree plan.
+	 *
 	 * @param operator The input top-level logical operator
 	 * @param parent The parent plan
 	 */
@@ -36,7 +39,8 @@ public final class TreePlan extends DAGPlan {
 	}
 
 	/**
-	 * Creates a tree plan with no parent or children subplans
+	 * Creates a tree plan with no parent or children subplans.
+	 *
 	 * @param operator The input top-level logical operator
 	 */
 	public TreePlan(RelationalOperator operator) {
@@ -44,21 +48,20 @@ public final class TreePlan extends DAGPlan {
 	}
 
 	/**
-	 * Creates a tree plan with no parent or child subplans
-	 * @param inputs
-	 *  	The plan's inputs
-	 * @param operator
-	 * 		The input top-level logical operator
+	 * Creates a tree plan with no parent or child subplans.
+	 *
+	 * @param inputs  	The plan's inputs
+	 * @param operator 		The input top-level logical operator
 	 */
 	public TreePlan(Collection<? extends Term> inputs, RelationalOperator operator) {
 		this(inputs, operator, null, Lists.<DAGPlan>newArrayList());
 	}
 	
 	/**
-	 * 
+	 * Instantiates a new tree plan.
+	 *
 	 * @param inputs The plan's inputs
-	 * @param operator
-	 * 		The input top-level logical operator
+	 * @param operator 		The input top-level logical operator
 	 * @param parent The parent plan
 	 * @param children The input child subplans
 	 */
@@ -68,12 +71,19 @@ public final class TreePlan extends DAGPlan {
 	}
 
 
+	/**
+	 * Gets the parent.
+	 *
+	 * @return the parent
+	 */
 	public TreePlan getParent() {
 		return (TreePlan) this.parents.get(0);
 	}
 
 	/**
-	 * 	Adds the input plan in the list of this plan's children
+	 * 	Adds the input plan in the list of this plan's children.
+	 *
+	 * @param plan the plan
 	 */
 	@Override
 	public void addChild(DAGPlan plan) {

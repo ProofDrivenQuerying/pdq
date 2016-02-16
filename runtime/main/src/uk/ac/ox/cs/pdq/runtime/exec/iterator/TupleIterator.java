@@ -12,6 +12,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.eventbus.EventBus;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * TupleIterator defines a top-level class for all physical operators.
  * 

@@ -4,11 +4,12 @@ import java.util.Collection;
 
 import uk.ac.ox.cs.pdq.fol.Term;
 
+// TODO: Auto-generated Javadoc
 /**
- * Writes a concise representation of a query to the given output
- * 
- * @author Julien Leblay
+ * Writes a concise representation of a query to the given output.
  *
+ * @author Julien Leblay
+ * @param <T> the generic type
  */
 public abstract class PrettyWriter<T> {
 
@@ -19,9 +20,10 @@ public abstract class PrettyWriter<T> {
 	public abstract void write(T t);
 	
 	/**
-	 * 
-	 * @param terms
-	 * @param separator
+	 * Join terms.
+	 *
+	 * @param terms the terms
+	 * @param separator the separator
 	 * @return a String in which all the provided terms are separated with the
 	 * given separators, and non-variable terms are surrounded with quotes.
 	 */

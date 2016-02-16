@@ -22,15 +22,16 @@ import uk.ac.ox.cs.pdq.planner.dag.cost.sql.DAGConfigurationToSQLTranslator;
 
 import com.google.common.eventbus.EventBus;
 
+// TODO: Auto-generated Javadoc
 /**
  * Translates a configuration directly to an SQL
- * query which is further provided to PostgreSQL for cost analysis
+ * query which is further provided to PostgreSQL for cost analysis.
  *
  * @author Efthymia Tsamoura
- *
  */
 public class PostgresqlBlackBoxEstimator implements BlackBoxCostEstimator<DAGChaseConfiguration> {
 
+	/** The stats. */
 	protected final StatisticsCollector stats;
 
 	/**
@@ -43,15 +44,16 @@ public class PostgresqlBlackBoxEstimator implements BlackBoxCostEstimator<DAGCha
 	/** Properties featuring database connection details. */
 	protected final Properties properties;
 
-	/** The query type use by this estimator */
+	/**  The query type use by this estimator. */
 	protected final BlackBoxQueryTypes queryType;
 
 	/**
 	 * Default constructor.
-	 * @param prop
+	 *
 	 * @param eventBus EventBus
 	 * @param collectStats boolean
-	 * @throws SQLException
+	 * @param prop the prop
+	 * @throws SQLException the SQL exception
 	 */
 	public PostgresqlBlackBoxEstimator(EventBus eventBus, boolean collectStats, Properties prop) throws SQLException {
 		this(eventBus, collectStats, prop, BlackBoxQueryTypes.DEFAULT);
@@ -59,9 +61,10 @@ public class PostgresqlBlackBoxEstimator implements BlackBoxCostEstimator<DAGCha
 
 	/**
 	 * Default constructor.
-	 * @param prop
+	 *
 	 * @param eventBus EventBus
 	 * @param collectStats boolean
+	 * @param prop the prop
 	 * @param type BlackBoxQueryTypes
 	 */
 	public PostgresqlBlackBoxEstimator(EventBus eventBus, boolean collectStats, Properties prop, BlackBoxQueryTypes type) {
@@ -70,9 +73,10 @@ public class PostgresqlBlackBoxEstimator implements BlackBoxCostEstimator<DAGCha
 
 	/**
 	 * Default constructor.
-	 * @param prop
-	 * @param type
+	 *
 	 * @param stats StatisticsCollector
+	 * @param prop the prop
+	 * @param type the type
 	 */
 	public PostgresqlBlackBoxEstimator(StatisticsCollector stats, Properties prop, BlackBoxQueryTypes type) {
 		this.stats = stats;
@@ -81,6 +85,8 @@ public class PostgresqlBlackBoxEstimator implements BlackBoxCostEstimator<DAGCha
 	}
 
 	/**
+	 * Clone.
+	 *
 	 * @return PostgresqlBlackBoxEstimator<P,S>
 	 * @see uk.ac.ox.cs.pdq.plan.cost.ConfigurationCostEstimator#clone()
 	 */
@@ -90,8 +96,10 @@ public class PostgresqlBlackBoxEstimator implements BlackBoxCostEstimator<DAGCha
 	}
 
 	/**
+	 * Gets the connection.
+	 *
 	 * @return a connection database connection for the given properties.
-	 * @throws SQLException
+	 * @throws SQLException the SQL exception
 	 */
 	public Connection getConnection() throws SQLException {
 		String url = this.properties.getProperty("url");
@@ -102,6 +110,8 @@ public class PostgresqlBlackBoxEstimator implements BlackBoxCostEstimator<DAGCha
 	}
 
 	/**
+	 * Cost.
+	 *
 	 * @param configuration DAGConfiguration<S>
 	 * @return Cost
 	 * @see uk.ac.ox.cs.pdq.costs.DAGConfigurationCostEstimator#cost(DAGConfiguration<S>)
@@ -112,6 +122,9 @@ public class PostgresqlBlackBoxEstimator implements BlackBoxCostEstimator<DAGCha
 		return configuration.getPlan().getCost();
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.cost.estimators.CostEstimator#estimateCost(uk.ac.ox.cs.pdq.util.Costable)
+	 */
 	@Override
 	public Cost estimateCost(DAGChaseConfiguration configuration) {
 		double result = Double.POSITIVE_INFINITY;

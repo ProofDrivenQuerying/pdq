@@ -23,25 +23,35 @@ import uk.ac.ox.cs.pdq.rewrite.Rewriter;
 
 import com.beust.jcommander.internal.Lists;
 
+// TODO: Auto-generated Javadoc
 /**
  * Rewriter that produces an output formula equivalent to the input one,
  * where constant in predicate have moved as external equality predicates.
  *  
- * @author Julien Leblay
  *
+ * @author Julien Leblay
+ * @param <F> the generic type
  */
 public class PullEqualityRewriter<F extends Formula> implements Rewriter<F, F> {
 
+	/** The bindings. */
 	private final Map<Variable, TypedConstant<?>> bindings = new LinkedHashMap<>();
 	
+	/** The schema. */
 	private final Schema schema;
 	
+	/**
+	 * Instantiates a new pull equality rewriter.
+	 *
+	 * @param schema the schema
+	 */
 	public PullEqualityRewriter(Schema schema) {
 		this.schema = schema;
 	}
 	
 	/**
-	 * 
+	 * Rewrite.
+	 *
 	 * @param input Formula
 	 * @return a rewriting of the input formula where equality predicates have
 	 * been removed.
@@ -53,8 +63,9 @@ public class PullEqualityRewriter<F extends Formula> implements Rewriter<F, F> {
 	}
 	
 	/**
-	 * Apply the propagation to a top-level formula
-	 * @param f
+	 * Apply the propagation to a top-level formula.
+	 *
+	 * @param f the f
 	 * @return the rewritten formula
 	 */
 	private Formula incorporateEqualities(Formula f) {
@@ -82,6 +93,8 @@ public class PullEqualityRewriter<F extends Formula> implements Rewriter<F, F> {
 	}
 	
 	/**
+	 * Make equalities.
+	 *
 	 * @return a conjunction of equality predicates, based on the bindings
 	 * recorded so far.
 	 */
@@ -99,8 +112,9 @@ public class PullEqualityRewriter<F extends Formula> implements Rewriter<F, F> {
 	}
 	
 	/**
-	 * Apply the propagation to a top-level formula
-	 * @param f
+	 * Apply the propagation to a top-level formula.
+	 *
+	 * @param f the f
 	 * @return the rewritten formula
 	 */
 	private Formula findBindings(Formula f) {

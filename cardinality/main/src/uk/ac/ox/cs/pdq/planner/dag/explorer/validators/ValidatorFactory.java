@@ -1,7 +1,11 @@
+/*
+ * 
+ */
 package uk.ac.ox.cs.pdq.planner.dag.explorer.validators;
 
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.ValidatorTypes;
 
+// TODO: Auto-generated Javadoc
 /**
  * Creates validators (shape restrictions) based on the input arguments.
  *
@@ -10,8 +14,10 @@ import uk.ac.ox.cs.pdq.planner.PlannerParameters.ValidatorTypes;
  */
 public class ValidatorFactory {
 
+	/** The type. */
 	private final ValidatorTypes type;
 
+	/** The depth threshold. */
 	private final int depthThreshold;
 
 	/**
@@ -34,6 +40,8 @@ public class ValidatorFactory {
 	}
 
 	/**
+	 * Gets the single instance of ValidatorFactory.
+	 *
 	 * @return Validator
 	 */
 	public Validator getInstance() {

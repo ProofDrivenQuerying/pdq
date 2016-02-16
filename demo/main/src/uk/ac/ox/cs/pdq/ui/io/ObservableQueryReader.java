@@ -20,6 +20,7 @@ import uk.ac.ox.cs.pdq.io.xml.QueryReader;
 import uk.ac.ox.cs.pdq.ui.model.ObservableQuery;
 import uk.ac.ox.cs.pdq.ui.model.ObservableSchema;
 
+// TODO: Auto-generated Javadoc
 /**
  * Reads queries from XML.
  * 
@@ -30,23 +31,28 @@ public class ObservableQueryReader extends AbstractXMLReader<ObservableQuery> {
 	/** Logger. */
 	private static Logger log = Logger.getLogger(ObservableQueryReader.class);
 
+	/** The name. */
 	private String name;
 
+	/** The description. */
 	private String description;
 
-	/** Query builder */
+	/**  Query builder. */
 	private QueryReader queryReader;
 	
 	/**
-	 * Default constructor
-	 * @param dependencies
+	 * Default constructor.
+	 *
+	 * @param schema the schema
 	 */
 	public ObservableQueryReader(Schema schema) {
 		this.queryReader = new QueryReader(schema);
 	}
 	
 	/**
-	 * @param in
+	 * Read.
+	 *
+	 * @param in the in
 	 * @return a conjunctive query read from the given input stream
 	 */
 	@Override
@@ -87,7 +93,8 @@ public class ObservableQueryReader extends AbstractXMLReader<ObservableQuery> {
 	
 	/**
 	 * For test purpose only.
-	 * @param args
+	 *
+	 * @param args the arguments
 	 */
 	public static void main(String... args) {
 		try (

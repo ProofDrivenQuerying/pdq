@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package uk.ac.ox.cs.pdq.planner.dag.explorer.validators;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -7,19 +10,24 @@ import uk.ac.ox.cs.pdq.planner.dag.DAGAnnotatedPlan;
 import uk.ac.ox.cs.pdq.planner.dag.DAGConfiguration;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * Requires the input pair of configurations to be non trivial
- * and at least one of the input configurations to be an UnaryAnnotatedPlan
- * @author Efthymia Tsamoura
+ * and at least one of the input configurations to be an UnaryAnnotatedPlan.
  *
- * @param 
+ * @author Efthymia Tsamoura
  */
 public class JoinValidator implements Validator{
 
+	/**
+	 * Instantiates a new join validator.
+	 */
 	public JoinValidator() {
 	}
 
 	/**
+	 * Validate.
+	 *
 	 * @param left DAGConfiguration
 	 * @param right DAGConfiguration
 	 * @return boolean
@@ -32,6 +40,8 @@ public class JoinValidator implements Validator{
 	}
 
 	/**
+	 * Validate.
+	 *
 	 * @param left DAGConfiguration
 	 * @param right DAGConfiguration
 	 * @param depth int
@@ -44,6 +54,8 @@ public class JoinValidator implements Validator{
 	}
 
 	/**
+	 * Clone.
+	 *
 	 * @return Validator
 	 * @see uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator#clone()
 	 */

@@ -23,14 +23,15 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 
+// TODO: Auto-generated Javadoc
 /**
- * Writes a concise representation of a query to the given output
- * 
- * @author Julien Leblay
+ * Writes a concise representation of a query to the given output.
  *
+ * @author Julien Leblay
  */
 public class SQLLikeQueryWriter extends PrettyWriter<Query<?>> implements Writer<Query<?>> {
 
+	/** The Constant ALIAS_PREFIX. */
 	private static final String ALIAS_PREFIX = "a";
 
 	/**
@@ -40,7 +41,8 @@ public class SQLLikeQueryWriter extends PrettyWriter<Query<?>> implements Writer
 	private PrintStream out;
 
 	/**
-	 * 
+	 * Instantiates a new SQL like query writer.
+	 *
 	 * @param out the default output
 	 */
 	private SQLLikeQueryWriter(PrintStream out) {
@@ -49,7 +51,8 @@ public class SQLLikeQueryWriter extends PrettyWriter<Query<?>> implements Writer
 	
 	/**
 	 * Fluent pretty writer provider.
-	 * @param out
+	 *
+	 * @param out the out
 	 * @return a new SQLLikeQueryWriter with the given default output.
 	 */
 	public static SQLLikeQueryWriter to(PrintStream out) {
@@ -74,6 +77,12 @@ public class SQLLikeQueryWriter extends PrettyWriter<Query<?>> implements Writer
 		out.print(this.toString(q));
 	}
 	
+	/**
+	 * To string.
+	 *
+	 * @param query the query
+	 * @return the string
+	 */
 	/*
 	 * 
 	 */
@@ -175,8 +184,8 @@ public class SQLLikeQueryWriter extends PrettyWriter<Query<?>> implements Writer
 	/**
 	 * Returns a short String representation of the given dependency. This
 	 * by-passes toString which is too verbose for non-debug purpose.
-	 * 
-	 * @param ic
+	 *
+	 * @param t the t
 	 * @return a short String representation of the dependency.
 	 */
 	public static String convert(Query<?> t) {

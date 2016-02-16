@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package uk.ac.ox.cs.pdq.planner.cardinality;
 
 import java.math.BigDecimal;
@@ -40,39 +43,49 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
 import com.google.common.collect.Sets;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
- * @author Efthymia Tsamoura
+ * The Class DefaultCardinalityEstimator.
  *
+ * @author Efthymia Tsamoura
  */
 public class DefaultCardinalityEstimator implements CardinalityEstimator {
 
+	/** The log. */
 	protected static Logger log = Logger.getLogger(DefaultCardinalityEstimator.class);
 
-	/** Base statistics **/
+	/**  Base statistics *. */
 	private final Catalog catalog;
 
-	/** Stores the keys of each annotated plan**/
+	/**  Stores the keys of each annotated plan*. */
 	private final Multimap<DAGAnnotatedPlan, Collection<Constant>> keyIndex;
 
-	/** Stores the keys of each annotated plan**/
+	/**  Stores the keys of each annotated plan*. */
 	private final Multimap<DAGAnnotatedPlan, Collection<Constant>> notkeyIndex;
 
-	/** 
-	 * Different penalties
-	 */
+	/**   Different penalties. */
 	private final double nonKeyPenalty = 1;
 
+	/** The selectivity penalty. */
 	private final double selectivityPenalty = 1;
 
+	/** The distinct penalty. */
 	private final double distinctPenalty = 1;
 
+	/** The projection penalty. */
 	private final double projectionPenalty = 1;
 
+	/** The subsumption penalty. */
 	private final double subsumptionPenalty = 1;
 
+	/** The histogram penalty. */
 	private final double histogramPenalty = 1;
 
+	/**
+	 * Instantiates a new default cardinality estimator.
+	 *
+	 * @param catalog the catalog
+	 */
 	public DefaultCardinalityEstimator(Catalog catalog) {
 		Preconditions.checkNotNull(catalog);
 		this.catalog = catalog;
@@ -80,6 +93,13 @@ public class DefaultCardinalityEstimator implements CardinalityEstimator {
 		this.notkeyIndex = Multimaps.synchronizedListMultimap(ArrayListMultimap.<DAGAnnotatedPlan, Collection<Constant>>create());
 	}
 
+	/**
+	 * Instantiates a new default cardinality estimator.
+	 *
+	 * @param catalog the catalog
+	 * @param keyIndex the key index
+	 * @param notkeyIndex the notkey index
+	 */
 	private DefaultCardinalityEstimator(Catalog catalog, Multimap<DAGAnnotatedPlan, Collection<Constant>> keyIndex, 
 			Multimap<DAGAnnotatedPlan, Collection<Constant>> notkeyIndex) {
 		Preconditions.checkNotNull(catalog);
@@ -91,10 +111,10 @@ public class DefaultCardinalityEstimator implements CardinalityEstimator {
 	}
 
 	/**
-	 * 
-	 * @param configuration
-	 * @return
-	 * 		the size and the quality of the input annotated plan
+	 * Size quality of.
+	 *
+	 * @param configuration the configuration
+	 * @return 		the size and the quality of the input annotated plan
 	 */
 	@Override
 	public Pair<BigInteger,Double> sizeQualityOf(UnaryAnnotatedPlan configuration) {
@@ -123,13 +143,13 @@ public class DefaultCardinalityEstimator implements CardinalityEstimator {
 		//Estimate the joint selectivity of the predicates using SQL 2014 server's formula.
 		//The formula is described below (from SQL 2014 tutorial):
 		//In an effort to assume some correlation, the new CE in SQL Server 2014 lessens the independence assumption slightly for conjunctions of predicates. 
-		//The process used to model this correlation is called “exponential back-off�?. 
-		//Note: “Exponential back-off�? is used with disjunctions as well. The system calculates this value by first transforming disjunctions to a negation of conjunctions. 
+		//The process used to model this correlation is called “exponential back-off�?. 
+		//Note: “Exponential back-off�? is used with disjunctions as well. The system calculates this value by first transforming disjunctions to a negation of conjunctions. 
 		//The formula below represents the new CE computation of selectivity for a conjunction of predicates. 
-		//“P0�? represents the most selective predicate and is followed by the three most selective predicates:
-		//p_0⋅〖p_1〗^(1�?�2)⋅〖p_2〗^(1�?�4)⋅〖p_3〗^(1�?�8)
+		//“P0�? represents the most selective predicate and is followed by the three most selective predicates:
+		//p_0⋅〖p_1〗^(1�?�2)⋅〖p_2〗^(1�?�4)⋅〖p_3〗^(1�?�8)
 		//The new CE sorts predicates by selectivity and keeps the four most selective predicates for use in the calculation. 
-		//The CE then “moderates�? each successive predicate by taking larger square roots. 
+		//The CE then “moderates�? each successive predicate by taking larger square roots. 
 		if(!selectivities.isEmpty()) {
 			Collections.sort(selectivities);
 			double globalSelectivity = 1;
@@ -147,17 +167,13 @@ public class DefaultCardinalityEstimator implements CardinalityEstimator {
 	 * This method uses key foreign-key constraints to derive an accurate cardinality estimation of the input (nary) join.
 	 * When this is not possible, the method breaks up the input (nary) join predicate into unary join predicates.
 	 * It estimates the output cardinality using the minimum of the cardinalities related to each unary join predicate.   
-	 * @param left
-	 * @param right
-	 * @param egd
-	 * 		Runs the EGD chase algorithm 
-	 * @param detector
-	 * 		Detects homomorphisms during chasing
-	 * @param dependencies
-	 * 		The dependencies to take into account during chasing
-	 * @return
-	 * 		the size and the quality of the annotated plan that is composed by the input annotated plans.
-	 * 		
+	 *
+	 * @param left the left
+	 * @param right the right
+	 * @param egd 		Runs the EGD chase algorithm 
+	 * @param detector 		Detects homomorphisms during chasing
+	 * @param dependencies 		The dependencies to take into account during chasing
+	 * @return 		the size and the quality of the annotated plan that is composed by the input annotated plans.
 	 */
 	@Override
 	public Pair<BigInteger,Double> sizeQualityOf(DAGAnnotatedPlan left, DAGAnnotatedPlan right, Chaser egd, HomomorphismDetector detector, Collection<? extends Constraint> dependencies) {
@@ -247,30 +263,35 @@ public class DefaultCardinalityEstimator implements CardinalityEstimator {
 
 	/**
 	 * --If AnnPlan is successful and the non-schema constants in the facts are exactly
-		the free variables of Q, we let
-		QueryAdjustedQuality(AnnPlan) = QualityOf(AnnPlan)
-		In this case we know that the number of tuples in the plan output is exactly the
-		size we want.
-
-		--Otherwise if AnnPlan is successful, we let
-		QueryAdjustedQuality(AnnPlan) = QualityOf(AnnPlan)+Kproject
-		where Kproject is a penalty reflecting the fact that the number of tuples in the
-		plan output is an overestimate of the number of tuples in Q, since Q will be a
-		projection of the plan. By default, we could set Kproject = 1 it could also be
-		proportional to the number of attributes that need to be projected out, which are
-		the non-schema constants in AnnPlan that are not free variables of Q.
-
-		--Otherwise, if AnnPlan is not successful but the non-schema constants are exactly
-		the free variables of Q, we set
-		QueryAdjustedQuality(AnnPlan) = QualityOf(AnnPlan)+Ksubsume
-		where Ksubsume is a penalty reflecting the fact that the number of tuples in the
-		plan output is an overestimate of the number of tuples in Q, since Q will be
-		contained in the plan but not vice versa. By default, we could let Ksubsume be 1.
-
-		--Otherwise, if AnnPlan is not successful and the non-schema constants properly
-		contain the free variables of Q, we set
-		QueryAdjustedQuality(AnnPlan) = QualityOf(AnnPlan)+Ksubsume+Kproject
-		reflecting both the considerations above.
+	 * 		the free variables of Q, we let
+	 * 		QueryAdjustedQuality(AnnPlan) = QualityOf(AnnPlan)
+	 * 		In this case we know that the number of tuples in the plan output is exactly the
+	 * 		size we want.
+	 * 
+	 * 		--Otherwise if AnnPlan is successful, we let
+	 * 		QueryAdjustedQuality(AnnPlan) = QualityOf(AnnPlan)+Kproject
+	 * 		where Kproject is a penalty reflecting the fact that the number of tuples in the
+	 * 		plan output is an overestimate of the number of tuples in Q, since Q will be a
+	 * 		projection of the plan. By default, we could set Kproject = 1 it could also be
+	 * 		proportional to the number of attributes that need to be projected out, which are
+	 * 		the non-schema constants in AnnPlan that are not free variables of Q.
+	 * 
+	 * 		--Otherwise, if AnnPlan is not successful but the non-schema constants are exactly
+	 * 		the free variables of Q, we set
+	 * 		QueryAdjustedQuality(AnnPlan) = QualityOf(AnnPlan)+Ksubsume
+	 * 		where Ksubsume is a penalty reflecting the fact that the number of tuples in the
+	 * 		plan output is an overestimate of the number of tuples in Q, since Q will be
+	 * 		contained in the plan but not vice versa. By default, we could let Ksubsume be 1.
+	 * 
+	 * 		--Otherwise, if AnnPlan is not successful and the non-schema constants properly
+	 * 		contain the free variables of Q, we set
+	 * 		QueryAdjustedQuality(AnnPlan) = QualityOf(AnnPlan)+Ksubsume+Kproject
+	 * 		reflecting both the considerations above.
+	 *
+	 * @param configuration the configuration
+	 * @param query the query
+	 * @param matchesQuery the matches query
+	 * @return the double
 	 */
 	@Override
 	public double adjustedQualityOf(DAGAnnotatedPlan configuration, Query<?> query, boolean matchesQuery) {		
@@ -293,6 +314,9 @@ public class DefaultCardinalityEstimator implements CardinalityEstimator {
 		return Double.MAX_VALUE;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#clone()
+	 */
 	@Override
 	public DefaultCardinalityEstimator clone() {
 		return new DefaultCardinalityEstimator(this.catalog, this.keyIndex, this.notkeyIndex);
@@ -301,18 +325,13 @@ public class DefaultCardinalityEstimator implements CardinalityEstimator {
 	/**
 	 * Determines whether the attributes corresponding to constants in keys form a key in the plan of AnnPlan.
 	 * It first searches the cache for previously detected keys before resorting to reasoning.
-	 * 
-	 * @param keys
-	 * 		Input candidate keys
-	 * @param configuration
-	 * @param egd
-	 * 		Runs the EGD chasing algorithm 
-	 * @param detector
-	 * 		Detects homomorphisms during chasing
-	 * @param dependencies
-	 * 		Dependencies to consider during chasing
-	 * @return
-	 * 		true if the input collection of constants is a key for the input annotated plan
+	 *
+	 * @param keys 		Input candidate keys
+	 * @param configuration the configuration
+	 * @param egd 		Runs the EGD chasing algorithm 
+	 * @param detector 		Detects homomorphisms during chasing
+	 * @param dependencies 		Dependencies to consider during chasing
+	 * @return 		true if the input collection of constants is a key for the input annotated plan
 	 */
 	private boolean isKey(Collection<Constant> keys, DAGAnnotatedPlan configuration, Chaser egd, HomomorphismDetector detector, Collection<? extends Constraint> dependencies) {
 		Preconditions.checkNotNull(keys);
@@ -406,11 +425,11 @@ public class DefaultCardinalityEstimator implements CardinalityEstimator {
 	}
 
 	/**
-	 * 
-	 * @param annotatedPlan
-	 * @param constant
-	 * @return
-	 * 		the <relation,attribute> pair with the highest quality for the given input constant
+	 * Gets the highest quality score relation.
+	 *
+	 * @param annotatedPlan the annotated plan
+	 * @param constant the constant
+	 * @return 		the <relation,attribute> pair with the highest quality for the given input constant
 	 */
 	private Pair<Relation,Attribute> getHighestQualityScoreRelation(DAGAnnotatedPlan annotatedPlan, Constant constant) {
 		double maxQuality = Double.MAX_VALUE;
@@ -427,11 +446,11 @@ public class DefaultCardinalityEstimator implements CardinalityEstimator {
 	}
 
 	/**
-	 * 
-	 * @param annotatedPlan
-	 * @param constant
-	 * @return
-	 * 		the <annotatedPlan,attribute> pair with the highest quality for the given input constant
+	 * Gets the highest quality annotated plan.
+	 *
+	 * @param annotatedPlan the annotated plan
+	 * @param constant the constant
+	 * @return 		the <annotatedPlan,attribute> pair with the highest quality for the given input constant
 	 */
 	private Pair<UnaryAnnotatedPlan, Attribute> getHighestQualityAnnotatedPlan(DAGAnnotatedPlan annotatedPlan, Constant constant) {
 		double maxQuality = Double.MAX_VALUE;
@@ -448,7 +467,6 @@ public class DefaultCardinalityEstimator implements CardinalityEstimator {
 	}
 
 	/**
-	 * 
 	 * Returns the size and the quality of the join of the input annotated plans.
 	 * Choose a fact F1 in the annotation of left containing c, such that the quality score
 	 * of the relation R1 in F1 is best possible, and similarly choose fact F2
@@ -463,11 +481,10 @@ public class DefaultCardinalityEstimator implements CardinalityEstimator {
 	 * 
 	 * The output quality if estimated as 
 	 * max{QualityOf(left), QualityOf(right)}+ K_{EstimateSelectivity} where K_{EstimateSelectivity} is a penalty.
-	 * 
-	 * @param left
-	 * @param right
-	 * @param c
-	 * 		the join chase constant
+	 *
+	 * @param left the left
+	 * @param right the right
+	 * @param c 		the join chase constant
 	 * @return the size and the quality of the join of the input annotated plans
 	 */
 	private Pair<BigInteger, Double> singleEquijoinSizeQualityWithoutHistograms(DAGAnnotatedPlan left, DAGAnnotatedPlan right, Constant c) {
@@ -486,23 +503,21 @@ public class DefaultCardinalityEstimator implements CardinalityEstimator {
 	 * The method covers the following case:
 	 * 
 	 * 	i.	our annotated plan is of the form Compose(Atomic(F1),Atomic(F2)), where
-		F1 = R1(\vec(c1)) and F2 = R2(\vec(c2)) are facts.
-		ii. there is only one common chase constant c of Atomic(F1) and Atomic(F2)
-		iii.we have a histogram on a position of R1 containing constant c in R1 and the same
-		in R2
-		iv.	the buckets of the histogram are the same, namely B = fb1 : : :bKg
-		In this case we could take
-		SizeOf(AnnPlan)=\Sum{i\leqK} AvgSize(R1[bi]) \times AvgSize(R2[bi]) \times min{NumDistinct(R1[bi]),NumDistinct(R2[bi])}
-		where AvgSize(Rj[bi]) is the average number of tuples in Rj per element in the bucket
-		bi and NumDistinct(Rj[bi]) is the number of distinct values of the position corresponding
-		to chase constant c in bucket bi of Rj.
-		We take QualityOf(AnnPlan) = KHistJoin where KHistJoin is another penalty factor.
-	 * 
-	 * 
-	 * @param left
-	 * @param right
-	 * @param c
-	 * 		the join chase constant
+	 * 		F1 = R1(\vec(c1)) and F2 = R2(\vec(c2)) are facts.
+	 * 		ii. there is only one common chase constant c of Atomic(F1) and Atomic(F2)
+	 * 		iii.we have a histogram on a position of R1 containing constant c in R1 and the same
+	 * 		in R2
+	 * 		iv.	the buckets of the histogram are the same, namely B = fb1 : : :bKg
+	 * 		In this case we could take
+	 * 		SizeOf(AnnPlan)=\Sum{i\leqK} AvgSize(R1[bi]) \times AvgSize(R2[bi]) \times min{NumDistinct(R1[bi]),NumDistinct(R2[bi])}
+	 * 		where AvgSize(Rj[bi]) is the average number of tuples in Rj per element in the bucket
+	 * 		bi and NumDistinct(Rj[bi]) is the number of distinct values of the position corresponding
+	 * 		to chase constant c in bucket bi of Rj.
+	 * 		We take QualityOf(AnnPlan) = KHistJoin where KHistJoin is another penalty factor.
+	 *
+	 * @param left the left
+	 * @param right the right
+	 * @param c 		the join chase constant
 	 * @return the size and the quality of the join of the input annotated plans
 	 */
 	private Pair<BigInteger, Double> singleEquijoinSizeQualityWithHistograms(UnaryAnnotatedPlan left, UnaryAnnotatedPlan right, Constant c) {		
@@ -532,18 +547,17 @@ public class DefaultCardinalityEstimator implements CardinalityEstimator {
 	 * Returns the size and the quality of the join of the input annotated plans.
 	 * The method covers the following case:
 	 * 
-		i.our annotated plan is of the form Compose(Atomic(F1),Atomic(F2)), where
-		F1 = R1(\vec{c1}) and F2 = R2(\vec{c1}) are facts with exactly the same chase constants.
-		ii.we have a histogram on a position corresponding to constant c in R1 and similarly
-		in R2
-		iii.the buckets of the histogram are the same, namely B = {b1,...,bK}
-		SizeOf(AnnPlan) = \Sum_{i\leqK}
-		min{AvgSize(R1[bi]) \times NumDistinct(R1[bi]),AvgSize(R2[bi]) \time NumDistinct(R2[bi])}
-		QualityOf(AnnPlan) = KHistJoin.
-	 * 
-	 * 
-	 * @param left
-	 * @param right
+	 * 		i.our annotated plan is of the form Compose(Atomic(F1),Atomic(F2)), where
+	 * 		F1 = R1(\vec{c1}) and F2 = R2(\vec{c1}) are facts with exactly the same chase constants.
+	 * 		ii.we have a histogram on a position corresponding to constant c in R1 and similarly
+	 * 		in R2
+	 * 		iii.the buckets of the histogram are the same, namely B = {b1,...,bK}
+	 * 		SizeOf(AnnPlan) = \Sum_{i\leqK}
+	 * 		min{AvgSize(R1[bi]) \times NumDistinct(R1[bi]),AvgSize(R2[bi]) \time NumDistinct(R2[bi])}
+	 * 		QualityOf(AnnPlan) = KHistJoin.
+	 *
+	 * @param left the left
+	 * @param right the right
 	 * @return the size and the quality of the join of the input annotated plans
 	 */
 	private Pair<BigInteger, Double> intersectionSizeQualityWithHistograms(UnaryAnnotatedPlan left, UnaryAnnotatedPlan right) {
@@ -579,11 +593,11 @@ public class DefaultCardinalityEstimator implements CardinalityEstimator {
 
 
 	/**
-	 * 
-	 * @param configuration
-	 * @param query
-	 * @return
-	 * 		the cardinality of the input annotated plan after applying the projections of the input    
+	 * Cardinality of.
+	 *
+	 * @param configuration the configuration
+	 * @param query the query
+	 * @return 		the cardinality of the input annotated plan after applying the projections of the input
 	 */
 	@Override
 	public BigInteger cardinalityOf(DAGAnnotatedPlan configuration, Query<?> query) {
@@ -591,15 +605,15 @@ public class DefaultCardinalityEstimator implements CardinalityEstimator {
 	}
 
 	/**
-	 * 
-	 * @param configuration
-	 * @param query
-	 * @return
-	 * 		an upper bound of the size of the query after projecting on its free variables.
+	 * Cardinality of independent estimate.
+	 *
+	 * @param configuration the configuration
+	 * @param query the query
+	 * @return 		an upper bound of the size of the query after projecting on its free variables.
 	 * 		This estimate is derived after assigning each query free variable to a constant (attribute) in a unary annotated plan 
 	 * 		and taking the product of the the cardinalities of the constants from the schema catalog. 
 	 * 		The cardinality of each constant is reduced by the selectivity of the unary annotated plan it comes from,
-	 * 		where the selectivity of the unary annotate plan is estimated as the size of the annotated plan to the size of the base relation.  
+	 * 		where the selectivity of the unary annotate plan is estimated as the size of the annotated plan to the size of the base relation.
 	 */
 	protected BigInteger cardinalityOfIndependentEstimate(DAGAnnotatedPlan configuration, Query<?> query) {
 		if(configuration.getExportedConstants().containsAll(query.getFreeToCanonical().values())) {
@@ -635,17 +649,16 @@ public class DefaultCardinalityEstimator implements CardinalityEstimator {
 	}
 
 	/**
-	 * 
-	 * @param configuration
-	 * @param query
-	 * @return
-	 * 		an upper bound of the size of the query after projecting on its free variables.
+	 * Cardinality of group estimate.
+	 *
+	 * @param configuration the configuration
+	 * @param query the query
+	 * @return 		an upper bound of the size of the query after projecting on its free variables.
 	 * 		pick an A_i for each free variable of the query v_i, and then say
-			that v_i == v_j if A_i = A_j. For each class C, let A_C be the corresponding atom. For each
-			equivalence class C, let m_C be the maximum of |A_C| and \pi_{v_i \in C} SizeOf|\pi_{v_i} A_C|. That is,
-			we can estimate \pi_{v_i} A_C by the minimum of these two quantities.
-			We then estimate SizeOf(p_{\vec{v}}(AnnPlan)), where \vec{v} is the vector of query's free variables by \Pi_C m_C
-	 * 
+	 * 			that v_i == v_j if A_i = A_j. For each class C, let A_C be the corresponding atom. For each
+	 * 			equivalence class C, let m_C be the maximum of |A_C| and \pi_{v_i \in C} SizeOf|\pi_{v_i} A_C|. That is,
+	 * 			we can estimate \pi_{v_i} A_C by the minimum of these two quantities.
+	 * 			We then estimate SizeOf(p_{\vec{v}}(AnnPlan)), where \vec{v} is the vector of query's free variables by \Pi_C m_C
 	 */
 	protected BigInteger cardinalityOfGroupEstimate(DAGAnnotatedPlan configuration, Query<?> query) {
 		if(configuration.getExportedConstants().containsAll(query.getFreeToCanonical().values())) {
@@ -717,8 +730,9 @@ public class DefaultCardinalityEstimator implements CardinalityEstimator {
 	}
 
 	/**
-	 * 
-	 * @param configuration
+	 * Gets the selectivity of.
+	 *
+	 * @param configuration the configuration
 	 * @return the selectivity of the input annotated plan.
 	 * The returned estimate is the ratio of the size of the annotated plan to the cartesian product of the base relations.
 	 */

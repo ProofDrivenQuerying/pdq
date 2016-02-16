@@ -1,5 +1,6 @@
 package uk.ac.ox.cs.pdq.builder;
 
+// TODO: Auto-generated Javadoc
 /**
  * Exception that occurred during a building operation.
  *
@@ -8,7 +9,7 @@ package uk.ac.ox.cs.pdq.builder;
  */
 public class BuilderException extends RuntimeException {
 
-	/** */
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -315472460756924167L;
 
 	/**
@@ -19,6 +20,8 @@ public class BuilderException extends RuntimeException {
 	}
 
 	/**
+	 * Instantiates a new builder exception.
+	 *
 	 * @param msg exception message.
 	 */
 	public BuilderException(String msg) {
@@ -26,6 +29,8 @@ public class BuilderException extends RuntimeException {
 	}
 
 	/**
+	 * Instantiates a new builder exception.
+	 *
 	 * @param msg exception's message
 	 * @param cause root cause of the problem.
 	 */

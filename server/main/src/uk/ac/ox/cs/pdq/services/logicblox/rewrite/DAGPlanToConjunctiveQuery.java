@@ -22,13 +22,14 @@ import uk.ac.ox.cs.pdq.plan.AccessOperator;
 import uk.ac.ox.cs.pdq.plan.DAGPlan;
 import uk.ac.ox.cs.pdq.rewrite.Rewriter;
 
+// TODO: Auto-generated Javadoc
 /**
  * Rewrites DAGPlans to conjunctive queries.
  * @author Julien LEBLAY
  */
 public class DAGPlanToConjunctiveQuery implements Rewriter<DAGPlan, ConjunctiveQuery> {
 	
-	/** The query's head predicate */
+	/**  The query's head predicate. */
 	private final Predicate head;
 	
 	/**
@@ -119,9 +120,10 @@ public class DAGPlanToConjunctiveQuery implements Rewriter<DAGPlan, ConjunctiveQ
 
 	/**
 	 * Propagate renaming into plan predicates.
-	 * @param builder QueryBuilder
+	 *
 	 * @param mapping Map<Term,Term>
 	 * @param pred LogicalOperator
+	 * @param child the child
 	 */
 	private void propagateConstants(Map<Term, Term> mapping, uk.ac.ox.cs.pdq.algebra.predicates.Predicate pred, RelationalOperator child) {
 		if (pred instanceof ConjunctivePredicate) {

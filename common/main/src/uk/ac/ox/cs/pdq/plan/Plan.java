@@ -11,17 +11,19 @@ import uk.ac.ox.cs.pdq.util.Typed;
 
 import com.google.common.collect.ImmutableList;
 
+// TODO: Auto-generated Javadoc
 /**
- * Abstract plan class
+ * Abstract plan class.
+ *
  * @author Efthymia Tsamoura
  * @author Julien Leblay
  */
 public abstract class Plan implements Costable, Comparable<Plan>, Differentiable<Plan> {
 	
-	/** The plan's inputs*/
+	/**  The plan's inputs. */
 	protected final List<? extends Term> inputs;
 
-	/** The plan's cost */
+	/**  The plan's cost. */
 	protected Cost cost = DoubleCost.UPPER_BOUND;
 
 	/**
@@ -32,9 +34,9 @@ public abstract class Plan implements Costable, Comparable<Plan>, Differentiable
 	}
 
 	/**
+	 * Instantiates a new plan.
 	 *
-	 * @param inputs
-	 * 		The plan's inputs
+	 * @param inputs 		The plan's inputs
 	 */
 	public Plan(List<? extends Term> inputs) {
 		this.inputs = inputs;
@@ -42,13 +44,16 @@ public abstract class Plan implements Costable, Comparable<Plan>, Differentiable
 
 	/**
 	 * Sets the plan's cost.
-	 * @param cost
+	 *
+	 * @param cost the new cost
 	 */
 	public void setCost(Cost cost) {
 		this.cost = cost;
 	}
 
 	/**
+	 * Gets the cost.
+	 *
 	 * @return the plan's cost
 	 */
 	public Cost getCost() {
@@ -56,6 +61,8 @@ public abstract class Plan implements Costable, Comparable<Plan>, Differentiable
 	}
 
 	/**
+	 * Gets the inputs.
+	 *
 	 * @return the plan's input terms
 	 */
 	public List<? extends Term> getInputs() {
@@ -63,6 +70,8 @@ public abstract class Plan implements Costable, Comparable<Plan>, Differentiable
 	}
 
 	/**
+	 * How different.
+	 *
 	 * @param o Plan
 	 * @return Levels
 	 */
@@ -81,6 +90,8 @@ public abstract class Plan implements Costable, Comparable<Plan>, Differentiable
 	}
 
 	/**
+	 * Diff.
+	 *
 	 * @param o Plan
 	 * @return String
 	 */
@@ -95,42 +106,60 @@ public abstract class Plan implements Costable, Comparable<Plan>, Differentiable
 	}
 
 	/**
+	 * Checks if is empty.
+	 *
 	 * @return true if the current plan is empty
 	 */
 	public abstract boolean isEmpty();
 
 	/**
+	 * Size.
+	 *
 	 * @return the number of subplans
 	 */
 	public abstract Integer size();
 
 	/**
+	 * Gets the output.
+	 *
 	 * @return the output terms of this plan
 	 */
 	public abstract List<? extends Term> getOutput();
 
 	/**
+	 * Gets the operator.
+	 *
+	 * @param <O> the generic type
 	 * @return the top-level operator of this plan
 	 */
 	public abstract <O extends Operator> O getOperator();
 
 	//This function seems confusing
 	/**
+	 * Gets the effective operator.
+	 *
+	 * @param <O> the generic type
 	 * @return the top level operator of this plan
 	 */
 	public abstract <O extends Operator> O getEffectiveOperator();
 
 	/**
+	 * Gets the output attributes.
+	 *
 	 * @return the output attributes of this plan
 	 */
 	public abstract List<Typed> getOutputAttributes();
 
 	/**
-	 * @return true if the plan has no input 
+	 * Checks if is closed.
+	 *
+	 * @return true if the plan has no input
 	 */
 	public abstract boolean isClosed();
 
 	/**
+	 * Gets the accesses.
+	 *
 	 * @return the accesses of this plan
 	 */
 	public abstract Collection<AccessOperator> getAccesses();

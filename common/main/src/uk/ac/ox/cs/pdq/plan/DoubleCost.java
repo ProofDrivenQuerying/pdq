@@ -2,18 +2,23 @@ package uk.ac.ox.cs.pdq.plan;
 
 import com.google.common.base.Preconditions;
 
+// TODO: Auto-generated Javadoc
 /**
- * Cost of double value
+ * Cost of double value.
  *
  * @author Efthymia Tsamoura
- *
  */
 public final class DoubleCost implements Cost {
 	
+	/** The Constant UPPER_BOUND. */
 	public static final DoubleCost UPPER_BOUND = new DoubleCost(Double.POSITIVE_INFINITY);
 	
+	/** The value. */
 	protected Double value;
 
+	/**
+	 * Instantiates a new double cost.
+	 */
 	public DoubleCost() {
 		this.value = 0.0;
 	}
@@ -27,6 +32,8 @@ public final class DoubleCost implements Cost {
 	}
 
 	/**
+	 * Gets the cost.
+	 *
 	 * @return double
 	 */
 	public double getCost() {
@@ -34,6 +41,8 @@ public final class DoubleCost implements Cost {
 	}
 
 	/**
+	 * Less or equals.
+	 *
 	 * @param cost Cost
 	 * @return boolean
 	 * @see uk.ac.ox.cs.pdq.plan.Cost#lessOrEquals(Cost)
@@ -45,6 +54,8 @@ public final class DoubleCost implements Cost {
 	}
 
 	/**
+	 * Sets the max.
+	 *
 	 * @see uk.ac.ox.cs.pdq.plan.Cost#setMax()
 	 */
 	@Override
@@ -53,6 +64,8 @@ public final class DoubleCost implements Cost {
 	}
 
 	/**
+	 * Greater or equals.
+	 *
 	 * @param cost Cost
 	 * @return boolean
 	 * @see uk.ac.ox.cs.pdq.plan.Cost#greaterOrEquals(Cost)
@@ -65,6 +78,8 @@ public final class DoubleCost implements Cost {
 	}
 
 	/**
+	 * Less than.
+	 *
 	 * @param cost Cost
 	 * @return boolean
 	 * @see uk.ac.ox.cs.pdq.plan.Cost#lessThan(Cost)
@@ -76,6 +91,8 @@ public final class DoubleCost implements Cost {
 	}
 
 	/**
+	 * Greater than.
+	 *
 	 * @param cost Cost
 	 * @return boolean
 	 * @see uk.ac.ox.cs.pdq.plan.Cost#greaterThan(Cost)
@@ -87,6 +104,8 @@ public final class DoubleCost implements Cost {
 	}
 
 	/**
+	 * Equals.
+	 *
 	 * @param o Object
 	 * @return boolean
 	 */
@@ -103,6 +122,8 @@ public final class DoubleCost implements Cost {
 	}
 
 	/**
+	 * Hash code.
+	 *
 	 * @return int
 	 */
 	@Override
@@ -111,6 +132,8 @@ public final class DoubleCost implements Cost {
 	}
 
 	/**
+	 * To string.
+	 *
 	 * @return String
 	 */
 	@Override
@@ -119,6 +142,8 @@ public final class DoubleCost implements Cost {
 	}
 
 	/**
+	 * Adds the.
+	 *
 	 * @param cost Cost
 	 * @return Cost
 	 * @see uk.ac.ox.cs.pdq.plan.Cost#add(Cost)
@@ -130,6 +155,8 @@ public final class DoubleCost implements Cost {
 	}
 
 	/**
+	 * Gets the value.
+	 *
 	 * @return Number
 	 * @see uk.ac.ox.cs.pdq.plan.Cost#getValue()
 	 */
@@ -139,6 +166,8 @@ public final class DoubleCost implements Cost {
 	}
 
 	/**
+	 * Clone.
+	 *
 	 * @return Cost
 	 * @see uk.ac.ox.cs.pdq.plan.Cost#clone()
 	 */
@@ -148,6 +177,8 @@ public final class DoubleCost implements Cost {
 	}
 
 	/**
+	 * Compare to.
+	 *
 	 * @param o Cost
 	 * @return int
 	 */
@@ -166,6 +197,8 @@ public final class DoubleCost implements Cost {
 	}
 
 	/**
+	 * Checks if is upper bound.
+	 *
 	 * @return boolean
 	 * @see uk.ac.ox.cs.pdq.plan.Cost#isUpperBound()
 	 */

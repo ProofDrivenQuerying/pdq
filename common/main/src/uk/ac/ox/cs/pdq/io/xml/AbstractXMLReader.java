@@ -9,10 +9,12 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import uk.ac.ox.cs.pdq.io.Reader;
 
+// TODO: Auto-generated Javadoc
 /**
  * Reads experiment sample elements from XML.
- * 
+ *
  * @author Julien Leblay
+ * @param <T> the generic type
  */
 public abstract class AbstractXMLReader<T> extends DefaultHandler implements Reader<T> {
 
@@ -20,7 +22,9 @@ public abstract class AbstractXMLReader<T> extends DefaultHandler implements Rea
 	private static Logger log = Logger.getLogger(AbstractXMLReader.class);
 
 	/**
-	 * @param str
+	 * To int list.
+	 *
+	 * @param str the str
 	 * @return a list of integer, from an String input comma-separated int list.
 	 * @throws NullPointerException if the given str is null
 	 * @throws NumberFormatException if the input string is not well-formed.
@@ -38,8 +42,10 @@ public abstract class AbstractXMLReader<T> extends DefaultHandler implements Rea
 	}
 
 	/**
-	 * @param att
-	 * @param qn
+	 * Gets the value.
+	 *
+	 * @param att the att
+	 * @param qn the qn
 	 * @return the attribute value of the given qname
 	 */
 	protected String getValue(Attributes att, QNames qn) {
@@ -47,8 +53,10 @@ public abstract class AbstractXMLReader<T> extends DefaultHandler implements Rea
 	}
 
 	/**
-	 * @param att
-	 * @param qn
+	 * Gets the int value.
+	 *
+	 * @param att the att
+	 * @param qn the qn
 	 * @return the attribute value of the given qname
 	 */
 	protected Integer getIntValue(Attributes att, QNames qn) {

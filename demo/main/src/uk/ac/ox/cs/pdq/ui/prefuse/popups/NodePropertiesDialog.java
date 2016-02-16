@@ -23,18 +23,30 @@ import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.DominanceMetadata.P
 import uk.ac.ox.cs.pdq.ui.proof.Proof;
 
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class NodePropertiesDialog.
+ */
 public class NodePropertiesDialog extends JFrame {
 
+	/** The node. */
 	private SearchNode node;
 
 
-	/** Creates the GUI shown inside the frame's content pane. */
+	/**
+	 *  Creates the GUI shown inside the frame's content pane.
+	 *
+	 * @param node the node
+	 */
 	public NodePropertiesDialog(SearchNode node) {
 		super();
 		this.node = node;
 		this.initialise();
 	}
 
+	/**
+	 * Initialise.
+	 */
 	private void initialise() {
 
 		Border border = BorderFactory.createEmptyBorder(20, 20, 5, 20);
@@ -56,6 +68,13 @@ public class NodePropertiesDialog extends JFrame {
 	}
 
 
+	/**
+	 * Creates the general panel.
+	 *
+	 * @param node the node
+	 * @param border the border
+	 * @return the j panel
+	 */
 	private JPanel createGeneralPanel(SearchNode node, Border border) {
 		JPanel titledBorders = new JPanel();
 		titledBorders.setBorder(border);
@@ -68,6 +87,13 @@ public class NodePropertiesDialog extends JFrame {
 	}
 
 
+	/**
+	 * Creates the candidates panel.
+	 *
+	 * @param node the node
+	 * @param border the border
+	 * @return the j panel
+	 */
 	private JPanel createCandidatesPanel(SearchNode node, Border border) {
 		JPanel titledBorders = new JPanel();
 		titledBorders.setBorder(border);
@@ -86,6 +112,13 @@ public class NodePropertiesDialog extends JFrame {
 		return titledBorders;
 	}
 
+	/**
+	 * Creates the pruning panel.
+	 *
+	 * @param node the node
+	 * @param border the border
+	 * @return the j panel
+	 */
 	private JPanel createPruningPanel(SearchNode node, Border border) {
 		JPanel titledBorders = new JPanel();
 		titledBorders.setBorder(border);
@@ -111,6 +144,13 @@ public class NodePropertiesDialog extends JFrame {
 	}
 
 
+	/**
+	 * Creates the equivalence panel.
+	 *
+	 * @param node the node
+	 * @param border the border
+	 * @return the j panel
+	 */
 	private JPanel createEquivalencePanel(SearchNode node, Border border) {
 		JPanel titledBorders = new JPanel();
 		titledBorders.setBorder(border);
@@ -127,6 +167,13 @@ public class NodePropertiesDialog extends JFrame {
 	}
 
 
+	/**
+	 * Creates the success panel.
+	 *
+	 * @param node the node
+	 * @param border the border
+	 * @return the j panel
+	 */
 	private JPanel createSuccessPanel(SearchNode node, Border border) {
 		JPanel titledBorders = new JPanel();
 		titledBorders.setBorder(border);
@@ -146,6 +193,13 @@ public class NodePropertiesDialog extends JFrame {
 
 
 
+	/**
+	 * Creates the miscellaneous panel.
+	 *
+	 * @param node the node
+	 * @param border the border
+	 * @return the j panel
+	 */
 	private JPanel createMiscellaneousPanel(SearchNode node, Border border) {
 		JPanel titledBorders = new JPanel();
 		titledBorders.setBorder(border);

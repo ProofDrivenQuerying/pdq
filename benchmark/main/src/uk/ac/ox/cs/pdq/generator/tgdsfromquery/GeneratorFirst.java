@@ -12,6 +12,7 @@ import uk.ac.ox.cs.pdq.io.xml.QueryReader;
 import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
 import uk.ac.ox.cs.pdq.io.xml.SchemaWriter;
 
+// TODO: Auto-generated Javadoc
 /**
  * Creates tuple generating dependencies or views given an input query.
  * First, it creates the relations of the schema. 
@@ -27,10 +28,21 @@ import uk.ac.ox.cs.pdq.io.xml.SchemaWriter;
  */
 public class GeneratorFirst extends AbstractGenerator{
 
+	/**
+	 * Instantiates a new generator first.
+	 *
+	 * @param parameters the parameters
+	 * @param schemaFile the schema file
+	 * @param queryFile the query file
+	 * @param out the out
+	 */
 	public GeneratorFirst(BenchmarkParameters parameters, String schemaFile, String queryFile, PrintStream out) {
 		super(parameters, schemaFile, queryFile, out);
 	}
 	
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.generator.AbstractGenerator#make()
+	 */
 	@Override
 	public void make() throws IOException {
 		// Load the statistic collector/logger

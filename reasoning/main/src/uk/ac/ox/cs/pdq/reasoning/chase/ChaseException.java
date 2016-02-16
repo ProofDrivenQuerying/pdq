@@ -1,14 +1,14 @@
 package uk.ac.ox.cs.pdq.reasoning.chase;
 
+// TODO: Auto-generated Javadoc
 /**
- * Exception that occurred during chasing
+ * Exception that occurred during chasing.
  *
  * @author Efthymia Tsamoura
- *
  */
 public class ChaseException extends Exception {
 
-	/** */
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -315472460756924167L;
 
 	/**
@@ -19,6 +19,8 @@ public class ChaseException extends Exception {
 	}
 
 	/**
+	 * Instantiates a new chase exception.
+	 *
 	 * @param msg exception message.
 	 */
 	public ChaseException(String msg) {
@@ -26,6 +28,8 @@ public class ChaseException extends Exception {
 	}
 
 	/**
+	 * Instantiates a new chase exception.
+	 *
 	 * @param msg exception's message
 	 * @param cause root cause of the problem.
 	 */
@@ -34,6 +38,8 @@ public class ChaseException extends Exception {
 	}
 
 	/**
+	 * Instantiates a new chase exception.
+	 *
 	 * @param cause root cause of the problem.
 	 */
 	public ChaseException(Throwable cause) {

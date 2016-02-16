@@ -12,6 +12,7 @@ import uk.ac.ox.cs.pdq.services.logicblox.rewrite.DAGPlanToConjunctiveQuery;
 
 import com.google.common.eventbus.Subscribe;
 
+// TODO: Auto-generated Javadoc
 /**
  * Prints cost to the default loggers, iff better that the last observed cost.
  * @author Julien LEBLAY

@@ -19,6 +19,7 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.generator.tgdsfromquery.SchemaGeneratorFirst;
 
+// TODO: Auto-generated Javadoc
 /**
  * Generates query or views based on an input Schema, and external parameters.
  * 
@@ -29,6 +30,11 @@ import uk.ac.ox.cs.pdq.generator.tgdsfromquery.SchemaGeneratorFirst;
 @RunWith(Parameterized.class) 
 public class SchemaGeneratorTest extends ParameterizedTest {
 
+	/**
+	 * Gets the parameters.
+	 *
+	 * @return the parameters
+	 */
 	@Parameters
 	public static Collection<Object[]> getParameters() {
 		return ParameterizedTest.getParameters(
@@ -39,9 +45,21 @@ public class SchemaGeneratorTest extends ParameterizedTest {
 				);
 	}
 
+	/** The params. */
 	private BenchmarkParameters params;
+	
+	/** The schema. */
 	private Schema schema;
 
+	/**
+	 * Instantiates a new schema generator test.
+	 *
+	 * @param seed the seed
+	 * @param relations the relations
+	 * @param arity the arity
+	 * @param bindings the bindings
+	 * @throws Exception the exception
+	 */
 	public SchemaGeneratorTest(Integer seed, Integer relations, Integer arity, Integer bindings) throws Exception {
 		this.params = new BenchmarkParameters();
 		this.params.setSeed(seed);
@@ -51,17 +69,26 @@ public class SchemaGeneratorTest extends ParameterizedTest {
 		this.schema = new SchemaGeneratorFirst(this.params).generate();
 	}
 
+	/**
+	 * Test number of relations.
+	 */
 	@Test
 	public void testNumberOfRelations() {
 		assertEquals((int) this.params.getNumberOfRelations(), this.schema.getRelations().size());
 	}
 
+	/**
+	 * Test relations arities.
+	 */
 	@Test
 	public void testRelationsArities() {
 		assertEquals((int) this.params.getArity(),
 				this.schema.getMaxArity());
 	}
 	
+	/**
+	 * Test number of access methods.
+	 */
 	@Test
 	public void testNumberOfAccessMethods() {
 		int nbAccessMethods = this.params.getNumberOfAccessMethods();
@@ -76,6 +103,9 @@ public class SchemaGeneratorTest extends ParameterizedTest {
 		}
 	}
 	
+	/**
+	 * Test each relation access methods is consistent.
+	 */
 	@Test
 	public void testEachRelationAccessMethodsIsConsistent() {
 		for (Relation r: this.schema.getRelations()) {
@@ -105,6 +135,9 @@ public class SchemaGeneratorTest extends ParameterizedTest {
 		}
 	}
 
+	/**
+	 * Test free access probability is correct.
+	 */
 	@Test
 	public void testFreeAccessProbabilityIsCorrect() {
 		double total = 0.0;

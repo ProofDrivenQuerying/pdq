@@ -11,13 +11,20 @@ import uk.ac.ox.cs.pdq.algebra.Selection;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
 /**
- * Translates DAG and Linear plans to Normalised plans
- * @author Efthymia Tsamoura
+ * Translates DAG and Linear plans to Normalised plans.
  *
+ * @author Efthymia Tsamoura
  */
 public class ToSequentialPlanTranslator {
 	
+	/**
+	 * Translate.
+	 *
+	 * @param operator the operator
+	 * @return the sequential plan
+	 */
 	public SequentialPlan translate(RelationalOperator operator) {
 		if(operator instanceof uk.ac.ox.cs.pdq.algebra.Join) {
 			//Get the left hand child plan

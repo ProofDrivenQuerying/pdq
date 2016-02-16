@@ -29,20 +29,36 @@ import uk.ac.ox.cs.pdq.util.TupleType;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
+// TODO: Auto-generated Javadoc
 /**
+ * The Class ProjectionTest.
  *
  * @author Julien Leblay
  */
 @RunWith(MockitoJUnitRunner.class)
 public class ProjectionTest extends UnaryOperatorTest {
 
+	/** The operator. */
 	Projection operator;
+	
+	/** The projected type. */
 	TupleType projectedType = TupleType.DefaultFactory.create(String.class, Integer.class);
+	
+	/** The projected. */
 	Term[] projected = new Term[] {new TypedConstant<>("c"), new Variable("a")};
+	
+	/** The renaming. */
 	Map<Integer, Term> renaming = Maps.newLinkedHashMap();
+	
+	/** The renamed output. */
 	List<Term> renamedOutput = Lists.<Term>newArrayList(new TypedConstant<>("c"), new Variable("d"));
+	
+	/** The renamed input. */
 	List<Term> renamedInput = Lists.<Term>newArrayList(new Variable("d"), new Skolem("e"));
 	
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.test.algebra.RelationalOperatorTest#setup()
+	 */
 	@Before public void setup() throws RelationalOperatorException {
 		super.setup();
 		int i = 0;
@@ -61,25 +77,40 @@ public class ProjectionTest extends UnaryOperatorTest {
 		this.operator = new Projection(child, renaming, projected);
 	}
 	
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.test.algebra.RelationalOperatorTest#getOperator()
+	 */
 	RelationalOperator getOperator() {
 		return this.operator;
 	}
 	
+	/**
+	 * Inits the projection null arguments.
+	 */
 	@Test(expected=NullPointerException.class)
 	public void initProjectionNullArguments() {
 		new Projection(null, null, (List) null);
 	}
 	
+	/**
+	 * Inits the projection test null argument1.
+	 */
 	@Test(expected=NullPointerException.class)
 	public void initProjectionTestNullArgument1() {
 		new Projection(null, renaming, projected);
 	}
 	
+	/**
+	 * Inits the projection test null argument3.
+	 */
 	@Test(expected=NullPointerException.class)
 	public void initProjectionTestNullArgument3() {
 		new Projection(child, renaming, (List) null);
 	}
 	
+	/**
+	 * Inits the projection child bad renaming.
+	 */
 	@Test(expected=AssertionError.class)
 	public void initProjectionChildBadRenaming() {
 		Map<Integer, Term> renaming = new HashMap<>();
@@ -87,11 +118,17 @@ public class ProjectionTest extends UnaryOperatorTest {
 		new Projection(child, renaming);
 	}
 
+	/**
+	 * Inits the projection child bad head.
+	 */
 	@Test(expected=AssertionError.class)
 	public void initProjectionChildBadHead() {
 		new Projection(child, Lists.<Term>newArrayList(new Variable("UnrelatedTerm")));
 	}
 
+	/**
+	 * Inits the projection child head array.
+	 */
 	@Test public void initProjectionChildHeadArray() {
 		this.operator = new Projection(child, projected);
 		Assert.assertEquals("Projection operator type must match that of child", projectedType, this.operator.getType());
@@ -101,6 +138,9 @@ public class ProjectionTest extends UnaryOperatorTest {
 		Assert.assertEquals("Projection renaming must be empty if unspecified", new HashMap<>(), this.operator.getRenaming());
 	}
 
+	/**
+	 * Inits the projection child head.
+	 */
 	@Test public void initProjectionChildHead() {
 		this.operator = new Projection(child,  Lists.newArrayList(this.projected));
 		Assert.assertEquals("Projection operator type must match that of child", projectedType, this.operator.getType());
@@ -110,6 +150,9 @@ public class ProjectionTest extends UnaryOperatorTest {
 		Assert.assertEquals("Projection renaming must be empty if unspecified", new HashMap<>(), this.operator.getRenaming());
 	}
 
+	/**
+	 * Inits the projection child renaming.
+	 */
 	@Ignore @Test public void initProjectionChildRenaming() {
 		this.operator = new Projection(child, renaming);
 		Assert.assertEquals("Projection operator type must match that of child", child.getType(), this.operator.getType());
@@ -119,6 +162,9 @@ public class ProjectionTest extends UnaryOperatorTest {
 		Assert.assertEquals("Projection renaming must match that of initialization", this.renaming, this.operator.getRenaming());
 	}
 
+	/**
+	 * Inits the projection child renaming head array.
+	 */
 	@Test public void initProjectionChildRenamingHeadArray() {
 		this.operator = new Projection(child, renaming, projected);
 		Assert.assertEquals("Projection operator type must match that of child", projectedType, this.operator.getType());
@@ -129,6 +175,9 @@ public class ProjectionTest extends UnaryOperatorTest {
 		Assert.assertEquals("Projection projected list must match that of initialization", renamedOutput, this.operator.getColumns());
 }
 
+	/**
+	 * Inits the projection child renaming head.
+	 */
 	@Test public void initProjectionChildRenamingHead() {
 		this.operator = new Projection(child, renaming,  Lists.newArrayList(this.projected));
 		Assert.assertEquals("Projection operator type must match that of child", projectedType, this.operator.getType());
@@ -139,6 +188,11 @@ public class ProjectionTest extends UnaryOperatorTest {
 		Assert.assertEquals("Projected list must match that of initialization", renamedOutput, this.operator.getColumns());
 	}
 
+	/**
+	 * Deep copy.
+	 *
+	 * @throws RelationalOperatorException the relational operator exception
+	 */
 	@Test public void deepCopy() throws RelationalOperatorException {
 		Projection copy = this.operator.deepCopy();
 		Assert.assertEquals("Projection operators deep copy must be equals to itself", this.operator, copy);
@@ -152,6 +206,11 @@ public class ProjectionTest extends UnaryOperatorTest {
 		Assert.assertEquals("Projection renaming must match that of initialization", this.operator.getRenaming(), copy.getRenaming());
 	}
 
+	/**
+	 * Gets the column.
+	 *
+	 * @return the column
+	 */
 	@Test public void getColumn() {
 		for (int i = 0, l = this.renamedOutput.size(); i < l; i++) {
 			Assert.assertEquals("Projection operator's " + i + "th column must match that of child",
@@ -159,10 +218,21 @@ public class ProjectionTest extends UnaryOperatorTest {
 		}
 	}
 
+	/**
+	 * Gets the bad column.
+	 *
+	 * @return the bad column
+	 */
 	@Test(expected=IllegalArgumentException.class) 
 	public void getBadColumn() {
 		this.operator.getColumn(this.outputTerms.size() + 1);
 	}
+	
+	/**
+	 * Test hash code.
+	 *
+	 * @throws RelationalOperatorException the relational operator exception
+	 */
 	@Test public void testHashCode() throws RelationalOperatorException {
 		Set<RelationalOperator> s = new LinkedHashSet<>();
 

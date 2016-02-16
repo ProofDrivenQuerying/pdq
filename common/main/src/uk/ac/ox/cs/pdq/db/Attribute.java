@@ -7,8 +7,10 @@ import uk.ac.ox.cs.pdq.util.Typed;
 
 import com.google.common.base.Preconditions;
 
+// TODO: Auto-generated Javadoc
 /**
- * An attribute
+ * An attribute.
+ *
  * @author Efthymia Tsamoura
  * @author Julien Leblay
  */
@@ -17,10 +19,10 @@ public class Attribute implements Typed {
 	/** The prefix to use when generating attribute names. */
 	public static final String GENERATED_ATTRIBUTE_PREFIX = "x";
 
-	/** The attribute's name */
+	/**  The attribute's name. */
 	protected final String name;
 
-	/** The attribute's type */
+	/**  The attribute's type. */
 	protected final Type type;
 
 	/** Cached instance hash (only possible because variables are immutable). */
@@ -58,6 +60,8 @@ public class Attribute implements Typed {
 	}
 
 	/**
+	 * Gets the type.
+	 *
 	 * @return Class<?>
 	 * @see uk.ac.ox.cs.pdq.util.Typed#getType()
 	 */
@@ -67,6 +71,8 @@ public class Attribute implements Typed {
 	}
 
 	/**
+	 * Gets the name.
+	 *
 	 * @return String
 	 */
 	public String getName() {
@@ -74,6 +80,8 @@ public class Attribute implements Typed {
 	}
 
 	/**
+	 * Equals.
+	 *
 	 * @param o Object
 	 * @return boolean
 	 */
@@ -92,6 +100,8 @@ public class Attribute implements Typed {
 	}
 
 	/**
+	 * Hash code.
+	 *
 	 * @return int
 	 */
 	@Override
@@ -100,6 +110,8 @@ public class Attribute implements Typed {
 	}
 
 	/**
+	 * To string.
+	 *
 	 * @return String
 	 */
 	@Override

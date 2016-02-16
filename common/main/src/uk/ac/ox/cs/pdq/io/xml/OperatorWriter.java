@@ -39,6 +39,7 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 
+// TODO: Auto-generated Javadoc
 /**
  * Writes plans to XML.
  * 
@@ -48,8 +49,9 @@ public class OperatorWriter extends AbstractXMLWriter<RelationalOperator> {
 
 	/**
 	 * Writes the given plan to the given output.
-	 * @param out
-	 * @param relation
+	 *
+	 * @param out the out
+	 * @param operator the operator
 	 */
 	public void writeOperator(PrintStream out, RelationalOperator operator) {
 		this.writeOperator(out, operator, Maps.<RelationalOperator, String>newHashMap());
@@ -57,8 +59,10 @@ public class OperatorWriter extends AbstractXMLWriter<RelationalOperator> {
 
 	/**
 	 * Writes the given plan to the given output.
-	 * @param out
-	 * @param relation
+	 *
+	 * @param out the out
+	 * @param operator the operator
+	 * @param aliases the aliases
 	 */
 	public void writeOperator(PrintStream out, RelationalOperator operator, Map<RelationalOperator, String> aliases) {
 		Preconditions.checkArgument(out != null);
@@ -173,8 +177,9 @@ public class OperatorWriter extends AbstractXMLWriter<RelationalOperator> {
 
 	/**
 	 * Writes the given plan to the given output.
-	 * @param out
-	 * @param relation
+	 *
+	 * @param out the out
+	 * @param plan the plan
 	 */
 	public void writeOutputs(PrintStream out, RelationalOperator plan) {
 		open(out, QNames.OUTPUTS);
@@ -250,8 +255,9 @@ public class OperatorWriter extends AbstractXMLWriter<RelationalOperator> {
 
 	/**
 	 * Writes the given relation to the given output.
-	 * @param out
-	 * @param attribute
+	 *
+	 * @param out the out
+	 * @param attribute the attribute
 	 */
 	public void writeAttribute(PrintStream out, Attribute attribute) {
 		Map<QNames, String> att = new LinkedHashMap<>();
@@ -262,8 +268,9 @@ public class OperatorWriter extends AbstractXMLWriter<RelationalOperator> {
 
 	/**
 	 * Writes the given relation to the given output.
-	 * @param out
-	 * @param constant
+	 *
+	 * @param out the out
+	 * @param constant the constant
 	 */
 	public void writeConstant(PrintStream out, TypedConstant<?> constant) {
 		Map<QNames, String> att = new LinkedHashMap<>();
@@ -274,8 +281,10 @@ public class OperatorWriter extends AbstractXMLWriter<RelationalOperator> {
 
 	/**
 	 * Writes the given relation to the given output.
-	 * @param out
-	 * @param constant
+	 *
+	 * @param out the out
+	 * @param i the i
+	 * @param constant the constant
 	 */
 	public void writeStaticInput(PrintStream out, Integer i, TypedConstant<?> constant) {
 		Map<QNames, String> att = new LinkedHashMap<>();
@@ -287,8 +296,9 @@ public class OperatorWriter extends AbstractXMLWriter<RelationalOperator> {
 
 	/**
 	 * Writes the given select command to the given output.
-	 * @param out
-	 * @param relation
+	 *
+	 * @param out the out
+	 * @param predicate the predicate
 	 */
 	private void writePredicate(PrintStream out, Predicate predicate) {
 		if (predicate instanceof ConjunctivePredicate<?>) {

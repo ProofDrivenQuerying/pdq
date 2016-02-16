@@ -5,15 +5,16 @@ import java.util.Objects;
 
 import com.google.common.base.Preconditions;
 
+// TODO: Auto-generated Javadoc
 /**
  * The negation of a formula.
  *
  * @author Julien Leblay
- *
- * @param <T>
+ * @param <T> the generic type
  */
 public final class Negation<T extends Formula> extends UnaryFormula<T> {
 
+	/** The hash. */
 	private Integer hash;
 
 	/**
@@ -25,6 +26,9 @@ public final class Negation<T extends Formula> extends UnaryFormula<T> {
 	}
 
 	/**
+	 * Of.
+	 *
+	 * @param <T> the generic type
 	 * @param f T
 	 * @return Negation<T>
 	 */
@@ -34,6 +38,8 @@ public final class Negation<T extends Formula> extends UnaryFormula<T> {
 	}
 
 	/**
+	 * Ground.
+	 *
 	 * @param mapping Map<Variable,Term>
 	 * @return Formula
 	 * @see uk.ac.ox.cs.pdq.formula.Formula#ground(Map<Variable,Term>)
@@ -44,6 +50,8 @@ public final class Negation<T extends Formula> extends UnaryFormula<T> {
 	}
 
 	/**
+	 * Equals.
+	 *
 	 * @param o Object
 	 * @return boolean
 	 */
@@ -60,6 +68,8 @@ public final class Negation<T extends Formula> extends UnaryFormula<T> {
 	}
 
 	/**
+	 * Hash code.
+	 *
 	 * @return int
 	 */
 	@Override

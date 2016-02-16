@@ -12,22 +12,22 @@ import uk.ac.ox.cs.pdq.util.TreeGraph;
 
 import com.google.common.base.Preconditions;
 
+// TODO: Auto-generated Javadoc
 /**
- * A tree of search nodes
+ * A tree of search nodes.
  *
  * @author Efthymia Tsamoura
- *
- * @param <N>
+ * @param <N> the number type
  */
 public class PlanTree<N extends SearchNode> extends IndexedDirectedGraph<N> implements TreeGraph<N>{
 
-	/** */
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -8536976771945466744L;
 
-	/** The root of the tree*/
+	/**  The root of the tree. */
 	private N root = null;
 
-	/** Maps each tree node to its ID*/
+	/**  Maps each tree node to its ID. */
 	private Map<Integer, N> map = new LinkedHashMap<>();
 
 	/**
@@ -47,6 +47,8 @@ public class PlanTree<N extends SearchNode> extends IndexedDirectedGraph<N> impl
 	}
 
 	/**
+	 * Adds the vertex.
+	 *
 	 * @param n N
 	 * @return boolean
 	 */
@@ -63,6 +65,8 @@ public class PlanTree<N extends SearchNode> extends IndexedDirectedGraph<N> impl
 	}
 
 	/**
+	 * Gets the vertex.
+	 *
 	 * @param id Integer
 	 * @return N
 	 */
@@ -72,6 +76,8 @@ public class PlanTree<N extends SearchNode> extends IndexedDirectedGraph<N> impl
 	}
 
 	/**
+	 * Gets the root.
+	 *
 	 * @return N
 	 * @see uk.ac.ox.cs.pdq.planner.linear.node.TreeGraph#getRoot()
 	 */
@@ -80,6 +86,9 @@ public class PlanTree<N extends SearchNode> extends IndexedDirectedGraph<N> impl
 		return this.root;
 	}
 	
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.util.TreeGraph#getParent(java.lang.Object)
+	 */
 	@Override
 	public N getParent(N child) {
 		Preconditions.checkArgument(this.vertexSet().contains(child));

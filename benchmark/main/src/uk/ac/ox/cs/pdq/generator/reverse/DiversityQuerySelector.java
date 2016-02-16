@@ -6,6 +6,7 @@ import java.util.SortedSet;
 
 import uk.ac.ox.cs.pdq.fol.Query;
 
+// TODO: Auto-generated Javadoc
 /**
  * A QuerySelector that accepts conjunctive query where that do not look like
  * already observed queries.

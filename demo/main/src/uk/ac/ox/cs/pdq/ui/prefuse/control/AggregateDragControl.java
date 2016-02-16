@@ -12,14 +12,22 @@ import prefuse.controls.ControlAdapter;
 import prefuse.visual.AggregateItem;
 import prefuse.visual.VisualItem;
 
+// TODO: Auto-generated Javadoc
 /**
- * Interactive drag control that is "aggregate-aware"
+ * Interactive drag control that is "aggregate-aware".
  */
 public class AggregateDragControl extends ControlAdapter {
 
+    /** The active item. */
     private VisualItem activeItem;
+    
+    /** The down. */
     protected Point2D down = new Point2D.Double();
+    
+    /** The temp. */
     protected Point2D temp = new Point2D.Double();
+    
+    /** The dragged. */
     protected boolean dragged;
     
     /**
@@ -30,6 +38,10 @@ public class AggregateDragControl extends ControlAdapter {
     }
         
     /**
+     * Item entered.
+     *
+     * @param item the item
+     * @param e the e
      * @see prefuse.controls.Control#itemEntered(prefuse.visual.VisualItem, java.awt.event.MouseEvent)
      */
     public void itemEntered(VisualItem item, MouseEvent e) {
@@ -41,6 +53,10 @@ public class AggregateDragControl extends ControlAdapter {
     }
     
     /**
+     * Item exited.
+     *
+     * @param item the item
+     * @param e the e
      * @see prefuse.controls.Control#itemExited(prefuse.visual.VisualItem, java.awt.event.MouseEvent)
      */
     public void itemExited(VisualItem item, MouseEvent e) {
@@ -53,6 +69,10 @@ public class AggregateDragControl extends ControlAdapter {
     }
     
     /**
+     * Item pressed.
+     *
+     * @param item the item
+     * @param e the e
      * @see prefuse.controls.Control#itemPressed(prefuse.visual.VisualItem, java.awt.event.MouseEvent)
      */
     public void itemPressed(VisualItem item, MouseEvent e) {
@@ -65,6 +85,10 @@ public class AggregateDragControl extends ControlAdapter {
     }
     
     /**
+     * Item released.
+     *
+     * @param item the item
+     * @param e the e
      * @see prefuse.controls.Control#itemReleased(prefuse.visual.VisualItem, java.awt.event.MouseEvent)
      */
     public void itemReleased(VisualItem item, MouseEvent e) {
@@ -77,6 +101,10 @@ public class AggregateDragControl extends ControlAdapter {
     }
     
     /**
+     * Item dragged.
+     *
+     * @param item the item
+     * @param e the e
      * @see prefuse.controls.Control#itemDragged(prefuse.visual.VisualItem, java.awt.event.MouseEvent)
      */
     public void itemDragged(VisualItem item, MouseEvent e) {
@@ -92,6 +120,12 @@ public class AggregateDragControl extends ControlAdapter {
         down.setLocation(temp);
     }
 
+    /**
+     * Sets the fixed.
+     *
+     * @param item the item
+     * @param fixed the fixed
+     */
     protected static void setFixed(VisualItem item, boolean fixed) {
         if ( item instanceof AggregateItem ) {
             Iterator items = ((AggregateItem)item).items();
@@ -103,6 +137,13 @@ public class AggregateDragControl extends ControlAdapter {
         }
     }
     
+    /**
+     * Move.
+     *
+     * @param item the item
+     * @param dx the dx
+     * @param dy the dy
+     */
     protected static void move(VisualItem item, double dx, double dy) {
         if ( item instanceof AggregateItem ) {
             Iterator items = ((AggregateItem)item).items();

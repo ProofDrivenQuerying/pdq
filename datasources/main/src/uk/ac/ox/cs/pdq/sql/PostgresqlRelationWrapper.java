@@ -20,6 +20,7 @@ import uk.ac.ox.cs.pdq.db.metadata.StaticMetadata;
 import uk.ac.ox.cs.pdq.plan.Cost;
 import uk.ac.ox.cs.pdq.plan.DoubleCost;
 
+// TODO: Auto-generated Javadoc
 /**
  * A wrapper for PostgresqlTranslator-based SQL relations. This adds the 
  * SQLRelationWrapper some postgres-specific functionalities, mainly 
@@ -30,7 +31,7 @@ import uk.ac.ox.cs.pdq.plan.DoubleCost;
  */
 public final class PostgresqlRelationWrapper extends SQLRelationWrapper {
 
-	/** */
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 6004751694940794606L;
 
 	/** Logger. */
@@ -43,7 +44,9 @@ public final class PostgresqlRelationWrapper extends SQLRelationWrapper {
 	private static final String COST_REGEXP_PATTERN = "\\(cost=\\d+\\.\\d+\\.\\.(?<cost>\\d+\\.\\d+)\\s.*\\)";
 
 	/**
-	 * @param properties
+	 * Instantiates a new postgresql relation wrapper.
+	 *
+	 * @param properties the properties
 	 * @param relation Relation
 	 */
 	public PostgresqlRelationWrapper(Properties properties, Relation relation) {
@@ -51,7 +54,9 @@ public final class PostgresqlRelationWrapper extends SQLRelationWrapper {
 	}
 
 	/**
-	 * @param properties
+	 * Instantiates a new postgresql relation wrapper.
+	 *
+	 * @param properties the properties
 	 * @param name String
 	 * @param attributes List<Attribute>
 	 */
@@ -60,7 +65,9 @@ public final class PostgresqlRelationWrapper extends SQLRelationWrapper {
 	}
 
 	/**
-	 * @param properties
+	 * Instantiates a new postgresql relation wrapper.
+	 *
+	 * @param properties the properties
 	 * @param name String
 	 * @param attributes List<Attribute>
 	 * @param bm List<AccessMethod>
@@ -70,8 +77,10 @@ public final class PostgresqlRelationWrapper extends SQLRelationWrapper {
 	}
 	
 	/**
-	 * @param bindingPositions
-	 * @return the cost of an access with the given bindingPositions as given 
+	 * Initialize cost.
+	 *
+	 * @param bindingPositions the binding positions
+	 * @return the cost of an access with the given bindingPositions as given
 	 * by postgresql.
 	 */
 	private Double initializeCost(List<Integer> bindingPositions) {
@@ -98,7 +107,8 @@ public final class PostgresqlRelationWrapper extends SQLRelationWrapper {
 	 * In addition to add the given access method to the relations, initialize
 	 * the cost of the binding by querying the underlying database, if the 
 	 * given access method does not already have a cost assigned. 
-	 * @param bm
+	 *
+	 * @param bm the bm
 	 * @see uk.ac.ox.cs.pdq.db.Relation#addAccessMethod(uk.ac.ox.cs.pdq.db.AccessMethod)
 	 */
 	@Override
@@ -115,8 +125,10 @@ public final class PostgresqlRelationWrapper extends SQLRelationWrapper {
 	}
 
 	/**
-	 * @param bindingPositions
-	 * @return a SQL statement asking for the cost of an access to the 
+	 * Make cost statement.
+	 *
+	 * @param bindingPositions the binding positions
+	 * @return a SQL statement asking for the cost of an access to the
 	 * underlying relation in postgres with the given bindingPositions.
 	 */
 	private String makeCostStatement(List<Integer> bindingPositions) {

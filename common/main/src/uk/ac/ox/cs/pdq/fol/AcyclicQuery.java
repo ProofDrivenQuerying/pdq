@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * A conjunctive query Q is cyclic (acyclic) if its associated hypergraph H(Q) is cyclic (acyclic).
  *
@@ -12,6 +13,8 @@ import java.util.List;
 public class AcyclicQuery extends ConjunctiveQuery {
 
 	/**
+	 * Instantiates a new acyclic query.
+	 *
 	 * @param name The query's name
 	 * @param head The query's head terms
 	 * @param right The query's body
@@ -21,6 +24,8 @@ public class AcyclicQuery extends ConjunctiveQuery {
 	}
 
 	/**
+	 * Instantiates a new acyclic query.
+	 *
 	 * @param left The query's head
 	 * @param right The query's body
 	 */
@@ -29,6 +34,8 @@ public class AcyclicQuery extends ConjunctiveQuery {
 	}
 
 	/**
+	 * Gets the suffix queries.
+	 *
 	 * @return the suffix queries
 	 */
 	public List<AcyclicQuery> getSuffixQueries() {
@@ -46,6 +53,8 @@ public class AcyclicQuery extends ConjunctiveQuery {
 	}
 
 	/**
+	 * Gets the last query.
+	 *
 	 * @return the last suffix query
 	 */
 	public AcyclicQuery getLastQuery() {

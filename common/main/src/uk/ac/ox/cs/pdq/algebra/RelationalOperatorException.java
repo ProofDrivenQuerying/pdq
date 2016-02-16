@@ -1,5 +1,6 @@
 package uk.ac.ox.cs.pdq.algebra;
 
+// TODO: Auto-generated Javadoc
 /**
  * Top-level exception for logical operator-related exceptions.
 
@@ -7,7 +8,7 @@ package uk.ac.ox.cs.pdq.algebra;
  */
 public class RelationalOperatorException extends Exception {
 
-	/**  */
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 8211019926393887496L;
 
 	/**

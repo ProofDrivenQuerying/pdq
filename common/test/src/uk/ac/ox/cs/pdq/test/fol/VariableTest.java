@@ -13,39 +13,61 @@ import org.junit.Test;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.util.Utility;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class VariableTest.
+ */
 public class VariableTest {
 	
 	/**
-	 * Makes sure assertions are enabled
+	 * Makes sure assertions are enabled.
 	 */
 	@Before 
 	public void setup() {
 		Utility.assertsEnabled();
 	}
 
+	/**
+	 * Test variable is variable.
+	 */
 	@Test public void testVariableIsVariable() {
 		Assert.assertTrue("Variable.isVariable must be always true", new Variable("v").isVariable());
 	}
 
+	/**
+	 * Test variable is not skolem.
+	 */
 	@Test public void testVariableIsNotSkolem() {
 		Assert.assertFalse("Variable.isSkolem must be always false", new Variable("v").isSkolem());
 	}
 
+	/**
+	 * Test variable valid.
+	 */
 	@Test public void testVariableValid() {
 		Variable v = new Variable("v");
 		Assert.assertEquals("Variable must have name 'v'", "v", v.getName());
 	}
 
+	/**
+	 * Test variable empty name.
+	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void testVariableEmptyName() {
 		new Variable("");
 	}
 
+	/**
+	 * Test variable null name.
+	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void testVariableNullName() {
 		new Variable(null);
 	}
 
+	/**
+	 * Test hash code.
+	 */
 	@Test public void testHashCode() {
 		int n = 100;
 		HashSet<Variable> terms = new HashSet<>();
@@ -65,6 +87,9 @@ public class VariableTest {
 		}
 	}
 
+	/**
+	 * Test equals.
+	 */
 	@Test public void testEquals() {
 		int n = 100;
 		for (int i = 0; i < n; i++) {
@@ -72,6 +97,9 @@ public class VariableTest {
 		}
 	}
 
+	/**
+	 * Test not equals.
+	 */
 	@Test public void testNotEquals() {
 		int n = 100;
 		for (int i = 0; i < n; i++) {

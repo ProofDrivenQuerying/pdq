@@ -24,6 +24,7 @@ import uk.ac.ox.cs.pdq.io.xml.QNames;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.ui.proof.Proof;
 
+// TODO: Auto-generated Javadoc
 /**
  * Reads proofs from XML.
  * 
@@ -34,18 +35,21 @@ public class ProofReader extends AbstractXMLReader<Proof> {
 	/** Logger. */
 	private static Logger log = Logger.getLogger(ProofReader.class);
 
-	/** Proof builder */
+	/**  Proof builder. */
 	private Proof.Builder builder = null;
 	
-	/** The match being built */
+	/**  The match being built. */
 	private Map<Variable, Constant> match = null;
 	
+	/** The schema. */
 	private final Schema schema;
 
+	/** The acc schema. */
 	private final AccessibleSchema accSchema;
 	
 	/**
-	 * Default constructor
+	 * Default constructor.
+	 *
 	 * @param schema Schema
 	 */
 	public ProofReader(Schema schema) {
@@ -54,7 +58,9 @@ public class ProofReader extends AbstractXMLReader<Proof> {
 	}
 	
 	/**
-	 * @param in
+	 * Read.
+	 *
+	 * @param in the in
 	 * @return Proof
 	 * @see uk.ac.ox.cs.pdq.io.Reader#read(InputStream)
 	 */

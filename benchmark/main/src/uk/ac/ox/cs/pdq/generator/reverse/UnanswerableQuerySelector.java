@@ -10,6 +10,7 @@ import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 
+// TODO: Auto-generated Javadoc
 /**
  * A QuerySelector that accepts only conjunctive query that are not unanswerable
  * without considering schema dependencies.
@@ -31,6 +32,8 @@ public class UnanswerableQuerySelector implements QuerySelector {
 	
 	/** The schema. */
 	private final Schema schema;
+	
+	/** The reasoning params. */
 	private final ReasoningParameters reasoningParams;
 
 	/**

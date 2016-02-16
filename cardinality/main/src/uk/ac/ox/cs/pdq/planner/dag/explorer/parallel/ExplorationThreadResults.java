@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package uk.ac.ox.cs.pdq.planner.dag.explorer.parallel;
 
 import java.util.List;
@@ -5,6 +8,7 @@ import java.util.Set;
 
 import uk.ac.ox.cs.pdq.planner.dag.DAGAnnotatedPlan;
 
+// TODO: Auto-generated Javadoc
 /**
  * Returns the results of a call to IterativeExecutor.finalIteration
  *
@@ -12,8 +16,14 @@ import uk.ac.ox.cs.pdq.planner.dag.DAGAnnotatedPlan;
  *
  */
 public class ExplorationThreadResults {
+	
+	/** The output. */
 	private final List<DAGAnnotatedPlan> output;
+	
+	/** The successful. */
 	private final Set<DAGAnnotatedPlan> successful;
+	
+	/** The best. */
 	private final DAGAnnotatedPlan best;
 
 	/**
@@ -31,6 +41,8 @@ public class ExplorationThreadResults {
 	}
 
 	/**
+	 * Gets the output.
+	 *
 	 * @return List<DAGAnnotatedPlan>
 	 */
 	public List<DAGAnnotatedPlan> getOutput() {
@@ -38,6 +50,8 @@ public class ExplorationThreadResults {
 	}
 
 	/**
+	 * Gets the best.
+	 *
 	 * @return DAGAnnotatedPlan
 	 */
 	public DAGAnnotatedPlan getBest() {
@@ -45,6 +59,8 @@ public class ExplorationThreadResults {
 	}
 
 	/**
+	 * Gets the successful.
+	 *
 	 * @return Set<DAGAnnotatedPlan>
 	 */
 	public Set<DAGAnnotatedPlan> getSuccessful() {

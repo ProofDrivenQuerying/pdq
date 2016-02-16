@@ -18,6 +18,7 @@ import uk.ac.ox.cs.pdq.util.TupleType;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
 /**
  * RelationalOperator defines a top-class for all logical relational operators.
  *
@@ -25,8 +26,16 @@ import com.google.common.collect.Lists;
  */
 public abstract class RelationalOperator implements Rewritable, Operator {
 
-	/** */
-	public static enum SharingType { NOTHING, CACHE, BLOCKING }
+	/**
+	 * The Enum SharingType.
+	 */
+	public static enum SharingType { 
+ /** The nothing. */
+ NOTHING, 
+ /** The cache. */
+ CACHE, 
+ /** The blocking. */
+ BLOCKING }
 
 	/** The operator's type. */
 	protected final TupleType outputType;
@@ -38,6 +47,8 @@ public abstract class RelationalOperator implements Rewritable, Operator {
 	protected EstimateProvider<RelationalOperator> metadata;
 
 	/**
+	 * Checks if is closed.
+	 *
 	 * @return false if the operator has some unfulfilled inputs, true otherwise.
 	 */
 	public abstract boolean isClosed();
@@ -63,8 +74,9 @@ public abstract class RelationalOperator implements Rewritable, Operator {
 
 	/**
 	 * Deep copy.
+	 *
 	 * @return a deep copy of the operator.
-	 * @throws RelationalOperatorException
+	 * @throws RelationalOperatorException the relational operator exception
 	 */
 	public abstract RelationalOperator deepCopy() throws RelationalOperatorException;
 
@@ -91,6 +103,8 @@ public abstract class RelationalOperator implements Rewritable, Operator {
 	public abstract List<Term> getInputTerms();
 
 	/**
+	 * Gets the type.
+	 *
 	 * @return the tuple Type of this operator
 	 */
 	public TupleType getType() {
@@ -98,6 +112,8 @@ public abstract class RelationalOperator implements Rewritable, Operator {
 	}
 
 	/**
+	 * Gets the input type.
+	 *
 	 * @return the input tuple Type of this operator
 	 */
 	public TupleType getInputType() {
@@ -105,8 +121,9 @@ public abstract class RelationalOperator implements Rewritable, Operator {
 	}
 
 	/**
-	 * Guard-method to ensure sub-classes are use with valid states
-	 * @param o
+	 * Guard-method to ensure sub-classes are use with valid states.
+	 *
+	 * @param o the o
 	 * @return the input type of the given operator.
 	 */
 	protected static TupleType outputType(RelationalOperator o) {
@@ -115,8 +132,9 @@ public abstract class RelationalOperator implements Rewritable, Operator {
 	}
 
 	/**
-	 * Guard-method to ensure sub-classes are use with valid states
-	 * @param o
+	 * Guard-method to ensure sub-classes are use with valid states.
+	 *
+	 * @param o the o
 	 * @return the input terms of the given operator.
 	 */
 	protected static List<Term> outputTerms(RelationalOperator o) {
@@ -125,8 +143,9 @@ public abstract class RelationalOperator implements Rewritable, Operator {
 	}
 
 	/**
-	 * Guard-method to ensure sub-classes are use with valid states
-	 * @param o
+	 * Guard-method to ensure sub-classes are use with valid states.
+	 *
+	 * @param o the o
 	 * @return the input type of the given operator.
 	 */
 	protected static TupleType inputType(RelationalOperator o) {
@@ -135,8 +154,9 @@ public abstract class RelationalOperator implements Rewritable, Operator {
 	}
 
 	/**
-	 * Guard-method to ensure sub-classes are use with valid states
-	 * @param o
+	 * Guard-method to ensure sub-classes are use with valid states.
+	 *
+	 * @param o the o
 	 * @return the input terms of the given operator.
 	 */
 	protected static List<Term> inputTerms(RelationalOperator o) {
@@ -145,6 +165,8 @@ public abstract class RelationalOperator implements Rewritable, Operator {
 	}
 
 	/**
+	 * Gets the columns display.
+	 *
 	 * @return a list of human readable column headers.
 	 */
 	public List<String> getColumnsDisplay() {
@@ -156,6 +178,8 @@ public abstract class RelationalOperator implements Rewritable, Operator {
 	}
 
 	/**
+	 * Gets the metadata.
+	 *
 	 * @return true if is output of this operator is sorted.
 	 */
 	public EstimateProvider<RelationalOperator> getMetadata() {
@@ -163,13 +187,17 @@ public abstract class RelationalOperator implements Rewritable, Operator {
 	}
 
 	/**
-	 * @param md
+	 * Sets the metadata.
+	 *
+	 * @param md the new metadata
 	 */
 	public void setMetadata(EstimateProvider<RelationalOperator> md) {
 		this.metadata = md;
 	}
 
 	/**
+	 * Gets the depth.
+	 *
 	 * @return the depth of the lowest descendant of this operator
 	 */
 	public abstract Integer getDepth();
@@ -203,16 +231,22 @@ public abstract class RelationalOperator implements Rewritable, Operator {
 	}
 
 	/**
+	 * Checks if is quasi leaf.
+	 *
 	 * @return true if the operator is a leaf or the ancestor of a single leaf
 	 */
 	public abstract boolean isQuasiLeaf();
 
 	/**
+	 * Checks if is left deep.
+	 *
 	 * @return true if the operator is left-deep
 	 */
 	public abstract boolean isLeftDeep();
 
 	/**
+	 * Checks if is right deep.
+	 *
 	 * @return true if the operator is right-deep
 	 */
 	public abstract boolean isRightDeep();
@@ -227,7 +261,9 @@ public abstract class RelationalOperator implements Rewritable, Operator {
 	}
 
 	/**
-	 * @param operator
+	 * Gets the accesses.
+	 *
+	 * @param operator the operator
 	 * @return the access operators that are children of the input operator
 	 */
 	public static Collection<AccessOperator> getAccesses(RelationalOperator operator) {
@@ -256,6 +292,12 @@ public abstract class RelationalOperator implements Rewritable, Operator {
 		return result;
 	}
 	
+	/**
+	 * Gets the selections.
+	 *
+	 * @param operator the operator
+	 * @return the selections
+	 */
 	public static Collection<Selection> getSelections(RelationalOperator operator) {
 		Collection<Selection> result = new LinkedHashSet<>();
 		if (operator instanceof Selection) {
@@ -275,7 +317,9 @@ public abstract class RelationalOperator implements Rewritable, Operator {
 	}
 
 	/**
-	 * @param operator
+	 * Gets the leaves.
+	 *
+	 * @param operator the operator
 	 * @return the leave operators rooted below the input operator
 	 */
 	public static List<AccessOperator> getLeaves(RelationalOperator operator) {

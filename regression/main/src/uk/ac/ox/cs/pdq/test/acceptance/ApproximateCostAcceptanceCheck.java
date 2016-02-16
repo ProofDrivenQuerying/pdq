@@ -6,6 +6,7 @@ import uk.ac.ox.cs.pdq.plan.Cost;
 import uk.ac.ox.cs.pdq.plan.DoubleCost;
 import uk.ac.ox.cs.pdq.plan.Plan;
 
+// TODO: Auto-generated Javadoc
 /**
  * Acceptance test request the expected plan cost to be within an order of 
  * magnitude of the expected plan cost to pass.
@@ -15,6 +16,8 @@ import uk.ac.ox.cs.pdq.plan.Plan;
 public class ApproximateCostAcceptanceCheck implements AcceptanceCriterion<Plan, Plan> {
 
 	/**
+	 * Check.
+	 *
 	 * @param expectedPlan Plan
 	 * @param observedPlan Plan
 	 * @return AcceptanceResult

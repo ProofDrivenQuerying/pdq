@@ -11,6 +11,7 @@ import uk.ac.ox.cs.pdq.util.Typed;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
 /**
  * IsEmpty of the boolean query operator. Return true if its child return any
  * tuple, false otherwise.

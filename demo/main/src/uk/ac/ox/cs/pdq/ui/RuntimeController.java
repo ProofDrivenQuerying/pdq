@@ -45,29 +45,45 @@ import uk.ac.ox.cs.pdq.util.Tuple;
 
 import com.google.common.base.Preconditions;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class RuntimeController.
+ */
 public class RuntimeController {
 
 	/** RuntimeController's logger. */
 	private static Logger log = Logger.getLogger(RuntimeController.class);
 
+    /** The runtime plan. */
     @FXML private ListView<Text> runtimePlan;
+    
+    /** The runtime results. */
     @FXML private TableView<Tuple> runtimeResults;
+    
+    /** The runtime pause button. */
     @FXML private Button runtimePauseButton;
+    
+    /** The runtime start button. */
     @FXML private Button runtimeStartButton;
+    
+    /** The runtime messages. */
     @FXML private Label runtimeMessages;
 
-	/** Icon for the pause button */
+	/**  Icon for the pause button. */
 	private final Image pauseIcon = new Image(this.getClass().getResourceAsStream("/resources/icons/suspend.gif"));
 	
-	/** Icon for the play button */
+	/**  Icon for the play button. */
 	private final Image playIcon = new Image(this.getClass().getResourceAsStream("/resources/icons/resume.gif"));
 	
-	/** The future */
+	/**  The future. */
 	private Future<?> future;
 
-	/** true, if the execution is complete */
+	/**  true, if the execution is complete. */
 	private Boolean complete = false;
 	
+    /**
+     * Initialize.
+     */
     @FXML
     void initialize() {
         assert this.runtimeMessages != null : "fx:id=\"runtimeMessages\" was not injected: check your FXML file 'runtime-window.fxml'.";
@@ -83,8 +99,9 @@ public class RuntimeController {
     }
 
 	/**
-	 * Pauses the runtime thread
-	 * @param event
+	 * Pauses the runtime thread.
+	 *
+	 * @param event the event
 	 */
    @FXML void pauseRunning(ActionEvent event) {
 		Preconditions.checkNotNull(this.pauser);
@@ -94,8 +111,9 @@ public class RuntimeController {
     }
 
 	/**
-	 * Starts or resumes the runtime thread
-	 * @param event
+	 * Starts or resumes the runtime thread.
+	 *
+	 * @param event the event
 	 */
     @FXML void startRunning(ActionEvent event) {
 		Preconditions.checkNotNull(this.plan);
@@ -127,6 +145,9 @@ public class RuntimeController {
 		this.runtimePauseButton.setDisable(false);
     }
 
+	/**
+	 * Interrupt runtime threads.
+	 */
 	public void interruptRuntimeThreads() {
 		log.info("Interrupting runtime.");
 		if (this.future != null) {
@@ -134,6 +155,9 @@ public class RuntimeController {
 		}
 	}
 
+    /**
+     * Configure columns.
+     */
     private void configureColumns() {
     	ObservableList<TableColumn<Tuple, ?>> columns = this.runtimeResults.getColumns();
     	Predicate head = this.query.getHead();
@@ -146,8 +170,9 @@ public class RuntimeController {
     }
     
 	/**
-	 * Pauses the search thread
-	 * @param event
+	 * Pauses the search thread.
+	 *
+	 * @param event the event
 	 */
 	@FXML void pausePlanning(ActionEvent event) {
 		Preconditions.checkNotNull(this.pauser);
@@ -156,36 +181,38 @@ public class RuntimeController {
 		this.runtimePauseButton.setDisable(true);
 	}
 	
-	/** The schema to be used during this runtime session */
+	/**  The schema to be used during this runtime session. */
 	private Schema schema;
 	
-	/** The query to be used during this runtime session */
+	/**  The query to be used during this runtime session. */
 	private Query query;
 
-	/** The plan to run */
+	/**  The plan to run. */
 	private Plan plan;
 
-	/** The parameters to run the plan on */
+	/**  The parameters to run the plan on. */
 	private RuntimeParameters params = new RuntimeParameters();
 	
-	/** The runtime session thread executor */
+	/**  The runtime session thread executor. */
 	private Pauser pauser;
 	
+	/** The execution start. */
 	private Long executionStart = 0l;
 	
 	/** Queue containing the next tuples to display in the result views. */
 	private ConcurrentLinkedQueue<Tuple> dataQueue = new ConcurrentLinkedQueue<>();
 
 	/**
-	 * Default constructor, start the animation timer
+	 * Default constructor, start the animation timer.
 	 */
 	public RuntimeController() {
 		this.prepareTimeline();
 	}
 
 	/**
-	 * Sets the query backing this runtime session
-	 * @param query
+	 * Sets the query backing this runtime session.
+	 *
+	 * @param query the new query
 	 */
 	void setQuery(ObservableQuery query) {
 		this.query = query.getQuery();
@@ -195,8 +222,9 @@ public class RuntimeController {
 	}
 
 	/**
-	 * Sets the schema backing this runtime session
-	 * @param schema
+	 * Sets the schema backing this runtime session.
+	 *
+	 * @param schema the new schema
 	 */
 	void setSchema(ObservableSchema schema) {
 		this.schema = schema.getSchema();
@@ -204,8 +232,9 @@ public class RuntimeController {
 	}
 
 	/**
-	 * Sets the plan backing this runtime session
-	 * @param schema
+	 * Sets the plan backing this runtime session.
+	 *
+	 * @param p the new plan
 	 */
 	void setPlan(ObservablePlan p) {
 		Preconditions.checkArgument(p != null);
@@ -223,8 +252,9 @@ public class RuntimeController {
 	}
 
 	/**
-	 * Sets the executor type to use this runtime session
-	 * @param schema
+	 * Sets the executor type to use this runtime session.
+	 *
+	 * @param type the new executor type
 	 */
 	void setExecutorType(ExecutorTypes type) {
 		Preconditions.checkArgument(type != null);
@@ -233,8 +263,9 @@ public class RuntimeController {
     
 
 	/**
-	 * Sets the number of output tuples to return
-	 * @param schema
+	 * Sets the number of output tuples to return.
+	 *
+	 * @param limit the new tuples limit
 	 */
 	void setTuplesLimit(Integer limit) {
 		if(limit == null || limit < 0) {
@@ -246,7 +277,7 @@ public class RuntimeController {
 	}
 
 	/**
-	 * Update the plan/search views 
+	 * Update the plan/search views.
 	 */
 	void udpateWidgets() {
 		while (this.dataQueue != null && !this.dataQueue.isEmpty()) {
@@ -283,12 +314,13 @@ public class RuntimeController {
 	private static class TupleCellFactoryCallback
 				implements Callback<CellDataFeatures<Tuple, Object>, ObservableValue<Object>> {
 
-		/** Index of the value to display within the tuple */
+		/**  Index of the value to display within the tuple. */
 		private final int index;
 		
 		/**
-		 * Default constructor
-		 * @param i
+		 * Default constructor.
+		 *
+		 * @param i the i
 		 */
 		public TupleCellFactoryCallback(int i) {
 			this.index = i;
@@ -296,6 +328,9 @@ public class RuntimeController {
 		
 		/**
 		 * Called be the table render to display the value of a table cell.
+		 *
+		 * @param t the t
+		 * @return the observable value
 		 */
 		@Override
 		public ObservableValue<Object> call(CellDataFeatures<Tuple, Object> t) {

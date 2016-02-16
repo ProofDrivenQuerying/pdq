@@ -18,15 +18,24 @@ import uk.ac.ox.cs.pdq.algebra.RelationalOperatorException;
 import uk.ac.ox.cs.pdq.algebra.Selection;
 import uk.ac.ox.cs.pdq.algebra.predicates.Predicate;
 
+// TODO: Auto-generated Javadoc
 /**
+ * The Class SelectionTest.
+ *
  * @author Julien Leblay
  */
 @RunWith(MockitoJUnitRunner.class)
 public class SelectionTest extends UnaryOperatorTest {
 
+	/** The operator. */
 	Selection operator;
+	
+	/** The predicate. */
 	@Mock Predicate predicate;
 	
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.test.algebra.RelationalOperatorTest#setup()
+	 */
 	@Before public void setup() throws RelationalOperatorException {
 		super.setup();
         MockitoAnnotations.initMocks(this);
@@ -41,25 +50,40 @@ public class SelectionTest extends UnaryOperatorTest {
 		this.operator = new Selection(predicate, child);
 	}
 	
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.test.algebra.RelationalOperatorTest#getOperator()
+	 */
 	RelationalOperator getOperator() {
 		return this.operator;
 	}
 	
+	/**
+	 * Inits the count test null arguments.
+	 */
 	@Test(expected=NullPointerException.class)
 	public void initCountTestNullArguments() {
 		new Selection(null, null);
 	}
 	
+	/**
+	 * Inits the count test null argument1.
+	 */
 	@Test(expected=NullPointerException.class)
 	public void initCountTestNullArgument1() {
 		new Selection(null, child);
 	}
 	
+	/**
+	 * Inits the count test null argument2.
+	 */
 	@Test(expected=NullPointerException.class)
 	public void initCountTestNullArgument2() {
 		new Selection(predicate, null);
 	}
 	
+	/**
+	 * Inits the selection test.
+	 */
 	@Test public void initSelectionTest() {
 		Assert.assertEquals("Child must match that used for initialization", child, this.operator.getChild());
 		Assert.assertEquals("Selection operator type must match that of child", child.getType(), this.operator.getType());
@@ -68,6 +92,11 @@ public class SelectionTest extends UnaryOperatorTest {
 		Assert.assertEquals("Selection predicate must match that of initialization", this.predicate, this.operator.getPredicate());
 	}
 
+	/**
+	 * Deep copy.
+	 *
+	 * @throws RelationalOperatorException the relational operator exception
+	 */
 	@Test public void deepCopy() throws RelationalOperatorException {
 		Selection copy = this.operator.deepCopy();
 		Assert.assertEquals("Selection operators deep copy must be equals to itself", this.operator, copy);
@@ -78,17 +107,32 @@ public class SelectionTest extends UnaryOperatorTest {
 		Assert.assertEquals("Selection predicate must match that of initialization", this.predicate, copy.getPredicate());
 	}
 
+	/**
+	 * Gets the column.
+	 *
+	 * @return the column
+	 */
 	@Test public void getColumn() {
 		for (int i = 0, l = this.outputTerms.size(); i < l; i++) {
 			Assert.assertEquals("Selection operator's " + i + "th column must match that of child", this.child.getColumns().get(i), this.operator.getColumn(i));
 		}
 	}
 
+	/**
+	 * Gets the bad column.
+	 *
+	 * @return the bad column
+	 */
 	@Test(expected=IllegalArgumentException.class) 
 	public void getBadColumn() {
 		this.operator.getColumn(this.outputTerms.size() + 1);
 	}
 
+	/**
+	 * Test hash code.
+	 *
+	 * @throws RelationalOperatorException the relational operator exception
+	 */
 	@Test public void testHashCode() throws RelationalOperatorException {
 		Set<RelationalOperator> s = new LinkedHashSet<>();
 

@@ -2,20 +2,27 @@ package uk.ac.ox.cs.pdq.planner.dominance;
 
 import uk.ac.ox.cs.pdq.planner.reasoning.Configuration;
 
+// TODO: Auto-generated Javadoc
 /**
  * Configuration dominance.
  *
  * @author Efthymia Tsamoura
+ * @param <C> the generic type
  */
 public interface Dominance<C extends Configuration> {
+	
 	/**
-	 * @param source
-	 * @param target
+	 * Checks if is dominated.
+	 *
+	 * @param source the source
+	 * @param target the target
 	 * @return true if the source is dominated by the target
 	 */
 	boolean isDominated(C source, C target);
 
 	/**
+	 * Clone.
+	 *
 	 * @return Dominance
 	 */
 	Dominance<C> clone();

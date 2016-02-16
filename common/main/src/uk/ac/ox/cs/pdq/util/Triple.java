@@ -1,18 +1,23 @@
 package uk.ac.ox.cs.pdq.util;
 
+// TODO: Auto-generated Javadoc
 /**
- * A triple of elements
+ * A triple of elements.
  *
  * @author Efthymia Tsamoura
- *
  * @param <T1> Type of the first element
  * @param <T2> Type of the second element
  * @param <T3> Type of the third element
  */
 public class Triple<T1, T2, T3> {
 
+	/** The first. */
 	private final T1 first;
+	
+	/** The second. */
 	private final T2 second;
+	
+	/** The third. */
 	private final T3 third;
 
 	/**
@@ -28,6 +33,8 @@ public class Triple<T1, T2, T3> {
 	}
 
 	/**
+	 * Gets the first.
+	 *
 	 * @return T1
 	 */
 	public T1 getFirst() {
@@ -35,6 +42,8 @@ public class Triple<T1, T2, T3> {
 	}
 
 	/**
+	 * Gets the second.
+	 *
 	 * @return T2
 	 */
 	public T2 getSecond() {
@@ -42,6 +51,8 @@ public class Triple<T1, T2, T3> {
 	}
 
 	/**
+	 * Gets the third.
+	 *
 	 * @return T3
 	 */
 	public T3 getThird() {
@@ -49,6 +60,8 @@ public class Triple<T1, T2, T3> {
 	}
 
 	/**
+	 * Hash code.
+	 *
 	 * @return int
 	 */
 	@Override
@@ -62,6 +75,8 @@ public class Triple<T1, T2, T3> {
 	}
 
 	/**
+	 * Equals.
+	 *
 	 * @param obj Object
 	 * @return boolean
 	 */
@@ -107,6 +122,8 @@ public class Triple<T1, T2, T3> {
 	}
 
 	/**
+	 * To string.
+	 *
 	 * @return String
 	 */
 	@Override

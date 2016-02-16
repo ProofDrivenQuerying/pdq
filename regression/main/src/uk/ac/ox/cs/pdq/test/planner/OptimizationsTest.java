@@ -25,6 +25,7 @@ import uk.ac.ox.cs.pdq.test.RegressionTest;
 import uk.ac.ox.cs.pdq.test.RegressionTestException;
 import uk.ac.ox.cs.pdq.test.Bootstrap.Command;
 
+// TODO: Auto-generated Javadoc
 /**
  * Runs regression tests for the optimized explorer. Run a search with and
  * without optimization (global equivalence, global dominance, post-pruning) and compares the
@@ -38,20 +39,30 @@ public class OptimizationsTest extends RegressionTest {
 	/** Runner's logger. */
 	private static Logger log = Logger.getLogger(OptimizationsTest.class);
 
-	/** File name where planning related parameters must be stored in a test case directory */
+	/**  File name where planning related parameters must be stored in a test case directory. */
 	private static final String PLAN_PARAMETERS_FILE = "case.properties";
 
-	/** File name where the schema must be stored in a test case directory */
+	/**  File name where the schema must be stored in a test case directory. */
 	private static final String SCHEMA_FILE = "schema.xml";
 
-	/** File name where the query must be stored in a test case directory */
+	/**  File name where the query must be stored in a test case directory. */
 	private static final String QUERY_FILE = "query.xml";
 
+	/**
+	 * The Class OptimizationsCommand.
+	 */
 	public static class OptimizationsCommand extends Command {
+		
+		/**
+		 * Instantiates a new optimizations command.
+		 */
 		public OptimizationsCommand() {
 			super("optim");
 		}
 
+		/* (non-Javadoc)
+		 * @see uk.ac.ox.cs.pdq.test.Bootstrap.Command#execute()
+		 */
 		@Override
 		public void execute() throws RegressionTestException, IOException, ReflectiveOperationException {
 			new OptimizationsTest().recursiveRun(new File(getInput()));
@@ -70,9 +81,9 @@ public class OptimizationsTest extends RegressionTest {
 	}
 
 	/**
-	 * Runs all the test case in the given directory
-	 * 
-	 * @param directory
+	 * Runs all the test case in the given directory.
+	 *
+	 * @param directory the directory
 	 * @return boolean
 	 */
 	protected boolean compare(File directory) {

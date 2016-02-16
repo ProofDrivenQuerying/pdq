@@ -8,6 +8,7 @@ import javax.swing.SortOrder;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+// TODO: Auto-generated Javadoc
 /**
  * Represents sorting order of the output of a logical operator, as a list of
  * position mapping to sorted order.
@@ -16,9 +17,12 @@ import org.apache.commons.lang3.tuple.Pair;
  */
 public class Sorting implements Iterable<Pair<Integer, SortOrder>>{
 
+	/** The positions. */
 	private final List<Pair<Integer, SortOrder>> positions = new LinkedList<>();
 
 	/**
+	 * Size.
+	 *
 	 * @return int
 	 */
 	public int size() {
@@ -26,6 +30,8 @@ public class Sorting implements Iterable<Pair<Integer, SortOrder>>{
 	}
 
 	/**
+	 * Iterator.
+	 *
 	 * @return Iterator<Pair<Integer,SortOrder>>
 	 * @see java.lang.Iterable#iterator()
 	 */
@@ -37,8 +43,9 @@ public class Sorting implements Iterable<Pair<Integer, SortOrder>>{
 	/**
 	 * Add column position and sorted order to the sorting.
 	 * This has no effect was already present.
-	 * @param col
-	 * @param order
+	 *
+	 * @param col the col
+	 * @param order the order
 	 */
 	public void addSorting(int col, SortOrder order) {
 		for (Pair<Integer, SortOrder> so: this.positions) {
@@ -54,8 +61,9 @@ public class Sorting implements Iterable<Pair<Integer, SortOrder>>{
 	 * This has no effect was already present with the same order.
 	 * If the column was not already part of the sorting, it will be add last as
 	 * a result of the update.
-	 * @param col
-	 * @param order
+	 *
+	 * @param col the col
+	 * @param order the order
 	 */
 	public void updateSorting(int col, SortOrder order) {
 		boolean found = false;
@@ -74,8 +82,9 @@ public class Sorting implements Iterable<Pair<Integer, SortOrder>>{
 	/**
 	 * Remove the column position and order form the sorting.
 	 * This has no effect was not already present.
-	 * @param col
-	 * @param order
+	 *
+	 * @param col the col
+	 * @param order the order
 	 */
 	public void removeSorting(int col, SortOrder order) {
 		for (Iterator<Pair<Integer, SortOrder>> i = this.positions.iterator(); i.hasNext(); ) {

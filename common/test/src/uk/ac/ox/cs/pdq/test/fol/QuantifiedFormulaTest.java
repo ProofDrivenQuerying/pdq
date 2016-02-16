@@ -23,16 +23,23 @@ import uk.ac.ox.cs.pdq.fol.Variable;
 
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class QuantifiedFormulaTest.
+ */
 public class QuantifiedFormulaTest {
 	
 	/**
-	 * Makes sure assertions are enabled
+	 * Makes sure assertions are enabled.
 	 */
 	@Before 
 	public void setup() {
 		Utility.assertsEnabled();
 	}
 
+	/**
+	 * Test universal.
+	 */
 	@Test public void testUniversal() {
 		Signature s = new Signature("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
@@ -48,6 +55,10 @@ public class QuantifiedFormulaTest {
 						Lists.newArrayList(new Variable("x1")), p);
 		Assert.assertEquals("Universal subformulation must match that of construction ", p, n.getChild());
 	}
+	
+	/**
+	 * Test equals universal.
+	 */
 	@Test public void testEqualsUniversal() {
 		Signature s1 = new Signature("s", 5);
 		List<Term> t1 = Lists.<Term>newArrayList(
@@ -74,6 +85,9 @@ public class QuantifiedFormulaTest {
 		Assert.assertTrue("Universal subformulation must match that of construction ", n1.equals(n2));
 	}
 
+	/**
+	 * Test not equals universal.
+	 */
 	@Test public void testNotEqualsUniversal() {
 		Signature s1 = new Signature("s", 5);
 		List<Term> t1 = Lists.<Term>newArrayList(
@@ -98,6 +112,9 @@ public class QuantifiedFormulaTest {
 		Assert.assertFalse("Universal subformulation must match that of construction ", n1.equals(n2));
 	}
 
+	/**
+	 * Test ground universal.
+	 */
 	@Test public void testGroundUniversal() {
 		Signature s = new Signature("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
@@ -123,6 +140,9 @@ public class QuantifiedFormulaTest {
 		Assert.assertEquals("Grounded universal must comply to mapping ", g, n.ground(m).getTerms());
 	}
 
+	/**
+	 * Test ground universal invalid.
+	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void testGroundUniversalInvalid() {
 		Signature s = new Signature("s", 5);
@@ -150,6 +170,9 @@ public class QuantifiedFormulaTest {
 		Assert.assertEquals("Grounded universal must comply to mapping ", g, n.ground(m).getTerms());
 	}
 
+	/**
+	 * Test existential.
+	 */
 	@Test public void testExistential() {
 		Signature s = new Signature("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
@@ -165,6 +188,10 @@ public class QuantifiedFormulaTest {
 						Lists.newArrayList(new Variable("x1")), p);
 		Assert.assertEquals("Universal subformulation must match that of construction ", p, n.getChild());
 	}
+	
+	/**
+	 * Test equals existential.
+	 */
 	@Test public void testEqualsExistential() {
 		Signature s1 = new Signature("s", 5);
 		List<Term> t1 = Lists.<Term>newArrayList(
@@ -191,6 +218,9 @@ public class QuantifiedFormulaTest {
 		Assert.assertTrue("Universal subformulation must match that of construction ", n1.equals(n2));
 	}
 
+	/**
+	 * Test not equals existential.
+	 */
 	@Test public void testNotEqualsExistential() {
 		Signature s1 = new Signature("s", 5);
 		List<Term> t1 = Lists.<Term>newArrayList(
@@ -217,6 +247,9 @@ public class QuantifiedFormulaTest {
 		Assert.assertFalse("Universal subformulation must match that of construction ", n1.equals(n2));
 	}
 
+	/**
+	 * Test ground existential invalid.
+	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void testGroundExistentialInvalid() {
 		Signature s = new Signature("s", 5);
@@ -244,6 +277,9 @@ public class QuantifiedFormulaTest {
 		Assert.assertEquals("Grounded universal must comply to mapping ", g, n.ground(m).getTerms());
 	}
 
+	/**
+	 * Test ground existential.
+	 */
 	@Test public void testGroundExistential() {
 		Signature s = new Signature("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(

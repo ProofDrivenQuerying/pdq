@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package uk.ac.ox.cs.pdq.planner.dag.equivalence;
 
 import java.util.Collection;
@@ -15,6 +18,7 @@ import uk.ac.ox.cs.pdq.planner.reasoning.chase.equivalence.StructuralEquivalence
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
 /**
  * A class of structurally equivalent configurations that supports multi-threading.
  * According to this implementation different threads can add, remove or perform domination detection inside the class concurrently.
@@ -24,14 +28,19 @@ import com.google.common.collect.Lists;
  */
 public class SynchronizedAnnotatedPlanClass extends DAGAnnotatedPlanClass{
 
-	/** The non-representative configurations*/
+	/**  The non-representative configurations. */
 	Collection<DAGAnnotatedPlan> nonRepresentatives = new LinkedHashSet<>();
 
-	/** Performs structural equivalence checks */
+	/**  Performs structural equivalence checks. */
 	private final StructuralEquivalence structuralEquivalence = new FastStructuralEquivalence();
 
+	/** The read write lock. */
 	private final ReentrantReadWriteLock readWriteLock =  new ReentrantReadWriteLock();
+	
+	/** The read. */
 	private final Lock read  = this.readWriteLock.readLock();
+	
+	/** The write. */
 	private final Lock write = this.readWriteLock.writeLock();
 
 	/**
@@ -44,6 +53,8 @@ public class SynchronizedAnnotatedPlanClass extends DAGAnnotatedPlanClass{
 	}
 
 	/**
+	 * Adds the entry.
+	 *
 	 * @param configuration DAGAnnotatedPlan
 	 */
 	@Override
@@ -65,6 +76,8 @@ public class SynchronizedAnnotatedPlanClass extends DAGAnnotatedPlanClass{
 	}
 
 	/**
+	 * Removes the entry.
+	 *
 	 * @param configuration DAGAnnotatedPlan
 	 */
 	@Override
@@ -73,6 +86,8 @@ public class SynchronizedAnnotatedPlanClass extends DAGAnnotatedPlanClass{
 	}
 
 	/**
+	 * Removes the all.
+	 *
 	 * @param configurations Collection<DAGAnnotatedPlan>
 	 */
 	@Override
@@ -105,6 +120,8 @@ public class SynchronizedAnnotatedPlanClass extends DAGAnnotatedPlanClass{
 	}
 
 	/**
+	 * Gets the all.
+	 *
 	 * @return Collection<DAGAnnotatedPlan>
 	 */
 	@Override
@@ -123,6 +140,9 @@ public class SynchronizedAnnotatedPlanClass extends DAGAnnotatedPlanClass{
 	}
 
 	/**
+	 * Dominated by.
+	 *
+	 * @param dominance the dominance
 	 * @param input DAGAnnotatedPlan
 	 * @return Collection<DAGAnnotatedPlan>
 	 */
@@ -148,6 +168,8 @@ public class SynchronizedAnnotatedPlanClass extends DAGAnnotatedPlanClass{
 	}
 
 	/**
+	 * Structurally equivalent to.
+	 *
 	 * @param configuration DAGAnnotatedPlan
 	 * @return boolean
 	 */
@@ -162,6 +184,9 @@ public class SynchronizedAnnotatedPlanClass extends DAGAnnotatedPlanClass{
 	}
 
 	/**
+	 * Dominate.
+	 *
+	 * @param dominance the dominance
 	 * @param input DAGAnnotatedPlan
 	 * @return DAGAnnotatedPlan
 	 */
@@ -186,6 +211,8 @@ public class SynchronizedAnnotatedPlanClass extends DAGAnnotatedPlanClass{
 	}
 
 	/**
+	 * Checks if is empty.
+	 *
 	 * @return boolean
 	 */
 	@Override
@@ -199,6 +226,8 @@ public class SynchronizedAnnotatedPlanClass extends DAGAnnotatedPlanClass{
 	}
 
 	/**
+	 * Size.
+	 *
 	 * @return int
 	 */
 	@Override
@@ -216,6 +245,8 @@ public class SynchronizedAnnotatedPlanClass extends DAGAnnotatedPlanClass{
 	}
 
 	/**
+	 * To string.
+	 *
 	 * @return String
 	 */
 	@Override

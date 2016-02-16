@@ -3,6 +3,7 @@ package uk.ac.ox.cs.pdq.generator.reverse;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Query;
 
+// TODO: Auto-generated Javadoc
 /**
  * A QuerySelector that accepts only conjunctive query where the number of
  * atoms with constants in the body is greater or equals to some given ratio.

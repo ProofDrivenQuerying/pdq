@@ -23,19 +23,32 @@ import uk.ac.ox.cs.pdq.util.TupleType;
 import com.google.common.collect.Lists;
 
 
+// TODO: Auto-generated Javadoc
 /**
- * 
+ * The Class SelectionTest.
+ *
  * @author Julien LEBLAY
  */
 public class SelectionTest extends UnaryIteratorTest {
 
+	/** The iterator. */
 	Selection iterator;
 	
+	/** The filter1. */
 	Predicate filter1 = new ConstantEqualityPredicate(0, new TypedConstant<>("one"));
+	
+	/** The filter2. */
 	Predicate filter2 = new ConstantEqualityPredicate(1, new TypedConstant<>(2));
+	
+	/** The filter3. */
 	Predicate filter3 = new ConjunctivePredicate<>(Lists.newArrayList(filter1, filter2));
+	
+	/** The filter4. */
 	Predicate filter4 = new ConstantEqualityPredicate(3, new TypedConstant<>("unrelated"));
 	
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.test.runtime.exec.iterator.TupleIteratorTest#setup()
+	 */
 	@Before public void setup() {
         super.setup();
         MockitoAnnotations.initMocks(this);
@@ -53,6 +66,9 @@ public class SelectionTest extends UnaryIteratorTest {
 		this.iterator = new Selection(filter3, child);
 	}
 	
+	/**
+	 * Inits the selection.
+	 */
 	@Test public void initSelection() {
 		this.iterator = new Selection(filter3, child);
 		Assert.assertEquals("Selection filter must match that of initialization", this.filter3, this.iterator.getPredicate());
@@ -63,16 +79,27 @@ public class SelectionTest extends UnaryIteratorTest {
 		Assert.assertEquals("Selection output type must match that of initialization", this.outputType, this.iterator.getType());
 	}
 	
+	/**
+	 * Inits the selection null child.
+	 */
 	@Test(expected=IllegalArgumentException.class) 
 	public void initSelectionNullChild() {
 		new Selection(filter1, null);
 	}
 	
+	/**
+	 * Inits the selection null filter.
+	 */
 	@Test(expected=IllegalArgumentException.class) 
 	public void initSelectionNullFilter() {
 		new Selection(null, child);
 	}
 
+	/**
+	 * Deep copy.
+	 *
+	 * @throws RelationalOperatorException the relational operator exception
+	 */
 	@Test public void deepCopy() throws RelationalOperatorException {
 		this.iterator = new Selection(filter3, child);
 		Selection copy = this.iterator.deepCopy();
@@ -84,6 +111,9 @@ public class SelectionTest extends UnaryIteratorTest {
 		Assert.assertEquals("Selection iterator input type must match that of child", this.iterator.getInputType(), copy.getInputType());
 	}
 
+	/**
+	 * Checks for next filtered1.
+	 */
 	@Test public void hasNextFiltered1() {
 		this.iterator = new Selection(filter1, child);
 		this.iterator.open();
@@ -92,6 +122,9 @@ public class SelectionTest extends UnaryIteratorTest {
 		Assert.assertFalse(this.iterator.hasNext());
 	}
 
+	/**
+	 * Checks for next filtered2.
+	 */
 	@Test public void hasNextFiltered2() {
 		this.iterator = new Selection(filter2, child);
 		this.iterator.open();
@@ -100,6 +133,9 @@ public class SelectionTest extends UnaryIteratorTest {
 		Assert.assertFalse(this.iterator.hasNext());
 	}
 
+	/**
+	 * Checks for next filtered3.
+	 */
 	@Test public void hasNextFiltered3() {
 		this.iterator = new Selection(filter3, child);
 		this.iterator.open();
@@ -107,12 +143,18 @@ public class SelectionTest extends UnaryIteratorTest {
 		Assert.assertFalse(this.iterator.hasNext());
 	}
 
+	/**
+	 * Checks for next filtered empty result.
+	 */
 	@Test public void hasNextFilteredEmptyResult() {
 		this.iterator = new Selection(filter4, child);
 		this.iterator.open();
 		Assert.assertFalse(this.iterator.hasNext());
 	}
 
+	/**
+	 * Next filtered1.
+	 */
 	@Test public void nextFiltered1() {
 		this.iterator = new Selection(filter1, child);
 		this.iterator.open();
@@ -120,6 +162,9 @@ public class SelectionTest extends UnaryIteratorTest {
 		Assert.assertEquals(outputType.createTuple("one", 2, "str", 6), this.iterator.next());
 	}
 
+	/**
+	 * Next filtered2.
+	 */
 	@Test public void nextFiltered2() {
 		this.iterator = new Selection(filter2, child);
 		this.iterator.open();
@@ -127,12 +172,18 @@ public class SelectionTest extends UnaryIteratorTest {
 		Assert.assertEquals(outputType.createTuple("two", 2, "str", 6), this.iterator.next());
 	}
 
+	/**
+	 * Next filtered3.
+	 */
 	@Test public void nextFiltered3() {
 		this.iterator = new Selection(filter3, child);
 		this.iterator.open();
 		Assert.assertEquals(outputType.createTuple("one", 2, "str", 6), this.iterator.next());
 	}
 
+	/**
+	 * Next filtered empty result.
+	 */
 	@Test(expected=NoSuchElementException.class) 
 	public void nextFilteredEmptyResult() {
 		this.iterator = new Selection(filter4, child);
@@ -140,6 +191,9 @@ public class SelectionTest extends UnaryIteratorTest {
 		this.iterator.next();
 	}
 
+	/**
+	 * Reset filtered1.
+	 */
 	@Test public void resetFiltered1() {
 		this.iterator = new Selection(filter1, child);
 		this.iterator.open();
@@ -162,6 +216,9 @@ public class SelectionTest extends UnaryIteratorTest {
 		Assert.assertFalse(this.iterator.hasNext());
 	}
 
+	/**
+	 * Reset filtered2.
+	 */
 	@Test public void resetFiltered2() {
 		this.iterator = new Selection(filter2, child);
 		this.iterator.open();
@@ -184,6 +241,9 @@ public class SelectionTest extends UnaryIteratorTest {
 		Assert.assertFalse(this.iterator.hasNext());
 	}
 
+	/**
+	 * Reset filtered3.
+	 */
 	@Test public void resetFiltered3() {
 		this.iterator = new Selection(filter3, child);
 		this.iterator.open();
@@ -202,6 +262,9 @@ public class SelectionTest extends UnaryIteratorTest {
 		Assert.assertFalse(this.iterator.hasNext());
 	}
 
+	/**
+	 * Bind null.
+	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void bindNull() {
 		this.iterator = new Selection(filter3, child);
@@ -209,12 +272,18 @@ public class SelectionTest extends UnaryIteratorTest {
 		this.iterator.bind(null);
 	}
 	
+	/**
+	 * Bind on unopened.
+	 */
 	@Test(expected=IllegalStateException.class)
 	public void bindOnUnopened() {
 		this.iterator = new Selection(filter3, child);
 		this.iterator.bind(Tuple.EmptyTuple);
 	}
 	
+	/**
+	 * Bind illegal type.
+	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void bindIllegalType() {
 		this.iterator = new Selection(filter3, child);
@@ -222,6 +291,9 @@ public class SelectionTest extends UnaryIteratorTest {
 		this.iterator.bind(outputType.createTuple("four", 4));
 	}
 	
+	/**
+	 * Bind empty tuple.
+	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void bindEmptyTuple() {
 		this.iterator = new Selection(filter3, child);
@@ -229,6 +301,9 @@ public class SelectionTest extends UnaryIteratorTest {
 		this.iterator.bind(Tuple.EmptyTuple);
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.test.runtime.exec.iterator.TupleIteratorTest#getIterator()
+	 */
 	@Override
 	protected TupleIterator getIterator() {
 		return this.iterator;

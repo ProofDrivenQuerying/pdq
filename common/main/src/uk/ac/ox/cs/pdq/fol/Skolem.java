@@ -9,31 +9,37 @@ import uk.ac.ox.cs.pdq.util.Named;
 import com.google.common.base.Preconditions;
 
 
+// TODO: Auto-generated Javadoc
 /**
- * A Skolem constant term
+ * A Skolem constant term.
  *
  * @author Julien Leblay
  */
 public final class Skolem implements Named, Constant {
 
-	/** The default prefix of the constant terms */
+	/**  The default prefix of the constant terms. */
 	public static final String DEFAULT_CONSTANT_PREFIX = "c";
 
-	/**  A counter used to create new constant terms */
+	/**   A counter used to create new constant terms. */
 	private static int freshConstantCounter = 0;
 
+	/**
+	 * Reset counter.
+	 */
 	public static void resetCounter() {
 		Skolem.freshConstantCounter = 0;
 	}
 
 	/**
+	 * Gets the fresh constant.
+	 *
 	 * @return Skolem
 	 */
 	public static Skolem getFreshConstant() {
 		return new Skolem(DEFAULT_CONSTANT_PREFIX + (freshConstantCounter++));
 	}
 
-	/** The constant's name */
+	/**  The constant's name. */
 	private final String name;
 
 	/** Cached instance hash (only possible because variables are immutable). */
@@ -43,6 +49,8 @@ public final class Skolem implements Named, Constant {
 	private String rep = null;
 
 	/**
+	 * Instantiates a new skolem.
+	 *
 	 * @param name The name of the constant
 	 */
 	public Skolem(String name) {
@@ -52,6 +60,8 @@ public final class Skolem implements Named, Constant {
 	}
 
 	/**
+	 * Equals.
+	 *
 	 * @param o Object
 	 * @return boolean
 	 */
@@ -69,6 +79,8 @@ public final class Skolem implements Named, Constant {
 
 
 	/**
+	 * Hash code.
+	 *
 	 * @return int
 	 */
 	@Override
@@ -80,6 +92,8 @@ public final class Skolem implements Named, Constant {
 	}
 
 	/**
+	 * To string.
+	 *
 	 * @return String
 	 */
 	@Override
@@ -93,6 +107,8 @@ public final class Skolem implements Named, Constant {
 	}
 
 	/**
+	 * Gets the name.
+	 *
 	 * @return String
 	 * @see uk.ac.ox.cs.pdq.util.Named#getName()
 	 */
@@ -102,6 +118,8 @@ public final class Skolem implements Named, Constant {
 	}
 
 	/**
+	 * Checks if is skolem.
+	 *
 	 * @return boolean
 	 * @see uk.ac.ox.cs.pdq.fol.Term#isSkolem()
 	 */
@@ -111,6 +129,8 @@ public final class Skolem implements Named, Constant {
 	}
 
 	/**
+	 * Checks if is variable.
+	 *
 	 * @return boolean
 	 * @see uk.ac.ox.cs.pdq.fol.Term#isVariable()
 	 */
@@ -130,24 +150,25 @@ public final class Skolem implements Named, Constant {
 
 	public static final class Generator {
 
+		/** The Constant DEFAULT_PREFIX. */
 		private static final String DEFAULT_PREFIX = "c";
+		
+		/** The Constant CANONICAL_PREFIX. */
 		private static final String CANONICAL_PREFIX = "k";
 
+		/** The global id. */
 		private static int globalId = 0;
 
 		/** Index storing all canonical name stored so far (value) and the canonical string there where generated from (key). */
 		private static Map<String, String> skolems = new LinkedHashMap<>();
 
 		/**
+		 * Gets the name.
 		 *
-		 * @param dependency
-		 * 		The input dependency
-		 * @param universalVariables
-		 * 		A string of universal variable-universal variable grounding pairs for all universally quantified variable
-		 * @param existentialVariable
-		 * 		The existential variable
-		 * @return
-		 * 		a canonical name which equals to the dependency name + the assignment
+		 * @param dependency 		The input dependency
+		 * @param universalVariables 		A string of universal variable-universal variable grounding pairs for all universally quantified variable
+		 * @param existentialVariable 		The existential variable
+		 * @return 		a canonical name which equals to the dependency name + the assignment
 		 * 		of the canonical names to universal variables + the existential's variable name
 		 */
 		public static String getName(String dependency, String universalVariables, String existentialVariable) {
@@ -161,7 +182,9 @@ public final class Skolem implements Named, Constant {
 		}
 
 		/**
-		 * @param prefix
+		 * Gets the name.
+		 *
+		 * @param prefix the prefix
 		 * @return a fresh constant name with the given prefix.
 		 */
 		private static String getName(String prefix) {
@@ -169,6 +192,8 @@ public final class Skolem implements Named, Constant {
 		}
 
 		/**
+		 * Gets the name.
+		 *
 		 * @return a fresh constant name with the default prefix.
 		 */
 		public static String getName() {

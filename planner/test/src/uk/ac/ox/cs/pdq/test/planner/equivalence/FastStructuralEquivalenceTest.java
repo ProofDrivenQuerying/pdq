@@ -15,16 +15,21 @@ import uk.ac.ox.cs.pdq.test.planner.TestObjects1;
 
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
- * @author Efthymia Tsamoura
+ * The Class FastStructuralEquivalenceTest.
  *
+ * @author Efthymia Tsamoura
  */
 
 public class FastStructuralEquivalenceTest  extends TestObjects1{
 
+	/** The cdomominance. */
 	FastStructuralEquivalence cdomominance = new FastStructuralEquivalence();
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.test.planner.TestObjects1#setup()
+	 */
 	@Before public void setup() {
 		super.setup();
         MockitoAnnotations.initMocks(this);
@@ -72,16 +77,25 @@ public class FastStructuralEquivalenceTest  extends TestObjects1{
 		when(config21.getInput()).thenReturn(Lists.<Constant>newArrayList(new Skolem("c1"), new Skolem("c2")));
 	}
 
+	/**
+	 * Test1.
+	 */
 	@Test public void test1() {
 		Assert.assertEquals(cdomominance.isEquivalent(config11, config12), false);
 		Assert.assertEquals(cdomominance.isEquivalent(config12, config11), false);
 	}
 
+	/**
+	 * Test2.
+	 */
 	@Test public void test2() {
 		Assert.assertEquals(cdomominance.isEquivalent(config21, config22), false);
 		Assert.assertEquals(cdomominance.isEquivalent(config22, config21), false);
 	}
 
+	/**
+	 * Test3.
+	 */
 	@Test public void test3() {
 		Assert.assertEquals(cdomominance.isEquivalent(config31, config32), true);
 		Assert.assertEquals(cdomominance.isEquivalent(config32, config31), true);

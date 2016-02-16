@@ -6,18 +6,24 @@ import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.dag.DAGConfiguration;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * Requires the input pair of configurations to be non trivial
- * and at least one of the input configurations to be an ApplyRule
- * @author Efthymia Tsamoura
+ * and at least one of the input configurations to be an ApplyRule.
  *
+ * @author Efthymia Tsamoura
  */
 public class ApplyRuleValidator implements Validator{
 
+	/**
+	 * Instantiates a new apply rule validator.
+	 */
 	public ApplyRuleValidator() {
 	}
 
 	/**
+	 * Validate.
+	 *
 	 * @param left DAGConfiguration
 	 * @param right DAGConfiguration
 	 * @return boolean
@@ -30,6 +36,8 @@ public class ApplyRuleValidator implements Validator{
 	}
 
 	/**
+	 * Validate.
+	 *
 	 * @param left DAGConfiguration
 	 * @param right DAGConfiguration
 	 * @param depth int
@@ -42,6 +50,8 @@ public class ApplyRuleValidator implements Validator{
 	}
 
 	/**
+	 * Clone.
+	 *
 	 * @return Validator
 	 * @see uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator#clone()
 	 */

@@ -24,19 +24,35 @@ import uk.ac.ox.cs.pdq.util.Typed;
 
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
+ * The Class BottomUpAccessTest.
+ *
  * @author Julien LEBLAY
  */
 public class BottomUpAccessTest extends UnaryIteratorTest {
 
+	/** The open iterator. */
 	BottomUpAccess iterator, openIterator;
+	
+	/** The relation. */
 	InMemoryTableWrapper relation;
+	
+	/** The unrelated. */
 	AccessMethod mt1, mt2, mt3, free, unrelated;
+	
+	/** The child5. */
 	@Mock TupleIterator child1, child2, child3, child4, child5;
+	
+	/** The child5 input type. */
 	TupleType child1Type, child2Type, child3Type, child5Type, child5InputType;
+	
+	/** The d. */
 	Attribute a, b, c, d;
 	
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.test.runtime.exec.iterator.TupleIteratorTest#setup()
+	 */
 	@Before public void setup() {
 		super.setup();
 		a = new Attribute(Integer.class, "a");
@@ -157,11 +173,17 @@ public class BottomUpAccessTest extends UnaryIteratorTest {
 		this.iterator = new BottomUpAccess(relation, mt1, child1);
 	}
 	
+	/**
+	 * Inits the with inconsistent access method.
+	 */
 	@Test(expected=IllegalArgumentException.class) 
 	public void initWithInconsistentAccessMethod() {
 		new BottomUpAccess(relation, unrelated, child);
 	}
 	
+	/**
+	 * Inits the access free access.
+	 */
 	@Test(expected=IllegalArgumentException.class) 
 	public void initAccessFreeAccess() {
 		this.iterator = new BottomUpAccess(relation, free, child4);
@@ -170,6 +192,9 @@ public class BottomUpAccessTest extends UnaryIteratorTest {
 		Assert.assertEquals(child, this.iterator.getChild());
 	}
 	
+	/**
+	 * Inits the access limited access1.
+	 */
 	@Test public void initAccessLimitedAccess1() {
 		this.iterator = new BottomUpAccess(relation, mt1, child1);
 		Assert.assertEquals(relation, this.iterator.getRelation());
@@ -177,6 +202,9 @@ public class BottomUpAccessTest extends UnaryIteratorTest {
 		Assert.assertEquals(child1, this.iterator.getChild());
 	}
 	
+	/**
+	 * Inits the access limited access2.
+	 */
 	@Test public void initAccessLimitedAccess2() {
 		this.iterator = new BottomUpAccess(relation, mt2, child2);
 		Assert.assertEquals(relation, this.iterator.getRelation());
@@ -184,6 +212,9 @@ public class BottomUpAccessTest extends UnaryIteratorTest {
 		Assert.assertEquals(child2, this.iterator.getChild());
 	}
 	
+	/**
+	 * Inits the access boolean access.
+	 */
 	@Test public void initAccessBooleanAccess() {
 		this.iterator = new BottomUpAccess(relation, mt3, child3);
 		Assert.assertEquals(relation, this.iterator.getRelation());
@@ -191,6 +222,9 @@ public class BottomUpAccessTest extends UnaryIteratorTest {
 		Assert.assertEquals(child3, this.iterator.getChild());
 	}
 	
+	/**
+	 * Inits the access open.
+	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void initAccessOpen() {
 		this.iterator = new BottomUpAccess(relation, mt1, child5);
@@ -200,21 +234,35 @@ public class BottomUpAccessTest extends UnaryIteratorTest {
 		Assert.assertEquals(child5InputType, this.iterator.getChild().getInputType());
 	}
 	
+	/**
+	 * Inits the access null relation.
+	 */
 	@Test(expected=IllegalArgumentException.class) 
 	public void initAccessNullRelation() {
 		new BottomUpAccess(null, mt1, child1);
 	}
 
+	/**
+	 * Inits the access null access method.
+	 */
 	@Test(expected=IllegalArgumentException.class) 
 	public void initAccessNullAccessMethod() {
 		new BottomUpAccess(relation, null, child1);
 	}
 
+	/**
+	 * Inits the access null child.
+	 */
 	@Test(expected=IllegalArgumentException.class) 
 	public void initAccessNullChild() {
 		new BottomUpAccess(relation, mt1, null);
 	}
 
+	/**
+	 * Deep copy.
+	 *
+	 * @throws RelationalOperatorException the relational operator exception
+	 */
 	@Test public void deepCopy() throws RelationalOperatorException {
 		this.iterator = new BottomUpAccess(relation, mt1, child1);
 		BottomUpAccess copy = this.iterator.deepCopy();
@@ -227,6 +275,9 @@ public class BottomUpAccessTest extends UnaryIteratorTest {
 		Assert.assertEquals("BottomUpAccess iterator input type must match that of child", this.iterator.getInputType(), copy.getInputType());
 	}
 	
+	/**
+	 * Inits the inconsistent empty input.
+	 */
 	@Test(expected=IllegalArgumentException.class) 
 	public void initInconsistentEmptyInput() {
 		when(child.getType()).thenReturn(TupleType.EmptyTupleType);
@@ -234,6 +285,9 @@ public class BottomUpAccessTest extends UnaryIteratorTest {
 		new BottomUpAccess(relation, mt1, child);
 	}		
 	
+	/**
+	 * Inits the inconsistent input type.
+	 */
 	@Test(expected=IllegalArgumentException.class) 
 	public void initInconsistentInputType() {
 		when(child.getType()).thenReturn(TupleType.DefaultFactory.create(String.class));
@@ -241,6 +295,9 @@ public class BottomUpAccessTest extends UnaryIteratorTest {
 		new BottomUpAccess(relation, mt1, child);
 	}		
 	
+	/**
+	 * Inits the inconsistent input arity.
+	 */
 	@Test(expected=IllegalArgumentException.class) 
 	public void initInconsistentInputArity() {
 		when(child.getType()).thenReturn(TupleType.DefaultFactory.create(Integer.class, String.class));
@@ -248,6 +305,9 @@ public class BottomUpAccessTest extends UnaryIteratorTest {
 		new BottomUpAccess(relation, mt1, child);
 	}		
 
+	/**
+	 * Checks for next limited1.
+	 */
 	@Test public void hasNextLimited1() {
 		this.iterator = new BottomUpAccess(relation, mt1, child1);
 		this.iterator.open();
@@ -259,6 +319,9 @@ public class BottomUpAccessTest extends UnaryIteratorTest {
 		Assert.assertFalse(this.iterator.hasNext());
 	}
 
+	/**
+	 * Checks for next limited2.
+	 */
 	@Test public void hasNextLimited2() {
 		this.iterator = new BottomUpAccess(relation, mt2, child2);
 		this.iterator.open();
@@ -270,6 +333,9 @@ public class BottomUpAccessTest extends UnaryIteratorTest {
 		Assert.assertFalse(this.iterator.hasNext()); 
 	}
 
+	/**
+	 * Checks for next boolean.
+	 */
 	@Test public void hasNextBoolean() {
 		this.iterator = new BottomUpAccess(relation, mt3, child3);
 		this.iterator.open();
@@ -279,6 +345,9 @@ public class BottomUpAccessTest extends UnaryIteratorTest {
 	}
 
 
+	/**
+	 * Next limited1.
+	 */
 	@Test public void nextLimited1() {
 		this.iterator = new BottomUpAccess(relation, mt1, child1);
 		this.iterator.open();
@@ -289,6 +358,9 @@ public class BottomUpAccessTest extends UnaryIteratorTest {
 		Assert.assertEquals(outputType.createTuple(3, "y", "one", 256), this.iterator.next());
 	}
 
+	/**
+	 * Next limited2.
+	 */
 	@Test public void nextLimited2() {
 		this.iterator = new BottomUpAccess(relation, mt2, child2);
 		this.iterator.open();
@@ -299,6 +371,9 @@ public class BottomUpAccessTest extends UnaryIteratorTest {
 		Assert.assertEquals(outputType.createTuple(3, "y", "one", 256), this.iterator.next());
 	}
 
+	/**
+	 * Next boolean.
+	 */
 	@Test public void nextBoolean() {
 		this.iterator = new BottomUpAccess(relation, mt3, child3);
 		this.iterator.open();
@@ -306,6 +381,9 @@ public class BottomUpAccessTest extends UnaryIteratorTest {
 		Assert.assertEquals(outputType.createTuple(3, "y", "one", 256), this.iterator.next());
 	}
 
+	/**
+	 * Next boolean limit reached.
+	 */
 	@Test (expected=NoSuchElementException.class)
 	public void nextBooleanLimitReached() {
 		this.iterator = new BottomUpAccess(relation, mt3, child3);
@@ -315,6 +393,9 @@ public class BottomUpAccessTest extends UnaryIteratorTest {
 		this.iterator.next();
 	}
 
+	/**
+	 * Reset limited1.
+	 */
 	@Test(expected=NoSuchElementException.class) 
 	public void resetLimited1() {
 		this.iterator = new BottomUpAccess(relation, mt1, child1);
@@ -347,6 +428,9 @@ public class BottomUpAccessTest extends UnaryIteratorTest {
 		this.iterator.next();
 	}
 
+	/**
+	 * Reset limited2.
+	 */
 	@Test(expected=NoSuchElementException.class) 
 	public void resetLimited2() {
 		this.iterator = new BottomUpAccess(relation, mt2, child2);
@@ -378,6 +462,9 @@ public class BottomUpAccessTest extends UnaryIteratorTest {
 		this.iterator.next();
 	}
 
+	/**
+	 * Reset boolean.
+	 */
 	@Test(expected=NoSuchElementException.class) 
 	public void resetBoolean() {
 		this.iterator = new BottomUpAccess(relation, mt3, child3);
@@ -426,7 +513,10 @@ public class BottomUpAccessTest extends UnaryIteratorTest {
 //		Assert.assertFalse(this.iterator.hasNext());
 //	}
 
-	@Override
+	/* (non-Javadoc)
+ * @see uk.ac.ox.cs.pdq.test.runtime.exec.iterator.TupleIteratorTest#getIterator()
+ */
+@Override
 	protected TupleIterator getIterator() {
 		return this.iterator;
 	}

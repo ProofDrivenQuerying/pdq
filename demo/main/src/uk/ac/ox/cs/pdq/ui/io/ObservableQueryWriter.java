@@ -12,6 +12,7 @@ import uk.ac.ox.cs.pdq.io.xml.QNames;
 import uk.ac.ox.cs.pdq.io.xml.QueryWriter;
 import uk.ac.ox.cs.pdq.ui.model.ObservableQuery;
 
+// TODO: Auto-generated Javadoc
 /**
  * Writes queries to XML.
  * 
@@ -23,7 +24,7 @@ public class ObservableQueryWriter extends AbstractXMLWriter<ObservableQuery> {
 	/** Logger. */
 	private static Logger log = Logger.getLogger(ObservableQueryWriter.class);
 
-	/** Query writer */
+	/**  Query writer. */
 	private QueryWriter queryWriter = null;
 	
 	/**
@@ -45,8 +46,9 @@ public class ObservableQueryWriter extends AbstractXMLWriter<ObservableQuery> {
 
 	/**
 	 * Writes the given query to the given output.
-	 * @param out
-	 * @param s
+	 *
+	 * @param out the out
+	 * @param s the s
 	 */
 	private void writeQuery(PrintStream out, ObservableQuery s) {
 		Map<QNames, String> att = new LinkedHashMap<>();

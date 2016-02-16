@@ -7,13 +7,17 @@ import org.jgrapht.EdgeFactory;
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 
+// TODO: Auto-generated Javadoc
 /**
  * Directed graph that allows reaching any node by its ID.
+ *
  * @author Efthymia Tsamoura
  * @author Julien Leblay
+ * @param <N> the number type
  */
 public abstract class IndexedDirectedGraph<N> extends DefaultDirectedGraph<N, DefaultEdge> {
-	/** */
+	
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -5341706482975843364L;
 
 	/**
@@ -33,13 +37,17 @@ public abstract class IndexedDirectedGraph<N> extends DefaultDirectedGraph<N, De
 	}
 
 	/**
-	 * @param id
+	 * Gets the vertex.
+	 *
+	 * @param id the id
 	 * @return the vertex having the input id
 	 */
 	public abstract N getVertex(Integer id);
 
 	/**
-	 * @param nodeSequence
+	 * Gets the path.
+	 *
+	 * @param nodeSequence the node sequence
 	 * @return the vertices having the input identifiers.
 	 */
 	public List<N> getPath(List<Integer> nodeSequence) {

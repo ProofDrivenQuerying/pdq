@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package uk.ac.ox.cs.pdq.planner.dag;
 
 import java.util.ArrayList;
@@ -17,21 +20,23 @@ import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState;
 import com.google.common.collect.Lists;
 
 
+// TODO: Auto-generated Javadoc
 /**
- * Utility class
+ * Utility class.
  *
  * @author Efthymia Tsamoura
  */
 public class ConfigurationUtility {
 
-	/** Performs fact dominance checks */
+	/**  Performs fact dominance checks. */
 	private final static FactDominance factDominance = new FastFactDominance(false);
 	
 	
 	/**
-	 * @param configuration
-	 * @return
-	 * 		true if the input configuration is a left-deep one
+	 * Checks if is left deep.
+	 *
+	 * @param configuration the configuration
+	 * @return 		true if the input configuration is a left-deep one
 	 */
 	public static boolean isLeftDeep(DAGConfiguration configuration) {
 		if(configuration instanceof BinaryAnnotatedPlan) {
@@ -44,9 +49,10 @@ public class ConfigurationUtility {
 	}
 	
 	/**
-	 * @param configuration
-	 * @return
-	 * 		the UnaryAnnotatedPlan sub-configurations of the input configuration
+	 * Gets the unary annotated plans.
+	 *
+	 * @param configuration the configuration
+	 * @return 		the UnaryAnnotatedPlan sub-configurations of the input configuration
 	 */
 	public static Collection<UnaryAnnotatedPlan> getUnaryAnnotatedPlans(DAGConfiguration configuration) {
 		Collection<UnaryAnnotatedPlan> ret = new LinkedHashSet<>();
@@ -61,9 +67,10 @@ public class ConfigurationUtility {
 	}
 
 	/**
-	 * @param configuration
-	 * @return 
-	 * 		the UnaryAnnotatedPlan sub-configurations (ordered by appearance) of the input configuration
+	 * Gets the unary annotated plans list.
+	 *
+	 * @param configuration the configuration
+	 * @return 		the UnaryAnnotatedPlan sub-configurations (ordered by appearance) of the input configuration
 	 */
 	public static List<UnaryAnnotatedPlan> getUnaryAnnotatedPlansList(DAGConfiguration configuration) {
 		List<UnaryAnnotatedPlan> ret = new ArrayList<>();
@@ -78,9 +85,10 @@ public class ConfigurationUtility {
 	}
 
 	/**
-	 * @param configuration
-	 * @return
-	 * 		the subconfigurations of the input configuration
+	 * Gets the subconfigurations.
+	 *
+	 * @param configuration the configuration
+	 * @return 		the subconfigurations of the input configuration
 	 */
 	public static Collection<DAGConfiguration> getSubconfigurations(DAGConfiguration configuration) {
 		Collection<DAGConfiguration> ret = new LinkedHashSet<>();
@@ -96,14 +104,15 @@ public class ConfigurationUtility {
 	}
 
 	/**
-	 * @param left
-	 * @param right
-	 * @return
-	 * 		true if the input pair of configurations is non trivial.
+	 * Checks if is non trivial.
+	 *
+	 * @param left the left
+	 * @param right the right
+	 * @return 		true if the input pair of configurations is non trivial.
 	 * 		An ordered pair of configurations (left, right)
-			is non-trivial if the output facts of the right configuration are not included in
-			the output facts of left configuration and vice versa, and if the UnaryAnnotatedPlan
-			subconfigurations of left and right do not overlap.
+	 * 			is non-trivial if the output facts of the right configuration are not included in
+	 * 			the output facts of left configuration and vice versa, and if the UnaryAnnotatedPlan
+	 * 			subconfigurations of left and right do not overlap.
 	 */
 	public static Boolean isNonTrivial(DAGAnnotatedPlan left, DAGAnnotatedPlan right) {
 		if (left.equals(right)){
@@ -115,8 +124,10 @@ public class ConfigurationUtility {
 	}
 
 	/**
-	 * @param left
-	 * @param right
+	 * Merge.
+	 *
+	 * @param left the left
+	 * @param right the right
 	 * @return a merged state
 	 */
 	public static ChaseState merge(DAGAnnotatedPlan left, DAGAnnotatedPlan right) {
@@ -124,8 +135,10 @@ public class ConfigurationUtility {
 	}
 	
 	/**
-	 * @param left
-	 * @param right
+	 * Gets the output.
+	 *
+	 * @param left the left
+	 * @param right the right
 	 * @return the output constants of the binary configuration composed from the left and right input configurations
 	 */
 	public static List<Constant> getOutput(DAGAnnotatedPlan left, DAGAnnotatedPlan right) {
@@ -135,9 +148,10 @@ public class ConfigurationUtility {
 	}
 
 	/**
+	 * Gets the bushiness.
 	 *
-	 * @param left
-	 * @param right
+	 * @param left the left
+	 * @param right the right
 	 * @return the bushiness of the binary configuration composed from the left and right input configurations
 	 */
 	public static Integer getBushiness(DAGAnnotatedPlan left, DAGAnnotatedPlan right) {
@@ -149,12 +163,13 @@ public class ConfigurationUtility {
 	}
 
 	/**
-	 * @param left
-	 * @param right
-	 * @param validators
-	 * @param depth
-	 * @return
-	 * 		true if the binary configuration composed from the left and right input configurations passes the validation tests,
+	 * Validate.
+	 *
+	 * @param left the left
+	 * @param right the right
+	 * @param validators the validators
+	 * @param depth the depth
+	 * @return 		true if the binary configuration composed from the left and right input configurations passes the validation tests,
 	 * 		i.e., satisfies given shape restrictions.
 	 * 		If depth > 0, then the corresponding binary configuration must be of the given depth.
 	 */
@@ -176,7 +191,11 @@ public class ConfigurationUtility {
 	}
 
 	/**
-	 * @param target 
+	 * Checks if is dominated by.
+	 *
+	 * @param dominance the dominance
+	 * @param target the target
+	 * @param source the source
 	 * @return true if this configuration is dominated by the input one
 	 */
 	public static boolean isDominatedBy(Dominance[] dominance, DAGAnnotatedPlan target, DAGAnnotatedPlan source) {

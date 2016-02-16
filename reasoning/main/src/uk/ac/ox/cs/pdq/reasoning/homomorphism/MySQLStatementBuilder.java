@@ -18,20 +18,29 @@ import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager.DBRelation;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismConstraint.TopKConstraint;
 
+// TODO: Auto-generated Javadoc
 /**
- * Builds queries for detecting homomorphisms in MySQL
+ * Builds queries for detecting homomorphisms in MySQL.
  *
  * @author Efthymia Tsamoura
- *
  */
 public class MySQLStatementBuilder extends SQLStatementBuilder {
 
+	/** The log. */
 	private static Logger log = Logger.getLogger(MySQLStatementBuilder.class);
 	
+	/**
+	 * Instantiates a new my sql statement builder.
+	 */
 	public MySQLStatementBuilder() {
 		super();
 	}
 	
+	/**
+	 * Instantiates a new my sql statement builder.
+	 *
+	 * @param cleanMap the clean map
+	 */
 	protected MySQLStatementBuilder(BiMap<String, String> cleanMap) {
 		super(cleanMap);
 	}
@@ -62,6 +71,9 @@ public class MySQLStatementBuilder extends SQLStatementBuilder {
 		return result;
 	}
 	
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.reasoning.homomorphism.SQLStatementBuilder#translateLimitConstraints(uk.ac.ox.cs.pdq.fol.Evaluatable, uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismConstraint[])
+	 */
 	@Override
 	protected String translateLimitConstraints(Evaluatable source, HomomorphismConstraint... constraints) {
 		for(HomomorphismConstraint c:constraints) {
@@ -73,6 +85,8 @@ public class MySQLStatementBuilder extends SQLStatementBuilder {
 	}
 	
 	/**
+	 * Clone.
+	 *
 	 * @return MySQLHomomorphismStatementBuilder
 	 */
 	@Override
@@ -80,13 +94,19 @@ public class MySQLStatementBuilder extends SQLStatementBuilder {
 		return new MySQLStatementBuilder(this.cleanMap);
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.reasoning.homomorphism.SQLStatementBuilder#encodeName(java.lang.String)
+	 */
 	@Override
 	public String encodeName(String name) {
 		return super.encodeName(name);
 	}
 	
 	/**
-	 * @param facts
+	 * Make inserts.
+	 *
+	 * @param facts the facts
+	 * @param dbrelations the dbrelations
 	 * @return insert statements that add the input fact to the fact database.
 	 */
 	@Override

@@ -24,6 +24,7 @@ import uk.ac.ox.cs.pdq.test.RegressionTest;
 import uk.ac.ox.cs.pdq.test.RegressionTestException;
 import uk.ac.ox.cs.pdq.test.Bootstrap.Command;
 
+// TODO: Auto-generated Javadoc
 /**
  * Runs the planner with simple and black box cost estimators and compares the resulting plans.
  * An exception is thrown when the planner finds a plan in one case but not the other. 
@@ -35,21 +36,31 @@ public class PlannerCostFunctionTest extends RegressionTest {
 	/** Runner's logger. */
 	private static Logger log = Logger.getLogger(PlannerCostFunctionTest.class);
 
-	/** File name where planning related parameters must be stored in a test case directory */
+	/**  File name where planning related parameters must be stored in a test case directory. */
 	private static final String PLAN_PARAMETERS_FILE = "case.properties";
 
-	/** File name where the schema must be stored in a test case directory */
+	/**  File name where the schema must be stored in a test case directory. */
 	private static final String SCHEMA_FILE = "schema.xml";
 
-	/** File name where the query must be stored in a test case directory */
+	/**  File name where the query must be stored in a test case directory. */
 	private static final String QUERY_FILE = "query.xml";
 
 
+	/**
+	 * The Class CostCommand.
+	 */
 	public static class CostCommand extends Command {
+		
+		/**
+		 * Instantiates a new cost command.
+		 */
 		public CostCommand() {
 			super("cost");
 		}
 
+		/* (non-Javadoc)
+		 * @see uk.ac.ox.cs.pdq.test.Bootstrap.Command#execute()
+		 */
 		@Override
 		public void execute() throws RegressionTestException, IOException, ReflectiveOperationException {
 			new PlannerCostFunctionTest().recursiveRun(new File(getInput()));
@@ -68,9 +79,9 @@ public class PlannerCostFunctionTest extends RegressionTest {
 	}
 
 	/**
-	 * Runs all the test case in the given directory
-	 * 
-	 * @param directory
+	 * Runs all the test case in the given directory.
+	 *
+	 * @param directory the directory
 	 * @return boolean
 	 */
 	protected boolean compare(File directory) {

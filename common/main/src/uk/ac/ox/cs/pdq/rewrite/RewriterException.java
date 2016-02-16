@@ -1,5 +1,6 @@
 package uk.ac.ox.cs.pdq.rewrite;
 
+// TODO: Auto-generated Javadoc
 /**
  * Exception that occurred during a rewriting operation.
  *
@@ -8,7 +9,7 @@ package uk.ac.ox.cs.pdq.rewrite;
  */
 public class RewriterException extends Exception {
 
-	/** */
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -315472460756924167L;
 
 	/**
@@ -19,6 +20,8 @@ public class RewriterException extends Exception {
 	}
 
 	/**
+	 * Instantiates a new rewriter exception.
+	 *
 	 * @param msg exception message.
 	 */
 	public RewriterException(String msg) {
@@ -26,6 +29,8 @@ public class RewriterException extends Exception {
 	}
 
 	/**
+	 * Instantiates a new rewriter exception.
+	 *
 	 * @param msg exception's message
 	 * @param cause root cause of the problem.
 	 */

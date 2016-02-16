@@ -27,6 +27,7 @@ import com.google.common.base.CaseFormat;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
 
+// TODO: Auto-generated Javadoc
 /**
  * A general parameters utility class, which allows getting and setting typed
  * properties, either through the loose properties methods, or stricter
@@ -36,49 +37,76 @@ import com.google.common.collect.ImmutableSet;
  */
 public abstract class Parameters extends Properties {
 
-	/** Generated serial ID */
+	/**  Generated serial ID. */
 	private static final long serialVersionUID = -722499380053104769L;
 
-	/** */
+	/**
+	 * The Interface Parameter.
+	 */
 	@Retention(RetentionPolicy.RUNTIME)
 	@Inherited @Target(ElementType.FIELD)
 	public static @interface Parameter {
+		
+		/**
+		 * Description.
+		 *
+		 * @return the string
+		 */
 		String description();
+		
+		/**
+		 * Default value.
+		 *
+		 * @return the string
+		 */
 		String defaultValue() default ""; 
 	}
 
-	/** */
+	/**
+	 * The Interface EnumParameterValue.
+	 */
 	@Retention(RetentionPolicy.RUNTIME)
 	@Inherited @Target(ElementType.FIELD)
 	public static @interface EnumParameterValue {
+		
+		/**
+		 * Description.
+		 *
+		 * @return the string
+		 */
 		public abstract String description();
 	}
 
 	/** Logger. */
 	private static Logger log = Logger.getLogger(Parameters.class);
 
-	/** Properties file name */
+	/**  Properties file name. */
 	static final String DEFAULT_CONFIG_FILE_NAME = "pdq.properties";
 
-	/** Properties file path */
+	/**  Properties file path. */
 	static final String DEFAULT_CONFIG_FILE_PATH = "./" + DEFAULT_CONFIG_FILE_NAME;
 
+	/** The getters. */
 	private Map<String, Method> getters = new LinkedHashMap<>();
+	
+	/** The setters. */
 	private Map<String, Method> setters = new LinkedHashMap<>();
 
-	/** If true, throws excpetion when parameter-related problems occur */
+	/**  If true, throws excpetion when parameter-related problems occur. */
 	private final boolean strict;
 
-	/** If true, reports when parameter-related problems occur */
+	/**  If true, reports when parameter-related problems occur. */
 	private final boolean verbose;
 
 	/**
 	 * Forces the loading of an alternate filename. Note: the properties
 	 * attribute is not reinitialize, allowing to use entries defined in the
 	 * default location as default variables.
+	 *
+	 * @param configFile the config file
 	 * @param delay true if the loading of the given config file should be delayed
+	 * @param verbose the verbose
 	 * @param strict if true, param loading problem will throw an exception
-	 * @param config path to the configuration file to read
 	 */
 	protected Parameters(File configFile, boolean delay, boolean verbose, boolean strict) {
 		this.strict = strict;
@@ -93,16 +121,16 @@ public abstract class Parameters extends Properties {
 	 * Forces the loading of an alternate filename. Note: the properties
 	 * attribute is not reinitialize, allowing to use entries defined in the
 	 * default location as default variables.
-	 * @param configFile File
-	 * @param strict boolean
 	 */
 	protected Parameters() {
 		this(new File(DEFAULT_CONFIG_FILE_PATH), false, false, false);
 	}
 
 	/**
-	 * loads the properties from the specified file
+	 * loads the properties from the specified file.
+	 *
 	 * @param configFile File
+	 * @param verbose the verbose
 	 * @param strict boolean
 	 */
 	protected void load(File configFile, boolean verbose, boolean strict) {
@@ -130,7 +158,7 @@ public abstract class Parameters extends Properties {
 	}
 
 	/**
-	 * Stores and update mapping between field canonical names and accessors;
+	 * Stores and update mapping between field canonical names and accessors;.
 	 */
 	private void updateAccessors() {
 		for (Field f : this.getAllFields()) {
@@ -171,7 +199,8 @@ public abstract class Parameters extends Properties {
 	/**
 	 * Type-checks the given objects against Boolean, Number and String
 	 * in this order, and return a cast of the first compatible type.
-	 * @param o
+	 *
+	 * @param o the o
 	 * @return a cast of the given o into the first match type among Boolean,
 	 * Number and String
 	 */
@@ -196,6 +225,8 @@ public abstract class Parameters extends Properties {
 	}
 
 	/**
+	 * To canonical name.
+	 *
 	 * @param camelName String
 	 * @return String
 	 */
@@ -204,6 +235,8 @@ public abstract class Parameters extends Properties {
 	}
 
 	/**
+	 * To loweramel name.
+	 *
 	 * @param canonicalName String
 	 * @return String
 	 */
@@ -212,6 +245,8 @@ public abstract class Parameters extends Properties {
 	}
 
 	/**
+	 * To upper camel name.
+	 *
 	 * @param canonicalName String
 	 * @return String
 	 */
@@ -220,9 +255,9 @@ public abstract class Parameters extends Properties {
 	}
 
 	/**
-	 * Checks whether the given property is part of these parameters
+	 * Checks whether the given property is part of these parameters.
 	 *
-	 * @param k
+	 * @param k the k
 	 * @return true, if the Parameters have property k
 	 */
 	protected boolean hasProperty(Object k) {
@@ -239,9 +274,8 @@ public abstract class Parameters extends Properties {
 	 * Sets the member of a initialConfig helper with the value specified in the
 	 * underlying Properties.
 	 *
-	 * @param k
-	 * @param v
-	 * @throws ReflectiveOperationException
+	 * @param k the k
+	 * @param v the v
 	 */
 	public void set(Object k, Object v) {
 		Preconditions.checkArgument(v != null);
@@ -252,8 +286,9 @@ public abstract class Parameters extends Properties {
 	 * Sets the member of a initialConfig helper with the value specified in the
 	 * underlying Properties.
 	 *
-	 * @param k
-	 * @param v
+	 * @param k the k
+	 * @param v the v
+	 * @param verbose the verbose
 	 * @param strict boolean
 	 */
 	public void set(Object k, Object v, boolean verbose, boolean strict) {
@@ -293,7 +328,7 @@ public abstract class Parameters extends Properties {
 	 * Gets the member of a initialConfig helper whose value is given as
 	 * parameter.
 	 *
-	 * @param k
+	 * @param k the k
 	 * @return Object
 	 * @see java.util.Map#get(Object)
 	 */
@@ -313,6 +348,8 @@ public abstract class Parameters extends Properties {
 	}
 
 	/**
+	 * Gets the all fields.
+	 *
 	 * @return Collection<Field>
 	 */
 	protected Collection<Field> getAllFields() {
@@ -329,7 +366,9 @@ public abstract class Parameters extends Properties {
 	}
 
 	/**
-	 * @return a string containing of the parameters and the current values, 
+	 * To string.
+	 *
+	 * @return a string containing of the parameters and the current values,
 	 * as they would appear in the file, i.e. the returned String can be used
 	 * for serialization purposes.
 	 */
@@ -339,9 +378,10 @@ public abstract class Parameters extends Properties {
 	}
 
 	/**
-	 * @param versbose If true, each field in preceded with a comment 
-	 * documenting it. Those comments are generated from the fields annotations.
-	 * @return a string containing of the parameters and the current values, 
+	 * To string.
+	 *
+	 * @param verbose the verbose
+	 * @return a string containing of the parameters and the current values,
 	 * as they would appear in the file, i.e. the returned String can be used
 	 * for serialization purposes.
 	 */
@@ -411,6 +451,8 @@ public abstract class Parameters extends Properties {
 	}
 
 	/**
+	 * Combine.
+	 *
 	 * @param params Parameters[]
 	 * @return Parameters
 	 */
@@ -424,9 +466,11 @@ public abstract class Parameters extends Properties {
 	 * @author Julien Leblay
 	 */
 	public static class CombinedParameters extends Parameters {
-		/** */
+		
+		/** The Constant serialVersionUID. */
 		private static final long serialVersionUID = 5262156763918477392L;
 
+		/** The sub params. */
 		public final Set<Parameters> subParams;
 
 		/**
@@ -439,6 +483,8 @@ public abstract class Parameters extends Properties {
 		}
 
 		/**
+		 * Checks for name clashes.
+		 *
 		 * @param params Parameters[]
 		 * @return boolean
 		 */
@@ -447,6 +493,8 @@ public abstract class Parameters extends Properties {
 		}
 
 		/**
+		 * Sets the.
+		 *
 		 * @param k Object
 		 * @param v Object
 		 */
@@ -463,6 +511,8 @@ public abstract class Parameters extends Properties {
 		}
 
 		/**
+		 * Gets the.
+		 *
 		 * @param k Object
 		 * @return Object
 		 * @see java.util.Map#get(Object)
@@ -479,18 +529,22 @@ public abstract class Parameters extends Properties {
 		}
 	}
 
+	/** The seed. */
 	@Parameter(
 			description="Randomizer seed shared by all randomizer across the PDQ libraries.",
 			defaultValue = "0"
 	)
 	protected Integer seed = 0;
 
+	/** The timeout. */
 	@Parameter(
 			description = "Time limit (in ms).",
 			defaultValue = "Infinity")
 	protected Double timeout = Double.POSITIVE_INFINITY;
 
 	/**
+	 * Gets the timeout.
+	 *
 	 * @return Double
 	 */
 	public Double getTimeout() {
@@ -498,6 +552,8 @@ public abstract class Parameters extends Properties {
 	}
 
 	/**
+	 * Sets the timeout.
+	 *
 	 * @param timeout Number
 	 */
 	public void setTimeout(Number timeout) {
@@ -505,6 +561,8 @@ public abstract class Parameters extends Properties {
 	}
 
 	/**
+	 * Gets the seed.
+	 *
 	 * @return Integer
 	 */
 	public Integer getSeed() {
@@ -512,6 +570,8 @@ public abstract class Parameters extends Properties {
 	}
 
 	/**
+	 * Sets the seed.
+	 *
 	 * @param seed Number
 	 */
 	public void setSeed(Number seed) {
@@ -519,6 +579,8 @@ public abstract class Parameters extends Properties {
 	}
 
 	/**
+	 * Gets the version.
+	 *
 	 * @return the version of the planner code, as given by Maven
 	 */
 	public static String getVersion() {

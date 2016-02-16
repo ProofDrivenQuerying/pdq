@@ -6,23 +6,30 @@ import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.util.Utility;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
- * @author Julien Leblay
+ * The Class ItemsLimit.
  *
+ * @author Julien Leblay
  */
 @Ignore
 public class ItemsLimit {
 	
 	/**
-	 * Makes sure assertions are enabled
+	 * Makes sure assertions are enabled.
 	 */
 	@Before 
 	public void setup() {
 		Utility.assertsEnabled();
 	}
 	
+	/**
+	 * Copy.
+	 */
 	@Test public void copy() {}
 
+	/**
+	 * Increment.
+	 */
 	@Test public void increment() {}
 }

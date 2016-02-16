@@ -25,6 +25,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 
+// TODO: Auto-generated Javadoc
 /**
  * Builder class for online services.
  * 
@@ -33,39 +34,57 @@ import com.google.common.collect.Multimap;
  */
 public class ServiceBuilder implements Builder<Service> {
 
+	/** The name. */
 	private String name;
 	
+	/** The protocol. */
 	private String protocol;
 
+	/** The url. */
 	private String url;
 
+	/** The media type. */
 	private MediaType mediaType = MediaType.APPLICATION_JSON_TYPE;
 
+	/** The result delimiter. */
 	private String resultDelimiter;
 
+	/** The attributes. */
 	private List<Attribute> attributes = new ArrayList<>();
 	
+	/** The non static attributes. */
 	private List<Attribute> nonStaticAttributes = new ArrayList<>();
 	
+	/** The static inputs. */
 	private Map<Attribute, InputMethod> staticInputs = new LinkedHashMap<>();
 	
+	/** The staticvalues. */
 	private Map<Attribute, Object> staticvalues = new LinkedHashMap<>();
 	
+	/** The input methods. */
 	private Map<Attribute, InputMethod> inputMethods = new LinkedHashMap<>();
 
+	/** The input params. */
 	private Multimap<Attribute, String> inputParams = LinkedHashMultimap.create();
 	
+	/** The output methods. */
 	private Map<Attribute, OutputMethod> outputMethods = new LinkedHashMap<>();
 
+	/** The access methods. */
 	private List<AccessMethod> accessMethods = new ArrayList<>();
 
+	/** The access costs. */
 	private Map<AccessMethod, Cost> accessCosts = new LinkedHashMap<>();
 
+	/** The policies. */
 	private Collection<UsagePolicy> policies = new ArrayList<>();
 	
+	/** The key. */
 	private List<Attribute> key = new ArrayList<>();
 	
 	/**
+	 * Sets the name.
+	 *
 	 * @param name String
 	 * @return ServiceBuilder
 	 */
@@ -75,6 +94,8 @@ public class ServiceBuilder implements Builder<Service> {
 	}
 
 	/**
+	 * Sets the url.
+	 *
 	 * @param url String
 	 * @return ServiceBuilder
 	 */
@@ -83,12 +104,20 @@ public class ServiceBuilder implements Builder<Service> {
 		return this;
 	}
 	
+	/**
+	 * Sets the media type.
+	 *
+	 * @param mediatype the mediatype
+	 * @return the service builder
+	 */
 	public ServiceBuilder setMediaType(MediaType mediatype) {
 		this.mediaType = mediatype;
 		return this;
 	}
 
 	/**
+	 * Sets the results delimiter.
+	 *
 	 * @param m String
 	 * @return ServiceBuilder
 	 */
@@ -98,6 +127,8 @@ public class ServiceBuilder implements Builder<Service> {
 	}
 
 	/**
+	 * Gets the name.
+	 *
 	 * @return String
 	 */
 	public String getName() {
@@ -105,6 +136,8 @@ public class ServiceBuilder implements Builder<Service> {
 	}
 	
 	/**
+	 * Sets the protocol.
+	 *
 	 * @param p String
 	 * @return ServiceBuilder
 	 */
@@ -114,6 +147,8 @@ public class ServiceBuilder implements Builder<Service> {
 	}
 
 	/**
+	 * Adds the usage policy.
+	 *
 	 * @param policy UsagePolicy
 	 * @return ServiceBuilder
 	 */
@@ -123,7 +158,9 @@ public class ServiceBuilder implements Builder<Service> {
 	}
 
 	/**
-	 * @param p Collection<UsagePolicy>
+	 * Adds the usage policies.
+	 *
+	 * @param policies the policies
 	 * @return ServiceBuilder
 	 */
 	public ServiceBuilder addUsagePolicies(Collection<UsagePolicy> policies) {
@@ -134,6 +171,8 @@ public class ServiceBuilder implements Builder<Service> {
 	}
 
 	/**
+	 * Adds the static input.
+	 *
 	 * @param a Attribute
 	 * @param defaultValue Object
 	 * @param m InputMethod
@@ -155,6 +194,8 @@ public class ServiceBuilder implements Builder<Service> {
 	}
 
 	/**
+	 * Adds the static input.
+	 *
 	 * @param a Attribute
 	 * @param defaultValue Object
 	 * @return ServiceBuilder
@@ -165,6 +206,8 @@ public class ServiceBuilder implements Builder<Service> {
 	}
 
 	/**
+	 * Adds the static input.
+	 *
 	 * @param a Attribute
 	 * @param m InputMethod
 	 * @param additionalParams String[]
@@ -175,6 +218,8 @@ public class ServiceBuilder implements Builder<Service> {
 	}
 
 	/**
+	 * Adds the attribute.
+	 *
 	 * @param a Attribute
 	 * @param om OutputMethod
 	 * @param im InputMethod
@@ -198,6 +243,8 @@ public class ServiceBuilder implements Builder<Service> {
 	}
 
 	/**
+	 * Adds the attribute.
+	 *
 	 * @param a Attribute
 	 * @param om OutputMethod
 	 * @return ServiceBuilder
@@ -207,9 +254,10 @@ public class ServiceBuilder implements Builder<Service> {
 	}
 	
 	/**
-	 * 
-	 * @param key
-	 * @return
+	 * Adds the key.
+	 *
+	 * @param key the key
+	 * @return the service builder
 	 */
 	public ServiceBuilder addKey(List<Attribute> key) {
 		this.key = key;
@@ -218,6 +266,8 @@ public class ServiceBuilder implements Builder<Service> {
 	
 	
 	/**
+	 * Adds the access method.
+	 *
 	 * @param b AccessMethod
 	 * @param c Cost
 	 * @return ServiceBuilder
@@ -228,6 +278,11 @@ public class ServiceBuilder implements Builder<Service> {
 		return this;
 	}
 	
+	/**
+	 * Gets the attributes.
+	 *
+	 * @return the attributes
+	 */
 	public List<Attribute> getAttributes() {
 		return this.attributes;
 	}

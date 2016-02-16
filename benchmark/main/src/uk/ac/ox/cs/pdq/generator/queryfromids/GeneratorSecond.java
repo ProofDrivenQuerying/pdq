@@ -12,17 +12,29 @@ import uk.ac.ox.cs.pdq.io.xml.QueryWriter;
 import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
 import uk.ac.ox.cs.pdq.io.xml.SchemaWriter;
 
+// TODO: Auto-generated Javadoc
 /**
- * Creates inclusion dependencies and then queries using the previously created dependencies
- * @author Efthymia Tsamoura
+ * Creates inclusion dependencies and then queries using the previously created dependencies.
  *
+ * @author Efthymia Tsamoura
  */
 public class GeneratorSecond extends AbstractGenerator{
 
+	/**
+	 * Instantiates a new generator second.
+	 *
+	 * @param parameters the parameters
+	 * @param schemaFile the schema file
+	 * @param queryFile the query file
+	 * @param out the out
+	 */
 	public GeneratorSecond(BenchmarkParameters parameters, String schemaFile, String queryFile, PrintStream out) {
 		super(parameters, schemaFile, queryFile, out);
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.generator.AbstractGenerator#make()
+	 */
 	@Override
 	public void make() throws IOException {
 		// Load the statistic collector/logger

@@ -23,6 +23,7 @@ import uk.ac.ox.cs.pdq.generator.tgdsfromquery.QueryGeneratorFirst;
 import uk.ac.ox.cs.pdq.generator.tgdsfromquery.SchemaGeneratorFirst;
 import uk.ac.ox.cs.pdq.generator.tgdsfromquery.ViewGeneratorFirst;
 
+// TODO: Auto-generated Javadoc
 /**
  * Generates query or views based on an input Schema, and external parameters.
  * 
@@ -34,16 +35,34 @@ import uk.ac.ox.cs.pdq.generator.tgdsfromquery.ViewGeneratorFirst;
 @RunWith(Parameterized.class) 
 public class ViewGeneratorTest extends ParameterizedTest {
 
+	/**
+	 * Gets the parameters.
+	 *
+	 * @return the parameters
+	 */
 	@Parameters
 	public static Collection<Object[]> getParameters() {
 		return ParameterizedTest.getParameters(asSet(1, 2, 3, 4, 5));
 	}
 
+	/** The params. */
 	private BenchmarkParameters params;
+	
+	/** The schema. */
 	private Schema schema;
+	
+	/** The query. */
 	private ConjunctiveQuery query;
+	
+	/** The views. */
 	private List<View> views;
 
+	/**
+	 * Instantiates a new view generator test.
+	 *
+	 * @param seed the seed
+	 * @throws Exception the exception
+	 */
 	public ViewGeneratorTest(Integer seed) throws Exception {
 		this.params = new BenchmarkParameters();
 		this.params.setSeed(seed);
@@ -53,6 +72,9 @@ public class ViewGeneratorTest extends ParameterizedTest {
 		this.views =new ViewGeneratorFirst(this.schema, this.query, this.params).generateViews();
 	}
 
+	/**
+	 * Test each relation in generate query.
+	 */
 	@Test
 	public void testEachRelationInGenerateQuery() {
 		List<String> relationNames = new ArrayList<>();
@@ -65,6 +87,9 @@ public class ViewGeneratorTest extends ParameterizedTest {
 		}
 	}
 
+	/**
+	 * Test each view contained in query.
+	 */
 	@Test
 	public void testEachViewContainedInQuery() {
 		List<Predicate> queryAtoms = this.query.getBody().getPredicates();

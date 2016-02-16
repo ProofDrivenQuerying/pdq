@@ -23,26 +23,46 @@ import uk.ac.ox.cs.pdq.db.Schema;
 
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class PostgresqlSchemaDiscoveryTest.
+ */
 @Ignore public class PostgresqlSchemaDiscoveryTest {
 
+	/** The schema. */
 	private Schema schema = null;
 	
+	/**
+	 * The Class Relation.
+	 */
 	private static class Relation {
+		
+		/** The name. */
 		String name;
+		
+		/** The attributes. */
 		List<String> attributes;
+		
+		/** The bindings. */
 		List<AccessMethod> bindings;
 	}
 	
+	/** The relations. */
 	private Map<String, Relation> relations = new LinkedHashMap<>();
 	
+	/** The relation names. */
 	private List<String> relationNames = Lists.newArrayList(
 			new String[] {"customer", "lineitem", "nation", "orders",
 					"part", "partsupp", "region", "supplier",
 					"order_customer", "order_supplier", "region_nation"}
 	);
+	
+	/** The relation arities. */
 	private List<Integer> relationArities = Lists.newArrayList(
 			new Integer[] {8, 16, 4, 9, 9, 5, 3, 7}
 	);
+	
+	/** The binding types. */
 	private List<Types> bindingTypes = Lists.newArrayList(
 			new Types[] {
 					Types.FREE, Types.FREE, Types.FREE, 
@@ -51,9 +71,13 @@ import com.google.common.collect.Lists;
 					Types.FREE, Types.FREE
 			}
 	);
+	
+	/** The binding positions. */
 	private List<Integer[]> bindingPositions = Lists.newArrayList(
 			new Integer[][] {{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}}
 	);
+	
+	/** The attributes names. */
 	private List<String[]> attributesNames = Lists.newArrayList(
 			new String[][] {
 					{"c_custkey", "c_name", "c_address", "c_nationkey", "c_phone", "c_acctbal", "c_mktsegment", "c_comment"},
@@ -70,6 +94,11 @@ import com.google.common.collect.Lists;
 			}
 	);
 	
+	/**
+	 * Instantiates a new postgresql schema discovery test.
+	 *
+	 * @throws BuilderException the builder exception
+	 */
 	public PostgresqlSchemaDiscoveryTest() throws BuilderException {
 		Properties properties = new Properties();
 		properties.put("url", "jdbc:postgresql://localhost/");
@@ -92,6 +121,12 @@ import com.google.common.collect.Lists;
 		this.schema = disco.discover();
 	}
 	
+	/**
+	 * Make attributes.
+	 *
+	 * @param attributeNames the attribute names
+	 * @return the list
+	 */
 	private List<Attribute> makeAttributes(String[] attributeNames) {
 		List<Attribute> result = new ArrayList<>();
 		for (String a: attributeNames) {
@@ -101,13 +136,16 @@ import com.google.common.collect.Lists;
 	}
 	
 	/**
-	 * Makes sure assertions are enabled
+	 * Makes sure assertions are enabled.
 	 */
 	@Before 
 	public void setup() {
 		Utility.assertsEnabled();
 	}
 		
+	/**
+	 * Test parse view defintion.
+	 */
 	@Test
 	public void testParseViewDefintion() {
 		Properties properties = new Properties();
@@ -151,11 +189,17 @@ import com.google.common.collect.Lists;
 				map);
 	}
 	
+	/**
+	 * Test number of relations.
+	 */
 	@Test
 	public void testNumberOfRelations() {
 		assertEquals(this.schema.getRelations().size(), this.relationNames.size());
 	}
 	
+	/**
+	 * Test relation names.
+	 */
 	@Test
 	public void testRelationNames() {
 		for (uk.ac.ox.cs.pdq.db.Relation r: this.schema.getRelations()) {
@@ -163,6 +207,9 @@ import com.google.common.collect.Lists;
 		}
 	}
 	
+	/**
+	 * Test relation arities.
+	 */
 	@Test
 	public void testRelationArities() {
 		for (uk.ac.ox.cs.pdq.db.Relation r: this.schema.getRelations()) {
@@ -170,6 +217,9 @@ import com.google.common.collect.Lists;
 		}
 	}
 	
+	/**
+	 * Test attribute names.
+	 */
 	@Test
 	public void testAttributeNames() {
 		for (uk.ac.ox.cs.pdq.db.Relation r: this.schema.getRelations()) {
@@ -180,6 +230,9 @@ import com.google.common.collect.Lists;
 		}
 	}
 
+	/**
+	 * Test access method methods.
+	 */
 	@Test
 	public void testAccessMethodMethods() {
 		for (uk.ac.ox.cs.pdq.db.Relation r: this.schema.getRelations()) {

@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package uk.ac.ox.cs.pdq.planner.logging;
 
 import uk.ac.ox.cs.pdq.EventHandler;
@@ -6,6 +9,7 @@ import uk.ac.ox.cs.pdq.planner.explorer.Explorer;
 
 import com.google.common.eventbus.Subscribe;
 
+// TODO: Auto-generated Javadoc
 /**
  * This logger works as a proxy to other progress logger, and performs a log
  * every time a Explorer event is thrown, modulo some predefined intervals.
@@ -15,8 +19,13 @@ import com.google.common.eventbus.Subscribe;
  */
 public class IntervalEventDrivenLogger implements EventHandler {
 
+	/** The intervals. */
 	private final int intervals;
+	
+	/** The short intervals. */
 	private final int shortIntervals;
+	
+	/** The logger. */
 	private final ProgressLogger logger;
 
 	/**
@@ -32,6 +41,8 @@ public class IntervalEventDrivenLogger implements EventHandler {
 	}
 
 	/**
+	 * Log.
+	 *
 	 * @param explorer Explorer<?>
 	 */
 	@Subscribe
@@ -44,6 +55,8 @@ public class IntervalEventDrivenLogger implements EventHandler {
 	}
 
 	/**
+	 * Force log.
+	 *
 	 * @param additionalInfo String
 	 */
 	public void forceLog(String additionalInfo) {

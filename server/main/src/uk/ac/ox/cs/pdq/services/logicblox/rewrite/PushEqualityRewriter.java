@@ -26,12 +26,14 @@ import uk.ac.ox.cs.pdq.rewrite.RewriterException;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 
+// TODO: Auto-generated Javadoc
 /**
  * Rewriter that produces an output formula equivalent to the input one,
  * containing no equality predicates.
  *  
- * @author Julien Leblay
  *
+ * @author Julien Leblay
+ * @param <F> the generic type
  */
 public class PushEqualityRewriter<F extends Formula> implements Rewriter<F, F> {
 
@@ -51,9 +53,11 @@ public class PushEqualityRewriter<F extends Formula> implements Rewriter<F, F> {
 	 *  - In the second phase, we traverse to formula, and replace each variable
 	 *  belong to a non-empty clusters by the representative term of that 
 	 *  cluster.
+	 *
 	 * @param input Formula
 	 * @return a rewriting of the input formula where equality predicates have
 	 * been removed.
+	 * @throws RewriterException the rewriter exception
 	 */
 	@Override
 	public F rewrite(F input) throws RewriterException {
@@ -64,9 +68,11 @@ public class PushEqualityRewriter<F extends Formula> implements Rewriter<F, F> {
 	}
 	
 	/**
-	 * Apply the propagation to a top-level formula
-	 * @param f
+	 * Apply the propagation to a top-level formula.
+	 *
+	 * @param f the f
 	 * @return the rewritten formula
+	 * @throws RewriterException the rewriter exception
 	 */
 	private Formula propagate(Formula f) throws RewriterException {
 		if (f instanceof NaryFormula) {
@@ -89,8 +95,10 @@ public class PushEqualityRewriter<F extends Formula> implements Rewriter<F, F> {
 
 	/**
 	 * Apply the propagation to a query.
+	 *
 	 * @param query NaryFormula<Formula>
 	 * @return the rewritten formula
+	 * @throws RewriterException the rewriter exception
 	 */
 	private ConjunctiveQuery propagate(ConjunctiveQuery query) throws RewriterException {
 		QueryBuilder result = new QueryBuilder();
@@ -118,8 +126,10 @@ public class PushEqualityRewriter<F extends Formula> implements Rewriter<F, F> {
 
 	/**
 	 * Apply the propagation to a conjunction or disjunction.
+	 *
 	 * @param nary NaryFormula<Formula>
 	 * @return the rewritten formula
+	 * @throws RewriterException the rewriter exception
 	 */
 	private Formula propagate(NaryFormula<Formula> nary) throws RewriterException {
 		List<Formula> result = new LinkedList<>();
@@ -146,8 +156,10 @@ public class PushEqualityRewriter<F extends Formula> implements Rewriter<F, F> {
 
 	/**
 	 * Apply the propagation to a conjunction or disjunction.
-	 * @param nary NaryFormula<Formula>
+	 *
+	 * @param implication the implication
 	 * @return the rewritten formula
+	 * @throws RewriterException the rewriter exception
 	 */
 	private Formula propagate(Implication<?, ?> implication) throws RewriterException {
 		if (implication instanceof TGD) {
@@ -163,8 +175,10 @@ public class PushEqualityRewriter<F extends Formula> implements Rewriter<F, F> {
 
 	/**
 	 * Apply the propagation to a negated formula.
+	 *
 	 * @param negation Negation<Formula>
 	 * @return the rewritten formula
+	 * @throws RewriterException the rewriter exception
 	 */
 	private Negation<Formula> propagate(Negation<Formula> negation) throws RewriterException {
 		Collection<Formula> subFormula = negation.getChildren();
@@ -208,8 +222,10 @@ public class PushEqualityRewriter<F extends Formula> implements Rewriter<F, F> {
 	}
 	
 	/**
-	 * Find equalities with a formula and build equality clusters accordingly 
-	 * @param f
+	 * Find equalities with a formula and build equality clusters accordingly .
+	 *
+	 * @param f the f
+	 * @throws RewriterException the rewriter exception
 	 */
 	private void buildClusters(Formula f) throws RewriterException {
 		for (Predicate pred: f.getPredicates()) {
@@ -223,7 +239,9 @@ public class PushEqualityRewriter<F extends Formula> implements Rewriter<F, F> {
 	 * Groups all the input terms into a single clusters. If some terms in terms
 	 * already belongs to some distinct clusters, there are merged into a single
 	 * one.
-	 * @param terms
+	 *
+	 * @param terms the terms
+	 * @throws RewriterException the rewriter exception
 	 */
 	private void cluster(Collection<Term> terms) throws RewriterException  {
 		Collection<Term> c1;
@@ -247,8 +265,10 @@ public class PushEqualityRewriter<F extends Formula> implements Rewriter<F, F> {
 	/**
 	 * Adds a single term t to the given cluster, and update the clusters 
 	 * representative.  
-	 * @param t
-	 * @param cluster
+	 *
+	 * @param t the t
+	 * @param cluster the cluster
+	 * @throws RewriterException the rewriter exception
 	 */
 	private void addToCluster(Term t, Collection<Term> cluster) throws RewriterException {
 		Term rep = this.representatives.remove(cluster);

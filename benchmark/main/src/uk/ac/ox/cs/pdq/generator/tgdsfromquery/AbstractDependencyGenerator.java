@@ -18,6 +18,7 @@ import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.util.Utility;
 
+// TODO: Auto-generated Javadoc
 /**
  * Provides functions for generating formulas, e.g., queries, views and dependencies.
  * 
@@ -27,13 +28,21 @@ import uk.ac.ox.cs.pdq.util.Utility;
  */
 public abstract class AbstractDependencyGenerator {
 
-	/** The input schema */
+	/**  The input schema. */
 	protected final Schema schema;
-	/** The input parameters */
+	
+	/**  The input parameters. */
 	protected final BenchmarkParameters params;
-	/** A random number generator */
+	
+	/**  A random number generator. */
 	protected final Random random;
 
+	/**
+	 * Instantiates a new abstract dependency generator.
+	 *
+	 * @param schema the schema
+	 * @param params the params
+	 */
 	public AbstractDependencyGenerator(Schema schema, BenchmarkParameters params) {
 		this.schema = schema;
 		this.params = params;
@@ -41,11 +50,11 @@ public abstract class AbstractDependencyGenerator {
 	}
 
 	/**
-	 * 
-	 * @param tgds
-	 * @param target
-	 * @return
-	 * 		true if the target has the same body with one of the tgds in the input collection
+	 * Same body.
+	 *
+	 * @param tgds the tgds
+	 * @param target the target
+	 * @return 		true if the target has the same body with one of the tgds in the input collection
 	 */
 	protected boolean sameBody(Collection<Constraint> tgds, TGD target) {
 		for (Constraint tg : tgds) {
@@ -62,11 +71,11 @@ public abstract class AbstractDependencyGenerator {
 	}
 	
 	/**
-	 * 
-	 * @param views
-	 * @param target
-	 * @return
-	 * 		true if the target has the same head/body with one of the views in the input collection
+	 * Same view.
+	 *
+	 * @param views the views
+	 * @param target the target
+	 * @return 		true if the target has the same head/body with one of the views in the input collection
 	 */
 	protected boolean sameView(List<View> views, View target) {
 		for (View mv : views) {
@@ -90,15 +99,12 @@ public abstract class AbstractDependencyGenerator {
 	}
 
 	/**
-	 * A guarded conjunction 
-	 * @param candidates
-	 * 		Pool of variables to use in the output conjunction 
-	 * @param conjuncts
-	 * 		Number of conjuncts 
-	 * @param hasRepeatedRelations
-	 * 		true if we allow repeated predicates
-	 * @return
-	 * 		
+	 * A guarded conjunction .
+	 *
+	 * @param candidates 		Pool of variables to use in the output conjunction 
+	 * @param conjuncts 		Number of conjuncts 
+	 * @param hasRepeatedRelations 		true if we allow repeated predicates
+	 * @return the conjunction info
 	 */
 	protected ConjunctionInfo createGuardedConjunction(List<Variable> candidates, int conjuncts, boolean hasRepeatedRelations) {
 		List<Predicate> atoms = new ArrayList<>();
@@ -114,15 +120,13 @@ public abstract class AbstractDependencyGenerator {
 	}
 
 	/**
-	 * 
-	 * @param candidates
-	 * 		Pool of variables to use in the output conjunction 
-	 * @param conjuncts
-	 * 		Number of conjuncts 
-	 * @param leftSide
-	 * @param hasRepeatedRelations
-	 * 		true if we allow repeated predicates
-	 * @return
+	 * Creates the un guarded conjunction.
+	 *
+	 * @param candidates 		Pool of variables to use in the output conjunction 
+	 * @param conjuncts 		Number of conjuncts 
+	 * @param leftSide the left side
+	 * @param hasRepeatedRelations 		true if we allow repeated predicates
+	 * @return the conjunction info
 	 */
 	protected ConjunctionInfo createUnGuardedConjunction(List<Variable> candidates, int conjuncts, List<Predicate> leftSide, boolean hasRepeatedRelations) {
 		List<Predicate> atoms = new ArrayList<>();
@@ -133,10 +137,10 @@ public abstract class AbstractDependencyGenerator {
 	}
 	
 	/**
-	 * 
-	 * @param n
-	 * @return
-	 * 		the list <x_0, x_1, ...., x_{n}> of variables
+	 * Creates the variables.
+	 *
+	 * @param n the n
+	 * @return 		the list <x_0, x_1, ...., x_{n}> of variables
 	 */
 	protected List<Variable> createVariables(int n) {
 		List<Variable> variables = new ArrayList<>();
@@ -147,11 +151,11 @@ public abstract class AbstractDependencyGenerator {
 	}
 
 	/**
-	 * 
-	 * @param n
-	 * @param input
-	 * @return
-	 * 		a list of n variables consisting of randomly selected variables from the input and y_i ones
+	 * Creates the variables.
+	 *
+	 * @param n the n
+	 * @param input the input
+	 * @return 		a list of n variables consisting of randomly selected variables from the input and y_i ones
 	 */
 	protected List<Variable> createVariables(int n, List<Variable> input) {
 		List<Variable> variables = new ArrayList<>();
@@ -166,13 +170,12 @@ public abstract class AbstractDependencyGenerator {
 	}
 
 	/**
-	 * 
-	 * @param conjuncts
-	 * 		a number of relations to select
-	 * @param leftSide
-	 * @param hasRepeatedRelations
-	 * 		true if we allow repeated predicates
-	 * @return
+	 * Select relations.
+	 *
+	 * @param conjuncts 		a number of relations to select
+	 * @param leftSide the left side
+	 * @param hasRepeatedRelations 		true if we allow repeated predicates
+	 * @return the relations info
 	 */
 	protected RelationsInfo selectRelations(int conjuncts, List<Predicate> leftSide, boolean hasRepeatedRelations) {
 		int nbRelations = this.schema.getRelations().size();
@@ -217,11 +220,11 @@ public abstract class AbstractDependencyGenerator {
 	}
 
 	/**
-	 * 
-	 * @param relations
-	 * @param variables
-	 * @return
-	 * 		a list of predicates coming from the input relations and populated with variables from the input list
+	 * Creates the conjuncts.
+	 *
+	 * @param relations the relations
+	 * @param variables the variables
+	 * @return 		a list of predicates coming from the input relations and populated with variables from the input list
 	 */
 	protected List<Predicate> createConjuncts(List<Relation> relations, List<Variable> variables) {
 		List<Predicate> conjuncts = new ArrayList<>();
@@ -238,10 +241,10 @@ public abstract class AbstractDependencyGenerator {
 	}
 	
 	/**
-	 * 
-	 * @param atoms
-	 * @return
-	 * 		a list of chain atoms coming from the input relations. Each atom has one join variable with its successor
+	 * Creates the chain conjuncts.
+	 *
+	 * @param atoms the atoms
+	 * @return 		a list of chain atoms coming from the input relations. Each atom has one join variable with its successor
 	 */
 	protected List<Predicate> createChainConjuncts(List<Predicate> atoms) {
 		int xCounter = 0;
@@ -265,10 +268,9 @@ public abstract class AbstractDependencyGenerator {
 
 	/**
 	 * Pick a body.size() * ratio variable out of body's variables.
-	 * 
-	 * @param ratio
-	 * @param body
-	 * @return
+	 *
+	 * @param body the body
+	 * @return the list
 	 */
 	protected List<Variable> pickFreeVariables(Collection<Predicate> body) {
 		Set<Variable> result = new LinkedHashSet<>();
@@ -287,40 +289,84 @@ public abstract class AbstractDependencyGenerator {
 	}
 
 
+	/**
+	 * The Class RelationsInfo.
+	 */
 	public class RelationsInfo {
 
+		/** The relations. */
 		List<Relation> relations;
+		
+		/** The max arity. */
 		int maxArity;
 
+		/**
+		 * Instantiates a new relations info.
+		 *
+		 * @param relations the relations
+		 * @param maxArity the max arity
+		 */
 		public RelationsInfo(List<Relation> relations, int maxArity) {
 			this.relations = relations;
 			this.maxArity = maxArity;
 		}
 
+		/**
+		 * Gets the relations.
+		 *
+		 * @return the relations
+		 */
 		public List<Relation> getRelations() {
 			return this.relations;
 		}
 
+		/**
+		 * Gets the max arity.
+		 *
+		 * @return the max arity
+		 */
 		public int getMaxArity() {
 			return this.maxArity;
 		}
 	}
 
 
+	/**
+	 * The Class ConjunctionInfo.
+	 */
 	public class ConjunctionInfo {
 
+		/** The variables. */
 		List<Variable> variables;
+		
+		/** The conjuncts. */
 		List<Predicate> conjuncts;
 
+		/**
+		 * Instantiates a new conjunction info.
+		 *
+		 * @param variable the variable
+		 * @param conjuncts the conjuncts
+		 */
 		public ConjunctionInfo(List<Variable> variable, List<Predicate> conjuncts) {
 			this.variables = variable;
 			this.conjuncts = conjuncts;
 		}
 
+		/**
+		 * Gets the variables.
+		 *
+		 * @return the variables
+		 */
 		public List<Variable> getVariables() {
 			return this.variables;
 		}
 
+		/**
+		 * Gets the conjuncts.
+		 *
+		 * @return the conjuncts
+		 */
 		public List<Predicate> getConjuncts() {
 			return this.conjuncts;
 		}

@@ -19,6 +19,7 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 
+// TODO: Auto-generated Javadoc
 /**
  * A proof consisting of a list of proof states, and a query match.
  * Each state represent a step in the reasoning process, that led to the query
@@ -43,9 +44,10 @@ public class Proof {
 //	}
 
 	/**
-	 * @param match
-	 * @param states
-	 */
+ * Instantiates a new proof.
+ *
+ * @param states the states
+ */
 //	private Proof(Map<Variable, Constant> match, List<State> states) {
 //		Preconditions.checkArgument(states != null);
 //		this.queryMatch = match;
@@ -61,13 +63,17 @@ public class Proof {
 	}
 
 	/**
-	 * @param state
+	 * Adds the state.
+	 *
+	 * @param state the state
 	 */
 	private void addState(State state) {
 		this.states.add(state);
 	}
 
 	/**
+	 * Gets the states.
+	 *
 	 * @return the list of states that led to a query match
 	 */
 	public List<State> getStates() {
@@ -82,8 +88,10 @@ public class Proof {
 //	}
 
 	/**
-	 * @return a fresh proof builder.
-	 */
+ * Builder.
+ *
+ * @return a fresh proof builder.
+ */
 	public static Builder builder() {
 		return new Builder();
 	}
@@ -99,11 +107,11 @@ public class Proof {
 	}
 
 	/**
-	 * 
-	 * @param head
-	 * @param queryMatch
-	 * @return
-	 * 		a proof composed by the input states and the input query match
+	 * Creates the proof.
+	 *
+	 * @param head the head
+	 * @param queryMatch the query match
+	 * @return 		a proof composed by the input states and the input query match
 	 */
 	public static Proof createProof(List<State> head, Map<Variable, Constant> queryMatch) {
 		Preconditions.checkArgument(head != null);
@@ -119,6 +127,8 @@ public class Proof {
 	}
 
 	/**
+	 * Equals.
+	 *
 	 * @param o Object
 	 * @return boolean
 	 */
@@ -136,6 +146,8 @@ public class Proof {
 	}
 
 	/**
+	 * Hash code.
+	 *
 	 * @return int
 	 */
 	@Override
@@ -155,29 +167,33 @@ public class Proof {
 	 */
 	public static final class State {
 
-		/** The accessibility axiom that was fired to create this state */
+		/**  The accessibility axiom that was fired to create this state. */
 		private final AccessibilityAxiom axiom;
 
 		/** The set of matched entailed by the axiom firing. */
 		private final Set<Map<Variable, Constant>> matches = new LinkedHashSet<>();
 
 		/**
+		 * Instantiates a new state.
 		 *
-		 * @param axiom
+		 * @param axiom the axiom
 		 */
 		public State(AccessibilityAxiom axiom) {
 			this.axiom = axiom;
 		}
 
 		/**
-		 * Adds a single match to the state
-		 * @param match
+		 * Adds a single match to the state.
+		 *
+		 * @param match the match
 		 */
 		public void addMatch(Map<Variable, Constant> match) {
 			this.matches.add(match);
 		}
 
 		/**
+		 * Gets the axiom.
+		 *
 		 * @return the accessibility axiom of the state.
 		 */
 		public AccessibilityAxiom getAxiom() {
@@ -185,6 +201,8 @@ public class Proof {
 		}
 
 		/**
+		 * Gets the matches.
+		 *
 		 * @return the full set of candidate matches for this state.
 		 */
 		public Set<Map<Variable, Constant>> getMatches() {
@@ -192,6 +210,8 @@ public class Proof {
 		}
 
 		/**
+		 * Equals.
+		 *
 		 * @param o Object
 		 * @return boolean
 		 */
@@ -209,6 +229,8 @@ public class Proof {
 		}
 
 		/**
+		 * Hash code.
+		 *
 		 * @return int
 		 */
 		@Override
@@ -217,6 +239,8 @@ public class Proof {
 		}
 
 		/**
+		 * To string.
+		 *
 		 * @return String
 		 */
 		@Override
@@ -227,7 +251,9 @@ public class Proof {
 
 		/**
 		 * Creates a fresh state from the given list of candidates.
-		 * @param candidates
+		 *
+		 * @param axiom the axiom
+		 * @param matches the matches
 		 * @return a fresh state created from the given list of candidates.
 		 */
 		public static State createState(AccessibilityAxiom axiom, Set<Map<Variable, Constant>> matches) {
@@ -247,14 +273,24 @@ public class Proof {
 	 */
 	public static class Builder implements uk.ac.ox.cs.pdq.builder.Builder<Proof> {
 
+		/** The query match. */
 		private Map<Variable, Constant> queryMatch = null;
+		
+		/** The states. */
 		private List<Proof.State> states = new LinkedList<>();
+		
+		/** The current state. */
 		private Proof.State currentState = null;
 
+		/**
+		 * Instantiates a new builder.
+		 */
 		Builder() {
 		}
 
 		/**
+		 * Clear states.
+		 *
 		 * @return Builder
 		 */
 		public Builder clearStates() {
@@ -263,6 +299,8 @@ public class Proof {
 		}
 
 		/**
+		 * Sets the query match.
+		 *
 		 * @param match Map<Variable,Term>
 		 * @return Builder
 		 */
@@ -272,6 +310,8 @@ public class Proof {
 		}
 
 		/**
+		 * Adds the axiom.
+		 *
 		 * @param axiom AccessibilityAxiom
 		 * @return Builder
 		 */
@@ -282,6 +322,8 @@ public class Proof {
 		}
 
 		/**
+		 * Adds the match.
+		 *
 		 * @param match Map<Variable,Term>
 		 * @return Builder
 		 */
@@ -295,6 +337,8 @@ public class Proof {
 		}
 
 		/**
+		 * Adds the state.
+		 *
 		 * @return Builder
 		 */
 		private Builder addState() {
@@ -305,6 +349,8 @@ public class Proof {
 		}
 
 		/**
+		 * Builds the.
+		 *
 		 * @return Proof
 		 * @see uk.ac.ox.cs.pdq.builder.Builder#build()
 		 */
@@ -317,10 +363,10 @@ public class Proof {
 	}
 
 	/**
-	 * Creates a proof from a list of candidates and a query match
-	 * @param candidates
-	 * @param queryMatch
-	 * @return
+	 * Creates a proof from a list of candidates and a query match.
+	 *
+	 * @param configurations the configurations
+	 * @return the proof
 	 */
 	public static Proof toProof(List<LinearChaseConfiguration> configurations) {
 		Proof.Builder builder = Proof.builder();

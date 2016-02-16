@@ -12,16 +12,19 @@ import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
 
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
- * @author Efthymia Tsamoura
+ * The Class PlannerUtility.
  *
+ * @author Efthymia Tsamoura
  */
 public class PlannerUtility {
 
 	/**
-	 * @param rule
-	 * @param facts
+	 * Gets the input constants.
+	 *
+	 * @param rule the rule
+	 * @param facts the facts
 	 * @return the constants of the input facts that correspond to the input positions of the rule
 	 */
 	public static Collection<Constant> getInputConstants(AccessibilityAxiom rule, Set<Predicate> facts) {
@@ -38,9 +41,10 @@ public class PlannerUtility {
 	}
 	
 	/**
+	 * Gets the input constants.
 	 *
-	 * @param binding
-	 * @param fact
+	 * @param binding the binding
+	 * @param fact the fact
 	 * @return the constants in the input positions of the given fact
 	 */
 	public static List<Constant> getInputConstants(AccessMethod binding, Predicate fact) {

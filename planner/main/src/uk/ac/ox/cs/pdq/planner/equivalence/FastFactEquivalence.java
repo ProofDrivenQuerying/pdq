@@ -8,6 +8,7 @@ import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
 import com.google.common.collect.Sets;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * Fast fact equivalence.
  * According to this implementation two configurations c and c' are equivalent if the have the same inferred accessible facts. 
@@ -18,6 +19,8 @@ import com.google.common.collect.Sets;
 public class FastFactEquivalence implements FactEquivalence{
 
 	/**
+	 * Checks if is equivalent.
+	 *
 	 * @param source ChaseConfiguration
 	 * @param target ChaseConfiguration
 	 * @return true if source and target configurations are equivalent
@@ -35,6 +38,8 @@ public class FastFactEquivalence implements FactEquivalence{
 	}
 
 	/**
+	 * Clone.
+	 *
 	 * @return FastFactDominance
 	 */
 	@Override

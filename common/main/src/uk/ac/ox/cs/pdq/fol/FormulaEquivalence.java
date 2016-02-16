@@ -8,6 +8,7 @@ import java.util.Map;
 
 import com.google.common.collect.LinkedHashMultiset;
 
+// TODO: Auto-generated Javadoc
 /**
  * Approximate formula equivalence checking utility.
  * 
@@ -19,8 +20,9 @@ public class FormulaEquivalence {
 	 * Quickly attempts to determine if two formula are equivalence with one
 	 * another. Assumes structures are homomorphic, and atom order match
 	 * May return false negatives.
-	 * @param left
-	 * @param right
+	 *
+	 * @param left the left
+	 * @param right the right
 	 * @return boolean
 	 */
 	public static boolean approximateEquivalence(Formula left, Formula right) {
@@ -44,6 +46,8 @@ public class FormulaEquivalence {
 	}
 
 	/**
+	 * Approximate unary equivalence.
+	 *
 	 * @param left UnaryFormula<?>
 	 * @param right UnaryFormula<?>
 	 * @return boolean
@@ -56,6 +60,8 @@ public class FormulaEquivalence {
 	}
 
 	/**
+	 * Approximate binary equivalence.
+	 *
 	 * @param left BinaryFormula<?,?>
 	 * @param right BinaryFormula<?,?>
 	 * @return boolean
@@ -72,6 +78,8 @@ public class FormulaEquivalence {
 	}
 
 	/**
+	 * Approximate nary equivalence.
+	 *
 	 * @param left NaryFormula<?>
 	 * @param right NaryFormula<?>
 	 * @return boolean
@@ -107,6 +115,8 @@ public class FormulaEquivalence {
 	}
 
 	/**
+	 * Variable signature.
+	 *
 	 * @param atoms List<PredicateFormula>
 	 * @return List<Integer>
 	 */
@@ -127,6 +137,8 @@ public class FormulaEquivalence {
 	}
 
 	/**
+	 * Approximate atom equivalence.
+	 *
 	 * @param left PredicateFormula
 	 * @param right PredicateFormula
 	 * @return boolean

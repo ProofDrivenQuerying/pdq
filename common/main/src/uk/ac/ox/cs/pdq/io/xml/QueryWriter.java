@@ -11,6 +11,7 @@ import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 
+// TODO: Auto-generated Javadoc
 /**
  * Writes queries to XML.
  * 
@@ -20,7 +21,8 @@ public class QueryWriter extends AbstractXMLWriter<ConjunctiveQuery> {
 
 	/**
 	 * Writes the given query to the given output.
-	 * @param out
+	 *
+	 * @param out the out
 	 * @param query ConjunctiveQuery
 	 */
 	private void writeQuery(PrintStream out, ConjunctiveQuery query) {
@@ -38,7 +40,8 @@ public class QueryWriter extends AbstractXMLWriter<ConjunctiveQuery> {
 
 	/**
 	 * Writes the given query to the given output.
-	 * @param out
+	 *
+	 * @param out the out
 	 * @param query ConjunctiveQuery
 	 * @param atts Map<QNames,String>
 	 */
@@ -57,7 +60,8 @@ public class QueryWriter extends AbstractXMLWriter<ConjunctiveQuery> {
 
 	/**
 	 * Writes the given body to the given output.
-	 * @param out
+	 *
+	 * @param out the out
 	 * @param body Conjunction<Predicate>
 	 */
 	public void writeBody(PrintStream out, Conjunction<Predicate> body) {
@@ -71,7 +75,8 @@ public class QueryWriter extends AbstractXMLWriter<ConjunctiveQuery> {
 
 	/**
 	 * Writes the given predicate to the given output.
-	 * @param out
+	 *
+	 * @param out the out
 	 * @param p Predicate
 	 */
 	public void writePredicate(PrintStream out, Predicate p) {
@@ -93,7 +98,8 @@ public class QueryWriter extends AbstractXMLWriter<ConjunctiveQuery> {
 
 	/**
 	 * Writes the given head to the given output.
-	 * @param out
+	 *
+	 * @param out the out
 	 * @param p Predicate
 	 */
 	public void writeHead(PrintStream out, Predicate p) {
@@ -114,6 +120,8 @@ public class QueryWriter extends AbstractXMLWriter<ConjunctiveQuery> {
 	}
 
 	/**
+	 * Write.
+	 *
 	 * @param out PrintStream
 	 * @param o ConjunctiveQuery
 	 */
@@ -125,10 +133,11 @@ public class QueryWriter extends AbstractXMLWriter<ConjunctiveQuery> {
 
 	/**
 	 * Writes query to the given stream with some additional attributes in the root
-	 * element
-	 * @param out
-	 * @param o
-	 * @param atts
+	 * element.
+	 *
+	 * @param out the out
+	 * @param o the o
+	 * @param atts the atts
 	 */
 	public void write(PrintStream out, ConjunctiveQuery o, Map<QNames, String> atts) {
 		this.writeQuery(out, o, atts);

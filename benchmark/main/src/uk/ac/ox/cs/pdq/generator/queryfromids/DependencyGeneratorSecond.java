@@ -17,6 +17,7 @@ import uk.ac.ox.cs.pdq.db.builder.SchemaBuilder;
 import uk.ac.ox.cs.pdq.generator.DependencyGenerator;
 import uk.ac.ox.cs.pdq.generator.tgdsfromquery.AbstractDependencyGenerator;
 
+// TODO: Auto-generated Javadoc
 /**
  * Creates inclusion dependencies.
  * 
@@ -56,14 +57,18 @@ public class DependencyGeneratorSecond extends AbstractDependencyGenerator imple
 	private static Logger log = Logger.getLogger(DependencyGeneratorSecond.class);
 
 	/**
-	 * 
-	 * @param schema
-	 * @param params
+	 * Instantiates a new dependency generator second.
+	 *
+	 * @param schema the schema
+	 * @param params the params
 	 */
 	public DependencyGeneratorSecond(Schema schema, BenchmarkParameters params) {
 		super(schema, params);
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.generator.DependencyGenerator#generate()
+	 */
 	@Override
 	public Schema generate() {
 		SchemaBuilder sb = Schema.builder(this.schema);
@@ -72,9 +77,8 @@ public class DependencyGeneratorSecond extends AbstractDependencyGenerator imple
 	}
 
 	/**
-	 * Generates inclusion dependencies randomly from a collection of relations
-	 * 
-	 * @param relations
+	 * Generates inclusion dependencies randomly from a collection of relations.
+	 *
 	 * @return a list of randomly generated inclusion dependencies.
 	 */
 	public List<Constraint> generateInclusionDependencies() {

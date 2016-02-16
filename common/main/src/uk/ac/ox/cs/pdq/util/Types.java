@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 import uk.ac.ox.cs.pdq.db.DataType;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 
+// TODO: Auto-generated Javadoc
 /**
  * Utility class for Type-related operations.
  *  
@@ -18,11 +19,13 @@ import uk.ac.ox.cs.pdq.db.TypedConstant;
  */
 public class Types {
 
-	/** The logger */
+	/**  The logger. */
 	public static Logger log = Logger.getLogger(Types.class);
 
 	/**
-	 * @param type
+	 * Simple name.
+	 *
+	 * @param type the type
 	 * @return the shortest know name of the given type.
 	 */
 	public static String simpleName(Type type) {
@@ -37,7 +40,9 @@ public class Types {
 	}
 
 	/**
-	 * @param type
+	 * Canonical name.
+	 *
+	 * @param type the type
 	 * @return the canonical name of the given type. By default, toString() is
 	 * used. If the type is a conventional class, then getCanonicalName is used,
 	 * if it is a DataType, then getName() is used.
@@ -54,8 +59,10 @@ public class Types {
 	}
 
 	/**
-	 * @param o1
-	 * @param o2
+	 * Equals.
+	 *
+	 * @param o1 the o1
+	 * @param o2 the o2
 	 * @return if o1 and o2 are the same type
 	 */
 	public static boolean equals(Type o1, Type o2) {
@@ -66,7 +73,9 @@ public class Types {
 	}
 
 	/**
-	 * @param type
+	 * Checks if is numeric.
+	 *
+	 * @param type the type
 	 * @return true if the given is numeric, false otherwise
 	 */
 	public static boolean isNumeric(Type type) {
@@ -80,8 +89,10 @@ public class Types {
 	/**
 	 * Attempts to cast the given string to given class. If the class is not
 	 * supported, the return object is the same as s.
-	 * @param cl
-	 * @param o
+	 *
+	 * @param <T> the generic type
+	 * @param type the type
+	 * @param o the o
 	 * @return a representation of s cast to the given class.
 	 */
 	public static <T> T cast(Type type, Object o) {
@@ -119,10 +130,25 @@ public class Types {
 		throw new ClassCastException(o + " could not be cast to " + type);
 	}
 	
+	/**
+	 * Make constant.
+	 *
+	 * @param <T> the generic type
+	 * @param c the c
+	 * @return the typed constant
+	 */
 	public static <T> TypedConstant<T> makeConstant(T c) {
 		return new TypedConstant<>(c);
 	}
 	
+	/**
+	 * Make constant.
+	 *
+	 * @param <T> the generic type
+	 * @param t the t
+	 * @param o the o
+	 * @return the typed constant
+	 */
 	public static <T> TypedConstant<T> makeConstant(Type t, Object o) {
 		return new TypedConstant<>((T) cast(t, o));
 	}

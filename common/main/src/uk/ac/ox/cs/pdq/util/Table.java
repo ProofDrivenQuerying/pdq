@@ -13,6 +13,7 @@ import com.google.common.collect.Interners;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
+// TODO: Auto-generated Javadoc
 /**
  * Implementation of a database table, whose tuples are fully loaded in memory.
  *
@@ -21,13 +22,13 @@ import com.google.common.collect.Sets;
  */
 public class Table implements Result, Iterable<Tuple> {
 
-	/** The table's header*/
+	/**  The table's header. */
 	private List<? extends Typed> header = new ArrayList<>();
 
-	/** The table's tuples*/
+	/**  The table's tuples. */
 	private List<Tuple> data = new ArrayList<>();
 
-	/** The type of each table's tuple*/
+	/**  The type of each table's tuple. */
 	private TupleType type = null;
 	
 	/**
@@ -39,17 +40,20 @@ public class Table implements Result, Iterable<Tuple> {
 	/** If true, tuple added to the table are first interned. */
 	private final boolean internTuples;
 	
+	/** The Constant prefix. */
 	private final static String prefix = "T"; 
 	
+	/** The count. */
 	private static int count = 0; 
 	
+	/** The name. */
 	private final String name;
 
 	/**
+	 * Instantiates a new table.
 	 *
-	 * @param attributes
-	 * 		The table's header
 	 * @param intern boolean
+	 * @param attributes 		The table's header
 	 */
 	public Table(boolean intern, List<? extends Typed> attributes) {
 		Preconditions.checkArgument(
@@ -62,34 +66,36 @@ public class Table implements Result, Iterable<Tuple> {
 	}
 
 	/**
+	 * Instantiates a new table.
 	 *
-	 * @param attributes
-	 * 		The table's header
 	 * @param intern boolean
+	 * @param attributes 		The table's header
 	 */
 	public Table(boolean intern, Typed... attributes) {
 		this(intern, Lists.newArrayList(attributes));
 	}
 
 	/**
+	 * Instantiates a new table.
 	 *
-	 * @param attributes
-	 * 		The table's header
+	 * @param attributes 		The table's header
 	 */
 	public Table(List<? extends Typed> attributes) {
 		this(false, attributes);
 	}
 
 	/**
+	 * Instantiates a new table.
 	 *
-	 * @param attributes
-	 * 		The table's header
+	 * @param attributes 		The table's header
 	 */
 	public Table(Typed... attributes) {
 		this(false, attributes);
 	}
 
 	/**
+	 * Gets the type.
+	 *
 	 * @return the tuple type of the table
 	 */
 	public TupleType getType() {
@@ -97,9 +103,9 @@ public class Table implements Result, Iterable<Tuple> {
 	}
 
 	/**
-	 * Appends the tuple to the table
-	 * @param row
-	 * 		Input tuple
+	 * Appends the tuple to the table.
+	 *
+	 * @param row 		Input tuple
 	 */
 	public void appendRow(Tuple row) {
 		Preconditions.checkArgument(row != null);
@@ -113,9 +119,9 @@ public class Table implements Result, Iterable<Tuple> {
 	}
 
 	/**
-	 * Appends the input's tuples to the current table
-	 * @param input
-	 * 		Input table
+	 * Appends the input's tuples to the current table.
+	 *
+	 * @param input 		Input table
 	 */
 	public void appendRows(Table input) {
 		for (Tuple row: input) {
@@ -140,6 +146,9 @@ public class Table implements Result, Iterable<Tuple> {
 	}
 
 	/**
+	 * Gets the column.
+	 *
+	 * @param <T> the generic type
 	 * @param c Column
 	 * @return the data of this column
 	 */
@@ -153,6 +162,8 @@ public class Table implements Result, Iterable<Tuple> {
 	}
 
 	/**
+	 * Contains.
+	 *
 	 * @param t Input tuple
 	 * @return returns true if the input tuple is contained in the current table
 	 */
@@ -217,6 +228,8 @@ public class Table implements Result, Iterable<Tuple> {
 	}
 
 	/**
+	 * Columns.
+	 *
 	 * @return the number of columns
 	 */
 	public Integer columns() {
@@ -224,6 +237,8 @@ public class Table implements Result, Iterable<Tuple> {
 	}
 
 	/**
+	 * Iterator.
+	 *
 	 * @return a resetable tuple iterator over the table's tuples.
 	 * @see java.lang.Iterable#iterator()
 	 */
@@ -268,6 +283,8 @@ public class Table implements Result, Iterable<Tuple> {
 	}
 
 	/**
+	 * Gets the header.
+	 *
 	 * @return the table header
 	 */
 	public List<? extends Typed> getHeader() {
@@ -276,13 +293,16 @@ public class Table implements Result, Iterable<Tuple> {
 
 	/**
 	 * Sets a new header for the table.
-	 * @param schema
+	 *
+	 * @param schema the new header
 	 */
 	public void setHeader(List<? extends Attribute> schema) {
 		this.header = Lists.newArrayList(schema);
 	}
 
 	/**
+	 * Checks for header.
+	 *
 	 * @return true, if the table has a non-empty header
 	 */
 	public boolean hasHeader() {
@@ -291,6 +311,8 @@ public class Table implements Result, Iterable<Tuple> {
 	}
 
 	/**
+	 * Gets the data.
+	 *
 	 * @return the data contained in the table as a list of tuples.
 	 */
 	public List<Tuple> getData() {
@@ -370,6 +392,11 @@ public class Table implements Result, Iterable<Tuple> {
 		return dyn;
 	}
 
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
 	public String getName() {
 		return this.name;
 	}

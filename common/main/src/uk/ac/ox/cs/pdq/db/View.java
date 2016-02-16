@@ -12,57 +12,53 @@ import uk.ac.ox.cs.pdq.fol.Term;
 
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
 /**
+ * A view.
  *
- * A view
  * @author Efthymia Tsamoura
  * @author Julien Leblay
- *
  */
 public class View extends Relation implements Rule<Formula, Predicate> {
 
-	/** */
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -4961888228318423619L;
 
+	/** The view id. */
 	protected int viewId;
 
-	/** The inverse dependency that defines the view */
+	/**  The inverse dependency that defines the view. */
 	protected LinearGuarded dependency;
 
-	/** The dependency that defines the view */
+	/**  The dependency that defines the view. */
 	protected TGD definition;
 
 	/**
+	 * Instantiates a new view.
 	 *
-	 * @param name
-	 * 		The name of the view
-	 * @param attributes
-	 * 		The view's attributes
+	 * @param name 		The name of the view
+	 * @param attributes 		The view's attributes
 	 */
 	public View(String name, List<Attribute> attributes) {
 		super(name, attributes);
 	}
 
 	/**
+	 * Instantiates a new view.
 	 *
-	 * @param name
-	 * 		The name of the view
-	 * @param attributes
-	 * 		The view's attributes
-	 * @param bindings
-	 * 		The binding patterns with which a view can be accessed. By default, a view has free access
+	 * @param name 		The name of the view
+	 * @param attributes 		The view's attributes
+	 * @param bindings 		The binding patterns with which a view can be accessed. By default, a view has free access
 	 */
 	public View(String name, List<Attribute> attributes, List<AccessMethod> bindings) {
 		super(name, attributes, bindings);
 	}
 
 	/**
+	 * Instantiates a new view.
 	 *
-	 * @param dependency
-	 * 		The dependency that defines the view
-	 * @param binding
-	 * 		A binding with which we can access the view. By default, a view has free access
-	 *
+	 * @param dependency 		The dependency that defines the view
+	 * @param binding 		A binding with which we can access the view. By default, a view has free access
 	 */
 	public View(LinearGuarded dependency, AccessMethod binding) {
 		this(dependency, Lists.newArrayList(binding));
@@ -70,12 +66,10 @@ public class View extends Relation implements Rule<Formula, Predicate> {
 
 
 	/**
+	 * Instantiates a new view.
 	 *
-	 * @param dependency
-	 * 		The dependency that defines the view
-	 * @param bindings
-	 * 		The binding patterns with which a view can be accessed. By default, a view has free access
-	 *
+	 * @param dependency 		The dependency that defines the view
+	 * @param bindings 		The binding patterns with which a view can be accessed. By default, a view has free access
 	 */
 	public View(LinearGuarded dependency, List<AccessMethod> bindings) {
 		super(dependency.getGuard().getName(), makeAttributes(dependency.getGuard()));
@@ -88,6 +82,8 @@ public class View extends Relation implements Rule<Formula, Predicate> {
 	}
 
 	/**
+	 * Make attributes.
+	 *
 	 * @param fact An input fact
 	 * @return The list of schema attributes that correspond to this fact
 	 */
@@ -104,6 +100,8 @@ public class View extends Relation implements Rule<Formula, Predicate> {
 	}
 
 	/**
+	 * Gets the id.
+	 *
 	 * @return int
 	 */
 	@Override
@@ -112,6 +110,8 @@ public class View extends Relation implements Rule<Formula, Predicate> {
 	}
 
 	/**
+	 * Gets the dependency.
+	 *
 	 * @return LinearGuarded
 	 */
 	public LinearGuarded getDependency() {
@@ -119,6 +119,8 @@ public class View extends Relation implements Rule<Formula, Predicate> {
 	}
 
 	/**
+	 * Gets the definition.
+	 *
 	 * @return the TGD defining the view
 	 */
 	public TGD getDefinition() {
@@ -126,6 +128,8 @@ public class View extends Relation implements Rule<Formula, Predicate> {
 	}
 
 	/**
+	 * Sets the dependency.
+	 *
 	 * @param d LinearGuarded
 	 */
 	public void setDependency(LinearGuarded d) {
@@ -159,16 +163,25 @@ public class View extends Relation implements Rule<Formula, Predicate> {
 		return Objects.hash(this.name, this.attributes);
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.fol.Rule#getHead()
+	 */
 	@Override
 	public Predicate getHead() {
 		return this.dependency.getGuard();
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.fol.Rule#getBody()
+	 */
 	@Override
 	public Formula getBody() {
 		return this.dependency.getHead();
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.fol.Rule#contains(uk.ac.ox.cs.pdq.fol.Signature)
+	 */
 	@Override
 	public boolean contains(Signature s) {
 		return this.dependency.contains(s);

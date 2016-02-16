@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 
 import com.google.common.base.Joiner;
 
+// TODO: Auto-generated Javadoc
 /**
  * This class capture the behavior have incorporate inputs parameters to a 
  * request. Input are (currently) one of two types: URL parameter or path
@@ -21,16 +22,22 @@ public class InputMethod {
 	/** Logger. */
 	private static Logger log = Logger.getLogger(InputMethod.class);
 
-	/** Allowed types */
-	public static enum Types {URL_PARAM, PATH_ELEMENT}
+	/**
+	 *  Allowed types.
+	 */
+	public static enum Types {
+/** The url param. */
+URL_PARAM, 
+ /** The path element. */
+ PATH_ELEMENT}
 
 	/** Separator for parameters. */
 	private static final String PARAM_SEPARATOR = ".";
 
-	/** The input method name */
+	/**  The input method name. */
 	private final String name;
 	
-	/** The input method type */
+	/**  The input method type. */
 	private final Types type;
 
 	/** 
@@ -39,7 +46,7 @@ public class InputMethod {
 	 */
 	private final String template;
 
-	/** If batch input is allowed, input should be separated with this string */
+	/**  If batch input is allowed, input should be separated with this string. */
 	private final String batchDelimiter;
 	
 	/** If batch input is allowed, this defined how many input are allowed in a single batch. */
@@ -50,12 +57,13 @@ public class InputMethod {
 
 	/**
 	 * Default constructor.
-	 * @param name
-	 * @param template
-	 * @param type
-	 * @param batchDelimiter
-	 * @param batchSize
-	 * @param defaultValue
+	 *
+	 * @param name the name
+	 * @param template the template
+	 * @param type the type
+	 * @param batchDelimiter the batch delimiter
+	 * @param batchSize the batch size
+	 * @param defaultValue the default value
 	 */
 	public InputMethod(String name, String template, Types type, String batchDelimiter, Integer batchSize, Object defaultValue) {
 		super();
@@ -69,14 +77,17 @@ public class InputMethod {
 
 	/**
 	 * Empty constructor, uses all possible default value.
-	 * @param name
+	 *
+	 * @param name the name
 	 */
 	public InputMethod(String name) {
 		this(name, null, Types.URL_PARAM, null, null, null);
 	}
 
 	/**
-	 * @param key
+	 * Compound key.
+	 *
+	 * @param key the key
 	 * @return a string made of the input method's name parameter with key
 	 */
 	public String compoundKey(String key) {
@@ -84,7 +95,9 @@ public class InputMethod {
 	}
 	
 	/**
-	 * @param params
+	 * Format.
+	 *
+	 * @param params the params
 	 * @return a string copies from the template, where the proper fields
 	 * have been replaced with value provided in params (default value otherwise).
 	 */
@@ -104,7 +117,9 @@ public class InputMethod {
 	}
 	
 	/**
-	 * @param params
+	 * Apply template.
+	 *
+	 * @param params the params
 	 * @return a string copies from the template, where the proper fields
 	 * have been replaced with value provided in params.
 	 */
@@ -127,7 +142,8 @@ public class InputMethod {
 	}
 
 	/**
-	 * 
+	 * Gets the name.
+	 *
 	 * @return the name of this input method
 	 */
 	public String getName() {
@@ -136,7 +152,8 @@ public class InputMethod {
 	
 	/**
 	 * TODO redundant with compound key. will be removed.
-	 * @param params
+	 *
+	 * @param params the params
 	 * @return String
 	 */
 	public String getParameterizedName(Collection<String> params) {
@@ -144,7 +161,8 @@ public class InputMethod {
 	}
 
 	/**
-	 * 
+	 * Gets the type.
+	 *
 	 * @return the input method type.
 	 */
 	public Types getType() {
@@ -152,7 +170,8 @@ public class InputMethod {
 	}
 
 	/**
-	 * 
+	 * Gets the default value.
+	 *
 	 * @return the input method's default value
 	 */
 	public Object getDefaultValue() {
@@ -160,7 +179,8 @@ public class InputMethod {
 	}
 
 	/**
-	 * 
+	 * Gets the batch delimiter.
+	 *
 	 * @return the batch delimiter
 	 */
 	public String getBatchDelimiter() {
@@ -168,7 +188,8 @@ public class InputMethod {
 	}
 
 	/**
-	 * 
+	 * Gets the batch size.
+	 *
 	 * @return the batch size.
 	 */
 	public Integer getBatchSize() {

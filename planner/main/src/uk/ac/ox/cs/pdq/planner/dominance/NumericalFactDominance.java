@@ -2,6 +2,7 @@ package uk.ac.ox.cs.pdq.planner.dominance;
 
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
 
+// TODO: Auto-generated Javadoc
 /**
  * Numerical success dominance. A configuration c dominates a configuration c', if c has >= facts than c'.
  * @author Efthymia Tsamoura
@@ -9,6 +10,8 @@ import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
 public class NumericalFactDominance implements FactDominance{
 
 	/**
+	 * Checks if is dominated.
+	 *
 	 * @param source C
 	 * @param target C
 	 * @return BijectiveMap<Constant,Constant>
@@ -26,6 +29,8 @@ public class NumericalFactDominance implements FactDominance{
 	}
 
 	/**
+	 * Clone.
+	 *
 	 * @return NumericalFactDominance<C>
 	 */
 	@Override

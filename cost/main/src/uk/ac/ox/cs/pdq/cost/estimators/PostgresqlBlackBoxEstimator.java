@@ -20,15 +20,17 @@ import uk.ac.ox.cs.pdq.rewrite.RewriterException;
 import uk.ac.ox.cs.pdq.rewrite.sql.SQLTranslator;
 import uk.ac.ox.cs.pdq.rewrite.sql.SQLTranslator.SupportedDialect;
 
+// TODO: Auto-generated Javadoc
 /**
  * Blackbox cost estimator which translates a configuration directly to an SQL
- * query which is further provided to PostgreSQL for cost analysis
+ * query which is further provided to PostgreSQL for cost analysis.
  *
  * @author Efthymia Tsamoura
- *
+ * @param <P> the generic type
  */
 public class PostgresqlBlackBoxEstimator<P extends Plan> implements BlackBoxCostEstimator<P> {
 
+	/** The stats. */
 	protected final StatisticsCollector stats;
 
 	/**
@@ -41,15 +43,14 @@ public class PostgresqlBlackBoxEstimator<P extends Plan> implements BlackBoxCost
 	/** Properties featuring database connection details. */
 	protected final Properties properties;
 
-	/** The query type use by this estimator */
+	/**  The query type use by this estimator. */
 	protected final BlackBoxQueryTypes queryType;
 
 	/**
 	 * Default constructor.
-	 * @param prop
-	 * @param eventBus EventBus
-	 * @param collectStats boolean
-	 * @throws SQLException
+	 *
+	 * @param prop the prop
+	 * @throws SQLException the SQL exception
 	 */
 	public PostgresqlBlackBoxEstimator(Properties prop) throws SQLException {
 		this(null, prop, BlackBoxQueryTypes.DEFAULT);
@@ -57,9 +58,10 @@ public class PostgresqlBlackBoxEstimator<P extends Plan> implements BlackBoxCost
 
 	/**
 	 * Default constructor.
-	 * @param prop
-	 * @param type
+	 *
 	 * @param stats StatisticsCollector
+	 * @param prop the prop
+	 * @param type the type
 	 */
 	public PostgresqlBlackBoxEstimator(StatisticsCollector stats, Properties prop, BlackBoxQueryTypes type) {
 		this.stats = stats;
@@ -68,6 +70,8 @@ public class PostgresqlBlackBoxEstimator<P extends Plan> implements BlackBoxCost
 	}
 
 	/**
+	 * Clone.
+	 *
 	 * @return PostgresqlBlackBoxEstimator<P,S>
 	 * @see uk.ac.ox.cs.pdq.plan.cost.ConfigurationCostEstimator#clone()
 	 */
@@ -77,8 +81,10 @@ public class PostgresqlBlackBoxEstimator<P extends Plan> implements BlackBoxCost
 	}
 
 	/**
+	 * Gets the connection.
+	 *
 	 * @return a connection database connection for the given properties.
-	 * @throws SQLException
+	 * @throws SQLException the SQL exception
 	 */
 	public Connection getConnection() throws SQLException {
 		String url = this.properties.getProperty("url");

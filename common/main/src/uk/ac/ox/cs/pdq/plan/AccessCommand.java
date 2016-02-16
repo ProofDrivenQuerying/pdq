@@ -17,6 +17,7 @@ import uk.ac.ox.cs.pdq.util.Table;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
 /**
  *  An access command over a schema $\aschema$ with access methods is of the form 
 	\[
@@ -44,31 +45,32 @@ import com.google.common.collect.Lists;
  */
 public class AccessCommand implements Command{
 
-	/** The accessed relation **/
+	/**  The accessed relation *. */
 	private final Relation relation;
 
-	/** The method applied to access the corresponding relation**/
+	/**  The method applied to access the corresponding relation*. */
 	private final AccessMethod method;
 
-	/** The output columns */
+	/**  The output columns. */
 	private final List<Term> columns;
 
-	/** The constants used to call the underlying access method */
+	/**  The constants used to call the underlying access method. */
 	private final Map<Integer, TypedConstant<?>> staticInputs;
 
-	/** The input table**/
+	/**  The input table*. */
 	private final Table input;
 
-	/** The output table**/
+	/**  The output table*. */
 	private final Table output;
 
-	/** Caches the constraint that captures this access command **/
+	/**  Caches the constraint that captures this access command *. */
 	private final TGD command;
 
 	/**
-	 * Creates an access command that takes as input the input table
-	 * @param access
-	 * @param input
+	 * Creates an access command that takes as input the input table.
+	 *
+	 * @param access the access
+	 * @param input the input
 	 */
 	public AccessCommand(AccessOperator access, Table input) {
 		this(access.getRelation(), access.getAccessMethod(), 
@@ -78,17 +80,13 @@ public class AccessCommand implements Command{
 	}
 
 	/**
-	 * 
-	 * @param relation
-	 * 		The accessed relation
-	 * @param method
-	 * 		The method applied to access the corresponding relation
-	 * @param columns
-	 * 		The output columns
-	 * @param input
-	 * 		The input table
-	 * @param staticInputs
-	 * 		Schema constants that are input positions
+	 * Instantiates a new access command.
+	 *
+	 * @param relation 		The accessed relation
+	 * @param method 		The method applied to access the corresponding relation
+	 * @param columns 		The output columns
+	 * @param input 		The input table
+	 * @param staticInputs 		Schema constants that are input positions
 	 */
 	public AccessCommand(Relation relation, AccessMethod method, List<Term> columns, Table input, Map<Integer, TypedConstant<?>> staticInputs) {
 		Preconditions.checkNotNull(relation);
@@ -119,31 +117,61 @@ public class AccessCommand implements Command{
 		this.command = new CommandToTGDTranslator().toTGD(this);
 	}
 
+	/**
+	 * Gets the input.
+	 *
+	 * @return the input
+	 */
 	public Table getInput() {
 		return this.input;
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.plan.Command#getOutput()
+	 */
 	public Table getOutput() {
 		return this.output;
 	}
 
+	/**
+	 * Gets the relation.
+	 *
+	 * @return the relation
+	 */
 	public Relation getRelation() {
 		return this.relation;
 	}
 
+	/**
+	 * Gets the method.
+	 *
+	 * @return the method
+	 */
 	public AccessMethod getMethod() {
 		return this.method;
 	}
 
+	/**
+	 * Gets the static inputs.
+	 *
+	 * @return the static inputs
+	 */
 	public Map<Integer, TypedConstant<?>> getStaticInputs() {
 		return this.staticInputs;
 	}
 
+	/**
+	 * Gets the columns.
+	 *
+	 * @return the columns
+	 */
 	public List<Term> getColumns() {
 		return this.columns;
 	}
 
 	/**
+	 * Equals.
+	 *
 	 * @param o Object
 	 * @return boolean
 	 */
@@ -163,6 +191,8 @@ public class AccessCommand implements Command{
 	}
 
 	/**
+	 * Hash code.
+	 *
 	 * @return int
 	 */
 	@Override
@@ -171,6 +201,8 @@ public class AccessCommand implements Command{
 	}
 
 	/**
+	 * To string.
+	 *
 	 * @return String
 	 */
 	@Override

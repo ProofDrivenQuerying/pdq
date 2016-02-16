@@ -28,6 +28,7 @@ import uk.ac.ox.cs.pdq.fol.Variable;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
+// TODO: Auto-generated Javadoc
 /**
  * Provide utility function, that don't fit anywhere else.
  *
@@ -37,14 +38,16 @@ import com.google.common.collect.Lists;
  */
 public class Utility {
 
-	/** The logger */
+	/**  The logger. */
 	public static Logger log = Logger.getLogger(Utility.class);
 
 	/**
-	 * @param collection
-	 * @param object
-	 * @return
-	 * 		the positions where the input object appears in collection.
+	 * Search.
+	 *
+	 * @param <T> the generic type
+	 * @param collection the collection
+	 * @param object the object
+	 * @return 		the positions where the input object appears in collection.
 	 * 		If object does not appear in source, then an empty list is returned
 	 */
 	public static <T> List<Integer> search(Collection<? extends T> collection, T object) {
@@ -60,10 +63,12 @@ public class Utility {
 	}
 
 	/**
-	 * @param source
-	 * @param target
-	 * @return
-	 * 		true if source contains at least on element of target
+	 * Contains element.
+	 *
+	 * @param <T> the generic type
+	 * @param source the source
+	 * @param target the target
+	 * @return 		true if source contains at least on element of target
 	 */
 	public static <T> boolean containsElement(Collection<T> source, Collection<T> target) {
 		for (T s: source) {
@@ -76,7 +81,10 @@ public class Utility {
 
 
 	/**
-	 * @param l
+	 * Removes the duplicates.
+	 *
+	 * @param <T> the generic type
+	 * @param l the l
 	 * @return a duplicate-free list
 	 */
 	public static <T> Collection<T> removeDuplicates(Collection<T> l) {
@@ -84,7 +92,10 @@ public class Utility {
 	}
 
 	/**
-	 * @param l
+	 * Extract.
+	 *
+	 * @param <T> the generic type
+	 * @param l the l
 	 * @param p a list of positions
 	 * @return a list of T made of all the items in l appearing at positions in p
 	 */
@@ -100,7 +111,9 @@ public class Utility {
 	}
 
 	/**
-	 * @param typed
+	 * Typed to terms.
+	 *
+	 * @param typed the typed
 	 * @return List<Term>
 	 */
 	public static List<Term> typedToTerms(Collection<? extends Typed> typed) {
@@ -112,7 +125,9 @@ public class Utility {
 	}
 
 	/**
-	 * @param typed
+	 * Typed to term.
+	 *
+	 * @param typed the typed
 	 * @return Term
 	 */
 	public static Term typedToTerm(Typed typed) {
@@ -123,7 +138,9 @@ public class Utility {
 	}
 
 	/**
-	 * @param typed
+	 * To typed constants.
+	 *
+	 * @param typed the typed
 	 * @return List<TypedConstant<?>>
 	 */
 	public static List<TypedConstant<?>> toTypedConstants(List<Typed> typed) {
@@ -139,7 +156,8 @@ public class Utility {
 	}
 
 	/**
-	 * Converts a list of Typed to a list of VariableTerm
+	 * Converts a list of Typed to a list of VariableTerm.
+	 *
 	 * @param typed Collection<? extends Typed>
 	 * @return List<Variable>
 	 */
@@ -152,7 +170,9 @@ public class Utility {
 	}
 
 	/**
-	 * @param atoms
+	 * Gets the variables.
+	 *
+	 * @param atoms the atoms
 	 * @return the variables of the input atoms
 	 */
 	public static List<Variable> getVariables(Collection<? extends Predicate> atoms) {
@@ -168,7 +188,9 @@ public class Utility {
 	}
 
 	/**
-	 * @param atoms
+	 * Gets the constants.
+	 *
+	 * @param atoms the atoms
 	 * @return the constants of the input atoms
 	 */
 	public static Collection<Constant> getConstants(Collection<? extends Predicate> atoms) {
@@ -184,7 +206,9 @@ public class Utility {
 	}
 
 	/**
-	 * @param atom
+	 * Gets the constants.
+	 *
+	 * @param atom the atom
 	 * @return the constants of the input atom
 	 */
 	public static Set<Constant> getConstants(Predicate atom) {
@@ -197,6 +221,12 @@ public class Utility {
 		return result;
 	}
 	
+	/**
+	 * Gets the non schema constants.
+	 *
+	 * @param atom the atom
+	 * @return the non schema constants
+	 */
 	public static Set<Constant> getNonSchemaConstants(Predicate atom) {
 		Set<Constant> result = new LinkedHashSet<>();
 		for (Term term:atom.getTerms()) {
@@ -208,6 +238,8 @@ public class Utility {
 	}
 
 	/**
+	 * Gets the terms.
+	 *
 	 * @param atoms Iterable<PredicateFormula>
 	 * @return the terms of the input atom
 	 */
@@ -222,7 +254,8 @@ public class Utility {
 	}
 
 	/**
-	 * Generates a list of terms matching the attributes of the input relation
+	 * Generates a list of terms matching the attributes of the input relation.
+	 *
 	 * @param r Relation
 	 * @return List<Term>
 	 */
@@ -252,7 +285,8 @@ public class Utility {
 	}
 
 	/**
-	 * Converts a list of Term to a list of Typed
+	 * Converts a list of Term to a list of Typed.
+	 *
 	 * @param terms List<? extends Term>
 	 * @param type TupleType
 	 * @return List<Typed>
@@ -269,7 +303,8 @@ public class Utility {
 	}
 
 	/**
-	 * Converts a Term to a Typed
+	 * Converts a Term to a Typed.
+	 *
 	 * @param t Term
 	 * @param type Class<?>
 	 * @return Typed
@@ -285,7 +320,8 @@ public class Utility {
 	}
 
 	/**
-	 * Generates a list of terms matching the attributes of the input relation
+	 * Generates a list of terms matching the attributes of the input relation.
+	 *
 	 * @param q ConjunctiveQuery
 	 * @return List<Attribute>
 	 */
@@ -321,8 +357,9 @@ public class Utility {
 	}
 
 	/**
-	 * Generates a list of terms matching the list of input attributes
-	 * @param attributes
+	 * Generates a list of terms matching the list of input attributes.
+	 *
+	 * @param attributes the attributes
 	 * @return List<Attribute>
 	 */
 	public static List<Attribute> canonicalAttributes(List<Attribute> attributes) {
@@ -334,7 +371,9 @@ public class Utility {
 	}
 
 	/**
-	 * @param atoms
+	 * To strings.
+	 *
+	 * @param atoms the atoms
 	 * @return the string representations of the input atoms
 	 */
 	public static Collection<String> toStrings(Collection<? extends Predicate> atoms) {
@@ -346,7 +385,9 @@ public class Utility {
 	}
 
 	/**
-	 * @param q
+	 * Gets the tuple type.
+	 *
+	 * @param q the q
 	 * @return the tuple type of the input query
 	 */
 	public static TupleType getTupleType(Query<?> q) {
@@ -380,6 +421,8 @@ public class Utility {
 
 
 	/**
+	 * Mean dist.
+	 *
 	 * @param random Random
 	 * @param mean double
 	 * @param min double
@@ -394,6 +437,10 @@ public class Utility {
 	}
 
 	/**
+	 * Retain.
+	 *
+	 * @param <K> the key type
+	 * @param <V> the value type
 	 * @param map Map<K,V>
 	 * @param keys Collection<K>
 	 * @return Map<K,V>
@@ -407,9 +454,10 @@ public class Utility {
 	}
 
 	/**
-	 * @param clusters
-	 * @return
-	 * 		a partition of the given clusters, such that all predicates in the
+	 * Connected components.
+	 *
+	 * @param clusters the clusters
+	 * @return 		a partition of the given clusters, such that all predicates in the
 	 *      each component are connected, and no predicates part of distinct
 	 *      component are connected.
 	 */
@@ -434,9 +482,11 @@ public class Utility {
 	}
 
 	/**
-	 * @param clusters
-	 * @return
-	 * 		a partition of the given clusters, such that all predicates in the
+	 * Connected components2.
+	 *
+	 * @param <T> the generic type
+	 * @param clusters the clusters
+	 * @return 		a partition of the given clusters, such that all predicates in the
 	 *      each component are connected, and no predicates part of distinct
 	 *      component are connected.
 	 */
@@ -462,6 +512,8 @@ public class Utility {
 
 	/**
 	 * Format the given value so as to call the proper type conversion function.
+	 *
+	 * @param <T> the generic type
 	 * @param c TypedConstant<T>
 	 * @return a string representation a call to the given target type
 	 * conversion function onto the given value;
@@ -472,6 +524,8 @@ public class Utility {
 
 	/**
 	 * Format the given value so as to call the proper type conversion function.
+	 *
+	 * @param <T> the generic type
 	 * @param o Object
 	 * @param target Class<T>
 	 * @return a string representation a call to the given target type
@@ -484,6 +538,9 @@ public class Utility {
 		return "'" + o + "'";
 	}
 	
+	/**
+	 * Asserts enabled.
+	 */
 	public static void assertsEnabled()
 	{
 		boolean assertsEnabled = false;

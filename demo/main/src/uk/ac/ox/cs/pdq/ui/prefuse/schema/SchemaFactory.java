@@ -11,14 +11,28 @@ import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode.NodeStatus;
 import uk.ac.ox.cs.pdq.ui.prefuse.types.EdgeTypes;
 import uk.ac.ox.cs.pdq.ui.prefuse.types.PathTypes;
 
+// TODO: Auto-generated Javadoc
+/**
+ * A factory for creating Schema objects.
+ */
 public class SchemaFactory {
 	
+	/**
+	 * Gets the node table schema.
+	 *
+	 * @return the node table schema
+	 */
 	public static Schema getNodeTableSchema() {
 		String[] names = new String[] { "id", "type", "pathToSuccess", "isCollapsed", "hidePointerEdges", "data" };
 		Class[] types = new Class[] { int.class, NodeStatus.class, PathTypes.class, boolean.class, boolean.class, SearchNode.class };
 		return new Schema(names, types);
 	}
 	
+	/**
+	 * Gets the edge table schema.
+	 *
+	 * @return the edge table schema
+	 */
 	public static Schema getEdgeTableSchema() {
 		String[] names = new String[] { "type", Graph.DEFAULT_SOURCE_KEY, Graph.DEFAULT_TARGET_KEY };
 		Class[] types = new Class[] {
@@ -28,6 +42,12 @@ public class SchemaFactory {
 	}
 	
 	
+	/**
+	 * Creates a new Schema object.
+	 *
+	 * @param schema the schema
+	 * @return the table
+	 */
 	public static Table createTable(Schema schema) {
 		Table table = new Table();
 		for(int c = 0; c < schema.getColumnCount(); ++c) {
@@ -36,12 +56,24 @@ public class SchemaFactory {
 		return table;
 	}
 
+	/**
+	 * Creates a new Schema object.
+	 *
+	 * @return the graph
+	 */
 	public static Graph createGraph() {
 		Table nodes = createTable(getNodeTableSchema());
 		Table edges = createTable(getEdgeTableSchema());
 		return new Graph(nodes, edges, true);
 	}
 	
+	/**
+	 * Creates a new Schema object.
+	 *
+	 * @param visualization the visualization
+	 * @param group the group
+	 * @return the aggregate table
+	 */
 	public static AggregateTable createAggregateTable(Visualization visualization, String group) {
 		if(group == null || visualization == null) {
 			throw new java.lang.IllegalArgumentException();
