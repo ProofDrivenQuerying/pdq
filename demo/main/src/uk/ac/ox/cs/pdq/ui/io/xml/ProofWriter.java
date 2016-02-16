@@ -15,6 +15,7 @@ import uk.ac.ox.cs.pdq.io.xml.AbstractXMLWriter;
 import uk.ac.ox.cs.pdq.io.xml.QNames;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.ui.proof.Proof;
+import uk.ac.ox.cs.pdq.util.CanonicalNameGenerator;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -159,13 +160,13 @@ public class ProofWriter extends AbstractXMLWriter<Proof> {
 		List<Variable> free = tgd.getUniversal();
 		if (free != null) {
 			for (Variable variable:free) {
-				result.put(variable, new Skolem(Skolem.Generator.getName()));
+				result.put(variable, new Skolem(CanonicalNameGenerator.getName()));
 			}
 		}
 		List<Variable> bound = tgd.getExistential();
 		if (bound != null) {
 			for (Variable variable:bound) {
-				result.put(variable, new Skolem(Skolem.Generator.getName()));
+				result.put(variable, new Skolem(CanonicalNameGenerator.getName()));
 			}
 		}
 		return result;

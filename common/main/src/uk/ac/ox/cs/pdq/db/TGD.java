@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-import uk.ac.ox.cs.pdq.fol.Skolem.Generator;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Implication;
@@ -18,6 +17,7 @@ import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Skolem;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
+import uk.ac.ox.cs.pdq.util.CanonicalNameGenerator;
 import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.base.Preconditions;
@@ -183,7 +183,7 @@ public class TGD
 			if (!result.containsKey(variable)) {
 				result.put(variable,
 						new Skolem(
-								Generator.getName("TGD" + this.id,
+								CanonicalNameGenerator.getName("TGD" + this.id,
 										namesOfUniversalVariables,
 										variable.getName()))
 						);

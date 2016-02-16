@@ -12,7 +12,7 @@ import java.util.Objects;
 import java.util.Set;
 
 import uk.ac.ox.cs.pdq.db.TypedConstant;
-import uk.ac.ox.cs.pdq.fol.Skolem.Generator;
+import uk.ac.ox.cs.pdq.util.CanonicalNameGenerator;
 import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.base.Preconditions;
@@ -154,7 +154,7 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 					if (t.isVariable()) {
 						Constant c = canonicalMapping.get(t);
 						if (c == null) {
-							c = new Skolem(Generator.getName());
+							c = new Skolem(CanonicalNameGenerator.getName());
 							canonicalMapping.put((Variable) t, c);
 						}
 					}
