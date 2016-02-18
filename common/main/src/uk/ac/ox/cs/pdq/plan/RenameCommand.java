@@ -26,8 +26,6 @@ public class RenameCommand implements Command {
 	/**  The attributes after the renaming *. */
 	private final List<Attribute> toRename;
 	
-	/**  Caches the constraint that captures this access command *. */
-	private final TGD command;
 	
 	/**
 	 * Creates a project command based on the input table and the input new attributes.
@@ -42,7 +40,6 @@ public class RenameCommand implements Command {
 		this.input = input;
 		this.toRename = toRename;
 		this.output = new Table(toRename);
-		this.command = new CommandToTGDTranslator().toTGD(this);
 	}
 
 	/* (non-Javadoc)
@@ -89,15 +86,5 @@ public class RenameCommand implements Command {
 	@Override
 	public int hashCode() {
 		return Objects.hash(this.toRename, this.input);
-	}
-
-	/**
-	 * To string.
-	 *
-	 * @return String
-	 */
-	@Override
-	public String toString() {
-		return this.command.toString();
 	}
 }

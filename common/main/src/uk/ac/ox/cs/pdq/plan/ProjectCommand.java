@@ -26,9 +26,6 @@ public class ProjectCommand implements Command{
 	/**  The attributes to project *. */
 	private final List<Attribute> toProject;
 	
-	/**  Caches the constraint that captures this access command *. */
-	private final TGD command;
-	
 	/**
 	 * Creates a project command based on the input table and the input attributes that will be projected.
 	 *
@@ -41,7 +38,6 @@ public class ProjectCommand implements Command{
 		this.input = input;
 		this.toProject = toProject;
 		this.output = new Table(toProject);
-		this.command = new CommandToTGDTranslator().toTGD(this);
 	}
 
 	/* (non-Javadoc)
@@ -97,15 +93,5 @@ public class ProjectCommand implements Command{
 	@Override
 	public int hashCode() {
 		return Objects.hash(this.toProject, this.input);
-	}
-
-	/**
-	 * To string.
-	 *
-	 * @return String
-	 */
-	@Override
-	public String toString() {
-		return this.command.toString();
 	}
 }

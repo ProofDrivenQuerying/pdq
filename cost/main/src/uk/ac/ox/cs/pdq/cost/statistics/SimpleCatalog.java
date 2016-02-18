@@ -28,7 +28,6 @@ import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.io.xml.QueryReader;
 import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
-import uk.ac.ox.cs.pdq.plan.CommandToTGDTranslator;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
@@ -111,11 +110,6 @@ public class SimpleCatalog implements Catalog{
 	
 	/**  The SQL Server histograms of each attribute. */
 	private final Map<Pair<Relation,Attribute>, SQLServerHistogram> SQLServerHistograms;
-	/** 
-	 * The queries correspond to cardinality expressions. 
-	 * This structure maps cardinality queries to its size. 
-	 * This implementation keeps only cardinality expressions coming from single relations-single attribute.*/
-	private final Map<Query<?>,Integer> queries; 
 	
 	/**  The schema of the input database. */
 	private final Schema schema;
@@ -146,51 +140,8 @@ public class SimpleCatalog implements Catalog{
 		this.frequencyMaps = new HashMap<>();
 		this.SQLServerHistograms = new HashMap<>();
 		this.read(schema, fileName);
-		this.queries = SimpleCatalog.getQueries(this.columnCardinalities);
-		this.queries.putAll(SimpleCatalog.getQueriesFromHistograms(this.frequencyMaps));
 	}
-
-	/**
-	 * Gets the queries.
-	 *
-	 * @param columnCardinalities the column cardinalities
-	 * @return 		query expressions for the input set of column cardinalities
-	 */
-	private static Map<Query<?>,Integer> getQueries(Map<Pair<Relation,Attribute>,Integer> columnCardinalities) {
-		Map<Query<?>,Integer> ret = Maps.newHashMap();
-		for(Entry<Pair<Relation, Attribute>, Integer> entry:columnCardinalities.entrySet()) {
-			Relation relation = entry.getKey().getLeft();
-			Attribute attribute = entry.getKey().getRight();
-			Query<?> query = new CommandToTGDTranslator().toQuery(relation, attribute);
-			ret.put(query, entry.getValue());
-		}
-		return ret;
-	}
-
-	/**
-	 * Gets the queries from histograms.
-	 *
-	 * @param histograms the histograms
-	 * @return 		query expressions for the input set of histograms
-	 */
-	private static Map<Query<?>,Integer> getQueriesFromHistograms(Map<Pair<Relation,Attribute>, SimpleFrequencyMap> histograms) {
-		Map<Query<?>,Integer> ret = Maps.newHashMap();
-		for(Entry<Pair<Relation, Attribute>, SimpleFrequencyMap> entry:histograms.entrySet()) {
-			Relation relation = entry.getKey().getLeft();
-			Attribute attribute = entry.getKey().getRight();
-			SimpleFrequencyMap histogram = entry.getValue();
-			for(Entry<String, Integer> frequency:histogram.getFrequencies().entrySet()) {
-				Map<Attribute, TypedConstant> constantsMap = new HashMap<>();
-				constantsMap.put(attribute, new TypedConstant(frequency.getKey()));
-				List<Attribute> free = Lists.newArrayList(relation.getAttributes());
-				free.remove(attribute);
-				Query<?> query = new CommandToTGDTranslator().toQuery(relation, constantsMap, free);
-				ret.put(query, frequency.getValue());
-			}
-		}
-		return ret;
-	}
-
+	
 	/**
 	 * Read.
 	 *
@@ -379,7 +330,6 @@ public class SimpleCatalog implements Catalog{
 	 */
 	private SimpleCatalog(Schema schema, Map<Relation,Integer> cardinalities, Map<Pair<Relation,AccessMethod>,Integer> erpsi, Map<Pair<Relation,AccessMethod>,Double> responseTimes,
 			Map<Pair<Relation,Attribute>,Double> columnSelectivity, Map<Pair<Relation,Attribute>,Integer> columnCardinalities, 
-			Map<Query<?>,Integer> queries,
 			Map<Pair<Relation,Attribute>, SimpleFrequencyMap> frequencyMaps,
 			Map<Pair<Relation,Attribute>, SQLServerHistogram> SQLServerHistograms
 			) {
@@ -399,7 +349,6 @@ public class SimpleCatalog implements Catalog{
 		this.columnCardinalities = Maps.newHashMap(columnCardinalities);
 		this.frequencyMaps = Maps.newHashMap(frequencyMaps);
 		this.SQLServerHistograms = Maps.newHashMap(SQLServerHistograms);
-		this.queries = Maps.newHashMap(queries);
 	}
 
 	/* (non-Javadoc)
@@ -615,20 +564,12 @@ public class SimpleCatalog implements Catalog{
 	}
 
 	/* (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.cost.statistics.Catalog#getStatisticsExpressions()
-	 */
-	@Override
-	public Collection<Query<?>> getStatisticsExpressions() {
-		return this.queries.keySet();
-	}
-
-	/* (non-Javadoc)
 	 * @see java.lang.Object#clone()
 	 */
 	@Override
 	public SimpleCatalog clone() {
 		return new SimpleCatalog(this.schema, this.cardinalities, this.erpsi, this.costs, this.columnSelectivity, 
-				this.columnCardinalities, this.queries, this.frequencyMaps, this.SQLServerHistograms);
+				this.columnCardinalities, this.frequencyMaps, this.SQLServerHistograms);
 	}
 
 	/* (non-Javadoc)

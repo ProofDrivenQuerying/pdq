@@ -21,7 +21,6 @@ import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.fol.Signature;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
-import uk.ac.ox.cs.pdq.plan.CommandToTGDTranslator;
 import uk.ac.ox.cs.pdq.reasoning.chase.ParallelEGDChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState;
@@ -44,31 +43,6 @@ public class ReasonerUtility {
 
 	/** The log. */
 	protected static Logger log = Logger.getLogger(ReasonerUtility.class);
-	
-	/**
-	 * Exists inclustion dependency.
-	 *
-	 * @param left the left
-	 * @param right the right
-	 * @param constraints the constraints
-	 * @param restrictedChaser the restricted chaser
-	 * @param detector the detector
-	 * @return 		returns true if there is an inclusion dependency from left to right on the common variables
-	 */
-	public boolean existsInclustionDependency(Table left, Table right, Collection<? extends Constraint> constraints, RestrictedChaser restrictedChaser, DBHomomorphismManager detector) {
-		Query<?> lquery = new CommandToTGDTranslator().toQuery(left);
-		
-		//Find the variables shared among the tables
-		//These should be preserved when checking for entailment 
-		List<Attribute> _toShare = Lists.newArrayList();
-		_toShare.addAll((Collection<? extends Attribute>) CollectionUtils.intersection(left.getHeader(),right.getHeader()));
-		Query<?> rquery = new CommandToTGDTranslator().toQuery(right, _toShare);
-		Map<Variable, Constant> _toPreserve = Utility.retain(lquery.getFreeToCanonical(), Utility.typedToVariable(_toShare));
-	
-		//Creates a chase state that consists of the canonical database of the input query.
-		ListState state = new DatabaseListState(lquery, detector);
-		return restrictedChaser.entails(state, _toPreserve, rquery, constraints);
-	}
 
 	/**
 	 * Checks if is key.

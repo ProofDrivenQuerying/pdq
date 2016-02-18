@@ -97,10 +97,4 @@ public interface Query<S extends Formula> extends Formula, Evaluatable, Rule<S, 
 	 */
 	void setGrounding(Map<Variable, Constant> grounding);
 	
-	/**
-	 * Gets the important subqueries.
-	 *
-	 * @return any sub-query of the query for any combination of free/bound variables
-	 */
-	List<Query<S>> getImportantSubqueries();
 }

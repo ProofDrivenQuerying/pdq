@@ -95,13 +95,6 @@ public interface Catalog {
 	 */
 	double getCost(Relation relation, AccessMethod method, Map<Integer, TypedConstant<?>> inputs);
 	
-	/**
-	 * Gets the statistics expressions.
-	 *
-	 * @return 		the schema statistics in form of queries
-	 */
-	Collection<Query<?>> getStatisticsExpressions();
-	
 	
 	/**
 	 * Gets the histogram.

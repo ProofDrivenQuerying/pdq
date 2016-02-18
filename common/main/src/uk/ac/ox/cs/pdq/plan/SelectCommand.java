@@ -32,9 +32,6 @@ public class SelectCommand implements Command{
 	/**  The selection predicates *. */
 	private final Predicate predicates;
 	
-	/**  Caches the constraint that captures this access command *. */
-	private final TGD command;
-	
 	/**
 	 * Creates a project command based on the input table and the input selection predicates.
 	 *
@@ -68,7 +65,6 @@ public class SelectCommand implements Command{
 		outputs.addAll((Collection<? extends Attribute>) input.getHeader());
 		outputs.removeAll(toEliminate);
 		this.output = new Table(outputs);		
-		this.command = new CommandToTGDTranslator().toTGD(this);
 	}
 
 	/* (non-Javadoc)
@@ -124,16 +120,5 @@ public class SelectCommand implements Command{
 	@Override
 	public int hashCode() {
 		return Objects.hash(this.predicates, this.input);
-	}
-
-	/**
-	 * To string.
-	 *
-	 * @return String
-	 */
-	@Override
-	public String toString() {
-		return this.command.toString();
-	}
-	
+	}	
 }

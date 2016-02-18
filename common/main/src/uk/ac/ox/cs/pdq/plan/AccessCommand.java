@@ -63,9 +63,6 @@ public class AccessCommand implements Command{
 	/**  The output table*. */
 	private final Table output;
 
-	/**  Caches the constraint that captures this access command *. */
-	private final TGD command;
-
 	/**
 	 * Creates an access command that takes as input the input table.
 	 *
@@ -114,7 +111,6 @@ public class AccessCommand implements Command{
 			outputs.add(new Attribute(relation.getAttribute(pos).getType(), columns.get(pos).toString()));
 		}
 		this.output = new Table(outputs);
-		this.command = new CommandToTGDTranslator().toTGD(this);
 	}
 
 	/**
@@ -199,16 +195,4 @@ public class AccessCommand implements Command{
 	public int hashCode() {
 		return Objects.hash(this.relation, this.method, this.columns, this.staticInputs);
 	}
-
-	/**
-	 * To string.
-	 *
-	 * @return String
-	 */
-	@Override
-	public String toString() {
-		return this.command.toString();
-	}
-
-
 }
