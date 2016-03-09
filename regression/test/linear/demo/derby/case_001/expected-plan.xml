@@ -3,7 +3,7 @@
 <command name="T1">
 <operator type="PROJECT">
 <outputs>
-<attribute name="c6062" type="java.lang.Integer"/>
+<attribute name="c1237" type="java.lang.Integer"/>
 </outputs>
 <project>
 <attribute name="woeid" type="java.lang.Integer"/>
@@ -39,22 +39,22 @@
 <command name="T2">
 <operator type="DEPENDENT_JOIN" param="0">
 <outputs>
-<attribute name="c6062" type="java.lang.Integer"/>
-<attribute name="c6062" type="java.lang.Integer"/>
-<attribute name="c6063" type="java.lang.Integer"/>
-<attribute name="c6064" type="java.lang.String"/>
-<attribute name="c6065" type="java.lang.String"/>
-<attribute name="c6066" type="java.lang.String"/>
+<attribute name="c1237" type="java.lang.Integer"/>
+<attribute name="c1237" type="java.lang.Integer"/>
+<attribute name="c1238" type="java.lang.Integer"/>
+<attribute name="c1239" type="java.lang.String"/>
+<attribute name="c1240" type="java.lang.String"/>
+<attribute name="c1241" type="java.lang.String"/>
 </outputs>
 <children>
 <operator type="ALIAS" name="T1"/>
 <operator type="PROJECT">
 <outputs>
-<attribute name="c6062" type="java.lang.Integer"/>
-<attribute name="c6063" type="java.lang.Integer"/>
-<attribute name="c6064" type="java.lang.String"/>
-<attribute name="c6065" type="java.lang.String"/>
-<attribute name="c6066" type="java.lang.String"/>
+<attribute name="c1237" type="java.lang.Integer"/>
+<attribute name="c1238" type="java.lang.Integer"/>
+<attribute name="c1239" type="java.lang.String"/>
+<attribute name="c1240" type="java.lang.String"/>
+<attribute name="c1241" type="java.lang.String"/>
 </outputs>
 <project>
 <attribute name="of" type="java.lang.Integer"/>
@@ -100,59 +100,59 @@
 <command name="T3">
 <operator type="DEPENDENT_JOIN" param="2">
 <outputs>
-<attribute name="c6062" type="java.lang.Integer"/>
-<attribute name="c6062" type="java.lang.Integer"/>
-<attribute name="c6063" type="java.lang.Integer"/>
-<attribute name="c6064" type="java.lang.String"/>
-<attribute name="c6065" type="java.lang.String"/>
-<attribute name="c6066" type="java.lang.String"/>
-<attribute name="c6063" type="java.lang.Integer"/>
-<attribute name="c6067" type="java.lang.String"/>
-<attribute name="c6068" type="java.lang.String"/>
-<attribute name="c6069" type="java.lang.String"/>
-<attribute name="c6070" type="java.lang.String"/>
-<attribute name="c6071" type="java.lang.String"/>
-<attribute name="c6072" type="java.lang.String"/>
-<attribute name="c6073" type="java.lang.String"/>
-<attribute name="c6074" type="java.lang.Integer"/>
-<attribute name="c6075" type="java.lang.Integer"/>
-<attribute name="c6076" type="java.lang.String"/>
-<attribute name="c6077" type="java.lang.Double"/>
-<attribute name="c6078" type="java.lang.Double"/>
-<attribute name="c6079" type="java.lang.Integer"/>
-<attribute name="c6080" type="java.lang.Double"/>
-<attribute name="c6081" type="java.lang.String"/>
-<attribute name="c6082" type="java.lang.String"/>
-<attribute name="c6083" type="java.lang.String"/>
-<attribute name="c6084" type="java.lang.Double"/>
-<attribute name="c6085" type="java.lang.String"/>
-<attribute name="c6086" type="java.lang.Integer"/>
+<attribute name="c1237" type="java.lang.Integer"/>
+<attribute name="c1237" type="java.lang.Integer"/>
+<attribute name="c1238" type="java.lang.Integer"/>
+<attribute name="c1239" type="java.lang.String"/>
+<attribute name="c1240" type="java.lang.String"/>
+<attribute name="c1241" type="java.lang.String"/>
+<attribute name="c1238" type="java.lang.Integer"/>
+<attribute name="c1242" type="java.lang.String"/>
+<attribute name="c1243" type="java.lang.String"/>
+<attribute name="c1244" type="java.lang.String"/>
+<attribute name="c1245" type="java.lang.String"/>
+<attribute name="c1246" type="java.lang.String"/>
+<attribute name="c1247" type="java.lang.String"/>
+<attribute name="c1248" type="java.lang.String"/>
+<attribute name="c1249" type="java.lang.Integer"/>
+<attribute name="c1250" type="java.lang.Integer"/>
+<attribute name="c1251" type="java.lang.String"/>
+<attribute name="c1252" type="java.lang.Double"/>
+<attribute name="c1253" type="java.lang.Double"/>
+<attribute name="c1254" type="java.lang.Integer"/>
+<attribute name="c1255" type="java.lang.Double"/>
+<attribute name="c1256" type="java.lang.String"/>
+<attribute name="c1257" type="java.lang.String"/>
+<attribute name="c1258" type="java.lang.String"/>
+<attribute name="c1259" type="java.lang.Double"/>
+<attribute name="c1260" type="java.lang.String"/>
+<attribute name="c1261" type="java.lang.Integer"/>
 </outputs>
 <children>
 <operator type="ALIAS" name="T2"/>
 <operator type="PROJECT">
 <outputs>
-<attribute name="c6063" type="java.lang.Integer"/>
-<attribute name="c6067" type="java.lang.String"/>
-<attribute name="c6068" type="java.lang.String"/>
-<attribute name="c6069" type="java.lang.String"/>
-<attribute name="c6070" type="java.lang.String"/>
-<attribute name="c6071" type="java.lang.String"/>
-<attribute name="c6072" type="java.lang.String"/>
-<attribute name="c6073" type="java.lang.String"/>
-<attribute name="c6074" type="java.lang.Integer"/>
-<attribute name="c6075" type="java.lang.Integer"/>
-<attribute name="c6076" type="java.lang.String"/>
-<attribute name="c6077" type="java.lang.Double"/>
-<attribute name="c6078" type="java.lang.Double"/>
-<attribute name="c6079" type="java.lang.Integer"/>
-<attribute name="c6080" type="java.lang.Double"/>
-<attribute name="c6081" type="java.lang.String"/>
-<attribute name="c6082" type="java.lang.String"/>
-<attribute name="c6083" type="java.lang.String"/>
-<attribute name="c6084" type="java.lang.Double"/>
-<attribute name="c6085" type="java.lang.String"/>
-<attribute name="c6086" type="java.lang.Integer"/>
+<attribute name="c1238" type="java.lang.Integer"/>
+<attribute name="c1242" type="java.lang.String"/>
+<attribute name="c1243" type="java.lang.String"/>
+<attribute name="c1244" type="java.lang.String"/>
+<attribute name="c1245" type="java.lang.String"/>
+<attribute name="c1246" type="java.lang.String"/>
+<attribute name="c1247" type="java.lang.String"/>
+<attribute name="c1248" type="java.lang.String"/>
+<attribute name="c1249" type="java.lang.Integer"/>
+<attribute name="c1250" type="java.lang.Integer"/>
+<attribute name="c1251" type="java.lang.String"/>
+<attribute name="c1252" type="java.lang.Double"/>
+<attribute name="c1253" type="java.lang.Double"/>
+<attribute name="c1254" type="java.lang.Integer"/>
+<attribute name="c1255" type="java.lang.Double"/>
+<attribute name="c1256" type="java.lang.String"/>
+<attribute name="c1257" type="java.lang.String"/>
+<attribute name="c1258" type="java.lang.String"/>
+<attribute name="c1259" type="java.lang.Double"/>
+<attribute name="c1260" type="java.lang.String"/>
+<attribute name="c1261" type="java.lang.Integer"/>
 </outputs>
 <project>
 <attribute name="woeid" type="java.lang.Integer"/>

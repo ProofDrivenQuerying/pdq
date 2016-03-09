@@ -3,11 +3,11 @@
 <command name="T1">
 <operator type="PROJECT">
 <outputs>
-<attribute name="c7183" type="java.lang.Integer"/>
-<attribute name="c7184" type="java.lang.Integer"/>
-<attribute name="c7185" type="java.lang.Integer"/>
-<attribute name="c7186" type="java.math.BigDecimal"/>
-<attribute name="c7187" type="java.lang.String"/>
+<attribute name="c27577" type="java.lang.Integer"/>
+<attribute name="c27578" type="java.lang.Integer"/>
+<attribute name="c27579" type="java.lang.Integer"/>
+<attribute name="c27580" type="java.math.BigDecimal"/>
+<attribute name="c27581" type="java.lang.String"/>
 </outputs>
 <project>
 <attribute name="ps_partkey" type="java.lang.Integer"/>
@@ -32,22 +32,22 @@
 <command name="T2">
 <operator type="CROSS_PRODUCT">
 <outputs>
-<attribute name="c7183" type="java.lang.Integer"/>
-<attribute name="c7184" type="java.lang.Integer"/>
-<attribute name="c7185" type="java.lang.Integer"/>
-<attribute name="c7186" type="java.math.BigDecimal"/>
-<attribute name="c7187" type="java.lang.String"/>
-<attribute name="c7195" type="java.lang.Integer"/>
-<attribute name="c7197" type="java.lang.String"/>
-<attribute name="c7198" type="java.lang.String"/>
+<attribute name="c27577" type="java.lang.Integer"/>
+<attribute name="c27578" type="java.lang.Integer"/>
+<attribute name="c27579" type="java.lang.Integer"/>
+<attribute name="c27580" type="java.math.BigDecimal"/>
+<attribute name="c27581" type="java.lang.String"/>
+<attribute name="c27589" type="java.lang.Integer"/>
+<attribute name="c27591" type="java.lang.String"/>
+<attribute name="c27592" type="java.lang.String"/>
 </outputs>
 <children>
 <operator type="ALIAS" name="T1"/>
 <operator type="PROJECT">
 <outputs>
-<attribute name="c7195" type="java.lang.Integer"/>
-<attribute name="c7197" type="java.lang.String"/>
-<attribute name="c7198" type="java.lang.String"/>
+<attribute name="c27589" type="java.lang.Integer"/>
+<attribute name="c27591" type="java.lang.String"/>
+<attribute name="c27592" type="java.lang.String"/>
 </outputs>
 <project>
 <attribute name="r_regionkey" type="java.lang.Integer"/>
@@ -70,18 +70,18 @@
 <command name="T3">
 <operator type="JOIN" variant="SYMMETRIC_HASH">
 <outputs>
-<attribute name="c7183" type="java.lang.Integer"/>
-<attribute name="c7184" type="java.lang.Integer"/>
-<attribute name="c7185" type="java.lang.Integer"/>
-<attribute name="c7186" type="java.math.BigDecimal"/>
-<attribute name="c7187" type="java.lang.String"/>
-<attribute name="c7195" type="java.lang.Integer"/>
-<attribute name="c7197" type="java.lang.String"/>
-<attribute name="c7198" type="java.lang.String"/>
-<attribute name="c7190" type="java.lang.Integer"/>
-<attribute name="c7194" type="java.lang.String"/>
-<attribute name="c7195" type="java.lang.Integer"/>
-<attribute name="c7196" type="java.lang.String"/>
+<attribute name="c27577" type="java.lang.Integer"/>
+<attribute name="c27578" type="java.lang.Integer"/>
+<attribute name="c27579" type="java.lang.Integer"/>
+<attribute name="c27580" type="java.math.BigDecimal"/>
+<attribute name="c27581" type="java.lang.String"/>
+<attribute name="c27589" type="java.lang.Integer"/>
+<attribute name="c27591" type="java.lang.String"/>
+<attribute name="c27592" type="java.lang.String"/>
+<attribute name="c27584" type="java.lang.Integer"/>
+<attribute name="c27588" type="java.lang.String"/>
+<attribute name="c27589" type="java.lang.Integer"/>
+<attribute name="c27590" type="java.lang.String"/>
 </outputs>
 <conjunction>
 <predicate type="equality" left="5" right="10"/>
@@ -90,10 +90,10 @@
 <operator type="ALIAS" name="T2"/>
 <operator type="PROJECT">
 <outputs>
-<attribute name="c7190" type="java.lang.Integer"/>
-<attribute name="c7194" type="java.lang.String"/>
-<attribute name="c7195" type="java.lang.Integer"/>
-<attribute name="c7196" type="java.lang.String"/>
+<attribute name="c27584" type="java.lang.Integer"/>
+<attribute name="c27588" type="java.lang.String"/>
+<attribute name="c27589" type="java.lang.Integer"/>
+<attribute name="c27590" type="java.lang.String"/>
 </outputs>
 <project>
 <attribute name="n_nationkey" type="java.lang.Integer"/>
@@ -118,25 +118,25 @@
 <command name="T4">
 <operator type="JOIN" variant="SYMMETRIC_HASH">
 <outputs>
-<attribute name="c7183" type="java.lang.Integer"/>
-<attribute name="c7184" type="java.lang.Integer"/>
-<attribute name="c7185" type="java.lang.Integer"/>
-<attribute name="c7186" type="java.math.BigDecimal"/>
-<attribute name="c7187" type="java.lang.String"/>
-<attribute name="c7195" type="java.lang.Integer"/>
-<attribute name="c7197" type="java.lang.String"/>
-<attribute name="c7198" type="java.lang.String"/>
-<attribute name="c7190" type="java.lang.Integer"/>
-<attribute name="c7194" type="java.lang.String"/>
-<attribute name="c7195" type="java.lang.Integer"/>
-<attribute name="c7196" type="java.lang.String"/>
-<attribute name="c7184" type="java.lang.Integer"/>
-<attribute name="c7188" type="java.lang.String"/>
-<attribute name="c7189" type="java.lang.String"/>
-<attribute name="c7190" type="java.lang.Integer"/>
-<attribute name="c7191" type="java.lang.String"/>
-<attribute name="c7192" type="java.math.BigDecimal"/>
-<attribute name="c7193" type="java.lang.String"/>
+<attribute name="c27577" type="java.lang.Integer"/>
+<attribute name="c27578" type="java.lang.Integer"/>
+<attribute name="c27579" type="java.lang.Integer"/>
+<attribute name="c27580" type="java.math.BigDecimal"/>
+<attribute name="c27581" type="java.lang.String"/>
+<attribute name="c27589" type="java.lang.Integer"/>
+<attribute name="c27591" type="java.lang.String"/>
+<attribute name="c27592" type="java.lang.String"/>
+<attribute name="c27584" type="java.lang.Integer"/>
+<attribute name="c27588" type="java.lang.String"/>
+<attribute name="c27589" type="java.lang.Integer"/>
+<attribute name="c27590" type="java.lang.String"/>
+<attribute name="c27578" type="java.lang.Integer"/>
+<attribute name="c27582" type="java.lang.String"/>
+<attribute name="c27583" type="java.lang.String"/>
+<attribute name="c27584" type="java.lang.Integer"/>
+<attribute name="c27585" type="java.lang.String"/>
+<attribute name="c27586" type="java.math.BigDecimal"/>
+<attribute name="c27587" type="java.lang.String"/>
 </outputs>
 <conjunction>
 <predicate type="equality" left="1" right="12"/>
@@ -146,13 +146,13 @@
 <operator type="ALIAS" name="T3"/>
 <operator type="PROJECT">
 <outputs>
-<attribute name="c7184" type="java.lang.Integer"/>
-<attribute name="c7188" type="java.lang.String"/>
-<attribute name="c7189" type="java.lang.String"/>
-<attribute name="c7190" type="java.lang.Integer"/>
-<attribute name="c7191" type="java.lang.String"/>
-<attribute name="c7192" type="java.math.BigDecimal"/>
-<attribute name="c7193" type="java.lang.String"/>
+<attribute name="c27578" type="java.lang.Integer"/>
+<attribute name="c27582" type="java.lang.String"/>
+<attribute name="c27583" type="java.lang.String"/>
+<attribute name="c27584" type="java.lang.Integer"/>
+<attribute name="c27585" type="java.lang.String"/>
+<attribute name="c27586" type="java.math.BigDecimal"/>
+<attribute name="c27587" type="java.lang.String"/>
 </outputs>
 <project>
 <attribute name="s_suppkey" type="java.lang.Integer"/>

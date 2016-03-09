@@ -3,20 +3,44 @@
 <command name="T1">
 <operator type="CROSS_PRODUCT">
 <outputs>
-<attribute name="c3040" type="java.lang.Integer"/>
-<attribute name="c3045" type="java.lang.String"/>
-<attribute name="c3046" type="java.lang.Integer"/>
-<attribute name="k3074" type="java.lang.Integer"/>
-<attribute name="k3088" type="java.lang.String"/>
-<attribute name="k3089" type="java.lang.Integer"/>
-<attribute name="k3091" type="java.lang.String"/>
+<attribute name="k34992" type="java.lang.Integer"/>
+<attribute name="k35004" type="java.lang.String"/>
+<attribute name="k35005" type="java.lang.Integer"/>
+<attribute name="k35007" type="java.lang.String"/>
+<attribute name="c34978" type="java.lang.Integer"/>
+<attribute name="c34983" type="java.lang.String"/>
+<attribute name="c34984" type="java.lang.Integer"/>
 </outputs>
 <children>
 <operator type="PROJECT">
 <outputs>
-<attribute name="c3040" type="java.lang.Integer"/>
-<attribute name="c3045" type="java.lang.String"/>
-<attribute name="c3046" type="java.lang.Integer"/>
+<attribute name="k34992" type="java.lang.Integer"/>
+<attribute name="k35004" type="java.lang.String"/>
+<attribute name="k35005" type="java.lang.Integer"/>
+<attribute name="k35007" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="nation_key" type="java.lang.Integer"/>
+<attribute name="nation_name" type="java.lang.String"/>
+<attribute name="region_key" type="java.lang.Integer"/>
+<attribute name="region_name" type="java.lang.String"/>
+</project>
+<child>
+<operator type="ACCESS" relation="region_nation" access-method="m0">
+<outputs>
+<attribute name="nation_key" type="java.lang.Integer"/>
+<attribute name="nation_name" type="java.lang.String"/>
+<attribute name="region_key" type="java.lang.Integer"/>
+<attribute name="region_name" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+<operator type="PROJECT">
+<outputs>
+<attribute name="c34978" type="java.lang.Integer"/>
+<attribute name="c34983" type="java.lang.String"/>
+<attribute name="c34984" type="java.lang.Integer"/>
 </outputs>
 <project>
 <attribute name="nation_key" type="java.lang.Integer"/>
@@ -47,86 +71,50 @@
 </operator>
 </child>
 </operator>
-<operator type="PROJECT">
-<outputs>
-<attribute name="k3074" type="java.lang.Integer"/>
-<attribute name="k3088" type="java.lang.String"/>
-<attribute name="k3089" type="java.lang.Integer"/>
-<attribute name="k3091" type="java.lang.String"/>
-</outputs>
-<project>
-<attribute name="nation_key" type="java.lang.Integer"/>
-<attribute name="nation_name" type="java.lang.String"/>
-<attribute name="region_key" type="java.lang.Integer"/>
-<attribute name="region_name" type="java.lang.String"/>
-</project>
-<child>
-<operator type="ACCESS" relation="region_nation" access-method="m0">
-<outputs>
-<attribute name="nation_key" type="java.lang.Integer"/>
-<attribute name="nation_name" type="java.lang.String"/>
-<attribute name="region_key" type="java.lang.Integer"/>
-<attribute name="region_name" type="java.lang.String"/>
-</outputs>
-</operator>
-</child>
-</operator>
 </children>
 </operator>
 </command>
 <command name="T2">
-<operator type="PROJECT">
+<operator type="DEPENDENT_JOIN" param="4">
 <outputs>
-<attribute name="c3038" type="java.lang.String"/>
-<attribute name="c3039" type="java.lang.String"/>
-<attribute name="c3045" type="java.lang.String"/>
-</outputs>
-<project>
-<attribute name="c3038" type="java.lang.String"/>
-<attribute name="c3039" type="java.lang.String"/>
-<attribute name="c3045" type="java.lang.String"/>
-</project>
-<child>
-<operator type="DEPENDENT_JOIN" param="0">
-<outputs>
-<attribute name="c3040" type="java.lang.Integer"/>
-<attribute name="c3045" type="java.lang.String"/>
-<attribute name="c3046" type="java.lang.Integer"/>
-<attribute name="k3074" type="java.lang.Integer"/>
-<attribute name="k3088" type="java.lang.String"/>
-<attribute name="k3089" type="java.lang.Integer"/>
-<attribute name="k3091" type="java.lang.String"/>
-<attribute name="c3038" type="java.lang.String"/>
-<attribute name="c3039" type="java.lang.String"/>
-<attribute name="c3040" type="java.lang.Integer"/>
-<attribute name="c3042" type="java.math.BigDecimal"/>
-<attribute name="c3019" type="java.lang.String"/>
-<attribute name="c3020" type="java.lang.String"/>
-<attribute name="k3078" type="java.lang.String"/>
-<attribute name="k3080" type="java.lang.String"/>
-<attribute name="k3081" type="java.lang.String"/>
-<attribute name="c3027" type="java.math.BigDecimal"/>
-<attribute name="c3028" type="java.math.BigDecimal"/>
-<attribute name="c3029" type="java.math.BigDecimal"/>
-<attribute name="c3030" type="java.lang.String"/>
+<attribute name="k34992" type="java.lang.Integer"/>
+<attribute name="k35004" type="java.lang.String"/>
+<attribute name="k35005" type="java.lang.Integer"/>
+<attribute name="k35007" type="java.lang.String"/>
+<attribute name="c34978" type="java.lang.Integer"/>
+<attribute name="c34983" type="java.lang.String"/>
+<attribute name="c34984" type="java.lang.Integer"/>
+<attribute name="c34976" type="java.lang.String"/>
+<attribute name="c34977" type="java.lang.String"/>
+<attribute name="c34978" type="java.lang.Integer"/>
+<attribute name="c34980" type="java.math.BigDecimal"/>
+<attribute name="c34957" type="java.lang.String"/>
+<attribute name="c34958" type="java.lang.String"/>
+<attribute name="k34996" type="java.lang.String"/>
+<attribute name="k34998" type="java.lang.String"/>
+<attribute name="k34999" type="java.lang.String"/>
+<attribute name="c34965" type="java.math.BigDecimal"/>
+<attribute name="c34966" type="java.math.BigDecimal"/>
+<attribute name="c34967" type="java.math.BigDecimal"/>
+<attribute name="c34968" type="java.lang.String"/>
 </outputs>
 <children>
 <operator type="ALIAS" name="T1"/>
 <operator type="PROJECT">
 <outputs>
-<attribute name="c3038" type="java.lang.String"/>
-<attribute name="c3039" type="java.lang.String"/>
-<attribute name="c3040" type="java.lang.Integer"/>
-<attribute name="c3042" type="java.math.BigDecimal"/>
-<attribute name="c3019" type="java.lang.String"/>
-<attribute name="c3020" type="java.lang.String"/>
-<attribute name="k3078" type="java.lang.String"/>
-<attribute name="k3080" type="java.lang.String"/>
-<attribute name="k3081" type="java.lang.String"/>
-<attribute name="c3027" type="java.math.BigDecimal"/>
-<attribute name="c3028" type="java.math.BigDecimal"/>
-<attribute name="c3029" type="java.math.BigDecimal"/>
-<attribute name="c3030" type="java.lang.String"/>
+<attribute name="c34976" type="java.lang.String"/>
+<attribute name="c34977" type="java.lang.String"/>
+<attribute name="c34978" type="java.lang.Integer"/>
+<attribute name="c34980" type="java.math.BigDecimal"/>
+<attribute name="c34957" type="java.lang.String"/>
+<attribute name="c34958" type="java.lang.String"/>
+<attribute name="k34996" type="java.lang.String"/>
+<attribute name="k34998" type="java.lang.String"/>
+<attribute name="k34999" type="java.lang.String"/>
+<attribute name="c34965" type="java.math.BigDecimal"/>
+<attribute name="c34966" type="java.math.BigDecimal"/>
+<attribute name="c34967" type="java.math.BigDecimal"/>
+<attribute name="c34968" type="java.lang.String"/>
 </outputs>
 <project>
 <attribute name="cname" type="java.lang.String"/>
@@ -164,8 +152,6 @@
 </child>
 </operator>
 </children>
-</operator>
-</child>
 </operator>
 </command>
 </plan>

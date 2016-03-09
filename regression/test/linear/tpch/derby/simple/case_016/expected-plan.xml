@@ -3,9 +3,9 @@
 <command name="T1">
 <operator type="PROJECT">
 <outputs>
-<attribute name="c15431" type="java.lang.Integer"/>
-<attribute name="c15434" type="java.lang.String"/>
-<attribute name="c15435" type="java.lang.String"/>
+<attribute name="c36570" type="java.lang.Integer"/>
+<attribute name="c36573" type="java.lang.String"/>
+<attribute name="c36574" type="java.lang.String"/>
 </outputs>
 <project>
 <attribute name="r_regionkey" type="java.lang.Integer"/>
@@ -26,13 +26,13 @@
 <command name="T2">
 <operator type="JOIN" variant="SYMMETRIC_HASH">
 <outputs>
-<attribute name="c15431" type="java.lang.Integer"/>
-<attribute name="c15434" type="java.lang.String"/>
-<attribute name="c15435" type="java.lang.String"/>
-<attribute name="c15431" type="java.lang.Integer"/>
-<attribute name="c15432" type="java.lang.String"/>
-<attribute name="c15431" type="java.lang.Integer"/>
-<attribute name="c15433" type="java.lang.String"/>
+<attribute name="c36570" type="java.lang.Integer"/>
+<attribute name="c36573" type="java.lang.String"/>
+<attribute name="c36574" type="java.lang.String"/>
+<attribute name="c36570" type="java.lang.Integer"/>
+<attribute name="c36571" type="java.lang.String"/>
+<attribute name="c36570" type="java.lang.Integer"/>
+<attribute name="c36572" type="java.lang.String"/>
 </outputs>
 <conjunction>
 <predicate type="equality" left="0" right="3"/>
@@ -41,10 +41,10 @@
 <operator type="ALIAS" name="T1"/>
 <operator type="PROJECT">
 <outputs>
-<attribute name="c15431" type="java.lang.Integer"/>
-<attribute name="c15432" type="java.lang.String"/>
-<attribute name="c15431" type="java.lang.Integer"/>
-<attribute name="c15433" type="java.lang.String"/>
+<attribute name="c36570" type="java.lang.Integer"/>
+<attribute name="c36571" type="java.lang.String"/>
+<attribute name="c36570" type="java.lang.Integer"/>
+<attribute name="c36572" type="java.lang.String"/>
 </outputs>
 <project>
 <attribute name="n_nationkey" type="java.lang.Integer"/>

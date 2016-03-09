@@ -67,7 +67,7 @@ public final class LeftDeepPlan extends Plan implements Iterable<LeftDeepPlan>, 
 		super();
 		Preconditions.checkArgument(operator != null);
 		Preconditions.checkArgument(RelationalOperator.getAccesses(operator) != null);
-		Preconditions.checkArgument(RelationalOperator.getAccesses(operator).size() == 1);
+		//Preconditions.checkArgument(RelationalOperator.getAccesses(operator).size() == 1);
 		this.operator = operator;
 		this.access = access;
 		if (prefix == null) {

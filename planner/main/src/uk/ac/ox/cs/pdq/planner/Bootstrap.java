@@ -177,6 +177,7 @@ public class Bootstrap {
 			log.trace("No plan found.");
 		} catch (Throwable e) {
 			log.error("Planning aborted: " + e.getMessage(), e);
+			e.printStackTrace();
 			System.exit(-1);
 		}
 	}

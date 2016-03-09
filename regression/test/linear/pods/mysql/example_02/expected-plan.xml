@@ -3,7 +3,7 @@
 <command name="T1">
 <operator type="PROJECT">
 <outputs>
-<attribute name="c1048" type="java.lang.String"/>
+<attribute name="c21442" type="java.lang.String"/>
 </outputs>
 <project>
 <attribute name="uname" type="java.lang.String"/>
@@ -20,14 +20,14 @@
 <command name="T2">
 <operator type="CROSS_PRODUCT">
 <outputs>
-<attribute name="c1048" type="java.lang.String"/>
-<attribute name="k1051" type="java.lang.Integer"/>
+<attribute name="c21442" type="java.lang.String"/>
+<attribute name="k21445" type="java.lang.Integer"/>
 </outputs>
 <children>
 <operator type="ALIAS" name="T1"/>
 <operator type="PROJECT">
 <outputs>
-<attribute name="k1051" type="java.lang.Integer"/>
+<attribute name="k21445" type="java.lang.Integer"/>
 </outputs>
 <project>
 <attribute name="uid" type="java.lang.Integer"/>
@@ -46,19 +46,19 @@
 <command name="T3">
 <operator type="DEPENDENT_JOIN" param="0,1">
 <outputs>
-<attribute name="c1048" type="java.lang.String"/>
-<attribute name="k1051" type="java.lang.Integer"/>
-<attribute name="c1048" type="java.lang.String"/>
-<attribute name="c1049" type="java.lang.String"/>
-<attribute name="k1051" type="java.lang.Integer"/>
+<attribute name="c21442" type="java.lang.String"/>
+<attribute name="k21445" type="java.lang.Integer"/>
+<attribute name="c21442" type="java.lang.String"/>
+<attribute name="c21443" type="java.lang.String"/>
+<attribute name="k21445" type="java.lang.Integer"/>
 </outputs>
 <children>
 <operator type="ALIAS" name="T2"/>
 <operator type="PROJECT">
 <outputs>
-<attribute name="c1048" type="java.lang.String"/>
-<attribute name="c1049" type="java.lang.String"/>
-<attribute name="k1051" type="java.lang.Integer"/>
+<attribute name="c21442" type="java.lang.String"/>
+<attribute name="c21443" type="java.lang.String"/>
+<attribute name="k21445" type="java.lang.Integer"/>
 </outputs>
 <project>
 <attribute name="uname" type="java.lang.String"/>
@@ -81,22 +81,22 @@
 <command name="T4">
 <operator type="DEPENDENT_JOIN" param="0,3">
 <outputs>
-<attribute name="c1048" type="java.lang.String"/>
-<attribute name="k1051" type="java.lang.Integer"/>
-<attribute name="c1048" type="java.lang.String"/>
-<attribute name="c1049" type="java.lang.String"/>
-<attribute name="k1051" type="java.lang.Integer"/>
-<attribute name="c1048" type="java.lang.String"/>
-<attribute name="c1049" type="java.lang.String"/>
-<attribute name="c1050" type="java.lang.String"/>
+<attribute name="c21442" type="java.lang.String"/>
+<attribute name="k21445" type="java.lang.Integer"/>
+<attribute name="c21442" type="java.lang.String"/>
+<attribute name="c21443" type="java.lang.String"/>
+<attribute name="k21445" type="java.lang.Integer"/>
+<attribute name="c21442" type="java.lang.String"/>
+<attribute name="c21443" type="java.lang.String"/>
+<attribute name="c21444" type="java.lang.String"/>
 </outputs>
 <children>
 <operator type="ALIAS" name="T3"/>
 <operator type="PROJECT">
 <outputs>
-<attribute name="c1048" type="java.lang.String"/>
-<attribute name="c1049" type="java.lang.String"/>
-<attribute name="c1050" type="java.lang.String"/>
+<attribute name="c21442" type="java.lang.String"/>
+<attribute name="c21443" type="java.lang.String"/>
+<attribute name="c21444" type="java.lang.String"/>
 </outputs>
 <project>
 <attribute name="uname" type="java.lang.String"/>

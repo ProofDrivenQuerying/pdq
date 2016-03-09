@@ -1,211 +1,214 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plan type="linear" cost="2.2100061963566666E14">
-<command name="T1">
-<operator type="PROJECT">
-<outputs>
-<attribute name="c23734" type="java.lang.Integer"/>
-</outputs>
-<project>
-<attribute name="woeid" type="java.lang.Integer"/>
-</project>
-<child>
-<operator type="SELECT">
-<outputs>
-<attribute name="namespace" type="java.lang.String"/>
-<attribute name="code" type="java.lang.String"/>
-<attribute name="woeid" type="java.lang.Integer"/>
-</outputs>
-<conjunction>
-<predicate type="equality" left="0" value="iso"/>
-<predicate type="equality" left="1" value="FR"/>
-</conjunction>
-<child>
-<operator type="ACCESS" relation="YahooPlaceCode" access-method="yh_geo_code">
-<outputs>
-<attribute name="namespace" type="java.lang.String"/>
-<attribute name="code" type="java.lang.String"/>
-<attribute name="woeid" type="java.lang.Integer"/>
-</outputs>
-<static-input>
-<input attribute="0" value="iso" type="java.lang.String"/>
-<input attribute="1" value="FR" type="java.lang.String"/>
-</static-input>
-</operator>
-</child>
-</operator>
-</child>
-</operator>
-</command>
-<command name="T2">
-<operator type="DEPENDENT_JOIN" param="0">
-<outputs>
-<attribute name="c23734" type="java.lang.Integer"/>
-<attribute name="c23734" type="java.lang.Integer"/>
-<attribute name="c23735" type="java.lang.Integer"/>
-<attribute name="c23736" type="java.lang.String"/>
-<attribute name="c23737" type="java.lang.String"/>
-<attribute name="c23738" type="java.lang.String"/>
-</outputs>
-<children>
-<operator type="ALIAS" name="T1"/>
-<operator type="PROJECT">
-<outputs>
-<attribute name="c23734" type="java.lang.Integer"/>
-<attribute name="c23735" type="java.lang.Integer"/>
-<attribute name="c23736" type="java.lang.String"/>
-<attribute name="c23737" type="java.lang.String"/>
-<attribute name="c23738" type="java.lang.String"/>
-</outputs>
-<project>
-<attribute name="of" type="java.lang.Integer"/>
-<attribute name="woeid" type="java.lang.Integer"/>
-<attribute name="placeTypeName" type="java.lang.String"/>
-<attribute name="name" type="java.lang.String"/>
-<attribute name="uri" type="java.lang.String"/>
-</project>
-<child>
-<operator type="SELECT">
-<outputs>
-<attribute name="relation" type="java.lang.String"/>
-<attribute name="of" type="java.lang.Integer"/>
-<attribute name="woeid" type="java.lang.Integer"/>
-<attribute name="placeTypeName" type="java.lang.String"/>
-<attribute name="name" type="java.lang.String"/>
-<attribute name="uri" type="java.lang.String"/>
-</outputs>
-<conjunction>
-<predicate type="equality" left="0" value="children"/>
-</conjunction>
-<child>
-<operator type="ACCESS" relation="YahooPlaceRelationship" access-method="yh_geo_rel">
-<outputs>
-<attribute name="relation" type="java.lang.String"/>
-<attribute name="of" type="java.lang.Integer"/>
-<attribute name="woeid" type="java.lang.Integer"/>
-<attribute name="placeTypeName" type="java.lang.String"/>
-<attribute name="name" type="java.lang.String"/>
-<attribute name="uri" type="java.lang.String"/>
-</outputs>
-<static-input>
-<input attribute="0" value="children" type="java.lang.String"/>
-</static-input>
-</operator>
-</child>
-</operator>
-</child>
-</operator>
-</children>
-</operator>
-</command>
-<command name="T3">
-<operator type="DEPENDENT_JOIN" param="2">
-<outputs>
-<attribute name="c23734" type="java.lang.Integer"/>
-<attribute name="c23734" type="java.lang.Integer"/>
-<attribute name="c23735" type="java.lang.Integer"/>
-<attribute name="c23736" type="java.lang.String"/>
-<attribute name="c23737" type="java.lang.String"/>
-<attribute name="c23738" type="java.lang.String"/>
-<attribute name="c23735" type="java.lang.Integer"/>
-<attribute name="c23739" type="java.lang.String"/>
-<attribute name="c23740" type="java.lang.String"/>
-<attribute name="c23741" type="java.lang.String"/>
-<attribute name="c23742" type="java.lang.String"/>
-<attribute name="c23743" type="java.lang.String"/>
-<attribute name="c23744" type="java.lang.String"/>
-<attribute name="c23745" type="java.lang.String"/>
-<attribute name="c23746" type="java.lang.Integer"/>
-<attribute name="c23747" type="java.lang.Integer"/>
-<attribute name="c23748" type="java.lang.String"/>
-<attribute name="c23749" type="java.lang.Double"/>
-<attribute name="c23750" type="java.lang.Double"/>
-<attribute name="c23751" type="java.lang.Integer"/>
-<attribute name="c23752" type="java.lang.Double"/>
-<attribute name="c23753" type="java.lang.String"/>
-<attribute name="c23754" type="java.lang.String"/>
-<attribute name="c23755" type="java.lang.String"/>
-<attribute name="c23756" type="java.lang.Double"/>
-<attribute name="c23757" type="java.lang.String"/>
-<attribute name="c23758" type="java.lang.Integer"/>
-</outputs>
-<children>
-<operator type="ALIAS" name="T2"/>
-<operator type="PROJECT">
-<outputs>
-<attribute name="c23735" type="java.lang.Integer"/>
-<attribute name="c23739" type="java.lang.String"/>
-<attribute name="c23740" type="java.lang.String"/>
-<attribute name="c23741" type="java.lang.String"/>
-<attribute name="c23742" type="java.lang.String"/>
-<attribute name="c23743" type="java.lang.String"/>
-<attribute name="c23744" type="java.lang.String"/>
-<attribute name="c23745" type="java.lang.String"/>
-<attribute name="c23746" type="java.lang.Integer"/>
-<attribute name="c23747" type="java.lang.Integer"/>
-<attribute name="c23748" type="java.lang.String"/>
-<attribute name="c23749" type="java.lang.Double"/>
-<attribute name="c23750" type="java.lang.Double"/>
-<attribute name="c23751" type="java.lang.Integer"/>
-<attribute name="c23752" type="java.lang.Double"/>
-<attribute name="c23753" type="java.lang.String"/>
-<attribute name="c23754" type="java.lang.String"/>
-<attribute name="c23755" type="java.lang.String"/>
-<attribute name="c23756" type="java.lang.Double"/>
-<attribute name="c23757" type="java.lang.String"/>
-<attribute name="c23758" type="java.lang.Integer"/>
-</outputs>
-<project>
-<attribute name="woeid" type="java.lang.Integer"/>
-<attribute name="city" type="java.lang.String"/>
-<attribute name="country" type="java.lang.String"/>
-<attribute name="region" type="java.lang.String"/>
-<attribute name="distance_unit" type="java.lang.String"/>
-<attribute name="pressure_unit" type="java.lang.String"/>
-<attribute name="speed_unit" type="java.lang.String"/>
-<attribute name="temp_unit" type="java.lang.String"/>
-<attribute name="wind_chill" type="java.lang.Integer"/>
-<attribute name="wind_direction" type="java.lang.Integer"/>
-<attribute name="wind_speed" type="java.lang.String"/>
-<attribute name="humidity" type="java.lang.Double"/>
-<attribute name="pressure" type="java.lang.Double"/>
-<attribute name="rising" type="java.lang.Integer"/>
-<attribute name="visibility" type="java.lang.Double"/>
-<attribute name="sunrise" type="java.lang.String"/>
-<attribute name="sunset" type="java.lang.String"/>
-<attribute name="date" type="java.lang.String"/>
-<attribute name="temperature" type="java.lang.Double"/>
-<attribute name="condition" type="java.lang.String"/>
-<attribute name="code" type="java.lang.Integer"/>
-</project>
-<child>
-<operator type="ACCESS" relation="YahooWeather" access-method="yh_wtr_woeid">
-<outputs>
-<attribute name="woeid" type="java.lang.Integer"/>
-<attribute name="city" type="java.lang.String"/>
-<attribute name="country" type="java.lang.String"/>
-<attribute name="region" type="java.lang.String"/>
-<attribute name="distance_unit" type="java.lang.String"/>
-<attribute name="pressure_unit" type="java.lang.String"/>
-<attribute name="speed_unit" type="java.lang.String"/>
-<attribute name="temp_unit" type="java.lang.String"/>
-<attribute name="wind_chill" type="java.lang.Integer"/>
-<attribute name="wind_direction" type="java.lang.Integer"/>
-<attribute name="wind_speed" type="java.lang.String"/>
-<attribute name="humidity" type="java.lang.Double"/>
-<attribute name="pressure" type="java.lang.Double"/>
-<attribute name="rising" type="java.lang.Integer"/>
-<attribute name="visibility" type="java.lang.Double"/>
-<attribute name="sunrise" type="java.lang.String"/>
-<attribute name="sunset" type="java.lang.String"/>
-<attribute name="date" type="java.lang.String"/>
-<attribute name="temperature" type="java.lang.Double"/>
-<attribute name="condition" type="java.lang.String"/>
-<attribute name="code" type="java.lang.Integer"/>
-</outputs>
-</operator>
-</child>
-</operator>
-</children>
-</operator>
-</command>
+	<command name="T1">
+		<operator type="PROJECT">
+			<outputs>
+				<attribute name="c1" type="java.lang.Integer" />
+			</outputs>
+			<project>
+				<attribute name="woeid" type="java.lang.Integer" />
+			</project>
+			<child>
+				<operator type="SELECT">
+					<outputs>
+						<attribute name="namespace" type="java.lang.String" />
+						<attribute name="code" type="java.lang.String" />
+						<attribute name="woeid" type="java.lang.Integer" />
+					</outputs>
+					<conjunction>
+						<predicate type="equality" left="0" value="iso" />
+						<predicate type="equality" left="1" value="FR" />
+					</conjunction>
+					<child>
+						<operator type="ACCESS" relation="YahooPlaceCode"
+							access-method="yh_geo_code">
+							<outputs>
+								<attribute name="namespace" type="java.lang.String" />
+								<attribute name="code" type="java.lang.String" />
+								<attribute name="woeid" type="java.lang.Integer" />
+							</outputs>
+							<static-input>
+								<input attribute="0" value="iso" type="java.lang.String" />
+								<input attribute="1" value="FR" type="java.lang.String" />
+							</static-input>
+						</operator>
+					</child>
+				</operator>
+			</child>
+		</operator>
+	</command>
+	<command name="T2">
+		<operator type="DEPENDENT_JOIN" param="0">
+			<outputs>
+				<attribute name="c1" type="java.lang.Integer" />
+				<attribute name="c1" type="java.lang.Integer" />
+				<attribute name="c2" type="java.lang.Integer" />
+				<attribute name="c3" type="java.lang.String" />
+				<attribute name="c4" type="java.lang.String" />
+				<attribute name="c5" type="java.lang.String" />
+			</outputs>
+			<children>
+				<operator type="ALIAS" name="T1" />
+				<operator type="PROJECT">
+					<outputs>
+						<attribute name="c1" type="java.lang.Integer" />
+						<attribute name="c2" type="java.lang.Integer" />
+						<attribute name="c3" type="java.lang.String" />
+						<attribute name="c4" type="java.lang.String" />
+						<attribute name="c5" type="java.lang.String" />
+					</outputs>
+					<project>
+						<attribute name="of" type="java.lang.Integer" />
+						<attribute name="woeid" type="java.lang.Integer" />
+						<attribute name="placeTypeName" type="java.lang.String" />
+						<attribute name="name" type="java.lang.String" />
+						<attribute name="uri" type="java.lang.String" />
+					</project>
+					<child>
+						<operator type="SELECT">
+							<outputs>
+								<attribute name="relation" type="java.lang.String" />
+								<attribute name="of" type="java.lang.Integer" />
+								<attribute name="woeid" type="java.lang.Integer" />
+								<attribute name="placeTypeName" type="java.lang.String" />
+								<attribute name="name" type="java.lang.String" />
+								<attribute name="uri" type="java.lang.String" />
+							</outputs>
+							<conjunction>
+								<predicate type="equality" left="0" value="children" />
+							</conjunction>
+							<child>
+								<operator type="ACCESS" relation="YahooPlaceRelationship"
+									access-method="yh_geo_rel">
+									<outputs>
+										<attribute name="relation" type="java.lang.String" />
+										<attribute name="of" type="java.lang.Integer" />
+										<attribute name="woeid" type="java.lang.Integer" />
+										<attribute name="placeTypeName" type="java.lang.String" />
+										<attribute name="name" type="java.lang.String" />
+										<attribute name="uri" type="java.lang.String" />
+									</outputs>
+									<static-input>
+										<input attribute="0" value="children" type="java.lang.String" />
+									</static-input>
+								</operator>
+							</child>
+						</operator>
+					</child>
+				</operator>
+			</children>
+		</operator>
+	</command>
+	<command name="T3">
+		<operator type="DEPENDENT_JOIN" param="2">
+			<outputs>
+				<attribute name="c1" type="java.lang.Integer" />
+				<attribute name="c1" type="java.lang.Integer" />
+				<attribute name="c2" type="java.lang.Integer" />
+				<attribute name="c3" type="java.lang.String" />
+				<attribute name="c4" type="java.lang.String" />
+				<attribute name="c5" type="java.lang.String" />
+				<attribute name="c2" type="java.lang.Integer" />
+				<attribute name="c6" type="java.lang.String" />
+				<attribute name="c7" type="java.lang.String" />
+				<attribute name="c8" type="java.lang.String" />
+				<attribute name="c9" type="java.lang.String" />
+				<attribute name="c10" type="java.lang.String" />
+				<attribute name="c11" type="java.lang.String" />
+				<attribute name="c12" type="java.lang.String" />
+				<attribute name="c13" type="java.lang.Integer" />
+				<attribute name="c14" type="java.lang.Integer" />
+				<attribute name="c15" type="java.lang.String" />
+				<attribute name="c16" type="java.lang.Double" />
+				<attribute name="c17" type="java.lang.Double" />
+				<attribute name="c18" type="java.lang.Integer" />
+				<attribute name="c19" type="java.lang.Double" />
+				<attribute name="c20" type="java.lang.String" />
+				<attribute name="c21" type="java.lang.String" />
+				<attribute name="c22" type="java.lang.String" />
+				<attribute name="c23" type="java.lang.Double" />
+				<attribute name="c24" type="java.lang.String" />
+				<attribute name="c25" type="java.lang.Integer" />
+			</outputs>
+			<children>
+				<operator type="ALIAS" name="T2" />
+				<operator type="PROJECT">
+					<outputs>
+						<attribute name="c2" type="java.lang.Integer" />
+						<attribute name="c6" type="java.lang.String" />
+						<attribute name="c7" type="java.lang.String" />
+						<attribute name="c8" type="java.lang.String" />
+						<attribute name="c9" type="java.lang.String" />
+						<attribute name="c10" type="java.lang.String" />
+						<attribute name="c11" type="java.lang.String" />
+						<attribute name="c12" type="java.lang.String" />
+						<attribute name="c13" type="java.lang.Integer" />
+						<attribute name="c14" type="java.lang.Integer" />
+						<attribute name="c15" type="java.lang.String" />
+						<attribute name="c16" type="java.lang.Double" />
+						<attribute name="c17" type="java.lang.Double" />
+						<attribute name="c18" type="java.lang.Integer" />
+						<attribute name="c19" type="java.lang.Double" />
+						<attribute name="c20" type="java.lang.String" />
+						<attribute name="c21" type="java.lang.String" />
+						<attribute name="c22" type="java.lang.String" />
+						<attribute name="c23" type="java.lang.Double" />
+						<attribute name="c24" type="java.lang.String" />
+						<attribute name="c25" type="java.lang.Integer" />
+					</outputs>
+					<project>
+						<attribute name="woeid" type="java.lang.Integer" />
+						<attribute name="city" type="java.lang.String" />
+						<attribute name="country" type="java.lang.String" />
+						<attribute name="region" type="java.lang.String" />
+						<attribute name="distance_unit" type="java.lang.String" />
+						<attribute name="pressure_unit" type="java.lang.String" />
+						<attribute name="speed_unit" type="java.lang.String" />
+						<attribute name="temp_unit" type="java.lang.String" />
+						<attribute name="wind_chill" type="java.lang.Integer" />
+						<attribute name="wind_direction" type="java.lang.Integer" />
+						<attribute name="wind_speed" type="java.lang.String" />
+						<attribute name="humidity" type="java.lang.Double" />
+						<attribute name="pressure" type="java.lang.Double" />
+						<attribute name="rising" type="java.lang.Integer" />
+						<attribute name="visibility" type="java.lang.Double" />
+						<attribute name="sunrise" type="java.lang.String" />
+						<attribute name="sunset" type="java.lang.String" />
+						<attribute name="date" type="java.lang.String" />
+						<attribute name="temperature" type="java.lang.Double" />
+						<attribute name="condition" type="java.lang.String" />
+						<attribute name="code" type="java.lang.Integer" />
+					</project>
+					<child>
+						<operator type="ACCESS" relation="YahooWeather"
+							access-method="yh_wtr_woeid">
+							<outputs>
+								<attribute name="woeid" type="java.lang.Integer" />
+								<attribute name="city" type="java.lang.String" />
+								<attribute name="country" type="java.lang.String" />
+								<attribute name="region" type="java.lang.String" />
+								<attribute name="distance_unit" type="java.lang.String" />
+								<attribute name="pressure_unit" type="java.lang.String" />
+								<attribute name="speed_unit" type="java.lang.String" />
+								<attribute name="temp_unit" type="java.lang.String" />
+								<attribute name="wind_chill" type="java.lang.Integer" />
+								<attribute name="wind_direction" type="java.lang.Integer" />
+								<attribute name="wind_speed" type="java.lang.String" />
+								<attribute name="humidity" type="java.lang.Double" />
+								<attribute name="pressure" type="java.lang.Double" />
+								<attribute name="rising" type="java.lang.Integer" />
+								<attribute name="visibility" type="java.lang.Double" />
+								<attribute name="sunrise" type="java.lang.String" />
+								<attribute name="sunset" type="java.lang.String" />
+								<attribute name="date" type="java.lang.String" />
+								<attribute name="temperature" type="java.lang.Double" />
+								<attribute name="condition" type="java.lang.String" />
+								<attribute name="code" type="java.lang.Integer" />
+							</outputs>
+						</operator>
+					</child>
+				</operator>
+			</children>
+		</operator>
+	</command>
 </plan>

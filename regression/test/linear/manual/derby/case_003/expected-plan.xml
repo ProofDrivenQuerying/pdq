@@ -3,10 +3,10 @@
 <command name="T1">
 <operator type="JOIN" variant="SYMMETRIC_HASH">
 <outputs>
-<attribute name="c219" type="java.lang.Integer"/>
-<attribute name="c220" type="java.lang.Integer"/>
-<attribute name="c221" type="java.lang.Integer"/>
-<attribute name="c220" type="java.lang.Integer"/>
+<attribute name="c21046" type="java.lang.Integer"/>
+<attribute name="c21045" type="java.lang.Integer"/>
+<attribute name="c21044" type="java.lang.Integer"/>
+<attribute name="c21045" type="java.lang.Integer"/>
 </outputs>
 <conjunction>
 <predicate type="equality" left="1" right="3"/>
@@ -14,8 +14,8 @@
 <children>
 <operator type="PROJECT">
 <outputs>
-<attribute name="c219" type="java.lang.Integer"/>
-<attribute name="c220" type="java.lang.Integer"/>
+<attribute name="c21046" type="java.lang.Integer"/>
+<attribute name="c21045" type="java.lang.Integer"/>
 </outputs>
 <project>
 <attribute name="r1.1" type="java.lang.Integer"/>
@@ -32,8 +32,8 @@
 </operator>
 <operator type="PROJECT">
 <outputs>
-<attribute name="c221" type="java.lang.Integer"/>
-<attribute name="c220" type="java.lang.Integer"/>
+<attribute name="c21044" type="java.lang.Integer"/>
+<attribute name="c21045" type="java.lang.Integer"/>
 </outputs>
 <project>
 <attribute name="r1.1" type="java.lang.Integer"/>
@@ -52,23 +52,23 @@
 </operator>
 </command>
 <command name="T2">
-<operator type="DEPENDENT_JOIN" param="0,1">
+<operator type="DEPENDENT_JOIN" param="2,1">
 <outputs>
-<attribute name="c219" type="java.lang.Integer"/>
-<attribute name="c220" type="java.lang.Integer"/>
-<attribute name="c221" type="java.lang.Integer"/>
-<attribute name="c220" type="java.lang.Integer"/>
-<attribute name="c221" type="java.lang.Integer"/>
-<attribute name="c219" type="java.lang.Integer"/>
-<attribute name="c220" type="java.lang.Integer"/>
+<attribute name="c21046" type="java.lang.Integer"/>
+<attribute name="c21045" type="java.lang.Integer"/>
+<attribute name="c21044" type="java.lang.Integer"/>
+<attribute name="c21045" type="java.lang.Integer"/>
+<attribute name="c21046" type="java.lang.Integer"/>
+<attribute name="c21044" type="java.lang.Integer"/>
+<attribute name="c21045" type="java.lang.Integer"/>
 </outputs>
 <children>
 <operator type="ALIAS" name="T1"/>
 <operator type="PROJECT">
 <outputs>
-<attribute name="c221" type="java.lang.Integer"/>
-<attribute name="c219" type="java.lang.Integer"/>
-<attribute name="c220" type="java.lang.Integer"/>
+<attribute name="c21046" type="java.lang.Integer"/>
+<attribute name="c21044" type="java.lang.Integer"/>
+<attribute name="c21045" type="java.lang.Integer"/>
 </outputs>
 <project>
 <attribute name="r3.1" type="java.lang.Integer"/>
@@ -91,14 +91,14 @@
 <command name="T3">
 <operator type="JOIN" variant="SYMMETRIC_HASH">
 <outputs>
-<attribute name="c219" type="java.lang.Integer"/>
-<attribute name="c220" type="java.lang.Integer"/>
-<attribute name="c221" type="java.lang.Integer"/>
-<attribute name="c220" type="java.lang.Integer"/>
-<attribute name="c221" type="java.lang.Integer"/>
-<attribute name="c219" type="java.lang.Integer"/>
-<attribute name="c220" type="java.lang.Integer"/>
-<attribute name="c220" type="java.lang.Integer"/>
+<attribute name="c21046" type="java.lang.Integer"/>
+<attribute name="c21045" type="java.lang.Integer"/>
+<attribute name="c21044" type="java.lang.Integer"/>
+<attribute name="c21045" type="java.lang.Integer"/>
+<attribute name="c21046" type="java.lang.Integer"/>
+<attribute name="c21044" type="java.lang.Integer"/>
+<attribute name="c21045" type="java.lang.Integer"/>
+<attribute name="c21045" type="java.lang.Integer"/>
 </outputs>
 <conjunction>
 <predicate type="equality" left="1" right="7"/>
@@ -107,7 +107,7 @@
 <operator type="ALIAS" name="T2"/>
 <operator type="PROJECT">
 <outputs>
-<attribute name="c220" type="java.lang.Integer"/>
+<attribute name="c21045" type="java.lang.Integer"/>
 </outputs>
 <project>
 <attribute name="r2.1" type="java.lang.Integer"/>
@@ -124,27 +124,27 @@
 </operator>
 </command>
 <command name="T4">
-<operator type="DEPENDENT_JOIN" param="0,0">
+<operator type="DEPENDENT_JOIN" param="2,2">
 <outputs>
-<attribute name="c219" type="java.lang.Integer"/>
-<attribute name="c220" type="java.lang.Integer"/>
-<attribute name="c221" type="java.lang.Integer"/>
-<attribute name="c220" type="java.lang.Integer"/>
-<attribute name="c221" type="java.lang.Integer"/>
-<attribute name="c219" type="java.lang.Integer"/>
-<attribute name="c220" type="java.lang.Integer"/>
-<attribute name="c220" type="java.lang.Integer"/>
-<attribute name="c220" type="java.lang.Integer"/>
-<attribute name="c219" type="java.lang.Integer"/>
-<attribute name="c219" type="java.lang.Integer"/>
+<attribute name="c21046" type="java.lang.Integer"/>
+<attribute name="c21045" type="java.lang.Integer"/>
+<attribute name="c21044" type="java.lang.Integer"/>
+<attribute name="c21045" type="java.lang.Integer"/>
+<attribute name="c21046" type="java.lang.Integer"/>
+<attribute name="c21044" type="java.lang.Integer"/>
+<attribute name="c21045" type="java.lang.Integer"/>
+<attribute name="c21045" type="java.lang.Integer"/>
+<attribute name="c21045" type="java.lang.Integer"/>
+<attribute name="c21044" type="java.lang.Integer"/>
+<attribute name="c21044" type="java.lang.Integer"/>
 </outputs>
 <children>
 <operator type="ALIAS" name="T3"/>
 <operator type="PROJECT">
 <outputs>
-<attribute name="c220" type="java.lang.Integer"/>
-<attribute name="c219" type="java.lang.Integer"/>
-<attribute name="c219" type="java.lang.Integer"/>
+<attribute name="c21045" type="java.lang.Integer"/>
+<attribute name="c21044" type="java.lang.Integer"/>
+<attribute name="c21044" type="java.lang.Integer"/>
 </outputs>
 <project>
 <attribute name="r3.1" type="java.lang.Integer"/>
