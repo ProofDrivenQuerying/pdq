@@ -7,8 +7,8 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import uk.ac.ox.cs.pdq.db.TypedConstant;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Predicate;
-import uk.ac.ox.cs.pdq.fol.Signature;
 import uk.ac.ox.cs.pdq.fol.Term;
 
 import com.google.common.base.Preconditions;
@@ -24,7 +24,7 @@ import com.google.common.collect.ImmutableList;
 public class FactSignature implements Comparable<FactSignature> {
 	
 	/** The signature. */
-	final Signature sig;
+	final Predicate sig;
 	
 	/** The constants. */
 	final List<TypedConstant<?>> constants;
@@ -35,7 +35,7 @@ public class FactSignature implements Comparable<FactSignature> {
 	 * @param fact the fact
 	 * @return the fact signature
 	 */
-	public static FactSignature make(Predicate fact) {
+	public static FactSignature make(Atom fact) {
 		List<TypedConstant<?>> constants = new LinkedList<>();
 		for (Term t: fact.getConstants()) {
 			if (!t.isVariable() && !t.isSkolem()) {
@@ -51,9 +51,9 @@ public class FactSignature implements Comparable<FactSignature> {
 	 * @param facts the facts
 	 * @return the sorted set
 	 */
-	public static SortedSet<FactSignature> make(Iterable<Predicate> facts) {
+	public static SortedSet<FactSignature> make(Iterable<Atom> facts) {
 		TreeSet<FactSignature> result = new TreeSet<>();
-		for (Predicate f: facts) {
+		for (Atom f: facts) {
 			result.add(make(f));
 		}
 		return result;
@@ -65,7 +65,7 @@ public class FactSignature implements Comparable<FactSignature> {
 	 * @param s a signature
 	 * @param c a list of typed constants
 	 */
-	private FactSignature(Signature s, List<TypedConstant<?>> c) {
+	private FactSignature(Predicate s, List<TypedConstant<?>> c) {
 		Preconditions.checkArgument(s != null);
 		Preconditions.checkArgument(c != null);
 		this.sig = s;

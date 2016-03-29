@@ -13,7 +13,7 @@ public interface PredicateBasedOperator {
 	/**
 	 * Gets the predicate.
 	 *
-	 * @return Predicate
+	 * @return Atom
 	 */
 	Predicate getPredicate();
 }

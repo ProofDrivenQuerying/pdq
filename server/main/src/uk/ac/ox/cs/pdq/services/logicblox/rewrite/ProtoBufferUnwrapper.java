@@ -25,15 +25,15 @@ import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Disjunction;
 import uk.ac.ox.cs.pdq.fol.Negation;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Predicate;
-import uk.ac.ox.cs.pdq.fol.Signature;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.rewrite.RewriterException;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.logicblox.common.protocol.CommonProto;
-import com.logicblox.common.protocol.CommonProto.Atom;
+//import com.logicblox.common.protocol.CommonProto.Atom;
 import com.logicblox.common.protocol.CommonProto.Clause;
 import com.logicblox.common.protocol.CommonProto.ClauseBody;
 import com.logicblox.common.protocol.CommonProto.Constraint;
@@ -274,13 +274,13 @@ public class ProtoBufferUnwrapper {
 			ClauseBody bodyClause = rule.getBody();
 			this.variables.putAll(this.unwrapVariableDeclarations(bodyClause.getVarList()));
 			body = this.unwrapFormula(bodyClause.getFormula());
-			if (body instanceof Predicate) {
-				body = Conjunction.of((Predicate) body);
+			if (body instanceof Atom) {
+				body = Conjunction.of((Atom) body);
 			} else if (!(body instanceof Conjunction)) {
 				throw new ParserException("Expected atom or positive conjunction as rule body: " + body);
 			} else {
 				for (uk.ac.ox.cs.pdq.fol.Formula sub: body.getChildren()) {
-					if (!(sub instanceof Predicate)) {
+					if (!(sub instanceof Atom)) {
 						throw new ParserException("Expected atom or positive conjunction as rule body: " + body);
 					}
 				}
@@ -292,8 +292,8 @@ public class ProtoBufferUnwrapper {
 		if (rule.hasHead()) {
 			this.variables.putAll(this.unwrapVariableDeclarations(rule.getHead().getVarList()));
 			for (HeadAtom atom: rule.getHead().getHeadAtomList()) {
-				Predicate headAtom = this.unwrapHeadAtom(atom, strict);
-				if (body.getPredicates().size() > 0) {
+				Atom headAtom = this.unwrapHeadAtom(atom, strict);
+				if (body.getAtoms().size() > 0) {
 					if (!forget) {
 						try {
 							LinearGuarded lg =
@@ -375,14 +375,14 @@ public class ProtoBufferUnwrapper {
 		Relation relation = this.builder.addOrReplaceRelation(name, attributes, name.contains(":eq_"));
 		if (!entityTypedAtts.isEmpty()) {
 			DependencyBuilder db = new DependencyBuilder();
-			Predicate atom = relation.createAtoms();
+			Atom atom = relation.createAtoms();
 			db.addLeftAtom(atom);
 			for (int i = 0, l = atom.getTermsCount(); i < l; i++) {
 				Relation r = entityTypedAtts.get(relation.getAttribute(i));
 				if (r != null) {
 //					attributes.set(i, new Attribute(r, attributes.get(i).getName()));
 					relation = this.builder.addOrReplaceRelation(name, attributes, name.contains(":eq_"));
-					db.addRightAtom(new Predicate(r, atom.getTerm(i)));
+					db.addRightAtom(new Atom(r, atom.getTerm(i)));
 				}
 			}
 			uk.ac.ox.cs.pdq.db.Constraint ic = db.build();
@@ -432,20 +432,20 @@ public class ProtoBufferUnwrapper {
 	 * @param strict the strict
 	 * @return PredicateFormula
 	 */
-	private Predicate unwrapAtom(Atom atom, boolean strict) {
-		Predicate.Builder atomBuilder = Predicate.builder();
+	private Atom unwrapAtom(com.logicblox.common.protocol.CommonProto.Atom atom, boolean strict) {
+		Atom.Builder atomBuilder = Atom.builder();
 		for (Term term: atom.getKeyArgumentList()) {
 			atomBuilder.addTerm(this.unwrapTerm(term));
 		}
 		for (Term term: atom.getValueArgumentList()) {
 			atomBuilder.addTerm(this.unwrapTerm(term));
 		}
-		Signature relation = this.getRelation(atom);
+		Predicate relation = this.getRelation(atom);
 		if (relation == null) {
 			if (strict) {
 				throw new ParserException("Referring to unknow predicate " + atom.getPredicateName());
 			}
-			relation = new Signature(atom.getPredicateName(), atomBuilder.getTermCount());
+			relation = new Predicate(atom.getPredicateName(), atomBuilder.getTermCount());
 		}
 		atomBuilder.setSignature(relation);
 		return atomBuilder.build();
@@ -457,7 +457,7 @@ public class ProtoBufferUnwrapper {
 	 * @param atom Atom
 	 * @return Relation
 	 */
-	private Relation getRelation(Atom atom) {
+	private Relation getRelation(com.logicblox.common.protocol.CommonProto.Atom atom) {
 		Relation result = this.builder.getRelation(atom.getPredicateName());
 		if (result != null) {
 			return result;
@@ -472,7 +472,7 @@ public class ProtoBufferUnwrapper {
 	 * @param strict the strict
 	 * @return PredicateFormula
 	 */
-	private Predicate unwrapHeadAtom(HeadAtom atom, boolean strict) {
+	private Atom unwrapHeadAtom(HeadAtom atom, boolean strict) {
 		if (!atom.hasAtom()) {
 			throw new UnsupportedOperationException("Unsupported construct: " + atom);
 		}

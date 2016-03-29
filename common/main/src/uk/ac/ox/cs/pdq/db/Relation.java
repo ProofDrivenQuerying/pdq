@@ -12,7 +12,7 @@ import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.db.AccessMethod.Types;
 import uk.ac.ox.cs.pdq.db.metadata.RelationMetadata;
-import uk.ac.ox.cs.pdq.fol.Signature;
+import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.util.TupleType;
@@ -30,7 +30,7 @@ import com.google.common.collect.Lists;
  * @author Efthymia Tsamoura
  * @author Julien Leblay
  */
-public abstract class Relation extends Signature implements Serializable {
+public abstract class Relation extends Predicate implements Serializable {
 
 	/** The log. */
 	protected static Logger log = Logger.getLogger(Relation.class);

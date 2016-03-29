@@ -13,7 +13,7 @@ import org.apache.log4j.Logger;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.io.pretty.DataReader;
 import uk.ac.ox.cs.pdq.io.xml.DAGPlanReader;
@@ -243,7 +243,7 @@ public class RuntimeTest extends RegressionTest {
 			}
 
 			// Loading data
-			List<Predicate> facts = null;
+			List<Atom> facts = null;
 			String[] dataFiles = directory.list(new FilenameFilter() {
 				@Override
 				public boolean accept(File dir, String name) {
@@ -289,7 +289,7 @@ public class RuntimeTest extends RegressionTest {
 	 * @param queryResult Result
 	 * @return boolean
 	 */
-	private boolean compareResult(RuntimeParameters params, Schema s, Query<?> q, Plan p, List<Predicate> f, Result queryResult) {
+	private boolean compareResult(RuntimeParameters params, Schema s, Query<?> q, Plan p, List<Atom> f, Result queryResult) {
 		boolean accepted = true;
 		ExecutorTypes[] types = new ExecutorTypes[] {
 				ExecutorTypes.PIPELINED, 
@@ -344,7 +344,7 @@ public class RuntimeTest extends RegressionTest {
 	 * @throws EvaluationException the evaluation exception
 	 * @throws AccessException the access exception
 	 */
-	private boolean run(File directory, Schema s, ConjunctiveQuery q, Plan p, List<Predicate> f)
+	private boolean run(File directory, Schema s, ConjunctiveQuery q, Plan p, List<Atom> f)
 			throws EvaluationException, AccessException {
 		RuntimeParameters params = new RuntimeParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
 		Runtime runtime = new Runtime(params, s, f);

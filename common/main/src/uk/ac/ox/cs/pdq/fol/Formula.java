@@ -27,7 +27,7 @@ public interface Formula extends Rewritable {
 	 *
 	 * @return the atoms of this formula
 	 */
-	List<Predicate> getPredicates();
+	List<Atom> getAtoms();
 
 	/**
 	 * Gets the terms.

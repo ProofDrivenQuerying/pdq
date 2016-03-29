@@ -15,7 +15,7 @@ import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.db.View;
 import uk.ac.ox.cs.pdq.db.wrappers.InMemoryTableWrapper;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 
@@ -694,65 +694,65 @@ public final class TestSchema {
 		Term input_id = new Variable("input_id");
 		Term entry_name = new Variable("entry_name");
 
-		Predicate ActivityFree = new Predicate(schema.getRelation("ActivityFree"),activity_comment, activity_id, assay_chembl_id, assay_description, assay_type,
+		Atom ActivityFree = new Atom(schema.getRelation("ActivityFree"),activity_comment, activity_id, assay_chembl_id, assay_description, assay_type,
 				bao_endpoint, bao_format, canonical_smiles, data_validity_comment, document_chembl_id, document_journal, document_year, molecule_chembl_id,
 				pchembl_value, potential_duplicate, published_relation, published_type, published_units,
 				published_value, qudt_units, record_id, standard_flag, standard_relation, standard_type, standard_units, standard_value, target_chembl_id,
 				target_organism, target_pref_name, uo_units);
 
-		Predicate ActivityLimited = new Predicate(schema.getRelation("ActivityLimited"),activity_comment, activity_id, assay_chembl_id, assay_description, assay_type,
+		Atom ActivityLimited = new Atom(schema.getRelation("ActivityLimited"),activity_comment, activity_id, assay_chembl_id, assay_description, assay_type,
 				bao_endpoint, bao_format, canonical_smiles, data_validity_comment, document_chembl_id, document_journal, document_year, molecule_chembl_id,
 				pchembl_value, potential_duplicate, published_relation, published_type, published_units,
 				published_value, qudt_units, record_id, standard_flag, standard_relation, standard_type, standard_units, standard_value, target_chembl_id,
 				target_organism, target_pref_name, uo_units);
 
-		Predicate Activity = new Predicate(schema.getRelation("Activity"),activity_comment, activity_id, assay_chembl_id, assay_description, assay_type,
+		Atom Activity = new Atom(schema.getRelation("Activity"),activity_comment, activity_id, assay_chembl_id, assay_description, assay_type,
 				bao_endpoint, bao_format, canonical_smiles, data_validity_comment, document_chembl_id, document_journal, document_year, molecule_chembl_id,
 				pchembl_value, potential_duplicate, published_relation, published_type, published_units,
 				published_value, qudt_units, record_id, standard_flag, standard_relation, standard_type, standard_units, standard_value, target_chembl_id,
 				target_organism, target_pref_name, uo_units);
 
-		Predicate AssayFree = new Predicate(schema.getRelation("AssayFree"),
+		Atom AssayFree = new Atom(schema.getRelation("AssayFree"),
 				assay_category, assay_cell_type, assay_chembl_id, assay_organism, assay_strain, assay_subcellular_fraction, assay_tax_id, assay_test_type,
 				assay_tissue, assay_type, assay_type_description, bao_format, cell_chembl_id, confidence_description, 
 				confidence_score, description, document_chembl_id, relationship_description, relationship_type, src_assay_id, src_id, target_chembl_id);
 
-		Predicate AssayLimited = new Predicate(schema.getRelation("AssayLimited"),
+		Atom AssayLimited = new Atom(schema.getRelation("AssayLimited"),
 				assay_category, assay_cell_type, assay_chembl_id, assay_organism, assay_strain, assay_subcellular_fraction, assay_tax_id, assay_test_type,
 				assay_tissue, assay_type, assay_type_description, bao_format, cell_chembl_id, confidence_description, 
 				confidence_score, description, document_chembl_id, relationship_description, relationship_type, src_assay_id, src_id, target_chembl_id);
 
-		Predicate Assay = new Predicate(schema.getRelation("Assay"),
+		Atom Assay = new Atom(schema.getRelation("Assay"),
 				assay_category, assay_cell_type, assay_chembl_id, assay_organism, assay_strain, assay_subcellular_fraction, assay_tax_id, assay_test_type,
 				assay_tissue, assay_type, assay_type_description, bao_format, cell_chembl_id, confidence_description, 
 				confidence_score, description, document_chembl_id, relationship_description, relationship_type, src_assay_id, src_id, target_chembl_id);
 
 
-		Predicate CellLineFree = new Predicate(schema.getRelation("CellLineFree"),
+		Atom CellLineFree = new Atom(schema.getRelation("CellLineFree"),
 				cell_chembl_id, cell_description, cell_id, 
 				cell_name, cell_source_organism, cell_source_tax_id, cell_source_tissue, cellosaurus_id, clo_id, efo_id);
 
-		Predicate CellLineLimited = new Predicate(schema.getRelation("CellLineLimited"),
+		Atom CellLineLimited = new Atom(schema.getRelation("CellLineLimited"),
 				cell_chembl_id, cell_description, cell_id, 
 				cell_name, cell_source_organism, cell_source_tax_id, cell_source_tissue, cellosaurus_id, clo_id, efo_id);
 
-		Predicate CellLine = new Predicate(schema.getRelation("CellLine"),
+		Atom CellLine = new Atom(schema.getRelation("CellLine"),
 				cell_chembl_id, cell_description, cell_id, 
 				cell_name, cell_source_organism, cell_source_tax_id, cell_source_tissue, cellosaurus_id, clo_id, efo_id);
 
-		Predicate DocumentFree = new Predicate(schema.getRelation("DocumentFree"),
+		Atom DocumentFree = new Atom(schema.getRelation("DocumentFree"),
 				authors,doc_type,document_chembl_id,doi,first_page,issue,
 				journal,last_page,pubmed_id,title,volume,year);
 
-		Predicate DocumentLimited = new Predicate(schema.getRelation("DocumentLimited"),
+		Atom DocumentLimited = new Atom(schema.getRelation("DocumentLimited"),
 				authors,doc_type,document_chembl_id,doi,first_page,issue,
 				journal,last_page,pubmed_id,title,volume,year);
 
-		Predicate Document = new Predicate(schema.getRelation("Document"),
+		Atom Document = new Atom(schema.getRelation("Document"),
 				authors,doc_type,document_chembl_id,doi,first_page,issue,
 				journal,last_page,pubmed_id,title,volume,year);
 
-		Predicate MoleculeFree = new Predicate(schema.getRelation("MoleculeFree"),
+		Atom MoleculeFree = new Atom(schema.getRelation("MoleculeFree"),
 				atc_classifications,availability_type,biocomponents,biotherapeutic,
 				black_box_warning,chebi_par_id,chirality,dosed_ingredient,first_approval,first_in_class,helm_notation,
 				indication_class,inorganic_flag,max_phase,molecule_chembl_id,parent_chembl_id,acd_logd,acd_logp,
@@ -762,7 +762,7 @@ public final class TestSchema {
 				canonical_smiles,standard_inchi,standard_inchi_key,molecule_synonyms,molecule_type,natural_product,oral,parenteral,polymer_flag,pref_name,
 				prodrug,structure_type,therapeutic_flag,topical,usan_stem,usan_stem_definition,usan_substem,usan_year);
 
-		Predicate MoleculeLimited = new Predicate(schema.getRelation("MoleculeLimited"),
+		Atom MoleculeLimited = new Atom(schema.getRelation("MoleculeLimited"),
 				atc_classifications,availability_type,biocomponents,biotherapeutic,
 				black_box_warning,chebi_par_id,chirality,dosed_ingredient,first_approval,first_in_class,helm_notation,
 				indication_class,inorganic_flag,max_phase,molecule_chembl_id,parent_chembl_id,acd_logd,acd_logp,
@@ -772,7 +772,7 @@ public final class TestSchema {
 				canonical_smiles,standard_inchi,standard_inchi_key,molecule_synonyms,molecule_type,natural_product,oral,parenteral,polymer_flag,pref_name,
 				prodrug,structure_type,therapeutic_flag,topical,usan_stem,usan_stem_definition,usan_substem,usan_year);
 
-		Predicate Molecule = new Predicate(schema.getRelation("Molecule"),
+		Atom Molecule = new Atom(schema.getRelation("Molecule"),
 				atc_classifications,availability_type,biocomponents,biotherapeutic,
 				black_box_warning,chebi_par_id,chirality,dosed_ingredient,first_approval,first_in_class,helm_notation,
 				indication_class,inorganic_flag,max_phase,molecule_chembl_id,parent_chembl_id,acd_logd,acd_logp,
@@ -782,68 +782,68 @@ public final class TestSchema {
 				canonical_smiles,standard_inchi,standard_inchi_key,molecule_synonyms,molecule_type,natural_product,oral,parenteral,polymer_flag,pref_name,
 				prodrug,structure_type,therapeutic_flag,topical,usan_stem,usan_stem_definition,usan_substem,usan_year);
 
-		Predicate TargetFree = new Predicate(schema.getRelation("TargetFree"),
+		Atom TargetFree = new Atom(schema.getRelation("TargetFree"),
 				organism,pref_name,species_group_flag,target_chembl_id,
 				target_component_accession,target_component_id,target_component_type,target_type);
 
-		Predicate TargetLimited = new Predicate(schema.getRelation("TargetLimited"),
+		Atom TargetLimited = new Atom(schema.getRelation("TargetLimited"),
 				organism,pref_name,species_group_flag,target_chembl_id,
 				target_component_accession,target_component_id,target_component_type,target_type);
 
-		Predicate Target = new Predicate(schema.getRelation("Target"),
+		Atom Target = new Atom(schema.getRelation("Target"),
 				organism,pref_name,species_group_flag,target_chembl_id,
 				target_component_accession,target_component_id,target_component_type,target_type);
 
-		Predicate TargetComponentFree = new Predicate(schema.getRelation("TargetComponentFree"),
+		Atom TargetComponentFree = new Atom(schema.getRelation("TargetComponentFree"),
 				accession,component_id,component_type,description,organism,protein_classification_id,sequence,tax_id);
 
-		Predicate TargetComponentLimited = new Predicate(schema.getRelation("TargetComponentLimited"),
+		Atom TargetComponentLimited = new Atom(schema.getRelation("TargetComponentLimited"),
 				accession,component_id,component_type,description,organism,protein_classification_id,sequence,tax_id);
 
-		Predicate TargetComponent = new Predicate(schema.getRelation("TargetComponent"),
+		Atom TargetComponent = new Atom(schema.getRelation("TargetComponent"),
 				accession,component_id,component_type,description,organism,protein_classification_id,sequence,tax_id);
 
-		Predicate PublicationFull = new Predicate(schema.getRelation("PublicationFull"),
+		Atom PublicationFull = new Atom(schema.getRelation("PublicationFull"),
 				id,source,pmid,pmcid,DOI,title,authorString,journalTitle,issue,journalVolume,pubYear,
 				journalIssn,pubType,inEPMC,inPMC,citedByCount,hasReferences,hasTextMinedTerms,hasDbCrossReferences,
 				hasLabsLinks,hasTMAccessionNumbers,authors,gene,organism,uniprotPubs);
 
-		Predicate Publication = new Predicate(schema.getRelation("Publication"),
+		Atom Publication = new Atom(schema.getRelation("Publication"),
 				id,source,pmid,pmcid,DOI,title,authorString,journalTitle,issue,journalVolume,pubYear,
 				journalIssn,pubType,inEPMC,inPMC,citedByCount,hasReferences,hasTextMinedTerms,hasDbCrossReferences,
 				hasLabsLinks,hasTMAccessionNumbers,authors,gene,organism,uniprotPubs);
 
-		Predicate Citation = new Predicate(schema.getRelation("Citation"),
+		Atom Citation = new Atom(schema.getRelation("Citation"),
 				id,source,citationType,title,authorString,journalAbbreviation,pubYear,volume,issue,pageInfo,citedByCount,src,ext_id);
 
-		Predicate Reference = new Predicate(schema.getRelation("Reference"),
+		Atom Reference = new Atom(schema.getRelation("Reference"),
 				id,source,citationType,title,authorString,journalAbbreviation,pubYear,volume,issue,pageInfo,src,ext_id);
 
-		Predicate PathwayBySpecies = new Predicate(schema.getRelation("PathwayBySpecies"),
+		Atom PathwayBySpecies = new Atom(schema.getRelation("PathwayBySpecies"),
 				pathwayId,pathwayName,stableIdentifier,goBiologicalProcess,isInDisease,isInferred,organismId,organism,doi,hasDiagram);
 
-		Predicate PathwayById = new Predicate(schema.getRelation("PathwayById"),
+		Atom PathwayById = new Atom(schema.getRelation("PathwayById"),
 				pathwayId,pathwayName,stableIdentifier,goBiologicalProcess,isInDisease,isInferred,organismId,organism,doi,hasDiagram);
 
-		Predicate Pathway = new Predicate(schema.getRelation("Pathway"),
+		Atom Pathway = new Atom(schema.getRelation("Pathway"),
 				pathwayId,pathwayName,stableIdentifier,goBiologicalProcess,isInDisease,isInferred,organismId,organism,doi,hasDiagram);
 
-		Predicate OrganismById = new Predicate(schema.getRelation("OrganismById"),
+		Atom OrganismById = new Atom(schema.getRelation("OrganismById"),
 				organismId,organism);
 
-		Predicate OrganismFree = new Predicate(schema.getRelation("OrganismFree"),
+		Atom OrganismFree = new Atom(schema.getRelation("OrganismFree"),
 				organismId,organism);
 
-		Predicate Organism = new Predicate(schema.getRelation("Organism"),
+		Atom Organism = new Atom(schema.getRelation("Organism"),
 				organismId,organism);
 
-		Predicate ProteinLimited = new Predicate(schema.getRelation("ProteinLimited"),
+		Atom ProteinLimited = new Atom(schema.getRelation("ProteinLimited"),
 				input_id,id,entry_name,organism);
 
-		Predicate ProteinFree = new Predicate(schema.getRelation("ProteinFree"),
+		Atom ProteinFree = new Atom(schema.getRelation("ProteinFree"),
 				id,entry_name,organism);
 
-		Predicate Protein = new Predicate(schema.getRelation("Protein"),
+		Atom Protein = new Atom(schema.getRelation("Protein"),
 				input_id,id,entry_name,organism);
 
 		TGD tgd1 = new TGD(Conjunction.of(Activity),Conjunction.of(ActivityFree));
@@ -897,7 +897,7 @@ public final class TestSchema {
 		TGD tgd39 = new TGD(Conjunction.of(Pathway),Conjunction.of(Organism));
 
 		TGD tgd40 = new TGD(Conjunction.of(
-				new Predicate(schema.getRelation("Document"), 
+				new Atom(schema.getRelation("Document"), 
 						Lists.newArrayList(new Variable("_1"), 
 								new TypedConstant<>("PUBLICATION"),
 								new Variable("_3"),
@@ -911,7 +911,7 @@ public final class TestSchema {
 								volume, 
 								pubYear))
 				),
-				Conjunction.of(new Predicate(schema.getRelation("Publication"), 
+				Conjunction.of(new Atom(schema.getRelation("Publication"), 
 						Lists.newArrayList(ext_id,source,pmid,pmcid,DOI,title,authorString,
 								journalTitle,issue,volume,pubYear,journalIssn,pubType,inEPMC,
 								inPMC,citedByCount,hasReferences,hasTextMinedTerms,hasDbCrossReferences,
@@ -929,7 +929,7 @@ public final class TestSchema {
 		TGD tgd45 = new TGD(Conjunction.of(Assay),Conjunction.of(Target));
 
 		TGD tgd46 = new TGD(Conjunction.of(
-				new Predicate(schema.getRelation("Target"), 
+				new Atom(schema.getRelation("Target"), 
 						Lists.newArrayList(organism,
 								pref_name,
 								species_group_flag,
@@ -939,7 +939,7 @@ public final class TestSchema {
 								target_component_type,
 								new TypedConstant<>("SINGLE PROTEIN")))
 				),
-				Conjunction.of(new Predicate(schema.getRelation("TargetComponent"), 
+				Conjunction.of(new Atom(schema.getRelation("TargetComponent"), 
 						Lists.newArrayList(
 								target_component_accession,
 								target_component_id,
@@ -953,7 +953,7 @@ public final class TestSchema {
 
 
 		TGD tgd47 = new TGD(Conjunction.of(
-				new Predicate(schema.getRelation("TargetComponent"), 
+				new Atom(schema.getRelation("TargetComponent"), 
 						Lists.newArrayList(
 								target_component_accession,
 								target_component_id,
@@ -964,7 +964,7 @@ public final class TestSchema {
 								sequence,
 								tax_id))
 				),
-				Conjunction.of(new Predicate(schema.getRelation("Protein"), 
+				Conjunction.of(new Atom(schema.getRelation("Protein"), 
 						Lists.newArrayList(
 								input_id,
 								target_component_accession,
@@ -973,7 +973,7 @@ public final class TestSchema {
 						));
 
 		TGD tgd48 = new TGD(Conjunction.of(
-				new Predicate(schema.getRelation("Target"), 
+				new Atom(schema.getRelation("Target"), 
 						Lists.newArrayList(
 								organism,
 								pref_name,
@@ -985,7 +985,7 @@ public final class TestSchema {
 								new TypedConstant<>("SINGLE PROTEIN")
 								))
 				),
-				Conjunction.of(new Predicate(schema.getRelation("Protein"), 
+				Conjunction.of(new Atom(schema.getRelation("Protein"), 
 						Lists.newArrayList(
 								input_id,
 								target_component_accession,
@@ -996,7 +996,7 @@ public final class TestSchema {
 		TGD tgd49 = new TGD(Conjunction.of(
 				Publication
 				),
-				Conjunction.of(new Predicate(schema.getRelation("Protein"), 
+				Conjunction.of(new Atom(schema.getRelation("Protein"), 
 						Lists.newArrayList(
 								new Variable("_1"),
 								uniprotPubs,

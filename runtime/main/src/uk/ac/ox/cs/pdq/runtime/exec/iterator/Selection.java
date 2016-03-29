@@ -24,7 +24,7 @@ public class Selection extends UnaryIterator {
 
 	/**
 	 * Instantiates a new selection.
-	 * @param p Predicate
+	 * @param p Atom
 	 * @param child TupleIterator
 	 */
 	public Selection(Predicate p, TupleIterator child) {
@@ -98,7 +98,7 @@ public class Selection extends UnaryIterator {
 	/**
 	 * Gets the predicate.
 	 *
-	 * @return Predicate
+	 * @return Atom
 	 */
 	public Predicate getPredicate() {
 		return this.predicate;

@@ -15,7 +15,7 @@ import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Constant;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.planner.dag.ApplyRule;
 import uk.ac.ox.cs.pdq.util.Utility;
@@ -88,7 +88,7 @@ public class ApplyRuleToSQLTranslator {
 	 * Translate.
 	 */
 	private void translate() {
-		Map<Predicate,String> factToAlias = this.makeAliases(this.configuration);
+		Map<Atom,String> factToAlias = this.makeAliases(this.configuration);
 		//Find possible join predicates among different facts of the ApplyRule
 		Set<String> joinConditions = this.makeJoinConditions(this.configuration, factToAlias);
 		//Find possible filtering predicates
@@ -111,10 +111,10 @@ public class ApplyRuleToSQLTranslator {
 	 * @param configuration the configuration
 	 * @return an alias for each input ApplyRule fact
 	 */
-	private Map<Predicate,String> makeAliases(ApplyRule configuration) {
+	private Map<Atom,String> makeAliases(ApplyRule configuration) {
 		int i = 0;
-		Map<Predicate,String> factToAlias = new HashMap<>();
-		for(Predicate fact:this.configuration.getFacts()) {
+		Map<Atom,String> factToAlias = new HashMap<>();
+		for(Atom fact:this.configuration.getFacts()) {
 			factToAlias.put(fact, RELATION_ALIAS_PREFIX + i++);
 		}
 		return factToAlias;
@@ -127,7 +127,7 @@ public class ApplyRuleToSQLTranslator {
 	 * @param factToAlias the fact to alias
 	 * @return join and selection predicates based on the facts of the ApplyRule configuration
 	 */
-	private Set<String> makeJoinConditions(ApplyRule configuration, Map<Predicate,String> factToAlias) {
+	private Set<String> makeJoinConditions(ApplyRule configuration, Map<Atom,String> factToAlias) {
 		Set<String> joinConditions = new HashSet<>();
 		joinConditions.addAll(this.makeInterFactJoinConditions(configuration, factToAlias));
 		joinConditions.addAll(this.makeIntraFactJoinConditions(configuration, factToAlias));
@@ -141,13 +141,13 @@ public class ApplyRuleToSQLTranslator {
 	 * @param factToAlias the fact to alias
 	 * @return join predicates among different facts of the ApplyRule configuration
 	 */
-	private Set<String> makeInterFactJoinConditions(ApplyRule configuration, Map<Predicate,String> factToAlias) {
+	private Set<String> makeInterFactJoinConditions(ApplyRule configuration, Map<Atom,String> factToAlias) {
 		Set<String> joinConditions = new HashSet<>();
-		List<Predicate> facts = Lists.newArrayList(configuration.getFacts());
+		List<Atom> facts = Lists.newArrayList(configuration.getFacts());
 		for(int i = 0; i < facts.size() - 1; ++i) {
-			Predicate fi = facts.get(i);
+			Atom fi = facts.get(i);
 			for(int j = i + 1; j < facts.size(); ++j) {
-				Predicate fj = facts.get(j);
+				Atom fj = facts.get(j);
 				Collection<Term> constants = CollectionUtils.intersection(fi.getTerms(), fj.getTerms());
 				for(Term constant:constants) {
 					List<Integer> pi = fi.getTermPositions(constant);
@@ -170,11 +170,11 @@ public class ApplyRuleToSQLTranslator {
 	 * @param factToAlias the fact to alias
 	 * @return selection predicates within single facts of the ApplyRule configuration
 	 */
-	private Set<String> makeIntraFactJoinConditions(ApplyRule configuration, Map<Predicate,String> factToAlias) {
+	private Set<String> makeIntraFactJoinConditions(ApplyRule configuration, Map<Atom,String> factToAlias) {
 		Set<String> joinConditions = new HashSet<>();
-		List<Predicate> facts = Lists.newArrayList(configuration.getFacts());
+		List<Atom> facts = Lists.newArrayList(configuration.getFacts());
 		for(int i = 0; i < facts.size(); ++i) {
-			Predicate fi = facts.get(i);
+			Atom fi = facts.get(i);
 			for(Term constant:fi.getTerms()) {
 				List<Integer> joinPositions = fi.getTermPositions(constant);
 				if(joinPositions.size() > 1) {
@@ -196,10 +196,10 @@ public class ApplyRuleToSQLTranslator {
 	 * @param factToAlias the fact to alias
 	 * @return filtering predicates based on the ApplyRule facts
 	 */
-	private Set<String> makeFilteringConditions(ApplyRule configuration, Map<Predicate,String> factToAlias) {
+	private Set<String> makeFilteringConditions(ApplyRule configuration, Map<Atom,String> factToAlias) {
 		Set<String> filteringConditions = new HashSet<>();
-		List<Predicate> facts = Lists.newArrayList(configuration.getFacts());
-		for(Predicate fact:facts) {
+		List<Atom> facts = Lists.newArrayList(configuration.getFacts());
+		for(Atom fact:facts) {
 			int i = 0;
 			for(Term term:fact.getTerms()) {
 				if(!term.isSkolem() && !term.isVariable()) {
@@ -222,13 +222,13 @@ public class ApplyRuleToSQLTranslator {
 	 * @param factToAlias the fact to alias
 	 * @return a SQL clause for each constant that will be projected out
 	 */
-	private Pair<Map<Constant,String>, Map<Constant,String>> makeSelectConditions(ApplyRule configuration, Collection<Constant> toProject, Map<Predicate,String> factToAlias) {
+	private Pair<Map<Constant,String>, Map<Constant,String>> makeSelectConditions(ApplyRule configuration, Collection<Constant> toProject, Map<Atom,String> factToAlias) {
 		Map<Constant,String> toProjectToAlias =  new HashMap<>();
 		Map<Constant,String> toProjectToExpression  =  new HashMap<>();
 
 		Set<Constant> constants = new HashSet<>();
 		if(toProject == null || toProject.isEmpty()) {
-			for(Predicate fact:configuration.getFacts()) {
+			for(Atom fact:configuration.getFacts()) {
 				constants.addAll(fact.getConstants());
 			}
 		}
@@ -238,7 +238,7 @@ public class ApplyRuleToSQLTranslator {
 
 		int i = 0;
 		for(Constant constant:constants) {
-			for(Predicate fact:configuration.getFacts()) {
+			for(Atom fact:configuration.getFacts()) {
 				List<Integer> p = fact.getTermPositions(constant);
 				if(!p.isEmpty()) {
 					Attribute a = ((Relation)fact.getSignature()).getAttribute(p.get(0));
@@ -260,12 +260,12 @@ public class ApplyRuleToSQLTranslator {
 	 * @param factToAlias the fact to alias
 	 * @return a FROM statement
 	 */
-	private String makeFromStatement(Map<Predicate,String> factToAlias) {
+	private String makeFromStatement(Map<Atom,String> factToAlias) {
 		String sql = "FROM ";
 
 		int i = 0;
 		int size = factToAlias.entrySet().size();
-		for(Entry<Predicate, String> entry:factToAlias.entrySet()) {
+		for(Entry<Atom, String> entry:factToAlias.entrySet()) {
 			sql += ((Relation)entry.getKey().getSignature()).getName() + " AS " + entry.getValue();
 			if(i < size-1) {
 				sql += ",";

@@ -6,7 +6,7 @@ import java.util.Set;
 
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Relation;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.plan.DAGPlan;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
@@ -42,7 +42,7 @@ public class ApplyRule extends DAGChaseConfiguration {
 	private final AccessibilityAxiom rule;
 	
 	/** The facts of this configuration. These must share the same constants for the input positions of the accessibility axiom */
-	private final Set<Predicate> facts;
+	private final Set<Atom> facts;
 
 	/**  The string representation of this configuration. */
 	private String toString;
@@ -57,7 +57,7 @@ public class ApplyRule extends DAGChaseConfiguration {
 	public ApplyRule(
 			AccessibleChaseState state,
 			AccessibilityAxiom rule,
-			Set<Predicate> facts
+			Set<Atom> facts
 			) {		
 		super(state, 
 				PlannerUtility.getInputConstants(rule, facts),
@@ -89,7 +89,7 @@ public class ApplyRule extends DAGChaseConfiguration {
 	 *
 	 * @return 		the facts of this configuration
 	 */
-	public Collection<Predicate> getFacts() {
+	public Collection<Atom> getFacts() {
 		return this.facts;
 	}
 

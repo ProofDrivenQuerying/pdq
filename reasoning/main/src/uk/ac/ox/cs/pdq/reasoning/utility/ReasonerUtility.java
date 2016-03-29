@@ -16,9 +16,9 @@ import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Equality;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Query;
-import uk.ac.ox.cs.pdq.fol.Signature;
+import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.reasoning.chase.ParallelEGDChaser;
@@ -56,12 +56,12 @@ public class ReasonerUtility {
 	 */
 	public boolean isKey(Table table, List<Attribute> candidateKeys, Collection<? extends Constraint> constraints, ParallelEGDChaser egdChaser, DBHomomorphismManager detector) {
 		//Create the set of EGDs that correspond to the given table and keys
-		EGD egd = EGD.getEGDs(new Signature(table.getName(),table.getHeader().size()), (List<Attribute>) table.getHeader(), candidateKeys);
+		EGD egd = EGD.getEGDs(new Predicate(table.getName(),table.getHeader().size()), (List<Attribute>) table.getHeader(), candidateKeys);
 		
-		Query<?> lquery = new ConjunctiveQuery(new Predicate(new Signature("Q", egd.getFree().size()), egd.getFree()), egd.getLeft());
+		Query<?> lquery = new ConjunctiveQuery(new Atom(new Predicate("Q", egd.getFree().size()), egd.getFree()), egd.getLeft());
 		
-		Query<?> rquery = new ConjunctiveQuery(new Predicate(new Signature("Q", egd.getRight().getTerms().size()), egd.getRight().getTerms()), 
-				Conjunction.of(egd.getRight().getPredicates()));
+		Query<?> rquery = new ConjunctiveQuery(new Atom(new Predicate("Q", egd.getRight().getTerms().size()), egd.getRight().getTerms()), 
+				Conjunction.of(egd.getRight().getAtoms()));
 		
 		//Creates a chase state that consists of the canonical database of the input query.
 		ListState state = new DatabaseListState(lquery, detector);
@@ -109,13 +109,13 @@ public class ReasonerUtility {
 		Constraint constraint = ((Constraint)match.getQuery());
 		Map<Variable, ? extends Term> input = Utility.retain(mapping, constraint.getBothSideVariables());
 		Conjunction.Builder cb = Conjunction.builder();
-		for (Predicate p: constraint.getLeft().getPredicates()) {
+		for (Atom p: constraint.getLeft().getAtoms()) {
 			cb.and(p);
 		}
-		for (Predicate p: constraint.getRight().getPredicates()) {
+		for (Atom p: constraint.getRight().getAtoms()) {
 			cb.and(p);
 		}
-		TGD tgd = new TGD((Conjunction<Predicate>) cb.build(), Conjunction.<Predicate>of());
+		TGD tgd = new TGD((Conjunction<Atom>) cb.build(), Conjunction.<Atom>of());
 		List<Match> matches = s.getMaches(tgd);
 		Set<Variable> variables = constraint.getBothSideVariables();
 		for(Match m:matches) {
@@ -138,6 +138,6 @@ public class ReasonerUtility {
 		Map<Variable, Constant> mapping = match.getMapping();
 		Constraint constraint = (Constraint) match.getQuery();
 		Constraint grounded = constraint.fire(mapping, true);
-		return !s.getFiringGraph().isFired(constraint, grounded.getLeft().getPredicates());
+		return !s.getFiringGraph().isFired(constraint, grounded.getLeft().getAtoms());
 	}
 }

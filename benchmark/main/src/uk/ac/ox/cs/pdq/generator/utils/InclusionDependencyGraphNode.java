@@ -12,7 +12,7 @@ import java.util.TreeSet;
 import uk.ac.ox.cs.pdq.db.ForeignKey;
 import uk.ac.ox.cs.pdq.db.Reference;
 import uk.ac.ox.cs.pdq.db.Relation;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.util.Utility;
 
@@ -103,11 +103,11 @@ public class InclusionDependencyGraphNode {
 	 * @param prevRel the prev rel
 	 * @return a random path in the dependency graph.
 	 */
-	public List<Predicate> traverseRandom(
+	public List<Atom> traverseRandom(
 			Random random, int maxDepth,
-			Predicate prevPred,
+			Atom prevPred,
 			Relation prevRel) {
-		List<Predicate> result = new LinkedList<>();
+		List<Atom> result = new LinkedList<>();
 		if (maxDepth > 0) {
 			List<Term> terms = Utility.generateVariables(this.node);
 			if (prevPred != null) {
@@ -121,7 +121,7 @@ public class InclusionDependencyGraphNode {
 					}
 				}
 			}
-			Predicate p = new Predicate(this.node, terms);
+			Atom p = new Atom(this.node, terms);
 			result.add(p);
 			if (!this.neighbors.isEmpty()) {
 				InclusionDependencyGraphNode next = Lists.newArrayList(this.neighbors).get(random.nextInt(this.neighbors.size()));

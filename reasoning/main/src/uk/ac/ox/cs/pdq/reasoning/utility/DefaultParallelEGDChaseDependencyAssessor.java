@@ -7,8 +7,8 @@ import org.apache.commons.collections4.CollectionUtils;
 import uk.ac.ox.cs.pdq.db.Constraint;
 import uk.ac.ox.cs.pdq.db.EGD;
 import uk.ac.ox.cs.pdq.db.TGD;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Predicate;
-import uk.ac.ox.cs.pdq.fol.Signature;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState;
 
 import com.beust.jcommander.internal.Sets;
@@ -32,7 +32,7 @@ import com.google.common.collect.Multimap;
 public final class DefaultParallelEGDChaseDependencyAssessor implements ParallelEGDChaseDependencyAssessor{
 
 	/**  The facts of this database instance*. */
-	private Collection<Predicate> stateFacts = null;
+	private Collection<Atom> stateFacts = null;
 
 	/** Maps of predicate names to EGDs. Given an EGD \delta = \sigma --> x_i = x_j, we 
 	 * create a new entry in the map for each R in \sigma **/
@@ -58,8 +58,8 @@ public final class DefaultParallelEGDChaseDependencyAssessor implements Parallel
 		Preconditions.checkNotNull(dependencies);
 		//Build the dependency map
 		for(Constraint dependency:dependencies) {
-			for(Predicate predicate:dependency.getLeft().getPredicates()) {
-				Signature s = predicate.getSignature();
+			for(Atom atom:dependency.getLeft().getAtoms()) {
+				Predicate s = atom.getSignature();
 				if(dependency instanceof EGD) {
 					this.egdMap.put(s.getName(), (EGD) dependency);
 				}
@@ -80,7 +80,7 @@ public final class DefaultParallelEGDChaseDependencyAssessor implements Parallel
 	@Override
 	public Collection<? extends Constraint> getDependencies(ChaseState state, EGDROUND round) {
 		Collection<Constraint> constraints = Sets.newHashSet();
-		Collection<Predicate> newFacts = null;
+		Collection<Atom> newFacts = null;
 		if(this.stateFacts == null || (round.equals(EGDROUND.EGD) && this.firstEGDRound == true) || 
 				(round.equals(EGDROUND.TGD) && this.firstTGDRound == true)) {
 			newFacts = state.getFacts();
@@ -89,13 +89,13 @@ public final class DefaultParallelEGDChaseDependencyAssessor implements Parallel
 			newFacts = CollectionUtils.subtract(state.getFacts(), this.stateFacts);
 		}
 		
-		Multimap<String, Predicate> newFactsMap = ArrayListMultimap.create();
-		for(Predicate fact:newFacts) {
+		Multimap<String, Atom> newFactsMap = ArrayListMultimap.create();
+		for(Atom fact:newFacts) {
 			newFactsMap.put(fact.getSignature().getName(), fact);
 		}
 		
-		Multimap<String, Predicate> allFactsMap = ArrayListMultimap.create();
-		for(Predicate fact:state.getFacts()) {
+		Multimap<String, Atom> allFactsMap = ArrayListMultimap.create();
+		for(Atom fact:state.getFacts()) {
 			allFactsMap.put(fact.getSignature().getName(), fact);
 		}
 		//for each fact

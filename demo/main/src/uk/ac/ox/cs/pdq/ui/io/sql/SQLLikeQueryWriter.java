@@ -13,7 +13,7 @@ import java.util.Set;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.io.Writer;
@@ -93,9 +93,9 @@ public class SQLLikeQueryWriter extends PrettyWriter<Query<?>> implements Writer
 		StringBuilder result = new StringBuilder();
 		// Make predicate aliases and join clusters.
 		int counter = 0;
-		Map<Predicate, String> aliases = new LinkedHashMap<>();
-		Multimap<Term, Predicate> joins = LinkedHashMultimap.create();
-		for (Predicate p: q.getBody()) {
+		Map<Atom, String> aliases = new LinkedHashMap<>();
+		Multimap<Term, Atom> joins = LinkedHashMultimap.create();
+		for (Atom p: q.getBody()) {
 			aliases.put(p, ALIAS_PREFIX + (counter++));
 			for (Term t: p.getTerms()) {
 				joins.put(t, p);
@@ -109,7 +109,7 @@ public class SQLLikeQueryWriter extends PrettyWriter<Query<?>> implements Writer
 		} else {
 			String sep = "";
 			for (Term t: head) {
-				Predicate p = joins.get(t).iterator().next();
+				Atom p = joins.get(t).iterator().next();
 				int pos = p.getTermPositions(t).iterator().next();
 				Attribute a = ((Relation) p.getSignature()).getAttribute(pos);
 				result.append(sep).append(aliases.get(p)).append('.').append(a.getName());
@@ -119,7 +119,7 @@ public class SQLLikeQueryWriter extends PrettyWriter<Query<?>> implements Writer
 		
 		// Remove non-join clusters
 		for (Iterator<Term> i = joins.keySet().iterator(); i.hasNext(); ) {
-			Collection<Predicate> cluster = joins.get(i.next());
+			Collection<Atom> cluster = joins.get(i.next());
 			if (cluster.size() <= 1) {
 				i.remove();
 			}
@@ -128,16 +128,16 @@ public class SQLLikeQueryWriter extends PrettyWriter<Query<?>> implements Writer
 		// Make FROM clause
 		result.append("\nFROM ");
 		String sep = "";
-		Set<Predicate> joined = new LinkedHashSet<>();
+		Set<Atom> joined = new LinkedHashSet<>();
 //		Set<PredicateFormula> unused = new LinkedHashSet<>(aliases.keySet());
 		for (Term t : joins.keySet()) {
-			Iterator<Predicate> i = joins.get(t).iterator();
-			for (Predicate curr: joins.get(t)) {
+			Iterator<Atom> i = joins.get(t).iterator();
+			for (Atom curr: joins.get(t)) {
 				if (!joined.contains(curr)) {
 					result.append(sep).append(curr.getSignature().getName())
 						.append(" AS ").append(aliases.get(curr));
 					String sep2 = " ON ";
-					for (Predicate other: joined) {
+					for (Atom other: joined) {
 						for (Term u : joins.keySet()) {
 							if (joins.get(u).contains(other) && joins.get(u).contains(curr)) {
 								result.append(sep2).append(aliases.get(curr)).append('.')
@@ -150,13 +150,13 @@ public class SQLLikeQueryWriter extends PrettyWriter<Query<?>> implements Writer
 					}
 					joined.add(curr);
 				}
-				Predicate next = i.next();
+				Atom next = i.next();
 				curr = next;
 				sep = "\n\tJOIN ";
 			} 
 		}
 		sep = joined.isEmpty() ? "" : ", ";
-		for (Predicate p : aliases.keySet()) {
+		for (Atom p : aliases.keySet()) {
 			if (!joined.contains(p)) {
 				result.append(sep).append(p.getSignature().getName())
 				.append(" AS ").append(aliases.get(p));
@@ -166,7 +166,7 @@ public class SQLLikeQueryWriter extends PrettyWriter<Query<?>> implements Writer
 		
 		// Make WHERE clause
 		sep = "\nWHERE ";
-		for (Predicate p: q.getBody()) {
+		for (Atom p: q.getBody()) {
 			List<Term> terms = p.getTerms();
 			for (int i = 0, l = terms.size(); i < l; i++) {
 				if (!terms.get(i).isVariable() && !terms.get(i).isSkolem()) {

@@ -7,7 +7,7 @@ import java.util.Map;
 import uk.ac.ox.cs.pdq.fol.AcyclicQuery;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 
@@ -62,12 +62,12 @@ public class QueryWriter extends AbstractXMLWriter<ConjunctiveQuery> {
 	 * Writes the given body to the given output.
 	 *
 	 * @param out the out
-	 * @param body Conjunction<Predicate>
+	 * @param body Conjunction<Atom>
 	 */
-	public void writeBody(PrintStream out, Conjunction<Predicate> body) {
+	public void writeBody(PrintStream out, Conjunction<Atom> body) {
 		Map<QNames, String> att = new LinkedHashMap<>();
 		open(out, QNames.BODY, att);
-		for (Predicate a: body) {
+		for (Atom a: body) {
 			this.writePredicate(out, a);
 		}
 		close(out, QNames.BODY);
@@ -77,9 +77,9 @@ public class QueryWriter extends AbstractXMLWriter<ConjunctiveQuery> {
 	 * Writes the given predicate to the given output.
 	 *
 	 * @param out the out
-	 * @param p Predicate
+	 * @param p Atom
 	 */
-	public void writePredicate(PrintStream out, Predicate p) {
+	public void writePredicate(PrintStream out, Atom p) {
 		Map<QNames, String> att = new LinkedHashMap<>();
 		att.put(QNames.NAME, p.getName());
 		open(out, QNames.ATOM, att);
@@ -100,9 +100,9 @@ public class QueryWriter extends AbstractXMLWriter<ConjunctiveQuery> {
 	 * Writes the given head to the given output.
 	 *
 	 * @param out the out
-	 * @param p Predicate
+	 * @param p Atom
 	 */
-	public void writeHead(PrintStream out, Predicate p) {
+	public void writeHead(PrintStream out, Atom p) {
 		Map<QNames, String> att = new LinkedHashMap<>();
 		att.put(QNames.NAME, p.getName());
 		open(out, QNames.HEAD, att);

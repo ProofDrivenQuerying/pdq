@@ -7,7 +7,7 @@ import java.util.Map;
 
 import uk.ac.ox.cs.pdq.db.TGD;
 import uk.ac.ox.cs.pdq.fol.Constant;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Skolem;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
@@ -120,7 +120,7 @@ public class ProofWriter extends AbstractXMLWriter<Proof> {
 	 * @param out the out
 	 * @param p the p
 	 */
-	public void writePredicate(PrintStream out, Predicate p) {
+	public void writePredicate(PrintStream out, Atom p) {
 		Map<QNames, String> att = new LinkedHashMap<>();
 		att.put(QNames.NAME, p.getName());
 		open(out, QNames.ATOM, att);

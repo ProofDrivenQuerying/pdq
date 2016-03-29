@@ -8,7 +8,7 @@ import uk.ac.ox.cs.pdq.db.LinearGuarded;
 import uk.ac.ox.cs.pdq.db.TGD;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.Formula;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -18,10 +18,10 @@ import uk.ac.ox.cs.pdq.fol.Predicate;
 public class DependencyBuilder implements Builder<TGD> {
 
 	/**  The left hand part of the dependency. */
-	private List<Predicate> left = new LinkedList<>();
+	private List<Atom> left = new LinkedList<>();
 
 	/**  The right hand part of the dependency. */
-	private List<Predicate> right = new LinkedList<>();
+	private List<Atom> right = new LinkedList<>();
 	
 	/**
 	 * Adds the left.
@@ -30,8 +30,8 @@ public class DependencyBuilder implements Builder<TGD> {
 	 * @return DependencyBuilder
 	 */
 	public DependencyBuilder addLeft(Formula f) {
-		if(f instanceof Predicate) {
-			return this.addLeftAtom((Predicate) f);
+		if(f instanceof Atom) {
+			return this.addLeftAtom((Atom) f);
 		}
 		if(f instanceof Conjunction) {
 			return this.addLeftConjunction((Conjunction) f);
@@ -46,8 +46,8 @@ public class DependencyBuilder implements Builder<TGD> {
 	 * @return DependencyBuilder
 	 */
 	public DependencyBuilder addRight(Formula f) {
-		if(f instanceof Predicate) {
-			return this.addRightAtom((Predicate) f);
+		if(f instanceof Atom) {
+			return this.addRightAtom((Atom) f);
 		}
 		if(f instanceof Conjunction) {
 			return this.addRightConjunction((Conjunction) f);
@@ -61,8 +61,8 @@ public class DependencyBuilder implements Builder<TGD> {
 	 * @param p Conjunction of PredicateFormula
 	 * @return DependencyBuilder
 	 */
-	public DependencyBuilder addLeftConjunction(Conjunction<Predicate> p) {
-		this.left.addAll(p.getPredicates());
+	public DependencyBuilder addLeftConjunction(Conjunction<Atom> p) {
+		this.left.addAll(p.getAtoms());
 		return this;
 	}
 	
@@ -72,8 +72,8 @@ public class DependencyBuilder implements Builder<TGD> {
 	 * @param p Conjunction of PredicateFormula
 	 * @return DependencyBuilder
 	 */
-	public DependencyBuilder addRightConjunction(Conjunction<Predicate> p) {
-		this.right.addAll(p.getPredicates());
+	public DependencyBuilder addRightConjunction(Conjunction<Atom> p) {
+		this.right.addAll(p.getAtoms());
 		return this;
 	}
 	
@@ -83,7 +83,7 @@ public class DependencyBuilder implements Builder<TGD> {
 	 * @param p PredicateFormula
 	 * @return DependencyBuilder
 	 */
-	public DependencyBuilder addLeftAtom(Predicate p) {
+	public DependencyBuilder addLeftAtom(Atom p) {
 		this.left.add(p);
 		return this;
 	}
@@ -94,7 +94,7 @@ public class DependencyBuilder implements Builder<TGD> {
 	 * @param p PredicateFormula
 	 * @return DependencyBuilder
 	 */
-	public DependencyBuilder addRightAtom(Predicate p) {
+	public DependencyBuilder addRightAtom(Atom p) {
 		this.right.add(p);
 		return this;
 	}

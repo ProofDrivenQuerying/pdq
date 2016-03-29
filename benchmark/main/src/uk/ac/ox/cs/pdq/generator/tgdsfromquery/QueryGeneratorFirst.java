@@ -15,8 +15,8 @@ import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.AcyclicQuery;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Predicate;
-import uk.ac.ox.cs.pdq.fol.Signature;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.generator.QueryGenerator;
@@ -74,8 +74,8 @@ public class QueryGeneratorFirst extends AbstractDependencyGenerator implements 
 	 * 		an acyclic query of the target number of conjunctions 
 	 */
 	private AcyclicQuery generateAcyclicQuery() {
-		SortedSet<Predicate> tmpBody = new TreeSet<>(new Comparator<Predicate>() {
-			@Override public int compare(Predicate o1, Predicate o2) {
+		SortedSet<Atom> tmpBody = new TreeSet<>(new Comparator<Atom>() {
+			@Override public int compare(Atom o1, Atom o2) {
 				return o1 != null
 						? (o2 != null ?
 								o1.getSignature().getArity() - o2.getSignature().getArity() : 1)
@@ -94,18 +94,18 @@ public class QueryGeneratorFirst extends AbstractDependencyGenerator implements 
 			if (!this.params.getRepeatedRelations()) {
 				relations.remove(choice);
 			}
-			tmpBody.add(new Predicate(selectedRelation, Utility.generateVariables(selectedRelation)));
+			tmpBody.add(new Atom(selectedRelation, Utility.generateVariables(selectedRelation)));
 		}
 
 		// Swapping variable ensuring no cycles are created
-		List<Predicate> body = new ArrayList<>(tmpBody.size());
+		List<Atom> body = new ArrayList<>(tmpBody.size());
 		Set<Term> usedVars = new LinkedHashSet<>();
-		PriorityQueue<Predicate> unusedPreds = new PriorityQueue<>(tmpBody);
-		Predicate pick1 = unusedPreds.poll();
+		PriorityQueue<Atom> unusedPreds = new PriorityQueue<>(tmpBody);
+		Atom pick1 = unusedPreds.poll();
 		do {
 			List<Term> terms = Lists.newArrayList(pick1.getTerms());
 			if (!unusedPreds.isEmpty()) {
-				Predicate pick2 = unusedPreds.peek();
+				Atom pick2 = unusedPreds.peek();
 				List<Term> terms1 = Lists.newArrayList(pick1.getTerms());
 				List<Term> terms2 = Lists.newArrayList(pick2.getTerms());
 				terms1.removeAll(usedVars);
@@ -116,16 +116,16 @@ public class QueryGeneratorFirst extends AbstractDependencyGenerator implements 
 					usedVars.add(v2);
 					unusedPreds.remove(pick2);
 				}
-				body.add(new Predicate(pick1.getSignature(), terms));
+				body.add(new Atom(pick1.getSignature(), terms));
 				pick1 = pick2;
 			} else {
-				body.add(new Predicate(pick1.getSignature(), terms));
+				body.add(new Atom(pick1.getSignature(), terms));
 			}
 		} while(!unusedPreds.isEmpty());
 
 		List<Variable> free = this.pickFreeVariables(body);
-		Signature relationQ = new Signature("Q", free.size());
-		Predicate atom = new Predicate(relationQ, free);
+		Predicate relationQ = new Predicate("Q", free.size());
+		Atom atom = new Atom(relationQ, free);
 		return new AcyclicQuery(atom, Conjunction.of(body));
 	}
 
@@ -148,10 +148,10 @@ public class QueryGeneratorFirst extends AbstractDependencyGenerator implements 
 				variables,
 				this.params.getQueryConjuncts(),
 				this.params.getRepeatedRelations());
-		List<Predicate> queryBodyAtoms = Lists.newArrayList(ret.getConjuncts());
+		List<Atom> queryBodyAtoms = Lists.newArrayList(ret.getConjuncts());
 		List<Variable> free = this.pickFreeVariables(queryBodyAtoms);
-		Signature relationQ = new Signature("Q", free.size());
-		Predicate atom = new Predicate(relationQ, free);
+		Predicate relationQ = new Predicate("Q", free.size());
+		Atom atom = new Atom(relationQ, free);
 		return new ConjunctiveQuery(atom, Conjunction.of(queryBodyAtoms));
 	}
 
@@ -175,10 +175,10 @@ public class QueryGeneratorFirst extends AbstractDependencyGenerator implements 
 				variables, 
 				this.params.getQueryConjuncts(),
 				this.params.getRepeatedRelations());
-		List<Predicate> queryBodyAtoms = this.createChainConjuncts(ret.getConjuncts());
+		List<Atom> queryBodyAtoms = this.createChainConjuncts(ret.getConjuncts());
 		List<Variable> free = this.pickFreeVariables(queryBodyAtoms);
-		Signature relationQ = new Signature("Q", free.size());
-		Predicate atom = new Predicate(relationQ, free);
+		Predicate relationQ = new Predicate("Q", free.size());
+		Atom atom = new Atom(relationQ, free);
 		return new ConjunctiveQuery(atom, Conjunction.of(queryBodyAtoms));
 	}
 }

@@ -3,7 +3,7 @@ package uk.ac.ox.cs.pdq.reasoning.homomorphism;
 import java.util.Collection;
 
 import uk.ac.ox.cs.pdq.fol.Evaluatable;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Query;
 
 // TODO: Auto-generated Javadoc
@@ -20,14 +20,14 @@ public interface HomomorphismManager extends HomomorphismDetector {
 	 *
 	 * @param facts Input list of facts
 	 */
-	void addFacts(Collection<? extends Predicate> facts);
+	void addFacts(Collection<? extends Atom> facts);
 	
 	/**
 	 * Deletes the facts of the list in the database.
 	 *
 	 * @param facts Input list of facts
 	 */
-	void deleteFacts(Collection<? extends Predicate> facts);
+	void deleteFacts(Collection<? extends Atom> facts);
 
 	/**
 	 * Initialises the manager.

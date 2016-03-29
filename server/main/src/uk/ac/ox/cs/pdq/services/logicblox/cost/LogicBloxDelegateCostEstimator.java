@@ -9,7 +9,7 @@ import org.apache.log4j.Logger;
 import uk.ac.ox.cs.pdq.cost.estimators.BlackBoxCostEstimator;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.plan.Cost;
 import uk.ac.ox.cs.pdq.plan.DAGPlan;
 import uk.ac.ox.cs.pdq.plan.DoubleCost;
@@ -88,7 +88,7 @@ public class LogicBloxDelegateCostEstimator<S extends AccessibleChaseState>
 	 * @return true, if is recursive
 	 */
 	private boolean isRecursive(ConjunctiveQuery q) {
-		for (Predicate pred : q.getBody().getPredicates()) {
+		for (Atom pred : q.getBody().getAtoms()) {
 			if (this.query.getHead().getSignature().equals(pred.getSignature())
 					&& this.query.getHead().getSchemaConstants().equals(pred.getSchemaConstants())) {
 				return true;

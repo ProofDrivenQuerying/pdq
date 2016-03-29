@@ -12,7 +12,7 @@ import uk.ac.ox.cs.pdq.builder.BuilderException;
 import uk.ac.ox.cs.pdq.fol.AcyclicQuery;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.util.Named;
 
@@ -34,7 +34,7 @@ public class QueryBuilder implements Builder<ConjunctiveQuery> {
 	private List<Term> head = new LinkedList<>();
 
 	/**  The temporary query body. */
-	private List<Predicate> body = new LinkedList<>();
+	private List<Atom> body = new LinkedList<>();
 
 	/** An index from variable name to their respective instances. */
 	private Map<String, Term> termIndex = new LinkedHashMap<>();
@@ -48,7 +48,7 @@ public class QueryBuilder implements Builder<ConjunctiveQuery> {
 	 * @return a PredicateFormula identical to p, in which variables are those
 	 * appearing the instance's variable index.
 	 */
-	private Predicate unifyVariable(Predicate p) {
+	private Atom unifyVariable(Atom p) {
 		Collection<Term> uniTerms = new ArrayList<>();
 		for (Term t : p.getTerms()) {
 			if (t.isVariable() || t.isSkolem()) {
@@ -63,7 +63,7 @@ public class QueryBuilder implements Builder<ConjunctiveQuery> {
 				uniTerms.add(t);
 			}
 		}
-		return new Predicate(p.getSignature(), uniTerms);
+		return new Atom(p.getSignature(), uniTerms);
 	}
 	
 	/**
@@ -72,7 +72,7 @@ public class QueryBuilder implements Builder<ConjunctiveQuery> {
 	 * @param p PredicateFormula
 	 * @return QueryBuilder
 	 */
-	public QueryBuilder addBodyAtom(Predicate p) {
+	public QueryBuilder addBodyAtom(Atom p) {
 		this.body.add(this.unifyVariable(p));
 		return this;
 	}
@@ -124,7 +124,7 @@ public class QueryBuilder implements Builder<ConjunctiveQuery> {
 	 */
 	@Override
 	public ConjunctiveQuery build() {
-		Conjunction<Predicate> b = Conjunction.of(this.body);
+		Conjunction<Atom> b = Conjunction.of(this.body);
 		if (this.type != null && this.type.equals("acyclic")) {
 			return new AcyclicQuery(this.name, this.head, b);
 		}

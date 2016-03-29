@@ -19,7 +19,7 @@ import uk.ac.ox.cs.pdq.db.View;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.util.Utility;
@@ -90,8 +90,8 @@ public class AccessibleSchema extends Schema {
 
 		// Inferred accessible axioms the schema ICs
 		for (Constraint<?, ?> ic: dependencies) {
-			Map<Predicate, InferredAccessibleRelation> predicateToInfAccessibleRelation = new LinkedHashMap<>();
-			for (Predicate p: ic.getPredicates()) {
+			Map<Atom, InferredAccessibleRelation> predicateToInfAccessibleRelation = new LinkedHashMap<>();
+			for (Atom p: ic.getAtoms()) {
 				predicateToInfAccessibleRelation.put(p, this.infAccessibleRelations.get(p.getName()));
 			}
 			if (ic instanceof TGD) {
@@ -230,10 +230,10 @@ public class AccessibleSchema extends Schema {
 		if (!(query instanceof ConjunctiveQuery)) {
 			throw new UnsupportedOperationException("Non CQ not supported yet.");
 		}
-		List<Predicate> atomicFormulas = new ArrayList<>();
-		for (Predicate af: query.getBody().getPredicates()) {
+		List<Atom> atomicFormulas = new ArrayList<>();
+		for (Atom af: query.getBody().getAtoms()) {
 			atomicFormulas.add(
-					new Predicate(this.getInferredAccessibleRelation((Relation) af.getSignature()), af.getTerms()));
+					new Atom(this.getInferredAccessibleRelation((Relation) af.getSignature()), af.getTerms()));
 		}
 		return (Q) new ConjunctiveQuery(query.getHead(), Conjunction.of(atomicFormulas));
 	}
@@ -251,10 +251,10 @@ public class AccessibleSchema extends Schema {
 		if (!(query instanceof ConjunctiveQuery)) {
 			throw new UnsupportedOperationException("Non CQ not supported yet.");
 		}
-		List<Predicate> atomicFormulas = new ArrayList<>();
-		for (Predicate af: query.getBody().getPredicates()) {
+		List<Atom> atomicFormulas = new ArrayList<>();
+		for (Atom af: query.getBody().getAtoms()) {
 			atomicFormulas.add(
-					new Predicate(this.getInferredAccessibleRelation((Relation) af.getSignature()), af.getTerms()));
+					new Atom(this.getInferredAccessibleRelation((Relation) af.getSignature()), af.getTerms()));
 		}
 		return (Q) new ConjunctiveQuery(query.getHead(), Conjunction.of(atomicFormulas), canonicalMapping);
 	}
@@ -336,8 +336,8 @@ public class AccessibleSchema extends Schema {
 		 * @param constant TypedConstant<?>
 		 * @return PredicateFormula
 		 */
-		public static Predicate getAccessibleFact(TypedConstant<?> constant) {
-			return new Predicate(AccessibleRelation.getInstance(), new TypedConstant<>(constant));
+		public static Atom getAccessibleFact(TypedConstant<?> constant) {
+			return new Atom(AccessibleRelation.getInstance(), new TypedConstant<>(constant));
 		}
 
 		/**

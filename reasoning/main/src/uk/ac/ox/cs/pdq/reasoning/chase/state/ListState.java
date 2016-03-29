@@ -2,7 +2,7 @@ package uk.ac.ox.cs.pdq.reasoning.chase.state;
 
 import java.util.Collection;
 
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -19,6 +19,6 @@ public interface ListState extends ChaseState{
 	 *
 	 * @param facts the facts
 	 */
-	void addFacts(Collection<Predicate> facts);
+	void addFacts(Collection<Atom> facts);
 
 }

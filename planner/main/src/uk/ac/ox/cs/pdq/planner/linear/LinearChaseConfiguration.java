@@ -12,7 +12,7 @@ import java.util.Random;
 import java.util.Set;
 
 import uk.ac.ox.cs.pdq.fol.Constant;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
@@ -108,7 +108,7 @@ public class LinearChaseConfiguration extends ChaseConfiguration<LeftDeepPlan> i
 	 * @return 		true of the input candidate has been already exposed
 	 */
 	public boolean isExposed(Candidate candidate) {
-		Predicate infAcc = candidate.getInferredAccessibleFact();
+		Atom infAcc = candidate.getInferredAccessibleFact();
 		return this.getState().getFacts().contains(infAcc);
 	}
 	
@@ -136,7 +136,7 @@ public class LinearChaseConfiguration extends ChaseConfiguration<LeftDeepPlan> i
 				this.getState().getUnexposedFacts(accessibleSchema);
 		for (AccessibilityAxiom axiom:nonFiredAxioms.keySet()) {
 			for (Match matching:nonFiredAxioms.get(axiom)) {
-				Predicate fact = axiom.getGuard().ground(matching.getMapping());
+				Atom fact = axiom.getGuard().ground(matching.getMapping());
 				result.add(new Candidate(accessibleSchema, axiom, fact, matching));
 			}
 		}

@@ -11,9 +11,9 @@ import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.db.builder.QueryBuilder;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.Formula;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Query;
-import uk.ac.ox.cs.pdq.fol.Signature;
+import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 
@@ -40,17 +40,17 @@ public class JoinOnVariableQuerySelector implements QuerySelector {
 	 */
 	@Override
 	public boolean accept(Query<?> q) {
-		for (Conjunction<Predicate> body: this.enumerateConjunctions(q.getBody())) {
+		for (Conjunction<Atom> body: this.enumerateConjunctions(q.getBody())) {
 			if (body.size() > 1) {
-				Multimap<Term, Predicate> clusters = LinkedHashMultimap.create();
-				for (Predicate pred: body) {
+				Multimap<Term, Atom> clusters = LinkedHashMultimap.create();
+				for (Atom pred: body) {
 					for (Term t: pred.getTerms()) {
 						clusters.put(t, pred);
 					}
 				}
-				Set<Predicate> unassigned = Sets.newHashSet(body);
+				Set<Atom> unassigned = Sets.newHashSet(body);
 				for (Term t: clusters.keySet()) {
-					Collection<Predicate> cluster = clusters.get(t);
+					Collection<Atom> cluster = clusters.get(t);
 					if (cluster.size() > 1 && (t.isSkolem() || t.isVariable())) {
 						unassigned.removeAll(cluster);
 					}
@@ -69,14 +69,14 @@ public class JoinOnVariableQuerySelector implements QuerySelector {
 	 * @param formula the formula
 	 * @return the collection
 	 */
-	private Collection<Conjunction<Predicate>> enumerateConjunctions(Formula formula) {
+	private Collection<Conjunction<Atom>> enumerateConjunctions(Formula formula) {
 		Preconditions.checkArgument(formula != null);
 		if (formula instanceof Conjunction) {
-			List<Conjunction<Predicate>> result = new LinkedList<>();
-			List<Predicate> localConj = new LinkedList<>();
+			List<Conjunction<Atom>> result = new LinkedList<>();
+			List<Atom> localConj = new LinkedList<>();
 			for (Formula subFormula: ((Conjunction<Formula>) formula)) {
-				if (subFormula instanceof Predicate) {
-					localConj.add((Predicate) subFormula);
+				if (subFormula instanceof Atom) {
+					localConj.add((Atom) subFormula);
 				} else {
 					result.addAll(this.enumerateConjunctions(subFormula));
 				}
@@ -95,8 +95,8 @@ public class JoinOnVariableQuerySelector implements QuerySelector {
 	public static void main(String... args) {
 		QueryBuilder qb = new QueryBuilder();
 		qb.setName("Q");
-		qb.addBodyAtom(new Predicate(new Signature("A", 2), Lists.newArrayList(new TypedConstant<>("Continent"), new Variable("x"))));
-		qb.addBodyAtom(new Predicate(new Signature("B", 2), Lists.newArrayList(new TypedConstant<>("Continent"), new Variable("x"))));
+		qb.addBodyAtom(new Atom(new Predicate("A", 2), Lists.newArrayList(new TypedConstant<>("Continent"), new Variable("x"))));
+		qb.addBodyAtom(new Atom(new Predicate("B", 2), Lists.newArrayList(new TypedConstant<>("Continent"), new Variable("x"))));
 		log.trace(new JoinOnVariableQuerySelector().accept(qb.build()));
 	}
 }

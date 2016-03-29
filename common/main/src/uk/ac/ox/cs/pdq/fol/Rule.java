@@ -31,5 +31,5 @@ public interface Rule<S extends Formula, T extends Formula> {
 	 * @return true if the dependency contains the given relation signature in
 	 * the left or right hand side.
 	 */
-	boolean contains(Signature s);
+	boolean contains(Predicate s);
 }

@@ -13,7 +13,7 @@ import com.google.common.collect.BiMap;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.Evaluatable;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager.DBRelation;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismConstraint.TopKConstraint;
@@ -110,9 +110,9 @@ public class MySQLStatementBuilder extends SQLStatementBuilder {
 	 * @return insert statements that add the input fact to the fact database.
 	 */
 	@Override
-	protected Collection<String> makeInserts(Collection<? extends Predicate> facts, Map<String, DBRelation> dbrelations) {
+	protected Collection<String> makeInserts(Collection<? extends Atom> facts, Map<String, DBRelation> dbrelations) {
 		Collection<String> result = new LinkedList<>();
-		for (Predicate fact : facts) {
+		for (Atom fact : facts) {
 			DBRelation rel = dbrelations.get(fact.getName());
 			List<Term> terms = fact.getTerms();
 			String insertInto = "INSERT IGNORE INTO " + this.encodeName(rel.getName()) + " " + "VALUES ( ";

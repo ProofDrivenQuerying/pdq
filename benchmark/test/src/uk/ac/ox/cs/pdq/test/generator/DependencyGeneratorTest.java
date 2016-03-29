@@ -21,7 +21,7 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TGD;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.generator.QueryGenerator;
@@ -106,7 +106,7 @@ public class DependencyGeneratorTest extends ParameterizedTest {
 			relationNames.add(r.getName());
 		}
 		for (Constraint ic : this.dependencies) {
-			for (Predicate a : ((TGD) ic).getPredicates()) {
+			for (Atom a : ((TGD) ic).getAtoms()) {
 				assertTrue("Relation " + a.getName() + " not present in schema.",
 						relationNames.contains(a.getName()));
 			}
@@ -120,7 +120,7 @@ public class DependencyGeneratorTest extends ParameterizedTest {
 	public void testNoRepeatedVariablesInDependencies() {
 		List<Term> vars = new ArrayList<>();
 		for (Constraint ic: this.dependencies) {
-			for (Predicate a: ((TGD) ic).getPredicates()) {
+			for (Atom a: ((TGD) ic).getAtoms()) {
 				vars.clear();
 				for (Term t: a.getTerms()) {
 					if (t instanceof Variable) {

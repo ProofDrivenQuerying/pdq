@@ -20,7 +20,7 @@ public class Selection extends UnaryOperator implements PredicateBasedOperator {
 	/**
 	 * Instantiates a new selection.
 	 *
-	 * @param p Predicate
+	 * @param p Atom
 	 * @param child            the child
 	 */
 	public Selection(Predicate p, RelationalOperator child) {

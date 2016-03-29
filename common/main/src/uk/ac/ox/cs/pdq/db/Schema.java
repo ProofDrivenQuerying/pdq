@@ -14,7 +14,7 @@ import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 
 import uk.ac.ox.cs.pdq.db.builder.SchemaBuilder;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -248,22 +248,22 @@ public class Schema {
 	 */
 	public boolean isCyclic() {
 		if (this.isCyclic == null) {
-			DirectedGraph<Predicate, DefaultEdge> simpleDepedencyGraph = new DefaultDirectedGraph<>(DefaultEdge.class);
+			DirectedGraph<Atom, DefaultEdge> simpleDepedencyGraph = new DefaultDirectedGraph<>(DefaultEdge.class);
 			for (Relation relation:this.relations) {
 				simpleDepedencyGraph.addVertex(relation.createAtoms());
 			}
 			for (Constraint ic:this.schemaDependencies) {
-				List<Predicate> leftAtoms = ic.getLeft().getPredicates();
-				List<Predicate> rightAtoms = ic.getRight().getPredicates();
-				for (Predicate left : leftAtoms) {
-					for (Predicate right : rightAtoms) {
-						Predicate leftVertex = this.searchDependencyGraph(simpleDepedencyGraph, left);
-						Predicate rightVertex = this.searchDependencyGraph(simpleDepedencyGraph, right);
+				List<Atom> leftAtoms = ic.getLeft().getAtoms();
+				List<Atom> rightAtoms = ic.getRight().getAtoms();
+				for (Atom left : leftAtoms) {
+					for (Atom right : rightAtoms) {
+						Atom leftVertex = this.searchDependencyGraph(simpleDepedencyGraph, left);
+						Atom rightVertex = this.searchDependencyGraph(simpleDepedencyGraph, right);
 						simpleDepedencyGraph.addEdge(leftVertex, rightVertex);
 					}
 				}
 			}
-			CycleDetector<Predicate, DefaultEdge> cycleDetector = new CycleDetector<>(simpleDepedencyGraph);
+			CycleDetector<Atom, DefaultEdge> cycleDetector = new CycleDetector<>(simpleDepedencyGraph);
 			this.isCyclic = cycleDetector.detectCycles();
 		}
 		return this.isCyclic;
@@ -276,10 +276,10 @@ public class Schema {
 	 * @param atom An input atom
 	 * @return the atom which has the same predicate with the input one
 	 */
-	private Predicate searchDependencyGraph(
-			DirectedGraph<Predicate, DefaultEdge> simpleDepedencyGraph,
-			Predicate atom) {
-		for (Predicate vertex: simpleDepedencyGraph.vertexSet()) {
+	private Atom searchDependencyGraph(
+			DirectedGraph<Atom, DefaultEdge> simpleDepedencyGraph,
+			Atom atom) {
+		for (Atom vertex: simpleDepedencyGraph.vertexSet()) {
 			if (atom.getName().equals(vertex.getName())) {
 				return vertex;
 			}

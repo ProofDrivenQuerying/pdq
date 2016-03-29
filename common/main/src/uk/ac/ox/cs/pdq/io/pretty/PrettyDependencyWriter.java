@@ -4,7 +4,7 @@ import java.io.PrintStream;
 
 import uk.ac.ox.cs.pdq.db.Constraint;
 import uk.ac.ox.cs.pdq.fol.LogicalSymbols;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.io.Writer;
 
 // TODO: Auto-generated Javadoc
@@ -60,14 +60,14 @@ public class PrettyDependencyWriter extends PrettyWriter<Constraint> implements 
 	@Override
 	public void write(PrintStream out, Constraint tgd) {
 		String sep = "";
-		for (Predicate f: tgd.getLeft().getPredicates()) {
+		for (Atom f: tgd.getLeft().getAtoms()) {
 			out.print(sep);
 			out.print(f.getSignature().getName());
 			out.print('(' + joinTerms(f.getTerms(), ", ") + ')');
 			sep = (this.indented ? "\n" : " ") + LogicalSymbols.AND + ' ';
 		}
 		sep = (this.indented ? "\n\t" : " ")  + LogicalSymbols.IMPLIES + ' ';
-		for (Predicate f : tgd.getRight().getPredicates()) {
+		for (Atom f : tgd.getRight().getAtoms()) {
 			out.print(sep);
 			out.print(f.getSignature().getName());
 			out.print('(' + joinTerms(f.getTerms(), ", ") + ')');

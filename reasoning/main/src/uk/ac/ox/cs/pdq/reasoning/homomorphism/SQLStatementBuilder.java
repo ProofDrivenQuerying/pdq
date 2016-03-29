@@ -27,7 +27,7 @@ import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Evaluatable;
 import uk.ac.ox.cs.pdq.fol.Formula;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Skolem;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
@@ -57,7 +57,7 @@ public abstract class SQLStatementBuilder {
 	private static Logger log = Logger.getLogger(SQLStatementBuilder.class);
 
 	/**  Aliases for facts *. */
-	protected BiMap<Predicate, String> aliases = HashBiMap.create();
+	protected BiMap<Atom, String> aliases = HashBiMap.create();
 
 	/** The alias prefix. */
 	private String aliasPrefix = "A";
@@ -144,9 +144,9 @@ public abstract class SQLStatementBuilder {
 	 * @param dbrelations the dbrelations
 	 * @return insert statements that add the input fact to the fact database.
 	 */
-	protected Collection<String> makeInserts(Collection<? extends Predicate> facts, Map<String, DBRelation> dbrelations) {
+	protected Collection<String> makeInserts(Collection<? extends Atom> facts, Map<String, DBRelation> dbrelations) {
 		Collection<String> result = new LinkedList<>();
-		for (Predicate fact : facts) {
+		for (Atom fact : facts) {
 			DBRelation rel = dbrelations.get(fact.getName());
 			List<Term> terms = fact.getTerms();
 			String insertInto = "INSERT INTO " + this.encodeName(rel.getName()) + " " + "VALUES ( ";
@@ -171,9 +171,9 @@ public abstract class SQLStatementBuilder {
 	 * @param aliases 		Map of schema relation names to *clean* names
 	 * @return 		a set of statements that delete the input facts from the fact database.
 	 */
-	protected Collection<String> makeDeletes(Collection<? extends Predicate> facts, Map<String, DBRelation> aliases) {
+	protected Collection<String> makeDeletes(Collection<? extends Atom> facts, Map<String, DBRelation> aliases) {
 		Collection<String> result = new LinkedList<>();
-		for (Predicate fact : facts) {
+		for (Atom fact : facts) {
 			Relation alias = aliases.get(fact.getName());
 			String delete = "DELETE FROM " + this.encodeName(alias.getName()) + " " + "WHERE ";
 			Attribute attribute = alias.getAttributes().get(alias.getAttributes().size()-1);
@@ -278,9 +278,9 @@ public abstract class SQLStatementBuilder {
 	 * @param relationMap the relation map
 	 * @return the collection
 	 */
-	public Collection<String> clearTables(List<Predicate> queryRelations, Map<String, DBRelation> relationMap) {
+	public Collection<String> clearTables(List<Atom> queryRelations, Map<String, DBRelation> relationMap) {
 		Set<String> result = new LinkedHashSet<>();
-		for(Predicate pred: queryRelations)
+		for(Atom pred: queryRelations)
 			result.add(this.createClearTable(relationMap.get(pred.getName())));
 		return result;
 	}
@@ -318,8 +318,8 @@ public abstract class SQLStatementBuilder {
 	 */
 	protected Pair<Collection<String>,Collection<String>> createTableIndexes(boolean isForQuery, Map<String, DBRelation> relationMap, Evaluatable rule, Set<String> constraintIndices) {
 		Conjunction<?> body = null;
-		if (rule.getBody() instanceof Predicate) {
-			body = Conjunction.of((Predicate) rule.getBody());
+		if (rule.getBody() instanceof Atom) {
+			body = Conjunction.of((Atom) rule.getBody());
 		} else if (rule.getBody() instanceof Conjunction<?>) {
 			body = (Conjunction) rule.getBody();
 		} else {
@@ -327,12 +327,12 @@ public abstract class SQLStatementBuilder {
 		}
 		Set<String> createIndices = new LinkedHashSet<>();
 		Set<String> dropIndices = new LinkedHashSet<>();
-		Multimap<Variable, Predicate> clusters = LinkedHashMultimap.create();
+		Multimap<Variable, Atom> clusters = LinkedHashMultimap.create();
 		for (Formula subFormula: body) {
-			if (subFormula instanceof Predicate) {
+			if (subFormula instanceof Atom) {
 				for (Term t: subFormula.getTerms()) {
 					if (t instanceof Variable) {
-						clusters.put((Variable) t, (Predicate) subFormula);
+						clusters.put((Variable) t, (Atom) subFormula);
 					}
 				}
 			} else {
@@ -340,9 +340,9 @@ public abstract class SQLStatementBuilder {
 			}
 		}
 		for (Variable t: clusters.keys()) {
-			Collection<Predicate> atoms = clusters.get(t);
+			Collection<Atom> atoms = clusters.get(t);
 			if (atoms.size() > 1) {
-				for (Predicate atom: atoms) {
+				for (Atom atom: atoms) {
 					for (int i = 0, l = atom.getTermsCount(); i < l; i++) {
 						if (atom.getTerm(i).equals(t)) {
 							Pair<String,String> createAndDropIndices = this.createTableIndex(isForQuery,constraintIndices, relationMap.get(atom.getName()), i);
@@ -384,8 +384,8 @@ public abstract class SQLStatementBuilder {
 		List<String> from = this.createContentForFromStatement(source);
 		LinkedHashMap<String,Variable> projectionStatementsAndVariables = this.createProjectionStatements(source);
 		List<String> predicates = new ArrayList<String>();
-		List<String> attributeEqualityPredicates = this.createAttributeEqualities((Conjunction<Predicate>) source.getBody(), this.aliases);
-		List<String> attributeConstantEqualityPredicates = this.createEqualitiesWithConstants((Conjunction<Predicate>) source.getBody(), this.aliases);
+		List<String> attributeEqualityPredicates = this.createAttributeEqualities((Conjunction<Atom>) source.getBody(), this.aliases);
+		List<String> attributeConstantEqualityPredicates = this.createEqualitiesWithConstants((Conjunction<Atom>) source.getBody(), this.aliases);
 		List<String> equalityForHomRestrictionsPredicates = this.createEqualitiesForHomConstraints(source, this.aliases, constraints);
 		
 		String egdConstraint = this.translateEGDHomomorphismConstraints(source, this.aliases, constraints);
@@ -465,7 +465,7 @@ public abstract class SQLStatementBuilder {
 		this.aliasCounter = 0;
 		List<String> relations = new ArrayList<String>();
 		this.aliases = HashBiMap.create();;
-		for (Predicate fact:source.getBody().getPredicates()) {
+		for (Atom fact:source.getBody().getAtoms()) {
 			String aliasName = this.aliasPrefix + this.aliasCounter;
 			relations.add(createTableAliasingExpression(aliasName, (Relation) fact.getSignature()));
 			this.aliases.put(fact, aliasName);
@@ -485,7 +485,7 @@ public abstract class SQLStatementBuilder {
 	protected LinkedHashMap<String,Variable> createProjectionStatements(Evaluatable source) {
 		LinkedHashMap<String,Variable> projected = new LinkedHashMap<>();
 		List<Variable> attributes = new ArrayList<>();
-		for (Predicate fact:source.getBody().getPredicates()) {
+		for (Atom fact:source.getBody().getAtoms()) {
 			String alias = this.aliases.get(fact);
 			List<Term> terms = fact.getTerms();
 			for (int it = 0; it < terms.size(); ++it) {
@@ -506,15 +506,15 @@ public abstract class SQLStatementBuilder {
 	 * @param aliases2 the aliases2
 	 * @return 		explicit equalities (String objects of the form A.x1 = B.x2) of the implicit equalities in the input conjunction (the latter is denoted by repetition of the same term)
 	 */
-	protected List<String> createAttributeEqualities(Conjunction<Predicate> source, BiMap<Predicate, String> aliases2) {
+	protected List<String> createAttributeEqualities(Conjunction<Atom> source, BiMap<Atom, String> aliases2) {
 		List<String> attributePredicates = new ArrayList<String>();
-		Collection<Term> terms = Utility.getTerms(source.getPredicates());
+		Collection<Term> terms = Utility.getTerms(source.getAtoms());
 		terms = Utility.removeDuplicates(terms);
 		for (Term term:terms) {
 			Integer leftPosition = null;
 			Relation leftRelation = null;
 			String leftAlias = null;
-			for (Predicate fact:source.getPredicates()) {
+			for (Atom fact:source.getAtoms()) {
 				List<Integer> positions = fact.getTermPositions(term); //all the positions for the same term should be equated
 				for (Integer pos:positions) {
 					if(leftPosition == null) {
@@ -546,9 +546,9 @@ public abstract class SQLStatementBuilder {
 	 * @param aliases2 the aliases2
 	 * @return 		constant equality predicates
 	 */
-	protected List<String> createEqualitiesWithConstants(Conjunction<Predicate> source, BiMap<Predicate, String> aliases2) {
+	protected List<String> createEqualitiesWithConstants(Conjunction<Atom> source, BiMap<Atom, String> aliases2) {
 		List<String> constantPredicates = new ArrayList<>();
-		for (Predicate fact:source.getPredicates()) {
+		for (Atom fact:source.getAtoms()) {
 			String alias = aliases2.get(fact);
 			List<Term> terms = fact.getTerms();
 			for (int it = 0; it < terms.size(); ++it) {
@@ -572,15 +572,15 @@ public abstract class SQLStatementBuilder {
 	 * @param constraints the constraints
 	 * @return 		predicates that correspond to fact constraints
 	 */
-	protected List<String> translateFactConstraints(Evaluatable source, BiMap<Predicate, String> aliases2, HomomorphismConstraint... constraints) {
+	protected List<String> translateFactConstraints(Evaluatable source, BiMap<Atom, String> aliases2, HomomorphismConstraint... constraints) {
 		List<String> setPredicates = new ArrayList<>();
 		for(HomomorphismConstraint c:constraints) {
 			if(c instanceof FactConstraint) {
 				List<Object> facts = new ArrayList<>();
-				for (Predicate atom:((FactConstraint) c).atoms) {
+				for (Atom atom:((FactConstraint) c).atoms) {
 					facts.add(atom.getId());
 				}
-				for(Predicate fact:source.getBody().getPredicates()) {
+				for(Atom fact:source.getBody().getAtoms()) {
 					String alias = aliases2.get(fact);
 					setPredicates.add(createSQLMembershipExpression(fact.getTermsCount()-1, facts, (Relation) fact.getSignature(), alias));
 				}
@@ -597,13 +597,13 @@ public abstract class SQLStatementBuilder {
 	 * @param constraints the constraints
 	 * @return 		predicates that correspond to canonical constraints
 	 */
-	protected List<String> createEqualitiesForHomConstraints(Evaluatable source, BiMap<Predicate, String> aliases2, HomomorphismConstraint... constraints) {
+	protected List<String> createEqualitiesForHomConstraints(Evaluatable source, BiMap<Atom, String> aliases2, HomomorphismConstraint... constraints) {
 		List<String> constantPredicates = new ArrayList<>();
 		for(HomomorphismConstraint c:constraints) {
 			if(c instanceof MapConstraint) {
 				Map<Variable, Constant> m = ((MapConstraint) c).mapping;
 				for(Entry<Variable, Constant> pair:m.entrySet()) {
-					for (Predicate fact:source.getBody().getPredicates()) {
+					for (Atom fact:source.getBody().getAtoms()) {
 						int it = fact.getTerms().indexOf(pair.getKey());
 						if(it != -1) {
 							StringBuilder eq = new StringBuilder();
@@ -627,10 +627,10 @@ public abstract class SQLStatementBuilder {
 	 * @param constraints the constraints
 	 * @return 		predicates that correspond to fact constraints
 	 */
-	protected String translateEGDHomomorphismConstraints(Evaluatable source, BiMap<Predicate, String> aliases, HomomorphismConstraint... constraints) {
+	protected String translateEGDHomomorphismConstraints(Evaluatable source, BiMap<Atom, String> aliases, HomomorphismConstraint... constraints) {
 		for(HomomorphismConstraint c:constraints) {
 			if(c instanceof EGDHomomorphismConstraint) {
-				List<Predicate> conjuncts = source.getBody().getPredicates();
+				List<Atom> conjuncts = source.getBody().getAtoms();
 				String lalias = aliases.get(conjuncts.get(0));
 				String ralias = aliases.get(conjuncts.get(1));
 				lalias = lalias==null ? this.encodeName(conjuncts.get(0).getSignature().getName()):lalias;

@@ -19,9 +19,9 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Query;
-import uk.ac.ox.cs.pdq.fol.Signature;
+import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 
@@ -175,9 +175,9 @@ public class Utility {
 	 * @param atoms the atoms
 	 * @return the variables of the input atoms
 	 */
-	public static List<Variable> getVariables(Collection<? extends Predicate> atoms) {
+	public static List<Variable> getVariables(Collection<? extends Atom> atoms) {
 		Set<Variable> result = new LinkedHashSet<>();
-		for (Predicate atom: atoms) {
+		for (Atom atom: atoms) {
 			for (Term term:atom.getTerms()) {
 				if (term instanceof Variable) {
 					result.add((Variable) term);
@@ -193,9 +193,9 @@ public class Utility {
 	 * @param atoms the atoms
 	 * @return the constants of the input atoms
 	 */
-	public static Collection<Constant> getConstants(Collection<? extends Predicate> atoms) {
+	public static Collection<Constant> getConstants(Collection<? extends Atom> atoms) {
 		Collection<Constant> result = new LinkedHashSet<>();
-		for (Predicate atom:atoms) {
+		for (Atom atom:atoms) {
 			for (Term term:atom.getTerms()) {
 				if (term instanceof Constant && ((Constant) term).isSkolem()) {
 					result.add((Constant) term);
@@ -211,7 +211,7 @@ public class Utility {
 	 * @param atom the atom
 	 * @return the constants of the input atom
 	 */
-	public static Set<Constant> getConstants(Predicate atom) {
+	public static Set<Constant> getConstants(Atom atom) {
 		Set<Constant> result = new LinkedHashSet<>();
 		for (Term term:atom.getTerms()) {
 			if (!term.isVariable()) {
@@ -227,7 +227,7 @@ public class Utility {
 	 * @param atom the atom
 	 * @return the non schema constants
 	 */
-	public static Set<Constant> getNonSchemaConstants(Predicate atom) {
+	public static Set<Constant> getNonSchemaConstants(Atom atom) {
 		Set<Constant> result = new LinkedHashSet<>();
 		for (Term term:atom.getTerms()) {
 			if (!(term instanceof TypedConstant)) {
@@ -243,9 +243,9 @@ public class Utility {
 	 * @param atoms Iterable<PredicateFormula>
 	 * @return the terms of the input atom
 	 */
-	public static Collection<Term> getTerms(Iterable<Predicate> atoms) {
+	public static Collection<Term> getTerms(Iterable<Atom> atoms) {
 		Set<Term> result = new LinkedHashSet<>();
-		for (Predicate atom:atoms) {
+		for (Atom atom:atoms) {
 			for (Term term:atom.getTerms()) {
 				result.add(term);
 			}
@@ -330,8 +330,8 @@ public class Utility {
 		for (Term t : q.getFree()) {
 			if (t instanceof Variable) {
 				boolean found = false;
-				for (Predicate p : q.getBody()) {
-					Signature s = p.getSignature();
+				for (Atom p : q.getBody()) {
+					Predicate s = p.getSignature();
 					if (s instanceof Relation) {
 						Relation r = (Relation) s;
 						int i = 0;
@@ -376,9 +376,9 @@ public class Utility {
 	 * @param atoms the atoms
 	 * @return the string representations of the input atoms
 	 */
-	public static Collection<String> toStrings(Collection<? extends Predicate> atoms) {
+	public static Collection<String> toStrings(Collection<? extends Atom> atoms) {
 		Set<String> strings = new LinkedHashSet<>();
-		for(Predicate atom: atoms) {
+		for(Atom atom: atoms) {
 			strings.add(atom.toString());
 		}
 		return strings;
@@ -401,8 +401,8 @@ public class Utility {
 				result[i] = ((TypedConstant) t).getType();
 				continue;
 			}
-			for (Predicate f: q.getBody().getPredicates()) {
-				Signature s = f.getSignature();
+			for (Atom f: q.getBody().getAtoms()) {
+				Predicate s = f.getSignature();
 				if (s instanceof Relation) {
 					List<Integer> pos = f.getTermPositions(t);
 					if (!pos.isEmpty()) {
@@ -461,15 +461,15 @@ public class Utility {
 	 *      each component are connected, and no predicates part of distinct
 	 *      component are connected.
 	 */
-	public static List<Set<Predicate>> connectedComponents(List<Set<Predicate>> clusters) {
-		List<Set<Predicate>> result = new LinkedList<>();
+	public static List<Set<Atom>> connectedComponents(List<Set<Atom>> clusters) {
+		List<Set<Atom>> result = new LinkedList<>();
 		if (clusters.isEmpty()) {
 			return result;
 		}
-		Set<Predicate> first = clusters.get(0);
+		Set<Atom> first = clusters.get(0);
 		if (clusters.size() > 1) {
-			List<Set<Predicate>> rest = connectedComponents(clusters.subList(1, clusters.size()));
-			for (Set<Predicate> s : rest) {
+			List<Set<Atom>> rest = connectedComponents(clusters.subList(1, clusters.size()));
+			for (Set<Atom> s : rest) {
 				if (!Collections.disjoint(first, s)) {
 					first.addAll(s);
 				} else {

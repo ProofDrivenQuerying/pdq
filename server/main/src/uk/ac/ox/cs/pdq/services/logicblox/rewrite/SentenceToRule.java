@@ -8,7 +8,7 @@ import uk.ac.ox.cs.pdq.db.TGD;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Negation;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.rewrite.Rewriter;
 import uk.ac.ox.cs.pdq.rewrite.RewriterException;
 
@@ -35,22 +35,22 @@ public class SentenceToRule<T extends Formula> implements Rewriter<T, TGD>{
 	public TGD rewrite(T input) throws RewriterException {
 		if (input instanceof Conjunction) {
 			Conjunction<Formula> conjunction = (Conjunction) input;
-			Predicate head = null;
-			List<Predicate> body = new LinkedList<>();
+			Atom head = null;
+			List<Atom> body = new LinkedList<>();
 			for (Formula f: conjunction) {
 				if (f instanceof Negation) {
 					if (head == null) {
 						Collection<T> subFormula = ((Negation) f).getChildren();
 						Formula h = subFormula.iterator().next();
-						if (!(h instanceof Predicate)) {
+						if (!(h instanceof Atom)) {
 							throw new RewriterException("Not a supported constraint sentence: " + input);
 						}
-						head = (Predicate) h;
+						head = (Atom) h;
 					} else {
 						throw new RewriterException("Not a valid constraint sentence: " + input);
 					}
-				} else if (f instanceof Predicate) {
-					body.add((Predicate) f);
+				} else if (f instanceof Atom) {
+					body.add((Atom) f);
 				} else {
 					throw new RewriterException("Not a valid constraint sentence: " + input);
 				}

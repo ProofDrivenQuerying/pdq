@@ -9,7 +9,7 @@ import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.Disjunction;
 import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Negation;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema.InferredAccessibleRelation;
 import uk.ac.ox.cs.pdq.rewrite.Rewriter;
 
@@ -29,7 +29,7 @@ public class InferredAccessibleAxiom extends TGD {
 	 * @param dependency the dependency
 	 * @param predToInfAcc the pred to inf acc
 	 */
-	public InferredAccessibleAxiom(TGD dependency, Map<Predicate, InferredAccessibleRelation> predToInfAcc) {
+	public InferredAccessibleAxiom(TGD dependency, Map<Atom, InferredAccessibleRelation> predToInfAcc) {
 		super(substitute(dependency.getLeft(), predToInfAcc),
 				substitute(dependency.getRight(), predToInfAcc));
 	}
@@ -43,7 +43,7 @@ public class InferredAccessibleAxiom extends TGD {
 	 * @return a conjunction of predicates corresponding to the LHS of an
 	 * inferred accessible axiom
 	 */
-	private static <T extends Formula> T substitute(T f, Map<Predicate, InferredAccessibleRelation> predToInfAcc) {
+	private static <T extends Formula> T substitute(T f, Map<Atom, InferredAccessibleRelation> predToInfAcc) {
 		return new InferredAccessibleRelationSubstituter<T>(predToInfAcc).rewrite(f);
 	}
 
@@ -56,13 +56,13 @@ public class InferredAccessibleAxiom extends TGD {
 	private static class InferredAccessibleRelationSubstituter<T extends Formula> implements Rewriter<T, T> {
 		
 		/** The pred to inf acc. */
-		final Map<Predicate, InferredAccessibleRelation> predToInfAcc;
+		final Map<Atom, InferredAccessibleRelation> predToInfAcc;
 
 		/**
 		 * Constructor for InferredAccessibleRelationSubstituter.
 		 * @param predToInfAcc Map<PredicateFormula,InferredAccessibleRelation>
 		 */
-		public InferredAccessibleRelationSubstituter(Map<Predicate, InferredAccessibleRelation> predToInfAcc) {
+		public InferredAccessibleRelationSubstituter(Map<Atom, InferredAccessibleRelation> predToInfAcc) {
 			this.predToInfAcc = predToInfAcc;
 		}
 
@@ -93,8 +93,8 @@ public class InferredAccessibleAxiom extends TGD {
 			if (f instanceof Negation) {
 				return this.substitute((Negation<Formula>) f);
 			}
-			if (f instanceof Predicate) {
-				return this.substitute((Predicate) f);
+			if (f instanceof Atom) {
+				return this.substitute((Atom) f);
 			}
 			return f;
 		}
@@ -143,8 +143,8 @@ public class InferredAccessibleAxiom extends TGD {
 		 * @param pred PredicateFormula
 		 * @return PredicateFormula
 		 */
-		private Predicate substitute(Predicate pred) {
-			return new Predicate(this.predToInfAcc.get(pred), pred.getTerms());
+		private Atom substitute(Atom pred) {
+			return new Atom(this.predToInfAcc.get(pred), pred.getTerms());
 		}
 	}
 }

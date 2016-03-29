@@ -11,12 +11,12 @@ import org.junit.Test;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Negation;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.QuantifiedFormula;
 import uk.ac.ox.cs.pdq.fol.QuantifiedFormula.ExistentiallyQuantifiedFormula;
 import uk.ac.ox.cs.pdq.fol.QuantifiedFormula.UniversallyQuantifiedFormula;
 import uk.ac.ox.cs.pdq.util.Utility;
-import uk.ac.ox.cs.pdq.fol.Signature;
+import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Skolem;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
@@ -41,7 +41,7 @@ public class QuantifiedFormulaTest {
 	 * Test universal.
 	 */
 	@Test public void testUniversal() {
-		Signature s = new Signature("s", 5);
+		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
 				new Variable("x1"), 
 				new Variable("x2"), 
@@ -49,8 +49,8 @@ public class QuantifiedFormulaTest {
 				new Skolem("x4"), 
 				new TypedConstant<>("x5")
 				);
-		Predicate p = new Predicate( s, t);
-		UniversallyQuantifiedFormula<Predicate> n =
+		Atom p = new Atom( s, t);
+		UniversallyQuantifiedFormula<Atom> n =
 				QuantifiedFormula.forAll(
 						Lists.newArrayList(new Variable("x1")), p);
 		Assert.assertEquals("Universal subformulation must match that of construction ", p, n.getChild());
@@ -60,7 +60,7 @@ public class QuantifiedFormulaTest {
 	 * Test equals universal.
 	 */
 	@Test public void testEqualsUniversal() {
-		Signature s1 = new Signature("s", 5);
+		Predicate s1 = new Predicate("s", 5);
 		List<Term> t1 = Lists.<Term>newArrayList(
 				new Variable("x1"), 
 				new Variable("x2"), 
@@ -68,8 +68,8 @@ public class QuantifiedFormulaTest {
 				new Skolem("x4"), 
 				new TypedConstant<>("x5")
 				);
-		Predicate p1 = new Predicate(s1, t1);
-		Signature s2 = new Signature("s", 5);
+		Atom p1 = new Atom(s1, t1);
+		Predicate s2 = new Predicate("s", 5);
 		List<Term> t2 = Lists.<Term>newArrayList(
 				new Variable("x1"), 
 				new Variable("x2"), 
@@ -77,11 +77,11 @@ public class QuantifiedFormulaTest {
 				new Skolem("x4"), 
 				new TypedConstant<>("x5")
 				);
-		Predicate p2 = new Predicate(s2, t2);
+		Atom p2 = new Atom(s2, t2);
 		List<Variable> v1 = Lists.newArrayList(new Variable("x1"));
 		List<Variable> v2 = Lists.newArrayList(new Variable("x1"));
-		UniversallyQuantifiedFormula<Predicate> n1 = QuantifiedFormula.forAll(v1, p1);
-		UniversallyQuantifiedFormula<Predicate> n2 = QuantifiedFormula.forAll(v2, p2);
+		UniversallyQuantifiedFormula<Atom> n1 = QuantifiedFormula.forAll(v1, p1);
+		UniversallyQuantifiedFormula<Atom> n2 = QuantifiedFormula.forAll(v2, p2);
 		Assert.assertTrue("Universal subformulation must match that of construction ", n1.equals(n2));
 	}
 
@@ -89,7 +89,7 @@ public class QuantifiedFormulaTest {
 	 * Test not equals universal.
 	 */
 	@Test public void testNotEqualsUniversal() {
-		Signature s1 = new Signature("s", 5);
+		Predicate s1 = new Predicate("s", 5);
 		List<Term> t1 = Lists.<Term>newArrayList(
 				new Variable("x1"), 
 				new Variable("x2"), 
@@ -97,8 +97,8 @@ public class QuantifiedFormulaTest {
 				new Skolem("x4"), 
 				new TypedConstant<>("x5")
 				);
-		Predicate p1 = new Predicate(s1, t1);
-		Signature s2 = new Signature("s", 5);
+		Atom p1 = new Atom(s1, t1);
+		Predicate s2 = new Predicate("s", 5);
 		List<Term> t2 = Lists.<Term>newArrayList(
 				new Variable("x1"), 
 				new Variable("x2"), 
@@ -106,9 +106,9 @@ public class QuantifiedFormulaTest {
 				new Skolem("x4"), 
 				new TypedConstant<>("y")
 				);
-		Predicate p2 = new Predicate(s2, t2);
-		Negation<Predicate> n1 = Negation.of(p1);
-		Negation<Predicate> n2 = Negation.of(p2);
+		Atom p2 = new Atom(s2, t2);
+		Negation<Atom> n1 = Negation.of(p1);
+		Negation<Atom> n2 = Negation.of(p2);
 		Assert.assertFalse("Universal subformulation must match that of construction ", n1.equals(n2));
 	}
 
@@ -116,7 +116,7 @@ public class QuantifiedFormulaTest {
 	 * Test ground universal.
 	 */
 	@Test public void testGroundUniversal() {
-		Signature s = new Signature("s", 5);
+		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
 				new Variable("x1"), 
 				new Variable("x2"), 
@@ -134,9 +134,9 @@ public class QuantifiedFormulaTest {
 		Map<Variable, Constant> m = new LinkedHashMap<>();
 		m.put(new Variable("x2"), new TypedConstant<>("c2"));
 		m.put(new Variable("x4"), new TypedConstant<>("c4"));
-		Predicate p = new Predicate(s, t);
+		Atom p = new Atom(s, t);
 		List<Variable> v = Lists.newArrayList(new Variable("x1"));
-		UniversallyQuantifiedFormula<Predicate> n = QuantifiedFormula.forAll(v, p);
+		UniversallyQuantifiedFormula<Atom> n = QuantifiedFormula.forAll(v, p);
 		Assert.assertEquals("Grounded universal must comply to mapping ", g, n.ground(m).getTerms());
 	}
 
@@ -145,7 +145,7 @@ public class QuantifiedFormulaTest {
 	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void testGroundUniversalInvalid() {
-		Signature s = new Signature("s", 5);
+		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
 				new Variable("x1"), 
 				new Variable("x2"), 
@@ -164,9 +164,9 @@ public class QuantifiedFormulaTest {
 		m.put(new Variable("x1"), new TypedConstant<>("c1"));
 		m.put(new Variable("x2"), new TypedConstant<>("c2"));
 		m.put(new Variable("x4"), new TypedConstant<>("c4"));
-		Predicate p = new Predicate(s, t);
+		Atom p = new Atom(s, t);
 		List<Variable> v = Lists.newArrayList(new Variable("x1"));
-		UniversallyQuantifiedFormula<Predicate> n = QuantifiedFormula.forAll(v, p);
+		UniversallyQuantifiedFormula<Atom> n = QuantifiedFormula.forAll(v, p);
 		Assert.assertEquals("Grounded universal must comply to mapping ", g, n.ground(m).getTerms());
 	}
 
@@ -174,7 +174,7 @@ public class QuantifiedFormulaTest {
 	 * Test existential.
 	 */
 	@Test public void testExistential() {
-		Signature s = new Signature("s", 5);
+		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
 				new Variable("x1"), 
 				new Variable("x2"), 
@@ -182,8 +182,8 @@ public class QuantifiedFormulaTest {
 				new Skolem("x4"), 
 				new TypedConstant<>("x5")
 				);
-		Predicate p = new Predicate( s, t);
-		ExistentiallyQuantifiedFormula<Predicate> n =
+		Atom p = new Atom( s, t);
+		ExistentiallyQuantifiedFormula<Atom> n =
 				QuantifiedFormula.thereExists(
 						Lists.newArrayList(new Variable("x1")), p);
 		Assert.assertEquals("Universal subformulation must match that of construction ", p, n.getChild());
@@ -193,7 +193,7 @@ public class QuantifiedFormulaTest {
 	 * Test equals existential.
 	 */
 	@Test public void testEqualsExistential() {
-		Signature s1 = new Signature("s", 5);
+		Predicate s1 = new Predicate("s", 5);
 		List<Term> t1 = Lists.<Term>newArrayList(
 				new Variable("x1"), 
 				new Variable("x2"), 
@@ -201,8 +201,8 @@ public class QuantifiedFormulaTest {
 				new Skolem("x4"), 
 				new TypedConstant<>("x5")
 				);
-		Predicate p1 = new Predicate(s1, t1);
-		Signature s2 = new Signature("s", 5);
+		Atom p1 = new Atom(s1, t1);
+		Predicate s2 = new Predicate("s", 5);
 		List<Term> t2 = Lists.<Term>newArrayList(
 				new Variable("x1"), 
 				new Variable("x2"), 
@@ -210,11 +210,11 @@ public class QuantifiedFormulaTest {
 				new Skolem("x4"), 
 				new TypedConstant<>("x5")
 				);
-		Predicate p2 = new Predicate(s2, t2);
+		Atom p2 = new Atom(s2, t2);
 		List<Variable> v1 = Lists.newArrayList(new Variable("x1"));
 		List<Variable> v2 = Lists.newArrayList(new Variable("x1"));
-		ExistentiallyQuantifiedFormula<Predicate> n1 = QuantifiedFormula.thereExists(v1, p1);
-		ExistentiallyQuantifiedFormula<Predicate> n2 = QuantifiedFormula.thereExists(v2, p2);
+		ExistentiallyQuantifiedFormula<Atom> n1 = QuantifiedFormula.thereExists(v1, p1);
+		ExistentiallyQuantifiedFormula<Atom> n2 = QuantifiedFormula.thereExists(v2, p2);
 		Assert.assertTrue("Universal subformulation must match that of construction ", n1.equals(n2));
 	}
 
@@ -222,7 +222,7 @@ public class QuantifiedFormulaTest {
 	 * Test not equals existential.
 	 */
 	@Test public void testNotEqualsExistential() {
-		Signature s1 = new Signature("s", 5);
+		Predicate s1 = new Predicate("s", 5);
 		List<Term> t1 = Lists.<Term>newArrayList(
 				new Variable("x1"), 
 				new Variable("x2"), 
@@ -230,8 +230,8 @@ public class QuantifiedFormulaTest {
 				new Skolem("x4"), 
 				new TypedConstant<>("x5")
 				);
-		Predicate p1 = new Predicate(s1, t1);
-		Signature s2 = new Signature("s", 5);
+		Atom p1 = new Atom(s1, t1);
+		Predicate s2 = new Predicate("s", 5);
 		List<Term> t2 = Lists.<Term>newArrayList(
 				new Variable("x1"), 
 				new Variable("x2"), 
@@ -239,11 +239,11 @@ public class QuantifiedFormulaTest {
 				new Skolem("x4"), 
 				new TypedConstant<>("y")
 				);
-		Predicate p2 = new Predicate(s2, t2);
+		Atom p2 = new Atom(s2, t2);
 		List<Variable> v1 = Lists.newArrayList(new Variable("x1"));
 		List<Variable> v2 = Lists.newArrayList(new Variable("x1"));
-		ExistentiallyQuantifiedFormula<Predicate> n1 = QuantifiedFormula.thereExists(v1, p1);
-		ExistentiallyQuantifiedFormula<Predicate> n2 = QuantifiedFormula.thereExists(v2, p2);
+		ExistentiallyQuantifiedFormula<Atom> n1 = QuantifiedFormula.thereExists(v1, p1);
+		ExistentiallyQuantifiedFormula<Atom> n2 = QuantifiedFormula.thereExists(v2, p2);
 		Assert.assertFalse("Universal subformulation must match that of construction ", n1.equals(n2));
 	}
 
@@ -252,7 +252,7 @@ public class QuantifiedFormulaTest {
 	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void testGroundExistentialInvalid() {
-		Signature s = new Signature("s", 5);
+		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
 				new Variable("x1"), 
 				new Variable("x2"), 
@@ -271,9 +271,9 @@ public class QuantifiedFormulaTest {
 		m.put(new Variable("x1"), new TypedConstant<>("c1"));
 		m.put(new Variable("x2"), new TypedConstant<>("c2"));
 		m.put(new Variable("x4"), new TypedConstant<>("c4"));
-		Predicate p = new Predicate(s, t);
+		Atom p = new Atom(s, t);
 		List<Variable> v = Lists.newArrayList(new Variable("x1"));
-		ExistentiallyQuantifiedFormula<Predicate> n = QuantifiedFormula.thereExists(v, p);
+		ExistentiallyQuantifiedFormula<Atom> n = QuantifiedFormula.thereExists(v, p);
 		Assert.assertEquals("Grounded universal must comply to mapping ", g, n.ground(m).getTerms());
 	}
 
@@ -281,7 +281,7 @@ public class QuantifiedFormulaTest {
 	 * Test ground existential.
 	 */
 	@Test public void testGroundExistential() {
-		Signature s = new Signature("s", 5);
+		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
 				new Variable("x1"), 
 				new Variable("x2"), 
@@ -299,9 +299,9 @@ public class QuantifiedFormulaTest {
 		Map<Variable, Constant> m = new LinkedHashMap<>();
 		m.put(new Variable("x2"), new TypedConstant<>("c2"));
 		m.put(new Variable("x4"), new TypedConstant<>("c4"));
-		Predicate p = new Predicate(s, t);
+		Atom p = new Atom(s, t);
 		List<Variable> v = Lists.newArrayList(new Variable("x1"));
-		ExistentiallyQuantifiedFormula<Predicate> n = QuantifiedFormula.thereExists(v, p);
+		ExistentiallyQuantifiedFormula<Atom> n = QuantifiedFormula.thereExists(v, p);
 		Assert.assertEquals("Grounded universal must comply to mapping ", g, n.ground(m).getTerms());
 	}
 }

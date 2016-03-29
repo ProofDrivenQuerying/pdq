@@ -18,7 +18,7 @@ import uk.ac.ox.cs.pdq.db.TypedConstant;
  * @author Julien Leblay
  * @param <S> the generic type
  */
-public interface Query<S extends Formula> extends Formula, Evaluatable, Rule<S, Predicate> {
+public interface Query<S extends Formula> extends Formula, Evaluatable, Rule<S, Atom> {
 
 	/**
 	 * Checks if is boolean.
@@ -43,7 +43,7 @@ public interface Query<S extends Formula> extends Formula, Evaluatable, Rule<S, 
 	 * @see uk.ac.ox.cs.pdq.formula.Rule#getHead()
 	 */
 	@Override
-	Predicate getHead();
+	Atom getHead();
 
 	/**
 	 * Gets the schema constants.

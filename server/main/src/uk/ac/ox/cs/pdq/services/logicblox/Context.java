@@ -14,7 +14,7 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.View;
 import uk.ac.ox.cs.pdq.db.builder.SchemaBuilder;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.services.logicblox.rewrite.ProtoBufferUnwrapper;
 
@@ -132,7 +132,7 @@ public class Context {
 	 */
 	public Schema setAccesses(Query<?> query) {
 		Set<String> queryPreds  = new LinkedHashSet<>();
-		for (Predicate p: query.getBody().getPredicates()) {
+		for (Atom p: query.getBody().getAtoms()) {
 			queryPreds.add(p.getName());
 		}
 		

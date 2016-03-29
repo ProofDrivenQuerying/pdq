@@ -4,7 +4,7 @@ import java.util.Map;
 
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.Constant;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Variable;
 
 // TODO: Auto-generated Javadoc
@@ -41,12 +41,12 @@ public abstract class HomomorphismConstraint {
 	static class FactConstraint extends HomomorphismConstraint {
 		
 		/** The atoms. */
-		final Conjunction<Predicate> atoms;
+		final Conjunction<Atom> atoms;
 		/**
 		 * Constructor for AtomCollectionScope.
 		 * @param atoms Conjunction<PredicateFormula>
 		 */
-		private FactConstraint(Conjunction<Predicate> atoms) {
+		private FactConstraint(Conjunction<Atom> atoms) {
 			this.atoms = atoms;
 		}
 	}
@@ -89,7 +89,7 @@ public abstract class HomomorphismConstraint {
 	 * @param atoms the atoms
 	 * @return a fresh fact collection scope constraint
 	 */
-	public static FactConstraint createFactConstraint(Conjunction<Predicate> atoms) {
+	public static FactConstraint createFactConstraint(Conjunction<Atom> atoms) {
 		return new FactConstraint(atoms);
 	}
 

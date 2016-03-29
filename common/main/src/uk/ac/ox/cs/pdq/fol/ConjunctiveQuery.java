@@ -28,13 +28,13 @@ import com.google.common.collect.Sets;
  * @author Julien Leblay
  *
  */
-public class ConjunctiveQuery extends AbstractFormula implements Query<Conjunction<Predicate>> {
+public class ConjunctiveQuery extends AbstractFormula implements Query<Conjunction<Atom>> {
 
 	/**  The query's head part. */
-	protected final Predicate head;
+	protected final Atom head;
 
 	/**  The query's body part. */
-	protected final Conjunction<Predicate> body;
+	protected final Conjunction<Atom> body;
 
 	/**  The terms in the head of the query. */
 	protected final List<Term> freeTerms;
@@ -52,7 +52,7 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 	protected final Collection<TypedConstant<?>> constants;
 
 	/**  The canonical database of the query. */
-	protected Conjunction<Predicate> canonical;
+	protected Conjunction<Atom> canonical;
 
 	/** The grounding. */
 	protected Map<Variable, Constant> grounding;
@@ -65,7 +65,7 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 	 * @param body
 	 * 		The query's body
 	 */
-	public ConjunctiveQuery(Predicate head, Conjunction<Predicate> body) {
+	public ConjunctiveQuery(Atom head, Conjunction<Atom> body) {
 		this(head, body, generateCanonicalMapping(body));
 	}
 	
@@ -79,8 +79,8 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 	 * @param body
 	 * 		The query's body
 	 */
-	public ConjunctiveQuery(String name, List<Term> headTerms, Conjunction<Predicate> body) {
-		this(new Predicate(new Signature(name, headTerms.size()), headTerms), body);
+	public ConjunctiveQuery(String name, List<Term> headTerms, Conjunction<Atom> body) {
+		this(new Atom(new Predicate(name, headTerms.size()), headTerms), body);
 	}
 
 	/**
@@ -94,15 +94,15 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 	 * @param grounding
 	 * 		Mapping of query variables to constants  
 	 */
-	public ConjunctiveQuery(Predicate head, Conjunction<Predicate> body, Map<Variable, Constant> grounding) {
+	public ConjunctiveQuery(Atom head, Conjunction<Atom> body, Map<Variable, Constant> grounding) {
 		super();
 		List<Variable> free = head.getVariables();
-		List<Variable> bound = Utility.getVariables(body.getPredicates());
+		List<Variable> bound = Utility.getVariables(body.getAtoms());
 		bound.removeAll(free);
 		assert Collections.disjoint(free, bound): "Free and bound variables overlap.";
 		assert Sets.difference(
 				Sets.union(
-						Sets.newLinkedHashSet(Utility.getVariables(body.getPredicates())),
+						Sets.newLinkedHashSet(Utility.getVariables(body.getAtoms())),
 						Sets.newLinkedHashSet(head.getVariables())),
 						Sets.union(
 								Sets.newLinkedHashSet(free),
@@ -125,10 +125,10 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 	 * @param right the right
 	 * @return 		returns the schema constants of the input conjunction of atoms
 	 */
-	private static Collection<TypedConstant<?>> getSchemaConstants(Conjunction<Predicate> right) {
+	private static Collection<TypedConstant<?>> getSchemaConstants(Conjunction<Atom> right) {
 		Collection<TypedConstant<?>> constants = new LinkedHashSet<>();
-		for(Predicate predicate: right.getChildren()) {
-			for (Term term: predicate.getTerms()) {
+		for(Atom atom: right.getChildren()) {
+			for (Term term: atom.getTerms()) {
 				if (!term.isSkolem() && !term.isVariable()) {
 					TypedConstant<?> schemaConstant = ((TypedConstant) term);
 					Preconditions.checkState(schemaConstant != null);
@@ -147,9 +147,9 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 	 * 		A fresh constant is created for each variable of the conjunction. 
 	 * 		This method is invoked by the conjunctive query constructor when the constructor is called with empty input canonical mapping.
 	 */
-	private static Map<Variable, Constant> generateCanonicalMapping(Conjunction<Predicate> body) {
+	private static Map<Variable, Constant> generateCanonicalMapping(Conjunction<Atom> body) {
 		Map<Variable, Constant> canonicalMapping = new LinkedHashMap<>();
-			for (Predicate p: body) {
+			for (Atom p: body) {
 				for (Term t: p.getTerms()) {
 					if (t.isVariable()) {
 						Constant c = canonicalMapping.get(t);
@@ -170,7 +170,7 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 	 * @param canonical the canonical
 	 * @return 		a mapping of query free variables to canonical constants
 	 */
-	private static Map<Variable, Constant> getFreeToCanonical(Predicate head, Map<Variable, Constant> canonical) {
+	private static Map<Variable, Constant> getFreeToCanonical(Atom head, Map<Variable, Constant> canonical) {
 		Map<Variable, Constant> freeToCanonical = new LinkedHashMap<>();
 		for(Term headTerm: head.getTerms()) {
 			Constant chaseTerm  = canonical.get(headTerm);
@@ -198,9 +198,9 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 	 * @see uk.ac.ox.cs.pdq.formula.Query#ground(java.util.Map)
 	 */
 	@Override
-	public Conjunction<Predicate> ground(Map<Variable, Constant> mapping) {
-		List<Predicate> bodyAtoms = new ArrayList<>();
-		for (Predicate atom: this.body.getChildren()) {
+	public Conjunction<Atom> ground(Map<Variable, Constant> mapping) {
+		List<Atom> bodyAtoms = new ArrayList<>();
+		for (Atom atom: this.body.getChildren()) {
 			bodyAtoms.add(atom.ground(mapping));
 		}
 		return Conjunction.of(bodyAtoms);
@@ -214,7 +214,7 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 	 * @see uk.ac.ox.cs.pdq.fol.Query#getCanonical()
 	 */
 	@Override
-	public Conjunction<Predicate> getCanonical() {
+	public Conjunction<Atom> getCanonical() {
 		return this.canonical;
 	}
 
@@ -222,13 +222,13 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 	 * Gets the predicates.
 	 *
 	 * @return List<PredicateFormula>
-	 * @see uk.ac.ox.cs.pdq.fol.Formula#getPredicates()
+	 * @see uk.ac.ox.cs.pdq.fol.Formula#getAtoms()
 	 */
 	@Override
-	public List<Predicate> getPredicates() {
-		List<Predicate> result = new ArrayList<>();
+	public List<Atom> getAtoms() {
+		List<Atom> result = new ArrayList<>();
 		result.add(this.head);
-		result.addAll(this.body.getPredicates());
+		result.addAll(this.body.getAtoms());
 		return result;
 	}
 
@@ -264,7 +264,7 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 	 * @see uk.ac.ox.cs.pdq.fol.Query#getBody()
 	 */
 	@Override
-	public Conjunction<Predicate> getBody() {
+	public Conjunction<Atom> getBody() {
 		return this.body;
 	}
 
@@ -275,7 +275,7 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 	 * @see uk.ac.ox.cs.pdq.fol.Query#getHead()
 	 */
 	@Override
-	public Predicate getHead() {
+	public Atom getHead() {
 		return this.head;
 	}
 
@@ -377,17 +377,17 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 	 * @see uk.ac.ox.cs.pdq.fol.Formula#getSubFormulas()
 	 */
 	@Override
-	public Collection<Predicate> getChildren() {
+	public Collection<Atom> getChildren() {
 		return this.getBody().getChildren();
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.fol.Rule#contains(uk.ac.ox.cs.pdq.fol.Signature)
+	 * @see uk.ac.ox.cs.pdq.fol.Rule#contains(uk.ac.ox.cs.pdq.fol.Predicate)
 	 */
 	@Override
-	public boolean contains(Signature s) {
-		for (Predicate atom: this.getPredicates()) {
+	public boolean contains(Predicate s) {
+		for (Atom atom: this.getAtoms()) {
 			if (atom.getSignature().equals(s)) {
 				return true;
 			}

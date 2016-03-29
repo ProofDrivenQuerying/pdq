@@ -18,7 +18,7 @@ import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Implication;
 import uk.ac.ox.cs.pdq.fol.NaryFormula;
 import uk.ac.ox.cs.pdq.fol.Negation;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.rewrite.Rewriter;
 import uk.ac.ox.cs.pdq.rewrite.RewriterException;
@@ -81,8 +81,8 @@ public class PushEqualityRewriter<F extends Formula> implements Rewriter<F, F> {
 		if (f instanceof Negation) {
 			return this.propagate((Negation) f);
 		}
-		if (f instanceof Predicate) {
-			return this.propagate((Predicate) f);
+		if (f instanceof Atom) {
+			return this.propagate((Atom) f);
 		}
 		if (f instanceof ConjunctiveQuery) {
 			return this.propagate((ConjunctiveQuery) f);
@@ -108,11 +108,11 @@ public class PushEqualityRewriter<F extends Formula> implements Rewriter<F, F> {
 		}
 		try {
 			if (newBody instanceof Conjunction) {
-				for (Predicate p: (Conjunction<Predicate>) newBody) {
+				for (Atom p: (Conjunction<Atom>) newBody) {
 					result.addBodyAtom(p);
 				}
-			} else if (newBody instanceof Predicate) {
-				result.addBodyAtom((Predicate) newBody);
+			} else if (newBody instanceof Atom) {
+				result.addBodyAtom((Atom) newBody);
 			}
 			result.setName(query.getHead().getName());
 			for (Term t: this.propagate(query.getHead().getTerms())) {
@@ -195,11 +195,11 @@ public class PushEqualityRewriter<F extends Formula> implements Rewriter<F, F> {
 	 * @param pred PredicateFormula
 	 * @return the rewritten formula
 	 */
-	private Predicate propagate(Predicate pred) {
+	private Atom propagate(Atom pred) {
 		if (pred.isEquality()) {
 			return null;
 		}
-		return new Predicate(pred.getSignature(), this.propagate(pred.getTerms()));
+		return new Atom(pred.getSignature(), this.propagate(pred.getTerms()));
 	}
 
 	/**
@@ -228,7 +228,7 @@ public class PushEqualityRewriter<F extends Formula> implements Rewriter<F, F> {
 	 * @throws RewriterException the rewriter exception
 	 */
 	private void buildClusters(Formula f) throws RewriterException {
-		for (Predicate pred: f.getPredicates()) {
+		for (Atom pred: f.getAtoms()) {
 			if (pred.isEquality()) {
 				this.cluster(pred.getTerms());
 			}

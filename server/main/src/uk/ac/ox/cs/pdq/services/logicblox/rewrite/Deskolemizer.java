@@ -14,7 +14,7 @@ import uk.ac.ox.cs.pdq.fol.Disjunction;
 import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Implication;
 import uk.ac.ox.cs.pdq.fol.Negation;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Skolem;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
@@ -123,7 +123,7 @@ public class Deskolemizer<F extends Formula> implements Rewriter<F, F> {
 		public ConjunctiveQuery rewrite(ConjunctiveQuery input) {
 			QueryBuilder builder = new QueryBuilder();
 			builder.setName(input.getHead().getName());
-			for (Predicate subFormula: input.getBody()) {
+			for (Atom subFormula: input.getBody()) {
 				builder.addBodyAtom(
 						Deskolemizer.resolve(subFormula, this.mapping)
 								.rewrite(subFormula));
@@ -226,8 +226,8 @@ public class Deskolemizer<F extends Formula> implements Rewriter<F, F> {
 	/**
 	 * Deskolemizer implementation for Atoms.
 	 */
-	public static class AtomDeskolemizer extends Deskolemizer<Predicate> {
-		static { repository.put(Predicate.class, AtomDeskolemizer.class); }
+	public static class AtomDeskolemizer extends Deskolemizer<Atom> {
+		static { repository.put(Atom.class, AtomDeskolemizer.class); }
 
 		/**
 		 * Rewrite.
@@ -236,8 +236,8 @@ public class Deskolemizer<F extends Formula> implements Rewriter<F, F> {
 		 * @return PredicateFormula
 		 */
 		@Override
-		public Predicate rewrite(Predicate input) {
-			Predicate.Builder builder = Predicate.builder();
+		public Atom rewrite(Atom input) {
+			Atom.Builder builder = Atom.builder();
 			builder.setSignature(input.getSignature());
 			for (Term term: input.getTerms()) {
 				builder.addTerm(this.map(term));

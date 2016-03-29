@@ -23,7 +23,7 @@ import uk.ac.ox.cs.pdq.db.TGD;
 import uk.ac.ox.cs.pdq.db.View;
 import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.FormulaEquivalence;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
@@ -345,7 +345,7 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	private void removeOrphanDependencies() {
 		for (Iterator<Integer> i = this.dependencies.keySet().iterator(); i.hasNext();) {
 			Constraint ic = this.dependencies.get(i.next());
-			for (Predicate p: ic.getLeft().getPredicates()) {
+			for (Atom p: ic.getLeft().getAtoms()) {
 				if (this.relations.get(p.getSignature().getName()) == null) {
 					i.remove();
 					break;
@@ -354,7 +354,7 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 		}
 		for (Iterator<Integer> i = this.dependencies.keySet().iterator(); i.hasNext();) {
 			Constraint ic = this.dependencies.get(i.next());
-			for (Predicate p: ic.getRight().getPredicates()) {
+			for (Atom p: ic.getRight().getAtoms()) {
 				if (this.relations.get(p.getSignature().getName()) == null) {
 					i.remove();
 					break;
@@ -387,8 +387,8 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	private LinearGuarded findViewDependency(View v) {
 		if (this.dependencies != null) {
 			for (Constraint ic : this.dependencies.values()) {
-				if (ic.getLeft().getPredicates().size() == 1) {
-					if (ic.getLeft().getPredicates().get(0)
+				if (ic.getLeft().getAtoms().size() == 1) {
+					if (ic.getLeft().getAtoms().get(0)
 							.getSignature().getName().equals(v.getName())) {
 						return (LinearGuarded) ic;
 					}

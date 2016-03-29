@@ -8,9 +8,9 @@ import java.util.Set;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Evaluatable;
 import uk.ac.ox.cs.pdq.fol.Formula;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Rule;
-import uk.ac.ox.cs.pdq.fol.Signature;
+import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Variable;
 
 // TODO: Auto-generated Javadoc
@@ -60,7 +60,7 @@ public interface Constraint<L extends Formula, R extends Formula> extends Evalua
 	 *
 	 * @return List<PredicateFormula>
 	 */
-	List<Predicate> getPredicates();
+	List<Atom> getAtoms();
 
 	/**
 	 * Gets the both side variables.
@@ -77,5 +77,5 @@ public interface Constraint<L extends Formula, R extends Formula> extends Evalua
 	 * the left or right hand side.
 	 */
 	@Override
-	boolean contains(Signature s);
+	boolean contains(Predicate s);
 }

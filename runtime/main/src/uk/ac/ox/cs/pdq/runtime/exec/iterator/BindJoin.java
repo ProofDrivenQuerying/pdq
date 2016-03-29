@@ -79,7 +79,7 @@ public class BindJoin extends Join {
 
 	/**
 	 * Instantiates a new join.
-	 * @param pred Predicate
+	 * @param pred Atom
 	 * @param left TupleIterator
 	 * @param right TupleIterator
 	 */
@@ -91,7 +91,7 @@ public class BindJoin extends Join {
 
 	/**
 	 * Instantiates a new join.
-	 * @param pred Predicate
+	 * @param pred Atom
 	 * @param sideWays List<Integer>
 	 * @param left TupleIterator
 	 * @param right TupleIterator

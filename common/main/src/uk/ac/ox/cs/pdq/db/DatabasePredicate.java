@@ -2,7 +2,7 @@ package uk.ac.ox.cs.pdq.db;
 
 import java.util.Collection;
 
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Term;
 
 // TODO: Auto-generated Javadoc
@@ -12,7 +12,7 @@ import uk.ac.ox.cs.pdq.fol.Term;
  *
  * @author Julien Leblay
  */
-public class DatabasePredicate extends Predicate {
+public class DatabasePredicate extends Atom {
 
 	/**
 	 * Constructor for DatabasePredicate.

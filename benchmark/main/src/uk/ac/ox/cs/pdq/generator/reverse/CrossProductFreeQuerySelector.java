@@ -7,7 +7,7 @@ import java.util.Set;
 
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.Formula;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.util.Utility;
@@ -31,15 +31,15 @@ public class CrossProductFreeQuerySelector implements QuerySelector {
 	 */
 	@Override
 	public boolean accept(Query<?> q) {
-		for (Conjunction<Predicate> body : this.enumerateConjunctions(q.getBody())) {
+		for (Conjunction<Atom> body : this.enumerateConjunctions(q.getBody())) {
 			if (body.size() > 1) {
-				Multimap<Term, Predicate> clusters = LinkedHashMultimap.create();
-				for (Predicate pred: body) {
+				Multimap<Term, Atom> clusters = LinkedHashMultimap.create();
+				for (Atom pred: body) {
 					for (Term t: pred.getTerms()) {
 						clusters.put(t, pred);
 					}
 				}
-				List<Set<Predicate>> localClusters2 = new LinkedList<>();
+				List<Set<Atom>> localClusters2 = new LinkedList<>();
 				for (Term t: clusters.keySet()) {
 					localClusters2.add(Sets.newHashSet(clusters.get(t)));
 				}
@@ -55,14 +55,14 @@ public class CrossProductFreeQuerySelector implements QuerySelector {
 	 * @param formula the formula
 	 * @return the collection
 	 */
-	private Collection<Conjunction<Predicate>> enumerateConjunctions(Formula formula) {
+	private Collection<Conjunction<Atom>> enumerateConjunctions(Formula formula) {
 		Preconditions.checkArgument(formula != null);
 		if (formula instanceof Conjunction) {
-			List<Conjunction<Predicate>> result = new LinkedList<>();
-			List<Predicate> localConj = new LinkedList<>();
+			List<Conjunction<Atom>> result = new LinkedList<>();
+			List<Atom> localConj = new LinkedList<>();
 			for (Formula subFormula: ((Conjunction<Formula>) formula)) {
-				if (subFormula instanceof Predicate) {
-					localConj.add((Predicate) subFormula);
+				if (subFormula instanceof Atom) {
+					localConj.add((Atom) subFormula);
 				} else {
 					result.addAll(this.enumerateConjunctions(subFormula));
 				}

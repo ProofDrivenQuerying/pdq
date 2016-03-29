@@ -5,7 +5,7 @@ import java.io.PrintStream;
 import uk.ac.ox.cs.pdq.fol.BinaryFormula;
 import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.NaryFormula;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.UnaryFormula;
 import uk.ac.ox.cs.pdq.io.Writer;
 
@@ -75,8 +75,8 @@ public class PrettyFormulaWriter<T extends Formula> extends PrettyWriter<T> impl
 			this.write(out, (UnaryFormula<?>) formula);
 			return;
 		}
-		if (formula instanceof Predicate) {
-			this.write(out, (Predicate) formula);
+		if (formula instanceof Atom) {
+			this.write(out, (Atom) formula);
 			return;
 		}
 		throw new UnsupportedOperationException("No writer operation defined for " + formula);
@@ -134,7 +134,7 @@ public class PrettyFormulaWriter<T extends Formula> extends PrettyWriter<T> impl
 	 * @param out PrintStream
 	 * @param formula AtomicFormula
 	 */
-	public void write(PrintStream out, Predicate formula) {
+	public void write(PrintStream out, Atom formula) {
 		out.print(formula.getSignature().getName());
 		out.print('(' + joinTerms(formula.getTerms(), ", ") + ')');
 	}

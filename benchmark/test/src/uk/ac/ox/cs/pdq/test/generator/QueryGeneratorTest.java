@@ -29,8 +29,8 @@ import uk.ac.ox.cs.pdq.benchmark.BenchmarkParameters.QueryTypes;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Predicate;
-import uk.ac.ox.cs.pdq.fol.Signature;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.generator.queryfromids.QueryGeneratorSecond;
@@ -206,7 +206,7 @@ public class QueryGeneratorTest extends ParameterizedTest {
 		for (Relation r: this.schema.getRelations()) {
 			relationNames.add(r.getName());
 		}
-		for (Predicate a : q.getBody()) {
+		for (Atom a : q.getBody()) {
 			assertTrue("Relation " + a.getName() + " not present in schema.",
 					relationNames.contains(a.getName()));
 		}
@@ -219,7 +219,7 @@ public class QueryGeneratorTest extends ParameterizedTest {
 	 */
 	public void testFreeVariableRatio(ConjunctiveQuery q) {
 		Set<Term> terms = new LinkedHashSet<>();
-		for (Predicate a : q.getBody()) {
+		for (Atom a : q.getBody()) {
 			terms.addAll(a.getTerms());
 		}
 		assertTrue("Free variable ratio not satisfied in " + q,
@@ -233,7 +233,7 @@ public class QueryGeneratorTest extends ParameterizedTest {
 	 */
 	public void testQueryIsGuarded(ConjunctiveQuery q) {
 		List<Term> freeVars = q.getHead().getTerms();
-		for (Predicate a : q.getBody().getPredicates()) {
+		for (Atom a : q.getBody().getAtoms()) {
 			if (a.getTerms().containsAll(freeVars)) {
 				assertTrue("Guard not found", true);
 				return;
@@ -249,8 +249,8 @@ public class QueryGeneratorTest extends ParameterizedTest {
 	 */
 	public void testQueryAcyclic(ConjunctiveQuery q) {
 		// Building variable clusters
-		SetMultimap<Variable, Predicate> clusters = LinkedHashMultimap.create();
-		for (Predicate p: q.getBody()) {
+		SetMultimap<Variable, Atom> clusters = LinkedHashMultimap.create();
+		for (Atom p: q.getBody()) {
 			for (Term t: p.getTerms()) {
 				if (t instanceof Variable) {
 					clusters.put((Variable) t, p);
@@ -259,14 +259,14 @@ public class QueryGeneratorTest extends ParameterizedTest {
 		}
 
 		// Building query graph
-		SetMultimap<Predicate, Predicate> queryGraph = LinkedHashMultimap.create();
-		for (Predicate p: q.getBody()) {
+		SetMultimap<Atom, Atom> queryGraph = LinkedHashMultimap.create();
+		for (Atom p: q.getBody()) {
 			for (Term t: p.getTerms()) {
-				Set<Predicate> neighbours = queryGraph.get(p);
+				Set<Atom> neighbours = queryGraph.get(p);
 				if (neighbours.contains(p)) {
 					fail("Cycle detected in " + q);
 				} else {
-					Collection<Predicate> allButMe = new LinkedHashSet<>(clusters.get((Variable) t));
+					Collection<Atom> allButMe = new LinkedHashSet<>(clusters.get((Variable) t));
 					allButMe.remove(p);
 					queryGraph.putAll(p, allButMe);
 				}
@@ -281,11 +281,11 @@ public class QueryGeneratorTest extends ParameterizedTest {
 	 * @param q the q
 	 */
 	public void testQueryHasNoCartesianProducts(ConjunctiveQuery q) {
-		Map<Variable, Set<Predicate>> joins = new LinkedHashMap<>();
-		for (Predicate p: q.getBody()) {
+		Map<Variable, Set<Atom>> joins = new LinkedHashMap<>();
+		for (Atom p: q.getBody()) {
 			for (Term t: p.getTerms()) {
 				if (t instanceof Variable) {
-					Set<Predicate> preds = joins.get(t);
+					Set<Atom> preds = joins.get(t);
 					if (preds == null) {
 						preds = new LinkedHashSet<>();
 						joins.put((Variable) t, preds);
@@ -306,15 +306,15 @@ public class QueryGeneratorTest extends ParameterizedTest {
 	 * predicates in the each component are connected, and no predicates part
 	 * of distinct component are connected.
 	 */
-	private List<Set<Predicate>> connectedComponents(List<Set<Predicate>> clusters) {
-		List<Set<Predicate>> result = new LinkedList<>();
+	private List<Set<Atom>> connectedComponents(List<Set<Atom>> clusters) {
+		List<Set<Atom>> result = new LinkedList<>();
 		if (clusters.isEmpty()) {
 			return result;
 		}
-		Set<Predicate> first = clusters.get(0);
+		Set<Atom> first = clusters.get(0);
 		if (clusters.size() > 1) {
-			List<Set<Predicate>> rest = this.connectedComponents(clusters.subList(1, clusters.size()));
-			for (Set<Predicate> s : rest) {
+			List<Set<Atom>> rest = this.connectedComponents(clusters.subList(1, clusters.size()));
+			for (Set<Atom> s : rest) {
 				if (!Collections.disjoint(first, s)) {
 					first.addAll(s);
 				} else {
@@ -332,13 +332,13 @@ public class QueryGeneratorTest extends ParameterizedTest {
 	 * @param q the q
 	 */
 	public void testNoRepeatedRelationQuery(ConjunctiveQuery q) {
-		Set<Signature> signatures = new LinkedHashSet<>();
-		for (Predicate p: q.getBody()) {
-			if (signatures.contains(p.getSignature())) {
+		Set<Predicate> predicates = new LinkedHashSet<>();
+		for (Atom p: q.getBody()) {
+			if (predicates.contains(p.getSignature())) {
 				fail("Repeated relation found in " + q);
 				return;
 			}
-			signatures.add(p.getSignature());
+			predicates.add(p.getSignature());
 		}
 	}
 
@@ -349,7 +349,7 @@ public class QueryGeneratorTest extends ParameterizedTest {
 	 */
 	public void testNoRepeatedVariablesInQuery(ConjunctiveQuery q) {
 		List<Term> vars = new ArrayList<>();
-		for (Predicate a: q.getBody()) {
+		for (Atom a: q.getBody()) {
 			for (Term t: a.getTerms()) {
 				vars.clear();
 				if (t instanceof Variable) {

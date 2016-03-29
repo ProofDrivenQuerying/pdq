@@ -11,7 +11,7 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TGD;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.Constant;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema.AccessibleRelation;
@@ -55,15 +55,15 @@ public class AccessibilityAxiom extends TGD implements GuardedDependency {
 	 * @param method 		A method to access this relation
 	 * @return 		the atoms of the left-hand side of the accessibility axiom that corresponds to the input relation and the input access method
 	 */
-	private static Conjunction<Predicate> createLeft(Relation relation, AccessMethod method) {
-		List<Predicate> leftAtoms = new ArrayList<>();
+	private static Conjunction<Atom> createLeft(Relation relation, AccessMethod method) {
+		List<Atom> leftAtoms = new ArrayList<>();
 		List<Integer> bindingPositions = method.getInputs();
 		Relation r = AccessibleRelation.getInstance();
-		Predicate f = relation.createAtoms();
+		Atom f = relation.createAtoms();
 		List<Term> terms = f.getTerms();
 		for (int bindingPos: bindingPositions) {
 			if (method.getType() != Types.FREE) {
-				leftAtoms.add(new Predicate(r, terms.get(bindingPos - 1)));
+				leftAtoms.add(new Atom(r, terms.get(bindingPos - 1)));
 			}
 		}
 		leftAtoms.add(f);
@@ -77,16 +77,16 @@ public class AccessibilityAxiom extends TGD implements GuardedDependency {
 	 * @param binding the binding
 	 * @return 		the atoms of the right-hand side of the accessibility axiom that corresponds to the input relation and the input access method
 	 */
-	private static Conjunction<Predicate> createRight(InferredAccessibleRelation infAccRel, AccessMethod binding) {
+	private static Conjunction<Atom> createRight(InferredAccessibleRelation infAccRel, AccessMethod binding) {
 		Relation relation = infAccRel.getBaseRelation();
-		List<Predicate> rightAtoms = new ArrayList<>();
+		List<Atom> rightAtoms = new ArrayList<>();
 		List<Integer> bindingPositions = binding.getInputs();
 		Relation accessible = AccessibleRelation.getInstance();
-		Predicate f = infAccRel.createAtoms();
+		Atom f = infAccRel.createAtoms();
 		List<Term> terms = f.getTerms();
 		for (int i = 1; i <= relation.getArity(); ++i) {
 			if (!bindingPositions.contains(i)) {
-				rightAtoms.add(new Predicate(accessible, terms.get(i - 1)));
+				rightAtoms.add(new Atom(accessible, terms.get(i - 1)));
 			}
 		}
 		rightAtoms.add(infAccRel.createAtoms());
@@ -131,9 +131,9 @@ public class AccessibilityAxiom extends TGD implements GuardedDependency {
 	 */
 	public TGD ground(Map<Variable, Constant> mapping, boolean canonicalNames) {
 		TGD grounded = (canonicalNames == true ? this.ground(this.skolemizeMapping(mapping)): this.ground(mapping));
-		List<Predicate> right = grounded.getRight().getPredicates();
-		right.removeAll(grounded.getLeft().getPredicates());
-		return new TGD(Conjunction.of(grounded.getLeft().getPredicates()), Conjunction.of(right));
+		List<Atom> right = grounded.getRight().getAtoms();
+		right.removeAll(grounded.getLeft().getAtoms());
+		return new TGD(Conjunction.of(grounded.getLeft().getAtoms()), Conjunction.of(right));
 	}
 
 	/**
@@ -143,7 +143,7 @@ public class AccessibilityAxiom extends TGD implements GuardedDependency {
 	 * @see uk.ac.ox.cs.pdq.db.GuardedDependency#getGuard()
 	 */
 	@Override
-	public Predicate getGuard() {
-		return this.left.getPredicates().get(this.left.size()-1);
+	public Atom getGuard() {
+		return this.left.getAtoms().get(this.left.size()-1);
 	}
 }

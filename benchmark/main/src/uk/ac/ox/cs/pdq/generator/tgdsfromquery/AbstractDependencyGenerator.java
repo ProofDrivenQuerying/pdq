@@ -13,7 +13,7 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TGD;
 import uk.ac.ox.cs.pdq.db.View;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.util.Utility;
@@ -59,10 +59,10 @@ public abstract class AbstractDependencyGenerator {
 	protected boolean sameBody(Collection<Constraint> tgds, TGD target) {
 		for (Constraint tg : tgds) {
 			TGD t = (TGD) tg;
-			Set<Predicate> set1 = new LinkedHashSet<>();
-			set1.addAll(t.getRight().getPredicates());
-			Set<Predicate> set2 = new LinkedHashSet<>();
-			set2.addAll(target.getRight().getPredicates());
+			Set<Atom> set1 = new LinkedHashSet<>();
+			set1.addAll(t.getRight().getAtoms());
+			Set<Atom> set2 = new LinkedHashSet<>();
+			set2.addAll(target.getRight().getAtoms());
 			if (set1.equals(set2)) {
 				return true;
 			}
@@ -79,11 +79,11 @@ public abstract class AbstractDependencyGenerator {
 	 */
 	protected boolean sameView(List<View> views, View target) {
 		for (View mv : views) {
-			Set<Predicate> set1 = new LinkedHashSet<>();
-			set1.addAll(mv.getDependency().getRight().getPredicates());
+			Set<Atom> set1 = new LinkedHashSet<>();
+			set1.addAll(mv.getDependency().getRight().getAtoms());
 
-			Set<Predicate> set2 = new LinkedHashSet<>();
-			set2.addAll(target.getDependency().getRight().getPredicates());
+			Set<Atom> set2 = new LinkedHashSet<>();
+			set2.addAll(target.getDependency().getRight().getAtoms());
 
 			Set<Variable> s1 = new LinkedHashSet<>();
 			s1.addAll(mv.getDependency().getExistential());
@@ -107,14 +107,14 @@ public abstract class AbstractDependencyGenerator {
 	 * @return the conjunction info
 	 */
 	protected ConjunctionInfo createGuardedConjunction(List<Variable> candidates, int conjuncts, boolean hasRepeatedRelations) {
-		List<Predicate> atoms = new ArrayList<>();
+		List<Atom> atoms = new ArrayList<>();
 		RelationsInfo info = this.selectRelations(conjuncts, null, hasRepeatedRelations);
 		List<Relation> selectedRelations = info.getRelations();
 		Relation relation = selectedRelations.get(conjuncts - 1);
 		List<Relation> relations = selectedRelations.subList(0, conjuncts - 1);
 		List<Variable> varSubList = candidates.subList(0, relation.getArity());
 		atoms = this.createConjuncts(relations, varSubList);
-		atoms.add(new Predicate(relation, varSubList));
+		atoms.add(new Atom(relation, varSubList));
 		return new ConjunctionInfo(Utility.getVariables(atoms), atoms);
 
 	}
@@ -128,8 +128,8 @@ public abstract class AbstractDependencyGenerator {
 	 * @param hasRepeatedRelations 		true if we allow repeated predicates
 	 * @return the conjunction info
 	 */
-	protected ConjunctionInfo createUnGuardedConjunction(List<Variable> candidates, int conjuncts, List<Predicate> leftSide, boolean hasRepeatedRelations) {
-		List<Predicate> atoms = new ArrayList<>();
+	protected ConjunctionInfo createUnGuardedConjunction(List<Variable> candidates, int conjuncts, List<Atom> leftSide, boolean hasRepeatedRelations) {
+		List<Atom> atoms = new ArrayList<>();
 		RelationsInfo info = this.selectRelations(conjuncts, leftSide, hasRepeatedRelations);
 		List<Relation> selectedRelations = info.getRelations();
 		atoms = this.createConjuncts(selectedRelations, candidates);
@@ -177,7 +177,7 @@ public abstract class AbstractDependencyGenerator {
 	 * @param hasRepeatedRelations 		true if we allow repeated predicates
 	 * @return the relations info
 	 */
-	protected RelationsInfo selectRelations(int conjuncts, List<Predicate> leftSide, boolean hasRepeatedRelations) {
+	protected RelationsInfo selectRelations(int conjuncts, List<Atom> leftSide, boolean hasRepeatedRelations) {
 		int nbRelations = this.schema.getRelations().size();
 		// Without this check, the method goes into an infinite loop
 		if (conjuncts > nbRelations) {
@@ -189,7 +189,7 @@ public abstract class AbstractDependencyGenerator {
 		List<Relation> relations = new ArrayList<>();
 		List<Relation> leftRelations = new ArrayList<>();
 		if(leftSide != null) {
-			for(Predicate l: leftSide) {
+			for(Atom l: leftSide) {
 				leftRelations.add((Relation) l.getSignature());
 			}
 		}
@@ -226,8 +226,8 @@ public abstract class AbstractDependencyGenerator {
 	 * @param variables the variables
 	 * @return 		a list of predicates coming from the input relations and populated with variables from the input list
 	 */
-	protected List<Predicate> createConjuncts(List<Relation> relations, List<Variable> variables) {
-		List<Predicate> conjuncts = new ArrayList<>();
+	protected List<Atom> createConjuncts(List<Relation> relations, List<Variable> variables) {
+		List<Atom> conjuncts = new ArrayList<>();
 		Relation relation = null;
 		for (int r = 0; r < relations.size(); ++r) {
 			relation = relations.get(r);
@@ -235,7 +235,7 @@ public abstract class AbstractDependencyGenerator {
 			for (int index = 0; index < relation.getArity(); ++index) {
 				arguments.add(variables.get(this.random.nextInt(variables.size())));
 			}
-			conjuncts.add(new Predicate(relation, arguments));
+			conjuncts.add(new Atom(relation, arguments));
 		}
 		return conjuncts;
 	}
@@ -246,11 +246,11 @@ public abstract class AbstractDependencyGenerator {
 	 * @param atoms the atoms
 	 * @return 		a list of chain atoms coming from the input relations. Each atom has one join variable with its successor
 	 */
-	protected List<Predicate> createChainConjuncts(List<Predicate> atoms) {
+	protected List<Atom> createChainConjuncts(List<Atom> atoms) {
 		int xCounter = 0;
-		List<Predicate> chainAtoms = new ArrayList<>();
+		List<Atom> chainAtoms = new ArrayList<>();
 		Term joinTerm = null;
-		for (Predicate atom : atoms) {
+		for (Atom atom : atoms) {
 			List<Term> nTerms = new ArrayList<>();
 			for (int index = 0; index < atom.getTerms().size(); ++index) {
 				if ((joinTerm == null) || index > 0) {
@@ -261,7 +261,7 @@ public abstract class AbstractDependencyGenerator {
 					nTerms.add(joinTerm);
 				}
 			}
-			chainAtoms.add(new Predicate(atom.getSignature(), nTerms));
+			chainAtoms.add(new Atom(atom.getSignature(), nTerms));
 		}
 		return chainAtoms;
 	}
@@ -272,11 +272,11 @@ public abstract class AbstractDependencyGenerator {
 	 * @param body the body
 	 * @return the list
 	 */
-	protected List<Variable> pickFreeVariables(Collection<Predicate> body) {
+	protected List<Variable> pickFreeVariables(Collection<Atom> body) {
 		Set<Variable> result = new LinkedHashSet<>();
 		if (this.params.getFreeVariable() > 0.0) {
 			Set<Term> allTerms = new LinkedHashSet<>();
-			for (Predicate a : body) {
+			for (Atom a : body) {
 				allTerms.addAll(a.getTerms());
 			}
 			int resultSize = (int) Math.max(1, allTerms.size() * this.params.getFreeVariable());
@@ -340,7 +340,7 @@ public abstract class AbstractDependencyGenerator {
 		List<Variable> variables;
 		
 		/** The conjuncts. */
-		List<Predicate> conjuncts;
+		List<Atom> conjuncts;
 
 		/**
 		 * Instantiates a new conjunction info.
@@ -348,7 +348,7 @@ public abstract class AbstractDependencyGenerator {
 		 * @param variable the variable
 		 * @param conjuncts the conjuncts
 		 */
-		public ConjunctionInfo(List<Variable> variable, List<Predicate> conjuncts) {
+		public ConjunctionInfo(List<Variable> variable, List<Atom> conjuncts) {
 			this.variables = variable;
 			this.conjuncts = conjuncts;
 		}
@@ -367,7 +367,7 @@ public abstract class AbstractDependencyGenerator {
 		 *
 		 * @return the conjuncts
 		 */
-		public List<Predicate> getConjuncts() {
+		public List<Atom> getConjuncts() {
 			return this.conjuncts;
 		}
 	}

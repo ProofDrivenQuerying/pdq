@@ -10,7 +10,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import uk.ac.ox.cs.pdq.db.Constraint;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Formula;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.io.Writer;
 import uk.ac.ox.cs.pdq.io.pretty.PrettyFormulaWriter;
@@ -97,17 +97,17 @@ public class ExtendedPrettyProofWriter extends PrettyWriter<Proof> implements Wr
 	 * @param target Iterable<? extends PredicateFormula>
 	 * @return String
 	 */
-	public static String traceBack(Proof proof, Iterable<? extends Predicate> target) {
+	public static String traceBack(Proof proof, Iterable<? extends Atom> target) {
 		StringBuilder result = new StringBuilder();
-		Set<Predicate> todo = Sets.newLinkedHashSet(target);
-		Map<Predicate, Pair<Constraint, HashSet<Predicate>>> provenance = null;
+		Set<Atom> todo = Sets.newLinkedHashSet(target);
+		Map<Atom, Pair<Constraint, HashSet<Atom>>> provenance = null;
 		while (!todo.isEmpty()) {
-			for (Predicate p: Lists.newArrayList(todo)) {
-				Pair<Constraint, HashSet<Predicate>> rule = provenance.get(p);
+			for (Atom p: Lists.newArrayList(todo)) {
+				Pair<Constraint, HashSet<Atom>> rule = provenance.get(p);
 				if (rule != null) {
 					String s = Joiner.on(" & ").join(rule.getRight()) + " -> " + p + "..." + '\n';
 					result.insert(0, s);
-					for (Predicate q: rule.getRight()) {
+					for (Atom q: rule.getRight()) {
 						if (!q.getSignature().equals(AccessibleRelation.getInstance())) {
 							todo.add(q);
 						}

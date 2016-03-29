@@ -3,7 +3,7 @@ package uk.ac.ox.cs.pdq.io.pretty;
 import java.io.PrintStream;
 
 import uk.ac.ox.cs.pdq.db.Constraint;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.io.Writer;
 
 // TODO: Auto-generated Javadoc
@@ -67,7 +67,7 @@ public class VeryPrettyDependencyWriter
 	public void write(PrintStream out, Constraint tgd) {
 		String sep = "";
 		int length = 0;
-		for (Predicate f: tgd.getLeft().getPredicates()) {
+		for (Atom f: tgd.getLeft().getAtoms()) {
 			out.print(sep);
 			out.print(f.getSignature().getName());
 			out.print('(' + joinTerms(f.getTerms(), ", ") + ')');
@@ -81,7 +81,7 @@ public class VeryPrettyDependencyWriter
 		}
 		length = 0;
 		sep = (this.indented ? "\n\t" : " ")  + IMPLIES + ' ';
-		for (Predicate f : tgd.getRight().getPredicates()) {
+		for (Atom f : tgd.getRight().getAtoms()) {
 			out.print(sep);
 			out.print(f.getSignature().getName());
 			out.print('(' + joinTerms(f.getTerms(), ", ") + ')');

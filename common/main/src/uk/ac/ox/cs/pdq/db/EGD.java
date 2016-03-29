@@ -15,8 +15,8 @@ import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Equality;
 import uk.ac.ox.cs.pdq.fol.Implication;
 import uk.ac.ox.cs.pdq.fol.LogicalSymbols;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Predicate;
-import uk.ac.ox.cs.pdq.fol.Signature;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.util.Utility;
@@ -32,8 +32,8 @@ import com.google.common.collect.Sets;
  * @author Efthymia Tsamoura
  */
 public class EGD
-		extends Implication<Conjunction<Predicate>, Conjunction<Equality>>
-		implements Constraint<Conjunction<Predicate>, Conjunction<Equality>> {
+		extends Implication<Conjunction<Atom>, Conjunction<Equality>>
+		implements Constraint<Conjunction<Atom>, Conjunction<Equality>> {
 
 	/**  The dependency's universally quantified variables. */
 	protected List<Variable> universal;
@@ -47,9 +47,9 @@ public class EGD
 	 * @param left The left-hand side conjunction of the dependency
 	 * @param right The right-hand side conjunction of the dependency
 	 */
-	public EGD(Conjunction<Predicate> left, Conjunction<Equality> right) {
+	public EGD(Conjunction<Atom> left, Conjunction<Equality> right) {
 		super(left, right);
-		this.universal = Utility.getVariables(left.getPredicates());
+		this.universal = Utility.getVariables(left.getAtoms());
 		for (Term term:right.getTerms()) {
 			if (!term.isVariable() && !term.isSkolem()) {
 				this.constants.add(((TypedConstant) term));
@@ -84,7 +84,7 @@ public class EGD
 	 * @see uk.ac.ox.cs.pdq.db.Constraint#getLeft()
 	 */
 	@Override
-	public Conjunction<Predicate> getLeft() {
+	public Conjunction<Atom> getLeft() {
 		return this.left;
 	}
 
@@ -188,8 +188,8 @@ public class EGD
 	 */
 	@Override
 	public Set<Variable> getBothSideVariables() {
-		Set<Variable> variables = Sets.newHashSet(Utility.getVariables(this.left.getPredicates()));
-		variables.retainAll(Utility.getVariables(this.right.getPredicates()));
+		Set<Variable> variables = Sets.newHashSet(Utility.getVariables(this.left.getAtoms()));
+		variables.retainAll(Utility.getVariables(this.right.getAtoms()));
 		return variables;
 	}
 	
@@ -198,12 +198,12 @@ public class EGD
 	 * The EGD that captures the EGD dependency is given by
 	 * R(x_1,...,x_k,...x_n) ^ R(x_1',...,x_k,...x_n') --> \Wedge_{i \neq k} x_i=x_i'
 	 *
-	 * @param signature the signature
+	 * @param predicate the signature
 	 * @param attributes the attributes
 	 * @param keys the keys
 	 * @return 		a collection of EGDs for the input relation and keys
 	 */
-	public static EGD getEGDs(Signature signature, List<Attribute> attributes, Collection<Attribute> keys) {
+	public static EGD getEGDs(Predicate predicate, List<Attribute> attributes, Collection<Attribute> keys) {
 		List<Term> leftTerms = Utility.typedToTerms(attributes);
 		List<Term> copiedTerms = Lists.newArrayList(leftTerms);
 		//Keeps the terms that should be equal
@@ -223,9 +223,9 @@ public class EGD
 			equalityPredicates.add(new Equality(pair.getKey(), pair.getValue()));
 		}
 
-		Conjunction<Predicate> head =
-				Conjunction.of(new Predicate(new Signature(signature.getName(), leftTerms.size()), leftTerms), 
-						new Predicate(new Signature(signature.getName(), copiedTerms.size()), copiedTerms));
+		Conjunction<Atom> head =
+				Conjunction.of(new Atom(new Predicate(predicate.getName(), leftTerms.size()), leftTerms), 
+						new Atom(new Predicate(predicate.getName(), copiedTerms.size()), copiedTerms));
 		
 		return new EGD(head, Conjunction.of(equalityPredicates));
 	}
@@ -238,7 +238,7 @@ public class EGD
 	 * @return the EG ds
 	 */
 	public static EGD getEGDs(Relation relation, Collection<Attribute> keys) {
-		return getEGDs(new Signature(relation.getName(), relation.getArity()), relation.getAttributes(), keys);
+		return getEGDs(new Predicate(relation.getName(), relation.getArity()), relation.getAttributes(), keys);
 	}
 
 	/**

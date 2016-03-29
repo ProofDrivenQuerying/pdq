@@ -30,7 +30,7 @@ import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Equality;
 import uk.ac.ox.cs.pdq.fol.Evaluatable;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
@@ -439,34 +439,34 @@ public class DBHomomorphismManager implements HomomorphismManager {
 		if(source instanceof Constraint) {
 			int f = 0;
 			int b = 0;
-			List<Predicate> left = Lists.newArrayList();
-			for(Predicate atom:((Constraint) source).getLeft().getPredicates()) {
+			List<Atom> left = Lists.newArrayList();
+			for(Atom atom:((Constraint) source).getLeft().getAtoms()) {
 				Relation relation = aliases.get(atom.getName());
 				List<Term> terms = Lists.newArrayList(atom.getTerms());
 				terms.add(new Variable(singleBag == true ? this.Bag.getName() : (this.Bag.getName() + b++)));
 				terms.add(new Variable(this.Fact.getName() + f++));
-				left.add(new Predicate(relation, terms));
+				left.add(new Atom(relation, terms));
 			}
-			List<Predicate> right = Lists.newArrayList();
-			for(Predicate atom:((Constraint) source).getRight().getPredicates()) {
+			List<Atom> right = Lists.newArrayList();
+			for(Atom atom:((Constraint) source).getRight().getAtoms()) {
 				Relation relation = aliases.get(atom.getName());
 				List<Term> terms = Lists.newArrayList(atom.getTerms());
 				terms.add(new Variable(singleBag == true ? this.Bag.getName() : (this.Bag.getName() + b++)));
 				terms.add(new Variable(this.Fact.getName() + f++));
-				right.add(new Predicate(relation, terms));
+				right.add(new Atom(relation, terms));
 			}
 			return (Q) new TGD(Conjunction.of(left), Conjunction.of(right));
 		}
 		else if(source instanceof Query) {
 			int f = 0;
 			int b = 0;
-			List<Predicate> body = Lists.newArrayList();
-			for(Predicate atom:((Query) source).getBody().getPredicates()) {
+			List<Atom> body = Lists.newArrayList();
+			for(Atom atom:((Query) source).getBody().getAtoms()) {
 				Relation relation = aliases.get(atom.getName());
 				List<Term> terms = Lists.newArrayList(atom.getTerms());
 				terms.add(new Variable(singleBag == true ? this.Bag.getName() : this.Bag.getName() + b++));
 				terms.add(new Variable(this.Fact.getName() + f++));
-				body.add(new Predicate(relation, terms));
+				body.add(new Atom(relation, terms));
 			}
 			return (Q) new ConjunctiveQuery(((Query) source).getHead(), Conjunction.of(body));
 		}
@@ -539,7 +539,7 @@ public class DBHomomorphismManager implements HomomorphismManager {
 	 * @see uk.ac.ox.cs.pdq.homomorphism.HomomorphismManager#addFacts(Collection<? extends PredicateFormula>)
 	 */
 	@Override
-	public void addFacts(Collection<? extends Predicate> facts) {
+	public void addFacts(Collection<? extends Atom> facts) {
 //		THIS COMMENT IS AN EFFORT TO OPTIMIZE THE CODE BELOW BUT FAILS
 //		try (Statement sqlStatement = this.connection.createStatement()) {
 //			for (String stmt : this.builder.makeInserts(facts, this.aliases)) {
@@ -584,7 +584,7 @@ public class DBHomomorphismManager implements HomomorphismManager {
 	 * @param facts Input list of facts
 	 */
 	@Override
-	public void deleteFacts(Collection<? extends Predicate> facts) {
+	public void deleteFacts(Collection<? extends Atom> facts) {
 		try (Statement sqlStatement = this.connection.createStatement()) {
 			for (String stmt : this.builder.makeDeletes(facts, this.aliases)) {
 				sqlStatement.addBatch(stmt);
@@ -727,7 +727,7 @@ public class DBHomomorphismManager implements HomomorphismManager {
 				}
 				
 				//clear the relations of the query
-				Collection<String> clearTablesSQLExpressions = this.builder.clearTables(this.currentQuery.getBody().getPredicates(),this.aliases);
+				Collection<String> clearTablesSQLExpressions = this.builder.clearTables(this.currentQuery.getBody().getAtoms(),this.aliases);
 				for (String b: clearTablesSQLExpressions) {
 					sqlStatement.addBatch(b);
 				}

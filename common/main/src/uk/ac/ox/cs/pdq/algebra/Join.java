@@ -80,7 +80,7 @@ public class Join extends NaryOperator implements PredicateBasedOperator {
 	/**
 	 * Instantiates a new join.
 	 *
-	 * @param pred Predicate
+	 * @param pred Atom
 	 * @param children the children
 	 */
 	public Join(Predicate pred, List<RelationalOperator> children) {
@@ -92,7 +92,7 @@ public class Join extends NaryOperator implements PredicateBasedOperator {
 	/**
 	 * Instantiates a new join.
 	 *
-	 * @param pred Predicate
+	 * @param pred Atom
 	 * @param children the children
 	 */
 	public Join(Predicate pred, RelationalOperator... children) {
@@ -160,7 +160,7 @@ public class Join extends NaryOperator implements PredicateBasedOperator {
 	/**
 	 * Gets the predicate.
 	 *
-	 * @return Predicate
+	 * @return Atom
 	 * @see uk.ac.ox.cs.pdq.algebra.PredicateBasedOperator#getPredicate()
 	 */
 	@Override
@@ -195,7 +195,7 @@ public class Join extends NaryOperator implements PredicateBasedOperator {
 
 	/**
 	 * Initialises the join variables.
-	 * @return Predicate
+	 * @return Atom
 	 */
 	protected Predicate initNaturalJoin() {
 		Multimap<Term, Integer> joinVariables = LinkedHashMultimap.create();

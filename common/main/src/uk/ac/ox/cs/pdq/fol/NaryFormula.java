@@ -67,13 +67,13 @@ public abstract class NaryFormula<T extends Formula> extends AbstractFormula imp
 	 * Gets the predicates.
 	 *
 	 * @return List<PredicateFormula>
-	 * @see uk.ac.ox.cs.pdq.fol.Formula#getPredicates()
+	 * @see uk.ac.ox.cs.pdq.fol.Formula#getAtoms()
 	 */
 	@Override
-	public List<Predicate> getPredicates() {
-		List<Predicate> result = new ArrayList<>();
+	public List<Atom> getAtoms() {
+		List<Atom> result = new ArrayList<>();
 		for (Formula item: this.children) {
-			result.addAll(item.getPredicates());
+			result.addAll(item.getAtoms());
 		}
 		return result;
 	}

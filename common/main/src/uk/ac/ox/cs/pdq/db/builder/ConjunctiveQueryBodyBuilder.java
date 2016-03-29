@@ -16,8 +16,8 @@ import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Predicate;
-import uk.ac.ox.cs.pdq.fol.Signature;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.util.Types;
@@ -34,7 +34,7 @@ public class ConjunctiveQueryBodyBuilder {
 	private static Logger log = Logger.getLogger(ConjunctiveQueryBodyBuilder.class);
 
 	/** The alias to predicate formulas. */
-	private Map<String, Predicate> aliasToPredicateFormulas = new HashMap<>();
+	private Map<String, Atom> aliasToPredicateFormulas = new HashMap<>();
 
 	/** The schema. */
 	private Schema              schema;
@@ -43,7 +43,7 @@ public class ConjunctiveQueryBodyBuilder {
 	private Map<String, String> aliasToRelations;
 	
 	/** The result predicate. */
-	private Predicate    resultPredicate;
+	private Atom    resultPredicate;
 	
 	/** The q name. */
 	private String              qName;
@@ -91,7 +91,7 @@ public class ConjunctiveQueryBodyBuilder {
 				terms[i] = new Variable(  "x_" + attributes.get(i).getName()  + "_" + counter );
 			}
 
-			this.aliasToPredicateFormulas.put(aliasName, new Predicate( relation, terms ));
+			this.aliasToPredicateFormulas.put(aliasName, new Atom( relation, terms ));
 
 			counter++;
 		}
@@ -143,7 +143,7 @@ public class ConjunctiveQueryBodyBuilder {
 		// Prepare right variable:
 		String rightAlias = rightAliasAttr.getAlias();
 		String rightAttr  = rightAliasAttr.getAttr();
-		Predicate rightPredForm = this.aliasToPredicateFormulas.get(rightAlias);
+		Atom rightPredForm = this.aliasToPredicateFormulas.get(rightAlias);
 
 		// Prepare left constant term:
 		TypedConstant<?> leftConstant = new TypedConstant<>(
@@ -179,7 +179,7 @@ public class ConjunctiveQueryBodyBuilder {
 		// Prepare left variable:
 		String leftAlias = leftAliasAttr.getAlias();
 		String leftAttr  = leftAliasAttr.getAttr();
-		Predicate leftPredForm = this.aliasToPredicateFormulas.get(leftAlias);
+		Atom leftPredForm = this.aliasToPredicateFormulas.get(leftAlias);
 
 		// Get term in said position:
 		int leftAttrIndex = this.schema.getRelation( this.aliasToRelations.get(leftAlias) ).getAttributeIndex(leftAttr);
@@ -188,7 +188,7 @@ public class ConjunctiveQueryBodyBuilder {
 		// Prepare right variable:
 		String rightAlias = rightAliasAttr.getAlias();
 		String rightAttr  = rightAliasAttr.getAttr();
-		Predicate rightPredForm = this.aliasToPredicateFormulas.get(rightAlias);
+		Atom rightPredForm = this.aliasToPredicateFormulas.get(rightAlias);
 
 		// Get term in said position:
 		int rightAttrIndex = -1;
@@ -241,9 +241,9 @@ public class ConjunctiveQueryBodyBuilder {
 	 */
 	private void replaceTerm(Term oldTerm, Term newTerm) {
 
-		for( Map.Entry<String, Predicate> entry : this.aliasToPredicateFormulas.entrySet() ) {
+		for( Map.Entry<String, Atom> entry : this.aliasToPredicateFormulas.entrySet() ) {
 			String alias = entry.getKey();
-			Predicate predicateFormula = entry.getValue();
+			Atom predicateFormula = entry.getValue();
 
 			List<Term> terms = predicateFormula.getTerms();
 
@@ -257,7 +257,7 @@ public class ConjunctiveQueryBodyBuilder {
 				}
 			}
 
-			Predicate newPredicateFormula = new Predicate(predicateFormula.getSignature(), newTerms);
+			Atom newPredicateFormula = new Atom(predicateFormula.getSignature(), newTerms);
 
 			this.aliasToPredicateFormulas.put(alias, newPredicateFormula);
 		}
@@ -272,13 +272,13 @@ public class ConjunctiveQueryBodyBuilder {
 		
 		// Find arity:
 		Set<Variable> vars = new HashSet<>();
-		for( Predicate predFormula : this.aliasToPredicateFormulas.values() ) {
+		for( Atom predFormula : this.aliasToPredicateFormulas.values() ) {
 			vars.addAll( predFormula.getVariables() );
 		}
 		
-		Signature signature = new Signature(this.qName, vars.size());
+		Predicate predicate = new Predicate(this.qName, vars.size());
 		
-		this.resultPredicate = new Predicate(signature, vars);
+		this.resultPredicate = new Atom(predicate, vars);
 	}
 	
 	/**
@@ -294,13 +294,13 @@ public class ConjunctiveQueryBodyBuilder {
 		
 		if( this.resultPredicate == null ) {
 			
-			Signature signature = new Signature(this.qName, 1);
+			Predicate predicate = new Predicate(this.qName, 1);
 			Term term = this._findTerm(aliasName, attrName);
-			this.resultPredicate = new Predicate(signature, term);
+			this.resultPredicate = new Atom(predicate, term);
 			
 		} else {
 			int newArity = this.resultPredicate.getSignature().getArity() + 1;
-			Signature newSignature = new Signature(this.qName, newArity);
+			Predicate newSignature = new Predicate(this.qName, newArity);
 			
 			Term[] newTerms = new Term[newArity];
 			
@@ -309,7 +309,7 @@ public class ConjunctiveQueryBodyBuilder {
 			}
 			newTerms[newTerms.length-1] = this._findTerm(aliasName, attrName);
 			
-			Predicate newPredForm = new Predicate(newSignature, newTerms);
+			Atom newPredForm = new Atom(newSignature, newTerms);
 			
 			this.resultPredicate = newPredForm;
 		}
@@ -324,7 +324,7 @@ public class ConjunctiveQueryBodyBuilder {
 	 * @return Term
 	 */
 	private Term _findTerm(String aliasName, String attrName) {
-		Predicate predFormula = this.aliasToPredicateFormulas.get(aliasName);
+		Atom predFormula = this.aliasToPredicateFormulas.get(aliasName);
 
 		// Get term in said position:
 		int attrIndex = this.schema.getRelation( this.aliasToRelations.get(aliasName) ).getAttributeIndex(attrName);
@@ -337,7 +337,7 @@ public class ConjunctiveQueryBodyBuilder {
 	 * @return ConjunctiveQuery
 	 */
 	public ConjunctiveQuery toConjunctiveQuery() {
-		List<Predicate> preds = new ArrayList<>();
+		List<Atom> preds = new ArrayList<>();
 		preds.addAll(this.aliasToPredicateFormulas.values());
 		this.conjQuery = new ConjunctiveQuery(this.resultPredicate, Conjunction.of(preds));
 		return this.conjQuery;
@@ -353,7 +353,7 @@ public class ConjunctiveQueryBodyBuilder {
 		StringBuilder ans = new StringBuilder();
 		
 		ans.append("<StartQueryBuilder: ");
-		for( Predicate predicateFormula : this.aliasToPredicateFormulas.values() ) {
+		for( Atom predicateFormula : this.aliasToPredicateFormulas.values() ) {
 			ans.append(predicateFormula.toString()).append(", ");
 		}
 		ans.append(":EndQueryBuilder>");

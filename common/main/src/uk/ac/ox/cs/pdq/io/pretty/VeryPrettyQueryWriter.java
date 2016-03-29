@@ -4,7 +4,7 @@ import java.io.PrintStream;
 
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.LogicalSymbols;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.io.Writer;
 
@@ -63,13 +63,13 @@ public class VeryPrettyQueryWriter extends PrettyWriter<ConjunctiveQuery> implem
 		out.print(q.getHead().getSignature().getName());
 		out.print('(' + Joiner.on(", ").join(q.getFree()) + ")\n\t<-");
 		String sep = "";
-		Multimap<Term, Predicate> clusters = LinkedHashMultimap.create();
-		for (Predicate a : q.getBody()) {
+		Multimap<Term, Atom> clusters = LinkedHashMultimap.create();
+		for (Atom a : q.getBody()) {
 			for (Term t: a.getTerms()) {
 				clusters.put(t, a);
 			}
 		}
-		for (Predicate a : q.getBody()) {
+		for (Atom a : q.getBody()) {
 			out.print(sep);
 			out.print(a.getSignature().getName());
 			String sep2 = "(";

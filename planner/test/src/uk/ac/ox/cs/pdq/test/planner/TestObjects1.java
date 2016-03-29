@@ -5,7 +5,7 @@ import org.mockito.Mock;
 
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Skolem;
 import uk.ac.ox.cs.pdq.plan.DAGPlan;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
@@ -36,7 +36,7 @@ public class TestObjects1 {
 			Lists.newArrayList(new Attribute(String.class, "a1"), new Attribute(String.class, "a2"), new Attribute(String.class, "a3"))) {};
 	
 			/** The p1. */
-			protected Predicate p1 = new Predicate(new AccessibleSchema.InferredAccessibleRelation(r1),
+			protected Atom p1 = new Atom(new AccessibleSchema.InferredAccessibleRelation(r1),
 			Lists.newArrayList(new Skolem("c1"), new Skolem("c2"), new Skolem("c3"))
 			);
 	
@@ -45,7 +45,7 @@ public class TestObjects1 {
 			Lists.newArrayList(new Attribute(String.class, "a1"), new Attribute(String.class, "a2"), new Attribute(String.class, "a3"), new Attribute(String.class, "a4"))) {};
 	
 			/** The p2. */
-			protected Predicate p2 = new Predicate(new AccessibleSchema.InferredAccessibleRelation(r2),
+			protected Atom p2 = new Atom(new AccessibleSchema.InferredAccessibleRelation(r2),
 			Lists.newArrayList(new Skolem("c1"), new Skolem("c2"), new Skolem("c3"), new Skolem("c4"))
 			);
 	
@@ -54,7 +54,7 @@ public class TestObjects1 {
 			Lists.newArrayList(new Attribute(String.class, "a1"), new Attribute(String.class, "a2"))) {};
 	
 			/** The p3. */
-			protected Predicate p3 = new Predicate(new AccessibleSchema.InferredAccessibleRelation(r3),
+			protected Atom p3 = new Atom(new AccessibleSchema.InferredAccessibleRelation(r3),
 			Lists.newArrayList(new Skolem("c1"), new Skolem("c2"))
 			);
 	
@@ -63,7 +63,7 @@ public class TestObjects1 {
 			Lists.newArrayList(new Attribute(String.class, "a1"))) {};
 			
 			/** The p4. */
-			protected Predicate p4 = new Predicate(new AccessibleSchema.InferredAccessibleRelation(r4),
+			protected Atom p4 = new Atom(new AccessibleSchema.InferredAccessibleRelation(r4),
 			Lists.newArrayList(new Skolem("c1"))
 			);
 	
@@ -72,7 +72,7 @@ public class TestObjects1 {
 			Lists.newArrayList(new Attribute(String.class, "a1"), new Attribute(String.class, "a3"), new Attribute(String.class, "a2"))) {};
 	
 			/** The p5. */
-			protected Predicate p5 = new Predicate(new AccessibleSchema.InferredAccessibleRelation(r5),
+			protected Atom p5 = new Atom(new AccessibleSchema.InferredAccessibleRelation(r5),
 			Lists.newArrayList(new Skolem("c1"), new Skolem("c3"), new Skolem("c2"))
 			);
 	
@@ -81,7 +81,7 @@ public class TestObjects1 {
 			Lists.newArrayList(new Attribute(String.class, "a1"), new Attribute(String.class, "a3"))) {};
 	
 			/** The p6. */
-			protected Predicate p6 = new Predicate(new AccessibleSchema.InferredAccessibleRelation(r6),
+			protected Atom p6 = new Atom(new AccessibleSchema.InferredAccessibleRelation(r6),
 			Lists.newArrayList(new Skolem("c1"), new Skolem("c3"))
 			);
 	
@@ -90,7 +90,7 @@ public class TestObjects1 {
 			Lists.newArrayList(new Attribute(String.class, "a1"))) {};
 	
 			/** The p7. */
-			protected Predicate p7 = new Predicate(new AccessibleSchema.InferredAccessibleRelation(r7),
+			protected Atom p7 = new Atom(new AccessibleSchema.InferredAccessibleRelation(r7),
 			Lists.newArrayList(new Skolem("c1"))
 			);
 

@@ -63,7 +63,7 @@ public abstract class Join extends NaryIterator {
 	
 	/**
 	 * Instantiates a new join.
-	 * @param predicate Predicate
+	 * @param predicate Atom
 	 * @param inputs List<Typed>
 	 * @param children
 	 *            the children
@@ -133,7 +133,7 @@ public abstract class Join extends NaryIterator {
 	/**
 	 * Initialises the join variables.
 	 * @param children TupleIterator[]
-	 * @return Predicate
+	 * @return Atom
 	 */
 	protected static Predicate inferNaturalJoin(Collection<TupleIterator> children) {
 		Map<Typed, SortedSet<Integer>> joinVariables = new LinkedHashMap<>();

@@ -8,7 +8,7 @@ import java.util.List;
 
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.Constant;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState;
 import uk.ac.ox.cs.pdq.util.Utility;
 
@@ -25,7 +25,7 @@ import com.google.common.collect.Sets;
 public class UnaryAnnotatedPlan extends DAGAnnotatedPlan {
 	
 	/** The facts of this configuration. These must share the same constants for the input positions of the accessibility axiom */
-	private final Predicate fact;
+	private final Atom fact;
 
 	/**  The string representation of this configuration. */
 	private String toString;
@@ -42,7 +42,7 @@ public class UnaryAnnotatedPlan extends DAGAnnotatedPlan {
 	 */
 	public UnaryAnnotatedPlan(
 			ChaseState state,
-			Predicate fact
+			Atom fact
 			) {		
 		super(state, 
 				Utility.getConstants(fact),
@@ -58,7 +58,7 @@ public class UnaryAnnotatedPlan extends DAGAnnotatedPlan {
 	 *
 	 * @return 		the fact of this configuration
 	 */
-	public Predicate getFact() {
+	public Atom getFact() {
 		return this.fact;
 	}
 	

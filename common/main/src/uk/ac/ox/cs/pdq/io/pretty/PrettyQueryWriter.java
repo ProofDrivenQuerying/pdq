@@ -5,7 +5,7 @@ import java.io.PrintStream;
 
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.LogicalSymbols;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.io.Writer;
 
 import com.google.common.base.Joiner;
@@ -61,9 +61,9 @@ public class PrettyQueryWriter extends PrettyWriter<ConjunctiveQuery> implements
 		out.print(q.getHead().getSignature().getName());
 		out.print('(' + Joiner.on(", ").join(q.getFree()) + ")\u2190");
 		String sep = "";
-		for (Predicate a : q.getBody()) {
+		for (Atom a : q.getBody()) {
 			out.print(sep);
-			Predicate f = a;
+			Atom f = a;
 			out.print(f.getSignature().getName());
 			out.print('(' + Joiner.on(", ").join(f.getTerms()) + ')');
 			sep = ' ' + LogicalSymbols.AND.toString() + ' ';

@@ -18,7 +18,7 @@ import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.View;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Formula;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.generator.tgdsfromquery.QueryGeneratorFirst;
 import uk.ac.ox.cs.pdq.generator.tgdsfromquery.SchemaGeneratorFirst;
 import uk.ac.ox.cs.pdq.generator.tgdsfromquery.ViewGeneratorFirst;
@@ -81,7 +81,7 @@ public class ViewGeneratorTest extends ParameterizedTest {
 		for (Relation r: this.schema.getRelations()) {
 			relationNames.add(r.getName());
 		}
-		for (Predicate a : this.query.getBody()) {
+		for (Atom a : this.query.getBody()) {
 			assertTrue("Relation " + a.getName() + " not present in schema.",
 					relationNames.contains(a.getName()));
 		}
@@ -92,12 +92,12 @@ public class ViewGeneratorTest extends ParameterizedTest {
 	 */
 	@Test
 	public void testEachViewContainedInQuery() {
-		List<Predicate> queryAtoms = this.query.getBody().getPredicates();
+		List<Atom> queryAtoms = this.query.getBody().getAtoms();
 		for (View v: this.views) {
 			Formula f = v.getDependency().getRight();
 			// TODO: This is not true containment, check for homomorphism instead
 			assertTrue("Formula " + f + " is not contained in query " + this.query,
-					queryAtoms.containsAll(v.getDependency().getRight().getPredicates()));
+					queryAtoms.containsAll(v.getDependency().getRight().getAtoms()));
 		}
 	}
 }

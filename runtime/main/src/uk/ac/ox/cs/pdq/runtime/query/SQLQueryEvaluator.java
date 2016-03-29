@@ -16,9 +16,9 @@ import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Query;
-import uk.ac.ox.cs.pdq.fol.Signature;
+import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.rewrite.RewriterException;
 import uk.ac.ox.cs.pdq.rewrite.sql.SQLTranslator;
 import uk.ac.ox.cs.pdq.runtime.EvaluationException;
@@ -252,8 +252,8 @@ public class SQLQueryEvaluator implements QueryEvaluator {
 	 */
 	private static Properties findRelationalProperties(Query<?> query) {
 		Properties result = null;
-		for (Predicate pred: query.getPredicates()) {
-			Signature sig = pred.getSignature();
+		for (Atom pred: query.getAtoms()) {
+			Predicate sig = pred.getSignature();
 			Properties properties = new Properties();
 			if (sig instanceof Relation) {
 				properties.putAll(((Relation) sig).getProperties());

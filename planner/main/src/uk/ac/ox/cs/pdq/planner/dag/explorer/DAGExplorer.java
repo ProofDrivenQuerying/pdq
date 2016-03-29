@@ -11,7 +11,7 @@ import uk.ac.ox.cs.pdq.algebra.Operators;
 import uk.ac.ox.cs.pdq.algebra.RelationalOperator;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.plan.DAGPlan;
 import uk.ac.ox.cs.pdq.planner.Explorer;
@@ -183,13 +183,13 @@ public abstract class DAGExplorer extends Explorer<DAGPlan> {
 		this.chaser.reasonUntilTermination(state, this.query, this.schema.getDependencies());
 
 		List<DAGChaseConfiguration> collection = new ArrayList<>();
-		Collection<Pair<AccessibilityAxiom,Collection<Predicate>>> pairs = state.groupByBinding(this.accessibleSchema.getAccessibilityAxioms());
-		for (Pair<AccessibilityAxiom, Collection<Predicate>> pair: pairs) {
+		Collection<Pair<AccessibilityAxiom,Collection<Atom>>> pairs = state.groupByBinding(this.accessibleSchema.getAccessibilityAxioms());
+		for (Pair<AccessibilityAxiom, Collection<Atom>> pair: pairs) {
 			ApplyRule applyRule = null;
-			Collection<Collection<Predicate>> bindings = new LinkedHashSet<>();
+			Collection<Collection<Atom>> bindings = new LinkedHashSet<>();
 			switch (this.parameters.getFollowUpHandling()) {
 			case MINIMAL:
-				for (Predicate p: pair.getRight()) {
+				for (Atom p: pair.getRight()) {
 					bindings.add(Sets.newHashSet(p));
 				}
 				break;
@@ -197,7 +197,7 @@ public abstract class DAGExplorer extends Explorer<DAGPlan> {
 				bindings.add(pair.getRight());
 				break;
 			}
-			for (Collection<Predicate> binding:bindings) {
+			for (Collection<Atom> binding:bindings) {
 				AccessibleChaseState newState = state.clone();
 				applyRule = new ApplyRule(
 						newState,

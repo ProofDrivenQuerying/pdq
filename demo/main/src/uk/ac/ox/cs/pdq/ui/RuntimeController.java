@@ -28,7 +28,7 @@ import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.io.pretty.AlgebraLikeLeftDeepPlanWriter;
 import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
@@ -160,7 +160,7 @@ public class RuntimeController {
      */
     private void configureColumns() {
     	ObservableList<TableColumn<Tuple, ?>> columns = this.runtimeResults.getColumns();
-    	Predicate head = this.query.getHead();
+    	Atom head = this.query.getHead();
     	for (int i = 0, l = head.getSignature().getArity(); i < l; i++) {
     		TableColumn<Tuple, Object> column = new TableColumn<>(head.getTerm(i).toString());
     		column.setCellValueFactory(new TupleCellFactoryCallback(i));

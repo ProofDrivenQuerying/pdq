@@ -10,7 +10,7 @@ import java.util.Set;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.Constant;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.plan.DAGPlan;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema.InferredAccessibleRelation;
@@ -379,8 +379,8 @@ public class ConfigurationUtility {
 	 * @param accessibleSchema the accessible schema
 	 * @return 		the output facts of the input configuration that are sufficient to make each input constant accessible
 	 */
-	public static Collection<Set<Predicate>> getMinimalSetThatExposesConstants(DAGChaseConfiguration configuration, Collection<Constant> constants, AccessibleSchema accessibleSchema) {
-		Collection<Set<Predicate>> ret = new LinkedHashSet<>();
+	public static Collection<Set<Atom>> getMinimalSetThatExposesConstants(DAGChaseConfiguration configuration, Collection<Constant> constants, AccessibleSchema accessibleSchema) {
+		Collection<Set<Atom>> ret = new LinkedHashSet<>();
 		Collection<ApplyRule> applyRules = configuration.getApplyRules();
 		//Create all combinations of the constituting ApplyRule configurations
 		Set<Set<ApplyRule>> sets = Sets.powerSet(Sets.newLinkedHashSet(applyRules));
@@ -389,7 +389,7 @@ public class ConfigurationUtility {
 		for(Set<ApplyRule> set:sets) {
 			//The set of facts (that came from the ApplyRule configurations of this iteration) that
 			//are sufficient to make each input constant accessible
-			Set<Predicate> minimalSet = new LinkedHashSet<>();
+			Set<Atom> minimalSet = new LinkedHashSet<>();
 			//The output constants of the minimalSet of facts
 			Set<Constant> observed = new LinkedHashSet<>();
 			//The constants that are still inaccessible
@@ -400,20 +400,20 @@ public class ConfigurationUtility {
 				Relation baseRelation = applyRule.getRelation();
 				InferredAccessibleRelation infAccRelation = accessibleSchema.getInferredAccessibleRelation(baseRelation);
 
-				Collection<Predicate> facts = applyRule.getFacts();
+				Collection<Atom> facts = applyRule.getFacts();
 				if(observed.containsAll(applyRule.getInput())) {
 					/*
 					 * If the input constants of the current fact are all provided by previously added facts
 					 * and makes at least one of the remaining constants accessible
 					 * then add it to the minimal set
 					 */
-					for(Predicate fact:facts) {
+					for(Atom fact:facts) {
 						Set<Constant> properOutput = Utility.getConstants(fact);
 						properOutput.removeAll(applyRule.getInput());
 						if(!Sets.intersection(remaining, properOutput).isEmpty()) {
 							remaining.removeAll(properOutput);
 							observed.addAll(properOutput);
-							minimalSet.add(new Predicate(infAccRelation, fact.getTerms()));
+							minimalSet.add(new Atom(infAccRelation, fact.getTerms()));
 						}
 					}
 				}

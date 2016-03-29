@@ -29,7 +29,7 @@ public class DiversityQuerySelector implements QuerySelector {
 	 */
 	@Override
 	public boolean accept(Query<?> q) {
-		SortedSet<FactSignature> signature = FactSignature.make(q.getBody().getPredicates());
+		SortedSet<FactSignature> signature = FactSignature.make(q.getBody().getAtoms());
 		if (this.signatures.contains(signature)) {
 			return false;
 		}

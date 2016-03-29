@@ -6,7 +6,7 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.wrappers.InMemoryTableWrapper;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.runtime.EvaluationException;
 
@@ -34,7 +34,7 @@ public class QueryEvaluatorFactory {
 	public static QueryEvaluator newEvaluator(Schema schema, Query<?> query) throws EvaluationException {
 		try {
 			QueryEvaluator result = null;
-			for (Predicate p: ((ConjunctiveQuery) query).getBody()) {
+			for (Atom p: ((ConjunctiveQuery) query).getBody()) {
 				Relation r = (Relation) p.getSignature();
 			    if (r instanceof InMemoryTableWrapper) {
 			    	return new InMemoryQueryEvaluator(query);

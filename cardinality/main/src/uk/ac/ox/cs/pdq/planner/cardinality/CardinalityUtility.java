@@ -16,9 +16,9 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Query;
-import uk.ac.ox.cs.pdq.fol.Signature;
+import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Skolem;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
@@ -85,8 +85,8 @@ public class CardinalityUtility {
 		Map<Constant,Skolem> map = Maps.newHashMap();
 
 		//Create a copy of the facts in the input configuration with the renamed constants
-		Collection<Predicate> copiedFacts = Sets.newHashSet();
-		for(Predicate fact:configuration.getOutputFacts()) {
+		Collection<Atom> copiedFacts = Sets.newHashSet();
+		for(Atom fact:configuration.getOutputFacts()) {
 			List<Term> copiedTerms = Lists.newArrayList();
 			for(Term originalTerm:fact.getTerms()) {
 				if(originalTerm instanceof Skolem && !keys.contains(originalTerm) && map.get(originalTerm) == null) {
@@ -100,7 +100,7 @@ public class CardinalityUtility {
 					copiedTerms.add(originalTerm);
 				}
 			}
-			copiedFacts.add(new Predicate(fact.getSignature(), copiedTerms));
+			copiedFacts.add(new Atom(fact.getSignature(), copiedTerms));
 		}
 
 		DatabaseListState state = new DatabaseListState((DBHomomorphismManager)detector, Sets.newLinkedHashSet(CollectionUtils.union(configuration.getOutputFacts(), copiedFacts)));
@@ -152,9 +152,9 @@ public class CardinalityUtility {
 			++index;
 		}
 		
-		List<Predicate> queryAtoms = Lists.newArrayList();
+		List<Atom> queryAtoms = Lists.newArrayList();
 		for(UnaryAnnotatedPlan unary:target.getUnaryAnnotatedPlans()) {
-			Predicate fact = unary.getFact();
+			Atom fact = unary.getFact();
 			List<Term> newTerms = Lists.newArrayList();
 			for(Term term:fact.getTerms()) {
 				if(term instanceof Skolem) {
@@ -164,7 +164,7 @@ public class CardinalityUtility {
 					newTerms.add(term);
 				}
 			}
-			queryAtoms.add(new Predicate(fact.getSignature(), newTerms));
+			queryAtoms.add(new Atom(fact.getSignature(), newTerms));
 		}
 		
 		
@@ -179,7 +179,7 @@ public class CardinalityUtility {
 			headTerms.add(queryMap.get(constant));
 			mapConstraint.put(queryMap.get(constant), constant);
 		}
-		Predicate head = new Predicate(new Signature("Q", constants.size()), headTerms);
+		Atom head = new Atom(new Predicate("Q", constants.size()), headTerms);
 		Query<?> query = new ConjunctiveQuery(head, Conjunction.of(queryAtoms));
 
 		//Create homomorphism constraints that preserve the input constants

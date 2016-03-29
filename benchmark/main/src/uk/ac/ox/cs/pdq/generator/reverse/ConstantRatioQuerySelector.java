@@ -1,6 +1,6 @@
 package uk.ac.ox.cs.pdq.generator.reverse;
 
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Query;
 
 // TODO: Auto-generated Javadoc
@@ -33,7 +33,7 @@ public class ConstantRatioQuerySelector implements QuerySelector {
 	public boolean accept(Query<?> q) {
 		double constPred = 0.0;
 		int count = 0;
-		for (Predicate p: q.getBody().getPredicates()) {
+		for (Atom p: q.getBody().getAtoms()) {
 			if (!p.getSchemaConstants().isEmpty()) {
 				constPred++;
 			}

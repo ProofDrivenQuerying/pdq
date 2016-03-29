@@ -13,7 +13,7 @@ import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Implication;
 import uk.ac.ox.cs.pdq.fol.LogicalSymbols;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Skolem;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
@@ -33,8 +33,8 @@ import com.google.common.collect.Sets;
  * @author Efthymia Tsamoura
  */
 public class TGD
-		extends Implication<Conjunction<Predicate>, Conjunction<Predicate>>
-		implements Constraint<Conjunction<Predicate>, Conjunction<Predicate>> {
+		extends Implication<Conjunction<Atom>, Conjunction<Atom>>
+		implements Constraint<Conjunction<Atom>, Conjunction<Atom>> {
 
 	/**  The dependency's universally quantified variables. */
 	protected final List<Variable> universal;
@@ -51,10 +51,10 @@ public class TGD
 	 * @param left The left-hand side conjunction of the dependency
 	 * @param right The right-hand side conjunction of the dependency
 	 */
-	public TGD(Conjunction<Predicate> left, Conjunction<Predicate> right) {
+	public TGD(Conjunction<Atom> left, Conjunction<Atom> right) {
 		super(left, right);
-		this.universal = Utility.getVariables(left.getPredicates());
-		this.existential = Utility.getVariables(right.getPredicates());
+		this.universal = Utility.getVariables(left.getAtoms());
+		this.existential = Utility.getVariables(right.getAtoms());
 		this.existential.removeAll(this.universal);
 
 		for (Term term:right.getTerms()) {
@@ -109,7 +109,7 @@ public class TGD
 	 * @see uk.ac.ox.cs.pdq.db.Constraint#getLeft()
 	 */
 	@Override
-	public Conjunction<Predicate> getLeft() {
+	public Conjunction<Atom> getLeft() {
 		return this.left;
 	}
 
@@ -120,7 +120,7 @@ public class TGD
 	 * @see uk.ac.ox.cs.pdq.db.Constraint#getRight()
 	 */
 	@Override
-	public Conjunction<Predicate> getRight() {
+	public Conjunction<Atom> getRight() {
 		return this.right;
 	}
 
@@ -227,8 +227,8 @@ public class TGD
 	 */
 	@Override
 	public Set<Variable> getBothSideVariables() {
-		Set<Variable> variables = Sets.newHashSet(Utility.getVariables(this.left.getPredicates()));
-		variables.retainAll(Utility.getVariables(this.right.getPredicates()));
+		Set<Variable> variables = Sets.newHashSet(Utility.getVariables(this.left.getAtoms()));
+		variables.retainAll(Utility.getVariables(this.right.getAtoms()));
 		return variables;
 	}
 

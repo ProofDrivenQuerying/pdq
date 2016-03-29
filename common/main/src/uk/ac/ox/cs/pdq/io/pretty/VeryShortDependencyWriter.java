@@ -10,7 +10,7 @@ import uk.ac.ox.cs.pdq.db.Constraint;
 import uk.ac.ox.cs.pdq.db.LinearGuarded;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.LogicalSymbols;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.io.Writer;
 
@@ -95,18 +95,18 @@ public class VeryShortDependencyWriter<T extends Constraint>
 		}
 		StringBuilder result = new StringBuilder();
 		String sep = "";
-		for (Predicate a : tgd.getLeft().getPredicates()) {
+		for (Atom a : tgd.getLeft().getAtoms()) {
 			result.append(sep);
-			Predicate f = a;
+			Atom f = a;
 			result.append(f.getSignature().getName());
 			result.append('(' + joinTerms(f.getTerms(), ", ") + ')');
 			sep = " " + LogicalSymbols.AND + ' ';
 		}
 		result.append(" " + LogicalSymbols.IMPLIES + ' ');
 		sep = "";
-		for (Predicate a : tgd.getRight().getPredicates()) {
+		for (Atom a : tgd.getRight().getAtoms()) {
 			result.append(sep);
-			Predicate f = a;
+			Atom f = a;
 			result.append(f.getSignature().getName());
 			result.append('(' + joinTerms(f.getTerms(), ", ") + ')');
 			sep = " " + LogicalSymbols.AND + ' ';
@@ -124,13 +124,13 @@ public class VeryShortDependencyWriter<T extends Constraint>
 		try {
 			StringBuilder result = new StringBuilder();
 			Map<Term, Attribute> leftAttributes = new LinkedHashMap<>();
-			for (Predicate p: tgd.getLeft()) {
+			for (Atom p: tgd.getLeft()) {
 				for (int i = 0, l = p.getTermsCount(); i < l; i++) {
 					leftAttributes.put(p.getTerm(i), ((Relation) p.getSignature()).getAttribute(i));
 				}
 			}
 			Map<Term, Attribute> rightAttributes = new LinkedHashMap<>();
-			for (Predicate p: tgd.getRight()) {
+			for (Atom p: tgd.getRight()) {
 				for (int i = 0, l = p.getTermsCount(); i < l; i++) {
 					rightAttributes.put(p.getTerm(i), ((Relation) p.getSignature()).getAttribute(i));
 				}

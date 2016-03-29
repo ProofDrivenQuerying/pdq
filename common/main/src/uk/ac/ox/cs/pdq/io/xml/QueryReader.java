@@ -15,7 +15,7 @@ import org.xml.sax.SAXException;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.builder.QueryBuilder;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.io.ReaderException;
 
@@ -34,7 +34,7 @@ public class QueryReader extends AbstractXMLReader<ConjunctiveQuery> {
 	private Boolean inBody = null;
 
 	/** Temporary list of atoms being built. */
-	private List<Predicate> atoms = null;
+	private List<Atom> atoms = null;
 
 	/**  The atom reader. */
 	private AtomReader atomReader = null;
@@ -124,7 +124,7 @@ public class QueryReader extends AbstractXMLReader<ConjunctiveQuery> {
 	public void endElement(String uri, String localName, String qName) {
 		switch(QNames.parse(qName)) {
 		case BODY:
-			for (Predicate a: this.atoms) {
+			for (Atom a: this.atoms) {
 				this.builder.addBodyAtom(a);
 			}
 			break;

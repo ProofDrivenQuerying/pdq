@@ -8,7 +8,7 @@ import java.util.Objects;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.Constant;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
@@ -41,7 +41,7 @@ public class Candidate implements Cloneable{
 	private final AccessibilityAxiom rule;
 
 	/**  The fact itself. */
-	private final Predicate fact;
+	private final Atom fact;
 
 	/**  Input constants. */
 	private final List<Constant> input;
@@ -59,12 +59,12 @@ public class Candidate implements Cloneable{
 	 * 		The accessible counterpart of the input schema
 	 * @param rule AccessibilityAxiom
 	 * 		The axiom that will be fired given this candidate fact
-	 * @param fact Predicate
+	 * @param fact Atom
 	 * 		The fact itself
 	 * @param matching Matching
 	 * 		Keeps information relevant to the exposed fact
 	 */
-	public Candidate(AccessibleSchema accessibleSchema, AccessibilityAxiom rule, Predicate fact, Match matching) {
+	public Candidate(AccessibleSchema accessibleSchema, AccessibilityAxiom rule, Atom fact, Match matching) {
 		this.accessibleSchema = accessibleSchema;
 		this.rule = rule;
 		this.fact = fact;
@@ -107,7 +107,7 @@ public class Candidate implements Cloneable{
 	 *
 	 * @return PredicateFormula
 	 */
-	public Predicate getFact() {
+	public Atom getFact() {
 		return this.fact;
 	}
 
@@ -151,10 +151,10 @@ public class Candidate implements Cloneable{
 	 *
 	 * @return the inferred accessible counterpart of the fact
 	 */
-	public Predicate getInferredAccessibleFact() {
-		Predicate accessed = this.rule.getGuard().ground(this.match.getMapping());
+	public Atom getInferredAccessibleFact() {
+		Atom accessed = this.rule.getGuard().ground(this.match.getMapping());
 		Relation baseRelation = this.rule.getBaseRelation();
-		return new Predicate(this.accessibleSchema.getInferredAccessibleRelation(baseRelation), accessed.getTerms() );
+		return new Atom(this.accessibleSchema.getInferredAccessibleRelation(baseRelation), accessed.getTerms() );
 	}
 
 	/**

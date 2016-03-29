@@ -7,7 +7,7 @@ import java.util.Set;
 
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.fol.Constant;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
 
 import com.google.common.collect.Lists;
@@ -27,9 +27,9 @@ public class PlannerUtility {
 	 * @param facts the facts
 	 * @return the constants of the input facts that correspond to the input positions of the rule
 	 */
-	public static Collection<Constant> getInputConstants(AccessibilityAxiom rule, Set<Predicate> facts) {
+	public static Collection<Constant> getInputConstants(AccessibilityAxiom rule, Set<Atom> facts) {
 		Collection<Constant> inputs = new LinkedHashSet<>();
-		for(Predicate fact:facts) {
+		for(Atom fact:facts) {
 			List<Constant> constants = fact.getConstants(rule.getAccessMethod().getZeroBasedInputs());
 			for(Constant constant:constants) {
 				if(constant.isSkolem()) {
@@ -47,7 +47,7 @@ public class PlannerUtility {
 	 * @param fact the fact
 	 * @return the constants in the input positions of the given fact
 	 */
-	public static List<Constant> getInputConstants(AccessMethod binding, Predicate fact) {
+	public static List<Constant> getInputConstants(AccessMethod binding, Atom fact) {
 		List<Constant> ret  = fact.getConstants(binding.getZeroBasedInputs());
 		return Lists.newArrayList(uk.ac.ox.cs.pdq.util.Utility.removeDuplicates(ret));
 	}

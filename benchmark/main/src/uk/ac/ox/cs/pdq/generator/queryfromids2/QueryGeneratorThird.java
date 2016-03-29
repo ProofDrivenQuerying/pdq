@@ -12,8 +12,8 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Predicate;
-import uk.ac.ox.cs.pdq.fol.Signature;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.generator.QueryGenerator;
@@ -62,7 +62,7 @@ public class QueryGeneratorThird extends AbstractDependencyGenerator implements 
 		// TODO: get rid of this when inclusion dependencies have there own class.
 		for (Constraint ic : this.schema.getDependencies()) {
 			if (ic instanceof LinearGuarded
-					&& ((LinearGuarded) ic).getRight().getPredicates().size() == 1) {
+					&& ((LinearGuarded) ic).getRight().getAtoms().size() == 1) {
 				guardedDependencies.add((LinearGuarded) ic);
 			}
 		}
@@ -77,14 +77,14 @@ public class QueryGeneratorThird extends AbstractDependencyGenerator implements 
 		//if there is an inclusion dependency P_i(.) --> P_j(.) 
 		Map<String, InclusionDependencyGraphNode> nodes = new TreeMap<>();
 		for (LinearGuarded guardedDependency:guardedDependencies) {
-			Predicate l = guardedDependency.getLeft().getPredicates().get(0);
-			Signature s = l.getSignature();
+			Atom l = guardedDependency.getLeft().getAtoms().get(0);
+			Predicate s = l.getSignature();
 			InclusionDependencyGraphNode ln = nodes.get(s.getName());
 			if (ln == null) {
 				ln = new InclusionDependencyGraphNode((Relation) s);
 				nodes.put(s.getName(), ln);
 			}
-			Predicate r = guardedDependency.getRight().getPredicates().get(0);
+			Atom r = guardedDependency.getRight().getAtoms().get(0);
 			s = r.getSignature();
 			InclusionDependencyGraphNode rn = nodes.get(s.getName());
 			if (rn == null) {
@@ -97,11 +97,11 @@ public class QueryGeneratorThird extends AbstractDependencyGenerator implements 
 		// Exploit the dependency graph
 		if (!nodes.isEmpty()) {
 			int length = 0;
-			List<Predicate> queryAtoms = new ArrayList<>();
+			List<Atom> queryAtoms = new ArrayList<>();
 			List<String> ordered = new ArrayList<>(nodes.keySet());
 			do {
 				InclusionDependencyGraphNode start = nodes.get(ordered.get(this.random.nextInt(ordered.size())));
-				List<Predicate> atoms = start.traverseRandom(this.random, this.params.getQueryConjuncts() - length, null, null);
+				List<Atom> atoms = start.traverseRandom(this.random, this.params.getQueryConjuncts() - length, null, null);
 				if (queryAtoms.isEmpty()
 						// Ensure the first fragment has more than one atom in the first round
 						&& (atoms.size() > 1 || this.params.getQueryConjuncts() <= 1)) {
@@ -119,7 +119,7 @@ public class QueryGeneratorThird extends AbstractDependencyGenerator implements 
 			// Create free variables
 			List<Variable> freeVars = this.pickFreeVariables(queryAtoms);
 			return new ConjunctiveQuery(
-					new Predicate(new Signature("Q", freeVars.size()), freeVars),
+					new Atom(new Predicate("Q", freeVars.size()), freeVars),
 					Conjunction.of(queryAtoms));
 		}
 		throw new IllegalStateException("Could not generate query. Dependency graph is empty");
@@ -134,21 +134,21 @@ public class QueryGeneratorThird extends AbstractDependencyGenerator implements 
 	 * @param rightAtoms the right atoms
 	 * @return true if the two list of atoms could be joined
 	 */
-	private Boolean join(List<Predicate> leftAtoms, List<Predicate> rightAtoms) {
-		Multimap<Term, Predicate> clusters = LinkedHashMultimap.create();
-		for (Predicate a : leftAtoms) {
+	private Boolean join(List<Atom> leftAtoms, List<Atom> rightAtoms) {
+		Multimap<Term, Atom> clusters = LinkedHashMultimap.create();
+		for (Atom a : leftAtoms) {
 			for (Term t : a.getTerms()) {
 				clusters.put(t, a);
 			}
 		}
-		for (Predicate a : rightAtoms) {
+		for (Atom a : rightAtoms) {
 			for (Term t : a.getTerms()) {
 				clusters.put(t, a);
 			}
 		}
 
-		for (Predicate a : leftAtoms) {
-			for (Predicate b : rightAtoms) {
+		for (Atom a : leftAtoms) {
+			for (Atom b : rightAtoms) {
 				if (a.getSignature().equals(b.getSignature())) {
 					for (int i = 0, l = a.getSignature().getArity(); i < l; i++) {
 						Term t1 = a.getTerm(i);
@@ -157,7 +157,7 @@ public class QueryGeneratorThird extends AbstractDependencyGenerator implements 
 							if (clusters.get(t2).size() == 1) {
 								List<Term> terms = Lists.newArrayList(b.getTerms());
 								terms.set(i, t1);
-								leftAtoms.set(leftAtoms.indexOf(a), new Predicate(a.getSignature(), terms));
+								leftAtoms.set(leftAtoms.indexOf(a), new Atom(a.getSignature(), terms));
 								leftAtoms.addAll(rightAtoms);
 								return true;
 							}

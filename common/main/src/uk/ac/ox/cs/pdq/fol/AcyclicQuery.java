@@ -19,7 +19,7 @@ public class AcyclicQuery extends ConjunctiveQuery {
 	 * @param head The query's head terms
 	 * @param right The query's body
 	 */
-	public AcyclicQuery(String name, List<Term> head, Conjunction<Predicate> right) {
+	public AcyclicQuery(String name, List<Term> head, Conjunction<Atom> right) {
 		super(name, head, right);
 	}
 
@@ -29,7 +29,7 @@ public class AcyclicQuery extends ConjunctiveQuery {
 	 * @param left The query's head
 	 * @param right The query's body
 	 */
-	public AcyclicQuery(Predicate left, Conjunction<Predicate> right) {
+	public AcyclicQuery(Atom left, Conjunction<Atom> right) {
 		super(left, right);
 	}
 }

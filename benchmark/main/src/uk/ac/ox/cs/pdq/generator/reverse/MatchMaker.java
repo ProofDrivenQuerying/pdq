@@ -17,7 +17,7 @@ import org.apache.log4j.Logger;
 import uk.ac.ox.cs.pdq.EventHandler;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
@@ -63,10 +63,10 @@ public class MatchMaker implements EventHandler {
 	private final LinkedHashSet<Term> accConstants = new LinkedHashSet<>();
 
 	/** The inferred-accessible facts. */
-	private final LinkedHashMap<FactSignature, Predicate> infAccFacts = new LinkedHashMap<>();
+	private final LinkedHashMap<FactSignature, Atom> infAccFacts = new LinkedHashMap<>();
 	
 	/** The clusters. */
-	private final Multimap<Term, Predicate> clusters = LinkedHashMultimap.create();
+	private final Multimap<Term, Atom> clusters = LinkedHashMultimap.create();
 	
 	/** The selectors. */
 	private final List<QuerySelector> selectors = new LinkedList<>();
@@ -99,11 +99,11 @@ public class MatchMaker implements EventHandler {
 	 * @param facts the facts
 	 */
 	@Subscribe
-	public void handleInfAccFacts(Collection<Predicate> facts) {
+	public void handleInfAccFacts(Collection<Atom> facts) {
 		if (facts != null) {
-			for (Predicate p: facts) {
+			for (Atom p: facts) {
 				if (p.getSignature() instanceof InferredAccessibleRelation) {
-					Predicate f = new Predicate(
+					Atom f = new Atom(
 							((InferredAccessibleRelation) p.getSignature()).getBaseRelation(),
 							p.getTerms());
 					FactSignature sig = FactSignature.make(f);
@@ -159,9 +159,9 @@ public class MatchMaker implements EventHandler {
 		this.out.println("Accessible (" + this.accConstants.size() + ") :" + this.accConstants);
 		this.out.println("Clusters (" + this.clusters. keySet().size() + ") :");
 		Set<Term> clTerms = new LinkedHashSet<>();
-		List<Set<Predicate>> clusters2 = new LinkedList<>();
+		List<Set<Atom>> clusters2 = new LinkedList<>();
 		for (Term t: this.clusters.keySet()) {
-			Collection<Predicate> cluster = this.clusters.get(t);
+			Collection<Atom> cluster = this.clusters.get(t);
 			if (cluster.size() > 1) {
 				this.out.println(t + " (" + cluster.size() + ") : " + cluster);
 				clTerms.add(t);
@@ -170,18 +170,18 @@ public class MatchMaker implements EventHandler {
 		}
 		
 		int i = 1;
-		Collection<Set<Predicate>> connectedComponents = Utility.connectedComponents(clusters2);
+		Collection<Set<Atom>> connectedComponents = Utility.connectedComponents(clusters2);
 		this.out.println("\nConnected component (" + connectedComponents.size() + "):");
-		for (Set<Predicate> component: connectedComponents) {
+		for (Set<Atom> component: connectedComponents) {
 			this.out.println(component.size() + " : " + component);
 			Set<Variable> terms = new HashSet<>(Utility.getVariables(component));
 			terms.retainAll(this.accConstants);
 			this.out.println("\tacc constants: " + terms);
 
-			Set<Predicate> restricted = Sets.newHashSet(component);
+			Set<Atom> restricted = Sets.newHashSet(component);
 			while (restricted.size() > 30) {
-				for (Iterator<Predicate> it = restricted.iterator(); it.hasNext();) {
-					Predicate p = it.next();
+				for (Iterator<Atom> it = restricted.iterator(); it.hasNext();) {
+					Atom p = it.next();
 					if (p.getSchemaConstants().isEmpty()) {
 						log.warn("Removing from connected component: " + p);
 						it.remove();
@@ -190,7 +190,7 @@ public class MatchMaker implements EventHandler {
 				}
 			}
 			
-			for (Set<Predicate> body: Sets.powerSet(restricted)) {
+			for (Set<Atom> body: Sets.powerSet(restricted)) {
 				Set<Term> head = new LinkedHashSet<>(Utility.getTerms(body));
 				ConjunctiveQuery candidate = new ConjunctiveQuery("Q" + (i++),
 						new ArrayList<>(head),

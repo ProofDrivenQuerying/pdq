@@ -18,7 +18,7 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.db.builder.SchemaBuilder;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.io.ReaderException;
@@ -32,7 +32,7 @@ import com.google.common.base.Preconditions;
  * 
  * @author Julien Leblay
  */
-public class AtomReader extends AbstractXMLReader<Predicate> {
+public class AtomReader extends AbstractXMLReader<Atom> {
 
 	/** Logger. */
 	private static Logger log = Logger.getLogger(AtomReader.class);
@@ -44,10 +44,10 @@ public class AtomReader extends AbstractXMLReader<Predicate> {
 	private static Integer counter = 0;
 	
 	/** List of atoms built so far. */
-	private List<Predicate> atoms = null;
+	private List<Atom> atoms = null;
 
 	/** The atom to build and return. */
-	private Predicate atom = null;
+	private Atom atom = null;
 
 	/** Temporary relation on which the atom is based being built. */
 	private Relation relation = null;
@@ -69,7 +69,7 @@ public class AtomReader extends AbstractXMLReader<Predicate> {
 	 * @param schema Schema.Builder
 	 * @param atoms List<PredicateFormula>
 	 */
-	public AtomReader(SchemaBuilder schema, List<Predicate> atoms) {
+	public AtomReader(SchemaBuilder schema, List<Atom> atoms) {
 		this.schemaBuilder = schema;
 		this.atoms = atoms;
 	}
@@ -79,7 +79,7 @@ public class AtomReader extends AbstractXMLReader<Predicate> {
 	 * @param schema Schema
 	 * @param atoms List<PredicateFormula>
 	 */
-	public AtomReader(Schema schema, List<Predicate> atoms) {
+	public AtomReader(Schema schema, List<Atom> atoms) {
 		this.schema = schema;
 		this.atoms = atoms;
 	}
@@ -89,7 +89,7 @@ public class AtomReader extends AbstractXMLReader<Predicate> {
 	 *
 	 * @return List<PredicateFormula>
 	 */
-	public List<Predicate> getAtoms() {
+	public List<Atom> getAtoms() {
 		return this.atoms;
 	}
 
@@ -98,7 +98,7 @@ public class AtomReader extends AbstractXMLReader<Predicate> {
 	 *
 	 * @param atoms List<PredicateFormula>
 	 */
-	public void setAtoms(List<Predicate> atoms) {
+	public void setAtoms(List<Atom> atoms) {
 		this.atoms = atoms;
 	}
 	
@@ -110,7 +110,7 @@ public class AtomReader extends AbstractXMLReader<Predicate> {
 	 * @see uk.ac.ox.cs.pdq.io.Reader#read(InputStream)
 	 */
 	@Override
-	public Predicate read(InputStream in) {
+	public Atom read(InputStream in) {
 		try {
 			SAXParserFactory factory = SAXParserFactory.newInstance();
 			SAXParser parser = factory.newSAXParser();
@@ -169,7 +169,7 @@ public class AtomReader extends AbstractXMLReader<Predicate> {
 	public void endElement(String uri, String localName, String qName) {
 		switch(QNames.parse(qName)) {
 		case ATOM:
-			this.atom = new Predicate(this.relation, this.terms);
+			this.atom = new Atom(this.relation, this.terms);
 			this.atoms.add(this.atom);
 			this.terms = new ArrayList<>();
 			this.relation = null;

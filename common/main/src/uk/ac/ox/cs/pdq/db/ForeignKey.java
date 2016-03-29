@@ -27,7 +27,7 @@ import org.apache.commons.collections4.set.ListOrderedSet;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Variable;
 
 // TODO: Auto-generated Javadoc
@@ -75,8 +75,8 @@ public class ForeignKey implements Cloneable {
 	 * @param dep LinearGuarded
 	 */
 	public ForeignKey(LinearGuarded dep) {
-		Predicate left = dep.getLeft().getPredicates().get(0);
-		Predicate right = dep.getRight().getPredicates().get(0);
+		Atom left = dep.getLeft().getAtoms().get(0);
+		Atom right = dep.getRight().getAtoms().get(0);
 		Relation leftRel = (Relation) left.getSignature();
 		Relation rightRel = (Relation) right.getSignature();
 		this.setForeignRelation(rightRel);

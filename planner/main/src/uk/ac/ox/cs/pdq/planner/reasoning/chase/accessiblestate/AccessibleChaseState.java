@@ -7,7 +7,7 @@ import java.util.Map;
 import org.apache.commons.lang3.tuple.Pair;
 
 import uk.ac.ox.cs.pdq.db.Constraint;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.reasoning.utility.Match;
@@ -28,7 +28,7 @@ public interface AccessibleChaseState extends uk.ac.ox.cs.pdq.reasoning.chase.st
 	 * @param axioms the axioms
 	 * @return 		pairs of accessibility axioms to chase facts
 	 */
-	Collection<Pair<AccessibilityAxiom, Collection<Predicate>>> groupByBinding(Collection<AccessibilityAxiom> axioms);
+	Collection<Pair<AccessibilityAxiom, Collection<Atom>>> groupByBinding(Collection<AccessibilityAxiom> axioms);
 
 	/**
 	 * Adds the accessible and inferred accessible facts associated with each input fact.
@@ -40,7 +40,7 @@ public interface AccessibleChaseState extends uk.ac.ox.cs.pdq.reasoning.chase.st
 	 * @param facts
 	 * 			Input facts
 	 */
-	void generate(AccessibleSchema schema, AccessibilityAxiom axiom, Collection<Predicate> facts);
+	void generate(AccessibleSchema schema, AccessibilityAxiom axiom, Collection<Atom> facts);
 
 	/**
 	 * Gets the unexposed facts.
@@ -62,14 +62,14 @@ public interface AccessibleChaseState extends uk.ac.ox.cs.pdq.reasoning.chase.st
 	 *
 	 * @return 		the inferred accessible facts that were derived when chasing the state
 	 */
-	Collection<Predicate> getDerivedInferred();
+	Collection<Atom> getDerivedInferred();
 	
 	/**
 	 * Gets the provenance.
 	 *
 	 * @return 		the rule firings that took place.
 	 */
-	Map<Predicate, Pair<Constraint, Collection<Predicate>>> getProvenance();
+	Map<Atom, Pair<Constraint, Collection<Atom>>> getProvenance();
 
 	/**
 	 * Gets the provenance.
@@ -77,7 +77,7 @@ public interface AccessibleChaseState extends uk.ac.ox.cs.pdq.reasoning.chase.st
 	 * @param fact the fact
 	 * @return 		the firing that has produced the input fact
 	 */
-	Pair<Constraint, Collection<Predicate>> getProvenance(Predicate fact);
+	Pair<Constraint, Collection<Atom>> getProvenance(Atom fact);
 	
 	/**
 	 * Merge.

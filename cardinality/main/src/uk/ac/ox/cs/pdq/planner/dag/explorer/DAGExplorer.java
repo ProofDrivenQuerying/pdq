@@ -9,7 +9,7 @@ import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;
 
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.plan.DAGPlan;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
@@ -157,7 +157,7 @@ public abstract class DAGExplorer extends Explorer<DAGPlan> {
 				CollectionUtils.union(this.schema.getDependencies(), this.schema.getKeyDependencies()));
 
 		List<DAGAnnotatedPlan> collection = new ArrayList<>();
-		for(Predicate fact:state.getFacts()) {
+		for(Atom fact:state.getFacts()) {
 			ChaseState newState = new DatabaseListState((DBHomomorphismManager) this.detector, Sets.newHashSet(fact));
 			this.chaser.reasonUntilTermination(newState, this.query, this.schema.getDependencies());
 			UnaryAnnotatedPlan unary =  new UnaryAnnotatedPlan(newState,fact);

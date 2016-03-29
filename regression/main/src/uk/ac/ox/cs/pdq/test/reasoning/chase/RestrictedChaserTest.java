@@ -18,8 +18,8 @@ import org.junit.Test;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Predicate;
-import uk.ac.ox.cs.pdq.fol.Signature;
 import uk.ac.ox.cs.pdq.fol.Skolem;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.io.xml.QueryReader;
@@ -240,7 +240,7 @@ public class RestrictedChaserTest {
 				reasoner.reasonUntilTermination(state, query, schema.getDependencies());
 				detector.clearQuery();
 
-				Collection<Predicate> expected = loadFacts(PATH + f, schema);
+				Collection<Atom> expected = loadFacts(PATH + f, schema);
 				
 				System.out.println("EXPECTED " + expected);
 				System.out.println("ACTUAL " + state.getFacts());
@@ -266,20 +266,20 @@ public class RestrictedChaserTest {
 	 * @param schema the schema
 	 * @return the collection
 	 */
-	private Collection<Predicate> loadFacts(String fileName, Schema schema) {
-		Collection<Predicate> predicates = new HashSet<>();
+	private Collection<Atom> loadFacts(String fileName, Schema schema) {
+		Collection<Atom> atoms = new HashSet<>();
 		String line = null;
 		try {
 			FileReader fileReader = new FileReader(fileName);
 			BufferedReader bufferedReader = new BufferedReader(fileReader);
 			while((line = bufferedReader.readLine()) != null) {
-				Predicate fact = this.loadFact(line, schema);
+				Atom fact = this.loadFact(line, schema);
 				if(fact != null) {
-					predicates.add(fact);
+					atoms.add(fact);
 				}
 			}
 			bufferedReader.close();    
-			return predicates;
+			return atoms;
 		}
 		catch(FileNotFoundException ex) {      
 			ex.printStackTrace(System.out);
@@ -293,19 +293,19 @@ public class RestrictedChaserTest {
 	/**
 	 * Load fact.
 	 *
-	 * @param predicate the predicate
+	 * @param pred the pred
 	 * @param schema the schema
-	 * @return the predicate
+	 * @return the pred
 	 */
-	private Predicate loadFact(String predicate, Schema schema) {		
-		int index1 = predicate.indexOf("(");
-		int index2 = predicate.indexOf(")");
-		String relationName = (String) predicate.subSequence(0, index1);
-		Signature signature = schema.getRelation(relationName);
-		if(signature==null) {
+	private Atom loadFact(String pred, Schema schema) {		
+		int index1 = pred.indexOf("(");
+		int index2 = pred.indexOf(")");
+		String relationName = (String) pred.subSequence(0, index1);
+		Predicate predicate = schema.getRelation(relationName);
+		if(predicate==null) {
 			return null;
 		}
-		String terms = (String) predicate.subSequence(index1 + 1, index2);
+		String terms = (String) pred.subSequence(index1 + 1, index2);
 		List<Term> variables = new ArrayList<>();
 		for(String term:terms.split(",")) {
 			TypedConstant<?> constant = schema.getConstant(term);
@@ -316,7 +316,7 @@ public class RestrictedChaserTest {
 				variables.add(new Skolem(term));
 			}
 		}
-		return new Predicate(signature, variables);
+		return new Atom(predicate, variables);
 	}
 
 

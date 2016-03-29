@@ -17,7 +17,7 @@ import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.db.builder.DependencyBuilder;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.LogicalSymbols;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.io.Reader;
@@ -80,10 +80,10 @@ public class PrettyDependencyReader implements Reader<TGD> {
 		if (sides.length != 2) {
 			throw new ReaderException("Dependency must have exactly one head and one body");
 		}
-		for (Predicate p: this.parseConjunction(sides[0])) {
+		for (Atom p: this.parseConjunction(sides[0])) {
 			this.builder.addLeftAtom(p);
 		}
-		for (Predicate p: this.parseConjunction(sides[1])) {
+		for (Atom p: this.parseConjunction(sides[1])) {
 			this.builder.addRightAtom(p);
 		}
 		return this.builder.build();
@@ -93,14 +93,14 @@ public class PrettyDependencyReader implements Reader<TGD> {
 	 * Parses a conjunction of atoms from the given String.
 	 *
 	 * @param s String
-	 * @return Conjunction<Predicate>
+	 * @return Conjunction<Atom>
 	 */
-	public Conjunction<Predicate> parseConjunction(String s) {
+	public Conjunction<Atom> parseConjunction(String s) {
 		String[] sAtoms = s.split(LogicalSymbols.AND.toString());
 		if (sAtoms == null || sAtoms.length == 0) {
 			throw new ReaderException("Atom list cannot be empty.");
 		}
-		Collection<Predicate> atoms = new LinkedList<>();
+		Collection<Atom> atoms = new LinkedList<>();
 		for (String atom: sAtoms) {
 			String trimmed = atom.trim();
 			int openIndex = trimmed.indexOf('(');
@@ -140,7 +140,7 @@ public class PrettyDependencyReader implements Reader<TGD> {
 					terms.add(new Variable(t));
 				}
 			}
-			atoms.add(new Predicate(relation, terms));
+			atoms.add(new Atom(relation, terms));
 		}
 		return Conjunction.of(atoms);
 	}

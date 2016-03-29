@@ -97,11 +97,11 @@ public class Implication<S extends Formula, T extends Formula>
 
 	/*
 	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.fol.Rule#contains(uk.ac.ox.cs.pdq.fol.Signature)
+	 * @see uk.ac.ox.cs.pdq.fol.Rule#contains(uk.ac.ox.cs.pdq.fol.Predicate)
 	 */
 	@Override
-	public boolean contains(Signature s) {
-		for (Predicate atom: this.getPredicates()) {
+	public boolean contains(Predicate s) {
+		for (Atom atom: this.getAtoms()) {
 			if (atom.getSignature().equals(s)) {
 				return true;
 			}

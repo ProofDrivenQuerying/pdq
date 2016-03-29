@@ -15,8 +15,8 @@ import uk.ac.ox.cs.pdq.db.builder.SchemaBuilder;
 import uk.ac.ox.cs.pdq.db.metadata.StaticMetadata;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Predicate;
-import uk.ac.ox.cs.pdq.fol.Signature;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.generator.ViewGenerator;
 import uk.ac.ox.cs.pdq.plan.DoubleCost;
@@ -71,9 +71,9 @@ public class ViewGeneratorFirst extends AbstractDependencyGenerator implements V
 	 */
 	public List<View> generateViews() {
 		List<View> result = new ArrayList<>();
-		List<Predicate> queryBodyAtoms = this.query.getBody().getPredicates();
-		Predicate guard = queryBodyAtoms.get(queryBodyAtoms.size() - 1);
-		List<Set<Predicate>> powerSet = Lists.newArrayList(Sets.powerSet(new LinkedHashSet<>(queryBodyAtoms)));
+		List<Atom> queryBodyAtoms = this.query.getBody().getAtoms();
+		Atom guard = queryBodyAtoms.get(queryBodyAtoms.size() - 1);
+		List<Set<Atom>> powerSet = Lists.newArrayList(Sets.powerSet(new LinkedHashSet<>(queryBodyAtoms)));
 
 		if (this.params.getNumberOfConstraints() > powerSet.size() - 1) {
 			throw new java.lang.IllegalArgumentException("Attempting to create " + 
@@ -84,7 +84,7 @@ public class ViewGeneratorFirst extends AbstractDependencyGenerator implements V
 		List<View> views = new ArrayList<>();
 		while (!powerSet.isEmpty()) {
 			int selection = this.random.nextInt(powerSet.size());
-			Set<Predicate> conjuncts = Sets.newLinkedHashSet(powerSet.get(selection));
+			Set<Atom> conjuncts = Sets.newLinkedHashSet(powerSet.get(selection));
 			conjuncts.add(guard);
 			List<Set<Variable>> termPowerSet = Lists.newArrayList(Sets.powerSet(new LinkedHashSet<>(Utility.getVariables(conjuncts))));
 			for (Set<Variable> terms:termPowerSet) {
@@ -109,11 +109,11 @@ public class ViewGeneratorFirst extends AbstractDependencyGenerator implements V
 	 * @param viewArguments the view arguments
 	 * @return 		a view definition given the input conjunction and the variables to expose
 	 */
-	private View createViewInstance(Set<Predicate> conjunction, Set<Variable> viewArguments) {
-		List<Predicate> conjuncts = Lists.newArrayList(conjunction);
-		Predicate headAtom =
-				new Predicate(
-						new Signature("V" + (globalViewId ++), viewArguments.size()), viewArguments);
+	private View createViewInstance(Set<Atom> conjunction, Set<Variable> viewArguments) {
+		List<Atom> conjuncts = Lists.newArrayList(conjunction);
+		Atom headAtom =
+				new Atom(
+						new Predicate("V" + (globalViewId ++), viewArguments.size()), viewArguments);
 		List<Variable> free = Lists.newArrayList(viewArguments);
 		List<Variable> bound = Utility.getVariables(conjuncts);
 		bound.removeAll(free);

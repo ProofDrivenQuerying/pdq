@@ -10,7 +10,7 @@ import uk.ac.ox.cs.pdq.db.EGD;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Equality;
 import uk.ac.ox.cs.pdq.fol.Formula;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
@@ -47,7 +47,7 @@ public class DatabaseListState extends DatabaseChaseState implements ListState {
 	private boolean _isFailed = false;
 
 	/**  The state's facts. */
-	protected Collection<Predicate> facts;
+	protected Collection<Atom> facts;
 
 	/**  The firings that took place in this state. */
 	protected FiringGraph graph;
@@ -65,7 +65,7 @@ public class DatabaseListState extends DatabaseChaseState implements ListState {
 	 * @param manager the manager
 	 */
 	public DatabaseListState(Query<?> query, DBHomomorphismManager manager) {
-		this(manager, Sets.newHashSet(query.getCanonical().getPredicates()), new MapFiringGraph(), inferEqualConstantsClasses(query.getCanonical().getPredicates()));
+		this(manager, Sets.newHashSet(query.getCanonical().getAtoms()), new MapFiringGraph(), inferEqualConstantsClasses(query.getCanonical().getAtoms()));
 		this.manager.addFacts(this.facts);
 	}
 
@@ -77,7 +77,7 @@ public class DatabaseListState extends DatabaseChaseState implements ListState {
 	 */
 	public DatabaseListState(
 			DBHomomorphismManager manager,
-			Collection<Predicate> facts) {
+			Collection<Atom> facts) {
 		this(manager, facts, new MapFiringGraph(), inferEqualConstantsClasses(facts));
 		this.manager.addFacts(this.facts);
 	}
@@ -92,7 +92,7 @@ public class DatabaseListState extends DatabaseChaseState implements ListState {
 	 */
 	protected DatabaseListState(
 			DBHomomorphismManager manager,
-			Collection<Predicate> facts,
+			Collection<Atom> facts,
 			FiringGraph graph, 
 			EqualConstantsClasses constantClasses
 			) {
@@ -110,9 +110,9 @@ public class DatabaseListState extends DatabaseChaseState implements ListState {
 	 * @param facts the facts
 	 * @return the equal constants classes
 	 */
-	public static EqualConstantsClasses inferEqualConstantsClasses(Collection<Predicate> facts) {
+	public static EqualConstantsClasses inferEqualConstantsClasses(Collection<Atom> facts) {
 		EqualConstantsClasses constantClasses = new EqualConstantsClasses();
-		for(Predicate fact:facts) {
+		for(Atom fact:facts) {
 			if(fact instanceof Equality) {
 				constantClasses.add((Equality) fact);
 			}
@@ -137,7 +137,7 @@ public class DatabaseListState extends DatabaseChaseState implements ListState {
 	@Override
 	public boolean chaseStep(Collection<Match> matches) {
 		Preconditions.checkNotNull(matches);
-		Collection<Predicate> created = new LinkedHashSet<>();
+		Collection<Atom> created = new LinkedHashSet<>();
 		//For each fired EGD create classes of equivalent constants
 		for(Match match:matches) {
 			Constraint dependency = (Constraint) match.getQuery();
@@ -146,7 +146,7 @@ public class DatabaseListState extends DatabaseChaseState implements ListState {
 			Formula left = grounded.getLeft();
 			Formula right = grounded.getRight();
 			if(dependency instanceof EGD) {
-				for(Predicate equality:right.getPredicates()) {
+				for(Atom equality:right.getAtoms()) {
 					boolean successfull = this.constantClasses.add((Equality)equality);
 					if(!successfull) {
 						this._isFailed = true;
@@ -154,22 +154,22 @@ public class DatabaseListState extends DatabaseChaseState implements ListState {
 					}
 				}
 			}	
-			this.graph.put(dependency, Sets.newHashSet(left.getPredicates()), Sets.newHashSet(right.getPredicates()));
+			this.graph.put(dependency, Sets.newHashSet(left.getAtoms()), Sets.newHashSet(right.getAtoms()));
 		}
 
 		//Iterate over all the database facts and replace their chase constants based on the classes of equal constants 
 		//Delete the old facts from this state
-		Collection<Predicate> obsoleteFacts = Sets.newHashSet();
+		Collection<Atom> obsoleteFacts = Sets.newHashSet();
 		for(Match match:matches) {
 			if(match.getQuery() instanceof EGD) {
-				for(Predicate fact:this.facts) {
+				for(Atom fact:this.facts) {
 					List<Term> newTerms = Lists.newArrayList();
 					for(Term term:fact.getTerms()) {
 						EqualConstantsClass cls = this.constantClasses.getClass(term);;
 						newTerms.add(cls != null ? cls.getRepresentative() : term);
 					}
 					if(!newTerms.equals(fact.getTerms())) {
-						created.add(new Predicate(fact.getSignature(), newTerms));
+						created.add(new Atom(fact.getSignature(), newTerms));
 						obsoleteFacts.add(fact);
 					}
 				}
@@ -183,13 +183,13 @@ public class DatabaseListState extends DatabaseChaseState implements ListState {
 				Map<Variable, Constant> mapping = match.getMapping();
 				Constraint grounded = dependency.fire(mapping, true);
 				Formula right = grounded.getRight();
-				for(Predicate fact:right.getPredicates()) {
+				for(Atom fact:right.getAtoms()) {
 					List<Term> newTerms = Lists.newArrayList();
 					for(Term term:fact.getTerms()) {
 						EqualConstantsClass cls = this.constantClasses.getClass(term);
 						newTerms.add(cls != null ? cls.getRepresentative() : term);
 					}
-					created.add(new Predicate(fact.getSignature(), newTerms));
+					created.add(new Atom(fact.getSignature(), newTerms));
 				}
 			}
 		}
@@ -237,7 +237,7 @@ public class DatabaseListState extends DatabaseChaseState implements ListState {
 	 * @see uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState#getFacts()
 	 */
 	@Override
-	public Collection<Predicate> getFacts() {
+	public Collection<Atom> getFacts() {
 		return this.facts;
 	}
 
@@ -247,7 +247,7 @@ public class DatabaseListState extends DatabaseChaseState implements ListState {
 	@Override
 	public ChaseState merge(ChaseState s) {
 		Preconditions.checkState(s instanceof DatabaseListState);
-		Collection<Predicate> facts =  new LinkedHashSet<>(this.facts);
+		Collection<Atom> facts =  new LinkedHashSet<>(this.facts);
 		facts.addAll(s.getFacts());
 
 		EqualConstantsClasses classes = this.constantClasses.clone();
@@ -264,7 +264,7 @@ public class DatabaseListState extends DatabaseChaseState implements ListState {
 	 * @see uk.ac.ox.cs.pdq.reasoning.chase.state.ListState#addFacts(java.util.Collection)
 	 */
 	@Override
-	public void addFacts(Collection<Predicate> facts) {
+	public void addFacts(Collection<Atom> facts) {
 		this.manager.addFacts(facts);
 		this.facts.addAll(facts);
 	}

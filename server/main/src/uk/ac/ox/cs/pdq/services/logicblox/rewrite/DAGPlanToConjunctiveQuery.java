@@ -15,8 +15,8 @@ import uk.ac.ox.cs.pdq.algebra.predicates.ConstantEqualityPredicate;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.db.builder.QueryBuilder;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Predicate;
-import uk.ac.ox.cs.pdq.fol.Signature;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.plan.AccessOperator;
 import uk.ac.ox.cs.pdq.plan.DAGPlan;
@@ -30,13 +30,13 @@ import uk.ac.ox.cs.pdq.rewrite.Rewriter;
 public class DAGPlanToConjunctiveQuery implements Rewriter<DAGPlan, ConjunctiveQuery> {
 	
 	/**  The query's head predicate. */
-	private final Predicate head;
+	private final Atom head;
 	
 	/**
 	 * Constructor for DAGPlanToConjunctiveQuery.
 	 * @param head PredicateFormula
 	 */
-	public DAGPlanToConjunctiveQuery(Predicate head) {
+	public DAGPlanToConjunctiveQuery(Atom head) {
 		this.head = head;
 	}
 	
@@ -44,7 +44,7 @@ public class DAGPlanToConjunctiveQuery implements Rewriter<DAGPlan, ConjunctiveQ
 	 * Constructor anonymous queries.
 	 */
 	public DAGPlanToConjunctiveQuery() {
-		this(Predicate.builder().setSignature(new Signature("_", 0)).build());
+		this(Atom.builder().setSignature(new Predicate("_", 0)).build());
 	}
 	
 	/**
@@ -85,7 +85,7 @@ public class DAGPlanToConjunctiveQuery implements Rewriter<DAGPlan, ConjunctiveQ
 	private void propagateNamesAndConstants(QueryBuilder builder,
 			Map<Term, Term> mapping, RelationalOperator logOp) {
 		if (logOp instanceof AccessOperator) {
-			Predicate.Builder atomBuilder = Predicate.builder()
+			Atom.Builder atomBuilder = Atom.builder()
 					.setSignature(((AccessOperator) logOp).getRelation());
 			for (Term t : logOp.getColumns()) {
 				Term substitue = t;

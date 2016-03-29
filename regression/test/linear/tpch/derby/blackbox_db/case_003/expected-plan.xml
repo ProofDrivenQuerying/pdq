@@ -1,15 +1,103 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<plan type="linear" cost="35.42">
+<plan type="linear" cost="23.47">
 <command name="T1">
 <operator type="PROJECT">
 <outputs>
-<attribute name="c26754" type="java.lang.Integer"/>
-<attribute name="c26758" type="java.lang.String"/>
-<attribute name="c26759" type="java.lang.String"/>
-<attribute name="c26760" type="java.lang.Integer"/>
-<attribute name="c26761" type="java.lang.String"/>
-<attribute name="c26762" type="java.math.BigDecimal"/>
-<attribute name="c26763" type="java.lang.String"/>
+<attribute name="c34456" type="java.lang.Integer"/>
+<attribute name="k34466" type="java.lang.String"/>
+<attribute name="k34467" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="r_regionkey" type="java.lang.Integer"/>
+<attribute name="r_name" type="java.lang.String"/>
+<attribute name="r_comment" type="java.lang.String"/>
+</project>
+<child>
+<operator type="ACCESS" relation="region" access-method="m12">
+<outputs>
+<attribute name="r_regionkey" type="java.lang.Integer"/>
+<attribute name="r_name" type="java.lang.String"/>
+<attribute name="r_comment" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</command>
+<command name="T2">
+<operator type="JOIN" variant="SYMMETRIC_HASH">
+<outputs>
+<attribute name="c34456" type="java.lang.Integer"/>
+<attribute name="k34466" type="java.lang.String"/>
+<attribute name="k34467" type="java.lang.String"/>
+<attribute name="c34451" type="java.lang.Integer"/>
+<attribute name="c34455" type="java.lang.String"/>
+<attribute name="c34456" type="java.lang.Integer"/>
+<attribute name="c34457" type="java.lang.String"/>
+</outputs>
+<conjunction>
+<predicate type="equality" left="0" right="5"/>
+</conjunction>
+<children>
+<operator type="ALIAS" name="T1"/>
+<operator type="PROJECT">
+<outputs>
+<attribute name="c34451" type="java.lang.Integer"/>
+<attribute name="c34455" type="java.lang.String"/>
+<attribute name="c34456" type="java.lang.Integer"/>
+<attribute name="c34457" type="java.lang.String"/>
+</outputs>
+<project>
+<attribute name="n_nationkey" type="java.lang.Integer"/>
+<attribute name="n_name" type="java.lang.String"/>
+<attribute name="n_regionkey" type="java.lang.Integer"/>
+<attribute name="n_comment" type="java.lang.String"/>
+</project>
+<child>
+<operator type="ACCESS" relation="nation" access-method="m10">
+<outputs>
+<attribute name="n_nationkey" type="java.lang.Integer"/>
+<attribute name="n_name" type="java.lang.String"/>
+<attribute name="n_regionkey" type="java.lang.Integer"/>
+<attribute name="n_comment" type="java.lang.String"/>
+</outputs>
+</operator>
+</child>
+</operator>
+</children>
+</operator>
+</command>
+<command name="T3">
+<operator type="JOIN" variant="SYMMETRIC_HASH">
+<outputs>
+<attribute name="c34456" type="java.lang.Integer"/>
+<attribute name="k34466" type="java.lang.String"/>
+<attribute name="k34467" type="java.lang.String"/>
+<attribute name="c34451" type="java.lang.Integer"/>
+<attribute name="c34455" type="java.lang.String"/>
+<attribute name="c34456" type="java.lang.Integer"/>
+<attribute name="c34457" type="java.lang.String"/>
+<attribute name="c34445" type="java.lang.Integer"/>
+<attribute name="c34449" type="java.lang.String"/>
+<attribute name="c34450" type="java.lang.String"/>
+<attribute name="c34451" type="java.lang.Integer"/>
+<attribute name="c34452" type="java.lang.String"/>
+<attribute name="c34453" type="java.math.BigDecimal"/>
+<attribute name="c34454" type="java.lang.String"/>
+</outputs>
+<conjunction>
+<predicate type="equality" left="3" right="10"/>
+</conjunction>
+<children>
+<operator type="ALIAS" name="T2"/>
+<operator type="PROJECT">
+<outputs>
+<attribute name="c34445" type="java.lang.Integer"/>
+<attribute name="c34449" type="java.lang.String"/>
+<attribute name="c34450" type="java.lang.String"/>
+<attribute name="c34451" type="java.lang.Integer"/>
+<attribute name="c34452" type="java.lang.String"/>
+<attribute name="c34453" type="java.math.BigDecimal"/>
+<attribute name="c34454" type="java.lang.String"/>
 </outputs>
 <project>
 <attribute name="s_suppkey" type="java.lang.Integer"/>
@@ -34,35 +122,44 @@
 </operator>
 </child>
 </operator>
+</children>
+</operator>
 </command>
-<command name="T2">
+<command name="T4">
 <operator type="JOIN" variant="SYMMETRIC_HASH">
 <outputs>
-<attribute name="c26754" type="java.lang.Integer"/>
-<attribute name="c26758" type="java.lang.String"/>
-<attribute name="c26759" type="java.lang.String"/>
-<attribute name="c26760" type="java.lang.Integer"/>
-<attribute name="c26761" type="java.lang.String"/>
-<attribute name="c26762" type="java.math.BigDecimal"/>
-<attribute name="c26763" type="java.lang.String"/>
-<attribute name="c26753" type="java.lang.Integer"/>
-<attribute name="c26754" type="java.lang.Integer"/>
-<attribute name="c26755" type="java.lang.Integer"/>
-<attribute name="c26756" type="java.math.BigDecimal"/>
-<attribute name="c26757" type="java.lang.String"/>
+<attribute name="c34456" type="java.lang.Integer"/>
+<attribute name="k34466" type="java.lang.String"/>
+<attribute name="k34467" type="java.lang.String"/>
+<attribute name="c34451" type="java.lang.Integer"/>
+<attribute name="c34455" type="java.lang.String"/>
+<attribute name="c34456" type="java.lang.Integer"/>
+<attribute name="c34457" type="java.lang.String"/>
+<attribute name="c34445" type="java.lang.Integer"/>
+<attribute name="c34449" type="java.lang.String"/>
+<attribute name="c34450" type="java.lang.String"/>
+<attribute name="c34451" type="java.lang.Integer"/>
+<attribute name="c34452" type="java.lang.String"/>
+<attribute name="c34453" type="java.math.BigDecimal"/>
+<attribute name="c34454" type="java.lang.String"/>
+<attribute name="c34444" type="java.lang.Integer"/>
+<attribute name="c34445" type="java.lang.Integer"/>
+<attribute name="c34446" type="java.lang.Integer"/>
+<attribute name="c34447" type="java.math.BigDecimal"/>
+<attribute name="c34448" type="java.lang.String"/>
 </outputs>
 <conjunction>
-<predicate type="equality" left="0" right="8"/>
+<predicate type="equality" left="7" right="15"/>
 </conjunction>
 <children>
-<operator type="ALIAS" name="T1"/>
+<operator type="ALIAS" name="T3"/>
 <operator type="PROJECT">
 <outputs>
-<attribute name="c26753" type="java.lang.Integer"/>
-<attribute name="c26754" type="java.lang.Integer"/>
-<attribute name="c26755" type="java.lang.Integer"/>
-<attribute name="c26756" type="java.math.BigDecimal"/>
-<attribute name="c26757" type="java.lang.String"/>
+<attribute name="c34444" type="java.lang.Integer"/>
+<attribute name="c34445" type="java.lang.Integer"/>
+<attribute name="c34446" type="java.lang.Integer"/>
+<attribute name="c34447" type="java.math.BigDecimal"/>
+<attribute name="c34448" type="java.lang.String"/>
 </outputs>
 <project>
 <attribute name="ps_partkey" type="java.lang.Integer"/>
@@ -79,58 +176,6 @@
 <attribute name="ps_availqty" type="java.lang.Integer"/>
 <attribute name="ps_supplycost" type="java.math.BigDecimal"/>
 <attribute name="ps_comment" type="java.lang.String"/>
-</outputs>
-</operator>
-</child>
-</operator>
-</children>
-</operator>
-</command>
-<command name="T3">
-<operator type="JOIN" variant="SYMMETRIC_HASH">
-<outputs>
-<attribute name="c26754" type="java.lang.Integer"/>
-<attribute name="c26758" type="java.lang.String"/>
-<attribute name="c26759" type="java.lang.String"/>
-<attribute name="c26760" type="java.lang.Integer"/>
-<attribute name="c26761" type="java.lang.String"/>
-<attribute name="c26762" type="java.math.BigDecimal"/>
-<attribute name="c26763" type="java.lang.String"/>
-<attribute name="c26753" type="java.lang.Integer"/>
-<attribute name="c26754" type="java.lang.Integer"/>
-<attribute name="c26755" type="java.lang.Integer"/>
-<attribute name="c26756" type="java.math.BigDecimal"/>
-<attribute name="c26757" type="java.lang.String"/>
-<attribute name="c26760" type="java.lang.Integer"/>
-<attribute name="c26764" type="java.lang.String"/>
-<attribute name="c26765" type="java.lang.Integer"/>
-<attribute name="c26766" type="java.lang.String"/>
-</outputs>
-<conjunction>
-<predicate type="equality" left="3" right="12"/>
-</conjunction>
-<children>
-<operator type="ALIAS" name="T2"/>
-<operator type="PROJECT">
-<outputs>
-<attribute name="c26760" type="java.lang.Integer"/>
-<attribute name="c26764" type="java.lang.String"/>
-<attribute name="c26765" type="java.lang.Integer"/>
-<attribute name="c26766" type="java.lang.String"/>
-</outputs>
-<project>
-<attribute name="n_nationkey" type="java.lang.Integer"/>
-<attribute name="n_name" type="java.lang.String"/>
-<attribute name="n_regionkey" type="java.lang.Integer"/>
-<attribute name="n_comment" type="java.lang.String"/>
-</project>
-<child>
-<operator type="ACCESS" relation="nation" access-method="m10">
-<outputs>
-<attribute name="n_nationkey" type="java.lang.Integer"/>
-<attribute name="n_name" type="java.lang.String"/>
-<attribute name="n_regionkey" type="java.lang.Integer"/>
-<attribute name="n_comment" type="java.lang.String"/>
 </outputs>
 </operator>
 </child>

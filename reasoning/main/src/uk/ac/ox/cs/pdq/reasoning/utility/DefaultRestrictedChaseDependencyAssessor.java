@@ -8,8 +8,8 @@ import org.apache.commons.collections4.CollectionUtils;
 import uk.ac.ox.cs.pdq.db.Constraint;
 import uk.ac.ox.cs.pdq.db.EGD;
 import uk.ac.ox.cs.pdq.db.TGD;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Predicate;
-import uk.ac.ox.cs.pdq.fol.Signature;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState;
 
 import com.beust.jcommander.internal.Lists;
@@ -35,7 +35,7 @@ import com.google.common.collect.Multimap;
 public final class DefaultRestrictedChaseDependencyAssessor implements RestrictedChaseDependencyAssessor{
 
 	/**  The facts of this database instance*. */
-	private Collection<Predicate> stateFacts = null;
+	private Collection<Atom> stateFacts = null;
 
 	/** Maps of predicate names to EGDs. Given an EGD \delta = \sigma --> x_i = x_j, we 
 	 * create a new entry in the map for each R in \sigma **/
@@ -61,8 +61,8 @@ public final class DefaultRestrictedChaseDependencyAssessor implements Restricte
 		
 		//Build the dependency map
 		for(Constraint dependency:dependencies) {
-			for(Predicate predicate:dependency.getLeft().getPredicates()) {
-				Signature s = predicate.getSignature();
+			for(Atom atom:dependency.getLeft().getAtoms()) {
+				Predicate s = atom.getSignature();
 				if(dependency instanceof EGD) {
 					this.egdMap.put(s.getName(), (EGD) dependency);
 					egds.add(dependency);
@@ -86,7 +86,7 @@ public final class DefaultRestrictedChaseDependencyAssessor implements Restricte
 	@Override
 	public Collection<? extends Constraint> getDependencies(ChaseState state) {
 		Collection<Constraint> constraints = Sets.newLinkedHashSet();
-		Collection<Predicate> newFacts = null;
+		Collection<Atom> newFacts = null;
 		if(this.stateFacts == null) {
 			newFacts = state.getFacts();
 		}
@@ -94,19 +94,19 @@ public final class DefaultRestrictedChaseDependencyAssessor implements Restricte
 			newFacts = CollectionUtils.subtract(state.getFacts(), this.stateFacts);
 		}
 		
-		Multimap<String, Predicate> newFactsMap = ArrayListMultimap.create();
-		for(Predicate fact:newFacts) {
+		Multimap<String, Atom> newFactsMap = ArrayListMultimap.create();
+		for(Atom fact:newFacts) {
 			newFactsMap.put(fact.getSignature().getName(), fact);
 		}
 		
-		Multimap<String, Predicate> allFactsMap = ArrayListMultimap.create();
-		for(Predicate fact:state.getFacts()) {
+		Multimap<String, Atom> allFactsMap = ArrayListMultimap.create();
+		for(Atom fact:state.getFacts()) {
 			allFactsMap.put(fact.getSignature().getName(), fact);
 		}
 		
 		for(Constraint dependency:this.dependencies) {
-			for(Predicate predicate:dependency.getLeft().getPredicates()) {
-				Signature s = predicate.getSignature();
+			for(Atom atom:dependency.getLeft().getAtoms()) {
+				Predicate s = atom.getSignature();
 				if(dependency instanceof TGD && newFactsMap.keySet().contains(s.getName())) {
 					constraints.add(dependency);
 					break;

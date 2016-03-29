@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import uk.ac.ox.cs.pdq.fol.Conjunction;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Variable;
 
 // TODO: Auto-generated Javadoc
@@ -23,7 +23,7 @@ public class LinearGuarded extends TGD implements GuardedDependency {
 	 * @param left 		The left-hand side predicate of the dependency
 	 * @param right 		The right-hand side predicate of the dependency
 	 */
-	public LinearGuarded(Predicate left, Conjunction<Predicate> right) {
+	public LinearGuarded(Atom left, Conjunction<Atom> right) {
 		super(Conjunction.of(left), right);
 	}
 
@@ -44,14 +44,14 @@ public class LinearGuarded extends TGD implements GuardedDependency {
 	 * @param relation Relation
 	 * @return the left-hand side predicate of a linear guarded dependency for the given relation
 	 */
-	private static Predicate createLeft(Relation relation) {
+	private static Atom createLeft(Relation relation) {
 		List<Variable> free = new ArrayList<>();
 		int index = 0;
 		for (int i = 0, l = relation.getArity(); i < l; i++) {
 			Variable v = new Variable(Variable.DEFAULT_VARIABLE_PREFIX + (index++));
 			free.add(v);
 		}
-		return new Predicate(relation, free);
+		return new Atom(relation, free);
 	}
 
 	/**
@@ -61,7 +61,7 @@ public class LinearGuarded extends TGD implements GuardedDependency {
 	 * @param foreignKey the foreign key
 	 * @return the right-hand side of a linear guarded dependency for the given relation and foreign key constraint
 	 */
-	private static Conjunction<Predicate> createRight(Relation relation, ForeignKey foreignKey) {
+	private static Conjunction<Atom> createRight(Relation relation, ForeignKey foreignKey) {
 		List<Variable> free = new ArrayList<>();
 		int index = 0;
 		for (int i = 0, l = relation.getArity(); i < l; i++) {
@@ -82,7 +82,7 @@ public class LinearGuarded extends TGD implements GuardedDependency {
 			remoteTerms.set(remoteTermIndex, free.get(localTermIndex));
 		}
 
-		return Conjunction.of(new Predicate(foreignKey.getForeignRelation(), remoteTerms));
+		return Conjunction.of(new Atom(foreignKey.getForeignRelation(), remoteTerms));
 	}
 
 
@@ -93,7 +93,7 @@ public class LinearGuarded extends TGD implements GuardedDependency {
 	 * @see uk.ac.ox.cs.pdq.db.GuardedDependency#getGuard()
 	 */
 	@Override
-	public Predicate getGuard() {
+	public Atom getGuard() {
 		return this.left.iterator().next();
 	}
 }

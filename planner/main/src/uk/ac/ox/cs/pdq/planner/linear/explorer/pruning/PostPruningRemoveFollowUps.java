@@ -13,7 +13,7 @@ import uk.ac.ox.cs.pdq.LimitReachedException;
 import uk.ac.ox.cs.pdq.db.Constraint;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.Constant;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
@@ -72,7 +72,7 @@ public final class PostPruningRemoveFollowUps extends PostPruning {
 	 * @throws LimitReachedException the limit reached exception
 	 */
 	@Override
-	protected void createPath(SearchNode root, List<SearchNode> path, Collection<Predicate> factsToExpose) throws PlannerException, LimitReachedException {
+	protected void createPath(SearchNode root, List<SearchNode> path, Collection<Atom> factsToExpose) throws PlannerException, LimitReachedException {
 		if(this.isPruned) {
 			this.path = new ArrayList<>();
 			List<Integer> nodeIds = new ArrayList<>();
@@ -124,10 +124,10 @@ public final class PostPruningRemoveFollowUps extends PostPruning {
 	 * @return 		the facts that are sufficient to produce the input queryFacts
 	 */
 	@Override
-	protected Collection<Predicate> findFactsToExpose(List<SearchNode> path, Collection<Predicate> queryFacts) {
+	protected Collection<Atom> findFactsToExpose(List<SearchNode> path, Collection<Atom> queryFacts) {
 		SearchNode successNode = path.get(path.size() - 1);
 		// Find the minimal set of facts that have to be exposed in order to make each fact in the query match accessible
-		Collection<Predicate> minimalFacts = this.getMinimalFacts(queryFacts, successNode);
+		Collection<Atom> minimalFacts = this.getMinimalFacts(queryFacts, successNode);
 
 		// For each node in the path
 		int i = 0;
@@ -159,12 +159,12 @@ public final class PostPruningRemoveFollowUps extends PostPruning {
 	 * @param successNode 		A node with configuration that matches the input query
 	 * @return 		a minimal set of facts that have to be exposed in order to make each input fact accessible
 	 */
-	private Collection<Predicate> getMinimalFacts(Collection<Predicate> queryMatch, SearchNode successNode) {
+	private Collection<Atom> getMinimalFacts(Collection<Atom> queryMatch, SearchNode successNode) {
 		Preconditions.checkArgument(queryMatch != null);
 		Preconditions.checkArgument(successNode != null);
 		Preconditions.checkArgument(successNode.getStatus() == NodeStatus.SUCCESSFUL);
-		Map<Predicate, Pair<Constraint, Collection<Predicate>>> factProvenance = successNode.getConfiguration().getState().getProvenance();
-		Collection<Predicate> minimalFacts = this.getMinimalFactsRecursive(queryMatch, Utility.getConstants(queryMatch), new LinkedHashSet<Constant>(), factProvenance);
+		Map<Atom, Pair<Constraint, Collection<Atom>>> factProvenance = successNode.getConfiguration().getState().getProvenance();
+		Collection<Atom> minimalFacts = this.getMinimalFactsRecursive(queryMatch, Utility.getConstants(queryMatch), new LinkedHashSet<Constant>(), factProvenance);
 		return minimalFacts;
 	}
 
@@ -178,18 +178,18 @@ public final class PostPruningRemoveFollowUps extends PostPruning {
 	 * 		Each pair corresponds to the dependency and the facts that were used to fire the former dependency and derive a fact in F.
 	 * @return a (minimal) list of inferred accessible facts.
 	 */
-	private Collection<Predicate> getMinimalFactsRecursive(
-			Collection<Predicate> facts,
+	private Collection<Atom> getMinimalFactsRecursive(
+			Collection<Atom> facts,
 			Collection<Constant> inputTerms,
 			Collection<Constant> outputTerms,
-			Map<Predicate, Pair<Constraint, Collection<Predicate>>> factProvenance) {
+			Map<Atom, Pair<Constraint, Collection<Atom>>> factProvenance) {
 
 		// The minimal set of atoms
-		Collection<Predicate> parentFacts = new LinkedHashSet<>();
+		Collection<Atom> parentFacts = new LinkedHashSet<>();
 		// For each input fact
-		for(Predicate fact:facts) {
+		for(Atom fact:facts) {
 			// Get its provenance
-			Pair<Constraint, Collection<Predicate>> icToFacts = factProvenance.get(fact);
+			Pair<Constraint, Collection<Atom>> icToFacts = factProvenance.get(fact);
 			if(icToFacts == null) {
 				return new LinkedHashSet<>();
 			}
@@ -217,7 +217,7 @@ public final class PostPruningRemoveFollowUps extends PostPruning {
 					outputTerms.addAll(elements.getOutputTerms());
 					outputTerms.removeAll(elements.getInputTerms());  // Julien-bugfix: if a terms previously thought to be accessible turns out to be a required input earlier in the plan, remove it from the output.
 					parentFacts.add(elements.getInferredAccessibleFact());
-					for(Predicate accessibleFact:elements.getInputAccessibleFacts()) {
+					for(Atom accessibleFact:elements.getInputAccessibleFacts()) {
 						parentFacts.addAll(this.getMinimalFactsRecursive(Sets.newLinkedHashSet(Sets.newHashSet(accessibleFact)), inputTerms, outputTerms, factProvenance));
 					}
 				}
@@ -235,12 +235,12 @@ public final class PostPruningRemoveFollowUps extends PostPruning {
 	 * 				the accessible facts O that were derived from this firing and
 	 * 				the inferred accessible fact that corresponds to the axiom's accessed fact.
 	 */
-	private Element getElement(Collection<Predicate> facts) {
+	private Element getElement(Collection<Atom> facts) {
 		Collection<Constant> inputTerms = new LinkedHashSet<>();
 		Collection<Constant> outputTerms = new LinkedHashSet<>();
-		Collection<Predicate> inputAccessibleFacts = new LinkedHashSet<>();
-		Predicate inferredAccessibleFact = null;
-		for(Predicate fact:facts) {
+		Collection<Atom> inputAccessibleFacts = new LinkedHashSet<>();
+		Atom inferredAccessibleFact = null;
+		for(Atom fact:facts) {
 			if(fact.getSignature() instanceof AccessibleRelation) {
 				Set<Constant> constants = Utility.getNonSchemaConstants(fact);
 				if(!constants.isEmpty()) {
@@ -251,7 +251,7 @@ public final class PostPruningRemoveFollowUps extends PostPruning {
 			else if(fact.getSignature() instanceof Relation) {
 				outputTerms.addAll(Utility.getConstants(fact));
 				Relation relation = (Relation) fact.getSignature();
-				inferredAccessibleFact = new Predicate(this.accessibleSchema.getInferredAccessibleRelation(relation), fact.getTerms() );
+				inferredAccessibleFact = new Atom(this.accessibleSchema.getInferredAccessibleRelation(relation), fact.getTerms() );
 			}
 			else {
 				throw new java.lang.IllegalArgumentException();
@@ -273,10 +273,10 @@ public final class PostPruningRemoveFollowUps extends PostPruning {
 		private final Collection<Constant> outputTerms;
 		
 		/** The input accessible facts. */
-		private final Collection<Predicate> inputAccessibleFacts;
+		private final Collection<Atom> inputAccessibleFacts;
 		
 		/** The inferred accessible fact. */
-		private final Predicate inferredAccessibleFact;
+		private final Atom inferredAccessibleFact;
 
 		/**
 		 * Constructor for Element.
@@ -287,8 +287,8 @@ public final class PostPruningRemoveFollowUps extends PostPruning {
 		 */
 		public Element(Collection<Constant> inputTerms,
 				Collection<Constant> outputTerms,
-				Collection<Predicate> accessibleFacts,
-				Predicate inferredAccessibleFact) {
+				Collection<Atom> accessibleFacts,
+				Atom inferredAccessibleFact) {
 			Preconditions.checkArgument(inputTerms != null);
 			Preconditions.checkArgument(outputTerms != null);
 			Preconditions.checkArgument(accessibleFacts != null);
@@ -322,7 +322,7 @@ public final class PostPruningRemoveFollowUps extends PostPruning {
 		 *
 		 * @return Collection<PredicateFormula>
 		 */
-		public Collection<Predicate> getInputAccessibleFacts() {
+		public Collection<Atom> getInputAccessibleFacts() {
 			return this.inputAccessibleFacts;
 		}
 
@@ -331,7 +331,7 @@ public final class PostPruningRemoveFollowUps extends PostPruning {
 		 *
 		 * @return PredicateFormula
 		 */
-		public Predicate getInferredAccessibleFact() {
+		public Atom getInferredAccessibleFact() {
 			return this.inferredAccessibleFact;
 		}
 

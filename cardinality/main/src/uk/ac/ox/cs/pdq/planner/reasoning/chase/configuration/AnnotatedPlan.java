@@ -9,7 +9,7 @@ import java.util.List;
 import uk.ac.ox.cs.pdq.LimitReachedException;
 import uk.ac.ox.cs.pdq.db.Constraint;
 import uk.ac.ox.cs.pdq.fol.Constant;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
@@ -92,7 +92,7 @@ public abstract class AnnotatedPlan<P extends Plan> implements Configuration<P> 
 	 *
 	 * @return the configuration's output facts
 	 */
-	public Collection<Predicate> getOutputFacts() {
+	public Collection<Atom> getOutputFacts() {
 		return this.state.getFacts();
 	}
 	

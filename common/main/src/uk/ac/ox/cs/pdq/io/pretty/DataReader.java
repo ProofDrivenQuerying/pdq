@@ -11,7 +11,7 @@ import java.util.List;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.io.Reader;
 import uk.ac.ox.cs.pdq.io.ReaderException;
@@ -23,7 +23,7 @@ import uk.ac.ox.cs.pdq.util.Types;
  * 
  * @author Julien Leblay
  */
-public class DataReader implements Reader<Collection<Predicate>> {
+public class DataReader implements Reader<Collection<Atom>> {
 
 	/**  The schema that the facts read must comply with. */
 	private final Schema schema;
@@ -42,15 +42,15 @@ public class DataReader implements Reader<Collection<Predicate>> {
 	 * @see uk.ac.ox.cs.pdq.io.Reader#read(java.io.InputStream)
 	 */
 	@Override
-	public List<Predicate> read(InputStream in) {
-		List<Predicate> result = new ArrayList<>();
+	public List<Atom> read(InputStream in) {
+		List<Atom> result = new ArrayList<>();
 		try (BufferedReader bif = new BufferedReader(new InputStreamReader(in))) {
 			String line = null;
 			int counter = 1;
 			while((line = bif.readLine()) != null) {
 				String trimed = line.trim();
 				if (!trimed.startsWith("#")) {
-					Predicate fact = this.parseFact(trimed, counter);
+					Atom fact = this.parseFact(trimed, counter);
 					if (fact != null) {
 					    result.add(fact);
 					}
@@ -70,7 +70,7 @@ public class DataReader implements Reader<Collection<Predicate>> {
 	 * @param lineNumber the line number
 	 * @return the fact read from the given line.
 	 */
-	private Predicate parseFact(String line, int lineNumber) {
+	private Atom parseFact(String line, int lineNumber) {
 		int open = line.indexOf('(');
 		if (open > 0) {
 			String relationName = line.substring(0, open);
@@ -86,7 +86,7 @@ public class DataReader implements Reader<Collection<Predicate>> {
 			for (int i = 0, l = arguments.length; i < l; i++) {
 				terms.add(new TypedConstant<>(Types.cast(r.getAttribute(i).getType(), arguments[i].trim())));
 			}
-			return new Predicate(r, terms);
+			return new Atom(r, terms);
 		}
 		return null;
 	}

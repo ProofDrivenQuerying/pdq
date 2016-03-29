@@ -130,13 +130,13 @@ public abstract class BinaryFormula<S extends Formula, T extends Formula> extend
 	 * Gets the predicates.
 	 *
 	 * @return List<PredicateFormula>
-	 * @see uk.ac.ox.cs.pdq.fol.Formula#getPredicates()
+	 * @see uk.ac.ox.cs.pdq.fol.Formula#getAtoms()
 	 */
 	@Override
-	public List<Predicate> getPredicates() {
-		List<Predicate> result = new ArrayList<>();
-		result.addAll(this.left.getPredicates());
-		result.addAll(this.right.getPredicates());
+	public List<Atom> getAtoms() {
+		List<Atom> result = new ArrayList<>();
+		result.addAll(this.left.getAtoms());
+		result.addAll(this.right.getAtoms());
 		return result;
 	}
 

@@ -9,8 +9,8 @@ import java.util.List;
 import org.apache.commons.lang3.tuple.Pair;
 
 import uk.ac.ox.cs.pdq.db.Relation;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Predicate;
-import uk.ac.ox.cs.pdq.fol.Signature;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
@@ -37,21 +37,21 @@ public class Utility {
 	 * @param signatureToSchemaFact 		Maps each schema signature (relation) to its chase facts
 	 * @return 		pairs of accessibility axioms to chase facts.
 	 */
-	public List<Pair<AccessibilityAxiom, Collection<Predicate>>> groupByBinding(
+	public List<Pair<AccessibilityAxiom, Collection<Atom>>> groupByBinding(
 			Collection<AccessibilityAxiom> axioms, 
-			Multimap<Signature, Predicate> signatureToSchemaFact) {
-		List<Pair<AccessibilityAxiom, Collection<Predicate>>> ret = new ArrayList<>();
+			Multimap<Predicate, Atom> signatureToSchemaFact) {
+		List<Pair<AccessibilityAxiom, Collection<Atom>>> ret = new ArrayList<>();
 		for(AccessibilityAxiom axiom: axioms) {
 			//For each axiom, we get the relevant facts
 			//and group them based on the constants of their input positions
-			Collection<Predicate> facts = signatureToSchemaFact.get(axiom.getBaseRelation());
-			Multimap<Collection<Term>, Predicate> groupsOfFacts = LinkedHashMultimap.create();
-			for(Predicate fact: facts) {
+			Collection<Atom> facts = signatureToSchemaFact.get(axiom.getBaseRelation());
+			Multimap<Collection<Term>, Atom> groupsOfFacts = LinkedHashMultimap.create();
+			for(Atom fact: facts) {
 				groupsOfFacts.put(fact.getTerms(axiom.getAccessMethod().getZeroBasedInputs()), fact);
 			}
 			Iterator<Collection<Term>> keyIterator = groupsOfFacts.keySet().iterator();
 			while(keyIterator.hasNext()) {
-				Collection<Predicate> collection = Sets.newLinkedHashSet(groupsOfFacts.get(keyIterator.next()));
+				Collection<Atom> collection = Sets.newLinkedHashSet(groupsOfFacts.get(keyIterator.next()));
 				ret.add(Pair.of(axiom, collection));
 			}
 		}
@@ -70,26 +70,26 @@ public class Utility {
 	 * @param graph the graph
 	 * @return 		the corresponding accessed, accessible and inferred accessible facts for each fact in the input collection
 	 */
-	public Collection<Predicate> generateFacts(AccessibleSchema schema, 
+	public Collection<Atom> generateFacts(AccessibleSchema schema, 
 			AccessibilityAxiom axiom, 
-			Collection<Predicate> facts,
+			Collection<Atom> facts,
 			Collection<String> inferred,
-			Collection<Predicate> derivedInferred,
+			Collection<Atom> derivedInferred,
 			FiringGraph graph
 			) {
-		Collection<Predicate> createdFacts = new LinkedHashSet<>();
-		for(Predicate fact:facts) {			
-			Predicate accessedFact = new Predicate((Relation) fact.getSignature(), fact.getTerms());
+		Collection<Atom> createdFacts = new LinkedHashSet<>();
+		for(Atom fact:facts) {			
+			Atom accessedFact = new Atom((Relation) fact.getSignature(), fact.getTerms());
 			createdFacts.add(accessedFact);
 			
-			Predicate infAccFact = new Predicate(schema.getInferredAccessibleRelation((Relation) fact.getSignature()), fact.getTerms());
+			Atom infAccFact = new Atom(schema.getInferredAccessibleRelation((Relation) fact.getSignature()), fact.getTerms());
 			createdFacts.add(infAccFact);
 			inferred.add(infAccFact.toString());
 			derivedInferred.add(infAccFact);
 			graph.put(axiom, accessedFact, infAccFact);
 			
 			for(Term term:fact.getTerms()) {
-				createdFacts.add(new Predicate(schema.getAccessibleRelation(), term));
+				createdFacts.add(new Atom(schema.getAccessibleRelation(), term));
 			}
 		}
 		return createdFacts;
@@ -101,9 +101,9 @@ public class Utility {
 	 * @param facts the facts
 	 * @return the collection
 	 */
-	public static Collection<String> inferInferred(Collection<Predicate> facts) {
+	public static Collection<String> inferInferred(Collection<Atom> facts) {
 		Collection<String> inferred = new LinkedHashSet<>();
-		for(Predicate fact:facts) {
+		for(Atom fact:facts) {
 			if (fact.getSignature() instanceof InferredAccessibleRelation) {
 				inferred.add(fact.toString());
 			}
@@ -116,7 +116,7 @@ public class Utility {
 	 *
 	 * @return the collection
 	 */
-	public static Collection<Predicate> inferDerivedInferred() {
+	public static Collection<Atom> inferDerivedInferred() {
 		return new LinkedHashSet<>();
 	}
 
@@ -126,9 +126,9 @@ public class Utility {
 	 * @param facts the facts
 	 * @return the multimap
 	 */
-	public static Multimap<Signature, Predicate> inferSignatureGroups(Collection<Predicate> facts) {
-		Multimap<Signature, Predicate> signatureGroups = LinkedHashMultimap.create();
-		for(Predicate fact:facts) {
+	public static Multimap<Predicate, Atom> inferSignatureGroups(Collection<Atom> facts) {
+		Multimap<Predicate, Atom> signatureGroups = LinkedHashMultimap.create();
+		for(Atom fact:facts) {
 			if (!(fact.getSignature() instanceof AccessibleRelation) && 
 					!(fact.getSignature() instanceof InferredAccessibleRelation)) {
 				signatureGroups.put(fact.getSignature(), fact);
@@ -143,9 +143,9 @@ public class Utility {
 	 * @param facts the facts
 	 * @return the multimap
 	 */
-	public static Multimap<Term,Predicate> inferAccessibleTerms(Collection<Predicate> facts) {
-		Multimap<Term,Predicate> accessibleTerms = LinkedHashMultimap.create();
-		for(Predicate fact:facts) {
+	public static Multimap<Term,Atom> inferAccessibleTerms(Collection<Atom> facts) {
+		Multimap<Term,Atom> accessibleTerms = LinkedHashMultimap.create();
+		for(Atom fact:facts) {
 			if (fact.getSignature() instanceof AccessibleRelation) {
 				accessibleTerms.put(fact.getTerm(0), fact);
 			}
@@ -159,9 +159,9 @@ public class Utility {
 	 * @param facts the facts
 	 * @return the collection
 	 */
-	public static Collection<Term> inferTerms(Collection<Predicate> facts) {
+	public static Collection<Term> inferTerms(Collection<Atom> facts) {
 		Collection<Term> terms = new LinkedHashSet<>();
-		for(Predicate fact:facts) {
+		for(Atom fact:facts) {
 			terms.addAll(fact.getTerms());
 		}
 		return terms;

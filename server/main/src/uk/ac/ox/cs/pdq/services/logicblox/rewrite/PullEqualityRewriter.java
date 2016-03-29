@@ -16,7 +16,7 @@ import uk.ac.ox.cs.pdq.fol.Disjunction;
 import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.NaryFormula;
 import uk.ac.ox.cs.pdq.fol.Negation;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.rewrite.Rewriter;
@@ -72,10 +72,10 @@ public class PullEqualityRewriter<F extends Formula> implements Rewriter<F, F> {
 		if (f instanceof ConjunctiveQuery) {
 			QueryBuilder result = new QueryBuilder();
 			ConjunctiveQuery query = ((ConjunctiveQuery) f);
-			for (Predicate p: query.getBody()) {
+			for (Atom p: query.getBody()) {
 				result.addBodyAtom(p);
 			}
-			for (Predicate p: this.makeEqualities()) {
+			for (Atom p: this.makeEqualities()) {
 				result.addBodyAtom(p);
 			}
 			result.setName(query.getHead().getName());
@@ -98,11 +98,11 @@ public class PullEqualityRewriter<F extends Formula> implements Rewriter<F, F> {
 	 * @return a conjunction of equality predicates, based on the bindings
 	 * recorded so far.
 	 */
-	private Conjunction<Predicate> makeEqualities() {
-		Collection<Predicate> result = new ArrayList<>();
+	private Conjunction<Atom> makeEqualities() {
+		Collection<Atom> result = new ArrayList<>();
 		for (Map.Entry<Variable, TypedConstant<?>> entry: this.bindings.entrySet()) {
 			if (String.class.equals(entry.getValue().getType())) {
-				result.add(new Predicate(
+				result.add(new Atom(
 						this.schema.getRelation("string:eq_2"),
 						Lists.newArrayList(entry.getKey(), entry.getValue())));
 			}
@@ -124,18 +124,18 @@ public class PullEqualityRewriter<F extends Formula> implements Rewriter<F, F> {
 		if (f instanceof Negation) {
 			return this.propagate((Negation) f);
 		}
-		if (f instanceof Predicate) {
-			return this.propagate((Predicate) f);
+		if (f instanceof Atom) {
+			return this.propagate((Atom) f);
 		}
 		if (f instanceof ConjunctiveQuery) {
 			ConjunctiveQuery query = ((ConjunctiveQuery) f);
 			Formula body = this.findBindings(query.getBody());
-			if (body instanceof Predicate) {
+			if (body instanceof Atom) {
 				return new ConjunctiveQuery(query.getHead(),
-						Conjunction.of((Predicate) body));
+						Conjunction.of((Atom) body));
 			}
 			return new ConjunctiveQuery(query.getHead(),
-						(Conjunction<Predicate>) body);
+						(Conjunction<Atom>) body);
 		}
 		throw new UnsupportedOperationException(f + " not supported in equality propagation rewriting.");
 	}
@@ -185,7 +185,7 @@ public class PullEqualityRewriter<F extends Formula> implements Rewriter<F, F> {
 	 * @param pred PredicateFormula
 	 * @return the rewritten formula
 	 */
-	private Predicate propagate(Predicate pred) {
+	private Atom propagate(Atom pred) {
 		List<Term> results = new ArrayList<>();
 		for (Term t: pred.getTerms()) {
 			if (!t.isVariable() && !t.isSkolem()) {
@@ -196,6 +196,6 @@ public class PullEqualityRewriter<F extends Formula> implements Rewriter<F, F> {
 				results.add(t);
 			}
 		}
-		return new Predicate(pred.getSignature(), results);
+		return new Atom(pred.getSignature(), results);
 	}
 }

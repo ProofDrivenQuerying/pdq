@@ -18,7 +18,7 @@ import uk.ac.ox.cs.pdq.db.wrappers.InMemoryTableWrapper;
 import uk.ac.ox.cs.pdq.db.wrappers.InMemoryViewWrapper;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.runtime.exec.Middleware;
@@ -56,7 +56,7 @@ public class Runtime {
 	private Schema schema;
 
 	/**  In-memory facts. */
-	private List<Predicate> facts;
+	private List<Atom> facts;
 	
 	/** The event bus. */
 	private EventBus eventBus;
@@ -67,7 +67,7 @@ public class Runtime {
 	 * @param schema Schema
 	 * @param facts List<PredicateFormula>
 	 */
-	public Runtime(RuntimeParameters params, Schema schema, List<Predicate> facts) {
+	public Runtime(RuntimeParameters params, Schema schema, List<Atom> facts) {
 		super();
 		this.eventBus = new EventBus();
 		this.params = params;
@@ -133,7 +133,7 @@ public class Runtime {
 			relations.put(w.getName(), w);
 		}
 
-		for (Predicate fact: this.facts) {
+		for (Atom fact: this.facts) {
 			InMemoryRelation w = relations.get(fact.getSignature().getName());
 			List<Attribute> attributes = ((Relation) fact.getSignature()).getAttributes();
 			TupleType type = types.get(w);

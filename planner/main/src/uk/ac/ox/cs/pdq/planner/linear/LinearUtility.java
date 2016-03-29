@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import uk.ac.ox.cs.pdq.fol.Constant;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.Candidate;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
 import uk.ac.ox.cs.pdq.planner.util.PlannerUtility;
@@ -45,7 +45,7 @@ public class LinearUtility {
 	 * @return 		the output constants of the input candidate facts
 	 */
 	public static Collection<Constant> getOutputConstants(Set<Candidate> candidates) {
-		Set<Predicate> facts = new HashSet<>();
+		Set<Atom> facts = new HashSet<>();
 		for(Candidate candidate:candidates) {
 			facts.add(candidate.getFact());
 		}

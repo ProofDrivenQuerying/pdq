@@ -16,7 +16,7 @@ import uk.ac.ox.cs.pdq.db.builder.SchemaBuilder;
 import uk.ac.ox.cs.pdq.fol.AcyclicQuery;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.generator.DependencyGenerator;
 import uk.ac.ox.cs.pdq.util.Utility;
@@ -77,14 +77,14 @@ public class DependencyGeneratorFirst extends AbstractDependencyGenerator implem
 	 */
 	private List<Constraint> generateTGDs(ConjunctiveQuery query) {
 		List<Constraint> dependencies = new ArrayList<>();
-		List<Predicate> queryBodyAtoms = query.getBody().getPredicates();
-		Predicate guard = queryBodyAtoms.get(queryBodyAtoms.size() - 1);
-		List<Set<Predicate>> powerSet = Lists.newArrayList(Sets.powerSet(new LinkedHashSet<>(queryBodyAtoms)));
+		List<Atom> queryBodyAtoms = query.getBody().getAtoms();
+		Atom guard = queryBodyAtoms.get(queryBodyAtoms.size() - 1);
+		List<Set<Atom>> powerSet = Lists.newArrayList(Sets.powerSet(new LinkedHashSet<>(queryBodyAtoms)));
 		
 		while (!powerSet.isEmpty()) {
 			//Select a random subset of conjunctions of the input query's body
 			int selection = this.random.nextInt(powerSet.size());
-			List<Predicate> leftConjuncts = Lists.newArrayList(powerSet.get(selection));
+			List<Atom> leftConjuncts = Lists.newArrayList(powerSet.get(selection));
 			//Add the guard of the query in the left-hand side of the dependency
 			if(!leftConjuncts.isEmpty()) {
 				if (leftConjuncts.size() > 1 && !leftConjuncts.contains(guard)) {
@@ -129,10 +129,10 @@ public class DependencyGeneratorFirst extends AbstractDependencyGenerator implem
 	 */
 	private List<Constraint> generateTGDs(AcyclicQuery query) {
 		List<Constraint> ret = new ArrayList<>();
-		List<Predicate> queryBodyAtoms = query.getBody().getPredicates();
+		List<Atom> queryBodyAtoms = query.getBody().getAtoms();
 		int dependencies = 0;
 		while (dependencies < this.params.getNumberOfConstraints() && dependencies < queryBodyAtoms.size()) {
-			List<Predicate> leftConjuncts = Lists.newArrayList(queryBodyAtoms.get(dependencies));
+			List<Atom> leftConjuncts = Lists.newArrayList(queryBodyAtoms.get(dependencies));
 			List<Variable> existential = this.createVariables(
 					this.params.getQueryConjuncts() * this.params.getArity(),
 					Utility.getVariables(leftConjuncts));

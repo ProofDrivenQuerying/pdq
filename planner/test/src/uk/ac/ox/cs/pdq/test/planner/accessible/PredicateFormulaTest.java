@@ -9,7 +9,7 @@ import org.junit.Test;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Skolem;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema.AccessibleRelation;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema.InferredAccessibleRelation;
@@ -43,8 +43,8 @@ public class PredicateFormulaTest {
 				TypedConstant<String> c = new TypedConstant<>("c");
 				Skolem s = new Skolem("s");
 				Assert.assertFalse("PredicateFormula must not be of type InferredAccessible",
-						new Predicate(r, Lists.newArrayList(s, c)).getSignature() instanceof InferredAccessibleRelation);
-				Predicate p = new Predicate(r, Lists.newArrayList(s, c));
+						new Atom(r, Lists.newArrayList(s, c)).getSignature() instanceof InferredAccessibleRelation);
+				Atom p = new Atom(r, Lists.newArrayList(s, c));
 	}
 
 	/**
@@ -54,7 +54,7 @@ public class PredicateFormulaTest {
 		Relation r = AccessibleRelation.getInstance();
 		Skolem s = new Skolem("s");
 		Assert.assertTrue("PredicateFormula must be of type Accessible",
-				new Predicate(r, Lists.newArrayList(s)).getSignature() instanceof AccessibleRelation);
+				new Atom(r, Lists.newArrayList(s)).getSignature() instanceof AccessibleRelation);
 	}
 
 	/**
@@ -68,7 +68,7 @@ public class PredicateFormulaTest {
 		TypedConstant<String> c = new TypedConstant<>("c");
 		Skolem s = new Skolem("s");
 		Assert.assertTrue("PredicateFormula must be of type InferredAccessible",
-				new Predicate(r, Lists.newArrayList(s, c)).getSignature() instanceof InferredAccessibleRelation);
+				new Atom(r, Lists.newArrayList(s, c)).getSignature() instanceof InferredAccessibleRelation);
 	}
 
 }

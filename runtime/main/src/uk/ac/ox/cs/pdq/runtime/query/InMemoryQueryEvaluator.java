@@ -19,7 +19,7 @@ import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.db.wrappers.InMemoryTableWrapper;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
@@ -118,13 +118,13 @@ public class InMemoryQueryEvaluator implements QueryEvaluator {
 	 */
 	private TupleIterator makePhysicalPlan(ConjunctiveQuery q) throws EvaluationException {
 		
-		Map<Variable, Set<Predicate>> joins = new LinkedHashMap<>();
-		Map<Predicate, TupleIterator> scans = new LinkedHashMap<>();
-		for (Predicate p: q.getBody()) {
+		Map<Variable, Set<Atom>> joins = new LinkedHashMap<>();
+		Map<Atom, TupleIterator> scans = new LinkedHashMap<>();
+		for (Atom p: q.getBody()) {
 			scans.put(p, this.makeScans(p));
 			for (Term t: p.getTerms()) {
 				if (t instanceof Variable) {
-					Set<Predicate> preds = joins.get(t);
+					Set<Atom> preds = joins.get(t);
 					if (preds == null) {
 						preds = new LinkedHashSet<>();
 						joins.put((Variable) t, preds);
@@ -146,11 +146,11 @@ public class InMemoryQueryEvaluator implements QueryEvaluator {
 	/**
 	 * Make scans.
 	 *
-	 * @param p Predicate
+	 * @param p Atom
 	 * @return TupleIterator
 	 * @throws EvaluationException the evaluation exception
 	 */
-	private TupleIterator makeScans(Predicate p) throws EvaluationException {
+	private TupleIterator makeScans(Atom p) throws EvaluationException {
 		if (!(p.getSignature() instanceof InMemoryTableWrapper)) {
 			throw new EvaluationException(
 					p.getSignature().getClass().getSimpleName() +
@@ -171,7 +171,7 @@ public class InMemoryQueryEvaluator implements QueryEvaluator {
 	 *
 	 * @param attributes List<Attribute>
 	 * @param terms List<Term>
-	 * @return List<Predicate>
+	 * @return List<Atom>
 	 */
 	private List<uk.ac.ox.cs.pdq.algebra.predicates.Predicate> makeSelectionPredicates(List<Attribute> attributes, List<Term> terms) {
 		List<uk.ac.ox.cs.pdq.algebra.predicates.Predicate> result = new ArrayList<>();
@@ -201,22 +201,22 @@ public class InMemoryQueryEvaluator implements QueryEvaluator {
 	 * @return a join/cross product relation tree
 	 */
 	private TupleIterator makeJoins(
-			Map<Predicate, TupleIterator> scans,
-			List<Set<Predicate>> clusters) {
+			Map<Atom, TupleIterator> scans,
+			List<Set<Atom>> clusters) {
 		TupleIterator outer = null;
-		Iterator<Set<Predicate>> i = Utility.connectedComponents(clusters).iterator();
+		Iterator<Set<Atom>> i = Utility.connectedComponents(clusters).iterator();
 		if (i.hasNext()) {
 			do {
 				TupleIterator inner = null;
-				Set<Predicate> cluster = i.next();
-				Iterator<Predicate> j = cluster.iterator();
+				Set<Atom> cluster = i.next();
+				Iterator<Atom> j = cluster.iterator();
 				if (j.hasNext()) {
 					do {
-						Predicate predicate = j.next();
+						Atom atom = j.next();
 						if (inner == null) {
-							inner = scans.get(predicate);
+							inner = scans.get(atom);
 						} else {
-							inner = new SymmetricMemoryHashJoin(this.makeNaturalJoinPredicate(inner, scans.get(predicate)), inner, scans.get(predicate));
+							inner = new SymmetricMemoryHashJoin(this.makeNaturalJoinPredicate(inner, scans.get(atom)), inner, scans.get(atom));
 						}
 					} while (j.hasNext());
 				}

@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.Objects;
 
 import uk.ac.ox.cs.pdq.fol.Formula;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Rule;
-import uk.ac.ox.cs.pdq.fol.Signature;
+import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
 
 import com.google.common.collect.Lists;
@@ -19,7 +19,7 @@ import com.google.common.collect.Lists;
  * @author Efthymia Tsamoura
  * @author Julien Leblay
  */
-public class View extends Relation implements Rule<Formula, Predicate> {
+public class View extends Relation implements Rule<Formula, Atom> {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -4961888228318423619L;
@@ -75,7 +75,7 @@ public class View extends Relation implements Rule<Formula, Predicate> {
 		super(dependency.getGuard().getName(), makeAttributes(dependency.getGuard()));
 		this.viewId = globalId++;
 		this.dependency = new LinearGuarded(
-				new Predicate(this, dependency.getUniversal()),
+				new Atom(this, dependency.getUniversal()),
 				dependency.getRight());
 		this.definition = this.dependency.invert();
 		this.setAccessMethods(bindings);
@@ -87,8 +87,8 @@ public class View extends Relation implements Rule<Formula, Predicate> {
 	 * @param fact An input fact
 	 * @return The list of schema attributes that correspond to this fact
 	 */
-	private static List<Attribute> makeAttributes(Predicate fact) {
-		Signature s = fact.getSignature();
+	private static List<Attribute> makeAttributes(Atom fact) {
+		Predicate s = fact.getSignature();
 		if (s instanceof Relation) {
 			return ((Relation) s).getAttributes();
 		}
@@ -167,7 +167,7 @@ public class View extends Relation implements Rule<Formula, Predicate> {
 	 * @see uk.ac.ox.cs.pdq.fol.Rule#getHead()
 	 */
 	@Override
-	public Predicate getHead() {
+	public Atom getHead() {
 		return this.dependency.getGuard();
 	}
 
@@ -180,10 +180,10 @@ public class View extends Relation implements Rule<Formula, Predicate> {
 	}
 
 	/* (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.fol.Rule#contains(uk.ac.ox.cs.pdq.fol.Signature)
+	 * @see uk.ac.ox.cs.pdq.fol.Rule#contains(uk.ac.ox.cs.pdq.fol.Predicate)
 	 */
 	@Override
-	public boolean contains(Signature s) {
+	public boolean contains(Predicate s) {
 		return this.dependency.contains(s);
 	}
 }

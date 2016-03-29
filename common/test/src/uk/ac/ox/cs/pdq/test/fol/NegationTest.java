@@ -11,8 +11,8 @@ import org.junit.Test;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Negation;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Predicate;
-import uk.ac.ox.cs.pdq.fol.Signature;
 import uk.ac.ox.cs.pdq.fol.Skolem;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
@@ -40,7 +40,7 @@ public final class NegationTest {
 	 * Test of.
 	 */
 	@Test public void testOf() {
-		Signature s = new Signature("s", 5);
+		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
 				new Variable("x1"), 
 				new Variable("x2"), 
@@ -48,8 +48,8 @@ public final class NegationTest {
 				new Skolem("x4"), 
 				new TypedConstant<>("x5")
 				);
-		Predicate p = new Predicate( s, t);
-		Negation<Predicate> n = Negation.of(p);
+		Atom p = new Atom( s, t);
+		Negation<Atom> n = Negation.of(p);
 		Assert.assertEquals("Negation subformulation must match that of construction ", p, n.getChild());
 	}
 
@@ -57,7 +57,7 @@ public final class NegationTest {
 	 * Test equals.
 	 */
 	@Test public void testEquals() {
-		Signature s1 = new Signature("s", 5);
+		Predicate s1 = new Predicate("s", 5);
 		List<Term> t1 = Lists.<Term>newArrayList(
 				new Variable("x1"), 
 				new Variable("x2"), 
@@ -65,8 +65,8 @@ public final class NegationTest {
 				new Skolem("x4"), 
 				new TypedConstant<>("x5")
 				);
-		Predicate p1 = new Predicate(s1, t1);
-		Signature s2 = new Signature("s", 5);
+		Atom p1 = new Atom(s1, t1);
+		Predicate s2 = new Predicate("s", 5);
 		List<Term> t2 = Lists.<Term>newArrayList(
 				new Variable("x1"), 
 				new Variable("x2"), 
@@ -74,9 +74,9 @@ public final class NegationTest {
 				new Skolem("x4"), 
 				new TypedConstant<>("x5")
 				);
-		Predicate p2 = new Predicate(s2, t2);
-		Negation<Predicate> n1 = Negation.of(p1);
-		Negation<Predicate> n2 = Negation.of(p2);
+		Atom p2 = new Atom(s2, t2);
+		Negation<Atom> n1 = Negation.of(p1);
+		Negation<Atom> n2 = Negation.of(p2);
 		Assert.assertTrue("Negation subformulation must match that of construction ", n1.equals(n2));
 	}
 
@@ -84,7 +84,7 @@ public final class NegationTest {
 	 * Test not equals.
 	 */
 	@Test public void testNotEquals() {
-		Signature s1 = new Signature("s", 5);
+		Predicate s1 = new Predicate("s", 5);
 		List<Term> t1 = Lists.<Term>newArrayList(
 				new Variable("x1"), 
 				new Variable("x2"), 
@@ -92,8 +92,8 @@ public final class NegationTest {
 				new Skolem("x4"), 
 				new TypedConstant<>("x5")
 				);
-		Predicate p1 = new Predicate(s1, t1);
-		Signature s2 = new Signature("s", 5);
+		Atom p1 = new Atom(s1, t1);
+		Predicate s2 = new Predicate("s", 5);
 		List<Term> t2 = Lists.<Term>newArrayList(
 				new Variable("x1"), 
 				new Variable("x2"), 
@@ -101,9 +101,9 @@ public final class NegationTest {
 				new Skolem("x4"), 
 				new TypedConstant<>("y")
 				);
-		Predicate p2 = new Predicate(s2, t2);
-		Negation<Predicate> n1 = Negation.of(p1);
-		Negation<Predicate> n2 = Negation.of(p2);
+		Atom p2 = new Atom(s2, t2);
+		Negation<Atom> n1 = Negation.of(p1);
+		Negation<Atom> n2 = Negation.of(p2);
 		Assert.assertFalse("Negation subformulation must match that of construction ", n1.equals(n2));
 	}
 
@@ -111,7 +111,7 @@ public final class NegationTest {
 	 * Test ground.
 	 */
 	@Test public void testGround() {
-		Signature s = new Signature("s", 5);
+		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
 				new Variable("x1"), 
 				new Variable("x2"), 
@@ -130,8 +130,8 @@ public final class NegationTest {
 		m.put(new Variable("x1"), new TypedConstant<>("c1"));
 		m.put(new Variable("x2"), new TypedConstant<>("c2"));
 		m.put(new Variable("x4"), new TypedConstant<>("c4"));
-		Predicate p = new Predicate(s, t);
-		Negation<Predicate> n = Negation.of(p);
+		Atom p = new Atom(s, t);
+		Negation<Atom> n = Negation.of(p);
 		Assert.assertEquals("Grounded negation must comply to mapping ", g, n.ground(m).getTerms());
 	}
 }

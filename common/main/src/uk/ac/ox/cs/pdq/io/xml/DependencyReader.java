@@ -18,7 +18,7 @@ import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TGD;
 import uk.ac.ox.cs.pdq.db.builder.DependencyBuilder;
 import uk.ac.ox.cs.pdq.db.builder.SchemaBuilder;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.io.ReaderException;
 
 import com.google.common.base.Preconditions;
@@ -41,10 +41,10 @@ public class DependencyReader extends AbstractXMLReader<Constraint> {
 	private TGD dependency = null;
 
 	/** Temporary list of left atoms being built. */
-	private List<Predicate> leftAtoms = null;
+	private List<Atom> leftAtoms = null;
 	
 	/** Temporary list of right atoms being built. */
-	private List<Predicate> rightAtoms = null;
+	private List<Atom> rightAtoms = null;
 	
 	/**  The atom reader for the left-hand side of the dependency. */
 	private AtomReader leftAtomsReader = null;
@@ -172,7 +172,7 @@ public class DependencyReader extends AbstractXMLReader<Constraint> {
 
 		case BODY:
 			Preconditions.checkState(this.inBody == 1);
-			for (Predicate a: this.leftAtoms) {
+			for (Atom a: this.leftAtoms) {
 				this.builder.addLeftAtom(a);
 			}
 			this.leftAtoms = new ArrayList<>();
@@ -181,7 +181,7 @@ public class DependencyReader extends AbstractXMLReader<Constraint> {
 
 		case HEAD:
 			Preconditions.checkState(this.inHead == 1);
-			for (Predicate a: this.rightAtoms) {
+			for (Atom a: this.rightAtoms) {
 				this.builder.addRightAtom(a);
 			}
 			this.rightAtoms = new ArrayList<>();

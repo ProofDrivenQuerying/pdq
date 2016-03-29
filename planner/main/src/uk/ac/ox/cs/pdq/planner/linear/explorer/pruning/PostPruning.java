@@ -9,7 +9,7 @@ import java.util.Set;
 import org.jgrapht.graph.DefaultEdge;
 
 import uk.ac.ox.cs.pdq.LimitReachedException;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
@@ -69,21 +69,21 @@ public abstract class PostPruning {
 	 * @throws PlannerException the planner exception
 	 * @throws LimitReachedException the limit reached exception
 	 */
-	public boolean prune(SearchNode root, List<SearchNode> path, Collection<Predicate> queryFacts) throws PlannerException, LimitReachedException {
+	public boolean prune(SearchNode root, List<SearchNode> path, Collection<Atom> queryFacts) throws PlannerException, LimitReachedException {
 		Preconditions.checkArgument(path != null);
 		Preconditions.checkArgument(queryFacts != null);
 		this.isPruned = false;
 		this.path = null;
 		this.plan = null;
-		Collection<Predicate> qF = new LinkedHashSet<>();
-		for(Predicate queryFact: queryFacts) {
+		Collection<Atom> qF = new LinkedHashSet<>();
+		for(Atom queryFact: queryFacts) {
 			if (queryFact.getSignature() instanceof InferredAccessibleRelation) {
 				qF.add(queryFact);
 			} else {
 				Preconditions.checkState(queryFact.getSignature() instanceof AccessibleRelation);
 			}
 		}
-		Collection<Predicate> factsToExpose = this.findFactsToExpose(path, qF);
+		Collection<Atom> factsToExpose = this.findFactsToExpose(path, qF);
 		if(this.isPruned) {
 			this.createPath(root, path, factsToExpose);
 		}
@@ -97,10 +97,10 @@ public abstract class PostPruning {
 	 * @param minimalFacts the minimal facts
 	 * @return the candidates that produced the input facts
 	 */
-	protected static Set<Candidate> getUtilisedCandidates(Collection<Candidate> candidates, Collection<Predicate> minimalFacts) {
+	protected static Set<Candidate> getUtilisedCandidates(Collection<Candidate> candidates, Collection<Atom> minimalFacts) {
 		Set<Candidate> useful = new HashSet<>();
 		for(Candidate candidate: candidates) {
-			Predicate inferredAccessibleFact = candidate.getInferredAccessibleFact();
+			Atom inferredAccessibleFact = candidate.getInferredAccessibleFact();
 			if (minimalFacts.contains(inferredAccessibleFact)) {
 				useful.add(candidate);
 			}
@@ -160,7 +160,7 @@ public abstract class PostPruning {
 	 * @param queryFacts 		The facts in the query match 
 	 * @return 		the facts that are sufficient to produce the input queryFacts
 	 */
-	protected abstract Collection<Predicate> findFactsToExpose(List<SearchNode> path, Collection<Predicate> queryFacts);
+	protected abstract Collection<Atom> findFactsToExpose(List<SearchNode> path, Collection<Atom> queryFacts);
 	
 	/**
 	 * Creates a post-pruned query path .
@@ -171,5 +171,5 @@ public abstract class PostPruning {
 	 * @throws PlannerException the planner exception
 	 * @throws LimitReachedException the limit reached exception
 	 */
-	protected abstract void createPath(SearchNode root, List<SearchNode> path, Collection<Predicate> factsToExpose) throws PlannerException, LimitReachedException;
+	protected abstract void createPath(SearchNode root, List<SearchNode> path, Collection<Atom> factsToExpose) throws PlannerException, LimitReachedException;
 }

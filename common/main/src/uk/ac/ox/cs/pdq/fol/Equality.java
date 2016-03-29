@@ -15,14 +15,14 @@ import com.google.common.base.Preconditions;
  *
  * @author Efthymia Tsamoura
  */
-public final class Equality extends Predicate {
+public final class Equality extends Atom {
 
 	/**
 	 * Constructor for Equality.
 	 * @param terms Collection<? extends Term>
 	 */
 	public Equality(Collection<? extends Term> terms) {
-		super(new Signature(QNames.EQUALITY.toString(), 2), terms);
+		super(new Predicate(QNames.EQUALITY.toString(), 2), terms);
 		Preconditions.checkArgument(terms.size()==2, "Illegal equality terms");
 	}
 	
@@ -32,7 +32,7 @@ public final class Equality extends Predicate {
 	 * @param term Term[]
 	 */
 	public Equality(Term... term) {
-		super(new Signature(QNames.EQUALITY.toString(), 2), term);
+		super(new Predicate(QNames.EQUALITY.toString(), 2), term);
 		Preconditions.checkArgument(term.length==2, "Illegal equality terms");
 	}
 	

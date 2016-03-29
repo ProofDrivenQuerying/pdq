@@ -20,7 +20,7 @@ import uk.ac.ox.cs.pdq.db.View;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.FormulaEquivalence;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
 import uk.ac.ox.cs.pdq.io.xml.SchemaWriter;
 import uk.ac.ox.cs.pdq.util.Utility;
@@ -102,9 +102,9 @@ public class XMLSchemaIOTest {
 	 */
 	@Test
 	public void testReadWriteSchemaWithoutViews() {
-		Predicate atom1 = r1.createAtoms();
-		Predicate atom2 = r2.createAtoms();
-		Predicate atom3 = r3.createAtoms();
+		Atom atom1 = r1.createAtoms();
+		Atom atom2 = r2.createAtoms();
+		Atom atom3 = r3.createAtoms();
 		c1 = new LinearGuarded(atom2, Conjunction.of(atom1));
 		c2 = new TGD(Conjunction.of(atom1, atom2), Conjunction.of(atom3));
 		c3 = new TGD(Conjunction.of(atom3), Conjunction.of(atom1, atom2));

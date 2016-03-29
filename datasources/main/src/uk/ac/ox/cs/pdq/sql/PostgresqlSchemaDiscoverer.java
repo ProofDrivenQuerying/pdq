@@ -23,7 +23,7 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.db.View;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Skolem;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
@@ -186,15 +186,15 @@ public class PostgresqlSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 		if (Strings.isNullOrEmpty(select) || Strings.isNullOrEmpty(from) || Strings.isNullOrEmpty(where)) {
 			throw new IllegalArgumentException("Not a valid view definition " + viewDef);
 		}
-		BiMap<String, Predicate> predicates = this.makePredicate(from, relationMap);
-		this.makeJoins(where, predicates);
-		Pair<List<Term>, List<Attribute>> freeTermsAndAttributes = this.makeFreeTerms(select, predicates);
-		List<Predicate> right = new ArrayList<>(predicates.values());
+		BiMap<String, Atom> atoms = this.makePredicate(from, relationMap);
+		this.makeJoins(where, atoms);
+		Pair<List<Term>, List<Attribute>> freeTermsAndAttributes = this.makeFreeTerms(select, atoms);
+		List<Atom> right = new ArrayList<>(atoms.values());
 		List<Variable> boundTerms = new ArrayList<>(Utility.getVariables(right));
 		boundTerms.removeAll(freeTermsAndAttributes.getLeft());
 		return new LinearGuarded(
 				//this.toVariable(freeTermsAndAttributes.getLeft()),
-				new Predicate(
+				new Atom(
 						new Relation(viewName, freeTermsAndAttributes.getRight()) {},
 						freeTermsAndAttributes.getLeft()), 
 				//boundTerms,
@@ -209,12 +209,12 @@ public class PostgresqlSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 	 * @param relationMap the relation map
 	 * @return a map from relation aliases to predicates with fresh variables
 	 */
-	private BiMap<String, Predicate> makePredicate(String fromClause, Map<String, Relation> relationMap) {
-		BiMap<String, Predicate> result = HashBiMap.create();
+	private BiMap<String, Atom> makePredicate(String fromClause, Map<String, Relation> relationMap) {
+		BiMap<String, Atom> result = HashBiMap.create();
 		for (String token: fromClause.trim().split(",")) {
 			String[] aliased = token.trim().split("(AS|\\s)");
 			Relation r = relationMap.get(aliased[0].trim());
-			Predicate pred = new Predicate(r, Utility.generateVariables(r));
+			Atom pred = new Atom(r, Utility.generateVariables(r));
 			if (aliased.length == 1) {
 				result.put(aliased[0].trim(), pred);
 			} else {
@@ -231,7 +231,7 @@ public class PostgresqlSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 	 * @param whereClause the where clause
 	 * @param predMap BiMap<String,PredicateFormula>
 	 */
-	private void makeJoins(String whereClause, BiMap<String, Predicate> predMap) {
+	private void makeJoins(String whereClause, BiMap<String, Atom> predMap) {
 		Matcher m = Pattern.compile(NESTED_CONJUNCTION_PATTERN, Pattern.CASE_INSENSITIVE).matcher(whereClause.trim());
 		String nested = null;
 		String rest = null;
@@ -254,19 +254,19 @@ public class PostgresqlSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 			}
 			String[] operands = clause.split("=");
 			if (operands != null && operands.length == 2) {
-				Triple<Predicate, Integer, Attribute> t1 = this.parseAlias(operands[0], predMap);
+				Triple<Atom, Integer, Attribute> t1 = this.parseAlias(operands[0], predMap);
 				if (t1 == null) {
 					return;
 				}
-				Triple<Predicate, Integer, Attribute> t2 = this.parseAlias(operands[1], predMap);
+				Triple<Atom, Integer, Attribute> t2 = this.parseAlias(operands[1], predMap);
 				if (t2 == null) {
 					return;
 				}
-				Predicate p2 = t2.getFirst();
+				Atom p2 = t2.getFirst();
 				List<Term> terms = Lists.newArrayList(p2.getTerms());
 				terms.set(t2.getSecond(), t1.getFirst().getTerm(t1.getSecond()));
 				String key = predMap.inverse().get(p2);
-				predMap.forcePut(key, new Predicate(p2.getSignature(), terms));
+				predMap.forcePut(key, new Atom(p2.getSignature(), terms));
 			}
 		}
 	}
@@ -279,11 +279,11 @@ public class PostgresqlSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 	 * @param predMap Map<String,PredicateFormula>
 	 * @return a map from relation aliases to predicates with fresh variables
 	 */
-	private Pair<List<Term>, List<Attribute>> makeFreeTerms(String selectClause, Map<String, Predicate> predMap) {
+	private Pair<List<Term>, List<Attribute>> makeFreeTerms(String selectClause, Map<String, Atom> predMap) {
 		List<Term> terms = new ArrayList<>();
 		List<Attribute> attributes = new ArrayList<>();
 		for (String token: selectClause.trim().split(",")) {
-			Triple<Predicate, Integer, Attribute> triple = this.parseAlias(token.trim(), predMap);
+			Triple<Atom, Integer, Attribute> triple = this.parseAlias(token.trim(), predMap);
 			if (triple == null) {
 				Pair<Term, Attribute> pair = this.parseConstant(token, predMap.values());
 				terms.add(pair.getLeft());
@@ -303,7 +303,7 @@ public class PostgresqlSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 	 * @param predMap Map<String,PredicateFormula>
 	 * @return Triple<PredicateFormula,Integer,Attribute>
 	 */
-	private Triple<Predicate, Integer, Attribute> parseAlias(String token, Map<String, Predicate> predMap) {
+	private Triple<Atom, Integer, Attribute> parseAlias(String token, Map<String, Atom> predMap) {
 		String alias = null;
 		String attribute = null;
 		String renamed = null;
@@ -320,11 +320,11 @@ public class PostgresqlSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 			throw new IllegalArgumentException("Not a valid alias clause in view definition " + token);
 		}
 		
-		Predicate pred = null;
+		Atom pred = null;
 		Integer index = null;
 		Attribute att = null;
 		if (alias == null || alias.isEmpty()){
-			Iterator<Predicate> it = predMap.values().iterator();
+			Iterator<Atom> it = predMap.values().iterator();
 			while (it.hasNext()) {
 				pred = it.next();
 				index = ((Relation) pred.getSignature()).getAttributeIndex(attribute);
@@ -348,11 +348,11 @@ public class PostgresqlSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 	 * Parses the constant.
 	 *
 	 * @param token String
-	 * @param predicates the predicates
+	 * @param atoms the predicates
 	 * @return the first predicate found in the given collection featuring the
 	 * given attribute and its position.
 	 */
-	private Pair<Term, Attribute> parseConstant(String token, Collection<Predicate> predicates) {
+	private Pair<Term, Attribute> parseConstant(String token, Collection<Atom> atoms) {
 //		String alias = null;
 		String attribute = null;
 		String renamed = null;

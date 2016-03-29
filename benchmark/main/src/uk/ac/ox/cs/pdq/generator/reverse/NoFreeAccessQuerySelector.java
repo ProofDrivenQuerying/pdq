@@ -3,9 +3,9 @@ package uk.ac.ox.cs.pdq.generator.reverse;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.AccessMethod.Types;
 import uk.ac.ox.cs.pdq.db.Relation;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Query;
-import uk.ac.ox.cs.pdq.fol.Signature;
+import uk.ac.ox.cs.pdq.fol.Predicate;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -22,8 +22,8 @@ public class NoFreeAccessQuerySelector implements QuerySelector {
 	 */
 	@Override
 	public boolean accept(Query<?> q) {
-		for (Predicate p: q.getBody().getPredicates()) {
-			Signature s = p.getSignature();
+		for (Atom p: q.getBody().getAtoms()) {
+			Predicate s = p.getSignature();
 			if (s instanceof Relation) {
 				for (AccessMethod am: ((Relation) s).getAccessMethods()) {
 					if (am.getType() == Types.FREE) {

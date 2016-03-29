@@ -31,16 +31,15 @@ import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.Disjunction;
 import uk.ac.ox.cs.pdq.fol.Negation;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Query;
-import uk.ac.ox.cs.pdq.fol.Signature;
+import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.rewrite.Rewriter;
 import uk.ac.ox.cs.pdq.rewrite.RewriterException;
 import uk.ac.ox.cs.pdq.util.Named;
 import uk.ac.ox.cs.pdq.util.Typed;
 
-import com.logicblox.common.protocol.CommonProto.Atom;
 import com.logicblox.common.protocol.CommonProto.BoolConstant;
 import com.logicblox.common.protocol.CommonProto.ClauseBody;
 import com.logicblox.common.protocol.CommonProto.ClauseHead;
@@ -148,9 +147,9 @@ public class QueryToProtoBuffer implements Rewriter<Query<?>, Rule> {
 	 */
 	private Formula rewriteFormula(uk.ac.ox.cs.pdq.fol.Formula formula) {
 		Formula.Builder builder = Formula.newBuilder();
-		if (formula instanceof Predicate) {
+		if (formula instanceof Atom) {
 			return builder.setKind(ATOM)
-				.setAtom(this.rewriteAtom((Predicate) formula))
+				.setAtom(this.rewriteAtom((Atom) formula))
 				.build();
 		}
 		if (formula instanceof Conjunction) {
@@ -218,20 +217,20 @@ public class QueryToProtoBuffer implements Rewriter<Query<?>, Rule> {
 	/**
 	 * Rewrite atom.
 	 *
-	 * @param predicate PredicateFormula
+	 * @param atom PredicateFormula
 	 * @return Atom
 	 */
-	private Atom rewriteAtom(Predicate predicate) {
-		Atom.Builder builder = Atom.newBuilder();
-		builder.setPredicateName(predicate.getName());
-		Signature signature = predicate.getSignature();
+	private com.logicblox.common.protocol.CommonProto.Atom rewriteAtom(Atom atom) {
+		com.logicblox.common.protocol.CommonProto.Atom.Builder builder = com.logicblox.common.protocol.CommonProto.Atom.newBuilder();
+		builder.setPredicateName(atom.getName());
+		Predicate predicate = atom.getSignature();
 		
-		for (int i = 0, l = predicate.getTermsCount(); i < l; i++) {
-			Term term = predicate.getTerm(i);
-			if (!this.varTypes.containsKey(term) && signature instanceof Relation) {
-				this.varTypes.put(term, this.resolveType((Relation) signature, i));
+		for (int i = 0, l = atom.getTermsCount(); i < l; i++) {
+			Term term = atom.getTerm(i);
+			if (!this.varTypes.containsKey(term) && predicate instanceof Relation) {
+				this.varTypes.put(term, this.resolveType((Relation) predicate, i));
 			}
-			if (i == 0 || i < predicate.getTermsCount() - 1) {
+			if (i == 0 || i < atom.getTermsCount() - 1) {
 				builder.addKeyArgument(this.rewriteTerm(term));
 			} else {
 				builder.addValueArgument(this.rewriteTerm(term));
@@ -254,11 +253,11 @@ public class QueryToProtoBuffer implements Rewriter<Query<?>, Rule> {
 		}
 		// Attempting to find a unary typing constraint
 		for (Constraint dep: this.schema.getDependencies()) {
-			List<Predicate> body = dep.getBody().getPredicates();
-			List<Predicate> head = dep.getRight().getPredicates();
+			List<Atom> body = dep.getBody().getAtoms();
+			List<Atom> head = dep.getRight().getAtoms();
 			if (body.size() == 1 && head.size() == 1) {
-				Predicate b = body.get(0);
-				Predicate h = head.get(0);
+				Atom b = body.get(0);
+				Atom h = head.get(0);
 				if (b.getSignature().equals(signature)
 					&& h.getSignature().getArity() == 1
 					&& b.getTerm(i).equals(h.getTerm(0))) {
@@ -362,10 +361,10 @@ public class QueryToProtoBuffer implements Rewriter<Query<?>, Rule> {
 		if (type == null) {
 			throw new RewriterException("Type of term '" + term + "' could not be determined.");
 		}
-		if (type instanceof Signature) {
+		if (type instanceof Predicate) {
 			builder.setKind(UNARY);
 			return builder.setUnary(UnaryPredicateType.newBuilder()
-					.setName(((Signature) type).getName()).build()).build();
+					.setName(((Predicate) type).getName()).build()).build();
 		}
 		if (type instanceof Class<?>) {
 			Class<?> cl = (Class<?>) type;

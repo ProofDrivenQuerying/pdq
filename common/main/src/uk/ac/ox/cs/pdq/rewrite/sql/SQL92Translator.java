@@ -35,8 +35,8 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.Evaluatable;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Predicate;
-import uk.ac.ox.cs.pdq.fol.Signature;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.plan.AccessOperator;
@@ -98,7 +98,7 @@ public class SQL92Translator extends SQLTranslator {
 		}
 
 		StringBuilder result = new StringBuilder();
-		BiMap<Predicate, String> aliases = HashBiMap.create(makeAliases(q));
+		BiMap<Atom, String> aliases = HashBiMap.create(makeAliases(q));
 		Map<Term, List<Triple<Relation, String, Integer>>> termMap = mapTerms(q, aliases);
 
 		result.append("SELECT ");
@@ -120,7 +120,7 @@ public class SQL92Translator extends SQLTranslator {
 
 		result.append(" FROM ");
 		sep = "";
-		BiMap<String, Predicate> invAlias = aliases.inverse();
+		BiMap<String, Atom> invAlias = aliases.inverse();
 		for (String alias: invAlias.keySet()) {
 			result.append(sep).append(invAlias.get(alias).getSignature().getName());
 			result.append(" AS ").append(alias);
@@ -166,10 +166,10 @@ public class SQL92Translator extends SQLTranslator {
 	 * @throws RewriterException if any atomic formula in the query is not
 	 * a predicate formula.
 	 */
-	private static Map<Predicate, String> makeAliases(Evaluatable q) throws RewriterException {
-		Map<Predicate, String> result = new LinkedHashMap<>();
+	private static Map<Atom, String> makeAliases(Evaluatable q) throws RewriterException {
+		Map<Atom, String> result = new LinkedHashMap<>();
 		int alias = 0;
-		for (Predicate a: ((Conjunction<Predicate>) q.getBody())) {
+		for (Atom a: ((Conjunction<Atom>) q.getBody())) {
 			result.put(a, RELATION_ALIAS_PREFIX + (alias++));
 		}
 		return result;
@@ -186,12 +186,12 @@ public class SQL92Translator extends SQLTranslator {
 	 * @throws RewriterException if a problem occurred during the creation of the map.
 	 */
 	private static Map<Term, List<Triple<Relation, String, Integer>>> mapTerms(
-			Evaluatable q, Map<Predicate, String> aliases)
+			Evaluatable q, Map<Atom, String> aliases)
 					throws RewriterException {
 		Map<Term, List<Triple<Relation, String, Integer>>> result = new LinkedHashMap<>();
-		for (Predicate a: ((Conjunction<Predicate>) q.getBody())) {
-			Predicate f = a;
-			Signature sig = f.getSignature();
+		for (Atom a: ((Conjunction<Atom>) q.getBody())) {
+			Atom f = a;
+			Predicate sig = f.getSignature();
 			if (sig instanceof Relation) {
 				int i = 0;
 				for (Term t: f.getTerms()) {
@@ -580,25 +580,25 @@ public class SQL92Translator extends SQLTranslator {
 		}
 
 		/**
-		 * Predicate to sql.
+		 * Atom to sql.
 		 *
-		 * @param predicate the predicate
+		 * @param uk.ac.ox.cs.pdq.algebra.predicates.Predicate the predicate
 		 * @param columns the columns
 		 * @param type the type
 		 * @param relAlias String
 		 * @return the SQL clause for the given predicate (currently only conjunctive predicates are supported).
 		 */
-		private String predicateToSQL(uk.ac.ox.cs.pdq.algebra.predicates.Predicate  predicate,
+		private String predicateToSQL(uk.ac.ox.cs.pdq.algebra.predicates.Predicate  pred,
 				List<String> columns, TupleType type, String relAlias) {
 			StringBuilder result = new StringBuilder();
-			if (predicate instanceof ConjunctivePredicate) {
+			if (pred instanceof ConjunctivePredicate) {
 				String sep = " ";
-				for (uk.ac.ox.cs.pdq.algebra.predicates.Predicate subPred: ((ConjunctivePredicate<uk.ac.ox.cs.pdq.algebra.predicates.Predicate>) predicate)) {
+				for (uk.ac.ox.cs.pdq.algebra.predicates.Predicate subPred: ((ConjunctivePredicate<uk.ac.ox.cs.pdq.algebra.predicates.Predicate>) pred)) {
 					result.append(sep).append(this.predicateToSQL(subPred, columns, type, relAlias));
 					sep = " AND ";
 				}
-			} else if (predicate instanceof AttributeEqualityPredicate) {
-				AttributeEqualityPredicate p = (AttributeEqualityPredicate) predicate;
+			} else if (pred instanceof AttributeEqualityPredicate) {
+				AttributeEqualityPredicate p = (AttributeEqualityPredicate) pred;
 				if (this.reAliased.containsKey(columns.get(p.getPosition()))) {
 					result.append(this.reAliased.get(columns.get(p.getPosition())));
 				} else {
@@ -610,8 +610,8 @@ public class SQL92Translator extends SQLTranslator {
 				} else {
 					result.append(relAlias).append('.').append(columns.get(p.getOther()));
 				}
-			} else if (predicate instanceof ConstantEqualityPredicate) {
-				ConstantEqualityPredicate p = (ConstantEqualityPredicate) predicate;
+			} else if (pred instanceof ConstantEqualityPredicate) {
+				ConstantEqualityPredicate p = (ConstantEqualityPredicate) pred;
 				if (this.reAliased.containsKey(columns.get(p.getPosition()))) {
 					result.append(this.reAliased.get(columns.get(p.getPosition())));
 				} else {
@@ -624,7 +624,7 @@ public class SQL92Translator extends SQLTranslator {
 		}
 
 		/**
-		 * Predicate to sql.
+		 * Atom to sql.
 		 *
 		 * @param predicate the predicate
 		 * @param lColumns the l columns
@@ -635,21 +635,21 @@ public class SQL92Translator extends SQLTranslator {
 		 * aliases as lAlias (left) and rAlias (right).
 		 * Currently only conjunctive predicates are supported.
 		 */
-		private String predicateToSQL(uk.ac.ox.cs.pdq.algebra.predicates.Predicate  predicate,
+		private String predicateToSQL(uk.ac.ox.cs.pdq.algebra.predicates.Predicate  pred,
 				List<String> lColumns, List<String> rColumns,
 				String lAlias, String rAlias) {
 			StringBuilder result = new StringBuilder();
-			if (predicate instanceof ConjunctivePredicate) {
+			if (pred instanceof ConjunctivePredicate) {
 				String sep = " ";
-				for (uk.ac.ox.cs.pdq.algebra.predicates.Predicate subPred: ((ConjunctivePredicate<uk.ac.ox.cs.pdq.algebra.predicates.Predicate>) predicate)) {
+				for (uk.ac.ox.cs.pdq.algebra.predicates.Predicate subPred: ((ConjunctivePredicate<uk.ac.ox.cs.pdq.algebra.predicates.Predicate>) pred)) {
 					result.append(sep).append(
 							this.predicateToSQL(subPred,
 									lColumns, rColumns,
 									lAlias, rAlias));
 					sep = " AND ";
 				}
-			} else if (predicate instanceof AttributeEqualityPredicate) {
-				AttributeEqualityPredicate p = (AttributeEqualityPredicate) predicate;
+			} else if (pred instanceof AttributeEqualityPredicate) {
+				AttributeEqualityPredicate p = (AttributeEqualityPredicate) pred;
 				result.append(lAlias).append('.').append(lColumns.get(p.getPosition()));
 				result.append('=');
 				result.append(rAlias).append('.').append(rColumns.get(p.getOther() - lColumns.size()));
@@ -1188,7 +1188,7 @@ public class SQL92Translator extends SQLTranslator {
 			/**
 			 * Where.
 			 *
-			 * @param pred Predicate
+			 * @param pred Atom
 			 * @return Builder
 			 */
 			public Builder where(uk.ac.ox.cs.pdq.algebra.predicates.Predicate pred) {
@@ -1207,7 +1207,7 @@ public class SQL92Translator extends SQLTranslator {
 			/**
 			 * Where.
 			 *
-			 * @param pred ConjunctivePredicate<Predicate>
+			 * @param pred ConjunctivePredicate<Atom>
 			 * @return Builder
 			 */
 			public Builder where(ConjunctivePredicate<uk.ac.ox.cs.pdq.algebra.predicates.Predicate> pred) {

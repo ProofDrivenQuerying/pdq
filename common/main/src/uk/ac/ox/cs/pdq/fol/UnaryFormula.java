@@ -53,11 +53,11 @@ public abstract class UnaryFormula<T extends Formula> extends AbstractFormula {
 	 * Gets the predicates.
 	 *
 	 * @return List<PredicateFormula>
-	 * @see uk.ac.ox.cs.pdq.fol.Formula#getPredicates()
+	 * @see uk.ac.ox.cs.pdq.fol.Formula#getAtoms()
 	 */
 	@Override
-	public List<Predicate> getPredicates() {
-		return this.child.getPredicates();
+	public List<Atom> getAtoms() {
+		return this.child.getAtoms();
 	}
 
 	/**

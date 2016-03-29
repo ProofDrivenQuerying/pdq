@@ -11,7 +11,7 @@ import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.io.pretty.DataReader;
 import uk.ac.ox.cs.pdq.io.xml.DAGPlanReader;
 import uk.ac.ox.cs.pdq.io.xml.LeftDeepPlanReader;
@@ -186,7 +186,7 @@ public class Bootstrap {
 			ConjunctiveQuery query = new QueryReader(schema).read(qis);
 			Plan plan = obtainPlan(schema, this.getPlanPath());
 
-			List<Predicate> facts = null;
+			List<Atom> facts = null;
 			if (this.getDataPath() != null) {
 				try (FileInputStream dis = new FileInputStream(this.getDataPath())) {
 					facts = new DataReader(schema).read(dis);

@@ -39,8 +39,8 @@ public class FormulaEquivalence {
 		if (left instanceof NaryFormula) {
 			return approximateNaryEquivalence((NaryFormula<?>) left, (NaryFormula<?>) right) ;
 		}
-		if (left instanceof Predicate) {
-			return approximateAtomEquivalence((Predicate) left, (Predicate) right);
+		if (left instanceof Atom) {
+			return approximateAtomEquivalence((Atom) left, (Atom) right);
 		}
 		return left == right;
 	}
@@ -70,7 +70,7 @@ public class FormulaEquivalence {
 		if (!left.getSymbol().equals(right.getSymbol())) {
 			return false;
 		}
-		if (!variableSignature(left.getPredicates()).equals(variableSignature(right.getPredicates()))) {
+		if (!variableSignature(left.getAtoms()).equals(variableSignature(right.getAtoms()))) {
 			return false;
 		}
 		return approximateEquivalence(left.getLeft(), right.getLeft())
@@ -88,21 +88,21 @@ public class FormulaEquivalence {
 		if (!left.getSymbol().equals(right.getSymbol())) {
 			return false;
 		}
-		if (left.getPredicates().size() != right.getPredicates().size()) {
+		if (left.getAtoms().size() != right.getAtoms().size()) {
 			return false;
 		}
-		LinkedHashMultiset<Signature> lSigs = LinkedHashMultiset.create();
-		for (Predicate pred: left.getPredicates()) {
+		LinkedHashMultiset<Predicate> lSigs = LinkedHashMultiset.create();
+		for (Atom pred: left.getAtoms()) {
 			lSigs.add(pred.getSignature());
 		}
-		LinkedHashMultiset<Signature> rSigs = LinkedHashMultiset.create();
-		for (Predicate pred: right.getPredicates()) {
+		LinkedHashMultiset<Predicate> rSigs = LinkedHashMultiset.create();
+		for (Atom pred: right.getAtoms()) {
 			rSigs.add(pred.getSignature());
 		}
 		if (!lSigs.equals(rSigs)) {
 			return false;
 		}
-		if (!variableSignature(left.getPredicates()).equals(variableSignature(right.getPredicates()))) {
+		if (!variableSignature(left.getAtoms()).equals(variableSignature(right.getAtoms()))) {
 			return false;
 		}
 		Iterator<? extends Formula> li = left.getChildren().iterator();
@@ -120,11 +120,11 @@ public class FormulaEquivalence {
 	 * @param atoms List<PredicateFormula>
 	 * @return List<Integer>
 	 */
-	private static List<Integer> variableSignature(List<Predicate> atoms) {
+	private static List<Integer> variableSignature(List<Atom> atoms) {
 		List<Integer> result = new LinkedList<>();
 		Map<Term, Integer> varMap = new LinkedHashMap<>();
 		int i = 0;
-		for (Predicate atom: atoms) {
+		for (Atom atom: atoms) {
 			for (Term term: atom.getTerms()) {
 				Integer j = varMap.get(term);
 				if (j == null) {
@@ -143,7 +143,7 @@ public class FormulaEquivalence {
 	 * @param right PredicateFormula
 	 * @return boolean
 	 */
-	private static boolean approximateAtomEquivalence(Predicate left, Predicate right) {
+	private static boolean approximateAtomEquivalence(Atom left, Atom right) {
 		if (!left.getSignature().equals(right.getSignature())) {
 			return false;
 		}

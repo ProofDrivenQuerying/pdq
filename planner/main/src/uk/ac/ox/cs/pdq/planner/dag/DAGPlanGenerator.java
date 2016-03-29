@@ -16,7 +16,7 @@ import uk.ac.ox.cs.pdq.algebra.Selection;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.Constant;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.plan.DAGPlan;
 import uk.ac.ox.cs.pdq.plan.TreePlan;
@@ -134,12 +134,12 @@ public class DAGPlanGenerator {
 	private static DAGPlan toDAGPlan(ApplyRule config) {
 		Relation relation = config.getRelation();
 		AccessMethod binding = config.getBindingPositions();
-		Collection<Predicate> facts = config.getFacts();
+		Collection<Atom> facts = config.getFacts();
 		if (facts.isEmpty()) {
 			return new DAGPlan(new DependentAccess(relation, binding));
 		}
 		RelationalOperator op = null;
-		for (Predicate fact: facts) {
+		for (Atom fact: facts) {
 			RelationalOperator access = new DependentAccess(relation, binding, fact.getTerms());
 			uk.ac.ox.cs.pdq.algebra.predicates.Predicate selectPredicates = Operators.createSelectPredicates(fact.getTerms());
 			if (selectPredicates != null) {

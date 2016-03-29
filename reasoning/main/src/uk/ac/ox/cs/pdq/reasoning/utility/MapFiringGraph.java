@@ -12,7 +12,7 @@ import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.SimpleGraph;
 
 import uk.ac.ox.cs.pdq.db.Constraint;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Atom;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.LinkedHashMultimap;
@@ -30,18 +30,18 @@ import com.google.common.collect.Sets;
 public class MapFiringGraph implements FiringGraph{
 
 	/** Keeps for each dependency, the facts that were used to fire it, as well as, the consequence facts. */
-	private final MultiValueMap<Collection<Predicate>, Collection<Predicate>> map;
+	private final MultiValueMap<Collection<Atom>, Collection<Atom>> map;
 
 	/** Chase graph. */
-	private final Graph<Predicate, DefaultEdge> graph;
+	private final Graph<Atom, DefaultEdge> graph;
 
 	/**
 	 * Fact history map. Associates each chase fact with the facts and the dependency that were last fired to produce this fact
 	 */
-	private final Map<Predicate, Pair<Constraint, Collection<Predicate>>> provenance;
+	private final Map<Atom, Pair<Constraint, Collection<Atom>>> provenance;
 
 	/** Keeps the set of facts that were used to fire each dependency. */
-	private final Multimap<Collection<Predicate>, Constraint> firings;
+	private final Multimap<Collection<Atom>, Constraint> firings;
 
 	/**
 	 * Instantiates a new map firing graph.
@@ -50,7 +50,7 @@ public class MapFiringGraph implements FiringGraph{
 		this.map = new MultiValueMap<>();
 		this.provenance = new LinkedHashMap<>();
 		this.firings = LinkedHashMultimap.create();
-		this.graph = new SimpleGraph<Predicate, DefaultEdge>(DefaultEdge.class);
+		this.graph = new SimpleGraph<Atom, DefaultEdge>(DefaultEdge.class);
 	}
 
 	/**
@@ -61,10 +61,10 @@ public class MapFiringGraph implements FiringGraph{
 	 * @param firedDependencies Multimap<Collection<PredicateFormula>,IC>
 	 */
 	private MapFiringGraph(
-			MultiValueMap<Collection<Predicate>, Collection<Predicate>> map,
-			Graph<Predicate, DefaultEdge> graph,
-			Map<Predicate, Pair<Constraint, Collection<Predicate>>> factProvenance,
-			Multimap<Collection<Predicate>, Constraint> firedDependencies) {
+			MultiValueMap<Collection<Atom>, Collection<Atom>> map,
+			Graph<Atom, DefaultEdge> graph,
+			Map<Atom, Pair<Constraint, Collection<Atom>>> factProvenance,
+			Multimap<Collection<Atom>, Constraint> firedDependencies) {
 		this.map = map;
 		this.graph = graph;
 		this.provenance = factProvenance;
@@ -80,8 +80,8 @@ public class MapFiringGraph implements FiringGraph{
 	 * @see uk.ac.ox.cs.pdq.chase.FiringGraph#put(IC, Collection<PredicateFormula>, Collection<PredicateFormula>, boolean)
 	 */
 	@Override
-	public void put(Constraint dependency, Collection<Predicate> sources, Collection<Predicate> targets) {
-		for (Predicate fact:targets) {
+	public void put(Constraint dependency, Collection<Atom> sources, Collection<Atom> targets) {
+		for (Atom fact:targets) {
 			if (!this.provenance.containsKey(fact)) {
 				this.provenance.put(fact, Pair.of(dependency, sources));
 			}
@@ -97,10 +97,10 @@ public class MapFiringGraph implements FiringGraph{
 	 * @param dependency IC
 	 * @param source PredicateFormula
 	 * @param target PredicateFormula
-	 * @see uk.ac.ox.cs.pdq.reasoning.utility.FiringGraph#put(Constraint, Predicate, Predicate, boolean)
+	 * @see uk.ac.ox.cs.pdq.reasoning.utility.FiringGraph#put(Constraint, Atom, Atom, boolean)
 	 */
 	@Override
-	public void put(Constraint dependency, Predicate source, Predicate target) {
+	public void put(Constraint dependency, Atom source, Atom target) {
 		this.put(dependency, Sets.newHashSet(source), Sets.newHashSet(target));
 	}
 
@@ -112,9 +112,9 @@ public class MapFiringGraph implements FiringGraph{
 	 */
 	@Override
 	public MapFiringGraph clone() {
-		Multimap<Collection<Predicate>, Constraint> firedDependencies = LinkedHashMultimap.create();
+		Multimap<Collection<Atom>, Constraint> firedDependencies = LinkedHashMultimap.create();
 		firedDependencies.putAll(this.firings);
-		Map<Predicate, Pair<Constraint, Collection<Predicate>>> factProvenance = Maps.newLinkedHashMap(this.getFactProvenance());
+		Map<Atom, Pair<Constraint, Collection<Atom>>> factProvenance = Maps.newLinkedHashMap(this.getFactProvenance());
 		return new MapFiringGraph(this.map, this.graph, factProvenance, firedDependencies);
 	}
 
@@ -125,7 +125,7 @@ public class MapFiringGraph implements FiringGraph{
 	 * @see uk.ac.ox.cs.pdq.reasoning.utility.FiringGraph#getGraph()
 	 */
 	@Override
-	public Graph<Predicate, DefaultEdge> getGraph() {
+	public Graph<Atom, DefaultEdge> getGraph() {
 		return this.graph;
 	}
 
@@ -135,10 +135,10 @@ public class MapFiringGraph implements FiringGraph{
 	 * @param sources Collection<PredicateFormula>
 	 * @param targets Collection<PredicateFormula>
 	 */
-	private void updateGraph(Collection<Predicate> sources, Collection<Predicate> targets) {
-		for(Predicate source:sources) {
+	private void updateGraph(Collection<Atom> sources, Collection<Atom> targets) {
+		for(Atom source:sources) {
 			this.graph.addVertex(source);
-			for(Predicate target: targets) {
+			for(Atom target: targets) {
 				this.graph.addVertex(target);
 				try {
 					this.graph.addEdge(source, target); 
@@ -155,9 +155,9 @@ public class MapFiringGraph implements FiringGraph{
 	 * @param graph0 Graph<PredicateFormula,DefaultEdge>
 	 * @return Graph<PredicateFormula,DefaultEdge>
 	 */
-	private Graph<Predicate, DefaultEdge> clone(Graph<Predicate, DefaultEdge> graph0) {
-		Graph<Predicate, DefaultEdge> graph = new SimpleGraph<Predicate, DefaultEdge>(DefaultEdge.class);
-		for(Predicate vertex:graph0.vertexSet()) {
+	private Graph<Atom, DefaultEdge> clone(Graph<Atom, DefaultEdge> graph0) {
+		Graph<Atom, DefaultEdge> graph = new SimpleGraph<Atom, DefaultEdge>(DefaultEdge.class);
+		for(Atom vertex:graph0.vertexSet()) {
 			graph.addVertex(vertex);
 		}
 		for(DefaultEdge edge:graph0.edgeSet()) {
@@ -173,12 +173,12 @@ public class MapFiringGraph implements FiringGraph{
 	 * @param graph1 Graph<PredicateFormula,DefaultEdge>
 	 * @return Graph<PredicateFormula,DefaultEdge>
 	 */
-	private Graph<Predicate, DefaultEdge> merge(Graph<Predicate, DefaultEdge> graph0, Graph<Predicate, DefaultEdge> graph1) {
-		Graph<Predicate, DefaultEdge> graph = new SimpleGraph<Predicate, DefaultEdge>(DefaultEdge.class);
-		for(Predicate vertex:graph0.vertexSet()) {
+	private Graph<Atom, DefaultEdge> merge(Graph<Atom, DefaultEdge> graph0, Graph<Atom, DefaultEdge> graph1) {
+		Graph<Atom, DefaultEdge> graph = new SimpleGraph<Atom, DefaultEdge>(DefaultEdge.class);
+		for(Atom vertex:graph0.vertexSet()) {
 			graph.addVertex(vertex);
 		}
-		for(Predicate vertex:graph1.vertexSet()) {
+		for(Atom vertex:graph1.vertexSet()) {
 			graph.addVertex(vertex);
 		}
 		for(DefaultEdge edge:graph0.edgeSet()) {
@@ -195,10 +195,10 @@ public class MapFiringGraph implements FiringGraph{
 	 *
 	 * @param fact PredicateFormula
 	 * @return Pair<IC,Collection<PredicateFormula>>
-	 * @see uk.ac.ox.cs.pdq.reasoning.utility.FiringGraph#getFactProvenance(Predicate)
+	 * @see uk.ac.ox.cs.pdq.reasoning.utility.FiringGraph#getFactProvenance(Atom)
 	 */
 	@Override
-	public Pair<Constraint, Collection<Predicate>> getFactProvenance(Predicate fact) {
+	public Pair<Constraint, Collection<Atom>> getFactProvenance(Atom fact) {
 		return this.provenance.get(fact);
 	}
 
@@ -211,7 +211,7 @@ public class MapFiringGraph implements FiringGraph{
 	 * @see uk.ac.ox.cs.pdq.chase.FiringGraph#isFired(IC, Collection<PredicateFormula>)
 	 */
 	@Override
-	public boolean isFired(Constraint dependency, Collection<Predicate> facts) {
+	public boolean isFired(Constraint dependency, Collection<Atom> facts) {
 		return this.firings.get(facts).contains(dependency);
 	}
 
@@ -226,11 +226,11 @@ public class MapFiringGraph implements FiringGraph{
 	public FiringGraph merge(FiringGraph source) {
 		Preconditions.checkArgument(source instanceof MapFiringGraph);
 
-		Multimap<Collection<Predicate>, Constraint> firedDependencies = LinkedHashMultimap.create();
+		Multimap<Collection<Atom>, Constraint> firedDependencies = LinkedHashMultimap.create();
 		firedDependencies.putAll(this.firings);
 		firedDependencies.putAll(((MapFiringGraph)source).getFiredDependencies());
 
-		Map<Predicate, Pair<Constraint, Collection<Predicate>>> factProvenance = Maps.newLinkedHashMap(this.getFactProvenance());
+		Map<Atom, Pair<Constraint, Collection<Atom>>> factProvenance = Maps.newLinkedHashMap(this.getFactProvenance());
 		factProvenance.putAll(((MapFiringGraph)source).getFactProvenance());
 
 		return new MapFiringGraph(this.map, this.graph, factProvenance, firedDependencies);
@@ -241,7 +241,7 @@ public class MapFiringGraph implements FiringGraph{
 	 *
 	 * @return MultiValueMap<Collection<PredicateFormula>,Collection<PredicateFormula>>
 	 */
-	public MultiValueMap<Collection<Predicate>, Collection<Predicate>> getMap() {
+	public MultiValueMap<Collection<Atom>, Collection<Atom>> getMap() {
 		return this.map;
 	}
 
@@ -252,7 +252,7 @@ public class MapFiringGraph implements FiringGraph{
 	 * @see uk.ac.ox.cs.pdq.reasoning.utility.FiringGraph#getFactProvenance()
 	 */
 	@Override
-	public Map<Predicate, Pair<Constraint, Collection<Predicate>>> getFactProvenance() {
+	public Map<Atom, Pair<Constraint, Collection<Atom>>> getFactProvenance() {
 		return this.provenance;
 	}
 
@@ -261,21 +261,21 @@ public class MapFiringGraph implements FiringGraph{
 	 *
 	 * @return Multimap<Collection<PredicateFormula>,IC>
 	 */
-	public Multimap<Collection<Predicate>, Constraint> getFiredDependencies() {
+	public Multimap<Collection<Atom>, Constraint> getFiredDependencies() {
 		return this.firings;
 	}
 
 	/* (non-Javadoc)
 	 * @see uk.ac.ox.cs.pdq.reasoning.utility.FiringGraph#getPreconditions()
 	 */
-	public Set<Collection<Predicate>> getPreconditions() {
+	public Set<Collection<Atom>> getPreconditions() {
 		return this.map.keySet();
 	}
 
 	/* (non-Javadoc)
 	 * @see uk.ac.ox.cs.pdq.reasoning.utility.FiringGraph#getConsequences(java.util.Collection)
 	 */
-	public Collection<Collection<Predicate>> getConsequences(Collection<Predicate> key) {
+	public Collection<Collection<Atom>> getConsequences(Collection<Atom> key) {
 		return this.map.getCollection(key);
 	}
 

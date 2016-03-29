@@ -34,8 +34,8 @@ public class LengthBasedQuerySelector implements QuerySelector {
 	 */
 	@Override
 	public boolean accept(Query<?> q) {
-		return q.getBody().getPredicates().size() >= this.min
-				&& q.getBody().getPredicates().size() <= this.max;
+		return q.getBody().getAtoms().size() >= this.min
+				&& q.getBody().getAtoms().size() <= this.max;
 	}
 
 }

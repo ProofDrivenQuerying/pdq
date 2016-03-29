@@ -18,8 +18,8 @@ import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Constant;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Predicate;
-import uk.ac.ox.cs.pdq.fol.Signature;
 import uk.ac.ox.cs.pdq.fol.Skolem;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
@@ -51,7 +51,7 @@ public class PredicateFormulaTest {
 	@Test
 	public void testHashCode() {
 		int n = 100, m = 10;
-		Set<Predicate> formulae = new LinkedHashSet<>();
+		Set<Atom> formulae = new LinkedHashSet<>();
 		int[] arities = new int[n];
 		for (int i = 0; i < n; i++) {
 			arities[i] = this.random.nextInt(m);
@@ -59,8 +59,8 @@ public class PredicateFormulaTest {
 			for (int j = 0, l = terms.length; j < l; j++) {
 				terms[j] = new Variable("x" + j);
 			}
-			Signature signature = new Signature("r" + i, terms.length);
-			formulae.add(new Predicate(signature, Lists.newArrayList(terms)));
+			Predicate predicate = new Predicate("r" + i, terms.length);
+			formulae.add(new Atom(predicate, Lists.newArrayList(terms)));
 		}
 		assertEquals(n, formulae.size());
 		for (int i = 0; i < n; i++) {
@@ -68,8 +68,8 @@ public class PredicateFormulaTest {
 			for (int j = 0, l = terms.length; j < l; j++) {
 				terms[j] = new Variable("x" + j);
 			}
-			Signature signature = new Signature("r" + i, terms.length);
-			assertTrue(formulae.contains(new Predicate(signature, Lists.newArrayList(terms))));
+			Predicate predicate = new Predicate("r" + i, terms.length);
+			assertTrue(formulae.contains(new Atom(predicate, Lists.newArrayList(terms))));
 		}
 	}
 
@@ -77,25 +77,25 @@ public class PredicateFormulaTest {
 	 * Test predicate formula valid.
 	 */
 	@Test public void testPredicateFormulaValid() {
-		Signature s = new Signature("s", 5);
+		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
 				new Variable("x1"), new Variable("x2"), new Variable("x3"),
 				new Skolem("x4"), new TypedConstant<>("x5")
 				);
-		Predicate p = new Predicate( s, t);
-		Assert.assertEquals("Predicate must have name signature " + s, s, p.getSignature());
-		Assert.assertEquals("Predicate must have name terms " + t, t, p.getTerms());
+		Atom p = new Atom( s, t);
+		Assert.assertEquals("Atom must have name signature " + s, s, p.getSignature());
+		Assert.assertEquals("Atom must have name terms " + t, t, p.getTerms());
 	}
 
 	/**
 	 * Test predicate formula zero arity.
 	 */
 	@Test public void testPredicateFormulaZeroArity() {
-		Signature s = new Signature("s", 0);
+		Predicate s = new Predicate("s", 0);
 		List<Term> t = Lists.newArrayList();
-		Predicate p = new Predicate( s, t);
-		Assert.assertEquals("Predicate must have name signature " + s, s, p.getSignature());
-		Assert.assertEquals("Predicate must have name terms " + t, t, p.getTerms());
+		Atom p = new Atom( s, t);
+		Assert.assertEquals("Atom must have name signature " + s, s, p.getSignature());
+		Assert.assertEquals("Atom must have name terms " + t, t, p.getTerms());
 	}
 
 	/**
@@ -103,8 +103,8 @@ public class PredicateFormulaTest {
 	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void testPredicateFormulaArityMistmatch1() {
-		new Predicate(
-				new Signature("s", 0),
+		new Atom(
+				new Predicate("s", 0),
 				Lists.newArrayList(new Variable("x")));
 	}
 
@@ -113,8 +113,8 @@ public class PredicateFormulaTest {
 	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void testPredicateFormulaArityMistmatch2() {
-		new Predicate(
-				new Signature("s", 1),
+		new Atom(
+				new Predicate("s", 1),
 				Lists.<Term>newArrayList());
 	}
 
@@ -126,9 +126,9 @@ public class PredicateFormulaTest {
 		Relation r = new Relation("s",
 				Lists.newArrayList(new Attribute(String.class, "a"))) {};
 		List<Term> t = Lists.<Term>newArrayList(new Variable("x"));
-		Predicate p = new Predicate(r, t);
-		Assert.assertEquals("Predicate must have name signature " + r, r, p.getSignature());
-		Assert.assertEquals("Predicate must have name terms " + t, t, p.getTerms());
+		Atom p = new Atom(r, t);
+		Assert.assertEquals("Atom must have name signature " + r, r, p.getSignature());
+		Assert.assertEquals("Atom must have name terms " + t, t, p.getTerms());
 	}
 
 	/**
@@ -139,9 +139,9 @@ public class PredicateFormulaTest {
 		Relation r = new Relation("s",
 				Lists.newArrayList(new Attribute(String.class, "a"))) {};
 		List<Term> t = Lists.<Term>newArrayList(new TypedConstant<String>("x"));
-		Predicate p = new Predicate(r, t);
-		Assert.assertEquals("Predicate must have name signature " + r, r, p.getSignature());
-		Assert.assertEquals("Predicate must have name terms " + t, t, p.getTerms());
+		Atom p = new Atom(r, t);
+		Assert.assertEquals("Atom must have name signature " + r, r, p.getSignature());
+		Assert.assertEquals("Atom must have name terms " + t, t, p.getTerms());
 	}
 
 	/**
@@ -151,8 +151,8 @@ public class PredicateFormulaTest {
 		Relation r = new Relation("s",
 				Lists.newArrayList(new Attribute(String.class, "a"))) {};
 		List<Term> t = Lists.<Term>newArrayList(new TypedConstant<String>("x"));
-		Predicate p1 = new Predicate(r, t);
-		Predicate p2 = new Predicate(r, t);
+		Atom p1 = new Atom(r, t);
+		Atom p2 = new Atom(r, t);
 		Assert.assertTrue("PredicateFormula p1 and p2 must be the same", p1.equals(p2));
 	}
 
@@ -166,8 +166,8 @@ public class PredicateFormulaTest {
 				new Attribute(String.class, "a"))) {};
 		List<Term> t1 = Lists.<Term>newArrayList(new TypedConstant<String>("x"), new TypedConstant<String>("y"));
 		List<Term> t2 = Lists.<Term>newArrayList(new TypedConstant<String>("x"));
-		Predicate p1 = new Predicate(r1, t1);
-		Predicate p2 = new Predicate(r2, t2);
+		Atom p1 = new Atom(r1, t1);
+		Atom p2 = new Atom(r2, t2);
 		Assert.assertFalse("PredicateFormula p1 and p2 have different arities", p1.equals(p2));
 	}
 
@@ -181,8 +181,8 @@ public class PredicateFormulaTest {
 				new Attribute(String.class, "a1"), new Attribute(String.class, "a2"))) {};
 		List<Term> t1 = Lists.<Term>newArrayList(new TypedConstant<String>("x"), new TypedConstant<String>("y"));
 		List<Term> t2 = Lists.<Term>newArrayList(new TypedConstant<String>("x"), new TypedConstant<String>("y"));
-		Predicate p1 = new Predicate(r1, t1);
-		Predicate p2 = new Predicate(r2, t2);
+		Atom p1 = new Atom(r1, t1);
+		Atom p2 = new Atom(r2, t2);
 		Assert.assertFalse("PredicateFormula p1 and p2 have different names", p1.equals(p2));
 	}
 
@@ -190,21 +190,21 @@ public class PredicateFormulaTest {
 	 * Test hash duplicates.
 	 */
 	@Test public void testHashDuplicates() {
-		Set<Predicate> set = new LinkedHashSet<>();
+		Set<Atom> set = new LinkedHashSet<>();
 		Relation r = new Relation("r", Lists.newArrayList(
 				new Attribute(String.class, "a1"), 
 				new Attribute(String.class, "a2"))) {};
 		TypedConstant<String> c = new TypedConstant<>("c");
 		Skolem s = new Skolem("s");
 		Variable v = new Variable("v");
-		set.add(new Predicate(r, Lists.newArrayList(c, v)));
-		set.add(new Predicate(r, Lists.newArrayList(c, c)));
-		set.add(new Predicate(r, Lists.newArrayList(s, v)));
-		set.add(new Predicate(r, Lists.newArrayList(s, c)));
-		set.add(new Predicate(r, Lists.newArrayList(c, v)));
-		set.add(new Predicate(r, Lists.newArrayList(c, c)));
-		set.add(new Predicate(r, Lists.newArrayList(s, v)));
-		set.add(new Predicate(r, Lists.newArrayList(s, c)));
+		set.add(new Atom(r, Lists.newArrayList(c, v)));
+		set.add(new Atom(r, Lists.newArrayList(c, c)));
+		set.add(new Atom(r, Lists.newArrayList(s, v)));
+		set.add(new Atom(r, Lists.newArrayList(s, c)));
+		set.add(new Atom(r, Lists.newArrayList(c, v)));
+		set.add(new Atom(r, Lists.newArrayList(c, c)));
+		set.add(new Atom(r, Lists.newArrayList(s, v)));
+		set.add(new Atom(r, Lists.newArrayList(s, c)));
 		Assert.assertEquals("PredicateFormula set must have 4 elements", 4, set.size());
 	}
 
@@ -212,20 +212,20 @@ public class PredicateFormulaTest {
 	 * Test hash no duplicates.
 	 */
 	@Test public void testHashNoDuplicates() {
-		Set<Predicate> set = new LinkedHashSet<>();
+		Set<Atom> set = new LinkedHashSet<>();
 		Relation r = new Relation("r", Lists.newArrayList(
 				new Attribute(String.class, "a1"), new Attribute(String.class, "a2"))) {};
 		TypedConstant<String> c = new TypedConstant<>("c");
 		Skolem s = new Skolem("s");
 		Variable v = new Variable("v");
-		set.add(new Predicate(r, Lists.newArrayList(c, v)));
-		set.add(new Predicate(r, Lists.newArrayList(c, c)));
-		set.add(new Predicate(r, Lists.newArrayList(s, v)));
-		set.add(new Predicate(r, Lists.newArrayList(s, c)));
-		set.add(new Predicate(r, Lists.newArrayList(v, v)));
-		set.add(new Predicate(r, Lists.newArrayList(c, s)));
-		set.add(new Predicate(r, Lists.newArrayList(s, s)));
-		set.add(new Predicate(r, Lists.newArrayList(v, s)));
+		set.add(new Atom(r, Lists.newArrayList(c, v)));
+		set.add(new Atom(r, Lists.newArrayList(c, c)));
+		set.add(new Atom(r, Lists.newArrayList(s, v)));
+		set.add(new Atom(r, Lists.newArrayList(s, c)));
+		set.add(new Atom(r, Lists.newArrayList(v, v)));
+		set.add(new Atom(r, Lists.newArrayList(c, s)));
+		set.add(new Atom(r, Lists.newArrayList(s, s)));
+		set.add(new Atom(r, Lists.newArrayList(v, s)));
 		Assert.assertEquals("PredicateFormula set must have 8 elements", 8, set.size());
 	}
 
@@ -233,13 +233,13 @@ public class PredicateFormulaTest {
 	 * Test get term count.
 	 */
 	@Test public void testGetTermCount() {
-		Signature s = new Signature("s", 5);
+		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
 				new Variable("x1"), new Variable("x2"), new Variable("x3"),
 				new Skolem("x4"), new TypedConstant<>("x5")
 				);
-		Predicate p = new Predicate(s, t);
-		Assert.assertEquals("Predicate must have " + t.size() +  " terms ",
+		Atom p = new Atom(s, t);
+		Assert.assertEquals("Atom must have " + t.size() +  " terms ",
 				t.size(), p.getTermsCount());
 	}
 
@@ -247,14 +247,14 @@ public class PredicateFormulaTest {
 	 * Test get term.
 	 */
 	@Test public void testGetTerm() {
-		Signature s = new Signature("s", 5);
+		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
 				new Variable("x1"), new Variable("x2"), new Variable("x3"),
 				new Skolem("x4"), new TypedConstant<>("x5")
 				);
-		Predicate p = new Predicate(s, t);
+		Atom p = new Atom(s, t);
 		for (int i = 0, l = t.size(); i < l; i++) {
-			Assert.assertEquals("Predicate's " + i + "th term must be " +
+			Assert.assertEquals("Atom's " + i + "th term must be " +
 					t.get(i), t.get(i), p.getTerm(i));
 		}
 	}
@@ -264,12 +264,12 @@ public class PredicateFormulaTest {
 	 */
 	@Test (expected=IndexOutOfBoundsException.class)
 	public void testGetTermOutOfRange1() {
-		Signature s = new Signature("s", 5);
+		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
 				new Variable("x1"), new Variable("x2"), new Variable("x3"),
 				new Skolem("x4"), new TypedConstant<>("x5")
 				);
-		new Predicate(s, t).getTerm(-1);
+		new Atom(s, t).getTerm(-1);
 	}
 
 	/**
@@ -277,25 +277,25 @@ public class PredicateFormulaTest {
 	 */
 	@Test (expected=IndexOutOfBoundsException.class)
 	public void testGetTermOutOfRange2() {
-		Signature s = new Signature("s", 5);
+		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
 				new Variable("x1"), new Variable("x2"), new Variable("x3"),
 				new Skolem("x4"), new TypedConstant<>("x5")
 				);
-		new Predicate(s, t).getTerm(5);
+		new Atom(s, t).getTerm(5);
 	}
 
 	/**
 	 * Test get terms.
 	 */
 	@Test public void testGetTerms() {
-		Signature s = new Signature("s", 5);
+		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
 				new Variable("x1"), new Variable("x2"), new Variable("x3"),
 				new Skolem("x4"), new TypedConstant<>("x5")
 				);
-		Predicate p = new Predicate(s, t);
-		Assert.assertEquals("Predicate terms must match term list of constructor",
+		Atom p = new Atom(s, t);
+		Assert.assertEquals("Atom terms must match term list of constructor",
 				t, p.getTerms());
 	}
 
@@ -303,19 +303,19 @@ public class PredicateFormulaTest {
 	 * Test get selected terms.
 	 */
 	@Test public void testGetSelectedTerms() {
-		Signature s = new Signature("s", 5);
+		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
 				new Variable("x1"), new Variable("x2"), new Variable("x3"),
 				new Skolem("x4"), new TypedConstant<>("x5")
 				);
-		Predicate p = new Predicate(s, t);
-		Assert.assertEquals("Predicate terms subset must match",
+		Atom p = new Atom(s, t);
+		Assert.assertEquals("Atom terms subset must match",
 				Sets.newLinkedHashSet(),
 				p.getTerms(Lists.<Integer>newArrayList()));
-		Assert.assertEquals("Predicate terms subset must match",
+		Assert.assertEquals("Atom terms subset must match",
 				Sets.newHashSet(new Variable("x1")),
 				p.getTerms(Lists.<Integer>newArrayList(0)));
-		Assert.assertEquals("Predicate terms subset must match",
+		Assert.assertEquals("Atom terms subset must match",
 				Sets.newHashSet(new Variable("x3"), new Skolem("x4"), new TypedConstant<>("x5")),
 				p.getTerms(Lists.<Integer>newArrayList(2, 3, 4)));
 	}
@@ -325,12 +325,12 @@ public class PredicateFormulaTest {
 	 */
 	@Test(expected=IndexOutOfBoundsException.class)
 	public void testGetSelectedTermsOutofRange1() {
-		Signature s = new Signature("s", 5);
+		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
 				new Variable("x1"), new Variable("x2"), new Variable("x3"),
 				new Skolem("x4"), new TypedConstant<>("x5")
 				);
-		new Predicate(s, t).getTerms(Lists.<Integer>newArrayList(0, 2, -1));
+		new Atom(s, t).getTerms(Lists.<Integer>newArrayList(0, 2, -1));
 	}
 
 	/**
@@ -338,24 +338,24 @@ public class PredicateFormulaTest {
 	 */
 	@Test(expected=IndexOutOfBoundsException.class)
 	public void testGetSelectedTermsOutofRange2() {
-		Signature s = new Signature("s", 5);
+		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
 				new Variable("x1"), new Variable("x2"), new Variable("x3"),
 				new Skolem("x4"), new TypedConstant<>("x5")
 				);
-		new Predicate(s, t).getTerms(Lists.<Integer>newArrayList(2, 1, 5));
+		new Atom(s, t).getTerms(Lists.<Integer>newArrayList(2, 1, 5));
 	}
 
 	/**
 	 * Test get constants.
 	 */
 	@Test public void testGetConstants() {
-		Signature s = new Signature("s", 5);
+		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
 				new Variable("x1"), new Variable("x2"), new Variable("x3"),
 				new Skolem("x4"), new TypedConstant<>("x5"));
-		Predicate p = new Predicate(s, t);
-		Assert.assertEquals("Predicate terms subset must match",
+		Atom p = new Atom(s, t);
+		Assert.assertEquals("Atom terms subset must match",
 				Lists.newArrayList(new Skolem("x4"), new TypedConstant<>("x5")),
 				p.getConstants(Lists.newArrayList(3, 4)));
 	}
@@ -365,24 +365,24 @@ public class PredicateFormulaTest {
 	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void testGetConstantsInvalid() {
-		Signature s = new Signature("s", 5);
+		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
 				new Variable("x1"), new Variable("x2"), new Variable("x3"),
 				new Skolem("x4"), new TypedConstant<>("x5"));
-		new Predicate(s, t).getConstants(Lists.newArrayList(0, 1));
+		new Atom(s, t).getConstants(Lists.newArrayList(0, 1));
 	}
 
 	/**
 	 * Test get variable.
 	 */
 	@Test public void testGetVariable() {
-		Signature s = new Signature("s", 5);
+		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
 				new Variable("x1"), new Variable("x2"), new Skolem("x3"),
 				new Variable("x4"), new TypedConstant<>("x5")
 				);
-		Predicate p = new Predicate(s, t);
-		Assert.assertEquals("Predicate variables subset must match",
+		Atom p = new Atom(s, t);
+		Assert.assertEquals("Atom variables subset must match",
 				Lists.<Term>newArrayList(new Variable("x1"), new Variable("x2"), new Variable("x4")),
 				p.getVariables());
 	}
@@ -391,13 +391,13 @@ public class PredicateFormulaTest {
 	 * Test get all constants.
 	 */
 	@Test public void testGetAllConstants() {
-		Signature s = new Signature("s", 5);
+		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
 				new Variable("x1"), new Variable("x2"), new Skolem("x3"),
 				new Variable("x4"), new TypedConstant<>("x5")
 				);
-		Predicate p = new Predicate(s, t);
-		Assert.assertEquals("Predicate variables subset must match",
+		Atom p = new Atom(s, t);
+		Assert.assertEquals("Atom variables subset must match",
 				Sets.newHashSet(new Skolem("x3"), new TypedConstant<>("x5")),
 				p.getConstants());
 	}
@@ -408,13 +408,13 @@ public class PredicateFormulaTest {
 	 * @return the schema constants
 	 */
 	@Test public void getSchemaConstants() {
-		Signature s = new Signature("s", 5);
+		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
 				new Variable("x1"), new TypedConstant<>("x2"), new Skolem("x3"),
 				new Variable("x4"), new TypedConstant<>("x5")
 				);
-		Predicate p = new Predicate(s, t);
-		Assert.assertEquals("Predicate variables subset must match",
+		Atom p = new Atom(s, t);
+		Assert.assertEquals("Atom variables subset must match",
 				Sets.newHashSet(new TypedConstant<>("x2"), new TypedConstant<>("x5")),
 				p.getSchemaConstants());
 	}
@@ -423,35 +423,35 @@ public class PredicateFormulaTest {
 	 * Test get predicates.
 	 */
 	@Test public void testGetPredicates() {
-		Signature s = new Signature("s", 5);
+		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
 				new Variable("x1"), new TypedConstant<>("x2"), new Skolem("x3"),
 				new Variable("x4"), new TypedConstant<>("x5")
 				);
-		Predicate p = new Predicate(s, t);
-		Assert.assertEquals("Predicate lists must match",
-				Lists.newArrayList(p), p.getPredicates());
+		Atom p = new Atom(s, t);
+		Assert.assertEquals("Atom lists must match",
+				Lists.newArrayList(p), p.getAtoms());
 	}
 
 	/**
 	 * Test get atoms.
 	 */
 	@Test public void testGetAtoms() {
-		Signature s = new Signature("s", 5);
+		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
 				new Variable("x1"), new TypedConstant<>("x2"), new Skolem("x3"),
 				new Variable("x4"), new TypedConstant<>("x5")
 				);
-		Predicate p = new Predicate(s, t);
-		Assert.assertEquals("Predicate lists must match",
-				Lists.newArrayList(p), p.getPredicates());
+		Atom p = new Atom(s, t);
+		Assert.assertEquals("Atom lists must match",
+				Lists.newArrayList(p), p.getAtoms());
 	}
 
 	/**
 	 * Test ground.
 	 */
 	@Test public void testGround() {
-		Signature s = new Signature("s", 5);
+		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
 				new Variable("x1"), new Variable("x2"), new Skolem("x3"),
 				new Variable("x4"), new TypedConstant<>("x5")
@@ -464,7 +464,7 @@ public class PredicateFormulaTest {
 		m.put(new Variable("x1"), new TypedConstant<>("c1"));
 		m.put(new Variable("x2"), new TypedConstant<>("c2"));
 		m.put(new Variable("x4"), new TypedConstant<>("c4"));
-		Predicate p = new Predicate(s, t);
+		Atom p = new Atom(s, t);
 		Assert.assertEquals("Grounded negation must comply to mapping ",g, p.ground(m).getTerms());
 	}
 
@@ -472,16 +472,16 @@ public class PredicateFormulaTest {
 	 * Test get term positions.
 	 */
 	@Test public void testGetTermPositions() {
-		Signature s = new Signature("s", 5);
+		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
 				new Variable("x1"), new Variable("x2"), new Skolem("x3"),
 				new Variable("x1"), new TypedConstant<>("x4")
 				);
-		Predicate p = new Predicate(s, t);
-		Assert.assertEquals("Predicate x1 term positions must match", Lists.newArrayList(0, 3), p.getTermPositions(new Variable("x1")));
-		Assert.assertEquals("Predicate x2 term positions must match", Lists.newArrayList(1), p.getTermPositions(new Variable("x2")));
-		Assert.assertEquals("Predicate x3 term positions must match", Lists.newArrayList(2), p.getTermPositions(new Skolem("x3")));
-		Assert.assertEquals("Predicate x4 term positions must match", Lists.newArrayList(4), p.getTermPositions(new TypedConstant<>("x4")));
+		Atom p = new Atom(s, t);
+		Assert.assertEquals("Atom x1 term positions must match", Lists.newArrayList(0, 3), p.getTermPositions(new Variable("x1")));
+		Assert.assertEquals("Atom x2 term positions must match", Lists.newArrayList(1), p.getTermPositions(new Variable("x2")));
+		Assert.assertEquals("Atom x3 term positions must match", Lists.newArrayList(2), p.getTermPositions(new Skolem("x3")));
+		Assert.assertEquals("Atom x4 term positions must match", Lists.newArrayList(4), p.getTermPositions(new TypedConstant<>("x4")));
 	}
 
 	/**
@@ -490,13 +490,13 @@ public class PredicateFormulaTest {
 	 * @return the term positions not found
 	 */
 	@Test public void getTermPositionsNotFound() {
-		Signature s = new Signature("s", 5);
+		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
 				new Variable("x1"), new Variable("x2"), new Skolem("x3"),
 				new Variable("x1"), new TypedConstant<>("x4")
 				);
-		Assert.assertTrue("Predicate term positions list must be empty",
-				new Predicate(s, t).getTermPositions(new Variable("x5"))
+		Assert.assertTrue("Atom term positions list must be empty",
+				new Atom(s, t).getTermPositions(new Variable("x5"))
 				.isEmpty());
 
 	}
@@ -505,12 +505,12 @@ public class PredicateFormulaTest {
 	 * Test is fact.
 	 */
 	@Test public void testIsFact() {
-		Signature s = new Signature("s", 5);
+		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
 				new TypedConstant<>("x1"), new TypedConstant<>("x2"), new TypedConstant<>("x3"),
 				new TypedConstant<>("x1"), new TypedConstant<>("x4")
 				);
-		Predicate p = new Predicate(s, t);
+		Atom p = new Atom(s, t);
 		Assert.assertTrue("Fact terms must contain schema constants only", p.isFact());
 	}
 
@@ -518,12 +518,12 @@ public class PredicateFormulaTest {
 	 * Test is not fact.
 	 */
 	@Test public void testIsNotFact() {
-		Signature s = new Signature("s", 5);
+		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
 				new Variable("x1"), new Variable("x2"), new Skolem("x3"),
 				new Variable("x1"), new TypedConstant<>("x4")
 				);
-		Predicate p = new Predicate(s, t);
+		Atom p = new Atom(s, t);
 		Assert.assertFalse("Fact terms must contain schema constants only", p.isFact());
 	}
 }
