@@ -269,7 +269,7 @@ public class MySQLSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 				List<Term> terms = Lists.newArrayList(p2.getTerms());
 				terms.set(t2.getSecond(), t1.getFirst().getTerm(t1.getSecond()));
 				String key = predMap.inverse().get(p2);
-				predMap.forcePut(key, new Atom(p2.getSignature(), terms));
+				predMap.forcePut(key, new Atom(p2.getPredicate(), terms));
 			}
 		}
 	}
@@ -330,7 +330,7 @@ public class MySQLSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 			Iterator<Atom> it = predMap.values().iterator();
 			while (it.hasNext()) {
 				pred = it.next();
-				index = ((Relation) pred.getSignature()).getAttributeIndex(attribute);
+				index = ((Relation) pred.getPredicate()).getAttributeIndex(attribute);
 				if (index >= 0) {
 					break;
 				}
@@ -338,11 +338,11 @@ public class MySQLSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 		} else {
 			pred = predMap.get(alias);
 			if (pred != null) {
-				index = ((Relation) pred.getSignature()).getAttributeIndex(attribute);
+				index = ((Relation) pred.getPredicate()).getAttributeIndex(attribute);
 			}
 		}
 		if (renamed != null && !renamed.isEmpty()){
-			att = new Attribute(((Relation) pred.getSignature()).getAttribute(index).getType(), renamed);
+			att = new Attribute(((Relation) pred.getPredicate()).getAttribute(index).getType(), renamed);
 		}
 		return new Triple<>(pred, index, att);
 	}

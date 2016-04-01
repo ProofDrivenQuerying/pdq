@@ -102,7 +102,7 @@ public class Implication<S extends Formula, T extends Formula>
 	@Override
 	public boolean contains(Predicate s) {
 		for (Atom atom: this.getAtoms()) {
-			if (atom.getSignature().equals(s)) {
+			if (atom.getPredicate().equals(s)) {
 				return true;
 			}
 		}

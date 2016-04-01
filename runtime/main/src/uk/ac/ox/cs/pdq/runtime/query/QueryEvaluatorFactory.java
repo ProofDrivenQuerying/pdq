@@ -35,7 +35,7 @@ public class QueryEvaluatorFactory {
 		try {
 			QueryEvaluator result = null;
 			for (Atom p: ((ConjunctiveQuery) query).getBody()) {
-				Relation r = (Relation) p.getSignature();
+				Relation r = (Relation) p.getPredicate();
 			    if (r instanceof InMemoryTableWrapper) {
 			    	return new InMemoryQueryEvaluator(query);
 			    } else {

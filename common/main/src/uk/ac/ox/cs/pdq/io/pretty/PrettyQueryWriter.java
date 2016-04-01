@@ -58,13 +58,13 @@ public class PrettyQueryWriter extends PrettyWriter<ConjunctiveQuery> implements
 	 */
 	@Override
 	public void write(PrintStream out, ConjunctiveQuery q) {
-		out.print(q.getHead().getSignature().getName());
+		out.print(q.getHead().getPredicate().getName());
 		out.print('(' + Joiner.on(", ").join(q.getFree()) + ")\u2190");
 		String sep = "";
 		for (Atom a : q.getBody()) {
 			out.print(sep);
 			Atom f = a;
-			out.print(f.getSignature().getName());
+			out.print(f.getPredicate().getName());
 			out.print('(' + Joiner.on(", ").join(f.getTerms()) + ')');
 			sep = ' ' + LogicalSymbols.AND.toString() + ' ';
 		}

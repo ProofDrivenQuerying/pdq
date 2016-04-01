@@ -102,9 +102,9 @@ public class MatchMaker implements EventHandler {
 	public void handleInfAccFacts(Collection<Atom> facts) {
 		if (facts != null) {
 			for (Atom p: facts) {
-				if (p.getSignature() instanceof InferredAccessibleRelation) {
+				if (p.getPredicate() instanceof InferredAccessibleRelation) {
 					Atom f = new Atom(
-							((InferredAccessibleRelation) p.getSignature()).getBaseRelation(),
+							((InferredAccessibleRelation) p.getPredicate()).getBaseRelation(),
 							p.getTerms());
 					FactSignature sig = FactSignature.make(f);
 					if (!this.infAccFacts.containsKey(sig)) {
@@ -116,7 +116,7 @@ public class MatchMaker implements EventHandler {
 					}
 					continue;
 				}
-				if (p.getSignature() instanceof AccessibleRelation) {
+				if (p.getPredicate() instanceof AccessibleRelation) {
 					if (this.accConstants.addAll(p.getTerms())) {
 						if (this.toPrint == '-') {
 							this.toPrint = '+';

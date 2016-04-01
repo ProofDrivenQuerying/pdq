@@ -134,8 +134,8 @@ public class Runtime {
 		}
 
 		for (Atom fact: this.facts) {
-			InMemoryRelation w = relations.get(fact.getSignature().getName());
-			List<Attribute> attributes = ((Relation) fact.getSignature()).getAttributes();
+			InMemoryRelation w = relations.get(fact.getPredicate().getName());
+			List<Attribute> attributes = ((Relation) fact.getPredicate()).getAttributes();
 			TupleType type = types.get(w);
 			if (type == null) {
 				type = TupleType.DefaultFactory.createFromTyped(attributes);

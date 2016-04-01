@@ -14,7 +14,7 @@ import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState;
  *
  */
 
-public interface RestrictedChaseDependencyAssessor {
+public interface TGDDependencyAssessor {
 
 	/**
 	 * Gets the dependencies.

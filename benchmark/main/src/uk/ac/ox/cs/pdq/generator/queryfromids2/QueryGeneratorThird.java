@@ -78,14 +78,14 @@ public class QueryGeneratorThird extends AbstractDependencyGenerator implements 
 		Map<String, InclusionDependencyGraphNode> nodes = new TreeMap<>();
 		for (LinearGuarded guardedDependency:guardedDependencies) {
 			Atom l = guardedDependency.getLeft().getAtoms().get(0);
-			Predicate s = l.getSignature();
+			Predicate s = l.getPredicate();
 			InclusionDependencyGraphNode ln = nodes.get(s.getName());
 			if (ln == null) {
 				ln = new InclusionDependencyGraphNode((Relation) s);
 				nodes.put(s.getName(), ln);
 			}
 			Atom r = guardedDependency.getRight().getAtoms().get(0);
-			s = r.getSignature();
+			s = r.getPredicate();
 			InclusionDependencyGraphNode rn = nodes.get(s.getName());
 			if (rn == null) {
 				rn = new InclusionDependencyGraphNode((Relation) s);
@@ -149,15 +149,15 @@ public class QueryGeneratorThird extends AbstractDependencyGenerator implements 
 
 		for (Atom a : leftAtoms) {
 			for (Atom b : rightAtoms) {
-				if (a.getSignature().equals(b.getSignature())) {
-					for (int i = 0, l = a.getSignature().getArity(); i < l; i++) {
+				if (a.getPredicate().equals(b.getPredicate())) {
+					for (int i = 0, l = a.getPredicate().getArity(); i < l; i++) {
 						Term t1 = a.getTerm(i);
 						if (clusters.get(t1).size() == 1) {
 							Term t2 = b.getTerm(i);
 							if (clusters.get(t2).size() == 1) {
 								List<Term> terms = Lists.newArrayList(b.getTerms());
 								terms.set(i, t1);
-								leftAtoms.set(leftAtoms.indexOf(a), new Atom(a.getSignature(), terms));
+								leftAtoms.set(leftAtoms.indexOf(a), new Atom(a.getPredicate(), terms));
 								leftAtoms.addAll(rightAtoms);
 								return true;
 							}

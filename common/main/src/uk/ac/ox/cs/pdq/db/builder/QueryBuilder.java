@@ -63,7 +63,7 @@ public class QueryBuilder implements Builder<ConjunctiveQuery> {
 				uniTerms.add(t);
 			}
 		}
-		return new Atom(p.getSignature(), uniTerms);
+		return new Atom(p.getPredicate(), uniTerms);
 	}
 	
 	/**

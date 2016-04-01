@@ -108,7 +108,7 @@ public class ExtendedPrettyProofWriter extends PrettyWriter<Proof> implements Wr
 					String s = Joiner.on(" & ").join(rule.getRight()) + " -> " + p + "..." + '\n';
 					result.insert(0, s);
 					for (Atom q: rule.getRight()) {
-						if (!q.getSignature().equals(AccessibleRelation.getInstance())) {
+						if (!q.getPredicate().equals(AccessibleRelation.getInstance())) {
 							todo.add(q);
 						}
 					}

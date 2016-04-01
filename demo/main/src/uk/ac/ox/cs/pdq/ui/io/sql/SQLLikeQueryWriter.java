@@ -111,7 +111,7 @@ public class SQLLikeQueryWriter extends PrettyWriter<Query<?>> implements Writer
 			for (Term t: head) {
 				Atom p = joins.get(t).iterator().next();
 				int pos = p.getTermPositions(t).iterator().next();
-				Attribute a = ((Relation) p.getSignature()).getAttribute(pos);
+				Attribute a = ((Relation) p.getPredicate()).getAttribute(pos);
 				result.append(sep).append(aliases.get(p)).append('.').append(a.getName());
 				sep = ", ";
 			}
@@ -134,16 +134,16 @@ public class SQLLikeQueryWriter extends PrettyWriter<Query<?>> implements Writer
 			Iterator<Atom> i = joins.get(t).iterator();
 			for (Atom curr: joins.get(t)) {
 				if (!joined.contains(curr)) {
-					result.append(sep).append(curr.getSignature().getName())
+					result.append(sep).append(curr.getPredicate().getName())
 						.append(" AS ").append(aliases.get(curr));
 					String sep2 = " ON ";
 					for (Atom other: joined) {
 						for (Term u : joins.keySet()) {
 							if (joins.get(u).contains(other) && joins.get(u).contains(curr)) {
 								result.append(sep2).append(aliases.get(curr)).append('.')
-									.append(((Relation) curr.getSignature()).getAttribute(curr.getTermPositions(u).get(0)))
+									.append(((Relation) curr.getPredicate()).getAttribute(curr.getTermPositions(u).get(0)))
 									.append("=").append(aliases.get(other)).append('.')
-									.append(((Relation) other.getSignature()).getAttribute(other.getTermPositions(u).get(0)));
+									.append(((Relation) other.getPredicate()).getAttribute(other.getTermPositions(u).get(0)));
 								sep2 = " AND ";
 							}
 						}
@@ -158,7 +158,7 @@ public class SQLLikeQueryWriter extends PrettyWriter<Query<?>> implements Writer
 		sep = joined.isEmpty() ? "" : ", ";
 		for (Atom p : aliases.keySet()) {
 			if (!joined.contains(p)) {
-				result.append(sep).append(p.getSignature().getName())
+				result.append(sep).append(p.getPredicate().getName())
 				.append(" AS ").append(aliases.get(p));
 			}
 		}
@@ -171,7 +171,7 @@ public class SQLLikeQueryWriter extends PrettyWriter<Query<?>> implements Writer
 			for (int i = 0, l = terms.size(); i < l; i++) {
 				if (!terms.get(i).isVariable() && !terms.get(i).isSkolem()) {
 					result.append(sep).append(aliases.get(p)).append('.')
-						.append(((Relation) p.getSignature()).getAttribute(i))
+						.append(((Relation) p.getPredicate()).getAttribute(i))
 						.append('=').append("'").append(terms.get(i)).append("'"); 
 					sep = "\nAND ";
 				}

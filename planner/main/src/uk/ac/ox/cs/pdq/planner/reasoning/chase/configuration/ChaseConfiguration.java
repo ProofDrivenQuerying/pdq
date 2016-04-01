@@ -167,7 +167,7 @@ public abstract class ChaseConfiguration<P extends Plan> implements Configuratio
 	 * @throws LimitReachedException the limit reached exception
 	 */
 	public void reasonUntilTermination(Chaser chaser, Query<?> query, Collection<? extends Constraint> dependencies) throws PlannerException, LimitReachedException {
-		chaser.reasonUntilTermination(this.state, query, dependencies);
+		chaser.reasonUntilTermination(this.state, dependencies);
 	}
 
 	/**

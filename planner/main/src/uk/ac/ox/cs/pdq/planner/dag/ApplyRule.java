@@ -120,7 +120,7 @@ public class ApplyRule extends DAGChaseConfiguration {
 	 */
 	public void generate(Chaser chaser, Query<?> query, AccessibleSchema accessibleSchema) {
 		this.getState().generate(accessibleSchema, this.rule, this.facts);
-		chaser.reasonUntilTermination(this.getState(), query, accessibleSchema.getInferredAccessibilityAxioms());
+		chaser.reasonUntilTermination(this.getState(), accessibleSchema.getInferredAccessibilityAxioms());
 	}
 	
 	/**

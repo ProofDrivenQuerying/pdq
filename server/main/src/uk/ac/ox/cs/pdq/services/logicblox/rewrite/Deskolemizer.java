@@ -238,7 +238,7 @@ public class Deskolemizer<F extends Formula> implements Rewriter<F, F> {
 		@Override
 		public Atom rewrite(Atom input) {
 			Atom.Builder builder = Atom.builder();
-			builder.setSignature(input.getSignature());
+			builder.setSignature(input.getPredicate());
 			for (Term term: input.getTerms()) {
 				builder.addTerm(this.map(term));
 			}

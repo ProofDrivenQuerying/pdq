@@ -83,7 +83,7 @@ public class PredicateFormulaTest {
 				new Skolem("x4"), new TypedConstant<>("x5")
 				);
 		Atom p = new Atom( s, t);
-		Assert.assertEquals("Atom must have name signature " + s, s, p.getSignature());
+		Assert.assertEquals("Atom must have name signature " + s, s, p.getPredicate());
 		Assert.assertEquals("Atom must have name terms " + t, t, p.getTerms());
 	}
 
@@ -94,7 +94,7 @@ public class PredicateFormulaTest {
 		Predicate s = new Predicate("s", 0);
 		List<Term> t = Lists.newArrayList();
 		Atom p = new Atom( s, t);
-		Assert.assertEquals("Atom must have name signature " + s, s, p.getSignature());
+		Assert.assertEquals("Atom must have name signature " + s, s, p.getPredicate());
 		Assert.assertEquals("Atom must have name terms " + t, t, p.getTerms());
 	}
 
@@ -127,7 +127,7 @@ public class PredicateFormulaTest {
 				Lists.newArrayList(new Attribute(String.class, "a"))) {};
 		List<Term> t = Lists.<Term>newArrayList(new Variable("x"));
 		Atom p = new Atom(r, t);
-		Assert.assertEquals("Atom must have name signature " + r, r, p.getSignature());
+		Assert.assertEquals("Atom must have name signature " + r, r, p.getPredicate());
 		Assert.assertEquals("Atom must have name terms " + t, t, p.getTerms());
 	}
 
@@ -140,7 +140,7 @@ public class PredicateFormulaTest {
 				Lists.newArrayList(new Attribute(String.class, "a"))) {};
 		List<Term> t = Lists.<Term>newArrayList(new TypedConstant<String>("x"));
 		Atom p = new Atom(r, t);
-		Assert.assertEquals("Atom must have name signature " + r, r, p.getSignature());
+		Assert.assertEquals("Atom must have name signature " + r, r, p.getPredicate());
 		Assert.assertEquals("Atom must have name terms " + t, t, p.getTerms());
 	}
 

@@ -13,7 +13,7 @@ import uk.ac.ox.cs.pdq.io.xml.QueryReader;
 import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState;
-import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseListState;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseListState;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismManagerFactory;
@@ -172,9 +172,8 @@ public class Bootstrap {
 								
 			Chaser reasoner = reasonerFactory.getInstance();
 //			//Creates a chase state that consists of the canonical database of the input query.
-			ChaseState state = 
-			new DatabaseListState(query, (DBHomomorphismManager) detector);
-			reasoner.reasonUntilTermination(state, query, schema.getDependencies());
+			ChaseState state = new DatabaseChaseListState(query, (DBHomomorphismManager) detector);
+			reasoner.reasonUntilTermination(state, schema.getDependencies());
 			
 			detector.clearQuery();
 			//TODO show something 

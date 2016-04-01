@@ -180,7 +180,7 @@ public abstract class DAGExplorer extends Explorer<DAGPlan> {
 		AccessibleChaseState state = null;
 		state = (uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState) 
 				new AccessibleDatabaseListState(this.query, this.schema, (DBHomomorphismManager) this.detector);
-		this.chaser.reasonUntilTermination(state, this.query, this.schema.getDependencies());
+		this.chaser.reasonUntilTermination(state, this.schema.getDependencies());
 
 		List<DAGChaseConfiguration> collection = new ArrayList<>();
 		Collection<Pair<AccessibilityAxiom,Collection<Atom>>> pairs = state.groupByBinding(this.accessibleSchema.getAccessibilityAxioms());

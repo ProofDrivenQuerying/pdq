@@ -105,6 +105,6 @@ public class EntityRelation extends Relation implements DataType {
 		if (!(o instanceof DatabasePredicate)) {
 			return false;
 		}
-		return this.equals(((DatabasePredicate) o).getSignature());
+		return this.equals(((DatabasePredicate) o).getPredicate());
 	}
 }

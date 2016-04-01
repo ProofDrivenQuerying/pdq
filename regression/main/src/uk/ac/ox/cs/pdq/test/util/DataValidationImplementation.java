@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
+import jersey.repackaged.com.google.common.collect.Lists;
 import uk.ac.ox.cs.pdq.db.Constraint;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -13,7 +14,7 @@ import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismConstraint;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismProperty;
 import uk.ac.ox.cs.pdq.reasoning.utility.Match;
 import uk.ac.ox.cs.pdq.runtime.exec.AccessException;
 import uk.ac.ox.cs.pdq.util.Table;
@@ -105,14 +106,14 @@ public final class DataValidationImplementation extends DataValidation{
 	 */
 	private void validate(Constraint constraint) throws PlannerException, AccessException {
 		// Checks if the there exists at least one set of facts that satisfies the left-hand side of the input dependency
-		List<Match> matchings = this.manager.getMatches(constraint);
+		List<Match> matchings = this.manager.getMatches(Lists.newArrayList(constraint));
 		if (!matchings.isEmpty()) {
 			/*
 			 * For each set of facts F1 that satisfy the left-hand side of the input dependency check whether or not 
 			 * there exists another set of facts F2 that satisfies the right-hand side of the input dependency w.r.t F1 
 			 */
 			for (Match m: matchings) {
-				List<Match> subMatchings = this.manager.getMatches(this.invert(constraint), HomomorphismConstraint.createMapConstraint(m.getMapping()));
+				List<Match> subMatchings = this.manager.getMatches(Lists.newArrayList(this.invert(constraint)), HomomorphismProperty.createMapProperty(m.getMapping()));
 				if (subMatchings.isEmpty()) {
 					throw new java.lang.IllegalArgumentException("Data does not satisfy constraint " + constraint.toString() );
 				}

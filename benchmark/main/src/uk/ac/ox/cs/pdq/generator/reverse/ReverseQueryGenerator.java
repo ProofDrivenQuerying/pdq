@@ -109,9 +109,9 @@ public class ReverseQueryGenerator implements Runnable {
 						new AccessibleDatabaseListState(query, accessibleSchema, (DBHomomorphismManager) detector);
 				
 				log.info("Phase 1");
-				reasoner.reasonUntilTermination(state, accessibleQuery, this.schema.getDependencies());
+				reasoner.reasonUntilTermination(state, this.schema.getDependencies());
 				log.info("Phase 2");
-				reasoner.reasonUntilTermination(state, accessibleQuery, CollectionUtils.union(
+				reasoner.reasonUntilTermination(state, CollectionUtils.union(
 						accessibleSchema.getAccessibilityAxioms(),
 						accessibleSchema.getInferredAccessibilityAxioms()));
 				log.info("Reasoning complete.");

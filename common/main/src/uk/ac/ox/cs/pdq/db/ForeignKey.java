@@ -77,8 +77,8 @@ public class ForeignKey implements Cloneable {
 	public ForeignKey(LinearGuarded dep) {
 		Atom left = dep.getLeft().getAtoms().get(0);
 		Atom right = dep.getRight().getAtoms().get(0);
-		Relation leftRel = (Relation) left.getSignature();
-		Relation rightRel = (Relation) right.getSignature();
+		Relation leftRel = (Relation) left.getPredicate();
+		Relation rightRel = (Relation) right.getPredicate();
 		this.setForeignRelation(rightRel);
 		this.setForeignRelationName(rightRel.getName());
 		for (Variable v: dep.getBothSideVariables()) {

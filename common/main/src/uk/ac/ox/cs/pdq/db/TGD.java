@@ -282,4 +282,10 @@ public class TGD
 		}
 		return f + this.left + LogicalSymbols.IMPLIES + b + this.right;
 	}
+	
+	@Override
+	public TGD clone() {
+		return new TGD(Conjunction.of(Lists.newArrayList(this.getBody().getChildren())), 
+				Conjunction.of(Lists.newArrayList(this.getHead().getChildren())));
+	}
 }

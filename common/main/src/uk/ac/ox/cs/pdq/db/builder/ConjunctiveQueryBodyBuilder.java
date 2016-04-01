@@ -147,7 +147,7 @@ public class ConjunctiveQueryBodyBuilder {
 
 		// Prepare left constant term:
 		TypedConstant<?> leftConstant = new TypedConstant<>(
-				Types.cast(((Relation) rightPredForm.getSignature()).getAttribute(rightAttr).getType(),
+				Types.cast(((Relation) rightPredForm.getPredicate()).getAttribute(rightAttr).getType(),
 						leftConst.getConstant()));
 
 
@@ -257,7 +257,7 @@ public class ConjunctiveQueryBodyBuilder {
 				}
 			}
 
-			Atom newPredicateFormula = new Atom(predicateFormula.getSignature(), newTerms);
+			Atom newPredicateFormula = new Atom(predicateFormula.getPredicate(), newTerms);
 
 			this.aliasToPredicateFormulas.put(alias, newPredicateFormula);
 		}
@@ -299,7 +299,7 @@ public class ConjunctiveQueryBodyBuilder {
 			this.resultPredicate = new Atom(predicate, term);
 			
 		} else {
-			int newArity = this.resultPredicate.getSignature().getArity() + 1;
+			int newArity = this.resultPredicate.getPredicate().getArity() + 1;
 			Predicate newSignature = new Predicate(this.qName, newArity);
 			
 			Term[] newTerms = new Term[newArity];

@@ -43,7 +43,7 @@ public class PredicateFormulaTest {
 				TypedConstant<String> c = new TypedConstant<>("c");
 				Skolem s = new Skolem("s");
 				Assert.assertFalse("PredicateFormula must not be of type InferredAccessible",
-						new Atom(r, Lists.newArrayList(s, c)).getSignature() instanceof InferredAccessibleRelation);
+						new Atom(r, Lists.newArrayList(s, c)).getPredicate() instanceof InferredAccessibleRelation);
 				Atom p = new Atom(r, Lists.newArrayList(s, c));
 	}
 
@@ -54,7 +54,7 @@ public class PredicateFormulaTest {
 		Relation r = AccessibleRelation.getInstance();
 		Skolem s = new Skolem("s");
 		Assert.assertTrue("PredicateFormula must be of type Accessible",
-				new Atom(r, Lists.newArrayList(s)).getSignature() instanceof AccessibleRelation);
+				new Atom(r, Lists.newArrayList(s)).getPredicate() instanceof AccessibleRelation);
 	}
 
 	/**
@@ -68,7 +68,7 @@ public class PredicateFormulaTest {
 		TypedConstant<String> c = new TypedConstant<>("c");
 		Skolem s = new Skolem("s");
 		Assert.assertTrue("PredicateFormula must be of type InferredAccessible",
-				new Atom(r, Lists.newArrayList(s, c)).getSignature() instanceof InferredAccessibleRelation);
+				new Atom(r, Lists.newArrayList(s, c)).getPredicate() instanceof InferredAccessibleRelation);
 	}
 
 }

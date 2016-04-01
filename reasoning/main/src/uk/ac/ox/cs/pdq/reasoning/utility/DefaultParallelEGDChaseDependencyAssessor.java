@@ -59,7 +59,7 @@ public final class DefaultParallelEGDChaseDependencyAssessor implements Parallel
 		//Build the dependency map
 		for(Constraint dependency:dependencies) {
 			for(Atom atom:dependency.getLeft().getAtoms()) {
-				Predicate s = atom.getSignature();
+				Predicate s = atom.getPredicate();
 				if(dependency instanceof EGD) {
 					this.egdMap.put(s.getName(), (EGD) dependency);
 				}
@@ -91,12 +91,12 @@ public final class DefaultParallelEGDChaseDependencyAssessor implements Parallel
 		
 		Multimap<String, Atom> newFactsMap = ArrayListMultimap.create();
 		for(Atom fact:newFacts) {
-			newFactsMap.put(fact.getSignature().getName(), fact);
+			newFactsMap.put(fact.getPredicate().getName(), fact);
 		}
 		
 		Multimap<String, Atom> allFactsMap = ArrayListMultimap.create();
 		for(Atom fact:state.getFacts()) {
-			allFactsMap.put(fact.getSignature().getName(), fact);
+			allFactsMap.put(fact.getPredicate().getName(), fact);
 		}
 		//for each fact
 		for(String factName:newFactsMap.keySet()) {

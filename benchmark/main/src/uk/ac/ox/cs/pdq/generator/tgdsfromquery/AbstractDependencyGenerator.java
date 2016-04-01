@@ -190,7 +190,7 @@ public abstract class AbstractDependencyGenerator {
 		List<Relation> leftRelations = new ArrayList<>();
 		if(leftSide != null) {
 			for(Atom l: leftSide) {
-				leftRelations.add((Relation) l.getSignature());
+				leftRelations.add((Relation) l.getPredicate());
 			}
 		}
 
@@ -261,7 +261,7 @@ public abstract class AbstractDependencyGenerator {
 					nTerms.add(joinTerm);
 				}
 			}
-			chainAtoms.add(new Atom(atom.getSignature(), nTerms));
+			chainAtoms.add(new Atom(atom.getPredicate(), nTerms));
 		}
 		return chainAtoms;
 	}

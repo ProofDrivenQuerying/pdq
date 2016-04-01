@@ -143,7 +143,7 @@ public abstract class LinearExplorer extends Explorer<LeftDeepPlan> {
 		AccessibleChaseState state = null;
 		state = (uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState) 
 				new AccessibleDatabaseListState(this.query, this.schema, (DBHomomorphismManager) this.detector);
-		this.chaser.reasonUntilTermination(state, this.query, this.schema.getDependencies());
+		this.chaser.reasonUntilTermination(state, this.schema.getDependencies());
 
 		this.tick = System.nanoTime();
 		SearchNode root = this.nodeFactory.getInstance(state);

@@ -23,7 +23,7 @@ public class NoFreeAccessQuerySelector implements QuerySelector {
 	@Override
 	public boolean accept(Query<?> q) {
 		for (Atom p: q.getBody().getAtoms()) {
-			Predicate s = p.getSignature();
+			Predicate s = p.getPredicate();
 			if (s instanceof Relation) {
 				for (AccessMethod am: ((Relation) s).getAccessMethods()) {
 					if (am.getType() == Types.FREE) {

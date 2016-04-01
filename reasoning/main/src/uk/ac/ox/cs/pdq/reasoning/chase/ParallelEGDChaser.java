@@ -12,15 +12,17 @@ import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.logging.performance.StatisticsCollector;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseListState;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ListState;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismConstraint;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismProperty;
 import uk.ac.ox.cs.pdq.reasoning.utility.DefaultParallelEGDChaseDependencyAssessor;
 import uk.ac.ox.cs.pdq.reasoning.utility.Match;
 import uk.ac.ox.cs.pdq.reasoning.utility.ParallelEGDChaseDependencyAssessor;
 import uk.ac.ox.cs.pdq.reasoning.utility.ParallelEGDChaseDependencyAssessor.EGDROUND;
 import uk.ac.ox.cs.pdq.reasoning.utility.ReasonerUtility;
 
-import com.beust.jcommander.internal.Lists;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 
@@ -70,7 +72,7 @@ public class ParallelEGDChaser extends Chaser {
 	 * @param dependencies the dependencies
 	 */
 	@Override
-	public <S extends ChaseState> void reasonUntilTermination(S instance,  Query<?> target, Collection<? extends Constraint> dependencies) {
+	public <S extends ChaseState> void reasonUntilTermination(S instance,  Collection<? extends Constraint> dependencies) {
 		Preconditions.checkArgument(instance instanceof ListState);
 		ParallelEGDChaseDependencyAssessor accessor = new DefaultParallelEGDChaseDependencyAssessor(dependencies);
 		
@@ -96,14 +98,7 @@ public class ParallelEGDChaser extends Chaser {
 			++step;
 			//Find all active triggers
 			Collection<? extends Constraint> d = step % 2 == 0 ? accessor.getDependencies(instance, EGDROUND.TGD):accessor.getDependencies(instance, EGDROUND.EGD);
-			List<Match> matches = instance.getMaches(d);
-			
-			List<Match> activeTriggers = Lists.newArrayList();
-			for(Match match:matches) {
-				if(new ReasonerUtility().isActiveTrigger(match, instance)){
-					activeTriggers.add(match);
-				}
-			}
+			List<Match> activeTriggers = instance.getMatches(d, HomomorphismProperty.createActiveTriggerProperty());
 			boolean succeeds = instance.chaseStep(activeTriggers);
 			if(!succeeds) {
 				break;
@@ -142,12 +137,13 @@ public class ParallelEGDChaser extends Chaser {
 	 */
 	@Override
 	public <S extends ChaseState> boolean entails(S instance, Map<Variable, Constant> free, Query<?> target,
-			Collection<? extends Constraint> constraints) {
-		this.reasonUntilTermination(instance, target, constraints);
+			Collection<? extends Constraint<?,?>> constraints) {
+		Collection<? extends Constraint<?, ?>> relevantDependencies = new ReasonerUtility().findRelevant(target, constraints);
+		this.reasonUntilTermination(instance, relevantDependencies);
 		if(!instance.isFailed()) {
-			HomomorphismConstraint[] c = {
-					HomomorphismConstraint.createTopKConstraint(1),
-					HomomorphismConstraint.createMapConstraint(free)};
+			HomomorphismProperty[] c = {
+					HomomorphismProperty.createTopKProperty(1),
+					HomomorphismProperty.createMapProperty(free)};
 
 			return !instance.getMatches(target,c).isEmpty(); 
 		}
@@ -164,9 +160,16 @@ public class ParallelEGDChaser extends Chaser {
 	 * @return 		true if the source query entails the target query
 	 */
 	@Override
-	public <S extends ChaseState> boolean entails(Query<?> source, Query<?> target,
-			Collection<? extends Constraint> constraints) {
-		// TODO Auto-generated method stub
+	public boolean entails(Query<?> source, Query<?> target,
+			Collection<? extends Constraint<?,?>> constraints, HomomorphismDetector detector) {
+		Collection<? extends Constraint<?, ?>> relevantDependencies = new ReasonerUtility().findRelevant(target, constraints);
+		DatabaseChaseListState instance = new DatabaseChaseListState(source, (DBHomomorphismManager)detector);
+		this.reasonUntilTermination(instance, relevantDependencies);
+		if(!instance.isFailed()) {
+			HomomorphismProperty[] c = {
+					HomomorphismProperty.createTopKProperty(1)};
+			return !instance.getMatches(target,c).isEmpty(); 
+		}
 		return false;
 	}
 

@@ -69,7 +69,7 @@ public class VeryPrettyDependencyWriter
 		int length = 0;
 		for (Atom f: tgd.getLeft().getAtoms()) {
 			out.print(sep);
-			out.print(f.getSignature().getName());
+			out.print(f.getPredicate().getName());
 			out.print('(' + joinTerms(f.getTerms(), ", ") + ')');
 			if (this.indented && length > 80) {
 				sep = "\n" + AND + ' ';
@@ -83,7 +83,7 @@ public class VeryPrettyDependencyWriter
 		sep = (this.indented ? "\n\t" : " ")  + IMPLIES + ' ';
 		for (Atom f : tgd.getRight().getAtoms()) {
 			out.print(sep);
-			out.print(f.getSignature().getName());
+			out.print(f.getPredicate().getName());
 			out.print('(' + joinTerms(f.getTerms(), ", ") + ')');
 			if (this.indented && length > 80) {
 				sep = "\n\t" + AND + ' ';

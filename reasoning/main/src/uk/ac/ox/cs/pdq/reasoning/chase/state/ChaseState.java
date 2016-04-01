@@ -6,7 +6,7 @@ import java.util.List;
 import uk.ac.ox.cs.pdq.db.Constraint;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Query;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismConstraint;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismProperty;
 import uk.ac.ox.cs.pdq.reasoning.utility.FiringGraph;
 import uk.ac.ox.cs.pdq.reasoning.utility.Match;
 
@@ -43,20 +43,7 @@ public interface ChaseState {
 	 * @param constraints the constraints
 	 * @return 		the list of matches of the input query to the facts of this state that satisfy the input constraints
 	 */
-	List<Match> getMatches(Query<?> query, HomomorphismConstraint... constraints);
-
-	/**
-	 * (Candidate match definition).
-	 * Given a set of facts I and a TGD
-	 * 		delta = \forall x_1, ..., x_j \phi(\vec{x}) --> \exists  y_1, ..., y_k \rho(\vec{x},\vec{y})
-	 * 		a candidate match for d is \vec{e} such that \phi(\vec{e}) holds but there is no \vec{f} such that \rho(\vec{e},\vec{f})
-	 * 		holds in I.
-	 *
-	 * @param dependency the dependency
-	 * @param constraints 		The homomorphism constraints that should be satisfied 
-	 * @return 		the list of matches (both candidates and not candidates) of the input dependency in this database instance.
-	 */
-	List<Match> getMaches(Constraint dependency, HomomorphismConstraint... constraints);
+	List<Match> getMatches(Query<?> query, HomomorphismProperty... constraints);
 	
 	/**
 	 * (Candidate match definition).
@@ -69,7 +56,7 @@ public interface ChaseState {
 	 * @param constraints 		The homomorphism constraints that should be satisfied 
 	 * @return 		the list of matches (both candidates and not candidates) of the input dependencies in this database instance.
 	 */
-	List<Match> getMaches(Collection<? extends Constraint> dependencies, HomomorphismConstraint... constraints);
+	List<Match> getMatches(Collection<? extends Constraint> dependencies, HomomorphismProperty... constraints);
 	
 	/**
 	 * Checks if is successful.

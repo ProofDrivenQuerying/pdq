@@ -26,9 +26,9 @@ import uk.ac.ox.cs.pdq.planner.dag.DAGAnnotatedPlan;
 import uk.ac.ox.cs.pdq.planner.dag.UnaryAnnotatedPlan;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseState;
-import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseListState;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseListState;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismConstraint;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismProperty;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
 import uk.ac.ox.cs.pdq.reasoning.utility.EqualConstantsClasses;
 import uk.ac.ox.cs.pdq.util.Utility;
@@ -100,11 +100,11 @@ public class CardinalityUtility {
 					copiedTerms.add(originalTerm);
 				}
 			}
-			copiedFacts.add(new Atom(fact.getSignature(), copiedTerms));
+			copiedFacts.add(new Atom(fact.getPredicate(), copiedTerms));
 		}
 
-		DatabaseListState state = new DatabaseListState((DBHomomorphismManager)detector, Sets.newLinkedHashSet(CollectionUtils.union(configuration.getOutputFacts(), copiedFacts)));
-		egd.reasonUntilTermination(state, null, dependencies);
+		DatabaseChaseListState state = new DatabaseChaseListState((DBHomomorphismManager)detector, Sets.newLinkedHashSet(CollectionUtils.union(configuration.getOutputFacts(), copiedFacts)));
+		egd.reasonUntilTermination(state, dependencies);
 
 		//Clear the database from the copied facts
 		((DBHomomorphismManager)detector).deleteFacts(
@@ -164,7 +164,7 @@ public class CardinalityUtility {
 					newTerms.add(term);
 				}
 			}
-			queryAtoms.add(new Atom(fact.getSignature(), newTerms));
+			queryAtoms.add(new Atom(fact.getPredicate(), newTerms));
 		}
 		
 		
@@ -187,9 +187,9 @@ public class CardinalityUtility {
 			((DatabaseChaseState)source.getState()).setManager((DBHomomorphismManager) detector);
 		}
 		
-		HomomorphismConstraint[] c = new HomomorphismConstraint[2];
-		c[0] = HomomorphismConstraint.createMapConstraint(mapConstraint);
-		c[1] = HomomorphismConstraint.createTopKConstraint(1);
+		HomomorphismProperty[] c = new HomomorphismProperty[2];
+		c[0] = HomomorphismProperty.createMapProperty(mapConstraint);
+		c[1] = HomomorphismProperty.createTopKProperty(1);
 		boolean hasID = !source.getState().getMatches(query, c).isEmpty();
 		
 		log.trace("hasID " + source + "-->" + target + " = " + hasID);

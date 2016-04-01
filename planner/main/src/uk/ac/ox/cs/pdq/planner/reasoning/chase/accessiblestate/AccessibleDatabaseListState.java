@@ -26,7 +26,7 @@ import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema.AccessibleRelation;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema.InferredAccessibleRelation;
 import uk.ac.ox.cs.pdq.planner.reasoning.MatchFactory;
-import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseListState;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseListState;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.utility.EqualConstantsClasses;
 import uk.ac.ox.cs.pdq.reasoning.utility.FiringGraph;
@@ -53,7 +53,7 @@ import com.google.common.collect.Sets;
  * 	under the constraints and c' is a representative.
  * 	The database is cleared from the obsolete facts after a chase step is applied.
  */
-public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseListState implements AccessibleChaseState {
+public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseListState implements AccessibleChaseState {
 
 	/**  String signatures of the inferred accessible facts. */
 	private final Collection<String> inferred;
@@ -203,17 +203,17 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 			//The grounded right-hand side of the input dependency
 			Formula right = grounded.getRight();
 			for(Atom fact:right.getAtoms()) {
-				if(fact.getSignature() instanceof InferredAccessibleRelation) {
+				if(fact.getPredicate() instanceof InferredAccessibleRelation) {
 					this.derivedInferred.add(fact);
 				}
-				if (!(fact.getSignature() instanceof AccessibleRelation) && 
-						!(fact.getSignature() instanceof InferredAccessibleRelation)) {
-					this.signatureGroups.put(fact.getSignature(), fact);
+				if (!(fact.getPredicate() instanceof AccessibleRelation) && 
+						!(fact.getPredicate() instanceof InferredAccessibleRelation)) {
+					this.signatureGroups.put(fact.getPredicate(), fact);
 				}
-				if (fact.getSignature() instanceof AccessibleRelation) {
+				if (fact.getPredicate() instanceof AccessibleRelation) {
 					this.accessibleTerms.put(fact.getTerm(0), fact);
 				}
-				if (fact.getSignature() instanceof InferredAccessibleRelation) {
+				if (fact.getPredicate() instanceof InferredAccessibleRelation) {
 					this.inferred.add(fact.toString());
 				}
 			}
@@ -279,7 +279,7 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 			Iterator<Atom> iterator = pair.getRight().iterator();
 			while (iterator.hasNext()) {
 				Atom fact = iterator.next();
-				Atom accessedFact = new Atom(accessibleSchema.getInferredAccessibleRelation((Relation) fact.getSignature()), fact.getTerms());
+				Atom accessedFact = new Atom(accessibleSchema.getInferredAccessibleRelation((Relation) fact.getPredicate()), fact.getTerms());
 				Collection<Term> inputTerms = accessedFact.getTerms(axiom.getAccessMethod().getZeroBasedInputs());
 				if(graph.getFactProvenance(accessedFact) == null && accessibleTerms.keySet().containsAll(inputTerms)) {
 					Match matching = MatchFactory.getMatch(pair.getLeft(), fact);
@@ -354,7 +354,7 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 		accessibleTerms.putAll(((AccessibleDatabaseListState)s).accessibleTerms);
 		
 		EqualConstantsClasses classes = this.constantClasses.clone();
-		if(!classes.merge(((DatabaseListState)s).getConstantClasses())) {
+		if(!classes.merge(((DatabaseChaseListState)s).getConstantClasses())) {
 			return null;
 		}
 		return new AccessibleDatabaseListState(

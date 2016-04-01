@@ -223,7 +223,7 @@ public class QueryToProtoBuffer implements Rewriter<Query<?>, Rule> {
 	private com.logicblox.common.protocol.CommonProto.Atom rewriteAtom(Atom atom) {
 		com.logicblox.common.protocol.CommonProto.Atom.Builder builder = com.logicblox.common.protocol.CommonProto.Atom.newBuilder();
 		builder.setPredicateName(atom.getName());
-		Predicate predicate = atom.getSignature();
+		Predicate predicate = atom.getPredicate();
 		
 		for (int i = 0, l = atom.getTermsCount(); i < l; i++) {
 			Term term = atom.getTerm(i);
@@ -258,10 +258,10 @@ public class QueryToProtoBuffer implements Rewriter<Query<?>, Rule> {
 			if (body.size() == 1 && head.size() == 1) {
 				Atom b = body.get(0);
 				Atom h = head.get(0);
-				if (b.getSignature().equals(signature)
-					&& h.getSignature().getArity() == 1
+				if (b.getPredicate().equals(signature)
+					&& h.getPredicate().getArity() == 1
 					&& b.getTerm(i).equals(h.getTerm(0))) {
-					return h.getSignature();
+					return h.getPredicate();
 				}
 			}
 		}

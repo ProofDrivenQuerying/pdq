@@ -36,10 +36,10 @@ public class DatabasePredicate extends Atom {
 	 * Gets the signature.
 	 *
 	 * @return Relation
-	 * @see uk.ac.ox.cs.pdq.fol.AtomicFormula#getSignature()
+	 * @see uk.ac.ox.cs.pdq.fol.AtomicFormula#getPredicate()
 	 */
 	@Override
-	public Relation getSignature() {
-		return (Relation) super.getSignature();
+	public Relation getPredicate() {
+		return (Relation) super.getPredicate();
 	}
 }

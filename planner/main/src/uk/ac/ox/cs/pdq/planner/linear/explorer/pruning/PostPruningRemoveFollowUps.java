@@ -241,16 +241,16 @@ public final class PostPruningRemoveFollowUps extends PostPruning {
 		Collection<Atom> inputAccessibleFacts = new LinkedHashSet<>();
 		Atom inferredAccessibleFact = null;
 		for(Atom fact:facts) {
-			if(fact.getSignature() instanceof AccessibleRelation) {
+			if(fact.getPredicate() instanceof AccessibleRelation) {
 				Set<Constant> constants = Utility.getNonSchemaConstants(fact);
 				if(!constants.isEmpty()) {
 					inputTerms.addAll(constants);
 					inputAccessibleFacts.add(fact);
 				}
 			}
-			else if(fact.getSignature() instanceof Relation) {
+			else if(fact.getPredicate() instanceof Relation) {
 				outputTerms.addAll(Utility.getConstants(fact));
-				Relation relation = (Relation) fact.getSignature();
+				Relation relation = (Relation) fact.getPredicate();
 				inferredAccessibleFact = new Atom(this.accessibleSchema.getInferredAccessibleRelation(relation), fact.getTerms() );
 			}
 			else {

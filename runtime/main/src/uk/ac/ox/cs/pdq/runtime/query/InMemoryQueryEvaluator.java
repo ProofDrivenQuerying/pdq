@@ -151,12 +151,12 @@ public class InMemoryQueryEvaluator implements QueryEvaluator {
 	 * @throws EvaluationException the evaluation exception
 	 */
 	private TupleIterator makeScans(Atom p) throws EvaluationException {
-		if (!(p.getSignature() instanceof InMemoryTableWrapper)) {
+		if (!(p.getPredicate() instanceof InMemoryTableWrapper)) {
 			throw new EvaluationException(
-					p.getSignature().getClass().getSimpleName() +
+					p.getPredicate().getClass().getSimpleName() +
 					" relations not supported in In-Mem query evaluator.");
 		}
-		InMemoryTableWrapper r = (InMemoryTableWrapper) p.getSignature();
+		InMemoryTableWrapper r = (InMemoryTableWrapper) p.getPredicate();
 		List<Term> terms = p.getTerms();
 		TupleType type = TupleType.DefaultFactory.createFromTyped(r.getAttributes());
 		List<uk.ac.ox.cs.pdq.algebra.predicates.Predicate> preds = this.makeSelectionPredicates(r.getAttributes(), terms); 

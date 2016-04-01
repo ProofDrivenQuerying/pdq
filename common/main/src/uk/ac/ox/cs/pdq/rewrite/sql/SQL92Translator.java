@@ -122,7 +122,7 @@ public class SQL92Translator extends SQLTranslator {
 		sep = "";
 		BiMap<String, Atom> invAlias = aliases.inverse();
 		for (String alias: invAlias.keySet()) {
-			result.append(sep).append(invAlias.get(alias).getSignature().getName());
+			result.append(sep).append(invAlias.get(alias).getPredicate().getName());
 			result.append(" AS ").append(alias);
 			sep = ", ";
 		}
@@ -191,7 +191,7 @@ public class SQL92Translator extends SQLTranslator {
 		Map<Term, List<Triple<Relation, String, Integer>>> result = new LinkedHashMap<>();
 		for (Atom a: ((Conjunction<Atom>) q.getBody())) {
 			Atom f = a;
-			Predicate sig = f.getSignature();
+			Predicate sig = f.getPredicate();
 			if (sig instanceof Relation) {
 				int i = 0;
 				for (Term t: f.getTerms()) {
@@ -200,7 +200,7 @@ public class SQL92Translator extends SQLTranslator {
 						positions = new ArrayList<>();
 						result.put(t, positions);
 					}
-					positions.add(new Triple<>((Relation) f.getSignature(),
+					positions.add(new Triple<>((Relation) f.getPredicate(),
 							aliases.get(f), i));
 					i++;
 				}

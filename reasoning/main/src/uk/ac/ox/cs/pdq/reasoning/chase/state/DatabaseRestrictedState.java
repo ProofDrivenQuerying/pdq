@@ -7,15 +7,16 @@ import java.util.Map;
 
 import uk.ac.ox.cs.pdq.db.Constraint;
 import uk.ac.ox.cs.pdq.db.EGD;
+import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Equality;
 import uk.ac.ox.cs.pdq.fol.Formula;
-import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Query;
-import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager;
-import uk.ac.ox.cs.pdq.reasoning.utility.EqualConstantsClass;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismProperty;
 import uk.ac.ox.cs.pdq.reasoning.utility.EqualConstantsClasses;
 import uk.ac.ox.cs.pdq.reasoning.utility.FiringGraph;
 import uk.ac.ox.cs.pdq.reasoning.utility.MapFiringGraph;
@@ -40,46 +41,29 @@ import com.google.common.collect.Sets;
  * @author Efthymia Tsamoura
  *
  */
-public class DatabaseListState extends DatabaseChaseState implements ListState {
-
+public class DatabaseRestrictedState extends DatabaseChaseState implements ListState {
 
 	/** The _is failed. */
 	private boolean _isFailed = false;
-
-	/**  The state's facts. */
-	protected Collection<Atom> facts;
-
-	/**  The firings that took place in this state. */
-	protected FiringGraph graph;
 
 	/**  Keeps the classes of equal constants *. */
 	protected EqualConstantsClasses constantClasses;
 	
 	/** The canonical names. */
 	protected final boolean canonicalNames = true;
-
-	/**
-	 * Instantiates a new database list state.
-	 *
-	 * @param query the query
-	 * @param manager the manager
-	 */
-	public DatabaseListState(Query<?> query, DBHomomorphismManager manager) {
-		this(manager, Sets.newHashSet(query.getCanonical().getAtoms()), new MapFiringGraph(), inferEqualConstantsClasses(query.getCanonical().getAtoms()));
-		this.manager.addFacts(this.facts);
-	}
-
+	
+	
 	/**
 	 * Instantiates a new database list state.
 	 *
 	 * @param manager the manager
 	 * @param facts the facts
 	 */
-	public DatabaseListState(
+	public DatabaseRestrictedState(
 			DBHomomorphismManager manager,
 			Collection<Atom> facts) {
-		this(manager, facts, new MapFiringGraph(), inferEqualConstantsClasses(facts));
-		this.manager.addFacts(this.facts);
+		this(manager, facts, inferEqualConstantsClasses(facts));
+//		this.manager.addFacts(this.facts);
 	}
 
 	/**
@@ -90,20 +74,18 @@ public class DatabaseListState extends DatabaseChaseState implements ListState {
 	 * @param graph the graph
 	 * @param constantClasses the constant classes
 	 */
-	protected DatabaseListState(
+	protected DatabaseRestrictedState(
 			DBHomomorphismManager manager,
 			Collection<Atom> facts,
-			FiringGraph graph, 
 			EqualConstantsClasses constantClasses
 			) {
 		super(manager);
 		Preconditions.checkNotNull(facts);
-		Preconditions.checkNotNull(graph);
-		this.facts = facts;
-		this.graph = graph;
+//		this.facts = facts;
 		this.constantClasses = constantClasses;
+		this.manager.addFacts(facts);
 	}
-
+	
 	/**
 	 * Infer equal constants classes.
 	 *
@@ -119,7 +101,7 @@ public class DatabaseListState extends DatabaseChaseState implements ListState {
 		}
 		return constantClasses;
 	}
-
+	
 	/**
 	 * Updates that state given the input match. 
 	 *
@@ -130,14 +112,18 @@ public class DatabaseListState extends DatabaseChaseState implements ListState {
 	public boolean chaseStep(Match match) {	
 		return this.chaseStep(Sets.newHashSet(match));
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState#chaseStep(java.util.Collection)
 	 */
 	@Override
 	public boolean chaseStep(Collection<Match> matches) {
 		Preconditions.checkNotNull(matches);
+		long start1 = System.currentTimeMillis();
 		Collection<Atom> created = new LinkedHashSet<>();
+		
+		System.out.println("Total number of matches: " + matches.size());
+		/*
 		//For each fired EGD create classes of equivalent constants
 		for(Match match:matches) {
 			Constraint dependency = (Constraint) match.getQuery();
@@ -146,7 +132,7 @@ public class DatabaseListState extends DatabaseChaseState implements ListState {
 			Formula left = grounded.getLeft();
 			Formula right = grounded.getRight();
 			if(dependency instanceof EGD) {
-				for(Atom equality:right.getAtoms()) {
+				for(Predicate equality:right.getPredicates()) {
 					boolean successfull = this.constantClasses.add((Equality)equality);
 					if(!successfull) {
 						this._isFailed = true;
@@ -154,27 +140,28 @@ public class DatabaseListState extends DatabaseChaseState implements ListState {
 					}
 				}
 			}	
-			this.graph.put(dependency, Sets.newHashSet(left.getAtoms()), Sets.newHashSet(right.getAtoms()));
+			this.graph.put(dependency, Sets.newHashSet(left.getPredicates()), Sets.newHashSet(right.getPredicates()));
 		}
 
 		//Iterate over all the database facts and replace their chase constants based on the classes of equal constants 
 		//Delete the old facts from this state
-		Collection<Atom> obsoleteFacts = Sets.newHashSet();
+		Collection<Predicate> obsoleteFacts = Sets.newHashSet();
 		for(Match match:matches) {
 			if(match.getQuery() instanceof EGD) {
-				for(Atom fact:this.facts) {
+				for(Predicate fact:this.facts) {
 					List<Term> newTerms = Lists.newArrayList();
 					for(Term term:fact.getTerms()) {
 						EqualConstantsClass cls = this.constantClasses.getClass(term);;
 						newTerms.add(cls != null ? cls.getRepresentative() : term);
 					}
 					if(!newTerms.equals(fact.getTerms())) {
-						created.add(new Atom(fact.getSignature(), newTerms));
+						created.add(new Predicate(fact.getSignature(), newTerms));
 						obsoleteFacts.add(fact);
 					}
 				}
 			}
 		}
+*/		
 
 		//Do not add the Equalities inside the database
 		for(Match match:matches) {
@@ -183,20 +170,39 @@ public class DatabaseListState extends DatabaseChaseState implements ListState {
 				Map<Variable, Constant> mapping = match.getMapping();
 				Constraint grounded = dependency.fire(mapping, true);
 				Formula right = grounded.getRight();
-				for(Atom fact:right.getAtoms()) {
+				
+				/*
+				for(Predicate fact:right.getPredicates()) {
 					List<Term> newTerms = Lists.newArrayList();
 					for(Term term:fact.getTerms()) {
 						EqualConstantsClass cls = this.constantClasses.getClass(term);
 						newTerms.add(cls != null ? cls.getRepresentative() : term);
 					}
-					created.add(new Atom(fact.getSignature(), newTerms));
+					created.add(new Predicate(fact.getSignature(), newTerms));
 				}
+				*/
+				created.addAll(right.getAtoms());
 			}
 		}
-
+		
+		long end1 = System.currentTimeMillis();
+		System.out.println("Time to do inmemory staff: " + (end1-start1));
+		
+		/*
+		long start2 = System.currentTimeMillis();
 		this.facts.removeAll(obsoleteFacts);
 		this.manager.deleteFacts(obsoleteFacts);
+		long end2 = System.currentTimeMillis();
+		System.out.println("Time to delete facts: " + (end2-start2));
+		*/
+		
+		
+		long start3 = System.currentTimeMillis();
 		this.addFacts(created);
+		long end3 = System.currentTimeMillis();
+		
+		System.out.println("Time to insert facts: " + (end3-start3));
+		
 		return !this._isFailed;
 	}
 
@@ -230,7 +236,7 @@ public class DatabaseListState extends DatabaseChaseState implements ListState {
 	 */
 	@Override
 	public FiringGraph getFiringGraph() {
-		return this.graph;
+		throw new java.lang.UnsupportedOperationException();
 	}
 
 	/* (non-Javadoc)
@@ -238,7 +244,7 @@ public class DatabaseListState extends DatabaseChaseState implements ListState {
 	 */
 	@Override
 	public Collection<Atom> getFacts() {
-		return this.facts;
+		throw new java.lang.UnsupportedOperationException();
 	}
 
 	/* (non-Javadoc)
@@ -246,18 +252,7 @@ public class DatabaseListState extends DatabaseChaseState implements ListState {
 	 */
 	@Override
 	public ChaseState merge(ChaseState s) {
-		Preconditions.checkState(s instanceof DatabaseListState);
-		Collection<Atom> facts =  new LinkedHashSet<>(this.facts);
-		facts.addAll(s.getFacts());
-
-		EqualConstantsClasses classes = this.constantClasses.clone();
-		if(!classes.merge(((DatabaseListState)s).constantClasses)) {
-			return null;
-		}
-		return new DatabaseListState(
-				this.getManager(),
-				facts, 
-				this.getFiringGraph().merge(s.getFiringGraph()), classes);
+		throw new java.lang.UnsupportedOperationException();
 	}
 
 	/* (non-Javadoc)
@@ -266,16 +261,62 @@ public class DatabaseListState extends DatabaseChaseState implements ListState {
 	@Override
 	public void addFacts(Collection<Atom> facts) {
 		this.manager.addFacts(facts);
-		this.facts.addAll(facts);
 	}
 
 	/* (non-Javadoc)
 	 * @see uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseState#clone()
 	 */
 	@Override
-	public DatabaseListState clone() {
-		return new DatabaseListState(this.manager, Sets.newHashSet(this.facts), this.graph.clone(), this.constantClasses.clone());
+	public DatabaseRestrictedState clone() {
+//		return new DatabaseRestrictedState(this.manager, Sets.newHashSet(this.facts), this.constantClasses.clone());
+		throw new java.lang.UnsupportedOperationException();
 	}	
 
+
+	/**
+	 * Calls the manager to detect homomorphisms of the input query to facts in this state.
+	 * The manager detects homomorphisms using a database backend.
+	 * @param query Query
+	 * @return List<Match>
+	 * @see uk.ac.ox.cs.pdq.chase.state.ChaseState#getMatches(Query)
+	 */
+	@Override
+	public List<Match> getMatches(Query<?> query) {
+		return this.manager.getMatches(
+				Lists.<Query<?>>newArrayList(query),
+//				HomomorphismConstraint.createTopKConstraint(1),
+				HomomorphismProperty.createFactProperty(Conjunction.of(this.getFacts())),
+				HomomorphismProperty.createMapProperty(query.getFreeToCanonical()));
+	}
+	
+	/**
+	 * Calls the manager to detect homomorphisms of the input query to facts in this state.
+	 * The manager detects homomorphisms using a database backend.
+	 *
+	 * @param query Query
+	 * @param constraints the constraints
+	 * @return List<Match>
+	 * @see uk.ac.ox.cs.pdq.chase.state.ChaseState#getMatches(Query)
+	 */
+	@Override
+	public List<Match> getMatches(Query<?> query, HomomorphismProperty... constraints) {
+		HomomorphismProperty[] c = new HomomorphismProperty[constraints.length+1];
+		System.arraycopy(constraints, 0, c, 0, constraints.length);
+		c[constraints.length] = HomomorphismProperty.createFactProperty(Conjunction.of(this.getFacts()));
+		return this.manager.getMatches(Lists.<Query<?>>newArrayList(query), c);
+	}
+
+	/**
+	 * Calls the manager to detect homomorphisms of the input dependencies to facts in this state.
+	 * The manager detects homomorphisms using a database backend.
+	 * @param dependencies Collection<D>
+	 * @param constraints HomomorphismConstraint...
+	 * @return Map<D,List<Match>>
+	 * @see uk.ac.ox.cs.pdq.chase.state.ChaseState#getHomomorphisms(Collection<D>)
+	 */
+	@Override
+	public List<Match> getMatches(Collection<? extends Constraint> dependencies, HomomorphismProperty... constraints) {
+		return this.manager.getMatches(dependencies, constraints);
+	}
 
 }

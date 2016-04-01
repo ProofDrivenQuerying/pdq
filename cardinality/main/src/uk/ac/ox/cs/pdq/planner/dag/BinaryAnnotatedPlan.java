@@ -110,7 +110,7 @@ public class BinaryAnnotatedPlan extends DAGAnnotatedPlan {
 	 * @param dependencies the dependencies
 	 */
 	public void reasonUntilTermination(Chaser chaser, Query<?> query, Collection<? extends Constraint> dependencies) {
-		chaser.reasonUntilTermination(this.getState(), query, dependencies);
+		chaser.reasonUntilTermination(this.getState(), dependencies);
 	}
 
 	/**

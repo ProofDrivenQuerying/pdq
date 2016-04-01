@@ -284,4 +284,10 @@ public class EGD
 //		}
 		return f + this.left + LogicalSymbols.IMPLIES + this.right;
 	}
+	
+	@Override
+	public EGD clone() {
+		return new EGD(this.getBody(), 
+				Conjunction.of(Lists.newArrayList(this.getHead().getChildren())));
+	}
 }

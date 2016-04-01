@@ -199,7 +199,7 @@ public class PushEqualityRewriter<F extends Formula> implements Rewriter<F, F> {
 		if (pred.isEquality()) {
 			return null;
 		}
-		return new Atom(pred.getSignature(), this.propagate(pred.getTerms()));
+		return new Atom(pred.getPredicate(), this.propagate(pred.getTerms()));
 	}
 
 	/**

@@ -98,7 +98,7 @@ public class VeryShortDependencyWriter<T extends Constraint>
 		for (Atom a : tgd.getLeft().getAtoms()) {
 			result.append(sep);
 			Atom f = a;
-			result.append(f.getSignature().getName());
+			result.append(f.getPredicate().getName());
 			result.append('(' + joinTerms(f.getTerms(), ", ") + ')');
 			sep = " " + LogicalSymbols.AND + ' ';
 		}
@@ -107,7 +107,7 @@ public class VeryShortDependencyWriter<T extends Constraint>
 		for (Atom a : tgd.getRight().getAtoms()) {
 			result.append(sep);
 			Atom f = a;
-			result.append(f.getSignature().getName());
+			result.append(f.getPredicate().getName());
 			result.append('(' + joinTerms(f.getTerms(), ", ") + ')');
 			sep = " " + LogicalSymbols.AND + ' ';
 		}
@@ -126,26 +126,26 @@ public class VeryShortDependencyWriter<T extends Constraint>
 			Map<Term, Attribute> leftAttributes = new LinkedHashMap<>();
 			for (Atom p: tgd.getLeft()) {
 				for (int i = 0, l = p.getTermsCount(); i < l; i++) {
-					leftAttributes.put(p.getTerm(i), ((Relation) p.getSignature()).getAttribute(i));
+					leftAttributes.put(p.getTerm(i), ((Relation) p.getPredicate()).getAttribute(i));
 				}
 			}
 			Map<Term, Attribute> rightAttributes = new LinkedHashMap<>();
 			for (Atom p: tgd.getRight()) {
 				for (int i = 0, l = p.getTermsCount(); i < l; i++) {
-					rightAttributes.put(p.getTerm(i), ((Relation) p.getSignature()).getAttribute(i));
+					rightAttributes.put(p.getTerm(i), ((Relation) p.getPredicate()).getAttribute(i));
 				}
 			}
 			leftAttributes.keySet().retainAll(rightAttributes.keySet());
 			rightAttributes.keySet().retainAll(leftAttributes.keySet());
 
-			result.append(tgd.getLeft().iterator().next().getSignature().getName());
+			result.append(tgd.getLeft().iterator().next().getPredicate().getName());
 			String sep = "(";
 			for (Attribute a: leftAttributes.values()) {
 				result.append(sep).append(a.getName());
 				sep = ",";
 			}
 			result.append("): ");
-			result.append(tgd.getRight().iterator().next().getSignature().getName());
+			result.append(tgd.getRight().iterator().next().getPredicate().getName());
 			sep = "(";
 			for (Attribute a: rightAttributes.values()) {
 				result.append(sep).append(a.getName());

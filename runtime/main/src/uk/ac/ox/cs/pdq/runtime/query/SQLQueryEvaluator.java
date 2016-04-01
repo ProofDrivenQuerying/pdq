@@ -253,7 +253,7 @@ public class SQLQueryEvaluator implements QueryEvaluator {
 	private static Properties findRelationalProperties(Query<?> query) {
 		Properties result = null;
 		for (Atom pred: query.getAtoms()) {
-			Predicate sig = pred.getSignature();
+			Predicate sig = pred.getPredicate();
 			Properties properties = new Properties();
 			if (sig instanceof Relation) {
 				properties.putAll(((Relation) sig).getProperties());

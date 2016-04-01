@@ -97,14 +97,14 @@ public class QueryGeneratorSecond extends QueryGeneratorFirst{
 		Map<String, InclusionDependencyGraphNode> nodes = new TreeMap<>();
 		for (LinearGuarded guardedDependency:guardedDependencies) {
 			Atom l = guardedDependency.getLeft().getAtoms().get(0);
-			Predicate s = l.getSignature();
+			Predicate s = l.getPredicate();
 			InclusionDependencyGraphNode ln = nodes.get(s.getName());
 			if (ln == null) {
 				ln = new InclusionDependencyGraphNode((Relation) s);
 				nodes.put(s.getName(), ln);
 			}
 			Atom r = guardedDependency.getRight().getAtoms().get(0);
-			s = r.getSignature();
+			s = r.getPredicate();
 			InclusionDependencyGraphNode rn = nodes.get(s.getName());
 			if (rn == null) {
 				rn = new InclusionDependencyGraphNode((Relation) s);

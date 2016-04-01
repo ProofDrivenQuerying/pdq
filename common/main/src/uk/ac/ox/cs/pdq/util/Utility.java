@@ -331,7 +331,7 @@ public class Utility {
 			if (t instanceof Variable) {
 				boolean found = false;
 				for (Atom p : q.getBody()) {
-					Predicate s = p.getSignature();
+					Predicate s = p.getPredicate();
 					if (s instanceof Relation) {
 						Relation r = (Relation) s;
 						int i = 0;
@@ -402,7 +402,7 @@ public class Utility {
 				continue;
 			}
 			for (Atom f: q.getBody().getAtoms()) {
-				Predicate s = f.getSignature();
+				Predicate s = f.getPredicate();
 				if (s instanceof Relation) {
 					List<Integer> pos = f.getTermPositions(t);
 					if (!pos.isEmpty()) {

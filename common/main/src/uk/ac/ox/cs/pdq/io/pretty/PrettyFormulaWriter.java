@@ -135,7 +135,7 @@ public class PrettyFormulaWriter<T extends Formula> extends PrettyWriter<T> impl
 	 * @param formula AtomicFormula
 	 */
 	public void write(PrintStream out, Atom formula) {
-		out.print(formula.getSignature().getName());
+		out.print(formula.getPredicate().getName());
 		out.print('(' + joinTerms(formula.getTerms(), ", ") + ')');
 	}
 

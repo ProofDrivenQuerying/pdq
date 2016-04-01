@@ -2,7 +2,6 @@ package uk.ac.ox.cs.pdq.reasoning.homomorphism;
 
 import java.util.Collection;
 
-import uk.ac.ox.cs.pdq.fol.Evaluatable;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Query;
 
@@ -10,6 +9,7 @@ import uk.ac.ox.cs.pdq.fol.Query;
 /**
  * Extends the HomomorphismDetector interface by providing a way to add facts.
  *
+ * @author Efthymuia Tsamoura
  * @author Julien Leblay
  * @author George Konstantinidis
  */
@@ -35,14 +35,7 @@ public interface HomomorphismManager extends HomomorphismDetector {
 	void initialize();
 
 	/**
-	 * Initialises the manager with queries.
-	 *
-	 * @param queries the queries
-	 */
-	void initialize(Collection<Evaluatable> queries); 
-
-	/**
-	 * This method initializes the homomomorphism machinery (e.g., any indices) needed to later find a homomorphism from a specific query
+	 * Initializes the homomomorphism machinery (e.g., any indices) needed to later find a homomorphism from a specific query
 	 * Note that in some implementations after you detect the homomorphisms from a query you have "consumed" any related machinery and you should make sure you cleeanup, by calling the manager's clearQuery method.
 	 *
 	 * @param query the query
@@ -50,7 +43,7 @@ public interface HomomorphismManager extends HomomorphismDetector {
 	void addQuery(Query<?> query);
 
 	/**
-	 * This method clears the homomomorphism machinery (e.g., any indices) constructed for an earlier query. In certain implementation one needs to call this before adding a new Query.
+	 * Clears the homomomorphism machinery (e.g., any indices) constructed for an earlier query. In certain implementation one needs to call this before adding a new Query.
 	 */
 	void clearQuery();
 }

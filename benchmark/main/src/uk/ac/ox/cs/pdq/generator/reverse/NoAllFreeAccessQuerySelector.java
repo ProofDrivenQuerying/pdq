@@ -24,7 +24,7 @@ public class NoAllFreeAccessQuerySelector implements QuerySelector {
 	public boolean accept(Query<?> q) {
 		boolean result = true;
 		for (Atom p: q.getBody().getAtoms()) {
-			Predicate s = p.getSignature();
+			Predicate s = p.getPredicate();
 			boolean hasFreeAccess = false;
 			if (s instanceof Relation) {
 				for (AccessMethod am: ((Relation) s).getAccessMethods()) {

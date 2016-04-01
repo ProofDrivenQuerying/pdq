@@ -11,6 +11,7 @@ import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.logging.performance.StatisticsCollector;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -43,10 +44,9 @@ public abstract class Chaser {
 	 *
 	 * @param <S> the generic type
 	 * @param instance the instance
-	 * @param target the target
 	 * @param dependencies the dependencies
 	 */
-	public abstract <S extends ChaseState> void reasonUntilTermination(S instance, Query<?> target, Collection<? extends Constraint> dependencies);
+	public abstract <S extends ChaseState> void reasonUntilTermination(S instance, Collection<? extends Constraint> dependencies);
 	
 	/**
 	 * Entails.
@@ -58,7 +58,7 @@ public abstract class Chaser {
 	 * @param constraints the constraints
 	 * @return 		true if the input instance with the given set of free variables and constraints implies the target query.
 	 */
-	public abstract <S extends ChaseState> boolean entails(S instance, Map<Variable, Constant> free, Query<?> target, Collection<? extends Constraint> constraints);
+	public abstract <S extends ChaseState> boolean entails(S instance, Map<Variable, Constant> free, Query<?> target, Collection<? extends Constraint<?,?>> constraints);
 	
 	
 	/**
@@ -70,7 +70,7 @@ public abstract class Chaser {
 	 * @param constraints the constraints
 	 * @return 		true if the source query entails the target query
 	 */
-	public abstract <S extends ChaseState> boolean entails(Query<?> source, Query<?> target, Collection<? extends Constraint> constraints);
+	public abstract boolean entails(Query<?> source, Query<?> target, Collection<? extends Constraint<?,?>> constraints, HomomorphismDetector detector);
 	
 
 	/* (non-Javadoc)

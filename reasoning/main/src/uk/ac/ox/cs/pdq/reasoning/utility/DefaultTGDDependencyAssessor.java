@@ -32,7 +32,7 @@ import com.google.common.collect.Multimap;
 *
 */
 
-public final class DefaultRestrictedChaseDependencyAssessor implements RestrictedChaseDependencyAssessor{
+public final class DefaultTGDDependencyAssessor implements TGDDependencyAssessor{
 
 	/**  The facts of this database instance*. */
 	private Collection<Atom> stateFacts = null;
@@ -53,7 +53,7 @@ public final class DefaultRestrictedChaseDependencyAssessor implements Restricte
 	 *
 	 * @param dependencies the dependencies
 	 */
-	public DefaultRestrictedChaseDependencyAssessor(Collection<? extends Constraint> dependencies) {
+	public DefaultTGDDependencyAssessor(Collection<? extends Constraint> dependencies) {
 		Preconditions.checkNotNull(dependencies);
 		this.dependencies = Lists.newArrayList();
 		List<Constraint> egds = Lists.newArrayList();
@@ -62,7 +62,7 @@ public final class DefaultRestrictedChaseDependencyAssessor implements Restricte
 		//Build the dependency map
 		for(Constraint dependency:dependencies) {
 			for(Atom atom:dependency.getLeft().getAtoms()) {
-				Predicate s = atom.getSignature();
+				Predicate s = atom.getPredicate();
 				if(dependency instanceof EGD) {
 					this.egdMap.put(s.getName(), (EGD) dependency);
 					egds.add(dependency);
@@ -96,17 +96,17 @@ public final class DefaultRestrictedChaseDependencyAssessor implements Restricte
 		
 		Multimap<String, Atom> newFactsMap = ArrayListMultimap.create();
 		for(Atom fact:newFacts) {
-			newFactsMap.put(fact.getSignature().getName(), fact);
+			newFactsMap.put(fact.getPredicate().getName(), fact);
 		}
 		
 		Multimap<String, Atom> allFactsMap = ArrayListMultimap.create();
 		for(Atom fact:state.getFacts()) {
-			allFactsMap.put(fact.getSignature().getName(), fact);
+			allFactsMap.put(fact.getPredicate().getName(), fact);
 		}
 		
 		for(Constraint dependency:this.dependencies) {
 			for(Atom atom:dependency.getLeft().getAtoms()) {
-				Predicate s = atom.getSignature();
+				Predicate s = atom.getPredicate();
 				if(dependency instanceof TGD && newFactsMap.keySet().contains(s.getName())) {
 					constraints.add(dependency);
 					break;

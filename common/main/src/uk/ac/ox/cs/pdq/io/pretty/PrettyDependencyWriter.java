@@ -62,14 +62,14 @@ public class PrettyDependencyWriter extends PrettyWriter<Constraint> implements 
 		String sep = "";
 		for (Atom f: tgd.getLeft().getAtoms()) {
 			out.print(sep);
-			out.print(f.getSignature().getName());
+			out.print(f.getPredicate().getName());
 			out.print('(' + joinTerms(f.getTerms(), ", ") + ')');
 			sep = (this.indented ? "\n" : " ") + LogicalSymbols.AND + ' ';
 		}
 		sep = (this.indented ? "\n\t" : " ")  + LogicalSymbols.IMPLIES + ' ';
 		for (Atom f : tgd.getRight().getAtoms()) {
 			out.print(sep);
-			out.print(f.getSignature().getName());
+			out.print(f.getPredicate().getName());
 			out.print('(' + joinTerms(f.getTerms(), ", ") + ')');
 			sep = (this.indented ? "\n\t" : " ") + LogicalSymbols.AND + ' ';
 		}

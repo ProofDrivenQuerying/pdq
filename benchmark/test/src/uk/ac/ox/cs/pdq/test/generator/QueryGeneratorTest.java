@@ -334,11 +334,11 @@ public class QueryGeneratorTest extends ParameterizedTest {
 	public void testNoRepeatedRelationQuery(ConjunctiveQuery q) {
 		Set<Predicate> predicates = new LinkedHashSet<>();
 		for (Atom p: q.getBody()) {
-			if (predicates.contains(p.getSignature())) {
+			if (predicates.contains(p.getPredicate())) {
 				fail("Repeated relation found in " + q);
 				return;
 			}
-			predicates.add(p.getSignature());
+			predicates.add(p.getPredicate());
 		}
 	}
 

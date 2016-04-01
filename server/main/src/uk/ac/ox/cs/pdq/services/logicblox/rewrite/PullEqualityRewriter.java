@@ -196,6 +196,6 @@ public class PullEqualityRewriter<F extends Formula> implements Rewriter<F, F> {
 				results.add(t);
 			}
 		}
-		return new Atom(pred.getSignature(), results);
+		return new Atom(pred.getPredicate(), results);
 	}
 }

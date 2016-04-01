@@ -388,7 +388,7 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 	@Override
 	public boolean contains(Predicate s) {
 		for (Atom atom: this.getAtoms()) {
-			if (atom.getSignature().equals(s)) {
+			if (atom.getPredicate().equals(s)) {
 				return true;
 			}
 		}

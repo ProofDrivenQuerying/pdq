@@ -59,8 +59,8 @@ public class DAGPlanToConjunctiveQuery implements Rewriter<DAGPlan, ConjunctiveQ
 		
 		Map<Term, Term> mapping = new LinkedHashMap<>();
 		List<? extends Term> headTerms = input.getOutput();
-		if (this.head.getSignature().getArity() > 0) {
-			assert this.head.getSignature().getArity() == input.getOutput().size();
+		if (this.head.getPredicate().getArity() > 0) {
+			assert this.head.getPredicate().getArity() == input.getOutput().size();
 			headTerms = this.head.getTerms();
 			for (int i = 0, l = headTerms.size(); i < l; i++) {
 				Term t = input.getOutput().get(i);

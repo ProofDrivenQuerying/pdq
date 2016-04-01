@@ -1,9 +1,5 @@
 package uk.ac.ox.cs.pdq.reasoning.homomorphism;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -18,25 +14,27 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 
-import uk.ac.ox.cs.pdq.algebra.predicates.EqualityPredicate;
 import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.db.Constraint;
+import uk.ac.ox.cs.pdq.db.EGD;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TGD;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Evaluatable;
 import uk.ac.ox.cs.pdq.fol.Formula;
-import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Skolem;
+import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager.DBRelation;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismConstraint.EGDHomomorphismConstraint;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismConstraint.FactConstraint;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismConstraint.MapConstraint;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismProperty.ActiveTriggerProperty;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismProperty.EGDHomomorphismProperty;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismProperty.FactProperty;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismProperty.MapProperty;
 import uk.ac.ox.cs.pdq.util.Utility;
 
+import com.beust.jcommander.internal.Lists;
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.BiMap;
@@ -46,9 +44,8 @@ import com.google.common.collect.Multimap;
 
 // TODO: Auto-generated Javadoc
 /**
- * Creates SQL statements for relation database-backed homomorphism detectors.
+ * Creates SQL statements to detect homomorphisms or add/delete facts in a database.
  *
- * @author George Konstantinidis
  * @author Efthymia Tsamoura
  */
 public abstract class SQLStatementBuilder {
@@ -56,106 +53,33 @@ public abstract class SQLStatementBuilder {
 	/** Logger. */
 	private static Logger log = Logger.getLogger(SQLStatementBuilder.class);
 
-	/**  Aliases for facts *. */
+	/**  Aliases for the relations in the query FROM statements. */
 	protected BiMap<Atom, String> aliases = HashBiMap.create();
 
 	/** The alias prefix. */
 	private String aliasPrefix = "A";
-	
+
 	/** The alias counter. */
 	private int aliasCounter = 0;
-
-	/** The clean name counter. */
-	public int cleanNameCounter = 0;
-	
-	/**  maps all relation names to clean ones *. */
-	protected BiMap<String, String> cleanMap = HashBiMap.create();
-	
-	/**
-	 * Instantiates a new SQL statement builder.
-	 */
-	public SQLStatementBuilder() {
-	}
-	
-	/**
-	 * Instantiates a new SQL statement builder.
-	 *
-	 * @param cleanMap the clean map
-	 */
-	protected SQLStatementBuilder(BiMap<String, String> cleanMap) {
-		Preconditions.checkNotNull(cleanMap);
-		this.cleanMap = cleanMap;
-	}
-
-	/**
-	 * Setup statements.
-	 *
-	 * @param databaseName the database name
-	 * @return the complete list of SQL statements required to set up the facts database
-	 */
-	public abstract Collection<String> setupStatements(String databaseName);
-
-	/**
-	 * Cleanup statements.
-	 *
-	 * @param databaseName String
-	 * @return the complete list of SQL statements required to clean up the fact database
-	 */
-	public abstract Collection<String> cleanupStatements(String databaseName);
-
-	/**
-	 * Drop table statement.
-	 *
-	 * @param relation the table to drop
-	 * @return a SQL statement for dropping the input table
-	 */
-	protected String dropTableStatement(DBRelation relation) {
-		return "DROP TABLE " + this.encodeName(relation.getName());
-	}
-
-	/**
-	 * Encode name.
-	 *
-	 * @param dirtyRelationName the dirty relation name
-	 * @return a new String that is a copy of the given name modified such that
-	 * it is acceptable for the underlying system
-	 */
-	public String encodeName(String dirtyRelationName) {
-		if(!this.cleanMap.containsKey(dirtyRelationName))
-			this.cleanMap.put(dirtyRelationName, "cleanR"+cleanNameCounter++);
-		return this.cleanMap.get(dirtyRelationName);
-	}
-	
-	/**
-	 * Decode name.
-	 *
-	 * @param cleanRelationName the clean relation name
-	 * @return the string
-	 */
-	public String decodeName(String cleanRelationName) {
-		return this.cleanMap.inverse().get(cleanRelationName);
-	}
-	
 
 	/**
 	 * Make inserts.
 	 *
 	 * @param facts the facts
-	 * @param dbrelations the dbrelations
+	 * @param toDatabaseTables the dbrelations
 	 * @return insert statements that add the input fact to the fact database.
 	 */
-	protected Collection<String> makeInserts(Collection<? extends Atom> facts, Map<String, DBRelation> dbrelations) {
+	protected Collection<String> createInsertStatements(Collection<? extends Atom> facts, Map<String, DatabaseRelation> toDatabaseTables) {
 		Collection<String> result = new LinkedList<>();
-		for (Atom fact : facts) {
-			DBRelation rel = dbrelations.get(fact.getName());
+		for (Atom fact:facts) {
+			DatabaseRelation relation = toDatabaseTables.get(fact.getName());
 			List<Term> terms = fact.getTerms();
-			String insertInto = "INSERT INTO " + this.encodeName(rel.getName()) + " " + "VALUES ( ";
+			String insertInto = "INSERT INTO " + relation.getName() + " " + "VALUES ( ";
 			for (Term term : terms) {
 				if (!term.isVariable()) {
 					insertInto += "'" + term + "'" + ",";
 				}
 			}
-			insertInto += 0 + ",";
 			insertInto += fact.getId();
 			insertInto += ")";
 			result.add(insertInto);
@@ -163,24 +87,47 @@ public abstract class SQLStatementBuilder {
 		log.trace(result);
 		return result;
 	}
-	
+
+	protected abstract String createBulkInsertStatement(Relation relation, Collection<? extends Atom> facts, Map<String, DatabaseRelation> toDatabaseTables);
+
 	/**
 	 * Make deletes.
 	 *
 	 * @param facts 		Facts to delete from the database
-	 * @param aliases 		Map of schema relation names to *clean* names
+	 * @param toDatabaseTables 		Map of schema relation names to *clean* names
 	 * @return 		a set of statements that delete the input facts from the fact database.
 	 */
-	protected Collection<String> makeDeletes(Collection<? extends Atom> facts, Map<String, DBRelation> aliases) {
+	protected Collection<String> createDeleteStatements(Collection<? extends Atom> facts, Map<String, DatabaseRelation> toDatabaseTables) {
 		Collection<String> result = new LinkedList<>();
-		for (Atom fact : facts) {
-			Relation alias = aliases.get(fact.getName());
-			String delete = "DELETE FROM " + this.encodeName(alias.getName()) + " " + "WHERE ";
-			Attribute attribute = alias.getAttributes().get(alias.getAttributes().size()-1);
+		for (Atom fact:facts) {
+			Relation relation = toDatabaseTables.get(fact.getName());
+			String delete = "DELETE FROM " + relation.getName() + " " + "WHERE ";
+			Attribute attribute = DatabaseRelation.Fact;
 			delete += attribute.getName() + "=" + fact.getId();
 			result.add(delete);
 		}
 		return result;
+	}
+
+	/**
+	 * Make deletes.
+	 *
+	 * @param facts 		Facts to delete from the database
+	 * @param toDatabaseTables 		Map of schema relation names to *clean* names
+	 * @return 		a set of statements that delete the input facts from the fact database.
+	 */
+	protected String createBulkDeleteStatement(Relation relation, Collection<? extends Atom> facts, Map<String, DatabaseRelation> toDatabaseTables) {
+		String insertInto = "DELETE FROM " + toDatabaseTables.get(relation.getName()).getName() + " " + "WHERE "; 
+		insertInto += DatabaseRelation.Fact.getName();
+		insertInto += " IN" + "\n"; 
+
+		List<String> tuples = Lists.newArrayList();
+		for (Atom fact:facts) {
+			String tuple = "(" + fact.getId() + ")";
+			tuples.add(tuple);
+		}
+		insertInto += "(" + Joiner.on(",").join(tuples) + ")" + ";";
+		return insertInto;
 	}
 
 	/**
@@ -189,9 +136,9 @@ public abstract class SQLStatementBuilder {
 	 * @param relation the table to create
 	 * @return a SQL statement that creates the fact table of the given relation
 	 */
-	protected String createTableStatement(DBRelation relation) {
+	protected String createTableStatement(DatabaseRelation relation) {
 		StringBuilder result = new StringBuilder();
-		result.append("CREATE TABLE  ").append(this.encodeName(relation.getName())).append('(');
+		result.append("CREATE TABLE  ").append(relation.getName()).append('(');
 		for (int it = 0; it < relation.getAttributes().size(); ++it) {
 			result.append(' ').append(relation.getAttributes().get(it).getName());
 			if (relation.getAttribute(it).getType() instanceof Class && String.class.isAssignableFrom((Class) relation.getAttribute(it).getType())) {
@@ -204,7 +151,7 @@ public abstract class SQLStatementBuilder {
 				throw new java.lang.IllegalArgumentException();
 			}
 		}
-		result.append(" PRIMARY KEY ").append("(").append("Fact").append(")");
+		result.append(" PRIMARY KEY ").append("(").append(DatabaseRelation.Fact.getName()).append(")");
 		result.append(')');
 		log.trace(relation);
 		log.trace(result);
@@ -220,7 +167,7 @@ public abstract class SQLStatementBuilder {
 	 * @param columns the columns
 	 * @return a SQL statement that creates an index for the columns of the input relation
 	 */
-	protected Pair<String,String> createTableIndex(boolean isForQuery,Set<String> constraintIndices,DBRelation relation, Integer... columns) {
+	protected Pair<String,String> createTableIndices(boolean isForQuery, Set<String> constraintIndices, DatabaseRelation relation, Integer... columns) {
 		StringBuilder indexName = new StringBuilder();
 		StringBuilder indexColumns = new StringBuilder();
 		String sep1 = "", sep2 = "";
@@ -230,21 +177,19 @@ public abstract class SQLStatementBuilder {
 			sep1 = "_";
 			sep2 = ",";
 		}
-		
-		if(isForQuery) //if the index is created for the query
-		{
+		//if the index is created for the query
+		if(isForQuery) {
 			//and is not already existing due to the constraints
-			if(constraintIndices.contains(this.encodeName(relation.getName()) + "_" + indexName))
+			if(constraintIndices.contains(relation.getName() + "_" + indexName))
 				return new ImmutablePair<String, String>(null,null);
 		}else{
-			constraintIndices.add(this.encodeName(relation.getName()) + "_" + indexName );
+			constraintIndices.add(relation.getName() + "_" + indexName );
 		}
-		String create = indexCreateStatement(relation,indexName,indexColumns);		
-		String drop =  indexDropStatement(relation,indexName,indexColumns);
-		
+		String create = this.createColumnIndexStatement(relation,indexName,indexColumns);		
+		String drop =  this.createDropIndexStatement(relation,indexName,indexColumns);
 		return new ImmutablePair<String, String>(create,drop);
 	}
-	
+
 	/**
 	 * Index create statement.
 	 *
@@ -253,11 +198,11 @@ public abstract class SQLStatementBuilder {
 	 * @param indexColumns the index columns
 	 * @return the string
 	 */
-	protected String indexCreateStatement(DBRelation relation, StringBuilder indexName, StringBuilder indexColumns) {
-		return "CREATE INDEX idx_" + this.encodeName(relation.getName()) + "_" + indexName +
-		" ON " + this.encodeName(relation.getName()) + "(" + indexColumns + ")";
+	protected String createColumnIndexStatement(DatabaseRelation relation, StringBuilder indexName, StringBuilder indexColumns) {
+		return "CREATE INDEX idx_" + relation.getName() + "_" + indexName + 
+				" ON " + relation.getName() + "(" + indexColumns + ")";
 	}
-	
+
 	/**
 	 * Index drop statement.
 	 *
@@ -266,33 +211,23 @@ public abstract class SQLStatementBuilder {
 	 * @param indexColumns the index columns
 	 * @return the string
 	 */
-	protected String indexDropStatement(DBRelation relation, StringBuilder indexName, StringBuilder indexColumns) {
-		return "DROP INDEX idx_" + this.encodeName(relation.getName()) + "_" + indexName +
-				" ON " + this.encodeName(relation.getName());
+	protected String createDropIndexStatement(DatabaseRelation relation, StringBuilder indexName, StringBuilder indexColumns) {
+		return "DROP INDEX idx_" + relation.getName() + "_" + indexName + 
+				" ON " + relation.getName(); 
 	}
 
 	/**
 	 * Clear tables.
 	 *
 	 * @param queryRelations the query relations
-	 * @param relationMap the relation map
+	 * @param toDatabaseRelation the relation map
 	 * @return the collection
 	 */
-	public Collection<String> clearTables(List<Atom> queryRelations, Map<String, DBRelation> relationMap) {
+	public Collection<String> createTruncateTableStatements(List<Atom> queryRelations, Map<String, DatabaseRelation> toDatabaseRelation) {
 		Set<String> result = new LinkedHashSet<>();
 		for(Atom pred: queryRelations)
-			result.add(this.createClearTable(relationMap.get(pred.getName())));
+			result.add("TRUNCATE TABLE  " + toDatabaseRelation.get(pred.getName()).getName());
 		return result;
-	}
-
-	/**
-	 * Creates the clear table.
-	 *
-	 * @param dbRelation the db relation
-	 * @return the string
-	 */
-	private String createClearTable(DBRelation dbRelation) {
-		return "TRUNCATE TABLE  "+this.encodeName(dbRelation.getName());
 	}
 
 	/**
@@ -302,21 +237,21 @@ public abstract class SQLStatementBuilder {
 	 * @param column the column
 	 * @return a SQL statement that creates an index for the bag and fact attributes of the database tables
 	 */
-	protected String createTableNonJoinIndexes(DBRelation relation, Attribute column) {
-		return "CREATE INDEX idx_" + this.encodeName(relation.getName()) + "_" + 
-				column.getName() + " ON " + this.encodeName(relation.getName()) + "(" + column.getName() + ")";
+	protected String createColumnIndexStatement(DatabaseRelation relation, Attribute column) {
+		return "CREATE INDEX idx_" + relation.getName() + "_" + 
+				column.getName() + " ON " + relation.getName() + "(" + column.getName() + ")"; 
 	}
 
 	/**
 	 * Creates the table indexes.
 	 *
 	 * @param isForQuery the is for query
-	 * @param relationMap the relation map
+	 * @param toDatabaseRelations the relation map
 	 * @param rule the rule
 	 * @param constraintIndices the constraint indices
 	 * @return the pair
 	 */
-	protected Pair<Collection<String>,Collection<String>> createTableIndexes(boolean isForQuery, Map<String, DBRelation> relationMap, Evaluatable rule, Set<String> constraintIndices) {
+	protected Pair<Collection<String>,Collection<String>> setupIndices(boolean isForQuery, Map<String, DatabaseRelation> toDatabaseRelations, Evaluatable rule, Set<String> constraintIndices) {
 		Conjunction<?> body = null;
 		if (rule.getBody() instanceof Atom) {
 			body = Conjunction.of((Atom) rule.getBody());
@@ -345,7 +280,7 @@ public abstract class SQLStatementBuilder {
 				for (Atom atom: atoms) {
 					for (int i = 0, l = atom.getTermsCount(); i < l; i++) {
 						if (atom.getTerm(i).equals(t)) {
-							Pair<String,String> createAndDropIndices = this.createTableIndex(isForQuery,constraintIndices, relationMap.get(atom.getName()), i);
+							Pair<String,String> createAndDropIndices = this.createTableIndices(isForQuery, constraintIndices, toDatabaseRelations.get(atom.getName()), i);
 							if(createAndDropIndices.getLeft() != null)
 								createIndices.add(createAndDropIndices.getLeft());
 							if(isForQuery && createAndDropIndices.getRight()!=null)
@@ -367,10 +302,10 @@ public abstract class SQLStatementBuilder {
 	 * @return
 	 * 		an SQL LIMIT statement 
 	 */
-	protected abstract String translateLimitConstraints(Evaluatable source, HomomorphismConstraint... constraints);
+	protected abstract String translateLimitConstraints(Evaluatable source, HomomorphismProperty... constraints);
 
 	/**
-	 * Creates and runs an SQL statement that detects homomorphisms of the input query to facts kept in a database.
+	 * Creates an SQL statement that detects homomorphisms of the input query to facts kept in a database.
 	 *
 	 * @param source the source
 	 * @param constraints 		A set of constraints that should be satisfied by the homomorphisms of the input formula to the facts of the database 
@@ -378,17 +313,16 @@ public abstract class SQLStatementBuilder {
 	 * @param connection the connection
 	 * @return homomorphisms of the input query to facts kept in a database.
 	 */
-	public Set<Map<Variable, Constant>> findHomomorphismsThroughSQL(Evaluatable source, HomomorphismConstraint[] constraints, Map<String, TypedConstant<?>> constants, Connection connection) {
+	public Pair<String,LinkedHashMap<String,Variable>> createQuery(Evaluatable source, HomomorphismProperty[] constraints) {
 
 		String query = "";
-		List<String> from = this.createContentForFromStatement(source);
-		LinkedHashMap<String,Variable> projectionStatementsAndVariables = this.createProjectionStatements(source);
+		List<String> from = this.createFromStatement(source);
+		LinkedHashMap<String,Variable> projectedVariables = this.createProjectionStatements(source);
 		List<String> predicates = new ArrayList<String>();
-		List<String> attributeEqualityPredicates = this.createAttributeEqualities((Conjunction<Atom>) source.getBody(), this.aliases);
-		List<String> attributeConstantEqualityPredicates = this.createEqualitiesWithConstants((Conjunction<Atom>) source.getBody(), this.aliases);
-		List<String> equalityForHomRestrictionsPredicates = this.createEqualitiesForHomConstraints(source, this.aliases, constraints);
-		
-		String egdConstraint = this.translateEGDHomomorphismConstraints(source, this.aliases, constraints);
+		List<String> equalityPredicates = this.createAttributeEqualities((Conjunction<Atom>) source.getBody());
+		List<String> constantEqualityPredicates = this.createEqualitiesWithConstants((Conjunction<Atom>) source.getBody());
+		List<String> equalityForHomRestrictionsPredicates = this.createEqualitiesForHomConstraints(source, constraints);
+
 
 		/*
 		 * if the target set of facts is not null, we
@@ -396,25 +330,66 @@ public abstract class SQLStatementBuilder {
 		 * of the facts that satisfy any homomorphism to the
 		 * identifiers of these facts
 		 */
-		List<String> factConstraints = this.translateFactConstraints(source, this.aliases, constraints);
+		List<String> factConstraints = this.translateFactConstraints(source, constraints);
 
+		String egdConstraint = this.translateEGDHomomorphismConstraints(source, constraints);
 		if(egdConstraint!=null) {
 			predicates.add(egdConstraint);
 		}
-		
-		predicates.addAll(attributeEqualityPredicates);
-		predicates.addAll(attributeConstantEqualityPredicates);
+		predicates.addAll(equalityPredicates);
+		predicates.addAll(constantEqualityPredicates);
 		predicates.addAll(equalityForHomRestrictionsPredicates);
 		predicates.addAll(factConstraints);
 
 		//Limit the number of returned homomorphisms
 		String limit = this.translateLimitConstraints(source, constraints); 
 
-		query = "SELECT " 	+ Joiner.on(",").join(projectionStatementsAndVariables.keySet()) + "\n" +  
+		query = "SELECT " 	+ Joiner.on(",").join(projectedVariables.keySet()) + "\n" +  
 				"FROM " 	+ Joiner.on(",").join(from);
 		if(!predicates.isEmpty()) {
 			query += "\n" + "WHERE " + Joiner.on(" AND ").join(predicates);
 		}	
+
+
+		boolean activeTriggerConstraint = false;
+		for(HomomorphismProperty c:constraints) {
+			if(c instanceof ActiveTriggerProperty) {
+				activeTriggerConstraint = true;
+				break;
+			}			
+		}
+
+		if(source instanceof Constraint && activeTriggerConstraint) {
+			List<String> from2 = null;
+			if(source instanceof TGD) {
+				from2 = this.createFromStatement(((TGD)source).getHead());
+			}
+			else if(source instanceof EGD) {
+				from2 = this.createFromStatement(((EGD)source).getHead());
+			}
+			LinkedHashMap<String,Variable> projectedVariables2 = this.createProjectionStatements(source);
+			List<String> predicates2 = new ArrayList<String>();
+			Conjunction<Atom> conjuncts = Conjunction.of(((Constraint)source).getAtoms());
+			List<String> attributeEqualityPredicates2 = this.createAttributeEqualities(conjuncts);
+			List<String> attributeConstantEqualityPredicates2 = this.createEqualitiesWithConstants(conjuncts);
+			predicates2.addAll(attributeEqualityPredicates2);
+			predicates2.addAll(attributeConstantEqualityPredicates2);
+
+			String query2 = 
+					"(SELECT " 	+ Joiner.on(",").join(projectedVariables2.keySet()) + "\n" +  
+							"FROM " 	+ Joiner.on(",").join(from2);
+			if(!predicates2.isEmpty()) {
+				query2 += "\n" + "WHERE " + Joiner.on(" AND ").join(predicates2);
+			}	
+			query2 += ")";
+
+			if(predicates.isEmpty()) {
+				query += "\n" + "WHERE " + " NOT EXISTS" + "\n" + query2;
+			}	
+			else {
+				query += "\n" + "AND " + " NOT EXISTS" + "\n" + query2;
+			}
+		}
 
 		if(limit != null) {
 			query += "\n" + limit;
@@ -424,50 +399,38 @@ public abstract class SQLStatementBuilder {
 		log.trace(query);
 		log.trace("\n\n");
 
-		/*
-		 * For each returned homomorphism (each homomorphism corresponds to each
-		 * returned tuple) we create a mapping of variables to constants.
-		 * We also maintain the bag where this homomorphism is found
-		 */
-		Set<Map<Variable, Constant>> maps = new LinkedHashSet<>();
-		try(Statement sqlStatement = connection.createStatement();
-				ResultSet resultSet = sqlStatement.executeQuery(query)) {
-			while (resultSet.next()) {
-
-				int f = 1;
-				Map<Variable, Constant> map = new LinkedHashMap<>();
-				for(Entry<String, Variable> entry:projectionStatementsAndVariables.entrySet()) {
-					Variable var = entry.getValue();
-					String assigned = resultSet.getString(f);
-					TypedConstant<?> constant = constants.get(assigned);
-					Constant constantTerm = constant != null ? constant : new Skolem(assigned);
-					map.put(var, constantTerm);
-					f++;
-				}
-				maps.add(map);
-			}
-		} catch (SQLException ex) {
-			log.debug(query);
-			throw new IllegalStateException(ex.getMessage(), ex);
-		}
-
-		return maps;
+		return Pair.of(query, projectedVariables);
 	}
 
-	
 	/**
 	 * Creates the content for from statement.
 	 *
 	 * @param source the source
 	 * @return 		a list of the table names that will be queried
 	 */
-	protected List<String> createContentForFromStatement(Evaluatable source) {
-		this.aliasCounter = 0;
+	protected List<String> createFromStatement(Evaluatable source) {
 		List<String> relations = new ArrayList<String>();
 		this.aliases = HashBiMap.create();;
 		for (Atom fact:source.getBody().getAtoms()) {
 			String aliasName = this.aliasPrefix + this.aliasCounter;
-			relations.add(createTableAliasingExpression(aliasName, (Relation) fact.getSignature()));
+			relations.add(createTableAliasingExpression(aliasName, (Relation) fact.getPredicate()));
+			this.aliases.put(fact, aliasName);
+			this.aliasCounter++;
+		}
+		return relations;
+	}
+
+	/**
+	 * Creates the content for from statement.
+	 *
+	 * @param source the source
+	 * @return 		a list of the table names that will be queried
+	 */
+	protected List<String> createFromStatement(Conjunction<? extends Atom> predicates) {
+		List<String> relations = new ArrayList<String>();
+		for (Atom fact:predicates) {
+			String aliasName = this.aliasPrefix + this.aliasCounter;
+			relations.add(createTableAliasingExpression(aliasName, (Relation) fact.getPredicate()));
 			this.aliases.put(fact, aliasName);
 			this.aliasCounter++;
 		}
@@ -491,7 +454,7 @@ public abstract class SQLStatementBuilder {
 			for (int it = 0; it < terms.size(); ++it) {
 				Term term = terms.get(it);
 				if (term instanceof Variable && !attributes.contains(((Variable) term).getName())) {
-					projected.put(createProjectionStatementForArgument(it, (Relation) fact.getSignature(), alias), (Variable)term);
+					projected.put(createProjectionStatementForArgument(it, (Relation) fact.getPredicate(), alias), (Variable)term);
 					attributes.add(((Variable) term));
 				}
 			}
@@ -503,10 +466,9 @@ public abstract class SQLStatementBuilder {
 	 * Creates the attribute equalities.
 	 *
 	 * @param source the source
-	 * @param aliases2 the aliases2
 	 * @return 		explicit equalities (String objects of the form A.x1 = B.x2) of the implicit equalities in the input conjunction (the latter is denoted by repetition of the same term)
 	 */
-	protected List<String> createAttributeEqualities(Conjunction<Atom> source, BiMap<Atom, String> aliases2) {
+	protected List<String> createAttributeEqualities(Conjunction<Atom> source) {
 		List<String> attributePredicates = new ArrayList<String>();
 		Collection<Term> terms = Utility.getTerms(source.getAtoms());
 		terms = Utility.removeDuplicates(terms);
@@ -519,17 +481,17 @@ public abstract class SQLStatementBuilder {
 				for (Integer pos:positions) {
 					if(leftPosition == null) {
 						leftPosition = pos;
-						leftRelation = (Relation) fact.getSignature();
-						leftAlias = aliases2.get(fact);
+						leftRelation = (Relation) fact.getPredicate();
+						leftAlias = this.aliases.get(fact);
 					}
 					else {					
 						Integer rightPosition = pos;
-						Relation rightRelation = (Relation) fact.getSignature();
-						String rightAlias = aliases2.get(fact);
-						
+						Relation rightRelation = (Relation) fact.getPredicate();
+						String rightAlias = this.aliases.get(fact);
+
 						StringBuilder result = new StringBuilder();
-						result.append(leftAlias==null ? this.encodeName(leftRelation.getName()):leftAlias).append(".").append(leftRelation.getAttribute(leftPosition).getName()).append('=');
-						result.append(rightAlias==null ? this.encodeName(rightRelation.getName()):rightAlias).append(".").append(rightRelation.getAttribute(rightPosition).getName());
+						result.append(leftAlias==null ? leftRelation.getName():leftAlias).append(".").append(leftRelation.getAttribute(leftPosition).getName()).append('=');
+						result.append(rightAlias==null ? rightRelation.getName():rightAlias).append(".").append(rightRelation.getAttribute(rightPosition).getName());
 						attributePredicates.add(result.toString());
 					}
 				}
@@ -543,19 +505,18 @@ public abstract class SQLStatementBuilder {
 	 * Creates the equalities with constants.
 	 *
 	 * @param source the source
-	 * @param aliases2 the aliases2
 	 * @return 		constant equality predicates
 	 */
-	protected List<String> createEqualitiesWithConstants(Conjunction<Atom> source, BiMap<Atom, String> aliases2) {
+	protected List<String> createEqualitiesWithConstants(Conjunction<Atom> source) {
 		List<String> constantPredicates = new ArrayList<>();
 		for (Atom fact:source.getAtoms()) {
-			String alias = aliases2.get(fact);
+			String alias = this.aliases.get(fact);
 			List<Term> terms = fact.getTerms();
 			for (int it = 0; it < terms.size(); ++it) {
 				Term term = terms.get(it);
 				if (!term.isVariable() && !term.isSkolem()) {
 					StringBuilder eq = new StringBuilder();
-					eq.append(alias==null ? this.encodeName(fact.getSignature().getName()):alias).append(".").append(((Relation) fact.getSignature()).getAttribute(it).getName()).append('=');
+					eq.append(alias==null ? fact.getPredicate().getName():alias).append(".").append(((Relation) fact.getPredicate()).getAttribute(it).getName()).append('=');
 					eq.append("'").append(((TypedConstant) term).toString()).append("'");
 					constantPredicates.add(eq.toString());
 				}
@@ -568,21 +529,20 @@ public abstract class SQLStatementBuilder {
 	 * Translate fact constraints.
 	 *
 	 * @param source the source
-	 * @param aliases2 the aliases2
 	 * @param constraints the constraints
 	 * @return 		predicates that correspond to fact constraints
 	 */
-	protected List<String> translateFactConstraints(Evaluatable source, BiMap<Atom, String> aliases2, HomomorphismConstraint... constraints) {
+	protected List<String> translateFactConstraints(Evaluatable source, HomomorphismProperty... constraints) {
 		List<String> setPredicates = new ArrayList<>();
-		for(HomomorphismConstraint c:constraints) {
-			if(c instanceof FactConstraint) {
+		for(HomomorphismProperty c:constraints) {
+			if(c instanceof FactProperty) {
 				List<Object> facts = new ArrayList<>();
-				for (Atom atom:((FactConstraint) c).atoms) {
+				for (Atom atom:((FactProperty) c).atoms) {
 					facts.add(atom.getId());
 				}
 				for(Atom fact:source.getBody().getAtoms()) {
-					String alias = aliases2.get(fact);
-					setPredicates.add(createSQLMembershipExpression(fact.getTermsCount()-1, facts, (Relation) fact.getSignature(), alias));
+					String alias = this.aliases.get(fact);
+					setPredicates.add(createSQLMembershipExpression(fact.getTermsCount()-1, facts, (Relation) fact.getPredicate(), alias));
 				}
 			}
 		}
@@ -593,21 +553,20 @@ public abstract class SQLStatementBuilder {
 	 * Creates the equalities for hom constraints.
 	 *
 	 * @param source the source
-	 * @param aliases2 the aliases2
 	 * @param constraints the constraints
 	 * @return 		predicates that correspond to canonical constraints
 	 */
-	protected List<String> createEqualitiesForHomConstraints(Evaluatable source, BiMap<Atom, String> aliases2, HomomorphismConstraint... constraints) {
+	protected List<String> createEqualitiesForHomConstraints(Evaluatable source, HomomorphismProperty... constraints) {
 		List<String> constantPredicates = new ArrayList<>();
-		for(HomomorphismConstraint c:constraints) {
-			if(c instanceof MapConstraint) {
-				Map<Variable, Constant> m = ((MapConstraint) c).mapping;
+		for(HomomorphismProperty c:constraints) {
+			if(c instanceof MapProperty) {
+				Map<Variable, Constant> m = ((MapProperty) c).mapping;
 				for(Entry<Variable, Constant> pair:m.entrySet()) {
 					for (Atom fact:source.getBody().getAtoms()) {
 						int it = fact.getTerms().indexOf(pair.getKey());
 						if(it != -1) {
 							StringBuilder eq = new StringBuilder();
-							eq.append(aliases2.get(fact)==null ? this.encodeName(fact.getSignature().getName()):aliases2.get(fact)).append(".").append(((Relation) fact.getSignature()).getAttribute(it).getName()).append('=');
+							eq.append(this.aliases.get(fact)==null ? fact.getPredicate().getName():this.aliases.get(fact)).append(".").append(((Relation) fact.getPredicate()).getAttribute(it).getName()).append('=');
 							eq.append("'").append(pair.getValue()).append("'");
 							constantPredicates.add(eq.toString());
 						}
@@ -618,27 +577,26 @@ public abstract class SQLStatementBuilder {
 		return constantPredicates;
 	}
 
-	
+
 	/**
 	 * Translate egd homomorphism constraints.
 	 *
 	 * @param source the source
-	 * @param aliases the aliases
 	 * @param constraints the constraints
 	 * @return 		predicates that correspond to fact constraints
 	 */
-	protected String translateEGDHomomorphismConstraints(Evaluatable source, BiMap<Atom, String> aliases, HomomorphismConstraint... constraints) {
-		for(HomomorphismConstraint c:constraints) {
-			if(c instanceof EGDHomomorphismConstraint) {
+	protected String translateEGDHomomorphismConstraints(Evaluatable source, HomomorphismProperty... constraints) {
+		for(HomomorphismProperty c:constraints) {
+			if(c instanceof EGDHomomorphismProperty) {
 				List<Atom> conjuncts = source.getBody().getAtoms();
-				String lalias = aliases.get(conjuncts.get(0));
-				String ralias = aliases.get(conjuncts.get(1));
-				lalias = lalias==null ? this.encodeName(conjuncts.get(0).getSignature().getName()):lalias;
-				ralias = ralias==null ? this.encodeName(conjuncts.get(1).getSignature().getName()):ralias;
+				String lalias = this.aliases.get(conjuncts.get(0));
+				String ralias = this.aliases.get(conjuncts.get(1));
+				lalias = lalias==null ? conjuncts.get(0).getPredicate().getName():lalias;
+				ralias = ralias==null ? conjuncts.get(1).getPredicate().getName():ralias;
 				StringBuilder eq = new StringBuilder();
 				eq.append(lalias).append(".").
 				append("FACT").append("<>");
-				
+
 				eq.append(ralias).append(".").
 				append("FACT");
 				return eq.toString();
@@ -657,7 +615,6 @@ public abstract class SQLStatementBuilder {
 	 * @return the string
 	 */
 	private String createSQLMembershipExpression(int position, List<Object> values, Relation relation, String alias) {
-		
 		StringBuilder result = new StringBuilder();
 		String set = "";
 		int v = 0;
@@ -669,27 +626,18 @@ public abstract class SQLStatementBuilder {
 				set += "\"" + values.get(v) + "\"" + ",";
 			}
 		}
-		
+
 		if(values.get(v) instanceof Number) {
 			set += values.get(v);
 		}
 		else {
 			set += "\"" + values.get(v) + "\"";
 		}
-		
-		result.append(alias==null ? this.encodeName(relation.getName()):alias).append(".").append(relation.getAttribute(position).getName()).
+		result.append(alias==null ? relation.getName():alias).append(".").append(relation.getAttribute(position).getName()).
 		append(" IN ").append("(").append(set).append(")");
 		return result.toString();
-	
-	}
 
-	/**
-	 * Clone.
-	 *
-	 * @return SQLStatementBuilder
-	 */
-	@Override
-	public abstract SQLStatementBuilder clone();
+	}
 
 	/**
 	 * Creates the projection statement for argument.
@@ -703,11 +651,11 @@ public abstract class SQLStatementBuilder {
 		Preconditions.checkNotNull(relation);
 		Preconditions.checkArgument(position >= 0 && position < relation.getArity());
 		StringBuilder result = new StringBuilder();
-		result.append(alias==null ? this.encodeName(relation.getName()):alias).
+		result.append(alias==null ? relation.getName():alias).
 		append(".").append(relation.getAttribute(position).getName());
 		return result.toString();
 	}
-	
+
 
 	/**
 	 * Creates the table aliasing expression.
@@ -719,9 +667,33 @@ public abstract class SQLStatementBuilder {
 	protected String createTableAliasingExpression(String alias, Relation relation) {
 		Preconditions.checkNotNull(relation);
 		StringBuilder result = new StringBuilder();
-		result.append(this.encodeName(relation.getName())).append(" AS ");
+		result.append(relation.getName()).append(" AS ");
 		result.append(alias==null ? relation.getName():alias);
 		return result.toString();
 	}
+
+	/**
+	 * Setup statements.
+	 *
+	 * @param databaseName the database name
+	 * @return the complete list of SQL statements required to set up the facts database
+	 */
+	public abstract Collection<String> createDatabaseStatements(String databaseName);
+
+	/**
+	 * Cleanup statements.
+	 *
+	 * @param databaseName String
+	 * @return the complete list of SQL statements required to clean up the fact database
+	 */
+	public abstract Collection<String> createDropStatements(String databaseName);
+
+	/**
+	 * Clone.
+	 *
+	 * @return SQLStatementBuilder
+	 */
+	@Override
+	public abstract SQLStatementBuilder clone();
 
 }

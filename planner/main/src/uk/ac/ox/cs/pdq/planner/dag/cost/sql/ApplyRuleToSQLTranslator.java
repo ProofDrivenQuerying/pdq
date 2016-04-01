@@ -153,8 +153,8 @@ public class ApplyRuleToSQLTranslator {
 					List<Integer> pi = fi.getTermPositions(constant);
 					List<Integer> pj = fj.getTermPositions(constant);
 					if(pi.size() > 0 && pj.size() > 0) {
-						Attribute ai = ((Relation)fi.getSignature()).getAttribute(pi.get(0));
-						Attribute aj = ((Relation)fj.getSignature()).getAttribute(pj.get(0));
+						Attribute ai = ((Relation)fi.getPredicate()).getAttribute(pi.get(0));
+						Attribute aj = ((Relation)fj.getPredicate()).getAttribute(pj.get(0));
 						joinConditions.add(factToAlias.get(fi) + "." + ai.toString() + "=" + factToAlias.get(fj) + "." + aj.toString());
 					}
 				}
@@ -179,8 +179,8 @@ public class ApplyRuleToSQLTranslator {
 				List<Integer> joinPositions = fi.getTermPositions(constant);
 				if(joinPositions.size() > 1) {
 					for(int pi = 0; pi < joinPositions.size() - 1; ++pi) {
-						Attribute ai = ((Relation)fi.getSignature()).getAttribute(joinPositions.get(pi));
-						Attribute aj = ((Relation)fi.getSignature()).getAttribute(joinPositions.get(pi+1));
+						Attribute ai = ((Relation)fi.getPredicate()).getAttribute(joinPositions.get(pi));
+						Attribute aj = ((Relation)fi.getPredicate()).getAttribute(joinPositions.get(pi+1));
 						joinConditions.add(factToAlias.get(fi) + "." + ai.toString() + "=" + factToAlias.get(fi) + "." + aj.toString());
 					}
 				}
@@ -204,7 +204,7 @@ public class ApplyRuleToSQLTranslator {
 			for(Term term:fact.getTerms()) {
 				if(!term.isSkolem() && !term.isVariable()) {
 					String constant = Utility.format(((TypedConstant)term));
-					Attribute ai = ((Relation)fact.getSignature()).getAttribute(i);
+					Attribute ai = ((Relation)fact.getPredicate()).getAttribute(i);
 					filteringConditions.add(factToAlias.get(fact) + "." + ai.toString() + "=" + constant);
 				}
 				i++;
@@ -241,7 +241,7 @@ public class ApplyRuleToSQLTranslator {
 			for(Atom fact:configuration.getFacts()) {
 				List<Integer> p = fact.getTermPositions(constant);
 				if(!p.isEmpty()) {
-					Attribute a = ((Relation)fact.getSignature()).getAttribute(p.get(0));
+					Attribute a = ((Relation)fact.getPredicate()).getAttribute(p.get(0));
 					String alias = COLUMN_ALIAS_PREFIX + i++;
 					String expression = factToAlias.get(fact) + "." + a.toString() + " AS " + alias;
 					toProjectToAlias.put(constant, alias);
@@ -266,7 +266,7 @@ public class ApplyRuleToSQLTranslator {
 		int i = 0;
 		int size = factToAlias.entrySet().size();
 		for(Entry<Atom, String> entry:factToAlias.entrySet()) {
-			sql += ((Relation)entry.getKey().getSignature()).getName() + " AS " + entry.getValue();
+			sql += ((Relation)entry.getKey().getPredicate()).getName() + " AS " + entry.getValue();
 			if(i < size-1) {
 				sql += ",";
 			}

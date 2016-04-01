@@ -77,10 +77,10 @@ public abstract class PostPruning {
 		this.plan = null;
 		Collection<Atom> qF = new LinkedHashSet<>();
 		for(Atom queryFact: queryFacts) {
-			if (queryFact.getSignature() instanceof InferredAccessibleRelation) {
+			if (queryFact.getPredicate() instanceof InferredAccessibleRelation) {
 				qF.add(queryFact);
 			} else {
-				Preconditions.checkState(queryFact.getSignature() instanceof AccessibleRelation);
+				Preconditions.checkState(queryFact.getPredicate() instanceof AccessibleRelation);
 			}
 		}
 		Collection<Atom> factsToExpose = this.findFactsToExpose(path, qF);

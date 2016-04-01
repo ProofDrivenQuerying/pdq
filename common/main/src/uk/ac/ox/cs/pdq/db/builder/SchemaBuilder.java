@@ -346,7 +346,7 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 		for (Iterator<Integer> i = this.dependencies.keySet().iterator(); i.hasNext();) {
 			Constraint ic = this.dependencies.get(i.next());
 			for (Atom p: ic.getLeft().getAtoms()) {
-				if (this.relations.get(p.getSignature().getName()) == null) {
+				if (this.relations.get(p.getPredicate().getName()) == null) {
 					i.remove();
 					break;
 				}
@@ -355,7 +355,7 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 		for (Iterator<Integer> i = this.dependencies.keySet().iterator(); i.hasNext();) {
 			Constraint ic = this.dependencies.get(i.next());
 			for (Atom p: ic.getRight().getAtoms()) {
-				if (this.relations.get(p.getSignature().getName()) == null) {
+				if (this.relations.get(p.getPredicate().getName()) == null) {
 					i.remove();
 					break;
 				}
@@ -389,7 +389,7 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 			for (Constraint ic : this.dependencies.values()) {
 				if (ic.getLeft().getAtoms().size() == 1) {
 					if (ic.getLeft().getAtoms().get(0)
-							.getSignature().getName().equals(v.getName())) {
+							.getPredicate().getName().equals(v.getName())) {
 						return (LinearGuarded) ic;
 					}
 				}
@@ -445,7 +445,7 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 			for (Constraint ic: this.dependencies.values()) {
 				if (ic instanceof LinearGuarded
 						&& ((LinearGuarded) ic).getRight().size() == 1
-						&& ((LinearGuarded) ic).getGuard().getSignature().equals(r)) {
+						&& ((LinearGuarded) ic).getGuard().getPredicate().equals(r)) {
 					result.add((LinearGuarded) ic);
 				}
 			}

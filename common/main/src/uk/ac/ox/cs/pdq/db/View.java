@@ -88,7 +88,7 @@ public class View extends Relation implements Rule<Formula, Atom> {
 	 * @return The list of schema attributes that correspond to this fact
 	 */
 	private static List<Attribute> makeAttributes(Atom fact) {
-		Predicate s = fact.getSignature();
+		Predicate s = fact.getPredicate();
 		if (s instanceof Relation) {
 			return ((Relation) s).getAttributes();
 		}

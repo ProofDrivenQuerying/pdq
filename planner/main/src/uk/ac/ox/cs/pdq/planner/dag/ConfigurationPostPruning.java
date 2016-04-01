@@ -83,9 +83,9 @@ public class ConfigurationPostPruning {
 		Preconditions.checkNotNull(queryFacts);
 		Collection<Atom> qF = new LinkedHashSet<>();
 		for(Atom queryFact: queryFacts) {
-			if(queryFact.getSignature() instanceof InferredAccessibleRelation) {
+			if(queryFact.getPredicate() instanceof InferredAccessibleRelation) {
 				qF.add(queryFact);
-			} else if(!(queryFact.getSignature() instanceof AccessibleRelation)) {
+			} else if(!(queryFact.getPredicate() instanceof AccessibleRelation)) {
 				throw new java.lang.IllegalArgumentException();
 			}
 		}
@@ -231,8 +231,8 @@ public class ConfigurationPostPruning {
 		InferredAccessibleRelation infAccRelation = accessibleSchema.getInferredAccessibleRelation(baseRelation);
 		for(Atom fact:applyRule.getFacts()) {
 			for(Atom inputFact:input) {
-				if(inputFact.getSignature() instanceof InferredAccessibleRelation &&
-						inputFact.getSignature().equals(infAccRelation) &&
+				if(inputFact.getPredicate() instanceof InferredAccessibleRelation &&
+						inputFact.getPredicate().equals(infAccRelation) &&
 						inputFact.getTerms().equals(fact.getTerms())) {
 					ret.add(fact);
 					break;

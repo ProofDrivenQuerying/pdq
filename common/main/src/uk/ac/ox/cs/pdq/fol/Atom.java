@@ -97,7 +97,7 @@ public class Atom extends AbstractFormula implements Formula {
 	 *
 	 * @return the atom's predicate
 	 */
-	public Predicate getSignature() {
+	public Predicate getPredicate() {
 		return this.predicate;
 	}
 

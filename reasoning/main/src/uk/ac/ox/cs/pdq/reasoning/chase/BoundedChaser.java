@@ -4,12 +4,11 @@ import java.util.Collection;
 import java.util.List;
 
 import uk.ac.ox.cs.pdq.db.Constraint;
-import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.logging.performance.StatisticsCollector;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ListState;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismProperty;
 import uk.ac.ox.cs.pdq.reasoning.utility.Match;
-import uk.ac.ox.cs.pdq.reasoning.utility.ReasonerUtility;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Supplier;
@@ -57,19 +56,17 @@ public class BoundedChaser extends RestrictedChaser {
 	 * Initialize.
 	 *
 	 * @param instance the instance
-	 * @param target the target
 	 * @param constraints the constraints
 	 */
 	public void initialize(
 			ChaseState instance, 
-			Query<?> target, 
 			Collection<? extends Constraint> constraints) {
 		synchronized (this.k) {
 			int oldK = this.k.get();
 			if (this.fullInitialization) {
 				this.k.set(Integer.MAX_VALUE);
 			}
-			this.reasonUntilTermination(instance, target, constraints);
+			this.reasonUntilTermination(instance, constraints);
 			this.k.set(Math.min(oldK, this.lastRound));
 			this.k.freeze();
 		}
@@ -80,22 +77,18 @@ public class BoundedChaser extends RestrictedChaser {
 	 *
 	 * @param <S> the generic type
 	 * @param intance the intance
-	 * @param target the target
 	 * @param dependencies the dependencies
 	 */
 	@Override
-	public <S extends ChaseState> void reasonUntilTermination(S intance,  Query<?> target, Collection<? extends Constraint> dependencies) {
+	public <S extends ChaseState> void reasonUntilTermination(S intance,  Collection<? extends Constraint> dependencies) {
 		Preconditions.checkArgument(intance instanceof ListState);
 		int rounds = 0;
 		boolean appliedStep = true;
 		while (rounds < this.k.get() && appliedStep) {
 			appliedStep = false;
-			List<Match> matches = intance.getMaches(dependencies);
-			for (Match match: matches) {
-				if(new ReasonerUtility().isActiveTrigger(match, intance)){
-					intance.chaseStep(match);
-					appliedStep = true;
-				}
+			List<Match> matches = intance.getMatches(dependencies, HomomorphismProperty.createActiveTriggerProperty());
+			if(!matches.isEmpty()) {
+				appliedStep = true;
 			}
 			if(appliedStep) {
 				++rounds;

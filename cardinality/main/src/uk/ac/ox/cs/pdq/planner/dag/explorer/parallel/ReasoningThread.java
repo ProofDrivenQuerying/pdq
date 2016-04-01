@@ -247,7 +247,7 @@ public class ReasoningThread implements Callable<Boolean> {
 			if(configuration.getState() instanceof DatabaseChaseState) {
 				((DatabaseChaseState)configuration.getState()).setManager((DBHomomorphismManager) this.detector);
 			}
-			this.chaser.reasonUntilTermination(configuration.getState(), this.query, 
+			this.chaser.reasonUntilTermination(configuration.getState(),
 					CollectionUtils.union(this.schema.getDependencies(), this.schema.getKeyDependencies()));
 			Pair<BigInteger, Double> sizeQuality = this.cardinalityEstimator.sizeQualityOf(left, right, this.chaser, this.detector, 
 					this.schema.getKeyDependencies());

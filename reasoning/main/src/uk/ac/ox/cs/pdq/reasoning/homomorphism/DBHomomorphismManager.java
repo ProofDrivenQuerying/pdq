@@ -13,31 +13,42 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Queue;
 import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 
-import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.LimitReachedException;
+import uk.ac.ox.cs.pdq.LimitReachedException.Reasons;
 import uk.ac.ox.cs.pdq.db.Constraint;
 import uk.ac.ox.cs.pdq.db.EGD;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TGD;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
-import uk.ac.ox.cs.pdq.fol.Equality;
 import uk.ac.ox.cs.pdq.fol.Evaluatable;
-import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Query;
+import uk.ac.ox.cs.pdq.fol.Skolem;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.io.xml.QNames;
 import uk.ac.ox.cs.pdq.reasoning.utility.Match;
-import uk.ac.ox.cs.pdq.util.Table;
 
+import com.beust.jcommander.internal.Maps;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
@@ -45,14 +56,12 @@ import com.google.common.collect.Sets;
 
 // TODO: Auto-generated Javadoc
 /**
- * Detects homomorphisms from a conjunction to a set of facts (e.g., facts produced during chasing).
- * For each schema/accessible schema relation of N attributes it creates a table
- * with attributes x0, x1, ..., x_{N-1}, where x_i corresponds to the
- * i-th relation attribute and an additional attribute named BAG which
- * corresponds to the bag (if it exists) where this fact is placed in.
+ * Detects homomorphisms from a conjunction to a set of facts.
+ * For each schema relation of N attributes the object creates a new table with "clean name"
+ * and attributes x0, x1, ..., x_{N-1}, FACT where x_i corresponds to the
+ * i-th relation attribute and FACT is a unique fact identifier. 
  *
  * @author Efthymia Tsamoura
- * @author George Konstantinidis
  *
  */
 public class DBHomomorphismManager implements HomomorphismManager {
@@ -60,67 +69,67 @@ public class DBHomomorphismManager implements HomomorphismManager {
 	/** Logger. */
 	private static Logger log = Logger.getLogger(DBHomomorphismManager.class);
 
-	/** The Bag. */
-	private final Attribute Bag = new Attribute(Integer.class, "Bag");
-	
-	/** The Fact. */
-	private final Attribute Fact = new Attribute(Integer.class, "Fact");
-	
-	/** The attr prefix. */
-	private String attrPrefix = "x";
-
-	/** Collection of expected queries. */
-	//protected Set<Evaluatable> queries;
-	
-	protected Set<Evaluatable> constraints;
-	
-	/** The relations. */
+	/** The schema relations */
 	protected final List<Relation> relations;
-	
-	/**  A map of the string representation of a constant to the constant. */
+
+	/** The schema constraints */
+	protected Set<Evaluatable> constraints;
+
+	/**  Maps of the string representation of a constant to the constant. */
 	protected final Map<String, TypedConstant<?>> constants;
-	
-	/**  Statement builder. */
+
+	/**  Creates SQL statements to detect homomorphisms or add/delete facts in a database. */
 	protected final SQLStatementBuilder builder;
-	
-	/** A map from the schema relation names to the created relations (the ones that correspond to the created database tables). */
-	protected final Map<String, DBRelation> aliases;
-	
-	/**  Connection to the database. */
-	protected Connection connection;
-	
-	/**  Chase database name. */
+
+	/** Map schema relation to database tables. */
+	protected final Map<String, DatabaseRelation> toDatabaseTables;
+
+	/** The open connections. */
+	protected static List<Connection> openConnections = new ArrayList<>();
+
+	/** Number of parallel threads. **/
+	protected final int parallelThreads = 1;
+
+	protected final long timeout = 3600000;
+
+	protected final TimeUnit unit = TimeUnit.MILLISECONDS;
+
+	/**  Open database connections. */
+	protected final List<Connection> connections = Lists.newArrayList();
+
+	/**  The database. */
 	protected final String database;
-	
-	/**  Information to connect to the facts database. */
+
+	/**  Database driver. */
 	protected final String driver;
-	
+
 	/** The url. */
 	protected final String url;
-	
+
 	/** The username. */
 	protected final String username;
-	
+
 	/** The password. */
 	protected final String password;
-	
+
 	/** The is initialized. */
 	protected boolean isInitialized = false;
 
-	/** The clones. */
-	protected List<Connection> clones = new ArrayList<>();
 
-	/** The cleared last query. */
-	private boolean clearedLastQuery = true;
-	
-	/** The constraint indices. */
-	private Set<String> constraintIndices =  new LinkedHashSet<String>();
-	
+	//TODO Cleanup the following variables
+	//------------------------------------------------------//
 	/** The current query. */
 	Evaluatable currentQuery = null;
-	
-	/** The drop indexes. */
-	Set<String> dropIndexes = Sets.newLinkedHashSet();
+
+	/** True if previous query indices were cleared. */
+	private boolean clearedLastQuery = true;
+
+	/** ??? */
+	private Set<String> constraintIndices =  new LinkedHashSet<String>();
+
+	/** Statemenets that drop the query indices. */
+	Set<String> dropQueryIndexStatements = Sets.newLinkedHashSet();
+	//------------------------------------------------------//
 
 	/**
 	 * Instantiates a new DB homomorphism manager.
@@ -143,19 +152,25 @@ public class DBHomomorphismManager implements HomomorphismManager {
 			SQLStatementBuilder builder,
 			Schema schema
 			) throws SQLException {
-		this.connection = getConnection(driver, url, database, username, password);
+		for(int i = 0; i < this.parallelThreads; ++i) {
+			this.connections.add(getConnection(driver, url, database, username, password));
+		}
 		this.driver = driver;
 		this.url = url;
 		this.username = username;
 		this.password = password;
 		this.database = database;
 		this.builder = builder;
-		this.constraints = this.getConstraints(schema);
+		this.constraints = Sets.newLinkedHashSet();
+		for (Constraint<?,?> dependency: schema.getDependencies()) {
+			this.constraints.add(dependency);
+		}
 		this.constants = schema.getConstants();
 		this.relations = Lists.newArrayList(schema.getRelations());
-		this.aliases = new LinkedHashMap<>();
+		this.toDatabaseTables = new LinkedHashMap<>();
+		DBHomomorphismManager.openConnections.addAll(this.connections);
 	}
-	
+
 	/**
 	 * Instantiates a new DB homomorphism manager.
 	 *
@@ -167,7 +182,7 @@ public class DBHomomorphismManager implements HomomorphismManager {
 	 * @param builder 		Builds SQL queries that detect homomorphisms
 	 * @param relations 		Database relations
 	 * @param constants 		Schema constants
-	 * @param aliases 		A map from the schema relation names to the created relations (the ones that
+	 * @param toDatabaseRelations 		A map from the schema relation names to the created relations (the ones that
 	 * 		correspond to the created database tables)
 	 * @param constraints the constraints
 	 * @throws SQLException the SQL exception
@@ -181,35 +196,22 @@ public class DBHomomorphismManager implements HomomorphismManager {
 			SQLStatementBuilder builder,
 			List<Relation> relations,
 			Map<String, TypedConstant<?>> constants,
-			Map<String, DBRelation> aliases,
+			Map<String, DatabaseRelation> toDatabaseRelations,
 			Set<Evaluatable> constraints) throws SQLException {
-		this.connection = DBHomomorphismManager.getConnection(driver, url, database, username, password);
+		for(int i = 0; i < this.parallelThreads; ++i) {
+			this.connections.add(getConnection(driver, url, database, username, password));
+		}
 		this.driver = driver;
 		this.url = url;
 		this.username = username;
 		this.password = password;
 		this.database = database;
 		this.builder = builder;
-		this.aliases = aliases;
+		this.toDatabaseTables = toDatabaseRelations;
 		this.constraints = constraints;
 		this.constants = constants;
 		this.relations = relations;
-	}
-
-	/**
-	 * Gets the constraints.
-	 *
-	 * @param schema the schema
-	 * @return 		queries of interest
-	 */
-	protected Set<Evaluatable> getConstraints(
-			Schema schema
-			) {
-		Set<Evaluatable> result = Sets.newLinkedHashSet();
-		for (Constraint ic: schema.getDependencies()) {
-			result.add(ic);
-		}
-		return result;
+		DBHomomorphismManager.openConnections.addAll(this.connections);
 	}
 
 	/**
@@ -220,86 +222,49 @@ public class DBHomomorphismManager implements HomomorphismManager {
 	@Override
 	public void initialize() {
 		if (!this.isInitialized) {
-			this.initialize(this.constraints);
-			this.isInitialized = true;
-		}
-	}
-
-	/**
-	 * Initialize.
-	 *
-	 * @param queries Collection<Evaluatable>
-	 * @see uk.ac.ox.cs.pdq.homomorphism.HomomorphismManager#initialize(Collection<Evaluatable>)
-	 */
-	@Override
-	public void initialize(Collection<Evaluatable> queries) {
-		if (!this.isInitialized) {
 			this.setup();
+			this.isInitialized = true;
 		}
 	}
 
 	/**
 	 * Sets up the database that will store the facts.
 	 */
-	private void setup() {
-		try(Statement sqlStatement = this.connection.createStatement()) {
+	protected void setup() {
+		try(Statement sqlStatement = this.connections.get(0).createStatement()) {
 			try {
-				for (String sql: this.builder.setupStatements(this.database)) {
+				for (String sql: this.builder.createDatabaseStatements(this.database)) {
 					sqlStatement.addBatch(sql);
 				}
-				createEqualityTable(sqlStatement);
+				DatabaseRelation equality = DatabaseRelation.createEqualityTable();
 
-				//putting relations into a set so as to make them unique
+				this.toDatabaseTables.put(QNames.EQUALITY.toString(), equality);
+				sqlStatement.addBatch(this.builder.createTableStatement(equality));
+				sqlStatement.addBatch(this.builder.createColumnIndexStatement(equality, DatabaseRelation.Fact));
+
+				//Put relations into a set so as to make them unique
 				Set<Relation> relationset = new HashSet<Relation>();
 				relationset.addAll(this.relations);
 				this.relations.clear();
 				this.relations.addAll(relationset);
 
-				this.createBaseTables(this.relations, sqlStatement);
-				this.createJoinIndexes(sqlStatement);
-				sqlStatement.executeBatch();
-			} catch (SQLException ex) {
-				throw new IllegalStateException(ex.getMessage(), ex);
-			}
-		} catch (SQLException ex) {
-			throw new IllegalStateException(ex.getMessage(), ex);
-		}
-	}
-
-	/**
-	 * Creates the base tables.
-	 *
-	 * @param relations List<Relation>
-	 * @param stmt Statement
-	 * @throws SQLException the SQL exception
-	 */
-	private void createBaseTables(List<Relation> relations, Statement stmt) throws SQLException {
-		DBRelation dbRelation = null;
-		for (Relation relation:relations) {
-			dbRelation = this.createDBRelation(relation);
-			this.aliases.put(relation.getName(), dbRelation);
-			stmt.addBatch(this.builder.createTableStatement(dbRelation));
-			stmt.addBatch(this.builder.createTableNonJoinIndexes(dbRelation, this.Bag));
-			stmt.addBatch(this.builder.createTableNonJoinIndexes(dbRelation, this.Fact));
-		}
-	}
-
-
-	/**
-	 * Consolidate base tables.
-	 *
-	 * @param tables the tables
-	 * @throws SQLException the SQL exception
-	 */
-	public void consolidateBaseTables(Collection<Table> tables) throws SQLException {
-		try(Statement sqlStatement = this.connection.createStatement()) {
-			try {
-				DBRelation dbRelation = null;
-				for (Table table:tables) {
-					dbRelation = this.toDBRelation(table);
-					this.aliases.put(table.getName(), dbRelation);
+				//Create the database tables and create column indices
+				for (Relation relation:this.relations) {
+					DatabaseRelation dbRelation = DatabaseRelation.createDatabaseRelation(relation);
+					this.toDatabaseTables.put(relation.getName(), dbRelation);
 					sqlStatement.addBatch(this.builder.createTableStatement(dbRelation));
+					sqlStatement.addBatch(this.builder.createColumnIndexStatement(dbRelation, DatabaseRelation.Fact));
 				}
+
+				//Create indices for the joins in the body of the dependencies
+				Set<String> joinIndexes = Sets.newLinkedHashSet();
+				for (Evaluatable constraint:this.constraints) {
+					joinIndexes.addAll(this.builder.setupIndices(false, this.toDatabaseTables, constraint, this.constraintIndices).getLeft());
+				}
+				for (String b: joinIndexes) {
+					sqlStatement.addBatch(b);
+				}
+
 				sqlStatement.executeBatch();
 			} catch (SQLException ex) {
 				throw new IllegalStateException(ex.getMessage(), ex);
@@ -308,67 +273,16 @@ public class DBHomomorphismManager implements HomomorphismManager {
 			throw new IllegalStateException(ex.getMessage(), ex);
 		}
 	}
-	
-	
-	/**
-	 * Creates the equality table.
-	 *
-	 * @param stmt the stmt
-	 * @throws SQLException the SQL exception
-	 */
-	private void createEqualityTable(Statement stmt) throws SQLException
-	{
-		DBRelation equality = this.createEquality();
-		this.aliases.put(QNames.EQUALITY.toString(), equality);
-		stmt.addBatch(this.builder.createTableStatement(equality));
-		stmt.addBatch(this.builder.createTableNonJoinIndexes(equality, this.Bag));
-		stmt.addBatch(this.builder.createTableNonJoinIndexes(equality, this.Fact));
-	}
 
-	/**
-	 * Creates the join indexes.
-	 *
-	 * @param stmt Statement
-	 * @throws SQLException the SQL exception
-	 */
-	private void createJoinIndexes(Statement stmt) throws SQLException {
-		Set<String> joinIndexes = Sets.newLinkedHashSet();
-		for (Evaluatable constraint:this.constraints) {
-			joinIndexes.addAll(this.builder.createTableIndexes(false,this.aliases, constraint, constraintIndices).getLeft());
-		}
-		for (String b: joinIndexes) {
-			stmt.addBatch(b);
-		}
-	}
-	
-	/**
-	 * Creates the and drop statementsfor query join indexes.
-	 *
-	 * @param query the query
-	 * @param stmt the stmt
-	 * @throws SQLException the SQL exception
-	 */
-	private void createAndDropStatementsforQueryJoinIndexes(Query query,Statement stmt) throws SQLException {
-		Set<String> joinIndexes = Sets.newLinkedHashSet();
-		
-		Pair<Collection<String>, Collection<String>> dropAndCreateStms = this.builder.createTableIndexes(true,this.aliases, query,constraintIndices);
-		
-		this.dropIndexes.addAll(dropAndCreateStms.getRight());
-		joinIndexes.addAll(dropAndCreateStms.getLeft());
-
-		for (String b: joinIndexes) {
-			stmt.addBatch(b);
-		}
-	}
 
 	/**
 	 * Cleans up the database.
 	 *
 	 * @throws HomomorphismException the homomorphism exception
 	 */
-	protected void cleanupDB() throws HomomorphismException {
-		try (Statement sqlStatement = this.connection.createStatement();) {
-			for (String sql: this.builder.cleanupStatements(this.database)) {
+	protected void dropDatabase() throws HomomorphismException {
+		try (Statement sqlStatement = this.connections.get(0).createStatement();) {
+			for (String sql: this.builder.createDropStatements(this.database)) {
 				sqlStatement.addBatch(sql);
 			}
 			sqlStatement.executeBatch();
@@ -377,114 +291,14 @@ public class DBHomomorphismManager implements HomomorphismManager {
 		}
 	}
 
-
-	/* (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector#getMatches(uk.ac.ox.cs.pdq.fol.Evaluatable, uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismConstraint[])
-	 */
-	@Override
-	public <Q extends Evaluatable> List<Match> getMatches(Q source, HomomorphismConstraint... constraints) {
-		Preconditions.checkNotNull(source);
-		List<Match> result = new LinkedList<>();
-		Q s = this.convert(source, this.aliases, constraints);
-			
-		HomomorphismConstraint[] c = null;
-		if(source instanceof EGD) {
-			c = new HomomorphismConstraint[constraints.length+1];
-			System.arraycopy(constraints, 0, c, 0, constraints.length);
-			c[constraints.length] = HomomorphismConstraint.createEGDHomomorphismConstraint();
-		}
-		else {
-			c = constraints;
-		}
-		
-		Set<Map<Variable, Constant>> maps = this.builder.findHomomorphismsThroughSQL(s, c, this.constants, this.connection);
-		for(Map<Variable, Constant> map:maps) {
-			result.add(new Match(source, map));
-		}
-		return result;
-	}
-	
-	/**
-	 * Gets the matches.
-	 *
-	 * @param <Q> the generic type
-	 * @param queries Collection<Q>
-	 * @param constraints HomomorphismConstraint[]
-	 * @return Map<Q,List<Matching>>
-	 * @see uk.ac.ox.cs.pdq.homomorphism.HomomorphismDetector#getMatches(Collection<Q>, HomomorphismConstraint[])
-	 */
-	@Override
-	public <Q extends Evaluatable> List<Match> getMatches(Collection<Q> queries, HomomorphismConstraint... constraints) {
-		List<Match> result = new ArrayList<>();
-		for (Q q: queries) {
-			List<Match> matches = this.getMatches(q, constraints);
-			if (!matches.isEmpty()) {
-				result.addAll(matches);
-			}
-		}
-		return result;
-	}
-	
-	/**
-	 * Convert.
-	 *
-	 * @param <Q> the generic type
-	 * @param source 		An input formula
-	 * @param aliases 		Map of schema relation names to *clean* names
-	 * @param constraints 		A set of constraints that should be satisfied by the homomorphisms of the input formula to the facts of the database 
-	 * @return 		a formula that uses the input *clean* names
-	 */
-	private <Q extends Evaluatable> Q convert(Q source, Map<String, DBRelation> aliases, HomomorphismConstraint... constraints) {
-		boolean singleBag = false;
-		if(source instanceof Constraint) {
-			int f = 0;
-			int b = 0;
-			List<Atom> left = Lists.newArrayList();
-			for(Atom atom:((Constraint) source).getLeft().getAtoms()) {
-				Relation relation = aliases.get(atom.getName());
-				List<Term> terms = Lists.newArrayList(atom.getTerms());
-				terms.add(new Variable(singleBag == true ? this.Bag.getName() : (this.Bag.getName() + b++)));
-				terms.add(new Variable(this.Fact.getName() + f++));
-				left.add(new Atom(relation, terms));
-			}
-			List<Atom> right = Lists.newArrayList();
-			for(Atom atom:((Constraint) source).getRight().getAtoms()) {
-				Relation relation = aliases.get(atom.getName());
-				List<Term> terms = Lists.newArrayList(atom.getTerms());
-				terms.add(new Variable(singleBag == true ? this.Bag.getName() : (this.Bag.getName() + b++)));
-				terms.add(new Variable(this.Fact.getName() + f++));
-				right.add(new Atom(relation, terms));
-			}
-			return (Q) new TGD(Conjunction.of(left), Conjunction.of(right));
-		}
-		else if(source instanceof Query) {
-			int f = 0;
-			int b = 0;
-			List<Atom> body = Lists.newArrayList();
-			for(Atom atom:((Query) source).getBody().getAtoms()) {
-				Relation relation = aliases.get(atom.getName());
-				List<Term> terms = Lists.newArrayList(atom.getTerms());
-				terms.add(new Variable(singleBag == true ? this.Bag.getName() : this.Bag.getName() + b++));
-				terms.add(new Variable(this.Fact.getName() + f++));
-				body.add(new Atom(relation, terms));
-			}
-			return (Q) new ConjunctiveQuery(((Query) source).getHead(), Conjunction.of(body));
-		}
-		else {
-			throw new java.lang.UnsupportedOperationException();
-		}
-	}
-
-	
 	/*
 	 * (non-Javadoc)
 	 * @see java.lang.AutoCloseable#close()
 	 */
 	@Override
 	public void close() throws Exception {
-		this.cleanupDB();
-		this.connection.close();
-		for(Connection con:this.clones) {
+		this.dropDatabase();
+		for(Connection con:DBHomomorphismManager.openConnections) {
 			con.close();
 		}
 	}
@@ -532,69 +346,7 @@ public class DBHomomorphismManager implements HomomorphismManager {
 		return result;
 	}
 
-	/**
-	 * Adds the facts.
-	 *
-	 * @param facts Collection<? extends PredicateFormula>
-	 * @see uk.ac.ox.cs.pdq.homomorphism.HomomorphismManager#addFacts(Collection<? extends PredicateFormula>)
-	 */
-	@Override
-	public void addFacts(Collection<? extends Atom> facts) {
-//		THIS COMMENT IS AN EFFORT TO OPTIMIZE THE CODE BELOW BUT FAILS
-//		try (Statement sqlStatement = this.connection.createStatement()) {
-//			for (String stmt : this.builder.makeInserts(facts, this.aliases)) {
-//				sqlStatement.addBatch(stmt);
-//			}
-//			sqlStatement.executeBatch();
-//		} catch (SQLException ex) {
-//			if(!ex.getCause().getMessage().contains("duplicate key value")) 
-//				throw new IllegalStateException(ex.getMessage(), ex);		
-//		}
-//
-		if(this.builder instanceof MySQLStatementBuilder) {
-			try (Statement sqlStatement = this.connection.createStatement()) {
-				for (String statement:this.builder.makeInserts(facts, this.aliases)) {
-					sqlStatement.addBatch(statement);
-				}
-				sqlStatement.executeBatch();
-			} catch (SQLException ex) {
-				throw new IllegalStateException(ex.getMessage(), ex);
-			}
-		}
-		else if(this.builder instanceof DerbyStatementBuilder) {
-			for (String statement : this.builder.makeInserts(facts, this.aliases)) {
-				try (Statement sqlStatement = this.connection.createStatement()) {
-					sqlStatement.executeUpdate(statement);
-				} catch (SQLException ex) {
-					if(!ex.getCause().getMessage().contains("duplicate key value")) {
-						throw new IllegalStateException(ex.getMessage(), ex);
-					}
-				}
-			}
-		}
-		else {
-			throw new java.lang.IllegalStateException("Unknown statement builder");
-		}
-		
-	}
-	
-	/**
-	 * Deletes the facts of the list in the database.
-	 *
-	 * @param facts Input list of facts
-	 */
-	@Override
-	public void deleteFacts(Collection<? extends Atom> facts) {
-		try (Statement sqlStatement = this.connection.createStatement()) {
-			for (String stmt : this.builder.makeDeletes(facts, this.aliases)) {
-				sqlStatement.addBatch(stmt);
-			}
-			sqlStatement.executeBatch();
-		} catch (SQLException ex) {
-			throw new IllegalStateException(ex.getMessage(), ex);
-		}
-	}
-	
+
 	/**
 	 * Clone.
 	 *
@@ -609,107 +361,45 @@ public class DBHomomorphismManager implements HomomorphismManager {
 					this.builder.clone(), 
 					this.relations, 
 					this.constants,
-					this.aliases, 
+					this.toDatabaseTables, 
 					this.constraints);
 			ret.isInitialized = this.isInitialized;
-			this.clones.add(ret.connection);
+			DBHomomorphismManager.openConnections.addAll(ret.connections);
 			return ret;
 		} catch (SQLException e) {
 			log.error(e.getMessage(),e);
 			return null;
 		}
 	}
-	
-	/**
-	 * A relation built-up for homomorphism detection .
-	 *
-	 * @author Efthymia Tsamoura
-	 */
-	protected static class DBRelation extends Relation {
-		
-		/** The Constant serialVersionUID. */
-		private static final long serialVersionUID = 3503553786085749666L;
-
-		/**
-		 * Constructor for DBRelation.
-		 * @param name String
-		 * @param attributes List<Attribute>
-		 */
-		public DBRelation(String name, List<Attribute> attributes) {
-			super(name, attributes);
-		}
-	}
-	
-	/**
-	 * Creates the db relation.
-	 *
-	 * @param relation the relation
-	 * @return a new database relation with attributes x0,x1,...,x_{N-1}, Bag, Fact where
-	 *         x_i maps to the i-th relation's attribute
-	 */
-	protected DBRelation createDBRelation(Relation relation) {
-		List<Attribute> attributes = new ArrayList<>();
-		for (int index = 0, l = relation.getAttributes().size(); index < l; ++index) {
-			attributes.add(new Attribute(String.class, this.attrPrefix + index));
-		}
-		attributes.add(this.Bag);
-		attributes.add(this.Fact);
-		return new DBRelation(relation.getName(), attributes);
-	}
-	
-	/**
-	 * To db relation.
-	 *
-	 * @param table the table
-	 * @return the DB relation
-	 */
-	protected DBRelation toDBRelation(Table table) {
-		List<Attribute> attributes = new ArrayList<>();
-		for (int index = 0, l = table.getHeader().size(); index < l; ++index) {
-			attributes.add(new Attribute(String.class, this.attrPrefix + index));
-		}
-		attributes.add(this.Bag);
-		attributes.add(this.Fact);
-		return new DBRelation(table.getName(), attributes);
-	}
-	
-	/**
-	 * Creates the equality.
-	 *
-	 * @return the DB relation
-	 */
-	protected DBRelation createEquality() {
-		List<Attribute> attributes = new ArrayList<>();
-		attributes.add(new Attribute(String.class, this.attrPrefix + 0));
-		attributes.add(new Attribute(String.class, this.attrPrefix + 1));
-		attributes.add(this.Bag);
-		attributes.add(this.Fact);
-		return new DBRelation(QNames.EQUALITY.toString(), attributes);
-	}
 
 	/**
-	 * This method initializes the database tables needed to later find a homomorphism from a specific query
+	 * Initializes the database tables needed to detect homomorphisms for a specific query.
 	 * In this implementation after you detect the homomorphisms from a query you have "consumed" any related machinery and have to add the query again.
 	 *
 	 * @param query the query
 	 */
 	@Override
 	public void addQuery(Query<?> query) {
-		if(!clearedLastQuery)
+		if(!this.clearedLastQuery)
 			throw new RuntimeException("Method clearQuery should be called in order to clear previous query's tables from the database.");
-		clearedLastQuery = false;
-		
-		try(Statement sqlStatement = this.connection.createStatement()) {
-			try {
-				this.createAndDropStatementsforQueryJoinIndexes(query,sqlStatement);
-				sqlStatement.executeBatch();
-			} catch (SQLException ex) {
-				throw new IllegalStateException(ex.getMessage(), ex);
+		this.clearedLastQuery = false;
+		try {
+			Statement sqlStatement = this.connections.get(0).createStatement();
+
+			//Create statements that set up or drop the indices for the joins in the body of the input query
+			Set<String> joinIndexes = Sets.newLinkedHashSet();
+			Pair<Collection<String>, Collection<String>> dropAndCreateStms = 
+					this.builder.setupIndices(true, this.toDatabaseTables, query, this.constraintIndices);
+			this.dropQueryIndexStatements.addAll(dropAndCreateStms.getRight());
+			joinIndexes.addAll(dropAndCreateStms.getLeft());
+			for (String b: joinIndexes) {
+				sqlStatement.addBatch(b);
 			}
+
+			sqlStatement.executeBatch();
 		} catch (SQLException ex) {
 			throw new IllegalStateException(ex.getMessage(), ex);
 		}
-		
 		this.currentQuery = query;
 	}
 
@@ -718,28 +408,291 @@ public class DBHomomorphismManager implements HomomorphismManager {
 	 */
 	@Override
 	public void clearQuery() {
-
-		try(Statement sqlStatement = this.connection.createStatement()) {
-			try {
-				//drop join indices for previous query
-				for (String b: this.dropIndexes) {
-					sqlStatement.addBatch(b);
-				}
-				
-				//clear the relations of the query
-				Collection<String> clearTablesSQLExpressions = this.builder.clearTables(this.currentQuery.getBody().getAtoms(),this.aliases);
-				for (String b: clearTablesSQLExpressions) {
-					sqlStatement.addBatch(b);
-				}
-				sqlStatement.executeBatch();
-			} catch (SQLException ex) {
-				throw new IllegalStateException(ex.getMessage(), ex);
+		try {
+			Statement sqlStatement = this.connections.get(0).createStatement();
+			//Drop the join indices for input query
+			for (String b: this.dropQueryIndexStatements) {
+				sqlStatement.addBatch(b);
 			}
+			//Clear the database tables built for the query
+			Collection<String> clearTablesSQLExpressions = this.builder.createTruncateTableStatements(this.currentQuery.getBody().getAtoms(), 
+					this.toDatabaseTables);
+			for (String b: clearTablesSQLExpressions) {
+				sqlStatement.addBatch(b);
+			}
+			sqlStatement.executeBatch();
 		} catch (SQLException ex) {
 			throw new IllegalStateException(ex.getMessage(), ex);
 		}
-		clearedLastQuery = true;
+		this.clearedLastQuery = true;
 	}
 
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector#getMatches(uk.ac.ox.cs.pdq.fol.Evaluatable, uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismConstraint[])
+	 */
+	@Override
+	public <Q extends Evaluatable> List<Match> getMatches(Collection<Q> sources, HomomorphismProperty... constraints) {
+		Preconditions.checkNotNull(sources);
+		List<Match> result = new LinkedList<>();
+
+		//List of create SQL statements
+		Queue<String> queries = new ConcurrentLinkedQueue<>();;
+		//Maps an SQL query to the projected attributes
+		Map<String,LinkedHashMap<String, Variable>> queryMap = Maps.newHashMap();		
+		//Maps an SQL query to the constraint or query it was create for
+		Map<String,Q> sqlToEvaluatable = Maps.newHashMap();
+
+
+		//Create a new query out of each input query that references only the cleaned predicates
+		for(Q source:sources) {
+			Q s = this.convert(source, constraints);
+			HomomorphismProperty[] c = null;
+			if(source instanceof EGD) {
+				c = new HomomorphismProperty[constraints.length+1];
+				System.arraycopy(constraints, 0, c, 0, constraints.length);
+				c[constraints.length] = HomomorphismProperty.createEGDHomomorphismProperty();
+			}
+			else {
+				c = constraints;
+			}
+			//Create an SQL statement for the cleaned query
+			Pair<String, LinkedHashMap<String, Variable>> pair = this.builder.createQuery(s, c);
+			sqlToEvaluatable.put(pair.getLeft(), source);
+			queryMap.put(pair.getLeft(), pair.getRight());
+			queries.add(pair.getLeft());
+		}
+
+		//Run the SQL query statements in multiple threads
+		ExecutorService executorService = null;
+		List<Pair<String,ResultSet>> outputs = Lists.newArrayList();
+		try {
+			//Create a pool of threads to run in parallel
+			executorService = Executors.newFixedThreadPool(this.parallelThreads);
+			List<Callable<List<Pair<String,ResultSet>>>> threads = new ArrayList<>();
+			for(int j = 0; j < this.parallelThreads; ++j) {
+				//Create the threads that will run the database queries
+				threads.add(new ExecuteSQLQueryThread(queries, this.connections.get(j)));
+			}
+			long start = System.currentTimeMillis();
+			try {
+				for(Future<List<Pair<String,ResultSet>>> output:executorService.invokeAll(threads, this.timeout, this.unit)){
+					outputs.addAll(output.get());
+				}
+			} catch(java.util.concurrent.CancellationException e) {
+				executorService.shutdownNow();
+				if (this.timeout <= (System.currentTimeMillis() - start)) {
+					try {
+						throw new LimitReachedException(Reasons.TIMEOUT);
+					} catch (LimitReachedException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+				return null;
+			}
+			executorService.shutdown();
+		} catch (InterruptedException | ExecutionException e) {
+			executorService.shutdownNow();
+			e.printStackTrace();
+			return null;
+		}
+
+		for(Pair<String,ResultSet> output:outputs) {
+			String query = output.getLeft();
+			Q source = sqlToEvaluatable.get(query);
+			LinkedHashMap<String, Variable> projectedVariables = queryMap.get(query);
+
+			/*
+			 * For each returned homomorphism (each homomorphism corresponds to each
+			 * returned tuple) we create a mapping of variables to constants.
+			 * We also maintain the bag where this homomorphism is found
+			 */
+			try{
+				ResultSet resultSet = output.getRight();
+				while (resultSet.next()) {
+					int f = 1;
+					Map<Variable, Constant> map = new LinkedHashMap<>();
+					for(Entry<String, Variable> entry:projectedVariables.entrySet()) {
+						Variable var = entry.getValue();
+						String assigned = resultSet.getString(f);
+						TypedConstant<?> constant = this.constants.get(assigned);
+						Constant constantTerm = constant != null ? constant : new Skolem(assigned);
+						map.put(var, constantTerm);
+						f++;
+					}
+					result.add(new Match(source,map));
+				}
+
+			} catch (SQLException ex) {
+				log.debug(query);
+				throw new IllegalStateException(ex.getMessage(), ex);
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Adds the facts.
+	 *
+	 * @param facts Collection<? extends PredicateFormula>
+	 * @see uk.ac.ox.cs.pdq.homomorphism.HomomorphismManager#addFacts(Collection<? extends PredicateFormula>)
+	 */
+	@Override
+	public void addFacts(Collection<? extends Atom> facts) {
+		Queue<String> queries = new ConcurrentLinkedQueue<>();
+
+		if(this.builder instanceof DerbyStatementBuilder) {
+			queries.addAll(this.builder.createInsertStatements(facts, this.toDatabaseTables));
+		}
+		else {
+			Map<Predicate, List<Atom>> clusters = HomomorphismUtility.clusterAtoms(facts);
+			//Find the total number of tuples that will be inserted in the database
+			int totalTuples = facts.size();
+			int tuplesPerThread = (int) Math.ceil(totalTuples / this.parallelThreads);
+			for(Entry<Predicate, List<Atom>> entry:clusters.entrySet()) {
+				Predicate predicate = entry.getKey();
+				List<Atom> clusterFacts = entry.getValue();
+				while(!clusterFacts.isEmpty()) {
+					int position = tuplesPerThread < clusterFacts.size() ? tuplesPerThread:clusterFacts.size();
+					List<Atom> subList = clusterFacts.subList(0, position);
+					queries.add(this.builder.createBulkInsertStatement((Relation) predicate, subList, this.toDatabaseTables));
+					subList.clear();
+				}
+			}
+		}
+
+		ExecutorService executorService = null;
+		try {
+			//Create a pool of threads to run in parallel
+			executorService = Executors.newFixedThreadPool(this.parallelThreads);
+			List<Callable<Boolean>> threads = new ArrayList<>();
+			for(int j = 0; j < this.parallelThreads; ++j) {
+				//Create the threads that will run the database update statements
+				threads.add(new ExecuteUpdateThread(queries, this.connections.get(j)));
+			}
+			long start = System.currentTimeMillis();
+			try {
+				for(Future<Boolean> output:executorService.invokeAll(threads, this.timeout, this.unit)){
+					output.get();
+				}
+			} catch(java.util.concurrent.CancellationException e) {
+				executorService.shutdownNow();
+				if (this.timeout <= (System.currentTimeMillis() - start)) {
+					try {
+						throw new LimitReachedException(Reasons.TIMEOUT);
+					} catch (LimitReachedException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+			}
+			executorService.shutdown();
+		} catch (InterruptedException | ExecutionException e) {
+			executorService.shutdownNow();
+			e.printStackTrace();
+		}
+
+	}
+
+	/**
+	 * Deletes the facts of the list in the database.
+	 *
+	 * @param facts Input list of facts
+	 */
+	@Override
+	public void deleteFacts(Collection<? extends Atom> facts) {
+		Queue<String> queries = new ConcurrentLinkedQueue<>();
+		Map<Predicate, List<Atom>> clusters = HomomorphismUtility.clusterAtoms(facts);
+		{
+			//Find the total number of tuples that will be inserted in the database
+			int totalTuples = facts.size();
+			int tuplesPerThread = (int) Math.ceil(totalTuples / this.parallelThreads);
+			for(Entry<Predicate, List<Atom>> entry:clusters.entrySet()) {
+				Predicate predicate = entry.getKey();
+				List<Atom> clusterFacts = entry.getValue();
+				while(!clusterFacts.isEmpty()) {
+					int position = tuplesPerThread > clusterFacts.size() ? tuplesPerThread:clusterFacts.size();
+					List<Atom> subList = clusterFacts.subList(0, position);
+					queries.add(this.builder.createBulkDeleteStatement((Relation) predicate, subList, this.toDatabaseTables));
+					subList.clear();
+				}
+			}
+		}
+		
+		ExecutorService executorService = null;
+		try {
+			//Create a pool of threads to run in parallel
+			executorService = Executors.newFixedThreadPool(this.parallelThreads);
+			List<Callable<Boolean>> threads = new ArrayList<>();
+			for(int j = 0; j < this.parallelThreads; ++j) {
+				//Create the threads that will create new binary configurations using the input left, right collections
+				threads.add(new ExecuteUpdateThread(queries, this.connections.get(j)));
+			}
+			long start = System.currentTimeMillis();
+			try {
+				for(Future<Boolean> output:executorService.invokeAll(threads, this.timeout, this.unit)){
+					output.get();
+				}
+			} catch(java.util.concurrent.CancellationException e) {
+				executorService.shutdownNow();
+				if (this.timeout <= (System.currentTimeMillis() - start)) {
+					try {
+						throw new LimitReachedException(Reasons.TIMEOUT);
+					} catch (LimitReachedException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+			}
+			executorService.shutdown();
+		} catch (InterruptedException | ExecutionException e) {
+			executorService.shutdownNow();
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Convert.
+	 *
+	 * @param <Q> the generic type
+	 * @param source 		An input formula
+	 * @param toDatabaseTables 		Map of schema relation names to *clean* names
+	 * @param constraints 		A set of constraints that should be satisfied by the homomorphisms of the input formula to the facts of the database 
+	 * @return 		a formula that uses the input *clean* names
+	 */
+	private <Q extends Evaluatable> Q convert(Q source, HomomorphismProperty... constraints) {
+		if(source instanceof Constraint) {
+			int f = 0;
+			List<Atom> left = Lists.newArrayList();
+			for(Atom atom:((Constraint<?,?>) source).getLeft().getAtoms()) {
+				Relation relation = this.toDatabaseTables.get(atom.getName());
+				List<Term> terms = Lists.newArrayList(atom.getTerms());
+				terms.add(new Variable(DatabaseRelation.Fact.getName() + f++));
+				left.add(new Atom(relation, terms));
+			}
+			List<Atom> right = Lists.newArrayList();
+			for(Atom atom:((Constraint<?,?>) source).getRight().getAtoms()) {
+				Relation relation = this.toDatabaseTables.get(atom.getName());
+				List<Term> terms = Lists.newArrayList(atom.getTerms());
+				terms.add(new Variable(DatabaseRelation.Fact.getName() + f++));
+				right.add(new Atom(relation, terms));
+			}
+			return (Q) new TGD(Conjunction.of(left), Conjunction.of(right));
+		}
+		else if(source instanceof Query) {
+			int f = 0;
+			List<Atom> body = Lists.newArrayList();
+			for(Atom atom:((Query<?>) source).getBody().getAtoms()) {
+				Relation relation = this.toDatabaseTables.get(atom.getName());
+				List<Term> terms = Lists.newArrayList(atom.getTerms());
+				terms.add(new Variable(DatabaseRelation.Fact.getName() + f++));
+				body.add(new Atom(relation, terms));
+			}
+			return (Q) new ConjunctiveQuery(((Query) source).getHead(), Conjunction.of(body));
+		}
+		else {
+			throw new java.lang.UnsupportedOperationException();
+		}
+	}
 
 }

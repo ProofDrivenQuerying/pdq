@@ -233,7 +233,7 @@ public class AccessibleSchema extends Schema {
 		List<Atom> atomicFormulas = new ArrayList<>();
 		for (Atom af: query.getBody().getAtoms()) {
 			atomicFormulas.add(
-					new Atom(this.getInferredAccessibleRelation((Relation) af.getSignature()), af.getTerms()));
+					new Atom(this.getInferredAccessibleRelation((Relation) af.getPredicate()), af.getTerms()));
 		}
 		return (Q) new ConjunctiveQuery(query.getHead(), Conjunction.of(atomicFormulas));
 	}
@@ -254,7 +254,7 @@ public class AccessibleSchema extends Schema {
 		List<Atom> atomicFormulas = new ArrayList<>();
 		for (Atom af: query.getBody().getAtoms()) {
 			atomicFormulas.add(
-					new Atom(this.getInferredAccessibleRelation((Relation) af.getSignature()), af.getTerms()));
+					new Atom(this.getInferredAccessibleRelation((Relation) af.getPredicate()), af.getTerms()));
 		}
 		return (Q) new ConjunctiveQuery(query.getHead(), Conjunction.of(atomicFormulas), canonicalMapping);
 	}

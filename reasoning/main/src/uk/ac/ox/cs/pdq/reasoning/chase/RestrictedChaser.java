@@ -10,12 +10,15 @@ import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.logging.performance.StatisticsCollector;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseListState;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ListState;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismConstraint;
-import uk.ac.ox.cs.pdq.reasoning.utility.DefaultRestrictedChaseDependencyAssessor;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismProperty;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
+import uk.ac.ox.cs.pdq.reasoning.utility.DefaultTGDDependencyAssessor;
 import uk.ac.ox.cs.pdq.reasoning.utility.Match;
 import uk.ac.ox.cs.pdq.reasoning.utility.ReasonerUtility;
-import uk.ac.ox.cs.pdq.reasoning.utility.RestrictedChaseDependencyAssessor;
+import uk.ac.ox.cs.pdq.reasoning.utility.TGDDependencyAssessor;
 
 import com.google.common.base.Preconditions;
 
@@ -49,29 +52,27 @@ public class RestrictedChaser extends Chaser {
 		super(statistics);
 	}
 
+	
+	//TODO this method must not take as input a query
 	/**
 	 * Chases the input state until termination.
 	 *
 	 * @param <S> the generic type
 	 * @param instance the instance
-	 * @param target the target
 	 * @param dependencies the dependencies
 	 */
 	@Override
-	public <S extends ChaseState> void reasonUntilTermination(S instance,  Query<?> target, Collection<? extends Constraint> dependencies) {
+	public <S extends ChaseState> void reasonUntilTermination(S instance,  Collection<? extends Constraint> dependencies) {
 		Preconditions.checkArgument(instance instanceof ListState);
-		RestrictedChaseDependencyAssessor accessor = new DefaultRestrictedChaseDependencyAssessor(dependencies);
+		TGDDependencyAssessor accessor = new DefaultTGDDependencyAssessor(dependencies);
 		boolean appliedStep = false;
 		do {
 			appliedStep = false;
 			Collection<? extends Constraint> d = accessor.getDependencies(instance);
-			List<Match> matches = instance.getMaches(d);
-			for (Match match: matches) {
-				if(new ReasonerUtility().isActiveTrigger(match, instance)){
-					//A single chase step
-					instance.chaseStep(match);
-					appliedStep = true;
-				}
+			List<Match> matches = instance.getMatches(d, HomomorphismProperty.createActiveTriggerProperty());		
+			instance.chaseStep(matches);
+			if(!matches.isEmpty()) {
+				appliedStep = true;
 			}
 		} while (appliedStep);
 	}
@@ -88,13 +89,13 @@ public class RestrictedChaser extends Chaser {
 	 */
 	@Override
 	public <S extends ChaseState> boolean entails(S instance, Map<Variable, Constant> free, Query<?> target,
-			Collection<? extends Constraint> constraints) {
-		this.reasonUntilTermination(instance, target, constraints);
+			Collection<? extends Constraint<?,?>> constraints) {
+		Collection<? extends Constraint<?, ?>> relevantDependencies = new ReasonerUtility().findRelevant(target, constraints);
+		this.reasonUntilTermination(instance, relevantDependencies);
 		if(!instance.isFailed()) {
-			HomomorphismConstraint[] c = {
-					HomomorphismConstraint.createTopKConstraint(1),
-					HomomorphismConstraint.createMapConstraint(free)};
-
+			HomomorphismProperty[] c = {
+					HomomorphismProperty.createTopKProperty(1),
+					HomomorphismProperty.createMapProperty(free)};
 			return !instance.getMatches(target,c).isEmpty(); 
 		}
 		return false;
@@ -110,9 +111,16 @@ public class RestrictedChaser extends Chaser {
 	 * @return 		true if the source query entails the target query
 	 */
 	@Override
-	public <S extends ChaseState> boolean entails(Query<?> source, Query<?> target,
-			Collection<? extends Constraint> constraints) {
-		// TODO Auto-generated method stub
+	public boolean entails(Query<?> source, Query<?> target,
+			Collection<? extends Constraint<?,?>> constraints, HomomorphismDetector detector) {	
+		Collection<? extends Constraint<?, ?>> relevantDependencies = new ReasonerUtility().findRelevant(target, constraints);
+		DatabaseChaseListState instance = new DatabaseChaseListState(source, (DBHomomorphismManager)detector);
+		this.reasonUntilTermination(instance, relevantDependencies);
+		if(!instance.isFailed()) {
+			HomomorphismProperty[] c = {
+					HomomorphismProperty.createTopKProperty(1)};
+			return !instance.getMatches(target,c).isEmpty(); 
+		}
 		return false;
 	}
 

@@ -8,15 +8,14 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import com.google.common.collect.BiMap;
-
-import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
-import uk.ac.ox.cs.pdq.fol.Evaluatable;
 import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.Evaluatable;
 import uk.ac.ox.cs.pdq.fol.Term;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager.DBRelation;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismConstraint.TopKConstraint;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismProperty.TopKProperty;
+
+import com.beust.jcommander.internal.Lists;
+import com.google.common.base.Joiner;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -28,29 +27,13 @@ public class MySQLStatementBuilder extends SQLStatementBuilder {
 
 	/** The log. */
 	private static Logger log = Logger.getLogger(MySQLStatementBuilder.class);
-	
-	/**
-	 * Instantiates a new my sql statement builder.
-	 */
-	public MySQLStatementBuilder() {
-		super();
-	}
-	
-	/**
-	 * Instantiates a new my sql statement builder.
-	 *
-	 * @param cleanMap the clean map
-	 */
-	protected MySQLStatementBuilder(BiMap<String, String> cleanMap) {
-		super(cleanMap);
-	}
 
 	/*
 	 * (non-Javadoc)
 	 * @see uk.ac.ox.cs.pdq.homomorphism.AbstractHomomorphismStatementBuilder#setupStatements(java.lang.String)
 	 */
 	@Override
-	public Collection<String> setupStatements(String databaseName) {
+	public Collection<String> createDatabaseStatements(String databaseName) {
 		Collection<String> result = new LinkedList<>();
 		result.add("DROP DATABASE IF EXISTS " + databaseName);
 		result.add("CREATE DATABASE " + databaseName);
@@ -64,26 +47,26 @@ public class MySQLStatementBuilder extends SQLStatementBuilder {
 	 * @see uk.ac.ox.cs.pdq.homomorphism.AbstractHomomorphismStatementBuilder#cleanupStatements(java.lang.String)
 	 */
 	@Override
-	public Collection<String> cleanupStatements(String databaseName) {
+	public Collection<String> createDropStatements(String databaseName) {
 		Collection<String> result = new LinkedList<>();
 		result.add("DROP DATABASE " + databaseName);
 		log.trace(result);
 		return result;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see uk.ac.ox.cs.pdq.reasoning.homomorphism.SQLStatementBuilder#translateLimitConstraints(uk.ac.ox.cs.pdq.fol.Evaluatable, uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismConstraint[])
 	 */
 	@Override
-	protected String translateLimitConstraints(Evaluatable source, HomomorphismConstraint... constraints) {
-		for(HomomorphismConstraint c:constraints) {
-			if(c instanceof TopKConstraint) {
-				return "LIMIT " + ((TopKConstraint) c).k;
+	protected String translateLimitConstraints(Evaluatable source, HomomorphismProperty... constraints) {
+		for(HomomorphismProperty c:constraints) {
+			if(c instanceof TopKProperty) {
+				return "LIMIT " + ((TopKProperty) c).k;
 			}
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Clone.
 	 *
@@ -91,31 +74,23 @@ public class MySQLStatementBuilder extends SQLStatementBuilder {
 	 */
 	@Override
 	public MySQLStatementBuilder clone() {
-		return new MySQLStatementBuilder(this.cleanMap);
+		return new MySQLStatementBuilder();
 	}
 
-	/* (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.reasoning.homomorphism.SQLStatementBuilder#encodeName(java.lang.String)
-	 */
-	@Override
-	public String encodeName(String name) {
-		return super.encodeName(name);
-	}
-	
 	/**
 	 * Make inserts.
 	 *
 	 * @param facts the facts
-	 * @param dbrelations the dbrelations
+	 * @param toDatabaseTables the dbrelations
 	 * @return insert statements that add the input fact to the fact database.
 	 */
 	@Override
-	protected Collection<String> makeInserts(Collection<? extends Atom> facts, Map<String, DBRelation> dbrelations) {
+	protected Collection<String> createInsertStatements(Collection<? extends Atom> facts, Map<String, DatabaseRelation> toDatabaseTables) {
 		Collection<String> result = new LinkedList<>();
-		for (Atom fact : facts) {
-			DBRelation rel = dbrelations.get(fact.getName());
+		for (Atom fact:facts) {
+			DatabaseRelation rel = toDatabaseTables.get(fact.getName());
 			List<Term> terms = fact.getTerms();
-			String insertInto = "INSERT IGNORE INTO " + this.encodeName(rel.getName()) + " " + "VALUES ( ";
+			String insertInto = "INSERT IGNORE INTO " + toDatabaseTables.get(rel.getName()).getName() + " " + "VALUES ( ";
 			for (Term term : terms) {
 				if (!term.isVariable()) {
 					insertInto += "'" + term + "'" + ",";
@@ -128,6 +103,34 @@ public class MySQLStatementBuilder extends SQLStatementBuilder {
 		}
 		log.trace(result);
 		return result;
+	}
+
+	/**
+	 * Make inserts.
+	 *
+	 * @param facts the facts
+	 * @param toDatabaseTables the dbrelations
+	 * @return insert statements that add the input fact to the fact database.
+	 */
+	@Override
+	protected String createBulkInsertStatement(Relation relation, Collection<? extends Atom> facts, Map<String, DatabaseRelation> toDatabaseTables) {
+		String insertInto = "INSERT IGNORE INTO " + toDatabaseTables.get(relation.getName()).getName() + "\n" +
+				"VALUES" + "\n";
+		List<String> tuples = Lists.newArrayList();
+		for (Atom fact:facts) {
+			String tuple = "(";
+			List<Term> terms = fact.getTerms();
+			for (Term term : terms) {
+				if (!term.isVariable()) {
+					tuple += "'" + term + "'" + ",";
+				}
+			}
+			tuple += fact.getId();
+			tuple += ")";
+			tuples.add(tuple);
+		}
+		insertInto += Joiner.on(",\n").join(tuples) + ";";
+		return insertInto;
 	}
 }
 

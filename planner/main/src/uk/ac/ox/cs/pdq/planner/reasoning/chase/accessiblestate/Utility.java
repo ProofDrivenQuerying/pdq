@@ -79,10 +79,10 @@ public class Utility {
 			) {
 		Collection<Atom> createdFacts = new LinkedHashSet<>();
 		for(Atom fact:facts) {			
-			Atom accessedFact = new Atom((Relation) fact.getSignature(), fact.getTerms());
+			Atom accessedFact = new Atom((Relation) fact.getPredicate(), fact.getTerms());
 			createdFacts.add(accessedFact);
 			
-			Atom infAccFact = new Atom(schema.getInferredAccessibleRelation((Relation) fact.getSignature()), fact.getTerms());
+			Atom infAccFact = new Atom(schema.getInferredAccessibleRelation((Relation) fact.getPredicate()), fact.getTerms());
 			createdFacts.add(infAccFact);
 			inferred.add(infAccFact.toString());
 			derivedInferred.add(infAccFact);
@@ -104,7 +104,7 @@ public class Utility {
 	public static Collection<String> inferInferred(Collection<Atom> facts) {
 		Collection<String> inferred = new LinkedHashSet<>();
 		for(Atom fact:facts) {
-			if (fact.getSignature() instanceof InferredAccessibleRelation) {
+			if (fact.getPredicate() instanceof InferredAccessibleRelation) {
 				inferred.add(fact.toString());
 			}
 		}
@@ -129,9 +129,9 @@ public class Utility {
 	public static Multimap<Predicate, Atom> inferSignatureGroups(Collection<Atom> facts) {
 		Multimap<Predicate, Atom> signatureGroups = LinkedHashMultimap.create();
 		for(Atom fact:facts) {
-			if (!(fact.getSignature() instanceof AccessibleRelation) && 
-					!(fact.getSignature() instanceof InferredAccessibleRelation)) {
-				signatureGroups.put(fact.getSignature(), fact);
+			if (!(fact.getPredicate() instanceof AccessibleRelation) && 
+					!(fact.getPredicate() instanceof InferredAccessibleRelation)) {
+				signatureGroups.put(fact.getPredicate(), fact);
 			}
 		}
 		return signatureGroups;
@@ -146,7 +146,7 @@ public class Utility {
 	public static Multimap<Term,Atom> inferAccessibleTerms(Collection<Atom> facts) {
 		Multimap<Term,Atom> accessibleTerms = LinkedHashMultimap.create();
 		for(Atom fact:facts) {
-			if (fact.getSignature() instanceof AccessibleRelation) {
+			if (fact.getPredicate() instanceof AccessibleRelation) {
 				accessibleTerms.put(fact.getTerm(0), fact);
 			}
 		}

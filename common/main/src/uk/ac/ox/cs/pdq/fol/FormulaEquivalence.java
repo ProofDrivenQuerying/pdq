@@ -93,11 +93,11 @@ public class FormulaEquivalence {
 		}
 		LinkedHashMultiset<Predicate> lSigs = LinkedHashMultiset.create();
 		for (Atom pred: left.getAtoms()) {
-			lSigs.add(pred.getSignature());
+			lSigs.add(pred.getPredicate());
 		}
 		LinkedHashMultiset<Predicate> rSigs = LinkedHashMultiset.create();
 		for (Atom pred: right.getAtoms()) {
-			rSigs.add(pred.getSignature());
+			rSigs.add(pred.getPredicate());
 		}
 		if (!lSigs.equals(rSigs)) {
 			return false;
@@ -144,7 +144,7 @@ public class FormulaEquivalence {
 	 * @return boolean
 	 */
 	private static boolean approximateAtomEquivalence(Atom left, Atom right) {
-		if (!left.getSignature().equals(right.getSignature())) {
+		if (!left.getPredicate().equals(right.getPredicate())) {
 			return false;
 		}
 		if (!left.getConstants().equals(right.getConstants())) {

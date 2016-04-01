@@ -42,7 +42,7 @@ public class FactSignature implements Comparable<FactSignature> {
 				constants.add((TypedConstant<?>) t);
 			}
 		}
-		return new FactSignature(fact.getSignature(), ImmutableList.copyOf(constants));
+		return new FactSignature(fact.getPredicate(), ImmutableList.copyOf(constants));
 	}
 	
 	/**

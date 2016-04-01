@@ -60,7 +60,7 @@ public class VeryPrettyQueryWriter extends PrettyWriter<ConjunctiveQuery> implem
 	 */
 	@Override
 	public void write(PrintStream out, ConjunctiveQuery q) {
-		out.print(q.getHead().getSignature().getName());
+		out.print(q.getHead().getPredicate().getName());
 		out.print('(' + Joiner.on(", ").join(q.getFree()) + ")\n\t<-");
 		String sep = "";
 		Multimap<Term, Atom> clusters = LinkedHashMultimap.create();
@@ -71,7 +71,7 @@ public class VeryPrettyQueryWriter extends PrettyWriter<ConjunctiveQuery> implem
 		}
 		for (Atom a : q.getBody()) {
 			out.print(sep);
-			out.print(a.getSignature().getName());
+			out.print(a.getPredicate().getName());
 			String sep2 = "(";
 			for (Term t: a.getTerms()) {
 				out.print(sep2 + t);

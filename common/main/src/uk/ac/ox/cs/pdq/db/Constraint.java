@@ -78,4 +78,6 @@ public interface Constraint<L extends Formula, R extends Formula> extends Evalua
 	 */
 	@Override
 	boolean contains(Predicate s);
+	
+	Constraint<L,R> clone();
 }

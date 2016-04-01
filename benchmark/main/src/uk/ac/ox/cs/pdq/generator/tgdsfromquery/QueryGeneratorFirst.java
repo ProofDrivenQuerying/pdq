@@ -78,7 +78,7 @@ public class QueryGeneratorFirst extends AbstractDependencyGenerator implements 
 			@Override public int compare(Atom o1, Atom o2) {
 				return o1 != null
 						? (o2 != null ?
-								o1.getSignature().getArity() - o2.getSignature().getArity() : 1)
+								o1.getPredicate().getArity() - o2.getPredicate().getArity() : 1)
 						: (o2 != null ? -1 : 0);
 			}
 		});
@@ -116,10 +116,10 @@ public class QueryGeneratorFirst extends AbstractDependencyGenerator implements 
 					usedVars.add(v2);
 					unusedPreds.remove(pick2);
 				}
-				body.add(new Atom(pick1.getSignature(), terms));
+				body.add(new Atom(pick1.getPredicate(), terms));
 				pick1 = pick2;
 			} else {
-				body.add(new Atom(pick1.getSignature(), terms));
+				body.add(new Atom(pick1.getPredicate(), terms));
 			}
 		} while(!unusedPreds.isEmpty());
 

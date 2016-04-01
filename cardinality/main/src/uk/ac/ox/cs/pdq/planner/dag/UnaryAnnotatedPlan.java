@@ -68,7 +68,7 @@ public class UnaryAnnotatedPlan extends DAGAnnotatedPlan {
 	 * @return the base relation associated with the fact that is exposed
 	 */
 	public Relation getRelation() {
-		return (Relation)this.fact.getSignature();
+		return (Relation)this.fact.getPredicate();
 	}
 	
 	/**

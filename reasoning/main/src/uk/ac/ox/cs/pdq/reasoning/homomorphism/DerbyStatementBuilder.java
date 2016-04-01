@@ -2,15 +2,13 @@ package uk.ac.ox.cs.pdq.reasoning.homomorphism;
 
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.Map;
 
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
-
+import uk.ac.ox.cs.pdq.db.Relation;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Evaluatable;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager.DBRelation;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismConstraint.TopKConstraint;
-
-import com.google.common.collect.BiMap;
+import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismProperty.TopKProperty;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -20,29 +18,13 @@ import com.google.common.collect.BiMap;
  * @author Julien leblay
  */
 public class DerbyStatementBuilder extends SQLStatementBuilder {
-
-	/**
-	 * Default constructor.
-	 */
-	public DerbyStatementBuilder() {
-		super();
-	}
 	
-	/**
-	 * Instantiates a new derby statement builder.
-	 *
-	 * @param cleanMap the clean map
-	 */
-	protected DerbyStatementBuilder(BiMap<String, String> cleanMap) {
-		super(cleanMap);
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * @see uk.ac.ox.cs.pdq.homomorphism.AbstractHomomorphismStatementBuilder#setupStatements(java.lang.String)
 	 */
 	@Override
-	public Collection<String> setupStatements(String databaseName) {
+	public Collection<String> createDatabaseStatements(String databaseName) {
 		return new LinkedList<>();
 	}
 
@@ -51,7 +33,7 @@ public class DerbyStatementBuilder extends SQLStatementBuilder {
 	 * @see uk.ac.ox.cs.pdq.homomorphism.AbstractHomomorphismStatementBuilder#cleanupStatements(java.lang.String)
 	 */
 	@Override
-	public Collection<String> cleanupStatements(String databaseName) {
+	public Collection<String> createDropStatements(String databaseName) {
 		return new LinkedList<>();
 	}
 	
@@ -60,10 +42,10 @@ public class DerbyStatementBuilder extends SQLStatementBuilder {
 	 * @see uk.ac.ox.cs.pdq.reasoning.homomorphism.SQLStatementBuilder#translateLimitConstraints(uk.ac.ox.cs.pdq.fol.Evaluatable, uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismConstraint[])
 	 */
 	@Override
-	protected String translateLimitConstraints(Evaluatable source, HomomorphismConstraint... constraints) {
-		for(HomomorphismConstraint c:constraints) {
-			if(c instanceof TopKConstraint) {
-				return "FETCH NEXT " + ((TopKConstraint) c).k + " ROWS ONLY  ";
+	protected String translateLimitConstraints(Evaluatable source, HomomorphismProperty... constraints) {
+		for(HomomorphismProperty c:constraints) {
+			if(c instanceof TopKProperty) {
+				return "FETCH NEXT " + ((TopKProperty) c).k + " ROWS ONLY  ";
 			}
 		}
 		return null;
@@ -76,23 +58,19 @@ public class DerbyStatementBuilder extends SQLStatementBuilder {
 	 */
 	@Override
 	public DerbyStatementBuilder clone() {
-		return new DerbyStatementBuilder(this.cleanMap);
+		return new DerbyStatementBuilder();
 	}
-
-	/* (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.reasoning.homomorphism.SQLStatementBuilder#encodeName(java.lang.String)
-	 */
-	@Override
-	public String encodeName(String name) {
-		return super.encodeName(name);
-	}
-	
 	
 	/* (non-Javadoc)
 	 * @see uk.ac.ox.cs.pdq.reasoning.homomorphism.SQLStatementBuilder#indexDropStatement(uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager.DBRelation, java.lang.StringBuilder, java.lang.StringBuilder)
 	 */
 	@Override
-	protected String indexDropStatement(DBRelation relation, StringBuilder indexName, StringBuilder indexColumns) {
-		return "DROP INDEX idx_" + this.encodeName(relation.getName()) + "_" + indexName ;
+	protected String createDropIndexStatement(DatabaseRelation relation, StringBuilder indexName, StringBuilder indexColumns) {
+		return "DROP INDEX idx_" + relation.getName() + "_" + indexName ;
+	}
+
+	@Override
+	protected String createBulkInsertStatement(Relation relation, Collection<? extends Atom> facts, Map<String, DatabaseRelation> toDatabaseTables) {
+		throw new java.lang.UnsupportedOperationException("No bulk inserts are allowed in Derby");
 	}
 }
