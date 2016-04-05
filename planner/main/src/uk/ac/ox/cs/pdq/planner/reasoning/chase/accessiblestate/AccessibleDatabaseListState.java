@@ -83,7 +83,7 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 				Utility.inferDerivedInferred(),
 				Utility.inferSignatureGroups(createInitialFacts(query, schema)),
 				Utility.inferAccessibleTerms(createInitialFacts(query, schema)));
-		this.manager.addFacts(facts);
+		this.manager.addFactsSynchronously(facts);
 	}
 
 	/**

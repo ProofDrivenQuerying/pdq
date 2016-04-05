@@ -1,25 +1,27 @@
 package uk.ac.ox.cs.pdq.reasoning.chase.state;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
+import java.util.Queue;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
+import uk.ac.ox.cs.pdq.LimitReachedException;
+import uk.ac.ox.cs.pdq.LimitReachedException.Reasons;
 import uk.ac.ox.cs.pdq.db.Constraint;
-import uk.ac.ox.cs.pdq.db.EGD;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
-import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Equality;
-import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Query;
-import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismProperty;
 import uk.ac.ox.cs.pdq.reasoning.utility.EqualConstantsClasses;
 import uk.ac.ox.cs.pdq.reasoning.utility.FiringGraph;
-import uk.ac.ox.cs.pdq.reasoning.utility.MapFiringGraph;
 import uk.ac.ox.cs.pdq.reasoning.utility.Match;
 
 import com.beust.jcommander.internal.Lists;
@@ -52,6 +54,15 @@ public class DatabaseRestrictedState extends DatabaseChaseState implements ListS
 	/** The canonical names. */
 	protected final boolean canonicalNames = true;
 	
+	/** Number of parallel threads. **/
+	protected final int parallelThreads = 50;
+
+	protected final long timeout = 3600000;
+
+	protected final TimeUnit unit = TimeUnit.MILLISECONDS;
+	
+	//TODO Hack think of a better placing of this 
+	protected Collection<Predicate> latestPredicates = Sets.newHashSet();
 	
 	/**
 	 * Instantiates a new database list state.
@@ -63,7 +74,6 @@ public class DatabaseRestrictedState extends DatabaseChaseState implements ListS
 			DBHomomorphismManager manager,
 			Collection<Atom> facts) {
 		this(manager, facts, inferEqualConstantsClasses(facts));
-//		this.manager.addFacts(this.facts);
 	}
 
 	/**
@@ -81,9 +91,8 @@ public class DatabaseRestrictedState extends DatabaseChaseState implements ListS
 			) {
 		super(manager);
 		Preconditions.checkNotNull(facts);
-//		this.facts = facts;
 		this.constantClasses = constantClasses;
-		this.manager.addFacts(facts);
+		this.manager.addFactsSynchronously(facts);
 	}
 	
 	/**
@@ -118,92 +127,43 @@ public class DatabaseRestrictedState extends DatabaseChaseState implements ListS
 	 */
 	@Override
 	public boolean chaseStep(Collection<Match> matches) {
-		Preconditions.checkNotNull(matches);
-		long start1 = System.currentTimeMillis();
-		Collection<Atom> created = new LinkedHashSet<>();
 		
-		System.out.println("Total number of matches: " + matches.size());
-		/*
-		//For each fired EGD create classes of equivalent constants
-		for(Match match:matches) {
-			Constraint dependency = (Constraint) match.getQuery();
-			Map<Variable, Constant> mapping = match.getMapping();
-			Constraint grounded = dependency.fire(mapping, true);
-			Formula left = grounded.getLeft();
-			Formula right = grounded.getRight();
-			if(dependency instanceof EGD) {
-				for(Predicate equality:right.getPredicates()) {
-					boolean successfull = this.constantClasses.add((Equality)equality);
-					if(!successfull) {
-						this._isFailed = true;
-						break;
-					}
+		//Start multiple threads which will consume the input matches
+		ExecutorService executorService = null;
+		try {
+			//Create a pool of threads to run in parallel
+			executorService = Executors.newFixedThreadPool(this.parallelThreads);
+			List<ExecuteTGDChaseStepThread> threads = new ArrayList<>();
+			for(int j = 0; j < this.parallelThreads; ++j) {
+				//Create the threads that will run the database update statements
+				threads.add(new ExecuteTGDChaseStepThread((Queue<Match>) matches, this.manager.clone()));
+				//TODO cleanup the threads after cloning
+			}
+			long start = System.currentTimeMillis();
+			try {
+				for(Future<Boolean> output:executorService.invokeAll(threads, this.timeout, this.unit)){
+					output.get();
 				}
-			}	
-			this.graph.put(dependency, Sets.newHashSet(left.getPredicates()), Sets.newHashSet(right.getPredicates()));
-		}
-
-		//Iterate over all the database facts and replace their chase constants based on the classes of equal constants 
-		//Delete the old facts from this state
-		Collection<Predicate> obsoleteFacts = Sets.newHashSet();
-		for(Match match:matches) {
-			if(match.getQuery() instanceof EGD) {
-				for(Predicate fact:this.facts) {
-					List<Term> newTerms = Lists.newArrayList();
-					for(Term term:fact.getTerms()) {
-						EqualConstantsClass cls = this.constantClasses.getClass(term);;
-						newTerms.add(cls != null ? cls.getRepresentative() : term);
-					}
-					if(!newTerms.equals(fact.getTerms())) {
-						created.add(new Predicate(fact.getSignature(), newTerms));
-						obsoleteFacts.add(fact);
+				for(ExecuteTGDChaseStepThread thread:threads) {
+					this.latestPredicates.addAll(thread.getObservedPredicates());
+				}
+			} catch(java.util.concurrent.CancellationException e) {
+				executorService.shutdownNow();
+				if (this.timeout <= (System.currentTimeMillis() - start)) {
+					try {
+						throw new LimitReachedException(Reasons.TIMEOUT);
+					} catch (LimitReachedException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
 					}
 				}
 			}
+			executorService.shutdown();
+		} catch (InterruptedException | ExecutionException e) {
+			executorService.shutdownNow();
+			e.printStackTrace();
 		}
-*/		
-
-		//Do not add the Equalities inside the database
-		for(Match match:matches) {
-			if(!(match.getQuery() instanceof EGD)) {
-				Constraint dependency = (Constraint) match.getQuery();
-				Map<Variable, Constant> mapping = match.getMapping();
-				Constraint grounded = dependency.fire(mapping, true);
-				Formula right = grounded.getRight();
-				
-				/*
-				for(Predicate fact:right.getPredicates()) {
-					List<Term> newTerms = Lists.newArrayList();
-					for(Term term:fact.getTerms()) {
-						EqualConstantsClass cls = this.constantClasses.getClass(term);
-						newTerms.add(cls != null ? cls.getRepresentative() : term);
-					}
-					created.add(new Predicate(fact.getSignature(), newTerms));
-				}
-				*/
-				created.addAll(right.getAtoms());
-			}
-		}
-		
-		long end1 = System.currentTimeMillis();
-		System.out.println("Time to do inmemory staff: " + (end1-start1));
-		
-		/*
-		long start2 = System.currentTimeMillis();
-		this.facts.removeAll(obsoleteFacts);
-		this.manager.deleteFacts(obsoleteFacts);
-		long end2 = System.currentTimeMillis();
-		System.out.println("Time to delete facts: " + (end2-start2));
-		*/
-		
-		
-		long start3 = System.currentTimeMillis();
-		this.addFacts(created);
-		long end3 = System.currentTimeMillis();
-		
-		System.out.println("Time to insert facts: " + (end3-start3));
-		
-		return !this._isFailed;
+		return true;
 	}
 
 	/**
@@ -260,7 +220,7 @@ public class DatabaseRestrictedState extends DatabaseChaseState implements ListS
 	 */
 	@Override
 	public void addFacts(Collection<Atom> facts) {
-		this.manager.addFacts(facts);
+		this.manager.addFactsSynchronously(facts);
 	}
 
 	/* (non-Javadoc)
@@ -319,4 +279,8 @@ public class DatabaseRestrictedState extends DatabaseChaseState implements ListS
 		return this.manager.getMatches(dependencies, constraints);
 	}
 
+	
+	public Collection<Predicate> getLatestPredicates() {
+		return this.latestPredicates;
+	}
 }

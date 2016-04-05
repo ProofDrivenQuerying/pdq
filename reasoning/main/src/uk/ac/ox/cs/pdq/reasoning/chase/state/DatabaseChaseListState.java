@@ -69,7 +69,7 @@ public class DatabaseChaseListState extends DatabaseChaseState implements ListSt
 	 */
 	public DatabaseChaseListState(Query<?> query, DBHomomorphismManager manager) {
 		this(manager, Sets.newHashSet(query.getCanonical().getAtoms()), new MapFiringGraph(), inferEqualConstantsClasses(query.getCanonical().getAtoms()));
-		this.manager.addFacts(this.facts);
+		this.manager.addFactsSynchronously(this.facts);
 	}
 
 	/**
@@ -82,7 +82,7 @@ public class DatabaseChaseListState extends DatabaseChaseState implements ListSt
 			DBHomomorphismManager manager,
 			Collection<Atom> facts) {
 		this(manager, facts, new MapFiringGraph(), inferEqualConstantsClasses(facts));
-		this.manager.addFacts(this.facts);
+		this.manager.addFactsSynchronously(this.facts);
 	}
 
 	/**
@@ -269,7 +269,7 @@ public class DatabaseChaseListState extends DatabaseChaseState implements ListSt
 	 */
 	@Override
 	public void addFacts(Collection<Atom> facts) {
-		this.manager.addFacts(facts);
+		this.manager.addFactsSynchronously(facts);
 		this.facts.addAll(facts);
 	}
 

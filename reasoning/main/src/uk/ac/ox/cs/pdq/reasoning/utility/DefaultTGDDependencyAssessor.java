@@ -11,6 +11,8 @@ import uk.ac.ox.cs.pdq.db.TGD;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseState;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseRestrictedState;
 
 import com.beust.jcommander.internal.Lists;
 import com.beust.jcommander.internal.Sets;
@@ -86,40 +88,58 @@ public final class DefaultTGDDependencyAssessor implements TGDDependencyAssessor
 	@Override
 	public Collection<? extends Constraint> getDependencies(ChaseState state) {
 		Collection<Constraint> constraints = Sets.newLinkedHashSet();
-		Collection<Atom> newFacts = null;
-		if(this.stateFacts == null) {
-			newFacts = state.getFacts();
+//		Collection<Atom> newFacts = null;
+//		if(this.stateFacts == null) {
+//			newFacts = state.getFacts();
+//		}
+//		else {
+//			newFacts = CollectionUtils.subtract(state.getFacts(), this.stateFacts);
+//		}
+//		
+//		Multimap<String, Atom> newFactsMap = ArrayListMultimap.create();
+//		for(Atom fact:newFacts) {
+//			newFactsMap.put(fact.getPredicate().getName(), fact);
+//		}
+//		
+//		Multimap<String, Atom> allFactsMap = ArrayListMultimap.create();
+//		for(Atom fact:state.getFacts()) {
+//			allFactsMap.put(fact.getPredicate().getName(), fact);
+//		}
+//		
+//		for(Constraint dependency:this.dependencies) {
+//			for(Atom atom:dependency.getLeft().getAtoms()) {
+//				Predicate s = atom.getPredicate();
+//				if(dependency instanceof TGD && newFactsMap.keySet().contains(s.getName())) {
+//					constraints.add(dependency);
+//					break;
+//				}
+//				
+//				if(dependency instanceof EGD && newFactsMap.keySet().contains(s.getName()) && allFactsMap.get(s.getName()).size() > 1) {
+//					constraints.add(dependency);
+//					break;
+//				}
+//			}
+//		}
+//		this.stateFacts = Sets.newLinkedHashSet();
+//		this.stateFacts.addAll(state.getFacts());
+		
+		DatabaseRestrictedState s = (DatabaseRestrictedState)state;
+		if(s.getLatestPredicates().isEmpty()) {
+			return this.dependencies;
 		}
 		else {
-			newFacts = CollectionUtils.subtract(state.getFacts(), this.stateFacts);
-		}
-		
-		Multimap<String, Atom> newFactsMap = ArrayListMultimap.create();
-		for(Atom fact:newFacts) {
-			newFactsMap.put(fact.getPredicate().getName(), fact);
-		}
-		
-		Multimap<String, Atom> allFactsMap = ArrayListMultimap.create();
-		for(Atom fact:state.getFacts()) {
-			allFactsMap.put(fact.getPredicate().getName(), fact);
-		}
-		
-		for(Constraint dependency:this.dependencies) {
-			for(Atom atom:dependency.getLeft().getAtoms()) {
-				Predicate s = atom.getPredicate();
-				if(dependency instanceof TGD && newFactsMap.keySet().contains(s.getName())) {
-					constraints.add(dependency);
-					break;
-				}
-				
-				if(dependency instanceof EGD && newFactsMap.keySet().contains(s.getName()) && allFactsMap.get(s.getName()).size() > 1) {
-					constraints.add(dependency);
-					break;
+			
+			for(Constraint dependency:this.dependencies) {
+				for(Atom atom:dependency.getLeft().getAtoms()) {
+					Predicate predicate = atom.getPredicate();
+					if(dependency instanceof TGD && s.getLatestPredicates().contains(predicate)) {
+						constraints.add(dependency);
+//						break;
+					}
 				}
 			}
 		}
-		this.stateFacts = Sets.newLinkedHashSet();
-		this.stateFacts.addAll(state.getFacts());
+		s.getLatestPredicates().clear();
 		return constraints;
 	}
 

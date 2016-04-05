@@ -31,10 +31,10 @@ import com.google.common.eventbus.EventBus;
  * 
  * @author Efthymia Tsamoura
  */
-public class Bootstrap {
+public class Reason {
 
 	/** Logger. */
-	private static Logger log = Logger.getLogger(Bootstrap.class); 
+	private static Logger log = Logger.getLogger(Reason.class); 
 	
 	/** The Constant PROGRAM_NAME. */
 	private static final String PROGRAM_NAME = "pdq-reasoning-<version>.jar";
@@ -120,7 +120,7 @@ public class Bootstrap {
 	 * the planner on them.
 	 * @param args String[]
 	 */
-	private Bootstrap(String... args) {
+	private Reason(String... args) {
 		JCommander jc = new JCommander(this);
 		jc.setProgramName(PROGRAM_NAME);
 		try {
@@ -212,6 +212,6 @@ public class Bootstrap {
 	 * @param args String[]
 	 */
 	public static void main(String... args) {
-		new Bootstrap(args);
+		new Reason(args);
 	}
 }

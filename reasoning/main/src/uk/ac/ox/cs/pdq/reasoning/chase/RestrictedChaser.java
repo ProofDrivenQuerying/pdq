@@ -3,6 +3,8 @@ package uk.ac.ox.cs.pdq.reasoning.chase;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import uk.ac.ox.cs.pdq.db.Constraint;
 import uk.ac.ox.cs.pdq.fol.Constant;
@@ -13,8 +15,8 @@ import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseListState;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ListState;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismProperty;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismProperty;
 import uk.ac.ox.cs.pdq.reasoning.utility.DefaultTGDDependencyAssessor;
 import uk.ac.ox.cs.pdq.reasoning.utility.Match;
 import uk.ac.ox.cs.pdq.reasoning.utility.ReasonerUtility;
@@ -66,15 +68,35 @@ public class RestrictedChaser extends Chaser {
 		Preconditions.checkArgument(instance instanceof ListState);
 		TGDDependencyAssessor accessor = new DefaultTGDDependencyAssessor(dependencies);
 		boolean appliedStep = false;
+		
+		Collection<? extends Constraint> d = dependencies;
+		
+		long start = System.currentTimeMillis();
 		do {
 			appliedStep = false;
-			Collection<? extends Constraint> d = accessor.getDependencies(instance);
-			List<Match> matches = instance.getMatches(d, HomomorphismProperty.createActiveTriggerProperty());		
-			instance.chaseStep(matches);
+			
+			long start0 = System.currentTimeMillis();
+			List<Match> matches = instance.getMatches(d, HomomorphismProperty.createActiveTriggerProperty());	
+			long end0 = System.currentTimeMillis();
+			System.out.println("---Time to detect homomorphisms " + " " + (end0-start0));
+			
 			if(!matches.isEmpty()) {
 				appliedStep = true;
 			}
+			
+			Queue<Match> queue = new ConcurrentLinkedQueue<>(matches);
+			matches.clear();
+			start0 = System.currentTimeMillis();
+			instance.chaseStep(queue);
+			
+			d = accessor.getDependencies(instance);
+			
+			end0 = System.currentTimeMillis();
+			System.out.println("---Time to update the state " + " " + (end0-start0));
+			
 		} while (appliedStep);
+		long end = System.currentTimeMillis();
+		System.out.println("---Time to reason until termination " + " " + (end-start));
 	}
 
 	/**

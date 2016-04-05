@@ -20,7 +20,7 @@ public interface HomomorphismManager extends HomomorphismDetector {
 	 *
 	 * @param facts Input list of facts
 	 */
-	void addFacts(Collection<? extends Atom> facts);
+	void addFactsSynchronously(Collection<? extends Atom> facts);
 	
 	/**
 	 * Deletes the facts of the list in the database.

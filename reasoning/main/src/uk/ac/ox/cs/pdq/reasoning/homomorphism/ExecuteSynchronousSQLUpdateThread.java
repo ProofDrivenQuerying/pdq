@@ -11,14 +11,14 @@ import java.util.concurrent.Callable;
  *
  * @author Efthymia Tsamoura
  */
-public class ExecuteUpdateThread implements Callable<Boolean> {
+public class ExecuteSynchronousSQLUpdateThread implements Callable<Boolean> {
 
 	/**  Connection to the database. */
 	protected final Connection connection;
 	
 	protected final Queue<String> queries;
 
-	public ExecuteUpdateThread(Queue<String> queries, Connection connection) {
+	public ExecuteSynchronousSQLUpdateThread(Queue<String> queries, Connection connection) {
 		//TODO check input arguments
 		this.connection = connection;
 		this.queries = queries;
