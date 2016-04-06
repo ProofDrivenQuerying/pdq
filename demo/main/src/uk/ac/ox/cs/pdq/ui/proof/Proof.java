@@ -33,28 +33,6 @@ public class Proof {
 	/** List of state that lead to a query match (full proof). */
 	private final List<State> states = new ArrayList<>();
 
-//	/** The goal of the proof. */
-//	private final Map<Variable, Constant> queryMatch;
-
-//	/**
-//	 * @param queryMatch
-//	 */
-//	public Proof(Map<Variable, Constant> queryMatch) {
-//		this.queryMatch = queryMatch;
-//	}
-
-	/**
- * Instantiates a new proof.
- *
- * @param states the states
- */
-//	private Proof(Map<Variable, Constant> match, List<State> states) {
-//		Preconditions.checkArgument(states != null);
-//		this.queryMatch = match;
-//		for (State s : states) {
-//			this.addState(s);
-//		}
-//	}
 	private Proof(List<State> states) {
 		Preconditions.checkArgument(states != null);
 		for (State s : states) {
@@ -79,13 +57,6 @@ public class Proof {
 	public List<State> getStates() {
 		return this.states;
 	}
-
-//	/**
-//	 * @return the query match of this proof
-//	 */
-//	public Map<Variable, Constant> getQueryMatch() {
-//		return this.queryMatch;
-//	}
 
 	/**
  * Builder.
@@ -141,7 +112,6 @@ public class Proof {
 			return false;
 		}
 		return this.getClass().isInstance(o)
-//				&& this.queryMatch.equals(((Proof) o).queryMatch)
 				&& this.states.equals(((Proof) o).states);
 	}
 
@@ -152,7 +122,6 @@ public class Proof {
 	 */
 	@Override
 	public int hashCode() {
-//		return Objects.hashCode(this.queryMatch, this.states);
 		return Objects.hashCode(this.states);
 	}
 
@@ -357,7 +326,6 @@ public class Proof {
 		@Override
 		public Proof build() {
 			this.addState();
-//			return new Proof(this.queryMatch, this.states);
 			return new Proof(this.states);
 		}
 	}

@@ -25,7 +25,6 @@ import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Evaluatable;
 import uk.ac.ox.cs.pdq.fol.Formula;
-import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismProperty.ActiveTriggerProperty;
@@ -372,8 +371,12 @@ public abstract class SQLStatementBuilder {
 			Conjunction<Atom> conjuncts = Conjunction.of(((Constraint)source).getAtoms());
 			List<String> attributeEqualityPredicates2 = this.createAttributeEqualities(conjuncts);
 			List<String> attributeConstantEqualityPredicates2 = this.createEqualitiesWithConstants(conjuncts);
+			List<String> factConstraints2 = this.translateFactConstraints(((TGD)source).getHead(), constraints);
 			predicates2.addAll(attributeEqualityPredicates2);
 			predicates2.addAll(attributeConstantEqualityPredicates2);
+			predicates2.addAll(factConstraints2);
+			
+			
 
 			String query2 = 
 					"(SELECT " 	+ Joiner.on(",").join(projectedVariables2.keySet()) + "\n" +  
@@ -426,9 +429,9 @@ public abstract class SQLStatementBuilder {
 	 * @param source the source
 	 * @return 		a list of the table names that will be queried
 	 */
-	protected List<String> createFromStatement(Conjunction<? extends Atom> predicates) {
+	protected List<String> createFromStatement(Conjunction<? extends Atom> atoms) {
 		List<String> relations = new ArrayList<String>();
-		for (Atom fact:predicates) {
+		for (Atom fact:atoms) {
 			String aliasName = this.aliasPrefix + this.aliasCounter;
 			relations.add(createTableAliasingExpression(aliasName, (Relation) fact.getPredicate()));
 			this.aliases.put(fact, aliasName);
@@ -541,6 +544,23 @@ public abstract class SQLStatementBuilder {
 					facts.add(atom.getId());
 				}
 				for(Atom fact:source.getBody().getAtoms()) {
+					String alias = this.aliases.get(fact);
+					setPredicates.add(createSQLMembershipExpression(fact.getTermsCount()-1, facts, (Relation) fact.getPredicate(), alias));
+				}
+			}
+		}
+		return setPredicates;
+	}
+	
+	protected List<String> translateFactConstraints(Conjunction<? extends Atom> atoms, HomomorphismProperty... constraints) {
+		List<String> setPredicates = new ArrayList<>();
+		for(HomomorphismProperty c:constraints) {
+			if(c instanceof FactProperty) {
+				List<Object> facts = new ArrayList<>();
+				for (Atom atom:((FactProperty) c).atoms) {
+					facts.add(atom.getId());
+				}
+				for(Atom fact:atoms) {
 					String alias = this.aliases.get(fact);
 					setPredicates.add(createSQLMembershipExpression(fact.getTermsCount()-1, facts, (Relation) fact.getPredicate(), alias));
 				}

@@ -292,7 +292,7 @@ public class DatabaseChaseListState extends DatabaseChaseState implements ListSt
 	public List<Match> getMatches(Query<?> query) {
 		return this.manager.getMatches(
 				Lists.<Query<?>>newArrayList(query),
-//				HomomorphismConstraint.createTopKConstraint(1),
+//				HomomorphismProperty.createTopKProperty(1),
 				HomomorphismProperty.createFactProperty(Conjunction.of(this.getFacts())),
 				HomomorphismProperty.createMapProperty(query.getFreeToCanonical()));
 	}
