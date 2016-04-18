@@ -12,10 +12,10 @@ import com.google.common.base.Preconditions;
  */
 public class Predicate {
 
-	/** Cached instance hash (only possible because signatures are immutable). */
+	/** Cached instance hash (only possible because predicates are immutable). */
 	protected final int hash;
 
-	/**  Cached string representation of the signature. */
+	/**  Cached string representation of the predicate. */
 	protected String rep;
 
 	/**  Predicate name. */
@@ -56,7 +56,7 @@ public class Predicate {
 	/**
 	 * Gets the name.
 	 *
-	 * @return the name of the predicate this signature underlies.
+	 * @return the name of the predicate.
 	 */
 	public String getName() {
 		return this.name;
@@ -65,7 +65,7 @@ public class Predicate {
 	/**
 	 * Gets the arity.
 	 *
-	 * @return the arity of the predicate this signature underlies.
+	 * @return the arity of the predicate.
 	 */
 	public int getArity() {
 		return this.arity;
