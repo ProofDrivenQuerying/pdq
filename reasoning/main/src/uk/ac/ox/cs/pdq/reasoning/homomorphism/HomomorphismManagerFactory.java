@@ -81,9 +81,8 @@ public class HomomorphismManagerFactory {
 			throw new IllegalStateException("No suitable driver found for homomorphism checker.", e);
 		}
 		try {
-			if (type != null) {
-				switch (type) {
-				case DATABASE:
+			if (type != null && type == HomomorphismDetectorTypes.DATABASE) {
+				
 					SQLStatementBuilder builder = null;
 					if (url != null && url.contains("mysql")) {
 						builder = new MySQLStatementBuilder();
@@ -110,22 +109,15 @@ public class HomomorphismManagerFactory {
 					result.initialize();
 					return result;
 				}
-			}
 		} catch (SQLException e) {
-			log.warn("Could not load " + database + ". Falling back to default database.", e);
+			throw new RuntimeException("Could not load " + database, e);
 		}
 		synchronized (counter) {
 			username = "APP_" + (counter++);
 		}
-		// Fail safe is in-memory derby
-		try {
-			result = new DBHomomorphismManager("org.apache.derby.jdbc.EmbeddedDriver",
-					"jdbc:derby:memory:{1};create=true", "chase", username, "", new DerbyStatementBuilder(),
-					schema);
-			result.initialize();
-			return result;
-		} catch (SQLException e) {
-			throw new IllegalStateException("Could not load default database.");
-		}
+		
+		//this point should be unreachable
+		return null;
+
 	}
 }
