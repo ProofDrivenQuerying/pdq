@@ -5,6 +5,7 @@ import java.util.List;
 
 import uk.ac.ox.cs.pdq.db.Constraint;
 import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismProperty;
 import uk.ac.ox.cs.pdq.reasoning.utility.FiringGraph;
@@ -31,7 +32,7 @@ public interface ChaseState {
 	 * @return
 	 * 		the list of matches of the input query to the facts of this state.
 	 */
-	List<Match> getMatches(Query<?> query);
+	List<Match> getMatches(ConjunctiveQuery query);
 	
 	/**
 	 * (Conjunctive query match definition) If Q′ is a conjunctive query and v is a chase configuration
@@ -64,7 +65,7 @@ public interface ChaseState {
 	 * @param query the query
 	 * @return 		true if this database instance is successful
 	 */
-	boolean isSuccessful(Query<?> query);
+	boolean isSuccessful(ConjunctiveQuery query);
 	
 	
 	/**

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import uk.ac.ox.cs.pdq.fol.Conjunction;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Query;
@@ -30,7 +31,7 @@ public class CrossProductFreeQuerySelector implements QuerySelector {
 	 * @see uk.ac.ox.cs.pdq.generator.reverse.QuerySelector#accept(uk.ac.ox.cs.pdq.fol.Query)
 	 */
 	@Override
-	public boolean accept(Query<?> q) {
+	public boolean accept(ConjunctiveQuery q) {
 		for (Conjunction<Atom> body : this.enumerateConjunctions(q.getBody())) {
 			if (body.size() > 1) {
 				Multimap<Term, Atom> clusters = LinkedHashMultimap.create();

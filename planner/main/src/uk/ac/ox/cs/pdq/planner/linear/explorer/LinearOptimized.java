@@ -24,6 +24,7 @@ import uk.ac.ox.cs.pdq.LimitReachedException;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
@@ -124,8 +125,8 @@ public class LinearOptimized extends LinearExplorer {
 	public LinearOptimized(
 			EventBus eventBus, 
 			boolean collectStats,
-			Query<?> query,
-			Query<?> accessibleQuery,
+			ConjunctiveQuery query,
+			ConjunctiveQuery accessibleQuery,
 			Schema schema,
 			AccessibleSchema accessibleSchema, 
 			Chaser chaser,

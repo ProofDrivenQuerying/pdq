@@ -16,7 +16,6 @@
   	<module>reasoning</module>
   	<module>cost</module>
   	<module>planner</module>
-  	<module>cardinality</module>
   	<module>runtime</module>
   	<module>datasources</module>
   	<module>regression</module>

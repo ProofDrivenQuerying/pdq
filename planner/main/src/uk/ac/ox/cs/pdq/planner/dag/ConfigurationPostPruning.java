@@ -11,6 +11,7 @@ import uk.ac.ox.cs.pdq.db.Constraint;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.plan.DAGPlan;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
@@ -67,7 +68,7 @@ public class ConfigurationPostPruning {
 	 * An exception is thrown if the input facts are not accessible or inferred accessible ones
 	 */
 	public ConfigurationPostPruning(
-			Query<?> accessibleQuery,
+			ConjunctiveQuery accessibleQuery,
 			AccessibleSchema accessibleSchema,
 			Chaser chaser,
 			CostEstimator<DAGPlan> costEstimator,

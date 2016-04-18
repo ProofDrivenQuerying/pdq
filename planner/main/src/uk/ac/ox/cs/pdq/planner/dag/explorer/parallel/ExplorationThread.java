@@ -7,6 +7,7 @@ import java.util.concurrent.Callable;
 
 import com.google.common.base.Preconditions;
 
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.plan.DAGPlan;
 import uk.ac.ox.cs.pdq.planner.dag.ConfigurationUtility;
@@ -31,7 +32,7 @@ import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
 public class ExplorationThread implements Callable<DAGChaseConfiguration> {
 
 	/**  The input query*. */
-	private final Query<?> query;
+	private final ConjunctiveQuery query;
 	
 	/**  Performs success dominance checks. */
 	private final SuccessDominance successDominance;
@@ -71,7 +72,7 @@ public class ExplorationThread implements Callable<DAGChaseConfiguration> {
 	 * @param successfulConfigurations 		The output non-dominated and successful (and not closed) configurations
 	 */
 	public ExplorationThread(
-			Query<?> query,
+			ConjunctiveQuery query,
 			Queue<DAGChaseConfiguration> input,
 			DAGEquivalenceClasses equivalenceClasses,
 			DAGChaseConfiguration best,

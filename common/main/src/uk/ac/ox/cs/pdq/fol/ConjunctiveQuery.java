@@ -46,13 +46,10 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 	protected final List<Variable> bound;
 
 	/**  Map of query's free variables to chase constants. */
-	protected final Map<Variable, Constant> freeToCanonical;
+	protected Map<Variable, Constant> freeToCanonical;
 
 	/**  The constants that appear in the query's body. */
 	protected final Collection<TypedConstant<?>> constants;
-
-	/**  The canonical database of the query. */
-	protected Conjunction<Atom> canonical;
 
 	/** The grounding. */
 	protected Map<Variable, Constant> grounding;
@@ -116,7 +113,6 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 		this.constants = getSchemaConstants(body);
 		this.freeToCanonical = getFreeToCanonical(head,grounding);
 		this.grounding = grounding;
-		this.canonical = this.ground(grounding);
 	}
 
 	/**
@@ -147,7 +143,7 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 	 * 		A fresh constant is created for each variable of the conjunction. 
 	 * 		This method is invoked by the conjunctive query constructor when the constructor is called with empty input canonical mapping.
 	 */
-	private static Map<Variable, Constant> generateCanonicalMapping(Conjunction<Atom> body) {
+	public static Map<Variable, Constant> generateCanonicalMapping(Conjunction<Atom> body) {
 		Map<Variable, Constant> canonicalMapping = new LinkedHashMap<>();
 			for (Atom p: body) {
 				for (Term t: p.getTerms()) {
@@ -184,18 +180,12 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 		return freeToCanonical;
 	}
 	
-	/* (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.fol.Query#setGrounding(java.util.Map)
-	 */
-	@Override
-	public void setGrounding(Map<Variable, Constant> grounding) {
-		this.grounding = grounding;
-		this.canonical = this.ground(grounding);
-	}
-	
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.formula.Query#ground(java.util.Map)
+	/**
+	 * Retruns the grounded body atoms of this query.
+	 *
+	 * @param mapping Map<Variable,Constant>
+	 * @return a copy of the query grounded using the given mapping
+	 * @see uk.ac.ox.cs.pdq.formula.Formula#ground(Map<Variable,Constant>)
 	 */
 	@Override
 	public Conjunction<Atom> ground(Map<Variable, Constant> mapping) {
@@ -204,18 +194,6 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 			bodyAtoms.add(atom.ground(mapping));
 		}
 		return Conjunction.of(bodyAtoms);
-	}
-
-
-	/**
-	 * Gets the canonical.
-	 *
-	 * @return Conjunction<PredicateFormula>
-	 * @see uk.ac.ox.cs.pdq.fol.Query#getCanonical()
-	 */
-	@Override
-	public Conjunction<Atom> getCanonical() {
-		return this.canonical;
 	}
 
 	/**
@@ -311,21 +289,24 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 	}
 
 	/**
-	 * Gets the free to canonical.
+	 * Gets the mapping of the free query variables to canonical constants.
 	 *
-	 * @return Map<Variable,Term>
-	 * @see uk.ac.ox.cs.pdq.fol.Query#getFreeToCanonical()
+	 * @return a map of query's free variables to its canonical constants.
+	 * Given a CQ Q, the canonical database of Q is the instance which has for each atom R(\vec{v}) 
+	 * in Q a corresponding fact for relation R with \vec{v} as a tuple. The canonical constants are the constants of the canonical database of Q
 	 */
-	@Override
-	public Map<Variable, Constant> getFreeToCanonical() {
+	public Map<Variable, Constant> getGroundingsProjectionOnFreeVars() {
 		return this.freeToCanonical;
 	}
 	
-	/* (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.fol.Query#getVariablesToCanonical()
+	/**
+	 * Gets the mapping of all query variables to canonical constants.
+	 *
+	 * @return a map of query's variables both free and quantified to chase constants appear in the canonical query.
+	 * Given a CQ Q, the canonical database of Q is the instance which has for each atom R(\vec{v}) 
+	 * in Q a corresponding fact for relation R with \vec{v} as a tuple. The canonical constants are the constants of the canonical database of Q
 	 */
-	@Override
-	public Map<Variable, Constant> getVariablesToCanonical() {
+	public Map<Variable, Constant> getGrounding() {
 		return this.grounding;
 	}
 

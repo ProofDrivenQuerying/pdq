@@ -1,5 +1,6 @@
 package uk.ac.ox.cs.pdq.generator.reverse;
 
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Query;
 
 // TODO: Auto-generated Javadoc
@@ -17,5 +18,5 @@ public interface QuerySelector {
 	 * @param q the q
 	 * @return true, iff the given query passes the query-selection test.
 	 */
-	public boolean accept(Query<?> q);
+	public boolean accept(ConjunctiveQuery q);
 }

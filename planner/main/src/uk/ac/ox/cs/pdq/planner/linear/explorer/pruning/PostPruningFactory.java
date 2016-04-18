@@ -1,5 +1,6 @@
 package uk.ac.ox.cs.pdq.planner.linear.explorer.pruning;
 
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.PostPruningTypes;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
@@ -29,7 +30,7 @@ public class PostPruningFactory {
 	private final Chaser chaser;
 	
 	/** The query. */
-	private final Query<?> query;
+	private final ConjunctiveQuery query;
 
 	/**
 	 * Instantiates a new post pruning factory.
@@ -40,7 +41,7 @@ public class PostPruningFactory {
 	 * @param query the query
 	 * @param accessibleSchema the accessible schema
 	 */
-	public PostPruningFactory(PostPruningTypes type, NodeFactory nodeFactory, Chaser chaser, Query<?> query,
+	public PostPruningFactory(PostPruningTypes type, NodeFactory nodeFactory, Chaser chaser, ConjunctiveQuery query,
 			AccessibleSchema accessibleSchema) {
 		Preconditions.checkNotNull(nodeFactory);
 		Preconditions.checkNotNull(chaser);

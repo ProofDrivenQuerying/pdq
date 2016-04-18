@@ -8,6 +8,7 @@ import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.rewrite.Rewriter;
 import uk.ac.ox.cs.pdq.rewrite.RewriterException;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.beust.jcommander.internal.Lists;
 import com.logicblox.common.Sets;
@@ -28,11 +29,11 @@ public class QueryHeadProjecor implements Rewriter<ConjunctiveQuery, Conjunctive
 	 *
 	 * @param query the query
 	 */
-	public QueryHeadProjecor(Query<?> query) {
+	public QueryHeadProjecor(ConjunctiveQuery query) {
 		this.terms = new HashSet<>();
 		for (Term t: query.getFree()) {
 			if (t.isVariable()) {
-				this.terms.add(query.getFreeToCanonical().get(t));
+				this.terms.add(query.getGroundingsProjectionOnFreeVars().get(t));
 			} else {
 				this.terms.add(t);
 			}

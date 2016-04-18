@@ -152,11 +152,11 @@ public class RuntimeTest extends RegressionTest {
 	 * @param query Query
 	 * @throws EvaluationException the evaluation exception
 	 */
-	private static void validateData(File directory, Schema schema, Query<?> query) throws EvaluationException {
+	private static void validateData(File directory, Schema schema, ConjunctiveQuery query) throws EvaluationException {
 		PlannerParameters plParams = new PlannerParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
 		ReasoningParameters reasoningParams = new ReasoningParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
 		AccessibleSchema accessibleSchema = new AccessibleSchema(schema);
-		Query<?> accessibleQuery = accessibleSchema.accessible(query, query.getVariablesToCanonical());
+		Query<?> accessibleQuery = accessibleSchema.accessible(query);
 		try (HomomorphismManager manager = new HomomorphismManagerFactory().getInstance(accessibleSchema, reasoningParams)) {
 			manager.addQuery(accessibleQuery);
 			DataValidationImplementation dataValidator = new DataValidationImplementation(schema, (DBHomomorphismManager) manager);
@@ -176,7 +176,7 @@ public class RuntimeTest extends RegressionTest {
 	 * @param full boolean
 	 * @return Plan
 	 */
-	private Plan obtainPlan(File directory, Schema schema, Query<?> query, boolean full) {
+	private Plan obtainPlan(File directory, Schema schema, ConjunctiveQuery query, boolean full) {
 		if (full) {
 			PlannerParameters plParams = new PlannerParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
 			CostParameters costParams = new CostParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));

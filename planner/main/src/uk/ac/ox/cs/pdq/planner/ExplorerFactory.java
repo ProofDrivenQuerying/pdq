@@ -15,6 +15,7 @@ import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.plan.DAGPlan;
 import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
@@ -98,8 +99,8 @@ public class ExplorerFactory {
 			boolean collectStats,
 			Schema schema,
 			AccessibleSchema accessibleSchema,
-			Query<?> query,
-			Query<?> accessibleQuery,
+			ConjunctiveQuery query,
+			ConjunctiveQuery accessibleQuery,
 			Chaser chaser,
 			HomomorphismDetector detector,
 			CostEstimator<P> costEstimator,

@@ -50,6 +50,7 @@ import prefuse.controls.FocusControl;
 import prefuse.controls.WheelZoomControl;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.io.pretty.AccessOnlyPlanWriter;
 import uk.ac.ox.cs.pdq.io.pretty.AlgebraLikeLeftDeepPlanWriter;
@@ -254,7 +255,7 @@ NOT_STARTED, /** The started. */
 	private AccessibleSchema accSchema;
 	
 	/**  The query to be used during this planning session. */
-	private Query query;
+	private ConjunctiveQuery query;
 
 	/**  The previous plan obtained with the setting of this planning session. */
 	private ObservablePlan plan;
@@ -296,7 +297,10 @@ NOT_STARTED, /** The started. */
 	 * @param query the new query
 	 */
 	void setQuery(ObservableQuery query) {
-		this.query = query.getQuery();
+		
+		if(!(query.getQuery() instanceof ConjunctiveQuery))
+				throw new RuntimeException("Only Conjunctive Queries Supported Currently");
+		this.query = (ConjunctiveQuery) query.getQuery();
 	}
 
 	/**

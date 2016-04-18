@@ -60,14 +60,14 @@ public class ReasonerUtility {
 		//Create the set of EGDs that correspond to the given table and keys
 		EGD egd = EGD.getEGDs(new Predicate(table.getName(),table.getHeader().size()), (List<Attribute>) table.getHeader(), candidateKeys);
 		
-		Query<?> lquery = new ConjunctiveQuery(new Atom(new Predicate("Q", egd.getFree().size()), egd.getFree()), egd.getLeft());
+		ConjunctiveQuery lquery = new ConjunctiveQuery(new Atom(new Predicate("Q", egd.getFree().size()), egd.getFree()), egd.getLeft());
 		
-		Query<?> rquery = new ConjunctiveQuery(new Atom(new Predicate("Q", egd.getRight().getTerms().size()), egd.getRight().getTerms()), 
+		ConjunctiveQuery rquery = new ConjunctiveQuery(new Atom(new Predicate("Q", egd.getRight().getTerms().size()), egd.getRight().getTerms()), 
 				Conjunction.of(egd.getRight().getAtoms()));
 		
 		//Creates a chase state that consists of the canonical database of the input query.
 		ListState state = new DatabaseChaseListState(lquery, detector);
-		return egdChaser.entails(state, lquery.getFreeToCanonical(), rquery, constraints);
+		return egdChaser.entails(state, lquery.getGroundingsProjectionOnFreeVars(), rquery, constraints);
 	}
 	
 	

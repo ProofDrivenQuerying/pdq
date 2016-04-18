@@ -10,6 +10,7 @@ import uk.ac.ox.cs.pdq.algebra.predicates.ConjunctivePredicate;
 import uk.ac.ox.cs.pdq.algebra.predicates.ConstantEqualityPredicate;
 import uk.ac.ox.cs.pdq.algebra.predicates.Predicate;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.fol.Term;
@@ -67,13 +68,13 @@ public class Operators {
 	 * @param childOp LogicalOperator
 	 * @return Projection
 	 */
-	public static Projection createFinalProjection(Query<?> query, RelationalOperator childOp) {
+	public static Projection createFinalProjection(ConjunctiveQuery query, RelationalOperator childOp) {
 		List<Term> freeTerms = query.getFree();
 		List<Term> toProject = new ArrayList<>();
 		for (Term term: freeTerms) {
 			if (term.isVariable()) {
-				Constant constant = query.getFreeToCanonical().get(term);
-				Preconditions.checkState(childOp.getColumns().contains(constant), constant + " not in " + childOp.getColumns() + "\nQuery: " + query + "\nCanonical Mapping: " + query.getFreeToCanonical() + "\nSubplan: " + childOp);
+				Constant constant = query.getGroundingsProjectionOnFreeVars().get(term);
+				Preconditions.checkState(childOp.getColumns().contains(constant), constant + " not in " + childOp.getColumns() + "\nQuery: " + query + "\nCanonical Mapping: " + query.getGroundingsProjectionOnFreeVars() + "\nSubplan: " + childOp);
 				toProject.add(constant);
 			} else {
 				toProject.add(term);

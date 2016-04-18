@@ -29,6 +29,7 @@ import uk.ac.ox.cs.pdq.endpoint.util.RequestParameters;
 import uk.ac.ox.cs.pdq.endpoint.util.ServletContextAttributes;
 import uk.ac.ox.cs.pdq.endpoint.util.SessionAttributes;
 import uk.ac.ox.cs.pdq.endpoint.util.WebBasedStatisticsLogger;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.io.ReaderException;
 import uk.ac.ox.cs.pdq.io.xml.QueryReader;
@@ -100,7 +101,7 @@ public class PlannerServlet extends PDQServlet {
     	}
 
     	// Parsing query
-		final Query<?> query;
+		final ConjunctiveQuery query;
     	try(InputStream qis = queryFile.getInputStream()) {
 			query = new QueryReader(schema).read(qis);
     	} catch (ReaderException e) {

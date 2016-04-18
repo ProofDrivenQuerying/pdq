@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -34,7 +35,7 @@ import com.google.common.collect.Lists;
  *
  * @author Efthymia Tsamoura
  * @author Julien Leblay
- *
+ * @author George Konstantinidis
  */
 public class Utility {
 
@@ -537,6 +538,23 @@ public class Utility {
 		}
 		return "'" + o + "'";
 	}
+	
+	/**
+	 * It projects the input map, keeping <key,value> pairs, where the key exists as a variable in the input Atom.
+	 */
+//	public static Map<Variable, Constant> projectMapOnAtomsVariables(Atom atom, Map<Variable, Constant> map) {
+//	Map<Variable, Constant> projectedMap = new LinkedHashMap<>();
+//	for(Term headTerm: atom.getTerms()) {
+//		Constant chaseTerm  = map.get(headTerm);
+//		if (chaseTerm != null && !chaseTerm.isSkolem()) {
+//			throw new java.lang.IllegalStateException("Chase Term " + headTerm + ", " + atom.getTerms());
+//		}
+//		if (headTerm.isVariable()) {
+//			projectedMap.put((Variable) headTerm, chaseTerm);
+//		}
+//	}
+//	return projectedMap;
+//}
 	
 	/**
 	 * Asserts enabled.

@@ -9,6 +9,7 @@ import uk.ac.ox.cs.pdq.db.Constraint;
 import uk.ac.ox.cs.pdq.db.EGD;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Equality;
 import uk.ac.ox.cs.pdq.fol.Formula;
@@ -23,6 +24,7 @@ import uk.ac.ox.cs.pdq.reasoning.utility.EqualConstantsClasses;
 import uk.ac.ox.cs.pdq.reasoning.utility.FiringGraph;
 import uk.ac.ox.cs.pdq.reasoning.utility.MapFiringGraph;
 import uk.ac.ox.cs.pdq.reasoning.utility.Match;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.beust.jcommander.internal.Lists;
 import com.google.common.base.Preconditions;
@@ -67,8 +69,8 @@ public class DatabaseChaseListState extends DatabaseChaseState implements ListSt
 	 * @param query the query
 	 * @param manager the manager
 	 */
-	public DatabaseChaseListState(Query<?> query, DBHomomorphismManager manager) {
-		this(manager, Sets.newHashSet(query.getCanonical().getAtoms()), new MapFiringGraph(), inferEqualConstantsClasses(query.getCanonical().getAtoms()));
+	public DatabaseChaseListState(ConjunctiveQuery query, DBHomomorphismManager manager) {
+		this(manager, Sets.newHashSet(query.ground(ConjunctiveQuery.generateCanonicalMapping(query.getBody())).getAtoms()), new MapFiringGraph(), inferEqualConstantsClasses(query.ground(ConjunctiveQuery.generateCanonicalMapping(query.getBody())).getAtoms()));
 		this.manager.addFacts(this.facts);
 	}
 
@@ -225,7 +227,7 @@ public class DatabaseChaseListState extends DatabaseChaseState implements ListSt
 	 * @see uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState#isSuccessful(uk.ac.ox.cs.pdq.fol.Query)
 	 */
 	@Override
-	public boolean isSuccessful(Query<?> query) {
+	public boolean isSuccessful(ConjunctiveQuery query) {
 		return !this.getMatches(query).isEmpty();
 	}
 
@@ -289,12 +291,12 @@ public class DatabaseChaseListState extends DatabaseChaseState implements ListSt
 	 * @see uk.ac.ox.cs.pdq.chase.state.ChaseState#getMatches(Query)
 	 */
 	@Override
-	public List<Match> getMatches(Query<?> query) {
+	public List<Match> getMatches(ConjunctiveQuery query) {
 		return this.manager.getMatches(
 				Lists.<Query<?>>newArrayList(query),
 //				HomomorphismProperty.createTopKProperty(1),
 				HomomorphismProperty.createFactProperty(Conjunction.of(this.getFacts())),
-				HomomorphismProperty.createMapProperty(query.getFreeToCanonical()));
+				HomomorphismProperty.createMapProperty(query.getGroundingsProjectionOnFreeVars()));
 	}
 	
 	/**

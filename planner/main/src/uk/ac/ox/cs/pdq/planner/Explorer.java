@@ -76,10 +76,10 @@ public abstract class Explorer<P extends Plan> {
 		this.tick = System.nanoTime();
 		this.post();
 		while (!this.terminates() && !this.forcedTermination) {
-			if (this.checkLimitReached()) {
-				this.forcedTermination = true;
-				break;
-			}
+//			if (this.checkLimitReached()) {
+//				this.forcedTermination = true;
+//				break;
+//			}
 			this._explore();
 			this.rounds++;
 			this.post();

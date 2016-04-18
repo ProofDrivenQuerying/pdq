@@ -12,6 +12,7 @@ import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.cost.CostStatKeys;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.db.Schema;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.logging.performance.ChainedStatistics;
 import uk.ac.ox.cs.pdq.logging.performance.DynamicStatistics;
@@ -165,7 +166,7 @@ public class ExplorationSetUp {
 	 *         operation.
 	 * @throws PlannerException the planner exception
 	 */
-	public <P extends Plan> P search(Query<?> query) throws PlannerException {
+	public <P extends Plan> P search(ConjunctiveQuery query) throws PlannerException {
 		return this.search(query,false);
 	}
 	
@@ -183,7 +184,7 @@ public class ExplorationSetUp {
 	 *         operation.
 	 * @throws PlannerException the planner exception
 	 */
-	public <S extends AccessibleChaseState, P extends Plan> P search(Query<?> query, boolean noDep) throws PlannerException {
+	public <S extends AccessibleChaseState, P extends Plan> P search(ConjunctiveQuery query, boolean noDep) throws PlannerException {
 		
 		boolean collectStats = this.statsLogger != null;
 		
@@ -200,7 +201,7 @@ public class ExplorationSetUp {
 		}
 
 		this.detector.addQuery(query);
-		Query<?> accessibleQuery = this.accessibleSchema.accessible(query, query.getVariablesToCanonical());
+		ConjunctiveQuery accessibleQuery = this.accessibleSchema.accessible(query, query.getGrounding());
 		
 		Explorer<P> explorer = null;
 		try{
@@ -213,10 +214,7 @@ public class ExplorationSetUp {
 					this.eventBus, 
 					collectStats,
 					this.reasoningParams).getInstance();
-			
-			
-			//reasoner.reasonUntilTermination(state, accessibleQuery, this.schema.getDependencies());
-			
+				
 			
 			explorer = ExplorerFactory.createExplorer(
 					this.eventBus, 

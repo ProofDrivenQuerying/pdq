@@ -7,6 +7,7 @@ import org.jgrapht.graph.DefaultEdge;
 
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.db.Schema;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.planner.Explorer;
@@ -47,10 +48,10 @@ import com.google.common.eventbus.EventBus;
 public abstract class LinearExplorer extends Explorer<LeftDeepPlan> {
 
 	/**  The input user query *. */
-	protected final Query<?> query;
+	protected final ConjunctiveQuery query;
 	
 	/**  The accessible counterpart of the user query *. */
-	protected final Query<?> accessibleQuery;
+	protected final ConjunctiveQuery accessibleQuery;
 
 	/**  The input schema *. */
 	protected final Schema schema;
@@ -102,8 +103,8 @@ public abstract class LinearExplorer extends Explorer<LeftDeepPlan> {
 	 */
 	public LinearExplorer(EventBus eventBus, 
 			boolean collectStats,
-			Query<?> query,
-			Query<?> accessibleQuery,
+			ConjunctiveQuery query,
+			ConjunctiveQuery accessibleQuery,
 			Schema schema,
 			AccessibleSchema accessibleSchema, 
 			Chaser chaser,
