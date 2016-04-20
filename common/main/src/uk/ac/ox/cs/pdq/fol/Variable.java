@@ -121,4 +121,9 @@ public class Variable implements Named, Term {
 	public String getName() {
 		return this.name;
 	}
+	
+	@Override
+	public Variable clone() {
+		return new Variable(this.name);
+	}
 }

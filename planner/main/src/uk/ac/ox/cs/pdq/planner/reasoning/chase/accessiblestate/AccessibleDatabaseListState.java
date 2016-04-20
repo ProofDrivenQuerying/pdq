@@ -34,6 +34,7 @@ import uk.ac.ox.cs.pdq.reasoning.utility.MapFiringGraph;
 import uk.ac.ox.cs.pdq.reasoning.utility.Match;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
@@ -78,7 +79,8 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 		this(manager, 
 				createInitialFacts(query, schema), 
 				new MapFiringGraph(),
-				inferEqualConstantsClasses(createInitialFacts(query, schema)),
+				new EqualConstantsClasses(),
+				inferConstantsMap(createInitialFacts(query, schema)),
 				Utility.inferInferred(createInitialFacts(query, schema)),
 				Utility.inferDerivedInferred(),
 				Utility.inferSignatureGroups(createInitialFacts(query, schema)),
@@ -125,12 +127,13 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 			Collection<Atom> facts,
 			FiringGraph graph,
 			EqualConstantsClasses constantClasses,
+			Multimap<Constant,Atom> constants,
 			Collection<String> inferred,
 			Collection<Atom> derivedInferred,
 			Multimap<Predicate, Atom> signatureGroups,
 			Multimap<Term,Atom> accessibleTerms
 			) {
-		super(manager, facts, graph, constantClasses);
+		super(manager, facts, graph, constantClasses, constants);
 		this.inferred = inferred;
 		this.derivedInferred = derivedInferred;
 		this.signatureGroups = signatureGroups;
@@ -328,9 +331,12 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 	 */
 	@Override
 	public AccessibleDatabaseListState clone() {
+		Multimap<Constant, Atom> constantsToAtoms = HashMultimap.create();
+		constantsToAtoms.putAll(this.constantsToAtoms);
 		return new AccessibleDatabaseListState(this.manager, Sets.newHashSet(this.facts), 
 				this.graph.clone(),
-				this.constantClasses.clone(),
+				this.classes.clone(),
+				constantsToAtoms,
 				new LinkedHashSet<>(this.inferred),
 				new LinkedHashSet<>(this.derivedInferred), 
 				LinkedHashMultimap.create(this.signatureGroups), 
@@ -353,15 +359,21 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 		Multimap<Term,Atom> accessibleTerms = LinkedHashMultimap.create(this.accessibleTerms);
 		accessibleTerms.putAll(((AccessibleDatabaseListState)s).accessibleTerms);
 		
-		EqualConstantsClasses classes = this.constantClasses.clone();
+		EqualConstantsClasses classes = this.classes.clone();
 		if(!classes.merge(((DatabaseChaseListState)s).getConstantClasses())) {
 			return null;
 		}
+		
+		Multimap<Constant, Atom> constantsToAtoms = HashMultimap.create();
+		constantsToAtoms.putAll(this.constantsToAtoms);
+		constantsToAtoms.putAll(((AccessibleDatabaseListState)s).getConstantsToAtoms());
+
 		return new AccessibleDatabaseListState(
 				this.getManager(),
 				facts, 
 				this.getFiringGraph().merge(s.getFiringGraph()),
 				classes,
+				constantsToAtoms,
 				inferred,
 				derivedInferred, 
 				signatureGroups, 

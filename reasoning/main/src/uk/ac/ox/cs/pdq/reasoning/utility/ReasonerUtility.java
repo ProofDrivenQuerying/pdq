@@ -27,7 +27,7 @@ import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseListState;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ListState;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.DatabaseHomomorphismManager;
 import uk.ac.ox.cs.pdq.util.Table;
 import uk.ac.ox.cs.pdq.util.Utility;
 
@@ -56,7 +56,7 @@ public class ReasonerUtility {
 	 * @param detector the detector
 	 * @return 		true if the input set of attributes is a key of the input table
 	 */
-	public boolean isKey(Table table, List<Attribute> candidateKeys, Collection<? extends Constraint<?,?>> constraints, ParallelEGDChaser egdChaser, DBHomomorphismManager detector) {
+	public boolean isKey(Table table, List<Attribute> candidateKeys, Collection<? extends Constraint<?,?>> constraints, ParallelEGDChaser egdChaser, DatabaseHomomorphismManager detector) {
 		//Create the set of EGDs that correspond to the given table and keys
 		EGD egd = EGD.getEGDs(new Predicate(table.getName(),table.getHeader().size()), (List<Attribute>) table.getHeader(), candidateKeys);
 		

@@ -2,6 +2,7 @@ package uk.ac.ox.cs.pdq.reasoning.utility;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -25,7 +26,7 @@ import com.google.common.base.Preconditions;
 public class EqualConstantsClasses {
 
 	/**  The classes of equal constants*. */
-	private final Set<EqualConstantsClass> classes = new HashSet<>();
+	private Set<EqualConstantsClass> classes = new HashSet<>();
 
 	/**
 	 * Instantiates a new equal constants classes.
@@ -56,10 +57,21 @@ public class EqualConstantsClasses {
 		EqualConstantsClass c0 = this.getClass(terms.get(0));
 		EqualConstantsClass c1 = this.getClass(terms.get(1));
 
+		if(c0 != null && c1 != null && c0.equals(c1)) {
+			return true;
+		}
 		if(c0 != null && c1 != null) {
 			if(c0.add(terms.get(1), c1)) {
 				if(!c0.equals(c1)) {
-					this.classes.remove(c1);
+					Set<EqualConstantsClass> classes = new HashSet<>();
+					Iterator<EqualConstantsClass> iterator = this.classes.iterator();
+					while (iterator.hasNext()) {
+						EqualConstantsClass cls = iterator.next();
+						if (!cls.equals(c1)) {
+							classes.add(cls);
+						}
+					}
+					this.classes = classes;
 				}
 			}
 			else {

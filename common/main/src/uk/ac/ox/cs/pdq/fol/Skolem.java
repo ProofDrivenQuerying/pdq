@@ -83,9 +83,9 @@ public final class Skolem implements Named, Constant {
 	 */
 	@Override
 	public int hashCode() {
-		if (this.hash == Integer.MIN_VALUE) {
+//		if (this.hash == Integer.MIN_VALUE) {
 			this.hash = Objects.hash(this.name);
-		}
+//		}
 		return this.hash;
 	}
 
@@ -135,5 +135,10 @@ public final class Skolem implements Named, Constant {
 	@Override
 	public boolean isVariable() {
 		return false;
+	}
+	
+	@Override
+	public Skolem clone() {
+		return new Skolem(this.name);
 	}
 }

@@ -31,7 +31,7 @@ import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters.ReasoningTypes;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseListState;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ListState;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.DatabaseHomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismManagerFactory;
@@ -236,7 +236,7 @@ public class RestrictedChaserTest {
 			    detector.addQuery(query);
 				ReasoningParameters reasoningParameters = new ReasoningParameters();
 				reasoningParameters.setReasoningType(ReasoningTypes.RESTRICTED_CHASE);
-				ListState state = new DatabaseChaseListState(query, (DBHomomorphismManager) detector);				
+				ListState state = new DatabaseChaseListState(query, (DatabaseHomomorphismManager) detector);				
 				reasoner.reasonUntilTermination(state, schema.getDependencies());
 				detector.clearQuery();
 

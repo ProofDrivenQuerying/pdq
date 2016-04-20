@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Queue;
-import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -45,7 +44,6 @@ import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.io.xml.QNames;
-import uk.ac.ox.cs.pdq.reasoning.chase.state.EOFAtom;
 import uk.ac.ox.cs.pdq.reasoning.utility.Match;
 
 import com.beust.jcommander.internal.Maps;
@@ -64,10 +62,10 @@ import com.google.common.collect.Sets;
  * @author Efthymia Tsamoura
  *
  */
-public class DBHomomorphismManager implements HomomorphismManager {
+public class DatabaseHomomorphismManager implements HomomorphismManager {
 
 	/** Logger. */
-	private static Logger log = Logger.getLogger(DBHomomorphismManager.class);
+	private static Logger log = Logger.getLogger(DatabaseHomomorphismManager.class);
 
 	/** The schema relations */
 	protected final List<Relation> relations;
@@ -90,16 +88,12 @@ public class DBHomomorphismManager implements HomomorphismManager {
 	/** Number of parallel threads. **/
 	protected final int synchronousThreads = 10;
 
-	protected final int asynchronousThreads = 1;
-
 	protected final long timeout = 3600000;
 
 	protected final TimeUnit unit = TimeUnit.MILLISECONDS;
 
 	/**  Open database connections. */
 	protected final List<Connection> synchronousConnections = Lists.newArrayList();
-
-	protected final List<Connection> asynchronousConnections = Lists.newArrayList();
 
 	protected Connection setupConnection;
 
@@ -136,22 +130,9 @@ public class DBHomomorphismManager implements HomomorphismManager {
 	Set<String> dropQueryIndexStatements = Sets.newLinkedHashSet();
 	//------------------------------------------------------//
 
-	/** True if this object has started the asynchronous threads that insert facts to the database **/
-	public boolean asynchronousInsertsOn = false;
-
-	//	/** True if this object has started the asynchronous threads that insert facts to the database **/
-	//	private int asynchronousWriteCounter = 0;
-
-	//	/** Threads that will run the asynchronous inserts **/
-	//	private List<ExecuteAsynchronousSQLInsertThread> asynchronousWriteThreads = Lists.newArrayList();
-
-	/** Caches of tuples. Caches are grouped based on the fact predicates. The facts are flushed to disk when the cache is full**/
-	protected final Map<Predicate,Set<Atom>> caches = Maps.newHashMap();
-
 	/** Inmemory cache size**/
 	protected final static int insertCacheSize = 1000; 
 
-	protected boolean eof = false;
 
 	/**
 	 * Instantiates a new DB homomorphism manager.
@@ -165,7 +146,7 @@ public class DBHomomorphismManager implements HomomorphismManager {
 	 * @param schema 		Input schema
 	 * @throws SQLException the SQL exception
 	 */
-	public DBHomomorphismManager(
+	public DatabaseHomomorphismManager(
 			String driver, 
 			String url, 
 			String database,
@@ -174,16 +155,6 @@ public class DBHomomorphismManager implements HomomorphismManager {
 			SQLStatementBuilder builder,
 			Schema schema
 			) throws SQLException {
-
-		//		for(int i = 0; i < this.synchronousThreads; ++i) {
-		//			this.synchronousConnections.add(getConnection(driver, url, database, username, password));
-		//		}
-		//		DBHomomorphismManager.openConnections.addAll(this.synchronousConnections);
-		//		for(int i = 0; i < this.asynchronousThreads; ++i) {
-		//			this.asynchronousConnections.add(getConnection(driver, url, database, username, password));
-		//		}
-		//		DBHomomorphismManager.openConnections.addAll(this.asynchronousConnections);
-
 		this.driver = driver;
 		this.url = url;
 		this.username = username;
@@ -197,8 +168,6 @@ public class DBHomomorphismManager implements HomomorphismManager {
 		this.constants = schema.getConstants();
 		this.relations = Lists.newArrayList(schema.getRelations());
 		this.toDatabaseTables = new LinkedHashMap<>();
-		//		this.setupConnection = getConnection(driver, url, database, username, password);
-		//		DBHomomorphismManager.openConnections.add(this.setupConnection);
 	}
 
 	/**
@@ -217,7 +186,7 @@ public class DBHomomorphismManager implements HomomorphismManager {
 	 * @param constraints the constraints
 	 * @throws SQLException the SQL exception
 	 */
-	protected DBHomomorphismManager(
+	protected DatabaseHomomorphismManager(
 			String driver, 
 			String url, 
 			String database,
@@ -228,14 +197,6 @@ public class DBHomomorphismManager implements HomomorphismManager {
 			Map<String, TypedConstant<?>> constants,
 			Map<String, DatabaseRelation> toDatabaseRelations,
 			Set<Evaluatable> constraints) throws SQLException {
-		//		for(int i = 0; i < this.synchronousThreads; ++i) {
-		//			this.synchronousConnections.add(getConnection(driver, url, database, username, password));
-		//		}
-		//		DBHomomorphismManager.openConnections.addAll(this.synchronousConnections);
-		//		for(int i = 0; i < this.asynchronousThreads; ++i) {
-		//			this.asynchronousConnections.add(getConnection(driver, url, database, username, password));
-		//		}
-		//		DBHomomorphismManager.openConnections.addAll(this.asynchronousConnections);
 		this.driver = driver;
 		this.url = url;
 		this.username = username;
@@ -246,8 +207,6 @@ public class DBHomomorphismManager implements HomomorphismManager {
 		this.constraints = constraints;
 		this.constants = constants;
 		this.relations = relations;
-		//		this.setupConnection = getConnection(driver, url, database, username, password);
-		//		DBHomomorphismManager.openConnections.add(this.setupConnection);
 
 	}
 
@@ -323,8 +282,6 @@ public class DBHomomorphismManager implements HomomorphismManager {
 	 * @throws HomomorphismException the homomorphism exception
 	 */
 	protected void dropDatabase() throws HomomorphismException {
-
-
 		try {
 			if(this.setupConnection == null) {
 				this.setupConnection = getConnection(this.driver, this.url, this.database, this.username, this.password);
@@ -349,7 +306,7 @@ public class DBHomomorphismManager implements HomomorphismManager {
 	@Override
 	public void close() throws Exception {
 		this.dropDatabase();
-		for(Connection con:DBHomomorphismManager.openConnections) {
+		for(Connection con:DatabaseHomomorphismManager.openConnections) {
 			con.close();
 		}
 	}
@@ -405,9 +362,9 @@ public class DBHomomorphismManager implements HomomorphismManager {
 	 * @see uk.ac.ox.cs.pdq.homomorphism.HomomorphismDetector#clone()
 	 */
 	@Override
-	public DBHomomorphismManager clone() {
+	public DatabaseHomomorphismManager clone() {
 		try {
-			DBHomomorphismManager clone = new DBHomomorphismManager(
+			DatabaseHomomorphismManager clone = new DatabaseHomomorphismManager(
 					this.driver, this.url, this.database, this.username, this.password,
 					this.builder.clone(), 
 					this.relations, 
@@ -520,7 +477,7 @@ public class DBHomomorphismManager implements HomomorphismManager {
 				for(int i = 0; i < this.synchronousThreads; ++i) {
 					this.synchronousConnections.add(getConnection(this.driver, this.url, this.database, this.username, this.password));
 				}
-				DBHomomorphismManager.openConnections.addAll(this.synchronousConnections);
+				DatabaseHomomorphismManager.openConnections.addAll(this.synchronousConnections);
 			}
 
 			//Create a pool of threads to run in parallel
@@ -603,7 +560,7 @@ public class DBHomomorphismManager implements HomomorphismManager {
 				for(int i = 0; i < this.synchronousThreads; ++i) {
 					this.synchronousConnections.add(getConnection(this.driver, this.url, this.database, this.username, this.password));
 				}
-				DBHomomorphismManager.openConnections.addAll(this.synchronousConnections);
+				DatabaseHomomorphismManager.openConnections.addAll(this.synchronousConnections);
 			}
 			//Create a pool of threads to run in parallel
 			executorService = Executors.newFixedThreadPool(this.synchronousThreads);
@@ -642,105 +599,6 @@ public class DBHomomorphismManager implements HomomorphismManager {
 		}
 	}
 
-	public void addFactsAsynchronously(Collection<? extends Atom> facts) {
-		/*		
-		//List<ExecuteAsynchronousSQLInsertThread> threads = new ArrayList<>();
-		//Start the write threads if not started yet
-		if(!this.asynchronousInsertsOn) {
-			ExecutorService executorService = null;
-			//Create a pool of threads to run in parallel
-			executorService = Executors.newFixedThreadPool(this.asynchronousThreads);
-			for(int j = 0; j < this.asynchronousThreads; ++j) {
-				//Create the threads that will run the database update statements
-				ExecuteAsynchronousSQLInsertThread thread = new ExecuteAsynchronousSQLInsertThread(this.builder, this.toDatabaseTables, this.asynchronousConnections.get(j));
-				this.asynchronousWriteThreads.add(thread);
-				executorService.submit(thread);
-			}
-			this.asynchronousInsertsOn = true;
-		}
-		//Assign the facts to the threads in a round-robin way
-		if(this.asynchronousWriteCounter >= this.asynchronousThreads) {
-			this.asynchronousWriteCounter = 0;
-		}
-		this.asynchronousWriteThreads.get(this.asynchronousWriteCounter).addFact(facts);
-		 */
-
-
-
-		for(Atom fact:facts) {
-			if(!(fact instanceof EOFAtom)) {
-				Set<Atom> atoms = this.caches.get(fact.getPredicate());
-				if(atoms == null) {
-					this.caches.put(fact.getPredicate(), Sets.newHashSet(fact));
-				}
-				else {
-					atoms.add(fact);
-				}
-				if(this.caches.get(fact.getPredicate()).size() == insertCacheSize) {
-					String query = this.builder.createBulkInsertStatement((Relation) fact.getPredicate(), this.caches.get(fact.getPredicate()),
-							this.toDatabaseTables);
-					try {	
-						if(this.asynchronousConnections.isEmpty()) {
-							for(int i = 0; i < this.asynchronousThreads; ++i) {
-								this.asynchronousConnections.add(getConnection(this.driver, this.url, this.database, this.username, this.password));
-							}
-							DBHomomorphismManager.openConnections.addAll(this.asynchronousConnections);
-						}
-						Statement sqlStatement = this.asynchronousConnections.get(0).createStatement();
-						sqlStatement.executeUpdate(query);
-						this.caches.get(fact.getPredicate()).clear();
-					} catch (SQLException ex) {
-						if(!ex.getCause().getMessage().contains("duplicate key value")) {
-							throw new IllegalStateException(ex.getMessage(), ex);
-						}
-					}
-				}
-			}
-			else {
-				this.eof = true;
-				break;
-			}
-		}
-
-
-		if(this.eof) { 
-			System.out.println(Thread.currentThread() + " reading EOF tuple. Flushing data to disk");
-			//When the thread reads the final tuple, then it should flush everything to disk
-			for(Entry<Predicate, Set<Atom>> entry:this.caches.entrySet()) {		
-				if(!this.caches.get(entry.getKey()).isEmpty()) {
-					String query = this.builder.createBulkInsertStatement((Relation) entry.getKey(), this.caches.get(entry.getKey()),
-							this.toDatabaseTables);
-					try {	
-						Statement sqlStatement = this.asynchronousConnections.get(0).createStatement();
-						sqlStatement.executeUpdate(query);
-						this.caches.get(entry.getKey()).clear();
-					} catch (SQLException ex) {
-						if(!ex.getCause().getMessage().contains("duplicate key value")) {
-							throw new IllegalStateException(ex.getMessage(), ex);
-						}
-					}
-				}
-			}
-			this.caches.clear();
-			this.eof = false;
-			try {
-				for(Connection connection:this.asynchronousConnections) {
-					connection.close();
-				}
-				this.asynchronousConnections.clear();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			Random random = new Random();
-			
-			if(random.nextFloat() > 0.9) {
-				System.gc();
-			}
-		}
-
-	}
-
 	/**
 	 * Deletes the facts of the list in the database.
 	 *
@@ -775,7 +633,7 @@ public class DBHomomorphismManager implements HomomorphismManager {
 				for(int i = 0; i < this.synchronousThreads; ++i) {
 					this.synchronousConnections.add(getConnection(this.driver, this.url, this.database, this.username, this.password));
 				}
-				DBHomomorphismManager.openConnections.addAll(this.synchronousConnections);
+				DatabaseHomomorphismManager.openConnections.addAll(this.synchronousConnections);
 			}
 
 			//Create a pool of threads to run in parallel

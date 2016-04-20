@@ -1,6 +1,6 @@
 package uk.ac.ox.cs.pdq.reasoning.chase.state;
 
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.DatabaseHomomorphismManager;
 
 import com.google.common.base.Preconditions;
 
@@ -18,14 +18,14 @@ import com.google.common.base.Preconditions;
 public abstract class DatabaseChaseState implements ChaseState {
 
 	/**  Queries and updates the database of facts *. */
-	protected DBHomomorphismManager manager;
+	protected DatabaseHomomorphismManager manager;
 
 	/**
 	 * Constructor for DatabaseChaseState.
 	 * @param manager DBHomomorphismManager
 	 */
 	public DatabaseChaseState(
-			DBHomomorphismManager manager) {
+			DatabaseHomomorphismManager manager) {
 		Preconditions.checkNotNull(manager);
 		this.manager = manager;
 	}
@@ -35,7 +35,7 @@ public abstract class DatabaseChaseState implements ChaseState {
 	 *
 	 * @return DBHomomorphismManager
 	 */
-	public DBHomomorphismManager getManager() {
+	public DatabaseHomomorphismManager getManager() {
 		return this.manager;
 	}
 
@@ -44,7 +44,7 @@ public abstract class DatabaseChaseState implements ChaseState {
 	 *
 	 * @param manager DBHomomorphismManager
 	 */
-	public void setManager(DBHomomorphismManager manager) {
+	public void setManager(DatabaseHomomorphismManager manager) {
 		this.manager = manager;
 	}
 

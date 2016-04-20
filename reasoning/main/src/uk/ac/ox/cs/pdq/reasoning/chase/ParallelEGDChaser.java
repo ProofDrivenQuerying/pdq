@@ -14,7 +14,7 @@ import uk.ac.ox.cs.pdq.logging.performance.StatisticsCollector;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseListState;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ListState;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.DatabaseHomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismProperty;
 import uk.ac.ox.cs.pdq.reasoning.utility.DefaultParallelEGDChaseDependencyAssessor;
@@ -163,7 +163,7 @@ public class ParallelEGDChaser extends Chaser {
 	public boolean entails(Query<?> source, Query<?> target,
 			Collection<? extends Constraint<?,?>> constraints, HomomorphismDetector detector) {
 		Collection<? extends Constraint<?, ?>> relevantDependencies = new ReasonerUtility().findRelevant(target, constraints);
-		DatabaseChaseListState instance = new DatabaseChaseListState(source, (DBHomomorphismManager)detector);
+		DatabaseChaseListState instance = new DatabaseChaseListState(source, (DatabaseHomomorphismManager)detector);
 		this.reasonUntilTermination(instance, relevantDependencies);
 		if(!instance.isFailed()) {
 			HomomorphismProperty[] c = {

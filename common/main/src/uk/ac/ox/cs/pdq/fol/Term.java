@@ -22,4 +22,6 @@ public interface Term {
 	 * @return true if the term is a Skolem
 	 */
 	public boolean isSkolem();
+	
+	public Term clone();
 }

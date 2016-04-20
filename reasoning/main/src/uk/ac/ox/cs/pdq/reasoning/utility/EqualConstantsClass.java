@@ -1,6 +1,7 @@
 package uk.ac.ox.cs.pdq.reasoning.utility;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
@@ -40,7 +41,7 @@ public class EqualConstantsClass {
 	 * @throws ChaseException the chase exception
 	 */
 	public EqualConstantsClass(Equality equality) throws ChaseException{
-		this.constants = new LinkedHashSet<>();
+		this.constants = new HashSet<>();
 		List<Term> terms = equality.getTerms();
 		Preconditions.checkArgument(terms.get(0) instanceof Constant && terms.get(1) instanceof Constant);
 		//If both inputs are schema constants
@@ -246,9 +247,11 @@ public class EqualConstantsClass {
 		}
 		return this.getClass().isInstance(o)
 				&& this.constants.equals(((EqualConstantsClass) o).constants)
-				&& ( (this.schemaConstant == null && ((EqualConstantsClass) o).schemaConstant == null) ||
-						this.schemaConstant != null && ((EqualConstantsClass) o).schemaConstant != null &&
-						this.schemaConstant.equals(((EqualConstantsClass) o).schemaConstant) );
+				&& this.schemaConstant.equals(((EqualConstantsClass) o).schemaConstant)
+				&& this.representative.equals(((EqualConstantsClass) o).representative);
+//				&& ( (this.schemaConstant == null && ((EqualConstantsClass) o).schemaConstant == null) ||
+//						this.schemaConstant != null && ((EqualConstantsClass) o).schemaConstant != null &&
+//						this.schemaConstant.equals(((EqualConstantsClass) o).schemaConstant) );
 	}
 
 	/**
@@ -258,7 +261,7 @@ public class EqualConstantsClass {
 	 */
 	@Override
 	public int hashCode() {
-		return Objects.hash(this.constants, this.schemaConstant);
+		return Objects.hash(this.constants, this.schemaConstant, this.representative);
 	}
 
 	/**

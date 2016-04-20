@@ -13,7 +13,7 @@ import uk.ac.ox.cs.pdq.db.wrappers.RelationAccessWrapper;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.DatabaseHomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismProperty;
 import uk.ac.ox.cs.pdq.reasoning.utility.Match;
 import uk.ac.ox.cs.pdq.runtime.exec.AccessException;
@@ -33,7 +33,7 @@ import com.google.common.base.Preconditions;
 public final class DataValidationImplementation extends DataValidation{
 
 	/** The manager. */
-	private final DBHomomorphismManager manager;
+	private final DatabaseHomomorphismManager manager;
 	
 	/** The ics. */
 	private final List<Constraint> ics;
@@ -43,7 +43,7 @@ public final class DataValidationImplementation extends DataValidation{
 	 * @param schema Schema
 	 * @param manager DBHomomorphismManager
 	 */
-	public DataValidationImplementation(Schema schema, DBHomomorphismManager manager) {
+	public DataValidationImplementation(Schema schema, DatabaseHomomorphismManager manager) {
 		super(schema);
 		this.manager = manager;
 		this.ics = schema.getDependencies();

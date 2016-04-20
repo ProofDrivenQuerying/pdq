@@ -104,7 +104,7 @@ public class HomomorphismManagerFactory {
 						password = "";
 						builder = new DerbyStatementBuilder();
 					}
-					result = new DBHomomorphismManager(
+					result = new DatabaseHomomorphismManager(
 							driver, url, database, username, password, builder,
 							schema);
 					result.initialize();
@@ -119,7 +119,7 @@ public class HomomorphismManagerFactory {
 		}
 		// Fail safe is in-memory derby
 		try {
-			result = new DBHomomorphismManager("org.apache.derby.jdbc.EmbeddedDriver",
+			result = new DatabaseHomomorphismManager("org.apache.derby.jdbc.EmbeddedDriver",
 					"jdbc:derby:memory:{1};create=true", "chase", username, "", new DerbyStatementBuilder(),
 					schema);
 			result.initialize();
