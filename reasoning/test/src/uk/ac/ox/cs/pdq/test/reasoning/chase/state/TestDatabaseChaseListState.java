@@ -1,9 +1,11 @@
-package uk.ac.ox.cs.pdq.test.reasoning.chase;
+package uk.ac.ox.cs.pdq.test.reasoning.chase.state;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
+
+import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -118,6 +120,8 @@ public class TestDatabaseChaseListState {
 		
 		boolean _isFailed;
 		_isFailed = this.state.chaseStep(matches);
+		Assert.assertEquals(false, _isFailed);
+		Assert.assertEquals(1, this.state.getConstantClasses().size());
 		
 		Map<Variable, Constant> map6 = new HashMap<>();
 		map6.put(new Variable("y"), new Skolem("c"));
@@ -125,6 +129,7 @@ public class TestDatabaseChaseListState {
 		map6.put(new Variable("w"), new TypedConstant(new String("Michael")));
 		
 		_isFailed = this.state.chaseStep(new Match(this.egd,map6));
+		Assert.assertEquals(true, _isFailed);
 	}
 	
 }

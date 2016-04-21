@@ -21,7 +21,7 @@ import com.google.common.collect.Lists;
 /**
  * The Class PredicateFormulaTest.
  */
-public class PredicateFormulaTest {
+public class AtomTest {
 
 	/** The random. */
 	private Random random = new Random();

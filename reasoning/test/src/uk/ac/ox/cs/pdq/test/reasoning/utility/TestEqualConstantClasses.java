@@ -1,5 +1,7 @@
 package uk.ac.ox.cs.pdq.test.reasoning.utility;
 
+import junit.framework.Assert;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
@@ -30,13 +32,24 @@ public class TestEqualConstantClasses {
 		
 		boolean _isFailed;
 		_isFailed = this.classes.add(eq5);
+		Assert.assertEquals(false, _isFailed);
+		Assert.assertEquals(1, this.classes.size());
 		_isFailed = this.classes.add(eq1);
+		Assert.assertEquals(false, _isFailed);
+		Assert.assertEquals(2, this.classes.size());
 		_isFailed = this.classes.add(eq4);
+		Assert.assertEquals(false, _isFailed);
+		Assert.assertEquals(2, this.classes.size());
 		_isFailed = this.classes.add(eq3);
+		Assert.assertEquals(false, _isFailed);
+		Assert.assertEquals(1, this.classes.size());
 		_isFailed = this.classes.add(eq2);
+		Assert.assertEquals(false, _isFailed);
+		Assert.assertEquals(1, this.classes.size());
 		
 		Equality eq6 = new Equality(new Skolem("c3"), new TypedConstant(new String("Michael")));
 		_isFailed = this.classes.add(eq6);
+		Assert.assertEquals(true, _isFailed);
 		
 	}
 	
