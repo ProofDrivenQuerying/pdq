@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.test.materialize.utility;
+package uk.ac.ox.cs.pdq.test.reasoning.utility;
 
 import java.util.Collection;
 

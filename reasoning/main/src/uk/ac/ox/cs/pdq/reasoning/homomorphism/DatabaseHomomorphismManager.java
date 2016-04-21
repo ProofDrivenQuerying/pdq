@@ -534,18 +534,15 @@ public class DatabaseHomomorphismManager implements HomomorphismManager {
 			//Find the total number of tuples that will be inserted in the database
 			int totalTuples = facts.size();
 			int tuplesPerThread;
-			
 			if(totalTuples < this.synchronousThreadsNumber) {
 				tuplesPerThread = totalTuples;
 			}
 			else {
 				tuplesPerThread = (int) Math.ceil(totalTuples / this.synchronousThreadsNumber);
 			}
-			
 			if(tuplesPerThread > insertCacheSize) {
 				tuplesPerThread = insertCacheSize;
 			}
-			
 			for(Entry<Predicate, List<Atom>> entry:clusters.entrySet()) {
 				Predicate predicate = entry.getKey();
 				List<Atom> clusterFacts = entry.getValue();
@@ -603,7 +600,6 @@ public class DatabaseHomomorphismManager implements HomomorphismManager {
 
 		//Find the total number of tuples that will be inserted in the database
 		int totalTuples = facts.size();
-		
 		int tuplesPerThread;
 		if(totalTuples < this.synchronousThreadsNumber) {
 			tuplesPerThread = totalTuples;
@@ -611,7 +607,6 @@ public class DatabaseHomomorphismManager implements HomomorphismManager {
 		else {
 			tuplesPerThread = (int) Math.ceil(totalTuples / this.synchronousThreadsNumber);
 		}
-		
 		if(tuplesPerThread > insertCacheSize) {
 			tuplesPerThread = insertCacheSize;
 		}
