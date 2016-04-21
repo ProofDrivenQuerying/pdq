@@ -34,7 +34,7 @@ import com.google.common.collect.Lists;
  * @author Efthymia Tsamoura
  *
  */
-public class TestDatabaseHomomorphismManager {	
+public class TestDatabaseHomomorphismDetector {	
 	protected FactDatabaseManager manager;
 	protected HomomorphismDetector detector;
 	
