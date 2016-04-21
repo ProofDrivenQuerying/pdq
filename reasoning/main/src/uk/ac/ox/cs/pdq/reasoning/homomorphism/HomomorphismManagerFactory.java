@@ -7,6 +7,9 @@ import org.apache.log4j.Logger;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters.HomomorphismDetectorTypes;
+import uk.ac.ox.cs.pdq.reasoning.sqlstatement.DerbyStatementBuilder;
+import uk.ac.ox.cs.pdq.reasoning.sqlstatement.MySQLStatementBuilder;
+import uk.ac.ox.cs.pdq.reasoning.sqlstatement.SQLStatementBuilder;
 
 import com.google.common.base.Strings;
 

@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Time;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,13 +67,7 @@ public class ExecuteSQLQueryThread<Q extends Evaluatable> implements Callable<Li
 				Q source = entry.getLeft();
 				String query = entry.getMiddle();
 				LinkedHashMap<String, Variable> projectedVariables = entry.getRight();
-				
-				long start0 = System.currentTimeMillis();
 				ResultSet resultSet = sqlStatement.executeQuery(query);
-				long end0 = System.currentTimeMillis();
-				System.out.println("Time to execute the query " + Thread.currentThread() + " " + (end0-start0));
-				
-				start0 = System.currentTimeMillis();
 				while (resultSet.next()) {
 					int f = 1;
 					Map<Variable, Constant> map = new LinkedHashMap<>();
@@ -88,8 +81,6 @@ public class ExecuteSQLQueryThread<Q extends Evaluatable> implements Callable<Li
 					}
 					results.add(new Match(source,map));
 				}
-				end0 = System.currentTimeMillis();
-				System.out.println("Time to deserialise the result " + Thread.currentThread() + " " + (end0-start0));
 			} catch (SQLException e) {
 				e.printStackTrace();
 				return null;

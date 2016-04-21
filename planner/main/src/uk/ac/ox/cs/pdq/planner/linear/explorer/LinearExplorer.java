@@ -21,7 +21,7 @@ import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.CreationMetadata;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleDatabaseListState;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.DatabaseHomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
 
 import com.google.common.base.Preconditions;
@@ -142,7 +142,7 @@ public abstract class LinearExplorer extends Explorer<LeftDeepPlan> {
 	private void initialise() throws PlannerException {
 		AccessibleChaseState state = null;
 		state = (uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState) 
-				new AccessibleDatabaseListState(this.query, this.schema, (DBHomomorphismManager) this.detector);
+				new AccessibleDatabaseListState(this.query, this.schema, (DatabaseHomomorphismManager) this.detector);
 		this.chaser.reasonUntilTermination(state, this.schema.getDependencies());
 
 		this.tick = System.nanoTime();

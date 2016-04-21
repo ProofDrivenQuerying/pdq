@@ -1,6 +1,5 @@
 package uk.ac.ox.cs.pdq.reasoning.homomorphism;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,7 +48,7 @@ public class DatabaseRelation extends Relation {
 		return new DatabaseRelation(relation.getName(), attributes);
 	}
 
-	public static DatabaseRelation createEqualityTable() throws SQLException {		
+	public static DatabaseRelation createEqualityTable() {		
 		List<Attribute> attributes = new ArrayList<>();
 		attributes.add(new Attribute(String.class, DatabaseRelation.attrPrefix + 0));
 		attributes.add(new Attribute(String.class, DatabaseRelation.attrPrefix + 1));

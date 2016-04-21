@@ -34,7 +34,7 @@ import com.google.common.collect.Sets;
 public class EGD
 		extends Implication<Conjunction<Atom>, Conjunction<Equality>>
 		implements Constraint<Conjunction<Atom>, Conjunction<Equality>> {
-
+	
 	/**  The dependency's universally quantified variables. */
 	protected List<Variable> universal;
 	

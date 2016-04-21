@@ -21,10 +21,10 @@ public abstract class HomomorphismProperty {
 	 *
 	 * @author Julien Leblay
 	 */
-	static class TopKProperty extends HomomorphismProperty {
+	public static class TopKProperty extends HomomorphismProperty {
 		
 		/** The k. */
-		final int k;
+		public final int k;
 		/**
 		 * Constructor for TopK.
 		 * @param k int
@@ -38,10 +38,10 @@ public abstract class HomomorphismProperty {
 	 * Limits the matches to a subset of facts.
 	 * @author Julien Leblay
 	 */
-	static class FactProperty extends HomomorphismProperty {
+	public static class FactProperty extends HomomorphismProperty {
 		
 		/** The atoms. */
-		final Conjunction<Atom> atoms;
+		public final Conjunction<Atom> atoms;
 		/**
 		 * Constructor for AtomCollectionScope.
 		 * @param atoms Conjunction<PredicateFormula>
@@ -55,10 +55,10 @@ public abstract class HomomorphismProperty {
 	 * Limits the matches to those subsuming the given map.
 	 * @author Julien Leblay
 	 */
-	static class MapProperty extends HomomorphismProperty {
+	public static class MapProperty extends HomomorphismProperty {
 		
 		/** The mapping. */
-		final Map<Variable, Constant> mapping;
+		public final Map<Variable, Constant> mapping;
 		/**
 		 * Constructor for SuperMap.
 		 * @param mapping Map<Variable,Term>
@@ -71,7 +71,7 @@ public abstract class HomomorphismProperty {
 	/**
 	 * Property to impose non trivial EGDs 
 	 */
-	static class EGDHomomorphismProperty extends HomomorphismProperty {}
+	public static class EGDHomomorphismProperty extends HomomorphismProperty {}
 	
 	
 	/**
@@ -85,7 +85,7 @@ public abstract class HomomorphismProperty {
 	 * 		does not extend to a homomorphism h0 into I. Informally, a trigger is a tuple \vec{c}
 	 * 		satisfying \sigma, and it is active if there is no witness \vec{y} that makes \tau holds.
 	 */
-	static class ActiveTriggerProperty extends HomomorphismProperty {}
+	public static class ActiveTriggerProperty extends HomomorphismProperty {}
 
 	/**
 	 * Creates the top k constraint.

@@ -94,7 +94,7 @@ public final class DataValidationImplementation extends DataValidation{
 		for(Tuple tuple: table.getData()) {
 			atoms.add(Atom.makeFact(relation, tuple));
 		}
-		this.manager.addFactsSynchronously(atoms);
+		this.manager.addFacts(atoms);
 	}
 
 	/**

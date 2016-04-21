@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.reasoning.homomorphism;
+package uk.ac.ox.cs.pdq.reasoning.sqlstatement;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -8,6 +8,8 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Evaluatable;
 import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.DatabaseRelation;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismProperty;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismProperty.TopKProperty;
 
 // TODO: Auto-generated Javadoc
@@ -70,7 +72,7 @@ public class DerbyStatementBuilder extends SQLStatementBuilder {
 	}
 
 	@Override
-	protected String createBulkInsertStatement(Relation relation, Collection<? extends Atom> facts, Map<String, DatabaseRelation> toDatabaseTables) {
+	public String createBulkInsertStatement(Predicate predicate, Collection<? extends Atom> facts, Map<String, DatabaseRelation> toDatabaseTables) {
 		throw new java.lang.UnsupportedOperationException("No bulk inserts are allowed in Derby");
 	}
 }

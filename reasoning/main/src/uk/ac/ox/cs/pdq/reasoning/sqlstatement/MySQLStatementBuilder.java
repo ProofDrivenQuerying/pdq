@@ -1,5 +1,5 @@
 
-package uk.ac.ox.cs.pdq.reasoning.homomorphism;
+package uk.ac.ox.cs.pdq.reasoning.sqlstatement;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -11,7 +11,10 @@ import org.apache.log4j.Logger;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Evaluatable;
+import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.DatabaseRelation;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismProperty;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismProperty.TopKProperty;
 
 import com.beust.jcommander.internal.Lists;
@@ -85,7 +88,7 @@ public class MySQLStatementBuilder extends SQLStatementBuilder {
 	 * @return insert statements that add the input fact to the fact database.
 	 */
 	@Override
-	protected Collection<String> createInsertStatements(Collection<? extends Atom> facts, Map<String, DatabaseRelation> toDatabaseTables) {
+	public Collection<String> createInsertStatements(Collection<? extends Atom> facts, Map<String, DatabaseRelation> toDatabaseTables) {
 		Collection<String> result = new LinkedList<>();
 		for (Atom fact:facts) {
 			DatabaseRelation rel = toDatabaseTables.get(fact.getName());
@@ -113,8 +116,8 @@ public class MySQLStatementBuilder extends SQLStatementBuilder {
 	 * @return insert statements that add the input fact to the fact database.
 	 */
 	@Override
-	protected String createBulkInsertStatement(Relation relation, Collection<? extends Atom> facts, Map<String, DatabaseRelation> toDatabaseTables) {
-		String insertInto = "INSERT IGNORE INTO " + toDatabaseTables.get(relation.getName()).getName() + "\n" +
+	public String createBulkInsertStatement(Predicate predicate, Collection<? extends Atom> facts, Map<String, DatabaseRelation> toDatabaseTables) {
+		String insertInto = "INSERT IGNORE INTO " + toDatabaseTables.get(predicate.getName()).getName() + "\n" +
 				"VALUES" + "\n";
 		List<String> tuples = Lists.newArrayList();
 		for (Atom fact:facts) {

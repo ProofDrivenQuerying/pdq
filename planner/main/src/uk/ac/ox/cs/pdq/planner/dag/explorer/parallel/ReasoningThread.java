@@ -21,7 +21,7 @@ import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator;
 import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominance;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseState;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.DatabaseHomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
 
 import com.google.common.base.Preconditions;
@@ -252,7 +252,7 @@ public class ReasoningThread implements Callable<Boolean> {
 					);
 					
 			if(configuration.getState() instanceof DatabaseChaseState) {
-				((DatabaseChaseState)configuration.getState()).setManager((DBHomomorphismManager) this.detector);
+				((DatabaseChaseState)configuration.getState()).setManager((DatabaseHomomorphismManager) this.detector);
 			}
 			this.chaser.reasonUntilTermination(configuration.getState(), this.dependencies);
 			this.representatives.put(this.equivalenceClasses, left, right, configuration);

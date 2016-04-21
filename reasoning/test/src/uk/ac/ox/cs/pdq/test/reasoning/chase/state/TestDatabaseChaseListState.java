@@ -13,7 +13,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import uk.ac.ox.cs.pdq.db.EGD;
-import uk.ac.ox.cs.pdq.db.TGD;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
@@ -27,55 +26,26 @@ import uk.ac.ox.cs.pdq.reasoning.homomorphism.DatabaseHomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.utility.Match;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 
+/**
+ * Tests the chaseStep method of the DatabaseChaseListState class 
+ * @author Efthymia Tsamoura
+ *
+ */
 public class TestDatabaseChaseListState {
 
 	protected DatabaseChaseListState state;
-	@Mock protected DatabaseHomomorphismManager manager;
+	@Mock 
+	protected DatabaseHomomorphismManager manager;
 	
-	private Atom R1 = new Atom(new Predicate("R1",3), 
-			Lists.newArrayList(new Variable("x"),new Variable("y"),new Variable("z")));
 	private Atom R2 = new Atom(new Predicate("R2",2), 
 			Lists.newArrayList(new Variable("y"),new Variable("z")));
 	private Atom R2p = new Atom(new Predicate("R2",2), 
 			Lists.newArrayList(new Variable("y"),new Variable("w")));
 	
-	private TGD tgd = new TGD(Conjunction.of(R1),Conjunction.of(R2));
 	private EGD egd = new EGD(Conjunction.of(R2,R2p), Conjunction.of(new Equality(new Variable("z"),new Variable("w"))));
-
-//	private Atom f20 = new Atom(new Predicate("R2",2), 
-//			Lists.newArrayList(new Skolem("c"),new Skolem("c1")));
-//	
-//	private Atom f21 = new Atom(new Predicate("R2",2), 
-//			Lists.newArrayList(new Skolem("c"),new Skolem("c2")));
-//	
-//	private Atom f22 = new Atom(new Predicate("R2",2), 
-//			Lists.newArrayList(new Skolem("c"),new Skolem("c3")));
-//	
-//	private Atom f23 = new Atom(new Predicate("R2",2), 
-//			Lists.newArrayList(new Skolem("c"),new Skolem("c4")));
-//	
-//	private Atom f24 = new Atom(new Predicate("R2",2), 
-//			Lists.newArrayList(new Skolem("c"),new TypedConstant(new String("John"))));
-//	
-//	private Atom f25 = new Atom(new Predicate("R2",2), 
-//			Lists.newArrayList(new Skolem("c"),new TypedConstant(new String("Michael"))));
-
-	private Atom f0 = new Atom(new Predicate("R2",2), 
-			Lists.newArrayList(new Skolem("c"),new Skolem("c1")));
-	
-	private Atom f1 = new Atom(new Predicate("R2",2), 
-			Lists.newArrayList(new Skolem("c"),new TypedConstant(new String("John"))));
-	
-	private Atom f2 = new Atom(new Predicate("R2",2), 
-			Lists.newArrayList(new Skolem("c"),new Skolem("k")));
-	
-	private Atom f3 = new Atom(new Predicate("R2",2), 
-			Lists.newArrayList(new Skolem("c3"),new TypedConstant(new String("John"))));
-	
-	private Atom f4 = new Atom(new Predicate("R2",2), 
-			Lists.newArrayList(new Skolem("c2"),new Skolem("c4")));
 			
 	@Before
 	public void setup() {
@@ -83,9 +53,23 @@ public class TestDatabaseChaseListState {
 	}
 	
 	@Test 
-	public void test1() {
+	public void test_chaseStep() {
+		Atom f0 = new Atom(new Predicate("R2",2), 
+				Lists.newArrayList(new Skolem("c"),new Skolem("c1")));
 		
-		this.state = new DatabaseChaseListState(this.manager, Lists.<Atom>newArrayList(this.f0, this.f1, this.f2, this.f3, this.f4));
+		Atom f1 = new Atom(new Predicate("R2",2), 
+				Lists.newArrayList(new Skolem("c"),new TypedConstant(new String("John"))));
+		
+		Atom f2 = new Atom(new Predicate("R2",2), 
+				Lists.newArrayList(new Skolem("c"),new Skolem("k")));
+		
+		Atom f3 = new Atom(new Predicate("R2",2), 
+				Lists.newArrayList(new Skolem("c3"),new TypedConstant(new String("John"))));
+		
+		Atom f4 = new Atom(new Predicate("R2",2), 
+				Lists.newArrayList(new Skolem("c2"),new Skolem("c4")));
+		
+		this.state = new DatabaseChaseListState(this.manager, Sets.<Atom>newHashSet(f0, f1, f2, f3, f4));
 		Map<Variable, Constant> map1 = new HashMap<>();
 		map1.put(new Variable("y"), new Skolem("c"));
 		map1.put(new Variable("z"), new Skolem("c1"));
@@ -120,8 +104,39 @@ public class TestDatabaseChaseListState {
 		
 		boolean _isFailed;
 		_isFailed = this.state.chaseStep(matches);
-		Assert.assertEquals(false, _isFailed);
+		Assert.assertEquals(false, !_isFailed);
 		Assert.assertEquals(1, this.state.getConstantClasses().size());
+		Assert.assertNotNull(this.state.getConstantClasses().getClass(new Skolem("c1")));
+		Assert.assertNotNull(this.state.getConstantClasses().getClass(new Skolem("c2")));
+		Assert.assertNotNull(this.state.getConstantClasses().getClass(new Skolem("c3")));
+		Assert.assertNotNull(this.state.getConstantClasses().getClass(new Skolem("c4")));
+		Assert.assertNotNull(this.state.getConstantClasses().getClass(new TypedConstant(new String("John"))));
+		
+		Atom n0 = new Atom(new Predicate("R2",2), 
+				Lists.newArrayList(new Skolem("c"),new TypedConstant(new String("John"))));
+		
+		Atom n1 = new Atom(new Predicate("R2",2), 
+				Lists.newArrayList(new Skolem("c"),new Skolem("k")));
+		
+		Atom n2 = new Atom(new Predicate("R2",2), 
+				Lists.newArrayList(new TypedConstant(new String("John")),new TypedConstant(new String("John"))));
+		
+		Atom n3 = new Equality( 
+				Lists.newArrayList(new Skolem("c3"),new TypedConstant(new String("John"))));
+		
+		Atom n4 = new Equality( 
+				Lists.newArrayList(new Skolem("c1"),new Skolem("c2")));
+		
+		Atom n5 = new Equality( 
+				Lists.newArrayList(new Skolem("c3"),new Skolem("c4")));
+		
+		Atom n6 = new Equality( 
+				Lists.newArrayList(new Skolem("c2"),new Skolem("c3")));
+		
+		Atom n7 = new Equality( 
+				Lists.newArrayList(new Skolem("c1"),new Skolem("c3")));
+		
+		Assert.assertEquals(Sets.newHashSet(n0,n1,n2,n3,n4,n5,n6,n7), this.state.getFacts());
 		
 		Map<Variable, Constant> map6 = new HashMap<>();
 		map6.put(new Variable("y"), new Skolem("c"));
@@ -129,7 +144,7 @@ public class TestDatabaseChaseListState {
 		map6.put(new Variable("w"), new TypedConstant(new String("Michael")));
 		
 		_isFailed = this.state.chaseStep(new Match(this.egd,map6));
-		Assert.assertEquals(true, _isFailed);
+		Assert.assertEquals(true, !_isFailed);
 	}
 	
 }

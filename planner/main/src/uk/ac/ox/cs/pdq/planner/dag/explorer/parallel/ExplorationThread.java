@@ -15,7 +15,7 @@ import uk.ac.ox.cs.pdq.planner.dag.equivalence.DAGEquivalenceClasses;
 import uk.ac.ox.cs.pdq.planner.dominance.Dominance;
 import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominance;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseState;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.DatabaseHomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
 
 // TODO: Auto-generated Javadoc
@@ -108,7 +108,7 @@ public class ExplorationThread implements Callable<DAGChaseConfiguration> {
 		//Poll the next configuration
 		while((configuration = this.input.poll()) != null) {
 			if(configuration.getState() instanceof DatabaseChaseState) {
-				((DatabaseChaseState)configuration.getState()).setManager((DBHomomorphismManager) this.detector);
+				((DatabaseChaseState)configuration.getState()).setManager((DatabaseHomomorphismManager) this.detector);
 			}
 			//If the configuration is not dominated
 			DAGChaseConfiguration dominator = this.equivalenceClasses.dominate(this.dominance, configuration);

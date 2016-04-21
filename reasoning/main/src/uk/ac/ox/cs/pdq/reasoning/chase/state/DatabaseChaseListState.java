@@ -48,7 +48,6 @@ import com.google.common.collect.Sets;
  */
 public class DatabaseChaseListState extends DatabaseChaseState implements ListState {
 
-
 	/** The _is failed. */
 	private boolean _isFailed = false;
 
@@ -81,7 +80,7 @@ public class DatabaseChaseListState extends DatabaseChaseState implements ListSt
 		this.graph = new MapFiringGraph();
 		this.classes = new EqualConstantsClasses();
 		this.constantsToAtoms = inferConstantsMap(this.facts);
-		this.manager.addFactsSynchronously(this.facts);
+		this.manager.addFacts(this.facts);
 	}
 
 	/**
@@ -99,7 +98,7 @@ public class DatabaseChaseListState extends DatabaseChaseState implements ListSt
 		this.graph = new MapFiringGraph();
 		this.classes = new EqualConstantsClasses();
 		this.constantsToAtoms = inferConstantsMap(this.facts);
-		this.manager.addFactsSynchronously(this.facts);
+		this.manager.addFacts(this.facts);
 	}
 
 	/**
@@ -110,7 +109,7 @@ public class DatabaseChaseListState extends DatabaseChaseState implements ListSt
 	 * @param graph the graph
 	 * @param classes the constant classes
 	 */
-	private DatabaseChaseListState(
+	protected DatabaseChaseListState(
 			DatabaseHomomorphismManager manager,
 			Collection<Atom> facts,
 			FiringGraph graph, 
@@ -134,7 +133,7 @@ public class DatabaseChaseListState extends DatabaseChaseState implements ListSt
 	 * @return a map of each constant to the atom and the position inside this atom where it appears. 
 	 * An exception is thrown when there is an equality in the input
 	 */
-	private static Multimap<Constant,Atom> inferConstantsMap(Collection<Atom> facts) {
+	protected static Multimap<Constant,Atom> inferConstantsMap(Collection<Atom> facts) {
 		Multimap<Constant, Atom> constantsToAtoms = HashMultimap.create();
 		for(Atom fact:facts) {
 			Preconditions.checkArgument(!(fact instanceof Equality));
@@ -176,6 +175,36 @@ public class DatabaseChaseListState extends DatabaseChaseState implements ListSt
 		return false;
 	}
 
+	/**
+	 * Applies chase steps for TGDs. 
+	 * An exception is thrown when a match does not come from a TGD
+	 * @param matches
+	 * @return
+	 */
+	public boolean TGDchaseStep(Collection<Match> matches) {
+		Preconditions.checkNotNull(matches);
+		Collection<Atom> newFacts = new LinkedHashSet<>();
+		for(Match match:matches) {
+			Constraint dependency = (Constraint) match.getQuery();
+			Preconditions.checkArgument(dependency instanceof TGD, "EGDs are not allowed inside TGDchaseStep");
+			Map<Variable, Constant> mapping = match.getMapping();
+			Constraint grounded = dependency.fire(mapping, true);
+			Formula left = grounded.getLeft();
+			Formula right = grounded.getRight();
+			//Add information about new facts to constantsToAtoms
+			for(Atom atom:right.getAtoms()) {
+				for(Term term:atom.getTerms()) {
+					this.constantsToAtoms.put((Constant)term, atom);
+				}
+			}
+			//Update the provenance of facts
+			this.graph.put(dependency, Sets.newHashSet(left.getAtoms()), Sets.newHashSet(right.getAtoms()));
+			newFacts.addAll(right.getAtoms());
+		}
+		//Add the newly created facts to the database
+		this.addFacts(newFacts);
+		return !this._isFailed;
+	}
 
 	/** 
 	 * TODO we need to think what will happen with a map firing graph in the presence of EGDs.
@@ -197,7 +226,7 @@ public class DatabaseChaseListState extends DatabaseChaseState implements ListSt
 		Map<Constant,Constant> obsoleteToRepresentative = Maps.newHashMap();
 		for(Match match:matches) {
 			Constraint dependency = (Constraint) match.getQuery();
-			Preconditions.checkArgument(!(dependency instanceof EGD), "TGDs are not allowed inside EGDchaseStep");
+			Preconditions.checkArgument(dependency instanceof EGD, "TGDs are not allowed inside EGDchaseStep");
 			Map<Variable, Constant> mapping = match.getMapping();
 			Constraint grounded = dependency.fire(mapping, true);
 			Formula left = grounded.getLeft();
@@ -206,7 +235,7 @@ public class DatabaseChaseListState extends DatabaseChaseState implements ListSt
 				//Find all the constants that each constant in the equality is representing 
 				Equality equality = (Equality)atom;
 				obsoleteToRepresentative.putAll(this.updateEqualConstantClasses(equality));
-				if(!this._isFailed) {
+				if(this._isFailed) {
 					return false;
 				}
 				//Equalities should be added into the database 
@@ -244,38 +273,6 @@ public class DatabaseChaseListState extends DatabaseChaseState implements ListSt
 		
 		this.facts.removeAll(obsoleteFacts);
 		this.manager.deleteFacts(obsoleteFacts);
-		this.addFacts(newFacts);
-		return !this._isFailed;
-	}
-
-
-	/**
-	 * Applies chase steps for TGDs. 
-	 * An exception is thrown when a match does not come from a TGD
-	 * @param matches
-	 * @return
-	 */
-	public boolean TGDchaseStep(Collection<Match> matches) {
-		Preconditions.checkNotNull(matches);
-		Collection<Atom> newFacts = new LinkedHashSet<>();
-		for(Match match:matches) {
-			Constraint dependency = (Constraint) match.getQuery();
-			Preconditions.checkArgument(!(dependency instanceof TGD), "EGDs are not allowed inside TGDchaseStep");
-			Map<Variable, Constant> mapping = match.getMapping();
-			Constraint grounded = dependency.fire(mapping, true);
-			Formula left = grounded.getLeft();
-			Formula right = grounded.getRight();
-			//Add information about new facts to constantsToAtoms
-			for(Atom atom:right.getAtoms()) {
-				for(Term term:atom.getTerms()) {
-					this.constantsToAtoms.put((Constant)term, atom);
-				}
-			}
-			//Update the provenance of facts
-			this.graph.put(dependency, Sets.newHashSet(left.getAtoms()), Sets.newHashSet(right.getAtoms()));
-			newFacts.addAll(right.getAtoms());
-		}
-		//Add the newly created facts to the database
 		this.addFacts(newFacts);
 		return !this._isFailed;
 	}
@@ -388,6 +385,10 @@ public class DatabaseChaseListState extends DatabaseChaseState implements ListSt
 	public Collection<Atom> getFacts() {
 		return this.facts;
 	}
+	
+	public Multimap<Constant, Atom> getConstantsToAtoms() {
+		return this.constantsToAtoms;
+	}
 
 	/* (non-Javadoc)
 	 * @see uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState#merge(uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState)
@@ -420,7 +421,7 @@ public class DatabaseChaseListState extends DatabaseChaseState implements ListSt
 	 */
 	@Override
 	public void addFacts(Collection<Atom> facts) {
-		this.manager.addFactsSynchronously(facts);
+		this.manager.addFacts(facts);
 		this.facts.addAll(facts);
 	}
 

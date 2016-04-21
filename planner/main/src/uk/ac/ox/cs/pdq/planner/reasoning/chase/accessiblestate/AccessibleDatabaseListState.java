@@ -27,7 +27,7 @@ import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema.AccessibleRelat
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema.InferredAccessibleRelation;
 import uk.ac.ox.cs.pdq.planner.reasoning.MatchFactory;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseListState;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.DatabaseHomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.utility.EqualConstantsClasses;
 import uk.ac.ox.cs.pdq.reasoning.utility.FiringGraph;
 import uk.ac.ox.cs.pdq.reasoning.utility.MapFiringGraph;
@@ -75,7 +75,7 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 	 * @param schema the schema
 	 * @param manager the manager
 	 */
-	public AccessibleDatabaseListState(Query<?> query, Schema schema, DBHomomorphismManager manager) {
+	public AccessibleDatabaseListState(Query<?> query, Schema schema, DatabaseHomomorphismManager manager) {
 		this(manager, 
 				createInitialFacts(query, schema), 
 				new MapFiringGraph(),
@@ -85,7 +85,7 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 				Utility.inferDerivedInferred(),
 				Utility.inferSignatureGroups(createInitialFacts(query, schema)),
 				Utility.inferAccessibleTerms(createInitialFacts(query, schema)));
-		this.manager.addFactsSynchronously(facts);
+		this.manager.addFacts(this.facts);
 	}
 
 	/**
@@ -123,7 +123,7 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 	 * @param accessibleTerms the accessible terms
 	 */
 	private AccessibleDatabaseListState(
-			DBHomomorphismManager manager,
+			DatabaseHomomorphismManager manager,
 			Collection<Atom> facts,
 			FiringGraph graph,
 			EqualConstantsClasses constantClasses,

@@ -16,7 +16,7 @@ import uk.ac.ox.cs.pdq.planner.dag.DAGAnnotatedPlan;
 import uk.ac.ox.cs.pdq.planner.dag.equivalence.DAGAnnotatedPlanClasses;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.dominance.Dominance;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseState;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.DatabaseHomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
 
 import com.google.common.base.Preconditions;
@@ -120,7 +120,7 @@ public class ExplorationThread implements Callable<DAGAnnotatedPlan> {
 		while((configuration = this.input.poll()) != null) {
 			//log.trace(configuration + "\t" + "Size: " + configuration.getSize() + "\t" +  "Quality: " + configuration.getQuality() + "\t" + "Adjusted quality: " + configuration.getAdjustedQuality());
 			if(configuration.getState() instanceof DatabaseChaseState) {
-				((DatabaseChaseState)configuration.getState()).setManager((DBHomomorphismManager) this.detector);
+				((DatabaseChaseState)configuration.getState()).setManager((DatabaseHomomorphismManager) this.detector);
 			}
 			//If the configuration is not dominated
 			DAGAnnotatedPlan dominator = this.classes.dominate(this.dominance, configuration);

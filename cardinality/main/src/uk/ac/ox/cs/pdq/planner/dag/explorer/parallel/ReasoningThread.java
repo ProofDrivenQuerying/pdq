@@ -26,7 +26,7 @@ import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.dominance.Dominance;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseState;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.DatabaseHomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
 
 import com.google.common.base.Preconditions;
@@ -245,7 +245,7 @@ public class ReasoningThread implements Callable<Boolean> {
 			log.trace("No representative found for input " + left + " " + right);
 			configuration = new BinaryAnnotatedPlan(left,right);				
 			if(configuration.getState() instanceof DatabaseChaseState) {
-				((DatabaseChaseState)configuration.getState()).setManager((DBHomomorphismManager) this.detector);
+				((DatabaseChaseState)configuration.getState()).setManager((DatabaseHomomorphismManager) this.detector);
 			}
 			this.chaser.reasonUntilTermination(configuration.getState(),
 					CollectionUtils.union(this.schema.getDependencies(), this.schema.getKeyDependencies()));

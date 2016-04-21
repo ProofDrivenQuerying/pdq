@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.reasoning.homomorphism;
+package uk.ac.ox.cs.pdq.materialize.sqlstatement;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,12 +25,15 @@ import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Evaluatable;
 import uk.ac.ox.cs.pdq.fol.Formula;
+import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismProperty.ActiveTriggerProperty;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismProperty.EGDHomomorphismProperty;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismProperty.FactProperty;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismProperty.MapProperty;
+import uk.ac.ox.cs.pdq.materialize.homomorphism.DatabaseRelation;
+import uk.ac.ox.cs.pdq.materialize.homomorphism.HomomorphismProperty;
+import uk.ac.ox.cs.pdq.materialize.homomorphism.HomomorphismProperty.ActiveTriggerProperty;
+import uk.ac.ox.cs.pdq.materialize.homomorphism.HomomorphismProperty.EGDHomomorphismProperty;
+import uk.ac.ox.cs.pdq.materialize.homomorphism.HomomorphismProperty.FactProperty;
+import uk.ac.ox.cs.pdq.materialize.homomorphism.HomomorphismProperty.MapProperty;
 import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.beust.jcommander.internal.Lists;
@@ -68,7 +71,7 @@ public abstract class SQLStatementBuilder {
 	 * @param toDatabaseTables the dbrelations
 	 * @return insert statements that add the input fact to the fact database.
 	 */
-	protected Collection<String> createInsertStatements(Collection<? extends Atom> facts, Map<String, DatabaseRelation> toDatabaseTables) {
+	public Collection<String> createInsertStatements(Collection<? extends Atom> facts, Map<String, DatabaseRelation> toDatabaseTables) {
 		Collection<String> result = new LinkedList<>();
 		for (Atom fact:facts) {
 			DatabaseRelation relation = toDatabaseTables.get(fact.getName());
@@ -87,7 +90,7 @@ public abstract class SQLStatementBuilder {
 		return result;
 	}
 
-	protected abstract String createBulkInsertStatement(Relation relation, Collection<? extends Atom> facts, Map<String, DatabaseRelation> toDatabaseTables);
+	public abstract String createBulkInsertStatement(Predicate predicate, Collection<? extends Atom> facts, Map<String, DatabaseRelation> toDatabaseTables);
 
 	/**
 	 * Make deletes.
@@ -96,7 +99,7 @@ public abstract class SQLStatementBuilder {
 	 * @param toDatabaseTables 		Map of schema relation names to *clean* names
 	 * @return 		a set of statements that delete the input facts from the fact database.
 	 */
-	protected Collection<String> createDeleteStatements(Collection<? extends Atom> facts, Map<String, DatabaseRelation> toDatabaseTables) {
+	public Collection<String> createDeleteStatements(Collection<? extends Atom> facts, Map<String, DatabaseRelation> toDatabaseTables) {
 		Collection<String> result = new LinkedList<>();
 		for (Atom fact:facts) {
 			Relation relation = toDatabaseTables.get(fact.getName());
@@ -115,8 +118,8 @@ public abstract class SQLStatementBuilder {
 	 * @param toDatabaseTables 		Map of schema relation names to *clean* names
 	 * @return 		a set of statements that delete the input facts from the fact database.
 	 */
-	protected String createBulkDeleteStatement(Relation relation, Collection<? extends Atom> facts, Map<String, DatabaseRelation> toDatabaseTables) {
-		String insertInto = "DELETE FROM " + toDatabaseTables.get(relation.getName()).getName() + " " + "WHERE "; 
+	public String createBulkDeleteStatement(Predicate predicate, Collection<? extends Atom> facts, Map<String, DatabaseRelation> toDatabaseTables) {
+		String insertInto = "DELETE FROM " + toDatabaseTables.get(predicate.getName()).getName() + " " + "WHERE "; 
 		insertInto += DatabaseRelation.Fact.getName();
 		insertInto += " IN" + "\n"; 
 
@@ -135,7 +138,7 @@ public abstract class SQLStatementBuilder {
 	 * @param relation the table to create
 	 * @return a SQL statement that creates the fact table of the given relation
 	 */
-	protected String createTableStatement(DatabaseRelation relation) {
+	public String createTableStatement(DatabaseRelation relation) {
 		StringBuilder result = new StringBuilder();
 		result.append("CREATE TABLE  ").append(relation.getName()).append('(');
 		for (int it = 0; it < relation.getAttributes().size(); ++it) {
@@ -166,7 +169,7 @@ public abstract class SQLStatementBuilder {
 	 * @param columns the columns
 	 * @return a SQL statement that creates an index for the columns of the input relation
 	 */
-	protected Pair<String,String> createTableIndices(boolean isForQuery, Set<String> constraintIndices, DatabaseRelation relation, Integer... columns) {
+	public Pair<String,String> createTableIndices(boolean isForQuery, Set<String> constraintIndices, DatabaseRelation relation, Integer... columns) {
 		StringBuilder indexName = new StringBuilder();
 		StringBuilder indexColumns = new StringBuilder();
 		String sep1 = "", sep2 = "";
@@ -197,7 +200,7 @@ public abstract class SQLStatementBuilder {
 	 * @param indexColumns the index columns
 	 * @return the string
 	 */
-	protected String createColumnIndexStatement(DatabaseRelation relation, StringBuilder indexName, StringBuilder indexColumns) {
+	public String createColumnIndexStatement(DatabaseRelation relation, StringBuilder indexName, StringBuilder indexColumns) {
 		return "CREATE INDEX idx_" + relation.getName() + "_" + indexName + 
 				" ON " + relation.getName() + "(" + indexColumns + ")";
 	}
@@ -210,7 +213,7 @@ public abstract class SQLStatementBuilder {
 	 * @param indexColumns the index columns
 	 * @return the string
 	 */
-	protected String createDropIndexStatement(DatabaseRelation relation, StringBuilder indexName, StringBuilder indexColumns) {
+	public String createDropIndexStatement(DatabaseRelation relation, StringBuilder indexName, StringBuilder indexColumns) {
 		return "DROP INDEX idx_" + relation.getName() + "_" + indexName + 
 				" ON " + relation.getName(); 
 	}
@@ -236,7 +239,7 @@ public abstract class SQLStatementBuilder {
 	 * @param column the column
 	 * @return a SQL statement that creates an index for the bag and fact attributes of the database tables
 	 */
-	protected String createColumnIndexStatement(DatabaseRelation relation, Attribute column) {
+	public String createColumnIndexStatement(DatabaseRelation relation, Attribute column) {
 		return "CREATE INDEX idx_" + relation.getName() + "_" + 
 				column.getName() + " ON " + relation.getName() + "(" + column.getName() + ")"; 
 	}
@@ -250,7 +253,7 @@ public abstract class SQLStatementBuilder {
 	 * @param constraintIndices the constraint indices
 	 * @return the pair
 	 */
-	protected Pair<Collection<String>,Collection<String>> setupIndices(boolean isForQuery, Map<String, DatabaseRelation> toDatabaseRelations, Evaluatable rule, Set<String> constraintIndices) {
+	public Pair<Collection<String>,Collection<String>> setupIndices(boolean isForQuery, Map<String, DatabaseRelation> toDatabaseRelations, Evaluatable rule, Set<String> constraintIndices) {
 		Conjunction<?> body = null;
 		if (rule.getBody() instanceof Atom) {
 			body = Conjunction.of((Atom) rule.getBody());
@@ -321,7 +324,6 @@ public abstract class SQLStatementBuilder {
 		List<String> equalityPredicates = this.createAttributeEqualities((Conjunction<Atom>) source.getBody());
 		List<String> constantEqualityPredicates = this.createEqualitiesWithConstants((Conjunction<Atom>) source.getBody());
 		List<String> equalityForHomRestrictionsPredicates = this.createEqualitiesForHomConstraints(source, constraints);
-
 
 		/*
 		 * if the target set of facts is not null, we

@@ -27,7 +27,7 @@ import uk.ac.ox.cs.pdq.planner.dag.UnaryAnnotatedPlan;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseState;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseListState;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.DatabaseHomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismProperty;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
 import uk.ac.ox.cs.pdq.reasoning.utility.EqualConstantsClasses;
@@ -103,11 +103,11 @@ public class CardinalityUtility {
 			copiedFacts.add(new Atom(fact.getPredicate(), copiedTerms));
 		}
 
-		DatabaseChaseListState state = new DatabaseChaseListState((DBHomomorphismManager)detector, Sets.newLinkedHashSet(CollectionUtils.union(configuration.getOutputFacts(), copiedFacts)));
+		DatabaseChaseListState state = new DatabaseChaseListState((DatabaseHomomorphismManager)detector, Sets.newLinkedHashSet(CollectionUtils.union(configuration.getOutputFacts(), copiedFacts)));
 		egd.reasonUntilTermination(state, dependencies);
 
 		//Clear the database from the copied facts
-		((DBHomomorphismManager)detector).deleteFacts(
+		((DatabaseHomomorphismManager)detector).deleteFacts(
 				Sets.newLinkedHashSet(CollectionUtils.union(copiedFacts, CollectionUtils.removeAll(state.getFacts(), configuration.getOutputFacts()))));
 		
 		if(state.isFailed()) {
@@ -184,7 +184,7 @@ public class CardinalityUtility {
 
 		//Create homomorphism constraints that preserve the input constants
 		if(source.getState() instanceof DatabaseChaseState) {
-			((DatabaseChaseState)source.getState()).setManager((DBHomomorphismManager) detector);
+			((DatabaseChaseState)source.getState()).setManager((DatabaseHomomorphismManager) detector);
 		}
 		
 		HomomorphismProperty[] c = new HomomorphismProperty[2];

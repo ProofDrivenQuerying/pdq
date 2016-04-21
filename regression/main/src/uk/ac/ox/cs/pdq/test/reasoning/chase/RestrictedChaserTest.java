@@ -12,29 +12,25 @@ import java.util.List;
 
 import junit.framework.Assert;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
-import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Skolem;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.io.xml.QueryReader;
 import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
 import uk.ac.ox.cs.pdq.logging.performance.StatisticsCollector;
-import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
-import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters.HomomorphismDetectorTypes;
-import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters.ReasoningTypes;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseListState;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ListState;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.DatabaseHomomorphismManager;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismManager;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismManagerFactory;
+import uk.ac.ox.cs.pdq.reasoning.sqlstatement.MySQLStatementBuilder;
+import uk.ac.ox.cs.pdq.reasoning.sqlstatement.SQLStatementBuilder;
 
 import com.google.common.eventbus.EventBus;
 
@@ -46,9 +42,6 @@ import com.google.common.eventbus.EventBus;
  */
 
 public class RestrictedChaserTest {
-
-	/** The event bus. */
-	private EventBus eventBus = new EventBus();
 
 	/** The path. */
 	private static String PATH = "test/restricted_chaser/";
@@ -177,13 +170,6 @@ public class RestrictedChaserTest {
 	String password ="root";
 
 	/**
-	 * Prepare.
-	 */
-	@Before
-	public void prepare() {
-	}
-
-	/**
 	 * Test1.
 	 */
 	@Test
@@ -222,28 +208,15 @@ public class RestrictedChaserTest {
 					throw new IllegalStateException("Schema and query must be provided.");
 				}
 				schema.updateConstants(query.getSchemaConstants());
-				RestrictedChaser reasoner = new RestrictedChaser(
-						new StatisticsCollector(true, this.eventBus));
-				HomomorphismManager detector =
-						new HomomorphismManagerFactory().getInstance(
-								schema, 
-								HomomorphismDetectorTypes.DATABASE,
-								this.driver,
-								this.url,
-								this.database,
-								this.username,			
-								this.password);
+				RestrictedChaser reasoner = new RestrictedChaser(new StatisticsCollector(true, new EventBus()));
+				
+				SQLStatementBuilder builder = new MySQLStatementBuilder();
+				HomomorphismManager detector = new DatabaseHomomorphismManager(this.driver, this.url, this.database, this.username, this.password, builder, schema);
 			    detector.addQuery(query);
-				ReasoningParameters reasoningParameters = new ReasoningParameters();
-				reasoningParameters.setReasoningType(ReasoningTypes.RESTRICTED_CHASE);
 				ListState state = new DatabaseChaseListState(query, (DatabaseHomomorphismManager) detector);				
 				reasoner.reasonUntilTermination(state, schema.getDependencies());
 				detector.clearQuery();
-
 				Collection<Atom> expected = loadFacts(PATH + f, schema);
-				
-				System.out.println("EXPECTED " + expected);
-				System.out.println("ACTUAL " + state.getFacts());
 				Assert.assertEquals(expected, state.getFacts());
 
 			} catch (FileNotFoundException e) {

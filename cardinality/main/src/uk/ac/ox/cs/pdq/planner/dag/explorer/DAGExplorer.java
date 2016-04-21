@@ -21,7 +21,7 @@ import uk.ac.ox.cs.pdq.planner.explorer.Explorer;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseListState;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.DatabaseHomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
 
 import com.google.common.base.Preconditions;
@@ -152,13 +152,13 @@ public abstract class DAGExplorer extends Explorer<DAGPlan> {
 	 */
 	protected List<DAGAnnotatedPlan> createInitialConfigurations() throws PlannerException {
 		ChaseState state = null;
-		state = new DatabaseChaseListState(this.query, (DBHomomorphismManager) this.detector);
+		state = new DatabaseChaseListState(this.query, (DatabaseHomomorphismManager) this.detector);
 		this.chaser.reasonUntilTermination(state, 
 				CollectionUtils.union(this.schema.getDependencies(), this.schema.getKeyDependencies()));
 
 		List<DAGAnnotatedPlan> collection = new ArrayList<>();
 		for(Atom fact:state.getFacts()) {
-			ChaseState newState = new DatabaseChaseListState((DBHomomorphismManager) this.detector, Sets.newHashSet(fact));
+			ChaseState newState = new DatabaseChaseListState((DatabaseHomomorphismManager) this.detector, Sets.newHashSet(fact));
 			this.chaser.reasonUntilTermination(newState, this.schema.getDependencies());
 			UnaryAnnotatedPlan unary =  new UnaryAnnotatedPlan(newState,fact);
 			collection.add(unary);

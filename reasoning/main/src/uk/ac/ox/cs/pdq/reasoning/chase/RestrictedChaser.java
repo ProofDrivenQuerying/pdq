@@ -3,8 +3,6 @@ package uk.ac.ox.cs.pdq.reasoning.chase;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 import uk.ac.ox.cs.pdq.db.Constraint;
 import uk.ac.ox.cs.pdq.fol.Constant;
@@ -22,6 +20,7 @@ import uk.ac.ox.cs.pdq.reasoning.utility.Match;
 import uk.ac.ox.cs.pdq.reasoning.utility.ReasonerUtility;
 import uk.ac.ox.cs.pdq.reasoning.utility.TGDDependencyAssessor;
 
+import com.beust.jcommander.internal.Lists;
 import com.google.common.base.Preconditions;
 
 
@@ -49,13 +48,11 @@ public class RestrictedChaser extends Chaser {
 	 *
 	 * @param statistics the statistics
 	 */
-	public RestrictedChaser(
-			StatisticsCollector statistics) {
+	public RestrictedChaser(StatisticsCollector statistics) {
 		super(statistics);
 	}
 
 	
-	//TODO this method must not take as input a query
 	/**
 	 * Chases the input state until termination.
 	 *
@@ -68,35 +65,18 @@ public class RestrictedChaser extends Chaser {
 		Preconditions.checkArgument(instance instanceof ListState);
 		TGDDependencyAssessor accessor = new DefaultTGDDependencyAssessor(dependencies);
 		boolean appliedStep = false;
-		
 		Collection<? extends Constraint> d = dependencies;
-		
-		long start = System.currentTimeMillis();
 		do {
 			appliedStep = false;
-			
-			long start0 = System.currentTimeMillis();
-			List<Match> matches = instance.getMatches(d, HomomorphismProperty.createActiveTriggerProperty());	
-			long end0 = System.currentTimeMillis();
-			System.out.println("---Time to detect homomorphisms " + " " + (end0-start0));
-			
-			if(!matches.isEmpty()) {
-				appliedStep = true;
+			for(Constraint dependency:d) {
+				List<Match> matches = instance.getMatches(Lists.newArrayList(dependency), HomomorphismProperty.createActiveTriggerProperty());	
+				if(!matches.isEmpty()) {
+					appliedStep = true;
+				}
+				instance.chaseStep(matches);
+				d = accessor.getDependencies(instance);	
 			}
-			
-			Queue<Match> queue = new ConcurrentLinkedQueue<>(matches);
-			matches.clear();
-			start0 = System.currentTimeMillis();
-			instance.chaseStep(queue);
-			
-			d = accessor.getDependencies(instance);
-			
-			end0 = System.currentTimeMillis();
-			System.out.println("---Time to update the state " + " " + (end0-start0));
-			
 		} while (appliedStep);
-		long end = System.currentTimeMillis();
-		System.out.println("---Time to reason until termination " + " " + (end-start));
 	}
 
 	/**
