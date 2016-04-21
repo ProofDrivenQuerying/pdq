@@ -89,7 +89,7 @@ public class RestrictedChaser extends Chaser {
 	 * @return 		true if the input instance with the given set of free variables and constraints implies the target query.
 	 */
 	@Override
-	public <S extends ChaseState> boolean entails(S instance, Map<Variable, Constant> free, Query<?> target,
+	public <S extends ChaseState> boolean entails(S instance, Map<Variable, Constant> free, ConjunctiveQuery target,
 			Collection<? extends Constraint<?,?>> constraints) {
 		Collection<? extends Constraint<?, ?>> relevantDependencies = new ReasonerUtility().findRelevant(target, constraints);
 		this.reasonUntilTermination(instance, relevantDependencies);
@@ -112,7 +112,7 @@ public class RestrictedChaser extends Chaser {
 	 * @return 		true if the source query entails the target query
 	 */
 	@Override
-	public boolean entails(ConjunctiveQuery source, Query<?> target,
+	public boolean entails(ConjunctiveQuery source, ConjunctiveQuery target,
 			Collection<? extends Constraint<?,?>> constraints, HomomorphismDetector detector) {	
 		Collection<? extends Constraint<?, ?>> relevantDependencies = new ReasonerUtility().findRelevant(target, constraints);
 		DatabaseChaseListState instance = new DatabaseChaseListState(source, (DBHomomorphismManager)detector);

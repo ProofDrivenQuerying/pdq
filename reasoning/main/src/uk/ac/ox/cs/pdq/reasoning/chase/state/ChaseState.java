@@ -44,7 +44,7 @@ public interface ChaseState {
 	 * @param constraints the constraints
 	 * @return 		the list of matches of the input query to the facts of this state that satisfy the input constraints
 	 */
-	List<Match> getMatches(Query<?> query, HomomorphismProperty... constraints);
+	List<Match> getMatches(ConjunctiveQuery query, HomomorphismProperty... constraints);
 	
 	/**
 	 * (Candidate match definition).

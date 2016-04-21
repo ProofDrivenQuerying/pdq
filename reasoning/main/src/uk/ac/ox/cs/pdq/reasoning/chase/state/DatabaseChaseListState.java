@@ -309,7 +309,7 @@ public class DatabaseChaseListState extends DatabaseChaseState implements ListSt
 	 * @see uk.ac.ox.cs.pdq.chase.state.ChaseState#getMatches(Query)
 	 */
 	@Override
-	public List<Match> getMatches(Query<?> query, HomomorphismProperty... constraints) {
+	public List<Match> getMatches(ConjunctiveQuery query, HomomorphismProperty... constraints) {
 		HomomorphismProperty[] c = new HomomorphismProperty[constraints.length+1];
 		System.arraycopy(constraints, 0, c, 0, constraints.length);
 		c[constraints.length] = HomomorphismProperty.createFactProperty(Conjunction.of(this.getFacts()));
