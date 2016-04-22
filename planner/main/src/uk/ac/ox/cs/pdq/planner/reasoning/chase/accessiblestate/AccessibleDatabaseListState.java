@@ -13,6 +13,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import uk.ac.ox.cs.pdq.db.Constraint;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
+import uk.ac.ox.cs.pdq.db.TGD;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Formula;
@@ -26,11 +27,11 @@ import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema.AccessibleRelation;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema.InferredAccessibleRelation;
 import uk.ac.ox.cs.pdq.planner.reasoning.MatchFactory;
+import uk.ac.ox.cs.pdq.planner.util.FiringGraph;
+import uk.ac.ox.cs.pdq.planner.util.MapFiringGraph;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseListState;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.DatabaseHomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.utility.EqualConstantsClasses;
-import uk.ac.ox.cs.pdq.reasoning.utility.FiringGraph;
-import uk.ac.ox.cs.pdq.reasoning.utility.MapFiringGraph;
 import uk.ac.ox.cs.pdq.reasoning.utility.Match;
 
 import com.google.common.base.Preconditions;
@@ -56,6 +57,9 @@ import com.google.common.collect.Sets;
  */
 public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseListState implements AccessibleChaseState {
 
+	/**  The firings that took place in this state. */
+	protected FiringGraph graph;
+	
 	/**  String signatures of the inferred accessible facts. */
 	private final Collection<String> inferred;
 
@@ -133,7 +137,13 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 			Multimap<Predicate, Atom> signatureGroups,
 			Multimap<Term,Atom> accessibleTerms
 			) {
-		super(manager, facts, graph, constantClasses, constants);
+		super(manager, facts, constantClasses, constants);
+		Preconditions.checkNotNull(graph);
+		Preconditions.checkNotNull(inferred);
+		Preconditions.checkNotNull(derivedInferred);
+		Preconditions.checkNotNull(signatureGroups);
+		Preconditions.checkNotNull(accessibleTerms);
+		this.graph = graph;
 		this.inferred = inferred;
 		this.derivedInferred = derivedInferred;
 		this.signatureGroups = signatureGroups;
@@ -196,14 +206,43 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 	 */
 	@Override
 	public boolean chaseStep(Collection<Match> matches) {
-		super.chaseStep(matches);
+//		super.chaseStep(matches);
+//		for(Match match:matches) {
+//			//The dependency to fire
+//			Constraint dependency = (Constraint) match.getQuery();
+//			Map<Variable, Constant> mapping = match.getMapping();
+//			//The grounded left-hand side of the input dependency
+//			Constraint grounded = dependency.fire(mapping, this.canonicalNames);
+//			//The grounded right-hand side of the input dependency
+//			Formula right = grounded.getRight();
+//			for(Atom fact:right.getAtoms()) {
+//				if(fact.getPredicate() instanceof InferredAccessibleRelation) {
+//					this.derivedInferred.add(fact);
+//				}
+//				if (!(fact.getPredicate() instanceof AccessibleRelation) && 
+//						!(fact.getPredicate() instanceof InferredAccessibleRelation)) {
+//					this.signatureGroups.put(fact.getPredicate(), fact);
+//				}
+//				if (fact.getPredicate() instanceof AccessibleRelation) {
+//					this.accessibleTerms.put(fact.getTerm(0), fact);
+//				}
+//				if (fact.getPredicate() instanceof InferredAccessibleRelation) {
+//					this.inferred.add(fact.toString());
+//				}
+//			}
+//			//Update the provenance of facts
+//			this.graph.put(dependency, Sets.newHashSet(left.getAtoms()), Sets.newHashSet(right.getAtoms()));
+//		}
+//		return true;
+		
+		Preconditions.checkNotNull(matches);
+		Collection<Atom> newFacts = new LinkedHashSet<>();
 		for(Match match:matches) {
-			//The dependency to fire
 			Constraint dependency = (Constraint) match.getQuery();
+			Preconditions.checkArgument(dependency instanceof TGD, "EGDs are not allowed inside TGDchaseStep");
 			Map<Variable, Constant> mapping = match.getMapping();
-			//The grounded left-hand side of the input dependency
-			Constraint grounded = dependency.fire(mapping, this.canonicalNames);
-			//The grounded right-hand side of the input dependency
+			Constraint grounded = dependency.fire(mapping, true);
+			Formula left = grounded.getLeft();
 			Formula right = grounded.getRight();
 			for(Atom fact:right.getAtoms()) {
 				if(fact.getPredicate() instanceof InferredAccessibleRelation) {
@@ -220,7 +259,12 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 					this.inferred.add(fact.toString());
 				}
 			}
+			newFacts.addAll(right.getAtoms());
+			//Update the provenance of facts
+			this.graph.put(dependency, Sets.newHashSet(left.getAtoms()), Sets.newHashSet(right.getAtoms()));
 		}
+		//Add the newly created facts to the database
+		this.addFacts(newFacts);
 		return true;
 	}
 
@@ -371,12 +415,16 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 		return new AccessibleDatabaseListState(
 				this.getManager(),
 				facts, 
-				this.getFiringGraph().merge(s.getFiringGraph()),
+				this.getFiringGraph().merge(((AccessibleDatabaseListState)s).getFiringGraph()),
 				classes,
 				constantsToAtoms,
 				inferred,
 				derivedInferred, 
 				signatureGroups, 
 				accessibleTerms);
+	}
+	
+	public FiringGraph getFiringGraph() {
+		return this.graph;
 	}
 }

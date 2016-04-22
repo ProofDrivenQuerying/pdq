@@ -44,6 +44,10 @@ public class ExecuteAsynchronousSQLInsertThread extends Thread {
 
 	/** Inmemory cache size**/
 	protected final static int cacheSize = 100; 
+	
+	protected boolean stop = false;
+	
+	protected boolean hasStopped = false;
 
 	public ExecuteAsynchronousSQLInsertThread(SQLStatementBuilder builder, Map<String, DatabaseRelation> toDatabaseTables,
 			Connection connection) {
@@ -60,6 +64,14 @@ public class ExecuteAsynchronousSQLInsertThread extends Thread {
 	public void addFact(Collection<? extends Atom> facts) {
 		this.facts.addAll(facts);
 	}
+	
+	public void stop(boolean stop) {
+		this.stop = stop;
+	}
+	
+	public boolean hasStopped() {
+		return this.hasStopped;
+	}
 
 	/**
 	 * Call.
@@ -70,7 +82,7 @@ public class ExecuteAsynchronousSQLInsertThread extends Thread {
 	@Override
 	public void run() {		
 		Atom fact; 
-		while (!Thread.currentThread().isInterrupted()){
+		while (!this.stop || !this.facts.isEmpty()){
 			while ((fact = this.facts.poll()) != null) {
 				Set<Atom> atoms = this.caches.get(fact.getPredicate());
 				if(atoms == null) {
@@ -94,7 +106,8 @@ public class ExecuteAsynchronousSQLInsertThread extends Thread {
 				}
 			}
 		}
-		
+
+
 		//When the thread reads the final tuple, then it should flush everything to disk
 		for(Entry<Predicate, Set<Atom>> entry:this.caches.entrySet()) {		
 			//TODO check if cache is empty
@@ -110,6 +123,7 @@ public class ExecuteAsynchronousSQLInsertThread extends Thread {
 				}
 			}
 		}
+		this.hasStopped = true;
 	}
 
 }

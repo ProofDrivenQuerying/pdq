@@ -9,7 +9,7 @@ import uk.ac.ox.cs.pdq.fol.Variable;
 
 // TODO: Auto-generated Javadoc
 /**
- * Super class for all constraints that an homomorphism should satisfy.
+ * Super class for all propertys that an homomorphism should satisfy.
  *
  * @author Julien Leblay
  * @author Efthymia Tsamoura
@@ -75,8 +75,6 @@ public abstract class HomomorphismProperty {
 	
 	
 	/**
-	 * Checks if is active trigger.
-	 *
 	 * 
 	 * (From modern dependency theory notes)
 	 * Consider an instance I, a set Base of values, and a TGD
@@ -86,52 +84,63 @@ public abstract class HomomorphismProperty {
 	 * 		satisfying \sigma, and it is active if there is no witness \vec{y} that makes \tau holds.
 	 */
 	public static class ActiveTriggerProperty extends HomomorphismProperty {}
+	
+	/**
+	 * 
+	 * A trigger is open if it has not been fired in the past
+	 *
+	 */
+	public static class OpenTriggerProperty extends HomomorphismProperty {}
 
 	/**
-	 * Creates the top k constraint.
+	 * Creates the top k property.
 	 *
 	 * @param k the k
-	 * @return a fresh top k constraint
+	 * @return a fresh top k property
 	 */
 	public static TopKProperty createTopKProperty(int k) {
 		return new TopKProperty(k);
 	}
 
 	/**
-	 * Creates the fact constraint.
+	 * Creates the fact property.
 	 *
 	 * @param atoms the atoms
-	 * @return a fresh fact collection scope constraint
+	 * @return a fresh fact collection scope property
 	 */
 	public static FactProperty createFactProperty(Conjunction<Atom> atoms) {
 		return new FactProperty(atoms);
 	}
 
 	/**
-	 * Creates the map constraint.
+	 * Creates the map property.
 	 *
 	 * @param mapping the mapping
-	 * @return a fresh SuperMap constraint
+	 * @return a fresh SuperMap property
 	 */
 	public static MapProperty createMapProperty(Map<Variable, Constant> mapping) {
 		return new MapProperty(mapping);
 	}
 	
 	/**
-	 * Creates the egd homomorphism constraint.
+	 * Creates the egd homomorphism property.
 	 *
-	 * @return the EGD homomorphism constraint
+	 * @return the EGD homomorphism property
 	 */
 	public static EGDHomomorphismProperty createEGDHomomorphismProperty() {
 		return new EGDHomomorphismProperty();
 	}
 	
 	/**
-	 * Creates the egd homomorphism constraint.
+	 * Creates the egd homomorphism property.
 	 *
-	 * @return the EGD homomorphism constraint
+	 * @return the EGD homomorphism property
 	 */
 	public static ActiveTriggerProperty createActiveTriggerProperty() {
 		return new ActiveTriggerProperty();
+	}
+	
+	public static OpenTriggerProperty createOpenTriggerProperty() {
+		throw new java.lang.UnsupportedOperationException("Open triggers are not currently supported");
 	}
 }

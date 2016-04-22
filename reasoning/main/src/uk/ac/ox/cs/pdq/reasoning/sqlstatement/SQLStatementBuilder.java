@@ -28,7 +28,8 @@ import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
-import uk.ac.ox.cs.pdq.io.xml.QNames;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.DatabaseEGD;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.DatabaseEquality;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.DatabaseRelation;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismProperty;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismProperty.ActiveTriggerProperty;
@@ -364,8 +365,8 @@ public abstract class SQLStatementBuilder {
 
 		if(source instanceof Constraint && activeTrigger) {
 			List<String> from2 = null;
-			if(source instanceof TGD) {
-				from2 = this.createFromStatement(((TGD)source).getHead());
+			if(source instanceof Constraint) {
+				from2 = this.createFromStatement(Conjunction.of(((Constraint)source).getRight().getAtoms()));
 			}
 			LinkedHashMap<String,Variable> nestedProjections = this.createProjections(source);
 			List<String> predicates2 = new ArrayList<String>();
@@ -448,25 +449,16 @@ public abstract class SQLStatementBuilder {
 	 * @return 		explicit equalities (String objects of the form A.x1 = B.x2) of the implicit equalities in the input conjunction (the latter is denoted by repetition of the same term)
 	 */
 	protected List<String> createNestedAttributeEqualitiesForActiveTriggers(Constraint source) {
-		boolean isEquality = false;
-		for(Atom atom:source.getHead().getAtoms()) {
-			if(atom.getPredicate().getName().equals(QNames.EQUALITY.toString())) {
-				isEquality = true;
-				break;
-			}
-		}
-		if(!isEquality) {
+		if(source instanceof TGD) {
 			return this.createAttributeEqualities(Conjunction.of(((Constraint)source).getAtoms()));
 		}
-		else {
+		else if(source instanceof DatabaseEGD){
 			List<String> attributePredicates = new ArrayList<String>();
 			//The right atom should be an equality
 			//We add additional checks to be sure that we have to do with EGDs
-			for(Atom rightAtom:source.getHead().getAtoms()) {
+			for(DatabaseEquality rightAtom:((DatabaseEGD)source).getHead()) {
 				Relation rightRelation = (Relation) rightAtom.getPredicate();
 				String rightAlias = this.aliases.get(rightAtom);
-				Preconditions.checkArgument(rightRelation.getName().equals(QNames.EQUALITY.toString()));
-				Preconditions.checkArgument(source.getBody().getAtoms().size()==2);
 				Map<Integer,Pair<String,Attribute>> rightToLeft = Maps.newHashMap();
 				for(Term term:rightAtom.getTerms()) {
 					List<Integer> rightPositions = rightAtom.getTermPositions(term); //all the positions for the same term should be equated
@@ -518,6 +510,9 @@ public abstract class SQLStatementBuilder {
 				
 			}
 			return attributePredicates;
+		}
+		else {
+			throw new java.lang.IllegalArgumentException("Unsupported constraint type");
 		}
 	}
 

@@ -2,27 +2,14 @@ package uk.ac.ox.cs.pdq.reasoning.utility;
 
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Constraint;
 import uk.ac.ox.cs.pdq.db.EGD;
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Conjunction;
-import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Query;
-import uk.ac.ox.cs.pdq.fol.Variable;
-import uk.ac.ox.cs.pdq.reasoning.chase.ParallelEGDChaser;
-import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState;
-import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseListState;
-import uk.ac.ox.cs.pdq.reasoning.chase.state.ListState;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.DatabaseHomomorphismManager;
-import uk.ac.ox.cs.pdq.util.Table;
 
 import com.google.common.collect.Sets;
 
@@ -36,21 +23,6 @@ public class ReasonerUtility {
 
 	/** The log. */
 	protected static Logger log = Logger.getLogger(ReasonerUtility.class);
-
-	
-	/**
-	 * Checks if is open trigger.
-	 *
-	 * @param match the match
-	 * @param s the s
-	 * @return 		true if the constraint kept in the input match has been already fired with the input homomorphism
-	 */
-	public boolean isOpenTrigger(Match match, ChaseState s) {
-		Map<Variable, Constant> mapping = match.getMapping();
-		Constraint constraint = (Constraint) match.getQuery();
-		Constraint grounded = constraint.fire(mapping, true);
-		return !s.getFiringGraph().isFired(constraint, grounded.getLeft().getAtoms());
-	}
 	
 	/**
 	 * 
@@ -113,10 +85,22 @@ public class ReasonerUtility {
 			}
 			change = false;
 		}while(change);
-		
-		
-		
 		return null;
+	}
+	
+	/**
+	 * 
+	 * @param dependencies
+	 * @return
+	 * 		true if the input set of dependencies containts EGDs
+	 */
+	public static boolean checkEGDs(Collection<? extends Constraint> dependencies) {
+		for(Constraint dependency:dependencies) {
+			if(dependency instanceof EGD) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 }

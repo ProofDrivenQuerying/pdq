@@ -38,6 +38,7 @@ import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+import uk.ac.ox.cs.pdq.fol.Equality;
 import uk.ac.ox.cs.pdq.fol.Evaluatable;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Query;
@@ -95,8 +96,6 @@ public class DatabaseHomomorphismManager implements HomomorphismManager {
 
 	/**  Open database connections. */
 	protected final List<Connection> synchronousConnections = Lists.newArrayList();
-
-	protected Connection setupConnection;
 
 	/**  The database. */
 	protected final String database;
@@ -238,20 +237,16 @@ public class DatabaseHomomorphismManager implements HomomorphismManager {
 	 */
 	protected void setup() {
 		try {
-			if(this.setupConnection == null) {
-				this.setupConnection = getConnection(this.driver, this.url, this.database, this.username, this.password);
-			}
-
-			Statement sqlStatement = this.setupConnection.createStatement();
+			Statement sqlStatement = this.synchronousConnections.get(0).createStatement();
 
 			for (String sql: this.builder.createDatabaseStatements(this.database)) {
 				sqlStatement.addBatch(sql);
 			}
-			DatabaseRelation equality = DatabaseRelation.createEqualityTable();
+//			DatabaseRelation equality = DatabaseRelation.createEqualityTable();
 
-			this.toDatabaseTables.put(QNames.EQUALITY.toString(), equality);
-			sqlStatement.addBatch(this.builder.createTableStatement(equality));
-			sqlStatement.addBatch(this.builder.createColumnIndexStatement(equality, DatabaseRelation.Fact));
+			this.toDatabaseTables.put(QNames.EQUALITY.toString(), DatabaseRelation.DatabaseEqualityRelation);
+			sqlStatement.addBatch(this.builder.createTableStatement(DatabaseRelation.DatabaseEqualityRelation));
+			sqlStatement.addBatch(this.builder.createColumnIndexStatement(DatabaseRelation.DatabaseEqualityRelation, DatabaseRelation.Fact));
 
 			//Put relations into a set so as to make them unique
 			Set<Relation> relationset = new HashSet<Relation>();
@@ -277,9 +272,6 @@ public class DatabaseHomomorphismManager implements HomomorphismManager {
 			}
 
 			sqlStatement.executeBatch();
-
-			this.setupConnection.close();
-			this.setupConnection = null;
 		} catch (SQLException ex) {
 			throw new IllegalStateException(ex.getMessage(), ex);
 		}
@@ -293,17 +285,12 @@ public class DatabaseHomomorphismManager implements HomomorphismManager {
 	 */
 	protected void dropDatabase() throws HomomorphismException {
 		try {
-			if(this.setupConnection == null) {
-				this.setupConnection = getConnection(this.driver, this.url, this.database, this.username, this.password);
-			}
-			Statement sqlStatement = this.setupConnection.createStatement();
+			Statement sqlStatement = this.synchronousConnections.get(0).createStatement();
 
 			for (String sql: this.builder.createDropStatements(this.database)) {
 				sqlStatement.addBatch(sql);
 			}
 			sqlStatement.executeBatch();
-			this.setupConnection.close();
-			this.setupConnection = null;
 		} catch (SQLException ex) {
 			throw new HomomorphismException(ex.getMessage(), ex);
 		}
@@ -401,10 +388,7 @@ public class DatabaseHomomorphismManager implements HomomorphismManager {
 			throw new RuntimeException("Method clearQuery should be called in order to clear previous query's tables from the database.");
 		this.clearedLastQuery = false;
 		try {
-			if(this.setupConnection == null) {
-				this.setupConnection = getConnection(this.driver, this.url, this.database, this.username, this.password);
-			}
-			Statement sqlStatement = this.setupConnection.createStatement();
+			Statement sqlStatement = this.synchronousConnections.get(0).createStatement();
 
 			//Create statements that set up or drop the indices for the joins in the body of the input query
 			Set<String> joinIndexes = Sets.newLinkedHashSet();
@@ -416,8 +400,6 @@ public class DatabaseHomomorphismManager implements HomomorphismManager {
 				sqlStatement.addBatch(b);
 			}
 			sqlStatement.executeBatch();
-			this.setupConnection.close();
-			this.setupConnection = null;
 		} catch (SQLException ex) {
 			throw new IllegalStateException(ex.getMessage(), ex);
 		}
@@ -430,11 +412,7 @@ public class DatabaseHomomorphismManager implements HomomorphismManager {
 	@Override
 	public void clearQuery() {
 		try {
-			if(this.setupConnection == null) {
-				this.setupConnection = getConnection(this.driver, this.url, this.database, this.username, this.password);
-			}
-
-			Statement sqlStatement = this.setupConnection.createStatement();
+			Statement sqlStatement = this.synchronousConnections.get(0).createStatement();
 			//Drop the join indices for input query
 			for (String b: this.dropQueryIndexStatements) {
 				sqlStatement.addBatch(b);
@@ -446,8 +424,6 @@ public class DatabaseHomomorphismManager implements HomomorphismManager {
 				sqlStatement.addBatch(b);
 			}
 			sqlStatement.executeBatch();
-			this.setupConnection.close();
-			this.setupConnection = null;
 		} catch (SQLException ex) {
 			throw new IllegalStateException(ex.getMessage(), ex);
 		}
@@ -664,23 +640,40 @@ public class DatabaseHomomorphismManager implements HomomorphismManager {
 	 * @return 		a formula that uses the input *clean* names
 	 */
 	private <Q extends Evaluatable> Q convert(Q source, HomomorphismProperty... constraints) {
-		if(source instanceof Constraint) {
+		if(source instanceof TGD) {
 			int f = 0;
 			List<Atom> left = Lists.newArrayList();
-			for(Atom atom:((Constraint) source).getLeft().getAtoms()) {
+			for(Atom atom:((TGD) source).getLeft()) {
 				Relation relation = this.toDatabaseTables.get(atom.getName());
 				List<Term> terms = Lists.newArrayList(atom.getTerms());
 				terms.add(new Variable(DatabaseRelation.Fact.getName() + f++));
 				left.add(new Atom(relation, terms));
 			}
 			List<Atom> right = Lists.newArrayList();
-			for(Atom atom:((Constraint) source).getRight().getAtoms()) {
+			for(Atom atom:((TGD) source).getRight()) {
 				Relation relation = this.toDatabaseTables.get(atom.getName());
 				List<Term> terms = Lists.newArrayList(atom.getTerms());
 				terms.add(new Variable(DatabaseRelation.Fact.getName() + f++));
 				right.add(new Atom(relation, terms));
 			}
 			return (Q) new TGD(Conjunction.of(left), Conjunction.of(right));
+		}
+		else if (source instanceof EGD) {
+			int f = 0;
+			List<Atom> left = Lists.newArrayList();
+			for(Atom atom:((EGD) source).getLeft()) {
+				Relation relation = this.toDatabaseTables.get(atom.getName());
+				List<Term> terms = Lists.newArrayList(atom.getTerms());
+				terms.add(new Variable(DatabaseRelation.Fact.getName() + f++));
+				left.add(new Atom(relation, terms));
+			}
+			List<DatabaseEquality> right = Lists.newArrayList();
+			for(Equality atom:((EGD) source).getRight()) {
+				List<Term> terms = Lists.newArrayList(atom.getTerms());
+				terms.add(new Variable(DatabaseRelation.Fact.getName() + f++));
+				right.add(new DatabaseEquality(terms));
+			}
+			return (Q) new DatabaseEGD(Conjunction.of(left), Conjunction.of(right));
 		}
 		else if(source instanceof Query) {
 			int f = 0;

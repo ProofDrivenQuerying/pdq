@@ -4,11 +4,8 @@ import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.logging.performance.StatisticsCollector;
 import uk.ac.ox.cs.pdq.materialize.ReasoningParameters.ReasoningTypes;
-import uk.ac.ox.cs.pdq.materialize.chase.BoundedChaser;
 import uk.ac.ox.cs.pdq.materialize.chase.Chaser;
-import uk.ac.ox.cs.pdq.materialize.chase.KTerminationChaser;
 import uk.ac.ox.cs.pdq.materialize.chase.RestrictedChaser;
-import uk.ac.ox.cs.pdq.materialize.chase.BoundedChaser.KSupplier;
 
 import com.google.common.base.Preconditions;
 import com.google.common.eventbus.EventBus;
@@ -64,12 +61,6 @@ public class ReasonerFactory {
 	/**  Type of reasoner. */
 	private final ReasoningTypes type;
 
-	/**  K for the KTermination chase. */
-	private final Integer terminationK;
-
-	/**  KSupplier to be shared across all BoundedChasers created by this factory. */
-	private KSupplier kSupplier = null;
-
 	/** true, if the reasoner initialisation shall be unrestricted. */
 	private final Boolean fullInitialization;
 
@@ -110,7 +101,6 @@ public class ReasonerFactory {
 		this.eventBus = eventBus;
 		this.collectStatistics = collectStats;
 		this.type = type;
-		this.terminationK = k;
 		this.fullInitialization = fullInitialization;
 	}
 
@@ -125,23 +115,6 @@ public class ReasonerFactory {
 		case RESTRICTED_CHASE:
 			return new RestrictedChaser(
 					this.collectStatistics == true ? new StatisticsCollector(this.collectStatistics, this.eventBus) : null);
-			
-		case SEQUENTIAL_EGD_CHASE:
-			return new RestrictedChaser(
-					this.collectStatistics == true ? new StatisticsCollector(this.collectStatistics, this.eventBus) : null);
-			
-		case KTERMINATION_CHASE:
-			return new KTerminationChaser(
-					this.collectStatistics == true ? new StatisticsCollector(this.collectStatistics, this.eventBus) : null,
-					this.terminationK);
-		case BOUNDED_CHASE:
-			if (this.kSupplier == null) {
-				this.kSupplier = new KSupplier(this.terminationK);
-			}
-			return new BoundedChaser(
-					this.collectStatistics == true ? new StatisticsCollector(this.collectStatistics, this.eventBus) : null,
-					this.kSupplier,
-					this.fullInitialization);
 		default:
 			return null;
 		}

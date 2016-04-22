@@ -15,10 +15,10 @@ import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.db.EGD;
 import uk.ac.ox.cs.pdq.db.Schema;
+import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.Equality;
-import uk.ac.ox.cs.pdq.fol.Skolem;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
@@ -174,10 +174,10 @@ public class Materialise {
 			//Load the facts 
 			//Store them in database
 			Collection<Atom> facts = Sets.newHashSet();
-			facts.addAll(this.loadFacts(schema, "hospital", "C:\\Users\\tsamoura\\Dropbox\\chaseBench\\datasets\\doctors\\data\\1m\\hospital.csv"));
-			facts.addAll(this.loadFacts(schema, "medprescription", "C:\\Users\\tsamoura\\Dropbox\\chaseBench\\datasets\\doctors\\data\\1m\\medprescription.csv"));
-			facts.addAll(this.loadFacts(schema, "physician", "C:\\Users\\tsamoura\\Dropbox\\chaseBench\\datasets\\doctors\\data\\1m\\physician.csv"));
-			facts.addAll(this.loadFacts(schema, "treatment", "C:\\Users\\tsamoura\\Dropbox\\chaseBench\\datasets\\doctors\\data\\1m\\treatment.csv"));
+			facts.addAll(this.loadFacts(schema, "hospital", "C:\\Users\\tsamoura\\Dropbox\\chaseBench\\datasets\\doctors\\data\\10k\\hospital.csv"));
+			facts.addAll(this.loadFacts(schema, "medprescription", "C:\\Users\\tsamoura\\Dropbox\\chaseBench\\datasets\\doctors\\data\\10k\\medprescription.csv"));
+			facts.addAll(this.loadFacts(schema, "physician", "C:\\Users\\tsamoura\\Dropbox\\chaseBench\\datasets\\doctors\\data\\10k\\physician.csv"));
+			facts.addAll(this.loadFacts(schema, "treatment", "C:\\Users\\tsamoura\\Dropbox\\chaseBench\\datasets\\doctors\\data\\10k\\treatment.csv"));
 			
 			
 			ReasonerFactory reasonerFactory = new ReasonerFactory(
@@ -251,7 +251,7 @@ public class Materialise {
 					String[] tuple = line.split(",");
 					List<Term> constants = Lists.newArrayList();
 					for(int i = 0; i < tuple.length; ++i ) {
-						constants.add(new Skolem(tuple[i]));
+						constants.add(new TypedConstant(tuple[i]));
 //						if(Character.isUpperCase(tuple[i].charAt(0))) {
 //							tuple[i] = "\"" + tuple[i] + "\"";
 //						}

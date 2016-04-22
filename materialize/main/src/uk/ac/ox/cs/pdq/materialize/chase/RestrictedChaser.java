@@ -70,6 +70,8 @@ public class RestrictedChaser extends Chaser {
 		Collection<? extends Constraint> d = dependencies;
 		long start = System.currentTimeMillis();
 		do {
+			
+			long start0 = System.currentTimeMillis();
 			appliedStep = false;
 			for(Constraint dependency:d) {
 				List<Match> matches = instance.getMatches(Lists.newArrayList(dependency), HomomorphismProperty.createActiveTriggerProperty());	
@@ -82,6 +84,9 @@ public class RestrictedChaser extends Chaser {
 				queue.clear();
 				d = accessor.getDependencies(instance);	
 			}
+			long end0 = System.currentTimeMillis();
+			System.out.println("---Finish chase round " + " " + (end0-start0));
+			
 		} while (appliedStep);
 		long end = System.currentTimeMillis();
 		System.out.println("---Time to reason until termination " + " " + (end-start));

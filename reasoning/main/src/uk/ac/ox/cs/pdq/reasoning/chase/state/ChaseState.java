@@ -7,7 +7,6 @@ import uk.ac.ox.cs.pdq.db.Constraint;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismProperty;
-import uk.ac.ox.cs.pdq.reasoning.utility.FiringGraph;
 import uk.ac.ox.cs.pdq.reasoning.utility.Match;
 
 // TODO: Auto-generated Javadoc
@@ -73,17 +72,7 @@ public interface ChaseState {
 	 * @return 		true if this database instance is failed
 	 */
 	boolean isFailed();
-	
-	
-	/**
-	 * Gets the firing graph.
-	 *
-	 * @return 		the rule firings that took place in this instance
-	 */
-	FiringGraph  getFiringGraph();
-	
-
-	
+		
 	/**
 	 * Gets the facts.
 	 *
@@ -120,18 +109,4 @@ public interface ChaseState {
 	 */
 	boolean chaseStep(Collection<Match> triggers);
 	
-	/**
-	 * Merge.
-	 *
-	 * @param s 		An input chase configuration
-	 * @return 		a database instance with facts the union of the facts of the two database instances.
-	 */
-	ChaseState merge(ChaseState s);
-
-	/**
-	 * Clone.
-	 *
-	 * @return the chase state
-	 */
-	ChaseState clone();
 }

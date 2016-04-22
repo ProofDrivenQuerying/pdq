@@ -20,8 +20,6 @@ import uk.ac.ox.cs.pdq.reasoning.homomorphism.DatabaseHomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismProperty;
 import uk.ac.ox.cs.pdq.reasoning.utility.EqualConstantsClass;
 import uk.ac.ox.cs.pdq.reasoning.utility.EqualConstantsClasses;
-import uk.ac.ox.cs.pdq.reasoning.utility.FiringGraph;
-import uk.ac.ox.cs.pdq.reasoning.utility.MapFiringGraph;
 import uk.ac.ox.cs.pdq.reasoning.utility.Match;
 
 import com.beust.jcommander.internal.Lists;
@@ -54,9 +52,6 @@ public class DatabaseChaseListState extends DatabaseChaseState implements ListSt
 	/**  The state's facts. */
 	protected Collection<Atom> facts;
 
-	/**  The firings that took place in this state. */
-	protected FiringGraph graph;
-
 	/**  Keeps the classes of equal constants. */
 	protected EqualConstantsClasses classes;
 
@@ -77,7 +72,6 @@ public class DatabaseChaseListState extends DatabaseChaseState implements ListSt
 			DatabaseHomomorphismManager manager) {
 		super(manager);
 		this.facts = Sets.newHashSet(query.getCanonical().getAtoms());
-		this.graph = new MapFiringGraph();
 		this.classes = new EqualConstantsClasses();
 		this.constantsToAtoms = inferConstantsMap(this.facts);
 		this.manager.addFacts(this.facts);
@@ -95,7 +89,6 @@ public class DatabaseChaseListState extends DatabaseChaseState implements ListSt
 		super(manager);
 		Preconditions.checkNotNull(facts);
 		this.facts = facts;
-		this.graph = new MapFiringGraph();
 		this.classes = new EqualConstantsClasses();
 		this.constantsToAtoms = inferConstantsMap(this.facts);
 		this.manager.addFacts(this.facts);
@@ -112,17 +105,14 @@ public class DatabaseChaseListState extends DatabaseChaseState implements ListSt
 	protected DatabaseChaseListState(
 			DatabaseHomomorphismManager manager,
 			Collection<Atom> facts,
-			FiringGraph graph, 
 			EqualConstantsClasses classes,
 			Multimap<Constant,Atom> constants
 			) {
 		super(manager);
 		Preconditions.checkNotNull(facts);
-		Preconditions.checkNotNull(graph);
 		Preconditions.checkNotNull(classes);
 		Preconditions.checkNotNull(constants);
 		this.facts = facts;
-		this.graph = graph;
 		this.classes = classes;
 		this.constantsToAtoms = constants; 
 	}
@@ -197,8 +187,6 @@ public class DatabaseChaseListState extends DatabaseChaseState implements ListSt
 					this.constantsToAtoms.put((Constant)term, atom);
 				}
 			}
-			//Update the provenance of facts
-			this.graph.put(dependency, Sets.newHashSet(left.getAtoms()), Sets.newHashSet(right.getAtoms()));
 			newFacts.addAll(right.getAtoms());
 		}
 		//Add the newly created facts to the database
@@ -371,14 +359,6 @@ public class DatabaseChaseListState extends DatabaseChaseState implements ListSt
 	}
 
 	/* (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState#getFiringGraph()
-	 */
-	@Override
-	public FiringGraph getFiringGraph() {
-		return this.graph;
-	}
-
-	/* (non-Javadoc)
 	 * @see uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState#getFacts()
 	 */
 	@Override
@@ -388,32 +368,6 @@ public class DatabaseChaseListState extends DatabaseChaseState implements ListSt
 	
 	public Multimap<Constant, Atom> getConstantsToAtoms() {
 		return this.constantsToAtoms;
-	}
-
-	/* (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState#merge(uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState)
-	 */
-	@Override
-	public ChaseState merge(ChaseState s) {
-		Preconditions.checkState(s instanceof DatabaseChaseListState);
-		Collection<Atom> facts =  new LinkedHashSet<>(this.facts);
-		facts.addAll(s.getFacts());
-
-		EqualConstantsClasses classes = this.classes.clone();
-		if(!classes.merge(((DatabaseChaseListState)s).classes)) {
-			return null;
-		}
-
-		Multimap<Constant, Atom> constantsToAtoms = HashMultimap.create();
-		constantsToAtoms.putAll(this.constantsToAtoms);
-		constantsToAtoms.putAll(((DatabaseChaseListState)s).constantsToAtoms);
-
-		return new DatabaseChaseListState(
-				this.getManager(),
-				facts, 
-				this.getFiringGraph().merge(s.getFiringGraph()), 
-				classes,
-				constantsToAtoms);
 	}
 
 	/* (non-Javadoc)
@@ -432,7 +386,7 @@ public class DatabaseChaseListState extends DatabaseChaseState implements ListSt
 	public DatabaseChaseListState clone() {
 		Multimap<Constant, Atom> constantsToAtoms = HashMultimap.create();
 		constantsToAtoms.putAll(this.constantsToAtoms);
-		return new DatabaseChaseListState(this.manager, Sets.newHashSet(this.facts), this.graph.clone(), this.classes.clone(), constantsToAtoms);
+		return new DatabaseChaseListState(this.manager, Sets.newHashSet(this.facts), this.classes.clone(), constantsToAtoms);
 	}	
 
 	/**

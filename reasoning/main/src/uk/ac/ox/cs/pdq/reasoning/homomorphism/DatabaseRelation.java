@@ -22,6 +22,8 @@ public class DatabaseRelation extends Relation {
 	
 	/** The Fact. */
 	public final static Attribute Fact = new Attribute(Integer.class, "Fact");
+	
+	public final static DatabaseRelation DatabaseEqualityRelation = createEqualityTable();
 
 	/**
 	 * Constructor for DBRelation.
@@ -48,7 +50,7 @@ public class DatabaseRelation extends Relation {
 		return new DatabaseRelation(relation.getName(), attributes);
 	}
 
-	public static DatabaseRelation createEqualityTable() {		
+	private static DatabaseRelation createEqualityTable() {		
 		List<Attribute> attributes = new ArrayList<>();
 		attributes.add(new Attribute(String.class, DatabaseRelation.attrPrefix + 0));
 		attributes.add(new Attribute(String.class, DatabaseRelation.attrPrefix + 1));

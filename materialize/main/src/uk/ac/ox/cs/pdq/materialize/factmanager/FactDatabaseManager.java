@@ -77,21 +77,13 @@ public class FactDatabaseManager implements FactManager {
 	/** The open connections. */
 	protected static List<Connection> openConnections = new ArrayList<>();
 
-	/** Number of parallel threads. **/
-	protected final int synchronousThreadsNumber = 10;
-
-	protected final int asynchronousThreadsNumber = 10;
+	protected final int asynchronousThreadsNumber = 2;
 
 	protected final long timeout = 3600000;
 
 	protected final TimeUnit unit = TimeUnit.MILLISECONDS;
 
-	/**  Open database connections. */
-	protected final List<Connection> synchronousConnections = Lists.newArrayList();
-
 	protected final List<Connection> asynchronousConnections = Lists.newArrayList();
-
-	protected Connection setupConnection;
 
 	/**  The database. */
 	protected final String database;
@@ -170,12 +162,7 @@ public class FactDatabaseManager implements FactManager {
 		this.constants = schema.getConstants();
 		this.relations = Lists.newArrayList(schema.getRelations());
 		this.toDatabaseTables = new LinkedHashMap<>();
-
-		for(int i = 0; i < this.synchronousThreadsNumber; ++i) {
-			this.synchronousConnections.add(HomomorphismUtility.getConnection(this.driver, this.url, this.database, this.username, this.password));
-		}
-		FactDatabaseManager.openConnections.addAll(this.synchronousConnections);
-	
+		
 		for(int i = 0; i < this.asynchronousThreadsNumber; ++i) {
 			this.asynchronousConnections.add(HomomorphismUtility.getConnection(this.driver, this.url, this.database, this.username, this.password));
 		}
@@ -220,11 +207,6 @@ public class FactDatabaseManager implements FactManager {
 		this.constants = constants;
 		this.relations = relations;
 		
-		for(int i = 0; i < this.synchronousThreadsNumber; ++i) {
-			this.synchronousConnections.add(HomomorphismUtility.getConnection(this.driver, this.url, this.database, this.username, this.password));
-		}
-		FactDatabaseManager.openConnections.addAll(this.synchronousConnections);
-	
 		for(int i = 0; i < this.asynchronousThreadsNumber; ++i) {
 			this.asynchronousConnections.add(HomomorphismUtility.getConnection(this.driver, this.url, this.database, this.username, this.password));
 		}
@@ -249,18 +231,15 @@ public class FactDatabaseManager implements FactManager {
 	 */
 	protected void setup() {
 		try {
-			if(this.setupConnection == null) {
-				this.setupConnection = HomomorphismUtility.getConnection(this.driver, this.url, this.database, this.username, this.password);
-			}
-			Statement sqlStatement = this.setupConnection.createStatement();
+			Statement sqlStatement = this.asynchronousConnections.get(0).createStatement();
 			for (String sql: this.builder.createDatabaseStatements(this.database)) {
 				sqlStatement.addBatch(sql);
 			}
-			DatabaseRelation equality = DatabaseRelation.createEqualityTable();
+//			DatabaseRelation equality = DatabaseRelation.createEqualityTable();
 
-			this.toDatabaseTables.put(QNames.EQUALITY.toString(), equality);
-			sqlStatement.addBatch(this.builder.createTableStatement(equality));
-			sqlStatement.addBatch(this.builder.createColumnIndexStatement(equality, DatabaseRelation.Fact));
+			this.toDatabaseTables.put(QNames.EQUALITY.toString(), DatabaseRelation.DatabaseEqualityRelation);
+			sqlStatement.addBatch(this.builder.createTableStatement(DatabaseRelation.DatabaseEqualityRelation));
+			sqlStatement.addBatch(this.builder.createColumnIndexStatement(DatabaseRelation.DatabaseEqualityRelation, DatabaseRelation.Fact));
 
 			//Put relations into a set so as to make them unique
 			Set<Relation> relationset = new HashSet<Relation>();
@@ -286,9 +265,6 @@ public class FactDatabaseManager implements FactManager {
 			}
 
 			sqlStatement.executeBatch();
-
-			this.setupConnection.close();
-			this.setupConnection = null;
 		} catch (SQLException ex) {
 			throw new IllegalStateException(ex.getMessage(), ex);
 		}
@@ -302,17 +278,12 @@ public class FactDatabaseManager implements FactManager {
 	 */
 	protected void dropDatabase() throws HomomorphismException {
 		try {
-			if(this.setupConnection == null) {
-				this.setupConnection = HomomorphismUtility.getConnection(this.driver, this.url, this.database, this.username, this.password);
-			}
-			Statement sqlStatement = this.setupConnection.createStatement();
+			Statement sqlStatement = this.asynchronousConnections.get(0).createStatement();
 
 			for (String sql: this.builder.createDropStatements(this.database)) {
 				sqlStatement.addBatch(sql);
 			}
 			sqlStatement.executeBatch();
-			this.setupConnection.close();
-			this.setupConnection = null;
 		} catch (SQLException ex) {
 			throw new HomomorphismException(ex.getMessage(), ex);
 		}
@@ -367,10 +338,7 @@ public class FactDatabaseManager implements FactManager {
 			throw new RuntimeException("Method clearQuery should be called in order to clear previous query's tables from the database.");
 		this.clearedLastQuery = false;
 		try {
-			if(this.setupConnection == null) {
-				this.setupConnection = HomomorphismUtility.getConnection(this.driver, this.url, this.database, this.username, this.password);
-			}
-			Statement sqlStatement = this.setupConnection.createStatement();
+			Statement sqlStatement = this.asynchronousConnections.get(0).createStatement();
 
 			//Create statements that set up or drop the indices for the joins in the body of the input query
 			Set<String> joinIndexes = Sets.newLinkedHashSet();
@@ -382,8 +350,6 @@ public class FactDatabaseManager implements FactManager {
 				sqlStatement.addBatch(b);
 			}
 			sqlStatement.executeBatch();
-			this.setupConnection.close();
-			this.setupConnection = null;
 		} catch (SQLException ex) {
 			throw new IllegalStateException(ex.getMessage(), ex);
 		}
@@ -396,11 +362,7 @@ public class FactDatabaseManager implements FactManager {
 	@Override
 	public void clearQuery() {
 		try {
-			if(this.setupConnection == null) {
-				this.setupConnection = HomomorphismUtility.getConnection(this.driver, this.url, this.database, this.username, this.password);
-			}
-
-			Statement sqlStatement = this.setupConnection.createStatement();
+			Statement sqlStatement = this.asynchronousConnections.get(0).createStatement();
 			//Drop the join indices for input query
 			for (String b: this.dropQueryIndexStatements) {
 				sqlStatement.addBatch(b);
@@ -412,8 +374,6 @@ public class FactDatabaseManager implements FactManager {
 				sqlStatement.addBatch(b);
 			}
 			sqlStatement.executeBatch();
-			this.setupConnection.close();
-			this.setupConnection = null;
 		} catch (SQLException ex) {
 			throw new IllegalStateException(ex.getMessage(), ex);
 		}
@@ -438,11 +398,11 @@ public class FactDatabaseManager implements FactManager {
 			//Find the total number of tuples that will be inserted in the database
 			int totalTuples = facts.size();
 			int tuplesPerThread;
-			if(totalTuples < this.synchronousThreadsNumber) {
+			if(totalTuples < this.asynchronousThreadsNumber) {
 				tuplesPerThread = totalTuples;
 			}
 			else {
-				tuplesPerThread = (int) Math.ceil(totalTuples / this.synchronousThreadsNumber);
+				tuplesPerThread = (int) Math.ceil(totalTuples / this.asynchronousThreadsNumber);
 			}
 			if(tuplesPerThread > insertCacheSize) {
 				tuplesPerThread = insertCacheSize;
@@ -463,11 +423,11 @@ public class FactDatabaseManager implements FactManager {
 		ExecutorService executorService = null;
 		try {
 			//Create a pool of threads to run in parallel
-			executorService = Executors.newFixedThreadPool(this.synchronousThreadsNumber);
+			executorService = Executors.newFixedThreadPool(this.asynchronousThreadsNumber);
 			List<Callable<Boolean>> threads = new ArrayList<>();
-			for(int j = 0; j < this.synchronousThreadsNumber; ++j) {
+			for(int j = 0; j < this.asynchronousThreadsNumber; ++j) {
 				//Create the threads that will run the database update statements
-				threads.add(new ExecuteSynchronousSQLUpdateThread(queries, this.synchronousConnections.get(j)));
+				threads.add(new ExecuteSynchronousSQLUpdateThread(queries, this.asynchronousConnections.get(j)));
 			}
 			long start = System.currentTimeMillis();
 			try {
@@ -496,13 +456,12 @@ public class FactDatabaseManager implements FactManager {
 	public void addFactsAsynchronously(Collection<? extends Atom> facts) {		
 		if(!this.isRunningAsynchronously) {
 			//Create a pool of threads to run in parallel
-			this.asynchonousExecutor = Executors.newFixedThreadPool(this.synchronousThreadsNumber);
 			this.asynchronousRunningThreads = new ArrayList<>();
-			for(int j = 0; j < this.synchronousThreadsNumber; ++j) {
+			for(int j = 0; j < this.asynchronousThreadsNumber; ++j) {
 				//Create the threads that will run the database update statements
-				ExecuteAsynchronousSQLInsertThread t = new ExecuteAsynchronousSQLInsertThread(this.builder, this.toDatabaseTables, this.synchronousConnections.get(j));
+				ExecuteAsynchronousSQLInsertThread t = new ExecuteAsynchronousSQLInsertThread(this.builder, this.toDatabaseTables, this.asynchronousConnections.get(j));
 				this.asynchronousRunningThreads.add(t);
-				this.asynchonousExecutor.submit(t);
+				t.start();
 			}
 			this.asynchronousThreadRound = 0;
 			this.isRunningAsynchronously = true;
@@ -510,12 +469,18 @@ public class FactDatabaseManager implements FactManager {
 
 		if(this.isRunningAsynchronously) {
 			if(facts.isEmpty()) {
-				for(Thread thread:this.asynchronousRunningThreads) {
-					thread.interrupt();
+				for(ExecuteAsynchronousSQLInsertThread thread:this.asynchronousRunningThreads) {
+					thread.stop(true);
 				}
-				this.asynchonousExecutor.shutdown();
-				this.asynchonousExecutor = null;
-				this.asynchronousRunningThreads.clear();
+				boolean running = true;
+				do {
+					for(ExecuteAsynchronousSQLInsertThread thread:this.asynchronousRunningThreads) {
+						if(thread.hasStopped()) {
+							running = false;
+							break;
+						}
+					}
+				}while(running);
 				this.isRunningAsynchronously = false;
 			}
 			else {
@@ -539,11 +504,11 @@ public class FactDatabaseManager implements FactManager {
 		//Find the total number of tuples that will be inserted in the database
 		int totalTuples = facts.size();
 		int tuplesPerThread;
-		if(totalTuples < this.synchronousThreadsNumber) {
+		if(totalTuples < this.asynchronousThreadsNumber) {
 			tuplesPerThread = totalTuples;
 		}
 		else {
-			tuplesPerThread = (int) Math.ceil(totalTuples / this.synchronousThreadsNumber);
+			tuplesPerThread = (int) Math.ceil(totalTuples / this.asynchronousThreadsNumber);
 		}
 		if(tuplesPerThread > insertCacheSize) {
 			tuplesPerThread = insertCacheSize;
@@ -563,11 +528,11 @@ public class FactDatabaseManager implements FactManager {
 		try {
 
 			//Create a pool of threads to run in parallel
-			executorService = Executors.newFixedThreadPool(this.synchronousThreadsNumber);
+			executorService = Executors.newFixedThreadPool(this.asynchronousThreadsNumber);
 			List<Callable<Boolean>> threads = new ArrayList<>();
-			for(int j = 0; j < this.synchronousThreadsNumber; ++j) {
+			for(int j = 0; j < this.asynchronousThreadsNumber; ++j) {
 				//Create the threads that will create new binary configurations using the input left, right collections
-				threads.add(new ExecuteSynchronousSQLUpdateThread(queries, this.synchronousConnections.get(j)));
+				threads.add(new ExecuteSynchronousSQLUpdateThread(queries, this.asynchronousConnections.get(j)));
 			}
 			long start = System.currentTimeMillis();
 			try {

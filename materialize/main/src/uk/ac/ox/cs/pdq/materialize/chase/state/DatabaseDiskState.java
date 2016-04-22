@@ -58,7 +58,7 @@ public class DatabaseDiskState implements ListState {
 	protected final boolean canonicalNames = true;
 	
 	/** Number of parallel threads. **/
-	protected final int parallelThreads = 50;
+	protected final int parallelThreads = 2;
 
 	protected final long timeout = 3600000;
 
@@ -66,7 +66,6 @@ public class DatabaseDiskState implements ListState {
 	
 	protected List<FactManager> managers;
 	
-	//TODO Hack think of a better placing of this 
 	protected Collection<Predicate> recentAtoms = Sets.newHashSet();
 
 	/**

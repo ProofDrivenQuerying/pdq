@@ -9,12 +9,13 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import uk.ac.ox.cs.pdq.db.Constraint;
+import uk.ac.ox.cs.pdq.db.EGD;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TGD;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+import uk.ac.ox.cs.pdq.fol.Equality;
 import uk.ac.ox.cs.pdq.fol.Evaluatable;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Query;
@@ -53,7 +54,7 @@ public class HomomorphismUtility {
 		}
 		return clusters;
 	}
-	
+		
 	/**
 	 * Convert.
 	 *
@@ -64,23 +65,40 @@ public class HomomorphismUtility {
 	 * @return 		a formula that uses the input *clean* names
 	 */
 	public static <Q extends Evaluatable> Q convert(Q source, Map<String, DatabaseRelation> toDatabaseTables, HomomorphismProperty... constraints) {
-		if(source instanceof Constraint) {
+		if(source instanceof TGD) {
 			int f = 0;
 			List<Atom> left = Lists.newArrayList();
-			for(Atom atom:((Constraint<?,?>) source).getLeft().getAtoms()) {
+			for(Atom atom:((TGD) source).getLeft()) {
 				Relation relation = toDatabaseTables.get(atom.getName());
 				List<Term> terms = Lists.newArrayList(atom.getTerms());
 				terms.add(new Variable(DatabaseRelation.Fact.getName() + f++));
 				left.add(new Atom(relation, terms));
 			}
 			List<Atom> right = Lists.newArrayList();
-			for(Atom atom:((Constraint<?,?>) source).getRight().getAtoms()) {
+			for(Atom atom:((TGD) source).getRight()) {
 				Relation relation = toDatabaseTables.get(atom.getName());
 				List<Term> terms = Lists.newArrayList(atom.getTerms());
 				terms.add(new Variable(DatabaseRelation.Fact.getName() + f++));
 				right.add(new Atom(relation, terms));
 			}
 			return (Q) new TGD(Conjunction.of(left), Conjunction.of(right));
+		}
+		else if (source instanceof EGD) {
+			int f = 0;
+			List<Atom> left = Lists.newArrayList();
+			for(Atom atom:((EGD) source).getLeft()) {
+				Relation relation = toDatabaseTables.get(atom.getName());
+				List<Term> terms = Lists.newArrayList(atom.getTerms());
+				terms.add(new Variable(DatabaseRelation.Fact.getName() + f++));
+				left.add(new Atom(relation, terms));
+			}
+			List<DatabaseEquality> right = Lists.newArrayList();
+			for(Equality atom:((EGD) source).getRight()) {
+				List<Term> terms = Lists.newArrayList(atom.getTerms());
+				terms.add(new Variable(DatabaseRelation.Fact.getName() + f++));
+				right.add(new DatabaseEquality(terms));
+			}
+			return (Q) new DatabaseEGD(Conjunction.of(left), Conjunction.of(right));
 		}
 		else if(source instanceof Query) {
 			int f = 0;
