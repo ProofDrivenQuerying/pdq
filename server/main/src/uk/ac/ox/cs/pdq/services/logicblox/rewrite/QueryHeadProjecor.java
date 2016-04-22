@@ -28,11 +28,11 @@ public class QueryHeadProjecor implements Rewriter<ConjunctiveQuery, Conjunctive
 	 *
 	 * @param query the query
 	 */
-	public QueryHeadProjecor(Query<?> query) {
+	public QueryHeadProjecor(ConjunctiveQuery query) {
 		this.terms = new HashSet<>();
 		for (Term t: query.getFree()) {
 			if (t.isVariable()) {
-				this.terms.add(query.getFreeToCanonical().get(t));
+				this.terms.add(query.getGroundingsProjectionOnFreeVars().get(t));
 			} else {
 				this.terms.add(t);
 			}

@@ -21,6 +21,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import uk.ac.ox.cs.pdq.LimitReachedException;
 import uk.ac.ox.cs.pdq.LimitReachedException.Reasons;
 import uk.ac.ox.cs.pdq.db.Constraint;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
@@ -176,7 +177,7 @@ public class MultiThreadedExecutor extends IterativeExecutor {
 	 */
 	@Override
 	public ExplorationResults explore(
-			Query<?> query,
+			ConjunctiveQuery query,
 			Queue<DAGChaseConfiguration> input,
 			DAGEquivalenceClasses equivalenceClasses,
 			DAGChaseConfiguration bestConfiguration,

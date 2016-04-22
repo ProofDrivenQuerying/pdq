@@ -1,5 +1,6 @@
 package uk.ac.ox.cs.pdq.planner.reasoning;
 
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.util.Costable;
@@ -46,7 +47,7 @@ public interface Configuration<P extends Plan> extends Costable, Cloneable, Comp
 	 * having elements for each free variable of Q′, then a homomorphism of Q′ into v
 	 * mapping each free variable into the corresponding element is called a match for Q′ in v.
 	 */
-	boolean isSuccessful(Query<?> query);
+	boolean isSuccessful(ConjunctiveQuery query);
 
 	/* (non-Javadoc)
 	 * @see java.lang.Comparable#compareTo(java.lang.Object)

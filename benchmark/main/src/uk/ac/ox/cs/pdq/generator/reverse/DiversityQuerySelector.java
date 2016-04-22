@@ -4,6 +4,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.SortedSet;
 
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Query;
 
 // TODO: Auto-generated Javadoc
@@ -28,7 +29,7 @@ public class DiversityQuerySelector implements QuerySelector {
 	 * @see uk.ac.ox.cs.pdq.builder.generator.reverse.QuerySelector#accept(uk.ac.ox.cs.pdq.formula.Query)
 	 */
 	@Override
-	public boolean accept(Query<?> q) {
+	public boolean accept(ConjunctiveQuery q) {
 		SortedSet<FactSignature> signature = FactSignature.make(q.getBody().getAtoms());
 		if (this.signatures.contains(signature)) {
 			return false;

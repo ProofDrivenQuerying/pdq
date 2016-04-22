@@ -9,6 +9,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.db.Constraint;
 import uk.ac.ox.cs.pdq.db.Relation;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Query;
@@ -34,7 +35,7 @@ import com.google.common.collect.Sets;
 public class ConfigurationPostPruning {
 
 	/**  The accessible counterpart of the user query *. */
-	protected final Query<?> accessibleQuery;
+	protected final ConjunctiveQuery accessibleQuery;
 
 	/**  The accessible counterpart of the input schema *. */
 	protected final AccessibleSchema accessibleSchema;
@@ -67,7 +68,7 @@ public class ConfigurationPostPruning {
 	 * An exception is thrown if the input facts are not accessible or inferred accessible ones
 	 */
 	public ConfigurationPostPruning(
-			Query<?> accessibleQuery,
+			ConjunctiveQuery accessibleQuery,
 			AccessibleSchema accessibleSchema,
 			Chaser chaser,
 			CostEstimator<DAGPlan> costEstimator,

@@ -84,35 +84,32 @@ public class HomomorphismManagerFactory {
 			throw new IllegalStateException("No suitable driver found for homomorphism checker.", e);
 		}
 		try {
-			if (type != null) {
-				switch (type) {
-				case DATABASE:
-					SQLStatementBuilder builder = null;
-					if (url != null && url.contains("mysql")) {
-						builder = new MySQLStatementBuilder();
-					} else {
-						if (Strings.isNullOrEmpty(driver)) {
-							driver = "org.apache.derby.jdbc.EmbeddedDriver";
-						}
-						if (Strings.isNullOrEmpty(url)) {
-							url = "jdbc:derby:memory:{1};create=true";
-						}
-						if (Strings.isNullOrEmpty(database)) {
-							database = "chase";
-						}
-						database +=  "_" + System.currentTimeMillis() + "_" + counter++;
-						synchronized (counter) {
-							username = "APP_" + (counter++);
-						}
-						password = "";
-						builder = new DerbyStatementBuilder();
+			if (type != null && type == HomomorphismDetectorTypes.DATABASE) {
+				SQLStatementBuilder builder = null;
+				if (url != null && url.contains("mysql")) {
+					builder = new MySQLStatementBuilder();
+				} else {
+					if (Strings.isNullOrEmpty(driver)) {
+						driver = "org.apache.derby.jdbc.EmbeddedDriver";
 					}
-					result = new DatabaseHomomorphismManager(
-							driver, url, database, username, password, builder,
-							schema);
-					result.initialize();
-					return result;
+					if (Strings.isNullOrEmpty(url)) {
+						url = "jdbc:derby:memory:{1};create=true";
+					}
+					if (Strings.isNullOrEmpty(database)) {
+						database = "chase";
+					}
+					database +=  "_" + System.currentTimeMillis() + "_" + counter++;
+					synchronized (counter) {
+						username = "APP_" + (counter++);
+					}
+					password = "";
+					builder = new DerbyStatementBuilder();
 				}
+				result = new DatabaseHomomorphismManager(
+						driver, url, database, username, password, builder,
+						schema);
+				result.initialize();
+				return result;
 			}
 		} catch (SQLException e) {
 			log.warn("Could not load " + database + ". Falling back to default database.", e);

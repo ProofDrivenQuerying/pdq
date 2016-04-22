@@ -7,6 +7,7 @@ import java.util.Map;
 import uk.ac.ox.cs.pdq.db.Constraint;
 import uk.ac.ox.cs.pdq.db.EGD;
 import uk.ac.ox.cs.pdq.db.TGD;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.fol.Variable;
@@ -136,7 +137,7 @@ public class ParallelEGDChaser extends Chaser {
 	 * @return 		true if the input instance with the given set of free variables and constraints implies the target query.
 	 */
 	@Override
-	public <S extends ChaseState> boolean entails(S instance, Map<Variable, Constant> free, Query<?> target,
+	public <S extends ChaseState> boolean entails(S instance, Map<Variable, Constant> free, ConjunctiveQuery target,
 			Collection<? extends Constraint<?,?>> constraints) {
 		Collection<? extends Constraint<?, ?>> relevantDependencies = new ReasonerUtility().findRelevant(target, constraints);
 		this.reasonUntilTermination(instance, relevantDependencies);
@@ -160,7 +161,7 @@ public class ParallelEGDChaser extends Chaser {
 	 * @return 		true if the source query entails the target query
 	 */
 	@Override
-	public boolean entails(Query<?> source, Query<?> target,
+	public boolean entails(ConjunctiveQuery source, ConjunctiveQuery target,
 			Collection<? extends Constraint<?,?>> constraints, HomomorphismDetector detector) {
 		Collection<? extends Constraint<?, ?>> relevantDependencies = new ReasonerUtility().findRelevant(target, constraints);
 		DatabaseChaseListState instance = new DatabaseChaseListState(source, (DatabaseHomomorphismManager)detector);

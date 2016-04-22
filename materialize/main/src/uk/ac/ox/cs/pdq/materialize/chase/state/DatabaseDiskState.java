@@ -14,6 +14,7 @@ import uk.ac.ox.cs.pdq.LimitReachedException;
 import uk.ac.ox.cs.pdq.LimitReachedException.Reasons;
 import uk.ac.ox.cs.pdq.db.Constraint;
 import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.materialize.factmanager.FactManager;
@@ -165,7 +166,7 @@ public class DatabaseDiskState implements ListState {
 	 * @see uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState#isSuccessful(uk.ac.ox.cs.pdq.fol.Query)
 	 */
 	@Override
-	public boolean isSuccessful(Query<?> query) {
+	public boolean isSuccessful(ConjunctiveQuery query) {
 		return !this.getMatches(query).isEmpty();
 	}
 
@@ -195,10 +196,10 @@ public class DatabaseDiskState implements ListState {
 	 * @see uk.ac.ox.cs.pdq.chase.state.ChaseState#getMatches(Query)
 	 */
 	@Override
-	public List<Match> getMatches(Query<?> query) {
+	public List<Match> getMatches(ConjunctiveQuery query) {
 		return this.detector.getMatches(
 				Lists.<Query<?>>newArrayList(query),
-				HomomorphismProperty.createMapProperty(query.getFreeToCanonical()));
+				HomomorphismProperty.createMapProperty(query.getGroundingsProjectionOnFreeVars()));
 	}
 	
 	/**
@@ -211,7 +212,7 @@ public class DatabaseDiskState implements ListState {
 	 * @see uk.ac.ox.cs.pdq.chase.state.ChaseState#getMatches(Query)
 	 */
 	@Override
-	public List<Match> getMatches(Query<?> query, HomomorphismProperty... constraints) {
+	public List<Match> getMatches(ConjunctiveQuery query, HomomorphismProperty... constraints) {
 		HomomorphismProperty[] c = new HomomorphismProperty[constraints.length+1];
 		System.arraycopy(constraints, 0, c, 0, constraints.length);
 		return this.detector.getMatches(Lists.<Query<?>>newArrayList(query), constraints);

@@ -50,6 +50,7 @@ import prefuse.controls.FocusControl;
 import prefuse.controls.WheelZoomControl;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.io.pretty.AccessOnlyPlanWriter;
 import uk.ac.ox.cs.pdq.io.pretty.AlgebraLikeLeftDeepPlanWriter;
@@ -92,118 +93,118 @@ public class PlannerController {
 
 	/** PlannerController's logger. */
 	private static Logger log = Logger.getLogger(PlannerController.class);
-	
+
 	/**
 	 * The Enum Status.
 	 */
 	enum Status {/** The not started. */
-NOT_STARTED, /** The started. */
- STARTED, /** The paused. */
- PAUSED, /** The complete. */
- COMPLETE}
+		NOT_STARTED, /** The started. */
+		STARTED, /** The paused. */
+		PAUSED, /** The complete. */
+		COMPLETE}
 
 	/**  Icon for the pause button. */
 	private final Image pauseIcon = new Image(this.getClass().getResourceAsStream("/resources/icons/suspend.gif"));
-	
+
 	/**  Icon for the play button. */
 	private final Image playIcon = new Image(this.getClass().getResourceAsStream("/resources/icons/resume.gif"));
 
 	/** The cost reduction chart. */
 	// This controller's widgets
 	@FXML private LineChart<Number, Number> costReductionChart;
-	
+
 	/** The plan statistics table. */
 	@FXML private TableView<ObservableSearchState> planStatisticsTable;
-	
+
 	/** The col stats cost. */
 	@FXML private TableColumn<ObservableSearchState, Number> colStatsCost;
-	
+
 	/** The col stats iterations. */
 	@FXML private TableColumn<ObservableSearchState, Integer> colStatsIterations;
-	
+
 	/** The col stats time. */
 	@FXML private TableColumn<ObservableSearchState, Double> colStatsTime;
-	
+
 	/** The planner pause button. */
 	@FXML private Button plannerPauseButton;
-	
+
 	/** The planner start button. */
 	@FXML private Button plannerStartButton;
-	
+
 	/** The search space controls. */
 	@FXML private VBox searchSpaceControls;
-	
+
 	/** The search space vizualization area. */
 	@FXML private AnchorPane searchSpaceVizualizationArea;
-    
-    /** The planner messages. */
-    @FXML private Label plannerMessages;
-	
+
+	/** The planner messages. */
+	@FXML private Label plannerMessages;
+
 	/** The plan view area. */
 	@FXML private ListView<Text> planViewArea;
-	
+
 	/** The proof view area. */
 	@FXML private TextArea proofViewArea;
-	
+
 	/** The planner tabs. */
 	@FXML private TabPane plannerTabs;
-	
+
 	/** The planner tab space. */
 	@FXML private Tab plannerTabSpace;
-	
+
 	/** The planner tab cost. */
 	@FXML private Tab plannerTabCost;
-	
+
 	/** The planner tab plan. */
 	@FXML private Tab plannerTabPlan;
-    
-    /** The search space split pane. */
-    @FXML private SplitPane searchSpaceSplitPane;
-    
-    /** The search space metadata general. */
-    @FXML private TextArea searchSpaceMetadataGeneral;
-    
-    /** The search space metadata candidates. */
-    @FXML private TextArea searchSpaceMetadataCandidates;
 
-/** The search space metadata dominance. */
-//    @FXML private TextArea searchSpaceMetadataEquivalence;
-    @FXML private TextArea searchSpaceMetadataDominance;
-    
-    /** The search space metadata success. */
-    @FXML private TextArea searchSpaceMetadataSuccess;
-    
-    /** The search space metadata tabs. */
-    @FXML private TabPane searchSpaceMetadataTabs;
-    
-    /** The search space metadata general tab. */
-    @FXML private Tab searchSpaceMetadataGeneralTab;
-    
-    /** The search space metadata candidates tab. */
-    @FXML private Tab searchSpaceMetadataCandidatesTab;
+	/** The search space split pane. */
+	@FXML private SplitPane searchSpaceSplitPane;
 
-/** The search space metadata dominance tab. */
-//    @FXML private Tab searchSpaceMetadataEquivalenceTab;
-    @FXML private Tab searchSpaceMetadataDominanceTab;
-    
-    /** The search space metadata success tab. */
-    @FXML private Tab searchSpaceMetadataSuccessTab;
-	
+	/** The search space metadata general. */
+	@FXML private TextArea searchSpaceMetadataGeneral;
+
+	/** The search space metadata candidates. */
+	@FXML private TextArea searchSpaceMetadataCandidates;
+
+	/** The search space metadata dominance. */
+	//    @FXML private TextArea searchSpaceMetadataEquivalence;
+	@FXML private TextArea searchSpaceMetadataDominance;
+
+	/** The search space metadata success. */
+	@FXML private TextArea searchSpaceMetadataSuccess;
+
+	/** The search space metadata tabs. */
+	@FXML private TabPane searchSpaceMetadataTabs;
+
+	/** The search space metadata general tab. */
+	@FXML private Tab searchSpaceMetadataGeneralTab;
+
+	/** The search space metadata candidates tab. */
+	@FXML private Tab searchSpaceMetadataCandidatesTab;
+
+	/** The search space metadata dominance tab. */
+	//    @FXML private Tab searchSpaceMetadataEquivalenceTab;
+	@FXML private Tab searchSpaceMetadataDominanceTab;
+
+	/** The search space metadata success tab. */
+	@FXML private Tab searchSpaceMetadataSuccessTab;
+
 	/** The plan proof tab. */
 	@FXML private Tab planProofTab;
-	
-    /** The plan selection. */
-    @FXML private ComboBox<String> planSelection = new ComboBox();
-	
+
+	/** The plan selection. */
+	@FXML private ComboBox<String> planSelection = new ComboBox();
+
 	/** The selected plan view area. */
 	@FXML private ListView<Text> selectedPlanViewArea;
-	
+
 	/** The selected proof view area. */
 	@FXML private TextArea selectedProofViewArea;
-	
+
 	/**  Sorted set of the plans found *. */
 	private TreeSet<ObservableSearchState> plansFound = new TreeSet<>(new PlanComparator());
-	
+
 	/**
 	 * Controller's widget's initialization.
 	 */
@@ -214,15 +215,15 @@ NOT_STARTED, /** The started. */
 		assert this.plannerStartButton != null : "fx:id=\"plannerStartButton\" was not injected: check your FXML file 'planner-window.fxml'.";
 		assert this.searchSpaceVizualizationArea != null : "fx:id=\"searchSpaceVizualizationArea\" was not injected: check your FXML file 'planner-window.fxml'.";
 		assert this.plannerMessages != null : "fx:id=\"plannerMessages\" was not injected: check your FXML file 'planner-window.fxml'.";
-        assert this.planSelection != null : "fx:id=\"planSelection\" was not injected: check your FXML file 'root-window.fxml'.";
-        assert this.selectedPlanViewArea != null : "fx:id=\"selectedPlanViewArea\" was not injected: check your FXML file 'root-window.fxml'.";
-        assert this.selectedProofViewArea != null : "fx:id=\"selectedProofViewArea\" was not injected: check your FXML file 'root-window.fxml'.";
-		 
-		this.plannerPauseButton.setGraphic(new ImageView(this.pauseIcon));
-        this.plannerStartButton.setGraphic(new ImageView(this.playIcon));
+		assert this.planSelection != null : "fx:id=\"planSelection\" was not injected: check your FXML file 'root-window.fxml'.";
+		assert this.selectedPlanViewArea != null : "fx:id=\"selectedPlanViewArea\" was not injected: check your FXML file 'root-window.fxml'.";
+		assert this.selectedProofViewArea != null : "fx:id=\"selectedProofViewArea\" was not injected: check your FXML file 'root-window.fxml'.";
 
-        this.plannerTabCost.setOnSelectionChanged((Event arg0) ->
-				PlannerController.this.plannerTabCost.getContent().autosize());
+		this.plannerPauseButton.setGraphic(new ImageView(this.pauseIcon));
+		this.plannerStartButton.setGraphic(new ImageView(this.playIcon));
+
+		this.plannerTabCost.setOnSelectionChanged((Event arg0) ->
+		PlannerController.this.plannerTabCost.getContent().autosize());
 		this.plannerPauseButton.setDisable(true);
 		this.planStatisticsTable.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 		this.planStatisticsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
@@ -243,25 +244,25 @@ NOT_STARTED, /** The started. */
 
 	/**  The cost parameters to be used by the cost function. */
 	private CostParameters costParams;
-	
+
 	/**  Keeps the reasoning parameters. */
 	private ReasoningParameters reasoningParams;
-	
+
 	/**  The schema to be used during this planning session. */
 	private Schema schema;
-	
+
 	/**  A copy of the accessible schema to be used during this planning session. */
 	private AccessibleSchema accSchema;
-	
+
 	/**  The query to be used during this planning session. */
-	private Query query;
+	private ConjunctiveQuery query;
 
 	/**  The previous plan obtained with the setting of this planning session. */
 	private ObservablePlan plan;
-	
+
 	/** Queue containing the plan found. */
 	private ConcurrentLinkedQueue<Object> planQueue;
-	
+
 	/** Queue containing the next data points to display in the plan/search views. */
 	private ConcurrentLinkedQueue dataQueue = new ConcurrentLinkedQueue<>();
 
@@ -270,10 +271,10 @@ NOT_STARTED, /** The started. */
 
 	/**  Cost of the first plan found. */
 	private Number initialCost = null;
-	
+
 	/**  The pauser. */
 	private Pauser pauser;
-	
+
 	/**  The future. */
 	private Future<?> future;
 
@@ -282,7 +283,7 @@ NOT_STARTED, /** The started. */
 
 	/** The best proof. */
 	private Proof bestProof;
-	
+
 	/**
 	 * Default constructor, start the animation timer.
 	 */
@@ -296,7 +297,10 @@ NOT_STARTED, /** The started. */
 	 * @param query the new query
 	 */
 	void setQuery(ObservableQuery query) {
-		this.query = query.getQuery();
+		//		this.query = query.getQuery();
+		if(!(query.getQuery() instanceof ConjunctiveQuery))
+			throw new RuntimeException("Only Conjunctive Queries Supported Currently");
+		this.query = (ConjunctiveQuery) query.getQuery();
 	}
 
 	/**
@@ -352,7 +356,7 @@ NOT_STARTED, /** The started. */
 		this.params.setQueryMatchInterval(this.plan.getQueryMatchInterval());
 		this.costParams.setCostType(this.plan.getCostType());
 		this.reasoningParams.setReasoningType(this.plan.getReasoningType());
-//		this.reasoningParams.setBlockingInterval(this.plan.getBlockingInterval());
+		//		this.reasoningParams.setBlockingInterval(this.plan.getBlockingInterval());
 	}
 
 	/**
@@ -361,31 +365,31 @@ NOT_STARTED, /** The started. */
 	 * @param planner the new search space visualizer
 	 */
 	private void setSearchSpaceVisualizer(final ExplorationSetUp planner) {
-        final SwingNode swingNode = new SwingNode();
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-    			PrefuseVisualizer visualizer = new PrefuseVisualizer();
-        		visualizer.addControl(new AggregateDragControl());
-        		visualizer.addControl(new FocusControl()); 
-        		visualizer.addControl(new WheelZoomControl());
-        		visualizer.addControl(visualizer.getPathHighlightControl());
-        		visualizer.addControl(new HoverControl());
-        		visualizer.addControl(new ClickControl(PlannerController.this.dataQueue));
-    			planner.registerEventHandler(
-    					new PrefuseEventHandler(visualizer.getGraph(),
-    					visualizer.getAggregateTable(),  visualizer.getVisualization(), 
-    					"aggregates", "graph.nodes", "color", "layout",
-    					visualizer.getPathHighlightControl(),
-    					visualizer.getPathsHighlightBox()));
-                swingNode.setContent(visualizer);
-            }
-        });
-        this.searchSpaceVizualizationArea.getChildren().add(swingNode);
-        AnchorPane.setTopAnchor(swingNode, 0.);
-        AnchorPane.setBottomAnchor(swingNode, 0.);
-        AnchorPane.setRightAnchor(swingNode, 0.);
-        AnchorPane.setLeftAnchor(swingNode, 0.);
+		final SwingNode swingNode = new SwingNode();
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				PrefuseVisualizer visualizer = new PrefuseVisualizer();
+				visualizer.addControl(new AggregateDragControl());
+				visualizer.addControl(new FocusControl()); 
+				visualizer.addControl(new WheelZoomControl());
+				visualizer.addControl(visualizer.getPathHighlightControl());
+				visualizer.addControl(new HoverControl());
+				visualizer.addControl(new ClickControl(PlannerController.this.dataQueue));
+				planner.registerEventHandler(
+						new PrefuseEventHandler(visualizer.getGraph(),
+								visualizer.getAggregateTable(),  visualizer.getVisualization(), 
+								"aggregates", "graph.nodes", "color", "layout",
+								visualizer.getPathHighlightControl(),
+								visualizer.getPathsHighlightBox()));
+				swingNode.setContent(visualizer);
+			}
+		});
+		this.searchSpaceVizualizationArea.getChildren().add(swingNode);
+		AnchorPane.setTopAnchor(swingNode, 0.);
+		AnchorPane.setBottomAnchor(swingNode, 0.);
+		AnchorPane.setRightAnchor(swingNode, 0.);
+		AnchorPane.setLeftAnchor(swingNode, 0.);
 	}
 
 	/**
@@ -401,31 +405,31 @@ NOT_STARTED, /** The started. */
 
 			final ExplorationSetUp planner = new ExplorationSetUp(this.params, this.costParams, this.reasoningParams, this.schema);
 			this.setSearchSpaceVisualizer(planner);
-			
+
 			planner.registerEventHandler(new PlanSearchVisualizer(this.dataQueue, this.params.getShortLogIntervals()));
 			this.pauser = new Pauser(this.dataQueue, 99999);
 			ExecutorService executor = Executors.newFixedThreadPool(2);
 			executor.execute(this.pauser);
 			this.future = executor.submit(() -> {
-					try {
-						log.debug("Searching plan...");
-						Plan bestPlan = planner.search(this.query);
-						PlannerController.this.bestPlan = bestPlan;
-						log.debug("Best plan: " + bestPlan);
-						ObservablePlan p = PlannerController.this.plan.copy();
-						p.setPlan(bestPlan);
-						p.setProof(PlannerController.this.bestProof);
-						if (bestPlan != null) {
-							p.setCost(bestPlan.getCost());
-						}
-						p.store();
-						PlannerController.this.planQueue.add(p);
-					} catch (PlannerException e) {
-						log.error(e.getMessage(), e);
-						throw new IllegalStateException();
+				try {
+					log.debug("Searching plan...");
+					Plan bestPlan = planner.search(this.query);
+					PlannerController.this.bestPlan = bestPlan;
+					log.debug("Best plan: " + bestPlan);
+					ObservablePlan p = PlannerController.this.plan.copy();
+					p.setPlan(bestPlan);
+					p.setProof(PlannerController.this.bestProof);
+					if (bestPlan != null) {
+						p.setCost(bestPlan.getCost());
 					}
-					PlannerController.this.dataQueue.add(Status.COMPLETE);
-				});
+					p.store();
+					PlannerController.this.planQueue.add(p);
+				} catch (PlannerException e) {
+					log.error(e.getMessage(), e);
+					throw new IllegalStateException();
+				}
+				PlannerController.this.dataQueue.add(Status.COMPLETE);
+			});
 		} else {
 			this.pauser.resume();
 		}
@@ -453,7 +457,7 @@ NOT_STARTED, /** The started. */
 			this.future.cancel(true);
 		}
 	}
-	
+
 	/**
 	 * Update the plan/search views.
 	 */
@@ -483,7 +487,7 @@ NOT_STARTED, /** The started. */
 			}
 		}
 	}
-	
+
 	/**
 	 * Update plans found.
 	 *
@@ -497,342 +501,342 @@ NOT_STARTED, /** The started. */
 			this.planSelection.getSelectionModel().selectedIndexProperty().addListener(this.viewPlan);
 		}
 	}
-	
-    /**
-     * Behaviour triggered when a plan is selected.
-     */
-    private final ChangeListener<? super Number> viewPlan =
-    		(ObservableValue<? extends Number> observable,
-    				Number oldValue, Number newValue) -> {
-    		Iterator<ObservableSearchState> iterator = this.plansFound.iterator();
-    		int i = 0;
-    		while(iterator.hasNext() && i < newValue.intValue()) {
-    			iterator.next();
-    			++i;
-    		}
-    		ObservableSearchState p = iterator.next();	
-    		this.displayPlan(this.selectedPlanViewArea, p.getPlan());
-    		this.displayProof(this.selectedProofViewArea, p.getProof());
-	};
 
 	/**
-	 * Update plan tab.
-	 *
-	 * @param pplan the pplan
+	 * Behaviour triggered when a plan is selected.
 	 */
-	private void updatePlanTab(Plan pplan) {
-		this.planViewArea.getItems().clear();
-		if (pplan != null && pplan instanceof LeftDeepPlan) {
-			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			AlgebraLikeLeftDeepPlanWriter.to(new PrintStream(bos)).write((LeftDeepPlan) pplan);
-			for (String line: bos.toString().split("\n")) {
-				Text t = new Text(line);
-				this.planViewArea.getItems().add(t);
-			}
-		} else if (pplan != null) {
-			log.warn("Display of " + pplan.getClass().getSimpleName() + " plans not yet supported.");
-			this.planViewArea.getItems().add(new Text("<Non linear plan selected>"));
-		} else {
-			this.planViewArea.getItems().add(new Text("<No plan>"));
-		}
-	}
+	private final ChangeListener<? super Number> viewPlan =
+			(ObservableValue<? extends Number> observable,
+					Number oldValue, Number newValue) -> {
+						Iterator<ObservableSearchState> iterator = this.plansFound.iterator();
+						int i = 0;
+						while(iterator.hasNext() && i < newValue.intValue()) {
+							iterator.next();
+							++i;
+						}
+						ObservableSearchState p = iterator.next();	
+						this.displayPlan(this.selectedPlanViewArea, p.getPlan());
+						this.displayProof(this.selectedProofViewArea, p.getProof());
+					};
 
-	/**
-	 * Update proof tab.
-	 *
-	 * @param pr the pr
-	 */
-	private void updateProofTab(Proof pr) {
-		this.proofViewArea.clear();
-		if (pr != null) {
-			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			PrettyProofWriter.to(new PrintStream(bos)).write(pr);
-			this.proofViewArea.setText(bos.toString());
-			this.bestProof = pr;
-		}
-	}
-	
-	/**
-	 * Update cost tab.
-	 *
-	 * @param state the state
-	 */
-	private void updateCostTab(ObservableSearchState state) {
-		Number cost = state.getCost();
-		if (cost != null) {
-			NumberAxis xAxis = (NumberAxis) this.costReductionChart.getXAxis();
-			LogarithmicAxis yAxis = (LogarithmicAxis) this.costReductionChart.getYAxis(); 
-			if (this.initialCost == null) {
-				this.initialCost = cost;
-				xAxis.setLowerBound(state.getTime().doubleValue()); 
-				yAxis.setUpperBound(cost.doubleValue() + 10);
-				yAxis.setLowerBound(cost.doubleValue() - 10);
-			}
-			if (cost.doubleValue() > yAxis.getUpperBound()) {
-				yAxis.setUpperBound(cost.doubleValue());
-			}
-			if (cost.doubleValue() < yAxis.getLowerBound()) {
-				yAxis.setLowerBound(cost.doubleValue());
-			}
-			this.costReductionSeries.getData().add(
-					new XYChart.Data<>(state.getTime(), cost));
-		}
-	}
-		
-	/**
-	 * Display plan.
-	 *
-	 * @param area the area
-	 * @param p the p
-	 */
-	void displayPlan(ListView<Text> area, Plan p) {
-		area.getItems().clear();
-		if (p instanceof LeftDeepPlan) {
-			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			AlgebraLikeLeftDeepPlanWriter.to(new PrintStream(bos)).write((LeftDeepPlan) p);
-			for (String line: bos.toString().split("\n")) {
-				Text t = new Text(line);
-				area.getItems().add(t);
-			}
-		} else if (p != null) {
-			log.warn("Display of " + p.getClass().getSimpleName() + " plans not yet supported.");
-			area.getItems().add(new Text("<Non linear plan selected>"));
-		} else {
-			area.getItems().add(new Text("<No plan>"));
-		} 					
-	}
+					/**
+					 * Update plan tab.
+					 *
+					 * @param pplan the pplan
+					 */
+					private void updatePlanTab(Plan pplan) {
+						this.planViewArea.getItems().clear();
+						if (pplan != null && pplan instanceof LeftDeepPlan) {
+							ByteArrayOutputStream bos = new ByteArrayOutputStream();
+							AlgebraLikeLeftDeepPlanWriter.to(new PrintStream(bos)).write((LeftDeepPlan) pplan);
+							for (String line: bos.toString().split("\n")) {
+								Text t = new Text(line);
+								this.planViewArea.getItems().add(t);
+							}
+						} else if (pplan != null) {
+							log.warn("Display of " + pplan.getClass().getSimpleName() + " plans not yet supported.");
+							this.planViewArea.getItems().add(new Text("<Non linear plan selected>"));
+						} else {
+							this.planViewArea.getItems().add(new Text("<No plan>"));
+						}
+					}
 
-	/**
-	 * Display proof.
-	 *
-	 * @param area the area
-	 * @param p the p
-	 */
-	void displayProof(TextArea area, Proof p) {
-		area.clear();
-		if (p != null) {
-			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			PrettyProofWriter.to(new PrintStream(bos)).write(p);
-			area.setText(bos.toString());
-		} 					
-	}
+					/**
+					 * Update proof tab.
+					 *
+					 * @param pr the pr
+					 */
+					private void updateProofTab(Proof pr) {
+						this.proofViewArea.clear();
+						if (pr != null) {
+							ByteArrayOutputStream bos = new ByteArrayOutputStream();
+							PrettyProofWriter.to(new PrintStream(bos)).write(pr);
+							this.proofViewArea.setText(bos.toString());
+							this.bestProof = pr;
+						}
+					}
 
-	/**
-	 * Display status complete.
-	 */
-	private void displayStatusComplete() {
-		this.plannerMessages.setText("Plan search complete.");
-		this.plannerPauseButton.setDisable(true);
-		this.searchSpaceMetadataCandidatesTab.setDisable(true);
-		PlannerController.this.updatePlanTab(this.bestPlan);
-		PlannerController.this.updateProofTab(PlannerController.this.bestProof);
-//		SelectionModel<Tab> sm = PlannerController.this.plannerTabs.getSelectionModel();
-//		sm.select(PlannerController.this.plannerTabPlan);
-	}
+					/**
+					 * Update cost tab.
+					 *
+					 * @param state the state
+					 */
+					private void updateCostTab(ObservableSearchState state) {
+						Number cost = state.getCost();
+						if (cost != null) {
+							NumberAxis xAxis = (NumberAxis) this.costReductionChart.getXAxis();
+							LogarithmicAxis yAxis = (LogarithmicAxis) this.costReductionChart.getYAxis(); 
+							if (this.initialCost == null) {
+								this.initialCost = cost;
+								xAxis.setLowerBound(state.getTime().doubleValue()); 
+								yAxis.setUpperBound(cost.doubleValue() + 10);
+								yAxis.setLowerBound(cost.doubleValue() - 10);
+							}
+							if (cost.doubleValue() > yAxis.getUpperBound()) {
+								yAxis.setUpperBound(cost.doubleValue());
+							}
+							if (cost.doubleValue() < yAxis.getLowerBound()) {
+								yAxis.setLowerBound(cost.doubleValue());
+							}
+							this.costReductionSeries.getData().add(
+									new XYChart.Data<>(state.getTime(), cost));
+						}
+					}
 
-	/**
-	 * Display search node info.
-	 *
-	 * @param n the n
-	 */
-	private void displaySearchNodeInfo(SearchNode n) {
-		this.searchSpaceSplitPane.setDividerPositions(.66);
-		this.updateGeneralMetadata(n);
-		this.updateCandidatesMetadata(n);
-//		this.updateEquivalenceMetadata(n);
-		this.updatePruningMetadata(n);
-		this.updateSuccessMetadata(n);
-		this.searchSpaceMetadataTabs.getSelectionModel().select(0);
-	}
+					/**
+					 * Display plan.
+					 *
+					 * @param area the area
+					 * @param p the p
+					 */
+					void displayPlan(ListView<Text> area, Plan p) {
+						area.getItems().clear();
+						if (p instanceof LeftDeepPlan) {
+							ByteArrayOutputStream bos = new ByteArrayOutputStream();
+							AlgebraLikeLeftDeepPlanWriter.to(new PrintStream(bos)).write((LeftDeepPlan) p);
+							for (String line: bos.toString().split("\n")) {
+								Text t = new Text(line);
+								area.getItems().add(t);
+							}
+						} else if (p != null) {
+							log.warn("Display of " + p.getClass().getSimpleName() + " plans not yet supported.");
+							area.getItems().add(new Text("<Non linear plan selected>"));
+						} else {
+							area.getItems().add(new Text("<No plan>"));
+						} 					
+					}
 
-	/**
-	 * Display search edge info.
-	 *
-	 * @param e the e
-	 */
-	private void displaySearchEdgeInfo(SearchEdge e) {
-		this.searchSpaceSplitPane.setDividerPositions(.66);
-		this.updateEdgeMetadata(e.edge, e.node);
-		this.searchSpaceMetadataTabs.getSelectionModel().select(0);
-	}
-	
-	/**
-	 * Update general metadata.
-	 *
-	 * @param node the node
-	 */
-	public void updateGeneralMetadata(SearchNode node) {
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		//AccessOnlyPlanWriter.to(new PrintStream(bos)).write(node.getConfiguration().getPlan());
-		AlgebraLikeLeftDeepPlanWriter.to(new PrintStream(bos)).write(node.getConfiguration().getPlan());
-		this.searchSpaceMetadataGeneral.setText(
-				"Type: " + node.getStatus() + "\n\n" + 
-				"Middleware query commands:\n" + bos);
-	}
+					/**
+					 * Display proof.
+					 *
+					 * @param area the area
+					 * @param p the p
+					 */
+					void displayProof(TextArea area, Proof p) {
+						area.clear();
+						if (p != null) {
+							ByteArrayOutputStream bos = new ByteArrayOutputStream();
+							PrettyProofWriter.to(new PrintStream(bos)).write(p);
+							area.setText(bos.toString());
+						} 					
+					}
 
-	/**
-	 * Update candidates metadata.
-	 *
-	 * @param node the node
-	 */
-	public void updateCandidatesMetadata(SearchNode node) {
-		if (node != null && node.getStatus() == NodeStatus.ONGOING) {
-			if (!node.getConfiguration().getCandidates().isEmpty()) {
-				this.searchSpaceMetadataCandidatesTab.setDisable(false);
-				int c = 1;
-				String s = "";
-				for(Candidate candidate: node.getConfiguration().getCandidates()) {
-					s += "Candidate " + (c++) + ":\n" + candidate;
-				}
-				this.searchSpaceMetadataCandidates.setText(s);
-				return;
-			}
-		}
-		this.searchSpaceMetadataCandidatesTab.setDisable(true);
-		this.searchSpaceMetadataCandidates.setText("No candidate");
-	}
+					/**
+					 * Display status complete.
+					 */
+					private void displayStatusComplete() {
+						this.plannerMessages.setText("Plan search complete.");
+						this.plannerPauseButton.setDisable(true);
+						this.searchSpaceMetadataCandidatesTab.setDisable(true);
+						PlannerController.this.updatePlanTab(this.bestPlan);
+						PlannerController.this.updateProofTab(PlannerController.this.bestProof);
+						//		SelectionModel<Tab> sm = PlannerController.this.plannerTabs.getSelectionModel();
+						//		sm.select(PlannerController.this.plannerTabPlan);
+					}
 
-	/**
-	 * Update success metadata.
-	 *
-	 * @param node the node
-	 */
-	public void updateSuccessMetadata(SearchNode node) {
-		Metadata m = node.getMetadata();
-		if (m instanceof BestPlanMetadata && ((BestPlanMetadata) m).getPlan() != null) {
-			BestPlanMetadata metadata = (BestPlanMetadata) m;
-			ByteArrayOutputStream prBos = new ByteArrayOutputStream();
-			ByteArrayOutputStream plBos = new ByteArrayOutputStream();
-			AlgebraLikeLeftDeepPlanWriter.to(new PrintStream(plBos)).write((LeftDeepPlan) metadata.getPlan());
-			ExtendedPrettyProofWriter.to(new PrintStream(prBos), this.accSchema).write(Proof.toProof(metadata.getConfigurations()));
-			this.searchSpaceMetadataSuccessTab.setDisable(false);
-			this.searchSpaceMetadataSuccess.setText(
-					"*******************\n* Proof \n*******************\n" + prBos + "\n\n" +
-					"*******************\n* Plan\n*******************\n" + plBos + "\n\n" +
-					"*******************\n* Cost\n*******************\n" + metadata.getPlan().getCost());
-		} else {
-			this.searchSpaceMetadataSuccess.setText("");
-			this.searchSpaceMetadataSuccessTab.setDisable(true);
-		}
-	} 
+					/**
+					 * Display search node info.
+					 *
+					 * @param n the n
+					 */
+					private void displaySearchNodeInfo(SearchNode n) {
+						this.searchSpaceSplitPane.setDividerPositions(.66);
+						this.updateGeneralMetadata(n);
+						this.updateCandidatesMetadata(n);
+						//		this.updateEquivalenceMetadata(n);
+						this.updatePruningMetadata(n);
+						this.updateSuccessMetadata(n);
+						this.searchSpaceMetadataTabs.getSelectionModel().select(0);
+					}
 
-	/**
-	 * Update edge metadata.
-	 *
-	 * @param type the type
-	 * @param node the node
-	 */
-	public void updateEdgeMetadata(EdgeTypes type, SearchNode node) {
-		String str = "Type: " + type + "\n";
-		if (type != EdgeTypes.POINTER) {
-			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			AlgebraLikeLeftDeepPlanWriter.to(new PrintStream(bos)).write(node.getConfiguration().getPlan());
-			str += "\nMiddlewarecommands:\n" + bos;
-		}
-		this.searchSpaceMetadataGeneral.setText(str);
-		this.searchSpaceMetadataGeneralTab.setDisable(false);
-		this.searchSpaceMetadataCandidatesTab.setDisable(true);
-//		this.searchSpaceMetadataEquivalenceTab.setDisable(true);
-		this.searchSpaceMetadataDominanceTab.setDisable(true);
-		this.searchSpaceMetadataSuccessTab.setDisable(true);
-	}
+					/**
+					 * Display search edge info.
+					 *
+					 * @param e the e
+					 */
+					private void displaySearchEdgeInfo(SearchEdge e) {
+						this.searchSpaceSplitPane.setDividerPositions(.66);
+						this.updateEdgeMetadata(e.edge, e.node);
+						this.searchSpaceMetadataTabs.getSelectionModel().select(0);
+					}
+
+					/**
+					 * Update general metadata.
+					 *
+					 * @param node the node
+					 */
+					public void updateGeneralMetadata(SearchNode node) {
+						ByteArrayOutputStream bos = new ByteArrayOutputStream();
+						//AccessOnlyPlanWriter.to(new PrintStream(bos)).write(node.getConfiguration().getPlan());
+						AlgebraLikeLeftDeepPlanWriter.to(new PrintStream(bos)).write(node.getConfiguration().getPlan());
+						this.searchSpaceMetadataGeneral.setText(
+								"Type: " + node.getStatus() + "\n\n" + 
+										"Middleware query commands:\n" + bos);
+					}
+
+					/**
+					 * Update candidates metadata.
+					 *
+					 * @param node the node
+					 */
+					public void updateCandidatesMetadata(SearchNode node) {
+						if (node != null && node.getStatus() == NodeStatus.ONGOING) {
+							if (!node.getConfiguration().getCandidates().isEmpty()) {
+								this.searchSpaceMetadataCandidatesTab.setDisable(false);
+								int c = 1;
+								String s = "";
+								for(Candidate candidate: node.getConfiguration().getCandidates()) {
+									s += "Candidate " + (c++) + ":\n" + candidate;
+								}
+								this.searchSpaceMetadataCandidates.setText(s);
+								return;
+							}
+						}
+						this.searchSpaceMetadataCandidatesTab.setDisable(true);
+						this.searchSpaceMetadataCandidates.setText("No candidate");
+					}
+
+					/**
+					 * Update success metadata.
+					 *
+					 * @param node the node
+					 */
+					public void updateSuccessMetadata(SearchNode node) {
+						Metadata m = node.getMetadata();
+						if (m instanceof BestPlanMetadata && ((BestPlanMetadata) m).getPlan() != null) {
+							BestPlanMetadata metadata = (BestPlanMetadata) m;
+							ByteArrayOutputStream prBos = new ByteArrayOutputStream();
+							ByteArrayOutputStream plBos = new ByteArrayOutputStream();
+							AlgebraLikeLeftDeepPlanWriter.to(new PrintStream(plBos)).write((LeftDeepPlan) metadata.getPlan());
+							ExtendedPrettyProofWriter.to(new PrintStream(prBos), this.accSchema).write(Proof.toProof(metadata.getConfigurations()));
+							this.searchSpaceMetadataSuccessTab.setDisable(false);
+							this.searchSpaceMetadataSuccess.setText(
+									"*******************\n* Proof \n*******************\n" + prBos + "\n\n" +
+											"*******************\n* Plan\n*******************\n" + plBos + "\n\n" +
+											"*******************\n* Cost\n*******************\n" + metadata.getPlan().getCost());
+						} else {
+							this.searchSpaceMetadataSuccess.setText("");
+							this.searchSpaceMetadataSuccessTab.setDisable(true);
+						}
+					} 
+
+					/**
+					 * Update edge metadata.
+					 *
+					 * @param type the type
+					 * @param node the node
+					 */
+					public void updateEdgeMetadata(EdgeTypes type, SearchNode node) {
+						String str = "Type: " + type + "\n";
+						if (type != EdgeTypes.POINTER) {
+							ByteArrayOutputStream bos = new ByteArrayOutputStream();
+							AlgebraLikeLeftDeepPlanWriter.to(new PrintStream(bos)).write(node.getConfiguration().getPlan());
+							str += "\nMiddlewarecommands:\n" + bos;
+						}
+						this.searchSpaceMetadataGeneral.setText(str);
+						this.searchSpaceMetadataGeneralTab.setDisable(false);
+						this.searchSpaceMetadataCandidatesTab.setDisable(true);
+						//		this.searchSpaceMetadataEquivalenceTab.setDisable(true);
+						this.searchSpaceMetadataDominanceTab.setDisable(true);
+						this.searchSpaceMetadataSuccessTab.setDisable(true);
+					}
 
 
-	/**
-	 * Update pruning metadata.
-	 *
-	 * @param node the node
-	 */
-	public void updatePruningMetadata(SearchNode node) {
-		Metadata metadata = node.getMetadata();
-		if (metadata instanceof DominanceMetadata) {
-			this.searchSpaceMetadataDominanceTab.setDisable(false);
-			    ByteArrayOutputStream bos1 = new ByteArrayOutputStream();
-			    AlgebraLikeLeftDeepPlanWriter.to(new PrintStream(bos1)).write((LeftDeepPlan) ((DominanceMetadata) metadata).getDominatedPlan());
-			    ByteArrayOutputStream bos2 = new ByteArrayOutputStream();
-			    AlgebraLikeLeftDeepPlanWriter.to(new PrintStream(bos2)).write((LeftDeepPlan) ((DominanceMetadata) metadata).getDominancePlan());
-			switch (((DominanceMetadata) metadata).getType()) {
-			case DOMINANCE:
-			    this.searchSpaceMetadataDominance.setText(
-						"Dominator node\n" + ((DominanceMetadata) metadata).getDominance() + "\n\n" + 
-						"Dominated plan\n" + bos1 + "\n\n" +
-						"Cost of dominated plan\n" + ((DominanceMetadata) metadata).getDominatedPlan().getCost() + "\n\n"+
-						"Dominator's plan\n" + bos2 + "\n\n" +
-						"Cost of dominator plan\n" + ((DominanceMetadata) metadata).getDominancePlan().getCost() + "\n\n");
-				break;
-			case COST:	
-			    this.searchSpaceMetadataDominance.setText(
-						"Plan\n" + bos1 + "\n\n" +
-						"Plan's cost\n" + ((DominanceMetadata) metadata).getDominatedPlan().getCost() + "\n\n"+
-						"Best plan\n" + bos2 + "\n\n" +
-						"Best plan's cost\n" + ((DominanceMetadata) metadata).getDominancePlan().getCost() + "\n\n");
-				break;
-			}
-		} else {
-			this.searchSpaceMetadataDominance.setText("");
-			this.searchSpaceMetadataDominanceTab.setDisable(true);
-		}
-	}
+					/**
+					 * Update pruning metadata.
+					 *
+					 * @param node the node
+					 */
+					public void updatePruningMetadata(SearchNode node) {
+						Metadata metadata = node.getMetadata();
+						if (metadata instanceof DominanceMetadata) {
+							this.searchSpaceMetadataDominanceTab.setDisable(false);
+							ByteArrayOutputStream bos1 = new ByteArrayOutputStream();
+							AlgebraLikeLeftDeepPlanWriter.to(new PrintStream(bos1)).write((LeftDeepPlan) ((DominanceMetadata) metadata).getDominatedPlan());
+							ByteArrayOutputStream bos2 = new ByteArrayOutputStream();
+							AlgebraLikeLeftDeepPlanWriter.to(new PrintStream(bos2)).write((LeftDeepPlan) ((DominanceMetadata) metadata).getDominancePlan());
+							switch (((DominanceMetadata) metadata).getType()) {
+							case DOMINANCE:
+								this.searchSpaceMetadataDominance.setText(
+										"Dominator node\n" + ((DominanceMetadata) metadata).getDominance() + "\n\n" + 
+												"Dominated plan\n" + bos1 + "\n\n" +
+												"Cost of dominated plan\n" + ((DominanceMetadata) metadata).getDominatedPlan().getCost() + "\n\n"+
+												"Dominator's plan\n" + bos2 + "\n\n" +
+												"Cost of dominator plan\n" + ((DominanceMetadata) metadata).getDominancePlan().getCost() + "\n\n");
+								break;
+							case COST:	
+								this.searchSpaceMetadataDominance.setText(
+										"Plan\n" + bos1 + "\n\n" +
+												"Plan's cost\n" + ((DominanceMetadata) metadata).getDominatedPlan().getCost() + "\n\n"+
+												"Best plan\n" + bos2 + "\n\n" +
+												"Best plan's cost\n" + ((DominanceMetadata) metadata).getDominancePlan().getCost() + "\n\n");
+								break;
+							}
+						} else {
+							this.searchSpaceMetadataDominance.setText("");
+							this.searchSpaceMetadataDominanceTab.setDisable(true);
+						}
+					}
 
-	/**
-	 * Animation timer, required to update plan/search views from the main JavaFX thread.
-	 */
-	private void prepareTimeline() {
-		// Every frame to take any dataQueue from queue and add to chart
-		new AnimationTimer() {
-			@Override
-			public void handle(long now) {
-				PlannerController.this.udpateWidgets();
-			}
-		}.start();
-	}
-	
-	/**
-	 * A Edge - node pair, use to pass information to the search space 
-	 * visualizer.
-	 * @author Julien Leblay
-	 *
-	 */
-	public static class SearchEdge {
-		
-		/** The node. */
-		final SearchNode node;
-		
-		/** The edge. */
-		final EdgeTypes edge;
-		
-		/**
-		 * Instantiates a new search edge.
-		 *
-		 * @param node the node
-		 * @param edge the edge
-		 */
-		public SearchEdge(SearchNode node, EdgeTypes edge) {
-			this.node = node;
-			this.edge = edge;
-		}
-	}
-	
-	/**
-	 * The Class PlanComparator.
-	 */
-	public static class PlanComparator implements Comparator<ObservableSearchState>{
-		
-		/* (non-Javadoc)
-		 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
-		 */
-		@Override
-		public int compare(ObservableSearchState o1, ObservableSearchState o2) {
-			if(o1.getCost().doubleValue() > o2.getCost().doubleValue()) {
-				return 1;
-			}
-			else if(o1.getCost().doubleValue() < o2.getCost().doubleValue()) {
-				return -1;
-			}
-			else {
-				return 0;
-			}
-		}
-	}
+					/**
+					 * Animation timer, required to update plan/search views from the main JavaFX thread.
+					 */
+					private void prepareTimeline() {
+						// Every frame to take any dataQueue from queue and add to chart
+						new AnimationTimer() {
+							@Override
+							public void handle(long now) {
+								PlannerController.this.udpateWidgets();
+							}
+						}.start();
+					}
+
+					/**
+					 * A Edge - node pair, use to pass information to the search space 
+					 * visualizer.
+					 * @author Julien Leblay
+					 *
+					 */
+					public static class SearchEdge {
+
+						/** The node. */
+						final SearchNode node;
+
+						/** The edge. */
+						final EdgeTypes edge;
+
+						/**
+						 * Instantiates a new search edge.
+						 *
+						 * @param node the node
+						 * @param edge the edge
+						 */
+						public SearchEdge(SearchNode node, EdgeTypes edge) {
+							this.node = node;
+							this.edge = edge;
+						}
+					}
+
+					/**
+					 * The Class PlanComparator.
+					 */
+					public static class PlanComparator implements Comparator<ObservableSearchState>{
+
+						/* (non-Javadoc)
+						 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
+						 */
+						@Override
+						public int compare(ObservableSearchState o1, ObservableSearchState o2) {
+							if(o1.getCost().doubleValue() > o2.getCost().doubleValue()) {
+								return 1;
+							}
+							else if(o1.getCost().doubleValue() < o2.getCost().doubleValue()) {
+								return -1;
+							}
+							else {
+								return 0;
+							}
+						}
+					}
 
 }

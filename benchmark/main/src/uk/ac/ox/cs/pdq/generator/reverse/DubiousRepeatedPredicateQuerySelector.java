@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 
 import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Query;
 
 import com.google.common.collect.Lists;
@@ -22,7 +23,7 @@ public class DubiousRepeatedPredicateQuerySelector implements QuerySelector {
 	 * @see uk.ac.ox.cs.pdq.generator.reverse.QuerySelector#accept(uk.ac.ox.cs.pdq.fol.Query)
 	 */
 	@Override
-	public boolean accept(Query<?> q) {
+	public boolean accept(ConjunctiveQuery q) {
 		List<Atom> list = Lists.newArrayList(q.getBody().getAtoms());
 		for (int i = 0, k = list.size(); i < k - 1; i++) {
 			Atom p1 = list.get(i);

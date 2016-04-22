@@ -12,6 +12,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import uk.ac.ox.cs.pdq.LimitReachedException;
 import uk.ac.ox.cs.pdq.db.Constraint;
 import uk.ac.ox.cs.pdq.db.Relation;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Query;
@@ -44,7 +45,7 @@ public final class PostPruningRemoveFollowUps extends PostPruning {
 	private final Chaser chaser;
 	
 	/**  The input query*. */
-	private final Query<?> query;
+	private final ConjunctiveQuery query;
 
 	/**
 	 * Instantiates a new post pruning remove follow ups.
@@ -54,7 +55,7 @@ public final class PostPruningRemoveFollowUps extends PostPruning {
 	 * @param chaser the chaser
 	 * @param query the query
 	 */
-	public PostPruningRemoveFollowUps(NodeFactory nodeFactory, AccessibleSchema accessibleSchema, Chaser chaser, Query<?> query) {
+	public PostPruningRemoveFollowUps(NodeFactory nodeFactory, AccessibleSchema accessibleSchema, Chaser chaser, ConjunctiveQuery query) {
 		super(nodeFactory, accessibleSchema);
 		Preconditions.checkNotNull(chaser);
 		Preconditions.checkNotNull(query);

@@ -10,6 +10,7 @@ import uk.ac.ox.cs.pdq.db.EGD;
 import uk.ac.ox.cs.pdq.db.TGD;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Equality;
 import uk.ac.ox.cs.pdq.fol.Formula;
@@ -68,10 +69,10 @@ public class DatabaseChaseListState extends DatabaseChaseState implements ListSt
 	 * @param query the query
 	 * @param manager the manager
 	 */
-	public DatabaseChaseListState(Query<?> query, 
+	public DatabaseChaseListState(ConjunctiveQuery query, 
 			DatabaseHomomorphismManager manager) {
 		super(manager);
-		this.facts = Sets.newHashSet(query.getCanonical().getAtoms());
+		this.facts = Sets.newHashSet(query.ground(ConjunctiveQuery.generateCanonicalMapping(query.getBody())).getAtoms());
 		this.classes = new EqualConstantsClasses();
 		this.constantsToAtoms = inferConstantsMap(this.facts);
 		this.manager.addFacts(this.facts);
@@ -354,7 +355,7 @@ public class DatabaseChaseListState extends DatabaseChaseState implements ListSt
 	 * @see uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState#isSuccessful(uk.ac.ox.cs.pdq.fol.Query)
 	 */
 	@Override
-	public boolean isSuccessful(Query<?> query) {
+	public boolean isSuccessful(ConjunctiveQuery query) {
 		return !this.getMatches(query).isEmpty();
 	}
 
@@ -397,11 +398,11 @@ public class DatabaseChaseListState extends DatabaseChaseState implements ListSt
 	 * @see uk.ac.ox.cs.pdq.chase.state.ChaseState#getMatches(Query)
 	 */
 	@Override
-	public List<Match> getMatches(Query<?> query) {
+	public List<Match> getMatches(ConjunctiveQuery query) {
 		return this.manager.getMatches(
 				Lists.<Query<?>>newArrayList(query),
 				HomomorphismProperty.createFactProperty(Conjunction.of(this.getFacts())),
-				HomomorphismProperty.createMapProperty(query.getFreeToCanonical()));
+				HomomorphismProperty.createMapProperty(query.getGroundingsProjectionOnFreeVars()));
 	}
 
 	/**
@@ -414,7 +415,7 @@ public class DatabaseChaseListState extends DatabaseChaseState implements ListSt
 	 * @see uk.ac.ox.cs.pdq.chase.state.ChaseState#getMatches(Query)
 	 */
 	@Override
-	public List<Match> getMatches(Query<?> query, HomomorphismProperty... constraints) {
+	public List<Match> getMatches(ConjunctiveQuery query, HomomorphismProperty... constraints) {
 		HomomorphismProperty[] c = new HomomorphismProperty[constraints.length+1];
 		System.arraycopy(constraints, 0, c, 0, constraints.length);
 		c[constraints.length] = HomomorphismProperty.createFactProperty(Conjunction.of(this.getFacts()));

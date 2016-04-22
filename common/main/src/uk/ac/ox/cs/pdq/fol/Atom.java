@@ -89,7 +89,7 @@ public class Atom extends AbstractFormula implements Formula {
 	 * @return true, if the atom acts as an equality
 	 */
 	public boolean isEquality() {
-		return this.predicate.isEquality();
+		return (this instanceof Equality);
 	}
 
 	/**

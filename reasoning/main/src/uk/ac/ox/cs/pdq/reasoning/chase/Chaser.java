@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.db.Constraint;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.fol.Variable;
@@ -58,7 +59,7 @@ public abstract class Chaser {
 	 * @param constraints the constraints
 	 * @return 		true if the input instance with the given set of free variables and constraints implies the target query.
 	 */
-	public abstract <S extends ChaseState> boolean entails(S instance, Map<Variable, Constant> free, Query<?> target, Collection<? extends Constraint<?,?>> constraints);
+	public abstract <S extends ChaseState> boolean entails(S instance, Map<Variable, Constant> free, ConjunctiveQuery target, Collection<? extends Constraint<?,?>> constraints);
 	
 	
 	/**
@@ -70,7 +71,7 @@ public abstract class Chaser {
 	 * @param constraints the constraints
 	 * @return 		true if the source query entails the target query
 	 */
-	public abstract boolean entails(Query<?> source, Query<?> target, Collection<? extends Constraint<?,?>> constraints, HomomorphismDetector detector);
+	public abstract boolean entails(ConjunctiveQuery source, ConjunctiveQuery target, Collection<? extends Constraint<?,?>> constraints, HomomorphismDetector detector);
 	
 
 	/* (non-Javadoc)

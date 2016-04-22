@@ -384,7 +384,7 @@ COMPARE, /** The prepare. */
 			ReasoningParameters reasoningParams = new ReasoningParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
 			
 			Schema schema = new SchemaReader().read(sis);
-			Query<?> query = new QueryReader(schema).read(qis);
+			ConjunctiveQuery query = new QueryReader(schema).read(qis);
 			if (schema == null || query == null) {
 				throw new RegressionTestException("Schema and query must be provided for each regression test. (schema:" + schema + ", query: " + query + ")");
 			}

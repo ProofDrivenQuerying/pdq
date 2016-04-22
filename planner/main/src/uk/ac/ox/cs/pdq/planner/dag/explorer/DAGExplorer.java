@@ -12,6 +12,7 @@ import uk.ac.ox.cs.pdq.algebra.RelationalOperator;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.plan.DAGPlan;
 import uk.ac.ox.cs.pdq.planner.Explorer;
@@ -45,10 +46,10 @@ import com.google.common.eventbus.EventBus;
 public abstract class DAGExplorer extends Explorer<DAGPlan> {
 
 	/**  The input user query *. */
-	protected final Query<?> query;
+	protected final ConjunctiveQuery query;
 	
 	/**  The accessible counterpart of the user query *. */
-	protected final Query<?> accessibleQuery;
+	protected final ConjunctiveQuery accessibleQuery;
 
 	/**  The input schema *. */
 	protected final Schema schema;
@@ -88,8 +89,8 @@ public abstract class DAGExplorer extends Explorer<DAGPlan> {
 	public DAGExplorer(EventBus eventBus, 
 			boolean collectStats, 
 			PlannerParameters parameters,
-			Query<?> query, 
-			Query<?> accessibleQuery,
+			ConjunctiveQuery query, 
+			ConjunctiveQuery accessibleQuery,
 			Schema schema,
 			AccessibleSchema accessibleSchema, 
 			Chaser chaser, 

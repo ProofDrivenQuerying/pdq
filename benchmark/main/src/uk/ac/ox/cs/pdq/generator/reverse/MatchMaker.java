@@ -138,7 +138,7 @@ public class MatchMaker implements EventHandler {
 	 * @param q the q
 	 * @return true if all the matcher's selectors have accepted the query q
 	 */
-	protected boolean accept(Query<?> q) {
+	protected boolean accept(ConjunctiveQuery q) {
 		for (QuerySelector sel: this.selectors) {
 			if (!sel.accept(q)) {
 				return false;

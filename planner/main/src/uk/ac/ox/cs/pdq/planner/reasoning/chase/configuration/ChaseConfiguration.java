@@ -5,6 +5,7 @@ import java.util.List;
 
 import uk.ac.ox.cs.pdq.LimitReachedException;
 import uk.ac.ox.cs.pdq.db.Constraint;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Query;
@@ -188,7 +189,7 @@ public abstract class ChaseConfiguration<P extends Plan> implements Configuratio
 	 * @return 		the list of query matches
 	 * @throws PlannerException the planner exception
 	 */
-	public List<Match> matchesQuery(Query<?> query) throws PlannerException {
+	public List<Match> matchesQuery(ConjunctiveQuery query) throws PlannerException {
 		return this.state.getMatches(query);
 	}
 
@@ -220,7 +221,7 @@ public abstract class ChaseConfiguration<P extends Plan> implements Configuratio
 	 * mapping each free variable into the corresponding element is called a match for Q′ in v.
 	 */
 	@Override
-	public boolean isSuccessful(Query<?> query) {
+	public boolean isSuccessful(ConjunctiveQuery query) {
 		try {
 			return !this.matchesQuery(query).isEmpty();
 		} catch (PlannerException e) {

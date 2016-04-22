@@ -4,6 +4,7 @@ import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.AccessMethod.Types;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 
@@ -21,7 +22,7 @@ public class NoAllFreeAccessQuerySelector implements QuerySelector {
 	 * @see uk.ac.ox.cs.pdq.generator.reverse.QuerySelector#accept(uk.ac.ox.cs.pdq.fol.Query)
 	 */
 	@Override
-	public boolean accept(Query<?> q) {
+	public boolean accept(ConjunctiveQuery q) {
 		boolean result = true;
 		for (Atom p: q.getBody().getAtoms()) {
 			Predicate s = p.getPredicate();

@@ -15,6 +15,7 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TGD;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Atom;
@@ -79,7 +80,7 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 	 * @param schema the schema
 	 * @param manager the manager
 	 */
-	public AccessibleDatabaseListState(Query<?> query, Schema schema, DatabaseHomomorphismManager manager) {
+	public AccessibleDatabaseListState(ConjunctiveQuery query, Schema schema, DatabaseHomomorphismManager manager) {
 		this(manager, 
 				createInitialFacts(query, schema), 
 				new MapFiringGraph(),
@@ -99,9 +100,9 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 	 * @param schema the schema
 	 * @return 		the facts of the canonical query and the Accessible(.) facts of the schema constants
 	 */
-	private static Collection<Atom> createInitialFacts(Query<?> query, Schema schema) {
+	private static Collection<Atom> createInitialFacts(ConjunctiveQuery query, Schema schema) {
 		// Gets the canonical database of the query
-		Collection<Atom> facts = query.getCanonical().getAtoms();
+		Collection<Atom> facts = query.ground(query.getGrounding()).getAtoms(); //query.getCanonical().getAtoms();
 		// Create the Accessible(.) facts
 		// One Accessible(.) is being created for every schema constant
 		for (TypedConstant<?> constant : query.getSchemaConstants()) {
