@@ -9,7 +9,7 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.benchmark.BenchmarkParameters;
-import uk.ac.ox.cs.pdq.db.Constraint;
+import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TGD;
 import uk.ac.ox.cs.pdq.db.builder.SchemaBuilder;
@@ -75,8 +75,8 @@ public class DependencyGeneratorFirst extends AbstractDependencyGenerator implem
 	 * @param query the query
 	 * @return 		a list of dependencies
 	 */
-	private List<Constraint> generateTGDs(ConjunctiveQuery query) {
-		List<Constraint> dependencies = new ArrayList<>();
+	private List<Dependency> generateTGDs(ConjunctiveQuery query) {
+		List<Dependency> dependencies = new ArrayList<>();
 		List<Atom> queryBodyAtoms = query.getBody().getAtoms();
 		Atom guard = queryBodyAtoms.get(queryBodyAtoms.size() - 1);
 		List<Set<Atom>> powerSet = Lists.newArrayList(Sets.powerSet(new LinkedHashSet<>(queryBodyAtoms)));
@@ -127,8 +127,8 @@ public class DependencyGeneratorFirst extends AbstractDependencyGenerator implem
 	 * @TODO the method to generate dependencies from a query must be put back
 	 * @TODO create the class AcyclicQuery
 	 */
-	private List<Constraint> generateTGDs(AcyclicQuery query) {
-		List<Constraint> ret = new ArrayList<>();
+	private List<Dependency> generateTGDs(AcyclicQuery query) {
+		List<Dependency> ret = new ArrayList<>();
 		List<Atom> queryBodyAtoms = query.getBody().getAtoms();
 		int dependencies = 0;
 		while (dependencies < this.params.getNumberOfConstraints() && dependencies < queryBodyAtoms.size()) {
@@ -160,8 +160,8 @@ public class DependencyGeneratorFirst extends AbstractDependencyGenerator implem
 	 * @param dependencies 		The number of dependencies to create
 	 * @return 		randomly created guarded dependencies. None of the output dependencies must already exist in the input collection
 	 */
-	private List<Constraint> generateGuardedTGDs(Collection<Constraint> input, int dependencies) {
-		List<Constraint> ret = new ArrayList<>();
+	private List<Dependency> generateGuardedTGDs(Collection<Dependency> input, int dependencies) {
+		List<Dependency> ret = new ArrayList<>();
 		while (ret.size() < dependencies) {
 			List<Variable> universal = this.createVariables(this.params.getQueryConjuncts() * this.params.getArity());
 			ConjunctionInfo leftSide = this.createGuardedConjunction(universal, 

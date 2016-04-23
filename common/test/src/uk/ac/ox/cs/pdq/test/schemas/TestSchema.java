@@ -7,7 +7,7 @@ import java.util.Collection;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.AccessMethod.Types;
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.db.Constraint;
+import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TGD;
@@ -503,7 +503,7 @@ public final class TestSchema {
 				PublicationFull,Publication,Citation,Reference,PathwayBySpecies,PathwayById,Pathway,
 				OrganismById,OrganismFree,Organism,ProteinLimited,ProteinFree,Protein);
 		
-		Collection<Constraint> dependencies = this.defineDependencies(new Schema(relations));
+		Collection<Dependency> dependencies = this.defineDependencies(new Schema(relations));
 		this.schema = new Schema(relations, dependencies);
 	}
 
@@ -514,7 +514,7 @@ public final class TestSchema {
 	 * @param schema the schema
 	 * @return the collection
 	 */
-	private Collection<Constraint> defineDependencies(Schema schema) {
+	private Collection<Dependency> defineDependencies(Schema schema) {
 		Term activity_comment = new Variable("activity_comment");
 		Term activity_id = new Variable("activity_id");
 		Term assay_chembl_id = new Variable("assay_chembl_id");
@@ -1017,7 +1017,7 @@ public final class TestSchema {
 						));
 		
 		
-		return Lists.<Constraint>newArrayList(tgd1,tgd2,tgd3,tgd4,tgd5,tgd6,tgd7,tgd8,tgd9,tgd10,
+		return Lists.<Dependency>newArrayList(tgd1,tgd2,tgd3,tgd4,tgd5,tgd6,tgd7,tgd8,tgd9,tgd10,
 				tgd11,tgd12,tgd13,tgd14,tgd15,tgd16,tgd17,tgd18,tgd19,tgd20,
 				tgd21,tgd22,tgd23,tgd24,tgd25,tgd26,tgd27,tgd28,tgd29,tgd30,
 				tgd31,tgd32,tgd33,tgd34,tgd35,tgd36,tgd37,tgd38,tgd39,tgd40,

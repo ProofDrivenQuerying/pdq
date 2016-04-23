@@ -39,10 +39,10 @@ public class Schema {
 	private final List<Relation>[] arityDistribution;
 
 	/**  The schema dependencies indexed based on their id. */
-	private final Map<Integer, Constraint> dependencyIndex;
+	private final Map<Integer, Dependency> dependencyIndex;
 
 	/**  The schema dependencies. */
-	protected final List<Constraint> schemaDependencies;
+	protected final List<Dependency> schemaDependencies;
 
 	/**  True if the schema contains at least one view. */
 	private final boolean containsViews;
@@ -60,13 +60,13 @@ public class Schema {
 	protected final Collection<EGD> keyDependencies = Lists.newArrayList();
 
 	/**  The views of the input schema*. */
-	protected final List<Constraint> views;
+	protected final List<Dependency> views;
 
 	/**
 	 * Empty schema constructor.
 	 */
 	public Schema() {
-		this(new ArrayList<Relation>(), new ArrayList<Constraint>());
+		this(new ArrayList<Relation>(), new ArrayList<Dependency>());
 	}
 
 	/**
@@ -75,7 +75,7 @@ public class Schema {
 	 * @param relations the relations
 	 */
 	public Schema(Collection<Relation> relations) {
-		this(relations, new ArrayList<Constraint>());
+		this(relations, new ArrayList<Dependency>());
 	}
 
 	/**
@@ -84,7 +84,7 @@ public class Schema {
 	 * @param relations 		The input relations
 	 * @param dependencies 		The input dependencies
 	 */
-	public Schema(Collection<Relation> relations, Collection<Constraint> dependencies) {
+	public Schema(Collection<Relation> relations, Collection<Dependency> dependencies) {
 		int maxArity = 0;
 		boolean containsViews = false;
 		Map<String, Relation> rm = new LinkedHashMap<>();
@@ -109,8 +109,8 @@ public class Schema {
 			this.arityDistribution[r.getArity()].add(r);
 		}
 
-		Map<Integer, Constraint> dm = new LinkedHashMap<>();
-		for (Constraint ic:dependencies) {
+		Map<Integer, Dependency> dm = new LinkedHashMap<>();
+		for (Dependency ic:dependencies) {
 			if (ic instanceof TGD) {
 				dm.put(((TGD) ic).getId(), ic);
 			}
@@ -144,7 +144,7 @@ public class Schema {
 	 *
 	 * @return 		the schema views
 	 */
-	public List<Constraint> getViews() {
+	public List<Dependency> getViews() {
 		return this.views;
 	}
 
@@ -191,7 +191,7 @@ public class Schema {
 	 *
 	 * @return 		the schema dependencies
 	 */
-	public List<Constraint> getDependencies() {
+	public List<Dependency> getDependencies() {
 		return this.schemaDependencies;
 	}
 	
@@ -232,7 +232,7 @@ public class Schema {
 		}
 		if (!this.schemaDependencies.isEmpty()) {
 			result.append("\n\t{");
-			for (Constraint ic : this.schemaDependencies) {
+			for (Dependency ic : this.schemaDependencies) {
 				result.append("\n\t\t").append(ic);
 			}
 			result.append("\n\t}");
@@ -252,7 +252,7 @@ public class Schema {
 			for (Relation relation:this.relations) {
 				simpleDepedencyGraph.addVertex(relation.createAtoms());
 			}
-			for (Constraint ic:this.schemaDependencies) {
+			for (Dependency ic:this.schemaDependencies) {
 				List<Atom> leftAtoms = ic.getLeft().getAtoms();
 				List<Atom> rightAtoms = ic.getRight().getAtoms();
 				for (Atom left : leftAtoms) {
@@ -295,7 +295,7 @@ public class Schema {
 	public Collection<TypedConstant<?>> getDependencyConstants() {
 		if (this.dependencyConstants == null) {
 			this.dependencyConstants = new LinkedHashSet<>();
-			for (Constraint ic : this.schemaDependencies) {
+			for (Dependency ic : this.schemaDependencies) {
 				this.dependencyConstants.addAll(ic.getSchemaConstants());
 			}
 		}

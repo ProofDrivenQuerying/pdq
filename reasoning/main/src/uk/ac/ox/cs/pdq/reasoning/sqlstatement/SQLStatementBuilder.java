@@ -16,7 +16,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.db.Constraint;
+import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TGD;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
@@ -363,17 +363,17 @@ public abstract class SQLStatementBuilder {
 			}			
 		}
 
-		if(source instanceof Constraint && activeTrigger) {
+		if(source instanceof Dependency && activeTrigger) {
 			List<String> from2 = null;
-			if(source instanceof Constraint) {
-				from2 = this.createFromStatement(Conjunction.of(((Constraint)source).getRight().getAtoms()));
+			if(source instanceof Dependency) {
+				from2 = this.createFromStatement(Conjunction.of(((Dependency)source).getRight().getAtoms()));
 			}
 			LinkedHashMap<String,Variable> nestedProjections = this.createProjections(source);
 			List<String> predicates2 = new ArrayList<String>();
 			
-			List<String> nestedAttributeEqualities = this.createNestedAttributeEqualitiesForActiveTriggers((Constraint)source);
+			List<String> nestedAttributeEqualities = this.createNestedAttributeEqualitiesForActiveTriggers((Dependency)source);
 			
-			List<String> nestedConstantEqualities = this.createEqualitiesWithConstants(Conjunction.of(((Constraint)source).getAtoms()));
+			List<String> nestedConstantEqualities = this.createEqualitiesWithConstants(Conjunction.of(((Dependency)source).getAtoms()));
 			predicates2.addAll(nestedAttributeEqualities);
 			predicates2.addAll(nestedConstantEqualities);
 
@@ -448,9 +448,9 @@ public abstract class SQLStatementBuilder {
 	 * @param source the source
 	 * @return 		explicit equalities (String objects of the form A.x1 = B.x2) of the implicit equalities in the input conjunction (the latter is denoted by repetition of the same term)
 	 */
-	protected List<String> createNestedAttributeEqualitiesForActiveTriggers(Constraint source) {
+	protected List<String> createNestedAttributeEqualitiesForActiveTriggers(Dependency source) {
 		if(source instanceof TGD) {
-			return this.createAttributeEqualities(Conjunction.of(((Constraint)source).getAtoms()));
+			return this.createAttributeEqualities(Conjunction.of(((Dependency)source).getAtoms()));
 		}
 		else if(source instanceof DatabaseEGD){
 			List<String> attributePredicates = new ArrayList<String>();

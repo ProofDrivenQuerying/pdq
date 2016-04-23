@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.apache.commons.collections4.CollectionUtils;
 
-import uk.ac.ox.cs.pdq.db.Constraint;
+import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.db.EGD;
 import uk.ac.ox.cs.pdq.db.TGD;
 import uk.ac.ox.cs.pdq.fol.Atom;
@@ -47,21 +47,21 @@ public final class DefaultTGDDependencyAssessor implements TGDDependencyAssessor
 	private final Multimap<String, TGD> tgdMap = ArrayListMultimap.create();
 	
 	/**  All schema dependencies *. */
-	private final Collection<Constraint> dependencies;
+	private final Collection<Dependency> dependencies;
 
 	/**
 	 * Instantiates a new default restricted chase dependency assessor.
 	 *
 	 * @param dependencies the dependencies
 	 */
-	public DefaultTGDDependencyAssessor(Collection<? extends Constraint> dependencies) {
+	public DefaultTGDDependencyAssessor(Collection<? extends Dependency> dependencies) {
 		Preconditions.checkNotNull(dependencies);
 		this.dependencies = Lists.newArrayList();
-		List<Constraint> egds = Lists.newArrayList();
-		List<Constraint> tgds = Lists.newArrayList();
+		List<Dependency> egds = Lists.newArrayList();
+		List<Dependency> tgds = Lists.newArrayList();
 		
 		//Build the dependency map
-		for(Constraint dependency:dependencies) {
+		for(Dependency dependency:dependencies) {
 			for(Atom atom:dependency.getLeft().getAtoms()) {
 				Predicate s = atom.getPredicate();
 				if(dependency instanceof EGD) {
@@ -85,8 +85,8 @@ public final class DefaultTGDDependencyAssessor implements TGDDependencyAssessor
 	 * @return 		the dependencies that are most likely to be fired in the next chase round.
 	 */
 	@Override
-	public Collection<? extends Constraint> getDependencies(ChaseState state) {
-		Collection<Constraint> constraints = Sets.newLinkedHashSet();
+	public Collection<? extends Dependency> getDependencies(ChaseState state) {
+		Collection<Dependency> constraints = Sets.newLinkedHashSet();
 		Collection<Atom> newFacts = null;
 		if(this.stateFacts == null) {
 			newFacts = state.getFacts();
@@ -105,7 +105,7 @@ public final class DefaultTGDDependencyAssessor implements TGDDependencyAssessor
 			allFactsMap.put(fact.getPredicate().getName(), fact);
 		}
 		
-		for(Constraint dependency:this.dependencies) {
+		for(Dependency dependency:this.dependencies) {
 			for(Atom atom:dependency.getLeft().getAtoms()) {
 				Predicate s = atom.getPredicate();
 				if(dependency instanceof TGD && newFactsMap.keySet().contains(s.getName())) {

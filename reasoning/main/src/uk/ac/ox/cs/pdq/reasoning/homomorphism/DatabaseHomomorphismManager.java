@@ -29,7 +29,7 @@ import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.LimitReachedException;
 import uk.ac.ox.cs.pdq.LimitReachedException.Reasons;
-import uk.ac.ox.cs.pdq.db.Constraint;
+import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.db.EGD;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -162,7 +162,7 @@ public class DatabaseHomomorphismManager implements HomomorphismManager {
 		this.database = database;
 		this.builder = builder;
 		this.constraints = Sets.newLinkedHashSet();
-		for (Constraint<?,?> dependency: schema.getDependencies()) {
+		for (Dependency<?,?> dependency: schema.getDependencies()) {
 			this.constraints.add(dependency);
 		}
 		this.constants = schema.getConstants();

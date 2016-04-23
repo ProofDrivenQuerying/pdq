@@ -24,7 +24,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import uk.ac.ox.cs.pdq.db.Constraint;
+import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
@@ -252,7 +252,7 @@ public class QueryToProtoBuffer implements Rewriter<Query<?>, Rule> {
 			return signature;
 		}
 		// Attempting to find a unary typing constraint
-		for (Constraint dep: this.schema.getDependencies()) {
+		for (Dependency dep: this.schema.getDependencies()) {
 			List<Atom> body = dep.getBody().getAtoms();
 			List<Atom> head = dep.getRight().getAtoms();
 			if (body.size() == 1 && head.size() == 1) {

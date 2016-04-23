@@ -10,7 +10,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.db.Constraint;
+import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TGD;
@@ -58,7 +58,7 @@ public class AccessibleSchema extends Schema {
 	private final Map<Pair<? extends Relation, AccessMethod>, AccessibilityAxiom> accessibilityAxioms;
 
 	/**  Mapping from a dependency to its inferred accessible counterpart. */
-	private final Map<Constraint, InferredAccessibleAxiom> infAccessibilityAxioms;
+	private final Map<Dependency, InferredAccessibleAxiom> infAccessibilityAxioms;
 
 	/**  The inferred accessible axioms*. */
 	private final List<InferredAccessibleAxiom> infAccessibleViews = new ArrayList<>();
@@ -70,7 +70,7 @@ public class AccessibleSchema extends Schema {
 	 * @param dependencies 		list if schema dependencies
 	 * @param constantsMap 		Map of schema constant names to constants
 	 */
-	public AccessibleSchema(List<Relation> relations, List<Constraint> dependencies, Map<String, TypedConstant<?>> constantsMap) {
+	public AccessibleSchema(List<Relation> relations, List<Dependency> dependencies, Map<String, TypedConstant<?>> constantsMap) {
 		super(relations, dependencies);
 		this.constants = constantsMap;
 		ImmutableMap.Builder<String, InferredAccessibleRelation> b2 = ImmutableMap.builder();
@@ -84,12 +84,12 @@ public class AccessibleSchema extends Schema {
 			}
 		}
 
-		ImmutableMap.Builder<Constraint, InferredAccessibleAxiom> b6 = ImmutableMap.builder();
+		ImmutableMap.Builder<Dependency, InferredAccessibleAxiom> b6 = ImmutableMap.builder();
 		this.accessibleRelations = ImmutableList.of(AccessibleRelation.getInstance());
 		this.infAccessibleRelations = b2.build();
 
 		// Inferred accessible axioms the schema ICs
-		for (Constraint<?, ?> ic: dependencies) {
+		for (Dependency<?, ?> ic: dependencies) {
 			Map<Atom, InferredAccessibleRelation> predicateToInfAccessibleRelation = new LinkedHashMap<>();
 			for (Atom p: ic.getAtoms()) {
 				predicateToInfAccessibleRelation.put(p, this.infAccessibleRelations.get(p.getName()));
@@ -211,7 +211,7 @@ public class AccessibleSchema extends Schema {
 	 * @return all the accessible schema dependencies including the ones of the original schema
 	 */
 	@Override
-	public List<Constraint> getDependencies() {
+	public List<Dependency> getDependencies() {
 		return Lists.newArrayList(
 				Iterables.concat(
 						this.schemaDependencies,
@@ -277,21 +277,21 @@ public class AccessibleSchema extends Schema {
 		}
 		if (!this.schemaDependencies.isEmpty()) {
 			result.append("\n\t{");
-			for (Constraint ic : this.schemaDependencies) {
+			for (Dependency ic : this.schemaDependencies) {
 				result.append("\n\t\t").append(ic);
 			}
 			result.append("\n\t}");
 		}
 		if (!this.accessibilityAxioms.isEmpty()) {
 			result.append("\n\t{");
-			for (Constraint ic : this.accessibilityAxioms.values()) {
+			for (Dependency ic : this.accessibilityAxioms.values()) {
 				result.append("\n\t\t").append(ic);
 			}
 			result.append("\n\t}");
 		}
 		if (!this.infAccessibilityAxioms.isEmpty()) {
 			result.append("\n\t{");
-			for (Constraint ic : this.infAccessibilityAxioms.values()) {
+			for (Dependency ic : this.infAccessibilityAxioms.values()) {
 				result.append("\n\t\t").append(ic);
 			}
 			result.append("\n\t}");

@@ -2,7 +2,7 @@ package uk.ac.ox.cs.pdq.materialize.utility;
 
 import java.util.Collection;
 
-import uk.ac.ox.cs.pdq.db.Constraint;
+import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.materialize.chase.state.ChaseState;
 
 // TODO: Auto-generated Javadoc
@@ -22,6 +22,6 @@ public interface TGDDependencyAssessor {
 	 * @param state 		A collection of chase facts
 	 * @return 		the dependencies that are most likely to be fired in the next chase round.
 	 */
-	Collection<? extends Constraint> getDependencies(ChaseState state);
+	Collection<? extends Dependency> getDependencies(ChaseState state);
 	
 }

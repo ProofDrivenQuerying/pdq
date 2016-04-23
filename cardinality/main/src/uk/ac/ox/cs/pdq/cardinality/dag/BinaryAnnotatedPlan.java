@@ -6,7 +6,7 @@ package uk.ac.ox.cs.pdq.cardinality.dag;
 import java.util.Collection;
 import java.util.List;
 
-import uk.ac.ox.cs.pdq.db.Constraint;
+import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
@@ -109,7 +109,7 @@ public class BinaryAnnotatedPlan extends DAGAnnotatedPlan {
 	 * @param query the query
 	 * @param dependencies the dependencies
 	 */
-	public void reasonUntilTermination(Chaser chaser, Query<?> query, Collection<? extends Constraint> dependencies) {
+	public void reasonUntilTermination(Chaser chaser, Query<?> query, Collection<? extends Dependency> dependencies) {
 		chaser.reasonUntilTermination(this.getState(), dependencies);
 	}
 

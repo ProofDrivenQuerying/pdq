@@ -11,7 +11,7 @@ import org.apache.commons.lang3.tuple.Triple;
 
 import uk.ac.ox.cs.pdq.cardinality.dag.DAGAnnotatedPlan;
 import uk.ac.ox.cs.pdq.cardinality.dag.UnaryAnnotatedPlan;
-import uk.ac.ox.cs.pdq.db.Constraint;
+import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
@@ -43,7 +43,7 @@ public interface CardinalityEstimator {
 	 * @param dependencies 		The dependencies to take into account during chasing
 	 * @return 		the size and the quality of the annotated plan that is composed by the input annotated plans
 	 */
-	Triple<BigInteger,Double, Integer> sizeQualityOf(DAGAnnotatedPlan left, DAGAnnotatedPlan right, Chaser egd, HomomorphismDetector detector, Collection<? extends Constraint> dependencies);
+	Triple<BigInteger,Double, Integer> sizeQualityOf(DAGAnnotatedPlan left, DAGAnnotatedPlan right, Chaser egd, HomomorphismDetector detector, Collection<? extends Dependency> dependencies);
 	
 	/**
 	 * Adjusted quality of.

@@ -22,7 +22,7 @@ import uk.ac.ox.cs.pdq.fol.Variable;
  * @param <L> the generic type
  * @param <R> the generic type
  */
-public interface Constraint<L extends Formula, R extends Formula> extends Evaluatable, Rule<L, R> {
+public interface Dependency<L extends Formula, R extends Formula> extends Evaluatable, Rule<L, R> {
 
 	/**
 	 * Fire.
@@ -31,7 +31,7 @@ public interface Constraint<L extends Formula, R extends Formula> extends Evalua
 	 * @param canonicalNames 		True if we assign Skolem constants to the existentially quantified variables
 	 * @return the grounded dependency using the input mapping
 	 */
-	Constraint<L, R> fire(Map<Variable, Constant> match, boolean canonicalNames);
+	Dependency<L, R> fire(Map<Variable, Constant> match, boolean canonicalNames);
 
 	/**
 	 * Gets the schema constants.
@@ -67,7 +67,7 @@ public interface Constraint<L extends Formula, R extends Formula> extends Evalua
 	 *
 	 * @return the variables of both sides of this constraint
 	 */
-	Set<Variable> getBothSideVariables();
+	Set<Variable> getAllVariables();
 
 	/**
 	 * Contains.
@@ -79,5 +79,5 @@ public interface Constraint<L extends Formula, R extends Formula> extends Evalua
 	@Override
 	boolean contains(Predicate s);
 	
-	Constraint<L,R> clone();
+	Dependency<L,R> clone();
 }

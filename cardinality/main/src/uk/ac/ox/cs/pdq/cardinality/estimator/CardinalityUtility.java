@@ -22,7 +22,7 @@ import uk.ac.ox.cs.pdq.cardinality.dag.UnaryAnnotatedPlan;
 import uk.ac.ox.cs.pdq.cost.statistics.Catalog;
 import uk.ac.ox.cs.pdq.cost.statistics.SimpleCatalog;
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.db.Constraint;
+import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
@@ -74,7 +74,7 @@ public class CardinalityUtility {
 	 * @param dependencies 		Dependencies to consider during chasing
 	 * @return 		true if the input collection of constants is a key for the input annotated plan
 	 */
-	public static boolean isKey(Collection<Constant> keys, DAGAnnotatedPlan configuration, Chaser egd, HomomorphismDetector detector, Collection<? extends Constraint> dependencies) {
+	public static boolean isKey(Collection<Constant> keys, DAGAnnotatedPlan configuration, Chaser egd, HomomorphismDetector detector, Collection<? extends Dependency> dependencies) {
 		Preconditions.checkNotNull(keys);
 		Preconditions.checkArgument(!keys.isEmpty());
 

@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.Callable;
 
-import uk.ac.ox.cs.pdq.db.Constraint;
+import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.db.TGD;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Constant;
@@ -49,10 +49,10 @@ public class ExecuteTGDChaseStepThread implements Callable<Boolean> {
 	public Boolean call() {
 		Match match;
 		while ((match = this.matches.poll()) != null) {
-			Constraint dependency = (Constraint) match.getQuery();
+			Dependency dependency = (Dependency) match.getQuery();
 			if(dependency instanceof TGD) {
 				Map<Variable, Constant> mapping = match.getMapping();
-				Constraint grounded = dependency.fire(mapping, true);
+				Dependency grounded = dependency.fire(mapping, true);
 				this.manager.addFactsAsynchronously(grounded.getRight().getAtoms());
 				for(Atom atom:grounded.getRight().getAtoms()) {
 					this.observedPredicates.add(atom.getPredicate());

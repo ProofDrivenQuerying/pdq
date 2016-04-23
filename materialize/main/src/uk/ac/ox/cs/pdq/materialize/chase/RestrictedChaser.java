@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import uk.ac.ox.cs.pdq.db.Constraint;
+import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Query;
@@ -64,17 +64,17 @@ public class RestrictedChaser extends Chaser {
 	 * @param dependencies the dependencies
 	 */
 	@Override
-	public <S extends ChaseState> void reasonUntilTermination(S instance,  Collection<? extends Constraint> dependencies) {
+	public <S extends ChaseState> void reasonUntilTermination(S instance,  Collection<? extends Dependency> dependencies) {
 		Preconditions.checkArgument(instance instanceof ListState);
 		TGDDependencyAssessor accessor = new DefaultTGDDependencyAssessor(dependencies);
 		boolean appliedStep = false;
-		Collection<? extends Constraint> d = dependencies;
+		Collection<? extends Dependency> d = dependencies;
 		long start = System.currentTimeMillis();
 		do {
 			
 			long start0 = System.currentTimeMillis();
 			appliedStep = false;
-			for(Constraint dependency:d) {
+			for(Dependency dependency:d) {
 				List<Match> matches = instance.getMatches(Lists.newArrayList(dependency), HomomorphismProperty.createActiveTriggerProperty());	
 				if(!matches.isEmpty()) {
 					appliedStep = true;
@@ -105,8 +105,8 @@ public class RestrictedChaser extends Chaser {
 	 */
 	@Override
 	public <S extends ChaseState> boolean entails(S instance, Map<Variable, Constant> free, ConjunctiveQuery target,
-			Collection<? extends Constraint<?,?>> constraints) {
-		Collection<? extends Constraint<?, ?>> relevantDependencies = new ReasonerUtility().findRelevant(target, constraints);
+			Collection<? extends Dependency<?,?>> constraints) {
+		Collection<? extends Dependency<?, ?>> relevantDependencies = new ReasonerUtility().findRelevant(target, constraints);
 		this.reasonUntilTermination(instance, relevantDependencies);
 		if(!instance.isFailed()) {
 			HomomorphismProperty[] c = {
@@ -128,8 +128,8 @@ public class RestrictedChaser extends Chaser {
 	 */
 	@Override
 	public boolean entails(ConjunctiveQuery source, ConjunctiveQuery target,
-			Collection<? extends Constraint<?,?>> constraints, HomomorphismDetector detector, FactManager manager) {	
-		Collection<? extends Constraint<?, ?>> relevantDependencies = new ReasonerUtility().findRelevant(target, constraints);
+			Collection<? extends Dependency<?,?>> constraints, HomomorphismDetector detector, FactManager manager) {	
+		Collection<? extends Dependency<?, ?>> relevantDependencies = new ReasonerUtility().findRelevant(target, constraints);
 		manager.addFactsSynchronously(source.ground(ConjunctiveQuery.generateCanonicalMapping(source.getBody())).getAtoms());
 		DatabaseDiskState instance = new DatabaseDiskState(manager, detector);
 		this.reasonUntilTermination(instance, relevantDependencies);

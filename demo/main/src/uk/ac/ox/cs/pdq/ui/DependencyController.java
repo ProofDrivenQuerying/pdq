@@ -17,7 +17,7 @@ import javafx.stage.Stage;
 
 import org.apache.log4j.Logger;
 
-import uk.ac.ox.cs.pdq.db.Constraint;
+import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.builder.SchemaBuilder;
 import uk.ac.ox.cs.pdq.io.ReaderException;
@@ -72,10 +72,10 @@ public class DependencyController {
     }
 
     /** The dependency. */
-    private Constraint dependency;
+    private Dependency dependency;
     
     /** The new dependency. */
-    private Constraint newDependency;
+    private Dependency newDependency;
     
     /** The schema. */
     private ObservableSchema schema;
@@ -91,7 +91,7 @@ public class DependencyController {
 	 *
 	 * @return the dependency
 	 */
-	public Constraint getDependency() {
+	public Dependency getDependency() {
 		return this.dependency;
 	}
 
@@ -109,7 +109,7 @@ public class DependencyController {
 	 *
 	 * @param dependency the new dependency
 	 */
-	public void setDependency(Constraint dependency) {
+	public void setDependency(Dependency dependency) {
 		this.dependency = dependency;
 		this.refreshEditor();
 	}

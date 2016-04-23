@@ -9,7 +9,7 @@ import java.util.List;
 import uk.ac.ox.cs.pdq.LimitReachedException;
 import uk.ac.ox.cs.pdq.cardinality.CardinalityException;
 import uk.ac.ox.cs.pdq.cardinality.reasoning.Configuration;
-import uk.ac.ox.cs.pdq.db.Constraint;
+import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Atom;
@@ -106,7 +106,7 @@ public abstract class AnnotatedPlan<P extends Plan> implements Configuration<P> 
 	 * @throws CardinalityException the planner exception
 	 * @throws LimitReachedException the limit reached exception
 	 */
-	public void reasonUntilTermination(Chaser chaser, Query<?> query, Collection<? extends Constraint> dependencies) throws CardinalityException, LimitReachedException {
+	public void reasonUntilTermination(Chaser chaser, Query<?> query, Collection<? extends Dependency> dependencies) throws CardinalityException, LimitReachedException {
 		chaser.reasonUntilTermination(this.state, dependencies);
 	}
 

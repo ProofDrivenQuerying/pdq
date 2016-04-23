@@ -6,7 +6,7 @@ import java.util.Map;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import uk.ac.ox.cs.pdq.db.Constraint;
+import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
@@ -70,7 +70,7 @@ public interface AccessibleChaseState extends uk.ac.ox.cs.pdq.reasoning.chase.st
 	 *
 	 * @return 		the rule firings that took place.
 	 */
-	Map<Atom, Pair<Constraint, Collection<Atom>>> getProvenance();
+	Map<Atom, Pair<Dependency, Collection<Atom>>> getProvenance();
 
 	/**
 	 * Gets the provenance.
@@ -78,7 +78,7 @@ public interface AccessibleChaseState extends uk.ac.ox.cs.pdq.reasoning.chase.st
 	 * @param fact the fact
 	 * @return 		the firing that has produced the input fact
 	 */
-	Pair<Constraint, Collection<Atom>> getProvenance(Atom fact);
+	Pair<Dependency, Collection<Atom>> getProvenance(Atom fact);
 	
 	/**
 	 * Merge.

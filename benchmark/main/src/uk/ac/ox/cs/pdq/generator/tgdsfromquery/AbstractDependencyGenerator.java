@@ -8,7 +8,7 @@ import java.util.Random;
 import java.util.Set;
 
 import uk.ac.ox.cs.pdq.benchmark.BenchmarkParameters;
-import uk.ac.ox.cs.pdq.db.Constraint;
+import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TGD;
@@ -56,8 +56,8 @@ public abstract class AbstractDependencyGenerator {
 	 * @param target the target
 	 * @return 		true if the target has the same body with one of the tgds in the input collection
 	 */
-	protected boolean sameBody(Collection<Constraint> tgds, TGD target) {
-		for (Constraint tg : tgds) {
+	protected boolean sameBody(Collection<Dependency> tgds, TGD target) {
+		for (Dependency tg : tgds) {
 			TGD t = (TGD) tg;
 			Set<Atom> set1 = new LinkedHashSet<>();
 			set1.addAll(t.getRight().getAtoms());

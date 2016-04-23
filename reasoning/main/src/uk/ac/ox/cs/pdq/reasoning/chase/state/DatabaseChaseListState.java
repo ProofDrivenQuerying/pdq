@@ -5,7 +5,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
-import uk.ac.ox.cs.pdq.db.Constraint;
+import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.db.EGD;
 import uk.ac.ox.cs.pdq.db.TGD;
 import uk.ac.ox.cs.pdq.fol.Atom;
@@ -176,10 +176,10 @@ public class DatabaseChaseListState extends DatabaseChaseState implements ListSt
 		Preconditions.checkNotNull(matches);
 		Collection<Atom> newFacts = new LinkedHashSet<>();
 		for(Match match:matches) {
-			Constraint dependency = (Constraint) match.getQuery();
+			Dependency dependency = (Dependency) match.getQuery();
 			Preconditions.checkArgument(dependency instanceof TGD, "EGDs are not allowed inside TGDchaseStep");
 			Map<Variable, Constant> mapping = match.getMapping();
-			Constraint grounded = dependency.fire(mapping, true);
+			Dependency grounded = dependency.fire(mapping, true);
 			Formula left = grounded.getLeft();
 			Formula right = grounded.getRight();
 			//Add information about new facts to constantsToAtoms
@@ -214,10 +214,10 @@ public class DatabaseChaseListState extends DatabaseChaseState implements ListSt
 		//Maps each constant to its new representative  
 		Map<Constant,Constant> obsoleteToRepresentative = Maps.newHashMap();
 		for(Match match:matches) {
-			Constraint dependency = (Constraint) match.getQuery();
+			Dependency dependency = (Dependency) match.getQuery();
 			Preconditions.checkArgument(dependency instanceof EGD, "TGDs are not allowed inside EGDchaseStep");
 			Map<Variable, Constant> mapping = match.getMapping();
-			Constraint grounded = dependency.fire(mapping, true);
+			Dependency grounded = dependency.fire(mapping, true);
 			Formula left = grounded.getLeft();
 			Formula right = grounded.getRight();
 			for(Atom atom:right.getAtoms()) {
@@ -457,7 +457,7 @@ public class DatabaseChaseListState extends DatabaseChaseState implements ListSt
 	 * @see uk.ac.ox.cs.pdq.chase.state.ChaseState#getHomomorphisms(Collection<D>)
 	 */
 	@Override
-	public List<Match> getMatches(Collection<? extends Constraint> dependencies, HomomorphismProperty... constraints) {
+	public List<Match> getMatches(Collection<? extends Dependency> dependencies, HomomorphismProperty... constraints) {
 		HomomorphismProperty[] c = new HomomorphismProperty[constraints.length+1];
 		System.arraycopy(constraints, 0, c, 0, constraints.length);
 		c[constraints.length] = HomomorphismProperty.createFactProperty(Conjunction.of(this.getFacts()));

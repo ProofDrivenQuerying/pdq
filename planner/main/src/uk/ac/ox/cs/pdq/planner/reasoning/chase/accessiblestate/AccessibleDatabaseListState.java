@@ -10,7 +10,7 @@ import java.util.Map;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
-import uk.ac.ox.cs.pdq.db.Constraint;
+import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TGD;
@@ -239,10 +239,10 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 		Preconditions.checkNotNull(matches);
 		Collection<Atom> newFacts = new LinkedHashSet<>();
 		for(Match match:matches) {
-			Constraint dependency = (Constraint) match.getQuery();
+			Dependency dependency = (Dependency) match.getQuery();
 			Preconditions.checkArgument(dependency instanceof TGD, "EGDs are not allowed inside TGDchaseStep");
 			Map<Variable, Constant> mapping = match.getMapping();
-			Constraint grounded = dependency.fire(mapping, true);
+			Dependency grounded = dependency.fire(mapping, true);
 			Formula left = grounded.getLeft();
 			Formula right = grounded.getRight();
 			for(Atom fact:right.getAtoms()) {
@@ -351,7 +351,7 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 	 * @see uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState#getProvenance()
 	 */
 	@Override
-	public Map<Atom, Pair<Constraint, Collection<Atom>>> getProvenance() {
+	public Map<Atom, Pair<Dependency, Collection<Atom>>> getProvenance() {
 		return this.getFiringGraph().getFactProvenance();
 	}
 
@@ -364,7 +364,7 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 	 * @see uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState#getProvenance(Atom)
 	 */
 	@Override
-	public Pair<Constraint, Collection<Atom>> getProvenance(Atom fact) {
+	public Pair<Dependency, Collection<Atom>> getProvenance(Atom fact) {
 		return this.getFiringGraph().getFactProvenance(fact);
 	}
 

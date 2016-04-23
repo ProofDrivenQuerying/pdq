@@ -8,7 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.db.Constraint;
+import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.db.EGD;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -70,7 +70,7 @@ public class TestRestrictedChaser {
 		this.tgd = new TGD(Conjunction.of(R1),Conjunction.of(R2));
 		this.egd = new EGD(Conjunction.of(R2,R2p), Conjunction.of(new Equality(new Variable("z"),new Variable("w"))));
 
-		this.schema = new Schema(Lists.<Relation>newArrayList(this.rel1, this.rel2), Lists.<Constraint>newArrayList(this.tgd,this.egd));
+		this.schema = new Schema(Lists.<Relation>newArrayList(this.rel1, this.rel2), Lists.<Dependency>newArrayList(this.tgd,this.egd));
 		this.schema.updateConstants(Lists.<TypedConstant<?>>newArrayList(new TypedConstant(new String("John"))));
 		/** The driver. */
 		String driver = null;
@@ -105,7 +105,7 @@ public class TestRestrictedChaser {
 		Atom f24 = new Atom(this.rel1, 
 				Lists.newArrayList(new Skolem("k5"), new Skolem("c"),new TypedConstant(new String("John"))));
 		this.state = new DatabaseChaseListState(this.manager, Sets.newHashSet(f20,f21,f22,f23,f24));
-		this.chaser.reasonUntilTermination(this.state, Lists.<Constraint>newArrayList(this.tgd,this.egd));
+		this.chaser.reasonUntilTermination(this.state, Lists.<Dependency>newArrayList(this.tgd,this.egd));
 		Assert.assertEquals(false, this.state.isFailed());
 		
 		

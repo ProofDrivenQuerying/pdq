@@ -4,7 +4,7 @@ import java.io.PrintStream;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import uk.ac.ox.cs.pdq.db.Constraint;
+import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
@@ -15,7 +15,7 @@ import uk.ac.ox.cs.pdq.fol.Variable;
  * 
  * @author Julien Leblay
  */
-public class DependencyWriter extends AbstractXMLWriter<Constraint> {
+public class DependencyWriter extends AbstractXMLWriter<Dependency> {
 
 	/**
 	 * Writes the given relation to the given output.
@@ -23,7 +23,7 @@ public class DependencyWriter extends AbstractXMLWriter<Constraint> {
 	 * @param out the out
 	 * @param dep TGD
 	 */
-	public void writeDependency(PrintStream out, Constraint dep) {
+	public void writeDependency(PrintStream out, Dependency dep) {
 		Map<QNames, String> att = new LinkedHashMap<>();
 		open(out, QNames.DEPENDENCY, att);
 		open(out, QNames.BODY, att);
@@ -70,7 +70,7 @@ public class DependencyWriter extends AbstractXMLWriter<Constraint> {
 	 * @param o TGD
 	 */
 	@Override
-	public void write(PrintStream out, Constraint o) {
+	public void write(PrintStream out, Dependency o) {
 		out.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
 		this.writeDependency(out, o);
 	}

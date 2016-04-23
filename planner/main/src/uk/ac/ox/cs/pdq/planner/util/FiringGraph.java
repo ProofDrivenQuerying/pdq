@@ -8,7 +8,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
 
-import uk.ac.ox.cs.pdq.db.Constraint;
+import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.fol.Atom;
 
 // TODO: Auto-generated Javadoc
@@ -27,7 +27,7 @@ public interface FiringGraph {
 	 * @param sources 			the facts that where used to ground the input dependency
 	 * @param targets 			the consequence facts
 	 */
-	void put(Constraint dependency, Collection<Atom> sources, Collection<Atom> targets);
+	void put(Dependency dependency, Collection<Atom> sources, Collection<Atom> targets);
 
 	/**
 	 * Put.
@@ -36,7 +36,7 @@ public interface FiringGraph {
 	 * @param source PredicateFormula
 	 * @param target PredicateFormula
 	 */
-	void put(Constraint dependency, Atom source, Atom target);
+	void put(Dependency dependency, Atom source, Atom target);
 
 	/**
 	 * Gets the fact provenance.
@@ -44,14 +44,14 @@ public interface FiringGraph {
 	 * @param fact the fact
 	 * @return 		the history of the input fact, i.e., the firings that leaded to the creation of this fact
 	 */
-	Pair<Constraint, Collection<Atom>> getFactProvenance(Atom fact);
+	Pair<Dependency, Collection<Atom>> getFactProvenance(Atom fact);
 
 	/**
 	 * Gets the fact provenance.
 	 *
 	 * @return 		the history of the chase facts, i.e., the firings that leaded to the creation of each fact
 	 */
-	Map<Atom, Pair<Constraint, Collection<Atom>>> getFactProvenance();
+	Map<Atom, Pair<Dependency, Collection<Atom>>> getFactProvenance();
 
 	/**
 	 * Checks if is fired.
@@ -60,7 +60,7 @@ public interface FiringGraph {
 	 * @param facts the facts
 	 * @return 		true if the input dependency has been already fired given the input facts
 	 */
-	boolean isFired(Constraint dependency, Collection<Atom> facts);
+	boolean isFired(Dependency dependency, Collection<Atom> facts);
 
 	/**
 	 * Gets the graph.

@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 
 import uk.ac.ox.cs.pdq.LimitReachedException;
 import uk.ac.ox.cs.pdq.LimitReachedException.Reasons;
-import uk.ac.ox.cs.pdq.db.Constraint;
+import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Predicate;
@@ -227,7 +227,7 @@ public class DatabaseDiskState implements ListState {
 	 * @see uk.ac.ox.cs.pdq.chase.state.ChaseState#getHomomorphisms(Collection<D>)
 	 */
 	@Override
-	public List<Match> getMatches(Collection<? extends Constraint> dependencies, HomomorphismProperty... constraints) {
+	public List<Match> getMatches(Collection<? extends Dependency> dependencies, HomomorphismProperty... constraints) {
 		return this.detector.getMatches(dependencies, constraints);
 	}
 

@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Objects;
 
 import uk.ac.ox.cs.pdq.LimitReachedException;
-import uk.ac.ox.cs.pdq.db.Constraint;
+import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
@@ -150,7 +150,7 @@ public abstract class SearchNode implements Cloneable{
 	 * @throws PlannerException the planner exception
 	 * @throws LimitReachedException the limit reached exception
 	 */
-	public void close(Chaser chaser, Query<?> query, Collection<? extends Constraint> dependencies) throws PlannerException, LimitReachedException {
+	public void close(Chaser chaser, Query<?> query, Collection<? extends Dependency> dependencies) throws PlannerException, LimitReachedException {
 		this.configuration.reasonUntilTermination(chaser, query, dependencies);
 		this.isFullyGenerated = true;
 	}

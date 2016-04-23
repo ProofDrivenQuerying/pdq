@@ -3,7 +3,7 @@ package uk.ac.ox.cs.pdq.reasoning.chase;
 import java.util.Collection;
 import java.util.List;
 
-import uk.ac.ox.cs.pdq.db.Constraint;
+import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.logging.performance.StatisticsCollector;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ListState;
@@ -60,7 +60,7 @@ public class BoundedChaser extends RestrictedChaser {
 	 */
 	public void initialize(
 			ChaseState instance, 
-			Collection<? extends Constraint> constraints) {
+			Collection<? extends Dependency> constraints) {
 		synchronized (this.k) {
 			int oldK = this.k.get();
 			if (this.fullInitialization) {
@@ -80,7 +80,7 @@ public class BoundedChaser extends RestrictedChaser {
 	 * @param dependencies the dependencies
 	 */
 	@Override
-	public <S extends ChaseState> void reasonUntilTermination(S intance,  Collection<? extends Constraint> dependencies) {
+	public <S extends ChaseState> void reasonUntilTermination(S intance,  Collection<? extends Dependency> dependencies) {
 		Preconditions.checkArgument(intance instanceof ListState);
 		int rounds = 0;
 		boolean appliedStep = true;

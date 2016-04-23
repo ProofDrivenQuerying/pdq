@@ -81,7 +81,7 @@ public class ForeignKey implements Cloneable {
 		Relation rightRel = (Relation) right.getPredicate();
 		this.setForeignRelation(rightRel);
 		this.setForeignRelationName(rightRel.getName());
-		for (Variable v: dep.getBothSideVariables()) {
+		for (Variable v: dep.getAllVariables()) {
 			this.addReference(new Reference(leftRel.getAttribute(left.getTerms().indexOf(v)), rightRel.getAttribute(right.getTerms().indexOf(v))));
 		}
 	}

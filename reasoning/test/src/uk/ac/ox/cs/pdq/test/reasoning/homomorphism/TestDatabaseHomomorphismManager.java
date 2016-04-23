@@ -9,7 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.db.Constraint;
+import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.db.EGD;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -76,7 +76,7 @@ public class TestDatabaseHomomorphismManager {
 		this.tgd2 = new TGD(Conjunction.of(R1),Conjunction.of(R3));
 		this.egd = new EGD(Conjunction.of(R2,R2p), Conjunction.of(new Equality(new Variable("z"),new Variable("w"))));
 
-		this.schema = new Schema(Lists.<Relation>newArrayList(this.rel1, this.rel2, this.rel3), Lists.<Constraint>newArrayList(this.tgd,this.tgd2, this.egd));
+		this.schema = new Schema(Lists.<Relation>newArrayList(this.rel1, this.rel2, this.rel3), Lists.<Dependency>newArrayList(this.tgd,this.tgd2, this.egd));
 		
 		/** The driver. */
 		String driver = null;

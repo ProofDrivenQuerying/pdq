@@ -10,7 +10,7 @@ import java.util.Set;
 import org.apache.commons.lang3.tuple.Pair;
 
 import uk.ac.ox.cs.pdq.LimitReachedException;
-import uk.ac.ox.cs.pdq.db.Constraint;
+import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
@@ -164,7 +164,7 @@ public final class PostPruningRemoveFollowUps extends PostPruning {
 		Preconditions.checkArgument(queryMatch != null);
 		Preconditions.checkArgument(successNode != null);
 		Preconditions.checkArgument(successNode.getStatus() == NodeStatus.SUCCESSFUL);
-		Map<Atom, Pair<Constraint, Collection<Atom>>> factProvenance = successNode.getConfiguration().getState().getProvenance();
+		Map<Atom, Pair<Dependency, Collection<Atom>>> factProvenance = successNode.getConfiguration().getState().getProvenance();
 		Collection<Atom> minimalFacts = this.getMinimalFactsRecursive(queryMatch, Utility.getConstants(queryMatch), new LinkedHashSet<Constant>(), factProvenance);
 		return minimalFacts;
 	}
@@ -183,18 +183,18 @@ public final class PostPruningRemoveFollowUps extends PostPruning {
 			Collection<Atom> facts,
 			Collection<Constant> inputTerms,
 			Collection<Constant> outputTerms,
-			Map<Atom, Pair<Constraint, Collection<Atom>>> factProvenance) {
+			Map<Atom, Pair<Dependency, Collection<Atom>>> factProvenance) {
 
 		// The minimal set of atoms
 		Collection<Atom> parentFacts = new LinkedHashSet<>();
 		// For each input fact
 		for(Atom fact:facts) {
 			// Get its provenance
-			Pair<Constraint, Collection<Atom>> icToFacts = factProvenance.get(fact);
+			Pair<Dependency, Collection<Atom>> icToFacts = factProvenance.get(fact);
 			if(icToFacts == null) {
 				return new LinkedHashSet<>();
 			}
-			Constraint ic = icToFacts.getLeft();
+			Dependency ic = icToFacts.getLeft();
 			/*
 			 * If the dependency (query) that leads to the derivation of the current atom is the inferred accessible version of a schema dependency
 			 * then add the current atom in the output list of facts and continue the recursion with the facts that were used to fire the considered dependency.

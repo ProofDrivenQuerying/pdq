@@ -4,7 +4,7 @@ import java.util.Collection;
 
 import org.apache.commons.collections4.CollectionUtils;
 
-import uk.ac.ox.cs.pdq.db.Constraint;
+import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.db.EGD;
 import uk.ac.ox.cs.pdq.db.TGD;
 import uk.ac.ox.cs.pdq.fol.Atom;
@@ -54,10 +54,10 @@ public final class DefaultParallelEGDChaseDependencyAssessor implements Parallel
 	 *
 	 * @param dependencies the dependencies
 	 */
-	public DefaultParallelEGDChaseDependencyAssessor(Collection<? extends Constraint> dependencies) {
+	public DefaultParallelEGDChaseDependencyAssessor(Collection<? extends Dependency> dependencies) {
 		Preconditions.checkNotNull(dependencies);
 		//Build the dependency map
-		for(Constraint dependency:dependencies) {
+		for(Dependency dependency:dependencies) {
 			for(Atom atom:dependency.getLeft().getAtoms()) {
 				Predicate s = atom.getPredicate();
 				if(dependency instanceof EGD) {
@@ -78,8 +78,8 @@ public final class DefaultParallelEGDChaseDependencyAssessor implements Parallel
 	 * @return 		the dependencies that are most likely to be fired in the next chase round.
 	 */
 	@Override
-	public Collection<? extends Constraint> getDependencies(ChaseState state, EGDROUND round) {
-		Collection<Constraint> constraints = Sets.newHashSet();
+	public Collection<? extends Dependency> getDependencies(ChaseState state, EGDROUND round) {
+		Collection<Dependency> constraints = Sets.newHashSet();
 		Collection<Atom> newFacts = null;
 		if(this.stateFacts == null || (round.equals(EGDROUND.EGD) && this.firstEGDRound == true) || 
 				(round.equals(EGDROUND.TGD) && this.firstTGDRound == true)) {

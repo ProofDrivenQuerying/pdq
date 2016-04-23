@@ -6,11 +6,7 @@ package uk.ac.ox.cs.pdq.cardinality.estimator;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -24,23 +20,17 @@ import uk.ac.ox.cs.pdq.cost.statistics.Catalog;
 import uk.ac.ox.cs.pdq.cost.statistics.Histogram;
 import uk.ac.ox.cs.pdq.cost.statistics.SQLServerHistogram;
 import uk.ac.ox.cs.pdq.cost.statistics.SQLServerJoinCardinalityEstimator;
-import uk.ac.ox.cs.pdq.cost.statistics.SimpleCatalog;
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.db.Constraint;
+import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.db.Relation;
-import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
-import uk.ac.ox.cs.pdq.fol.Query;
-import uk.ac.ox.cs.pdq.fol.Skolem;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
 
-import com.beust.jcommander.internal.Maps;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
 import com.google.common.collect.Sets;
@@ -136,7 +126,7 @@ public class DefaultCardinalityEstimator implements CardinalityEstimator {
 	 * @return 		the size and the quality of the annotated plan that is composed by the input annotated plans.
 	 */
 	@Override
-	public Triple<BigInteger,Double, Integer> sizeQualityOf(DAGAnnotatedPlan left, DAGAnnotatedPlan right, Chaser egd, HomomorphismDetector detector, Collection<? extends Constraint> dependencies) {				
+	public Triple<BigInteger,Double, Integer> sizeQualityOf(DAGAnnotatedPlan left, DAGAnnotatedPlan right, Chaser egd, HomomorphismDetector detector, Collection<? extends Dependency> dependencies) {				
 		//Find the constants that are shared among the annotated plans
 		Collection<Constant> constants = Sets.newHashSet(CollectionUtils.intersection(left.getOutput(), right.getOutput()));
 		Boolean rightKey = this.isKey(constants, right, egd, detector, dependencies);
@@ -322,7 +312,7 @@ public class DefaultCardinalityEstimator implements CardinalityEstimator {
 	 * @param dependencies 		Dependencies to consider during chasing
 	 * @return 		true if the input collection of constants is a key for the input annotated plan
 	 */
-	private boolean isKey(Collection<Constant> keys, DAGAnnotatedPlan configuration, Chaser egd, HomomorphismDetector detector, Collection<? extends Constraint> dependencies) {
+	private boolean isKey(Collection<Constant> keys, DAGAnnotatedPlan configuration, Chaser egd, HomomorphismDetector detector, Collection<? extends Dependency> dependencies) {
 		Preconditions.checkNotNull(keys);
 		Preconditions.checkArgument(!keys.isEmpty());
 

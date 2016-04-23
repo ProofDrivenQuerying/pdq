@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-import uk.ac.ox.cs.pdq.db.Constraint;
+import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
@@ -30,7 +30,7 @@ import com.google.common.collect.Sets;
  */
 public class DatabaseEGD
 		extends Implication<Conjunction<Atom>, Conjunction<DatabaseEquality>>
-		implements Constraint<Conjunction<Atom>, Conjunction<DatabaseEquality>> {
+		implements Dependency<Conjunction<Atom>, Conjunction<DatabaseEquality>> {
 	
 	/**  The dependency's universally quantified variables. */
 	protected List<Variable> universal;
@@ -78,7 +78,7 @@ public class DatabaseEGD
 	 * Gets the left.
 	 *
 	 * @return L
-	 * @see uk.ac.ox.cs.pdq.db.Constraint#getLeft()
+	 * @see uk.ac.ox.cs.pdq.db.Dependency#getLeft()
 	 */
 	@Override
 	public Conjunction<Atom> getLeft() {
@@ -89,7 +89,7 @@ public class DatabaseEGD
 	 * Gets the right.
 	 *
 	 * @return R
-	 * @see uk.ac.ox.cs.pdq.db.Constraint#getRight()
+	 * @see uk.ac.ox.cs.pdq.db.Dependency#getRight()
 	 */
 	@Override
 	public Conjunction<DatabaseEquality> getRight() {
@@ -115,7 +115,7 @@ public class DatabaseEGD
 	 * Gets the schema constants.
 	 *
 	 * @return Collection<TypedConstant<?>>
-	 * @see uk.ac.ox.cs.pdq.db.Constraint#getSchemaConstants()
+	 * @see uk.ac.ox.cs.pdq.db.Dependency#getSchemaConstants()
 	 */
 	@Override
 	public Collection<TypedConstant<?>> getSchemaConstants() {
@@ -198,7 +198,7 @@ public class DatabaseEGD
 	}
 
 	@Override
-	public Set<Variable> getBothSideVariables() {
+	public Set<Variable> getAllVariables() {
 		Set<Variable> variables = Sets.newHashSet(Utility.getVariables(this.left.getAtoms()));
 		variables.retainAll(Utility.getVariables(this.right.getAtoms()));
 		return variables;
