@@ -1,0 +1,14 @@
+--Actual size: 57
+--SQL Server estimate:38
+SELECT DISTINCT part.p_partkey, lineitem.l_orderkey
+FROM part, lineitem, orders, customer
+WHERE part.p_retailprice = lineitem.l_extendedprice
+	 AND lineitem.l_orderkey = orders.o_orderkey
+	 AND orders.o_custkey = customer.c_custkey
+	 AND orders.o_orderpriority = '5-LOW'
+	 AND customer.c_mktsegment = 'HOUSEHOLD'
+	 AND lineitem.l_shipinstruct = 'TAKE BACK RETURN'
+	 AND lineitem.l_shipmode = 'REG AIR'
+	 AND part.p_brand = 'Brand#51'
+
+

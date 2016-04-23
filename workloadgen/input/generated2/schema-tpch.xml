@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE schema SYSTEM "schema.dtd">
+<schema name="tpch">
+  <table name="region">
+    <attribute name="region.r_regionkey" type="integer"></attribute>
+    <attribute name="region.r_name" type="string"></attribute>
+    <attribute name="region.r_comment" type="string"></attribute>
+    <primaryKey attrNames="region.r_regionkey"></primaryKey>
+    <filtered attrName="region.r_name" />
+  </table>
+  <table name="nation">
+    <attribute name="nation.n_nationkey" type="integer"></attribute>
+    <attribute name="nation.n_name" type="string"></attribute>
+    <attribute name="nation.n_regionkey" type="integer"></attribute>
+    <attribute name="nation.n_comment" type="string"></attribute>
+    <primaryKey attrNames="nation.n_nationkey"></primaryKey>
+    <foreignKey referencing="nation.n_regionkey" referenced="region.r_regionkey" />
+    <filtered attrName="nation.n_name" />
+  </table>
+  <table name="customer">
+    <attribute name="customer.c_custkey" type="integer"></attribute>
+    <attribute name="customer.c_name" type="string"></attribute>
+    <attribute name="customer.c_address" type="string"></attribute>
+    <attribute name="customer.c_nationkey" type="integer"></attribute>
+    <attribute name="customer.c_phone" type="string"></attribute>
+    <attribute name="customer.c_acctbal" type="double"></attribute>
+    <attribute name="customer.c_mktsegment" type="string"></attribute>
+    <attribute name="customer.c_comment" type="string"></attribute>
+    <primaryKey attrNames="customer.c_custkey"></primaryKey>
+    <foreignKey referencing="customer.c_nationkey" referenced="nation.n_nationkey"></foreignKey>
+    <joinableKey attrName1="customer.c_acctbal" attrName2="supplier.s_acctbal" />
+    <filtered attrName="customer.c_acctbal" />
+    <filtered attrName="customer.c_mktsegment" />
+  </table>
+  <table name="orders">
+    <attribute name="orders.o_orderkey" type="integer"></attribute>
+    <attribute name="orders.o_custkey" type="integer"></attribute>
+    <attribute name="orders.o_orderstatus" type="char"></attribute>
+    <attribute name="orders.o_totalprice" type="double"></attribute>
+    <attribute name="orders.o_orderdate" type="date"></attribute>
+    <attribute name="orders.o_orderpriority" type="string"></attribute>
+    <attribute name="orders.o_clerk" type="string"></attribute>
+    <attribute name="orders.o_shippriority" type="integer"></attribute>
+    <attribute name="orders.o_comment" type="string"></attribute>
+    <primaryKey attrNames="orders.o_orderkey"></primaryKey>
+    <foreignKey referencing="orders.o_custkey" referenced="customer.c_custkey"></foreignKey>
+    <joinableKey attrName1="orders.o_totalprice" attrName2="lineitem.l_extendedprice" />
+    <joinableKey attrName1="orders.o_totalprice" attrName2="part.p_retailprice" />
+    <joinableKey attrName1="orders.o_orderstatus" attrName2="lineitem.l_linestatus" />
+    <joinableKey attrName1="orders.o_orderdate" attrName2="lineitem.l_shipdate"></joinableKey>
+    <joinableKey attrName1="orders.o_orderdate" attrName2="lineitem.l_commitdate"></joinableKey>
+    <joinableKey attrName1="orders.o_orderdate" attrName2="lineitem.l_receiptdate"></joinableKey>
+    <filtered attrName="orders.o_orderstatus" />
+    <filtered attrName="orders.o_totalprice" />
+    <filtered attrName="orders.o_orderdate" />
+    <filtered attrName="orders.o_orderpriority" />
+  </table>
+  <table name="part">
+    <attribute name="part.p_partkey" type="integer"></attribute>
+    <attribute name="part.p_name" type="string"></attribute>
+    <attribute name="part.p_mfgr" type="string"></attribute>
+    <attribute name="part.p_brand" type="string"></attribute>
+    <attribute name="part.p_type" type="string"></attribute>
+    <attribute name="part.p_size" type="integer"></attribute>
+    <attribute name="part.p_container" type="string"></attribute>
+    <attribute name="part.p_retailprice" type="double"></attribute>
+    <attribute name="part.p_comment" type="string"></attribute>
+    <primaryKey attrNames="part.p_partkey"></primaryKey>
+    <joinableKey attrName1="part.p_retailprice" attrName2="orders.o_totalprice" />
+    <joinableKey attrName1="part.p_retailprice" attrName2="lineitem.l_extendedprice" />
+    <joinableKey attrName1="part.p_retailprice" attrName2="partsupp.ps_supplycost" />
+    <filtered attrName="part.p_mfgr" />
+    <filtered attrName="part.p_brand" />
+    <filtered attrName="part.p_size" />
+    <filtered attrName="part.p_retailprice" />
+  </table>
+  <table name="supplier">
+    <attribute name="supplier.s_suppkey" type="integer"></attribute>
+    <attribute name="supplier.s_name" type="string"></attribute>
+    <attribute name="supplier.s_address" type="string"></attribute>
+    <attribute name="supplier.s_nationkey" type="integer"></attribute>
+    <attribute name="supplier.s_phone" type="string"></attribute>
+    <attribute name="supplier.s_acctbal" type="double"></attribute>
+    <attribute name="supplier.s_comment" type="string"></attribute>
+    <primaryKey attrNames="supplier.s_suppkey"></primaryKey>
+    <foreignKey referencing="supplier.s_nationkey" referenced="nation.n_nationkey"></foreignKey>
+    <joinableKey attrName1="supplier.s_acctbal" attrName2="customer.c_acctbal" />
+    <filtered attrName="supplier.s_acctbal" />
+  </table>
+  <table name="partsupp">
+    <attribute name="partsupp.ps_partkey" type="integer"></attribute>
+    <attribute name="partsupp.ps_suppkey" type="integer"></attribute>
+    <attribute name="partsupp.ps_availqty" type="integer"></attribute>
+    <attribute name="partsupp.ps_supplycost" type="double"></attribute>
+    <attribute name="partsupp.ps_comment" type="string"></attribute>
+    <primaryKey attrNames="partsupp.ps_partkey partsupp.ps_suppkey"></primaryKey>
+    <foreignKey referencing="partsupp.ps_partkey" referenced="part.p_partkey"></foreignKey>
+    <foreignKey referencing="partsupp.ps_suppkey" referenced="supplier.s_suppkey"></foreignKey>
+    <joinableKey attrName1="partsupp.ps_availqty" attrName2="lineitem.l_quantity" />
+    <joinableKey attrName1="partsupp.ps_supplycost" attrName2="part.p_retailprice" />
+    <filtered attrName="partsupp.ps_availqty" />
+    <filtered attrName="partsupp.ps_supplycost" />
+  </table>
+  <table name="lineitem">
+    <attribute name="lineitem.l_orderkey" type="integer"></attribute>
+    <attribute name="lineitem.l_partkey" type="integer"></attribute>
+    <attribute name="lineitem.l_suppkey" type="integer"></attribute>
+    <attribute name="lineitem.l_linenumber" type="integer"></attribute>
+    <attribute name="lineitem.l_quantity" type="double"></attribute>
+    <attribute name="lineitem.l_extendedprice" type="double"></attribute>
+    <attribute name="lineitem.l_discount" type="double"></attribute>
+    <attribute name="lineitem.l_tax" type="double"></attribute>
+    <attribute name="lineitem.l_returnflag" type="char"></attribute>
+    <attribute name="lineitem.l_linestatus" type="char"></attribute>
+    <attribute name="lineitem.l_shipdate" type="date"></attribute>
+    <attribute name="lineitem.l_commitdate" type="date"></attribute>
+    <attribute name="lineitem.l_receiptdate" type="date"></attribute>
+    <attribute name="lineitem.l_shipinstruct" type="string"></attribute>
+    <attribute name="lineitem.l_shipmode" type="string"></attribute>
+    <attribute name="lineitem.l_comment" type="string"></attribute>
+    <primaryKey attrNames="lineitem.l_orderkey lineitem.l_linenumber"></primaryKey>
+    <foreignKey referencing="lineitem.l_orderkey" referenced="orders.o_orderkey"></foreignKey>
+    <foreignKey referencing="lineitem.l_suppkey" referenced="supplier.s_suppkey"></foreignKey>
+    <foreignKey referencing="lineitem.l_partkey" referenced="part.p_partkey"></foreignKey>
+    <foreignKey referencing="lineitem.l_partkey lineitem.l_suppkey" referenced="partsupp.ps_partkey partsupp.ps_suppkey"></foreignKey>
+    <joinableKey attrName1="lineitem.l_linestatus" attrName2="orders.o_orderstatus" />
+    <joinableKey attrName1="lineitem.l_extendedprice" attrName2="orders.o_totalprice" />
+    <joinableKey attrName1="lineitem.l_extendedprice" attrName2="part.p_retailprice" />
+    <joinableKey attrName1="lineitem.l_shipdate" attrName2="orders.o_orderdate" />
+    <joinableKey attrName1="lineitem.l_commitdate" attrName2="orders.o_orderdate" />
+    <joinableKey attrName1="lineitem.l_receiptdate" attrName2="orders.o_orderdate" />
+    <joinableKey attrName1="lineitem.l_quantity" attrName2="partsupp.ps_availqty" />
+    <filtered attrName="lineitem.l_quantity" />
+    <filtered attrName="lineitem.l_discount" />
+    <filtered attrName="lineitem.l_returnflag" />
+    <filtered attrName="lineitem.l_linestatus" />
+    <filtered attrName="lineitem.l_shipdate" />
+    <filtered attrName="lineitem.l_receiptdate" />
+    <filtered attrName="lineitem.l_shipinstruct" />
+    <filtered attrName="lineitem.l_shipmode" />
+  </table>
+</schema>

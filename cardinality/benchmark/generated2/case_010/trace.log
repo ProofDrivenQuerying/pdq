@@ -1,0 +1,14 @@
+PDQ estimate (Lowest adjusted quality):
+We approximate this query using the binary annotated plan 
+Binary(Unary(V7(c11,c10)),Unary(V2(c11,c24,c25)))
+with Quality: 1.0	Adjusted quality: 2.0
+The size estimate using histograms is 35334691
+The size estimate without histograms is 35208079
+The actual size of is 46242462
+
+PDQ estimate (Lowest size):
+The case times out
+We approximate this query using the binary annotated plan  
+with 
+
+The size estimate without histograms is 

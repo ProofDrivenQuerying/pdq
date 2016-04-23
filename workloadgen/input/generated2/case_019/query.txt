@@ -1,0 +1,13 @@
+--Actual size: 32785
+SELECT DISTINCT lineitem.l_linenumber, partsupp.ps_suppkey, lineitem.l_orderkey
+FROM partsupp, supplier, lineitem, orders, part
+WHERE partsupp.ps_suppkey = supplier.s_suppkey
+	 AND partsupp.ps_availqty = lineitem.l_quantity
+	 AND lineitem.l_orderkey = orders.o_orderkey
+	 AND partsupp.ps_supplycost = part.p_retailprice
+	 AND lineitem.l_shipmode = 'REG AIR'
+	 AND lineitem.l_linestatus = 'O'
+	 AND part.p_mfgr = 'Manufacturer#5'
+	 AND orders.o_orderpriority = '5-LOW'
+
+

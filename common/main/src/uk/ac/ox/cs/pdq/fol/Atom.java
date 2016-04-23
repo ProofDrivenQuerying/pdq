@@ -219,6 +219,16 @@ public class Atom extends AbstractFormula implements Formula {
 		}
 		return result;
 	}
+	
+	public List<TypedConstant<?>> getSchemaConstantsList() {
+		List<TypedConstant<?>> result = Lists.newArrayList();
+		for (Term term: this.terms) {
+			if (term instanceof TypedConstant) {
+				result.add((TypedConstant) term);
+			}
+		}
+		return result;
+	}
 
 	/**
 	 * Gets the predicates.

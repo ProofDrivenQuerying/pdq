@@ -1,0 +1,13 @@
+--Actual size: 1
+SELECT DISTINCT part.p_partkey, customer.c_custkey, orders.o_orderkey
+FROM part, orders, customer, lineitem, nation
+WHERE part.p_retailprice = orders.o_totalprice
+	 AND orders.o_custkey = customer.c_custkey
+	 AND orders.o_orderdate = lineitem.l_shipdate
+	 AND customer.c_nationkey = nation.n_nationkey
+	 AND orders.o_orderstatus = 'O'
+	 AND customer.c_mktsegment = 'HOUSEHOLD'
+	 AND nation.n_name = 'JORDAN'
+	 AND part.p_mfgr = 'Manufacturer#5'
+
+

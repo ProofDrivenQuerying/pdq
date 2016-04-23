@@ -1,0 +1,65 @@
+--Size: 1224
+SELECT DISTINCT customer.c_custkey
+FROM customer, nation
+WHERE customer.c_nationkey = nation.n_nationkey
+	 AND customer.c_mktsegment = 'FURNITURE'
+	 AND nation.n_name = 'MOROCCO'
+
+
+--Size: 779784
+SELECT DISTINCT orders.o_orderkey
+FROM lineitem, orders
+WHERE orders.o_orderdate = lineitem.l_receiptdate
+	 AND lineitem.l_returnflag = 'R'
+	 AND lineitem.l_shipinstruct = 'COLLECT COD'
+	 AND lineitem.l_shipmode = 'SHIP'
+
+
+--Size: 155385
+SELECT DISTINCT orders.o_orderkey, customer.c_custkey
+FROM orders, customer, lineitem
+WHERE orders.o_custkey = customer.c_custkey
+	 AND orders.o_orderdate = lineitem.l_receiptdate
+	 AND lineitem.l_returnflag = 'R'
+	 AND customer.c_mktsegment = 'FURNITURE'
+	 AND lineitem.l_shipinstruct = 'COLLECT COD'
+	 AND lineitem.l_shipmode = 'SHIP'
+
+
+--Size: 6578708
+SELECT DISTINCT lineitem.l_orderkey, orders.o_orderkey
+FROM orders, customer, lineitem
+WHERE orders.o_custkey = customer.c_custkey
+	 AND orders.o_orderdate = lineitem.l_receiptdate
+	 AND lineitem.l_returnflag = 'R'
+	 AND customer.c_mktsegment = 'FURNITURE'
+	 AND lineitem.l_shipinstruct = 'COLLECT COD'
+	 AND lineitem.l_shipmode = 'SHIP'
+
+
+--Size: 6557118
+SELECT DISTINCT lineitem.l_orderkey, customer.c_custkey
+FROM orders, customer, lineitem
+WHERE orders.o_custkey = customer.c_custkey
+	 AND orders.o_orderdate = lineitem.l_receiptdate
+	 AND lineitem.l_returnflag = 'R'
+	 AND customer.c_mktsegment = 'FURNITURE'
+	 AND lineitem.l_shipinstruct = 'COLLECT COD'
+	 AND lineitem.l_shipmode = 'SHIP'
+
+
+--Size: 29968
+SELECT DISTINCT customer.c_custkey
+FROM customer
+WHERE customer.c_mktsegment = 'FURNITURE'
+
+
+--Size: 51151
+SELECT DISTINCT lineitem.l_orderkey
+FROM lineitem, orders
+WHERE orders.o_orderdate = lineitem.l_receiptdate
+	 AND lineitem.l_returnflag = 'R'
+	 AND lineitem.l_shipinstruct = 'COLLECT COD'
+	 AND lineitem.l_shipmode = 'SHIP'
+
+

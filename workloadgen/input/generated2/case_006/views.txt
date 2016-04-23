@@ -1,0 +1,60 @@
+--Size: 25
+SELECT DISTINCT nation.n_nationkey
+FROM customer, nation
+WHERE customer.c_nationkey = nation.n_nationkey
+
+
+--Size: 1224
+SELECT DISTINCT supplier.s_suppkey
+FROM customer, nation, supplier
+WHERE customer.c_nationkey = nation.n_nationkey
+	 AND customer.c_acctbal = supplier.s_acctbal
+
+
+--Size: 142047
+SELECT DISTINCT orders.o_orderkey
+FROM lineitem, orders
+WHERE orders.o_orderdate = lineitem.l_receiptdate
+	 AND lineitem.l_returnflag = 'N'
+	 AND orders.o_orderpriority = '3-MEDIUM'
+	 AND orders.o_orderstatus = 'O'
+	 AND lineitem.l_linestatus = 'O'
+
+
+--Size: 1224
+SELECT DISTINCT supplier.s_suppkey
+FROM customer, supplier
+WHERE customer.c_acctbal = supplier.s_acctbal
+
+
+--Size: 142047
+SELECT DISTINCT orders.o_orderkey
+FROM orders, customer, lineitem
+WHERE orders.o_custkey = customer.c_custkey
+	 AND orders.o_orderdate = lineitem.l_receiptdate
+	 AND lineitem.l_returnflag = 'N'
+	 AND orders.o_orderpriority = '3-MEDIUM'
+	 AND orders.o_orderstatus = 'O'
+	 AND lineitem.l_linestatus = 'O'
+
+
+--Size: 1210
+SELECT DISTINCT orders.o_orderkey
+FROM orders, customer, supplier
+WHERE orders.o_custkey = customer.c_custkey
+	 AND customer.c_acctbal = supplier.s_acctbal
+	 AND orders.o_orderpriority = '3-MEDIUM'
+	 AND orders.o_orderstatus = 'O'
+
+
+--Size: 142047
+SELECT DISTINCT orders.o_orderkey
+FROM lineitem, orders, customer
+WHERE orders.o_orderdate = lineitem.l_receiptdate
+	 AND orders.o_custkey = customer.c_custkey
+	 AND lineitem.l_returnflag = 'N'
+	 AND orders.o_orderpriority = '3-MEDIUM'
+	 AND orders.o_orderstatus = 'O'
+	 AND lineitem.l_linestatus = 'O'
+
+

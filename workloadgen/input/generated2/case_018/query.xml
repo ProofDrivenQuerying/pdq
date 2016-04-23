@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<query type="conjunctive">
+<body>
+<atom name="orders">
+<variable name="o_orderkey"/>
+<variable name="o_custkey"/>
+<variable name="o_orderstatus"/>
+<variable name="o_totalprice"/>
+<variable name="o_orderdate"/>
+<constant value="2-HIGH"/>
+<variable name="o_clerk"/>
+<variable name="o_shippriority"/>
+<variable name="o_comment"/>
+</atom>
+<atom name="customer">
+<variable name="o_custkey"/>
+<variable name="c_name"/>
+<variable name="c_address"/>
+<variable name="c_nationkey"/>
+<variable name="c_phone"/>
+<variable name="c_acctbal"/>
+<constant value="AUTOMOBILE"/>
+<variable name="c_comment"/>
+</atom>
+<atom name="lineitem">
+<variable name="l_orderkey"/>
+<variable name="l_partkey"/>
+<variable name="s_suppkey"/>
+<variable name="l_linenumber"/>
+<variable name="l_quantity"/>
+<variable name="l_extendedprice"/>
+<variable name="l_discount"/>
+<variable name="l_tax"/>
+<variable name="l_returnflag"/>
+<variable name="l_linestatus"/>
+<variable name="o_orderdate"/>
+<variable name="l_commitdate"/>
+<variable name="l_receiptdate"/>
+<variable name="l_shipinstruct"/>
+<constant value="REG AIR"/>
+<variable name="l_comment"/>
+</atom>
+<atom name="supplier">
+<variable name="s_suppkey"/>
+<variable name="s_name"/>
+<variable name="s_address"/>
+<variable name="s_nationkey"/>
+<variable name="s_phone"/>
+<variable name="s_acctbal"/>
+<variable name="s_comment"/>
+</atom>
+<atom name="part">
+<variable name="p_partkey"/>
+<variable name="p_name"/>
+<variable name="p_mfgr"/>
+<constant value="Brand#52"/>
+<variable name="p_type"/>
+<variable name="p_size"/>
+<variable name="p_container"/>
+<variable name="l_extendedprice"/>
+<variable name="p_comment"/>
+</atom>
+</body>
+<head name="Q18">
+<variable name="l_orderkey"/>
+<variable name="s_suppkey"/>
+<variable name="o_orderkey"/>
+</head>
+</query>

@@ -1,0 +1,13 @@
+--Actual size: 1
+SELECT DISTINCT customer.c_custkey, lineitem.l_linenumber, lineitem.l_orderkey
+FROM orders, customer, lineitem, part
+WHERE orders.o_custkey = customer.c_custkey
+	 AND orders.o_totalprice = lineitem.l_extendedprice
+	 AND lineitem.l_partkey = part.p_partkey
+	 AND customer.c_mktsegment = 'HOUSEHOLD'
+	 AND lineitem.l_shipinstruct = 'NONE'
+	 AND orders.o_orderstatus = 'P'
+	 AND part.p_brand = 'Brand#33'
+	 AND lineitem.l_shipmode = 'AIR'
+
+

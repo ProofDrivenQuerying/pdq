@@ -1,0 +1,13 @@
+--Actual size: 83
+SELECT DISTINCT orders.o_orderkey, nation.n_nationkey, customer.c_custkey
+FROM orders, customer, lineitem, nation, part
+WHERE orders.o_custkey = customer.c_custkey
+	 AND orders.o_orderdate = lineitem.l_commitdate
+	 AND customer.c_nationkey = nation.n_nationkey
+	 AND orders.o_totalprice = part.p_retailprice
+	 AND lineitem.l_shipinstruct = 'NONE'
+	 AND orders.o_orderstatus = 'O'
+	 AND orders.o_orderpriority = '4-NOT SPECIFIED'
+	 AND part.p_mfgr = 'Manufacturer#1'
+
+

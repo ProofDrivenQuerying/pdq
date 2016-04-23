@@ -1,0 +1,43 @@
+--Size: 31943
+SELECT DISTINCT orders.o_orderkey
+FROM lineitem, orders, customer
+WHERE orders.o_orderdate = lineitem.l_receiptdate
+	 AND orders.o_custkey = customer.c_custkey
+	 AND orders.o_orderpriority = '2-HIGH'
+	 AND lineitem.l_shipmode = 'SHIP'
+	 AND lineitem.l_linestatus = 'F'
+	 AND customer.c_mktsegment = 'FURNITURE'
+
+
+--Size: 25
+SELECT DISTINCT nation.n_nationkey
+FROM customer, nation
+WHERE customer.c_nationkey = nation.n_nationkey
+	 AND customer.c_mktsegment = 'FURNITURE'
+
+
+--Size: 175
+SELECT DISTINCT orders.o_orderkey
+FROM part, orders
+WHERE orders.o_totalprice = part.p_retailprice
+	 AND orders.o_orderpriority = '2-HIGH'
+
+
+--Size: 298
+SELECT DISTINCT part.p_partkey
+FROM part, orders, customer
+WHERE orders.o_totalprice = part.p_retailprice
+	 AND orders.o_custkey = customer.c_custkey
+	 AND orders.o_orderpriority = '2-HIGH'
+	 AND customer.c_mktsegment = 'FURNITURE'
+
+
+--Size: 31
+SELECT DISTINCT orders.o_orderkey
+FROM part, orders, customer
+WHERE orders.o_totalprice = part.p_retailprice
+	 AND orders.o_custkey = customer.c_custkey
+	 AND orders.o_orderpriority = '2-HIGH'
+	 AND customer.c_mktsegment = 'FURNITURE'
+
+

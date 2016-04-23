@@ -1,0 +1,73 @@
+--Size: 99891
+SELECT DISTINCT lineitem.l_orderkey
+FROM lineitem, supplier, orders
+WHERE lineitem.l_suppkey = supplier.s_suppkey
+	 AND orders.o_orderdate = lineitem.l_shipdate
+	 AND lineitem.l_shipmode = 'SHIP'
+	 AND orders.o_orderstatus = 'F'
+	 AND lineitem.l_shipinstruct = 'COLLECT COD'
+
+
+--Size: 7
+SELECT DISTINCT lineitem.l_linenumber
+FROM orders, customer, lineitem
+WHERE orders.o_custkey = customer.c_custkey
+	 AND orders.o_orderdate = lineitem.l_shipdate
+	 AND lineitem.l_shipmode = 'SHIP'
+	 AND orders.o_orderstatus = 'F'
+	 AND lineitem.l_shipinstruct = 'COLLECT COD'
+
+
+--Size: 7
+SELECT DISTINCT lineitem.l_linenumber
+FROM lineitem, supplier, orders, customer
+WHERE lineitem.l_suppkey = supplier.s_suppkey
+	 AND orders.o_orderdate = lineitem.l_shipdate
+	 AND orders.o_custkey = customer.c_custkey
+	 AND lineitem.l_shipmode = 'SHIP'
+	 AND orders.o_orderstatus = 'F'
+	 AND lineitem.l_shipinstruct = 'COLLECT COD'
+
+
+--Size: 99891
+SELECT DISTINCT lineitem.l_orderkey
+FROM lineitem, orders, customer
+WHERE orders.o_orderdate = lineitem.l_shipdate
+	 AND orders.o_custkey = customer.c_custkey
+	 AND lineitem.l_shipmode = 'SHIP'
+	 AND orders.o_orderstatus = 'F'
+	 AND lineitem.l_shipinstruct = 'COLLECT COD'
+
+
+--Size: 7
+SELECT DISTINCT lineitem.l_linenumber
+FROM lineitem, supplier
+WHERE lineitem.l_suppkey = supplier.s_suppkey
+	 AND lineitem.l_shipmode = 'SHIP'
+	 AND lineitem.l_shipinstruct = 'COLLECT COD'
+
+
+--Size: 915
+SELECT DISTINCT part.p_partkey
+FROM orders, customer, part
+WHERE orders.o_custkey = customer.c_custkey
+	 AND orders.o_totalprice = part.p_retailprice
+	 AND orders.o_orderstatus = 'F'
+	 AND part.p_mfgr = 'Manufacturer#4'
+
+
+--Size: 915
+SELECT DISTINCT part.p_partkey
+FROM part, orders, customer
+WHERE orders.o_totalprice = part.p_retailprice
+	 AND orders.o_custkey = customer.c_custkey
+	 AND orders.o_orderstatus = 'F'
+	 AND part.p_mfgr = 'Manufacturer#4'
+
+
+--Size: 39841
+SELECT DISTINCT part.p_partkey
+FROM part
+WHERE part.p_mfgr = 'Manufacturer#4'
+
+

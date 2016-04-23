@@ -389,6 +389,31 @@ public class DatabaseChaseListState extends DatabaseChaseState implements ListSt
 		constantsToAtoms.putAll(this.constantsToAtoms);
 		return new DatabaseChaseListState(this.manager, Sets.newHashSet(this.facts), this.classes.clone(), constantsToAtoms);
 	}	
+	
+	/* (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState#merge(uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState)
+	 */
+	@Override
+	public ChaseState merge(ChaseState s) {
+		Preconditions.checkState(s instanceof DatabaseChaseListState);
+		Collection<Atom> facts =  new LinkedHashSet<>(this.facts);
+		facts.addAll(s.getFacts());
+
+		EqualConstantsClasses classes = this.classes.clone();
+		if(!classes.merge(((DatabaseChaseListState)s).classes)) {
+			return null;
+		}
+
+		Multimap<Constant, Atom> constantsToAtoms = HashMultimap.create();
+		constantsToAtoms.putAll(this.constantsToAtoms);
+		constantsToAtoms.putAll(((DatabaseChaseListState)s).constantsToAtoms);
+
+		return new DatabaseChaseListState(
+				this.getManager(),
+				facts, 
+				classes,
+				constantsToAtoms);
+	}
 
 	/**
 	 * Calls the manager to detect homomorphisms of the input query to facts in this state.

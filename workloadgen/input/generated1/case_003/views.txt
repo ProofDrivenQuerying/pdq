@@ -1,0 +1,40 @@
+--Size: 280
+SELECT DISTINCT lineitem.l_orderkey
+FROM lineitem, orders, part
+WHERE lineitem.l_orderkey = orders.o_orderkey
+	 AND part.p_retailprice = lineitem.l_extendedprice
+	 AND orders.o_orderpriority = '5-LOW'
+	 AND lineitem.l_shipinstruct = 'TAKE BACK RETURN'
+	 AND lineitem.l_shipmode = 'REG AIR'
+	 AND part.p_brand = 'Brand#51'
+
+
+--Size: 320
+SELECT DISTINCT part.p_partkey
+FROM lineitem, orders, part
+WHERE lineitem.l_orderkey = orders.o_orderkey
+	 AND part.p_retailprice = lineitem.l_extendedprice
+	 AND orders.o_orderpriority = '5-LOW'
+	 AND lineitem.l_shipinstruct = 'TAKE BACK RETURN'
+	 AND lineitem.l_shipmode = 'REG AIR'
+	 AND part.p_brand = 'Brand#51'
+
+
+--Size: 1456
+SELECT DISTINCT lineitem.l_orderkey
+FROM lineitem, part
+WHERE part.p_retailprice = lineitem.l_extendedprice
+	 AND lineitem.l_shipinstruct = 'TAKE BACK RETURN'
+	 AND lineitem.l_shipmode = 'REG AIR'
+	 AND part.p_brand = 'Brand#51'
+
+
+--Size: 1541
+SELECT DISTINCT part.p_partkey
+FROM part, lineitem
+WHERE part.p_retailprice = lineitem.l_extendedprice
+	 AND lineitem.l_shipinstruct = 'TAKE BACK RETURN'
+	 AND lineitem.l_shipmode = 'REG AIR'
+	 AND part.p_brand = 'Brand#51'
+
+

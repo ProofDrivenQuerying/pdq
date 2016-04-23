@@ -1,0 +1,11 @@
+PDQ estimate (Lowest adjusted quality):
+We approximate this query using the binary annotated plan Binary(Binary(Unary(V10(c25)),Unary(V2(c13,c25))),Unary(V8(c25,c11)))
+with Quality: 1.0	Adjusted quality: 2.0
+The size estimate with/without histograms is 106076
+The actual size of Binary(Binary(Unary(V10(c25)),Unary(V2(c13,c25))),Unary(V8(c25,c11))) is 8557278
+
+PDQ estimate (Lowest size):
+We approximate this query using the binary annotated plan  
+Binary(Binary(Unary(orders(c25,c26,c27,c28,c17,2-HIGH,c29,c30,c31)),Unary(V2(c13,c25))),Unary(V8(c25,c11))) 
+with Quality: 1.0	Adjusted quality: 3.0
+The size estimate without histograms is 21221

@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE schemaStats SYSTEM "stats.dtd">
+<schemaStats name="tpch">
+  <tableStats name="region">
+    <attrStats name="region.r_name" type="string">
+      <listValues>
+        <value>AFRICA</value>
+        <value>AMERICA</value>
+        <value>ASIA</value>
+        <value>EUROPE</value>
+        <value>MIDDLE EAST</value>
+      </listValues>
+    </attrStats>
+  </tableStats>
+  <tableStats name="nation">
+    <attrStats name="nation.n_name" type="string">
+      <listValues>
+        <value>ALGERIA</value>
+        <value>ARGENTINA</value>
+        <value>BRAZIL</value>
+        <value>CANADA</value>
+        <value>CHINA</value>
+        <value>EGYPT</value>
+        <value>ETHIOPIA</value>
+        <value>FRANCE</value>
+        <value>GERMANY</value>
+        <value>INDIA</value>
+        <value>INDONESIA</value>
+        <value>IRAN</value>
+        <value>IRAQ</value>
+        <value>JAPAN</value>
+        <value>JORDAN</value>
+        <value>KENYA</value>
+        <value>MOROCCO</value>
+        <value>MOZAMBIQUE</value>
+        <value>PERU</value>
+        <value>ROMANIA</value>
+        <value>RUSSIA</value>
+        <value>SAUDI ARABIA</value>
+        <value>UNITED KINGDOM</value>
+        <value>UNITED STATES</value>
+        <value>VIETNAM</value>
+      </listValues>
+    </attrStats>
+  </tableStats>
+  <tableStats name="customer">
+    <attrStats name="customer.c_acctbal" type="double">
+      <rangeValues>
+        <min>-1000</min>
+        <max>10000</max>
+      </rangeValues>
+    </attrStats>
+    <attrStats name="customer.c_mktsegment" type="string">
+      <listValues>
+        <value>AUTOMOBILE</value>
+        <value>FURNITURE</value> 
+        <value>MACHINERY</value>
+        <value>BUILDING</value>
+        <value>HOUSEHOLD</value>
+      </listValues>
+    </attrStats>
+  </tableStats>
+  <tableStats name="orders">
+    <attrStats name="orders.o_orderstatus" type="char">
+      <listValues>
+        <value>F</value>
+        <value>O</value>
+        <value>P</value>
+      </listValues>
+    </attrStats>
+    <attrStats name="orders.o_totalprice" type="double">
+      <rangeValues>
+        <min>860</min>
+        <max>555000</max>
+      </rangeValues>
+    </attrStats>
+    <attrStats name="orders.o_orderdate" type="date">
+      <rangeValues>
+        <min>1992-01-01</min>
+        <max>1998-08-02</max>
+      </rangeValues>
+    </attrStats>
+    <attrStats name="orders.o_orderpriority" type="string">
+      <listValues>
+        <value>1-URGENT</value>
+        <value>2-HIGH</value>
+        <value>3-MEDIUM</value>
+        <value>4-NOT SPECIFIED</value>
+        <value>5-LOW</value>
+      </listValues>
+    </attrStats>
+  </tableStats>
+  <tableStats name="part">
+    <attrStats name="part.p_mfgr" type="string">
+      <listValues>
+        <value>Manufacturer#1</value>
+        <value>Manufacturer#2</value>
+        <value>Manufacturer#3</value>
+        <value>Manufacturer#4</value>
+        <value>Manufacturer#5</value>
+      </listValues>
+    </attrStats>
+    <attrStats name="part.p_brand" type="string">
+      <listValues>
+        <value>Brand#54</value>
+        <value>Brand#42</value>
+        <value>Brand#33</value>
+        <value>Brand#51</value>
+        <value>Brand#41</value>
+        <value>Brand#13</value>
+        <!-- 
+        <value>Brand#32</value>
+        <value>Brand#23</value>
+        <value>Brand#14</value>
+        <value>Brand#52</value>
+        <value>Brand#35</value>
+        <value>Brand#22</value>
+        <value>Brand#45</value>
+        <value>Brand#25</value>
+        <value>Brand#12</value>
+        <value>Brand#24</value>
+        <value>Brand#15</value>
+        <value>Brand#55</value>
+        <value>Brand#34</value>
+        <value>Brand#21</value>
+        <value>Brand#44</value>
+        <value>Brand#11</value>
+        <value>Brand#31</value>
+        <value>Brand#53</value>
+        <value>Brand#43</value>
+         -->
+      </listValues>
+    </attrStats>
+    <attrStats name="part.p_retailprice" type="double">
+      <rangeValues>
+        <min>901</min>
+        <max>2099</max>
+      </rangeValues>
+    </attrStats>
+  </tableStats>
+  <tableStats name="supplier">
+    <attrStats name="supplier.s_acctbal" type="double">
+      <rangeValues>
+        <min>-1000</min>
+        <max>10000</max>
+      </rangeValues>
+    </attrStats>
+  </tableStats>
+  <tableStats name="partsupp">
+    <attrStats name="partsupp.ps_availqty" type="integer">
+      <rangeValues>
+        <min>1</min>
+        <max>9999</max>
+      </rangeValues>
+    </attrStats>
+    <attrStats name="partsupp.ps_supplycost" type="double">
+      <rangeValues>
+        <min>1</min>
+        <max>1000</max>
+      </rangeValues>
+    </attrStats>
+  </tableStats>
+  <tableStats name="lineitem">
+    <attrStats name="lineitem.l_quantity" type="double">
+      <rangeValues>
+        <min>1</min>
+        <max>50</max>
+      </rangeValues>
+    </attrStats>
+    <attrStats name="lineitem.l_discount" type="double">
+      <rangeValues>
+        <min>0</min>
+        <max>0.1</max>
+      </rangeValues>
+    </attrStats>
+    <attrStats name="lineitem.l_returnflag" type="char">
+      <listValues>
+        <value>R</value>
+        <value>A</value>
+        <value>N</value>
+      </listValues>
+    </attrStats>
+    <attrStats name="lineitem.l_linestatus" type="char">
+      <listValues>
+        <value>F</value>
+        <value>O</value>
+      </listValues>
+    </attrStats>
+    <attrStats name="lineitem.l_shipdate" type="date">
+      <rangeValues>
+        <min>1992-01-02</min>
+        <max>1998-12-01</max>
+      </rangeValues>
+    </attrStats>
+    <attrStats name="lineitem.l_commitdate" type="date">
+      <rangeValues>
+        <min>1992-01-31</min>
+        <max>1998-10-31</max>
+      </rangeValues>
+    </attrStats>
+    <attrStats name="lineitem.l_receiptdate" type="date">
+      <rangeValues>
+        <min>1992-01-04</min>
+        <max>1998-12-31</max>
+      </rangeValues>
+    </attrStats>
+    <attrStats name="lineitem.l_shipinstruct" type="string">
+      <listValues>
+        <value>TAKE BACK RETURN</value>
+        <value>DELIVER IN PERSON</value>
+        <value>NONE</value>
+        <value>COLLECT COD</value>
+      </listValues>
+    </attrStats>
+    <attrStats name="lineitem.l_shipmode" type="string">
+      <listValues>
+        <value>TRUCK</value>
+        <value>SHIP</value>
+        <value>RAIL</value>
+        <value>MAIL</value>
+        <value>FOB</value>
+        <value>REG AIR</value>
+        <value>AIR</value>
+      </listValues>
+    </attrStats>
+  </tableStats>
+</schemaStats>

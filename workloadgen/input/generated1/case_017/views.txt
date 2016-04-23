@@ -1,0 +1,56 @@
+--Size: 7
+SELECT DISTINCT lineitem.l_linenumber
+FROM part, lineitem
+WHERE part.p_retailprice = lineitem.l_extendedprice
+	 AND lineitem.l_returnflag = 'R'
+	 AND part.p_mfgr = 'Manufacturer#4'
+	 AND lineitem.l_shipmode = 'SHIP'
+	 AND lineitem.l_linestatus = 'F'
+
+
+--Size: 7
+SELECT DISTINCT lineitem.l_linenumber
+FROM lineitem, orders, part
+WHERE lineitem.l_orderkey = orders.o_orderkey
+	 AND part.p_retailprice = lineitem.l_extendedprice
+	 AND lineitem.l_returnflag = 'R'
+	 AND orders.o_orderpriority = '4-NOT SPECIFIED'
+	 AND part.p_mfgr = 'Manufacturer#4'
+	 AND lineitem.l_shipmode = 'SHIP'
+	 AND lineitem.l_linestatus = 'F'
+
+
+--Size: 7644
+SELECT DISTINCT part.p_partkey
+FROM part, lineitem
+WHERE part.p_retailprice = lineitem.l_extendedprice
+	 AND lineitem.l_returnflag = 'R'
+	 AND part.p_mfgr = 'Manufacturer#4'
+	 AND lineitem.l_shipmode = 'SHIP'
+	 AND lineitem.l_linestatus = 'F'
+
+
+--Size: 1652
+SELECT DISTINCT part.p_partkey
+FROM lineitem, orders, part
+WHERE lineitem.l_orderkey = orders.o_orderkey
+	 AND part.p_retailprice = lineitem.l_extendedprice
+	 AND lineitem.l_returnflag = 'R'
+	 AND orders.o_orderpriority = '4-NOT SPECIFIED'
+	 AND part.p_mfgr = 'Manufacturer#4'
+	 AND lineitem.l_shipmode = 'SHIP'
+	 AND lineitem.l_linestatus = 'F'
+
+
+--Size: 8429
+SELECT DISTINCT partsupp.ps_suppkey, part.p_partkey
+FROM lineitem, partsupp, part
+WHERE lineitem.l_partkey = partsupp.ps_partkey
+	 AND lineitem.l_suppkey = partsupp.ps_suppkey
+	 AND part.p_retailprice = lineitem.l_extendedprice
+	 AND lineitem.l_returnflag = 'R'
+	 AND part.p_mfgr = 'Manufacturer#4'
+	 AND lineitem.l_shipmode = 'SHIP'
+	 AND lineitem.l_linestatus = 'F'
+
+

@@ -1,0 +1,82 @@
+--Size: 30189
+SELECT DISTINCT customer.c_custkey
+FROM customer
+WHERE customer.c_mktsegment = 'HOUSEHOLD'
+
+
+--Size: 146766
+SELECT DISTINCT orders.o_orderkey
+FROM lineitem, orders, customer
+WHERE orders.o_orderdate = lineitem.l_shipdate
+	 AND orders.o_custkey = customer.c_custkey
+	 AND orders.o_orderstatus = 'O'
+	 AND customer.c_mktsegment = 'HOUSEHOLD'
+
+
+--Size: 1
+SELECT DISTINCT part.p_partkey, orders.o_orderkey
+FROM orders, customer, part, nation
+WHERE orders.o_custkey = customer.c_custkey
+	 AND part.p_retailprice = orders.o_totalprice
+	 AND customer.c_nationkey = nation.n_nationkey
+	 AND orders.o_orderstatus = 'O'
+	 AND customer.c_mktsegment = 'HOUSEHOLD'
+	 AND nation.n_name = 'JORDAN'
+	 AND part.p_mfgr = 'Manufacturer#5'
+
+
+--Size: 5969
+SELECT DISTINCT orders.o_orderkey
+FROM orders, customer, lineitem, nation
+WHERE orders.o_custkey = customer.c_custkey
+	 AND orders.o_orderdate = lineitem.l_shipdate
+	 AND customer.c_nationkey = nation.n_nationkey
+	 AND orders.o_orderstatus = 'O'
+	 AND customer.c_mktsegment = 'HOUSEHOLD'
+	 AND nation.n_name = 'JORDAN'
+
+
+--Size: 74
+SELECT DISTINCT customer.c_custkey, orders.o_orderkey
+FROM orders, customer, part
+WHERE orders.o_custkey = customer.c_custkey
+	 AND part.p_retailprice = orders.o_totalprice
+	 AND orders.o_orderstatus = 'O'
+	 AND customer.c_mktsegment = 'HOUSEHOLD'
+	 AND part.p_mfgr = 'Manufacturer#5'
+
+
+--Size: 146766
+SELECT DISTINCT orders.o_orderkey
+FROM orders, customer, lineitem
+WHERE orders.o_custkey = customer.c_custkey
+	 AND orders.o_orderdate = lineitem.l_shipdate
+	 AND orders.o_orderstatus = 'O'
+	 AND customer.c_mktsegment = 'HOUSEHOLD'
+
+
+--Size: 874
+SELECT DISTINCT part.p_partkey
+FROM part, orders
+WHERE part.p_retailprice = orders.o_totalprice
+	 AND orders.o_orderstatus = 'O'
+	 AND part.p_mfgr = 'Manufacturer#5'
+
+
+--Size: 1201
+SELECT DISTINCT customer.c_custkey
+FROM customer, nation
+WHERE customer.c_nationkey = nation.n_nationkey
+	 AND customer.c_mktsegment = 'HOUSEHOLD'
+	 AND nation.n_name = 'JORDAN'
+
+
+--Size: 19953
+SELECT DISTINCT customer.c_custkey
+FROM lineitem, orders, customer
+WHERE orders.o_orderdate = lineitem.l_shipdate
+	 AND orders.o_custkey = customer.c_custkey
+	 AND orders.o_orderstatus = 'O'
+	 AND customer.c_mktsegment = 'HOUSEHOLD'
+
+

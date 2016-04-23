@@ -1,0 +1,14 @@
+--Actual size: 22
+SELECT DISTINCT lineitem.l_orderkey, lineitem.l_linenumber, partsupp.ps_suppkey
+FROM lineitem, partsupp, part, orders
+WHERE lineitem.l_partkey = partsupp.ps_partkey
+	 AND lineitem.l_suppkey = partsupp.ps_suppkey
+	 AND lineitem.l_extendedprice = part.p_retailprice
+	 AND lineitem.l_orderkey = orders.o_orderkey
+	 AND orders.o_orderpriority = '3-MEDIUM'
+	 AND part.p_mfgr = 'Manufacturer#5'
+	 AND lineitem.l_shipinstruct = 'DELIVER IN PERSON'
+	 AND orders.o_orderstatus = 'P'
+	 AND lineitem.l_shipmode = 'MAIL'
+
+

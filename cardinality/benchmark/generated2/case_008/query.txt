@@ -1,0 +1,14 @@
+--Actual size: 305331
+--SQL Server estimate: 5999630
+SELECT DISTINCT lineitem.l_linenumber, partsupp.ps_suppkey, supplier.s_suppkey, partsupp.ps_partkey
+FROM lineitem, supplier, orders, customer, partsupp
+WHERE lineitem.l_suppkey = supplier.s_suppkey
+	 AND lineitem.l_extendedprice = orders.o_totalprice
+	 AND orders.o_custkey = customer.c_custkey
+	 AND lineitem.l_quantity = partsupp.ps_availqty
+	 AND lineitem.l_shipinstruct = 'TAKE BACK RETURN'
+	 AND customer.c_mktsegment = 'AUTOMOBILE'
+	 AND lineitem.l_returnflag = 'R'
+	 AND lineitem.l_linestatus = 'F'
+
+

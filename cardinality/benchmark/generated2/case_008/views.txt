@@ -1,0 +1,52 @@
+--Size: 7
+SELECT DISTINCT lineitem.l_linenumber
+FROM orders, customer, lineitem
+WHERE orders.o_custkey = customer.c_custkey
+	 AND lineitem.l_extendedprice = orders.o_totalprice
+	 AND lineitem.l_shipinstruct = 'TAKE BACK RETURN'
+	 AND customer.c_mktsegment = 'AUTOMOBILE'
+	 AND lineitem.l_returnflag = 'R'
+	 AND lineitem.l_linestatus = 'F'
+
+
+--Size: 7
+SELECT DISTINCT lineitem.l_linenumber
+FROM lineitem, supplier, orders
+WHERE lineitem.l_suppkey = supplier.s_suppkey
+	 AND lineitem.l_extendedprice = orders.o_totalprice
+	 AND lineitem.l_shipinstruct = 'TAKE BACK RETURN'
+	 AND lineitem.l_returnflag = 'R'
+	 AND lineitem.l_linestatus = 'F'
+
+
+--Size: 7
+SELECT DISTINCT lineitem.l_linenumber
+FROM orders, lineitem, customer
+WHERE lineitem.l_extendedprice = orders.o_totalprice
+	 AND orders.o_custkey = customer.c_custkey
+	 AND lineitem.l_shipinstruct = 'TAKE BACK RETURN'
+	 AND customer.c_mktsegment = 'AUTOMOBILE'
+	 AND lineitem.l_returnflag = 'R'
+	 AND lineitem.l_linestatus = 'F'
+
+
+--Size: 8503
+SELECT DISTINCT supplier.s_suppkey
+FROM orders, lineitem, supplier
+WHERE lineitem.l_extendedprice = orders.o_totalprice
+	 AND lineitem.l_suppkey = supplier.s_suppkey
+	 AND lineitem.l_shipinstruct = 'TAKE BACK RETURN'
+	 AND lineitem.l_returnflag = 'R'
+	 AND lineitem.l_linestatus = 'F'
+
+
+--Size: 28448
+SELECT DISTINCT partsupp.ps_suppkey, lineitem.l_linenumber, partsupp.ps_partkey
+FROM lineitem, supplier, partsupp
+WHERE lineitem.l_suppkey = supplier.s_suppkey
+	 AND lineitem.l_quantity = partsupp.ps_availqty
+	 AND lineitem.l_shipinstruct = 'TAKE BACK RETURN'
+	 AND lineitem.l_returnflag = 'R'
+	 AND lineitem.l_linestatus = 'F'
+
+

@@ -1,0 +1,80 @@
+--Size: 150000
+SELECT DISTINCT customer.c_custkey
+FROM customer, nation
+WHERE customer.c_nationkey = nation.n_nationkey
+
+
+--Size: 146395
+SELECT DISTINCT orders.o_orderkey
+FROM orders, customer, lineitem
+WHERE orders.o_custkey = customer.c_custkey
+	 AND orders.o_orderdate = lineitem.l_commitdate
+	 AND lineitem.l_shipinstruct = 'NONE'
+	 AND orders.o_orderstatus = 'O'
+	 AND orders.o_orderpriority = '4-NOT SPECIFIED'
+
+
+--Size: 25
+SELECT DISTINCT nation.n_nationkey
+FROM customer, nation
+WHERE customer.c_nationkey = nation.n_nationkey
+
+
+--Size: 83
+SELECT DISTINCT orders.o_orderkey
+FROM part, orders, customer
+WHERE orders.o_totalprice = part.p_retailprice
+	 AND orders.o_custkey = customer.c_custkey
+	 AND orders.o_orderstatus = 'O'
+	 AND orders.o_orderpriority = '4-NOT SPECIFIED'
+	 AND part.p_mfgr = 'Manufacturer#1'
+
+
+--Size: 150000
+SELECT DISTINCT customer.c_custkey
+FROM customer
+
+--Size: 146395
+SELECT DISTINCT customer.c_custkey, orders.o_orderkey
+FROM orders, customer, lineitem, nation
+WHERE orders.o_custkey = customer.c_custkey
+	 AND orders.o_orderdate = lineitem.l_commitdate
+	 AND customer.c_nationkey = nation.n_nationkey
+	 AND lineitem.l_shipinstruct = 'NONE'
+	 AND orders.o_orderstatus = 'O'
+	 AND orders.o_orderpriority = '4-NOT SPECIFIED'
+
+
+--Size: 146395
+SELECT DISTINCT nation.n_nationkey, orders.o_orderkey
+FROM orders, customer, lineitem, nation
+WHERE orders.o_custkey = customer.c_custkey
+	 AND orders.o_orderdate = lineitem.l_commitdate
+	 AND customer.c_nationkey = nation.n_nationkey
+	 AND lineitem.l_shipinstruct = 'NONE'
+	 AND orders.o_orderstatus = 'O'
+	 AND orders.o_orderpriority = '4-NOT SPECIFIED'
+
+
+--Size: 83
+SELECT DISTINCT customer.c_custkey, orders.o_orderkey
+FROM orders, customer, part, nation
+WHERE orders.o_custkey = customer.c_custkey
+	 AND orders.o_totalprice = part.p_retailprice
+	 AND customer.c_nationkey = nation.n_nationkey
+	 AND orders.o_orderstatus = 'O'
+	 AND orders.o_orderpriority = '4-NOT SPECIFIED'
+	 AND part.p_mfgr = 'Manufacturer#1'
+
+
+--Size: 83
+SELECT DISTINCT nation.n_nationkey, orders.o_orderkey
+FROM orders, customer, part, nation
+WHERE orders.o_custkey = customer.c_custkey
+	 AND orders.o_totalprice = part.p_retailprice
+	 AND customer.c_nationkey = nation.n_nationkey
+	 AND orders.o_orderstatus = 'O'
+	 AND orders.o_orderpriority = '4-NOT SPECIFIED'
+	 AND part.p_mfgr = 'Manufacturer#1'
+
+

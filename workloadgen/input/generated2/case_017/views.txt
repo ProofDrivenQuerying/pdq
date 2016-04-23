@@ -1,0 +1,46 @@
+--Size: 6697
+SELECT DISTINCT partsupp.ps_partkey, part.p_partkey
+FROM lineitem, part, partsupp
+WHERE lineitem.l_partkey = part.p_partkey
+	 AND part.p_retailprice = partsupp.ps_supplycost
+	 AND lineitem.l_shipinstruct = 'COLLECT COD'
+	 AND lineitem.l_returnflag = 'R'
+	 AND part.p_mfgr = 'Manufacturer#5'
+
+
+--Size: 70505
+SELECT DISTINCT lineitem.l_orderkey
+FROM lineitem, part
+WHERE lineitem.l_partkey = part.p_partkey
+	 AND lineitem.l_shipinstruct = 'COLLECT COD'
+	 AND lineitem.l_returnflag = 'R'
+	 AND part.p_mfgr = 'Manufacturer#5'
+
+
+--Size: 1003
+SELECT DISTINCT part.p_partkey
+FROM part, partsupp
+WHERE part.p_retailprice = partsupp.ps_supplycost
+	 AND part.p_mfgr = 'Manufacturer#5'
+
+
+--Size: 300343
+SELECT DISTINCT orders.o_orderkey
+FROM orders, customer
+WHERE orders.o_custkey = customer.c_custkey
+	 AND orders.o_orderpriority = '1-URGENT'
+
+
+--Size: 40135
+SELECT DISTINCT part.p_partkey
+FROM part
+WHERE part.p_mfgr = 'Manufacturer#5'
+
+
+--Size: 3717
+SELECT DISTINCT partsupp.ps_partkey
+FROM part, partsupp
+WHERE part.p_retailprice = partsupp.ps_supplycost
+	 AND part.p_mfgr = 'Manufacturer#5'
+
+

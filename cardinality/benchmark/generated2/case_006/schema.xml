@@ -1,0 +1,580 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema>
+	<sources>
+		<source name="tpch" discoverer="uk.ac.ox.cs.pdq.sql.PostgresqlSchemaDiscoverer"
+			url="jdbc:postgresql://localhost/" database="tpch_0001" username="root"
+			password="root" />
+	</sources>
+	<relations>
+		<relation name="customer" source="tpch">
+		</relation>
+		<relation name="part" source="tpch">
+		</relation>
+		<relation name="supplier" source="tpch">
+		</relation>
+		<relation name="partsupp" source="tpch">
+		</relation>
+		<relation name="nation" source="tpch">
+		</relation>
+		<relation name="region" source="tpch">
+		</relation>
+		<relation name="orders" source="tpch">
+		</relation>
+		<relation name="lineitem" source="tpch">
+		</relation>
+		<view name="V1">
+			<attribute name="n_nationkey" type="java.lang.Integer" />
+		</view>
+		<view name="V2">
+			<attribute name="s_suppkey" type="java.lang.Integer" />
+		</view>
+		<view name="V3">
+			<attribute name="o_orderkey" type="java.lang.Integer" />
+		</view>
+		<view name="V5">
+			<attribute name="s_suppkey" type="java.lang.Integer" />
+		</view>
+		<view name="V6">
+			<attribute name="o_orderkey" type="java.lang.Integer" />
+		</view>
+		<view name="V7">
+			<attribute name="o_orderkey" type="java.lang.Integer" />
+		</view>
+		<view name="V9">
+			<attribute name="o_orderkey" type="java.lang.Integer" />
+		</view>
+	</relations>
+
+
+	<dependencies>
+
+		<dependency>
+			<body>
+				<atom name="V1">
+					<variable name="n_nationkey" />
+				</atom>
+			</body>
+			<head>
+				<atom name="customer">
+					<variable name="c_custkey" />
+					<variable name="c_name" />
+					<variable name="c_address" />
+					<variable name="n_nationkey" />
+					<variable name="c_phone" />
+					<variable name="c_acctbal" />
+					<variable name="c_mktsegment" />
+					<variable name="c_comment" />
+				</atom>
+				<atom name="nation">
+					<variable name="n_nationkey" />
+					<variable name="n_name" />
+					<variable name="n_regionkey" />
+					<variable name="n_comment" />
+				</atom>
+			</head>
+		</dependency>
+		<dependency>
+			<body>
+				<atom name="customer">
+					<variable name="c_custkey" />
+					<variable name="c_name" />
+					<variable name="c_address" />
+					<variable name="n_nationkey" />
+					<variable name="c_phone" />
+					<variable name="c_acctbal" />
+					<variable name="c_mktsegment" />
+					<variable name="c_comment" />
+				</atom>
+				<atom name="nation">
+					<variable name="n_nationkey" />
+					<variable name="n_name" />
+					<variable name="n_regionkey" />
+					<variable name="n_comment" />
+				</atom>
+			</body>
+			<head>
+				<atom name="V1">
+					<variable name="n_nationkey" />
+				</atom>
+			</head>
+		</dependency>
+
+		<dependency>
+			<body>
+				<atom name="V2">
+					<variable name="s_suppkey" />
+				</atom>
+			</body>
+			<head>
+				<atom name="customer">
+					<variable name="c_custkey" />
+					<variable name="c_name" />
+					<variable name="c_address" />
+					<variable name="c_nationkey" />
+					<variable name="c_phone" />
+					<variable name="c_acctbal" />
+					<variable name="c_mktsegment" />
+					<variable name="c_comment" />
+				</atom>
+				<atom name="nation">
+					<variable name="c_nationkey" />
+					<variable name="n_name" />
+					<variable name="n_regionkey" />
+					<variable name="n_comment" />
+				</atom>
+				<atom name="supplier">
+					<variable name="s_suppkey" />
+					<variable name="s_name" />
+					<variable name="s_address" />
+					<variable name="s_nationkey" />
+					<variable name="s_phone" />
+					<variable name="c_acctbal" />
+					<variable name="s_comment" />
+				</atom>
+			</head>
+		</dependency>
+		<dependency>
+			<body>
+				<atom name="customer">
+					<variable name="c_custkey" />
+					<variable name="c_name" />
+					<variable name="c_address" />
+					<variable name="c_nationkey" />
+					<variable name="c_phone" />
+					<variable name="c_acctbal" />
+					<variable name="c_mktsegment" />
+					<variable name="c_comment" />
+				</atom>
+				<atom name="nation">
+					<variable name="c_nationkey" />
+					<variable name="n_name" />
+					<variable name="n_regionkey" />
+					<variable name="n_comment" />
+				</atom>
+				<atom name="supplier">
+					<variable name="s_suppkey" />
+					<variable name="s_name" />
+					<variable name="s_address" />
+					<variable name="s_nationkey" />
+					<variable name="s_phone" />
+					<variable name="c_acctbal" />
+					<variable name="s_comment" />
+				</atom>
+			</body>
+			<head>
+				<atom name="V2">
+					<variable name="s_suppkey" />
+				</atom>
+			</head>
+		</dependency>
+
+		<dependency>
+			<body>
+				<atom name="V3">
+					<variable name="o_orderkey" />
+				</atom>
+			</body>
+			<head>
+				<atom name="lineitem">
+					<variable name="l_orderkey" />
+					<variable name="l_partkey" />
+					<variable name="l_suppkey" />
+					<variable name="l_linenumber" />
+					<variable name="l_quantity" />
+					<variable name="l_extendedprice" />
+					<variable name="l_discount" />
+					<variable name="l_tax" />
+					<constant value="N" />
+					<constant value="O" />
+					<variable name="l_shipdate" />
+					<variable name="l_commitdate" />
+					<variable name="o_orderdate" />
+					<variable name="l_shipinstruct" />
+					<variable name="l_shipmode" />
+					<variable name="l_comment" />
+				</atom>
+				<atom name="orders">
+					<variable name="o_orderkey" />
+					<variable name="o_custkey" />
+					<constant value="O" />
+					<variable name="o_totalprice" />
+					<variable name="o_orderdate" />
+					<constant value="3-MEDIUM" />
+					<variable name="o_clerk" />
+					<variable name="o_shippriority" />
+					<variable name="o_comment" />
+				</atom>
+			</head>
+		</dependency>
+		<dependency>
+			<body>
+				<atom name="lineitem">
+					<variable name="l_orderkey" />
+					<variable name="l_partkey" />
+					<variable name="l_suppkey" />
+					<variable name="l_linenumber" />
+					<variable name="l_quantity" />
+					<variable name="l_extendedprice" />
+					<variable name="l_discount" />
+					<variable name="l_tax" />
+					<constant value="N" />
+					<constant value="O" />
+					<variable name="l_shipdate" />
+					<variable name="l_commitdate" />
+					<variable name="o_orderdate" />
+					<variable name="l_shipinstruct" />
+					<variable name="l_shipmode" />
+					<variable name="l_comment" />
+				</atom>
+				<atom name="orders">
+					<variable name="o_orderkey" />
+					<variable name="o_custkey" />
+					<constant value="O" />
+					<variable name="o_totalprice" />
+					<variable name="o_orderdate" />
+					<constant value="3-MEDIUM" />
+					<variable name="o_clerk" />
+					<variable name="o_shippriority" />
+					<variable name="o_comment" />
+				</atom>
+			</body>
+			<head>
+				<atom name="V3">
+					<variable name="o_orderkey" />
+				</atom>
+			</head>
+		</dependency>
+
+		<dependency>
+			<body>
+				<atom name="V5">
+					<variable name="s_suppkey" />
+				</atom>
+			</body>
+			<head>
+				<atom name="customer">
+					<variable name="c_custkey" />
+					<variable name="c_name" />
+					<variable name="c_address" />
+					<variable name="c_nationkey" />
+					<variable name="c_phone" />
+					<variable name="c_acctbal" />
+					<variable name="c_mktsegment" />
+					<variable name="c_comment" />
+				</atom>
+				<atom name="supplier">
+					<variable name="s_suppkey" />
+					<variable name="s_name" />
+					<variable name="s_address" />
+					<variable name="s_nationkey" />
+					<variable name="s_phone" />
+					<variable name="c_acctbal" />
+					<variable name="s_comment" />
+				</atom>
+			</head>
+		</dependency>
+		<dependency>
+			<body>
+				<atom name="customer">
+					<variable name="c_custkey" />
+					<variable name="c_name" />
+					<variable name="c_address" />
+					<variable name="c_nationkey" />
+					<variable name="c_phone" />
+					<variable name="c_acctbal" />
+					<variable name="c_mktsegment" />
+					<variable name="c_comment" />
+				</atom>
+				<atom name="supplier">
+					<variable name="s_suppkey" />
+					<variable name="s_name" />
+					<variable name="s_address" />
+					<variable name="s_nationkey" />
+					<variable name="s_phone" />
+					<variable name="c_acctbal" />
+					<variable name="s_comment" />
+				</atom>
+			</body>
+			<head>
+				<atom name="V5">
+					<variable name="s_suppkey" />
+				</atom>
+			</head>
+		</dependency>
+
+		<dependency>
+			<body>
+				<atom name="V6">
+					<variable name="o_orderkey" />
+				</atom>
+			</body>
+			<head>
+				<atom name="orders">
+					<variable name="o_orderkey" />
+					<variable name="o_custkey" />
+					<constant value="O" />
+					<variable name="o_totalprice" />
+					<variable name="o_orderdate" />
+					<constant value="3-MEDIUM" />
+					<variable name="o_clerk" />
+					<variable name="o_shippriority" />
+					<variable name="o_comment" />
+				</atom>
+				<atom name="customer">
+					<variable name="o_custkey" />
+					<variable name="c_name" />
+					<variable name="c_address" />
+					<variable name="c_nationkey" />
+					<variable name="c_phone" />
+					<variable name="c_acctbal" />
+					<variable name="c_mktsegment" />
+					<variable name="c_comment" />
+				</atom>
+				<atom name="lineitem">
+					<variable name="l_orderkey" />
+					<variable name="l_partkey" />
+					<variable name="l_suppkey" />
+					<variable name="l_linenumber" />
+					<variable name="l_quantity" />
+					<variable name="l_extendedprice" />
+					<variable name="l_discount" />
+					<variable name="l_tax" />
+					<constant value="N" />
+					<constant value="O" />
+					<variable name="l_shipdate" />
+					<variable name="l_commitdate" />
+					<variable name="o_orderdate" />
+					<variable name="l_shipinstruct" />
+					<variable name="l_shipmode" />
+					<variable name="l_comment" />
+				</atom>
+			</head>
+		</dependency>
+		<dependency>
+			<body>
+				<atom name="orders">
+					<variable name="o_orderkey" />
+					<variable name="o_custkey" />
+					<constant value="O" />
+					<variable name="o_totalprice" />
+					<variable name="o_orderdate" />
+					<constant value="3-MEDIUM" />
+					<variable name="o_clerk" />
+					<variable name="o_shippriority" />
+					<variable name="o_comment" />
+				</atom>
+				<atom name="customer">
+					<variable name="o_custkey" />
+					<variable name="c_name" />
+					<variable name="c_address" />
+					<variable name="c_nationkey" />
+					<variable name="c_phone" />
+					<variable name="c_acctbal" />
+					<variable name="c_mktsegment" />
+					<variable name="c_comment" />
+				</atom>
+				<atom name="lineitem">
+					<variable name="l_orderkey" />
+					<variable name="l_partkey" />
+					<variable name="l_suppkey" />
+					<variable name="l_linenumber" />
+					<variable name="l_quantity" />
+					<variable name="l_extendedprice" />
+					<variable name="l_discount" />
+					<variable name="l_tax" />
+					<constant value="N" />
+					<constant value="O" />
+					<variable name="l_shipdate" />
+					<variable name="l_commitdate" />
+					<variable name="o_orderdate" />
+					<variable name="l_shipinstruct" />
+					<variable name="l_shipmode" />
+					<variable name="l_comment" />
+				</atom>
+			</body>
+			<head>
+				<atom name="V6">
+					<variable name="o_orderkey" />
+				</atom>
+			</head>
+		</dependency>
+
+		<dependency>
+			<body>
+				<atom name="V7">
+					<variable name="o_orderkey" />
+				</atom>
+			</body>
+			<head>
+				<atom name="orders">
+					<variable name="o_orderkey" />
+					<variable name="o_custkey" />
+					<constant value="O" />
+					<variable name="o_totalprice" />
+					<variable name="o_orderdate" />
+					<constant value="3-MEDIUM" />
+					<variable name="o_clerk" />
+					<variable name="o_shippriority" />
+					<variable name="o_comment" />
+				</atom>
+				<atom name="customer">
+					<variable name="o_custkey" />
+					<variable name="c_name" />
+					<variable name="c_address" />
+					<variable name="c_nationkey" />
+					<variable name="c_phone" />
+					<variable name="c_acctbal" />
+					<variable name="c_mktsegment" />
+					<variable name="c_comment" />
+				</atom>
+				<atom name="supplier">
+					<variable name="s_suppkey" />
+					<variable name="s_name" />
+					<variable name="s_address" />
+					<variable name="s_nationkey" />
+					<variable name="s_phone" />
+					<variable name="c_acctbal" />
+					<variable name="s_comment" />
+				</atom>
+			</head>
+		</dependency>
+		<dependency>
+			<body>
+				<atom name="orders">
+					<variable name="o_orderkey" />
+					<variable name="o_custkey" />
+					<constant value="O" />
+					<variable name="o_totalprice" />
+					<variable name="o_orderdate" />
+					<constant value="3-MEDIUM" />
+					<variable name="o_clerk" />
+					<variable name="o_shippriority" />
+					<variable name="o_comment" />
+				</atom>
+				<atom name="customer">
+					<variable name="o_custkey" />
+					<variable name="c_name" />
+					<variable name="c_address" />
+					<variable name="c_nationkey" />
+					<variable name="c_phone" />
+					<variable name="c_acctbal" />
+					<variable name="c_mktsegment" />
+					<variable name="c_comment" />
+				</atom>
+				<atom name="supplier">
+					<variable name="s_suppkey" />
+					<variable name="s_name" />
+					<variable name="s_address" />
+					<variable name="s_nationkey" />
+					<variable name="s_phone" />
+					<variable name="c_acctbal" />
+					<variable name="s_comment" />
+				</atom>
+			</body>
+			<head>
+				<atom name="V7">
+					<variable name="o_orderkey" />
+				</atom>
+			</head>
+		</dependency>
+
+		<dependency>
+			<body>
+				<atom name="V9">
+					<variable name="o_orderkey" />
+				</atom>
+			</body>
+			<head>
+				<atom name="lineitem">
+					<variable name="l_orderkey" />
+					<variable name="l_partkey" />
+					<variable name="l_suppkey" />
+					<variable name="l_linenumber" />
+					<variable name="l_quantity" />
+					<variable name="l_extendedprice" />
+					<variable name="l_discount" />
+					<variable name="l_tax" />
+					<constant value="N" />
+					<constant value="O" />
+					<variable name="l_shipdate" />
+					<variable name="l_commitdate" />
+					<variable name="o_orderdate" />
+					<variable name="l_shipinstruct" />
+					<variable name="l_shipmode" />
+					<variable name="l_comment" />
+				</atom>
+				<atom name="orders">
+					<variable name="o_orderkey" />
+					<variable name="o_custkey" />
+					<constant value="O" />
+					<variable name="o_totalprice" />
+					<variable name="o_orderdate" />
+					<constant value="3-MEDIUM" />
+					<variable name="o_clerk" />
+					<variable name="o_shippriority" />
+					<variable name="o_comment" />
+				</atom>
+				<atom name="customer">
+					<variable name="o_custkey" />
+					<variable name="c_name" />
+					<variable name="c_address" />
+					<variable name="c_nationkey" />
+					<variable name="c_phone" />
+					<variable name="c_acctbal" />
+					<variable name="c_mktsegment" />
+					<variable name="c_comment" />
+				</atom>
+			</head>
+		</dependency>
+		<dependency>
+			<body>
+				<atom name="lineitem">
+					<variable name="l_orderkey" />
+					<variable name="l_partkey" />
+					<variable name="l_suppkey" />
+					<variable name="l_linenumber" />
+					<variable name="l_quantity" />
+					<variable name="l_extendedprice" />
+					<variable name="l_discount" />
+					<variable name="l_tax" />
+					<constant value="N" />
+					<constant value="O" />
+					<variable name="l_shipdate" />
+					<variable name="l_commitdate" />
+					<variable name="o_orderdate" />
+					<variable name="l_shipinstruct" />
+					<variable name="l_shipmode" />
+					<variable name="l_comment" />
+				</atom>
+				<atom name="orders">
+					<variable name="o_orderkey" />
+					<variable name="o_custkey" />
+					<constant value="O" />
+					<variable name="o_totalprice" />
+					<variable name="o_orderdate" />
+					<constant value="3-MEDIUM" />
+					<variable name="o_clerk" />
+					<variable name="o_shippriority" />
+					<variable name="o_comment" />
+				</atom>
+				<atom name="customer">
+					<variable name="o_custkey" />
+					<variable name="c_name" />
+					<variable name="c_address" />
+					<variable name="c_nationkey" />
+					<variable name="c_phone" />
+					<variable name="c_acctbal" />
+					<variable name="c_mktsegment" />
+					<variable name="c_comment" />
+				</atom>
+			</body>
+			<head>
+				<atom name="V9">
+					<variable name="o_orderkey" />
+				</atom>
+			</head>
+		</dependency>
+
+
+	</dependencies>
+</schema>

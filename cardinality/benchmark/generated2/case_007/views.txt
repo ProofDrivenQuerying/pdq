@@ -1,0 +1,93 @@
+--Size: 7
+--V1
+SELECT DISTINCT lineitem.l_linenumber
+FROM part, lineitem
+WHERE part.p_retailprice = lineitem.l_extendedprice
+	 AND lineitem.l_returnflag = 'N'
+	 AND lineitem.l_linestatus = 'F'
+	 AND lineitem.l_shipinstruct = 'DELIVER IN PERSON'
+
+
+--Size: 26016
+--V2
+SELECT DISTINCT lineitem.l_linenumber, orders.o_orderkey
+FROM lineitem, partsupp, orders
+WHERE lineitem.l_partkey = partsupp.ps_partkey
+	 AND lineitem.l_suppkey = partsupp.ps_suppkey
+	 AND lineitem.l_shipdate = orders.o_orderdate
+	 AND lineitem.l_returnflag = 'N'
+	 AND lineitem.l_linestatus = 'F'
+	 AND orders.o_orderpriority = '2-HIGH'
+	 AND lineitem.l_shipinstruct = 'DELIVER IN PERSON'
+
+
+--Size: 187
+--V3
+SELECT DISTINCT partsupp.ps_partkey
+FROM part, lineitem, partsupp
+WHERE part.p_retailprice = lineitem.l_extendedprice
+	 AND lineitem.l_partkey = partsupp.ps_partkey
+	 AND lineitem.l_suppkey = partsupp.ps_suppkey
+	 AND lineitem.l_returnflag = 'N'
+	 AND lineitem.l_linestatus = 'F'
+	 AND lineitem.l_shipinstruct = 'DELIVER IN PERSON'
+
+
+--Size: 7
+--V4
+SELECT DISTINCT lineitem.l_linenumber
+FROM orders, lineitem
+WHERE lineitem.l_shipdate = orders.o_orderdate
+	 AND lineitem.l_returnflag = 'N'
+	 AND lineitem.l_linestatus = 'F'
+	 AND orders.o_orderpriority = '2-HIGH'
+	 AND lineitem.l_shipinstruct = 'DELIVER IN PERSON'
+
+
+--Size: 26016
+--V6
+SELECT DISTINCT orders.o_orderkey, lineitem.l_linenumber
+FROM orders, lineitem, partsupp
+WHERE lineitem.l_shipdate = orders.o_orderdate
+	 AND lineitem.l_partkey = partsupp.ps_partkey
+	 AND lineitem.l_suppkey = partsupp.ps_suppkey
+	 AND lineitem.l_returnflag = 'N'
+	 AND lineitem.l_linestatus = 'F'
+	 AND orders.o_orderpriority = '2-HIGH'
+	 AND lineitem.l_shipinstruct = 'DELIVER IN PERSON'
+
+
+--Size: 9715
+--V7
+SELECT DISTINCT partsupp.ps_partkey, lineitem.l_linenumber
+FROM lineitem, partsupp, orders, supplier
+WHERE lineitem.l_partkey = partsupp.ps_partkey
+	 AND lineitem.l_suppkey = partsupp.ps_suppkey
+	 AND lineitem.l_shipdate = orders.o_orderdate
+	 AND partsupp.ps_suppkey = supplier.s_suppkey
+	 AND lineitem.l_returnflag = 'N'
+	 AND lineitem.l_linestatus = 'F'
+	 AND orders.o_orderpriority = '2-HIGH'
+	 AND lineitem.l_shipinstruct = 'DELIVER IN PERSON'
+
+
+--Size: 1223574
+--V8
+SELECT DISTINCT orders.o_orderkey, partsupp.ps_partkey
+FROM lineitem, partsupp, orders
+WHERE lineitem.l_partkey = partsupp.ps_partkey
+	 AND lineitem.l_suppkey = partsupp.ps_suppkey
+	 AND lineitem.l_shipdate = orders.o_orderdate
+	 AND lineitem.l_returnflag = 'N'
+	 AND lineitem.l_linestatus = 'F'
+	 AND orders.o_orderpriority = '2-HIGH'
+	 AND lineitem.l_shipinstruct = 'DELIVER IN PERSON'
+
+
+--Size: 300091
+--V10
+SELECT DISTINCT orders.o_orderkey
+FROM orders
+WHERE orders.o_orderpriority = '2-HIGH'
+
+

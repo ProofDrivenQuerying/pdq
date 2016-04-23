@@ -1,0 +1,44 @@
+--Size: 3113
+SELECT DISTINCT partsupp.ps_suppkey
+FROM part, partsupp, supplier
+WHERE partsupp.ps_supplycost = part.p_retailprice
+	 AND partsupp.ps_suppkey = supplier.s_suppkey
+	 AND part.p_mfgr = 'Manufacturer#5'
+
+
+--Size: 3113
+SELECT DISTINCT partsupp.ps_suppkey
+FROM part, partsupp
+WHERE partsupp.ps_supplycost = part.p_retailprice
+	 AND part.p_mfgr = 'Manufacturer#5'
+
+
+--Size: 65790
+SELECT DISTINCT lineitem.l_orderkey
+FROM lineitem, orders
+WHERE lineitem.l_orderkey = orders.o_orderkey
+	 AND lineitem.l_shipmode = 'REG AIR'
+	 AND lineitem.l_linestatus = 'O'
+	 AND orders.o_orderpriority = '5-LOW'
+
+
+--Size: 23632
+SELECT DISTINCT partsupp.ps_suppkey, lineitem.l_linenumber
+FROM lineitem, orders, partsupp, supplier
+WHERE lineitem.l_orderkey = orders.o_orderkey
+	 AND partsupp.ps_availqty = lineitem.l_quantity
+	 AND partsupp.ps_suppkey = supplier.s_suppkey
+	 AND lineitem.l_shipmode = 'REG AIR'
+	 AND lineitem.l_linestatus = 'O'
+	 AND orders.o_orderpriority = '5-LOW'
+
+
+--Size: 34485356
+SELECT DISTINCT partsupp.ps_suppkey, lineitem.l_orderkey
+FROM lineitem, partsupp, supplier
+WHERE partsupp.ps_availqty = lineitem.l_quantity
+	 AND partsupp.ps_suppkey = supplier.s_suppkey
+	 AND lineitem.l_shipmode = 'REG AIR'
+	 AND lineitem.l_linestatus = 'O'
+
+

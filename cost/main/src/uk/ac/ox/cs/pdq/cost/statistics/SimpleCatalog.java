@@ -54,64 +54,37 @@ public class SimpleCatalog implements Catalog{
 	/** Logger. */
 	private static Logger log = Logger.getLogger(SimpleCatalog.class);
 	
-	/** The default attribute equality selectivity. */
 	public static double DEFAULT_ATTRIBUTE_EQUALITY_SELECTIVITY = 0.1;
 
-	/** The default cardinality. */
 	private static int DEFAULT_CARDINALITY = 1000000;
-	
-	/** The default quality. */
 	private static double DEFAULT_QUALITY = 0.0;
-	
-	/** The default column cardinality. */
 	private static int DEFAULT_COLUMN_CARDINALITY = 1000;
-	
-	/** The default cost. */
 	private static double DEFAULT_COST = 1.0;
-	
-	/** The catalog file name. */
 	private static String CATALOG_FILE_NAME = "catalog/catalog.properties";
 
-	/** The read cardinality. */
 	private static String READ_CARDINALITY = "^(RE:(\\w+)(\\s+)CA:(\\d+))";
-	
-	/** The read column cardinality. */
 	private static String READ_COLUMN_CARDINALITY = "^(RE:(\\w+)(\\s+)AT:(\\w+)(\\s+)CC:(\\d+))";
-	
-	/** The read column selectivity. */
 	private static String READ_COLUMN_SELECTIVITY = "^(RE:(\\w+)(\\s+)AT:(\\w+)(\\s+)SE:(\\d+(\\.\\d+)?))";
-	
-	/** The read erspi. */
 	private static String READ_ERSPI = "^(RE:(\\w+)(\\s+)BI:(\\w+)(\\s+)ERSPI:(\\d+(\\.\\d+)?))";
-	
-	/** The read cost. */
 	private static String READ_COST = "^(RE:(\\w+)(\\s+)BI:(\\w+)(\\s+)RT:(\\d+(\\.\\d+)?))";
-	
-	/** The read sqlserverhistogram. */
 	private static String READ_SQLSERVERHISTOGRAM = "^(RE:(\\w+)(\\s+)AT:(\\w+)(\\s+)SQLH:((/[a-zA-Z0-9._-]+)+/?))";
 
-	/**  Cardinalities of the schema relations. */
+	/** Cardinalities of the schema relations*/
 	private final Map<Relation,Integer> cardinalities;
-	
-	/**  Cardinalities of the relations' attributes. */
+	/** Cardinalities of the relations' attributes*/
 	private final Map<Pair<Relation,Attribute>,Integer> columnCardinalities;
-	
-	/**  The estimated result size per invocation of each access method. */
+	/** The estimated result size per invocation of each access method*/
 	private final Map<Pair<Relation,AccessMethod>,Integer> erpsi;
-	
-	/**  The response time of each access method. */
+	/** The response time of each access method*/
 	private final Map<Pair<Relation,AccessMethod>,Double> costs;
-	
-	/**  The selectivity of each attribute. */
+	/** The selectivity of each attribute*/
 	private final Map<Pair<Relation,Attribute>,Double> columnSelectivity;
-	
-	/**  The frequency histogram of each attribute. */
+	/** The frequency histogram of each attribute*/
 	private final Map<Pair<Relation,Attribute>, SimpleFrequencyMap> frequencyMaps;
-	
-	/**  The SQL Server histograms of each attribute. */
+	/** The SQL Server histograms of each attribute*/
 	private final Map<Pair<Relation,Attribute>, SQLServerHistogram> SQLServerHistograms;
-	
-	/**  The schema of the input database. */
+
+	/** The schema of the input database */
 	private final Schema schema;
 
 	/**

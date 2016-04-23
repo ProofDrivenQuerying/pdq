@@ -1,0 +1,50 @@
+--Size: 1950
+SELECT DISTINCT lineitem.l_orderkey
+FROM part, lineitem
+WHERE part.p_retailprice = lineitem.l_extendedprice
+	 AND lineitem.l_returnflag = 'N'
+	 AND lineitem.l_shipmode = 'AIR'
+	 AND lineitem.l_linestatus = 'O'
+	 AND part.p_mfgr = 'Manufacturer#4'
+	 AND lineitem.l_shipinstruct = 'NONE'
+
+
+--Size: 4338
+SELECT DISTINCT part.p_partkey, lineitem.l_orderkey
+FROM lineitem, partsupp, part
+WHERE lineitem.l_partkey = partsupp.ps_partkey
+	 AND lineitem.l_suppkey = partsupp.ps_suppkey
+	 AND part.p_retailprice = lineitem.l_extendedprice
+	 AND lineitem.l_returnflag = 'N'
+	 AND lineitem.l_shipmode = 'AIR'
+	 AND lineitem.l_linestatus = 'O'
+	 AND part.p_mfgr = 'Manufacturer#4'
+	 AND lineitem.l_shipinstruct = 'NONE'
+
+
+--Size: 4308
+SELECT DISTINCT part.p_partkey, partsupp.ps_partkey
+FROM lineitem, partsupp, part
+WHERE lineitem.l_partkey = partsupp.ps_partkey
+	 AND lineitem.l_suppkey = partsupp.ps_suppkey
+	 AND part.p_retailprice = lineitem.l_extendedprice
+	 AND lineitem.l_returnflag = 'N'
+	 AND lineitem.l_shipmode = 'AIR'
+	 AND lineitem.l_linestatus = 'O'
+	 AND part.p_mfgr = 'Manufacturer#4'
+	 AND lineitem.l_shipinstruct = 'NONE'
+
+
+--Size: 1951
+SELECT DISTINCT partsupp.ps_partkey, lineitem.l_orderkey
+FROM lineitem, partsupp, part
+WHERE lineitem.l_partkey = partsupp.ps_partkey
+	 AND lineitem.l_suppkey = partsupp.ps_suppkey
+	 AND part.p_retailprice = lineitem.l_extendedprice
+	 AND lineitem.l_returnflag = 'N'
+	 AND lineitem.l_shipmode = 'AIR'
+	 AND lineitem.l_linestatus = 'O'
+	 AND part.p_mfgr = 'Manufacturer#4'
+	 AND lineitem.l_shipinstruct = 'NONE'
+
+

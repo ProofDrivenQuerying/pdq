@@ -1,0 +1,47 @@
+--Size: 3722
+SELECT DISTINCT lineitem.l_orderkey
+FROM orders, customer, lineitem
+WHERE orders.o_custkey = customer.c_custkey
+	 AND orders.o_totalprice = lineitem.l_extendedprice
+	 AND lineitem.l_shipinstruct = 'DELIVER IN PERSON'
+	 AND orders.o_orderstatus = 'F'
+	 AND lineitem.l_returnflag = 'N'
+	 AND lineitem.l_linestatus = 'O'
+	 AND orders.o_orderpriority = '5-LOW'
+
+
+--Size: 3722
+SELECT DISTINCT lineitem.l_orderkey
+FROM lineitem, orders
+WHERE orders.o_totalprice = lineitem.l_extendedprice
+	 AND lineitem.l_shipinstruct = 'DELIVER IN PERSON'
+	 AND orders.o_orderstatus = 'F'
+	 AND lineitem.l_returnflag = 'N'
+	 AND lineitem.l_linestatus = 'O'
+	 AND orders.o_orderpriority = '5-LOW'
+
+
+--Size: 2475
+SELECT DISTINCT customer.c_custkey
+FROM orders, customer, lineitem
+WHERE orders.o_custkey = customer.c_custkey
+	 AND orders.o_totalprice = lineitem.l_extendedprice
+	 AND lineitem.l_shipinstruct = 'DELIVER IN PERSON'
+	 AND orders.o_orderstatus = 'F'
+	 AND lineitem.l_returnflag = 'N'
+	 AND lineitem.l_linestatus = 'O'
+	 AND orders.o_orderpriority = '5-LOW'
+
+
+--Size: 25
+SELECT DISTINCT nation.n_nationkey
+FROM customer, nation
+WHERE customer.c_nationkey = nation.n_nationkey
+
+
+--Size: 150000
+SELECT DISTINCT customer.c_custkey
+FROM customer, nation
+WHERE customer.c_nationkey = nation.n_nationkey
+
+

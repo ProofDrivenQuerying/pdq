@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dependency>
+<body>
+<atom name="V1">
+<variable name="s_suppkey"/>
+</atom>
+</body>
+<head>
+<atom name="lineitem">
+<variable name="l_orderkey"/>
+<variable name="l_partkey"/>
+<variable name="s_suppkey"/>
+<variable name="l_linenumber"/>
+<variable name="l_quantity"/>
+<variable name="p_retailprice"/>
+<variable name="l_discount"/>
+<variable name="l_tax"/>
+<constant value="N"/>
+<constant value="F"/>
+<variable name="l_shipdate"/>
+<variable name="l_commitdate"/>
+<variable name="l_receiptdate"/>
+<constant value="COLLECT COD"/>
+<constant value="MAIL"/>
+<variable name="l_comment"/>
+</atom>
+<atom name="supplier">
+<variable name="s_suppkey"/>
+<variable name="s_name"/>
+<variable name="s_address"/>
+<variable name="s_nationkey"/>
+<variable name="s_phone"/>
+<variable name="s_acctbal"/>
+<variable name="s_comment"/>
+</atom>
+<atom name="part">
+<variable name="p_partkey"/>
+<variable name="p_name"/>
+<variable name="p_mfgr"/>
+<constant value="Brand#51"/>
+<variable name="p_type"/>
+<variable name="p_size"/>
+<variable name="p_container"/>
+<variable name="p_retailprice"/>
+<variable name="p_comment"/>
+</atom>
+</head>
+</dependency>
+<dependency>
+<body>
+<atom name="lineitem">
+<variable name="l_orderkey"/>
+<variable name="l_partkey"/>
+<variable name="s_suppkey"/>
+<variable name="l_linenumber"/>
+<variable name="l_quantity"/>
+<variable name="p_retailprice"/>
+<variable name="l_discount"/>
+<variable name="l_tax"/>
+<constant value="N"/>
+<constant value="F"/>
+<variable name="l_shipdate"/>
+<variable name="l_commitdate"/>
+<variable name="l_receiptdate"/>
+<constant value="COLLECT COD"/>
+<constant value="MAIL"/>
+<variable name="l_comment"/>
+</atom>
+<atom name="supplier">
+<variable name="s_suppkey"/>
+<variable name="s_name"/>
+<variable name="s_address"/>
+<variable name="s_nationkey"/>
+<variable name="s_phone"/>
+<variable name="s_acctbal"/>
+<variable name="s_comment"/>
+</atom>
+<atom name="part">
+<variable name="p_partkey"/>
+<variable name="p_name"/>
+<variable name="p_mfgr"/>
+<constant value="Brand#51"/>
+<variable name="p_type"/>
+<variable name="p_size"/>
+<variable name="p_container"/>
+<variable name="p_retailprice"/>
+<variable name="p_comment"/>
+</atom>
+</body>
+<head>
+<atom name="V1">
+<variable name="s_suppkey"/>
+</atom>
+</head>
+</dependency>
+<view name="V1">
+<attribute name="s_suppkey" type="java.lang.Integer"/>
+</view>

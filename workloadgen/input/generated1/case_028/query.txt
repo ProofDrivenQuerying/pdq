@@ -1,0 +1,13 @@
+--Actual size: 1
+SELECT DISTINCT nation.n_nationkey, orders.o_orderkey
+FROM part, orders, customer, nation
+WHERE part.p_retailprice = orders.o_totalprice
+	 AND orders.o_custkey = customer.c_custkey
+	 AND customer.c_nationkey = nation.n_nationkey
+	 AND orders.o_orderpriority = '3-MEDIUM'
+	 AND customer.c_mktsegment = 'MACHINERY'
+	 AND part.p_mfgr = 'Manufacturer#3'
+	 AND orders.o_orderstatus = 'O'
+	 AND nation.n_name = 'MOZAMBIQUE'
+
+

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<query type="conjunctive">
+<body>
+<atom name="part">
+<variable name="p_partkey"/>
+<variable name="p_name"/>
+<constant value="Manufacturer#4"/>
+<variable name="p_brand"/>
+<variable name="p_type"/>
+<variable name="p_size"/>
+<variable name="p_container"/>
+<variable name="p_retailprice"/>
+<variable name="p_comment"/>
+</atom>
+<atom name="lineitem">
+<variable name="l_orderkey"/>
+<variable name="ps_partkey"/>
+<variable name="l_suppkey"/>
+<variable name="l_linenumber"/>
+<variable name="l_quantity"/>
+<variable name="p_retailprice"/>
+<variable name="l_discount"/>
+<variable name="l_tax"/>
+<constant value="N"/>
+<constant value="O"/>
+<variable name="l_shipdate"/>
+<variable name="l_commitdate"/>
+<variable name="l_receiptdate"/>
+<constant value="NONE"/>
+<constant value="AIR"/>
+<variable name="l_comment"/>
+</atom>
+<atom name="partsupp">
+<variable name="ps_partkey"/>
+<variable name="l_suppkey"/>
+<variable name="ps_availqty"/>
+<variable name="ps_supplycost"/>
+<variable name="ps_comment"/>
+</atom>
+<atom name="supplier">
+<variable name="l_suppkey"/>
+<variable name="s_name"/>
+<variable name="s_address"/>
+<variable name="s_nationkey"/>
+<variable name="s_phone"/>
+<variable name="s_acctbal"/>
+<variable name="s_comment"/>
+</atom>
+</body>
+<head name="Q20">
+<variable name="ps_partkey"/>
+<variable name="l_orderkey"/>
+<variable name="p_partkey"/>
+</head>
+</query>

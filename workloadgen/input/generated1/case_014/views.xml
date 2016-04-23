@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dependency>
+<body>
+<atom name="V1">
+<variable name="ps_suppkey"/>
+<variable name="ps_partkey"/>
+</atom>
+</body>
+<head>
+<atom name="lineitem">
+<variable name="l_orderkey"/>
+<variable name="ps_partkey"/>
+<variable name="ps_suppkey"/>
+<variable name="l_linenumber"/>
+<variable name="l_quantity"/>
+<variable name="l_extendedprice"/>
+<variable name="l_discount"/>
+<variable name="l_tax"/>
+<variable name="l_returnflag"/>
+<constant value="O"/>
+<variable name="l_shipdate"/>
+<variable name="l_commitdate"/>
+<variable name="l_receiptdate"/>
+<constant value="TAKE BACK RETURN"/>
+<constant value="REG AIR"/>
+<variable name="l_comment"/>
+</atom>
+<atom name="partsupp">
+<variable name="ps_partkey"/>
+<variable name="ps_suppkey"/>
+<variable name="ps_availqty"/>
+<variable name="ps_supplycost"/>
+<variable name="ps_comment"/>
+</atom>
+<atom name="orders">
+<variable name="o_orderkey"/>
+<variable name="o_custkey"/>
+<constant value="F"/>
+<variable name="l_extendedprice"/>
+<variable name="o_orderdate"/>
+<constant value="3-MEDIUM"/>
+<variable name="o_clerk"/>
+<variable name="o_shippriority"/>
+<variable name="o_comment"/>
+</atom>
+</head>
+</dependency>
+<dependency>
+<body>
+<atom name="lineitem">
+<variable name="l_orderkey"/>
+<variable name="ps_partkey"/>
+<variable name="ps_suppkey"/>
+<variable name="l_linenumber"/>
+<variable name="l_quantity"/>
+<variable name="l_extendedprice"/>
+<variable name="l_discount"/>
+<variable name="l_tax"/>
+<variable name="l_returnflag"/>
+<constant value="O"/>
+<variable name="l_shipdate"/>
+<variable name="l_commitdate"/>
+<variable name="l_receiptdate"/>
+<constant value="TAKE BACK RETURN"/>
+<constant value="REG AIR"/>
+<variable name="l_comment"/>
+</atom>
+<atom name="partsupp">
+<variable name="ps_partkey"/>
+<variable name="ps_suppkey"/>
+<variable name="ps_availqty"/>
+<variable name="ps_supplycost"/>
+<variable name="ps_comment"/>
+</atom>
+<atom name="orders">
+<variable name="o_orderkey"/>
+<variable name="o_custkey"/>
+<constant value="F"/>
+<variable name="l_extendedprice"/>
+<variable name="o_orderdate"/>
+<constant value="3-MEDIUM"/>
+<variable name="o_clerk"/>
+<variable name="o_shippriority"/>
+<variable name="o_comment"/>
+</atom>
+</body>
+<head>
+<atom name="V1">
+<variable name="ps_suppkey"/>
+<variable name="ps_partkey"/>
+</atom>
+</head>
+</dependency>
+<view name="V1">
+<attribute name="ps_suppkey" type="java.lang.Integer"/>
+<attribute name="ps_partkey" type="java.lang.Integer"/>
+</view>
+<dependency>
+<body>
+<atom name="V2">
+<variable name="l_linenumber"/>
+</atom>
+</body>
+<head>
+<atom name="orders">
+<variable name="o_orderkey"/>
+<variable name="o_custkey"/>
+<constant value="F"/>
+<variable name="l_extendedprice"/>
+<variable name="o_orderdate"/>
+<constant value="3-MEDIUM"/>
+<variable name="o_clerk"/>
+<variable name="o_shippriority"/>
+<variable name="o_comment"/>
+</atom>
+<atom name="lineitem">
+<variable name="l_orderkey"/>
+<variable name="l_partkey"/>
+<variable name="l_suppkey"/>
+<variable name="l_linenumber"/>
+<variable name="l_quantity"/>
+<variable name="l_extendedprice"/>
+<variable name="l_discount"/>
+<variable name="l_tax"/>
+<variable name="l_returnflag"/>
+<constant value="O"/>
+<variable name="l_shipdate"/>
+<variable name="l_commitdate"/>
+<variable name="l_receiptdate"/>
+<constant value="TAKE BACK RETURN"/>
+<constant value="REG AIR"/>
+<variable name="l_comment"/>
+</atom>
+</head>
+</dependency>
+<dependency>
+<body>
+<atom name="orders">
+<variable name="o_orderkey"/>
+<variable name="o_custkey"/>
+<constant value="F"/>
+<variable name="l_extendedprice"/>
+<variable name="o_orderdate"/>
+<constant value="3-MEDIUM"/>
+<variable name="o_clerk"/>
+<variable name="o_shippriority"/>
+<variable name="o_comment"/>
+</atom>
+<atom name="lineitem">
+<variable name="l_orderkey"/>
+<variable name="l_partkey"/>
+<variable name="l_suppkey"/>
+<variable name="l_linenumber"/>
+<variable name="l_quantity"/>
+<variable name="l_extendedprice"/>
+<variable name="l_discount"/>
+<variable name="l_tax"/>
+<variable name="l_returnflag"/>
+<constant value="O"/>
+<variable name="l_shipdate"/>
+<variable name="l_commitdate"/>
+<variable name="l_receiptdate"/>
+<constant value="TAKE BACK RETURN"/>
+<constant value="REG AIR"/>
+<variable name="l_comment"/>
+</atom>
+</body>
+<head>
+<atom name="V2">
+<variable name="l_linenumber"/>
+</atom>
+</head>
+</dependency>
+<view name="V2">
+<attribute name="l_linenumber" type="java.lang.Integer"/>
+</view>
+<dependency>
+<body>
+<atom name="V6">
+<variable name="ps_suppkey"/>
+<variable name="l_linenumber"/>
+</atom>
+</body>
+<head>
+<atom name="lineitem">
+<variable name="l_orderkey"/>
+<variable name="l_partkey"/>
+<variable name="ps_suppkey"/>
+<variable name="l_linenumber"/>
+<variable name="l_quantity"/>
+<variable name="l_extendedprice"/>
+<variable name="l_discount"/>
+<variable name="l_tax"/>
+<variable name="l_returnflag"/>
+<constant value="O"/>
+<variable name="l_shipdate"/>
+<variable name="l_commitdate"/>
+<variable name="l_receiptdate"/>
+<constant value="TAKE BACK RETURN"/>
+<constant value="REG AIR"/>
+<variable name="l_comment"/>
+</atom>
+<atom name="partsupp">
+<variable name="l_partkey"/>
+<variable name="ps_suppkey"/>
+<variable name="ps_availqty"/>
+<variable name="ps_supplycost"/>
+<variable name="ps_comment"/>
+</atom>
+<atom name="orders">
+<variable name="o_orderkey"/>
+<variable name="o_custkey"/>
+<constant value="F"/>
+<variable name="l_extendedprice"/>
+<variable name="o_orderdate"/>
+<constant value="3-MEDIUM"/>
+<variable name="o_clerk"/>
+<variable name="o_shippriority"/>
+<variable name="o_comment"/>
+</atom>
+</head>
+</dependency>
+<dependency>
+<body>
+<atom name="lineitem">
+<variable name="l_orderkey"/>
+<variable name="l_partkey"/>
+<variable name="ps_suppkey"/>
+<variable name="l_linenumber"/>
+<variable name="l_quantity"/>
+<variable name="l_extendedprice"/>
+<variable name="l_discount"/>
+<variable name="l_tax"/>
+<variable name="l_returnflag"/>
+<constant value="O"/>
+<variable name="l_shipdate"/>
+<variable name="l_commitdate"/>
+<variable name="l_receiptdate"/>
+<constant value="TAKE BACK RETURN"/>
+<constant value="REG AIR"/>
+<variable name="l_comment"/>
+</atom>
+<atom name="partsupp">
+<variable name="l_partkey"/>
+<variable name="ps_suppkey"/>
+<variable name="ps_availqty"/>
+<variable name="ps_supplycost"/>
+<variable name="ps_comment"/>
+</atom>
+<atom name="orders">
+<variable name="o_orderkey"/>
+<variable name="o_custkey"/>
+<constant value="F"/>
+<variable name="l_extendedprice"/>
+<variable name="o_orderdate"/>
+<constant value="3-MEDIUM"/>
+<variable name="o_clerk"/>
+<variable name="o_shippriority"/>
+<variable name="o_comment"/>
+</atom>
+</body>
+<head>
+<atom name="V6">
+<variable name="ps_suppkey"/>
+<variable name="l_linenumber"/>
+</atom>
+</head>
+</dependency>
+<view name="V6">
+<attribute name="ps_suppkey" type="java.lang.Integer"/>
+<attribute name="l_linenumber" type="java.lang.Integer"/>
+</view>

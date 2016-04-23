@@ -1,0 +1,388 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dependency>
+<body>
+<atom name="V1">
+<variable name="o_orderkey"/>
+</atom>
+</body>
+<head>
+<atom name="lineitem">
+<variable name="l_orderkey"/>
+<variable name="l_partkey"/>
+<variable name="l_suppkey"/>
+<variable name="l_linenumber"/>
+<variable name="l_quantity"/>
+<variable name="l_extendedprice"/>
+<variable name="l_discount"/>
+<variable name="l_tax"/>
+<variable name="l_returnflag"/>
+<constant value="F"/>
+<variable name="l_shipdate"/>
+<variable name="l_commitdate"/>
+<variable name="o_orderdate"/>
+<variable name="l_shipinstruct"/>
+<constant value="SHIP"/>
+<variable name="l_comment"/>
+</atom>
+<atom name="orders">
+<variable name="o_orderkey"/>
+<variable name="o_custkey"/>
+<variable name="o_orderstatus"/>
+<variable name="o_totalprice"/>
+<variable name="o_orderdate"/>
+<constant value="2-HIGH"/>
+<variable name="o_clerk"/>
+<variable name="o_shippriority"/>
+<variable name="o_comment"/>
+</atom>
+<atom name="customer">
+<variable name="o_custkey"/>
+<variable name="c_name"/>
+<variable name="c_address"/>
+<variable name="c_nationkey"/>
+<variable name="c_phone"/>
+<variable name="c_acctbal"/>
+<constant value="FURNITURE"/>
+<variable name="c_comment"/>
+</atom>
+</head>
+</dependency>
+<dependency>
+<body>
+<atom name="lineitem">
+<variable name="l_orderkey"/>
+<variable name="l_partkey"/>
+<variable name="l_suppkey"/>
+<variable name="l_linenumber"/>
+<variable name="l_quantity"/>
+<variable name="l_extendedprice"/>
+<variable name="l_discount"/>
+<variable name="l_tax"/>
+<variable name="l_returnflag"/>
+<constant value="F"/>
+<variable name="l_shipdate"/>
+<variable name="l_commitdate"/>
+<variable name="o_orderdate"/>
+<variable name="l_shipinstruct"/>
+<constant value="SHIP"/>
+<variable name="l_comment"/>
+</atom>
+<atom name="orders">
+<variable name="o_orderkey"/>
+<variable name="o_custkey"/>
+<variable name="o_orderstatus"/>
+<variable name="o_totalprice"/>
+<variable name="o_orderdate"/>
+<constant value="2-HIGH"/>
+<variable name="o_clerk"/>
+<variable name="o_shippriority"/>
+<variable name="o_comment"/>
+</atom>
+<atom name="customer">
+<variable name="o_custkey"/>
+<variable name="c_name"/>
+<variable name="c_address"/>
+<variable name="c_nationkey"/>
+<variable name="c_phone"/>
+<variable name="c_acctbal"/>
+<constant value="FURNITURE"/>
+<variable name="c_comment"/>
+</atom>
+</body>
+<head>
+<atom name="V1">
+<variable name="o_orderkey"/>
+</atom>
+</head>
+</dependency>
+<view name="V1">
+<attribute name="o_orderkey" type="java.lang.Integer"/>
+</view>
+<dependency>
+<body>
+<atom name="V2">
+<variable name="n_nationkey"/>
+</atom>
+</body>
+<head>
+<atom name="customer">
+<variable name="c_custkey"/>
+<variable name="c_name"/>
+<variable name="c_address"/>
+<variable name="n_nationkey"/>
+<variable name="c_phone"/>
+<variable name="c_acctbal"/>
+<constant value="FURNITURE"/>
+<variable name="c_comment"/>
+</atom>
+<atom name="nation">
+<variable name="n_nationkey"/>
+<variable name="n_name"/>
+<variable name="n_regionkey"/>
+<variable name="n_comment"/>
+</atom>
+</head>
+</dependency>
+<dependency>
+<body>
+<atom name="customer">
+<variable name="c_custkey"/>
+<variable name="c_name"/>
+<variable name="c_address"/>
+<variable name="n_nationkey"/>
+<variable name="c_phone"/>
+<variable name="c_acctbal"/>
+<constant value="FURNITURE"/>
+<variable name="c_comment"/>
+</atom>
+<atom name="nation">
+<variable name="n_nationkey"/>
+<variable name="n_name"/>
+<variable name="n_regionkey"/>
+<variable name="n_comment"/>
+</atom>
+</body>
+<head>
+<atom name="V2">
+<variable name="n_nationkey"/>
+</atom>
+</head>
+</dependency>
+<view name="V2">
+<attribute name="n_nationkey" type="java.lang.Integer"/>
+</view>
+<dependency>
+<body>
+<atom name="V5">
+<variable name="o_orderkey"/>
+</atom>
+</body>
+<head>
+<atom name="part">
+<variable name="p_partkey"/>
+<variable name="p_name"/>
+<variable name="p_mfgr"/>
+<variable name="p_brand"/>
+<variable name="p_type"/>
+<variable name="p_size"/>
+<variable name="p_container"/>
+<variable name="o_totalprice"/>
+<variable name="p_comment"/>
+</atom>
+<atom name="orders">
+<variable name="o_orderkey"/>
+<variable name="o_custkey"/>
+<variable name="o_orderstatus"/>
+<variable name="o_totalprice"/>
+<variable name="o_orderdate"/>
+<constant value="2-HIGH"/>
+<variable name="o_clerk"/>
+<variable name="o_shippriority"/>
+<variable name="o_comment"/>
+</atom>
+</head>
+</dependency>
+<dependency>
+<body>
+<atom name="part">
+<variable name="p_partkey"/>
+<variable name="p_name"/>
+<variable name="p_mfgr"/>
+<variable name="p_brand"/>
+<variable name="p_type"/>
+<variable name="p_size"/>
+<variable name="p_container"/>
+<variable name="o_totalprice"/>
+<variable name="p_comment"/>
+</atom>
+<atom name="orders">
+<variable name="o_orderkey"/>
+<variable name="o_custkey"/>
+<variable name="o_orderstatus"/>
+<variable name="o_totalprice"/>
+<variable name="o_orderdate"/>
+<constant value="2-HIGH"/>
+<variable name="o_clerk"/>
+<variable name="o_shippriority"/>
+<variable name="o_comment"/>
+</atom>
+</body>
+<head>
+<atom name="V5">
+<variable name="o_orderkey"/>
+</atom>
+</head>
+</dependency>
+<view name="V5">
+<attribute name="o_orderkey" type="java.lang.Integer"/>
+</view>
+<dependency>
+<body>
+<atom name="V6">
+<variable name="p_partkey"/>
+</atom>
+</body>
+<head>
+<atom name="part">
+<variable name="p_partkey"/>
+<variable name="p_name"/>
+<variable name="p_mfgr"/>
+<variable name="p_brand"/>
+<variable name="p_type"/>
+<variable name="p_size"/>
+<variable name="p_container"/>
+<variable name="o_totalprice"/>
+<variable name="p_comment"/>
+</atom>
+<atom name="orders">
+<variable name="o_orderkey"/>
+<variable name="o_custkey"/>
+<variable name="o_orderstatus"/>
+<variable name="o_totalprice"/>
+<variable name="o_orderdate"/>
+<constant value="2-HIGH"/>
+<variable name="o_clerk"/>
+<variable name="o_shippriority"/>
+<variable name="o_comment"/>
+</atom>
+<atom name="customer">
+<variable name="o_custkey"/>
+<variable name="c_name"/>
+<variable name="c_address"/>
+<variable name="c_nationkey"/>
+<variable name="c_phone"/>
+<variable name="c_acctbal"/>
+<constant value="FURNITURE"/>
+<variable name="c_comment"/>
+</atom>
+</head>
+</dependency>
+<dependency>
+<body>
+<atom name="part">
+<variable name="p_partkey"/>
+<variable name="p_name"/>
+<variable name="p_mfgr"/>
+<variable name="p_brand"/>
+<variable name="p_type"/>
+<variable name="p_size"/>
+<variable name="p_container"/>
+<variable name="o_totalprice"/>
+<variable name="p_comment"/>
+</atom>
+<atom name="orders">
+<variable name="o_orderkey"/>
+<variable name="o_custkey"/>
+<variable name="o_orderstatus"/>
+<variable name="o_totalprice"/>
+<variable name="o_orderdate"/>
+<constant value="2-HIGH"/>
+<variable name="o_clerk"/>
+<variable name="o_shippriority"/>
+<variable name="o_comment"/>
+</atom>
+<atom name="customer">
+<variable name="o_custkey"/>
+<variable name="c_name"/>
+<variable name="c_address"/>
+<variable name="c_nationkey"/>
+<variable name="c_phone"/>
+<variable name="c_acctbal"/>
+<constant value="FURNITURE"/>
+<variable name="c_comment"/>
+</atom>
+</body>
+<head>
+<atom name="V6">
+<variable name="p_partkey"/>
+</atom>
+</head>
+</dependency>
+<view name="V6">
+<attribute name="p_partkey" type="java.lang.Integer"/>
+</view>
+<dependency>
+<body>
+<atom name="V8">
+<variable name="o_orderkey"/>
+</atom>
+</body>
+<head>
+<atom name="part">
+<variable name="p_partkey"/>
+<variable name="p_name"/>
+<variable name="p_mfgr"/>
+<variable name="p_brand"/>
+<variable name="p_type"/>
+<variable name="p_size"/>
+<variable name="p_container"/>
+<variable name="o_totalprice"/>
+<variable name="p_comment"/>
+</atom>
+<atom name="orders">
+<variable name="o_orderkey"/>
+<variable name="o_custkey"/>
+<variable name="o_orderstatus"/>
+<variable name="o_totalprice"/>
+<variable name="o_orderdate"/>
+<constant value="2-HIGH"/>
+<variable name="o_clerk"/>
+<variable name="o_shippriority"/>
+<variable name="o_comment"/>
+</atom>
+<atom name="customer">
+<variable name="o_custkey"/>
+<variable name="c_name"/>
+<variable name="c_address"/>
+<variable name="c_nationkey"/>
+<variable name="c_phone"/>
+<variable name="c_acctbal"/>
+<constant value="FURNITURE"/>
+<variable name="c_comment"/>
+</atom>
+</head>
+</dependency>
+<dependency>
+<body>
+<atom name="part">
+<variable name="p_partkey"/>
+<variable name="p_name"/>
+<variable name="p_mfgr"/>
+<variable name="p_brand"/>
+<variable name="p_type"/>
+<variable name="p_size"/>
+<variable name="p_container"/>
+<variable name="o_totalprice"/>
+<variable name="p_comment"/>
+</atom>
+<atom name="orders">
+<variable name="o_orderkey"/>
+<variable name="o_custkey"/>
+<variable name="o_orderstatus"/>
+<variable name="o_totalprice"/>
+<variable name="o_orderdate"/>
+<constant value="2-HIGH"/>
+<variable name="o_clerk"/>
+<variable name="o_shippriority"/>
+<variable name="o_comment"/>
+</atom>
+<atom name="customer">
+<variable name="o_custkey"/>
+<variable name="c_name"/>
+<variable name="c_address"/>
+<variable name="c_nationkey"/>
+<variable name="c_phone"/>
+<variable name="c_acctbal"/>
+<constant value="FURNITURE"/>
+<variable name="c_comment"/>
+</atom>
+</body>
+<head>
+<atom name="V8">
+<variable name="o_orderkey"/>
+</atom>
+</head>
+</dependency>
+<view name="V8">
+<attribute name="o_orderkey" type="java.lang.Integer"/>
+</view>

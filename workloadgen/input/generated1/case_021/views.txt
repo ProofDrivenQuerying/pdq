@@ -1,0 +1,57 @@
+--Size: 2
+SELECT DISTINCT lineitem.l_linenumber
+FROM lineitem, part, orders
+WHERE lineitem.l_partkey = part.p_partkey
+	 AND orders.o_totalprice = lineitem.l_extendedprice
+	 AND lineitem.l_shipinstruct = 'NONE'
+	 AND orders.o_orderstatus = 'P'
+	 AND part.p_brand = 'Brand#33'
+	 AND lineitem.l_shipmode = 'AIR'
+
+
+--Size: 15
+SELECT DISTINCT lineitem.l_linenumber, lineitem.l_orderkey
+FROM orders, customer, lineitem
+WHERE orders.o_custkey = customer.c_custkey
+	 AND orders.o_totalprice = lineitem.l_extendedprice
+	 AND customer.c_mktsegment = 'HOUSEHOLD'
+	 AND lineitem.l_shipinstruct = 'NONE'
+	 AND orders.o_orderstatus = 'P'
+	 AND lineitem.l_shipmode = 'AIR'
+
+
+--Size: 2
+SELECT DISTINCT lineitem.l_orderkey
+FROM lineitem, part, orders
+WHERE lineitem.l_partkey = part.p_partkey
+	 AND orders.o_totalprice = lineitem.l_extendedprice
+	 AND lineitem.l_shipinstruct = 'NONE'
+	 AND orders.o_orderstatus = 'P'
+	 AND part.p_brand = 'Brand#33'
+	 AND lineitem.l_shipmode = 'AIR'
+
+
+--Size: 30189
+SELECT DISTINCT customer.c_custkey
+FROM customer
+WHERE customer.c_mktsegment = 'HOUSEHOLD'
+
+
+--Size: 98
+SELECT DISTINCT lineitem.l_orderkey
+FROM lineitem, orders
+WHERE orders.o_totalprice = lineitem.l_extendedprice
+	 AND lineitem.l_shipinstruct = 'NONE'
+	 AND orders.o_orderstatus = 'P'
+	 AND lineitem.l_shipmode = 'AIR'
+
+
+--Size: 7
+SELECT DISTINCT lineitem.l_linenumber
+FROM orders, lineitem
+WHERE orders.o_totalprice = lineitem.l_extendedprice
+	 AND lineitem.l_shipinstruct = 'NONE'
+	 AND orders.o_orderstatus = 'P'
+	 AND lineitem.l_shipmode = 'AIR'
+
+

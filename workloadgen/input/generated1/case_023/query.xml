@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<query type="conjunctive">
+<body>
+<atom name="orders">
+<variable name="o_orderkey"/>
+<variable name="c_custkey"/>
+<constant value="O"/>
+<variable name="o_totalprice"/>
+<variable name="o_orderdate"/>
+<constant value="5-LOW"/>
+<variable name="o_clerk"/>
+<variable name="o_shippriority"/>
+<variable name="o_comment"/>
+</atom>
+<atom name="customer">
+<variable name="c_custkey"/>
+<variable name="c_name"/>
+<variable name="c_address"/>
+<variable name="c_nationkey"/>
+<variable name="c_phone"/>
+<variable name="c_acctbal"/>
+<constant value="BUILDING"/>
+<variable name="c_comment"/>
+</atom>
+<atom name="lineitem">
+<variable name="l_orderkey"/>
+<variable name="l_partkey"/>
+<variable name="l_suppkey"/>
+<variable name="l_linenumber"/>
+<variable name="l_quantity"/>
+<variable name="l_extendedprice"/>
+<variable name="l_discount"/>
+<variable name="l_tax"/>
+<variable name="l_returnflag"/>
+<variable name="l_linestatus"/>
+<variable name="l_shipdate"/>
+<variable name="l_commitdate"/>
+<variable name="o_orderdate"/>
+<variable name="l_shipinstruct"/>
+<constant value="SHIP"/>
+<variable name="l_comment"/>
+</atom>
+<atom name="part">
+<variable name="l_partkey"/>
+<variable name="p_name"/>
+<constant value="Manufacturer#3"/>
+<variable name="p_brand"/>
+<variable name="p_type"/>
+<variable name="p_size"/>
+<variable name="p_container"/>
+<variable name="p_retailprice"/>
+<variable name="p_comment"/>
+</atom>
+</body>
+<head name="Q23">
+<variable name="l_linenumber"/>
+<variable name="c_custkey"/>
+<variable name="o_orderkey"/>
+</head>
+</query>

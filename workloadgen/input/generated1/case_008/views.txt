@@ -1,0 +1,12 @@
+--Size: 11
+SELECT DISTINCT supplier.s_suppkey
+FROM lineitem, supplier, part
+WHERE lineitem.l_suppkey = supplier.s_suppkey
+	 AND part.p_retailprice = lineitem.l_extendedprice
+	 AND lineitem.l_shipmode = 'MAIL'
+	 AND lineitem.l_linestatus = 'F'
+	 AND lineitem.l_shipinstruct = 'COLLECT COD'
+	 AND part.p_brand = 'Brand#51'
+	 AND lineitem.l_returnflag = 'N'
+
+

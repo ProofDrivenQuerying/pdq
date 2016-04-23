@@ -6,7 +6,6 @@ import java.util.List;
 import uk.ac.ox.cs.pdq.db.Constraint;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismProperty;
 import uk.ac.ox.cs.pdq.reasoning.utility.Match;
 
@@ -110,4 +109,13 @@ public interface ChaseState {
 	 */
 	boolean chaseStep(Collection<Match> triggers);
 	
+	/**
+	 * Merge.
+	 *
+	 * @param s 		An input chase configuration
+	 * @return 		a database instance with facts the union of the facts of the two database instances.
+	 */
+	ChaseState merge(ChaseState s);
+	
+	ChaseState clone();
 }

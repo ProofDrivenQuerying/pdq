@@ -1,0 +1,13 @@
+--Actual size: 52
+SELECT DISTINCT partsupp.ps_suppkey, partsupp.ps_partkey, supplier.s_suppkey
+FROM partsupp, part, lineitem, supplier
+WHERE partsupp.ps_partkey = part.p_partkey
+	 AND part.p_retailprice = lineitem.l_extendedprice
+	 AND lineitem.l_suppkey = supplier.s_suppkey
+	 AND lineitem.l_shipmode = 'MAIL'
+	 AND lineitem.l_linestatus = 'F'
+	 AND lineitem.l_shipinstruct = 'COLLECT COD'
+	 AND part.p_brand = 'Brand#51'
+	 AND lineitem.l_returnflag = 'N'
+
+

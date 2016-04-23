@@ -1,0 +1,63 @@
+--Size: 3763
+SELECT DISTINCT lineitem.l_orderkey
+FROM part, lineitem
+WHERE lineitem.l_extendedprice = part.p_retailprice
+	 AND part.p_mfgr = 'Manufacturer#5'
+	 AND lineitem.l_shipinstruct = 'DELIVER IN PERSON'
+	 AND lineitem.l_shipmode = 'MAIL'
+
+
+--Size: 3640
+SELECT DISTINCT partsupp.ps_suppkey, lineitem.l_linenumber
+FROM lineitem, partsupp, part
+WHERE lineitem.l_partkey = partsupp.ps_partkey
+	 AND lineitem.l_suppkey = partsupp.ps_suppkey
+	 AND lineitem.l_extendedprice = part.p_retailprice
+	 AND part.p_mfgr = 'Manufacturer#5'
+	 AND lineitem.l_shipinstruct = 'DELIVER IN PERSON'
+	 AND lineitem.l_shipmode = 'MAIL'
+
+
+--Size: 3768
+SELECT DISTINCT lineitem.l_linenumber, lineitem.l_orderkey
+FROM lineitem, partsupp, part
+WHERE lineitem.l_partkey = partsupp.ps_partkey
+	 AND lineitem.l_suppkey = partsupp.ps_suppkey
+	 AND lineitem.l_extendedprice = part.p_retailprice
+	 AND part.p_mfgr = 'Manufacturer#5'
+	 AND lineitem.l_shipinstruct = 'DELIVER IN PERSON'
+	 AND lineitem.l_shipmode = 'MAIL'
+
+
+--Size: 3768
+SELECT DISTINCT partsupp.ps_suppkey, lineitem.l_orderkey
+FROM lineitem, partsupp, part
+WHERE lineitem.l_partkey = partsupp.ps_partkey
+	 AND lineitem.l_suppkey = partsupp.ps_suppkey
+	 AND lineitem.l_extendedprice = part.p_retailprice
+	 AND part.p_mfgr = 'Manufacturer#5'
+	 AND lineitem.l_shipinstruct = 'DELIVER IN PERSON'
+	 AND lineitem.l_shipmode = 'MAIL'
+
+
+--Size: 6
+SELECT DISTINCT lineitem.l_linenumber
+FROM lineitem, orders, part
+WHERE lineitem.l_orderkey = orders.o_orderkey
+	 AND lineitem.l_extendedprice = part.p_retailprice
+	 AND orders.o_orderpriority = '3-MEDIUM'
+	 AND part.p_mfgr = 'Manufacturer#5'
+	 AND lineitem.l_shipinstruct = 'DELIVER IN PERSON'
+	 AND orders.o_orderstatus = 'P'
+	 AND lineitem.l_shipmode = 'MAIL'
+
+
+--Size: 7
+SELECT DISTINCT lineitem.l_linenumber
+FROM part, lineitem
+WHERE lineitem.l_extendedprice = part.p_retailprice
+	 AND part.p_mfgr = 'Manufacturer#5'
+	 AND lineitem.l_shipinstruct = 'DELIVER IN PERSON'
+	 AND lineitem.l_shipmode = 'MAIL'
+
+

@@ -1,0 +1,82 @@
+--Size: 43972
+SELECT DISTINCT orders.o_orderkey, lineitem.l_linenumber
+FROM orders, lineitem, part
+WHERE lineitem.l_shipdate = orders.o_orderdate
+	 AND lineitem.l_partkey = part.p_partkey
+	 AND orders.o_orderstatus = 'P'
+	 AND lineitem.l_returnflag = 'N'
+	 AND part.p_mfgr = 'Manufacturer#3'
+
+
+--Size: 44352
+SELECT DISTINCT orders.o_orderkey, lineitem.l_linenumber
+FROM orders, lineitem, supplier
+WHERE lineitem.l_shipdate = orders.o_orderdate
+	 AND lineitem.l_suppkey = supplier.s_suppkey
+	 AND orders.o_orderstatus = 'P'
+	 AND lineitem.l_returnflag = 'N'
+
+
+--Size: 38543
+SELECT DISTINCT orders.o_orderkey
+FROM orders
+WHERE orders.o_orderstatus = 'P'
+
+
+--Size: 7
+SELECT DISTINCT lineitem.l_linenumber
+FROM lineitem, supplier, customer
+WHERE lineitem.l_suppkey = supplier.s_suppkey
+	 AND supplier.s_acctbal = customer.c_acctbal
+	 AND lineitem.l_returnflag = 'N'
+	 AND customer.c_mktsegment = 'BUILDING'
+
+
+--Size: 7
+SELECT DISTINCT lineitem.l_linenumber
+FROM lineitem, part, supplier
+WHERE lineitem.l_partkey = part.p_partkey
+	 AND lineitem.l_suppkey = supplier.s_suppkey
+	 AND lineitem.l_returnflag = 'N'
+	 AND part.p_mfgr = 'Manufacturer#3'
+
+
+--Size: 16411
+SELECT DISTINCT lineitem.l_orderkey
+FROM lineitem, supplier, customer, part
+WHERE lineitem.l_suppkey = supplier.s_suppkey
+	 AND supplier.s_acctbal = customer.c_acctbal
+	 AND lineitem.l_partkey = part.p_partkey
+	 AND lineitem.l_returnflag = 'N'
+	 AND customer.c_mktsegment = 'BUILDING'
+	 AND part.p_mfgr = 'Manufacturer#3'
+
+
+--Size: 36320
+SELECT DISTINCT lineitem.l_linenumber, lineitem.l_orderkey
+FROM lineitem, supplier, orders
+WHERE lineitem.l_suppkey = supplier.s_suppkey
+	 AND lineitem.l_shipdate = orders.o_orderdate
+	 AND orders.o_orderstatus = 'P'
+	 AND lineitem.l_returnflag = 'N'
+
+
+--Size: 7339
+SELECT DISTINCT lineitem.l_orderkey, lineitem.l_linenumber
+FROM orders, lineitem, part
+WHERE lineitem.l_shipdate = orders.o_orderdate
+	 AND lineitem.l_partkey = part.p_partkey
+	 AND orders.o_orderstatus = 'P'
+	 AND lineitem.l_returnflag = 'N'
+	 AND part.p_mfgr = 'Manufacturer#3'
+
+
+--Size: 5808199
+SELECT DISTINCT orders.o_orderkey, lineitem.l_orderkey
+FROM orders, lineitem, supplier
+WHERE lineitem.l_shipdate = orders.o_orderdate
+	 AND lineitem.l_suppkey = supplier.s_suppkey
+	 AND orders.o_orderstatus = 'P'
+	 AND lineitem.l_returnflag = 'N'
+
+

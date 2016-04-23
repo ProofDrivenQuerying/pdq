@@ -1,0 +1,67 @@
+--Size: 29752
+--V1
+SELECT DISTINCT customer.c_custkey
+FROM customer
+WHERE customer.c_mktsegment = 'AUTOMOBILE'
+
+
+--Size: 17844809
+--V2
+SELECT DISTINCT customer.c_custkey, partsupp.ps_suppkey, lineitem.l_linenumber
+FROM orders, customer, lineitem, partsupp
+WHERE orders.o_custkey = customer.c_custkey
+	 AND orders.o_orderdate = lineitem.l_commitdate
+	 AND lineitem.l_partkey = partsupp.ps_partkey
+	 AND lineitem.l_suppkey = partsupp.ps_suppkey
+	 AND orders.o_orderstatus = 'O'
+	 AND customer.c_mktsegment = 'AUTOMOBILE'
+	 AND orders.o_orderpriority = '2-HIGH'
+	 AND lineitem.l_shipinstruct = 'DELIVER IN PERSON'
+
+
+--Size: 102984
+--V6
+SELECT DISTINCT lineitem.l_linenumber, customer.c_custkey
+FROM orders, customer, lineitem
+WHERE orders.o_custkey = customer.c_custkey
+	 AND orders.o_orderdate = lineitem.l_commitdate
+	 AND orders.o_orderstatus = 'O'
+	 AND customer.c_mktsegment = 'AUTOMOBILE'
+	 AND orders.o_orderpriority = '2-HIGH'
+	 AND lineitem.l_shipinstruct = 'DELIVER IN PERSON'
+
+
+--Size: 29027
+--V7
+SELECT DISTINCT customer.c_custkey, orders.o_orderkey
+FROM orders, customer, lineitem
+WHERE orders.o_custkey = customer.c_custkey
+	 AND orders.o_orderdate = lineitem.l_commitdate
+	 AND orders.o_orderstatus = 'O'
+	 AND customer.c_mktsegment = 'AUTOMOBILE'
+	 AND orders.o_orderpriority = '2-HIGH'
+	 AND lineitem.l_shipinstruct = 'DELIVER IN PERSON'
+
+
+--Size: 21
+--v8
+SELECT DISTINCT customer.c_custkey
+FROM orders, customer, part
+WHERE orders.o_custkey = customer.c_custkey
+	 AND part.p_retailprice = orders.o_totalprice
+	 AND orders.o_orderstatus = 'O'
+	 AND customer.c_mktsegment = 'AUTOMOBILE'
+	 AND orders.o_orderpriority = '2-HIGH'
+
+
+--Size: 21
+--V9
+SELECT DISTINCT customer.c_custkey
+FROM orders, part, customer
+WHERE part.p_retailprice = orders.o_totalprice
+	 AND orders.o_custkey = customer.c_custkey
+	 AND orders.o_orderstatus = 'O'
+	 AND customer.c_mktsegment = 'AUTOMOBILE'
+	 AND orders.o_orderpriority = '2-HIGH'
+
+

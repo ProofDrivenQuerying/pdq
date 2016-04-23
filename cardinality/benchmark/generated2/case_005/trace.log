@@ -1,0 +1,6 @@
+PDQ estimate (Lowest adjusted quality):
+
+We approximate this query using the binary annotated plan Binary(Unary(V8(c1,c4)),Unary(V10(c23,c1)))
+The size estimate using histograms is 3212574 
+The size estimate without histograms is 1454229
+The actual size of Binary(Unary(V8(c1,c4)),Unary(V10(c23,c1))) is 1650155

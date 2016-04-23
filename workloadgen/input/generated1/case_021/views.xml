@@ -1,0 +1,504 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dependency>
+<body>
+<atom name="V1">
+<variable name="l_linenumber"/>
+</atom>
+</body>
+<head>
+<atom name="lineitem">
+<variable name="l_orderkey"/>
+<variable name="l_partkey"/>
+<variable name="l_suppkey"/>
+<variable name="l_linenumber"/>
+<variable name="l_quantity"/>
+<variable name="o_totalprice"/>
+<variable name="l_discount"/>
+<variable name="l_tax"/>
+<variable name="l_returnflag"/>
+<variable name="l_linestatus"/>
+<variable name="l_shipdate"/>
+<variable name="l_commitdate"/>
+<variable name="l_receiptdate"/>
+<constant value="NONE"/>
+<constant value="AIR"/>
+<variable name="l_comment"/>
+</atom>
+<atom name="part">
+<variable name="l_partkey"/>
+<variable name="p_name"/>
+<variable name="p_mfgr"/>
+<constant value="Brand#33"/>
+<variable name="p_type"/>
+<variable name="p_size"/>
+<variable name="p_container"/>
+<variable name="p_retailprice"/>
+<variable name="p_comment"/>
+</atom>
+<atom name="orders">
+<variable name="o_orderkey"/>
+<variable name="o_custkey"/>
+<constant value="P"/>
+<variable name="o_totalprice"/>
+<variable name="o_orderdate"/>
+<variable name="o_orderpriority"/>
+<variable name="o_clerk"/>
+<variable name="o_shippriority"/>
+<variable name="o_comment"/>
+</atom>
+</head>
+</dependency>
+<dependency>
+<body>
+<atom name="lineitem">
+<variable name="l_orderkey"/>
+<variable name="l_partkey"/>
+<variable name="l_suppkey"/>
+<variable name="l_linenumber"/>
+<variable name="l_quantity"/>
+<variable name="o_totalprice"/>
+<variable name="l_discount"/>
+<variable name="l_tax"/>
+<variable name="l_returnflag"/>
+<variable name="l_linestatus"/>
+<variable name="l_shipdate"/>
+<variable name="l_commitdate"/>
+<variable name="l_receiptdate"/>
+<constant value="NONE"/>
+<constant value="AIR"/>
+<variable name="l_comment"/>
+</atom>
+<atom name="part">
+<variable name="l_partkey"/>
+<variable name="p_name"/>
+<variable name="p_mfgr"/>
+<constant value="Brand#33"/>
+<variable name="p_type"/>
+<variable name="p_size"/>
+<variable name="p_container"/>
+<variable name="p_retailprice"/>
+<variable name="p_comment"/>
+</atom>
+<atom name="orders">
+<variable name="o_orderkey"/>
+<variable name="o_custkey"/>
+<constant value="P"/>
+<variable name="o_totalprice"/>
+<variable name="o_orderdate"/>
+<variable name="o_orderpriority"/>
+<variable name="o_clerk"/>
+<variable name="o_shippriority"/>
+<variable name="o_comment"/>
+</atom>
+</body>
+<head>
+<atom name="V1">
+<variable name="l_linenumber"/>
+</atom>
+</head>
+</dependency>
+<view name="V1">
+<attribute name="l_linenumber" type="java.lang.Integer"/>
+</view>
+<dependency>
+<body>
+<atom name="V3">
+<variable name="l_linenumber"/>
+<variable name="l_orderkey"/>
+</atom>
+</body>
+<head>
+<atom name="orders">
+<variable name="o_orderkey"/>
+<variable name="o_custkey"/>
+<constant value="P"/>
+<variable name="o_totalprice"/>
+<variable name="o_orderdate"/>
+<variable name="o_orderpriority"/>
+<variable name="o_clerk"/>
+<variable name="o_shippriority"/>
+<variable name="o_comment"/>
+</atom>
+<atom name="customer">
+<variable name="o_custkey"/>
+<variable name="c_name"/>
+<variable name="c_address"/>
+<variable name="c_nationkey"/>
+<variable name="c_phone"/>
+<variable name="c_acctbal"/>
+<constant value="HOUSEHOLD"/>
+<variable name="c_comment"/>
+</atom>
+<atom name="lineitem">
+<variable name="l_orderkey"/>
+<variable name="l_partkey"/>
+<variable name="l_suppkey"/>
+<variable name="l_linenumber"/>
+<variable name="l_quantity"/>
+<variable name="o_totalprice"/>
+<variable name="l_discount"/>
+<variable name="l_tax"/>
+<variable name="l_returnflag"/>
+<variable name="l_linestatus"/>
+<variable name="l_shipdate"/>
+<variable name="l_commitdate"/>
+<variable name="l_receiptdate"/>
+<constant value="NONE"/>
+<constant value="AIR"/>
+<variable name="l_comment"/>
+</atom>
+</head>
+</dependency>
+<dependency>
+<body>
+<atom name="orders">
+<variable name="o_orderkey"/>
+<variable name="o_custkey"/>
+<constant value="P"/>
+<variable name="o_totalprice"/>
+<variable name="o_orderdate"/>
+<variable name="o_orderpriority"/>
+<variable name="o_clerk"/>
+<variable name="o_shippriority"/>
+<variable name="o_comment"/>
+</atom>
+<atom name="customer">
+<variable name="o_custkey"/>
+<variable name="c_name"/>
+<variable name="c_address"/>
+<variable name="c_nationkey"/>
+<variable name="c_phone"/>
+<variable name="c_acctbal"/>
+<constant value="HOUSEHOLD"/>
+<variable name="c_comment"/>
+</atom>
+<atom name="lineitem">
+<variable name="l_orderkey"/>
+<variable name="l_partkey"/>
+<variable name="l_suppkey"/>
+<variable name="l_linenumber"/>
+<variable name="l_quantity"/>
+<variable name="o_totalprice"/>
+<variable name="l_discount"/>
+<variable name="l_tax"/>
+<variable name="l_returnflag"/>
+<variable name="l_linestatus"/>
+<variable name="l_shipdate"/>
+<variable name="l_commitdate"/>
+<variable name="l_receiptdate"/>
+<constant value="NONE"/>
+<constant value="AIR"/>
+<variable name="l_comment"/>
+</atom>
+</body>
+<head>
+<atom name="V3">
+<variable name="l_linenumber"/>
+<variable name="l_orderkey"/>
+</atom>
+</head>
+</dependency>
+<view name="V3">
+<attribute name="l_linenumber" type="java.lang.Integer"/>
+<attribute name="l_orderkey" type="java.lang.Integer"/>
+</view>
+<dependency>
+<body>
+<atom name="V4">
+<variable name="l_orderkey"/>
+</atom>
+</body>
+<head>
+<atom name="lineitem">
+<variable name="l_orderkey"/>
+<variable name="l_partkey"/>
+<variable name="l_suppkey"/>
+<variable name="l_linenumber"/>
+<variable name="l_quantity"/>
+<variable name="o_totalprice"/>
+<variable name="l_discount"/>
+<variable name="l_tax"/>
+<variable name="l_returnflag"/>
+<variable name="l_linestatus"/>
+<variable name="l_shipdate"/>
+<variable name="l_commitdate"/>
+<variable name="l_receiptdate"/>
+<constant value="NONE"/>
+<constant value="AIR"/>
+<variable name="l_comment"/>
+</atom>
+<atom name="part">
+<variable name="l_partkey"/>
+<variable name="p_name"/>
+<variable name="p_mfgr"/>
+<constant value="Brand#33"/>
+<variable name="p_type"/>
+<variable name="p_size"/>
+<variable name="p_container"/>
+<variable name="p_retailprice"/>
+<variable name="p_comment"/>
+</atom>
+<atom name="orders">
+<variable name="o_orderkey"/>
+<variable name="o_custkey"/>
+<constant value="P"/>
+<variable name="o_totalprice"/>
+<variable name="o_orderdate"/>
+<variable name="o_orderpriority"/>
+<variable name="o_clerk"/>
+<variable name="o_shippriority"/>
+<variable name="o_comment"/>
+</atom>
+</head>
+</dependency>
+<dependency>
+<body>
+<atom name="lineitem">
+<variable name="l_orderkey"/>
+<variable name="l_partkey"/>
+<variable name="l_suppkey"/>
+<variable name="l_linenumber"/>
+<variable name="l_quantity"/>
+<variable name="o_totalprice"/>
+<variable name="l_discount"/>
+<variable name="l_tax"/>
+<variable name="l_returnflag"/>
+<variable name="l_linestatus"/>
+<variable name="l_shipdate"/>
+<variable name="l_commitdate"/>
+<variable name="l_receiptdate"/>
+<constant value="NONE"/>
+<constant value="AIR"/>
+<variable name="l_comment"/>
+</atom>
+<atom name="part">
+<variable name="l_partkey"/>
+<variable name="p_name"/>
+<variable name="p_mfgr"/>
+<constant value="Brand#33"/>
+<variable name="p_type"/>
+<variable name="p_size"/>
+<variable name="p_container"/>
+<variable name="p_retailprice"/>
+<variable name="p_comment"/>
+</atom>
+<atom name="orders">
+<variable name="o_orderkey"/>
+<variable name="o_custkey"/>
+<constant value="P"/>
+<variable name="o_totalprice"/>
+<variable name="o_orderdate"/>
+<variable name="o_orderpriority"/>
+<variable name="o_clerk"/>
+<variable name="o_shippriority"/>
+<variable name="o_comment"/>
+</atom>
+</body>
+<head>
+<atom name="V4">
+<variable name="l_orderkey"/>
+</atom>
+</head>
+</dependency>
+<view name="V4">
+<attribute name="l_orderkey" type="java.lang.Integer"/>
+</view>
+<dependency>
+<body>
+<atom name="V5">
+<variable name="c_custkey"/>
+</atom>
+</body>
+<head>
+<atom name="customer">
+<variable name="c_custkey"/>
+<variable name="c_name"/>
+<variable name="c_address"/>
+<variable name="c_nationkey"/>
+<variable name="c_phone"/>
+<variable name="c_acctbal"/>
+<constant value="HOUSEHOLD"/>
+<variable name="c_comment"/>
+</atom>
+</head>
+</dependency>
+<dependency>
+<body>
+<atom name="customer">
+<variable name="c_custkey"/>
+<variable name="c_name"/>
+<variable name="c_address"/>
+<variable name="c_nationkey"/>
+<variable name="c_phone"/>
+<variable name="c_acctbal"/>
+<constant value="HOUSEHOLD"/>
+<variable name="c_comment"/>
+</atom>
+</body>
+<head>
+<atom name="V5">
+<variable name="c_custkey"/>
+</atom>
+</head>
+</dependency>
+<view name="V5">
+<attribute name="c_custkey" type="java.lang.Integer"/>
+</view>
+<dependency>
+<body>
+<atom name="V6">
+<variable name="l_orderkey"/>
+</atom>
+</body>
+<head>
+<atom name="lineitem">
+<variable name="l_orderkey"/>
+<variable name="l_partkey"/>
+<variable name="l_suppkey"/>
+<variable name="l_linenumber"/>
+<variable name="l_quantity"/>
+<variable name="o_totalprice"/>
+<variable name="l_discount"/>
+<variable name="l_tax"/>
+<variable name="l_returnflag"/>
+<variable name="l_linestatus"/>
+<variable name="l_shipdate"/>
+<variable name="l_commitdate"/>
+<variable name="l_receiptdate"/>
+<constant value="NONE"/>
+<constant value="AIR"/>
+<variable name="l_comment"/>
+</atom>
+<atom name="orders">
+<variable name="o_orderkey"/>
+<variable name="o_custkey"/>
+<constant value="P"/>
+<variable name="o_totalprice"/>
+<variable name="o_orderdate"/>
+<variable name="o_orderpriority"/>
+<variable name="o_clerk"/>
+<variable name="o_shippriority"/>
+<variable name="o_comment"/>
+</atom>
+</head>
+</dependency>
+<dependency>
+<body>
+<atom name="lineitem">
+<variable name="l_orderkey"/>
+<variable name="l_partkey"/>
+<variable name="l_suppkey"/>
+<variable name="l_linenumber"/>
+<variable name="l_quantity"/>
+<variable name="o_totalprice"/>
+<variable name="l_discount"/>
+<variable name="l_tax"/>
+<variable name="l_returnflag"/>
+<variable name="l_linestatus"/>
+<variable name="l_shipdate"/>
+<variable name="l_commitdate"/>
+<variable name="l_receiptdate"/>
+<constant value="NONE"/>
+<constant value="AIR"/>
+<variable name="l_comment"/>
+</atom>
+<atom name="orders">
+<variable name="o_orderkey"/>
+<variable name="o_custkey"/>
+<constant value="P"/>
+<variable name="o_totalprice"/>
+<variable name="o_orderdate"/>
+<variable name="o_orderpriority"/>
+<variable name="o_clerk"/>
+<variable name="o_shippriority"/>
+<variable name="o_comment"/>
+</atom>
+</body>
+<head>
+<atom name="V6">
+<variable name="l_orderkey"/>
+</atom>
+</head>
+</dependency>
+<view name="V6">
+<attribute name="l_orderkey" type="java.lang.Integer"/>
+</view>
+<dependency>
+<body>
+<atom name="V8">
+<variable name="l_linenumber"/>
+</atom>
+</body>
+<head>
+<atom name="orders">
+<variable name="o_orderkey"/>
+<variable name="o_custkey"/>
+<constant value="P"/>
+<variable name="o_totalprice"/>
+<variable name="o_orderdate"/>
+<variable name="o_orderpriority"/>
+<variable name="o_clerk"/>
+<variable name="o_shippriority"/>
+<variable name="o_comment"/>
+</atom>
+<atom name="lineitem">
+<variable name="l_orderkey"/>
+<variable name="l_partkey"/>
+<variable name="l_suppkey"/>
+<variable name="l_linenumber"/>
+<variable name="l_quantity"/>
+<variable name="o_totalprice"/>
+<variable name="l_discount"/>
+<variable name="l_tax"/>
+<variable name="l_returnflag"/>
+<variable name="l_linestatus"/>
+<variable name="l_shipdate"/>
+<variable name="l_commitdate"/>
+<variable name="l_receiptdate"/>
+<constant value="NONE"/>
+<constant value="AIR"/>
+<variable name="l_comment"/>
+</atom>
+</head>
+</dependency>
+<dependency>
+<body>
+<atom name="orders">
+<variable name="o_orderkey"/>
+<variable name="o_custkey"/>
+<constant value="P"/>
+<variable name="o_totalprice"/>
+<variable name="o_orderdate"/>
+<variable name="o_orderpriority"/>
+<variable name="o_clerk"/>
+<variable name="o_shippriority"/>
+<variable name="o_comment"/>
+</atom>
+<atom name="lineitem">
+<variable name="l_orderkey"/>
+<variable name="l_partkey"/>
+<variable name="l_suppkey"/>
+<variable name="l_linenumber"/>
+<variable name="l_quantity"/>
+<variable name="o_totalprice"/>
+<variable name="l_discount"/>
+<variable name="l_tax"/>
+<variable name="l_returnflag"/>
+<variable name="l_linestatus"/>
+<variable name="l_shipdate"/>
+<variable name="l_commitdate"/>
+<variable name="l_receiptdate"/>
+<constant value="NONE"/>
+<constant value="AIR"/>
+<variable name="l_comment"/>
+</atom>
+</body>
+<head>
+<atom name="V8">
+<variable name="l_linenumber"/>
+</atom>
+</head>
+</dependency>
+<view name="V8">
+<attribute name="l_linenumber" type="java.lang.Integer"/>
+</view>

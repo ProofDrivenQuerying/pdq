@@ -1,0 +1,60 @@
+--Size: 4366
+SELECT DISTINCT supplier.s_suppkey
+FROM part, lineitem, supplier
+WHERE lineitem.l_extendedprice = part.p_retailprice
+	 AND lineitem.l_suppkey = supplier.s_suppkey
+	 AND part.p_brand = 'Brand#52'
+	 AND lineitem.l_shipmode = 'REG AIR'
+
+
+--Size: 5733
+SELECT DISTINCT lineitem.l_orderkey
+FROM part, lineitem, supplier
+WHERE lineitem.l_extendedprice = part.p_retailprice
+	 AND lineitem.l_suppkey = supplier.s_suppkey
+	 AND part.p_brand = 'Brand#52'
+	 AND lineitem.l_shipmode = 'REG AIR'
+
+
+--V3
+--Size: 20569675
+SELECT DISTINCT orders.o_orderkey, lineitem.l_orderkey
+INTO V3
+FROM orders, customer, lineitem, supplier
+WHERE orders.o_custkey = customer.c_custkey
+	 AND orders.o_orderdate = lineitem.l_shipdate
+	 AND lineitem.l_suppkey = supplier.s_suppkey
+	 AND customer.c_mktsegment = 'AUTOMOBILE'
+	 AND orders.o_orderpriority = '2-HIGH'
+	 AND lineitem.l_shipmode = 'REG AIR'
+
+
+--Size: 59391
+SELECT DISTINCT orders.o_orderkey
+FROM orders, customer, lineitem
+WHERE orders.o_custkey = customer.c_custkey
+	 AND orders.o_orderdate = lineitem.l_shipdate
+	 AND customer.c_mktsegment = 'AUTOMOBILE'
+	 AND orders.o_orderpriority = '2-HIGH'
+	 AND lineitem.l_shipmode = 'REG AIR'
+
+--V5
+--Size: 835264
+SELECT DISTINCT supplier.s_suppkey, lineitem.l_orderkey
+FROM orders, customer, lineitem, supplier
+WHERE orders.o_custkey = customer.c_custkey
+	 AND orders.o_orderdate = lineitem.l_shipdate
+	 AND lineitem.l_suppkey = supplier.s_suppkey
+	 AND customer.c_mktsegment = 'AUTOMOBILE'
+	 AND orders.o_orderpriority = '2-HIGH'
+	 AND lineitem.l_shipmode = 'REG AIR'
+
+
+--Size: 59411
+SELECT DISTINCT orders.o_orderkey
+FROM orders, customer
+WHERE orders.o_custkey = customer.c_custkey
+	 AND customer.c_mktsegment = 'AUTOMOBILE'
+	 AND orders.o_orderpriority = '2-HIGH'
+
+

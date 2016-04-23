@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE schema SYSTEM "view-policies.dtd">
+<Policies>
+    <ViewGenPolicy numViews="10">
+        <Policy class="cy.ac.cut.cs.workloadgen.policies.viewgen.VJoinPolicyFixed">
+            <Parameter>
+                <Name>NumJoins</Name>
+                <Value>2</Value>
+            </Parameter>
+            <Parameter>
+                <Name>NumFKJoins</Name>
+                <Value>1</Value>
+            </Parameter>
+        </Policy>
+        <Policy class="cy.ac.cut.cs.workloadgen.policies.viewgen.VProjectPolicyKeys">
+            <Parameter>
+                <Name>Percent</Name>
+                <Value>50</Value>
+            </Parameter>
+        </Policy>
+        <Policy class="cy.ac.cut.cs.workloadgen.policies.viewgen.VFilterPolicyFixed">
+            <Parameter>
+                <Name>NumTotalFilters</Name>
+                <Value>4</Value>
+            </Parameter>
+            <Parameter>
+                <Name>MaxNumEquiFilters</Name>
+                <Value>4</Value>
+            </Parameter>
+            <Parameter>
+                <Name>MaxNumRangeFilters</Name>
+                <Value>1</Value>
+            </Parameter>
+            <Parameter>
+                <Name>MinRangePercent</Name>
+                <Value>20</Value>
+            </Parameter>
+            <Parameter>
+                <Name>MaxRangePercent</Name>
+                <Value>50</Value>
+            </Parameter>
+        </Policy>
+    </ViewGenPolicy>
+</Policies>
