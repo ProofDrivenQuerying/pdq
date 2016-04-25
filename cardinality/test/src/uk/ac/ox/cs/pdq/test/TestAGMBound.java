@@ -36,7 +36,7 @@ import com.google.common.collect.Lists;
  * @author Efthymia tsamoura
  *
  */
-public class AGMBound {
+public class TestAGMBound {
 
 	private Schema schema = new TestSchema().getSchema();
 
