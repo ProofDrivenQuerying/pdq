@@ -10,7 +10,6 @@ import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
-import uk.ac.ox.cs.pdq.planner.util.FiringGraph;
 import uk.ac.ox.cs.pdq.reasoning.utility.Match;
 
 // TODO: Auto-generated Javadoc
@@ -90,12 +89,5 @@ public interface AccessibleChaseState extends uk.ac.ox.cs.pdq.reasoning.chase.st
 	
 
 	AccessibleChaseState clone();
-	
-//	/**
-//	 * Gets the firing graph.
-//	 *
-//	 * @return 		the rule firings that took place in this instance
-//	 */
-//	FiringGraph  getFiringGraph();
 	
 }

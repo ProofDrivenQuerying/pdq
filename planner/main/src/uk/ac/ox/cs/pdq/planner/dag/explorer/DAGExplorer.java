@@ -180,7 +180,7 @@ public abstract class DAGExplorer extends Explorer<DAGPlan> {
 	protected List<DAGChaseConfiguration> createInitialConfigurations() throws PlannerException {
 		AccessibleChaseState state = null;
 		state = (uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState) 
-				new AccessibleDatabaseListState(this.query, this.schema, (DatabaseHomomorphismManager) this.detector);
+				new AccessibleDatabaseListState(this.query, this.schema, (DatabaseHomomorphismManager) this.detector, false);
 		this.chaser.reasonUntilTermination(state, this.schema.getDependencies());
 
 		List<DAGChaseConfiguration> collection = new ArrayList<>();

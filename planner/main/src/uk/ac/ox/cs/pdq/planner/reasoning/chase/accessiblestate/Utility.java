@@ -86,7 +86,10 @@ public class Utility {
 			createdFacts.add(infAccFact);
 			inferred.add(infAccFact.toString());
 			derivedInferred.add(infAccFact);
-			graph.put(axiom, accessedFact, infAccFact);
+			if(graph != null) {
+				graph.put(axiom, accessedFact, infAccFact);
+			}
+			
 			
 			for(Term term:fact.getTerms()) {
 				createdFacts.add(new Atom(schema.getAccessibleRelation(), term));

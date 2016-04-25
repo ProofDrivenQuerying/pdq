@@ -15,12 +15,10 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TGD;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Formula;
-import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
@@ -81,10 +79,10 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 	 * @param schema the schema
 	 * @param manager the manager
 	 */
-	public AccessibleDatabaseListState(ConjunctiveQuery query, Schema schema, DatabaseHomomorphismManager manager) {
+	public AccessibleDatabaseListState(ConjunctiveQuery query, Schema schema, DatabaseHomomorphismManager manager, boolean maintainProvenance) {
 		this(manager, 
 				createInitialFacts(query, schema), 
-				new MapFiringGraph(),
+				maintainProvenance == true ? new MapFiringGraph() : null,
 				new EqualConstantsClasses(),
 				inferConstantsMap(createInitialFacts(query, schema)),
 				Utility.inferInferred(createInitialFacts(query, schema)),
@@ -114,8 +112,7 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 		}
 		return facts;
 	}
-
-
+	
 	/**
 	 * Instantiates a new accessible database list state.
 	 *
@@ -140,7 +137,6 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 			Multimap<Term,Atom> accessibleTerms
 			) {
 		super(manager, facts, constantClasses, constants);
-		Preconditions.checkNotNull(graph);
 		Preconditions.checkNotNull(inferred);
 		Preconditions.checkNotNull(derivedInferred);
 		Preconditions.checkNotNull(signatureGroups);
@@ -233,8 +229,10 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 				}
 			}
 			newFacts.addAll(right.getAtoms());
-			//Update the provenance of facts
-			this.graph.put(dependency, Sets.newHashSet(left.getAtoms()), Sets.newHashSet(right.getAtoms()));
+			if(this.graph != null) {
+				//Update the provenance of facts
+				this.graph.put(dependency, Sets.newHashSet(left.getAtoms()), Sets.newHashSet(right.getAtoms()));
+			}
 		}
 		//Add the newly created facts to the database
 		this.addFacts(newFacts);
@@ -324,6 +322,9 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 	 */
 	@Override
 	public Map<Atom, Pair<Dependency, Collection<Atom>>> getProvenance() {
+		if(this.graph == null) {
+			return null;
+		}
 		return this.getFiringGraph().getFactProvenance();
 	}
 
@@ -337,6 +338,9 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 	 */
 	@Override
 	public Pair<Dependency, Collection<Atom>> getProvenance(Atom fact) {
+		if(this.graph == null) {
+			return null;
+		}
 		return this.getFiringGraph().getFactProvenance(fact);
 	}
 
@@ -351,7 +355,7 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 		Multimap<Constant, Atom> constantsToAtoms = HashMultimap.create();
 		constantsToAtoms.putAll(this.constantsToAtoms);
 		return new AccessibleDatabaseListState(this.manager, Sets.newHashSet(this.facts), 
-				this.graph.clone(),
+				this.graph == null ? null : this.graph.clone(),
 				this.classes.clone(),
 				constantsToAtoms,
 				new LinkedHashSet<>(this.inferred),
@@ -388,7 +392,7 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 		return new AccessibleDatabaseListState(
 				this.getManager(),
 				facts, 
-				this.getFiringGraph().merge(((AccessibleDatabaseListState)s).getFiringGraph()),
+				this.getFiringGraph() == null ? null : this.getFiringGraph().merge(((AccessibleDatabaseListState)s).getFiringGraph()),
 				classes,
 				constantsToAtoms,
 				inferred,

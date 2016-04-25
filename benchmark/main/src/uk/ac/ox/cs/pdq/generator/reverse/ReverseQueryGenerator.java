@@ -106,7 +106,7 @@ public class ReverseQueryGenerator implements Runnable {
 				detector.addQuery(accessibleQuery);
 				detector.initialize();
 				AccessibleChaseState state = (AccessibleChaseState) 
-						new AccessibleDatabaseListState(query, accessibleSchema, (DatabaseHomomorphismManager) detector);
+						new AccessibleDatabaseListState(query, accessibleSchema, (DatabaseHomomorphismManager) detector, false);
 				
 				log.info("Phase 1");
 				reasoner.reasonUntilTermination(state, this.schema.getDependencies());
