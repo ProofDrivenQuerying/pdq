@@ -29,7 +29,7 @@ public class SQLServerHistogramLoaderTest {
 	 * Test1.
 	 */
 	@Test public void test1() {
-		SQLServerHistogram histogram = SQLServerHistogramLoader.load(Integer.class, "test/input/V1Histogram.rpt");
+		SQLServerHistogram histogram = SQLServerHistogramLoader.load(Integer.class, "/test/input/V1Histogram.rpt");
 		Assert.assertEquals(histogram.getBuckets().size(), 162);
 	}
 	
@@ -37,7 +37,7 @@ public class SQLServerHistogramLoaderTest {
 	 * Test2.
 	 */
 	@Test public void test2() {
-		SQLServerHistogram histogram = SQLServerHistogramLoader.load(Integer.class, "test/input/V2Histogram.rpt");
+		SQLServerHistogram histogram = SQLServerHistogramLoader.load(Integer.class, "/test/input/V2Histogram.rpt");
 		Assert.assertEquals(histogram.getBuckets().size(), 26);
 	}
 }
