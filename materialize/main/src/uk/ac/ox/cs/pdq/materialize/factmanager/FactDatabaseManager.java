@@ -75,7 +75,7 @@ public class FactDatabaseManager implements FactManager {
 	protected final Map<String, DatabaseRelation> toDatabaseTables;
 
 	/** The open connections. */
-	protected static List<Connection> openConnections = new ArrayList<>();
+	protected List<Connection> openConnections = new ArrayList<>();
 
 	protected final int asynchronousThreadsNumber = 2;
 
@@ -166,7 +166,6 @@ public class FactDatabaseManager implements FactManager {
 		for(int i = 0; i < this.asynchronousThreadsNumber; ++i) {
 			this.asynchronousConnections.add(HomomorphismUtility.getConnection(this.driver, this.url, this.database, this.username, this.password));
 		}
-		FactDatabaseManager.openConnections.addAll(this.asynchronousConnections);
 	}
 
 	/**
@@ -210,7 +209,6 @@ public class FactDatabaseManager implements FactManager {
 		for(int i = 0; i < this.asynchronousThreadsNumber; ++i) {
 			this.asynchronousConnections.add(HomomorphismUtility.getConnection(this.driver, this.url, this.database, this.username, this.password));
 		}
-		FactDatabaseManager.openConnections.addAll(this.asynchronousConnections);
 	}
 
 	/**
@@ -235,8 +233,7 @@ public class FactDatabaseManager implements FactManager {
 			for (String sql: this.builder.createDatabaseStatements(this.database)) {
 				sqlStatement.addBatch(sql);
 			}
-//			DatabaseRelation equality = DatabaseRelation.createEqualityTable();
-
+			
 			this.toDatabaseTables.put(QNames.EQUALITY.toString(), DatabaseRelation.DatabaseEqualityRelation);
 			sqlStatement.addBatch(this.builder.createTableStatement(DatabaseRelation.DatabaseEqualityRelation));
 			sqlStatement.addBatch(this.builder.createColumnIndexStatement(DatabaseRelation.DatabaseEqualityRelation, DatabaseRelation.Fact));
@@ -296,7 +293,10 @@ public class FactDatabaseManager implements FactManager {
 	@Override
 	public void close() throws Exception {
 		this.dropDatabase();
-		for(Connection con:FactDatabaseManager.openConnections) {
+		for(Connection con:this.asynchronousConnections) {
+			con.close();
+		}
+		for(Connection con:this.openConnections) {
 			con.close();
 		}
 	}
@@ -319,6 +319,7 @@ public class FactDatabaseManager implements FactManager {
 					this.toDatabaseTables, 
 					this.constraints);
 			clone.isInitialized = this.isInitialized;
+			this.openConnections.addAll(clone.asynchronousConnections);
 			return clone;
 		} catch (SQLException e) {
 			log.error(e.getMessage(),e);

@@ -59,7 +59,7 @@ public class DatabaseHomomorphismDetector implements HomomorphismDetector {
 	protected final Map<String, DatabaseRelation> toDatabaseTables;
 
 	/** The open connections. */
-	protected static List<Connection> openConnections = new ArrayList<>();
+	protected List<Connection> openConnections = new ArrayList<>();
 
 	/** Number of parallel threads. **/
 	protected final int synchronousThreads = 5;
@@ -120,7 +120,6 @@ public class DatabaseHomomorphismDetector implements HomomorphismDetector {
 		for(int i = 0; i < this.synchronousThreads; ++i) {
 			this.synchronousConnections.add(HomomorphismUtility.getConnection(this.driver, this.url, this.database, this.username, this.password));
 		}
-		DatabaseHomomorphismDetector.openConnections.addAll(this.synchronousConnections);
 	}
 	
 	/**
@@ -161,7 +160,6 @@ public class DatabaseHomomorphismDetector implements HomomorphismDetector {
 		for(int i = 0; i < this.synchronousThreads; ++i) {
 			this.synchronousConnections.add(HomomorphismUtility.getConnection(this.driver, this.url, this.database, this.username, this.password));
 		}
-		DatabaseHomomorphismDetector.openConnections.addAll(this.synchronousConnections);
 	}
 
 
@@ -171,7 +169,10 @@ public class DatabaseHomomorphismDetector implements HomomorphismDetector {
 	 */
 	@Override
 	public void close() throws Exception {
-		for(Connection con:DatabaseHomomorphismDetector.openConnections) {
+		for(Connection con:this.synchronousConnections) {
+			con.close();
+		}
+		for(Connection con:this.openConnections) {
 			con.close();
 		}
 	}
@@ -190,6 +191,7 @@ public class DatabaseHomomorphismDetector implements HomomorphismDetector {
 					this.builder.clone(), 
 					this.constants,
 					this.toDatabaseTables);
+			this.openConnections.addAll(this.synchronousConnections);
 			return clone;
 		} catch (SQLException e) {
 			log.error(e.getMessage(),e);
@@ -226,14 +228,6 @@ public class DatabaseHomomorphismDetector implements HomomorphismDetector {
 		//Run the SQL query statements in multiple threads
 		ExecutorService executorService = null;
 		try {
-
-//			if(this.synchronousConnections.isEmpty()) {
-//				for(int i = 0; i < this.synchronousThreads; ++i) {
-//					this.synchronousConnections.add(HomomorphismUtility.getConnection(this.driver, this.url, this.database, this.username, this.password));
-//				}
-//				DatabaseHomomorphismDetector.openConnections.addAll(this.synchronousConnections);
-//			}
-
 			//Create a pool of threads to run in parallel
 			executorService = Executors.newFixedThreadPool(this.synchronousThreads);
 			List<Callable<List<Match>>> threads = new ArrayList<>();
@@ -258,20 +252,12 @@ public class DatabaseHomomorphismDetector implements HomomorphismDetector {
 				}
 				return null;
 			}
-//			for(Connection connection:this.synchronousConnections) {
-//				connection.close();
-//			}
-//			this.synchronousConnections.clear();
 			executorService.shutdown();
 		} catch (InterruptedException | ExecutionException e) {
 			executorService.shutdownNow();
 			e.printStackTrace();
 			return null;
 		} 
-//		catch (SQLException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
 		return result;
 	}
 

@@ -162,10 +162,10 @@ public class RuntimeTest extends RegressionTest {
 		AccessibleSchema accessibleSchema = new AccessibleSchema(schema);
 		Query<?> accessibleQuery = accessibleSchema.accessible(query);
 		try (HomomorphismManager manager = new HomomorphismManagerFactory().getInstance(accessibleSchema, reasoningParams)) {
-			manager.addQuery(accessibleQuery);
+//			manager.addQuery(accessibleQuery);
 			DataValidationImplementation dataValidator = new DataValidationImplementation(schema, (DatabaseHomomorphismManager) manager);
 			dataValidator.validate();
-			manager.clearQuery();
+//			manager.clearQuery();
 		} catch (Exception e) {
 			throw new EvaluationException(e.getMessage(), e);
 		}

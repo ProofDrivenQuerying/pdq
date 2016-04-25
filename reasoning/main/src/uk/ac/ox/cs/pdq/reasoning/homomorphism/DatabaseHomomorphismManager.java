@@ -2,6 +2,7 @@ package uk.ac.ox.cs.pdq.reasoning.homomorphism;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -38,10 +39,12 @@ import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Equality;
 import uk.ac.ox.cs.pdq.fol.Evaluatable;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Query;
+import uk.ac.ox.cs.pdq.fol.Skolem;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.io.xml.QNames;
@@ -85,7 +88,7 @@ public class DatabaseHomomorphismManager implements HomomorphismManager {
 	protected final Map<String, DatabaseRelation> toDatabaseTables;
 
 	/** The open connections. */
-	protected static List<Connection> openConnections = new ArrayList<>();
+	protected List<Connection> openConnections = new ArrayList<>();
 
 	/** Number of parallel threads. **/
 	protected final int synchronousThreadsNumber = 1;
@@ -96,6 +99,8 @@ public class DatabaseHomomorphismManager implements HomomorphismManager {
 
 	/**  Open database connections. */
 	protected final List<Connection> synchronousConnections = Lists.newArrayList();
+	
+//	protected final Connection synchronousConnections;
 
 	/**  The database. */
 	protected final String database;
@@ -170,9 +175,8 @@ public class DatabaseHomomorphismManager implements HomomorphismManager {
 		this.toDatabaseTables = new LinkedHashMap<>();
 		
 		for(int i = 0; i < this.synchronousThreadsNumber; ++i) {
-			this.synchronousConnections.add(getConnection(this.driver, this.url, this.database, this.username, this.password));
+			this.synchronousConnections.add(getConnection(this.driver, this.url, this.database, this.username, this.password));			
 		}
-		DatabaseHomomorphismManager.openConnections.addAll(this.synchronousConnections);
 	}
 
 	/**
@@ -216,7 +220,6 @@ public class DatabaseHomomorphismManager implements HomomorphismManager {
 		for(int i = 0; i < this.synchronousThreadsNumber; ++i) {
 			this.synchronousConnections.add(getConnection(this.driver, this.url, this.database, this.username, this.password));
 		}
-		DatabaseHomomorphismManager.openConnections.addAll(this.synchronousConnections);
 	}
 
 	/**
@@ -242,7 +245,6 @@ public class DatabaseHomomorphismManager implements HomomorphismManager {
 			for (String sql: this.builder.createDatabaseStatements(this.database)) {
 				sqlStatement.addBatch(sql);
 			}
-//			DatabaseRelation equality = DatabaseRelation.createEqualityTable();
 
 			this.toDatabaseTables.put(QNames.EQUALITY.toString(), DatabaseRelation.DatabaseEqualityRelation);
 			sqlStatement.addBatch(this.builder.createTableStatement(DatabaseRelation.DatabaseEqualityRelation));
@@ -286,6 +288,7 @@ public class DatabaseHomomorphismManager implements HomomorphismManager {
 	protected void dropDatabase() throws HomomorphismException {
 		try {
 			Statement sqlStatement = this.synchronousConnections.get(0).createStatement();
+			//Statement sqlStatement = this.synchronousConnections.createStatement();
 
 			for (String sql: this.builder.createDropStatements(this.database)) {
 				sqlStatement.addBatch(sql);
@@ -303,7 +306,10 @@ public class DatabaseHomomorphismManager implements HomomorphismManager {
 	@Override
 	public void close() throws Exception {
 		this.dropDatabase();
-		for(Connection con:DatabaseHomomorphismManager.openConnections) {
+		for(Connection con:this.synchronousConnections) {
+			con.close();
+		}
+		for(Connection con:this.openConnections) {
 			con.close();
 		}
 	}
@@ -369,6 +375,7 @@ public class DatabaseHomomorphismManager implements HomomorphismManager {
 					this.toDatabaseTables, 
 					this.constraints);
 			clone.isInitialized = this.isInitialized;
+			this.openConnections.addAll(clone.synchronousConnections);
 			return clone;
 		} catch (SQLException e) {
 			log.error(e.getMessage(),e);
@@ -531,7 +538,7 @@ public class DatabaseHomomorphismManager implements HomomorphismManager {
 			}
 			clusters.clear();
 		}
-
+		
 		ExecutorService executorService = null;
 		try {
 			//Create a pool of threads to run in parallel
@@ -596,7 +603,7 @@ public class DatabaseHomomorphismManager implements HomomorphismManager {
 				subList.clear();
 			}
 		}
-
+		
 		ExecutorService executorService = null;
 		try {
 

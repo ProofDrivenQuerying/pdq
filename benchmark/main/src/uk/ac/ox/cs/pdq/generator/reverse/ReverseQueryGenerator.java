@@ -102,9 +102,9 @@ public class ReverseQueryGenerator implements Runnable {
 
 			Query<?> accessibleQuery = accessibleSchema.accessible(this.query);
 			try(HomomorphismManager detector =
-				new HomomorphismManagerFactory().getInstance(accessibleSchema, reasoningParams)) {
-				
+				new HomomorphismManagerFactory().getInstance(accessibleSchema, reasoningParams)) {				
 				detector.addQuery(accessibleQuery);
+				detector.initialize();
 				AccessibleChaseState state = (AccessibleChaseState) 
 						new AccessibleDatabaseListState(query, accessibleSchema, (DatabaseHomomorphismManager) detector);
 				

@@ -88,4 +88,14 @@ public class TestEqualConstantClasses {
 		Assert.assertEquals(new TypedConstant(new String("John")), this.classes.getClass(new Skolem("c3")).getRepresentative());		
 	}
 	
+	@Test 
+	public void test_add3() {
+		Equality eq31 = new Equality(new TypedConstant(new String("John")), new TypedConstant(new String("Michael")));
+		
+		boolean _isFailed;
+		_isFailed = this.classes.add(eq31);
+		
+		Assert.assertEquals(true, !_isFailed);		
+	}
+	
 }

@@ -29,8 +29,7 @@ import uk.ac.ox.cs.pdq.logging.performance.StatKey;
 import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismException;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismManager;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismManagerFactory;
 
 import com.google.common.collect.Lists;
@@ -67,10 +66,6 @@ public class Cardinality {
 
 	/**  The schema. */
 	private Schema schema;
-
-	
-	/** The detector. */
-	private HomomorphismManager detector;
 	
 	/**
 	 * Instantiates a new planner.
@@ -102,13 +97,6 @@ public class Cardinality {
 		this.reasoningParams = reasoningParams;
 		this.schema = schema;
 		this.statsLogger = statsLogger;
-		
-		try {
-			this.detector = new HomomorphismManagerFactory().getInstance(schema, this.reasoningParams);
-		} catch (HomomorphismException e) {
-			// TODO what to throw here?
-			throw new RuntimeException(e);
-		}
 	}
 
 	/**
@@ -183,13 +171,13 @@ public class Cardinality {
 			this.schema.updateConstants(query.getSchemaConstants());
 		}
 		this.addKeys(schema);
-		
-		this.detector.addQuery(query);
 	
 		Explorer<P> explorer = null;
-		try{
+		try (HomomorphismDetector detector =
+				new HomomorphismManagerFactory().getInstance(this.schema, this.reasoningParams)) {
+			
 			// Top-level initialisations
-			Catalog catalog = new SimpleCatalog(schema, this.costParams.getDatabaseCatalog());
+			Catalog catalog = new SimpleCatalog(this.schema, this.costParams.getDatabaseCatalog());
 			CardinalityEstimator cardinalityEstimator = CardinalityEstimatorFactory.getInstance(this.plannerParams.getCardinalityEstimatorType(), catalog);
 
 			Chaser reasoner = new ReasonerFactory(
@@ -203,12 +191,10 @@ public class Cardinality {
 					this.schema,
 					query,
 					reasoner,
-					this.detector,
+					detector,
 					cardinalityEstimator,
 					this.plannerParams);
 			
-			
-
 			// Chain all statistics collectors
 			if (collectStats) {
 				// Explorer statistics
@@ -231,7 +217,6 @@ public class Cardinality {
 			explorer.setMaxRounds(this.plannerParams.getMaxIterations().doubleValue());
 			explorer.setMaxElapsedTime(this.plannerParams.getTimeout());
 			explorer.explore();
-			this.detector.clearQuery();
 			return explorer.getBestPlan();
 			
 		} catch (CardinalityException e) {

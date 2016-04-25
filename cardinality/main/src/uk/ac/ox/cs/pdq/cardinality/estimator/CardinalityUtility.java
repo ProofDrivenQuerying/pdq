@@ -101,7 +101,6 @@ public class CardinalityUtility {
 				if(originalTerm instanceof Skolem && !keys.contains(originalTerm) && map.get(originalTerm) == null) {
 					map.put((Constant) originalTerm, new Skolem("?" + ((Skolem) originalTerm).getName()));
 				}
-
 				if(map.get(originalTerm) != null) {
 					copiedTerms.add(map.get(originalTerm));
 				}

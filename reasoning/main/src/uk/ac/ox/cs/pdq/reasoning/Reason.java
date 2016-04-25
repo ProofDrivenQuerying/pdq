@@ -163,8 +163,6 @@ public class Reason {
 			HomomorphismManager detector =
 					new HomomorphismManagerFactory().getInstance(schema, reasoningParams);
 			
-			detector.addQuery(query);
-			
 			ReasonerFactory reasonerFactory = new ReasonerFactory(
 					new EventBus(),
 					true,
@@ -175,7 +173,6 @@ public class Reason {
 			ChaseState state = new DatabaseChaseListState(query, (DatabaseHomomorphismManager) detector);
 			reasoner.reasonUntilTermination(state, schema.getDependencies());
 			
-			detector.clearQuery();
 			//TODO show something 
 			
 		} catch (Throwable e) {

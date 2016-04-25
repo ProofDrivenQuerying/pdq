@@ -75,8 +75,8 @@ public class RestrictedChaser extends Chaser {
 					appliedStep = true;
 				}
 				instance.chaseStep(matches);
-				d = accessor.getDependencies(instance);	
 			}
+			d = accessor.getDependencies(instance);	
 		} while (appliedStep);
 	}
 

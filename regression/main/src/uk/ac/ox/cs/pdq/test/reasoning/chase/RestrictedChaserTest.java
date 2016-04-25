@@ -212,10 +212,10 @@ public class RestrictedChaserTest {
 				
 				SQLStatementBuilder builder = new MySQLStatementBuilder();
 				HomomorphismManager detector = new DatabaseHomomorphismManager(this.driver, this.url, this.database, this.username, this.password, builder, schema);
-			    detector.addQuery(query);
+//			    detector.addQuery(query);
 				ListState state = new DatabaseChaseListState(query, (DatabaseHomomorphismManager) detector);				
 				reasoner.reasonUntilTermination(state, schema.getDependencies());
-				detector.clearQuery();
+//				detector.clearQuery();
 				Collection<Atom> expected = loadFacts(PATH + f, schema);
 				Assert.assertEquals(expected, state.getFacts());
 

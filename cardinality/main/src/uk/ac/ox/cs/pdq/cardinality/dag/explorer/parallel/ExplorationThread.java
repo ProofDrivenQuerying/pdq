@@ -16,7 +16,6 @@ import uk.ac.ox.cs.pdq.cardinality.estimator.CardinalityEstimator;
 import uk.ac.ox.cs.pdq.cardinality.estimator.CardinalityUtility;
 import uk.ac.ox.cs.pdq.cardinality.reasoning.chase.dominance.Dominance;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseState;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.DatabaseHomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;

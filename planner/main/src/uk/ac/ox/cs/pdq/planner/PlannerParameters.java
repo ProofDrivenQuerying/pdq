@@ -101,30 +101,6 @@ public class PlannerParameters extends Parameters {
 		}
 	}
 
-	/** The database driver. */
-	@Parameter(description="Canonical name of the driver class for the internal"
-			+ " database used by the reasoner",
-			defaultValue="org.apache.derby.jdbc.EmbeddedDriver")
-	protected String databaseDriver = "org.apache.derby.jdbc.EmbeddedDriver";
-
-	/** The connection url. */
-	@Parameter(description="Connection URL for the internal database used by the reasoner",
-			defaultValue = "jdbc:derby:memory:{1};create=true")
-	protected String connectionUrl = "jdbc:derby:memory:{1};create=true";
-
-	/** The database name. */
-	@Parameter(description="Name of the internal database used by the reasoner")
-	protected String databaseName;
-
-	/** The database user. */
-	@Parameter(description="Username for the internal database used by the reasoner")
-	protected String databaseUser;
-
-	/** The database password. */
-	@Parameter(description="Password for the internal database used by the reasoner")
-	protected String databasePassword;
-
-	/** The max iterations. */
 	@Parameter(description="The maximum number of iterations to perform in "
 			+ "planning.\nThis may have different semantic depending of which "
 			+ "planning algorithm is used.",
@@ -157,20 +133,6 @@ public class PlannerParameters extends Parameters {
 			+ "query match checks.\n Use in linear planning algorithms only.")
 	protected Integer queryMatchInterval;
 
-	/** The blocking interval. */
-	@Parameter(description="Number of exploration interval to wait for between "
-			+ "blocking checks.")
-	protected Integer blockingInterval;
-
-	/** The reasoning type. */
-	@Parameter(description="Type of reasoning to use.", defaultValue="RESTRICTED_CHASE")
-	protected ReasoningTypes reasoningType = ReasoningTypes.RESTRICTED_CHASE;
-
-	/** The homomorphism detector type. */
-	@Parameter(description = "Type of the homomorphism detected infrastructure")
-	protected HomomorphismDetectorTypes homomorphismDetectorType;
-
-	/** The post pruning type. */
 	@Parameter(description = "Type of post-pruning. This is only used in "
 			+ "optimizer linear planning")
 	protected PostPruningTypes postPruningType;
@@ -191,14 +153,6 @@ public class PlannerParameters extends Parameters {
 			defaultValue = "Integer.MAX_VALUE")
 	protected Integer maxBushiness = Integer.MAX_VALUE;
 
-	/** The range. */
-	@Parameter(description = "Range configurations to consider as inputs to "
-			+ "each subsequent phase of a DAG planning algorithm.\n"
-			+ "Use in conjunction to DISTANCE2CORETOPK priority assessor",
-			defaultValue = "Integer.MAX_VALUE")
-	protected Integer range = Integer.MAX_VALUE;
-
-	/** The exception on limit. */
 	@Parameter(description = 
 			"If true, a LimitReachedException is thrown during planning if a "
 			+ "limit (e.g. time or max no. interactions) is reached.\n"
@@ -212,13 +166,6 @@ public class PlannerParameters extends Parameters {
 			defaultValue = "DEFAULT")
 	protected ValidatorTypes validatorType = ValidatorTypes.DEFAULT_VALIDATOR;
 
-	/** The priority assessor type. */
-	@Parameter(description = "Type of priority assessor to use. Only required "
-			+ "in conjunction with DAG planning algorithms",
-			defaultValue = "DEFAULT")
-	protected PriorityAssessorTypes priorityAssessorType = PriorityAssessorTypes.DEFAULT;
-
-	/** The filter type. */
 	@Parameter(description = "Type of filter to use. Only required in "
 			+ "conjunction with DAG planning algorithms")
 	protected FilterTypes filterType;
@@ -265,21 +212,6 @@ public class PlannerParameters extends Parameters {
 			defaultValue = "2")
 	protected Integer depthThreshold = 2;
 
-	/** The termination k. */
-	@Parameter(description = "Number of rounds of rule firings to perform, in "
-			+ "a single application of the chase. "
-			+ "\nOnly applies to KTERMINATION_CHASE reasoning type.",
-			defaultValue = "Integer.MAX_VALUE")
-	protected Integer terminationK = Integer.MAX_VALUE;
-
-	/** The full initialization. */
-	@Parameter(description = "In true, the initial configuration is full "
-			+ "initialized at the beginning of a planning algorithm.\n"
-			+ "Only applies to DAG planning algorithms",
-			defaultValue = "false")
-	protected Boolean fullInitialization = Boolean.FALSE;
-
-	/** The order aware. */
 	@Parameter(description = "If true, all join orders are considered during "
 			+ "plan search",
 			defaultValue = "true")
@@ -297,53 +229,6 @@ public class PlannerParameters extends Parameters {
 	protected String accessFile;
 
 	/**
-	 * Gets the database driver.
-	 *
-	 * @return String
-	 */
-	public String getDatabaseDriver() {
-		return this.databaseDriver;
-	}
-
-	/**
-	 * Gets the connection url.
-	 *
-	 * @return String
-	 */
-	public String getConnectionUrl() {
-		return this.connectionUrl;
-	}
-
-	/**
-	 * Gets the database name.
-	 *
-	 * @return String
-	 */
-	public String getDatabaseName() {
-		return this.databaseName;
-	}
-
-	/**
-	 * Gets the database password.
-	 *
-	 * @return String
-	 */
-	public String getDatabasePassword() {
-		return this.databasePassword;
-	}
-
-	/**
-	 * Gets the database user.
-	 *
-	 * @return String
-	 */
-	public String getDatabaseUser() {
-		return this.databaseUser;
-	}
-
-	/**
-	 * Gets the log intervals.
-	 *
 	 * @return Integer
 	 */
 	public Integer getLogIntervals() {
@@ -369,59 +254,6 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
-	 * Sets the database driver.
-	 *
-	 * @param d String
-	 */
-	public void setDatabaseDriver(String d) {
-		try {
-			Class.forName(d);
-			this.databaseDriver = d;
-		} catch (ClassNotFoundException e) {
-			log.warn("No such database driver '" + d + "'. Ignoring");
-			this.databaseDriver = null;
-		}
-	}
-
-	/**
-	 * Sets the connection url.
-	 *
-	 * @param connectionUrl String
-	 */
-	public void setConnectionUrl(String connectionUrl) {
-		this.connectionUrl = connectionUrl;
-	}
-
-	/**
-	 * Sets the database name.
-	 *
-	 * @param databaseName String
-	 */
-	public void setDatabaseName(String databaseName) {
-		this.databaseName = databaseName;
-	}
-
-	/**
-	 * Sets the database password.
-	 *
-	 * @param databasePassword String
-	 */
-	public void setDatabasePassword(String databasePassword) {
-		this.databasePassword = databasePassword;
-	}
-
-	/**
-	 * Sets the database user.
-	 *
-	 * @param databaseUser String
-	 */
-	public void setDatabaseUser(String databaseUser) {
-		this.databaseUser = databaseUser;
-	}
-
-	/**
-	 * Sets the log intervals.
-	 *
 	 * @param logIntervals Number
 	 */
 	public void setLogIntervals(Number logIntervals) {
@@ -541,93 +373,6 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
-	 * Gets the blocking interval.
-	 *
-	 * @return Integer
-	 */
-	public Integer getBlockingInterval() {
-		return this.blockingInterval;
-	}
-
-	/**
-	 * Sets the blocking interval.
-	 *
-	 * @param blockingInterval Number
-	 */
-	public void setBlockingInterval(Number blockingInterval) {
-		this.blockingInterval = blockingInterval != null ? blockingInterval.intValue() : null;
-	}
-
-	/**
-	 * Gets the reasoning type.
-	 *
-	 * @return ReasoningTypes
-	 */
-	public ReasoningTypes getReasoningType() {
-		return this.reasoningType;
-	}
-
-	/**
-	 * Sets the reasoning type.
-	 *
-	 * @param reasoningType ReasoningTypes
-	 */
-	public void setReasoningType(ReasoningTypes reasoningType) {
-		this.reasoningType = reasoningType;
-	}
-
-	/**
-	 * Sets the reasoning type.
-	 *
-	 * @param reasoningType String
-	 */
-	public void setReasoningType(String reasoningType) {
-		try {
-			this.reasoningType = ReasoningTypes.valueOf(reasoningType);
-		} catch (IllegalArgumentException e) {
-			log.warn("Setting reasoning type to " + null, e);
-			this.reasoningType = null;
-		}
-	}
-
-	/**
-	 * Gets the homomorphism detector type.
-	 *
-	 * @return HomomorphismDetectorTypes
-	 */
-	public HomomorphismDetectorTypes getHomomorphismDetectorType() {
-		if (this.homomorphismDetectorType == null) {
-			return HomomorphismDetectorTypes.DATABASE;
-		}
-		return this.homomorphismDetectorType;
-	}
-
-	/**
-	 * Sets the homomorphism detector type.
-	 *
-	 * @param type HomomorphismDetectorTypes
-	 */
-	public void setHomomorphismDetectorType(HomomorphismDetectorTypes type) {
-		this.homomorphismDetectorType = type;
-	}
-
-	/**
-	 * Sets the homomorphism detector type.
-	 *
-	 * @param type String
-	 */
-	public void setHomomorphismDetectorType(String type) {
-		try {
-			this.homomorphismDetectorType = HomomorphismDetectorTypes.valueOf(type);
-		} catch (IllegalArgumentException e) {
-			log.warn("Setting homomorphism checker type to " + HomomorphismDetectorTypes.DATABASE, e);
-			this.homomorphismDetectorType = HomomorphismDetectorTypes.DATABASE;
-		}
-	}
-
-	/**
-	 * Gets the post pruning type.
-	 *
 	 * @return PostPruningTypes
 	 */
 	public PostPruningTypes getPostPruningType() {
@@ -721,29 +466,6 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
-	 * Gets the range.
-	 *
-	 * @return Integer
-	 */
-	public Integer getRange() {
-		if (this.range == null) {
-			return Integer.MAX_VALUE;
-		}
-		return this.range;
-	}
-
-	/**
-	 * Sets the range.
-	 *
-	 * @param range Number
-	 */
-	public void setRange(Number range) {
-		this.range = range != null ? range.intValue() : null;
-	}
-
-	/**
-	 * Gets the exception on limit.
-	 *
 	 * @return Boolean
 	 */
 	public Boolean getExceptionOnLimit() {
@@ -877,40 +599,6 @@ public class PlannerParameters extends Parameters {
 	}
 
 	/**
-	 * Gets the priority assessor type.
-	 *
-	 * @return PriorityAssessorTypes
-	 */
-	public PriorityAssessorTypes getPriorityAssessorType() {
-		return this.priorityAssessorType;
-	}
-
-	/**
-	 * Sets the priority assessor type.
-	 *
-	 * @param priorityAssessorType PriorityAssessorTypes
-	 */
-	public void setPriorityAssessorType(PriorityAssessorTypes priorityAssessorType) {
-		this.priorityAssessorType = priorityAssessorType;
-	}
-
-	/**
-	 * Sets the priority assessor type.
-	 *
-	 * @param priorityAssessorType String
-	 */
-	public void setPriorityAssessorType(String priorityAssessorType) {
-		try {
-			this.priorityAssessorType = PriorityAssessorTypes.valueOf(priorityAssessorType);
-		} catch (IllegalArgumentException e) {
-			log.warn("Setting post pruning type to " + null, e);
-			this.priorityAssessorType = null;
-		}
-	}
-
-	/**
-	 * Gets the follow up handling.
-	 *
 	 * @return FollowUpHandling
 	 */
 	public FollowUpHandling getFollowUpHandling() {
@@ -1047,51 +735,6 @@ public class PlannerParameters extends Parameters {
 	public void setDepthThreshold(Number depthThreshold) {
 		this.depthThreshold = depthThreshold != null ? depthThreshold.intValue() : null;
 	}
-
-	/**
-	 * Gets the full initialization.
-	 *
-	 * @return Boolean
-	 */
-	public Boolean getFullInitialization() {
-		return this.fullInitialization;
-	}
-
-	/**
-	 * Gets the termination k.
-	 *
-	 * @return Integer
-	 */
-	public Integer getTerminationK() {
-		return this.terminationK;
-	}
-
-	/**
-	 * Sets the termination k.
-	 *
-	 * @param terminationK Number
-	 */
-	public void setTerminationK(Number terminationK) {
-		this.terminationK = terminationK != null ? terminationK.intValue() : null;
-	}
-
-	/**
-	 * Sets the termination k.
-	 *
-	 * @param terminationK Integer
-	 */
-	public void setTerminationK(Integer terminationK) {
-		this.terminationK = terminationK;
-	}
-
-	/**
-	 * Sets the full initialization.
-	 *
-	 * @param b Boolean
-	 */
-	public void setFullInitialization(Boolean b) {
-		this.fullInitialization = b;
-	}
 	
 	/**
 	 * Gets the order aware.
@@ -1177,53 +820,9 @@ public class PlannerParameters extends Parameters {
 		/** The dag optimized. */
 		@EnumParameterValue(description = "DAG DP planning algorithm, relying on parallelism")
 		DAG_OPTIMIZED, 
-
-		/** The dag ilp. */
-		@EnumParameterValue(description = "DAG planning algorithm using linear planning iteratively (Iterative Linear Planning)")
-		DAG_ILP, 
-
-		/** The dag ilp si. */
-		@EnumParameterValue(description = "DAG planning algorithm, a variant of ILP")
-		DAG_ILP_SI, 
-
-		/** The dag mixed ilp. */
-		@EnumParameterValue(description = "DAG planning algorithm, a variant of ILP")
-		DAG_MIXED_ILP
 	}
 
-	/**
-	 * The Enum ReasoningTypes.
-	 */
-	public static enum ReasoningTypes {
-		
-		/** The blocking chase. */
-		@EnumParameterValue(description = "Chase algorithm with blocking. To be use in cases where the chase does not terminate.")
-		BLOCKING_CHASE, 
-		
-		/** The restricted chase. */
-		@EnumParameterValue(description = "Restricted chase as defined in the literature")
-		RESTRICTED_CHASE, 
-		
-		/** The ktermination chase. */
-		@EnumParameterValue(description = "Restricted chase, where the number of rule firing rounds is bounded by a constant K")
-		KTERMINATION_CHASE, 
-		
-
-	}
-
-	/**
-	 * The Enum HomomorphismDetectorTypes.
-	 */
-	public static enum HomomorphismDetectorTypes {
-		
-		/** The database. */
-		@EnumParameterValue(description = "Homomorphism checker relying on an internal relational database")
-		DATABASE;
-	}
-
-	/**
-	 * The Enum PostPruningTypes.
-	 */
+	/** */
 	public static enum PostPruningTypes {
 		
 		/** The remove accesses. */
@@ -1338,27 +937,5 @@ public class PlannerParameters extends Parameters {
 		@EnumParameterValue(description = "Multi-threaded executor for running"
 				+ "DAG planning rounds in parallel")
 		MULTITHREADED
-	}
-
-	/**
-	 * The Enum PriorityAssessorTypes.
-	 */
-	public static enum PriorityAssessorTypes {
-		
-		/** The default. */
-		@EnumParameterValue(description = "Default (no-op) priority assessor")
-		DEFAULT,
-
-		/** The DISTANC e2 coretopk. */
-		@EnumParameterValue(description =
-				"Assessor given priority to the K configurations that are "
-				+ "closest to the core")
-		DISTANCE2CORETOPK,
-
-		/** The DISTANC e2 corerange. */
-		@EnumParameterValue(description =
-				"Assessor given priority to some range of configurations that "
-				+ "are closest to the core")
-		DISTANCE2CORERANGE
 	}
 }
