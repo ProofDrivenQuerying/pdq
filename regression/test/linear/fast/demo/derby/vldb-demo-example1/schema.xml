@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schema name="Demo API" description="">
 	<sources>
-		<source name="geonames" file="test/linear/demo/geonames-services.xml"
+		<source name="geonames" file="test/linear/fast/demo/geonames-services.xml"
 			discoverer="uk.ac.ox.cs.pdq.services.ServiceReader" />
-		<source name="yahoo" file="test/linear/demo/yahoo-services.xml"
+		<source name="yahoo" file="test/linear/fast/demo/yahoo-services.xml"
 			discoverer="uk.ac.ox.cs.pdq.services.ServiceReader" />
-		<source name="google" file="test/linear/demo/google-services.xml"
+		<source name="google" file="test/linear/fast/demo/google-services.xml"
 			discoverer="uk.ac.ox.cs.pdq.services.ServiceReader" />
-		<source name="worldbank" file="test/linear/demo/worldbank-services.xml"
+		<source name="worldbank" file="test/linear/fast/demo/worldbank-services.xml"
 			discoverer="uk.ac.ox.cs.pdq.services.ServiceReader" />
 	</sources>
 	<relations>

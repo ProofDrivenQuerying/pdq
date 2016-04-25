@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schema name="Yahoo! API" description="">
 <sources>
-<source name="yahoo" file="test/linear/demo/yahoo-services.xml" discoverer="uk.ac.ox.cs.pdq.services.ServiceReader"/>
+<source name="yahoo" file="test/linear/fast/demo/yahoo-services.xml" discoverer="uk.ac.ox.cs.pdq.services.ServiceReader"/>
 </sources>
 <relations>
 <relation name="YahooPlaces" source="yahoo" size="10000000">
