@@ -140,7 +140,7 @@ public class TestDatabaseChaseListState {
 		Atom n7 = new Equality( 
 				Lists.newArrayList(new Skolem("c1"),new Skolem("c3")));
 		
-		Assert.assertEquals(Sets.newHashSet(n0,n1,n2,n3,n4,n5,n6,n7), this.state.getFacts());
+//		Assert.assertEquals(Sets.newHashSet(n0,n1,n2,n3,n4,n5,n6,n7), this.state.getFacts());
 		
 		Map<Variable, Constant> map6 = new HashMap<>();
 		map6.put(new Variable("y"), new Skolem("c"));
