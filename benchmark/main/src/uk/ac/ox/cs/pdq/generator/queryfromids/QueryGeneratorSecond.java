@@ -8,7 +8,7 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import uk.ac.ox.cs.pdq.benchmark.BenchmarkParameters;
-import uk.ac.ox.cs.pdq.db.Constraint;
+import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.db.LinearGuarded;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -77,7 +77,7 @@ public class QueryGeneratorSecond extends QueryGeneratorFirst{
 		List<LinearGuarded> guardedDependencies = new ArrayList<>();
 		// Filter out non-inclusion dependencies
 		// TODO: get rid of this when inclusion dependencies have there own class.
-		for (Constraint ic: this.schema.getDependencies()) {
+		for (Dependency ic: this.schema.getDependencies()) {
 			if (ic instanceof LinearGuarded
 					&& ((LinearGuarded) ic).getRight().getAtoms().size() == 1) {
 				guardedDependencies.add((LinearGuarded) ic);

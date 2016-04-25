@@ -10,7 +10,7 @@ import java.util.concurrent.Callable;
 import org.apache.commons.lang3.tuple.Pair;
 
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
-import uk.ac.ox.cs.pdq.db.Constraint;
+import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.plan.DAGPlan;
 import uk.ac.ox.cs.pdq.planner.dag.BinaryConfiguration;
@@ -21,7 +21,7 @@ import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator;
 import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominance;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseState;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.DatabaseHomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
 
 import com.google.common.base.Preconditions;
@@ -45,7 +45,7 @@ public class ReasoningThread implements Callable<Boolean> {
 	protected final Query<?> query;
 	
 	/**  The schema dependencies*. */
-	protected final Collection<? extends Constraint> dependencies;
+	protected final Collection<? extends Dependency> dependencies;
 	
 	/**  Saturates newly created binary configurations using the chase reasoning tool. */
 	protected final Chaser chaser;
@@ -117,7 +117,7 @@ public class ReasoningThread implements Callable<Boolean> {
 			Queue<DAGChaseConfiguration> left,
 			Collection<DAGChaseConfiguration> right,
 			Query<?> query,
-			Collection<? extends Constraint> dependencies,
+			Collection<? extends Dependency> dependencies,
 			Chaser chaser,
 			HomomorphismDetector detector,
 			CostEstimator<DAGPlan> costEstimator,
@@ -252,7 +252,7 @@ public class ReasoningThread implements Callable<Boolean> {
 					);
 					
 			if(configuration.getState() instanceof DatabaseChaseState) {
-				((DatabaseChaseState)configuration.getState()).setManager((DBHomomorphismManager) this.detector);
+				((DatabaseChaseState)configuration.getState()).setManager((DatabaseHomomorphismManager) this.detector);
 			}
 			this.chaser.reasonUntilTermination(configuration.getState(), this.dependencies);
 			this.representatives.put(this.equivalenceClasses, left, right, configuration);

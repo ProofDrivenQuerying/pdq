@@ -7,7 +7,7 @@ import java.util.Set;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import uk.ac.ox.cs.pdq.db.Constraint;
+import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Atom;
@@ -100,10 +100,10 @@ public class ExtendedPrettyProofWriter extends PrettyWriter<Proof> implements Wr
 	public static String traceBack(Proof proof, Iterable<? extends Atom> target) {
 		StringBuilder result = new StringBuilder();
 		Set<Atom> todo = Sets.newLinkedHashSet(target);
-		Map<Atom, Pair<Constraint, HashSet<Atom>>> provenance = null;
+		Map<Atom, Pair<Dependency, HashSet<Atom>>> provenance = null;
 		while (!todo.isEmpty()) {
 			for (Atom p: Lists.newArrayList(todo)) {
-				Pair<Constraint, HashSet<Atom>> rule = provenance.get(p);
+				Pair<Dependency, HashSet<Atom>> rule = provenance.get(p);
 				if (rule != null) {
 					String s = Joiner.on(" & ").join(rule.getRight()) + " -> " + p + "..." + '\n';
 					result.insert(0, s);

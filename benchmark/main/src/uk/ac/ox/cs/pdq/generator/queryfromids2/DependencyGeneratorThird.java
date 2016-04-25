@@ -8,7 +8,7 @@ import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.benchmark.BenchmarkParameters;
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.db.Constraint;
+import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.db.ForeignKey;
 import uk.ac.ox.cs.pdq.db.LinearGuarded;
 import uk.ac.ox.cs.pdq.db.Reference;
@@ -56,9 +56,9 @@ public class DependencyGeneratorThird extends AbstractDependencyGenerator implem
 	 *
 	 * @return a list of randomly generated inclusion dependencies.
 	 */
-	public List<Constraint> generateInclusionDependencies() {
+	public List<Dependency> generateInclusionDependencies() {
 		List<Relation> relations = this.schema.getRelations();
-		List<Constraint> result = new ArrayList<>();
+		List<Dependency> result = new ArrayList<>();
 		for (int i = 0, l = this.params.getNumberOfConstraints(); i < l; i++) {
 			Relation r1 = relations.get(this.random.nextInt(relations.size()));
 			Relation r2 = relations.get(this.random.nextInt(relations.size()));

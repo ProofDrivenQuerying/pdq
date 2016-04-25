@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-import uk.ac.ox.cs.pdq.db.Constraint;
+import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TGD;
@@ -132,9 +132,9 @@ public class SchemaWriter extends AbstractXMLWriter<Schema> {
 	 * @param out the out
 	 * @param ds the ds
 	 */
-	private void writeDependencies(PrintStream out, Collection<Constraint> ds) {
+	private void writeDependencies(PrintStream out, Collection<Dependency> ds) {
 		open(out, QNames.DEPENDENCIES);
-		for (Constraint d : ds) {
+		for (Dependency d : ds) {
 			if (d instanceof TGD) {
 				this.dependencyWriter.writeDependency(out, (TGD) d);
 			} else {

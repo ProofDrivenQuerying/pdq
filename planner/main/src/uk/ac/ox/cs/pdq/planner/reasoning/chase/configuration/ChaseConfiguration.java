@@ -4,7 +4,8 @@ import java.util.Collection;
 import java.util.List;
 
 import uk.ac.ox.cs.pdq.LimitReachedException;
-import uk.ac.ox.cs.pdq.db.Constraint;
+import uk.ac.ox.cs.pdq.db.Dependency;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
@@ -167,7 +168,7 @@ public abstract class ChaseConfiguration<P extends Plan> implements Configuratio
 	 * @throws PlannerException the planner exception
 	 * @throws LimitReachedException the limit reached exception
 	 */
-	public void reasonUntilTermination(Chaser chaser, Query<?> query, Collection<? extends Constraint> dependencies) throws PlannerException, LimitReachedException {
+	public void reasonUntilTermination(Chaser chaser, Query<?> query, Collection<? extends Dependency> dependencies) throws PlannerException, LimitReachedException {
 		chaser.reasonUntilTermination(this.state, dependencies);
 	}
 

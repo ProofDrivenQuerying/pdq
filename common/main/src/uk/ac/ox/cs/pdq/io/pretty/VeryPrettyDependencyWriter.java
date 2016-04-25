@@ -2,7 +2,7 @@ package uk.ac.ox.cs.pdq.io.pretty;
 
 import java.io.PrintStream;
 
-import uk.ac.ox.cs.pdq.db.Constraint;
+import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.io.Writer;
 
@@ -13,7 +13,7 @@ import uk.ac.ox.cs.pdq.io.Writer;
  * @author Julien Leblay
  */
 public class VeryPrettyDependencyWriter 
-		extends PrettyWriter<Constraint> implements Writer<Constraint> {
+		extends PrettyWriter<Dependency> implements Writer<Dependency> {
 
 	/** The Constant AND. */
 	public static final String AND = " \u2227 ";
@@ -64,7 +64,7 @@ public class VeryPrettyDependencyWriter
 	 * @see uk.ac.ox.cs.pdq.io.Writer#write(java.io.PrintStream, java.lang.Object)
 	 */
 	@Override
-	public void write(PrintStream out, Constraint tgd) {
+	public void write(PrintStream out, Dependency tgd) {
 		String sep = "";
 		int length = 0;
 		for (Atom f: tgd.getLeft().getAtoms()) {
@@ -100,7 +100,7 @@ public class VeryPrettyDependencyWriter
 	 * @see uk.ac.ox.cs.pdq.io.pretty.PrettyWriter#write(java.lang.Object)
 	 */
 	@Override
-	public void write(Constraint t) {
+	public void write(Dependency t) {
 		this.write(this.out, t);
 	}
 }

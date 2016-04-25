@@ -11,7 +11,7 @@ import org.junit.Test;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.AccessMethod.Types;
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.db.Constraint;
+import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.db.LinearGuarded;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -59,7 +59,7 @@ public class XMLSchemaIOTest {
 			.build();
 	
 	/** The c5. */
-	Constraint c1, c2, c3, c4, c5;
+	Dependency c1, c2, c3, c4, c5;
 	
 	/** The v3. */
 	View 

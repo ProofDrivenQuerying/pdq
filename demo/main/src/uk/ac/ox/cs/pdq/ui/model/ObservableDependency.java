@@ -1,6 +1,6 @@
 package uk.ac.ox.cs.pdq.ui.model;
 
-import uk.ac.ox.cs.pdq.db.Constraint;
+import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.db.TGD;
 
 // TODO: Auto-generated Javadoc
@@ -13,7 +13,7 @@ public class ObservableDependency extends TGD {
 	private static final int MAX_LENGTH = 30;
 	
 	/** The dependency. */
-	private Constraint dependency;
+	private Dependency dependency;
 	
 	/**
 	 * Instantiates a new observable dependency.

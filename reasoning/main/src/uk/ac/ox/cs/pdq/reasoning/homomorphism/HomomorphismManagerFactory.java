@@ -7,6 +7,9 @@ import org.apache.log4j.Logger;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters.HomomorphismDetectorTypes;
+import uk.ac.ox.cs.pdq.reasoning.sqlstatement.DerbyStatementBuilder;
+import uk.ac.ox.cs.pdq.reasoning.sqlstatement.MySQLStatementBuilder;
+import uk.ac.ox.cs.pdq.reasoning.sqlstatement.SQLStatementBuilder;
 
 import com.google.common.base.Strings;
 
@@ -82,42 +85,47 @@ public class HomomorphismManagerFactory {
 		}
 		try {
 			if (type != null && type == HomomorphismDetectorTypes.DATABASE) {
-				
-					SQLStatementBuilder builder = null;
-					if (url != null && url.contains("mysql")) {
-						builder = new MySQLStatementBuilder();
-					} else {
-						if (Strings.isNullOrEmpty(driver)) {
-							driver = "org.apache.derby.jdbc.EmbeddedDriver";
-						}
-						if (Strings.isNullOrEmpty(url)) {
-							url = "jdbc:derby:memory:{1};create=true";
-						}
-						if (Strings.isNullOrEmpty(database)) {
-							database = "chase";
-						}
-						database +=  "_" + System.currentTimeMillis() + "_" + counter++;
-						synchronized (counter) {
-							username = "APP_" + (counter++);
-						}
-						password = "";
-						builder = new DerbyStatementBuilder();
+				SQLStatementBuilder builder = null;
+				if (url != null && url.contains("mysql")) {
+					builder = new MySQLStatementBuilder();
+				} else {
+					if (Strings.isNullOrEmpty(driver)) {
+						driver = "org.apache.derby.jdbc.EmbeddedDriver";
 					}
-					result = new DBHomomorphismManager(
-							driver, url, database, username, password, builder,
-							schema);
-					result.initialize();
-					return result;
+					if (Strings.isNullOrEmpty(url)) {
+						url = "jdbc:derby:memory:{1};create=true";
+					}
+					if (Strings.isNullOrEmpty(database)) {
+						database = "chase";
+					}
+					database +=  "_" + System.currentTimeMillis() + "_" + counter++;
+					synchronized (counter) {
+						username = "APP_" + (counter++);
+					}
+					password = "";
+					builder = new DerbyStatementBuilder();
 				}
+				result = new DatabaseHomomorphismManager(
+						driver, url, database, username, password, builder,
+						schema);
+				result.initialize();
+				return result;
+			}
 		} catch (SQLException e) {
-			throw new RuntimeException("Could not load " + database, e);
+			log.warn("Could not load " + database + ". Falling back to default database.", e);
 		}
 		synchronized (counter) {
 			username = "APP_" + (counter++);
 		}
-		
-		//this point should be unreachable
-		return null;
-
+		// Fail safe is in-memory derby
+		try {
+			result = new DatabaseHomomorphismManager("org.apache.derby.jdbc.EmbeddedDriver",
+					"jdbc:derby:memory:{1};create=true", "chase", username, "", new DerbyStatementBuilder(),
+					schema);
+			result.initialize();
+			return result;
+		} catch (SQLException e) {
+			throw new IllegalStateException("Could not load default database.");
+		}
 	}
 }

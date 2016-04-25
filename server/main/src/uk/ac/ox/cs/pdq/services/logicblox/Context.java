@@ -9,7 +9,7 @@ import java.util.TreeMap;
 import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.db.AccessMethod;
-import uk.ac.ox.cs.pdq.db.Constraint;
+import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.View;
@@ -167,7 +167,7 @@ public class Context {
 		for (Object o : this.index.removeAll(name)) {
 			if (o instanceof Relation) {
 				Relation r = (Relation) o;
-				for (Constraint ic : this.builder.getDependencies()) {
+				for (Dependency ic : this.builder.getDependencies()) {
 					if (ic.contains(r)) {
 						log.warn("Implicit removal of dependency " + ic);
 						this.builder.removeDependency(ic);
@@ -175,7 +175,7 @@ public class Context {
 				}
 				this.builder.removeRelation(r);
 			} else {
-				this.builder.removeDependency((Constraint) o);
+				this.builder.removeDependency((Dependency) o);
 			}
 		}
 		this.pendingRelations.removeAll(name);
@@ -303,7 +303,7 @@ public class Context {
 					this.pendingConstraints.entries().iterator(); i.hasNext();) {
 				Entry<String, Rule> entry = i.next();
 				try {
-					Constraint c = (Constraint) this.proto.ruleToConstraint(entry.getValue());
+					Dependency c = (Dependency) this.proto.ruleToConstraint(entry.getValue());
 					if (c != null) {
 						this.builder.addDependency(c);
 						this.index.put(entry.getKey(), c);

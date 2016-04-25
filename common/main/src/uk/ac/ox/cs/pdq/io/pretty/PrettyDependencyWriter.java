@@ -2,7 +2,7 @@ package uk.ac.ox.cs.pdq.io.pretty;
 
 import java.io.PrintStream;
 
-import uk.ac.ox.cs.pdq.db.Constraint;
+import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.fol.LogicalSymbols;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.io.Writer;
@@ -13,7 +13,7 @@ import uk.ac.ox.cs.pdq.io.Writer;
  *
  * @author Julien Leblay
  */
-public class PrettyDependencyWriter extends PrettyWriter<Constraint> implements Writer<Constraint> {
+public class PrettyDependencyWriter extends PrettyWriter<Dependency> implements Writer<Dependency> {
 
 	/**
 	 * The default out to which dependencies should be written, if not 
@@ -58,7 +58,7 @@ public class PrettyDependencyWriter extends PrettyWriter<Constraint> implements 
 	 * @see uk.ac.ox.cs.pdq.io.Writer#write(java.io.PrintStream, java.lang.Object)
 	 */
 	@Override
-	public void write(PrintStream out, Constraint tgd) {
+	public void write(PrintStream out, Dependency tgd) {
 		String sep = "";
 		for (Atom f: tgd.getLeft().getAtoms()) {
 			out.print(sep);
@@ -80,7 +80,7 @@ public class PrettyDependencyWriter extends PrettyWriter<Constraint> implements 
 	 * @see uk.ac.ox.cs.pdq.io.pretty.PrettyWriter#write(java.lang.Object)
 	 */
 	@Override
-	public void write(Constraint t) {
+	public void write(Dependency t) {
 		this.write(this.out, t);
 	}
 }

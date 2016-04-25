@@ -1,8 +1,5 @@
 package uk.ac.ox.cs.pdq.planner;
 
-import java.io.IOException;
-import java.sql.SQLException;
-
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 
@@ -13,7 +10,6 @@ import uk.ac.ox.cs.pdq.cost.CostStatKeys;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.logging.performance.ChainedStatistics;
 import uk.ac.ox.cs.pdq.logging.performance.DynamicStatistics;
 import uk.ac.ox.cs.pdq.logging.performance.StatKey;
@@ -27,8 +23,7 @@ import uk.ac.ox.cs.pdq.planner.reasoning.ReasonerFactory;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismException;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismManager;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismManagerFactory;
 
 import com.google.common.eventbus.EventBus;
@@ -73,9 +68,6 @@ public class ExplorationSetUp {
 	/** The accessible schema. */
 	private AccessibleSchema accessibleSchema;
 	
-	/** The detector. */
-	private HomomorphismManager detector;
-	
 	/**
 	 * Instantiates a new exploration set up.
 	 *
@@ -105,15 +97,7 @@ public class ExplorationSetUp {
 		this.schema = schema;
 		this.statsLogger = statsLogger;
 		this.schema = schema;
-		
-		accessibleSchema = new AccessibleSchema(schema);
-			try {
-				this.detector = new HomomorphismManagerFactory().getInstance(accessibleSchema, this.reasoningParams);
-			} catch (HomomorphismException e) {
-				// TODO what to throw here?
-				throw new RuntimeException(e);
-			}
-		
+		this.accessibleSchema = new AccessibleSchema(schema);
 	}
 
 	/**
@@ -200,11 +184,11 @@ public class ExplorationSetUp {
 			this.accessibleSchema.updateConstants(query.getSchemaConstants());
 		}
 
-		this.detector.addQuery(query);
 		ConjunctiveQuery accessibleQuery = this.accessibleSchema.accessible(query, query.getGrounding());
 		
 		Explorer<P> explorer = null;
-		try{
+		try (HomomorphismDetector detector =
+				new HomomorphismManagerFactory().getInstance(this.accessibleSchema, this.reasoningParams)) {
 			// Top-level initialisations
 			CostEstimator<P> costEstimator = (CostEstimator<P>) this.externalCostEstimator;
 			if (costEstimator == null) {
@@ -214,7 +198,6 @@ public class ExplorationSetUp {
 					this.eventBus, 
 					collectStats,
 					this.reasoningParams).getInstance();
-				
 			
 			explorer = ExplorerFactory.createExplorer(
 					this.eventBus, 
@@ -224,12 +207,9 @@ public class ExplorationSetUp {
 					query,
 					accessibleQuery,
 					reasoner,
-					this.detector,
+					detector,
 					costEstimator,
 					this.plannerParams);
-			
-			
-			
 
 			// Chain all statistics collectors
 			if (collectStats) {
@@ -253,10 +233,7 @@ public class ExplorationSetUp {
 			explorer.setMaxRounds(this.plannerParams.getMaxIterations().doubleValue());
 			explorer.setMaxElapsedTime(this.plannerParams.getTimeout());
 			explorer.explore();
-			this.detector.clearQuery();
 			return explorer.getBestPlan();
-			
-			
 		} catch (PlannerException e) {
 			this.handleEarlyTermination(explorer);
 			throw e;

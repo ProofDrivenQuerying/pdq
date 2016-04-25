@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import uk.ac.ox.cs.pdq.db.Constraint;
+import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.db.EGD;
 import uk.ac.ox.cs.pdq.db.TGD;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
@@ -15,7 +15,7 @@ import uk.ac.ox.cs.pdq.logging.performance.StatisticsCollector;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseListState;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ListState;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.DatabaseHomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismProperty;
 import uk.ac.ox.cs.pdq.reasoning.utility.DefaultParallelEGDChaseDependencyAssessor;
@@ -46,7 +46,7 @@ import com.google.common.collect.Sets;
 	to get an equivalence relation.
 	iii. If we try to equate two different schema constants, then the chase fails. 
 	The facts that are generated during chasing are stored in a list.
-	
+
  * @author Efthymia Tsamoura
  *
  */
@@ -73,13 +73,13 @@ public class ParallelEGDChaser extends Chaser {
 	 * @param dependencies the dependencies
 	 */
 	@Override
-	public <S extends ChaseState> void reasonUntilTermination(S instance,  Collection<? extends Constraint> dependencies) {
+	public <S extends ChaseState> void reasonUntilTermination(S instance,  Collection<? extends Dependency> dependencies) {
 		Preconditions.checkArgument(instance instanceof ListState);
 		ParallelEGDChaseDependencyAssessor accessor = new DefaultParallelEGDChaseDependencyAssessor(dependencies);
-		
+
 		Collection<TGD> tgds = Sets.newHashSet();
 		Collection<EGD> egds = Sets.newHashSet();
-		for(Constraint constraint:dependencies) {
+		for(Dependency constraint:dependencies) {
 			if(constraint instanceof EGD) {
 				egds.add((EGD) constraint);
 			}
@@ -98,7 +98,7 @@ public class ParallelEGDChaser extends Chaser {
 		do {
 			++step;
 			//Find all active triggers
-			Collection<? extends Constraint> d = step % 2 == 0 ? accessor.getDependencies(instance, EGDROUND.TGD):accessor.getDependencies(instance, EGDROUND.EGD);
+			Collection<? extends Dependency> d = step % 2 == 0 ? accessor.getDependencies(instance, EGDROUND.TGD):accessor.getDependencies(instance, EGDROUND.EGD);
 			List<Match> activeTriggers = instance.getMatches(d, HomomorphismProperty.createActiveTriggerProperty());
 			boolean succeeds = instance.chaseStep(activeTriggers);
 			if(!succeeds) {
@@ -112,7 +112,7 @@ public class ParallelEGDChaser extends Chaser {
 					appliedOddStep = true;
 				}
 			}
-			
+
 			if(activeTriggers.isEmpty()) {
 				if(step % 2 == 0) {
 					appliedEvenStep = false;
@@ -121,7 +121,7 @@ public class ParallelEGDChaser extends Chaser {
 					appliedOddStep = false;
 				}
 			}
-			
+
 		} while (!(appliedOddStep == false && appliedEvenStep == false && step > 1));
 	}
 
@@ -138,8 +138,8 @@ public class ParallelEGDChaser extends Chaser {
 	 */
 	@Override
 	public <S extends ChaseState> boolean entails(S instance, Map<Variable, Constant> free, ConjunctiveQuery target,
-			Collection<? extends Constraint<?,?>> constraints) {
-		Collection<? extends Constraint<?, ?>> relevantDependencies = new ReasonerUtility().findRelevant(target, constraints);
+			Collection<? extends Dependency<?,?>> constraints) {
+		Collection<? extends Dependency<?, ?>> relevantDependencies = new ReasonerUtility().findRelevant(target, constraints);
 		this.reasonUntilTermination(instance, relevantDependencies);
 		if(!instance.isFailed()) {
 			HomomorphismProperty[] c = {
@@ -162,9 +162,9 @@ public class ParallelEGDChaser extends Chaser {
 	 */
 	@Override
 	public boolean entails(ConjunctiveQuery source, ConjunctiveQuery target,
-			Collection<? extends Constraint<?,?>> constraints, HomomorphismDetector detector) {
-		Collection<? extends Constraint<?, ?>> relevantDependencies = new ReasonerUtility().findRelevant(target, constraints);
-		DatabaseChaseListState instance = new DatabaseChaseListState(source, (DBHomomorphismManager)detector);
+			Collection<? extends Dependency<?,?>> constraints, HomomorphismDetector detector) {
+		Collection<? extends Dependency<?, ?>> relevantDependencies = new ReasonerUtility().findRelevant(target, constraints);
+		DatabaseChaseListState instance = new DatabaseChaseListState(source, (DatabaseHomomorphismManager)detector);
 		this.reasonUntilTermination(instance, relevantDependencies);
 		if(!instance.isFailed()) {
 			HomomorphismProperty[] c = {

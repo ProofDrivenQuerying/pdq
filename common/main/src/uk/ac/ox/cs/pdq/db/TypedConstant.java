@@ -86,7 +86,8 @@ public class TypedConstant<T> implements Typed, Constant {
 			return false;
 		}
 		return this.getClass().isInstance(o)
-				&& this.value.equals(((TypedConstant<?>) o).value);
+				&& this.value.equals(((TypedConstant<?>) o).value)
+				&& this.type.equals(((TypedConstant<?>) o).type);
 
 	}
 
@@ -97,9 +98,9 @@ public class TypedConstant<T> implements Typed, Constant {
 	 */
 	@Override
 	public int hashCode() {
-		if (this.hash == Integer.MIN_VALUE) {
+//		if (this.hash == Integer.MIN_VALUE) {
 			this.hash = Objects.hash(this.value, this.type);
-		}
+//		}
 		return this.hash;
 	}
 
@@ -138,5 +139,10 @@ public class TypedConstant<T> implements Typed, Constant {
 	@Override
 	public boolean isSkolem() {
 		return false;
+	}
+	
+	@Override
+	public TypedConstant<T> clone() {
+		return new TypedConstant<T>(this.value);
 	}
 }

@@ -12,6 +12,8 @@
  			<TimeBasedTriggeringPolicy />
  		</RollingFile>
     </Appenders>
+    
+    <!-- 
     <Loggers>
         <Logger name="uk.ac.ox.cs.pdq.reasoning" level="trace">
             <AppenderRef ref="CONSOLE" />
@@ -20,4 +22,5 @@
             <AppenderRef ref="FILE" />
         </Root>
     </Loggers>
+     -->
 </Configuration>

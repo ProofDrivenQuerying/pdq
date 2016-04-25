@@ -6,7 +6,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.db.Constraint;
+import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.db.LinearGuarded;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.LogicalSymbols;
@@ -21,7 +21,7 @@ import uk.ac.ox.cs.pdq.io.Writer;
  * @author Julien Leblay
  * @param <T> the generic type
  */
-public class VeryShortDependencyWriter<T extends Constraint> 
+public class VeryShortDependencyWriter<T extends Dependency> 
 		extends PrettyWriter<T> implements Writer<T> {
 
 	/**
@@ -75,7 +75,7 @@ public class VeryShortDependencyWriter<T extends Constraint>
 	 * @param t the t
 	 * @return a short String representation of the dependency.
 	 */
-	public static <T extends Constraint> String convert(T t) {
+	public static <T extends Dependency> String convert(T t) {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		PrintStream ps = new PrintStream(baos);
 		VeryShortDependencyWriter.to(ps).write(t);
@@ -89,7 +89,7 @@ public class VeryShortDependencyWriter<T extends Constraint>
 	 * @param tgd the tgd
 	 * @return the string representation of the given TGD.
 	 */
-	private <T extends Constraint> String toString(T tgd) {
+	private <T extends Dependency> String toString(T tgd) {
 		if (tgd instanceof LinearGuarded) {
 			return this.toString((LinearGuarded) tgd);
 		}

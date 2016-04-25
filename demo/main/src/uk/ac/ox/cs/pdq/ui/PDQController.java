@@ -70,7 +70,7 @@ import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.cost.CostParameters.CostTypes;
-import uk.ac.ox.cs.pdq.db.Constraint;
+import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.db.LinearGuarded;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -250,7 +250,7 @@ public class PDQController {
         		}
 	       		int index = this.currentSchemaViewitems.getParent().getChildren().indexOf(this.currentSchemaViewitems);
 	       		index -= this.currentSchema.get().getSchema().getRelations().size();
-	       		Constraint dependency = this.currentSchema.get().getSchema().getDependencies().get(index);
+	       		Dependency dependency = this.currentSchema.get().getSchema().getDependencies().get(index);
         		if (dependency != null) {
         			this.deleteDependency(schema, dependency);
         			this.reloadTreeItem(item.getParent(), schema);
@@ -297,7 +297,7 @@ public class PDQController {
      * @param schema the schema
      * @param dependency the dependency
      */
-    private void deleteDependency(ObservableSchema schema, Constraint dependency) {
+    private void deleteDependency(ObservableSchema schema, Dependency dependency) {
 		// TODO
     	log.warn("Attempting to delete " + dependency + " from " + schema);
     }
@@ -511,7 +511,7 @@ public class PDQController {
     	       		int index = this.currentSchemaViewitems.getParent().getChildren().indexOf(this.currentSchemaViewitems);
     	       		//index -= this.currentSchema.get().getSchema().getRelations().size();
     	       		
-    	       		Constraint dependency = this.currentSchema.get().getSchema().getDependencies().get(index);
+    	       		Dependency dependency = this.currentSchema.get().getSchema().getDependencies().get(index);
     	       		if (dependency != null) {
 						try {
 							Stage dialog = new Stage();
@@ -1273,7 +1273,7 @@ public class PDQController {
 			}
 			//item.getChildren().add(new TreeItem<>(r.getName(), imageView));
 		}
-		for (Constraint ic : s.getSchema().getDependencies()) {
+		for (Dependency ic : s.getSchema().getDependencies()) {
 			ImageView imageView = null;
 			if (ic instanceof LinearGuarded) {
 				imageView = new ImageView(this.fkIcon);

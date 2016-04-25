@@ -12,7 +12,7 @@ import java.util.Set;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.AccessMethod.Types;
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.db.Constraint;
+import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.db.EntityRelation;
 import uk.ac.ox.cs.pdq.db.ForeignKey;
 import uk.ac.ox.cs.pdq.db.GuardedDependency;
@@ -40,7 +40,7 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	private Map<String, Relation> relations = new LinkedHashMap<>();
 	
 	/** The dependencies. */
-	private Map<Integer, Constraint> dependencies = new LinkedHashMap<>();
+	private Map<Integer, Dependency> dependencies = new LinkedHashMap<>();
 	
 	/** The disable dependencies. */
 	private boolean disableDependencies = false;
@@ -151,8 +151,8 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	 * @param dep IC
 	 * @return this builder
 	 */
-	public SchemaBuilder addDependency(Constraint dep) {
-		for (Constraint ic : this.dependencies.values()) {
+	public SchemaBuilder addDependency(Dependency dep) {
+		for (Dependency ic : this.dependencies.values()) {
 			if (FormulaEquivalence.approximateEquivalence(
 					(Formula) ic, (Formula) dep) ) {
 				return this;
@@ -168,9 +168,9 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	 * @param ic IC
 	 * @return this builder
 	 */
-	public SchemaBuilder removeDependency(Constraint ic) {
+	public SchemaBuilder removeDependency(Dependency ic) {
 		if (this.dependencies.remove(((TGD) ic).getId()) == null) {
-			for (Iterator<Entry<Integer, Constraint>> it =
+			for (Iterator<Entry<Integer, Dependency>> it =
 					this.dependencies.entrySet().iterator();
 					it.hasNext();) {
 				if (FormulaEquivalence.approximateEquivalence(
@@ -199,8 +199,8 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	 * @param ics the ics
 	 * @return this builder
 	 */
-	public SchemaBuilder addDependencies(Collection<Constraint> ics) {
-		for (Constraint ic : ics) {
+	public SchemaBuilder addDependencies(Collection<Dependency> ics) {
+		for (Dependency ic : ics) {
 			this.addDependency(ic);
 		}
 		return this;
@@ -274,7 +274,7 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	 *
 	 * @return Collection<IC>
 	 */
-	public Collection<Constraint> getDependencies() {
+	public Collection<Dependency> getDependencies() {
 		return this.dependencies.values();
 	}
 
@@ -283,7 +283,7 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	 *
 	 * @return Map<Integer,IC>
 	 */
-	private Map<Integer, Constraint> deriveKeyDependencies() {
+	private Map<Integer, Dependency> deriveKeyDependencies() {
 		return new LinkedHashMap<>();
 	}
 
@@ -344,7 +344,7 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	 */
 	private void removeOrphanDependencies() {
 		for (Iterator<Integer> i = this.dependencies.keySet().iterator(); i.hasNext();) {
-			Constraint ic = this.dependencies.get(i.next());
+			Dependency ic = this.dependencies.get(i.next());
 			for (Atom p: ic.getLeft().getAtoms()) {
 				if (this.relations.get(p.getPredicate().getName()) == null) {
 					i.remove();
@@ -353,7 +353,7 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 			}
 		}
 		for (Iterator<Integer> i = this.dependencies.keySet().iterator(); i.hasNext();) {
-			Constraint ic = this.dependencies.get(i.next());
+			Dependency ic = this.dependencies.get(i.next());
 			for (Atom p: ic.getRight().getAtoms()) {
 				if (this.relations.get(p.getPredicate().getName()) == null) {
 					i.remove();
@@ -386,7 +386,7 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	 */
 	private LinearGuarded findViewDependency(View v) {
 		if (this.dependencies != null) {
-			for (Constraint ic : this.dependencies.values()) {
+			for (Dependency ic : this.dependencies.values()) {
 				if (ic.getLeft().getAtoms().size() == 1) {
 					if (ic.getLeft().getAtoms().get(0)
 							.getPredicate().getName().equals(v.getName())) {
@@ -407,7 +407,7 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	 */
 	private TGD findDependency(TGD dep) {
 		if (this.dependencies != null) {
-			for (Constraint ic: this.dependencies.values()) {
+			for (Dependency ic: this.dependencies.values()) {
 				if (FormulaEquivalence.approximateEquivalence((Formula) ic, (Formula) dep)) {
 					return (TGD) ic;
 				}
@@ -424,7 +424,7 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	 */
 	private GuardedDependency findFKDependency(GuardedDependency gd) {
 		if (this.dependencies != null) {
-			for (Constraint ic:this.dependencies.values()) {
+			for (Dependency ic:this.dependencies.values()) {
 				if (FormulaEquivalence.approximateEquivalence((Formula) gd, (Formula) ic)) {
 					return (GuardedDependency) ic;
 				}
@@ -442,7 +442,7 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	private Collection<LinearGuarded> findFKDependency(Relation r) {
 		Set<LinearGuarded> result = new LinkedHashSet<>();
 		if (this.dependencies != null) {
-			for (Constraint ic: this.dependencies.values()) {
+			for (Dependency ic: this.dependencies.values()) {
 				if (ic instanceof LinearGuarded
 						&& ((LinearGuarded) ic).getRight().size() == 1
 						&& ((LinearGuarded) ic).getGuard().getPredicate().equals(r)) {

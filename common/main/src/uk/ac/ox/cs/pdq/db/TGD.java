@@ -34,7 +34,7 @@ import com.google.common.collect.Sets;
  */
 public class TGD
 		extends Implication<Conjunction<Atom>, Conjunction<Atom>>
-		implements Constraint<Conjunction<Atom>, Conjunction<Atom>> {
+		implements Dependency<Conjunction<Atom>, Conjunction<Atom>> {
 
 	/**  The dependency's universally quantified variables. */
 	protected final List<Variable> universal;
@@ -106,7 +106,7 @@ public class TGD
 	 * Gets the left.
 	 *
 	 * @return L
-	 * @see uk.ac.ox.cs.pdq.db.Constraint#getLeft()
+	 * @see uk.ac.ox.cs.pdq.db.Dependency#getLeft()
 	 */
 	@Override
 	public Conjunction<Atom> getLeft() {
@@ -117,7 +117,7 @@ public class TGD
 	 * Gets the right.
 	 *
 	 * @return R
-	 * @see uk.ac.ox.cs.pdq.db.Constraint#getRight()
+	 * @see uk.ac.ox.cs.pdq.db.Dependency#getRight()
 	 */
 	@Override
 	public Conjunction<Atom> getRight() {
@@ -143,7 +143,7 @@ public class TGD
 	 * Gets the schema constants.
 	 *
 	 * @return Collection<TypedConstant<?>>
-	 * @see uk.ac.ox.cs.pdq.db.Constraint#getSchemaConstants()
+	 * @see uk.ac.ox.cs.pdq.db.Dependency#getSchemaConstants()
 	 */
 	@Override
 	public Collection<TypedConstant<?>> getSchemaConstants() {
@@ -223,10 +223,10 @@ public class TGD
 	 * Gets the both side variables.
 	 *
 	 * @return Set<Variable>
-	 * @see uk.ac.ox.cs.pdq.db.Constraint#getBothSideVariables()
+	 * @see uk.ac.ox.cs.pdq.db.Dependency#getAllVariables()
 	 */
 	@Override
-	public Set<Variable> getBothSideVariables() {
+	public Set<Variable> getAllVariables() {
 		Set<Variable> variables = Sets.newHashSet(Utility.getVariables(this.left.getAtoms()));
 		variables.retainAll(Utility.getVariables(this.right.getAtoms()));
 		return variables;

@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import jersey.repackaged.com.google.common.collect.Lists;
-import uk.ac.ox.cs.pdq.db.Constraint;
+import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TGD;
@@ -13,7 +13,7 @@ import uk.ac.ox.cs.pdq.db.wrappers.RelationAccessWrapper;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.DatabaseHomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismProperty;
 import uk.ac.ox.cs.pdq.reasoning.utility.Match;
 import uk.ac.ox.cs.pdq.runtime.exec.AccessException;
@@ -33,17 +33,17 @@ import com.google.common.base.Preconditions;
 public final class DataValidationImplementation extends DataValidation{
 
 	/** The manager. */
-	private final DBHomomorphismManager manager;
+	private final DatabaseHomomorphismManager manager;
 	
 	/** The ics. */
-	private final List<Constraint> ics;
+	private final List<Dependency> ics;
 
 	/**
 	 * Constructor for DataValidationImplementation.
 	 * @param schema Schema
 	 * @param manager DBHomomorphismManager
 	 */
-	public DataValidationImplementation(Schema schema, DBHomomorphismManager manager) {
+	public DataValidationImplementation(Schema schema, DatabaseHomomorphismManager manager) {
 		super(schema);
 		this.manager = manager;
 		this.ics = schema.getDependencies();
@@ -61,7 +61,7 @@ public final class DataValidationImplementation extends DataValidation{
 	@Override
 	public Boolean validate() throws AccessException, PlannerException {
 		this.save();
-		for(Constraint ic: this.ics) {
+		for(Dependency ic: this.ics) {
 			this.validate(ic);
 		}
 		return true;
@@ -104,7 +104,7 @@ public final class DataValidationImplementation extends DataValidation{
 	 * @throws PlannerException the planner exception
 	 * @throws AccessException the access exception
 	 */
-	private void validate(Constraint constraint) throws PlannerException, AccessException {
+	private void validate(Dependency constraint) throws PlannerException, AccessException {
 		// Checks if the there exists at least one set of facts that satisfies the left-hand side of the input dependency
 		List<Match> matchings = this.manager.getMatches(Lists.newArrayList(constraint));
 		if (!matchings.isEmpty()) {
@@ -127,7 +127,7 @@ public final class DataValidationImplementation extends DataValidation{
 	 * @param ic Constraint
 	 * @return Constraint
 	 */
-	private static Constraint invert(Constraint ic) {
+	private static Dependency invert(Dependency ic) {
 		Conjunction<Atom> left = (Conjunction<Atom>) ic.getLeft();
 		Conjunction<Atom> right = (Conjunction<Atom>) ic.getRight();
 		return new TGD(right, left);

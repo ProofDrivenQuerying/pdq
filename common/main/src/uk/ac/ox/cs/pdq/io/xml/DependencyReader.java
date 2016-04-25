@@ -13,7 +13,7 @@ import org.apache.log4j.Logger;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import uk.ac.ox.cs.pdq.db.Constraint;
+import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TGD;
 import uk.ac.ox.cs.pdq.db.builder.DependencyBuilder;
@@ -29,7 +29,7 @@ import com.google.common.base.Preconditions;
  * 
  * @author Julien Leblay
  */
-public class DependencyReader extends AbstractXMLReader<Constraint> {
+public class DependencyReader extends AbstractXMLReader<Dependency> {
 
 	/** Logger. */
 	private static Logger log = Logger.getLogger(DependencyReader.class);
@@ -98,7 +98,7 @@ public class DependencyReader extends AbstractXMLReader<Constraint> {
 	 * @see uk.ac.ox.cs.pdq.io.Reader#read(InputStream)
 	 */
 	@Override
-	public Constraint read(InputStream in) {
+	public Dependency read(InputStream in) {
 		try {
 			SAXParserFactory factory = SAXParserFactory.newInstance();
 			SAXParser parser = factory.newSAXParser();

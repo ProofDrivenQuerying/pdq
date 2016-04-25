@@ -3,12 +3,10 @@ package uk.ac.ox.cs.pdq.reasoning.chase.state;
 import java.util.Collection;
 import java.util.List;
 
-import uk.ac.ox.cs.pdq.db.Constraint;
+import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismProperty;
-import uk.ac.ox.cs.pdq.reasoning.utility.FiringGraph;
 import uk.ac.ox.cs.pdq.reasoning.utility.Match;
 
 // TODO: Auto-generated Javadoc
@@ -57,7 +55,7 @@ public interface ChaseState {
 	 * @param constraints 		The homomorphism constraints that should be satisfied 
 	 * @return 		the list of matches (both candidates and not candidates) of the input dependencies in this database instance.
 	 */
-	List<Match> getMatches(Collection<? extends Constraint> dependencies, HomomorphismProperty... constraints);
+	List<Match> getMatches(Collection<? extends Dependency> dependencies, HomomorphismProperty... constraints);
 	
 	/**
 	 * Checks if is successful.
@@ -74,17 +72,7 @@ public interface ChaseState {
 	 * @return 		true if this database instance is failed
 	 */
 	boolean isFailed();
-	
-	
-	/**
-	 * Gets the firing graph.
-	 *
-	 * @return 		the rule firings that took place in this instance
-	 */
-	FiringGraph  getFiringGraph();
-	
-
-	
+		
 	/**
 	 * Gets the facts.
 	 *
@@ -128,11 +116,6 @@ public interface ChaseState {
 	 * @return 		a database instance with facts the union of the facts of the two database instances.
 	 */
 	ChaseState merge(ChaseState s);
-
-	/**
-	 * Clone.
-	 *
-	 * @return the chase state
-	 */
+	
 	ChaseState clone();
 }

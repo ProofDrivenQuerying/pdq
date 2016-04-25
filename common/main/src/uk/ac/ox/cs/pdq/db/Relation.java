@@ -50,8 +50,8 @@ public abstract class Relation extends Predicate implements Serializable {
 	 * The Enum PropertyKeys.
 	 */
 	public static enum PropertyKeys { 
- /** The metadata. */
- METADATA }
+		/** The metadata. */
+		METADATA }
 
 	/**  The relation's properties. */
 	protected final Properties properties = new Properties();
@@ -70,7 +70,7 @@ public abstract class Relation extends Predicate implements Serializable {
 	 * which require input values.
 	 */
 	protected Map<String, AccessMethod> accessMethods;
-	
+
 	/** The am view. */
 	protected List<AccessMethod> amView;
 
@@ -78,10 +78,10 @@ public abstract class Relation extends Predicate implements Serializable {
 	 * The relation's foreign keys.
 	 */
 	protected List<ForeignKey> foreignKeys;
-	
+
 	/** The key. */
 	protected List<Attribute> key = Lists.newArrayList();
-	
+
 	/** The key positions. */
 	protected List<Integer> keyPositions = null;
 
@@ -220,7 +220,7 @@ public abstract class Relation extends Predicate implements Serializable {
 	public TupleType getType() {
 		return TupleType.DefaultFactory.createFromTyped(getAttributes());
 	}
-	
+
 	/**
 	 * Gets the input attributes.
 	 *
@@ -413,7 +413,7 @@ public abstract class Relation extends Predicate implements Serializable {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Sets the key.
 	 *
@@ -422,7 +422,7 @@ public abstract class Relation extends Predicate implements Serializable {
 	public void setKey(List<Attribute> key) {
 		this.key = key;
 	}
-	
+
 	/**
 	 * Gets the key.
 	 *
@@ -431,7 +431,7 @@ public abstract class Relation extends Predicate implements Serializable {
 	public List<Attribute> getKey() {
 		return this.key;
 	}
-	
+
 	/**
 	 * Gets the key positions.
 	 *

@@ -13,6 +13,8 @@
   </organization>
   <modules>
   	<module>common</module>
+  	<module>workloadgen</module>
+  	<module>materialize</module>
   	<module>reasoning</module>
   	<module>cost</module>
   	<module>planner</module>

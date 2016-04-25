@@ -7,8 +7,9 @@ import java.util.Set;
 import org.apache.commons.lang3.tuple.Pair;
 
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
-import uk.ac.ox.cs.pdq.db.Constraint;
+import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.db.Relation;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
@@ -35,7 +36,7 @@ import com.google.common.collect.Sets;
 public class ConfigurationPostPruning {
 
 	/**  The accessible counterpart of the user query *. */
-	protected final Query<?> accessibleQuery;
+	protected final ConjunctiveQuery accessibleQuery;
 
 	/**  The accessible counterpart of the input schema *. */
 	protected final AccessibleSchema accessibleSchema;
@@ -172,7 +173,7 @@ public class ConfigurationPostPruning {
 	protected Collection<Atom> getAccessibilityAxioms(Collection<Atom> input, AccessibleChaseState state) {
 		Collection<Atom> facts = new LinkedHashSet<>();
 		for(Atom fact:input) {
-			Pair<Constraint, Collection<Atom>> pair = state.getProvenance(fact);
+			Pair<Dependency, Collection<Atom>> pair = state.getProvenance(fact);
 			if(pair!= null) {
 				if(pair.getLeft() instanceof AccessibilityAxiom) {
 					facts.add(fact);

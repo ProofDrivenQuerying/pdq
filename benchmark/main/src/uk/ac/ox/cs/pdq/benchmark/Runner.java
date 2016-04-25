@@ -19,7 +19,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.Parameters;
-import uk.ac.ox.cs.pdq.db.Constraint;
+import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TGD;
@@ -317,7 +317,7 @@ planner,
 		}
 		result.append("\n# }");
 		result.append("\n# { ");
-		for (Constraint ic : schema.getDependencies()) {
+		for (Dependency ic : schema.getDependencies()) {
 			result.append("\n#\t").append(toShortString((TGD) ic));
 		}
 		result.append("\n# } ");
@@ -329,7 +329,7 @@ planner,
 			}
 			result.append("\n# }");
 			result.append("\n# { ");
-			for (Constraint ic : accSchema.getDependencies()) {
+			for (Dependency ic : accSchema.getDependencies()) {
 				result.append("\n#\t").append(toShortString((TGD) ic));
 			}
 			result.append("\n# } ");

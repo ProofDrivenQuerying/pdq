@@ -16,7 +16,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 import uk.ac.ox.cs.pdq.builder.SchemaDiscoverer;
-import uk.ac.ox.cs.pdq.db.Constraint;
+import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.builder.SchemaBuilder;
@@ -44,7 +44,7 @@ public class SchemaReader extends AbstractXMLReader<Schema> {
 	private List<Relation> relations = new ArrayList<>();
 
 	/** Temporary list of dependencies being built. */
-	private List<Constraint> dependencies = new ArrayList<>();
+	private List<Dependency> dependencies = new ArrayList<>();
 	
 	/** A map from the builder discovered' names to their instances. */
 	private Map<String, SchemaDiscoverer> discovered;

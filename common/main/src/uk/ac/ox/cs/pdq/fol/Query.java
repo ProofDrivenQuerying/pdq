@@ -51,5 +51,4 @@ public interface Query<S extends Formula> extends Formula, Evaluatable, Rule<S, 
 	 * @return the constants that appear in the query's body
 	 */
 	Collection<TypedConstant<?>> getSchemaConstants();
-	
 }

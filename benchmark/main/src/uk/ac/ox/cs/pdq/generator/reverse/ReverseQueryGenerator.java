@@ -19,7 +19,7 @@ import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseSt
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleDatabaseListState;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.DatabaseHomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismManagerFactory;
 
@@ -102,11 +102,11 @@ public class ReverseQueryGenerator implements Runnable {
 
 			Query<?> accessibleQuery = accessibleSchema.accessible(this.query);
 			try(HomomorphismManager detector =
-				new HomomorphismManagerFactory().getInstance(accessibleSchema, reasoningParams)) {
-				
+				new HomomorphismManagerFactory().getInstance(accessibleSchema, reasoningParams)) {				
 				detector.addQuery(accessibleQuery);
+				detector.initialize();
 				AccessibleChaseState state = (AccessibleChaseState) 
-						new AccessibleDatabaseListState(query, accessibleSchema, (DBHomomorphismManager) detector);
+						new AccessibleDatabaseListState(query, accessibleSchema, (DatabaseHomomorphismManager) detector);
 				
 				log.info("Phase 1");
 				reasoner.reasonUntilTermination(state, this.schema.getDependencies());

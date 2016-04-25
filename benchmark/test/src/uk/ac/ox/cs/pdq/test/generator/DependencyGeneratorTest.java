@@ -16,7 +16,7 @@ import org.junit.runners.Parameterized.Parameters;
 
 import uk.ac.ox.cs.pdq.benchmark.BenchmarkParameters;
 import uk.ac.ox.cs.pdq.benchmark.BenchmarkParameters.QueryTypes;
-import uk.ac.ox.cs.pdq.db.Constraint;
+import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TGD;
@@ -71,7 +71,7 @@ public class DependencyGeneratorTest extends ParameterizedTest {
 	private ConjunctiveQuery query;
 	
 	/** The dependencies. */
-	private List<Constraint> dependencies;
+	private List<Dependency> dependencies;
 
 	/**
 	 * Instantiates a new dependency generator test.
@@ -105,7 +105,7 @@ public class DependencyGeneratorTest extends ParameterizedTest {
 		for (Relation r: this.schema.getRelations()) {
 			relationNames.add(r.getName());
 		}
-		for (Constraint ic : this.dependencies) {
+		for (Dependency ic : this.dependencies) {
 			for (Atom a : ((TGD) ic).getAtoms()) {
 				assertTrue("Relation " + a.getName() + " not present in schema.",
 						relationNames.contains(a.getName()));
@@ -119,7 +119,7 @@ public class DependencyGeneratorTest extends ParameterizedTest {
 	@Test
 	public void testNoRepeatedVariablesInDependencies() {
 		List<Term> vars = new ArrayList<>();
-		for (Constraint ic: this.dependencies) {
+		for (Dependency ic: this.dependencies) {
 			for (Atom a: ((TGD) ic).getAtoms()) {
 				vars.clear();
 				for (Term t: a.getTerms()) {

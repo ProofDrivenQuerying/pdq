@@ -3,7 +3,6 @@ package uk.ac.ox.cs.pdq.fol;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -16,7 +15,6 @@ import uk.ac.ox.cs.pdq.util.CanonicalNameGenerator;
 import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 // TODO: Auto-generated Javadoc
@@ -44,7 +42,7 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 
 	/**  The query's bound variables. */
 	protected final List<Variable> bound;
-
+	
 	/**  Map of query's free variables to chase constants. */
 	protected Map<Variable, Constant> freeToCanonical;
 
@@ -186,7 +184,9 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 	 * @param mapping Map<Variable,Constant>
 	 * @return a copy of the query grounded using the given mapping
 	 * @see uk.ac.ox.cs.pdq.formula.Formula#ground(Map<Variable,Constant>)
-	 */
+//	/* (non-Javadoc)
+//	 * @see uk.ac.ox.cs.pdq.fol.Query#setGrounding(java.util.Map)
+//	 */
 	@Override
 	public Conjunction<Atom> ground(Map<Variable, Constant> mapping) {
 		List<Atom> bodyAtoms = new ArrayList<>();
@@ -287,7 +287,7 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 	public Collection<TypedConstant<?>> getSchemaConstants() {
 		return this.constants;
 	}
-
+	
 	/**
 	 * Gets the mapping of the free query variables to canonical constants.
 	 *
@@ -299,17 +299,10 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 		return this.freeToCanonical;
 	}
 	
-	/**
-	 * Gets the mapping of all query variables to canonical constants.
-	 *
-	 * @return a map of query's variables both free and quantified to chase constants appear in the canonical query.
-	 * Given a CQ Q, the canonical database of Q is the instance which has for each atom R(\vec{v}) 
-	 * in Q a corresponding fact for relation R with \vec{v} as a tuple. The canonical constants are the constants of the canonical database of Q
-	 */
 	public Map<Variable, Constant> getGrounding() {
 		return this.grounding;
 	}
-
+	
 	/**
 	 * Equals.
 	 *

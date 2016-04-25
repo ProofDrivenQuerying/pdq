@@ -96,7 +96,7 @@ public class ProtoBufferUnwrapper {
 			try {
 				switch (clause.getKind()) {
 				case CONSTRAINT:
-					uk.ac.ox.cs.pdq.db.Constraint c = this.unwrapConstraint(clause.getConstraint());
+					uk.ac.ox.cs.pdq.db.Dependency c = this.unwrapConstraint(clause.getConstraint());
 					if (c != null) {
 						this.builder.addDependency(c);
 					}
@@ -108,7 +108,7 @@ public class ProtoBufferUnwrapper {
 							if (r instanceof View) {
 								this.builder.addRelation((Relation) r);
 							} else {
-								this.builder.addDependency((uk.ac.ox.cs.pdq.db.Constraint) r);
+								this.builder.addDependency((uk.ac.ox.cs.pdq.db.Dependency) r);
 							} 
 						}
 					}
@@ -180,7 +180,7 @@ public class ProtoBufferUnwrapper {
 	 * @param constraint Constraint
 	 * @return the uk.ac.ox.cs.pdq.db. constraint
 	 */
-	public uk.ac.ox.cs.pdq.db.Constraint unwrapConstraint(Constraint constraint) {
+	public uk.ac.ox.cs.pdq.db.Dependency unwrapConstraint(Constraint constraint) {
 		this.variables.clear();
 		if (constraint.hasBody()) {
 			this.variables.putAll(this.unwrapVariableDeclarations(constraint.getBody().getVarList()));
@@ -205,7 +205,7 @@ public class ProtoBufferUnwrapper {
 	 * @param rule Rule
 	 * @return Collection<ConjunctiveQuery>
 	 */
-	public uk.ac.ox.cs.pdq.db.Constraint ruleToConstraint(Rule rule) {
+	public uk.ac.ox.cs.pdq.db.Dependency ruleToConstraint(Rule rule) {
 		this.variables.clear();
 		uk.ac.ox.cs.pdq.fol.Formula body = null;
 		this.variables.putAll(this.unwrapVariableDeclarations(rule.getVarList()));
@@ -385,7 +385,7 @@ public class ProtoBufferUnwrapper {
 					db.addRightAtom(new Atom(r, atom.getTerm(i)));
 				}
 			}
-			uk.ac.ox.cs.pdq.db.Constraint ic = db.build();
+			uk.ac.ox.cs.pdq.db.Dependency ic = db.build();
 			log.debug("Type constraint:" + ic);
 			this.builder.addDependency(ic);
 		}

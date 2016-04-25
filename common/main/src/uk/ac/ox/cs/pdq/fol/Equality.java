@@ -16,7 +16,7 @@ import com.google.common.base.Preconditions;
  * @author Efthymia Tsamoura
  */
 public final class Equality extends Atom {
-
+	
 	/**
 	 * Constructor for Equality.
 	 * @param terms Collection<? extends Term>

@@ -2,7 +2,7 @@ package uk.ac.ox.cs.pdq.reasoning.utility;
 
 import java.util.Collection;
 
-import uk.ac.ox.cs.pdq.db.Constraint;
+import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState;
 
 // TODO: Auto-generated Javadoc
@@ -31,6 +31,6 @@ EGD, /** The tgd. */
 	 * @param round the round
 	 * @return 		the dependencies that are most likely to be fired in the next chase round.
 	 */
-	Collection<? extends Constraint> getDependencies(ChaseState state, EGDROUND round);
+	Collection<? extends Dependency> getDependencies(ChaseState state, EGDROUND round);
 	
 }
