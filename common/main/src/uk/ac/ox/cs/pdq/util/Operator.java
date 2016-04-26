@@ -7,8 +7,8 @@ import uk.ac.ox.cs.pdq.fol.Term;
 
 // TODO: Auto-generated Javadoc
 /**
- * Top-level interface for any operator accepting input and output types.
- * This can be fined-grained operator such as relational algebra operators,
+ * Top-level interface for any operator supporting input and output types.
+ * It can be a fined-grained operator such as a relational algebra operator,
  * or more coarse views on specific plan operators.
  * 
  * @author Julien Leblay
@@ -16,7 +16,7 @@ import uk.ac.ox.cs.pdq.fol.Term;
 public interface Operator extends Costable {
 
 	/**
-	 * The Enum SortOrder.
+	 * Specifies how the output of this operator is sorted.
 	 */
 	public static enum SortOrder { 
  /** The asc. */
@@ -26,12 +26,7 @@ public interface Operator extends Costable {
  /** The unsorted. */
  UNSORTED }
 	
-//	/**
-//	 * @return a list of pair of column/sortorder, specifying how the output
-//	 * of this operator is sorted.
-//	 */
-//	List<Pair<Term, SortOrder>> getSortOrder();
-	
+
 	/**
  * Gets the input type.
  *

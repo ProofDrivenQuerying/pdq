@@ -156,7 +156,7 @@ public class Projection extends UnaryOperator {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see uk.ac.ox.cs.pdq.plan.relational.logical.LogicalOperator#deepCopy()
+	 * @see uk.ac.ox.cs.pdq.algebra.RelationalOperator#deepCopy()
 	 */
 	@Override
 	public Projection deepCopy() throws RelationalOperatorException {

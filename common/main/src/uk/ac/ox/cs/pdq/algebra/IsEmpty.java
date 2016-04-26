@@ -11,7 +11,7 @@ import uk.ac.ox.cs.pdq.util.TupleType;
 
 // TODO: Auto-generated Javadoc
 /**
- * IsEmpty of the boolean query operator. Return true if the database satisfies
+ * IsEmpty  unary operator used for boolean queries. Return true if the database satisfies
  * the body of the query, false otherwise.
  *
  * @author Julien LEBLAY
@@ -32,7 +32,7 @@ public class IsEmpty extends UnaryOperator {
 
 	/*
 	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.plan.relational.logical.LogicalOperator#deepCopy()
+	 * @see  uk.ac.ox.cs.pdq.algebra.RelationalOperator#deepCopy()
 	 */
 	@Override
 	public IsEmpty deepCopy() throws RelationalOperatorException {
@@ -41,7 +41,7 @@ public class IsEmpty extends UnaryOperator {
 
 	/*
 	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.plan.relational.logical.LogicalOperator#getColumnsDisplay()
+	 * @see uk.ac.ox.cs.pdq.algebra.RelationalOperator#getColumnsDisplay()
 	 */
 	@Override
 	public List<String> getColumnsDisplay() {

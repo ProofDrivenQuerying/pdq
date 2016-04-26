@@ -18,7 +18,7 @@ import com.google.common.collect.Lists;
 public class Count extends UnaryOperator {
 
 	/**
-	 * Instantiates a new operator.
+	 * Instantiates a new "count operator" on the input relational algebra operator.
 	 *
 	 * @param child LogicalOperator
 	 */
@@ -31,7 +31,7 @@ public class Count extends UnaryOperator {
 
 	/*
 	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.plan.relational.logical.LogicalOperator#deepCopy()
+	 * @see uk.ac.ox.cs.pdq.algebra.RelationalOperator#deepCopy()
 	 */
 	@Override
 	public Count deepCopy() throws RelationalOperatorException {
@@ -40,7 +40,7 @@ public class Count extends UnaryOperator {
 
 	/*
 	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.plan.relational.logical.LogicalOperator#getColumnsDisplay()
+	 * @see uk.ac.ox.cs.pdq.algebra.RelationalOperator#getColumnsDisplay()
 	 */
 	@Override
 	public List<String> getColumnsDisplay() {

@@ -10,7 +10,7 @@ import com.google.common.base.Preconditions;
 
 // TODO: Auto-generated Javadoc
 /**
- * Superclass to all unary logical operator.
+ * Superclass to all unary logical operators.
  *
  * @author Julien Leblay
  */
@@ -88,7 +88,7 @@ public abstract class UnaryOperator extends RelationalOperator {
 
 	/*
 	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.plan.relational.logical.LogicalOperator#getColumn(int)
+	 * @see uk.ac.ox.cs.pdq.algebra.RelationalOperator#getColumn(int)
 	 */
 	@Override
 	public Term getColumn(int i) {
@@ -98,7 +98,7 @@ public abstract class UnaryOperator extends RelationalOperator {
 
 	/*
 	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.plan.relational.logical.LogicalOperator#getColumns()
+	 * @see uk.ac.ox.cs.pdq.algebra.RelationalOperator#getColumns()
 	 */
 	@Override
 	public List<Term> getColumns() {
@@ -190,7 +190,7 @@ public abstract class UnaryOperator extends RelationalOperator {
 
 	/*
 	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.plan.relational.logical.LogicalOperator#isLeftDeep()
+	 * @see uk.ac.ox.cs.pdq.algebra.RelationalOperator#isLeftDeep()
 	 */
 	@Override
 	public boolean isLeftDeep() {
@@ -199,7 +199,6 @@ public abstract class UnaryOperator extends RelationalOperator {
 
 	/*
 	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.plan.relational.logical.LogicalOperator#isRightDeep()
 	 */
 	@Override
 	public boolean isRightDeep() {

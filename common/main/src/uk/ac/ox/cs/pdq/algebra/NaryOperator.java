@@ -330,7 +330,7 @@ public abstract class NaryOperator extends RelationalOperator {
 
 	/*
 	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.plan.relational.logical.LogicalOperator#isLeftDeep()
+	 * @see uk.ac.ox.cs.pdq.algebra.RelationalOperator#isLeftDeep()
 	 */
 	@Override
 	public boolean isLeftDeep() {
@@ -347,7 +347,7 @@ public abstract class NaryOperator extends RelationalOperator {
 
 	/*
 	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.plan.relational.logical.LogicalOperator#isRightDeep()
+	 * @see uk.ac.ox.cs.pdq.algebra.RelationalOperator#isRightDeep()
 	 */
 	@Override
 	public boolean isRightDeep() {

@@ -85,7 +85,7 @@ public class SubPlanAlias extends RelationalOperator {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see uk.ac.ox.cs.pdq.plan.relational.logical.LogicalOperator#deepCopy()
+	 * @see uk.ac.ox.cs.pdq.algebra.RelationalOperator#deepCopy()
 	 */
 	@Override
 	public SubPlanAlias deepCopy() throws RelationalOperatorException {
@@ -187,7 +187,7 @@ public class SubPlanAlias extends RelationalOperator {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see uk.ac.ox.cs.pdq.plan.relational.logical.LogicalOperator#isLeftDeep()
+	 * @see uk.ac.ox.cs.pdq.algebra.RelationalOperator#isLeftDeep()
 	 */
 	@Override
 	public boolean isLeftDeep() {
@@ -201,7 +201,7 @@ public class SubPlanAlias extends RelationalOperator {
 	 * (non-Javadoc)
 	 *
 	 * @see
-	 * uk.ac.ox.cs.pdq.plan.relational.logical.LogicalOperator#isRightDeep()
+	 * uk.ac.ox.cs.pdq.algebra.RelationalOperator#isRightDeep()
 	 */
 	@Override
 	public boolean isRightDeep() {

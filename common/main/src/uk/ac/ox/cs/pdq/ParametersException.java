@@ -5,7 +5,7 @@ package uk.ac.ox.cs.pdq;
 
 // TODO: Auto-generated Javadoc
 /**
- * Exception that occurred when parameters cannot be loaded or set properly.
+ * Exception that occurrs when parameters cannot be loaded or set properly.
  *
  * @author Julien Leblay
  */

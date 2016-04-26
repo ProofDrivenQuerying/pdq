@@ -3,14 +3,14 @@ package uk.ac.ox.cs.pdq.algebra;
 
 // TODO: Auto-generated Javadoc
 /**
- * Distinct removes duplicates in a result set.
+ * Distinct unary operator removes duplicates in a result set.
  *
  * @author Julien Leblay
  */
 public class Distinct extends UnaryOperator {
 
 	/**
-	 * Instantiates a new operator.
+	 * Instantiates a new distinct operator that has a relational operator as a child.
 	 *
 	 * @param child LogicalOperator
 	 */
@@ -20,7 +20,7 @@ public class Distinct extends UnaryOperator {
 
 	/*
 	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.plan.relational.logical.LogicalOperator#deepCopy()
+	 * @see uk.ac.ox.cs.pdq.algebra.RelationalOperator#deepCopy()
 	 */
 	@Override
 	public Distinct deepCopy() throws RelationalOperatorException {
