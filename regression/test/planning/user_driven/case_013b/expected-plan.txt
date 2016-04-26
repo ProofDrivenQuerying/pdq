@@ -1,5 +1,0 @@
-RE:TargetFree BI:chembl_target_free
-RE:ProteinLimited BI:uniprot_protein_2
-RE:AssayLimited BI:chembl_assay_limited_3
-RE:PathwayBySpecies BI:reactome_pathway_1
-RE:ActivityLimited BI:chembl_activity_limited_1
