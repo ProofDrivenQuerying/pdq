@@ -107,7 +107,7 @@ public class ExplorationThread implements Callable<DAGChaseConfiguration> {
 	public DAGChaseConfiguration call() throws Exception {
 		DAGChaseConfiguration configuration;
 		//Poll the next configuration
-		while((configuration = this.input.poll()) != null) {
+		while((configuration = this.input.poll()) != null) {			
 			if(configuration.getState() instanceof DatabaseChaseState) {
 				((DatabaseChaseState)configuration.getState()).setManager((DatabaseHomomorphismManager) this.detector);
 			}

@@ -99,8 +99,6 @@ public class DatabaseHomomorphismManager implements HomomorphismManager {
 
 	/**  Open database connections. */
 	protected final List<Connection> synchronousConnections = Lists.newArrayList();
-	
-//	protected final Connection synchronousConnections;
 
 	/**  The database. */
 	protected final String database;

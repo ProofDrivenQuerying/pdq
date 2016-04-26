@@ -328,14 +328,12 @@ public abstract class SQLStatementBuilder {
 		List<String> constantEqualities = this.createEqualitiesWithConstants((Conjunction<Atom>) source.getBody());
 		List<String> equalitiesForHomomorphicProperties = this.createEqualitiesForHomomorphicProperties(source, constraints);
 
-
 		/*
 		 * if the target set of facts is not null, we
 		 * add in the WHERE statement a predicate which limits the identifiers
-		 * of the facts that satisfy any homomorphism to the
-		 * identifiers of these facts
+		 * of the facts that satisfy any homomorphism to the identifiers of these facts
 		 */
-		List<String> factproperties = this.translateFactProperties(source, constraints);
+		List<String> factproperties = this.translateFactProperties((Conjunction<Atom>) source.getBody(), constraints);
 
 		String egdProperties = this.translateEGDHomomorphicProperties(source, constraints);
 		if(egdProperties!=null) {
@@ -370,13 +368,19 @@ public abstract class SQLStatementBuilder {
 			}
 			LinkedHashMap<String,Variable> nestedProjections = this.createProjections(source);
 			List<String> predicates2 = new ArrayList<String>();
-			
 			List<String> nestedAttributeEqualities = this.createNestedAttributeEqualitiesForActiveTriggers((Dependency)source);
-			
 			List<String> nestedConstantEqualities = this.createEqualitiesWithConstants(Conjunction.of(((Dependency)source).getAtoms()));
 			predicates2.addAll(nestedAttributeEqualities);
 			predicates2.addAll(nestedConstantEqualities);
-
+			
+			/*
+			 * if the target set of facts is not null, we
+			 * add in the WHERE statement a predicate which limits the identifiers
+			 * of the facts that satisfy any homomorphism to the identifiers of these facts
+			 */
+			List<String> nestedFactproperties = this.translateFactProperties(Conjunction.of(((Dependency)source).getRight().getAtoms()), constraints);
+			predicates2.addAll(nestedFactproperties);
+			
 			String query2 = 
 					"(SELECT " 	+ Joiner.on(",").join(nestedProjections.keySet()) + "\n" +  
 							"FROM " 	+ Joiner.on(",").join(from2);
@@ -579,6 +583,30 @@ public abstract class SQLStatementBuilder {
 		return constantPredicates;
 	}
 
+//	/**
+//	 * Translate fact constraints.
+//	 *
+//	 * @param source the source
+//	 * @param constraints the constraints
+//	 * @return 		predicates that correspond to fact constraints
+//	 */
+//	protected List<String> translateFactProperties(Evaluatable source, HomomorphismProperty... constraints) {
+//		List<String> setPredicates = new ArrayList<>();
+//		for(HomomorphismProperty c:constraints) {
+//			if(c instanceof FactProperty) {
+//				List<Object> facts = new ArrayList<>();
+//				for (Atom atom:((FactProperty) c).atoms) {
+//					facts.add(atom.getId());
+//				}
+//				for(Atom fact:source.getBody().getAtoms()) {
+//					String alias = this.aliases.get(fact);
+//					setPredicates.add(createSQLMembershipExpression(fact.getTermsCount()-1, facts, (Relation) fact.getPredicate(), alias));
+//				}
+//			}
+//		}
+//		return setPredicates;
+//	}
+	
 	/**
 	 * Translate fact constraints.
 	 *
@@ -586,7 +614,7 @@ public abstract class SQLStatementBuilder {
 	 * @param constraints the constraints
 	 * @return 		predicates that correspond to fact constraints
 	 */
-	protected List<String> translateFactProperties(Evaluatable source, HomomorphismProperty... constraints) {
+	protected List<String> translateFactProperties(Conjunction<Atom> source, HomomorphismProperty... constraints) {
 		List<String> setPredicates = new ArrayList<>();
 		for(HomomorphismProperty c:constraints) {
 			if(c instanceof FactProperty) {
@@ -594,7 +622,7 @@ public abstract class SQLStatementBuilder {
 				for (Atom atom:((FactProperty) c).atoms) {
 					facts.add(atom.getId());
 				}
-				for(Atom fact:source.getBody().getAtoms()) {
+				for(Atom fact:source) {
 					String alias = this.aliases.get(fact);
 					setPredicates.add(createSQLMembershipExpression(fact.getTermsCount()-1, facts, (Relation) fact.getPredicate(), alias));
 				}

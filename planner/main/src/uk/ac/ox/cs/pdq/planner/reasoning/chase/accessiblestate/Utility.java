@@ -90,7 +90,6 @@ public class Utility {
 				graph.put(axiom, accessedFact, infAccFact);
 			}
 			
-			
 			for(Term term:fact.getTerms()) {
 				createdFacts.add(new Atom(schema.getAccessibleRelation(), term));
 			}

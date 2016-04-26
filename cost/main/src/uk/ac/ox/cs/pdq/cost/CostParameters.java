@@ -276,7 +276,7 @@ public class CostParameters extends uk.ac.ox.cs.pdq.Parameters {
 	 *
 	 * @param catalog the new catalog
 	 */
-	public void setDatabaseCatalog(String catalog) {
+	public void setCatalog(String catalog) {
 		this.catalog = catalog;
 	}
 	
@@ -285,7 +285,7 @@ public class CostParameters extends uk.ac.ox.cs.pdq.Parameters {
 	 *
 	 * @return the catalog
 	 */
-	public String getDatabaseCatalog() {
+	public String getCatalog() {
 		return this.catalog;
 	}
 	
