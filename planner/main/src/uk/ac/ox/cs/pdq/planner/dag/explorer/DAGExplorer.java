@@ -199,7 +199,8 @@ public abstract class DAGExplorer extends Explorer<DAGPlan> {
 				break;
 			}
 			for (Collection<Atom> binding:bindings) {
-				AccessibleChaseState newState = state.clone();
+				AccessibleChaseState newState = (uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState) 
+						new AccessibleDatabaseListState(binding, (DatabaseHomomorphismManager) this.detector, false);
 				applyRule = new ApplyRule(
 						newState,
 						pair.getLeft(),

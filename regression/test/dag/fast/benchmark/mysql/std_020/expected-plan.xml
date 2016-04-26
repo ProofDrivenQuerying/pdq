@@ -1,164 +1,142 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<plan type="dag" cost="29164.652777777777">
+<plan type="dag" cost="29135.277777777777">
 <operator type="PROJECT">
 <outputs>
-<attribute name="c1401366" type="java.lang.String"/>
-<attribute name="c1401367" type="java.lang.String"/>
+<attribute name="c161471" type="java.lang.String"/>
+<attribute name="c161472" type="java.lang.String"/>
 </outputs>
 <project>
-<attribute name="c1401366" type="java.lang.String"/>
-<attribute name="c1401367" type="java.lang.String"/>
+<attribute name="c161471" type="java.lang.String"/>
+<attribute name="c161472" type="java.lang.String"/>
 </project>
 <child>
 <operator type="JOIN" variant="SYMMETRIC_HASH">
 <outputs>
-<attribute name="c1401368" type="java.lang.Integer"/>
-<attribute name="c1401372" type="java.lang.Integer"/>
-<attribute name="k1401397" type="java.lang.String"/>
-<attribute name="c1401368" type="java.lang.Integer"/>
-<attribute name="c1401372" type="java.lang.Integer"/>
-<attribute name="c1401373" type="java.lang.String"/>
-<attribute name="c1401365" type="java.lang.Integer"/>
-<attribute name="c1401366" type="java.lang.String"/>
-<attribute name="c1401367" type="java.lang.String"/>
-<attribute name="c1401368" type="java.lang.Integer"/>
-<attribute name="c1401369" type="java.lang.String"/>
-<attribute name="c1401370" type="java.math.BigDecimal"/>
-<attribute name="c1401371" type="java.lang.String"/>
-<attribute name="c1401385" type="java.lang.Integer"/>
-<attribute name="c1401374" type="java.lang.Integer"/>
-<attribute name="c1401365" type="java.lang.Integer"/>
-<attribute name="c1401386" type="java.lang.Integer"/>
-<attribute name="c1401375" type="java.math.BigDecimal"/>
-<attribute name="c1401387" type="java.math.BigDecimal"/>
-<attribute name="c1401388" type="java.math.BigDecimal"/>
-<attribute name="c1401389" type="java.math.BigDecimal"/>
-<attribute name="c1401390" type="java.lang.String"/>
-<attribute name="c1401391" type="java.lang.String"/>
-<attribute name="c1401392" type="java.sql.Date"/>
-<attribute name="c1401393" type="java.sql.Date"/>
-<attribute name="c1401394" type="java.lang.String"/>
-<attribute name="c1401395" type="java.lang.String"/>
-<attribute name="c1401396" type="java.lang.String"/>
-<attribute name="c1401374" type="java.lang.Integer"/>
-<attribute name="c1401365" type="java.lang.Integer"/>
-<attribute name="c1401375" type="java.lang.Integer"/>
-<attribute name="c1401376" type="java.math.BigDecimal"/>
-<attribute name="c1401377" type="java.lang.String"/>
-<attribute name="c1401374" type="java.lang.Integer"/>
-<attribute name="c1401378" type="java.lang.String"/>
-<attribute name="c1401379" type="java.lang.String"/>
-<attribute name="c1401380" type="java.lang.String"/>
-<attribute name="c1401381" type="java.lang.Integer"/>
-<attribute name="c1401382" type="java.lang.String"/>
-<attribute name="c1401383" type="java.math.BigDecimal"/>
-<attribute name="c1401384" type="java.lang.String"/>
+<attribute name="c161473" type="java.lang.Integer"/>
+<attribute name="c161477" type="java.lang.Integer"/>
+<attribute name="k161502" type="java.lang.String"/>
+<attribute name="c161470" type="java.lang.Integer"/>
+<attribute name="c161471" type="java.lang.String"/>
+<attribute name="c161472" type="java.lang.String"/>
+<attribute name="c161473" type="java.lang.Integer"/>
+<attribute name="c161474" type="java.lang.String"/>
+<attribute name="c161475" type="java.math.BigDecimal"/>
+<attribute name="c161476" type="java.lang.String"/>
+<attribute name="c161490" type="java.lang.Integer"/>
+<attribute name="c161479" type="java.lang.Integer"/>
+<attribute name="c161470" type="java.lang.Integer"/>
+<attribute name="c161491" type="java.lang.Integer"/>
+<attribute name="c161480" type="java.math.BigDecimal"/>
+<attribute name="c161492" type="java.math.BigDecimal"/>
+<attribute name="c161493" type="java.math.BigDecimal"/>
+<attribute name="c161494" type="java.math.BigDecimal"/>
+<attribute name="c161495" type="java.lang.String"/>
+<attribute name="c161496" type="java.lang.String"/>
+<attribute name="c161497" type="java.sql.Date"/>
+<attribute name="c161498" type="java.sql.Date"/>
+<attribute name="c161499" type="java.lang.String"/>
+<attribute name="c161500" type="java.lang.String"/>
+<attribute name="c161501" type="java.lang.String"/>
+<attribute name="c161479" type="java.lang.Integer"/>
+<attribute name="c161470" type="java.lang.Integer"/>
+<attribute name="c161480" type="java.lang.Integer"/>
+<attribute name="c161481" type="java.math.BigDecimal"/>
+<attribute name="c161482" type="java.lang.String"/>
+<attribute name="c161479" type="java.lang.Integer"/>
+<attribute name="c161483" type="java.lang.String"/>
+<attribute name="c161484" type="java.lang.String"/>
+<attribute name="c161485" type="java.lang.String"/>
+<attribute name="c161486" type="java.lang.Integer"/>
+<attribute name="c161487" type="java.lang.String"/>
+<attribute name="c161488" type="java.math.BigDecimal"/>
+<attribute name="c161489" type="java.lang.String"/>
 </outputs>
 <conjunction>
-<predicate type="equality" left="14" right="33"/>
+<predicate type="equality" left="11" right="30"/>
 </conjunction>
 <children>
-<operator type="DEPENDENT_JOIN" param="14,6">
+<operator type="DEPENDENT_JOIN" param="11,3">
 <outputs>
-<attribute name="c1401368" type="java.lang.Integer"/>
-<attribute name="c1401372" type="java.lang.Integer"/>
-<attribute name="k1401397" type="java.lang.String"/>
-<attribute name="c1401368" type="java.lang.Integer"/>
-<attribute name="c1401372" type="java.lang.Integer"/>
-<attribute name="c1401373" type="java.lang.String"/>
-<attribute name="c1401365" type="java.lang.Integer"/>
-<attribute name="c1401366" type="java.lang.String"/>
-<attribute name="c1401367" type="java.lang.String"/>
-<attribute name="c1401368" type="java.lang.Integer"/>
-<attribute name="c1401369" type="java.lang.String"/>
-<attribute name="c1401370" type="java.math.BigDecimal"/>
-<attribute name="c1401371" type="java.lang.String"/>
-<attribute name="c1401385" type="java.lang.Integer"/>
-<attribute name="c1401374" type="java.lang.Integer"/>
-<attribute name="c1401365" type="java.lang.Integer"/>
-<attribute name="c1401386" type="java.lang.Integer"/>
-<attribute name="c1401375" type="java.math.BigDecimal"/>
-<attribute name="c1401387" type="java.math.BigDecimal"/>
-<attribute name="c1401388" type="java.math.BigDecimal"/>
-<attribute name="c1401389" type="java.math.BigDecimal"/>
-<attribute name="c1401390" type="java.lang.String"/>
-<attribute name="c1401391" type="java.lang.String"/>
-<attribute name="c1401392" type="java.sql.Date"/>
-<attribute name="c1401393" type="java.sql.Date"/>
-<attribute name="c1401394" type="java.lang.String"/>
-<attribute name="c1401395" type="java.lang.String"/>
-<attribute name="c1401396" type="java.lang.String"/>
-<attribute name="c1401374" type="java.lang.Integer"/>
-<attribute name="c1401365" type="java.lang.Integer"/>
-<attribute name="c1401375" type="java.lang.Integer"/>
-<attribute name="c1401376" type="java.math.BigDecimal"/>
-<attribute name="c1401377" type="java.lang.String"/>
+<attribute name="c161473" type="java.lang.Integer"/>
+<attribute name="c161477" type="java.lang.Integer"/>
+<attribute name="k161502" type="java.lang.String"/>
+<attribute name="c161470" type="java.lang.Integer"/>
+<attribute name="c161471" type="java.lang.String"/>
+<attribute name="c161472" type="java.lang.String"/>
+<attribute name="c161473" type="java.lang.Integer"/>
+<attribute name="c161474" type="java.lang.String"/>
+<attribute name="c161475" type="java.math.BigDecimal"/>
+<attribute name="c161476" type="java.lang.String"/>
+<attribute name="c161490" type="java.lang.Integer"/>
+<attribute name="c161479" type="java.lang.Integer"/>
+<attribute name="c161470" type="java.lang.Integer"/>
+<attribute name="c161491" type="java.lang.Integer"/>
+<attribute name="c161480" type="java.math.BigDecimal"/>
+<attribute name="c161492" type="java.math.BigDecimal"/>
+<attribute name="c161493" type="java.math.BigDecimal"/>
+<attribute name="c161494" type="java.math.BigDecimal"/>
+<attribute name="c161495" type="java.lang.String"/>
+<attribute name="c161496" type="java.lang.String"/>
+<attribute name="c161497" type="java.sql.Date"/>
+<attribute name="c161498" type="java.sql.Date"/>
+<attribute name="c161499" type="java.lang.String"/>
+<attribute name="c161500" type="java.lang.String"/>
+<attribute name="c161501" type="java.lang.String"/>
+<attribute name="c161479" type="java.lang.Integer"/>
+<attribute name="c161470" type="java.lang.Integer"/>
+<attribute name="c161480" type="java.lang.Integer"/>
+<attribute name="c161481" type="java.math.BigDecimal"/>
+<attribute name="c161482" type="java.lang.String"/>
 </outputs>
 <children>
-<operator type="DEPENDENT_JOIN" param="6">
+<operator type="DEPENDENT_JOIN" param="3">
 <outputs>
-<attribute name="c1401368" type="java.lang.Integer"/>
-<attribute name="c1401372" type="java.lang.Integer"/>
-<attribute name="k1401397" type="java.lang.String"/>
-<attribute name="c1401368" type="java.lang.Integer"/>
-<attribute name="c1401372" type="java.lang.Integer"/>
-<attribute name="c1401373" type="java.lang.String"/>
-<attribute name="c1401365" type="java.lang.Integer"/>
-<attribute name="c1401366" type="java.lang.String"/>
-<attribute name="c1401367" type="java.lang.String"/>
-<attribute name="c1401368" type="java.lang.Integer"/>
-<attribute name="c1401369" type="java.lang.String"/>
-<attribute name="c1401370" type="java.math.BigDecimal"/>
-<attribute name="c1401371" type="java.lang.String"/>
-<attribute name="c1401385" type="java.lang.Integer"/>
-<attribute name="c1401374" type="java.lang.Integer"/>
-<attribute name="c1401365" type="java.lang.Integer"/>
-<attribute name="c1401386" type="java.lang.Integer"/>
-<attribute name="c1401375" type="java.math.BigDecimal"/>
-<attribute name="c1401387" type="java.math.BigDecimal"/>
-<attribute name="c1401388" type="java.math.BigDecimal"/>
-<attribute name="c1401389" type="java.math.BigDecimal"/>
-<attribute name="c1401390" type="java.lang.String"/>
-<attribute name="c1401391" type="java.lang.String"/>
-<attribute name="c1401392" type="java.sql.Date"/>
-<attribute name="c1401393" type="java.sql.Date"/>
-<attribute name="c1401394" type="java.lang.String"/>
-<attribute name="c1401395" type="java.lang.String"/>
-<attribute name="c1401396" type="java.lang.String"/>
+<attribute name="c161473" type="java.lang.Integer"/>
+<attribute name="c161477" type="java.lang.Integer"/>
+<attribute name="k161502" type="java.lang.String"/>
+<attribute name="c161470" type="java.lang.Integer"/>
+<attribute name="c161471" type="java.lang.String"/>
+<attribute name="c161472" type="java.lang.String"/>
+<attribute name="c161473" type="java.lang.Integer"/>
+<attribute name="c161474" type="java.lang.String"/>
+<attribute name="c161475" type="java.math.BigDecimal"/>
+<attribute name="c161476" type="java.lang.String"/>
+<attribute name="c161490" type="java.lang.Integer"/>
+<attribute name="c161479" type="java.lang.Integer"/>
+<attribute name="c161470" type="java.lang.Integer"/>
+<attribute name="c161491" type="java.lang.Integer"/>
+<attribute name="c161480" type="java.math.BigDecimal"/>
+<attribute name="c161492" type="java.math.BigDecimal"/>
+<attribute name="c161493" type="java.math.BigDecimal"/>
+<attribute name="c161494" type="java.math.BigDecimal"/>
+<attribute name="c161495" type="java.lang.String"/>
+<attribute name="c161496" type="java.lang.String"/>
+<attribute name="c161497" type="java.sql.Date"/>
+<attribute name="c161498" type="java.sql.Date"/>
+<attribute name="c161499" type="java.lang.String"/>
+<attribute name="c161500" type="java.lang.String"/>
+<attribute name="c161501" type="java.lang.String"/>
 </outputs>
 <children>
 <operator type="DEPENDENT_JOIN" param="0">
 <outputs>
-<attribute name="c1401368" type="java.lang.Integer"/>
-<attribute name="c1401372" type="java.lang.Integer"/>
-<attribute name="k1401397" type="java.lang.String"/>
-<attribute name="c1401368" type="java.lang.Integer"/>
-<attribute name="c1401372" type="java.lang.Integer"/>
-<attribute name="c1401373" type="java.lang.String"/>
-<attribute name="c1401365" type="java.lang.Integer"/>
-<attribute name="c1401366" type="java.lang.String"/>
-<attribute name="c1401367" type="java.lang.String"/>
-<attribute name="c1401368" type="java.lang.Integer"/>
-<attribute name="c1401369" type="java.lang.String"/>
-<attribute name="c1401370" type="java.math.BigDecimal"/>
-<attribute name="c1401371" type="java.lang.String"/>
-</outputs>
-<children>
-<operator type="DEPENDENT_JOIN" param="1">
-<outputs>
-<attribute name="c1401368" type="java.lang.Integer"/>
-<attribute name="c1401372" type="java.lang.Integer"/>
-<attribute name="k1401397" type="java.lang.String"/>
-<attribute name="c1401368" type="java.lang.Integer"/>
-<attribute name="c1401372" type="java.lang.Integer"/>
-<attribute name="c1401373" type="java.lang.String"/>
+<attribute name="c161473" type="java.lang.Integer"/>
+<attribute name="c161477" type="java.lang.Integer"/>
+<attribute name="k161502" type="java.lang.String"/>
+<attribute name="c161470" type="java.lang.Integer"/>
+<attribute name="c161471" type="java.lang.String"/>
+<attribute name="c161472" type="java.lang.String"/>
+<attribute name="c161473" type="java.lang.Integer"/>
+<attribute name="c161474" type="java.lang.String"/>
+<attribute name="c161475" type="java.math.BigDecimal"/>
+<attribute name="c161476" type="java.lang.String"/>
 </outputs>
 <children>
 <operator type="PROJECT">
 <outputs>
-<attribute name="c1401368" type="java.lang.Integer"/>
-<attribute name="c1401372" type="java.lang.Integer"/>
-<attribute name="k1401397" type="java.lang.String"/>
+<attribute name="c161473" type="java.lang.Integer"/>
+<attribute name="c161477" type="java.lang.Integer"/>
+<attribute name="k161502" type="java.lang.String"/>
 </outputs>
 <project>
 <attribute name="nation_key" type="java.lang.Integer"/>
@@ -191,50 +169,13 @@
 </operator>
 <operator type="PROJECT">
 <outputs>
-<attribute name="c1401368" type="java.lang.Integer"/>
-<attribute name="c1401372" type="java.lang.Integer"/>
-<attribute name="c1401373" type="java.lang.String"/>
-</outputs>
-<project>
-<attribute name="n_nationkey" type="java.lang.Integer"/>
-<attribute name="n_regionkey" type="java.lang.Integer"/>
-<attribute name="n_comment" type="java.lang.String"/>
-</project>
-<child>
-<operator type="SELECT">
-<outputs>
-<attribute name="n_nationkey" type="java.lang.Integer"/>
-<attribute name="n_name" type="java.lang.String"/>
-<attribute name="n_regionkey" type="java.lang.Integer"/>
-<attribute name="n_comment" type="java.lang.String"/>
-</outputs>
-<conjunction>
-<predicate type="equality" left="1" value="CHINA"/>
-</conjunction>
-<child>
-<operator type="ACCESS" relation="nation" access-method="m7">
-<outputs>
-<attribute name="n_nationkey" type="java.lang.Integer"/>
-<attribute name="n_name" type="java.lang.String"/>
-<attribute name="n_regionkey" type="java.lang.Integer"/>
-<attribute name="n_comment" type="java.lang.String"/>
-</outputs>
-</operator>
-</child>
-</operator>
-</child>
-</operator>
-</children>
-</operator>
-<operator type="PROJECT">
-<outputs>
-<attribute name="c1401365" type="java.lang.Integer"/>
-<attribute name="c1401366" type="java.lang.String"/>
-<attribute name="c1401367" type="java.lang.String"/>
-<attribute name="c1401368" type="java.lang.Integer"/>
-<attribute name="c1401369" type="java.lang.String"/>
-<attribute name="c1401370" type="java.math.BigDecimal"/>
-<attribute name="c1401371" type="java.lang.String"/>
+<attribute name="c161470" type="java.lang.Integer"/>
+<attribute name="c161471" type="java.lang.String"/>
+<attribute name="c161472" type="java.lang.String"/>
+<attribute name="c161473" type="java.lang.Integer"/>
+<attribute name="c161474" type="java.lang.String"/>
+<attribute name="c161475" type="java.math.BigDecimal"/>
+<attribute name="c161476" type="java.lang.String"/>
 </outputs>
 <project>
 <attribute name="s_suppkey" type="java.lang.Integer"/>
@@ -263,21 +204,21 @@
 </operator>
 <operator type="PROJECT">
 <outputs>
-<attribute name="c1401385" type="java.lang.Integer"/>
-<attribute name="c1401374" type="java.lang.Integer"/>
-<attribute name="c1401365" type="java.lang.Integer"/>
-<attribute name="c1401386" type="java.lang.Integer"/>
-<attribute name="c1401375" type="java.math.BigDecimal"/>
-<attribute name="c1401387" type="java.math.BigDecimal"/>
-<attribute name="c1401388" type="java.math.BigDecimal"/>
-<attribute name="c1401389" type="java.math.BigDecimal"/>
-<attribute name="c1401390" type="java.lang.String"/>
-<attribute name="c1401391" type="java.lang.String"/>
-<attribute name="c1401392" type="java.sql.Date"/>
-<attribute name="c1401393" type="java.sql.Date"/>
-<attribute name="c1401394" type="java.lang.String"/>
-<attribute name="c1401395" type="java.lang.String"/>
-<attribute name="c1401396" type="java.lang.String"/>
+<attribute name="c161490" type="java.lang.Integer"/>
+<attribute name="c161479" type="java.lang.Integer"/>
+<attribute name="c161470" type="java.lang.Integer"/>
+<attribute name="c161491" type="java.lang.Integer"/>
+<attribute name="c161480" type="java.math.BigDecimal"/>
+<attribute name="c161492" type="java.math.BigDecimal"/>
+<attribute name="c161493" type="java.math.BigDecimal"/>
+<attribute name="c161494" type="java.math.BigDecimal"/>
+<attribute name="c161495" type="java.lang.String"/>
+<attribute name="c161496" type="java.lang.String"/>
+<attribute name="c161497" type="java.sql.Date"/>
+<attribute name="c161498" type="java.sql.Date"/>
+<attribute name="c161499" type="java.lang.String"/>
+<attribute name="c161500" type="java.lang.String"/>
+<attribute name="c161501" type="java.lang.String"/>
 </outputs>
 <project>
 <attribute name="l_orderkey" type="java.lang.Integer"/>
@@ -348,11 +289,11 @@
 </operator>
 <operator type="PROJECT">
 <outputs>
-<attribute name="c1401374" type="java.lang.Integer"/>
-<attribute name="c1401365" type="java.lang.Integer"/>
-<attribute name="c1401375" type="java.lang.Integer"/>
-<attribute name="c1401376" type="java.math.BigDecimal"/>
-<attribute name="c1401377" type="java.lang.String"/>
+<attribute name="c161479" type="java.lang.Integer"/>
+<attribute name="c161470" type="java.lang.Integer"/>
+<attribute name="c161480" type="java.lang.Integer"/>
+<attribute name="c161481" type="java.math.BigDecimal"/>
+<attribute name="c161482" type="java.lang.String"/>
 </outputs>
 <project>
 <attribute name="ps_partkey" type="java.lang.Integer"/>
@@ -377,14 +318,14 @@
 </operator>
 <operator type="PROJECT">
 <outputs>
-<attribute name="c1401374" type="java.lang.Integer"/>
-<attribute name="c1401378" type="java.lang.String"/>
-<attribute name="c1401379" type="java.lang.String"/>
-<attribute name="c1401380" type="java.lang.String"/>
-<attribute name="c1401381" type="java.lang.Integer"/>
-<attribute name="c1401382" type="java.lang.String"/>
-<attribute name="c1401383" type="java.math.BigDecimal"/>
-<attribute name="c1401384" type="java.lang.String"/>
+<attribute name="c161479" type="java.lang.Integer"/>
+<attribute name="c161483" type="java.lang.String"/>
+<attribute name="c161484" type="java.lang.String"/>
+<attribute name="c161485" type="java.lang.String"/>
+<attribute name="c161486" type="java.lang.Integer"/>
+<attribute name="c161487" type="java.lang.String"/>
+<attribute name="c161488" type="java.math.BigDecimal"/>
+<attribute name="c161489" type="java.lang.String"/>
 </outputs>
 <project>
 <attribute name="p_partkey" type="java.lang.Integer"/>

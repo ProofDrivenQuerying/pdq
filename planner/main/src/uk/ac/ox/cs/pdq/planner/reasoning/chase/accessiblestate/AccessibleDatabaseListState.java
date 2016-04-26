@@ -91,6 +91,19 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 				Utility.inferAccessibleTerms(createInitialFacts(query, schema)));
 		this.manager.addFacts(this.facts);
 	}
+	
+	public AccessibleDatabaseListState(Collection<Atom> facts, DatabaseHomomorphismManager manager, boolean maintainProvenance) {
+		this(manager, 
+				facts, 
+				maintainProvenance == true ? new MapFiringGraph() : null,
+				new EqualConstantsClasses(),
+				inferConstantsMap(facts),
+				Utility.inferInferred(facts),
+				Utility.inferDerivedInferred(),
+				Utility.inferSignatureGroups(facts),
+				Utility.inferAccessibleTerms(facts));
+		this.manager.addFacts(this.facts);
+	}
 
 	/**
 	 * Creates the initial facts.
