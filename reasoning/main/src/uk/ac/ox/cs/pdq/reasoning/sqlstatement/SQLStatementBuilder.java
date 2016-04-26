@@ -398,6 +398,7 @@ public abstract class SQLStatementBuilder {
 		if(limit != null) {
 			query += "\n" + limit;
 		}
+		
 		log.trace(source);
 		log.trace(query);
 		log.trace("\n\n");
