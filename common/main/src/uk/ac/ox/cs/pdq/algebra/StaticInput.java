@@ -113,7 +113,7 @@ public class StaticInput extends RelationalOperator {
 
 	/*
 	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.plan.relational.logical.LogicalOperator#deepCopy()
+	 * @see uk.ac.ox.cs.pdq.algebra.RelationalOperator#deepCopy()
 	 */
 	@Override
 	public StaticInput deepCopy() throws RelationalOperatorException {
@@ -133,7 +133,7 @@ public class StaticInput extends RelationalOperator {
 
 	/*
 	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.plan.relational.logical.LogicalOperator#getColumn(int)
+	 * @see uk.ac.ox.cs.pdq.algebra.RelationalOperator#getColumn(int)
 	 */
 	@Override
 	public Term getColumn(int i) {
@@ -142,7 +142,7 @@ public class StaticInput extends RelationalOperator {
 
 	/*
 	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.plan.relational.logical.LogicalOperator#getColumns()
+	 * @see uk.ac.ox.cs.pdq.algebra.RelationalOperator#getColumns()
 	 */
 	@Override
 	public List<Term> getColumns() {
@@ -207,7 +207,7 @@ public class StaticInput extends RelationalOperator {
 
 	/*
 	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.plan.relational.logical.LogicalOperator#isLeftDeep()
+	 * @see uk.ac.ox.cs.pdq.algebra.RelationalOperator#isLeftDeep()
 	 */
 	@Override
 	public boolean isLeftDeep() {
@@ -216,7 +216,7 @@ public class StaticInput extends RelationalOperator {
 
 	/*
 	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.plan.relational.logical.LogicalOperator#isRightDeep()
+	 * @see uk.ac.ox.cs.pdq.algebra.RelationalOperator#isRightDeep()
 	 */
 	@Override
 	public boolean isRightDeep() {

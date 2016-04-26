@@ -5,7 +5,7 @@ package uk.ac.ox.cs.pdq;
 
 // TODO: Auto-generated Javadoc
 /**
- * Exception that occurred when an inconsistency is found among parameters.
+ * Exception that occurrs when an inconsistency is found among parameters.
  *
  * @author Julien Leblay
  */

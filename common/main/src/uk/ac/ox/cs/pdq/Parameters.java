@@ -31,7 +31,7 @@ import com.google.common.collect.ImmutableSet;
 /**
  * A general parameters utility class, which allows getting and setting typed
  * properties, either through the loose properties methods, or stricter
- * camelcase getter and setter methods.
+ * CamelCase getter and setter methods.
  *
  * @author Julien Leblay
  */
@@ -92,7 +92,7 @@ public abstract class Parameters extends Properties {
 	/** The setters. */
 	private Map<String, Method> setters = new LinkedHashMap<>();
 
-	/**  If true, throws excpetion when parameter-related problems occur. */
+	/**  If true, throws exception when parameter-related problems occur. */
 	private final boolean strict;
 
 	/**  If true, reports when parameter-related problems occur. */

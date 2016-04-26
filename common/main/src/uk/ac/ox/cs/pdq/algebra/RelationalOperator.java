@@ -73,7 +73,7 @@ public abstract class RelationalOperator implements Rewritable, Operator {
 	}
 
 	/**
-	 * Deep copy.
+	 * A seep clone copy of the operator.
 	 *
 	 * @return a deep copy of the operator.
 	 * @throws RelationalOperatorException the relational operator exception
@@ -89,7 +89,7 @@ public abstract class RelationalOperator implements Rewritable, Operator {
 	public abstract Term getColumn(int i);
 
 	/**
-	 * Gets the columns.
+	 * Gets the columns of this operator.
 	 *
 	 * @return the columns
 	 */

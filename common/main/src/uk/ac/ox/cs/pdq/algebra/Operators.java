@@ -20,7 +20,7 @@ import com.google.common.base.Preconditions;
 
 // TODO: Auto-generated Javadoc
 /**
- * Utility class for common stateless logical operator operators.
+ * Utility class for common stateless logical operators.
  *
  * @author Julien Leblay
  */

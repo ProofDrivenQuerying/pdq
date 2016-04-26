@@ -128,7 +128,7 @@ public class Access extends UnaryOperator implements AccessOperator {
 
 	/*
 	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.plan.relational.logical.LogicalOperator#deepCopy()
+	 * @see uk.ac.ox.cs.pdq.algebra.RelationalOperator#deepCopy()
 	 */
 	@Override
 	public Access deepCopy() throws RelationalOperatorException {

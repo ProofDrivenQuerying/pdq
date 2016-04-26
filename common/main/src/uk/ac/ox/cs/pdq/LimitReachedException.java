@@ -2,7 +2,7 @@ package uk.ac.ox.cs.pdq;
 
 // TODO: Auto-generated Javadoc
 /**
- * Exception that occurred when an evaluation time out is reached.
+ * Exception that occurrs when a task's timeout is reached.
  *
  * @author Julien Leblay
  */
@@ -45,7 +45,7 @@ TIMEOUT,
 	}
 
 	/**
-	 * Gets the reason.
+	 * Gets the reason for this exception.
 	 *
 	 * @return Reasons
 	 */

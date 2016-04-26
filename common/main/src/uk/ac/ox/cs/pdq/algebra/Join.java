@@ -235,7 +235,7 @@ public class Join extends NaryOperator implements PredicateBasedOperator {
 
 	/*
 	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.plan.relational.logical.LogicalOperator#toString()
+	 * @see uk.ac.ox.cs.pdq.algebra.RelationalOperator#toString()
 	 */
 	@Override
 	public String toString() {

@@ -2,7 +2,7 @@ package uk.ac.ox.cs.pdq;
 
 // TODO: Auto-generated Javadoc
 /**
- * Check the consistency of some parameters.
+ * A generic interface to check the consistency of the input parameters.
  *
  * @author Julien Leblay
  * @author Efthymia Tsamoura
