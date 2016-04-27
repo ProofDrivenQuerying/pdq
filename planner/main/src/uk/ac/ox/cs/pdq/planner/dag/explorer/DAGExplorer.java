@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import uk.ac.ox.cs.pdq.algebra.Operators;
 import uk.ac.ox.cs.pdq.algebra.RelationalOperator;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -15,6 +14,7 @@ import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.plan.DAGPlan;
+import uk.ac.ox.cs.pdq.plan.PlanUtils;
 import uk.ac.ox.cs.pdq.planner.Explorer;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
@@ -129,7 +129,7 @@ public abstract class DAGExplorer extends Explorer<DAGPlan> {
 		}
 		this.bestConfiguration = configuration;
 		//Add the final projection to the best plan
-		RelationalOperator project = Operators.createFinalProjection(
+		RelationalOperator project = PlanUtils.createFinalProjection(
 				this.accessibleQuery,
 				this.bestConfiguration.getPlan().getOperator());
 		this.bestPlan = new DAGPlan(project);

@@ -9,7 +9,6 @@ import java.util.Set;
 import uk.ac.ox.cs.pdq.algebra.DependentAccess;
 import uk.ac.ox.cs.pdq.algebra.DependentJoin;
 import uk.ac.ox.cs.pdq.algebra.Join;
-import uk.ac.ox.cs.pdq.algebra.Operators;
 import uk.ac.ox.cs.pdq.algebra.Projection;
 import uk.ac.ox.cs.pdq.algebra.RelationalOperator;
 import uk.ac.ox.cs.pdq.algebra.Selection;
@@ -19,6 +18,7 @@ import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.plan.DAGPlan;
+import uk.ac.ox.cs.pdq.plan.PlanUtils;
 import uk.ac.ox.cs.pdq.plan.TreePlan;
 import uk.ac.ox.cs.pdq.planner.dag.BinaryConfiguration.BinaryConfigurationTypes;
 
@@ -141,7 +141,7 @@ public class DAGPlanGenerator {
 		RelationalOperator op = null;
 		for (Atom fact: facts) {
 			RelationalOperator access = new DependentAccess(relation, binding, fact.getTerms());
-			uk.ac.ox.cs.pdq.algebra.predicates.Predicate selectPredicates = Operators.createSelectPredicates(fact.getTerms());
+			uk.ac.ox.cs.pdq.algebra.predicates.Predicate selectPredicates = PlanUtils.createSelectPredicates(fact.getTerms());
 			if (selectPredicates != null) {
 				access = new Selection(selectPredicates, access);
 			}

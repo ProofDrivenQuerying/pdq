@@ -1,10 +1,14 @@
-package uk.ac.ox.cs.pdq.algebra;
+package uk.ac.ox.cs.pdq.plan;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import uk.ac.ox.cs.pdq.algebra.DependentJoin;
+import uk.ac.ox.cs.pdq.algebra.Projection;
+import uk.ac.ox.cs.pdq.algebra.RelationalOperator;
+import uk.ac.ox.cs.pdq.algebra.StaticInput;
 import uk.ac.ox.cs.pdq.algebra.predicates.AttributeEqualityPredicate;
 import uk.ac.ox.cs.pdq.algebra.predicates.ConjunctivePredicate;
 import uk.ac.ox.cs.pdq.algebra.predicates.ConstantEqualityPredicate;
@@ -12,7 +16,6 @@ import uk.ac.ox.cs.pdq.algebra.predicates.Predicate;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
-import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.util.Utility;
 
@@ -24,7 +27,7 @@ import com.google.common.base.Preconditions;
  *
  * @author Julien Leblay
  */
-public class Operators {
+public class PlanUtils {
 
 	/**
 	 * Creates the select predicates.

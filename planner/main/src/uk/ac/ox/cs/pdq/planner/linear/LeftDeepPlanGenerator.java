@@ -9,7 +9,6 @@ import java.util.Map;
 import uk.ac.ox.cs.pdq.algebra.DependentAccess;
 import uk.ac.ox.cs.pdq.algebra.DependentJoin;
 import uk.ac.ox.cs.pdq.algebra.Join;
-import uk.ac.ox.cs.pdq.algebra.Operators;
 import uk.ac.ox.cs.pdq.algebra.Projection;
 import uk.ac.ox.cs.pdq.algebra.RelationalOperator;
 import uk.ac.ox.cs.pdq.algebra.Scan;
@@ -20,6 +19,7 @@ import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.plan.AccessOperator;
 import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
+import uk.ac.ox.cs.pdq.plan.PlanUtils;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.Candidate;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
 
@@ -101,7 +101,7 @@ public class LeftDeepPlanGenerator {
 			RelationalOperator op2 = (RelationalOperator) access;
 			//Find if this fact has schema constants in output positions or repeated constants
 			//If yes, then these schema constants map to filtering predicates
-			uk.ac.ox.cs.pdq.algebra.predicates.Predicate selectPredicates = Operators.createSelectPredicates(candidate.getFact().getTerms());
+			uk.ac.ox.cs.pdq.algebra.predicates.Predicate selectPredicates = PlanUtils.createSelectPredicates(candidate.getFact().getTerms());
 			if (selectPredicates != null) {
 				op2 = new Selection(selectPredicates, op2);
 			}
