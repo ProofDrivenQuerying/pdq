@@ -4,7 +4,8 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Map;
 
-import uk.ac.ox.cs.pdq.db.Relation;
+import org.apache.log4j.Logger;
+
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Evaluatable;
 import uk.ac.ox.cs.pdq.fol.Predicate;
@@ -21,6 +22,8 @@ import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismProperty.TopKProperty;
  */
 public class DerbyStatementBuilder extends SQLStatementBuilder {
 	
+	/** The log. */
+	private static Logger log = Logger.getLogger(DerbyStatementBuilder.class);
 	/*
 	 * (non-Javadoc)
 	 * @see uk.ac.ox.cs.pdq.homomorphism.AbstractHomomorphismStatementBuilder#setupStatements(java.lang.String)
