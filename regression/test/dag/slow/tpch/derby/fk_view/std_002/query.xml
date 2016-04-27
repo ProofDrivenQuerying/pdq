@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--SELECT s_acctbal, s_name, n_name, p_partkey, p_mfgr, s_address, s_phone, s_comment 
+	FROM   part, supplier, partsupp, nation, region 
+	WHERE  p_partkey = ps_partkey
+	AND    s_suppkey = ps_suppkey 
+	AND    p_size = 15
+	AND    p_type LIKE 'STANDARD POLISHED TIN' 
+	AND    s_nationkey = n_nationkey 
+	AND    n_regionkey = r_regionkey 
+	AND    r_name = 'AMERICA' 
+	AND    ps_supplycost = (
+		SELECT min(ps_supplycost) 
+		FROM   partsupp, supplier, nation, region 
+		WHERE  p_partkey = ps_partkey 
+		AND    s_suppkey = ps_suppkey 
+		AND    s_nationkey = n_nationkey 
+		AND    n_regionkey = r_regionkey 
+		AND    r_name = 'AMERICA' 
+	)
+	ORDER BY s_acctbal DESC, n_name, s_name, p_partkey; -->
+<query>
+	<body>
+		<atom name="part">
+			<variable name="p_partkey" />
+			<variable name="p_name" />
+			<variable name="p_mfgr" />
+			<variable name="p_brand" />
+			<constant value="STANDARD POLISHED TIN" />
+			<constant value="15" />
+			<variable name="p_container" />
+			<variable name="p_retailprice" />
+			<variable name="p_comment" />
+		</atom>
+		<atom name="supplier">
+			<variable name="s_suppkey" />
+			<variable name="s_name" />
+			<variable name="s_address" />
+			<variable name="s_nation" />
+			<variable name="s_phone" />
+			<variable name="s_acctbal" />
+			<variable name="s_comment" />
+		</atom>
+		<atom name="nation">
+			<variable name="s_nation" />
+			<variable name="n_name" />
+			<variable name="n_regionkey" />
+			<variable name="n_comment" />
+		</atom>
+		<atom name="region">
+			<variable name="n_regionkey" />
+			<constant value="AMERICA" />
+			<variable name="r_comment" />
+		</atom>
+		<atom name="partsupp">
+			<variable name="p_partkey" />
+			<variable name="s_suppkey" />
+			<variable name="ps_availqty" />
+			<variable name="ps_supplycost" />
+			<variable name="ps_comment" />
+		</atom>
+		<atom name="supplier">
+			<variable name="s_suppkey2" />
+			<variable name="s_name2" />
+			<variable name="s_address2" />
+			<variable name="s_nation2" />
+			<variable name="s_phone2" />
+			<variable name="s_acctbal2" />
+			<variable name="s_comment2" />
+		</atom>
+		<atom name="nation">
+			<variable name="s_nation2" />
+			<variable name="n_name2" />
+			<variable name="n_regionkey2" />
+			<variable name="n_comment2" />
+		</atom>
+		<atom name="region">
+			<variable name="n_regionkey2" />
+			<constant value="AMERICA" />
+			<variable name="r_comment2" />
+		</atom>
+		<atom name="partsupp">
+			<variable name="ps_partkey2" />
+			<variable name="s_suppkey2" />
+			<variable name="ps_availqty2" />
+			<variable name="ps_supplycost" />
+			<variable name="ps_comment2" />
+		</atom>
+	</body>
+	<head name="Q">
+		<variable name="s_acctbal" />
+		<variable name="s_name" />
+		<variable name="n_name" />
+		<variable name="p_partkey" />
+		<variable name="p_mfgr" />
+		<variable name="s_address" />
+		<variable name="s_phone" />
+		<variable name="s_comment" />
+	</head>
+</query>

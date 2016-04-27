@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SELECT 100.00 * sum(case when p_type like 'PROMO%' then l_extendedprice 
+	* (1 - l_discount) else 0 end) / sum(l_extendedprice * (1 - l_discount)) 
+	as promo_revenue 
+	FROM lineitem, part 
+	WHERE l_partkey = p_partkey
+	AND l_shipdate >= date '' AND l_shipdate < date '' + interval '1' month;
+	-->
+<query>
+	<body>
+		<atom name="part">
+			<variable name="p_partkey" />
+			<variable name="p_name" />
+			<variable name="p_mfgr" />
+			<variable name="p_brand" />
+			<variable name="p_type" />
+			<variable name="p_size" />
+			<variable name="p_container" />
+			<variable name="p_retailprice" />
+			<variable name="p_comment" />
+		</atom>
+		<atom name="lineitem">
+			<variable name="l_orderkey" />
+			<variable name="p_partkey" />
+			<variable name="l_suppkey" />
+			<variable name="l_linenumber" />
+			<variable name="l_quantity" />
+			<variable name="l_extendedprice" />
+			<variable name="l_discount" />
+			<variable name="l_tax" />
+			<variable name="l_returnflag" />
+			<variable name="l_linestatus" />
+			<constant value="1998-01-01" />
+			<variable name="l_commitdate" />
+			<variable name="l_receiptdate" />
+			<variable name="l_shipinstruct" />
+			<variable name="l_shipmode" />
+			<variable name="l_comment" />
+		</atom>
+
+	</body>
+	<head name="Q">
+		<variable name="p_type" />
+		<variable name="l_discount" />
+		<variable name="l_extendedprice" />
+	</head>
+</query>

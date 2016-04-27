@@ -1,0 +1,19 @@
+<query>
+	<body>
+		<atom name="nation">
+			<variable name="x8" />
+			<variable name="x13" />
+			<variable name="x8" />
+			<variable name="x15" />
+		</atom>
+		<atom name="region">
+			<variable name="x8" />
+			<variable name="x17" />
+			<variable name="x18" />
+		</atom>
+	</body>
+	<head name="Q">
+		<variable name="x13" />
+		<variable name="x17" />
+	</head>
+</query>
