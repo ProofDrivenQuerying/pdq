@@ -1,6 +1,8 @@
 package uk.ac.ox.cs.pdq.test.reasoning.chase;
 
 import java.sql.SQLException;
+import java.util.Iterator;
+import java.util.Set;
 
 import junit.framework.Assert;
 
@@ -125,38 +127,17 @@ public class TestRestrictedChaser {
 		
 		Atom n1 = new Atom(this.rel2, 
 				Lists.newArrayList(new Skolem("c"),new TypedConstant(new String("John"))));
+	
+		Set<Atom> facts = Sets.newHashSet(this.state.getFacts());
+		Iterator<Atom> iterator = facts.iterator();
+		while(iterator.hasNext()) {
+			Atom fact = iterator.next();
+			if(fact instanceof Equality) {
+				iterator.remove();
+			}
+		}
 		
-		Atom n2 = new Equality( 
-				Lists.newArrayList(new Skolem("c1"),new TypedConstant(new String("John"))));
-		
-		Atom n3 = new Equality( 
-				Lists.newArrayList(new Skolem("c2"),new TypedConstant(new String("John"))));
-		
-		Atom n4 = new Equality( 
-				Lists.newArrayList(new Skolem("c3"),new TypedConstant(new String("John"))));
-		
-		Atom n5 = new Equality( 
-				Lists.newArrayList(new Skolem("c4"),new TypedConstant(new String("John"))));
-		
-		Atom n6 = new Equality( 
-				Lists.newArrayList(new Skolem("c2"),new Skolem("c1")));
-		
-		Atom n7 = new Equality( 
-				Lists.newArrayList(new Skolem("c3"),new Skolem("c1")));
-		
-		Atom n8 = new Equality( 
-				Lists.newArrayList(new Skolem("c4"),new Skolem("c1")));
-		
-		Atom n9 = new Equality( 
-				Lists.newArrayList(new Skolem("c3"),new Skolem("c2")));
-		
-		Atom n10 = new Equality( 
-				Lists.newArrayList(new Skolem("c4"),new Skolem("c2")));
-		
-		Atom n11 = new Equality( 
-				Lists.newArrayList(new Skolem("c4"),new Skolem("c3")));
-		
-		Assert.assertEquals(Sets.newHashSet(n00,n01,n02,n03,n04,n1,n2,n3,n4,n5,n6,n7,n8,n9,n10,n11), this.state.getFacts());
+		Assert.assertEquals(Sets.newHashSet(n00,n01,n02,n03,n04,n1), facts);
 		
 	}
 	
