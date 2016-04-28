@@ -19,7 +19,7 @@ import uk.ac.ox.cs.pdq.services.logicblox.DelimitedMessageProtocol;
 import uk.ac.ox.cs.pdq.services.logicblox.rewrite.DAGPlanToConjunctiveQuery;
 import uk.ac.ox.cs.pdq.services.logicblox.rewrite.Deskolemizer;
 import uk.ac.ox.cs.pdq.services.logicblox.rewrite.PullEqualityRewriter;
-import uk.ac.ox.cs.pdq.services.logicblox.rewrite.QueryHeadProjecor;
+import uk.ac.ox.cs.pdq.services.logicblox.rewrite.QueryHeadProjector;
 import uk.ac.ox.cs.pdq.services.logicblox.rewrite.QueryToProtoBuffer;
 
 import com.google.protobuf.GeneratedMessage;
@@ -178,7 +178,7 @@ public class LogicBloxDelegateCostEstimator<S extends AccessibleChaseState>
 		try {
 			ConjunctiveQuery q = plan
 					.rewrite(new DAGPlanToConjunctiveQuery())
-					.rewrite(new QueryHeadProjecor(this.query))
+					.rewrite(new QueryHeadProjector(this.query))
 					.rewrite(new Deskolemizer<ConjunctiveQuery>())
 					.rewrite(new PullEqualityRewriter<ConjunctiveQuery>(this.schema))
 					;
