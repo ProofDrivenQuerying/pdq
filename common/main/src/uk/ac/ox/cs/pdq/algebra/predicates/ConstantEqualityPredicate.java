@@ -12,7 +12,6 @@ import uk.ac.ox.cs.pdq.util.Tuple;
 
 import com.google.common.base.Objects;
 
-// TODO: Auto-generated Javadoc
 /**
  * Compares the value at a given position in a tuple with a value given by a
  * constant.
@@ -24,13 +23,13 @@ public class ConstantEqualityPredicate implements EqualityPredicate {
 	/** The log. */
 	private static Logger log = Logger.getLogger(ConstantEqualityPredicate.class);
 
-	/**  The position on which the predicate is evaluated. */
+	/**  The position of the tuple, whose value we will compare. */
 	private final int position;
 
-	/**  The value to which the tuple must be equals at the given position. */
+	/**  The value to which the tuple must equal at the given position. */
 	private final TypedConstant<?> constant;
 
-	/**  The value to which the tuple must be equals at the given position. */
+	/**  The value of the given position. */
 	private final Object value;
 
 	/**
@@ -48,7 +47,7 @@ public class ConstantEqualityPredicate implements EqualityPredicate {
 	}
 
 	/**
-	 * Checks if is satisfied.
+	 * Checks if the comparison is true.
 	 *
 	 * @param t the t
 	 * @return true if the tuple t satisfies the predicate
@@ -78,7 +77,7 @@ public class ConstantEqualityPredicate implements EqualityPredicate {
 	}
 
 	/**
-	 * Gets the position.
+	 * Gets the position of the tuple to compare.
 	 *
 	 * @return the position of the attribute to compare
 	 * @see uk.ac.ox.cs.pdq.algebra.predicates.EqualityPredicate#getPosition()
@@ -89,7 +88,7 @@ public class ConstantEqualityPredicate implements EqualityPredicate {
 	}
 
 	/**
-	 * Gets the value.
+	 * Gets the value in the position of the tuple to compare.
 	 *
 	 * @return the constant value to compare with
 	 */

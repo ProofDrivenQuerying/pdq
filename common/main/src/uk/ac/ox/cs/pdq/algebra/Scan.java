@@ -14,7 +14,6 @@ import uk.ac.ox.cs.pdq.util.Utility;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
-// TODO: Auto-generated Javadoc
 /**
  * Logical operator representation of an scan (input free access).
  *
@@ -29,7 +28,7 @@ public class Scan extends RelationalOperator implements AccessOperator {
 	/** The free access method associated with this scan. */
 	private final AccessMethod accessMethod;
 
-	/** The columns. */
+	/** ??? The columns. */
 	protected List<Term> columns;
 	
 	/** The output constants this access. */
@@ -63,7 +62,7 @@ public class Scan extends RelationalOperator implements AccessOperator {
 	}
 
 	/**
-	 * Instantiates a new projection.
+	 * Instantiates a new scan operator.
 	 *
 	 * @param relation Relation
 	 * @param accessMethod AccessMethod
@@ -81,7 +80,7 @@ public class Scan extends RelationalOperator implements AccessOperator {
 	}
 
 	/**
-	 * Gets the relation.
+	 * Gets the relation to be scanned.
 	 *
 	 * @return the relation scanned by the operator
 	 * @see uk.ac.ox.cs.pdq.plan.AccessOperator#getRelation()
@@ -112,6 +111,7 @@ public class Scan extends RelationalOperator implements AccessOperator {
 	}
 
 	/**
+	 * ??? What is this?
 	 * Gets the depth.
 	 *
 	 * @return Integer
@@ -151,9 +151,10 @@ public class Scan extends RelationalOperator implements AccessOperator {
 	}
 
 	/**
-	 * Equals.
+	 * Two scan operators are equal if they scan the same terms of the same relation 
+	 * ("same" in both cases tested with the corresponding equals() method).
 	 *
-	 * @param o Object
+	 * @param o the other scan operator 
 	 * @return boolean
 	 */
 	@Override
@@ -165,11 +166,7 @@ public class Scan extends RelationalOperator implements AccessOperator {
 
 	}
 
-	/**
-	 * Hash code.
-	 *
-	 * @return int
-	 */
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(this.outputType, this.inputType, this.columns,
@@ -198,6 +195,7 @@ public class Scan extends RelationalOperator implements AccessOperator {
 	}
 
 	/**
+	 * ???
 	 * Checks if is quasi leaf.
 	 *
 	 * @return boolean

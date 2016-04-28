@@ -8,10 +8,11 @@ import javax.swing.SortOrder;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-// TODO: Auto-generated Javadoc
+
 /**
- * Represents sorting order of the output of a logical operator, as a list of
- * position mapping to sorted order.
+ * ??? The comment precisely explains what is happening but I am not sure I get it
+ * Represents a sorting order of the output of a logical operator, as a list of
+ * positions mapped to a sorted order.
  *
  * @author Julien Leblay
  */
@@ -21,7 +22,7 @@ public class Sorting implements Iterable<Pair<Integer, SortOrder>>{
 	private final List<Pair<Integer, SortOrder>> positions = new LinkedList<>();
 
 	/**
-	 * Size.
+	 * Size of the sorting order.
 	 *
 	 * @return int
 	 */
@@ -29,19 +30,15 @@ public class Sorting implements Iterable<Pair<Integer, SortOrder>>{
 		return this.positions.size();
 	}
 
-	/**
-	 * Iterator.
-	 *
-	 * @return Iterator<Pair<Integer,SortOrder>>
-	 * @see java.lang.Iterable#iterator()
-	 */
+
 	@Override
 	public Iterator<Pair<Integer, SortOrder>> iterator() {
 		return this.positions.iterator();
 	}
 
 	/**
-	 * Add column position and sorted order to the sorting.
+	 * ??? 
+	 * Adds a column position and sorted order to the sorting.
 	 * This has no effect was already present.
 	 *
 	 * @param col the col
@@ -57,8 +54,9 @@ public class Sorting implements Iterable<Pair<Integer, SortOrder>>{
 	}
 
 	/**
+	 * 
 	 * Modifies the sorting order at the given column position.
-	 * This has no effect was already present with the same order.
+	 * ??? This has no effect was already present with the same order.
 	 * If the column was not already part of the sorting, it will be add last as
 	 * a result of the update.
 	 *
@@ -81,7 +79,7 @@ public class Sorting implements Iterable<Pair<Integer, SortOrder>>{
 
 	/**
 	 * Remove the column position and order form the sorting.
-	 * This has no effect was not already present.
+	 * ??? This has no effect was not already present.
 	 *
 	 * @param col the col
 	 * @param order the order

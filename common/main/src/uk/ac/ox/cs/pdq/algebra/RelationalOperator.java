@@ -18,7 +18,7 @@ import uk.ac.ox.cs.pdq.util.TupleType;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * RelationalOperator defines a top-class for all logical relational operators.
  *
@@ -27,6 +27,7 @@ import com.google.common.collect.Lists;
 public abstract class RelationalOperator implements Rewritable, Operator {
 
 	/**
+	 * ??? Not sure what this is
 	 * The Enum SharingType.
 	 */
 	public static enum SharingType { 
@@ -73,7 +74,7 @@ public abstract class RelationalOperator implements Rewritable, Operator {
 	}
 
 	/**
-	 * A seep clone copy of the operator.
+	 * A deep clone copy of the operator.
 	 *
 	 * @return a deep copy of the operator.
 	 * @throws RelationalOperatorException the relational operator exception
@@ -81,7 +82,7 @@ public abstract class RelationalOperator implements Rewritable, Operator {
 	public abstract RelationalOperator deepCopy() throws RelationalOperatorException;
 
 	/**
-	 * Gets the column at index i.
+	 * Gets the output term at position i in this operator.
 	 *
 	 * @param i the index of the column to return.
 	 * @return the column at index i.
@@ -89,7 +90,7 @@ public abstract class RelationalOperator implements Rewritable, Operator {
 	public abstract Term getColumn(int i);
 
 	/**
-	 * Gets the columns of this operator.
+	 * Gets the output terms of this operator.
 	 *
 	 * @return the columns
 	 */
@@ -103,7 +104,7 @@ public abstract class RelationalOperator implements Rewritable, Operator {
 	public abstract List<Term> getInputTerms();
 
 	/**
-	 * Gets the type.
+	 * Gets the output tuple type.
 	 *
 	 * @return the tuple Type of this operator
 	 */
@@ -112,7 +113,7 @@ public abstract class RelationalOperator implements Rewritable, Operator {
 	}
 
 	/**
-	 * Gets the input type.
+	 * Gets the input tuple type.
 	 *
 	 * @return the input tuple Type of this operator
 	 */
@@ -121,9 +122,9 @@ public abstract class RelationalOperator implements Rewritable, Operator {
 	}
 
 	/**
-	 * Guard-method to ensure sub-classes are use with valid states.
+	 * Guard-method to ensure sub-classes are used with valid states.
 	 *
-	 * @param o the o
+	 * @param o the operator
 	 * @return the input type of the given operator.
 	 */
 	protected static TupleType outputType(RelationalOperator o) {
@@ -132,9 +133,9 @@ public abstract class RelationalOperator implements Rewritable, Operator {
 	}
 
 	/**
-	 * Guard-method to ensure sub-classes are use with valid states.
+	 * Guard-method to ensure sub-classes are used with valid states.
 	 *
-	 * @param o the o
+	 * @param o the operator
 	 * @return the input terms of the given operator.
 	 */
 	protected static List<Term> outputTerms(RelationalOperator o) {
@@ -143,9 +144,9 @@ public abstract class RelationalOperator implements Rewritable, Operator {
 	}
 
 	/**
-	 * Guard-method to ensure sub-classes are use with valid states.
+	 * Guard-method to ensure sub-classes are used with valid states.
 	 *
-	 * @param o the o
+	 * @param o the operator
 	 * @return the input type of the given operator.
 	 */
 	protected static TupleType inputType(RelationalOperator o) {
@@ -156,7 +157,7 @@ public abstract class RelationalOperator implements Rewritable, Operator {
 	/**
 	 * Guard-method to ensure sub-classes are use with valid states.
 	 *
-	 * @param o the o
+	 * @param o the operator
 	 * @return the input terms of the given operator.
 	 */
 	protected static List<Term> inputTerms(RelationalOperator o) {

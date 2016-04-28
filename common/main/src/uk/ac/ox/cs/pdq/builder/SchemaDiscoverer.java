@@ -4,7 +4,6 @@ import java.util.Properties;
 
 import uk.ac.ox.cs.pdq.db.Schema;
 
-// TODO: Auto-generated Javadoc
 /**
  * Common interface to all schema discovered.
  * 
@@ -13,14 +12,14 @@ import uk.ac.ox.cs.pdq.db.Schema;
 public interface SchemaDiscoverer {
 	
 	/**
-	 * Gets the properties.
+	 * Gets the properties of the schema discoverer.
 	 *
 	 * @return the discoverer's properties.
 	 */
 	Properties getProperties();
 
 	/**
-	 * Sets the properties.
+	 * Sets the properties of the schema discoverer.
 	 *
 	 * @param p Properties
 	 */

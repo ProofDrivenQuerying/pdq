@@ -1,7 +1,6 @@
 package uk.ac.ox.cs.pdq.algebra.predicates;
 
 
-// TODO: Auto-generated Javadoc
 /**
  * Common interface to equality predicates.
  *

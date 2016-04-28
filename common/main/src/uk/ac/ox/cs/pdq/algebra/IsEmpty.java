@@ -9,9 +9,8 @@ import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.util.TupleType;
 
-// TODO: Auto-generated Javadoc
 /**
- * IsEmpty  unary operator used for boolean queries. Return true if the database satisfies
+ * IsEmpty unary operator used for boolean queries. Return true if the database satisfies
  * the body of the query, false otherwise.
  *
  * @author Julien LEBLAY

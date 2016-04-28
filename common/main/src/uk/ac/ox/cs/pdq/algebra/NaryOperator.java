@@ -15,7 +15,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
-// TODO: Auto-generated Javadoc
 /**
  * NaryOperator defines a top-class for all operators with multiple children.
  *
@@ -83,7 +82,7 @@ public abstract class NaryOperator extends RelationalOperator {
 	 */
 	public NaryOperator(List<Term> inputTerms, TupleType typeOverride, Collection<RelationalOperator> children) {
 		super(inferType(inputTerms, children), typeOverride);
-		Preconditions.checkArgument(!children.isEmpty(), "Attempting to instantiate union operator with an empty list of children.");
+		Preconditions.checkArgument(!children.isEmpty(), "Attempting to instantiate a plan operator with an empty list of children.");
 //		if (children != null && children.size() > 0) {
 			this.children = ImmutableList.copyOf(children);
 			this.columns = ImmutableList.copyOf(this.updateColumns());
@@ -112,6 +111,7 @@ public abstract class NaryOperator extends RelationalOperator {
 	}
 
 	/**
+	 * ??? what does each one of the following three methods do?
 	 * Infer the tuple type of the given collection of children.
 	 *
 	 * @param terms List<Term>
@@ -170,7 +170,7 @@ public abstract class NaryOperator extends RelationalOperator {
 	}
 
 	/**
-	 * Deep copy.
+	 * Deep copy of an operator.
 	 *
 	 * @return a deep copy of the operator.
 	 * @throws RelationalOperatorException the relational operator exception
@@ -179,7 +179,7 @@ public abstract class NaryOperator extends RelationalOperator {
 	public abstract NaryOperator deepCopy() throws RelationalOperatorException;
 
 	/**
-	 * Gets the children.
+	 * Gets the children of the operator.
 	 *
 	 * @return the children
 	 */
@@ -319,6 +319,7 @@ public abstract class NaryOperator extends RelationalOperator {
 	}
 
 	/**
+	 * ???
 	 * Checks if is quasi leaf.
 	 *
 	 * @return boolean

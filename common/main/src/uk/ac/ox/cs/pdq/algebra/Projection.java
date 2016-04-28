@@ -15,7 +15,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * OpenProjection operator.
  *
@@ -23,10 +23,10 @@ import com.google.common.collect.Maps;
  */
 public class Projection extends UnaryOperator {
 
-	/** The head, the list of term from the child's output terms list that are projected by this operator. */
+	/** The head, the list of terms from the child's output terms list that are projected by this operator. */
 	private final List<Term> projected;
 
-	/** Maps each non-typed-constant term's positions in the child output, to a new named (terms). */
+	/** Maps each non-constant term's position of the child's output to a new named term. */
 	private final Map<Integer, Term> renaming;
 
 	/**
@@ -69,7 +69,7 @@ public class Projection extends UnaryOperator {
 	/**
 	 * Constructor for Projection.
 	 * @param child LogicalOperator
-	 * @param naming Map<Integer,Term> for all non-typed constant positions in the outputs, maps to a renaming
+	 * @param naming Map<Integer,Term> maps all non-typed constant positions in the output of the child to a renamed term
 	 * @param head List<Term>
 	 */
 	public Projection(RelationalOperator child, Map<Integer, Term> naming, List<Term> head) {

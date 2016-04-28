@@ -17,7 +17,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 
-// TODO: Auto-generated Javadoc
 /**
  * Join is a top-level class for all join operators.
  *
@@ -26,17 +25,17 @@ import com.google.common.collect.Sets;
 public class Join extends NaryOperator implements PredicateBasedOperator {
 
 	/**
-	 * The Enum Variants.
+	 * Variant is an enumeration of the types of different joins.
 	 */
 	public static enum Variants {
 		
-		/** The nested loop. */
+		/** The nested loop join. */
 		NESTED_LOOP, 
- /** The merge. */
+ /** The merge join. */
  MERGE, 
- /** The asymmetric hash. */
+ /** The asymmetric hash join. */
  ASYMMETRIC_HASH, 
- /** The symmetric hash. */
+ /** The symmetric hash join. */
  SYMMETRIC_HASH
 	}
 
@@ -139,7 +138,7 @@ public class Join extends NaryOperator implements PredicateBasedOperator {
 	}
 
 	/**
-	 * Gets the variant.
+	 * Gets the join variant.
 	 *
 	 * @return Variants
 	 */
@@ -148,7 +147,7 @@ public class Join extends NaryOperator implements PredicateBasedOperator {
 	}
 
 	/**
-	 * Sets the variant.
+	 * Sets the join variant.
 	 *
 	 * @param variant Variants
 	 */
@@ -158,7 +157,7 @@ public class Join extends NaryOperator implements PredicateBasedOperator {
 	}
 
 	/**
-	 * Gets the predicate.
+	 * Gets the predicate associated with this join. If the join is natural this returns null.
 	 *
 	 * @return Atom
 	 * @see uk.ac.ox.cs.pdq.algebra.PredicateBasedOperator#getPredicate()
@@ -169,7 +168,7 @@ public class Join extends NaryOperator implements PredicateBasedOperator {
 	}
 
 	/**
-	 * Checks for predicate.
+	 * Checks for a predicate associated with this join.
 	 *
 	 * @return boolean
 	 */
@@ -180,7 +179,7 @@ public class Join extends NaryOperator implements PredicateBasedOperator {
 	}
 
 	/**
-	 * Checks for common terms.
+	 * Checks for common terms between the two lists.
 	 *
 	 * @param from the from
 	 * @param to the to
@@ -194,6 +193,7 @@ public class Join extends NaryOperator implements PredicateBasedOperator {
 
 
 	/**
+	 * ??? what does this mean?
 	 * Initialises the join variables.
 	 * @return Atom
 	 */

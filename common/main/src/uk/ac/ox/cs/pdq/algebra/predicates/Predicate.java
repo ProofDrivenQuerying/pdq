@@ -2,7 +2,6 @@ package uk.ac.ox.cs.pdq.algebra.predicates;
 
 import uk.ac.ox.cs.pdq.util.Tuple;
 
-// TODO: Auto-generated Javadoc
 /**
  * Common interface to all relational operator predicates.
  *

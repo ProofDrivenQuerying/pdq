@@ -7,7 +7,6 @@ import java.util.Objects;
 
 import com.google.common.base.Preconditions;
 
-// TODO: Auto-generated Javadoc
 /**
  * An access method defines the positions of a relation's attributes whose values are required to access the relation.
  *

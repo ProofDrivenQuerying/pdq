@@ -1,7 +1,5 @@
 package uk.ac.ox.cs.pdq.algebra;
 
-
-// TODO: Auto-generated Javadoc
 /**
  * Distinct unary operator removes duplicates in a result set.
  *

@@ -15,19 +15,18 @@ import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.collect.Lists;
 
-// TODO: Auto-generated Javadoc
 /**
- * Logical operator representation of an scan over a statically defined
+ * Logical operator representation of a scan over a statically defined
  * collection of tuples.
  *
  * @author Julien Leblay
  */
 public class StaticInput extends RelationalOperator {
 
-	/** The input table of the access. */
+	/** The input collection of tuples. */
 	private final Collection<Tuple> tuples;
 
-	/** The columns. */
+	/** ??? The columns. */
 	protected List<Term> columns;
 
 	/**
@@ -71,6 +70,7 @@ public class StaticInput extends RelationalOperator {
 	}
 
 	/**
+	 * ???
 	 * Gets the consistent type.
 	 *
 	 * @param tuples the tuples
@@ -102,7 +102,7 @@ public class StaticInput extends RelationalOperator {
 	}
 
 	/**
-	 * Gets the depth.
+	 * ??? Gets the depth.
 	 *
 	 * @return Integer
 	 */

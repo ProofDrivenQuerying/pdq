@@ -1,6 +1,5 @@
 package uk.ac.ox.cs.pdq.algebra;
 
-// TODO: Auto-generated Javadoc
 /**
  * Top-level exception for logical operator-related exceptions.
 

@@ -1,8 +1,7 @@
 package uk.ac.ox.cs.pdq.builder;
 
-// TODO: Auto-generated Javadoc
 /**
- * Exception that occurred during a building operation.
+ * Exception that occurrs during a building operation.
  *
  * @author Julien Leblay
  *

@@ -8,7 +8,6 @@ import uk.ac.ox.cs.pdq.util.TupleType;
 
 import com.google.common.base.Preconditions;
 
-// TODO: Auto-generated Javadoc
 /**
  * Superclass to all unary logical operators.
  *
@@ -16,10 +15,10 @@ import com.google.common.base.Preconditions;
  */
 public abstract class UnaryOperator extends RelationalOperator {
 
-	/** The child. */
+	/** The child of the operator. */
 	protected RelationalOperator child;
 
-	/** The columns. */
+	/** The ??? (output) columns. */
 	protected final List<Term> columns;
 
 	/** The input terms . */
@@ -78,7 +77,7 @@ public abstract class UnaryOperator extends RelationalOperator {
 	}
 
 	/**
-	 * Gets the child.
+	 * Gets the child of the operator.
 	 *
 	 * @return the unique child of this operator
 	 */
@@ -116,6 +115,7 @@ public abstract class UnaryOperator extends RelationalOperator {
 	}
 
 	/**
+	 * ???
 	 * Gets the depth.
 	 *
 	 * @return Integer
@@ -141,7 +141,8 @@ public abstract class UnaryOperator extends RelationalOperator {
 	}
 
 	/**
-	 * Equals.
+	 * Two unary operators are equal if the their child, their input and output terms are the same
+	 * ("same" is implemented with the corresponding equals() methods)
 	 *
 	 * @param o Object
 	 * @return boolean
@@ -157,11 +158,6 @@ public abstract class UnaryOperator extends RelationalOperator {
 
 	}
 
-	/**
-	 * Hash code.
-	 *
-	 * @return int
-	 */
 	@Override
 	public int hashCode() {
 		return Objects.hash(this.outputType, this.metadata, this.inputType,
@@ -169,7 +165,7 @@ public abstract class UnaryOperator extends RelationalOperator {
 	}
 
 	/**
-	 * Checks if is closed.
+	 * Checks if the operator is closed.
 	 *
 	 * @return boolean
 	 */
@@ -179,6 +175,7 @@ public abstract class UnaryOperator extends RelationalOperator {
 	}
 
 	/**
+	 * ???
 	 * Checks if is quasi leaf.
 	 *
 	 * @return boolean
@@ -199,6 +196,7 @@ public abstract class UnaryOperator extends RelationalOperator {
 
 	/*
 	 * (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.algebra.RelationalOperator#isRightDeep()
 	 */
 	@Override
 	public boolean isRightDeep() {

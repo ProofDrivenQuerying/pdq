@@ -6,7 +6,6 @@ import com.google.common.base.Preconditions;
 
 import uk.ac.ox.cs.pdq.algebra.predicates.Predicate;
 
-// TODO: Auto-generated Javadoc
 /**
  * OpenSelection operator.
  *
@@ -39,7 +38,7 @@ public class Selection extends UnaryOperator implements PredicateBasedOperator {
 	}
 
 	/**
-	 * Gets the predicate.
+	 * Gets the predicate associated with this selection. .
 	 *
 	 * @return the predicate of this selection
 	 * @see uk.ac.ox.cs.pdq.algebra.PredicateBasedOperator#getPredicate()
@@ -62,8 +61,9 @@ public class Selection extends UnaryOperator implements PredicateBasedOperator {
 	}
 
 	/**
-	 * Equals.
-	 *
+	 * Two selection operators are equal if they have the same predicate and the same child operator 
+	 * ("same" in both cases tested with the corresponding equals() method).
+	 * 
 	 * @param o Object
 	 * @return boolean
 	 */
@@ -77,11 +77,7 @@ public class Selection extends UnaryOperator implements PredicateBasedOperator {
 
 	}
 
-	/**
-	 * Hash code.
-	 *
-	 * @return int
-	 */
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(this.outputType, this.inputType, this.child,

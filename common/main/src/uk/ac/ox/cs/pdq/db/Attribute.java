@@ -7,7 +7,6 @@ import uk.ac.ox.cs.pdq.util.Typed;
 
 import com.google.common.base.Preconditions;
 
-// TODO: Auto-generated Javadoc
 /**
  * An attribute.
  *

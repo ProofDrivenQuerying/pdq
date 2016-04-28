@@ -9,7 +9,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
 
-// TODO: Auto-generated Javadoc
 /**
  * A dependent join operator.
  *
@@ -18,7 +17,10 @@ import com.google.common.collect.Lists;
  */
 public class DependentJoin extends Join {
 
-	/** A map each RHS input to the position of its corresponding output in the LHS, -1 otherwise. */
+	/** ??? what is this?
+	 * This was the comment before: 
+	 * A map each RHS input to the position of its corresponding output in the LHS, -1 otherwise. 
+	 * */
 	protected final List<Integer> sidewaysInput;
 
 	/**

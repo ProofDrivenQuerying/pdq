@@ -11,9 +11,9 @@ import uk.ac.ox.cs.pdq.util.Tuple;
 
 import com.google.common.base.Objects;
 
-// TODO: Auto-generated Javadoc
+
 /**
- * Compares the value at a given position pairs in a tuple.
+ * Compares the values at two given positions in a tuple.
  *
  * @author Julien Leblay
  */
@@ -41,7 +41,7 @@ public class AttributeEqualityPredicate implements EqualityPredicate {
 	}
 
 	/**
-	 * Checks if is satisfied.
+	 * Checks if the values in the two positions are the same.
 	 *
 	 * @param t the t
 	 * @return true if the tuple t satisfies the predicate
@@ -79,7 +79,7 @@ public class AttributeEqualityPredicate implements EqualityPredicate {
 	
 
 	/**
-	 * Gets the position.
+	 * Gets the first position to compare.
 	 *
 	 * @return the first position of the attribute to compare
 	 * @see uk.ac.ox.cs.pdq.algebra.predicates.EqualityPredicate#getPosition()
@@ -90,7 +90,7 @@ public class AttributeEqualityPredicate implements EqualityPredicate {
 	}
 
 	/**
-	 * Gets the other.
+	 * Gets the other position to compare.
 	 *
 	 * @return the second position of the attribute to compare
 	 */

@@ -9,9 +9,9 @@ import uk.ac.ox.cs.pdq.util.TupleType;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
-// TODO: Auto-generated Javadoc
 /**
- * Alias operator which acts as a pointed to other sub-plans.
+ * ??? This is deprecated. Shall we delete? It is used in many places
+ * Alias operator which acts as a pointer to other sub-plans.
  *
  * @author Julien Leblay
  */

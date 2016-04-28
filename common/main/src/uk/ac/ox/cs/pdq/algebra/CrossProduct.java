@@ -3,7 +3,6 @@ package uk.ac.ox.cs.pdq.algebra;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO: Auto-generated Javadoc
 /**
  * CrossProduct implements a n-ary cartesian product.
  *

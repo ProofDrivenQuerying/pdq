@@ -10,8 +10,8 @@ import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
-// TODO: Auto-generated Javadoc
 /**
+ * ??? This seems to be a "conjunction of predicates" object (not a conjunctive predicate)
  * Evaluates a Collection of predicates conjunctively, i.e. all the underlying
  * predicates must be satisfied for this predicate to be satisfied.
  *
@@ -20,7 +20,7 @@ import com.google.common.collect.Lists;
  */
 public class ConjunctivePredicate<T extends Predicate> implements Predicate, Iterable<T> {
 
-	/**  The value to which the tuple must be equals at the given position. */
+	/**???  The value to which the tuple must be equals at the given position. */
 	private final Collection<T> predicates;
 
 	/**
@@ -83,7 +83,7 @@ public class ConjunctivePredicate<T extends Predicate> implements Predicate, Ite
 
 	/*
 	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.plan.relational.logical.predicates.Predicate#isSatisfied(uk.ac.ox.cs.pdq.tuple.Tuple)
+	 * @see uk.ac.ox.cs.pdq.algebra.predicates.Predicate#isSatisfied(uk.ac.ox.cs.pdq.tuple.Tuple)
 	 */
 	@Override
 	public boolean isSatisfied(Tuple t) {
@@ -98,8 +98,8 @@ public class ConjunctivePredicate<T extends Predicate> implements Predicate, Ite
 	/**
 	 * Flatten.
 	 *
-	 * @return a collection of predicate remove the nesting of conjunction that
-	 * it may contain.
+	 * @return a collection of predicates, removing the nesting of conjunctions that
+	 * this object may contain.
 	 */
 	public Collection<Predicate> flatten() {
 		return this.flatten(this);
@@ -109,8 +109,7 @@ public class ConjunctivePredicate<T extends Predicate> implements Predicate, Ite
 	 * Flatten.
 	 *
 	 * @param predicate the (possibly nested) predicate to flatten, if null the empty collection is returned.
-	 * @return a collection of predicate remove the nesting of conjunction that
-	 * it may contain.
+	 * @return a collection of predicates, removing the nesting that it may contain.
 	 */
 	public Collection<Predicate> flatten(Predicate predicate) {
 		Collection<Predicate> result = new LinkedList<Predicate>();

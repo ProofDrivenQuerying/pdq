@@ -3,7 +3,6 @@ package uk.ac.ox.cs.pdq.algebra;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO: Auto-generated Javadoc
 /**
  * Union the results of its children.
  *
@@ -31,7 +30,7 @@ public class Union extends NaryOperator {
 
 	/*
 	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.plan.relational.logical.NaryOperator#deepCopy()
+	 * @see uk.ac.ox.cs.pdq.algebra.NaryOperator#deepCopy()
 	 */
 	@Override
 	public Union deepCopy() throws RelationalOperatorException {
