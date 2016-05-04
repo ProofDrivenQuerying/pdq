@@ -22,7 +22,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
 
-// QQQ : What does this class do ? what is the relationship with access?
+// TOCOMMENT : What does this class do ? what is the relationship with access?
 /**
  * Logical operator representation of a dependent access.
  *
