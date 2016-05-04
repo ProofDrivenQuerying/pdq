@@ -27,7 +27,7 @@ import com.google.common.collect.Lists;
 public abstract class RelationalOperator implements Rewritable, Operator {
 
 	/**
-	 * ??? Not sure what this is
+	 * TOCOMMENT Not sure what this is
 	 * The Enum SharingType.
 	 */
 	public static enum SharingType { 

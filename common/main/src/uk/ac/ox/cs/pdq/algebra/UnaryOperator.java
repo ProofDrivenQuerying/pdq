@@ -18,7 +18,7 @@ public abstract class UnaryOperator extends RelationalOperator {
 	/** The child of the operator. */
 	protected RelationalOperator child;
 
-	/** The ??? (output) columns. */
+	/** The TOCOMMENT (output) columns. */
 	protected final List<Term> columns;
 
 	/** The input terms . */
@@ -115,7 +115,7 @@ public abstract class UnaryOperator extends RelationalOperator {
 	}
 
 	/**
-	 * ???
+	 * TOCOMMENT
 	 * Gets the depth.
 	 *
 	 * @return Integer
@@ -175,7 +175,7 @@ public abstract class UnaryOperator extends RelationalOperator {
 	}
 
 	/**
-	 * ???
+	 * TOCOMMENT
 	 * Checks if is quasi leaf.
 	 *
 	 * @return boolean

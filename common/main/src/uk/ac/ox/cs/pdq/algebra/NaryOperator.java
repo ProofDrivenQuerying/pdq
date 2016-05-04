@@ -111,7 +111,7 @@ public abstract class NaryOperator extends RelationalOperator {
 	}
 
 	/**
-	 * ??? what does each one of the following three methods do?
+	 * TOCOMMENT what does each one of the following three methods do?
 	 * Infer the tuple type of the given collection of children.
 	 *
 	 * @param terms List<Term>
@@ -319,7 +319,7 @@ public abstract class NaryOperator extends RelationalOperator {
 	}
 
 	/**
-	 * ???
+	 * TOCOMMENT
 	 * Checks if is quasi leaf.
 	 *
 	 * @return boolean

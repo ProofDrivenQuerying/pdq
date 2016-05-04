@@ -10,7 +10,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 
 /**
- * ??? The comment precisely explains what is happening but I am not sure I get it
+ * TOCOMMENT The comment precisely explains what is happening but I am not sure I get it
  * Represents a sorting order of the output of a logical operator, as a list of
  * positions mapped to a sorted order.
  *
@@ -37,7 +37,7 @@ public class Sorting implements Iterable<Pair<Integer, SortOrder>>{
 	}
 
 	/**
-	 * ??? 
+	 * TOCOMMENT 
 	 * Adds a column position and sorted order to the sorting.
 	 * This has no effect was already present.
 	 *
@@ -56,7 +56,7 @@ public class Sorting implements Iterable<Pair<Integer, SortOrder>>{
 	/**
 	 * 
 	 * Modifies the sorting order at the given column position.
-	 * ??? This has no effect was already present with the same order.
+	 * TOCOMMENT This has no effect was already present with the same order.
 	 * If the column was not already part of the sorting, it will be add last as
 	 * a result of the update.
 	 *
@@ -79,7 +79,7 @@ public class Sorting implements Iterable<Pair<Integer, SortOrder>>{
 
 	/**
 	 * Remove the column position and order form the sorting.
-	 * ??? This has no effect was not already present.
+	 * TOCOMMENT This has no effect was not already present.
 	 *
 	 * @param col the col
 	 * @param order the order

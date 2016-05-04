@@ -28,7 +28,7 @@ public class Scan extends RelationalOperator implements AccessOperator {
 	/** The free access method associated with this scan. */
 	private final AccessMethod accessMethod;
 
-	/** ??? The columns. */
+	/** TOCOMMENT The columns. */
 	protected List<Term> columns;
 	
 	/** The output constants this access. */
@@ -111,7 +111,7 @@ public class Scan extends RelationalOperator implements AccessOperator {
 	}
 
 	/**
-	 * ??? What is this?
+	 * TOCOMMENT What is this?
 	 * Gets the depth.
 	 *
 	 * @return Integer
@@ -195,7 +195,7 @@ public class Scan extends RelationalOperator implements AccessOperator {
 	}
 
 	/**
-	 * ???
+	 * TOCOMMENT
 	 * Checks if is quasi leaf.
 	 *
 	 * @return boolean

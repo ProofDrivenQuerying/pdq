@@ -193,7 +193,7 @@ public class Join extends NaryOperator implements PredicateBasedOperator {
 
 
 	/**
-	 * ??? what does this mean?
+	 * TOCOMMENT what does this mean?
 	 * Initialises the join variables.
 	 * @return Atom
 	 */

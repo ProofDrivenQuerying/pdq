@@ -126,7 +126,7 @@ public class DatabaseHomomorphismManager implements HomomorphismManager {
 	/** True if previous query indices were cleared. */
 	private boolean clearedLastQuery = true;
 
-	/** ??? */
+	/** TOCOMMENT */
 	private Set<String> constraintIndices =  new LinkedHashSet<String>();
 
 	/** Statemenets that drop the query indices. */

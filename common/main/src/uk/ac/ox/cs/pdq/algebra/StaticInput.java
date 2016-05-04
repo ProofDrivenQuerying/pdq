@@ -26,7 +26,7 @@ public class StaticInput extends RelationalOperator {
 	/** The input collection of tuples. */
 	private final Collection<Tuple> tuples;
 
-	/** ??? The columns. */
+	/** TOCOMMENT The columns. */
 	protected List<Term> columns;
 
 	/**
@@ -70,7 +70,7 @@ public class StaticInput extends RelationalOperator {
 	}
 
 	/**
-	 * ???
+	 * TOCOMMENT
 	 * Gets the consistent type.
 	 *
 	 * @param tuples the tuples
@@ -102,7 +102,7 @@ public class StaticInput extends RelationalOperator {
 	}
 
 	/**
-	 * ??? Gets the depth.
+	 * TOCOMMENT Gets the depth.
 	 *
 	 * @return Integer
 	 */

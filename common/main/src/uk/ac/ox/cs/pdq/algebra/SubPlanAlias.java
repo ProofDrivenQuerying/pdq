@@ -10,7 +10,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
 /**
- * ??? This is deprecated. Shall we delete? It is used in many places
+ * TOCOMMENT This is deprecated. Shall we delete? It is used in many places
  * Alias operator which acts as a pointer to other sub-plans.
  *
  * @author Julien Leblay

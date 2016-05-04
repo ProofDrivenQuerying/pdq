@@ -17,7 +17,7 @@ import com.google.common.collect.Lists;
  */
 public class DependentJoin extends Join {
 
-	/** ??? what is this?
+	/** TOCOMMENT what is this?
 	 * This was the comment before: 
 	 * A map each RHS input to the position of its corresponding output in the LHS, -1 otherwise. 
 	 * */

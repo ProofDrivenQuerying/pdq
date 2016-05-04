@@ -11,7 +11,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
 /**
- * ??? This seems to be a "conjunction of predicates" object (not a conjunctive predicate)
+ * TOCOMMENT This seems to be a "conjunction of predicates" object (not a conjunctive predicate)
  * Evaluates a Collection of predicates conjunctively, i.e. all the underlying
  * predicates must be satisfied for this predicate to be satisfied.
  *
@@ -20,7 +20,7 @@ import com.google.common.collect.Lists;
  */
 public class ConjunctivePredicate<T extends Predicate> implements Predicate, Iterable<T> {
 
-	/**???  The value to which the tuple must be equals at the given position. */
+	/** TOCOMMENT  The value to which the tuple must be equals at the given position. */
 	private final Collection<T> predicates;
 
 	/**
