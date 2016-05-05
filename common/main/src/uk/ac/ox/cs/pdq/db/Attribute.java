@@ -8,7 +8,7 @@ import uk.ac.ox.cs.pdq.util.Typed;
 import com.google.common.base.Preconditions;
 
 /**
- * An attribute.
+ * Represents a relation's attribute.
  *
  * @author Efthymia Tsamoura
  * @author Julien Leblay
@@ -24,10 +24,11 @@ public class Attribute implements Typed {
 	/**  The attribute's type. */
 	protected final Type type;
 
+	// TOCOMMENT I don't get this, but it seems minor
 	/** Cached instance hash (only possible because variables are immutable). */
 	private final int hash;
 
-	/** Cached String representation of a variable. */
+	/** Cached String representation of an attribute. */
 	private final String rep;
 
 	/**
@@ -59,7 +60,7 @@ public class Attribute implements Typed {
 	}
 
 	/**
-	 * Gets the type.
+	 * Gets the type of the attribute.
 	 *
 	 * @return Class<?>
 	 * @see uk.ac.ox.cs.pdq.util.Typed#getType()
@@ -70,7 +71,7 @@ public class Attribute implements Typed {
 	}
 
 	/**
-	 * Gets the name.
+	 * Gets the name of the attribute.
 	 *
 	 * @return String
 	 */
@@ -79,7 +80,7 @@ public class Attribute implements Typed {
 	}
 
 	/**
-	 * Equals.
+	 * Two attributes are equal if their types and names are equal (using the corresponding equals() methods)..
 	 *
 	 * @param o Object
 	 * @return boolean
@@ -98,21 +99,11 @@ public class Attribute implements Typed {
 
 	}
 
-	/**
-	 * Hash code.
-	 *
-	 * @return int
-	 */
 	@Override
 	public int hashCode() {
 		return this.hash;
 	}
 
-	/**
-	 * To string.
-	 *
-	 * @return String
-	 */
 	@Override
 	public String toString() {
 		return this.rep;

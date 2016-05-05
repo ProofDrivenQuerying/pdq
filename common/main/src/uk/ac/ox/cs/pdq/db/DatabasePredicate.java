@@ -6,6 +6,7 @@ import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Term;
 
 /**
+ * TOCOMMENT why do we need this class?
  * Convenience class, referring to a predicate whose relation symbol is a
  * database relation.
  *

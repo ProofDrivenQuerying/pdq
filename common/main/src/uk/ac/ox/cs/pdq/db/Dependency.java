@@ -13,7 +13,6 @@ import uk.ac.ox.cs.pdq.fol.Rule;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Variable;
 
-// TODO: Auto-generated Javadoc
 /**
  * A schema constraint.
  *
@@ -25,7 +24,10 @@ import uk.ac.ox.cs.pdq.fol.Variable;
 public interface Dependency<L extends Formula, R extends Formula> extends Evaluatable, Rule<L, R> {
 
 	/**
-	 * Fire.
+	 * TOCOMMENT In literature one first detects all active triggers and then "fires" them; is this the case here?
+	 * I can see the fire method gets a "match" and I assume this match is the active trigger's antecedent homomorphism
+	 * depending on the chase version used. 
+	 * Fires the constraint.
 	 *
 	 * @param match 		Input mapping from variables to constants
 	 * @param canonicalNames 		True if we assign Skolem constants to the existentially quantified variables
@@ -34,6 +36,7 @@ public interface Dependency<L extends Formula, R extends Formula> extends Evalua
 	Dependency<L, R> fire(Map<Variable, Constant> match, boolean canonicalNames);
 
 	/**
+	 * TOCOMMENT Schema constants as opposed to what other kind of constant?
 	 * Gets the schema constants.
 	 *
 	 * @return the schema constants of this constraint
@@ -41,14 +44,15 @@ public interface Dependency<L extends Formula, R extends Formula> extends Evalua
 	Collection<TypedConstant<?>> getSchemaConstants();
 
 	/**
-	 * Gets the left.
+	 * TOCOMMENT it would be better to say getBody or getHead; it's not really clear what left and right is.
+	 * Gets the left-hand side of this constraint.
 	 *
 	 * @return the left-hand side of this constraint
 	 */
 	L getLeft();
 
 	/**
-	 * Gets the right.
+	 * Gets the right-hand side of this constraint.
 	 *
 	 * @return the right-hand side of this constraint
 	 */
@@ -56,21 +60,20 @@ public interface Dependency<L extends Formula, R extends Formula> extends Evalua
 
 
 	/**
-	 * Gets the predicates.
+	 * Gets all atoms in this dependency.
 	 *
-	 * @return List<PredicateFormula>
+	 * @return List<Atom>
 	 */
 	List<Atom> getAtoms();
 
 	/**
-	 * Gets the both side variables.
+	 * Gets all universally and existentially quantified variables.
 	 *
 	 * @return the variables of both sides of this constraint
 	 */
 	Set<Variable> getAllVariables();
 
 	/**
-	 * Contains.
 	 *
 	 * @param s the s
 	 * @return true if the dependency contains the given relation signature in

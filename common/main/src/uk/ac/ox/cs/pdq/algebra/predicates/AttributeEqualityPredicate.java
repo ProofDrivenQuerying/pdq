@@ -22,7 +22,7 @@ public class AttributeEqualityPredicate implements EqualityPredicate {
 	/** The log. */
 	private static Logger log = Logger.getLogger(AttributeEqualityPredicate.class);
 
-	/**  The position on which the predicate is evaluated. */
+	/**  The first of the two positions to be compared for equality. */
 	private final int position;
 
 	/**  The other position to which position must be equals for a given tuple. */

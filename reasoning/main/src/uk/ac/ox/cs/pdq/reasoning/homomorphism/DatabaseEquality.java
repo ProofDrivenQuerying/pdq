@@ -12,6 +12,7 @@ import com.google.common.base.Preconditions;
 
 // TODO: Auto-generated Javadoc
 /**
+ * TOCOMMENT how does this differ from Equality in common.fol?
  * An equality.
  *
  * @author Efthymia Tsamoura

@@ -5,7 +5,7 @@ import java.util.Properties;
 import uk.ac.ox.cs.pdq.db.Schema;
 
 /**
- * Common interface to all schema discovered.
+ * Common interface to all schema discoverers.
  * 
  * @author Julien Leblay
  */

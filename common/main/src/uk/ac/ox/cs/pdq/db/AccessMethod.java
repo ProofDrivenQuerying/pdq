@@ -40,10 +40,10 @@ public class AccessMethod implements Serializable {
 	/**  Input attribute positions. */
 	private final List<Integer> inputs;
 
-	/**  Access restriction. */
+	/**  Typr of access restriction. */
 	private final Types type;
 
-	/**  Name of the access restrictions. */
+	/**  Name of the access method. */
 	private final String name;
 
 	/**  String representation of the object. */
@@ -103,6 +103,7 @@ public class AccessMethod implements Serializable {
 	}
 
 	/**
+	 * TOCOMMENT What is a zero based input
 	 * Gets the zero based inputs.
 	 *
 	 * @return the positions that are required inputs
@@ -116,7 +117,7 @@ public class AccessMethod implements Serializable {
 	}
 
 	/**
-	 * Gets the type.
+	 * Gets the access restriction type.
 	 *
 	 * @return the type of the access restriction
 	 */
@@ -125,6 +126,8 @@ public class AccessMethod implements Serializable {
 	}
 
 	/**
+	 * TOCOMMENT Why does the comment say "binding's name"? An access method is not a binding.
+	 * 
 	 * Gets the name.
 	 *
 	 * @return the binding's name.
@@ -134,7 +137,8 @@ public class AccessMethod implements Serializable {
 	}
 
 	/**
-	 * Equals.
+	 * Two access methods are equal if their types and inputs are equal (using the corresponding equals() methods).
+	 * TOCOMMENT how about the name? it is currently commented out.
 	 *
 	 * @param o Object
 	 * @return boolean

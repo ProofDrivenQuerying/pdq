@@ -25,8 +25,8 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
-// TODO: Auto-generated Javadoc
 /**
+ * TOCOMMENT will this be readable in the html javadocs?
  * A dependency of the form \delta = \forall \vec{x} \rho(\vec{x}) --> x_i = x_j where \rho is a conjunction of atoms.
  *
  * @author Efthymia Tsamoura
@@ -58,7 +58,7 @@ public class EGD
 	}
 	
 	/**
-	 * Gets the universal.
+	 * Gets the universally quantified variables.
 	 *
 	 * @return List<Variable>
 	 */
@@ -67,7 +67,9 @@ public class EGD
 	}
 
 	/**
-	 * Gets the free.
+	 * TOCOMMENT why is this a list of Term objects while the method above returns a list of Variable objects?
+	 * TOCOMMENT An EGD does not have free variables, it has only universally quantified
+	 * Gets the free variables.
 	 *
 	 * @return List<Term>
 	 * @see uk.ac.ox.cs.pdq.fol.Evaluatable#getFree()
@@ -78,7 +80,8 @@ public class EGD
 	}
 
 	/**
-	 * Gets the left.
+	 * TOCOMMENT it would be better to say getBody or getHead; it's not really clear what left and right is.
+	 * Gets the left-hand side of the constraint.
 	 *
 	 * @return L
 	 * @see uk.ac.ox.cs.pdq.db.Dependency#getLeft()
@@ -100,6 +103,7 @@ public class EGD
 	}
 
 	/**
+	 * TOCOMMENT all terms?
 	 * Gets the terms.
 	 *
 	 * @return List<Term>

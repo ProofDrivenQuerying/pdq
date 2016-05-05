@@ -1,6 +1,6 @@
 package uk.ac.ox.cs.pdq.db;
 
-/*
+/* TOCOMMENT What is this licence for?
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -30,7 +30,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Variable;
 
-// TODO: Auto-generated Javadoc
 /**
  * Represents a database foreign key.
  *

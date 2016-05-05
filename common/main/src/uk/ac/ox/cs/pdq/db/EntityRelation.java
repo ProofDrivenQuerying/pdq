@@ -8,7 +8,7 @@ import uk.ac.ox.cs.pdq.util.TupleType;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
-// TODO: Auto-generated Javadoc
+// TOCOMMENT No idea what this does
 //Efi: This class seems strange to me.
 //Consider deleting
 /**
