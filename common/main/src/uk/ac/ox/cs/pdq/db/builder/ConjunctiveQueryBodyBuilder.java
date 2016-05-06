@@ -22,8 +22,8 @@ import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.util.Types;
 
-// TODO: Auto-generated Javadoc
 /**
+ * TOCOMMENT this class seems to be only used in DEMO -- not sure what it does instead of tagging every method I write this here.
  * The Class ConjunctiveQueryBodyBuilder.
  *
  * @author Gonzalo Diaz
@@ -33,22 +33,28 @@ public class ConjunctiveQueryBodyBuilder {
 	/** The log. */
 	private static Logger log = Logger.getLogger(ConjunctiveQueryBodyBuilder.class);
 
-	/** The alias to predicate formulas. */
-	private Map<String, Atom> aliasToPredicateFormulas = new HashMap<>();
+	/** 
+	 * TOCOMMENT not sure where this is used
+	 * The alias to predicate formulas. */
+	private Map<String, Atom> aliasToAtoms = new HashMap<>();
 
 	/** The schema. */
 	private Schema              schema;
 	
-	/** The alias to relations. */
+	/** 
+	 * TOCOMMENT not sure where this is used
+	 * The alias to relations. */
 	private Map<String, String> aliasToRelations;
 	
 	/** The result predicate. */
 	private Atom    resultPredicate;
 	
-	/** The q name. */
+	/** The query's name. */
 	private String              qName;
 	
-	/** The conj query. */
+	/** 
+	 * TOCOMMENT Does this builder build only one query?
+	 * The conjunctive query built. */
 	private ConjunctiveQuery    conjQuery; 
 	
 	/** The returns all vars. */
@@ -72,7 +78,7 @@ public class ConjunctiveQueryBodyBuilder {
 	}
 
 	/**
-	 * Builds an initial set of PredicateFormulas with fresh variables in every position.
+	 * Builds an initial set of Atoms with fresh variables in every position.
 	 */
 	private void buildInitialPredicates() {
 		log.debug("buildInitialPredicates. aliasToRelations = " + this.aliasToRelations);
@@ -91,13 +97,14 @@ public class ConjunctiveQueryBodyBuilder {
 				terms[i] = new Variable(  "x_" + attributes.get(i).getName()  + "_" + counter );
 			}
 
-			this.aliasToPredicateFormulas.put(aliasName, new Atom( relation, terms ));
+			this.aliasToAtoms.put(aliasName, new Atom( relation, terms ));
 
 			counter++;
 		}
 	}
 
 	/**
+	 * TOCOMMENT I am not sure what the following methods do
 	 * Adds the constraint.
 	 *
 	 * @param left ConstraintTerm
@@ -143,7 +150,7 @@ public class ConjunctiveQueryBodyBuilder {
 		// Prepare right variable:
 		String rightAlias = rightAliasAttr.getAlias();
 		String rightAttr  = rightAliasAttr.getAttr();
-		Atom rightPredForm = this.aliasToPredicateFormulas.get(rightAlias);
+		Atom rightPredForm = this.aliasToAtoms.get(rightAlias);
 
 		// Prepare left constant term:
 		TypedConstant<?> leftConstant = new TypedConstant<>(
@@ -179,7 +186,7 @@ public class ConjunctiveQueryBodyBuilder {
 		// Prepare left variable:
 		String leftAlias = leftAliasAttr.getAlias();
 		String leftAttr  = leftAliasAttr.getAttr();
-		Atom leftPredForm = this.aliasToPredicateFormulas.get(leftAlias);
+		Atom leftPredForm = this.aliasToAtoms.get(leftAlias);
 
 		// Get term in said position:
 		int leftAttrIndex = this.schema.getRelation( this.aliasToRelations.get(leftAlias) ).getAttributeIndex(leftAttr);
@@ -188,7 +195,7 @@ public class ConjunctiveQueryBodyBuilder {
 		// Prepare right variable:
 		String rightAlias = rightAliasAttr.getAlias();
 		String rightAttr  = rightAliasAttr.getAttr();
-		Atom rightPredForm = this.aliasToPredicateFormulas.get(rightAlias);
+		Atom rightPredForm = this.aliasToAtoms.get(rightAlias);
 
 		// Get term in said position:
 		int rightAttrIndex = -1;
@@ -234,18 +241,18 @@ public class ConjunctiveQueryBodyBuilder {
 	}
 
 	/**
-	 * Replace a term for a constant in all predicates.
+	 * Replace a term for a constant in all atoms.
 	 *
 	 * @param oldTerm Term
 	 * @param newTerm Term
 	 */
 	private void replaceTerm(Term oldTerm, Term newTerm) {
 
-		for( Map.Entry<String, Atom> entry : this.aliasToPredicateFormulas.entrySet() ) {
+		for( Map.Entry<String, Atom> entry : this.aliasToAtoms.entrySet() ) {
 			String alias = entry.getKey();
-			Atom predicateFormula = entry.getValue();
+			Atom atom = entry.getValue();
 
-			List<Term> terms = predicateFormula.getTerms();
+			List<Term> terms = atom.getTerms();
 
 			Term[] newTerms = new Term[terms.size()];
 
@@ -257,22 +264,23 @@ public class ConjunctiveQueryBodyBuilder {
 				}
 			}
 
-			Atom newPredicateFormula = new Atom(predicateFormula.getPredicate(), newTerms);
+			Atom newAtom = new Atom(atom.getPredicate(), newTerms);
 
-			this.aliasToPredicateFormulas.put(alias, newPredicateFormula);
+			this.aliasToAtoms.put(alias, newAtom);
 		}
 
 	}
 	
 	/**
-	 * Return all vars.
+	 * TOCOMMENT
+	 * Return all vars of what?.
 	 */
 	public void returnAllVars() {
 		this.returnsAllVars = true;
 		
 		// Find arity:
 		Set<Variable> vars = new HashSet<>();
-		for( Atom predFormula : this.aliasToPredicateFormulas.values() ) {
+		for( Atom predFormula : this.aliasToAtoms.values() ) {
 			vars.addAll( predFormula.getVariables() );
 		}
 		
@@ -324,7 +332,7 @@ public class ConjunctiveQueryBodyBuilder {
 	 * @return Term
 	 */
 	private Term _findTerm(String aliasName, String attrName) {
-		Atom predFormula = this.aliasToPredicateFormulas.get(aliasName);
+		Atom predFormula = this.aliasToAtoms.get(aliasName);
 
 		// Get term in said position:
 		int attrIndex = this.schema.getRelation( this.aliasToRelations.get(aliasName) ).getAttributeIndex(attrName);
@@ -338,7 +346,7 @@ public class ConjunctiveQueryBodyBuilder {
 	 */
 	public ConjunctiveQuery toConjunctiveQuery() {
 		List<Atom> preds = new ArrayList<>();
-		preds.addAll(this.aliasToPredicateFormulas.values());
+		preds.addAll(this.aliasToAtoms.values());
 		this.conjQuery = new ConjunctiveQuery(this.resultPredicate, Conjunction.of(preds));
 		return this.conjQuery;
 	}
@@ -353,8 +361,8 @@ public class ConjunctiveQueryBodyBuilder {
 		StringBuilder ans = new StringBuilder();
 		
 		ans.append("<StartQueryBuilder: ");
-		for( Atom predicateFormula : this.aliasToPredicateFormulas.values() ) {
-			ans.append(predicateFormula.toString()).append(", ");
+		for( Atom atom : this.aliasToAtoms.values() ) {
+			ans.append(atom.toString()).append(", ");
 		}
 		ans.append(":EndQueryBuilder>");
 		

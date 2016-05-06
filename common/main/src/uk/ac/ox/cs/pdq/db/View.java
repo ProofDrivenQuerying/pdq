@@ -12,8 +12,8 @@ import uk.ac.ox.cs.pdq.fol.Term;
 
 import com.google.common.collect.Lists;
 
-// TODO: Auto-generated Javadoc
 /**
+ * TOCOMMENT I still have a hard time understanding the hierarchy between Formulas, Dependencies, Implications, Rules, Views, etc.
  * A view.
  *
  * @author Efthymia Tsamoura
@@ -27,13 +27,18 @@ public class View extends Relation implements Rule<Formula, Atom> {
 	/** The view id. */
 	protected int viewId;
 
-	/**  The inverse dependency that defines the view. */
+	/** 
+	 * TOCOMMENT what is this supposed to mean, and why is it a LinearGuarded dependency?
+	 *  The inverse dependency that defines the view. */
 	protected LinearGuarded dependency;
 
-	/**  The dependency that defines the view. */
+	/**  
+	 * TOCOMMENT So a view extends a Relation?? And does not have a declared connection to TGD except that it essentially is a TGD wrapper.
+	 * The dependency that defines the view. */
 	protected TGD definition;
 
 	/**
+	 * TOCOMMENT Instantiates a new view by instantiating a Relation?
 	 * Instantiates a new view.
 	 *
 	 * @param name 		The name of the view
@@ -50,6 +55,8 @@ public class View extends Relation implements Rule<Formula, Atom> {
 	 * @param attributes 		The view's attributes
 	 * @param bindings 		The binding patterns with which a view can be accessed. By default, a view has free access
 	 */
+	//TOCOMMENT: the term "binding" is used in many places for variable names, instead of "binding pattern", or "access method/restriction"
+	//biding is something else and this might be confusing
 	public View(String name, List<Attribute> attributes, List<AccessMethod> bindings) {
 		super(name, attributes, bindings);
 	}
@@ -82,6 +89,7 @@ public class View extends Relation implements Rule<Formula, Atom> {
 	}
 
 	/**
+	 * TOCOMMENT how is this method relevant to a View?
 	 * Make attributes.
 	 *
 	 * @param fact An input fact
@@ -100,7 +108,7 @@ public class View extends Relation implements Rule<Formula, Atom> {
 	}
 
 	/**
-	 * Gets the id.
+	 * Gets the id of this view.
 	 *
 	 * @return int
 	 */
@@ -110,6 +118,7 @@ public class View extends Relation implements Rule<Formula, Atom> {
 	}
 
 	/**
+	 * TOCOMMENT ???
 	 * Gets the dependency.
 	 *
 	 * @return LinearGuarded

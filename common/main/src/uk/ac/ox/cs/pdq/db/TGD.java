@@ -24,8 +24,8 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
-// TODO: Auto-generated Javadoc
 /**
+ * TOCOMMENT agree on a way to write formulas in javadoc
  * A dependency of the form \delta = \forall x  \sigma(\vec{x}) --> \exists y  \tau(\vec{x}, \vec{y})
  * where \sigma and \tau are conjunctions of atoms.
  *
@@ -46,7 +46,8 @@ public class TGD
 	protected final Collection<TypedConstant<?>> constants = new LinkedHashSet<>();
 
 	/**
-	 * Instantiates a new tgd.
+	 * TOCOMMENT left and right are easy to confuse, head and body is better
+	 * Instantiates a new TGD.
 	 *
 	 * @param left The left-hand side conjunction of the dependency
 	 * @param right The right-hand side conjunction of the dependency
@@ -65,7 +66,8 @@ public class TGD
 	}
 
 	/**
-	 * Invert.
+	 * TOCOMMENT this seems some like a utility method, not something you would want in the TGD
+	 * Inverts a dependency.
 	 *
 	 * @return the inverse dependency
 	 */
@@ -74,7 +76,7 @@ public class TGD
 	}
 
 	/**
-	 * Gets the universal.
+	 * Gets the universally quantified variables.
 	 *
 	 * @return List<Variable>
 	 */
@@ -83,7 +85,7 @@ public class TGD
 	}
 
 	/**
-	 * Gets the free.
+	 * Gets the free variables.
 	 *
 	 * @return List<Term>
 	 * @see uk.ac.ox.cs.pdq.fol.Evaluatable#getFree()
@@ -94,7 +96,7 @@ public class TGD
 	}
 
 	/**
-	 * Gets the existential.
+	 * Gets the existentially quantified variables.
 	 *
 	 * @return List<Variable>
 	 */
@@ -103,7 +105,7 @@ public class TGD
 	}
 
 	/**
-	 * Gets the left.
+	 * Gets the left-hand side of the dependency.
 	 *
 	 * @return L
 	 * @see uk.ac.ox.cs.pdq.db.Dependency#getLeft()
@@ -114,7 +116,8 @@ public class TGD
 	}
 
 	/**
-	 * Gets the right.
+	 * TOCOMMENT for all methods up to line 169, see issue #139 on github
+	 * Gets the right-hand side of the dependency.
 	 *
 	 * @return R
 	 * @see uk.ac.ox.cs.pdq.db.Dependency#getRight()
@@ -125,7 +128,7 @@ public class TGD
 	}
 
 	/**
-	 * Gets the terms.
+	 * Gets all terms.
 	 *
 	 * @return List<Term>
 	 * @see uk.ac.ox.cs.pdq.fol.Formula#getTerms()
@@ -164,6 +167,7 @@ public class TGD
 	}
 
 	/**
+	 * TOCOMMENT there is no "canonicalNames" mentioned in the comment says here.
 	 * Skolemize mapping.
 	 *
 	 * @param mapping the mapping
@@ -193,20 +197,20 @@ public class TGD
 	}
 
 	/**
-	 * Ground.
+	 * Grounds the TGD using the input mapping.
 	 *
 	 * @param mapping the mapping
 	 * @param canonicalNames 		True if we assign Skolem constants to the existentially quantified variables
 	 * @return 		the grounded dependency using the input mapping.
 	 *      If canonicalNames is TRUE then skolem constants are produced for
-	 *      the existentially quantified variables
+	 *      the existentially quantified variables TOCOMMENT what happens if canonicalNames is False?
 	 */
 	public TGD ground(Map<Variable, Constant> mapping, boolean canonicalNames) {
 		return canonicalNames == true ? this.ground(this.skolemizeMapping(mapping)): this.ground(mapping);
 	}
 
 	/**
-	 * Ground.
+	 * Grounds the TGD using the input mapping..
 	 *
 	 * @param mapping Map<Variable,Term>
 	 * @return TGD<L,R>
@@ -220,7 +224,7 @@ public class TGD
 	}
 
 	/**
-	 * Gets the both side variables.
+	 * Gets all the variables of this TGD.
 	 *
 	 * @return Set<Variable>
 	 * @see uk.ac.ox.cs.pdq.db.Dependency#getAllVariables()
@@ -233,7 +237,8 @@ public class TGD
 	}
 
 	/**
-	 * Equals.
+	 * TOCOMMENT equal here seems to mean identical, so you might as well compare strings.
+	 * Two TGDs are equal if left, right, universal variables and existential variables, are all equal (using the corresponding equals methods).
 	 *
 	 * @param o Object
 	 * @return boolean
@@ -253,21 +258,11 @@ public class TGD
 				&& this.existential.equals(((TGD) o).existential);
 	}
 
-	/**
-	 * Hash code.
-	 *
-	 * @return int
-	 */
 	@Override
 	public int hashCode() {
 		return Objects.hash(this.universal, this.existential, this.left, this.right);
 	}
 
-	/**
-	 * To string.
-	 *
-	 * @return String
-	 */
 	@Override
 	public String toString() {
 		String f = "";

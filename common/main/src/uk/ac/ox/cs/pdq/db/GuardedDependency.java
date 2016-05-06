@@ -2,7 +2,6 @@ package uk.ac.ox.cs.pdq.db;
 
 import uk.ac.ox.cs.pdq.fol.Atom;
 
-// TODO: Auto-generated Javadoc
 /**
  * A guarded dependency.
  *

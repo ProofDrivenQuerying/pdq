@@ -20,7 +20,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 
-// TODO: Auto-generated Javadoc
 /**
  * A database schema.
  *
@@ -29,13 +28,17 @@ import com.google.common.collect.Lists;
  */
 public class Schema {
 
+	//TOCOMMENT normally you can have different relations with the same name if the arity is different.
+	// I guess this is not the case here?? It should be cleared out.
 	/**  Relations indexed based on their name. */
 	private final Map<String, Relation> relIndex;
 	
 	/**  The list of schema relations*. */
 	protected final List<Relation> relations;
 
-	/**  Distribution of relations by arity. */
+	/**
+	 * For every different arity, this keeps the list of schema relations with this arity
+	 *  Distribution of relations by arity. */
 	private final List<Relation>[] arityDistribution;
 
 	/**  The schema dependencies indexed based on their id. */
@@ -47,19 +50,23 @@ public class Schema {
 	/**  True if the schema contains at least one view. */
 	private final boolean containsViews;
 
-	/**  True if the schema contains cycles. */
+	/**  
+	 * True if the schema dependencies contain cycles. */
 	protected Boolean isCyclic = null;
 
-	/**  Schema constants. */
+	/**  
+	 * Schema constants, are all constants appearing in the dependencies */
 	protected Collection<TypedConstant<?>> dependencyConstants = null;
 
 	/**  A map from a constant's name to the constant object. */
 	protected Map<String, TypedConstant<?>> constants = new LinkedHashMap<>();
 	
-	/**  The EGDs of the keys*. */
+	/**  The EGDs of (TOCOMMENT: corresponding to?) the keys*. */
 	protected final Collection<EGD> keyDependencies = Lists.newArrayList();
 
-	/**  The views of the input schema*. */
+	/**  
+	 * TOCOMMENT why are view kept separate?
+	 * The views of the input schema*. */
 	protected final List<Dependency> views;
 
 	/**
@@ -129,6 +136,7 @@ public class Schema {
 	}
 	
 	/**
+	 * TOCOMMENT I don't find "consolidateKeys" or "EGD.getEGDs" very appropariate names
 	 * Extracts the EGDs of the relation keys.
 	 */
 	public void consolidateKeys() {
@@ -140,7 +148,7 @@ public class Schema {
 	}
 
 	/**
-	 * Gets the views.
+	 * Gets the views of this schema's dependency set.
 	 *
 	 * @return 		the schema views
 	 */
@@ -150,7 +158,7 @@ public class Schema {
 
 
 	/**
-	 * Contains views.
+	 * True is this schema's dependencies contain views.
 	 *
 	 * @return 		true if the schema contains views
 	 */
@@ -159,7 +167,7 @@ public class Schema {
 	}
 
 	/**
-	 * Gets the relations by arity.
+	 * Gets the relations that have the input arity.
 	 *
 	 * @param i the i
 	 * @return 		all relations having the input arity
@@ -169,7 +177,7 @@ public class Schema {
 	}
 
 	/**
-	 * Gets the relations.
+	 * Gets all schema relations.
 	 *
 	 * @return 		all schema relations
 	 */
@@ -178,7 +186,7 @@ public class Schema {
 	}
 
 	/**
-	 * Gets the max arity.
+	 * Gets the max arity of any relation.
 	 *
 	 * @return 		the maximum relation arity
 	 */
@@ -187,7 +195,7 @@ public class Schema {
 	}
 
 	/**
-	 * Gets the dependencies.
+	 * Gets the schema dependencies.
 	 *
 	 * @return 		the schema dependencies
 	 */
@@ -196,7 +204,7 @@ public class Schema {
 	}
 	
 	/**
-	 * Gets the key dependencies.
+	 * Gets the (TOCOMMENT primary) key dependencies.
 	 *
 	 * @return 		the EGDs that come from the relations keys
 	 */
@@ -205,7 +213,7 @@ public class Schema {
 	}
 
 	/**
-	 * Gets the relation.
+	 * Gets the relation with the specified name.
 	 *
 	 * @param name the name
 	 * @return 		the relation with the input name
@@ -214,11 +222,6 @@ public class Schema {
 		return this.relIndex.get(name);
 	}
 
-	/**
-	 * To string.
-	 *
-	 * @return String
-	 */
 	@Override
 	public String toString() {
 		StringBuilder result = new StringBuilder();
@@ -242,9 +245,9 @@ public class Schema {
 	}
 
 	/**
-	 * Checks if is cyclic.
+	 * Checks if is the dependencies are cyclic.
 	 *
-	 * @return true if the schema contains cycles
+	 * @return true if the schema dependencies contain cycles
 	 */
 	public boolean isCyclic() {
 		if (this.isCyclic == null) {
@@ -270,6 +273,7 @@ public class Schema {
 	}
 
 	/**
+	 * TOCOMMENT not an appropriate method name
 	 * Search dependency graph.
 	 *
 	 * @param simpleDepedencyGraph A schema dependency graph
@@ -289,6 +293,8 @@ public class Schema {
 
 	/**
 	 * Gets the dependency constants.
+	 * 
+	 * TOCOMMENT what is the difference with getSchemaConstants?
 	 *
 	 * @return the constants of the schema dependencies
 	 */
@@ -303,6 +309,9 @@ public class Schema {
 	}
 
 	/**
+	 * TOCOMMENT I'm not sure what this is but two different constants (say integer 5, and a string with value "5") 
+	 * will end up in the same position (one of them will overwrite the entry of the other in this map)
+	 * TOCOMMENT Once we figure what this map does, we need to update the comments for 4 methods below.
 	 * Creates a map of the constants that appear in the schema dependencies.
 	 */
 	private void loadConstants() {
@@ -343,7 +352,7 @@ public class Schema {
 	}
 
 	/**
-	 * Contains.
+	 * Checks if the schema contains a relation.
 	 *
 	 * @param name the name
 	 * @return true if the given relation is part of the schema.
@@ -381,7 +390,7 @@ public class Schema {
 	}
 
 	/**
-	 * Builder.
+	 * Instantiates a new SchemaBuilder.
 	 *
 	 * @return a new schema builder
 	 */

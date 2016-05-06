@@ -22,7 +22,7 @@ import uk.ac.ox.cs.pdq.util.Utility;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * A dependency of the form \delta = \forall \vec{x} \rho(\vec{x}) --> x_i = x_j where \rho is a conjunction of atoms.
  *
@@ -64,6 +64,7 @@ public class DatabaseEGD
 	}
 
 	/**
+	 * 
 	 * Gets the free.
 	 *
 	 * @return List<Term>

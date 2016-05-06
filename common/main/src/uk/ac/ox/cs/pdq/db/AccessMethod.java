@@ -31,16 +31,16 @@ public class AccessMethod implements Serializable {
  BOOLEAN
 	}
 
-	/** The Constant DEFAULT_PREFIX. */
+	/** A Constant DEFAULT_PREFIX for all automatically generated access methods names */
 	public static final String DEFAULT_PREFIX = "mt_";
 
-	/** The global counter. */
+	/** A global counter appended to the default prefix in order to create a new automatically generated access methods name. */
 	private static int globalCounter = 0;
 
 	/**  Input attribute positions. */
 	private final List<Integer> inputs;
 
-	/**  Typr of access restriction. */
+	/**  Type of access restriction. */
 	private final Types type;
 
 	/**  Name of the access method. */
@@ -94,7 +94,7 @@ public class AccessMethod implements Serializable {
 	}
 
 	/**
-	 * Gets the inputs.
+	 * Gets the input positions tha define this access method.
 	 *
 	 * @return the positions that are required inputs
 	 */
@@ -126,7 +126,7 @@ public class AccessMethod implements Serializable {
 	}
 
 	/**
-	 * TOCOMMENT Why does the comment say "binding's name"? An access method is not a binding.
+	 * TOCOMMENT Why does the comment say "binding's name"? I think an access method is not a binding. In this class the term "binding" is used in the place of "access restriction"
 	 * 
 	 * Gets the name.
 	 *

@@ -7,7 +7,6 @@ import uk.ac.ox.cs.pdq.util.Named;
 import com.google.common.base.Preconditions;
 
 
-// TODO: Auto-generated Javadoc
 /**
  * A Skolem constant term.
  *

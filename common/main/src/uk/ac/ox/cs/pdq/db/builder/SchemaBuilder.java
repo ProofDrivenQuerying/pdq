@@ -28,7 +28,7 @@ import uk.ac.ox.cs.pdq.fol.Atom;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * Helper class for build schema. Allows incrementally construction, and 
  * performs various validations and checks upon initialization.

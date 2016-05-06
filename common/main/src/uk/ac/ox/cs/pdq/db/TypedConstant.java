@@ -8,7 +8,6 @@ import uk.ac.ox.cs.pdq.util.Typed;
 
 import com.google.common.base.Preconditions;
 
-// TODO: Auto-generated Javadoc
 /**
  * Schema constant.
  *
@@ -52,7 +51,7 @@ public class TypedConstant<T> implements Typed, Constant {
 	}
 
 	/**
-	 * Gets the type.
+	 * Gets the type of this constant.
 	 *
 	 * @return Class<T>
 	 * @see uk.ac.ox.cs.pdq.util.Typed#getType()
@@ -63,7 +62,7 @@ public class TypedConstant<T> implements Typed, Constant {
 	}
 
 	/**
-	 * Gets the value.
+	 * Gets the value of this constant.
 	 *
 	 * @return T
 	 */
@@ -72,7 +71,7 @@ public class TypedConstant<T> implements Typed, Constant {
 	}
 
 	/**
-	 * Equals.
+	 * Two constants are equal if their values and types are equal (using the corresponding equals).
 	 *
 	 * @param o Object
 	 * @return boolean
@@ -91,11 +90,6 @@ public class TypedConstant<T> implements Typed, Constant {
 
 	}
 
-	/**
-	 * Hash code.
-	 *
-	 * @return int
-	 */
 	@Override
 	public int hashCode() {
 //		if (this.hash == Integer.MIN_VALUE) {
@@ -104,11 +98,6 @@ public class TypedConstant<T> implements Typed, Constant {
 		return this.hash;
 	}
 
-	/**
-	 * To string.
-	 *
-	 * @return String
-	 */
 	@Override
 	public String toString() {
 		if (this.rep == null) {
@@ -120,6 +109,7 @@ public class TypedConstant<T> implements Typed, Constant {
 	}
 
 	/**
+	 * TOCOMMENT ????
 	 * Checks if is variable.
 	 *
 	 * @return boolean
@@ -131,6 +121,7 @@ public class TypedConstant<T> implements Typed, Constant {
 	}
 
 	/**
+	 * TOCOMMENT I do not know if skolems are TypedConstants or not. But this seems bad design, this method comes from a super-object.
 	 * Checks if is skolem.
 	 *
 	 * @return boolean

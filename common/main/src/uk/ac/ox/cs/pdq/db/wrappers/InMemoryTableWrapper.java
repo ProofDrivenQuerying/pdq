@@ -22,7 +22,6 @@ import uk.ac.ox.cs.pdq.util.TupleType;
 
 import com.google.common.base.Preconditions;
 
-// TODO: Auto-generated Javadoc
 /**
  * In memory relation wrapper. This is the default implementation of a relation,
  * where the data associated with a relation resides in memory, and does not
@@ -116,7 +115,7 @@ public class InMemoryTableWrapper extends Relation
 	}
 	
 	/**
-	 * Gets the data.
+	 * Gets the underlying data tuples.
 	 *
 	 * @return the collection of tuple stored in memory for this relation
 	 */
@@ -125,6 +124,10 @@ public class InMemoryTableWrapper extends Relation
 	}
 	
 	/**
+	 * TOCOMMENT Not sure what the next two methods do; they seem to create an iterator over the data tuples 
+	 * maintaine by this relation objec, which is already claimed to be in-memory, and putting them in another
+	 * main memory list.
+	 * 
 	 * Access.
 	 *
 	 * @param inputHeader the input header
@@ -175,7 +178,7 @@ public class InMemoryTableWrapper extends Relation
 	}
 
 	/**
-	 * Iterator.
+	 * TOCOMMENT what is the difference between the different iterators?
 	 *
 	 * @param inputAttributes List<? extends Attribute>
 	 * @param inputs ResetableIterator<Tuple>

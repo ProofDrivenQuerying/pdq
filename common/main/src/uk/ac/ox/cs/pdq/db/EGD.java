@@ -26,7 +26,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 /**
- * TOCOMMENT will this be readable in the html javadocs?
+ * TOCOMMENT this is not well readable in javadoc we need to find out how to write formulas in javadoc (maybe html?)
  * A dependency of the form \delta = \forall \vec{x} \rho(\vec{x}) --> x_i = x_j where \rho is a conjunction of atoms.
  *
  * @author Efthymia Tsamoura
@@ -69,6 +69,7 @@ public class EGD
 	/**
 	 * TOCOMMENT why is this a list of Term objects while the method above returns a list of Variable objects?
 	 * TOCOMMENT An EGD does not have free variables, it has only universally quantified
+	 * TOCOMMENT See #139 for comments for all methods below up to line 143 
 	 * Gets the free variables.
 	 *
 	 * @return List<Term>
@@ -80,7 +81,7 @@ public class EGD
 	}
 
 	/**
-	 * TOCOMMENT it would be better to say getBody or getHead; it's not really clear what left and right is.
+	 * TOCOMMENT it would be better to say getBody or getHead; it's not always clear what left and right is.
 	 * Gets the left-hand side of the constraint.
 	 *
 	 * @return L
@@ -143,12 +144,15 @@ public class EGD
 	}
 
 	/**
+	 * TOCOMMENT this method seems to be checking that all variables in the EGD are in the input mapping, 
+	 * copies the input mapping and returns it. Maybe it is a residue of some old meaningful method?
 	 * Skolemize mapping.
 	 *
 	 * @param mapping the mapping
 	 * @return 		If canonicalNames is TRUE returns a copy of the input mapping
 	 * 		augmented such that Skolem constants are produced for
 	 *      the existentially quantified variables
+	 *      
 	 */
 	public Map<Variable, Constant> skolemizeMapping(Map<Variable, Constant> mapping) {
 		Map<Variable, Constant> result = new LinkedHashMap<>(mapping);
@@ -160,6 +164,8 @@ public class EGD
 	}
 
 	/**
+	 * TOCOMMENT Since it is not clear what the above method does it is not clear what this or the following method does.
+	 * 
 	 * Ground.
 	 *
 	 * @param mapping the mapping
@@ -215,7 +221,7 @@ public class EGD
 		int i = 0;
 		for(Attribute typed:attributes) {
 			if(!keys.contains(typed)) {
-				Term term = new Variable(String.valueOf("?" + typed));
+				Term term = new Variable(String.valueOf("?" + typed));//TOCOMMENT why are we using a "?" here?
 				copiedTerms.set(i, term);
 				tobeEqual.put(leftTerms.get(i), term);
 			}
@@ -231,22 +237,24 @@ public class EGD
 				Conjunction.of(new Atom(new Predicate(predicate.getName(), leftTerms.size()), leftTerms), 
 						new Atom(new Predicate(predicate.getName(), copiedTerms.size()), copiedTerms));
 		
+		//TOCOMMENT here we give "head" as the left part of the EGDs -- wrong choice of local variable name, or a bug?
 		return new EGD(head, Conjunction.of(equalityPredicates));
 	}
 	
 	/**
-	 * Gets the EG ds.
+	 * TOCOMMENT why plural in the name of the method?
+	 * Constructs an EGD for the given relation and key attibutes.
 	 *
 	 * @param relation the relation
-	 * @param keys the keys
-	 * @return the EG ds
+	 * @param keys the key attirbutes
+	 * @return the EGD representing the primary key
 	 */
 	public static EGD getEGDs(Relation relation, Collection<Attribute> keys) {
 		return getEGDs(new Predicate(relation.getName(), relation.getArity()), relation.getAttributes(), keys);
 	}
 
 	/**
-	 * Equals.
+	 * Two EGDs are equal if (by using the corresponding equals() methods) left and right hand sides and all universally quantified variables are equal.
 	 *
 	 * @param o Object
 	 * @return boolean
@@ -265,21 +273,11 @@ public class EGD
 				&& this.universal.equals(((EGD) o).universal);
 	}
 
-	/**
-	 * Hash code.
-	 *
-	 * @return int
-	 */
 	@Override
 	public int hashCode() {
 		return Objects.hash(this.universal, this.left, this.right);
 	}
 
-	/**
-	 * To string.
-	 *
-	 * @return String
-	 */
 	@Override
 	public String toString() {
 		String f = "";

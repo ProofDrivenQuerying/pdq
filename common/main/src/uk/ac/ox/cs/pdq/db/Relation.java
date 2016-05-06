@@ -23,7 +23,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 
-// TODO: Auto-generated Javadoc
 /**
  * A schema relation.
  *
@@ -38,7 +37,7 @@ public abstract class Relation extends Predicate implements Serializable {
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -9222721018270749836L;
 
-	/** The global id. */
+	/** A global counter that gives unique id numbers to relations. */
 	protected static int globalId = 0;
 
 	/**
@@ -47,31 +46,39 @@ public abstract class Relation extends Predicate implements Serializable {
 	protected final int relationId;
 
 	/**
+	 * TOCOMMENT not sure what this is
 	 * The Enum PropertyKeys.
 	 */
 	public static enum PropertyKeys { 
 		/** The metadata. */
 		METADATA }
 
-	/**  The relation's properties. */
+	/** 
+	 * Properties associated with this relation; these may be SQL
+	 * connection parameters, web service settings, etc. depending on the
+	 * underlying implementation.
+	 * If no properties are defined, then this an an empty Properties instance. */
 	protected final Properties properties = new Properties();
 
 	/**  The relation's attributes. */
 	protected final List<Attribute> attributes;
 
 	/**
-	 * The map attributes names to the positions. This map is initialized lazily
-	 * to minimise memory overhead
+	 * Maps attribute names to position in the relation. This map is initialized lazily
+	 * to minimize memory overhead
 	 */
 	protected final Map<String, Integer> attributePositions;
 
 	/**
+	 * TOCOMMENT what is the key of this map? the relations' names?
 	 * The relation's access methods, i.e. the positions of the inputAttributes
 	 * which require input values.
 	 */
 	protected Map<String, AccessMethod> accessMethods;
 
-	/** The am view. */
+	/**
+	 *  TOCOMMENT what is this?
+	 *  The am view. */
 	protected List<AccessMethod> amView;
 
 	/**
@@ -79,7 +86,9 @@ public abstract class Relation extends Predicate implements Serializable {
 	 */
 	protected List<ForeignKey> foreignKeys;
 
-	/** The key. */
+	/** 
+	 * TOCOMMENT the primary key?
+	 * The key. */
 	protected List<Attribute> key = Lists.newArrayList();
 
 	/** The key positions. */
@@ -87,7 +96,7 @@ public abstract class Relation extends Predicate implements Serializable {
 
 
 	/**
-	 * Constructor with input method.
+	 * Constructs a new Relation.
 	 *
 	 * @param name Relation's name
 	 * @param attributes List<? extends Attribute>
@@ -100,13 +109,13 @@ public abstract class Relation extends Predicate implements Serializable {
 	}
 
 	/**
-	 * Constructor with input method.
+	 * Constructs a new relation.
 	 *
 	 * @param name Relation's name
 	 * @param attributes List<? extends Attribute>
 	 * @param accessMethods Relation's binding methods
 	 * @param foreignKeys List<ForeignKey>
-	 * @param isEquality the is equality
+	 * @param isEquality true if this is an equality predicate
 	 */
 	public Relation(String name, List<? extends Attribute> attributes,
 			List<AccessMethod> accessMethods, List<ForeignKey> foreignKeys,
@@ -128,7 +137,7 @@ public abstract class Relation extends Predicate implements Serializable {
 	}
 
 	/**
-	 * Constructor with input method.
+	 * Constructs a new relation.
 	 *
 	 * @param name Relation's name
 	 * @param attributes List<? extends Attribute>
@@ -139,7 +148,7 @@ public abstract class Relation extends Predicate implements Serializable {
 	}
 
 	/**
-	 * Constructor with input method.
+	 * Constructs a new relation..
 	 *
 	 * @param name Relation's name
 	 * @param attributes List<? extends Attribute>
@@ -152,7 +161,7 @@ public abstract class Relation extends Predicate implements Serializable {
 	}
 
 	/**
-	 * Constructor without input method.
+	 * Constructs a new relation.
 	 *
 	 * @param name Relation's name
 	 * @param attributes List<? extends Attribute>
@@ -163,7 +172,7 @@ public abstract class Relation extends Predicate implements Serializable {
 	}
 
 	/**
-	 * Constructor without input method.
+	 * Constructs a new relation.
 	 *
 	 * @param name Relation's name
 	 * @param attributes List<? extends Attribute>
@@ -183,7 +192,7 @@ public abstract class Relation extends Predicate implements Serializable {
 	}
 
 	/**
-	 * Gets the name.
+	 * Gets the name of the relation.
 	 *
 	 * @return String
 	 */
@@ -194,7 +203,7 @@ public abstract class Relation extends Predicate implements Serializable {
 	}
 
 	/**
-	 * Gets the arity.
+	 * Gets the arity of the relation.
 	 *
 	 * @return the arity of the relation.
 	 */
@@ -204,7 +213,7 @@ public abstract class Relation extends Predicate implements Serializable {
 	}
 
 	/**
-	 * Gets the attributes.
+	 * Gets the attributes of the relation.
 	 *
 	 * @return the relation's inputAttributes
 	 */
@@ -213,7 +222,7 @@ public abstract class Relation extends Predicate implements Serializable {
 	}
 
 	/**
-	 * Gets the type.
+	 * Gets the type of the attributes of the relation.
 	 *
 	 * @return the relation's type
 	 */
@@ -222,9 +231,10 @@ public abstract class Relation extends Predicate implements Serializable {
 	}
 
 	/**
+	 * TOCOMMENT this seems strange, to have to call a method on a relation given the access method as input, to get the input positiions of the access method
 	 * Gets the input attributes.
 	 *
-	 * @param b the b
+	 * @param b an access method of this relation
 	 * @return 		the relation's input attributes for input binding
 	 */
 	public List<Attribute> getInputAttributes(AccessMethod b) {
@@ -237,7 +247,7 @@ public abstract class Relation extends Predicate implements Serializable {
 	}
 
 	/**
-	 * Gets the attribute.
+	 * Gets the attribute at position 'index'.
 	 *
 	 * @param index int
 	 * @return the relation's attribute at position index
@@ -247,6 +257,7 @@ public abstract class Relation extends Predicate implements Serializable {
 	}
 
 	/**
+	 * TOCOMMENT I guss this retruns the attribute's position
 	 * Gets the attribute index.
 	 *
 	 * @param attributeName the attribute name
@@ -258,7 +269,7 @@ public abstract class Relation extends Predicate implements Serializable {
 	}
 
 	/**
-	 * Gets the attribute.
+	 * Gets the attribute object given its name.
 	 *
 	 * @param attributeName the attribute name
 	 * @return the index of the attribute whose name is given as parameter,
@@ -282,7 +293,7 @@ public abstract class Relation extends Predicate implements Serializable {
 	}
 
 	/**
-	 * Adds the foreign key.
+	 * Adds a foreign key to the relation.
 	 *
 	 * @param foreingKey ForeignKey
 	 */
@@ -292,7 +303,7 @@ public abstract class Relation extends Predicate implements Serializable {
 	}
 
 	/**
-	 * Adds the foreign keys.
+	 * Adds a list of foreign keys to the relation.
 	 *
 	 * @param foreingKeys List<ForeignKey>
 	 */
@@ -302,7 +313,7 @@ public abstract class Relation extends Predicate implements Serializable {
 	}
 
 	/**
-	 * Gets the foreign key.
+	 * Gets the foreign ke at the specified index.
 	 *
 	 * @param index int
 	 * @return ForeignKey
@@ -312,7 +323,7 @@ public abstract class Relation extends Predicate implements Serializable {
 	}
 
 	/**
-	 * Gets the foreign keys.
+	 * Gets the list of all foreign keys.
 	 *
 	 * @return List<ForeignKey>
 	 */
@@ -321,7 +332,7 @@ public abstract class Relation extends Predicate implements Serializable {
 	}
 
 	/**
-	 * Gets the id.
+	 * Gets the id of the relation.
 	 *
 	 * @return int
 	 */
@@ -330,7 +341,7 @@ public abstract class Relation extends Predicate implements Serializable {
 	}
 
 	/**
-	 * Adds the access method.
+	 * Adds an access method to this relation.
 	 *
 	 * @param bm AccessMethod
 	 */
@@ -348,7 +359,8 @@ public abstract class Relation extends Predicate implements Serializable {
 	}
 
 	/**
-	 * Sets the access methods.
+	 * Sets all access methods of this relation, eliminating all prexisting ones if clearFirst is true. 
+	 * If the flag clearFirst is false it just adds the input access methods to the list of access methods.
 	 *
 	 * @param bindingMethods List<AccessMethod>
 	 * @param clearFirst boolean
@@ -367,6 +379,7 @@ public abstract class Relation extends Predicate implements Serializable {
 	}
 
 	/**
+	 * TOCOMMMENT this uses a wrong naming convention. Since clearFirst is false, this method *adds* to the list of existing access methods, it does not *set*
 	 * Sets the access methods.
 	 *
 	 * @param bindingMethods List<AccessMethod>
@@ -376,7 +389,7 @@ public abstract class Relation extends Predicate implements Serializable {
 	}
 
 	/**
-	 * Gets the access method.
+	 * Gets the access method with the corrsponding name.
 	 *
 	 * @param name String
 	 * @return AccessMethod
@@ -386,6 +399,7 @@ public abstract class Relation extends Predicate implements Serializable {
 	}
 
 	/**
+	 * TOCOMMENT creates predicate (so the name of the method should be Atom- singular), used where??
 	 * Creates the atoms.
 	 *
 	 * @return an atom corresponding to this relation.
@@ -399,7 +413,8 @@ public abstract class Relation extends Predicate implements Serializable {
 	}
 
 	/**
-	 * Checks for free access.
+	 * TOCOMMENT here we can maintain a field so not search again all access methods
+	 * Checks if this relation supports any free access method.
 	 *
 	 * @return Boolean
 	 */
@@ -415,6 +430,7 @@ public abstract class Relation extends Predicate implements Serializable {
 	}
 
 	/**
+	 * TOCOMMENT primary? same comment applies in two methods below
 	 * Sets the key.
 	 *
 	 * @param key the new key
@@ -448,7 +464,7 @@ public abstract class Relation extends Predicate implements Serializable {
 	}
 
 	/**
-	 * Equals.
+	 * TOCOMMENT Two methods are equal if, by using the corresponding equals methods, their names are equals, their attributes are equal, and their amView ???? are equal.
 	 *
 	 * @param o Object
 	 * @return boolean
@@ -467,21 +483,11 @@ public abstract class Relation extends Predicate implements Serializable {
 				&& this.amView.equals(((Relation) o).amView);
 	}
 
-	/**
-	 * Hash code.
-	 *
-	 * @return int
-	 */
 	@Override
 	public int hashCode() {
 		return Objects.hash(this.name, this.attributes, this.amView);
 	}
 
-	/**
-	 * To string.
-	 *
-	 * @return String
-	 */
 	@Override
 	public String toString() {
 		if (this.rep == null) {
@@ -532,6 +538,7 @@ public abstract class Relation extends Predicate implements Serializable {
 	}
 
 	/**
+	 * TOCOMMENT ???
 	 * Gets the metadata.
 	 *
 	 * @return RelationMetadata
@@ -541,6 +548,7 @@ public abstract class Relation extends Predicate implements Serializable {
 	}
 
 	/**
+	 * TOCOMMENT ???
 	 * Sets the metadata.
 	 *
 	 * @param metadata RelationMetadata

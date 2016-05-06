@@ -16,8 +16,8 @@ import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.util.Named;
 
-// TODO: Auto-generated Javadoc
 /**
+ * TOCOMMENT what is the relationship of this class to ConjunctiveQueryBodyBuilder
  * Builder for conjunctive queries.
  * 
  * @author Julien Leblay
@@ -89,6 +89,7 @@ public class QueryBuilder implements Builder<ConjunctiveQuery> {
 	}
 	
 	/**
+	 * TOCOMMENT what is a type of a query builder?
 	 * Sets the type.
 	 *
 	 * @param n String

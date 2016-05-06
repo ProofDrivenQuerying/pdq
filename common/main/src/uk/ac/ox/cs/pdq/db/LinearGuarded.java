@@ -7,8 +7,8 @@ import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Variable;
 
-// TODO: Auto-generated Javadoc
 /**
+ * TOCOMMENT this is not well readable in javadoc we need to find out how to write formulas in javadoc (maybe html?)
  * A dependency of the form \delta = \forall x  \sigma(\vec{x}) --> \exists y  \tau(\vec{x}, \vec{y})
  * where \sigma is a single atim and \tau is a conjunction of atoms.
  *
@@ -18,10 +18,11 @@ import uk.ac.ox.cs.pdq.fol.Variable;
 public class LinearGuarded extends TGD implements GuardedDependency {
 
 	/**
-	 * Instantiates a new linear guarded.
+	 * TOCOMMENT left and right are used all over, I suggest body and head
+	 * Instantiates a new linear guarded dependency.
 	 *
 	 * @param left 		The left-hand side predicate of the dependency
-	 * @param right 		The right-hand side predicate of the dependency
+	 * @param right 		The right-hand side conjunctions of the dependency
 	 */
 	public LinearGuarded(Atom left, Conjunction<Atom> right) {
 		super(Conjunction.of(left), right);
