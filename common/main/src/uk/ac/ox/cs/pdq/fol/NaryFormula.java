@@ -9,8 +9,8 @@ import java.util.Objects;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 
-// TODO: Auto-generated Javadoc
 /**
+ * TOCOMMENT we have both n-ary formulas and just formulas? I suggest we merge these.
  * A n-ary formula.
  *
  * @author Efthymia Tsamoura
@@ -19,7 +19,7 @@ import com.google.common.collect.ImmutableList;
  */
 public abstract class NaryFormula<T extends Formula> extends AbstractFormula implements Iterable<T> {
 
-	/**  The formula's head operator. */
+	/**  The formula's top-level operator. */
 	protected final LogicalSymbols operator;
 
 	/**  The subformulae. */
@@ -38,7 +38,7 @@ public abstract class NaryFormula<T extends Formula> extends AbstractFormula imp
 	}
 
 	/**
-	 * Gets the children.
+	 * Gets the n subformulas of this n-ary formula.
 	 *
 	 * @return Collection<T>
 	 * @see uk.ac.ox.cs.pdq.fol.Formula#getSubFormulas()
@@ -48,12 +48,6 @@ public abstract class NaryFormula<T extends Formula> extends AbstractFormula imp
 		return this.children;
 	}
 
-	/**
-	 * Gets the terms.
-	 *
-	 * @return List<Term>
-	 * @see uk.ac.ox.cs.pdq.fol.Formula#getTerms()
-	 */
 	@Override
 	public List<Term> getTerms() {
 		List<Term> terms = new ArrayList<>();
@@ -63,12 +57,6 @@ public abstract class NaryFormula<T extends Formula> extends AbstractFormula imp
 		return terms;
 	}
 
-	/**
-	 * Gets the predicates.
-	 *
-	 * @return List<PredicateFormula>
-	 * @see uk.ac.ox.cs.pdq.fol.Formula#getAtoms()
-	 */
 	@Override
 	public List<Atom> getAtoms() {
 		List<Atom> result = new ArrayList<>();
@@ -79,7 +67,7 @@ public abstract class NaryFormula<T extends Formula> extends AbstractFormula imp
 	}
 
 	/**
-	 * Equals.
+	 * Two n-ary formulas are equal if their top-level operator and all subformulas are equal (using their corresponding equals method).
 	 *
 	 * @param o Object
 	 * @return boolean
@@ -97,31 +85,17 @@ public abstract class NaryFormula<T extends Formula> extends AbstractFormula imp
 				&& this.children.equals(((NaryFormula<T>) o).children);
 	}
 
-	/**
-	 * Hash code.
-	 *
-	 * @return int
-	 */
 	@Override
 	public int hashCode() {
 		return Objects.hash(this.operator, this.children);
 	}
 
-	/**
-	 * To string.
-	 *
-	 * @return String
-	 */
 	@Override
 	public String toString() {
 		return Joiner.on(this.operator.toString()).join(this.children);
 	}
 
-	/**
-	 * Size.
-	 *
-	 * @return int
-	 */
+
 	public int size() {
 		return this.children.size();
 	}
@@ -136,7 +110,7 @@ public abstract class NaryFormula<T extends Formula> extends AbstractFormula imp
 	}
 
 	/**
-	 * Gets the symbol.
+	 * Gets the top-level operator of this formula.
 	 *
 	 * @return LogicalSymbols
 	 */
@@ -145,7 +119,7 @@ public abstract class NaryFormula<T extends Formula> extends AbstractFormula imp
 	}
 
 	/**
-	 * Iterator.
+	 * Iterates over all subformulas of the top-level operator of this formula.
 	 *
 	 * @return Iterator<T>
 	 * @see java.lang.Iterable#iterator()

@@ -4,7 +4,6 @@ import java.util.Objects;
 
 import com.google.common.base.Preconditions;
 
-// TODO: Auto-generated Javadoc
 /**
  * A predicate's signature, associate a symbol with an arity.
  *
@@ -54,7 +53,7 @@ public class Predicate {
 	}
 
 	/**
-	 * Gets the name.
+	 * Gets the name of the predicate.
 	 *
 	 * @return the name of the predicate.
 	 */
@@ -63,7 +62,7 @@ public class Predicate {
 	}
 
 	/**
-	 * Gets the arity.
+	 * Gets the arity of the predicate.
 	 *
 	 * @return the arity of the predicate.
 	 */
@@ -72,7 +71,7 @@ public class Predicate {
 	}
 
 	/**
-	 * Checks if is equality.
+	 * Checks if this is an equality predicate.
 	 *
 	 * @return true if the signature is of an equality predicate,
 	 * false otherwise
@@ -82,7 +81,7 @@ public class Predicate {
 	}
 
 	/**
-	 * Equals.
+	 * Two predicates are equal if their names and arities are equal.
 	 *
 	 * @param o Object
 	 * @return boolean
@@ -100,28 +99,18 @@ public class Predicate {
 				&& this.arity == ((Predicate) o).arity;
 	}
 
-	/**
-	 * Hash code.
-	 *
-	 * @return int
-	 */
 	@Override
 	public int hashCode() {
 		return this.hash;
 	}
 
-	/**
-	 * To string.
-	 *
-	 * @return String
-	 */
 	@Override
 	public String toString() {
 		return this.rep;
 	}
 
 	/**
-	 * Make string.
+	 * Helper printing method.
 	 *
 	 * @return String
 	 */

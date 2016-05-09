@@ -9,8 +9,6 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.collect.ImmutableList;
 
-
-// TODO: Auto-generated Javadoc
 /**
  * A binary formula.
  *
@@ -56,7 +54,7 @@ public abstract class BinaryFormula<S extends Formula, T extends Formula> extend
 	}
 
 	/**
-	 * Equals.
+	 * Two binary formulas are equal if their operators, left and right parts are all equal (using equals()).
 	 *
 	 * @param o Object
 	 * @return boolean
@@ -75,22 +73,11 @@ public abstract class BinaryFormula<S extends Formula, T extends Formula> extend
 				&& this.right.equals(((BinaryFormula<?, ?>) o).right);
 	}
 
-
-	/**
-	 * Hash code.
-	 *
-	 * @return int
-	 */
 	@Override
 	public int hashCode() {
 		return Objects.hash(this.operator, this.left, this.right);
 	}
 
-	/**
-	 * To string.
-	 *
-	 * @return String
-	 */
 	@Override
 	public String toString() {
 		return "(" + this.left + " " + this.operator + " " + this.right + ")";
@@ -98,7 +85,7 @@ public abstract class BinaryFormula<S extends Formula, T extends Formula> extend
 
 
 	/**
-	 * Gets the operator.
+	 * Gets the operator of this formula.
 	 *
 	 * @return LogicalSymbols
 	 */
@@ -108,7 +95,7 @@ public abstract class BinaryFormula<S extends Formula, T extends Formula> extend
 
 
 	/**
-	 * Gets the left.
+	 * Gets the left part of this binary formula.
 	 *
 	 * @return S
 	 */
@@ -118,7 +105,7 @@ public abstract class BinaryFormula<S extends Formula, T extends Formula> extend
 
 
 	/**
-	 * Gets the right.
+	 * Gets the right part of this binary formula.
 	 *
 	 * @return T
 	 */
@@ -127,7 +114,7 @@ public abstract class BinaryFormula<S extends Formula, T extends Formula> extend
 	}
 
 	/**
-	 * Gets the predicates.
+	 * Gets all atoms in this formula.
 	 *
 	 * @return List<PredicateFormula>
 	 * @see uk.ac.ox.cs.pdq.fol.Formula#getAtoms()
@@ -141,7 +128,7 @@ public abstract class BinaryFormula<S extends Formula, T extends Formula> extend
 	}
 
 	/**
-	 * Gets the terms.
+	 * Gets all terms in this Formula.
 	 *
 	 * @return List<Term>
 	 * @see uk.ac.ox.cs.pdq.fol.Formula#getTerms()
@@ -155,7 +142,7 @@ public abstract class BinaryFormula<S extends Formula, T extends Formula> extend
 	}
 
 	/**
-	 * Checks if is conjunction.
+	 * Checks if this formula is a conjunction.
 	 *
 	 * @return boolean
 	 */
@@ -164,7 +151,7 @@ public abstract class BinaryFormula<S extends Formula, T extends Formula> extend
 	}
 
 	/**
-	 * Checks if is equivalence.
+	 * Checks if this formula is an equivalence.
 	 *
 	 * @return boolean
 	 */
@@ -173,7 +160,7 @@ public abstract class BinaryFormula<S extends Formula, T extends Formula> extend
 	}
 
 	/**
-	 * Checks if is implication.
+	 * Checks if this formula is an implication.
 	 *
 	 * @return boolean
 	 */
@@ -182,7 +169,7 @@ public abstract class BinaryFormula<S extends Formula, T extends Formula> extend
 	}
 
 	/**
-	 * Checks if is disjunction.
+	 * Checks if this formula is a disjunction.
 	 *
 	 * @return boolean
 	 */
@@ -191,6 +178,8 @@ public abstract class BinaryFormula<S extends Formula, T extends Formula> extend
 	}
 
 	/**
+	 * TOCOMMENT this is the same as getOperator(). Why have it here?
+	 * 
 	 * Gets the symbol.
 	 *
 	 * @return LogicalSymbols
@@ -200,6 +189,7 @@ public abstract class BinaryFormula<S extends Formula, T extends Formula> extend
 	}
 
 	/**
+	 * TOCOMMENT What are the children of a binary formula? (we already have methods providing left and right subformulas)
 	 * Gets the children.
 	 *
 	 * @return Collection<Formula>

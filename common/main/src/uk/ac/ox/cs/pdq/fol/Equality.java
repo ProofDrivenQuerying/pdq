@@ -9,9 +9,8 @@ import uk.ac.ox.cs.pdq.io.xml.QNames;
 
 import com.google.common.base.Preconditions;
 
-// TODO: Auto-generated Javadoc
 /**
- * An equality.
+ * An equalityn atom.
  *
  * @author Efthymia Tsamoura
  */
@@ -37,7 +36,8 @@ public final class Equality extends Atom {
 	}
 	
 	/**
-	 * Ground.
+	 * TOCOMMENT what does this do?
+	 * Ground the equality atom.
 	 *
 	 * @param mapping Map<Variable,Term>
 	 * @return PredicateFormula

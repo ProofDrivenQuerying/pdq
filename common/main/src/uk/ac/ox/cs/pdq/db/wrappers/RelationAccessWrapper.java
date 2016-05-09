@@ -9,9 +9,13 @@ import uk.ac.ox.cs.pdq.util.ResetableIterator;
 import uk.ac.ox.cs.pdq.util.Table;
 import uk.ac.ox.cs.pdq.util.Tuple;
 
-
-// TODO: Auto-generated Javadoc
 /**
+ * TOCOMMENT I understqnd that there are two views of database objects reflected in the code in common. 
+ * On is the traditional where we don't have access restrictions, hence we have normal relations etc.
+ * The other is the "access restrictions" perspective and this is why this object exists. Is this the case? 
+ * By putting this in a package called wrappers and naming it a wrapper you don't do justice to it if it's the main
+ * "access restriction perspective" object.
+ * 
  * The Wrapper interface provide access functions.
  * @author Julien Leblay
  *
@@ -50,14 +54,14 @@ public interface RelationAccessWrapper extends Pipelineable {
 	List<Attribute> getInputAttributes(AccessMethod b);
 
 	/**
-	 * Gets the name.
+	 * Gets the name of the relation.
 	 *
 	 * @return the name of the relation.
 	 */
 	String getName();
 
 	/**
-	 * Gets the access method.
+	 * Gets the access method by its name.
 	 *
 	 * @param name the name
 	 * @return an access method by its name.

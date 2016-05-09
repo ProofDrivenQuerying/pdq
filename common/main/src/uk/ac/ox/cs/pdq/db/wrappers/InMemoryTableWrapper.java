@@ -23,6 +23,9 @@ import uk.ac.ox.cs.pdq.util.TupleType;
 import com.google.common.base.Preconditions;
 
 /**
+ * TOCOMMENT If this is the default implementation of a relation, why do we call this wrapper?
+ * 
+ * 
  * In memory relation wrapper. This is the default implementation of a relation,
  * where the data associated with a relation resides in memory, and does not
  * rely on any external support.
@@ -124,9 +127,7 @@ public class InMemoryTableWrapper extends Relation
 	}
 	
 	/**
-	 * TOCOMMENT Not sure what the next two methods do; they seem to create an iterator over the data tuples 
-	 * maintaine by this relation objec, which is already claimed to be in-memory, and putting them in another
-	 * main memory list.
+	 * TOCOMMENT Not sure what this method does, and why you would need yet another ``access'' to a relation already loaded in memory 
 	 * 
 	 * Access.
 	 *
@@ -179,6 +180,8 @@ public class InMemoryTableWrapper extends Relation
 
 	/**
 	 * TOCOMMENT what is the difference between the different iterators?
+	 * 
+	 * Iterator for this relation's tuples.
 	 *
 	 * @param inputAttributes List<? extends Attribute>
 	 * @param inputs ResetableIterator<Tuple>
@@ -191,7 +194,7 @@ public class InMemoryTableWrapper extends Relation
 	}
 
 	/**
-	 * Iterator.
+	 * Iterator for this relation's tuples.
 	 *
 	 * @return ResetableIterator<Tuple>
 	 * @see uk.ac.ox.cs.pdq.runtime.Pipelineable#iterator()
@@ -201,6 +204,9 @@ public class InMemoryTableWrapper extends Relation
 	}
 
 	/**
+	 * TOCOMMENT this is not connected hierarchically to the InMemoryTableWrapper nor to any Access object. We do we need this?
+	 *
+	 * 
 	 * The class encapsulates the pipelined behaviour of the Wrapper.
 	 * 
 	 * @author Julien Leblay

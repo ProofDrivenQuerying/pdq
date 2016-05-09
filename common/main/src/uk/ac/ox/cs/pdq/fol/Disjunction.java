@@ -8,12 +8,12 @@ import java.util.Map;
 
 import com.google.common.collect.Lists;
 
-// TODO: Auto-generated Javadoc
+
 /**
- * A disjunction.
+ * A disjunction of formulas.
  *
  * @author Julien Leblay
- * @param <T> the generic type
+ * @param <T> the generic type that extends formula
  */
 public final class Disjunction<T extends Formula> extends NaryFormula<T> {
 
@@ -34,7 +34,7 @@ public final class Disjunction<T extends Formula> extends NaryFormula<T> {
 	}
 
 	/**
-	 * Of.
+	 * Convenience constructor for Disjunction.
 	 *
 	 * @param <T> the generic type
 	 * @param subFormulas T[]
@@ -45,7 +45,7 @@ public final class Disjunction<T extends Formula> extends NaryFormula<T> {
 	}
 
 	/**
-	 * Of.
+	 * Convenience constructor for Disjunction.
 	 *
 	 * @param <T> the generic type
 	 * @param subFormulas Collection<T>
@@ -55,13 +55,7 @@ public final class Disjunction<T extends Formula> extends NaryFormula<T> {
 		return new Disjunction<>(subFormulas);
 	}
 
-	/**
-	 * Ground.
-	 *
-	 * @param mapping Map<Variable,Term>
-	 * @return Formula
-	 * @see uk.ac.ox.cs.pdq.formula.Formula#ground(Map<Variable,Term>)
-	 */
+
 	@Override
 	public Formula ground(Map<Variable, Constant> mapping) {
 		List<T> result = new ArrayList<>(this.children.size());
@@ -72,7 +66,7 @@ public final class Disjunction<T extends Formula> extends NaryFormula<T> {
 	}
 
 	/**
-	 * Builder.
+	 * Construct a disjunction builder.
 	 *
 	 * @return a generic formula builder.
 	 */
@@ -87,11 +81,13 @@ public final class Disjunction<T extends Formula> extends NaryFormula<T> {
 	 */
 	public static class Builder implements uk.ac.ox.cs.pdq.builder.Builder<Disjunction<?>> {
 
-		/** The current. */
+		/** 
+		 * TOCOMMENT ??
+		 * The current. */
 		private LinkedList<Formula> current = new LinkedList<>();
 
 		/**
-		 * Or.
+		 * Constructs a disjunction builder.
 		 *
 		 * @param disjuncts Formula[]
 		 * @return Builder
@@ -101,7 +97,7 @@ public final class Disjunction<T extends Formula> extends NaryFormula<T> {
 		}
 
 		/**
-		 * Or.
+		 * Constructs a disjunction builder.
 		 *
 		 * @param disjuncts List<Formula>
 		 * @return Builder
@@ -114,7 +110,7 @@ public final class Disjunction<T extends Formula> extends NaryFormula<T> {
 		}
 
 		/**
-		 * Builds the.
+		 * Builds the disjunction.
 		 *
 		 * @return Disjunction<?>
 		 * @see uk.ac.ox.cs.pdq.builder.Builder#build()

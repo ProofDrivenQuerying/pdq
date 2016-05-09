@@ -17,8 +17,8 @@ import uk.ac.ox.cs.pdq.util.Utility;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 
-// TODO: Auto-generated Javadoc
 /**
+ * TOCOMMENT find a pretty way to write formulas in javadoc
  * A conjunctive query (CQ) is a first order formula of the form \exists x_1, \ldots, x_n \Wedge A_i,
  * where A_i are atoms with arguments that are either variables or constants.
 
@@ -31,25 +31,38 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 	/**  The query's head part. */
 	protected final Atom head;
 
-	/**  The query's body part. */
+	/**  
+	 * The query's body part. */
 	protected final Conjunction<Atom> body;
 
-	/**  The terms in the head of the query. */
+	/**
+	 * TOCOMMENT what is the difference of the following two fields? Dow e keep a copy of the free vars both
+	 * variables and as terms? Why? a variable object is a Term anyway.
+	 * 
+	 * The terms in the head of the query. */
 	protected final List<Term> freeTerms;
 
 	/** The query's free variables i.e. head variables */
 	protected final List<Variable> free;
 
-	/**  The query's bound variables. */
+	/**  
+	 * TOCOMMENT is bound the same as existentially quantified? I don't think so
+	 * The query's bound variables. */
 	protected final List<Variable> bound;
 	
-	/**  Map of query's free variables to chase constants. */
+	/**  
+	 * TOCOMMENT we should get rid of this when we fix #42, together with the grounding field a few lines below, they are very confusing.
+	 * 
+	 * Map of query's free variables to chase constants. */
 	protected Map<Variable, Constant> freeToCanonical;
 
 	/**  The constants that appear in the query's body. */
 	protected final Collection<TypedConstant<?>> constants;
 
-	/** The grounding. */
+	/** 
+	 * TOCOMMENT we should get rid of this when we fix #42
+	 * 
+	 * The grounding. */
 	protected Map<Variable, Constant> grounding;
 
 	/**
@@ -114,6 +127,8 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 	}
 
 	/**
+	 * TOCOMMENT why is this method here? Shouldn't it be in utility?
+	 * 
 	 * Gets the schema constants.
 	 *
 	 * @param right the right
@@ -134,6 +149,8 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 	}
 
 	/**
+	 * TOCOMMENT the next 3 methods are discussed in #42
+	 * 
 	 * Generate canonical mapping.
 	 *
 	 * @param body the body
@@ -196,12 +213,6 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 		return Conjunction.of(bodyAtoms);
 	}
 
-	/**
-	 * Gets the predicates.
-	 *
-	 * @return List<PredicateFormula>
-	 * @see uk.ac.ox.cs.pdq.fol.Formula#getAtoms()
-	 */
 	@Override
 	public List<Atom> getAtoms() {
 		List<Atom> result = new ArrayList<>();
@@ -210,12 +221,7 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 		return result;
 	}
 
-	/**
-	 * Gets the terms.
-	 *
-	 * @return List<Term>
-	 * @see uk.ac.ox.cs.pdq.fol.Formula#getTerms()
-	 */
+
 	@Override
 	public List<Term> getTerms() {
 		Set<Term> terms = new LinkedHashSet<>();
@@ -225,7 +231,7 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 	}
 
 	/**
-	 * Checks if is boolean.
+	 * Checks if the query is boolean boolean.
 	 *
 	 * @return boolean
 	 * @see uk.ac.ox.cs.pdq.fol.Query#isBoolean()
@@ -236,7 +242,7 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 	}
 
 	/**
-	 * Gets the body.
+	 * Gets the body of the query.
 	 *
 	 * @return Conjunction<PredicateFormula>
 	 * @see uk.ac.ox.cs.pdq.fol.Query#getBody()
@@ -247,7 +253,7 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 	}
 
 	/**
-	 * Gets the head.
+	 * Gets the head of the query.
 	 *
 	 * @return PredicateFormula
 	 * @see uk.ac.ox.cs.pdq.fol.Query#getHead()
@@ -258,7 +264,7 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 	}
 
 	/**
-	 * Gets the bound.
+	 * Gets the bound variables of the query.
 	 *
 	 * @return List<Variable>
 	 */
@@ -267,7 +273,7 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 	}
 
 	/**
-	 * Gets the free.
+	 * Gets the free variables of the query.
 	 *
 	 * @return List<Term>
 	 * @see uk.ac.ox.cs.pdq.fol.Evaluatable#getFree()
@@ -278,6 +284,8 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 	}
 
 	/**
+	 * TOCOMMENT? which schema? We propably mean "Gets query's constants".
+	 * 
 	 * Gets the schema constants.
 	 *
 	 * @return Collection<TypedConstant<?>>
@@ -304,7 +312,8 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 	}
 	
 	/**
-	 * Equals.
+	 * TOCOMMENT this is exact identity why not use toString()?
+	 * Two queries are equal if their heads, bodies, free terms, and bound terms, are all equal (using their corresponding equals).
 	 *
 	 * @param o Object
 	 * @return boolean
@@ -324,41 +333,23 @@ public class ConjunctiveQuery extends AbstractFormula implements Query<Conjuncti
 				&& this.bound.equals(((ConjunctiveQuery) o).bound);
 	}
 
-	/**
-	 * Hash code.
-	 *
-	 * @return int
-	 */
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(this.free, this.bound, this.head, this.body);
 	}
 
-	/**
-	 * To string.
-	 *
-	 * @return String
-	 */
+
 	@Override
 	public String toString() {
 		return this.getHead() + " <- " + /*this.bound +*/ this.getBody();
 	}
 
-	/**
-	 * Gets the children.
-	 *
-	 * @return Collection<PredicateFormula>
-	 * @see uk.ac.ox.cs.pdq.fol.Formula#getSubFormulas()
-	 */
 	@Override
 	public Collection<Atom> getChildren() {
 		return this.getBody().getChildren();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.fol.Rule#contains(uk.ac.ox.cs.pdq.fol.Predicate)
-	 */
 	@Override
 	public boolean contains(Predicate s) {
 		for (Atom atom: this.getAtoms()) {

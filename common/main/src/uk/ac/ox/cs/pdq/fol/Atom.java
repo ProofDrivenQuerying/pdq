@@ -18,8 +18,8 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
-// TODO: Auto-generated Javadoc
 /**
+ * TOCOMMENT find a pretty way to write formulas in javadoc
  * A formula that contains no logical connectives.
  * An atomic formula is a formula of the form P (t_1, \ldots, t_n) for P a predicate, and the t_i terms.)
  *
@@ -29,8 +29,8 @@ import com.google.common.collect.Lists;
 public class Atom extends AbstractFormula implements Formula {
 
 	/**
-	 * The predicate of the predicate of this atom.
-	 * A predicate bridges the predicate with the real-word relation it comes from.
+	 * The predicate of this atom.
+	 * A predicate bridges the atom with the real-word relation it comes from.
 	 * If it does not correspond to a real-word relation, the predicate is a dummy one.
 	 */
 	private final Predicate predicate;
@@ -47,7 +47,6 @@ public class Atom extends AbstractFormula implements Formula {
 	/**   Cashed string representation of the atom. */
 	private final String toString;
 
-	/** The hash. */
 	private Integer hash;
 
 	/**
@@ -74,7 +73,7 @@ public class Atom extends AbstractFormula implements Formula {
 	}
 	
 	/**
-	 * Instantiates a new predicate.
+	 * Instantiates a new atom.
 	 *
 	 * @param predicate Predicate
 	 * @param term Term[]
@@ -84,7 +83,7 @@ public class Atom extends AbstractFormula implements Formula {
 	}
 
 	/**
-	 * Checks if is equality.
+	 * Checks if this is an equality atom.
 	 *
 	 * @return true, if the atom acts as an equality
 	 */
@@ -93,7 +92,7 @@ public class Atom extends AbstractFormula implements Formula {
 	}
 
 	/**
-	 * Gets the predicate.
+	 * Gets the atom's predicate.
 	 *
 	 * @return the atom's predicate
 	 */
@@ -103,16 +102,17 @@ public class Atom extends AbstractFormula implements Formula {
 
 
 	/**
-	 * Gets the name.
+	 * TOCOMMMENT I guess this is the predicate name of the atom's predicate.
+	 * However both Atom and Predicate have a name field. Are these the same? Are they kept in sync? Maybe one should go.
 	 *
-	 * @return the atom's predicate
+	 * @return the atom's 
 	 */
 	public String getName() {
 		return this.name;
 	}
 
 	/**
-	 * Gets the terms count.
+	 * Gets the atom's terms count.
 	 *
 	 * @return the atom's arity
 	 */
@@ -121,7 +121,7 @@ public class Atom extends AbstractFormula implements Formula {
 	}
 
 	/**
-	 * Gets the term.
+	 * Gets the term at the input position.
 	 *
 	 * @param n int
 	 * @return the atom's n-th term
@@ -131,7 +131,7 @@ public class Atom extends AbstractFormula implements Formula {
 	}
 
 	/**
-	 * Gets the terms.
+	 * Gets the terms of this atom.
 	 *
 	 * @return the list of terms
 	 * @see uk.ac.ox.cs.pdq.fol.Formula#getTerms()
@@ -143,7 +143,7 @@ public class Atom extends AbstractFormula implements Formula {
 
 
 	/**
-	 * Gets the terms.
+	 * Gets only the terms at the specified input positions.
 	 *
 	 * @param positions List<Integer>
 	 * @return the Set<Term> at the given positions.
@@ -157,8 +157,9 @@ public class Atom extends AbstractFormula implements Formula {
 	}
 
 	/**
-	 * Gets the constants.
+	 * Gets the constants lying at the input positions.
 	 *
+	 * @throws IllegalArgumentException if there is a non-constant at one of the input positions
 	 * @param positions List<Integer>
 	 * @return the List<Constant> at the given positions.
 	 */

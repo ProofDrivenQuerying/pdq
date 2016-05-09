@@ -5,6 +5,7 @@ import java.util.Collection;
 import uk.ac.ox.cs.pdq.util.Tuple;
 
 /**
+ * TOCOMMENT shouldn't this be connected to other Relation objects?
  * Common interface to all in-memory relations (table, views, etc.).
  * 
  * @author Julien Leblay

@@ -20,10 +20,11 @@ import uk.ac.ox.cs.pdq.util.TupleType;
 
 import com.google.common.base.Preconditions;
 
-// TODO: Auto-generated Javadoc
 /**
- * In memory relation wrapper. This is the default implementation of a relation,
- * where the data associated with a relation resides in memory, and does not
+ * TOCOMMENT this class is copy pasted by InMemoryRelationWrapper. Same questions apply here.
+ * 
+ * In memory view wrapper. This is the default implementation of a view,
+ * where the data associated with a view resides in memory, and does not
  * rely on any external support.
  * 
  * @author Julien Leblay
@@ -76,7 +77,7 @@ public class InMemoryViewWrapper extends View
 	}
 	
 	/**
-	 * Gets the data.
+	 * Gets the data tuples.
 	 *
 	 * @return the data that this relation currently holds in-memory.
 	 */
@@ -85,6 +86,8 @@ public class InMemoryViewWrapper extends View
 	}
 	
 	/**
+	 * TOCOMMENT see comment for InMemoryViewWrapper  
+	 * 
 	 * Access.
 	 *
 	 * @param inputHeader the input header

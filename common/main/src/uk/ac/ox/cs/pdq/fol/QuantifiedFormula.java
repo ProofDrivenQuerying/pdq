@@ -12,8 +12,12 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
-// TODO: Auto-generated Javadoc
 /**
+ * TOCOMMENT Is a quantified formula the opposite of a quantifier-free formula, that is, on the contains quantifiers,
+ * or one which a quantifier is the top level operator? I think here the latter is meant which simply makes this 
+ * class a dependency? But it is not connected to dependency
+ * 
+ * 
  * A quantified formula.
  *
  * @author Efthymia Tsamoura

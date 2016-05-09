@@ -26,7 +26,7 @@ public final class Negation<T extends Formula> extends UnaryFormula<T> {
 	}
 
 	/**
-	 * Of.
+	 * Convenience constructor for Negation.
 	 *
 	 * @param <T> the generic type
 	 * @param f T
@@ -37,20 +37,13 @@ public final class Negation<T extends Formula> extends UnaryFormula<T> {
 		return new Negation<>(f);
 	}
 
-	/**
-	 * Ground.
-	 *
-	 * @param mapping Map<Variable,Term>
-	 * @return Formula
-	 * @see uk.ac.ox.cs.pdq.formula.Formula#ground(Map<Variable,Term>)
-	 */
 	@Override
 	public Formula ground(Map<Variable, Constant> mapping) {
 		return Negation.of(this.child.ground(mapping));
 	}
 
 	/**
-	 * Equals.
+	 * Two negations are equal if their subformulas are equal (using equals()).
 	 *
 	 * @param o Object
 	 * @return boolean
@@ -67,11 +60,7 @@ public final class Negation<T extends Formula> extends UnaryFormula<T> {
 				&& this.child.equals(((Negation) o).child);
 	}
 
-	/**
-	 * Hash code.
-	 *
-	 * @return int
-	 */
+
 	@Override
 	public int hashCode() {
 		if(this.hash == null) {

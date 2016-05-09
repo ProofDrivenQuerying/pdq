@@ -1,8 +1,7 @@
 package uk.ac.ox.cs.pdq.fol;
 
-// TODO: Auto-generated Javadoc
 /**
- * Logical symbols.
+ * A enumeration of Logical symbols.
  *
  * @author Efthymia Tsamoura
  * @author Julien Leblay
@@ -47,11 +46,6 @@ public enum LogicalSymbols {
 		this.arity = a;
 	}
 
-	/**
-	 * To string.
-	 *
-	 * @return String
-	 */
 	@Override
 	public String toString() {
 		return this.representation;

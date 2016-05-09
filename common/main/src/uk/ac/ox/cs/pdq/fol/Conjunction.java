@@ -8,9 +8,8 @@ import java.util.Map;
 
 import com.google.common.collect.Lists;
 
-// TODO: Auto-generated Javadoc
 /**
- * A conjunctive formula.
+ * A conjunctive formula, is a conjunction of formulas (or subclasses of formulas), and it is also itself an n-ary formula.
  *
  * @author Efthymia Tsamoura
  * @author Julien Leblay
@@ -35,7 +34,7 @@ public final class Conjunction<T extends Formula> extends NaryFormula<T> {
 	}
 
 	/**
-	 * Of.
+	 * Convenience constructor.
 	 *
 	 * @param <T> the generic type
 	 * @param children T[]
@@ -46,7 +45,7 @@ public final class Conjunction<T extends Formula> extends NaryFormula<T> {
 	}
 
 	/**
-	 * Of.
+	 * Convenience constructor.
 	 *
 	 * @param <T> the generic type
 	 * @param children Collection<T>
@@ -56,13 +55,7 @@ public final class Conjunction<T extends Formula> extends NaryFormula<T> {
 		return new Conjunction<>(children);
 	}
 
-	/**
-	 * Ground.
-	 *
-	 * @param mapping Map<Variable,Term>
-	 * @return Formula
-	 * @see uk.ac.ox.cs.pdq.formula.Formula#ground(Map<Variable,Term>)
-	 */
+
 	@Override
 	public Conjunction<T> ground(Map<Variable, Constant> mapping) {
 		List<T> result = new ArrayList<>(this.children.size());
@@ -73,7 +66,7 @@ public final class Conjunction<T extends Formula> extends NaryFormula<T> {
 	}
 
 	/**
-	 * Builder.
+	 * Creates a conjunction builder.
 	 *
 	 * @return a generic formula builder.
 	 */
@@ -88,11 +81,13 @@ public final class Conjunction<T extends Formula> extends NaryFormula<T> {
 	 */
 	public static class Builder implements uk.ac.ox.cs.pdq.builder.Builder<Conjunction<?>> {
 
-		/** The current. */
+		/** TOCOMMENT what is this?
+		 * 
+		 *  The current. */
 		private LinkedList<Formula> current = new LinkedList<>();
 
 		/**
-		 * And.
+		 * Constructs a conjunction builder.
 		 *
 		 * @param conjuncts Formula[]
 		 * @return Builder
@@ -102,7 +97,7 @@ public final class Conjunction<T extends Formula> extends NaryFormula<T> {
 		}
 
 		/**
-		 * And.
+		 * Constructs a conjunction builder.
 		 *
 		 * @param conjuncts List<Formula>
 		 * @return Builder
@@ -115,7 +110,7 @@ public final class Conjunction<T extends Formula> extends NaryFormula<T> {
 		}
 
 		/**
-		 * Builds the.
+		 * Builds the conjunction.
 		 *
 		 * @return Conjunction<?>
 		 * @see uk.ac.ox.cs.pdq.builder.Builder#build()

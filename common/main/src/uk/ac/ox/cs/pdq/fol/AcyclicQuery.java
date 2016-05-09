@@ -3,8 +3,6 @@ package uk.ac.ox.cs.pdq.fol;
 import java.util.ArrayList;
 import java.util.List;
 
-
-// TODO: Auto-generated Javadoc
 /**
  * A conjunctive query Q is cyclic (acyclic) if its associated hypergraph H(Q) is cyclic (acyclic).
  *
@@ -13,6 +11,9 @@ import java.util.List;
 public class AcyclicQuery extends ConjunctiveQuery {
 
 	/**
+	 * TOCOMMENT I commented elsewhere about the left and right terminology. Usually within PDQ right is the "head".
+	 * Here it is the body.
+	 * 
 	 * Instantiates a new acyclic query.
 	 *
 	 * @param name The query's name

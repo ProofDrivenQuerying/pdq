@@ -8,7 +8,6 @@ import java.util.Map;
 
 import com.google.common.collect.LinkedHashMultiset;
 
-// TODO: Auto-generated Javadoc
 /**
  * Approximate formula equivalence checking utility.
  * 
@@ -17,8 +16,11 @@ import com.google.common.collect.LinkedHashMultiset;
 public class FormulaEquivalence {
 
 	/**
-	 * Quickly attempts to determine if two formula are equivalence with one
-	 * another. Assumes structures are homomorphic, and atom order match
+	 * Quickly attempts to determine if two formulas are equivalent to one
+	 * another. 
+	 * TOCOMMENT what does the following line mean?
+	 * Assumes structures are homomorphic, and atom order match
+	 * 
 	 * May return false negatives.
 	 *
 	 * @param left the left

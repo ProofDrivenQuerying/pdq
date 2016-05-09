@@ -5,8 +5,6 @@ import org.apache.log4j.Logger;
 import uk.ac.ox.cs.pdq.rewrite.Rewritable;
 import uk.ac.ox.cs.pdq.rewrite.Rewriter;
 import uk.ac.ox.cs.pdq.rewrite.RewriterException;
-
-// TODO: Auto-generated Javadoc
 /**
  * A first order formula.
  *
@@ -18,7 +16,7 @@ public abstract class AbstractFormula implements Formula {
 	/** The log. */
 	protected static Logger log = Logger.getLogger(Formula.class);
 	
-	/** The global id. */
+	/** A global counter used in creating identifiers for formulas. */
 	protected static int globalId = 0;
 
 	/**  Formula's identifier. */
@@ -32,7 +30,7 @@ public abstract class AbstractFormula implements Formula {
 	}
 
 	/**
-	 * Gets the id.
+	 * Gets the id of the formula.
 	 *
 	 * @return int
 	 */

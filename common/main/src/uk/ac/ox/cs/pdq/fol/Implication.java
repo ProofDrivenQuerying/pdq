@@ -4,7 +4,6 @@ import java.util.Map;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-// TODO: Auto-generated Javadoc
 /**
  * A logical implication.
  *
@@ -35,7 +34,7 @@ public class Implication<S extends Formula, T extends Formula>
 	}
 
 	/**
-	 * Of.
+	 * Convenience constructor for Implication.
 	 *
 	 * @param <S> the generic type
 	 * @param <T> the generic type
@@ -48,7 +47,7 @@ public class Implication<S extends Formula, T extends Formula>
 	}
 
 	/**
-	 * Of.
+	 * Convenience constructor for Implication.
 	 *
 	 * @param <S> the generic type
 	 * @param <T> the generic type
@@ -59,13 +58,6 @@ public class Implication<S extends Formula, T extends Formula>
 		return new Implication<>(pair);
 	}
 
-	/**
-	 * Ground.
-	 *
-	 * @param mapping Map<Variable,Term>
-	 * @return Formula
-	 * @see uk.ac.ox.cs.pdq.formula.Formula#ground(Map<Variable,Term>)
-	 */
 	@Override
 	public Formula ground(Map<Variable, Constant> mapping) {
 		S s = (S) this.left.ground(mapping);
@@ -74,7 +66,7 @@ public class Implication<S extends Formula, T extends Formula>
 	}
 
 	/**
-	 * Gets the head.
+	 * Gets the implication's head, i.e., the consequent.
 	 *
 	 * @return T
 	 * @see uk.ac.ox.cs.pdq.fol.Rule#getHead()
@@ -85,7 +77,7 @@ public class Implication<S extends Formula, T extends Formula>
 	}
 
 	/**
-	 * Gets the body.
+	 * Gets the implication's body.
 	 *
 	 * @return S
 	 * @see uk.ac.ox.cs.pdq.fol.Rule#getBody()
@@ -94,11 +86,8 @@ public class Implication<S extends Formula, T extends Formula>
 	public S getBody() {
 		return this.getLeft();
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.fol.Rule#contains(uk.ac.ox.cs.pdq.fol.Predicate)
-	 */
+	
+	
 	@Override
 	public boolean contains(Predicate s) {
 		for (Atom atom: this.getAtoms()) {
