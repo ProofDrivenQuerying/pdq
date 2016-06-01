@@ -9,7 +9,6 @@ import com.logicblox.connect.BloxCommand.CommandResponse;
 import com.logicblox.connect.BloxCommand.SynchronizeWorkspace;
 import com.logicblox.connect.BloxCommand.SynchronizeWorkspaceResponse;
 
-// TODO: Auto-generated Javadoc
 /**
  * Handles workspace synchronization requests coming from the client. 
  * 
@@ -20,7 +19,7 @@ public class SynchronizationHandler implements MessageHandler<SynchronizeWorkspa
 	/** Logger. */
 	static final Logger log = Logger.getLogger(SynchronizationHandler.class);
 
-	/**  Handle on the LogicBlox service. */
+	/**  Handle on the LogicBlox-communicating master service. */
 	private final SemanticOptimizationService master;
 
 	/**
@@ -32,8 +31,14 @@ public class SynchronizationHandler implements MessageHandler<SynchronizeWorkspa
 		this.master = master;
 	}
 
-	/* (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.services.MessageHandler#handle(com.google.protobuf.GeneratedMessage)
+	/**
+	 *  Handles the LB message, called "command", which is a BloxCommand.SynchronizeWorkspace object defined in the external 
+	 *	LB library. As soon as a request comes in, it checks for the "Action" it contains. Action is defined in the external LB lib
+	 *  and is ADD or REMOVE. It then checks the "Kind" (also defined in the external lib) of the message. Kinds are PREDICATE,
+	 *  CONSTRAINT or RULE. Depending on the "Kind" of the message either a PredicateDeclaration object (in the case of PREDICATE)
+	 *  or a Rule object (in the cases of CONSTRAINT or RULE) is extracted from the message, and added or removed (depending on the
+	 *  action) from the context associated with this message's workspace. PredicateDeclaration and Rule are google protobuf objects
+	 *  defined in the extrenal lib. Context unwraps these objects using the ProtoBufferUnwrapper.java
 	 */
 	@Override
 	public GeneratedMessage handle(SynchronizeWorkspace command) {

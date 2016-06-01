@@ -5,7 +5,6 @@ import java.util.Map;
 
 import uk.ac.ox.cs.pdq.services.logicblox.Context.Workspace;
 
-// TODO: Auto-generated Javadoc
 /**
  * A container for contexts, indexed by workspace names.
  * 
@@ -16,7 +15,7 @@ public class ContextRepository {
 	/** The Constant DEFAULT_WORKSPACE_NAME. */
 	public static final String DEFAULT_WORKSPACE_NAME = "default";
 	
-	/** The contexts. */
+	/** A map of different contexts. */
 	private final Map<String, Context> contexts = new LinkedHashMap<>();
 
 	/**
@@ -28,7 +27,7 @@ public class ContextRepository {
 	}
 	
 	/**
-	 * Default context.
+	 * The default context.
 	 *
 	 * @return the default context.
 	 */
@@ -37,7 +36,7 @@ public class ContextRepository {
 	}
 	
 	/**
-	 * Resolve.
+	 * Resolves the input string name into a context.
 	 *
 	 * @param ws a workspace name
 	 * @return the context who workspace has the given name. If no such context

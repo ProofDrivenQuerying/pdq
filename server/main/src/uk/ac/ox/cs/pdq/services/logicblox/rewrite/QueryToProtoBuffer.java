@@ -58,16 +58,15 @@ import com.logicblox.common.protocol.CommonProto.UnaryPredicateType;
 import com.logicblox.common.protocol.CommonProto.UnsignedIntConstant;
 import com.logicblox.common.protocol.CommonProto.VariableDeclaration;
 
-// TODO: Auto-generated Javadoc
 /**
- * Converts query to Logicblox-ready protocol buffer messages.
+ * Converts queries to Logicblox-ready protocol buffer messages.
  */
 public class QueryToProtoBuffer implements Rewriter<Query<?>, Rule> {
 
-	/** The var types. */
+	/** The types of the query variables. */
 	private final Map<Term, Object> varTypes = new LinkedHashMap<>();
 
-	/** The schema. */
+	/** The context schema registered so far. */
 	private final Schema schema;
 	
 	/**
@@ -79,7 +78,7 @@ public class QueryToProtoBuffer implements Rewriter<Query<?>, Rule> {
 	}
 	
 	/**
-	 * Rewrite.
+	 * Rewrite the input queries into LB/google-protobuf Rule objects.
 	 *
 	 * @param input Query<?>
 	 * @return ProtocolBuffer rule, representing the input query.
@@ -95,6 +94,7 @@ public class QueryToProtoBuffer implements Rewriter<Query<?>, Rule> {
 	}
 	
 	/**
+	 * TODO
 	 * Rewrite variable declarations.
 	 *
 	 * @param input Query<?>
@@ -115,6 +115,7 @@ public class QueryToProtoBuffer implements Rewriter<Query<?>, Rule> {
 	}
 
 	/**
+	 * TODO
 	 * Rewrite head.
 	 *
 	 * @param input Query<?>
@@ -128,6 +129,7 @@ public class QueryToProtoBuffer implements Rewriter<Query<?>, Rule> {
 	}
 	
 	/**
+	 * TODO
 	 * Rewrite body.
 	 *
 	 * @param input Query<?>
@@ -140,6 +142,7 @@ public class QueryToProtoBuffer implements Rewriter<Query<?>, Rule> {
 	}
 
 	/**
+	 * TODO
 	 * Rewrite formula.
 	 *
 	 * @param formula uk.ac.ox.cs.pdq.formula.Formula
@@ -171,6 +174,7 @@ public class QueryToProtoBuffer implements Rewriter<Query<?>, Rule> {
 	}
 	
 	/**
+	 * TODO
 	 * Rewrite conjunction.
 	 *
 	 * @param formula Conjunction<?>
@@ -186,6 +190,7 @@ public class QueryToProtoBuffer implements Rewriter<Query<?>, Rule> {
 	}
 	
 	/**
+	 * TODO
 	 * Rewrite disjunction.
 	 *
 	 * @param formula Disjunction<?>
@@ -201,6 +206,7 @@ public class QueryToProtoBuffer implements Rewriter<Query<?>, Rule> {
 	}
 	
 	/**
+	 * TODO
 	 * Rewrite negation.
 	 *
 	 * @param formula Negation<?>

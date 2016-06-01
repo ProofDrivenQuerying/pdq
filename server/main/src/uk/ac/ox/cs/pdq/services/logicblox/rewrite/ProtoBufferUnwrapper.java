@@ -353,7 +353,8 @@ public class ProtoBufferUnwrapper {
 			attributes.add(typeAtt);
 			if (predDecl.getKind() == Kind.SUBENTITY) {
 				Relation parent = this.builder.getRelation(predDecl.getSuper());
-				entityTypedAtts.put(typeAtt, parent);
+				if(parent!=null)
+					entityTypedAtts.put(typeAtt, parent);
 			}
 			break;
 		default:

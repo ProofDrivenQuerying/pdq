@@ -12,7 +12,6 @@ import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.rewrite.Rewriter;
 import uk.ac.ox.cs.pdq.rewrite.RewriterException;
 
-// TODO: Auto-generated Javadoc
 /**
  * Attempts to rewrite a sentence into a TGD. If the sentence of found
  * not to be top-level conjunction, with a single negation sub-formula,

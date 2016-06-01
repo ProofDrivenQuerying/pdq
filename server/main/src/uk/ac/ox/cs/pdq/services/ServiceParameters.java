@@ -2,7 +2,6 @@ package uk.ac.ox.cs.pdq.services;
 
 import java.io.File;
 
-// TODO: Auto-generated Javadoc
 /**
  * Holds server-related parameters.
  * 

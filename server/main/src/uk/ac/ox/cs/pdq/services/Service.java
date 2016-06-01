@@ -2,7 +2,6 @@ package uk.ac.ox.cs.pdq.services;
 
 import java.io.PrintStream;
 
-// TODO: Auto-generated Javadoc
 /**
  * Top-level interface for all services. A service can typically be started, 
  * stopped, and asked for its name or status.

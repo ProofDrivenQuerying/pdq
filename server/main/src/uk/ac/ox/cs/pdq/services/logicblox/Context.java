@@ -25,10 +25,10 @@ import com.google.common.collect.Multimap;
 import com.logicblox.common.protocol.CommonProto.PredicateDeclaration;
 import com.logicblox.common.protocol.CommonProto.Rule;
 
-// TODO: Auto-generated Javadoc
 /**
- * The context holds information about Logicblox workspaces. It is in charge 
- * of converting and storing LB-data structures to PDQ-data structures.
+ * The context holds information about Logicblox workspaces. It is essentially a wrapper for a schema (including 
+ * views/constraints). It is in charge of converting and storing LB-data structures to PDQ-data structures. 
+ * It supports updates on the schema/context.
  * 
  * @author Julien LEBLAY
  */
@@ -43,32 +43,37 @@ public class Context {
 	/** Schema associated with the context's workspace. */
 	private Schema schema;
 
-	/** Schema builder. */
+	/** Schema builder helps with updating schema requests. */
 	private final SchemaBuilder builder;
 
 	/** Unwrapper for incoming protobuf messages. */
 	private final ProtoBufferUnwrapper proto;
 
-	/** Stores predicate declarations that have not been committed yet. */
+	/** Stores predicate declarations that have not been committed yet. Schema objects are first accumulated and 
+	 * updated remaining in these pending lists until an optimization request where they are "committed" together. */
 	private Multimap<String, PredicateDeclaration> pendingRelations = LinkedHashMultimap.create();
 
-	/** Stores view declarations that have not been committed yet. */
+	/** Stores view declarations that have not been committed yet. Schema objects are first accumulated and 
+	 * then "committed" together so they reference each other. */
 	private Multimap<String, Rule> pendingViews = LinkedHashMultimap.create();
 
-	/** Stored constraints that have not been committed yet. */
+	/** Stored constraints that have not been committed yet. Schema objects are first accumulated and 
+	 * then "committed" together so they reference each other. */
 	private Multimap<String, Rule> pendingConstraints = LinkedHashMultimap.create();
 
-	/** Index every relation or constraints by their names. */
+	/** Indexes every relation or constraint by their names. */
 	private Multimap<String, Object> index = LinkedHashMultimap.create();
 
-	/** LB execution graphs's topological order. */
+	/** LB execution graphs's topological order. We maintain a "rank" for all relations; when the query comes all relations
+	 *  of lower rank than that of the query relations become inaccessible.
+	 */
 	private BiMap<String, Long> topoOrder = HashBiMap.create();
 	
 	/** Flag, set to true if the context has any uncommitted changes. */
 	private boolean hasModifs = true;
 
 	/**
-	 * Gets the workspace.
+	 * Gets the LB workspace.
 	 *
 	 * @return Workspace
 	 */
@@ -77,7 +82,8 @@ public class Context {
 	}
 	
 	/**
-	 * Gets the schema.
+	 * Gets the schema associated with the LB context. After having performed a number of updates, i.e., 
+	 * additions removals of schema objects, the latest lists of these become "persistent" when this method is called.
 	 *
 	 * @return Schema
 	 */
@@ -123,8 +129,8 @@ public class Context {
 
 	/**
 	 * Modifies the access of the relations in the schema under construction
-	 * such that predicate preceeding the query's body predicates in the 
-	 * execution graph's topological sort orders are made inaccessible, while
+	 * such that predicates preceding the query's body predicates in the 
+	 * execution graph's topological sort order are made inaccessible, while
 	 * all other relations have free access.
 	 *
 	 * @param query the query
@@ -192,7 +198,8 @@ public class Context {
 	 */
 	public void putRelation(String name, PredicateDeclaration predDecl) {
 		if (!this.index.containsKey(name)) {
-			log.debug("Putting relation " + name + " to " + this.workspace.name);
+			Relation r = this.proto.unwrapPredicateDeclaration(predDecl);
+			log.debug("Putting relation " + r + " to " + this.workspace.name);
 			this.pendingRelations.put(name, predDecl);
 			this.hasModifs = true;
 		}
@@ -205,8 +212,9 @@ public class Context {
 	 * @param rule the rule
 	 */
 	public void putView(String name, Rule rule) {
+		View v = (View) this.proto.ruleToView(rule);
 		if (!this.index.containsKey(name)) {
-			log.debug("Putting view " + name + " to " + this.workspace.name);
+			log.debug("Putting view " + v.getDefinition() + " to " + this.workspace.name);
 			this.pendingViews.put(name, rule);
 			this.hasModifs = true;
 		}
@@ -220,14 +228,15 @@ public class Context {
 	 */
 	public void putDependency(String name, Rule rule) {
 		if (!this.index.containsKey(name)) {
-			log.debug("Putting constraint " + name + " to " + this.workspace.name);
+			Dependency c = (Dependency) this.proto.ruleToConstraint(rule);
+			log.debug("Putting constraint " + c + " to " + this.workspace.name);
 			this.pendingConstraints.put(name, rule);
 			this.hasModifs = true;
 		}
 	}
 
 	/**
-	 * Commits all pending relations, and removes successfully commited ones
+	 * Commits all pending relations, and removes successfully committed ones
 	 * from the collection of pending relations.
 	 */
 	private void commitPendingRelations() {
@@ -327,7 +336,7 @@ public class Context {
 	}
 	
 	/**
-	 * Removes the rank of the object by the given from the topological order.
+	 * Removes the rank of the object by the given name from the topological order.
 	 *
 	 * @param name the name
 	 */
@@ -336,7 +345,7 @@ public class Context {
 	}
 
 	/**
-	 * Updates the rank of the object by the given from the topological order.
+	 * Updates the rank of the object by the given name from the topological order.
 	 *
 	 * @param name the name
 	 * @param rank the rank

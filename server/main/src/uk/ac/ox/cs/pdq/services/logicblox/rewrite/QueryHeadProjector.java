@@ -13,7 +13,6 @@ import uk.ac.ox.cs.pdq.util.Utility;
 import com.beust.jcommander.internal.Lists;
 import com.logicblox.common.Sets;
 
-// TODO: Auto-generated Javadoc
 /**
  * Only keeps head terms that appear in a given list.
  * 
@@ -25,7 +24,7 @@ public class QueryHeadProjector implements Rewriter<ConjunctiveQuery, Conjunctiv
 	private final Set<Term> terms;
 	
 	/**
-	 * Instantiates a new query head projecor.
+	 * Instantiates a new query head projector.
 	 *
 	 * @param query the query
 	 */

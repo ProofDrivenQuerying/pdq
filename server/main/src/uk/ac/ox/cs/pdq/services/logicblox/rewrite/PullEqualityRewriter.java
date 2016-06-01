@@ -23,10 +23,9 @@ import uk.ac.ox.cs.pdq.rewrite.Rewriter;
 
 import com.beust.jcommander.internal.Lists;
 
-// TODO: Auto-generated Javadoc
 /**
- * Rewriter that produces an output formula equivalent to the input one,
- * where constant in predicate have moved as external equality predicates.
+ * Rewriter that produces an output formula equivalent to the input one, where constants in 
+ *		 atoms have moved as external equality predicates.
  *  
  *
  * @author Julien Leblay

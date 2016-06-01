@@ -14,10 +14,7 @@
     </RollingFile>
   </Appenders>
   <Loggers>
-    <Logger name="uk.ac.ox.cs.pdq" level="info">
-      <AppenderRef ref="CONSOLE" />
-    </Logger>
-    <Logger name="uk.ac.ox.cs.pdq.services.logicblox.cost" level="all" additivity="false">
+    <Logger name="uk.ac.ox.cs.pdq.services.logicblox.cost" level="all" additivity="true">
       <AppenderRef ref="CONSOLE" />
     </Logger>
 <!--

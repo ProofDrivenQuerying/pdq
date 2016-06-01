@@ -21,7 +21,6 @@ import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.rewrite.Rewriter;
 import uk.ac.ox.cs.pdq.services.logicblox.cost.LogicBloxDelegateCostEstimator;
 
-// TODO: Auto-generated Javadoc
 /**
  * Deskolemizes an input formula, by replacing any Skolem term into a fresh
  * variables.
@@ -46,7 +45,7 @@ public class Deskolemizer<F extends Formula> implements Rewriter<F, F> {
 		}
 	}
 
-	/** The mapping. */
+	/** A mapping between skolem and variable names. */
 	protected Map<Skolem, Variable> mapping = new LinkedHashMap<>();
 
 	/**

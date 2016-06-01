@@ -23,7 +23,6 @@ import com.beust.jcommander.ParameterException;
 import com.beust.jcommander.Parameters;
 import com.beust.jcommander.internal.Lists;
 
-// TODO: Auto-generated Javadoc
 /**
  * Top-level service that provides the means of managing other services
  * (starting, stop, status, etc.)

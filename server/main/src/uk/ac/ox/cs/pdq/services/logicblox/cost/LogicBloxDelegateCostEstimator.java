@@ -31,9 +31,8 @@ import com.logicblox.connect.BloxCommand.ExternalRuleOptimizationResponse.Status
 import com.logicblox.connect.BloxCommand.RuleCostEstimate;
 import com.logicblox.connect.ProtoBufException.ExceptionContainer;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class LogicBloxDelegateCostEstimator.
+ * The Class LogicBloxDelegateCostEstimator. Interacts with the Logicblox server to determine the cost of the given rule.
  *
  * @param <S> the generic type
  */
@@ -43,17 +42,17 @@ public class LogicBloxDelegateCostEstimator<S extends AccessibleChaseState>
 	/** Logger. */
 	static final Logger log = Logger.getLogger(LogicBloxDelegateCostEstimator.class);
 
-	/** The in. */
+	/** The input stream. */
 	private final InputStream in;
 	
-	/** The out. */
+	/** The output stream. */
 	private final OutputStream out;
 	
-	/** The schema. */
+	/** The schema registered so far. */
 	private final Schema schema;
 	
-	/** The query. */
-	private final ConjunctiveQuery query;
+	/** The conjunctive rule to cost. */
+	private final ConjunctiveQuery rule;
 	
 	/**
 	 * Default constructor. Ignores statistic collection.
@@ -63,10 +62,10 @@ public class LogicBloxDelegateCostEstimator<S extends AccessibleChaseState>
 	 * @param in InputStream
 	 * @param out OutputStream
 	 */
-	public LogicBloxDelegateCostEstimator(Schema schema, ConjunctiveQuery query, InputStream in, OutputStream out) {
+	public LogicBloxDelegateCostEstimator(Schema schema, ConjunctiveQuery rule, InputStream in, OutputStream out) {
 		super();
 		this.schema = schema;
-		this.query = query;
+		this.rule = rule;
 		this.in = in;
 		this.out = out;
 	}
@@ -78,19 +77,19 @@ public class LogicBloxDelegateCostEstimator<S extends AccessibleChaseState>
 	 */
 	@Override
 	public LogicBloxDelegateCostEstimator<S> clone() {
-	    return new LogicBloxDelegateCostEstimator<>(this.schema, this.query, this.in, this.out);
+	    return new LogicBloxDelegateCostEstimator<>(this.schema, this.rule, this.in, this.out);
 	}
 
 	/**
-	 * Checks if is recursive.
+	 * Checks if the rule is recursive.
 	 *
 	 * @param q the q
 	 * @return true, if is recursive
 	 */
 	private boolean isRecursive(ConjunctiveQuery q) {
 		for (Atom pred : q.getBody().getAtoms()) {
-			if (this.query.getHead().getPredicate().equals(pred.getPredicate())
-					&& this.query.getHead().getSchemaConstants().equals(pred.getSchemaConstants())) {
+			if (this.rule.getHead().getPredicate().equals(pred.getPredicate())
+					&& this.rule.getHead().getSchemaConstants().equals(pred.getSchemaConstants())) {
 				return true;
 			}
 		}
@@ -98,13 +97,25 @@ public class LogicBloxDelegateCostEstimator<S extends AccessibleChaseState>
 	}
 
 	/**
-	 * Interacts with the Logicblox server to determine the cost of the given
-	 * query.
-	 * @param q ConjunctiveQuery
-	 * @return the cost of the input query has estimation by LogicBlox.
+	 * Interacts with the Logicblox server to determine the cost of the given rule.
+	 * If the rule is recursive, and the deafult upper bound cost is returned. 
+	 * Else the following happen:
+	 * 	(1) it uses the QueryToProtoBufferRewriter to rewrite the input ConjunctiveQuery object to an LB/google-protobuf Rule object 
+	 * 	and through calls to the LB linked lib this gets transformed to a (externally defined) CommandResponse object, 
+	 * 	which models the respond to a command/message.
+	 * 	(2) It then uses the DelimitedMessageProtocol.java to send the message to LB (if something goes while using the 
+	 * 	QueryToProtoBufferRewriter wrong it sends an exception message to LB). 
+	 *  (3) It then receives a message, through DelimitedMessageProtocol, which is expected to be an LB/google-protobuf (externally
+	 *  defined) "Option" object.
+	 *  (4) If Option.isSome() is false it means that we received a proble LB message that checks whether PDQ is alive, and we ignore it.
+	 *  If Option.isSome() is true it means we can extract a RuleCostEstimate LB/google-protobuf (externally defined) object.
+	 *  On this we can get a cost, which this estimator does, and returns it.
+	 *
+	 * @param r ConjunctiveQuery
+	 * @return the cost of the input query as estimated by LogicBlox.
 	 */
-	public Cost estimateCost(ConjunctiveQuery q) {
-		if (this.isRecursive(q)) {
+	public Cost estimateCost(ConjunctiveQuery r) {
+		if (this.isRecursive(r)) {
 			return DoubleCost.UPPER_BOUND;
 		}
 		try {
@@ -112,7 +123,7 @@ public class LogicBloxDelegateCostEstimator<S extends AccessibleChaseState>
 				CommandResponse response = CommandResponse.newBuilder()
 						.setOptimizedRule(
 							ExternalRuleOptimizationResponse.newBuilder()
-								.setRewriting(q.rewrite(new QueryToProtoBuffer(this.schema)))
+								.setRewriting(r.rewrite(new QueryToProtoBuffer(this.schema)))
 							.setStatus(Status.COST_INFO).build())
 							.build();
 				DelimitedMessageProtocol.send(this.out, response);
@@ -133,7 +144,7 @@ public class LogicBloxDelegateCostEstimator<S extends AccessibleChaseState>
 					final GeneratedMessage req = optRequest.unwrap();
 					if (req instanceof Command) {
 						RuleCostEstimate estimate = ((Command) req).getRuleToCost();
-						log.debug("\tCost: " + estimate.getCost() + " = " + q);
+						log.debug("\tCost: " + estimate.getCost() + " = " + r);
 						return new DoubleCost(estimate.getCost());
 					}
 				}
@@ -154,6 +165,7 @@ public class LogicBloxDelegateCostEstimator<S extends AccessibleChaseState>
 	}
 
 	/**
+	 * ??? This seems as an infinite loop.
 	 * Converts the input plan to a conjunctive query amenable to cost 
 	 * estimation by LogicBlox.
 	 *
@@ -178,7 +190,7 @@ public class LogicBloxDelegateCostEstimator<S extends AccessibleChaseState>
 		try {
 			ConjunctiveQuery q = plan
 					.rewrite(new DAGPlanToConjunctiveQuery())
-					.rewrite(new QueryHeadProjector(this.query))
+					.rewrite(new QueryHeadProjector(this.rule))
 					.rewrite(new Deskolemizer<ConjunctiveQuery>())
 					.rewrite(new PullEqualityRewriter<ConjunctiveQuery>(this.schema))
 					;

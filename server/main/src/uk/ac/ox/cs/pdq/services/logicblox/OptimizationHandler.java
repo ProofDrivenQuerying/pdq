@@ -39,10 +39,8 @@ import com.logicblox.connect.BloxCommand.ExternalRuleOptimization;
 import com.logicblox.connect.BloxCommand.ExternalRuleOptimizationResponse;
 import com.logicblox.connect.BloxCommand.ExternalRuleOptimizationResponse.Status;
 
-// TODO: Auto-generated Javadoc
 /**
- * Handles commands coming from client (typically optimization requests
- * and cost estimates).
+ *  Handles optimization requests, and cost information messages between PDQ and LB.
  * 
  * @author Julien LEBLAY
  */
@@ -51,13 +49,13 @@ public class OptimizationHandler implements MessageHandler<ExternalRuleOptimizat
 	/** Logger. */
 	static final Logger log = Logger.getLogger(OptimizationHandler.class);
 
-	/** The in. */
+	/** The input stream. */
 	private final InputStream in;
 	
-	/** The out. */
+	/** The output stream. */
 	private final OutputStream out;
 	
-	/** The master. */
+	/** The master service. */
 	private final SemanticOptimizationService master;
 
 	/**
@@ -76,8 +74,18 @@ public class OptimizationHandler implements MessageHandler<ExternalRuleOptimizat
 		}
 	}
 	
-	/* (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.services.MessageHandler#handle(com.google.protobuf.GeneratedMessage)
+	/**
+	 * Handles the LB message, called "command", which is a BloxCommand object defined in the external LB library.
+	 *  As soon as a 
+	 *  request comes it creates a ProtoBufferUnwrapper object for the schema associated with the incoming message's workspace. Then:
+	 *		(1) It uses the ProtoBufferUnwrapper object to transform the LB "rule" in the message to a PDQ ConjunctiveQuery, 
+	 *		(2) it instantiates a LogicBloxDelegateCostEstimator, which in turn asks LB to cost the original "non-optimized" rule
+     *  	(3) it calls the planner (passing the LB cost estimator above as a parameter) to optimize the rule and return a DAGPlan
+	 *		(4) If the plan return has lower cost than the original query it uses the DAGPlanToConjunctiveQuery object to create a
+	 *		    ConjunctiveQuery, 
+	 *		    (4.1) It uses a QueryToProtoBuffer object (which is a Rewriter) to write the query into a google protobuf Rule object,
+	 *		    and uses the external LB lib to transform this into a google protobuf message (a BloxCommand) delivering it to 
+	 *		    SemanticOptimizationService which sends it to LB.
 	 */
 	@Override
 	public GeneratedMessage handle(ExternalRuleOptimization command) {
@@ -86,16 +94,27 @@ public class OptimizationHandler implements MessageHandler<ExternalRuleOptimizat
 			log.debug("Optimization on workspace " + command.getWorkspace());
 			Context context = this.master.resolve(command.getWorkspace());
 			Schema schema = context.getSchema();
+			
+			// We initialize the ProtoBufferUnwrapper with a schema
+			// but we later change the schema.
+			// This OK because the only changes to the schema are access restrictions, while
+			// the only use of the schema by the ProtoBufferUnwrapper is to resolve LB objects while translating them to PDQ.
+			//
+			// Still this looks ugly since the schema in the line below should necessarily come from the context 8 lines below.
 			final ProtoBufferUnwrapper protoToCQ = new ProtoBufferUnwrapper(schema);
 			ConjunctiveQuery query = protoToCQ.ruleToQuery(command.getRule());
 			
-			// Make relations/rules that preceed the queries, predicate in the
-			// execution inaccessible.
+			// modifies the access of the relations in the schema (and builds it again)
+			// such that predicates preceeding the query's body predicates in the 
+			// execution graph's topological sort orders are made inaccessible, while
+			// all other relations have free access.
 			schema = context.setAccesses(query);
 			
 			log.info("Optimizing:" + query);
+			// ???
+			// Julien's comment:
 			// Here, we do not rewrite directly into 'query' as the cost
-			// estimator require to share the canonical mapping of the 
+			// estimator requires to share the canonical mapping of the 
 			// query used by the planner.
 			ConjunctiveQuery queryEq = query
 						.rewrite(new PushEqualityRewriter<ConjunctiveQuery>());

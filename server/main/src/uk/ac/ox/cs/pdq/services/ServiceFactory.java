@@ -5,7 +5,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-// TODO: Auto-generated Javadoc
 /**
  * Produces services based of their name and their implementation given in 
  * registered classes.

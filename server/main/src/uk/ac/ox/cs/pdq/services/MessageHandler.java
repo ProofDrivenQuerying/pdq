@@ -2,9 +2,8 @@ package uk.ac.ox.cs.pdq.services;
 
 import com.google.protobuf.GeneratedMessage;
 
-// TODO: Auto-generated Javadoc
 /**
- * Top level interface for handling message from the Protobuffer protocol.
+ * Top level interface for handling messages from the Protobuffer protocol.
  * 
  * @author Julien LEBLAY
  *
@@ -13,7 +12,7 @@ import com.google.protobuf.GeneratedMessage;
 public interface MessageHandler<M extends GeneratedMessage> {
 	
 	/**
-	 * Handle.
+	 * Handle the message.
 	 *
 	 * @param msg the msg
 	 * @return the generated message

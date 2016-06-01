@@ -10,9 +10,8 @@ import com.logicblox.connect.BloxCommand.TopoOrderUpdate;
 import com.logicblox.connect.BloxCommand.TopoOrderUpdate.Entry;
 import com.logicblox.connect.BloxCommand.TopoOrderUpdateResponse;
 
-// TODO: Auto-generated Javadoc
 /**
- * Handles update message on the topological ordering of predicates and rules,
+ * Handles update messages on the topological ordering of predicates and rules,
  * in the database-lifetime execution graph.
  * 
  * @author Julien LEBLAY
@@ -34,8 +33,14 @@ public class TopoOrderUpdateHandler implements MessageHandler<TopoOrderUpdate> {
 		this.master = master;
 	}
 
-	/* (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.services.MessageHandler#handle(com.google.protobuf.GeneratedMessage)
+	/**
+	 *  Handles the LB message, called "command", which is a BloxCommand.TopoOrderUpdate object defined in the external 
+	 *	LB library. As soon as a request comes in, we resolve the associated PDQ context. The incoming message has a list of
+	 *  BoxCommand.TopoOrderUpdate.Entry objects. Each entry contains a long number "rank" and a string "name", representing
+	 *  the topological order of the relation with that name inside LB. 
+	 *  These entries are delegated to Context: if the rank is < 0 the object is removed for the topoOrder map that Context 
+	 *  maintains (probably meaning that the relation is not relevant any more). 
+	 *  Else a new entry in the Context's map is registered (overwriting older ones with the same rank).
 	 */
 	@Override
 	public GeneratedMessage handle(TopoOrderUpdate command) {

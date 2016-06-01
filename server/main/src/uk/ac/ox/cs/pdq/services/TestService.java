@@ -9,25 +9,24 @@ import java.net.Socket;
 
 import org.apache.log4j.Logger;
 
-// TODO: Auto-generated Javadoc
 /**
- * A dummy test service.
+ * A dummy test service which simply echoes whatever incoming messages it gets.
  */
 public class TestService implements Service {
 
 	/** Logger. */
 	static Logger log = Logger.getLogger(TestService.class);
 
-	/** The Constant DEFAULT_PORT. */
+	/** The default port for a test service */
 	public static final int DEFAULT_PORT = 9998;
 	
-	/** The Constant SERVICE_NAME. */
+	/** The default name for the test service is "test". */
 	public static final String SERVICE_NAME = "test";
 
-	/** The is interrupted. */
+	/** A flag modeling whether the service has been interrupted. */
 	private boolean isInterrupted = false;
 
-	/** The port. */
+	/** The current port of the service if changed from the default. */
 	private final int port;
 
 	/**
@@ -56,7 +55,7 @@ public class TestService implements Service {
 	}
 
 	/**
-	 * Status.
+	 * Prints the status of the service.
 	 *
 	 * @param out PrintStream
 	 * @see uk.ac.ox.cs.pdq.services.Service#status(PrintStream)
@@ -72,7 +71,7 @@ public class TestService implements Service {
 	}
 
 	/**
-	 * Gets the name.
+	 * Gets the name of the service.
 	 *
 	 * @return String
 	 * @see uk.ac.ox.cs.pdq.services.Service#getName()
@@ -83,7 +82,7 @@ public class TestService implements Service {
 	}
 
 	/**
-	 * Run.
+	 * Runs the test service.
 	 *
 	 * @see java.lang.Runnable#run()
 	 */

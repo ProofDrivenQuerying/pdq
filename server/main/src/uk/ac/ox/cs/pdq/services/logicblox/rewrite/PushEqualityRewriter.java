@@ -26,7 +26,6 @@ import uk.ac.ox.cs.pdq.rewrite.RewriterException;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 
-// TODO: Auto-generated Javadoc
 /**
  * Rewriter that produces an output formula equivalent to the input one,
  * containing no equality predicates.

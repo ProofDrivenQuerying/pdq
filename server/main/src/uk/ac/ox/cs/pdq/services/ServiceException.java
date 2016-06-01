@@ -1,6 +1,5 @@
 package uk.ac.ox.cs.pdq.services;
 
-// TODO: Auto-generated Javadoc
 /**
  * Top-level exception for anything happening at the service level.
  * 

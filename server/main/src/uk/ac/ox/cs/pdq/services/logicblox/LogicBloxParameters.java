@@ -6,9 +6,8 @@ import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.services.ServiceParameters;
 
-// TODO: Auto-generated Javadoc
 /**
- * Holds logicblox-specific parameters.
+ * Holds logicblox-specific parameters. It also registers where the PDQ hook within LB lies.
  * 
  * @author Julien LEBLAY
  */
@@ -27,7 +26,7 @@ public class LogicBloxParameters extends ServiceParameters {
 	static final String DEFAULT_CONFIG_FILE_PATH = "./" + DEFAULT_CONFIG_FILE_NAME;
 
 	/**
-	 * The Enum OptimizationModes.
+	 * Different OptimizationModes supported.
 	 */
 	public static enum OptimizationModes { 
  /** The in compiler. */

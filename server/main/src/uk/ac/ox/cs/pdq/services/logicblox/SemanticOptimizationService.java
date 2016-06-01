@@ -26,9 +26,8 @@ import com.logicblox.connect.BloxCommand.CommandResponse;
 import com.logicblox.connect.BloxCommand.LogMessageResponse;
 import com.logicblox.connect.ProtoBufException.ExceptionContainer;
 
-// TODO: Auto-generated Javadoc
 /**
- * A semantics optimization service for LogixBlox database.
+ * A semantic-optimization service for the LogixBlox database.
  * 
  * @author Julien Leblay
  *
@@ -56,7 +55,7 @@ public class SemanticOptimizationService implements Service {
 	/**
 	 * Default constructor.
 	 *
-	 * @param configDir the config dir
+	 * @param configDir the directory containing the configuration file
 	 */
 	public SemanticOptimizationService(File configDir) {
 		this(new LogicBloxParameters(configDir));
@@ -86,7 +85,7 @@ public class SemanticOptimizationService implements Service {
 	}
 
 	/**
-	 * Resolve.
+	 * Resolves the workspace name getting the corresponding context.
 	 *
 	 * @param path the path
 	 * @return Context
@@ -96,7 +95,7 @@ public class SemanticOptimizationService implements Service {
 	}
 	
 	/**
-	 * Stop.
+	 * Stop the service.
 	 *
 	 * @see uk.ac.ox.cs.pdq.services.Service#stop()
 	 */
@@ -112,7 +111,7 @@ public class SemanticOptimizationService implements Service {
 	}
 
 	/**
-	 * Status.
+	 * Status of the services.
 	 *
 	 * @param out PrintStream
 	 * @see uk.ac.ox.cs.pdq.services.Service#status(PrintStream)
@@ -161,7 +160,7 @@ public class SemanticOptimizationService implements Service {
 	}
 
 	/**
-	 * Service calls that received incomes update information from a LogicBlox
+	 * Service call that receives incoming update information from a LogicBlox
 	 * instance, and handles them. Messages might be for synchronization or
 	 * optimization purposes.
 	 * 

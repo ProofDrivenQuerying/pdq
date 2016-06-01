@@ -22,7 +22,6 @@ import uk.ac.ox.cs.pdq.plan.AccessOperator;
 import uk.ac.ox.cs.pdq.plan.DAGPlan;
 import uk.ac.ox.cs.pdq.rewrite.Rewriter;
 
-// TODO: Auto-generated Javadoc
 /**
  * Rewrites DAGPlans to conjunctive queries.
  * @author Julien LEBLAY
@@ -41,7 +40,7 @@ public class DAGPlanToConjunctiveQuery implements Rewriter<DAGPlan, ConjunctiveQ
 	}
 	
 	/**
-	 * Constructor anonymous queries.
+	 * Constructor for anonymous queries.
 	 */
 	public DAGPlanToConjunctiveQuery() {
 		this(Atom.builder().setSignature(new Predicate("_", 0)).build());
@@ -77,7 +76,7 @@ public class DAGPlanToConjunctiveQuery implements Rewriter<DAGPlan, ConjunctiveQ
 	}
 
 	/**
-	 * Progragation attribute renaming down to the plan's leafs.
+	 * Propagates attribute renaming down to the plan's leafs.
 	 * @param builder QueryBuilder
 	 * @param mapping Map<Term,Term>
 	 * @param logOp LogicalOperator
@@ -119,7 +118,7 @@ public class DAGPlanToConjunctiveQuery implements Rewriter<DAGPlan, ConjunctiveQ
 	}
 
 	/**
-	 * Propagate renaming into plan predicates.
+	 * Propagates renaming into plan predicates.
 	 *
 	 * @param mapping Map<Term,Term>
 	 * @param pred LogicalOperator

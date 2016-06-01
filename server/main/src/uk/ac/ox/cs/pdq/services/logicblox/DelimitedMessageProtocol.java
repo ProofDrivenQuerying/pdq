@@ -14,14 +14,13 @@ import com.logicblox.common.Option;
 import com.logicblox.common.Streams;
 import com.logicblox.connect.BloxCommand.Command;
 
-// TODO: Auto-generated Javadoc
 /**
- * Simple protocol for send sequences of Protocol Buffer messages over the same
+ * Simple protocol for sending/receiving sequences of Protocol Buffer messages over the same
  * input/output stream. For this, the protocol buffer message needs to be
  * wrapped in a messaging format that indicates the size of the message, since
  * protocol buffer messages do not have terminators.
  *
- * The format we use here is very simple: 4 bytes for the integer size of the
+ * The format used here is very simple: 4 bytes for the integer size of the
  * data, followed by the data.
  *
  * @author Martin Bravenboer
@@ -34,7 +33,7 @@ public class DelimitedMessageProtocol {
 			.getLogger(DelimitedMessageProtocol.class);
 
 	/**
-	 * Receive.
+	 * Receives a message. It uses a logicblox library to parse the message and create a google protobuf object.
 	 *
 	 * @param istream            InputStream
 	 * @return Option<? extends GeneratedMessage>
@@ -66,7 +65,8 @@ public class DelimitedMessageProtocol {
 	}
 
 	/**
-	 * Send a message on the given output stream.
+	 * Send a message on the given output stream. It uses a logicblox library to write the message which is a google
+	 * protobuf object.
 	 *
 	 * @param ostream            OutputStream
 	 * @param message            GeneratedMessage
