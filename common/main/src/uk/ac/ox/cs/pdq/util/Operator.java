@@ -4,8 +4,6 @@ import java.util.List;
 
 import uk.ac.ox.cs.pdq.fol.Term;
 
-
-// TODO: Auto-generated Javadoc
 /**
  * Top-level interface for any operator supporting input and output types.
  * It can be a fined-grained operator such as a relational algebra operator,
@@ -28,20 +26,24 @@ public interface Operator extends Costable {
 	
 
 	/**
- * Gets the input type.
+ * Gets the input type of the operator.
  *
  * @return TupleType
  */
 	TupleType getInputType();
 
 	/**
-	 * Gets the type.
+	 * TOCOMMENT is this the output TupleType?
+	 * 
+	 * Gets the type of the operator.
 	 *
 	 * @return Type
 	 */
 	TupleType getType();
 
 	/**
+	 * TOCOMMENT what columns?
+	 * 
 	 * Gets the columns.
 	 *
 	 * @return TupleType

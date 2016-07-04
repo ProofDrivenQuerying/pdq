@@ -1,8 +1,7 @@
 package uk.ac.ox.cs.pdq.rewrite;
 
-// TODO: Auto-generated Javadoc
 /**
- * Exception that occurred during a rewriting operation.
+ * Exception that occurrs during a rewriting operation.
  *
  * @author Julien Leblay
  *

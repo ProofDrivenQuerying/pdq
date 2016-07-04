@@ -23,7 +23,6 @@ import uk.ac.ox.cs.pdq.io.ReaderException;
 
 import com.google.common.base.Preconditions;
 
-// TODO: Auto-generated Javadoc
 /**
  * Reads dependencies from XML.
  * 
@@ -34,7 +33,7 @@ public class DependencyReader extends AbstractXMLReader<Dependency> {
 	/** Logger. */
 	private static Logger log = Logger.getLogger(DependencyReader.class);
 
-	/** The dependency being built. */
+	/** The dependency builder  */
 	private DependencyBuilder builder = null;
 
 	/** The dependency being built. */
@@ -90,13 +89,6 @@ public class DependencyReader extends AbstractXMLReader<Dependency> {
 		this.rightAtomsReader = new AtomReader(sb, this.rightAtoms);
 	}
 
-	/**
-	 * Read.
-	 *
-	 * @param in InputStream
-	 * @return IC
-	 * @see uk.ac.ox.cs.pdq.io.Reader#read(InputStream)
-	 */
 	@Override
 	public Dependency read(InputStream in) {
 		try {

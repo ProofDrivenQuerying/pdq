@@ -1,8 +1,11 @@
 package uk.ac.ox.cs.pdq.rewrite;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * Common interface to all rewritable objects.
+ * 
+ * TOCOMMENT I don't get the line below
+ * 
  * Generally only call the given rewritten onto the current object.
  * 
  * @author Julien Leblay

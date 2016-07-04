@@ -11,7 +11,6 @@ import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 
-// TODO: Auto-generated Javadoc
 /**
  * Writes queries to XML.
  * 

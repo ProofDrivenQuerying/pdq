@@ -7,7 +7,6 @@ import org.jgrapht.EdgeFactory;
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 
-// TODO: Auto-generated Javadoc
 /**
  * Directed graph that allows reaching any node by its ID.
  *
@@ -37,7 +36,7 @@ public abstract class IndexedDirectedGraph<N> extends DefaultDirectedGraph<N, De
 	}
 
 	/**
-	 * Gets the vertex.
+	 * Gets the vertex by its id.
 	 *
 	 * @param id the id
 	 * @return the vertex having the input id
@@ -45,7 +44,7 @@ public abstract class IndexedDirectedGraph<N> extends DefaultDirectedGraph<N, De
 	public abstract N getVertex(Integer id);
 
 	/**
-	 * Gets the path.
+	 * This  a list of nodes, by their ids.
 	 *
 	 * @param nodeSequence the node sequence
 	 * @return the vertices having the input identifiers.

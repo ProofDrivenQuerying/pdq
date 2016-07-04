@@ -57,7 +57,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
-// TODO: Auto-generated Javadoc
 /**
  * Provide utility function for translating from/to SQL.
  *
@@ -79,12 +78,11 @@ public class SQL92Translator extends SQLTranslator {
 	private static int aliasCounter = 0;
 
 	/**
-	 * Instantiates a new SQ l92 translator.
+	 * Instantiates a new SQl92 translator.
 	 */
 	protected SQL92Translator() {}
 
 	/**
-	 * To sql.
 	 *
 	 * @param q the q
 	 * @return a String representation of a SQL statement for the given query * @throws ConversionException if the statement could not be generated.
@@ -159,6 +157,8 @@ public class SQL92Translator extends SQLTranslator {
 	}
 
 	/**
+	 * TOCOMMENT ???
+	 * 
 	 * Make aliases.
 	 *
 	 * @param q the q
@@ -176,6 +176,8 @@ public class SQL92Translator extends SQLTranslator {
 	}
 
 	/**
+	 * TOCOMMENT ???
+	 * 
 	 * Map terms.
 	 *
 	 * @param q the q
@@ -212,7 +214,7 @@ public class SQL92Translator extends SQLTranslator {
 	}
 
 	/**
-	 * To sql.
+	 * Translates the operator to SQL.
 	 *
 	 * @param op the op
 	 * @return a SQL statement equivalent to the given plan
@@ -224,7 +226,7 @@ public class SQL92Translator extends SQLTranslator {
 	}
 
 	/**
-	 * To sql with.
+	 * TOCOMMENT Translates to SQL-with: what is that?
 	 *
 	 * @param op the op
 	 * @return a SQL statement equivalent to the given plan
@@ -235,12 +237,6 @@ public class SQL92Translator extends SQLTranslator {
 		return new WithTranslator().rewrite(op);
 	}
 
-	/**
-	 * To string.
-	 *
-	 * @param terms List<? extends Term>
-	 * @return List<String>
-	 */
 	private static List<String> toString(List<? extends Term> terms){
 		List<String> result = new ArrayList<>();
 		for (Term t: terms) {
@@ -250,7 +246,7 @@ public class SQL92Translator extends SQLTranslator {
 	}
 
 	/**
-	 * Gets the positions.
+	 * Gets the positions of TOCOMMENT ???.
 	 *
 	 * @param projected the projected
 	 * @param fullList the full list
@@ -282,7 +278,7 @@ public class SQL92Translator extends SQLTranslator {
 	}
 
 	/**
-	 * Gets the positions.
+	 * Gets the positions of TOCOMMENT ???.
 	 *
 	 * @param projected the projected
 	 * @param fullList the full list
@@ -293,6 +289,7 @@ public class SQL92Translator extends SQLTranslator {
 	}
 
 	/**
+	 * TOCOMMENT ???.
 	 * Project by positions.
 	 *
 	 * @param columns the columns

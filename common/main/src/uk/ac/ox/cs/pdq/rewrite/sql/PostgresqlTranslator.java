@@ -17,7 +17,6 @@ import uk.ac.ox.cs.pdq.util.TupleType;
 import uk.ac.ox.cs.pdq.util.Typed;
 import uk.ac.ox.cs.pdq.util.Types;
 
-// TODO: Auto-generated Javadoc
 /**
  * Provide utility function for translating from/to SQL.
  *
@@ -35,25 +34,11 @@ public class PostgresqlTranslator extends SQL92Translator {
 	 */
 	protected PostgresqlTranslator() {}
 
-	/**
-	 * To sql.
-	 *
-	 * @param op the op
-	 * @return a SQL statement equivalent to the given plan
-	 * @throws RewriterException the rewriter exception
-	 */
 	@Override
 	public String toSQL(Operator op) throws RewriterException {
 		return new TreeTranslator().rewrite(op);
 	}
 
-	/**
-	 * To sql with.
-	 *
-	 * @param op the op
-	 * @return a SQL statement equivalent to the given plan
-	 * @throws RewriterException the rewriter exception
-	 */
 	@Override
 	public String toSQLWith(Operator op) throws RewriterException {
 		return new WithTranslator().rewrite(op);

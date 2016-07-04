@@ -2,7 +2,6 @@ package uk.ac.ox.cs.pdq.io;
 
 import java.io.PrintStream;
 
-// TODO: Auto-generated Javadoc
 /**
  * Writes experiment sample elements to XML.
  *

@@ -8,7 +8,6 @@ import uk.ac.ox.cs.pdq.EventHandler;
 import com.google.common.base.Preconditions;
 import com.google.common.eventbus.Subscribe;
 
-// TODO: Auto-generated Javadoc
 /**
  * A dynamic statistics logger allows logging data point as key-value pair,
  * i.e. without prior knowledge of what is to be logged.
@@ -96,10 +95,6 @@ public class DynamicStatistics extends StatisticsLogger implements EventHandler 
 		throw new IllegalStateException();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.logging.performance.StatisticsLogger#makeLine()
-	 */
 	@Override
 	protected String makeLine() {
 		StringBuilder result = new StringBuilder();
@@ -109,10 +104,6 @@ public class DynamicStatistics extends StatisticsLogger implements EventHandler 
 		return result.toString();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.logging.performance.StatisticsLogger#makeHeader()
-	 */
 	@Override
 	protected String makeHeader() {
 		StringBuilder result = new StringBuilder();

@@ -6,8 +6,6 @@ import java.util.List;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 
-
-// TODO: Auto-generated Javadoc
 /**
  * A unary formula.
  *
@@ -17,7 +15,10 @@ import com.google.common.collect.ImmutableList;
  */
 public abstract class UnaryFormula<T extends Formula> extends AbstractFormula {
 
-	/**  The subformula. */
+	/**  
+	 * TOCOMMENT having both child and children needs synchronizing.
+	 * 
+	 * The subformula. */
 	protected final T child;
 	
 	/** The children. */
@@ -41,7 +42,7 @@ public abstract class UnaryFormula<T extends Formula> extends AbstractFormula {
 	}
 
 	/**
-	 * Gets the symbol.
+	 * Gets the top-level symbol.
 	 *
 	 * @return the operator of this formula
 	 */
@@ -49,29 +50,19 @@ public abstract class UnaryFormula<T extends Formula> extends AbstractFormula {
 		return this.operator;
 	}
 
-	/**
-	 * Gets the predicates.
-	 *
-	 * @return List<PredicateFormula>
-	 * @see uk.ac.ox.cs.pdq.fol.Formula#getAtoms()
-	 */
 	@Override
 	public List<Atom> getAtoms() {
 		return this.child.getAtoms();
 	}
 
-	/**
-	 * Gets the terms.
-	 *
-	 * @return List<Term>
-	 * @see uk.ac.ox.cs.pdq.fol.Formula#getTerms()
-	 */
 	@Override
 	public List<Term> getTerms() {
 		return this.child.getTerms();
 	}
 
 	/**
+	 * TOCOMMENT see comment in the fields above
+	 * 
 	 * Gets the child.
 	 *
 	 * @return T
@@ -81,7 +72,7 @@ public abstract class UnaryFormula<T extends Formula> extends AbstractFormula {
 	}
 
 	/**
-	 * Gets the children.
+	 * Gets the children subformulas.
 	 *
 	 * @return Collection<T>
 	 * @see uk.ac.ox.cs.pdq.fol.Formula#getSubFormulas()
@@ -91,11 +82,6 @@ public abstract class UnaryFormula<T extends Formula> extends AbstractFormula {
 		return this.children;
 	}
 
-	/**
-	 * To string.
-	 *
-	 * @return String
-	 */
 	@Override
 	public String toString() {
 		return this.operator + "(" + this.child + ")";

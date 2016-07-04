@@ -8,7 +8,6 @@ import uk.ac.ox.cs.pdq.algebra.RelationalOperator;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 
-// TODO: Auto-generated Javadoc
 /**
  * Writes plans to XML.
  * 

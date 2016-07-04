@@ -8,7 +8,6 @@ import org.apache.log4j.Logger;
 import com.google.common.base.Preconditions;
 import com.google.common.eventbus.EventBus;
 
-// TODO: Auto-generated Javadoc
 /**
  * This class help collecting statics without prior knowledge of what is to be
  * logged.
@@ -129,7 +128,7 @@ public class StatisticsCollector implements Cloneable {
 	}
 
 	/**
-	 * Checks if is collecting.
+	 * Checks if it is collecting.
 	 *
 	 * @return boolean
 	 */

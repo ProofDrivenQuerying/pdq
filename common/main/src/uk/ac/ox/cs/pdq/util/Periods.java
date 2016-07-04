@@ -3,9 +3,9 @@ package uk.ac.ox.cs.pdq.util;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-// TODO: Auto-generated Javadoc
+
 /**
- * Helper class for reprensentation time interavals of various granularities.
+ * Helper class for representation time intervals of various granularities.
  * 
  * @author Julien Leblay
  */

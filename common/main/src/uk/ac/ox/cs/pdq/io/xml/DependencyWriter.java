@@ -9,7 +9,6 @@ import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 
-// TODO: Auto-generated Javadoc
 /**
  * Writes dependencies to XML.
  * 
@@ -64,7 +63,7 @@ public class DependencyWriter extends AbstractXMLWriter<Dependency> {
 	}
 
 	/**
-	 * Write.
+	 * Write the dependency to the output stream.
 	 *
 	 * @param out PrintStream
 	 * @param o TGD

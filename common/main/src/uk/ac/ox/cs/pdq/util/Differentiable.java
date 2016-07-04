@@ -1,8 +1,7 @@
 package uk.ac.ox.cs.pdq.util;
 
-// TODO: Auto-generated Javadoc
 /**
- * Common interface to thing that can be differentiated, i.e. tell whether two
+ * Common interface to things that can be differentiated, i.e. tell whether two
  * object are the same, equivalent or different, and provide some human-readable
  * representation of their difference if any.
  * 
@@ -25,7 +24,7 @@ IDENTICAL,
  DIFFERENT}
 
 	/**
-	 * How different.
+	 * Returns the "level" of difference.
 	 *
 	 * @param o the o
 	 * @return Levels
@@ -33,10 +32,10 @@ IDENTICAL,
 	Levels howDifferent(T o);
 
 	/**
-	 * Diff.
+	 * The difference between this object and the input.
 	 *
 	 * @param o T
-	 * @return a String representation of the difference between this object
+	 * @return a String representation of the difference between this object and the input
 	 * and o
 	 */
 	String diff(T o);

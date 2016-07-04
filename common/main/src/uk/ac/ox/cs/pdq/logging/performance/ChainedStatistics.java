@@ -10,7 +10,6 @@ import java.util.Map;
 
 import uk.ac.ox.cs.pdq.logging.ProgressLogger;
 
-// TODO: Auto-generated Javadoc
 /**
  * Statistics logger that works by appending logs from a sequence of delegate
  * loggers.
@@ -22,7 +21,6 @@ public class ChainedStatistics extends StatisticsLogger implements ProgressLogge
 	/** The filter separator. */
 	public static Character FILTER_SEPARATOR = ':';
 
-	/** The out. */
 	protected PrintStream out;
 
 	/** The print header. */
@@ -87,11 +85,6 @@ public class ChainedStatistics extends StatisticsLogger implements ProgressLogge
 		this.printHeader = true;
 	}
 
-	/**
-	 * Log.
-	 *
-	 * @see uk.ac.ox.cs.pdq.logging.ProgressLogger#log()
-	 */
 	@Override
 	public void log() {
 		if (this.printHeader) {
@@ -102,12 +95,6 @@ public class ChainedStatistics extends StatisticsLogger implements ProgressLogge
 		this.out.flush();
 	}
 
-	/**
-	 * Log.
-	 *
-	 * @param suffix String
-	 * @see uk.ac.ox.cs.pdq.logging.ProgressLogger#log(String)
-	 */
 	@Override
 	public void log(String suffix) {
 		if (this.printHeader) {
@@ -119,10 +106,6 @@ public class ChainedStatistics extends StatisticsLogger implements ProgressLogge
 		this.out.flush();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.logging.performance.StatisticsLogger#makeLine()
-	 */
 	@Override
 	protected String makeLine() {
 		StringBuilder result = new StringBuilder();
@@ -161,10 +144,6 @@ public class ChainedStatistics extends StatisticsLogger implements ProgressLogge
 		return result.toString();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.logging.performance.StatisticsLogger#close()
-	 */
 	@Override
 	public void close() {
 		this.printHeader = true;

@@ -51,30 +51,20 @@ public class Variable implements Named, Term {
 		this.name = name;
 	}
 
-	/**
-	 * Checks if is variable.
-	 *
-	 * @return boolean
-	 * @see uk.ac.ox.cs.pdq.fol.Term#isVariable()
-	 */
+
 	@Override
 	public boolean isVariable() {
 		return true;
 	}
 
-	/**
-	 * Checks if is skolem.
-	 *
-	 * @return boolean
-	 * @see uk.ac.ox.cs.pdq.fol.Term#isSkolem()
-	 */
+
 	@Override
 	public boolean isSkolem() {
 		return false;
 	}
 
 	/**
-	 * Equals.
+	 * Two variables are equal of their names are equal (using equals()).
 	 *
 	 * @param o Object
 	 * @return boolean
@@ -91,28 +81,18 @@ public class Variable implements Named, Term {
 				&& this.name.equals(((Variable) o).name);
 	}
 
-	/**
-	 * Hash code.
-	 *
-	 * @return int
-	 */
 	@Override
 	public int hashCode() {
 		return Objects.hash(this.name);
 	}
 
-	/**
-	 * To string.
-	 *
-	 * @return String
-	 */
 	@Override
 	public String toString() {
 		return this.name;
 	}
 
 	/**
-	 * Gets the name.
+	 * Gets the name of the variable.
 	 *
 	 * @return String
 	 * @see uk.ac.ox.cs.pdq.util.Named#getName()

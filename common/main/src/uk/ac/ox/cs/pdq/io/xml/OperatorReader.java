@@ -50,7 +50,6 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
-// TODO: Auto-generated Javadoc
 /**
  * Reads physical operators from XML.
  * 

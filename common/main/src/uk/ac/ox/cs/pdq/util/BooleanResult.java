@@ -1,6 +1,5 @@
 package uk.ac.ox.cs.pdq.util;
 
-// TODO: Auto-generated Javadoc
 /**
  * Representation of a Boolean query/plan result.
  *
@@ -20,10 +19,6 @@ public final class BooleanResult implements Result {
 		this.value = value;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.structures.Result#isEmpty()
-	 */
 	@Override
 	public boolean isEmpty() {
 		return !this.value;
@@ -48,7 +43,7 @@ public final class BooleanResult implements Result {
 	}
 
 	/**
-	 * Gets the value.
+	 * Gets the result value.
 	 *
 	 * @return the internal value of the BooleanResult
 	 */

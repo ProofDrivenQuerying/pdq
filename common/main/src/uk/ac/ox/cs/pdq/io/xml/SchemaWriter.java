@@ -15,7 +15,6 @@ import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TGD;
 import uk.ac.ox.cs.pdq.io.WriterException;
 
-// TODO: Auto-generated Javadoc
 /**
  * Writes schemas to XML.
  * 

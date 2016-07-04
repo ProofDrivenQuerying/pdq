@@ -13,10 +13,9 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
 /**
- * TOCOMMENT Is a quantified formula the opposite of a quantifier-free formula, that is, on the contains quantifiers,
- * or one which a quantifier is the top level operator? I think here the latter is meant which simply makes this 
- * class a dependency? But it is not connected to dependency
- * 
+ * TOCOMMENT Neither this class nor its subclasses 
+ * (ExistentiallyQuantifiedFormula or UniversallyQuantifiedFormula)  are connected to Dependency. 
+ * I think we seem to be over-modeling things with these objects.
  * 
  * A quantified formula.
  *
@@ -64,21 +63,13 @@ public abstract class QuantifiedFormula<T extends Formula> extends UnaryFormula<
 				&& this.child.equals(((QuantifiedFormula<?>) o).child);
 	}
 
-	/**
-	 * Hash code.
-	 *
-	 * @return int
-	 */
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(this.operator, this.variables, this.child);
 	}
 
-	/**
-	 * To string.
-	 *
-	 * @return java.lang.String
-	 */
+
 	@Override
 	public java.lang.String toString() {
 		return this.operator.toString() + " " + Joiner.on(",").join(this.variables) + " "
@@ -87,6 +78,7 @@ public abstract class QuantifiedFormula<T extends Formula> extends UnaryFormula<
 	}
 
 	/**
+	 * TOCOMMENT shouldn't this be an overridden method?
 	 * Gets the variables.
 	 *
 	 * @return List<Variable>

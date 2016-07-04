@@ -57,7 +57,7 @@ public final class Skolem implements Named, Constant {
 	}
 
 	/**
-	 * Equals.
+	 * Two skolems are equal if their names are equal.
 	 *
 	 * @param o Object
 	 * @return boolean
@@ -74,12 +74,6 @@ public final class Skolem implements Named, Constant {
 				&& this.name.equals(((Skolem) o).name);
 	}
 
-
-	/**
-	 * Hash code.
-	 *
-	 * @return int
-	 */
 	@Override
 	public int hashCode() {
 //		if (this.hash == Integer.MIN_VALUE) {
@@ -88,11 +82,6 @@ public final class Skolem implements Named, Constant {
 		return this.hash;
 	}
 
-	/**
-	 * To string.
-	 *
-	 * @return String
-	 */
 	@Override
 	public String toString() {
 		if (this.rep == null) {
@@ -104,7 +93,7 @@ public final class Skolem implements Named, Constant {
 	}
 
 	/**
-	 * Gets the name.
+	 * Gets the skolem's name.
 	 *
 	 * @return String
 	 * @see uk.ac.ox.cs.pdq.util.Named#getName()
@@ -115,6 +104,8 @@ public final class Skolem implements Named, Constant {
 	}
 
 	/**
+	 * TOCOMMENT I suggest this goes, something is a skolem if it is instance of Skolem
+	 * 
 	 * Checks if is skolem.
 	 *
 	 * @return boolean
@@ -126,7 +117,7 @@ public final class Skolem implements Named, Constant {
 	}
 
 	/**
-	 * Checks if is variable.
+	 * TOCOMMENT I suggest this goes, something is a variable if it is instance of Variable
 	 *
 	 * @return boolean
 	 * @see uk.ac.ox.cs.pdq.fol.Term#isVariable()

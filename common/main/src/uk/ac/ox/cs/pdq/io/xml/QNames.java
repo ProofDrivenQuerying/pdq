@@ -3,8 +3,6 @@ package uk.ac.ox.cs.pdq.io.xml;
 import javax.xml.namespace.QName;
 
 import com.google.common.base.CaseFormat;
-
-// TODO: Auto-generated Javadoc
 /**
  * Gather all the qualified names required for reading and writing schemas,
  * queries, dependencies, etc.
@@ -203,6 +201,7 @@ public enum QNames {
 	}
 
 	/**
+	 * TOCOMMENT what does this do?
 	 * Parses the.
 	 *
 	 * @param lowerHyphen the qname in lower hyphen case.
@@ -215,6 +214,8 @@ public enum QNames {
 	}
 
 	/**
+	 * 
+	 * TOCOMMENT what does this do?
 	 * Format.
 	 *
 	 * @return the String serialization of qname associated with this enum item

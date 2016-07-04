@@ -1,8 +1,6 @@
 package uk.ac.ox.cs.pdq.logging.performance;
 
 
-
-// TODO: Auto-generated Javadoc
 /**
  * Keys to be used in statistics collections.
  *
@@ -10,10 +8,5 @@ package uk.ac.ox.cs.pdq.logging.performance;
  */
 public interface StatKey {
 	
-	/**
-	 * Name.
-	 *
-	 * @return the string
-	 */
 	String name();
 }

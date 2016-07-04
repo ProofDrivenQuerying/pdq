@@ -17,7 +17,6 @@ import uk.ac.ox.cs.pdq.io.ReaderException;
 import uk.ac.ox.cs.pdq.plan.DAGPlan;
 import uk.ac.ox.cs.pdq.plan.DoubleCost;
 
-// TODO: Auto-generated Javadoc
 /**
  * Reads plans from XML.
  * 
@@ -54,7 +53,7 @@ public class DAGPlanReader extends AbstractXMLReader<DAGPlan> {
 	}
 
 	/**
-	 * Read.
+	 * Reads plans from XML.
 	 *
 	 * @param in InputStream
 	 * @return DAGPlan

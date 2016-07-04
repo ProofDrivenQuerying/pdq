@@ -1,6 +1,5 @@
 package uk.ac.ox.cs.pdq.logging.performance;
 
-// TODO: Auto-generated Javadoc
 /**
  * Top-level class for all statistics logger.
  *
@@ -12,6 +11,8 @@ public abstract class StatisticsLogger {
 	public static Character FIELD_SEPARATOR = '\t';
 
 	/**
+	 * TOCOMMENT ???
+	 * 
 	 * Make line.
 	 *
 	 * @return String
@@ -19,6 +20,8 @@ public abstract class StatisticsLogger {
 	protected abstract String makeLine();
 
 	/**
+	 * TOCOMMENT ???
+	 * 
 	 * Make header.
 	 *
 	 * @return String

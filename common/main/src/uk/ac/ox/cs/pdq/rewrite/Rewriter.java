@@ -1,6 +1,5 @@
 package uk.ac.ox.cs.pdq.rewrite;
 
-// TODO: Auto-generated Javadoc
 /**
  * Interface common to rewriter classes.
  *

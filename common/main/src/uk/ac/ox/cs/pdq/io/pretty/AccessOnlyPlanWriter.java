@@ -11,7 +11,6 @@ import uk.ac.ox.cs.pdq.io.Writer;
 import uk.ac.ox.cs.pdq.plan.AccessOperator;
 import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 
-// TODO: Auto-generated Javadoc
 /**
  * Writes a concise representation of a plan to the given output.
  *

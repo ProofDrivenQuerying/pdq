@@ -6,7 +6,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 
-// TODO: Auto-generated Javadoc
 /**
  * Annotation used to distinguish method that can automatically be timed through
  * AOP.

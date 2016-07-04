@@ -6,7 +6,6 @@ import uk.ac.ox.cs.pdq.fol.Evaluatable;
 import uk.ac.ox.cs.pdq.rewrite.RewriterException;
 import uk.ac.ox.cs.pdq.util.Operator;
 
-// TODO: Auto-generated Javadoc
 /**
  * Provide utility function for translating from/to SQL.
  *
@@ -29,6 +28,7 @@ public abstract class SQLTranslator {
 	public static Logger log = Logger.getLogger(SQLTranslator.class);
 
 	/**
+	 * TOCOMMENT ???
 	 * Target.
 	 *
 	 * @param dialect SupportedDialect
@@ -44,6 +44,8 @@ public abstract class SQLTranslator {
 	}
 
 	/**
+	 * TOCOMMENT ???
+	 * 
 	 * Target.
 	 *
 	 * @param dialect String
@@ -66,7 +68,7 @@ public abstract class SQLTranslator {
 	}
 
 	/**
-	 * To sql.
+	 * Translates the operator to SQL.
 	 *
 	 * @param q the q
 	 * @return a String representation of a SQL statement for the given query
@@ -76,7 +78,7 @@ public abstract class SQLTranslator {
 
 
 	/**
-	 * To sql with.
+	 * TOCOMMENT Translates to SQL-with: what is that?
 	 *
 	 * @param op the op
 	 * @return a SQL statement equivalent to the given plan

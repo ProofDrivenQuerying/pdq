@@ -39,7 +39,6 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 
-// TODO: Auto-generated Javadoc
 /**
  * Writes plans to XML.
  * 

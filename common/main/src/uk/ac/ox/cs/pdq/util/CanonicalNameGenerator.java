@@ -4,6 +4,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
+ * TOCOMMENT this class uses strings called "skolems" but not Skolem objects, which seems strange
+ * 
  * Generates constants for existentially quantified variables.
  * It is called when a dependency is grounded
  *
@@ -14,19 +16,23 @@ import java.util.Map;
 
 public final class CanonicalNameGenerator {
 
-	/** The Constant DEFAULT_PREFIX. */
+	/** 
+	 * TOCOMMENT what is the difference between the default and the canonical prefix?
+	 * 
+	 * The DEFAULT_PREFIX for canonical names. */
 	private static final String DEFAULT_PREFIX = "c";
 	
 	/** The Constant CANONICAL_PREFIX. */
 	private static final String CANONICAL_PREFIX = "k";
 
-	/** The global id. */
+	/** A global counter used in generating new names. */
 	private static int globalId = 0;
 
 	/** Index storing all canonical name stored so far (value) and the canonical string there where generated from (key). */
 	private static Map<String, String> skolems = new LinkedHashMap<>();
 
 	/**
+	 * TOCOMMENT The follwoing three methods probably return a new skolem name.
 	 * Gets the name.
 	 *
 	 * @param dependency 		The input dependency

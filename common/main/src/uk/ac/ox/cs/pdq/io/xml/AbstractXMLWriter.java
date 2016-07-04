@@ -6,7 +6,6 @@ import java.util.Properties;
 
 import uk.ac.ox.cs.pdq.io.Writer;
 
-// TODO: Auto-generated Javadoc
 /**
  * Writes experiment sample elements to XML.
  *

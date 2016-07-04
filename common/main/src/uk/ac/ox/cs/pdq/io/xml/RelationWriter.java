@@ -12,7 +12,6 @@ import uk.ac.ox.cs.pdq.db.View;
 import uk.ac.ox.cs.pdq.db.metadata.StaticMetadata;
 import uk.ac.ox.cs.pdq.util.Types;
 
-// TODO: Auto-generated Javadoc
 /**
  * Writes relations to XML.
  * 

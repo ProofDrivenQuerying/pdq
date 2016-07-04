@@ -1,7 +1,11 @@
 package uk.ac.ox.cs.pdq.fol;
 
-// TODO: Auto-generated Javadoc
+
 /**
+ * TOCOMMENT I disaggree with this being an interface. Interfaces are there to describe common functions.
+ * Here we artificially create an interface by merging a functionality onle relative to Variables (isVariable())
+ * with one only relative to Skolems (isSkolem()) (and how about constants?)
+ * 
  * A formula term.
  *
  * @author Efthymia Tsamoura

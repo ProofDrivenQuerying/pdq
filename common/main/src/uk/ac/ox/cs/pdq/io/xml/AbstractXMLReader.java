@@ -9,7 +9,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import uk.ac.ox.cs.pdq.io.Reader;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * Reads experiment sample elements from XML.
  *
@@ -22,7 +22,7 @@ public abstract class AbstractXMLReader<T> extends DefaultHandler implements Rea
 	private static Logger log = Logger.getLogger(AbstractXMLReader.class);
 
 	/**
-	 * To int list.
+	 * Converts a string input comma-separated int list.
 	 *
 	 * @param str the str
 	 * @return a list of integer, from an String input comma-separated int list.
@@ -42,6 +42,7 @@ public abstract class AbstractXMLReader<T> extends DefaultHandler implements Rea
 	}
 
 	/**
+	 * TOCOMMENT ??
 	 * Gets the value.
 	 *
 	 * @param att the att
@@ -53,6 +54,7 @@ public abstract class AbstractXMLReader<T> extends DefaultHandler implements Rea
 	}
 
 	/**
+	 * TOCOMMENT ??
 	 * Gets the int value.
 	 *
 	 * @param att the att

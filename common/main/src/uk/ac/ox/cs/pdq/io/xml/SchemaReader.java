@@ -22,7 +22,6 @@ import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.builder.SchemaBuilder;
 import uk.ac.ox.cs.pdq.io.ReaderException;
 
-// TODO: Auto-generated Javadoc
 /**
  * Reads schemas from XML.
  * 

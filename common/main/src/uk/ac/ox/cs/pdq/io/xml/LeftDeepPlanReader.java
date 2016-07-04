@@ -23,7 +23,6 @@ import uk.ac.ox.cs.pdq.plan.AccessOperator;
 import uk.ac.ox.cs.pdq.plan.DoubleCost;
 import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 
-// TODO: Auto-generated Javadoc
 /**
  * Reads plans from XML.
  * 

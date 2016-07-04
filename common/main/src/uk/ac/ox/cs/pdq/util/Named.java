@@ -1,7 +1,7 @@
 package uk.ac.ox.cs.pdq.util;
 
-// TODO: Auto-generated Javadoc
 /**
+ * TOCOMMENT This seems redundant. Also, a term has a name and Skolem, variable could inherit from there.
  * Common interface for named objects, such as variable and Skolems.
  *
  * @author Julien Leblay
