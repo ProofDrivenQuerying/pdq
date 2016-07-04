@@ -37,7 +37,7 @@ public class EntityRelation extends Relation implements DataType {
 	}
 
 	/**
-	 * Constructor for an accessible rentity relation.
+	 * Constructor for an accessible entity relation.
 	 *
 	 * @param name the name
 	 * @param am the am
