@@ -280,4 +280,11 @@ public class SemanticOptimizationService implements Service {
 			}
 		}
 	}
+	
+	public static boolean filterLBname(String s)
+	{
+		if(s.endsWith(":cond") || s.endsWith(":convert") || s.endsWith(":eq_2") || s.endsWith(":ne_2"))
+			return true;
+		return false;
+	}
 }
