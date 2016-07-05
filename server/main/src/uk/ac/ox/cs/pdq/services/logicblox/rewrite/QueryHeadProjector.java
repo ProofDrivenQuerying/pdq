@@ -31,6 +31,7 @@ public class QueryHeadProjector implements Rewriter<ConjunctiveQuery, Conjunctiv
 	public QueryHeadProjector(ConjunctiveQuery query) {
 		this.terms = new HashSet<>();
 		for (Term t: query.getFree()) {
+			// ??? How could it be that a free term of a query is not variable???
 			if (t.isVariable()) {
 				this.terms.add(query.getGroundingsProjectionOnFreeVars().get(t));
 			} else {

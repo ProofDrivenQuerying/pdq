@@ -148,7 +148,7 @@ public class DatabaseChaseListState extends DatabaseChaseState implements ListSt
 	}
 
 	/* 
-	 * 
+	 * ??? What does false here mean?
 	 * (non-Javadoc)
 	 * @see uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState#chaseStep(java.util.Collection)
 	 */
@@ -423,7 +423,7 @@ public class DatabaseChaseListState extends DatabaseChaseState implements ListSt
 	 * @return List<Match>
 	 * @see uk.ac.ox.cs.pdq.chase.state.ChaseState#getMatches(Query)
 	 */
-	@Override
+	//@Override
 	public List<Match> getMatches(ConjunctiveQuery query) {
 		return this.manager.getMatches(
 				Lists.<Query<?>>newArrayList(query),

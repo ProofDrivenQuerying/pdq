@@ -61,7 +61,7 @@ public class Context {
 	 * then "committed" together so they reference each other. */
 	private Multimap<String, Rule> pendingConstraints = LinkedHashMultimap.create();
 
-	/** Indexes every relation or constraint by their names. */
+	/** Indexes every relation or constraint (the LB/protobuf external objects) by their names. */
 	private Multimap<String, Object> index = LinkedHashMultimap.create();
 
 	/** LB execution graphs's topological order. We maintain a "rank" for all relations; when the query comes all relations
@@ -198,8 +198,7 @@ public class Context {
 	 */
 	public void putRelation(String name, PredicateDeclaration predDecl) {
 		if (!this.index.containsKey(name)) {
-			Relation r = this.proto.unwrapPredicateDeclaration(predDecl);
-			log.debug("Putting relation " + r + " to " + this.workspace.name);
+			log.debug("Putting relation " + this.proto.unwrapPredicateDeclaration(predDecl) + " to " + this.workspace.name);
 			this.pendingRelations.put(name, predDecl);
 			this.hasModifs = true;
 		}
@@ -212,9 +211,8 @@ public class Context {
 	 * @param rule the rule
 	 */
 	public void putView(String name, Rule rule) {
-		View v = (View) this.proto.ruleToView(rule);
 		if (!this.index.containsKey(name)) {
-			log.debug("Putting view " + v.getDefinition() + " to " + this.workspace.name);
+			log.debug("Putting view " + ((View) this.proto.ruleToView(rule)).getDefinition() + " to " + this.workspace.name);
 			this.pendingViews.put(name, rule);
 			this.hasModifs = true;
 		}
@@ -228,8 +226,7 @@ public class Context {
 	 */
 	public void putDependency(String name, Rule rule) {
 		if (!this.index.containsKey(name)) {
-			Dependency c = (Dependency) this.proto.ruleToConstraint(rule);
-			log.debug("Putting constraint " + c + " to " + this.workspace.name);
+			log.debug("Putting constraint " + ((Dependency) this.proto.ruleToDependency(rule)) + " to " + this.workspace.name);
 			this.pendingConstraints.put(name, rule);
 			this.hasModifs = true;
 		}
@@ -312,7 +309,7 @@ public class Context {
 					this.pendingConstraints.entries().iterator(); i.hasNext();) {
 				Entry<String, Rule> entry = i.next();
 				try {
-					Dependency c = (Dependency) this.proto.ruleToConstraint(entry.getValue());
+					Dependency c = (Dependency) this.proto.ruleToDependency(entry.getValue());
 					if (c != null) {
 						this.builder.addDependency(c);
 						this.index.put(entry.getKey(), c);

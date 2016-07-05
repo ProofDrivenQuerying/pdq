@@ -47,10 +47,8 @@ import com.logicblox.common.protocol.CommonProto.Term;
 import com.logicblox.common.protocol.CommonProto.VariableDeclaration;
 import com.logicblox.compiler.ProtoBuf.CompilationUnit;
 
-
-// TODO: Auto-generated Javadoc
 /**
- * Builds a partial schema from a compile result.
+ * Transforms LB/google-protobuf objects into PDQ objects.
  * 
  * @author Julien Leblay
  */
@@ -83,129 +81,129 @@ public class ProtoBufferUnwrapper {
 	public ProtoBufferUnwrapper(SchemaBuilder schema) {
 		this.builder = schema;
 	}
-
-	/**
-	 * Unwrap schema.
-	 *
-	 * @param cu CompilationUnit
-	 * @return Schema
-	 */
-	public Schema unwrapSchema(CompilationUnit cu) {
-		this.unwrapPredicateDeclarations(cu.getPredicateList());
-		for (Clause clause: cu.getClauseList()) {
-			try {
-				switch (clause.getKind()) {
-				case CONSTRAINT:
-					uk.ac.ox.cs.pdq.db.Dependency c = this.unwrapConstraint(clause.getConstraint());
-					if (c != null) {
-						this.builder.addDependency(c);
-					}
-					break;
-				case RULE:
-					Collection<uk.ac.ox.cs.pdq.fol.Rule> col = this.unwrapRule(clause.getRule(), false, true);
-					if (col != null && !col.isEmpty()) {
-						for (uk.ac.ox.cs.pdq.fol.Rule r: col) {
-							if (r instanceof View) {
-								this.builder.addRelation((Relation) r);
-							} else {
-								this.builder.addDependency((uk.ac.ox.cs.pdq.db.Dependency) r);
-							} 
-						}
-					}
-					break;
-				case P2P:
-					this.unwrapP2P(clause.getP2P());
-					break;
-				default:
-					throw new ParserException("Unsupported clause kind " + clause.getKind());
-				}
-			} catch (UnsupportedOperationException | ParserException e) {
-				log.warn("Ignoring clause due to unsupported construct: " + e.getMessage());
-				log.debug("Ignored clause: " + clause);
-			}
-			this.variables.clear();
-		}
-		return this.builder.build();
-	}
+//
+//	/**
+//	 * Unwrap schema.
+//	 *
+//	 * @param cu CompilationUnit
+//	 * @return Schema
+//	 */
+//	public Schema unwrapSchema(CompilationUnit cu) {
+//		this.unwrapPredicateDeclarations(cu.getPredicateList());
+//		for (Clause clause: cu.getClauseList()) {
+//			try {
+//				switch (clause.getKind()) {
+//				case CONSTRAINT:
+//					uk.ac.ox.cs.pdq.db.Dependency c = this.unwrapConstraint(clause.getConstraint());
+//					if (c != null) {
+//						this.builder.addDependency(c);
+//					}
+//					break;
+//				case RULE:
+//					Collection<uk.ac.ox.cs.pdq.fol.Rule> col = this.unwrapRule(clause.getRule(), false, true);
+//					if (col != null && !col.isEmpty()) {
+//						for (uk.ac.ox.cs.pdq.fol.Rule r: col) {
+//							if (r instanceof View) {
+//								this.builder.addRelation((Relation) r);
+//							} else {
+//								this.builder.addDependency((uk.ac.ox.cs.pdq.db.Dependency) r);
+//							} 
+//						}
+//					}
+//					break;
+//				case P2P:
+//					this.unwrapP2P(clause.getP2P());
+//					break;
+//				default:
+//					throw new ParserException("Unsupported clause kind " + clause.getKind());
+//				}
+//			} catch (UnsupportedOperationException | ParserException e) {
+//				log.warn("Ignoring clause due to unsupported construct: " + e.getMessage());
+//				log.debug("Ignored clause: " + clause);
+//			}
+//			this.variables.clear();
+//		}
+//		return this.builder.build();
+//	}
+//	
+//	/**
+//	 * Unwrap queries.
+//	 *
+//	 * @param cu CompilationUnit
+//	 * @return Collection<ConjunctiveQuery>
+//	 */
+//	public Collection<ConjunctiveQuery> unwrapQueries(CompilationUnit cu) {
+// 		this.unwrapPredicateDeclarations(cu.getPredicateList());
+//		Collection<ConjunctiveQuery> result = new LinkedList<>();
+//		for (Clause clause: cu.getClauseList()) {
+//			switch (clause.getKind()) {
+//			case RULE:
+//				for (uk.ac.ox.cs.pdq.fol.Rule rule: this.unwrapRule(clause.getRule(), true, false)) {
+//					result.add((ConjunctiveQuery) rule);
+//				}
+//				break;
+//			default:
+//				log.info("Ignoring clause " + clause);
+//				break;
+//			}
+//			this.variables.clear();
+//		}
+//		return result;
+//	}
 	
-	/**
-	 * Unwrap queries.
-	 *
-	 * @param cu CompilationUnit
-	 * @return Collection<ConjunctiveQuery>
-	 */
-	public Collection<ConjunctiveQuery> unwrapQueries(CompilationUnit cu) {
- 		this.unwrapPredicateDeclarations(cu.getPredicateList());
-		Collection<ConjunctiveQuery> result = new LinkedList<>();
-		for (Clause clause: cu.getClauseList()) {
-			switch (clause.getKind()) {
-			case RULE:
-				for (uk.ac.ox.cs.pdq.fol.Rule rule: this.unwrapRule(clause.getRule(), true, false)) {
-					result.add((ConjunctiveQuery) rule);
-				}
-				break;
-			default:
-				log.info("Ignoring clause " + clause);
-				break;
-			}
-			this.variables.clear();
-		}
-		return result;
-	}
-	
-	/**
-	 * Unwrap predicate declarations.
-	 *
-	 * @param predList List<PredicateDeclaration>
-	 */
-	private void unwrapPredicateDeclarations(List<PredicateDeclaration> predList) {
-		for (PredicateDeclaration predDecl: predList) {
-			switch (predDecl.getDerivationType()) {
-			case DERIVED:
-			case DERIVED_AND_STORED:
-			case NOT_DERIVED:
-			case EXTENSIONAL:
-				this.unwrapPredicateDeclaration(predDecl);
-				break;
-			case INTEGRITY_CONSTRAINT:
-			default:
-				throw new UnsupportedOperationException();
-			}
-		}
-	}
+//	/**
+//	 * Unwrap predicate declarations.
+//	 *
+//	 * @param predList List<PredicateDeclaration>
+//	 */
+//	private void unwrapPredicateDeclarations(List<PredicateDeclaration> predList) {
+//		for (PredicateDeclaration predDecl: predList) {
+//			switch (predDecl.getDerivationType()) {
+//			case DERIVED:
+//			case DERIVED_AND_STORED:
+//			case NOT_DERIVED:
+//			case EXTENSIONAL:
+//				this.unwrapPredicateDeclaration(predDecl);
+//				break;
+//			case INTEGRITY_CONSTRAINT:
+//			default:
+//				throw new UnsupportedOperationException();
+//			}
+//		}
+//	}
+
+//	/**
+//	 * Unwrap constraint.
+//	 *
+//	 * @param constraint Constraint
+//	 * @return the uk.ac.ox.cs.pdq.db. constraint
+//	 */
+//	public uk.ac.ox.cs.pdq.db.Dependency unwrapConstraint(Constraint constraint) {
+//		this.variables.clear();
+//		if (constraint.hasBody()) {
+//			this.variables.putAll(this.unwrapVariableDeclarations(constraint.getBody().getVarList()));
+//			uk.ac.ox.cs.pdq.fol.Formula f = this.unwrapFormula(constraint.getBody().getFormula());
+//			try {
+//				log.debug("Constraint " + f);
+//				 return f.rewrite(new PushEqualityRewriter<>())
+//						.rewrite(new SentenceToRule<>());
+//			} catch (RewriterException e) {
+//				log.warn("Contraint could not be rewritten for PDQ. Ignoring constraint: " + e.getMessage());
+//				log.debug(constraint);
+//				return null;
+//			}
+//		} else {
+//			throw new ParserException("Expected body in constraint " + constraint);
+//		}
+//	}
 
 	/**
-	 * Unwrap constraint.
-	 *
-	 * @param constraint Constraint
-	 * @return the uk.ac.ox.cs.pdq.db. constraint
-	 */
-	public uk.ac.ox.cs.pdq.db.Dependency unwrapConstraint(Constraint constraint) {
-		this.variables.clear();
-		if (constraint.hasBody()) {
-			this.variables.putAll(this.unwrapVariableDeclarations(constraint.getBody().getVarList()));
-			uk.ac.ox.cs.pdq.fol.Formula f = this.unwrapFormula(constraint.getBody().getFormula());
-			try {
-				log.debug("Constraint " + f);
-				 return f.rewrite(new PushEqualityRewriter<>())
-						.rewrite(new SentenceToRule<>());
-			} catch (RewriterException e) {
-				log.warn("Contraint could not be rewritten for PDQ. Ignoring constraint: " + e.getMessage());
-				log.debug(constraint);
-				return null;
-			}
-		} else {
-			throw new ParserException("Expected body in constraint " + constraint);
-		}
-	}
-
-	/**
-	 * Rule to constraint.
+	 * Transforms a LB/protobuffer Rule to a PDQ dependency.
 	 *
 	 * @param rule Rule
-	 * @return Collection<ConjunctiveQuery>
+	 * @return Dependency
 	 */
-	public uk.ac.ox.cs.pdq.db.Dependency ruleToConstraint(Rule rule) {
+	public uk.ac.ox.cs.pdq.db.Dependency ruleToDependency(Rule rule) {
 		this.variables.clear();
 		uk.ac.ox.cs.pdq.fol.Formula body = null;
 		this.variables.putAll(this.unwrapVariableDeclarations(rule.getVarList()));
@@ -230,7 +228,8 @@ public class ProtoBufferUnwrapper {
 	}
 
 	/**
-	 * Rule to view.
+	 * Transforms a LB/protobuffer Rule to a View by calling unwrapRule and casting the result 
+	 * into a View object.
 	 *
 	 * @param rule Rule
 	 * @return View
@@ -244,10 +243,11 @@ public class ProtoBufferUnwrapper {
 	}
 
 	/**
-	 * Rule to query.
-	 *
+	 * Transforms a LB/protobuffer Rule to a ConjunctiveQuery by calling unwrapRule and casting the result 
+	 * into a ConjunctiveQuery object.
+	 * 
 	 * @param rule Rule
-	 * @return Collection<ConjunctiveQuery>
+	 * @return ConjunctiveQuery
 	 */
 	public ConjunctiveQuery ruleToQuery(Rule rule) {
 		Iterator<uk.ac.ox.cs.pdq.fol.Rule> it = this.unwrapRule(rule, true, false).iterator();
@@ -258,12 +258,14 @@ public class ProtoBufferUnwrapper {
 	}
 
 	/**
-	 * Unwrap rule.
+	 *  Transforms a LB/protobuffer Rule to a PDQ fol Rule object.
 	 *
 	 * @param rule Rule
 	 * @param forget boolean if true, the return rule is not recorded into the
-	 * schema. This is typically useful when rule are actually queries.
-	 * @param strict the strict
+	 * schema. This is typically useful when rules are actually queries. Currently this is the only case
+	 * where this is true.
+	 * @param strict if set to true, an exception will be thrown if during the unwrapping of the rule,
+	 * we meet an atom that has not been registered in our schema before.
 	 * @return Collection<Rule>
 	 */
 	public Collection<uk.ac.ox.cs.pdq.fol.Rule> unwrapRule(Rule rule, boolean forget, boolean strict) {
@@ -292,6 +294,7 @@ public class ProtoBufferUnwrapper {
 		if (rule.hasHead()) {
 			this.variables.putAll(this.unwrapVariableDeclarations(rule.getHead().getVarList()));
 			for (HeadAtom atom: rule.getHead().getHeadAtomList()) {
+				//??? how many times is this for called and why we create views for every head atom?
 				Atom headAtom = this.unwrapHeadAtom(atom, strict);
 				if (body.getAtoms().size() > 0) {
 					if (!forget) {
@@ -319,18 +322,10 @@ public class ProtoBufferUnwrapper {
 		}
 		return result;
 	}
-
-	/**
-	 * Unwrap p2 p.
-	 *
-	 * @param p2p P2PMapping
-	 */
-	private void unwrapP2P(P2PMapping p2p) {
-		log.warn("P2P not yet supported.");
-	}
 	
 	/**
-	 * Unwrap predicate declaration.
+	 * Unwrap predicate declaration. This is called only when registering relations in the Context.
+	 * ??? I don't really get this.
 	 *
 	 * @param predDecl PredicateDeclaration
 	 * @return Relation
@@ -343,7 +338,6 @@ public class ProtoBufferUnwrapper {
 		case ENTITY:
 		case SUBENTITY:
 			Relation r = this.builder.getRelation(name);
-			assert r instanceof EntityRelation;
 			EntityRelation e = (EntityRelation) r;
 			if (e == null) {
 				e = this.builder.addEntityRelation(name);
@@ -365,10 +359,14 @@ public class ProtoBufferUnwrapper {
 					attributes.add(new Attribute((Class) cl, "_" + (i++)));
 				} else if (type.hasUnary()) {
 					EntityRelation relType = this.entityTypes.get(type.getUnary().getName());
-					Preconditions.checkNotNull(relType, "No such entity type: " + type.getUnary().getName());
-					Attribute att = relType.getAttribute(0);
-					entityTypedAtts.put(att, relType);
-					attributes.add(att);
+					if(relType == null)
+						log.warn("No such entity type: " + type.getUnary().getName());
+					else
+					{
+						Attribute att = relType.getAttribute(0);
+						entityTypedAtts.put(att, relType);
+						attributes.add(att);
+					}
 				} 
 			}
 			break;
@@ -380,7 +378,7 @@ public class ProtoBufferUnwrapper {
 			db.addLeftAtom(atom);
 			for (int i = 0, l = atom.getTermsCount(); i < l; i++) {
 				Relation r = entityTypedAtts.get(relation.getAttribute(i));
-				if (r != null) {
+				if (r != null) {//if something is an entity type create an inlcusion dependency
 //					attributes.set(i, new Attribute(r, attributes.get(i).getName()));
 					relation = this.builder.addOrReplaceRelation(name, attributes, name.contains(":eq_"));
 					db.addRightAtom(new Atom(r, atom.getTerm(i)));
@@ -395,7 +393,7 @@ public class ProtoBufferUnwrapper {
 	}
 	
 	/**
-	 * Unwrap formula.
+	 * Unwraps a LB/protobuf formula into a PDQ formula. It is used for translating the body of the constraints.
 	 *
 	 * @param formula Formula
 	 * @return uk.ac.ox.cs.pdq.formula.Formula
@@ -403,7 +401,7 @@ public class ProtoBufferUnwrapper {
 	private uk.ac.ox.cs.pdq.fol.Formula unwrapFormula(Formula formula) {
 		switch (formula.getKind()) {
 		case ATOM:
-			return this.unwrapAtom(formula.getAtom(), true);
+			return this.unwrapAtom(formula.getAtom(), false);
 		case CONJUNCTION:
 			uk.ac.ox.cs.pdq.fol.Formula[] conjuncts = new uk.ac.ox.cs.pdq.fol.Formula[formula.getConjunction().getFormulaCount()];
 			int i = 0;
@@ -427,7 +425,7 @@ public class ProtoBufferUnwrapper {
 	}
 
 	/**
-	 * Unwrap atom.
+	 * Translates an LB/protbuf atom into a PDQ atom.
 	 *
 	 * @param atom Atom
 	 * @param strict the strict
@@ -441,7 +439,7 @@ public class ProtoBufferUnwrapper {
 		for (Term term: atom.getValueArgumentList()) {
 			atomBuilder.addTerm(this.unwrapTerm(term));
 		}
-		Predicate relation = this.getRelation(atom);
+		Predicate relation = this.builder.getRelation(atom.getPredicateName());
 		if (relation == null) {
 			if (strict) {
 				throw new ParserException("Referring to unknow predicate " + atom.getPredicateName());
@@ -451,23 +449,9 @@ public class ProtoBufferUnwrapper {
 		atomBuilder.setSignature(relation);
 		return atomBuilder.build();
 	}
-	
-	/**
-	 * Gets the relation.
-	 *
-	 * @param atom Atom
-	 * @return Relation
-	 */
-	private Relation getRelation(com.logicblox.common.protocol.CommonProto.Atom atom) {
-		Relation result = this.builder.getRelation(atom.getPredicateName());
-		if (result != null) {
-			return result;
-		}
-		return null;
-	}
 
 	/**
-	 * Unwrap head atom.
+	 * Translates the head atom of rules/constraints in LB/protobuff format into a PDQ Atom.
 	 *
 	 * @param atom HeadAtom
 	 * @param strict the strict
@@ -481,13 +465,14 @@ public class ProtoBufferUnwrapper {
 	}
 
 	/**
-	 * Unwrap term.
+	 * Unwraps an LB/protobuf term returning a PDQ term as either a variable or a typed constant
 	 *
 	 * @param term Term
 	 * @return uk.ac.ox.cs.pdq.formula.Term
 	 */
 	private uk.ac.ox.cs.pdq.fol.Term unwrapTerm(Term term) {
 		if (term.hasVariable()) {
+			//??? this.variables map seems useless; the right hand side of the pairs is never read.
 			Pair<Variable, Object> vPair = this.variables.get(term.getVariable().getName());
 			if (vPair == null) {
 				log.warn("Referring to undeclared variable " + term.getVariable().getName());
@@ -512,7 +497,11 @@ public class ProtoBufferUnwrapper {
 	
 
 	/**
-	 * Unwrap variable declarations.
+	 * Unwraps variable declarations. Takes a list of VariableDeclaration objects which are 
+	 * LB/protobuf objects defined externally and creates new PDQ Variable objects which have the same name.
+	 * It gets the LB/protobuf type of its variable and "unwraps it", by storing the Java datatype that
+	 * this type corresponds to (currently all var
+	 *  
 	 *
 	 * @param declarations List<VariableDeclaration>
 	 * @return Map<String,Pair<Variable,Object>>
@@ -527,7 +516,9 @@ public class ProtoBufferUnwrapper {
 	}
 
 	/**
-	 * Unwrap type.
+	 * Constructs a LB type to a standard java type.
+	 * Currently this method returns Long as the type of every unknown variable. Not sure what it needs
+	 * to change for this to become more general
 	 *
 	 * @param type com.logicblox.common.protocol.CommonProto.Type
 	 * @return Object
@@ -555,12 +546,11 @@ public class ProtoBufferUnwrapper {
 	}
 	
 	/**
-	 * An exception that occur while parsing a compile result.
+	 * An exception that occures while parsing a compile result.
 	 * @author Julien Leblay
 	 */
 	public static class ParserException extends RuntimeException {
 
-		/**  generated. */
 		private static final long serialVersionUID = 1453097478156826396L;
 
 		/**

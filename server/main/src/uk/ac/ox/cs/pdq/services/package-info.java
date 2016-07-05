@@ -53,8 +53,8 @@ package uk.ac.ox.cs.pdq.services;
 		message's workspace. Then:
 	 		(1) It uses the ProtoBufferUnwrapper object to transform the LB "rule" in the message to a PDQ ConjunctiveQuery, 
 	 		(2) it instantiates a LogicBloxDelegateCostEstimator, which in turn asks LB to cost the original "non-optimized" rule
-     		(3) it calls the planner (passing the LB cost estimator above as a parameter) to optimize the rule and return a DAGPlan
-	 		(4) If the plan return has lower cost than the original query it uses the DAGPlanToConjunctiveQuery object to create a
+			(3) it calls the planner (passing the LB cost estimator above as a parameter) to optimize the rule and return a DAGPlan
+			(4) If the plan return has lower cost than the original query it uses the DAGPlanToConjunctiveQuery object to create a
 	 		    ConjunctiveQuery, 
 	 		    (4.1) It uses a QueryToProtoBuffer object (which is a Rewriter) to write the query into a google protobuf Rule object,
 	 		    and uses the external LB lib to transform this into a google protobuf message (a BloxCommand) delivering it to 
@@ -96,7 +96,8 @@ package uk.ac.ox.cs.pdq.services;
 	-services.logicblox.rewrite: Utility Rewriters.
 		-DAGPlanToConjunctiveQuery.java: Rewrites DAGPlans to conjunctive queries.
 		-Deskolemizer.java: Deskolemizes an input formula, by replacing any Skolem terms with fresh variables.
-		-ProtoBufferUnwrapper.java: It instantiates a new Schema builder, for the schema associated with the workspace of the request. 
+		-ProtoBufferUnwrapper.java: Transforms LB/google-protobuf objects into PDQ objects. It instantiates a new Schema builder, 
+		for the schema associated with the workspace of the request. 
 		 The reason for mainting a builder is ??
 		-PullEqualityRewriter.java: Rewriter that produces an output formula equivalent to the input one, where constants in 
 		 atoms have moved as external equality predicates.
