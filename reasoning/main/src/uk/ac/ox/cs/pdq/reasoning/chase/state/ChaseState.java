@@ -33,18 +33,6 @@ public interface ChaseState {
 	List<Match> getMatches(ConjunctiveQuery query);
 	
 	/**
-	 * (Conjunctive query match definition) If Q′ is a conjunctive query and v is a chase configuration
-	 * having elements for each free variable of Q′, then a homomorphism of Q′ into v
-	 * mapping each free variable into the corresponding element is called a match for Q′ in
-	 * v.
-	 *
-	 * @param query 		An input query
-	 * @param constraints the constraints
-	 * @return 		the list of matches of the input query to the facts of this state that satisfy the input constraints
-	 */
-	List<Match> getMatches(ConjunctiveQuery query, HomomorphismProperty... constraints);
-	
-	/**
 	 * (Candidate match definition).
 	 * Given a set of facts I and a TGD
 	 * 		delta = \forall x_1, ..., x_j \phi(\vec{x}) --> \exists  y_1, ..., y_k \rho(\vec{x},\vec{y})

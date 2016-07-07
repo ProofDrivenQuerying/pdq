@@ -431,22 +431,6 @@ public class DatabaseChaseListState extends DatabaseChaseState implements ListSt
 				HomomorphismProperty.createMapProperty(query.getGroundingsProjectionOnFreeVars()));
 	}
 
-	/**
-	 * Calls the manager to detect homomorphisms of the input query to facts in this state.
-	 * The manager detects homomorphisms using a database backend.
-	 *
-	 * @param query Query
-	 * @param constraints the constraints
-	 * @return List<Match>
-	 * @see uk.ac.ox.cs.pdq.chase.state.ChaseState#getMatches(Query)
-	 */
-	@Override
-	public List<Match> getMatches(ConjunctiveQuery query, HomomorphismProperty... constraints) {
-		HomomorphismProperty[] c = new HomomorphismProperty[constraints.length+1];
-		System.arraycopy(constraints, 0, c, 0, constraints.length);
-		c[constraints.length] = HomomorphismProperty.createFactProperty(Conjunction.of(this.getFacts()));
-		return this.manager.getMatches(Lists.<Query<?>>newArrayList(query), c);
-	}
 
 
 	/**

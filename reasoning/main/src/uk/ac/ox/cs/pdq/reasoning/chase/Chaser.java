@@ -49,29 +49,6 @@ public abstract class Chaser {
 	 */
 	public abstract <S extends ChaseState> void reasonUntilTermination(S instance, Collection<? extends Dependency> dependencies);
 	
-	/**
-	 * Entails.
-	 *
-	 * @param <S> the generic type
-	 * @param instance the instance
-	 * @param free 		Mapping of query's free variables to constants
-	 * @param target the target
-	 * @param constraints the constraints
-	 * @return 		true if the input instance with the given set of free variables and constraints implies the target query.
-	 */
-	public abstract <S extends ChaseState> boolean entails(S instance, Map<Variable, Constant> free, ConjunctiveQuery target, Collection<? extends Dependency<?,?>> constraints);
-	
-	
-	/**
-	 * Entails.
-	 *
-	 * @param <S> the generic type
-	 * @param source the source
-	 * @param target the target
-	 * @param constraints the constraints
-	 * @return 		true if the source query entails the target query
-	 */
-	public abstract boolean entails(ConjunctiveQuery source, ConjunctiveQuery target, Collection<? extends Dependency<?,?>> constraints, HomomorphismDetector detector);
 	
 
 	/* (non-Javadoc)

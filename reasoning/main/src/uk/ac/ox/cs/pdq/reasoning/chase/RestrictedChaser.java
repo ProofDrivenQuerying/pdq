@@ -80,52 +80,6 @@ public class RestrictedChaser extends Chaser {
 		} while (appliedStep);
 	}
 
-	/**
-	 * Entails.
-	 *
-	 * @param <S> the generic type
-	 * @param instance the instance
-	 * @param free 		Mapping of query's free variables to constants
-	 * @param target the target
-	 * @param constraints the constraints
-	 * @return 		true if the input instance with the given set of free variables and constraints implies the target query.
-	 */
-	@Override
-	public <S extends ChaseState> boolean entails(S instance, Map<Variable, Constant> free, ConjunctiveQuery target,
-			Collection<? extends Dependency<?,?>> constraints) {
-		Collection<? extends Dependency<?, ?>> relevantDependencies = new ReasonerUtility().findRelevant(target, constraints);
-		this.reasonUntilTermination(instance, relevantDependencies);
-		if(!instance.isFailed()) {
-			HomomorphismProperty[] c = {
-					HomomorphismProperty.createTopKProperty(1),
-					HomomorphismProperty.createMapProperty(free)};
-			return !instance.getMatches(target,c).isEmpty(); 
-		}
-		return false;
-	}
-
-	/**
-	 * Entails.
-	 *
-	 * @param <S> the generic type
-	 * @param source the source
-	 * @param target the target
-	 * @param constraints the constraints
-	 * @return 		true if the source query entails the target query
-	 */
-	@Override
-	public boolean entails(ConjunctiveQuery source, ConjunctiveQuery target,
-			Collection<? extends Dependency<?,?>> constraints, HomomorphismDetector detector) {	
-		Collection<? extends Dependency<?, ?>> relevantDependencies = new ReasonerUtility().findRelevant(target, constraints);
-		DatabaseChaseListState instance = new DatabaseChaseListState(source, (DatabaseHomomorphismManager)detector);
-		this.reasonUntilTermination(instance, relevantDependencies);
-		if(!instance.isFailed()) {
-			HomomorphismProperty[] c = {
-					HomomorphismProperty.createTopKProperty(1)};
-			return !instance.getMatches(target,c).isEmpty(); 
-		}
-		return false;
-	}
 
 	/* (non-Javadoc)
 	 * @see uk.ac.ox.cs.pdq.reasoning.chase.Chaser#clone()
