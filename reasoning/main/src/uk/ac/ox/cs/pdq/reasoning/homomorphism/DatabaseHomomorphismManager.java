@@ -445,7 +445,7 @@ public class DatabaseHomomorphismManager implements HomomorphismManager {
 		Queue<Triple<Q, String, LinkedHashMap<String, Variable>>> queries = new ConcurrentLinkedQueue<>();;
 		//Create a new query out of each input query that references only the cleaned predicates
 		for(Q source:sources) {
-			Q s = this.convert(source, constraints);
+			Q s = this.convert(source);
 			HomomorphismProperty[] c = null;
 			if(source instanceof EGD) {
 				c = new HomomorphismProperty[constraints.length+1];
@@ -644,7 +644,7 @@ public class DatabaseHomomorphismManager implements HomomorphismManager {
 	 * @param constraints 		A set of constraints that should be satisfied by the homomorphisms of the input formula to the facts of the database 
 	 * @return 		a formula that uses the input *clean* names
 	 */
-	private <Q extends Evaluatable> Q convert(Q source, HomomorphismProperty... constraints) {
+	private <Q extends Evaluatable> Q convert(Q source) {
 		if(source instanceof TGD) {
 			int f = 0;
 			List<Atom> left = Lists.newArrayList();
