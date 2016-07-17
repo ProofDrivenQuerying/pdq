@@ -3,6 +3,7 @@ package uk.ac.ox.cs.pdq.reasoning.homomorphism;
 import java.util.Collection;
 import java.util.List;
 
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Evaluatable;
 import uk.ac.ox.cs.pdq.reasoning.utility.Match;
 
@@ -17,15 +18,25 @@ import uk.ac.ox.cs.pdq.reasoning.utility.Match;
 public interface HomomorphismDetector extends AutoCloseable {
 
 	/**
-	 * Gets the matches.
+	 * Gets the matches of a set of constraints.
 	 *
 	 * @param <Q> the generic type
 	 * @param q the q
 	 * @param constraints the constraints
 	 * @return matches of the input queries q that satisfy the input constraints
 	 */
-	<Q extends Evaluatable> List<Match> getMatches(Collection<Q> q, HomomorphismProperty... constraints);
+	<Q extends Evaluatable> List<Match> getTriggers(Collection<Q> q, TriggerProperty t);
 
+	
+	/**
+	 * Gets the matches/homomorphisms of a cq.
+	 *
+	 * @param <Q> the generic type
+	 * @param q the q
+	 * @param constraints the constraints
+	 * @return matches of the input queries q that satisfy the input constraints
+	 */
+	<Q extends Evaluatable> List<Match> getMatches(ConjunctiveQuery q);
 	
 	/**
 	 * Clone.

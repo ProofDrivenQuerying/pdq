@@ -7,6 +7,7 @@ import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismProperty;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.TriggerProperty;
 import uk.ac.ox.cs.pdq.reasoning.utility.Match;
 
 // TODO: Auto-generated Javadoc
@@ -43,7 +44,7 @@ public interface ChaseState {
 	 * @param constraints 		The homomorphism constraints that should be satisfied 
 	 * @return 		the list of matches (both candidates and not candidates) of the input dependencies in this database instance.
 	 */
-	List<Match> getMatches(Collection<? extends Dependency> dependencies, HomomorphismProperty... constraints);
+	List<Match> getTriggers(Collection<? extends Dependency> dependencies, TriggerProperty t);
 	
 	/**
 	 * Checks if is successful.

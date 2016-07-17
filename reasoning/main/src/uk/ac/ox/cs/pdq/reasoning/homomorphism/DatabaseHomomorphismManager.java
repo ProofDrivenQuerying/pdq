@@ -434,12 +434,34 @@ public class DatabaseHomomorphismManager implements HomomorphismManager {
 		}
 		this.clearedLastQuery = true;
 	}
-
-	/* (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector#getMatches(uk.ac.ox.cs.pdq.fol.Evaluatable, uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismConstraint[])
-	 */
+	
 	@Override
-	public <Q extends Evaluatable> List<Match> getMatches(Collection<Q> sources, HomomorphismProperty... constraints) {
+	public <Q extends Evaluatable> List<Match> getMatches(ConjunctiveQuery query) {
+		
+		HomomorphismProperty[] properties = new HomomorphismProperty[1];
+		properties[0] = HomomorphismProperty.createMapProperty(query.getGroundingsProjectionOnFreeVars());
+		return this.internalGetMatches(Lists.<Query<?>>newArrayList(query),properties);
+	}
+
+	@Override
+	public <Q extends Evaluatable> List<Match> getTriggers(Collection<Q> dependencies, TriggerProperty t) {
+		
+		HomomorphismProperty[] properties = new HomomorphismProperty[1];
+		if(t.equals(TriggerProperty.ACTIVE))
+		{
+			properties[0] = HomomorphismProperty.createActiveTriggerProperty();
+		}
+		return this.internalGetMatches(dependencies, properties);
+		
+	}
+		/**
+		 * private getMatches method for supporting both queries and constraints
+		 * @param sources
+		 * @param properties
+		 * @return
+		 */
+		private <Q extends Evaluatable> List<Match> internalGetMatches(Collection<Q> sources, HomomorphismProperty... properties) {
+
 		Preconditions.checkNotNull(sources);
 		List<Match> result = new LinkedList<>();
 		Queue<Triple<Q, String, LinkedHashMap<String, Variable>>> queries = new ConcurrentLinkedQueue<>();;
@@ -448,12 +470,12 @@ public class DatabaseHomomorphismManager implements HomomorphismManager {
 			Q s = this.convert(source);
 			HomomorphismProperty[] c = null;
 			if(source instanceof EGD) {
-				c = new HomomorphismProperty[constraints.length+1];
-				System.arraycopy(constraints, 0, c, 0, constraints.length);
-				c[constraints.length] = HomomorphismProperty.createEGDHomomorphismProperty();
+				c = new HomomorphismProperty[properties.length+1];
+				System.arraycopy(properties, 0, c, 0, properties.length);
+				c[properties.length] = HomomorphismProperty.createEGDHomomorphismProperty();
 			}
 			else {
-				c = constraints;
+				c = properties;
 			}
 			//Create an SQL statement for the cleaned query
 			Pair<String, LinkedHashMap<String, Variable>> pair = this.builder.createQuery(s, c);

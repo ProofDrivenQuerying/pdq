@@ -16,6 +16,7 @@ import uk.ac.ox.cs.pdq.reasoning.chase.state.ListState;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.DatabaseHomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismProperty;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.TriggerProperty;
 import uk.ac.ox.cs.pdq.reasoning.utility.DefaultTGDDependencyAssessor;
 import uk.ac.ox.cs.pdq.reasoning.utility.Match;
 import uk.ac.ox.cs.pdq.reasoning.utility.ReasonerUtility;
@@ -70,7 +71,7 @@ public class RestrictedChaser extends Chaser {
 		do {
 			appliedStep = false;
 			for(Dependency dependency:d) {
-				List<Match> matches = instance.getMatches(Lists.newArrayList(dependency), HomomorphismProperty.createActiveTriggerProperty());	
+				List<Match> matches = instance.getTriggers(Lists.newArrayList(dependency), TriggerProperty.ACTIVE);	
 				if(!matches.isEmpty()) {
 					appliedStep = true;
 				}

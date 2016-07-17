@@ -19,6 +19,7 @@ import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.DatabaseHomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismProperty;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.TriggerProperty;
 import uk.ac.ox.cs.pdq.reasoning.utility.EqualConstantsClass;
 import uk.ac.ox.cs.pdq.reasoning.utility.EqualConstantsClasses;
 import uk.ac.ox.cs.pdq.reasoning.utility.Match;
@@ -421,14 +422,15 @@ public class DatabaseChaseListState extends DatabaseChaseState implements ListSt
 	 * The manager detects homomorphisms using a database backend.
 	 * @param query Query
 	 * @return List<Match>
-	 * @see uk.ac.ox.cs.pdq.chase.state.ChaseState#getMatches(Query)
+	 * @see uk.ac.ox.cs.pdq.chase.state.ChaseState#getTriggers(Query)
 	 */
 	//@Override
 	public List<Match> getMatches(ConjunctiveQuery query) {
-		return this.manager.getMatches(
-				Lists.<Query<?>>newArrayList(query),
+		return this.manager.getMatches(query);
+				/*,
 				HomomorphismProperty.createFactProperty(Conjunction.of(this.getFacts())),
 				HomomorphismProperty.createMapProperty(query.getGroundingsProjectionOnFreeVars()));
+				*/
 	}
 
 
@@ -442,11 +444,17 @@ public class DatabaseChaseListState extends DatabaseChaseState implements ListSt
 	 * @see uk.ac.ox.cs.pdq.chase.state.ChaseState#getHomomorphisms(Collection<D>)
 	 */
 	@Override
-	public List<Match> getMatches(Collection<? extends Dependency> dependencies, HomomorphismProperty... constraints) {
-		HomomorphismProperty[] c = new HomomorphismProperty[constraints.length+1];
-		System.arraycopy(constraints, 0, c, 0, constraints.length);
-		c[constraints.length] = HomomorphismProperty.createFactProperty(Conjunction.of(this.getFacts()));
-		return this.manager.getMatches(dependencies, c);
+	public List<Match> getTriggers(Collection<? extends Dependency> dependencies,TriggerProperty t) {
+		
+		
+		//HomomorphismProperty[] c = new HomomorphismProperty[1];
+		//c[0] = HomomorphismProperty.createActiveTriggerProperty();
+		//c[1] = HomomorphismProperty.createFactProperty(Conjunction.of(this.getFacts()));
+		
+//		HomomorphismProperty[] c = new HomomorphismProperty[constraints.length+1];
+//		System.arraycopy(constraints, 0, c, 0, constraints.length);
+//		c[constraints.length] = HomomorphismProperty.createFactProperty(Conjunction.of(this.getFacts()));
+		return this.manager.getTriggers(dependencies,t);
 	}
 
 

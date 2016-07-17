@@ -8,6 +8,7 @@ import uk.ac.ox.cs.pdq.logging.performance.StatisticsCollector;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ListState;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismProperty;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.TriggerProperty;
 import uk.ac.ox.cs.pdq.reasoning.utility.Match;
 import uk.ac.ox.cs.pdq.reasoning.utility.ReasonerUtility;
 
@@ -58,7 +59,7 @@ public class KTerminationChaser extends RestrictedChaser {
 		boolean appliedStep = true;
 		while (rounds < this.k && appliedStep) {
 			appliedStep = false;
-			List<Match> matches = instance.getMatches(dependencies, HomomorphismProperty.createOpenTriggerProperty());
+			List<Match> matches = instance.getTriggers(dependencies, TriggerProperty.ACTIVE);
 			if(!matches.isEmpty()) {
 				appliedStep = true;
 			}

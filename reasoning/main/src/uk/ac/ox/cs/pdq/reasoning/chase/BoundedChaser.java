@@ -8,6 +8,7 @@ import uk.ac.ox.cs.pdq.logging.performance.StatisticsCollector;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ListState;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismProperty;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.TriggerProperty;
 import uk.ac.ox.cs.pdq.reasoning.utility.Match;
 
 import com.google.common.base.Preconditions;
@@ -86,7 +87,7 @@ public class BoundedChaser extends RestrictedChaser {
 		boolean appliedStep = true;
 		while (rounds < this.k.get() && appliedStep) {
 			appliedStep = false;
-			List<Match> matches = intance.getMatches(dependencies, HomomorphismProperty.createActiveTriggerProperty());
+			List<Match> matches = intance.getTriggers(dependencies, TriggerProperty.ACTIVE);
 			if(!matches.isEmpty()) {
 				appliedStep = true;
 			}

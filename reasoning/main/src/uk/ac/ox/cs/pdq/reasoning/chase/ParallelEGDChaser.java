@@ -18,6 +18,7 @@ import uk.ac.ox.cs.pdq.reasoning.chase.state.ListState;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.DatabaseHomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismProperty;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.TriggerProperty;
 import uk.ac.ox.cs.pdq.reasoning.utility.DefaultParallelEGDChaseDependencyAssessor;
 import uk.ac.ox.cs.pdq.reasoning.utility.Match;
 import uk.ac.ox.cs.pdq.reasoning.utility.ParallelEGDChaseDependencyAssessor;
@@ -99,7 +100,7 @@ public class ParallelEGDChaser extends Chaser {
 			++step;
 			//Find all active triggers
 			Collection<? extends Dependency> d = step % 2 == 0 ? accessor.getDependencies(instance, EGDROUND.TGD):accessor.getDependencies(instance, EGDROUND.EGD);
-			List<Match> activeTriggers = instance.getMatches(d, HomomorphismProperty.createActiveTriggerProperty());
+			List<Match> activeTriggers = instance.getTriggers(d,TriggerProperty.ACTIVE);
 			boolean succeeds = instance.chaseStep(activeTriggers);
 			if(!succeeds) {
 				break;
