@@ -1,10 +1,8 @@
-package uk.ac.ox.cs.pdq.reasoning.homomorphism;
+package uk.ac.ox.cs.pdq.db;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.io.xml.QNames;
 
 /**
