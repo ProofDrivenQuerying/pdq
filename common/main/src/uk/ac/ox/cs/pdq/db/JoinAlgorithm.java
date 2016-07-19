@@ -143,7 +143,7 @@ public class JoinAlgorithm {
 		
 		//Create an index of all atoms of table one, indexing on the join attribute
 		for( Atom tuple: table1.getTuples() ){
-			List<Atom> v = indexOnFirstJoinAttribute.getOrDefault(tuple.getTerm(index1), new ArrayList<Atom>());
+			List<Atom> v = (indexOnFirstJoinAttribute.get(tuple.getTerm(index1)) != null)?indexOnFirstJoinAttribute.get(tuple.getTerm(index1)): new ArrayList<Atom>();
 			v.add(tuple);
 			indexOnFirstJoinAttribute.put( tuple.getTerm(index1), v);
 		}
