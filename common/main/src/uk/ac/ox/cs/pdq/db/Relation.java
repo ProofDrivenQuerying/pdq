@@ -45,14 +45,6 @@ public abstract class Relation extends Predicate implements Serializable {
 	 */
 	protected final int relationId;
 
-	/**
-	 * TOCOMMENT not sure what this is
-	 * The Enum PropertyKeys.
-	 */
-	public static enum PropertyKeys { 
-		/** The metadata. */
-		METADATA }
-
 	/** 
 	 * Properties associated with this relation; these may be SQL
 	 * connection parameters, web service settings, etc. depending on the
@@ -93,6 +85,9 @@ public abstract class Relation extends Predicate implements Serializable {
 
 	/** The key positions. */
 	protected List<Integer> keyPositions = null;
+
+	/** Every relation has associated metadata stored in a separate object **/
+	private RelationMetadata metadataRelation;
 
 
 	/**
@@ -538,22 +533,20 @@ public abstract class Relation extends Predicate implements Serializable {
 	}
 
 	/**
-	 * TOCOMMENT ???
-	 * Gets the metadata.
+	 * Gets the metadata object of the relation.
 	 *
 	 * @return RelationMetadata
 	 */
 	public RelationMetadata getMetadata() {
-		return (RelationMetadata) this.properties.get(PropertyKeys.METADATA);
+		return this.metadataRelation;
 	}
 
 	/**
-	 * TOCOMMENT ???
-	 * Sets the metadata.
+	 * Sets the metadata of the Relation.
 	 *
 	 * @param metadata RelationMetadata
 	 */
 	public void setMetadata(RelationMetadata metadata) {
-		this.properties.put(PropertyKeys.METADATA, metadata);
+		this.metadataRelation = metadata;
 	}
 }

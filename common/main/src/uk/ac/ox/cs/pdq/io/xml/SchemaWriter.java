@@ -102,7 +102,6 @@ public class SchemaWriter extends AbstractXMLWriter<Schema> {
 			open(out, QNames.SOURCES);
 			for (Properties p: properties) {
 				Properties p2 = new Properties(p);
-				p2.remove(Relation.PropertyKeys.METADATA);
 				if (!p2.isEmpty()) {
 					openclose(out, QNames.SOURCE, p2);
 				}

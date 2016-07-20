@@ -80,7 +80,6 @@ public final class Middleware {
 		for (AccessOperator access: plan.getAccesses()) {
 			Properties properties = new Properties();
 			properties.putAll(access.getRelation().getProperties());
-			properties.remove(Relation.PropertyKeys.METADATA);
 			if (result == null) {
 				result = properties;
 			} else if (!(properties.equals(result))) {

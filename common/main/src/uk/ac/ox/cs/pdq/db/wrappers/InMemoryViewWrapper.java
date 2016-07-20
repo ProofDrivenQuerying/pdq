@@ -128,15 +128,6 @@ public class InMemoryViewWrapper extends View
 		return result;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.runtime.wrappers.RelationAccessWrapper#getProperties()
-	 */
-	@Override
-	public Properties getProperties() {
-		return new Properties();
-	}
-
 	/**
 	 * Iterator.
 	 *

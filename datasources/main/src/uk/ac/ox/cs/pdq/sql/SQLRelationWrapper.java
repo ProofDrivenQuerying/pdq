@@ -239,13 +239,4 @@ public class SQLRelationWrapper extends Relation implements RelationAccessWrappe
 		}
 		return this.connection;
 	}
-	
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.schema.Relation#getProperties()
-	 */
-	@Override
-	public Properties getProperties() {
-		return this.properties;
-	}
 }

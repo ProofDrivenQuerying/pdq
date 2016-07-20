@@ -169,15 +169,6 @@ public class InMemoryTableWrapper extends Relation
 		return result;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.runtime.wrappers.RelationAccessWrapper#getProperties()
-	 */
-	@Override
-	public Properties getProperties() {
-		return new Properties();
-	}
-
 	/**
 	 * TOCOMMENT what is the difference between the different iterators?
 	 * 

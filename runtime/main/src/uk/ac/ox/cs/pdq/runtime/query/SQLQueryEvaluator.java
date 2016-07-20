@@ -257,7 +257,6 @@ public class SQLQueryEvaluator implements QueryEvaluator {
 			Properties properties = new Properties();
 			if (sig instanceof Relation) {
 				properties.putAll(((Relation) sig).getProperties());
-				properties.remove(Relation.PropertyKeys.METADATA);
 				if (result == null) {
 					result = properties;
 				} else if (!(properties.equals(result))) {
