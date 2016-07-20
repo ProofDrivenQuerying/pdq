@@ -23,7 +23,7 @@ import uk.ac.ox.cs.pdq.fol.Skolem;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.logging.performance.StatisticsCollector;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
-import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseListState;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseState;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.DatabaseHomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.sqlstatement.MySQLStatementBuilder;
 
@@ -39,7 +39,7 @@ import com.google.common.eventbus.EventBus;
 public class TestRestrictedChaser {
 
 	protected DatabaseHomomorphismManager manager;
-	protected DatabaseChaseListState state;
+	protected DatabaseChaseState state;
 	protected RestrictedChaser chaser;
 	
 	private Relation rel1;
@@ -105,7 +105,7 @@ public class TestRestrictedChaser {
 
 		Atom f24 = new Atom(this.rel1, 
 				Lists.newArrayList(new Skolem("k5"), new Skolem("c"),new TypedConstant(new String("John"))));
-		this.state = new DatabaseChaseListState(this.manager, Sets.newHashSet(f20,f21,f22,f23,f24));
+		this.state = new DatabaseChaseState(this.manager, Sets.newHashSet(f20,f21,f22,f23,f24));
 		this.chaser.reasonUntilTermination(this.state, Lists.<Dependency>newArrayList(this.tgd,this.egd));
 		Assert.assertEquals(false, this.state.isFailed());
 		

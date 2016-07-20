@@ -21,7 +21,7 @@ import uk.ac.ox.cs.pdq.fol.Equality;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Skolem;
 import uk.ac.ox.cs.pdq.fol.Variable;
-import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseListState;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseState;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.MainMemoryHomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.utility.Match;
@@ -37,7 +37,7 @@ import com.google.common.collect.Sets;
  */
 public class TestMainMemoryChaseListState {
 
-	protected DatabaseChaseListState state;
+	protected DatabaseChaseState state;
 	@Mock 
 	protected MainMemoryHomomorphismManager manager;
 	
@@ -70,7 +70,7 @@ public class TestMainMemoryChaseListState {
 		Atom f4 = new Atom(new Predicate("R2",2), 
 				Lists.newArrayList(new Skolem("c2"),new Skolem("c4")));
 		
-		this.state = new DatabaseChaseListState(this.manager, Sets.<Atom>newHashSet(f0, f1, f2, f3, f4));
+		this.state = new DatabaseChaseState(this.manager, Sets.<Atom>newHashSet(f0, f1, f2, f3, f4));
 		Map<Variable, Constant> map1 = new HashMap<>();
 		map1.put(new Variable("y"), new Skolem("c"));
 		map1.put(new Variable("z"), new Skolem("c1"));

@@ -6,7 +6,6 @@ import java.util.List;
 import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.logging.performance.StatisticsCollector;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState;
-import uk.ac.ox.cs.pdq.reasoning.chase.state.ListState;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismProperty;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.TriggerProperty;
 import uk.ac.ox.cs.pdq.reasoning.utility.Match;
@@ -81,13 +80,13 @@ public class BoundedChaser extends RestrictedChaser {
 	 * @param dependencies the dependencies
 	 */
 	@Override
-	public <S extends ChaseState> void reasonUntilTermination(S intance,  Collection<? extends Dependency> dependencies) {
-		Preconditions.checkArgument(intance instanceof ListState);
+	public <S extends ChaseState> void reasonUntilTermination(S instance,  Collection<? extends Dependency> dependencies) {
+		Preconditions.checkArgument(instance instanceof ChaseState);
 		int rounds = 0;
 		boolean appliedStep = true;
 		while (rounds < this.k.get() && appliedStep) {
 			appliedStep = false;
-			List<Match> matches = intance.getTriggers(dependencies, TriggerProperty.ACTIVE);
+			List<Match> matches = instance.getTriggers(dependencies, TriggerProperty.ACTIVE);
 			if(!matches.isEmpty()) {
 				appliedStep = true;
 			}

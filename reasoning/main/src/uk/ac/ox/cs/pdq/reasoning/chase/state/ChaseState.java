@@ -14,8 +14,9 @@ import uk.ac.ox.cs.pdq.reasoning.utility.Match;
 /**
  *
  * A collection of facts produced during chasing.
- * It also keeps a graph of the rule firings that took place during chasing.
+ * It also keeps a graph of the rule firings that took place during chasing. //TOCOMMENT: I'm not sure where the latter sentence is true 
  *
+ * @author George K
  * @author Efthymia Tsamoura
  *
  */
@@ -41,19 +42,10 @@ public interface ChaseState {
 	 * 		holds in I.
 	 *
 	 * @param dependencies the dependencies
-	 * @param constraints 		The homomorphism constraints that should be satisfied 
+	 * @param t 		The TriggerProperty constraints that should be satisfied 
 	 * @return 		the list of matches (both candidates and not candidates) of the input dependencies in this database instance.
 	 */
 	List<Match> getTriggers(Collection<? extends Dependency> dependencies, TriggerProperty t);
-	
-	/**
-	 * Checks if is successful.
-	 *
-	 * @param query the query
-	 * @return 		true if this database instance is successful
-	 */
-	boolean isSuccessful(ConjunctiveQuery query);
-	
 	
 	/**
 	 * Checks if is failed.
@@ -68,6 +60,13 @@ public interface ChaseState {
 	 * @return the facts of this instance
 	 */
 	Collection<Atom> getFacts();
+	
+	/**
+	 * Augments the internal facts with the new ones.
+	 *
+	 * @param facts the facts
+	 */
+	void addFacts(Collection<Atom> facts);
 	
 	
 	/**

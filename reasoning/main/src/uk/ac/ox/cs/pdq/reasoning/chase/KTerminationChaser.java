@@ -6,7 +6,6 @@ import java.util.List;
 import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.logging.performance.StatisticsCollector;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState;
-import uk.ac.ox.cs.pdq.reasoning.chase.state.ListState;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismProperty;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.TriggerProperty;
 import uk.ac.ox.cs.pdq.reasoning.utility.Match;
@@ -53,7 +52,7 @@ public class KTerminationChaser extends RestrictedChaser {
 	 */
 	@Override
 	public <S extends ChaseState> void reasonUntilTermination(S instance, Collection<? extends Dependency> dependencies) {
-		Preconditions.checkArgument(instance instanceof ListState);
+		Preconditions.checkArgument(instance instanceof ChaseState);
 		Preconditions.checkArgument(!ReasonerUtility.checkEGDs(dependencies), "KTerminationChaser is not allowed with EGDs");
 		int rounds = 0;
 		boolean appliedStep = true;

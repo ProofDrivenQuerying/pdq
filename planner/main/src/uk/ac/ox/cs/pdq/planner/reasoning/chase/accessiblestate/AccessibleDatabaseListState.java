@@ -29,7 +29,7 @@ import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema.InferredAccessi
 import uk.ac.ox.cs.pdq.planner.reasoning.MatchFactory;
 import uk.ac.ox.cs.pdq.planner.util.FiringGraph;
 import uk.ac.ox.cs.pdq.planner.util.MapFiringGraph;
-import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseListState;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseState;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.DatabaseHomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.utility.EqualConstantsClasses;
@@ -56,7 +56,7 @@ import com.google.common.collect.Sets;
  * 	under the constraints and c' is a representative.
  * 	The database is cleared from the obsolete facts after a chase step is applied.
  */
-public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseListState implements AccessibleChaseState {
+public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseState implements AccessibleChaseState {
 
 	/**  The firings that took place in this state. */
 	protected FiringGraph graph;
@@ -395,7 +395,7 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 		accessibleTerms.putAll(((AccessibleDatabaseListState)s).accessibleTerms);
 		
 		EqualConstantsClasses classes = this.classes.clone();
-		if(!classes.merge(((DatabaseChaseListState)s).getConstantClasses())) {
+		if(!classes.merge(((DatabaseChaseState)s).getConstantClasses())) {
 			return null;
 		}
 		

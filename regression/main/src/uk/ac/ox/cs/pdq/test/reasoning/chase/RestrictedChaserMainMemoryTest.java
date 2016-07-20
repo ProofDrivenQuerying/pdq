@@ -25,9 +25,7 @@ import uk.ac.ox.cs.pdq.io.xml.QueryReader;
 import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
 import uk.ac.ox.cs.pdq.logging.performance.StatisticsCollector;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
-import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseListState;
-import uk.ac.ox.cs.pdq.reasoning.chase.state.ListState;
-//import uk.ac.ox.cs.pdq.reasoning.homomorphism.DatabaseHomomorphismManager;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseState;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.MainMemoryHomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.sqlstatement.MySQLStatementBuilder;
@@ -214,7 +212,7 @@ public class RestrictedChaserMainMemoryTest {
 				SQLStatementBuilder builder = new MySQLStatementBuilder();
 				HomomorphismManager detector = new MainMemoryHomomorphismManager(schema);
 				detector.initialize();
-				ListState state = new DatabaseChaseListState(query, (HomomorphismManager) detector);				
+				DatabaseChaseState state = new DatabaseChaseState(query, (HomomorphismManager) detector);				
 				reasoner.reasonUntilTermination(state, schema.getDependencies());
 				Collection<Atom> expected = loadFacts(PATH + f, schema);
 				if(expected.size() != state.getFacts().size()) {
