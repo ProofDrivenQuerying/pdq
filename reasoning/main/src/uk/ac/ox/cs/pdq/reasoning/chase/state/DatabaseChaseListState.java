@@ -17,7 +17,7 @@ import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.DatabaseHomomorphismManager;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismProperty;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.TriggerProperty;
 import uk.ac.ox.cs.pdq.reasoning.utility.EqualConstantsClass;
@@ -72,7 +72,7 @@ public class DatabaseChaseListState extends DatabaseChaseState implements ListSt
 	 * @param manager the manager
 	 */
 	public DatabaseChaseListState(ConjunctiveQuery query, 
-			DatabaseHomomorphismManager manager) {
+			HomomorphismManager manager) {
 		super(manager);
 		this.facts = Sets.newHashSet(query.ground(ConjunctiveQuery.generateCanonicalMapping(query.getBody())).getAtoms());
 		this.classes = new EqualConstantsClasses();
@@ -87,7 +87,7 @@ public class DatabaseChaseListState extends DatabaseChaseState implements ListSt
 	 * @param facts the facts
 	 */
 	public DatabaseChaseListState(
-			DatabaseHomomorphismManager manager,
+			HomomorphismManager manager,
 			Collection<Atom> facts) {
 		super(manager);
 		Preconditions.checkNotNull(facts);
@@ -106,7 +106,7 @@ public class DatabaseChaseListState extends DatabaseChaseState implements ListSt
 	 * @param classes the constant classes
 	 */
 	protected DatabaseChaseListState(
-			DatabaseHomomorphismManager manager,
+			HomomorphismManager manager,
 			Collection<Atom> facts,
 			EqualConstantsClasses classes,
 			Multimap<Constant,Atom> constants

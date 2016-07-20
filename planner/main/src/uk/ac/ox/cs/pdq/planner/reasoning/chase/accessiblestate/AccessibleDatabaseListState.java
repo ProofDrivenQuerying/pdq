@@ -31,6 +31,7 @@ import uk.ac.ox.cs.pdq.planner.util.FiringGraph;
 import uk.ac.ox.cs.pdq.planner.util.MapFiringGraph;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseListState;
 import uk.ac.ox.cs.pdq.reasoning.homomorphism.DatabaseHomomorphismManager;
+import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismManager;
 import uk.ac.ox.cs.pdq.reasoning.utility.EqualConstantsClasses;
 import uk.ac.ox.cs.pdq.reasoning.utility.Match;
 
@@ -79,7 +80,7 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 	 * @param schema the schema
 	 * @param manager the manager
 	 */
-	public AccessibleDatabaseListState(ConjunctiveQuery query, Schema schema, DatabaseHomomorphismManager manager, boolean maintainProvenance) {
+	public AccessibleDatabaseListState(ConjunctiveQuery query, Schema schema, HomomorphismManager manager, boolean maintainProvenance) {
 		this(manager, 
 				createInitialFacts(query, schema), 
 				maintainProvenance == true ? new MapFiringGraph() : null,
@@ -92,7 +93,7 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 		this.manager.addFacts(this.facts);
 	}
 	
-	public AccessibleDatabaseListState(Collection<Atom> facts, DatabaseHomomorphismManager manager, boolean maintainProvenance) {
+	public AccessibleDatabaseListState(Collection<Atom> facts, HomomorphismManager manager, boolean maintainProvenance) {
 		this(manager, 
 				facts, 
 				maintainProvenance == true ? new MapFiringGraph() : null,
@@ -139,7 +140,7 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 	 * @param accessibleTerms the accessible terms
 	 */
 	private AccessibleDatabaseListState(
-			DatabaseHomomorphismManager manager,
+			HomomorphismManager manager,
 			Collection<Atom> facts,
 			FiringGraph graph,
 			EqualConstantsClasses constantClasses,
