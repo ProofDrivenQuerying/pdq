@@ -1,9 +1,10 @@
-package uk.ac.ox.cs.pdq.reasoning.homomorphism;
+package uk.ac.ox.cs.pdq.db.sql;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,14 +14,12 @@ import java.util.concurrent.Callable;
 
 import org.apache.commons.lang3.tuple.Triple;
 
+import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Evaluatable;
 import uk.ac.ox.cs.pdq.fol.Skolem;
 import uk.ac.ox.cs.pdq.fol.Variable;
-import uk.ac.ox.cs.pdq.reasoning.utility.Match;
-
-import com.beust.jcommander.internal.Lists;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -59,7 +58,7 @@ public class ExecuteSQLQueryThread<Q extends Evaluatable> implements Callable<Li
 	@Override
 	public List<Match> call() {
 		
-		List<Match> results = Lists.newArrayList();
+		List<Match> results = new ArrayList<Match>();
 		Triple<Q, String, LinkedHashMap<String, Variable>> entry;
 		while ((entry = this.queries.poll()) != null) {
 			try {

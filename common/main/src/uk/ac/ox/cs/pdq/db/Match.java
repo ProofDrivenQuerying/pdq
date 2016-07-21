@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.reasoning.utility;
+package uk.ac.ox.cs.pdq.db;
 
 import java.util.Map;
 import java.util.Objects;

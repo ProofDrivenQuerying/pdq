@@ -16,6 +16,8 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TGD;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
+import uk.ac.ox.cs.pdq.db.homomorphism.DatabaseHomomorphismManager;
+import uk.ac.ox.cs.pdq.db.sql.MySQLStatementBuilder;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.Equality;
@@ -24,8 +26,6 @@ import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.logging.performance.StatisticsCollector;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseState;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.DatabaseHomomorphismManager;
-import uk.ac.ox.cs.pdq.reasoning.sqlstatement.MySQLStatementBuilder;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;

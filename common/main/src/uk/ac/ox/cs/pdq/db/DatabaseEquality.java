@@ -1,9 +1,8 @@
-package uk.ac.ox.cs.pdq.reasoning.homomorphism;
+package uk.ac.ox.cs.pdq.db;
 
 import java.util.Collection;
 import java.util.Map;
 
-import uk.ac.ox.cs.pdq.db.DatabaseRelation;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Term;

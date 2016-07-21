@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.reasoning.homomorphism;
+package uk.ac.ox.cs.pdq.db.sql;
 
 import java.sql.Connection;
 import java.sql.SQLException;

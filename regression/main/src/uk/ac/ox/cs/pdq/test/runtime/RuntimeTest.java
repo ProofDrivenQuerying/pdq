@@ -11,6 +11,10 @@ import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
+import uk.ac.ox.cs.pdq.db.homomorphism.DatabaseHomomorphismManager;
+import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismDetector;
+import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismManager;
+import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismManagerFactory;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Query;
@@ -27,10 +31,6 @@ import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.logging.IntervalEventDrivenLogger;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.DatabaseHomomorphismManager;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismManager;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismManagerFactory;
 import uk.ac.ox.cs.pdq.runtime.EvaluationException;
 import uk.ac.ox.cs.pdq.runtime.Runtime;
 import uk.ac.ox.cs.pdq.runtime.RuntimeParameters;
@@ -158,7 +158,13 @@ public class RuntimeTest extends RegressionTest {
 		ReasoningParameters reasoningParams = new ReasoningParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
 		AccessibleSchema accessibleSchema = new AccessibleSchema(schema);
 		Query<?> accessibleQuery = accessibleSchema.accessible(query);
-		try (HomomorphismManager manager = new HomomorphismManagerFactory().getInstance(accessibleSchema, reasoningParams)) {
+		try (HomomorphismManager manager = new HomomorphismManagerFactory().getInstance(accessibleSchema, 
+				reasoningParams.getHomomorphismDetectorType(), 
+				reasoningParams.getDatabaseDriver(), 
+				reasoningParams.getConnectionUrl(),
+				reasoningParams.getDatabaseName(), 
+				reasoningParams.getDatabaseUser(),
+				reasoningParams.getDatabasePassword())) {
 //			manager.addQuery(accessibleQuery);
 			DataValidationImplementation dataValidator = new DataValidationImplementation(schema, (DatabaseHomomorphismManager) manager);
 			dataValidator.validate();

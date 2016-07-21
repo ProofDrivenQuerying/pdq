@@ -1,7 +1,8 @@
-package uk.ac.ox.cs.pdq.reasoning.sqlstatement;
+package uk.ac.ox.cs.pdq.db.sql;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -16,11 +17,18 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.db.DatabaseEGD;
+import uk.ac.ox.cs.pdq.db.DatabaseEquality;
 import uk.ac.ox.cs.pdq.db.DatabaseRelation;
 import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TGD;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
+import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismProperty;
+import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismProperty.ActiveTriggerProperty;
+import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismProperty.EGDHomomorphismProperty;
+import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismProperty.FactProperty;
+import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismProperty.MapProperty;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.Constant;
@@ -29,17 +37,8 @@ import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.DatabaseEGD;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.DatabaseEquality;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismProperty;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismProperty.ActiveTriggerProperty;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismProperty.EGDHomomorphismProperty;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismProperty.FactProperty;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismProperty.MapProperty;
 import uk.ac.ox.cs.pdq.util.Utility;
 
-import com.beust.jcommander.internal.Lists;
-import com.beust.jcommander.internal.Maps;
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.BiMap;
@@ -126,7 +125,7 @@ public abstract class SQLStatementBuilder {
 		insertInto += DatabaseRelation.Fact.getName();
 		insertInto += " IN" + "\n"; 
 
-		List<String> tuples = Lists.newArrayList();
+		List<String> tuples = new ArrayList<String>();
 		for (Atom fact:facts) {
 			String tuple = "(" + fact.getId() + ")";
 			tuples.add(tuple);
@@ -464,7 +463,7 @@ public abstract class SQLStatementBuilder {
 			for(DatabaseEquality rightAtom:((DatabaseEGD)source).getHead()) {
 				Relation rightRelation = (Relation) rightAtom.getPredicate();
 				String rightAlias = this.aliases.get(rightAtom);
-				Map<Integer,Pair<String,Attribute>> rightToLeft = Maps.newHashMap();
+				Map<Integer,Pair<String,Attribute>> rightToLeft = new HashMap<Integer,Pair<String,Attribute>>();
 				for(Term term:rightAtom.getTerms()) {
 					List<Integer> rightPositions = rightAtom.getTermPositions(term); //all the positions for the same term should be equated
 					Preconditions.checkArgument(rightPositions.size() == 1);

@@ -1,11 +1,12 @@
-package uk.ac.ox.cs.pdq.reasoning.homomorphism;
+package uk.ac.ox.cs.pdq.db.homomorphism;
 
 import java.util.Collection;
 import java.util.List;
 
+import uk.ac.ox.cs.pdq.Parameters.EnumParameterValue;
+import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Evaluatable;
-import uk.ac.ox.cs.pdq.reasoning.utility.Match;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -44,4 +45,14 @@ public interface HomomorphismDetector extends AutoCloseable {
 	 * @return the homomorphism detector
 	 */
 	HomomorphismDetector clone();
+	
+	/**
+	 * The Enum HomomorphismDetectorTypes.
+	 */
+	public static enum HomomorphismDetectorTypes {
+		
+		/** The database. */
+		@EnumParameterValue(description = "Homomorphism detection relying on an internal relational database")
+		DATABASE;
+	}
 }

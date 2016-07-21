@@ -7,6 +7,8 @@ import java.util.concurrent.Callable;
 
 import com.google.common.base.Preconditions;
 
+import uk.ac.ox.cs.pdq.db.homomorphism.DatabaseHomomorphismManager;
+import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismDetector;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.plan.DAGPlan;
@@ -16,8 +18,6 @@ import uk.ac.ox.cs.pdq.planner.dag.equivalence.DAGEquivalenceClasses;
 import uk.ac.ox.cs.pdq.planner.dominance.Dominance;
 import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominance;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseState;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.DatabaseHomomorphismManager;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
 
 // TODO: Auto-generated Javadoc
 /**

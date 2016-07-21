@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.reasoning.sqlstatement;
+package uk.ac.ox.cs.pdq.db.sql;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -7,11 +7,11 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.db.DatabaseRelation;
+import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismProperty;
+import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismProperty.TopKProperty;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Evaluatable;
 import uk.ac.ox.cs.pdq.fol.Predicate;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismProperty;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismProperty.TopKProperty;
 
 // TODO: Auto-generated Javadoc
 /**

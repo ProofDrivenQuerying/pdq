@@ -1,10 +1,4 @@
-package uk.ac.ox.cs.pdq.reasoning.homomorphism;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismProperty.ActiveTriggerProperty;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismProperty.EGDHomomorphismProperty;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismProperty.FactProperty;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismProperty.MapProperty;
-import uk.ac.ox.cs.pdq.reasoning.sqlstatement.MySQLStatementBuilder;
-import uk.ac.ox.cs.pdq.reasoning.sqlstatement.SQLStatementBuilder;
+package uk.ac.ox.cs.pdq.db.homomorphism;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,7 +16,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
-import com.beust.jcommander.internal.Maps;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
@@ -31,18 +24,25 @@ import com.google.common.collect.Sets;
 
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.AttributeEqualities;
+import uk.ac.ox.cs.pdq.db.DatabaseEGD;
+import uk.ac.ox.cs.pdq.db.DatabaseEquality;
 import uk.ac.ox.cs.pdq.db.DatabaseRelation;
 import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.db.EGD;
 import uk.ac.ox.cs.pdq.db.JoinAlgorithm;
 import uk.ac.ox.cs.pdq.db.MainMemoryDatabase;
 import uk.ac.ox.cs.pdq.db.MainMemoryRelation;
+import uk.ac.ox.cs.pdq.db.Match;
 //import uk.ac.ox.cs.pdq.db.MainMemoryDatabase;
 //import uk.ac.ox.cs.pdq.db.MainMemoryRelation;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TGD;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
+import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismProperty.ActiveTriggerProperty;
+import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismProperty.EGDHomomorphismProperty;
+import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismProperty.FactProperty;
+import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismProperty.MapProperty;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
@@ -55,8 +55,6 @@ import uk.ac.ox.cs.pdq.fol.Skolem;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.io.xml.QNames;
-import uk.ac.ox.cs.pdq.reasoning.sqlstatement.SQLStatementBuilder;
-import uk.ac.ox.cs.pdq.reasoning.utility.Match;
 import uk.ac.ox.cs.pdq.util.Utility;
 import uk.ac.ox.cs.pdq.InconsistentParametersException;
 
@@ -148,6 +146,8 @@ public class MainMemoryHomomorphismManager implements HomomorphismManager {
 			Map<String, String> 			inequalityMapping 			= this.createStatementsofInequality(s, stateAliases, c);
 			//If there is NOT a meaningful join the joinRelationsandAttributes is empty
 			AttributeEqualities				joinRelationsandAttributes	= this.createAttributeEqualities((Conjunction<Atom>) s.getBody(), stateAliases);
+			System.out.println("Get the matches of  "+s);
+			System.out.println("Compute AttributeEqualities: "+ joinRelationsandAttributes);
 			MainMemoryRelation searchTable;
 			JoinAlgorithm joinAlgorithm = new JoinAlgorithm();
 			// Searches the database for the results of the original query without eliminating anything from nested queries
@@ -235,7 +235,7 @@ public class MainMemoryHomomorphismManager implements HomomorphismManager {
 			for(DatabaseEquality rightAtom:((DatabaseEGD)source).getHead()) {
 				Relation rightRelation = (Relation) rightAtom.getPredicate();
 				String rightAlias = stateAliases.get(rightAtom);
-				Map<Integer,Pair<String,Attribute>> rightToLeft = Maps.newHashMap();
+				Map<Integer,Pair<String,Attribute>> rightToLeft = new HashMap<Integer,Pair<String,Attribute>>();
 				for(Term term:rightAtom.getTerms()) {
 					List<Integer> rightPositions = rightAtom.getTermPositions(term); //all the positions for the same term should be equated
 					Preconditions.checkArgument(rightPositions.size() == 1);

@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.reasoning.homomorphism;
+package uk.ac.ox.cs.pdq.db.homomorphism;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -30,13 +30,20 @@ import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.LimitReachedException;
 import uk.ac.ox.cs.pdq.LimitReachedException.Reasons;
+import uk.ac.ox.cs.pdq.db.DatabaseEGD;
+import uk.ac.ox.cs.pdq.db.DatabaseEquality;
 import uk.ac.ox.cs.pdq.db.DatabaseRelation;
 import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.db.EGD;
+import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TGD;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
+import uk.ac.ox.cs.pdq.db.sql.DerbyStatementBuilder;
+import uk.ac.ox.cs.pdq.db.sql.ExecuteSQLQueryThread;
+import uk.ac.ox.cs.pdq.db.sql.ExecuteSynchronousSQLUpdateThread;
+import uk.ac.ox.cs.pdq.db.sql.SQLStatementBuilder;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
@@ -49,10 +56,6 @@ import uk.ac.ox.cs.pdq.fol.Skolem;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.io.xml.QNames;
-import uk.ac.ox.cs.pdq.reasoning.sqlstatement.DerbyStatementBuilder;
-import uk.ac.ox.cs.pdq.reasoning.sqlstatement.SQLStatementBuilder;
-import uk.ac.ox.cs.pdq.reasoning.utility.Match;
-
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
@@ -224,7 +227,7 @@ public class DatabaseHomomorphismManager implements HomomorphismManager {
 	/**
 	 * Initialize.
 	 *
-	 * @see uk.ac.ox.cs.pdq.homomorphism.HomomorphismManager#initialize()
+	 * @see uk.ac.ox.cs.pdq.db.homomorphism.homomorphism.HomomorphismManager#initialize()
 	 */
 	@Override
 	public void initialize() {
@@ -361,7 +364,7 @@ public class DatabaseHomomorphismManager implements HomomorphismManager {
 	 * Clone.
 	 *
 	 * @return DBHomomorphismManager
-	 * @see uk.ac.ox.cs.pdq.homomorphism.HomomorphismDetector#clone()
+	 * @see uk.ac.ox.cs.pdq.db.homomorphism.homomorphism.HomomorphismDetector#clone()
 	 */
 	@Override
 	public DatabaseHomomorphismManager clone() {
@@ -695,7 +698,7 @@ public class DatabaseHomomorphismManager implements HomomorphismManager {
 				terms.add(new Variable(DatabaseRelation.Fact.getName() + f++));
 				left.add(new Atom(relation, terms));
 			}
-			List<DatabaseEquality> right = Lists.newArrayList();
+			List<DatabaseEquality> right = new ArrayList<DatabaseEquality>();
 			for(Equality atom:((EGD) source).getRight()) {
 				List<Term> terms = Lists.newArrayList(atom.getTerms());
 				terms.add(new Variable(DatabaseRelation.Fact.getName() + f++));

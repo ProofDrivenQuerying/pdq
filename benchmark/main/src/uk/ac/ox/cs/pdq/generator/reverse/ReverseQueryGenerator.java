@@ -9,6 +9,9 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.db.Schema;
+import uk.ac.ox.cs.pdq.db.homomorphism.DatabaseHomomorphismManager;
+import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismManager;
+import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismManagerFactory;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.io.xml.QueryReader;
@@ -19,9 +22,6 @@ import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseSt
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleDatabaseListState;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.DatabaseHomomorphismManager;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismManager;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismManagerFactory;
 
 import com.google.common.eventbus.EventBus;
 
@@ -102,7 +102,13 @@ public class ReverseQueryGenerator implements Runnable {
 
 			Query<?> accessibleQuery = accessibleSchema.accessible(this.query);
 			try(HomomorphismManager detector =
-				new HomomorphismManagerFactory().getInstance(accessibleSchema, reasoningParams)) {				
+				new HomomorphismManagerFactory().getInstance(accessibleSchema,  
+						reasoningParams.getHomomorphismDetectorType(), 
+						reasoningParams.getDatabaseDriver(), 
+						reasoningParams.getConnectionUrl(),
+						reasoningParams.getDatabaseName(), 
+						reasoningParams.getDatabaseUser(),
+						reasoningParams.getDatabasePassword())) {				
 				detector.addQuery(accessibleQuery);
 				detector.initialize();
 				AccessibleChaseState state = (AccessibleChaseState) 

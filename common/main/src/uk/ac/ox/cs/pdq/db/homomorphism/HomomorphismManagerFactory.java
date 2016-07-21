@@ -1,15 +1,14 @@
-package uk.ac.ox.cs.pdq.reasoning.homomorphism;
+package uk.ac.ox.cs.pdq.db.homomorphism;
 
 import java.sql.SQLException;
 
 import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
-import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters.HomomorphismDetectorTypes;
-import uk.ac.ox.cs.pdq.reasoning.sqlstatement.DerbyStatementBuilder;
-import uk.ac.ox.cs.pdq.reasoning.sqlstatement.MySQLStatementBuilder;
-import uk.ac.ox.cs.pdq.reasoning.sqlstatement.SQLStatementBuilder;
+import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismDetector.HomomorphismDetectorTypes;
+import uk.ac.ox.cs.pdq.db.sql.DerbyStatementBuilder;
+import uk.ac.ox.cs.pdq.db.sql.MySQLStatementBuilder;
+import uk.ac.ox.cs.pdq.db.sql.SQLStatementBuilder;
 
 import com.google.common.base.Strings;
 
@@ -31,29 +30,29 @@ public class HomomorphismManagerFactory {
 	 */
 	private static Integer counter = 0;
 
-	/**
-	 * Gets the single instance of HomomorphismManagerFactory.
-	 *
-	 * @param schema the schema
-	 * @param parameters the parameters
-	 * @return an instance of homomorphism HomomorphismDetector instantiated according to
-	 *         contextual information
-	 * @throws HomomorphismException the homomorphism exception
-	 */
-	public synchronized HomomorphismManager getInstance(
-			Schema schema, 
-			ReasoningParameters parameters)
-					throws HomomorphismException {
-		return getInstance(schema, 
-				parameters.getHomomorphismDetectorType(), 
-				parameters.getDatabaseDriver(), 
-				parameters.getConnectionUrl(),
-				parameters.getDatabaseName(), 
-				parameters.getDatabaseUser(),
-				parameters.getDatabasePassword()
-				);
-	}
-	
+//	/**
+//	 * Gets the single instance of HomomorphismManagerFactory.
+//	 *
+//	 * @param schema the schema
+//	 * @param parameters the parameters
+//	 * @return an instance of homomorphism HomomorphismDetector instantiated according to
+//	 *         contextual information
+//	 * @throws HomomorphismException the homomorphism exception
+//	 */
+//	public synchronized HomomorphismManager getInstance(
+//			Schema schema, 
+//			ReasoningParameters parameters)
+//					throws HomomorphismException {
+//		return getInstance(schema, 
+//				parameters.getHomomorphismDetectorType(), 
+//				parameters.getDatabaseDriver(), 
+//				parameters.getConnectionUrl(),
+//				parameters.getDatabaseName(), 
+//				parameters.getDatabaseUser(),
+//				parameters.getDatabasePassword()
+//				);
+//	}
+//	
 	/**
 	 * Gets the single instance of HomomorphismManagerFactory.
 	 *

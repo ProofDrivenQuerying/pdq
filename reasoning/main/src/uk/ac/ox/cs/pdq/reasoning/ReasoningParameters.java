@@ -8,6 +8,7 @@ import java.util.Properties;
 import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.Parameters;
+import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismDetector.HomomorphismDetectorTypes;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -375,16 +376,6 @@ public class ReasoningParameters extends Parameters {
 		/** The sequential egd chase. */
 		@EnumParameterValue(description = "Runs a sequential version of the EGD chase algorithm")
 		SEQUENTIAL_EGD_CHASE
-	}
-
-	/**
-	 * The Enum HomomorphismDetectorTypes.
-	 */
-	public static enum HomomorphismDetectorTypes {
-		
-		/** The database. */
-		@EnumParameterValue(description = "Homomorphism detection relying on an internal relational database")
-		DATABASE;
 	}
 
 }

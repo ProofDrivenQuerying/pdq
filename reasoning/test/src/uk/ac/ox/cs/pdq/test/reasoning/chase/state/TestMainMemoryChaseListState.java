@@ -13,7 +13,10 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import uk.ac.ox.cs.pdq.db.EGD;
+import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
+import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismManager;
+import uk.ac.ox.cs.pdq.db.homomorphism.MainMemoryHomomorphismManager;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.Constant;
@@ -22,9 +25,6 @@ import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Skolem;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseState;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.MainMemoryHomomorphismManager;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismManager;
-import uk.ac.ox.cs.pdq.reasoning.utility.Match;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;

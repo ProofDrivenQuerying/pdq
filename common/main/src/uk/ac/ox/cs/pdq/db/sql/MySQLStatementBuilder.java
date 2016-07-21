@@ -1,6 +1,7 @@
 
-package uk.ac.ox.cs.pdq.reasoning.sqlstatement;
+package uk.ac.ox.cs.pdq.db.sql;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -9,14 +10,13 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.db.DatabaseRelation;
+import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismProperty;
+import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismProperty.TopKProperty;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Evaluatable;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismProperty;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismProperty.TopKProperty;
 
-import com.beust.jcommander.internal.Lists;
 import com.google.common.base.Joiner;
 
 // TODO: Auto-generated Javadoc
@@ -118,7 +118,7 @@ public class MySQLStatementBuilder extends SQLStatementBuilder {
 	public String createBulkInsertStatement(Predicate predicate, Collection<? extends Atom> facts, Map<String, DatabaseRelation> toDatabaseTables) {
 		String insertInto = "INSERT IGNORE INTO " + toDatabaseTables.get(predicate.getName()).getName() + "\n" +
 				"VALUES" + "\n";
-		List<String> tuples = Lists.newArrayList();
+		List<String> tuples = new ArrayList<String>();
 		for (Atom fact:facts) {
 			String tuple = "(";
 			List<Term> terms = fact.getTerms();

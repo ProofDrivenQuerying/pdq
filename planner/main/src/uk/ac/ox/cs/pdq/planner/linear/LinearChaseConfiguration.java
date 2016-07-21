@@ -12,6 +12,7 @@ import java.util.Random;
 import java.util.Set;
 
 import uk.ac.ox.cs.pdq.fol.Constant;
+import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
@@ -21,7 +22,6 @@ import uk.ac.ox.cs.pdq.planner.linear.explorer.Candidate;
 import uk.ac.ox.cs.pdq.planner.reasoning.Configuration;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
-import uk.ac.ox.cs.pdq.reasoning.utility.Match;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;

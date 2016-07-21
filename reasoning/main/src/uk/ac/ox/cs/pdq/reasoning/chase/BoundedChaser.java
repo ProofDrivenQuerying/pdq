@@ -4,11 +4,11 @@ import java.util.Collection;
 import java.util.List;
 
 import uk.ac.ox.cs.pdq.db.Dependency;
+import uk.ac.ox.cs.pdq.db.Match;
+import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismProperty;
+import uk.ac.ox.cs.pdq.db.homomorphism.TriggerProperty;
 import uk.ac.ox.cs.pdq.logging.performance.StatisticsCollector;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismProperty;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.TriggerProperty;
-import uk.ac.ox.cs.pdq.reasoning.utility.Match;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Supplier;

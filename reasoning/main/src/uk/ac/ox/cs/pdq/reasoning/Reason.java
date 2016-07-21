@@ -8,15 +8,15 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.db.Schema;
+import uk.ac.ox.cs.pdq.db.homomorphism.DatabaseHomomorphismManager;
+import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismManager;
+import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismManagerFactory;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.io.xml.QueryReader;
 import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseState;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.DatabaseHomomorphismManager;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismManager;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismManagerFactory;
 
 import com.beust.jcommander.DynamicParameter;
 import com.beust.jcommander.IParameterValidator;
@@ -161,7 +161,14 @@ public class Reason {
 			schema.updateConstants(query.getSchemaConstants());
 			
 			HomomorphismManager detector =
-					new HomomorphismManagerFactory().getInstance(schema, reasoningParams);
+					new HomomorphismManagerFactory().getInstance(schema,  
+							reasoningParams.getHomomorphismDetectorType(), 
+							reasoningParams.getDatabaseDriver(), 
+							reasoningParams.getConnectionUrl(),
+							reasoningParams.getDatabaseName(), 
+							reasoningParams.getDatabaseUser(),
+							reasoningParams.getDatabasePassword()
+							);
 			
 			ReasonerFactory reasonerFactory = new ReasonerFactory(
 					new EventBus(),

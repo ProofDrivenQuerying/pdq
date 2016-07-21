@@ -4,11 +4,11 @@ import java.util.Collection;
 import java.util.List;
 
 import uk.ac.ox.cs.pdq.db.Dependency;
+import uk.ac.ox.cs.pdq.db.Match;
+import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismProperty;
+import uk.ac.ox.cs.pdq.db.homomorphism.TriggerProperty;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismProperty;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.TriggerProperty;
-import uk.ac.ox.cs.pdq.reasoning.utility.Match;
 
 // TODO: Auto-generated Javadoc
 /**

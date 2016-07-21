@@ -2,7 +2,10 @@ package uk.ac.ox.cs.pdq.reasoning.chase.state;
 
 import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.db.EGD;
+import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.TGD;
+import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismManager;
+import uk.ac.ox.cs.pdq.db.homomorphism.TriggerProperty;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
@@ -10,11 +13,8 @@ import uk.ac.ox.cs.pdq.fol.Equality;
 import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismManager;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.TriggerProperty;
 import uk.ac.ox.cs.pdq.reasoning.utility.EqualConstantsClass;
 import uk.ac.ox.cs.pdq.reasoning.utility.EqualConstantsClasses;
-import uk.ac.ox.cs.pdq.reasoning.utility.Match;
 
 import java.util.Collection;
 import java.util.LinkedHashSet;
@@ -36,6 +36,7 @@ import com.google.common.collect.Sets;
  * This implementation keeps the facts produced during chasing in a database.
  * Homomorphisms are detected using the DBMS the stores the chase facts. 
  *
+ * @author George K
  * @author Efthymia Tsamoura
  *
  */

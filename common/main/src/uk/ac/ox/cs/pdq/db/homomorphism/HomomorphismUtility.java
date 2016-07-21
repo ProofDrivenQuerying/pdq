@@ -1,5 +1,6 @@
-package uk.ac.ox.cs.pdq.reasoning.homomorphism;
+package uk.ac.ox.cs.pdq.db.homomorphism;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -7,11 +8,10 @@ import java.util.Map;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 
-import com.beust.jcommander.internal.Lists;
 import com.google.common.collect.Maps;
 
 /**
- * 
+ * @author George K
  * @author Efthymmia Tsamoura
  *
  */
@@ -30,7 +30,9 @@ public class HomomorphismUtility {
 				clusters.get(atom.getPredicate()).add(atom);
 			}
 			else {
-				clusters.put(atom.getPredicate(), Lists.newArrayList(atom));
+				ArrayList<Atom> new_list  = new ArrayList<Atom>();
+				new_list.add(atom);
+				clusters.put(atom.getPredicate(), new_list);
 			}
 		}
 		return clusters;

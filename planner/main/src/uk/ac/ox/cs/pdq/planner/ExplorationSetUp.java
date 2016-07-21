@@ -9,6 +9,8 @@ import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.cost.CostStatKeys;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.db.Schema;
+import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismDetector;
+import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismManagerFactory;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.logging.performance.ChainedStatistics;
 import uk.ac.ox.cs.pdq.logging.performance.DynamicStatistics;
@@ -23,8 +25,6 @@ import uk.ac.ox.cs.pdq.planner.reasoning.ReasonerFactory;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismDetector;
-import uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismManagerFactory;
 
 import com.google.common.eventbus.EventBus;
 
@@ -188,7 +188,13 @@ public class ExplorationSetUp {
 		
 		Explorer<P> explorer = null;
 		try (HomomorphismDetector detector =
-				new HomomorphismManagerFactory().getInstance(this.accessibleSchema, this.reasoningParams)) {
+				new HomomorphismManagerFactory().getInstance(this.accessibleSchema,  
+						this.reasoningParams.getHomomorphismDetectorType(), 
+						this.reasoningParams.getDatabaseDriver(), 
+						this.reasoningParams.getConnectionUrl(),
+						this.reasoningParams.getDatabaseName(), 
+						this.reasoningParams.getDatabaseUser(),
+						this.reasoningParams.getDatabasePassword())) {
 			// Top-level initialisations
 			CostEstimator<P> costEstimator = (CostEstimator<P>) this.externalCostEstimator;
 			if (costEstimator == null) {
