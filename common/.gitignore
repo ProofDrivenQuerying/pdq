@@ -5,3 +5,6 @@
 /.project
 /log/
 /*.log
+/.DS_Store
+/test/.DS_Store
+/test/scenarios/.DS_Store
