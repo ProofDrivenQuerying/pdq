@@ -95,7 +95,7 @@ public abstract class SQLStatementBuilder {
 	public abstract String createBulkInsertStatement(Predicate predicate, Collection<? extends Atom> facts, Map<String, DatabaseRelation> toDatabaseTables);
 
 	/**
-	 * Make deletes.
+	 * Creates an SQL statement that deletes the set of input facts, by deleting tuples whose fact id attribute is the fact id of the input fact.
 	 *
 	 * @param facts 		Facts to delete from the database
 	 * @param toDatabaseTables 		Map of schema relation names to *clean* names

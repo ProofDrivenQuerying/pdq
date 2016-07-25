@@ -443,6 +443,7 @@ public class DatabaseHomomorphismManager implements HomomorphismManager {
 	public <Q extends Evaluatable> List<Match> getMatches(ConjunctiveQuery query) {
 		
 		HomomorphismProperty[] properties = new HomomorphismProperty[1];
+		//TODO: WHAT SHOULD WE DO HERE ??????
 		properties[0] = HomomorphismProperty.createMapProperty(query.getGroundingsProjectionOnFreeVars());
 		return this.internalGetMatches(Lists.<Query<?>>newArrayList(query),properties);
 	}
@@ -467,7 +468,6 @@ public class DatabaseHomomorphismManager implements HomomorphismManager {
 		private <Q extends Evaluatable> List<Match> internalGetMatches(Collection<Q> sources, HomomorphismProperty... properties) {
 
 		Preconditions.checkNotNull(sources);
-		List<Match> result = new LinkedList<>();
 		Queue<Triple<Q, String, LinkedHashMap<String, Variable>>> queries = new ConcurrentLinkedQueue<>();;
 		//Create a new query out of each input query that references only the cleaned predicates
 		for(Q source:sources) {
@@ -486,6 +486,17 @@ public class DatabaseHomomorphismManager implements HomomorphismManager {
 			queries.add(Triple.of(source, pair.getLeft(), pair.getRight()));
 		}
 
+		return answerQueries(queries);
+	}
+	/**
+	 * TOCOMMENT: 
+	 * @param queries
+	 * @return
+	 */
+	private <Q extends Evaluatable>  List<Match> answerQueries(Queue<Triple<Q, String, LinkedHashMap<String, Variable>>> queries) {
+		
+		List<Match> result = new LinkedList<>();
+		
 		//Run the SQL query statements in multiple threads
 		ExecutorService executorService = null;
 		try {
@@ -521,7 +532,7 @@ public class DatabaseHomomorphismManager implements HomomorphismManager {
 			return null;
 		} 
 		return result;
-	}
+		}
 
 	/**
 	 * Adds the facts.
@@ -563,6 +574,11 @@ public class DatabaseHomomorphismManager implements HomomorphismManager {
 			clusters.clear();
 		}
 		
+		executeQueries(queries);
+	}
+	
+	public void executeQueries(Queue<String> queries)
+	{		
 		ExecutorService executorService = null;
 		try {
 			//Create a pool of threads to run in parallel
@@ -628,37 +644,7 @@ public class DatabaseHomomorphismManager implements HomomorphismManager {
 			}
 		}
 		
-		ExecutorService executorService = null;
-		try {
-
-			//Create a pool of threads to run in parallel
-			executorService = Executors.newFixedThreadPool(this.synchronousThreadsNumber);
-			List<Callable<Boolean>> threads = new ArrayList<>();
-			for(int j = 0; j < this.synchronousThreadsNumber; ++j) {
-				//Create the threads that will create new binary configurations using the input left, right collections
-				threads.add(new ExecuteSynchronousSQLUpdateThread(queries, this.synchronousConnections.get(j)));
-			}
-			long start = System.currentTimeMillis();
-			try {
-				for(Future<Boolean> output:executorService.invokeAll(threads, this.timeout, this.unit)){
-					output.get();
-				}
-			} catch(java.util.concurrent.CancellationException e) {
-				executorService.shutdownNow();
-				if (this.timeout <= (System.currentTimeMillis() - start)) {
-					try {
-						throw new LimitReachedException(Reasons.TIMEOUT);
-					} catch (LimitReachedException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-				}
-			}
-			executorService.shutdown();
-		} catch (InterruptedException | ExecutionException e) {
-			executorService.shutdownNow();
-			e.printStackTrace();
-		} 
+		executeQueries(queries);
 	}
 
 	/**
