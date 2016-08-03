@@ -126,11 +126,9 @@ public class AccessMethod implements Serializable {
 	}
 
 	/**
-	 * TOCOMMENT Why does the comment say "binding's name"? I think an access method is not a binding. In this class the term "binding" is used in the place of "access restriction"
-	 * 
 	 * Gets the name.
 	 *
-	 * @return the binding's name.
+	 * @return the  name of the method.
 	 */
 	public String getName() {
 		return this.name;
