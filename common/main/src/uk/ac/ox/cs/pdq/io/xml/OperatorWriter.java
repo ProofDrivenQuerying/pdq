@@ -253,9 +253,9 @@ public class OperatorWriter extends AbstractXMLWriter<RelationalOperator> {
 	}
 
 	/**
-	 * Writes the given relation to the given output.
+	 * Writes the given attribute to the given output.
 	 *
-	 * @param out the out
+	 * @param out the output stream being written to
 	 * @param attribute the attribute
 	 */
 	public void writeAttribute(PrintStream out, Attribute attribute) {
@@ -266,9 +266,9 @@ public class OperatorWriter extends AbstractXMLWriter<RelationalOperator> {
 	}
 
 	/**
-	 * Writes the given relation to the given output.
+	 * Writes the given constant to the given output.
 	 *
-	 * @param out the out
+	 * @param out the output stream being written to
 	 * @param constant the constant
 	 */
 	public void writeConstant(PrintStream out, TypedConstant<?> constant) {
@@ -280,6 +280,7 @@ public class OperatorWriter extends AbstractXMLWriter<RelationalOperator> {
 
 	/**
 	 * Writes the given relation to the given output.
+	 * TOCOMMENT: CUT AND PAST HERE
 	 *
 	 * @param out the out
 	 * @param i the i
