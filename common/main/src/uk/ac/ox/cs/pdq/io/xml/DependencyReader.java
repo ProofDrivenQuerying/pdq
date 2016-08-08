@@ -51,10 +51,10 @@ public class DependencyReader extends AbstractXMLReader<Dependency> {
 	/**  The atom reader for the right-hand side of the dependency. */
 	private AtomReader rightAtomsReader = null;
 	
-	/** Number of time the parser reached a body element (should not exceed 1). */
+	/** Number of times the parser reached a body element (should not exceed 1). */
 	private int inBody = 0;
 	
-	/** Number of time the parser reached a head element (should not exceed 1). */
+	/** Number of times the parser reached a head element (should not exceed 1). */
 	private int inHead = 0;
 	
 	/** The schema. */
@@ -198,7 +198,6 @@ public class DependencyReader extends AbstractXMLReader<Dependency> {
 	}
 
 	/**
-	 * Gets the dependency.
 	 *
 	 * @return the TGD read
 	 */

@@ -65,75 +65,49 @@ public class OperatorReader extends AbstractXMLReader<RelationalOperator> {
 	 */
 	public static enum Types {
 		
-		/** The select. */
 		SELECT, 
- /** The project. */
  PROJECT, 
- /** The rename. */
  RENAME, 
- /** The static input. */
  STATIC_INPUT, 
- /** The cross product. */
  CROSS_PRODUCT,
 		
-		/** The dependent access. */
 		DEPENDENT_ACCESS, 
- /** The access. */
  ACCESS, 
- /** The dependent join. */
  DEPENDENT_JOIN, 
- /** The join. */
  JOIN, 
- /** The alias. */
  ALIAS,
 		
-		/** The distinct. */
 		DISTINCT, 
- /** The count. */
  COUNT, 
- /** The is empty. */
  IS_EMPTY, 
- /** The union. */
  UNION
 	}
 	
-	/** The operator being built. */
 	private RelationalOperator operator = null;
 
-	/** The schema from which the relation come. */
 	protected Schema schema = null;
 	
-	/** The type. */
 	protected Types type;
 	
-	/** The variant. */
 	protected Join.Variants variant;
 	
-	/** The predicate. */
 	protected Predicate predicate = null;
 
-	/** The conjunction. */
 	protected List<Predicate> conjunction = Lists.newLinkedList();
 	
-	/** The sideways. */
+/** TOCOMMENT: ??? */
 	protected List<Integer> sideways = Lists.newLinkedList();
 	
-	/** The outputs. */
 	protected List<Typed> outputs = Lists.newLinkedList();
 	
-	/** The projection. */
 	protected List<Term> projection = Lists.newLinkedList();
 	
-	/** The static inputs. */
 	protected Map<Integer, TypedConstant<?>> staticInputs = Maps.newLinkedHashMap();
 	
-	/** The children. */
 	protected List<RelationalOperator> children = Lists.newLinkedList();
 	
-	/** The relation name. */
 	protected String relationName;
 	
-	/** The access method name. */
 	protected String accessMethodName;
 	
 	/** Boolean tracking wither the reader is current reading conjunctions. */
@@ -148,13 +122,10 @@ public class OperatorReader extends AbstractXMLReader<RelationalOperator> {
 	/** The aliases. */
 	private final Map<String, RelationalOperator> aliases;
 	
-	/** The alias. */
 	private String alias;
 	
-	/**  The child operator reader. */
 	private OperatorReader childReader;
 	
-	/**  The parent operator reader. */
 	private OperatorReader parentReader;
 
 	/**

@@ -19,8 +19,8 @@ public class DependencyWriter extends AbstractXMLWriter<Dependency> {
 	/**
 	 * Writes the given relation to the given output.
 	 *
-	 * @param out the out
-	 * @param dep TGD
+	 * @param out the output stream being written to
+	 * @param dep the TGD being written
 	 */
 	public void writeDependency(PrintStream out, Dependency dep) {
 		Map<QNames, String> att = new LinkedHashMap<>();
@@ -41,8 +41,8 @@ public class DependencyWriter extends AbstractXMLWriter<Dependency> {
 	/**
 	 * Writes the given relation to the given output.
 	 *
-	 * @param out the out
-	 * @param a PredicateFormula
+	 * @param out the output streem being written to 
+	 * @param a Atom being written
 	 */
 	public void writePredicate(PrintStream out, Atom a) {
 		Atom p = a;

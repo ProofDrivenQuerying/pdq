@@ -58,10 +58,10 @@ public class LeftDeepPlanWriter extends AbstractXMLWriter<LeftDeepPlan> {
 	}
 	
 	/**
-	 * Writes the given relation to the given output.
+	 * Writes the given attribute to the given output.
 	 *
-	 * @param out the out
-	 * @param attribute the attribute
+	 * @param out the output stream being written to
+	 * @param attribute the attribute being written
 	 */
 	public void writeAttribute(PrintStream out, Attribute attribute) {
 		Map<QNames, String> att = new LinkedHashMap<>();
@@ -72,7 +72,7 @@ public class LeftDeepPlanWriter extends AbstractXMLWriter<LeftDeepPlan> {
 	/**
 	 * Writes the given command to the given output.
 	 *
-	 * @param out the out
+	 * @param out the output stream being written to
 	 * @param plan LeftDeepPlan
 	 * @param alias String
 	 * @param aliases Map<LogicalOperator,String>
