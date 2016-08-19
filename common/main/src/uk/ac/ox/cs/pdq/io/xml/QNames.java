@@ -4,8 +4,8 @@ import javax.xml.namespace.QName;
 
 import com.google.common.base.CaseFormat;
 /**
- * Gather all the qualified names required for reading and writing schemas,
- * queries, dependencies, etc.
+ * Gather all the qualified names appearing in a schema file 
+ * query file or plan file
  * 
  * @author Julien Leblay
  * @author Efthymia Tsamoura
@@ -14,7 +14,7 @@ import com.google.common.base.CaseFormat;
 public enum QNames {
 
 	/** The schema. */
-	// Schema, relation and access
+		
 	SCHEMA, 
  DISCOVERER, 
  RELATIONS, 
@@ -22,7 +22,6 @@ public enum QNames {
  VIEWS, 
  VIEW, 
  DEPENDENCIES,
-	
 	DEPENDENCY, 
  ACCESS_METHOD, 
  ATTRIBUTE, 
@@ -60,7 +59,6 @@ public enum QNames {
  PREDICATE, 
  CONJUNCTION,
 
-	// Services
 	SERVICES, 
  SERVICE, 
  PROTOCOL, 
@@ -81,7 +79,6 @@ public enum QNames {
  STATIC_INPUT, 
  TEMPLATE, 
  MEDIA_TYPE,
-
 	TYPE, 
  URL, 
  USERNAME, 
@@ -120,8 +117,8 @@ public enum QNames {
 	}
 
 	/**
-	 * TOCOMMENT what does this do?
-	 * Parses the.
+	 * 
+	 * 
 	 *
 	 * @param lowerHyphen the qname in lower hyphen case.
 	 * @return the enum item corresponding to given param, in lower-case, hyphenated form.
@@ -134,7 +131,6 @@ public enum QNames {
 
 	/**
 	 * 
-	 * TOCOMMENT what does this do?
 	 * Format.
 	 *
 	 * @return the String serialization of qname associated with this enum item
