@@ -26,17 +26,6 @@ import com.google.common.collect.Lists;
  */
 public abstract class RelationalOperator implements Rewritable, Operator {
 
-	/**
-	 * TOCOMMENT Not sure what this is
-	 * The Enum SharingType.
-	 */
-	public static enum SharingType { 
- /** The nothing. */
- NOTHING, 
- /** The cache. */
- CACHE, 
- /** The blocking. */
- BLOCKING }
 
 	/** The operator's type. */
 	protected final TupleType outputType;
