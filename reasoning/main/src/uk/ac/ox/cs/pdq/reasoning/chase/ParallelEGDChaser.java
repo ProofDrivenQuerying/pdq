@@ -30,7 +30,7 @@ import com.google.common.collect.Sets;
 
 // TODO: Auto-generated Javadoc
 /**
- * Runs EGD chase using parallel chase steps.
+ * Runs EGD and TGD chase using parallel chase steps.
  * (From modern dependency theory notes)
  * 
  * A trigger for and EGD \delta = \sigma --> x_i = x_j in I is again a homomorphism h in
