@@ -142,7 +142,7 @@ public abstract class SearchNode implements Cloneable{
 	}
 
 	/**
-	 * Closes the configuration of this node.
+	 * Closes the configuration of this node by adding consequences, stopping if the  query is true
 	 *
 	 * @param chaser the chaser
 	 * @param query the query
