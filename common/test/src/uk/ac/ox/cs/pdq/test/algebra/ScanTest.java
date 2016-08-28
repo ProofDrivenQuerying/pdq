@@ -262,12 +262,12 @@ public class ScanTest extends RelationalOperatorTest {
 	}
 
 	/**
-	 * Checks if is quasi leaf.
+	 * Checks if contains no non-unary operator as sub expression.
 	 */
-	@Test public void isQuasiLeaf() {
-		Assert.assertTrue("Scan isQuasiLeaf must match always be true", new Scan(r2).isQuasiLeaf());
-		Assert.assertTrue("Scan isQuasiLeaf must match always be true", new Scan(r4).isQuasiLeaf());
-		Assert.assertTrue("Scan isQuasiLeaf must match always be true", new Scan(r7).isQuasiLeaf());
+	@Test public void isJoinFree() {
+		Assert.assertTrue("Scan isJoinFree must match always be true", new Scan(r2).isJoinFree());
+		Assert.assertTrue("Scan isJoinFree must match always be true", new Scan(r4).isJoinFree());
+		Assert.assertTrue("Scan isJoinFree must match always be true", new Scan(r7).isJoinFree());
 	}
 
 	/**

@@ -196,12 +196,12 @@ public class StaticInput extends RelationalOperator {
 	}
 
 	/**
-	 * Checks if is quasi leaf.
+	 * Checks if it does not have a non-unary operator as a subexpresion
 	 *
 	 * @return boolean
 	 */
 	@Override
-	public boolean isQuasiLeaf() {
+	public boolean  isJoinFree() {
 		return true;
 	}
 

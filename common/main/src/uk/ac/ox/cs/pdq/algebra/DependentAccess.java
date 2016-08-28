@@ -312,12 +312,12 @@ public class DependentAccess  extends RelationalOperator implements AccessOperat
 	}
 
 	/**
-	 * Checks if is quasi leaf.
+	 * Checks if it does not have any non-unary operator as a subexpression
 	 *
 	 * @return boolean
 	 */
 	@Override
-	public boolean isQuasiLeaf() {
+	public boolean  isJoinFree() {
 		return true;
 	}
 

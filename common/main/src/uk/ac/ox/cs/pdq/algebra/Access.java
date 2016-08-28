@@ -209,12 +209,11 @@ public class Access extends UnaryOperator implements AccessOperator {
 	}
 
 	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.algebra.UnaryOperator#isQuasiLeaf()
+	 * 
 	 */
 	@Override
-	public boolean isQuasiLeaf() {
-		return this.child == null || this.child.isQuasiLeaf();
+	public boolean isJoinFree() {
+		return this.child == null || this.child.isJoinFree();
 	}
 
 	/*

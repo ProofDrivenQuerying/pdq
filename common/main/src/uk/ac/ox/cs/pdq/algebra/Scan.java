@@ -195,13 +195,12 @@ public class Scan extends RelationalOperator implements AccessOperator {
 	}
 
 	/**
-	 * TOCOMMENT
-	 * Checks if is quasi leaf.
+	 * Checks if does not have a non-unary operator as a subexpression
 	 *
 	 * @return boolean
 	 */
 	@Override
-	public boolean isQuasiLeaf() {
+	public boolean  isJoinFree() {
 		return true;
 	}
 

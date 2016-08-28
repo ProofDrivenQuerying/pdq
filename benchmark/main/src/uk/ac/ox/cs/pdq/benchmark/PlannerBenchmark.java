@@ -307,7 +307,7 @@ public class PlannerBenchmark extends Runner {
 			int i = 0;
 			for (RelationalOperator child : ((NaryOperator) op).getChildren()) {
 				result += this.bushiness(child);
-				if (i > 0 && !(child.isQuasiLeaf())) {
+				if (i > 0 && !(child.isJoinFree())) {
 					result++;
 				}
 				i++;

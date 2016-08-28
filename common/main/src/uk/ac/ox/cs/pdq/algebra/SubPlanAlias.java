@@ -172,14 +172,14 @@ public class SubPlanAlias extends RelationalOperator {
 	}
 
 	/**
-	 * Checks if is quasi leaf.
+	 * Checks if it does not have a non-unary operator as a subexpression.
 	 *
 	 * @return boolean
 	 */
 	@Override
-	public boolean isQuasiLeaf() {
+	public boolean  isJoinFree() {
 		if (this.subPlan != null) {
-			return ((RelationalOperator) this.subPlan.getOperator()).isQuasiLeaf();
+			return ((RelationalOperator) this.subPlan.getOperator()).isJoinFree();
 		}
 		return false;
 	}

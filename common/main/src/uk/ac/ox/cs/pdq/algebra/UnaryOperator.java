@@ -175,14 +175,13 @@ public abstract class UnaryOperator extends RelationalOperator {
 	}
 
 	/**
-	 * TOCOMMENT
-	 * Checks if is quasi leaf.
+	 * Checks if it does not have a non-unary operator as a subexpression
 	 *
 	 * @return boolean
 	 */
 	@Override
-	public boolean isQuasiLeaf() {
-		return this.child.isQuasiLeaf();
+	public boolean  isJoinFree() {
+		return this.child.isJoinFree();
 	}
 
 	/*
