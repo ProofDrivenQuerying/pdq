@@ -465,8 +465,8 @@ public class DatabaseHomomorphismManager implements HomomorphismManager {
 		{
 			properties[0] = HomomorphismProperty.createActiveTriggerProperty();
 		}
-		
-		properties[1] = HomomorphismProperty.createFactProperty(Conjunction.of(facts));
+		if(facts != null)
+			properties[1] = HomomorphismProperty.createFactProperty(Conjunction.of(facts));
 		
 		return this.internalGetMatches(dependencies, properties);
 			
