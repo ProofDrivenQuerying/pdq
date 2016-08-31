@@ -5,6 +5,7 @@ import java.util.List;
 
 import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.db.Match;
+import uk.ac.ox.cs.pdq.db.homomorphism.DatabaseHomomorphismManager.LimitTofacts;
 import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismProperty;
 import uk.ac.ox.cs.pdq.db.homomorphism.TriggerProperty;
 import uk.ac.ox.cs.pdq.fol.Atom;
@@ -32,7 +33,7 @@ public interface ChaseState {
 	 * @return
 	 * 		the list of matches of the input query to the facts of this state.
 	 */
-	List<Match> getMatches(ConjunctiveQuery query);
+	List<Match> getMatches(ConjunctiveQuery query, LimitTofacts l);
 	
 	/**
 	 * (Candidate match definition).

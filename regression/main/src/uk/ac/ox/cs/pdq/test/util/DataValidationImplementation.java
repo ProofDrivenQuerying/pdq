@@ -107,14 +107,14 @@ public final class DataValidationImplementation extends DataValidation{
 	 */
 	private void validate(Dependency constraint) throws PlannerException, AccessException {
 		// Checks if the there exists at least one set of facts that satisfies the left-hand side of the input dependency
-		List<Match> matchings = this.manager.getTriggers(Lists.newArrayList(constraint),TriggerProperty.ACTIVE);
+		List<Match> matchings = this.manager.getTriggers(Lists.newArrayList(constraint),TriggerProperty.ACTIVE,null);
 		if (!matchings.isEmpty()) {
 			/*
 			 * For each set of facts F1 that satisfy the left-hand side of the input dependency check whether or not 
 			 * there exists another set of facts F2 that satisfies the right-hand side of the input dependency w.r.t F1 
 			 */
 			for (Match m: matchings) {
-				List<Match> subMatchings = this.manager.getTriggers(Lists.newArrayList(this.invert(constraint)),TriggerProperty.ACTIVE);//, HomomorphismProperty.createMapProperty(m.getMapping()));
+				List<Match> subMatchings = this.manager.getTriggers(Lists.newArrayList(this.invert(constraint)),TriggerProperty.ACTIVE,null);//, HomomorphismProperty.createMapProperty(m.getMapping()));
 				if (subMatchings.isEmpty()) {
 					throw new java.lang.IllegalArgumentException("Data does not satisfy constraint " + constraint.toString() );
 				}

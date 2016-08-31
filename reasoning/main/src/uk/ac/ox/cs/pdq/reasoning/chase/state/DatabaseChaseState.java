@@ -6,6 +6,7 @@ import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.TGD;
 import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismManager;
 import uk.ac.ox.cs.pdq.db.homomorphism.TriggerProperty;
+import uk.ac.ox.cs.pdq.db.homomorphism.DatabaseHomomorphismManager.LimitTofacts;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
@@ -438,8 +439,8 @@ public class DatabaseChaseState implements ChaseState {
 	 * @see uk.ac.ox.cs.pdq.chase.state.ChaseState#getTriggers(Query)
 	 */
 	//@Override
-	public List<Match> getMatches(ConjunctiveQuery query) {
-		return this.manager.getMatches(query);
+	public List<Match> getMatches(ConjunctiveQuery query, LimitTofacts l) {
+		return this.manager.getMatches(query, this.facts, l);
 				/*,
 				HomomorphismProperty.createFactProperty(Conjunction.of(this.getFacts())),
 				HomomorphismProperty.createMapProperty(query.getGroundingsProjectionOnFreeVars()));
@@ -467,6 +468,6 @@ public class DatabaseChaseState implements ChaseState {
 //		HomomorphismProperty[] c = new HomomorphismProperty[constraints.length+1];
 //		System.arraycopy(constraints, 0, c, 0, constraints.length);
 //		c[constraints.length] = HomomorphismProperty.createFactProperty(Conjunction.of(this.getFacts()));
-		return this.manager.getTriggers(dependencies,t);
+		return this.manager.getTriggers(dependencies,t,this.facts);
 	}
 }

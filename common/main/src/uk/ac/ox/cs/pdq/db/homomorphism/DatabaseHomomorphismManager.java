@@ -440,24 +440,36 @@ public class DatabaseHomomorphismManager implements HomomorphismManager {
 	}
 	
 	@Override
-	public <Q extends Evaluatable> List<Match> getMatches(ConjunctiveQuery query) {
+	public <Q extends Evaluatable> List<Match> getMatches(ConjunctiveQuery query, Collection<Atom>facts, LimitTofacts l) {
 		
 		HomomorphismProperty[] properties = new HomomorphismProperty[1];
-		//TODO: WHAT SHOULD WE DO HERE ??????
-		properties[0] = HomomorphismProperty.createMapProperty(query.getGroundingsProjectionOnFreeVars());
+		//properties[0] = HomomorphismProperty.createMapProperty(query.getGroundingsProjectionOnFreeVars());
+		if(l.equals(LimitTofacts.THIS))
+				properties[0] = HomomorphismProperty.createFactProperty(Conjunction.of(facts));
+		else
+			properties = new HomomorphismProperty[0];
+		
 		return this.internalGetMatches(Lists.<Query<?>>newArrayList(query),properties);
 	}
 
+	public enum LimitTofacts{
+		ALL,
+		THIS
+	}
+
 	@Override
-	public <Q extends Evaluatable> List<Match> getTriggers(Collection<Q> dependencies, TriggerProperty t) {
+	public <Q extends Evaluatable> List<Match> getTriggers(Collection<Q> dependencies, TriggerProperty t, Collection<Atom>facts) {
 		
-		HomomorphismProperty[] properties = new HomomorphismProperty[1];
+		HomomorphismProperty[] properties = new HomomorphismProperty[2];
 		if(t.equals(TriggerProperty.ACTIVE))
 		{
 			properties[0] = HomomorphismProperty.createActiveTriggerProperty();
 		}
-		return this.internalGetMatches(dependencies, properties);
 		
+		properties[1] = HomomorphismProperty.createFactProperty(Conjunction.of(facts));
+		
+		return this.internalGetMatches(dependencies, properties);
+			
 	}
 		/**
 		 * private getMatches method for supporting both queries and constraints

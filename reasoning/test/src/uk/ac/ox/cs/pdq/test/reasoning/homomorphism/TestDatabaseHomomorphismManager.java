@@ -115,7 +115,7 @@ public class TestDatabaseHomomorphismManager {
 				Lists.newArrayList(new Skolem("k6"), new Skolem("c"),new TypedConstant(new String("Michael"))));
 		
 		this.manager.addFacts(Lists.newArrayList(f20,f21,f22,f23,f24,f25));
-		List<Match> matches = this.manager.getTriggers(Lists.newArrayList(this.tgd),TriggerProperty.ACTIVE);
+		List<Match> matches = this.manager.getTriggers(Lists.newArrayList(this.tgd),TriggerProperty.ACTIVE,null);
 		Assert.assertEquals(6, matches.size());
 	}
 	
@@ -140,7 +140,7 @@ public class TestDatabaseHomomorphismManager {
 				Lists.newArrayList(new Skolem("p"),new TypedConstant(new String("Michael"))));
 		
 		this.manager.addFacts(Lists.newArrayList(f20,f21,f22,f23,f24,f25));
-		List<Match> matches = this.manager.getTriggers(Lists.newArrayList(this.egd),TriggerProperty.ACTIVE);
+		List<Match> matches = this.manager.getTriggers(Lists.newArrayList(this.egd),TriggerProperty.ACTIVE,null);
 		Assert.assertEquals(4, matches.size());
 	}
 	
@@ -168,7 +168,7 @@ public class TestDatabaseHomomorphismManager {
 		Equality eq2 = new Equality(new Skolem("c1"), new Skolem("c3"));
 		
 		this.manager.addFacts(Lists.newArrayList(f20,f21,f22,f23,f24,f25, eq1,eq2));
-		List<Match> matches = this.manager.getTriggers(Lists.newArrayList(this.egd),TriggerProperty.ALL);
+		List<Match> matches = this.manager.getTriggers(Lists.newArrayList(this.egd),TriggerProperty.ALL,null);
 		Assert.assertEquals(4, matches.size());
 	}	
 	
@@ -196,7 +196,7 @@ public class TestDatabaseHomomorphismManager {
 		Equality eq2 = new Equality(new Skolem("c1"), new Skolem("c3"));
 		
 		this.manager.addFacts(Lists.newArrayList(f20,f21,f22,f23,f24,f25, eq1,eq2));
-		List<Match> matches = this.manager.getTriggers(Lists.newArrayList(this.egd),TriggerProperty.ACTIVE);
+		List<Match> matches = this.manager.getTriggers(Lists.newArrayList(this.egd),TriggerProperty.ACTIVE,null);
 		Assert.assertEquals(3, matches.size());
 	}	
 	
@@ -227,7 +227,7 @@ public class TestDatabaseHomomorphismManager {
 				Lists.newArrayList(new Skolem("c"),new Skolem("c2")));
 		
 		this.manager.addFacts(Lists.newArrayList(f20,f21,f22,f23,f24,f25, f26, f27));
-		List<Match> matches = this.manager.getTriggers(Lists.newArrayList(this.tgd), TriggerProperty.ACTIVE);
+		List<Match> matches = this.manager.getTriggers(Lists.newArrayList(this.tgd), TriggerProperty.ACTIVE,null);
 		Assert.assertEquals(4, matches.size());
 	}
 	
@@ -249,7 +249,7 @@ public class TestDatabaseHomomorphismManager {
 				Lists.newArrayList(new Skolem("r2"),new Skolem("skolem2")));
 		
 		this.manager.addFacts(Lists.newArrayList(f20,f21,f22,f26,f27));
-		List<Match> matches = this.manager.getTriggers(Lists.newArrayList(this.tgd2), TriggerProperty.ACTIVE);
+		List<Match> matches = this.manager.getTriggers(Lists.newArrayList(this.tgd2), TriggerProperty.ACTIVE,null);
 		Assert.assertEquals(1, matches.size());
 	}
 	

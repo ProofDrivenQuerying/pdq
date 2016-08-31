@@ -3,21 +3,21 @@ package uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration;
 import java.util.Collection;
 import java.util.List;
 
+import com.google.common.collect.Lists;
+
 import uk.ac.ox.cs.pdq.LimitReachedException;
 import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.db.Match;
-import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Constant;
+import uk.ac.ox.cs.pdq.db.homomorphism.DatabaseHomomorphismManager.LimitTofacts;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.reasoning.Configuration;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
-
-import com.google.common.collect.Lists;
 
 
 // TODO: Auto-generated Javadoc
@@ -191,7 +191,7 @@ public abstract class ChaseConfiguration<P extends Plan> implements Configuratio
 	 * @throws PlannerException the planner exception
 	 */
 	public List<Match> matchesQuery(ConjunctiveQuery query) throws PlannerException {
-		return this.state.getMatches(query);
+		return this.state.getMatches(query,LimitTofacts.THIS);
 	}
 
 	/**
