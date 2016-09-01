@@ -442,12 +442,17 @@ public class DatabaseHomomorphismManager implements HomomorphismManager {
 	@Override
 	public <Q extends Evaluatable> List<Match> getMatches(ConjunctiveQuery query, Collection<Atom>facts, LimitTofacts l) {
 		
-		HomomorphismProperty[] properties = new HomomorphismProperty[1];
-		//properties[0] = HomomorphismProperty.createMapProperty(query.getGroundingsProjectionOnFreeVars());
+		HomomorphismProperty[] properties = new HomomorphismProperty[2];
 		if(l.equals(LimitTofacts.THIS))
-				properties[0] = HomomorphismProperty.createFactProperty(Conjunction.of(facts));
+		{
+				properties[0] = HomomorphismProperty.createMapProperty(query.getGroundingsProjectionOnFreeVars());
+				properties[1] = HomomorphismProperty.createFactProperty(Conjunction.of(facts));
+		}
 		else
-			properties = new HomomorphismProperty[0];
+		{
+			properties = new HomomorphismProperty[1];
+			properties[0] = HomomorphismProperty.createMapProperty(query.getGroundingsProjectionOnFreeVars());
+		}
 		
 		return this.internalGetMatches(Lists.<Query<?>>newArrayList(query),properties);
 	}
