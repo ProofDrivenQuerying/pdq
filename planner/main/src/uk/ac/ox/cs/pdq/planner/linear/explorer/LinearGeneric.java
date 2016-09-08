@@ -3,6 +3,7 @@ package uk.ac.ox.cs.pdq.planner.linear.explorer;
 import static uk.ac.ox.cs.pdq.planner.logging.performance.PlannerStatKeys.MILLI_CLOSE;
 import static uk.ac.ox.cs.pdq.planner.logging.performance.PlannerStatKeys.MILLI_QUERY_MATCH;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Set;
 
@@ -13,7 +14,6 @@ import uk.ac.ox.cs.pdq.LimitReachedException;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismDetector;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.plan.LeftDeepPlan; 
@@ -27,6 +27,7 @@ import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.BestPlanMetadata;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.CreationMetadata;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.Metadata;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
 
 import com.google.common.eventbus.EventBus;
 
@@ -60,6 +61,7 @@ public class LinearGeneric extends LinearExplorer {
 	 * @param nodeFactory the node factory
 	 * @param depth the depth
 	 * @throws PlannerException the planner exception
+	 * @throws SQLException 
 	 */
 	public LinearGeneric(
 			EventBus eventBus, 
@@ -69,10 +71,10 @@ public class LinearGeneric extends LinearExplorer {
 			Schema schema,
 			AccessibleSchema accessibleSchema, 
 			Chaser chaser,
-			HomomorphismDetector detector,
+			ChaseInstance detector,
 			CostEstimator<LeftDeepPlan> costEstimator,
 			NodeFactory nodeFactory,
-			int depth) throws PlannerException {
+			int depth) throws PlannerException, SQLException {
 		super(eventBus, collectStats, query, accessibleQuery, schema, accessibleSchema, chaser, detector, costEstimator, nodeFactory, depth);
 	}
 

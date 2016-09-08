@@ -1,5 +1,6 @@
 package uk.ac.ox.cs.pdq.planner.linear.explorer;
 
+import java.sql.SQLException;
 import java.util.List; 
 import java.util.Set;
 
@@ -7,8 +8,8 @@ import org.jgrapht.graph.DefaultEdge;
 
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.db.homomorphism.DatabaseHomomorphismManager;
-import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismDetector;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
@@ -63,7 +64,7 @@ public abstract class LinearExplorer extends Explorer<LeftDeepPlan> {
 	protected final Chaser chaser;
 
 	/**  Detects homomorphisms during chasing*. */
-	protected final HomomorphismDetector detector;
+	protected final ChaseInstance detector;
 
 	/**  Estimates the cost of a plan *. */
 	protected final CostEstimator<LeftDeepPlan> costEstimator;
@@ -100,6 +101,7 @@ public abstract class LinearExplorer extends Explorer<LeftDeepPlan> {
 	 * @param nodeFactory the node factory
 	 * @param depth 		Maximum exploration depth
 	 * @throws PlannerException the planner exception
+	 * @throws SQLException 
 	 */
 	public LinearExplorer(EventBus eventBus, 
 			boolean collectStats,
@@ -108,10 +110,10 @@ public abstract class LinearExplorer extends Explorer<LeftDeepPlan> {
 			Schema schema,
 			AccessibleSchema accessibleSchema, 
 			Chaser chaser,
-			HomomorphismDetector detector,
+			ChaseInstance detector,
 			CostEstimator<LeftDeepPlan> costEstimator,
 			NodeFactory nodeFactory,
-			int depth) throws PlannerException {
+			int depth) throws PlannerException, SQLException {
 		super(eventBus, collectStats);
 		Preconditions.checkArgument(eventBus != null);
 		Preconditions.checkArgument(nodeFactory != null);
@@ -139,11 +141,12 @@ public abstract class LinearExplorer extends Explorer<LeftDeepPlan> {
 	 * Initialises the plan tree.
 	 *
 	 * @throws PlannerException the planner exception
+	 * @throws SQLException 
 	 */
-	private void initialise() throws PlannerException {
+	private void initialise() throws PlannerException, SQLException {
 		AccessibleChaseState state = null;
 		state = (uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState) 
-				new AccessibleDatabaseListState(this.query, this.schema, (DatabaseHomomorphismManager) this.detector, true);
+				new AccessibleDatabaseListState(this.query, this.schema, (DatabaseChaseInstance) this.detector, true);
 		this.chaser.reasonUntilTermination(state, this.schema.getDependencies());
 
 		this.tick = System.nanoTime();

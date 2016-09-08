@@ -5,15 +5,15 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.cost.CostParameters;
+import uk.ac.ox.cs.pdq.db.DatabaseInstance;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.db.homomorphism.DatabaseHomomorphismManager;
-import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismDetector;
-import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismManager;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismManagerFactory;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
@@ -158,17 +158,19 @@ public class RuntimeTest extends RegressionTest {
 		ReasoningParameters reasoningParams = new ReasoningParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
 		AccessibleSchema accessibleSchema = new AccessibleSchema(schema);
 		Query<?> accessibleQuery = accessibleSchema.accessible(query);
-		try (HomomorphismManager manager = new HomomorphismManagerFactory().getInstance(accessibleSchema, 
+		try (DatabaseInstance manager = new HomomorphismManagerFactory().getInstance(accessibleSchema, 
 				reasoningParams.getHomomorphismDetectorType(), 
 				reasoningParams.getDatabaseDriver(), 
 				reasoningParams.getConnectionUrl(),
 				reasoningParams.getDatabaseName(), 
 				reasoningParams.getDatabaseUser(),
 				reasoningParams.getDatabasePassword())) {
-//			manager.addQuery(accessibleQuery);
-			DataValidationImplementation dataValidator = new DataValidationImplementation(schema, (DatabaseHomomorphismManager) manager);
+//			chaseState.addQuery(accessibleQuery);
+			DatabaseChaseInstance detector = new DatabaseChaseInstance(new ArrayList<Atom>(), manager.getDriver(), manager.getUrl(), manager.getDatabase(), manager.getUsername(), manager.getPassword(), manager.builder, manager.schema);
+			
+			DataValidationImplementation dataValidator = new DataValidationImplementation(schema, detector);
 			dataValidator.validate();
-//			manager.clearQuery();
+//			chaseState.clearQuery();
 		} catch (Exception e) {
 			throw new EvaluationException(e.getMessage(), e);
 		}

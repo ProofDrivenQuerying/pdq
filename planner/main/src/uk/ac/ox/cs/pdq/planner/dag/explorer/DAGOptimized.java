@@ -3,6 +3,7 @@ package uk.ac.ox.cs.pdq.planner.dag.explorer;
 import static uk.ac.ox.cs.pdq.planner.logging.performance.PlannerStatKeys.CANDIDATES;
 import static uk.ac.ox.cs.pdq.planner.logging.performance.PlannerStatKeys.CONFIGURATIONS;
 
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Queue;
@@ -14,7 +15,6 @@ import org.apache.commons.collections4.CollectionUtils;
 import uk.ac.ox.cs.pdq.LimitReachedException;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismDetector;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.plan.DAGPlan;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
@@ -27,6 +27,7 @@ import uk.ac.ox.cs.pdq.planner.dag.explorer.filters.Filter;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.parallel.ExplorationResults;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.parallel.IterativeExecutor;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
 
 import com.google.common.base.Preconditions;
 import com.google.common.eventbus.EventBus;
@@ -83,6 +84,7 @@ public class DAGOptimized extends DAGExplorer {
 	 * @param explorationThreads 		Iterates over all newly created configurations in parallel and returns the best configuration
 	 * @param maxDepth 		The maximum depth to explore
 	 * @throws PlannerException the planner exception
+	 * @throws SQLException 
 	 */
 	public DAGOptimized(
 			EventBus eventBus, 
@@ -93,12 +95,12 @@ public class DAGOptimized extends DAGExplorer {
 			Schema schema,
 			AccessibleSchema accessibleSchema, 
 			Chaser chaser, 
-			HomomorphismDetector detector,
+			ChaseInstance detector,
 			CostEstimator<DAGPlan> costEstimator,
 			Filter filter,
 			IterativeExecutor reasoningThreads,
 			IterativeExecutor explorationThreads,
-			int maxDepth) throws PlannerException {
+			int maxDepth) throws PlannerException, SQLException {
 		super(eventBus, collectStats, parameters, 
 				query, accessibleQuery, schema, accessibleSchema, chaser, detector, costEstimator);
 		Preconditions.checkNotNull(reasoningThreads);

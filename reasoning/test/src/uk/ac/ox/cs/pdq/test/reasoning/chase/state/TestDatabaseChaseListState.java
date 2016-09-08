@@ -1,5 +1,6 @@
 package uk.ac.ox.cs.pdq.test.reasoning.chase.state;
 
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -12,10 +13,11 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import uk.ac.ox.cs.pdq.db.DatabaseInstance;
 import uk.ac.ox.cs.pdq.db.EGD;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
-import uk.ac.ox.cs.pdq.db.homomorphism.DatabaseHomomorphismManager;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.Constant;
@@ -23,22 +25,20 @@ import uk.ac.ox.cs.pdq.fol.Equality;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Skolem;
 import uk.ac.ox.cs.pdq.fol.Variable;
-import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseState;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 
 /**
- * Tests the chaseStep method of the DatabaseChaseState class 
+ * Tests the chaseStep method of the DatabaseChaseInstance class 
  * @author Efthymia Tsamoura
  *
  */
 public class TestDatabaseChaseListState {
 
-	protected DatabaseChaseState state;
-	@Mock 
-	protected DatabaseHomomorphismManager manager;
+	protected DatabaseChaseInstance state;
 	
 	private Atom R2 = new Atom(new Predicate("R2",2), 
 			Lists.newArrayList(new Variable("y"),new Variable("z")));
@@ -69,7 +69,11 @@ public class TestDatabaseChaseListState {
 		Atom f4 = new Atom(new Predicate("R2",2), 
 				Lists.newArrayList(new Skolem("c2"),new Skolem("c4")));
 		
-		this.state = new DatabaseChaseState(this.manager, Sets.<Atom>newHashSet(f0, f1, f2, f3, f4));
+		try {
+			this.state = new DatabaseChaseInstance(Sets.<Atom>newHashSet(f0, f1, f2, f3, f4), null, null, null, null, null, null, null);
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
 		Map<Variable, Constant> map1 = new HashMap<>();
 		map1.put(new Variable("y"), new Skolem("c"));
 		map1.put(new Variable("z"), new Skolem("c1"));

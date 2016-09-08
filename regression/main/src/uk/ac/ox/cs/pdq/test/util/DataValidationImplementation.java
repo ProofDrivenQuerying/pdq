@@ -4,37 +4,40 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
+import com.google.common.base.Preconditions;
+
 import jersey.repackaged.com.google.common.collect.Lists;
+import uk.ac.ox.cs.pdq.db.DatabaseInstance;
 import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TGD;
-import uk.ac.ox.cs.pdq.db.homomorphism.DatabaseHomomorphismManager;
-import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismProperty;
 import uk.ac.ox.cs.pdq.db.homomorphism.TriggerProperty;
 import uk.ac.ox.cs.pdq.db.wrappers.RelationAccessWrapper;
-import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 import uk.ac.ox.cs.pdq.runtime.exec.AccessException;
 import uk.ac.ox.cs.pdq.util.Table;
 import uk.ac.ox.cs.pdq.util.Tuple;
-
-import com.google.common.base.Preconditions;
 
 // TODO: Auto-generated Javadoc
 /**
  * Class that checks if the data is consistent w.r.t. the schema dependencies
  * The homomorphisms are found using SQL queries. The database facts (relation tuples) have to be stored in a database.
  * This database is created by a DBHomomorphismManager object.
+ * 
+ * @author georgek
  * @author Efthymia Tsamoura
  */
 
 public final class DataValidationImplementation extends DataValidation{
 
-	/** The manager. */
-	private final DatabaseHomomorphismManager manager;
+	/** The chaseState. */
+	private final ChaseInstance manager;
 	
 	/** The ics. */
 	private final List<Dependency> ics;
@@ -42,9 +45,9 @@ public final class DataValidationImplementation extends DataValidation{
 	/**
 	 * Constructor for DataValidationImplementation.
 	 * @param schema Schema
-	 * @param manager DBHomomorphismManager
+	 * @param chaseState DBHomomorphismManager
 	 */
-	public DataValidationImplementation(Schema schema, DatabaseHomomorphismManager manager) {
+	public DataValidationImplementation(Schema schema, ChaseInstance manager) {
 		super(schema);
 		this.manager = manager;
 		this.ics = schema.getDependencies();

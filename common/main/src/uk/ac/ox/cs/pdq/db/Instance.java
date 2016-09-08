@@ -2,9 +2,10 @@ package uk.ac.ox.cs.pdq.db;
 
 import java.util.Collection;
 import java.util.LinkedHashSet;
+import java.util.List;
 
-import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismManager;
 import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.Evaluatable;
 
 /**
  * Models a relational database instance. An Instance is a set of Atoms. 
@@ -12,12 +13,8 @@ import uk.ac.ox.cs.pdq.fol.Atom;
  * @author George K
  *
  */
-public interface Instance {
+public interface Instance extends AutoCloseable {
 
-	
-	/**  Queries and updates the storage of facts *. */
-	public HomomorphismManager manager = null;
-	
 	
 	/**
 	 * Augments the internal facts with the new ones.
@@ -33,12 +30,19 @@ public interface Instance {
 	 *
 	 * @param facts the Atom objects to be removed
 	 */
-	void removeFacts(Collection<Atom> facts);
+	void deleteFacts(Collection<Atom> facts);
 	
 	/**
 	 * 
 	 * @return
 	 */
 	Collection<Atom> getFacts();
+	
+	/**
+	 * Answers queries on this instance's facts.
+	 *
+	 * @param
+	 */
+	List<Match> answerQuery(Evaluatable q);
 
 }

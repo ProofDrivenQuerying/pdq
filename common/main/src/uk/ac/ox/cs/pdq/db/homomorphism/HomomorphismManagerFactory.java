@@ -4,8 +4,9 @@ import java.sql.SQLException;
 
 import org.apache.log4j.Logger;
 
+import uk.ac.ox.cs.pdq.db.DatabaseInstance;
+import uk.ac.ox.cs.pdq.db.DatabaseInstance.HomomorphismDetectorTypes;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismDetector.HomomorphismDetectorTypes;
 import uk.ac.ox.cs.pdq.db.sql.DerbyStatementBuilder;
 import uk.ac.ox.cs.pdq.db.sql.MySQLStatementBuilder;
 import uk.ac.ox.cs.pdq.db.sql.SQLStatementBuilder;
@@ -67,23 +68,24 @@ public class HomomorphismManagerFactory {
 	 *         contextual information
 	 * @throws HomomorphismException the homomorphism exception
 	 */
-	public synchronized HomomorphismManager getInstance(
+	public synchronized DatabaseInstance getInstance(
 			Schema schema, 
-			HomomorphismDetectorTypes type,
+			DatabaseInstance.HomomorphismDetectorTypes type,
 			String driver,
 			String url,
 			String database,
 			String username,			
 			String password
 			) throws HomomorphismException {
-		HomomorphismManager result = null;
+
+		DatabaseInstance result = null;
 		try {
 			Class.forName(driver);
 		} catch (ClassNotFoundException e) {
 			throw new IllegalStateException("No suitable driver found for homomorphism checker.", e);
 		}
 		try {
-			if (type != null && type == HomomorphismDetectorTypes.DATABASE) {
+			if (type != null && type == DatabaseInstance.HomomorphismDetectorTypes.DATABASE) {
 				SQLStatementBuilder builder = null;
 				if (url != null && url.contains("mysql")) {
 					builder = new MySQLStatementBuilder();
@@ -104,7 +106,8 @@ public class HomomorphismManagerFactory {
 					password = "";
 					builder = new DerbyStatementBuilder();
 				}
-				result = new DatabaseHomomorphismManager(
+				result = new 
+						DatabaseInstance(
 						driver, url, database, username, password, builder,
 						schema);
 				result.initialize();
@@ -118,7 +121,8 @@ public class HomomorphismManagerFactory {
 		}
 		// Fail safe is in-memory derby
 		try {
-			result = new DatabaseHomomorphismManager("org.apache.derby.jdbc.EmbeddedDriver",
+			result = new 
+					DatabaseInstance("org.apache.derby.jdbc.EmbeddedDriver",
 					"jdbc:derby:memory:{1};create=true", "chase", username, "", new DerbyStatementBuilder(),
 					schema);
 			result.initialize();

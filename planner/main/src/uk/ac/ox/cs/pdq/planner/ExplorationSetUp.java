@@ -1,5 +1,7 @@
 package uk.ac.ox.cs.pdq.planner;
 
+import java.util.ArrayList;
+
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 
@@ -8,9 +10,10 @@ import uk.ac.ox.cs.pdq.cost.CostEstimatorFactory;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.cost.CostStatKeys;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
+import uk.ac.ox.cs.pdq.db.DatabaseInstance;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismDetector;
 import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismManagerFactory;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.logging.performance.ChainedStatistics;
 import uk.ac.ox.cs.pdq.logging.performance.DynamicStatistics;
@@ -25,6 +28,7 @@ import uk.ac.ox.cs.pdq.planner.reasoning.ReasonerFactory;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 
 import com.google.common.eventbus.EventBus;
 
@@ -187,7 +191,7 @@ public class ExplorationSetUp {
 		ConjunctiveQuery accessibleQuery = this.accessibleSchema.accessible(query, query.getGrounding());
 		
 		Explorer<P> explorer = null;
-		try (HomomorphismDetector detector =
+		try (DatabaseInstance detector1 =
 				new HomomorphismManagerFactory().getInstance(this.accessibleSchema,  
 						this.reasoningParams.getHomomorphismDetectorType(), 
 						this.reasoningParams.getDatabaseDriver(), 
@@ -200,6 +204,7 @@ public class ExplorationSetUp {
 			if (costEstimator == null) {
 				costEstimator = CostEstimatorFactory.getEstimator(this.costParams, this.schema);
 			}
+			DatabaseChaseInstance detector = new DatabaseChaseInstance(new ArrayList<Atom>(), detector1.getDriver(), detector1.getUrl(), detector1.getDatabase(), detector1.getUsername(), detector1.getPassword(), detector1.builder, detector1.schema);
 			Chaser reasoner = new ReasonerFactory(
 					this.eventBus, 
 					collectStats,

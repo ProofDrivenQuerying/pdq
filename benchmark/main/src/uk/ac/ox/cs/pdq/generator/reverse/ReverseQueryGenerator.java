@@ -8,9 +8,9 @@ import java.util.concurrent.Executors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.log4j.Logger;
 
+import uk.ac.ox.cs.pdq.db.DatabaseInstance;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.db.homomorphism.DatabaseHomomorphismManager;
-import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismManager;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismManagerFactory;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Query;
@@ -101,7 +101,7 @@ public class ReverseQueryGenerator implements Runnable {
 			Runtime.getRuntime().addShutdownHook(new MatchReport(mm));
 
 			Query<?> accessibleQuery = accessibleSchema.accessible(this.query);
-			try(HomomorphismManager detector =
+			try(DatabaseInstance detector =
 				new HomomorphismManagerFactory().getInstance(accessibleSchema,  
 						reasoningParams.getHomomorphismDetectorType(), 
 						reasoningParams.getDatabaseDriver(), 
@@ -112,7 +112,7 @@ public class ReverseQueryGenerator implements Runnable {
 				detector.addQuery(accessibleQuery);
 				detector.initialize();
 				AccessibleChaseState state = (AccessibleChaseState) 
-						new AccessibleDatabaseListState(query, accessibleSchema, (DatabaseHomomorphismManager) detector, false);
+						new AccessibleDatabaseListState(query, accessibleSchema,  detector, false);
 				
 				log.info("Phase 1");
 				reasoner.reasonUntilTermination(state, this.schema.getDependencies());

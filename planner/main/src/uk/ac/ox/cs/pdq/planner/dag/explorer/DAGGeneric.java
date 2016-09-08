@@ -3,6 +3,7 @@ package uk.ac.ox.cs.pdq.planner.dag.explorer;
 import static uk.ac.ox.cs.pdq.planner.logging.performance.PlannerStatKeys.CANDIDATES;
 import static uk.ac.ox.cs.pdq.planner.logging.performance.PlannerStatKeys.CONFIGURATIONS;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -17,7 +18,6 @@ import org.apache.commons.lang3.tuple.Pair;
 import uk.ac.ox.cs.pdq.LimitReachedException;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismDetector;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.plan.DAGPlan;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
@@ -32,6 +32,7 @@ import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator;
 import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominance;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
@@ -94,6 +95,7 @@ public class DAGGeneric extends DAGExplorer {
 	 * @param maxDepth 		The maximum depth to explore
 	 * @param orderAware the order aware
 	 * @throws PlannerException the planner exception
+	 * @throws SQLException 
 	 */
 	public DAGGeneric(
 			EventBus eventBus, 
@@ -104,13 +106,13 @@ public class DAGGeneric extends DAGExplorer {
 			Schema schema,
 			AccessibleSchema accessibleSchema, 
 			Chaser chaser,
-			HomomorphismDetector detector,
+			ChaseInstance detector,
 			CostEstimator<DAGPlan> costEstimator,
 			SuccessDominance successDominance,
 			Filter filter,
 			List<Validator> validators,
 			int maxDepth,
-			boolean orderAware) throws PlannerException {
+			boolean orderAware) throws PlannerException, SQLException {
 		super(eventBus, collectStats, parameters, query, accessibleQuery, schema, accessibleSchema, chaser, detector, costEstimator);
 		Preconditions.checkNotNull(successDominance);
 		Preconditions.checkArgument(validators != null);

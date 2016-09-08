@@ -8,7 +8,7 @@ import com.google.common.collect.Lists;
 import uk.ac.ox.cs.pdq.LimitReachedException;
 import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.db.Match;
-import uk.ac.ox.cs.pdq.db.homomorphism.DatabaseHomomorphismManager.LimitTofacts;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance.LimitTofacts;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
@@ -44,7 +44,7 @@ import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 public abstract class ChaseConfiguration<P extends Plan> implements Configuration<P> {
 
 	/** The configuration's chase state. Keeps the output facts of this configuration */
-	protected final AccessibleChaseState state;
+	protected AccessibleChaseState state;
 
 	/**  The plan that corresponds to this configuration. */
 	protected P plan;
@@ -102,6 +102,10 @@ public abstract class ChaseConfiguration<P extends Plan> implements Configuratio
 	 */
 	public AccessibleChaseState getState() {
 		return this.state;
+	}
+	
+	public AccessibleChaseState setState(AccessibleChaseState state) {
+		return this.state = state;
 	}
 
 	/**

@@ -14,6 +14,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
+import uk.ac.ox.cs.pdq.db.DatabaseInstance;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismManager;
@@ -29,7 +30,7 @@ import uk.ac.ox.cs.pdq.io.xml.QueryReader;
 import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
 import uk.ac.ox.cs.pdq.logging.performance.StatisticsCollector;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
-import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseState;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 
 import com.google.common.eventbus.EventBus;
 
@@ -210,9 +211,9 @@ public class RestrictedChaserMainMemoryTest {
 				RestrictedChaser reasoner = new RestrictedChaser(new StatisticsCollector(true, new EventBus()));
 
 				SQLStatementBuilder builder = new MySQLStatementBuilder();
-				HomomorphismManager detector = new MainMemoryHomomorphismManager(schema);
+				DatabaseInstance detector = new MainMemoryHomomorphismManager(schema);
 				detector.initialize();
-				DatabaseChaseState state = new DatabaseChaseState(query, (HomomorphismManager) detector);				
+				DatabaseChaseInstance state = new DatabaseChaseInstance(query, detector);				
 				reasoner.reasonUntilTermination(state, schema.getDependencies());
 				Collection<Atom> expected = loadFacts(PATH + f, schema);
 				if(expected.size() != state.getFacts().size()) {

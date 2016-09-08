@@ -1,26 +1,17 @@
 package uk.ac.ox.cs.pdq.reasoning.chase.state;
 
-import uk.ac.ox.cs.pdq.db.Dependency;
-import uk.ac.ox.cs.pdq.db.EGD;
-import uk.ac.ox.cs.pdq.db.Match;
-import uk.ac.ox.cs.pdq.db.TGD;
-import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismManager;
-import uk.ac.ox.cs.pdq.db.homomorphism.TriggerProperty;
-import uk.ac.ox.cs.pdq.db.homomorphism.DatabaseHomomorphismManager.LimitTofacts;
-import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Constant;
-import uk.ac.ox.cs.pdq.fol.Equality;
-import uk.ac.ox.cs.pdq.fol.Formula;
-import uk.ac.ox.cs.pdq.fol.Term;
-import uk.ac.ox.cs.pdq.fol.Variable;
-import uk.ac.ox.cs.pdq.reasoning.utility.EqualConstantsClass;
-import uk.ac.ox.cs.pdq.reasoning.utility.EqualConstantsClasses;
-
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Triple;
 
 import com.beust.jcommander.internal.Lists;
 import com.beust.jcommander.internal.Maps;
@@ -29,7 +20,32 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 
-// TODO: Auto-generated Javadoc
+import uk.ac.ox.cs.pdq.db.DatabaseEGD;
+import uk.ac.ox.cs.pdq.db.DatabaseEquality;
+import uk.ac.ox.cs.pdq.db.DatabaseInstance;
+import uk.ac.ox.cs.pdq.db.DatabaseRelation;
+import uk.ac.ox.cs.pdq.db.Dependency;
+import uk.ac.ox.cs.pdq.db.EGD;
+import uk.ac.ox.cs.pdq.db.Match;
+import uk.ac.ox.cs.pdq.db.Relation;
+import uk.ac.ox.cs.pdq.db.Schema;
+import uk.ac.ox.cs.pdq.db.TGD;
+import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismProperty;
+import uk.ac.ox.cs.pdq.db.homomorphism.TriggerProperty;
+import uk.ac.ox.cs.pdq.db.sql.SQLStatementBuilder;
+import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.Conjunction;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+import uk.ac.ox.cs.pdq.fol.Constant;
+import uk.ac.ox.cs.pdq.fol.Equality;
+import uk.ac.ox.cs.pdq.fol.Evaluatable;
+import uk.ac.ox.cs.pdq.fol.Formula;
+import uk.ac.ox.cs.pdq.fol.Query;
+import uk.ac.ox.cs.pdq.fol.Term;
+import uk.ac.ox.cs.pdq.fol.Variable;
+import uk.ac.ox.cs.pdq.reasoning.utility.EqualConstantsClass;
+import uk.ac.ox.cs.pdq.reasoning.utility.EqualConstantsClasses;
+
 /**
  *
  * A collection of facts produced during chasing.
@@ -41,7 +57,7 @@ import com.google.common.collect.Sets;
  * @author Efthymia Tsamoura
  *
  */
-public class DatabaseChaseState implements ChaseState {
+public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInstance  {
 
 	
 	/** The _is failed. */
@@ -60,60 +76,71 @@ public class DatabaseChaseState implements ChaseState {
 	 * We need this table when we are applying an EGD chase step. **/
 	protected final Multimap<Constant, Atom> constantsToAtoms;
 
-	
-	/**  Queries and updates the database of facts *. */
-	protected HomomorphismManager manager;
-	
 	/**
 	 * Instantiates a new database chase state.
 	 *
 	 * @param query the query
-	 * @param manager the manager
+	 * @param chaseState the chaseState
+	 * @throws SQLException 
 	 */
-	public DatabaseChaseState(ConjunctiveQuery query, 
-			HomomorphismManager manager) {
-		Preconditions.checkNotNull(manager);
-		this.manager = manager;
+	public DatabaseChaseInstance(ConjunctiveQuery query,
+			String driver, 
+			String url, 
+			String database,
+			String username, 
+			String password,
+			SQLStatementBuilder builder,
+			Schema schema
+			) throws SQLException {
+		super(driver,url,database,username,password,builder,schema);
 		this.facts = Sets.newHashSet(query.ground(ConjunctiveQuery.generateCanonicalMapping(query.getBody())).getAtoms());
 		this.classes = new EqualConstantsClasses();
 		this.constantsToAtoms = inferConstantsMap(this.facts);
-		this.manager.addFacts(this.facts);
 	}
 
 	/**
 	 * Instantiates a new database list state.
 	 *
-	 * @param manager the manager
+	 * @param chaseState the chaseState
 	 * @param facts the facts
 	 */
-	public DatabaseChaseState(
-			HomomorphismManager manager,
-			Collection<Atom> facts) {
-		this.manager = manager;
-		Preconditions.checkNotNull(manager);
+	public DatabaseChaseInstance(Collection<Atom> facts,
+			String driver, 
+			String url, 
+			String database,
+			String username, 
+			String password,
+			SQLStatementBuilder builder,
+			Schema schema
+			) throws SQLException {
+		super(driver,url,database,username,password,builder,schema);
 		Preconditions.checkNotNull(facts);
 		this.facts = facts;
 		this.classes = new EqualConstantsClasses();
 		this.constantsToAtoms = inferConstantsMap(this.facts);
-		this.manager.addFacts(this.facts);
 	}
 	
 	/**
 	 * Instantiates a new database list state.
 	 *
-	 * @param manager the manager
+	 * @param chaseState the chaseState
 	 * @param facts the facts
 	 * @param graph the graph
 	 * @param classes the constant classes
 	 */
-	protected DatabaseChaseState(
-			HomomorphismManager manager,
+	protected DatabaseChaseInstance(
 			Collection<Atom> facts,
 			EqualConstantsClasses classes,
-			Multimap<Constant,Atom> constants
-			) {
-		this.manager = manager;
-		Preconditions.checkNotNull(manager);
+			Multimap<Constant,Atom> constants,
+			String driver, 
+			String url, 
+			String database,
+			String username, 
+			String password,
+			SQLStatementBuilder builder,
+			Schema schema
+			) throws SQLException {
+		super(driver,url,database,username,password,builder,schema);
 		Preconditions.checkNotNull(facts);
 		Preconditions.checkNotNull(classes);
 		Preconditions.checkNotNull(constants);
@@ -123,30 +150,15 @@ public class DatabaseChaseState implements ChaseState {
 	}
 	
 
-	/**
-	 * Gets the manager.
-	 *
-	 * @return DBHomomorphismManager
-	 */
-	public HomomorphismManager getManager() {
-		return this.manager;
-	}
 
 	/**
-	 * Sets the manager.
 	 *
-	 * @param manager DBHomomorphismManager
-	 */
-	public void setManager(HomomorphismManager manager) {
-		this.manager = manager;
-	}
-
-	/**
 	 * 
 	 * @param facts
 	 * @return a map of each constant to the atom and the position inside this atom where it appears. 
 	 * An exception is thrown when there is an equality in the input
 	 */
+	//TOCOMMENT: What does this do exaclty? where is it used?
 	protected static Multimap<Constant,Atom> inferConstantsMap(Collection<Atom> facts) {
 		Multimap<Constant, Atom> constantsToAtoms = HashMultimap.create();
 		for(Atom fact:facts) {
@@ -172,7 +184,7 @@ public class DatabaseChaseState implements ChaseState {
 	/* 
 	 * ??? What does false here mean?
 	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState#chaseStep(java.util.Collection)
+	 * @see uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance#chaseStep(java.util.Collection)
 	 */
 	@Override
 	public boolean chaseStep(Collection<Match> matches) {
@@ -284,7 +296,7 @@ public class DatabaseChaseState implements ChaseState {
 		}
 		
 		this.facts.removeAll(obsoleteFacts);
-		this.manager.deleteFacts(obsoleteFacts);
+		deleteFacts(obsoleteFacts);
 		this.addFacts(newFacts);
 		return !this._isFailed;
 	}
@@ -368,20 +380,13 @@ public class DatabaseChaseState implements ChaseState {
 
 
 	/* (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState#isFailed()
+	 * @see uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance#isFailed()
 	 */
 	@Override
 	public boolean isFailed() {
 		return this._isFailed;
 	}
 
-	/* (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState#getFacts()
-	 */
-	@Override
-	public Collection<Atom> getFacts() {
-		return this.facts;
-	}
 	
 	public Multimap<Constant, Atom> getConstantsToAtoms() {
 		return this.constantsToAtoms;
@@ -392,82 +397,196 @@ public class DatabaseChaseState implements ChaseState {
 	 */
 	@Override
 	public void addFacts(Collection<Atom> facts) {
-		this.manager.addFacts(facts);
+		super.addFacts(facts);
 		this.facts.addAll(facts);
 	}
 
 	/* (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseState#clone()
+	 * @see uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance#clone()
 	 */
 	@Override
-	public DatabaseChaseState clone() {
+	public DatabaseChaseInstance clone() {
 		Multimap<Constant, Atom> constantsToAtoms = HashMultimap.create();
 		constantsToAtoms.putAll(this.constantsToAtoms);
-		return new DatabaseChaseState(this.manager, Sets.newHashSet(this.facts), this.classes.clone(), constantsToAtoms);
+		try {
+			return new DatabaseChaseInstance(Sets.newHashSet(this.facts), this.classes.clone(), constantsToAtoms, getDriver(), getUrl(), getDatabase(),getUsername(), getPassword(),builder,schema);
+		} catch (SQLException e) {
+			throw new RuntimeException("Cloning a DatabaseChaseInstance failed due to an SQL exception "+ e);
+		}
 	}	
 	
+	@Override
+	public Collection<Atom> getFacts() {
+		return this.facts;
+	}
+	
 	/* (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState#merge(uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState)
+	 * @see uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance#merge(uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance)
 	 */
 	@Override
-	public ChaseState merge(ChaseState s) {
-		Preconditions.checkState(s instanceof DatabaseChaseState);
+	public ChaseInstance merge(ChaseInstance s) throws SQLException {
+		Preconditions.checkState(s instanceof DatabaseChaseInstance);
 		Collection<Atom> facts =  new LinkedHashSet<>(this.facts);
 		facts.addAll(s.getFacts());
 
 		EqualConstantsClasses classes = this.classes.clone();
-		if(!classes.merge(((DatabaseChaseState)s).classes)) {
+		if(!classes.merge(((DatabaseChaseInstance)s).classes)) {
 			return null;
 		}
 
 		Multimap<Constant, Atom> constantsToAtoms = HashMultimap.create();
 		constantsToAtoms.putAll(this.constantsToAtoms);
-		constantsToAtoms.putAll(((DatabaseChaseState)s).constantsToAtoms);
+		constantsToAtoms.putAll(((DatabaseChaseInstance)s).constantsToAtoms);
 
-		return new DatabaseChaseState(
-				this.getManager(),
+		return new DatabaseChaseInstance(
 				facts, 
 				classes,
-				constantsToAtoms);
+				constantsToAtoms, getDriver(), getUrl(), getDatabase(),getUsername(), getPassword(),builder,schema);
 	}
 
 	/**
-	 * Calls the manager to detect homomorphisms of the input query to facts in this state.
-	 * The manager detects homomorphisms using a database backend.
+	 * Calls the chaseState to detect homomorphisms of the input query to facts in this state.
+	 * The chaseState detects homomorphisms using a database backend.
 	 * @param query Query
 	 * @return List<Match>
-	 * @see uk.ac.ox.cs.pdq.chase.state.ChaseState#getTriggers(Query)
+	 * @see uk.ac.ox.cs.pdq.ChaseInstance.state.ChaseState#getTriggers(Query)
 	 */
 	//@Override
 	public List<Match> getMatches(ConjunctiveQuery query, LimitTofacts l) {
-		return this.manager.getMatches(query, this.facts, l);
-				/*,
-				HomomorphismProperty.createFactProperty(Conjunction.of(this.getFacts())),
-				HomomorphismProperty.createMapProperty(query.getGroundingsProjectionOnFreeVars()));
-				*/
+			
+			HomomorphismProperty[] properties = new HomomorphismProperty[2];
+			if(l.equals(LimitTofacts.THIS))
+			{
+					properties[0] = HomomorphismProperty.createMapProperty(query.getGroundingsProjectionOnFreeVars());
+					properties[1] = HomomorphismProperty.createFactProperty(Conjunction.of(facts));
+			}
+			else
+			{
+				properties = new HomomorphismProperty[1];
+				properties[0] = HomomorphismProperty.createMapProperty(query.getGroundingsProjectionOnFreeVars());
+			}
+			
+			Queue<Triple<ConjunctiveQuery, String, LinkedHashMap<String, Variable>>> queries = new ConcurrentLinkedQueue<>();;
+			//Create a new query out of each input query that references only the cleaned predicates
+			ConjunctiveQuery converted = this.convert(query);
+			HomomorphismProperty[] c = null;
+			//Create an SQL statement for the cleaned query
+			Pair<String, LinkedHashMap<String, Variable>> pair = this.builder.createQuery(converted, properties);
+			queries.add(Triple.of(query, pair.getLeft(), pair.getRight()));
+
+			return this.answerQueries(queries);
+		
 	}
 
 
 
 	/**
-	 * Calls the manager to detect homomorphisms of the input dependencies to facts in this state.
-	 * The manager detects homomorphisms using a database backend.
+	 * Calls the chaseState to detect homomorphisms of the input dependencies to facts in this state.
+	 * The chaseState detects homomorphisms using a database backend.
+	 * @param <Q>
 	 * @param dependencies Collection<D>
 	 * @param constraints HomomorphismConstraint...
 	 * @return Map<D,List<Match>>
 	 * @see uk.ac.ox.cs.pdq.chase.state.ChaseState#getHomomorphisms(Collection<D>)
 	 */
 	@Override
-	public List<Match> getTriggers(Collection<? extends Dependency> dependencies,TriggerProperty t) {
+	public List<Match>getTriggers(Collection<? extends Dependency> dependencies,TriggerProperty t, LimitTofacts limitToFacts) {
 		
 		
-		//HomomorphismProperty[] c = new HomomorphismProperty[1];
-		//c[0] = HomomorphismProperty.createActiveTriggerProperty();
-		//c[1] = HomomorphismProperty.createFactProperty(Conjunction.of(this.getFacts()));
-		
-//		HomomorphismProperty[] c = new HomomorphismProperty[constraints.length+1];
-//		System.arraycopy(constraints, 0, c, 0, constraints.length);
-//		c[constraints.length] = HomomorphismProperty.createFactProperty(Conjunction.of(this.getFacts()));
-		return this.manager.getTriggers(dependencies,t,this.facts);
+		HomomorphismProperty[] properties = new HomomorphismProperty[2];
+		if(t.equals(TriggerProperty.ACTIVE))
+		{
+			properties[0] = HomomorphismProperty.createActiveTriggerProperty();
+		}
+		if(limitToFacts.equals(LimitTofacts.THIS))
+		{
+			Preconditions.checkNotNull(facts);
+			properties[1] = HomomorphismProperty.createFactProperty(Conjunction.of(this.facts));
+		}
+		Preconditions.checkNotNull(dependencies);
+		Queue<Triple<Dependency, String, LinkedHashMap<String, Variable>>> queries = new ConcurrentLinkedQueue<>();;
+		//Create a new query out of each input query that references only the cleaned predicates
+		for(Dependency source:dependencies) {
+			Dependency s = this.convert(source);
+			HomomorphismProperty[] c = null;
+			if(source instanceof EGD) {
+				c = new HomomorphismProperty[properties.length+1];
+				System.arraycopy(properties, 0, c, 0, properties.length);
+				c[properties.length] = HomomorphismProperty.createEGDHomomorphismProperty();
+			}
+			else {
+				c = properties;
+			}
+			//Create an SQL statement for the cleaned query
+			Pair<String, LinkedHashMap<String, Variable>> pair = this.builder.createQuery(s, c);
+			queries.add(Triple.of(source, pair.getLeft(), pair.getRight()));
+		}
+
+		return this.answerQueries(queries);
+	}
+	
+	/**
+	 * Convert.
+	 *
+	 * @param <Q> the generic type
+	 * @param source 		An input formula
+	 * @param toDatabaseTables 		Map of schema relation names to *clean* names
+	 * @param constraints 		A set of constraints that should be satisfied by the homomorphisms of the input formula to the facts of the database 
+	 * @return 		a formula that uses the input *clean* names
+	 */
+	private <Q extends Evaluatable> Q convert(Q source) {
+		if(source instanceof TGD) {
+			int f = 0;
+			List<Atom> left = Lists.newArrayList();
+			for(Atom atom:((TGD) source).getLeft()) {
+				Relation relation = this.RelationNamesToRelationObjects.get(atom.getName());
+				List<Term> terms = Lists.newArrayList(atom.getTerms());
+				terms.add(new Variable(DatabaseRelation.Fact.getName() + f++));
+				left.add(new Atom(relation, terms));
+			}
+			List<Atom> right = Lists.newArrayList();
+			for(Atom atom:((TGD) source).getRight()) {
+				Relation relation = this.RelationNamesToRelationObjects.get(atom.getName());
+				List<Term> terms = Lists.newArrayList(atom.getTerms());
+				terms.add(new Variable(DatabaseRelation.Fact.getName() + f++));
+				right.add(new Atom(relation, terms));
+			}
+			return (Q) new TGD(Conjunction.of(left), Conjunction.of(right));
+		}
+		else if (source instanceof EGD) {
+			int f = 0;
+			List<Atom> left = Lists.newArrayList();
+			for(Atom atom:((EGD) source).getLeft()) {
+				Relation relation = this.RelationNamesToRelationObjects.get(atom.getName());
+				List<Term> terms = Lists.newArrayList(atom.getTerms());
+				terms.add(new Variable(DatabaseRelation.Fact.getName() + f++));
+				left.add(new Atom(relation, terms));
+			}
+			List<DatabaseEquality> right = new ArrayList<DatabaseEquality>();
+			for(Equality atom:((EGD) source).getRight()) {
+				List<Term> terms = Lists.newArrayList(atom.getTerms());
+				terms.add(new Variable(DatabaseRelation.Fact.getName() + f++));
+				right.add(new DatabaseEquality(terms));
+			}
+			return (Q) new DatabaseEGD(Conjunction.of(left), Conjunction.of(right));
+		}
+		else if(source instanceof Query) {
+			int f = 0;
+			List<Atom> body = Lists.newArrayList();
+			for(Atom atom:((Query<?>) source).getBody().getAtoms()) {
+				Relation relation = this.RelationNamesToRelationObjects.get(atom.getName());
+				List<Term> terms = Lists.newArrayList(atom.getTerms());
+				terms.add(new Variable(DatabaseRelation.Fact.getName() + f++));
+				body.add(new Atom(relation, terms));
+			}
+			return (Q) new ConjunctiveQuery(((Query) source).getHead(), Conjunction.of(body));
+		}
+		else {
+			throw new java.lang.UnsupportedOperationException();
+		}
+	}
+	public enum LimitTofacts{
+		ALL,
+		THIS
 	}
 }

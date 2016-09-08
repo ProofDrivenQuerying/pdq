@@ -8,6 +8,7 @@ import static uk.ac.ox.cs.pdq.planner.logging.performance.PlannerStatKeys.MILLI_
 import static uk.ac.ox.cs.pdq.planner.logging.performance.PlannerStatKeys.MILLI_EQUIVALENCE;
 import static uk.ac.ox.cs.pdq.planner.logging.performance.PlannerStatKeys.MILLI_QUERY_MATCH;
 
+import java.sql.SQLException;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -24,7 +25,6 @@ import uk.ac.ox.cs.pdq.LimitReachedException;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismDetector;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Query;
@@ -50,6 +50,7 @@ import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.Metadata;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.StatusUpdateMetadata;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.pruning.PostPruning;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
 import uk.ac.ox.cs.pdq.util.IndexedDirectedGraph;
 
 import com.google.common.base.Joiner;
@@ -121,6 +122,7 @@ public class LinearOptimized extends LinearExplorer {
 	 * @param postPruning 		Removes the redundant follow up joins and accesses from a plan
 	 * @param zombification 		True if we wake up previously terminal nodes
 	 * @throws PlannerException the planner exception
+	 * @throws SQLException 
 	 */
 	public LinearOptimized(
 			EventBus eventBus, 
@@ -130,13 +132,13 @@ public class LinearOptimized extends LinearExplorer {
 			Schema schema,
 			AccessibleSchema accessibleSchema, 
 			Chaser chaser,
-			HomomorphismDetector detector,
+			ChaseInstance detector,
 			CostEstimator<LeftDeepPlan> costEstimator,
 			NodeFactory nodeFactory,
 			int depth,
 			int queryMatchInterval, 
 			PostPruning postPruning,
-			boolean zombification) throws PlannerException {
+			boolean zombification) throws PlannerException, SQLException {
 		super(eventBus, collectStats, query, accessibleQuery, schema, accessibleSchema, chaser, detector, costEstimator, nodeFactory, depth);
 		this.costPropagator = PropagatorUtils.getPropagator(costEstimator);
 		this.queryMatchInterval = queryMatchInterval;

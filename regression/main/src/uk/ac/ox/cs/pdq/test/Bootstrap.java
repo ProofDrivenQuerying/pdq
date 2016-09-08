@@ -158,7 +158,7 @@ public class Bootstrap {
 
 		/**
 		 * Executes the command action on the list of modules. If the module 
-		 * list is empty, the action is performed on the service manager itself.
+		 * list is empty, the action is performed on the service chaseState itself.
 		 *
 		 * @throws RegressionTestException the regression test exception
 		 * @throws IOException Signals that an I/O exception has occurred.

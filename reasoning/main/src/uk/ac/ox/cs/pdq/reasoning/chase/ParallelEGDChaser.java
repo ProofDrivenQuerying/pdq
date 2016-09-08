@@ -8,8 +8,6 @@ import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.db.EGD;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.TGD;
-import uk.ac.ox.cs.pdq.db.homomorphism.DatabaseHomomorphismManager;
-import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismDetector;
 import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismProperty;
 import uk.ac.ox.cs.pdq.db.homomorphism.TriggerProperty;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
@@ -17,8 +15,9 @@ import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.logging.performance.StatisticsCollector;
-import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState;
-import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseState;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance.LimitTofacts;
 import uk.ac.ox.cs.pdq.reasoning.utility.DefaultParallelEGDChaseDependencyAssessor;
 import uk.ac.ox.cs.pdq.reasoning.utility.ParallelEGDChaseDependencyAssessor;
 import uk.ac.ox.cs.pdq.reasoning.utility.ParallelEGDChaseDependencyAssessor.EGDROUND;
@@ -73,8 +72,8 @@ public class ParallelEGDChaser extends Chaser {
 	 * @param dependencies the dependencies
 	 */
 	@Override
-	public <S extends ChaseState> void reasonUntilTermination(S instance,  Collection<? extends Dependency> dependencies) {
-		Preconditions.checkArgument(instance instanceof ChaseState);
+	public <S extends ChaseInstance> void reasonUntilTermination(S instance,  Collection<? extends Dependency> dependencies) {
+		Preconditions.checkArgument(instance instanceof ChaseInstance);
 		ParallelEGDChaseDependencyAssessor accessor = new DefaultParallelEGDChaseDependencyAssessor(dependencies);
 
 		Collection<TGD> tgds = Sets.newHashSet();
@@ -99,7 +98,7 @@ public class ParallelEGDChaser extends Chaser {
 			++step;
 			//Find all active triggers
 			Collection<? extends Dependency> d = step % 2 == 0 ? accessor.getDependencies(instance, EGDROUND.TGD):accessor.getDependencies(instance, EGDROUND.EGD);
-			List<Match> activeTriggers = instance.getTriggers(d,TriggerProperty.ACTIVE);
+			List<Match> activeTriggers = instance.getTriggers(d,TriggerProperty.ACTIVE,LimitTofacts.THIS);
 			boolean succeeds = instance.chaseStep(activeTriggers);
 			if(!succeeds) {
 				break;

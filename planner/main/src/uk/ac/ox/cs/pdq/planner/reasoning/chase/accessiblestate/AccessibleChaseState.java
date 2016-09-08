@@ -18,7 +18,7 @@ import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
  *
  * @author Efthymia Tsamoura
  */
-public interface AccessibleChaseState extends uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState {
+public interface AccessibleChaseState extends uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance {
 
 	/**
 	 * For each input accessibility axiom, it

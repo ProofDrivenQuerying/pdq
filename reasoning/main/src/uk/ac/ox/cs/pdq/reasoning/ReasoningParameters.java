@@ -8,7 +8,8 @@ import java.util.Properties;
 import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.Parameters;
-import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismDetector.HomomorphismDetectorTypes;
+import uk.ac.ox.cs.pdq.db.DatabaseInstance;
+import uk.ac.ox.cs.pdq.db.DatabaseInstance.HomomorphismDetectorTypes;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -127,7 +128,7 @@ public class ReasoningParameters extends Parameters {
 
 	/** The homomorphism detector type. */
 	@Parameter(description = "Type of the homomorphism detected infrastructure")
-	protected HomomorphismDetectorTypes homomorphismDetectorType;
+	protected DatabaseInstance.HomomorphismDetectorTypes homomorphismDetectorType;
 	
 	/** The termination k. */
 	@Parameter(description = "Number of rounds of rule firings to perform, in "
@@ -276,9 +277,9 @@ public class ReasoningParameters extends Parameters {
 	 *
 	 * @return HomomorphismDetectorTypes
 	 */
-	public HomomorphismDetectorTypes getHomomorphismDetectorType() {
+	public DatabaseInstance.HomomorphismDetectorTypes getHomomorphismDetectorType() {
 		if (this.homomorphismDetectorType == null) {
-			return HomomorphismDetectorTypes.DATABASE;
+			return DatabaseInstance.HomomorphismDetectorTypes.DATABASE;
 		}
 		return this.homomorphismDetectorType;
 	}
@@ -288,7 +289,7 @@ public class ReasoningParameters extends Parameters {
 	 *
 	 * @param type HomomorphismDetectorTypes
 	 */
-	public void setHomomorphismDetectorType(HomomorphismDetectorTypes type) {
+	public void setHomomorphismDetectorType(DatabaseInstance.HomomorphismDetectorTypes type) {
 		this.homomorphismDetectorType = type;
 	}
 
@@ -299,10 +300,10 @@ public class ReasoningParameters extends Parameters {
 	 */
 	public void setHomomorphismDetectorType(String type) {
 		try {
-			this.homomorphismDetectorType = HomomorphismDetectorTypes.valueOf(type);
+			this.homomorphismDetectorType = DatabaseInstance.HomomorphismDetectorTypes.valueOf(type);
 		} catch (IllegalArgumentException e) {
-			log.warn("Setting homomorphism checker type to " + HomomorphismDetectorTypes.DATABASE, e);
-			this.homomorphismDetectorType = HomomorphismDetectorTypes.DATABASE;
+			log.warn("Setting homomorphism checker type to " + DatabaseInstance.HomomorphismDetectorTypes.DATABASE, e);
+			this.homomorphismDetectorType = DatabaseInstance.HomomorphismDetectorTypes.DATABASE;
 		}
 	}
 	

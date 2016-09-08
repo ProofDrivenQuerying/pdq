@@ -6,13 +6,12 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.db.Dependency;
-import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismDetector;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.logging.performance.StatisticsCollector;
-import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -47,7 +46,7 @@ public abstract class Chaser {
 	 * @param instance the instance
 	 * @param dependencies the dependencies
 	 */
-	public abstract <S extends ChaseState> void reasonUntilTermination(S instance, Collection<? extends Dependency> dependencies);
+	public abstract <S extends ChaseInstance> void reasonUntilTermination(S instance, Collection<? extends Dependency> dependencies);
 	
 	
 

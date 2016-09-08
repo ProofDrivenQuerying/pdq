@@ -10,8 +10,8 @@ import uk.ac.ox.cs.pdq.db.EGD;
 import uk.ac.ox.cs.pdq.db.TGD;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Predicate;
-import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState;
-import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseState;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 
 import com.beust.jcommander.internal.Lists;
 import com.beust.jcommander.internal.Sets;
@@ -85,7 +85,7 @@ public final class DefaultTGDDependencyAssessor implements TGDDependencyAssessor
 	 * @return 		the dependencies that are most likely to be fired in the next chase round.
 	 */
 	@Override
-	public Collection<? extends Dependency> getDependencies(ChaseState state) {
+	public Collection<? extends Dependency> getDependencies(ChaseInstance state) {
 		Collection<Dependency> constraints = Sets.newLinkedHashSet();
 		Collection<Atom> newFacts = null;
 		if(this.stateFacts == null) {

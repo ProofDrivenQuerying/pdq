@@ -11,8 +11,8 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.db.Dependency;
-import uk.ac.ox.cs.pdq.db.homomorphism.DatabaseHomomorphismManager;
-import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismDetector;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.plan.DAGPlan;
 import uk.ac.ox.cs.pdq.planner.dag.BinaryConfiguration;
@@ -21,8 +21,9 @@ import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.dag.equivalence.DAGEquivalenceClasses;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator;
 import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominance;
+import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
-import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseState;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
@@ -51,7 +52,7 @@ public class ReasoningThread implements Callable<Boolean> {
 	protected final Chaser chaser;
 
 	/**  Detects homomorphisms during chasing. */
-	protected final HomomorphismDetector detector;
+	protected final ChaseInstance detector;
 
 	/**  Estimates the cost of the plans. */
 	protected final CostEstimator<DAGPlan> costEstimator;
@@ -119,7 +120,7 @@ public class ReasoningThread implements Callable<Boolean> {
 			Query<?> query,
 			Collection<? extends Dependency> dependencies,
 			Chaser chaser,
-			HomomorphismDetector detector,
+			ChaseInstance detector,
 			CostEstimator<DAGPlan> costEstimator,
 			SuccessDominance successDominance,
 			DAGChaseConfiguration best,
@@ -251,8 +252,8 @@ public class ReasoningThread implements Callable<Boolean> {
 					right
 					);
 					
-			if(configuration.getState() instanceof DatabaseChaseState) {
-				((DatabaseChaseState)configuration.getState()).setManager((DatabaseHomomorphismManager) this.detector);
+			if(configuration.getState() instanceof DatabaseChaseInstance) {
+				configuration.setState((AccessibleChaseState) this.detector);
 			}
 			this.chaser.reasonUntilTermination(configuration.getState(), this.dependencies);
 			this.representatives.put(this.equivalenceClasses, left, right, configuration);

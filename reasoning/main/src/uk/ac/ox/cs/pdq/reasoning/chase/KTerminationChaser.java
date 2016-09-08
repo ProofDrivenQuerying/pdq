@@ -8,7 +8,8 @@ import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismProperty;
 import uk.ac.ox.cs.pdq.db.homomorphism.TriggerProperty;
 import uk.ac.ox.cs.pdq.logging.performance.StatisticsCollector;
-import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance.LimitTofacts;
 import uk.ac.ox.cs.pdq.reasoning.utility.ReasonerUtility;
 
 import com.google.common.base.Preconditions;
@@ -51,14 +52,14 @@ public class KTerminationChaser extends RestrictedChaser {
 	 * @param dependencies Collection<? extends Constraint>
 	 */
 	@Override
-	public <S extends ChaseState> void reasonUntilTermination(S instance, Collection<? extends Dependency> dependencies) {
-		Preconditions.checkArgument(instance instanceof ChaseState);
+	public <S extends ChaseInstance> void reasonUntilTermination(S instance, Collection<? extends Dependency> dependencies) {
+		Preconditions.checkArgument(instance instanceof ChaseInstance);
 		Preconditions.checkArgument(!ReasonerUtility.checkEGDs(dependencies), "KTerminationChaser is not allowed with EGDs");
 		int rounds = 0;
 		boolean appliedStep = true;
 		while (rounds < this.k && appliedStep) {
 			appliedStep = false;
-			List<Match> matches = instance.getTriggers(dependencies, TriggerProperty.ACTIVE);
+			List<Match> matches = instance.getTriggers(dependencies, TriggerProperty.ACTIVE, LimitTofacts.THIS);
 			if(!matches.isEmpty()) {
 				appliedStep = true;
 			}

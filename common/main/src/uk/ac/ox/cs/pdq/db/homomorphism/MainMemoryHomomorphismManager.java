@@ -39,7 +39,7 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TGD;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
-import uk.ac.ox.cs.pdq.db.homomorphism.DatabaseHomomorphismManager.LimitTofacts;
+import uk.ac.ox.cs.pdq.db.homomorphism.DatabaseChaseInstance.LimitTofacts;
 import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismProperty.ActiveTriggerProperty;
 import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismProperty.EGDHomomorphismProperty;
 import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismProperty.FactProperty;
@@ -108,17 +108,17 @@ public class MainMemoryHomomorphismManager implements HomomorphismManager {
 		return this.internalGetMatches(Lists.<Query<?>>newArrayList(query),properties);
 	}
 
-	@Override
-	public <Q extends Evaluatable> List<Match> getTriggers(Collection<Q> dependencies, TriggerProperty t, Collection<Atom> facts) {
-		
-		HomomorphismProperty[] properties = new HomomorphismProperty[1];
-		if(t.equals(TriggerProperty.ACTIVE))
-		{
-			properties[0] = HomomorphismProperty.createActiveTriggerProperty();
-		}
-		return this.internalGetMatches(dependencies, properties);
-		
-	}
+//	@Override
+//	public <Q extends Evaluatable> List<Match> getTriggers(Collection<Q> dependencies, TriggerProperty t, Collection<Atom> facts) {
+//		
+//		HomomorphismProperty[] properties = new HomomorphismProperty[1];
+//		if(t.equals(TriggerProperty.ACTIVE))
+//		{
+//			properties[0] = HomomorphismProperty.createActiveTriggerProperty();
+//		}
+//		return this.internalGetMatches(dependencies, properties);
+//		
+//	}
 	
 	
 	/* Done? */

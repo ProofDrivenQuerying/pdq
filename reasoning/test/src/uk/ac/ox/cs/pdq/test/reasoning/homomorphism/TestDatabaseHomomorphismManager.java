@@ -1,13 +1,15 @@
 package uk.ac.ox.cs.pdq.test.reasoning.homomorphism;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
-
-import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import com.google.common.collect.Lists;
+
+import junit.framework.Assert;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.db.EGD;
@@ -16,9 +18,6 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TGD;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
-import uk.ac.ox.cs.pdq.db.homomorphism.DatabaseHomomorphismManager;
-import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismManager;
-import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismProperty;
 import uk.ac.ox.cs.pdq.db.homomorphism.TriggerProperty;
 import uk.ac.ox.cs.pdq.db.sql.MySQLStatementBuilder;
 import uk.ac.ox.cs.pdq.db.sql.SQLStatementBuilder;
@@ -27,16 +26,18 @@ import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.Equality;
 import uk.ac.ox.cs.pdq.fol.Skolem;
 import uk.ac.ox.cs.pdq.fol.Variable;
-
-import com.google.common.collect.Lists;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance.LimitTofacts;
 
 /**
- * Tests the getMatches method of the DatabaseHomomorphismManager class 
+ * Tests the getMatches method of the DatabaseChaseInstance class 
+ * 
+ * @author georgeK
  * @author Efthymia Tsamoura
  *
  */
-public class TestDatabaseHomomorphismManager {	
-	protected HomomorphismManager manager;
+public class TestDatabaseChaseInstance {	
+	protected DatabaseChaseInstance chaseState;
 	
 	private Relation rel1;
 	private Relation rel2;
@@ -90,8 +91,8 @@ public class TestDatabaseHomomorphismManager {
 		/** The password. */
 		String password ="root";
 		SQLStatementBuilder builder = new MySQLStatementBuilder();
-		this.manager = new DatabaseHomomorphismManager(driver, url, database, username, password, builder, this.schema);
-		this.manager.initialize();
+		this.chaseState = new DatabaseChaseInstance(new ArrayList<Atom>(), driver, url, database, username, password, builder, this.schema);
+		this.chaseState.initialize();
 	}
 	
 	@Test 
@@ -114,8 +115,8 @@ public class TestDatabaseHomomorphismManager {
 		Atom f25 = new Atom(this.rel1, 
 				Lists.newArrayList(new Skolem("k6"), new Skolem("c"),new TypedConstant(new String("Michael"))));
 		
-		this.manager.addFacts(Lists.newArrayList(f20,f21,f22,f23,f24,f25));
-		List<Match> matches = this.manager.getTriggers(Lists.newArrayList(this.tgd),TriggerProperty.ACTIVE,null);
+		this.chaseState.addFacts(Lists.newArrayList(f20,f21,f22,f23,f24,f25));
+		List<Match> matches = this.chaseState.getTriggers(Lists.newArrayList(this.tgd),TriggerProperty.ACTIVE,LimitTofacts.THIS);
 		Assert.assertEquals(6, matches.size());
 	}
 	
@@ -139,8 +140,8 @@ public class TestDatabaseHomomorphismManager {
 		Atom f25 = new Atom(this.rel2, 
 				Lists.newArrayList(new Skolem("p"),new TypedConstant(new String("Michael"))));
 		
-		this.manager.addFacts(Lists.newArrayList(f20,f21,f22,f23,f24,f25));
-		List<Match> matches = this.manager.getTriggers(Lists.newArrayList(this.egd),TriggerProperty.ACTIVE,null);
+		this.chaseState.addFacts(Lists.newArrayList(f20,f21,f22,f23,f24,f25));
+		List<Match> matches = this.chaseState.getTriggers(Lists.newArrayList(this.egd),TriggerProperty.ACTIVE,LimitTofacts.THIS);
 		Assert.assertEquals(4, matches.size());
 	}
 	
@@ -167,8 +168,8 @@ public class TestDatabaseHomomorphismManager {
 		Equality eq1 = new Equality(new Skolem("c1"), new Skolem("c2"));
 		Equality eq2 = new Equality(new Skolem("c1"), new Skolem("c3"));
 		
-		this.manager.addFacts(Lists.newArrayList(f20,f21,f22,f23,f24,f25, eq1,eq2));
-		List<Match> matches = this.manager.getTriggers(Lists.newArrayList(this.egd),TriggerProperty.ALL,null);
+		this.chaseState.addFacts(Lists.newArrayList(f20,f21,f22,f23,f24,f25, eq1,eq2));
+		List<Match> matches = this.chaseState.getTriggers(Lists.newArrayList(this.egd),TriggerProperty.ALL,LimitTofacts.THIS);
 		Assert.assertEquals(4, matches.size());
 	}	
 	
@@ -195,8 +196,8 @@ public class TestDatabaseHomomorphismManager {
 		Equality eq1 = new Equality(new Skolem("c1"), new Skolem("c2"));
 		Equality eq2 = new Equality(new Skolem("c1"), new Skolem("c3"));
 		
-		this.manager.addFacts(Lists.newArrayList(f20,f21,f22,f23,f24,f25, eq1,eq2));
-		List<Match> matches = this.manager.getTriggers(Lists.newArrayList(this.egd),TriggerProperty.ACTIVE,null);
+		this.chaseState.addFacts(Lists.newArrayList(f20,f21,f22,f23,f24,f25, eq1,eq2));
+		List<Match> matches = this.chaseState.getTriggers(Lists.newArrayList(this.egd),TriggerProperty.ACTIVE,LimitTofacts.THIS);
 		Assert.assertEquals(3, matches.size());
 	}	
 	
@@ -226,8 +227,8 @@ public class TestDatabaseHomomorphismManager {
 		Atom f27 = new Atom(this.rel2, 
 				Lists.newArrayList(new Skolem("c"),new Skolem("c2")));
 		
-		this.manager.addFacts(Lists.newArrayList(f20,f21,f22,f23,f24,f25, f26, f27));
-		List<Match> matches = this.manager.getTriggers(Lists.newArrayList(this.tgd), TriggerProperty.ACTIVE,null);
+		this.chaseState.addFacts(Lists.newArrayList(f20,f21,f22,f23,f24,f25, f26, f27));
+		List<Match> matches = this.chaseState.getTriggers(Lists.newArrayList(this.tgd), TriggerProperty.ACTIVE,LimitTofacts.THIS);
 		Assert.assertEquals(4, matches.size());
 	}
 	
@@ -248,8 +249,8 @@ public class TestDatabaseHomomorphismManager {
 		Atom f27 = new Atom(this.rel3, 
 				Lists.newArrayList(new Skolem("r2"),new Skolem("skolem2")));
 		
-		this.manager.addFacts(Lists.newArrayList(f20,f21,f22,f26,f27));
-		List<Match> matches = this.manager.getTriggers(Lists.newArrayList(this.tgd2), TriggerProperty.ACTIVE,null);
+		this.chaseState.addFacts(Lists.newArrayList(f20,f21,f22,f26,f27));
+		List<Match> matches = this.chaseState.getTriggers(Lists.newArrayList(this.tgd2), TriggerProperty.ACTIVE,LimitTofacts.THIS);
 		Assert.assertEquals(1, matches.size());
 	}
 	

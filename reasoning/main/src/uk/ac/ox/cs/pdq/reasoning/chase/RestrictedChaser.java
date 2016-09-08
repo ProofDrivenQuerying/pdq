@@ -6,8 +6,8 @@ import java.util.Map;
 
 import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.db.Match;
-import uk.ac.ox.cs.pdq.db.homomorphism.DatabaseHomomorphismManager;
-import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismDetector;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance.LimitTofacts;
 import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismProperty;
 import uk.ac.ox.cs.pdq.db.homomorphism.TriggerProperty;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
@@ -15,8 +15,8 @@ import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.logging.performance.StatisticsCollector;
-import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState;
-import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseState;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 import uk.ac.ox.cs.pdq.reasoning.utility.DefaultTGDDependencyAssessor;
 import uk.ac.ox.cs.pdq.reasoning.utility.ReasonerUtility;
 import uk.ac.ox.cs.pdq.reasoning.utility.TGDDependencyAssessor;
@@ -62,15 +62,15 @@ public class RestrictedChaser extends Chaser {
 	 * @param dependencies the dependencies
 	 */
 	@Override
-	public <S extends ChaseState> void reasonUntilTermination(S instance,  Collection<? extends Dependency> dependencies) {
-		Preconditions.checkArgument(instance instanceof ChaseState);
+	public <S extends ChaseInstance> void reasonUntilTermination(S instance,  Collection<? extends Dependency> dependencies) {
+		Preconditions.checkArgument(instance instanceof ChaseInstance);
 		TGDDependencyAssessor accessor = new DefaultTGDDependencyAssessor(dependencies);
 		boolean appliedStep = false;
 		Collection<? extends Dependency> d = dependencies;
 		do {
 			appliedStep = false;
 			for(Dependency dependency:d) {
-				List<Match> matches = instance.getTriggers(Lists.newArrayList(dependency), TriggerProperty.ACTIVE);	
+				List<Match> matches = instance.getTriggers(Lists.newArrayList(dependency), TriggerProperty.ACTIVE, LimitTofacts.THIS);	
 				if(!matches.isEmpty()) {
 					appliedStep = true;
 				}

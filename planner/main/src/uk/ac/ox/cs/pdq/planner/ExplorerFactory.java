@@ -13,9 +13,9 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.DatabaseInstance;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismDetector;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.plan.DAGPlan;
@@ -45,6 +45,7 @@ import uk.ac.ox.cs.pdq.planner.linear.explorer.node.NodeFactory;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.pruning.PostPruning;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.pruning.PostPruningFactory;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
 
 import com.google.common.eventbus.EventBus;
 
@@ -102,7 +103,7 @@ public class ExplorerFactory {
 			ConjunctiveQuery query,
 			ConjunctiveQuery accessibleQuery,
 			Chaser chaser,
-			HomomorphismDetector detector,
+			ChaseInstance detector,
 			CostEstimator<P> costEstimator,
 			PlannerParameters parameters) throws Exception {
 

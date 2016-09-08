@@ -7,18 +7,16 @@ import java.util.concurrent.Callable;
 
 import com.google.common.base.Preconditions;
 
-import uk.ac.ox.cs.pdq.db.homomorphism.DatabaseHomomorphismManager;
-import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismDetector;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.plan.DAGPlan;
 import uk.ac.ox.cs.pdq.planner.dag.ConfigurationUtility;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.dag.equivalence.DAGEquivalenceClasses;
 import uk.ac.ox.cs.pdq.planner.dominance.Dominance;
 import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominance;
-import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseState;
-
+import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState;
 // TODO: Auto-generated Javadoc
 /**
  * Iterates over the input collection of configurations to identify the minimum-cost one.
@@ -41,7 +39,7 @@ public class ExplorationThread implements Callable<DAGChaseConfiguration> {
 	private final Dominance[] dominance;
 
 	/**  Detects query matches. */
-	private final HomomorphismDetector detector;
+	private final ChaseInstance detector;
 
 	/**  Input configurations. */
 	private final Queue<DAGChaseConfiguration> input;
@@ -76,7 +74,7 @@ public class ExplorationThread implements Callable<DAGChaseConfiguration> {
 			Queue<DAGChaseConfiguration> input,
 			DAGEquivalenceClasses equivalenceClasses,
 			DAGChaseConfiguration best,
-			HomomorphismDetector detector,
+			ChaseInstance detector,
 			SuccessDominance successDominance,
 			Dominance[] dominance,
 			Set<DAGChaseConfiguration> output,
@@ -108,8 +106,8 @@ public class ExplorationThread implements Callable<DAGChaseConfiguration> {
 		DAGChaseConfiguration configuration;
 		//Poll the next configuration
 		while((configuration = this.input.poll()) != null) {			
-			if(configuration.getState() instanceof DatabaseChaseState) {
-				((DatabaseChaseState)configuration.getState()).setManager((DatabaseHomomorphismManager) this.detector);
+			if(configuration.getState() instanceof DatabaseChaseInstance) {
+				configuration.setState((AccessibleChaseState) this.detector);
 			}
 			//If the configuration is not dominated
 			DAGChaseConfiguration dominator = this.equivalenceClasses.dominate(this.dominance, configuration);

@@ -38,6 +38,7 @@ public class ExecuteSQLQueryThread<Q extends Evaluatable> implements Callable<Li
 	protected final Queue<Triple<Q, String, LinkedHashMap<String, Variable>>> queries;
 	
 	/** List of database constants **/
+	//TOCOMMENT this class should not be aware of constants
 	protected final Map<String, TypedConstant<?>> constants;
 
 	public ExecuteSQLQueryThread(Queue<Triple<Q, String, LinkedHashMap<String, Variable>>> queries, 

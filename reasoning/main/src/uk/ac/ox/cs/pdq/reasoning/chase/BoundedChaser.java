@@ -8,7 +8,8 @@ import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismProperty;
 import uk.ac.ox.cs.pdq.db.homomorphism.TriggerProperty;
 import uk.ac.ox.cs.pdq.logging.performance.StatisticsCollector;
-import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance.LimitTofacts;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Supplier;
@@ -59,7 +60,7 @@ public class BoundedChaser extends RestrictedChaser {
 	 * @param constraints the constraints
 	 */
 	public void initialize(
-			ChaseState instance, 
+			ChaseInstance instance, 
 			Collection<? extends Dependency> constraints) {
 		synchronized (this.k) {
 			int oldK = this.k.get();
@@ -80,13 +81,13 @@ public class BoundedChaser extends RestrictedChaser {
 	 * @param dependencies the dependencies
 	 */
 	@Override
-	public <S extends ChaseState> void reasonUntilTermination(S instance,  Collection<? extends Dependency> dependencies) {
-		Preconditions.checkArgument(instance instanceof ChaseState);
+	public <S extends ChaseInstance> void reasonUntilTermination(S instance,  Collection<? extends Dependency> dependencies) {
+		Preconditions.checkArgument(instance instanceof ChaseInstance);
 		int rounds = 0;
 		boolean appliedStep = true;
 		while (rounds < this.k.get() && appliedStep) {
 			appliedStep = false;
-			List<Match> matches = instance.getTriggers(dependencies, TriggerProperty.ACTIVE);
+			List<Match> matches = instance.getTriggers(dependencies, TriggerProperty.ACTIVE, LimitTofacts.THIS);
 			if(!matches.isEmpty()) {
 				appliedStep = true;
 			}
