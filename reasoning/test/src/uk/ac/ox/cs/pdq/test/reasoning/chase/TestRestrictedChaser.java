@@ -111,6 +111,7 @@ public class TestRestrictedChaser {
 //		this.state = new DatabaseChaseInstance(this.manager, Sets.newHashSet(f20,f21,f22,f23,f24));
 		try {
 			this.state = new DatabaseChaseInstance(Sets.<Atom>newHashSet(f20,f21,f22,f23,f24),this.manager.getDriver(),this.manager.getUrl(),this.manager.getDatabase(),this.manager.getUsername(),this.manager.getPassword(),this.manager.builder,this.manager.schema);
+			this.state.initialize();
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
