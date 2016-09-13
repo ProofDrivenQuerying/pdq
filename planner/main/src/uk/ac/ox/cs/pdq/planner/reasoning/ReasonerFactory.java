@@ -2,7 +2,7 @@ package uk.ac.ox.cs.pdq.planner.reasoning;
 
 import org.apache.log4j.Logger;
 
-import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
+import uk.ac.ox.cs.pdq.db.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 
 import com.google.common.eventbus.EventBus;

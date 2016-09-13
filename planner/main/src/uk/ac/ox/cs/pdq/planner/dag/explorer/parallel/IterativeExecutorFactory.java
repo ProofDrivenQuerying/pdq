@@ -10,6 +10,7 @@ import uk.ac.ox.cs.pdq.planner.dominance.Dominance;
 import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominance;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -39,7 +40,7 @@ public class IterativeExecutorFactory {
 			IterativeExecutorTypes executorType,
 			int parallelThreads,
 			Chaser chaser,
-			ChaseInstance detector,
+			DatabaseChaseInstance detector,
 			CostEstimator<DAGPlan> estimator,
 			SuccessDominance successDominance,
 			Dominance[] dominance,

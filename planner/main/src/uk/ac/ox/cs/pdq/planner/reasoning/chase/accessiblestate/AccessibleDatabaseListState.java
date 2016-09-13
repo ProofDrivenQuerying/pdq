@@ -158,7 +158,7 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 			Multimap<Term,Atom> accessibleTerms
 			) throws SQLException {
 //		super(manager, facts, constantClasses, constants);
-		super(manager.getFacts(),constantClasses, constants, manager.getDriver(), manager.getUrl(), manager.getDatabase(), manager.getUsername(), manager.getPassword(), manager.builder, manager.schema);
+		super(facts,constantClasses, constants,manager.RelationNamesToRelationObjects, manager.getDriver(), manager.getUrl(), manager.getDatabase(), manager.getUsername(), manager.getPassword(), manager.builder, manager.schema);
 		
 		Preconditions.checkNotNull(inferred);
 		Preconditions.checkNotNull(derivedInferred);

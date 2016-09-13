@@ -3,7 +3,7 @@ package uk.ac.ox.cs.pdq.planner;
 import uk.ac.ox.cs.pdq.ConsistencyChecker;
 import uk.ac.ox.cs.pdq.InconsistentParametersException;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
-import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
+import uk.ac.ox.cs.pdq.db.ReasoningParameters;
 
 // TODO: Auto-generated Javadoc
 /**

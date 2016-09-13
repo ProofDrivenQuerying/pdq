@@ -12,6 +12,7 @@ import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.db.DatabaseInstance;
+import uk.ac.ox.cs.pdq.db.ReasoningParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismManagerFactory;
@@ -30,7 +31,6 @@ import uk.ac.ox.cs.pdq.planner.ExplorationSetUp;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.logging.IntervalEventDrivenLogger;
-import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.runtime.EvaluationException;
 import uk.ac.ox.cs.pdq.runtime.Runtime;
 import uk.ac.ox.cs.pdq.runtime.RuntimeParameters;
@@ -158,16 +158,19 @@ public class RuntimeTest extends RegressionTest {
 		ReasoningParameters reasoningParams = new ReasoningParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
 		AccessibleSchema accessibleSchema = new AccessibleSchema(schema);
 		Query<?> accessibleQuery = accessibleSchema.accessible(query);
-		try (DatabaseInstance manager = new HomomorphismManagerFactory().getInstance(accessibleSchema, 
-				reasoningParams.getHomomorphismDetectorType(), 
-				reasoningParams.getDatabaseDriver(), 
-				reasoningParams.getConnectionUrl(),
-				reasoningParams.getDatabaseName(), 
-				reasoningParams.getDatabaseUser(),
-				reasoningParams.getDatabasePassword())) {
+		try (
+				DatabaseChaseInstance detector = new DatabaseChaseInstance(reasoningParams, accessibleSchema);
+				 
+//				DatabaseInstance manager = new HomomorphismManagerFactory().getInstance(accessibleSchema, 
+//				reasoningParams.getHomomorphismDetectorType(), 
+//				reasoningParams.getDatabaseDriver(), 
+//				reasoningParams.getConnectionUrl(),
+//				reasoningParams.getDatabaseName(), 
+//				reasoningParams.getDatabaseUser(),
+//				reasoningParams.getDatabasePassword())				
+				) {
 //			chaseState.addQuery(accessibleQuery);
-			DatabaseChaseInstance detector = new DatabaseChaseInstance(new ArrayList<Atom>(), manager.getDriver(), manager.getUrl(), manager.getDatabase(), manager.getUsername(), manager.getPassword(), manager.builder, manager.schema);
-			
+
 			DataValidationImplementation dataValidator = new DataValidationImplementation(schema, detector);
 			dataValidator.validate();
 //			chaseState.clearQuery();

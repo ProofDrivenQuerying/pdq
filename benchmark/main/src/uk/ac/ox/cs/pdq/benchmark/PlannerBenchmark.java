@@ -17,6 +17,7 @@ import uk.ac.ox.cs.pdq.algebra.RelationalOperator;
 import uk.ac.ox.cs.pdq.algebra.UnaryOperator;
 import uk.ac.ox.cs.pdq.algebra.predicates.ConjunctivePredicate;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
+import uk.ac.ox.cs.pdq.db.ReasoningParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.logging.performance.ChainedStatistics;
@@ -27,7 +28,6 @@ import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.events.BestPlanWriter;
 import uk.ac.ox.cs.pdq.planner.events.MultiplePlanWriter;
 import uk.ac.ox.cs.pdq.planner.logging.IntervalEventDrivenLogger;
-import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 
 import com.beust.jcommander.Parameter;
 

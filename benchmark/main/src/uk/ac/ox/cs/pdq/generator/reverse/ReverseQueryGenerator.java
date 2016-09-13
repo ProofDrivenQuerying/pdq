@@ -9,6 +9,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.db.DatabaseInstance;
+import uk.ac.ox.cs.pdq.db.ReasoningParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismManagerFactory;
@@ -20,7 +21,6 @@ import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.reasoning.ReasonerFactory;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleDatabaseListState;
-import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 
 import com.google.common.eventbus.EventBus;
@@ -101,14 +101,18 @@ public class ReverseQueryGenerator implements Runnable {
 			Runtime.getRuntime().addShutdownHook(new MatchReport(mm));
 
 			Query<?> accessibleQuery = accessibleSchema.accessible(this.query);
-			try(DatabaseInstance detector =
-				new HomomorphismManagerFactory().getInstance(accessibleSchema,  
-						reasoningParams.getHomomorphismDetectorType(), 
-						reasoningParams.getDatabaseDriver(), 
-						reasoningParams.getConnectionUrl(),
-						reasoningParams.getDatabaseName(), 
-						reasoningParams.getDatabaseUser(),
-						reasoningParams.getDatabasePassword())) {				
+			try(
+					DatabaseChaseInstance detector = new DatabaseChaseInstance(reasoningParams, accessibleSchema);
+					 
+//					DatabaseInstance detector =
+//				new HomomorphismManagerFactory().getInstance(accessibleSchema,  
+//						reasoningParams.getHomomorphismDetectorType(), 
+//						reasoningParams.getDatabaseDriver(), 
+//						reasoningParams.getConnectionUrl(),
+//						reasoningParams.getDatabaseName(), 
+//						reasoningParams.getDatabaseUser(),
+//						reasoningParams.getDatabasePassword())
+				) {				
 				detector.addQuery(accessibleQuery);
 				detector.initialize();
 				AccessibleChaseState state = (AccessibleChaseState) 

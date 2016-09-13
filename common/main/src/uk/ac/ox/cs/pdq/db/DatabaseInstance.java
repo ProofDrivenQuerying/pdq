@@ -39,6 +39,7 @@ import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismUtility;
 import uk.ac.ox.cs.pdq.db.sql.DerbyStatementBuilder;
 import uk.ac.ox.cs.pdq.db.sql.ExecuteSQLQueryThread;
 import uk.ac.ox.cs.pdq.db.sql.ExecuteSynchronousSQLUpdateThread;
+import uk.ac.ox.cs.pdq.db.sql.MySQLStatementBuilder;
 import uk.ac.ox.cs.pdq.db.sql.SQLStatementBuilder;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Evaluatable;
@@ -52,25 +53,25 @@ import uk.ac.ox.cs.pdq.io.xml.QNames;
  *
  */
 public class DatabaseInstance implements Instance {
-	
+
 
 	/** Logger. */
 	private static Logger log = Logger.getLogger(DatabaseInstance.class);
 
 	/** The schema relations */
-	protected final List<Relation> relations;
+	protected List<Relation> relations = null;
 
 	/** The schema constraints */
-	protected Set<Evaluatable> constraints;
+	protected Set<Evaluatable> constraints = null;
 
 	/**  Maps of the string representation of a constant to the constant. */
-	protected final Map<String, TypedConstant<?>> constants;
+	protected Map<String, TypedConstant<?>> constants = null;
 
 	/**  Creates SQL statements to detect homomorphisms or add/delete facts in a database. */
-	public final SQLStatementBuilder builder;
+	public SQLStatementBuilder builder = null;
 
 	/** Map schema relation to database tables. */
-	public final Map<String, DatabaseRelation> RelationNamesToRelationObjects;
+	public Map<String, DatabaseRelation> RelationNamesToRelationObjects = null;
 
 	/** The open connections. */
 	protected List<Connection> openConnections = new ArrayList<>();
@@ -86,19 +87,19 @@ public class DatabaseInstance implements Instance {
 	protected final List<Connection> synchronousConnections = Lists.newArrayList();
 
 	/**  The database. */
-	private final String database;
+	private String database = null;
 
 	/**  Database driver. */
-	private final String driver;
+	private String driver = null;
 
 	/** The url. */
-	private final String url;
+	private String url = null;
 
 	/** The username. */
-	private final String username;
+	private String username = null;
 
 	/** The password. */
-	private final String password;
+	private String password = null;
 
 	/** The is initialized. */
 	protected boolean isInitialized = false;
@@ -122,37 +123,91 @@ public class DatabaseInstance implements Instance {
 
 	/** Inmemory cache size**/
 	protected final static int insertCacheSize = 1000; 
+	private static Integer counter = 0;
+	
+	public DatabaseInstance(ReasoningParameters reasoningParams, Schema schema) throws SQLException
+	{
+		
+		HomomorphismDetectorTypes type =reasoningParams.getHomomorphismDetectorType(); 
+		String driver = reasoningParams.getDatabaseDriver();
+		String url = reasoningParams.getConnectionUrl();
+		String database = reasoningParams.getDatabaseName(); 
+		String username = reasoningParams.getDatabaseUser();
+		String password = reasoningParams.getDatabasePassword();
+		SQLStatementBuilder builder = null;
+		if (type != null && type == HomomorphismDetectorTypes.DATABASE) {
+			if (url != null && url.contains("mysql")) {
+				builder = new MySQLStatementBuilder();
+			} else {
+				if (Strings.isNullOrEmpty(driver)) {
+					driver = "org.apache.derby.jdbc.EmbeddedDriver";
+				}
+				if (Strings.isNullOrEmpty(url)) {
+					url = "jdbc:derby:memory:{1};create=true";
+				}
+				if (Strings.isNullOrEmpty(database)) {
+					database = "chase";
+				}
+				database +=  "_" + System.currentTimeMillis() + "_" + counter++;
+				synchronized (counter) {
+					username = "APP_" + (counter++);
+				}
+				password = "";
+				builder = new DerbyStatementBuilder();
+			}
+			
+			this.schema = schema;
+			this.driver = driver;
+			this.url = url;
+			this.username = username;
+			this.password = password;
+			this.database = database;
+			this.builder = builder;
+			this.constraints = Sets.newLinkedHashSet();
+			for (Dependency<?,?> dependency: schema.getDependencies()) {
+				this.constraints.add(dependency);
+			}
+			this.constants = schema.getConstants();
+			this.relations = Lists.newArrayList(schema.getRelations());
+			this.RelationNamesToRelationObjects = new LinkedHashMap<>();
 
-	
+			for(int i = 0; i < this.synchronousThreadsNumber; ++i) {
+				this.synchronousConnections.add(getConnection(this.getDriver(), this.getUrl(), this.getDatabase(), this.getUsername(), this.getPassword()));			
+			}
+			this.initialize();
+		}
+			
+	}
+
 	public DatabaseInstance(
-		String driver, 
-		String url, 
-		String database,
-		String username, 
-		String password,
-		SQLStatementBuilder builder,
-		Schema schema
-		) throws SQLException {
-	this.schema = schema;
-	this.driver = driver;
-	this.url = url;
-	this.username = username;
-	this.password = password;
-	this.database = database;
-	this.builder = builder;
-	this.constraints = Sets.newLinkedHashSet();
-	for (Dependency<?,?> dependency: schema.getDependencies()) {
-		this.constraints.add(dependency);
+			String driver, 
+			String url, 
+			String database,
+			String username, 
+			String password,
+			SQLStatementBuilder builder,
+			Schema schema
+			) throws SQLException {
+		this.schema = schema;
+		this.driver = driver;
+		this.url = url;
+		this.username = username;
+		this.password = password;
+		this.database = database;
+		this.builder = builder;
+		this.constraints = Sets.newLinkedHashSet();
+		for (Dependency<?,?> dependency: schema.getDependencies()) {
+			this.constraints.add(dependency);
+		}
+		this.constants = schema.getConstants();
+		this.relations = Lists.newArrayList(schema.getRelations());
+		this.RelationNamesToRelationObjects = new LinkedHashMap<>();
+
+		for(int i = 0; i < this.synchronousThreadsNumber; ++i) {
+			this.synchronousConnections.add(getConnection(this.getDriver(), this.getUrl(), this.getDatabase(), this.getUsername(), this.getPassword()));			
+
+		}
 	}
-	this.constants = schema.getConstants();
-	this.relations = Lists.newArrayList(schema.getRelations());
-	this.RelationNamesToRelationObjects = new LinkedHashMap<>();
-	
-	for(int i = 0; i < this.synchronousThreadsNumber; ++i) {
-		this.synchronousConnections.add(getConnection(this.getDriver(), this.getUrl(), this.getDatabase(), this.getUsername(), this.getPassword()));			
-	
-	}
-}
 	protected DatabaseInstance(
 			String driver, 
 			String url, 
@@ -180,7 +235,7 @@ public class DatabaseInstance implements Instance {
 			this.synchronousConnections.add(getConnection(this.getDriver(), this.getUrl(), this.getDatabase(), this.getUsername(), this.getPassword()));
 		}
 	}
-	
+
 	/**
 	 * Initialize.
 	 *
@@ -236,7 +291,7 @@ public class DatabaseInstance implements Instance {
 			throw new IllegalStateException(ex.getMessage(), ex);
 		}
 	}
-	
+
 	/**
 	 * Cleans up the database.
 	 *
@@ -269,7 +324,7 @@ public class DatabaseInstance implements Instance {
 			con.close();
 		}
 	}
-	
+
 	/**
 	 * Gets the connection.
 	 *
@@ -313,17 +368,17 @@ public class DatabaseInstance implements Instance {
 		return result;
 	}
 
-	
+
 	/**
 	 * The Enum HomomorphismDetectorTypes.
 	 */
 	public static enum HomomorphismDetectorTypes {
-		
+
 		/** The database. */
 		@EnumParameterValue(description = "Homomorphism detection relying on an internal relational database")
 		DATABASE;
 	}
-	
+
 	@Override
 	public void addFacts(Collection<Atom> facts) {
 		Queue<String> queries = new ConcurrentLinkedQueue<>();
@@ -357,11 +412,11 @@ public class DatabaseInstance implements Instance {
 			}
 			clusters.clear();
 		}
-		
+
 		executeQueries(queries);		
 	}
 
-	
+
 	public void executeQueries(Queue<String> queries)
 	{		
 		ExecutorService executorService = null;
@@ -395,7 +450,7 @@ public class DatabaseInstance implements Instance {
 			e.printStackTrace();
 		} 
 	}
-	
+
 	@Override
 	public void deleteFacts(Collection<Atom> facts) {
 		Queue<String> queries = new ConcurrentLinkedQueue<>();
@@ -423,17 +478,16 @@ public class DatabaseInstance implements Instance {
 				subList.clear();
 			}
 		}
-		
+
 		executeQueries(queries);
 	}
 
 
 	@Override
 	public List<Match> answerQuery(Evaluatable q) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException("Method not implemented yet - use answerQueries()");
 	}
-	
+
 	public DatabaseInstance clone() {
 		try {
 			DatabaseInstance clone = new DatabaseInstance(
@@ -451,7 +505,7 @@ public class DatabaseInstance implements Instance {
 			return null;
 		}
 	}
-	
+
 	public void addQuery(Query<?> query) {
 		if(!this.clearedLastQuery)
 			throw new RuntimeException("Method clearQuery should be called in order to clear previous query's tables from the database.");
@@ -474,7 +528,7 @@ public class DatabaseInstance implements Instance {
 		}
 		this.currentQuery = query;
 	}
-	
+
 	public void clearQuery() {
 		try {
 			Statement sqlStatement = this.synchronousConnections.get(0).createStatement();
@@ -494,20 +548,20 @@ public class DatabaseInstance implements Instance {
 		}
 		this.clearedLastQuery = true;
 	}
-	
+
 	/**
 	 * TOCOMMENT: 
 	 * @param queries
 	 * @return
 	 */
 	public <Q extends Evaluatable>  List<Match> answerQueries(Queue<Triple<Q, String, LinkedHashMap<String, Variable>>> queries) {
-		
+
 		List<Match> result = new LinkedList<>();
-		
+
 		//Run the SQL query statements in multiple threads
 		ExecutorService executorService = null;
 		try {
-			
+
 			//Create a pool of threads to run in parallel
 			executorService = Executors.newFixedThreadPool(this.synchronousThreadsNumber);
 			List<Callable<List<Match>>> threads = new ArrayList<>();
@@ -539,8 +593,8 @@ public class DatabaseInstance implements Instance {
 			return null;
 		} 
 		return result;
-		}
-	
+	}
+
 	@Override
 	public Collection<Atom> getFacts() {
 		// TODO How to return the facts? Query The database?

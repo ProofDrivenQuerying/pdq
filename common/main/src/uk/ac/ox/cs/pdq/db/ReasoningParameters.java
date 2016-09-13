@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.reasoning;
+package uk.ac.ox.cs.pdq.db;
 
 import java.io.File;
 import java.io.IOException;
@@ -8,8 +8,6 @@ import java.util.Properties;
 import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.Parameters;
-import uk.ac.ox.cs.pdq.db.DatabaseInstance;
-import uk.ac.ox.cs.pdq.db.DatabaseInstance.HomomorphismDetectorTypes;
 
 // TODO: Auto-generated Javadoc
 /**

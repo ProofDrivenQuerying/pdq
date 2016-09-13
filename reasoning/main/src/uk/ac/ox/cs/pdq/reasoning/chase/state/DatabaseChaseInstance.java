@@ -27,6 +27,7 @@ import uk.ac.ox.cs.pdq.db.DatabaseRelation;
 import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.db.EGD;
 import uk.ac.ox.cs.pdq.db.Match;
+import uk.ac.ox.cs.pdq.db.ReasoningParameters;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TGD;
@@ -127,18 +128,20 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 	 * @param facts the facts
 	 * @param graph the graph
 	 * @param classes the constant classes
+	 * @param relationNamesToRelationObjects 
 	 */
 	protected DatabaseChaseInstance(
 			Collection<Atom> facts,
 			EqualConstantsClasses classes,
 			Multimap<Constant,Atom> constants,
+			Map<String, DatabaseRelation> relationNamesToRelationObjects,
 			String driver, 
 			String url, 
 			String database,
 			String username, 
 			String password,
 			SQLStatementBuilder builder,
-			Schema schema
+			Schema schema 
 			) throws SQLException {
 		super(driver,url,database,username,password,builder,schema);
 		Preconditions.checkNotNull(facts);
@@ -147,9 +150,17 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		this.facts = facts;
 		this.classes = classes;
 		this.constantsToAtoms = constants; 
+		this.RelationNamesToRelationObjects = relationNamesToRelationObjects; 
 	}
 	
 
+
+	public DatabaseChaseInstance(ReasoningParameters reasoningParams, Schema schema) throws SQLException {
+		super(reasoningParams, schema);
+		this.facts = new LinkedHashSet<Atom>();
+		this.classes = new EqualConstantsClasses();
+		this.constantsToAtoms = inferConstantsMap(this.facts);
+	}
 
 	/**
 	 *
@@ -409,7 +420,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		Multimap<Constant, Atom> constantsToAtoms = HashMultimap.create();
 		constantsToAtoms.putAll(this.constantsToAtoms);
 		try {
-			return new DatabaseChaseInstance(Sets.newHashSet(this.facts), this.classes.clone(), constantsToAtoms, getDriver(), getUrl(), getDatabase(),getUsername(), getPassword(),builder,schema);
+			return new DatabaseChaseInstance(Sets.newHashSet(this.facts), this.classes.clone(), constantsToAtoms, RelationNamesToRelationObjects, getDriver(), getUrl(), getDatabase(),getUsername(), getPassword(),builder,schema);
 		} catch (SQLException e) {
 			throw new RuntimeException("Cloning a DatabaseChaseInstance failed due to an SQL exception "+ e);
 		}
@@ -441,7 +452,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		return new DatabaseChaseInstance(
 				facts, 
 				classes,
-				constantsToAtoms, getDriver(), getUrl(), getDatabase(),getUsername(), getPassword(),builder,schema);
+				constantsToAtoms, RelationNamesToRelationObjects, getDriver(), getUrl(), getDatabase(),getUsername(), getPassword(),builder,schema);
 	}
 
 	/**
