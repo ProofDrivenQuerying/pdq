@@ -1,5 +1,6 @@
 package uk.ac.ox.cs.pdq.planner.dag.explorer.parallel;
 
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,7 @@ import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.plan.DAGPlan;
 import uk.ac.ox.cs.pdq.planner.dag.BinaryConfiguration;
@@ -22,6 +24,7 @@ import uk.ac.ox.cs.pdq.planner.dag.equivalence.DAGEquivalenceClasses;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator;
 import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominance;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState;
+import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleDatabaseListState;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 
@@ -161,10 +164,11 @@ public class ReasoningThread implements Callable<Boolean> {
 	 * Call.
 	 *
 	 * @return Boolean
+	 * @throws SQLException 
 	 * @see java.util.concurrent.Callable#call()
 	 */
 	@Override
-	public Boolean call() {
+	public Boolean call() throws SQLException {
 		DAGChaseConfiguration left;
 		//Poll the next configuration from the left input
 		while ((left = this.left.poll()) != null) {
@@ -233,8 +237,9 @@ public class ReasoningThread implements Callable<Boolean> {
 	 * @param left the left
 	 * @param right the right
 	 * @return a new binary configuration BinConfiguration(left, right)
+	 * @throws SQLException 
 	 */
-	protected DAGChaseConfiguration merge(DAGChaseConfiguration left, DAGChaseConfiguration right) {
+	protected DAGChaseConfiguration merge(DAGChaseConfiguration left, DAGChaseConfiguration right) throws SQLException {
 		DAGChaseConfiguration configuration = null;
 		//A configuration BinConfiguration(c,c'), where c and c' belong to the equivalence classes of
 		//the left and right input configuration, respectively.
@@ -253,7 +258,7 @@ public class ReasoningThread implements Callable<Boolean> {
 					);
 					
 			if(configuration.getState() instanceof DatabaseChaseInstance) {
-				configuration.setState((AccessibleChaseState) this.detector);
+				configuration.setState(new AccessibleDatabaseListState(configuration.getState().getFacts(), (DatabaseChaseInstance)this.detector, false));
 			}
 			this.chaser.reasonUntilTermination(configuration.getState(), this.dependencies);
 			this.representatives.put(this.equivalenceClasses, left, right, configuration);

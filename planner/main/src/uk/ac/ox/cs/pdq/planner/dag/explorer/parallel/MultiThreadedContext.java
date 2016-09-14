@@ -29,7 +29,7 @@ public class MultiThreadedContext implements Context{
 	private final Chaser[] reasoners;
 	
 	/**  Detect homomorphisms during chasing*. */
-	private final DatabaseChaseInstance[] detectors;
+	private final ChaseInstance[] detectors;
 	
 	/**  Estimate the cost of a plan*. */
 	private final CostEstimator<DAGPlan>[] costEstimators;
@@ -56,14 +56,14 @@ public class MultiThreadedContext implements Context{
 	 */
 	public MultiThreadedContext(int parallelThreads,
 			Chaser chaser,
-			DatabaseChaseInstance detector,
+			ChaseInstance detector,
 			CostEstimator<DAGPlan> costEstimator,
 			SuccessDominance successDominance,
 			Dominance[] dominance,
 			List<Validator> validators) throws Exception {
 		this.parallelThreads = parallelThreads;
 		this.reasoners = new Chaser[this.parallelThreads];
-		this.detectors = new DatabaseChaseInstance[this.parallelThreads];
+		this.detectors = new ChaseInstance[this.parallelThreads];
 		this.costEstimators = new CostEstimator[this.parallelThreads];
 		this.successDominances = new SuccessDominance[this.parallelThreads];
 		this.validators = new List[this.parallelThreads];
@@ -131,7 +131,7 @@ public class MultiThreadedContext implements Context{
 	 *
 	 * @return HomomorphismDetector[]
 	 */
-	public DatabaseChaseInstance[] getDetectors() {
+	public ChaseInstance[] getDetectors() {
 		return this.detectors;
 	}
 

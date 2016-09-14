@@ -40,7 +40,7 @@ public class IterativeExecutorFactory {
 			IterativeExecutorTypes executorType,
 			int parallelThreads,
 			Chaser chaser,
-			DatabaseChaseInstance detector,
+			ChaseInstance detector,
 			CostEstimator<DAGPlan> estimator,
 			SuccessDominance successDominance,
 			Dominance[] dominance,
