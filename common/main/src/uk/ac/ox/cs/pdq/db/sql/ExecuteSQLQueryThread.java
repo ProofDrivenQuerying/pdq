@@ -87,6 +87,7 @@ public class ExecuteSQLQueryThread<Q extends Evaluatable> implements Callable<Li
 			}
 		}
 		return results;
+		
 	}
 
 }
