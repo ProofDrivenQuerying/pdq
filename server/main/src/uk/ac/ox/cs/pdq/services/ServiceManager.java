@@ -94,7 +94,7 @@ public class ServiceManager implements Service {
 	}
 	
 	/**
-	 * Execute the given commands on the service chaseState.
+	 * Execute the given commands on the service manager.
 	 *
 	 * @param commands the commands
 	 */
@@ -106,7 +106,7 @@ public class ServiceManager implements Service {
 	}
 	
 	/**
-	 * Execute the given commands on the service chaseState.
+	 * Execute the given commands on the service manager.
 	 *
 	 * @param out the out
 	 * @param commands the commands
@@ -121,7 +121,7 @@ public class ServiceManager implements Service {
 	/**
 	 * Gets the host.
 	 *
-	 * @return the host on which the service chaseState is running.
+	 * @return the host on which the service manager is running.
 	 */
 	public String getHost() {
 		return this.host;
@@ -130,7 +130,7 @@ public class ServiceManager implements Service {
 	/**
 	 * Gets the port number.
 	 *
-	 * @return the port number on which the service chaseState is running.
+	 * @return the port number on which the service manager is running.
 	 */
 	public Integer getPortNumber() {
 		return this.portNumber;
@@ -227,9 +227,9 @@ public class ServiceManager implements Service {
  STATUS }
 
 	/**
-	 * A command to the service chaseState. Consists of an action and a list of
+	 * A command to the service manager. Consists of an action and a list of
 	 * modules to act on. If the module list is empty, the action is performed
-	 * on the service chaseState itself.
+	 * on the service manager itself.
 	 * 
 	 * @author Julien Leblay
 	 *
@@ -283,7 +283,7 @@ public class ServiceManager implements Service {
 		
 		/**
 		 * Executes the command action on the list of modules. If the module 
-		 * list is empty, the action is performed on the service chaseState itself.
+		 * list is empty, the action is performed on the service manager itself.
 		 *
 		 * @param sm the sm
 		 */
@@ -293,7 +293,7 @@ public class ServiceManager implements Service {
 		
 		/**
 		 * Executes the command action on the list of modules. If the module 
-		 * list is empty, the action is performed on the service chaseState itself.
+		 * list is empty, the action is performed on the service manager itself.
 		 *
 		 * @param sm the sm
 		 * @param out the out

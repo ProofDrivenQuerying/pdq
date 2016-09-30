@@ -1,8 +1,11 @@
 package uk.ac.ox.cs.pdq.test.reasoning.chase;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import javax.management.RuntimeErrorException;
@@ -13,8 +16,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.db.DatabaseConnection;
+import uk.ac.ox.cs.pdq.db.DatabaseInstance;
 import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.db.EGD;
+import uk.ac.ox.cs.pdq.db.ReasoningParameters;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TGD;
@@ -41,7 +47,6 @@ import com.google.common.eventbus.EventBus;
  */
 public class TestRestrictedChaser {
 
-	protected DatabaseChaseInstance manager;
 	protected DatabaseChaseInstance state;
 	protected RestrictedChaser chaser;
 	
@@ -52,6 +57,8 @@ public class TestRestrictedChaser {
 	private EGD egd;
 
 	private Schema schema;
+	private ReasoningParameters reasoningParams;
+	private DatabaseConnection connection;
 	
 	@Before
 	public void setup() throws SQLException {
@@ -76,19 +83,8 @@ public class TestRestrictedChaser {
 
 		this.schema = new Schema(Lists.<Relation>newArrayList(this.rel1, this.rel2), Lists.<Dependency>newArrayList(this.tgd,this.egd));
 		this.schema.updateConstants(Lists.<TypedConstant<?>>newArrayList(new TypedConstant(new String("John"))));
-		/** The driver. */
-		String driver = null;
-		/** The url. */
-		String url = "jdbc:mysql://localhost/";
-		/** The database. */
-		String database = "pdq_chase";
-		/** The username. */
-		String username = "root";
-		/** The password. */
-		String password ="root";
-		this.manager = new DatabaseChaseInstance(new ArrayList<Atom>(),driver, url, database, username, password, new MySQLStatementBuilder(), this.schema);
-		this.manager.initialize();
-		
+
+		this.connection = new DatabaseConnection(new ReasoningParameters(), this.schema);
 		this.chaser = new RestrictedChaser(new StatisticsCollector(true, new EventBus()));
 	}
 	
@@ -108,17 +104,13 @@ public class TestRestrictedChaser {
 
 		Atom f24 = new Atom(this.rel1, 
 				Lists.newArrayList(new Skolem("k5"), new Skolem("c"),new TypedConstant(new String("John"))));
-//		this.state = new DatabaseChaseInstance(this.manager, Sets.newHashSet(f20,f21,f22,f23,f24));
 		try {
-			this.state = new DatabaseChaseInstance(Sets.<Atom>newHashSet(f20,f21,f22,f23,f24),this.manager.getDriver(),this.manager.getUrl(),this.manager.getDatabase(),this.manager.getUsername(),this.manager.getPassword(),this.manager.builder,this.manager.schema);
-			this.state.initialize();
+			this.state = new DatabaseChaseInstance(Sets.<Atom>newHashSet(f20,f21,f22,f23,f24),connection);
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
-		
 		this.chaser.reasonUntilTermination(this.state, Lists.<Dependency>newArrayList(this.tgd,this.egd));
 		Assert.assertEquals(false, this.state.isFailed());
-		
 		
 		Atom n00 = new Atom(this.rel1, 
 				Lists.newArrayList(new Skolem("k5"), new Skolem("c"),new TypedConstant(new String("John"))));

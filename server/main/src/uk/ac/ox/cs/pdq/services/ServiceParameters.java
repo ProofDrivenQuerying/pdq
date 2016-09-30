@@ -13,7 +13,7 @@ public class ServiceParameters extends uk.ac.ox.cs.pdq.Parameters {
 	private static final long serialVersionUID = 1481542784450218004L;
 
 	/**  Properties file name. */
-	static final String DEFAULT_CONFIG_FILE_NAME = "pdq-chaseState-service.properties";
+	static final String DEFAULT_CONFIG_FILE_NAME = "pdq-manager-service.properties";
 
 	/**  Properties file path. */
 	static final String DEFAULT_CONFIG_FILE_PATH = "./" + DEFAULT_CONFIG_FILE_NAME;

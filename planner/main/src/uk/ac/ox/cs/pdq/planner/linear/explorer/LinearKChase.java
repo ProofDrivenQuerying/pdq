@@ -8,6 +8,7 @@ import static uk.ac.ox.cs.pdq.planner.logging.performance.PlannerStatKeys.MILLI_
 import static uk.ac.ox.cs.pdq.planner.logging.performance.PlannerStatKeys.MILLI_EQUIVALENCE;
 import static uk.ac.ox.cs.pdq.planner.logging.performance.PlannerStatKeys.MILLI_QUERY_MATCH;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
@@ -18,7 +19,9 @@ import org.jgrapht.graph.DefaultEdge;
 
 import uk.ac.ox.cs.pdq.LimitReachedException;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
+import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.Match;
+import uk.ac.ox.cs.pdq.db.ReasoningParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Query;
@@ -76,6 +79,7 @@ public class LinearKChase extends LinearExplorer {
 	 * @param nodeFactory the node factory
 	 * @param depth the depth
 	 * @param chaseInterval the chase interval
+	 * @param reasoningParameters 
 	 * @throws PlannerException the planner exception
 	 * @throws SQLException 
 	 */
@@ -87,12 +91,12 @@ public class LinearKChase extends LinearExplorer {
 			Schema schema,
 			AccessibleSchema accessibleSchema, 
 			Chaser chaser,
-			ChaseInstance detector,
+			DatabaseConnection dbConn,
 			CostEstimator<LeftDeepPlan> costEstimator,
 			NodeFactory nodeFactory,
 			int depth,
-			int chaseInterval) throws PlannerException, SQLException {
-		super(eventBus, collectStats, query, accessibleQuery, schema, accessibleSchema, chaser, detector, costEstimator, nodeFactory, depth);
+			int chaseInterval, ReasoningParameters reasoningParameters) throws PlannerException, SQLException {
+		super(eventBus, collectStats, query, accessibleQuery, schema, accessibleSchema, chaser, dbConn, costEstimator, nodeFactory, depth, reasoningParameters);
 		this.costPropagator = PropagatorUtils.getPropagator(costEstimator);
 		this.chaseInterval = chaseInterval;
 	}

@@ -3,6 +3,7 @@ package uk.ac.ox.cs.pdq.planner.dag.explorer;
 import static uk.ac.ox.cs.pdq.planner.logging.performance.PlannerStatKeys.CANDIDATES;
 import static uk.ac.ox.cs.pdq.planner.logging.performance.PlannerStatKeys.CONFIGURATIONS;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -17,6 +18,8 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import uk.ac.ox.cs.pdq.LimitReachedException;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
+import uk.ac.ox.cs.pdq.db.DatabaseConnection;
+import uk.ac.ox.cs.pdq.db.ReasoningParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.plan.DAGPlan;
@@ -101,19 +104,20 @@ public class DAGGeneric extends DAGExplorer {
 			EventBus eventBus, 
 			boolean collectStats,
 			PlannerParameters parameters,
+			ReasoningParameters reasoningParameters,
 			ConjunctiveQuery query,
 			ConjunctiveQuery accessibleQuery,
 			Schema schema,
 			AccessibleSchema accessibleSchema, 
 			Chaser chaser,
-			ChaseInstance detector,
+			DatabaseConnection dbConn,
 			CostEstimator<DAGPlan> costEstimator,
 			SuccessDominance successDominance,
 			Filter filter,
 			List<Validator> validators,
 			int maxDepth,
 			boolean orderAware) throws PlannerException, SQLException {
-		super(eventBus, collectStats, parameters, query, accessibleQuery, schema, accessibleSchema, chaser, detector, costEstimator);
+		super(eventBus, collectStats, parameters,reasoningParameters, query, accessibleQuery, schema, accessibleSchema, chaser, dbConn, costEstimator);
 		Preconditions.checkNotNull(successDominance);
 		Preconditions.checkArgument(validators != null);
 		Preconditions.checkArgument(!validators.isEmpty());

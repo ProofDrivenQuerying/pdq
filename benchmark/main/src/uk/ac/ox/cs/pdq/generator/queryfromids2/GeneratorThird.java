@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.sql.SQLException;
 import java.util.Arrays;
 
 import org.apache.log4j.Logger;
@@ -88,8 +89,9 @@ public class GeneratorThird extends AbstractGenerator{
 	 * The main method.
 	 *
 	 * @param args the arguments
+	 * @throws SQLException 
 	 */
-	public static void main (String... args) {
+	public static void main (String... args) throws SQLException {
 		try(FileInputStream fis = new FileInputStream("test/input/web-schema.xml")) {
 			PlannerParameters planParams = new PlannerParameters();
 			CostParameters costParams = new CostParameters();

@@ -5,7 +5,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -15,6 +17,9 @@ import org.junit.Test;
 import com.google.common.eventbus.EventBus;
 
 import junit.framework.Assert;
+import uk.ac.ox.cs.pdq.db.DatabaseConnection;
+import uk.ac.ox.cs.pdq.db.DatabaseInstance;
+import uk.ac.ox.cs.pdq.db.ReasoningParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.db.sql.MySQLStatementBuilder;
@@ -206,9 +211,9 @@ public class RestrictedChaserTest {
 				schema.updateConstants(query.getSchemaConstants());
 				RestrictedChaser reasoner = new RestrictedChaser(new StatisticsCollector(true, new EventBus()));
 
-				SQLStatementBuilder builder = new MySQLStatementBuilder();
-				DatabaseChaseInstance state = new DatabaseChaseInstance(query, this.driver, this.url, this.database, this.username, this.password, builder, schema);				
-				state.initialize();
+				DatabaseConnection dbcon = new DatabaseConnection(new ReasoningParameters(),schema);
+				DatabaseChaseInstance state = new DatabaseChaseInstance(query, dbcon);				
+				
 				reasoner.reasonUntilTermination(state, schema.getDependencies());
 				Collection<Atom> expected = loadFacts(PATH + f, schema);
 				if(expected.size() != state.getFacts().size()) {

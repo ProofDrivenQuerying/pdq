@@ -6,7 +6,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -28,25 +27,21 @@ import org.apache.commons.lang3.tuple.Triple;
 import org.apache.log4j.Logger;
 
 import com.google.common.base.Strings;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 import uk.ac.ox.cs.pdq.LimitReachedException;
 import uk.ac.ox.cs.pdq.LimitReachedException.Reasons;
 import uk.ac.ox.cs.pdq.Parameters.EnumParameterValue;
-import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismException;
 import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismUtility;
 import uk.ac.ox.cs.pdq.db.sql.DerbyStatementBuilder;
 import uk.ac.ox.cs.pdq.db.sql.ExecuteSQLQueryThread;
 import uk.ac.ox.cs.pdq.db.sql.ExecuteSynchronousSQLUpdateThread;
-import uk.ac.ox.cs.pdq.db.sql.MySQLStatementBuilder;
 import uk.ac.ox.cs.pdq.db.sql.SQLStatementBuilder;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Evaluatable;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.fol.Variable;
-import uk.ac.ox.cs.pdq.io.xml.QNames;
 /**
  * 
  * @author George K
@@ -67,39 +62,13 @@ public class DatabaseInstance implements Instance {
 	/**  Maps of the string representation of a constant to the constant. */
 	protected Map<String, TypedConstant<?>> constants = null;
 
-	/**  Creates SQL statements to detect homomorphisms or add/delete facts in a database. */
-	public SQLStatementBuilder builder = null;
-
-	/** Map schema relation to database tables. */
-	public Map<String, DatabaseRelation> RelationNamesToRelationObjects = null;
-
-	/** The open connections. */
-	protected List<Connection> openConnections = new ArrayList<>();
-
 	/** Number of parallel threads. **/
-	protected final int synchronousThreadsNumber = 1;
+	protected int synchronousThreadsNumber = 1;
 
 	protected final long timeout = 3600000;
-
 	protected final TimeUnit unit = TimeUnit.MILLISECONDS;
+	protected final static int insertCacheSize = 1000; 
 
-	/**  Open database connections. */
-	protected final List<Connection> synchronousConnections = Lists.newArrayList();
-
-	/**  The database. */
-	private String database = null;
-
-	/**  Database driver. */
-	private String driver = null;
-
-	/** The url. */
-	private String url = null;
-
-	/** The username. */
-	private String username = null;
-
-	/** The password. */
-	private String password = null;
 
 	/** The is initialized. */
 	protected boolean isInitialized = false;
@@ -111,6 +80,8 @@ public class DatabaseInstance implements Instance {
 
 	/** True if previous query indices were cleared. */
 	private boolean clearedLastQuery = true;
+	
+	protected ReasoningParameters resParams;
 
 	/** TOCOMMENT */
 	private Set<String> constraintIndices =  new LinkedHashSet<String>();
@@ -121,209 +92,92 @@ public class DatabaseInstance implements Instance {
 
 	public Schema schema;
 
-	/** Inmemory cache size**/
-	protected final static int insertCacheSize = 1000; 
-	private static Integer counter = 0;
-	
-	public DatabaseInstance(ReasoningParameters reasoningParams, Schema schema) throws SQLException
+	protected List<Connection> connections;
+
+	protected SQLStatementBuilder builder;
+
+	protected Map<String, DatabaseRelation> relationNamesToRelationObjects;
+
+	protected DatabaseConnection databaseConnection;
+
+	protected DatabaseConnection getDatabaseConnection() {
+		return databaseConnection;
+	}
+
+	public DatabaseInstance(DatabaseConnection databaseConnection) throws SQLException
 	{
-		
-		HomomorphismDetectorTypes type =reasoningParams.getHomomorphismDetectorType(); 
-		String driver = reasoningParams.getDatabaseDriver();
-		String url = reasoningParams.getConnectionUrl();
-		String database = reasoningParams.getDatabaseName(); 
-		String username = reasoningParams.getDatabaseUser();
-		String password = reasoningParams.getDatabasePassword();
-		SQLStatementBuilder builder = null;
-		if (type != null && type == HomomorphismDetectorTypes.DATABASE) {
-			if (url != null && url.contains("mysql")) {
-				builder = new MySQLStatementBuilder();
-			} else {
-				if (Strings.isNullOrEmpty(driver)) {
-					driver = "org.apache.derby.jdbc.EmbeddedDriver";
-				}
-				if (Strings.isNullOrEmpty(url)) {
-					url = "jdbc:derby:memory:{1};create=true";
-				}
-				if (Strings.isNullOrEmpty(database)) {
-					database = "chase";
-				}
-				database +=  "_" + System.currentTimeMillis() + "_" + counter++;
-				synchronized (counter) {
-					username = "APP_" + (counter++);
-				}
-				password = "";
-				builder = new DerbyStatementBuilder();
-			}
-			
-			this.schema = schema;
-			this.driver = driver;
-			this.url = url;
-			this.username = username;
-			this.password = password;
-			this.database = database;
-			this.builder = builder;
-			this.constraints = Sets.newLinkedHashSet();
-			for (Dependency<?,?> dependency: schema.getDependencies()) {
-				this.constraints.add(dependency);
-			}
-			this.constants = schema.getConstants();
-			this.relations = Lists.newArrayList(schema.getRelations());
-			this.RelationNamesToRelationObjects = new LinkedHashMap<>();
-
-			for(int i = 0; i < this.synchronousThreadsNumber; ++i) {
-				this.synchronousConnections.add(getConnection(this.getDriver(), this.getUrl(), this.getDatabase(), this.getUsername(), this.getPassword()));			
-			}
-			this.initialize();
-		}
-			
+		connections = databaseConnection.synchronousConnections;
+		builder = databaseConnection.getSQLStatementBuilder();
+		relationNamesToRelationObjects = databaseConnection.getRelationNamesToRelationObjects();
+		synchronousThreadsNumber = databaseConnection.synchronousThreadsNumber;
+		constants = databaseConnection.getSchema().getConstants();
+		this.databaseConnection = databaseConnection;
 	}
 
-	public DatabaseInstance(
-			String driver, 
-			String url, 
-			String database,
-			String username, 
-			String password,
-			SQLStatementBuilder builder,
-			Schema schema
-			) throws SQLException {
-		this.schema = schema;
-		this.driver = driver;
-		this.url = url;
-		this.username = username;
-		this.password = password;
-		this.database = database;
-		this.builder = builder;
-		this.constraints = Sets.newLinkedHashSet();
-		for (Dependency<?,?> dependency: schema.getDependencies()) {
-			this.constraints.add(dependency);
-		}
-		this.constants = schema.getConstants();
-		this.relations = Lists.newArrayList(schema.getRelations());
-		this.RelationNamesToRelationObjects = new LinkedHashMap<>();
+//	public DatabaseInstance(
+//			ReasoningParameters resParams,
+//			Schema schema,
+//			SQLStatementBuilder builder,
+//			List<Connection> connections
+//			) throws SQLException {
+//		this.schema = schema;
+//		this.driver = resParams.databaseDriver;
+//		this.url = resParams.connectionUrl;
+//		this.username = resParams.databaseUser;
+//		this.password = resParams.databasePassword;
+//		this.database = resParams.databasePassword;
+//		this.builder = builder;
+//		this.constraints = Sets.newLinkedHashSet();
+//		for (Dependency<?,?> dependency: schema.getDependencies()) {
+//			this.constraints.add(dependency);
+//		}
+//		this.constants = schema.getConstants();
+//		this.relations = Lists.newArrayList(schema.getRelations());
+//		this.RelationNamesToRelationObjects = new LinkedHashMap<>();
+//		this.resParams = resParams;
+//
+//		this.synchronousConnections = connections;
+//	}
+//	
+//	protected DatabaseInstance(
+//			ReasoningParameters resParams,
+//			Schema schema,
+//			SQLStatementBuilder builder,
+//			List<Relation> relations,
+//			Map<String, TypedConstant<?>> constants,
+//			Map<String, DatabaseRelation> toDatabaseRelations,
+//			Set<Evaluatable> constraints, List<Connection> connections) throws SQLException {
+//		this.schema = schema;
+//		this.driver = resParams.databaseDriver;
+//		this.url = resParams.connectionUrl;
+//		this.username = resParams.databaseUser;
+//		this.password = resParams.databasePassword;
+//		this.database = resParams.databasePassword;
+//		this.builder = builder;
+//		this.RelationNamesToRelationObjects = toDatabaseRelations;
+//		this.constraints = constraints;
+//		this.constants = constants;
+//		this.relations = relations;
+//		this.resParams = resParams;
+//
+//		this.synchronousConnections = connections;
+//	}
 
-		for(int i = 0; i < this.synchronousThreadsNumber; ++i) {
-			this.synchronousConnections.add(getConnection(this.getDriver(), this.getUrl(), this.getDatabase(), this.getUsername(), this.getPassword()));			
+//	/**
+//	 * Initialize.
+//	 *
+//	 * @see uk.ac.ox.cs.pdq.db.homomorphism.homomorphism.HomomorphismManager#initialize()
+//	 */
+//	public void initialize() {
+//		if (!this.isInitialized) {
+//			this.setup();
+//			this.isInitialized = true;
+//		}
+//	}
 
-		}
-	}
-	protected DatabaseInstance(
-			String driver, 
-			String url, 
-			String database,
-			String username, 
-			String password,
-			SQLStatementBuilder builder,
-			List<Relation> relations,
-			Map<String, TypedConstant<?>> constants,
-			Map<String, DatabaseRelation> toDatabaseRelations,
-			Set<Evaluatable> constraints, Schema schema) throws SQLException {
-		this.schema = schema;
-		this.driver = driver;
-		this.url = url;
-		this.username = username;
-		this.password = password;
-		this.database = database;
-		this.builder = builder;
-		this.RelationNamesToRelationObjects = toDatabaseRelations;
-		this.constraints = constraints;
-		this.constants = constants;
-		this.relations = relations;
 
-		for(int i = 0; i < this.synchronousThreadsNumber; ++i) {
-			this.synchronousConnections.add(getConnection(this.getDriver(), this.getUrl(), this.getDatabase(), this.getUsername(), this.getPassword()));
-		}
-	}
 
-	/**
-	 * Initialize.
-	 *
-	 * @see uk.ac.ox.cs.pdq.db.homomorphism.homomorphism.HomomorphismManager#initialize()
-	 */
-	public void initialize() {
-		if (!this.isInitialized) {
-			this.setup();
-			this.isInitialized = true;
-		}
-	}
 
-	/**
-	 * Sets up the database that will store the facts.
-	 */
-	protected void setup() {
-		try {
-			Statement sqlStatement = this.synchronousConnections.get(0).createStatement();
-
-			for (String sql: this.builder.createDatabaseStatements(this.getDatabase())) {
-				sqlStatement.addBatch(sql);
-			}
-
-			this.RelationNamesToRelationObjects.put(QNames.EQUALITY.toString(), DatabaseRelation.DatabaseEqualityRelation);
-			sqlStatement.addBatch(this.builder.createTableStatement(DatabaseRelation.DatabaseEqualityRelation));
-			sqlStatement.addBatch(this.builder.createColumnIndexStatement(DatabaseRelation.DatabaseEqualityRelation, DatabaseRelation.Fact));
-
-			//Put relations into a set so as to make them unique
-			Set<Relation> relationset = new HashSet<Relation>();
-			relationset.addAll(this.relations);
-			this.relations.clear();
-			this.relations.addAll(relationset);
-
-			//Create the database tables and create column indices
-			for (Relation relation:this.relations) {
-				DatabaseRelation dbRelation = DatabaseRelation.createDatabaseRelation(relation);
-				this.RelationNamesToRelationObjects.put(relation.getName(), dbRelation);
-				sqlStatement.addBatch(this.builder.createTableStatement(dbRelation));
-				sqlStatement.addBatch(this.builder.createColumnIndexStatement(dbRelation, DatabaseRelation.Fact));
-			}
-
-			//Create indices for the joins in the body of the dependencies
-			Set<String> joinIndexes = Sets.newLinkedHashSet();
-			for (Evaluatable constraint:this.constraints) {
-				joinIndexes.addAll(this.builder.setupIndices(false, this.RelationNamesToRelationObjects, constraint, this.constraintIndices).getLeft());
-			}
-			for (String b: joinIndexes) {
-				sqlStatement.addBatch(b);
-			}
-
-			sqlStatement.executeBatch();
-		} catch (SQLException ex) {
-			throw new IllegalStateException(ex.getMessage(), ex);
-		}
-	}
-
-	/**
-	 * Cleans up the database.
-	 *
-	 * @throws HomomorphismException the homomorphism exception
-	 */
-	protected void dropDatabase() throws HomomorphismException {
-		try {
-			Statement sqlStatement = this.synchronousConnections.get(0).createStatement();
-			//Statement sqlStatement = this.synchronousConnections.createStatement();
-
-			for (String sql: this.builder.createDropStatements(this.getDatabase())) {
-				sqlStatement.addBatch(sql);
-			}
-			sqlStatement.executeBatch();
-		} catch (SQLException ex) {
-			throw new HomomorphismException(ex.getMessage(), ex);
-		}
-	}
-	/*
-	 * (non-Javadoc)
-	 * @see java.lang.AutoCloseable#close()
-	 */
-	@Override
-	public void close() throws Exception {
-		this.dropDatabase();
-		for(Connection con:this.synchronousConnections) {
-			con.close();
-		}
-		for(Connection con:this.openConnections) {
-			con.close();
-		}
-	}
 
 	/**
 	 * Gets the connection.
@@ -345,9 +199,11 @@ public class DatabaseInstance implements Instance {
 			} catch (InstantiationException e) {
 				// TODO Auto-generated catch block
 				log.error(e.getMessage(),e);
+				throw new RuntimeException(e);
 			} catch (IllegalAccessException e) {
 				// TODO Auto-generated catch block
 				log.error(e.getMessage(),e);
+				throw new RuntimeException(e);
 			}
 		}
 		String u = null;
@@ -384,7 +240,7 @@ public class DatabaseInstance implements Instance {
 		Queue<String> queries = new ConcurrentLinkedQueue<>();
 
 		if(this.builder instanceof DerbyStatementBuilder) {
-			queries.addAll(this.builder.createInsertStatements(facts, this.RelationNamesToRelationObjects));
+			queries.addAll(this.builder.createInsertStatements(facts, this.relationNamesToRelationObjects));
 		}
 		else {
 			Map<Predicate, List<Atom>> clusters = HomomorphismUtility.clusterAtoms(facts);
@@ -406,7 +262,7 @@ public class DatabaseInstance implements Instance {
 				while(!clusterFacts.isEmpty()) {
 					int position = tuplesPerThread < clusterFacts.size() ? tuplesPerThread:clusterFacts.size();
 					List<Atom> subList = clusterFacts.subList(0, position);
-					queries.add(this.builder.createBulkInsertStatement(predicate, subList, this.RelationNamesToRelationObjects));
+					queries.add(this.builder.createBulkInsertStatement(predicate, subList, this.relationNamesToRelationObjects));
 					subList.clear();
 				}
 			}
@@ -426,7 +282,7 @@ public class DatabaseInstance implements Instance {
 			List<Callable<Boolean>> threads = new ArrayList<>();
 			for(int j = 0; j < this.synchronousThreadsNumber; ++j) {
 				//Create the threads that will run the database update statements
-				threads.add(new ExecuteSynchronousSQLUpdateThread(queries, this.synchronousConnections.get(j)));
+				threads.add(new ExecuteSynchronousSQLUpdateThread(queries, this.connections.get(j)));
 			}
 			long start = System.currentTimeMillis();
 			try {
@@ -439,8 +295,7 @@ public class DatabaseInstance implements Instance {
 					try {
 						throw new LimitReachedException(Reasons.TIMEOUT);
 					} catch (LimitReachedException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+						throw new RuntimeException(e1);
 					}
 				}
 			}
@@ -474,7 +329,7 @@ public class DatabaseInstance implements Instance {
 			while(!clusterFacts.isEmpty()) {
 				int position = tuplesPerThread > clusterFacts.size() ? clusterFacts.size():tuplesPerThread;
 				List<Atom> subList = clusterFacts.subList(0, position);
-				queries.add(this.builder.createBulkDeleteStatement(predicate, subList, this.RelationNamesToRelationObjects));
+				queries.add(this.builder.createBulkDeleteStatement(predicate, subList, this.relationNamesToRelationObjects));
 				subList.clear();
 			}
 		}
@@ -490,15 +345,12 @@ public class DatabaseInstance implements Instance {
 
 	public DatabaseInstance clone() {
 		try {
-			DatabaseInstance clone = new DatabaseInstance(
-					this.getDriver(), this.getUrl(), this.getDatabase(), this.getUsername(), this.getPassword(),
-					this.builder.clone(), 
-					this.relations, 
-					this.constants,
-					this.RelationNamesToRelationObjects, 
-					this.constraints, this.schema);
+			
+			
+			DatabaseConnection dbconn= new DatabaseConnection(resParams, schema);
+			DatabaseInstance clone = new DatabaseInstance(dbconn);
+			clone.resParams = this.resParams;
 			clone.isInitialized = this.isInitialized;
-			this.openConnections.addAll(clone.synchronousConnections);
 			return clone;
 		} catch (SQLException e) {
 			log.error(e.getMessage(),e);
@@ -511,12 +363,12 @@ public class DatabaseInstance implements Instance {
 			throw new RuntimeException("Method clearQuery should be called in order to clear previous query's tables from the database.");
 		this.clearedLastQuery = false;
 		try {
-			Statement sqlStatement = this.synchronousConnections.get(0).createStatement();
+			Statement sqlStatement = this.connections.get(0).createStatement();
 
 			//Create statements that set up or drop the indices for the joins in the body of the input query
 			Set<String> joinIndexes = Sets.newLinkedHashSet();
 			Pair<Collection<String>, Collection<String>> dropAndCreateStms = 
-					this.builder.setupIndices(true, this.RelationNamesToRelationObjects, query, this.constraintIndices);
+					this.builder.setupIndices(true, this.relationNamesToRelationObjects, query, this.constraintIndices);
 			this.dropQueryIndexStatements.addAll(dropAndCreateStms.getRight());
 			joinIndexes.addAll(dropAndCreateStms.getLeft());
 			for (String b: joinIndexes) {
@@ -531,14 +383,14 @@ public class DatabaseInstance implements Instance {
 
 	public void clearQuery() {
 		try {
-			Statement sqlStatement = this.synchronousConnections.get(0).createStatement();
+			Statement sqlStatement = this.connections.get(0).createStatement();
 			//Drop the join indices for input query
 			for (String b: this.dropQueryIndexStatements) {
 				sqlStatement.addBatch(b);
 			}
 			//Clear the database tables built for the query
 			Collection<String> clearTablesSQLExpressions = this.builder.createTruncateTableStatements(this.currentQuery.getBody().getAtoms(), 
-					this.RelationNamesToRelationObjects);
+					this.relationNamesToRelationObjects);
 			for (String b: clearTablesSQLExpressions) {
 				sqlStatement.addBatch(b);
 			}
@@ -567,7 +419,7 @@ public class DatabaseInstance implements Instance {
 			List<Callable<List<Match>>> threads = new ArrayList<>();
 			for(int j = 0; j < this.synchronousThreadsNumber; ++j) {
 				//Create the threads that will run the database queries
-				threads.add(new ExecuteSQLQueryThread<Q>(queries, this.constants, this.synchronousConnections.get(j)));
+				threads.add(new ExecuteSQLQueryThread<Q>(queries, this.constants, this.connections.get(j)));
 			}
 			long start = System.currentTimeMillis();
 			try {
@@ -600,34 +452,10 @@ public class DatabaseInstance implements Instance {
 		// TODO How to return the facts? Query The database?
 		throw new RuntimeException("getFacts() is unimplemented in DatabaseInstance.java");
 	}
-	/**
-	 * @return the driver
-	 */
-	public String getDriver() {
-		return driver;
-	}
-	/**
-	 * @return the url
-	 */
-	public String getUrl() {
-		return url;
-	}
-	/**
-	 * @return the database
-	 */
-	public String getDatabase() {
-		return database;
-	}
-	/**
-	 * @return the username
-	 */
-	public String getUsername() {
-		return username;
-	}
-	/**
-	 * @return the password
-	 */
-	public String getPassword() {
-		return password;
+
+	//@Override
+	public void close() throws Exception {
+		//is this the right thing to do?
+		this.databaseConnection.close();
 	}
 }

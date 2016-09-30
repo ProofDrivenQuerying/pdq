@@ -117,9 +117,9 @@ public class Bootstrap {
 	}
 	
 	/**
-	 * Checks if is service chaseState up.
+	 * Checks if is service manager up.
 	 *
-	 * @return true, if the 'status' command on the service chaseState was
+	 * @return true, if the 'status' command on the service manager was
 	 * successful
 	 */
 	private boolean isServiceManagerUp() {
@@ -127,7 +127,7 @@ public class Bootstrap {
 	}
 
 	/**
-	 * Connects to the service chaseState and attempts to execute the given 
+	 * Connects to the service manager and attempts to execute the given 
 	 * commands.
 	 *
 	 * @param commands the commands
@@ -163,7 +163,7 @@ public class Bootstrap {
 	}
 	
 	/**
-	 * Launch the service chaseState daemon.
+	 * Launch the service manager daemon.
 	 *
 	 * @param commands the commands
 	 */

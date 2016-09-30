@@ -13,7 +13,7 @@ import uk.ac.ox.cs.pdq.fol.Evaluatable;
  * @author George K
  *
  */
-public interface Instance extends AutoCloseable {
+public interface Instance {
 
 	
 	/**

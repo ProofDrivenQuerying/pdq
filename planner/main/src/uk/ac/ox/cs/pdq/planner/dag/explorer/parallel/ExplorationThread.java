@@ -1,6 +1,8 @@
 package uk.ac.ox.cs.pdq.planner.dag.explorer.parallel;
 
+import java.sql.Connection;
 import java.util.Collection;
+import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.Callable;
@@ -9,6 +11,7 @@ import com.google.common.base.Preconditions;
 
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
+import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.plan.DAGPlan;
 import uk.ac.ox.cs.pdq.planner.dag.ConfigurationUtility;
@@ -39,8 +42,8 @@ public class ExplorationThread implements Callable<DAGChaseConfiguration> {
 	private final Dominance[] dominance;
 
 	/**  Detects query matches. */
-	private final ChaseInstance detector;
-
+	DatabaseConnection databaseConnection;
+	
 	/**  Input configurations. */
 	private final Queue<DAGChaseConfiguration> input;
 
@@ -74,18 +77,18 @@ public class ExplorationThread implements Callable<DAGChaseConfiguration> {
 			Queue<DAGChaseConfiguration> input,
 			DAGEquivalenceClasses equivalenceClasses,
 			DAGChaseConfiguration best,
-			ChaseInstance detector,
+			DatabaseConnection connection,
 			SuccessDominance successDominance,
 			Dominance[] dominance,
 			Set<DAGChaseConfiguration> output,
 			Set<DAGChaseConfiguration> successfulConfigurations
 			) {	
 		Preconditions.checkNotNull(query);
-		Preconditions.checkNotNull(detector);
+		Preconditions.checkNotNull(connection);
 	
 		this.best = best == null ? null : best.clone();
 		this.query = query;
-		this.detector = detector;
+		this.databaseConnection = connection;
 		this.input = input;
 		this.equivalenceClasses = equivalenceClasses;
 		this.output = output;
@@ -107,7 +110,7 @@ public class ExplorationThread implements Callable<DAGChaseConfiguration> {
 		//Poll the next configuration
 		while((configuration = this.input.poll()) != null) {			
 			if(configuration.getState() instanceof DatabaseChaseInstance) {
-				configuration.setState((AccessibleChaseState) this.detector);
+				((DatabaseChaseInstance)configuration.getState()).setDatabaseConnection(this.databaseConnection);
 			}
 			//If the configuration is not dominated
 			DAGChaseConfiguration dominator = this.equivalenceClasses.dominate(this.dominance, configuration);

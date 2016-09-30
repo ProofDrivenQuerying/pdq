@@ -1,5 +1,6 @@
 package uk.ac.ox.cs.pdq.planner.dag.explorer.parallel;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.concurrent.Callable;
 import org.apache.commons.lang3.tuple.Pair;
 
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
+import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
@@ -55,7 +57,7 @@ public class ReasoningThread implements Callable<Boolean> {
 	protected final Chaser chaser;
 
 	/**  Detects homomorphisms during chasing. */
-	protected final ChaseInstance detector;
+	protected final DatabaseConnection connection;
 
 	/**  Estimates the cost of the plans. */
 	protected final CostEstimator<DAGPlan> costEstimator;
@@ -123,7 +125,7 @@ public class ReasoningThread implements Callable<Boolean> {
 			Query<?> query,
 			Collection<? extends Dependency> dependencies,
 			Chaser chaser,
-			ChaseInstance detector,
+			DatabaseConnection connection,
 			CostEstimator<DAGPlan> costEstimator,
 			SuccessDominance successDominance,
 			DAGChaseConfiguration best,
@@ -138,7 +140,7 @@ public class ReasoningThread implements Callable<Boolean> {
 		Preconditions.checkNotNull(query);
 		Preconditions.checkNotNull(dependencies);
 		Preconditions.checkNotNull(chaser);
-		Preconditions.checkNotNull(detector);
+		Preconditions.checkNotNull(connection);
 		Preconditions.checkNotNull(costEstimator);
 		Preconditions.checkNotNull(representatives);
 		Preconditions.checkNotNull(equivalenceClasses);
@@ -146,7 +148,7 @@ public class ReasoningThread implements Callable<Boolean> {
 		this.query = query;
 		this.dependencies = dependencies;
 		this.chaser = chaser;
-		this.detector = detector;
+		this.connection = connection;
 		this.costEstimator = costEstimator;
 		this.equivalenceClasses = equivalenceClasses;
 		this.representatives = representatives;
@@ -258,7 +260,7 @@ public class ReasoningThread implements Callable<Boolean> {
 					);
 					
 			if(configuration.getState() instanceof DatabaseChaseInstance) {
-				configuration.setState(new AccessibleDatabaseListState(configuration.getState().getFacts(), (DatabaseChaseInstance)this.detector, false));
+				((DatabaseChaseInstance)configuration.getState()).setDatabaseConnection(this.connection);
 			}
 			this.chaser.reasonUntilTermination(configuration.getState(), this.dependencies);
 			this.representatives.put(this.equivalenceClasses, left, right, configuration);

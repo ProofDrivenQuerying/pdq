@@ -2,6 +2,7 @@ package uk.ac.ox.cs.pdq.endpoint;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.SQLException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -143,7 +144,7 @@ public class PlannerServlet extends PDQServlet {
         		ExecutorService executor = Executors.newFixedThreadPool(1);
     			Future<Plan> future = executor.submit(new Callable<Plan>() {
     				@Override
-    				public Plan call() {
+    				public Plan call() throws SQLException {
     					try {
     						return planner.search(query);
     					} catch (PlannerException e) {

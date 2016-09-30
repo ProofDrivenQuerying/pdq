@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -13,7 +14,9 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.DatabaseInstance;
+import uk.ac.ox.cs.pdq.db.ReasoningParameters;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
@@ -104,9 +107,10 @@ public class ExplorerFactory {
 			ConjunctiveQuery query,
 			ConjunctiveQuery accessibleQuery,
 			Chaser chaser,
-			ChaseInstance detector,
+			DatabaseConnection dbConn,
 			CostEstimator<P> costEstimator,
-			PlannerParameters parameters) throws Exception {
+			PlannerParameters parameters,
+			ReasoningParameters reasoningParameters) throws Exception {
 
 		Dominance[] dominance = new DominanceFactory(parameters.getDominanceType(), (CostEstimator<Plan>) costEstimator).getInstance();
 		SuccessDominance successDominance = new SuccessDominanceFactory<>(costEstimator, parameters.getSuccessDominanceType()).getInstance();
@@ -143,21 +147,21 @@ public class ExplorerFactory {
 					parameters.getIterativeExecutorType(),
 					parameters.getFirstPhaseThreads(),
 					chaser,
-					detector,
+					dbConn,
 					(CostEstimator<DAGPlan>) costEstimator,
 					successDominance,
 					dominance,
-					validators);
+					validators,reasoningParameters);
 
 			executor1 = IterativeExecutorFactory.createIterativeExecutor(
 					parameters.getIterativeExecutorType(),
 					parameters.getSecondPhaseThreads(),
 					chaser,
-					detector,
+					dbConn,
 					(CostEstimator<DAGPlan>) costEstimator,
 					successDominance,
 					dominance,
-					validators);
+					validators,reasoningParameters);
 		}
 
 		switch(parameters.getPlannerType()) {
@@ -170,10 +174,10 @@ public class ExplorerFactory {
 					schema,
 					accessibleSchema, 
 					chaser, 
-					detector, 
+					dbConn, 
 					(CostEstimator<LeftDeepPlan>) costEstimator,
 					nodeFactory,
-					parameters.getMaxDepth());
+					parameters.getMaxDepth(),reasoningParameters);
 		case LINEAR_KCHASE:
 			return (Explorer<P>) new LinearKChase(
 					eventBus, 
@@ -183,22 +187,23 @@ public class ExplorerFactory {
 					schema,
 					accessibleSchema, 
 					chaser, 
-					detector, 
+					dbConn, 
 					(CostEstimator<LeftDeepPlan>) costEstimator,
 					nodeFactory,
 					parameters.getMaxDepth(),
-					parameters.getChaseInterval());
+					parameters.getChaseInterval(), reasoningParameters);
 
 		case DAG_GENERIC:
 			return (Explorer<P>) new uk.ac.ox.cs.pdq.planner.dag.explorer.DAGGeneric(
 					eventBus, collectStats,
 					parameters,
+					reasoningParameters,
 					query, 
 					accessibleQuery,
 					schema,
 					accessibleSchema, 
 					chaser,
-					detector,
+					dbConn,
 					(CostEstimator<DAGPlan>) costEstimator,
 					successDominance,
 					filter,
@@ -210,12 +215,13 @@ public class ExplorerFactory {
 			return (Explorer<P>) new uk.ac.ox.cs.pdq.planner.dag.explorer.DAGSimpleDP(
 					eventBus, collectStats,
 					parameters,
+					reasoningParameters,
 					query, 
 					accessibleQuery,
 					schema,
 					accessibleSchema, 
 					chaser,
-					detector,
+					dbConn,
 					(CostEstimator<DAGPlan>) costEstimator,
 					successDominance,
 					dominance,
@@ -228,12 +234,13 @@ public class ExplorerFactory {
 			return (Explorer<P>) new uk.ac.ox.cs.pdq.planner.dag.explorer.DAGChaseFriendlyDP(
 					eventBus, collectStats,
 					parameters,
+					reasoningParameters,
 					query, 
 					accessibleQuery,
 					schema,
 					accessibleSchema, 
 					chaser,
-					detector,
+					dbConn,
 					(CostEstimator<DAGPlan>) costEstimator,
 					successDominance,
 					dominance,
@@ -246,12 +253,13 @@ public class ExplorerFactory {
 			return (Explorer<P>) new DAGOptimized(
 					eventBus, collectStats,
 					parameters,
+					reasoningParameters,
 					query, 
 					accessibleQuery,
 					schema,
 					accessibleSchema, 
 					chaser,
-					detector,
+					dbConn,
 					(CostEstimator<DAGPlan>) costEstimator,
 					filter,
 					executor0, executor1,
@@ -266,13 +274,13 @@ public class ExplorerFactory {
 					schema,
 					accessibleSchema, 
 					chaser,
-					detector,
+					dbConn,
 					(CostEstimator<LeftDeepPlan>) costEstimator,
 					nodeFactory,
 					parameters.getMaxDepth(),
 					parameters.getQueryMatchInterval(),
 					postPruning,
-					parameters.getZombification());
+					parameters.getZombification(), reasoningParameters);
 
 		default:
 			throw new IllegalStateException("Unsupported planner type " + parameters.getPlannerType());

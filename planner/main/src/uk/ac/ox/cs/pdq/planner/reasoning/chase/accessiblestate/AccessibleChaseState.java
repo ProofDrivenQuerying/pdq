@@ -11,6 +11,7 @@ import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -18,7 +19,7 @@ import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
  *
  * @author Efthymia Tsamoura
  */
-public interface AccessibleChaseState extends uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance {
+public interface AccessibleChaseState extends ChaseInstance {
 
 	/**
 	 * For each input accessibility axiom, it

@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.TreeSet;
@@ -412,7 +413,12 @@ public class PlannerController {
 			this.future = executor.submit(() -> {
 				try {
 					log.debug("Searching plan...");
-					Plan bestPlan = planner.search(this.query);
+					Plan bestPlan;
+					try {
+						bestPlan = planner.search(this.query);
+					} catch (SQLException e) {
+						throw new RuntimeException(e);
+					}
 					PlannerController.this.bestPlan = bestPlan;
 					log.debug("Best plan: " + bestPlan);
 					ObservablePlan p = PlannerController.this.plan.copy();

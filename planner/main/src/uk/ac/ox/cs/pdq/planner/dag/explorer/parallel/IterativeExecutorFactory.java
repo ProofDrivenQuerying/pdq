@@ -1,8 +1,11 @@
 package uk.ac.ox.cs.pdq.planner.dag.explorer.parallel;
 
+import java.sql.Connection;
 import java.util.List;
 
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
+import uk.ac.ox.cs.pdq.db.DatabaseConnection;
+import uk.ac.ox.cs.pdq.db.ReasoningParameters;
 import uk.ac.ox.cs.pdq.plan.DAGPlan;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.IterativeExecutorTypes;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator;
@@ -28,11 +31,12 @@ public class IterativeExecutorFactory {
 	 * @param executorType the executor type
 	 * @param parallelThreads the parallel threads
 	 * @param chaser 		Runs the chase algorithm
-	 * @param detector 		Detects homomorphisms during chasing
+	 * @param dbConn 		Detects homomorphisms during chasing
 	 * @param estimator 		Estimates the cost of a plan
 	 * @param successDominance 		Removes success dominated configurations
 	 * @param dominance the dominance
 	 * @param validators 		Validates pairs of configurations to be composed
+	 * @param reasoningParameters 
 	 * @return the iterative executor
 	 * @throws Exception the exception
 	 */
@@ -40,20 +44,20 @@ public class IterativeExecutorFactory {
 			IterativeExecutorTypes executorType,
 			int parallelThreads,
 			Chaser chaser,
-			ChaseInstance detector,
+			DatabaseConnection dbConn,
 			CostEstimator<DAGPlan> estimator,
 			SuccessDominance successDominance,
 			Dominance[] dominance,
-			List<Validator> validators) throws Exception{
+			List<Validator> validators, ReasoningParameters reasoningParameters) throws Exception{
 		switch(executorType) {
 		case MULTITHREADED:
 			MultiThreadedContext mtcontext = new MultiThreadedContext(parallelThreads,
 					chaser,
-					detector,
+					dbConn,
 					estimator,
 					successDominance,
 					dominance,
-					validators);
+					validators, reasoningParameters);
 			return new MultiThreadedExecutor(mtcontext);
 		default:
 			throw new java.lang.IllegalArgumentException();

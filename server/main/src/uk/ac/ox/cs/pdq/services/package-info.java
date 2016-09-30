@@ -6,11 +6,11 @@ package uk.ac.ox.cs.pdq.services;
 	This package contains classes that attempt to support optimization of external rule-based systems with a particular 
 	focus on the LogciBlox database system.
 	
-	A "service" is a very generic process that listens to a port, and receives incoming connections.
+	A "service" is a very generic process that listens to a port, and receives incoming connection.
 	One can start, run and stop a service.
 	
 	The concrete service, with which in mind this package was developed, is services.logicblox.SemanticOptimizationService
-	which listens for outside connections, accepts connections and registers schema information, 
+	which listens for outside connection, accepts connection and registers schema information, 
 	integrity constraints, and views. It also receives updates on this registered information and adds/removes elements 
 	accordingly. It's main task is to receive query optimization requests and calls the PDQ planner to try to rewrite 
 	the corresponding queries using the view and constraints information registered so far.

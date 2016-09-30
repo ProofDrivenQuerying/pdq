@@ -1,5 +1,6 @@
 package uk.ac.ox.cs.pdq.planner.linear.explorer;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List; 
 import java.util.Set;
@@ -7,6 +8,8 @@ import java.util.Set;
 import org.jgrapht.graph.DefaultEdge;
 
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
+import uk.ac.ox.cs.pdq.db.DatabaseConnection;
+import uk.ac.ox.cs.pdq.db.ReasoningParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
@@ -64,7 +67,7 @@ public abstract class LinearExplorer extends Explorer<LeftDeepPlan> {
 	protected final Chaser chaser;
 
 	/**  Detects homomorphisms during chasing*. */
-	protected final ChaseInstance detector;
+	protected final DatabaseConnection connection;
 
 	/**  Estimates the cost of a plan *. */
 	protected final CostEstimator<LeftDeepPlan> costEstimator;
@@ -85,6 +88,8 @@ public abstract class LinearExplorer extends Explorer<LeftDeepPlan> {
 	
 	/** The best configurations list. */
 	protected List<LinearChaseConfiguration> bestConfigurationsList;
+
+	private ReasoningParameters reasoningParameters;
 
 	/**
 	 * Instantiates a new linear explorer.
@@ -110,10 +115,12 @@ public abstract class LinearExplorer extends Explorer<LeftDeepPlan> {
 			Schema schema,
 			AccessibleSchema accessibleSchema, 
 			Chaser chaser,
-			ChaseInstance detector,
+			 DatabaseConnection dbConn,
 			CostEstimator<LeftDeepPlan> costEstimator,
 			NodeFactory nodeFactory,
-			int depth) throws PlannerException, SQLException {
+			int depth,
+			ReasoningParameters reasoningParams
+			) throws PlannerException, SQLException {
 		super(eventBus, collectStats);
 		Preconditions.checkArgument(eventBus != null);
 		Preconditions.checkArgument(nodeFactory != null);
@@ -122,7 +129,7 @@ public abstract class LinearExplorer extends Explorer<LeftDeepPlan> {
 		Preconditions.checkArgument(schema != null);
 		Preconditions.checkArgument(accessibleSchema != null);
 		Preconditions.checkArgument(chaser != null);
-		Preconditions.checkArgument(detector != null);
+		Preconditions.checkArgument(dbConn != null);
 		Preconditions.checkArgument(costEstimator != null);
 
 		this.query = query;
@@ -130,10 +137,11 @@ public abstract class LinearExplorer extends Explorer<LeftDeepPlan> {
 		this.schema = schema;
 		this.accessibleSchema = accessibleSchema;
 		this.chaser = chaser;
-		this.detector = detector;
+		this.connection = dbConn;
 		this.costEstimator = costEstimator;
 		this.nodeFactory = nodeFactory;
 		this.depth = depth;
+		this.reasoningParameters = reasoningParams;
 		this.initialise();
 	}
 
@@ -146,7 +154,7 @@ public abstract class LinearExplorer extends Explorer<LeftDeepPlan> {
 	private void initialise() throws PlannerException, SQLException {
 		AccessibleChaseState state = null;
 		state = (uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState) 
-				new AccessibleDatabaseListState(this.query, this.schema, (DatabaseChaseInstance) this.detector, true);
+				new AccessibleDatabaseListState(this.reasoningParameters, this.query, this.schema, connection, true);
 		this.chaser.reasonUntilTermination(state, this.schema.getDependencies());
 
 		this.tick = System.nanoTime();

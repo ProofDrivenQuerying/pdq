@@ -3,6 +3,7 @@ package uk.ac.ox.cs.pdq.planner.dag.explorer;
 import static uk.ac.ox.cs.pdq.planner.logging.performance.PlannerStatKeys.CANDIDATES;
 import static uk.ac.ox.cs.pdq.planner.logging.performance.PlannerStatKeys.CONFIGURATIONS;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
@@ -14,6 +15,8 @@ import org.apache.commons.collections4.CollectionUtils;
 
 import uk.ac.ox.cs.pdq.LimitReachedException;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
+import uk.ac.ox.cs.pdq.db.DatabaseConnection;
+import uk.ac.ox.cs.pdq.db.ReasoningParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.plan.DAGPlan;
@@ -90,19 +93,20 @@ public class DAGOptimized extends DAGExplorer {
 			EventBus eventBus, 
 			boolean collectStats, 
 			PlannerParameters parameters,
+			ReasoningParameters reasoningParameters,
 			ConjunctiveQuery query,
 			ConjunctiveQuery accessibleQuery,
 			Schema schema,
 			AccessibleSchema accessibleSchema, 
 			Chaser chaser, 
-			ChaseInstance detector,
+			DatabaseConnection dbConn,
 			CostEstimator<DAGPlan> costEstimator,
 			Filter filter,
 			IterativeExecutor reasoningThreads,
 			IterativeExecutor explorationThreads,
 			int maxDepth) throws PlannerException, SQLException {
-		super(eventBus, collectStats, parameters, 
-				query, accessibleQuery, schema, accessibleSchema, chaser, detector, costEstimator);
+		super(eventBus, collectStats, parameters, reasoningParameters, 
+				query, accessibleQuery, schema, accessibleSchema, chaser, dbConn, costEstimator);
 		Preconditions.checkNotNull(reasoningThreads);
 		Preconditions.checkNotNull(explorationThreads);
 		this.filter = filter;
@@ -149,6 +153,7 @@ public class DAGOptimized extends DAGExplorer {
 		} else if (this.depth > 1) {
 			this.checkLimitReached();
 			//Perform parallel chasing
+			System.out.println("here");
 			Collection<DAGChaseConfiguration> configurations =
 					this.reasoningThreads.reason(this.depth,
 							this.left,

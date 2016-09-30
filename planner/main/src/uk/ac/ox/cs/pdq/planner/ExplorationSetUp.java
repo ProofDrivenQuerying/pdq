@@ -1,6 +1,10 @@
 package uk.ac.ox.cs.pdq.planner;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
@@ -10,6 +14,7 @@ import uk.ac.ox.cs.pdq.cost.CostEstimatorFactory;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.cost.CostStatKeys;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
+import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.DatabaseInstance;
 import uk.ac.ox.cs.pdq.db.ReasoningParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -153,8 +158,9 @@ public class ExplorationSetUp {
 	 *         input query to the constant generated in the initial grounded
 	 *         operation.
 	 * @throws PlannerException the planner exception
+	 * @throws SQLException 
 	 */
-	public <P extends Plan> P search(ConjunctiveQuery query) throws PlannerException {
+	public <P extends Plan> P search(ConjunctiveQuery query) throws PlannerException, SQLException {
 		return this.search(query,false);
 	}
 	
@@ -171,8 +177,9 @@ public class ExplorationSetUp {
 	 *         input query to the constant generated in the initial grounded
 	 *         operation.
 	 * @throws PlannerException the planner exception
+	 * @throws SQLException 
 	 */
-	public <S extends AccessibleChaseState, P extends Plan> P search(ConjunctiveQuery query, boolean noDep) throws PlannerException {
+	public <S extends AccessibleChaseState, P extends Plan> P search(ConjunctiveQuery query, boolean noDep) throws PlannerException, SQLException {
 		
 		boolean collectStats = this.statsLogger != null;
 		
@@ -189,20 +196,13 @@ public class ExplorationSetUp {
 		}
 
 		ConjunctiveQuery accessibleQuery = this.accessibleSchema.accessible(query, query.getGrounding());
-		
+
 		Explorer<P> explorer = null;
-		try (
-				DatabaseChaseInstance detector = new DatabaseChaseInstance(this.reasoningParams, this.accessibleSchema);
-		 
-//				DatabaseInstance detector1 =
-//				new HomomorphismManagerFactory().getInstance(this.accessibleSchema,  
-//						this.reasoningParams.getHomomorphismDetectorType(), 
-//						this.reasoningParams.getDatabaseDriver(), 
-//						this.reasoningParams.getConnectionUrl(),
-//						this.reasoningParams.getDatabaseName(), 
-//						this.reasoningParams.getDatabaseUser(),
-//						this.reasoningParams.getDatabasePassword())) 
-				){
+
+		
+		DatabaseConnection dbConn = new DatabaseConnection(reasoningParams,accessibleSchema);
+
+		try{
 			// Top-level initialisations
 			CostEstimator<P> costEstimator = (CostEstimator<P>) this.externalCostEstimator;
 			if (costEstimator == null) {
@@ -222,9 +222,10 @@ public class ExplorationSetUp {
 					query,
 					accessibleQuery,
 					reasoner,
-					detector,
+					dbConn,
 					costEstimator,
-					this.plannerParams);
+					this.plannerParams,
+					this.reasoningParams);
 
 			// Chain all statistics collectors
 			if (collectStats) {

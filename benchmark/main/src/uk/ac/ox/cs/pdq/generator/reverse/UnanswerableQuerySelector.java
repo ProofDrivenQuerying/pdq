@@ -1,5 +1,7 @@
 package uk.ac.ox.cs.pdq.generator.reverse;
 
+import java.sql.SQLException;
+
 import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.cost.CostParameters;
@@ -55,12 +57,17 @@ public class UnanswerableQuerySelector implements QuerySelector {
 	
 	/**
 	 * {@inheritDoc}
+	 * @throws SQLException 
 	 * @see uk.ac.ox.cs.pdq.generator.reverse.QuerySelector#accept(uk.ac.ox.cs.pdq.fol.Query)
 	 */
 	@Override
 	public boolean accept(ConjunctiveQuery q) {
 		try {
-			return new ExplorationSetUp(this.planParams, this.costParams, this.reasoningParams, this.schema).search(q,true) != null;
+			try {
+				return new ExplorationSetUp(this.planParams, this.costParams, this.reasoningParams, this.schema).search(q,true) != null;
+			} catch (SQLException e) {
+				throw new RuntimeException(e);
+			}
 		} catch (PlannerException e) {
 			log.error(e);
 			return false;

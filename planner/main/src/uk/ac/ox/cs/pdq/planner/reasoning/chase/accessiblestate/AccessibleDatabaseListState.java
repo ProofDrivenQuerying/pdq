@@ -1,5 +1,6 @@
 package uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Iterator;
@@ -11,9 +12,11 @@ import java.util.Map;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
+import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.DatabaseInstance;
 import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.db.Match;
+import uk.ac.ox.cs.pdq.db.ReasoningParameters;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TGD;
@@ -74,8 +77,6 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 	/**  Maps each chase constant the Accessed facts it appears. */
 	private final Multimap<Term,Atom> accessibleTerms;
 
-	private DatabaseInstance manager;
-
 	/**
 	 * Instantiates a new accessible database list state.
 	 *
@@ -84,8 +85,8 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 	 * @param chaseState the chaseState
 	 * @throws SQLException 
 	 */
-	public AccessibleDatabaseListState(ConjunctiveQuery query, Schema schema, DatabaseInstance manager, boolean maintainProvenance) throws SQLException {
-		this(manager, 
+	public AccessibleDatabaseListState(ReasoningParameters resParam,ConjunctiveQuery query, Schema schema, DatabaseConnection connection, boolean maintainProvenance) throws SQLException {
+		this(
 				createInitialFacts(query, schema), 
 				maintainProvenance == true ? new MapFiringGraph() : null,
 				new EqualConstantsClasses(),
@@ -93,22 +94,21 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 				Utility.inferInferred(createInitialFacts(query, schema)),
 				Utility.inferDerivedInferred(),
 				Utility.inferSignatureGroups(createInitialFacts(query, schema)),
-				Utility.inferAccessibleTerms(createInitialFacts(query, schema)));
-		this.manager = manager;
+				Utility.inferAccessibleTerms(createInitialFacts(query, schema)),
+				connection);
 		this.addFacts(this.facts);
 	}
 	
-	public AccessibleDatabaseListState(Collection<Atom> facts, DatabaseInstance manager, boolean maintainProvenance) throws SQLException {
-		this(manager, 
-				facts, 
+	public AccessibleDatabaseListState(ReasoningParameters resParam, Collection<Atom> facts, DatabaseConnection connection, boolean maintainProvenance) throws SQLException {
+		this(	facts, 
 				maintainProvenance == true ? new MapFiringGraph() : null,
 				new EqualConstantsClasses(),
 				inferConstantsMap(facts),
 				Utility.inferInferred(facts),
 				Utility.inferDerivedInferred(),
 				Utility.inferSignatureGroups(facts),
-				Utility.inferAccessibleTerms(facts));
-		this.manager = manager;
+				Utility.inferAccessibleTerms(facts),
+				connection);
 		this.addFacts(this.facts);
 	}
 
@@ -147,7 +147,6 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 	 * @throws SQLException 
 	 */
 	private AccessibleDatabaseListState(
-			DatabaseInstance manager,
 			Collection<Atom> facts,
 			FiringGraph graph,
 			EqualConstantsClasses constantClasses,
@@ -155,10 +154,10 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 			Collection<String> inferred,
 			Collection<Atom> derivedInferred,
 			Multimap<Predicate, Atom> signatureGroups,
-			Multimap<Term,Atom> accessibleTerms
+			Multimap<Term,Atom> accessibleTerms, 
+			DatabaseConnection connection
 			) throws SQLException {
-//		super(manager, facts, constantClasses, constants);
-		super(facts,constantClasses, constants,manager.RelationNamesToRelationObjects, manager.getDriver(), manager.getUrl(), manager.getDatabase(), manager.getUsername(), manager.getPassword(), manager.builder, manager.schema);
+		super(facts, constantClasses, constants, connection);
 		
 		Preconditions.checkNotNull(inferred);
 		Preconditions.checkNotNull(derivedInferred);
@@ -378,14 +377,15 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 		Multimap<Constant, Atom> constantsToAtoms = HashMultimap.create();
 		constantsToAtoms.putAll(this.constantsToAtoms);
 		try {
-			return new AccessibleDatabaseListState(this.manager, Sets.newHashSet(this.facts), 
+			return new AccessibleDatabaseListState(
+					Sets.newHashSet(this.facts), 
 					this.graph == null ? null : this.graph.clone(),
 					this.classes.clone(),
 					constantsToAtoms,
 					new LinkedHashSet<>(this.inferred),
 					new LinkedHashSet<>(this.derivedInferred), 
 					LinkedHashMultimap.create(this.signatureGroups), 
-					LinkedHashMultimap.create(this.accessibleTerms));
+					LinkedHashMultimap.create(this.accessibleTerms),this.getDatabaseConnection());
 		} catch (SQLException e) {
 			throw new RuntimeException("Cloning of AccessibleDatabaseListState failed due to an SQL exception "+e);
 		}
@@ -418,7 +418,6 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 
 		try {
 			return new AccessibleDatabaseListState(
-					this.manager,
 					facts, 
 					this.getFiringGraph() == null ? null : this.getFiringGraph().merge(((AccessibleDatabaseListState)s).getFiringGraph()),
 					classes,
@@ -426,7 +425,8 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 					inferred,
 					derivedInferred, 
 					signatureGroups, 
-					accessibleTerms);
+					accessibleTerms,
+					this.getDatabaseConnection());
 		} catch (SQLException e) {
 				throw new RuntimeException("Merging of AccessibleDatabaseListState failed due to an SQL exception "+e);
 			}

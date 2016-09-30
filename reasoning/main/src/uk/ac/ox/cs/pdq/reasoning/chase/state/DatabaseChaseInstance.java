@@ -1,5 +1,6 @@
 package uk.ac.ox.cs.pdq.reasoning.chase.state;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -20,6 +21,7 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 
+import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.DatabaseEGD;
 import uk.ac.ox.cs.pdq.db.DatabaseEquality;
 import uk.ac.ox.cs.pdq.db.DatabaseInstance;
@@ -65,7 +67,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 	private boolean _isFailed = false;
 
 	/**  The state's facts. */
-	protected Collection<Atom> facts;
+	protected Collection<Atom> facts = new LinkedHashSet<Atom>();
 
 	/**  Keeps the classes of equal constants. */
 	protected EqualConstantsClasses classes;
@@ -84,17 +86,9 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 	 * @param chaseState the chaseState
 	 * @throws SQLException 
 	 */
-	public DatabaseChaseInstance(ConjunctiveQuery query,
-			String driver, 
-			String url, 
-			String database,
-			String username, 
-			String password,
-			SQLStatementBuilder builder,
-			Schema schema
-			) throws SQLException {
-		super(driver,url,database,username,password,builder,schema);
-		this.facts = Sets.newHashSet(query.ground(ConjunctiveQuery.generateCanonicalMapping(query.getBody())).getAtoms());
+	public DatabaseChaseInstance(ConjunctiveQuery query, DatabaseConnection connection) throws SQLException {
+		super(connection);
+		this.addFacts(Sets.newHashSet(query.ground(ConjunctiveQuery.generateCanonicalMapping(query.getBody())).getAtoms()));
 		this.classes = new EqualConstantsClasses();
 		this.constantsToAtoms = inferConstantsMap(this.facts);
 	}
@@ -105,24 +99,18 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 	 * @param chaseState the chaseState
 	 * @param facts the facts
 	 */
-	public DatabaseChaseInstance(Collection<Atom> facts,
-			String driver, 
-			String url, 
-			String database,
-			String username, 
-			String password,
-			SQLStatementBuilder builder,
-			Schema schema
-			) throws SQLException {
-		super(driver,url,database,username,password,builder,schema);
+	public DatabaseChaseInstance(Collection<Atom> facts, DatabaseConnection connection) throws SQLException {
+		super(connection);
 		Preconditions.checkNotNull(facts);
-		this.facts = facts;
+		this.addFacts(facts);
 		this.classes = new EqualConstantsClasses();
 		this.constantsToAtoms = inferConstantsMap(this.facts);
 	}
 	
 	/**
-	 * Instantiates a new database list state.
+	 * Instantiates a new database list state. 
+	 * This protected constructor does not(!) add the facts into the rdbms. 
+	 * Using this constructor on would need to call addFacts explicilty.
 	 *
 	 * @param chaseState the chaseState
 	 * @param facts the facts
@@ -134,33 +122,19 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 			Collection<Atom> facts,
 			EqualConstantsClasses classes,
 			Multimap<Constant,Atom> constants,
-			Map<String, DatabaseRelation> relationNamesToRelationObjects,
-			String driver, 
-			String url, 
-			String database,
-			String username, 
-			String password,
-			SQLStatementBuilder builder,
-			Schema schema 
+			DatabaseConnection connection 
 			) throws SQLException {
-		super(driver,url,database,username,password,builder,schema);
+
+		super(connection);
 		Preconditions.checkNotNull(facts);
 		Preconditions.checkNotNull(classes);
 		Preconditions.checkNotNull(constants);
 		this.facts = facts;
 		this.classes = classes;
 		this.constantsToAtoms = constants; 
-		this.RelationNamesToRelationObjects = relationNamesToRelationObjects; 
 	}
 	
-
-
-	public DatabaseChaseInstance(ReasoningParameters reasoningParams, Schema schema) throws SQLException {
-		super(reasoningParams, schema);
-		this.facts = new LinkedHashSet<Atom>();
-		this.classes = new EqualConstantsClasses();
-		this.constantsToAtoms = inferConstantsMap(this.facts);
-	}
+	
 
 	/**
 	 *
@@ -419,8 +393,8 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 	public DatabaseChaseInstance clone() {
 		Multimap<Constant, Atom> constantsToAtoms = HashMultimap.create();
 		constantsToAtoms.putAll(this.constantsToAtoms);
-		try {
-			return new DatabaseChaseInstance(Sets.newHashSet(this.facts), this.classes.clone(), constantsToAtoms, RelationNamesToRelationObjects, getDriver(), getUrl(), getDatabase(),getUsername(), getPassword(),builder,schema);
+		try { 
+			return new DatabaseChaseInstance(Sets.newHashSet(this.facts),this.getDatabaseConnection().clone());
 		} catch (SQLException e) {
 			throw new RuntimeException("Cloning a DatabaseChaseInstance failed due to an SQL exception "+ e);
 		}
@@ -452,7 +426,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		return new DatabaseChaseInstance(
 				facts, 
 				classes,
-				constantsToAtoms, RelationNamesToRelationObjects, getDriver(), getUrl(), getDatabase(),getUsername(), getPassword(),builder,schema);
+				constantsToAtoms, this.getDatabaseConnection());
 	}
 
 	/**
@@ -550,14 +524,14 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 			int f = 0;
 			List<Atom> left = Lists.newArrayList();
 			for(Atom atom:((TGD) source).getLeft()) {
-				Relation relation = this.RelationNamesToRelationObjects.get(atom.getName());
+				Relation relation = this.relationNamesToRelationObjects.get(atom.getName());
 				List<Term> terms = Lists.newArrayList(atom.getTerms());
 				terms.add(new Variable(DatabaseRelation.Fact.getName() + f++));
 				left.add(new Atom(relation, terms));
 			}
 			List<Atom> right = Lists.newArrayList();
 			for(Atom atom:((TGD) source).getRight()) {
-				Relation relation = this.RelationNamesToRelationObjects.get(atom.getName());
+				Relation relation = this.relationNamesToRelationObjects.get(atom.getName());
 				List<Term> terms = Lists.newArrayList(atom.getTerms());
 				terms.add(new Variable(DatabaseRelation.Fact.getName() + f++));
 				right.add(new Atom(relation, terms));
@@ -568,7 +542,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 			int f = 0;
 			List<Atom> left = Lists.newArrayList();
 			for(Atom atom:((EGD) source).getLeft()) {
-				Relation relation = this.RelationNamesToRelationObjects.get(atom.getName());
+				Relation relation = this.relationNamesToRelationObjects.get(atom.getName());
 				List<Term> terms = Lists.newArrayList(atom.getTerms());
 				terms.add(new Variable(DatabaseRelation.Fact.getName() + f++));
 				left.add(new Atom(relation, terms));
@@ -585,7 +559,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 			int f = 0;
 			List<Atom> body = Lists.newArrayList();
 			for(Atom atom:((Query<?>) source).getBody().getAtoms()) {
-				Relation relation = this.RelationNamesToRelationObjects.get(atom.getName());
+				Relation relation = this.relationNamesToRelationObjects.get(atom.getName());
 				List<Term> terms = Lists.newArrayList(atom.getTerms());
 				terms.add(new Variable(DatabaseRelation.Fact.getName() + f++));
 				body.add(new Atom(relation, terms));
@@ -600,4 +574,13 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		ALL,
 		THIS
 	}
+	public void setDatabaseConnection(DatabaseConnection connection) {
+		this.databaseConnection = connection;
+		this.connections = databaseConnection.getSynchronousConnections();
+		this.builder = databaseConnection.getSQLStatementBuilder();
+		this.relationNamesToRelationObjects = databaseConnection.getRelationNamesToRelationObjects();
+		this.synchronousThreadsNumber = databaseConnection.synchronousThreadsNumber;
+		this.constants = databaseConnection.getSchema().getConstants();
+	}
+
 }

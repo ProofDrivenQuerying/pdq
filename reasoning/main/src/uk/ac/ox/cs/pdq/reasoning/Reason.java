@@ -2,15 +2,21 @@ package uk.ac.ox.cs.pdq.reasoning;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.sql.Connection;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import uk.ac.ox.cs.pdq.db.DatabaseConnection;
+import uk.ac.ox.cs.pdq.db.DatabaseInstance;
 import uk.ac.ox.cs.pdq.db.ReasoningParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismManagerFactory;
+import uk.ac.ox.cs.pdq.db.sql.MySQLStatementBuilder;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.io.xml.QueryReader;
 import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
@@ -167,12 +173,7 @@ public class Reason {
 								
 			Chaser reasoner = reasonerFactory.getInstance();
 //			//Creates a chase state that consists of the canonical database of the input query.
-			ChaseInstance state = new DatabaseChaseInstance(query,							
-					reasoningParams.getDatabaseDriver(), 
-					reasoningParams.getConnectionUrl(),
-					reasoningParams.getDatabaseName(), 
-					reasoningParams.getDatabaseUser(),
-					reasoningParams.getDatabasePassword(), null,schema);
+			ChaseInstance state = new DatabaseChaseInstance(query,new DatabaseConnection(reasoningParams, schema));		
 			reasoner.reasonUntilTermination(state, schema.getDependencies());
 			
 			//TODO show something 

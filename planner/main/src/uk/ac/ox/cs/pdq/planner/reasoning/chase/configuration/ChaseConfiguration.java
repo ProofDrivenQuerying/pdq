@@ -44,7 +44,7 @@ import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 public abstract class ChaseConfiguration<P extends Plan> implements Configuration<P> {
 
 	/** The configuration's chase state. Keeps the output facts of this configuration */
-	protected AccessibleChaseState state;
+	protected final AccessibleChaseState state;
 
 	/**  The plan that corresponds to this configuration. */
 	protected P plan;
@@ -104,10 +104,6 @@ public abstract class ChaseConfiguration<P extends Plan> implements Configuratio
 		return this.state;
 	}
 	
-	public AccessibleChaseState setState(AccessibleChaseState state) {
-		return this.state = state;
-	}
-
 	/**
 	 * Gets the plan.
 	 *

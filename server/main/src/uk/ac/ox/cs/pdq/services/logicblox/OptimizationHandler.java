@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.sql.SQLException;
 
 import org.apache.log4j.Logger;
 
@@ -86,6 +87,7 @@ public class OptimizationHandler implements MessageHandler<ExternalRuleOptimizat
 	 *		    (4.1) It uses a QueryToProtoBuffer object (which is a Rewriter) to write the query into a google protobuf Rule object,
 	 *		    and uses the external LB lib to transform this into a google protobuf message (a BloxCommand) delivering it to 
 	 *		    SemanticOptimizationService which sends it to LB.
+	 * @throws SQLException 
 	 */
 	@Override
 	public GeneratedMessage handle(ExternalRuleOptimization command) {
@@ -123,8 +125,13 @@ public class OptimizationHandler implements MessageHandler<ExternalRuleOptimizat
 							     schema, queryEq, this.in, this.out);
 			Cost nonOptimizedCost = estimator.estimateCost(query);
 			query = queryEq;
-			DAGPlan optimized = this.optimize(schema, query, estimator,
-					new BestRewritingPrinter());
+			DAGPlan optimized;
+			try {
+				optimized = this.optimize(schema, query, estimator,
+						new BestRewritingPrinter());
+			} catch (SQLException e) {
+				throw new RuntimeException(e);
+			}
 			if (optimized != null 
 					&& optimized.getCost().lessThan(nonOptimizedCost)) {
 				query = optimized
@@ -159,9 +166,10 @@ public class OptimizationHandler implements MessageHandler<ExternalRuleOptimizat
 	 * @param estimator CostEstimator<?>
 	 * @param handlers EventHandler[]
 	 * @return the optimized query, if any, null otherwise.
+	 * @throws SQLException 
 	 */
 	private DAGPlan optimize(Schema schema, ConjunctiveQuery query, 
-			CostEstimator<?> estimator, EventHandler... handlers) {
+			CostEstimator<?> estimator, EventHandler... handlers) throws SQLException {
 		log.debug("Optimizing query :" + query);
 		
 		PlannerParameters plannerParams = new PlannerParameters();

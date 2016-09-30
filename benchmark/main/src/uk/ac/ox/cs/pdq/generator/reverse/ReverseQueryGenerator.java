@@ -2,17 +2,24 @@ package uk.ac.ox.cs.pdq.generator.reverse;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.log4j.Logger;
 
+import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.DatabaseInstance;
 import uk.ac.ox.cs.pdq.db.ReasoningParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismManagerFactory;
+import uk.ac.ox.cs.pdq.db.sql.MySQLStatementBuilder;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.io.xml.QueryReader;
@@ -101,23 +108,26 @@ public class ReverseQueryGenerator implements Runnable {
 			Runtime.getRuntime().addShutdownHook(new MatchReport(mm));
 
 			Query<?> accessibleQuery = accessibleSchema.accessible(this.query);
-			try(
-					DatabaseChaseInstance detector = new DatabaseChaseInstance(reasoningParams, accessibleSchema);
-					 
-//					DatabaseInstance detector =
-//				new HomomorphismManagerFactory().getInstance(accessibleSchema,  
-//						reasoningParams.getHomomorphismDetectorType(), 
-//						reasoningParams.getDatabaseDriver(), 
-//						reasoningParams.getConnectionUrl(),
-//						reasoningParams.getDatabaseName(), 
-//						reasoningParams.getDatabaseUser(),
-//						reasoningParams.getDatabasePassword())
-				) {				
-				detector.addQuery(accessibleQuery);
-				detector.initialize();
-				AccessibleChaseState state = (AccessibleChaseState) 
-						new AccessibleDatabaseListState(query, accessibleSchema,  detector, false);
-				
+//			List<Connection> connections = Arrays.asList(DatabaseInstance.getConnection(reasoningParams.getDatabaseDriver(), 
+//					reasoningParams.getConnectionUrl(),
+//					reasoningParams.getDatabaseName(), 
+//					reasoningParams.getDatabaseUser(),
+//					reasoningParams.getDatabasePassword()));	
+//			try(
+//					DatabaseChaseInstance detector = new DatabaseChaseInstance(reasoningParams, accessibleSchema, new ArrayList<Atom>(), connections);
+//					
+//				){				
+//				detector.addQuery(accessibleQuery);
+//				detector.initialize();
+//				AccessibleChaseState state = (AccessibleChaseState) 
+//						new AccessibleDatabaseListState(reasoningParams, query, accessibleSchema,  connections, false);
+			
+				DatabaseConnection connection = new DatabaseConnection(reasoningParams, accessibleSchema);		
+					DatabaseChaseInstance bdinst = new DatabaseChaseInstance(new ArrayList<Atom>(),connection);
+					bdinst.addQuery(accessibleQuery);
+					AccessibleChaseState state = (AccessibleChaseState) 
+							new AccessibleDatabaseListState(null, query, accessibleSchema, connection, false);
+			
 				log.info("Phase 1");
 				reasoner.reasonUntilTermination(state, this.schema.getDependencies());
 				log.info("Phase 2");
@@ -125,11 +135,11 @@ public class ReverseQueryGenerator implements Runnable {
 						accessibleSchema.getAccessibilityAxioms(),
 						accessibleSchema.getInferredAccessibilityAxioms()));
 				log.info("Reasoning complete.");
-				detector.clearQuery();
-		}
+				bdinst.clearQuery();
+		
 			
 		} catch (Exception e) {
-			log.error(e.getMessage(),e);
+			throw new RuntimeException(e);
 		}
 	}
 

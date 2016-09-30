@@ -1,9 +1,12 @@
 package uk.ac.ox.cs.pdq.test.reasoning.homomorphism;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -11,9 +14,12 @@ import com.google.common.collect.Lists;
 
 import junit.framework.Assert;
 import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.db.DatabaseConnection;
+import uk.ac.ox.cs.pdq.db.DatabaseInstance;
 import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.db.EGD;
 import uk.ac.ox.cs.pdq.db.Match;
+import uk.ac.ox.cs.pdq.db.ReasoningParameters;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TGD;
@@ -90,13 +96,17 @@ public class TestDatabaseChaseInstance {
 		String username = "root";
 		/** The password. */
 		String password ="root";
-		SQLStatementBuilder builder = new MySQLStatementBuilder();
-		this.chaseState = new DatabaseChaseInstance(new ArrayList<Atom>(), driver, url, database, username, password, builder, this.schema);
-		this.chaseState.initialize();
+				
+		this.chaseState = new DatabaseChaseInstance(new ArrayList<Atom>(),new DatabaseConnection(new ReasoningParameters(), this.schema));
+	}
+	
+	@After
+	public void tearDown() throws Exception {
+		this.chaseState.close();
 	}
 	
 	@Test 
-	public void test_getMatches1() {
+	public void test_getMatches1() {	
 		Atom f20 = new Atom(this.rel1, 
 				Lists.newArrayList(new Skolem("k1"), new Skolem("c"),new Skolem("c1")));
 

@@ -1,5 +1,6 @@
 package uk.ac.ox.cs.pdq.planner.dag.explorer;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -10,6 +11,8 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import uk.ac.ox.cs.pdq.algebra.RelationalOperator;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
+import uk.ac.ox.cs.pdq.db.DatabaseConnection;
+import uk.ac.ox.cs.pdq.db.ReasoningParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
@@ -62,7 +65,7 @@ public abstract class DAGExplorer extends Explorer<DAGPlan> {
 	protected final Chaser chaser;
 
 	/**  Detects homomorphisms during chasing*. */
-	protected final ChaseInstance detector;
+	DatabaseConnection connection;
 
 	/**  Estimates the cost of a plan *. */
 	protected final CostEstimator<DAGPlan> costEstimator;
@@ -71,7 +74,9 @@ public abstract class DAGExplorer extends Explorer<DAGPlan> {
 	protected DAGChaseConfiguration bestConfiguration = null;
 
 	/** The parameters. */
-	protected final PlannerParameters parameters; 
+	protected final PlannerParameters parameters;
+
+	private ReasoningParameters reasoningParams; 
 
 	/**
 	 * Instantiates a new DAG explorer.
@@ -86,16 +91,18 @@ public abstract class DAGExplorer extends Explorer<DAGPlan> {
 	 * @param chaser 		Saturates configurations using the chase algorithm
 	 * @param detector 		Detects homomorphisms during chasing
 	 * @param costEstimator 		Estimates the cost of a plan
+	 * @param reasoningParameters 
 	 */
 	public DAGExplorer(EventBus eventBus, 
 			boolean collectStats, 
 			PlannerParameters parameters,
+			ReasoningParameters reasoningParameters,
 			ConjunctiveQuery query, 
 			ConjunctiveQuery accessibleQuery,
 			Schema schema,
 			AccessibleSchema accessibleSchema, 
 			Chaser chaser, 
-			ChaseInstance detector,
+			DatabaseConnection dbConn,
 			CostEstimator<DAGPlan> costEstimator) {
 		super(eventBus, collectStats);
 		Preconditions.checkArgument(parameters != null);
@@ -104,7 +111,7 @@ public abstract class DAGExplorer extends Explorer<DAGPlan> {
 		Preconditions.checkArgument(schema != null);
 		Preconditions.checkArgument(accessibleSchema != null);
 		Preconditions.checkArgument(chaser != null);
-		Preconditions.checkArgument(detector != null);
+		Preconditions.checkArgument(dbConn != null);
 		Preconditions.checkArgument(costEstimator != null);
 		
 		this.parameters = parameters;
@@ -113,8 +120,9 @@ public abstract class DAGExplorer extends Explorer<DAGPlan> {
 		this.schema = schema;
 		this.accessibleSchema = accessibleSchema;
 		this.chaser = chaser;
-		this.detector = detector;
+		this.connection = dbConn;
 		this.costEstimator = costEstimator;
+		this.reasoningParams = reasoningParameters;
 	}
 
 	/**
@@ -180,9 +188,8 @@ public abstract class DAGExplorer extends Explorer<DAGPlan> {
 	 * @throws SQLException 
 	 */
 	protected List<DAGChaseConfiguration> createInitialConfigurations() throws PlannerException, SQLException {
-		AccessibleChaseState state = null;
-		state = (uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState) 
-				new AccessibleDatabaseListState(this.query, this.schema, (DatabaseChaseInstance) this.detector, false);
+		AccessibleDatabaseListState state = null;
+		state = new AccessibleDatabaseListState(this.reasoningParams, this.query, this.schema, this.connection, false);
 		this.chaser.reasonUntilTermination(state, this.schema.getDependencies());
 
 		List<DAGChaseConfiguration> collection = new ArrayList<>();
@@ -202,7 +209,7 @@ public abstract class DAGExplorer extends Explorer<DAGPlan> {
 			}
 			for (Collection<Atom> binding:bindings) {
 				AccessibleChaseState newState = (uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState) 
-						new AccessibleDatabaseListState(binding, (DatabaseChaseInstance) this.detector, false);
+						new AccessibleDatabaseListState(this.reasoningParams, binding, this.connection, false);
 				applyRule = new ApplyRule(
 						newState,
 						pair.getLeft(),
