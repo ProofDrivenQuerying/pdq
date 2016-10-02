@@ -14,7 +14,7 @@ import com.google.common.base.Preconditions;
 
 // TODO: Auto-generated Javadoc
 /**
- * Instances of binary DAG configurations.
+ * Configurations represent a place in the search space for plans and proofs. In the DAG world these are built up inductively, and binary configurations are the main inductive constructor. Instances of binary DAG configurations.
  * They are of the form Binary(x,y), where x and y can be either binary of unary DAG configurations. 
  * Binary(x,y) has input I1 \cup (I2-O1) and output O1 \cup O2, and output facts all facts that are consequences of
  * the union of the facts in x and y under the copy of the integrity constraints on the InfAcc relations. 

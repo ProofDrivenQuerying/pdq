@@ -49,23 +49,23 @@ public class ExplorationSetUp {
 	/**  Input parameters. */
 	private CostParameters costParams;
 	
-	/** The reasoning params. */
+	/**  */
 	private ReasoningParameters reasoningParams;
 
-	/**  Event bus. */
+	/**   */
 	private EventBus eventBus = new EventBus();
 
 	/**  Statistics collector. */
 	private ChainedStatistics statsLogger;
 
-	/**  The schema. */
+	/**   */
 	private Schema schema;
 
 
 	/** The external cost estimator. */
 	private CostEstimator<?> externalCostEstimator = null;
 
-	/** The accessible schema. */
+	/** The auxiliary schema, including axioms capturing access methods  */
 	private AccessibleSchema accessibleSchema;
 	
 	/**

@@ -22,7 +22,7 @@ public class PlannerParameters extends Parameters {
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -8077300774514524509L;
 
-	/** The log. */
+	/** */
 	private static Logger log = Logger.getLogger(PlannerParameters.class);
 
 	/**  Properties file name. */

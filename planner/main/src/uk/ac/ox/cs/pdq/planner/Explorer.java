@@ -20,10 +20,10 @@ import com.google.common.eventbus.EventBus;
  */
 public abstract class Explorer<P extends Plan> {
 
-	/** The log. */
+	/**  */
 	protected static Logger log = Logger.getLogger(Explorer.class);
 
-	/**  The best plan. */
+	/**  The best plan found this far. */
 	protected P bestPlan = null;
 	
 	/**  If true then the explorer must terminate immediately. */
