@@ -155,7 +155,7 @@ public class ExplorationSetUp {
 	}
 	
 	/**
-	 * Search a best plan for the given schema and query.
+	 * Search for a best plan for the given schema and query.
 	 *
 	 * @param <S> the generic type
 	 * @param <P> the generic type
@@ -289,7 +289,7 @@ public class ExplorationSetUp {
 	}
 
 	/**
-	 * Gets the schema.
+	 * 
 	 *
 	 * @return the planner's underlying schema
 	 */
@@ -298,7 +298,7 @@ public class ExplorationSetUp {
 	}
 
 	/**
-	 * Performs a search as in search, and returns not only the best plan found
+	 * Performs a search, and returns not only the best plan found
 	 * but also the search node in which it is was found. The returned search
 	 * node may be used later as parameters to the resumeSearch method.
 	 *

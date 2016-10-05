@@ -30,7 +30,7 @@ import com.google.common.eventbus.EventBus;
 
 // TODO: Auto-generated Javadoc
 /**
- * Chase friendly dag explorer. The exploration proceeds similarly to the GenericExplorer.
+ * The exploration proceeds similarly to the GenericExplorer.
  * First, it checks whether or not the configurations
  * to be composed could lead to the optimal solution prior to creating the corresponding binary configuration.
  * If yes, then it creates a new binary configuration which is only further considered

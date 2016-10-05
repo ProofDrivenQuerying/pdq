@@ -33,7 +33,7 @@ import com.google.common.eventbus.EventBus;
 
 // TODO: Auto-generated Javadoc
 /**
- * Very chase friendly dynamic programming dag explorer. It performs parallel chasing and
+ * An explorer for plans using ideas from dynamic programming. It performs parallel chasing and
  * (success-)dominance, equivalence and success checks in parallel
  * @author Efthymia Tsamoura
  *

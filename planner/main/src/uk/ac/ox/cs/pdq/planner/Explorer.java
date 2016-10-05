@@ -171,7 +171,6 @@ public abstract class Explorer<P extends Plan> {
 	}
 
 	/**
-	 * Gets the rounds.
 	 *
 	 * @return int
 	 */
