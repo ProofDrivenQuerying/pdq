@@ -62,8 +62,6 @@ import com.google.common.eventbus.EventBus;
 /**
  * Searches the proof space employing several optimisations heuristics
  * in order to reach faster the best plan.
- * For more information see
- * "Michael Benedikt, Balder ten Cate, Efthymia Tsamoura. Generating Low-cost Plans From Proofs"
  *
  * @author Efthymia Tsamoura
  *
