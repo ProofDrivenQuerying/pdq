@@ -2,6 +2,7 @@ package uk.ac.ox.cs.pdq.db;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -451,6 +452,24 @@ public class DatabaseInstance implements Instance {
 	public Collection<Atom> getFacts() {
 		// TODO How to return the facts? Query The database?
 		throw new RuntimeException("getFacts() is unimplemented in DatabaseInstance.java");
+	}
+	//used for debugging purposes
+	public LinkedHashSet<String> getAllFactsFromDB() throws SQLException {
+		LinkedHashSet<String> results = new LinkedHashSet<String>();
+		Statement sqlStatement = this.connections.get(0).createStatement();
+		for(String query:this.builder.createGetAllTuplesStatement(this.relationNamesToRelationObjects))
+		{
+			try {
+				ResultSet resultSet = sqlStatement.executeQuery(query);
+				while (resultSet.next()) {
+					int f = 1;
+					results.add(resultSet.getString(f));
+				}
+			} catch (SQLException e) {
+				throw new RuntimeException(e);
+			}
+		}
+		return results;
 	}
 
 	//@Override

@@ -92,6 +92,19 @@ public abstract class SQLStatementBuilder {
 		log.trace(result);
 		return result;
 	}
+	
+	
+	//used for debugging purposes
+	public Collection<String> createGetAllTuplesStatement(Map<String, DatabaseRelation> toDatabaseTables) {
+		Collection<String> result = new LinkedList<>();
+		for (String key:toDatabaseTables.keySet()) {
+			DatabaseRelation relation = toDatabaseTables.get(key);
+			String selectAll = "SELECT * FROM " + relation.getName();
+			result.add(selectAll);
+		}
+		log.trace(result);
+		return result;
+	}
 
 	public abstract String createBulkInsertStatement(Predicate predicate, Collection<? extends Atom> facts, Map<String, DatabaseRelation> toDatabaseTables);
 

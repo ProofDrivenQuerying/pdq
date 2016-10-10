@@ -28,7 +28,7 @@ import uk.ac.ox.cs.pdq.io.xml.QNames;
  * @author george
  *
  */
-public class DatabaseConnection {
+public class DatabaseConnection implements AutoCloseable{
 	public final int synchronousThreadsNumber = 1;
 
 	private boolean isInitialized = false;
@@ -176,8 +176,9 @@ public class DatabaseConnection {
 	 * Cleans up the database.
 	 *
 	 * @throws HomomorphismException the homomorphism exception
+	 * @throws SQLException 
 	 */
-	protected void dropDatabase() throws HomomorphismException {
+	protected void dropDatabase() throws HomomorphismException, SQLException {
 		try {
 			Statement sqlStatement = this.synchronousConnections.get(0).createStatement();
 			//Statement sqlStatement = this.synchronousConnections.createStatement();
@@ -194,7 +195,7 @@ public class DatabaseConnection {
 	 * (non-Javadoc)
 	 * @see java.lang.AutoCloseable#close()
 	 */
-//	@Override
+	@Override
 	public void close() throws Exception {
 		this.dropDatabase();
 		for(Connection con:this.synchronousConnections) {

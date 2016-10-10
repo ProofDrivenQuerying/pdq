@@ -417,7 +417,7 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 		constantsToAtoms.putAll(((AccessibleDatabaseListState)s).getConstantsToAtoms());
 
 		try {
-			return new AccessibleDatabaseListState(
+			AccessibleDatabaseListState ret = new AccessibleDatabaseListState(
 					facts, 
 					this.getFiringGraph() == null ? null : this.getFiringGraph().merge(((AccessibleDatabaseListState)s).getFiringGraph()),
 					classes,
@@ -427,6 +427,8 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 					signatureGroups, 
 					accessibleTerms,
 					this.getDatabaseConnection());
+			ret.addFacts(facts);
+			return ret;
 		} catch (SQLException e) {
 				throw new RuntimeException("Merging of AccessibleDatabaseListState failed due to an SQL exception "+e);
 			}

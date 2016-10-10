@@ -153,7 +153,6 @@ public class DAGOptimized extends DAGExplorer {
 		} else if (this.depth > 1) {
 			this.checkLimitReached();
 			//Perform parallel chasing
-			System.out.println("here");
 			Collection<DAGChaseConfiguration> configurations =
 					this.reasoningThreads.reason(this.depth,
 							this.left,

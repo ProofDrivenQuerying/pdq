@@ -31,7 +31,6 @@ public abstract class ParameterizedTest {
 	 */
 	@Before 
 	public void setup() {
-		System.out.println("here");
 		Utility.assertsEnabled();
 	}
 	

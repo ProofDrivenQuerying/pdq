@@ -576,11 +576,11 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 	}
 	public void setDatabaseConnection(DatabaseConnection connection) {
 		this.databaseConnection = connection;
-		this.connections = databaseConnection.getSynchronousConnections();
-		this.builder = databaseConnection.getSQLStatementBuilder();
-		this.relationNamesToRelationObjects = databaseConnection.getRelationNamesToRelationObjects();
-		this.synchronousThreadsNumber = databaseConnection.synchronousThreadsNumber;
-		this.constants = databaseConnection.getSchema().getConstants();
+		this.connections = connection.getSynchronousConnections();
+		this.builder = connection.getSQLStatementBuilder();
+		this.relationNamesToRelationObjects = connection.getRelationNamesToRelationObjects();
+		this.synchronousThreadsNumber = connection.synchronousThreadsNumber;
+		this.constants = connection.getSchema().getConstants();
 	}
 
 }
