@@ -251,6 +251,8 @@ public class ReasoningThread implements Callable<Boolean> {
 			representative = this.representatives.getRepresentative(this.equivalenceClasses, right, left);
 		}
 		
+		((DatabaseChaseInstance)left.getState()).setDatabaseConnection(this.connection);
+		
 		//If the representative is null or we do not use templates or we cannot find a template configuration that
 		//consists of the corresponding ApplyRules, then create a binary configuration from scratch by fully chasing its state
 		if(representative == null) {
@@ -258,10 +260,10 @@ public class ReasoningThread implements Callable<Boolean> {
 					left,
 					right
 					);
-					
+		
 			if(configuration.getState() instanceof DatabaseChaseInstance) {
 				((DatabaseChaseInstance)configuration.getState()).setDatabaseConnection(this.connection);
-			}
+			}	
 			this.chaser.reasonUntilTermination(configuration.getState(), this.dependencies);
 			this.representatives.put(this.equivalenceClasses, left, right, configuration);
 

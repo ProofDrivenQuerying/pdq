@@ -109,9 +109,6 @@ public class ExplorationThread implements Callable<DAGChaseConfiguration> {
 		DAGChaseConfiguration configuration;
 		//Poll the next configuration
 		while((configuration = this.input.poll()) != null) {			
-			if(configuration.getState() instanceof DatabaseChaseInstance) {
-				((DatabaseChaseInstance)configuration.getState()).setDatabaseConnection(this.databaseConnection);
-			}
 			//If the configuration is not dominated
 			DAGChaseConfiguration dominator = this.equivalenceClasses.dominate(this.dominance, configuration);
 			if (dominator != null
