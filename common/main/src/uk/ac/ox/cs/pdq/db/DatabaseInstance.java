@@ -84,8 +84,7 @@ public class DatabaseInstance implements Instance {
 	
 	protected ReasoningParameters resParams;
 
-	/** TOCOMMENT */
-	private Set<String> constraintIndices =  new LinkedHashSet<String>();
+	private Set<String> existingIndices =  new LinkedHashSet<String>();
 
 	/** Statemenets that drop the query indices. */
 	Set<String> dropQueryIndexStatements = Sets.newLinkedHashSet();
@@ -114,71 +113,6 @@ public class DatabaseInstance implements Instance {
 		constants = databaseConnection.getSchema().getConstants();
 		this.databaseConnection = databaseConnection;
 	}
-
-//	public DatabaseInstance(
-//			ReasoningParameters resParams,
-//			Schema schema,
-//			SQLStatementBuilder builder,
-//			List<Connection> connections
-//			) throws SQLException {
-//		this.schema = schema;
-//		this.driver = resParams.databaseDriver;
-//		this.url = resParams.connectionUrl;
-//		this.username = resParams.databaseUser;
-//		this.password = resParams.databasePassword;
-//		this.database = resParams.databasePassword;
-//		this.builder = builder;
-//		this.constraints = Sets.newLinkedHashSet();
-//		for (Dependency<?,?> dependency: schema.getDependencies()) {
-//			this.constraints.add(dependency);
-//		}
-//		this.constants = schema.getConstants();
-//		this.relations = Lists.newArrayList(schema.getRelations());
-//		this.RelationNamesToRelationObjects = new LinkedHashMap<>();
-//		this.resParams = resParams;
-//
-//		this.synchronousConnections = connections;
-//	}
-//	
-//	protected DatabaseInstance(
-//			ReasoningParameters resParams,
-//			Schema schema,
-//			SQLStatementBuilder builder,
-//			List<Relation> relations,
-//			Map<String, TypedConstant<?>> constants,
-//			Map<String, DatabaseRelation> toDatabaseRelations,
-//			Set<Evaluatable> constraints, List<Connection> connections) throws SQLException {
-//		this.schema = schema;
-//		this.driver = resParams.databaseDriver;
-//		this.url = resParams.connectionUrl;
-//		this.username = resParams.databaseUser;
-//		this.password = resParams.databasePassword;
-//		this.database = resParams.databasePassword;
-//		this.builder = builder;
-//		this.RelationNamesToRelationObjects = toDatabaseRelations;
-//		this.constraints = constraints;
-//		this.constants = constants;
-//		this.relations = relations;
-//		this.resParams = resParams;
-//
-//		this.synchronousConnections = connections;
-//	}
-
-//	/**
-//	 * Initialize.
-//	 *
-//	 * @see uk.ac.ox.cs.pdq.db.homomorphism.homomorphism.HomomorphismManager#initialize()
-//	 */
-//	public void initialize() {
-//		if (!this.isInitialized) {
-//			this.setup();
-//			this.isInitialized = true;
-//		}
-//	}
-
-
-
-
 
 	/**
 	 * Gets the connection.
@@ -358,10 +292,9 @@ public class DatabaseInstance implements Instance {
 			return null;
 		}
 	}
-
 	public void addQuery(Query<?> query) {
 		if(!this.clearedLastQuery)
-			throw new RuntimeException("Method clearQuery should be called in order to clear previous query's tables from the database.");
+			throw new RuntimeException("Method clearQuery should have been called in order to clear previous query's tables from the database.");
 		this.clearedLastQuery = false;
 		try {
 			Statement sqlStatement = this.connections.get(0).createStatement();
@@ -369,7 +302,7 @@ public class DatabaseInstance implements Instance {
 			//Create statements that set up or drop the indices for the joins in the body of the input query
 			Set<String> joinIndexes = Sets.newLinkedHashSet();
 			Pair<Collection<String>, Collection<String>> dropAndCreateStms = 
-					this.builder.setupIndices(true, this.relationNamesToRelationObjects, query, this.constraintIndices);
+					this.builder.setupIndices(true, this.relationNamesToRelationObjects, query, this.existingIndices);
 			this.dropQueryIndexStatements.addAll(dropAndCreateStms.getRight());
 			joinIndexes.addAll(dropAndCreateStms.getLeft());
 			for (String b: joinIndexes) {

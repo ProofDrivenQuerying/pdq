@@ -180,12 +180,12 @@ public abstract class SQLStatementBuilder {
 	 * Creates the table index.
 	 *
 	 * @param isForQuery the is for query
-	 * @param constraintIndices the constraint indices
+	 * @param existingIndices
 	 * @param relation the relation
 	 * @param columns the columns
 	 * @return a SQL statement that creates an index for the columns of the input relation
 	 */
-	protected Pair<String,String> createTableIndices(boolean isForQuery, Set<String> constraintIndices, DatabaseRelation relation, Integer... columns) {
+	protected Pair<String,String> createTableIndices(Set<String> existingIndices, DatabaseRelation relation, Integer... columns) {
 		StringBuilder indexName = new StringBuilder();
 		StringBuilder indexColumns = new StringBuilder();
 		String sep1 = "", sep2 = "";
@@ -195,13 +195,13 @@ public abstract class SQLStatementBuilder {
 			sep1 = "_";
 			sep2 = ",";
 		}
-		//if the index is created for the query
-		if(isForQuery) {
-			//and is not already existing due to the constraints
-			if(constraintIndices.contains(relation.getName() + "_" + indexName))
-				return new ImmutablePair<String, String>(null,null);
-		}else{
-			constraintIndices.add(relation.getName() + "_" + indexName );
+		//if the index is not already existing due to the constraints
+		if(existingIndices.contains(relation.getName() + "_" + indexName))
+		{	
+			return null;
+		}
+		else{
+			existingIndices.add(relation.getName() + "_" + indexName );
 		}
 		String create = this.createColumnIndexStatement(relation,indexName,indexColumns);		
 		String drop =  this.createDropIndexStatement(relation,indexName,indexColumns);
@@ -298,11 +298,13 @@ public abstract class SQLStatementBuilder {
 				for (Atom atom: atoms) {
 					for (int i = 0, l = atom.getTermsCount(); i < l; i++) {
 						if (atom.getTerm(i).equals(t)) {
-							Pair<String,String> createAndDropIndices = this.createTableIndices(isForQuery, constraintIndices, toDatabaseRelations.get(atom.getName()), i);
-							if(createAndDropIndices.getLeft() != null)
+							Pair<String,String> createAndDropIndices = this.createTableIndices(constraintIndices, toDatabaseRelations.get(atom.getName()), i);
+							if(createAndDropIndices != null)
+							{	
 								createIndices.add(createAndDropIndices.getLeft());
-							if(isForQuery && createAndDropIndices.getRight()!=null)
-								dropIndices.add(createAndDropIndices.getRight());
+								if(isForQuery)
+									dropIndices.add(createAndDropIndices.getRight());
+							}
 						}
 					}
 				}

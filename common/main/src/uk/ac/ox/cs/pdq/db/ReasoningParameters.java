@@ -65,14 +65,14 @@ public class ReasoningParameters extends Parameters {
 		this(config, false, false);
 	}
 
-	/**
-	 * Constructor for PlannerParameters.
-	 * @param config path to the configuration file to read
-	 * @param verbose if true, param loading problem will be reported
-	 */
-	public ReasoningParameters(File config, boolean verbose) {
-		this(config, false, verbose, false);
-	}
+//	/**
+//	 * Constructor for PlannerParameters.
+//	 * @param config path to the configuration file to read
+//	 * @param verbose if true, param loading problem will be reported
+//	 */
+//	public ReasoningParameters(File config, boolean verbose) {
+//		this(config, false, verbose, false);
+//	}
 
 	/**
 	 * Constructor for PlannerParameters.
