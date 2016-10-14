@@ -20,10 +20,10 @@ import com.google.common.collect.Sets;
 // TODO: Auto-generated Javadoc
 /**
  *
- * Black box cost propagator. According to this propagation paradigm, each node keeps all the paths-to-success. 
+ * Black box cost propagator. When a node has been updated, this class propogates information about search nodes in the search space, their plans and associated costs.
+ * According to this propagation paradigm, each node keeps all the paths-to-success. 
  * The nodes of the input plan tree must be of BlackBoxNode type; otherwise, a runtime exception is thrown.
- * For more information about this type of propagation see
- * "Michael Benedikt, Balder ten Cate, Efthymia Tsamoura. Generating Low-cost Plans From Proofs"
+ *  
  *
  *
  * @author Efthymia Tsamoura
@@ -31,7 +31,7 @@ import com.google.common.collect.Sets;
  */
 public class BlackBoxPropagator extends CostPropagator<BlackBoxNode> {
 
-	/** The updated. */
+	/**  the nodes that have been already updated */
 	private Set<BlackBoxNode> updated = Sets.newHashSet();
 
 	/**

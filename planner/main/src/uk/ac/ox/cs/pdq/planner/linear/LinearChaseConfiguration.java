@@ -234,7 +234,7 @@ public class LinearChaseConfiguration extends ChaseConfiguration<LeftDeepPlan> i
 	}
 
 	/**
-	 * Equals.
+	 * 
 	 *
 	 * @param o Object
 	 * @return boolean

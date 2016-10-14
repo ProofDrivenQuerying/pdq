@@ -18,7 +18,8 @@ import com.google.common.collect.Lists;
 // TODO: Auto-generated Javadoc
 /**
  *
- * Simple cost propagator. According to this propagation paradigm, 
+ * Simple cost propagator. This propagates information through the search space when a node has been updated; information
+ * concerning the plans, successful plans, best plan etc. According to this propagation paradigm, 
  * each node keeps at most one path-to-success (the one that corresponds to the minimum cost sub-plan).
  * The nodes of the input plan tree must be of SimpleNode type; otherwise,
  * a runtime exception is thrown. For more information about this type of

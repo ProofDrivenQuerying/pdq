@@ -38,8 +38,6 @@ import com.google.common.eventbus.EventBus;
 // TODO: Auto-generated Javadoc
 /**
  * Exhaustively searches the proof space
- * For more information see
- * "Michael Benedikt, Balder ten Cate, Efthymia Tsamoura. Generating Low-cost Plans From Proofs"
  *
  * @author Efthymia Tsamoura
  */

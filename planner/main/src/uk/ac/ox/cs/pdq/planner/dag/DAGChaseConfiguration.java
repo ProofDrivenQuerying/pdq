@@ -13,8 +13,13 @@ import com.google.common.base.Preconditions;
 
 // TODO: Auto-generated Javadoc
 /**
- * Type of configurations met in the DAG world that use the chase as a proof system. 
- * DAG configurations are built up compositionally and can be either unary or binary.
+ *  Configurations represent a partial proof and also a corresponding plan
+ *  In the DAG planner they are proofs that may have hypotheses, corresponding to
+ *  ``open plans'' that have paramters.  
+ * DAG configurations are built up inductively. The base case (unary configuratinos)
+ * correspond to firing an accessibility axiom (hence ``applyrule'') at the proof level, 
+ * and to  single access at the plan level. The inductive step (binary configurations)
+ * corresponds to composing proofs at the proof level, and to dependent join of plans at the plan level
  * 
  * @author Efthymia Tsamoura
  *
