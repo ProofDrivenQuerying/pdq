@@ -266,10 +266,10 @@ public abstract class SQLStatementBuilder {
 	 * @param isForQuery the is for query
 	 * @param toDatabaseRelations the relation map
 	 * @param rule the rule
-	 * @param constraintIndices the constraint indices
+	 * @param existingIndices the constraint indices
 	 * @return the pair
 	 */
-	public Pair<Collection<String>,Collection<String>> setupIndices(boolean isForQuery, Map<String, DatabaseRelation> toDatabaseRelations, Evaluatable rule, Set<String> constraintIndices) {
+	public Pair<Collection<String>,Collection<String>> setupIndices(boolean isForQuery, Map<String, DatabaseRelation> toDatabaseRelations, Evaluatable rule, Set<String> existingIndices) {
 		Conjunction<?> body = null;
 		if (rule.getBody() instanceof Atom) {
 			body = Conjunction.of((Atom) rule.getBody());
@@ -298,7 +298,7 @@ public abstract class SQLStatementBuilder {
 				for (Atom atom: atoms) {
 					for (int i = 0, l = atom.getTermsCount(); i < l; i++) {
 						if (atom.getTerm(i).equals(t)) {
-							Pair<String,String> createAndDropIndices = this.createTableIndices(constraintIndices, toDatabaseRelations.get(atom.getName()), i);
+							Pair<String,String> createAndDropIndices = this.createTableIndices(existingIndices, toDatabaseRelations.get(atom.getName()), i);
 							if(createAndDropIndices != null)
 							{	
 								createIndices.add(createAndDropIndices.getLeft());

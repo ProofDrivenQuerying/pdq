@@ -48,6 +48,7 @@ import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
+import uk.ac.ox.cs.pdq.io.xml.QNames;
 import uk.ac.ox.cs.pdq.reasoning.utility.EqualConstantsClass;
 import uk.ac.ox.cs.pdq.reasoning.utility.EqualConstantsClasses;
 
@@ -165,10 +166,15 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 	
 		Statement sqlStatement = this.getDatabaseConnection().getSynchronousConnections().get(0).createStatement();
 
+		this.relationNamesToRelationObjects.put(QNames.EQUALITY.toString(), DatabaseRelation.DatabaseEqualityRelation);
+		sqlStatement.addBatch(this.getDatabaseConnection().getBuilder().createTableStatement(DatabaseRelation.DatabaseEqualityRelation));
+		sqlStatement.addBatch(this.getDatabaseConnection().getBuilder().createColumnIndexStatement(DatabaseRelation.DatabaseEqualityRelation, DatabaseRelation.Fact));
+
+		
 		//Create indices for the joins in the body of the dependencies
 		Set<String> joinIndexes = Sets.newLinkedHashSet();
 		for (Evaluatable constraint:schema.getDependencies()) {
-			joinIndexes.addAll(this.getDatabaseConnection().getBuilder().setupIndices(false, this.relationNamesToRelationObjects, constraint, this.getDatabaseConnection().getConstraintIndices()).getLeft());
+			joinIndexes.addAll(this.getDatabaseConnection().getBuilder().setupIndices(false, this.relationNamesToRelationObjects, constraint, this.existingIndices).getLeft());
 		}
 		for (String b: joinIndexes) {
 			sqlStatement.addBatch(b);
@@ -448,14 +454,10 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 				constantsToAtoms, this.getDatabaseConnection());
 	}
 
-	/**
-	 * Calls the chaseState to detect homomorphisms of the input query to facts in this state.
-	 * The chaseState detects homomorphisms using a database backend.
-	 * @param query Query
-	 * @return List<Match>
-	 * @see uk.ac.ox.cs.pdq.ChaseInstance.state.ChaseState#getTriggers(Query)
+	/*
+	 * (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance#getMatches(uk.ac.ox.cs.pdq.fol.ConjunctiveQuery, uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance.LimitTofacts)
 	 */
-	//@Override
 	public List<Match> getMatches(ConjunctiveQuery query, LimitTofacts l) {
 			
 			HomomorphismProperty[] properties = new HomomorphismProperty[2];
@@ -484,16 +486,10 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 
 
 
-	/**
-	 * Calls the chaseState to detect homomorphisms of the input dependencies to facts in this state.
-	 * The chaseState detects homomorphisms using a database backend.
-	 * @param <Q>
-	 * @param dependencies Collection<D>
-	 * @param constraints HomomorphismConstraint...
-	 * @return Map<D,List<Match>>
-	 * @see uk.ac.ox.cs.pdq.chase.state.ChaseState#getHomomorphisms(Collection<D>)
+	/*
+	 * (non-Javadoc)
+	 * @see uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance#getTriggers(java.util.Collection, uk.ac.ox.cs.pdq.db.homomorphism.TriggerProperty, uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance.LimitTofacts)
 	 */
-	@Override
 	public List<Match>getTriggers(Collection<? extends Dependency> dependencies,TriggerProperty t, LimitTofacts limitToFacts) {
 		
 		
@@ -530,13 +526,9 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 	}
 	
 	/**
-	 * Convert.
-	 *
-	 * @param <Q> the generic type
-	 * @param source 		An input formula
-	 * @param toDatabaseTables 		Map of schema relation names to *clean* names
-	 * @param constraints 		A set of constraints that should be satisfied by the homomorphisms of the input formula to the facts of the database 
-	 * @return 		a formula that uses the input *clean* names
+	 * Adds fact id column to all relations, extending their arity.
+	 * @param source
+	 * @return
 	 */
 	private <Q extends Evaluatable> Q convert(Q source) {
 		if(source instanceof TGD) {

@@ -45,13 +45,14 @@ import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.fol.Variable;
 /**
  * 
+ * A database instance is a set of facts stored in an RDBMS. 
+ * This objects provides basic functionalities, for storing, indexing querying and deleting a database instance.
  * @author George K
  *
  */
 public class DatabaseInstance implements Instance {
 
 
-	/** Logger. */
 	private static Logger log = Logger.getLogger(DatabaseInstance.class);
 
 	/** The schema relations */
@@ -68,12 +69,7 @@ public class DatabaseInstance implements Instance {
 	protected final static int insertCacheSize = 1000; 
 
 
-	/** The is initialized. */
-	protected boolean isInitialized = false;
-
-	//TODO Cleanup the following variables
-	//------------------------------------------------------//
-	/** The current query. */
+	/** A datqabase instance can be associated to a current query, for the join positions of which, indices are created.. */
 	Evaluatable currentQuery = null;
 
 	/** True if previous query indices were cleared. */
@@ -81,7 +77,7 @@ public class DatabaseInstance implements Instance {
 	
 	protected ReasoningParameters resParams;
 
-	private Set<String> existingIndices =  new LinkedHashSet<String>();
+	protected Set<String> existingIndices =  new LinkedHashSet<String>();
 
 	/** Statemenets that drop the query indices. */
 	Set<String> dropQueryIndexStatements = Sets.newLinkedHashSet();
@@ -154,17 +150,6 @@ public class DatabaseInstance implements Instance {
 		Connection result = DriverManager.getConnection(url, username, password);
 		result.setAutoCommit(true);
 		return result;
-	}
-
-
-	/**
-	 * The Enum HomomorphismDetectorTypes.
-	 */
-	public static enum HomomorphismDetectorTypes {
-
-		/** The database. */
-		@EnumParameterValue(description = "Homomorphism detection relying on an internal relational database")
-		DATABASE;
 	}
 
 	@Override
@@ -282,7 +267,6 @@ public class DatabaseInstance implements Instance {
 			DatabaseConnection dbconn= new DatabaseConnection(resParams, schema);
 			DatabaseInstance clone = new DatabaseInstance(dbconn);
 			clone.resParams = this.resParams;
-			clone.isInitialized = this.isInitialized;
 			return clone;
 		} catch (SQLException e) {
 			log.error(e.getMessage(),e);
@@ -333,11 +317,14 @@ public class DatabaseInstance implements Instance {
 	}
 
 	/**
-	 * TOCOMMENT: 
-	 * @param queries
-	 * @return
+	 * 
+	 * @param queries A queue of triples, representing a query.bEach triple holds, 
+	 * - the query or the constraint we want to detect homomorphisms for
+	 * - the SQL query expression we will execute over the database
+	 * - a map of projected variables
+	 * @return matches of the queries
 	 */
-	public <Q extends Evaluatable>  List<Match> answerQueries(Queue<Triple<Q, String, LinkedHashMap<String, Variable>>> queries) {
+	protected <Q extends Evaluatable>  List<Match> answerQueries(Queue<Triple<Q, String, LinkedHashMap<String, Variable>>> queries) {
 
 		List<Match> result = new LinkedList<>();
 

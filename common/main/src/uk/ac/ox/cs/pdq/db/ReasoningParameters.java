@@ -124,10 +124,6 @@ public class ReasoningParameters extends Parameters {
 	@Parameter(description="Type of reasoning to use.", defaultValue="RESTRICTED_CHASE")
 	protected ReasoningTypes reasoningType = ReasoningTypes.RESTRICTED_CHASE;
 
-	/** The homomorphism detector type. */
-	@Parameter(description = "Type of the homomorphism detected infrastructure")
-	protected DatabaseInstance.HomomorphismDetectorTypes homomorphismDetectorType;
-	
 	/** The termination k. */
 	@Parameter(description = "Number of rounds of rule firings to perform, in "
 			+ "a single application of the chase. "
@@ -267,41 +263,6 @@ public class ReasoningParameters extends Parameters {
 		} catch (IllegalArgumentException e) {
 			log.warn("Setting reasoning type to " + null, e);
 			this.reasoningType = null;
-		}
-	}
-
-	/**
-	 * Gets the homomorphism detector type.
-	 *
-	 * @return HomomorphismDetectorTypes
-	 */
-	public DatabaseInstance.HomomorphismDetectorTypes getHomomorphismDetectorType() {
-		if (this.homomorphismDetectorType == null) {
-			return DatabaseInstance.HomomorphismDetectorTypes.DATABASE;
-		}
-		return this.homomorphismDetectorType;
-	}
-
-	/**
-	 * Sets the homomorphism detector type.
-	 *
-	 * @param type HomomorphismDetectorTypes
-	 */
-	public void setHomomorphismDetectorType(DatabaseInstance.HomomorphismDetectorTypes type) {
-		this.homomorphismDetectorType = type;
-	}
-
-	/**
-	 * Sets the homomorphism detector type.
-	 *
-	 * @param type String
-	 */
-	public void setHomomorphismDetectorType(String type) {
-		try {
-			this.homomorphismDetectorType = DatabaseInstance.HomomorphismDetectorTypes.valueOf(type);
-		} catch (IllegalArgumentException e) {
-			log.warn("Setting homomorphism checker type to " + DatabaseInstance.HomomorphismDetectorTypes.DATABASE, e);
-			this.homomorphismDetectorType = DatabaseInstance.HomomorphismDetectorTypes.DATABASE;
 		}
 	}
 	
