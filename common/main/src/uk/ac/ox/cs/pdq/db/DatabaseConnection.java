@@ -46,7 +46,7 @@ public class DatabaseConnection implements AutoCloseable{
 	private SQLStatementBuilder builder = null;
 	
 	public SQLStatementBuilder getSQLStatementBuilder() {
-		return builder;
+		return getBuilder();
 	}
 
 	private ReasoningParameters resParams;
@@ -55,8 +55,6 @@ public class DatabaseConnection implements AutoCloseable{
 
 	private ArrayList<Relation> relations;
 
-	private Set<Evaluatable> constraints = null;
-	
 	private static Integer counter = 0;
 	
 	private Set<String> constraintIndices =  new LinkedHashSet<String>();
@@ -81,7 +79,7 @@ public class DatabaseConnection implements AutoCloseable{
 		
 		if (type != null && type == HomomorphismDetectorTypes.DATABASE) {
 			if (url != null && url.contains("mysql")) {
-				builder = new MySQLStatementBuilder();
+				setBuilder(new MySQLStatementBuilder());
 			} else {
 				if (Strings.isNullOrEmpty(driver)) {
 					driver = "org.apache.derby.jdbc.EmbeddedDriver";
@@ -97,14 +95,8 @@ public class DatabaseConnection implements AutoCloseable{
 					username = "APP_" + (counter++);
 				}
 				password = "";
-				builder = new DerbyStatementBuilder();
+				setBuilder(new DerbyStatementBuilder());
 			}
-			
-			this.constraints = Sets.newLinkedHashSet();
-			for (Dependency<?,?> dependency: schema.getDependencies()) {
-				this.constraints.add(dependency);
-			}
-			
 			
 			this.relations = Lists.newArrayList(schema.getRelations());
 			this.schema = schema;
@@ -137,14 +129,14 @@ public class DatabaseConnection implements AutoCloseable{
 	protected void setup() throws SQLException {
 			Statement sqlStatement = this.synchronousConnections.get(0).createStatement();
 
-			for (String sql: this.builder.createDatabaseStatements(database)) {
+			for (String sql: this.getBuilder().createDatabaseStatements(database)) {
 				sqlStatement.addBatch(sql);
 			}
 
 			//if(this.RelationNamesToRelationObjects.get(QNames.EQUALITY.toString()) == null)
 			this.relationNamesToRelationObjects.put(QNames.EQUALITY.toString(), DatabaseRelation.DatabaseEqualityRelation);
-			sqlStatement.addBatch(this.builder.createTableStatement(DatabaseRelation.DatabaseEqualityRelation));
-			sqlStatement.addBatch(this.builder.createColumnIndexStatement(DatabaseRelation.DatabaseEqualityRelation, DatabaseRelation.Fact));
+			sqlStatement.addBatch(this.getBuilder().createTableStatement(DatabaseRelation.DatabaseEqualityRelation));
+			sqlStatement.addBatch(this.getBuilder().createColumnIndexStatement(DatabaseRelation.DatabaseEqualityRelation, DatabaseRelation.Fact));
 
 			//Put relations into a set so as to make them unique
 			Set<Relation> relationset = new HashSet<Relation>();
@@ -156,17 +148,8 @@ public class DatabaseConnection implements AutoCloseable{
 			for (Relation relation:this.relations) {
 				DatabaseRelation dbRelation = DatabaseRelation.createDatabaseRelation(relation);
 				this.relationNamesToRelationObjects.put(relation.getName(), dbRelation);
-				sqlStatement.addBatch(this.builder.createTableStatement(dbRelation));
-				sqlStatement.addBatch(this.builder.createColumnIndexStatement(dbRelation, DatabaseRelation.Fact));
-			}
-
-			//Create indices for the joins in the body of the dependencies
-			Set<String> joinIndexes = Sets.newLinkedHashSet();
-			for (Evaluatable constraint:this.constraints) {
-				joinIndexes.addAll(this.builder.setupIndices(false, this.relationNamesToRelationObjects, constraint, this.constraintIndices).getLeft());
-			}
-			for (String b: joinIndexes) {
-				sqlStatement.addBatch(b);
+				sqlStatement.addBatch(this.getBuilder().createTableStatement(dbRelation));
+				sqlStatement.addBatch(this.getBuilder().createColumnIndexStatement(dbRelation, DatabaseRelation.Fact));
 			}
 
 			sqlStatement.executeBatch();
@@ -183,7 +166,7 @@ public class DatabaseConnection implements AutoCloseable{
 			Statement sqlStatement = this.synchronousConnections.get(0).createStatement();
 			//Statement sqlStatement = this.synchronousConnections.createStatement();
 
-			for (String sql: this.builder.createDropStatements(database)) {
+			for (String sql: this.getBuilder().createDropStatements(database)) {
 				sqlStatement.addBatch(sql);
 			}
 			sqlStatement.executeBatch();
@@ -217,4 +200,20 @@ public class DatabaseConnection implements AutoCloseable{
 	public Map<String, DatabaseRelation> getRelationNamesToRelationObjects() {
 		return relationNamesToRelationObjects;
 	}
+
+
+	public Set<String> getConstraintIndices() {
+		return constraintIndices;
+	}
+
+
+	public SQLStatementBuilder getBuilder() {
+		return builder;
+	}
+
+
+	public void setBuilder(SQLStatementBuilder builder) {
+		this.builder = builder;
+	}
+
 }

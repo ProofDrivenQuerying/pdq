@@ -57,9 +57,6 @@ public class DatabaseInstance implements Instance {
 	/** The schema relations */
 	protected List<Relation> relations = null;
 
-	/** The schema constraints */
-	protected Set<Evaluatable> constraints = null;
-
 	/**  Maps of the string representation of a constant to the constant. */
 	protected Map<String, TypedConstant<?>> constants = null;
 

@@ -2,6 +2,7 @@ package uk.ac.ox.cs.pdq.reasoning.chase.state;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -9,6 +10,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.apache.commons.lang3.tuple.Pair;
@@ -91,6 +93,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		this.addFacts(Sets.newHashSet(query.ground(ConjunctiveQuery.generateCanonicalMapping(query.getBody())).getAtoms()));
 		this.classes = new EqualConstantsClasses();
 		this.constantsToAtoms = inferConstantsMap(this.facts);
+		this.indexConstraints();
 	}
 
 	/**
@@ -105,6 +108,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		this.addFacts(facts);
 		this.classes = new EqualConstantsClasses();
 		this.constantsToAtoms = inferConstantsMap(this.facts);
+		this.indexConstraints();
 	}
 	
 	/**
@@ -155,6 +159,21 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		return constantsToAtoms;
 	}
 	
+	
+	public void indexConstraints() throws SQLException
+	{
+	
+		Statement sqlStatement = this.getDatabaseConnection().getSynchronousConnections().get(0).createStatement();
+
+		//Create indices for the joins in the body of the dependencies
+		Set<String> joinIndexes = Sets.newLinkedHashSet();
+		for (Evaluatable constraint:schema.getDependencies()) {
+			joinIndexes.addAll(this.getDatabaseConnection().getBuilder().setupIndices(false, this.relationNamesToRelationObjects, constraint, this.getDatabaseConnection().getConstraintIndices()).getLeft());
+		}
+		for (String b: joinIndexes) {
+			sqlStatement.addBatch(b);
+		}
+	}
 	/**
 	 * Updates that state given the input match. 
 	 *

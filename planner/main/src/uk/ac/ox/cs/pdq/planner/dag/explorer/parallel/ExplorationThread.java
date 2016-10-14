@@ -41,9 +41,6 @@ public class ExplorationThread implements Callable<DAGChaseConfiguration> {
 	/**  Performs domination checks*. */
 	private final Dominance[] dominance;
 
-	/**  Detects query matches. */
-	DatabaseConnection databaseConnection;
-	
 	/**  Input configurations. */
 	private final Queue<DAGChaseConfiguration> input;
 
@@ -77,18 +74,15 @@ public class ExplorationThread implements Callable<DAGChaseConfiguration> {
 			Queue<DAGChaseConfiguration> input,
 			DAGEquivalenceClasses equivalenceClasses,
 			DAGChaseConfiguration best,
-			DatabaseConnection connection,
 			SuccessDominance successDominance,
 			Dominance[] dominance,
 			Set<DAGChaseConfiguration> output,
 			Set<DAGChaseConfiguration> successfulConfigurations
 			) {	
 		Preconditions.checkNotNull(query);
-		Preconditions.checkNotNull(connection);
 	
 		this.best = best == null ? null : best.clone();
 		this.query = query;
-		this.databaseConnection = connection;
 		this.input = input;
 		this.equivalenceClasses = equivalenceClasses;
 		this.output = output;

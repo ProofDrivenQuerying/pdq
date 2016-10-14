@@ -206,7 +206,6 @@ public class MultiThreadedExecutor extends IterativeExecutor {
 						input,
 						equivalenceClasses,
 						bestConfiguration,
-						this.mtcontext.getConnections()[j],
 						this.mtcontext.getSuccessDominances()[j],
 						this.mtcontext.getDominances()[j],
 						output,
