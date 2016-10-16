@@ -126,7 +126,6 @@ public class AccessMethod implements Serializable {
 	}
 
 	/**
-	 * Gets the name.
 	 *
 	 * @return the  name of the method.
 	 */
@@ -166,7 +165,6 @@ public class AccessMethod implements Serializable {
 	}
 
 	/**
-	 * To string.
 	 *
 	 * @return String
 	 */

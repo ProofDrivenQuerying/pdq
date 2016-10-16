@@ -70,6 +70,7 @@ public abstract class HomomorphismProperty {
 	
 	/**
 	 * Property to impose non trivial EGDs 
+	 *  TOCOMMENT: ALL OF THIS DEPENEDENCY STUFF SHOULD NOT BE HERE IN DB
 	 */
 	public static class EGDHomomorphismProperty extends HomomorphismProperty {}
 	

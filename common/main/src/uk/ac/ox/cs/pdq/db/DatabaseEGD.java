@@ -23,6 +23,7 @@ import com.google.common.collect.Sets;
 
 /**
  * A dependency of the form \delta = \forall \vec{x} \rho(\vec{x}) --> x_i = x_j where \rho is a conjunction of atoms.
+ * WHAT THE ???? IS THE DIFFERENCE BETWEEN THIS AND EGD
  *
  * @author Efthymia Tsamoura
  */

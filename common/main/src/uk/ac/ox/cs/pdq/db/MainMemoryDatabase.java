@@ -22,6 +22,7 @@ import uk.ac.ox.cs.pdq.fol.Variable;
 
 public class MainMemoryDatabase {
 	
+//THIS WHOLE CLASS NEEDS TO CHANGE!!
 	protected Map<String, MainMemoryRelation> relations;
 		
 	public Map<String, MainMemoryRelation> getTables(){

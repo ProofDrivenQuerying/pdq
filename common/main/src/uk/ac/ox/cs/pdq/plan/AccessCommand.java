@@ -130,7 +130,7 @@ public class AccessCommand implements Command{
 	}
 
 	/**
-	 * Gets the relation.
+	 * Gets the relation being accessed
 	 *
 	 * @return the relation
 	 */
@@ -148,7 +148,7 @@ public class AccessCommand implements Command{
 	}
 
 	/**
-	 * Gets the static inputs.
+	 * Gets the inputs that are set to constants. TOCOMMENT: THIS SHOULD CHANGE SO THAT CONSTANTS ARE NTO TREATED SPECIALLY
 	 *
 	 * @return the static inputs
 	 */
@@ -166,7 +166,6 @@ public class AccessCommand implements Command{
 	}
 
 	/**
-	 * Equals.
 	 *
 	 * @param o Object
 	 * @return boolean

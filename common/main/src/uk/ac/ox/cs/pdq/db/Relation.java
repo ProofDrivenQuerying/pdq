@@ -24,7 +24,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 
 /**
- * A schema relation.
+ * The schema of a relation.
  *
  * @author Efthymia Tsamoura
  * @author Julien Leblay
@@ -308,7 +308,7 @@ public abstract class Relation extends Predicate implements Serializable {
 	}
 
 	/**
-	 * Gets the foreign ke at the specified index.
+	 * Gets the foreign key at the specified index.
 	 *
 	 * @param index int
 	 * @return ForeignKey
