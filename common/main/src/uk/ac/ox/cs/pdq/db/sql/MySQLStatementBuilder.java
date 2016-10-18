@@ -134,5 +134,12 @@ public class MySQLStatementBuilder extends SQLStatementBuilder {
 		insertInto += Joiner.on(",\n").join(tuples) + ";";
 		return insertInto;
 	}
+	
+	
+	@Override
+	public String createBulkDeleteStatement(Predicate predicate, Collection<? extends Atom> facts, Map<String, DatabaseRelation> toDatabaseTables)
+	{
+		return super.createBulkDeleteStatement(predicate, facts, toDatabaseTables)+";";
+	}
 }
 

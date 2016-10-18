@@ -43,7 +43,7 @@ public class DatabaseConnection implements AutoCloseable{
 		return getBuilder();
 	}
 
-	private ReasoningParameters resParams;
+	private DatabaseParameters dbParams;
 
 	private String database;
 
@@ -58,7 +58,7 @@ public class DatabaseConnection implements AutoCloseable{
 	}
 
 
-	public DatabaseConnection(ReasoningParameters reasoningParams, Schema schema) throws SQLException {
+	public DatabaseConnection(DatabaseParameters reasoningParams, Schema schema) throws SQLException {
 		String driver = reasoningParams.getDatabaseDriver();
 		String url = reasoningParams.getConnectionUrl();
 		database = reasoningParams.getDatabaseName(); 
@@ -95,7 +95,7 @@ public class DatabaseConnection implements AutoCloseable{
 			this.synchronousConnections.add(DatabaseInstance.getConnection(driver, url, database, username, password));
 		}
 
-		this.resParams = reasoningParams;
+		this.dbParams = reasoningParams;
 		this.relationNamesToRelationObjects = new LinkedHashMap<>();
 		initialize();
 	}
@@ -171,7 +171,7 @@ public class DatabaseConnection implements AutoCloseable{
 	@Override
 	public DatabaseConnection clone() {
 		try {
-			DatabaseConnection cloneCon = new DatabaseConnection(resParams,schema);
+			DatabaseConnection cloneCon = new DatabaseConnection(dbParams,schema);
 			cloneCon.isInitialized = this.isInitialized;
 			return cloneCon;
 		} catch (SQLException e) {

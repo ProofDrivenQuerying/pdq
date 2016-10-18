@@ -19,7 +19,7 @@ import com.google.common.eventbus.EventBus;
 import junit.framework.Assert;
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.DatabaseInstance;
-import uk.ac.ox.cs.pdq.db.ReasoningParameters;
+import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.db.sql.MySQLStatementBuilder;
@@ -32,6 +32,7 @@ import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.io.xml.QueryReader;
 import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
 import uk.ac.ox.cs.pdq.logging.performance.StatisticsCollector;
+import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 
@@ -211,7 +212,7 @@ public class RestrictedChaserTest {
 				schema.updateConstants(query.getSchemaConstants());
 				RestrictedChaser reasoner = new RestrictedChaser(new StatisticsCollector(true, new EventBus()));
 
-				DatabaseConnection dbcon = new DatabaseConnection(new ReasoningParameters(),schema);
+				DatabaseConnection dbcon = new DatabaseConnection(new DatabaseParameters(),schema);
 				DatabaseChaseInstance state = new DatabaseChaseInstance(query, dbcon);				
 				
 				reasoner.reasonUntilTermination(state, schema.getDependencies());

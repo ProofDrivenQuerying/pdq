@@ -75,7 +75,7 @@ public class DatabaseInstance implements Instance {
 	/** True if previous query indices were cleared. */
 	private boolean clearedLastQuery = true;
 	
-	protected ReasoningParameters resParams;
+	protected DatabaseParameters dbParams;
 
 	protected Set<String> existingIndices =  new LinkedHashSet<String>();
 
@@ -105,6 +105,7 @@ public class DatabaseInstance implements Instance {
 		synchronousThreadsNumber = databaseConnection.synchronousThreadsNumber;
 		constants = databaseConnection.getSchema().getConstants();
 		this.databaseConnection = databaseConnection;
+		this.schema = databaseConnection.getSchema();
 	}
 
 	/**
@@ -264,9 +265,9 @@ public class DatabaseInstance implements Instance {
 		try {
 			
 			
-			DatabaseConnection dbconn= new DatabaseConnection(resParams, schema);
+			DatabaseConnection dbconn= new DatabaseConnection(dbParams, schema);
 			DatabaseInstance clone = new DatabaseInstance(dbconn);
-			clone.resParams = this.resParams;
+			clone.dbParams = this.dbParams;
 			return clone;
 		} catch (SQLException e) {
 			log.error(e.getMessage(),e);

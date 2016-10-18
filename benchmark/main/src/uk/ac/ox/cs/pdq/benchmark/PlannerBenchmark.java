@@ -17,7 +17,7 @@ import uk.ac.ox.cs.pdq.algebra.RelationalOperator;
 import uk.ac.ox.cs.pdq.algebra.UnaryOperator;
 import uk.ac.ox.cs.pdq.algebra.predicates.ConjunctivePredicate;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
-import uk.ac.ox.cs.pdq.db.ReasoningParameters;
+import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.logging.performance.ChainedStatistics;
@@ -28,6 +28,7 @@ import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.events.BestPlanWriter;
 import uk.ac.ox.cs.pdq.planner.events.MultiplePlanWriter;
 import uk.ac.ox.cs.pdq.planner.logging.IntervalEventDrivenLogger;
+import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 
 import com.beust.jcommander.Parameter;
 
@@ -115,6 +116,7 @@ public class PlannerBenchmark extends Runner {
 		PlannerParameters plannerParams = null;
 		CostParameters costParams = null;
 		ReasoningParameters reasoningParams = null;
+		DatabaseParameters dbParams = null;
 		
 		if (this.getInputFile() != null) {
 			synchronized (this) {
@@ -140,10 +142,11 @@ public class PlannerBenchmark extends Runner {
 			plannerParams = new PlannerParameters(new File(f.getAbsolutePath()));
 			costParams = new CostParameters(new File(f.getAbsolutePath()));
 			reasoningParams = new ReasoningParameters(new File(f.getAbsolutePath()));
+			dbParams = new DatabaseParameters(new File(f.getAbsolutePath()));
 		} else {
 			plannerParams = new PlannerParameters();
 			costParams = new CostParameters();
-			reasoningParams = new ReasoningParameters();
+			dbParams = new DatabaseParameters();
 		}
 
 		// Override with dynamic parameters (specified in command line)
@@ -192,7 +195,7 @@ public class PlannerBenchmark extends Runner {
 				sq = this.makeSchemaQuery(plannerParams,
 							directory.getAbsolutePath() + '/' + SCHEMA_FILE,
 							directory.getAbsolutePath() + '/' + QUERY_FILE);
-				this.run(directory, plannerParams, costParams, reasoningParams, sq.getKey(), sq.getValue(), stats, out);
+				this.run(directory, plannerParams, costParams, reasoningParams, dbParams, sq.getKey(), sq.getValue(), stats, out);
 			}
 			log.info(threadName + ": " + "Complete.");
 		} else {
@@ -217,7 +220,7 @@ public class PlannerBenchmark extends Runner {
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public void run(File directory, PlannerParameters plannerParams, CostParameters costParams, 
-			ReasoningParameters reasoningParams, Schema schema, ConjunctiveQuery query, ChainedStatistics stats, PrintStream out)
+			ReasoningParameters reasoningParams, DatabaseParameters dbParams, Schema schema, ConjunctiveQuery query, ChainedStatistics stats, PrintStream out)
 			throws BenchmarkException, IOException {
 		// Print experiments environment
 		if (this.isVerbose()) {
@@ -226,7 +229,7 @@ public class PlannerBenchmark extends Runner {
 		}
 	    printSystemSettings(out);
 		printHeader(out);
-		ExplorationSetUp planner = new ExplorationSetUp(plannerParams, costParams, reasoningParams, schema, stats);
+		ExplorationSetUp planner = new ExplorationSetUp(plannerParams, costParams, reasoningParams, dbParams, schema, stats);
 
 		IntervalEventDrivenLogger logger = new IntervalEventDrivenLogger(stats, plannerParams.getLogIntervals(), plannerParams.getShortLogIntervals());
 		planner.registerEventHandler(logger);

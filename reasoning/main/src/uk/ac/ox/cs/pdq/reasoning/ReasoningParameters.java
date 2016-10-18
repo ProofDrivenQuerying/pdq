@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.db;
+package uk.ac.ox.cs.pdq.reasoning;
 
 import java.io.File;
 import java.io.IOException;

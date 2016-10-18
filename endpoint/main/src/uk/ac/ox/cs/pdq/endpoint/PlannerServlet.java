@@ -23,7 +23,7 @@ import uk.ac.ox.cs.pdq.EventHandler;
 import uk.ac.ox.cs.pdq.builder.SchemaDiscoverer;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.cost.CostParameters.CostTypes;
-import uk.ac.ox.cs.pdq.db.ReasoningParameters;
+import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.endpoint.util.BufferedProgressLogger;
 import uk.ac.ox.cs.pdq.endpoint.util.PlanningSession;
@@ -42,6 +42,7 @@ import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.PlannerTypes;
 import uk.ac.ox.cs.pdq.planner.logging.IntervalEventDrivenLogger;
+import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -120,6 +121,8 @@ public class PlannerServlet extends PDQServlet {
        		PlannerParameters plannerParams = new PlannerParameters();
        		CostParameters costParams = new CostParameters();
        		ReasoningParameters reasoningParams = new ReasoningParameters();
+
+       		DatabaseParameters dbParams = new DatabaseParameters();
     		
        		plannerParams.setSeed(1);
     		plannerParams.setPlannerType(PlannerTypes.valueOf(request.getParameter(RequestParameters.PLANNER)));
@@ -135,7 +138,7 @@ public class PlannerServlet extends PDQServlet {
 
     		// Launch planner
     		try (WebBasedStatisticsLogger pLog = new WebBasedStatisticsLogger()) {
-        		final ExplorationSetUp planner = new ExplorationSetUp(plannerParams, costParams, reasoningParams, schema, pLog);
+        		final ExplorationSetUp planner = new ExplorationSetUp(plannerParams, costParams, reasoningParams, dbParams, schema, pLog);
         		EventHandler eventLogger = new IntervalEventDrivenLogger(pLog, 5, 10); 
         		planner.registerEventHandler(eventLogger);
         		String planningSessionId = Long.toHexString(System.nanoTime());

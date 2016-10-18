@@ -144,7 +144,7 @@ public abstract class SQLStatementBuilder {
 			String tuple = "(" + fact.getId() + ")";
 			tuples.add(tuple);
 		}
-		insertInto += "(" + Joiner.on(",").join(tuples) + ")" + ";";
+		insertInto += "(" + Joiner.on(",").join(tuples) + ")";
 		return insertInto;
 	}
 

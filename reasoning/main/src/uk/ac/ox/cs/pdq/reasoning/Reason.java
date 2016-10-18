@@ -12,7 +12,7 @@ import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.DatabaseInstance;
-import uk.ac.ox.cs.pdq.db.ReasoningParameters;
+import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 import uk.ac.ox.cs.pdq.db.sql.MySQLStatementBuilder;
@@ -150,6 +150,11 @@ public class Reason {
 		ReasoningParameters reasoningParams = this.getConfigFile() != null ?
 				new ReasoningParameters(this.getConfigFile()) :
 				new ReasoningParameters() ;
+
+		DatabaseParameters dbParams = this.getConfigFile() != null ?
+						new DatabaseParameters(this.getConfigFile()) :
+							new DatabaseParameters() ;
+
 		for (String k : this.dynamicParams.keySet()) {
 			reasoningParams.set(k, this.dynamicParams.get(k));
 		}
@@ -172,7 +177,7 @@ public class Reason {
 								
 			Chaser reasoner = reasonerFactory.getInstance();
 //			//Creates a chase state that consists of the canonical database of the input query.
-			ChaseInstance state = new DatabaseChaseInstance(query,new DatabaseConnection(reasoningParams, schema));		
+			ChaseInstance state = new DatabaseChaseInstance(query,new DatabaseConnection(dbParams, schema));		
 			reasoner.reasonUntilTermination(state, schema.getDependencies());
 			
 			//TODO show something 

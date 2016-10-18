@@ -13,7 +13,7 @@ import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.benchmark.BenchmarkParameters;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
-import uk.ac.ox.cs.pdq.db.ReasoningParameters;
+import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.generator.AbstractGenerator;
@@ -25,6 +25,7 @@ import uk.ac.ox.cs.pdq.io.xml.SchemaWriter;
 import uk.ac.ox.cs.pdq.planner.ExplorationSetUp;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
+import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -96,6 +97,8 @@ public class GeneratorThird extends AbstractGenerator{
 			PlannerParameters planParams = new PlannerParameters();
 			CostParameters costParams = new CostParameters();
 			ReasoningParameters reasoningParams = new ReasoningParameters();
+			DatabaseParameters dbParams = new DatabaseParameters();
+
 			Schema schema = new SchemaReader().read(fis);
 			String[] queryFiles = new File("test/output/").list(new FilenameFilter() {
 				@Override public boolean accept(File dir, String name) {
@@ -108,12 +111,12 @@ public class GeneratorThird extends AbstractGenerator{
 					
 					log.trace(queryFile);
 					planParams.setMaxDepth(1);
-					ExplorationSetUp planner = new ExplorationSetUp(planParams, costParams, reasoningParams, schema);
+					ExplorationSetUp planner = new ExplorationSetUp(planParams, costParams, reasoningParams, dbParams, schema);
 					if (planner.search(query) != null) {
 						log.trace(" not answerable without constraints");
 					}
 					planParams.setMaxDepth(10);
-					planner = new ExplorationSetUp(planParams, costParams, reasoningParams, schema);
+					planner = new ExplorationSetUp(planParams, costParams, reasoningParams, dbParams, schema);
 					if (planner.search(query) != null) {
 						log.trace(", not answerable with constraints (depth=10)");
 					}

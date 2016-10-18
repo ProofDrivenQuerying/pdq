@@ -2,6 +2,7 @@ package uk.ac.ox.cs.pdq.services.logicblox;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -13,7 +14,7 @@ import org.apache.log4j.Logger;
 import uk.ac.ox.cs.pdq.EventHandler;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
-import uk.ac.ox.cs.pdq.db.ReasoningParameters;
+import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.plan.Cost;
@@ -21,6 +22,7 @@ import uk.ac.ox.cs.pdq.plan.DAGPlan;
 import uk.ac.ox.cs.pdq.planner.ExplorationSetUp;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
+import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.rewrite.RewriterException;
 import uk.ac.ox.cs.pdq.services.MessageHandler;
 import uk.ac.ox.cs.pdq.services.ServiceException;
@@ -175,9 +177,10 @@ public class OptimizationHandler implements MessageHandler<ExternalRuleOptimizat
 		PlannerParameters plannerParams = new PlannerParameters();
 		CostParameters costParams = new CostParameters();
 		ReasoningParameters reasoningParams = new ReasoningParameters();
+		DatabaseParameters dbParams = new DatabaseParameters();
 		
 		try {
-			ExplorationSetUp planner = new ExplorationSetUp(plannerParams, costParams, reasoningParams, schema);
+			ExplorationSetUp planner = new ExplorationSetUp(plannerParams, costParams, reasoningParams, dbParams, schema);
 			planner.setCostEstimator(estimator);
 			for (EventHandler eh: handlers) {
 				planner.registerEventHandler(eh);

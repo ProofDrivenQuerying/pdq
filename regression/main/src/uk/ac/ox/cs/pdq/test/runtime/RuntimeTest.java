@@ -16,8 +16,9 @@ import org.apache.log4j.Logger;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.DatabaseInstance;
-import uk.ac.ox.cs.pdq.db.ReasoningParameters;
+import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
+import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 import uk.ac.ox.cs.pdq.db.sql.MySQLStatementBuilder;
 import uk.ac.ox.cs.pdq.fol.Atom;
@@ -161,11 +162,13 @@ public class RuntimeTest extends RegressionTest {
 	private static void validateData(File directory, Schema schema, ConjunctiveQuery query) throws EvaluationException, SQLException {
 		PlannerParameters plParams = new PlannerParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
 		ReasoningParameters reasoningParams = new ReasoningParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
+		DatabaseParameters dbParams = new DatabaseParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
+		
 		AccessibleSchema accessibleSchema = new AccessibleSchema(schema);
 		Query<?> accessibleQuery = accessibleSchema.accessible(query);				
 		try  
 		{
-			DatabaseChaseInstance dbinst = new DatabaseChaseInstance(query,new DatabaseConnection(reasoningParams, schema));
+			DatabaseChaseInstance dbinst = new DatabaseChaseInstance(query,new DatabaseConnection(dbParams, schema));
 //			chaseState.addQuery(accessibleQuery);
 
 			DataValidationImplementation dataValidator = new DataValidationImplementation(schema, dbinst);
@@ -190,9 +193,9 @@ public class RuntimeTest extends RegressionTest {
 			PlannerParameters plParams = new PlannerParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
 			CostParameters costParams = new CostParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
 			ReasoningParameters reasoningParams = new ReasoningParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
-			
+			DatabaseParameters dbParams = new DatabaseParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
 			try (ProgressLogger pLog = new SimpleProgressLogger(this.out)) {
-				ExplorationSetUp planner = new ExplorationSetUp(plParams, costParams, reasoningParams, schema);
+				ExplorationSetUp planner = new ExplorationSetUp(plParams, costParams, reasoningParams, dbParams, schema);
 				planner.registerEventHandler(new IntervalEventDrivenLogger(pLog, plParams.getLogIntervals(), plParams.getShortLogIntervals()));
 				return planner.search(query);
 			} catch (Exception e) {

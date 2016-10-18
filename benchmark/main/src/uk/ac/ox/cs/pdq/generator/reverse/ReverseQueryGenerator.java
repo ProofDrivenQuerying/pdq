@@ -14,7 +14,7 @@ import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.DatabaseInstance;
-import uk.ac.ox.cs.pdq.db.ReasoningParameters;
+import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 import uk.ac.ox.cs.pdq.db.sql.MySQLStatementBuilder;
@@ -27,6 +27,7 @@ import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.reasoning.ReasonerFactory;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleDatabaseListState;
+import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 
 import com.google.common.eventbus.EventBus;
@@ -86,13 +87,15 @@ public class ReverseQueryGenerator implements Runnable {
 	public void run() {
 		try {
 			ReasoningParameters reasoningParams = new ReasoningParameters();
+			DatabaseParameters dbParams = new DatabaseParameters();
+			
 			this.schema.updateConstants(this.query.getSchemaConstants());
 			AccessibleSchema accessibleSchema = new AccessibleSchema(this.schema);
 			EventBus eb = new EventBus();
 			Chaser reasoner = new ReasonerFactory(
 					eb, 
 					true, 
-					reasoningParams).getInstance(); 
+					reasoningParams, dbParams).getInstance(); 
 			MatchMaker mm = new MatchMaker(
 					new LengthBasedQuerySelector(2, 6),
 					new ConstantRatioQuerySelector(0.2),
@@ -121,7 +124,7 @@ public class ReverseQueryGenerator implements Runnable {
 //				AccessibleChaseState state = (AccessibleChaseState) 
 //						new AccessibleDatabaseListState(reasoningParams, query, accessibleSchema,  connections, false);
 			
-				DatabaseConnection connection = new DatabaseConnection(reasoningParams, accessibleSchema);		
+				DatabaseConnection connection = new DatabaseConnection(dbParams, accessibleSchema);		
 					DatabaseChaseInstance bdinst = new DatabaseChaseInstance(new ArrayList<Atom>(),connection);
 					bdinst.addQuery(accessibleQuery);
 					AccessibleChaseState state = (AccessibleChaseState) 

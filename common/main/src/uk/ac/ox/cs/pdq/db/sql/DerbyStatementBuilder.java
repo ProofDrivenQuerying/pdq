@@ -26,7 +26,7 @@ import uk.ac.ox.cs.pdq.util.CleanDerbyDatabaseUtil;
  * @author Julien leblay
  */
 public class DerbyStatementBuilder extends SQLStatementBuilder {
-	
+
 	/** The log. */
 	private static Logger log = Logger.getLogger(DerbyStatementBuilder.class);
 	/*
@@ -46,8 +46,8 @@ public class DerbyStatementBuilder extends SQLStatementBuilder {
 	public Collection<String> createDropStatements(String databaseName) {
 		return new LinkedList<>();
 	}
-	
-	
+
+
 	/* (non-Javadoc)
 	 * @see uk.ac.ox.cs.pdq.reasoning.homomorphism.SQLStatementBuilder#translateLimitConstraints(uk.ac.ox.cs.pdq.fol.Evaluatable, uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismConstraint[])
 	 */
@@ -70,7 +70,7 @@ public class DerbyStatementBuilder extends SQLStatementBuilder {
 	public DerbyStatementBuilder clone() {
 		return new DerbyStatementBuilder();
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see uk.ac.ox.cs.pdq.reasoning.homomorphism.SQLStatementBuilder#indexDropStatement(uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager.DBRelation, java.lang.StringBuilder, java.lang.StringBuilder)
 	 */
@@ -83,10 +83,17 @@ public class DerbyStatementBuilder extends SQLStatementBuilder {
 	public String createBulkInsertStatement(Predicate predicate, Collection<? extends Atom> facts, Map<String, DatabaseRelation> toDatabaseTables) {
 		throw new java.lang.UnsupportedOperationException("No bulk inserts are allowed in Derby");
 	}
-//
-//	@Override
-//	public void close(List<Connection> synchronousConnections) throws SQLException {
-//		for(Connection con:synchronousConnections)
-//			CleanDerbyDatabaseUtil.cleanDatabase(con);
-//	}
-}
+	//
+	//	@Override
+	//	public void close(List<Connection> synchronousConnections) throws SQLException {
+	//		for(Connection con:synchronousConnections)
+	//			CleanDerbyDatabaseUtil.cleanDatabase(con);
+	//	}
+
+	@Override
+	public String createBulkDeleteStatement(Predicate predicate, Collection<? extends Atom> facts, Map<String, DatabaseRelation> toDatabaseTables)
+	{
+		return super.createBulkDeleteStatement(predicate, facts, toDatabaseTables);
+	}
+
+	}

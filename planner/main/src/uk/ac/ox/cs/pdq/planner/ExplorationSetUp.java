@@ -16,7 +16,7 @@ import uk.ac.ox.cs.pdq.cost.CostStatKeys;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.DatabaseInstance;
-import uk.ac.ox.cs.pdq.db.ReasoningParameters;
+import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
@@ -31,6 +31,7 @@ import uk.ac.ox.cs.pdq.planner.logging.performance.EventDrivenExplorerStatistics
 import uk.ac.ox.cs.pdq.planner.logging.performance.PlannerStatKeys;
 import uk.ac.ox.cs.pdq.planner.reasoning.ReasonerFactory;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState;
+import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 
@@ -59,6 +60,10 @@ public class ExplorationSetUp {
 	
 	/**  */
 	private ReasoningParameters reasoningParams;
+	
+	/**  */
+	private DatabaseParameters dbParams;
+
 
 	/**   */
 	private EventBus eventBus = new EventBus();
@@ -84,8 +89,8 @@ public class ExplorationSetUp {
 	 * @param reasoningParams the reasoning params
 	 * @param schema the schema
 	 */
-	public ExplorationSetUp(PlannerParameters planParams, CostParameters costParams, ReasoningParameters reasoningParams, Schema schema) {
-		this(planParams, costParams, reasoningParams, schema, null);
+	public ExplorationSetUp(PlannerParameters planParams, CostParameters costParams, ReasoningParameters reasoningParams, DatabaseParameters dbParams, Schema schema) {
+		this(planParams, costParams, reasoningParams, dbParams, schema, null);
 	}
 
 	/**
@@ -97,11 +102,12 @@ public class ExplorationSetUp {
 	 * @param schema the schema
 	 * @param statsLogger the stats logger
 	 */
-	public ExplorationSetUp(PlannerParameters params, CostParameters costParams, ReasoningParameters reasoningParams, Schema schema, ChainedStatistics statsLogger) {
-		checkParametersConsistency(params, costParams, reasoningParams);
+	public ExplorationSetUp(PlannerParameters params, CostParameters costParams, ReasoningParameters reasoningParams, DatabaseParameters dbParams, Schema schema, ChainedStatistics statsLogger) {
+		checkParametersConsistency(params, costParams, reasoningParams, dbParams);
 		this.plannerParams = params;
 		this.costParams = costParams;
 		this.reasoningParams = reasoningParams;
+		this.dbParams = dbParams;
 		this.schema = schema;
 		this.statsLogger = statsLogger;
 		this.schema = schema;
@@ -116,8 +122,8 @@ public class ExplorationSetUp {
 	 * @param reasoningParams the reasoning params
 	 * @return boolean
 	 */
-	private static void checkParametersConsistency(PlannerParameters params, CostParameters costParams, ReasoningParameters reasoningParams) {
-		new PlannerConsistencyChecker().check(params, costParams, reasoningParams);
+	private static void checkParametersConsistency(PlannerParameters params, CostParameters costParams, ReasoningParameters reasoningParams, DatabaseParameters dbParams) {
+		new PlannerConsistencyChecker().check(params, costParams, reasoningParams, dbParams);
 	}
 
 	/**
@@ -199,7 +205,7 @@ public class ExplorationSetUp {
 		Explorer<P> explorer = null;
 
 		
-		DatabaseConnection dbConn = new DatabaseConnection(reasoningParams,accessibleSchema);
+		DatabaseConnection dbConn = new DatabaseConnection(dbParams,accessibleSchema);
 
 		try{
 			// Top-level initialisations
@@ -211,7 +217,7 @@ public class ExplorationSetUp {
 			Chaser reasoner = new ReasonerFactory(
 					this.eventBus, 
 					collectStats,
-					this.reasoningParams).getInstance();
+					this.reasoningParams, this.dbParams).getInstance();
 			
 			explorer = ExplorerFactory.createExplorer(
 					this.eventBus, 
@@ -224,7 +230,7 @@ public class ExplorationSetUp {
 					dbConn,
 					costEstimator,
 					this.plannerParams,
-					this.reasoningParams);
+					this.reasoningParams, this.dbParams);
 
 			// Chain all statistics collectors
 			if (collectStats) {

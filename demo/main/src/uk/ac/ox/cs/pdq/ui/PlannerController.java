@@ -50,7 +50,7 @@ import org.apache.log4j.Logger;
 import prefuse.controls.FocusControl;
 import prefuse.controls.WheelZoomControl;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
-import uk.ac.ox.cs.pdq.db.ReasoningParameters;
+import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Query;
@@ -68,6 +68,7 @@ import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode.NodeStatus;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.BestPlanMetadata;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.DominanceMetadata;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.Metadata;
+import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.ui.event.PlanSearchVisualizer;
 import uk.ac.ox.cs.pdq.ui.event.PrefuseEventHandler;
 import uk.ac.ox.cs.pdq.ui.io.pretty.ExtendedPrettyProofWriter;
@@ -249,6 +250,10 @@ public class PlannerController {
 	/**  Keeps the reasoning parameters. */
 	private ReasoningParameters reasoningParams;
 
+	/**  Keeps the database parameters. */
+	private DatabaseParameters dbParams;
+
+	
 	/**  The schema to be used during this planning session. */
 	private Schema schema;
 
@@ -342,11 +347,14 @@ public class PlannerController {
 			this.params = new PlannerParameters(new File(workDir.getAbsolutePath() + '/' + PDQApplication.DEFAULT_CONFIGURATION));
 			this.costParams = new CostParameters(new File(workDir.getAbsolutePath() + '/' + PDQApplication.DEFAULT_CONFIGURATION));
 			this.reasoningParams = new ReasoningParameters(new File(workDir.getAbsolutePath() + '/' + PDQApplication.DEFAULT_CONFIGURATION));
+			this.dbParams = new DatabaseParameters(new File(workDir.getAbsolutePath() + '/' + PDQApplication.DEFAULT_CONFIGURATION));
+			
 		} else {
 			log.info("No default configuration file. Initializing demo environment...");
 			this.params = new PlannerParameters();
 			this.costParams = new CostParameters();
 			this.reasoningParams = new ReasoningParameters();
+			this.dbParams = new DatabaseParameters();
 		}
 		this.plan = plan;
 		this.params.setSeed(1);
@@ -403,7 +411,7 @@ public class PlannerController {
 		Preconditions.checkNotNull(this.query);
 		if (this.pauser == null) {
 
-			final ExplorationSetUp planner = new ExplorationSetUp(this.params, this.costParams, this.reasoningParams, this.schema);
+			final ExplorationSetUp planner = new ExplorationSetUp(this.params, this.costParams, this.reasoningParams, this.dbParams,  this.schema);
 			this.setSearchSpaceVisualizer(planner);
 
 			planner.registerEventHandler(new PlanSearchVisualizer(this.dataQueue, this.params.getShortLogIntervals()));

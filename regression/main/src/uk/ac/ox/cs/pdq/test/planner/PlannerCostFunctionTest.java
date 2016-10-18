@@ -9,7 +9,7 @@ import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.cost.CostParameters.CostTypes;
-import uk.ac.ox.cs.pdq.db.ReasoningParameters;
+import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.io.xml.QueryReader;
@@ -20,6 +20,7 @@ import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.planner.ExplorationSetUp;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.logging.IntervalEventDrivenLogger;
+import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.test.RegressionTest;
 import uk.ac.ox.cs.pdq.test.RegressionTestException;
 import uk.ac.ox.cs.pdq.test.Bootstrap.Command;
@@ -96,6 +97,7 @@ public class PlannerCostFunctionTest extends RegressionTest {
 			PlannerParameters planParams = new PlannerParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
 			CostParameters costParams = new CostParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
 			ReasoningParameters reasoningParams = new ReasoningParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
+			DatabaseParameters dbParams = new DatabaseParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
 			
 			// Loading query
 			ConjunctiveQuery query = new QueryReader(schema).read(qis);
@@ -107,13 +109,13 @@ public class PlannerCostFunctionTest extends RegressionTest {
 			Plan plan1, plan2;
 			try (ProgressLogger pLog = new SimpleProgressLogger(this.out)) {
 				costParams.setCostType(CostTypes.SIMPLE_CONSTANT);
-				ExplorationSetUp planner1 = new ExplorationSetUp(planParams, costParams, reasoningParams, schema);
+				ExplorationSetUp planner1 = new ExplorationSetUp(planParams, costParams, reasoningParams,dbParams, schema);
 				planner1.registerEventHandler(new IntervalEventDrivenLogger(pLog, planParams.getLogIntervals(), planParams.getShortLogIntervals()));
 				plan1 = planner1.search(query);
 			}
 			try (ProgressLogger pLog = new SimpleProgressLogger(this.out)) {
 				costParams.setCostType(CostTypes.BLACKBOX);
-				ExplorationSetUp planner2 = new ExplorationSetUp(planParams, costParams, reasoningParams, schema);
+				ExplorationSetUp planner2 = new ExplorationSetUp(planParams, costParams, reasoningParams,dbParams, schema);
 				planner2.registerEventHandler(new IntervalEventDrivenLogger(pLog, planParams.getLogIntervals(), planParams.getShortLogIntervals()));
 				plan2 = planner2.search(query);
 			}
