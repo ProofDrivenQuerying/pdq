@@ -15,6 +15,9 @@ import org.jgrapht.graph.DefaultEdge;
 
 import uk.ac.ox.cs.pdq.db.builder.SchemaBuilder;
 import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.Dependency;
+import uk.ac.ox.cs.pdq.fol.EGD;
+import uk.ac.ox.cs.pdq.fol.TGD;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;

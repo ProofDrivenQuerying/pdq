@@ -11,6 +11,7 @@ import java.util.Set;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.Constant;
+import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.Implication;
 import uk.ac.ox.cs.pdq.fol.LogicalSymbols;
 import uk.ac.ox.cs.pdq.fol.Term;
@@ -23,7 +24,7 @@ import com.google.common.collect.Sets;
 
 /**
  * A dependency of the form \delta = \forall \vec{x} \rho(\vec{x}) --> x_i = x_j where \rho is a conjunction of atoms.
- * WHAT THE ???? IS THE DIFFERENCE BETWEEN THIS AND EGD
+ * TOCOMMENT: WHAT THE ???? IS THE DIFFERENCE BETWEEN THIS AND EGD
  *
  * @author Efthymia Tsamoura
  */
@@ -78,7 +79,7 @@ public class DatabaseEGD
 	 * Gets the left.
 	 *
 	 * @return L
-	 * @see uk.ac.ox.cs.pdq.db.Dependency#getLeft()
+	 * @see uk.ac.ox.cs.pdq.fol.Dependency#getLeft()
 	 */
 	@Override
 	public Conjunction<Atom> getLeft() {
@@ -89,7 +90,7 @@ public class DatabaseEGD
 	 * Gets the right.
 	 *
 	 * @return R
-	 * @see uk.ac.ox.cs.pdq.db.Dependency#getRight()
+	 * @see uk.ac.ox.cs.pdq.fol.Dependency#getRight()
 	 */
 	@Override
 	public Conjunction<DatabaseEquality> getRight() {
@@ -115,7 +116,7 @@ public class DatabaseEGD
 	 * Gets the schema constants.
 	 *
 	 * @return Collection<TypedConstant<?>>
-	 * @see uk.ac.ox.cs.pdq.db.Dependency#getSchemaConstants()
+	 * @see uk.ac.ox.cs.pdq.fol.Dependency#getSchemaConstants()
 	 */
 	@Override
 	public Collection<TypedConstant<?>> getSchemaConstants() {

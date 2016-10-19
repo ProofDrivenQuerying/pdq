@@ -33,7 +33,6 @@ import com.google.common.collect.Sets;
 import uk.ac.ox.cs.pdq.LimitReachedException;
 import uk.ac.ox.cs.pdq.LimitReachedException.Reasons;
 import uk.ac.ox.cs.pdq.Parameters.EnumParameterValue;
-import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismUtility;
 import uk.ac.ox.cs.pdq.db.sql.DerbyStatementBuilder;
 import uk.ac.ox.cs.pdq.db.sql.ExecuteSQLQueryThread;
 import uk.ac.ox.cs.pdq.db.sql.ExecuteSynchronousSQLUpdateThread;
@@ -43,6 +42,7 @@ import uk.ac.ox.cs.pdq.fol.Evaluatable;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.fol.Variable;
+import uk.ac.ox.cs.pdq.util.Utility;
 /**
  * 
  * A database instance is a set of facts stored in an RDBMS. 
@@ -161,7 +161,7 @@ public class DatabaseInstance implements Instance {
 			queries.addAll(this.builder.createInsertStatements(facts, this.relationNamesToRelationObjects));
 		}
 		else {
-			Map<Predicate, List<Atom>> clusters = HomomorphismUtility.clusterAtoms(facts);
+			Map<Predicate, List<Atom>> clusters = Utility.clusterAtomsWithSamePredicateName(facts);
 			//Find the total number of tuples that will be inserted in the database
 			int totalTuples = facts.size();
 			int tuplesPerThread;
@@ -227,7 +227,7 @@ public class DatabaseInstance implements Instance {
 	@Override
 	public void deleteFacts(Collection<Atom> facts) {
 		Queue<String> queries = new ConcurrentLinkedQueue<>();
-		Map<Predicate, List<Atom>> clusters = HomomorphismUtility.clusterAtoms(facts);
+		Map<Predicate, List<Atom>> clusters = Utility.clusterAtomsWithSamePredicateName(facts);
 
 		//Find the total number of tuples that will be inserted in the database
 		int totalTuples = facts.size();

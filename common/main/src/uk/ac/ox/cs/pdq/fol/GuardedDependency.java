@@ -1,6 +1,4 @@
-package uk.ac.ox.cs.pdq.db;
-
-import uk.ac.ox.cs.pdq.fol.Atom;
+package uk.ac.ox.cs.pdq.fol;
 
 /**
  * A guarded dependency.

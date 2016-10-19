@@ -2,8 +2,8 @@ package uk.ac.ox.cs.pdq.io.pretty;
 
 import java.io.PrintStream;
 
-import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.io.Writer;
 
 // TODO: Auto-generated Javadoc

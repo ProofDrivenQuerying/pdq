@@ -4,10 +4,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 import uk.ac.ox.cs.pdq.builder.Builder;
-import uk.ac.ox.cs.pdq.db.LinearGuarded;
-import uk.ac.ox.cs.pdq.db.TGD;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.Formula;
+import uk.ac.ox.cs.pdq.fol.LinearGuarded;
+import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.fol.Atom;
 
 /**

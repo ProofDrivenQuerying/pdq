@@ -10,7 +10,7 @@ import uk.ac.ox.cs.pdq.fol.Variable;
 
 import com.google.common.base.Preconditions;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * TOCOMMENT how does this differ from Equality in common.fol?
  * An equality.

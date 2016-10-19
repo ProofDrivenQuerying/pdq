@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.db;
+package uk.ac.ox.cs.pdq.fol;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -10,15 +10,9 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 
-import uk.ac.ox.cs.pdq.fol.Conjunction;
-import uk.ac.ox.cs.pdq.fol.Constant;
-import uk.ac.ox.cs.pdq.fol.Equality;
-import uk.ac.ox.cs.pdq.fol.Implication;
-import uk.ac.ox.cs.pdq.fol.LogicalSymbols;
-import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Predicate;
-import uk.ac.ox.cs.pdq.fol.Term;
-import uk.ac.ox.cs.pdq.fol.Variable;
+import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.db.Relation;
+import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.base.Preconditions;
@@ -85,7 +79,7 @@ public class EGD
 	 * Gets the left-hand side of the constraint.
 	 *
 	 * @return L
-	 * @see uk.ac.ox.cs.pdq.db.Dependency#getLeft()
+	 * @see uk.ac.ox.cs.pdq.fol.Dependency#getLeft()
 	 */
 	@Override
 	public Conjunction<Atom> getLeft() {
@@ -96,7 +90,7 @@ public class EGD
 	 * Gets the right.
 	 *
 	 * @return R
-	 * @see uk.ac.ox.cs.pdq.db.Dependency#getRight()
+	 * @see uk.ac.ox.cs.pdq.fol.Dependency#getRight()
 	 */
 	@Override
 	public Conjunction<Equality> getRight() {
@@ -123,7 +117,7 @@ public class EGD
 	 * Gets the schema constants.
 	 *
 	 * @return Collection<TypedConstant<?>>
-	 * @see uk.ac.ox.cs.pdq.db.Dependency#getSchemaConstants()
+	 * @see uk.ac.ox.cs.pdq.fol.Dependency#getSchemaConstants()
 	 */
 	@Override
 	public Collection<TypedConstant<?>> getSchemaConstants() {
@@ -194,7 +188,7 @@ public class EGD
 	 * Gets the both side variables.
 	 *
 	 * @return Set<Variable>
-	 * @see uk.ac.ox.cs.pdq.db.Dependency#getAllVariables()
+	 * @see uk.ac.ox.cs.pdq.fol.Dependency#getAllVariables()
 	 */
 	@Override
 	public Set<Variable> getAllVariables() {

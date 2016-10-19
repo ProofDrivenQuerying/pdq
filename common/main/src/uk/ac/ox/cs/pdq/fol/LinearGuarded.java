@@ -1,11 +1,11 @@
-package uk.ac.ox.cs.pdq.db;
+package uk.ac.ox.cs.pdq.fol;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import uk.ac.ox.cs.pdq.fol.Conjunction;
-import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Variable;
+import uk.ac.ox.cs.pdq.db.ForeignKey;
+import uk.ac.ox.cs.pdq.db.Reference;
+import uk.ac.ox.cs.pdq.db.Relation;
 
 /**
  * TOCOMMENT this is not well readable in javadoc we need to find out how to write formulas in javadoc (maybe html?)
@@ -91,7 +91,7 @@ public class LinearGuarded extends TGD implements GuardedDependency {
 	 * Gets the guard.
 	 *
 	 * @return PredicateFormula
-	 * @see uk.ac.ox.cs.pdq.db.GuardedDependency#getGuard()
+	 * @see uk.ac.ox.cs.pdq.fol.GuardedDependency#getGuard()
 	 */
 	@Override
 	public Atom getGuard() {

@@ -12,12 +12,11 @@ import java.util.Set;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
-
-import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismException;
 import uk.ac.ox.cs.pdq.db.sql.DerbyStatementBuilder;
 import uk.ac.ox.cs.pdq.db.sql.MySQLStatementBuilder;
 import uk.ac.ox.cs.pdq.db.sql.SQLStatementBuilder;
 /**
+ * Models a database connection. It is responsible for creating database tables for the input schema.
  * 
  * @author george
  *
@@ -58,12 +57,12 @@ public class DatabaseConnection implements AutoCloseable{
 	}
 
 
-	public DatabaseConnection(DatabaseParameters reasoningParams, Schema schema) throws SQLException {
-		String driver = reasoningParams.getDatabaseDriver();
-		String url = reasoningParams.getConnectionUrl();
-		database = reasoningParams.getDatabaseName(); 
-		String username = reasoningParams.getDatabaseUser();
-		String password = reasoningParams.getDatabasePassword();
+	public DatabaseConnection(DatabaseParameters dbParams, Schema schema) throws SQLException {
+		String driver = dbParams.getDatabaseDriver();
+		String url = dbParams.getConnectionUrl();
+		database = dbParams.getDatabaseName(); 
+		String username = dbParams.getDatabaseUser();
+		String password = dbParams.getDatabasePassword();
 
 		if (url != null && url.contains("mysql")) {
 			setBuilder(new MySQLStatementBuilder());
@@ -95,7 +94,7 @@ public class DatabaseConnection implements AutoCloseable{
 			this.synchronousConnections.add(DatabaseInstance.getConnection(driver, url, database, username, password));
 		}
 
-		this.dbParams = reasoningParams;
+		this.dbParams = dbParams;
 		this.relationNamesToRelationObjects = new LinkedHashMap<>();
 		initialize();
 	}
@@ -143,8 +142,7 @@ public class DatabaseConnection implements AutoCloseable{
 	 * @throws HomomorphismException the homomorphism exception
 	 * @throws SQLException 
 	 */
-	protected void dropDatabase() throws HomomorphismException, SQLException {
-		try {
+	protected void dropDatabase() throws SQLException {
 			Statement sqlStatement = this.synchronousConnections.get(0).createStatement();
 			//Statement sqlStatement = this.synchronousConnections.createStatement();
 
@@ -152,9 +150,6 @@ public class DatabaseConnection implements AutoCloseable{
 				sqlStatement.addBatch(sql);
 			}
 			sqlStatement.executeBatch();
-		} catch (SQLException ex) {
-			throw new HomomorphismException(ex.getMessage(), ex);
-		}
 	}
 	/*
 	 * (non-Javadoc)
@@ -178,7 +173,10 @@ public class DatabaseConnection implements AutoCloseable{
 			throw new RuntimeException(e);
 		}
 	}
-
+	/**
+	 * Map from relation names to the main memory objects existing for these names. 
+	 * TOCOMMENT: See issue 168
+	 */
 	public Map<String, DatabaseRelation> getRelationNamesToRelationObjects() {
 		return relationNamesToRelationObjects;
 	}

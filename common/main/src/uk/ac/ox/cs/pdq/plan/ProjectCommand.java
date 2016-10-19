@@ -6,7 +6,7 @@ import java.util.Objects;
 import com.google.common.base.Preconditions;
 
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.db.TGD;
+import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.util.Table;
 
 // TODO: Auto-generated Javadoc

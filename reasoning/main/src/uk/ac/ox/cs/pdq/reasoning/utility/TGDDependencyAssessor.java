@@ -2,7 +2,7 @@ package uk.ac.ox.cs.pdq.reasoning.utility;
 
 import java.util.Collection;
 
-import uk.ac.ox.cs.pdq.db.Dependency;
+import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
 
 // TODO: Auto-generated Javadoc

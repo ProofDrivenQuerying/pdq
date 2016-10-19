@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.db;
+package uk.ac.ox.cs.pdq.fol;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -9,14 +9,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-import uk.ac.ox.cs.pdq.fol.Conjunction;
-import uk.ac.ox.cs.pdq.fol.Constant;
-import uk.ac.ox.cs.pdq.fol.Implication;
-import uk.ac.ox.cs.pdq.fol.LogicalSymbols;
-import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Skolem;
-import uk.ac.ox.cs.pdq.fol.Term;
-import uk.ac.ox.cs.pdq.fol.Variable;
+import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.util.CanonicalNameGenerator;
 import uk.ac.ox.cs.pdq.util.Utility;
 
@@ -108,7 +101,7 @@ public class TGD
 	 * Gets the left-hand side of the dependency.
 	 *
 	 * @return L
-	 * @see uk.ac.ox.cs.pdq.db.Dependency#getLeft()
+	 * @see uk.ac.ox.cs.pdq.fol.Dependency#getLeft()
 	 */
 	@Override
 	public Conjunction<Atom> getLeft() {
@@ -120,7 +113,7 @@ public class TGD
 	 * Gets the right-hand side of the dependency.
 	 *
 	 * @return R
-	 * @see uk.ac.ox.cs.pdq.db.Dependency#getRight()
+	 * @see uk.ac.ox.cs.pdq.fol.Dependency#getRight()
 	 */
 	@Override
 	public Conjunction<Atom> getRight() {
@@ -146,7 +139,7 @@ public class TGD
 	 * Gets the schema constants.
 	 *
 	 * @return Collection<TypedConstant<?>>
-	 * @see uk.ac.ox.cs.pdq.db.Dependency#getSchemaConstants()
+	 * @see uk.ac.ox.cs.pdq.fol.Dependency#getSchemaConstants()
 	 */
 	@Override
 	public Collection<TypedConstant<?>> getSchemaConstants() {
@@ -227,7 +220,7 @@ public class TGD
 	 * Gets all the variables of this TGD.
 	 *
 	 * @return Set<Variable>
-	 * @see uk.ac.ox.cs.pdq.db.Dependency#getAllVariables()
+	 * @see uk.ac.ox.cs.pdq.fol.Dependency#getAllVariables()
 	 */
 	@Override
 	public Set<Variable> getAllVariables() {

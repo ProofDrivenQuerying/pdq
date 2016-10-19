@@ -14,7 +14,6 @@ import org.apache.log4j.Logger;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.EntityRelation;
-import uk.ac.ox.cs.pdq.db.LinearGuarded;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
@@ -24,6 +23,7 @@ import uk.ac.ox.cs.pdq.db.builder.SchemaBuilder;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Disjunction;
+import uk.ac.ox.cs.pdq.fol.LinearGuarded;
 import uk.ac.ox.cs.pdq.fol.Negation;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Predicate;
@@ -203,7 +203,7 @@ public class ProtoBufferUnwrapper {
 	 * @param rule Rule
 	 * @return Dependency
 	 */
-	public uk.ac.ox.cs.pdq.db.Dependency ruleToDependency(Rule rule) {
+	public uk.ac.ox.cs.pdq.fol.Dependency ruleToDependency(Rule rule) {
 		this.variables.clear();
 		uk.ac.ox.cs.pdq.fol.Formula body = null;
 		this.variables.putAll(this.unwrapVariableDeclarations(rule.getVarList()));
@@ -384,7 +384,7 @@ public class ProtoBufferUnwrapper {
 					db.addRightAtom(new Atom(r, atom.getTerm(i)));
 				}
 			}
-			uk.ac.ox.cs.pdq.db.Dependency ic = db.build();
+			uk.ac.ox.cs.pdq.fol.Dependency ic = db.build();
 			log.debug("Type constraint:" + ic);
 			this.builder.addDependency(ic);
 		}

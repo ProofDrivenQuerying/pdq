@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Objects;
 
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.db.TGD;
+import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.util.Table;
 
 import com.google.common.base.Preconditions;
