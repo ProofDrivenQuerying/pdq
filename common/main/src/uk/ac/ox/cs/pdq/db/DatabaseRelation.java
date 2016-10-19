@@ -16,13 +16,11 @@ public class DatabaseRelation extends Relation {
 	private final static long serialVersionUID = 3503553786085749666L;
 	
 	/** The attr prefix. THIS SHOULD DISAPPEAR */
-	private final static String attrPrefix = "x";
+	protected final static String attrPrefix = "x";
 	
 	/** A FactID attribute. THIS SHOULD DISAPPEAR */
 	public final static Attribute Fact = new Attribute(Integer.class, "Fact");
 	
-	public final static DatabaseRelation DatabaseEqualityRelation = createEqualityTable();
-
 	/**
 	 * Constructor for DBRelation.
 	 * @param name String

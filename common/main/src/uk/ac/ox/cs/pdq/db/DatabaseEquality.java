@@ -24,7 +24,7 @@ public final class DatabaseEquality extends Atom {
 	 * @param terms Collection<? extends Term>
 	 */
 	public DatabaseEquality(Collection<? extends Term> terms) {
-		super(DatabaseRelation.DatabaseEqualityRelation, terms);
+		super(DatabaseEqualityRelation.relation, terms);
 		Preconditions.checkArgument(terms.size()==3, "Illegal equality terms");
 	}
 	
@@ -34,7 +34,7 @@ public final class DatabaseEquality extends Atom {
 	 * @param term Term[]
 	 */
 	public DatabaseEquality(Term... term) {
-		super(DatabaseRelation.DatabaseEqualityRelation, term);
+		super(DatabaseEqualityRelation.relation, term);
 		Preconditions.checkArgument(term.length==3, "Illegal equality terms");
 	}
 	

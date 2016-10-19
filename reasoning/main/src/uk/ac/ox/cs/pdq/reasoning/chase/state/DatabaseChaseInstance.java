@@ -26,6 +26,7 @@ import com.google.common.collect.Sets;
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.DatabaseEGD;
 import uk.ac.ox.cs.pdq.db.DatabaseEquality;
+import uk.ac.ox.cs.pdq.db.DatabaseEqualityRelation;
 import uk.ac.ox.cs.pdq.db.DatabaseInstance;
 import uk.ac.ox.cs.pdq.db.DatabaseRelation;
 import uk.ac.ox.cs.pdq.db.Match;
@@ -165,9 +166,9 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 	
 		Statement sqlStatement = this.getDatabaseConnection().getSynchronousConnections().get(0).createStatement();
 
-		this.relationNamesToRelationObjects.put(QNames.EQUALITY.toString(), DatabaseRelation.DatabaseEqualityRelation);
-		sqlStatement.addBatch(this.getDatabaseConnection().getBuilder().createTableStatement(DatabaseRelation.DatabaseEqualityRelation));
-		sqlStatement.addBatch(this.getDatabaseConnection().getBuilder().createColumnIndexStatement(DatabaseRelation.DatabaseEqualityRelation, DatabaseRelation.Fact));
+		this.relationNamesToRelationObjects.put(QNames.EQUALITY.toString(), DatabaseEqualityRelation.relation);
+		sqlStatement.addBatch(this.getDatabaseConnection().getBuilder().createTableStatement(DatabaseEqualityRelation.relation));
+		sqlStatement.addBatch(this.getDatabaseConnection().getBuilder().createColumnIndexStatement(DatabaseEqualityRelation.relation, DatabaseRelation.Fact));
 
 		
 		//Create indices for the joins in the body of the dependencies
