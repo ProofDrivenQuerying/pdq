@@ -4,8 +4,6 @@ import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.logging.performance.StatisticsCollector;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters.ReasoningTypes;
-import uk.ac.ox.cs.pdq.reasoning.chase.BoundedChaser;
-import uk.ac.ox.cs.pdq.reasoning.chase.BoundedChaser.KSupplier;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.ParallelEGDChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.KTerminationChaser;
@@ -45,7 +43,7 @@ import com.google.common.eventbus.EventBus;
 	 	iii. If we try to equate two different schema constants, then the chase fails. 
 	 	The facts that are generated during chasing are stored in a list.
 	 
-	 	-Bounded chase and KTermination chase: Run the chase for k rounds.
+	 	-KTermination chase: Run the chase for k rounds.
  *
  * @author Efthymia Tsamoura
  * @author Julien Leblay
@@ -68,8 +66,6 @@ public class ReasonerFactory {
 	/**  K for the KTermination chase. */
 	private final Integer terminationK;
 
-	/**  KSupplier to be shared across all BoundedChasers created by this factory. */
-	private KSupplier kSupplier = null;
 
 	/** true, if the reasoner initialisation shall be unrestricted. */
 	private final Boolean fullInitialization;
@@ -138,17 +134,9 @@ public class ReasonerFactory {
 			return new KTerminationChaser(
 					this.collectStatistics == true ? new StatisticsCollector(this.collectStatistics, this.eventBus) : null,
 					this.terminationK);
-		case BOUNDED_CHASE:
-			if (this.kSupplier == null) {
-				this.kSupplier = new KSupplier(this.terminationK);
-			}
-			return new BoundedChaser(
-					this.collectStatistics == true ? new StatisticsCollector(this.collectStatistics, this.eventBus) : null,
-					this.kSupplier,
-					this.fullInitialization);
-		default:
-			return null;
-		}
+                 default:
+                        return null;
+                 }
 	}
 
 	/**
