@@ -52,28 +52,24 @@ public interface AccessibleChaseState extends ChaseInstance {
 	Map<AccessibilityAxiom, List<Match>> getUnexposedFacts(AccessibleSchema accessibleSchema);
 	
 	/**
-	 * Gets the inferred.
 	 *
 	 * @return 		the inferred accessible facts of the state
 	 */
 	Collection<String> getInferred();
 
 	/**
-	 * Gets the derived inferred.
 	 *
 	 * @return 		the inferred accessible facts that were derived when chasing the state
 	 */
 	Collection<Atom> getDerivedInferred();
 	
 	/**
-	 * Gets the provenance.
 	 *
 	 * @return 		the rule firings that took place.
 	 */
 	Map<Atom, Pair<Dependency, Collection<Atom>>> getProvenance();
 
 	/**
-	 * Gets the provenance.
 	 *
 	 * @param fact the fact
 	 * @return 		the firing that has produced the input fact

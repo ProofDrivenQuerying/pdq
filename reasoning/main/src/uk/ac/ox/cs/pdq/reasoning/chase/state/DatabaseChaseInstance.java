@@ -113,15 +113,14 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 	}
 	
 	/**
-	 * Instantiates a new database list state. 
+	 * Instantiates a new database chase instance
 	 * This protected constructor does not(!) add the facts into the rdbms. 
 	 * Using this constructor on would need to call addFacts explicilty.
 	 *
-	 * @param chaseState the chaseState
-	 * @param facts the facts
-	 * @param graph the graph
-	 * @param classes the constant classes
-	 * @param relationNamesToRelationObjects 
+	 * @param chaseState TOCOMMENT: why doesn't state contain facts?
+	 * @param facts 
+	 * @param constants TOCOMMENT what is this
+	 * @param classes TCOMMENT: what is this
 	 */
 	protected DatabaseChaseInstance(
 			Collection<Atom> facts,
@@ -186,7 +185,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 	 * Updates that state given the input match. 
 	 *
 	 * @param match the match
-	 * @return true, if successful
+	 * @return true, if step successful
 	 */
 	@Override
 	public boolean chaseStep(Match match) {	
