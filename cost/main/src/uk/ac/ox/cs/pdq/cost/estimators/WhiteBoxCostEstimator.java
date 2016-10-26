@@ -17,7 +17,7 @@ import uk.ac.ox.cs.pdq.algebra.PredicateBasedOperator;
 import uk.ac.ox.cs.pdq.algebra.Projection;
 import uk.ac.ox.cs.pdq.algebra.RelationalOperator;
 import uk.ac.ox.cs.pdq.algebra.StaticInput;
-import uk.ac.ox.cs.pdq.algebra.SubPlanAlias;
+/* import uk.ac.ox.cs.pdq.algebra.SubPlanAlias; */
 import uk.ac.ox.cs.pdq.algebra.UnaryOperator;
 import uk.ac.ox.cs.pdq.algebra.predicates.ConjunctivePredicate;
 import uk.ac.ox.cs.pdq.algebra.predicates.Predicate;
@@ -149,22 +149,21 @@ public class WhiteBoxCostEstimator<P extends Plan> implements BlackBoxCostEstima
 		double card = Math.max(1.0, logOp.getMetadata().getOutputCardinality());
 		double localCost =
 				Math.max(0.0, card * perOutputTupleCost(logOp));
-		//		if (logOp instanceof AccessOperator) {
-		//			localCost += Math.max(1.0, inputCard) * perInputTupleCost(logOp);
-		//		}
-		if (logOp instanceof SubPlanAlias) {
-			Plan subPlan = ((SubPlanAlias) logOp).getPlan();
-			Cost aliasCost = new DoubleCost(Double.POSITIVE_INFINITY);
-			if (subPlan != null) {
-				aliasCost = subPlan.getCost();
-				if (aliasCost == null || aliasCost.isUpperBound()) {
-					aliasCost = new DoubleCost(this.recursiveCost((RelationalOperator) subPlan.getOperator()));
-				}
-				subPlan.setCost(aliasCost);
-			}
-			return aliasCost.getValue().doubleValue();
+		//if (logOp instanceof SubPlanAlias) {
+			//Plan subPlan = ((SubPlanAlias) logOp).getPlan();
+			//Cost aliasCost = new DoubleCost(Double.POSITIVE_INFINITY);
+			//if (subPlan != null) {
+				//aliasCost = subPlan.getCost();
+				//if (aliasCost == null || aliasCost.isUpperBound()) {
+					//aliasCost = new DoubleCost(this.recursiveCost((RelationalOperator) subPlan.getOperator()));
+				//}
+				//subPlan.setCost(aliasCost);
+			//}
+			//return aliasCost.getValue().doubleValue();
 
-		} else if (logOp instanceof UnaryOperator) {
+		//} 
+		//else 
+		if (logOp instanceof UnaryOperator) {
 			RelationalOperator child = ((UnaryOperator) logOp).getChild();
 			if (logOp instanceof Access) {
 				if (child != null) {
@@ -226,13 +225,13 @@ public class WhiteBoxCostEstimator<P extends Plan> implements BlackBoxCostEstima
 			}
 			return (projected.size() / (double) child.getColumns().size());
 		}
-		if (o instanceof SubPlanAlias) {
-			Plan subPlan = ((SubPlanAlias) o).getPlan();
-			if (subPlan != null) {
-				return perOutputTupleCost((RelationalOperator) subPlan.getOperator());
-			}
-			return null;
-		}
+	//	if (o instanceof SubPlanAlias) {
+		//	Plan subPlan = ((SubPlanAlias) o).getPlan();
+		//	if (subPlan != null) {
+	//			return perOutputTupleCost((RelationalOperator) subPlan.getOperator());
+			//}
+			//return null;
+		//}
 		if (o instanceof Count || o instanceof IsEmpty) {
 			return 1.0;
 		}
