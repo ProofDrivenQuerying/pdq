@@ -36,10 +36,10 @@ public class AtomReader extends AbstractXMLReader<Atom> {
 	/** Logger. */
 	private static Logger log = Logger.getLogger(AtomReader.class);
 
-	/** The Constant UNBOUND_VARIABLE_PREFIX. */
+	/** TOCOMMENT: ??? */
 	private static final String UNBOUND_VARIABLE_PREFIX = "_";
 	
-	/** The counter. */
+	/** TOCOMMENT: ??. */
 	private static Integer counter = 0;
 	
 	/** List of atoms built so far. */
@@ -102,7 +102,7 @@ public class AtomReader extends AbstractXMLReader<Atom> {
 	}
 	
 	/**
-	 * Read.
+	 * 
 	 *
 	 * @param in InputStream
 	 * @return PredicateFormula

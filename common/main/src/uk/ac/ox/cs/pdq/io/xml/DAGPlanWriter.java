@@ -15,7 +15,7 @@ import com.google.common.base.Preconditions;
  */
 public class DAGPlanWriter extends AbstractXMLWriter<DAGPlan> {
 	
-	/** The Constant TYPE_MARKER. */
+	/** TOCOMMENT: ?? */
 	public static final String TYPE_MARKER = "dag"; 
 	
 	/** The operator writer. */

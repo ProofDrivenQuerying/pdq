@@ -49,8 +49,8 @@ public class OperatorWriter extends AbstractXMLWriter<RelationalOperator> {
 	/**
 	 * Writes the given plan to the given output.
 	 *
-	 * @param out the out
-	 * @param operator the operator
+	 * @param out 
+	 * @param operator 
 	 */
 	public void writeOperator(PrintStream out, RelationalOperator operator) {
 		this.writeOperator(out, operator, Maps.<RelationalOperator, String>newHashMap());
@@ -58,10 +58,11 @@ public class OperatorWriter extends AbstractXMLWriter<RelationalOperator> {
 
 	/**
 	 * Writes the given plan to the given output.
+	 * TOCOMMENT: how different?
 	 *
-	 * @param out the out
-	 * @param operator the operator
-	 * @param aliases the aliases
+	 * @param out 
+	 * @param operator 
+	 * @param aliases 
 	 */
 	public void writeOperator(PrintStream out, RelationalOperator operator, Map<RelationalOperator, String> aliases) {
 		Preconditions.checkArgument(out != null);
@@ -151,10 +152,11 @@ public class OperatorWriter extends AbstractXMLWriter<RelationalOperator> {
 
 	/**
 	 * Writes the given plan to the given output.
+	 * TOCOMMENT: WRONG DESCRIPTION?
 	 *
-	 * @param out the out
-	 * @param operator the operator
-	 * @param aliases the aliases
+	 * @param out 
+	 * @param operator 
+	 * @param aliases 
 	 */
 	public void writeChildren(PrintStream out, RelationalOperator operator, Map<RelationalOperator, String> aliases) {
 		if (operator instanceof UnaryOperator) {
@@ -176,9 +178,10 @@ public class OperatorWriter extends AbstractXMLWriter<RelationalOperator> {
 
 	/**
 	 * Writes the given plan to the given output.
+	 * TOCOMMENT: cut and paste error in descriptioin?
 	 *
-	 * @param out the out
-	 * @param plan the plan
+	 * @param out 
+	 * @param plan t
 	 */
 	public void writeOutputs(PrintStream out, RelationalOperator plan) {
 		open(out, QNames.OUTPUTS);
@@ -204,10 +207,11 @@ public class OperatorWriter extends AbstractXMLWriter<RelationalOperator> {
 	
 	/**
 	 * Writes the given plan to the given output.
+	 * TOCOMMENT: cut and paste error in  description
 	 *
-	 * @param out the out
-	 * @param operator the operator
-	 * @param type the type
+	 * @param out 
+	 * @param operator 
+	 * @param type 
 	 */
 	public void writeOptions(PrintStream out, RelationalOperator operator, Types type) {
 		switch (type) {
@@ -296,9 +300,10 @@ public class OperatorWriter extends AbstractXMLWriter<RelationalOperator> {
 
 	/**
 	 * Writes the given select command to the given output.
+	 * TOCOMMENT: select command?
 	 *
-	 * @param out the out
-	 * @param predicate the predicate
+	 * @param out 
+	 * @param predicate 
 	 */
 	private void writePredicate(PrintStream out, Predicate predicate) {
 		if (predicate instanceof ConjunctivePredicate<?>) {
