@@ -30,14 +30,15 @@ public class RelationalDynamicMetadata implements RelationMetadata {
 	/** The per input tuple cost. */
 	private Map<AccessMethod, Cost> perInputTupleCost;
 
-	/** The position selectivity. */
+	/** TOCOMMENT: what is this?. */
 	private Map<List<Integer>, Double> positionSelectivity;
 
-	/** The value selectivity. */
+	/** TOCOMMENT: what is this? */
 	private Map<Pair<List<Integer>, Tuple>, Double> valueSelectivity;
 
 	/**
 	 * Constructor for RelationalDynamicMetadata.
+	 * TOCOMMENT: hwat is this
 	 * @param relation Relation
 	 */
 	public RelationalDynamicMetadata(Relation relation) {
@@ -47,6 +48,7 @@ public class RelationalDynamicMetadata implements RelationMetadata {
 
 	/**
 	 * Collect statistics.
+	 * TCOMMENT: meaning?
 	 */
 	private void collectStatistics() {
 	}
@@ -80,6 +82,7 @@ public class RelationalDynamicMetadata implements RelationMetadata {
 
 	/**
 	 * Gets the selectivity.
+	 * TOCOMMENT: what is going on here?
 	 *
 	 * @param positions List<Integer>
 	 * @param tuple Tuple
@@ -109,6 +112,7 @@ public class RelationalDynamicMetadata implements RelationMetadata {
 
 	/**
 	 * Sets the per input tuple costs.
+	 * TOCOMMENT: what is the difference from the previous?
 	 *
 	 * @param accessCosts Map<AccessMethod,Cost>
 	 * @see uk.ac.ox.cs.pdq.costs.statistics.RelationMetadata#setPerInputTupleCosts(Map<AccessMethod,Cost>)

@@ -23,10 +23,9 @@ public class DependencyBuilder implements Builder<TGD> {
 	private List<Atom> right = new LinkedList<>();
 	
 	/**
-	 * Adds the left.
+	 * Adds to the left.
 	 *
-	 * @param f the f
-	 * @return DependencyBuilder
+	 * 
 	 */
 	public DependencyBuilder addLeft(Formula f) {
 		if(f instanceof Atom) {
@@ -39,10 +38,8 @@ public class DependencyBuilder implements Builder<TGD> {
 	}
 	
 	/**
-	 * Adds the right.
+	 * Adds to the right.
 	 *
-	 * @param f the f
-	 * @return DependencyBuilder
 	 */
 	public DependencyBuilder addRight(Formula f) {
 		if(f instanceof Atom) {
@@ -55,7 +52,7 @@ public class DependencyBuilder implements Builder<TGD> {
 	}
 	
 	/**
-	 * Adds the left conjunction.
+	 * Adds a conjunction to the left.
 	 *
 	 * @param p Conjunction of Atoms
 	 * @return DependencyBuilder
@@ -66,7 +63,7 @@ public class DependencyBuilder implements Builder<TGD> {
 	}
 	
 	/**
-	 * Adds the right conjunction.
+	 * Adds a conjunction to the right
 	 *
 	 * @param p Conjunction of Atom
 	 * @return DependencyBuilder
@@ -77,7 +74,7 @@ public class DependencyBuilder implements Builder<TGD> {
 	}
 	
 	/**
-	 * Adds the left atom.
+	 * Adds an atom to the left 
 	 *
 	 * @param p Atom
 	 * @return DependencyBuilder
@@ -88,7 +85,7 @@ public class DependencyBuilder implements Builder<TGD> {
 	}
 	
 	/**
-	 * Adds the right atom.
+	 * Adds an atom to the right 
 	 *
 	 * @param p Atom
 	 * @return DependencyBuilder
