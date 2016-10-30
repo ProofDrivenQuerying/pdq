@@ -31,8 +31,8 @@ Two JARs will be built and placed in the project's "target/" directory.
 	  only, i.e. you need to make sure all dependencies are on the CLASSPATH to
 	  run it.
 
-	- pdq-regression-<version>.one-jar.jar, is fully self-contained, and can be
-	  run directly.
+	- pdq-regression-<version>-Beta-jar-with-dependencies.jar, is fully self-contained, and can be
+	  run directly. However,  a number of the tests currently require installation of Postgres or MySQL.
 
 To run the regression tests, type:
 
