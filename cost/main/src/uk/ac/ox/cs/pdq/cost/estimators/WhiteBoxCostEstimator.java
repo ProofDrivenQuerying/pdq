@@ -17,7 +17,6 @@ import uk.ac.ox.cs.pdq.algebra.PredicateBasedOperator;
 import uk.ac.ox.cs.pdq.algebra.Projection;
 import uk.ac.ox.cs.pdq.algebra.RelationalOperator;
 import uk.ac.ox.cs.pdq.algebra.StaticInput;
-import uk.ac.ox.cs.pdq.algebra.SubPlanAlias;
 /* import uk.ac.ox.cs.pdq.algebra.SubPlanAlias; */
 import uk.ac.ox.cs.pdq.algebra.UnaryOperator;
 import uk.ac.ox.cs.pdq.algebra.predicates.ConjunctivePredicate;
@@ -29,6 +28,7 @@ import uk.ac.ox.cs.pdq.plan.DAGPlan;
 import uk.ac.ox.cs.pdq.plan.DoubleCost;
 import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.plan.Plan;
+import uk.ac.ox.cs.pdq.plan.SubPlanAlias;
 
 import com.google.common.collect.Lists;
 

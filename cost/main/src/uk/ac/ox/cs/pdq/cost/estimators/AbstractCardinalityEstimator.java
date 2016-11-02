@@ -12,10 +12,10 @@ import uk.ac.ox.cs.pdq.algebra.RelationalOperator;
 import uk.ac.ox.cs.pdq.algebra.Scan;
 import uk.ac.ox.cs.pdq.algebra.Selection;
 import uk.ac.ox.cs.pdq.algebra.StaticInput;
-import uk.ac.ox.cs.pdq.algebra.SubPlanAlias;
 import uk.ac.ox.cs.pdq.algebra.UnaryOperator;
 import uk.ac.ox.cs.pdq.algebra.Union;
 import uk.ac.ox.cs.pdq.plan.EstimateProvider;
+import uk.ac.ox.cs.pdq.plan.SubPlanAlias;
 
 import com.google.common.base.Preconditions;
 

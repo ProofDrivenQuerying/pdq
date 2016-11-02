@@ -13,13 +13,13 @@ import uk.ac.ox.cs.pdq.algebra.Projection;
 import uk.ac.ox.cs.pdq.algebra.RelationalOperator;
 import uk.ac.ox.cs.pdq.algebra.Scan;
 import uk.ac.ox.cs.pdq.algebra.Selection;
-import uk.ac.ox.cs.pdq.algebra.SubPlanAlias;
 import uk.ac.ox.cs.pdq.db.AccessMethod.Types;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.plan.AccessOperator;
 import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.plan.PlanUtils;
+import uk.ac.ox.cs.pdq.plan.SubPlanAlias;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.Candidate;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
 
