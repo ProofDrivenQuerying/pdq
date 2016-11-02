@@ -559,11 +559,11 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 				terms.add(new Variable(DatabaseRelation.Fact.getName() + f++));
 				left.add(new Atom(relation, terms));
 			}
-			List<Equality> right = new ArrayList<Equality>();
+			List<DatabaseEquality> right = new ArrayList<DatabaseEquality>();
 			for(Equality atom:((EGD) source).getRight()) {
 				List<Term> terms = Lists.newArrayList(atom.getTerms());
 				terms.add(new Variable(DatabaseRelation.Fact.getName() + f++));
-				right.add(new Equality(terms));
+				right.add(new DatabaseEquality(terms));
 			}
 			return (Q) new DatabaseEGD(Conjunction.of(left), Conjunction.of(right));
 		}

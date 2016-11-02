@@ -477,7 +477,7 @@ public abstract class SQLStatementBuilder {
 			List<String> attributePredicates = new ArrayList<String>();
 			//The right atom should be an equality
 			//We add additional checks to be sure that we have to do with EGDs
-			for(Equality rightAtom:((DatabaseEGD)source).getHead()) {
+			for(DatabaseEquality rightAtom:((DatabaseEGD)source).getHead()) {
 				Relation rightRelation = (Relation) rightAtom.getPredicate();
 				String rightAlias = this.aliases.get(rightAtom);
 				Map<Integer,Pair<String,Attribute>> rightToLeft = new HashMap<Integer,Pair<String,Attribute>>();

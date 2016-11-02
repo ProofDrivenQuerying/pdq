@@ -30,8 +30,8 @@ import com.google.common.collect.Sets;
  * @author Efthymia Tsamoura
  */
 public class DatabaseEGD
-		extends Implication<Conjunction<Atom>, Conjunction<Equality>>
-		implements Dependency<Conjunction<Atom>, Conjunction<Equality>> {
+		extends Implication<Conjunction<Atom>, Conjunction<DatabaseEquality>>
+		implements Dependency<Conjunction<Atom>, Conjunction<DatabaseEquality>> {
 	
 	/**  The dependency's universally quantified variables. */
 	protected List<Variable> universal;
@@ -45,7 +45,7 @@ public class DatabaseEGD
 	 * @param left The left-hand side conjunction of the dependency
 	 * @param conjunction The right-hand side conjunction of the dependency
 	 */
-	public DatabaseEGD(Conjunction<Atom> left, Conjunction<Equality> conjunction) {
+	public DatabaseEGD(Conjunction<Atom> left, Conjunction<DatabaseEquality> conjunction) {
 		super(left, conjunction);
 		this.universal = Utility.getVariables(left.getAtoms());
 		for (Term term:conjunction.getTerms()) {
@@ -94,7 +94,7 @@ public class DatabaseEGD
 	 * @see uk.ac.ox.cs.pdq.fol.Dependency#getRight()
 	 */
 	@Override
-	public Conjunction<Equality> getRight() {
+	public Conjunction<DatabaseEquality> getRight() {
 		return this.right;
 	}
 
