@@ -53,7 +53,7 @@ import uk.ac.ox.cs.pdq.util.Utility;
 public class DatabaseInstance implements Instance {
 
 
-	private static Logger log = Logger.getLogger(DatabaseInstance.class);
+	protected static Logger log = Logger.getLogger(DatabaseInstance.class);
 
 	/** The schema relations */
 	protected List<Relation> relations = null;

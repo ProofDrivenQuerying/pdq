@@ -5,12 +5,15 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.apache.commons.lang3.tuple.Pair;
@@ -18,14 +21,14 @@ import org.apache.commons.lang3.tuple.Triple;
 
 import com.beust.jcommander.internal.Lists;
 import com.beust.jcommander.internal.Maps;
+import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 
+import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
-import uk.ac.ox.cs.pdq.db.DatabaseEGD;
-import uk.ac.ox.cs.pdq.db.DatabaseEquality;
 import uk.ac.ox.cs.pdq.db.DatabaseEqualityRelation;
 import uk.ac.ox.cs.pdq.db.DatabaseInstance;
 import uk.ac.ox.cs.pdq.db.DatabaseRelation;
@@ -33,6 +36,7 @@ import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismProperty;
+import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismProperty.ActiveTriggerProperty;
 import uk.ac.ox.cs.pdq.db.sql.SQLStatementBuilder;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
@@ -478,7 +482,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 			ConjunctiveQuery converted = this.convert(query);
 			HomomorphismProperty[] c = null;
 			//Create an SQL statement for the cleaned query
-			Pair<String, LinkedHashMap<String, Variable>> pair = this.builder.createQuery(converted, properties);
+			Pair<String, LinkedHashMap<String, Variable>> pair = createQuery(converted, properties);
 			queries.add(Triple.of(query, pair.getLeft(), pair.getRight()));
 
 			return this.answerQueries(queries);
@@ -519,7 +523,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 				c = properties;
 			}
 			//Create an SQL statement for the cleaned query
-			Pair<String, LinkedHashMap<String, Variable>> pair = this.builder.createQuery(s, c);
+			Pair<String, LinkedHashMap<String, Variable>> pair = createQuery(s, c);
 			queries.add(Triple.of(source, pair.getLeft(), pair.getRight()));
 		}
 
@@ -593,6 +597,177 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		this.relationNamesToRelationObjects = connection.getRelationNamesToRelationObjects();
 		this.synchronousThreadsNumber = connection.synchronousThreadsNumber;
 		this.constants = connection.getSchema().getConstants();
+	}
+
+	
+	/**
+	 * Creates an SQL statement that detects homomorphisms of the input query to facts kept in a database.
+	 *
+	 * @param source the source
+	 * @param constraints 		A set of constraints that should be satisfied by the homomorphisms of the input formula to the facts of the database 
+	 * @param constants the constants
+	 * @param connection the connection
+	 * @return homomorphisms of the input query to facts kept in a database.
+	 */
+	public Pair<String,LinkedHashMap<String,Variable>> createQuery(Evaluatable source, HomomorphismProperty[] constraints) {
+
+		String query = "";
+		List<String> from = this.builder.createFromStatement((Conjunction<Atom>) source.getBody());
+		LinkedHashMap<String,Variable> projections = this.builder.createProjections(source);
+		List<String> predicates = new ArrayList<String>();
+		List<String> equalities = this.builder.createAttributeEqualities((Conjunction<Atom>) source.getBody());
+		List<String> constantEqualities = this.builder.createEqualitiesWithConstants((Conjunction<Atom>) source.getBody());
+		List<String> equalitiesForHomomorphicProperties = this.builder.createEqualitiesForHomomorphicProperties(source, constraints);
+
+		/*
+		 * if the target set of facts is not null, we
+		 * add in the WHERE statement a predicate which limits the identifiers
+		 * of the facts that satisfy any homomorphism to the identifiers of these facts
+		 */
+		List<String> factproperties = this.builder.translateFactProperties((Conjunction<Atom>) source.getBody(), constraints);
+
+		String egdProperties = this.builder.translateEGDHomomorphicProperties(source, constraints);
+		if(egdProperties!=null) {
+			predicates.add(egdProperties);
+		}
+		predicates.addAll(equalities);
+		predicates.addAll(constantEqualities);
+		predicates.addAll(equalitiesForHomomorphicProperties);
+		predicates.addAll(factproperties);
+
+		//Limit the number of returned homomorphisms
+		String limit = this.builder.translateLimitConstraints(source, constraints); 
+
+		query = "SELECT " 	+ Joiner.on(",").join(projections.keySet()) + "\n" +  
+				"FROM " 	+ Joiner.on(",").join(from);
+		if(!predicates.isEmpty()) {
+			query += "\n" + "WHERE " + Joiner.on(" AND ").join(predicates);
+		}	
+
+		boolean activeTrigger = false;
+		for(HomomorphismProperty c:constraints) {
+			if(c instanceof ActiveTriggerProperty) {
+				activeTrigger = true;
+				break;
+			}			
+		}
+
+		if(source instanceof Dependency && activeTrigger) {
+			List<String> from2 = null;
+			if(source instanceof Dependency) {
+				from2 = this.builder.createFromStatement(Conjunction.of(((Dependency)source).getRight().getAtoms()));
+			}
+			LinkedHashMap<String,Variable> nestedProjections = this.builder.createProjections(source);
+			List<String> predicates2 = new ArrayList<String>();
+			List<String> nestedAttributeEqualities = this.createNestedAttributeEqualitiesForActiveTriggers((Dependency)source);
+			List<String> nestedConstantEqualities = this.builder.createEqualitiesWithConstants(Conjunction.of(((Dependency)source).getAtoms()));
+			predicates2.addAll(nestedAttributeEqualities);
+			predicates2.addAll(nestedConstantEqualities);
+			
+			/*
+			 * if the target set of facts is not null, we
+			 * add in the WHERE statement a predicate which limits the identifiers
+			 * of the facts that satisfy any homomorphism to the identifiers of these facts
+			 */
+			List<String> nestedFactproperties = this.builder.translateFactProperties(Conjunction.of(((Dependency)source).getRight().getAtoms()), constraints);
+			predicates2.addAll(nestedFactproperties);
+			
+			String query2 = 
+					"(SELECT " 	+ Joiner.on(",").join(nestedProjections.keySet()) + "\n" +  
+							"FROM " 	+ Joiner.on(",").join(from2);
+			if(!predicates2.isEmpty()) {
+				query2 += "\n" + "WHERE " + Joiner.on(" AND ").join(predicates2);
+			}	
+			query2 += ")";
+			if(predicates.isEmpty()) {
+				query += "\n" + "WHERE " + " NOT EXISTS" + "\n" + query2;
+			}	
+			else {
+				query += "\n" + "AND " + " NOT EXISTS" + "\n" + query2;
+			}
+		}
+		if(limit != null) {
+			query += "\n" + limit;
+		}
+		
+		log.trace(source);
+		log.trace(query);
+		log.trace("\n\n");
+		return Pair.of(query, projections);
+	}
+	
+	/**
+	 * Creates the attribute equalities.
+	 *
+	 * @param source the source
+	 * @return 		explicit equalities (String objects of the form A.x1 = B.x2) of the implicit equalities in the input conjunction (the latter is denoted by repetition of the same term)
+	 */
+	protected List<String> createNestedAttributeEqualitiesForActiveTriggers(Dependency source) {
+		if(source instanceof TGD) {
+			return this.builder.createAttributeEqualities(Conjunction.of(((Dependency)source).getAtoms()));
+		}
+		else if(source instanceof DatabaseEGD){
+			List<String> attributePredicates = new ArrayList<String>();
+			//The right atom should be an equality
+			//We add additional checks to be sure that we have to do with EGDs
+			for(DatabaseEquality rightAtom:((DatabaseEGD)source).getHead()) {
+				Relation rightRelation = (Relation) rightAtom.getPredicate();
+				String rightAlias = this.builder.aliases.get(rightAtom);
+				Map<Integer,Pair<String,Attribute>> rightToLeft = new HashMap<Integer,Pair<String,Attribute>>();
+				for(Term term:rightAtom.getTerms()) {
+					List<Integer> rightPositions = rightAtom.getTermPositions(term); //all the positions for the same term should be equated
+					Preconditions.checkArgument(rightPositions.size() == 1);
+					for(Atom leftAtom:source.getBody().getAtoms()) {
+						Relation leftRelation = (Relation) leftAtom.getPredicate();
+						String leftAlias = this.builder.aliases.get(leftAtom);
+						List<Integer> leftPositions = leftAtom.getTermPositions(term); 
+						Preconditions.checkArgument(leftPositions.size() <= 1);
+						if(leftPositions.size() == 1) {
+							rightToLeft.put(rightPositions.get(0), Pair.of(leftAlias==null ? leftRelation.getName():leftAlias, leftRelation.getAttribute(leftPositions.get(0))));
+						}
+					}
+				}
+				Preconditions.checkArgument(rightToLeft.size()==2);
+				Iterator<Entry<Integer, Pair<String, Attribute>>> entries;
+				Entry<Integer, Pair<String, Attribute>> entry;
+				
+				entries = rightToLeft.entrySet().iterator();
+				entry = entries.next();
+				
+				StringBuilder result = new StringBuilder();
+				result.append("(");
+				result.append(entry.getValue().getLeft()).append(".").append(entry.getValue().getRight().getName()).append('=');
+				result.append(rightAlias==null ? rightRelation.getName():rightAlias).append(".").append(rightRelation.getAttribute(0).getName());
+				
+				entry = entries.next();
+				
+				result.append(" AND ");
+				result.append(entry.getValue().getLeft()).append(".").append(entry.getValue().getRight().getName()).append('=');
+				result.append(rightAlias==null ? rightRelation.getName():rightAlias).append(".").append(rightRelation.getAttribute(1).getName());
+				
+				entries = rightToLeft.entrySet().iterator();
+				entry = entries.next();
+	
+				result.append(" OR ");
+				result.append(entry.getValue().getLeft()).append(".").append(entry.getValue().getRight().getName()).append('=');
+				result.append(rightAlias==null ? rightRelation.getName():rightAlias).append(".").append(rightRelation.getAttribute(1).getName());
+				
+				entry = entries.next();
+				
+				result.append(" AND ");
+				result.append(entry.getValue().getLeft()).append(".").append(entry.getValue().getRight().getName()).append('=');
+				result.append(rightAlias==null ? rightRelation.getName():rightAlias).append(".").append(rightRelation.getAttribute(0).getName());
+				
+				result.append(")");
+
+				attributePredicates.add(result.toString());
+				
+			}
+			return attributePredicates;
+		}
+		else {
+			throw new java.lang.IllegalArgumentException("Unsupported constraint type");
+		}
 	}
 
 }

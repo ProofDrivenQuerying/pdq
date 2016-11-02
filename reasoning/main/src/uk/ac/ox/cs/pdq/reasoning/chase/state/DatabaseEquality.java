@@ -1,8 +1,9 @@
-package uk.ac.ox.cs.pdq.db;
+package uk.ac.ox.cs.pdq.reasoning.chase.state;
 
 import java.util.Collection;
 import java.util.Map;
 
+import uk.ac.ox.cs.pdq.db.DatabaseEqualityRelation;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Term;
