@@ -46,6 +46,7 @@ public abstract class PlanWriter {
 
 		/**
 		 * Instantiates a new plan writer factory.
+		 * TOCOMMENT: how are thses two different?
 		 */
 		private PlanWriterFactory() {
 			this(System.out);
@@ -54,7 +55,7 @@ public abstract class PlanWriter {
 		/**
 		 * Instantiates a new plan writer factory.
 		 *
-		 * @param out the out
+		 * @param out 
 		 */
 		private PlanWriterFactory(PrintStream out) {
 			this.out = out;
@@ -63,7 +64,7 @@ public abstract class PlanWriter {
 		/**
 		 * Writes the given plan to the last set output stream.
 		 *
-		 * @param plan the plan
+		 * @param plan 
 		 */
 		public void write(Plan plan) {
 			if (plan instanceof LeftDeepPlan) {

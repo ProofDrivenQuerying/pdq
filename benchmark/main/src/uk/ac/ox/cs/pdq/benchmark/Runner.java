@@ -110,7 +110,7 @@ planner,
 	@Parameter(names = { "-f", "--filter-by" }, required = false, description = "Comma-separated list of parameters to include on the log in order to filter them.")
 	protected List<String> filters;
 
-	/** The nb threads. */
+	/** The number of threads. */
 	@Parameter(names = { "-t", "--threads" }, required = false, description = "The numbder of search thread to execute in parallel.")
 	protected int nbThreads = 1;
 
@@ -119,6 +119,7 @@ planner,
 	protected long overallTimeout = 24*3600000;
 
 	/** The dynamic params. */
+/** TO COMMENT: WHAT IS THIS?? */
 	@DynamicParameter(names = "-D", description = "Dynamic parameters. Override values defined in the initialConfig files.")
 	protected Map<String, String> dynamicParams = new LinkedHashMap<>();
 
@@ -358,7 +359,7 @@ planner,
 	 * Returns a short String representation of the given dependency. This
 	 * by-passes toString which is too verbose for non-debug purpose.
 	 *
-	 * @param ic the ic
+	 * @param ic 
 	 * @return a short String representation of the dependency.
 	 */
 	private static String toShortString(TGD ic) {
@@ -371,7 +372,7 @@ planner,
 	/**
 	 * Prints the given plan the output.
 	 *
-	 * @param p the p
+	 * @param p 
 	 * @param out the out
 	 */
 	protected void printPlan(Plan p, PrintStream out) {

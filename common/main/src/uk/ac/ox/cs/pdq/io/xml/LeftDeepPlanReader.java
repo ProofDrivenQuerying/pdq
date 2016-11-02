@@ -36,7 +36,7 @@ public class LeftDeepPlanReader extends AbstractXMLReader<LeftDeepPlan> {
 	/**  The pan being built. */
 	private LeftDeepPlan plan = null;
 	
-	/**  The operator if the command being read. */
+	/**  The operator of the command being read. */
 	private RelationalOperator operator = null;
 	
 	/**  The current access operator being read. */

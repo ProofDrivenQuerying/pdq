@@ -39,6 +39,7 @@ public interface RelationMetadata {
 
 	/**
 	 * Gets the selectivity.
+	 * TOCOMMENT: How different from previous
 	 *
 	 * @param positions List<Integer>
 	 * @param tuple Tuple
@@ -64,6 +65,7 @@ public interface RelationMetadata {
 
 	/**
 	 * Sets the per input tuple costs.
+	 * TOCOMMENT: how different from previous
 	 *
 	 * @param costs Map<AccessMethod,Cost>
 	 */

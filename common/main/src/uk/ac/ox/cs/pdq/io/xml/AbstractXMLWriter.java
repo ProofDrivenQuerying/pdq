@@ -7,6 +7,7 @@ import java.util.Properties;
 import uk.ac.ox.cs.pdq.io.Writer;
 
 /**
+ * TOCOMMENT: what is experiment sample elements
  * Writes experiment sample elements to XML.
  *
  * @author Julien Leblay
@@ -17,7 +18,7 @@ public abstract class AbstractXMLWriter<T> implements Writer<T> {
 	/**
 	 * Writes a standard XML header to the output.
 	 *
-	 * @param out the out
+	 * @param out 
 	 */
 	protected static void prolog(PrintStream out) {
 		out.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
@@ -26,8 +27,8 @@ public abstract class AbstractXMLWriter<T> implements Writer<T> {
 	/**
 	 * Writes an opening tag with the given QName to the given output.
 	 *
-	 * @param out the out
-	 * @param qname the qname
+	 * @param out 
+	 * @param qname 
 	 */
 	protected static void open(PrintStream out, QNames qname) {
 		out.println("<" + qname.format() + ">");
@@ -37,9 +38,9 @@ public abstract class AbstractXMLWriter<T> implements Writer<T> {
 	 * Writes an opening tag with the given QName and attributes to the given 
 	 * output.
 	 *
-	 * @param out the out
-	 * @param qname the qname
-	 * @param attributes the attributes
+	 * @param out 
+	 * @param qname 
+	 * @param attributes 
 	 */
 	protected static void open(PrintStream out, QNames qname,
 			Map<QNames, String> attributes) {
@@ -55,8 +56,8 @@ public abstract class AbstractXMLWriter<T> implements Writer<T> {
 	/**
 	 * Writes a stand-alone tag with the given QName to the given output.
 	 *
-	 * @param out the out
-	 * @param qname the qname
+	 * @param out 
+	 * @param qname 
 	 */
 	protected static void openclose(PrintStream out, QNames qname) {
 		out.println('<' + qname.format() + "/>");
@@ -66,9 +67,9 @@ public abstract class AbstractXMLWriter<T> implements Writer<T> {
 	 * Writes a stand-alone tag with the given QName and attributes to the 
 	 * given output.
 	 *
-	 * @param out the out
-	 * @param qname the qname
-	 * @param properties Properties
+	 * @param out 
+	 * @param qname 
+	 * @param properties 
 	 */
 	protected static void openclose(PrintStream out, QNames qname,
 			Properties properties) {
@@ -84,10 +85,11 @@ public abstract class AbstractXMLWriter<T> implements Writer<T> {
 	/**
 	 * Writes a stand-alone tag with the given QName and attributes to the 
 	 * given output.
+	 * TOCOMMENT: HOW DIFFERENT FROM PREVIOUS?
 	 *
-	 * @param out the out
-	 * @param qname the qname
-	 * @param attributes the attributes
+	 * @param out 
+	 * @param qname 
+	 * @param attributes 
 	 */
 	protected static void openclose(PrintStream out, QNames qname,
 			Map<QNames, String> attributes) {
@@ -103,8 +105,8 @@ public abstract class AbstractXMLWriter<T> implements Writer<T> {
 	/**
 	 * Writes a closing tag with the given QName to the given output.
 	 *
-	 * @param out the out
-	 * @param qname the qname
+	 * @param out 
+	 * @param qname 
 	 */
 	protected static void close(PrintStream out, QNames qname) {
 		out.println("</" + qname.format() + '>');

@@ -16,10 +16,10 @@ import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
  */
 public class LeftDeepPlanWriter extends AbstractXMLWriter<LeftDeepPlan> {
 
-	/** The Constant TYPE_MARKER. */
+	/**  TOCOMMENT: ??. */
 	public static final String TYPE_MARKER = "linear"; 
 
-	/** The Constant SUBPLAN_ALIAS. */
+	/**  TOCOMMENT: ?? */
 	public static final String SUBPLAN_ALIAS = "T"; 
 
 	/**  Relations writer. */

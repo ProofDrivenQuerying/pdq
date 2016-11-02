@@ -26,28 +26,28 @@ public class BenchmarkParameters extends uk.ac.ox.cs.pdq.Parameters {
 	/**  Properties file path. */
 	public static final String DEFAULT_CONFIG_FILE_PATH = "./" + DEFAULT_CONFIG_FILE_NAME;
 
-	/** The print query result. */
+	/** The printed query result. */
 	@Parameter(description =
 		"If true, prints the result of the evaluation of the input query to STDOUT")
 	protected Boolean printQueryResult;
 
-	/** The print plan result. */
+	/** The printed plan result. */
 	@Parameter(description = 
 		"If true, prints the result of the evaluation of the output plan to STDOUT")
 	protected Boolean printPlanResult;
 
-	/** The print accessible schema. */
+	/** The printed accessible schema. */
 	@Parameter(description =
 		"If true, prints the accessible version of the input schema to STDOUT")
 	protected Boolean printAccessibleSchema;
 
-	/** The search only. */
+	/** Flag saying to only search, not run. */
 	@Parameter(description=
 		"If true, only run the search "
 		+ "(e.g. does not attempt to evluation the resulting plan")
 	protected Boolean searchOnly;
 
-	/** The arity. */
+	/** The maximum arity of generated relations */
 	@Parameter(description="Maximum arity of generated relations")
 	private Integer arity;
 
@@ -55,47 +55,51 @@ public class BenchmarkParameters extends uk.ac.ox.cs.pdq.Parameters {
 	@Parameter(description="Number of generated relations")
 	private Integer numberOfRelations;
 
-	/** The max access methods. */
+	/** The maximum number of access methods per relations. */
 	@Parameter(description="Maximum number of access method in generated relations")
 	private Integer maxAccessMethods;
 
-	/** The accessibility. */
+	/** The fraction of relations that should be accessible. */
 	@Parameter(description="Ratio of generated relations that should be accessible")
 	private Double accessibility;
 
 	/** The free position. */
+       /** TOCOMMENT: SOMETHING WRONG HERE */
 	@Parameter(description="Ratio of distinguished variables in generated queries")
 	private Double freePosition;
 
-	/** The connectivity. */
+	/** The connectivity ratio of generated queries. */
 	@Parameter(description="Connectivity ratio in generated queries")
 	private Double connectivity;
 
-	/** The projectivity. */
+	/** The ratio of free to existentially quantified variables . */
 	@Parameter(description="Projectivity ratio in generated queries")
 	private Double projectivity;
 
-	/** The max distance to free. */
+	/** The max distance to a freely accessible relations relation. */
 	@Parameter(description="Maximun distance (number of rule firing) from the query to a free access relation")
 	private Integer maxDistanceToFree;
 	
 	/** The generator type. */
-	@Parameter(description="Type of generate to use")
+ /** TOCOMMENT: WHAT DOES THIS MEAN?  */
+	@Parameter(description="Type of generator to use")
 	private GeneratorTypes generatorType;
 
 	/** The join. */
+/** TOCOMMENT: WHAT DOES THIS MEAN?  */
 	@Parameter(description="JoinTest ratio in generated queries")
 	private Double join;
 
 	/** The query type. */
+/** TOCOMMENT: WHAT DOES THIS MEAN?  */
 	@Parameter(description="Type of queries to generate")
 	private QueryTypes queryType;
 
-	/** The query conjuncts. */
+	/** The number of query conjuncts. */
 	@Parameter(description="Number of conjuncts in the generated queries")
 	private Integer queryConjuncts;
 
-	/** The constraint conjuncts. */
+	/** The number of constraint conjuncts. */
 	@Parameter(description="Number of conjuncts in the generated constraints")
 	private Integer constraintConjuncts;
 
@@ -115,7 +119,7 @@ public class BenchmarkParameters extends uk.ac.ox.cs.pdq.Parameters {
 	@Parameter(description="Maximum cardinality of the generated relations")
 	private Integer relationSize;
 
-	/** The max cost. */
+	/** The max cost of access. */
 	@Parameter(description="Maximun (simple) cost of access to generated relations")
 	private Double maxCost;
 
@@ -123,15 +127,15 @@ public class BenchmarkParameters extends uk.ac.ox.cs.pdq.Parameters {
 	@Parameter(description="Mean (simple) cost of access to generated relations")
 	private Double meanCost;
 
-	/** The input position. */
+	/** The ratio of input to non-input positions. */
 	@Parameter(description="Ratio of attribute positions to use as inputs in generated access methods")
 	private Double inputPosition;
 
-	/** The free access. */
+	/** The ratio of freely-accessible relations. */
 	@Parameter(description="Ratio of generated relations with a free access")
 	private Double freeAccess;
 
-	/** The repeated relations. */
+	/** Flag telling if  repeated relations allowed. */
 	@Parameter(description="If true, generated queries are allowed to reference relations multiple times")
 	private Boolean repeatedRelations;
 
@@ -139,12 +143,14 @@ public class BenchmarkParameters extends uk.ac.ox.cs.pdq.Parameters {
 	@Parameter(description="Path to the input schema file")
 	private String inputSchema;
 
-	/** The free variable. */
+	/** The ratio of free variable in generated queries. */
+/** TOCOMMENT: HOW IS THIS DIFFERENT FROM PROJECTIVITY ABOVE */
 	@Parameter(description="Ratio of distinguished variables in generated queries",
 			defaultValue = "0.0")
 	private Double freeVariable = 0.0;
 
 	/** The validation db. */
+/** TOCOMMENT: SOMETHING WRONG  */
 	@Parameter(description="Maximun (simple) cost of access to generated relations")
 	private String validationDB;
 
@@ -222,16 +228,15 @@ public class BenchmarkParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 
 	/**
-	 * Gets the prints the query result.
+	 * Gets the flag telling if query result printed.
 	 *
-	 * @return the prints the query result
 	 */
 	public Boolean getPrintQueryResult() {
 		return this.printQueryResult;
 	}
 
 	/**
-	 * Sets the prints the query result.
+	 * Sets the flag telling if the query result is printed.
 	 *
 	 * @param print the new prints the query result
 	 */
@@ -240,7 +245,7 @@ public class BenchmarkParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 
 	/**
-	 * Gets the prints the plan result.
+	 * Gets flag telling if the plan result is printed.
 	 *
 	 * @return the prints the plan result
 	 */
@@ -249,7 +254,7 @@ public class BenchmarkParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 
 	/**
-	 * Sets the prints the plan result.
+	 * Sets the flag telling if the plan result is printed.
 	 *
 	 * @param print the new prints the plan result
 	 */
@@ -258,7 +263,7 @@ public class BenchmarkParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 
 	/**
-	 * Gets the prints the accessible schema.
+	 * Gets the flag telling if the accessible schema is printed.
 	 *
 	 * @return the prints the accessible schema
 	 */
@@ -267,7 +272,7 @@ public class BenchmarkParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 
 	/**
-	 * Sets the prints the accessible schema.
+	 * Sets the flag telling if the accessible schema is printed.
 	 *
 	 * @param print the new prints the accessible schema
 	 */
@@ -276,27 +281,24 @@ public class BenchmarkParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 
 	/**
-	 * Gets the search only.
+	 * Gets the flag telling if we only search  rather than run
 	 *
-	 * @return the search only
 	 */
 	public Boolean getSearchOnly() {
 		return this.searchOnly;
 	}
 
 	/**
-	 * Sets the search only.
+	 * Sets the flag telling if we only search rather than run
 	 *
-	 * @param searchOnly the new search only
 	 */
 	public void setSearchOnly(Boolean searchOnly) {
 		this.searchOnly = searchOnly;
 	}
 
 	/**
-	 * Gets the arity.
+	 * Gets the max arity.
 	 *
-	 * @return the arity
 	 */
 	public Integer getArity() {
 		return this.arity;
@@ -321,7 +323,7 @@ public class BenchmarkParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 
 	/**
-	 * Gets the dependency conjuncts.
+	 * Gets the number of dependency conjuncts.
 	 *
 	 * @return the dependency conjuncts
 	 */
@@ -331,27 +333,24 @@ public class BenchmarkParameters extends uk.ac.ox.cs.pdq.Parameters {
 
 
 	/**
-	 * Gets the free access.
+	 * Gets the ratio of free accesses.
 	 *
-	 * @return the free access
 	 */
 	public Double getFreeAccess() {
 		return this.freeAccess;
 	}
 
 	/**
-	 * Gets the free variable.
+	 * Gets the ratio of free variable.
 	 *
-	 * @return the free variable
 	 */
 	public Double getFreeVariable() {
 		return this.freeVariable;
 	}
 
 	/**
-	 * Gets the input position.
+	 * Gets the ratio of input positions.
 	 *
-	 * @return the input position
 	 */
 	public Double getInputPosition() {
 		return this.inputPosition;
@@ -385,7 +384,7 @@ public class BenchmarkParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 
 	/**
-	 * Gets the query conjuncts.
+	 * Gets the number of query conjuncts.
 	 *
 	 * @return the query conjuncts
 	 */
@@ -421,7 +420,7 @@ public class BenchmarkParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 
 	/**
-	 * Sets the arity.
+	 * Sets the max arity.
 	 *
 	 * @param arity the new arity
 	 */
@@ -448,7 +447,7 @@ public class BenchmarkParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 
 	/**
-	 * Sets the constraint conjuncts.
+	 * Sets the number of constraint conjuncts.
 	 *
 	 * @param dependencyConjuncts the new constraint conjuncts
 	 */
@@ -458,7 +457,7 @@ public class BenchmarkParameters extends uk.ac.ox.cs.pdq.Parameters {
 
 
 	/**
-	 * Sets the free access.
+	 * Sets the ratio of free accesses.
 	 *
 	 * @param freeAccess the new free access
 	 */
@@ -467,7 +466,7 @@ public class BenchmarkParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 
 	/**
-	 * Sets the free variable.
+	 * Sets the ratio of free variables.
 	 *
 	 * @param freeVarRatio the new free variable
 	 */
@@ -476,7 +475,7 @@ public class BenchmarkParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 
 	/**
-	 * Sets the input position.
+	 * Sets the ratio of input positions.
 	 *
 	 * @param inputPosition the new input position
 	 */
@@ -516,7 +515,7 @@ public class BenchmarkParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 
 	/**
-	 * Sets the query conjuncts.
+	 * Sets the number of query conjuncts.
 	 *
 	 * @param queryConjuncts the new query conjuncts
 	 */
@@ -552,18 +551,16 @@ public class BenchmarkParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 
 	/**
-	 * Gets the repeated relations.
+	 * Gets the flag telling if  repeated relations allows
 	 *
-	 * @return the repeated relations
 	 */
 	public Boolean getRepeatedRelations() {
 		return this.repeatedRelations;
 	}
 
 	/**
-	 * Sets the repeated relations.
+	 * Sets the flat telling if repeated relations allowed
 	 *
-	 * @param allowRepeatedRelations the new repeated relations
 	 */
 	public void setRepeatedRelations(Boolean allowRepeatedRelations) {
 		this.repeatedRelations = allowRepeatedRelations;
@@ -571,6 +568,7 @@ public class BenchmarkParameters extends uk.ac.ox.cs.pdq.Parameters {
 
 	/**
 	 * Gets the query type.
+	 * TOCOMMENT: WHAT IS THIS
 	 *
 	 * @return the query type
 	 */
@@ -580,6 +578,7 @@ public class BenchmarkParameters extends uk.ac.ox.cs.pdq.Parameters {
 
 	/**
 	 * Sets the query type.
+	 * TOCOMMENT: WHAT IS THIS
 	 *
 	 * @param type the new query type
 	 */
@@ -589,6 +588,7 @@ public class BenchmarkParameters extends uk.ac.ox.cs.pdq.Parameters {
 
 	/**
 	 * Sets the query type.
+	 * TOCOMMENT: WHAT IS THE DIFFERENCE FROM ABOVE???
 	 *
 	 * @param type the new query type
 	 */
@@ -624,16 +624,15 @@ public class BenchmarkParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 
 	/**
-	 * Gets the accessibility.
+	 * Gets the fraction of relations that are accessible
 	 *
-	 * @return the accessibility
 	 */
 	public Double getAccessibility() {
 		return this.accessibility;
 	}
 
 	/**
-	 * Sets the accessibility.
+	 * Sets the fraction of relations that are accessible
 	 *
 	 * @param accessibility the new accessibility
 	 */
@@ -643,6 +642,7 @@ public class BenchmarkParameters extends uk.ac.ox.cs.pdq.Parameters {
 
 	/**
 	 * Sets the accessibility.
+	 * TOCOMMENT WHAT IS THE DIFFERENCE FROM ABOVE?
 	 *
 	 * @param accessibility the new accessibility
 	 */
@@ -670,6 +670,7 @@ public class BenchmarkParameters extends uk.ac.ox.cs.pdq.Parameters {
 
 	/**
 	 * Sets the free position.
+	 * TOCOMMENT: WHAT IS THE DIFFERENCE FROM ABOVE
 	 *
 	 * @param freePosition the new free position
 	 */
@@ -849,21 +850,21 @@ public class BenchmarkParameters extends uk.ac.ox.cs.pdq.Parameters {
 	 */
 	public static enum QueryTypes {
 		
-		/** The from fks. */
+		/** The flag corresponding to satisfying fks. */
 		@EnumParameterValue(description = 
 				"Generates queries whose join satisfy the key/foreign key "
 				+ "relationships observed in the schema")
 		FROM_FKS,
 
-		/** The guarded. */
+		/** The flag telling if queries are guarded. */
 		@EnumParameterValue(description ="Generates guarded queries")
 		GUARDED,
 
-		/** The chainguarded. */
+		/** The flag telling if queries chainguarded. */
 		@EnumParameterValue(description ="Generates chained guarded queries")
 		CHAINGUARDED,
 
-		/** The acyclic. */
+		/** The flag telling whether queries are acyclic. */
 		@EnumParameterValue(description ="Generates acyclic queries")
 		ACYCLIC
 	}
@@ -873,7 +874,7 @@ public class BenchmarkParameters extends uk.ac.ox.cs.pdq.Parameters {
 	 */
 	public static enum GeneratorTypes {
 		
-		/** The first. */
+		/** TOCOMMENT: COMMENT OR DIE!!!. */
 		@EnumParameterValue(description ="TODO: description coming soon.")
 		FIRST,
 

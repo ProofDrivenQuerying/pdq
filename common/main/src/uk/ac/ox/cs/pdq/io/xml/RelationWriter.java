@@ -22,8 +22,8 @@ public class RelationWriter extends AbstractXMLWriter<Relation> {
 	/**
 	 * Writes the given relation to the given output.
 	 *
-	 * @param out the out
-	 * @param relation the relation
+	 * @param out 
+	 * @param relation 
 	 */
 	public void writeRelation(PrintStream out, Relation relation) {
 		Map<QNames, String> att = new LinkedHashMap<>();
@@ -82,9 +82,9 @@ public class RelationWriter extends AbstractXMLWriter<Relation> {
 	/**
 	 * Writes the given binding pattern to the given output.
 	 *
-	 * @param out the out
-	 * @param r Relation
-	 * @param ar the ar
+	 * @param out 
+	 * @param r 
+	 * @param ar 
 	 */
 	public void writeAccessMethod(PrintStream out, Relation r, AccessMethod ar) {
 		Map<QNames, String> att = new LinkedHashMap<>();

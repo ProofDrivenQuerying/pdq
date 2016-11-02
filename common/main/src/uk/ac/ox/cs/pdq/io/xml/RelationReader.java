@@ -49,7 +49,7 @@ public class RelationReader extends AbstractXMLReader<Relation> {
 	/** Name of temporary relation being built. */
 	protected String relationName = null;
 
-	/** Temporary isEquality. */
+	/** TOCOMMENT */
 	protected String isEquality = null;
 
 	/** Temporary list of attributes being built. */
@@ -70,10 +70,10 @@ public class RelationReader extends AbstractXMLReader<Relation> {
 	/** Boolean tracing with the relation being read is a view. */
 	protected boolean isView = false;
 	
-	/** The size. */
+	/** TOCOMMENT: the size fo what? */
 	protected Long size;
 	
-	/** The discovered. */
+	/** TOCOMMENT: what?. */
 	protected Map<String, SchemaDiscoverer> discovered = null;
 
 	/**

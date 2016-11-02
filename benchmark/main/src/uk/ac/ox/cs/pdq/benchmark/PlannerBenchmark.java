@@ -44,15 +44,15 @@ public class PlannerBenchmark extends Runner {
 	/** Runner's logger. */
 	private static Logger log = Logger.getLogger(PlannerBenchmark.class);
 
-	/** The write plan. */
+	/** Flag telling if plan is written. */
 	@Parameter(names = { "-w", "--write-plan" }, required = false, description = "If true, write the resulting plan to a plan.xml file.")
 	protected boolean writePlan;
 
-	/** The write plan multiple. */
+	/** TOCOMMENT: WHAT IS THE DIFFERENCE?? . */
 	@Parameter(names = { "-W", "--write-multiple-plans" }, required = false, description = "If true, write the resulting plan to a plan.xml file.")
 	protected boolean writePlanMultiple;
 
-	/** The no dep. */
+	/** FLAG telling if dependencies are respected . */
 	@Parameter(names = { "-n", "--no-dependencies" }, required = false, description = "If true, the planner will be run without taking dependencies into account.")
 	protected boolean noDep;
 
@@ -301,8 +301,6 @@ public class PlannerBenchmark extends Runner {
 	/**
 	 * Bushiness.
 	 *
-	 * @param op the op
-	 * @return the int
 	 */
 	public int bushiness(RelationalOperator op) {
 		int result = 0;
@@ -323,7 +321,7 @@ public class PlannerBenchmark extends Runner {
 	}
 
 	/**
-	 * Checks if is write plan.
+	 * Checks if plan is to be written
 	 *
 	 * @return true if the plan found is to be written to a file.
 	 */
@@ -332,8 +330,7 @@ public class PlannerBenchmark extends Runner {
 	}
 
 	/**
-	 * Checks if is write plan multiple.
-	 *
+	 * 
 	 * @return true if all the best plans found are to be written to separate files.
 	 */
 	public boolean isWritePlanMultiple() {
@@ -350,7 +347,6 @@ public class PlannerBenchmark extends Runner {
 	}
 
 	/**
-	 * Checks if is no dependencies.
 	 *
 	 * @return true if dependencies should be taken into account or not during planning.
 	 */

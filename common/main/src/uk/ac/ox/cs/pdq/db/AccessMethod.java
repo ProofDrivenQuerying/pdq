@@ -25,10 +25,10 @@ public class AccessMethod implements Serializable {
 		
 		/** The free. */
 		FREE, 
- /** The limited. */
- LIMITED, 
- /** The boolean. */
- BOOLEAN
+		/** The limited. */
+		LIMITED, 
+		/** The boolean. */
+		BOOLEAN
 	}
 
 	/** A Constant DEFAULT_PREFIX for all automatically generated access methods names */
