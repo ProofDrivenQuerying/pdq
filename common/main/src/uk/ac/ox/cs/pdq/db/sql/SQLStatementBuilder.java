@@ -31,6 +31,7 @@ import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Dependency;
+import uk.ac.ox.cs.pdq.fol.Equality;
 import uk.ac.ox.cs.pdq.fol.Evaluatable;
 import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Predicate;
@@ -476,7 +477,7 @@ public abstract class SQLStatementBuilder {
 			List<String> attributePredicates = new ArrayList<String>();
 			//The right atom should be an equality
 			//We add additional checks to be sure that we have to do with EGDs
-			for(DatabaseEquality rightAtom:((DatabaseEGD)source).getHead()) {
+			for(Equality rightAtom:((DatabaseEGD)source).getHead()) {
 				Relation rightRelation = (Relation) rightAtom.getPredicate();
 				String rightAlias = this.aliases.get(rightAtom);
 				Map<Integer,Pair<String,Attribute>> rightToLeft = new HashMap<Integer,Pair<String,Attribute>>();

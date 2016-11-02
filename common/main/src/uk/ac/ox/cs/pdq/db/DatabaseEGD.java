@@ -12,6 +12,7 @@ import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Dependency;
+import uk.ac.ox.cs.pdq.fol.Equality;
 import uk.ac.ox.cs.pdq.fol.Implication;
 import uk.ac.ox.cs.pdq.fol.LogicalSymbols;
 import uk.ac.ox.cs.pdq.fol.Term;
@@ -24,13 +25,13 @@ import com.google.common.collect.Sets;
 
 /**
  * A dependency of the form \delta = \forall \vec{x} \rho(\vec{x}) --> x_i = x_j where \rho is a conjunction of atoms.
- * TOCOMMENT: WHAT THE ???? IS THE DIFFERENCE BETWEEN THIS AND EGD
+ * TOCOMMENT: WHAT IS THE DIFFERENCE BETWEEN THIS AND EGD
  *
  * @author Efthymia Tsamoura
  */
 public class DatabaseEGD
-		extends Implication<Conjunction<Atom>, Conjunction<DatabaseEquality>>
-		implements Dependency<Conjunction<Atom>, Conjunction<DatabaseEquality>> {
+		extends Implication<Conjunction<Atom>, Conjunction<Equality>>
+		implements Dependency<Conjunction<Atom>, Conjunction<Equality>> {
 	
 	/**  The dependency's universally quantified variables. */
 	protected List<Variable> universal;
@@ -42,12 +43,12 @@ public class DatabaseEGD
 	 * Instantiates a new egd.
 	 *
 	 * @param left The left-hand side conjunction of the dependency
-	 * @param right The right-hand side conjunction of the dependency
+	 * @param conjunction The right-hand side conjunction of the dependency
 	 */
-	public DatabaseEGD(Conjunction<Atom> left, Conjunction<DatabaseEquality> right) {
-		super(left, right);
+	public DatabaseEGD(Conjunction<Atom> left, Conjunction<Equality> conjunction) {
+		super(left, conjunction);
 		this.universal = Utility.getVariables(left.getAtoms());
-		for (Term term:right.getTerms()) {
+		for (Term term:conjunction.getTerms()) {
 			if (!term.isVariable() && !term.isSkolem()) {
 				this.constants.add(((TypedConstant) term));
 			}
@@ -93,7 +94,7 @@ public class DatabaseEGD
 	 * @see uk.ac.ox.cs.pdq.fol.Dependency#getRight()
 	 */
 	@Override
-	public Conjunction<DatabaseEquality> getRight() {
+	public Conjunction<Equality> getRight() {
 		return this.right;
 	}
 
