@@ -17,7 +17,7 @@ public class DatabaseRelation extends Relation {
 	
 	/** The attr prefix. THIS SHOULD DISAPPEAR */
 	protected final static String attrPrefix = "x";
-	
+
 	/** A FactID attribute. THIS SHOULD DISAPPEAR */
 	public final static Attribute Fact = new Attribute(Integer.class, "Fact");
 	
@@ -46,16 +46,5 @@ public class DatabaseRelation extends Relation {
 		return new DatabaseRelation(relation.getName(), attributes);
 	}
 
-/**
- * REPRESENTATION OF AN EQUALITY TABLE: THIS SHOULD CHANGE
- *
- */
-	private static DatabaseRelation createEqualityTable() {		
-		List<Attribute> attributes = new ArrayList<>();
-		attributes.add(new Attribute(String.class, DatabaseRelation.attrPrefix + 0));
-		attributes.add(new Attribute(String.class, DatabaseRelation.attrPrefix + 1));
-		attributes.add(DatabaseRelation.Fact);
-		return new DatabaseRelation(QNames.EQUALITY.toString(), attributes);
-	}
 }
 

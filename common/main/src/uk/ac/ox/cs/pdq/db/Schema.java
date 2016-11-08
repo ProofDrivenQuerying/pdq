@@ -26,16 +26,12 @@ import com.google.common.collect.Lists;
 /**
  * A database schema.
  *
+ * @author George K
  * @author Efthymia Tsamoura
  * @author Julien Leblay
  */
 public class Schema {
 
-	//TOCOMMENT normally you can have different relations with the same name if the arity is different.
-	// I guess this is not the case here?? It should be cleared out.
-	//
-	//
-	// TOCOMMENT: WHAT IS THIS CLASS? WHAT KIND OF INFO IS KEPT HERE?
 	/**  Relations indexed based on their name. */
 	private final Map<String, Relation> relIndex;
 	
@@ -142,7 +138,7 @@ public class Schema {
 	}
 	
 	/**
-	 * TOCOMMENT I don't find "consolidateKeys" or "EGD.getEGDs" very appropariate names
+	 * TOCOMMENT I don't find "consolidateKeys" or "EGD.getEGDs" very appropriate names
 	 * Extracts the EGDs of the relation keys.
 	 */
 	public void consolidateKeys() {

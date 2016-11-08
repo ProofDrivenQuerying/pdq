@@ -153,7 +153,7 @@ public class DatabaseInstance implements Instance {
 		return result;
 	}
 
-	@Override
+
 	public void addFacts(Collection<Atom> facts) {
 		Queue<String> queries = new ConcurrentLinkedQueue<>();
 
@@ -224,7 +224,6 @@ public class DatabaseInstance implements Instance {
 		} 
 	}
 
-	@Override
 	public void deleteFacts(Collection<Atom> facts) {
 		Queue<String> queries = new ConcurrentLinkedQueue<>();
 		Map<Predicate, List<Atom>> clusters = Utility.clusterAtomsWithSamePredicateName(facts);
@@ -256,7 +255,6 @@ public class DatabaseInstance implements Instance {
 	}
 
 
-	@Override
 	public List<Match> answerQuery(Evaluatable q) {
 		throw new UnsupportedOperationException("Method not implemented yet - use answerQueries()");
 	}
@@ -366,7 +364,6 @@ public class DatabaseInstance implements Instance {
 		return result;
 	}
 
-	@Override
 	public Collection<Atom> getFacts() {
 		// TODO How to return the facts? Query The database?
 		throw new RuntimeException("getFacts() is unimplemented in DatabaseInstance.java");
@@ -390,7 +387,6 @@ public class DatabaseInstance implements Instance {
 		return results;
 	}
 
-	//@Override
 	public void close() throws Exception {
 		//is this the right thing to do?
 		this.databaseConnection.close();

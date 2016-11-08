@@ -119,7 +119,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 	/**
 	 * Instantiates a new database chase instance
 	 * This protected constructor does not(!) add the facts into the rdbms. 
-	 * Using this constructor on would need to call addFacts explicilty.
+	 * Using this constructor one would need to call addFacts explicilty.
 	 *
 	 * @param chaseState TOCOMMENT: why doesn't state contain facts?
 	 * @param facts 

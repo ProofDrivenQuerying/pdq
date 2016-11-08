@@ -80,6 +80,7 @@ public class ExplorationSetUp {
 
 	/** The auxiliary schema, including axioms capturing access methods  */
 	private AccessibleSchema accessibleSchema;
+
 	
 	/**
 	 * Instantiates a new exploration set up.
