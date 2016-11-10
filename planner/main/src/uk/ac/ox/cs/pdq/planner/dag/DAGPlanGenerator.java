@@ -25,7 +25,7 @@ import uk.ac.ox.cs.pdq.planner.dag.BinaryConfiguration.BinaryConfigurationTypes;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 
-// TOCOMMENT: WHAT THE F***???  WHAT NOTES??
+/** TOCOMMENT: WHAT THE F***???  WHAT NOTES??
 /**
  * Implement algorithms 1 and 2 from the dependent join notes.
  *
