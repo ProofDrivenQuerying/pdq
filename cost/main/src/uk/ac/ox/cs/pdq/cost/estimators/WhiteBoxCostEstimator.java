@@ -28,6 +28,7 @@ import uk.ac.ox.cs.pdq.plan.DAGPlan;
 import uk.ac.ox.cs.pdq.plan.DoubleCost;
 import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.plan.Plan;
+import uk.ac.ox.cs.pdq.plan.SubPlanAlias;
 
 import com.google.common.collect.Lists;
 
@@ -149,21 +150,19 @@ public class WhiteBoxCostEstimator<P extends Plan> implements BlackBoxCostEstima
 		double card = Math.max(1.0, logOp.getMetadata().getOutputCardinality());
 		double localCost =
 				Math.max(0.0, card * perOutputTupleCost(logOp));
-		//if (logOp instanceof SubPlanAlias) {
-			//Plan subPlan = ((SubPlanAlias) logOp).getPlan();
-			//Cost aliasCost = new DoubleCost(Double.POSITIVE_INFINITY);
-			//if (subPlan != null) {
-				//aliasCost = subPlan.getCost();
-				//if (aliasCost == null || aliasCost.isUpperBound()) {
-					//aliasCost = new DoubleCost(this.recursiveCost((RelationalOperator) subPlan.getOperator()));
-				//}
-				//subPlan.setCost(aliasCost);
-			//}
-			//return aliasCost.getValue().doubleValue();
+		if (logOp instanceof SubPlanAlias) {
+			Plan subPlan = ((SubPlanAlias) logOp).getPlan();
+			Cost aliasCost = new DoubleCost(Double.POSITIVE_INFINITY);
+			if (subPlan != null) {
+				aliasCost = subPlan.getCost();
+				if (aliasCost == null || aliasCost.isUpperBound()) {
+					aliasCost = new DoubleCost(this.recursiveCost((RelationalOperator) subPlan.getOperator()));
+				}
+				subPlan.setCost(aliasCost);
+			}
+			return aliasCost.getValue().doubleValue();
 
-		//} 
-		//else 
-		if (logOp instanceof UnaryOperator) {
+		} else if (logOp instanceof UnaryOperator) {
 			RelationalOperator child = ((UnaryOperator) logOp).getChild();
 			if (logOp instanceof Access) {
 				if (child != null) {
@@ -225,13 +224,13 @@ public class WhiteBoxCostEstimator<P extends Plan> implements BlackBoxCostEstima
 			}
 			return (projected.size() / (double) child.getColumns().size());
 		}
-	//	if (o instanceof SubPlanAlias) {
-		//	Plan subPlan = ((SubPlanAlias) o).getPlan();
-		//	if (subPlan != null) {
-	//			return perOutputTupleCost((RelationalOperator) subPlan.getOperator());
-			//}
-			//return null;
-		//}
+		if (o instanceof SubPlanAlias) {
+			Plan subPlan = ((SubPlanAlias) o).getPlan();
+			if (subPlan != null) {
+				return perOutputTupleCost((RelationalOperator) subPlan.getOperator());
+			}
+			return null;
+		}
 		if (o instanceof Count || o instanceof IsEmpty) {
 			return 1.0;
 		}

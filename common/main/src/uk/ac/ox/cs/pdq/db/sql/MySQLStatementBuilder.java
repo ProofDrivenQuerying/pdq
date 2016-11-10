@@ -60,7 +60,7 @@ public class MySQLStatementBuilder extends SQLStatementBuilder {
 	 * @see uk.ac.ox.cs.pdq.reasoning.homomorphism.SQLStatementBuilder#translateLimitConstraints(uk.ac.ox.cs.pdq.fol.Evaluatable, uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismConstraint[])
 	 */
 	@Override
-	protected String translateLimitConstraints(Evaluatable source, HomomorphismProperty... constraints) {
+	public String translateLimitConstraints(Evaluatable source, HomomorphismProperty... constraints) {
 		for(HomomorphismProperty c:constraints) {
 			if(c instanceof TopKProperty) {
 				return "LIMIT " + ((TopKProperty) c).k;

@@ -86,7 +86,6 @@ public class DatabaseConnection implements AutoCloseable{
 
 		this.relations = Lists.newArrayList(schema.getRelations());
 		this.schema = schema;
-		this.relationNamesToRelationObjects = new LinkedHashMap<>();
 
 
 		for(int j=0; j<=synchronousThreadsNumber; j++)

@@ -18,7 +18,6 @@ import uk.ac.ox.cs.pdq.algebra.RelationalOperator;
 import uk.ac.ox.cs.pdq.algebra.Scan;
 import uk.ac.ox.cs.pdq.algebra.Selection;
 import uk.ac.ox.cs.pdq.algebra.StaticInput;
-import uk.ac.ox.cs.pdq.algebra.SubPlanAlias;
 import uk.ac.ox.cs.pdq.algebra.UnaryOperator;
 import uk.ac.ox.cs.pdq.algebra.predicates.AttributeEqualityPredicate;
 import uk.ac.ox.cs.pdq.algebra.predicates.ConjunctivePredicate;
@@ -30,6 +29,7 @@ import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.io.Writer;
 import uk.ac.ox.cs.pdq.io.xml.OperatorReader.Types;
 import uk.ac.ox.cs.pdq.plan.AccessOperator;
+import uk.ac.ox.cs.pdq.plan.SubPlanAlias;
 import uk.ac.ox.cs.pdq.util.Tuple;
 
 import com.google.common.base.Preconditions;

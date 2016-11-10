@@ -61,7 +61,7 @@ public class KTerminationChaser extends RestrictedChaser {
 			appliedStep = false;
 			List<Match> matches = instance.getTriggers(dependencies, TriggerProperty.ACTIVE, LimitTofacts.THIS);
 			if(!matches.isEmpty()) {
-                                instance.chaseStep(matches);
+				instance.chaseStep(matches);
 				appliedStep = true;
 			}
 			++rounds;
