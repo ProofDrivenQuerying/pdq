@@ -202,7 +202,7 @@ public class ApplyRuleToSQLTranslator {
 		for(Atom fact:facts) {
 			int i = 0;
 			for(Term term:fact.getTerms()) {
-				if(!term.isSkolem() && !term.isVariable()) {
+				if(!term.isUntypedConstant() && !term.isVariable()) {
 					String constant = Utility.format(((TypedConstant)term));
 					Attribute ai = ((Relation)fact.getPredicate()).getAttribute(i);
 					filteringConditions.add(factToAlias.get(fact) + "." + ai.toString() + "=" + constant);

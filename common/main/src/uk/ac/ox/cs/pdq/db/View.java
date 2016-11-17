@@ -6,7 +6,6 @@ import java.util.Objects;
 
 import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Rule;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
 
@@ -19,7 +18,8 @@ import com.google.common.collect.Lists;
  * @author Efthymia Tsamoura
  * @author Julien Leblay
  */
-public class View extends Relation implements Rule<Formula, Atom> {
+public class View extends Relation //implements Rule<Formula, Atom> 
+{
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -4961888228318423619L;
@@ -30,12 +30,12 @@ public class View extends Relation implements Rule<Formula, Atom> {
 	/** 
 	 * TOCOMMENT what is this supposed to mean, and why is it a LinearGuarded dependency?
 	 *  The inverse dependency that defines the view. */
-	protected LinearGuarded dependency;
+	protected Dependency dependency;
 
 	/**  
 	 * TOCOMMENT So a view extends a Relation?? And does not have a declared connection to TGD except that it essentially is a TGD wrapper.
 	 * The dependency that defines the view. */
-	protected TGD definition;
+	protected Dependency definition;
 
 	/**
 	 * TOCOMMENT Instantiates a new view by instantiating a Relation?
@@ -67,7 +67,7 @@ public class View extends Relation implements Rule<Formula, Atom> {
 	 * @param dependency 		The dependency that defines the view
 	 * @param binding 		A binding with which we can access the view. By default, a view has free access
 	 */
-	public View(LinearGuarded dependency, AccessMethod binding) {
+	public View(Dependency dependency, AccessMethod binding) {
 		this(dependency, Lists.newArrayList(binding));
 	}
 
@@ -78,7 +78,7 @@ public class View extends Relation implements Rule<Formula, Atom> {
 	 * @param dependency 		The dependency that defines the view
 	 * @param bindings 		The binding patterns with which a view can be accessed. By default, a view has free access
 	 */
-	public View(LinearGuarded dependency, List<AccessMethod> bindings) {
+	public View(Dependency dependency, List<AccessMethod> bindings) {
 		super(dependency.getGuard().getName(), makeAttributes(dependency.getGuard()));
 		this.viewId = globalId++;
 		this.dependency = new LinearGuarded(
@@ -123,7 +123,7 @@ public class View extends Relation implements Rule<Formula, Atom> {
 	 *
 	 * @return LinearGuarded
 	 */
-	public LinearGuarded getDependency() {
+	public Dependency getDependency() {
 		return this.dependency;
 	}
 
@@ -132,7 +132,7 @@ public class View extends Relation implements Rule<Formula, Atom> {
 	 *
 	 * @return the TGD defining the view
 	 */
-	public TGD getDefinition() {
+	public Dependency getDefinition() {
 		return this.definition;
 	}
 
@@ -141,7 +141,7 @@ public class View extends Relation implements Rule<Formula, Atom> {
 	 *
 	 * @param d LinearGuarded
 	 */
-	public void setDependency(LinearGuarded d) {
+	public void setDependency(Dependency d) {
 		this.dependency = d;
 		this.definition = d.invert();
 	}
@@ -172,27 +172,27 @@ public class View extends Relation implements Rule<Formula, Atom> {
 		return Objects.hash(this.name, this.attributes);
 	}
 
-	/* (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.fol.Rule#getHead()
-	 */
-	@Override
-	public Atom getHead() {
-		return this.dependency.getGuard();
-	}
-
-	/* (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.fol.Rule#getBody()
-	 */
-	@Override
-	public Formula getBody() {
-		return this.dependency.getHead();
-	}
-
-	/* (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.fol.Rule#contains(uk.ac.ox.cs.pdq.fol.Predicate)
-	 */
-	@Override
-	public boolean contains(Predicate s) {
-		return this.dependency.contains(s);
-	}
+//	/* (non-Javadoc)
+//	 * @see uk.ac.ox.cs.pdq.fol.Rule#getHead()
+//	 */
+//	@Override
+//	public Atom getHead() {
+//		return this.dependency.getGuard();
+//	}
+//
+//	/* (non-Javadoc)
+//	 * @see uk.ac.ox.cs.pdq.fol.Rule#getBody()
+//	 */
+//	@Override
+//	public Formula getBody() {
+//		return this.dependency.getHead();
+//	}
+//
+//	/* (non-Javadoc)
+//	 * @see uk.ac.ox.cs.pdq.fol.Rule#contains(uk.ac.ox.cs.pdq.fol.Predicate)
+//	 */
+//	@Override
+//	public boolean contains(Predicate s) {
+//		return this.dependency.contains(s);
+//	}
 }

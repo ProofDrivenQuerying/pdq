@@ -20,7 +20,7 @@ import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Query;
+import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.util.Utility;
 
@@ -226,16 +226,13 @@ public class AccessibleSchema extends Schema {
 	 * @return the accessible query
 	 * @see uk.ac.ox.cs.pdq.fol.Query#accessible(AccessibleSchema)
 	 */
-	public <Q extends Query<?>> Q accessible(Q query) {
-		if (!(query instanceof ConjunctiveQuery)) {
-			throw new UnsupportedOperationException("Non CQ not supported yet.");
-		}
-		List<Atom> atomicFormulas = new ArrayList<>();
-		for (Atom af: query.getBody().getAtoms()) {
-			atomicFormulas.add(
+	public ConjunctiveQuery accessible(ConjunctiveQuery query) {
+		List<Formula> atoms = new ArrayList<>();
+		for (Atom af: query.getAtoms()) {
+			atoms.add(
 					new Atom(this.getInferredAccessibleRelation((Relation) af.getPredicate()), af.getTerms()));
 		}
-		return (Q) new ConjunctiveQuery(query.getHead(), Conjunction.of(atomicFormulas));
+		return new ConjunctiveQuery(query.getHead(), Conjunction.of(atoms));
 	}
 	
 	/**
@@ -247,16 +244,13 @@ public class AccessibleSchema extends Schema {
 	 * @return the accessible query
 	 * @see uk.ac.ox.cs.pdq.fol.Query#accessible(AccessibleSchema)
 	 */
-	public <Q extends Query<?>> Q accessible(Q query, Map<Variable, Constant> canonicalMapping) {
-		if (!(query instanceof ConjunctiveQuery)) {
-			throw new UnsupportedOperationException("Non CQ not supported yet.");
-		}
-		List<Atom> atomicFormulas = new ArrayList<>();
-		for (Atom af: query.getBody().getAtoms()) {
-			atomicFormulas.add(
+	public ConjunctiveQuery accessible(ConjunctiveQuery query, Map<Variable, Constant> canonicalMapping) {
+		List<Formula> atoms = new ArrayList<>();
+		for (Atom af: query.getAtoms()) {
+			atoms.add(
 					new Atom(this.getInferredAccessibleRelation((Relation) af.getPredicate()), af.getTerms()));
 		}
-		return (Q) new ConjunctiveQuery(query.getHead(), Conjunction.of(atomicFormulas), canonicalMapping);
+		return new ConjunctiveQuery(query.getHead(), Conjunction.of(atoms), canonicalMapping);
 	}
 	
 	/**

@@ -58,13 +58,13 @@ public class InMemoryQueryEvaluator implements QueryEvaluator {
 	private EventBus eventBus;
 	
 	/**  The query to be evaluated. */
-	private final Query<?> query;
+	private final ConjunctiveQuery query;
 
 	/**
 	 * Constructor for InMemoryQueryEvaluator.
 	 * @param q Query
 	 */
-	public InMemoryQueryEvaluator(Query<?> q) {
+	public InMemoryQueryEvaluator(ConjunctiveQuery q) {
 		this.query = q;
 	}
 	

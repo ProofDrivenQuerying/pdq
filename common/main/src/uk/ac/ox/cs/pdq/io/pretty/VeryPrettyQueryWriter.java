@@ -64,12 +64,12 @@ public class VeryPrettyQueryWriter extends PrettyWriter<ConjunctiveQuery> implem
 		out.print('(' + Joiner.on(", ").join(q.getFree()) + ")\n\t<-");
 		String sep = "";
 		Multimap<Term, Atom> clusters = LinkedHashMultimap.create();
-		for (Atom a : q.getBody()) {
+		for (Atom a : q.getAtoms()) {
 			for (Term t: a.getTerms()) {
 				clusters.put(t, a);
 			}
 		}
-		for (Atom a : q.getBody()) {
+		for (Atom a : q.getAtoms()) {
 			out.print(sep);
 			out.print(a.getPredicate().getName());
 			String sep2 = "(";

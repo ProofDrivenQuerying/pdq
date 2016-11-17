@@ -13,6 +13,7 @@ import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.db.EntityRelation;
 import uk.ac.ox.cs.pdq.db.LinearGuarded;
 import uk.ac.ox.cs.pdq.db.Relation;
@@ -234,8 +235,8 @@ public class ProtoBufferUnwrapper {
 	 * @param rule Rule
 	 * @return View
 	 */
-	public View ruleToView(Rule rule) {
-		Iterator<uk.ac.ox.cs.pdq.fol.Rule> it = this.unwrapRule(rule, false, false).iterator();
+	public View ruleToView(Dependency rule) {
+		Iterator<Dependency> it = this.unwrapRule(rule, false, false).iterator();
 		if (!it.hasNext()) {
 			return null;
 		}
@@ -268,7 +269,7 @@ public class ProtoBufferUnwrapper {
 	 * we meet an atom that has not been registered in our schema before.
 	 * @return Collection<Rule>
 	 */
-	public Collection<uk.ac.ox.cs.pdq.fol.Rule> unwrapRule(Rule rule, boolean forget, boolean strict) {
+	public Collection<Dependency> unwrapRule(Dependency rule, boolean forget, boolean strict) {
 		this.variables.clear();
 		uk.ac.ox.cs.pdq.fol.Formula body = null;
 		this.variables.putAll(this.unwrapVariableDeclarations(rule.getVarList()));

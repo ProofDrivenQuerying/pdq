@@ -67,7 +67,7 @@ public class VeryPrettyDependencyWriter
 	public void write(PrintStream out, Dependency tgd) {
 		String sep = "";
 		int length = 0;
-		for (Atom f: tgd.getLeft().getAtoms()) {
+		for (Atom f: tgd.getBody().getAtoms()) {
 			out.print(sep);
 			out.print(f.getPredicate().getName());
 			out.print('(' + joinTerms(f.getTerms(), ", ") + ')');
@@ -81,7 +81,7 @@ public class VeryPrettyDependencyWriter
 		}
 		length = 0;
 		sep = (this.indented ? "\n\t" : " ")  + IMPLIES + ' ';
-		for (Atom f : tgd.getRight().getAtoms()) {
+		for (Atom f : tgd.getHead().getAtoms()) {
 			out.print(sep);
 			out.print(f.getPredicate().getName());
 			out.print('(' + joinTerms(f.getTerms(), ", ") + ')');

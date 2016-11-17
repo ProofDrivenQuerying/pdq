@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.concurrent.Future;
 
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.fol.Query;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.plan.Plan;
 
 import com.google.common.base.Preconditions;
@@ -22,7 +22,7 @@ public class PlanningSession implements Serializable {
 	private final Schema schema;
 	
 	/** The query. */
-	private final Query<?> query;
+	private final ConjunctiveQuery query;
 	
 	/** The future. */
 	private final Future<Plan> future;
@@ -38,7 +38,7 @@ public class PlanningSession implements Serializable {
 	 * @param future the future
 	 * @param logger the logger
 	 */
-	public PlanningSession(Schema schema, Query<?> query, Future<Plan> future, BufferedProgressLogger logger) {
+	public PlanningSession(Schema schema, ConjunctiveQuery query, Future<Plan> future, BufferedProgressLogger logger) {
 		super();
 		Preconditions.checkArgument(schema != null);
 		Preconditions.checkArgument(query != null);
@@ -64,7 +64,7 @@ public class PlanningSession implements Serializable {
 	 *
 	 * @return the query
 	 */
-	public Query<?> getQuery() {
+	public ConjunctiveQuery getQuery() {
 		return this.query;
 	}
 

@@ -26,12 +26,12 @@ public class DependencyWriter extends AbstractXMLWriter<Dependency> {
 		Map<QNames, String> att = new LinkedHashMap<>();
 		open(out, QNames.DEPENDENCY, att);
 		open(out, QNames.BODY, att);
-		for (Atom a: dep.getLeft().getAtoms()) {
+		for (Atom a: dep.getBody().getAtoms()) {
 			this.writePredicate(out, a);
 		}
 		close(out, QNames.BODY);
 		open(out, QNames.HEAD, att);
-		for (Atom a: dep.getRight().getAtoms()) {
+		for (Atom a: dep.getHead().getAtoms()) {
 			this.writePredicate(out, a);
 		}
 		close(out, QNames.HEAD);
@@ -47,12 +47,12 @@ public class DependencyWriter extends AbstractXMLWriter<Dependency> {
 	public void writePredicate(PrintStream out, Atom a) {
 		Atom p = a;
 		Map<QNames, String> att = new LinkedHashMap<>();
-		att.put(QNames.NAME, p.getName());
+		att.put(QNames.NAME, p.getPredicate().getName());
 		open(out, QNames.ATOM, att);
 		for (Term t: p.getTerms()) {
 			Map<QNames, String> att2 = new LinkedHashMap<>();
 			if (t.isVariable()) {
-				att2.put(QNames.NAME, ((Variable) t).getName());
+				att2.put(QNames.NAME, ((Variable) t).getSymbol());
 				openclose(out, QNames.VARIABLE, att2);
 			} else {
 				att2.put(QNames.VALUE, t.toString());

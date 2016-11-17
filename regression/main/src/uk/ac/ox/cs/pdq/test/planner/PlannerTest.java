@@ -17,7 +17,6 @@ import uk.ac.ox.cs.pdq.LimitReachedException.Reasons;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.io.xml.DAGPlanReader;
 import uk.ac.ox.cs.pdq.io.xml.LeftDeepPlanReader;
 import uk.ac.ox.cs.pdq.io.xml.PlanWriter;
@@ -254,7 +253,7 @@ public class PlannerTest extends RegressionTest {
 		 * @param query Query
 		 * @return Plan
 		 */
-		private Plan obtainPlan(File directory, Schema schema, Query<?> query) {
+		private Plan obtainPlan(File directory, Schema schema, ConjunctiveQuery query) {
 			try(FileInputStream pis = new FileInputStream(directory.getAbsolutePath() + '/' + PLAN_FILE);
 					BufferedInputStream bis = new BufferedInputStream(pis)) {
 				try {
@@ -347,7 +346,7 @@ public class PlannerTest extends RegressionTest {
 				CostParameters costParams = new CostParameters(
 						new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE), true);
 				Schema schema = new SchemaReader().read(sis);
-				Query<?> query = new QueryReader(schema).read(qis);
+				ConjunctiveQuery query = new QueryReader(schema).read(qis);
 				if (schema == null || query == null) {
 					throw new RegressionTestException("Schema and query must be provided for each regression test. (schema:" + schema + ", query: " + query + ")");
 				}

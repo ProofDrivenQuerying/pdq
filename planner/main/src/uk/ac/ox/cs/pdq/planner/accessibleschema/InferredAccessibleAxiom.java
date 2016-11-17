@@ -30,8 +30,8 @@ public class InferredAccessibleAxiom extends TGD {
 	 * @param predToInfAcc the pred to inf acc
 	 */
 	public InferredAccessibleAxiom(TGD dependency, Map<Atom, InferredAccessibleRelation> predToInfAcc) {
-		super(substitute(dependency.getLeft(), predToInfAcc),
-				substitute(dependency.getRight(), predToInfAcc));
+		super(substitute(dependency.getBody(), predToInfAcc),
+				substitute(dependency.getHead(), predToInfAcc));
 	}
 
 	/**
@@ -85,13 +85,13 @@ public class InferredAccessibleAxiom extends TGD {
 		 */
 		private Formula substitute(Formula f) {
 			if (f instanceof Conjunction) {
-				return this.substitute((Conjunction<Formula>) f);
+				return this.substitute((Conjunction) f);
 			}
 			if (f instanceof Disjunction) {
-				return this.substitute((Disjunction<Formula>) f);
+				return this.substitute((Disjunction) f);
 			}
 			if (f instanceof Negation) {
-				return this.substitute((Negation<Formula>) f);
+				return this.substitute((Negation) f);
 			}
 			if (f instanceof Atom) {
 				return this.substitute((Atom) f);
@@ -105,9 +105,9 @@ public class InferredAccessibleAxiom extends TGD {
 		 * @param conjunction Conjunction<Formula>
 		 * @return Conjunction<Formula>
 		 */
-		private Conjunction<Formula> substitute(Conjunction<Formula> conjunction) {
+		private Conjunction substitute(Conjunction conjunction) {
 			List<Formula> result = new LinkedList<>();
-			for (Formula f: conjunction) {
+			for (Formula f:conjunction.getChildren()) {
 				result.add(this.substitute(f));
 			}
 			return Conjunction.of(result);
@@ -119,9 +119,9 @@ public class InferredAccessibleAxiom extends TGD {
 		 * @param disjunction Disjunction<Formula>
 		 * @return Disjunction<Formula>
 		 */
-		private Disjunction<Formula> substitute(Disjunction<Formula> disjunction) {
+		private Disjunction substitute(Disjunction disjunction) {
 			List<Formula> result = new LinkedList<>();
-			for (Formula f: disjunction) {
+			for (Formula f: disjunction.getChildren()) {
 				result.add(this.substitute(f));
 			}
 			return Disjunction.of(result);
@@ -133,8 +133,8 @@ public class InferredAccessibleAxiom extends TGD {
 		 * @param neg Negation<Formula>
 		 * @return Negation<Formula>
 		 */
-		private Negation<Formula> substitute(Negation<Formula> neg) {
-			return Negation.of(this.substitute(neg.getChild()));
+		private Negation substitute(Negation neg) {
+			return Negation.of(this.substitute(neg.getChildren().get(0)));
 		}
 
 		/**

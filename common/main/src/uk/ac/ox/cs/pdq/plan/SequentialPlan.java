@@ -1,26 +1,12 @@
 package uk.ac.ox.cs.pdq.plan;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.log4j.Logger;
 
-import uk.ac.ox.cs.pdq.db.AccessMethod;
-import uk.ac.ox.cs.pdq.db.Relation;
-import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.db.TypedConstant;
-import uk.ac.ox.cs.pdq.fol.Skolem;
-import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.util.Table;
 
 import com.google.common.base.Joiner;

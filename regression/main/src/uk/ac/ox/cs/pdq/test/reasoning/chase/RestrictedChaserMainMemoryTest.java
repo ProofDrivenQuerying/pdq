@@ -23,8 +23,8 @@ import uk.ac.ox.cs.pdq.db.sql.SQLStatementBuilder;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Predicate;
-import uk.ac.ox.cs.pdq.fol.Skolem;
 import uk.ac.ox.cs.pdq.fol.Term;
+import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.io.xml.QueryReader;
 import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
 import uk.ac.ox.cs.pdq.logging.performance.StatisticsCollector;
@@ -287,7 +287,7 @@ public class RestrictedChaserMainMemoryTest {
 				variables.add(new TypedConstant<>(constant));
 			}
 			else {
-				variables.add(new Skolem(term));
+				variables.add(new UntypedConstant(term));
 			}
 		}
 		return new Atom(predicate, variables);

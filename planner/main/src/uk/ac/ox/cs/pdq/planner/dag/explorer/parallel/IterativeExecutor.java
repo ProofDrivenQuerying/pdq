@@ -7,7 +7,6 @@ import java.util.concurrent.TimeUnit;
 import uk.ac.ox.cs.pdq.LimitReachedException;
 import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.dag.equivalence.DAGEquivalenceClasses;
@@ -66,7 +65,7 @@ public abstract class IterativeExecutor {
 			int depth,
 			Queue<DAGChaseConfiguration> left,
 			Collection<DAGChaseConfiguration> right,
-			Query<?> query,
+			ConjunctiveQuery query,
 			Collection<? extends Dependency> dependencies,
 			DAGChaseConfiguration best,
 			DAGEquivalenceClasses classes, 

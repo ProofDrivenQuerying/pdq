@@ -134,7 +134,7 @@ public class Projection extends UnaryOperator {
 		if (renaming != null && !renaming.isEmpty()) {
 			List<Term> result = new ArrayList<>(target.size());
 			for (Term t : target) {
-				if (t.isVariable() || t.isSkolem()) {
+				if (t.isVariable() || t.isUntypedConstant()) {
 					int pos = source.indexOf(t);
 					if (renaming.containsKey(pos)) {
 						result.add(renaming.get(pos));

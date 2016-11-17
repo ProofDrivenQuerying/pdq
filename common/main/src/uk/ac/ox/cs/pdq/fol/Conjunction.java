@@ -1,124 +1,174 @@
 package uk.ac.ox.cs.pdq.fol;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
+import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 /**
- * A conjunctive formula, is a conjunction of formulas (or subclasses of formulas), and it is also itself an n-ary formula.
- *
+ * 
  * @author Efthymia Tsamoura
- * @author Julien Leblay
- * @param <T> the generic type
+ *
  */
-public final class Conjunction<T extends Formula> extends NaryFormula<T> {
+public final class Conjunction extends Formula {
 
-	/**
-	 * Constructor for Conjunction.
-	 * @param children Collection<T>
-	 */
-	private Conjunction(Collection<T> children) {
-		super(LogicalSymbols.AND, children);
+	protected final List<Formula> children;
+
+	/**  The unary operator. */
+	protected final LogicalSymbols operator = LogicalSymbols.AND;
+
+	/**  Cashed string representation of the atom. */
+	private String toString = null;
+
+	/** The hash. */
+	private Integer hash;
+
+	/**  Cashed list of atoms. */
+	private List<Atom> atoms = null;
+
+	/**  Cashed list of terms. */
+	private List<Term> terms = null;
+
+	/**  Cashed list of free variables. */
+	private List<Variable> freeVariables = null;
+
+	/**  Cashed list of bound variables. */
+	private List<Variable> boundVariables = null;
+
+	public Conjunction(List<Formula> children) {
+		Preconditions.checkArgument(children != null);
+		Preconditions.checkArgument(children.size() == 2);
+		this.children = ImmutableList.copyOf(children);
 	}
 
-	/**
-	 * Constructor for Conjunction.
-	 * @param children T[]
-	 */
-	private Conjunction(T... children) {
-		super(LogicalSymbols.AND, Lists.newArrayList(children));
+	public Conjunction(Formula... children) {
+		Preconditions.checkArgument(children != null);
+		Preconditions.checkArgument(children.length == 2);
+		this.children = ImmutableList.copyOf(children);
 	}
 
 	/**
 	 * Convenience constructor.
 	 *
 	 * @param <T> the generic type
-	 * @param children T[]
-	 * @return Conjunction<T>
-	 */
-	public static <T extends Formula> Conjunction<T> of(T... children) {
-		return new Conjunction<>(children);
-	}
-
-	/**
-	 * Convenience constructor.
-	 *
-	 * @param <T> the generic type
 	 * @param children Collection<T>
 	 * @return Conjunction<T>
 	 */
-	public static <T extends Formula> Conjunction<T> of(Collection<T> children) {
-		return new Conjunction<>(children);
+	public static Formula of(Formula... children) {
+		return Conjunction.of(Lists.newArrayList(children));
+	}
+
+	public static Formula of(List<Formula> children) {
+		if(children.size() == 2) {
+			return new Conjunction(children.get(0), children.get(1));
+		}
+		else if(children.size() > 2) {
+			Formula right = Conjunction.of(children.subList(1, children.size()));
+			return new Conjunction(children.get(0), right);
+		}
+		else if(children.size() == 1) {
+			return children.get(0);
+		}
+		else {
+			throw new java.lang.RuntimeException("Illegal number of arguments");
+		}
+	}
+
+	/**
+	 *
+	 * @param o Object
+	 * @return boolean
+	 */
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null) {
+			return false;
+		}
+		return this.getClass().isInstance(o)
+				&& this.children.equals(((Conjunction) o).children);
 	}
 
 
 	@Override
-	public Conjunction<T> ground(Map<Variable, Constant> mapping) {
-		List<T> result = new ArrayList<>(this.children.size());
-		for (T p: this.children) {
-			result.add((T) p.ground(mapping));
+	public int hashCode() {
+		if(this.hash == null) {
+			this.hash = Objects.hash(this.operator, this.children);
 		}
-		return Conjunction.of(result);
+		return this.hash;
+	}
+	
+	/**
+	 * To string.
+	 *
+	 * @return String
+	 */
+	@Override
+	public String toString() {
+		if(this.toString == null) {
+			this.toString = "";
+			this.toString += "(" +this.children.get(0).toString() + " & " + this.children.get(1).toString() + ")";
+		}
+		return this.toString;
 	}
 
-	/**
-	 * Creates a conjunction builder.
-	 *
-	 * @return a generic formula builder.
-	 */
-	public static Builder builder() {
-		return new Builder();
+	@Override
+	public int getId() {
+		return this.hashCode();
 	}
 
-	/**
-	 * A simple builder for conjunctions.
-	 *
-	 * @author Julien Leblay
-	 */
-	public static class Builder implements uk.ac.ox.cs.pdq.builder.Builder<Conjunction<?>> {
+	@Override
+	public List<Formula> getChildren() {
+		return this.children;
+	}
 
-		/** TOCOMMENT what is this?
-		 * 
-		 *  The current. */
-		private LinkedList<Formula> current = new LinkedList<>();
-
-		/**
-		 * Constructs a conjunction builder.
-		 *
-		 * @param conjuncts Formula[]
-		 * @return Builder
-		 */
-		public Builder and(Formula... conjuncts) {
-			return this.and(Lists.newArrayList(conjuncts));
+	@Override
+	public List<Atom> getAtoms() {
+		if(this.atoms == null) {
+			Set<Atom> atoms = Sets.newLinkedHashSet();
+			atoms.addAll(this.children.get(0).getAtoms());
+			atoms.addAll(this.children.get(1).getAtoms());
+			this.atoms = Lists.newArrayList(atoms);
 		}
+		return this.atoms;
+	}
 
-		/**
-		 * Constructs a conjunction builder.
-		 *
-		 * @param conjuncts List<Formula>
-		 * @return Builder
-		 */
-		public Builder and(List<Formula> conjuncts) {
-			for (Formula f: conjuncts) {
-				this.current.add(f);
-			}
-			return this;
+	@Override
+	public List<Term> getTerms() {
+		if(this.terms == null) {
+			Set<Term> terms = Sets.newLinkedHashSet();
+			terms.addAll(this.children.get(0).getTerms());
+			terms.addAll(this.children.get(1).getTerms());
+			this.terms = Lists.newArrayList(terms);
 		}
+		return this.terms;
+	}
 
-		/**
-		 * Builds the conjunction.
-		 *
-		 * @return Conjunction<?>
-		 * @see uk.ac.ox.cs.pdq.builder.Builder#build()
-		 */
-		@Override
-		public Conjunction<?> build() {
-			assert this.current != null;
-			return Conjunction.of(this.current);
+	@Override
+	public List<Variable> getFreeVariables() {
+		if(this.freeVariables == null) {
+			Set<Variable> variables = Sets.newLinkedHashSet();
+			variables.addAll(this.children.get(0).getFreeVariables());
+			variables.addAll(this.children.get(1).getFreeVariables());
+			this.freeVariables = Lists.newArrayList(variables);
 		}
+		return this.freeVariables;
+	}
+
+	@Override
+	public List<Variable> getBoundVariables() {
+		if(this.boundVariables == null) {
+			Set<Variable> variables = Sets.newLinkedHashSet();
+			variables.addAll(this.children.get(0).getBoundVariables());
+			variables.addAll(this.children.get(1).getBoundVariables());
+			this.boundVariables = Lists.newArrayList(variables);
+		}
+		return this.boundVariables;
 	}
 }

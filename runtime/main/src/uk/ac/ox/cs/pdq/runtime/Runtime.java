@@ -199,7 +199,7 @@ public class Runtime {
 	 * @return the result of the plan evaluation.
 	 * @throws EvaluationException the evaluation exception
 	 */
-	public Result evaluatePlan(Plan p, Query<?> query)
+	public Result evaluatePlan(Plan p, ConjunctiveQuery query)
 			throws EvaluationException {
 		return this.evaluatePlan(p, query, ExecutionModes.DEFAULT);
 	}
@@ -213,7 +213,7 @@ public class Runtime {
 	 * @return the result of the plan evaluation.
 	 * @throws EvaluationException the evaluation exception
 	 */
-	public Result evaluatePlan(Plan p, Query<?> query, ExecutionModes mode)
+	public Result evaluatePlan(Plan p, ConjunctiveQuery query, ExecutionModes mode)
 			throws EvaluationException {
 		PlanExecutor executor = Middleware.newExecutor(this.params, p, query);
 		executor.setTuplesLimit(this.params.getTuplesLimit());
@@ -229,7 +229,7 @@ public class Runtime {
 	 * @return the result of the query evaluation.
 	 * @throws EvaluationException the evaluation exception
 	 */
-	public Result evaluateQuery(Query<?> query) throws EvaluationException {
+	public Result evaluateQuery(ConjunctiveQuery query) throws EvaluationException {
 		QueryEvaluator evaluator = QueryEvaluatorFactory.newEvaluator(this.schema, query);
 		if (evaluator != null) {
 			evaluator.setEventBus(this.eventBus);

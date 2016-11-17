@@ -2,7 +2,7 @@ package uk.ac.ox.cs.pdq.rewrite.sql;
 
 import org.apache.log4j.Logger;
 
-import uk.ac.ox.cs.pdq.fol.Evaluatable;
+import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.rewrite.RewriterException;
 import uk.ac.ox.cs.pdq.util.Operator;
 
@@ -74,7 +74,7 @@ public abstract class SQLTranslator {
 	 * @return a String representation of a SQL statement for the given query
 	 * @throws RewriterException if the statement could not be generated.
 	 */
-	public abstract String toSQL(Evaluatable q) throws RewriterException;
+	public abstract String toSQL(Formula q) throws RewriterException;
 
 
 	/**

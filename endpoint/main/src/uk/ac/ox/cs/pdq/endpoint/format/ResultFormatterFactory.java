@@ -1,6 +1,7 @@
 package uk.ac.ox.cs.pdq.endpoint.format;
 
-import uk.ac.ox.cs.pdq.fol.Query;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+
 
 
 // TODO: Auto-generated Javadoc
@@ -19,7 +20,7 @@ public class ResultFormatterFactory {
 	 * @return the appropriate implementation of a ResultFormatter depending on
 	 * the given inputs.
 	 */
-	public static ResultFormatter getFormatter(Query<?> q, String name) {
+	public static ResultFormatter getFormatter(ConjunctiveQuery q, String name) {
 		return new HtmlTabularResultFormatter();
 	}
 }

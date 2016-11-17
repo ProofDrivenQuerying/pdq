@@ -2,11 +2,8 @@ package uk.ac.ox.cs.pdq.io.pretty;
 
 import java.io.PrintStream;
 
-import uk.ac.ox.cs.pdq.fol.BinaryFormula;
 import uk.ac.ox.cs.pdq.fol.Formula;
-import uk.ac.ox.cs.pdq.fol.NaryFormula;
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.UnaryFormula;
 import uk.ac.ox.cs.pdq.io.Writer;
 
 // TODO: Auto-generated Javadoc

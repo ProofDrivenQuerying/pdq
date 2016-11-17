@@ -202,8 +202,8 @@ public class DatabaseChaseState implements ChaseState {
 			Preconditions.checkArgument(dependency instanceof TGD, "EGDs are not allowed inside TGDchaseStep");
 			Map<Variable, Constant> mapping = match.getMapping();
 			Dependency grounded = dependency.fire(mapping, true);
-			Formula left = grounded.getLeft();
-			Formula right = grounded.getRight();
+			Formula left = grounded.getBody();
+			Formula right = grounded.getHead();
 			//Add information about new facts to constantsToAtoms
 			for(Atom atom:right.getAtoms()) {
 				for(Term term:atom.getTerms()) {

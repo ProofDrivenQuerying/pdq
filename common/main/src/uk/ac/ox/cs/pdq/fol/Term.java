@@ -25,7 +25,7 @@ public interface Term {
 	 *
 	 * @return true if the term is a Skolem
 	 */
-	public boolean isSkolem();
+	public boolean isUntypedConstant();
 	
 	public Term clone();
 }

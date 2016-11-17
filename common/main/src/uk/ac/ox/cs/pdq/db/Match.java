@@ -3,8 +3,9 @@ package uk.ac.ox.cs.pdq.db;
 import java.util.Map;
 import java.util.Objects;
 
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
-import uk.ac.ox.cs.pdq.fol.Evaluatable;
+import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Variable;
 
 import com.google.common.base.Preconditions;
@@ -30,7 +31,7 @@ import com.google.common.base.Preconditions;
 public class Match {
 
 	/**  The dependency or query that will be grounded using an homomorphism*. */
-	protected final Evaluatable query;
+	protected final Formula query;
 
 	/** The mapping of query's variables to chase constants.*/
 	protected final Map<Variable, Constant> mapping;
@@ -40,7 +41,8 @@ public class Match {
 	 * @param q Evaluatable
 	 * @param mapping Map<Variable,Constant>
 	 */
-	public Match(Evaluatable q, Map<Variable, Constant> mapping) {
+	public Match(Formula q, Map<Variable, Constant> mapping) {
+		Preconditions.checkArgument(q instanceof ConjunctiveQuery || q instanceof Dependency);
 		Preconditions.checkArgument(mapping != null);
 		this.mapping = mapping;
 		this.query = q;
@@ -61,7 +63,7 @@ public class Match {
 	 *
 	 * @return Evaluatable
 	 */
-	public Evaluatable getQuery() {
+	public Formula getQuery() {
 		return this.query;
 	}
 

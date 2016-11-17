@@ -17,7 +17,6 @@ import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismManager;
 import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismManagerFactory;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.io.pretty.DataReader;
 import uk.ac.ox.cs.pdq.io.xml.DAGPlanReader;
 import uk.ac.ox.cs.pdq.io.xml.LeftDeepPlanReader;
@@ -157,7 +156,7 @@ public class RuntimeTest extends RegressionTest {
 		PlannerParameters plParams = new PlannerParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
 		ReasoningParameters reasoningParams = new ReasoningParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
 		AccessibleSchema accessibleSchema = new AccessibleSchema(schema);
-		Query<?> accessibleQuery = accessibleSchema.accessible(query);
+		ConjunctiveQuery accessibleQuery = accessibleSchema.accessible(query);
 		try (HomomorphismManager manager = new HomomorphismManagerFactory().getInstance(accessibleSchema, 
 				reasoningParams.getHomomorphismDetectorType(), 
 				reasoningParams.getDatabaseDriver(), 
@@ -292,7 +291,7 @@ public class RuntimeTest extends RegressionTest {
 	 * @param queryResult Result
 	 * @return boolean
 	 */
-	private boolean compareResult(RuntimeParameters params, Schema s, Query<?> q, Plan p, List<Atom> f, Result queryResult) {
+	private boolean compareResult(RuntimeParameters params, Schema s, ConjunctiveQuery q, Plan p, List<Atom> f, Result queryResult) {
 		boolean accepted = true;
 		ExecutorTypes[] types = new ExecutorTypes[] {
 				ExecutorTypes.PIPELINED, 

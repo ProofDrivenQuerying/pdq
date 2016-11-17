@@ -50,7 +50,7 @@ public class SQLQueryEvaluator implements QueryEvaluator {
 	private final Connection connection;
 	
 	/**  The query to be evaluated. */
-	private final Query<?> query;
+	private final ConjunctiveQuery query;
 
 	/**  The evaluator's event bus. */
 	private EventBus eventBus;
@@ -72,7 +72,7 @@ public class SQLQueryEvaluator implements QueryEvaluator {
 	 * @param query Query
 	 * @throws SQLException the SQL exception
 	 */
-	private SQLQueryEvaluator(Connection connection, Query<?> query)  throws SQLException {
+	private SQLQueryEvaluator(Connection connection, ConjunctiveQuery query)  throws SQLException {
 		this.connection = connection;
 		this.query = query;
 	}
@@ -107,7 +107,7 @@ public class SQLQueryEvaluator implements QueryEvaluator {
 	 * @throws SQLException the SQL exception
 	 * @throws EvaluationException the evaluation exception
 	 */
-	public static SQLQueryEvaluator newEvaluator(Query<?> query) throws SQLException, EvaluationException {
+	public static SQLQueryEvaluator newEvaluator(ConjunctiveQuery query) throws SQLException, EvaluationException {
 		Properties prop = findRelationalProperties(query);
 		if (prop == null) {
 			throw new EvaluationException("Unable to evaluate query over a SQL database.");
@@ -250,7 +250,7 @@ public class SQLQueryEvaluator implements QueryEvaluator {
 	 * @return the schema underlying relational's properties if all of the
 	 * relations in the schema have the same properties, null otherwise.
 	 */
-	private static Properties findRelationalProperties(Query<?> query) {
+	private static Properties findRelationalProperties(ConjunctiveQuery query) {
 		Properties result = null;
 		for (Atom pred: query.getAtoms()) {
 			Predicate sig = pred.getPredicate();

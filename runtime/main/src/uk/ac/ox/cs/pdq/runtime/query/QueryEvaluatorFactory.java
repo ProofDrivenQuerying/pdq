@@ -31,10 +31,10 @@ public class QueryEvaluatorFactory {
 	 * @return QueryEvaluator
 	 * @throws EvaluationException the evaluation exception
 	 */
-	public static QueryEvaluator newEvaluator(Schema schema, Query<?> query) throws EvaluationException {
+	public static QueryEvaluator newEvaluator(Schema schema, ConjunctiveQuery query) throws EvaluationException {
 		try {
 			QueryEvaluator result = null;
-			for (Atom p: ((ConjunctiveQuery) query).getBody()) {
+			for (Atom p: query.getAtoms()) {
 				Relation r = (Relation) p.getPredicate();
 			    if (r instanceof InMemoryTableWrapper) {
 			    	return new InMemoryQueryEvaluator(query);

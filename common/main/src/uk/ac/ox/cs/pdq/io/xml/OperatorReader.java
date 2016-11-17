@@ -64,68 +64,68 @@ public class OperatorReader extends AbstractXMLReader<RelationalOperator> {
 	 * The Enum Types.
 	 */
 	public static enum Types {
-		
+
 		SELECT, 
- PROJECT, 
- RENAME, 
- STATIC_INPUT, 
- CROSS_PRODUCT,
-		
+		PROJECT, 
+		RENAME, 
+		STATIC_INPUT, 
+		CROSS_PRODUCT,
+
 		DEPENDENT_ACCESS, 
- ACCESS, 
- DEPENDENT_JOIN, 
- JOIN, 
- ALIAS,
-		
+		ACCESS, 
+		DEPENDENT_JOIN, 
+		JOIN, 
+		ALIAS,
+
 		DISTINCT, 
- COUNT, 
- IS_EMPTY, 
- UNION
+		COUNT, 
+		IS_EMPTY, 
+		UNION
 	}
-	
+
 	private RelationalOperator operator = null;
 
 	protected Schema schema = null;
-	
+
 	protected Types type;
-	
+
 	protected Join.Variants variant;
-	
+
 	protected Predicate predicate = null;
 
 	protected List<Predicate> conjunction = Lists.newLinkedList();
-	
-/** TOCOMMENT: ??? */
+
+	/** TOCOMMENT: ??? */
 	protected List<Integer> sideways = Lists.newLinkedList();
-	
+
 	protected List<Typed> outputs = Lists.newLinkedList();
-	
+
 	protected List<Term> projection = Lists.newLinkedList();
-	
+
 	protected Map<Integer, TypedConstant<?>> staticInputs = Maps.newLinkedHashMap();
-	
+
 	protected List<RelationalOperator> children = Lists.newLinkedList();
-	
+
 	protected String relationName;
-	
+
 	protected String accessMethodName;
-	
+
 	/** Boolean tracking wither the reader is current reading conjunctions. */
 	private boolean inConjunction = false;
-	
+
 	/** Boolean tracking wither the reader is current reading outputs. */
 	private boolean inOutputs = false;
-	
+
 	/** Boolean tracking wither the reader is current reading options. */
 	private boolean inOptions = false;
 
 	/** The aliases. */
 	private final Map<String, RelationalOperator> aliases;
-	
+
 	private String alias;
-	
+
 	private OperatorReader childReader;
-	
+
 	private OperatorReader parentReader;
 
 	/**
@@ -169,7 +169,7 @@ public class OperatorReader extends AbstractXMLReader<RelationalOperator> {
 		this.aliases = aliases;
 		this.parentReader = parent;
 	}
-	
+
 	/**
 	 * Adds A child.
 	 *
@@ -179,7 +179,7 @@ public class OperatorReader extends AbstractXMLReader<RelationalOperator> {
 		this.children.add(i);
 		this.childReader = new OperatorReader(this.schema, this.aliases, this);
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 * @see uk.ac.ox.cs.pdq.io.Reader#read(java.io.InputStream)
@@ -248,8 +248,8 @@ public class OperatorReader extends AbstractXMLReader<RelationalOperator> {
 						left,
 						new TypedConstant<>(
 								uk.ac.ox.cs.pdq.util.Types.cast(
-									this.outputs.get(left).getType(),
-									this.getValue(atts, QNames.VALUE))));
+										this.outputs.get(left).getType(),
+										this.getValue(atts, QNames.VALUE))));
 			} else {
 				this.predicate = new AttributeEqualityPredicate(
 						left,
@@ -271,7 +271,7 @@ public class OperatorReader extends AbstractXMLReader<RelationalOperator> {
 			this.inOptions = true;
 			this.staticInputs = Maps.newLinkedHashMap();
 			break;
-	
+
 		case CHILD:
 		case CHILDREN:
 			this.childReader = new OperatorReader(this.schema, this.aliases, this);
@@ -298,8 +298,8 @@ public class OperatorReader extends AbstractXMLReader<RelationalOperator> {
 				try {
 					this.outputs.add(
 							new TypedConstant<>(uk.ac.ox.cs.pdq.util.Types.cast(
-							Class.forName(this.getValue(atts, QNames.TYPE)),
-							this.getValue(atts, QNames.VALUE))));
+									Class.forName(this.getValue(atts, QNames.TYPE)),
+									this.getValue(atts, QNames.VALUE))));
 				} catch (ClassNotFoundException e) {
 					throw new IllegalStateException();
 				}
@@ -323,8 +323,8 @@ public class OperatorReader extends AbstractXMLReader<RelationalOperator> {
 					this.staticInputs.put(
 							Integer.valueOf(this.getValue(atts, QNames.ATTRIBUTE)),
 							new TypedConstant<>(uk.ac.ox.cs.pdq.util.Types.cast(
-							Class.forName(this.getValue(atts, QNames.TYPE)),
-							this.getValue(atts, QNames.VALUE))));
+									Class.forName(this.getValue(atts, QNames.TYPE)),
+									this.getValue(atts, QNames.VALUE))));
 				} catch (ClassNotFoundException e) {
 					throw new IllegalStateException();
 				}
@@ -346,7 +346,7 @@ public class OperatorReader extends AbstractXMLReader<RelationalOperator> {
 	private boolean isProcessingChild() {
 		return this.childReader != null;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 * @see org.xml.sax.helpers.DefaultHandler#endElement(java.lang.String, java.lang.String, java.lang.String)
@@ -355,7 +355,7 @@ public class OperatorReader extends AbstractXMLReader<RelationalOperator> {
 	public void endElement(String uri, String localName, String qName) {
 		if (isProcessingChild()) {
 			if (!this.childReader.isProcessingChild() 
-				&& (QNames.parse(qName) == QNames.CHILDREN
+					&& (QNames.parse(qName) == QNames.CHILDREN
 					|| QNames.parse(qName) == QNames.CHILD)){
 				this.childReader = null;
 				return;
@@ -363,7 +363,7 @@ public class OperatorReader extends AbstractXMLReader<RelationalOperator> {
 			this.childReader.endElement(uri, localName, qName);
 		} else switch(QNames.parse(qName)) {
 		case OPERATOR:
-			
+
 			switch (this.type) {
 			case DISTINCT:
 				this.operator = new Distinct(this.children.get(0));
@@ -381,7 +381,7 @@ public class OperatorReader extends AbstractXMLReader<RelationalOperator> {
 				Map<Integer, Term> renaming = new LinkedHashMap<>();
 				int i = 0;
 				for (Term t: this.projection) {
-					if (t.isVariable() || t.isSkolem()) {
+					if (t.isVariable() || t.isUntypedConstant()) {
 						Term r = Utility.typedToTerm(this.outputs.get(i));
 						if (!String.valueOf(r).equals(String.valueOf(t))) {
 							renaming.put(this.children.get(0).getColumns().indexOf(t), r);

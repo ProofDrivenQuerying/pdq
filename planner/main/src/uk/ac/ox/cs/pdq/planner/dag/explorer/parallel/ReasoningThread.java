@@ -13,7 +13,7 @@ import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.db.homomorphism.DatabaseHomomorphismManager;
 import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismDetector;
-import uk.ac.ox.cs.pdq.fol.Query;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.plan.DAGPlan;
 import uk.ac.ox.cs.pdq.planner.dag.BinaryConfiguration;
 import uk.ac.ox.cs.pdq.planner.dag.ConfigurationUtility;
@@ -42,7 +42,7 @@ import com.google.common.collect.Sets;
 public class ReasoningThread implements Callable<Boolean> {
 
 	/**  The input query*. */
-	protected final Query<?> query;
+	protected final ConjunctiveQuery query;
 	
 	/**  The schema dependencies*. */
 	protected final Collection<? extends Dependency> dependencies;
@@ -116,7 +116,7 @@ public class ReasoningThread implements Callable<Boolean> {
 			int depth,
 			Queue<DAGChaseConfiguration> left,
 			Collection<DAGChaseConfiguration> right,
-			Query<?> query,
+			ConjunctiveQuery query,
 			Collection<? extends Dependency> dependencies,
 			Chaser chaser,
 			HomomorphismDetector detector,

@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.List;
 
 import uk.ac.ox.cs.pdq.db.Dependency;
-import uk.ac.ox.cs.pdq.fol.Query;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.plan.DAGPlan;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
@@ -129,7 +129,7 @@ public class BinaryConfiguration extends DAGChaseConfiguration {
 	 * @param query the query
 	 * @param dependencies the dependencies
 	 */
-	public void reasonUntilTermination(Chaser chaser, Query<?> query, Collection<? extends Dependency> dependencies) {
+	public void reasonUntilTermination(Chaser chaser, ConjunctiveQuery query, Collection<? extends Dependency> dependencies) {
 		chaser.reasonUntilTermination(this.getState(), dependencies);
 	}
 

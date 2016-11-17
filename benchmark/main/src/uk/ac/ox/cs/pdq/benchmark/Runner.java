@@ -24,7 +24,6 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TGD;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.io.pretty.PrettyDependencyWriter;
 import uk.ac.ox.cs.pdq.io.pretty.PrettyQueryWriter;
 import uk.ac.ox.cs.pdq.io.xml.DAGPlanReader;
@@ -395,7 +394,7 @@ planner,
 	 * @param query Query
 	 * @return Plan
 	 */
-	protected Plan obtainPlan(File directory, Schema schema, Query<?> query) {
+	protected Plan obtainPlan(File directory, Schema schema, ConjunctiveQuery query) {
 		try(FileInputStream pis = new FileInputStream(directory.getAbsolutePath() + '/' + PLAN_FILE);
 				BufferedInputStream bis = new BufferedInputStream(pis)) {
 			try {

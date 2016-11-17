@@ -269,7 +269,7 @@ public class RelationalOperatorWriter extends PrettyWriter<RelationalOperator>
 		String sep = "";
 		for (Term t: projected) {
 			sb.append(sep);
-			if (t.isVariable() || t.isSkolem()) {
+			if (t.isVariable() || t.isUntypedConstant()) {
 				sb.append(new Attribute(proj.getType().getType(i), t.toString()));
 			} else {
 				sb.append(t);

@@ -5,7 +5,7 @@ import java.util.Properties;
 import uk.ac.ox.cs.pdq.InconsistentParametersException;
 import uk.ac.ox.cs.pdq.Parameters.EnumParameterValue;
 import uk.ac.ox.cs.pdq.db.Relation;
-import uk.ac.ox.cs.pdq.fol.Query;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.plan.AccessOperator;
 import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.plan.Plan;
@@ -50,7 +50,7 @@ public final class Middleware {
 	 * type.
 	 * @throws MiddlewareException the middleware exception
 	 */
-	public static PlanExecutor newExecutor(RuntimeParameters params, Plan p, Query<?> q) throws MiddlewareException {
+	public static PlanExecutor newExecutor(RuntimeParameters params, Plan p, ConjunctiveQuery q) throws MiddlewareException {
 		Preconditions.checkArgument(p != null, "Cannot execute null plan");
 		Properties properties = findRelationalProperties(p);
 		switch(params.getExecutorType()) {

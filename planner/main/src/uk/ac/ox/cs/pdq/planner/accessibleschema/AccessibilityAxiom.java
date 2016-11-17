@@ -12,6 +12,7 @@ import uk.ac.ox.cs.pdq.db.TGD;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema.AccessibleRelation;
@@ -55,8 +56,8 @@ public class AccessibilityAxiom extends TGD implements GuardedDependency {
 	 * @param method 		A method to access this relation
 	 * @return 		the atoms of the left-hand side of the accessibility axiom that corresponds to the input relation and the input access method
 	 */
-	private static Conjunction<Atom> createLeft(Relation relation, AccessMethod method) {
-		List<Atom> leftAtoms = new ArrayList<>();
+	private static Formula createLeft(Relation relation, AccessMethod method) {
+		List<Formula> leftAtoms = new ArrayList<>();
 		List<Integer> bindingPositions = method.getInputs();
 		Relation r = AccessibleRelation.getInstance();
 		Atom f = relation.createAtoms();
@@ -77,9 +78,9 @@ public class AccessibilityAxiom extends TGD implements GuardedDependency {
 	 * @param binding the binding
 	 * @return 		the atoms of the right-hand side of the accessibility axiom that corresponds to the input relation and the input access method
 	 */
-	private static Conjunction<Atom> createRight(InferredAccessibleRelation infAccRel, AccessMethod binding) {
+	private static Formula createRight(InferredAccessibleRelation infAccRel, AccessMethod binding) {
 		Relation relation = infAccRel.getBaseRelation();
-		List<Atom> rightAtoms = new ArrayList<>();
+		List<Formula> rightAtoms = new ArrayList<>();
 		List<Integer> bindingPositions = binding.getInputs();
 		Relation accessible = AccessibleRelation.getInstance();
 		Atom f = infAccRel.createAtoms();
@@ -144,6 +145,6 @@ public class AccessibilityAxiom extends TGD implements GuardedDependency {
 	 */
 	@Override
 	public Atom getGuard() {
-		return this.left.getAtoms().get(this.left.size()-1);
+		return this.getBody().getAtoms().get(this.getBody().getAtoms().size()-1);
 	}
 }

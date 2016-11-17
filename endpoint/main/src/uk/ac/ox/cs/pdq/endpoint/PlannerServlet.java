@@ -30,7 +30,6 @@ import uk.ac.ox.cs.pdq.endpoint.util.ServletContextAttributes;
 import uk.ac.ox.cs.pdq.endpoint.util.SessionAttributes;
 import uk.ac.ox.cs.pdq.endpoint.util.WebBasedStatisticsLogger;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.io.ReaderException;
 import uk.ac.ox.cs.pdq.io.xml.QueryReader;
 import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
@@ -177,7 +176,7 @@ public class PlannerServlet extends PDQServlet {
 	 * @param future the future
 	 * @param logger the logger
 	 */
-	private void savePlanningSession(String planningId, Schema schema, Query query, Future<Plan> future, BufferedProgressLogger logger) {
+	private void savePlanningSession(String planningId, Schema schema, ConjunctiveQuery query, Future<Plan> future, BufferedProgressLogger logger) {
 		this.session.setAttribute(SessionAttributes.LAST_PLANNING_SESSION, planningId);
 		Map<String, PlanningSession> planners = (Map) this.session.getAttribute(SessionAttributes.PLANNING_SESSIONS);
 		if (planners == null) {

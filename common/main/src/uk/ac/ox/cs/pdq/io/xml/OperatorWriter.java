@@ -217,7 +217,7 @@ public class OperatorWriter extends AbstractXMLWriter<RelationalOperator> {
 			int i = 0;
 			open(out, QNames.PROJECT);
 			for (Term t: projected) {
-				if (t.isVariable() || t.isSkolem()) {
+				if (t.isVariable() || t.isUntypedConstant()) {
 					this.writeAttribute(out, new Attribute(proj.getType().getType(i), t.toString()));
 				} else {
 					this.writeConstant(out, (TypedConstant) t);

@@ -94,7 +94,7 @@ public class DAGPlan extends Plan implements Rewritable {
 	private static List<Term> inferInputTerms(Collection<? extends Term> inputs, RelationalOperator operator) {
 		List<Term> result = new ArrayList<>();
 		for (Term t: operator.getInputTerms()) {
-			if (t.isSkolem()) {
+			if (t.isUntypedConstant()) {
 				result.add(t);
 			}
 		}

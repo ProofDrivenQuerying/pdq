@@ -34,8 +34,8 @@ import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
-import uk.ac.ox.cs.pdq.fol.Evaluatable;
 import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
@@ -89,9 +89,9 @@ public class SQL92Translator extends SQLTranslator {
 	 * @throws RewriterException the rewriter exception
 	 */
 	@Override
-	public String toSQL(Evaluatable q) throws RewriterException {
+	public String toSQL(Formula q) throws RewriterException {
 		Preconditions.checkArgument(q != null);
-		if (!(q.getBody() instanceof Conjunction<?>)) {
+		if (!(q.getBody() instanceof Conjunction)) {
 			throw new UnsupportedOperationException("SQLTranslator does not yet supports queries other than conjunctive (SPJ) queries.");
 		}
 
@@ -169,7 +169,7 @@ public class SQL92Translator extends SQLTranslator {
 	private static Map<Atom, String> makeAliases(Evaluatable q) throws RewriterException {
 		Map<Atom, String> result = new LinkedHashMap<>();
 		int alias = 0;
-		for (Atom a: ((Conjunction<Atom>) q.getBody())) {
+		for (Atom a: ((Conjunction) q.getBody())) {
 			result.put(a, RELATION_ALIAS_PREFIX + (alias++));
 		}
 		return result;
@@ -257,7 +257,7 @@ public class SQL92Translator extends SQLTranslator {
 		List<Term> terms = new ArrayList<>(projected.size());
 		List<Integer> positions = new ArrayList<>(projected.size());
 		for (Term t: projected) {
-			if (t.isVariable() || t.isSkolem())  {
+			if (t.isVariable() || t.isUntypedConstant())  {
 				Integer i = fullList.indexOf(t);
 				if (i < 0) {
 					throw new IllegalStateException("Could not find projected '"
@@ -300,7 +300,7 @@ public class SQL92Translator extends SQLTranslator {
 		List<String> result = new ArrayList<>();
 		int i = 0;
 		for (Term t: positions.getLeft()) {
-			if (t.isVariable() || t.isSkolem()) {
+			if (t.isVariable() || t.isUntypedConstant()) {
 				result.add(columns.get(positions.getRight().get(i)));
 			} else {
 				result.add("'" + t + "'");
@@ -1120,7 +1120,7 @@ public class SQL92Translator extends SQLTranslator {
 					int i = columns.indexOf(t);
 					String a = null;
 					if (i < 0) {
-						if (!(t.isVariable() || t.isSkolem())) {
+						if (!(t.isVariable() || t.isUntypedConstant())) {
 							a = COLUMN_ALIAS_PREFIX + (aliasCounter++);
 							Column c = new Column.ConstantColumn((TypedConstant) t);
 							this.result.columns.forcePut(a, c);
@@ -1131,10 +1131,10 @@ public class SQL92Translator extends SQLTranslator {
 					} else {
 						a = this.result.projection.get(i);
 						Column c = this.result.columnTerms.inverse().get(t);
-						if ((t.isVariable() || t.isSkolem())
+						if ((t.isVariable() || t.isUntypedConstant())
 								&& renaming != null && renaming.containsKey(i)) {
 							Term newTerm = renaming.get(i);
-							if (newTerm.isSkolem() || newTerm.isSkolem()) {
+							if (newTerm.isUntypedConstant() || newTerm.isUntypedConstant()) {
 								a = newTerm.toString();
 								this.result.columns.forcePut(a, c);
 								this.result.columnTerms.forcePut(c, newTerm);

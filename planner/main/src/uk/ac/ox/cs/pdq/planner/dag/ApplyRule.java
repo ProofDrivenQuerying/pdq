@@ -7,7 +7,7 @@ import java.util.Set;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Query;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.plan.DAGPlan;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
@@ -118,7 +118,7 @@ public class ApplyRule extends DAGChaseConfiguration {
 	 * @param query the query
 	 * @param accessibleSchema the accessible schema
 	 */
-	public void generate(Chaser chaser, Query<?> query, AccessibleSchema accessibleSchema) {
+	public void generate(Chaser chaser, ConjunctiveQuery query, AccessibleSchema accessibleSchema) {
 		this.getState().generate(accessibleSchema, this.rule, this.facts);
 		chaser.reasonUntilTermination(this.getState(), accessibleSchema.getInferredAccessibilityAxioms());
 	}

@@ -105,7 +105,7 @@ public class JoinAlgorithm {
 			int index1 = searchTable.getAttributeIndex(minorAttr);
 			int index2 = searchTable.getAttributeIndex(inequalities.get(minorAttr));
 			for( Atom row: Lists.newArrayList( searchTable.getTuples() )){
-				if( row.getTerm(index1).isSkolem() && row.getTerm(index2).isSkolem() ){
+				if( row.getTerm(index1).isUntypedConstant() && row.getTerm(index2).isUntypedConstant() ){
 					// This is an ugly way to do this but there seems to be no way to return a term's actual value directly, or to check whether it's a TypedConstant
 					// So instead I am abusing toString(). 
 					if( Integer.parseInt(row.getTerm(index1).toString()) <= Integer.parseInt(row.getTerm(index2).toString())){

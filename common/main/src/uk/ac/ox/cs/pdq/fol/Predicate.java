@@ -23,31 +23,18 @@ public class Predicate {
 	/**  Predicate arity. */
 	protected final int arity;
 
-	/**  true, if this is the signature for an equality predicate. */
-	protected final boolean equality;
-
 	/**
 	 * Constructor for Predicate.
-	 * @param symbol String
-	 * @param arity int
-	 */
-	public Predicate(String symbol, int arity) {
-		this(symbol, arity, false);
-	}
-
-	/**
-	 * Constructor for Predicate.
-	 * @param symbol String
+	 * @param name String
 	 * @param arity int
 	 * @param equality boolean
 	 */
-	public Predicate(String symbol, int arity, boolean equality) {
-		Preconditions.checkArgument(symbol != null);
-		Preconditions.checkArgument(!symbol.isEmpty());
+	public Predicate(String name, int arity) {
+		Preconditions.checkArgument(name != null);
+		Preconditions.checkArgument(!name.isEmpty());
 		Preconditions.checkArgument(arity >= 0);
-		this.name = symbol;
+		this.name = name;
 		this.arity = arity;
-		this.equality = equality;
 		this.hash = Objects.hash(this.name, this.arity);
 		this.rep = this.makeString();
 	}
@@ -69,17 +56,7 @@ public class Predicate {
 	public int getArity() {
 		return this.arity;
 	}
-
-	/**
-	 * Checks if this is an equality predicate.
-	 *
-	 * @return true if the signature is of an equality predicate,
-	 * false otherwise
-	 */
-	public boolean isEquality() {
-		return this.equality;
-	}
-
+	
 	/**
 	 * Two predicates are equal if their names and arities are equal.
 	 *

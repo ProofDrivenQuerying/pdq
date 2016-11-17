@@ -86,7 +86,7 @@ public class PlanUtils {
 		if (!childOp.getInputTerms().isEmpty()) {
 			List<TypedConstant<?>> constants = new ArrayList<>(childOp.getInputTerms().size());
 			for (Term t: childOp.getInputTerms()) {
-				Preconditions.checkState(!t.isVariable() && !t.isSkolem(), "Successful plan cannot be open.");
+				Preconditions.checkState(!t.isVariable() && !t.isUntypedConstant(), "Successful plan cannot be open.");
 				constants.add((TypedConstant) t);
 			}
 			return new Projection(new DependentJoin(new StaticInput(constants), childOp),

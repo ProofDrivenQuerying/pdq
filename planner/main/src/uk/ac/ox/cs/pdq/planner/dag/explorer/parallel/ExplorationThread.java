@@ -10,7 +10,6 @@ import com.google.common.base.Preconditions;
 import uk.ac.ox.cs.pdq.db.homomorphism.DatabaseHomomorphismManager;
 import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismDetector;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.plan.DAGPlan;
 import uk.ac.ox.cs.pdq.planner.dag.ConfigurationUtility;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;

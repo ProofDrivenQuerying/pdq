@@ -2,27 +2,17 @@ package uk.ac.ox.cs.pdq.reasoning.chase;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.db.EGD;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.TGD;
-import uk.ac.ox.cs.pdq.db.homomorphism.DatabaseHomomorphismManager;
-import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismDetector;
-import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismProperty;
 import uk.ac.ox.cs.pdq.db.homomorphism.TriggerProperty;
-import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Constant;
-import uk.ac.ox.cs.pdq.fol.Query;
-import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.logging.performance.StatisticsCollector;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState;
-import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseState;
 import uk.ac.ox.cs.pdq.reasoning.utility.DefaultParallelEGDChaseDependencyAssessor;
 import uk.ac.ox.cs.pdq.reasoning.utility.ParallelEGDChaseDependencyAssessor;
 import uk.ac.ox.cs.pdq.reasoning.utility.ParallelEGDChaseDependencyAssessor.EGDROUND;
-import uk.ac.ox.cs.pdq.reasoning.utility.ReasonerUtility;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;

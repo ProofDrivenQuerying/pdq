@@ -138,7 +138,7 @@ public class DependentAccess  extends RelationalOperator implements AccessOperat
 		Map<Integer, TypedConstant<?>> result = new LinkedHashMap<>();
 		for(Integer i: accessMethod.getInputs()) {
 			Term t = columns.get(i - 1);
-			if (!(t.isSkolem() || t.isVariable())) {
+			if (!(t.isUntypedConstant() || t.isVariable())) {
 				result.put(i - 1, ((TypedConstant) t));
 			}
 		}

@@ -87,7 +87,7 @@ public class LogicBloxDelegateCostEstimator<S extends AccessibleChaseState>
 	 * @return true, if is recursive
 	 */
 	private boolean isRecursive(ConjunctiveQuery q) {
-		for (Atom pred : q.getBody().getAtoms()) {
+		for (Atom pred : q.getAtoms()) {
 			if (this.rule.getHead().getPredicate().equals(pred.getPredicate())
 					&& this.rule.getHead().getSchemaConstants().equals(pred.getSchemaConstants())) {
 				return true;

@@ -128,7 +128,7 @@ public class TypedConstant<T> implements Typed, Constant {
 	 * @see uk.ac.ox.cs.pdq.fol.Term#isSkolem()
 	 */
 	@Override
-	public boolean isSkolem() {
+	public boolean isUntypedConstant() {
 		return false;
 	}
 	

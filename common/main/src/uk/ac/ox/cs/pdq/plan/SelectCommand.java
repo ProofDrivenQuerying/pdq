@@ -9,7 +9,6 @@ import uk.ac.ox.cs.pdq.algebra.predicates.ConjunctivePredicate;
 import uk.ac.ox.cs.pdq.algebra.predicates.ConstantEqualityPredicate;
 import uk.ac.ox.cs.pdq.algebra.predicates.Predicate;
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.db.TGD;
 import uk.ac.ox.cs.pdq.util.Table;
 
 import com.google.common.base.Preconditions;

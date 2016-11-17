@@ -10,7 +10,6 @@ import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.io.xml.DAGPlanReader;
 import uk.ac.ox.cs.pdq.io.xml.QueryReader;
 import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
@@ -135,7 +134,7 @@ public class PipelinedPlanExecutorTest {
 	 * @param query Query
 	 * @return Plan
 	 */
-	private Plan readPlan(String plan, Schema schema, Query<?> query) {
+	private Plan readPlan(String plan, Schema schema, ConjunctiveQuery query) {
 		try(FileInputStream pis = new FileInputStream(plan);
 				BufferedInputStream bis = new BufferedInputStream(pis)) {
 			return new DAGPlanReader(schema).read(bis); 
@@ -154,7 +153,7 @@ public class PipelinedPlanExecutorTest {
 	 * @return the result of the plan evaluation.
 	 * @throws EvaluationException the evaluation exception
 	 */
-	private Result evaluatePlan(RuntimeParameters runtimeParams, Plan p, Query<?> query, ExecutionModes mode)
+	private Result evaluatePlan(RuntimeParameters runtimeParams, Plan p, ConjunctiveQuery query, ExecutionModes mode)
 			throws EvaluationException {
 		//this.eventBus.register(new TuplePrinterTest(System.out));
 		PlanExecutor executor = Middleware.newExecutor(runtimeParams, p, query);

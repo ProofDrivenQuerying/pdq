@@ -4,7 +4,6 @@ import java.io.PrintStream;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import uk.ac.ox.cs.pdq.fol.AcyclicQuery;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Atom;
@@ -26,11 +25,7 @@ public class QueryWriter extends AbstractXMLWriter<ConjunctiveQuery> {
 	 */
 	private void writeQuery(PrintStream out, ConjunctiveQuery query) {
 		Map<QNames, String> att = new LinkedHashMap<>();
-		if (query instanceof AcyclicQuery) {
-			att.put(QNames.TYPE, "acyclic");
-		} else {
-			att.put(QNames.TYPE, "conjunctive");
-		}
+		att.put(QNames.TYPE, "conjunctive");
 		open(out, QNames.QUERY, att);
 		this.writeBody(out, query.getBody());
 		this.writeHead(out, query.getHead());
@@ -46,11 +41,7 @@ public class QueryWriter extends AbstractXMLWriter<ConjunctiveQuery> {
 	 */
 	private void writeQuery(PrintStream out, ConjunctiveQuery query, Map<QNames, String> atts) {
 		Map<QNames, String> att = new LinkedHashMap<>(atts);
-		if (query instanceof AcyclicQuery) {
-			att.put(QNames.TYPE, "acyclic");
-		} else {
 			att.put(QNames.TYPE, "conjunctive");
-		}
 		open(out, QNames.QUERY, att);
 		this.writeBody(out, query.getBody());
 		this.writeHead(out, query.getHead());
@@ -63,10 +54,10 @@ public class QueryWriter extends AbstractXMLWriter<ConjunctiveQuery> {
 	 * @param out the out
 	 * @param body Conjunction<Atom>
 	 */
-	public void writeBody(PrintStream out, Conjunction<Atom> body) {
+	public void writeBody(PrintStream out, Conjunction body) {
 		Map<QNames, String> att = new LinkedHashMap<>();
 		open(out, QNames.BODY, att);
-		for (Atom a: body) {
+		for (Atom a: body.getAtoms()) {
 			this.writePredicate(out, a);
 		}
 		close(out, QNames.BODY);
@@ -80,12 +71,12 @@ public class QueryWriter extends AbstractXMLWriter<ConjunctiveQuery> {
 	 */
 	public void writePredicate(PrintStream out, Atom p) {
 		Map<QNames, String> att = new LinkedHashMap<>();
-		att.put(QNames.NAME, p.getName());
+		att.put(QNames.NAME, p.getPredicate().getName());
 		open(out, QNames.ATOM, att);
 		for (Term t: p.getTerms()) {
 			Map<QNames, String> att2 = new LinkedHashMap<>();
 			if (t.isVariable()) {
-				att2.put(QNames.NAME, ((Variable) t).getName());
+				att2.put(QNames.NAME, ((Variable) t).getSymbol());
 				openclose(out, QNames.VARIABLE, att2);
 			} else {
 				att2.put(QNames.VALUE, t.toString());
@@ -103,12 +94,12 @@ public class QueryWriter extends AbstractXMLWriter<ConjunctiveQuery> {
 	 */
 	public void writeHead(PrintStream out, Atom p) {
 		Map<QNames, String> att = new LinkedHashMap<>();
-		att.put(QNames.NAME, p.getName());
+		att.put(QNames.NAME, p.getPredicate().getName());
 		open(out, QNames.HEAD, att);
 		for (Term t: p.getTerms()) {
 			Map<QNames, String> att2 = new LinkedHashMap<>();
 			if (t.isVariable()) {
-				att2.put(QNames.NAME, ((Variable) t).getName());
+				att2.put(QNames.NAME, ((Variable) t).getSymbol());
 				openclose(out, QNames.VARIABLE, att2);
 			} else {
 				att2.put(QNames.VALUE, t.toString());

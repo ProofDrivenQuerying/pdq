@@ -5,6 +5,7 @@ import java.util.List;
 
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Variable;
 
 /**
@@ -24,7 +25,7 @@ public class LinearGuarded extends TGD implements GuardedDependency {
 	 * @param left 		The left-hand side predicate of the dependency
 	 * @param right 		The right-hand side conjunctions of the dependency
 	 */
-	public LinearGuarded(Atom left, Conjunction<Atom> right) {
+	public LinearGuarded(Formula left, Formula right) {
 		super(Conjunction.of(left), right);
 	}
 
@@ -45,7 +46,7 @@ public class LinearGuarded extends TGD implements GuardedDependency {
 	 * @param relation Relation
 	 * @return the left-hand side predicate of a linear guarded dependency for the given relation
 	 */
-	private static Atom createLeft(Relation relation) {
+	private static Formula createLeft(Relation relation) {
 		List<Variable> free = new ArrayList<>();
 		int index = 0;
 		for (int i = 0, l = relation.getArity(); i < l; i++) {
@@ -62,7 +63,7 @@ public class LinearGuarded extends TGD implements GuardedDependency {
 	 * @param foreignKey the foreign key
 	 * @return the right-hand side of a linear guarded dependency for the given relation and foreign key constraint
 	 */
-	private static Conjunction<Atom> createRight(Relation relation, ForeignKey foreignKey) {
+	private static Formula createRight(Relation relation, ForeignKey foreignKey) {
 		List<Variable> free = new ArrayList<>();
 		int index = 0;
 		for (int i = 0, l = relation.getArity(); i < l; i++) {
@@ -83,7 +84,7 @@ public class LinearGuarded extends TGD implements GuardedDependency {
 			remoteTerms.set(remoteTermIndex, free.get(localTermIndex));
 		}
 
-		return Conjunction.of(new Atom(foreignKey.getForeignRelation(), remoteTerms));
+		return new Atom(foreignKey.getForeignRelation(), remoteTerms);
 	}
 
 
@@ -95,6 +96,6 @@ public class LinearGuarded extends TGD implements GuardedDependency {
 	 */
 	@Override
 	public Atom getGuard() {
-		return this.left.iterator().next();
+		return this.getBody().getAtoms().get(0);
 	}
 }

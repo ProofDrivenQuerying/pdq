@@ -32,7 +32,7 @@ public class PlannerUtility {
 		for(Atom fact:facts) {
 			List<Constant> constants = fact.getConstants(rule.getAccessMethod().getZeroBasedInputs());
 			for(Constant constant:constants) {
-				if(constant.isSkolem()) {
+				if(constant.isUntypedConstant()) {
 					inputs.add(constant);
 				}
 			}

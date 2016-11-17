@@ -18,11 +18,16 @@ import org.apache.log4j.Logger;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
+import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Query;
+import uk.ac.ox.cs.pdq.fol.Disjunction;
+import uk.ac.ox.cs.pdq.fol.Formula;
+import uk.ac.ox.cs.pdq.fol.Implication;
+import uk.ac.ox.cs.pdq.fol.Negation;
 import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.QuantifiedFormula;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 
@@ -198,7 +203,7 @@ public class Utility {
 		Collection<Constant> result = new LinkedHashSet<>();
 		for (Atom atom:atoms) {
 			for (Term term:atom.getTerms()) {
-				if (term instanceof Constant && ((Constant) term).isSkolem()) {
+				if (term instanceof Constant && ((Constant) term).isUntypedConstant()) {
 					result.add((Constant) term);
 				}
 			}
@@ -311,7 +316,7 @@ public class Utility {
 	 * @return Typed
 	 */
 	public static Typed termToTyped(Term t, Type type) {
-		if (t.isVariable() || t.isSkolem()) {
+		if (t.isVariable() || t.isUntypedConstant()) {
 			return new Attribute(type, String.valueOf(t));
 		} else if (t instanceof TypedConstant) {
 			return (TypedConstant) t;
@@ -566,6 +571,32 @@ public class Utility {
 		if (!assertsEnabled)
 			throw new RuntimeException("Assertions must be enabled in the VM");
 
+	}
+	
+	public static List<Variable> getVariables(Formula formula) {
+		List<Variable> variables = Lists.newArrayList();
+		if(formula instanceof Conjunction) {
+			variables.addAll(getVariables(((Conjunction)formula).getChildren().get(0)));
+			variables.addAll(getVariables(((Conjunction)formula).getChildren().get(1)));
+		}
+		else if(formula instanceof Disjunction) {
+			variables.addAll(getVariables(((Disjunction)formula).getChildren().get(0)));
+			variables.addAll(getVariables(((Disjunction)formula).getChildren().get(1)));
+		}
+		else if(formula instanceof Negation) {
+			variables.addAll(getVariables(((Negation)formula).getChildren().get(0)));
+		}
+		else if(formula instanceof Atom) {
+			variables.addAll(((Atom)formula).getVariables());
+		}
+		else if(formula instanceof Implication) {
+			variables.addAll(getVariables(((Implication)formula).getChildren().get(0)));
+			variables.addAll(getVariables(((Implication)formula).getChildren().get(1)));
+		}
+		else if(formula instanceof QuantifiedFormula) {
+			variables.addAll(getVariables(((QuantifiedFormula)formula).getChildren().get(0)));
+		}
+		return variables;
 	}
 
 }

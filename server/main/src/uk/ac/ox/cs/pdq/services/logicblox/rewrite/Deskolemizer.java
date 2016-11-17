@@ -15,8 +15,8 @@ import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Implication;
 import uk.ac.ox.cs.pdq.fol.Negation;
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Skolem;
 import uk.ac.ox.cs.pdq.fol.Term;
+import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.rewrite.Rewriter;
 import uk.ac.ox.cs.pdq.services.logicblox.cost.LogicBloxDelegateCostEstimator;
@@ -46,7 +46,7 @@ public class Deskolemizer<F extends Formula> implements Rewriter<F, F> {
 	}
 
 	/** A mapping between skolem and variable names. */
-	protected Map<Skolem, Variable> mapping = new LinkedHashMap<>();
+	protected Map<UntypedConstant, Variable> mapping = new LinkedHashMap<>();
 
 	/**
 	 * Rewrite.
@@ -68,11 +68,11 @@ public class Deskolemizer<F extends Formula> implements Rewriter<F, F> {
 	 */
 	protected Term map(Term term) {
 		Term result = term;
-		if (term.isSkolem()) {
+		if (term.isUntypedConstant()) {
 			result = this.mapping.get(term);
 			if (result == null) {
 				result = Variable.getFreshVariable();
-				this.mapping.put((Skolem) term, (Variable) result);
+				this.mapping.put((UntypedConstant) term, (Variable) result);
 			}
 		}
 		return result;
@@ -87,7 +87,7 @@ public class Deskolemizer<F extends Formula> implements Rewriter<F, F> {
 	 * @return a specialized Desolemizer implementation, suited for the input
 	 * formula.
 	 */
-	private static <F extends Formula> Deskolemizer<F> resolve(F input, Map<Skolem, Variable> mapping) {
+	private static <F extends Formula> Deskolemizer<F> resolve(F input, Map<UntypedConstant, Variable> mapping) {
 		assert input != null;
 		Class<Deskolemizer<?>>  result = null;
 		Class<?> paramType = input.getClass();
@@ -122,7 +122,7 @@ public class Deskolemizer<F extends Formula> implements Rewriter<F, F> {
 		public ConjunctiveQuery rewrite(ConjunctiveQuery input) {
 			QueryBuilder builder = new QueryBuilder();
 			builder.setName(input.getHead().getName());
-			for (Atom subFormula: input.getBody()) {
+			for (Atom subFormula: input.getAtoms()) {
 				builder.addBodyAtom(
 						Deskolemizer.resolve(subFormula, this.mapping)
 								.rewrite(subFormula));
@@ -137,7 +137,7 @@ public class Deskolemizer<F extends Formula> implements Rewriter<F, F> {
 	/**
 	 * Deskolemizer implementation for Implication.
 	 */
-	public static class ImplicationDeskolemizer extends Deskolemizer<Implication<?, ?>> {
+	public static class ImplicationDeskolemizer extends Deskolemizer<Implication> {
 		static { repository.put(Implication.class, ImplicationDeskolemizer.class); }
 
 		/**
@@ -147,9 +147,9 @@ public class Deskolemizer<F extends Formula> implements Rewriter<F, F> {
 		 * @return Implication<?,?>
 		 */
 		@Override
-		public Implication<?, ?> rewrite(Implication<?, ?> input) {
-			Formula left = input.getLeft();
-			Formula right = input.getRight();
+		public Implication rewrite(Implication input) {
+			Formula left = input.getChildren().get(0);
+			Formula right = input.getChildren().get(1);
 			return Implication.of(
 					Deskolemizer.resolve(left, this.mapping).rewrite(left),
 					Deskolemizer.resolve(right, this.mapping).rewrite(right));
@@ -159,7 +159,7 @@ public class Deskolemizer<F extends Formula> implements Rewriter<F, F> {
 	/**
 	 * Deskolemizer implementation for Conjunction.
 	 */
-	public static class ConjunctionDeskolemizer extends Deskolemizer<Conjunction<?>> {
+	public static class ConjunctionDeskolemizer extends Deskolemizer<Conjunction> {
 		static { repository.put(Conjunction.class, ConjunctionDeskolemizer.class); }
 
 		/**
@@ -169,7 +169,7 @@ public class Deskolemizer<F extends Formula> implements Rewriter<F, F> {
 		 * @return Conjunction<?>
 		 */
 		@Override
-		public Conjunction<?> rewrite(Conjunction<?> input) {
+		public Conjunction rewrite(Conjunction input) {
 			Conjunction.Builder builder = Conjunction.builder();
 			for (Formula subFormula: input) {
 				builder.and(Deskolemizer.resolve(subFormula, this.mapping)
@@ -182,7 +182,7 @@ public class Deskolemizer<F extends Formula> implements Rewriter<F, F> {
 	/**
 	 * Deskolemizer implementation for Disjunction.
 	 */
-	public static class DisjunctionDeskolemizer extends Deskolemizer<Disjunction<?>> {
+	public static class DisjunctionDeskolemizer extends Deskolemizer<Disjunction> {
 		static { repository.put(Disjunction.class, DisjunctionDeskolemizer.class); }
 
 		/**
@@ -192,7 +192,7 @@ public class Deskolemizer<F extends Formula> implements Rewriter<F, F> {
 		 * @return Disjunction<?>
 		 */
 		@Override
-		public Disjunction<?> rewrite(Disjunction<?> input) {
+		public Disjunction rewrite(Disjunction input) {
 			Disjunction.Builder builder = Disjunction.builder();
 			for (Formula subFormula: input) {
 				builder.or(Deskolemizer.resolve(subFormula, this.mapping)
@@ -205,7 +205,7 @@ public class Deskolemizer<F extends Formula> implements Rewriter<F, F> {
 	/**
 	 * Deskolemizer implementation for Negation.
 	 */
-	public static class NegationDeskolemizer extends Deskolemizer<Negation<?>> {
+	public static class NegationDeskolemizer extends Deskolemizer<Negation> {
 		static { repository.put(Negation.class, NegationDeskolemizer.class); }
 
 		/**
@@ -215,8 +215,8 @@ public class Deskolemizer<F extends Formula> implements Rewriter<F, F> {
 		 * @return Negation<?>
 		 */
 		@Override
-		public Negation<?> rewrite(Negation<?> input) {
-			Formula subFormula = input.getChild();
+		public Negation rewrite(Negation input) {
+			Formula subFormula = input.getChildren().get(0);
 			return Negation.of(Deskolemizer.resolve(subFormula, this.mapping)
 					.rewrite(subFormula));
 		}

@@ -1,169 +1,84 @@
 package uk.ac.ox.cs.pdq.db;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
 
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.Constant;
+import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Implication;
 import uk.ac.ox.cs.pdq.fol.LogicalSymbols;
-import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Skolem;
-import uk.ac.ox.cs.pdq.fol.Term;
+import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.util.CanonicalNameGenerator;
-import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 
 /**
  * TOCOMMENT agree on a way to write formulas in javadoc
  * A dependency of the form \delta = \forall x  \sigma(\vec{x}) --> \exists y  \tau(\vec{x}, \vec{y})
  * where \sigma and \tau are conjunctions of atoms.
  *
- * @author Julien Leblay
  * @author Efthymia Tsamoura
  */
-public class TGD
-		extends Implication<Conjunction<Atom>, Conjunction<Atom>>
-		implements Dependency<Conjunction<Atom>, Conjunction<Atom>> {
-
-	/**  The dependency's universally quantified variables. */
-	protected final List<Variable> universal;
-
-	/**  The dependency's existentially quantified variables. */
-	protected final List<Variable> existential;
+public class TGD extends Dependency {
 
 	/**  The dependency's constants. */
-	protected final Collection<TypedConstant<?>> constants = new LinkedHashSet<>();
+	protected Collection<TypedConstant<?>> constants = new LinkedHashSet<>();
 
-	/**
-	 * TOCOMMENT left and right are easy to confuse, head and body is better
-	 * Instantiates a new TGD.
-	 *
-	 * @param left The left-hand side conjunction of the dependency
-	 * @param right The right-hand side conjunction of the dependency
-	 */
-	public TGD(Conjunction<Atom> left, Conjunction<Atom> right) {
-		super(left, right);
-		this.universal = Utility.getVariables(left.getAtoms());
-		this.existential = Utility.getVariables(right.getAtoms());
-		this.existential.removeAll(this.universal);
+	public TGD(LogicalSymbols operator, List<Variable> variables, Implication implication) {
+		super(operator, variables, implication);
+		Preconditions.checkArgument(isConjunctionOfAtoms(implication.getChildren().get(0)));
+		Preconditions.checkArgument(isConjunctionOfAtoms(implication.getChildren().get(1)));
+	}
 
-		for (Term term:right.getTerms()) {
-			if (!term.isVariable() && !term.isSkolem()) {
-				this.constants.add(((TypedConstant) term));
-			}
+	public TGD(Formula body, Formula head) {
+		super(body,head);
+		Preconditions.checkArgument(isConjunctionOfAtoms(body));
+		Preconditions.checkArgument(isConjunctionOfAtoms(head));
+	}
+
+	private static boolean isConjunctionOfAtoms(Formula formula) {
+		if(formula instanceof Conjunction) {
+			return isConjunctionOfAtoms(formula.getChildren().get(0)) && isConjunctionOfAtoms(formula.getChildren().get(1));
 		}
-	}
-
-	/**
-	 * TOCOMMENT this seems some like a utility method, not something you would want in the TGD
-	 * Inverts a dependency.
-	 *
-	 * @return the inverse dependency
-	 */
-	public TGD invert() {
-		return new TGD(this.right, this.left);
-	}
-
-	/**
-	 * Gets the universally quantified variables.
-	 *
-	 * @return List<Variable>
-	 */
-	public List<Variable> getUniversal() {
-		return this.universal;
-	}
-
-	/**
-	 * Gets the free variables.
-	 *
-	 * @return List<Term>
-	 * @see uk.ac.ox.cs.pdq.fol.Evaluatable#getFree()
-	 */
-	@Override
-	public List<Term> getFree() {
-		return Lists.<Term>newArrayList();
-	}
-
-	/**
-	 * Gets the existentially quantified variables.
-	 *
-	 * @return List<Variable>
-	 */
-	public List<Variable> getExistential() {
-		return this.existential;
-	}
-
-	/**
-	 * Gets the left-hand side of the dependency.
-	 *
-	 * @return L
-	 * @see uk.ac.ox.cs.pdq.db.Dependency#getLeft()
-	 */
-	@Override
-	public Conjunction<Atom> getLeft() {
-		return this.left;
-	}
-
-	/**
-	 * TOCOMMENT for all methods up to line 169, see issue #139 on github
-	 * Gets the right-hand side of the dependency.
-	 *
-	 * @return R
-	 * @see uk.ac.ox.cs.pdq.db.Dependency#getRight()
-	 */
-	@Override
-	public Conjunction<Atom> getRight() {
-		return this.right;
-	}
-
-	/**
-	 * Gets all terms.
-	 *
-	 * @return List<Term>
-	 * @see uk.ac.ox.cs.pdq.fol.Formula#getTerms()
-	 */
-	@Override
-	public List<Term> getTerms() {
-		List<Term> terms = new ArrayList<>();
-		terms.addAll(this.left.getTerms());
-		terms.addAll(this.right.getTerms());
-		return terms;
-	}
-
-
-	/**
-	 * Gets the schema constants.
-	 *
-	 * @return Collection<TypedConstant<?>>
-	 * @see uk.ac.ox.cs.pdq.db.Dependency#getSchemaConstants()
-	 */
-	@Override
-	public Collection<TypedConstant<?>> getSchemaConstants() {
-		return this.constants;
+		if(formula instanceof Atom) {
+			return true;
+		}
+		return false;
 	}
 
 	/**
 	 * Fire.
 	 *
 	 * @param mapping Map<Variable,Term>
-	 * @param canonicalNames boolean
+	 * @param skolemize boolean
 	 * @return TGD<L,R>
 	 * @see uk.ac.ox.cs.pdq.ics.IC#fire(Map<Variable,Term>, boolean)
 	 */
-	@Override
-	public TGD fire(Map<Variable, Constant> mapping, boolean canonicalNames) {
-		return this.ground(mapping, canonicalNames);
+	public Implication fire(Map<Variable, Constant> mapping, boolean skolemize) {
+		Map<Variable, Constant> skolemizedMapping = mapping;
+		if(skolemize) {
+			skolemizedMapping = this.skolemizeMapping(mapping);
+		}
+		List<Formula> bodyAtoms = Lists.newArrayList();
+		for(Atom atom:this.body.getAtoms()) {
+			atom.ground(skolemizedMapping);
+			bodyAtoms.add(atom);
+		}
+		List<Formula> headAtoms = Lists.newArrayList();
+		for(Atom atom:this.body.getAtoms()) {
+			atom.ground(skolemizedMapping);
+			headAtoms.add(atom);
+		}
+		Formula bodyConjunction = Conjunction.of(bodyAtoms);
+		Formula headConjunction = Conjunction.of(headAtoms);
+		return Implication.of(bodyConjunction, headConjunction);
 	}
 
 	/**
@@ -181,86 +96,19 @@ public class TGD
 		for (Variable variable: this.universal) {
 			Variable variableTerm = variable;
 			Preconditions.checkState(result.get(variableTerm) != null);
-			namesOfUniversalVariables += variable.getName() + result.get(variableTerm);
+			namesOfUniversalVariables += variable.getSymbol() + result.get(variableTerm);
 		}
 		for(Variable variable:this.existential) {
 			if (!result.containsKey(variable)) {
 				result.put(variable,
-						new Skolem(
-								CanonicalNameGenerator.getName("TGD" + this.id,
+						new UntypedConstant(
+								CanonicalNameGenerator.getName("TGD" + this.getId(),
 										namesOfUniversalVariables,
-										variable.getName()))
+										variable.getSymbol()))
 						);
 			}
 		}
 		return result;
-	}
-
-	/**
-	 * Grounds the TGD using the input mapping.
-	 *
-	 * @param mapping the mapping
-	 * @param canonicalNames 		True if we assign Skolem constants to the existentially quantified variables
-	 * @return 		the grounded dependency using the input mapping.
-	 *      If canonicalNames is TRUE then skolem constants are produced for
-	 *      the existentially quantified variables TOCOMMENT what happens if canonicalNames is False?
-	 */
-	public TGD ground(Map<Variable, Constant> mapping, boolean canonicalNames) {
-		return canonicalNames == true ? this.ground(this.skolemizeMapping(mapping)): this.ground(mapping);
-	}
-
-	/**
-	 * Grounds the TGD using the input mapping..
-	 *
-	 * @param mapping Map<Variable,Term>
-	 * @return TGD<L,R>
-	 * @see uk.ac.ox.cs.pdq.formula.Formula#ground(Map<Variable,Term>)
-	 */
-	@Override
-	public TGD ground(Map<Variable, Constant> mapping) {
-		return new TGD(
-				this.left.ground(mapping),
-				this.right.ground(mapping));
-	}
-
-	/**
-	 * Gets all the variables of this TGD.
-	 *
-	 * @return Set<Variable>
-	 * @see uk.ac.ox.cs.pdq.db.Dependency#getAllVariables()
-	 */
-	@Override
-	public Set<Variable> getAllVariables() {
-		Set<Variable> variables = Sets.newHashSet(Utility.getVariables(this.left.getAtoms()));
-		variables.retainAll(Utility.getVariables(this.right.getAtoms()));
-		return variables;
-	}
-
-	/**
-	 * TOCOMMENT equal here seems to mean identical, so you might as well compare strings.
-	 * Two TGDs are equal if left, right, universal variables and existential variables, are all equal (using the corresponding equals methods).
-	 *
-	 * @param o Object
-	 * @return boolean
-	 */
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null) {
-			return false;
-		}
-		return this.getClass().isInstance(o)
-				&& this.left.equals(((TGD) o).left)
-				&& this.right.equals(((TGD) o).right)
-				&& this.universal.equals(((TGD) o).universal)
-				&& this.existential.equals(((TGD) o).existential);
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(this.universal, this.existential, this.left, this.right);
 	}
 
 	@Override
@@ -275,12 +123,27 @@ public class TGD
 		if(!this.existential.isEmpty()) {
 			b = this.existential.toString();
 		}
-		return f + this.left + LogicalSymbols.IMPLIES + b + this.right;
+		return f + this.body + LogicalSymbols.IMPLIES + b + this.head;
 	}
 	
-	@Override
-	public TGD clone() {
-		return new TGD(Conjunction.of(Lists.newArrayList(this.getBody().getChildren())), 
-				Conjunction.of(Lists.newArrayList(this.getHead().getChildren())));
+	public boolean isLinear() {
+		return this.body.getAtoms().size() == 1;
+	}
+	
+	public boolean isGuarded() {
+		List<Atom> atoms = this.body.getAtoms();
+		Atom guard = null;
+		for(Atom atom:atoms) {
+			if(guard == null || atom.getPredicate().getArity() >  guard.getPredicate().getArity()) {
+				guard = atom;
+			}
+		}
+		
+		for(Atom atom:atoms) {
+			if(!guard.getVariables().containsAll(atom.getVariables())) {
+				return false;
+			}
+		}
+		return true;
 	}
 }

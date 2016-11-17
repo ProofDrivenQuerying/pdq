@@ -14,7 +14,6 @@ import uk.ac.ox.cs.pdq.LimitReachedException;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.io.xml.DAGPlanReader;
 import uk.ac.ox.cs.pdq.io.xml.LeftDeepPlanReader;
 import uk.ac.ox.cs.pdq.io.xml.PlanWriter;
@@ -177,7 +176,7 @@ public class UserPlannerTest extends RegressionTest {
 	 * @param query Query
 	 * @return Plan
 	 */
-	private Plan obtainPlan(File directory, Schema schema, Query<?> query) {
+	private Plan obtainPlan(File directory, Schema schema, ConjunctiveQuery query) {
 		try(FileInputStream pis = new FileInputStream(directory.getAbsolutePath() + '/' + PLAN_FILE);
 			BufferedInputStream bis = new BufferedInputStream(pis)) {
 			try {

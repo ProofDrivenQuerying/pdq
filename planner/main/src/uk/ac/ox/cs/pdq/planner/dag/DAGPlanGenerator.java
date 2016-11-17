@@ -166,7 +166,7 @@ public class DAGPlanGenerator {
 		Preconditions.checkArgument(from.size() == to.size());
 		Map<Integer, Term> result = new LinkedHashMap<>();
 		for (int i = 0, l = from.size(); i < l; i++) {
-			if (to.get(i).isVariable() || to.get(i).isSkolem()) {
+			if (to.get(i).isVariable() || to.get(i).isUntypedConstant()) {
 				result.put(i, to.get(i));
 			}
 		}

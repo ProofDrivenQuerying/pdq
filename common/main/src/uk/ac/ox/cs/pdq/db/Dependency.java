@@ -1,47 +1,99 @@
 package uk.ac.ox.cs.pdq.db;
 
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
-import uk.ac.ox.cs.pdq.fol.Constant;
-import uk.ac.ox.cs.pdq.fol.Evaluatable;
-import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Rule;
-import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Conjunction;
+import uk.ac.ox.cs.pdq.fol.Disjunction;
+import uk.ac.ox.cs.pdq.fol.Formula;
+import uk.ac.ox.cs.pdq.fol.Implication;
+import uk.ac.ox.cs.pdq.fol.Literal;
+import uk.ac.ox.cs.pdq.fol.LogicalSymbols;
+import uk.ac.ox.cs.pdq.fol.Negation;
+import uk.ac.ox.cs.pdq.fol.QuantifiedFormula;
 import uk.ac.ox.cs.pdq.fol.Variable;
 
+import com.google.common.base.Preconditions;
+
 /**
- * A schema constraint.
+ * A universally quantified implication where the body is a quantifier-free formula and 
+ * the head is an existentially-quantified or quantifier-free formula.
  *
  * @author Efthymia Tsamoura
- * @author Julien Leblay
- * @param <L> the generic type
- * @param <R> the generic type
  */
-public interface Dependency<L extends Formula, R extends Formula> extends Evaluatable, Rule<L, R> {
+public class Dependency extends QuantifiedFormula {
 
-	/**
-	 * TOCOMMENT In literature one first detects all active triggers and then "fires" them; is this the case here?
-	 * I can see the fire method gets a "match" and I assume this match is the active trigger's antecedent homomorphism
-	 * depending on the chase version used. 
-	 * Fires the constraint.
-	 *
-	 * @param match 		Input mapping from variables to constants
-	 * @param canonicalNames 		True if we assign Skolem constants to the existentially quantified variables
-	 * @return the grounded dependency using the input mapping
-	 */
-	Dependency<L, R> fire(Map<Variable, Constant> match, boolean canonicalNames);
+	protected final Formula body;
+	protected final Formula head;
+	
+	/**  The dependency's universally quantified variables. */
+	protected List<Variable> universal;
 
-	/**
-	 * TOCOMMENT Schema constants as opposed to what other kind of constant?
-	 * Gets the schema constants.
-	 *
-	 * @return the schema constants of this constraint
-	 */
-	Collection<TypedConstant<?>> getSchemaConstants();
+	/**  The dependency's existentially quantified variables. */
+	protected List<Variable> existential;
+	
+	public Dependency(LogicalSymbols operator, List<Variable> variables, Implication implication) {
+		super(operator, variables, implication);
+		Preconditions.checkArgument(isUnquantified(implication.getChildren().get(0)));
+		Preconditions.checkArgument(isExistentiallyQuantified(implication.getChildren().get(1)) ||
+				isUnquantified(implication.getChildren().get(1)));
+		Preconditions.checkArgument(implication.getChildren().get(0).getFreeVariables().
+				containsAll(implication.getChildren().get(1).getFreeVariables()));
+		this.body = implication.getChildren().get(0);
+		this.head = implication.getChildren().get(1);
+	}
+	
+	public Dependency(Formula body, Formula head) {
+		super(LogicalSymbols.UNIVERSAL, body.getFreeVariables(), new Implication(body,head));
+		Preconditions.checkArgument(isUnquantified(body));
+		Preconditions.checkArgument(isExistentiallyQuantified(head) || isUnquantified(head));
+		Preconditions.checkArgument(body.getFreeVariables().containsAll(head.getFreeVariables()));
+		this.body = body;
+		this.head = head;
+	}
+	
+	private static boolean isUnquantified(Formula formula) {
+		if(formula instanceof Conjunction || formula instanceof Implication || formula instanceof Disjunction) {
+			return isUnquantified(formula.getChildren().get(0)) && isUnquantified(formula.getChildren().get(1));
+		}
+		else if(formula instanceof Negation) {
+			return isUnquantified(formula.getChildren().get(0));
+		}
+		else if(formula instanceof Literal) {
+			return true;
+		}
+		else if(formula instanceof Atom) {
+			return true;
+		}
+		else if(formula instanceof QuantifiedFormula) {
+			return false;
+		}
+		return false;
+	}
+	
+	private static boolean isExistentiallyQuantified(Formula formula) {
+		if(formula instanceof Conjunction || formula instanceof Implication || formula instanceof Disjunction) {
+			return isUnquantified(formula.getChildren().get(0)) && isUnquantified(formula.getChildren().get(1));
+		}
+		else if(formula instanceof Negation) {
+			return isUnquantified(formula.getChildren().get(0));
+		}
+		else if(formula instanceof Literal) {
+			return true;
+		}
+		else if(formula instanceof Atom) {
+			return true;
+		}
+		else if(formula instanceof QuantifiedFormula) {
+			if(((QuantifiedFormula) formula).isExistential()) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+		return false;
+	}
 
 	/**
 	 * TOCOMMENT it would be better to say getBody or getHead; it's not really clear what left and right is.
@@ -49,38 +101,40 @@ public interface Dependency<L extends Formula, R extends Formula> extends Evalua
 	 *
 	 * @return the left-hand side of this constraint
 	 */
-	L getLeft();
+	public Formula getBody() {
+		return this.body;
+	}
 
 	/**
 	 * Gets the right-hand side of this constraint.
 	 *
 	 * @return the right-hand side of this constraint
 	 */
-	R getRight();
-
-
-	/**
-	 * Gets all atoms in this dependency.
-	 *
-	 * @return List<Atom>
-	 */
-	List<Atom> getAtoms();
-
-	/**
-	 * Gets all universally and existentially quantified variables.
-	 *
-	 * @return the variables of both sides of this constraint
-	 */
-	Set<Variable> getAllVariables();
-
-	/**
-	 *
-	 * @param s the s
-	 * @return true if the dependency contains the given relation signature in
-	 * the left or right hand side.
-	 */
-	@Override
-	boolean contains(Predicate s);
+	public Formula getHead() {
+		return this.head; 
+	}
 	
-	Dependency<L,R> clone();
+	/**
+	 * Gets the universally quantified variables.
+	 *
+	 * @return List<Variable>
+	 */
+	public List<Variable> getUniversal() {
+		if(this.universal == null) {
+			this.universal = this.variables;
+		}
+		return this.universal;
+	}
+
+	/**
+	 * Gets the existentially quantified variables.
+	 *
+	 * @return List<Variable>
+	 */
+	public List<Variable> getExistential() {
+		if(this.existential == null) {
+			this.existential = this.head.getBoundVariables();
+		}
+		return this.existential;
+	}
 }
