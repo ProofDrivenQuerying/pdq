@@ -123,7 +123,7 @@ public class AccessibleSchema extends Schema {
 	 *
 	 * @return the inferred accessible counterparts of the schema dependencies
 	 */
-	public Collection<InferredAccessibleAxiom> getInferredAccessibilityAxioms() {
+	public Collection<Dependency> getInferredAccessibilityAxioms() {
 		return this.infAccessibilityAxioms.values();
 	}
 
@@ -141,7 +141,7 @@ public class AccessibleSchema extends Schema {
 	 *
 	 * @return 		the accessibility axioms of this schema
 	 */
-	public Collection<AccessibilityAxiom> getAccessibilityAxioms() {
+	public Collection<Dependency> getAccessibilityAxioms() {
 		return this.accessibilityAxioms.values();
 	}
 

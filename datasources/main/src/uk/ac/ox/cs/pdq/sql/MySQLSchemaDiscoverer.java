@@ -26,6 +26,7 @@ import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Term;
+import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.util.Triple;
 import uk.ac.ox.cs.pdq.util.Utility;
@@ -188,7 +189,8 @@ public class MySQLSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 		BiMap<String, Atom> atoms = this.makePredicate(from, relationMap);
 		this.makeJoins(where, atoms);
 		Pair<List<Term>, List<Attribute>> freeTermsAndAttributes = this.makeFreeTerms(select, atoms);
-		List<Formula> right = new ArrayList<>(atoms.values());
+		List<Formula> right = Lists.newArrayList();
+		right.addAll(atoms.values());
 		List<Variable> boundTerms = new ArrayList<>(Utility.getVariables(right));
 		boundTerms.removeAll(freeTermsAndAttributes.getLeft());
 		return new LinearGuarded(
@@ -377,7 +379,7 @@ public class MySQLSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 			term = new TypedConstant<>(attribute.substring(1, attribute.length() - 1));
 		}
 		if (renamed != null && !renamed.isEmpty()) {
-			att = new Attribute(String.class, String.valueOf(Skolem.getFreshConstant()));
+			att = new Attribute(String.class, String.valueOf(UntypedConstant.getFreshConstant()));
 		}
 		return Pair.of(term, att);
 	}

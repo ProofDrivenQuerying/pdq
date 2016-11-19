@@ -44,15 +44,15 @@ public class SQLViewWrapper extends View implements RelationAccessWrapper {
 	/** Logger. */
 	private static Logger log = Logger.getLogger(SQLViewWrapper.class);
 
-	/**
-	 * Instantiates a new SQL view wrapper.
-	 *
-	 * @param properties the properties
-	 * @param view View
-	 */
-	public SQLViewWrapper(Properties properties, View view) {
-		this(properties, view.getDependency(), view.getAccessMethods());
-	}
+//	/**
+//	 * Instantiates a new SQL view wrapper.
+//	 *
+//	 * @param properties the properties
+//	 * @param view View
+//	 */
+//	public SQLViewWrapper(Properties properties, View view) {
+//		this(properties, view.getDependency(), view.getAccessMethods());
+//	}
 
 	/**
 	 * Instantiates a new SQL view wrapper.
