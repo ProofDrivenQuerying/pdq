@@ -6,7 +6,7 @@ import org.mockito.Mock;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Skolem;
+import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.plan.DAGPlan;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
@@ -37,7 +37,7 @@ public class TestObjects1 {
 	
 			/** The p1. */
 			protected Atom p1 = new Atom(new AccessibleSchema.InferredAccessibleRelation(r1),
-			Lists.newArrayList(new Skolem("c1"), new Skolem("c2"), new Skolem("c3"))
+			Lists.newArrayList(new UntypedConstant("c1"), new UntypedConstant("c2"), new UntypedConstant("c3"))
 			);
 	
 			/** The r2. */
@@ -46,7 +46,7 @@ public class TestObjects1 {
 	
 			/** The p2. */
 			protected Atom p2 = new Atom(new AccessibleSchema.InferredAccessibleRelation(r2),
-			Lists.newArrayList(new Skolem("c1"), new Skolem("c2"), new Skolem("c3"), new Skolem("c4"))
+			Lists.newArrayList(new UntypedConstant("c1"), new UntypedConstant("c2"), new UntypedConstant("c3"), new UntypedConstant("c4"))
 			);
 	
 			/** The r3. */
@@ -55,7 +55,7 @@ public class TestObjects1 {
 	
 			/** The p3. */
 			protected Atom p3 = new Atom(new AccessibleSchema.InferredAccessibleRelation(r3),
-			Lists.newArrayList(new Skolem("c1"), new Skolem("c2"))
+			Lists.newArrayList(new UntypedConstant("c1"), new UntypedConstant("c2"))
 			);
 	
 			/** The r4. */
@@ -64,7 +64,7 @@ public class TestObjects1 {
 			
 			/** The p4. */
 			protected Atom p4 = new Atom(new AccessibleSchema.InferredAccessibleRelation(r4),
-			Lists.newArrayList(new Skolem("c1"))
+			Lists.newArrayList(new UntypedConstant("c1"))
 			);
 	
 			/** The r5. */
@@ -73,7 +73,7 @@ public class TestObjects1 {
 	
 			/** The p5. */
 			protected Atom p5 = new Atom(new AccessibleSchema.InferredAccessibleRelation(r5),
-			Lists.newArrayList(new Skolem("c1"), new Skolem("c3"), new Skolem("c2"))
+			Lists.newArrayList(new UntypedConstant("c1"), new UntypedConstant("c3"), new UntypedConstant("c2"))
 			);
 	
 			/** The r6. */
@@ -82,7 +82,7 @@ public class TestObjects1 {
 	
 			/** The p6. */
 			protected Atom p6 = new Atom(new AccessibleSchema.InferredAccessibleRelation(r6),
-			Lists.newArrayList(new Skolem("c1"), new Skolem("c3"))
+			Lists.newArrayList(new UntypedConstant("c1"), new UntypedConstant("c3"))
 			);
 	
 			/** The r7. */
@@ -91,7 +91,7 @@ public class TestObjects1 {
 	
 			/** The p7. */
 			protected Atom p7 = new Atom(new AccessibleSchema.InferredAccessibleRelation(r7),
-			Lists.newArrayList(new Skolem("c1"))
+			Lists.newArrayList(new UntypedConstant("c1"))
 			);
 
 

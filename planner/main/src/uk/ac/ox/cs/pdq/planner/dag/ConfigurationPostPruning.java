@@ -12,8 +12,6 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.plan.DAGPlan;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
@@ -210,7 +208,7 @@ public class ConfigurationPostPruning {
 	 * @return 		a configuration that comprises only the facts derived using only the input facts.
 	 * 		The input facts must be a subset of this configuration's facts
 	 */
-	private DAGChaseConfiguration prune(ApplyRule applyRule, Set<Atom> facts, Chaser chaser, Query<?> query, AccessibleSchema accessibleSchema) {
+	private DAGChaseConfiguration prune(ApplyRule applyRule, Set<Atom> facts, Chaser chaser, ConjunctiveQuery query, AccessibleSchema accessibleSchema) {
 		ApplyRule configuration = new ApplyRule(
 				applyRule.getState(),
 				applyRule.getRule(),

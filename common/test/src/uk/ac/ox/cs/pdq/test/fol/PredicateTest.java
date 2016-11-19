@@ -20,8 +20,8 @@ import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Predicate;
-import uk.ac.ox.cs.pdq.fol.Skolem;
 import uk.ac.ox.cs.pdq.fol.Term;
+import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.util.Utility;
 
@@ -32,7 +32,7 @@ import com.google.common.collect.Sets;
 /**
  * The Class PredicateFormulaTest.
  */
-public class PredicateFormulaTest {
+public class PredicateTest {
 
 	/** The random. */
 	private Random random = new Random();
@@ -80,7 +80,7 @@ public class PredicateFormulaTest {
 		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
 				new Variable("x1"), new Variable("x2"), new Variable("x3"),
-				new Skolem("x4"), new TypedConstant<>("x5")
+				new UntypedConstant("x4"), new TypedConstant<>("x5")
 				);
 		Atom p = new Atom( s, t);
 		Assert.assertEquals("Atom must have name signature " + s, s, p.getPredicate());
@@ -195,7 +195,7 @@ public class PredicateFormulaTest {
 				new Attribute(String.class, "a1"), 
 				new Attribute(String.class, "a2"))) {};
 		TypedConstant<String> c = new TypedConstant<>("c");
-		Skolem s = new Skolem("s");
+		UntypedConstant s = new UntypedConstant("s");
 		Variable v = new Variable("v");
 		set.add(new Atom(r, Lists.newArrayList(c, v)));
 		set.add(new Atom(r, Lists.newArrayList(c, c)));
@@ -216,7 +216,7 @@ public class PredicateFormulaTest {
 		Relation r = new Relation("r", Lists.newArrayList(
 				new Attribute(String.class, "a1"), new Attribute(String.class, "a2"))) {};
 		TypedConstant<String> c = new TypedConstant<>("c");
-		Skolem s = new Skolem("s");
+		UntypedConstant s = new UntypedConstant("s");
 		Variable v = new Variable("v");
 		set.add(new Atom(r, Lists.newArrayList(c, v)));
 		set.add(new Atom(r, Lists.newArrayList(c, c)));
@@ -236,11 +236,11 @@ public class PredicateFormulaTest {
 		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
 				new Variable("x1"), new Variable("x2"), new Variable("x3"),
-				new Skolem("x4"), new TypedConstant<>("x5")
+				new UntypedConstant("x4"), new TypedConstant<>("x5")
 				);
 		Atom p = new Atom(s, t);
 		Assert.assertEquals("Atom must have " + t.size() +  " terms ",
-				t.size(), p.getTermsCount());
+				t.size(), p.getPredicate().getArity());
 	}
 
 	/**
@@ -250,7 +250,7 @@ public class PredicateFormulaTest {
 		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
 				new Variable("x1"), new Variable("x2"), new Variable("x3"),
-				new Skolem("x4"), new TypedConstant<>("x5")
+				new UntypedConstant("x4"), new TypedConstant<>("x5")
 				);
 		Atom p = new Atom(s, t);
 		for (int i = 0, l = t.size(); i < l; i++) {
@@ -267,7 +267,7 @@ public class PredicateFormulaTest {
 		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
 				new Variable("x1"), new Variable("x2"), new Variable("x3"),
-				new Skolem("x4"), new TypedConstant<>("x5")
+				new UntypedConstant("x4"), new TypedConstant<>("x5")
 				);
 		new Atom(s, t).getTerm(-1);
 	}
@@ -280,7 +280,7 @@ public class PredicateFormulaTest {
 		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
 				new Variable("x1"), new Variable("x2"), new Variable("x3"),
-				new Skolem("x4"), new TypedConstant<>("x5")
+				new UntypedConstant("x4"), new TypedConstant<>("x5")
 				);
 		new Atom(s, t).getTerm(5);
 	}
@@ -292,7 +292,7 @@ public class PredicateFormulaTest {
 		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
 				new Variable("x1"), new Variable("x2"), new Variable("x3"),
-				new Skolem("x4"), new TypedConstant<>("x5")
+				new UntypedConstant("x4"), new TypedConstant<>("x5")
 				);
 		Atom p = new Atom(s, t);
 		Assert.assertEquals("Atom terms must match term list of constructor",
@@ -306,7 +306,7 @@ public class PredicateFormulaTest {
 		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
 				new Variable("x1"), new Variable("x2"), new Variable("x3"),
-				new Skolem("x4"), new TypedConstant<>("x5")
+				new UntypedConstant("x4"), new TypedConstant<>("x5")
 				);
 		Atom p = new Atom(s, t);
 		Assert.assertEquals("Atom terms subset must match",
@@ -316,7 +316,7 @@ public class PredicateFormulaTest {
 				Sets.newHashSet(new Variable("x1")),
 				p.getTerms(Lists.<Integer>newArrayList(0)));
 		Assert.assertEquals("Atom terms subset must match",
-				Sets.newHashSet(new Variable("x3"), new Skolem("x4"), new TypedConstant<>("x5")),
+				Sets.newHashSet(new Variable("x3"), new UntypedConstant("x4"), new TypedConstant<>("x5")),
 				p.getTerms(Lists.<Integer>newArrayList(2, 3, 4)));
 	}
 
@@ -328,7 +328,7 @@ public class PredicateFormulaTest {
 		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
 				new Variable("x1"), new Variable("x2"), new Variable("x3"),
-				new Skolem("x4"), new TypedConstant<>("x5")
+				new UntypedConstant("x4"), new TypedConstant<>("x5")
 				);
 		new Atom(s, t).getTerms(Lists.<Integer>newArrayList(0, 2, -1));
 	}
@@ -341,7 +341,7 @@ public class PredicateFormulaTest {
 		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
 				new Variable("x1"), new Variable("x2"), new Variable("x3"),
-				new Skolem("x4"), new TypedConstant<>("x5")
+				new UntypedConstant("x4"), new TypedConstant<>("x5")
 				);
 		new Atom(s, t).getTerms(Lists.<Integer>newArrayList(2, 1, 5));
 	}
@@ -353,11 +353,11 @@ public class PredicateFormulaTest {
 		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
 				new Variable("x1"), new Variable("x2"), new Variable("x3"),
-				new Skolem("x4"), new TypedConstant<>("x5"));
+				new UntypedConstant("x4"), new TypedConstant<>("x5"));
 		Atom p = new Atom(s, t);
 		Assert.assertEquals("Atom terms subset must match",
-				Lists.newArrayList(new Skolem("x4"), new TypedConstant<>("x5")),
-				p.getConstants(Lists.newArrayList(3, 4)));
+				Lists.newArrayList(new UntypedConstant("x4"), new TypedConstant<>("x5")),
+				p.getTypedConstants(Lists.newArrayList(3, 4)));
 	}
 
 	/**
@@ -368,8 +368,8 @@ public class PredicateFormulaTest {
 		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
 				new Variable("x1"), new Variable("x2"), new Variable("x3"),
-				new Skolem("x4"), new TypedConstant<>("x5"));
-		new Atom(s, t).getConstants(Lists.newArrayList(0, 1));
+				new UntypedConstant("x4"), new TypedConstant<>("x5"));
+		new Atom(s, t).getTypedConstants(Lists.newArrayList(0, 1));
 	}
 
 	/**
@@ -378,7 +378,7 @@ public class PredicateFormulaTest {
 	@Test public void testGetVariable() {
 		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
-				new Variable("x1"), new Variable("x2"), new Skolem("x3"),
+				new Variable("x1"), new Variable("x2"), new UntypedConstant("x3"),
 				new Variable("x4"), new TypedConstant<>("x5")
 				);
 		Atom p = new Atom(s, t);
@@ -393,12 +393,12 @@ public class PredicateFormulaTest {
 	@Test public void testGetAllConstants() {
 		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
-				new Variable("x1"), new Variable("x2"), new Skolem("x3"),
+				new Variable("x1"), new Variable("x2"), new UntypedConstant("x3"),
 				new Variable("x4"), new TypedConstant<>("x5")
 				);
 		Atom p = new Atom(s, t);
 		Assert.assertEquals("Atom variables subset must match",
-				Sets.newHashSet(new Skolem("x3"), new TypedConstant<>("x5")),
+				Sets.newHashSet(new UntypedConstant("x3"), new TypedConstant<>("x5")),
 				p.getConstants());
 	}
 
@@ -410,7 +410,7 @@ public class PredicateFormulaTest {
 	@Test public void getSchemaConstants() {
 		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
-				new Variable("x1"), new TypedConstant<>("x2"), new Skolem("x3"),
+				new Variable("x1"), new TypedConstant<>("x2"), new UntypedConstant("x3"),
 				new Variable("x4"), new TypedConstant<>("x5")
 				);
 		Atom p = new Atom(s, t);
@@ -425,7 +425,7 @@ public class PredicateFormulaTest {
 	@Test public void testGetPredicates() {
 		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
-				new Variable("x1"), new TypedConstant<>("x2"), new Skolem("x3"),
+				new Variable("x1"), new TypedConstant<>("x2"), new UntypedConstant("x3"),
 				new Variable("x4"), new TypedConstant<>("x5")
 				);
 		Atom p = new Atom(s, t);
@@ -439,7 +439,7 @@ public class PredicateFormulaTest {
 	@Test public void testGetAtoms() {
 		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
-				new Variable("x1"), new TypedConstant<>("x2"), new Skolem("x3"),
+				new Variable("x1"), new TypedConstant<>("x2"), new UntypedConstant("x3"),
 				new Variable("x4"), new TypedConstant<>("x5")
 				);
 		Atom p = new Atom(s, t);
@@ -453,11 +453,11 @@ public class PredicateFormulaTest {
 	@Test public void testGround() {
 		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
-				new Variable("x1"), new Variable("x2"), new Skolem("x3"),
+				new Variable("x1"), new Variable("x2"), new UntypedConstant("x3"),
 				new Variable("x4"), new TypedConstant<>("x5")
 				);
 		List<Term> g = Lists.<Term>newArrayList(
-				new TypedConstant<>("c1"), new TypedConstant<>("c2"), new Skolem("x3"),
+				new TypedConstant<>("c1"), new TypedConstant<>("c2"), new UntypedConstant("x3"),
 				new TypedConstant<>("c4"), new TypedConstant<>("x5")
 				);
 		Map<Variable, Constant> m = new LinkedHashMap<>();
@@ -474,13 +474,13 @@ public class PredicateFormulaTest {
 	@Test public void testGetTermPositions() {
 		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
-				new Variable("x1"), new Variable("x2"), new Skolem("x3"),
+				new Variable("x1"), new Variable("x2"), new UntypedConstant("x3"),
 				new Variable("x1"), new TypedConstant<>("x4")
 				);
 		Atom p = new Atom(s, t);
 		Assert.assertEquals("Atom x1 term positions must match", Lists.newArrayList(0, 3), p.getTermPositions(new Variable("x1")));
 		Assert.assertEquals("Atom x2 term positions must match", Lists.newArrayList(1), p.getTermPositions(new Variable("x2")));
-		Assert.assertEquals("Atom x3 term positions must match", Lists.newArrayList(2), p.getTermPositions(new Skolem("x3")));
+		Assert.assertEquals("Atom x3 term positions must match", Lists.newArrayList(2), p.getTermPositions(new UntypedConstant("x3")));
 		Assert.assertEquals("Atom x4 term positions must match", Lists.newArrayList(4), p.getTermPositions(new TypedConstant<>("x4")));
 	}
 
@@ -492,7 +492,7 @@ public class PredicateFormulaTest {
 	@Test public void getTermPositionsNotFound() {
 		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
-				new Variable("x1"), new Variable("x2"), new Skolem("x3"),
+				new Variable("x1"), new Variable("x2"), new UntypedConstant("x3"),
 				new Variable("x1"), new TypedConstant<>("x4")
 				);
 		Assert.assertTrue("Atom term positions list must be empty",
@@ -520,7 +520,7 @@ public class PredicateFormulaTest {
 	@Test public void testIsNotFact() {
 		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
-				new Variable("x1"), new Variable("x2"), new Skolem("x3"),
+				new Variable("x1"), new Variable("x2"), new UntypedConstant("x3"),
 				new Variable("x1"), new TypedConstant<>("x4")
 				);
 		Atom p = new Atom(s, t);

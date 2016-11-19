@@ -9,6 +9,7 @@ import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.collect.Lists;
 
@@ -30,7 +31,7 @@ public class PlannerUtility {
 	public static Collection<Constant> getInputConstants(AccessibilityAxiom rule, Set<Atom> facts) {
 		Collection<Constant> inputs = new LinkedHashSet<>();
 		for(Atom fact:facts) {
-			List<Constant> constants = fact.getConstants(rule.getAccessMethod().getZeroBasedInputs());
+			List<Constant> constants = Utility.getTypedAndUntypedConstants(fact,rule.getAccessMethod().getZeroBasedInputs());
 			for(Constant constant:constants) {
 				if(constant.isUntypedConstant()) {
 					inputs.add(constant);
@@ -48,7 +49,7 @@ public class PlannerUtility {
 	 * @return the constants in the input positions of the given fact
 	 */
 	public static List<Constant> getInputConstants(AccessMethod binding, Atom fact) {
-		List<Constant> ret  = fact.getConstants(binding.getZeroBasedInputs());
+		List<Constant> ret  = Utility.getTypedAndUntypedConstants(fact,binding.getZeroBasedInputs());
 		return Lists.newArrayList(uk.ac.ox.cs.pdq.util.Utility.removeDuplicates(ret));
 	}
 }

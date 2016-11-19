@@ -31,10 +31,13 @@ import uk.ac.ox.cs.pdq.algebra.predicates.ConstantEqualityPredicate;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.AccessMethod.Types;
 import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.db.EGD;
 import uk.ac.ox.cs.pdq.db.Relation;
+import uk.ac.ox.cs.pdq.db.TGD;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
@@ -91,17 +94,32 @@ public class SQL92Translator extends SQLTranslator {
 	@Override
 	public String toSQL(Formula q) throws RewriterException {
 		Preconditions.checkArgument(q != null);
-		if (!(q.getBody() instanceof Conjunction)) {
+		if (!(q instanceof TGD) || !(q instanceof EGD) || !(q instanceof ConjunctiveQuery)) {
 			throw new UnsupportedOperationException("SQLTranslator does not yet supports queries other than conjunctive (SPJ) queries.");
 		}
 
 		StringBuilder result = new StringBuilder();
-		BiMap<Atom, String> aliases = HashBiMap.create(makeAliases(q));
-		Map<Term, List<Triple<Relation, String, Integer>>> termMap = mapTerms(q, aliases);
-
+		BiMap<Atom, String> aliases = null;
+		List<Term> projected = Lists.newArrayList();
+		Map<Term, List<Triple<Relation, String, Integer>>> termMap = null;
+		if(q instanceof TGD) {
+			aliases = HashBiMap.create(makeAliases((Conjunction) ((TGD)q).getBody()));
+			termMap = mapTerms((Conjunction) ((TGD)q).getBody(), aliases);
+			projected.addAll(((TGD)q).getFreeVariables());
+		}
+		else if(q instanceof EGD) {
+			aliases = HashBiMap.create(makeAliases((Conjunction) ((EGD)q).getBody()));
+			termMap = mapTerms((Conjunction) ((TGD)q).getBody(), aliases);
+			projected.addAll(((EGD)q).getFreeVariables());
+		}
+		else if(q instanceof ConjunctiveQuery) {
+			aliases = HashBiMap.create(makeAliases((Conjunction) ((ConjunctiveQuery)q).getChildren().get(0)));
+			termMap = mapTerms((Conjunction) ((ConjunctiveQuery)q).getChildren().get(0), aliases);
+			projected.addAll(((ConjunctiveQuery)q).getFreeVariables());
+		}
+				
 		result.append("SELECT ");
 		String sep = "";
-		List<Term> projected = q.getFree();
 		for (Term t: projected) {
 			List<Triple<Relation, String, Integer>> positions = termMap.get(t);
 			if (positions.isEmpty()) {
@@ -166,15 +184,15 @@ public class SQL92Translator extends SQLTranslator {
 	 * @throws RewriterException if any atomic formula in the query is not
 	 * a predicate formula.
 	 */
-	private static Map<Atom, String> makeAliases(Evaluatable q) throws RewriterException {
+	private static Map<Atom, String> makeAliases(Conjunction q) throws RewriterException {
 		Map<Atom, String> result = new LinkedHashMap<>();
 		int alias = 0;
-		for (Atom a: ((Conjunction) q.getBody())) {
+		for (Atom a:q.getAtoms()) {
 			result.put(a, RELATION_ALIAS_PREFIX + (alias++));
 		}
 		return result;
 	}
-
+	
 	/**
 	 * TOCOMMENT ???
 	 * 
@@ -188,10 +206,10 @@ public class SQL92Translator extends SQLTranslator {
 	 * @throws RewriterException if a problem occurred during the creation of the map.
 	 */
 	private static Map<Term, List<Triple<Relation, String, Integer>>> mapTerms(
-			Evaluatable q, Map<Atom, String> aliases)
+			Conjunction q, Map<Atom, String> aliases)
 					throws RewriterException {
 		Map<Term, List<Triple<Relation, String, Integer>>> result = new LinkedHashMap<>();
-		for (Atom a: ((Conjunction<Atom>) q.getBody())) {
+		for (Atom a: q.getAtoms()) {//getbody
 			Atom f = a;
 			Predicate sig = f.getPredicate();
 			if (sig instanceof Relation) {

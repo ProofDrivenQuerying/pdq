@@ -11,11 +11,12 @@ import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Constant;
+import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Implication;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Predicate;
-import uk.ac.ox.cs.pdq.fol.Skolem;
 import uk.ac.ox.cs.pdq.fol.Term;
+import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.util.Utility;
 
@@ -46,7 +47,7 @@ public class ImplicationTest {
 				new Variable("x1"), 
 				new Variable("x2"), 
 				new Variable("x3"),
-				new Skolem("x4"), 
+				new UntypedConstant("x4"), 
 				new TypedConstant<>("x5")
 				);
 		Predicate s2 = new Predicate("s", 2);
@@ -55,7 +56,7 @@ public class ImplicationTest {
 				new Variable("x1"));
 		Atom p1 = new Atom(s1, t1);
 		Atom p2 = new Atom(s2, t2);
-		Implication<Atom, Atom> i = Implication.of(p1, p2);
+		Formula i = Implication.of(p1, p2);
 		Assert.assertEquals("Implication body must match that of construction ", p1, i.getBody());
 		Assert.assertEquals("Implication head must match that of construction ", p2, i.getHead());
 	}
@@ -69,7 +70,7 @@ public class ImplicationTest {
 				new Variable("x1"), 
 				new Variable("x2"), 
 				new Variable("x3"),
-				new Skolem("x4"), 
+				new UntypedConstant("x4"), 
 				new TypedConstant<>("x5")
 				);
 		Atom p1 = new Atom(s1, t1);
@@ -78,12 +79,12 @@ public class ImplicationTest {
 				new Variable("x1"), 
 				new Variable("x2"), 
 				new Variable("x3"),
-				new Skolem("x4"), 
+				new UntypedConstant("x4"), 
 				new TypedConstant<>("x5")
 				);
 		Atom p2 = new Atom(s2, t2);
-		Implication<Atom, Atom> i1 = Implication.of(p1, p2);
-		Implication<Atom, Atom> i2 = Implication.of(Pair.of(p1, p2));
+		Formula i1 = Implication.of(p1, p2);
+		Formula i2 = Implication.of(Pair.of(p1, p2));
 		Assert.assertTrue("Implications must match be equal ", i1.equals(i2));
 	}
 
@@ -96,7 +97,7 @@ public class ImplicationTest {
 				new Variable("x1"), 
 				new Variable("x2"), 
 				new Variable("x3"),
-				new Skolem("x4"), 
+				new UntypedConstant("x4"), 
 				new TypedConstant<>("x5")
 				);
 		Atom p1 = new Atom(s1, t1);
@@ -105,7 +106,7 @@ public class ImplicationTest {
 				new Variable("x1"), 
 				new Variable("x2"), 
 				new Variable("x3"),
-				new Skolem("x4"), 
+				new UntypedConstant("x4"), 
 				new TypedConstant<>("y1")
 				);
 		Atom p2 = new Atom(s2, t2);
@@ -114,12 +115,12 @@ public class ImplicationTest {
 				new Variable("x1"), 
 				new Variable("x2"), 
 				new Variable("x3"),
-				new Skolem("x4"), 
+				new UntypedConstant("x4"), 
 				new TypedConstant<>("y2")
 				);
 		Atom p3 = new Atom(s3, t3);
-		Implication<Atom, Atom> i1 = Implication.of(p1, p2);
-		Implication<Atom, Atom> i2 = Implication.of(p1, p3);
+		Formula i1 = Implication.of(p1, p2);
+		Formula i2 = Implication.of(p1, p3);
 		Assert.assertFalse("Implications must match be equal ", i1.equals(i2));
 	}
 
@@ -131,7 +132,7 @@ public class ImplicationTest {
 		List<Term> t1 = Lists.<Term>newArrayList(
 				new Variable("x1"), 
 				new Variable("x2"), 
-				new Skolem("x3"),
+				new UntypedConstant("x3"),
 				new Variable("x4"), 
 				new TypedConstant<>("x5")
 				);
@@ -144,7 +145,7 @@ public class ImplicationTest {
 		List<Term> g = Lists.<Term>newArrayList(
 				new TypedConstant<>("c1"), 
 				new TypedConstant<>("c2"),
-				new Skolem("x3"), 
+				new UntypedConstant("x3"), 
 				new TypedConstant<>("c4"),
 				new TypedConstant<>("x5"), 
 				new TypedConstant<>("x5"),
@@ -154,7 +155,7 @@ public class ImplicationTest {
 		m.put(new Variable("x1"), new TypedConstant<>("c1"));
 		m.put(new Variable("x2"), new TypedConstant<>("c2"));
 		m.put(new Variable("x4"), new TypedConstant<>("c4"));
-		Implication<Atom, Atom> i = Implication.of(p1, p2);
+		Formula i = Implication.of(p1, p2);
 		Assert.assertEquals("Grounded negation must comply to mapping ", g, i.ground(m).getTerms());
 	}
 }

@@ -4,9 +4,9 @@ import java.util.Collection;
 import java.util.List;
 
 import uk.ac.ox.cs.pdq.Parameters.EnumParameterValue;
+import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Evaluatable;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -26,7 +26,7 @@ public interface HomomorphismDetector extends AutoCloseable {
 	 * @param constraints the constraints
 	 * @return matches of the input queries q that satisfy the input constraints
 	 */
-	<Q extends Evaluatable> List<Match> getTriggers(Collection<Q> q, TriggerProperty t);
+	List<Match> getTriggers(Collection<Dependency> q, TriggerProperty t);
 
 	
 	/**
@@ -37,7 +37,7 @@ public interface HomomorphismDetector extends AutoCloseable {
 	 * @param constraints the constraints
 	 * @return matches of the input queries q that satisfy the input constraints
 	 */
-	<Q extends Evaluatable> List<Match> getMatches(ConjunctiveQuery q);
+	List<Match> getMatches(ConjunctiveQuery q);
 	
 	/**
 	 * Clone.

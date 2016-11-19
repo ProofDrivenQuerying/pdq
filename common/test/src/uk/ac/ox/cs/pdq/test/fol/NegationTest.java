@@ -10,11 +10,12 @@ import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Constant;
+import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Negation;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Predicate;
-import uk.ac.ox.cs.pdq.fol.Skolem;
 import uk.ac.ox.cs.pdq.fol.Term;
+import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.util.Utility;
 
@@ -45,7 +46,7 @@ public final class NegationTest {
 				new Variable("x1"), 
 				new Variable("x2"), 
 				new Variable("x3"),
-				new Skolem("x4"), 
+				new UntypedConstant("x4"), 
 				new TypedConstant<>("x5")
 				);
 		Atom p = new Atom( s, t);
@@ -62,7 +63,7 @@ public final class NegationTest {
 				new Variable("x1"), 
 				new Variable("x2"), 
 				new Variable("x3"),
-				new Skolem("x4"), 
+				new UntypedConstant("x4"), 
 				new TypedConstant<>("x5")
 				);
 		Atom p1 = new Atom(s1, t1);
@@ -71,12 +72,12 @@ public final class NegationTest {
 				new Variable("x1"), 
 				new Variable("x2"), 
 				new Variable("x3"),
-				new Skolem("x4"), 
+				new UntypedConstant("x4"), 
 				new TypedConstant<>("x5")
 				);
 		Atom p2 = new Atom(s2, t2);
-		Negation<Atom> n1 = Negation.of(p1);
-		Negation<Atom> n2 = Negation.of(p2);
+		Formula n1 = Negation.of(p1);
+		Formula n2 = Negation.of(p2);
 		Assert.assertTrue("Negation subformulation must match that of construction ", n1.equals(n2));
 	}
 
@@ -89,7 +90,7 @@ public final class NegationTest {
 				new Variable("x1"), 
 				new Variable("x2"), 
 				new Variable("x3"),
-				new Skolem("x4"), 
+				new UntypedConstant("x4"), 
 				new TypedConstant<>("x5")
 				);
 		Atom p1 = new Atom(s1, t1);
@@ -98,12 +99,12 @@ public final class NegationTest {
 				new Variable("x1"), 
 				new Variable("x2"), 
 				new Variable("x3"),
-				new Skolem("x4"), 
+				new UntypedConstant("x4"), 
 				new TypedConstant<>("y")
 				);
 		Atom p2 = new Atom(s2, t2);
-		Negation<Atom> n1 = Negation.of(p1);
-		Negation<Atom> n2 = Negation.of(p2);
+		Formula n1 = Negation.of(p1);
+		Formula n2 = Negation.of(p2);
 		Assert.assertFalse("Negation subformulation must match that of construction ", n1.equals(n2));
 	}
 
@@ -115,14 +116,14 @@ public final class NegationTest {
 		List<Term> t = Lists.<Term>newArrayList(
 				new Variable("x1"), 
 				new Variable("x2"), 
-				new Skolem("x3"),
+				new UntypedConstant("x3"),
 				new Variable("x4"), 
 				new TypedConstant<>("x5")
 				);
 		List<Term> g = Lists.<Term>newArrayList(
 				new TypedConstant<>("c1"), 
 				new TypedConstant<>("c2"), 
-				new Skolem("x3"),
+				new UntypedConstant("x3"),
 				new TypedConstant<>("c4"), 
 				new TypedConstant<>("x5")
 				);
@@ -131,7 +132,7 @@ public final class NegationTest {
 		m.put(new Variable("x2"), new TypedConstant<>("c2"));
 		m.put(new Variable("x4"), new TypedConstant<>("c4"));
 		Atom p = new Atom(s, t);
-		Negation<Atom> n = Negation.of(p);
+		Formula n = Negation.of(p);
 		Assert.assertEquals("Grounded negation must comply to mapping ", g, n.ground(m).getTerms());
 	}
 }

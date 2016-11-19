@@ -1,16 +1,8 @@
 package uk.ac.ox.cs.pdq.db;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-
-
-
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 
 import uk.ac.ox.cs.pdq.fol.Atom;
 

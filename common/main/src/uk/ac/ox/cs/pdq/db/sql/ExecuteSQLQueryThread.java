@@ -17,8 +17,8 @@ import org.apache.commons.lang3.tuple.Triple;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Constant;
-import uk.ac.ox.cs.pdq.fol.Evaluatable;
-import uk.ac.ox.cs.pdq.fol.Skolem;
+import uk.ac.ox.cs.pdq.fol.Formula;
+import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
 
 // TODO: Auto-generated Javadoc
@@ -26,7 +26,7 @@ import uk.ac.ox.cs.pdq.fol.Variable;
  *
  * @author Efthymia Tsamoura
  */
-public class ExecuteSQLQueryThread<Q extends Evaluatable> implements Callable<List<Match>> {
+public class ExecuteSQLQueryThread implements Callable<List<Match>> {
 
 	/**  Connection to the database. */
 	protected final Connection connection;
@@ -35,12 +35,12 @@ public class ExecuteSQLQueryThread<Q extends Evaluatable> implements Callable<Li
 	 * - the query or the constraint we want to detect homomorphisms for
 	 * - the SQL query expression we will execute over the database
 	 * - a map of projected variables **/
-	protected final Queue<Triple<Q, String, LinkedHashMap<String, Variable>>> queries;
+	protected final Queue<Triple<Formula, String, LinkedHashMap<String, Variable>>> queries;
 	
 	/** List of database constants **/
 	protected final Map<String, TypedConstant<?>> constants;
 
-	public ExecuteSQLQueryThread(Queue<Triple<Q, String, LinkedHashMap<String, Variable>>> queries, 
+	public ExecuteSQLQueryThread(Queue<Triple<Formula, String, LinkedHashMap<String, Variable>>> queries, 
 			Map<String, TypedConstant<?>> constants,
 			Connection connection) {
 		//TODO check input arguments
@@ -59,11 +59,11 @@ public class ExecuteSQLQueryThread<Q extends Evaluatable> implements Callable<Li
 	public List<Match> call() {
 		
 		List<Match> results = new ArrayList<Match>();
-		Triple<Q, String, LinkedHashMap<String, Variable>> entry;
+		Triple<Formula, String, LinkedHashMap<String, Variable>> entry;
 		while ((entry = this.queries.poll()) != null) {
 			try {
 				Statement sqlStatement = this.connection.createStatement();
-				Q source = entry.getLeft();
+				Formula source = entry.getLeft();
 				String query = entry.getMiddle();
 				LinkedHashMap<String, Variable> projectedVariables = entry.getRight();
 				ResultSet resultSet = sqlStatement.executeQuery(query);
@@ -74,7 +74,7 @@ public class ExecuteSQLQueryThread<Q extends Evaluatable> implements Callable<Li
 						Variable variable = variables.getValue();
 						String assigned = resultSet.getString(f);
 						TypedConstant<?> constant = this.constants.get(assigned);
-						Constant constantTerm = constant != null ? constant : new Skolem(assigned);
+						Constant constantTerm = constant != null ? constant : new UntypedConstant(assigned);
 						map.put(variable, constantTerm);
 						f++;
 					}

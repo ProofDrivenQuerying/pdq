@@ -9,7 +9,7 @@ import java.util.Properties;
 import java.util.Set;
 
 import uk.ac.ox.cs.pdq.algebra.RelationalOperator;
-import uk.ac.ox.cs.pdq.fol.Query;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.runtime.EvaluationException;
 import uk.ac.ox.cs.pdq.runtime.RuntimeParameters.Semantics;
@@ -40,7 +40,7 @@ public class SQLStepPlanExecutor extends SQLPlanExecutor {
 	 * @param sem Semantics
 	 * @param properties the properties
 	 */
-	public SQLStepPlanExecutor(LeftDeepPlan plan, Query<?> q, Semantics sem, Properties properties) {
+	public SQLStepPlanExecutor(LeftDeepPlan plan, ConjunctiveQuery q, Semantics sem, Properties properties) {
 		super(plan, q, sem, properties);
 	}
 

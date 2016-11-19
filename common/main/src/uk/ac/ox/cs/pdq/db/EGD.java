@@ -8,7 +8,6 @@ import java.util.Map;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.Constant;
-import uk.ac.ox.cs.pdq.fol.Equality;
 import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Implication;
 import uk.ac.ox.cs.pdq.fol.LogicalSymbols;
@@ -28,7 +27,7 @@ public class EGD extends Dependency {
 
 	/**  The dependency's universally quantified variables. */
 	protected List<Variable> universal;
-	
+
 	/**  The dependency's constants. */
 	protected Collection<TypedConstant<?>> constants = new LinkedHashSet<>();
 
@@ -53,13 +52,15 @@ public class EGD extends Dependency {
 		}
 		return false;
 	}
-	
+
 	private static boolean isConjunctionOfEqualities(Formula formula) {
 		if(formula instanceof Conjunction) {
-			return isConjunctionOfAtoms(formula.getChildren().get(0)) && isConjunctionOfAtoms(formula.getChildren().get(1));
+			return isConjunctionOfEqualities(formula.getChildren().get(0)) && isConjunctionOfEqualities(formula.getChildren().get(1));
 		}
-		if(formula instanceof Equality) {
-			return true;
+		if(formula instanceof Atom) {
+			if(((Atom)formula).isEquality()) {
+				return true;
+			}
 		}
 		return false;
 	}

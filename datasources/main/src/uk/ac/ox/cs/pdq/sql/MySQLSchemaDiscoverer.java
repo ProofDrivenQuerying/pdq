@@ -24,6 +24,7 @@ import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.db.View;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.util.Triple;
@@ -187,7 +188,7 @@ public class MySQLSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 		BiMap<String, Atom> atoms = this.makePredicate(from, relationMap);
 		this.makeJoins(where, atoms);
 		Pair<List<Term>, List<Attribute>> freeTermsAndAttributes = this.makeFreeTerms(select, atoms);
-		List<Atom> right = new ArrayList<>(atoms.values());
+		List<Formula> right = new ArrayList<>(atoms.values());
 		List<Variable> boundTerms = new ArrayList<>(Utility.getVariables(right));
 		boundTerms.removeAll(freeTermsAndAttributes.getLeft());
 		return new LinearGuarded(

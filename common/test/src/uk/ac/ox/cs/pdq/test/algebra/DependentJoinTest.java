@@ -15,8 +15,8 @@ import uk.ac.ox.cs.pdq.algebra.predicates.AttributeEqualityPredicate;
 import uk.ac.ox.cs.pdq.algebra.predicates.ConjunctivePredicate;
 import uk.ac.ox.cs.pdq.algebra.predicates.Predicate;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
-import uk.ac.ox.cs.pdq.fol.Skolem;
 import uk.ac.ox.cs.pdq.fol.Term;
+import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.util.TupleType;
 
@@ -49,7 +49,7 @@ public class DependentJoinTest extends JoinTest{
 	Predicate predicate23 = new AttributeEqualityPredicate(1, 3);
 
 	/** The output terms12. */
-	List<Term> outputTerms12 = Lists.<Term>newArrayList(new Variable("a"), new Variable("a"), new Skolem("b"), new TypedConstant<>("c"));
+	List<Term> outputTerms12 = Lists.<Term>newArrayList(new Variable("a"), new Variable("a"), new UntypedConstant("b"), new TypedConstant<>("c"));
 	
 	/** The input terms12. */
 	List<Term> inputTerms12 = Lists.<Term>newArrayList(new Variable("a"));
@@ -61,10 +61,10 @@ public class DependentJoinTest extends JoinTest{
 	TupleType inputType12 = TupleType.DefaultFactory.create(Integer.class);
 
 	/** The output terms23. */
-	List<Term> outputTerms23 = Lists.<Term>newArrayList(new Variable("a"), new Skolem("b"), new TypedConstant<>("c"), new Skolem("b"), new TypedConstant<>("d"));
+	List<Term> outputTerms23 = Lists.<Term>newArrayList(new Variable("a"), new UntypedConstant("b"), new TypedConstant<>("c"), new UntypedConstant("b"), new TypedConstant<>("d"));
 	
 	/** The input terms23. */
-	List<Term> inputTerms23 = Lists.<Term>newArrayList(new Skolem("b"));
+	List<Term> inputTerms23 = Lists.<Term>newArrayList(new UntypedConstant("b"));
 	
 	/** The output type23. */
 	TupleType outputType23 = TupleType.DefaultFactory.create(Integer.class, R, String.class, R, String.class);
@@ -73,10 +73,10 @@ public class DependentJoinTest extends JoinTest{
 	TupleType inputType23 = TupleType.DefaultFactory.create(R);
 
 	/** The output terms13. */
-	List<Term> outputTerms13 = Lists.<Term>newArrayList(new Variable("a"), new Skolem("b"), new TypedConstant<>("d"));
+	List<Term> outputTerms13 = Lists.<Term>newArrayList(new Variable("a"), new UntypedConstant("b"), new TypedConstant<>("d"));
 	
 	/** The input terms13. */
-	List<Term> inputTerms13 = Lists.<Term>newArrayList(new Variable("a"), new Skolem("b"));
+	List<Term> inputTerms13 = Lists.<Term>newArrayList(new Variable("a"), new UntypedConstant("b"));
 	
 	/** The output type13. */
 	TupleType outputType13 = TupleType.DefaultFactory.create(Integer.class, R, String.class);

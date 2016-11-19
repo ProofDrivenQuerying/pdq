@@ -73,7 +73,7 @@ public class Atom extends Formula {
 	 * @return true, if the atom acts as an equality
 	 */
 	public boolean isEquality() {
-		return (this instanceof Equality);
+		return this.predicate.isEquality();
 	}
 
 	/**

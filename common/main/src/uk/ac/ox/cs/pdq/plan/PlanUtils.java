@@ -46,7 +46,7 @@ public class PlanUtils {
 
 			if (term instanceof TypedConstant) {
 				result.add(new ConstantEqualityPredicate(
-						termIndex, (TypedConstant) term));
+						termIndex, (TypedConstant<?>) term));
 			} else {
 				List<Integer> appearances = Utility.search(terms, term);
 				if (appearances.size() > 1) {
@@ -72,12 +72,12 @@ public class PlanUtils {
 	 * @return Projection
 	 */
 	public static Projection createFinalProjection(ConjunctiveQuery query, RelationalOperator childOp) {
-		List<Term> freeTerms = query.getFree();
+		List<Term> freeTerms = query.getHeadTerms();
 		List<Term> toProject = new ArrayList<>();
 		for (Term term: freeTerms) {
 			if (term.isVariable()) {
-				Constant constant = query.getGroundingsProjectionOnFreeVars().get(term);
-				Preconditions.checkState(childOp.getColumns().contains(constant), constant + " not in " + childOp.getColumns() + "\nQuery: " + query + "\nCanonical Mapping: " + query.getGroundingsProjectionOnFreeVars() + "\nSubplan: " + childOp);
+				Constant constant = query.getSubstitutionOfFreeVariablesToCanonicalConstants().get(term);
+				Preconditions.checkState(childOp.getColumns().contains(constant), constant + " not in " + childOp.getColumns() + "\nQuery: " + query + "\nCanonical Mapping: " + query.getSubstitutionOfFreeVariablesToCanonicalConstants() + "\nSubplan: " + childOp);
 				toProject.add(constant);
 			} else {
 				toProject.add(term);
@@ -87,7 +87,7 @@ public class PlanUtils {
 			List<TypedConstant<?>> constants = new ArrayList<>(childOp.getInputTerms().size());
 			for (Term t: childOp.getInputTerms()) {
 				Preconditions.checkState(!t.isVariable() && !t.isUntypedConstant(), "Successful plan cannot be open.");
-				constants.add((TypedConstant) t);
+				constants.add((TypedConstant<?>) t);
 			}
 			return new Projection(new DependentJoin(new StaticInput(constants), childOp),
 					toProject);

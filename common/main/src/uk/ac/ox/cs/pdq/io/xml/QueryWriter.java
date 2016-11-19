@@ -2,11 +2,12 @@ package uk.ac.ox.cs.pdq.io.xml;
 
 import java.io.PrintStream;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
-import uk.ac.ox.cs.pdq.fol.Conjunction;
-import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 
@@ -27,8 +28,8 @@ public class QueryWriter extends AbstractXMLWriter<ConjunctiveQuery> {
 		Map<QNames, String> att = new LinkedHashMap<>();
 		att.put(QNames.TYPE, "conjunctive");
 		open(out, QNames.QUERY, att);
-		this.writeBody(out, query.getBody());
-		this.writeHead(out, query.getHead());
+		this.writeBody(out, query.getChildren().get(0));
+		this.writeHead(out, query.getFreeVariables());
 		close(out, QNames.QUERY);
 	}
 
@@ -41,10 +42,10 @@ public class QueryWriter extends AbstractXMLWriter<ConjunctiveQuery> {
 	 */
 	private void writeQuery(PrintStream out, ConjunctiveQuery query, Map<QNames, String> atts) {
 		Map<QNames, String> att = new LinkedHashMap<>(atts);
-			att.put(QNames.TYPE, "conjunctive");
+		att.put(QNames.TYPE, "conjunctive");
 		open(out, QNames.QUERY, att);
-		this.writeBody(out, query.getBody());
-		this.writeHead(out, query.getHead());
+		this.writeBody(out, query.getChildren().get(0));
+		this.writeHead(out, query.getFreeVariables());
 		close(out, QNames.QUERY);
 	}
 
@@ -54,7 +55,7 @@ public class QueryWriter extends AbstractXMLWriter<ConjunctiveQuery> {
 	 * @param out the out
 	 * @param body Conjunction<Atom>
 	 */
-	public void writeBody(PrintStream out, Conjunction body) {
+	public void writeBody(PrintStream out, Formula body) {
 		Map<QNames, String> att = new LinkedHashMap<>();
 		open(out, QNames.BODY, att);
 		for (Atom a: body.getAtoms()) {
@@ -92,19 +93,14 @@ public class QueryWriter extends AbstractXMLWriter<ConjunctiveQuery> {
 	 * @param out the out
 	 * @param p Atom
 	 */
-	public void writeHead(PrintStream out, Atom p) {
+	public void writeHead(PrintStream out, List<Variable> variables) {
 		Map<QNames, String> att = new LinkedHashMap<>();
-		att.put(QNames.NAME, p.getPredicate().getName());
+		att.put(QNames.NAME, "Q");
 		open(out, QNames.HEAD, att);
-		for (Term t: p.getTerms()) {
+		for (Variable t:variables) {
 			Map<QNames, String> att2 = new LinkedHashMap<>();
-			if (t.isVariable()) {
-				att2.put(QNames.NAME, ((Variable) t).getSymbol());
-				openclose(out, QNames.VARIABLE, att2);
-			} else {
-				att2.put(QNames.VALUE, t.toString());
-				openclose(out, QNames.CONSTANT, att2);
-			}
+			att2.put(QNames.NAME, ((Variable) t).getSymbol());
+			openclose(out, QNames.VARIABLE, att2);
 		}
 		close(out, QNames.HEAD);
 	}

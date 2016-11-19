@@ -12,9 +12,10 @@ import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Disjunction;
 import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Predicate;
-import uk.ac.ox.cs.pdq.fol.Skolem;
 import uk.ac.ox.cs.pdq.fol.Term;
+import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.util.Utility;
 
@@ -45,7 +46,7 @@ public final class DisjunctionTest {
 				new Variable("x1"), 
 				new Variable("x2"), 
 				new Variable("x3"),
-				new Skolem("x4"), 
+				new UntypedConstant("x4"), 
 				new TypedConstant<>("x5")
 				);
 		Predicate s2 = new Predicate("s", 2);
@@ -54,7 +55,7 @@ public final class DisjunctionTest {
 				new Variable("x1"));
 		Atom p1 = new Atom(s1, t1);
 		Atom p2 = new Atom(s2, t2);
-		Disjunction<Atom> i = Disjunction.of(p1, p2);
+		Formula i = Disjunction.of(p1, p2);
 		Assert.assertEquals("Disjunction atoms must match that of construction",
 				Lists.newArrayList(p1, p2), i.getAtoms());
 	}
@@ -68,7 +69,7 @@ public final class DisjunctionTest {
 				new Variable("x1"), 
 				new Variable("x2"), 
 				new Variable("x3"),
-				new Skolem("x4"), 
+				new UntypedConstant("x4"), 
 				new TypedConstant<>("x5")
 				);
 		Atom p1 = new Atom(s1, t1);
@@ -77,11 +78,11 @@ public final class DisjunctionTest {
 				new Variable("x1"), 
 				new Variable("x2"), 
 				new Variable("x3"),
-				new Skolem("x4"), 
+				new UntypedConstant("x4"), 
 				new TypedConstant<>("x5")
 				);
 		Atom p2 = new Atom(s2, t2);
-		Disjunction<Atom> i1 = Disjunction.of(p1, p2);
+		Formula i1 = Disjunction.of(p1, p2);
 		Disjunction i2 = Disjunction.builder().or(p1, p2).build();
 		Assert.assertTrue("Disjunctions must match be equal ", i1.equals(i2));
 	}
@@ -104,7 +105,7 @@ public final class DisjunctionTest {
 				new Variable("x1"), 
 				new Variable("x2"), 
 				new Variable("x3"),
-				new Skolem("x4"), 
+				new UntypedConstant("x4"), 
 				new TypedConstant<>("y1")
 				);
 		Atom p2 = new Atom(s2, t2);
@@ -113,12 +114,12 @@ public final class DisjunctionTest {
 				new Variable("x1"), 
 				new Variable("x2"), 
 				new Variable("x3"),
-				new Skolem("x4"), 
+				new UntypedConstant("x4"), 
 				new TypedConstant<>("y2")
 				);
 		Atom p3 = new Atom(s3, t3);
-		Disjunction<Atom> i1 = Disjunction.of(p1, p2);
-		Disjunction<Atom> i2 = Disjunction.of(p1, p3);
+		Formula i1 = Disjunction.of(p1, p2);
+		Formula i2 = Disjunction.of(p1, p3);
 		Assert.assertFalse("Disjunctions must match be equal ", i1.equals(i2));
 	}
 
@@ -130,7 +131,7 @@ public final class DisjunctionTest {
 		List<Term> t1 = Lists.<Term>newArrayList(
 				new Variable("x1"), 
 				new Variable("x2"), 
-				new Skolem("x3"),
+				new UntypedConstant("x3"),
 				new Variable("x4"), 
 				new TypedConstant<>("x5")
 				);
@@ -143,7 +144,7 @@ public final class DisjunctionTest {
 		List<Term> g = Lists.<Term>newArrayList(
 				new TypedConstant<>("c1"), 
 				new TypedConstant<>("c2"),
-				new Skolem("x3"), 
+				new UntypedConstant("x3"), 
 				new TypedConstant<>("c4"),
 				new TypedConstant<>("x5"), 
 				new TypedConstant<>("x5"),
@@ -153,7 +154,7 @@ public final class DisjunctionTest {
 		m.put(new Variable("x1"), new TypedConstant<>("c1"));
 		m.put(new Variable("x2"), new TypedConstant<>("c2"));
 		m.put(new Variable("x4"), new TypedConstant<>("c4"));
-		Disjunction<Atom> i = Disjunction.of(p1, p2);
+		Formula i = Disjunction.of(p1, p2);
 		Assert.assertEquals("Grounded disjunction must comply to mapping ", g, i.ground(m).getTerms());
 	}
 }

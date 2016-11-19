@@ -8,11 +8,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,10 +24,10 @@ import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.io.xml.QueryReader;
 import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 // TODO: Auto-generated Javadoc
@@ -619,7 +616,7 @@ public class SimpleCatalog implements Catalog{
 			if (schema == null || query == null) {
 				throw new IllegalStateException("Schema and query must be provided.");
 			}
-			schema.updateConstants(query.getSchemaConstants());
+			schema.updateConstants(Utility.getTypedConstants(query));
 			SimpleCatalog catalog = new SimpleCatalog(schema, catalogfile);
 			log.trace(catalog.toString());
 		} catch (FileNotFoundException e) {

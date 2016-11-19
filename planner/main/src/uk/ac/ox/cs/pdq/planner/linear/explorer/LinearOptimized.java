@@ -27,7 +27,6 @@ import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismDetector;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
@@ -51,6 +50,7 @@ import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.StatusUpdateMetadat
 import uk.ac.ox.cs.pdq.planner.linear.explorer.pruning.PostPruning;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.util.IndexedDirectedGraph;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
@@ -348,7 +348,7 @@ public class LinearOptimized extends LinearExplorer {
 			if(this.postPruning != null && !this.prunedPaths.contains(this.costPropagator.getBestPath())) {
 				this.prunedPaths.add(this.costPropagator.getBestPath());
 				List<SearchNode> path = LinearUtility.createPath(this.planTree, this.costPropagator.getBestPath());
-				List<Atom> queryFacts = this.accessibleQuery.ground(match.getMapping()).getAtoms();
+				List<Atom> queryFacts = Utility.ground(accessibleQuery, match.getMapping()).getAtoms();
 				boolean isPruned = this.postPruning.prune(this.planTree.getRoot(), path, queryFacts);
 				if(isPruned) {
 					this.postPruning.addPrunedPathToTree(this.planTree, this.planTree.getRoot(), this.postPruning.getPath());

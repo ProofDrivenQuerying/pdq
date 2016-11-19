@@ -38,7 +38,7 @@ public class VariableTest {
 	 * Test variable is not skolem.
 	 */
 	@Test public void testVariableIsNotSkolem() {
-		Assert.assertFalse("Variable.isSkolem must be always false", new Variable("v").isSkolem());
+		Assert.assertFalse("Variable.isSkolem must be always false", new Variable("v").isUntypedConstant());
 	}
 
 	/**
@@ -46,7 +46,7 @@ public class VariableTest {
 	 */
 	@Test public void testVariableValid() {
 		Variable v = new Variable("v");
-		Assert.assertEquals("Variable must have name 'v'", "v", v.getName());
+		Assert.assertEquals("Variable must have name 'v'", "v", v.getSymbol());
 	}
 
 	/**

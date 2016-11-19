@@ -9,7 +9,7 @@ import com.google.common.base.Preconditions;
  *
  * @author Julien Leblay
  */
-public class Predicate {
+public class Function {
 
 	/** Cached instance hash (only possible because predicates are immutable). */
 	protected final int hash;
@@ -23,39 +23,18 @@ public class Predicate {
 	/**  Predicate arity. */
 	protected final int arity;
 
-	/**  true, if this is the signature for an equality predicate. */
-	protected final boolean isEquality;
-
 	/**
 	 * Constructor for Predicate.
 	 * @param name String
 	 * @param arity int
 	 * @param equality boolean
 	 */
-	public Predicate(String name, int arity) {
+	public Function(String name, int arity) {
 		Preconditions.checkArgument(name != null);
 		Preconditions.checkArgument(!name.isEmpty());
 		Preconditions.checkArgument(arity >= 0);
 		this.name = name;
 		this.arity = arity;
-		this.isEquality = false;
-		this.hash = Objects.hash(this.name, this.arity);
-		this.rep = this.makeString();
-	}
-	
-	/**
-	 * Constructor for Predicate.
-	 * @param name String
-	 * @param arity int
-	 * @param equality boolean
-	 */
-	public Predicate(String name, int arity, boolean isEquality) {
-		Preconditions.checkArgument(name != null);
-		Preconditions.checkArgument(!name.isEmpty());
-		Preconditions.checkArgument(arity >= 0);
-		this.name = name;
-		this.arity = arity;
-		this.isEquality = isEquality;
 		this.hash = Objects.hash(this.name, this.arity);
 		this.rep = this.makeString();
 	}
@@ -77,17 +56,7 @@ public class Predicate {
 	public int getArity() {
 		return this.arity;
 	}
-
-	/**
-	 * Checks if this is an equality predicate.
-	 *
-	 * @return true if the signature is of an equality predicate,
-	 * false otherwise
-	 */
-	public boolean isEquality() {
-		return this.isEquality;
-	}
-
+	
 	/**
 	 * Two predicates are equal if their names and arities are equal.
 	 *
@@ -103,8 +72,8 @@ public class Predicate {
 			return false;
 		}
 		return this.getClass().isInstance(o)
-				&& this.name.equals(((Predicate) o).name)
-				&& this.arity == ((Predicate) o).arity;
+				&& this.name.equals(((Function) o).name)
+				&& this.arity == ((Function) o).arity;
 	}
 
 	@Override

@@ -19,10 +19,10 @@ public abstract class SQLTranslator {
 	 * The Enum SupportedDialect.
 	 */
 	public static enum SupportedDialect{ 
- /** The SQ l92. */
- SQL92, 
- /** The postgresql. */
- POSTGRESQL }
+		/** The SQ l92. */
+		SQL92, 
+		/** The postgresql. */
+		POSTGRESQL }
 
 	/**  The logger. */
 	public static Logger log = Logger.getLogger(SQLTranslator.class);

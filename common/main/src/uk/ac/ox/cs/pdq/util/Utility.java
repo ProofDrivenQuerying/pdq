@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -16,12 +15,13 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.db.EGD;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
-import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Disjunction;
 import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Implication;
@@ -30,6 +30,7 @@ import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.QuantifiedFormula;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
+import uk.ac.ox.cs.pdq.io.xml.QNames;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
@@ -138,7 +139,7 @@ public class Utility {
 	 */
 	public static Term typedToTerm(Typed typed) {
 		if (typed instanceof TypedConstant) {
-			return (TypedConstant) typed;
+			return (TypedConstant<?>) typed;
 		}
 		return new Variable(String.valueOf(typed));
 	}
@@ -153,9 +154,9 @@ public class Utility {
 		List<TypedConstant<?>> result = new ArrayList<>();
 		for (Typed t: typed) {
 			if (t instanceof TypedConstant) {
-				result.add((TypedConstant) t);
+				result.add((TypedConstant<?>) t);
 			} else {
-				result.add(new TypedConstant(Types.cast(t.getType(), String.valueOf(t))));
+				result.add(new TypedConstant<>(Types.cast(t.getType(), String.valueOf(t))));
 			}
 		}
 		return result;
@@ -181,14 +182,10 @@ public class Utility {
 	 * @param atoms the atoms
 	 * @return the variables of the input atoms
 	 */
-	public static List<Variable> getVariables(Collection<? extends Atom> atoms) {
+	public static List<Variable> getVariables(Collection<Atom> atoms) {
 		Set<Variable> result = new LinkedHashSet<>();
 		for (Atom atom: atoms) {
-			for (Term term:atom.getTerms()) {
-				if (term instanceof Variable) {
-					result.add((Variable) term);
-				}
-			}
+			result.addAll(atom.getVariables());
 		}
 		return Lists.newArrayList(result);
 	}
@@ -199,7 +196,7 @@ public class Utility {
 	 * @param atoms the atoms
 	 * @return the constants of the input atoms
 	 */
-	public static Collection<Constant> getConstants(Collection<? extends Atom> atoms) {
+	public static Collection<Constant> getTypedConstants(Collection<Atom> atoms) {
 		Collection<Constant> result = new LinkedHashSet<>();
 		for (Atom atom:atoms) {
 			for (Term term:atom.getTerms()) {
@@ -217,7 +214,7 @@ public class Utility {
 	 * @param atom the atom
 	 * @return the constants of the input atom
 	 */
-	public static Set<Constant> getConstants(Atom atom) {
+	public static Set<Constant> getTypedAndUntypedConstants(Atom atom) {
 		Set<Constant> result = new LinkedHashSet<>();
 		for (Term term:atom.getTerms()) {
 			if (!term.isVariable()) {
@@ -233,7 +230,7 @@ public class Utility {
 	 * @param atom the atom
 	 * @return the non schema constants
 	 */
-	public static Set<Constant> getNonSchemaConstants(Atom atom) {
+	public static Set<Constant> getUntypedConstants(Atom atom) {
 		Set<Constant> result = new LinkedHashSet<>();
 		for (Term term:atom.getTerms()) {
 			if (!(term instanceof TypedConstant)) {
@@ -273,22 +270,22 @@ public class Utility {
 		return result;
 	}
 
-	/**
-	 * Generates a list of attribute whose name are the name as those of term in
-	 * the given predicate, and types match with the predicate attribute types.
-	 * @param terms List<? extends Term>
-	 * @param type TupleType
-	 * @return List<Attribute>
-	 */
-	public static List<Attribute> termsToAttributes(List<? extends Term> terms, TupleType type) {
-		Preconditions.checkArgument(terms.size() == type.size());
-		List<Attribute> result = new ArrayList<>();
-		int i = 0;
-		for (Term t : terms) {
-			result.add(new Attribute(type.getType(i++), t.toString()));
-		}
-		return result;
-	}
+//	/**
+//	 * Generates a list of attribute whose name are the name as those of term in
+//	 * the given predicate, and types match with the predicate attribute types.
+//	 * @param terms List<? extends Term>
+//	 * @param type TupleType
+//	 * @return List<Attribute>
+//	 */
+//	public static List<Attribute> termsToAttributes(List<? extends Term> terms, TupleType type) {
+//		Preconditions.checkArgument(terms.size() == type.size());
+//		List<Attribute> result = new ArrayList<>();
+//		int i = 0;
+//		for (Term t : terms) {
+//			result.add(new Attribute(type.getType(i++), t.toString()));
+//		}
+//		return result;
+//	}
 
 	/**
 	 * Converts a list of Term to a list of Typed.
@@ -319,7 +316,7 @@ public class Utility {
 		if (t.isVariable() || t.isUntypedConstant()) {
 			return new Attribute(type, String.valueOf(t));
 		} else if (t instanceof TypedConstant) {
-			return (TypedConstant) t;
+			return (TypedConstant<?>) t;
 		} else {
 			throw new IllegalStateException("Unknown typed object: " + t);
 		}
@@ -333,10 +330,10 @@ public class Utility {
 	 */
 	public static List<Attribute> termsToAttributes(ConjunctiveQuery q) {
 		List<Attribute> result = new ArrayList<>();
-		for (Term t : q.getFree()) {
-			if (t instanceof Variable) {
+		for (Variable t:q.getFreeVariables()) {
+//			if (t instanceof Variable) {
 				boolean found = false;
-				for (Atom p : q.getBody()) {
+				for (Atom p:q.getAtoms()) {
 					Predicate s = p.getPredicate();
 					if (s instanceof Relation) {
 						Relation r = (Relation) s;
@@ -354,11 +351,11 @@ public class Utility {
 						break;
 					}
 				}
-			} else {
-				result.add(new Attribute(String.class, t.toString()));
-			}
+//			} else {
+//				result.add(new Attribute(String.class, t.toString()));
+//			}
 		}
-		assert result.size() == q.getFree().size() : "Could not infer type of projected term in the query";
+		assert result.size() == q.getFreeVariables().size() : "Could not infer type of projected term in the query";
 		return result;
 	}
 
@@ -376,19 +373,19 @@ public class Utility {
 		return result;
 	}
 
-	/**
-	 * To strings.
-	 *
-	 * @param atoms the atoms
-	 * @return the string representations of the input atoms
-	 */
-	public static Collection<String> toStrings(Collection<? extends Atom> atoms) {
-		Set<String> strings = new LinkedHashSet<>();
-		for(Atom atom: atoms) {
-			strings.add(atom.toString());
-		}
-		return strings;
-	}
+//	/**
+//	 * To strings.
+//	 *
+//	 * @param atoms the atoms
+//	 * @return the string representations of the input atoms
+//	 */
+//	public static Collection<String> toStrings(Collection<? extends Atom> atoms) {
+//		Set<String> strings = new LinkedHashSet<>();
+//		for(Atom atom: atoms) {
+//			strings.add(atom.toString());
+//		}
+//		return strings;
+//	}
 
 	/**
 	 * Gets the tuple type.
@@ -396,18 +393,18 @@ public class Utility {
 	 * @param q the q
 	 * @return the tuple type of the input query
 	 */
-	public static TupleType getTupleType(Query<?> q) {
-		List<Term> headTerms = q.getHead().getTerms();
+	public static TupleType getTupleType(ConjunctiveQuery q) {
+		List<Term> headTerms = q.getHeadTerms();
 		Type[] result = new Class<?>[headTerms.size()];
 		boolean assigned = false;
 		for (int i = 0, l = result.length; i < l; i++) {
 			assigned = false;
 			Term t = headTerms.get(i);
 			if (t instanceof TypedConstant) {
-				result[i] = ((TypedConstant) t).getType();
+				result[i] = ((TypedConstant<?>) t).getType();
 				continue;
 			}
-			for (Atom f: q.getBody().getAtoms()) {
+			for (Atom f: q.getAtoms()) {
 				Predicate s = f.getPredicate();
 				if (s instanceof Relation) {
 					List<Integer> pos = f.getTermPositions(t);
@@ -487,34 +484,34 @@ public class Utility {
 		return result;
 	}
 
-	/**
-	 * Connected components2.
-	 *
-	 * @param <T> the generic type
-	 * @param clusters the clusters
-	 * @return 		a partition of the given clusters, such that all predicates in the
-	 *      each component are connected, and no predicates part of distinct
-	 *      component are connected.
-	 */
-	public static <T> List<Set<T>> connectedComponents2(List<Set<T>> clusters) {
-		List<Set<T>> result = new LinkedList<>();
-		if (clusters.isEmpty()) {
-			return result;
-		}
-		Set<T> first = clusters.get(0);
-		if (clusters.size() > 1) {
-			List<Set<T>> rest = connectedComponents2(clusters.subList(1, clusters.size()));
-			for (Set<T> s : rest) {
-				if (!Collections.disjoint(first, s)) {
-					first.addAll(s);
-				} else {
-					result.add(s);
-				}
-			}
-		}
-		result.add(first);
-		return result;
-	}
+//	/**
+//	 * Connected components2.
+//	 *
+//	 * @param <T> the generic type
+//	 * @param clusters the clusters
+//	 * @return 		a partition of the given clusters, such that all predicates in the
+//	 *      each component are connected, and no predicates part of distinct
+//	 *      component are connected.
+//	 */
+//	public static <T> List<Set<T>> connectedComponents2(List<Set<T>> clusters) {
+//		List<Set<T>> result = new LinkedList<>();
+//		if (clusters.isEmpty()) {
+//			return result;
+//		}
+//		Set<T> first = clusters.get(0);
+//		if (clusters.size() > 1) {
+//			List<Set<T>> rest = connectedComponents2(clusters.subList(1, clusters.size()));
+//			for (Set<T> s : rest) {
+//				if (!Collections.disjoint(first, s)) {
+//					first.addAll(s);
+//				} else {
+//					result.add(s);
+//				}
+//			}
+//		}
+//		result.add(first);
+//		return result;
+//	}
 
 	/**
 	 * Format the given value so as to call the proper type conversion function.
@@ -538,7 +535,7 @@ public class Utility {
 	 * conversion function onto the given value;
 	 */
 	public static <T> String format(Object o, Type target) {
-		if (target instanceof Class && Number.class.isAssignableFrom((Class) target)) {
+		if (target instanceof Class && Number.class.isAssignableFrom((Class<?>) target)) {
 			return String.valueOf(o);
 		}
 		return "'" + o + "'";
@@ -598,5 +595,93 @@ public class Utility {
 		}
 		return variables;
 	}
+	
+	/**
+	 * Let R be a relation of arity n and x_k be its key.
+	 * The EGD that captures the EGD dependency is given by
+	 * R(x_1,...,x_k,...x_n) ^ R(x_1',...,x_k,...x_n') --> \Wedge_{i \neq k} x_i=x_i'
+	 *
+	 * @param predicate the signature
+	 * @param attributes the attributes
+	 * @param keys the keys
+	 * @return 		a collection of EGDs for the input relation and keys
+	 */
+	public static EGD getEGDs(Predicate predicate, List<Attribute> attributes, Collection<Attribute> keys) {
+		List<Term> leftTerms = Utility.typedToTerms(attributes);
+		List<Term> copiedTerms = Lists.newArrayList(leftTerms);
+		//Keeps the terms that should be equal
+		Map<Term,Term> tobeEqual = com.google.common.collect.Maps.newHashMap();
+		int i = 0;
+		for(Attribute typed:attributes) {
+			if(!keys.contains(typed)) {
+				Term term = new Variable(String.valueOf("?" + typed));//TOCOMMENT why are we using a "?" here?
+				copiedTerms.set(i, term);
+				tobeEqual.put(leftTerms.get(i), term);
+			}
+			i++;
+		}
+		Predicate equality = new Predicate(QNames.EQUALITY.toString(), 2);
+		//Create the constant equality predicates
+		List<Formula> equalities = Lists.newArrayList();
+		for(java.util.Map.Entry<Term, Term> pair:tobeEqual.entrySet()) {
+			equalities.add(new Atom(equality, pair.getKey(), pair.getValue()));
+		}
+		Formula body =
+				Conjunction.of(new Atom(new Predicate(predicate.getName(), leftTerms.size()), leftTerms), 
+						new Atom(new Predicate(predicate.getName(), copiedTerms.size()), copiedTerms));
+		return new EGD(body, Conjunction.of(equalities));
+	}
+	
+	/**
+	 * TOCOMMENT why plural in the name of the method?
+	 * Constructs an EGD for the given relation and key attibutes.
+	 *
+	 * @param relation the relation
+	 * @param keys the key attirbutes
+	 * @return the EGD representing the primary key
+	 */
+	public static EGD getEGDs(Relation relation, Collection<Attribute> keys) {
+		return getEGDs(new Predicate(relation.getName(), relation.getArity()), relation.getAttributes(), keys);
+	}
+	
+	public static List<TypedConstant<?>> getTypedConstants(Formula formula) {
+		List<TypedConstant<?>> typedConstants = Lists.newArrayList();
+		for(Atom atom:formula.getAtoms()) {
+			for(Term term:atom.getTerms()) {
+				if(term instanceof TypedConstant<?>) {
+					typedConstants.add((TypedConstant<?>)term);
+				}
+			}
+		}
+		return typedConstants;
+	}
+	
+	/**
+	 * Gets the constants lying at the input positions.
+	 *
+	 * @throws IllegalArgumentException if there is a non-constant at one of the input positions
+	 * @param positions List<Integer>
+	 * @return the List<Constant> at the given positions.
+	 */
+	public static List<Constant> getTypedAndUntypedConstants(Atom atom, List<Integer> positions) {
+		List<Constant> result = new ArrayList<>();
+		for(Integer i: positions) {
+			if(i < atom.getTerms().size() && !atom.getTerms().get(i).isVariable()) {
+				result.add((Constant) atom.getTerms().get(i));
+			}
+			else {
+				throw new java.lang.IllegalArgumentException();
+			}
+		}
+		return result;
+	}
 
+	public static Formula ground(ConjunctiveQuery query, Map<Variable, Constant> mapping) {
+		List<Formula> bodyAtoms = new ArrayList<>();
+		for (Atom atom: query.getAtoms()) {
+			bodyAtoms.add(atom.ground(mapping));
+		}
+		return Conjunction.of(bodyAtoms);
+	}
+	
 }

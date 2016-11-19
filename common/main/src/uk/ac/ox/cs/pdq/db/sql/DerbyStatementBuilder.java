@@ -10,7 +10,6 @@ import uk.ac.ox.cs.pdq.db.DatabaseRelation;
 import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismProperty;
 import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismProperty.TopKProperty;
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Evaluatable;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 
 // TODO: Auto-generated Javadoc
@@ -47,7 +46,7 @@ public class DerbyStatementBuilder extends SQLStatementBuilder {
 	 * @see uk.ac.ox.cs.pdq.reasoning.homomorphism.SQLStatementBuilder#translateLimitConstraints(uk.ac.ox.cs.pdq.fol.Evaluatable, uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismConstraint[])
 	 */
 	@Override
-	protected String translateLimitConstraints(Evaluatable source, HomomorphismProperty... constraints) {
+	protected String translateLimitConstraints(HomomorphismProperty... constraints) {
 		for(HomomorphismProperty c:constraints) {
 			if(c instanceof TopKProperty) {
 				return "FETCH NEXT " + ((TopKProperty) c).k + " ROWS ONLY  ";
@@ -75,7 +74,7 @@ public class DerbyStatementBuilder extends SQLStatementBuilder {
 	}
 
 	@Override
-	public String createBulkInsertStatement(Predicate predicate, Collection<? extends Atom> facts, Map<String, DatabaseRelation> toDatabaseTables) {
+	public String createBulkInsertStatement(Predicate predicate, Collection<Atom> facts, Map<String, DatabaseRelation> toDatabaseTables) {
 		throw new java.lang.UnsupportedOperationException("No bulk inserts are allowed in Derby");
 	}
 }

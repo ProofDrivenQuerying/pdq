@@ -25,6 +25,7 @@ import uk.ac.ox.cs.pdq.planner.reasoning.ReasonerFactory;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.eventbus.EventBus;
 
@@ -175,16 +176,16 @@ public class ExplorationSetUp {
 		if (noDep) 
 		{
 			this.schema = Schema.builder(this.schema).disableDependencies().build();
-			this.schema.updateConstants(query.getSchemaConstants());
+			this.schema.updateConstants(Utility.getTypedConstants(query));
 			this.accessibleSchema = new AccessibleSchema(this.schema);
 		}
 		else
 		{
-			this.schema.updateConstants(query.getSchemaConstants());
-			this.accessibleSchema.updateConstants(query.getSchemaConstants());
+			this.schema.updateConstants(Utility.getTypedConstants(query));
+			this.accessibleSchema.updateConstants(Utility.getTypedConstants(query));
 		}
 
-		ConjunctiveQuery accessibleQuery = this.accessibleSchema.accessible(query, query.getGrounding());
+		ConjunctiveQuery accessibleQuery = this.accessibleSchema.accessible(query, query.getSubstitutionOfFreeVariablesToCanonicalConstants());
 		
 		Explorer<P> explorer = null;
 		try (HomomorphismDetector detector =

@@ -1,7 +1,6 @@
 package uk.ac.ox.cs.pdq.planner.linear.explorer.pruning;
 
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.PostPruningTypes;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.NodeFactory;

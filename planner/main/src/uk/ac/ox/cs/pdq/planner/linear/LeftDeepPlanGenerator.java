@@ -142,10 +142,10 @@ public class LeftDeepPlanGenerator {
 	 * @return the output constants of the input configuration
 	 */
 	public static List<Term> inferOutputChaseConstants(LinearChaseConfiguration configuration) {
-		Collection<Term> result = new LinkedHashSet();
+		Collection<Term> result = new LinkedHashSet<>();
 		for (Atom fact: configuration.getOutputFacts()) {
 			for (Term t: fact.getTerms()) {
-				if (t.isVariable() || t.isSkolem()) {
+				if (t.isVariable() || t.isUntypedConstant()) {
 					result.add(t);
 				}
 			}

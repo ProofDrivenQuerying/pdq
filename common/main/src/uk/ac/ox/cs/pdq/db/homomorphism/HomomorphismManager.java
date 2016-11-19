@@ -3,7 +3,7 @@ package uk.ac.ox.cs.pdq.db.homomorphism;
 import java.util.Collection;
 
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Query;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -20,14 +20,14 @@ public interface HomomorphismManager extends HomomorphismDetector {
 	 *
 	 * @param facts Input list of facts
 	 */
-	void addFacts(Collection<? extends Atom> facts);
+	void addFacts(Collection<Atom> facts);
 	
 	/**
 	 * Deletes the facts of the list in the database.
 	 *
 	 * @param facts Input list of facts
 	 */
-	void deleteFacts(Collection<? extends Atom> facts);
+	void deleteFacts(Collection<Atom> facts);
 
 	/**
 	 * Initialises the manager.
@@ -40,7 +40,7 @@ public interface HomomorphismManager extends HomomorphismDetector {
 	 *
 	 * @param query the query
 	 */
-	void addQuery(Query<?> query);
+	void addQuery(ConjunctiveQuery query);
 
 	/**
 	 * Clears the homomomorphism machinery (e.g., any indices) constructed for an earlier query. In certain implementation one needs to call this before adding a new Query.

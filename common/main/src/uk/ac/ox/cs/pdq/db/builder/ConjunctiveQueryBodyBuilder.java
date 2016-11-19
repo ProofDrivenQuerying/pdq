@@ -17,6 +17,7 @@ import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
@@ -345,9 +346,9 @@ public class ConjunctiveQueryBodyBuilder {
 	 * @return ConjunctiveQuery
 	 */
 	public ConjunctiveQuery toConjunctiveQuery() {
-		List<Atom> preds = new ArrayList<>();
+		List<Formula> preds = new ArrayList<>();
 		preds.addAll(this.aliasToAtoms.values());
-		this.conjQuery = new ConjunctiveQuery(this.resultPredicate, Conjunction.of(preds));
+		this.conjQuery = new ConjunctiveQuery(this.resultPredicate.getVariables(), Conjunction.of(preds));
 		return this.conjQuery;
 	}
 

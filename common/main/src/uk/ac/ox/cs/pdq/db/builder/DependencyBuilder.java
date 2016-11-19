@@ -17,10 +17,10 @@ import uk.ac.ox.cs.pdq.fol.Atom;
 public class DependencyBuilder implements Builder<TGD> {
 
 	/**  The left hand part of the dependency. */
-	private List<Atom> left = new LinkedList<>();
+	private List<Formula> left = new LinkedList<>();
 
 	/**  The right hand part of the dependency. */
-	private List<Atom> right = new LinkedList<>();
+	private List<Formula> right = new LinkedList<>();
 	
 	/**
 	 * Adds the left.
@@ -60,7 +60,7 @@ public class DependencyBuilder implements Builder<TGD> {
 	 * @param p Conjunction of Atoms
 	 * @return DependencyBuilder
 	 */
-	public DependencyBuilder addLeftConjunction(Conjunction<Atom> p) {
+	public DependencyBuilder addLeftConjunction(Conjunction p) {
 		this.left.addAll(p.getAtoms());
 		return this;
 	}
@@ -71,7 +71,7 @@ public class DependencyBuilder implements Builder<TGD> {
 	 * @param p Conjunction of Atom
 	 * @return DependencyBuilder
 	 */
-	public DependencyBuilder addRightConjunction(Conjunction<Atom> p) {
+	public DependencyBuilder addRightConjunction(Conjunction p) {
 		this.right.addAll(p.getAtoms());
 		return this;
 	}

@@ -61,7 +61,7 @@ public class ApplyRule extends DAGChaseConfiguration {
 			) {		
 		super(state, 
 				PlannerUtility.getInputConstants(rule, facts),
-				Utility.getConstants(facts),
+				Utility.getTypedConstants(facts),
 				1,
 				0);
 		Preconditions.checkNotNull(rule);

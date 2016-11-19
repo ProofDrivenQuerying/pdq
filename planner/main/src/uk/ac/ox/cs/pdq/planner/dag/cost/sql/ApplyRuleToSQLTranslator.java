@@ -229,7 +229,7 @@ public class ApplyRuleToSQLTranslator {
 		Set<Constant> constants = new HashSet<>();
 		if(toProject == null || toProject.isEmpty()) {
 			for(Atom fact:configuration.getFacts()) {
-				constants.addAll(fact.getConstants());
+				constants.addAll(Utility.getTypedAndUntypedConstants(fact));
 			}
 		}
 		else {

@@ -15,6 +15,7 @@ import org.jgrapht.graph.DefaultEdge;
 
 import uk.ac.ox.cs.pdq.db.builder.SchemaBuilder;
 import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -47,8 +48,8 @@ public class Schema {
 	/**  The schema dependencies. */
 	protected final List<Dependency> schemaDependencies;
 
-	/**  True if the schema contains at least one view. */
-	private final boolean containsViews;
+//	/**  True if the schema contains at least one view. */
+//	private final boolean containsViews;
 
 	/**  
 	 * True if the schema dependencies contain cycles. */
@@ -64,10 +65,10 @@ public class Schema {
 	/**  The EGDs of (TOCOMMENT: corresponding to?) the keys*. */
 	protected final Collection<EGD> keyDependencies = Lists.newArrayList();
 
-	/**  
-	 * TOCOMMENT why are view kept separate?
-	 * The views of the input schema*. */
-	protected final List<Dependency> views;
+//	/**  
+//	 * TOCOMMENT why are view kept separate?
+//	 * The views of the input schema*. */
+//	protected final List<Dependency> views;
 
 	/**
 	 * Empty schema constructor.
@@ -93,20 +94,20 @@ public class Schema {
 	 */
 	public Schema(Collection<Relation> relations, Collection<Dependency> dependencies) {
 		int maxArity = 0;
-		boolean containsViews = false;
+//		boolean containsViews = false;
 		Map<String, Relation> rm = new LinkedHashMap<>();
-		this.views = new ArrayList<>();
-		for (Relation relation : relations) {
-			rm.put(relation.getName(), relation);
-			if (maxArity < relation.getArity()) {
-				maxArity = relation.getArity();
-			}
-			containsViews |= relation instanceof View;
-			if(relation instanceof View) {
-				this.views.add(((View) relation).getDependency());
-			}
-		}
-		this.containsViews = containsViews;
+//		this.views = new ArrayList<>();
+//		for (Relation relation : relations) {
+//			rm.put(relation.getName(), relation);
+//			if (maxArity < relation.getArity()) {
+//				maxArity = relation.getArity();
+//			}
+//			containsViews |= relation instanceof View;
+//			if(relation instanceof View) {
+//				this.views.add(((View) relation).getDependency());
+//			}
+//		}
+//		this.containsViews = containsViews;
 
 		this.arityDistribution = new List[maxArity + 1];
 		for (int i = 0, l = this.arityDistribution.length; i < l; i++) {
@@ -128,7 +129,7 @@ public class Schema {
 		
 		for(Relation relation:this.relations) {
 			if(!relation.getKey().isEmpty()) {
-				this.keyDependencies.add(EGD.getEGDs(relation, relation.getKey()));
+				this.keyDependencies.add(Utility.getEGDs(relation, relation.getKey()));
 			}
 		}
 		this.schemaDependencies = ImmutableList.copyOf(this.dependencyIndex.values());
@@ -142,29 +143,29 @@ public class Schema {
 	public void consolidateKeys() {
 		for(Relation relation:this.relations) {
 			if(!relation.getKey().isEmpty()) {
-				this.keyDependencies.add(EGD.getEGDs(relation, relation.getKey()));
+				this.keyDependencies.add(Utility.getEGDs(relation, relation.getKey()));
 			}
 		}
 	}
 
-	/**
-	 * Gets the views of this schema's dependency set.
-	 *
-	 * @return 		the schema views
-	 */
-	public List<Dependency> getViews() {
-		return this.views;
-	}
-
-
-	/**
-	 * True is this schema's dependencies contain views.
-	 *
-	 * @return 		true if the schema contains views
-	 */
-	public boolean containsViews() {
-		return this.containsViews;
-	}
+//	/**
+//	 * Gets the views of this schema's dependency set.
+//	 *
+//	 * @return 		the schema views
+//	 */
+//	public List<Dependency> getViews() {
+//		return this.views;
+//	}
+//
+//
+//	/**
+//	 * True is this schema's dependencies contain views.
+//	 *
+//	 * @return 		true if the schema contains views
+//	 */
+//	public boolean containsViews() {
+//		return this.containsViews;
+//	}
 
 	/**
 	 * Gets the relations that have the input arity.
@@ -255,9 +256,9 @@ public class Schema {
 			for (Relation relation:this.relations) {
 				simpleDepedencyGraph.addVertex(relation.createAtoms());
 			}
-			for (Dependency ic:this.schemaDependencies) {
-				List<Atom> leftAtoms = ic.getLeft().getAtoms();
-				List<Atom> rightAtoms = ic.getRight().getAtoms();
+			for (Dependency dependency:this.schemaDependencies) {
+				List<Atom> leftAtoms = dependency.getBody().getAtoms();
+				List<Atom> rightAtoms = dependency.getHead().getAtoms();
 				for (Atom left : leftAtoms) {
 					for (Atom right : rightAtoms) {
 						Atom leftVertex = this.searchDependencyGraph(simpleDepedencyGraph, left);
@@ -284,7 +285,7 @@ public class Schema {
 			DirectedGraph<Atom, DefaultEdge> simpleDepedencyGraph,
 			Atom atom) {
 		for (Atom vertex: simpleDepedencyGraph.vertexSet()) {
-			if (atom.getName().equals(vertex.getName())) {
+			if (atom.getPredicate().getName().equals(vertex.getPredicate().getName())) {
 				return vertex;
 			}
 		}
@@ -301,8 +302,8 @@ public class Schema {
 	public Collection<TypedConstant<?>> getDependencyConstants() {
 		if (this.dependencyConstants == null) {
 			this.dependencyConstants = new LinkedHashSet<>();
-			for (Dependency ic : this.schemaDependencies) {
-				this.dependencyConstants.addAll(ic.getSchemaConstants());
+			for (Dependency dependency:this.schemaDependencies) {
+				this.dependencyConstants.addAll(Utility.getTypedConstants(dependency));
 			}
 		}
 		return this.dependencyConstants;

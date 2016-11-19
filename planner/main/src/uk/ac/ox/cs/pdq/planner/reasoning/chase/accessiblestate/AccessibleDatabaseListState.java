@@ -22,6 +22,7 @@ import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Formula;
+import uk.ac.ox.cs.pdq.fol.Implication;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
@@ -115,10 +116,10 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 	 */
 	private static Collection<Atom> createInitialFacts(ConjunctiveQuery query, Schema schema) {
 		// Gets the canonical database of the query
-		Collection<Atom> facts = query.ground(query.getGrounding()).getAtoms();
+		Collection<Atom> facts = uk.ac.ox.cs.pdq.util.Utility.ground(query, query.getSubstitutionToCanonicalConstants()).getAtoms();
 		// Create the Accessible(.) facts
 		// One Accessible(.) is being created for every schema constant
-		for (TypedConstant<?> constant : query.getSchemaConstants()) {
+		for (TypedConstant<?> constant : uk.ac.ox.cs.pdq.util.Utility.getTypedConstants(query)) {
 			facts.add(AccessibleRelation.getAccessibleFact(constant));
 		}
 		for (TypedConstant<?> constant:schema.getDependencyConstants()) {
@@ -224,9 +225,9 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 			Dependency dependency = (Dependency) match.getQuery();
 			Preconditions.checkArgument(dependency instanceof TGD, "EGDs are not allowed inside TGDchaseStep");
 			Map<Variable, Constant> mapping = match.getMapping();
-			Dependency grounded = dependency.fire(mapping, true);
-			Formula left = grounded.getLeft();
-			Formula right = grounded.getRight();
+			Implication grounded = ((TGD)dependency).fire(mapping, true);
+			Formula left = grounded.getChildren().get(0);
+			Formula right = grounded.getChildren().get(1);
 			for(Atom fact:right.getAtoms()) {
 				if(fact.getPredicate() instanceof InferredAccessibleRelation) {
 					this.derivedInferred.add(fact);

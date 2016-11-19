@@ -105,7 +105,7 @@ public class InferredAccessibleAxiom extends TGD {
 		 * @param conjunction Conjunction<Formula>
 		 * @return Conjunction<Formula>
 		 */
-		private Conjunction substitute(Conjunction conjunction) {
+		private Formula substitute(Conjunction conjunction) {
 			List<Formula> result = new LinkedList<>();
 			for (Formula f:conjunction.getChildren()) {
 				result.add(this.substitute(f));
@@ -119,7 +119,7 @@ public class InferredAccessibleAxiom extends TGD {
 		 * @param disjunction Disjunction<Formula>
 		 * @return Disjunction<Formula>
 		 */
-		private Disjunction substitute(Disjunction disjunction) {
+		private Formula substitute(Disjunction disjunction) {
 			List<Formula> result = new LinkedList<>();
 			for (Formula f: disjunction.getChildren()) {
 				result.add(this.substitute(f));

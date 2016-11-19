@@ -29,6 +29,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Variable;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 /**
  * Represents a database foreign key.
@@ -74,13 +75,13 @@ public class ForeignKey implements Cloneable {
 	 * @param dep LinearGuarded
 	 */
 	public ForeignKey(LinearGuarded dep) {
-		Atom left = dep.getLeft().getAtoms().get(0);
-		Atom right = dep.getRight().getAtoms().get(0);
+		Atom left = dep.getBody().getAtoms().get(0);
+		Atom right = dep.getHead().getAtoms().get(0);
 		Relation leftRel = (Relation) left.getPredicate();
 		Relation rightRel = (Relation) right.getPredicate();
 		this.setForeignRelation(rightRel);
 		this.setForeignRelationName(rightRel.getName());
-		for (Variable v: dep.getAllVariables()) {
+		for (Variable v:Utility.getVariables(dep)) {
 			this.addReference(new Reference(leftRel.getAttribute(left.getTerms().indexOf(v)), rightRel.getAttribute(right.getTerms().indexOf(v))));
 		}
 	}

@@ -2,7 +2,6 @@ package uk.ac.ox.cs.pdq.db.homomorphism;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -30,8 +29,6 @@ import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.LimitReachedException;
 import uk.ac.ox.cs.pdq.LimitReachedException.Reasons;
-import uk.ac.ox.cs.pdq.db.DatabaseEGD;
-import uk.ac.ox.cs.pdq.db.DatabaseEquality;
 import uk.ac.ox.cs.pdq.db.DatabaseRelation;
 import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.db.EGD;
@@ -47,15 +44,12 @@ import uk.ac.ox.cs.pdq.db.sql.SQLStatementBuilder;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Constant;
-import uk.ac.ox.cs.pdq.fol.Equality;
-import uk.ac.ox.cs.pdq.fol.Evaluatable;
+import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Predicate;
-import uk.ac.ox.cs.pdq.fol.Query;
-import uk.ac.ox.cs.pdq.fol.Skolem;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.io.xml.QNames;
+
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
@@ -80,7 +74,7 @@ public class DatabaseHomomorphismManager implements HomomorphismManager {
 	protected final List<Relation> relations;
 
 	/** The schema constraints */
-	protected Set<Evaluatable> constraints;
+	protected Set<Dependency> constraints;
 
 	/**  Maps of the string representation of a constant to the constant. */
 	protected final Map<String, TypedConstant<?>> constants;
@@ -125,7 +119,7 @@ public class DatabaseHomomorphismManager implements HomomorphismManager {
 	//TODO Cleanup the following variables
 	//------------------------------------------------------//
 	/** The current query. */
-	Evaluatable currentQuery = null;
+	ConjunctiveQuery currentQuery = null;
 
 	/** True if previous query indices were cleared. */
 	private boolean clearedLastQuery = true;
@@ -169,13 +163,13 @@ public class DatabaseHomomorphismManager implements HomomorphismManager {
 		this.database = database;
 		this.builder = builder;
 		this.constraints = Sets.newLinkedHashSet();
-		for (Dependency<?,?> dependency: schema.getDependencies()) {
+		for (Dependency dependency: schema.getDependencies()) {
 			this.constraints.add(dependency);
 		}
 		this.constants = schema.getConstants();
 		this.relations = Lists.newArrayList(schema.getRelations());
 		this.toDatabaseTables = new LinkedHashMap<>();
-		
+
 		for(int i = 0; i < this.synchronousThreadsNumber; ++i) {
 			this.synchronousConnections.add(getConnection(this.driver, this.url, this.database, this.username, this.password));			
 		}
@@ -207,7 +201,7 @@ public class DatabaseHomomorphismManager implements HomomorphismManager {
 			List<Relation> relations,
 			Map<String, TypedConstant<?>> constants,
 			Map<String, DatabaseRelation> toDatabaseRelations,
-			Set<Evaluatable> constraints) throws SQLException {
+			Set<Dependency> constraints) throws SQLException {
 		this.driver = driver;
 		this.url = url;
 		this.username = username;
@@ -268,7 +262,7 @@ public class DatabaseHomomorphismManager implements HomomorphismManager {
 
 			//Create indices for the joins in the body of the dependencies
 			Set<String> joinIndexes = Sets.newLinkedHashSet();
-			for (Evaluatable constraint:this.constraints) {
+			for (Dependency constraint:this.constraints) {
 				joinIndexes.addAll(this.builder.setupIndices(false, this.toDatabaseTables, constraint, this.constraintIndices).getLeft());
 			}
 			for (String b: joinIndexes) {
@@ -392,7 +386,7 @@ public class DatabaseHomomorphismManager implements HomomorphismManager {
 	 * @param query the query
 	 */
 	@Override
-	public void addQuery(Query<?> query) {
+	public void addQuery(ConjunctiveQuery query) {
 		if(!this.clearedLastQuery)
 			throw new RuntimeException("Method clearQuery should be called in order to clear previous query's tables from the database.");
 		this.clearedLastQuery = false;
@@ -427,7 +421,7 @@ public class DatabaseHomomorphismManager implements HomomorphismManager {
 				sqlStatement.addBatch(b);
 			}
 			//Clear the database tables built for the query
-			Collection<String> clearTablesSQLExpressions = this.builder.createTruncateTableStatements(this.currentQuery.getBody().getAtoms(), 
+			Collection<String> clearTablesSQLExpressions = this.builder.createTruncateTableStatements(this.currentQuery.getAtoms(), 
 					this.toDatabaseTables);
 			for (String b: clearTablesSQLExpressions) {
 				sqlStatement.addBatch(b);
@@ -438,40 +432,55 @@ public class DatabaseHomomorphismManager implements HomomorphismManager {
 		}
 		this.clearedLastQuery = true;
 	}
-	
+
 	@Override
-	public <Q extends Evaluatable> List<Match> getMatches(ConjunctiveQuery query) {
-		
+	public List<Match> getMatches(ConjunctiveQuery query) {
 		HomomorphismProperty[] properties = new HomomorphismProperty[1];
 		//TODO: WHAT SHOULD WE DO HERE ??????
-		properties[0] = HomomorphismProperty.createMapProperty(query.getGroundingsProjectionOnFreeVars());
-		return this.internalGetMatches(Lists.<Query<?>>newArrayList(query),properties);
+		properties[0] = HomomorphismProperty.createMapProperty(query.getSubstitutionOfFreeVariablesToCanonicalConstants());
+		return this.internalGetMatches(query,properties);
 	}
 
 	@Override
-	public <Q extends Evaluatable> List<Match> getTriggers(Collection<Q> dependencies, TriggerProperty t) {
-		
+	public List<Match> getTriggers(Collection<Dependency> dependencies, TriggerProperty t) {
 		HomomorphismProperty[] properties = new HomomorphismProperty[1];
-		if(t.equals(TriggerProperty.ACTIVE))
-		{
+		if(t.equals(TriggerProperty.ACTIVE)) {
 			properties[0] = HomomorphismProperty.createActiveTriggerProperty();
 		}
 		return this.internalGetMatches(dependencies, properties);
-		
-	}
-		/**
-		 * private getMatches method for supporting both queries and constraints
-		 * @param sources
-		 * @param properties
-		 * @return
-		 */
-		private <Q extends Evaluatable> List<Match> internalGetMatches(Collection<Q> sources, HomomorphismProperty... properties) {
 
-		Preconditions.checkNotNull(sources);
-		Queue<Triple<Q, String, LinkedHashMap<String, Variable>>> queries = new ConcurrentLinkedQueue<>();;
+	}
+
+	/**
+	 * private getMatches method for supporting both queries and constraints
+	 * @param sources
+	 * @param properties
+	 * @return
+	 */
+	private List<Match> internalGetMatches(ConjunctiveQuery query, HomomorphismProperty... properties) {
+		Preconditions.checkNotNull(query);
+		Queue<Triple<Formula, String, LinkedHashMap<String, Variable>>> queries = new ConcurrentLinkedQueue<>();
 		//Create a new query out of each input query that references only the cleaned predicates
-		for(Q source:sources) {
-			Q s = this.convert(source);
+		ConjunctiveQuery s = this.convert(query);
+		HomomorphismProperty[] c = properties;
+		//Create an SQL statement for the cleaned query
+		Pair<String, LinkedHashMap<String, Variable>> pair = this.builder.createQuery(s, c);
+		queries.add(Triple.of((Formula)query, pair.getLeft(), pair.getRight()));
+		return answerQueries(queries);
+	}
+
+	/**
+	 * private getMatches method for supporting both queries and constraints
+	 * @param sources
+	 * @param properties
+	 * @return
+	 */
+	private List<Match> internalGetMatches(Collection<Dependency> sources, HomomorphismProperty... properties) {
+		Preconditions.checkNotNull(sources);
+		Queue<Triple<Formula, String, LinkedHashMap<String, Variable>>> queries = new ConcurrentLinkedQueue<>();;
+		//Create a new query out of each input query that references only the cleaned predicates
+		for(Dependency source:sources) {
+			Dependency s = this.convert(source);
 			HomomorphismProperty[] c = null;
 			if(source instanceof EGD) {
 				c = new HomomorphismProperty[properties.length+1];
@@ -483,9 +492,8 @@ public class DatabaseHomomorphismManager implements HomomorphismManager {
 			}
 			//Create an SQL statement for the cleaned query
 			Pair<String, LinkedHashMap<String, Variable>> pair = this.builder.createQuery(s, c);
-			queries.add(Triple.of(source, pair.getLeft(), pair.getRight()));
+			queries.add(Triple.of((Formula)source, pair.getLeft(), pair.getRight()));
 		}
-
 		return answerQueries(queries);
 	}
 	/**
@@ -493,20 +501,18 @@ public class DatabaseHomomorphismManager implements HomomorphismManager {
 	 * @param queries
 	 * @return
 	 */
-	private <Q extends Evaluatable>  List<Match> answerQueries(Queue<Triple<Q, String, LinkedHashMap<String, Variable>>> queries) {
-		
+	private List<Match> answerQueries(Queue<Triple<Formula, String, LinkedHashMap<String, Variable>>> queries) {
 		List<Match> result = new LinkedList<>();
-		
 		//Run the SQL query statements in multiple threads
 		ExecutorService executorService = null;
 		try {
-			
+
 			//Create a pool of threads to run in parallel
 			executorService = Executors.newFixedThreadPool(this.synchronousThreadsNumber);
 			List<Callable<List<Match>>> threads = new ArrayList<>();
 			for(int j = 0; j < this.synchronousThreadsNumber; ++j) {
 				//Create the threads that will run the database queries
-				threads.add(new ExecuteSQLQueryThread<Q>(queries, this.constants, this.synchronousConnections.get(j)));
+				threads.add(new ExecuteSQLQueryThread(queries, this.constants, this.synchronousConnections.get(j)));
 			}
 			long start = System.currentTimeMillis();
 			try {
@@ -532,7 +538,7 @@ public class DatabaseHomomorphismManager implements HomomorphismManager {
 			return null;
 		} 
 		return result;
-		}
+	}
 
 	/**
 	 * Adds the facts.
@@ -541,9 +547,8 @@ public class DatabaseHomomorphismManager implements HomomorphismManager {
 	 * @see uk.ac.ox.cs.pdq.homomorphism.HomomorphismManager#addFacts(Collection<? extends PredicateFormula>)
 	 */
 	@Override
-	public void addFacts(Collection<? extends Atom> facts) {
+	public void addFacts(Collection<Atom> facts) {
 		Queue<String> queries = new ConcurrentLinkedQueue<>();
-
 		if(this.builder instanceof DerbyStatementBuilder) {
 			queries.addAll(this.builder.createInsertStatements(facts, this.toDatabaseTables));
 		}
@@ -573,12 +578,10 @@ public class DatabaseHomomorphismManager implements HomomorphismManager {
 			}
 			clusters.clear();
 		}
-		
 		executeQueries(queries);
 	}
-	
-	public void executeQueries(Queue<String> queries)
-	{		
+
+	public void executeQueries(Queue<String> queries) {		
 		ExecutorService executorService = null;
 		try {
 			//Create a pool of threads to run in parallel
@@ -617,10 +620,9 @@ public class DatabaseHomomorphismManager implements HomomorphismManager {
 	 * @param facts Input list of facts
 	 */
 	@Override
-	public void deleteFacts(Collection<? extends Atom> facts) {
+	public void deleteFacts(Collection<Atom> facts) {
 		Queue<String> queries = new ConcurrentLinkedQueue<>();
 		Map<Predicate, List<Atom>> clusters = HomomorphismUtility.clusterAtoms(facts);
-
 		//Find the total number of tuples that will be inserted in the database
 		int totalTuples = facts.size();
 		int tuplesPerThread;
@@ -643,7 +645,6 @@ public class DatabaseHomomorphismManager implements HomomorphismManager {
 				subList.clear();
 			}
 		}
-		
 		executeQueries(queries);
 	}
 
@@ -656,56 +657,42 @@ public class DatabaseHomomorphismManager implements HomomorphismManager {
 	 * @param constraints 		A set of constraints that should be satisfied by the homomorphisms of the input formula to the facts of the database 
 	 * @return 		a formula that uses the input *clean* names
 	 */
-	private <Q extends Evaluatable> Q convert(Q source) {
+	private Dependency convert(Dependency source) {
+		int f = 0;
+		List<Formula> left = Lists.newArrayList();
+		for(Atom atom:((Dependency) source).getBody().getAtoms()) {
+			Relation relation = this.toDatabaseTables.get(atom.getPredicate().getName());
+			List<Term> terms = Lists.newArrayList(atom.getTerms());
+			terms.add(new Variable(DatabaseRelation.Fact.getName() + f++));
+			left.add(new Atom(relation, terms));
+		}
+		List<Formula> right = Lists.newArrayList();
+		for(Atom atom:((Dependency) source).getHead().getAtoms()) {
+			Relation relation = this.toDatabaseTables.get(atom.getPredicate().getName());
+			List<Term> terms = Lists.newArrayList(atom.getTerms());
+			terms.add(new Variable(DatabaseRelation.Fact.getName() + f++));
+			right.add(new Atom(relation, terms));
+		}
 		if(source instanceof TGD) {
-			int f = 0;
-			List<Atom> left = Lists.newArrayList();
-			for(Atom atom:((TGD) source).getLeft()) {
-				Relation relation = this.toDatabaseTables.get(atom.getName());
-				List<Term> terms = Lists.newArrayList(atom.getTerms());
-				terms.add(new Variable(DatabaseRelation.Fact.getName() + f++));
-				left.add(new Atom(relation, terms));
-			}
-			List<Atom> right = Lists.newArrayList();
-			for(Atom atom:((TGD) source).getRight()) {
-				Relation relation = this.toDatabaseTables.get(atom.getName());
-				List<Term> terms = Lists.newArrayList(atom.getTerms());
-				terms.add(new Variable(DatabaseRelation.Fact.getName() + f++));
-				right.add(new Atom(relation, terms));
-			}
-			return (Q) new TGD(Conjunction.of(left), Conjunction.of(right));
+			return new TGD(Conjunction.of(left), Conjunction.of(right));
 		}
-		else if (source instanceof EGD) {
-			int f = 0;
-			List<Atom> left = Lists.newArrayList();
-			for(Atom atom:((EGD) source).getLeft()) {
-				Relation relation = this.toDatabaseTables.get(atom.getName());
-				List<Term> terms = Lists.newArrayList(atom.getTerms());
-				terms.add(new Variable(DatabaseRelation.Fact.getName() + f++));
-				left.add(new Atom(relation, terms));
-			}
-			List<DatabaseEquality> right = new ArrayList<DatabaseEquality>();
-			for(Equality atom:((EGD) source).getRight()) {
-				List<Term> terms = Lists.newArrayList(atom.getTerms());
-				terms.add(new Variable(DatabaseRelation.Fact.getName() + f++));
-				right.add(new DatabaseEquality(terms));
-			}
-			return (Q) new DatabaseEGD(Conjunction.of(left), Conjunction.of(right));
+		else if(source instanceof EGD) {
+			return new EGD(Conjunction.of(left), Conjunction.of(right));
 		}
-		else if(source instanceof Query) {
-			int f = 0;
-			List<Atom> body = Lists.newArrayList();
-			for(Atom atom:((Query<?>) source).getBody().getAtoms()) {
-				Relation relation = this.toDatabaseTables.get(atom.getName());
-				List<Term> terms = Lists.newArrayList(atom.getTerms());
-				terms.add(new Variable(DatabaseRelation.Fact.getName() + f++));
-				body.add(new Atom(relation, terms));
-			}
-			return (Q) new ConjunctiveQuery(((Query) source).getHead(), Conjunction.of(body));
+		throw new java.lang.RuntimeException("Unsupported formula type.");
+	}
+
+
+	private ConjunctiveQuery convert(ConjunctiveQuery source) {
+		int f = 0;
+		List<Formula> body = Lists.newArrayList();
+		for(Atom atom:((ConjunctiveQuery) source).getAtoms()) {
+			Relation relation = this.toDatabaseTables.get(atom.getPredicate().getName());
+			List<Term> terms = Lists.newArrayList(atom.getTerms());
+			terms.add(new Variable(DatabaseRelation.Fact.getName() + f++));
+			body.add(new Atom(relation, terms));
 		}
-		else {
-			throw new java.lang.UnsupportedOperationException();
-		}
+		return new ConjunctiveQuery(((ConjunctiveQuery) source).getBoundVariables(), Conjunction.of(body));
 	}
 
 }

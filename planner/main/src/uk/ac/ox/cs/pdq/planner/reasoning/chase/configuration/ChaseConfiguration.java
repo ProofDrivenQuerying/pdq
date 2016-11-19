@@ -9,8 +9,6 @@ import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.reasoning.Configuration;
@@ -168,7 +166,7 @@ public abstract class ChaseConfiguration<P extends Plan> implements Configuratio
 	 * @throws PlannerException the planner exception
 	 * @throws LimitReachedException the limit reached exception
 	 */
-	public void reasonUntilTermination(Chaser chaser, Query<?> query, Collection<? extends Dependency> dependencies) throws PlannerException, LimitReachedException {
+	public void reasonUntilTermination(Chaser chaser, ConjunctiveQuery query, Collection<? extends Dependency> dependencies) throws PlannerException, LimitReachedException {
 		chaser.reasonUntilTermination(this.state, dependencies);
 	}
 

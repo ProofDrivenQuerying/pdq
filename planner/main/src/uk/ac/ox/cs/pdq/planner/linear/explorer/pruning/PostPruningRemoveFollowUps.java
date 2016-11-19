@@ -16,8 +16,6 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
@@ -166,7 +164,7 @@ public final class PostPruningRemoveFollowUps extends PostPruning {
 		Preconditions.checkArgument(successNode != null);
 		Preconditions.checkArgument(successNode.getStatus() == NodeStatus.SUCCESSFUL);
 		Map<Atom, Pair<Dependency, Collection<Atom>>> factProvenance = successNode.getConfiguration().getState().getProvenance();
-		Collection<Atom> minimalFacts = this.getMinimalFactsRecursive(queryMatch, Utility.getConstants(queryMatch), new LinkedHashSet<Constant>(), factProvenance);
+		Collection<Atom> minimalFacts = this.getMinimalFactsRecursive(queryMatch, Utility.getTypedConstants(queryMatch), new LinkedHashSet<Constant>(), factProvenance);
 		return minimalFacts;
 	}
 
@@ -244,14 +242,14 @@ public final class PostPruningRemoveFollowUps extends PostPruning {
 		Atom inferredAccessibleFact = null;
 		for(Atom fact:facts) {
 			if(fact.getPredicate() instanceof AccessibleRelation) {
-				Set<Constant> constants = Utility.getNonSchemaConstants(fact);
+				Set<Constant> constants = Utility.getUntypedConstants(fact);
 				if(!constants.isEmpty()) {
 					inputTerms.addAll(constants);
 					inputAccessibleFacts.add(fact);
 				}
 			}
 			else if(fact.getPredicate() instanceof Relation) {
-				outputTerms.addAll(Utility.getConstants(fact));
+				outputTerms.addAll(Utility.getTypedAndUntypedConstants(fact));
 				Relation relation = (Relation) fact.getPredicate();
 				inferredAccessibleFact = new Atom(this.accessibleSchema.getInferredAccessibleRelation(relation), fact.getTerms() );
 			}

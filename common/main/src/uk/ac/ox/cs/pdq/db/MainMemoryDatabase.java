@@ -2,23 +2,11 @@ package uk.ac.ox.cs.pdq.db;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
-import org.apache.commons.lang3.tuple.Pair;
-
-import com.google.common.collect.Lists;
 
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Constant;
-import uk.ac.ox.cs.pdq.fol.Predicate;
-import uk.ac.ox.cs.pdq.fol.Skolem;
-import uk.ac.ox.cs.pdq.fol.Term;
-import uk.ac.ox.cs.pdq.fol.Variable;
+
+import com.google.common.collect.Lists;
 
 public class MainMemoryDatabase {
 	
@@ -47,28 +35,30 @@ public class MainMemoryDatabase {
 	public void dropTable( String name ){
 		relations.remove(name);
 	}
+	
 	public void editTable( MainMemoryRelation table ){
 		// Edits or inserts table
 		relations.put(table.getName(), table);
 	}
+	
 	public MainMemoryRelation getTable( String name ){
 		return this.relations.get(name);
 	}
+	
 	public void addTuples( Collection<Atom> tuples ){
 		for(Atom tuple: tuples ){
-			MainMemoryRelation temp = this.relations.get(tuple.getName());
+			MainMemoryRelation temp = this.relations.get(tuple.getPredicate().getName());
 			temp.addTuple(tuple);
 			this.relations.put(temp.getName(), temp);
 		}
 	}
+	
 	public void dropTuples( Collection<Atom> tuples ){
-		
 		for( Atom tuple: tuples){
-			MainMemoryRelation temp = this.relations.get(tuple.getName());	
+			MainMemoryRelation temp = this.relations.get(tuple.getPredicate().getName());	
 			temp.dropTuple(tuple);
 			this.relations.put(temp.getName(), temp);
 		}
-	
 	}
 	
 	public String toString(){
@@ -78,7 +68,4 @@ public class MainMemoryDatabase {
 		}
 		return temp;
 	}
-	
-
-
 }

@@ -14,8 +14,8 @@ import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Predicate;
-import uk.ac.ox.cs.pdq.fol.Skolem;
 import uk.ac.ox.cs.pdq.fol.Term;
+import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.util.Utility;
 
@@ -47,7 +47,7 @@ public class ConjunctiveQueryTest {
 				new Variable("x1"), 
 				new Variable("x2"), 
 				new Variable("x3"),
-				new Skolem("x4"), 
+				new UntypedConstant("x4"), 
 				new TypedConstant<>("x5"));
 		Atom p1 = new Atom(s1, t1);
 		Predicate s2 = new Predicate("s", 2);
@@ -58,7 +58,7 @@ public class ConjunctiveQueryTest {
 		Predicate s3 = new Predicate("t", 3);
 		List<Term> t3 = Lists.<Term>newArrayList(
 				new Variable("x3"), 
-				new Skolem("x4"),
+				new UntypedConstant("x4"),
 				new TypedConstant<>("x5"));
 		Atom p3 = new Atom(s3, t3);
 		ConjunctiveQuery q = new ConjunctiveQuery("r", t1, Conjunction.of(p2, p3));
@@ -81,7 +81,7 @@ public class ConjunctiveQueryTest {
 				new Variable("x1"), 
 				new Variable("x2"), 
 				new Variable("x3"),
-				new Skolem("x4"), 
+				new UntypedConstant("x4"), 
 				new TypedConstant<>("x5"));
 		Atom p1 = new Atom(s1, t1);
 		Predicate s2 = new Predicate("s", 2);
@@ -92,7 +92,7 @@ public class ConjunctiveQueryTest {
 		Predicate s3 = new Predicate("t", 3);
 		List<Term> t3 = Lists.<Term>newArrayList(
 				new Variable("x3"),
-				new Skolem("x4"), 
+				new UntypedConstant("x4"), 
 				new TypedConstant<>("x5"));
 		Atom p3 = new Atom(s3, t3);
 		ConjunctiveQuery q = new ConjunctiveQuery(p1, Conjunction.of(p2, p3));
@@ -115,7 +115,7 @@ public class ConjunctiveQueryTest {
 				new Variable("x1"), 
 				new Variable("x2"), 
 				new Variable("x3"),
-				new Skolem("x4"), 
+				new UntypedConstant("x4"), 
 				new TypedConstant<>("x5"));
 		Atom p1 = new Atom(s1, t1);
 		Predicate s2 = new Predicate("s", 2);
@@ -126,7 +126,7 @@ public class ConjunctiveQueryTest {
 		Predicate s3 = new Predicate("t", 3);
 		List<Term> t3 = Lists.<Term>newArrayList(
 				new Variable("x3"), 
-				new Skolem("x4"), 
+				new UntypedConstant("x4"), 
 				new TypedConstant<>("x5"));
 		Atom p3 = new Atom(s3, t3);
 		ConjunctiveQuery q1 = new ConjunctiveQuery(p1, Conjunction.of(p2, p3));
@@ -143,7 +143,7 @@ public class ConjunctiveQueryTest {
 				new Variable("x1"), 
 				new Variable("x2"), 
 				new Variable("x3"),
-				new Skolem("x4"), 
+				new UntypedConstant("x4"), 
 				new TypedConstant<>("x5"));
 		Atom p1 = new Atom(s1, t1);
 		Predicate s2 = new Predicate("s", 2);
@@ -154,7 +154,7 @@ public class ConjunctiveQueryTest {
 		Predicate s3 = new Predicate("t", 3);
 		List<Term> t3 = Lists.<Term>newArrayList(
 				new Variable("x3"), 
-				new Skolem("x4"), 
+				new UntypedConstant("x4"), 
 				new TypedConstant<>("x5"));
 		Atom p3 = new Atom(s3, t3);
 		ConjunctiveQuery q1 = new ConjunctiveQuery(p1, Conjunction.of(p2, p3));
@@ -170,7 +170,7 @@ public class ConjunctiveQueryTest {
 		List<Term> t1 = Lists.<Term>newArrayList(
 				new Variable("x1"), 
 				new Variable("x2"), 
-				new Skolem("x3"),
+				new UntypedConstant("x3"),
 				new Variable("x4"), 
 				new TypedConstant<>("x5"));
 		Predicate s2 = new Predicate("s", 2);
@@ -182,7 +182,7 @@ public class ConjunctiveQueryTest {
 		List<Term> g = Lists.<Term>newArrayList(
 				new TypedConstant<>("c1"), 
 				new TypedConstant<>("c2"),
-				new Skolem("x3"), 
+				new UntypedConstant("x3"), 
 				new TypedConstant<>("c4"),
 				new TypedConstant<>("x5"), 
 				new TypedConstant<>("x5"),
@@ -191,7 +191,7 @@ public class ConjunctiveQueryTest {
 		m.put(new Variable("x1"), new TypedConstant<>("c1"));
 		m.put(new Variable("x2"), new TypedConstant<>("c2"));
 		m.put(new Variable("x4"), new TypedConstant<>("c4"));
-		Conjunction<Atom> i = Conjunction.of(p1, p2);
+		Conjunction i = Conjunction.of(p1, p2);
 		Assert.assertEquals("Grounded conjunction must comply to mapping ", g, i.ground(m).getTerms());
 	}
 

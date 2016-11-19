@@ -13,7 +13,6 @@ import uk.ac.ox.cs.pdq.db.DatabaseRelation;
 import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismProperty;
 import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismProperty.TopKProperty;
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Evaluatable;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
 
@@ -60,7 +59,7 @@ public class MySQLStatementBuilder extends SQLStatementBuilder {
 	 * @see uk.ac.ox.cs.pdq.reasoning.homomorphism.SQLStatementBuilder#translateLimitConstraints(uk.ac.ox.cs.pdq.fol.Evaluatable, uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismConstraint[])
 	 */
 	@Override
-	protected String translateLimitConstraints(Evaluatable source, HomomorphismProperty... constraints) {
+	protected String translateLimitConstraints(HomomorphismProperty... constraints) {
 		for(HomomorphismProperty c:constraints) {
 			if(c instanceof TopKProperty) {
 				return "LIMIT " + ((TopKProperty) c).k;
@@ -87,10 +86,10 @@ public class MySQLStatementBuilder extends SQLStatementBuilder {
 	 * @return insert statements that add the input fact to the fact database.
 	 */
 	@Override
-	public Collection<String> createInsertStatements(Collection<? extends Atom> facts, Map<String, DatabaseRelation> toDatabaseTables) {
+	public Collection<String> createInsertStatements(Collection<Atom> facts, Map<String, DatabaseRelation> toDatabaseTables) {
 		Collection<String> result = new LinkedList<>();
 		for (Atom fact:facts) {
-			DatabaseRelation rel = toDatabaseTables.get(fact.getName());
+			DatabaseRelation rel = toDatabaseTables.get(fact.getPredicate().getName());
 			List<Term> terms = fact.getTerms();
 			String insertInto = "INSERT IGNORE INTO " + toDatabaseTables.get(rel.getName()).getName() + " " + "VALUES ( ";
 			for (Term term : terms) {
@@ -115,7 +114,7 @@ public class MySQLStatementBuilder extends SQLStatementBuilder {
 	 * @return insert statements that add the input fact to the fact database.
 	 */
 	@Override
-	public String createBulkInsertStatement(Predicate predicate, Collection<? extends Atom> facts, Map<String, DatabaseRelation> toDatabaseTables) {
+	public String createBulkInsertStatement(Predicate predicate, Collection<Atom> facts, Map<String, DatabaseRelation> toDatabaseTables) {
 		String insertInto = "INSERT IGNORE INTO " + toDatabaseTables.get(predicate.getName()).getName() + "\n" +
 				"VALUES" + "\n";
 		List<String> tuples = new ArrayList<String>();

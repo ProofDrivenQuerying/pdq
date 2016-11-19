@@ -22,8 +22,9 @@ import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TGD;
 import uk.ac.ox.cs.pdq.db.View;
 import uk.ac.ox.cs.pdq.fol.Formula;
-import uk.ac.ox.cs.pdq.fol.FormulaEquivalence;
 import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.util.FormulaEquivalence;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
@@ -148,33 +149,33 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	/**
 	 * Adds the dependency.
 	 *
-	 * @param dep IC
+	 * @param dependency IC
 	 * @return this builder
 	 */
-	public SchemaBuilder addDependency(Dependency dep) {
+	public SchemaBuilder addDependency(Dependency dependency) {
 		for (Dependency ic : this.dependencies.values()) {
 			if (FormulaEquivalence.approximateEquivalence(
-					(Formula) ic, (Formula) dep) ) {
+					(Formula) ic, (Formula) dependency) ) {
 				return this;
 			}
 		}
-		this.dependencies.put(((TGD) dep).getId(), dep);
+		this.dependencies.put(((TGD) dependency).getId(), dependency);
 		return this;
 	}
 
 	/**
 	 * Removes the dependency.
 	 *
-	 * @param ic IC
+	 * @param dependency IC
 	 * @return this builder
 	 */
-	public SchemaBuilder removeDependency(Dependency ic) {
-		if (this.dependencies.remove(((TGD) ic).getId()) == null) {
+	public SchemaBuilder removeDependency(Dependency dependency) {
+		if (this.dependencies.remove(((TGD) dependency).getId()) == null) {
 			for (Iterator<Entry<Integer, Dependency>> it =
 					this.dependencies.entrySet().iterator();
 					it.hasNext();) {
 				if (FormulaEquivalence.approximateEquivalence(
-						(Formula) it.next().getValue(), (Formula) ic) ) {
+						(Formula) it.next().getValue(), (Formula) dependency) ) {
 					it.remove();
 				}
 			}
@@ -293,14 +294,15 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	 * @param view the view
 	 */
 	private void ensureViewDefinition(View view) {
-		LinearGuarded d = view.getDependency();
+		Formula d = view.getFormula();
 		LinearGuarded t = this.findViewDependency(view);
 		if (d != null) {
-			TGD inverse = d.invert();
-
 			if (t == null) {
-				this.dependencies.put(d.getId(), d);
+				Atom body = new Atom(new Predicate(view.getName(), view.getArity()), view.getFormula().getFreeVariables());
+				TGD dependency = new TGD(body, view.getFormula().getChildren().get(0));
+				this.dependencies.put(dependency.getId(), dependency);
 			}
+			TGD inverse = new TGD(t.getHead(), t.getBody());
 			TGD i = this.findDependency(inverse);
 			if (i == null) {
 				this.dependencies.put(inverse.getId(), inverse);
@@ -308,7 +310,7 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 		} else {
 			if (t != null) {
 				view.setDependency(t);
-				TGD inverse = t.invert();
+				TGD inverse = new TGD(t.getHead(), t.getBody());
 				TGD i = this.findDependency(inverse);
 				if (i == null) {
 					this.dependencies.put(inverse.getId(), inverse);
@@ -344,8 +346,8 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	 */
 	private void removeOrphanDependencies() {
 		for (Iterator<Integer> i = this.dependencies.keySet().iterator(); i.hasNext();) {
-			Dependency ic = this.dependencies.get(i.next());
-			for (Atom p: ic.getLeft().getAtoms()) {
+			Dependency dependency = this.dependencies.get(i.next());
+			for (Atom p: dependency.getBody().getAtoms()) {
 				if (this.relations.get(p.getPredicate().getName()) == null) {
 					i.remove();
 					break;
@@ -354,7 +356,7 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 		}
 		for (Iterator<Integer> i = this.dependencies.keySet().iterator(); i.hasNext();) {
 			Dependency ic = this.dependencies.get(i.next());
-			for (Atom p: ic.getRight().getAtoms()) {
+			for (Atom p: ic.getHead().getAtoms()) {
 				if (this.relations.get(p.getPredicate().getName()) == null) {
 					i.remove();
 					break;
@@ -386,11 +388,11 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	 */
 	private LinearGuarded findViewDependency(View v) {
 		if (this.dependencies != null) {
-			for (Dependency ic : this.dependencies.values()) {
-				if (ic.getLeft().getAtoms().size() == 1) {
-					if (ic.getLeft().getAtoms().get(0)
+			for (Dependency dependency:this.dependencies.values()) {
+				if (dependency.getBody().getAtoms().size() == 1) {
+					if (dependency.getBody().getAtoms().get(0)
 							.getPredicate().getName().equals(v.getName())) {
-						return (LinearGuarded) ic;
+						return (LinearGuarded) dependency;
 					}
 				}
 			}
@@ -401,15 +403,15 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	/**
 	 * Find dependency.
 	 *
-	 * @param dep TGD
+	 * @param input TGD
 	 * @return the dependency currently held in the builder that is equal
 	 *         (modulo the ID) to the given dependency.
 	 */
-	private TGD findDependency(TGD dep) {
+	private TGD findDependency(TGD input) {
 		if (this.dependencies != null) {
-			for (Dependency ic: this.dependencies.values()) {
-				if (FormulaEquivalence.approximateEquivalence((Formula) ic, (Formula) dep)) {
-					return (TGD) ic;
+			for (Dependency dependency:this.dependencies.values()) {
+				if (FormulaEquivalence.approximateEquivalence((Formula) dependency, (Formula) input)) {
+					return (TGD) dependency;
 				}
 			}
 		}
@@ -419,14 +421,14 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	/**
 	 * Find fk dependency.
 	 *
-	 * @param gd the gd
+	 * @param input the gd
 	 * @return the guarded dependency that is equal to the given one.
 	 */
-	private GuardedDependency findFKDependency(GuardedDependency gd) {
+	private GuardedDependency findFKDependency(GuardedDependency input) {
 		if (this.dependencies != null) {
-			for (Dependency ic:this.dependencies.values()) {
-				if (FormulaEquivalence.approximateEquivalence((Formula) gd, (Formula) ic)) {
-					return (GuardedDependency) ic;
+			for (Dependency dependency:this.dependencies.values()) {
+				if (FormulaEquivalence.approximateEquivalence((Formula) input, (Formula) dependency)) {
+					return (GuardedDependency) dependency;
 				}
 			}
 		}
@@ -442,11 +444,11 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	private Collection<LinearGuarded> findFKDependency(Relation r) {
 		Set<LinearGuarded> result = new LinkedHashSet<>();
 		if (this.dependencies != null) {
-			for (Dependency ic: this.dependencies.values()) {
-				if (ic instanceof LinearGuarded
-						&& ((LinearGuarded) ic).getRight().size() == 1
-						&& ((LinearGuarded) ic).getGuard().getPredicate().equals(r)) {
-					result.add((LinearGuarded) ic);
+			for (Dependency dependency: this.dependencies.values()) {
+				if (dependency instanceof LinearGuarded
+						&& ((LinearGuarded) dependency).getHead().getAtoms().size() == 1
+						&& ((LinearGuarded) dependency).getGuard().getPredicate().equals(r)) {
+					result.add((LinearGuarded) dependency);
 				}
 			}
 		}
@@ -481,14 +483,14 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 		/** The Constant serialVersionUID. */
 		private static final long serialVersionUID = 7049363904713889121L;
 
-		/**
-		 * Constructor for TemporaryRelation.
-		 * @param name String
-		 * @param attributes List<Attribute>
-		 */
-		public TemporaryRelation(String name, List<Attribute> attributes) {
-			this(name, attributes, false);
-		}
+//		/**
+//		 * Constructor for TemporaryRelation.
+//		 * @param name String
+//		 * @param attributes List<Attribute>
+//		 */
+//		public TemporaryRelation(String name, List<Attribute> attributes) {
+//			this(name, attributes, false);
+//		}
 		/**
 		 * Constructor for TemporaryRelation.
 		 * @param name String

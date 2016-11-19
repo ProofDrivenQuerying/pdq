@@ -10,7 +10,7 @@ import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Skolem;
+import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema.AccessibleRelation;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema.InferredAccessibleRelation;
 import uk.ac.ox.cs.pdq.util.Utility;
@@ -41,7 +41,7 @@ public class AtomTest {
 		Relation r = new Relation("r", Lists.newArrayList(
 				new Attribute(String.class, "a1"), new Attribute(String.class, "a2"))) {};
 				TypedConstant<String> c = new TypedConstant<>("c");
-				Skolem s = new Skolem("s");
+				UntypedConstant s = new UntypedConstant("s");
 				Assert.assertFalse("PredicateFormula must not be of type InferredAccessible",
 						new Atom(r, Lists.newArrayList(s, c)).getPredicate() instanceof InferredAccessibleRelation);
 				Atom p = new Atom(r, Lists.newArrayList(s, c));
@@ -52,7 +52,7 @@ public class AtomTest {
 	 */
 	@Test public void testIsAccessibleFact() {
 		Relation r = AccessibleRelation.getInstance();
-		Skolem s = new Skolem("s");
+		UntypedConstant s = new UntypedConstant("s");
 		Assert.assertTrue("PredicateFormula must be of type Accessible",
 				new Atom(r, Lists.newArrayList(s)).getPredicate() instanceof AccessibleRelation);
 	}
@@ -66,7 +66,7 @@ public class AtomTest {
 						new Attribute(String.class, "a1"),
 						new Attribute(String.class, "a2"))) {});
 		TypedConstant<String> c = new TypedConstant<>("c");
-		Skolem s = new Skolem("s");
+		UntypedConstant s = new UntypedConstant("s");
 		Assert.assertTrue("PredicateFormula must be of type InferredAccessible",
 				new Atom(r, Lists.newArrayList(s, c)).getPredicate() instanceof InferredAccessibleRelation);
 	}

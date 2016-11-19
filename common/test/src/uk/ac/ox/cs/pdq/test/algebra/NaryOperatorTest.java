@@ -13,8 +13,8 @@ import uk.ac.ox.cs.pdq.algebra.RelationalOperator;
 import uk.ac.ox.cs.pdq.algebra.RelationalOperatorException;
 import uk.ac.ox.cs.pdq.db.EntityRelation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
-import uk.ac.ox.cs.pdq.fol.Skolem;
 import uk.ac.ox.cs.pdq.fol.Term;
+import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.util.TupleType;
 
@@ -48,7 +48,7 @@ public abstract class NaryOperatorTest extends RelationalOperatorTest {
 	TupleType inputType1 = TupleType.DefaultFactory.create(Integer.class);
 	
 	/** The output terms2. */
-	List<Term> outputTerms2 = Lists.<Term>newArrayList(new Variable("a"), new Skolem("b"), new TypedConstant<>("c"));
+	List<Term> outputTerms2 = Lists.<Term>newArrayList(new Variable("a"), new UntypedConstant("b"), new TypedConstant<>("c"));
 	
 	/** The input terms2. */
 	List<Term> inputTerms2 = Lists.<Term>newArrayList();
@@ -60,10 +60,10 @@ public abstract class NaryOperatorTest extends RelationalOperatorTest {
 	TupleType inputType2 = TupleType.EmptyTupleType;
 	
 	/** The output terms3. */
-	List<Term> outputTerms3 = Lists.<Term>newArrayList(new Skolem("b"), new TypedConstant<>("d"));
+	List<Term> outputTerms3 = Lists.<Term>newArrayList(new UntypedConstant("b"), new TypedConstant<>("d"));
 	
 	/** The input terms3. */
-	List<Term> inputTerms3 = Lists.<Term>newArrayList(new Skolem("b"));
+	List<Term> inputTerms3 = Lists.<Term>newArrayList(new UntypedConstant("b"));
 	
 	/** The output type3. */
 	TupleType outputType3 = TupleType.DefaultFactory.create(R, String.class);
@@ -72,10 +72,10 @@ public abstract class NaryOperatorTest extends RelationalOperatorTest {
 	TupleType inputType3 = TupleType.DefaultFactory.create(R);
 
 	/** The output terms. */
-	List<Term> outputTerms = Lists.<Term>newArrayList(new Variable("a"), new Variable("a"), new Skolem("b"), new TypedConstant<>("c"), new Skolem("b"), new TypedConstant<>("d"));
+	List<Term> outputTerms = Lists.<Term>newArrayList(new Variable("a"), new Variable("a"), new UntypedConstant("b"), new TypedConstant<>("c"), new UntypedConstant("b"), new TypedConstant<>("d"));
 	
 	/** The input terms. */
-	List<Term> inputTerms = Lists.<Term>newArrayList(new Variable("a"), new Skolem("b"));
+	List<Term> inputTerms = Lists.<Term>newArrayList(new Variable("a"), new UntypedConstant("b"));
 	
 	/** The output type. */
 	TupleType outputType = TupleType.DefaultFactory.create(Integer.class, Integer.class, R, String.class, R, String.class);

@@ -20,8 +20,8 @@ import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.EntityRelation;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
-import uk.ac.ox.cs.pdq.fol.Skolem;
 import uk.ac.ox.cs.pdq.fol.Term;
+import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.util.TupleType;
 
@@ -37,10 +37,10 @@ import com.google.common.collect.Lists;
 public class DependentAccessTest extends RelationalOperatorTest {
 
 	/** The output terms. */
-	List<Term> outputTerms = Lists.<Term>newArrayList(new Variable("a"), new Skolem("b"), new TypedConstant<>("c"));
+	List<Term> outputTerms = Lists.<Term>newArrayList(new Variable("a"), new UntypedConstant("b"), new TypedConstant<>("c"));
 	
 	/** The input terms. */
-	List<Term> inputTerms = Lists.<Term>newArrayList(new Variable("a"), new Skolem("b"));
+	List<Term> inputTerms = Lists.<Term>newArrayList(new Variable("a"), new UntypedConstant("b"));
 	
 	/** The r. */
 	EntityRelation R = new EntityRelation("R");

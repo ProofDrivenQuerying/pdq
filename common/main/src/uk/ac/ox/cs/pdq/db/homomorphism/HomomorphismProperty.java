@@ -2,7 +2,6 @@ package uk.ac.ox.cs.pdq.db.homomorphism;
 
 import java.util.Map;
 
-import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Variable;
@@ -41,12 +40,12 @@ public abstract class HomomorphismProperty {
 	public static class FactProperty extends HomomorphismProperty {
 		
 		/** The atoms. */
-		public final Conjunction<Atom> atoms;
+		public final Conjunction atoms;
 		/**
 		 * Constructor for AtomCollectionScope.
 		 * @param atoms Conjunction<PredicateFormula>
 		 */
-		private FactProperty(Conjunction<Atom> atoms) {
+		private FactProperty(Conjunction atoms) {
 			this.atoms = atoms;
 		}
 	}
@@ -108,7 +107,7 @@ public abstract class HomomorphismProperty {
 	 * @param atoms the atoms
 	 * @return a fresh fact collection scope property
 	 */
-	public static FactProperty createFactProperty(Conjunction<Atom> atoms) {
+	public static FactProperty createFactProperty(Conjunction atoms) {
 		return new FactProperty(atoms);
 	}
 

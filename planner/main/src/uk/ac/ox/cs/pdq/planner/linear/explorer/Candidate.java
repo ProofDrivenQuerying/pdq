@@ -70,7 +70,7 @@ public class Candidate implements Cloneable{
 		this.fact = fact;
 		this.match = matching;
 		this.input = PlannerUtility.getInputConstants(rule.getAccessMethod(), fact);
-		this.output = Lists.newArrayList(uk.ac.ox.cs.pdq.util.Utility.getConstants(fact));
+		this.output = Lists.newArrayList(uk.ac.ox.cs.pdq.util.Utility.getTypedAndUntypedConstants(fact));
 		this.properOutput = Lists.newArrayList(this.output);
 		this.properOutput.removeAll(this.input);
 	}
@@ -129,7 +129,7 @@ public class Candidate implements Cloneable{
 		LinkedHashMap<Integer, Term> map = new LinkedHashMap<>();
 		Integer i = 0;
 		for (Term t: this.fact.getTerms()) {
-			if (t.isSkolem() && this.output.contains(t)) {
+			if (t.isUntypedConstant() && this.output.contains(t)) {
 				map.put(i, t);
 			}
 			++i;

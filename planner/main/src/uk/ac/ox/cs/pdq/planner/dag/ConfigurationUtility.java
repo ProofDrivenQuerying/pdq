@@ -408,7 +408,7 @@ public class ConfigurationUtility {
 					 * then add it to the minimal set
 					 */
 					for(Atom fact:facts) {
-						Set<Constant> properOutput = Utility.getConstants(fact);
+						Set<Constant> properOutput = Utility.getTypedAndUntypedConstants(fact);
 						properOutput.removeAll(applyRule.getInput());
 						if(!Sets.intersection(remaining, properOutput).isEmpty()) {
 							remaining.removeAll(properOutput);

@@ -21,8 +21,8 @@ import uk.ac.ox.cs.pdq.algebra.Projection;
 import uk.ac.ox.cs.pdq.algebra.RelationalOperator;
 import uk.ac.ox.cs.pdq.algebra.RelationalOperatorException;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
-import uk.ac.ox.cs.pdq.fol.Skolem;
 import uk.ac.ox.cs.pdq.fol.Term;
+import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.util.TupleType;
 
@@ -54,7 +54,7 @@ public class ProjectionTest extends UnaryOperatorTest {
 	List<Term> renamedOutput = Lists.<Term>newArrayList(new TypedConstant<>("c"), new Variable("d"));
 	
 	/** The renamed input. */
-	List<Term> renamedInput = Lists.<Term>newArrayList(new Variable("d"), new Skolem("e"));
+	List<Term> renamedInput = Lists.<Term>newArrayList(new Variable("d"), new UntypedConstant("e"));
 	
 	/* (non-Javadoc)
 	 * @see uk.ac.ox.cs.pdq.test.algebra.RelationalOperatorTest#setup()

@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
 
-import uk.ac.ox.cs.pdq.fol.Query;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.rewrite.RewriterException;
 import uk.ac.ox.cs.pdq.rewrite.sql.SQLTranslator;
@@ -36,7 +36,7 @@ public class SQLWithPlanExecutor extends SQLPlanExecutor {
 	 * @param sem Semantics
 	 * @param properties the properties
 	 */
-	public SQLWithPlanExecutor(Plan plan, Query<?> q, Semantics sem, Properties properties) {
+	public SQLWithPlanExecutor(Plan plan, ConjunctiveQuery q, Semantics sem, Properties properties) {
 		super(plan, q, sem, properties);
 	}
 

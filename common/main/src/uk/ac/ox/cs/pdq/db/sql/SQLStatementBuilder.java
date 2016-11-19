@@ -17,10 +17,9 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.db.DatabaseEGD;
-import uk.ac.ox.cs.pdq.db.DatabaseEquality;
 import uk.ac.ox.cs.pdq.db.DatabaseRelation;
 import uk.ac.ox.cs.pdq.db.Dependency;
+import uk.ac.ox.cs.pdq.db.EGD;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TGD;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
@@ -31,8 +30,8 @@ import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismProperty.FactProperty;
 import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismProperty.MapProperty;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
-import uk.ac.ox.cs.pdq.fol.Evaluatable;
 import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
@@ -73,10 +72,10 @@ public abstract class SQLStatementBuilder {
 	 * @param toDatabaseTables the dbrelations
 	 * @return insert statements that add the input fact to the fact database.
 	 */
-	public Collection<String> createInsertStatements(Collection<? extends Atom> facts, Map<String, DatabaseRelation> toDatabaseTables) {
+	public Collection<String> createInsertStatements(Collection<Atom> facts, Map<String, DatabaseRelation> toDatabaseTables) {
 		Collection<String> result = new LinkedList<>();
 		for (Atom fact:facts) {
-			DatabaseRelation relation = toDatabaseTables.get(fact.getName());
+			DatabaseRelation relation = toDatabaseTables.get(fact.getPredicate().getName());
 			List<Term> terms = fact.getTerms();
 			String insertInto = "INSERT INTO " + relation.getName() + " " + "VALUES ( ";
 			for (Term term : terms) {
@@ -92,7 +91,7 @@ public abstract class SQLStatementBuilder {
 		return result;
 	}
 
-	public abstract String createBulkInsertStatement(Predicate predicate, Collection<? extends Atom> facts, Map<String, DatabaseRelation> toDatabaseTables);
+	public abstract String createBulkInsertStatement(Predicate predicate, Collection<Atom> facts, Map<String, DatabaseRelation> toDatabaseTables);
 
 	/**
 	 * Creates an SQL statement that deletes the set of input facts, by deleting tuples whose fact id attribute is the fact id of the input fact.
@@ -101,10 +100,10 @@ public abstract class SQLStatementBuilder {
 	 * @param toDatabaseTables 		Map of schema relation names to *clean* names
 	 * @return 		a set of statements that delete the input facts from the fact database.
 	 */
-	protected Collection<String> createDeleteStatements(Collection<? extends Atom> facts, Map<String, DatabaseRelation> toDatabaseTables) {
+	protected Collection<String> createDeleteStatements(Collection<Atom> facts, Map<String, DatabaseRelation> toDatabaseTables) {
 		Collection<String> result = new LinkedList<>();
 		for (Atom fact:facts) {
-			Relation relation = toDatabaseTables.get(fact.getName());
+			Relation relation = toDatabaseTables.get(fact.getPredicate().getName());
 			String delete = "DELETE FROM " + relation.getName() + " " + "WHERE ";
 			Attribute attribute = DatabaseRelation.Fact;
 			delete += attribute.getName() + "=" + fact.getId();
@@ -120,7 +119,7 @@ public abstract class SQLStatementBuilder {
 	 * @param toDatabaseTables 		Map of schema relation names to *clean* names
 	 * @return 		a set of statements that delete the input facts from the fact database.
 	 */
-	public String createBulkDeleteStatement(Predicate predicate, Collection<? extends Atom> facts, Map<String, DatabaseRelation> toDatabaseTables) {
+	public String createBulkDeleteStatement(Predicate predicate, Collection<Atom> facts, Map<String, DatabaseRelation> toDatabaseTables) {
 		String insertInto = "DELETE FROM " + toDatabaseTables.get(predicate.getName()).getName() + " " + "WHERE "; 
 		insertInto += DatabaseRelation.Fact.getName();
 		insertInto += " IN" + "\n"; 
@@ -145,10 +144,10 @@ public abstract class SQLStatementBuilder {
 		result.append("CREATE TABLE  ").append(relation.getName()).append('(');
 		for (int it = 0; it < relation.getAttributes().size(); ++it) {
 			result.append(' ').append(relation.getAttributes().get(it).getName());
-			if (relation.getAttribute(it).getType() instanceof Class && String.class.isAssignableFrom((Class) relation.getAttribute(it).getType())) {
+			if (relation.getAttribute(it).getType() instanceof Class && String.class.isAssignableFrom((Class<?>) relation.getAttribute(it).getType())) {
 				result.append(" VARCHAR(500),");
 			}
-			else if (relation.getAttribute(it).getType() instanceof Class && Integer.class.isAssignableFrom((Class) relation.getAttribute(it).getType())) {
+			else if (relation.getAttribute(it).getType() instanceof Class && Integer.class.isAssignableFrom((Class<?>) relation.getAttribute(it).getType())) {
 				result.append(" int,");
 			}
 			else {
@@ -230,7 +229,7 @@ public abstract class SQLStatementBuilder {
 	public Collection<String> createTruncateTableStatements(List<Atom> queryRelations, Map<String, DatabaseRelation> toDatabaseRelation) {
 		Set<String> result = new LinkedHashSet<>();
 		for(Atom pred: queryRelations)
-			result.add("TRUNCATE TABLE  " + toDatabaseRelation.get(pred.getName()).getName());
+			result.add("TRUNCATE TABLE  " + toDatabaseRelation.get(pred.getPredicate().getName()).getName());
 		return result;
 	}
 
@@ -255,19 +254,22 @@ public abstract class SQLStatementBuilder {
 	 * @param constraintIndices the constraint indices
 	 * @return the pair
 	 */
-	public Pair<Collection<String>,Collection<String>> setupIndices(boolean isForQuery, Map<String, DatabaseRelation> toDatabaseRelations, Evaluatable rule, Set<String> constraintIndices) {
-		Conjunction<?> body = null;
-		if (rule.getBody() instanceof Atom) {
-			body = Conjunction.of((Atom) rule.getBody());
-		} else if (rule.getBody() instanceof Conjunction<?>) {
-			body = (Conjunction) rule.getBody();
-		} else {
+	public Pair<Collection<String>,Collection<String>> setupIndices(boolean isForQuery, Map<String, DatabaseRelation> toDatabaseRelations, Formula rule, Set<String> constraintIndices) {
+		Formula body = null;
+		if (rule instanceof Atom) {
+			body = Conjunction.of(rule);
+		} else if (rule instanceof TGD) {
+			body = ((TGD)rule).getBody();
+		} else if (rule instanceof ConjunctiveQuery) {
+			body = rule;
+		}
+		else {
 			throw new UnsupportedOperationException("Homomorphism check only supported on conjunction of atomic predicate formulas for now.");
 		}
 		Set<String> createIndices = new LinkedHashSet<>();
 		Set<String> dropIndices = new LinkedHashSet<>();
 		Multimap<Variable, Atom> clusters = LinkedHashMultimap.create();
-		for (Formula subFormula: body) {
+		for (Formula subFormula:body.getChildren()) {
 			if (subFormula instanceof Atom) {
 				for (Term t: subFormula.getTerms()) {
 					if (t instanceof Variable) {
@@ -282,9 +284,9 @@ public abstract class SQLStatementBuilder {
 			Collection<Atom> atoms = clusters.get(t);
 			if (atoms.size() > 1) {
 				for (Atom atom: atoms) {
-					for (int i = 0, l = atom.getTermsCount(); i < l; i++) {
+					for (int i = 0, l = atom.getPredicate().getArity(); i < l; i++) {
 						if (atom.getTerm(i).equals(t)) {
-							Pair<String,String> createAndDropIndices = this.createTableIndices(isForQuery, constraintIndices, toDatabaseRelations.get(atom.getName()), i);
+							Pair<String,String> createAndDropIndices = this.createTableIndices(isForQuery, constraintIndices, toDatabaseRelations.get(atom.getPredicate().getName()), i);
 							if(createAndDropIndices.getLeft() != null)
 								createIndices.add(createAndDropIndices.getLeft());
 							if(isForQuery && createAndDropIndices.getRight()!=null)
@@ -306,7 +308,7 @@ public abstract class SQLStatementBuilder {
 	 * @return
 	 * 		an SQL LIMIT statement 
 	 */
-	protected abstract String translateLimitConstraints(Evaluatable source, HomomorphismProperty... constraints);
+	protected abstract String translateLimitConstraints(HomomorphismProperty... constraints);
 
 	/**
 	 * Creates an SQL statement that detects homomorphisms of the input query to facts kept in a database.
@@ -317,22 +319,21 @@ public abstract class SQLStatementBuilder {
 	 * @param connection the connection
 	 * @return homomorphisms of the input query to facts kept in a database.
 	 */
-	public Pair<String,LinkedHashMap<String,Variable>> createQuery(Evaluatable source, HomomorphismProperty[] constraints) {
-
+	public Pair<String,LinkedHashMap<String,Variable>> createQuery(Dependency source, HomomorphismProperty[] constraints) {
 		String query = "";
-		List<String> from = this.createFromStatement((Conjunction<Atom>) source.getBody());
+		List<String> from = this.createFromStatement(source.getBody().getAtoms());
 		LinkedHashMap<String,Variable> projections = this.createProjections(source);
 		List<String> predicates = new ArrayList<String>();
-		List<String> equalities = this.createAttributeEqualities((Conjunction<Atom>) source.getBody());
-		List<String> constantEqualities = this.createEqualitiesWithConstants((Conjunction<Atom>) source.getBody());
-		List<String> equalitiesForHomomorphicProperties = this.createEqualitiesForHomomorphicProperties(source, constraints);
+		List<String> equalities = this.createAttributeEqualities(source.getBody().getAtoms());
+		List<String> constantEqualities = this.createEqualitiesWithConstants(source.getBody().getAtoms());
+		List<String> equalitiesForHomomorphicProperties = this.createEqualitiesForHomomorphicProperties(source.getBody().getAtoms(), constraints);
 
 		/*
 		 * if the target set of facts is not null, we
 		 * add in the WHERE statement a predicate which limits the identifiers
 		 * of the facts that satisfy any homomorphism to the identifiers of these facts
 		 */
-		List<String> factproperties = this.translateFactProperties((Conjunction<Atom>) source.getBody(), constraints);
+		List<String> factproperties = this.translateFactProperties(source.getBody().getAtoms(), constraints);
 
 		String egdProperties = this.translateEGDHomomorphicProperties(source, constraints);
 		if(egdProperties!=null) {
@@ -344,7 +345,7 @@ public abstract class SQLStatementBuilder {
 		predicates.addAll(factproperties);
 
 		//Limit the number of returned homomorphisms
-		String limit = this.translateLimitConstraints(source, constraints); 
+		String limit = this.translateLimitConstraints(constraints); 
 
 		query = "SELECT " 	+ Joiner.on(",").join(projections.keySet()) + "\n" +  
 				"FROM " 	+ Joiner.on(",").join(from);
@@ -360,15 +361,12 @@ public abstract class SQLStatementBuilder {
 			}			
 		}
 
-		if(source instanceof Dependency && activeTrigger) {
-			List<String> from2 = null;
-			if(source instanceof Dependency) {
-				from2 = this.createFromStatement(Conjunction.of(((Dependency)source).getRight().getAtoms()));
-			}
+		if(activeTrigger) {
+			List<String> from2 = this.createFromStatement(source.getHead().getAtoms());
 			LinkedHashMap<String,Variable> nestedProjections = this.createProjections(source);
 			List<String> predicates2 = new ArrayList<String>();
-			List<String> nestedAttributeEqualities = this.createNestedAttributeEqualitiesForActiveTriggers((Dependency)source);
-			List<String> nestedConstantEqualities = this.createEqualitiesWithConstants(Conjunction.of(((Dependency)source).getAtoms()));
+			List<String> nestedAttributeEqualities = this.createNestedAttributeEqualitiesForActiveTriggers(source);
+			List<String> nestedConstantEqualities = this.createEqualitiesWithConstants(source.getAtoms());
 			predicates2.addAll(nestedAttributeEqualities);
 			predicates2.addAll(nestedConstantEqualities);
 			
@@ -377,7 +375,7 @@ public abstract class SQLStatementBuilder {
 			 * add in the WHERE statement a predicate which limits the identifiers
 			 * of the facts that satisfy any homomorphism to the identifiers of these facts
 			 */
-			List<String> nestedFactproperties = this.translateFactProperties(Conjunction.of(((Dependency)source).getRight().getAtoms()), constraints);
+			List<String> nestedFactproperties = this.translateFactProperties(source.getHead().getAtoms(), constraints);
 			predicates2.addAll(nestedFactproperties);
 			
 			String query2 = 
@@ -404,15 +402,56 @@ public abstract class SQLStatementBuilder {
 		return Pair.of(query, projections);
 	}
 	
+	
+	public Pair<String,LinkedHashMap<String,Variable>> createQuery(ConjunctiveQuery source, HomomorphismProperty[] constraints) {
+		String query = "";
+		List<String> from = this.createFromStatement(source.getAtoms());
+		LinkedHashMap<String,Variable> projections = this.createProjections(source);
+		List<String> predicates = new ArrayList<String>();
+		List<String> equalities = this.createAttributeEqualities(source.getAtoms());
+		List<String> constantEqualities = this.createEqualitiesWithConstants(source.getAtoms());
+		List<String> equalitiesForHomomorphicProperties = this.createEqualitiesForHomomorphicProperties(source.getAtoms(), constraints);
+
+		/*
+		 * if the target set of facts is not null, we
+		 * add in the WHERE statement a predicate which limits the identifiers
+		 * of the facts that satisfy any homomorphism to the identifiers of these facts
+		 */
+		List<String> factproperties = this.translateFactProperties(source.getAtoms(), constraints);
+
+		predicates.addAll(equalities);
+		predicates.addAll(constantEqualities);
+		predicates.addAll(equalitiesForHomomorphicProperties);
+		predicates.addAll(factproperties);
+
+		//Limit the number of returned homomorphisms
+		String limit = this.translateLimitConstraints(constraints); 
+
+		query = "SELECT " 	+ Joiner.on(",").join(projections.keySet()) + "\n" +  
+				"FROM " 	+ Joiner.on(",").join(from);
+		if(!predicates.isEmpty()) {
+			query += "\n" + "WHERE " + Joiner.on(" AND ").join(predicates);
+		}	
+
+		if(limit != null) {
+			query += "\n" + limit;
+		}
+		
+		log.trace(source);
+		log.trace(query);
+		log.trace("\n\n");
+		return Pair.of(query, projections);
+	}
+	
 	/**
 	 * Creates the content for from statement.
 	 *
 	 * @param source the source
 	 * @return 		a list of the table names that will be queried
 	 */
-	protected List<String> createFromStatement(Conjunction<? extends Atom> predicates) {
+	protected List<String> createFromStatement(Collection<Atom> facts) {
 		List<String> relations = new ArrayList<String>();
-		for (Atom fact:predicates) {
+		for (Atom fact:facts) {
 			String aliasName = this.aliasPrefix + this.aliasCounter;
 			relations.add(this.createTableAliasingExpression(aliasName, fact.getPredicate()));
 			this.aliases.put(fact, aliasName);
@@ -429,7 +468,7 @@ public abstract class SQLStatementBuilder {
 	 * 		If the input is an egd or tgd we project the attributes that map to universally quantified variables.
 	 * 		If the input is a query we project the attributes that map to its free variables.
 	 */
-	protected LinkedHashMap<String,Variable> createProjections(Evaluatable source) {
+	protected LinkedHashMap<String,Variable> createProjections(Dependency source) {
 		LinkedHashMap<String,Variable> projected = new LinkedHashMap<>();
 		List<Variable> attributes = new ArrayList<>();
 		for (Atom fact:source.getBody().getAtoms()) {
@@ -437,7 +476,24 @@ public abstract class SQLStatementBuilder {
 			List<Term> terms = fact.getTerms();
 			for (int it = 0; it < terms.size(); ++it) {
 				Term term = terms.get(it);
-				if (term instanceof Variable && !attributes.contains(((Variable) term).getName())) {
+				if (term instanceof Variable && !attributes.contains(((Variable) term).getSymbol())) {
+					projected.put(createProjectionStatementForArgument(it, (Relation) fact.getPredicate(), alias), (Variable)term);
+					attributes.add(((Variable) term));
+				}
+			}
+		}
+		return projected;
+	}
+	
+	protected LinkedHashMap<String,Variable> createProjections(ConjunctiveQuery source) {
+		LinkedHashMap<String,Variable> projected = new LinkedHashMap<>();
+		List<Variable> attributes = new ArrayList<>();
+		for (Atom fact:source.getAtoms()) {
+			String alias = this.aliases.get(fact);
+			List<Term> terms = fact.getTerms();
+			for (int it = 0; it < terms.size(); ++it) {
+				Term term = terms.get(it);
+				if (term instanceof Variable && !attributes.contains(((Variable) term).getSymbol()) && source.getFreeVariables().contains(term)) {
 					projected.put(createProjectionStatementForArgument(it, (Relation) fact.getPredicate(), alias), (Variable)term);
 					attributes.add(((Variable) term));
 				}
@@ -454,13 +510,13 @@ public abstract class SQLStatementBuilder {
 	 */
 	protected List<String> createNestedAttributeEqualitiesForActiveTriggers(Dependency source) {
 		if(source instanceof TGD) {
-			return this.createAttributeEqualities(Conjunction.of(((Dependency)source).getAtoms()));
+			return this.createAttributeEqualities(source.getAtoms());
 		}
-		else if(source instanceof DatabaseEGD){
+		else if(source instanceof EGD){
 			List<String> attributePredicates = new ArrayList<String>();
 			//The right atom should be an equality
 			//We add additional checks to be sure that we have to do with EGDs
-			for(DatabaseEquality rightAtom:((DatabaseEGD)source).getHead()) {
+			for(Atom rightAtom:source.getHead().getAtoms()) {
 				Relation rightRelation = (Relation) rightAtom.getPredicate();
 				String rightAlias = this.aliases.get(rightAtom);
 				Map<Integer,Pair<String,Attribute>> rightToLeft = new HashMap<Integer,Pair<String,Attribute>>();
@@ -526,15 +582,15 @@ public abstract class SQLStatementBuilder {
 	 * @param source the source
 	 * @return 		explicit equalities (String objects of the form A.x1 = B.x2) of the implicit equalities in the input conjunction (the latter is denoted by repetition of the same term)
 	 */
-	protected List<String> createAttributeEqualities(Conjunction<Atom> source) {
+	protected List<String> createAttributeEqualities(Collection<Atom> source) {
 		List<String> attributePredicates = new ArrayList<String>();
-		Collection<Term> terms = Utility.getTerms(source.getAtoms());
+		Collection<Term> terms = Utility.getTerms(source);
 		terms = Utility.removeDuplicates(terms);
 		for (Term term:terms) {
 			Integer leftPosition = null;
 			Relation leftRelation = null;
 			String leftAlias = null;
-			for (Atom fact:source.getAtoms()) {
+			for (Atom fact:source) {
 				List<Integer> positions = fact.getTermPositions(term); //all the positions for the same term should be equated
 				for (Integer pos:positions) {
 					if(leftPosition == null) {
@@ -565,47 +621,23 @@ public abstract class SQLStatementBuilder {
 	 * @param source the source
 	 * @return 		constant equality predicates
 	 */
-	protected List<String> createEqualitiesWithConstants(Conjunction<Atom> source) {
+	protected List<String> createEqualitiesWithConstants(Collection<Atom> source) {
 		List<String> constantPredicates = new ArrayList<>();
-		for (Atom fact:source.getAtoms()) {
+		for (Atom fact:source) {
 			String alias = this.aliases.get(fact);
 			List<Term> terms = fact.getTerms();
 			for (int it = 0; it < terms.size(); ++it) {
 				Term term = terms.get(it);
-				if (!term.isVariable() && !term.isSkolem()) {
+				if (!term.isVariable() && !term.isUntypedConstant()) {
 					StringBuilder eq = new StringBuilder();
 					eq.append(alias==null ? fact.getPredicate().getName():alias).append(".").append(((Relation) fact.getPredicate()).getAttribute(it).getName()).append('=');
-					eq.append("'").append(((TypedConstant) term).toString()).append("'");
+					eq.append("'").append(((TypedConstant<?>) term).toString()).append("'");
 					constantPredicates.add(eq.toString());
 				}
 			}
 		}
 		return constantPredicates;
 	}
-
-//	/**
-//	 * Translate fact constraints.
-//	 *
-//	 * @param source the source
-//	 * @param constraints the constraints
-//	 * @return 		predicates that correspond to fact constraints
-//	 */
-//	protected List<String> translateFactProperties(Evaluatable source, HomomorphismProperty... constraints) {
-//		List<String> setPredicates = new ArrayList<>();
-//		for(HomomorphismProperty c:constraints) {
-//			if(c instanceof FactProperty) {
-//				List<Object> facts = new ArrayList<>();
-//				for (Atom atom:((FactProperty) c).atoms) {
-//					facts.add(atom.getId());
-//				}
-//				for(Atom fact:source.getBody().getAtoms()) {
-//					String alias = this.aliases.get(fact);
-//					setPredicates.add(createSQLMembershipExpression(fact.getTermsCount()-1, facts, (Relation) fact.getPredicate(), alias));
-//				}
-//			}
-//		}
-//		return setPredicates;
-//	}
 	
 	/**
 	 * Translate fact constraints.
@@ -614,17 +646,17 @@ public abstract class SQLStatementBuilder {
 	 * @param constraints the constraints
 	 * @return 		predicates that correspond to fact constraints
 	 */
-	protected List<String> translateFactProperties(Conjunction<Atom> source, HomomorphismProperty... constraints) {
+	protected List<String> translateFactProperties(Collection<Atom> source, HomomorphismProperty... constraints) {
 		List<String> setPredicates = new ArrayList<>();
 		for(HomomorphismProperty c:constraints) {
 			if(c instanceof FactProperty) {
 				List<Object> facts = new ArrayList<>();
-				for (Atom atom:((FactProperty) c).atoms) {
+				for (Atom atom:((FactProperty) c).atoms.getAtoms()) {
 					facts.add(atom.getId());
 				}
 				for(Atom fact:source) {
 					String alias = this.aliases.get(fact);
-					setPredicates.add(createSQLMembershipExpression(fact.getTermsCount()-1, facts, (Relation) fact.getPredicate(), alias));
+					setPredicates.add(createSQLMembershipExpression(fact.getPredicate().getArity()-1, facts, (Relation) fact.getPredicate(), alias));
 				}
 			}
 		}
@@ -638,13 +670,13 @@ public abstract class SQLStatementBuilder {
 	 * @param constraints the constraints
 	 * @return 		predicates that correspond to canonical constraints
 	 */
-	protected List<String> createEqualitiesForHomomorphicProperties(Evaluatable source, HomomorphismProperty... constraints) {
+	protected List<String> createEqualitiesForHomomorphicProperties(Collection<Atom> source, HomomorphismProperty... constraints) {
 		List<String> constantPredicates = new ArrayList<>();
 		for(HomomorphismProperty c:constraints) {
 			if(c instanceof MapProperty) {
 				Map<Variable, Constant> m = ((MapProperty) c).mapping;
 				for(Entry<Variable, Constant> pair:m.entrySet()) {
-					for (Atom fact:source.getBody().getAtoms()) {
+					for (Atom fact:source) {
 						int it = fact.getTerms().indexOf(pair.getKey());
 						if(it != -1) {
 							StringBuilder eq = new StringBuilder();
@@ -667,7 +699,7 @@ public abstract class SQLStatementBuilder {
 	 * @param constraints the constraints
 	 * @return 		predicates that correspond to fact constraints
 	 */
-	protected String translateEGDHomomorphicProperties(Evaluatable source, HomomorphismProperty... constraints) {
+	protected String translateEGDHomomorphicProperties(Dependency source, HomomorphismProperty... constraints) {
 		for(HomomorphismProperty c:constraints) {
 			if(c instanceof EGDHomomorphismProperty) {
 				List<Atom> conjuncts = source.getBody().getAtoms();

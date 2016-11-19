@@ -8,7 +8,7 @@ import org.junit.Test;
 import org.mockito.MockitoAnnotations;
 
 import uk.ac.ox.cs.pdq.fol.Constant;
-import uk.ac.ox.cs.pdq.fol.Skolem;
+import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.plan.DoubleCost;
 import uk.ac.ox.cs.pdq.planner.equivalence.FastFactEquivalence;
 import uk.ac.ox.cs.pdq.test.planner.TestObjects1;
@@ -39,14 +39,14 @@ public class FastFactEquivalenceTest extends TestObjects1 {
 		when(config11.getPlan()).thenReturn(plan11);
 		when(plan11.getCost()).thenReturn(new DoubleCost(3.0));
 		when(config11.isClosed()).thenReturn(false);
-		when(config11.getInput()).thenReturn(Lists.<Constant>newArrayList(new Skolem("c1")));
+		when(config11.getInput()).thenReturn(Lists.<Constant>newArrayList(new UntypedConstant("c1")));
 		
 		when(config12.getState()).thenReturn(config12State);
 		when(config12State.getInferred()).thenReturn(Lists.newArrayList(p3.toString(),p2.toString()));
 		when(config12.getPlan()).thenReturn(plan12);
 		when(plan12.getCost()).thenReturn(new DoubleCost(3.0));
 		when(config12.isClosed()).thenReturn(false);
-		when(config12.getInput()).thenReturn(Lists.<Constant>newArrayList(new Skolem("c1")));
+		when(config12.getInput()).thenReturn(Lists.<Constant>newArrayList(new UntypedConstant("c1")));
 		
 		when(config21.getState()).thenReturn(config21State);
 		when(config21State.getInferred()).thenReturn(Lists.newArrayList(p1.toString(),p2.toString(),p3.toString(),p4.toString()));
@@ -67,14 +67,14 @@ public class FastFactEquivalenceTest extends TestObjects1 {
 		when(config31.getPlan()).thenReturn(plan31);
 		when(plan31.getCost()).thenReturn(new DoubleCost(2.0));
 		when(config31.isClosed()).thenReturn(false);
-		when(config21.getInput()).thenReturn(Lists.<Constant>newArrayList(new Skolem("c1"), new Skolem("c3")));
+		when(config21.getInput()).thenReturn(Lists.<Constant>newArrayList(new UntypedConstant("c1"), new UntypedConstant("c3")));
 		
 		when(config32.getState()).thenReturn(config32State);
 		when(config32State.getInferred()).thenReturn(Lists.newArrayList(p1.toString(),p2.toString(),p3.toString(),p4.toString(),p5.toString(),p6.toString(),p7.toString()));
 		when(config32.getPlan()).thenReturn(plan32);
 		when(plan32.getCost()).thenReturn(new DoubleCost(3.0));
 		when(config32.isClosed()).thenReturn(true);
-		when(config21.getInput()).thenReturn(Lists.<Constant>newArrayList(new Skolem("c1"), new Skolem("c2")));
+		when(config21.getInput()).thenReturn(Lists.<Constant>newArrayList(new UntypedConstant("c1"), new UntypedConstant("c2")));
 	}
 
 	/**

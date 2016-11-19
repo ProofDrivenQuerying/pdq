@@ -60,8 +60,8 @@ public class AccessibleSchema extends Schema {
 	/**  Mapping from a dependency to its inferred accessible counterpart. */
 	private final Map<Dependency, InferredAccessibleAxiom> infAccessibilityAxioms;
 
-	/**  The inferred accessible axioms*. */
-	private final List<InferredAccessibleAxiom> infAccessibleViews = new ArrayList<>();
+//	/**  The inferred accessible axioms*. */
+//	private final List<InferredAccessibleAxiom> infAccessibleViews = new ArrayList<>();
 	
 	/**
 	 * Instantiates a new accessible schema.
@@ -89,17 +89,17 @@ public class AccessibleSchema extends Schema {
 		this.infAccessibleRelations = b2.build();
 
 		// Inferred accessible axioms the schema ICs
-		for (Dependency<?, ?> ic: dependencies) {
+		for (Dependency dependency: dependencies) {
 			Map<Atom, InferredAccessibleRelation> predicateToInfAccessibleRelation = new LinkedHashMap<>();
-			for (Atom p: ic.getAtoms()) {
-				predicateToInfAccessibleRelation.put(p, this.infAccessibleRelations.get(p.getName()));
+			for (Atom p: dependency.getAtoms()) {
+				predicateToInfAccessibleRelation.put(p, this.infAccessibleRelations.get(p.getPredicate().getName()));
 			}
-			if (ic instanceof TGD) {
-				InferredAccessibleAxiom infAcc = new InferredAccessibleAxiom((TGD) ic, predicateToInfAccessibleRelation);
-				b6.put(ic, infAcc);
-				if(this.views.contains(ic)) {
-					this.infAccessibleViews.add(infAcc);
-				}
+			if (dependency instanceof TGD) {
+				InferredAccessibleAxiom infAcc = new InferredAccessibleAxiom((TGD) dependency, predicateToInfAccessibleRelation);
+				b6.put(dependency, infAcc);
+//				if(this.views.contains(dependency)) {
+//					this.infAccessibleViews.add(infAcc);
+//				}
 			}
 		}
 		try {
@@ -127,14 +127,14 @@ public class AccessibleSchema extends Schema {
 		return this.infAccessibilityAxioms.values();
 	}
 
-	/**
-	 * Gets the inferred accessible views.
-	 *
-	 * @return 		the inferred accessible views of this accessible schema
-	 */
-	public List<InferredAccessibleAxiom> getInferredAccessibleViews() {
-		return this.infAccessibleViews;
-	}
+//	/**
+//	 * Gets the inferred accessible views.
+//	 *
+//	 * @return 		the inferred accessible views of this accessible schema
+//	 */
+//	public List<InferredAccessibleAxiom> getInferredAccessibleViews() {
+//		return this.infAccessibleViews;
+//	}
 
 	/**
 	 * Gets the accessibility axioms.
@@ -232,7 +232,7 @@ public class AccessibleSchema extends Schema {
 			atoms.add(
 					new Atom(this.getInferredAccessibleRelation((Relation) af.getPredicate()), af.getTerms()));
 		}
-		return new ConjunctiveQuery(query.getHead(), Conjunction.of(atoms));
+		return new ConjunctiveQuery(query.getBoundVariables(), Conjunction.of(atoms));
 	}
 	
 	/**
@@ -250,7 +250,7 @@ public class AccessibleSchema extends Schema {
 			atoms.add(
 					new Atom(this.getInferredAccessibleRelation((Relation) af.getPredicate()), af.getTerms()));
 		}
-		return new ConjunctiveQuery(query.getHead(), Conjunction.of(atoms), canonicalMapping);
+		return new ConjunctiveQuery(query.getBoundVariables(), Conjunction.of(atoms), canonicalMapping);
 	}
 	
 	/**
