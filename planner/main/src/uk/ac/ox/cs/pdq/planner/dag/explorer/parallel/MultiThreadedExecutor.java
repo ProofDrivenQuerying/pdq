@@ -77,7 +77,7 @@ public class MultiThreadedExecutor extends IterativeExecutor {
 			Queue<DAGChaseConfiguration> left,
 			Collection<DAGChaseConfiguration> right,
 			ConjunctiveQuery query,
-			Collection<Dependency> dependencies,
+			Collection<? extends Dependency> dependencies,
 			DAGChaseConfiguration bestConfiguration,
 			DAGEquivalenceClasses equivalenceClasses, 
 			boolean twoWay,

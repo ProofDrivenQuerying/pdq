@@ -52,7 +52,7 @@ public class RestrictedChaser extends Chaser {
 	 * @param dependencies the dependencies
 	 */
 	@Override
-	public <S extends ChaseState> void reasonUntilTermination(S instance,  Collection<Dependency> dependencies) {
+	public <S extends ChaseState> void reasonUntilTermination(S instance,  Collection<? extends Dependency> dependencies) {
 		Preconditions.checkArgument(instance instanceof ChaseState);
 		TGDDependencyAssessor accessor = new DefaultTGDDependencyAssessor(dependencies);
 		boolean appliedStep = false;

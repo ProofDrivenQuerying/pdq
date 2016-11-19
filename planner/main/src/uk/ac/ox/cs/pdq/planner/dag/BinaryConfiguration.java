@@ -129,7 +129,7 @@ public class BinaryConfiguration extends DAGChaseConfiguration {
 	 * @param query the query
 	 * @param dependencies the dependencies
 	 */
-	public void reasonUntilTermination(Chaser chaser, ConjunctiveQuery query, Collection<Dependency> dependencies) {
+	public void reasonUntilTermination(Chaser chaser, ConjunctiveQuery query, Collection<? extends Dependency> dependencies) {
 		chaser.reasonUntilTermination(this.getState(), dependencies);
 	}
 

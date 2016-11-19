@@ -17,7 +17,6 @@ import org.apache.log4j.Logger;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.rewrite.RewriterException;
 import uk.ac.ox.cs.pdq.rewrite.sql.SQLTranslator;
@@ -188,7 +187,7 @@ public class SQLQueryEvaluator implements QueryEvaluator {
 		log.debug("Evaluating query : " + sql);
 		try(Statement stmt = this.connection.createStatement();
 			ResultSet rs = stmt.executeQuery(sql)) {
-			if (q.getFree().isEmpty()) {
+			if (q.getFreeVariables().isEmpty()) {
 				if (rs.next()) {
 					return new BooleanResult(true);
 				}

@@ -172,8 +172,8 @@ public class Runtime {
 			
 			LinearGuarded dependency = v.getDependency();
 			ConjunctiveQuery cq = new ConjunctiveQuery(
-					dependency.getGuard(),
-					dependency.getRight());
+					dependency.getFreeVariables(),
+					dependency.getHead());
 			Collection<Tuple> data = new LinkedList<>();
 			try {
 				InMemoryQueryEvaluator eval = new InMemoryQueryEvaluator(cq);

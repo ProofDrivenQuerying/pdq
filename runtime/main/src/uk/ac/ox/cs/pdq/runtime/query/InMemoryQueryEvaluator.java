@@ -20,7 +20,6 @@ import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.db.wrappers.InMemoryTableWrapper;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.runtime.EvaluationException;
@@ -120,7 +119,7 @@ public class InMemoryQueryEvaluator implements QueryEvaluator {
 		
 		Map<Variable, Set<Atom>> joins = new LinkedHashMap<>();
 		Map<Atom, TupleIterator> scans = new LinkedHashMap<>();
-		for (Atom p: q.getBody()) {
+		for (Atom p: q.getAtoms()) {
 			scans.put(p, this.makeScans(p));
 			for (Term t: p.getTerms()) {
 				if (t instanceof Variable) {

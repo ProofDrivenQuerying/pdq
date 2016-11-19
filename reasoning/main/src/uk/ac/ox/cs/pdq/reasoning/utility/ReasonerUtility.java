@@ -61,7 +61,7 @@ public class ReasonerUtility {
 							relevantPredicates.add(atom.getPredicate());
 						}
 						//Remove from the dependency all the irrelevant atoms
-						Dependency dep = dependency.clone();
+						Dependency dep = new Dependency(dependency.getBody(), dependency.getHead());
 						Iterator<Atom> it = null;
 						it = dep.getHead().getAtoms().iterator();
 						while(it.hasNext()) {

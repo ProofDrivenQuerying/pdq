@@ -149,7 +149,7 @@ public abstract class SearchNode implements Cloneable{
 	 * @throws PlannerException the planner exception
 	 * @throws LimitReachedException the limit reached exception
 	 */
-	public void close(Chaser chaser, ConjunctiveQuery query, Collection<Dependency> dependencies) throws PlannerException, LimitReachedException {
+	public void close(Chaser chaser, ConjunctiveQuery query, Collection<? extends Dependency> dependencies) throws PlannerException, LimitReachedException {
 		this.configuration.reasonUntilTermination(chaser, query, dependencies);
 		this.isFullyGenerated = true;
 	}

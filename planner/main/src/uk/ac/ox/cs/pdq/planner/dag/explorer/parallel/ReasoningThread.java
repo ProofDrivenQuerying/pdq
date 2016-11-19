@@ -45,7 +45,7 @@ public class ReasoningThread implements Callable<Boolean> {
 	protected final ConjunctiveQuery query;
 	
 	/**  The schema dependencies*. */
-	protected final Collection<Dependency> dependencies;
+	protected final Collection<? extends Dependency> dependencies;
 	
 	/**  Saturates newly created binary configurations using the chase reasoning tool. */
 	protected final Chaser chaser;
@@ -117,7 +117,7 @@ public class ReasoningThread implements Callable<Boolean> {
 			Queue<DAGChaseConfiguration> left,
 			Collection<DAGChaseConfiguration> right,
 			ConjunctiveQuery query,
-			Collection<Dependency> dependencies,
+			Collection<? extends Dependency> dependencies,
 			Chaser chaser,
 			HomomorphismDetector detector,
 			CostEstimator<DAGPlan> costEstimator,
