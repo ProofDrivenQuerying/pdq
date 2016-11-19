@@ -380,14 +380,14 @@ public class AccessTest extends UnaryOperatorTest {
 	}
 
 	/* (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.test.algebra.UnaryOperatorTest#isQuasiLeaf()
+	 * @see uk.ac.ox.cs.pdq.test.algebra.UnaryOperatorTest#isJoinFree()
 	 */
-	@Test public void isQuasiLeaf() {
+	@Test public void isJoinFree() {
 		this.operator = new Access(r2, free);
-		Assert.assertTrue("Operator's isQuasiLeaf must be true iff the access is free", this.operator.isQuasiLeaf());
+		Assert.assertTrue("Operator's isJoinFree must be true iff the access is free", this.operator.isJoinFree());
 
 		this.operator = new Access(r8, m2, child);
-		Assert.assertFalse("Operator's isQuasiLeaf must be true iff the access is free", this.operator.isQuasiLeaf());
+		Assert.assertFalse("Operator's isJoinFree must be true iff the access is free", this.operator.isJoinFree());
 	}
 
 	/* (non-Javadoc)

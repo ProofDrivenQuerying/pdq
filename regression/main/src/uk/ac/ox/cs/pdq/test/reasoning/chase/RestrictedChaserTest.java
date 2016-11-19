@@ -5,19 +5,23 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
-import junit.framework.Assert;
-
 import org.junit.Test;
 
+import com.google.common.eventbus.EventBus;
+
+import junit.framework.Assert;
+import uk.ac.ox.cs.pdq.db.DatabaseConnection;
+import uk.ac.ox.cs.pdq.db.DatabaseInstance;
+import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
-import uk.ac.ox.cs.pdq.db.homomorphism.DatabaseHomomorphismManager;
-import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismManager;
 import uk.ac.ox.cs.pdq.db.sql.MySQLStatementBuilder;
 import uk.ac.ox.cs.pdq.db.sql.SQLStatementBuilder;
 import uk.ac.ox.cs.pdq.fol.Atom;
@@ -28,11 +32,10 @@ import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.io.xml.QueryReader;
 import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
 import uk.ac.ox.cs.pdq.logging.performance.StatisticsCollector;
+import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
-import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseState;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 import uk.ac.ox.cs.pdq.util.Utility;
-
-import com.google.common.eventbus.EventBus;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -210,10 +213,9 @@ public class RestrictedChaserTest {
 				schema.updateConstants(Utility.getTypedConstants(query));
 				RestrictedChaser reasoner = new RestrictedChaser(new StatisticsCollector(true, new EventBus()));
 
-				SQLStatementBuilder builder = new MySQLStatementBuilder();
-				HomomorphismManager detector = new DatabaseHomomorphismManager(this.driver, this.url, this.database, this.username, this.password, builder, schema);
-				detector.initialize();
-				DatabaseChaseState state = new DatabaseChaseState(query, (DatabaseHomomorphismManager) detector);				
+				DatabaseConnection dbcon = new DatabaseConnection(new DatabaseParameters(),schema);
+				DatabaseChaseInstance state = new DatabaseChaseInstance(query, dbcon);				
+				
 				reasoner.reasonUntilTermination(state, schema.getDependencies());
 				Collection<Atom> expected = loadFacts(PATH + f, schema);
 				if(expected.size() != state.getFacts().size()) {

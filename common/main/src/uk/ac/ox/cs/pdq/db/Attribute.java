@@ -16,7 +16,7 @@ import com.google.common.base.Preconditions;
 public class Attribute implements Typed {
 
 	/** The prefix to use when generating attribute names. */
-	public static final String GENERATED_ATTRIBUTE_PREFIX = "x";
+	/** public static final String GENERATED_ATTRIBUTE_PREFIX = "x";
 
 	/**  The attribute's name. */
 	protected final String name;

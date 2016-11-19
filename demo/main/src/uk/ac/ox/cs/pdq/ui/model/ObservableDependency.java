@@ -1,7 +1,7 @@
 package uk.ac.ox.cs.pdq.ui.model;
 
-import uk.ac.ox.cs.pdq.db.Dependency;
-import uk.ac.ox.cs.pdq.db.TGD;
+import uk.ac.ox.cs.pdq.fol.Dependency;
+import uk.ac.ox.cs.pdq.fol.TGD;
 
 // TODO: Auto-generated Javadoc
 /**

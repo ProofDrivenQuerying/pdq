@@ -4,6 +4,7 @@ package uk.ac.ox.cs.pdq.algebra;
  * Distinct unary operator removes duplicates in a result set.
  *
  * @author Julien Leblay
+ * TOCOMMENT:  THIS CLASS SHOULD DIE!
  */
 public class Distinct extends UnaryOperator {
 

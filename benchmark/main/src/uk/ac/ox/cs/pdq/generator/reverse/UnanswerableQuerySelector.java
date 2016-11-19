@@ -1,11 +1,13 @@
 package uk.ac.ox.cs.pdq.generator.reverse;
 
+import java.sql.SQLException;
+
 import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.cost.CostParameters;
+import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.planner.ExplorationSetUp;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
@@ -36,6 +38,9 @@ public class UnanswerableQuerySelector implements QuerySelector {
 	
 	/** The reasoning params. */
 	private final ReasoningParameters reasoningParams;
+	
+	/** The database params. */
+	private final DatabaseParameters dbParams;
 
 	/**
 	 * Instantiates a new unanswerable query selector.
@@ -45,22 +50,29 @@ public class UnanswerableQuerySelector implements QuerySelector {
 	 * @param r the r
 	 * @param s the s
 	 */
-	public UnanswerableQuerySelector(PlannerParameters p, CostParameters c, ReasoningParameters r, Schema s) {
+	public UnanswerableQuerySelector(PlannerParameters p, CostParameters c, ReasoningParameters r, DatabaseParameters d, Schema s) {
 		this.planParams = (PlannerParameters) p.clone();
 		this.costParams = (CostParameters) c.clone();
 		this.planParams.setTimeout(10000);
 		this.reasoningParams = (ReasoningParameters) r.clone();
+
+		this.dbParams = (DatabaseParameters) r.clone();
 		this.schema = s;
 	}
 	
 	/**
 	 * {@inheritDoc}
+	 * @throws SQLException 
 	 * @see uk.ac.ox.cs.pdq.generator.reverse.QuerySelector#accept(uk.ac.ox.cs.pdq.fol.Query)
 	 */
 	@Override
 	public boolean accept(ConjunctiveQuery q) {
 		try {
-			return new ExplorationSetUp(this.planParams, this.costParams, this.reasoningParams, this.schema).search(q,true) != null;
+			try {
+				return new ExplorationSetUp(this.planParams, this.costParams, this.reasoningParams, this.dbParams, this.schema).search(q,true) != null;
+			} catch (SQLException e) {
+				throw new RuntimeException(e);
+			}
 		} catch (PlannerException e) {
 			log.error(e);
 			return false;

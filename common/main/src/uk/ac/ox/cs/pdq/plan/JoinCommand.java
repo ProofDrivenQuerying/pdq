@@ -11,7 +11,7 @@ import uk.ac.ox.cs.pdq.algebra.predicates.AttributeEqualityPredicate;
 import uk.ac.ox.cs.pdq.algebra.predicates.ConjunctivePredicate;
 import uk.ac.ox.cs.pdq.algebra.predicates.Predicate;
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.db.TGD;
+import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.util.Table;
 import uk.ac.ox.cs.pdq.util.Typed;
 

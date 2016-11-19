@@ -16,10 +16,10 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 import uk.ac.ox.cs.pdq.builder.SchemaDiscoverer;
-import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.builder.SchemaBuilder;
+import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.io.ReaderException;
 
 /**

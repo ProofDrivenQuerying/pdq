@@ -8,6 +8,8 @@ import static uk.ac.ox.cs.pdq.planner.logging.performance.PlannerStatKeys.MILLI_
 import static uk.ac.ox.cs.pdq.planner.logging.performance.PlannerStatKeys.MILLI_EQUIVALENCE;
 import static uk.ac.ox.cs.pdq.planner.logging.performance.PlannerStatKeys.MILLI_QUERY_MATCH;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -17,9 +19,9 @@ import org.jgrapht.graph.DefaultEdge;
 
 import uk.ac.ox.cs.pdq.LimitReachedException;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
+import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismDetector;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.plan.LeftDeepPlan; 
 import uk.ac.ox.cs.pdq.planner.PlannerException;
@@ -37,7 +39,9 @@ import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.DominanceMetadata;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.EquivalenceMetadata;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.Metadata;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.StatusUpdateMetadata;
+import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
 
 import com.google.common.eventbus.EventBus;
 
@@ -74,7 +78,9 @@ public class LinearKChase extends LinearExplorer {
 	 * @param nodeFactory the node factory
 	 * @param depth the depth
 	 * @param chaseInterval the chase interval
+	 * @param reasoningParameters 
 	 * @throws PlannerException the planner exception
+	 * @throws SQLException 
 	 */
 	public LinearKChase(
 			EventBus eventBus, 
@@ -84,12 +90,12 @@ public class LinearKChase extends LinearExplorer {
 			Schema schema,
 			AccessibleSchema accessibleSchema, 
 			Chaser chaser,
-			HomomorphismDetector detector,
+			DatabaseConnection dbConn,
 			CostEstimator<LeftDeepPlan> costEstimator,
 			NodeFactory nodeFactory,
 			int depth,
-			int chaseInterval) throws PlannerException {
-		super(eventBus, collectStats, query, accessibleQuery, schema, accessibleSchema, chaser, detector, costEstimator, nodeFactory, depth);
+			int chaseInterval, ReasoningParameters reasoningParameters) throws PlannerException, SQLException {
+		super(eventBus, collectStats, query, accessibleQuery, schema, accessibleSchema, chaser, dbConn, costEstimator, nodeFactory, depth, reasoningParameters);
 		this.costPropagator = PropagatorUtils.getPropagator(costEstimator);
 		this.chaseInterval = chaseInterval;
 	}

@@ -1,7 +1,6 @@
 package uk.ac.ox.cs.pdq.generator.reverse;
 
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Query;
 
 // TODO: Auto-generated Javadoc
 /**

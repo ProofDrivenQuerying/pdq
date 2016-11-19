@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.db;
+package uk.ac.ox.cs.pdq.fol;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -6,14 +6,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
-import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Conjunction;
-import uk.ac.ox.cs.pdq.fol.Constant;
-import uk.ac.ox.cs.pdq.fol.Formula;
-import uk.ac.ox.cs.pdq.fol.Implication;
-import uk.ac.ox.cs.pdq.fol.LogicalSymbols;
-import uk.ac.ox.cs.pdq.fol.UntypedConstant;
-import uk.ac.ox.cs.pdq.fol.Variable;
+import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.util.CanonicalNameGenerator;
 
 import com.google.common.base.Preconditions;
@@ -137,8 +130,7 @@ public class TGD extends Dependency {
 			if(guard == null || atom.getPredicate().getArity() >  guard.getPredicate().getArity()) {
 				guard = atom;
 			}
-		}
-		
+		}	
 		for(Atom atom:atoms) {
 			if(!guard.getVariables().containsAll(atom.getVariables())) {
 				return false;

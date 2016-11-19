@@ -7,16 +7,15 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import uk.ac.ox.cs.pdq.db.DatabaseConnection;
+import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.db.homomorphism.DatabaseHomomorphismManager;
-import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismManager;
-import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismManagerFactory;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.io.xml.QueryReader;
 import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
-import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState;
-import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseState;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.beust.jcommander.DynamicParameter;
@@ -143,10 +142,15 @@ public class Reason {
 	 *
 	 * @param <S> the generic type
 	 */
-	public <S extends ChaseState> void run() {				
+	public <S extends ChaseInstance> void run() {				
 		ReasoningParameters reasoningParams = this.getConfigFile() != null ?
 				new ReasoningParameters(this.getConfigFile()) :
 				new ReasoningParameters() ;
+
+		DatabaseParameters dbParams = this.getConfigFile() != null ?
+						new DatabaseParameters(this.getConfigFile()) :
+							new DatabaseParameters() ;
+
 		for (String k : this.dynamicParams.keySet()) {
 			reasoningParams.set(k, this.dynamicParams.get(k));
 		}
@@ -161,15 +165,6 @@ public class Reason {
 			}
 			schema.updateConstants(Utility.getTypedConstants(query));
 			
-			HomomorphismManager detector =
-					new HomomorphismManagerFactory().getInstance(schema,  
-							reasoningParams.getHomomorphismDetectorType(), 
-							reasoningParams.getDatabaseDriver(), 
-							reasoningParams.getConnectionUrl(),
-							reasoningParams.getDatabaseName(), 
-							reasoningParams.getDatabaseUser(),
-							reasoningParams.getDatabasePassword()
-							);
 			
 			ReasonerFactory reasonerFactory = new ReasonerFactory(
 					new EventBus(),
@@ -178,7 +173,7 @@ public class Reason {
 								
 			Chaser reasoner = reasonerFactory.getInstance();
 //			//Creates a chase state that consists of the canonical database of the input query.
-			ChaseState state = new DatabaseChaseState(query, (DatabaseHomomorphismManager) detector);
+			ChaseInstance state = new DatabaseChaseInstance(query,new DatabaseConnection(dbParams, schema));		
 			reasoner.reasonUntilTermination(state, schema.getDependencies());
 			
 			//TODO show something 

@@ -1,7 +1,6 @@
 package uk.ac.ox.cs.pdq.generator.reverse;
 
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Query;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -35,8 +34,8 @@ public class LengthBasedQuerySelector implements QuerySelector {
 	 */
 	@Override
 	public boolean accept(ConjunctiveQuery q) {
-		return q.getBody().getAtoms().size() >= this.min
-				&& q.getBody().getAtoms().size() <= this.max;
+		return q.getAtoms().size() >= this.min
+				&& q.getAtoms().size() <= this.max;
 	}
 
 }

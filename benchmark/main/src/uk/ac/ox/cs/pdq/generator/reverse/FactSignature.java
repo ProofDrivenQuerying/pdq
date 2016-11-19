@@ -10,6 +10,7 @@ import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
@@ -37,8 +38,8 @@ public class FactSignature implements Comparable<FactSignature> {
 	 */
 	public static FactSignature make(Atom fact) {
 		List<TypedConstant<?>> constants = new LinkedList<>();
-		for (Term t: fact.getConstants()) {
-			if (!t.isVariable() && !t.isSkolem()) {
+		for (Term t: Utility.getTypedAndUntypedConstants(fact)) {
+			if (!t.isVariable() && !t.isUntypedConstant()) {
 				constants.add((TypedConstant<?>) t);
 			}
 		}

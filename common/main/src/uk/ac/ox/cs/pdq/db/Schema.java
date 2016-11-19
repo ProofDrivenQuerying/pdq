@@ -15,6 +15,9 @@ import org.jgrapht.graph.DefaultEdge;
 
 import uk.ac.ox.cs.pdq.db.builder.SchemaBuilder;
 import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.Dependency;
+import uk.ac.ox.cs.pdq.fol.EGD;
+import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.collect.ImmutableList;
@@ -24,13 +27,12 @@ import com.google.common.collect.Lists;
 /**
  * A database schema.
  *
+ * @author George K
  * @author Efthymia Tsamoura
  * @author Julien Leblay
  */
 public class Schema {
 
-	//TOCOMMENT normally you can have different relations with the same name if the arity is different.
-	// I guess this is not the case here?? It should be cleared out.
 	/**  Relations indexed based on their name. */
 	private final Map<String, Relation> relIndex;
 	
@@ -137,7 +139,7 @@ public class Schema {
 	}
 	
 	/**
-	 * TOCOMMENT I don't find "consolidateKeys" or "EGD.getEGDs" very appropariate names
+	 * TOCOMMENT I don't find "consolidateKeys" or "EGD.getEGDs" very appropriate names
 	 * Extracts the EGDs of the relation keys.
 	 */
 	public void consolidateKeys() {

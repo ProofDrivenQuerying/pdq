@@ -8,12 +8,12 @@ import java.util.Random;
 import java.util.Set;
 
 import uk.ac.ox.cs.pdq.benchmark.BenchmarkParameters;
-import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.db.TGD;
 import uk.ac.ox.cs.pdq.db.View;
 import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.Dependency;
+import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.util.Utility;
@@ -60,9 +60,9 @@ public abstract class AbstractDependencyGenerator {
 		for (Dependency tg : tgds) {
 			TGD t = (TGD) tg;
 			Set<Atom> set1 = new LinkedHashSet<>();
-			set1.addAll(t.getRight().getAtoms());
+			set1.addAll(t.getHead().getAtoms());
 			Set<Atom> set2 = new LinkedHashSet<>();
-			set2.addAll(target.getRight().getAtoms());
+			set2.addAll(target.getHead().getAtoms());
 			if (set1.equals(set2)) {
 				return true;
 			}

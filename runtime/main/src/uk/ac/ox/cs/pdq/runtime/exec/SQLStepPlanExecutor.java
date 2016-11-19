@@ -100,7 +100,7 @@ public class SQLStepPlanExecutor extends SQLPlanExecutor {
 				evaluator.setEventBus(this.eventBus);
 				this.universalTable = evaluator.evaluate(
 						sqlStatements.get(alias), 
-						Utility.termsToTyped(this.query.getFree(), lastCommand.getType()));
+						Utility.variablesToTyped(this.query.getFreeVariables(), lastCommand.getType()));
 			} catch (SQLException e) {
 				throw new EvaluationException(e);
 			}
@@ -112,7 +112,7 @@ public class SQLStepPlanExecutor extends SQLPlanExecutor {
 		
 		this.cleanUp(sqlStatements.keySet());
 		
-		this.universalTable.setHeader(Utility.termsToAttributes(this.query.getFree(), this.universalTable.getType()));
+		this.universalTable.setHeader(Utility.variablesToAttributes(this.query.getFreeVariables(), this.universalTable.getType()));
 		return this.universalTable;
 	}
 

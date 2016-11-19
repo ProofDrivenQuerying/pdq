@@ -121,7 +121,7 @@ public class SQLPlanExecutor implements PlanExecutor {
 		if (this.query.isBoolean()) {
 			return new BooleanResult(!this.universalTable.isEmpty());
 		}
-		this.universalTable.setHeader(Utility.termsToAttributes(this.query.getFree(), this.universalTable.getType()));
+		this.universalTable.setHeader(Utility.variablesToAttributes(this.query.getFreeVariables(), this.universalTable.getType()));
 		return this.universalTable;
 	}
 	

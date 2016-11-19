@@ -70,7 +70,7 @@ public abstract class Plan implements Costable, Comparable<Plan>, Differentiable
 	}
 
 	/**
-	 * How different.
+	 * TOCOMMENT: WHAT IS THIS?.
 	 *
 	 * @param o Plan
 	 * @return Levels

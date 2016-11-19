@@ -28,6 +28,7 @@ public class StaticMetadata implements RelationMetadata {
 
 	/**
 	 * Instantiates a new static metadata.
+	 * TCOMMENT: what is static vs dynamic metadata
 	 */
 	public StaticMetadata() {
 		this(0L, new LinkedHashMap<AccessMethod, Cost>());
@@ -43,6 +44,7 @@ public class StaticMetadata implements RelationMetadata {
 
 	/**
 	 * Constructor for StaticMetadata.
+	 * TOCOMMENT: difference from above and bdlow
 	 * @param perTupleCost Map<AccessMethod,Cost>
 	 */
 	public StaticMetadata(Map<AccessMethod, Cost> perTupleCost) {
@@ -84,6 +86,7 @@ public class StaticMetadata implements RelationMetadata {
 
 	/**
 	 * Gets the selectivity.
+	 * TOCOMMENT: difference from above?
 	 *
 	 * @param positions List<Integer>
 	 * @param tuple Tuple
@@ -125,6 +128,7 @@ public class StaticMetadata implements RelationMetadata {
 
 	/**
 	 * Sets the per input tuple costs.
+	 * TOCOMMENT: difference from above?
 	 *
 	 * @param accessCosts Map<AccessMethod,Cost>
 	 * @see uk.ac.ox.cs.pdq.costs.statistics.RelationMetadata#setPerInputTupleCosts(Map<AccessMethod,Cost>)

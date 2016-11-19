@@ -45,8 +45,8 @@ public abstract class AbstractXMLReader<T> extends DefaultHandler implements Rea
 	 * TOCOMMENT ??
 	 * Gets the value.
 	 *
-	 * @param att the att
-	 * @param qn the qn
+	 * @param att 
+	 * @param qn 
 	 * @return the attribute value of the given qname
 	 */
 	protected String getValue(Attributes att, QNames qn) {
@@ -57,8 +57,8 @@ public abstract class AbstractXMLReader<T> extends DefaultHandler implements Rea
 	 * TOCOMMENT ??
 	 * Gets the int value.
 	 *
-	 * @param att the att
-	 * @param qn the qn
+	 * @param att 
+	 * @param qn 
 	 * @return the attribute value of the given qname
 	 */
 	protected Integer getIntValue(Attributes att, QNames qn) {

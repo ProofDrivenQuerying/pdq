@@ -13,6 +13,7 @@ import com.google.common.collect.Lists;
 //Consider deleting
 /**
  * Entity relation are unary relation that also act as types.
+ * THIS WHOLE CLASS PROBABLY NEEDS TO GO
  * @author Julien Leblay
  */
 public class EntityRelation extends Relation implements DataType {

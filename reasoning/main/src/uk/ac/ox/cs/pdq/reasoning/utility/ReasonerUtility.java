@@ -5,10 +5,10 @@ import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 
-import uk.ac.ox.cs.pdq.db.Dependency;
-import uk.ac.ox.cs.pdq.db.EGD;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+import uk.ac.ox.cs.pdq.fol.Dependency;
+import uk.ac.ox.cs.pdq.fol.EGD;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 
 import com.google.common.collect.Sets;

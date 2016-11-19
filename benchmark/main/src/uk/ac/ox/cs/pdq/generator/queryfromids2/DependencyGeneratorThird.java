@@ -8,13 +8,13 @@ import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.benchmark.BenchmarkParameters;
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.db.ForeignKey;
-import uk.ac.ox.cs.pdq.db.LinearGuarded;
 import uk.ac.ox.cs.pdq.db.Reference;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.builder.SchemaBuilder;
+import uk.ac.ox.cs.pdq.fol.Dependency;
+import uk.ac.ox.cs.pdq.fol.LinearGuarded;
 import uk.ac.ox.cs.pdq.generator.DependencyGenerator;
 import uk.ac.ox.cs.pdq.generator.tgdsfromquery.AbstractDependencyGenerator;
 

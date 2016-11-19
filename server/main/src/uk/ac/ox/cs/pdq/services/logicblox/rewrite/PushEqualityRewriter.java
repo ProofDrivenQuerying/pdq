@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 
 import uk.ac.ox.cs.pdq.builder.BuilderException;
-import uk.ac.ox.cs.pdq.db.TGD;
 import uk.ac.ox.cs.pdq.db.builder.DependencyBuilder;
 import uk.ac.ox.cs.pdq.db.builder.QueryBuilder;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
@@ -18,6 +17,7 @@ import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Implication;
 import uk.ac.ox.cs.pdq.fol.NaryFormula;
 import uk.ac.ox.cs.pdq.fol.Negation;
+import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.rewrite.Rewriter;

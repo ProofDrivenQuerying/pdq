@@ -1,17 +1,11 @@
-package uk.ac.ox.cs.pdq.db;
+package uk.ac.ox.cs.pdq.fol;
 
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
-import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Conjunction;
-import uk.ac.ox.cs.pdq.fol.Constant;
-import uk.ac.ox.cs.pdq.fol.Formula;
-import uk.ac.ox.cs.pdq.fol.Implication;
-import uk.ac.ox.cs.pdq.fol.LogicalSymbols;
-import uk.ac.ox.cs.pdq.fol.Variable;
+import uk.ac.ox.cs.pdq.db.TypedConstant;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;

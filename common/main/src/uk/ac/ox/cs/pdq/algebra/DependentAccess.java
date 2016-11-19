@@ -64,14 +64,14 @@ public class DependentAccess  extends RelationalOperator implements AccessOperat
 	 *
 	 * @param relation the relation
 	 * @param accessMethod the access method
-	 * @param terms the terms
+	 * @param terms the input terms
 	 */
 	public DependentAccess(Relation relation, AccessMethod accessMethod, List<Term> terms) {
 		this(relation, accessMethod, terms, inferStaticInput(terms, accessMethod));
 	}
 
 	/**
-	 * Instantiates a new projection.
+	 * Instantiates a new dependent access , inferring output
 	 *
 	 * @param relation Relation
 	 * @param accessMethod AccessMethod
@@ -82,7 +82,7 @@ public class DependentAccess  extends RelationalOperator implements AccessOperat
 	}
 
 	/**
-	 * Instantiates a new projection.
+	 * Instantiates a new dependent access
 	 *
 	 * @param relation Relation
 	 * @param accessMethod AccessMethod
@@ -104,10 +104,9 @@ public class DependentAccess  extends RelationalOperator implements AccessOperat
 	}
 
 	/**
-	 * Attributes of.
 	 *
-	 * @param relation the relation
-	 * @return the list
+	 * @param relation 
+	 * @return 
 	 */
 	private static List<Attribute> attributesOf(Relation relation) {
 		Preconditions.checkArgument(relation != null);
@@ -115,10 +114,6 @@ public class DependentAccess  extends RelationalOperator implements AccessOperat
 	}
 
 	/**
-	 * Key set of.
-	 *
-	 * @param inputs the inputs
-	 * @return the sets the
 	 */
 	private static Set<Integer> keySetOf(Map<Integer, TypedConstant<?>> inputs) {
 		Preconditions.checkArgument(inputs != null);
@@ -126,7 +121,7 @@ public class DependentAccess  extends RelationalOperator implements AccessOperat
 	}
 
 	/**
-	 * Infer static input.
+	 * Infer schema constants that are in the input.
 	 *
 	 * @param columns List<Term>
 	 * @param accessMethod AccessMethod
@@ -146,7 +141,7 @@ public class DependentAccess  extends RelationalOperator implements AccessOperat
 	}
 
 	/**
-	 * Infer input type.
+	 * Infer the non-static part of the input, as a type
 	 *
 	 * @param columns List<Attribute>
 	 * @param accessMethod AccessMethod
@@ -161,7 +156,7 @@ public class DependentAccess  extends RelationalOperator implements AccessOperat
 	}
 
 	/**
-	 * Infer input terms.
+	 * Infer non-static part of the input, as a list of attributes
 	 *
 	 * @param columns List<Attribute>
 	 * @param binding AccessMethod
@@ -189,7 +184,7 @@ public class DependentAccess  extends RelationalOperator implements AccessOperat
 	}
 
 	/**
-	 * Gets the static inputs.
+	 * Gets the static part of the inputs
 	 *
 	 * @return the static inputs of this access.
 	 */
@@ -198,7 +193,7 @@ public class DependentAccess  extends RelationalOperator implements AccessOperat
 	}
 
 	/**
-	 * Gets the relation.
+	 * Gets the relation being accessed
 	 *
 	 * @return the accessed relation
 	 * @see uk.ac.ox.cs.pdq.plan.AccessOperator#getRelation()
@@ -275,7 +270,6 @@ public class DependentAccess  extends RelationalOperator implements AccessOperat
 	}
 
 	/**
-	 * Equals.
 	 *
 	 * @param o Object
 	 * @return boolean
@@ -312,12 +306,12 @@ public class DependentAccess  extends RelationalOperator implements AccessOperat
 	}
 
 	/**
-	 * Checks if is quasi leaf.
+	 * Checks if it does not have any non-unary operator as a subexpression
 	 *
 	 * @return boolean
 	 */
 	@Override
-	public boolean isQuasiLeaf() {
+	public boolean  isJoinFree() {
 		return true;
 	}
 

@@ -5,7 +5,6 @@ import java.util.List;
 
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Query;
 
 import com.google.common.collect.Lists;
 
@@ -24,7 +23,7 @@ public class DubiousRepeatedPredicateQuerySelector implements QuerySelector {
 	 */
 	@Override
 	public boolean accept(ConjunctiveQuery q) {
-		List<Atom> list = Lists.newArrayList(q.getBody().getAtoms());
+		List<Atom> list = Lists.newArrayList(q.getAtoms());
 		for (int i = 0, k = list.size(); i < k - 1; i++) {
 			Atom p1 = list.get(i);
 			FactSignature s1 = FactSignature.make(p1);
@@ -34,7 +33,7 @@ public class DubiousRepeatedPredicateQuerySelector implements QuerySelector {
 				if (s1.covers(s2) || s2.covers(s1)) {
 					return false;
 				}
-				if (p2.getName().equals(p1.getName())
+				if (p2.getPredicate().getName().equals(p1.getPredicate().getName())
 					&& !Collections.disjoint(list.get(i).getTerms(), list.get(j).getTerms())) {
 					return false;
 				}

@@ -3,6 +3,8 @@ package uk.ac.ox.cs.pdq.planner.linear.explorer;
 import static uk.ac.ox.cs.pdq.planner.logging.performance.PlannerStatKeys.MILLI_CLOSE;
 import static uk.ac.ox.cs.pdq.planner.logging.performance.PlannerStatKeys.MILLI_QUERY_MATCH;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Set;
 
@@ -11,9 +13,9 @@ import org.jgrapht.graph.DefaultEdge;
 
 import uk.ac.ox.cs.pdq.LimitReachedException;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
+import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismDetector;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.plan.LeftDeepPlan; 
 import uk.ac.ox.cs.pdq.planner.PlannerException;
@@ -25,7 +27,9 @@ import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode.NodeStatus;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.BestPlanMetadata;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.CreationMetadata;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.Metadata;
+import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
 
 import com.google.common.eventbus.EventBus;
 
@@ -33,8 +37,6 @@ import com.google.common.eventbus.EventBus;
 // TODO: Auto-generated Javadoc
 /**
  * Exhaustively searches the proof space
- * For more information see
- * "Michael Benedikt, Balder ten Cate, Efthymia Tsamoura. Generating Low-cost Plans From Proofs"
  *
  * @author Efthymia Tsamoura
  */
@@ -58,7 +60,9 @@ public class LinearGeneric extends LinearExplorer {
 	 * @param costEstimator 		Estimates the cost of a plan
 	 * @param nodeFactory the node factory
 	 * @param depth the depth
+	 * @param reasoningParameters 
 	 * @throws PlannerException the planner exception
+	 * @throws SQLException 
 	 */
 	public LinearGeneric(
 			EventBus eventBus, 
@@ -68,11 +72,11 @@ public class LinearGeneric extends LinearExplorer {
 			Schema schema,
 			AccessibleSchema accessibleSchema, 
 			Chaser chaser,
-			HomomorphismDetector detector,
+			DatabaseConnection dbConn,
 			CostEstimator<LeftDeepPlan> costEstimator,
 			NodeFactory nodeFactory,
-			int depth) throws PlannerException {
-		super(eventBus, collectStats, query, accessibleQuery, schema, accessibleSchema, chaser, detector, costEstimator, nodeFactory, depth);
+			int depth, ReasoningParameters reasoningParameters) throws PlannerException, SQLException {
+		super(eventBus, collectStats, query, accessibleQuery, schema, accessibleSchema, chaser, dbConn, costEstimator, nodeFactory, depth, reasoningParameters);
 	}
 
 	/**

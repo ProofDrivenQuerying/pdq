@@ -10,6 +10,7 @@ import uk.ac.ox.cs.pdq.db.AccessMethod.Types;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
+import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.util.Table;
 
@@ -129,7 +130,7 @@ public class AccessCommand implements Command{
 	}
 
 	/**
-	 * Gets the relation.
+	 * Gets the relation being accessed
 	 *
 	 * @return the relation
 	 */
@@ -147,7 +148,7 @@ public class AccessCommand implements Command{
 	}
 
 	/**
-	 * Gets the static inputs.
+	 * Gets the inputs that are set to constants. TOCOMMENT: THIS SHOULD CHANGE SO THAT CONSTANTS ARE NTO TREATED SPECIALLY
 	 *
 	 * @return the static inputs
 	 */
@@ -165,7 +166,6 @@ public class AccessCommand implements Command{
 	}
 
 	/**
-	 * Equals.
 	 *
 	 * @param o Object
 	 * @return boolean

@@ -25,10 +25,10 @@ public class AccessMethod implements Serializable {
 		
 		/** The free. */
 		FREE, 
- /** The limited. */
- LIMITED, 
- /** The boolean. */
- BOOLEAN
+		/** The limited. */
+		LIMITED, 
+		/** The boolean. */
+		BOOLEAN
 	}
 
 	/** A Constant DEFAULT_PREFIX for all automatically generated access methods names */
@@ -126,7 +126,6 @@ public class AccessMethod implements Serializable {
 	}
 
 	/**
-	 * Gets the name.
 	 *
 	 * @return the  name of the method.
 	 */
@@ -166,7 +165,6 @@ public class AccessMethod implements Serializable {
 	}
 
 	/**
-	 * To string.
 	 *
 	 * @return String
 	 */

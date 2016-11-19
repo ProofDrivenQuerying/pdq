@@ -446,14 +446,14 @@ public class DependentAccessTest extends RelationalOperatorTest {
 	}
 
 	/**
-	 * Checks if is quasi leaf.
+	 * Checks if does not hava any non-unary-operators as subexpressions
 	 */
-	@Test public void isQuasiLeaf() {
-		Assert.assertTrue("Operator's isQuasiLeaf must match always be true", new DependentAccess(r2, free).isQuasiLeaf());
-		Assert.assertTrue("Operator's isQuasiLeaf must match always be true", new DependentAccess(r4, free).isQuasiLeaf());
-		Assert.assertTrue("Operator's isQuasiLeaf must match always be true", new DependentAccess(r5, m1).isQuasiLeaf());
-		Assert.assertTrue("Operator's isQuasiLeaf must match always be true", new DependentAccess(r7, free).isQuasiLeaf());
-		Assert.assertTrue("Operator's isQuasiLeaf must match always be true", new DependentAccess(r8, m2).isQuasiLeaf());
+	@Test public void isJoinFree() {
+		Assert.assertTrue("Operator's isJoinFree must match always be true", new DependentAccess(r2, free).isJoinFree());
+		Assert.assertTrue("Operator's isJoinFree must match always be true", new DependentAccess(r4, free).isJoinFree());
+		Assert.assertTrue("Operator's isJoinFree must match always be true", new DependentAccess(r5, m1).isJoinFree());
+		Assert.assertTrue("Operator's isJoinFree must match always be true", new DependentAccess(r7, free).isJoinFree());
+		Assert.assertTrue("Operator's isJoinFree must match always be true", new DependentAccess(r8, m2).isJoinFree());
 	}
 
 	/**

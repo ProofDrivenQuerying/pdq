@@ -9,6 +9,7 @@ import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.plan.AccessOperator;
+import uk.ac.ox.cs.pdq.plan.SubPlanAlias;
 import uk.ac.ox.cs.pdq.util.TupleType;
 import uk.ac.ox.cs.pdq.util.Utility;
 
@@ -209,12 +210,11 @@ public class Access extends UnaryOperator implements AccessOperator {
 	}
 
 	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.algebra.UnaryOperator#isQuasiLeaf()
+	 * 
 	 */
 	@Override
-	public boolean isQuasiLeaf() {
-		return this.child == null || this.child.isQuasiLeaf();
+	public boolean isJoinFree() {
+		return this.child == null || this.child.isJoinFree();
 	}
 
 	/*

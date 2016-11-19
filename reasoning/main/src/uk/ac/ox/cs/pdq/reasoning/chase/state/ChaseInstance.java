@@ -1,26 +1,24 @@
 package uk.ac.ox.cs.pdq.reasoning.chase.state;
 
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
 
-import uk.ac.ox.cs.pdq.db.Dependency;
+import uk.ac.ox.cs.pdq.db.Instance;
 import uk.ac.ox.cs.pdq.db.Match;
-import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismProperty;
-import uk.ac.ox.cs.pdq.db.homomorphism.TriggerProperty;
-import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance.LimitTofacts;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+import uk.ac.ox.cs.pdq.fol.Dependency;
 
-// TODO: Auto-generated Javadoc
 /**
  *
  * A collection of facts produced during chasing.
- * It also keeps a graph of the rule firings that took place during chasing. //TOCOMMENT: I'm not sure where the latter sentence is true 
- *
+ * 
  * @author George K
  * @author Efthymia Tsamoura
  *
  */
-public interface ChaseState {
+public interface ChaseInstance extends Instance{
 
 	/**
 	 *
@@ -32,7 +30,7 @@ public interface ChaseState {
 	 * @return
 	 * 		the list of matches of the input query to the facts of this state.
 	 */
-	List<Match> getMatches(ConjunctiveQuery query);
+	List<Match> getMatches(ConjunctiveQuery query, LimitTofacts l);
 	
 	/**
 	 * (Candidate match definition).
@@ -45,7 +43,8 @@ public interface ChaseState {
 	 * @param t 		The TriggerProperty constraints that should be satisfied 
 	 * @return 		the list of matches (both candidates and not candidates) of the input dependencies in this database instance.
 	 */
-	List<Match> getTriggers(Collection<Dependency> dependencies, TriggerProperty t);
+	//TOCOMMENT: I can "push" the argument limitToFacts inside the implementation
+	List<Match> getTriggers(Collection<? extends Dependency> dependencies, TriggerProperty t,LimitTofacts limitToFacts);
 	
 	/**
 	 * Checks if is failed.
@@ -54,21 +53,6 @@ public interface ChaseState {
 	 */
 	boolean isFailed();
 		
-	/**
-	 * Gets the facts.
-	 *
-	 * @return the facts of this instance
-	 */
-	Collection<Atom> getFacts();
-	
-	/**
-	 * Augments the internal facts with the new ones.
-	 *
-	 * @param facts the facts
-	 */
-	void addFacts(Collection<Atom> facts);
-	
-	
 	/**
 	 * Performs a chase step.
 	 * 	(From modern dependency theory notes) Given trigger h for a dependency \delta = \forall x  \sigma(\vec{x}) --> \exists y  \tau(\vec{x}, \vec{y})
@@ -102,8 +86,9 @@ public interface ChaseState {
 	 *
 	 * @param s 		An input chase configuration
 	 * @return 		a database instance with facts the union of the facts of the two database instances.
+	 * @throws SQLException 
 	 */
-	ChaseState merge(ChaseState s);
+	ChaseInstance merge(ChaseInstance s) throws SQLException;
 	
-	ChaseState clone();
+	ChaseInstance clone();
 }

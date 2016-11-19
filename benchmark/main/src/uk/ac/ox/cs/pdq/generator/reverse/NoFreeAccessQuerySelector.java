@@ -5,7 +5,6 @@ import uk.ac.ox.cs.pdq.db.AccessMethod.Types;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 
 // TODO: Auto-generated Javadoc
@@ -23,7 +22,7 @@ public class NoFreeAccessQuerySelector implements QuerySelector {
 	 */
 	@Override
 	public boolean accept(ConjunctiveQuery q) {
-		for (Atom p: q.getBody().getAtoms()) {
+		for (Atom p: q.getAtoms()) {
 			Predicate s = p.getPredicate();
 			if (s instanceof Relation) {
 				for (AccessMethod am: ((Relation) s).getAccessMethods()) {

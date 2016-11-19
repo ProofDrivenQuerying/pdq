@@ -22,26 +22,20 @@ import uk.ac.ox.cs.pdq.util.Utility;
  */
 public class Operators {
 
-	/** The p. */
 	EntityRelation P = new EntityRelation("P", Types.FREE);
 	
-	/** The q. */
 	EntityRelation Q = new EntityRelation("Q", Types.BOOLEAN);
 	
-	/** The r. */
 	EntityRelation R = new EntityRelation("R", Types.FREE);
 	
-	/** The s. */
 	EntityRelation S = new EntityRelation("S", Types.BOOLEAN);
 	
-	/** The t. */
 	EntityRelation T = new EntityRelation("T", Types.FREE);
 	
-	/** The schema. */
 	Schema schema;
 
 	/**
-	 * Before.
+	 * 
 	 *
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
@@ -70,8 +64,8 @@ public class Operators {
 		Join j1 = new Join(b4, b3);
 		Join j2 = new Join(j1, b5);
 		Join j3 = new Join(j2, b6);
-		Assert.assertTrue("Plan is expected (quasi)-left deep", j3.isLeftDeep());
-		Assert.assertFalse("Plan is expected not (quasi)-right deep", j3.isRightDeep());
+		Assert.assertTrue("Plan is expected left deep", j3.isLeftDeep());
+		Assert.assertFalse("Plan is expected not right deep", j3.isRightDeep());
 	}
 
 	/**
@@ -87,8 +81,8 @@ public class Operators {
 		Join j1 = new Join(b4, b3);
 		Join j2 = new Join(b5, j1);
 		Join j3 = new Join(b6, j2);
-		Assert.assertFalse("Plan is expected not (quasi)-left deep", j3.isLeftDeep());
-		Assert.assertTrue("Plan is expected (quasi)-right deep", j3.isRightDeep());
+		Assert.assertFalse("Plan is expected not left deep", j3.isLeftDeep());
+		Assert.assertTrue("Plan is expected right deep", j3.isRightDeep());
 	}
 
 	/**
@@ -104,7 +98,7 @@ public class Operators {
 		Join j1 = new Join(b4, b3);
 		Join j2 = new Join(b5, b6);
 		Join j3 = new Join(j1, j2);
-		Assert.assertFalse("Plan is expected not (quasi)-left deep", j3.isLeftDeep());
-		Assert.assertFalse("Plan is expected not (quasi)-right deep", j3.isRightDeep());
+		Assert.assertFalse("Plan is expected not left deep", j3.isLeftDeep());
+		Assert.assertFalse("Plan is expected not right deep", j3.isRightDeep());
 	}
 }

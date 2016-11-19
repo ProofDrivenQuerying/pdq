@@ -1,5 +1,6 @@
 package uk.ac.ox.cs.pdq.planner.dag.explorer.parallel;
 
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -10,10 +11,9 @@ import java.util.concurrent.Callable;
 import org.apache.commons.lang3.tuple.Pair;
 
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
-import uk.ac.ox.cs.pdq.db.Dependency;
-import uk.ac.ox.cs.pdq.db.homomorphism.DatabaseHomomorphismManager;
-import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismDetector;
+import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.plan.DAGPlan;
 import uk.ac.ox.cs.pdq.planner.dag.BinaryConfiguration;
 import uk.ac.ox.cs.pdq.planner.dag.ConfigurationUtility;
@@ -22,7 +22,7 @@ import uk.ac.ox.cs.pdq.planner.dag.equivalence.DAGEquivalenceClasses;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator;
 import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominance;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
-import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseState;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
@@ -51,7 +51,7 @@ public class ReasoningThread implements Callable<Boolean> {
 	protected final Chaser chaser;
 
 	/**  Detects homomorphisms during chasing. */
-	protected final HomomorphismDetector detector;
+	protected final DatabaseConnection connection;
 
 	/**  Estimates the cost of the plans. */
 	protected final CostEstimator<DAGPlan> costEstimator;
@@ -119,7 +119,7 @@ public class ReasoningThread implements Callable<Boolean> {
 			ConjunctiveQuery query,
 			Collection<? extends Dependency> dependencies,
 			Chaser chaser,
-			HomomorphismDetector detector,
+			DatabaseConnection connection,
 			CostEstimator<DAGPlan> costEstimator,
 			SuccessDominance successDominance,
 			DAGChaseConfiguration best,
@@ -134,7 +134,7 @@ public class ReasoningThread implements Callable<Boolean> {
 		Preconditions.checkNotNull(query);
 		Preconditions.checkNotNull(dependencies);
 		Preconditions.checkNotNull(chaser);
-		Preconditions.checkNotNull(detector);
+		Preconditions.checkNotNull(connection);
 		Preconditions.checkNotNull(costEstimator);
 		Preconditions.checkNotNull(representatives);
 		Preconditions.checkNotNull(equivalenceClasses);
@@ -142,7 +142,7 @@ public class ReasoningThread implements Callable<Boolean> {
 		this.query = query;
 		this.dependencies = dependencies;
 		this.chaser = chaser;
-		this.detector = detector;
+		this.connection = connection;
 		this.costEstimator = costEstimator;
 		this.equivalenceClasses = equivalenceClasses;
 		this.representatives = representatives;
@@ -160,10 +160,11 @@ public class ReasoningThread implements Callable<Boolean> {
 	 * Call.
 	 *
 	 * @return Boolean
+	 * @throws SQLException 
 	 * @see java.util.concurrent.Callable#call()
 	 */
 	@Override
-	public Boolean call() {
+	public Boolean call() throws SQLException {
 		DAGChaseConfiguration left;
 		//Poll the next configuration from the left input
 		while ((left = this.left.poll()) != null) {
@@ -232,8 +233,9 @@ public class ReasoningThread implements Callable<Boolean> {
 	 * @param left the left
 	 * @param right the right
 	 * @return a new binary configuration BinConfiguration(left, right)
+	 * @throws SQLException 
 	 */
-	protected DAGChaseConfiguration merge(DAGChaseConfiguration left, DAGChaseConfiguration right) {
+	protected DAGChaseConfiguration merge(DAGChaseConfiguration left, DAGChaseConfiguration right) throws SQLException {
 		DAGChaseConfiguration configuration = null;
 		//A configuration BinConfiguration(c,c'), where c and c' belong to the equivalence classes of
 		//the left and right input configuration, respectively.
@@ -243,6 +245,8 @@ public class ReasoningThread implements Callable<Boolean> {
 			representative = this.representatives.getRepresentative(this.equivalenceClasses, right, left);
 		}
 		
+		((DatabaseChaseInstance)left.getState()).setDatabaseConnection(this.connection);
+		
 		//If the representative is null or we do not use templates or we cannot find a template configuration that
 		//consists of the corresponding ApplyRules, then create a binary configuration from scratch by fully chasing its state
 		if(representative == null) {
@@ -250,10 +254,10 @@ public class ReasoningThread implements Callable<Boolean> {
 					left,
 					right
 					);
-					
-			if(configuration.getState() instanceof DatabaseChaseState) {
-				((DatabaseChaseState)configuration.getState()).setManager((DatabaseHomomorphismManager) this.detector);
-			}
+		
+			if(configuration.getState() instanceof DatabaseChaseInstance) {
+				((DatabaseChaseInstance)configuration.getState()).setDatabaseConnection(this.connection);
+			}	
 			this.chaser.reasonUntilTermination(configuration.getState(), this.dependencies);
 			this.representatives.put(this.equivalenceClasses, left, right, configuration);
 

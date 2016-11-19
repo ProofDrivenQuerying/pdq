@@ -6,12 +6,14 @@ import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.sql.SQLException;
 import java.util.Arrays;
 
 import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.benchmark.BenchmarkParameters;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
+import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.generator.AbstractGenerator;
@@ -88,12 +90,15 @@ public class GeneratorThird extends AbstractGenerator{
 	 * The main method.
 	 *
 	 * @param args the arguments
+	 * @throws SQLException 
 	 */
-	public static void main (String... args) {
+	public static void main (String... args) throws SQLException {
 		try(FileInputStream fis = new FileInputStream("test/input/web-schema.xml")) {
 			PlannerParameters planParams = new PlannerParameters();
 			CostParameters costParams = new CostParameters();
 			ReasoningParameters reasoningParams = new ReasoningParameters();
+			DatabaseParameters dbParams = new DatabaseParameters();
+
 			Schema schema = new SchemaReader().read(fis);
 			String[] queryFiles = new File("test/output/").list(new FilenameFilter() {
 				@Override public boolean accept(File dir, String name) {
@@ -106,12 +111,12 @@ public class GeneratorThird extends AbstractGenerator{
 					
 					log.trace(queryFile);
 					planParams.setMaxDepth(1);
-					ExplorationSetUp planner = new ExplorationSetUp(planParams, costParams, reasoningParams, schema);
+					ExplorationSetUp planner = new ExplorationSetUp(planParams, costParams, reasoningParams, dbParams, schema);
 					if (planner.search(query) != null) {
 						log.trace(" not answerable without constraints");
 					}
 					planParams.setMaxDepth(10);
-					planner = new ExplorationSetUp(planParams, costParams, reasoningParams, schema);
+					planner = new ExplorationSetUp(planParams, costParams, reasoningParams, dbParams, schema);
 					if (planner.search(query) != null) {
 						log.trace(", not answerable with constraints (depth=10)");
 					}

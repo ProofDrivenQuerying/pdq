@@ -12,6 +12,7 @@ import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.LimitReachedException;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
+import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.io.xml.DAGPlanReader;
@@ -120,6 +121,7 @@ public class UserPlannerTest extends RegressionTest {
 			plannerParams.setAccessFile(directory.getAbsolutePath() + '/' + ACCESS_PLAN_FILE);
 			CostParameters costParams = new CostParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
 			ReasoningParameters reasoningParams = new ReasoningParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
+			DatabaseParameters dbParams = new DatabaseParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
 			
 			Schema schema = new SchemaReader().read(sis);
 			ConjunctiveQuery query = new QueryReader(schema).read(qis);
@@ -130,7 +132,7 @@ public class UserPlannerTest extends RegressionTest {
 			
 			Plan observedPlan = null;
 			try(ProgressLogger pLog = new SimpleProgressLogger(this.out)) {
-				ExplorationSetUp planner = new ExplorationSetUp(plannerParams, costParams, reasoningParams, schema);
+				ExplorationSetUp planner = new ExplorationSetUp(plannerParams, costParams, reasoningParams, dbParams, schema);
 				planner.registerEventHandler(
 						new IntervalEventDrivenLogger(
 								pLog, plannerParams.getLogIntervals(),

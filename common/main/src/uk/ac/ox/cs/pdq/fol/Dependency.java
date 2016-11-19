@@ -1,17 +1,6 @@
-package uk.ac.ox.cs.pdq.db;
+package uk.ac.ox.cs.pdq.fol;
 
 import java.util.List;
-
-import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Conjunction;
-import uk.ac.ox.cs.pdq.fol.Disjunction;
-import uk.ac.ox.cs.pdq.fol.Formula;
-import uk.ac.ox.cs.pdq.fol.Implication;
-import uk.ac.ox.cs.pdq.fol.Literal;
-import uk.ac.ox.cs.pdq.fol.LogicalSymbols;
-import uk.ac.ox.cs.pdq.fol.Negation;
-import uk.ac.ox.cs.pdq.fol.QuantifiedFormula;
-import uk.ac.ox.cs.pdq.fol.Variable;
 
 import com.google.common.base.Preconditions;
 

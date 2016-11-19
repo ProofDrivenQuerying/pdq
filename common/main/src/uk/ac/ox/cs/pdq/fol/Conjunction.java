@@ -1,5 +1,6 @@
 package uk.ac.ox.cs.pdq.fol;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -59,6 +60,10 @@ public final class Conjunction extends Formula {
 	 * @return Conjunction<T>
 	 */
 	public static Formula of(Formula... children) {
+		return Conjunction.of(Lists.newArrayList(children));
+	}
+	
+	public static Formula of(Collection<? extends Formula> children) {
 		return Conjunction.of(Lists.newArrayList(children));
 	}
 

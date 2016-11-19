@@ -26,17 +26,6 @@ import com.google.common.collect.Lists;
  */
 public abstract class RelationalOperator implements Rewritable, Operator {
 
-	/**
-	 * TOCOMMENT Not sure what this is
-	 * The Enum SharingType.
-	 */
-	public static enum SharingType { 
- /** The nothing. */
- NOTHING, 
- /** The cache. */
- CACHE, 
- /** The blocking. */
- BLOCKING }
 
 	/** The operator's type. */
 	protected final TupleType outputType;
@@ -232,11 +221,11 @@ public abstract class RelationalOperator implements Rewritable, Operator {
 	}
 
 	/**
-	 * Checks if is quasi leaf.
+	 * Checks if it does not include a non-unary operator as a subexpression
 	 *
 	 * @return true if the operator is a leaf or the ancestor of a single leaf
 	 */
-	public abstract boolean isQuasiLeaf();
+	public abstract boolean  isJoinFree();
 
 	/**
 	 * Checks if is left deep.

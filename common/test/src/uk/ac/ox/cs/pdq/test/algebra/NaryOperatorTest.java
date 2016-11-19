@@ -178,72 +178,72 @@ public abstract class NaryOperatorTest extends RelationalOperatorTest {
 	}
 
 	/**
-	 * Checks if is quasi leaf.
+	 * Checks if does not have any non-unary operators as subexpressions.
 	 */
-	@Test public void isQuasiLeaf() {
-		Mockito.when(child1.isQuasiLeaf()).thenReturn(true);
-		Mockito.when(child2.isQuasiLeaf()).thenReturn(true);
-		Mockito.when(child3.isQuasiLeaf()).thenReturn(true);
-		Assert.assertFalse("NaryOperator's are never quasi-leaves", getOperator().isQuasiLeaf());
+	@Test public void isJoinFree() {
+		Mockito.when(child1.isJoinFree()).thenReturn(true);
+		Mockito.when(child2.isJoinFree()).thenReturn(true);
+		Mockito.when(child3.isJoinFree()).thenReturn(true);
+		Assert.assertFalse("NaryOperator's are never join-free", getOperator().isJoinFree());
 		
-		Mockito.when(child1.isQuasiLeaf()).thenReturn(true);
-		Mockito.when(child2.isQuasiLeaf()).thenReturn(false);
-		Mockito.when(child3.isQuasiLeaf()).thenReturn(true);
-		Assert.assertFalse("NaryOperator's are never quasi-leaves", getOperator().isQuasiLeaf());
+		Mockito.when(child1.isJoinFree()).thenReturn(true);
+		Mockito.when(child2.isJoinFree()).thenReturn(false);
+		Mockito.when(child3.isJoinFree()).thenReturn(true);
+		Assert.assertFalse("NaryOperator's are never join-free", getOperator().isJoinFree());
 
-		Mockito.when(child1.isQuasiLeaf()).thenReturn(false);
-		Mockito.when(child2.isQuasiLeaf()).thenReturn(false);
-		Mockito.when(child3.isQuasiLeaf()).thenReturn(false);
-		Assert.assertFalse("NaryOperator's are never quasi-leaves", getOperator().isQuasiLeaf());
+		Mockito.when(child1.isJoinFree()).thenReturn(false);
+		Mockito.when(child2.isJoinFree()).thenReturn(false);
+		Mockito.when(child3.isJoinFree()).thenReturn(false);
+		Assert.assertFalse("NaryOperator's are never join-free", getOperator().isJoinFree());
 	}
 
 	/**
 	 * Checks if is left deep.
 	 */
 	@Test public void isLeftDeep() {
-		Mockito.when(child1.isQuasiLeaf()).thenReturn(false); Mockito.when(child1.isLeftDeep()).thenReturn(true);
-		Mockito.when(child2.isQuasiLeaf()).thenReturn(false); Mockito.when(child2.isLeftDeep()).thenReturn(true);
-		Mockito.when(child3.isQuasiLeaf()).thenReturn(false); Mockito.when(child3.isLeftDeep()).thenReturn(true);
-		Assert.assertFalse("NaryOperator's are left-deep if only the left-most child is, or all are quasi-leaves", getOperator().isLeftDeep());
+		Mockito.when(child1.isJoinFree()).thenReturn(false); Mockito.when(child1.isLeftDeep()).thenReturn(true);
+		Mockito.when(child2.isJoinFree()).thenReturn(false); Mockito.when(child2.isLeftDeep()).thenReturn(true);
+		Mockito.when(child3.isJoinFree()).thenReturn(false); Mockito.when(child3.isLeftDeep()).thenReturn(true);
+		Assert.assertFalse("NaryOperator's are left-deep if only the left-most child is, or all are join-free", getOperator().isLeftDeep());
 		
-		Mockito.when(child1.isQuasiLeaf()).thenReturn(false); Mockito.when(child1.isLeftDeep()).thenReturn(true);
-		Mockito.when(child2.isQuasiLeaf()).thenReturn(true);  Mockito.when(child2.isLeftDeep()).thenReturn(false);
-		Mockito.when(child3.isQuasiLeaf()).thenReturn(false); Mockito.when(child3.isLeftDeep()).thenReturn(true);
-		Assert.assertFalse("NaryOperator's are left-deep if only the left-most child is, or all are quasi-leaves", getOperator().isLeftDeep());
+		Mockito.when(child1.isJoinFree()).thenReturn(false); Mockito.when(child1.isLeftDeep()).thenReturn(true);
+		Mockito.when(child2.isJoinFree()).thenReturn(true);  Mockito.when(child2.isLeftDeep()).thenReturn(false);
+		Mockito.when(child3.isJoinFree()).thenReturn(false); Mockito.when(child3.isLeftDeep()).thenReturn(true);
+		Assert.assertFalse("NaryOperator's are left-deep if only the left-most child is, or all are join-free", getOperator().isLeftDeep());
 
-		Mockito.when(child1.isQuasiLeaf()).thenReturn(false); Mockito.when(child1.isLeftDeep()).thenReturn(true);
-		Mockito.when(child2.isQuasiLeaf()).thenReturn(true);  Mockito.when(child2.isLeftDeep()).thenReturn(false);
-		Mockito.when(child3.isQuasiLeaf()).thenReturn(true);  Mockito.when(child3.isLeftDeep()).thenReturn(false);
-		Assert.assertTrue("NaryOperator's are left-deep if only the left-most child is, or all are quasi-leaves", getOperator().isLeftDeep());
+		Mockito.when(child1.isJoinFree()).thenReturn(false); Mockito.when(child1.isLeftDeep()).thenReturn(true);
+		Mockito.when(child2.isJoinFree()).thenReturn(true);  Mockito.when(child2.isLeftDeep()).thenReturn(false);
+		Mockito.when(child3.isJoinFree()).thenReturn(true);  Mockito.when(child3.isLeftDeep()).thenReturn(false);
+		Assert.assertTrue("NaryOperator's are left-deep if only the left-most child is, or all are join-free", getOperator().isLeftDeep());
 
-		Mockito.when(child1.isQuasiLeaf()).thenReturn(true); Mockito.when(child1.isLeftDeep()).thenReturn(false);
-		Mockito.when(child2.isQuasiLeaf()).thenReturn(true); Mockito.when(child2.isLeftDeep()).thenReturn(false);
-		Mockito.when(child3.isQuasiLeaf()).thenReturn(true); Mockito.when(child3.isLeftDeep()).thenReturn(false);
-		Assert.assertTrue("NaryOperator's are left-deep if only the left-most child is, or all are quasi-leaves", getOperator().isLeftDeep());
+		Mockito.when(child1.isJoinFree()).thenReturn(true); Mockito.when(child1.isLeftDeep()).thenReturn(false);
+		Mockito.when(child2.isJoinFree()).thenReturn(true); Mockito.when(child2.isLeftDeep()).thenReturn(false);
+		Mockito.when(child3.isJoinFree()).thenReturn(true); Mockito.when(child3.isLeftDeep()).thenReturn(false);
+		Assert.assertTrue("NaryOperator's are left-deep if only the left-most child is, or all are join-free", getOperator().isLeftDeep());
 	}
 
 	/**
 	 * Checks if is right deep.
 	 */
 	@Test public void isRightDeep() {
-		Mockito.when(child1.isQuasiLeaf()).thenReturn(false); Mockito.when(child1.isRightDeep()).thenReturn(true);
-		Mockito.when(child2.isQuasiLeaf()).thenReturn(false); Mockito.when(child2.isRightDeep()).thenReturn(true);
-		Mockito.when(child3.isQuasiLeaf()).thenReturn(false); Mockito.when(child3.isRightDeep()).thenReturn(true);
-		Assert.assertFalse("NaryOperator's are right-deep if only the right-most child is, or all are quasi-leaves", getOperator().isRightDeep());
+		Mockito.when(child1.isJoinFree()).thenReturn(false); Mockito.when(child1.isRightDeep()).thenReturn(true);
+		Mockito.when(child2.isJoinFree()).thenReturn(false); Mockito.when(child2.isRightDeep()).thenReturn(true);
+		Mockito.when(child3.isJoinFree()).thenReturn(false); Mockito.when(child3.isRightDeep()).thenReturn(true);
+		Assert.assertFalse("NaryOperator's are right-deep if only the right-most child is, or all are join-free", getOperator().isRightDeep());
 		
-		Mockito.when(child1.isQuasiLeaf()).thenReturn(false); Mockito.when(child1.isRightDeep()).thenReturn(true);
-		Mockito.when(child2.isQuasiLeaf()).thenReturn(true);  Mockito.when(child2.isRightDeep()).thenReturn(false);
-		Mockito.when(child3.isQuasiLeaf()).thenReturn(false); Mockito.when(child3.isRightDeep()).thenReturn(true);
-		Assert.assertFalse("NaryOperator's are right-deep if only the right-most child is, or all are quasi-leaves", getOperator().isRightDeep());
+		Mockito.when(child1.isJoinFree()).thenReturn(false); Mockito.when(child1.isRightDeep()).thenReturn(true);
+		Mockito.when(child2.isJoinFree()).thenReturn(true);  Mockito.when(child2.isRightDeep()).thenReturn(false);
+		Mockito.when(child3.isJoinFree()).thenReturn(false); Mockito.when(child3.isRightDeep()).thenReturn(true);
+		Assert.assertFalse("NaryOperator's are right-deep if only the right-most child is, or all are join-free", getOperator().isRightDeep());
 
-		Mockito.when(child1.isQuasiLeaf()).thenReturn(true); Mockito.when(child1.isRightDeep()).thenReturn(false);
-		Mockito.when(child2.isQuasiLeaf()).thenReturn(true);  Mockito.when(child2.isRightDeep()).thenReturn(false);
-		Mockito.when(child3.isQuasiLeaf()).thenReturn(false); Mockito.when(child3.isRightDeep()).thenReturn(true);
-		Assert.assertTrue("NaryOperator's are right-deep if only the right-most child is, or all are quasi-leaves", getOperator().isRightDeep());
+		Mockito.when(child1.isJoinFree()).thenReturn(true); Mockito.when(child1.isRightDeep()).thenReturn(false);
+		Mockito.when(child2.isJoinFree()).thenReturn(true);  Mockito.when(child2.isRightDeep()).thenReturn(false);
+		Mockito.when(child3.isJoinFree()).thenReturn(false); Mockito.when(child3.isRightDeep()).thenReturn(true);
+		Assert.assertTrue("NaryOperator's are right-deep if only the right-most child is, or all are join-free", getOperator().isRightDeep());
 
-		Mockito.when(child1.isQuasiLeaf()).thenReturn(true); Mockito.when(child1.isRightDeep()).thenReturn(false);
-		Mockito.when(child2.isQuasiLeaf()).thenReturn(true);  Mockito.when(child2.isRightDeep()).thenReturn(false);
-		Mockito.when(child3.isQuasiLeaf()).thenReturn(true); Mockito.when(child3.isRightDeep()).thenReturn(false);
-		Assert.assertTrue("NaryOperator's are right-deep if only the right-most child is, or all are quasi-leaves", getOperator().isRightDeep());
+		Mockito.when(child1.isJoinFree()).thenReturn(true); Mockito.when(child1.isRightDeep()).thenReturn(false);
+		Mockito.when(child2.isJoinFree()).thenReturn(true);  Mockito.when(child2.isRightDeep()).thenReturn(false);
+		Mockito.when(child3.isJoinFree()).thenReturn(true); Mockito.when(child3.isRightDeep()).thenReturn(false);
+		Assert.assertTrue("NaryOperator's are right-deep if only the right-most child is, or all are join-free", getOperator().isRightDeep());
 	}
 }

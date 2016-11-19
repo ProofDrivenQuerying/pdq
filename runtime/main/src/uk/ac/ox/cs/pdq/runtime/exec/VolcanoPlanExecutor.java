@@ -6,7 +6,7 @@ import java.util.concurrent.Executors;
 import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.algebra.RelationalOperator;
-import uk.ac.ox.cs.pdq.fol.Query;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.runtime.EvaluationException;
 import uk.ac.ox.cs.pdq.runtime.RuntimeParameters.Semantics;
@@ -44,7 +44,7 @@ public class VolcanoPlanExecutor implements PlanExecutor {
 	private final Plan plan;
 	
 	/** The query. */
-	private final Query<?> query;
+	private final ConjunctiveQuery query;
 	
 	/** The semantics. */
 	private final Semantics semantics;
@@ -69,7 +69,7 @@ public class VolcanoPlanExecutor implements PlanExecutor {
 	 * @param sem Semantics
 	 * @param timeout Long
 	 */
-	public VolcanoPlanExecutor(Plan plan, Query<?> query, Semantics sem, Long timeout) {
+	public VolcanoPlanExecutor(Plan plan, ConjunctiveQuery query, Semantics sem, Long timeout) {
 		this.plan = plan;
 		this.query = query;
 		this.semantics = sem;
@@ -83,7 +83,7 @@ public class VolcanoPlanExecutor implements PlanExecutor {
 	 * @param query the query
 	 * @param sem Semantics
 	 */
-	public VolcanoPlanExecutor(Plan plan, Query<?> query, Semantics sem) {
+	public VolcanoPlanExecutor(Plan plan, ConjunctiveQuery query, Semantics sem) {
 		this(plan, query, sem, Long.MAX_VALUE);
 	}
 
@@ -143,8 +143,8 @@ public class VolcanoPlanExecutor implements PlanExecutor {
 			if (top.isInterrupted()) {
 				throw new TimeoutException();
 			}
-			this.universalTable.setHeader(Utility.termsToAttributes(
-					this.query.getFree(), this.universalTable.getType()));
+			this.universalTable.setHeader(Utility.variablesToAttributes(
+					this.query.getFreeVariables(), this.universalTable.getType()));
 		}
 		return this.universalTable;
 	}

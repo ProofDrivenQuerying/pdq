@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.db.homomorphism;
+package uk.ac.ox.cs.pdq.reasoning.chase.state;
 
 
 /**
@@ -6,7 +6,7 @@ package uk.ac.ox.cs.pdq.db.homomorphism;
  *
  * @author George K
  */
-public  enum TriggerProperty {
+public 	 enum TriggerProperty {
 	
 	ACTIVE,
 	ALL;

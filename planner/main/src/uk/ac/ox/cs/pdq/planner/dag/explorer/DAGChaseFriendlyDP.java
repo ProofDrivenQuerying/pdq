@@ -1,5 +1,7 @@
 package uk.ac.ox.cs.pdq.planner.dag.explorer;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -9,8 +11,8 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import uk.ac.ox.cs.pdq.LimitReachedException;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
+import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismDetector;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.plan.DAGPlan;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
@@ -22,14 +24,16 @@ import uk.ac.ox.cs.pdq.planner.dag.explorer.filters.Filter;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator;
 import uk.ac.ox.cs.pdq.planner.dominance.Dominance;
 import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominance;
+import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
 
 import com.google.common.base.Preconditions;
 import com.google.common.eventbus.EventBus;
 
 // TODO: Auto-generated Javadoc
 /**
- * Chase friendly dag explorer. The exploration proceeds similarly to the GenericExplorer.
+ * The exploration proceeds similarly to the GenericExplorer.
  * First, it checks whether or not the configurations
  * to be composed could lead to the optimal solution prior to creating the corresponding binary configuration.
  * If yes, then it creates a new binary configuration which is only further considered
@@ -63,25 +67,27 @@ public class DAGChaseFriendlyDP extends DAGGeneric {
 	 * @param maxDepth 		The maximum depth to explore
 	 * @param orderAware True if pair selection is order aware
 	 * @throws PlannerException the planner exception
+	 * @throws SQLException 
 	 */
 	public DAGChaseFriendlyDP(
 			EventBus eventBus, 
 			boolean collectStats,
 			PlannerParameters parameters,
+			ReasoningParameters reasoningParameters,
 			ConjunctiveQuery query,
 			ConjunctiveQuery accessibleQuery,
 			Schema schema,
 			AccessibleSchema accessibleSchema, 
 			Chaser chaser,
-			HomomorphismDetector detector,
+			DatabaseConnection dbConn,
 			CostEstimator<DAGPlan> costEstimator,
 			SuccessDominance successDominance,
 			Dominance[] dominance,
 			Filter filter, 
 			List<Validator> validators,
 			int maxDepth, 
-			boolean orderAware) throws PlannerException {
-		super(eventBus, collectStats, parameters, query, accessibleQuery, schema, accessibleSchema, chaser, detector, costEstimator,
+			boolean orderAware) throws PlannerException, SQLException {
+		super(eventBus, collectStats, parameters,reasoningParameters, query, accessibleQuery, schema, accessibleSchema, chaser, dbConn, costEstimator,
 				successDominance, filter, validators, maxDepth, orderAware);
 		Preconditions.checkNotNull(dominance);
 		Preconditions.checkNotNull(successDominance);

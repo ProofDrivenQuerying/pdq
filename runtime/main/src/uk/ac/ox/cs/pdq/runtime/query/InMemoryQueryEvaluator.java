@@ -137,7 +137,7 @@ public class InMemoryQueryEvaluator implements QueryEvaluator {
 			result = new IsEmpty(result);
 		} else {
 			TupleType type = Utility.getTupleType(q);
-			result = new Projection(Utility.termsToTyped(q.getFree(),  type), result);
+			result = new Projection(Utility.variablesToTyped(q.getFreeVariables(),  type), result);
 		}
 		return result;
 	}

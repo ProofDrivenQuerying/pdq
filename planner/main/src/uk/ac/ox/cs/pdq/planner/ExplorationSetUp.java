@@ -1,5 +1,11 @@
 package uk.ac.ox.cs.pdq.planner;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 
@@ -8,9 +14,11 @@ import uk.ac.ox.cs.pdq.cost.CostEstimatorFactory;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.cost.CostStatKeys;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
+import uk.ac.ox.cs.pdq.db.DatabaseConnection;
+import uk.ac.ox.cs.pdq.db.DatabaseInstance;
+import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismDetector;
-import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismManagerFactory;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.logging.performance.ChainedStatistics;
 import uk.ac.ox.cs.pdq.logging.performance.DynamicStatistics;
@@ -50,24 +58,29 @@ public class ExplorationSetUp {
 	/**  Input parameters. */
 	private CostParameters costParams;
 	
-	/** The reasoning params. */
+	/**  */
 	private ReasoningParameters reasoningParams;
+	
+	/**  */
+	private DatabaseParameters dbParams;
 
-	/**  Event bus. */
+
+	/**   */
 	private EventBus eventBus = new EventBus();
 
 	/**  Statistics collector. */
 	private ChainedStatistics statsLogger;
 
-	/**  The schema. */
+	/**   */
 	private Schema schema;
 
 
 	/** The external cost estimator. */
 	private CostEstimator<?> externalCostEstimator = null;
 
-	/** The accessible schema. */
+	/** The auxiliary schema, including axioms capturing access methods  */
 	private AccessibleSchema accessibleSchema;
+
 	
 	/**
 	 * Instantiates a new exploration set up.
@@ -77,8 +90,8 @@ public class ExplorationSetUp {
 	 * @param reasoningParams the reasoning params
 	 * @param schema the schema
 	 */
-	public ExplorationSetUp(PlannerParameters planParams, CostParameters costParams, ReasoningParameters reasoningParams, Schema schema) {
-		this(planParams, costParams, reasoningParams, schema, null);
+	public ExplorationSetUp(PlannerParameters planParams, CostParameters costParams, ReasoningParameters reasoningParams, DatabaseParameters dbParams, Schema schema) {
+		this(planParams, costParams, reasoningParams, dbParams, schema, null);
 	}
 
 	/**
@@ -90,11 +103,12 @@ public class ExplorationSetUp {
 	 * @param schema the schema
 	 * @param statsLogger the stats logger
 	 */
-	public ExplorationSetUp(PlannerParameters params, CostParameters costParams, ReasoningParameters reasoningParams, Schema schema, ChainedStatistics statsLogger) {
-		checkParametersConsistency(params, costParams, reasoningParams);
+	public ExplorationSetUp(PlannerParameters params, CostParameters costParams, ReasoningParameters reasoningParams, DatabaseParameters dbParams, Schema schema, ChainedStatistics statsLogger) {
+		checkParametersConsistency(params, costParams, reasoningParams, dbParams);
 		this.plannerParams = params;
 		this.costParams = costParams;
 		this.reasoningParams = reasoningParams;
+		this.dbParams = dbParams;
 		this.schema = schema;
 		this.statsLogger = statsLogger;
 		this.schema = schema;
@@ -109,8 +123,8 @@ public class ExplorationSetUp {
 	 * @param reasoningParams the reasoning params
 	 * @return boolean
 	 */
-	private static void checkParametersConsistency(PlannerParameters params, CostParameters costParams, ReasoningParameters reasoningParams) {
-		new PlannerConsistencyChecker().check(params, costParams, reasoningParams);
+	private static void checkParametersConsistency(PlannerParameters params, CostParameters costParams, ReasoningParameters reasoningParams, DatabaseParameters dbParams) {
+		new PlannerConsistencyChecker().check(params, costParams, reasoningParams, dbParams);
 	}
 
 	/**
@@ -150,13 +164,14 @@ public class ExplorationSetUp {
 	 *         input query to the constant generated in the initial grounded
 	 *         operation.
 	 * @throws PlannerException the planner exception
+	 * @throws SQLException 
 	 */
-	public <P extends Plan> P search(ConjunctiveQuery query) throws PlannerException {
+	public <P extends Plan> P search(ConjunctiveQuery query) throws PlannerException, SQLException {
 		return this.search(query,false);
 	}
 	
 	/**
-	 * Search a best plan for the given schema and query.
+	 * Search for a best plan for the given schema and query.
 	 *
 	 * @param <S> the generic type
 	 * @param <P> the generic type
@@ -168,8 +183,9 @@ public class ExplorationSetUp {
 	 *         input query to the constant generated in the initial grounded
 	 *         operation.
 	 * @throws PlannerException the planner exception
+	 * @throws SQLException 
 	 */
-	public <S extends AccessibleChaseState, P extends Plan> P search(ConjunctiveQuery query, boolean noDep) throws PlannerException {
+	public <S extends AccessibleChaseState, P extends Plan> P search(ConjunctiveQuery query, boolean noDep) throws PlannerException, SQLException {
 		
 		boolean collectStats = this.statsLogger != null;
 		
@@ -186,25 +202,22 @@ public class ExplorationSetUp {
 		}
 
 		ConjunctiveQuery accessibleQuery = this.accessibleSchema.accessible(query, query.getSubstitutionOfFreeVariablesToCanonicalConstants());
-		
 		Explorer<P> explorer = null;
-		try (HomomorphismDetector detector =
-				new HomomorphismManagerFactory().getInstance(this.accessibleSchema,  
-						this.reasoningParams.getHomomorphismDetectorType(), 
-						this.reasoningParams.getDatabaseDriver(), 
-						this.reasoningParams.getConnectionUrl(),
-						this.reasoningParams.getDatabaseName(), 
-						this.reasoningParams.getDatabaseUser(),
-						this.reasoningParams.getDatabasePassword())) {
+
+		
+		DatabaseConnection dbConn = new DatabaseConnection(dbParams,accessibleSchema);
+
+		try{
 			// Top-level initialisations
 			CostEstimator<P> costEstimator = (CostEstimator<P>) this.externalCostEstimator;
 			if (costEstimator == null) {
 				costEstimator = CostEstimatorFactory.getEstimator(this.costParams, this.schema);
 			}
+
 			Chaser reasoner = new ReasonerFactory(
 					this.eventBus, 
 					collectStats,
-					this.reasoningParams).getInstance();
+					this.reasoningParams, this.dbParams).getInstance();
 			
 			explorer = ExplorerFactory.createExplorer(
 					this.eventBus, 
@@ -214,9 +227,10 @@ public class ExplorationSetUp {
 					query,
 					accessibleQuery,
 					reasoner,
-					detector,
+					dbConn,
 					costEstimator,
-					this.plannerParams);
+					this.plannerParams,
+					this.reasoningParams, this.dbParams);
 
 			// Chain all statistics collectors
 			if (collectStats) {
@@ -290,7 +304,7 @@ public class ExplorationSetUp {
 	}
 
 	/**
-	 * Gets the schema.
+	 * 
 	 *
 	 * @return the planner's underlying schema
 	 */
@@ -299,7 +313,7 @@ public class ExplorationSetUp {
 	}
 
 	/**
-	 * Performs a search as in search, and returns not only the best plan found
+	 * Performs a search, and returns not only the best plan found
 	 * but also the search node in which it is was found. The returned search
 	 * node may be used later as parameters to the resumeSearch method.
 	 *

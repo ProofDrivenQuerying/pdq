@@ -8,7 +8,6 @@ import java.util.Properties;
 import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.Parameters;
-import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismDetector.HomomorphismDetectorTypes;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -66,14 +65,14 @@ public class ReasoningParameters extends Parameters {
 		this(config, false, false);
 	}
 
-	/**
-	 * Constructor for PlannerParameters.
-	 * @param config path to the configuration file to read
-	 * @param verbose if true, param loading problem will be reported
-	 */
-	public ReasoningParameters(File config, boolean verbose) {
-		this(config, false, verbose, false);
-	}
+//	/**
+//	 * Constructor for PlannerParameters.
+//	 * @param config path to the configuration file to read
+//	 * @param verbose if true, param loading problem will be reported
+//	 */
+//	public ReasoningParameters(File config, boolean verbose) {
+//		this(config, false, verbose, false);
+//	}
 
 	/**
 	 * Constructor for PlannerParameters.
@@ -125,10 +124,6 @@ public class ReasoningParameters extends Parameters {
 	@Parameter(description="Type of reasoning to use.", defaultValue="RESTRICTED_CHASE")
 	protected ReasoningTypes reasoningType = ReasoningTypes.RESTRICTED_CHASE;
 
-	/** The homomorphism detector type. */
-	@Parameter(description = "Type of the homomorphism detected infrastructure")
-	protected HomomorphismDetectorTypes homomorphismDetectorType;
-	
 	/** The termination k. */
 	@Parameter(description = "Number of rounds of rule firings to perform, in "
 			+ "a single application of the chase. "
@@ -270,41 +265,6 @@ public class ReasoningParameters extends Parameters {
 			this.reasoningType = null;
 		}
 	}
-
-	/**
-	 * Gets the homomorphism detector type.
-	 *
-	 * @return HomomorphismDetectorTypes
-	 */
-	public HomomorphismDetectorTypes getHomomorphismDetectorType() {
-		if (this.homomorphismDetectorType == null) {
-			return HomomorphismDetectorTypes.DATABASE;
-		}
-		return this.homomorphismDetectorType;
-	}
-
-	/**
-	 * Sets the homomorphism detector type.
-	 *
-	 * @param type HomomorphismDetectorTypes
-	 */
-	public void setHomomorphismDetectorType(HomomorphismDetectorTypes type) {
-		this.homomorphismDetectorType = type;
-	}
-
-	/**
-	 * Sets the homomorphism detector type.
-	 *
-	 * @param type String
-	 */
-	public void setHomomorphismDetectorType(String type) {
-		try {
-			this.homomorphismDetectorType = HomomorphismDetectorTypes.valueOf(type);
-		} catch (IllegalArgumentException e) {
-			log.warn("Setting homomorphism checker type to " + HomomorphismDetectorTypes.DATABASE, e);
-			this.homomorphismDetectorType = HomomorphismDetectorTypes.DATABASE;
-		}
-	}
 	
 	/**
 	 * Gets the full initialization.
@@ -361,9 +321,9 @@ public class ReasoningParameters extends Parameters {
 		@EnumParameterValue(description = "Restricted chase algorithm. Fires only dependencies that are not already satisfied.")
 		RESTRICTED_CHASE, 
 		
-//		/** The ktermination chase. */
-//		@EnumParameterValue(description = "Restricted chase, where the number of rule firing rounds is bounded by a constant K")
-//		KTERMINATION_CHASE, 
+		/** The ktermination chase. */
+		@EnumParameterValue(description = "Restricted chase, where the number of rule firing rounds is bounded by a constant K")
+		KTERMINATION_CHASE, 
 //		
 //		/** The bounded chase. */
 //		@EnumParameterValue(description = "Restricted chase, where the number of rule firing rounds is bounded by a constant K")

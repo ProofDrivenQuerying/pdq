@@ -89,14 +89,14 @@ public abstract class UnaryOperatorTest extends RelationalOperatorTest {
 	}
 
 	/**
-	 * Checks if is quasi leaf.
+	 * Checks if does not have any non-unary operators as subexpressions 
 	 */
-	@Test public void isQuasiLeaf() {
-		Mockito.when(child.isQuasiLeaf()).thenReturn(true);
-		Assert.assertEquals("Operator's isQuasiLeaf must match that of child", child.isQuasiLeaf(), getOperator().isQuasiLeaf());
+	@Test public void isJoinFree() {
+		Mockito.when(child.isJoinFree()).thenReturn(true);
+		Assert.assertEquals("Operator's isJoinFree must match that of child", child.isJoinFree(), getOperator().isJoinFree());
 
-		Mockito.when(child.isQuasiLeaf()).thenReturn(false);
-		Assert.assertEquals("Operator's isQuasiLeaf must match that of child", child.isQuasiLeaf(), getOperator().isQuasiLeaf());
+		Mockito.when(child.isJoinFree()).thenReturn(false);
+		Assert.assertEquals("Operator's isJoinFree must match that of child", child.isJoinFree(), getOperator().isJoinFree());
 	}
 
 	/**

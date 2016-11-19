@@ -3,13 +3,14 @@ package uk.ac.ox.cs.pdq.reasoning.chase;
 import java.util.Collection;
 import java.util.List;
 
-import uk.ac.ox.cs.pdq.db.Dependency;
-import uk.ac.ox.cs.pdq.db.EGD;
 import uk.ac.ox.cs.pdq.db.Match;
-import uk.ac.ox.cs.pdq.db.TGD;
-import uk.ac.ox.cs.pdq.db.homomorphism.TriggerProperty;
+import uk.ac.ox.cs.pdq.fol.Dependency;
+import uk.ac.ox.cs.pdq.fol.EGD;
+import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.logging.performance.StatisticsCollector;
-import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance.LimitTofacts;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.TriggerProperty;
 import uk.ac.ox.cs.pdq.reasoning.utility.DefaultParallelEGDChaseDependencyAssessor;
 import uk.ac.ox.cs.pdq.reasoning.utility.ParallelEGDChaseDependencyAssessor;
 import uk.ac.ox.cs.pdq.reasoning.utility.ParallelEGDChaseDependencyAssessor.EGDROUND;
@@ -20,7 +21,7 @@ import com.google.common.collect.Sets;
 
 // TODO: Auto-generated Javadoc
 /**
- * Runs EGD chase using parallel chase steps.
+ * Runs EGD and TGD chase using parallel chase steps.
  * (From modern dependency theory notes)
  * 
  * A trigger for and EGD \delta = \sigma --> x_i = x_j in I is again a homomorphism h in
@@ -63,8 +64,8 @@ public class ParallelEGDChaser extends Chaser {
 	 * @param dependencies the dependencies
 	 */
 	@Override
-	public <S extends ChaseState> void reasonUntilTermination(S instance,  Collection<? extends Dependency> dependencies) {
-		Preconditions.checkArgument(instance instanceof ChaseState);
+	public <S extends ChaseInstance> void reasonUntilTermination(S instance,  Collection<? extends Dependency> dependencies) {
+		Preconditions.checkArgument(instance instanceof ChaseInstance);
 		ParallelEGDChaseDependencyAssessor accessor = new DefaultParallelEGDChaseDependencyAssessor(dependencies);
 
 		Collection<TGD> tgds = Sets.newHashSet();
@@ -88,8 +89,8 @@ public class ParallelEGDChaser extends Chaser {
 		do {
 			++step;
 			//Find all active triggers
-			Collection<Dependency> d = step % 2 == 0 ? accessor.getDependencies(instance, EGDROUND.TGD):accessor.getDependencies(instance, EGDROUND.EGD);
-			List<Match> activeTriggers = instance.getTriggers(d,TriggerProperty.ACTIVE);
+			Collection<? extends Dependency> d = step % 2 == 0 ? accessor.getDependencies(instance, EGDROUND.TGD):accessor.getDependencies(instance, EGDROUND.EGD);
+			List<Match> activeTriggers = instance.getTriggers(d,TriggerProperty.ACTIVE,LimitTofacts.THIS);
 			boolean succeeds = instance.chaseStep(activeTriggers);
 			if(!succeeds) {
 				break;

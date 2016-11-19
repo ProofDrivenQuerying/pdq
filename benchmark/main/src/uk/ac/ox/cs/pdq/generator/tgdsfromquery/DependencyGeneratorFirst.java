@@ -9,13 +9,12 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.benchmark.BenchmarkParameters;
-import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.db.TGD;
 import uk.ac.ox.cs.pdq.db.builder.SchemaBuilder;
-import uk.ac.ox.cs.pdq.fol.AcyclicQuery;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+import uk.ac.ox.cs.pdq.fol.Dependency;
+import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.generator.DependencyGenerator;
@@ -57,11 +56,11 @@ public class DependencyGeneratorFirst extends AbstractDependencyGenerator implem
 	@Override
 	public Schema generate() {
 		SchemaBuilder sb = Schema.builder(this.schema);
-		if(this.query instanceof AcyclicQuery) {
-			return sb.addDependencies(this.generateTGDs((AcyclicQuery) this.query)).build();
-		} else {
-			return sb.addDependencies(this.generateTGDs(this.query)).build();
-		}
+		//if(this.query instanceof AcyclicQuery) {
+			return sb.addDependencies(this.generateTGDsForAcyclicQueries(this.query)).build();
+		//} else {
+			return sb.addDependencies(this.generateTGDsForNonAcyclicQueries(this.query)).build();
+		//}
 	}
 
 	
@@ -75,9 +74,9 @@ public class DependencyGeneratorFirst extends AbstractDependencyGenerator implem
 	 * @param query the query
 	 * @return 		a list of dependencies
 	 */
-	private List<Dependency> generateTGDs(ConjunctiveQuery query) {
+	private List<Dependency> generateTGDsForNonAcyclicQueries(ConjunctiveQuery query) {
 		List<Dependency> dependencies = new ArrayList<>();
-		List<Atom> queryBodyAtoms = query.getBody().getAtoms();
+		List<Atom> queryBodyAtoms = query.getAtoms();
 		Atom guard = queryBodyAtoms.get(queryBodyAtoms.size() - 1);
 		List<Set<Atom>> powerSet = Lists.newArrayList(Sets.powerSet(new LinkedHashSet<>(queryBodyAtoms)));
 		
@@ -127,9 +126,9 @@ public class DependencyGeneratorFirst extends AbstractDependencyGenerator implem
 	 * @TODO the method to generate dependencies from a query must be put back
 	 * @TODO create the class AcyclicQuery
 	 */
-	private List<Dependency> generateTGDs(AcyclicQuery query) {
+	private List<Dependency> generateTGDsForAcyclicQueries(ConjunctiveQuery query) {
 		List<Dependency> ret = new ArrayList<>();
-		List<Atom> queryBodyAtoms = query.getBody().getAtoms();
+		List<Atom> queryBodyAtoms = query.getAtoms();
 		int dependencies = 0;
 		while (dependencies < this.params.getNumberOfConstraints() && dependencies < queryBodyAtoms.size()) {
 			List<Atom> leftConjuncts = Lists.newArrayList(queryBodyAtoms.get(dependencies));

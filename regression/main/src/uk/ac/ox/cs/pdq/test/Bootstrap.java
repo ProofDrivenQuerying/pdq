@@ -41,7 +41,7 @@ public class Bootstrap {
 	@Parameter(names = { "-h", "--help" }, help = true, description = "Displays this help message.")
 	private boolean help;
 	
-	/** The out. */
+	/** The output. TOCOMMENT: of what?*/
 	protected PrintStream out;
 
 	/**
@@ -101,16 +101,16 @@ public class Bootstrap {
 	 */
 	public static abstract class Command {
 
-		/** The name. */
+		/** TOCOMMENT: the name of what?. */
 		public final String name;
 		
-		/** The input. */
+		/** TO COMMENT: The input to what? */
 		@Parameter(names = { "-i", "--input" }, required = true,
 				description = "Path to the regression test case directories.",
 				validateWith=DirectoryValidator.class)
 		private String input;
 
-		/** The params. */
+		/**  */
 		@DynamicParameter(names = "-D", required = false, 
 				description = "Force the given parameters across all the test in the suite, "
 						+ "ignoring those that may be specified in each parameter file. "
@@ -139,16 +139,16 @@ public class Bootstrap {
 		}
 
 		/**
-		 * Gets the input.
 		 *
-		 * @return the path the initialConfig file to use.
+		 * @return gets the path to the initialConfig file to use.
 		 */
 		public String getInput() {
 			return this.input;
 		}
 
 		/**
-		 * Gets the parameter overrides.
+		 * 
+		 * TOCOMMENT: what is this?
 		 *
 		 * @return the parameter overrides
 		 */
@@ -158,7 +158,7 @@ public class Bootstrap {
 
 		/**
 		 * Executes the command action on the list of modules. If the module 
-		 * list is empty, the action is performed on the service manager itself.
+		 * list is empty, the action is performed on the service chaseState itself.
 		 *
 		 * @throws RegressionTestException the regression test exception
 		 * @throws IOException Signals that an I/O exception has occurred.
@@ -190,7 +190,7 @@ public class Bootstrap {
 	}
 
 	/**
-	 * Checks if is help.
+	 * Checks if called for help.
 	 *
 	 * @return true if the line command asked for help.
 	 */
@@ -199,7 +199,7 @@ public class Bootstrap {
 	}
 
 	/**
-	 * Sets the help.
+	 * Sets the help message.
 	 *
 	 * @param help the new help
 	 */

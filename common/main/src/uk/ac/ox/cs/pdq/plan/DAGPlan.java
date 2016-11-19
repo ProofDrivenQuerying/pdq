@@ -125,7 +125,7 @@ public class DAGPlan extends Plan implements Rewritable {
 	}
 
 	/**
-	 * Gets the ancestors.
+	 * Gets the ancestors. TOCOMMENT: WHAT DOES THIS MEAN!!!
 	 *
 	 * @return the ancestor plans
 	 */
@@ -184,7 +184,7 @@ public class DAGPlan extends Plan implements Rewritable {
 	}
 
 	/**
-	 * Gets the effective operator.
+	 * Gets the effective operator. TCOMMENT: WHAT THE ???? DOES THIS MEAN?
 	 *
 	 * @return LogicalOperator
 	 */
@@ -295,7 +295,7 @@ public class DAGPlan extends Plan implements Rewritable {
 	}
 
 	/**
-	 * Checks if is closed.
+	 * Checks if the plan is ``closed'', meaning that there are no inputs
 	 *
 	 * @return if the plan has no input
 	 */

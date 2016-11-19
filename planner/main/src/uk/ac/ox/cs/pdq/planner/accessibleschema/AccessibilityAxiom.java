@@ -6,11 +6,11 @@ import java.util.Map;
 
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.AccessMethod.Types;
-import uk.ac.ox.cs.pdq.db.GuardedDependency;
 import uk.ac.ox.cs.pdq.db.Relation;
-import uk.ac.ox.cs.pdq.db.TGD;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.Constant;
+import uk.ac.ox.cs.pdq.fol.GuardedDependency;
+import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Term;
@@ -141,7 +141,7 @@ public class AccessibilityAxiom extends TGD implements GuardedDependency {
 	 * Gets the guard.
 	 *
 	 * @return PredicateFormula
-	 * @see uk.ac.ox.cs.pdq.db.GuardedDependency#getGuard()
+	 * @see uk.ac.ox.cs.pdq.fol.GuardedDependency#getGuard()
 	 */
 	@Override
 	public Atom getGuard() {

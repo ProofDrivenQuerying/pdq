@@ -5,24 +5,15 @@ import java.util.Objects;
 
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
+import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Variable;
 
 import com.google.common.base.Preconditions;
 
 
-// TODO: Auto-generated Javadoc
 /**
- * A trigger or query match.
- * (From modern dependency theory notes)
- * Consider an instance I, a set Base of values, and a TGD
- * \delta = \forall x  \sigma(\vec{x}) --> \exists y  \tau(\vec{x}, \vec{y})
- * A trigger for \delta in I is a homomorphism h of \sigma into I.
- * 
- * (Query match definition) If Q′ is a conjunctive query and v is a chase configuration
- * having elements for each free variable of Q′, then a homomorphism of Q′ into v
- * mapping each free variable into the corresponding element is called a match for Q′ in v.
- *  
+ * A query match.
  *
  * @author Efthymia Tsamoura
  * @author Julien Leblay
@@ -33,7 +24,7 @@ public class Match {
 	/**  The dependency or query that will be grounded using an homomorphism*. */
 	protected final Formula query;
 
-	/** The mapping of query's variables to chase constants.*/
+	/** The mapping of query's variables to constants.*/
 	protected final Map<Variable, Constant> mapping;
 
 	/**
@@ -68,7 +59,7 @@ public class Match {
 	}
 
 	/**
-	 * Equals.
+	 * Two matches are equal if the queries and the mappings they contain are equal (using equals accordingly).
 	 *
 	 * @param o Object
 	 * @return boolean
@@ -86,21 +77,12 @@ public class Match {
 				&& this.mapping.equals(((Match) o).mapping);
 	}
 
-	/**
-	 * Hash code.
-	 *
-	 * @return int
-	 */
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(this.query, this.mapping);
 	}
 
-	/**
-	 * To string.
-	 *
-	 * @return String
-	 */
 	@Override
 	public String toString() {
 		return this.mapping.toString() + "\n" + this.query.toString(); 

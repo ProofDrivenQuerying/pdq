@@ -3,6 +3,7 @@ package uk.ac.ox.cs.pdq.planner;
 import uk.ac.ox.cs.pdq.ConsistencyChecker;
 import uk.ac.ox.cs.pdq.InconsistentParametersException;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
+import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 
 // TODO: Auto-generated Javadoc
@@ -11,7 +12,7 @@ import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
  *
  * @author Julien Leblay
  */
-public class PlannerConsistencyChecker implements ConsistencyChecker<PlannerParameters, CostParameters, ReasoningParameters> {
+public class PlannerConsistencyChecker implements ConsistencyChecker<PlannerParameters, CostParameters, ReasoningParameters, DatabaseParameters> {
 
 	/**
 	 * Check.
@@ -23,7 +24,7 @@ public class PlannerConsistencyChecker implements ConsistencyChecker<PlannerPara
 	 * @see uk.ac.ox.cs.pdq.ConsistencyChecker#check(PlannerParameters)
 	 */
 	@Override
-	public void check(PlannerParameters p, CostParameters c, ReasoningParameters r) throws InconsistentParametersException {
+	public void check(PlannerParameters p, CostParameters c, ReasoningParameters r, DatabaseParameters d) throws InconsistentParametersException {
 	}
 	
 	/**

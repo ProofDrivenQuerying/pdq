@@ -2,8 +2,8 @@ package uk.ac.ox.cs.pdq.reasoning.utility;
 
 import java.util.Collection;
 
-import uk.ac.ox.cs.pdq.db.Dependency;
-import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState;
+import uk.ac.ox.cs.pdq.fol.Dependency;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -31,6 +31,6 @@ public interface ParallelEGDChaseDependencyAssessor {
 		 * @param round the round
 		 * @return 		the dependencies that are most likely to be fired in the next chase round.
 		 */
-		Collection<Dependency> getDependencies(ChaseState state, EGDROUND round);
+		Collection<? extends Dependency> getDependencies(ChaseInstance state, EGDROUND round);
 
 }

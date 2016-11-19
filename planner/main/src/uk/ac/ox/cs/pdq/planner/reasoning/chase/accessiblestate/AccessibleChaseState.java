@@ -6,11 +6,12 @@ import java.util.Map;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -18,7 +19,7 @@ import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
  *
  * @author Efthymia Tsamoura
  */
-public interface AccessibleChaseState extends uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState {
+public interface AccessibleChaseState extends ChaseInstance {
 
 	/**
 	 * For each input accessibility axiom, it
@@ -51,28 +52,24 @@ public interface AccessibleChaseState extends uk.ac.ox.cs.pdq.reasoning.chase.st
 	Map<AccessibilityAxiom, List<Match>> getUnexposedFacts(AccessibleSchema accessibleSchema);
 	
 	/**
-	 * Gets the inferred.
 	 *
 	 * @return 		the inferred accessible facts of the state
 	 */
 	Collection<String> getInferred();
 
 	/**
-	 * Gets the derived inferred.
 	 *
 	 * @return 		the inferred accessible facts that were derived when chasing the state
 	 */
 	Collection<Atom> getDerivedInferred();
 	
 	/**
-	 * Gets the provenance.
 	 *
 	 * @return 		the rule firings that took place.
 	 */
 	Map<Atom, Pair<Dependency, Collection<Atom>>> getProvenance();
 
 	/**
-	 * Gets the provenance.
 	 *
 	 * @param fact the fact
 	 * @return 		the firing that has produced the input fact

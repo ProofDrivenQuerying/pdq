@@ -38,6 +38,7 @@ public class ExecuteSQLQueryThread implements Callable<List<Match>> {
 	protected final Queue<Triple<Formula, String, LinkedHashMap<String, Variable>>> queries;
 	
 	/** List of database constants **/
+	//TOCOMMENT this class should not be aware of constants
 	protected final Map<String, TypedConstant<?>> constants;
 
 	public ExecuteSQLQueryThread(Queue<Triple<Formula, String, LinkedHashMap<String, Variable>>> queries, 
@@ -86,6 +87,7 @@ public class ExecuteSQLQueryThread implements Callable<List<Match>> {
 			}
 		}
 		return results;
+		
 	}
 
 }

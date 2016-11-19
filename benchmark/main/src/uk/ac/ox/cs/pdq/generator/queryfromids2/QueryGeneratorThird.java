@@ -6,12 +6,12 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import uk.ac.ox.cs.pdq.benchmark.BenchmarkParameters;
-import uk.ac.ox.cs.pdq.db.Dependency;
-import uk.ac.ox.cs.pdq.db.LinearGuarded;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+import uk.ac.ox.cs.pdq.fol.Dependency;
+import uk.ac.ox.cs.pdq.fol.LinearGuarded;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
@@ -62,7 +62,7 @@ public class QueryGeneratorThird extends AbstractDependencyGenerator implements 
 		// TODO: get rid of this when inclusion dependencies have there own class.
 		for (Dependency ic : this.schema.getDependencies()) {
 			if (ic instanceof LinearGuarded
-					&& ((LinearGuarded) ic).getRight().getAtoms().size() == 1) {
+					&& ((LinearGuarded) ic).getHead().getAtoms().size() == 1) {
 				guardedDependencies.add((LinearGuarded) ic);
 			}
 		}
@@ -77,14 +77,14 @@ public class QueryGeneratorThird extends AbstractDependencyGenerator implements 
 		//if there is an inclusion dependency P_i(.) --> P_j(.) 
 		Map<String, InclusionDependencyGraphNode> nodes = new TreeMap<>();
 		for (LinearGuarded guardedDependency:guardedDependencies) {
-			Atom l = guardedDependency.getLeft().getAtoms().get(0);
+			Atom l = guardedDependency.getBody().getAtoms().get(0);
 			Predicate s = l.getPredicate();
 			InclusionDependencyGraphNode ln = nodes.get(s.getName());
 			if (ln == null) {
 				ln = new InclusionDependencyGraphNode((Relation) s);
 				nodes.put(s.getName(), ln);
 			}
-			Atom r = guardedDependency.getRight().getAtoms().get(0);
+			Atom r = guardedDependency.getHead().getAtoms().get(0);
 			s = r.getPredicate();
 			InclusionDependencyGraphNode rn = nodes.get(s.getName());
 			if (rn == null) {
@@ -119,7 +119,7 @@ public class QueryGeneratorThird extends AbstractDependencyGenerator implements 
 			// Create free variables
 			List<Variable> freeVars = this.pickFreeVariables(queryAtoms);
 			return new ConjunctiveQuery(
-					new Atom(new Predicate("Q", freeVars.size()), freeVars),
+					freeVars,
 					Conjunction.of(queryAtoms));
 		}
 		throw new IllegalStateException("Could not generate query. Dependency graph is empty");

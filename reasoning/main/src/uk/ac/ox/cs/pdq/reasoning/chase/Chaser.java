@@ -4,9 +4,9 @@ import java.util.Collection;
 
 import org.apache.log4j.Logger;
 
-import uk.ac.ox.cs.pdq.db.Dependency;
+import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.logging.performance.StatisticsCollector;
-import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -41,7 +41,7 @@ public abstract class Chaser {
 	 * @param instance the instance
 	 * @param dependencies the dependencies
 	 */
-	public abstract <S extends ChaseState> void reasonUntilTermination(S instance, Collection<? extends Dependency> dependencies);
+	public abstract <S extends ChaseInstance> void reasonUntilTermination(S instance, Collection<? extends Dependency> dependencies);
 	
 	
 

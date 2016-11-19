@@ -9,7 +9,6 @@ import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.util.Utility;
 
@@ -32,10 +31,10 @@ public class CrossProductFreeQuerySelector implements QuerySelector {
 	 */
 	@Override
 	public boolean accept(ConjunctiveQuery q) {
-		for (Conjunction<Atom> body : this.enumerateConjunctions(q.getBody())) {
-			if (body.size() > 1) {
+		for (Conjunction body : this.enumerateConjunctions(q.getChildren().get(0))) {
+			if (body.getChildren().size() > 1) {
 				Multimap<Term, Atom> clusters = LinkedHashMultimap.create();
-				for (Atom pred: body) {
+				for (Atom pred: body.getAtoms()) {
 					for (Term t: pred.getTerms()) {
 						clusters.put(t, pred);
 					}
@@ -56,19 +55,19 @@ public class CrossProductFreeQuerySelector implements QuerySelector {
 	 * @param formula the formula
 	 * @return the collection
 	 */
-	private Collection<Conjunction<Atom>> enumerateConjunctions(Formula formula) {
+	private Collection<Conjunction> enumerateConjunctions(Formula formula) {
 		Preconditions.checkArgument(formula != null);
 		if (formula instanceof Conjunction) {
-			List<Conjunction<Atom>> result = new LinkedList<>();
+			List<Conjunction> result = new LinkedList<>();
 			List<Atom> localConj = new LinkedList<>();
-			for (Formula subFormula: ((Conjunction<Formula>) formula)) {
+			for (Formula subFormula: formula.getChildren()) {
 				if (subFormula instanceof Atom) {
 					localConj.add((Atom) subFormula);
 				} else {
 					result.addAll(this.enumerateConjunctions(subFormula));
 				}
 			}
-			result.add(Conjunction.of(localConj));
+			result.add((Conjunction) Conjunction.of(localConj));
 			return result;
 		}
 		throw new IllegalStateException();

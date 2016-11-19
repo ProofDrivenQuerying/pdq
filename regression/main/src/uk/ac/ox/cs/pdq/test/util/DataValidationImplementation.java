@@ -5,16 +5,16 @@ import java.util.HashSet;
 import java.util.List;
 
 import jersey.repackaged.com.google.common.collect.Lists;
-import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.db.TGD;
-import uk.ac.ox.cs.pdq.db.homomorphism.DatabaseHomomorphismManager;
-import uk.ac.ox.cs.pdq.db.homomorphism.TriggerProperty;
 import uk.ac.ox.cs.pdq.db.wrappers.RelationAccessWrapper;
 import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.Dependency;
+import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.TriggerProperty;
 import uk.ac.ox.cs.pdq.runtime.exec.AccessException;
 import uk.ac.ox.cs.pdq.util.Table;
 import uk.ac.ox.cs.pdq.util.Tuple;
@@ -27,13 +27,15 @@ import com.google.common.base.Preconditions;
  * Class that checks if the data is consistent w.r.t. the schema dependencies
  * The homomorphisms are found using SQL queries. The database facts (relation tuples) have to be stored in a database.
  * This database is created by a DBHomomorphismManager object.
+ * 
+ * @author georgek
  * @author Efthymia Tsamoura
  */
 
 public final class DataValidationImplementation extends DataValidation{
 
-	/** The manager. */
-	private final DatabaseHomomorphismManager manager;
+	/** The chaseState. */
+	private final ChaseInstance manager;
 	
 	/** The ics. */
 	private final List<Dependency> ics;
@@ -41,9 +43,9 @@ public final class DataValidationImplementation extends DataValidation{
 	/**
 	 * Constructor for DataValidationImplementation.
 	 * @param schema Schema
-	 * @param manager DBHomomorphismManager
+	 * @param chaseState DBHomomorphismManager
 	 */
-	public DataValidationImplementation(Schema schema, DatabaseHomomorphismManager manager) {
+	public DataValidationImplementation(Schema schema, ChaseInstance manager) {
 		super(schema);
 		this.manager = manager;
 		this.ics = schema.getDependencies();
@@ -106,14 +108,14 @@ public final class DataValidationImplementation extends DataValidation{
 	 */
 	private void validate(Dependency constraint) throws PlannerException, AccessException {
 		// Checks if the there exists at least one set of facts that satisfies the left-hand side of the input dependency
-		List<Match> matchings = this.manager.getTriggers(Lists.newArrayList(constraint),TriggerProperty.ACTIVE);
+		List<Match> matchings = this.manager.getTriggers(Lists.newArrayList(constraint),TriggerProperty.ACTIVE,null);
 		if (!matchings.isEmpty()) {
 			/*
 			 * For each set of facts F1 that satisfy the left-hand side of the input dependency check whether or not 
 			 * there exists another set of facts F2 that satisfies the right-hand side of the input dependency w.r.t F1 
 			 */
 			for (Match m: matchings) {
-				List<Match> subMatchings = this.manager.getTriggers(Lists.newArrayList(this.invert(constraint)),TriggerProperty.ACTIVE);//, HomomorphismProperty.createMapProperty(m.getMapping()));
+				List<Match> subMatchings = this.manager.getTriggers(Lists.newArrayList(this.invert(constraint)),TriggerProperty.ACTIVE,null);//, HomomorphismProperty.createMapProperty(m.getMapping()));
 				if (subMatchings.isEmpty()) {
 					throw new java.lang.IllegalArgumentException("Data does not satisfy constraint " + constraint.toString() );
 				}

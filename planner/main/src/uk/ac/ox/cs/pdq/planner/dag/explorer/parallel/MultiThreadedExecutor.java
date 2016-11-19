@@ -16,11 +16,12 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
+import uk.ac.ox.cs.pdq.fol.Dependency;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import uk.ac.ox.cs.pdq.LimitReachedException;
 import uk.ac.ox.cs.pdq.LimitReachedException.Reasons;
-import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
@@ -113,7 +114,7 @@ public class MultiThreadedExecutor extends IterativeExecutor {
 							query,
 							dependencies,
 							this.mtcontext.getReasoners()[j],
-							this.mtcontext.getDetectors()[j],
+							this.mtcontext.getConnections()[j],
 							this.mtcontext.getCostEstimators()[j],
 							this.mtcontext.getSuccessDominances()[j],
 							bestConfiguration,
@@ -205,7 +206,6 @@ public class MultiThreadedExecutor extends IterativeExecutor {
 						input,
 						equivalenceClasses,
 						bestConfiguration,
-						this.mtcontext.getDetectors()[j],
 						this.mtcontext.getSuccessDominances()[j],
 						this.mtcontext.getDominances()[j],
 						output,

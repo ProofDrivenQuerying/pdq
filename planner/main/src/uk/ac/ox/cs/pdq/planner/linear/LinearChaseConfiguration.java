@@ -30,7 +30,10 @@ import com.google.common.collect.Sets;
 // TODO: Auto-generated Javadoc
 /**
  * Type of configurations met in the linear world.
- * Each linear chase configuration is associated with a set of facts, a rule firing, and a set of generated facts p � the ones produced by the last rule firing.
+ * Each linear chase configuration is associated with a set of facts, 
+ * a rule firing, and a set of generated facts --
+ * the ones produced by the last rule firing.
+ * TOCOMMENT: DO NOT FOLLOW ABOVE
  * The (output) facts are all stored inside the state member field.
  *
  * @author Efthymia Tsamoura
@@ -44,6 +47,7 @@ public class LinearChaseConfiguration extends ChaseConfiguration<LeftDeepPlan> i
 	private List<Candidate> candidates;
 
 	/**  The candidate facts exposed in this configuration. */
+/** TOCOMMENT: WHY WOULD A CANDIDATE BE EXPOSED ALREADY? */
 	private final Set<Candidate> exposedCandidates;
 
 	/** Random engine. Used when selecting candidate facts to expose*/
@@ -85,7 +89,7 @@ public class LinearChaseConfiguration extends ChaseConfiguration<LeftDeepPlan> i
 	 * Creates a linear chase configuration using the input accessible chase state that has no parent configuration.
 	 * Used when creating the root of the linear plan tree.
 	 *
-	 * @param state the state
+	 * @param state the state; i.e. the set of facts
 	 * @param random the random
 	 */
 	public LinearChaseConfiguration(
@@ -105,7 +109,7 @@ public class LinearChaseConfiguration extends ChaseConfiguration<LeftDeepPlan> i
 	 * Checks if is exposed.
 	 *
 	 * @param candidate the candidate
-	 * @return 		true of the input candidate has been already exposed
+	 * @return 		true if the input candidate has been already exposed
 	 */
 	public boolean isExposed(Candidate candidate) {
 		Atom infAcc = candidate.getInferredAccessibleFact();
@@ -234,7 +238,7 @@ public class LinearChaseConfiguration extends ChaseConfiguration<LeftDeepPlan> i
 	}
 
 	/**
-	 * Equals.
+	 * 
 	 *
 	 * @param o Object
 	 * @return boolean
@@ -262,7 +266,7 @@ public class LinearChaseConfiguration extends ChaseConfiguration<LeftDeepPlan> i
 	}
 
 	/**
-	 * To string.
+	 * TOCOMMENT: CONVERT WHAT TO A STRING?
 	 *
 	 * @return String
 	 */

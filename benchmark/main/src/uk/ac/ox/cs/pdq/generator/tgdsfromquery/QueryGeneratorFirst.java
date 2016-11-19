@@ -12,7 +12,6 @@ import java.util.TreeSet;
 import uk.ac.ox.cs.pdq.benchmark.BenchmarkParameters;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.fol.AcyclicQuery;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Atom;
@@ -73,7 +72,7 @@ public class QueryGeneratorFirst extends AbstractDependencyGenerator implements 
 	 * @return
 	 * 		an acyclic query of the target number of conjunctions 
 	 */
-	private AcyclicQuery generateAcyclicQuery() {
+	private ConjunctiveQuery generateAcyclicQuery() {
 		SortedSet<Atom> tmpBody = new TreeSet<>(new Comparator<Atom>() {
 			@Override public int compare(Atom o1, Atom o2) {
 				return o1 != null
@@ -124,9 +123,7 @@ public class QueryGeneratorFirst extends AbstractDependencyGenerator implements 
 		} while(!unusedPreds.isEmpty());
 
 		List<Variable> free = this.pickFreeVariables(body);
-		Predicate relationQ = new Predicate("Q", free.size());
-		Atom atom = new Atom(relationQ, free);
-		return new AcyclicQuery(atom, Conjunction.of(body));
+		return new ConjunctiveQuery(free, Conjunction.of(body));
 	}
 
 	/**
@@ -150,9 +147,7 @@ public class QueryGeneratorFirst extends AbstractDependencyGenerator implements 
 				this.params.getRepeatedRelations());
 		List<Atom> queryBodyAtoms = Lists.newArrayList(ret.getConjuncts());
 		List<Variable> free = this.pickFreeVariables(queryBodyAtoms);
-		Predicate relationQ = new Predicate("Q", free.size());
-		Atom atom = new Atom(relationQ, free);
-		return new ConjunctiveQuery(atom, Conjunction.of(queryBodyAtoms));
+		return new ConjunctiveQuery(free, Conjunction.of(queryBodyAtoms));
 	}
 
 	
@@ -177,8 +172,6 @@ public class QueryGeneratorFirst extends AbstractDependencyGenerator implements 
 				this.params.getRepeatedRelations());
 		List<Atom> queryBodyAtoms = this.createChainConjuncts(ret.getConjuncts());
 		List<Variable> free = this.pickFreeVariables(queryBodyAtoms);
-		Predicate relationQ = new Predicate("Q", free.size());
-		Atom atom = new Atom(relationQ, free);
-		return new ConjunctiveQuery(atom, Conjunction.of(queryBodyAtoms));
+		return new ConjunctiveQuery(free, Conjunction.of(queryBodyAtoms));
 	}
 }

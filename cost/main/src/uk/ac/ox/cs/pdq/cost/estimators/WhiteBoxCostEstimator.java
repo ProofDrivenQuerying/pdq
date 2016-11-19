@@ -17,7 +17,7 @@ import uk.ac.ox.cs.pdq.algebra.PredicateBasedOperator;
 import uk.ac.ox.cs.pdq.algebra.Projection;
 import uk.ac.ox.cs.pdq.algebra.RelationalOperator;
 import uk.ac.ox.cs.pdq.algebra.StaticInput;
-import uk.ac.ox.cs.pdq.algebra.SubPlanAlias;
+/* import uk.ac.ox.cs.pdq.algebra.SubPlanAlias; */
 import uk.ac.ox.cs.pdq.algebra.UnaryOperator;
 import uk.ac.ox.cs.pdq.algebra.predicates.ConjunctivePredicate;
 import uk.ac.ox.cs.pdq.algebra.predicates.Predicate;
@@ -28,6 +28,7 @@ import uk.ac.ox.cs.pdq.plan.DAGPlan;
 import uk.ac.ox.cs.pdq.plan.DoubleCost;
 import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.plan.Plan;
+import uk.ac.ox.cs.pdq.plan.SubPlanAlias;
 
 import com.google.common.collect.Lists;
 
@@ -149,9 +150,6 @@ public class WhiteBoxCostEstimator<P extends Plan> implements BlackBoxCostEstima
 		double card = Math.max(1.0, logOp.getMetadata().getOutputCardinality());
 		double localCost =
 				Math.max(0.0, card * perOutputTupleCost(logOp));
-		//		if (logOp instanceof AccessOperator) {
-		//			localCost += Math.max(1.0, inputCard) * perInputTupleCost(logOp);
-		//		}
 		if (logOp instanceof SubPlanAlias) {
 			Plan subPlan = ((SubPlanAlias) logOp).getPlan();
 			Cost aliasCost = new DoubleCost(Double.POSITIVE_INFINITY);

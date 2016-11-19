@@ -10,6 +10,7 @@ import com.google.common.collect.Lists;
 
 public class MainMemoryDatabase {
 	
+//THIS WHOLE CLASS NEEDS TO CHANGE!!
 	protected Map<String, MainMemoryRelation> relations;
 		
 	public Map<String, MainMemoryRelation> getTables(){

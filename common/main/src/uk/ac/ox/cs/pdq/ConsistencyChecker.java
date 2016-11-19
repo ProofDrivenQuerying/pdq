@@ -10,7 +10,7 @@ package uk.ac.ox.cs.pdq;
  * @param <P2> the generic type
  * @param <P3> the generic type
  */
-public interface ConsistencyChecker<P1 extends Parameters, P2 extends Parameters, P3 extends Parameters> {
+public interface ConsistencyChecker<P1 extends Parameters, P2 extends Parameters, P3 extends Parameters, P4 extends Parameters> {
 	
 	/**
 	 * Check.
@@ -20,5 +20,5 @@ public interface ConsistencyChecker<P1 extends Parameters, P2 extends Parameters
 	 * @param p3 the p3
 	 * @throws InconsistentParametersException the inconsistent parameters exception
 	 */
-	void check(P1 p1, P2 p2, P3 p3) throws InconsistentParametersException;
+	void check(P1 p1, P2 p2, P3 p3, P4 p4) throws InconsistentParametersException;
 }

@@ -9,6 +9,7 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.SQLException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -205,10 +206,11 @@ public class SemanticOptimizationService implements Service {
 		 *
 		 * @return GeneratedMessage
 		 * @throws ServiceException the service exception
+		 * @throws SQLException 
 		 * @see java.util.concurrent.Callable#call()
 		 */
 		@Override
-		public GeneratedMessage call() throws ServiceException {
+		public GeneratedMessage call() throws ServiceException, SQLException {
 			assert this.in != null;
 			assert this.out != null;
 

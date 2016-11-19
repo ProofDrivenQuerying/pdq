@@ -17,9 +17,9 @@ import javafx.stage.Stage;
 
 import org.apache.log4j.Logger;
 
-import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.builder.SchemaBuilder;
+import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.io.ReaderException;
 import uk.ac.ox.cs.pdq.io.pretty.PrettyDependencyReader;
 import uk.ac.ox.cs.pdq.io.pretty.PrettyDependencyWriter;

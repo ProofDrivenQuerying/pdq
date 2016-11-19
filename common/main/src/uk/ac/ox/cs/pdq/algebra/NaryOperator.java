@@ -319,13 +319,12 @@ public abstract class NaryOperator extends RelationalOperator {
 	}
 
 	/**
-	 * TOCOMMENT
-	 * Checks if is quasi leaf.
+	 * Checks if does not have a subexpression that is a non-unary   operator
 	 *
 	 * @return boolean
 	 */
 	@Override
-	public boolean isQuasiLeaf() {
+	public boolean  isJoinFree() {
 		return false;
 	}
 
@@ -338,10 +337,10 @@ public abstract class NaryOperator extends RelationalOperator {
 		Iterator<RelationalOperator> childrenIt = this.children.iterator();
 		assert childrenIt.hasNext();
 		RelationalOperator leftMost = childrenIt.next();
-		boolean result = leftMost.isLeftDeep() || leftMost.isQuasiLeaf();
+		boolean result = leftMost.isLeftDeep() || leftMost.isJoinFree();
 		while (childrenIt.hasNext() && result) {
 			RelationalOperator child = childrenIt.next();
-			result &= child.isQuasiLeaf();
+			result &= child.isJoinFree();
 		}
 		return result;
 	}
@@ -356,8 +355,8 @@ public abstract class NaryOperator extends RelationalOperator {
 		for (Iterator<RelationalOperator> childrenIt = this.children.iterator();
 				childrenIt.hasNext();) {
 			RelationalOperator child = childrenIt.next();
-			result &= childrenIt.hasNext() ? child.isQuasiLeaf() :
-				(child.isRightDeep() || child.isQuasiLeaf());
+			result &= childrenIt.hasNext() ? child.isJoinFree() :
+				(child.isRightDeep() || child.isJoinFree());
 		}
 		return result;
 	}

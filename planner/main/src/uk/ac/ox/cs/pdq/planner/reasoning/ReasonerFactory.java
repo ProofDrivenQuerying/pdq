@@ -2,6 +2,7 @@ package uk.ac.ox.cs.pdq.planner.reasoning;
 
 import org.apache.log4j.Logger;
 
+import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 
@@ -25,11 +26,12 @@ public final class ReasonerFactory extends uk.ac.ox.cs.pdq.reasoning.ReasonerFac
 	 * @param eventBus the event bus
 	 * @param collectStats the collect stats
 	 * @param params the params
+	 * @param dbParams 
 	 */
 	public ReasonerFactory(
 			EventBus eventBus,
 			boolean collectStats,
-			ReasoningParameters params) {
+			ReasoningParameters params, DatabaseParameters dbParams) {
 		super(eventBus, collectStats, params);
 	}
 

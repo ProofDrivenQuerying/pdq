@@ -2,7 +2,7 @@ package uk.ac.ox.cs.pdq.generator.reverse;
 
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Query;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -34,8 +34,8 @@ public class ConstantRatioQuerySelector implements QuerySelector {
 	public boolean accept(ConjunctiveQuery q) {
 		double constPred = 0.0;
 		int count = 0;
-		for (Atom p: q.getBody().getAtoms()) {
-			if (!p.getSchemaConstants().isEmpty()) {
+		for (Atom p:q.getAtoms()) {
+			if (!Utility.getTypedConstants(p).isEmpty()) {
 				constPred++;
 			}
 			count++;

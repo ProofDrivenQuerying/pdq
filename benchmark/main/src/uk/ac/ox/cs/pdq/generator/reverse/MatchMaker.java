@@ -18,7 +18,6 @@ import uk.ac.ox.cs.pdq.EventHandler;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.io.pretty.VeryPrettyQueryWriter;
@@ -182,7 +181,7 @@ public class MatchMaker implements EventHandler {
 			while (restricted.size() > 30) {
 				for (Iterator<Atom> it = restricted.iterator(); it.hasNext();) {
 					Atom p = it.next();
-					if (p.getSchemaConstants().isEmpty()) {
+					if (Utility.getTypedConstants(p).isEmpty()) {
 						log.warn("Removing from connected component: " + p);
 						it.remove();
 						break;
@@ -191,15 +190,15 @@ public class MatchMaker implements EventHandler {
 			}
 			
 			for (Set<Atom> body: Sets.powerSet(restricted)) {
-				Set<Term> head = new LinkedHashSet<>(Utility.getTerms(body));
-				ConjunctiveQuery candidate = new ConjunctiveQuery("Q" + (i++),
-						new ArrayList<>(head),
+				//Set<Term> head = new LinkedHashSet<>(Utility.getTerms(body));
+				ConjunctiveQuery candidate = new ConjunctiveQuery(
+						Utility.getVariables(body),
 						Conjunction.of(body));
 				if (this.accept(candidate)) {
 					VeryPrettyQueryWriter.to(this.out).write(candidate);
 					this.out.println();
 					
-					try(PrintStream ps = new PrintStream("test/output/candidate-" + candidate.getHead().getName() + ".xml")) {
+					try(PrintStream ps = new PrintStream("test/output/candidate-" + "Q" + ".xml")) {
 						new QueryWriter().write(ps, candidate);
 					} catch (FileNotFoundException e) {
 						log.warn(e);

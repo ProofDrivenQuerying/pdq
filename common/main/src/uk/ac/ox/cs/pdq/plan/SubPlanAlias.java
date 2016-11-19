@@ -1,9 +1,10 @@
-package uk.ac.ox.cs.pdq.algebra;
+package uk.ac.ox.cs.pdq.plan;
 
 import java.util.List;
 
+import uk.ac.ox.cs.pdq.algebra.RelationalOperator;
+import uk.ac.ox.cs.pdq.algebra.RelationalOperatorException;
 import uk.ac.ox.cs.pdq.fol.Term;
-import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.util.TupleType;
 
 import com.google.common.base.Preconditions;
@@ -172,14 +173,14 @@ public class SubPlanAlias extends RelationalOperator {
 	}
 
 	/**
-	 * Checks if is quasi leaf.
+	 * Checks if it does not have a non-unary operator as a subexpression.
 	 *
 	 * @return boolean
 	 */
 	@Override
-	public boolean isQuasiLeaf() {
+	public boolean  isJoinFree() {
 		if (this.subPlan != null) {
-			return ((RelationalOperator) this.subPlan.getOperator()).isQuasiLeaf();
+			return ((RelationalOperator) this.subPlan.getOperator()).isJoinFree();
 		}
 		return false;
 	}

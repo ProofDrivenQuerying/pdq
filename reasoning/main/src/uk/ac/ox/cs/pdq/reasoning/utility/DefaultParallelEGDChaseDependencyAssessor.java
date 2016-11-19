@@ -4,12 +4,12 @@ import java.util.Collection;
 
 import org.apache.commons.collections4.CollectionUtils;
 
-import uk.ac.ox.cs.pdq.db.Dependency;
-import uk.ac.ox.cs.pdq.db.EGD;
-import uk.ac.ox.cs.pdq.db.TGD;
 import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.Dependency;
+import uk.ac.ox.cs.pdq.fol.EGD;
 import uk.ac.ox.cs.pdq.fol.Predicate;
-import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState;
+import uk.ac.ox.cs.pdq.fol.TGD;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
 
 import com.beust.jcommander.internal.Sets;
 import com.google.common.base.Preconditions;
@@ -78,7 +78,7 @@ public final class DefaultParallelEGDChaseDependencyAssessor implements Parallel
 	 * @return 		the dependencies that are most likely to be fired in the next chase round.
 	 */
 	@Override
-	public Collection<Dependency> getDependencies(ChaseState state, EGDROUND round) {
+	public Collection<? extends Dependency> getDependencies(ChaseInstance state, EGDROUND round) {
 		Collection<Dependency> constraints = Sets.newHashSet();
 		Collection<Atom> newFacts = null;
 		if(this.stateFacts == null || (round.equals(EGDROUND.EGD) && this.firstEGDRound == true) || 

@@ -8,12 +8,12 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import uk.ac.ox.cs.pdq.benchmark.BenchmarkParameters;
-import uk.ac.ox.cs.pdq.db.Dependency;
-import uk.ac.ox.cs.pdq.db.LinearGuarded;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+import uk.ac.ox.cs.pdq.fol.Dependency;
+import uk.ac.ox.cs.pdq.fol.LinearGuarded;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Predicate;
@@ -123,7 +123,7 @@ public class QueryGeneratorSecond extends QueryGeneratorFirst{
 		if (!nodes.isEmpty()) {
 			List<Variable> variablesPool = this.createVariables(1000);
 			List<Variable> queryVariables = new ArrayList<>();
-			List<Formula> queryAtoms = new ArrayList<>();
+			List<Atom> queryAtoms = new ArrayList<>();
 			List<Variable> freshVariables = new ArrayList<>();
 			for(int atom = 0; atom < this.params.getQueryConjuncts(); ++atom) {
 				List<Variable> nextfreshVariables = new ArrayList<>();

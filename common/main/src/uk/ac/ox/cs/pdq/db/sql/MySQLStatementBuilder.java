@@ -59,7 +59,7 @@ public class MySQLStatementBuilder extends SQLStatementBuilder {
 	 * @see uk.ac.ox.cs.pdq.reasoning.homomorphism.SQLStatementBuilder#translateLimitConstraints(uk.ac.ox.cs.pdq.fol.Evaluatable, uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismConstraint[])
 	 */
 	@Override
-	protected String translateLimitConstraints(HomomorphismProperty... constraints) {
+	public String translateLimitConstraints(HomomorphismProperty... constraints) {
 		for(HomomorphismProperty c:constraints) {
 			if(c instanceof TopKProperty) {
 				return "LIMIT " + ((TopKProperty) c).k;
@@ -132,6 +132,12 @@ public class MySQLStatementBuilder extends SQLStatementBuilder {
 		}
 		insertInto += Joiner.on(",\n").join(tuples) + ";";
 		return insertInto;
+	}
+	
+	
+	@Override
+	public String createBulkDeleteStatement(Predicate predicate, Collection<Atom> facts, Map<String, DatabaseRelation> toDatabaseTables) {
+		return super.createBulkDeleteStatement(predicate, facts, toDatabaseTables)+";";
 	}
 }
 

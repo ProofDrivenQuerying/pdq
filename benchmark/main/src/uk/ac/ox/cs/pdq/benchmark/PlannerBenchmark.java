@@ -17,6 +17,7 @@ import uk.ac.ox.cs.pdq.algebra.RelationalOperator;
 import uk.ac.ox.cs.pdq.algebra.UnaryOperator;
 import uk.ac.ox.cs.pdq.algebra.predicates.ConjunctivePredicate;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
+import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.logging.performance.ChainedStatistics;
@@ -43,15 +44,15 @@ public class PlannerBenchmark extends Runner {
 	/** Runner's logger. */
 	private static Logger log = Logger.getLogger(PlannerBenchmark.class);
 
-	/** The write plan. */
+	/** Flag telling if plan is written. */
 	@Parameter(names = { "-w", "--write-plan" }, required = false, description = "If true, write the resulting plan to a plan.xml file.")
 	protected boolean writePlan;
 
-	/** The write plan multiple. */
+	/** TOCOMMENT: WHAT IS THE DIFFERENCE?? . */
 	@Parameter(names = { "-W", "--write-multiple-plans" }, required = false, description = "If true, write the resulting plan to a plan.xml file.")
 	protected boolean writePlanMultiple;
 
-	/** The no dep. */
+	/** FLAG telling if dependencies are respected . */
 	@Parameter(names = { "-n", "--no-dependencies" }, required = false, description = "If true, the planner will be run without taking dependencies into account.")
 	protected boolean noDep;
 
@@ -115,6 +116,7 @@ public class PlannerBenchmark extends Runner {
 		PlannerParameters plannerParams = null;
 		CostParameters costParams = null;
 		ReasoningParameters reasoningParams = null;
+		DatabaseParameters dbParams = null;
 		
 		if (this.getInputFile() != null) {
 			synchronized (this) {
@@ -140,10 +142,11 @@ public class PlannerBenchmark extends Runner {
 			plannerParams = new PlannerParameters(new File(f.getAbsolutePath()));
 			costParams = new CostParameters(new File(f.getAbsolutePath()));
 			reasoningParams = new ReasoningParameters(new File(f.getAbsolutePath()));
+			dbParams = new DatabaseParameters(new File(f.getAbsolutePath()));
 		} else {
 			plannerParams = new PlannerParameters();
 			costParams = new CostParameters();
-			reasoningParams = new ReasoningParameters();
+			dbParams = new DatabaseParameters();
 		}
 
 		// Override with dynamic parameters (specified in command line)
@@ -192,7 +195,7 @@ public class PlannerBenchmark extends Runner {
 				sq = this.makeSchemaQuery(plannerParams,
 							directory.getAbsolutePath() + '/' + SCHEMA_FILE,
 							directory.getAbsolutePath() + '/' + QUERY_FILE);
-				this.run(directory, plannerParams, costParams, reasoningParams, sq.getKey(), sq.getValue(), stats, out);
+				this.run(directory, plannerParams, costParams, reasoningParams, dbParams, sq.getKey(), sq.getValue(), stats, out);
 			}
 			log.info(threadName + ": " + "Complete.");
 		} else {
@@ -217,7 +220,7 @@ public class PlannerBenchmark extends Runner {
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public void run(File directory, PlannerParameters plannerParams, CostParameters costParams, 
-			ReasoningParameters reasoningParams, Schema schema, ConjunctiveQuery query, ChainedStatistics stats, PrintStream out)
+			ReasoningParameters reasoningParams, DatabaseParameters dbParams, Schema schema, ConjunctiveQuery query, ChainedStatistics stats, PrintStream out)
 			throws BenchmarkException, IOException {
 		// Print experiments environment
 		if (this.isVerbose()) {
@@ -226,7 +229,7 @@ public class PlannerBenchmark extends Runner {
 		}
 	    printSystemSettings(out);
 		printHeader(out);
-		ExplorationSetUp planner = new ExplorationSetUp(plannerParams, costParams, reasoningParams, schema, stats);
+		ExplorationSetUp planner = new ExplorationSetUp(plannerParams, costParams, reasoningParams, dbParams, schema, stats);
 
 		IntervalEventDrivenLogger logger = new IntervalEventDrivenLogger(stats, plannerParams.getLogIntervals(), plannerParams.getShortLogIntervals());
 		planner.registerEventHandler(logger);
@@ -298,8 +301,6 @@ public class PlannerBenchmark extends Runner {
 	/**
 	 * Bushiness.
 	 *
-	 * @param op the op
-	 * @return the int
 	 */
 	public int bushiness(RelationalOperator op) {
 		int result = 0;
@@ -307,7 +308,7 @@ public class PlannerBenchmark extends Runner {
 			int i = 0;
 			for (RelationalOperator child : ((NaryOperator) op).getChildren()) {
 				result += this.bushiness(child);
-				if (i > 0 && !(child.isQuasiLeaf())) {
+				if (i > 0 && !(child.isJoinFree())) {
 					result++;
 				}
 				i++;
@@ -320,7 +321,7 @@ public class PlannerBenchmark extends Runner {
 	}
 
 	/**
-	 * Checks if is write plan.
+	 * Checks if plan is to be written
 	 *
 	 * @return true if the plan found is to be written to a file.
 	 */
@@ -329,8 +330,7 @@ public class PlannerBenchmark extends Runner {
 	}
 
 	/**
-	 * Checks if is write plan multiple.
-	 *
+	 * 
 	 * @return true if all the best plans found are to be written to separate files.
 	 */
 	public boolean isWritePlanMultiple() {
@@ -347,7 +347,6 @@ public class PlannerBenchmark extends Runner {
 	}
 
 	/**
-	 * Checks if is no dependencies.
 	 *
 	 * @return true if dependencies should be taken into account or not during planning.
 	 */

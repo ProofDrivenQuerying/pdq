@@ -1,15 +1,21 @@
 package uk.ac.ox.cs.pdq.planner.dag.explorer.parallel;
 
+import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
-import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismDetector;
+import uk.ac.ox.cs.pdq.db.DatabaseConnection;
+import uk.ac.ox.cs.pdq.db.DatabaseInstance;
 import uk.ac.ox.cs.pdq.plan.DAGPlan;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator;
 import uk.ac.ox.cs.pdq.planner.dominance.Dominance;
 import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominance;
+import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -28,7 +34,7 @@ public class MultiThreadedContext implements Context{
 	private final Chaser[] reasoners;
 	
 	/**  Detect homomorphisms during chasing*. */
-	private final HomomorphismDetector[] detectors;
+	private DatabaseConnection[] connections;
 	
 	/**  Estimate the cost of a plan*. */
 	private final CostEstimator<DAGPlan>[] costEstimators;
@@ -41,6 +47,8 @@ public class MultiThreadedContext implements Context{
 	/**  Perform domination checks*. */
 	private final Dominance[][] dominances;
 
+	
+
 	/**
 	 * Instantiates a new multi threaded context.
 	 *
@@ -51,18 +59,19 @@ public class MultiThreadedContext implements Context{
 	 * @param successDominance 		Performs success domination checks
 	 * @param dominance 		Perform domination checks
 	 * @param validators 		Checks whether the binary configuration composed from a given configuration pair satisfies given shape restrictions.
+	 * @param reasoningParameters 
 	 * @throws Exception the exception
 	 */
 	public MultiThreadedContext(int parallelThreads,
 			Chaser chaser,
-			HomomorphismDetector detector,
+			DatabaseConnection dbConn,
 			CostEstimator<DAGPlan> costEstimator,
 			SuccessDominance successDominance,
 			Dominance[] dominance,
-			List<Validator> validators) throws Exception {
-		this.parallelThreads = parallelThreads;
+			List<Validator> validators, ReasoningParameters reasoningParameters) throws Exception {
+		this.parallelThreads = 1;//parallelThreads;
 		this.reasoners = new Chaser[this.parallelThreads];
-		this.detectors = new HomomorphismDetector[this.parallelThreads];
+		this.connections = new DatabaseConnection[this.parallelThreads];
 		this.costEstimators = new CostEstimator[this.parallelThreads];
 		this.successDominances = new SuccessDominance[this.parallelThreads];
 		this.validators = new List[this.parallelThreads];
@@ -70,7 +79,7 @@ public class MultiThreadedContext implements Context{
 				
 		for(int p = 0; p < this.parallelThreads; ++p) {
 			this.reasoners[p] = (Chaser) chaser.clone();
-			this.detectors[p] = detector.clone();
+			this.connections[p] = (DatabaseConnection) dbConn.clone();
 			this.costEstimators[p] = (CostEstimator<DAGPlan>) costEstimator.clone();
 			this.successDominances[p] = successDominance.clone();
 			this.validators[p] = deepCopy(validators);
@@ -130,8 +139,8 @@ public class MultiThreadedContext implements Context{
 	 *
 	 * @return HomomorphismDetector[]
 	 */
-	public HomomorphismDetector[] getDetectors() {
-		return this.detectors;
+	public DatabaseConnection[] getConnections() {
+		return this.connections;
 	}
 
 	/**

@@ -140,8 +140,8 @@ public class PlanTranslator {
 
 			}
 			
-		} else if (logOp instanceof uk.ac.ox.cs.pdq.algebra.SubPlanAlias) {
-			return translate((RelationalOperator) ((uk.ac.ox.cs.pdq.algebra.SubPlanAlias) logOp).getPlan().getOperator());
+		} else if (logOp instanceof uk.ac.ox.cs.pdq.plan.SubPlanAlias) {
+			return translate((RelationalOperator) ((uk.ac.ox.cs.pdq.plan.SubPlanAlias) logOp).getPlan().getOperator());
 
 		}  
 		throw new IllegalArgumentException("Unsupported logical operator " + logOp);

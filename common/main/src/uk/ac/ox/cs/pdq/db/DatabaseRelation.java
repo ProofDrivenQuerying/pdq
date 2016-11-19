@@ -6,7 +6,7 @@ import java.util.List;
 import uk.ac.ox.cs.pdq.io.xml.QNames;
 
 /**
- * Relations stored in the database built up for homomorphism detection.
+ * A Database Relation (schema/meta-data)
  *
  * @author Efthymia Tsamoura
  */
@@ -15,14 +15,12 @@ public class DatabaseRelation extends Relation {
 	/** The Constant serialVersionUID. */
 	private final static long serialVersionUID = 3503553786085749666L;
 	
-	/** The attr prefix. */
-	private final static String attrPrefix = "x";
-	
-	/** The Fact. */
+	/** The attr prefix. THIS SHOULD DISAPPEAR */
+	protected final static String attrPrefix = "x";
+
+	/** A FactID attribute. THIS SHOULD DISAPPEAR */
 	public final static Attribute Fact = new Attribute(Integer.class, "Fact");
 	
-	public final static DatabaseRelation DatabaseEqualityRelation = createEqualityTable();
-
 	/**
 	 * Constructor for DBRelation.
 	 * @param name String
@@ -33,7 +31,7 @@ public class DatabaseRelation extends Relation {
 	}
 	
 	/**
-	 * Creates the db relation.
+	 * Creates the db relation. Currently codes in the position numbers into the names, but this should change
 	 *
 	 * @param relation the relation
 	 * @return a new database relation with attributes x0,x1,...,x_{N-1}, Fact where
@@ -48,12 +46,5 @@ public class DatabaseRelation extends Relation {
 		return new DatabaseRelation(relation.getName(), attributes);
 	}
 
-	private static DatabaseRelation createEqualityTable() {		
-		List<Attribute> attributes = new ArrayList<>();
-		attributes.add(new Attribute(String.class, DatabaseRelation.attrPrefix + 0));
-		attributes.add(new Attribute(String.class, DatabaseRelation.attrPrefix + 1));
-		attributes.add(DatabaseRelation.Fact);
-		return new DatabaseRelation(QNames.EQUALITY.toString(), attributes);
-	}
 }
 

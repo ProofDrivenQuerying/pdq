@@ -17,6 +17,7 @@ import uk.ac.ox.cs.pdq.benchmark.BenchmarkParameters;
 import uk.ac.ox.cs.pdq.benchmark.BenchmarkParameters.QueryTypes;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.cost.statistics.SQLServerJoinCardinalityEstimator;
+import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.generator.queryfromids.QueryGeneratorSecond;
@@ -103,15 +104,16 @@ public class MultiThreadedQueryGenerator implements Runnable {
 					PlannerParameters pParams = new PlannerParameters();
 					CostParameters cParams = new CostParameters();
 					ReasoningParameters reasoningParams = new ReasoningParameters();
+					DatabaseParameters dbParams = new DatabaseParameters();
 					params.setTimeout(60000);
-					ExplorationSetUp plannerNoDep = new ExplorationSetUp(pParams, cParams, reasoningParams, schemaNoDep);
+					ExplorationSetUp plannerNoDep = new ExplorationSetUp(pParams, cParams, reasoningParams,dbParams, schemaNoDep);
 					Plan planNoDep = plannerNoDep.search(query);
 					if (planNoDep != null) {
 						fos.print("+++ Answerable w/o IC ");
 					} else {
 						fos.print("--- Not answerable w/o IC ");
 					}
-					ExplorationSetUp planner = new ExplorationSetUp(pParams, cParams, reasoningParams, this.schema);
+					ExplorationSetUp planner = new ExplorationSetUp(pParams, cParams, reasoningParams,dbParams, this.schema);
 					Plan plan = planner.search(query);
 					if (plan != null) {
 						fos.println("\t+++ Answerable " + plan.getCost() + " ");

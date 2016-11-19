@@ -16,7 +16,6 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.db.EGD;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
@@ -24,6 +23,7 @@ import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Disjunction;
+import uk.ac.ox.cs.pdq.fol.EGD;
 import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Implication;
 import uk.ac.ox.cs.pdq.fol.Negation;
@@ -36,6 +36,7 @@ import uk.ac.ox.cs.pdq.io.xml.QNames;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -198,7 +199,7 @@ public class Utility {
 	 * @param formulas the atoms
 	 * @return the variables of the input atoms
 	 */
-	public static List<Variable> getVariables(Collection<Formula> formulas) {
+	public static List<Variable> getVariables(Collection<? extends Formula> formulas) {
 		Set<Variable> result = new LinkedHashSet<>();
 		for (Formula formula: formulas) {
 			for(Atom atom:formula.getAtoms()) {
@@ -288,22 +289,22 @@ public class Utility {
 		return result;
 	}
 
-	//	/**
-	//	 * Generates a list of attribute whose name are the name as those of term in
-	//	 * the given predicate, and types match with the predicate attribute types.
-	//	 * @param terms List<? extends Term>
-	//	 * @param type TupleType
-	//	 * @return List<Attribute>
-	//	 */
-	//	public static List<Attribute> termsToAttributes(List<? extends Term> terms, TupleType type) {
-	//		Preconditions.checkArgument(terms.size() == type.size());
-	//		List<Attribute> result = new ArrayList<>();
-	//		int i = 0;
-	//		for (Term t : terms) {
-	//			result.add(new Attribute(type.getType(i++), t.toString()));
-	//		}
-	//		return result;
-	//	}
+	/**
+	 * Generates a list of attribute whose name are the name as those of term in
+	 * the given predicate, and types match with the predicate attribute types.
+	 * @param variables List<? extends Term>
+	 * @param type TupleType
+	 * @return List<Attribute>
+	 */
+	public static List<Attribute> variablesToAttributes(List<Variable> variables, TupleType type) {
+		Preconditions.checkArgument(variables.size() == type.size());
+		List<Attribute> result = new ArrayList<>();
+		int i = 0;
+		for (Term t : variables) {
+			result.add(new Attribute(type.getType(i++), t.toString()));
+		}
+		return result;
+	}
 
 	/**
 	 * Converts a list of Term to a list of Typed.
@@ -312,7 +313,7 @@ public class Utility {
 	 * @param type TupleType
 	 * @return List<Typed>
 	 */
-	public static List<Typed> termsToTyped(List<? extends Term> terms, TupleType type) {
+	public static List<Typed> termsToTyped(List<Term> terms, TupleType type) {
 		Preconditions.checkArgument(terms.size() == type.size());
 		List<Typed> result = new ArrayList<>();
 		int i = 0;
@@ -322,6 +323,25 @@ public class Utility {
 		}
 		return result;
 	}
+	
+	/**
+	 * Converts a list of Term to a list of Typed.
+	 *
+	 * @param variables List<? extends Term>
+	 * @param type TupleType
+	 * @return List<Typed>
+	 */
+	public static List<Typed> variablesToTyped(List<Variable> variables, TupleType type) {
+		Preconditions.checkArgument(variables.size() == type.size());
+		List<Typed> result = new ArrayList<>();
+		int i = 0;
+		for (Term t: variables) {
+			result.add(termToTyped(t, type.getType(i)));
+			i++;
+		}
+		return result;
+	}
+
 
 	/**
 	 * Converts a Term to a Typed.
@@ -587,7 +607,7 @@ public class Utility {
 			throw new RuntimeException("Assertions must be enabled in the VM");
 
 	}
-
+	
 	public static List<Variable> getVariables(Formula formula) {
 		List<Variable> variables = Lists.newArrayList();
 		if(formula instanceof Conjunction) {
@@ -742,6 +762,26 @@ public class Utility {
 			terms[i++] = new TypedConstant<>(tuple.getValue(i));
 		}
 		return new Atom(predicate, terms);
+	}
+	/**
+	 * Clusters the input atoms based on their signature
+	 * @param atoms
+	 * @return
+	 */
+	public static Map<Predicate, List<Atom>> clusterAtomsWithSamePredicateName(Collection<? extends Atom> atoms) {
+		//Cluster the input facts based on their predicate
+		Map<Predicate, List<Atom>> clusters = Maps.newHashMap();
+		for (Atom atom:atoms) {
+			if(clusters.containsKey(atom.getPredicate())) {
+				clusters.get(atom.getPredicate()).add(atom);
+			}
+			else {
+				ArrayList<Atom> new_list  = new ArrayList<Atom>();
+				new_list.add(atom);
+				clusters.put(atom.getPredicate(), new_list);
+			}
+		}
+		return clusters;
 	}
 
 }
