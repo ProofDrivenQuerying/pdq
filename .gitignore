@@ -4,3 +4,7 @@
 /log/
 /.DS_Store
 /doc/
+/materialize/
+/workloadgen/
+/workloadrun/
+/cardinality/
