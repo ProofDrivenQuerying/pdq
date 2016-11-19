@@ -8,8 +8,8 @@ import org.apache.log4j.Logger;
 import uk.ac.ox.cs.pdq.db.Dependency;
 import uk.ac.ox.cs.pdq.db.EGD;
 import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Predicate;
-import uk.ac.ox.cs.pdq.fol.Query;
 
 import com.google.common.collect.Sets;
 
@@ -43,25 +43,25 @@ public class ReasonerUtility {
 			}
 			Let RelevantTGDs:= all TGDs such that some relation in the head are in Rels
 	 */
-	public Collection<? extends Dependency<?,?>> findRelevant(Query<?> query, Collection<? extends Dependency<?,?>> dependencies) {
-		Collection<Dependency<?,?>> relevantDependencies = Sets.newLinkedHashSet();
+	public Collection<? extends Dependency> findRelevant(ConjunctiveQuery query, Collection<? extends Dependency> dependencies) {
+		Collection<Dependency> relevantDependencies = Sets.newLinkedHashSet();
 		Collection<Predicate> relevantPredicates = Sets.newLinkedHashSet();
-		for(Atom atom:query.getBody().getAtoms()) {
+		for(Atom atom:query.getAtoms()) {
 			relevantPredicates.add(atom.getPredicate());
 		}
-		Collection<? extends Dependency<?,?>> dependenciesCopy = Sets.newLinkedHashSet(dependencies);
+		Collection<? extends Dependency> dependenciesCopy = Sets.newLinkedHashSet(dependencies);
 		boolean change = false;
 		do {
-			Iterator<? extends Dependency<?,?>> iterator = dependenciesCopy.iterator();
+			Iterator<? extends Dependency> iterator = dependenciesCopy.iterator();
 			while(iterator.hasNext()) {
-				Dependency<?,?> dependency = iterator.next();
+				Dependency dependency = iterator.next();
 				for(Atom headAtom:dependency.getHead().getAtoms()) {
 					if(relevantPredicates.contains(headAtom.getPredicate())) {
 						for(Atom atom:dependency.getBody().getAtoms()) {
 							relevantPredicates.add(atom.getPredicate());
 						}
 						//Remove from the dependency all the irrelevant atoms
-						Dependency<?, ?> dep = dependency.clone();
+						Dependency dep = dependency.clone();
 						Iterator<Atom> it = null;
 						it = dep.getHead().getAtoms().iterator();
 						while(it.hasNext()) {

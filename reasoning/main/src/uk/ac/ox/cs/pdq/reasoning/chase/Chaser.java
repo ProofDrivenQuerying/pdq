@@ -41,7 +41,7 @@ public abstract class Chaser {
 	 * @param instance the instance
 	 * @param dependencies the dependencies
 	 */
-	public abstract <S extends ChaseState> void reasonUntilTermination(S instance, Collection<? extends Dependency> dependencies);
+	public abstract <S extends ChaseState> void reasonUntilTermination(S instance, Collection<Dependency> dependencies);
 	
 	
 

@@ -17,6 +17,7 @@ import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseState;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.beust.jcommander.DynamicParameter;
 import com.beust.jcommander.IParameterValidator;
@@ -158,7 +159,7 @@ public class Reason {
 			if (schema == null || query == null) {
 				throw new IllegalStateException("Schema and query must be provided.");
 			}
-			schema.updateConstants(query.getSchemaConstants());
+			schema.updateConstants(Utility.getTypedConstants(query));
 			
 			HomomorphismManager detector =
 					new HomomorphismManagerFactory().getInstance(schema,  

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -29,6 +30,7 @@ import uk.ac.ox.cs.pdq.fol.Negation;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.QuantifiedFormula;
 import uk.ac.ox.cs.pdq.fol.Term;
+import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.io.xml.QNames;
 
@@ -682,6 +684,33 @@ public class Utility {
 			bodyAtoms.add(atom.ground(mapping));
 		}
 		return Conjunction.of(bodyAtoms);
+	}
+	
+
+	/**
+	 * TOCOMMENT the next 3 methods are discussed in #42
+	 * 
+	 * Generate canonical mapping.
+	 *
+	 * @param body the body
+	 * @return 		a mapping of variables of the input conjunction to constants. 
+	 * 		A fresh constant is created for each variable of the conjunction. 
+	 * 		This method is invoked by the conjunctive query constructor when the constructor is called with empty input canonical mapping.
+	 */
+	public static Map<Variable, Constant> generateCanonicalMapping(ConjunctiveQuery query) {
+		Map<Variable, Constant> canonicalMapping = new LinkedHashMap<>();
+			for (Atom p: query.getAtoms()) {
+				for (Term t: p.getTerms()) {
+					if (t.isVariable()) {
+						Constant c = canonicalMapping.get(t);
+						if (c == null) {
+							c = new UntypedConstant(CanonicalNameGenerator.getName());
+							canonicalMapping.put((Variable) t, c);
+						}
+					}
+				}
+			}
+		return canonicalMapping;
 	}
 	
 }

@@ -63,7 +63,7 @@ public class ParallelEGDChaser extends Chaser {
 	 * @param dependencies the dependencies
 	 */
 	@Override
-	public <S extends ChaseState> void reasonUntilTermination(S instance,  Collection<? extends Dependency> dependencies) {
+	public <S extends ChaseState> void reasonUntilTermination(S instance,  Collection<Dependency> dependencies) {
 		Preconditions.checkArgument(instance instanceof ChaseState);
 		ParallelEGDChaseDependencyAssessor accessor = new DefaultParallelEGDChaseDependencyAssessor(dependencies);
 
@@ -88,7 +88,7 @@ public class ParallelEGDChaser extends Chaser {
 		do {
 			++step;
 			//Find all active triggers
-			Collection<? extends Dependency> d = step % 2 == 0 ? accessor.getDependencies(instance, EGDROUND.TGD):accessor.getDependencies(instance, EGDROUND.EGD);
+			Collection<Dependency> d = step % 2 == 0 ? accessor.getDependencies(instance, EGDROUND.TGD):accessor.getDependencies(instance, EGDROUND.EGD);
 			List<Match> activeTriggers = instance.getTriggers(d,TriggerProperty.ACTIVE);
 			boolean succeeds = instance.chaseStep(activeTriggers);
 			if(!succeeds) {

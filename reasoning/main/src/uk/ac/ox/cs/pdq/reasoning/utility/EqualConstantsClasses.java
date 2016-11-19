@@ -9,7 +9,7 @@ import java.util.Set;
 
 import org.apache.commons.collections4.CollectionUtils;
 
-import uk.ac.ox.cs.pdq.fol.Equality;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.reasoning.chase.ChaseException;
 
@@ -52,7 +52,8 @@ public class EqualConstantsClasses {
 	 * @param equality the equality
 	 * @return 		true if the input equality does not cause chase failure
 	 */
-	public boolean add(Equality equality) { 
+	public boolean add(Atom equality) { 
+		Preconditions.checkArgument(equality.isEquality());
 		List<Term> terms = equality.getTerms();
 		EqualConstantsClass c0 = this.getClass(terms.get(0));
 		EqualConstantsClass c1 = this.getClass(terms.get(1));

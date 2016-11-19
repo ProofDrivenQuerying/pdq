@@ -62,7 +62,7 @@ public final class DefaultTGDDependencyAssessor implements TGDDependencyAssessor
 		
 		//Build the dependency map
 		for(Dependency dependency:dependencies) {
-			for(Atom atom:dependency.getLeft().getAtoms()) {
+			for(Atom atom:dependency.getBody().getAtoms()) {
 				Predicate s = atom.getPredicate();
 				if(dependency instanceof EGD) {
 					this.egdMap.put(s.getName(), (EGD) dependency);
@@ -106,7 +106,7 @@ public final class DefaultTGDDependencyAssessor implements TGDDependencyAssessor
 		}
 		
 		for(Dependency dependency:this.dependencies) {
-			for(Atom atom:dependency.getLeft().getAtoms()) {
+			for(Atom atom:dependency.getBody().getAtoms()) {
 				Predicate s = atom.getPredicate();
 				if(dependency instanceof TGD && newFactsMap.keySet().contains(s.getName())) {
 					constraints.add(dependency);

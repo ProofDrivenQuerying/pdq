@@ -7,10 +7,10 @@ import java.util.List;
 import java.util.Objects;
 
 import uk.ac.ox.cs.pdq.db.TypedConstant;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Constant;
-import uk.ac.ox.cs.pdq.fol.Equality;
-import uk.ac.ox.cs.pdq.fol.Skolem;
 import uk.ac.ox.cs.pdq.fol.Term;
+import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.reasoning.chase.ChaseException;
 
 import com.google.common.base.Joiner;
@@ -40,7 +40,7 @@ public class EqualConstantsClass {
 	 * @param equality the equality
 	 * @throws ChaseException the chase exception
 	 */
-	public EqualConstantsClass(Equality equality) throws ChaseException{
+	public EqualConstantsClass(Atom equality) throws ChaseException{
 		this.constants = new HashSet<>();
 		List<Term> terms = equality.getTerms();
 		Preconditions.checkArgument(terms.get(0) instanceof Constant && terms.get(1) instanceof Constant);
@@ -160,9 +160,9 @@ public class EqualConstantsClass {
 			this.representative = this.schemaConstant;
 		}
 		else {
-			if(this.representative == null || this.representative instanceof Skolem && !((Skolem) this.representative).getName().startsWith("c")) {
+			if(this.representative == null || this.representative instanceof UntypedConstant && !((UntypedConstant) this.representative).getSymbol().startsWith("c")) {
 				for(Term constant:this.constants) {
-					if(constant instanceof Skolem && ((Skolem) constant).getName().startsWith("c")) {
+					if(constant instanceof UntypedConstant && ((UntypedConstant) constant).getSymbol().startsWith("c")) {
 						this.representative = constant;
 						break;
 					}
@@ -170,7 +170,7 @@ public class EqualConstantsClass {
 			}
 			if(this.representative == null) {
 				for(Term constant:this.constants) {
-					if(constant instanceof Skolem && ((Skolem) constant).getName().startsWith("k")) {
+					if(constant instanceof UntypedConstant && ((UntypedConstant) constant).getSymbol().startsWith("k")) {
 						this.representative = constant;
 						break;
 					}

@@ -58,7 +58,7 @@ public final class DefaultParallelEGDChaseDependencyAssessor implements Parallel
 		Preconditions.checkNotNull(dependencies);
 		//Build the dependency map
 		for(Dependency dependency:dependencies) {
-			for(Atom atom:dependency.getLeft().getAtoms()) {
+			for(Atom atom:dependency.getBody().getAtoms()) {
 				Predicate s = atom.getPredicate();
 				if(dependency instanceof EGD) {
 					this.egdMap.put(s.getName(), (EGD) dependency);
@@ -78,7 +78,7 @@ public final class DefaultParallelEGDChaseDependencyAssessor implements Parallel
 	 * @return 		the dependencies that are most likely to be fired in the next chase round.
 	 */
 	@Override
-	public Collection<? extends Dependency> getDependencies(ChaseState state, EGDROUND round) {
+	public Collection<Dependency> getDependencies(ChaseState state, EGDROUND round) {
 		Collection<Dependency> constraints = Sets.newHashSet();
 		Collection<Atom> newFacts = null;
 		if(this.stateFacts == null || (round.equals(EGDROUND.EGD) && this.firstEGDRound == true) || 

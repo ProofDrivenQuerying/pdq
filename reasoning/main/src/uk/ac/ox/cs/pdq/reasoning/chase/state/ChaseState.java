@@ -45,7 +45,7 @@ public interface ChaseState {
 	 * @param t 		The TriggerProperty constraints that should be satisfied 
 	 * @return 		the list of matches (both candidates and not candidates) of the input dependencies in this database instance.
 	 */
-	List<Match> getTriggers(Collection<? extends Dependency> dependencies, TriggerProperty t);
+	List<Match> getTriggers(Collection<Dependency> dependencies, TriggerProperty t);
 	
 	/**
 	 * Checks if is failed.

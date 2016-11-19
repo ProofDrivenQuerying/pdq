@@ -7,8 +7,10 @@ import org.junit.Test;
 import org.mockito.MockitoAnnotations;
 
 import uk.ac.ox.cs.pdq.db.TypedConstant;
-import uk.ac.ox.cs.pdq.fol.Equality;
-import uk.ac.ox.cs.pdq.fol.Skolem;
+import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.UntypedConstant;
+import uk.ac.ox.cs.pdq.io.xml.QNames;
 import uk.ac.ox.cs.pdq.reasoning.utility.EqualConstantsClasses;
 
 /**
@@ -27,11 +29,11 @@ public class TestEqualConstantClasses {
 	
 	@Test 
 	public void test_add1() {
-		Equality eq5 = new Equality(new Skolem("c3"), new TypedConstant(new String("John")));
-		Equality eq1 = new Equality(new Skolem("c1"), new Skolem("c2"));
-		Equality eq4 = new Equality(new Skolem("c3"), new Skolem("c4"));
-		Equality eq3 = new Equality(new Skolem("c2"), new Skolem("c3"));
-		Equality eq2 = new Equality(new Skolem("c1"), new Skolem("c3"));
+		Atom eq5 = new Atom(new Predicate(QNames.EQUALITY.toString(), 2),new UntypedConstant("c3"), new TypedConstant(new String("John")));
+		Atom eq1 = new Atom(new Predicate(QNames.EQUALITY.toString(), 2),new UntypedConstant("c1"), new UntypedConstant("c2"));
+		Atom eq4 = new Atom(new Predicate(QNames.EQUALITY.toString(), 2),new UntypedConstant("c3"), new UntypedConstant("c4"));
+		Atom eq3 = new Atom(new Predicate(QNames.EQUALITY.toString(), 2),new UntypedConstant("c2"), new UntypedConstant("c3"));
+		Atom eq2 = new Atom(new Predicate(QNames.EQUALITY.toString(), 2),new UntypedConstant("c1"), new UntypedConstant("c3"));
 		
 		boolean _isFailed;
 		_isFailed = this.classes.add(eq5);
@@ -49,25 +51,25 @@ public class TestEqualConstantClasses {
 		_isFailed = this.classes.add(eq2);
 		Assert.assertEquals(false, !_isFailed);
 		Assert.assertEquals(1, this.classes.size());
-		Assert.assertEquals(new TypedConstant(new String("John")), this.classes.getClass(new Skolem("c3")).getRepresentative());
+		Assert.assertEquals(new TypedConstant(new String("John")), this.classes.getClass(new UntypedConstant("c3")).getRepresentative());
 		
-		Equality eq6 = new Equality(new Skolem("c3"), new TypedConstant(new String("Michael")));
+		Atom eq6 = new Atom(new Predicate(QNames.EQUALITY.toString(), 2),new UntypedConstant("c3"), new TypedConstant(new String("Michael")));
 		_isFailed = this.classes.add(eq6);
 		Assert.assertEquals(true, !_isFailed);
 	}
 	
 	@Test 
 	public void test_add2() {
-		Equality eq1 = new Equality(new Skolem("c2"), new Skolem("c1"));
-		Equality eq2 = new Equality(new Skolem("c3"), new Skolem("c1"));
-		Equality eq3 = new Equality(new Skolem("c4"), new Skolem("c1"));
-		Equality eq4 = new Equality(new TypedConstant(new String("John")), new Skolem("c1"));
-		Equality eq12 = new Equality(new Skolem("c3"), new Skolem("c2"));
-		Equality eq13 = new Equality(new Skolem("c4"), new Skolem("c2"));
-		Equality eq14 = new Equality(new TypedConstant(new String("John")), new Skolem("c2"));
-		Equality eq21 = new Equality(new Skolem("c4"), new Skolem("c3"));
-		Equality eq22 = new Equality(new TypedConstant(new String("John")), new Skolem("c3"));
-		Equality eq31 = new Equality(new TypedConstant(new String("John")), new Skolem("c4"));
+		Atom eq1 = new Atom(new Predicate(QNames.EQUALITY.toString(), 2),new UntypedConstant("c2"), new UntypedConstant("c1"));
+		Atom eq2 = new Atom(new Predicate(QNames.EQUALITY.toString(), 2),new UntypedConstant("c3"), new UntypedConstant("c1"));
+		Atom eq3 = new Atom(new Predicate(QNames.EQUALITY.toString(), 2),new UntypedConstant("c4"), new UntypedConstant("c1"));
+		Atom eq4 = new Atom(new Predicate(QNames.EQUALITY.toString(), 2),new TypedConstant(new String("John")), new UntypedConstant("c1"));
+		Atom eq12 = new Atom(new Predicate(QNames.EQUALITY.toString(), 2),new UntypedConstant("c3"), new UntypedConstant("c2"));
+		Atom eq13 = new Atom(new Predicate(QNames.EQUALITY.toString(), 2),new UntypedConstant("c4"), new UntypedConstant("c2"));
+		Atom eq14 = new Atom(new Predicate(QNames.EQUALITY.toString(), 2),new TypedConstant(new String("John")), new UntypedConstant("c2"));
+		Atom eq21 = new Atom(new Predicate(QNames.EQUALITY.toString(), 2),new UntypedConstant("c4"), new UntypedConstant("c3"));
+		Atom eq22 = new Atom(new Predicate(QNames.EQUALITY.toString(), 2),new TypedConstant(new String("John")), new UntypedConstant("c3"));
+		Atom eq31 = new Atom(new Predicate(QNames.EQUALITY.toString(), 2),new TypedConstant(new String("John")), new UntypedConstant("c4"));
 		
 		boolean _isFailed;
 		_isFailed = this.classes.add(eq1);
@@ -85,12 +87,12 @@ public class TestEqualConstantClasses {
 		
 		Assert.assertEquals(false, !_isFailed);
 		Assert.assertEquals(1, this.classes.size());
-		Assert.assertEquals(new TypedConstant(new String("John")), this.classes.getClass(new Skolem("c3")).getRepresentative());		
+		Assert.assertEquals(new TypedConstant(new String("John")), this.classes.getClass(new UntypedConstant("c3")).getRepresentative());		
 	}
 	
 	@Test 
 	public void test_add3() {
-		Equality eq31 = new Equality(new TypedConstant(new String("John")), new TypedConstant(new String("Michael")));
+		Atom eq31 = new Atom(new Predicate(QNames.EQUALITY.toString(), 2),new TypedConstant(new String("John")), new TypedConstant(new String("Michael")));
 		
 		boolean _isFailed;
 		_isFailed = this.classes.add(eq31);

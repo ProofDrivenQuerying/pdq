@@ -20,9 +20,10 @@ import uk.ac.ox.cs.pdq.db.homomorphism.DatabaseHomomorphismManager;
 import uk.ac.ox.cs.pdq.db.sql.MySQLStatementBuilder;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
-import uk.ac.ox.cs.pdq.fol.Equality;
-import uk.ac.ox.cs.pdq.fol.Skolem;
+import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
+import uk.ac.ox.cs.pdq.io.xml.QNames;
 import uk.ac.ox.cs.pdq.logging.performance.StatisticsCollector;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseState;
@@ -69,7 +70,7 @@ public class TestRestrictedChaser {
 				Lists.newArrayList(new Variable("y"),new Variable("w")));
 		
 		this.tgd = new TGD(Conjunction.of(R1),Conjunction.of(R2));
-		this.egd = new EGD(Conjunction.of(R2,R2p), Conjunction.of(new Equality(new Variable("z"),new Variable("w"))));
+		this.egd = new EGD(Conjunction.of(R2,R2p), Conjunction.of(new Atom(new Predicate(QNames.EQUALITY.toString(), 2), new Variable("z"),new Variable("w"))));
 
 		this.schema = new Schema(Lists.<Relation>newArrayList(this.rel1, this.rel2), Lists.<Dependency>newArrayList(this.tgd,this.egd));
 		this.schema.updateConstants(Lists.<TypedConstant<?>>newArrayList(new TypedConstant(new String("John"))));
@@ -92,47 +93,47 @@ public class TestRestrictedChaser {
 	@Test 
 	public void test_reasonUntilTermination1() {
 		Atom f20 = new Atom(this.rel1, 
-				Lists.newArrayList(new Skolem("k1"), new Skolem("c"),new Skolem("c1")));
+				Lists.newArrayList(new UntypedConstant("k1"), new UntypedConstant("c"),new UntypedConstant("c1")));
 
 		Atom f21 = new Atom(this.rel1, 
-				Lists.newArrayList(new Skolem("k2"), new Skolem("c"),new Skolem("c2")));
+				Lists.newArrayList(new UntypedConstant("k2"), new UntypedConstant("c"),new UntypedConstant("c2")));
 
 		Atom f22 = new Atom(this.rel1, 
-				Lists.newArrayList(new Skolem("k3"), new Skolem("c"),new Skolem("c3")));
+				Lists.newArrayList(new UntypedConstant("k3"), new UntypedConstant("c"),new UntypedConstant("c3")));
 
 		Atom f23 = new Atom(this.rel1, 
-				Lists.newArrayList(new Skolem("k4"), new Skolem("c"),new Skolem("c4")));
+				Lists.newArrayList(new UntypedConstant("k4"), new UntypedConstant("c"),new UntypedConstant("c4")));
 
 		Atom f24 = new Atom(this.rel1, 
-				Lists.newArrayList(new Skolem("k5"), new Skolem("c"),new TypedConstant(new String("John"))));
+				Lists.newArrayList(new UntypedConstant("k5"), new UntypedConstant("c"),new TypedConstant(new String("John"))));
 		this.state = new DatabaseChaseState(this.manager, Sets.newHashSet(f20,f21,f22,f23,f24));
 		this.chaser.reasonUntilTermination(this.state, Lists.<Dependency>newArrayList(this.tgd,this.egd));
 		Assert.assertEquals(false, this.state.isFailed());
 		
 		
 		Atom n00 = new Atom(this.rel1, 
-				Lists.newArrayList(new Skolem("k5"), new Skolem("c"),new TypedConstant(new String("John"))));
+				Lists.newArrayList(new UntypedConstant("k5"), new UntypedConstant("c"),new TypedConstant(new String("John"))));
 		
 		Atom n01 = new Atom(this.rel1, 
-				Lists.newArrayList(new Skolem("k4"), new Skolem("c"),new TypedConstant(new String("John"))));
+				Lists.newArrayList(new UntypedConstant("k4"), new UntypedConstant("c"),new TypedConstant(new String("John"))));
 		
 		Atom n02 = new Atom(this.rel1, 
-				Lists.newArrayList(new Skolem("k3"), new Skolem("c"),new TypedConstant(new String("John"))));
+				Lists.newArrayList(new UntypedConstant("k3"), new UntypedConstant("c"),new TypedConstant(new String("John"))));
 		
 		Atom n03 = new Atom(this.rel1, 
-				Lists.newArrayList(new Skolem("k1"), new Skolem("c"),new TypedConstant(new String("John"))));
+				Lists.newArrayList(new UntypedConstant("k1"), new UntypedConstant("c"),new TypedConstant(new String("John"))));
 		
 		Atom n04 = new Atom(this.rel1, 
-				Lists.newArrayList(new Skolem("k2"), new Skolem("c"),new TypedConstant(new String("John"))));
+				Lists.newArrayList(new UntypedConstant("k2"), new UntypedConstant("c"),new TypedConstant(new String("John"))));
 		
 		Atom n1 = new Atom(this.rel2, 
-				Lists.newArrayList(new Skolem("c"),new TypedConstant(new String("John"))));
+				Lists.newArrayList(new UntypedConstant("c"),new TypedConstant(new String("John"))));
 	
 		Set<Atom> facts = Sets.newHashSet(this.state.getFacts());
 		Iterator<Atom> iterator = facts.iterator();
 		while(iterator.hasNext()) {
 			Atom fact = iterator.next();
-			if(fact instanceof Equality) {
+			if(fact.isEquality()) {
 				iterator.remove();
 			}
 		}

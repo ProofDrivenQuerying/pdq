@@ -16,21 +16,21 @@ import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseState;
 
 public interface ParallelEGDChaseDependencyAssessor {
 
-	
+
 	/**
 	 * The Enum EGDROUND.
 	 */
 	public static enum EGDROUND{/** The egd. */
-EGD, /** The tgd. */
- TGD};
-	
-	/**
-	 * Gets the dependencies.
-	 *
-	 * @param state 		A collection of chase facts
-	 * @param round the round
-	 * @return 		the dependencies that are most likely to be fired in the next chase round.
-	 */
-	Collection<? extends Dependency> getDependencies(ChaseState state, EGDROUND round);
-	
+		EGD, /** The tgd. */
+		TGD};
+
+		/**
+		 * Gets the dependencies.
+		 *
+		 * @param state 		A collection of chase facts
+		 * @param round the round
+		 * @return 		the dependencies that are most likely to be fired in the next chase round.
+		 */
+		Collection<Dependency> getDependencies(ChaseState state, EGDROUND round);
+
 }

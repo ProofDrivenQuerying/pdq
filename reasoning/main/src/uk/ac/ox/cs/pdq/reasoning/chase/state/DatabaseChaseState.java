@@ -9,12 +9,13 @@ import uk.ac.ox.cs.pdq.db.homomorphism.TriggerProperty;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
-import uk.ac.ox.cs.pdq.fol.Equality;
 import uk.ac.ox.cs.pdq.fol.Formula;
+import uk.ac.ox.cs.pdq.fol.Implication;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.reasoning.utility.EqualConstantsClass;
 import uk.ac.ox.cs.pdq.reasoning.utility.EqualConstantsClasses;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 import java.util.Collection;
 import java.util.LinkedHashSet;
@@ -73,7 +74,7 @@ public class DatabaseChaseState implements ChaseState {
 			HomomorphismManager manager) {
 		Preconditions.checkNotNull(manager);
 		this.manager = manager;
-		this.facts = Sets.newHashSet(query.ground(ConjunctiveQuery.generateCanonicalMapping(query.getBody())).getAtoms());
+		this.facts = Sets.newHashSet(Utility.ground(query, Utility.generateCanonicalMapping(query)).getAtoms());
 		this.classes = new EqualConstantsClasses();
 		this.constantsToAtoms = inferConstantsMap(this.facts);
 		this.manager.addFacts(this.facts);
@@ -149,7 +150,7 @@ public class DatabaseChaseState implements ChaseState {
 	protected static Multimap<Constant,Atom> inferConstantsMap(Collection<Atom> facts) {
 		Multimap<Constant, Atom> constantsToAtoms = HashMultimap.create();
 		for(Atom fact:facts) {
-			Preconditions.checkArgument(!(fact instanceof Equality));
+			Preconditions.checkArgument(!(fact.isEquality()));
 			for(Term term:fact.getTerms()) {
 				constantsToAtoms.put((Constant)term, fact);
 			}
@@ -201,9 +202,9 @@ public class DatabaseChaseState implements ChaseState {
 			Dependency dependency = (Dependency) match.getQuery();
 			Preconditions.checkArgument(dependency instanceof TGD, "EGDs are not allowed inside TGDchaseStep");
 			Map<Variable, Constant> mapping = match.getMapping();
-			Dependency grounded = dependency.fire(mapping, true);
-			Formula left = grounded.getBody();
-			Formula right = grounded.getHead();
+			Implication grounded = ((TGD)dependency).fire(mapping, true);
+			Formula left = grounded.getChildren().get(0);
+			Formula right = grounded.getChildren().get(1);
 			//Add information about new facts to constantsToAtoms
 			for(Atom atom:right.getAtoms()) {
 				for(Term term:atom.getTerms()) {
@@ -239,13 +240,12 @@ public class DatabaseChaseState implements ChaseState {
 			Dependency dependency = (Dependency) match.getQuery();
 			Preconditions.checkArgument(dependency instanceof EGD, "TGDs are not allowed inside EGDchaseStep");
 			Map<Variable, Constant> mapping = match.getMapping();
-			Dependency grounded = dependency.fire(mapping, true);
-			Formula left = grounded.getLeft();
-			Formula right = grounded.getRight();
+			Implication grounded = ((EGD)dependency).fire(mapping);
+			Formula left = grounded.getChildren().get(0);
+			Formula right = grounded.getChildren().get(1);
 			for(Atom atom:right.getAtoms()) {
 				//Find all the constants that each constant in the equality is representing 
-				Equality equality = (Equality)atom;
-				obsoleteToRepresentative.putAll(this.updateEqualConstantClasses(equality));
+				obsoleteToRepresentative.putAll(this.updateEqualConstantClasses(atom));
 				if(this._isFailed) {
 					return false;
 				}
@@ -293,7 +293,8 @@ public class DatabaseChaseState implements ChaseState {
 	 * @param atom
 	 * @return
 	 */
-	public Map<Constant,Constant> updateEqualConstantClasses(Equality atom) {
+	public Map<Constant,Constant> updateEqualConstantClasses(Atom atom) {
+		Preconditions.checkArgument(atom.isEquality());
 		//Maps each constant to its new representative  
 		Map<Constant,Constant> obsoleteToRepresentative = Maps.newHashMap();
 
@@ -324,7 +325,7 @@ public class DatabaseChaseState implements ChaseState {
 			successfull = true;
 		}
 		else {
-			successfull = this.classes.add((Equality)atom);
+			successfull = this.classes.add(atom);
 			if(!successfull) {
 				this._isFailed = true;
 				return Maps.newHashMap();
@@ -457,7 +458,7 @@ public class DatabaseChaseState implements ChaseState {
 	 * @see uk.ac.ox.cs.pdq.chase.state.ChaseState#getHomomorphisms(Collection<D>)
 	 */
 	@Override
-	public List<Match> getTriggers(Collection<? extends Dependency> dependencies,TriggerProperty t) {
+	public List<Match> getTriggers(Collection<Dependency> dependencies,TriggerProperty t) {
 		
 		
 		//HomomorphismProperty[] c = new HomomorphismProperty[1];
