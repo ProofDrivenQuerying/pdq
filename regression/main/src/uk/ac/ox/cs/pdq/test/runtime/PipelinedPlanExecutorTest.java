@@ -21,6 +21,7 @@ import uk.ac.ox.cs.pdq.runtime.exec.Middleware;
 import uk.ac.ox.cs.pdq.runtime.exec.PlanExecutor;
 import uk.ac.ox.cs.pdq.runtime.exec.PlanExecutor.ExecutionModes;
 import uk.ac.ox.cs.pdq.util.Result;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.eventbus.EventBus;
 
@@ -100,7 +101,7 @@ public class PipelinedPlanExecutorTest {
 					throw new IllegalStateException("Schema and query must be provided.");
 				}
 
-				schema.updateConstants(query.getSchemaConstants());
+				schema.updateConstants(Utility.getTypedConstants(query));
 
 				Plan plan = readPlan(PATH + p, schema, query);
 

@@ -713,4 +713,19 @@ public class Utility {
 		return canonicalMapping;
 	}
 	
+	/**
+	 * Make fact.
+	 *
+	 * @param predicate Predicate
+	 * @param tuple Tuple
+	 * @return PredicateFormula
+	 */
+	public static Atom makeFact(Predicate predicate, Tuple tuple) {
+		TypedConstant<?>[] terms = new TypedConstant[tuple.size()];
+		for (int i = 0, l = tuple.size(); i < l; i++) {
+			terms[i++] = new TypedConstant<>(tuple.getValue(i));
+		}
+		return new Atom(predicate, terms);
+	}
+	
 }

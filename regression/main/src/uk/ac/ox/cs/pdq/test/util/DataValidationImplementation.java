@@ -11,15 +11,14 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TGD;
 import uk.ac.ox.cs.pdq.db.homomorphism.DatabaseHomomorphismManager;
-import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismProperty;
 import uk.ac.ox.cs.pdq.db.homomorphism.TriggerProperty;
 import uk.ac.ox.cs.pdq.db.wrappers.RelationAccessWrapper;
-import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.runtime.exec.AccessException;
 import uk.ac.ox.cs.pdq.util.Table;
 import uk.ac.ox.cs.pdq.util.Tuple;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.base.Preconditions;
 
@@ -93,7 +92,7 @@ public final class DataValidationImplementation extends DataValidation{
 	private void saveRelation(Relation relation, Table table) throws PlannerException {
 		Collection<Atom> atoms = new HashSet<>();
 		for(Tuple tuple: table.getData()) {
-			atoms.add(Atom.makeFact(relation, tuple));
+			atoms.add(Utility.makeFact(relation, tuple));
 		}
 		this.manager.addFacts(atoms);
 	}
@@ -129,9 +128,7 @@ public final class DataValidationImplementation extends DataValidation{
 	 * @return Constraint
 	 */
 	private static Dependency invert(Dependency ic) {
-		Conjunction<Atom> left = (Conjunction<Atom>) ic.getLeft();
-		Conjunction<Atom> right = (Conjunction<Atom>) ic.getRight();
-		return new TGD(right, left);
+		return new TGD(ic.getHead(), ic.getHead());
 	}
 
 }
