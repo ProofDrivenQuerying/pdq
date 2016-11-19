@@ -16,7 +16,7 @@ import org.xml.sax.SAXException;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Constant;
-import uk.ac.ox.cs.pdq.fol.Skolem;
+import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.io.ReaderException;
 import uk.ac.ox.cs.pdq.io.xml.AbstractXMLReader;
@@ -99,7 +99,7 @@ public class ProofReader extends AbstractXMLReader<Proof> {
 		case ENTRY:
 			this.match.put(
 					new Variable(this.getValue(atts, QNames.KEY)),
-					new Skolem(this.getValue(atts, QNames.VALUE)));
+					new UntypedConstant(this.getValue(atts, QNames.VALUE)));
 			break;
 
 		case AXIOM:

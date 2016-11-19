@@ -7,9 +7,9 @@ import java.util.Map;
 
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Skolem;
 import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.fol.Term;
+import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.io.xml.AbstractXMLWriter;
 import uk.ac.ox.cs.pdq.io.xml.QNames;
@@ -122,12 +122,12 @@ public class ProofWriter extends AbstractXMLWriter<Proof> {
 	 */
 	public void writePredicate(PrintStream out, Atom p) {
 		Map<QNames, String> att = new LinkedHashMap<>();
-		att.put(QNames.NAME, p.getName());
+		att.put(QNames.NAME, p.getPredicate().getName());
 		open(out, QNames.ATOM, att);
 		for (Term t: p.getTerms()) {
 			Map<QNames, String> att2 = new LinkedHashMap<>();
 			if (t.isVariable()) {
-				att2.put(QNames.NAME, ((Variable) t).getName());
+				att2.put(QNames.NAME, ((Variable) t).getSymbol());
 				openclose(out, QNames.VARIABLE, att2);
 			} else {
 				att2.put(QNames.VALUE, t.toString());
@@ -160,13 +160,13 @@ public class ProofWriter extends AbstractXMLWriter<Proof> {
 		List<Variable> free = tgd.getUniversal();
 		if (free != null) {
 			for (Variable variable:free) {
-				result.put(variable, new Skolem(CanonicalNameGenerator.getName()));
+				result.put(variable, new UntypedConstant(CanonicalNameGenerator.getName()));
 			}
 		}
 		List<Variable> bound = tgd.getExistential();
 		if (bound != null) {
 			for (Variable variable:bound) {
-				result.put(variable, new Skolem(CanonicalNameGenerator.getName()));
+				result.put(variable, new UntypedConstant(CanonicalNameGenerator.getName()));
 			}
 		}
 		return result;

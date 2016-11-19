@@ -29,7 +29,6 @@ import org.apache.log4j.Logger;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.io.pretty.AlgebraLikeLeftDeepPlanWriter;
 import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.plan.Plan;
@@ -160,9 +159,9 @@ public class RuntimeController {
      */
     private void configureColumns() {
     	ObservableList<TableColumn<Tuple, ?>> columns = this.runtimeResults.getColumns();
-    	Atom head = this.query.getHead();
-    	for (int i = 0, l = head.getPredicate().getArity(); i < l; i++) {
-    		TableColumn<Tuple, Object> column = new TableColumn<>(head.getTerm(i).toString());
+//    	Atom head = this.query.getHeadTerms();
+    	for (int i = 0, l = this.query.getHeadTerms().size(); i < l; i++) {
+    		TableColumn<Tuple, Object> column = new TableColumn<>(this.query.getHeadTerms().get(i).toString());
     		column.setCellValueFactory(new TupleCellFactoryCallback(i));
     		columns.add(column);
 
@@ -185,7 +184,7 @@ public class RuntimeController {
 	private Schema schema;
 	
 	/**  The query to be used during this runtime session. */
-	private Query query;
+	private ConjunctiveQuery query;
 
 	/**  The plan to run. */
 	private Plan plan;

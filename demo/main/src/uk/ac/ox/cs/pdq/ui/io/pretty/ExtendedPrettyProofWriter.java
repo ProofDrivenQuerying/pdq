@@ -79,7 +79,7 @@ public class ExtendedPrettyProofWriter extends PrettyWriter<Proof> implements Wr
 			out.println(axiom.getBaseRelation().getName() + '/' + axiom.getAccessMethod().getName());
 			
 			
-			PrettyFormulaWriter<Formula> dw = PrettyFormulaWriter.to(out).indented();
+			PrettyFormulaWriter dw = PrettyFormulaWriter.to(out).indented();
 			out.print("Groundings: ");
 			for (Map<Variable, Constant> candidate: state.getMatches()) {
 				out.print('\n');

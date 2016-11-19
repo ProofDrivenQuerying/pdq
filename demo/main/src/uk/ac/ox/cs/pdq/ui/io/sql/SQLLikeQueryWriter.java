@@ -14,7 +14,6 @@ import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.io.Writer;
 import uk.ac.ox.cs.pdq.io.pretty.PrettyWriter;
@@ -29,7 +28,7 @@ import com.google.common.collect.Multimap;
  *
  * @author Julien Leblay
  */
-public class SQLLikeQueryWriter extends PrettyWriter<Query<?>> implements Writer<Query<?>> {
+public class SQLLikeQueryWriter extends PrettyWriter<ConjunctiveQuery> implements Writer<ConjunctiveQuery> {
 
 	/** The Constant ALIAS_PREFIX. */
 	private static final String ALIAS_PREFIX = "a";
@@ -64,7 +63,7 @@ public class SQLLikeQueryWriter extends PrettyWriter<Query<?>> implements Writer
 	 * @see uk.ac.ox.cs.pdq.builder.io.PrettyWriter#write(java.lang.Object)
 	 */
 	@Override
-	public void write(Query<?> q) {
+	public void write(ConjunctiveQuery q) {
 		this.write(this.out, q);
 	}
 	
@@ -73,7 +72,7 @@ public class SQLLikeQueryWriter extends PrettyWriter<Query<?>> implements Writer
 	 * @see uk.ac.ox.cs.pdq.provider.io.Writer#write(java.io.PrintStream, java.lang.Object)
 	 */
 	@Override
-	public void write(PrintStream out, Query<?> q) {
+	public void write(PrintStream out, ConjunctiveQuery q) {
 		out.print(this.toString(q));
 	}
 	
@@ -86,7 +85,7 @@ public class SQLLikeQueryWriter extends PrettyWriter<Query<?>> implements Writer
 	/*
 	 * 
 	 */
-	private String toString(Query<?> query) {
+	private String toString(ConjunctiveQuery query) {
 		Preconditions.checkArgument(query instanceof ConjunctiveQuery, "Non conjunctive queries not yet supported.");
 		
 		ConjunctiveQuery q = (ConjunctiveQuery) query;
@@ -95,7 +94,7 @@ public class SQLLikeQueryWriter extends PrettyWriter<Query<?>> implements Writer
 		int counter = 0;
 		Map<Atom, String> aliases = new LinkedHashMap<>();
 		Multimap<Term, Atom> joins = LinkedHashMultimap.create();
-		for (Atom p: q.getBody()) {
+		for (Atom p: q.getAtoms()) {
 			aliases.put(p, ALIAS_PREFIX + (counter++));
 			for (Term t: p.getTerms()) {
 				joins.put(t, p);
@@ -103,7 +102,7 @@ public class SQLLikeQueryWriter extends PrettyWriter<Query<?>> implements Writer
 		}
 		// Make SELECT clause
 		result.append("SELECT ");
-		Collection<Term> head = q.getHead().getTerms();
+		Collection<Term> head = q.getHeadTerms();
 		if (head.isEmpty()) {
 			result.append("*");
 		} else {
@@ -166,10 +165,10 @@ public class SQLLikeQueryWriter extends PrettyWriter<Query<?>> implements Writer
 		
 		// Make WHERE clause
 		sep = "\nWHERE ";
-		for (Atom p: q.getBody()) {
+		for (Atom p: q.getAtoms()) {
 			List<Term> terms = p.getTerms();
 			for (int i = 0, l = terms.size(); i < l; i++) {
-				if (!terms.get(i).isVariable() && !terms.get(i).isSkolem()) {
+				if (!terms.get(i).isVariable() && !terms.get(i).isUntypedConstant()) {
 					result.append(sep).append(aliases.get(p)).append('.')
 						.append(((Relation) p.getPredicate()).getAttribute(i))
 						.append('=').append("'").append(terms.get(i)).append("'"); 
@@ -188,7 +187,7 @@ public class SQLLikeQueryWriter extends PrettyWriter<Query<?>> implements Writer
 	 * @param t the t
 	 * @return a short String representation of the dependency.
 	 */
-	public static String convert(Query<?> t) {
+	public static String convert(ConjunctiveQuery t) {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		PrintStream ps = new PrintStream(baos);
 		SQLLikeQueryWriter.to(ps).write(t);

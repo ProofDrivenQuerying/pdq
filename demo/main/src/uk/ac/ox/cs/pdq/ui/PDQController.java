@@ -366,7 +366,7 @@ public class PDQController {
     	if( selected.size() == 1 ) {
     		ObservableQuery selectedQuery = selected.get(0);
     		ConjunctiveQuery query = (ConjunctiveQuery) selectedQuery.getQuery();
-    		ConjunctiveQuery cQuery = new ConjunctiveQuery(query.getHead(), query.getBody());
+    		ConjunctiveQuery cQuery = new ConjunctiveQuery(query.getBoundVariables(), query.getChildren().get(0));
     		ObservableQuery obsQuery = new ObservableQuery(selectedQuery.getName() + " (copy)", "", cQuery);
     		this.dataQueue.add(obsQuery);
     	}

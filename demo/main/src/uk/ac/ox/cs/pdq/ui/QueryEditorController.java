@@ -13,7 +13,7 @@ import javafx.stage.Stage;
 
 import org.apache.log4j.Logger;
 
-import uk.ac.ox.cs.pdq.fol.Query;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.ui.io.sql.SQLLikeQueryReader;
 import uk.ac.ox.cs.pdq.ui.io.sql.SQLLikeQueryWriter;
 import uk.ac.ox.cs.pdq.ui.model.ObservableQuery;
@@ -128,8 +128,7 @@ public class QueryEditorController {
 	 */
 	private boolean validateQuery() {
 		SQLLikeQueryReader queryReader = new SQLLikeQueryReader(this.schema.getSchema());
-		
-		Query<?> outputQuery = null;
+		ConjunctiveQuery outputQuery = null;
 		try {
 			outputQuery = queryReader.fromString(this.queryEditArea.getText());
 		} catch (Exception e) {

@@ -8,7 +8,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableStringValue;
 import javafx.beans.value.ObservableValue;
-import uk.ac.ox.cs.pdq.fol.Query;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.ui.UserInterfaceException;
 import uk.ac.ox.cs.pdq.ui.io.ObservableQueryWriter;
 import uk.ac.ox.cs.pdq.ui.io.sql.SQLLikeQueryWriter;
@@ -31,7 +31,7 @@ public class ObservableQuery {
 	private final SimpleObjectProperty<File> file =  new SimpleObjectProperty<>(this, "file");
 	
 	/** The query. */
-	private final SimpleObjectProperty<Query<?>> query = new SimpleObjectProperty<>(this, "query");
+	private final SimpleObjectProperty<ConjunctiveQuery> query = new SimpleObjectProperty<>(this, "query");
 	
 	/**
 	 * Instantiates a new observable query.
@@ -40,7 +40,7 @@ public class ObservableQuery {
 	 * @param description the description
 	 * @param query the query
 	 */
-	public ObservableQuery(String name, String description, Query<?> query) {
+	public ObservableQuery(String name, String description, ConjunctiveQuery query) {
 		this(name, description, null, query);
 	}
 
@@ -52,7 +52,7 @@ public class ObservableQuery {
 	 * @param file the file
 	 * @param query the query
 	 */
-	public ObservableQuery(String name, String description, File file, Query<?> query) {
+	public ObservableQuery(String name, String description, File file, ConjunctiveQuery query) {
 		this.name.set(name);
 		this.description.set(description);
 		this.file.set(file);
@@ -91,7 +91,7 @@ public class ObservableQuery {
 	 *
 	 * @return the observable value
 	 */
-	public ObservableValue<Query<?>> queryProperty() {
+	public ObservableValue<ConjunctiveQuery> queryProperty() {
 		return this.query;
 	}
 
@@ -127,7 +127,7 @@ public class ObservableQuery {
 	 *
 	 * @return the query
 	 */
-	public Query getQuery() {
+	public ConjunctiveQuery getQuery() {
 		return this.query.get();
 	}
 
@@ -163,7 +163,7 @@ public class ObservableQuery {
 	 *
 	 * @param q the new query
 	 */
-	public void setQuery(Query q) {
+	public void setQuery(ConjunctiveQuery q) {
 		this.query.set(q);
 	}
 
