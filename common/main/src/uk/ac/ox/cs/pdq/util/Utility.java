@@ -71,24 +71,6 @@ public class Utility {
 		return result;
 	}
 
-//	/**
-//	 * Contains element.
-//	 *
-//	 * @param <T> the generic type
-//	 * @param source the source
-//	 * @param target the target
-//	 * @return 		true if source contains at least on element of target
-//	 */
-//	public static <T> boolean containsElement(Collection<T> source, Collection<T> target) {
-//		for (T s: source) {
-//			if (target.contains(s)) {
-//				return true;
-//			}
-//		}
-//		return false;
-//	}
-
-
 	/**
 	 * Removes the duplicates.
 	 *
@@ -99,25 +81,6 @@ public class Utility {
 	public static <T> Collection<T> removeDuplicates(Collection<T> l) {
 		return new LinkedHashSet<>(l);
 	}
-
-//	/**
-//	 * Extract.
-//	 *
-//	 * @param <T> the generic type
-//	 * @param l the l
-//	 * @param p a list of positions
-//	 * @return a list of T made of all the items in l appearing at positions in p
-//	 */
-//	public static <T> List<T> extract(List<T> l, List<Integer> p) {
-//		Preconditions.checkArgument(l != null);
-//		Preconditions.checkArgument(p != null);
-//		List<T> result = new ArrayList<>(p.size());
-//		for (Integer position: p) {
-//			Preconditions.checkState(position >= 0 && position < l.size());
-//			result.add(l.get(position));
-//		}
-//		return result;
-//	}
 
 	/**
 	 * Typed to terms.
@@ -164,34 +127,6 @@ public class Utility {
 		return result;
 	}
 
-//	/**
-//	 * Converts a list of Typed to a list of VariableTerm.
-//	 *
-//	 * @param typed Collection<? extends Typed>
-//	 * @return List<Variable>
-//	 */
-//	public static List<Variable> typedToVariable(Collection<? extends Typed> typed) {
-//		List<Variable> result = new ArrayList<>();
-//		for (Typed a : typed) {
-//			result.add(new Variable(a.toString()));
-//		}
-//		return result;
-//	}
-
-	//	/**
-	//	 * Gets the variables.
-	//	 *
-	//	 * @param atoms the atoms
-	//	 * @return the variables of the input atoms
-	//	 */
-	//	public static List<Variable> getVariables(Formula atoms) {
-	//		Set<Variable> result = new LinkedHashSet<>();
-	//		for (Atom atom: atoms.getAtoms()) {
-	//			result.addAll(atom.getVariables());
-	//		}
-	//		return Lists.newArrayList(result);
-	//	}
-	//	
 	/**
 	 * Gets the variables.
 	 *
@@ -446,17 +381,6 @@ public class Utility {
 		}
 		return result;
 	}
-	
-//	public List<Term> getHeadTerms() {
-//		if(this.headTerms == null) {
-//			this.headTerms = Lists.newArrayList();
-//			for(Variable variable:this.getFreeVariables()) {
-//				this.headTerms.add(variable);
-//			}
-//		}
-//		return this.headTerms;
-//	}
-
 
 	/**
 	 * Mean dist.
@@ -473,23 +397,6 @@ public class Utility {
 		}
 		return mean + random.nextDouble() * (max - mean);
 	}
-
-//	/**
-//	 * Retain.
-//	 *
-//	 * @param <K> the key type
-//	 * @param <V> the value type
-//	 * @param map Map<K,V>
-//	 * @param keys Collection<K>
-//	 * @return Map<K,V>
-//	 */
-//	public static <K,V> Map<K,V> retain(Map<K,V> map, Collection<K> keys) {
-//		Map<K,V> ret = new HashMap<>();
-//		for(K key: keys) {
-//			ret.put(key, map.get(key));
-//		}
-//		return ret;
-//	}
 
 	/**
 	 * Connected components.
@@ -519,35 +426,6 @@ public class Utility {
 		return result;
 	}
 
-	//	/**
-	//	 * Connected components2.
-	//	 *
-	//	 * @param <T> the generic type
-	//	 * @param clusters the clusters
-	//	 * @return 		a partition of the given clusters, such that all predicates in the
-	//	 *      each component are connected, and no predicates part of distinct
-	//	 *      component are connected.
-	//	 */
-	//	public static <T> List<Set<T>> connectedComponents2(List<Set<T>> clusters) {
-	//		List<Set<T>> result = new LinkedList<>();
-	//		if (clusters.isEmpty()) {
-	//			return result;
-	//		}
-	//		Set<T> first = clusters.get(0);
-	//		if (clusters.size() > 1) {
-	//			List<Set<T>> rest = connectedComponents2(clusters.subList(1, clusters.size()));
-	//			for (Set<T> s : rest) {
-	//				if (!Collections.disjoint(first, s)) {
-	//					first.addAll(s);
-	//				} else {
-	//					result.add(s);
-	//				}
-	//			}
-	//		}
-	//		result.add(first);
-	//		return result;
-	//	}
-
 	/**
 	 * Format the given value so as to call the proper type conversion function.
 	 *
@@ -575,23 +453,6 @@ public class Utility {
 		}
 		return "'" + o + "'";
 	}
-
-	/**
-	 * It projects the input map, keeping <key,value> pairs, where the key exists as a variable in the input Atom.
-	 */
-	//	public static Map<Variable, Constant> projectMapOnAtomsVariables(Atom atom, Map<Variable, Constant> map) {
-	//	Map<Variable, Constant> projectedMap = new LinkedHashMap<>();
-	//	for(Term headTerm: atom.getTerms()) {
-	//		Constant chaseTerm  = map.get(headTerm);
-	//		if (chaseTerm != null && !chaseTerm.isSkolem()) {
-	//			throw new java.lang.IllegalStateException("Chase Term " + headTerm + ", " + atom.getTerms());
-	//		}
-	//		if (headTerm.isVariable()) {
-	//			projectedMap.put((Variable) headTerm, chaseTerm);
-	//		}
-	//	}
-	//	return projectedMap;
-	//}
 
 	/**
 	 * Asserts enabled.

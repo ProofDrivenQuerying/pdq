@@ -1,11 +1,7 @@
 package uk.ac.ox.cs.pdq.fol;
 
-import java.util.Collection;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-
-import uk.ac.ox.cs.pdq.db.TypedConstant;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
@@ -21,9 +17,6 @@ public class EGD extends Dependency {
 
 	/**  The dependency's universally quantified variables. */
 	protected List<Variable> universal;
-
-	/**  The dependency's constants. */
-	protected Collection<TypedConstant<?>> constants = new LinkedHashSet<>();
 
 	public EGD(LogicalSymbols operator, List<Variable> variables, Implication implication) {
 		super(operator, variables, implication);
