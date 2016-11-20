@@ -107,8 +107,8 @@ public class DependencyGeneratorTest extends ParameterizedTest {
 		}
 		for (Dependency ic : this.dependencies) {
 			for (Atom a : ((TGD) ic).getAtoms()) {
-				assertTrue("Relation " + a.getName() + " not present in schema.",
-						relationNames.contains(a.getName()));
+				assertTrue("Relation " + a.getPredicate().getName() + " not present in schema.",
+						relationNames.contains(a.getPredicate().getName()));
 			}
 		}
 	}

@@ -56,9 +56,9 @@ public class ImplicationTest {
 				new Variable("x1"));
 		Atom p1 = new Atom(s1, t1);
 		Atom p2 = new Atom(s2, t2);
-		Formula i = Implication.of(p1, p2);
-		Assert.assertEquals("Implication body must match that of construction ", p1, i.getBody());
-		Assert.assertEquals("Implication head must match that of construction ", p2, i.getHead());
+		Implication i = Implication.of(p1, p2);
+		Assert.assertEquals("Implication body must match that of construction ", p1, i.getChildren().get(0));
+		Assert.assertEquals("Implication head must match that of construction ", p2, i.getChildren().get(1));
 	}
 
 	/**
@@ -84,7 +84,7 @@ public class ImplicationTest {
 				);
 		Atom p2 = new Atom(s2, t2);
 		Formula i1 = Implication.of(p1, p2);
-		Formula i2 = Implication.of(Pair.of(p1, p2));
+		Formula i2 = Implication.of(p1, p2);
 		Assert.assertTrue("Implications must match be equal ", i1.equals(i2));
 	}
 

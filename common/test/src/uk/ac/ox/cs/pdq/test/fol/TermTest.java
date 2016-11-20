@@ -17,7 +17,7 @@ import uk.ac.ox.cs.pdq.util.Utility;
 /**
  * The Class VariableTermTest.
  */
-public class VariableTermTest {
+public class TermTest {
 	
 	/**
 	 * Makes sure assertions are enabled.
@@ -49,8 +49,6 @@ public class VariableTermTest {
 	@Test
 	public void testEquals() {
 		int n = 100;
-		Set<Variable> terms1 = new LinkedHashSet<>();
-		Set<Variable> terms2 = new LinkedHashSet<>();
 		for (int i = 0; i < n; i++) {
 			assertEquals(new Variable("x" + i), new Variable("x" + i));
 		}

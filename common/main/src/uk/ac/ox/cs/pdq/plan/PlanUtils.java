@@ -17,6 +17,7 @@ import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Term;
+import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.base.Preconditions;
@@ -72,16 +73,17 @@ public class PlanUtils {
 	 * @return Projection
 	 */
 	public static Projection createFinalProjection(ConjunctiveQuery query, RelationalOperator childOp) {
-		List<Term> freeTerms = query.getHeadTerms();
+//		List<Term> freeTerms = query.getHeadTerms();
 		List<Term> toProject = new ArrayList<>();
-		for (Term term: freeTerms) {
-			if (term.isVariable()) {
+		for (Variable term: query.getFreeVariables()) {
+//			if (term.isVariable()) {
 				Constant constant = query.getSubstitutionOfFreeVariablesToCanonicalConstants().get(term);
 				Preconditions.checkState(childOp.getColumns().contains(constant), constant + " not in " + childOp.getColumns() + "\nQuery: " + query + "\nCanonical Mapping: " + query.getSubstitutionOfFreeVariablesToCanonicalConstants() + "\nSubplan: " + childOp);
 				toProject.add(constant);
-			} else {
-				toProject.add(term);
-			}
+//			} 
+//		else {
+//				toProject.add(term);
+//			}
 		}
 		if (!childOp.getInputTerms().isEmpty()) {
 			List<TypedConstant<?>> constants = new ArrayList<>(childOp.getInputTerms().size());

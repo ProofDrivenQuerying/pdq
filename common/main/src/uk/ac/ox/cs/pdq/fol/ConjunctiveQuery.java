@@ -22,9 +22,6 @@ import com.google.common.collect.Sets;
  */
 public class ConjunctiveQuery extends QuantifiedFormula {
 
-//	/**  The query's head part. */
-//	protected final Atom head;
-//	
 	/** 
 	 * TOCOMMENT we should get rid of this when we fix #42
 	 * 
@@ -36,10 +33,6 @@ public class ConjunctiveQuery extends QuantifiedFormula {
 	 * 
 	 * Map of query's free variables to chase constants. */
 	protected Map<Variable, Constant> canonicalSubstitutionOfFreeVariables;
-	
-	protected Atom alias;
-	
-	protected List<Term> headTerms;
 	
 	/**
 	 * Builds a conjunctive query given the input head variables and body.
@@ -144,15 +137,5 @@ public class ConjunctiveQuery extends QuantifiedFormula {
 			}
 		}
 		return false;
-	}
-	
-	public List<Term> getHeadTerms() {
-		if(this.headTerms == null) {
-			this.headTerms = Lists.newArrayList();
-			for(Variable variable:this.getFreeVariables()) {
-				this.headTerms.add(variable);
-			}
-		}
-		return this.headTerms;
 	}
 }

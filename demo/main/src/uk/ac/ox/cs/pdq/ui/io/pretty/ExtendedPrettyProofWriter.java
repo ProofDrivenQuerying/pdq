@@ -7,10 +7,9 @@ import java.util.Set;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Dependency;
-import uk.ac.ox.cs.pdq.fol.Formula;
-import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.io.Writer;
 import uk.ac.ox.cs.pdq.io.pretty.PrettyFormulaWriter;
@@ -83,12 +82,29 @@ public class ExtendedPrettyProofWriter extends PrettyWriter<Proof> implements Wr
 			out.print("Groundings: ");
 			for (Map<Variable, Constant> candidate: state.getMatches()) {
 				out.print('\n');
-				dw.write(axiom.ground(candidate));
+				dw.write(axiom.fire(candidate,true));
 				out.println();
 			}
 			out.println();
 		}
 	}
+	
+	
+//	/**
+//	 * Ground.
+//	 *
+//	 * @param mapping the mapping
+//	 * @param canonicalNames 		True if we assign Skolem constants to the existentially quantified variables
+//	 * @return 		the grounded dependency using the input mapping.
+//	 *      If canonicalNames is TRUE then skolem constants are produced for
+//	 *      the existentially quantified variables
+//	 */
+//	public TGD ground(Map<Variable, Constant> mapping, boolean canonicalNames) {
+//		TGD grounded = (canonicalNames == true ? this.ground(this.skolemizeMapping(mapping)): this.ground(mapping));
+//		List<Atom> right = grounded.getRight().getAtoms();
+//		right.removeAll(grounded.getLeft().getAtoms());
+//		return new TGD(Conjunction.of(grounded.getLeft().getAtoms()), Conjunction.of(right));
+//	}
 	
 	/**
 	 * Trace back.

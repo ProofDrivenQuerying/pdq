@@ -15,6 +15,7 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Term;
+import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.io.Writer;
 import uk.ac.ox.cs.pdq.io.pretty.PrettyWriter;
 
@@ -102,12 +103,12 @@ public class SQLLikeQueryWriter extends PrettyWriter<ConjunctiveQuery> implement
 		}
 		// Make SELECT clause
 		result.append("SELECT ");
-		Collection<Term> head = q.getHeadTerms();
+		Collection<Variable> head = q.getFreeVariables();
 		if (head.isEmpty()) {
 			result.append("*");
 		} else {
 			String sep = "";
-			for (Term t: head) {
+			for (Variable t: head) {
 				Atom p = joins.get(t).iterator().next();
 				int pos = p.getTermPositions(t).iterator().next();
 				Attribute a = ((Relation) p.getPredicate()).getAttribute(pos);

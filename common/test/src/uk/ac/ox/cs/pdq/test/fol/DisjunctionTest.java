@@ -96,7 +96,7 @@ public final class DisjunctionTest {
 				new Variable("x1"), 
 				new Variable("x2"), 
 				new Variable("x3"),
-				new Skolem("x4"), 
+				new UntypedConstant("x4"), 
 				new TypedConstant<>("x5")
 				);
 		Atom p1 = new Atom(s1, t1);

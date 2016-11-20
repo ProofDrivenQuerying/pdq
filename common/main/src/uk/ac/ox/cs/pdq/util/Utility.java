@@ -4,7 +4,6 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -72,22 +71,22 @@ public class Utility {
 		return result;
 	}
 
-	/**
-	 * Contains element.
-	 *
-	 * @param <T> the generic type
-	 * @param source the source
-	 * @param target the target
-	 * @return 		true if source contains at least on element of target
-	 */
-	public static <T> boolean containsElement(Collection<T> source, Collection<T> target) {
-		for (T s: source) {
-			if (target.contains(s)) {
-				return true;
-			}
-		}
-		return false;
-	}
+//	/**
+//	 * Contains element.
+//	 *
+//	 * @param <T> the generic type
+//	 * @param source the source
+//	 * @param target the target
+//	 * @return 		true if source contains at least on element of target
+//	 */
+//	public static <T> boolean containsElement(Collection<T> source, Collection<T> target) {
+//		for (T s: source) {
+//			if (target.contains(s)) {
+//				return true;
+//			}
+//		}
+//		return false;
+//	}
 
 
 	/**
@@ -101,24 +100,24 @@ public class Utility {
 		return new LinkedHashSet<>(l);
 	}
 
-	/**
-	 * Extract.
-	 *
-	 * @param <T> the generic type
-	 * @param l the l
-	 * @param p a list of positions
-	 * @return a list of T made of all the items in l appearing at positions in p
-	 */
-	public static <T> List<T> extract(List<T> l, List<Integer> p) {
-		Preconditions.checkArgument(l != null);
-		Preconditions.checkArgument(p != null);
-		List<T> result = new ArrayList<>(p.size());
-		for (Integer position: p) {
-			Preconditions.checkState(position >= 0 && position < l.size());
-			result.add(l.get(position));
-		}
-		return result;
-	}
+//	/**
+//	 * Extract.
+//	 *
+//	 * @param <T> the generic type
+//	 * @param l the l
+//	 * @param p a list of positions
+//	 * @return a list of T made of all the items in l appearing at positions in p
+//	 */
+//	public static <T> List<T> extract(List<T> l, List<Integer> p) {
+//		Preconditions.checkArgument(l != null);
+//		Preconditions.checkArgument(p != null);
+//		List<T> result = new ArrayList<>(p.size());
+//		for (Integer position: p) {
+//			Preconditions.checkState(position >= 0 && position < l.size());
+//			result.add(l.get(position));
+//		}
+//		return result;
+//	}
 
 	/**
 	 * Typed to terms.
@@ -165,19 +164,19 @@ public class Utility {
 		return result;
 	}
 
-	/**
-	 * Converts a list of Typed to a list of VariableTerm.
-	 *
-	 * @param typed Collection<? extends Typed>
-	 * @return List<Variable>
-	 */
-	public static List<Variable> typedToVariable(Collection<? extends Typed> typed) {
-		List<Variable> result = new ArrayList<>();
-		for (Typed a : typed) {
-			result.add(new Variable(a.toString()));
-		}
-		return result;
-	}
+//	/**
+//	 * Converts a list of Typed to a list of VariableTerm.
+//	 *
+//	 * @param typed Collection<? extends Typed>
+//	 * @return List<Variable>
+//	 */
+//	public static List<Variable> typedToVariable(Collection<? extends Typed> typed) {
+//		List<Variable> result = new ArrayList<>();
+//		for (Typed a : typed) {
+//			result.add(new Variable(a.toString()));
+//		}
+//		return result;
+//	}
 
 	//	/**
 	//	 * Gets the variables.
@@ -290,23 +289,6 @@ public class Utility {
 	}
 
 	/**
-	 * Generates a list of attribute whose name are the name as those of term in
-	 * the given predicate, and types match with the predicate attribute types.
-	 * @param variables List<? extends Term>
-	 * @param type TupleType
-	 * @return List<Attribute>
-	 */
-	public static List<Attribute> variablesToAttributes(List<Variable> variables, TupleType type) {
-		Preconditions.checkArgument(variables.size() == type.size());
-		List<Attribute> result = new ArrayList<>();
-		int i = 0;
-		for (Term t : variables) {
-			result.add(new Attribute(type.getType(i++), t.toString()));
-		}
-		return result;
-	}
-
-	/**
 	 * Converts a list of Term to a list of Typed.
 	 *
 	 * @param terms List<? extends Term>
@@ -320,6 +302,24 @@ public class Utility {
 		for (Term t: terms) {
 			result.add(termToTyped(t, type.getType(i)));
 			i++;
+		}
+		return result;
+	}
+	
+
+	/**
+	 * Generates a list of attribute whose name are the name as those of term in
+	 * the given predicate, and types match with the predicate attribute types.
+	 * @param variables List<? extends Term>
+	 * @param type TupleType
+	 * @return List<Attribute>
+	 */
+	public static List<Attribute> variablesToAttributes(List<Variable> variables, TupleType type) {
+		Preconditions.checkArgument(variables.size() == type.size());
+		List<Attribute> result = new ArrayList<>();
+		int i = 0;
+		for (Term t : variables) {
+			result.add(new Attribute(type.getType(i++), t.toString()));
 		}
 		return result;
 	}
@@ -341,25 +341,7 @@ public class Utility {
 		}
 		return result;
 	}
-
-
-	/**
-	 * Converts a Term to a Typed.
-	 *
-	 * @param t Term
-	 * @param type Class<?>
-	 * @return Typed
-	 */
-	public static Typed termToTyped(Term t, Type type) {
-		if (t.isVariable() || t.isUntypedConstant()) {
-			return new Attribute(type, String.valueOf(t));
-		} else if (t instanceof TypedConstant) {
-			return (TypedConstant<?>) t;
-		} else {
-			throw new IllegalStateException("Unknown typed object: " + t);
-		}
-	}
-
+	
 	/**
 	 * Generates a list of terms matching the attributes of the input relation.
 	 *
@@ -398,50 +380,23 @@ public class Utility {
 	}
 
 	/**
-	 * Generates a list of terms matching the list of input attributes.
-	 *
-	 * @param attributes the attributes
-	 * @return List<Attribute>
-	 */
-	public static List<Attribute> canonicalAttributes(List<Attribute> attributes) {
-		List<Attribute> result = new ArrayList<>();
-		for (int index = 0, l = attributes.size(); index < l; ++index) {
-			result.add(new Attribute(attributes.get(index).getClass(), "x" + index));
-		}
-		return result;
-	}
-
-	//	/**
-	//	 * To strings.
-	//	 *
-	//	 * @param atoms the atoms
-	//	 * @return the string representations of the input atoms
-	//	 */
-	//	public static Collection<String> toStrings(Collection<? extends Atom> atoms) {
-	//		Set<String> strings = new LinkedHashSet<>();
-	//		for(Atom atom: atoms) {
-	//			strings.add(atom.toString());
-	//		}
-	//		return strings;
-	//	}
-
-	/**
 	 * Gets the tuple type.
 	 *
 	 * @param q the q
 	 * @return the tuple type of the input query
 	 */
 	public static TupleType getTupleType(ConjunctiveQuery q) {
-		List<Term> headTerms = q.getHeadTerms();
-		Type[] result = new Class<?>[headTerms.size()];
+//		List<Term> headTerms = q.getHeadTerms();
+		Type[] result = new Class<?>[q.getFreeVariables().size()];
 		boolean assigned = false;
 		for (int i = 0, l = result.length; i < l; i++) {
 			assigned = false;
-			Term t = headTerms.get(i);
-			if (t instanceof TypedConstant) {
-				result[i] = ((TypedConstant<?>) t).getType();
-				continue;
-			}
+//			Term t = headTerms.get(i);
+//			if (t instanceof TypedConstant) {
+//				result[i] = ((TypedConstant<?>) t).getType();
+//				continue;
+//			}
+			Variable t = q.getFreeVariables().get(i);
 			for (Atom f: q.getAtoms()) {
 				Predicate s = f.getPredicate();
 				if (s instanceof Relation) {
@@ -462,6 +417,48 @@ public class Utility {
 
 
 	/**
+	 * Converts a Term to a Typed.
+	 *
+	 * @param t Term
+	 * @param type Class<?>
+	 * @return Typed
+	 */
+	public static Typed termToTyped(Term t, Type type) {
+		if (t.isVariable() || t.isUntypedConstant()) {
+			return new Attribute(type, String.valueOf(t));
+		} else if (t instanceof TypedConstant) {
+			return (TypedConstant<?>) t;
+		} else {
+			throw new IllegalStateException("Unknown typed object: " + t);
+		}
+	}
+
+	/**
+	 * Generates a list of terms matching the list of input attributes.
+	 *
+	 * @param attributes the attributes
+	 * @return List<Attribute>
+	 */
+	public static List<Attribute> canonicalAttributes(List<Attribute> attributes) {
+		List<Attribute> result = new ArrayList<>();
+		for (int index = 0, l = attributes.size(); index < l; ++index) {
+			result.add(new Attribute(attributes.get(index).getClass(), "x" + index));
+		}
+		return result;
+	}
+	
+//	public List<Term> getHeadTerms() {
+//		if(this.headTerms == null) {
+//			this.headTerms = Lists.newArrayList();
+//			for(Variable variable:this.getFreeVariables()) {
+//				this.headTerms.add(variable);
+//			}
+//		}
+//		return this.headTerms;
+//	}
+
+
+	/**
 	 * Mean dist.
 	 *
 	 * @param random Random
@@ -477,22 +474,22 @@ public class Utility {
 		return mean + random.nextDouble() * (max - mean);
 	}
 
-	/**
-	 * Retain.
-	 *
-	 * @param <K> the key type
-	 * @param <V> the value type
-	 * @param map Map<K,V>
-	 * @param keys Collection<K>
-	 * @return Map<K,V>
-	 */
-	public static <K,V> Map<K,V> retain(Map<K,V> map, Collection<K> keys) {
-		Map<K,V> ret = new HashMap<>();
-		for(K key: keys) {
-			ret.put(key, map.get(key));
-		}
-		return ret;
-	}
+//	/**
+//	 * Retain.
+//	 *
+//	 * @param <K> the key type
+//	 * @param <V> the value type
+//	 * @param map Map<K,V>
+//	 * @param keys Collection<K>
+//	 * @return Map<K,V>
+//	 */
+//	public static <K,V> Map<K,V> retain(Map<K,V> map, Collection<K> keys) {
+//		Map<K,V> ret = new HashMap<>();
+//		for(K key: keys) {
+//			ret.put(key, map.get(key));
+//		}
+//		return ret;
+//	}
 
 	/**
 	 * Connected components.

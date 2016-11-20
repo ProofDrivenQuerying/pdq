@@ -160,8 +160,8 @@ public class RuntimeController {
     private void configureColumns() {
     	ObservableList<TableColumn<Tuple, ?>> columns = this.runtimeResults.getColumns();
 //    	Atom head = this.query.getHeadTerms();
-    	for (int i = 0, l = this.query.getHeadTerms().size(); i < l; i++) {
-    		TableColumn<Tuple, Object> column = new TableColumn<>(this.query.getHeadTerms().get(i).toString());
+    	for (int i = 0, l = this.query.getFreeVariables().size(); i < l; i++) {
+    		TableColumn<Tuple, Object> column = new TableColumn<>(this.query.getFreeVariables().get(i).toString());
     		column.setCellValueFactory(new TupleCellFactoryCallback(i));
     		columns.add(column);
 

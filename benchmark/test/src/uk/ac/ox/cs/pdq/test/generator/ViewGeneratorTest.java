@@ -81,9 +81,9 @@ public class ViewGeneratorTest extends ParameterizedTest {
 		for (Relation r: this.schema.getRelations()) {
 			relationNames.add(r.getName());
 		}
-		for (Atom a : this.query.getBody()) {
-			assertTrue("Relation " + a.getName() + " not present in schema.",
-					relationNames.contains(a.getName()));
+		for (Atom a : this.query.getAtoms()) {
+			assertTrue("Relation " + a.getPredicate().getName() + " not present in schema.",
+					relationNames.contains(a.getPredicate().getName()));
 		}
 	}
 
@@ -92,7 +92,7 @@ public class ViewGeneratorTest extends ParameterizedTest {
 	 */
 	@Test
 	public void testEachViewContainedInQuery() {
-		List<Atom> queryAtoms = this.query.getBody().getAtoms();
+		List<Atom> queryAtoms = this.query.getAtoms();
 		for (View v: this.views) {
 			Formula f = v.getDependency().getRight();
 			// TODO: This is not true containment, check for homomorphism instead

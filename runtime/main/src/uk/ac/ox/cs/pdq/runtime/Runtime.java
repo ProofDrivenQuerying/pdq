@@ -19,7 +19,6 @@ import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.LinearGuarded;
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.runtime.exec.Middleware;
 import uk.ac.ox.cs.pdq.runtime.exec.PlanExecutor;

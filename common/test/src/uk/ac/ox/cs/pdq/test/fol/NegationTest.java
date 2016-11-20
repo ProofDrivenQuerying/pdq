@@ -50,8 +50,8 @@ public final class NegationTest {
 				new TypedConstant<>("x5")
 				);
 		Atom p = new Atom( s, t);
-		Negation<Atom> n = Negation.of(p);
-		Assert.assertEquals("Negation subformulation must match that of construction ", p, n.getChild());
+		Negation n = Negation.of(p);
+		Assert.assertEquals("Negation subformulation must match that of construction ", p, n.getChildren().get(0));
 	}
 
 	/**

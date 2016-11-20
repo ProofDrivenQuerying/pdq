@@ -63,7 +63,7 @@ public class PrettyProofWriter extends PrettyWriter<Proof> implements Writer<Pro
 			out.print("Groundings: ");
 			for (Map<Variable, Constant> candidate: state.getMatches()) {
 				out.print('\n');
-				dw.write(axiom.ground(candidate));
+				dw.write(axiom.fire(candidate,true));
 				out.println();
 			}
 			out.println();

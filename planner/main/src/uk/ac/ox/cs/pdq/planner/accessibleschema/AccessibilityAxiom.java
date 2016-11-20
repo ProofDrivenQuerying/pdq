@@ -2,19 +2,16 @@ package uk.ac.ox.cs.pdq.planner.accessibleschema;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.AccessMethod.Types;
 import uk.ac.ox.cs.pdq.db.Relation;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
-import uk.ac.ox.cs.pdq.fol.Constant;
+import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.GuardedDependency;
 import uk.ac.ox.cs.pdq.fol.TGD;
-import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Term;
-import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema.AccessibleRelation;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema.InferredAccessibleRelation;
 

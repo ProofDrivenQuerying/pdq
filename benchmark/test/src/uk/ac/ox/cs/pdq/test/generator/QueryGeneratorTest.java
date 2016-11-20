@@ -206,9 +206,9 @@ public class QueryGeneratorTest extends ParameterizedTest {
 		for (Relation r: this.schema.getRelations()) {
 			relationNames.add(r.getName());
 		}
-		for (Atom a : q.getBody()) {
-			assertTrue("Relation " + a.getName() + " not present in schema.",
-					relationNames.contains(a.getName()));
+		for (Atom a : q.getAtoms()) {
+			assertTrue("Relation " + a.getPredicate().getName() + " not present in schema.",
+					relationNames.contains(a.getPredicate().getName()));
 		}
 	}
 	
@@ -219,11 +219,11 @@ public class QueryGeneratorTest extends ParameterizedTest {
 	 */
 	public void testFreeVariableRatio(ConjunctiveQuery q) {
 		Set<Term> terms = new LinkedHashSet<>();
-		for (Atom a : q.getBody()) {
+		for (Atom a : q.getAtoms()) {
 			terms.addAll(a.getTerms());
 		}
 		assertTrue("Free variable ratio not satisfied in " + q,
-				terms.size() * this.params.getFreeVariable() == q.getFree().size());
+				terms.size() * this.params.getFreeVariable() == q.getFreeVariables().size());
 	}
 
 	/**
@@ -232,8 +232,8 @@ public class QueryGeneratorTest extends ParameterizedTest {
 	 * @param q the q
 	 */
 	public void testQueryIsGuarded(ConjunctiveQuery q) {
-		List<Term> freeVars = q.getHead().getTerms();
-		for (Atom a : q.getBody().getAtoms()) {
+		List<Variable> freeVars = q.getFreeVariables();
+		for (Atom a:q.getAtoms()) {
 			if (a.getTerms().containsAll(freeVars)) {
 				assertTrue("Guard not found", true);
 				return;
@@ -250,7 +250,7 @@ public class QueryGeneratorTest extends ParameterizedTest {
 	public void testQueryAcyclic(ConjunctiveQuery q) {
 		// Building variable clusters
 		SetMultimap<Variable, Atom> clusters = LinkedHashMultimap.create();
-		for (Atom p: q.getBody()) {
+		for (Atom p: q.getAtoms()) {
 			for (Term t: p.getTerms()) {
 				if (t instanceof Variable) {
 					clusters.put((Variable) t, p);
@@ -260,7 +260,7 @@ public class QueryGeneratorTest extends ParameterizedTest {
 
 		// Building query graph
 		SetMultimap<Atom, Atom> queryGraph = LinkedHashMultimap.create();
-		for (Atom p: q.getBody()) {
+		for (Atom p: q.getAtoms()) {
 			for (Term t: p.getTerms()) {
 				Set<Atom> neighbours = queryGraph.get(p);
 				if (neighbours.contains(p)) {
@@ -282,7 +282,7 @@ public class QueryGeneratorTest extends ParameterizedTest {
 	 */
 	public void testQueryHasNoCartesianProducts(ConjunctiveQuery q) {
 		Map<Variable, Set<Atom>> joins = new LinkedHashMap<>();
-		for (Atom p: q.getBody()) {
+		for (Atom p: q.getAtoms()) {
 			for (Term t: p.getTerms()) {
 				if (t instanceof Variable) {
 					Set<Atom> preds = joins.get(t);
@@ -333,7 +333,7 @@ public class QueryGeneratorTest extends ParameterizedTest {
 	 */
 	public void testNoRepeatedRelationQuery(ConjunctiveQuery q) {
 		Set<Predicate> predicates = new LinkedHashSet<>();
-		for (Atom p: q.getBody()) {
+		for (Atom p: q.getAtoms()) {
 			if (predicates.contains(p.getPredicate())) {
 				fail("Repeated relation found in " + q);
 				return;
@@ -349,7 +349,7 @@ public class QueryGeneratorTest extends ParameterizedTest {
 	 */
 	public void testNoRepeatedVariablesInQuery(ConjunctiveQuery q) {
 		List<Term> vars = new ArrayList<>();
-		for (Atom a: q.getBody()) {
+		for (Atom a: q.getAtoms()) {
 			for (Term t: a.getTerms()) {
 				vars.clear();
 				if (t instanceof Variable) {
