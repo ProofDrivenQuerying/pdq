@@ -3,10 +3,8 @@ package uk.ac.ox.cs.pdq.test.fol;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
@@ -17,7 +15,6 @@ import org.junit.Test;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
-import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
@@ -445,27 +442,6 @@ public class AtomTest {
 		Atom p = new Atom(s, t);
 		Assert.assertEquals("Atom lists must match",
 				Lists.newArrayList(p), p.getAtoms());
-	}
-
-	/**
-	 * Test ground.
-	 */
-	@Test public void testGround() {
-		Predicate s = new Predicate("s", 5);
-		List<Term> t = Lists.<Term>newArrayList(
-				new Variable("x1"), new Variable("x2"), new UntypedConstant("x3"),
-				new Variable("x4"), new TypedConstant<>("x5")
-				);
-		List<Term> g = Lists.<Term>newArrayList(
-				new TypedConstant<>("c1"), new TypedConstant<>("c2"), new UntypedConstant("x3"),
-				new TypedConstant<>("c4"), new TypedConstant<>("x5")
-				);
-		Map<Variable, Constant> m = new LinkedHashMap<>();
-		m.put(new Variable("x1"), new TypedConstant<>("c1"));
-		m.put(new Variable("x2"), new TypedConstant<>("c2"));
-		m.put(new Variable("x4"), new TypedConstant<>("c4"));
-		Atom p = new Atom(s, t);
-		Assert.assertEquals("Grounded negation must comply to mapping ",g, p.ground(m).getTerms());
 	}
 
 	/**

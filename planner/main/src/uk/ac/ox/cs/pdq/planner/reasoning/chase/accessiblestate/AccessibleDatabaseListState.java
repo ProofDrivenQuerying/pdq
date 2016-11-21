@@ -1,6 +1,5 @@
 package uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Iterator;
@@ -13,12 +12,10 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
-import uk.ac.ox.cs.pdq.db.DatabaseInstance;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
-import uk.ac.ox.cs.pdq.db.sql.SQLStatementBuilder;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
@@ -122,13 +119,13 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 	 */
 	private static Collection<Atom> createInitialFacts(ConjunctiveQuery query, Schema schema) {
 		// Gets the canonical database of the query
-		Collection<Atom> facts = uk.ac.ox.cs.pdq.util.Utility.ground(query, query.getSubstitutionToCanonicalConstants()).getAtoms();
+		Collection<Atom> facts = uk.ac.ox.cs.pdq.reasoning.chase.Utility.applySubstitution(query, query.getSubstitutionToCanonicalConstants()).getAtoms();
 		// Create the Accessible(.) facts
 		// One Accessible(.) is being created for every schema constant
 		for (TypedConstant<?> constant : uk.ac.ox.cs.pdq.util.Utility.getTypedConstants(query)) {
 			facts.add(AccessibleRelation.getAccessibleFact(constant));
 		}
-		for (TypedConstant<?> constant:schema.getDependencyConstants()) {
+		for (TypedConstant<?> constant:schema.getDependencyTypedConstants()) {
 			facts.add(AccessibleRelation.getAccessibleFact(constant));
 		}
 		return facts;
@@ -233,7 +230,7 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 			Dependency dependency = (Dependency) match.getQuery();
 			Preconditions.checkArgument(dependency instanceof TGD, "EGDs are not allowed inside TGDchaseStep");
 			Map<Variable, Constant> mapping = match.getMapping();
-			Implication grounded = ((TGD)dependency).fire(mapping, true);
+			Implication grounded = uk.ac.ox.cs.pdq.reasoning.chase.Utility.fire(dependency, mapping, true);
 			Formula left = grounded.getChildren().get(0);
 			Formula right = grounded.getChildren().get(1);
 			for(Atom fact:right.getAtoms()) {

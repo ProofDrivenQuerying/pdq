@@ -1,24 +1,21 @@
 package uk.ac.ox.cs.pdq.test.fol;
 
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.db.TypedConstant;
-import uk.ac.ox.cs.pdq.fol.Constant;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.LogicalSymbols;
 import uk.ac.ox.cs.pdq.fol.Negation;
-import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.QuantifiedFormula;
-import uk.ac.ox.cs.pdq.util.Utility;
 import uk.ac.ox.cs.pdq.fol.Predicate;
-import uk.ac.ox.cs.pdq.fol.UntypedConstant;
+import uk.ac.ox.cs.pdq.fol.QuantifiedFormula;
 import uk.ac.ox.cs.pdq.fol.Term;
+import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.collect.Lists;
 
@@ -110,64 +107,6 @@ public class QuantifiedFormulaTest {
 	}
 
 	/**
-	 * Test ground universal.
-	 */
-	@Test public void testGroundUniversal() {
-		Predicate s = new Predicate("s", 5);
-		List<Term> t = Lists.<Term>newArrayList(
-				new Variable("x1"), 
-				new Variable("x2"), 
-				new UntypedConstant("x3"),
-				new Variable("x4"), 
-				new TypedConstant<>("x5")
-				);
-		List<Term> g = Lists.<Term>newArrayList(
-				new Variable("x1"), 
-				new TypedConstant<>("c2"), 
-				new UntypedConstant("x3"),
-				new TypedConstant<>("c4"), 
-				new TypedConstant<>("x5")
-				);
-		Map<Variable, Constant> m = new LinkedHashMap<>();
-		m.put(new Variable("x2"), new TypedConstant<>("c2"));
-		m.put(new Variable("x4"), new TypedConstant<>("c4"));
-		Atom p = new Atom(s, t);
-		List<Variable> v = Lists.newArrayList(new Variable("x1"));
-		QuantifiedFormula n = new QuantifiedFormula(LogicalSymbols.UNIVERSAL, v, p);
-		Assert.assertEquals("Grounded universal must comply to mapping ", g, n.ground(m).getTerms());
-	}
-
-	/**
-	 * Test ground universal invalid.
-	 */
-	@Test(expected=IllegalArgumentException.class)
-	public void testGroundUniversalInvalid() {
-		Predicate s = new Predicate("s", 5);
-		List<Term> t = Lists.<Term>newArrayList(
-				new Variable("x1"), 
-				new Variable("x2"), 
-				new UntypedConstant("x3"),
-				new Variable("x4"), 
-				new TypedConstant<>("x5")
-				);
-		List<Term> g = Lists.<Term>newArrayList(
-				new Variable("x1"), 
-				new TypedConstant<>("c2"), 
-				new UntypedConstant("x3"),
-				new TypedConstant<>("c4"), 
-				new TypedConstant<>("x5")
-				);
-		Map<Variable, Constant> m = new LinkedHashMap<>();
-		m.put(new Variable("x1"), new TypedConstant<>("c1"));
-		m.put(new Variable("x2"), new TypedConstant<>("c2"));
-		m.put(new Variable("x4"), new TypedConstant<>("c4"));
-		Atom p = new Atom(s, t);
-		List<Variable> v = Lists.newArrayList(new Variable("x1"));
-		QuantifiedFormula n = new QuantifiedFormula(LogicalSymbols.UNIVERSAL, v, p);
-		Assert.assertEquals("Grounded universal must comply to mapping ", g, n.ground(m).getTerms());
-	}
-
-	/**
 	 * Test existential.
 	 */
 	@Test public void testExistential() {
@@ -181,7 +120,7 @@ public class QuantifiedFormulaTest {
 				);
 		Atom p = new Atom( s, t);
 		QuantifiedFormula n = new QuantifiedFormula(LogicalSymbols.EXISTENTIAL, Lists.newArrayList(new Variable("x1")), p);
-		Assert.assertEquals("Universal subformulation must match that of construction ", p, n.getChild());
+		Assert.assertEquals("Universal subformulation must match that of construction ", p, n.getChildren().get(0));
 	}
 	
 	/**
@@ -242,61 +181,4 @@ public class QuantifiedFormulaTest {
 		Assert.assertFalse("Universal subformulation must match that of construction ", n1.equals(n2));
 	}
 
-	/**
-	 * Test ground existential invalid.
-	 */
-	@Test(expected=IllegalArgumentException.class)
-	public void testGroundExistentialInvalid() {
-		Predicate s = new Predicate("s", 5);
-		List<Term> t = Lists.<Term>newArrayList(
-				new Variable("x1"), 
-				new Variable("x2"), 
-				new UntypedConstant("x3"),
-				new Variable("x4"), 
-				new TypedConstant<>("x5")
-				);
-		List<Term> g = Lists.<Term>newArrayList(
-				new TypedConstant<>("c1"), 
-				new TypedConstant<>("c2"), 
-				new UntypedConstant("x3"),
-				new TypedConstant<>("c4"), 
-				new TypedConstant<>("x5")
-				);
-		Map<Variable, Constant> m = new LinkedHashMap<>();
-		m.put(new Variable("x1"), new TypedConstant<>("c1"));
-		m.put(new Variable("x2"), new TypedConstant<>("c2"));
-		m.put(new Variable("x4"), new TypedConstant<>("c4"));
-		Atom p = new Atom(s, t);
-		List<Variable> v = Lists.newArrayList(new Variable("x1"));
-		QuantifiedFormula n = new QuantifiedFormula(LogicalSymbols.EXISTENTIAL, v, p);
-		Assert.assertEquals("Grounded universal must comply to mapping ", g, n.ground(m).getTerms());
-	}
-
-	/**
-	 * Test ground existential.
-	 */
-	@Test public void testGroundExistential() {
-		Predicate s = new Predicate("s", 5);
-		List<Term> t = Lists.<Term>newArrayList(
-				new Variable("x1"), 
-				new Variable("x2"), 
-				new UntypedConstant("x3"),
-				new Variable("x4"), 
-				new TypedConstant<>("x5")
-				);
-		List<Term> g = Lists.<Term>newArrayList(
-				new Variable("x1"), 
-				new TypedConstant<>("c2"), 
-				new UntypedConstant("x3"),
-				new TypedConstant<>("c4"), 
-				new TypedConstant<>("x5")
-				);
-		Map<Variable, Constant> m = new LinkedHashMap<>();
-		m.put(new Variable("x2"), new TypedConstant<>("c2"));
-		m.put(new Variable("x4"), new TypedConstant<>("c4"));
-		Atom p = new Atom(s, t);
-		List<Variable> v = Lists.newArrayList(new Variable("x1"));
-		QuantifiedFormula n = new QuantifiedFormula(LogicalSymbols.EXISTENTIAL, v, p);
-		Assert.assertEquals("Grounded universal must comply to mapping ", g, n.ground(m).getTerms());
-	}
 }

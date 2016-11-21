@@ -15,6 +15,7 @@ import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.wrappers.InMemoryRelation;
 import uk.ac.ox.cs.pdq.db.wrappers.InMemoryTableWrapper;
 import uk.ac.ox.cs.pdq.db.wrappers.InMemoryViewWrapper;
+import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.LinearGuarded;
@@ -172,7 +173,7 @@ public class Runtime {
 			LinearGuarded dependency = v.getDependency();
 			ConjunctiveQuery cq = new ConjunctiveQuery(
 					dependency.getFreeVariables(),
-					dependency.getHead());
+					(Conjunction) Conjunction.of(dependency.getHead()));
 			Collection<Tuple> data = new LinkedList<>();
 			try {
 				InMemoryQueryEvaluator eval = new InMemoryQueryEvaluator(cq);

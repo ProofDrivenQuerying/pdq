@@ -18,14 +18,12 @@ import uk.ac.ox.cs.pdq.util.TupleType;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
-
 /**
  * RelationalOperator defines a top-class for all logical relational operators.
  *
  * @author Julien Leblay
  */
 public abstract class RelationalOperator implements Rewritable, Operator {
-
 
 	/** The operator's type. */
 	protected final TupleType outputType;

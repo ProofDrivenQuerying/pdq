@@ -259,5 +259,4 @@ public class TestDatabaseChaseInstance {
 		List<Match> matches = this.chaseState.getTriggers(Lists.newArrayList(this.tgd2), TriggerProperty.ACTIVE,LimitTofacts.THIS);
 		Assert.assertEquals(1, matches.size());
 	}
-	
 }

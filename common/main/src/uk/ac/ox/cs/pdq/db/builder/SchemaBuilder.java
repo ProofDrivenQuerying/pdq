@@ -21,7 +21,6 @@ import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.LinearGuarded;
-import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.util.FormulaEquivalence;
 
@@ -293,15 +292,13 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	 * @param view the view
 	 */
 	private void ensureViewDefinition(View view) {
-		Formula d = view.getFormula();
+		LinearGuarded d = view.getDependency();
 		LinearGuarded t = this.findViewDependency(view);
 		if (d != null) {
-			if (t == null) {
-				Atom body = new Atom(new Predicate(view.getName(), view.getArity()), view.getFormula().getFreeVariables());
-				TGD dependency = new TGD(body, view.getFormula().getChildren().get(0));
-				this.dependencies.put(dependency.getId(), dependency);
-			}
 			TGD inverse = new TGD(t.getHead(), t.getBody());
+			if (t == null) {
+				this.dependencies.put(d.getId(), d);
+			}
 			TGD i = this.findDependency(inverse);
 			if (i == null) {
 				this.dependencies.put(inverse.getId(), inverse);

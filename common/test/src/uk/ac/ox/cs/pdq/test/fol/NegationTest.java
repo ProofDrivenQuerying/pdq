@@ -1,18 +1,15 @@
 package uk.ac.ox.cs.pdq.test.fol;
 
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.db.TypedConstant;
-import uk.ac.ox.cs.pdq.fol.Constant;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Negation;
-import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
@@ -106,33 +103,5 @@ public final class NegationTest {
 		Formula n1 = Negation.of(p1);
 		Formula n2 = Negation.of(p2);
 		Assert.assertFalse("Negation subformulation must match that of construction ", n1.equals(n2));
-	}
-
-	/**
-	 * Test ground.
-	 */
-	@Test public void testGround() {
-		Predicate s = new Predicate("s", 5);
-		List<Term> t = Lists.<Term>newArrayList(
-				new Variable("x1"), 
-				new Variable("x2"), 
-				new UntypedConstant("x3"),
-				new Variable("x4"), 
-				new TypedConstant<>("x5")
-				);
-		List<Term> g = Lists.<Term>newArrayList(
-				new TypedConstant<>("c1"), 
-				new TypedConstant<>("c2"), 
-				new UntypedConstant("x3"),
-				new TypedConstant<>("c4"), 
-				new TypedConstant<>("x5")
-				);
-		Map<Variable, Constant> m = new LinkedHashMap<>();
-		m.put(new Variable("x1"), new TypedConstant<>("c1"));
-		m.put(new Variable("x2"), new TypedConstant<>("c2"));
-		m.put(new Variable("x4"), new TypedConstant<>("c4"));
-		Atom p = new Atom(s, t);
-		Formula n = Negation.of(p);
-		Assert.assertEquals("Grounded negation must comply to mapping ", g, n.ground(m).getTerms());
 	}
 }

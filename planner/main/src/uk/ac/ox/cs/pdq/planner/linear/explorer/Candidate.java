@@ -14,6 +14,7 @@ import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.util.PlannerUtility;
+import uk.ac.ox.cs.pdq.reasoning.chase.Utility;
 
 import com.google.common.collect.Lists;
 
@@ -152,7 +153,7 @@ public class Candidate implements Cloneable{
 	 * @return the inferred accessible counterpart of the fact
 	 */
 	public Atom getInferredAccessibleFact() {
-		Atom accessed = this.rule.getGuard().ground(this.match.getMapping());
+		Atom accessed = (Atom) Utility.applySubstitution(this.rule.getGuard(),this.match.getMapping());
 		Relation baseRelation = this.rule.getBaseRelation();
 		return new Atom(this.accessibleSchema.getInferredAccessibleRelation(baseRelation), accessed.getTerms() );
 	}

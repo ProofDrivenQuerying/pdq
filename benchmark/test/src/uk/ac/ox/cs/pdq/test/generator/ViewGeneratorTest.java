@@ -94,10 +94,10 @@ public class ViewGeneratorTest extends ParameterizedTest {
 	public void testEachViewContainedInQuery() {
 		List<Atom> queryAtoms = this.query.getAtoms();
 		for (View v: this.views) {
-			Formula f = v.getDependency().getRight();
+			Formula f = v.getDependency().getHead();
 			// TODO: This is not true containment, check for homomorphism instead
 			assertTrue("Formula " + f + " is not contained in query " + this.query,
-					queryAtoms.containsAll(v.getDependency().getRight().getAtoms()));
+					queryAtoms.containsAll(v.getDependency().getHead().getAtoms()));
 		}
 	}
 }

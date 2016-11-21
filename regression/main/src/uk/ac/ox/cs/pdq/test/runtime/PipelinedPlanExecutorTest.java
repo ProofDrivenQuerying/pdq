@@ -101,7 +101,7 @@ public class PipelinedPlanExecutorTest {
 					throw new IllegalStateException("Schema and query must be provided.");
 				}
 
-				schema.updateConstants(Utility.getTypedConstants(query));
+				schema.updateTypedConstants(Utility.getTypedConstants(query));
 
 				Plan plan = readPlan(PATH + p, schema, query);
 

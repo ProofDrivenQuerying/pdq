@@ -3,8 +3,6 @@ package uk.ac.ox.cs.pdq.db;
 import java.util.ArrayList;
 import java.util.List;
 
-import uk.ac.ox.cs.pdq.io.xml.QNames;
-
 /**
  * A Database Relation (schema/meta-data)
  *

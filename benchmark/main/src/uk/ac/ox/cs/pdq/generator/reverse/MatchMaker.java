@@ -2,7 +2,6 @@ package uk.ac.ox.cs.pdq.generator.reverse;
 
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -15,9 +14,9 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.EventHandler;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.io.pretty.VeryPrettyQueryWriter;
@@ -193,7 +192,7 @@ public class MatchMaker implements EventHandler {
 				//Set<Term> head = new LinkedHashSet<>(Utility.getTerms(body));
 				ConjunctiveQuery candidate = new ConjunctiveQuery(
 						Utility.getVariables(body),
-						Conjunction.of(body));
+						(Conjunction) Conjunction.of(body));
 				if (this.accept(candidate)) {
 					VeryPrettyQueryWriter.to(this.out).write(candidate);
 					this.out.println();

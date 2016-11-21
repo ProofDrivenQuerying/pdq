@@ -22,6 +22,7 @@ import uk.ac.ox.cs.pdq.planner.linear.explorer.Candidate;
 import uk.ac.ox.cs.pdq.planner.reasoning.Configuration;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
+import uk.ac.ox.cs.pdq.reasoning.chase.Utility;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
@@ -140,7 +141,7 @@ public class LinearChaseConfiguration extends ChaseConfiguration<LeftDeepPlan> i
 				this.getState().getUnexposedFacts(accessibleSchema);
 		for (AccessibilityAxiom axiom:nonFiredAxioms.keySet()) {
 			for (Match matching:nonFiredAxioms.get(axiom)) {
-				Atom fact = axiom.getGuard().ground(matching.getMapping());
+				Atom fact = (Atom) Utility.applySubstitution(axiom.getGuard(), matching.getMapping());
 				result.add(new Candidate(accessibleSchema, axiom, fact, matching));
 			}
 		}

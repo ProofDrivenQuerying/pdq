@@ -1,7 +1,6 @@
 package uk.ac.ox.cs.pdq.db;
 
 import java.util.Collection;
-import java.util.LinkedHashSet;
 import java.util.List;
 
 import uk.ac.ox.cs.pdq.fol.Atom;

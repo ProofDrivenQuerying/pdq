@@ -14,11 +14,10 @@ import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.View;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.Formula;
-import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.LinearGuarded;
 import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
 import uk.ac.ox.cs.pdq.io.xml.SchemaWriter;
@@ -92,7 +91,7 @@ public class XMLSchemaIOTest {
 		Assert.assertEquals(s.getRelations(), observed.getRelations());
 //		Assert.assertEquals(s.getViews(), observed.getViews());
 		Assert.assertEquals(s.getDependencies(), observed.getDependencies());
-		Assert.assertEquals(s.getConstants(), observed.getConstants());
+		Assert.assertEquals(s.getTypedConstants(), observed.getTypedConstants());
 		Assert.assertEquals(s.getMaxArity(), observed.getMaxArity());
 		Assert.assertEquals(s.isCyclic(), observed.isCyclic());
 	}
@@ -105,7 +104,7 @@ public class XMLSchemaIOTest {
 		Atom atom1 = r1.createAtoms();
 		Atom atom2 = r2.createAtoms();
 		Atom atom3 = r3.createAtoms();
-		c1 = new LinearGuarded(atom2, Conjunction.of(atom1));
+		c1 = new TGD(atom2, Conjunction.of(atom1));
 		c2 = new TGD(Conjunction.of(atom1, atom2), Conjunction.of(atom3));
 		c3 = new TGD(Conjunction.of(atom3), Conjunction.of(atom1, atom2));
 		Schema s = Schema.builder()
@@ -130,7 +129,7 @@ public class XMLSchemaIOTest {
 					(Formula) s.getDependencies().get(i), 
 					(Formula) observed.getDependencies().get(i)));
 		}
-		Assert.assertEquals(s.getConstants(), observed.getConstants());
+		Assert.assertEquals(s.getTypedConstants(), observed.getTypedConstants());
 		Assert.assertEquals(s.getMaxArity(), observed.getMaxArity());
 		Assert.assertEquals(s.isCyclic(), observed.isCyclic());
 	}

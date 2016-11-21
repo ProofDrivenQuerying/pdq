@@ -107,7 +107,7 @@ public class QueryBuilder implements Builder<ConjunctiveQuery> {
 	@Override
 	public ConjunctiveQuery build() {
 		Formula b = Conjunction.of(this.body);
-		return new ConjunctiveQuery(this.head, b);
+		return new ConjunctiveQuery(this.head, (Conjunction) b);
 	}
 
 }

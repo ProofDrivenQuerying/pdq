@@ -72,7 +72,7 @@ public class AccessibleSchema extends Schema {
 	 */
 	public AccessibleSchema(List<Relation> relations, List<Dependency> dependencies, Map<String, TypedConstant<?>> constantsMap) {
 		super(relations, dependencies);
-		this.constants = constantsMap;
+		this.typedConstants = constantsMap;
 		ImmutableMap.Builder<String, InferredAccessibleRelation> b2 = ImmutableMap.builder();
 		ImmutableMap.Builder<Pair<? extends Relation, AccessMethod>, AccessibilityAxiom> f4 = ImmutableMap.builder();
 		for (Relation relation:relations) {
@@ -115,7 +115,7 @@ public class AccessibleSchema extends Schema {
 	 * @param schema Schema
 	 */
 	public AccessibleSchema(Schema schema) {
-		this(schema.getRelations(), schema.getDependencies(), schema.getConstants());
+		this(schema.getRelations(), schema.getDependencies(), schema.getTypedConstants());
 	}
 	
 	/**
@@ -232,7 +232,7 @@ public class AccessibleSchema extends Schema {
 			atoms.add(
 					new Atom(this.getInferredAccessibleRelation((Relation) af.getPredicate()), af.getTerms()));
 		}
-		return new ConjunctiveQuery(query.getBoundVariables(), Conjunction.of(atoms));
+		return new ConjunctiveQuery(query.getFreeVariables(), (Conjunction) Conjunction.of(atoms));
 	}
 	
 	/**
@@ -250,7 +250,7 @@ public class AccessibleSchema extends Schema {
 			atoms.add(
 					new Atom(this.getInferredAccessibleRelation((Relation) af.getPredicate()), af.getTerms()));
 		}
-		return new ConjunctiveQuery(query.getBoundVariables(), Conjunction.of(atoms), canonicalMapping);
+		return new ConjunctiveQuery(query.getFreeVariables(), (Conjunction) Conjunction.of(atoms), canonicalMapping);
 	}
 	
 	/**

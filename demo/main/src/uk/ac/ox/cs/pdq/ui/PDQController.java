@@ -74,6 +74,7 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.View;
 import uk.ac.ox.cs.pdq.db.builder.QueryBuilder;
+import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.LinearGuarded;
@@ -365,8 +366,8 @@ public class PDQController {
     	
     	if( selected.size() == 1 ) {
     		ObservableQuery selectedQuery = selected.get(0);
-    		ConjunctiveQuery query = (ConjunctiveQuery) selectedQuery.getQuery();
-    		ConjunctiveQuery cQuery = new ConjunctiveQuery(query.getBoundVariables(), query.getChildren().get(0));
+    		ConjunctiveQuery query = selectedQuery.getQuery();
+    		ConjunctiveQuery cQuery = new ConjunctiveQuery(query.getFreeVariables(), (Conjunction) query.getChildren().get(0));
     		ObservableQuery obsQuery = new ObservableQuery(selectedQuery.getName() + " (copy)", "", cQuery);
     		this.dataQueue.add(obsQuery);
     	}

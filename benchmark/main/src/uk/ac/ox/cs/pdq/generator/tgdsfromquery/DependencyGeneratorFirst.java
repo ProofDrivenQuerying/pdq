@@ -9,6 +9,7 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.benchmark.BenchmarkParameters;
+import uk.ac.ox.cs.pdq.benchmark.BenchmarkParameters.QueryTypes;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.builder.SchemaBuilder;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
@@ -56,11 +57,11 @@ public class DependencyGeneratorFirst extends AbstractDependencyGenerator implem
 	@Override
 	public Schema generate() {
 		SchemaBuilder sb = Schema.builder(this.schema);
-		//if(this.query instanceof AcyclicQuery) {
+		if(this.params.getQueryType().equals(QueryTypes.ACYCLIC)) {
 			return sb.addDependencies(this.generateTGDsForAcyclicQueries(this.query)).build();
-		//} else {
+		} else {
 			return sb.addDependencies(this.generateTGDsForNonAcyclicQueries(this.query)).build();
-		//}
+		}
 	}
 
 	

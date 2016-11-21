@@ -28,15 +28,15 @@ public class Join extends NaryOperator implements PredicateBasedOperator {
 	 * Variant is an enumeration of the types of different joins.
 	 */
 	public static enum Variants {
-		
+
 		/** The nested loop join. */
 		NESTED_LOOP, 
- /** The merge join. */
- MERGE, 
- /** The asymmetric hash join. */
- ASYMMETRIC_HASH, 
- /** The symmetric hash join. */
- SYMMETRIC_HASH
+		/** The merge join. */
+		MERGE, 
+		/** The asymmetric hash join. */
+		ASYMMETRIC_HASH, 
+		/** The symmetric hash join. */
+		SYMMETRIC_HASH
 	}
 
 	/** The predicate associated with this join, null if this is a natural join. */

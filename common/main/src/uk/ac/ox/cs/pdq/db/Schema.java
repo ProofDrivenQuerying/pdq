@@ -50,9 +50,6 @@ public class Schema {
 	/**  The schema dependencies. */
 	protected final List<Dependency> schemaDependencies;
 
-//	/**  True if the schema contains at least one view. */
-//	private final boolean containsViews;
-
 	/**  
 	 * True if the schema dependencies contain cycles. */
 	protected Boolean isCyclic = null;
@@ -62,15 +59,10 @@ public class Schema {
 	protected Collection<TypedConstant<?>> dependencyConstants = null;
 
 	/**  A map from a constant's name to the constant object. */
-	protected Map<String, TypedConstant<?>> constants = new LinkedHashMap<>();
+	protected Map<String, TypedConstant<?>> typedConstants = new LinkedHashMap<>();
 	
 	/**  The EGDs of (TOCOMMENT: corresponding to?) the keys*. */
 	protected final Collection<EGD> keyDependencies = Lists.newArrayList();
-
-//	/**  
-//	 * TOCOMMENT why are view kept separate?
-//	 * The views of the input schema*. */
-//	protected final List<Dependency> views;
 
 	/**
 	 * Empty schema constructor.
@@ -96,21 +88,7 @@ public class Schema {
 	 */
 	public Schema(Collection<Relation> relations, Collection<Dependency> dependencies) {
 		int maxArity = 0;
-//		boolean containsViews = false;
 		Map<String, Relation> rm = new LinkedHashMap<>();
-//		this.views = new ArrayList<>();
-//		for (Relation relation : relations) {
-//			rm.put(relation.getName(), relation);
-//			if (maxArity < relation.getArity()) {
-//				maxArity = relation.getArity();
-//			}
-//			containsViews |= relation instanceof View;
-//			if(relation instanceof View) {
-//				this.views.add(((View) relation).getDependency());
-//			}
-//		}
-//		this.containsViews = containsViews;
-
 		this.arityDistribution = new List[maxArity + 1];
 		for (int i = 0, l = this.arityDistribution.length; i < l; i++) {
 			this.arityDistribution[i] = new ArrayList<>();
@@ -135,7 +113,7 @@ public class Schema {
 			}
 		}
 		this.schemaDependencies = ImmutableList.copyOf(this.dependencyIndex.values());
-		this.loadConstants();
+		this.loadTypedConstants();
 	}
 	
 	/**
@@ -149,25 +127,6 @@ public class Schema {
 			}
 		}
 	}
-
-//	/**
-//	 * Gets the views of this schema's dependency set.
-//	 *
-//	 * @return 		the schema views
-//	 */
-//	public List<Dependency> getViews() {
-//		return this.views;
-//	}
-//
-//
-//	/**
-//	 * True is this schema's dependencies contain views.
-//	 *
-//	 * @return 		true if the schema contains views
-//	 */
-//	public boolean containsViews() {
-//		return this.containsViews;
-//	}
 
 	/**
 	 * Gets the relations that have the input arity.
@@ -301,7 +260,7 @@ public class Schema {
 	 *
 	 * @return the constants of the schema dependencies
 	 */
-	public Collection<TypedConstant<?>> getDependencyConstants() {
+	public Collection<TypedConstant<?>> getDependencyTypedConstants() {
 		if (this.dependencyConstants == null) {
 			this.dependencyConstants = new LinkedHashSet<>();
 			for (Dependency dependency:this.schemaDependencies) {
@@ -317,9 +276,9 @@ public class Schema {
 	 * TOCOMMENT Once we figure what this map does, we need to update the comments for 4 methods below.
 	 * Creates a map of the constants that appear in the schema dependencies.
 	 */
-	private void loadConstants() {
-		for (TypedConstant<?> constant: this.getDependencyConstants()) {
-			this.constants.put(constant.toString(), constant);
+	private void loadTypedConstants() {
+		for (TypedConstant<?> constant: this.getDependencyTypedConstants()) {
+			this.typedConstants.put(constant.toString(), constant);
 		}
 	}
 	
@@ -328,9 +287,9 @@ public class Schema {
 	 *
 	 * @param constants the constants
 	 */
-	public void updateConstants(Collection<TypedConstant<?>> constants) {
+	public void updateTypedConstants(Collection<TypedConstant<?>> constants) {
 		for (TypedConstant<?> constant: constants) {
-			this.constants.put(constant.toString(), constant);
+			this.typedConstants.put(constant.toString(), constant);
 		}
 	}
 
@@ -339,8 +298,8 @@ public class Schema {
 	 *
 	 * @return 		the schema constants
 	 */
-	public Map<String, TypedConstant<?>> getConstants() {
-		return this.constants;
+	public Map<String, TypedConstant<?>> getTypedConstants() {
+		return this.typedConstants;
 	}
 
 
@@ -351,7 +310,7 @@ public class Schema {
 	 * @return 		the constant with the given name
 	 */
 	public TypedConstant<?> getConstant(String name) {
-		return this.constants.get(name);
+		return this.typedConstants.get(name);
 	}
 
 	/**

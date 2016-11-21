@@ -83,7 +83,7 @@ public final class DisjunctionTest {
 				);
 		Atom p2 = new Atom(s2, t2);
 		Formula i1 = Disjunction.of(p1, p2);
-		Disjunction i2 = Disjunction.builder().or(p1, p2).build();
+		Formula i2 = Disjunction.of(p1, p2);
 		Assert.assertTrue("Disjunctions must match be equal ", i1.equals(i2));
 	}
 
@@ -123,38 +123,5 @@ public final class DisjunctionTest {
 		Assert.assertFalse("Disjunctions must match be equal ", i1.equals(i2));
 	}
 
-	/**
-	 * Test ground.
-	 */
-	@Test public void testGround() {
-		Predicate s1 = new Predicate("s", 5);
-		List<Term> t1 = Lists.<Term>newArrayList(
-				new Variable("x1"), 
-				new Variable("x2"), 
-				new UntypedConstant("x3"),
-				new Variable("x4"), 
-				new TypedConstant<>("x5")
-				);
-		Predicate s2 = new Predicate("s", 2);
-		List<Term> t2 = Lists.<Term>newArrayList(
-				new TypedConstant<>("x5"), 
-				new Variable("x1"));
-		Atom p1 = new Atom(s1, t1);
-		Atom p2 = new Atom(s2, t2);
-		List<Term> g = Lists.<Term>newArrayList(
-				new TypedConstant<>("c1"), 
-				new TypedConstant<>("c2"),
-				new UntypedConstant("x3"), 
-				new TypedConstant<>("c4"),
-				new TypedConstant<>("x5"), 
-				new TypedConstant<>("x5"),
-				new TypedConstant<>("c1")
-				);
-		Map<Variable, Constant> m = new LinkedHashMap<>();
-		m.put(new Variable("x1"), new TypedConstant<>("c1"));
-		m.put(new Variable("x2"), new TypedConstant<>("c2"));
-		m.put(new Variable("x4"), new TypedConstant<>("c4"));
-		Formula i = Disjunction.of(p1, p2);
-		Assert.assertEquals("Grounded disjunction must comply to mapping ", g, i.ground(m).getTerms());
-	}
+
 }

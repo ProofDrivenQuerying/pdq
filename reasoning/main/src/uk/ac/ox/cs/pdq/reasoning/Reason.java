@@ -163,7 +163,7 @@ public class Reason {
 			if (schema == null || query == null) {
 				throw new IllegalStateException("Schema and query must be provided.");
 			}
-			schema.updateConstants(Utility.getTypedConstants(query));
+			schema.updateTypedConstants(Utility.getTypedConstants(query));
 			
 			
 			ReasonerFactory reasonerFactory = new ReasonerFactory(

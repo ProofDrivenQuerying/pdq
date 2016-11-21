@@ -15,7 +15,6 @@ import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.LinearGuarded;
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.generator.tgdsfromquery.QueryGeneratorFirst;
@@ -167,7 +166,7 @@ public class QueryGeneratorSecond extends QueryGeneratorFirst{
 			List<Variable> freeVars = this.pickFreeVariables(queryAtoms);
 			return new ConjunctiveQuery(
 					freeVars,
-					Conjunction.of(queryAtoms));
+					(Conjunction) Conjunction.of(queryAtoms));
 		}
 		throw new IllegalStateException("Could not generate query. Dependency graph is empty");
 	}

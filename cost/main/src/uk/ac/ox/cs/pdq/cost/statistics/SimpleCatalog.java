@@ -616,7 +616,7 @@ public class SimpleCatalog implements Catalog{
 			if (schema == null || query == null) {
 				throw new IllegalStateException("Schema and query must be provided.");
 			}
-			schema.updateConstants(Utility.getTypedConstants(query));
+			schema.updateTypedConstants(Utility.getTypedConstants(query));
 			SimpleCatalog catalog = new SimpleCatalog(schema, catalogfile);
 			log.trace(catalog.toString());
 		} catch (FileNotFoundException e) {

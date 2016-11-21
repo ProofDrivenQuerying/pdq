@@ -9,6 +9,7 @@ import uk.ac.ox.cs.pdq.io.Writer;
 import uk.ac.ox.cs.pdq.io.pretty.PrettyFormulaWriter;
 import uk.ac.ox.cs.pdq.io.pretty.PrettyWriter;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
+import uk.ac.ox.cs.pdq.reasoning.chase.Utility;
 import uk.ac.ox.cs.pdq.ui.proof.Proof;
 import uk.ac.ox.cs.pdq.ui.proof.Proof.State;
 
@@ -63,7 +64,7 @@ public class PrettyProofWriter extends PrettyWriter<Proof> implements Writer<Pro
 			out.print("Groundings: ");
 			for (Map<Variable, Constant> candidate: state.getMatches()) {
 				out.print('\n');
-				dw.write(axiom.fire(candidate,true));
+				dw.write(Utility.fire(axiom,candidate,true));
 				out.println();
 			}
 			out.println();

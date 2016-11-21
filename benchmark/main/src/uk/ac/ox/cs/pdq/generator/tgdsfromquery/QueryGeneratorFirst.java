@@ -123,7 +123,7 @@ public class QueryGeneratorFirst extends AbstractDependencyGenerator implements 
 		} while(!unusedPreds.isEmpty());
 
 		List<Variable> free = this.pickFreeVariables(body);
-		return new ConjunctiveQuery(free, Conjunction.of(body));
+		return new ConjunctiveQuery(free, (Conjunction) Conjunction.of(body));
 	}
 
 	/**
@@ -147,7 +147,7 @@ public class QueryGeneratorFirst extends AbstractDependencyGenerator implements 
 				this.params.getRepeatedRelations());
 		List<Atom> queryBodyAtoms = Lists.newArrayList(ret.getConjuncts());
 		List<Variable> free = this.pickFreeVariables(queryBodyAtoms);
-		return new ConjunctiveQuery(free, Conjunction.of(queryBodyAtoms));
+		return new ConjunctiveQuery(free, (Conjunction) Conjunction.of(queryBodyAtoms));
 	}
 
 	
@@ -172,6 +172,6 @@ public class QueryGeneratorFirst extends AbstractDependencyGenerator implements 
 				this.params.getRepeatedRelations());
 		List<Atom> queryBodyAtoms = this.createChainConjuncts(ret.getConjuncts());
 		List<Variable> free = this.pickFreeVariables(queryBodyAtoms);
-		return new ConjunctiveQuery(free, Conjunction.of(queryBodyAtoms));
+		return new ConjunctiveQuery(free, (Conjunction) Conjunction.of(queryBodyAtoms));
 	}
 }

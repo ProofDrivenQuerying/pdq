@@ -80,10 +80,10 @@ public abstract class AbstractDependencyGenerator {
 	protected boolean sameView(List<View> views, View target) {
 		for (View mv : views) {
 			Set<Atom> set1 = new LinkedHashSet<>();
-			set1.addAll(mv.getDependency().getRight().getAtoms());
+			set1.addAll(mv.getDependency().getHead().getAtoms());
 
 			Set<Atom> set2 = new LinkedHashSet<>();
-			set2.addAll(target.getDependency().getRight().getAtoms());
+			set2.addAll(target.getDependency().getHead().getAtoms());
 
 			Set<Variable> s1 = new LinkedHashSet<>();
 			s1.addAll(mv.getDependency().getExistential());

@@ -102,7 +102,7 @@ public class DatabaseInstance implements Instance {
 		builder = databaseConnection.getSQLStatementBuilder();
 		relationNamesToRelationObjects = databaseConnection.getRelationNamesToRelationObjects();
 		synchronousThreadsNumber = databaseConnection.synchronousThreadsNumber;
-		constants = databaseConnection.getSchema().getConstants();
+		constants = databaseConnection.getSchema().getTypedConstants();
 		this.databaseConnection = databaseConnection;
 		this.schema = databaseConnection.getSchema();
 	}

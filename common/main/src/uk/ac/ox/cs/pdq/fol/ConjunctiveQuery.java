@@ -3,10 +3,15 @@ package uk.ac.ox.cs.pdq.fol;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+
+import org.apache.commons.collections4.CollectionUtils;
 
 import uk.ac.ox.cs.pdq.util.CanonicalNameGenerator;
 
+import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 
 /**
@@ -17,7 +22,21 @@ import com.google.common.collect.Maps;
  * @author Efthymia Tsamoura
  *
  */
-public class ConjunctiveQuery extends QuantifiedFormula {
+public class ConjunctiveQuery extends Formula {
+
+	protected final Formula child;
+	
+	/** The hash. */
+	private Integer hash;
+
+	/**  Cashed list of atoms. */
+	private List<Atom> atoms = null;
+
+	/**  Cashed list of terms. */
+	private List<Term> terms = null;
+	
+	/**  Cashed string representation of the atom. */
+	private String toString = null;
 
 	/** 
 	 * TOCOMMENT we should get rid of this when we fix #42
@@ -31,6 +50,13 @@ public class ConjunctiveQuery extends QuantifiedFormula {
 	 * Map of query's free variables to chase constants. */
 	protected Map<Variable, Constant> canonicalSubstitutionOfFreeVariables;
 	
+	/**  Cashed list of free variables. */
+	private List<Variable> freeVariables = null;
+
+	/**  Cashed list of bound variables. */
+	private List<Variable> boundVariables = null;
+
+	
 	/**
 	 * Builds a conjunctive query given the input head variables and body.
 	 * The query is grounded using the input mapping of variables to constants.
@@ -42,10 +68,13 @@ public class ConjunctiveQuery extends QuantifiedFormula {
 	 * @param grounding
 	 * 		Mapping of query variables to constants  
 	 */
-	public ConjunctiveQuery(List<Variable> variables, Formula child, Map<Variable, Constant> canonicalSubstitution) {
-		super(LogicalSymbols.EXISTENTIAL, variables, child);
+	public ConjunctiveQuery(List<Variable> freeVariables, Conjunction child, Map<Variable, Constant> canonicalSubstitution) {
 		//Check that the body is a conjunction of positive atoms
 		Preconditions.checkArgument(isConjunctionOfAtoms(child));
+		Preconditions.checkArgument(child.getFreeVariables().containsAll(freeVariables));
+		this.child = child;
+		this.freeVariables = ImmutableList.copyOf(freeVariables);
+		this.boundVariables = ImmutableList.copyOf(CollectionUtils.removeAll(child.getFreeVariables(), freeVariables));
 		this.canonicalSubstitution = canonicalSubstitution;
 		this.canonicalSubstitutionOfFreeVariables = Maps.newHashMap(canonicalSubstitution);
 		for(Variable variable:this.getBoundVariables()) {
@@ -53,8 +82,12 @@ public class ConjunctiveQuery extends QuantifiedFormula {
 		}
 	}
 	
-	public ConjunctiveQuery(List<Variable> variables, Formula child) {
-		this(variables, child, generateSubstitutionToCanonicalVariables(child));
+	public ConjunctiveQuery(List<Variable> freeVariables, Conjunction child) {
+		this(freeVariables, child, generateSubstitutionToCanonicalVariables(child));
+	}
+	
+	public ConjunctiveQuery(List<Variable> freeVariables, Atom child) {
+		this(freeVariables, (Conjunction) Conjunction.of(child), generateSubstitutionToCanonicalVariables(child));
 	}
 	
 	private static boolean isConjunctionOfAtoms(Formula formula) {
@@ -92,14 +125,6 @@ public class ConjunctiveQuery extends QuantifiedFormula {
 		return canonicalMapping;
 	}
 	
-//	public List<Atom> getCanonicalDatabase(Map<Variable, Constant> mapping) {
-//		Set<Atom> atoms = Sets.newHashSet();
-//		for(Atom atom:atoms) {
-//			atoms.add(atom.ground(mapping));
-//		}
-//		return Lists.newArrayList(atoms);
-//	}
-
 	/**
 	 * Checks if the query is boolean boolean.
 	 *
@@ -132,5 +157,80 @@ public class ConjunctiveQuery extends QuantifiedFormula {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Equals.
+	 *
+	 * @param o Object
+	 * @return boolean
+	 */
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null) {
+			return false;
+		}
+		return this.getClass().isInstance(o)
+				&& this.freeVariables.equals(((ConjunctiveQuery) o).freeVariables)
+				&& this.child.equals(((QuantifiedFormula) o).child);
+	}
+
+
+	@Override
+	public int hashCode() {
+		if(this.hash == null) {
+			this.hash = Objects.hash(this.freeVariables, this.child);
+		}
+		return this.hash;
+	}
+
+
+	@Override
+	public java.lang.String toString() {
+		if(this.toString == null) {
+			this.toString = "";
+			String op = this.boundVariables.isEmpty() ? "" : "exists";
+			this.toString += "(" + op + "[" + Joiner.on(",").join(this.boundVariables) + "]" + this.child.toString() + ")";
+		}
+		return this.toString;
+	}
+
+	@Override
+	public int getId() {
+		return this.hashCode();
+	}
+
+	@Override
+	public List<Formula> getChildren() {
+		return ImmutableList.of(this.child);
+	}
+
+	@Override
+	public List<Atom> getAtoms() {
+		if(this.atoms == null) {
+			this.atoms = this.child.getAtoms();
+		}
+		return this.atoms;
+	}
+
+	@Override
+	public List<Term> getTerms() {
+		if(this.terms == null) {
+			this.terms = this.child.getTerms();
+		}
+		return this.terms;
+	}
+
+	@Override
+	public List<Variable> getFreeVariables() {
+		return this.freeVariables;
+	}
+
+	@Override
+	public List<Variable> getBoundVariables() {
+		return this.boundVariables;
 	}
 }

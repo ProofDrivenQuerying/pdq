@@ -74,7 +74,7 @@ public class TestRestrictedChaser {
 		this.egd = new EGD(Conjunction.of(R2,R2p), Conjunction.of(new Atom(new Predicate(QNames.EQUALITY.toString(), 2), new Variable("z"),new Variable("w"))));
 
 		this.schema = new Schema(Lists.<Relation>newArrayList(this.rel1, this.rel2), Lists.<Dependency>newArrayList(this.tgd,this.egd));
-		this.schema.updateConstants(Lists.<TypedConstant<?>>newArrayList(new TypedConstant(new String("John"))));
+		this.schema.updateTypedConstants(Lists.<TypedConstant<?>>newArrayList(new TypedConstant(new String("John"))));
 
 		this.connection = new DatabaseConnection(new DatabaseParameters(), this.schema);
 		this.chaser = new RestrictedChaser(new StatisticsCollector(true, new EventBus()));

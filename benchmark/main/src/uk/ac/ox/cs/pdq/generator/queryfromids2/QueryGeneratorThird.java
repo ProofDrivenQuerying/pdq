@@ -120,7 +120,7 @@ public class QueryGeneratorThird extends AbstractDependencyGenerator implements 
 			List<Variable> freeVars = this.pickFreeVariables(queryAtoms);
 			return new ConjunctiveQuery(
 					freeVars,
-					Conjunction.of(queryAtoms));
+					(Conjunction) Conjunction.of(queryAtoms));
 		}
 		throw new IllegalStateException("Could not generate query. Dependency graph is empty");
 	}

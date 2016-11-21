@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
@@ -139,18 +138,6 @@ public class Atom extends Formula {
 	@Override
 	public List<Atom> getAtoms() {
 		return ImmutableList.of(this);
-	}
-
-	public Atom ground(Map<Variable, Constant> mapping) {
-		List<Term> nterms = new ArrayList<>();
-		for (Term term: this.terms) {
-			if (term.isVariable() && mapping.containsKey(term)) {
-				nterms.add(mapping.get(term));
-			} else {
-				nterms.add(term);
-			}
-		}
-		return new Atom(this.predicate, nterms);
 	}
 
 	/**

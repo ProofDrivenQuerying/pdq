@@ -572,15 +572,6 @@ public class Utility {
 		return result;
 	}
 
-	public static Formula ground(ConjunctiveQuery query, Map<Variable, Constant> mapping) {
-		List<Formula> bodyAtoms = new ArrayList<>();
-		for (Atom atom: query.getAtoms()) {
-			bodyAtoms.add(atom.ground(mapping));
-		}
-		return Conjunction.of(bodyAtoms);
-	}
-
-
 	/**
 	 * TOCOMMENT the next 3 methods are discussed in #42
 	 * 
@@ -642,4 +633,24 @@ public class Utility {
 		return clusters;
 	}
 
+
+	/**
+	 * TOCOMMENT how is this method relevant to a View?
+	 * Make attributes.
+	 *
+	 * @param fact An input fact
+	 * @return The list of schema attributes that correspond to this fact
+	 */
+	public static List<Attribute> makeAttributes(Atom fact) {
+		Predicate s = fact.getPredicate();
+		if (s instanceof Relation) {
+			return ((Relation) s).getAttributes();
+		}
+		List<Attribute> result = new ArrayList<>();
+		for (Term t : fact.getTerms()) {
+			result.add(new Attribute(String.class, t.toString()));
+		}
+		return result;
+	}
+	
 }

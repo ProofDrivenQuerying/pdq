@@ -348,7 +348,7 @@ public class ConjunctiveQueryBodyBuilder {
 	public ConjunctiveQuery toConjunctiveQuery() {
 		List<Formula> preds = new ArrayList<>();
 		preds.addAll(this.aliasToAtoms.values());
-		this.conjQuery = new ConjunctiveQuery(this.resultPredicate.getVariables(), Conjunction.of(preds));
+		this.conjQuery = new ConjunctiveQuery(this.resultPredicate.getVariables(), (Conjunction) Conjunction.of(preds));
 		return this.conjQuery;
 	}
 

@@ -17,6 +17,10 @@ import uk.ac.ox.cs.pdq.db.Relation;
  */
 public class LinearGuarded extends TGD {
 
+	public LinearGuarded(Formula body, Formula head) {
+		super(body,head);
+	}
+	
 	/**
 	 * Constructs a guarded dependency based on the input key-foreign key
 	 * dependency.
@@ -73,7 +77,6 @@ public class LinearGuarded extends TGD {
 		}
 		return new Atom(foreignKey.getForeignRelation(), remoteTerms);
 	}
-
 
 	/**
 	 * Gets the guard.
