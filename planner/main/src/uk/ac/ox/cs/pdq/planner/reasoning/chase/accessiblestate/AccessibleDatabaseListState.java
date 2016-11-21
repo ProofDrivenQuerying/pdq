@@ -233,6 +233,7 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 			Implication grounded = uk.ac.ox.cs.pdq.reasoning.chase.Utility.fire(dependency, mapping, true);
 			Formula left = grounded.getChildren().get(0);
 			Formula right = grounded.getChildren().get(1);
+			System.out.println(left + "-->" + right);
 			for(Atom fact:right.getAtoms()) {
 				if(fact.getPredicate() instanceof InferredAccessibleRelation) {
 					this.derivedInferred.add(fact);

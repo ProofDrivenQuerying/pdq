@@ -58,7 +58,6 @@ public class ExecuteSQLQueryThread implements Callable<List<Match>> {
 	 */
 	@Override
 	public List<Match> call() {
-		
 		List<Match> results = new ArrayList<Match>();
 		Triple<Formula, String, LinkedHashMap<String, Variable>> entry;
 		while ((entry = this.queries.poll()) != null) {
@@ -82,7 +81,7 @@ public class ExecuteSQLQueryThread implements Callable<List<Match>> {
 					results.add(new Match(source,map));
 				}
 			} catch (SQLException e) {
-				e.printStackTrace();
+				e.printStackTrace();;
 				return null;
 			}
 		}

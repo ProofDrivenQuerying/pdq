@@ -3,6 +3,7 @@ package uk.ac.ox.cs.pdq.db;
 import java.util.List;
 
 import uk.ac.ox.cs.pdq.fol.LinearGuarded;
+import uk.ac.ox.cs.pdq.fol.QuantifiedFormula;
 import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.util.Utility;
 
@@ -74,7 +75,11 @@ public class View extends Relation {
 	public View(LinearGuarded dependency, List<AccessMethod> accessMethods) {
 		super(dependency.getBody().getAtoms().get(0).getPredicate().getName(), Utility.makeAttributes(dependency.getGuard()));
 		this.dependency = dependency;
-		this.definition = new TGD(dependency.getHead(), dependency.getBody());
+		this.definition = new TGD(
+				dependency.getHead() instanceof QuantifiedFormula ? 
+						dependency.getHead().getChildren().get(0) :
+				dependency.getHead(), 
+				dependency.getBody());
 		this.setAccessMethods(accessMethods);
 	}
 

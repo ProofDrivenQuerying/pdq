@@ -46,7 +46,7 @@ public class Utility {
 			bodyAtoms.add(Utility.applySubstitution(atom, skolemizedMapping));
 		}
 		List<Formula> headAtoms = Lists.newArrayList();
-		for(Atom atom:dependency.getBody().getAtoms()) {
+		for(Atom atom:dependency.getHead().getAtoms()) {
 			headAtoms.add(Utility.applySubstitution(atom, skolemizedMapping));
 		}
 		Formula bodyConjunction = Conjunction.of(bodyAtoms);
@@ -60,7 +60,7 @@ public class Utility {
 			bodyAtoms.add(Utility.applySubstitution(atom, mapping));
 		}
 		List<Formula> headAtoms = Lists.newArrayList();
-		for(Atom atom:dependency.getBody().getAtoms()) {
+		for(Atom atom:dependency.getHead().getAtoms()) {
 			headAtoms.add(Utility.applySubstitution(atom, mapping));
 		}
 		Formula bodyConjunction = Conjunction.of(bodyAtoms);

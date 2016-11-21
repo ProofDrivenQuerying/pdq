@@ -118,22 +118,6 @@ public class AccessibilityAxiom extends TGD {
 		return this.method;
 	}
 	
-//	/**
-//	 * Ground.
-//	 *
-//	 * @param mapping the mapping
-//	 * @param canonicalNames 		True if we assign Skolem constants to the existentially quantified variables
-//	 * @return 		the grounded dependency using the input mapping.
-//	 *      If canonicalNames is TRUE then skolem constants are produced for
-//	 *      the existentially quantified variables
-//	 */
-//	public TGD ground(Map<Variable, Constant> mapping, boolean canonicalNames) {
-//		TGD grounded = (canonicalNames == true ? this.ground(this.skolemizeMapping(mapping)): this.ground(mapping));
-//		List<Atom> right = grounded.getRight().getAtoms();
-//		right.removeAll(grounded.getLeft().getAtoms());
-//		return new TGD(Conjunction.of(grounded.getLeft().getAtoms()), Conjunction.of(right));
-//	}
-
 	/**
 	 * Gets the guard.
 	 *

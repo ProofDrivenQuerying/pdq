@@ -8,6 +8,7 @@ import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.Disjunction;
 import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Negation;
+import uk.ac.ox.cs.pdq.fol.QuantifiedFormula;
 import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema.InferredAccessibleRelation;
@@ -31,7 +32,10 @@ public class InferredAccessibleAxiom extends TGD {
 	 */
 	public InferredAccessibleAxiom(TGD dependency, Map<Atom, InferredAccessibleRelation> predToInfAcc) {
 		super(substitute(dependency.getBody(), predToInfAcc),
-				substitute(dependency.getHead(), predToInfAcc));
+				dependency.getHead() instanceof QuantifiedFormula ? 
+					substitute(dependency.getHead().getChildren().get(0), predToInfAcc) :
+					substitute(dependency.getHead(), predToInfAcc)
+				);
 	}
 
 	/**

@@ -9,13 +9,12 @@ import java.util.Map;
 
 import uk.ac.ox.cs.pdq.builder.Builder;
 import uk.ac.ox.cs.pdq.builder.BuilderException;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
-import uk.ac.ox.cs.pdq.util.Named;
 
 /**
  * TOCOMMENT what is the relationship of this class to ConjunctiveQueryBodyBuilder
@@ -46,9 +45,9 @@ public class QueryBuilder implements Builder<ConjunctiveQuery> {
 		Collection<Term> uniTerms = new ArrayList<>();
 		for (Term t : p.getTerms()) {
 			if (t.isVariable()) { //|| t.isUntypedConstant()
-				Variable v = this.termIndex.get(((Named) t).getName());
+				Variable v = this.termIndex.get(((Variable)t).getSymbol());
 				if (v == null) {
-					this.termIndex.put(((Named) t).getName(), (Variable) t);
+					this.termIndex.put(((Variable)t).getSymbol(), (Variable) t);
 					uniTerms.add(t);
 				} else {
 					uniTerms.add(v);
