@@ -16,7 +16,7 @@ public class DatabaseEqualityRelation extends DatabaseRelation {
 
 
 	private DatabaseEqualityRelation(String name, List<Attribute> attributes) {
-		super(name, attributes);
+		super(name, attributes, true);
 	}
 
 	/** The Constant serialVersionUID. */

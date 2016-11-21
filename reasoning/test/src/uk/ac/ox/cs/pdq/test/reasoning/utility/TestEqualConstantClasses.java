@@ -29,11 +29,11 @@ public class TestEqualConstantClasses {
 	
 	@Test 
 	public void test_add1() {
-		Atom eq5 = new Atom(new Predicate(QNames.EQUALITY.toString(), 2),new UntypedConstant("c3"), new TypedConstant(new String("John")));
-		Atom eq1 = new Atom(new Predicate(QNames.EQUALITY.toString(), 2),new UntypedConstant("c1"), new UntypedConstant("c2"));
-		Atom eq4 = new Atom(new Predicate(QNames.EQUALITY.toString(), 2),new UntypedConstant("c3"), new UntypedConstant("c4"));
-		Atom eq3 = new Atom(new Predicate(QNames.EQUALITY.toString(), 2),new UntypedConstant("c2"), new UntypedConstant("c3"));
-		Atom eq2 = new Atom(new Predicate(QNames.EQUALITY.toString(), 2),new UntypedConstant("c1"), new UntypedConstant("c3"));
+		Atom eq5 = new Atom(new Predicate(QNames.EQUALITY.toString(), 2, true),new UntypedConstant("c3"), new TypedConstant(new String("John")));
+		Atom eq1 = new Atom(new Predicate(QNames.EQUALITY.toString(), 2, true),new UntypedConstant("c1"), new UntypedConstant("c2"));
+		Atom eq4 = new Atom(new Predicate(QNames.EQUALITY.toString(), 2, true),new UntypedConstant("c3"), new UntypedConstant("c4"));
+		Atom eq3 = new Atom(new Predicate(QNames.EQUALITY.toString(), 2, true),new UntypedConstant("c2"), new UntypedConstant("c3"));
+		Atom eq2 = new Atom(new Predicate(QNames.EQUALITY.toString(), 2, true),new UntypedConstant("c1"), new UntypedConstant("c3"));
 		
 		boolean _isFailed;
 		_isFailed = this.classes.add(eq5);
@@ -53,23 +53,23 @@ public class TestEqualConstantClasses {
 		Assert.assertEquals(1, this.classes.size());
 		Assert.assertEquals(new TypedConstant(new String("John")), this.classes.getClass(new UntypedConstant("c3")).getRepresentative());
 		
-		Atom eq6 = new Atom(new Predicate(QNames.EQUALITY.toString(), 2),new UntypedConstant("c3"), new TypedConstant(new String("Michael")));
+		Atom eq6 = new Atom(new Predicate(QNames.EQUALITY.toString(), 2, true),new UntypedConstant("c3"), new TypedConstant(new String("Michael")));
 		_isFailed = this.classes.add(eq6);
 		Assert.assertEquals(true, !_isFailed);
 	}
 	
 	@Test 
 	public void test_add2() {
-		Atom eq1 = new Atom(new Predicate(QNames.EQUALITY.toString(), 2),new UntypedConstant("c2"), new UntypedConstant("c1"));
-		Atom eq2 = new Atom(new Predicate(QNames.EQUALITY.toString(), 2),new UntypedConstant("c3"), new UntypedConstant("c1"));
-		Atom eq3 = new Atom(new Predicate(QNames.EQUALITY.toString(), 2),new UntypedConstant("c4"), new UntypedConstant("c1"));
-		Atom eq4 = new Atom(new Predicate(QNames.EQUALITY.toString(), 2),new TypedConstant(new String("John")), new UntypedConstant("c1"));
-		Atom eq12 = new Atom(new Predicate(QNames.EQUALITY.toString(), 2),new UntypedConstant("c3"), new UntypedConstant("c2"));
-		Atom eq13 = new Atom(new Predicate(QNames.EQUALITY.toString(), 2),new UntypedConstant("c4"), new UntypedConstant("c2"));
-		Atom eq14 = new Atom(new Predicate(QNames.EQUALITY.toString(), 2),new TypedConstant(new String("John")), new UntypedConstant("c2"));
-		Atom eq21 = new Atom(new Predicate(QNames.EQUALITY.toString(), 2),new UntypedConstant("c4"), new UntypedConstant("c3"));
-		Atom eq22 = new Atom(new Predicate(QNames.EQUALITY.toString(), 2),new TypedConstant(new String("John")), new UntypedConstant("c3"));
-		Atom eq31 = new Atom(new Predicate(QNames.EQUALITY.toString(), 2),new TypedConstant(new String("John")), new UntypedConstant("c4"));
+		Atom eq1 = new Atom(new Predicate(QNames.EQUALITY.toString(), 2, true),new UntypedConstant("c2"), new UntypedConstant("c1"));
+		Atom eq2 = new Atom(new Predicate(QNames.EQUALITY.toString(), 2, true),new UntypedConstant("c3"), new UntypedConstant("c1"));
+		Atom eq3 = new Atom(new Predicate(QNames.EQUALITY.toString(), 2, true),new UntypedConstant("c4"), new UntypedConstant("c1"));
+		Atom eq4 = new Atom(new Predicate(QNames.EQUALITY.toString(), 2, true),new TypedConstant(new String("John")), new UntypedConstant("c1"));
+		Atom eq12 = new Atom(new Predicate(QNames.EQUALITY.toString(), 2, true),new UntypedConstant("c3"), new UntypedConstant("c2"));
+		Atom eq13 = new Atom(new Predicate(QNames.EQUALITY.toString(), 2, true),new UntypedConstant("c4"), new UntypedConstant("c2"));
+		Atom eq14 = new Atom(new Predicate(QNames.EQUALITY.toString(), 2, true),new TypedConstant(new String("John")), new UntypedConstant("c2"));
+		Atom eq21 = new Atom(new Predicate(QNames.EQUALITY.toString(), 2, true),new UntypedConstant("c4"), new UntypedConstant("c3"));
+		Atom eq22 = new Atom(new Predicate(QNames.EQUALITY.toString(), 2, true),new TypedConstant(new String("John")), new UntypedConstant("c3"));
+		Atom eq31 = new Atom(new Predicate(QNames.EQUALITY.toString(), 2, true),new TypedConstant(new String("John")), new UntypedConstant("c4"));
 		
 		boolean _isFailed;
 		_isFailed = this.classes.add(eq1);
@@ -92,7 +92,7 @@ public class TestEqualConstantClasses {
 	
 	@Test 
 	public void test_add3() {
-		Atom eq31 = new Atom(new Predicate(QNames.EQUALITY.toString(), 2),new TypedConstant(new String("John")), new TypedConstant(new String("Michael")));
+		Atom eq31 = new Atom(new Predicate(QNames.EQUALITY.toString(), 2, true),new TypedConstant(new String("John")), new TypedConstant(new String("Michael")));
 		
 		boolean _isFailed;
 		_isFailed = this.classes.add(eq31);

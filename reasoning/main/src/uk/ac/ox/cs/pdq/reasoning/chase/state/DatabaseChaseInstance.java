@@ -151,7 +151,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 	protected static Multimap<Constant,Atom> inferConstantsMap(Collection<Atom> facts) {
 		Multimap<Constant, Atom> constantsToAtoms = HashMultimap.create();
 		for(Atom fact:facts) {
-			Preconditions.checkArgument(fact.isEquality());
+			Preconditions.checkArgument(!fact.isEquality());
 			for(Term term:fact.getTerms()) {
 				constantsToAtoms.put((Constant)term, fact);
 			}
@@ -504,7 +504,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 				c = properties;
 			}
 			//Create an SQL statement for the cleaned query
-			Pair<String, LinkedHashMap<String, Variable>> pair = createQuery(s, c);
+			Pair<String, LinkedHashMap<String, Variable>> pair = createQuery(s, source instanceof EGD, c);
 			queries.add(Triple.of((Formula)source, pair.getLeft(), pair.getRight()));
 		}
 		return this.answerQueries(queries);
@@ -537,11 +537,8 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 			terms.add(new Variable(DatabaseRelation.Fact.getName() + f++));
 			right.add(new Atom(relation, terms));
 		}
-		if(source instanceof TGD) {
+		if(source instanceof TGD || source instanceof EGD) {
 			return new TGD(Conjunction.of(left), Conjunction.of(right));
-		}
-		else if(source instanceof EGD) {
-			return new EGD(Conjunction.of(left), Conjunction.of(right));
 		}
 		throw new java.lang.RuntimeException("Unsupported formula type.");
 	}
@@ -580,7 +577,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 	 * @param connection the connection
 	 * @return homomorphisms of the input query to facts kept in a database.
 	 */
-	public Pair<String,LinkedHashMap<String,Variable>> createQuery(Dependency source, HomomorphismProperty[] constraints) {
+	public Pair<String,LinkedHashMap<String,Variable>> createQuery(Dependency source, boolean isEquality, HomomorphismProperty[] constraints) {
 		String query = "";
 		List<String> from = this.builder.createFromStatement(source.getBody().getAtoms());
 		LinkedHashMap<String,Variable> projections = this.builder.createProjections(source);
@@ -626,7 +623,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 			List<String> from2 = this.builder.createFromStatement(source.getHead().getAtoms());
 			LinkedHashMap<String,Variable> nestedProjections = this.builder.createProjections(source);
 			List<String> predicates2 = new ArrayList<String>();
-			List<String> nestedAttributeEqualities = this.createNestedAttributeEqualitiesForActiveTriggers(source);
+			List<String> nestedAttributeEqualities = this.createNestedAttributeEqualitiesForActiveTriggers(source, isEquality);
 			List<String> nestedConstantEqualities = this.builder.createEqualitiesWithConstants(source.getAtoms());
 			predicates2.addAll(nestedAttributeEqualities);
 			predicates2.addAll(nestedConstantEqualities);
@@ -711,11 +708,11 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 	 * @param source the source
 	 * @return 		explicit equalities (String objects of the form A.x1 = B.x2) of the implicit equalities in the input conjunction (the latter is denoted by repetition of the same term)
 	 */
-	public List<String> createNestedAttributeEqualitiesForActiveTriggers(Dependency source) {
-		if(source instanceof TGD) {
+	public List<String> createNestedAttributeEqualitiesForActiveTriggers(Dependency source, boolean isEquality) {
+		if(!isEquality) {
 			return this.builder.createAttributeEqualities(source.getAtoms());
 		}
-		else if(source instanceof EGD){
+		else {
 			List<String> attributePredicates = new ArrayList<String>();
 			//The right atom should be an equality
 			//We add additional checks to be sure that we have to do with EGDs
@@ -773,9 +770,6 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 				
 			}
 			return attributePredicates;
-		}
-		else {
-			throw new java.lang.IllegalArgumentException("Unsupported constraint type");
 		}
 	}
 	

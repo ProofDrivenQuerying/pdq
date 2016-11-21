@@ -24,8 +24,8 @@ public class DatabaseRelation extends Relation {
 	 * @param name String
 	 * @param attributes List<Attribute>
 	 */
-	public DatabaseRelation(String name, List<Attribute> attributes) {
-		super(name, attributes);
+	public DatabaseRelation(String name, List<Attribute> attributes, boolean isEquality) {
+		super(name, attributes, isEquality);
 	}
 	
 	/**
@@ -41,7 +41,7 @@ public class DatabaseRelation extends Relation {
 			attributes.add(new Attribute(String.class, DatabaseRelation.attrPrefix + index));
 		}
 		attributes.add(DatabaseRelation.Fact);
-		return new DatabaseRelation(relation.getName(), attributes);
+		return new DatabaseRelation(relation.getName(), attributes, relation.isEquality());
 	}
 
 }

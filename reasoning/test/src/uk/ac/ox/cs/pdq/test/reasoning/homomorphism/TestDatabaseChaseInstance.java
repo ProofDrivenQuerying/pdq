@@ -78,7 +78,8 @@ public class TestDatabaseChaseInstance {
 		
 		this.tgd = new TGD(Conjunction.of(R1),Conjunction.of(R2));
 		this.tgd2 = new TGD(Conjunction.of(R1),Conjunction.of(R3));
-		this.egd = new EGD(Conjunction.of(R2,R2p), Conjunction.of(new Atom(new Predicate(QNames.EQUALITY.toString(), 2), new Variable("z"),new Variable("w"))));
+		this.egd = new EGD(Conjunction.of(R2,R2p), Conjunction.of(new Atom(new Predicate(QNames.EQUALITY.toString(), 2, true), 
+				new Variable("z"),new Variable("w"))));
 
 		this.schema = new Schema(Lists.<Relation>newArrayList(this.rel1, this.rel2, this.rel3), Lists.<Dependency>newArrayList(this.tgd,this.tgd2, this.egd));
 		

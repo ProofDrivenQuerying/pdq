@@ -29,7 +29,6 @@ import uk.ac.ox.cs.pdq.fol.Implication;
 import uk.ac.ox.cs.pdq.fol.Negation;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.QuantifiedFormula;
-import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
@@ -517,7 +516,7 @@ public class Utility {
 			}
 			i++;
 		}
-		Predicate equality = new Predicate(QNames.EQUALITY.toString(), 2);
+		Predicate equality = new Predicate(QNames.EQUALITY.toString(), 2, true);
 		//Create the constant equality predicates
 		List<Formula> equalities = Lists.newArrayList();
 		for(java.util.Map.Entry<Term, Term> pair:tobeEqual.entrySet()) {

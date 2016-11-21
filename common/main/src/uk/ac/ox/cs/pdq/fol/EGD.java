@@ -43,7 +43,6 @@ public class EGD extends Dependency {
 		List<Variable> boundVariables = Lists.newArrayList(CollectionUtils.removeAll(headFree, bodyFree));
 		if(!boundVariables.isEmpty()) {
 			return new Implication(body, new QuantifiedFormula(LogicalSymbols.EXISTENTIAL, boundVariables, head));
-			
 		}
 		else {
 			return new Implication(body, head);

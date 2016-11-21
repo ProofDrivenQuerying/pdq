@@ -105,13 +105,13 @@ public class Utility {
 			return Conjunction.of(child1, child2);
 		}
 		else if(formula instanceof Disjunction) {
-			Formula child1 = applySubstitution(((Conjunction)formula).getChildren().get(0), mapping);
-			Formula child2 = applySubstitution(((Conjunction)formula).getChildren().get(1), mapping);
+			Formula child1 = applySubstitution(((Disjunction)formula).getChildren().get(0), mapping);
+			Formula child2 = applySubstitution(((Disjunction)formula).getChildren().get(1), mapping);
 			return Disjunction.of(child1, child2);
 		}
 		else if(formula instanceof Implication) {
-			Formula child1 = applySubstitution(((Conjunction)formula).getChildren().get(0), mapping);
-			Formula child2 = applySubstitution(((Conjunction)formula).getChildren().get(1), mapping);
+			Formula child1 = applySubstitution(((Implication)formula).getChildren().get(0), mapping);
+			Formula child2 = applySubstitution(((Implication)formula).getChildren().get(1), mapping);
 			return Implication.of(child1, child2);
 		}
 		else if(formula instanceof ConjunctiveQuery) {

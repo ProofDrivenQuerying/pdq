@@ -13,8 +13,6 @@ import org.apache.log4j.Logger;
 import uk.ac.ox.cs.pdq.db.AccessMethod.Types;
 import uk.ac.ox.cs.pdq.db.metadata.RelationMetadata;
 import uk.ac.ox.cs.pdq.fol.Predicate;
-import uk.ac.ox.cs.pdq.fol.Term;
-import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.util.TupleType;
 
 import com.google.common.base.Joiner;
@@ -71,7 +69,7 @@ public abstract class Relation extends Predicate implements Serializable {
 	/**
 	 *  TOCOMMENT what is this?
 	 *  The am view. */
-	protected List<AccessMethod> amView;
+	protected List<AccessMethod> accessMethodsList;
 
 	/**
 	 * The relation's foreign keys.
@@ -125,7 +123,7 @@ public abstract class Relation extends Predicate implements Serializable {
 		}
 		this.attributePositions = ImmutableMap.copyOf(positions);
 		this.accessMethods = new LinkedHashMap<>();
-		this.amView = new ArrayList<>();
+		this.accessMethodsList = new ArrayList<>();
 		this.setAccessMethods(accessMethods);
 		this.foreignKeys = new ArrayList<>(foreignKeys);
 		this.rep = null;
@@ -284,7 +282,7 @@ public abstract class Relation extends Predicate implements Serializable {
 	 * @return the relation's accessMethods.
 	 */
 	public List<AccessMethod> getAccessMethods() {
-		return this.amView;
+		return this.accessMethodsList;
 	}
 
 	/**
@@ -348,7 +346,7 @@ public abstract class Relation extends Predicate implements Serializable {
 			}
 		}
 		if (this.accessMethods.put(bm.getName(), bm) == null) {
-			this.amView.add(bm);
+			this.accessMethodsList.add(bm);
 		}
 		this.rep = null;
 	}
@@ -363,7 +361,7 @@ public abstract class Relation extends Predicate implements Serializable {
 	public void setAccessMethods(List<AccessMethod> bindingMethods, boolean clearFirst) {
 		if (clearFirst) {
 			this.accessMethods.clear();
-			this.amView.clear();
+			this.accessMethodsList.clear();
 			this.rep = null;
 		}
 		if (bindingMethods != null) {
@@ -461,12 +459,12 @@ public abstract class Relation extends Predicate implements Serializable {
 		return Relation.class.isInstance(o)
 				&& this.name.equals(((Relation) o).name)
 				&& this.attributes.equals(((Relation) o).attributes)
-				&& this.amView.equals(((Relation) o).amView);
+				&& this.accessMethodsList.equals(((Relation) o).accessMethodsList);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(this.name, this.attributes, this.amView);
+		return Objects.hash(this.name, this.attributes, this.accessMethodsList);
 	}
 
 	@Override
