@@ -553,7 +553,13 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 			terms.add(new Variable(DatabaseRelation.Fact.getName() + f++));
 			body.add(new Atom(relation, terms));
 		}
-		return new ConjunctiveQuery(((ConjunctiveQuery) source).getFreeVariables(), (Conjunction) Conjunction.of(body));
+		if(body.size() == 1) {
+			return new ConjunctiveQuery(((ConjunctiveQuery) source).getFreeVariables(), (Atom)body.get(0));
+		}
+		else {
+			return new ConjunctiveQuery(((ConjunctiveQuery) source).getFreeVariables(), (Conjunction) Conjunction.of(body));
+		}
+		
 	}
 	public enum LimitTofacts{
 		ALL,

@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.set.ListOrderedSet;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -82,7 +83,7 @@ public class ForeignKey implements Cloneable {
 		Relation rightRel = (Relation) right.getPredicate();
 		this.setForeignRelation(rightRel);
 		this.setForeignRelationName(rightRel.getName());
-		for (Variable v:Utility.getVariables(dep)) {
+		for (Variable v:CollectionUtils.intersection(left.getVariables(), right.getVariables())) {
 			this.addReference(new Reference(leftRel.getAttribute(left.getTerms().indexOf(v)), rightRel.getAttribute(right.getTerms().indexOf(v))));
 		}
 	}

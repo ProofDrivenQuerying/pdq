@@ -82,12 +82,26 @@ public class ConjunctiveQuery extends Formula {
 		}
 	}
 	
+	public ConjunctiveQuery(List<Variable> freeVariables, Atom child, Map<Variable, Constant> canonicalSubstitution) {
+		//Check that the body is a conjunction of positive atoms
+		Preconditions.checkArgument(isConjunctionOfAtoms(child));
+		Preconditions.checkArgument(child.getFreeVariables().containsAll(freeVariables));
+		this.child = child;
+		this.freeVariables = ImmutableList.copyOf(freeVariables);
+		this.boundVariables = ImmutableList.copyOf(CollectionUtils.removeAll(child.getFreeVariables(), freeVariables));
+		this.canonicalSubstitution = canonicalSubstitution;
+		this.canonicalSubstitutionOfFreeVariables = Maps.newHashMap(canonicalSubstitution);
+		for(Variable variable:this.getBoundVariables()) {
+			this.canonicalSubstitutionOfFreeVariables.remove(variable);
+		}
+	}
+	
 	public ConjunctiveQuery(List<Variable> freeVariables, Conjunction child) {
 		this(freeVariables, child, generateSubstitutionToCanonicalVariables(child));
 	}
 	
 	public ConjunctiveQuery(List<Variable> freeVariables, Atom child) {
-		this(freeVariables, (Conjunction) Conjunction.of(child), generateSubstitutionToCanonicalVariables(child));
+		this(freeVariables, child, generateSubstitutionToCanonicalVariables(child));
 	}
 	
 	private static boolean isConjunctionOfAtoms(Formula formula) {

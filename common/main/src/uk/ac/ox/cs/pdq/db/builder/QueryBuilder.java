@@ -58,7 +58,7 @@ public class QueryBuilder implements Builder<ConjunctiveQuery> {
 		}
 		return new Atom(p.getPredicate(), uniTerms);
 	}
-	
+
 	/**
 	 * Adds the body atom.
 	 *
@@ -69,7 +69,7 @@ public class QueryBuilder implements Builder<ConjunctiveQuery> {
 		this.body.add(this.unifyVariable(p));
 		return this;
 	}
-	
+
 	/**
 	 * Sets the name.
 	 *
@@ -79,7 +79,7 @@ public class QueryBuilder implements Builder<ConjunctiveQuery> {
 	public QueryBuilder setName(String n) {
 		return this;
 	}
-		
+
 	/**
 	 * Adds the head term.
 	 *
@@ -98,15 +98,20 @@ public class QueryBuilder implements Builder<ConjunctiveQuery> {
 		this.head.add(term);
 		return this;
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * @see uk.ac.ox.cs.pdq.builder.Builder#build()
 	 */
 	@Override
 	public ConjunctiveQuery build() {
-		Formula b = Conjunction.of(this.body);
-		return new ConjunctiveQuery(this.head, (Conjunction) b);
+		if(this.body.size() == 1) {
+			return new ConjunctiveQuery(this.head, (Atom)this.body.get(0));
+		}
+		else {
+			return new ConjunctiveQuery(this.head, (Conjunction) Conjunction.of(this.body));
+		}
+		
 	}
 
 }

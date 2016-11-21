@@ -21,6 +21,7 @@ import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.LinearGuarded;
+import uk.ac.ox.cs.pdq.fol.QuantifiedFormula;
 import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.util.FormulaEquivalence;
 
@@ -37,10 +38,10 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 
 	/** The relations. */
 	private Map<String, Relation> relations = new LinkedHashMap<>();
-	
+
 	/** The dependencies. */
 	private Map<Integer, Dependency> dependencies = new LinkedHashMap<>();
-	
+
 	/** The disable dependencies. */
 	private boolean disableDependencies = false;
 
@@ -295,7 +296,11 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 		LinearGuarded d = view.getDependency();
 		LinearGuarded t = this.findViewDependency(view);
 		if (d != null) {
-			TGD inverse = new TGD(t.getHead(), t.getBody());
+			TGD inverse = new TGD(
+					d.getHead() instanceof QuantifiedFormula ?
+							d.getHead().getChildren().get(0) :
+								d.getHead(), 
+								d.getBody());
 			if (t == null) {
 				this.dependencies.put(d.getId(), d);
 			}
@@ -306,7 +311,11 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 		} else {
 			if (t != null) {
 				view.setDependency(t);
-				TGD inverse = new TGD(t.getHead(), t.getBody());
+				TGD inverse = new TGD(
+						t.getHead() instanceof QuantifiedFormula ?
+								t.getHead().getChildren().get(0) :
+									t.getHead(), 
+									t.getBody());
 				TGD i = this.findDependency(inverse);
 				if (i == null) {
 					this.dependencies.put(inverse.getId(), inverse);
@@ -365,7 +374,7 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	 * Derives the dependencies that correspond to the schema views.
 	 */
 	private void consolidateDependencies() {
-		for (Relation r : this.relations.values()) {
+		for (Relation r:this.relations.values()) {
 			if (r instanceof View) {
 				this.ensureViewDefinition((View) r);
 			} else {
@@ -475,18 +484,18 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	 * @author Julien Leblay
 	 */
 	private static class TemporaryRelation extends Relation {
-		
+
 		/** The Constant serialVersionUID. */
 		private static final long serialVersionUID = 7049363904713889121L;
 
-//		/**
-//		 * Constructor for TemporaryRelation.
-//		 * @param name String
-//		 * @param attributes List<Attribute>
-//		 */
-//		public TemporaryRelation(String name, List<Attribute> attributes) {
-//			this(name, attributes, false);
-//		}
+		//		/**
+		//		 * Constructor for TemporaryRelation.
+		//		 * @param name String
+		//		 * @param attributes List<Attribute>
+		//		 */
+		//		public TemporaryRelation(String name, List<Attribute> attributes) {
+		//			this(name, attributes, false);
+		//		}
 		/**
 		 * Constructor for TemporaryRelation.
 		 * @param name String

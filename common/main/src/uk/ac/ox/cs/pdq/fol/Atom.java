@@ -137,7 +137,7 @@ public class Atom extends Formula {
 	 */
 	@Override
 	public List<Atom> getAtoms() {
-		return ImmutableList.of(this);
+		return Lists.newArrayList(this);
 	}
 
 	/**

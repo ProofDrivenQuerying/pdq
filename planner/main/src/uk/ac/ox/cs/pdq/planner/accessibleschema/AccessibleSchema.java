@@ -232,7 +232,12 @@ public class AccessibleSchema extends Schema {
 			atoms.add(
 					new Atom(this.getInferredAccessibleRelation((Relation) af.getPredicate()), af.getTerms()));
 		}
-		return new ConjunctiveQuery(query.getFreeVariables(), (Conjunction) Conjunction.of(atoms));
+		if(atoms.size() == 1) {
+			return new ConjunctiveQuery(query.getFreeVariables(), (Atom)atoms.get(0));
+		}
+		else {
+			return new ConjunctiveQuery(query.getFreeVariables(), (Conjunction) Conjunction.of(atoms));
+		}
 	}
 	
 	/**
@@ -250,7 +255,12 @@ public class AccessibleSchema extends Schema {
 			atoms.add(
 					new Atom(this.getInferredAccessibleRelation((Relation) af.getPredicate()), af.getTerms()));
 		}
-		return new ConjunctiveQuery(query.getFreeVariables(), (Conjunction) Conjunction.of(atoms), canonicalMapping);
+		if(atoms.size() == 1) {
+			return new ConjunctiveQuery(query.getFreeVariables(), (Atom)atoms.get(0), canonicalMapping);
+		}
+		else {
+			return new ConjunctiveQuery(query.getFreeVariables(), (Conjunction) Conjunction.of(atoms), canonicalMapping);
+		}
 	}
 	
 	/**
