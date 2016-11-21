@@ -98,6 +98,7 @@ import uk.ac.ox.cs.pdq.ui.model.ObservablePlan;
 import uk.ac.ox.cs.pdq.ui.model.ObservableQuery;
 import uk.ac.ox.cs.pdq.ui.model.ObservableSchema;
 import uk.ac.ox.cs.pdq.ui.proof.Proof;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
@@ -352,7 +353,7 @@ public class PDQController {
     	Schema schema = this.currentSchema.get().getSchema();
     	ObservableQuery query = new ObservableQuery("New Query", "",
     			new QueryBuilder().setName("Q").addBodyAtom(
-    					schema.getRelations().iterator().next().createAtoms()).build());
+    					Utility.createAtoms(schema.getRelations().iterator().next())).build());
 		this.dataQueue.add(query);
     }
    

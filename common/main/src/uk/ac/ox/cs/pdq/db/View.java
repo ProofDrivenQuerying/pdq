@@ -15,8 +15,7 @@ import com.google.common.collect.Lists;
  * @author Efthymia Tsamoura
  * @author Julien Leblay
  */
-public class View extends Relation 
-{
+public class View extends Relation {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -4961888228318423619L;

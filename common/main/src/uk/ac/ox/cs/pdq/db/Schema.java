@@ -215,7 +215,7 @@ public class Schema {
 		if (this.isCyclic == null) {
 			DirectedGraph<Atom, DefaultEdge> simpleDepedencyGraph = new DefaultDirectedGraph<>(DefaultEdge.class);
 			for (Relation relation:this.relations) {
-				simpleDepedencyGraph.addVertex(relation.createAtoms());
+				simpleDepedencyGraph.addVertex(Utility.createAtoms(relation));
 			}
 			for (Dependency dependency:this.schemaDependencies) {
 				List<Atom> leftAtoms = dependency.getBody().getAtoms();

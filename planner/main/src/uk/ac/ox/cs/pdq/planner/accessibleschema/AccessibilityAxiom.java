@@ -13,6 +13,7 @@ import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema.AccessibleRelation;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema.InferredAccessibleRelation;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -56,7 +57,7 @@ public class AccessibilityAxiom extends TGD {
 		List<Formula> leftAtoms = new ArrayList<>();
 		List<Integer> bindingPositions = method.getInputs();
 		Relation r = AccessibleRelation.getInstance();
-		Atom f = relation.createAtoms();
+		Atom f = Utility.createAtoms(relation);
 		List<Term> terms = f.getTerms();
 		for (int bindingPos: bindingPositions) {
 			if (method.getType() != Types.FREE) {
@@ -79,14 +80,14 @@ public class AccessibilityAxiom extends TGD {
 		List<Formula> rightAtoms = new ArrayList<>();
 		List<Integer> bindingPositions = binding.getInputs();
 		Relation accessible = AccessibleRelation.getInstance();
-		Atom f = infAccRel.createAtoms();
+		Atom f = Utility.createAtoms(infAccRel);
 		List<Term> terms = f.getTerms();
 		for (int i = 1; i <= relation.getArity(); ++i) {
 			if (!bindingPositions.contains(i)) {
 				rightAtoms.add(new Atom(accessible, terms.get(i - 1)));
 			}
 		}
-		rightAtoms.add(infAccRel.createAtoms());
+		rightAtoms.add(Utility.createAtoms(infAccRel));
 		return Conjunction.of(rightAtoms);
 	}
 

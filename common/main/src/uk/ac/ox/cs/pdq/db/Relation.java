@@ -394,20 +394,6 @@ public abstract class Relation extends Predicate implements Serializable {
 	}
 
 	/**
-	 * TOCOMMENT creates predicate (so the name of the method should be Atom- singular), used where??
-	 * Creates the atoms.
-	 *
-	 * @return an atom corresponding to this relation.
-	 */
-	public DatabasePredicate createAtoms() {
-		List<Term> variableTerms = new ArrayList<>();
-		for (Attribute attribute : this.attributes) {
-			variableTerms.add(new Variable(attribute.getName()));
-		}
-		return new DatabasePredicate(this, variableTerms);
-	}
-
-	/**
 	 * TOCOMMENT here we can maintain a field so not search again all access methods
 	 * Checks if this relation supports any free access method.
 	 *

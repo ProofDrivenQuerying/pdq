@@ -15,6 +15,7 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.db.DatabasePredicate;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
@@ -651,6 +652,21 @@ public class Utility {
 			result.add(new Attribute(String.class, t.toString()));
 		}
 		return result;
+	}
+	
+
+	/**
+	 * TOCOMMENT creates predicate (so the name of the method should be Atom- singular), used where??
+	 * Creates the atoms.
+	 *
+	 * @return an atom corresponding to this relation.
+	 */
+	public static DatabasePredicate createAtoms(Relation relation) {
+		List<Term> variableTerms = new ArrayList<>();
+		for (Attribute attribute : relation.getAttributes()) {
+			variableTerms.add(new Variable(attribute.getName()));
+		}
+		return new DatabasePredicate(relation, variableTerms);
 	}
 	
 }

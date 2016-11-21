@@ -33,7 +33,7 @@ public class ConstantEqualityPredicateTest {
 	EntityRelation R = new EntityRelation("R"), S = new EntityRelation("S");
 	
 	/** The s. */
-	DatabasePredicate r = R.createAtoms(), s = S.createAtoms();
+	DatabasePredicate r = Utility.createAtoms(R), s = Utility.createAtoms(S);
 	
 	/**
 	 * Setup.
