@@ -1,10 +1,8 @@
 package uk.ac.ox.cs.pdq.fol;
 
 import java.util.List;
-import java.util.Map;
 
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
 
 /**
  * TOCOMMENT agree on a way to write formulas in javadoc
@@ -50,22 +48,6 @@ public class EGD extends Dependency {
 			}
 		}
 		return false;
-	}
-
-	public Implication fire(Map<Variable, Constant> mapping) {
-		List<Formula> bodyAtoms = Lists.newArrayList();
-		for(Atom atom:this.body.getAtoms()) {
-			atom.ground(mapping);
-			bodyAtoms.add(atom);
-		}
-		List<Formula> headAtoms = Lists.newArrayList();
-		for(Atom atom:this.body.getAtoms()) {
-			atom.ground(mapping);
-			headAtoms.add(atom);
-		}
-		Formula bodyConjunction = Conjunction.of(bodyAtoms);
-		Formula headConjunction = Conjunction.of(headAtoms);
-		return Implication.of(bodyConjunction, headConjunction);
 	}
 
 	/**

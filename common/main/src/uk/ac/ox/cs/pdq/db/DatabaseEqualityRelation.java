@@ -8,7 +8,7 @@ import uk.ac.ox.cs.pdq.io.xml.QNames;
 /**
  * 
  * @author george k
- *
+ *TODO delete 
  */
 public class DatabaseEqualityRelation extends DatabaseRelation {
 

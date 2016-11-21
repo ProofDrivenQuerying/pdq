@@ -3,14 +3,11 @@ package uk.ac.ox.cs.pdq.fol;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import uk.ac.ox.cs.pdq.util.CanonicalNameGenerator;
 
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 
 /**
  * TOCOMMENT find a pretty way to write formulas in javadoc
@@ -69,7 +66,6 @@ public class ConjunctiveQuery extends QuantifiedFormula {
 		}
 		return false;
 	}
-
 	/**
 	 * TOCOMMENT the next 3 methods are discussed in #42
 	 * 
@@ -96,14 +92,13 @@ public class ConjunctiveQuery extends QuantifiedFormula {
 		return canonicalMapping;
 	}
 	
-	
-	public List<Atom> getCanonicalDatabase(Map<Variable, Constant> mapping) {
-		Set<Atom> atoms = Sets.newHashSet();
-		for(Atom atom:atoms) {
-			atoms.add(atom.ground(mapping));
-		}
-		return Lists.newArrayList(atoms);
-	}
+//	public List<Atom> getCanonicalDatabase(Map<Variable, Constant> mapping) {
+//		Set<Atom> atoms = Sets.newHashSet();
+//		for(Atom atom:atoms) {
+//			atoms.add(atom.ground(mapping));
+//		}
+//		return Lists.newArrayList(atoms);
+//	}
 
 	/**
 	 * Checks if the query is boolean boolean.

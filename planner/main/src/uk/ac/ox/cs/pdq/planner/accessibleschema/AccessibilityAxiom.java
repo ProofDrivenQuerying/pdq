@@ -9,7 +9,6 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.Formula;
-import uk.ac.ox.cs.pdq.fol.GuardedDependency;
 import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema.AccessibleRelation;
@@ -26,7 +25,7 @@ import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema.InferredAccessi
  *
  * @author Efthymia Tsamoura
  */
-public class AccessibilityAxiom extends TGD implements GuardedDependency {
+public class AccessibilityAxiom extends TGD {
 
 	/**  The inferred accessible relation of the axiom *. */
 	private final InferredAccessibleRelation infAccRelation;
@@ -140,7 +139,6 @@ public class AccessibilityAxiom extends TGD implements GuardedDependency {
 	 * @return PredicateFormula
 	 * @see uk.ac.ox.cs.pdq.fol.GuardedDependency#getGuard()
 	 */
-	@Override
 	public Atom getGuard() {
 		return this.getBody().getAtoms().get(this.getBody().getAtoms().size()-1);
 	}

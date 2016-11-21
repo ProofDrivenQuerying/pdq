@@ -20,7 +20,6 @@ import uk.ac.ox.cs.pdq.db.View;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.Formula;
-import uk.ac.ox.cs.pdq.fol.GuardedDependency;
 import uk.ac.ox.cs.pdq.fol.LinearGuarded;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.TGD;
@@ -424,11 +423,11 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	 * @param input the gd
 	 * @return the guarded dependency that is equal to the given one.
 	 */
-	private GuardedDependency findFKDependency(GuardedDependency input) {
+	private TGD findFKDependency(TGD input) {
 		if (this.dependencies != null) {
 			for (Dependency dependency:this.dependencies.values()) {
 				if (FormulaEquivalence.approximateEquivalence((Formula) input, (Formula) dependency)) {
-					return (GuardedDependency) dependency;
+					return (TGD)dependency;
 				}
 			}
 		}

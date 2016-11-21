@@ -38,10 +38,12 @@ import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Implication;
 import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.fol.Term;
+import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.io.xml.QNames;
 import uk.ac.ox.cs.pdq.reasoning.utility.EqualConstantsClass;
 import uk.ac.ox.cs.pdq.reasoning.utility.EqualConstantsClasses;
+import uk.ac.ox.cs.pdq.util.CanonicalNameGenerator;
 import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.base.Joiner;
@@ -219,7 +221,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 			Dependency dependency = (Dependency) match.getQuery();
 			Preconditions.checkArgument(dependency instanceof TGD, "EGDs are not allowed inside TGDchaseStep");
 			Map<Variable, Constant> mapping = match.getMapping();
-			Implication grounded = ((TGD)dependency).fire(mapping, true);
+			Implication grounded = this.fire(dependency, mapping, true);
 			Formula left = grounded.getChildren().get(0);
 			Formula right = grounded.getChildren().get(1);
 			//Add information about new facts to constantsToAtoms
@@ -257,7 +259,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 			Dependency dependency = (Dependency) match.getQuery();
 			Preconditions.checkArgument(dependency instanceof EGD, "TGDs are not allowed inside EGDchaseStep");
 			Map<Variable, Constant> mapping = match.getMapping();
-			Implication grounded = ((EGD)dependency).fire(mapping);
+			Implication grounded = this.fire(dependency, mapping);
 			Formula left = grounded.getChildren().get(0);
 			Formula right = grounded.getChildren().get(1);
 			for(Atom atom:right.getAtoms()) {
@@ -471,7 +473,6 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		//Create an SQL statement for the cleaned query
 		Pair<String, LinkedHashMap<String, Variable>> pair = createQuery(converted, properties);
 		queries.add(Triple.of((Formula)query, pair.getLeft(), pair.getRight()));
-
 		return this.answerQueries(queries);
 	}
 
@@ -571,7 +572,6 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		this.synchronousThreadsNumber = connection.synchronousThreadsNumber;
 		this.constants = connection.getSchema().getConstants();
 	}
-
 
 	/**
 	 * Creates an SQL statement that detects homomorphisms of the input query to facts kept in a database.
@@ -806,5 +806,79 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 			}
 		}
 		return null;
+	}
+	
+	/**
+	 * Fire.
+	 *
+	 * @param mapping Map<Variable,Term>
+	 * @param skolemize boolean
+	 * @return TGD<L,R>
+	 * @see uk.ac.ox.cs.pdq.ics.IC#fire(Map<Variable,Term>, boolean)
+	 */
+	public Implication fire(Dependency dependency, Map<Variable, Constant> mapping, boolean skolemize) {
+		Map<Variable, Constant> skolemizedMapping = mapping;
+		if(skolemize) {
+			skolemizedMapping = this.skolemizeMapping(dependency, mapping);
+		}
+		List<Formula> bodyAtoms = Lists.newArrayList();
+		for(Atom atom:dependency.getBody().getAtoms()) {
+			atom.ground(skolemizedMapping);
+			bodyAtoms.add(atom);
+		}
+		List<Formula> headAtoms = Lists.newArrayList();
+		for(Atom atom:dependency.getBody().getAtoms()) {
+			atom.ground(skolemizedMapping);
+			headAtoms.add(atom);
+		}
+		Formula bodyConjunction = Conjunction.of(bodyAtoms);
+		Formula headConjunction = Conjunction.of(headAtoms);
+		return Implication.of(bodyConjunction, headConjunction);
+	}
+	
+	public Implication fire(Dependency dependency, Map<Variable, Constant> mapping) {
+		List<Formula> bodyAtoms = Lists.newArrayList();
+		for(Atom atom:dependency.getBody().getAtoms()) {
+			atom.ground(mapping);
+			bodyAtoms.add(atom);
+		}
+		List<Formula> headAtoms = Lists.newArrayList();
+		for(Atom atom:dependency.getBody().getAtoms()) {
+			atom.ground(mapping);
+			headAtoms.add(atom);
+		}
+		Formula bodyConjunction = Conjunction.of(bodyAtoms);
+		Formula headConjunction = Conjunction.of(headAtoms);
+		return Implication.of(bodyConjunction, headConjunction);
+	}
+
+	/**
+	 * TOCOMMENT there is no "canonicalNames" mentioned in the comment says here.
+	 * Skolemize mapping.
+	 *
+	 * @param mapping the mapping
+	 * @return 		If canonicalNames is TRUE returns a copy of the input mapping
+	 * 		augmented such that Skolem constants are produced for
+	 *      the existentially quantified variables
+	 */
+	public Map<Variable, Constant> skolemizeMapping(Dependency dependency, Map<Variable, Constant> mapping) {
+		String namesOfUniversalVariables = "";
+		Map<Variable, Constant> result = new LinkedHashMap<>(mapping);
+		for (Variable variable: dependency.getUniversal()) {
+			Variable variableTerm = variable;
+			Preconditions.checkState(result.get(variableTerm) != null);
+			namesOfUniversalVariables += variable.getSymbol() + result.get(variableTerm);
+		}
+		for(Variable variable:dependency.getExistential()) {
+			if (!result.containsKey(variable)) {
+				result.put(variable,
+						new UntypedConstant(
+								CanonicalNameGenerator.getName("TGD" + dependency.getId(),
+										namesOfUniversalVariables,
+										variable.getSymbol()))
+						);
+			}
+		}
+		return result;
 	}
 }

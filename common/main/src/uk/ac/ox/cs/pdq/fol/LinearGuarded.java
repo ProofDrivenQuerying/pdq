@@ -15,18 +15,7 @@ import uk.ac.ox.cs.pdq.db.Relation;
  * @author Efthymia Tsamoura
  * @author Julien Leblay
  */
-public class LinearGuarded extends TGD implements GuardedDependency {
-
-	/**
-	 * TOCOMMENT left and right are used all over, I suggest body and head
-	 * Instantiates a new linear guarded dependency.
-	 *
-	 * @param left 		The left-hand side predicate of the dependency
-	 * @param right 		The right-hand side conjunctions of the dependency
-	 */
-	public LinearGuarded(Formula left, Formula right) {
-		super(Conjunction.of(left), right);
-	}
+public class LinearGuarded extends TGD {
 
 	/**
 	 * Constructs a guarded dependency based on the input key-foreign key
@@ -36,7 +25,7 @@ public class LinearGuarded extends TGD implements GuardedDependency {
 	 * @param foreignKey One of the foreign keys of this relation
 	 */
 	public LinearGuarded(Relation relation, ForeignKey foreignKey) {
-		this(createLeft(relation), createRight(relation, foreignKey));
+		super(createBody(relation), createHead(relation, foreignKey));
 	}
 
 	/**
@@ -45,7 +34,7 @@ public class LinearGuarded extends TGD implements GuardedDependency {
 	 * @param relation Relation
 	 * @return the left-hand side predicate of a linear guarded dependency for the given relation
 	 */
-	private static Formula createLeft(Relation relation) {
+	private static Formula createBody(Relation relation) {
 		List<Variable> free = new ArrayList<>();
 		int index = 0;
 		for (int i = 0, l = relation.getArity(); i < l; i++) {
@@ -62,7 +51,7 @@ public class LinearGuarded extends TGD implements GuardedDependency {
 	 * @param foreignKey the foreign key
 	 * @return the right-hand side of a linear guarded dependency for the given relation and foreign key constraint
 	 */
-	private static Formula createRight(Relation relation, ForeignKey foreignKey) {
+	private static Formula createHead(Relation relation, ForeignKey foreignKey) {
 		List<Variable> free = new ArrayList<>();
 		int index = 0;
 		for (int i = 0, l = relation.getArity(); i < l; i++) {
@@ -82,7 +71,6 @@ public class LinearGuarded extends TGD implements GuardedDependency {
 			int localTermIndex = relation.getAttributeIndex(rf.getLocalAttributeName());
 			remoteTerms.set(remoteTermIndex, free.get(localTermIndex));
 		}
-
 		return new Atom(foreignKey.getForeignRelation(), remoteTerms);
 	}
 
@@ -93,8 +81,12 @@ public class LinearGuarded extends TGD implements GuardedDependency {
 	 * @return PredicateFormula
 	 * @see uk.ac.ox.cs.pdq.db.GuardedDependency#getGuard()
 	 */
-	@Override
 	public Atom getGuard() {
 		return this.getBody().getAtoms().get(0);
+	}
+	
+	@Override
+	public boolean isGuarded() {
+		return true;
 	}
 }
