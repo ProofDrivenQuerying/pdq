@@ -29,6 +29,7 @@ import uk.ac.ox.cs.pdq.fol.Implication;
 import uk.ac.ox.cs.pdq.fol.Negation;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.QuantifiedFormula;
+import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
@@ -525,7 +526,7 @@ public class Utility {
 		Formula body =
 				Conjunction.of(new Atom(new Predicate(predicate.getName(), leftTerms.size()), leftTerms), 
 						new Atom(new Predicate(predicate.getName(), copiedTerms.size()), copiedTerms));
-		return EGD.of(body, Conjunction.of(equalities));
+		return new EGD(body, Conjunction.of(equalities));
 	}
 
 	/**

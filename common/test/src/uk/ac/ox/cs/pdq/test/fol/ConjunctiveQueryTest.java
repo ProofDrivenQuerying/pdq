@@ -69,13 +69,12 @@ public class ConjunctiveQueryTest {
 				Lists.<Variable>newArrayList(new Variable("x1"), new Variable("x3")), 
 				q.getFreeVariables());
 		Assert.assertEquals("ConjunctiveQuery predicates must match that of construction", Lists.newArrayList(p2, p3), q.getAtoms());
-		Assert.assertEquals("ConjunctiveQuery sub-formulas must match that of construction", Lists.newArrayList(p2, p3), q.getChildren());
+		Assert.assertEquals("ConjunctiveQuery sub-formulas must match that of construction", Conjunction.of(p2, p3), q.getChildren().get(0));
 		Assert.assertEquals("ConjunctiveQuery terms must match that of construction", Lists.<Term>newArrayList(
 				new TypedConstant<>("x5"), 
 				new Variable("x1"),
 				new Variable("x3"), 
-				new UntypedConstant("x4"),
-				new TypedConstant<>("x5")
+				new UntypedConstant("x4")
 				), 
 				q.getTerms());
 	}

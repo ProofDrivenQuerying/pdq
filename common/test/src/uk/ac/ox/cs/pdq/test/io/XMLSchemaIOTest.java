@@ -125,6 +125,11 @@ public class XMLSchemaIOTest {
 //		Assert.assertEquals(s.getViews(), observed.getViews());
 		Assert.assertEquals(s.getDependencies().size(), observed.getDependencies().size());
 		for (int i = 0, l = s.getDependencies().size(); i < l; i++) {
+			System.out.println(s.getDependencies().get(i));
+			System.out.println(observed.getDependencies().get(i));
+			System.out.println(FormulaEquivalence.approximateEquivalence(
+					(Formula) s.getDependencies().get(i), 
+					(Formula) observed.getDependencies().get(i)));
 			Assert.assertTrue(FormulaEquivalence.approximateEquivalence(
 					(Formula) s.getDependencies().get(i), 
 					(Formula) observed.getDependencies().get(i)));

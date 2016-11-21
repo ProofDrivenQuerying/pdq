@@ -130,7 +130,7 @@ public final class DataValidationImplementation extends DataValidation{
 	 * @return Constraint
 	 */
 	private static Dependency invert(Dependency ic) {
-		return TGD.of(ic.getHead(), ic.getHead());
+		return new TGD(ic.getHead(), ic.getHead());
 	}
 
 }

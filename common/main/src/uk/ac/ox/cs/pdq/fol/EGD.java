@@ -1,10 +1,12 @@
 package uk.ac.ox.cs.pdq.fol;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.collections4.CollectionUtils;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
 
 /**
  * TOCOMMENT agree on a way to write formulas in javadoc
@@ -23,21 +25,29 @@ public class EGD extends Dependency {
 		Preconditions.checkArgument(isConjunctionOfAtoms(implication.getChildren().get(0)));
 		Preconditions.checkArgument(isConjunctionOfEqualities(implication.getChildren().get(1)));
 	}
-
-	//	public EGD(Formula body, Formula head) {
-	//		super(body,head);
-	//		Preconditions.checkArgument(isConjunctionOfAtoms(body));
-	//		Preconditions.checkArgument(isConjunctionOfEqualities(head));
-	//	}
-
-	public static EGD of(Formula body, Formula head) {
+	
+	public EGD(Formula body, Formula head) {
+		this(LogicalSymbols.UNIVERSAL, body.getFreeVariables(), createImplication(body,head));
+		Preconditions.checkArgument(isConjunctionOfAtoms(body));
+		Preconditions.checkArgument(isConjunctionOfAtoms(head));
+	}
+	
+	private static Implication createImplication(Formula body, Formula head) {
 		Preconditions.checkArgument(body instanceof Conjunction || body instanceof Atom);
 		Preconditions.checkArgument(head instanceof Conjunction || head instanceof Atom);
 		Preconditions.checkArgument(body.getBoundVariables().isEmpty());
 		Preconditions.checkArgument(head.getBoundVariables().isEmpty());
 		Preconditions.checkArgument(!CollectionUtils.intersection(body.getFreeVariables(), head.getFreeVariables()).isEmpty());
-		Implication formula = new Implication(body, head);
-		return new EGD(LogicalSymbols.UNIVERSAL, body.getFreeVariables(), formula);
+		Collection<Variable> headFree = head.getFreeVariables();
+		Collection<Variable> bodyFree = body.getFreeVariables();
+		List<Variable> boundVariables = Lists.newArrayList(CollectionUtils.removeAll(headFree, bodyFree));
+		if(!boundVariables.isEmpty()) {
+			return new Implication(body, new QuantifiedFormula(LogicalSymbols.EXISTENTIAL, boundVariables, head));
+			
+		}
+		else {
+			return new Implication(body, head);
+		}
 	}
 
 	private static boolean isConjunctionOfAtoms(Formula formula) {
@@ -79,8 +89,8 @@ public class EGD extends Dependency {
 		String f = "";
 		String b = "";
 
-		if(!this.universal.isEmpty()) {
-			f = this.universal.toString();
+		if(!this.getUniversal().isEmpty()) {
+			f = this.getUniversal().toString();
 		}
 
 		return f + this.body + LogicalSymbols.IMPLIES + b + this.head;

@@ -103,11 +103,11 @@ public class DependencyBuilder implements Builder<TGD> {
 		if (!this.right.isEmpty()) {
 			if (!this.left.isEmpty()) {
 				if (this.left.size() == 1) {
-					return TGD.of(
+					return new TGD(
 							this.left.get(0),
 							Conjunction.of(this.right));
 				}
-				return TGD.of(
+				return new TGD(
 						Conjunction.of(this.left),
 						Conjunction.of(this.right));
 			}

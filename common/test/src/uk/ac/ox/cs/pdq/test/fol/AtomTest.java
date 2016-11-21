@@ -412,7 +412,7 @@ public class AtomTest {
 				);
 		Atom p = new Atom(s, t);
 		Assert.assertEquals("Atom variables subset must match",
-				Sets.newHashSet(new TypedConstant<>("x2"), new TypedConstant<>("x5")),
+				Lists.newArrayList(new TypedConstant<>("x2"), new TypedConstant<>("x5")),
 				Utility.getTypedConstants(p));
 	}
 

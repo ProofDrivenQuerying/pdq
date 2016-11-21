@@ -846,57 +846,57 @@ public final class TestSchema {
 		Atom Protein = new Atom(schema.getRelation("Protein"),
 				input_id,id,entry_name,organism);
 
-		TGD tgd1 = TGD.of(Conjunction.of(Activity),Conjunction.of(ActivityFree));
-		TGD tgd2 = TGD.of(Conjunction.of(Activity),Conjunction.of(ActivityLimited));
-		TGD tgd3 = TGD.of(Conjunction.of(ActivityFree),Conjunction.of(Activity));
-		TGD tgd4 = TGD.of(Conjunction.of(ActivityLimited),Conjunction.of(Activity));
+		TGD tgd1 = new TGD(Conjunction.of(Activity),Conjunction.of(ActivityFree));
+		TGD tgd2 = new TGD(Conjunction.of(Activity),Conjunction.of(ActivityLimited));
+		TGD tgd3 = new TGD(Conjunction.of(ActivityFree),Conjunction.of(Activity));
+		TGD tgd4 = new TGD(Conjunction.of(ActivityLimited),Conjunction.of(Activity));
 
-		TGD tgd5 = TGD.of(Conjunction.of(Assay),Conjunction.of(AssayFree));
-		TGD tgd6 = TGD.of(Conjunction.of(Assay),Conjunction.of(AssayLimited));
-		TGD tgd7 = TGD.of(Conjunction.of(AssayFree),Conjunction.of(Assay));
-		TGD tgd8 = TGD.of(Conjunction.of(AssayLimited),Conjunction.of(Assay));
+		TGD tgd5 = new TGD(Conjunction.of(Assay),Conjunction.of(AssayFree));
+		TGD tgd6 = new TGD(Conjunction.of(Assay),Conjunction.of(AssayLimited));
+		TGD tgd7 = new TGD(Conjunction.of(AssayFree),Conjunction.of(Assay));
+		TGD tgd8 = new TGD(Conjunction.of(AssayLimited),Conjunction.of(Assay));
 
-		TGD tgd9 = TGD.of(Conjunction.of(Document),Conjunction.of(DocumentFree));
-		TGD tgd10 = TGD.of(Conjunction.of(Document),Conjunction.of(DocumentLimited));
-		TGD tgd11 = TGD.of(Conjunction.of(DocumentFree),Conjunction.of(Document));
-		TGD tgd12 = TGD.of(Conjunction.of(DocumentLimited),Conjunction.of(Document));
+		TGD tgd9 = new TGD(Conjunction.of(Document),Conjunction.of(DocumentFree));
+		TGD tgd10 = new TGD(Conjunction.of(Document),Conjunction.of(DocumentLimited));
+		TGD tgd11 = new TGD(Conjunction.of(DocumentFree),Conjunction.of(Document));
+		TGD tgd12 = new TGD(Conjunction.of(DocumentLimited),Conjunction.of(Document));
 
-		TGD tgd13 = TGD.of(Conjunction.of(Molecule),Conjunction.of(MoleculeFree));
-		TGD tgd14 = TGD.of(Conjunction.of(Molecule),Conjunction.of(MoleculeLimited));
-		TGD tgd15 = TGD.of(Conjunction.of(MoleculeFree),Conjunction.of(Molecule));
-		TGD tgd16 = TGD.of(Conjunction.of(MoleculeLimited),Conjunction.of(Molecule));
+		TGD tgd13 = new TGD(Conjunction.of(Molecule),Conjunction.of(MoleculeFree));
+		TGD tgd14 = new TGD(Conjunction.of(Molecule),Conjunction.of(MoleculeLimited));
+		TGD tgd15 = new TGD(Conjunction.of(MoleculeFree),Conjunction.of(Molecule));
+		TGD tgd16 = new TGD(Conjunction.of(MoleculeLimited),Conjunction.of(Molecule));
 
-		TGD tgd17 = TGD.of(Conjunction.of(Target),Conjunction.of(TargetFree));
-		TGD tgd18 = TGD.of(Conjunction.of(Target),Conjunction.of(TargetLimited));
-		TGD tgd19 = TGD.of(Conjunction.of(TargetFree),Conjunction.of(Target));
-		TGD tgd20 = TGD.of(Conjunction.of(TargetLimited),Conjunction.of(Target));
+		TGD tgd17 = new TGD(Conjunction.of(Target),Conjunction.of(TargetFree));
+		TGD tgd18 = new TGD(Conjunction.of(Target),Conjunction.of(TargetLimited));
+		TGD tgd19 = new TGD(Conjunction.of(TargetFree),Conjunction.of(Target));
+		TGD tgd20 = new TGD(Conjunction.of(TargetLimited),Conjunction.of(Target));
 
-		TGD tgd21 = TGD.of(Conjunction.of(TargetComponent),Conjunction.of(TargetComponentFree));
-		TGD tgd22 = TGD.of(Conjunction.of(TargetComponent),Conjunction.of(TargetComponentLimited));
-		TGD tgd23 = TGD.of(Conjunction.of(TargetComponentFree),Conjunction.of(TargetComponent));
-		TGD tgd24 = TGD.of(Conjunction.of(TargetComponentLimited),Conjunction.of(TargetComponent));
+		TGD tgd21 = new TGD(Conjunction.of(TargetComponent),Conjunction.of(TargetComponentFree));
+		TGD tgd22 = new TGD(Conjunction.of(TargetComponent),Conjunction.of(TargetComponentLimited));
+		TGD tgd23 = new TGD(Conjunction.of(TargetComponentFree),Conjunction.of(TargetComponent));
+		TGD tgd24 = new TGD(Conjunction.of(TargetComponentLimited),Conjunction.of(TargetComponent));
 
-		TGD tgd25 = TGD.of(Conjunction.of(Publication),Conjunction.of(PublicationFull));
-		TGD tgd26 = TGD.of(Conjunction.of(PublicationFull),Conjunction.of(Publication));
+		TGD tgd25 = new TGD(Conjunction.of(Publication),Conjunction.of(PublicationFull));
+		TGD tgd26 = new TGD(Conjunction.of(PublicationFull),Conjunction.of(Publication));
 
-		TGD tgd27 = TGD.of(Conjunction.of(Protein),Conjunction.of(ProteinFree));
-		TGD tgd28 = TGD.of(Conjunction.of(ProteinFree),Conjunction.of(Protein));
-		TGD tgd29 = TGD.of(Conjunction.of(Protein),Conjunction.of(ProteinLimited));
-		TGD tgd30 = TGD.of(Conjunction.of(ProteinLimited),Conjunction.of(Protein));
+		TGD tgd27 = new TGD(Conjunction.of(Protein),Conjunction.of(ProteinFree));
+		TGD tgd28 = new TGD(Conjunction.of(ProteinFree),Conjunction.of(Protein));
+		TGD tgd29 = new TGD(Conjunction.of(Protein),Conjunction.of(ProteinLimited));
+		TGD tgd30 = new TGD(Conjunction.of(ProteinLimited),Conjunction.of(Protein));
 
-		TGD tgd31 = TGD.of(Conjunction.of(Pathway),Conjunction.of(PathwayBySpecies));
-		TGD tgd32 = TGD.of(Conjunction.of(Pathway),Conjunction.of(PathwayById));
-		TGD tgd33 = TGD.of(Conjunction.of(PathwayBySpecies),Conjunction.of(Pathway));
-		TGD tgd34 = TGD.of(Conjunction.of(PathwayById),Conjunction.of(Pathway));
+		TGD tgd31 = new TGD(Conjunction.of(Pathway),Conjunction.of(PathwayBySpecies));
+		TGD tgd32 = new TGD(Conjunction.of(Pathway),Conjunction.of(PathwayById));
+		TGD tgd33 = new TGD(Conjunction.of(PathwayBySpecies),Conjunction.of(Pathway));
+		TGD tgd34 = new TGD(Conjunction.of(PathwayById),Conjunction.of(Pathway));
 
-		TGD tgd35 = TGD.of(Conjunction.of(Organism),Conjunction.of(OrganismById));
-		TGD tgd36 = TGD.of(Conjunction.of(Organism),Conjunction.of(OrganismFree));
-		TGD tgd37 = TGD.of(Conjunction.of(OrganismById),Conjunction.of(Organism));
-		TGD tgd38 = TGD.of(Conjunction.of(OrganismFree),Conjunction.of(Organism));
+		TGD tgd35 = new TGD(Conjunction.of(Organism),Conjunction.of(OrganismById));
+		TGD tgd36 = new TGD(Conjunction.of(Organism),Conjunction.of(OrganismFree));
+		TGD tgd37 = new TGD(Conjunction.of(OrganismById),Conjunction.of(Organism));
+		TGD tgd38 = new TGD(Conjunction.of(OrganismFree),Conjunction.of(Organism));
 
-		TGD tgd39 = TGD.of(Conjunction.of(Pathway),Conjunction.of(Organism));
+		TGD tgd39 = new TGD(Conjunction.of(Pathway),Conjunction.of(Organism));
 
-		TGD tgd40 = TGD.of(Conjunction.of(
+		TGD tgd40 = new TGD(Conjunction.of(
 				new Atom(schema.getRelation("Document"), 
 						Lists.newArrayList(new Variable("_1"), 
 								new TypedConstant<>("PUBLICATION"),
@@ -922,13 +922,13 @@ public final class TestSchema {
 								new Variable("_14")
 								))));
 
-		TGD tgd41 = TGD.of(Conjunction.of(Activity),Conjunction.of(Molecule));
-		TGD tgd42 = TGD.of(Conjunction.of(Activity),Conjunction.of(Target));
-		TGD tgd43 = TGD.of(Conjunction.of(Activity),Conjunction.of(Document));
-		TGD tgd44 = TGD.of(Conjunction.of(Assay),Conjunction.of(Document));
-		TGD tgd45 = TGD.of(Conjunction.of(Assay),Conjunction.of(Target));
+		TGD tgd41 = new TGD(Conjunction.of(Activity),Conjunction.of(Molecule));
+		TGD tgd42 = new TGD(Conjunction.of(Activity),Conjunction.of(Target));
+		TGD tgd43 = new TGD(Conjunction.of(Activity),Conjunction.of(Document));
+		TGD tgd44 = new TGD(Conjunction.of(Assay),Conjunction.of(Document));
+		TGD tgd45 = new TGD(Conjunction.of(Assay),Conjunction.of(Target));
 
-		TGD tgd46 = TGD.of(Conjunction.of(
+		TGD tgd46 = new TGD(Conjunction.of(
 				new Atom(schema.getRelation("Target"), 
 						Lists.newArrayList(organism,
 								pref_name,
@@ -952,7 +952,7 @@ public final class TestSchema {
 								))));
 
 
-		TGD tgd47 = TGD.of(Conjunction.of(
+		TGD tgd47 = new TGD(Conjunction.of(
 				new Atom(schema.getRelation("TargetComponent"), 
 						Lists.newArrayList(
 								target_component_accession,
@@ -972,7 +972,7 @@ public final class TestSchema {
 								organism))
 						));
 
-		TGD tgd48 = TGD.of(Conjunction.of(
+		TGD tgd48 = new TGD(Conjunction.of(
 				new Atom(schema.getRelation("Target"), 
 						Lists.newArrayList(
 								organism,
@@ -993,7 +993,7 @@ public final class TestSchema {
 								organism))
 						));
 
-		TGD tgd49 = TGD.of(Conjunction.of(
+		TGD tgd49 = new TGD(Conjunction.of(
 				Publication
 				),
 				Conjunction.of(new Atom(schema.getRelation("Protein"), 
@@ -1004,13 +1004,13 @@ public final class TestSchema {
 								new Variable("_4")))
 						));
 		
-		TGD tgd50 = TGD.of(Conjunction.of(
+		TGD tgd50 = new TGD(Conjunction.of(
 				Citation
 				),
 				Conjunction.of(Publication
 						));
 		
-		TGD tgd51 = TGD.of(Conjunction.of(
+		TGD tgd51 = new TGD(Conjunction.of(
 				Reference
 				),
 				Conjunction.of(Publication

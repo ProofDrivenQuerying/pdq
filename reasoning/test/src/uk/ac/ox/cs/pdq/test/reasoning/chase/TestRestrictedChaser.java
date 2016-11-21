@@ -70,8 +70,8 @@ public class TestRestrictedChaser {
 		Atom R2p = new Atom(this.rel2, 
 				Lists.newArrayList(new Variable("y"),new Variable("w")));
 
-		this.tgd = TGD.of(Conjunction.of(R1),Conjunction.of(R2));
-		this.egd = EGD.of(Conjunction.of(R2,R2p), Conjunction.of(new Atom(new Predicate(QNames.EQUALITY.toString(), 2), new Variable("z"),new Variable("w"))));
+		this.tgd = new TGD(Conjunction.of(R1),Conjunction.of(R2));
+		this.egd = new EGD(Conjunction.of(R2,R2p), Conjunction.of(new Atom(new Predicate(QNames.EQUALITY.toString(), 2), new Variable("z"),new Variable("w"))));
 
 		this.schema = new Schema(Lists.<Relation>newArrayList(this.rel1, this.rel2), Lists.<Dependency>newArrayList(this.tgd,this.egd));
 		this.schema.updateTypedConstants(Lists.<TypedConstant<?>>newArrayList(new TypedConstant(new String("John"))));

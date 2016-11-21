@@ -21,17 +21,14 @@ public class TGD extends Dependency {
 		super(operator, variables, implication);
 		Preconditions.checkArgument(isConjunctionOfAtoms(implication.getChildren().get(0)));
 		Preconditions.checkArgument(implication.getChildren().get(1) instanceof QuantifiedFormula || 
-				implication.getChildren().get(1) instanceof Conjunction);
-		Preconditions.checkArgument(isConjunctionOfAtoms(implication.getChildren().get(1)));
+				isConjunctionOfAtoms(implication.getChildren().get(1)));
 	}
 
-//	public TGD(Formula body, Formula head) {
-//		super(body,head);
-//		Preconditions.checkArgument(isConjunctionOfAtoms(body));
-//		Preconditions.checkArgument(isConjunctionOfAtoms(head));
-//	}
+	public TGD(Formula body, Formula head) {
+		this(LogicalSymbols.UNIVERSAL, body.getFreeVariables(), createImplication(body,head));
+	}
 	
-	public static TGD of(Formula body, Formula head) {
+	private static Implication createImplication(Formula body, Formula head) {
 		Preconditions.checkArgument(body instanceof Conjunction || body instanceof Atom);
 		Preconditions.checkArgument(head instanceof Conjunction || head instanceof Atom);
 		Preconditions.checkArgument(body.getBoundVariables().isEmpty());
@@ -41,12 +38,10 @@ public class TGD extends Dependency {
 		Collection<Variable> bodyFree = body.getFreeVariables();
 		List<Variable> boundVariables = Lists.newArrayList(CollectionUtils.removeAll(headFree, bodyFree));
 		if(!boundVariables.isEmpty()) {
-			Implication formula = new Implication(body, new QuantifiedFormula(LogicalSymbols.EXISTENTIAL, boundVariables, head));
-			return new TGD(LogicalSymbols.UNIVERSAL, body.getFreeVariables(), formula);
+			return new Implication(body, new QuantifiedFormula(LogicalSymbols.EXISTENTIAL, boundVariables, head));
 		}
 		else {
-			Implication formula = new Implication(body, head);
-			return new TGD(LogicalSymbols.UNIVERSAL, body.getFreeVariables(), formula);
+			return new Implication(body, head);
 		}
 	}
 
@@ -68,12 +63,12 @@ public class TGD extends Dependency {
 		String f = "";
 		String b = "";
 
-		if(!this.universal.isEmpty()) {
-			f = this.universal.toString();
+		if(!this.getUniversal().isEmpty()) {
+			f = this.getUniversal().toString();
 		}
 
-		if(!this.existential.isEmpty()) {
-			b = this.existential.toString();
+		if(!this.getExistential().isEmpty()) {
+			b = this.getExistential().toString();
 		}
 		return f + this.body + LogicalSymbols.IMPLIES + b + this.head;
 	}

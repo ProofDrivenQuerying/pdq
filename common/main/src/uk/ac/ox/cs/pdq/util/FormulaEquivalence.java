@@ -7,10 +7,12 @@ import java.util.Map;
 
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
+import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.Disjunction;
 import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Implication;
 import uk.ac.ox.cs.pdq.fol.Negation;
+import uk.ac.ox.cs.pdq.fol.QuantifiedFormula;
 import uk.ac.ox.cs.pdq.fol.Term;
 
 /**
@@ -48,6 +50,12 @@ public class FormulaEquivalence {
 		}
 		if (left instanceof Implication) {
 			return approximateBinaryEquivalence((Implication) left, (Implication) right) ;
+		}
+		if (left instanceof Dependency) {
+			return approximateBinaryEquivalence((Dependency) left, (Dependency) right) ;
+		}
+		if (left instanceof QuantifiedFormula) {
+			return approximateUnaryEquivalence((QuantifiedFormula) left, (QuantifiedFormula) right) ;
 		}
 		if (left instanceof Atom) {
 			return approximateAtomEquivalence((Atom) left, (Atom) right);
@@ -95,6 +103,23 @@ public class FormulaEquivalence {
 		}
 		return approximateEquivalence(left.getChildren().get(0), right.getChildren().get(0))
 				&& approximateEquivalence(left.getChildren().get(1), right.getChildren().get(1));
+	}
+	
+	private static boolean approximateBinaryEquivalence(Dependency left, Dependency right) {
+		if (!variableSignature(left.getAtoms()).equals(variableSignature(right.getAtoms()))) {
+			return false;
+		}
+		return approximateEquivalence(left.getChildren().get(0), right.getChildren().get(0));
+	}
+	
+	private static boolean approximateUnaryEquivalence(QuantifiedFormula left, QuantifiedFormula right) {
+		if (!variableSignature(left.getAtoms()).equals(variableSignature(right.getAtoms()))) {
+			return false;
+		}
+		if(!left.getTopLevelQuantifiedVariables().equals(right.getTopLevelQuantifiedVariables())) {
+			return false;
+		}
+		return approximateEquivalence(left.getChildren().get(0), right.getChildren().get(0));
 	}
 	
 	/**
