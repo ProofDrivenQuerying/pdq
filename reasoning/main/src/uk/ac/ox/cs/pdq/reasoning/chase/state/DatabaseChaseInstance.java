@@ -538,10 +538,10 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 			right.add(new Atom(relation, terms));
 		}
 		if(source instanceof TGD) {
-			return new TGD(Conjunction.of(left), Conjunction.of(right));
+			return TGD.of(Conjunction.of(left), Conjunction.of(right));
 		}
 		else if(source instanceof EGD) {
-			return new EGD(Conjunction.of(left), Conjunction.of(right));
+			return EGD.of(Conjunction.of(left), Conjunction.of(right));
 		}
 		throw new java.lang.RuntimeException("Unsupported formula type.");
 	}

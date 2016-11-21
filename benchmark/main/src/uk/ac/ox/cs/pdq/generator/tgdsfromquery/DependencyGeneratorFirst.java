@@ -100,7 +100,7 @@ public class DependencyGeneratorFirst extends AbstractDependencyGenerator implem
 				ConjunctionInfo rightSide = this.createUnGuardedConjunction(existential,
 						this.params.getDependencyConjuncts(), leftConjuncts, this.params.getRepeatedRelations());
 
-				TGD mytgd = new TGD(
+				TGD mytgd = TGD.of(
 						Conjunction.of(leftConjuncts),
 						Conjunction.of(rightSide.getConjuncts()));
 
@@ -140,7 +140,7 @@ public class DependencyGeneratorFirst extends AbstractDependencyGenerator implem
 			ConjunctionInfo rightSide = this.createUnGuardedConjunction(existential,
 					this.params.getDependencyConjuncts(), leftConjuncts, this.params.getRepeatedRelations());
 
-			TGD mytgd = new TGD(
+			TGD mytgd = TGD.of(
 					Conjunction.of(leftConjuncts),
 					Conjunction.of(rightSide.getConjuncts()));
 
@@ -176,7 +176,7 @@ public class DependencyGeneratorFirst extends AbstractDependencyGenerator implem
 					this.random.nextInt(this.params.getDependencyConjuncts()) + 1, 
 					leftSide.getConjuncts(), this.params.getRepeatedRelations());
 			
-			TGD mytgd = new TGD(
+			TGD mytgd = TGD.of(
 					Conjunction.of(leftSide.getConjuncts()),
 					Conjunction.of(rightSide.getConjuncts()));
 

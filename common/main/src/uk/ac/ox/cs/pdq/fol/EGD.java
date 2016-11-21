@@ -2,6 +2,8 @@ package uk.ac.ox.cs.pdq.fol;
 
 import java.util.List;
 
+import org.apache.commons.collections4.CollectionUtils;
+
 import com.google.common.base.Preconditions;
 
 /**
@@ -22,10 +24,20 @@ public class EGD extends Dependency {
 		Preconditions.checkArgument(isConjunctionOfEqualities(implication.getChildren().get(1)));
 	}
 
-	public EGD(Formula body, Formula head) {
-		super(body,head);
-		Preconditions.checkArgument(isConjunctionOfAtoms(body));
-		Preconditions.checkArgument(isConjunctionOfEqualities(head));
+	//	public EGD(Formula body, Formula head) {
+	//		super(body,head);
+	//		Preconditions.checkArgument(isConjunctionOfAtoms(body));
+	//		Preconditions.checkArgument(isConjunctionOfEqualities(head));
+	//	}
+
+	public static EGD of(Formula body, Formula head) {
+		Preconditions.checkArgument(body instanceof Conjunction || body instanceof Atom);
+		Preconditions.checkArgument(head instanceof Conjunction || head instanceof Atom);
+		Preconditions.checkArgument(body.getBoundVariables().isEmpty());
+		Preconditions.checkArgument(head.getBoundVariables().isEmpty());
+		Preconditions.checkArgument(!CollectionUtils.intersection(body.getFreeVariables(), head.getFreeVariables()).isEmpty());
+		Implication formula = new Implication(body, head);
+		return new EGD(LogicalSymbols.UNIVERSAL, body.getFreeVariables(), formula);
 	}
 
 	private static boolean isConjunctionOfAtoms(Formula formula) {

@@ -1,8 +1,12 @@
 package uk.ac.ox.cs.pdq.fol;
 
+import java.util.Collection;
 import java.util.List;
 
+import org.apache.commons.collections4.CollectionUtils;
+
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
 
 /**
  * TOCOMMENT agree on a way to write formulas in javadoc
@@ -16,16 +20,40 @@ public class TGD extends Dependency {
 	public TGD(LogicalSymbols operator, List<Variable> variables, Implication implication) {
 		super(operator, variables, implication);
 		Preconditions.checkArgument(isConjunctionOfAtoms(implication.getChildren().get(0)));
+		Preconditions.checkArgument(implication.getChildren().get(1) instanceof QuantifiedFormula || 
+				implication.getChildren().get(1) instanceof Conjunction);
 		Preconditions.checkArgument(isConjunctionOfAtoms(implication.getChildren().get(1)));
 	}
 
-	public TGD(Formula body, Formula head) {
-		super(body,head);
-		Preconditions.checkArgument(isConjunctionOfAtoms(body));
-		Preconditions.checkArgument(isConjunctionOfAtoms(head));
+//	public TGD(Formula body, Formula head) {
+//		super(body,head);
+//		Preconditions.checkArgument(isConjunctionOfAtoms(body));
+//		Preconditions.checkArgument(isConjunctionOfAtoms(head));
+//	}
+	
+	public static TGD of(Formula body, Formula head) {
+		Preconditions.checkArgument(body instanceof Conjunction || body instanceof Atom);
+		Preconditions.checkArgument(head instanceof Conjunction || head instanceof Atom);
+		Preconditions.checkArgument(body.getBoundVariables().isEmpty());
+		Preconditions.checkArgument(head.getBoundVariables().isEmpty());
+		Preconditions.checkArgument(!CollectionUtils.intersection(body.getFreeVariables(), head.getFreeVariables()).isEmpty());
+		Collection<Variable> headFree = head.getFreeVariables();
+		Collection<Variable> bodyFree = body.getFreeVariables();
+		List<Variable> boundVariables = Lists.newArrayList(CollectionUtils.removeAll(headFree, bodyFree));
+		if(!boundVariables.isEmpty()) {
+			Implication formula = new Implication(body, new QuantifiedFormula(LogicalSymbols.EXISTENTIAL, boundVariables, head));
+			return new TGD(LogicalSymbols.UNIVERSAL, body.getFreeVariables(), formula);
+		}
+		else {
+			Implication formula = new Implication(body, head);
+			return new TGD(LogicalSymbols.UNIVERSAL, body.getFreeVariables(), formula);
+		}
 	}
 
 	private static boolean isConjunctionOfAtoms(Formula formula) {
+		if(formula instanceof QuantifiedFormula) {
+			return isConjunctionOfAtoms(formula.getChildren().get(0));
+		}
 		if(formula instanceof Conjunction) {
 			return isConjunctionOfAtoms(formula.getChildren().get(0)) && isConjunctionOfAtoms(formula.getChildren().get(1));
 		}

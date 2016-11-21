@@ -295,7 +295,7 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 		LinearGuarded d = view.getDependency();
 		LinearGuarded t = this.findViewDependency(view);
 		if (d != null) {
-			TGD inverse = new TGD(t.getHead(), t.getBody());
+			TGD inverse = TGD.of(t.getHead(), t.getBody());
 			if (t == null) {
 				this.dependencies.put(d.getId(), d);
 			}
@@ -306,7 +306,7 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 		} else {
 			if (t != null) {
 				view.setDependency(t);
-				TGD inverse = new TGD(t.getHead(), t.getBody());
+				TGD inverse = TGD.of(t.getHead(), t.getBody());
 				TGD i = this.findDependency(inverse);
 				if (i == null) {
 					this.dependencies.put(inverse.getId(), inverse);

@@ -525,7 +525,7 @@ public class Utility {
 		Formula body =
 				Conjunction.of(new Atom(new Predicate(predicate.getName(), leftTerms.size()), leftTerms), 
 						new Atom(new Predicate(predicate.getName(), copiedTerms.size()), copiedTerms));
-		return new EGD(body, Conjunction.of(equalities));
+		return EGD.of(body, Conjunction.of(equalities));
 	}
 
 	/**

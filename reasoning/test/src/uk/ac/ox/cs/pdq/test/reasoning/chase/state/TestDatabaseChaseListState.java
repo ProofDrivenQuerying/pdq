@@ -29,7 +29,7 @@ public class TestDatabaseChaseListState {
 	private Atom R2p = new Atom(new Predicate("R2",2), 
 			Lists.newArrayList(new Variable("y"),new Variable("w")));
 	
-	private EGD egd = new EGD(Conjunction.of(R2,R2p), Conjunction.of(new Atom(new Predicate(QNames.EQUALITY.toString(), 2), new Variable("z"),new Variable("w"))));
+	private EGD egd = EGD.of(Conjunction.of(R2,R2p), Conjunction.of(new Atom(new Predicate(QNames.EQUALITY.toString(), 2), new Variable("z"),new Variable("w"))));
 			
 	@Before
 	public void setup() {
