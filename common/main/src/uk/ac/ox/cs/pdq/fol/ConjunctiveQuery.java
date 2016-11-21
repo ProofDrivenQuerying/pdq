@@ -175,7 +175,7 @@ public class ConjunctiveQuery extends Formula {
 		}
 		return this.getClass().isInstance(o)
 				&& this.freeVariables.equals(((ConjunctiveQuery) o).freeVariables)
-				&& this.child.equals(((QuantifiedFormula) o).child);
+				&& this.child.equals(((ConjunctiveQuery) o).child);
 	}
 
 

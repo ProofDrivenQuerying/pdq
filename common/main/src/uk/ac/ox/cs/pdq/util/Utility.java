@@ -458,8 +458,7 @@ public class Utility {
 	/**
 	 * Asserts enabled.
 	 */
-	public static void assertsEnabled()
-	{
+	public static void assertsEnabled() {
 		boolean assertsEnabled = false;
 		assert assertsEnabled = true; // Intentional side effect!!!
 		if (!assertsEnabled)

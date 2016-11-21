@@ -8,6 +8,11 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 
+/**
+ * 
+ * @author Efthtymia Tsamoura
+ *
+ */
 public class FunctionTerm implements Term{
 
 	private final Function function;

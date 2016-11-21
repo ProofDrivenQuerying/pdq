@@ -40,7 +40,8 @@ public class SchemaTest {
 	/**
 	 * Test get relations.
 	 */
-	@Test public void testGetRelations() {
+	@Test 
+	public void testGetRelations() {
 		List<Relation> r1 = schema.getRelations();
 		List<Relation> r2 = schema.getRelations();
 		Assert.assertSame(r1, r2);

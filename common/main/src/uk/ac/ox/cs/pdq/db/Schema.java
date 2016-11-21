@@ -89,6 +89,12 @@ public class Schema {
 	public Schema(Collection<Relation> relations, Collection<Dependency> dependencies) {
 		int maxArity = 0;
 		Map<String, Relation> rm = new LinkedHashMap<>();
+		for (Relation relation : relations) {
+			rm.put(relation.getName(), relation);
+			if (maxArity < relation.getArity()) {
+				maxArity = relation.getArity();
+			}
+		}
 		this.arityDistribution = new List[maxArity + 1];
 		for (int i = 0, l = this.arityDistribution.length; i < l; i++) {
 			this.arityDistribution[i] = new ArrayList<>();
