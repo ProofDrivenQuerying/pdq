@@ -107,30 +107,4 @@ public class View extends Relation
 		this.dependency = d;
 		this.definition = new TGD(dependency.getHead(), dependency.getBody());
 	}
-
-//	/*
-//	 * (non-Javadoc)
-//	 * @see uk.ac.ox.cs.pdq.dbschema.Relation#equals(java.lang.Object)
-//	 */
-//	@Override
-//	public boolean equals(Object o) {
-//		if (this == o) {
-//			return true;
-//		}
-//		if (o == null) {
-//			return false;
-//		}
-//		return this.getClass().isInstance(o)
-//				&& this.name.equals(((View) o).name)
-//				&& this.attributes.equals(((View) o).attributes);
-//	}
-//
-//	/*
-//	 * (non-Javadoc)
-//	 * @see uk.ac.ox.cs.pdq.dbschema.Relation#hashCode()
-//	 */
-//	@Override
-//	public int hashCode() {
-//		return Objects.hash(this.name, this.attributes);
-//	}
 }
