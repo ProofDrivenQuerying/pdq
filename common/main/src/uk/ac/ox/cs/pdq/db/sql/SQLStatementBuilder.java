@@ -22,10 +22,10 @@ import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismProperty;
 import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismProperty.FactProperty;
 import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismProperty.MapProperty;
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Dependency;
+import uk.ac.ox.cs.pdq.fol.EGD;
 import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.TGD;
@@ -85,8 +85,8 @@ public abstract class SQLStatementBuilder {
 		log.trace(result);
 		return result;
 	}
-	
-	
+
+
 	//used for debugging purposes
 	public Collection<String> createGetAllTuplesStatement(Map<String, DatabaseRelation> toDatabaseTables) {
 		Collection<String> result = new LinkedList<>();
@@ -265,27 +265,24 @@ public abstract class SQLStatementBuilder {
 	public Pair<Collection<String>,Collection<String>> setupIndices(boolean isForQuery, Map<String, DatabaseRelation> toDatabaseRelations, Formula rule, Set<String> existingIndices) {
 		Formula body = null;
 		if (rule instanceof Atom) {
-			body = Conjunction.of(rule);
+			body = rule;
 		} else if (rule instanceof TGD) {
 			body = ((TGD)rule).getBody();
+		} else if (rule instanceof EGD) {
+			body = ((EGD)rule).getBody();
 		} else if (rule instanceof ConjunctiveQuery) {
 			body = rule;
-		}
-		else {
+		} else {
 			throw new UnsupportedOperationException("Homomorphism check only supported on conjunction of atomic predicate formulas for now.");
 		}
 		Set<String> createIndices = new LinkedHashSet<>();
 		Set<String> dropIndices = new LinkedHashSet<>();
 		Multimap<Variable, Atom> clusters = LinkedHashMultimap.create();
-		for (Formula subFormula:body.getChildren()) {
-			if (subFormula instanceof Atom) {
-				for (Term t: subFormula.getTerms()) {
-					if (t instanceof Variable) {
-						clusters.put((Variable) t, (Atom) subFormula);
-					}
+		for (Atom subFormula:body.getAtoms()) {
+			for (Term t: subFormula.getTerms()) {
+				if (t instanceof Variable) {
+					clusters.put((Variable) t, subFormula);
 				}
-			} else {
-				throw new UnsupportedOperationException("Homomorphism check only supported on conjunction of atomic predicate formulas for now.");
 			}
 		}
 		for (Variable t: clusters.keys()) {
@@ -319,7 +316,7 @@ public abstract class SQLStatementBuilder {
 	 */
 	public abstract String translateLimitConstraints(HomomorphismProperty... constraints);
 
-	
+
 	public List<String> createFromStatement(Collection<Atom> facts) {
 		List<String> relations = new ArrayList<String>();
 		for (Atom fact:facts) {
@@ -355,7 +352,7 @@ public abstract class SQLStatementBuilder {
 		}
 		return projected;
 	}
-	
+
 	public LinkedHashMap<String,Variable> createProjections(ConjunctiveQuery source) {
 		LinkedHashMap<String,Variable> projected = new LinkedHashMap<>();
 		List<Variable> attributes = new ArrayList<>();
@@ -372,9 +369,9 @@ public abstract class SQLStatementBuilder {
 		}
 		return projected;
 	}
-	
 
-	
+
+
 	public List<String> createAttributeEqualities(Collection<Atom> source) {
 		List<String> attributePredicates = new ArrayList<String>();
 		Collection<Term> terms = Utility.getTerms(source);
@@ -424,7 +421,7 @@ public abstract class SQLStatementBuilder {
 		}
 		return constantPredicates;
 	}
-	
+
 	/**
 	 * Translate fact constraints.
 	 *

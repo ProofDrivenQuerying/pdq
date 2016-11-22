@@ -133,8 +133,7 @@ public class TestRestrictedChaser {
 			}
 		}
 
-		//	Assert.assertEquals(Sets.newHashSet(n00,n01,n02,n03,n04,n1), facts);
-
+		Assert.assertEquals(Sets.newHashSet(n00,n01,n02,n03,n04,n1), facts);
 	}
 
 
