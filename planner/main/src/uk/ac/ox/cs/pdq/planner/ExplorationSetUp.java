@@ -1,10 +1,6 @@
 package uk.ac.ox.cs.pdq.planner;
 
-import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
@@ -15,10 +11,8 @@ import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.cost.CostStatKeys;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
-import uk.ac.ox.cs.pdq.db.DatabaseInstance;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.logging.performance.ChainedStatistics;
 import uk.ac.ox.cs.pdq.logging.performance.DynamicStatistics;
@@ -189,22 +183,18 @@ public class ExplorationSetUp {
 		
 		boolean collectStats = this.statsLogger != null;
 		
-		if (noDep) 
-		{
+		if (noDep) {
 			this.schema = Schema.builder(this.schema).disableDependencies().build();
 			this.schema.updateTypedConstants(Utility.getTypedConstants(query));
 			this.accessibleSchema = new AccessibleSchema(this.schema);
 		}
-		else
-		{
+		else {
 			this.schema.updateTypedConstants(Utility.getTypedConstants(query));
 			this.accessibleSchema.updateTypedConstants(Utility.getTypedConstants(query));
 		}
 
 		ConjunctiveQuery accessibleQuery = this.accessibleSchema.accessible(query, query.getSubstitutionOfFreeVariablesToCanonicalConstants());
 		Explorer<P> explorer = null;
-
-		
 		DatabaseConnection dbConn = new DatabaseConnection(dbParams,accessibleSchema);
 
 		try{
