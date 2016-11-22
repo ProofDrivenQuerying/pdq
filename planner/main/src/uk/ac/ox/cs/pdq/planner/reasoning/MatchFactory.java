@@ -6,6 +6,7 @@ import java.util.Map;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
 
@@ -39,8 +40,13 @@ public class MatchFactory {
 	private static Map<Variable, Constant> createMapping(AccessibilityAxiom axiom, Atom fact) {
 		Map<Variable, Constant> map = new LinkedHashMap<>();
 		int i = 0;
-		for(Variable variable:axiom.getGuard().getVariables()) {
-			map.put(variable, (Constant) fact.getTerm(i));
+		for(Term term:axiom.getGuard().getTerms()) {
+			if(term instanceof Variable && fact.getTerm(i) instanceof Constant) {
+				map.put((Variable)term, (Constant) fact.getTerm(i));
+			}
+			else {
+				throw new java.lang.RuntimeException("Cannot map constants to constants or variables to variables, but only variables to constants");
+			}
 			i++;
 		}
 		return map;

@@ -278,15 +278,12 @@ public class ConjunctiveQueryBodyBuilder {
 	 */
 	public void returnAllVars() {
 		this.returnsAllVars = true;
-		
 		// Find arity:
 		Set<Variable> vars = new HashSet<>();
 		for( Atom predFormula : this.aliasToAtoms.values() ) {
-			vars.addAll( predFormula.getVariables() );
+			vars.addAll(predFormula.getVariables());
 		}
-		
 		Predicate predicate = new Predicate(this.qName, vars.size());
-		
 		this.resultPredicate = new Atom(predicate, vars);
 	}
 	
@@ -300,9 +297,7 @@ public class ConjunctiveQueryBodyBuilder {
 		if( this.returnsAllVars) {
 			throw new RuntimeException("cannot add result column to this query!");
 		}
-		
 		if( this.resultPredicate == null ) {
-			
 			Predicate predicate = new Predicate(this.qName, 1);
 			Term term = this._findTerm(aliasName, attrName);
 			this.resultPredicate = new Atom(predicate, term);
@@ -310,16 +305,12 @@ public class ConjunctiveQueryBodyBuilder {
 		} else {
 			int newArity = this.resultPredicate.getPredicate().getArity() + 1;
 			Predicate newSignature = new Predicate(this.qName, newArity);
-			
 			Term[] newTerms = new Term[newArity];
-			
 			for(int i = 0; i < newTerms.length-1; i++) {
 				newTerms[i] = this.resultPredicate.getTerm(i);
 			}
 			newTerms[newTerms.length-1] = this._findTerm(aliasName, attrName);
-			
 			Atom newPredForm = new Atom(newSignature, newTerms);
-			
 			this.resultPredicate = newPredForm;
 		}
 		
@@ -360,13 +351,11 @@ public class ConjunctiveQueryBodyBuilder {
 	@Override
 	public String toString() {
 		StringBuilder ans = new StringBuilder();
-		
 		ans.append("<StartQueryBuilder: ");
 		for( Atom atom : this.aliasToAtoms.values() ) {
 			ans.append(atom.toString()).append(", ");
 		}
 		ans.append(":EndQueryBuilder>");
-		
 		return ans.toString();
 	}
 

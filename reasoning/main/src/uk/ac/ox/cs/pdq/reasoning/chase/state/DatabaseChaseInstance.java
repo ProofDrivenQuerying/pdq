@@ -128,7 +128,6 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 			Multimap<Constant,Atom> constants,
 			DatabaseConnection connection 
 			) throws SQLException {
-
 		super(connection);
 		Preconditions.checkNotNull(facts);
 		Preconditions.checkNotNull(classes);
@@ -464,7 +463,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 			properties[0] = HomomorphismProperty.createMapProperty(query.getSubstitutionOfFreeVariablesToCanonicalConstants());
 		}
 
-		Queue<Triple<Formula, String, LinkedHashMap<String, Variable>>> queries = new ConcurrentLinkedQueue<>();;
+		Queue<Triple<Formula, String, LinkedHashMap<String, Variable>>> queries = new ConcurrentLinkedQueue<>();
 		//Create a new query out of each input query that references only the cleaned predicates
 		ConjunctiveQuery converted = this.convert(query);
 		HomomorphismProperty[] c = null;
