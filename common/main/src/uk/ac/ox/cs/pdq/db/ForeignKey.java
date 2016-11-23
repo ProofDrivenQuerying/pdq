@@ -31,7 +31,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.LinearGuarded;
 import uk.ac.ox.cs.pdq.fol.Variable;
-import uk.ac.ox.cs.pdq.util.Utility;
 
 /**
  * Represents a database foreign key.

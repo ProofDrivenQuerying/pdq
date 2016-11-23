@@ -77,12 +77,6 @@ public class DerbyStatementBuilder extends SQLStatementBuilder {
 	public String createBulkInsertStatement(Predicate predicate, Collection<Atom> facts, Map<String, DatabaseRelation> toDatabaseTables) {
 		throw new java.lang.UnsupportedOperationException("No bulk inserts are allowed in Derby");
 	}
-	//
-	//	@Override
-	//	public void close(List<Connection> synchronousConnections) throws SQLException {
-	//		for(Connection con:synchronousConnections)
-	//			CleanDerbyDatabaseUtil.cleanDatabase(con);
-	//	}
 
 	@Override
 	public String createBulkDeleteStatement(Predicate predicate, Collection<Atom> facts, Map<String, DatabaseRelation> toDatabaseTables) {

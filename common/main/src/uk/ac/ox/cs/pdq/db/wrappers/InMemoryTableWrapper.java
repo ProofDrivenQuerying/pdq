@@ -7,7 +7,6 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Properties;
 import java.util.Set;
 
 import uk.ac.ox.cs.pdq.db.AccessMethod;

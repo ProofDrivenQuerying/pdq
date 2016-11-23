@@ -2,8 +2,6 @@ package uk.ac.ox.cs.pdq.algebra.predicates;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Collection;
-import java.util.LinkedList;
 
 import org.apache.log4j.Logger;
 
