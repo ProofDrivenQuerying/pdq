@@ -3,6 +3,7 @@ package uk.ac.ox.cs.pdq.db;
 import java.util.List;
 import java.util.Objects;
 
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.LinearGuarded;
 import uk.ac.ox.cs.pdq.fol.QuantifiedFormula;
 import uk.ac.ox.cs.pdq.fol.TGD;
@@ -76,18 +77,16 @@ public class View extends Relation {
 	public View(LinearGuarded dependency, List<AccessMethod> accessMethods) {
 		super(dependency.getBody().getAtoms().get(0).getPredicate().getName(), Utility.makeAttributes(dependency.getGuard()));
 		this.dependency = new LinearGuarded(
-				dependency.getBody() instanceof QuantifiedFormula ? 
-						dependency.getBody().getChildren().get(0) :
-				dependency.getBody(), 
+				new Atom(this, dependency.getBody().getAtoms().get(0).getTerms()),
 				dependency.getHead() instanceof QuantifiedFormula ? 
 						dependency.getHead().getChildren().get(0) :
 				dependency.getHead());
 		
 		this.definition = new TGD(
-				dependency.getHead() instanceof QuantifiedFormula ? 
-						dependency.getHead().getChildren().get(0) :
-				dependency.getHead(), 
-				dependency.getBody());
+				this.dependency.getHead() instanceof QuantifiedFormula ? 
+						this.dependency.getHead().getChildren().get(0) :
+							this.dependency.getHead(), 
+							this.dependency.getBody());
 		this.setAccessMethods(accessMethods);
 	}
 
@@ -116,12 +115,17 @@ public class View extends Relation {
 	 * @param d LinearGuarded
 	 */
 	public void setDependency(LinearGuarded d) {
-		this.dependency = d;
-		this.definition = new TGD(
+		this.dependency = new LinearGuarded(
+				new Atom(this, d.getBody().getAtoms().get(0).getTerms()),
 				d.getHead() instanceof QuantifiedFormula ? 
 						d.getHead().getChildren().get(0) :
-				d.getHead(), 
-				d.getBody());
+				d.getHead());
+		
+		this.definition = new TGD(
+				this.dependency.getHead() instanceof QuantifiedFormula ? 
+						this.dependency.getHead().getChildren().get(0) :
+							this.dependency.getHead(), 
+							this.dependency.getBody());
 	}
 	
 	/*
