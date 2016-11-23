@@ -75,7 +75,14 @@ public class View extends Relation {
 	 */
 	public View(LinearGuarded dependency, List<AccessMethod> accessMethods) {
 		super(dependency.getBody().getAtoms().get(0).getPredicate().getName(), Utility.makeAttributes(dependency.getGuard()));
-		this.dependency = dependency;
+		this.dependency = new LinearGuarded(
+				dependency.getBody() instanceof QuantifiedFormula ? 
+						dependency.getBody().getChildren().get(0) :
+				dependency.getBody(), 
+				dependency.getHead() instanceof QuantifiedFormula ? 
+						dependency.getHead().getChildren().get(0) :
+				dependency.getHead());
+		
 		this.definition = new TGD(
 				dependency.getHead() instanceof QuantifiedFormula ? 
 						dependency.getHead().getChildren().get(0) :
@@ -110,7 +117,11 @@ public class View extends Relation {
 	 */
 	public void setDependency(LinearGuarded d) {
 		this.dependency = d;
-		this.definition = new TGD(dependency.getHead(), dependency.getBody());
+		this.definition = new TGD(
+				d.getHead() instanceof QuantifiedFormula ? 
+						d.getHead().getChildren().get(0) :
+				d.getHead(), 
+				d.getBody());
 	}
 	
 	/*
