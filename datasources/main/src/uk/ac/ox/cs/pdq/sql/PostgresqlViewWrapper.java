@@ -43,15 +43,15 @@ public final class PostgresqlViewWrapper extends SQLViewWrapper {
 	 */
 	private static final String COST_REGEXP_PATTERN = "\\(cost=\\d+\\.\\d+\\.\\.(?<cost>\\d+\\.\\d+)\\s.*\\)";
 
-//	/**
-//	 * Instantiates a new postgresql view wrapper.
-//	 *
-//	 * @param properties the properties
-//	 * @param view View
-//	 */
-//	public PostgresqlViewWrapper(Properties properties, View view) {
-//		super(properties, view);
-//	}
+	/**
+	 * Instantiates a new postgresql view wrapper.
+	 *
+	 * @param properties the properties
+	 * @param view View
+	 */
+	public PostgresqlViewWrapper(Properties properties, View view) {
+		super(properties, view);
+	}
 
 	/**
 	 * Instantiates a new postgresql view wrapper.

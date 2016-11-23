@@ -488,14 +488,14 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 		/** The Constant serialVersionUID. */
 		private static final long serialVersionUID = 7049363904713889121L;
 
-		//		/**
-		//		 * Constructor for TemporaryRelation.
-		//		 * @param name String
-		//		 * @param attributes List<Attribute>
-		//		 */
-		//		public TemporaryRelation(String name, List<Attribute> attributes) {
-		//			this(name, attributes, false);
-		//		}
+		/**
+		 * Constructor for TemporaryRelation.
+		 * @param name String
+		 * @param attributes List<Attribute>
+		 */
+		public TemporaryRelation(String name, List<Attribute> attributes) {
+			this(name, attributes, false);
+		}
 		/**
 		 * Constructor for TemporaryRelation.
 		 * @param name String

@@ -7,6 +7,7 @@ import uk.ac.ox.cs.pdq.builder.Builder;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.Formula;
+import uk.ac.ox.cs.pdq.fol.LinearGuarded;
 import uk.ac.ox.cs.pdq.fol.TGD;
 
 /**
@@ -103,7 +104,7 @@ public class DependencyBuilder implements Builder<TGD> {
 		if (!this.right.isEmpty()) {
 			if (!this.left.isEmpty()) {
 				if (this.left.size() == 1) {
-					return new TGD(
+					return new LinearGuarded(
 							this.left.get(0),
 							Conjunction.of(this.right));
 				}
