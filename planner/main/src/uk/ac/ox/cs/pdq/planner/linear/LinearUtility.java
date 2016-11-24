@@ -49,7 +49,7 @@ public class LinearUtility {
 		for(Candidate candidate:candidates) {
 			facts.add(candidate.getFact());
 		}
-		return Utility.getTypedConstants(facts);
+		return Utility.getUntypedConstants(facts);
 	}
 	
 	/**
