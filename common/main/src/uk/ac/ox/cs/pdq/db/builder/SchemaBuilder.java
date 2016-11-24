@@ -132,6 +132,7 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 		return result;
 	}
 
+	//TODO move this piece of code to logicblox package
 	/**
 	 * Adds the entity relation.
 	 *

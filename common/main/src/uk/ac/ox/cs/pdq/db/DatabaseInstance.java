@@ -88,7 +88,7 @@ public class DatabaseInstance implements Instance {
 
 	protected SQLStatementBuilder builder;
 
-	protected Map<String, DatabaseRelation> relationNamesToRelationObjects;
+	protected Map<String, Relation> relationNamesToRelationObjects;
 
 	protected DatabaseConnection databaseConnection;
 

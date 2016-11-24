@@ -95,6 +95,7 @@ public class EntityRelation extends Relation implements DataType {
 		return TupleType.DefaultFactory.create(this);
 	}
 
+	//TODO move this piece of code to logicblox package
 	/* (non-Javadoc)
 	 * @see uk.ac.ox.cs.pdq.db.DataType#isAssignableFrom(java.lang.Object)
 	 */
@@ -103,9 +104,10 @@ public class EntityRelation extends Relation implements DataType {
 		if (o == null) {
 			return false;
 		}
-		if (!(o instanceof DatabasePredicate)) {
-			return false;
-		}
-		return this.equals(((DatabasePredicate) o).getPredicate());
+		return true;
+//		if (!(o instanceof DatabasePredicate)) {
+//			return false;
+//		}
+//		return this.equals(((DatabasePredicate) o).getPredicate());
 	}
 }

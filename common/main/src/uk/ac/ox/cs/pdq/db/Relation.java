@@ -336,17 +336,17 @@ public abstract class Relation extends Predicate implements Serializable {
 	/**
 	 * Adds an access method to this relation.
 	 *
-	 * @param bm AccessMethod
+	 * @param accessMethod AccessMethod
 	 */
-	public void addAccessMethod(AccessMethod bm) {
-		for (int b : bm.getInputs()) {
+	public void addAccessMethod(AccessMethod accessMethod) {
+		for (int b : accessMethod.getInputs()) {
 			if (!(1 <= b && b <= this.attributes.size())) {
 				throw new IllegalArgumentException(
 						"Attempting to instantiation a relation with inconsistent binding method.");
 			}
 		}
-		if (this.accessMethods.put(bm.getName(), bm) == null) {
-			this.accessMethodsList.add(bm);
+		if (this.accessMethods.put(accessMethod.getName(), accessMethod) == null) {
+			this.accessMethodsList.add(accessMethod);
 		}
 		this.rep = null;
 	}
@@ -355,17 +355,17 @@ public abstract class Relation extends Predicate implements Serializable {
 	 * Sets all access methods of this relation, eliminating all prexisting ones if clearFirst is true. 
 	 * If the flag clearFirst is false it just adds the input access methods to the list of access methods.
 	 *
-	 * @param bindingMethods List<AccessMethod>
+	 * @param accessMethods List<AccessMethod>
 	 * @param clearFirst boolean
 	 */
-	public void setAccessMethods(List<AccessMethod> bindingMethods, boolean clearFirst) {
+	public void setAccessMethods(List<AccessMethod> accessMethods, boolean clearFirst) {
 		if (clearFirst) {
 			this.accessMethods.clear();
 			this.accessMethodsList.clear();
 			this.rep = null;
 		}
-		if (bindingMethods != null) {
-			for (AccessMethod bm : bindingMethods) {
+		if (accessMethods != null) {
+			for (AccessMethod bm : accessMethods) {
 				this.addAccessMethod(bm);
 			}
 		}
@@ -375,10 +375,10 @@ public abstract class Relation extends Predicate implements Serializable {
 	 * TOCOMMMENT this uses a wrong naming convention. Since clearFirst is false, this method *adds* to the list of existing access methods, it does not *set*
 	 * Sets the access methods.
 	 *
-	 * @param bindingMethods List<AccessMethod>
+	 * @param accessMethods List<AccessMethod>
 	 */
-	public void setAccessMethods(List<AccessMethod> bindingMethods) {
-		this.setAccessMethods(bindingMethods, false);
+	public void setAccessMethods(List<AccessMethod> accessMethods) {
+		this.setAccessMethods(accessMethods, false);
 	}
 
 	/**

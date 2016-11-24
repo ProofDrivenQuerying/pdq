@@ -20,9 +20,7 @@ import org.apache.commons.lang3.tuple.Triple;
 
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
-import uk.ac.ox.cs.pdq.db.DatabaseEqualityRelation;
 import uk.ac.ox.cs.pdq.db.DatabaseInstance;
-import uk.ac.ox.cs.pdq.db.DatabaseRelation;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismProperty;
@@ -158,12 +156,12 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		return constantsToAtoms;
 	}
 
-
 	public void indexConstraints() throws SQLException {
 		Statement sqlStatement = this.getDatabaseConnection().getSynchronousConnections().get(0).createStatement();
-		this.relationNamesToRelationObjects.put(QNames.EQUALITY.toString(), DatabaseEqualityRelation.relation);
-		sqlStatement.addBatch(this.getDatabaseConnection().getBuilder().createTableStatement(DatabaseEqualityRelation.relation));
-		sqlStatement.addBatch(this.getDatabaseConnection().getBuilder().createColumnIndexStatement(DatabaseEqualityRelation.relation, DatabaseRelation.Fact));
+		Relation equalityRelation = this.createDatabaseEqualityRelation();
+		this.relationNamesToRelationObjects.put(QNames.EQUALITY.toString(), equalityRelation);
+		sqlStatement.addBatch(this.getDatabaseConnection().getBuilder().createTableStatement(equalityRelation));
+		sqlStatement.addBatch(this.getDatabaseConnection().getBuilder().createColumnIndexStatement(equalityRelation, equalityRelation.getAttribute(equalityRelation.getArity()-1)));
 		//Create indices for the joins in the body of the dependencies
 		Set<String> joinIndexes = Sets.newLinkedHashSet();
 		for (Dependency constraint:schema.getDependencies()) {
@@ -174,6 +172,19 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		}
 		sqlStatement.executeBatch();
 	}
+	
+	private Relation createDatabaseEqualityRelation() {	
+		/** The attr prefix. THIS SHOULD DISAPPEAR */
+		String attrPrefix = "x";
+		/** A FactID attribute. THIS SHOULD DISAPPEAR */
+		Attribute Fact = new Attribute(Integer.class, "Fact");
+		List<Attribute> attributes = new ArrayList<>();
+		attributes.add(new Attribute(String.class, attrPrefix + 0));
+		attributes.add(new Attribute(String.class, attrPrefix + 1));
+		attributes.add(Fact);
+		return new Relation(QNames.EQUALITY.toString(), attributes, true){};
+	}	
+	
 	/**
 	 * Updates that state given the input match. 
 	 *
@@ -526,14 +537,14 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		for(Atom atom:((Dependency) source).getBody().getAtoms()) {
 			Relation relation = this.relationNamesToRelationObjects.get(atom.getPredicate().getName());
 			List<Term> terms = Lists.newArrayList(atom.getTerms());
-			terms.add(new Variable(DatabaseRelation.Fact.getName() + f++));
+			terms.add(new Variable(relation.getAttribute(relation.getArity()-1).getName() + f++));
 			left.add(new Atom(relation, terms));
 		}
 		List<Formula> right = Lists.newArrayList();
 		for(Atom atom:((Dependency) source).getHead().getAtoms()) {
 			Relation relation = this.relationNamesToRelationObjects.get(atom.getPredicate().getName());
 			List<Term> terms = Lists.newArrayList(atom.getTerms());
-			terms.add(new Variable(DatabaseRelation.Fact.getName() + f++));
+			terms.add(new Variable(relation.getAttribute(relation.getArity()-1).getName() + f++));
 			right.add(new Atom(relation, terms));
 		}
 		if(source instanceof TGD || source instanceof EGD) {
@@ -549,7 +560,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		for(Atom atom:((ConjunctiveQuery) source).getAtoms()) {
 			Relation relation = this.relationNamesToRelationObjects.get(atom.getPredicate().getName());
 			List<Term> terms = Lists.newArrayList(atom.getTerms());
-			terms.add(new Variable(DatabaseRelation.Fact.getName() + f++));
+			terms.add(new Variable(relation.getAttribute(relation.getArity()-1).getName() + f++));
 			body.add(new Atom(relation, terms));
 		}
 		if(body.size() == 1) {

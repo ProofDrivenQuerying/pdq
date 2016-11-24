@@ -8,8 +8,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.algebra.predicates.AttributeEqualityPredicate;
-import uk.ac.ox.cs.pdq.db.DatabasePredicate;
 import uk.ac.ox.cs.pdq.db.EntityRelation;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.util.Tuple;
 import uk.ac.ox.cs.pdq.util.TupleType;
 import uk.ac.ox.cs.pdq.util.Utility;
@@ -32,7 +32,7 @@ public class AttributeEqualityPredicateTest {
 	EntityRelation R = new EntityRelation("R"), S = new EntityRelation("S");
 	
 	/** The s. */
-	DatabasePredicate r = Utility.createAtoms(R), s = Utility.createAtoms(S);
+	Atom r = Utility.createAtoms(R), s = Utility.createAtoms(S);
 	
 	/**
 	 * Setup.

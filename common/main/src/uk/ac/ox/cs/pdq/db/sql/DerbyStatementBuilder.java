@@ -6,7 +6,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import uk.ac.ox.cs.pdq.db.DatabaseRelation;
+import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismProperty;
 import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismProperty.TopKProperty;
 import uk.ac.ox.cs.pdq.fol.Atom;
@@ -69,17 +69,17 @@ public class DerbyStatementBuilder extends SQLStatementBuilder {
 	 * @see uk.ac.ox.cs.pdq.reasoning.homomorphism.SQLStatementBuilder#indexDropStatement(uk.ac.ox.cs.pdq.reasoning.homomorphism.DBHomomorphismManager.DBRelation, java.lang.StringBuilder, java.lang.StringBuilder)
 	 */
 	@Override
-	protected String createDropIndexStatement(DatabaseRelation relation, StringBuilder indexName, StringBuilder indexColumns) {
+	protected String createDropIndexStatement(Relation relation, StringBuilder indexName, StringBuilder indexColumns) {
 		return "DROP INDEX idx_" + relation.getName() + "_" + indexName ;
 	}
 
 	@Override
-	public String createBulkInsertStatement(Predicate predicate, Collection<Atom> facts, Map<String, DatabaseRelation> toDatabaseTables) {
+	public String createBulkInsertStatement(Predicate predicate, Collection<Atom> facts, Map<String, Relation> toDatabaseTables) {
 		throw new java.lang.UnsupportedOperationException("No bulk inserts are allowed in Derby");
 	}
 
 	@Override
-	public String createBulkDeleteStatement(Predicate predicate, Collection<Atom> facts, Map<String, DatabaseRelation> toDatabaseTables) {
+	public String createBulkDeleteStatement(Predicate predicate, Collection<Atom> facts, Map<String, Relation> toDatabaseTables) {
 		return super.createBulkDeleteStatement(predicate, facts, toDatabaseTables);
 	}
 

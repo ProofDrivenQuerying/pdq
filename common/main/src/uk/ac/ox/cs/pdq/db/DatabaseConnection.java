@@ -33,7 +33,7 @@ public class DatabaseConnection implements AutoCloseable{
 		return synchronousConnections;
 	}
 	/** Map schema relation to database tables. */
-	private Map<String, DatabaseRelation> relationNamesToRelationObjects = null;
+	private Map<String, Relation> relationNamesToRelationObjects = null;
 	
 	/**  Creates SQL statements to detect homomorphisms or add/delete facts in a database. */
 	private SQLStatementBuilder builder = null;
@@ -126,13 +126,32 @@ public class DatabaseConnection implements AutoCloseable{
 
 			//Create the database tables and create column indices
 			for (Relation relation:this.relations) {
-				DatabaseRelation dbRelation = DatabaseRelation.createDatabaseRelation(relation);
+				Relation dbRelation = this.createDatabaseRelation(relation);
 				this.relationNamesToRelationObjects.put(relation.getName(), dbRelation);
 				sqlStatement.addBatch(this.getBuilder().createTableStatement(dbRelation));
-				sqlStatement.addBatch(this.getBuilder().createColumnIndexStatement(dbRelation, DatabaseRelation.Fact));
+				sqlStatement.addBatch(this.getBuilder().createColumnIndexStatement(dbRelation, dbRelation.getAttribute(dbRelation.getArity()-1)));
 			}
-
 			sqlStatement.executeBatch();
+	}
+	
+	/**
+	 * Creates the db relation. Currently codes in the position numbers into the names, but this should change
+	 *
+	 * @param relation the relation
+	 * @return a new database relation with attributes x0,x1,...,x_{N-1}, Fact where
+	 *         x_i maps to the i-th relation's attribute
+	 */
+	private Relation createDatabaseRelation(Relation relation) {
+		/** The attr prefix. THIS SHOULD DISAPPEAR */
+		String attrPrefix = "x";
+		/** A FactID attribute. THIS SHOULD DISAPPEAR */
+		Attribute Fact = new Attribute(Integer.class, "Fact");
+		List<Attribute> attributes = new ArrayList<>();
+		for (int index = 0, l = relation.getAttributes().size(); index < l; ++index) {
+			attributes.add(new Attribute(String.class, attrPrefix + index));
+		}
+		attributes.add(Fact);
+		return new Relation(relation.getName(), attributes, relation.isEquality()){};
 	}
 
 	/**
@@ -176,7 +195,7 @@ public class DatabaseConnection implements AutoCloseable{
 	 * Map from relation names to the main memory objects existing for these names. 
 	 * TOCOMMENT: See issue 168
 	 */
-	public Map<String, DatabaseRelation> getRelationNamesToRelationObjects() {
+	public Map<String, Relation> getRelationNamesToRelationObjects() {
 		return relationNamesToRelationObjects;
 	}
 

@@ -15,7 +15,6 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.db.DatabasePredicate;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
@@ -678,12 +677,12 @@ public class Utility {
 	 *
 	 * @return an atom corresponding to this relation.
 	 */
-	public static DatabasePredicate createAtoms(Relation relation) {
+	public static Atom createAtoms(Relation relation) {
 		List<Term> variableTerms = new ArrayList<>();
 		for (Attribute attribute : relation.getAttributes()) {
 			variableTerms.add(new Variable(attribute.getName()));
 		}
-		return new DatabasePredicate(relation, variableTerms);
+		return new Atom(relation, variableTerms);
 	}
 
 }

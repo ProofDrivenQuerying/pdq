@@ -15,7 +15,6 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.db.DatabaseRelation;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismProperty;
@@ -67,10 +66,10 @@ public abstract class SQLStatementBuilder {
 	 * @param toDatabaseTables the dbrelations
 	 * @return insert statements that add the input fact to the fact database.
 	 */
-	public Collection<String> createInsertStatements(Collection<Atom> facts, Map<String, DatabaseRelation> toDatabaseTables) {
+	public Collection<String> createInsertStatements(Collection<Atom> facts, Map<String, Relation> toDatabaseTables) {
 		Collection<String> result = new LinkedList<>();
 		for (Atom fact:facts) {
-			DatabaseRelation relation = toDatabaseTables.get(fact.getPredicate().getName());
+			Relation relation = toDatabaseTables.get(fact.getPredicate().getName());
 			List<Term> terms = fact.getTerms();
 			String insertInto = "INSERT INTO " + relation.getName() + " " + "VALUES ( ";
 			for (Term term : terms) {
@@ -88,10 +87,10 @@ public abstract class SQLStatementBuilder {
 
 
 	//used for debugging purposes
-	public Collection<String> createGetAllTuplesStatement(Map<String, DatabaseRelation> toDatabaseTables) {
+	public Collection<String> createGetAllTuplesStatement(Map<String, Relation> toDatabaseTables) {
 		Collection<String> result = new LinkedList<>();
 		for (String key:toDatabaseTables.keySet()) {
-			DatabaseRelation relation = toDatabaseTables.get(key);
+			Relation relation = toDatabaseTables.get(key);
 			String selectAll = "SELECT * FROM " + relation.getName();
 			result.add(selectAll);
 		}
@@ -99,7 +98,7 @@ public abstract class SQLStatementBuilder {
 		return result;
 	}
 
-	public abstract String createBulkInsertStatement(Predicate predicate, Collection<Atom> facts, Map<String, DatabaseRelation> toDatabaseTables);
+	public abstract String createBulkInsertStatement(Predicate predicate, Collection<Atom> facts, Map<String, Relation> toDatabaseTables);
 
 	/**
 	 * Creates an SQL statement that deletes the set of input facts, by deleting tuples whose fact id attribute is the fact id of the input fact.
@@ -108,12 +107,12 @@ public abstract class SQLStatementBuilder {
 	 * @param toDatabaseTables 		Map of schema relation names to *clean* names
 	 * @return 		a set of statements that delete the input facts from the fact database.
 	 */
-	protected Collection<String> createDeleteStatements(Collection<Atom> facts, Map<String, DatabaseRelation> toDatabaseTables) {
+	protected Collection<String> createDeleteStatements(Collection<Atom> facts, Map<String, Relation> toDatabaseTables) {
 		Collection<String> result = new LinkedList<>();
 		for (Atom fact:facts) {
 			Relation relation = toDatabaseTables.get(fact.getPredicate().getName());
 			String delete = "DELETE FROM " + relation.getName() + " " + "WHERE ";
-			Attribute attribute = DatabaseRelation.Fact;
+			Attribute attribute = relation.getAttribute(relation.getArity()-1);
 			delete += attribute.getName() + "=" + fact.getId();
 			result.add(delete);
 		}
@@ -127,9 +126,10 @@ public abstract class SQLStatementBuilder {
 	 * @param toDatabaseTables 		Map of schema relation names to *clean* names
 	 * @return 		a set of statements that delete the input facts from the fact database.
 	 */
-	public String createBulkDeleteStatement(Predicate predicate, Collection<Atom> facts, Map<String, DatabaseRelation> toDatabaseTables) {
+	public String createBulkDeleteStatement(Predicate predicate, Collection<Atom> facts, Map<String, Relation> toDatabaseTables) {
 		String insertInto = "DELETE FROM " + toDatabaseTables.get(predicate.getName()).getName() + " " + "WHERE "; 
-		insertInto += DatabaseRelation.Fact.getName();
+		Relation relation = toDatabaseTables.get(predicate);
+		insertInto += relation.getAttribute(relation.getArity()-1).getName();
 		insertInto += " IN" + "\n"; 
 
 		List<String> tuples = new ArrayList<String>();
@@ -147,7 +147,7 @@ public abstract class SQLStatementBuilder {
 	 * @param relation the table to create
 	 * @return a SQL statement that creates the fact table of the given relation
 	 */
-	public String createTableStatement(DatabaseRelation relation) {
+	public String createTableStatement(Relation relation) {
 		StringBuilder result = new StringBuilder();
 		result.append("CREATE TABLE  ").append(relation.getName()).append('(');
 		for (int it = 0; it < relation.getAttributes().size(); ++it) {
@@ -162,7 +162,7 @@ public abstract class SQLStatementBuilder {
 				throw new java.lang.IllegalArgumentException();
 			}
 		}
-		result.append(" PRIMARY KEY ").append("(").append(DatabaseRelation.Fact.getName()).append(")");
+		result.append(" PRIMARY KEY ").append("(").append(relation.getAttribute(relation.getArity()-1).getName()).append(")");
 		result.append(')');
 		log.trace(relation);
 		log.trace(result);
@@ -178,7 +178,7 @@ public abstract class SQLStatementBuilder {
 	 * @param columns the columns
 	 * @return a SQL statement that creates an index for the columns of the input relation
 	 */
-	protected Pair<String,String> createTableIndices(Set<String> existingIndices, DatabaseRelation relation, Integer... columns) {
+	protected Pair<String,String> createTableIndices(Set<String> existingIndices, Relation relation, Integer... columns) {
 		StringBuilder indexName = new StringBuilder();
 		StringBuilder indexColumns = new StringBuilder();
 		String sep1 = "", sep2 = "";
@@ -209,7 +209,7 @@ public abstract class SQLStatementBuilder {
 	 * @param indexColumns the index columns
 	 * @return the string
 	 */
-	protected String createColumnIndexStatement(DatabaseRelation relation, StringBuilder indexName, StringBuilder indexColumns) {
+	protected String createColumnIndexStatement(Relation relation, StringBuilder indexName, StringBuilder indexColumns) {
 		return "CREATE INDEX idx_" + relation.getName() + "_" + indexName + 
 				" ON " + relation.getName() + "(" + indexColumns + ")";
 	}
@@ -222,7 +222,7 @@ public abstract class SQLStatementBuilder {
 	 * @param indexColumns the index columns
 	 * @return the string
 	 */
-	protected String createDropIndexStatement(DatabaseRelation relation, StringBuilder indexName, StringBuilder indexColumns) {
+	protected String createDropIndexStatement(Relation relation, StringBuilder indexName, StringBuilder indexColumns) {
 		return "DROP INDEX idx_" + relation.getName() + "_" + indexName + 
 				" ON " + relation.getName(); 
 	}
@@ -234,7 +234,7 @@ public abstract class SQLStatementBuilder {
 	 * @param toDatabaseRelation the relation map
 	 * @return the collection
 	 */
-	public Collection<String> createTruncateTableStatements(List<Atom> queryRelations, Map<String, DatabaseRelation> toDatabaseRelation) {
+	public Collection<String> createTruncateTableStatements(List<Atom> queryRelations, Map<String, Relation> toDatabaseRelation) {
 		Set<String> result = new LinkedHashSet<>();
 		for(Atom pred: queryRelations)
 			result.add("TRUNCATE TABLE  " + toDatabaseRelation.get(pred.getPredicate().getName()).getName());
@@ -248,7 +248,7 @@ public abstract class SQLStatementBuilder {
 	 * @param column the column
 	 * @return a SQL statement that creates an index for the bag and fact attributes of the database tables
 	 */
-	public String createColumnIndexStatement(DatabaseRelation relation, Attribute column) {
+	public String createColumnIndexStatement(Relation relation, Attribute column) {
 		return "CREATE INDEX idx_" + relation.getName() + "_" + 
 				column.getName() + " ON " + relation.getName() + "(" + column.getName() + ")"; 
 	}
@@ -262,7 +262,7 @@ public abstract class SQLStatementBuilder {
 	 * @param existingIndices the constraint indices
 	 * @return the pair
 	 */
-	public Pair<Collection<String>,Collection<String>> setupIndices(boolean isForQuery, Map<String, DatabaseRelation> toDatabaseRelations, Formula rule, Set<String> existingIndices) {
+	public Pair<Collection<String>,Collection<String>> setupIndices(boolean isForQuery, Map<String, Relation> toDatabaseRelations, Formula rule, Set<String> existingIndices) {
 		Formula body = null;
 		if (rule instanceof Atom) {
 			body = rule;
