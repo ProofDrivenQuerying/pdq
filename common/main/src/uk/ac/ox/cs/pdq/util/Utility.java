@@ -187,8 +187,26 @@ public class Utility {
 	public static Set<Constant> getUntypedConstants(Atom atom) {
 		Set<Constant> result = new LinkedHashSet<>();
 		for (Term term:atom.getTerms()) {
-			if (!(term instanceof TypedConstant)) {
+			if (term.isUntypedConstant()) {
 				result.add((Constant) term);
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Gets the non schema constants.
+	 *
+	 * @param atom the atom
+	 * @return the non schema constants
+	 */
+	public static Set<Constant> getUntypedConstants(Collection<Atom> atoms) {
+		Set<Constant> result = new LinkedHashSet<>();
+		for(Atom atom:atoms) {
+			for (Term term:atom.getTerms()) {
+				if (term.isUntypedConstant()) {
+					result.add((Constant) term);
+				}
 			}
 		}
 		return result;
@@ -241,7 +259,7 @@ public class Utility {
 		}
 		return result;
 	}
-	
+
 
 	/**
 	 * Generates a list of attribute whose name are the name as those of term in
@@ -259,7 +277,7 @@ public class Utility {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * Converts a list of Term to a list of Typed.
 	 *
@@ -277,7 +295,7 @@ public class Utility {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * Generates a list of terms matching the attributes of the input relation.
 	 *
@@ -322,16 +340,16 @@ public class Utility {
 	 * @return the tuple type of the input query
 	 */
 	public static TupleType getTupleType(ConjunctiveQuery q) {
-//		List<Term> headTerms = q.getHeadTerms();
+		//		List<Term> headTerms = q.getHeadTerms();
 		Type[] result = new Class<?>[q.getFreeVariables().size()];
 		boolean assigned = false;
 		for (int i = 0, l = result.length; i < l; i++) {
 			assigned = false;
-//			Term t = headTerms.get(i);
-//			if (t instanceof TypedConstant) {
-//				result[i] = ((TypedConstant<?>) t).getType();
-//				continue;
-//			}
+			//			Term t = headTerms.get(i);
+			//			if (t instanceof TypedConstant) {
+			//				result[i] = ((TypedConstant<?>) t).getType();
+			//				continue;
+			//			}
 			Variable t = q.getFreeVariables().get(i);
 			for (Atom f: q.getAtoms()) {
 				Predicate s = f.getPredicate();
@@ -465,7 +483,7 @@ public class Utility {
 			throw new RuntimeException("Assertions must be enabled in the VM");
 
 	}
-	
+
 	public static List<Variable> getVariables(Formula formula) {
 		List<Variable> variables = Lists.newArrayList();
 		if(formula instanceof Conjunction) {
@@ -652,7 +670,7 @@ public class Utility {
 		}
 		return result;
 	}
-	
+
 
 	/**
 	 * TOCOMMENT creates predicate (so the name of the method should be Atom- singular), used where??
@@ -667,5 +685,5 @@ public class Utility {
 		}
 		return new DatabasePredicate(relation, variableTerms);
 	}
-	
+
 }

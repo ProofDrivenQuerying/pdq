@@ -164,7 +164,7 @@ public final class PostPruningRemoveFollowUps extends PostPruning {
 		Preconditions.checkArgument(successNode != null);
 		Preconditions.checkArgument(successNode.getStatus() == NodeStatus.SUCCESSFUL);
 		Map<Atom, Pair<Dependency, Collection<Atom>>> factProvenance = successNode.getConfiguration().getState().getProvenance();
-		Collection<Atom> minimalFacts = this.getMinimalFactsRecursive(queryMatch, Utility.getTypedConstants(queryMatch), new LinkedHashSet<Constant>(), factProvenance);
+		Collection<Atom> minimalFacts = this.getMinimalFactsRecursive(queryMatch, Utility.getUntypedConstants(queryMatch), new LinkedHashSet<Constant>(), factProvenance);
 		return minimalFacts;
 	}
 
@@ -183,7 +183,6 @@ public final class PostPruningRemoveFollowUps extends PostPruning {
 			Collection<Constant> inputTerms,
 			Collection<Constant> outputTerms,
 			Map<Atom, Pair<Dependency, Collection<Atom>>> factProvenance) {
-
 		// The minimal set of atoms
 		Collection<Atom> parentFacts = new LinkedHashSet<>();
 		// For each input fact
