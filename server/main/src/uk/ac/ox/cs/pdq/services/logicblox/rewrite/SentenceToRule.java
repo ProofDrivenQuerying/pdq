@@ -33,7 +33,7 @@ public class SentenceToRule<T extends Formula> implements Rewriter<T, TGD>{
 	@Override
 	public TGD rewrite(T input) throws RewriterException {
 		if (input instanceof Conjunction) {
-			Conjunction<Formula> conjunction = (Conjunction) input;
+			Conjunction conjunction = (Conjunction) input;
 			Atom head = null;
 			List<Atom> body = new LinkedList<>();
 			for (Formula f: conjunction) {

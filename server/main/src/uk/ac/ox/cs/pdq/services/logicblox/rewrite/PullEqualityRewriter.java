@@ -71,7 +71,7 @@ public class PullEqualityRewriter<F extends Formula> implements Rewriter<F, F> {
 		if (f instanceof ConjunctiveQuery) {
 			QueryBuilder result = new QueryBuilder();
 			ConjunctiveQuery query = ((ConjunctiveQuery) f);
-			for (Atom p: query.getBody()) {
+			for (Atom p: query.getAtoms()) {
 				result.addBodyAtom(p);
 			}
 			for (Atom p: this.makeEqualities()) {
@@ -97,8 +97,8 @@ public class PullEqualityRewriter<F extends Formula> implements Rewriter<F, F> {
 	 * @return a conjunction of equality predicates, based on the bindings
 	 * recorded so far.
 	 */
-	private Conjunction<Atom> makeEqualities() {
-		Collection<Atom> result = new ArrayList<>();
+	private Conjunction makeEqualities() {
+		Collection<Formula> result = new ArrayList<>();
 		for (Map.Entry<Variable, TypedConstant<?>> entry: this.bindings.entrySet()) {
 			if (String.class.equals(entry.getValue().getType())) {
 				result.add(new Atom(
@@ -107,7 +107,7 @@ public class PullEqualityRewriter<F extends Formula> implements Rewriter<F, F> {
 			}
 			// TODO: manage other primitive types
 		}
-		return Conjunction.of(result);
+		return (Conjunction) Conjunction.of(result);
 	}
 	
 	/**
@@ -134,7 +134,7 @@ public class PullEqualityRewriter<F extends Formula> implements Rewriter<F, F> {
 						Conjunction.of((Atom) body));
 			}
 			return new ConjunctiveQuery(query.getHead(),
-						(Conjunction<Atom>) body);
+						(Conjunction) body);
 		}
 		throw new UnsupportedOperationException(f + " not supported in equality propagation rewriting.");
 	}
@@ -173,7 +173,7 @@ public class PullEqualityRewriter<F extends Formula> implements Rewriter<F, F> {
 	 * @param negation Negation<Formula>
 	 * @return the rewritten formula
 	 */
-	private Negation<Formula> propagate(Negation<Formula> negation) {
+	private Negation propagate(Negation negation) {
 		Collection<Formula> subFormula = negation.getChildren();
 		assert subFormula.size() == 1;
 		return Negation.of(this.findBindings(subFormula.iterator().next()));
@@ -187,7 +187,7 @@ public class PullEqualityRewriter<F extends Formula> implements Rewriter<F, F> {
 	private Atom propagate(Atom pred) {
 		List<Term> results = new ArrayList<>();
 		for (Term t: pred.getTerms()) {
-			if (!t.isVariable() && !t.isSkolem()) {
+			if (!t.isVariable() && !t.isUntypedConstant()) {
 				Variable v = Variable.getFreshVariable();
 				this.bindings.put(v, (TypedConstant) t);
 				results.add(v);

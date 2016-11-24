@@ -28,11 +28,11 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.Disjunction;
 import uk.ac.ox.cs.pdq.fol.Negation;
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.rewrite.Rewriter;
@@ -61,7 +61,7 @@ import com.logicblox.common.protocol.CommonProto.VariableDeclaration;
 /**
  * Converts queries to Logicblox-ready protocol buffer messages.
  */
-public class QueryToProtoBuffer implements Rewriter<Query<?>, Rule> {
+public class QueryToProtoBuffer implements Rewriter<ConjunctiveQuery, Rule> {
 
 	/** The types of the query variables. */
 	private final Map<Term, Object> varTypes = new LinkedHashMap<>();
@@ -85,7 +85,7 @@ public class QueryToProtoBuffer implements Rewriter<Query<?>, Rule> {
 	 * @throws RewriterException the rewriter exception
 	 */
 	@Override
-	public Rule rewrite(Query<?> input) throws RewriterException {
+	public Rule rewrite(ConjunctiveQuery input) throws RewriterException {
 		Rule.Builder builder = Rule.newBuilder();
 		builder.setBody(this.rewriteBody(input));
 		builder.setHead(this.rewriteHead(input));
@@ -101,7 +101,7 @@ public class QueryToProtoBuffer implements Rewriter<Query<?>, Rule> {
 	 * @return Collection<VariableDeclaration> base on the input query
 	 * @throws RewriterException the rewriter exception
 	 */
-	private Collection<VariableDeclaration> rewriteVariableDeclarations(Query<?> input) throws RewriterException {
+	private Collection<VariableDeclaration> rewriteVariableDeclarations(ConjunctiveQuery input) throws RewriterException {
 		Collection<VariableDeclaration> result = new LinkedList<>();
 		for (Term term: input.getTerms()) {
 			if (term instanceof Named) {
@@ -121,7 +121,7 @@ public class QueryToProtoBuffer implements Rewriter<Query<?>, Rule> {
 	 * @param input Query<?>
 	 * @return ClauseHead
 	 */
-	private ClauseHead rewriteHead(Query<?> input) {
+	private ClauseHead rewriteHead(ConjunctiveQuery input) {
 		ClauseHead.Builder builder = ClauseHead.newBuilder();
 		builder.addHeadAtom(HeadAtom.newBuilder().setAtom(
 				this.rewriteAtom(input.getHead())));
@@ -135,9 +135,9 @@ public class QueryToProtoBuffer implements Rewriter<Query<?>, Rule> {
 	 * @param input Query<?>
 	 * @return ClauseBody
 	 */
-	private ClauseBody rewriteBody(Query<?> input) {
+	private ClauseBody rewriteBody(ConjunctiveQuery input) {
 		ClauseBody.Builder builder = ClauseBody.newBuilder()
-				.setFormula(this.rewriteFormula(input.getBody()));
+				.setFormula(this.rewriteFormula(input.getChildren().get(0)));
 		return builder.build();
 	}
 
@@ -180,7 +180,7 @@ public class QueryToProtoBuffer implements Rewriter<Query<?>, Rule> {
 	 * @param formula Conjunction<?>
 	 * @return com.logicblox.common.protocol.CommonProto.Conjunction
 	 */
-	private com.logicblox.common.protocol.CommonProto.Conjunction rewriteConjunction(Conjunction<?> formula) {
+	private com.logicblox.common.protocol.CommonProto.Conjunction rewriteConjunction(Conjunction formula) {
 		com.logicblox.common.protocol.CommonProto.Conjunction.Builder builder = 
 				com.logicblox.common.protocol.CommonProto.Conjunction.newBuilder();
 		for (uk.ac.ox.cs.pdq.fol.Formula subForm: formula.getChildren()) {
@@ -196,7 +196,7 @@ public class QueryToProtoBuffer implements Rewriter<Query<?>, Rule> {
 	 * @param formula Disjunction<?>
 	 * @return com.logicblox.common.protocol.CommonProto.Disjunction
 	 */
-	private com.logicblox.common.protocol.CommonProto.Disjunction rewriteDisjunction(Disjunction<?> formula) {
+	private com.logicblox.common.protocol.CommonProto.Disjunction rewriteDisjunction(Disjunction formula) {
 		com.logicblox.common.protocol.CommonProto.Disjunction.Builder builder = 
 				com.logicblox.common.protocol.CommonProto.Disjunction.newBuilder();
 		for (uk.ac.ox.cs.pdq.fol.Formula subForm: formula.getChildren()) {
@@ -212,10 +212,10 @@ public class QueryToProtoBuffer implements Rewriter<Query<?>, Rule> {
 	 * @param formula Negation<?>
 	 * @return com.logicblox.common.protocol.CommonProto.Negation
 	 */
-	private com.logicblox.common.protocol.CommonProto.Negation rewriteNegation(Negation<?> formula) {
+	private com.logicblox.common.protocol.CommonProto.Negation rewriteNegation(Negation formula) {
 		com.logicblox.common.protocol.CommonProto.Negation.Builder builder = 
 				com.logicblox.common.protocol.CommonProto.Negation.newBuilder();
-		builder.setFormula(this.rewriteFormula(formula.getChild()));
+		builder.setFormula(this.rewriteFormula(formula.getChildren().get(0)));
 		return builder.build();
 	}
 
@@ -228,15 +228,15 @@ public class QueryToProtoBuffer implements Rewriter<Query<?>, Rule> {
 	 */
 	private com.logicblox.common.protocol.CommonProto.Atom rewriteAtom(Atom atom) {
 		com.logicblox.common.protocol.CommonProto.Atom.Builder builder = com.logicblox.common.protocol.CommonProto.Atom.newBuilder();
-		builder.setPredicateName(atom.getName());
+		builder.setPredicateName(atom.getPredicate().getName());
 		Predicate predicate = atom.getPredicate();
 		
-		for (int i = 0, l = atom.getTermsCount(); i < l; i++) {
+		for (int i = 0, l = atom.getTerms().size(); i < l; i++) {
 			Term term = atom.getTerm(i);
 			if (!this.varTypes.containsKey(term) && predicate instanceof Relation) {
 				this.varTypes.put(term, this.resolveType((Relation) predicate, i));
 			}
-			if (i == 0 || i < atom.getTermsCount() - 1) {
+			if (i == 0 || i < atom.getTerms().size() - 1) {
 				builder.addKeyArgument(this.rewriteTerm(term));
 			} else {
 				builder.addValueArgument(this.rewriteTerm(term));
@@ -260,7 +260,7 @@ public class QueryToProtoBuffer implements Rewriter<Query<?>, Rule> {
 		// Attempting to find a unary typing constraint
 		for (Dependency dep: this.schema.getDependencies()) {
 			List<Atom> body = dep.getBody().getAtoms();
-			List<Atom> head = dep.getRight().getAtoms();
+			List<Atom> head = dep.getHead().getAtoms();
 			if (body.size() == 1 && head.size() == 1) {
 				Atom b = body.get(0);
 				Atom h = head.get(0);
@@ -283,7 +283,7 @@ public class QueryToProtoBuffer implements Rewriter<Query<?>, Rule> {
 	private com.logicblox.common.protocol.CommonProto.Term rewriteTerm(Term term) {
 		com.logicblox.common.protocol.CommonProto.Term.Builder builder =
 				com.logicblox.common.protocol.CommonProto.Term.newBuilder();
-		if (term.isVariable() || term.isSkolem()) {
+		if (term.isVariable() || term.isUntypedConstant()) {
 			builder.setKind(VARIABLE);
 			return builder.setVariable(
 					com.logicblox.common.protocol.CommonProto.Variable.newBuilder()
@@ -357,7 +357,7 @@ public class QueryToProtoBuffer implements Rewriter<Query<?>, Rule> {
 		com.logicblox.common.protocol.CommonProto.Type.Builder builder =
 				com.logicblox.common.protocol.CommonProto.Type.newBuilder();
 		Object type = null;
-		if ((term.isVariable() || term.isSkolem()) && this.varTypes.containsKey(term)) {
+		if ((term.isVariable() || term.isUntypedConstant()) && this.varTypes.containsKey(term)) {
 			type = this.varTypes.get(term);
 		} else if (term instanceof Typed) {
 			type = ((Typed) term).getType();

@@ -4,7 +4,6 @@ package uk.ac.ox.cs.pdq.services.logicblox.rewrite;
 import java.util.Set;
 
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.rewrite.Rewriter;
 import uk.ac.ox.cs.pdq.rewrite.RewriterException;

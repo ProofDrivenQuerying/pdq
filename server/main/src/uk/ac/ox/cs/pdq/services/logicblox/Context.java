@@ -14,8 +14,8 @@ import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.View;
 import uk.ac.ox.cs.pdq.db.builder.SchemaBuilder;
 import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Dependency;
-import uk.ac.ox.cs.pdq.fol.Query;
 import uk.ac.ox.cs.pdq.services.logicblox.rewrite.ProtoBufferUnwrapper;
 
 import com.google.common.collect.BiMap;
@@ -136,9 +136,9 @@ public class Context {
 	 * @param query the query
 	 * @return a copy of the schema, with the newly modified access methods.
 	 */
-	public Schema setAccesses(Query<?> query) {
+	public Schema setAccesses(ConjunctiveQuery query) {
 		Set<String> queryPreds  = new LinkedHashSet<>();
-		for (Atom p: query.getBody().getAtoms()) {
+		for (Atom p: query.getAtoms()) {
 			queryPreds.add(p.getName());
 		}
 		
