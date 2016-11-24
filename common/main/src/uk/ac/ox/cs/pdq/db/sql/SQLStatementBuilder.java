@@ -361,7 +361,7 @@ public abstract class SQLStatementBuilder {
 			List<Term> terms = fact.getTerms();
 			for (int it = 0; it < terms.size(); ++it) {
 				Term term = terms.get(it);
-				if (term instanceof Variable && !attributes.contains(((Variable) term).getSymbol()) && source.getFreeVariables().contains(term)) {
+				if (term instanceof Variable && !attributes.contains(((Variable) term).getSymbol())) {
 					projected.put(createProjectionStatementForArgument(it, (Relation) fact.getPredicate(), alias), (Variable)term);
 					attributes.add(((Variable) term));
 				}
