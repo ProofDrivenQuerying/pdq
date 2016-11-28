@@ -27,7 +27,6 @@ import com.google.common.collect.Lists;
 /**
  * A database schema.
  *
- * @author George K
  * @author Efthymia Tsamoura
  * @author Julien Leblay
  */

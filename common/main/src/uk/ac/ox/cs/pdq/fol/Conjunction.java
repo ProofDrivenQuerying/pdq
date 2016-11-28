@@ -52,13 +52,6 @@ public final class Conjunction extends Formula {
 		this.children = ImmutableList.copyOf(children);
 	}
 
-	/**
-	 * Convenience constructor.
-	 *
-	 * @param <T> the generic type
-	 * @param children Collection<T>
-	 * @return Conjunction<T>
-	 */
 	public static Formula of(Formula... children) {
 		return Conjunction.of(Lists.newArrayList(children));
 	}

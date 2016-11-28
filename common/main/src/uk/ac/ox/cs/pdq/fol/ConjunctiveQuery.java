@@ -146,8 +146,6 @@ public class ConjunctiveQuery extends Formula {
 	/**
 	 * Checks if the query is boolean boolean.
 	 *
-	 * @return boolean
-	 * @see uk.ac.ox.cs.pdq.fol.Query#isBoolean()
 	 */
 	public boolean isBoolean() {
 		return this.getFreeVariables().isEmpty();
@@ -166,15 +164,6 @@ public class ConjunctiveQuery extends Formula {
 	
 	public Map<Variable, Constant> getSubstitutionToCanonicalConstants() {
 		return this.canonicalSubstitution;
-	}
-	
-	public boolean contains(Predicate s) {
-		for (Atom atom: this.getAtoms()) {
-			if (atom.getPredicate().equals(s)) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 	/**

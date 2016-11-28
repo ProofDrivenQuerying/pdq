@@ -143,12 +143,6 @@ public class Utility {
 		return Lists.newArrayList(result);
 	}
 
-	/**
-	 * Gets the constants.
-	 *
-	 * @param atoms the atoms
-	 * @return the constants of the input atoms
-	 */
 	public static Collection<Constant> getTypedConstants(Collection<Atom> atoms) {
 		Collection<Constant> result = new LinkedHashSet<>();
 		for (Atom atom:atoms) {
@@ -161,12 +155,7 @@ public class Utility {
 		return result;
 	}
 
-	/**
-	 * Gets the constants.
-	 *
-	 * @param atom the atom
-	 * @return the constants of the input atom
-	 */
+
 	public static Set<Constant> getTypedAndUntypedConstants(Atom atom) {
 		Set<Constant> result = new LinkedHashSet<>();
 		for (Term term:atom.getTerms()) {
@@ -177,12 +166,6 @@ public class Utility {
 		return result;
 	}
 
-	/**
-	 * Gets the non schema constants.
-	 *
-	 * @param atom the atom
-	 * @return the non schema constants
-	 */
 	public static Set<Constant> getUntypedConstants(Atom atom) {
 		Set<Constant> result = new LinkedHashSet<>();
 		for (Term term:atom.getTerms()) {
@@ -193,12 +176,6 @@ public class Utility {
 		return result;
 	}
 
-	/**
-	 * Gets the non schema constants.
-	 *
-	 * @param atom the atom
-	 * @return the non schema constants
-	 */
 	public static Set<Constant> getUntypedConstants(Collection<Atom> atoms) {
 		Set<Constant> result = new LinkedHashSet<>();
 		for(Atom atom:atoms) {
@@ -211,12 +188,6 @@ public class Utility {
 		return result;
 	}
 
-	/**
-	 * Gets the terms.
-	 *
-	 * @param atoms Iterable<PredicateFormula>
-	 * @return the terms of the input atom
-	 */
 	public static Collection<Term> getTerms(Iterable<Atom> atoms) {
 		Set<Term> result = new LinkedHashSet<>();
 		for (Atom atom:atoms) {
@@ -304,7 +275,6 @@ public class Utility {
 	public static List<Attribute> termsToAttributes(ConjunctiveQuery q) {
 		List<Attribute> result = new ArrayList<>();
 		for (Variable t:q.getFreeVariables()) {
-			//			if (t instanceof Variable) {
 			boolean found = false;
 			for (Atom p:q.getAtoms()) {
 				Predicate s = p.getPredicate();
@@ -324,9 +294,6 @@ public class Utility {
 					break;
 				}
 			}
-			//			} else {
-			//				result.add(new Attribute(String.class, t.toString()));
-			//			}
 		}
 		assert result.size() == q.getFreeVariables().size() : "Could not infer type of projected term in the query";
 		return result;
@@ -339,16 +306,10 @@ public class Utility {
 	 * @return the tuple type of the input query
 	 */
 	public static TupleType getTupleType(ConjunctiveQuery q) {
-		//		List<Term> headTerms = q.getHeadTerms();
 		Type[] result = new Class<?>[q.getFreeVariables().size()];
 		boolean assigned = false;
 		for (int i = 0, l = result.length; i < l; i++) {
 			assigned = false;
-			//			Term t = headTerms.get(i);
-			//			if (t instanceof TypedConstant) {
-			//				result[i] = ((TypedConstant<?>) t).getType();
-			//				continue;
-			//			}
 			Variable t = q.getFreeVariables().get(i);
 			for (Atom f: q.getAtoms()) {
 				Predicate s = f.getPredicate();

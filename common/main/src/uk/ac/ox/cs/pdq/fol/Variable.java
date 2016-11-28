@@ -6,7 +6,7 @@ import com.google.common.base.Preconditions;
 
 // TODO: Auto-generated Javadoc
 /**
- * A variable term.
+ * A variable
  *
  * @author Efthymia Tsamoura
  * @author Julien Leblay
