@@ -353,7 +353,7 @@ public class PDQController {
     	Schema schema = this.currentSchema.get().getSchema();
     	ObservableQuery query = new ObservableQuery("New Query", "",
     			new QueryBuilder().setName("Q").addBodyAtom(
-    					Utility.createAtoms(schema.getRelations().iterator().next())).build());
+    					Utility.createAtom(schema.getRelations().iterator().next())).build());
 		this.dataQueue.add(query);
     }
    

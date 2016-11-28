@@ -32,7 +32,7 @@ public class AttributeEqualityPredicateTest {
 	EntityRelation R = new EntityRelation("R"), S = new EntityRelation("S");
 	
 	/** The s. */
-	Atom r = Utility.createAtoms(R), s = Utility.createAtoms(S);
+	Atom r = Utility.createAtom(R), s = Utility.createAtom(S);
 	
 	/**
 	 * Setup.

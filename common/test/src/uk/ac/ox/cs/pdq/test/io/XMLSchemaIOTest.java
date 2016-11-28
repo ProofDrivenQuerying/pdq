@@ -101,9 +101,9 @@ public class XMLSchemaIOTest {
 	 */
 	@Test
 	public void testReadWriteSchemaWithoutViews() {
-		Atom atom1 = Utility.createAtoms(r1);
-		Atom atom2 = Utility.createAtoms(r2);
-		Atom atom3 = Utility.createAtoms(r3);
+		Atom atom1 = Utility.createAtom(r1);
+		Atom atom2 = Utility.createAtom(r2);
+		Atom atom3 = Utility.createAtom(r3);
 		c1 = new TGD(atom2, Conjunction.of(atom1));
 		c2 = new TGD(Conjunction.of(atom1, atom2), Conjunction.of(atom3));
 		c3 = new TGD(Conjunction.of(atom3), Conjunction.of(atom1, atom2));

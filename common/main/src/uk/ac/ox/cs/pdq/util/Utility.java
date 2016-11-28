@@ -613,11 +613,8 @@ public class Utility {
 
 
 	/**
-	 * TOCOMMENT how is this method relevant to a View?
-	 * Make attributes.
-	 *
 	 * @param fact An input fact
-	 * @return The list of schema attributes that correspond to this fact
+	 * @return The list of attributes coming from this fact
 	 */
 	public static List<Attribute> makeAttributes(Atom fact) {
 		Predicate s = fact.getPredicate();
@@ -633,12 +630,9 @@ public class Utility {
 
 
 	/**
-	 * TOCOMMENT creates predicate (so the name of the method should be Atom- singular), used where??
-	 * Creates the atoms.
-	 *
-	 * @return an atom corresponding to this relation.
+	 * @return an atom with predicate the input relation.
 	 */
-	public static Atom createAtoms(Relation relation) {
+	public static Atom createAtom(Relation relation) {
 		List<Term> variableTerms = new ArrayList<>();
 		for (Attribute attribute : relation.getAttributes()) {
 			variableTerms.add(new Variable(attribute.getName()));
