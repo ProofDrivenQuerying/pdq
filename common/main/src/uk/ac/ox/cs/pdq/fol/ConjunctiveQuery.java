@@ -14,6 +14,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 
+//TODO fix the comments
 /**
  * TOCOMMENT find a pretty way to write formulas in javadoc
  * A conjunctive query (CQ) is a first order formula of the form \exists x_1, \ldots, x_n \Wedge A_i,
@@ -58,15 +59,8 @@ public class ConjunctiveQuery extends Formula {
 
 	
 	/**
-	 * Builds a conjunctive query given the input head variables and body.
+	 * Builds a query given a set of free variables and its conjunction.
 	 * The query is grounded using the input mapping of variables to constants.
-	 *  
-	 * @param head
-	 * 		The query's head
-	 * @param formula
-	 * 		The query's body
-	 * @param grounding
-	 * 		Mapping of query variables to constants  
 	 */
 	public ConjunctiveQuery(List<Variable> freeVariables, Conjunction child, Map<Variable, Constant> canonicalSubstitution) {
 		//Check that the body is a conjunction of positive atoms
@@ -82,6 +76,10 @@ public class ConjunctiveQuery extends Formula {
 		}
 	}
 	
+	/**
+	 * Builds a query given a set of free variables and an atom.
+	 * The query is grounded using the input mapping of variables to constants.
+	 */
 	public ConjunctiveQuery(List<Variable> freeVariables, Atom child, Map<Variable, Constant> canonicalSubstitution) {
 		//Check that the body is a conjunction of positive atoms
 		Preconditions.checkArgument(isConjunctionOfAtoms(child));
@@ -96,10 +94,16 @@ public class ConjunctiveQuery extends Formula {
 		}
 	}
 	
+	/**
+	 * Builds a query given a set of free variables and its conjunction.
+	 */
 	public ConjunctiveQuery(List<Variable> freeVariables, Conjunction child) {
 		this(freeVariables, child, generateSubstitutionToCanonicalVariables(child));
 	}
 	
+	/**
+	 * Builds a query given a set of free variables and an atom.
+	 */
 	public ConjunctiveQuery(List<Variable> freeVariables, Atom child) {
 		this(freeVariables, child, generateSubstitutionToCanonicalVariables(child));
 	}

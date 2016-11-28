@@ -9,6 +9,11 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
+/**
+ * 
+ * @author Efthymia Tsamoura
+ *
+ */
 public final class Implication extends Formula {
 
 	protected final List<Formula> children;

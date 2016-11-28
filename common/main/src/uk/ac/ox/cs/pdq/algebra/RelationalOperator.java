@@ -157,6 +157,7 @@ public abstract class RelationalOperator implements Rewritable, Operator {
 	 *
 	 * @return a list of human readable column headers.
 	 */
+	//TODO not used delete 
 	public List<String> getColumnsDisplay() {
 		List<String> result = new ArrayList<>();
 		for (Term t: this.getColumns()) {
@@ -223,6 +224,7 @@ public abstract class RelationalOperator implements Rewritable, Operator {
 	 *
 	 * @return true if the operator is a leaf or the ancestor of a single leaf
 	 */
+	//TODO not used delete
 	public abstract boolean  isJoinFree();
 
 	/**
@@ -310,6 +312,7 @@ public abstract class RelationalOperator implements Rewritable, Operator {
 	 * @param operator the operator
 	 * @return the leave operators rooted below the input operator
 	 */
+	//TODO not used delete
 	public static List<AccessOperator> getLeaves(RelationalOperator operator) {
 		Preconditions.checkNotNull(operator);
 		if( operator instanceof NaryOperator) {

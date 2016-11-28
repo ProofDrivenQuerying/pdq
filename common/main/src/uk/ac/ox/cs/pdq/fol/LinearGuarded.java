@@ -33,10 +33,9 @@ public class LinearGuarded extends TGD {
 	}
 
 	/**
-	 * Creates the left.
 	 *
 	 * @param relation Relation
-	 * @return the left-hand side predicate of a linear guarded dependency for the given relation
+	 * @return the body formula of a linear guarded dependency for the given relation
 	 */
 	private static Formula createBody(Relation relation) {
 		List<Variable> free = new ArrayList<>();
@@ -49,11 +48,10 @@ public class LinearGuarded extends TGD {
 	}
 
 	/**
-	 * Creates the right.
 	 *
 	 * @param relation the relation
 	 * @param foreignKey the foreign key
-	 * @return the right-hand side of a linear guarded dependency for the given relation and foreign key constraint
+	 * @return the head formula of a linear guarded dependency for the given relation and foreign key constraint
 	 */
 	private static Formula createHead(Relation relation, ForeignKey foreignKey) {
 		List<Variable> free = new ArrayList<>();
@@ -79,10 +77,8 @@ public class LinearGuarded extends TGD {
 	}
 
 	/**
-	 * Gets the guard.
+	 * Gets the guard atom.
 	 *
-	 * @return PredicateFormula
-	 * @see uk.ac.ox.cs.pdq.db.GuardedDependency#getGuard()
 	 */
 	public Atom getGuard() {
 		return this.getBody().getAtoms().get(0);

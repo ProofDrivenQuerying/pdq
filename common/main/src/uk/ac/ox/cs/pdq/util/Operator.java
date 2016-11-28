@@ -17,19 +17,19 @@ public interface Operator extends Costable {
 	 * Specifies how the output of this operator is sorted.
 	 */
 	public static enum SortOrder { 
- /** The asc. */
- ASC, 
- /** The desc. */
- DESC, 
- /** The unsorted. */
- UNSORTED }
-	
+		/** The asc. */
+		ASC, 
+		/** The desc. */
+		DESC, 
+		/** The unsorted. */
+		UNSORTED }
+
 
 	/**
- * Gets the input type of the operator.
- *
- * @return TupleType
- */
+	 * Gets the input type of the operator.
+	 *
+	 * @return TupleType
+	 */
 	TupleType getInputType();
 
 	/**

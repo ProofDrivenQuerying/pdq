@@ -40,19 +40,6 @@ public final class UntypedConstantTest {
 				UntypedConstant.getFreshConstant());
 	}
 
-	/**
-	 * Test generated skolems similar after reset.
-	 */
-	@Test public void testGeneratedUntypedConstantsSimilarAfterReset() {
-		UntypedConstant.resetCounter();
-		UntypedConstant s1 = UntypedConstant.getFreshConstant();
-		UntypedConstant.resetCounter();
-		UntypedConstant s2 = UntypedConstant.getFreshConstant();
-		Assert.assertEquals(
-				"Two UntypedConstant generated right after a reset must be equal",
-				s1, s2);
-	}
-
 
 	/**
 	 * Test skolem is skolem.

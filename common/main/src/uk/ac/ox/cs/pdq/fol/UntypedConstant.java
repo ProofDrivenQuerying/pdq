@@ -4,37 +4,25 @@ import java.util.Objects;
 
 import com.google.common.base.Preconditions;
 
-
 /**
- * A Skolem constant term.
+ * 
+ * @author Efthymia Tsamoura
  *
- * @author Julien Leblay
  */
 public final class UntypedConstant implements Constant {
 
 	/**  The constant's name. */
 	private final String symbol;
 
-	/** Cached String representation of a variable. */
+	/** Cached String representation. */
 	private String rep = null;
 
-	/**
-	 * Instantiates a new skolem.
-	 *
-	 * @param name The name of the constant
-	 */
 	public UntypedConstant(String name) {
 		Preconditions.checkArgument(name != null);
 		Preconditions.checkArgument(!name.isEmpty());
 		this.symbol = name;
 	}
 
-	/**
-	 * Two skolems are equal if their names are equal.
-	 *
-	 * @param o Object
-	 * @return boolean
-	 */
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) {
@@ -62,24 +50,10 @@ public final class UntypedConstant implements Constant {
 		return this.rep;
 	}
 
-	/**
-	 * Gets the skolem's name.
-	 *
-	 * @return String
-	 * @see uk.ac.ox.cs.pdq.util.Named#getName()
-	 */
 	public String getSymbol() {
 		return this.symbol;
 	}
 
-	/**
-	 * TOCOMMENT I suggest this goes, something is a skolem if it is instance of Skolem
-	 * 
-	 * Checks if is skolem.
-	 *
-	 * @return boolean
-	 * @see uk.ac.ox.cs.pdq.fol.Term#isSkolem()
-	 */
 	@Override
 	public boolean isUntypedConstant() {
 		return true;
@@ -88,8 +62,6 @@ public final class UntypedConstant implements Constant {
 	/**
 	 * TOCOMMENT I suggest this goes, something is a variable if it is instance of Variable
 	 *
-	 * @return boolean
-	 * @see uk.ac.ox.cs.pdq.fol.Term#isVariable()
 	 */
 	@Override
 	public boolean isVariable() {
@@ -106,18 +78,10 @@ public final class UntypedConstant implements Constant {
 
 	/**   A counter used to create new constant terms. */
 	private static int freshConstantCounter = 0;
-
-	/**
-	 * Reset counter.
-	 */
-	public static void resetCounter() {
-		UntypedConstant.freshConstantCounter = 0;
-	}
-
+	
 	/**
 	 * Gets the fresh constant.
 	 *
-	 * @return Skolem
 	 */
 	public static UntypedConstant getFreshConstant() {
 		return new UntypedConstant(DEFAULT_CONSTANT_PREFIX + (freshConstantCounter++));
