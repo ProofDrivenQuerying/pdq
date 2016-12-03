@@ -139,11 +139,13 @@ public class MapFiringGraph implements FiringGraph{
 		for(Atom source:sources) {
 			this.graph.addVertex(source);
 			for(Atom target: targets) {
-				this.graph.addVertex(target);
-				try {
-					this.graph.addEdge(source, target); 
-				} catch(Exception ex) {
-					ex.printStackTrace();
+				if(!source.equals(target)) {
+					this.graph.addVertex(target);
+					try {
+						this.graph.addEdge(source, target); 
+					} catch(Exception ex) {
+						ex.printStackTrace();
+					}
 				}
 			}
 		}
