@@ -14,6 +14,7 @@ import uk.ac.ox.cs.pdq.algebra.RelationalOperator;
 import uk.ac.ox.cs.pdq.algebra.Scan;
 import uk.ac.ox.cs.pdq.algebra.Selection;
 import uk.ac.ox.cs.pdq.db.AccessMethod.Types;
+import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.plan.AccessOperator;
@@ -93,9 +94,15 @@ public class LeftDeepPlanGenerator {
 				//If this fact has been exposed by an input-free accessibility axiom (access method), then create an input-free access
 				//else create a dependent access operator
 				if (candidate.getAccessMethod().getType() == Types.FREE) {
-					access = new Scan(candidate.getRelation());
+					Relation planRelation = new Relation(candidate.getRelation().getName(), candidate.getRelation().getAttributes().subList(0, candidate.getRelation().getAttributes().size()-1)){};
+					planRelation.setMetadata(candidate.getRelation().getMetadata());
+					planRelation.setAccessMethods(candidate.getRelation().getAccessMethods());
+					access =  new Scan(planRelation);
 				} else {
-					access = new DependentAccess(candidate.getRelation(), candidate.getAccessMethod(), candidate.getFact().getTerms());
+					//planRelation is a copy of the relation without the extra attribute in the schema, needed for chasing
+					Relation planRelation = new Relation(candidate.getRelation().getName(), candidate.getRelation().getAttributes().subList(0, candidate.getRelation().getAttributes().size()-1)){};
+					planRelation.setMetadata(candidate.getRelation().getMetadata());
+					access = new DependentAccess(planRelation,candidate.getAccessMethod(), candidate.getFact().getTerms());
 				}
 			}
 			RelationalOperator op2 = (RelationalOperator) access;

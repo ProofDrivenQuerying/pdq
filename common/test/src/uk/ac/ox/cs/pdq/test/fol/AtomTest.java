@@ -95,25 +95,25 @@ public class AtomTest {
 		Assert.assertEquals("Atom must have name terms " + t, t, p.getTerms());
 	}
 
-	/**
-	 * Test predicate formula arity mistmatch1.
-	 */
-	@Test(expected=IllegalArgumentException.class)
-	public void testPredicateFormulaArityMistmatch1() {
-		new Atom(
-				new Predicate("s", 0),
-				Lists.newArrayList(new Variable("x")));
-	}
+//	/**
+//	 * Test predicate formula arity mistmatch1.
+//	 */
+//	@Test(expected=IllegalArgumentException.class)
+//	public void testPredicateFormulaArityMistmatch1() {
+//		new Atom(
+//				new Predicate("s", 0),
+//				Lists.newArrayList(new Variable("x")));
+//	}
 
-	/**
-	 * Test predicate formula arity mistmatch2.
-	 */
-	@Test(expected=IllegalArgumentException.class)
-	public void testPredicateFormulaArityMistmatch2() {
-		new Atom(
-				new Predicate("s", 1),
-				Lists.<Term>newArrayList());
-	}
+//	/**
+//	 * Test predicate formula arity mistmatch2.
+//	 */
+//	@Test(expected=IllegalArgumentException.class)
+//	public void testPredicateFormulaArityMistmatch2() {
+//		new Atom(
+//				new Predicate("s", 1),
+//				Lists.<Term>newArrayList());
+//	}
 
 	/**
 	 * Test predicate formula valid relation1.

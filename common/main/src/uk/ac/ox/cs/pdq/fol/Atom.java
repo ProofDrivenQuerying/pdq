@@ -49,9 +49,10 @@ public class Atom extends Formula {
 	public Atom(Predicate predicate, Collection<? extends Term> terms) {
 		Preconditions.checkArgument(predicate != null && terms != null,
 				"Predicate and terms list cannot be null. (predicate: " + predicate + ", terms:" + terms + ")");
-		Preconditions.checkArgument(predicate.getArity() == terms.size(),
-				"Atom predicate does not match terms lists " + predicate.getName()
-				+ "(" + predicate.getArity() + ") <> " + terms);
+//      The following precondition is not true anymore since for chasing purposes we might append an atom with extra attributes
+//		Preconditions.checkArgument(predicate.getArity() == terms.size(),
+//				"Atom predicate does not match terms lists " + predicate.getName()
+//				+ "(" + predicate.getArity() + ") <> " + terms);
 		this.predicate = predicate;
 		this.terms = ImmutableList.copyOf(terms);
 	}

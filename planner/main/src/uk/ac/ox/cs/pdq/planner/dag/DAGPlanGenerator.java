@@ -25,7 +25,7 @@ import uk.ac.ox.cs.pdq.planner.dag.BinaryConfiguration.BinaryConfigurationTypes;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 
-/** TOCOMMENT: WHAT THE F***???  WHAT NOTES??
+/** TOCOMMENT: WHAT NOTES??
 /**
  * Implement algorithms 1 and 2 from the dependent join notes.
  *
@@ -136,11 +136,17 @@ public class DAGPlanGenerator {
 		AccessMethod binding = config.getBindingPositions();
 		Collection<Atom> facts = config.getFacts();
 		if (facts.isEmpty()) {
-			return new DAGPlan(new DependentAccess(relation, binding));
+			//planRelation is a copy of the relation without the extra attribute in the schema, needed for chasing
+			Relation planRelation = new Relation(relation.getName(), relation.getAttributes().subList(0, relation.getAttributes().size()-1)){};
+			planRelation.setMetadata(relation.getMetadata());
+			return new DAGPlan(new DependentAccess(planRelation, binding));
 		}
 		RelationalOperator op = null;
 		for (Atom fact: facts) {
-			RelationalOperator access = new DependentAccess(relation, binding, fact.getTerms());
+			//planRelation is a copy of the relation without the extra attribute in the schema, needed for chasing
+			Relation planRelation = new Relation(relation.getName(), relation.getAttributes().subList(0, relation.getAttributes().size()-1)){};
+			planRelation.setMetadata(relation.getMetadata());
+			RelationalOperator access = new DependentAccess(planRelation, binding, fact.getTerms());
 			uk.ac.ox.cs.pdq.algebra.predicates.Predicate selectPredicates = PlanUtils.createSelectPredicates(fact.getTerms());
 			if (selectPredicates != null) {
 				access = new Selection(selectPredicates, access);

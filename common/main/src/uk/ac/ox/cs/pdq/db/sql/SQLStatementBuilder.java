@@ -43,6 +43,7 @@ import com.google.common.collect.Multimap;
 /**
  * Creates SQL statements to detect homomorphisms or add/delete facts in a database.
  *
+ * @author George K
  * @author Efthymia Tsamoura
  */
 public abstract class SQLStatementBuilder {
@@ -77,7 +78,7 @@ public abstract class SQLStatementBuilder {
 					insertInto += "'" + term + "'" + ",";
 				}
 			}
-			insertInto += fact.getId();
+			insertInto += "'"+fact.getId()+"'";
 			insertInto += ")";
 			result.add(insertInto);
 		}
@@ -100,24 +101,6 @@ public abstract class SQLStatementBuilder {
 
 	public abstract String createBulkInsertStatement(Predicate predicate, Collection<Atom> facts, Map<String, Relation> toDatabaseTables);
 
-	/**
-	 * Creates an SQL statement that deletes the set of input facts, by deleting tuples whose fact id attribute is the fact id of the input fact.
-	 *
-	 * @param facts 		Facts to delete from the database
-	 * @param toDatabaseTables 		Map of schema relation names to *clean* names
-	 * @return 		a set of statements that delete the input facts from the fact database.
-	 */
-	protected Collection<String> createDeleteStatements(Collection<Atom> facts, Map<String, Relation> toDatabaseTables) {
-		Collection<String> result = new LinkedList<>();
-		for (Atom fact:facts) {
-			Relation relation = toDatabaseTables.get(fact.getPredicate().getName());
-			String delete = "DELETE FROM " + relation.getName() + " " + "WHERE ";
-			Attribute attribute = relation.getAttribute(relation.getArity()-1);
-			delete += attribute.getName() + "=" + fact.getId();
-			result.add(delete);
-		}
-		return result;
-	}
 
 	/**
 	 * Make deletes.
@@ -127,18 +110,18 @@ public abstract class SQLStatementBuilder {
 	 * @return 		a set of statements that delete the input facts from the fact database.
 	 */
 	public String createBulkDeleteStatement(Predicate predicate, Collection<Atom> facts, Map<String, Relation> toDatabaseTables) {
-		String insertInto = "DELETE FROM " + toDatabaseTables.get(predicate.getName()).getName() + " " + "WHERE "; 
-		Relation relation = toDatabaseTables.get(predicate);
-		insertInto += relation.getAttribute(relation.getArity()-1).getName();
-		insertInto += " IN" + "\n"; 
+		String deleteFrom = "DELETE FROM " + toDatabaseTables.get(predicate.getName()).getName() + " " + "WHERE "; 
+		String lastAttributeName = toDatabaseTables.get(predicate.getName()).getAttribute(predicate.getArity()-1).getName();
+		deleteFrom += lastAttributeName;
+		deleteFrom += " IN" + "\n"; 
 
 		List<String> tuples = new ArrayList<String>();
 		for (Atom fact:facts) {
-			String tuple = "(" + fact.getId() + ")";
+			String tuple = "'" + fact.getId() + "'";
 			tuples.add(tuple);
 		}
-		insertInto += "(" + Joiner.on(",").join(tuples) + ")";
-		return insertInto;
+		deleteFrom += "(" + Joiner.on(",").join(tuples) + ")";
+		return deleteFrom;
 	}
 
 	/**
@@ -162,8 +145,10 @@ public abstract class SQLStatementBuilder {
 				throw new java.lang.IllegalArgumentException();
 			}
 		}
-		result.append(" PRIMARY KEY ").append("(").append(relation.getAttribute(relation.getArity()-1).getName()).append(")");
-		result.append(')');
+		//result.append(" PRIMARY KEY ").append("(").append(relation.getAttribute(relation.getArity()-1).getName()).append(")");
+		//result.append(')');
+		int lastcommaindex= result.lastIndexOf(",");
+		result.replace(lastcommaindex, lastcommaindex+1, ")");
 		log.trace(relation);
 		log.trace(result);
 		return result.toString();
@@ -289,7 +274,7 @@ public abstract class SQLStatementBuilder {
 			Collection<Atom> atoms = clusters.get(t);
 			if (atoms.size() > 1) {
 				for (Atom atom: atoms) {
-					for (int i = 0, l = atom.getPredicate().getArity(); i < l; i++) {
+					for (int i = 0, l = atom.getTerms().size(); i < l; i++) {
 						if (atom.getTerm(i).equals(t)) {
 							Pair<String,String> createAndDropIndices = this.createTableIndices(existingIndices, toDatabaseRelations.get(atom.getPredicate().getName()), i);
 							if(createAndDropIndices != null) {	
@@ -336,27 +321,10 @@ public abstract class SQLStatementBuilder {
 	 * 		If the input is an egd or tgd we project the attributes that map to universally quantified variables.
 	 * 		If the input is a query we project the attributes that map to its free variables.
 	 */
-	public LinkedHashMap<String,Variable> createProjections(Dependency source) {
+	public LinkedHashMap<String,Variable> createProjections(Collection<Atom> atoms) {
 		LinkedHashMap<String,Variable> projected = new LinkedHashMap<>();
 		List<Variable> attributes = new ArrayList<>();
-		for (Atom fact:source.getBody().getAtoms()) {
-			String alias = this.aliases.get(fact);
-			List<Term> terms = fact.getTerms();
-			for (int it = 0; it < terms.size(); ++it) {
-				Term term = terms.get(it);
-				if (term instanceof Variable && !attributes.contains(((Variable) term).getSymbol())) {
-					projected.put(createProjectionStatementForArgument(it, (Relation) fact.getPredicate(), alias), (Variable)term);
-					attributes.add(((Variable) term));
-				}
-			}
-		}
-		return projected;
-	}
-
-	public LinkedHashMap<String,Variable> createProjections(ConjunctiveQuery source) {
-		LinkedHashMap<String,Variable> projected = new LinkedHashMap<>();
-		List<Variable> attributes = new ArrayList<>();
-		for (Atom fact:source.getAtoms()) {
+		for (Atom fact:atoms) {
 			String alias = this.aliases.get(fact);
 			List<Term> terms = fact.getTerms();
 			for (int it = 0; it < terms.size(); ++it) {
@@ -429,7 +397,7 @@ public abstract class SQLStatementBuilder {
 	 * @param constraints the constraints
 	 * @return 		predicates that correspond to fact constraints
 	 */
-	public List<String> translateFactProperties(Collection<Atom> source, HomomorphismProperty... constraints) {
+	public List<String> translateFactProperties(Collection<Atom> source,  Map<String, Relation> relationNamesToRelationObjects, HomomorphismProperty... constraints) {
 		List<String> setPredicates = new ArrayList<>();
 		for(HomomorphismProperty c:constraints) {
 			if(c instanceof FactProperty) {
@@ -439,7 +407,7 @@ public abstract class SQLStatementBuilder {
 				}
 				for(Atom fact:source) {
 					String alias = this.aliases.get(fact);
-					setPredicates.add(createSQLMembershipExpression(fact.getPredicate().getArity()-1, facts, (Relation) fact.getPredicate(), alias));
+					setPredicates.add(createSQLMembershipExpression(relationNamesToRelationObjects.get(fact.getPredicate().getName()).getArity()-1, facts, (Relation) fact.getPredicate(), alias));
 				}
 			}
 		}
@@ -488,20 +456,11 @@ public abstract class SQLStatementBuilder {
 		String set = "";
 		int v = 0;
 		for(v = 0; v < values.size()-1; ++v) {
-			if(values.get(v) instanceof Number) {
-				set += values.get(v) + ",";
-			}
-			else {
-				set += "\"" + values.get(v) + "\"" + ",";
-			}
+			set += "'" + values.get(v) + "'" + ",";
 		}
 
-		if(values.get(v) instanceof Number) {
-			set += values.get(v);
-		}
-		else {
-			set += "\"" + values.get(v) + "\"";
-		}
+		set += "'" + values.get(v) + "'";
+
 		result.append(alias==null ? relation.getName():alias).append(".").append(relation.getAttribute(position).getName()).
 		append(" IN ").append("(").append(set).append(")");
 		return result.toString();

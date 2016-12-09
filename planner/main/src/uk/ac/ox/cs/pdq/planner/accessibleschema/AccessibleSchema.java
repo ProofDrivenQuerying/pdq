@@ -1,6 +1,7 @@
 package uk.ac.ox.cs.pdq.planner.accessibleschema;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -73,20 +74,20 @@ public class AccessibleSchema extends Schema {
 	public AccessibleSchema(List<Relation> relations, List<Dependency> dependencies, Map<String, TypedConstant<?>> constantsMap) {
 		super(relations, dependencies);
 		this.typedConstants = constantsMap;
-		ImmutableMap.Builder<String, InferredAccessibleRelation> b2 = ImmutableMap.builder();
-		ImmutableMap.Builder<Pair<? extends Relation, AccessMethod>, AccessibilityAxiom> f4 = ImmutableMap.builder();
+		ImmutableMap.Builder<String, InferredAccessibleRelation> relationNameToInfAccVersion = ImmutableMap.builder();
+		ImmutableMap.Builder<Pair<? extends Relation, AccessMethod>, AccessibilityAxiom> relAndAccMethodToAccAxiom = ImmutableMap.builder();
 		for (Relation relation:relations) {
 			InferredAccessibleRelation infAcc = new InferredAccessibleRelation(relation);
-			b2.put(relation.getName(), infAcc);
+			relationNameToInfAccVersion.put(relation.getName(), infAcc);
 			// Accessibility axioms/
 			for (AccessMethod bindingMethod:relation.getAccessMethods()) {
-				f4.put(Pair.of(relation, bindingMethod), new AccessibilityAxiom(infAcc, bindingMethod));
+				relAndAccMethodToAccAxiom.put(Pair.of(relation, bindingMethod), new AccessibilityAxiom(infAcc, bindingMethod));
 			}
 		}
 
 		ImmutableMap.Builder<Dependency, InferredAccessibleAxiom> b6 = ImmutableMap.builder();
 		this.accessibleRelations = ImmutableList.of(AccessibleRelation.getInstance());
-		this.infAccessibleRelations = b2.build();
+		this.infAccessibleRelations = relationNameToInfAccVersion.build();
 
 		// Inferred accessible axioms the schema ICs
 		for (Dependency dependency: dependencies) {
@@ -97,13 +98,10 @@ public class AccessibleSchema extends Schema {
 			if (dependency instanceof TGD) {
 				InferredAccessibleAxiom infAcc = new InferredAccessibleAxiom((TGD) dependency, predicateToInfAccessibleRelation);
 				b6.put(dependency, infAcc);
-//				if(this.views.contains(dependency)) {
-//					this.infAccessibleViews.add(infAcc);
-//				}
 			}
 		}
 		try {
-			this.accessibilityAxioms = f4.build();
+			this.accessibilityAxioms = relAndAccMethodToAccAxiom.build();
 			this.infAccessibilityAxioms = b6.build();
 		} catch (Exception e) {
 			throw e;
@@ -127,14 +125,6 @@ public class AccessibleSchema extends Schema {
 		return this.infAccessibilityAxioms.values();
 	}
 
-//	/**
-//	 * Gets the inferred accessible views.
-//	 *
-//	 * @return 		the inferred accessible views of this accessible schema
-//	 */
-//	public List<InferredAccessibleAxiom> getInferredAccessibleViews() {
-//		return this.infAccessibleViews;
-//	}
 
 	/**
 	 * Gets the accessibility axioms.
@@ -324,7 +314,7 @@ public class AccessibleSchema extends Schema {
 		 * Instantiates a new accessible relation.
 		 */
 		private AccessibleRelation() {
-			super(PREFIX, asList(new Attribute(String.class, "x0")),
+			super(PREFIX, Arrays.asList((new Attribute(String.class, "x0")),(new Attribute(Integer.class, "FactID"))),
 					Lists.newArrayList(
 							new AccessMethod(
 									AccessMethod.DEFAULT_PREFIX +

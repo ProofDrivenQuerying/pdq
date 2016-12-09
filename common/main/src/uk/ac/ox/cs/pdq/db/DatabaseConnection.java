@@ -129,7 +129,7 @@ public class DatabaseConnection implements AutoCloseable{
 				Relation dbRelation = this.createDatabaseRelation(relation);
 				this.relationNamesToRelationObjects.put(relation.getName(), dbRelation);
 				sqlStatement.addBatch(this.getBuilder().createTableStatement(dbRelation));
-				sqlStatement.addBatch(this.getBuilder().createColumnIndexStatement(dbRelation, dbRelation.getAttribute(dbRelation.getArity()-1)));
+//				sqlStatement.addBatch(this.getBuilder().createColumnIndexStatement(dbRelation, dbRelation.getAttribute(dbRelation.getArity()-1)));
 			}
 			sqlStatement.executeBatch();
 	}

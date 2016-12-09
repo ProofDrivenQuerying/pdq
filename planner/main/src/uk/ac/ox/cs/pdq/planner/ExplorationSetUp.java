@@ -10,8 +10,10 @@ import uk.ac.ox.cs.pdq.cost.CostEstimatorFactory;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.cost.CostStatKeys;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
+import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
+import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.logging.performance.ChainedStatistics;
@@ -103,10 +105,20 @@ public class ExplorationSetUp {
 		this.costParams = costParams;
 		this.reasoningParams = reasoningParams;
 		this.dbParams = dbParams;
+		final Attribute Fact = new Attribute(Integer.class, "Fact");
+		addAdditionalAttributeToSchema(schema, Fact);//new Attribute(Integer.class, "ChaseStateID"));
 		this.schema = schema;
 		this.statsLogger = statsLogger;
 		this.schema = schema;
 		this.accessibleSchema = new AccessibleSchema(schema);
+	}
+
+	private void addAdditionalAttributeToSchema(Schema schema, Attribute atribute) {
+		//final static Attribute StateIDAttribute = new Attribute(Integer.class, "ChaseStateID");
+		for(Relation r:schema.getRelations())
+		{
+			r.extendByAddingAttribute(atribute);
+		}
 	}
 
 	/**

@@ -45,7 +45,7 @@ import uk.ac.ox.cs.pdq.util.Utility;
 /**
  * 
  * A database instance is a set of facts stored in an RDBMS. 
- * This objects provides basic functionalities, for storing, indexing querying and deleting a database instance.
+ * This object provides basic functionalities, for storing, indexing querying and deleting a database instance.
  * @author George K
  *
  */
