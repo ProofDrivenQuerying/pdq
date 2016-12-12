@@ -168,7 +168,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		Relation equalityRelation = this.createDatabaseEqualityRelation();
 		this.relationNamesToRelationObjects.put(QNames.EQUALITY.toString(), equalityRelation);
 		sqlStatement.addBatch(this.getDatabaseConnection().getBuilder().createTableStatement(equalityRelation));
-		sqlStatement.addBatch(this.getDatabaseConnection().getBuilder().createColumnIndexStatement(equalityRelation, equalityRelation.getAttribute(equalityRelation.getArity()-1)));
+		//sqlStatement.addBatch(this.getDatabaseConnection().getBuilder().createColumnIndexStatement(equalityRelation, equalityRelation.getAttribute(equalityRelation.getArity()-1)));
 		//Create indices for the joins in the body of the dependencies
 		Set<String> joinIndexes = Sets.newLinkedHashSet();
 		for (Dependency constraint:schema.getDependencies()) {
