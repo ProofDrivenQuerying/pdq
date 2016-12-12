@@ -818,7 +818,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 	
 	/**
 	 * Translate egd homomorphism constraints.
-	 * TOCOMMENT: I am not sure what this is for. It returns the part of the where clause of an sql query that compares
+	 * TOCOMMENT: I am not sure what this is for. It seems to be returning the part of the where clause of an sql query that compares
 	 * two atoms in the body of an EGD and checks they have different fact.id
 	 *
 	 * @param source the source

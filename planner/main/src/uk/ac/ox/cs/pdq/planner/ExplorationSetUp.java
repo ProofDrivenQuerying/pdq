@@ -105,7 +105,7 @@ public class ExplorationSetUp {
 		this.costParams = costParams;
 		this.reasoningParams = reasoningParams;
 		this.dbParams = dbParams;
-		final Attribute Fact = new Attribute(Integer.class, "Fact");
+		final Attribute Fact = new Attribute(Integer.class, "FactID");
 		addAdditionalAttributeToSchema(schema, Fact);//new Attribute(Integer.class, "ChaseStateID"));
 		this.schema = schema;
 		this.statsLogger = statsLogger;
