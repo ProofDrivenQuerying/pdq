@@ -105,8 +105,8 @@ public class Scan extends RelationalOperator implements AccessOperator {
 	@Override
 	public String toString() {
 		StringBuilder result = new StringBuilder();
-		result.append(this.getClass().getSimpleName()).append('(');
-		result.append(this.relation.getName()).append(')');
+		result.append(this.getClass().getSimpleName()).append('{');
+		result.append(this.relation.getName()).append(this.outputTerms).append('}');
 		return result.toString();
 	}
 
