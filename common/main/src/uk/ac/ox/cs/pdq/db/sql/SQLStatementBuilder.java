@@ -78,7 +78,7 @@ public abstract class SQLStatementBuilder {
 					insertInto += "'" + term + "'" + ",";
 				}
 			}
-			insertInto += "'"+fact.getId()+"'";
+			insertInto = insertInto.substring(0,insertInto.lastIndexOf(","));
 			insertInto += ")";
 			result.add(insertInto);
 		}

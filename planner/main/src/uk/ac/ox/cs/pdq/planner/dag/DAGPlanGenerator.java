@@ -146,6 +146,7 @@ public class DAGPlanGenerator {
 			//planRelation is a copy of the relation without the extra attribute in the schema, needed for chasing
 			Relation planRelation = new Relation(relation.getName(), relation.getAttributes().subList(0, relation.getAttributes().size()-1)){};
 			planRelation.setMetadata(relation.getMetadata());
+			planRelation.setAccessMethods(relation.getAccessMethods());
 			RelationalOperator access = new DependentAccess(planRelation, binding, fact.getTerms());
 			uk.ac.ox.cs.pdq.algebra.predicates.Predicate selectPredicates = PlanUtils.createSelectPredicates(fact.getTerms());
 			if (selectPredicates != null) {
