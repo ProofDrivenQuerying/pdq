@@ -12,7 +12,6 @@ import uk.ac.ox.cs.pdq.plan.EstimateProvider;
 import uk.ac.ox.cs.pdq.rewrite.Rewritable;
 import uk.ac.ox.cs.pdq.rewrite.Rewriter;
 import uk.ac.ox.cs.pdq.rewrite.RewriterException;
-import uk.ac.ox.cs.pdq.util.Operator;
 import uk.ac.ox.cs.pdq.util.TupleType;
 
 import com.google.common.base.Preconditions;

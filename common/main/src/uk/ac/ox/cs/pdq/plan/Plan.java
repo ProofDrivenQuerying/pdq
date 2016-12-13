@@ -3,10 +3,10 @@ package uk.ac.ox.cs.pdq.plan;
 import java.util.Collection;
 import java.util.List;
 
+import uk.ac.ox.cs.pdq.algebra.Operator;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.util.Costable;
 import uk.ac.ox.cs.pdq.util.Differentiable;
-import uk.ac.ox.cs.pdq.util.Operator;
 import uk.ac.ox.cs.pdq.util.Typed;
 
 import com.google.common.collect.ImmutableList;

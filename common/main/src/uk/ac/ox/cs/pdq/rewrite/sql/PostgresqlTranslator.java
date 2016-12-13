@@ -10,9 +10,9 @@ import java.util.Set;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 
+import uk.ac.ox.cs.pdq.algebra.Operator;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.rewrite.RewriterException;
-import uk.ac.ox.cs.pdq.util.Operator;
 import uk.ac.ox.cs.pdq.util.TupleType;
 import uk.ac.ox.cs.pdq.util.Typed;
 import uk.ac.ox.cs.pdq.util.Types;

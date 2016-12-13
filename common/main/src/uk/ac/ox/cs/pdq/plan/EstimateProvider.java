@@ -1,6 +1,6 @@
 package uk.ac.ox.cs.pdq.plan;
 
-import uk.ac.ox.cs.pdq.util.Operator;
+import uk.ac.ox.cs.pdq.algebra.Operator;
 
 
 // TODO: Auto-generated Javadoc

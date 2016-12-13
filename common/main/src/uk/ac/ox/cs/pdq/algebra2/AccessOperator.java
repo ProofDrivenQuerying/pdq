@@ -1,6 +1,5 @@
-package uk.ac.ox.cs.pdq.plan;
+package uk.ac.ox.cs.pdq.algebra2;
 
-import uk.ac.ox.cs.pdq.algebra.Operator;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Relation;
 
@@ -11,7 +10,7 @@ import uk.ac.ox.cs.pdq.db.Relation;
  * @author Julien Leblay
  * @author Efthymia Tsamoura
  */
-public interface AccessOperator extends Operator {
+public interface AccessOperator {
 	
 	/**
 	 * Gets the relation.

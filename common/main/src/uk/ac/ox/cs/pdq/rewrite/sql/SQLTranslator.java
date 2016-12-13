@@ -2,9 +2,9 @@ package uk.ac.ox.cs.pdq.rewrite.sql;
 
 import org.apache.log4j.Logger;
 
+import uk.ac.ox.cs.pdq.algebra.Operator;
 import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.rewrite.RewriterException;
-import uk.ac.ox.cs.pdq.util.Operator;
 
 /**
  * Provide utility function for translating from/to SQL.

@@ -1,8 +1,10 @@
-package uk.ac.ox.cs.pdq.util;
+package uk.ac.ox.cs.pdq.algebra;
 
 import java.util.List;
 
 import uk.ac.ox.cs.pdq.fol.Term;
+import uk.ac.ox.cs.pdq.util.Costable;
+import uk.ac.ox.cs.pdq.util.TupleType;
 
 /**
  * Top-level interface for any operator supporting input and output types.
