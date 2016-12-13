@@ -61,10 +61,10 @@ public abstract class SQLStatementBuilder {
 	private int aliasCounter = 0;
 
 	/**
-	 * Make inserts.
+	 * Creates SQL insert statements, for the input facts.
 	 *
 	 * @param facts the facts
-	 * @param toDatabaseTables the dbrelations
+	 * @param toDatabaseTables map to the relation objects 
 	 * @return insert statements that add the input fact to the fact database.
 	 */
 	public Collection<String> createInsertStatements(Collection<Atom> facts, Map<String, Relation> toDatabaseTables) {
@@ -103,7 +103,7 @@ public abstract class SQLStatementBuilder {
 
 
 	/**
-	 * Make deletes.
+	 * Creates delete statements
 	 *
 	 * @param facts 		Facts to delete from the database
 	 * @param toDatabaseTables 		Map of schema relation names to *clean* names

@@ -126,7 +126,8 @@ public class MySQLStatementBuilder extends SQLStatementBuilder {
 					tuple += "'" + term + "'" + ",";
 				}
 			}
-			tuple += "'"+fact.getId()+"'";
+			tuple = tuple.substring(0,tuple.lastIndexOf(","));
+			//tuple += "'"+fact.getId()+"'";
 			tuple += ")";
 			tuples.add(tuple);
 		}

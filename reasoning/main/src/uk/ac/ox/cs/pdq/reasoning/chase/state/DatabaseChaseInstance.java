@@ -23,6 +23,7 @@ import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.DatabaseInstance;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.Relation;
+import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismProperty;
 import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismProperty.ActiveTriggerProperty;
 import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismProperty.EGDHomomorphismProperty;
@@ -438,8 +439,21 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 	 */
 	@Override
 	public void addFacts(Collection<Atom> facts) {
-		super.addFacts(facts);
+		super.addFacts(extendFactsUsingFactID(facts));
 		this.facts.addAll(facts);
+	}
+
+	private Collection<Atom> extendFactsUsingFactID(Collection<Atom> facts) {		
+		Collection<Atom> extendedFacts = new LinkedHashSet<Atom>();
+		
+		for(Atom f: facts)
+		{
+			ArrayList<Term> terms = new ArrayList<Term>(f.getTerms());
+			terms.add(new TypedConstant<Integer>(f.getId()));
+			extendedFacts.add(new Atom(f.getPredicate(), terms)); 
+		}
+		
+		return extendedFacts;
 	}
 
 	/* (non-Javadoc)
