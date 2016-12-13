@@ -53,18 +53,20 @@ public class TestDatabaseChaseInstance {
 				
 	@Before
 	public void setup() throws SQLException {
+		Attribute factId = new Attribute(Integer.class, "factID");
+		
 		Attribute at11 = new Attribute(String.class, "at11");
 		Attribute at12 = new Attribute(String.class, "at12");
 		Attribute at13 = new Attribute(String.class, "at13");
-		this.rel1 = new Relation("R1", Lists.newArrayList(at11, at12, at13)) {};
+		this.rel1 = new Relation("R1", Lists.newArrayList(at11, at12, at13,factId)) {};
 		
 		Attribute at21 = new Attribute(String.class, "at21");
 		Attribute at22 = new Attribute(String.class, "at22");
-		this.rel2 = new Relation("R2", Lists.newArrayList(at21, at22)) {};
+		this.rel2 = new Relation("R2", Lists.newArrayList(at21, at22,factId)) {};
 		
 		Attribute at31 = new Attribute(String.class, "at31");
 		Attribute at32 = new Attribute(String.class, "at32");
-		this.rel3 = new Relation("R3", Lists.newArrayList(at31, at32)) {};
+		this.rel3 = new Relation("R3", Lists.newArrayList(at31, at32,factId)) {};
 		
 		Atom R1 = new Atom(this.rel1, 
 				Lists.newArrayList(new Variable("x"),new Variable("y"),new Variable("z")));
