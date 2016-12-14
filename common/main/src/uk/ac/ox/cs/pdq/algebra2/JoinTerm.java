@@ -88,7 +88,7 @@ public class JoinTerm extends RelationalTerm {
 	public String toString() {
 		if(this.toString == null) {
 			StringBuilder result = new StringBuilder();
-			result.append("Select");
+			result.append("Join");
 			result.append('{');
 			result.append('[').append(this.predicate).append(']');
 			result.append(this.children.get(0).toString());
