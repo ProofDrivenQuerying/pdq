@@ -2,7 +2,7 @@ package uk.ac.ox.cs.pdq.algebra2;
 
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.LinkedHashSet;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
@@ -20,23 +20,8 @@ public class ConjunctivePredicate<T extends Predicate> implements Predicate, Ite
 
 	/** TOCOMMENT  The value to which the tuple must be equals at the given position. */
 	private final Collection<T> predicates;
-
-	/**
-	 * Default constructor.
-	 */
-	public ConjunctivePredicate() {
-		this.predicates = Lists.<T>newArrayList();
-	}
-
-	/**
-	 * Default constructor.
-	 *
-	 * @param predicate T
-	 */
-	public ConjunctivePredicate(T predicate) {
-		this();
-		this.addPredicate(predicate);
-	}
+	
+	private final Collection<EqualityPredicate> equalityPredicates;
 
 	/**
 	 * Default constructor.
@@ -44,11 +29,12 @@ public class ConjunctivePredicate<T extends Predicate> implements Predicate, Ite
 	 * @param predicates the predicates
 	 */
 	public ConjunctivePredicate(Collection<T> predicates) {
-		this();
 		Preconditions.checkArgument(predicates != null);
+		this.predicates = Lists.newArrayList();
 		for (T p: predicates) {
 			this.addPredicate(p);
 		}
+		this.equalityPredicates = getEqualityPredicates(this);
 	}
 
 	/**
@@ -78,34 +64,31 @@ public class ConjunctivePredicate<T extends Predicate> implements Predicate, Ite
 		Preconditions.checkArgument(p != null);
 		this.predicates.add(p);
 	}
-	
+
 	/**
-	 * Flatten.
-	 *
-	 * @return a collection of predicates, removing the nesting of conjunctions that
-	 * this object may contain.
-	 */
-	public Collection<Predicate> flatten() {
-		return this.flatten(this);
-	}
-	
-	/**
-	 * Flatten.
 	 *
 	 * @param predicate the (possibly nested) predicate to flatten, if null the empty collection is returned.
 	 * @return a collection of predicates, removing the nesting that it may contain.
 	 */
-	public Collection<Predicate> flatten(Predicate predicate) {
-		Collection<Predicate> result = new LinkedList<Predicate>();
-		if (predicate != null) {
-			if (predicate instanceof ConjunctivePredicate) {
-				ConjunctivePredicate<Predicate> conjunction = (ConjunctivePredicate) predicate;
-				for (Predicate subPred: conjunction) {
-					result.addAll(flatten(subPred));
-				}
-			} else {
-				result.add(predicate);
+	@Override
+	public Collection<EqualityPredicate> getEqualityPredicates() {
+		return this.equalityPredicates;
+	}
+	
+	
+	public Collection<EqualityPredicate> getEqualityPredicates(Predicate predicate) {
+		Preconditions.checkArgument(predicate != null);
+		Collection<EqualityPredicate> result = new LinkedHashSet<EqualityPredicate>();
+		if (predicate instanceof ConjunctivePredicate) {
+			ConjunctivePredicate<Predicate> conjunction = (ConjunctivePredicate) predicate;
+			for (Predicate subPred: conjunction) {
+				result.addAll(getEqualityPredicates(subPred));
 			}
+		} else if(predicate instanceof EqualityPredicate){
+			result.add((EqualityPredicate)predicate);
+		}
+		else {
+			throw new java.lang.RuntimeException("Unknown predicate type");
 		}
 		return result;
 	}

@@ -4,48 +4,32 @@ import java.util.List;
 import java.util.Objects;
 
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.util.TupleType;
 
 import com.google.common.base.Preconditions;
 
 /**
- * RelationalOperator defines a top-class for all logical relational operators.
+ * 
+ * @author Efthymia Tsamoura
  *
- * @author Julien Leblay
  */
 public abstract class RelationalTerm {
-	
-	/** The operator's type. */
-	protected final TupleType outputType;
+		
+	protected final List<Attribute> inputAttributes;
 	
 	protected final List<Attribute> outputAttributes;
-	
-	protected final RelationalOperator operator;
-	
-	/**
-	 * Instantiates a new operator.
-	 * @param input TupleType
-	 * @param output TupleType
-	 */
-	public RelationalTerm(RelationalOperator operator, List<Attribute> outputAttributes) {
-		Preconditions.checkArgument(operator != null);
-		Preconditions.checkArgument(outputAttributes != null && !outputAttributes.isEmpty());
-		this.operator = operator;
-		this.outputAttributes = outputAttributes;
-		this.outputType = null;
-	}
 
-	/**
-	 * Gets the output tuple type.
-	 *
-	 * @return the tuple Type of this operator
-	 */
-	public TupleType getOutputType() {
-		return this.outputType;
+	public RelationalTerm(List<Attribute> inputAttributes, List<Attribute> outputAttributes) {
+		Preconditions.checkArgument(outputAttributes != null && !outputAttributes.isEmpty());
+		this.inputAttributes = inputAttributes;
+		this.outputAttributes = outputAttributes;
 	}
 	
 	public List<Attribute> getOutputAttributes() {
 		return this.outputAttributes;
+	}
+	
+	public List<Attribute> getInputAttributes() {
+		return this.inputAttributes;
 	}
 	
 	public abstract List<RelationalTerm> getChildren();
@@ -63,7 +47,7 @@ public abstract class RelationalTerm {
 			return false;
 		}
 		return this.getClass().isInstance(o)
-				&& this.outputType == ((RelationalTerm) o).outputType
+				&& this.inputAttributes == ((RelationalTerm) o).inputAttributes
 				&& this.outputAttributes == ((RelationalTerm) o).outputAttributes;
 	}
 
@@ -73,7 +57,7 @@ public abstract class RelationalTerm {
 	 */
 	@Override
 	public int hashCode() {
-		return Objects.hash(this.outputType, this.outputAttributes);
+		return Objects.hash(this.inputAttributes, this.outputAttributes);
 	}
 	
 }

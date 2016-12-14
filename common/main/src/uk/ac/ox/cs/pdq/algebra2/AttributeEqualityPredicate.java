@@ -1,8 +1,11 @@
 package uk.ac.ox.cs.pdq.algebra2;
 
+import java.util.Collection;
+
 import org.apache.log4j.Logger;
 
 import com.google.common.base.Objects;
+import com.google.common.collect.Lists;
 
 
 /**
@@ -53,6 +56,12 @@ public class AttributeEqualityPredicate implements EqualityPredicate {
 		return this.other;
 	}
 
+	@Override
+	public Collection<EqualityPredicate> getEqualityPredicates() {
+		// TODO Auto-generated method stub
+		return Lists.<EqualityPredicate>newArrayList(this);
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)

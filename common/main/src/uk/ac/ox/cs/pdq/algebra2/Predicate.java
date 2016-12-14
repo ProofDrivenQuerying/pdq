@@ -1,5 +1,7 @@
 package uk.ac.ox.cs.pdq.algebra2;
 
+import java.util.Collection;
+
 
 /**
  * TOCOMMENT This seems to be a superclass of conjunctions of equalities; hence the isSatisifed method. 
@@ -11,4 +13,6 @@ package uk.ac.ox.cs.pdq.algebra2;
  */
 public interface Predicate {
 
+	Collection<EqualityPredicate> getEqualityPredicates();
+	
 }

@@ -1,10 +1,13 @@
 package uk.ac.ox.cs.pdq.algebra2;
 
+import java.util.Collection;
+
 import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 
 import com.google.common.base.Objects;
+import com.google.common.collect.Lists;
 
 /**
  * Compares the value at a given position in a tuple with a value given by a
@@ -59,7 +62,13 @@ public class ConstantEqualityPredicate implements EqualityPredicate {
 	public TypedConstant<?> getValue() {
 		return this.constant;
 	}
-
+	
+	@Override
+	public Collection<EqualityPredicate> getEqualityPredicates() {
+		// TODO Auto-generated method stub
+		return Lists.<EqualityPredicate>newArrayList(this);
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
