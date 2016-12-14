@@ -97,8 +97,9 @@ public class MySQLStatementBuilder extends SQLStatementBuilder {
 					insertInto += "'" + term + "'" + ",";
 				}
 			}
-			insertInto += 0 + ",";
-			insertInto += fact.getId();
+			insertInto = insertInto.substring(0,insertInto.lastIndexOf(","));
+//			insertInto += 0 + ",";
+//			insertInto += fact.getId();
 			insertInto += ")";
 			result.add(insertInto);
 		}
