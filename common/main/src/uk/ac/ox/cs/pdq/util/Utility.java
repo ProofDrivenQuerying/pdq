@@ -642,7 +642,7 @@ public class Utility {
 	
 	public static Atom createAtomsWithoutExtraAttribute(Relation relation) {
 		List<Term> variableTerms = new ArrayList<>();
-		for (Attribute attribute : relation.getAttributes()) {
+		for (Attribute attribute : relation.getAttributes().subList(0, relation.getAttributes().size()-1)) {
 			variableTerms.add(new Variable(attribute.getName()));
 		}
 		return new Atom(relation, variableTerms);

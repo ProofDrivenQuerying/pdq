@@ -102,6 +102,7 @@ public class LeftDeepPlanGenerator {
 					//planRelation is a copy of the relation without the extra attribute in the schema, needed for chasing
 					Relation planRelation = new Relation(candidate.getRelation().getName(), candidate.getRelation().getAttributes().subList(0, candidate.getRelation().getAttributes().size()-1)){};
 					planRelation.setMetadata(candidate.getRelation().getMetadata());
+					planRelation.setAccessMethods(candidate.getRelation().getAccessMethods());
 					access = new DependentAccess(planRelation,candidate.getAccessMethod(), candidate.getFact().getTerms());
 				}
 			}
