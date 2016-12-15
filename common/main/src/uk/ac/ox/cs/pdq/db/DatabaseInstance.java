@@ -45,7 +45,7 @@ import uk.ac.ox.cs.pdq.util.Utility;
 /**
  * 
  * A database instance is a set of facts stored in an RDBMS. 
- * This objects provides basic functionalities, for storing, indexing querying and deleting a database instance.
+ * This object provides basic functionalities, for storing, indexing querying and deleting a database instance.
  * @author George K
  *
  */
@@ -227,7 +227,7 @@ public class DatabaseInstance implements Instance {
 		Queue<String> queries = new ConcurrentLinkedQueue<>();
 		Map<Predicate, List<Atom>> clusters = Utility.clusterAtomsWithSamePredicateName(facts);
 
-		//Find the total number of tuples that will be inserted in the database
+		//Find the total number of tuples that will be deleted from the database
 		int totalTuples = facts.size();
 		int tuplesPerThread;
 		if(totalTuples < this.synchronousThreadsNumber) {

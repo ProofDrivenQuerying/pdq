@@ -16,7 +16,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 /**
- * TOCOMMENT find a pretty way to write formulas in javadoc
  * A formula that contains no logical connectives.
  * An atomic formula is a formula of the form P (t_1, \ldots, t_n) for P a predicate, and the t_i terms.)
  *
@@ -49,9 +48,11 @@ public class Atom extends Formula {
 	public Atom(Predicate predicate, Collection<? extends Term> terms) {
 		Preconditions.checkArgument(predicate != null && terms != null,
 				"Predicate and terms list cannot be null. (predicate: " + predicate + ", terms:" + terms + ")");
-		Preconditions.checkArgument(predicate.getArity() == terms.size(),
-				"Atom predicate does not match terms lists " + predicate.getName()
-				+ "(" + predicate.getArity() + ") <> " + terms);
+//TOCOMMENT: NOOOO!  THIS STUFF SHOULD NOT BE RELATED TO CHASING
+//      The following precondition is not true anymore since for chasing purposes we might append an atom with extra attribute
+//		Preconditions.checkArgument(predicate.getArity() == terms.size(),
+//				"Atom predicate does not match terms lists " + predicate.getName()
+//				+ "(" + predicate.getArity() + ") <> " + terms);
 		this.predicate = predicate;
 		this.terms = ImmutableList.copyOf(terms);
 	}
@@ -152,6 +153,7 @@ public class Atom extends Formula {
 
 	/**
 	 * Checks if is fact.
+	 * TOCOMMENT: I GUESS THIS SHOULD be isGround()
 	 *
 	 * @return Boolean
 	 */

@@ -15,9 +15,7 @@ import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Disjunction;
 import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Implication;
-import uk.ac.ox.cs.pdq.fol.LogicalSymbols;
 import uk.ac.ox.cs.pdq.fol.Predicate;
-import uk.ac.ox.cs.pdq.fol.QuantifiedFormula;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
@@ -50,8 +48,7 @@ public class TestUtility {
 		List<Term> g = Lists.<Term>newArrayList(
 				new TypedConstant<>("c1"), new TypedConstant<>("c2"),
 				new UntypedConstant("x3"), new TypedConstant<>("c4"),
-				new TypedConstant<>("x5"), new TypedConstant<>("x5"),
-				new TypedConstant<>("c1")
+				new TypedConstant<>("x5")
 				);
 		Map<Variable, Constant> m = new LinkedHashMap<>();
 		m.put(new Variable("x1"), new TypedConstant<>("c1"));
@@ -107,9 +104,7 @@ public class TestUtility {
 				new TypedConstant<>("c2"),
 				new UntypedConstant("x3"), 
 				new TypedConstant<>("c4"),
-				new TypedConstant<>("x5"), 
-				new TypedConstant<>("x5"),
-				new TypedConstant<>("c1")
+				new TypedConstant<>("x5")
 				);
 		Map<Variable, Constant> m = new LinkedHashMap<>();
 		m.put(new Variable("x1"), new TypedConstant<>("c1"));
@@ -143,9 +138,7 @@ public class TestUtility {
 				new TypedConstant<>("c2"),
 				new UntypedConstant("x3"), 
 				new TypedConstant<>("c4"),
-				new TypedConstant<>("x5"), 
-				new TypedConstant<>("x5"),
-				new TypedConstant<>("c1")
+				new TypedConstant<>("x5")
 				);
 		Map<Variable, Constant> m = new LinkedHashMap<>();
 		m.put(new Variable("x1"), new TypedConstant<>("c1"));
@@ -296,9 +289,7 @@ public class TestUtility {
 				new TypedConstant<>("c2"),
 				new UntypedConstant("x3"), 
 				new TypedConstant<>("c4"),
-				new TypedConstant<>("x5"), 
-				new TypedConstant<>("x5"),
-				new TypedConstant<>("c1"));
+				new TypedConstant<>("x5"));
 		Map<Variable, Constant> m = new LinkedHashMap<>();
 		m.put(new Variable("x1"), new TypedConstant<>("c1"));
 		m.put(new Variable("x2"), new TypedConstant<>("c2"));

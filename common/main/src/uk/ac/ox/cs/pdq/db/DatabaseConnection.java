@@ -129,7 +129,7 @@ public class DatabaseConnection implements AutoCloseable{
 				Relation dbRelation = this.createDatabaseRelation(relation);
 				this.relationNamesToRelationObjects.put(relation.getName(), dbRelation);
 				sqlStatement.addBatch(this.getBuilder().createTableStatement(dbRelation));
-				sqlStatement.addBatch(this.getBuilder().createColumnIndexStatement(dbRelation, dbRelation.getAttribute(dbRelation.getArity()-1)));
+//				sqlStatement.addBatch(this.getBuilder().createColumnIndexStatement(dbRelation, dbRelation.getAttribute(dbRelation.getArity()-1)));
 			}
 			sqlStatement.executeBatch();
 	}
@@ -144,14 +144,12 @@ public class DatabaseConnection implements AutoCloseable{
 	private Relation createDatabaseRelation(Relation relation) {
 		/** The attr prefix. THIS SHOULD DISAPPEAR */
 		String attrPrefix = "x";
-		/** A FactID attribute. THIS SHOULD DISAPPEAR */
-		Attribute Fact = new Attribute(Integer.class, "Fact");
+
 		List<Attribute> attributes = new ArrayList<>();
-		for (int index = 0, l = relation.getAttributes().size(); index < l; ++index) {
+		for (int index = 0; index < relation.getAttributes().size(); index++) {
 			attributes.add(new Attribute(String.class, attrPrefix + index));
 		}
-		attributes.add(Fact);
-		return new Relation(relation.getName(), attributes, relation.isEquality()){};
+		return new Relation(relation.getName(), attributes, relation.isEquality()){};	
 	}
 
 	/**

@@ -97,8 +97,9 @@ public class MySQLStatementBuilder extends SQLStatementBuilder {
 					insertInto += "'" + term + "'" + ",";
 				}
 			}
-			insertInto += 0 + ",";
-			insertInto += fact.getId();
+			insertInto = insertInto.substring(0,insertInto.lastIndexOf(","));
+//			insertInto += 0 + ",";
+//			insertInto += fact.getId();
 			insertInto += ")";
 			result.add(insertInto);
 		}
@@ -126,7 +127,8 @@ public class MySQLStatementBuilder extends SQLStatementBuilder {
 					tuple += "'" + term + "'" + ",";
 				}
 			}
-			tuple += fact.getId();
+			tuple = tuple.substring(0,tuple.lastIndexOf(","));
+			//tuple += "'"+fact.getId()+"'";
 			tuple += ")";
 			tuples.add(tuple);
 		}

@@ -263,7 +263,6 @@ public class LinearOptimized extends LinearExplorer {
 				freshNode.setMetadata(metadata);
 				this.stats.increase(DOMINANCE_PRUNING, 1);
 				log.debug(dominancePlan.toString() + " dominates " + freshNodePlan.toString() + dominancePlan.getCost().toString() + "<" + freshNodePlan.getCost().toString());
-
 			}
 		}
 

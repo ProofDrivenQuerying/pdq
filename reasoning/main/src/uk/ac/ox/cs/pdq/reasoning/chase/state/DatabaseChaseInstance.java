@@ -23,6 +23,7 @@ import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.DatabaseInstance;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.Relation;
+import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismProperty;
 import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismProperty.ActiveTriggerProperty;
 import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismProperty.EGDHomomorphismProperty;
@@ -93,6 +94,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		this.classes = new EqualConstantsClasses();
 		this.constantsToAtoms = inferConstantsMap(this.facts);
 		this.indexConstraints();
+		this.indexLastAttributeOfAllRelations();
 	}
 
 	/**
@@ -108,12 +110,13 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		this.classes = new EqualConstantsClasses();
 		this.constantsToAtoms = inferConstantsMap(this.facts);
 		this.indexConstraints();
+		this.indexLastAttributeOfAllRelations();
 	}
 
 	/**
 	 * Instantiates a new database chase instance
 	 * This protected constructor does not(!) add the facts into the rdbms. 
-	 * Using this constructor one would need to call addFacts explicilty.
+	 * Using this constructor one would need to call addFacts explicitly. It also does not perform any contraint or attribute indexing.
 	 *
 	 * @param chaseState TOCOMMENT: why doesn't state contain facts?
 	 * @param facts 
@@ -144,7 +147,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 	 * @return a map of each constant to the atom and the position inside this atom where it appears. 
 	 * An exception is thrown when there is an equality in the input
 	 */
-	//TOCOMMENT: What does this do exaclty? where is it used?
+	//TOCOMMENT: What does this do exactly? where is it used?
 	protected static Multimap<Constant,Atom> inferConstantsMap(Collection<Atom> facts) {
 		Multimap<Constant, Atom> constantsToAtoms = HashMultimap.create();
 		for(Atom fact:facts) {
@@ -156,12 +159,17 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		return constantsToAtoms;
 	}
 
+	/**
+	 * Creates indices in the RDBMS for all join positions in the dependencies' bodies
+	 * 
+	 * @throws SQLException
+	 */
 	public void indexConstraints() throws SQLException {
 		Statement sqlStatement = this.getDatabaseConnection().getSynchronousConnections().get(0).createStatement();
 		Relation equalityRelation = this.createDatabaseEqualityRelation();
 		this.relationNamesToRelationObjects.put(QNames.EQUALITY.toString(), equalityRelation);
 		sqlStatement.addBatch(this.getDatabaseConnection().getBuilder().createTableStatement(equalityRelation));
-		sqlStatement.addBatch(this.getDatabaseConnection().getBuilder().createColumnIndexStatement(equalityRelation, equalityRelation.getAttribute(equalityRelation.getArity()-1)));
+		//sqlStatement.addBatch(this.getDatabaseConnection().getBuilder().createColumnIndexStatement(equalityRelation, equalityRelation.getAttribute(equalityRelation.getArity()-1)));
 		//Create indices for the joins in the body of the dependencies
 		Set<String> joinIndexes = Sets.newLinkedHashSet();
 		for (Dependency constraint:schema.getDependencies()) {
@@ -173,11 +181,30 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		sqlStatement.executeBatch();
 	}
 	
+	/**
+	 * Creates indices in the RDBMS for the last position of every relation schema
+	 * 
+	 * @throws SQLException
+	 */
+	private void indexLastAttributeOfAllRelations() throws SQLException {
+		Statement sqlStatement = this.getDatabaseConnection().getSynchronousConnections().get(0).createStatement();
+
+		for(Relation relation:this.relationNamesToRelationObjects.values())
+			sqlStatement.addBatch(this.getDatabaseConnection().getBuilder().createColumnIndexStatement(relation, relation.getAttribute(relation.getArity()-1)));
+		
+		sqlStatement.executeBatch();
+	}
+	
+	/**
+	 * Creates an "equality" relation for storing terms in the chase that are equated by EGDs
+	 * 
+	 * @return
+	 */
 	private Relation createDatabaseEqualityRelation() {	
-		/** The attr prefix. THIS SHOULD DISAPPEAR */
+		
 		String attrPrefix = "x";
-		/** A FactID attribute. THIS SHOULD DISAPPEAR */
-		Attribute Fact = new Attribute(Integer.class, "Fact");
+		
+		Attribute Fact = new Attribute(Integer.class, "FactID");
 		List<Attribute> attributes = new ArrayList<>();
 		attributes.add(new Attribute(String.class, attrPrefix + 0));
 		attributes.add(new Attribute(String.class, attrPrefix + 1));
@@ -412,8 +439,21 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 	 */
 	@Override
 	public void addFacts(Collection<Atom> facts) {
-		super.addFacts(facts);
+		super.addFacts(extendFactsUsingFactID(facts));
 		this.facts.addAll(facts);
+	}
+
+	private Collection<Atom> extendFactsUsingFactID(Collection<Atom> facts) {		
+		Collection<Atom> extendedFacts = new LinkedHashSet<Atom>();
+		
+		for(Atom f: facts)
+		{
+			ArrayList<Term> terms = new ArrayList<Term>(f.getTerms());
+			terms.add(new TypedConstant<Integer>(f.getId()));
+			extendedFacts.add(new Atom(f.getPredicate(), terms)); 
+		}
+		
+		return extendedFacts;
 	}
 
 	/* (non-Javadoc)
@@ -500,7 +540,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 			properties[1] = HomomorphismProperty.createFactProperty(this.facts);
 		}
 		Preconditions.checkNotNull(dependencies);
-		Queue<Triple<Formula, String, LinkedHashMap<String, Variable>>> queries = new ConcurrentLinkedQueue<>();;
+		Queue<Triple<Formula, String, LinkedHashMap<String, Variable>>> queries = new ConcurrentLinkedQueue<>();
 		//Create a new query out of each input query that references only the cleaned predicates
 		for(Dependency source:dependencies) {
 			Dependency s = this.convert(source);
@@ -514,7 +554,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 				c = properties;
 			}
 			//Create an SQL statement for the cleaned query
-			Pair<String, LinkedHashMap<String, Variable>> pair = createQuery(s, source instanceof EGD, c);
+			Pair<String, LinkedHashMap<String, Variable>> pair = createQuery(s, c);
 			queries.add(Triple.of((Formula)source, pair.getLeft(), pair.getRight()));
 		}
 		return this.answerQueries(queries);
@@ -537,14 +577,14 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		for(Atom atom:((Dependency) source).getBody().getAtoms()) {
 			Relation relation = this.relationNamesToRelationObjects.get(atom.getPredicate().getName());
 			List<Term> terms = Lists.newArrayList(atom.getTerms());
-			terms.add(new Variable(relation.getAttribute(relation.getArity()-1).getName() + f++));
+			terms.add(new Variable("fact" + f++));
 			left.add(new Atom(relation, terms));
 		}
 		List<Formula> right = Lists.newArrayList();
 		for(Atom atom:((Dependency) source).getHead().getAtoms()) {
 			Relation relation = this.relationNamesToRelationObjects.get(atom.getPredicate().getName());
 			List<Term> terms = Lists.newArrayList(atom.getTerms());
-			terms.add(new Variable(relation.getAttribute(relation.getArity()-1).getName() + f++));
+			terms.add(new Variable("fact" + f++));
 			right.add(new Atom(relation, terms));
 		}
 		if(source instanceof TGD || source instanceof EGD) {
@@ -560,7 +600,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		for(Atom atom:((ConjunctiveQuery) source).getAtoms()) {
 			Relation relation = this.relationNamesToRelationObjects.get(atom.getPredicate().getName());
 			List<Term> terms = Lists.newArrayList(atom.getTerms());
-			terms.add(new Variable(relation.getAttribute(relation.getArity()-1).getName() + f++));
+			terms.add(new Variable("fact" + f++));
 			body.add(new Atom(relation, terms));
 		}
 		if(body.size() == 1) {
@@ -593,10 +633,10 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 	 * @param connection the connection
 	 * @return homomorphisms of the input query to facts kept in a database.
 	 */
-	public Pair<String,LinkedHashMap<String,Variable>> createQuery(Dependency source, boolean isEquality, HomomorphismProperty[] constraints) {
+	public Pair<String,LinkedHashMap<String,Variable>> createQuery(Dependency source, HomomorphismProperty[] constraints) {
 		String query = "";
 		List<String> from = this.builder.createFromStatement(source.getBody().getAtoms());
-		LinkedHashMap<String,Variable> projections = this.builder.createProjections(source);
+		LinkedHashMap<String,Variable> projections = this.builder.createProjections(source.getBody().getAtoms());
 		List<String> predicates = new ArrayList<String>();
 		List<String> equalities = this.builder.createAttributeEqualities(source.getBody().getAtoms());
 		List<String> constantEqualities = this.builder.createEqualitiesWithConstants(source.getBody().getAtoms());
@@ -607,9 +647,9 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		 * add in the WHERE statement a predicate which limits the identifiers
 		 * of the facts that satisfy any homomorphism to the identifiers of these facts
 		 */
-		List<String> factproperties = this.builder.translateFactProperties(source.getBody().getAtoms(), constraints);
+		List<String> factproperties = this.builder.translateFactProperties(source.getBody().getAtoms(),relationNamesToRelationObjects, constraints);
 
-		String egdProperties = this.translateEGDHomomorphicProperties(source, constraints);
+		String egdProperties = this.translateEGDHomomorphicProperties(source, relationNamesToRelationObjects, constraints);
 		if(egdProperties!=null) {
 			predicates.add(egdProperties);
 		}
@@ -637,9 +677,9 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 
 		if(activeTrigger) {
 			List<String> from2 = this.builder.createFromStatement(source.getHead().getAtoms());
-			LinkedHashMap<String,Variable> nestedProjections = this.builder.createProjections(source);
+			LinkedHashMap<String,Variable> nestedProjections = this.builder.createProjections(source.getHead().getAtoms());
 			List<String> predicates2 = new ArrayList<String>();
-			List<String> nestedAttributeEqualities = this.createNestedAttributeEqualitiesForActiveTriggers(source, isEquality);
+			List<String> nestedAttributeEqualities = this.createNestedAttributeEqualitiesForActiveTriggers(source);
 			List<String> nestedConstantEqualities = this.builder.createEqualitiesWithConstants(source.getAtoms());
 			predicates2.addAll(nestedAttributeEqualities);
 			predicates2.addAll(nestedConstantEqualities);
@@ -649,7 +689,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 			 * add in the WHERE statement a predicate which limits the identifiers
 			 * of the facts that satisfy any homomorphism to the identifiers of these facts
 			 */
-			List<String> nestedFactproperties = this.builder.translateFactProperties(source.getHead().getAtoms(), constraints);
+			List<String> nestedFactproperties = this.builder.translateFactProperties(source.getHead().getAtoms(), relationNamesToRelationObjects, constraints);
 			predicates2.addAll(nestedFactproperties);
 			
 			String query2 = 
@@ -680,7 +720,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 	public Pair<String,LinkedHashMap<String,Variable>> createQuery(ConjunctiveQuery source, HomomorphismProperty[] constraints) {
 		String query = "";
 		List<String> from = this.builder.createFromStatement(source.getAtoms());
-		LinkedHashMap<String,Variable> projections = this.builder.createProjections(source);
+		LinkedHashMap<String,Variable> projections = this.builder.createProjections(source.getAtoms());
 		List<String> predicates = new ArrayList<String>();
 		List<String> equalities = this.builder.createAttributeEqualities(source.getAtoms());
 		List<String> constantEqualities = this.builder.createEqualitiesWithConstants(source.getAtoms());
@@ -691,7 +731,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		 * add in the WHERE statement a predicate which limits the identifiers
 		 * of the facts that satisfy any homomorphism to the identifiers of these facts
 		 */
-		List<String> factproperties = this.builder.translateFactProperties(source.getAtoms(), constraints);
+		List<String> factproperties = this.builder.translateFactProperties(source.getAtoms(), relationNamesToRelationObjects, constraints);
 
 		predicates.addAll(equalities);
 		predicates.addAll(constantEqualities);
@@ -724,8 +764,8 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 	 * @param source the source
 	 * @return 		explicit equalities (String objects of the form A.x1 = B.x2) of the implicit equalities in the input conjunction (the latter is denoted by repetition of the same term)
 	 */
-	public List<String> createNestedAttributeEqualitiesForActiveTriggers(Dependency source, boolean isEquality) {
-		if(!isEquality) {
+	public List<String> createNestedAttributeEqualitiesForActiveTriggers(Dependency source) {
+		if(!(source instanceof EGD)) {
 			return this.builder.createAttributeEqualities(source.getAtoms());
 		}
 		else {
@@ -789,14 +829,18 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		}
 	}
 	
+	
 	/**
 	 * Translate egd homomorphism constraints.
+	 * TOCOMMENT: I am not sure what this is for. It seems to be returning the part of the where clause of an sql query that compares
+	 * two atoms in the body of an EGD and checks they have different fact.id
 	 *
 	 * @param source the source
 	 * @param constraints the constraints
+	 * @param relationNamesToRelationObjects 
 	 * @return 		predicates that correspond to fact constraints
 	 */
-	protected String translateEGDHomomorphicProperties(Dependency source, HomomorphismProperty... constraints) {
+	public String translateEGDHomomorphicProperties(Dependency source, Map<String, Relation> relationNamesToRelationObjects,HomomorphismProperty... constraints) {
 		for(HomomorphismProperty c:constraints) {
 			if(c instanceof EGDHomomorphismProperty) {
 				List<Atom> conjuncts = source.getBody().getAtoms();
@@ -805,14 +849,20 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 				lalias = lalias==null ? conjuncts.get(0).getPredicate().getName():lalias;
 				ralias = ralias==null ? conjuncts.get(1).getPredicate().getName():ralias;
 				StringBuilder eq = new StringBuilder();
-				eq.append(lalias).append(".").
-				append("FACT").append(">");
+				
+				String leftAttributeName = relationNamesToRelationObjects.get(conjuncts.get(0).getPredicate().getName()).getAttribute(conjuncts.get(0).getPredicate().getArity()-1).getName();
+				String rightAttributeName = relationNamesToRelationObjects.get(conjuncts.get(1).getPredicate().getName()).getAttribute(conjuncts.get(1).getPredicate().getArity()-1).getName();
 
+				
+				eq.append(lalias).append(".").
+				append(leftAttributeName).append(">");
 				eq.append(ralias).append(".").
-				append("FACT");
+				append(rightAttributeName);
 				return eq.toString();
 			}
 		}
 		return null;
 	}
+	
+	
 }

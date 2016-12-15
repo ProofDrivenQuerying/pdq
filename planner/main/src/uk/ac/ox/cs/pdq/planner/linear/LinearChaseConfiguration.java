@@ -34,7 +34,6 @@ import com.google.common.collect.Sets;
  * Each linear chase configuration is associated with a set of facts, 
  * a rule firing, and a set of generated facts --
  * the ones produced by the last rule firing.
- * TOCOMMENT: DO NOT FOLLOW ABOVE
  * The (output) facts are all stored inside the state member field.
  *
  * @author Efthymia Tsamoura

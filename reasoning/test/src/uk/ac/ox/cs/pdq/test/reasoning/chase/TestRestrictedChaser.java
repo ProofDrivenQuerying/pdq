@@ -57,11 +57,12 @@ public class TestRestrictedChaser {
 		Attribute at11 = new Attribute(String.class, "at11");
 		Attribute at12 = new Attribute(String.class, "at12");
 		Attribute at13 = new Attribute(String.class, "at13");
-		this.rel1 = new Relation("R1", Lists.newArrayList(at11, at12, at13)) {};
+		Attribute fact= new Attribute(Integer.class, "Fact");
+		this.rel1 = new Relation("R1", Lists.newArrayList(at11, at12, at13, fact)) {};
 
 		Attribute at21 = new Attribute(String.class, "at21");
 		Attribute at22 = new Attribute(String.class, "at22");
-		this.rel2 = new Relation("R2", Lists.newArrayList(at21, at22)) {};
+		this.rel2 = new Relation("R2", Lists.newArrayList(at21, at22, fact)) {};
 
 		Atom R1 = new Atom(this.rel1, 
 				Lists.newArrayList(new Variable("x"),new Variable("y"),new Variable("z")));

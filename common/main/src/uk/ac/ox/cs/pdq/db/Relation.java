@@ -51,13 +51,13 @@ public abstract class Relation extends Predicate implements Serializable {
 	protected final Properties properties = new Properties();
 
 	/**  The relation's attributes. */
-	protected final List<Attribute> attributes;
+	protected List<Attribute> attributes;
 
 	/**
 	 * Maps attribute names to position in the relation. This map is initialized lazily
 	 * to minimize memory overhead
 	 */
-	protected final Map<String, Integer> attributePositions;
+	protected Map<String, Integer> attributePositions;
 
 	/**
 	 * TOCOMMENT what is the key of this map? the relations' names?
@@ -443,7 +443,29 @@ public abstract class Relation extends Predicate implements Serializable {
 	}
 
 	/**
-	 * TOCOMMENT Two methods are equal if, by using the corresponding equals methods, their names are equals, their attributes are equal, and their amView ???? are equal.
+	 * Extend the relation's schema by adding an extra attribute
+	 */
+	public void extendByAddingAttribute(Attribute at)
+	{
+//		arity = arity + 1;
+//		super.hash = Objects.hash(this.name, this.arity);
+//		
+		List<Attribute> attrs = new ArrayList<Attribute>(this.attributes);
+		attrs.add(at);
+		this.attributes = ImmutableList.copyOf(attrs);
+		Map<String, Integer> positions = new LinkedHashMap<>();
+		int i = 0;
+		for (Attribute a : this.attributes) {
+			positions.put(a.getName(), i++);
+		}
+		this.attributePositions = ImmutableMap.copyOf(positions);
+		
+		
+	}
+
+
+	/**
+	 * TOCOMMENT Two relations are equal if, by using the corresponding equals methods, their names are equals, their attributes are equal, and their amView ???? are equal.
 	 *
 	 * @param o Object
 	 * @return boolean

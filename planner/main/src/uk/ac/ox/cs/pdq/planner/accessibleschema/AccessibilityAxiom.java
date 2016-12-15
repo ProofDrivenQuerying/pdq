@@ -57,7 +57,7 @@ public class AccessibilityAxiom extends TGD {
 		List<Formula> leftAtoms = new ArrayList<>();
 		List<Integer> bindingPositions = method.getInputs();
 		Relation r = AccessibleRelation.getInstance();
-		Atom f = Utility.createAtom(relation);
+		Atom f = Utility.createAtomsWithoutExtraAttribute(relation);
 		List<Term> terms = f.getTerms();
 		for (int bindingPos: bindingPositions) {
 			if (method.getType() != Types.FREE) {
@@ -76,18 +76,18 @@ public class AccessibilityAxiom extends TGD {
 	 * @return 		the atoms of the right-hand side of the accessibility axiom that corresponds to the input relation and the input access method
 	 */
 	private static Formula createRight(InferredAccessibleRelation infAccRel, AccessMethod binding) {
-		Relation relation = infAccRel.getBaseRelation();
 		List<Formula> rightAtoms = new ArrayList<>();
 		List<Integer> bindingPositions = binding.getInputs();
 		Relation accessible = AccessibleRelation.getInstance();
-		Atom f = Utility.createAtom(infAccRel);
+	//	Atom f = Utility.createAtom(infAccRel);
+		Atom f = Utility.createAtomsWithoutExtraAttribute(infAccRel);
 		List<Term> terms = f.getTerms();
-		for (int i = 1; i <= relation.getArity(); ++i) {
+		for (int i = 1; i <= f.getTerms().size(); ++i) {
 			if (!bindingPositions.contains(i)) {
 				rightAtoms.add(new Atom(accessible, terms.get(i - 1)));
 			}
 		}
-		rightAtoms.add(Utility.createAtom(infAccRel));
+		rightAtoms.add(f);
 		return Conjunction.of(rightAtoms);
 	}
 

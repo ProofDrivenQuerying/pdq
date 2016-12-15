@@ -64,8 +64,8 @@ public class RestrictedChaser extends Chaser {
 				List<Match> matches = instance.getTriggers(Lists.newArrayList(dependency), TriggerProperty.ACTIVE, LimitTofacts.THIS);	
 				if(!matches.isEmpty()) {
 					appliedStep = true;
+					instance.chaseStep(matches);
 				}
-				instance.chaseStep(matches);
 			}
 			d = accessor.getDependencies(instance);	
 		} while (appliedStep);
