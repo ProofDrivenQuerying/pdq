@@ -21,7 +21,7 @@ import com.google.common.collect.Lists;
  */
 public class AccessTerm extends RelationalTerm {
 
-	/** The input table of the access. */
+	/** The accessed relation. */
 	private final Relation relation;
 
 	/** The access method to use. */

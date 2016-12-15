@@ -6,7 +6,6 @@ import java.util.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 
-
 /**
  * 
  * @author Efthymia Tsamoura

@@ -188,6 +188,7 @@ public abstract class RelationalOperator implements Rewritable, Operator {
 	 *
 	 * @return the depth of the lowest descendant of this operator
 	 */
+	//TODO not used delete
 	public abstract Integer getDepth();
 
 	/*
@@ -231,6 +232,7 @@ public abstract class RelationalOperator implements Rewritable, Operator {
 	 *
 	 * @return true if the operator is left-deep
 	 */
+	//TODO not used delete
 	public abstract boolean isLeftDeep();
 
 	/**
@@ -238,6 +240,7 @@ public abstract class RelationalOperator implements Rewritable, Operator {
 	 *
 	 * @return true if the operator is right-deep
 	 */
+	//TODO not used delete
 	public abstract boolean isRightDeep();
 
 	/*
@@ -287,6 +290,7 @@ public abstract class RelationalOperator implements Rewritable, Operator {
 	 * @param operator the operator
 	 * @return the selections
 	 */
+	//TODO not used delete
 	public static Collection<Selection> getSelections(RelationalOperator operator) {
 		Collection<Selection> result = new LinkedHashSet<>();
 		if (operator instanceof Selection) {
