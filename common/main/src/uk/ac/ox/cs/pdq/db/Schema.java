@@ -33,42 +33,19 @@ import com.google.common.collect.Lists;
 public class Schema {
 
 	/**  Relations indexed based on their name. */
-	private final Map<String, Relation> relIndex;
-	
+	private final Map<String, Relation> relationsMap;
+
 	/**  The list of schema relations*. */
-	protected final List<Relation> relations;
-
-	/**
-	 * For every different arity, this keeps the list of schema relations with this arity
-	 *  Distribution of relations by arity. */
-	private final List<Relation>[] arityDistribution;
-
-	/**  The schema dependencies indexed based on their id. */
-	private final Map<Integer, Dependency> dependencyIndex;
+	protected final Relation[] relations;
 
 	/**  The schema dependencies. */
-	protected final List<Dependency> schemaDependencies;
-
-	/**  
-	 * True if the schema dependencies contain cycles. */
-	protected Boolean isCyclic = null;
-
-	/**  
-	 * Schema constants, are all constants appearing in the dependencies */
-	protected Collection<TypedConstant<?>> dependencyConstants = null;
+	protected final Dependency[] dependencies;
 
 	/**  A map from a constant's name to the constant object. */
-	protected Map<String, TypedConstant<?>> typedConstants = new LinkedHashMap<>();
-	
-	/**  The EGDs of (TOCOMMENT: corresponding to?) the keys*. */
-	protected final Collection<EGD> keyDependencies = Lists.newArrayList();
+	protected Map<String, TypedConstant<?>> constants;
 
-	/**
-	 * Empty schema constructor.
-	 */
-	public Schema() {
-		this(new ArrayList<Relation>(), new ArrayList<Dependency>());
-	}
+	/**  The EGDs of (TOCOMMENT: corresponding to?) the keys*. */
+	protected final EGD[] keyDependencies;
 
 	/**
 	 * Builds a schema with the input relations.
@@ -86,79 +63,39 @@ public class Schema {
 	 * @param dependencies 		The input dependencies
 	 */
 	public Schema(Collection<Relation> relations, Collection<Dependency> dependencies) {
-		int maxArity = 0;
-		Map<String, Relation> rm = new LinkedHashMap<>();
-		for (Relation relation : relations) {
-			rm.put(relation.getName(), relation);
-			if (maxArity < relation.getArity()) {
-				maxArity = relation.getArity();
-			}
+		this.relations = new Relation[relations.size()];
+		int relationIndex = 0;
+		for(Relation relation:relations) {
+			this.relations[relationIndex++] = relation;
 		}
-		this.arityDistribution = new List[maxArity + 1];
-		for (int i = 0, l = this.arityDistribution.length; i < l; i++) {
-			this.arityDistribution[i] = new ArrayList<>();
-		}
-		for (Relation r:relations) {
-			this.arityDistribution[r.getArity()].add(r);
+		this.dependencies = new Dependency[dependencies.size()];
+		for(Dependency dependency:dependencies) {
+			this.dependencies[relationIndex++] = dependency;
 		}
 
-		Map<Integer, Dependency> dm = new LinkedHashMap<>();
-		for (Dependency ic:dependencies) {
-			if (ic instanceof TGD) {
-				dm.put(((TGD) ic).getId(), ic);
-			}
-		}
-		this.relIndex = ImmutableMap.copyOf(rm);
-		this.dependencyIndex = ImmutableMap.copyOf(dm);
-		this.relations = ImmutableList.copyOf(this.relIndex.values());
-		
 		for(Relation relation:this.relations) {
-			if(!relation.getKey().isEmpty()) {
-				this.keyDependencies.add(Utility.getEGDs(relation, relation.getKey()));
-			}
+			if(relation.getKey() != null) 
+				this.keyDependencies.add(Utility.getEGDs(relation, relation.getKey().getAttributes()));
 		}
-		this.schemaDependencies = ImmutableList.copyOf(this.dependencyIndex.values());
-		this.loadTypedConstants();
+
+		for (Dependency dependency:this.dependencies) {
+			for (TypedConstant<?> constant: Utility.getTypedConstants(dependency)) {
+				if(this.constants == null)
+					this.constants = new LinkedHashMap<>();
+				this.constants.put(constant.toString(), constant);
+			}
+				
+		}
 	}
 	
-	/**
-	 * TOCOMMENT I don't find "consolidateKeys" or "EGD.getEGDs" very appropriate names
-	 * Extracts the EGDs of the relation keys.
-	 */
-	public void consolidateKeys() {
-		for(Relation relation:this.relations) {
-			if(!relation.getKey().isEmpty()) {
-				this.keyDependencies.add(Utility.getEGDs(relation, relation.getKey()));
-			}
-		}
-	}
-
-	/**
-	 * Gets the relations that have the input arity.
-	 *
-	 * @param i the i
-	 * @return 		all relations having the input arity
-	 */
-	public List<Relation> getRelationsByArity(int i) {
-		return this.arityDistribution[i];
-	}
-
+	
 	/**
 	 * Gets all schema relations.
 	 *
 	 * @return 		all schema relations
 	 */
-	public List<Relation> getRelations() {
-		return this.relations;
-	}
-
-	/**
-	 * Gets the max arity of any relation.
-	 *
-	 * @return 		the maximum relation arity
-	 */
-	public int getMaxArity() {
-		return this.arityDistribution.length;
+	public Relation[] getRelations() {
+		return this.relations.clone();
 	}
 
 	/**
@@ -166,17 +103,17 @@ public class Schema {
 	 *
 	 * @return 		the schema dependencies
 	 */
-	public List<Dependency> getDependencies() {
-		return this.schemaDependencies;
+	public Dependency[] getDependencies() {
+		return this.dependencies.clone();
 	}
-	
+
 	/**
 	 * Gets the (TOCOMMENT primary) key dependencies.
 	 *
 	 * @return 		the EGDs that come from the relations keys
 	 */
-	public Collection<EGD> getKeyDependencies() {
-		return this.keyDependencies;
+	public EGD[] getKeyDependencies() {
+		return this.keyDependencies.clone();
 	}
 
 	/**
@@ -186,23 +123,23 @@ public class Schema {
 	 * @return 		the relation with the input name
 	 */
 	public Relation getRelation(String name) {
-		return this.relIndex.get(name);
+		return this.relationsMap.get(name);
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder result = new StringBuilder();
 		result.append('{');
-		if (!this.relations.isEmpty()) {
+		if (this.relations.length > 0) {
 			result.append("\n\t{");
 			for (Relation r : this.relations) {
 				result.append("\n\t\t").append(r);
 			}
 			result.append("\n\t}");
 		}
-		if (!this.schemaDependencies.isEmpty()) {
+		if (this.dependencies.length > 0) {
 			result.append("\n\t{");
-			for (Dependency ic : this.schemaDependencies) {
+			for (Dependency ic : this.dependencies) {
 				result.append("\n\t\t").append(ic);
 			}
 			result.append("\n\t}");
@@ -212,89 +149,15 @@ public class Schema {
 	}
 
 	/**
-	 * Checks if is the dependencies are cyclic.
-	 *
-	 * @return true if the schema dependencies contain cycles
-	 */
-	public boolean isCyclic() {
-		if (this.isCyclic == null) {
-			DirectedGraph<Atom, DefaultEdge> simpleDepedencyGraph = new DefaultDirectedGraph<>(DefaultEdge.class);
-			for (Relation relation:this.relations) {
-				simpleDepedencyGraph.addVertex(Utility.createAtom(relation));
-			}
-			for (Dependency dependency:this.schemaDependencies) {
-				List<Atom> leftAtoms = dependency.getBody().getAtoms();
-				List<Atom> rightAtoms = dependency.getHead().getAtoms();
-				for (Atom left : leftAtoms) {
-					for (Atom right : rightAtoms) {
-						Atom leftVertex = this.searchDependencyGraph(simpleDepedencyGraph, left);
-						Atom rightVertex = this.searchDependencyGraph(simpleDepedencyGraph, right);
-						simpleDepedencyGraph.addEdge(leftVertex, rightVertex);
-					}
-				}
-			}
-			CycleDetector<Atom, DefaultEdge> cycleDetector = new CycleDetector<>(simpleDepedencyGraph);
-			this.isCyclic = cycleDetector.detectCycles();
-		}
-		return this.isCyclic;
-	}
-
-	/**
-	 * TOCOMMENT not an appropriate method name
-	 * Search dependency graph.
-	 *
-	 * @param simpleDepedencyGraph A schema dependency graph
-	 * @param atom An input atom
-	 * @return the atom which has the same predicate with the input one
-	 */
-	private Atom searchDependencyGraph(
-			DirectedGraph<Atom, DefaultEdge> simpleDepedencyGraph,
-			Atom atom) {
-		for (Atom vertex: simpleDepedencyGraph.vertexSet()) {
-			if (atom.getPredicate().getName().equals(vertex.getPredicate().getName())) {
-				return vertex;
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * Gets the dependency constants.
-	 * 
-	 * TOCOMMENT what is the difference with getSchemaConstants?
-	 *
-	 * @return the constants of the schema dependencies
-	 */
-	public Collection<TypedConstant<?>> getDependencyTypedConstants() {
-		if (this.dependencyConstants == null) {
-			this.dependencyConstants = new LinkedHashSet<>();
-			for (Dependency dependency:this.schemaDependencies) {
-				this.dependencyConstants.addAll(Utility.getTypedConstants(dependency));
-			}
-		}
-		return this.dependencyConstants;
-	}
-
-	/**
-	 * TOCOMMENT I'm not sure what this is but two different constants (say integer 5, and a string with value "5") 
-	 * will end up in the same position (one of them will overwrite the entry of the other in this map)
-	 * TOCOMMENT Once we figure what this map does, we need to update the comments for 4 methods below.
-	 * Creates a map of the constants that appear in the schema dependencies.
-	 */
-	private void loadTypedConstants() {
-		for (TypedConstant<?> constant: this.getDependencyTypedConstants()) {
-			this.typedConstants.put(constant.toString(), constant);
-		}
-	}
-	
-	/**
 	 * Updates the schema constants with the input map.
 	 *
 	 * @param constants the constants
 	 */
-	public void updateTypedConstants(Collection<TypedConstant<?>> constants) {
+	public void addConstants(Collection<TypedConstant<?>> constants) {
 		for (TypedConstant<?> constant: constants) {
-			this.typedConstants.put(constant.toString(), constant);
+			if(this.constants == null)
+				this.constants = new LinkedHashMap<>();
+			this.constants.put(constant.toString(), constant);
 		}
 	}
 
@@ -303,10 +166,9 @@ public class Schema {
 	 *
 	 * @return 		the schema constants
 	 */
-	public Map<String, TypedConstant<?>> getTypedConstants() {
-		return this.typedConstants;
+	public Map<String, TypedConstant<?>> getConstants() {
+		return this.constants;
 	}
-
 
 	/**
 	 * Gets the constant.
@@ -315,7 +177,7 @@ public class Schema {
 	 * @return 		the constant with the given name
 	 */
 	public TypedConstant<?> getConstant(String name) {
-		return this.typedConstants.get(name);
+		return this.constants.get(name);
 	}
 
 	/**
@@ -325,35 +187,7 @@ public class Schema {
 	 * @return true if the given relation is part of the schema.
 	 */
 	public boolean contains(String name) {
-		return this.relIndex.containsKey(name);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null) {
-			return false;
-		}
-		return this.getClass().isInstance(o)
-				&& this.relations.equals(((Schema) o).relations)
-				&& this.schemaDependencies.equals(((Schema) o).schemaDependencies);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode() {
-		return Objects.hash(this.relations, this.schemaDependencies);
+		return this.relationsMap.containsKey(name);
 	}
 
 	/**

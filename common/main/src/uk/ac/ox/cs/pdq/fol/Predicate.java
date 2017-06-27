@@ -11,12 +11,6 @@ import com.google.common.base.Preconditions;
  */
 public class Predicate {
 
-	/** Cached instance hash (only possible because predicates are immutable). */
-	protected final int hash;
-
-	/**  Cached string representation of the predicate. */
-	protected String rep;
-
 	/**  Predicate name. */
 	protected final String name;
 

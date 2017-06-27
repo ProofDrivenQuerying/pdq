@@ -8,18 +8,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Properties;
 
-import org.apache.log4j.Logger;
-
-import uk.ac.ox.cs.pdq.db.AccessMethod.Types;
 import uk.ac.ox.cs.pdq.db.metadata.RelationMetadata;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.util.TupleType;
-
-import com.google.common.base.Joiner;
-import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Lists;
 
 /**
  * The schema of a relation.
@@ -29,19 +20,8 @@ import com.google.common.collect.Lists;
  */
 public abstract class Relation extends Predicate implements Serializable {
 
-	/** The log. */
-	protected static Logger log = Logger.getLogger(Relation.class);
-
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -9222721018270749836L;
-
-	/** A global counter that gives unique id numbers to relations. */
-	protected static int globalId = 0;
-
-	/**
-	 * The relation's unique identifier.
-	 */
-	protected final int relationId;
 
 	/** 
 	 * Properties associated with this relation; these may be SQL
@@ -54,21 +34,16 @@ public abstract class Relation extends Predicate implements Serializable {
 	protected List<Attribute> attributes;
 
 	/**
-	 * Maps attribute names to position in the relation. This map is initialized lazily
-	 * to minimize memory overhead
+	 * Maps attribute names to position in the relation. 
 	 */
 	protected Map<String, Integer> attributePositions;
 
 	/**
-	 * TOCOMMENT what is the key of this map? the relations' names?
 	 * The relation's access methods, i.e. the positions of the inputAttributes
 	 * which require input values.
 	 */
 	protected Map<String, AccessMethod> accessMethods;
 
-	/**
-	 *  TOCOMMENT what is this?
-	 *  The am view. */
 	protected List<AccessMethod> accessMethodsList;
 
 	/**
@@ -76,175 +51,72 @@ public abstract class Relation extends Predicate implements Serializable {
 	 */
 	protected List<ForeignKey> foreignKeys;
 
-	/** 
-	 * TOCOMMENT the primary key?
-	 * The key. */
-	protected List<Attribute> key = Lists.newArrayList();
-
-	/** The key positions. */
-	protected List<Integer> keyPositions = null;
+	protected PrimaryKey key;
 
 	/** Every relation has associated metadata stored in a separate object **/
 	private RelationMetadata metadataRelation;
 
 
-	/**
-	 * Constructs a new Relation.
-	 *
-	 * @param name Relation's name
-	 * @param attributes List<? extends Attribute>
-	 * @param accessMethods Relation's binding methods
-	 * @param foreignKeys List<ForeignKey>
-	 */
 	public Relation(String name, List<? extends Attribute> attributes,
 			List<AccessMethod> accessMethods, List<ForeignKey> foreignKeys) {
 		this(name, attributes, accessMethods, foreignKeys, false);
 	}
 
-	/**
-	 * Constructs a new relation.
-	 *
-	 * @param name Relation's name
-	 * @param attributes List<? extends Attribute>
-	 * @param accessMethods Relation's binding methods
-	 * @param foreignKeys List<ForeignKey>
-	 * @param isEquality true if this is an equality predicate
-	 */
-	public Relation(String name, List<? extends Attribute> attributes,
-			List<AccessMethod> accessMethods, List<ForeignKey> foreignKeys,
-			boolean isEquality) {
+	public Relation(String name, List<? extends Attribute> attributes, List<AccessMethod> accessMethods, List<ForeignKey> foreignKeys, boolean isEquality) {
 		super(name, attributes.size(), isEquality);
-		this.relationId = Relation.globalId++;
-		this.attributes = ImmutableList.copyOf(attributes);
+		this.attributes = new ArrayList<>();
+		this.attributes.addAll(attributes);
 		Map<String, Integer> positions = new LinkedHashMap<>();
 		int i = 0;
 		for (Attribute a : this.attributes) {
 			positions.put(a.getName(), i++);
 		}
-		this.attributePositions = ImmutableMap.copyOf(positions);
+		this.attributePositions = new LinkedHashMap<>();
+		this.attributePositions.putAll(positions);
 		this.accessMethods = new LinkedHashMap<>();
 		this.accessMethodsList = new ArrayList<>();
-		this.setAccessMethods(accessMethods);
+		this.addAccessMethods(accessMethods);
 		this.foreignKeys = new ArrayList<>(foreignKeys);
-		this.rep = null;
 	}
 
-	/**
-	 * Constructs a new relation.
-	 *
-	 * @param name Relation's name
-	 * @param attributes List<? extends Attribute>
-	 * @param accessMethods Relation's binding methods
-	 */
+
 	public Relation(String name, List<? extends Attribute> attributes, List<AccessMethod> accessMethods) {
 		this(name, attributes, accessMethods, false);
 	}
 
-	/**
-	 * Constructs a new relation..
-	 *
-	 * @param name Relation's name
-	 * @param attributes List<? extends Attribute>
-	 * @param accessMethods Relation's binding methods
-	 * @param isEquality the is equality
-	 */
-	public Relation(String name, List<? extends Attribute> attributes,
-			List<AccessMethod> accessMethods, boolean isEquality) {
+	public Relation(String name, List<? extends Attribute> attributes, List<AccessMethod> accessMethods, boolean isEquality) {
 		this(name, attributes, accessMethods, new ArrayList<ForeignKey>(), isEquality);
 	}
 
-	/**
-	 * Constructs a new relation.
-	 *
-	 * @param name Relation's name
-	 * @param attributes List<? extends Attribute>
-	 * @param isEquality the is equality
-	 */
 	public Relation(String name, List<? extends Attribute> attributes, boolean isEquality) {
 		this(name, attributes, new ArrayList<AccessMethod>(), isEquality);
 	}
 
-	/**
-	 * Constructs a new relation.
-	 *
-	 * @param name Relation's name
-	 * @param attributes List<? extends Attribute>
-	 */
 	public Relation(String name, List<? extends Attribute> attributes) {
 		this(name, attributes, new ArrayList<AccessMethod>(), false);
 	}
 
-	/**
-	 * Copy constructor.
-	 *
-	 * @param r Relation
-	 */
-	public Relation(Relation r) {
-		this(r.getName(), r.getAttributes(), r.getAccessMethods(),
-				r.getForeignKeys(), r.isEquality());
-	}
-
-	/**
-	 * Gets the name of the relation.
-	 *
-	 * @return String
-	 */
 	@Override
 	public String getName() {
 		return this.name;
 
 	}
 
-	/**
-	 * Gets the arity of the relation.
-	 *
-	 * @return the arity of the relation.
-	 */
 	@Override
 	public int getArity() {
 		return this.attributes.size();
 	}
 
-	/**
-	 * Gets the attributes of the relation.
-	 *
-	 * @return the relation's inputAttributes
-	 */
+
 	public List<Attribute> getAttributes() {
 		return this.attributes;
 	}
 
-	/**
-	 * Gets the type of the attributes of the relation.
-	 *
-	 * @return the relation's type
-	 */
 	public TupleType getType() {
 		return TupleType.DefaultFactory.createFromTyped(getAttributes());
 	}
 
-	/**
-	 * TOCOMMENT this seems strange, to have to call a method on a relation given the access method as input, to get the input positiions of the access method
-	 * Gets the input attributes.
-	 *
-	 * @param b an access method of this relation
-	 * @return 		the relation's input attributes for input binding
-	 */
-	public List<Attribute> getInputAttributes(AccessMethod b) {
-		Preconditions.checkArgument(this.accessMethods.containsKey(b.getName()));
-		List<Attribute> result = new ArrayList<>(b.getInputs().size());
-		for (Integer i: b.getInputs()) {
-			result.add(this.getAttribute(i - 1));
-		}
-		return result;
-	}
 
-	/**
-	 * Gets the attribute at position 'index'.
-	 *
-	 * @param index int
-	 * @return the relation's attribute at position index
-	 */
 	public Attribute getAttribute(int index) {
 		return this.attributes.get(index);
 	}
@@ -261,13 +133,6 @@ public abstract class Relation extends Predicate implements Serializable {
 		return this.attributePositions.get(attributeName);
 	}
 
-	/**
-	 * Gets the attribute object given its name.
-	 *
-	 * @param attributeName the attribute name
-	 * @return the index of the attribute whose name is given as parameter,
-	 *         returns -1 iff the relation has no such attribute
-	 */
 	public Attribute getAttribute(String attributeName) {
 		Integer position = this.attributePositions.get(attributeName);
 		if (position != null && position >= 0) {
@@ -276,180 +141,64 @@ public abstract class Relation extends Predicate implements Serializable {
 		return null;
 	}
 
-	/**
-	 * Gets the access methods.
-	 *
-	 * @return the relation's accessMethods.
-	 */
 	public List<AccessMethod> getAccessMethods() {
 		return this.accessMethodsList;
 	}
 
-	/**
-	 * Adds a foreign key to the relation.
-	 *
-	 * @param foreingKey ForeignKey
-	 */
 	public void addForeignKey(ForeignKey foreingKey) {
 		this.foreignKeys.add(foreingKey);
-		this.rep = null;
 	}
 
-	/**
-	 * Adds a list of foreign keys to the relation.
-	 *
-	 * @param foreingKeys List<ForeignKey>
-	 */
 	public void addForeignKeys(List<ForeignKey> foreingKeys) {
 		this.foreignKeys.addAll(foreingKeys);
-		this.rep = null;
 	}
 
-	/**
-	 * Gets the foreign key at the specified index.
-	 *
-	 * @param index int
-	 * @return ForeignKey
-	 */
 	public ForeignKey getForeignKey(int index) {
 		return this.foreignKeys.get(index);
 	}
 
-	/**
-	 * Gets the list of all foreign keys.
-	 *
-	 * @return List<ForeignKey>
-	 */
 	public List<ForeignKey> getForeignKeys() {
 		return this.foreignKeys;
 	}
-
-	/**
-	 * Gets the id of the relation.
-	 *
-	 * @return int
-	 */
-	public int getId() {
-		return this.relationId;
-	}
-
-	/**
-	 * Adds an access method to this relation.
-	 *
-	 * @param accessMethod AccessMethod
-	 */
-	public void addAccessMethod(AccessMethod accessMethod) {
-		for (int b : accessMethod.getInputs()) {
-			if (!(1 <= b && b <= this.attributes.size())) {
-				throw new IllegalArgumentException(
-						"Attempting to instantiation a relation with inconsistent binding method.");
-			}
-		}
-		if (this.accessMethods.put(accessMethod.getName(), accessMethod) == null) {
+	
+	public void addAccessMethods(List<AccessMethod> accessMethods) {
+		for(AccessMethod accessMethod:accessMethods) {
+			this.accessMethods.put(accessMethod.getName(), accessMethod);
 			this.accessMethodsList.add(accessMethod);
 		}
-		this.rep = null;
 	}
-
-	/**
-	 * Sets all access methods of this relation, eliminating all prexisting ones if clearFirst is true. 
-	 * If the flag clearFirst is false it just adds the input access methods to the list of access methods.
-	 *
-	 * @param accessMethods List<AccessMethod>
-	 * @param clearFirst boolean
-	 */
-	public void setAccessMethods(List<AccessMethod> accessMethods, boolean clearFirst) {
-		if (clearFirst) {
-			this.accessMethods.clear();
-			this.accessMethodsList.clear();
-			this.rep = null;
-		}
-		if (accessMethods != null) {
-			for (AccessMethod bm : accessMethods) {
-				this.addAccessMethod(bm);
-			}
-		}
-	}
-
-	/**
-	 * TOCOMMMENT this uses a wrong naming convention. Since clearFirst is false, this method *adds* to the list of existing access methods, it does not *set*
-	 * Sets the access methods.
-	 *
-	 * @param accessMethods List<AccessMethod>
-	 */
+	
 	public void setAccessMethods(List<AccessMethod> accessMethods) {
-		this.setAccessMethods(accessMethods, false);
-	}
-
-	/**
-	 * Gets the access method with the corrsponding name.
-	 *
-	 * @param name String
-	 * @return AccessMethod
-	 */
-	public AccessMethod getAccessMethod(String name) {
-		return this.accessMethods.get(name);
-	}
-
-	/**
-	 * TOCOMMENT here we can maintain a field so not search again all access methods
-	 * Checks if this relation supports any free access method.
-	 *
-	 * @return Boolean
-	 */
-	public Boolean hasFreeAccess() {
-		if (this.accessMethods != null) {
-			for (AccessMethod binding: this.accessMethods.values()) {
-				if (binding.getType() == Types.FREE) {
-					return true;
-				}
-			}
+		this.accessMethods.clear();
+		this.accessMethodsList.clear();
+		for(AccessMethod accessMethod:accessMethods) {
+			this.accessMethods.put(accessMethod.getName(), accessMethod);
+			this.accessMethodsList.add(accessMethod);
 		}
-		return false;
 	}
 
-	/**
-	 * TOCOMMENT primary? same comment applies in two methods below
-	 * Sets the key.
-	 *
-	 * @param key the new key
-	 */
-	public void setKey(List<Attribute> key) {
+	public void setKey(PrimaryKey key) {
 		this.key = key;
 	}
 
-	/**
-	 * Gets the key.
-	 *
-	 * @return the key
-	 */
-	public List<Attribute> getKey() {
+	public PrimaryKey getKey() {
 		return this.key;
 	}
 
-	/**
-	 * Gets the key positions.
-	 *
-	 * @return the key positions
-	 */
-	public List<Integer> getKeyPositions() {
-		if(this.keyPositions == null) {
-			this.keyPositions = Lists.newArrayList();
-			for(Attribute key:this.key) {
-				this.keyPositions.add(this.attributes.indexOf(key));
-			}
-		}
-		return this.keyPositions;
+	public Integer[] getKeyPositions() {
+		Integer[] keyPositions = new Integer[key.getNumberOfAttributes()];
+		for(int attributeIndex = 0; attributeIndex < this.key.getNumberOfAttributes(); ++attributeIndex) 
+			keyPositions[attributeIndex] = this.attributes.indexOf(this.key.getAttributes()[attributeIndex]);
+		return keyPositions;
 	}
 
 	/**
 	 * Extend the relation's schema by adding an extra attribute
 	 */
-	public void extendByAddingAttribute(Attribute at)
-	{
-//		arity = arity + 1;
-//		super.hash = Objects.hash(this.name, this.arity);
-//		
+	public void extendByAddingAttribute(Attribute at) {
+		//		arity = arity + 1;
+		//		super.hash = Objects.hash(this.name, this.arity);
+		//		
 		List<Attribute> attrs = new ArrayList<Attribute>(this.attributes);
 		attrs.add(at);
 		this.attributes = ImmutableList.copyOf(attrs);
@@ -459,71 +208,68 @@ public abstract class Relation extends Predicate implements Serializable {
 			positions.put(a.getName(), i++);
 		}
 		this.attributePositions = ImmutableMap.copyOf(positions);
-		
-		
-	}
 
 
-	/**
-	 * TOCOMMENT Two relations are equal if, by using the corresponding equals methods, their names are equals, their attributes are equal, and their amView ???? are equal.
-	 *
-	 * @param o Object
-	 * @return boolean
-	 */
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null) {
-			return false;
-		}
-		return Relation.class.isInstance(o)
-				&& this.name.equals(((Relation) o).name)
-				&& this.attributes.equals(((Relation) o).attributes)
-				&& this.accessMethodsList.equals(((Relation) o).accessMethodsList);
 	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(this.name, this.attributes, this.accessMethodsList);
-	}
+	//
+	//
+	//	/**
+	//	 * TOCOMMENT Two relations are equal if, by using the corresponding equals methods, their names are equals, their attributes are equal, and their amView ???? are equal.
+	//	 *
+	//	 * @param o Object
+	//	 * @return boolean
+	//	 */
+	//	@Override
+	//	public boolean equals(Object o) {
+	//		if (this == o) {
+	//			return true;
+	//		}
+	//		if (o == null) {
+	//			return false;
+	//		}
+	//		return Relation.class.isInstance(o)
+	//				&& this.name.equals(((Relation) o).name)
+	//				&& this.attributes.equals(((Relation) o).attributes)
+	//				&& this.accessMethodsList.equals(((Relation) o).accessMethodsList);
+	//	}
+	//
+	//	@Override
+	//	public int hashCode() {
+	//		return Objects.hash(this.name, this.attributes, this.accessMethodsList);
+	//	}
 
 	@Override
 	public String toString() {
-		if (this.rep == null) {
-			StringBuilder result = new StringBuilder();
-			result.append(this.name).append('(');
-			result.append(Joiner.on(",").join(this.attributes)).append(')');
+		StringBuilder result = new StringBuilder();
+		result.append(this.name).append('(');
+		result.append(Joiner.on(",").join(this.attributes)).append(')');
 
+		if (this.accessMethods != null && !this.accessMethods.isEmpty()) {
+			char sep = '{';
 			if (this.accessMethods != null && !this.accessMethods.isEmpty()) {
-				char sep = '{';
-				if (this.accessMethods != null && !this.accessMethods.isEmpty()) {
-					for (AccessMethod c : this.accessMethods.values()) {
-						result.append(sep).append(c);
-						RelationMetadata md = this.getMetadata();
-						if (md != null) {
-							result.append('/').append(md.getPerInputTupleCost(c));
-						}
-						sep = ',';
+				for (AccessMethod c : this.accessMethods.values()) {
+					result.append(sep).append(c);
+					RelationMetadata md = this.getMetadata();
+					if (md != null) {
+						result.append('/').append(md.getPerInputTupleCost(c));
 					}
-					result.append('}');
+					sep = ',';
 				}
+				result.append('}');
 			}
-
-			if (this.foreignKeys != null && !this.foreignKeys.isEmpty()) {
-				char sep = '{';
-				if (this.foreignKeys != null && !this.foreignKeys.isEmpty()) {
-					for (ForeignKey c : this.foreignKeys) {
-						result.append(sep).append(c);
-						sep = ',';
-					}
-					result.append('}');
-				}
-			}
-			this.rep = result.toString();
 		}
-		return this.rep;
+
+		if (this.foreignKeys != null && !this.foreignKeys.isEmpty()) {
+			char sep = '{';
+			if (this.foreignKeys != null && !this.foreignKeys.isEmpty()) {
+				for (ForeignKey c : this.foreignKeys) {
+					result.append(sep).append(c);
+					sep = ',';
+				}
+				result.append('}');
+			}
+		}
+		return result.toString();
 	}
 
 	/**

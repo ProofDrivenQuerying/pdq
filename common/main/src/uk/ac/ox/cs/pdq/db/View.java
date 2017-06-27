@@ -12,9 +12,6 @@ import uk.ac.ox.cs.pdq.util.Utility;
 import com.google.common.collect.Lists;
 
 /**
- * TOCOMMENT I still have a hard time understanding the hierarchy between Formulas, Dependencies, Implications, Rules, Views, etc.
- * A view.
- *
  * @author Efthymia Tsamoura
  * @author Julien Leblay
  */

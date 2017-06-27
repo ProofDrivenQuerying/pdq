@@ -1,11 +1,8 @@
 package uk.ac.ox.cs.pdq.db;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
-import com.google.common.base.Preconditions;
+import uk.ac.ox.cs.pdq.InterningManager;
 
 /**
  * An access method defines the positions of a relation's attributes whose values are required to access the relation.
@@ -15,175 +12,102 @@ import com.google.common.base.Preconditions;
  */
 public class AccessMethod implements Serializable {
 
-	/**  Generated serial number. */
-	private static final long serialVersionUID = 1946416951995219490L;
-
-	/**
-	 *  Types of access restrictions.
-	 */
-	public static enum Types {
-		
-		/** The free. */
-		FREE, 
-		/** The limited. */
-		LIMITED, 
-		/** The boolean. */
-		BOOLEAN
-	}
+	protected static final long serialVersionUID = -5821292665848480210L;
 
 	/** A Constant DEFAULT_PREFIX for all automatically generated access methods names */
 	public static final String DEFAULT_PREFIX = "mt_";
 
 	/** A global counter appended to the default prefix in order to create a new automatically generated access methods name. */
-	private static int globalCounter = 0;
+	protected static int globalCounter = 0;
 
 	/**  Input attribute positions. */
-	private final List<Integer> inputs;
-
-	/**  Type of access restriction. */
-	private final Types type;
+	protected final Integer[] inputs;
 
 	/**  Name of the access method. */
-	private final String name;
+	protected final String name;
 
 	/**  String representation of the object. */
-	private String rep = null;
+	protected String toString = null;
 
-	/**
-	 * Default constructor. Instantiates an inaccessible binding method
-	 */
-	public AccessMethod() {
-		this(Types.FREE, new ArrayList<Integer>());
+	protected AccessMethod() {
+		this(new Integer[]{});
 	}
 
-	/**
-	 * Copy constructor.
-	 * @param binding AccessMethod
-	 */
-	public AccessMethod(AccessMethod binding) {
-		this(binding.name, binding.type, binding.getInputs());
+	protected AccessMethod(AccessMethod accessMethod) {
+		this(accessMethod.name, accessMethod.getInputs());
 	}
 
-	/**
-	 * Instantiates a new access method.
-	 *
-	 * @param type the type
-	 * @param bindingPositions the binding positions
-	 */
-	public AccessMethod(Types type, List<Integer> bindingPositions) {
-		this(DEFAULT_PREFIX + globalCounter++, type, bindingPositions);
+	protected AccessMethod(Integer[] inputs) {
+		this(DEFAULT_PREFIX + globalCounter++, inputs);
 	}
 
-	/**
-	 * Instantiates a new access method.
-	 *
-	 * @param name the name
-	 * @param type the type
-	 * @param bindingPositions the binding positions
-	 */
-	public AccessMethod(String name, Types type, List<Integer> bindingPositions) {
-		Preconditions.checkArgument(type == Types.FREE ? bindingPositions.isEmpty() : true);
+	protected AccessMethod(String name, Integer[] inputs) {
 		this.name = name;
-		this.type = type;
-		this.inputs = new ArrayList<>();
-		if (bindingPositions != null) {
-			for (Integer i : bindingPositions) {
-				this.inputs.add(i);
-			}
-		}
+		this.inputs = inputs.clone();
+	}
+
+	public Integer[] getInputs() {
+		return this.inputs.clone();
 	}
 
 	/**
-	 * Gets the input positions tha define this access method.
-	 *
-	 * @return the positions that are required inputs
-	 */
-	public List<Integer> getInputs() {
-		return this.inputs;
-	}
-
-	/**
-	 * TOCOMMENT What is a zero based input
 	 * Gets the zero based inputs.
 	 *
-	 * @return the positions that are required inputs
 	 */
-	public List<Integer> getZeroBasedInputs() {
-		List<Integer> zero = new ArrayList<>();
-		for(Integer index:this.inputs) {
-			zero.add(index-1);
-		}
+	public Integer[] getZeroBasedInputs() {
+		Integer[] zero = new Integer[this.inputs.length];
+		for(int index = 0; index < this.inputs.length; ++index) 
+			zero[index] = this.inputs[index] - 1;
 		return zero;
 	}
 
-	/**
-	 * Gets the access restriction type.
-	 *
-	 * @return the type of the access restriction
-	 */
-	public Types getType() {
-		return this.type;
-	}
-
-	/**
-	 *
-	 * @return the  name of the method.
-	 */
 	public String getName() {
 		return this.name;
 	}
 
-	/**
-	 * Two access methods are equal if their types and inputs are equal (using the corresponding equals() methods).
-	 * TOCOMMENT how about the name? it is currently commented out.
-	 *
-	 * @param o Object
-	 * @return boolean
-	 */
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
+	protected Object readResolve() {
+		return s_interningManager.intern(this);
+	}
+
+	protected static final InterningManager<AccessMethod> s_interningManager = new InterningManager<AccessMethod>() {
+		protected boolean equal(AccessMethod object1, AccessMethod object2) {
+			if (!object1.name.equals(object2.name) || object1.inputs.length != object2.inputs.length)
+				return false;
+			for (int index = object1.inputs.length - 1; index >= 0; --index)
+				if (!object1.inputs[index].equals(object2.inputs[index]))
+					return false;
 			return true;
 		}
-		if (o == null) {
-			return false;
+
+		protected int getHashCode(AccessMethod object) {
+			int hashCode = object.name.hashCode();
+			for (int index = object.inputs.length - 1; index >= 0; --index)
+				hashCode = hashCode * 7 + object.inputs[index].hashCode();
+			return hashCode;
 		}
-		return this.getClass().isInstance(o)
-				//				&& this.name.equals(((AccessMethod) o).name)
-				&& this.type.equals(((AccessMethod) o).type)
-				&& this.inputs.equals(((AccessMethod) o).inputs);
+	};
+
+	public static AccessMethod create(String name, Integer[] inputs) {
+		return s_interningManager.intern(new AccessMethod(name, inputs));
+	}
+	
+	public static AccessMethod create(Integer[] inputs) {
+		return s_interningManager.intern(new AccessMethod(inputs));
 	}
 
-	/**
-	 * Hash code.
-	 *
-	 * @return int
-	 */
-	@Override
-	public int hashCode() {
-		return Objects.hash(this.name, this.type, this.inputs);
-	}
-
-	/**
-	 *
-	 * @return String
-	 */
 	@Override
 	public String toString() {
-		if (this.rep == null) {
+		if (this.toString == null) {
 			StringBuilder result = new StringBuilder();
 			result.append(this.name).append(':');
-			result.append(this.type);
-			if (this.type.equals(Types.LIMITED)) {
-				char sep = '[';
-				for (int i : this.inputs) {
-					result.append(sep).append(i);
-					sep = ',';
-				}
-				result.append(']');
+			char sep = '[';
+			for (int i:this.inputs) {
+				result.append(sep).append(i);
+				sep = ',';
 			}
-			this.rep = result.toString();
+			result.append(']');
+			this.toString = result.toString();
 		}
-		return this.rep;
+		return this.toString;
 	}
 }

@@ -1,6 +1,6 @@
 package uk.ac.ox.cs.pdq.plan;
 
-import uk.ac.ox.cs.pdq.algebra.Operator;
+import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 
 
 // TODO: Auto-generated Javadoc
@@ -11,7 +11,7 @@ import uk.ac.ox.cs.pdq.algebra.Operator;
  * @param <P> the generic type
  */
  //Efi: This class should be moved to the cost package 
-public interface EstimateProvider<P extends Operator> {
+public interface EstimateProvider<P extends RelationalTerm> {
 
 	/**
 	 * Gets the parent.

@@ -76,7 +76,7 @@ public class TestRestrictedChaser {
 				new Variable("z"),new Variable("w"))));
 
 		this.schema = new Schema(Lists.<Relation>newArrayList(this.rel1, this.rel2), Lists.<Dependency>newArrayList(this.tgd,this.egd));
-		this.schema.updateTypedConstants(Lists.<TypedConstant<?>>newArrayList(new TypedConstant(new String("John"))));
+		this.schema.addConstants(Lists.<TypedConstant<?>>newArrayList(new TypedConstant(new String("John"))));
 
 		this.connection = new DatabaseConnection(new DatabaseParameters(), this.schema);
 		this.chaser = new RestrictedChaser(new StatisticsCollector(true, new EventBus()));

@@ -75,10 +75,10 @@ public class BottomUpAccessTest extends UnaryIteratorTest {
 				outputType.createTuple(3, "x", "one", 8),
 				outputType.createTuple(3, "x", "four", 32),
 				outputType.createTuple(3, "y", "one", 256)));
-		this.relation.addAccessMethod(free);
-		this.relation.addAccessMethod(mt1);
-		this.relation.addAccessMethod(mt2);
-		this.relation.addAccessMethod(mt3);
+		this.relation.addAccessMethods(free);
+		this.relation.addAccessMethods(mt1);
+		this.relation.addAccessMethods(mt2);
+		this.relation.addAccessMethods(mt3);
 
         MockitoAnnotations.initMocks(this);
 		child1Type = TupleType.DefaultFactory.create(Integer.class);

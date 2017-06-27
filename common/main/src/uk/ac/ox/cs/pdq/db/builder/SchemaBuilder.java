@@ -10,9 +10,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import uk.ac.ox.cs.pdq.db.AccessMethod;
-import uk.ac.ox.cs.pdq.db.AccessMethod.Types;
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.db.EntityRelation;
 import uk.ac.ox.cs.pdq.db.ForeignKey;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -93,9 +91,8 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	 */
 	public SchemaBuilder setAccessMethods(String name, AccessMethod... am) {
 		Relation existing = this.relations.get(name);
-		if (existing != null) {
-			existing.setAccessMethods(Lists.newArrayList(am), true);
-		}
+		if (existing != null) 
+			existing.setAccessMethods(Lists.newArrayList(am));
 		return this;
 	}
 
@@ -132,20 +129,6 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 		return result;
 	}
 
-	//TODO move this piece of code to logicblox package
-	/**
-	 * Adds the entity relation.
-	 *
-	 * @param name String
-	 * @return the relation built
-	 */
-	public EntityRelation addEntityRelation(String name) {
-		Preconditions.checkState(this.relations.get(name) == null, "Relation '" + name + "' already exists.");
-		EntityRelation result = new EntityRelation(name, Types.FREE);
-		this.addRelation(result);
-		return result;
-	}
-
 	/**
 	 * Adds the dependency.
 	 *
@@ -154,10 +137,8 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	 */
 	public SchemaBuilder addDependency(Dependency dependency) {
 		for (Dependency ic : this.dependencies.values()) {
-			if (FormulaEquivalence.approximateEquivalence(
-					(Formula) ic, (Formula) dependency) ) {
+			if (FormulaEquivalence.approximateEquivalence((Formula) ic, (Formula) dependency) ) 
 				return this;
-			}
 		}
 		this.dependencies.put(((TGD) dependency).getId(), dependency);
 		return this;
@@ -171,13 +152,10 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	 */
 	public SchemaBuilder removeDependency(Dependency dependency) {
 		if (this.dependencies.remove(((TGD) dependency).getId()) == null) {
-			for (Iterator<Entry<Integer, Dependency>> it =
-					this.dependencies.entrySet().iterator();
-					it.hasNext();) {
-				if (FormulaEquivalence.approximateEquivalence(
-						(Formula) it.next().getValue(), (Formula) dependency) ) {
+			for (Iterator<Entry<Integer, Dependency>> it = this.dependencies.entrySet().iterator(); it.hasNext();) {
+				if (FormulaEquivalence.approximateEquivalence((Formula) it.next().getValue(), (Formula) dependency) ) 
 					it.remove();
-				}
+				
 			}
 		};
 		return this;
@@ -197,13 +175,12 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	/**
 	 * Adds the dependencies.
 	 *
-	 * @param ics the ics
+	 * @param dependencies the ics
 	 * @return this builder
 	 */
-	public SchemaBuilder addDependencies(Collection<Dependency> ics) {
-		for (Dependency ic : ics) {
-			this.addDependency(ic);
-		}
+	public SchemaBuilder addDependencies(Dependency[] dependencies) {
+		for (Dependency dependency:dependencies) 
+			this.addDependency(dependency);
 		return this;
 	}
 
@@ -222,10 +199,9 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	 * @param relations the relations
 	 * @return this builder
 	 */
-	public SchemaBuilder addRelations(Collection<? extends Relation> relations) {
-		for (Relation relation : relations) {
+	public SchemaBuilder addRelations(Relation[] relations) {
+		for (Relation relation:relations) 
 			this.addRelation(relation);
-		}
 		return this;
 	}
 
@@ -277,15 +253,6 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	 */
 	public Collection<Dependency> getDependencies() {
 		return this.dependencies.values();
-	}
-
-	/**
-	 * Derives the dependencies that correspond to the relation's keys.
-	 *
-	 * @return Map<Integer,IC>
-	 */
-	private Map<Integer, Dependency> deriveKeyDependencies() {
-		return new LinkedHashMap<>();
 	}
 
 	/**
@@ -489,14 +456,6 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 		/** The Constant serialVersionUID. */
 		private static final long serialVersionUID = 7049363904713889121L;
 
-		/**
-		 * Constructor for TemporaryRelation.
-		 * @param name String
-		 * @param attributes List<Attribute>
-		 */
-		public TemporaryRelation(String name, List<Attribute> attributes) {
-			this(name, attributes, false);
-		}
 		/**
 		 * Constructor for TemporaryRelation.
 		 * @param name String

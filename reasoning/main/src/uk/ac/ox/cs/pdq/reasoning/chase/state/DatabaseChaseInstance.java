@@ -621,7 +621,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		this.builder = connection.getSQLStatementBuilder();
 		this.relationNamesToRelationObjects = connection.getRelationNamesToRelationObjects();
 		this.synchronousThreadsNumber = connection.synchronousThreadsNumber;
-		this.constants = connection.getSchema().getTypedConstants();
+		this.constants = connection.getSchema().getConstants();
 	}
 
 	/**

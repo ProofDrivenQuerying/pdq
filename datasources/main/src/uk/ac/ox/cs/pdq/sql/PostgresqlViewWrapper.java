@@ -108,7 +108,7 @@ public final class PostgresqlViewWrapper extends SQLViewWrapper {
 	 * given access method does not already have a cost assigned. 
 	 *
 	 * @param bm the bm
-	 * @see uk.ac.ox.cs.pdq.db.Relation#addAccessMethod(uk.ac.ox.cs.pdq.db.AccessMethod)
+	 * @see uk.ac.ox.cs.pdq.db.Relation#addAccessMethods(uk.ac.ox.cs.pdq.db.AccessMethod)
 	 */
 	@Override
 	public void addAccessMethod(AccessMethod bm) {
@@ -116,9 +116,9 @@ public final class PostgresqlViewWrapper extends SQLViewWrapper {
 		if (accessCost == null || accessCost.getValue().equals(Double.POSITIVE_INFINITY)) {
 			AccessMethod b = new AccessMethod(bm.getName(), bm.getType(), bm.getInputs());
 			((StaticMetadata) this.getMetadata()).setPerInputTupleCost(b, new DoubleCost(this.initializeCost(bm.getInputs())));
-			super.addAccessMethod(b);
+			super.addAccessMethods(b);
 		} else {
-			super.addAccessMethod(bm);
+			super.addAccessMethods(bm);
 		}
 	}
 

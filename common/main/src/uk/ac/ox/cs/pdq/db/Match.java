@@ -13,7 +13,6 @@ import com.google.common.base.Preconditions;
 
 
 /**
- * A query match.
  *
  * @author Efthymia Tsamoura
  * @author Julien Leblay
@@ -21,41 +20,25 @@ import com.google.common.base.Preconditions;
  */
 public class Match {
 
-	/**  The dependency or query that will be grounded using an homomorphism*. */
-	protected final Formula query;
+	/**  The formula or query that will be grounded using an homomorphism*. */
+	protected final Formula formula;
 
 	/** The mapping of query's variables to constants.*/
 	protected final Map<Variable, Constant> mapping;
 
-	/**
-	 * Constructor for Match.
-	 * @param q Evaluatable
-	 * @param mapping Map<Variable,Constant>
-	 */
-	public Match(Formula q, Map<Variable, Constant> mapping) {
-		Preconditions.checkArgument(q instanceof ConjunctiveQuery || q instanceof Dependency);
+	public Match(Formula formula, Map<Variable, Constant> mapping) {
+		Preconditions.checkArgument(formula instanceof ConjunctiveQuery || formula instanceof Dependency);
 		Preconditions.checkArgument(mapping != null);
 		this.mapping = mapping;
-		this.query = q;
+		this.formula = formula;
 	}
 
-	/**
-	 * Gets the mapping.
-	 *
-	 * @return Map<Variable,Constant>
-	 */
 	public Map<Variable, Constant> getMapping() {
 		return this.mapping;
 	}
 
-
-	/**
-	 * Gets the query.
-	 *
-	 * @return Evaluatable
-	 */
 	public Formula getQuery() {
-		return this.query;
+		return this.formula;
 	}
 
 	/**
@@ -73,18 +56,18 @@ public class Match {
 			return false;
 		}
 		return this.getClass().isInstance(o)
-				&& this.query.equals(((Match) o).query)
+				&& this.formula.equals(((Match) o).formula)
 				&& this.mapping.equals(((Match) o).mapping);
 	}
 
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(this.query, this.mapping);
+		return Objects.hash(this.formula, this.mapping);
 	}
 
 	@Override
 	public String toString() {
-		return this.mapping.toString() + "\n" + this.query.toString(); 
+		return this.mapping.toString() + "\n" + this.formula.toString(); 
 	}
 }

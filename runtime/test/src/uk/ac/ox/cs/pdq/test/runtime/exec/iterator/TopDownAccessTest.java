@@ -114,10 +114,10 @@ public class TopDownAccessTest {
 				outputType.createTuple(3, "x", "one", 8),
 				outputType.createTuple(3, "x", "four", 32),
 				outputType.createTuple(3, "y", "one", 256)));
-		this.relation.addAccessMethod(mt1);
-		this.relation.addAccessMethod(mt2);
-		this.relation.addAccessMethod(mt3);
-		this.relation.addAccessMethod(free);
+		this.relation.addAccessMethods(mt1);
+		this.relation.addAccessMethods(mt2);
+		this.relation.addAccessMethods(mt3);
+		this.relation.addAccessMethods(free);
 		
 		this.binding1 = TupleType.DefaultFactory.create(Integer.class).createTuple(3);
 		this.binding2 = TupleType.DefaultFactory.create(String.class, Integer.class).createTuple("x", 3);

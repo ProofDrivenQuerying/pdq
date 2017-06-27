@@ -91,7 +91,7 @@ public class XMLSchemaIOTest {
 		Assert.assertEquals(s.getRelations(), observed.getRelations());
 //		Assert.assertEquals(s.getViews(), observed.getViews());
 		Assert.assertEquals(s.getDependencies(), observed.getDependencies());
-		Assert.assertEquals(s.getTypedConstants(), observed.getTypedConstants());
+		Assert.assertEquals(s.getConstants(), observed.getConstants());
 		Assert.assertEquals(s.getMaxArity(), observed.getMaxArity());
 		Assert.assertEquals(s.isCyclic(), observed.isCyclic());
 	}
@@ -134,7 +134,7 @@ public class XMLSchemaIOTest {
 					(Formula) s.getDependencies().get(i), 
 					(Formula) observed.getDependencies().get(i)));
 		}
-		Assert.assertEquals(s.getTypedConstants(), observed.getTypedConstants());
+		Assert.assertEquals(s.getConstants(), observed.getConstants());
 		Assert.assertEquals(s.getMaxArity(), observed.getMaxArity());
 		Assert.assertEquals(s.isCyclic(), observed.isCyclic());
 	}

@@ -323,12 +323,12 @@ public class RelationalOperatorWriter extends PrettyWriter<RelationalOperator>
 			this.formatConjunctivePredicate(sb, (ConjunctivePredicate) predicate, columns);
 		}
  		if (predicate instanceof AttributeEqualityPredicate) {
- 			sb.append(columns.get(((EqualityPredicate) predicate).getPosition()))
+ 			sb.append(columns.get(((SimplePredicate) predicate).getPosition()))
  				.append(EQUALITY)
 				.append(columns.get(((AttributeEqualityPredicate) predicate).getOther()));
 		}
 		if (predicate instanceof ConstantEqualityPredicate) {
- 			sb.append(columns.get(((EqualityPredicate) predicate).getPosition()))
+ 			sb.append(columns.get(((SimplePredicate) predicate).getPosition()))
 				.append(EQUALITY).append(SINGLE_QUOTE)
 				.append(((ConstantEqualityPredicate) predicate).getValue()).append(SINGLE_QUOTE);
 		}
@@ -391,9 +391,9 @@ public class RelationalOperatorWriter extends PrettyWriter<RelationalOperator>
 		if (predicate instanceof AttributeEqualityPredicate) {
 			if (left != null) {
 				sb.append(left).append(PERIOD)
-					.append(terms.get(((EqualityPredicate) predicate).getPosition()));
+					.append(terms.get(((SimplePredicate) predicate).getPosition()));
 			} else {
-				sb.append(INDEX).append(((EqualityPredicate) predicate).getPosition());
+				sb.append(INDEX).append(((SimplePredicate) predicate).getPosition());
 			}
 			sb.append(EQUALITY);
 			if (right != null) {
@@ -406,10 +406,10 @@ public class RelationalOperatorWriter extends PrettyWriter<RelationalOperator>
 		if (predicate instanceof ConstantEqualityPredicate) {
 			if (left != null) {
 				sb.append(left).append(PERIOD)
-					.append(terms.get(((EqualityPredicate) predicate).getPosition()));
+					.append(terms.get(((SimplePredicate) predicate).getPosition()));
 			} else {
 				sb.append(INDEX)
-					.append(((EqualityPredicate) predicate).getPosition());
+					.append(((SimplePredicate) predicate).getPosition());
 			}
 			sb.append(EQUALITY).append(SINGLE_QUOTE)
 				.append(((ConstantEqualityPredicate) predicate).getValue()).append(SINGLE_QUOTE);

@@ -1,11 +1,12 @@
 package uk.ac.ox.cs.pdq.db;
 
+import java.io.Serializable;
 import java.lang.reflect.Type;
-import java.util.Objects;
 
+import org.junit.Assert;
+
+import uk.ac.ox.cs.pdq.InterningManager;
 import uk.ac.ox.cs.pdq.util.Typed;
-
-import com.google.common.base.Preconditions;
 
 /**
  * Represents a relation's attribute.
@@ -13,10 +14,8 @@ import com.google.common.base.Preconditions;
  * @author Efthymia Tsamoura
  * @author Julien Leblay
  */
-public class Attribute implements Typed {
-
-	/** The prefix to use when generating attribute names. */
-	/** public static final String GENERATED_ATTRIBUTE_PREFIX = "x";
+public class Attribute implements Typed, Serializable {
+	private static final long serialVersionUID = -2103116468417078713L;
 
 	/**  The attribute's name. */
 	protected final String name;
@@ -24,88 +23,59 @@ public class Attribute implements Typed {
 	/**  The attribute's type. */
 	protected final Type type;
 
-	// TOCOMMENT I don't get this, but it seems minor
-	/** Cached instance hash (only possible because variables are immutable). */
-	private final int hash;
+	/**  String representation of the object. */
+	protected String toString = null;
 
-	/** Cached String representation of an attribute. */
-	private final String rep;
 
-	/**
-	 * Default constructor.
-	 *
-	 * @param type
-	 * 		The attribute's type
-	 * @param name
-	 *      The attribute's name
-	 */
 	public Attribute(Type type, String name) {
-		Preconditions.checkArgument(type != null);
-		Preconditions.checkArgument(name != null);
+		Assert.assertNotNull(type);
+		Assert.assertNotNull(name);
 		assert name != null;
 		this.type = type;
 		this.name = name;
-		this.hash = Objects.hash(this.name, this.type);
-		StringBuilder result = new StringBuilder();
-		result.append(this.name);
-		this.rep = result.toString().intern();
 	}
 
-	/**
-	 * Constructor for Attribute.
-	 * @param attribute Attribute
-	 */
 	public Attribute(Attribute attribute) {
 		this(attribute.type, attribute.name);
 	}
 
-	/**
-	 * Gets the type of the attribute.
-	 *
-	 * @return Class<?>
-	 * @see uk.ac.ox.cs.pdq.util.Typed#getType()
-	 */
 	@Override
 	public Type getType() {
 		return this.type;
 	}
 
-	/**
-	 * Gets the name of the attribute.
-	 *
-	 * @return String
-	 */
 	public String getName() {
 		return this.name;
 	}
-
-	/**
-	 * Two attributes are equal if their types and names are equal (using the corresponding equals() methods)..
-	 *
-	 * @param o Object
-	 * @return boolean
-	 */
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null) {
-			return false;
-		}
-		return this.getClass().isInstance(o)
-				&& this.name.equals(((Attribute) o).name)
-				&& this.type.equals(((Attribute) o).type);
-
+	
+	protected Object readResolve() {
+		return s_interningManager.intern(this);
 	}
 
-	@Override
-	public int hashCode() {
-		return this.hash;
+	protected static final InterningManager<Attribute> s_interningManager = new InterningManager<Attribute>() {
+		protected boolean equal(Attribute object1, Attribute object2) {
+			if (!object1.name.equals(object2.name) || object1.type != object2.type)
+				return false;
+			return true;
+		}
+
+		protected int getHashCode(Attribute object) {
+			int hashCode = object.name.hashCode() + object.type.hashCode() * 7;
+			return hashCode;
+		}
+	};
+
+	public static Attribute create(Type type, String name) {
+		return s_interningManager.intern(new Attribute(type, name));
 	}
 
 	@Override
 	public String toString() {
-		return this.rep;
+		if (this.toString == null) {
+			StringBuilder result = new StringBuilder();
+			result.append(this.name);
+			this.toString = result.toString().intern();
+		}
+		return this.toString;
 	}
 }

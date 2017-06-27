@@ -205,7 +205,7 @@ public class RestrictedChaserTest {
 				if (schema == null || query == null) {
 					throw new IllegalStateException("Schema and query must be provided.");
 				}
-				schema.updateTypedConstants(Utility.getTypedConstants(query));
+				schema.addConstants(Utility.getTypedConstants(query));
 				RestrictedChaser reasoner = new RestrictedChaser(new StatisticsCollector(true, new EventBus()));
 
 				DatabaseConnection dbcon = new DatabaseConnection(new DatabaseParameters(),schema);

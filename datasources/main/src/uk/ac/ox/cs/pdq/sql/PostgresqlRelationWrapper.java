@@ -109,7 +109,7 @@ public final class PostgresqlRelationWrapper extends SQLRelationWrapper {
 	 * given access method does not already have a cost assigned. 
 	 *
 	 * @param bm the bm
-	 * @see uk.ac.ox.cs.pdq.db.Relation#addAccessMethod(uk.ac.ox.cs.pdq.db.AccessMethod)
+	 * @see uk.ac.ox.cs.pdq.db.Relation#addAccessMethods(uk.ac.ox.cs.pdq.db.AccessMethod)
 	 */
 	@Override
 	public void addAccessMethod(AccessMethod bm) {
@@ -117,10 +117,10 @@ public final class PostgresqlRelationWrapper extends SQLRelationWrapper {
 		if (accessCost == null || accessCost.getValue().equals(Double.POSITIVE_INFINITY)) {
 			AccessMethod b = new AccessMethod(bm.getName(), bm.getType(), bm.getInputs());
 			accessCost = new DoubleCost(this.initializeCost(bm.getInputs()));
-			super.addAccessMethod(b);
+			super.addAccessMethods(b);
 			((StaticMetadata) this.getMetadata()).setPerInputTupleCost(b, accessCost);
 		} else {
-			super.addAccessMethod(bm);
+			super.addAccessMethods(bm);
 		}
 	}
 

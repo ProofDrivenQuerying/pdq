@@ -69,7 +69,7 @@ public class ScanTest {
 				outputType.createTuple(1, "x", "one"), 
 				outputType.createTuple(2, "x", "two"), 
 				outputType.createTuple(3, "x", "three")));
-		this.relation.addAccessMethod(mt);
+		this.relation.addAccessMethods(mt);
 
         MockitoAnnotations.initMocks(this);
 	}

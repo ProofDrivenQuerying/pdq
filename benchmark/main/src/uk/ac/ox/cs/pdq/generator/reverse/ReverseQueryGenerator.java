@@ -89,7 +89,7 @@ public class ReverseQueryGenerator implements Runnable {
 			ReasoningParameters reasoningParams = new ReasoningParameters();
 			DatabaseParameters dbParams = new DatabaseParameters();
 			
-			this.schema.updateTypedConstants(Utility.getTypedConstants(this.query));
+			this.schema.addConstants(Utility.getTypedConstants(this.query));
 			AccessibleSchema accessibleSchema = new AccessibleSchema(this.schema);
 			EventBus eb = new EventBus();
 			Chaser reasoner = new ReasonerFactory(

@@ -78,7 +78,7 @@ public class ProjectionTest extends UnaryIteratorTest {
 				outputType.createTuple("one", 1, "str", 6), 
 				outputType.createTuple("two", 2, "str", 6), 
 				outputType.createTuple("three", 3, "str", 6)));
-		this.relation.addAccessMethod(mt);
+		this.relation.addAccessMethods(mt);
 
         MockitoAnnotations.initMocks(this);
         when(child.getColumns()).thenReturn(outputColumns);

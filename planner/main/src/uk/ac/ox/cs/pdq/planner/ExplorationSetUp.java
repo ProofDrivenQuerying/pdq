@@ -197,12 +197,12 @@ public class ExplorationSetUp {
 		
 		if (noDep) {
 			this.schema = Schema.builder(this.schema).disableDependencies().build();
-			this.schema.updateTypedConstants(Utility.getTypedConstants(query));
+			this.schema.addConstants(Utility.getTypedConstants(query));
 			this.accessibleSchema = new AccessibleSchema(this.schema);
 		}
 		else {
-			this.schema.updateTypedConstants(Utility.getTypedConstants(query));
-			this.accessibleSchema.updateTypedConstants(Utility.getTypedConstants(query));
+			this.schema.addConstants(Utility.getTypedConstants(query));
+			this.accessibleSchema.addConstants(Utility.getTypedConstants(query));
 		}
 
 		ConjunctiveQuery accessibleQuery = this.accessibleSchema.accessible(query, query.getSubstitutionOfFreeVariablesToCanonicalConstants());

@@ -33,7 +33,7 @@ public class TGD extends Dependency {
 		Preconditions.checkArgument(head instanceof Conjunction || head instanceof Atom, "Input formula head " + head + " is not a conjunction of atoms or a single atom" );
 		Preconditions.checkArgument(body.getBoundVariables().isEmpty());
 		Preconditions.checkArgument(head.getBoundVariables().isEmpty());
-		Preconditions.checkArgument(!CollectionUtils.intersection(body.getFreeVariables(), head.getFreeVariables()).isEmpty());
+		//Preconditions.checkArgument(!CollectionUtils.intersection(body.getFreeVariables(), head.getFreeVariables()).isEmpty());
 		Collection<Variable> headFree = head.getFreeVariables();
 		Collection<Variable> bodyFree = body.getFreeVariables();
 		List<Variable> boundVariables = Lists.newArrayList(CollectionUtils.removeAll(headFree, bodyFree));

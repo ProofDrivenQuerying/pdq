@@ -73,7 +73,7 @@ public class AccessibleSchema extends Schema {
 	 */
 	public AccessibleSchema(List<Relation> relations, List<Dependency> dependencies, Map<String, TypedConstant<?>> constantsMap) {
 		super(relations, dependencies);
-		this.typedConstants = constantsMap;
+		this.constants = constantsMap;
 		ImmutableMap.Builder<String, InferredAccessibleRelation> relationNameToInfAccVersion = ImmutableMap.builder();
 		ImmutableMap.Builder<Pair<? extends Relation, AccessMethod>, AccessibilityAxiom> relAndAccMethodToAccAxiom = ImmutableMap.builder();
 		for (Relation relation:relations) {
@@ -113,7 +113,7 @@ public class AccessibleSchema extends Schema {
 	 * @param schema Schema
 	 */
 	public AccessibleSchema(Schema schema) {
-		this(schema.getRelations(), schema.getDependencies(), schema.getTypedConstants());
+		this(schema.getRelations(), schema.getDependencies(), schema.getConstants());
 	}
 	
 	/**
@@ -204,7 +204,7 @@ public class AccessibleSchema extends Schema {
 	public List<Dependency> getDependencies() {
 		return Lists.newArrayList(
 				Iterables.concat(
-						this.schemaDependencies,
+						this.dependencies,
 						this.infAccessibilityAxioms.values()));
 	}
 
@@ -269,9 +269,9 @@ public class AccessibleSchema extends Schema {
 			}
 			result.append("\n\t}");
 		}
-		if (!this.schemaDependencies.isEmpty()) {
+		if (!this.dependencies.isEmpty()) {
 			result.append("\n\t{");
-			for (Dependency ic : this.schemaDependencies) {
+			for (Dependency ic : this.dependencies) {
 				result.append("\n\t\t").append(ic);
 			}
 			result.append("\n\t}");
