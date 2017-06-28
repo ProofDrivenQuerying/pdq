@@ -70,6 +70,7 @@ import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.cost.CostParameters.CostTypes;
+import uk.ac.ox.cs.pdq.datasources.services.Service;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.View;
@@ -88,7 +89,6 @@ import uk.ac.ox.cs.pdq.planner.PlannerParameters.PlannerTypes;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters.ReasoningTypes;
 import uk.ac.ox.cs.pdq.runtime.RuntimeParameters.ExecutorTypes;
-import uk.ac.ox.cs.pdq.services.Service;
 import uk.ac.ox.cs.pdq.ui.io.ObservableQueryReader;
 import uk.ac.ox.cs.pdq.ui.io.ObservableSchemaReader;
 import uk.ac.ox.cs.pdq.ui.io.pretty.PrettyProofWriter;

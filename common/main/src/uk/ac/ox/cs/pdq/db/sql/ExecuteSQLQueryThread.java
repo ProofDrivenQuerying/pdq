@@ -39,10 +39,10 @@ public class ExecuteSQLQueryThread implements Callable<List<Match>> {
 	
 	/** List of database constants **/
 	//TOCOMMENT this class should not be aware of constants
-	protected final Map<String, TypedConstant<?>> constants;
+	protected final Map<String, TypedConstant> constants;
 
 	public ExecuteSQLQueryThread(Queue<Triple<Formula, String, LinkedHashMap<String, Variable>>> queries, 
-			Map<String, TypedConstant<?>> constants,
+			Map<String, TypedConstant> constants,
 			Connection connection) {
 		//TODO check input arguments
 		this.connection = connection;
@@ -73,7 +73,7 @@ public class ExecuteSQLQueryThread implements Callable<List<Match>> {
 					for(Entry<String, Variable> variables:projectedVariables.entrySet()) {
 						Variable variable = variables.getValue();
 						String assigned = resultSet.getString(f);
-						TypedConstant<?> constant = this.constants.get(assigned);
+						TypedConstant constant = this.constants.get(assigned);
 						Constant constantTerm = constant != null ? constant : new UntypedConstant(assigned);
 						map.put(variable, constantTerm);
 						f++;

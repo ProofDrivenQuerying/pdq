@@ -11,6 +11,7 @@ import java.util.concurrent.Executors;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 
+import uk.ac.ox.cs.pdq.datasources.Result;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.AccessMethod.Types;
 import uk.ac.ox.cs.pdq.db.Relation;
@@ -23,7 +24,6 @@ import uk.ac.ox.cs.pdq.runtime.RuntimeParameters;
 import uk.ac.ox.cs.pdq.runtime.RuntimeParameters.ExecutorTypes;
 import uk.ac.ox.cs.pdq.runtime.TimeoutException;
 import uk.ac.ox.cs.pdq.runtime.exec.AccessException;
-import uk.ac.ox.cs.pdq.util.Result;
 
 import com.beust.jcommander.Parameter;
 

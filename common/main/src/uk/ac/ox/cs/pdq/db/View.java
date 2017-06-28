@@ -1,15 +1,11 @@
 package uk.ac.ox.cs.pdq.db;
 
-import java.util.List;
 import java.util.Objects;
 
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.LinearGuarded;
 import uk.ac.ox.cs.pdq.fol.QuantifiedFormula;
 import uk.ac.ox.cs.pdq.fol.TGD;
-import uk.ac.ox.cs.pdq.util.Utility;
-
-import com.google.common.collect.Lists;
 
 /**
  * @author Efthymia Tsamoura
@@ -30,61 +26,9 @@ public class View extends Relation {
 	 * The dependency that defines the view. */
 	protected TGD definition;
 
-	/**
-	 * TOCOMMENT Instantiates a new view by instantiating a Relation?
-	 * Instantiates a new view.
-	 *
-	 * @param name 		The name of the view
-	 * @param attributes 		The view's attributes
-	 */
-	public View(String name, List<Attribute> attributes) {
+	
+	public View(String name, Attribute[] attributes) {
 		super(name, attributes);
-	}
-
-	/**
-	 * Instantiates a new view.
-	 *
-	 * @param name 		The name of the view
-	 * @param attributes 		The view's attributes
-	 * @param accessMethods 		The binding patterns with which a view can be accessed. By default, a view has free access
-	 */
-	//TOCOMMENT: the term "binding" is used in many places for variable names, instead of "binding pattern", or "access method/restriction"
-	//biding is something else and this might be confusing
-	public View(String name, List<Attribute> attributes, List<AccessMethod> accessMethods) {
-		super(name, attributes, accessMethods);
-	}
-
-	/**
-	 * Instantiates a new view.
-	 *
-	 * @param dependency 		The dependency that defines the view
-	 * @param accessMethod 		A binding with which we can access the view. By default, a view has free access
-	 */
-	public View(LinearGuarded dependency, AccessMethod accessMethod) {
-		this(dependency, Lists.newArrayList(accessMethod));
-	}
-
-
-	/**
-	 * Instantiates a new view.
-	 *
-	 * @param dependency 		The dependency that defines the view
-	 * @param accessMethods 		The binding patterns with which a view can be accessed. By default, a view has free access
-	 */
-	public View(LinearGuarded dependency, List<AccessMethod> accessMethods) {
-		super(dependency.getBody().getAtoms().get(0).getPredicate().getName(), Utility.makeAttributes(dependency.getGuard()));
-		this.dependency = new LinearGuarded(
-				new Atom(this, dependency.getBody().getAtoms().get(0).getTerms()),
-				dependency.getHead() instanceof QuantifiedFormula ? 
-						dependency.getHead().getChildren().get(0) :
-				dependency.getHead());
-		
-		this.definition = new TGD(
-				this.dependency.getHead() instanceof QuantifiedFormula ? 
-						this.dependency.getHead().getChildren().get(0) :
-							this.dependency.getHead(), 
-							this.dependency.getBody());
-		this.setAccessMethods(accessMethods);
 	}
 
 	/**
@@ -109,14 +53,14 @@ public class View extends Relation {
 	/**
 	 * Sets the dependency.
 	 *
-	 * @param d LinearGuarded
+	 * @param dependency LinearGuarded
 	 */
-	public void setDependency(LinearGuarded d) {
+	public void setDependency(LinearGuarded dependency) {
 		this.dependency = new LinearGuarded(
-				new Atom(this, d.getBody().getAtoms().get(0).getTerms()),
-				d.getHead() instanceof QuantifiedFormula ? 
-						d.getHead().getChildren().get(0) :
-				d.getHead());
+				new Atom(this, dependency.getBody().getAtoms().get(0).getTerms()),
+				dependency.getHead() instanceof QuantifiedFormula ? 
+						dependency.getHead().getChildren().get(0) :
+				dependency.getHead());
 		
 		this.definition = new TGD(
 				this.dependency.getHead() instanceof QuantifiedFormula ? 
@@ -124,11 +68,7 @@ public class View extends Relation {
 							this.dependency.getHead(), 
 							this.dependency.getBody());
 	}
-	
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.dbschema.Relation#equals(java.lang.Object)
-	 */
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) {
@@ -138,18 +78,12 @@ public class View extends Relation {
 			return false;
 		}
 		return this.getClass().isInstance(o)
-				&& this.name.equals(((View) o).name)
-				&& this.attributes.equals(((View) o).attributes);
+				&& this.name.equals(((View) o).name);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.dbschema.Relation#hashCode()
-	 */
 	@Override
 	public int hashCode() {
-		return Objects.hash(this.name, this.attributes);
+		return Objects.hash(this.name);
 	}
-
 	
 }

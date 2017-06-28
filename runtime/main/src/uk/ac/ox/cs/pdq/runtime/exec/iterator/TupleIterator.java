@@ -3,7 +3,7 @@ package uk.ac.ox.cs.pdq.runtime.exec.iterator;
 import java.util.ArrayList;
 import java.util.List;
 
-import uk.ac.ox.cs.pdq.util.ResetableIterator;
+import uk.ac.ox.cs.pdq.datasources.ResetableIterator;
 import uk.ac.ox.cs.pdq.util.Tuple;
 import uk.ac.ox.cs.pdq.util.TupleType;
 import uk.ac.ox.cs.pdq.util.Typed;
@@ -122,7 +122,7 @@ public abstract class TupleIterator  implements AutoCloseable, ResetableIterator
 	 * Deep copy.
 	 *
 	 * @return a deep copy of the operator.
-	 * @see uk.ac.ox.cs.pdq.util.ResetableIterator#deepCopy()
+	 * @see uk.ac.ox.cs.pdq.datasources.ResetableIterator#deepCopy()
 	 */
 	@Override
 	public abstract TupleIterator deepCopy();

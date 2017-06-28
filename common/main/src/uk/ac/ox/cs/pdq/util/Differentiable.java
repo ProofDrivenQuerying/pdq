@@ -16,12 +16,12 @@ public interface Differentiable<T> {
 	 * The Enum Levels.
 	 */
 	static enum Levels {
-/** The identical. */
-IDENTICAL, 
- /** The equivalent. */
- EQUIVALENT, 
- /** The different. */
- DIFFERENT}
+		/** The identical. */
+		IDENTICAL, 
+		/** The equivalent. */
+		EQUIVALENT, 
+		/** The different. */
+		DIFFERENT}
 
 	/**
 	 * Returns the "level" of difference.

@@ -3,11 +3,11 @@ package uk.ac.ox.cs.pdq.runtime.exec.iterator;
 import java.util.ArrayList;
 import java.util.List;
 
+import uk.ac.ox.cs.pdq.datasources.ResetableIterator;
+import uk.ac.ox.cs.pdq.datasources.memory.RelationAccessWrapper;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.AccessMethod.Types;
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.db.wrappers.RelationAccessWrapper;
-import uk.ac.ox.cs.pdq.util.ResetableIterator;
 import uk.ac.ox.cs.pdq.util.Tuple;
 import uk.ac.ox.cs.pdq.util.TupleType;
 import uk.ac.ox.cs.pdq.util.Typed;

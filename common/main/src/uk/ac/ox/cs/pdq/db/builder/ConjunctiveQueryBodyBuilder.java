@@ -160,7 +160,7 @@ public class ConjunctiveQueryBodyBuilder {
 
 
 		// Get term in said position:
-		int rightAttrIndex = this.schema.getRelation( this.aliasToRelations.get(rightAlias) ).getAttributeIndex(rightAttr);
+		int rightAttrIndex = this.schema.getRelation( this.aliasToRelations.get(rightAlias) ).getAttributePosition(rightAttr);
 		Term rightTerm = rightPredForm.getTerm(rightAttrIndex);
 
 		if( rightTerm.isVariable() ) {
@@ -190,7 +190,7 @@ public class ConjunctiveQueryBodyBuilder {
 		Atom leftPredForm = this.aliasToAtoms.get(leftAlias);
 
 		// Get term in said position:
-		int leftAttrIndex = this.schema.getRelation( this.aliasToRelations.get(leftAlias) ).getAttributeIndex(leftAttr);
+		int leftAttrIndex = this.schema.getRelation( this.aliasToRelations.get(leftAlias) ).getAttributePosition(leftAttr);
 		Term leftTerm = leftPredForm.getTerm(leftAttrIndex);
 
 		// Prepare right variable:
@@ -203,7 +203,7 @@ public class ConjunctiveQueryBodyBuilder {
 		
 		Term rightTerm = null;
 		try {
-			rightAttrIndex = this.schema.getRelation( this.aliasToRelations.get(rightAlias) ).getAttributeIndex(rightAttr);
+			rightAttrIndex = this.schema.getRelation( this.aliasToRelations.get(rightAlias) ).getAttributePosition(rightAttr);
 			rightTerm = rightPredForm.getTerm(rightAttrIndex);
 		} catch( NullPointerException e ) {
 			log.error("null pointer. rightAttr=" + rightAttr
@@ -327,7 +327,7 @@ public class ConjunctiveQueryBodyBuilder {
 		Atom predFormula = this.aliasToAtoms.get(aliasName);
 
 		// Get term in said position:
-		int attrIndex = this.schema.getRelation( this.aliasToRelations.get(aliasName) ).getAttributeIndex(attrName);
+		int attrIndex = this.schema.getRelation( this.aliasToRelations.get(aliasName) ).getAttributePosition(attrName);
 		return predFormula.getTerm(attrIndex);
 	}
 		

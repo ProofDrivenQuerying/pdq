@@ -3,26 +3,12 @@ package uk.ac.ox.cs.pdq.db;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
-import org.jgrapht.DirectedGraph;
-import org.jgrapht.alg.CycleDetector;
-import org.jgrapht.graph.DefaultDirectedGraph;
-import org.jgrapht.graph.DefaultEdge;
-
-import uk.ac.ox.cs.pdq.db.builder.SchemaBuilder;
-import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.EGD;
-import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.util.Utility;
-
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Lists;
 
 /**
  * A database schema.
@@ -42,9 +28,9 @@ public class Schema {
 	protected final Dependency[] dependencies;
 
 	/**  A map from a constant's name to the constant object. */
-	protected Map<String, TypedConstant<?>> constants;
+	protected Map<String, TypedConstant> constants;
 
-	/**  The EGDs of (TOCOMMENT: corresponding to?) the keys*. */
+	/**  The EGDs of the keys*. */
 	protected final EGD[] keyDependencies;
 
 	/**
@@ -64,31 +50,35 @@ public class Schema {
 	 */
 	public Schema(Collection<Relation> relations, Collection<Dependency> dependencies) {
 		this.relations = new Relation[relations.size()];
+		this.relationsMap = new LinkedHashMap<>();
 		int relationIndex = 0;
 		for(Relation relation:relations) {
 			this.relations[relationIndex++] = relation;
+			this.relationsMap.put(relation.getName(), relation);
 		}
+		
+		int dependencyIndex = 0;
 		this.dependencies = new Dependency[dependencies.size()];
-		for(Dependency dependency:dependencies) {
-			this.dependencies[relationIndex++] = dependency;
-		}
-
+		for(Dependency dependency:dependencies) 
+			this.dependencies[dependencyIndex++] = dependency;
+		
+		List<EGD> EGDs = new ArrayList<>();
 		for(Relation relation:this.relations) {
 			if(relation.getKey() != null) 
-				this.keyDependencies.add(Utility.getEGDs(relation, relation.getKey().getAttributes()));
+				EGDs.add(Utility.getEGDs(relation, relation.getKey().getAttributes()));
 		}
+		this.keyDependencies = EGDs.toArray(new EGD[EGDs.size()]);
 
 		for (Dependency dependency:this.dependencies) {
-			for (TypedConstant<?> constant: Utility.getTypedConstants(dependency)) {
+			for (TypedConstant constant: Utility.getTypedConstants(dependency)) {
 				if(this.constants == null)
 					this.constants = new LinkedHashMap<>();
 				this.constants.put(constant.toString(), constant);
-			}
-				
+			}				
 		}
 	}
 	
-	
+
 	/**
 	 * Gets all schema relations.
 	 *
@@ -153,8 +143,8 @@ public class Schema {
 	 *
 	 * @param constants the constants
 	 */
-	public void addConstants(Collection<TypedConstant<?>> constants) {
-		for (TypedConstant<?> constant: constants) {
+	public void addConstants(Collection<TypedConstant> constants) {
+		for (TypedConstant constant: constants) {
 			if(this.constants == null)
 				this.constants = new LinkedHashMap<>();
 			this.constants.put(constant.toString(), constant);
@@ -166,7 +156,7 @@ public class Schema {
 	 *
 	 * @return 		the schema constants
 	 */
-	public Map<String, TypedConstant<?>> getConstants() {
+	public Map<String, TypedConstant> getConstants() {
 		return this.constants;
 	}
 
@@ -176,7 +166,7 @@ public class Schema {
 	 * @param name the name
 	 * @return 		the constant with the given name
 	 */
-	public TypedConstant<?> getConstant(String name) {
+	public TypedConstant getConstant(String name) {
 		return this.constants.get(name);
 	}
 
@@ -189,24 +179,5 @@ public class Schema {
 	public boolean contains(String name) {
 		return this.relationsMap.containsKey(name);
 	}
-
-	/**
-	 * Instantiates a new SchemaBuilder.
-	 *
-	 * @return a new schema builder
-	 */
-	public static SchemaBuilder builder() {
-		return new SchemaBuilder();
-	}
-
-	/**
-	 * Builder.
-	 *
-	 * @param schema the schema
-	 * @return a new schema builder containing all the relations and
-	 *         dependencies already in the given schema
-	 */
-	public static SchemaBuilder builder(Schema schema) {
-		return new SchemaBuilder(schema);
-	}
+	
 }

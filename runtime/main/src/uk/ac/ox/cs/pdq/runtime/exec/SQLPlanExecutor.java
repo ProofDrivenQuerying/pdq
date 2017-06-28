@@ -4,6 +4,9 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
 
+import uk.ac.ox.cs.pdq.datasources.BooleanResult;
+import uk.ac.ox.cs.pdq.datasources.Result;
+import uk.ac.ox.cs.pdq.datasources.Table;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.rewrite.RewriterException;
@@ -12,9 +15,6 @@ import uk.ac.ox.cs.pdq.rewrite.sql.SQLTranslator.SupportedDialect;
 import uk.ac.ox.cs.pdq.runtime.EvaluationException;
 import uk.ac.ox.cs.pdq.runtime.RuntimeParameters.Semantics;
 import uk.ac.ox.cs.pdq.runtime.query.SQLQueryEvaluator;
-import uk.ac.ox.cs.pdq.util.BooleanResult;
-import uk.ac.ox.cs.pdq.util.Result;
-import uk.ac.ox.cs.pdq.util.Table;
 import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.eventbus.EventBus;

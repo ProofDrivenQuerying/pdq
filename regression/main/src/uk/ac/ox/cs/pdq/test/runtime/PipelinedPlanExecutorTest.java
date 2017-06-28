@@ -8,6 +8,7 @@ import java.io.IOException;
 
 import org.junit.Test;
 
+import uk.ac.ox.cs.pdq.datasources.Result;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.io.xml.DAGPlanReader;
@@ -20,7 +21,6 @@ import uk.ac.ox.cs.pdq.runtime.RuntimeParameters.ExecutorTypes;
 import uk.ac.ox.cs.pdq.runtime.exec.Middleware;
 import uk.ac.ox.cs.pdq.runtime.exec.PlanExecutor;
 import uk.ac.ox.cs.pdq.runtime.exec.PlanExecutor.ExecutionModes;
-import uk.ac.ox.cs.pdq.util.Result;
 import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.eventbus.EventBus;

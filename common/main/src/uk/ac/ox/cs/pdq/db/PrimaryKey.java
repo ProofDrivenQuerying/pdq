@@ -16,6 +16,14 @@ public class PrimaryKey implements Serializable{
 		return s_interningManager.intern(this);
 	}
 
+	public Attribute[] getAttributes() {
+		return this.attributes.clone();
+	}
+	
+	public int getNumberOfAttributes() {
+		return this.attributes.length;
+	}
+	
 	protected static final InterningManager<PrimaryKey> s_interningManager = new InterningManager<PrimaryKey>() {
 		protected boolean equal(PrimaryKey object1, PrimaryKey object2) {
 			if (object1.attributes.length != object2.attributes.length)
@@ -37,12 +45,5 @@ public class PrimaryKey implements Serializable{
 	public static PrimaryKey create(Attribute[] attributes) {
 		return s_interningManager.intern(new PrimaryKey(attributes));
 	}
-	
-	public Attribute[] getAttributes() {
-		return this.attributes.clone();
-	}
-	
-	public int getNumberOfAttributes() {
-		return this.attributes.length;
-	}
+
 }

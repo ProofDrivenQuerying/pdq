@@ -23,7 +23,7 @@ import uk.ac.ox.cs.pdq.util.Utility;
 public class AttributeEqualityPredicateTest {
 	
 	/** The pred. */
-	AttributeEqualityPredicate pred;
+	AttributeEqualityCondition pred;
 	
 	/** The t5. */
 	Tuple t1, t2, t3, t4, t5;
@@ -63,15 +63,15 @@ public class AttributeEqualityPredicateTest {
 	 * Inits the attribute equality predicate test.
 	 */
 	@Test public void initAttributeEqualityPredicateTest() {
-		pred = new AttributeEqualityPredicate(0, 0) ;
+		pred = new AttributeEqualityCondition(0, 0) ;
 		Assert.assertEquals("Initial parameters are found in getters", 0, pred.getPosition());
 		Assert.assertEquals("Initial parameters are found in getters", 0, pred.getOther());
 		
-		pred = new AttributeEqualityPredicate(0, 10) ;
+		pred = new AttributeEqualityCondition(0, 10) ;
 		Assert.assertEquals("Initial parameters are found in getters", 0, pred.getPosition());
 		Assert.assertEquals("Initial parameters are found in getters", 10, pred.getOther());
 		
-		pred = new AttributeEqualityPredicate(10, 0) ;
+		pred = new AttributeEqualityCondition(10, 0) ;
 		Assert.assertEquals("Initial parameters are found in getters", 10, pred.getPosition());
 		Assert.assertEquals("Initial parameters are found in getters", 0, pred.getOther());
 	}
@@ -82,20 +82,20 @@ public class AttributeEqualityPredicateTest {
 	 */
 	@Test(expected=AssertionError.class)
 	public void initAttributeEqualityPredicateNegativeParameters() {
-		new AttributeEqualityPredicate(0, -1) ;
+		new AttributeEqualityCondition(0, -1) ;
 	}
 
 	/**
 	 * Checks if is satisfied same positions.
 	 */
 	@Test public void isSatisfiedSamePositions() {
-		pred = new AttributeEqualityPredicate(0, 0) ;
+		pred = new AttributeEqualityCondition(0, 0) ;
 		Assert.assertTrue("Equality on oneself is always satisfied", pred.isSatisfied(t1));
 		Assert.assertTrue("Equality on oneself is always satisfied", pred.isSatisfied(t2));
 		Assert.assertTrue("Equality on oneself is always satisfied", pred.isSatisfied(t3));
 		Assert.assertTrue("Equality on oneself is always satisfied", pred.isSatisfied(t4));
 		
-		pred = new AttributeEqualityPredicate(2, 2) ;
+		pred = new AttributeEqualityCondition(2, 2) ;
 		Assert.assertTrue("Equality on oneself is always satisfied", pred.isSatisfied(t3));
 	}
 
@@ -103,13 +103,13 @@ public class AttributeEqualityPredicateTest {
 	 * Checks if is satisfied distinct positions.
 	 */
 	@Test public void isSatisfiedDistinctPositions() {
-		pred = new AttributeEqualityPredicate(0, 1) ;
+		pred = new AttributeEqualityCondition(0, 1) ;
 		Assert.assertTrue("Equality on integers ", pred.isSatisfied(t2));
 		
-		pred = new AttributeEqualityPredicate(2, 3) ;
+		pred = new AttributeEqualityCondition(2, 3) ;
 		Assert.assertTrue("Equality on string ", pred.isSatisfied(t2));
 		
-		pred = new AttributeEqualityPredicate(0, 1) ;
+		pred = new AttributeEqualityCondition(0, 1) ;
 		Assert.assertTrue("Equality on entity relations ", pred.isSatisfied(t4));
 	}
 
@@ -117,19 +117,19 @@ public class AttributeEqualityPredicateTest {
 	 * Checks if is not satisfied.
 	 */
 	@Test public void isNotSatisfied() {
-		pred = new AttributeEqualityPredicate(0, 1) ;
+		pred = new AttributeEqualityCondition(0, 1) ;
 		Assert.assertFalse("Non-equality on integers ", pred.isSatisfied(t1));
 		
-		pred = new AttributeEqualityPredicate(0, 3) ;
+		pred = new AttributeEqualityCondition(0, 3) ;
 		Assert.assertFalse("Non-equality on strings ", pred.isSatisfied(t3));
 		
-		pred = new AttributeEqualityPredicate(0, 2) ;
+		pred = new AttributeEqualityCondition(0, 2) ;
 		Assert.assertFalse("Non-equality on entity relations ", pred.isSatisfied(t4));
 		
-		pred = new AttributeEqualityPredicate(1, 2) ;
+		pred = new AttributeEqualityCondition(1, 2) ;
 		Assert.assertFalse("Non-equality across integers and string ", pred.isSatisfied(t2));
 		
-		pred = new AttributeEqualityPredicate(1, 3) ;
+		pred = new AttributeEqualityCondition(1, 3) ;
 		Assert.assertFalse("Non-equality across similar integers and string ", pred.isSatisfied(t3));
 	}
 
@@ -138,7 +138,7 @@ public class AttributeEqualityPredicateTest {
 	 */
 	@Test(expected=AssertionError.class)
 	public void isSatisfiedWithIllegalArgument() {
-		pred = new AttributeEqualityPredicate(0, 10);
+		pred = new AttributeEqualityCondition(0, 10);
 		pred.isSatisfied(t1);
 	}
 
@@ -147,7 +147,7 @@ public class AttributeEqualityPredicateTest {
 	 */
 	@Test(expected=AssertionError.class)
 	public void isSatisfiedWithIllegalEmptyTupleArgument() {
-		pred = new AttributeEqualityPredicate(0, 0);
+		pred = new AttributeEqualityCondition(0, 0);
 		pred.isSatisfied(t5);
 	}
 
@@ -155,23 +155,23 @@ public class AttributeEqualityPredicateTest {
 	 * Equals.
 	 */
 	@Test public void equals() {
-		pred = new AttributeEqualityPredicate(0, 1) ;
-		Assert.assertEquals("Equality on attribute equality predicates ", pred, new AttributeEqualityPredicate(0, 1));
-		Assert.assertNotEquals("Non-equality on attribute equality predicates ", pred, new AttributeEqualityPredicate(0, 2));
+		pred = new AttributeEqualityCondition(0, 1) ;
+		Assert.assertEquals("Equality on attribute equality predicates ", pred, new AttributeEqualityCondition(0, 1));
+		Assert.assertNotEquals("Non-equality on attribute equality predicates ", pred, new AttributeEqualityCondition(0, 2));
 	}
 
 	/**
 	 * Test hash code.
 	 */
 	@Test public void testHashCode() {
-		Set<AttributeEqualityPredicate> s = new LinkedHashSet<>();
-		s.add(new AttributeEqualityPredicate(0, 1));
+		Set<AttributeEqualityCondition> s = new LinkedHashSet<>();
+		s.add(new AttributeEqualityCondition(0, 1));
 		Assert.assertEquals("Size of singleton set should be one ", 1, s.size());
 		
-		s.add(new AttributeEqualityPredicate(0, 1));
+		s.add(new AttributeEqualityCondition(0, 1));
 		Assert.assertEquals("Adding same predicate should not increase set size ", 1, s.size());
 		
-		s.add(new AttributeEqualityPredicate(0, 2));
+		s.add(new AttributeEqualityCondition(0, 2));
 		Assert.assertEquals("Adding different predicate should increase set size ", 2, s.size());
 	}
 }

@@ -2,8 +2,7 @@ package uk.ac.ox.cs.pdq.test.schemas;
 
 import java.util.Collection;
 
-
-
+import uk.ac.ox.cs.pdq.datasources.memory.InMemoryTableWrapper;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.AccessMethod.Types;
 import uk.ac.ox.cs.pdq.db.Attribute;
@@ -11,7 +10,6 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.db.View;
-import uk.ac.ox.cs.pdq.db.wrappers.InMemoryTableWrapper;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.TGD;

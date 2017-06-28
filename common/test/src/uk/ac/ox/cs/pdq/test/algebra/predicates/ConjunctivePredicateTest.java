@@ -26,10 +26,10 @@ import com.google.common.collect.Lists;
 public class ConjunctivePredicateTest {
 
 	/** The sub pred3. */
-	@Mock Predicate subPred1, subPred2, subPred3;
+	@Mock Condition subPred1, subPred2, subPred3;
 	
 	/** The pred. */
-	ConjunctivePredicate<Predicate> pred;
+	ConjunctiveCondition<Condition> pred;
 	
 	/** The t. */
 	Tuple t = Tuple.EmptyTuple;
@@ -50,7 +50,7 @@ public class ConjunctivePredicateTest {
 	 * Inits the conjunctive predicate.
 	 */
 	@Test public void initConjunctivePredicate() {
-		pred = new ConjunctivePredicate<>();
+		pred = new ConjunctiveCondition<>();
 		Assert.assertEquals("Empty constructor should yield conjunction of size 0", 0, pred.size());
 		Assert.assertTrue("Empty constructor should yield empty conjunction", pred.isEmpty());
 	}
@@ -59,15 +59,15 @@ public class ConjunctivePredicateTest {
 	 * Inits the conjunctive predicate t.
 	 */
 	@Test public void initConjunctivePredicateT() {
-		pred = new ConjunctivePredicate<>(subPred1);
+		pred = new ConjunctiveCondition<>(subPred1);
 		Assert.assertEquals("Singleton constructor should yield conjunction of size 1", 1, pred.size());
 		Assert.assertFalse("Empty constructor should yield non-empty conjunction", pred.isEmpty());
 
-		pred = new ConjunctivePredicate<>(subPred2);
+		pred = new ConjunctiveCondition<>(subPred2);
 		Assert.assertEquals("Singleton constructor should yield conjunction of size 1", 1, pred.size());
 		Assert.assertFalse("Empty constructor should yield non-empty conjunction", pred.isEmpty());
 
-		pred = new ConjunctivePredicate<>(subPred3);
+		pred = new ConjunctiveCondition<>(subPred3);
 		Assert.assertEquals("Singleton constructor should yield conjunction of size 1", 1, pred.size());
 		Assert.assertFalse("Empty constructor should yield non-empty conjunction", pred.isEmpty());
 	}
@@ -76,7 +76,7 @@ public class ConjunctivePredicateTest {
 	 * Inits the conjunctive predicate collection.
 	 */
 	@Test public void initConjunctivePredicateCollection() {
-		pred = new ConjunctivePredicate<>(Lists.newArrayList(subPred1, subPred2, subPred3));
+		pred = new ConjunctiveCondition<>(Lists.newArrayList(subPred1, subPred2, subPred3));
 		Assert.assertEquals("Empty constructor should yield conjunction of size 3", 3, pred.size());
 		Assert.assertFalse("Empty constructor should yield non-empty conjunction", pred.isEmpty());
 	}
@@ -86,7 +86,7 @@ public class ConjunctivePredicateTest {
 	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void initConjunctivePredicateCollectionNoNullElement() {
-		pred = new ConjunctivePredicate<>(Lists.newArrayList(subPred1, null, subPred3));
+		pred = new ConjunctiveCondition<>(Lists.newArrayList(subPred1, null, subPred3));
 	}
 
 	/**
@@ -94,14 +94,14 @@ public class ConjunctivePredicateTest {
 	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void initConjunctivePredicateNotNullArgument() {
-		pred = new ConjunctivePredicate<>((Predicate) null);
+		pred = new ConjunctiveCondition<>((Condition) null);
 	}
 
 	/**
 	 * Adds the predicate.
 	 */
 	@Test public void addPredicate() {
-		pred = new ConjunctivePredicate<>();
+		pred = new ConjunctiveCondition<>();
 		Assert.assertEquals("Empty constructor should yield conjunction of size 0", 0, pred.size());
 		Assert.assertTrue("Empty constructor should yield empty conjunction", pred.isEmpty());
 		
@@ -123,7 +123,7 @@ public class ConjunctivePredicateTest {
 	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void addPredicateNotNull() {
-		pred = new ConjunctivePredicate<>();
+		pred = new ConjunctiveCondition<>();
 		pred.addPredicate(null);
 	}
 
@@ -131,19 +131,19 @@ public class ConjunctivePredicateTest {
 	 * Checks if is satisfied.
 	 */
 	@Test public void isSatisfied() {
-		pred = new ConjunctivePredicate<>(subPred1);
+		pred = new ConjunctiveCondition<>(subPred1);
 		Assert.assertTrue("Conjunctive singleton is true when sub predicate is true", pred.isSatisfied(t));
 
-		pred = new ConjunctivePredicate<>(Lists.newArrayList(subPred1, subPred2, subPred1));
+		pred = new ConjunctiveCondition<>(Lists.newArrayList(subPred1, subPred2, subPred1));
 		Assert.assertTrue("Conjunctive is true when one all sub predicates are true", pred.isSatisfied(t));
 
-		pred = new ConjunctivePredicate<>(subPred3);
+		pred = new ConjunctiveCondition<>(subPred3);
 		Assert.assertFalse("Conjunctive singleton is false when sub predicate is false", pred.isSatisfied(t));
 
-		pred = new ConjunctivePredicate<>(Lists.newArrayList(subPred1, subPred2, subPred3));
+		pred = new ConjunctiveCondition<>(Lists.newArrayList(subPred1, subPred2, subPred3));
 		Assert.assertFalse("Conjunctive is false when one of all sub predicate is false", pred.isSatisfied(t));
 
-		pred = new ConjunctivePredicate<>(Lists.newArrayList(subPred3, subPred3, subPred3));
+		pred = new ConjunctiveCondition<>(Lists.newArrayList(subPred3, subPred3, subPred3));
 		Assert.assertFalse("Conjunctive is false when all sub predicates are false", pred.isSatisfied(t));
 	}
 

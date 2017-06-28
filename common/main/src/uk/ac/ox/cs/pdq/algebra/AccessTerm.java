@@ -8,7 +8,6 @@ import org.junit.Assert;
 
 import uk.ac.ox.cs.pdq.InterningManager;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
-import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 
@@ -28,13 +27,13 @@ public class AccessTerm extends RelationalTerm {
 	protected final AccessMethod accessMethod;
 
 	/**  The constants used to call the underlying access method. */
-	protected final Map<Integer, TypedConstant<?>> inputConstants;
+	protected final Map<Integer, TypedConstant> inputConstants;
 
 	/**  Cashed string representation. */
 	protected String toString = null;
 
 	protected AccessTerm(Relation relation, AccessMethod accessMethod) {
-		super(AlgebraUtilities.getInputAttributes(relation, accessMethod), relation.getAttributes().toArray(new Attribute[relation.getAttributes().size()]));
+		super(AlgebraUtilities.getInputAttributes(relation, accessMethod), relation.getAttributes());
 		Assert.assertNotNull(relation);
 		Assert.assertNotNull(accessMethod);
 		this.relation = relation;
@@ -42,8 +41,8 @@ public class AccessTerm extends RelationalTerm {
 		this.inputConstants = new LinkedHashMap<>();
 	}
 
-	protected AccessTerm(Relation relation, AccessMethod accessMethod, Map<Integer, TypedConstant<?>> inputConstants) {
-		super(AlgebraUtilities.getInputAttributes(relation, accessMethod, inputConstants), relation.getAttributes().toArray(new Attribute[relation.getAttributes().size()]));
+	protected AccessTerm(Relation relation, AccessMethod accessMethod, Map<Integer, TypedConstant> inputConstants) {
+		super(AlgebraUtilities.getInputAttributes(relation, accessMethod, inputConstants), relation.getAttributes());
 		Assert.assertNotNull(relation);
 		Assert.assertNotNull(accessMethod);
 		for(Integer position:inputConstants.keySet()) {
@@ -53,7 +52,7 @@ public class AccessTerm extends RelationalTerm {
 		this.relation = relation;
 		this.accessMethod = accessMethod;
 		this.inputConstants = new LinkedHashMap<>();
-		for(java.util.Map.Entry<Integer, TypedConstant<?>> entry:inputConstants.entrySet()) 
+		for(java.util.Map.Entry<Integer, TypedConstant> entry:inputConstants.entrySet()) 
 			this.inputConstants.put(entry.getKey(), entry.getValue().clone());
 	}
 
@@ -106,7 +105,7 @@ public class AccessTerm extends RelationalTerm {
             if (!object1.relation.equals(object2.relation) || !object1.accessMethod.equals(object2.accessMethod) || 
             		object1.inputConstants.size() != object2.inputConstants.size())
                 return false;
-            for(java.util.Map.Entry<Integer, TypedConstant<?>> entry:object1.inputConstants.entrySet()) {
+            for(java.util.Map.Entry<Integer, TypedConstant> entry:object1.inputConstants.entrySet()) {
             	if(!object2.inputConstants.containsKey(entry.getKey()) || object2.inputConstants.get(entry.getKey()).equals(entry.getValue())) 
             		return false;
             }
@@ -115,7 +114,7 @@ public class AccessTerm extends RelationalTerm {
 
         protected int getHashCode(AccessTerm object) {
             int hashCode = object.relation.hashCode() + object.accessMethod.hashCode() * 7;
-            for(java.util.Map.Entry<Integer, TypedConstant<?>> entry:object.inputConstants.entrySet()) 
+            for(java.util.Map.Entry<Integer, TypedConstant> entry:object.inputConstants.entrySet()) 
                 hashCode = hashCode * 8 + entry.getKey().hashCode() * 9 + entry.getValue().hashCode() * 10;
             return hashCode;
         }
@@ -129,7 +128,7 @@ public class AccessTerm extends RelationalTerm {
         return s_interningManager.intern(new AccessTerm(relation, accessMethod));
     }
     
-    public static AccessTerm create(Relation relation, AccessMethod accessMethod, Map<Integer, TypedConstant<?>> inputConstants) {
+    public static AccessTerm create(Relation relation, AccessMethod accessMethod, Map<Integer, TypedConstant> inputConstants) {
         return s_interningManager.intern(new AccessTerm(relation, accessMethod, inputConstants));
     }
 

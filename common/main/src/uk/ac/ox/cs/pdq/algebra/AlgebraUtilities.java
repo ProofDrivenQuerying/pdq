@@ -29,7 +29,7 @@ public class AlgebraUtilities {
 		return inputs.toArray(new Attribute[inputs.size()]);
 	}
 
-	public static Attribute[] getInputAttributes(Relation relation, AccessMethod accessMethod, Map<Integer, TypedConstant<?>> inputConstants) {
+	public static Attribute[] getInputAttributes(Relation relation, AccessMethod accessMethod, Map<Integer, TypedConstant> inputConstants) {
 		Assert.assertNotNull(relation);
 		Assert.assertTrue(accessMethod != null && accessMethod.getInputs().length > 0);
 		Assert.assertNotNull(inputConstants);

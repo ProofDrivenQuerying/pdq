@@ -25,7 +25,7 @@ public class DatabaseConnection implements AutoCloseable{
 	public final int synchronousThreadsNumber = 1;
 
 	private boolean isInitialized = false;
-	
+
 	/**  Open database connections. */
 	protected List<Connection> synchronousConnections = Lists.newArrayList();
 
@@ -34,10 +34,10 @@ public class DatabaseConnection implements AutoCloseable{
 	}
 	/** Map schema relation to database tables. */
 	private Map<String, Relation> relationNamesToRelationObjects = null;
-	
+
 	/**  Creates SQL statements to detect homomorphisms or add/delete facts in a database. */
 	private SQLStatementBuilder builder = null;
-	
+
 	public SQLStatementBuilder getSQLStatementBuilder() {
 		return getBuilder();
 	}
@@ -49,7 +49,7 @@ public class DatabaseConnection implements AutoCloseable{
 	private ArrayList<Relation> relations;
 
 	private static Integer counter = 0;
-	
+
 	private Schema schema;
 
 	public Schema getSchema() {
@@ -106,34 +106,34 @@ public class DatabaseConnection implements AutoCloseable{
 			this.isInitialized = true;
 		}
 	}
-	
+
 	/**
 	 * Sets up the database that will store the facts.
 	 * @throws SQLException 
 	 */
 	protected void setup() throws SQLException {
-			Statement sqlStatement = this.synchronousConnections.get(0).createStatement();
+		Statement sqlStatement = this.synchronousConnections.get(0).createStatement();
 
-			for (String sql: this.getBuilder().createDatabaseStatements(database)) {
-				sqlStatement.addBatch(sql);
-			}
+		for (String sql: this.getBuilder().createDatabaseStatements(database)) {
+			sqlStatement.addBatch(sql);
+		}
 
-			//Put relations into a set so as to make them unique
-			Set<Relation> relationset = new HashSet<Relation>();
-			relationset.addAll(this.relations);
-			this.relations.clear();
-			this.relations.addAll(relationset);
+		//Put relations into a set so as to make them unique
+		Set<Relation> relationset = new HashSet<Relation>();
+		relationset.addAll(this.relations);
+		this.relations.clear();
+		this.relations.addAll(relationset);
 
-			//Create the database tables and create column indices
-			for (Relation relation:this.relations) {
-				Relation dbRelation = this.createDatabaseRelation(relation);
-				this.relationNamesToRelationObjects.put(relation.getName(), dbRelation);
-				sqlStatement.addBatch(this.getBuilder().createTableStatement(dbRelation));
-//				sqlStatement.addBatch(this.getBuilder().createColumnIndexStatement(dbRelation, dbRelation.getAttribute(dbRelation.getArity()-1)));
-			}
-			sqlStatement.executeBatch();
+		//Create the database tables and create column indices
+		for (Relation relation:this.relations) {
+			Relation dbRelation = this.createDatabaseRelation(relation);
+			this.relationNamesToRelationObjects.put(relation.getName(), dbRelation);
+			sqlStatement.addBatch(this.getBuilder().createTableStatement(dbRelation));
+			//				sqlStatement.addBatch(this.getBuilder().createColumnIndexStatement(dbRelation, dbRelation.getAttribute(dbRelation.getArity()-1)));
+		}
+		sqlStatement.executeBatch();
 	}
-	
+
 	/**
 	 * Creates the db relation. Currently codes in the position numbers into the names, but this should change
 	 *
@@ -159,13 +159,13 @@ public class DatabaseConnection implements AutoCloseable{
 	 * @throws SQLException 
 	 */
 	protected void dropDatabase() throws SQLException {
-			Statement sqlStatement = this.synchronousConnections.get(0).createStatement();
-			//Statement sqlStatement = this.synchronousConnections.createStatement();
+		Statement sqlStatement = this.synchronousConnections.get(0).createStatement();
+		//Statement sqlStatement = this.synchronousConnections.createStatement();
 
-			for (String sql: this.getBuilder().createDropStatements(database)) {
-				sqlStatement.addBatch(sql);
-			}
-			sqlStatement.executeBatch();
+		for (String sql: this.getBuilder().createDropStatements(database)) {
+			sqlStatement.addBatch(sql);
+		}
+		sqlStatement.executeBatch();
 	}
 	/*
 	 * (non-Javadoc)

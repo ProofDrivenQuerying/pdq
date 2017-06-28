@@ -69,8 +69,8 @@ public class LinearGuarded extends TGD {
 
 		Reference[] references = foreignKey.getReferences();
 		for (Reference rf:references) {
-			int remoteTermIndex = foreignKey.getForeignRelation().getAttributeIndex(rf.getForeignAttributeName());
-			int localTermIndex = relation.getAttributeIndex(rf.getLocalAttributeName());
+			int remoteTermIndex = foreignKey.getForeignRelation().getAttributePosition(rf.getForeignAttributeName());
+			int localTermIndex = relation.getAttributePosition(rf.getLocalAttributeName());
 			remoteTerms.set(remoteTermIndex, free.get(localTermIndex));
 		}
 		return new Atom(foreignKey.getForeignRelation(), remoteTerms);

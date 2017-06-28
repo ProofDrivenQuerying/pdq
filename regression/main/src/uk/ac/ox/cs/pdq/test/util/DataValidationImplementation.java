@@ -5,10 +5,11 @@ import java.util.HashSet;
 import java.util.List;
 
 import jersey.repackaged.com.google.common.collect.Lists;
+import uk.ac.ox.cs.pdq.datasources.Table;
+import uk.ac.ox.cs.pdq.datasources.memory.RelationAccessWrapper;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.db.wrappers.RelationAccessWrapper;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.TGD;
@@ -16,7 +17,6 @@ import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.TriggerProperty;
 import uk.ac.ox.cs.pdq.runtime.exec.AccessException;
-import uk.ac.ox.cs.pdq.util.Table;
 import uk.ac.ox.cs.pdq.util.Tuple;
 import uk.ac.ox.cs.pdq.util.Utility;
 

@@ -2,9 +2,9 @@ package uk.ac.ox.cs.pdq.runtime.query;
 
 import java.sql.SQLException;
 
+import uk.ac.ox.cs.pdq.datasources.memory.InMemoryTableWrapper;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.db.wrappers.InMemoryTableWrapper;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.runtime.EvaluationException;

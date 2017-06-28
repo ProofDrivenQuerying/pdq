@@ -117,7 +117,7 @@ public class ExplorationSetUp {
 		//final static Attribute StateIDAttribute = new Attribute(Integer.class, "ChaseStateID");
 		for(Relation r:schema.getRelations())
 		{
-			r.extendByAddingAttribute(atribute);
+			r.appendAttribute(atribute);
 		}
 	}
 

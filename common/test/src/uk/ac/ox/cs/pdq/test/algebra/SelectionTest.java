@@ -31,7 +31,7 @@ public class SelectionTest extends UnaryOperatorTest {
 	Selection operator;
 	
 	/** The predicate. */
-	@Mock Predicate predicate;
+	@Mock Condition predicate;
 	
 	/* (non-Javadoc)
 	 * @see uk.ac.ox.cs.pdq.test.algebra.RelationalOperatorTest#setup()

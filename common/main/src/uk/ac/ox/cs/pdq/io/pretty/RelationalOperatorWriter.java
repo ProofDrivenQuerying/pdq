@@ -289,7 +289,7 @@ public class RelationalOperatorWriter extends PrettyWriter<RelationalOperator>
 	 * @param selection the selection
 	 */
 	private void formatPredicate(StringBuilder sb, Selection selection) {
-		Predicate predicate = selection.getPredicate();
+		Condition predicate = selection.getPredicate();
 		List<Term> columns = selection.getColumns();
 		this.formatPredicate(sb, predicate, columns);
 	}
@@ -302,9 +302,9 @@ public class RelationalOperatorWriter extends PrettyWriter<RelationalOperator>
 	 * @param conjunction the conjunction
 	 * @param columns the columns
 	 */
-	private void formatConjunctivePredicate(StringBuilder sb, ConjunctivePredicate<Predicate> conjunction, List<Term> columns) {
+	private void formatConjunctivePredicate(StringBuilder sb, ConjunctiveCondition<Condition> conjunction, List<Term> columns) {
 		String sep = "";
-		for (Predicate predicate : conjunction) {
+		for (Condition predicate : conjunction) {
 			sb.append(sep);
 			this.formatPredicate(sb, predicate, columns);
 			sep = CONJUNCTION;
@@ -318,19 +318,19 @@ public class RelationalOperatorWriter extends PrettyWriter<RelationalOperator>
 	 * @param predicate the predicate
 	 * @param columns the columns
 	 */
-	private void formatPredicate(StringBuilder sb, Predicate predicate, List<Term> columns) {
-		if (predicate instanceof ConjunctivePredicate) {
-			this.formatConjunctivePredicate(sb, (ConjunctivePredicate) predicate, columns);
+	private void formatPredicate(StringBuilder sb, Condition predicate, List<Term> columns) {
+		if (predicate instanceof ConjunctiveCondition) {
+			this.formatConjunctivePredicate(sb, (ConjunctiveCondition) predicate, columns);
 		}
- 		if (predicate instanceof AttributeEqualityPredicate) {
- 			sb.append(columns.get(((SimplePredicate) predicate).getPosition()))
+ 		if (predicate instanceof AttributeEqualityCondition) {
+ 			sb.append(columns.get(((SimpleCondition) predicate).getPosition()))
  				.append(EQUALITY)
-				.append(columns.get(((AttributeEqualityPredicate) predicate).getOther()));
+				.append(columns.get(((AttributeEqualityCondition) predicate).getOther()));
 		}
-		if (predicate instanceof ConstantEqualityPredicate) {
- 			sb.append(columns.get(((SimplePredicate) predicate).getPosition()))
+		if (predicate instanceof ConstantEqualityCondition) {
+ 			sb.append(columns.get(((SimpleCondition) predicate).getPosition()))
 				.append(EQUALITY).append(SINGLE_QUOTE)
-				.append(((ConstantEqualityPredicate) predicate).getValue()).append(SINGLE_QUOTE);
+				.append(((ConstantEqualityCondition) predicate).getValue()).append(SINGLE_QUOTE);
 		}
 	}
 
@@ -342,7 +342,7 @@ public class RelationalOperatorWriter extends PrettyWriter<RelationalOperator>
 	 * @param aliases the aliases
 	 */
 	private void formatPredicate(StringBuilder sb, Join join, Map<RelationalOperator, String> aliases) {
-		Predicate predicate = join.getPredicate();
+		Condition predicate = join.getPredicate();
 		List<Term> columns = join.getColumns();
 		RelationalOperator subLeft = this.findSubPlanAlias(join.getChildren().get(0));
 		String lAlias = aliases.get(subLeft);
@@ -384,35 +384,35 @@ public class RelationalOperatorWriter extends PrettyWriter<RelationalOperator>
 	 * @param right the right
 	 * @param terms the terms
 	 */
-	private void formatJoinPredicate(StringBuilder sb, Predicate predicate, String left, String right, List<Term> terms) {
-		if (predicate instanceof ConjunctivePredicate) {
-			this.formatJoinConjunctivePredicate(sb, (ConjunctivePredicate) predicate, left, right, terms);
+	private void formatJoinPredicate(StringBuilder sb, Condition predicate, String left, String right, List<Term> terms) {
+		if (predicate instanceof ConjunctiveCondition) {
+			this.formatJoinConjunctivePredicate(sb, (ConjunctiveCondition) predicate, left, right, terms);
 		}
-		if (predicate instanceof AttributeEqualityPredicate) {
+		if (predicate instanceof AttributeEqualityCondition) {
 			if (left != null) {
 				sb.append(left).append(PERIOD)
-					.append(terms.get(((SimplePredicate) predicate).getPosition()));
+					.append(terms.get(((SimpleCondition) predicate).getPosition()));
 			} else {
-				sb.append(INDEX).append(((SimplePredicate) predicate).getPosition());
+				sb.append(INDEX).append(((SimpleCondition) predicate).getPosition());
 			}
 			sb.append(EQUALITY);
 			if (right != null) {
 				sb.append(right).append(PERIOD)
-					.append(terms.get(((AttributeEqualityPredicate) predicate).getOther()));
+					.append(terms.get(((AttributeEqualityCondition) predicate).getOther()));
 			} else {
-				sb.append(INDEX).append(((AttributeEqualityPredicate) predicate).getOther());
+				sb.append(INDEX).append(((AttributeEqualityCondition) predicate).getOther());
 			}
 		}
-		if (predicate instanceof ConstantEqualityPredicate) {
+		if (predicate instanceof ConstantEqualityCondition) {
 			if (left != null) {
 				sb.append(left).append(PERIOD)
-					.append(terms.get(((SimplePredicate) predicate).getPosition()));
+					.append(terms.get(((SimpleCondition) predicate).getPosition()));
 			} else {
 				sb.append(INDEX)
-					.append(((SimplePredicate) predicate).getPosition());
+					.append(((SimpleCondition) predicate).getPosition());
 			}
 			sb.append(EQUALITY).append(SINGLE_QUOTE)
-				.append(((ConstantEqualityPredicate) predicate).getValue()).append(SINGLE_QUOTE);
+				.append(((ConstantEqualityCondition) predicate).getValue()).append(SINGLE_QUOTE);
 		}
 	}
 
@@ -425,9 +425,9 @@ public class RelationalOperatorWriter extends PrettyWriter<RelationalOperator>
 	 * @param right the right
 	 * @param columns the columns
 	 */
-	private void formatJoinConjunctivePredicate(StringBuilder sb, ConjunctivePredicate<Predicate> conjunction, String left, String right, List<Term> columns) {
+	private void formatJoinConjunctivePredicate(StringBuilder sb, ConjunctiveCondition<Condition> conjunction, String left, String right, List<Term> columns) {
 		String sep = "";
-		for (Predicate predicate : conjunction) {
+		for (Condition predicate : conjunction) {
 			sb.append(sep);
 			this.formatJoinPredicate(sb, predicate, left, right, columns);
 			sep = CONJUNCTION;

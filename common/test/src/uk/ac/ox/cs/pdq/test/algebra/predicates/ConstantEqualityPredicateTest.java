@@ -24,7 +24,7 @@ import uk.ac.ox.cs.pdq.util.Utility;
 public class ConstantEqualityPredicateTest {
 	
 	/** The pred. */
-	ConstantEqualityPredicate pred;
+	ConstantEqualityCondition pred;
 	
 	/** The t5. */
 	Tuple t1, t2, t3, t4, t5;
@@ -64,10 +64,10 @@ public class ConstantEqualityPredicateTest {
 	 * Inits the constant equality predicate test.
 	 */
 	@Test public void initConstantEqualityPredicateTest() {
-		pred = new ConstantEqualityPredicate(0, new TypedConstant<>(0)) ;
+		pred = new ConstantEqualityCondition(0, new TypedConstant<>(0)) ;
 		Assert.assertEquals("Initial parameters are found in getters", 0, pred.getPosition());
 		Assert.assertEquals("Initial parameters are found in getters", new TypedConstant<>(0), pred.getValue());
-		pred = new ConstantEqualityPredicate(0, new TypedConstant<>("0")) ;
+		pred = new ConstantEqualityCondition(0, new TypedConstant<>("0")) ;
 		Assert.assertEquals("Initial parameters are found in getters", 0, pred.getPosition());
 		Assert.assertEquals("Initial parameters are found in getters", new TypedConstant<>("0"), pred.getValue());
 		//TODO: Add test for entity relation constant types
@@ -79,7 +79,7 @@ public class ConstantEqualityPredicateTest {
 	 */
 	@Test(expected=AssertionError.class)
 	public void initConstantEqualityPredicateNegativeParameters() {
-		new ConstantEqualityPredicate(-1, new TypedConstant<>("0")) ;
+		new ConstantEqualityCondition(-1, new TypedConstant<>("0")) ;
 	}
 	
 	/**
@@ -93,11 +93,11 @@ public class ConstantEqualityPredicateTest {
 	 * Checks if is satisfied distinct positions.
 	 */
 	@Test public void isSatisfiedDistinctPositions() {
-		pred = new ConstantEqualityPredicate(0, new TypedConstant<>(1)) ;
+		pred = new ConstantEqualityCondition(0, new TypedConstant<>(1)) ;
 		Assert.assertTrue("Equality on integers ", pred.isSatisfied(t1));
-		pred = new ConstantEqualityPredicate(2, new TypedConstant<>("A")) ;
+		pred = new ConstantEqualityCondition(2, new TypedConstant<>("A")) ;
 		Assert.assertTrue("Equality on string ", pred.isSatisfied(t2));
-		pred = new ConstantEqualityPredicate(2, null) ;
+		pred = new ConstantEqualityCondition(2, null) ;
 		Assert.assertTrue("Equality on null value ", pred.isSatisfied(t3));
 		//TODO: Add test for entity relation constant types
 	}
@@ -106,16 +106,16 @@ public class ConstantEqualityPredicateTest {
 	 * Checks if is not satisfied.
 	 */
 	@Test public void isNotSatisfied() {
-		pred = new ConstantEqualityPredicate(0, new TypedConstant<>(4)) ;
+		pred = new ConstantEqualityCondition(0, new TypedConstant<>(4)) ;
 		Assert.assertFalse("Non-equality on integers ", pred.isSatisfied(t1));
-		pred = new ConstantEqualityPredicate(0, new TypedConstant<>("B")) ;
+		pred = new ConstantEqualityCondition(0, new TypedConstant<>("B")) ;
 		Assert.assertFalse("Non-equality on strings ", pred.isSatisfied(t3));
 		//TODO: Add test for entity relation constant types
-		pred = new ConstantEqualityPredicate(1, new TypedConstant<>("B")) ;
+		pred = new ConstantEqualityCondition(1, new TypedConstant<>("B")) ;
 		Assert.assertFalse("Non-equality across integers and string ", pred.isSatisfied(t2));
-		pred = new ConstantEqualityPredicate(1, new TypedConstant<>("0")) ;
+		pred = new ConstantEqualityCondition(1, new TypedConstant<>("0")) ;
 		Assert.assertFalse("Non-equality across similar integers and string ", pred.isSatisfied(t3));
-		pred = new ConstantEqualityPredicate(1, null) ;
+		pred = new ConstantEqualityCondition(1, null) ;
 		Assert.assertFalse("Non-equality on null value ", pred.isSatisfied(t3));
 	}
 
@@ -124,7 +124,7 @@ public class ConstantEqualityPredicateTest {
 	 */
 	@Test(expected=AssertionError.class)
 	public void isSatisfiedWithIllegalArgument() {
-		pred = new ConstantEqualityPredicate(10, new TypedConstant<>("0"));
+		pred = new ConstantEqualityCondition(10, new TypedConstant<>("0"));
 		pred.isSatisfied(t1);
 	}
 
@@ -133,7 +133,7 @@ public class ConstantEqualityPredicateTest {
 	 */
 	@Test(expected=AssertionError.class)
 	public void isSatisfiedWithIllegalEmptyTupleArgument() {
-		pred = new ConstantEqualityPredicate(0, new TypedConstant<>("0"));
+		pred = new ConstantEqualityCondition(0, new TypedConstant<>("0"));
 		pred.isSatisfied(t5);
 	}
 
@@ -141,21 +141,21 @@ public class ConstantEqualityPredicateTest {
 	 * Equals.
 	 */
 	@Test public void equals() {
-		pred = new ConstantEqualityPredicate(0, new TypedConstant<>("0")) ;
-		Assert.assertEquals("Equality on attribute equality predicates ", pred, new ConstantEqualityPredicate(0, new TypedConstant<>("0")));
-		Assert.assertNotEquals("Non-equality on attribute equality predicates ", pred, new ConstantEqualityPredicate(0, new TypedConstant<>(0)));
+		pred = new ConstantEqualityCondition(0, new TypedConstant<>("0")) ;
+		Assert.assertEquals("Equality on attribute equality predicates ", pred, new ConstantEqualityCondition(0, new TypedConstant<>("0")));
+		Assert.assertNotEquals("Non-equality on attribute equality predicates ", pred, new ConstantEqualityCondition(0, new TypedConstant<>(0)));
 	}
 
 	/**
 	 * Test hash code.
 	 */
 	@Test public void testHashCode() {
-		Set<ConstantEqualityPredicate> s = new LinkedHashSet<>();
-		s.add(new ConstantEqualityPredicate(0, new TypedConstant<>("0")));
+		Set<ConstantEqualityCondition> s = new LinkedHashSet<>();
+		s.add(new ConstantEqualityCondition(0, new TypedConstant<>("0")));
 		Assert.assertEquals("Size of singleton set should be one ", 1, s.size());
-		s.add(new ConstantEqualityPredicate(0, new TypedConstant<>("0")));
+		s.add(new ConstantEqualityCondition(0, new TypedConstant<>("0")));
 		Assert.assertEquals("Adding same predicate should not increase set size ", 1, s.size());
-		s.add(new ConstantEqualityPredicate(0, new TypedConstant<>(0)));
+		s.add(new ConstantEqualityCondition(0, new TypedConstant<>(0)));
 		Assert.assertEquals("Adding different predicate should increase set size ", 2, s.size());
 	}
 }

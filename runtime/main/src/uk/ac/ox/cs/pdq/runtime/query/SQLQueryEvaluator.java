@@ -14,6 +14,9 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
+import uk.ac.ox.cs.pdq.datasources.BooleanResult;
+import uk.ac.ox.cs.pdq.datasources.Result;
+import uk.ac.ox.cs.pdq.datasources.Table;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Atom;
@@ -21,9 +24,6 @@ import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.rewrite.RewriterException;
 import uk.ac.ox.cs.pdq.rewrite.sql.SQLTranslator;
 import uk.ac.ox.cs.pdq.runtime.EvaluationException;
-import uk.ac.ox.cs.pdq.util.BooleanResult;
-import uk.ac.ox.cs.pdq.util.Result;
-import uk.ac.ox.cs.pdq.util.Table;
 import uk.ac.ox.cs.pdq.util.Tuple;
 import uk.ac.ox.cs.pdq.util.Typed;
 import uk.ac.ox.cs.pdq.util.Types;

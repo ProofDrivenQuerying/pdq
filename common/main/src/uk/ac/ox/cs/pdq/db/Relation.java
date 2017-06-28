@@ -1,16 +1,14 @@
 package uk.ac.ox.cs.pdq.db;
 
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Properties;
 
 import uk.ac.ox.cs.pdq.db.metadata.RelationMetadata;
 import uk.ac.ox.cs.pdq.fol.Predicate;
-import uk.ac.ox.cs.pdq.util.TupleType;
 
 /**
  * The schema of a relation.
@@ -23,15 +21,8 @@ public abstract class Relation extends Predicate implements Serializable {
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -9222721018270749836L;
 
-	/** 
-	 * Properties associated with this relation; these may be SQL
-	 * connection parameters, web service settings, etc. depending on the
-	 * underlying implementation.
-	 * If no properties are defined, then this an an empty Properties instance. */
-	protected final Properties properties = new Properties();
-
 	/**  The relation's attributes. */
-	protected List<Attribute> attributes;
+	protected Attribute[] attributes;
 
 	/**
 	 * Maps attribute names to position in the relation. 
@@ -42,232 +33,205 @@ public abstract class Relation extends Predicate implements Serializable {
 	 * The relation's access methods, i.e. the positions of the inputAttributes
 	 * which require input values.
 	 */
-	protected Map<String, AccessMethod> accessMethods;
+	protected Map<String, AccessMethod> accessMethodsMaps;
 
-	protected List<AccessMethod> accessMethodsList;
+	protected AccessMethod[] accessMethods;
 
 	/**
 	 * The relation's foreign keys.
 	 */
-	protected List<ForeignKey> foreignKeys;
+	protected ForeignKey[] foreignKeys;
 
-	protected PrimaryKey key;
+	protected PrimaryKey primaryKey;
 
 	/** Every relation has associated metadata stored in a separate object **/
-	private RelationMetadata metadataRelation;
+	protected RelationMetadata metadataRelation;
 
+	/** 
+	 * Properties associated with this relation; these may be SQL
+	 * connection parameters, web service settings, etc. depending on the
+	 * underlying implementation.
+	 * If no properties are defined, then this an an empty Properties instance. */
+	protected final Properties properties = new Properties();
 
-	public Relation(String name, List<? extends Attribute> attributes,
-			List<AccessMethod> accessMethods, List<ForeignKey> foreignKeys) {
+	
+	public Relation(String name, Attribute[] attributes, AccessMethod[] accessMethods, ForeignKey[] foreignKeys) {
 		this(name, attributes, accessMethods, foreignKeys, false);
 	}
 
-	public Relation(String name, List<? extends Attribute> attributes, List<AccessMethod> accessMethods, List<ForeignKey> foreignKeys, boolean isEquality) {
-		super(name, attributes.size(), isEquality);
-		this.attributes = new ArrayList<>();
-		this.attributes.addAll(attributes);
-		Map<String, Integer> positions = new LinkedHashMap<>();
-		int i = 0;
-		for (Attribute a : this.attributes) {
-			positions.put(a.getName(), i++);
-		}
-		this.attributePositions = new LinkedHashMap<>();
-		this.attributePositions.putAll(positions);
-		this.accessMethods = new LinkedHashMap<>();
-		this.accessMethodsList = new ArrayList<>();
-		this.addAccessMethods(accessMethods);
-		this.foreignKeys = new ArrayList<>(foreignKeys);
-	}
-
-
-	public Relation(String name, List<? extends Attribute> attributes, List<AccessMethod> accessMethods) {
+	public Relation(String name, Attribute[] attributes, AccessMethod[] accessMethods) {
 		this(name, attributes, accessMethods, false);
 	}
 
-	public Relation(String name, List<? extends Attribute> attributes, List<AccessMethod> accessMethods, boolean isEquality) {
-		this(name, attributes, accessMethods, new ArrayList<ForeignKey>(), isEquality);
+	public Relation(String name, Attribute[] attributes, AccessMethod[] accessMethods, boolean isEquality) {
+		this(name, attributes, accessMethods, new ForeignKey[]{}, isEquality);
 	}
 
-	public Relation(String name, List<? extends Attribute> attributes, boolean isEquality) {
-		this(name, attributes, new ArrayList<AccessMethod>(), isEquality);
+	public Relation(String name, Attribute[] attributes, boolean isEquality) {
+		this(name, attributes, new AccessMethod[]{}, isEquality);
 	}
 
-	public Relation(String name, List<? extends Attribute> attributes) {
-		this(name, attributes, new ArrayList<AccessMethod>(), false);
+	public Relation(String name, Attribute[] attributes) {
+		this(name, attributes, new AccessMethod[]{}, false);
+	}
+
+	public Relation(String name, Attribute[] attributes, AccessMethod[] accessMethods, ForeignKey[] foreignKeys, boolean isEquality) {
+		super(name, attributes.length, isEquality);
+		this.attributes = attributes.clone();
+		Map<String, Integer> positions = new LinkedHashMap<>();
+		for (int attributeIndex = 0; attributeIndex < attributes.length; ++attributeIndex) 
+			positions.put(this.attributes[attributeIndex].getName(), attributeIndex);
+		this.attributePositions = new LinkedHashMap<>();
+		this.attributePositions.putAll(positions);
+		this.accessMethods = accessMethods.clone();
+		this.accessMethodsMaps = new LinkedHashMap<>();
+		for(AccessMethod accessMethod:accessMethods) 
+			this.accessMethodsMaps.put(accessMethod.getName(), accessMethod);
+		this.foreignKeys = foreignKeys.clone();
 	}
 
 	@Override
 	public String getName() {
 		return this.name;
-
 	}
 
 	@Override
 	public int getArity() {
-		return this.attributes.size();
+		return this.attributes.length;
 	}
 
-
-	public List<Attribute> getAttributes() {
-		return this.attributes;
+	public Attribute[] getAttributes() {
+		return this.attributes.clone();
 	}
-
-	public TupleType getType() {
-		return TupleType.DefaultFactory.createFromTyped(getAttributes());
-	}
-
 
 	public Attribute getAttribute(int index) {
-		return this.attributes.get(index);
+		return this.attributes[index];
 	}
 
 	/**
-	 * TOCOMMENT I guss this retruns the attribute's position
 	 * Gets the attribute index.
 	 *
 	 * @param attributeName the attribute name
 	 * @return the index of the attribute whose name is given as parameter,
 	 *         returns -1 iff the relation has no such attribute
 	 */
-	public int getAttributeIndex(String attributeName) {
+	public int getAttributePosition(String attributeName) {
 		return this.attributePositions.get(attributeName);
 	}
 
 	public Attribute getAttribute(String attributeName) {
 		Integer position = this.attributePositions.get(attributeName);
-		if (position != null && position >= 0) {
-			return this.attributes.get(position);
-		}
+		if (position != null && position >= 0) 
+			return this.attributes[position];
 		return null;
 	}
 
-	public List<AccessMethod> getAccessMethods() {
-		return this.accessMethodsList;
+	public AccessMethod[] getAccessMethods() {
+		return this.accessMethods.clone();
 	}
 
 	public void addForeignKey(ForeignKey foreingKey) {
-		this.foreignKeys.add(foreingKey);
-	}
-
-	public void addForeignKeys(List<ForeignKey> foreingKeys) {
-		this.foreignKeys.addAll(foreingKeys);
-	}
-
-	public ForeignKey getForeignKey(int index) {
-		return this.foreignKeys.get(index);
-	}
-
-	public List<ForeignKey> getForeignKeys() {
-		return this.foreignKeys;
-	}
-	
-	public void addAccessMethods(List<AccessMethod> accessMethods) {
-		for(AccessMethod accessMethod:accessMethods) {
-			this.accessMethods.put(accessMethod.getName(), accessMethod);
-			this.accessMethodsList.add(accessMethod);
-		}
-	}
-	
-	public void setAccessMethods(List<AccessMethod> accessMethods) {
-		this.accessMethods.clear();
-		this.accessMethodsList.clear();
-		for(AccessMethod accessMethod:accessMethods) {
-			this.accessMethods.put(accessMethod.getName(), accessMethod);
-			this.accessMethodsList.add(accessMethod);
+		if(this.foreignKeys.length == 0)
+			this.foreignKeys = new ForeignKey[]{foreingKey};
+		else {
+			ForeignKey[] destination = new ForeignKey[this.foreignKeys.length + 1];
+			System.arraycopy(this.foreignKeys, 0, destination, 0, this.foreignKeys.length);
+			destination[this.foreignKeys.length] = foreingKey;
+			this.foreignKeys = destination;
 		}
 	}
 
-	public void setKey(PrimaryKey key) {
-		this.key = key;
+	public ForeignKey[] getForeignKeys() {
+		return this.foreignKeys.clone();
+	}
+
+	public void setAccessMethods(AccessMethod[] accessMethods) {
+		this.accessMethodsMaps.clear();
+		this.accessMethods = new AccessMethod[accessMethods.length];
+		int accessMethodIndex = 0;
+		for(AccessMethod accessMethod:accessMethods) {
+			this.accessMethodsMaps.put(accessMethod.getName(), accessMethod);
+			this.accessMethods[accessMethodIndex] = accessMethod;
+		}
 	}
 
 	public PrimaryKey getKey() {
-		return this.key;
+		return this.primaryKey;
+	}
+
+	public void setKey(PrimaryKey key) {
+		this.primaryKey = key;
 	}
 
 	public Integer[] getKeyPositions() {
-		Integer[] keyPositions = new Integer[key.getNumberOfAttributes()];
-		for(int attributeIndex = 0; attributeIndex < this.key.getNumberOfAttributes(); ++attributeIndex) 
-			keyPositions[attributeIndex] = this.attributes.indexOf(this.key.getAttributes()[attributeIndex]);
+		Integer[] keyPositions = new Integer[primaryKey.getNumberOfAttributes()];
+		for(int attributeIndex = 0; attributeIndex < this.primaryKey.getNumberOfAttributes(); ++attributeIndex) 
+			keyPositions[attributeIndex] = Arrays.asList(this.attributes).indexOf(this.primaryKey.getAttributes()[attributeIndex]);
 		return keyPositions;
 	}
 
 	/**
 	 * Extend the relation's schema by adding an extra attribute
 	 */
-	public void extendByAddingAttribute(Attribute at) {
-		//		arity = arity + 1;
-		//		super.hash = Objects.hash(this.name, this.arity);
-		//		
-		List<Attribute> attrs = new ArrayList<Attribute>(this.attributes);
-		attrs.add(at);
-		this.attributes = ImmutableList.copyOf(attrs);
-		Map<String, Integer> positions = new LinkedHashMap<>();
-		int i = 0;
-		for (Attribute a : this.attributes) {
-			positions.put(a.getName(), i++);
-		}
-		this.attributePositions = ImmutableMap.copyOf(positions);
-
-
+	public void appendAttribute(Attribute attribute) {
+		Attribute[] destination = new Attribute[this.attributes.length + 1];
+		System.arraycopy(this.attributes, 0, destination, 0, this.attributes.length);
+		destination[this.attributes.length] = attribute;
+		this.attributes = destination;
+		this.attributePositions.put(attribute.getName(), this.attributes.length);
 	}
-	//
-	//
-	//	/**
-	//	 * TOCOMMENT Two relations are equal if, by using the corresponding equals methods, their names are equals, their attributes are equal, and their amView ???? are equal.
-	//	 *
-	//	 * @param o Object
-	//	 * @return boolean
-	//	 */
-	//	@Override
-	//	public boolean equals(Object o) {
-	//		if (this == o) {
-	//			return true;
-	//		}
-	//		if (o == null) {
-	//			return false;
-	//		}
-	//		return Relation.class.isInstance(o)
-	//				&& this.name.equals(((Relation) o).name)
-	//				&& this.attributes.equals(((Relation) o).attributes)
-	//				&& this.accessMethodsList.equals(((Relation) o).accessMethodsList);
-	//	}
-	//
-	//	@Override
-	//	public int hashCode() {
-	//		return Objects.hash(this.name, this.attributes, this.accessMethodsList);
-	//	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null) {
+			return false;
+		}
+		return Relation.class.isInstance(o)
+				&& this.name.equals(((Relation) o).name);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(this.name);
+	}
 
 	@Override
 	public String toString() {
 		StringBuilder result = new StringBuilder();
-		result.append(this.name).append('(');
-		result.append(Joiner.on(",").join(this.attributes)).append(')');
-
-		if (this.accessMethods != null && !this.accessMethods.isEmpty()) {
-			char sep = '{';
-			if (this.accessMethods != null && !this.accessMethods.isEmpty()) {
-				for (AccessMethod c : this.accessMethods.values()) {
-					result.append(sep).append(c);
-					RelationMetadata md = this.getMetadata();
-					if (md != null) {
-						result.append('/').append(md.getPerInputTupleCost(c));
-					}
-					sep = ',';
-				}
-				result.append('}');
+		result.append(this.name);
+		
+		if (this.attributes.length > 0) {
+			char sep = '(';
+			for (Attribute attribute:this.attributes) {
+				result.append(sep).append(attribute);
+				sep = ',';
 			}
+			result.append(')');
 		}
 
-		if (this.foreignKeys != null && !this.foreignKeys.isEmpty()) {
+		if (this.accessMethods.length > 0) {
 			char sep = '{';
-			if (this.foreignKeys != null && !this.foreignKeys.isEmpty()) {
-				for (ForeignKey c : this.foreignKeys) {
-					result.append(sep).append(c);
-					sep = ',';
+			for (AccessMethod method:this.accessMethods) {
+				result.append(sep).append(method);
+				RelationMetadata md = this.getMetadata();
+				if (md != null) {
+					result.append('/').append(md.getPerInputTupleCost(method));
 				}
-				result.append('}');
+				sep = ',';
 			}
+			result.append('}');
+		}
+
+		if (this.foreignKeys.length > 0) {
+			char sep = '{';
+			for (ForeignKey foreignKey:this.foreignKeys) {
+				result.append(sep).append(foreignKey);
+				sep = ',';
+			}
+			result.append('}');
 		}
 		return result.toString();
 	}

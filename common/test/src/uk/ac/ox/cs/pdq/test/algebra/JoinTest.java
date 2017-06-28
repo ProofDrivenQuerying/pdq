@@ -31,13 +31,13 @@ public class JoinTest extends NaryOperatorTest {
 	List<RelationalOperator> children;
 	
 	/** The predicate12. */
-	Predicate predicate12 = new AttributeEqualityPredicate(0, 1);
+	Condition predicate12 = new AttributeEqualityCondition(0, 1);
 	
 	/** The predicate23. */
-	Predicate predicate23 = new AttributeEqualityPredicate(2, 4);
+	Condition predicate23 = new AttributeEqualityCondition(2, 4);
 	
 	/** The predicate. */
-	Predicate predicate = new ConjunctivePredicate(
+	Condition predicate = new ConjunctiveCondition(
 			Lists.newArrayList(predicate12, predicate23));
 	
 	/* (non-Javadoc)

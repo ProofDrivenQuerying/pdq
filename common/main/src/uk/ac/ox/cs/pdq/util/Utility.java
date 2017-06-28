@@ -104,7 +104,7 @@ public class Utility {
 	 */
 	public static Term typedToTerm(Typed typed) {
 		if (typed instanceof TypedConstant) {
-			return (TypedConstant<?>) typed;
+			return (TypedConstant) typed;
 		}
 		return new Variable(String.valueOf(typed));
 	}
@@ -115,13 +115,13 @@ public class Utility {
 	 * @param typed the typed
 	 * @return List<TypedConstant<?>>
 	 */
-	public static List<TypedConstant<?>> toTypedConstants(List<Typed> typed) {
-		List<TypedConstant<?>> result = new ArrayList<>();
+	public static List<TypedConstant> toTypedConstants(List<Typed> typed) {
+		List<TypedConstant> result = new ArrayList<>();
 		for (Typed t: typed) {
 			if (t instanceof TypedConstant) {
-				result.add((TypedConstant<?>) t);
+				result.add((TypedConstant) t);
 			} else {
-				result.add(new TypedConstant<>(Types.cast(t.getType(), String.valueOf(t))));
+				result.add(new TypedConstant(Types.cast(t.getType(), String.valueOf(t))));
 			}
 		}
 		return result;
@@ -341,7 +341,7 @@ public class Utility {
 		if (t.isVariable() || t.isUntypedConstant()) {
 			return new Attribute(type, String.valueOf(t));
 		} else if (t instanceof TypedConstant) {
-			return (TypedConstant<?>) t;
+			return (TypedConstant) t;
 		} else {
 			throw new IllegalStateException("Unknown typed object: " + t);
 		}
@@ -413,7 +413,7 @@ public class Utility {
 	 * @return a string representation a call to the given target type
 	 * conversion function onto the given value;
 	 */
-	public static <T> String format(TypedConstant<T> c) {
+	public static <T> String format(TypedConstant c) {
 		return format(c, c.getType());
 	}
 
@@ -480,7 +480,7 @@ public class Utility {
 	 * @param keys the keys
 	 * @return 		a collection of EGDs for the input relation and keys
 	 */
-	public static EGD getEGDs(Predicate predicate, List<Attribute> attributes, Collection<Attribute> keys) {
+	public static EGD getEGDs(Predicate predicate, Attribute[] attributes, Attribute[] keys) {
 		List<Term> leftTerms = Utility.typedToTerms(attributes);
 		List<Term> copiedTerms = Lists.newArrayList(leftTerms);
 		//Keeps the terms that should be equal
@@ -514,16 +514,16 @@ public class Utility {
 	 * @param keys the key attirbutes
 	 * @return the EGD representing the primary key
 	 */
-	public static EGD getEGDs(Relation relation, Collection<Attribute> keys) {
+	public static EGD getEGDs(Relation relation, Attribute[] keys) {
 		return getEGDs(new Predicate(relation.getName(), relation.getArity()), relation.getAttributes(), keys);
 	}
 
-	public static List<TypedConstant<?>> getTypedConstants(Formula formula) {
-		List<TypedConstant<?>> typedConstants = Lists.newArrayList();
+	public static List<TypedConstant> getTypedConstants(Formula formula) {
+		List<TypedConstant> typedConstants = Lists.newArrayList();
 		for(Atom atom:formula.getAtoms()) {
 			for(Term term:atom.getTerms()) {
-				if(term instanceof TypedConstant<?>) {
-					typedConstants.add((TypedConstant<?>)term);
+				if(term instanceof TypedConstant) {
+					typedConstants.add((TypedConstant)term);
 				}
 			}
 		}
@@ -610,24 +610,6 @@ public class Utility {
 		}
 		return clusters;
 	}
-
-
-	/**
-	 * @param fact An input fact
-	 * @return The list of attributes coming from this fact
-	 */
-	public static List<Attribute> makeAttributes(Atom fact) {
-		Predicate s = fact.getPredicate();
-		if (s instanceof Relation) {
-			return ((Relation) s).getAttributes();
-		}
-		List<Attribute> result = new ArrayList<>();
-		for (Term t : fact.getTerms()) {
-			result.add(new Attribute(String.class, t.toString()));
-		}
-		return result;
-	}
-
 
 	/**
 	 * @return an atom with predicate the input relation.

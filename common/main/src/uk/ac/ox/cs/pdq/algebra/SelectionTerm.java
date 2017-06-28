@@ -16,12 +16,12 @@ public class SelectionTerm extends RelationalTerm {
 	private final RelationalTerm child;
 
 	/** The predicate associated with this selection. */
-	private final Predicate predicate;
+	private final Condition predicate;
 
 	/**  Cashed string representation. */
 	private String toString = null;
 
-	public SelectionTerm(Predicate predicate, RelationalTerm child) {
+	public SelectionTerm(Condition predicate, RelationalTerm child) {
 		super(child.getInputAttributes(), child.getOutputAttributes());
 		Assert.assertNotNull(predicate);
 		Assert.assertNotNull(child);
@@ -29,7 +29,7 @@ public class SelectionTerm extends RelationalTerm {
 		this.child = child;
 	}
 
-	public Predicate getPredicate() {
+	public Condition getPredicate() {
 		return this.predicate;
 	}
 
@@ -74,7 +74,7 @@ public class SelectionTerm extends RelationalTerm {
         return s_interningManager.intern(this);
     }
 
-    public static SelectionTerm create(Predicate predicate, RelationalTerm child) {
+    public static SelectionTerm create(Condition predicate, RelationalTerm child) {
         return s_interningManager.intern(new SelectionTerm(predicate, child));
     }
 }

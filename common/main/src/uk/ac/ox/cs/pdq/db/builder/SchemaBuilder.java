@@ -1,13 +1,15 @@
 package uk.ac.ox.cs.pdq.db.builder;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+
+import com.google.common.base.Preconditions;
 
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
@@ -22,9 +24,6 @@ import uk.ac.ox.cs.pdq.fol.LinearGuarded;
 import uk.ac.ox.cs.pdq.fol.QuantifiedFormula;
 import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.util.FormulaEquivalence;
-
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
 
 
 /**
@@ -92,7 +91,7 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	public SchemaBuilder setAccessMethods(String name, AccessMethod... am) {
 		Relation existing = this.relations.get(name);
 		if (existing != null) 
-			existing.setAccessMethods(Lists.newArrayList(am));
+			existing.setAccessMethods(am);
 		return this;
 	}
 
@@ -104,7 +103,7 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	 * @param attributes List<Attribute>
 	 * @return this builder
 	 */
-	public Relation addOrReplaceRelation(String name, List<Attribute> attributes) {
+	public Relation addOrReplaceRelation(String name, Attribute[] attributes) {
 		return this.addOrReplaceRelation(name, attributes, false);
 	}
 
@@ -118,7 +117,7 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	 * @param isEquality the is equality
 	 * @return this builder
 	 */
-	public Relation addOrReplaceRelation(String name, List<Attribute> attributes, boolean isEquality) {
+	public Relation addOrReplaceRelation(String name, Attribute[] attributes, boolean isEquality) {
 		Relation result = this.relations.get(name);
 		if (result != null && result.getAttributes().equals(attributes)) {
 			return result;
@@ -308,7 +307,7 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 		}
 		for (LinearGuarded gd: this.findFKDependency(relation)) {
 			ForeignKey fk = new ForeignKey(gd);
-			if (!relation.getForeignKeys().contains(fk)) {
+			if (!Arrays.asList(relation.getForeignKeys()).contains(fk)) {
 				relation.addForeignKey(fk);
 			}
 		}
@@ -445,6 +444,27 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 		}
 		return new Schema(this.relations.values(), this.dependencies.values());
 	}
+	
+
+	/**
+	 * Instantiates a new SchemaBuilder.
+	 *
+	 * @return a new schema builder
+	 */
+	public static SchemaBuilder builder() {
+		return new SchemaBuilder();
+	}
+
+	/**
+	 * Builder.
+	 *
+	 * @param schema the schema
+	 * @return a new schema builder containing all the relations and
+	 *         dependencies already in the given schema
+	 */
+	public static SchemaBuilder builder(Schema schema) {
+		return new SchemaBuilder(schema);
+	}
 
 	/**
 	 * A relation that temporarily hold signature related information in
@@ -462,7 +482,7 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 		 * @param attributes List<Attribute>
 		 * @param isEq true if the relation acts as an equality
 		 */
-		public TemporaryRelation(String name, List<Attribute> attributes, boolean isEq) {
+		public TemporaryRelation(String name, Attribute[] attributes, boolean isEq) {
 			super(name, attributes, isEq);
 		}
 	}

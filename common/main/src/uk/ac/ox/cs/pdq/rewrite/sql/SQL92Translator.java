@@ -517,7 +517,7 @@ public class SQL92Translator extends SQLTranslator {
 
 			result.append("SELECT ").append(this.makeAliasesColumns(childAlias, subQuery.getRight(), select.getType()).getLeft());
 			result.append(" FROM (").append(subQuery.getLeft()).append(") AS ").append(childAlias);
-			uk.ac.ox.cs.pdq.algebra.predicates.Predicate pred = select.getPredicate();
+			uk.ac.ox.cs.pdq.algebra.Condition.Predicate pred = select.getPredicate();
 			if (pred != null) {
 				String where = this.predicateToSQL(pred, subQuery.getRight(),
 						child.getType(), childAlias);
@@ -551,7 +551,7 @@ public class SQL92Translator extends SQLTranslator {
 				.append(lAlias).append(", (").append(rightSub.getLeft())
 				.append(") AS ").append(rAlias);
 
-			uk.ac.ox.cs.pdq.algebra.predicates.Predicate pred = join.getPredicate();
+			uk.ac.ox.cs.pdq.algebra.Condition.Predicate pred = join.getPredicate();
 			if (pred != null) {
 				String whereClause = this.predicateToSQL(pred, leftSub.getRight(), rightSub.getRight(), lAlias, rAlias);
 				if (!whereClause.trim().isEmpty()) {
@@ -603,17 +603,17 @@ public class SQL92Translator extends SQLTranslator {
 		 * @param relAlias String
 		 * @return the SQL clause for the given predicate (currently only conjunctive predicates are supported).
 		 */
-		private String predicateToSQL(uk.ac.ox.cs.pdq.algebra.predicates.Predicate  pred,
+		private String predicateToSQL(uk.ac.ox.cs.pdq.algebra.Condition.Predicate  pred,
 				List<String> columns, TupleType type, String relAlias) {
 			StringBuilder result = new StringBuilder();
-			if (pred instanceof ConjunctivePredicate) {
+			if (pred instanceof ConjunctiveCondition) {
 				String sep = " ";
-				for (uk.ac.ox.cs.pdq.algebra.predicates.Predicate subPred: ((ConjunctivePredicate<uk.ac.ox.cs.pdq.algebra.predicates.Predicate>) pred)) {
+				for (uk.ac.ox.cs.pdq.algebra.Condition.Predicate subPred: ((ConjunctiveCondition<uk.ac.ox.cs.pdq.algebra.Condition.Predicate>) pred)) {
 					result.append(sep).append(this.predicateToSQL(subPred, columns, type, relAlias));
 					sep = " AND ";
 				}
-			} else if (pred instanceof AttributeEqualityPredicate) {
-				AttributeEqualityPredicate p = (AttributeEqualityPredicate) pred;
+			} else if (pred instanceof AttributeEqualityCondition) {
+				AttributeEqualityCondition p = (AttributeEqualityCondition) pred;
 				if (this.reAliased.containsKey(columns.get(p.getPosition()))) {
 					result.append(this.reAliased.get(columns.get(p.getPosition())));
 				} else {
@@ -625,8 +625,8 @@ public class SQL92Translator extends SQLTranslator {
 				} else {
 					result.append(relAlias).append('.').append(columns.get(p.getOther()));
 				}
-			} else if (pred instanceof ConstantEqualityPredicate) {
-				ConstantEqualityPredicate p = (ConstantEqualityPredicate) pred;
+			} else if (pred instanceof ConstantEqualityCondition) {
+				ConstantEqualityCondition p = (ConstantEqualityCondition) pred;
 				if (this.reAliased.containsKey(columns.get(p.getPosition()))) {
 					result.append(this.reAliased.get(columns.get(p.getPosition())));
 				} else {
@@ -650,21 +650,21 @@ public class SQL92Translator extends SQLTranslator {
 		 * aliases as lAlias (left) and rAlias (right).
 		 * Currently only conjunctive predicates are supported.
 		 */
-		private String predicateToSQL(uk.ac.ox.cs.pdq.algebra.predicates.Predicate  pred,
+		private String predicateToSQL(uk.ac.ox.cs.pdq.algebra.Condition.Predicate  pred,
 				List<String> lColumns, List<String> rColumns,
 				String lAlias, String rAlias) {
 			StringBuilder result = new StringBuilder();
-			if (pred instanceof ConjunctivePredicate) {
+			if (pred instanceof ConjunctiveCondition) {
 				String sep = " ";
-				for (uk.ac.ox.cs.pdq.algebra.predicates.Predicate subPred: ((ConjunctivePredicate<uk.ac.ox.cs.pdq.algebra.predicates.Predicate>) pred)) {
+				for (uk.ac.ox.cs.pdq.algebra.Condition.Predicate subPred: ((ConjunctiveCondition<uk.ac.ox.cs.pdq.algebra.Condition.Predicate>) pred)) {
 					result.append(sep).append(
 							this.predicateToSQL(subPred,
 									lColumns, rColumns,
 									lAlias, rAlias));
 					sep = " AND ";
 				}
-			} else if (pred instanceof AttributeEqualityPredicate) {
-				AttributeEqualityPredicate p = (AttributeEqualityPredicate) pred;
+			} else if (pred instanceof AttributeEqualityCondition) {
+				AttributeEqualityCondition p = (AttributeEqualityCondition) pred;
 				result.append(lAlias).append('.').append(lColumns.get(p.getPosition()));
 				result.append('=');
 				result.append(rAlias).append('.').append(rColumns.get(p.getOther() - lColumns.size()));
@@ -860,7 +860,7 @@ public class SQL92Translator extends SQLTranslator {
 
 			} else if (logOp instanceof Selection) {
 				result.copy(this.toSQL(((Selection) logOp).getChild(), str));
-				uk.ac.ox.cs.pdq.algebra.predicates.Predicate predicate = ((Selection) logOp).getPredicate();
+				uk.ac.ox.cs.pdq.algebra.Condition.Predicate predicate = ((Selection) logOp).getPredicate();
 				result.where(predicate);
 
 			} else if (logOp instanceof Projection) {
@@ -957,7 +957,7 @@ public class SQL92Translator extends SQLTranslator {
 		private void addSelect(String alias, Attribute att) {
 			Relation pred = this.relations.get(alias);
 			Preconditions.checkArgument(pred != null);
-			int position = pred.getAttributeIndex(att.getName());
+			int position = pred.getAttributePosition(att.getName());
 			Preconditions.checkArgument(position >= 0);
 			String columnAlias = COLUMN_ALIAS_PREFIX + (colAliasCounter++);
 			Column col = new AttributeColumn(alias, att);
@@ -1206,15 +1206,15 @@ public class SQL92Translator extends SQLTranslator {
 			 * @param pred Atom
 			 * @return Builder
 			 */
-			public Builder where(uk.ac.ox.cs.pdq.algebra.predicates.Predicate pred) {
-				if (pred instanceof ConjunctivePredicate) {
-					return this.where((ConjunctivePredicate) pred);
+			public Builder where(uk.ac.ox.cs.pdq.algebra.Condition.Predicate pred) {
+				if (pred instanceof ConjunctiveCondition) {
+					return this.where((ConjunctiveCondition) pred);
 				}
-				if (pred instanceof AttributeEqualityPredicate) {
-					return this.where((AttributeEqualityPredicate) pred);
+				if (pred instanceof AttributeEqualityCondition) {
+					return this.where((AttributeEqualityCondition) pred);
 				}
-				if (pred instanceof ConstantEqualityPredicate) {
-					return this.where((ConstantEqualityPredicate) pred);
+				if (pred instanceof ConstantEqualityCondition) {
+					return this.where((ConstantEqualityCondition) pred);
 				}
 				return this;
 			}
@@ -1225,8 +1225,8 @@ public class SQL92Translator extends SQLTranslator {
 			 * @param pred ConjunctivePredicate<Atom>
 			 * @return Builder
 			 */
-			public Builder where(ConjunctivePredicate<uk.ac.ox.cs.pdq.algebra.predicates.Predicate> pred) {
-				for (uk.ac.ox.cs.pdq.algebra.predicates.Predicate p: pred) {
+			public Builder where(ConjunctiveCondition<uk.ac.ox.cs.pdq.algebra.Condition.Predicate> pred) {
+				for (uk.ac.ox.cs.pdq.algebra.Condition.Predicate p: pred) {
 					this.where(p);
 				}
 				return this;
@@ -1238,7 +1238,7 @@ public class SQL92Translator extends SQLTranslator {
 			 * @param pred AttributeEqualityPredicate
 			 * @return Builder
 			 */
-			public Builder where(AttributeEqualityPredicate pred) {
+			public Builder where(AttributeEqualityCondition pred) {
 				Column c1 = this.result.getColumn(pred.getPosition());
 				Column c2 = this.result.getColumn(pred.getOther());
 				this.conditions.add(Condition.columns(c1).equalsTo(c2));
@@ -1251,7 +1251,7 @@ public class SQL92Translator extends SQLTranslator {
 			 * @param pred ConstantEqualityPredicate
 			 * @return Builder
 			 */
-			public Builder where(ConstantEqualityPredicate pred) {
+			public Builder where(ConstantEqualityCondition pred) {
 				Column c1 = this.result.getColumn(pred.getPosition());
 				this.conditions.add(Condition.columns(c1).equalsTo(pred.getValue()));
 				return this;

@@ -6,12 +6,12 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
+import uk.ac.ox.cs.pdq.datasources.ResetableIterator;
+import uk.ac.ox.cs.pdq.datasources.Table;
+import uk.ac.ox.cs.pdq.datasources.memory.RelationAccessWrapper;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.AccessMethod.Types;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
-import uk.ac.ox.cs.pdq.db.wrappers.RelationAccessWrapper;
-import uk.ac.ox.cs.pdq.util.ResetableIterator;
-import uk.ac.ox.cs.pdq.util.Table;
 import uk.ac.ox.cs.pdq.util.Tuple;
 import uk.ac.ox.cs.pdq.util.TupleType;
 import uk.ac.ox.cs.pdq.util.Typed;
@@ -157,7 +157,7 @@ public class TopDownAccess extends TupleIterator {
 	/**
 	 * 
 	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.util.ResetableIterator#open()
+	 * @see uk.ac.ox.cs.pdq.datasources.ResetableIterator#open()
 	 */
 	@Override
 	public void open() {
@@ -173,7 +173,7 @@ public class TopDownAccess extends TupleIterator {
 	/**
 	 * 
 	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.util.ResetableIterator#reset()
+	 * @see uk.ac.ox.cs.pdq.datasources.ResetableIterator#reset()
 	 */
 	@Override
 	public void reset() {

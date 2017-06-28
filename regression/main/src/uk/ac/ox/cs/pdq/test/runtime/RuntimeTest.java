@@ -14,6 +14,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.cost.CostParameters;
+import uk.ac.ox.cs.pdq.datasources.Result;
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.DatabaseInstance;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
@@ -51,7 +52,6 @@ import uk.ac.ox.cs.pdq.test.acceptance.AcceptanceCriterion.AcceptanceResult;
 import uk.ac.ox.cs.pdq.test.acceptance.ExpectedCardinalityAcceptanceCheck;
 import uk.ac.ox.cs.pdq.test.acceptance.SetEquivalentResultSetsAcceptanceCheck;
 import uk.ac.ox.cs.pdq.test.util.DataValidationImplementation;
-import uk.ac.ox.cs.pdq.util.Result;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;

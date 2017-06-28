@@ -14,7 +14,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.builder.BuilderException;
-import uk.ac.ox.cs.pdq.sql.PostgresqlSchemaDiscoverer;
+import uk.ac.ox.cs.pdq.datasources.sql.PostgresqlSchemaDiscoverer;
 import uk.ac.ox.cs.pdq.util.Utility;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.AccessMethod.Types;

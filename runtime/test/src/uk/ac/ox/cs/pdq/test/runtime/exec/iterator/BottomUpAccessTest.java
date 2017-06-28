@@ -12,10 +12,10 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import uk.ac.ox.cs.pdq.algebra.RelationalOperatorException;
+import uk.ac.ox.cs.pdq.datasources.memory.InMemoryTableWrapper;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.AccessMethod.Types;
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.db.wrappers.InMemoryTableWrapper;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.BottomUpAccess;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator;
 import uk.ac.ox.cs.pdq.util.Tuple;

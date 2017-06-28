@@ -231,7 +231,7 @@ public class OperatorWriter extends AbstractXMLWriter<RelationalOperator> {
 			close(out, QNames.PROJECT);
 			break;
 		case SELECT:
-			Predicate sp = ((Selection) operator).getPredicate();
+			Condition sp = ((Selection) operator).getPredicate();
 			if (sp != null) {
 				this.writePredicate(out, sp);
 			}
@@ -305,25 +305,25 @@ public class OperatorWriter extends AbstractXMLWriter<RelationalOperator> {
 	 * @param out 
 	 * @param predicate 
 	 */
-	private void writePredicate(PrintStream out, Predicate predicate) {
-		if (predicate instanceof ConjunctivePredicate<?>) {
+	private void writePredicate(PrintStream out, Condition predicate) {
+		if (predicate instanceof ConjunctiveCondition<?>) {
 			open(out, QNames.CONJUNCTION);
-			for (Predicate p: ((ConjunctivePredicate<?>) predicate)) {
+			for (Condition p: ((ConjunctiveCondition<?>) predicate)) {
 				this.writePredicate(out, p);
 			}
 			close(out, QNames.CONJUNCTION);
-		} else if (predicate instanceof ConstantEqualityPredicate) {
+		} else if (predicate instanceof ConstantEqualityCondition) {
 			Map<QNames, String> att = new LinkedHashMap<>();
 			att.put(QNames.TYPE, "equality");
-			att.put(QNames.LEFT, String.valueOf(((ConstantEqualityPredicate) predicate).getPosition()));
-			att.put(QNames.VALUE, String.valueOf(((ConstantEqualityPredicate) predicate).getValue().getValue()));
+			att.put(QNames.LEFT, String.valueOf(((ConstantEqualityCondition) predicate).getPosition()));
+			att.put(QNames.VALUE, String.valueOf(((ConstantEqualityCondition) predicate).getValue().getValue()));
 			openclose(out, QNames.PREDICATE, att);
 
-		} else if (predicate instanceof AttributeEqualityPredicate) {
+		} else if (predicate instanceof AttributeEqualityCondition) {
 			Map<QNames, String> att = new LinkedHashMap<>();
 			att.put(QNames.TYPE, "equality");
-			att.put(QNames.LEFT, String.valueOf(((AttributeEqualityPredicate) predicate).getPosition()));
-			att.put(QNames.RIGHT, String.valueOf(((AttributeEqualityPredicate) predicate).getOther()));
+			att.put(QNames.LEFT, String.valueOf(((AttributeEqualityCondition) predicate).getPosition()));
+			att.put(QNames.RIGHT, String.valueOf(((AttributeEqualityCondition) predicate).getOther()));
 			openclose(out, QNames.PREDICATE, att);
 			
 		} else {

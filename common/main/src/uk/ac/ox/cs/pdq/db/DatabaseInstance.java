@@ -58,7 +58,7 @@ public class DatabaseInstance implements Instance {
 	protected List<Relation> relations = null;
 
 	/**  Maps of the string representation of a constant to the constant. */
-	protected Map<String, TypedConstant<?>> constants = null;
+	protected Map<String, TypedConstant> constants = null;
 
 	/** Number of parallel threads. **/
 	protected int synchronousThreadsNumber = 1;

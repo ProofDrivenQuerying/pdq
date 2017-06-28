@@ -85,7 +85,7 @@ public class MemoryScan extends TupleIterator {
 	/**
 	 * 
 	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.util.ResetableIterator#open()
+	 * @see uk.ac.ox.cs.pdq.datasources.ResetableIterator#open()
 	 */
 	@Override
 	public void open() {
@@ -122,7 +122,7 @@ public class MemoryScan extends TupleIterator {
 	/**
 	 * 
 	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.util.ResetableIterator#reset()
+	 * @see uk.ac.ox.cs.pdq.datasources.ResetableIterator#reset()
 	 */
 	@Override
 	public void reset() {

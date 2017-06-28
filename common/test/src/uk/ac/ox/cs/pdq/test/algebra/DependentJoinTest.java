@@ -38,15 +38,15 @@ public class DependentJoinTest extends JoinTest{
 	List<RelationalOperator> children;
 	
 	/** The predicate. */
-	Predicate predicate = new ConjunctivePredicate(Lists.newArrayList(
-			new AttributeEqualityPredicate(0, 1),
-			new AttributeEqualityPredicate(2, 4)));
+	Condition predicate = new ConjunctiveCondition(Lists.newArrayList(
+			new AttributeEqualityCondition(0, 1),
+			new AttributeEqualityCondition(2, 4)));
 	
 	/** The sw input. */
 	List<Integer> swInput = Lists.newArrayList(1);
 	
 	/** The predicate23. */
-	Predicate predicate23 = new AttributeEqualityPredicate(1, 3);
+	Condition predicate23 = new AttributeEqualityCondition(1, 3);
 
 	/** The output terms12. */
 	List<Term> outputTerms12 = Lists.<Term>newArrayList(new Variable("a"), new Variable("a"), new UntypedConstant("b"), new TypedConstant<>("c"));
@@ -159,7 +159,7 @@ public class DependentJoinTest extends JoinTest{
 		Assert.assertEquals("DependentJoin output type must match the concatenation of childrens", outputType12, this.operator.getType());
 		Assert.assertEquals("DependentJoin input must match the concatenation of childrens", inputTerms12, this.operator.getInputTerms());
 		Assert.assertEquals("DependentJoin input type must match the concatenation of childrens", inputType12, this.operator.getInputType());
-		Assert.assertEquals("DependentJoin predicate must match that of initialization", new ConjunctivePredicate(predicate12), this.operator.getPredicate());
+		Assert.assertEquals("DependentJoin predicate must match that of initialization", new ConjunctiveCondition(predicate12), this.operator.getPredicate());
 		Assert.assertEquals("DependentJoin left child must match that of initialization", child1, this.operator.getLeft());
 		Assert.assertEquals("DependentJoin right child must match that of initialization", child2, this.operator.getRight());
 		Assert.assertFalse("DependentJoin sideways input must match that of initialization", this.operator.hasSidewaysInputs());
@@ -175,7 +175,7 @@ public class DependentJoinTest extends JoinTest{
 		Assert.assertEquals("DependentJoin output type must match the concatenation of childrens", outputType23, this.operator.getType());
 		Assert.assertTrue("DependentJoin input must be empty (because of sideways input).", this.operator.getInputTerms().isEmpty());
 		Assert.assertEquals("DependentJoin input type must be empty (because of sideways input)", TupleType.EmptyTupleType, this.operator.getInputType());
-		Assert.assertEquals("DependentJoin predicate must match that of initialization", new ConjunctivePredicate(predicate23), this.operator.getPredicate());
+		Assert.assertEquals("DependentJoin predicate must match that of initialization", new ConjunctiveCondition(predicate23), this.operator.getPredicate());
 		Assert.assertEquals("DependentJoin left child must match that of initialization", child2, this.operator.getLeft());
 		Assert.assertEquals("DependentJoin right child must match that of initialization", child3, this.operator.getRight());
 		Assert.assertEquals("DependentJoin sideways input must match that of initialization", swInput, this.operator.getSidewaysInput());

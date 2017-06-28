@@ -114,8 +114,8 @@ public class InclusionDependencyGraphNode {
 				for (ForeignKey fk : prevRel.getForeignKeys()) {
 					if (this.node.equals(fk.getForeignRelation())) {
 						for (Reference ref : fk.getReferences()) {
-							int remotePos = this.node.getAttributeIndex(ref.getForeignAttributeName());
-							int localPos = prevRel.getAttributeIndex(ref.getLocalAttributeName());
+							int remotePos = this.node.getAttributePosition(ref.getForeignAttributeName());
+							int localPos = prevRel.getAttributePosition(ref.getLocalAttributeName());
 							terms.set(remotePos, prevPred.getTerm(localPos));
 						}
 					}

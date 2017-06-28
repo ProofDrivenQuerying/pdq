@@ -261,7 +261,7 @@ public class BindJoin extends Join {
 	 * Deep copy.
 	 *
 	 * @return BindJoinTest
-	 * @see uk.ac.ox.cs.pdq.util.ResetableIterator#deepCopy()
+	 * @see uk.ac.ox.cs.pdq.datasources.ResetableIterator#deepCopy()
 	 */
 	@Override
 	public BindJoin deepCopy() {

@@ -225,9 +225,9 @@ public class XMLRelationOperatorIOTest {
 	@Test
 	public void testReadWriteSelection() {
 		Scan scan = new Scan(r1);
-		AttributeEqualityPredicate p1 = new AttributeEqualityPredicate(0, 1);
-		ConstantEqualityPredicate p2 = new ConstantEqualityPredicate(0, new TypedConstant<>("A"));
-		ConjunctivePredicate p3 = new ConjunctivePredicate(Lists.newArrayList(p1, p2));
+		AttributeEqualityCondition p1 = new AttributeEqualityCondition(0, 1);
+		ConstantEqualityCondition p2 = new ConstantEqualityCondition(0, new TypedConstant<>("A"));
+		ConjunctiveCondition p3 = new ConjunctiveCondition(Lists.newArrayList(p1, p2));
 		Selection expected = new Selection(p3, scan);
 		writer.write(new PrintStream(bos), expected);
 		Selection observed = (Selection) reader.read(new ByteArrayInputStream(bos.toByteArray()));
@@ -247,9 +247,9 @@ public class XMLRelationOperatorIOTest {
 	@Test
 	public void testReadWriteOpenSelection() {
 		DependentAccess access = new DependentAccess(r2, limited);
-		AttributeEqualityPredicate p1 = new AttributeEqualityPredicate(0, 1);
-		ConstantEqualityPredicate p2 = new ConstantEqualityPredicate(0, new TypedConstant<>("A"));
-		ConjunctivePredicate p3 = new ConjunctivePredicate(Lists.newArrayList(p1, p2));
+		AttributeEqualityCondition p1 = new AttributeEqualityCondition(0, 1);
+		ConstantEqualityCondition p2 = new ConstantEqualityCondition(0, new TypedConstant<>("A"));
+		ConjunctiveCondition p3 = new ConjunctiveCondition(Lists.newArrayList(p1, p2));
 		Selection expected = new Selection(p3, access);
 		writer.write(new PrintStream(bos), expected);
 		Selection observed = (Selection) reader.read(new ByteArrayInputStream(bos.toByteArray()));
@@ -535,9 +535,9 @@ public class XMLRelationOperatorIOTest {
 	public void testReadWriteJoinWithAltPredicate() {
 		Scan scan = new Scan(r1);
 		DependentAccess access = new DependentAccess(r2, limited);
-		AttributeEqualityPredicate p1 = new AttributeEqualityPredicate(0, 1);
-		ConstantEqualityPredicate p2 = new ConstantEqualityPredicate(0, new TypedConstant<>("A"));
-		ConjunctivePredicate p3 = new ConjunctivePredicate(Lists.newArrayList(p1, p2));
+		AttributeEqualityCondition p1 = new AttributeEqualityCondition(0, 1);
+		ConstantEqualityCondition p2 = new ConstantEqualityCondition(0, new TypedConstant<>("A"));
+		ConjunctiveCondition p3 = new ConjunctiveCondition(Lists.newArrayList(p1, p2));
 		Join expected = new Join(p3, scan, access);
 		writer.write(new PrintStream(bos), expected);
 		Join observed = (Join) reader.read(new ByteArrayInputStream(bos.toByteArray()));
@@ -557,11 +557,11 @@ public class XMLRelationOperatorIOTest {
 	@Test
 	public void testReadWriteDeepUnary() {
 		Scan scan = new Scan(r1);
-		AttributeEqualityPredicate p1 = new AttributeEqualityPredicate(0, 1);
-		ConstantEqualityPredicate p2 = new ConstantEqualityPredicate(0, new TypedConstant<>("A"));
-		ConjunctivePredicate p3 = new ConjunctivePredicate(Lists.newArrayList(p1, p2));
-		ConstantEqualityPredicate p4 = new ConstantEqualityPredicate(0, new TypedConstant<>(1.0));
-		ConstantEqualityPredicate p5 = new ConstantEqualityPredicate(0, new TypedConstant<>(1));
+		AttributeEqualityCondition p1 = new AttributeEqualityCondition(0, 1);
+		ConstantEqualityCondition p2 = new ConstantEqualityCondition(0, new TypedConstant<>("A"));
+		ConjunctiveCondition p3 = new ConjunctiveCondition(Lists.newArrayList(p1, p2));
+		ConstantEqualityCondition p4 = new ConstantEqualityCondition(0, new TypedConstant<>(1.0));
+		ConstantEqualityCondition p5 = new ConstantEqualityCondition(0, new TypedConstant<>(1));
 		
 		Projection pro1 = new Projection(scan, Lists.newArrayList(scan.getColumn(0), new TypedConstant<>("B")));
 		Selection sel1 = new Selection(p3, pro1);

@@ -40,13 +40,13 @@ public class PlanUtils {
 	 * 		and equality to a constant when an exposed fact's term is mapped to a schema constant.
 	 * 		The returned list is null if there does not exist any select condition
 	 */
-	public static Predicate createSelectPredicates(List<Term> terms) {
-		Set<Predicate> result = new LinkedHashSet<>();
+	public static Condition createSelectPredicates(List<Term> terms) {
+		Set<Condition> result = new LinkedHashSet<>();
 		Integer termIndex = 0;
 		for (Term term : terms) {
 
 			if (term instanceof TypedConstant) {
-				result.add(new ConstantEqualityPredicate(
+				result.add(new ConstantEqualityCondition(
 						termIndex, (TypedConstant<?>) term));
 			} else {
 				List<Integer> appearances = Utility.search(terms, term);
@@ -55,14 +55,14 @@ public class PlanUtils {
 						Integer indexI = appearances.get(i);
 						for (int j = i + 1; j < appearances.size(); ++j) {
 							Integer indexJ = appearances.get(j);
-							result.add(new AttributeEqualityPredicate(indexI, indexJ));
+							result.add(new AttributeEqualityCondition(indexI, indexJ));
 						}
 					}
 				}
 			}
 			++termIndex;
 		}
-		return result.isEmpty() ? null : new ConjunctivePredicate<>(result);
+		return result.isEmpty() ? null : new ConjunctiveCondition<>(result);
 	}
 
 	/**

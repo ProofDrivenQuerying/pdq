@@ -6,6 +6,9 @@ import java.util.concurrent.Executors;
 import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.algebra.RelationalOperator;
+import uk.ac.ox.cs.pdq.datasources.BooleanResult;
+import uk.ac.ox.cs.pdq.datasources.Result;
+import uk.ac.ox.cs.pdq.datasources.Table;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.runtime.EvaluationException;
@@ -14,9 +17,6 @@ import uk.ac.ox.cs.pdq.runtime.TimeoutException;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.Distinct;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator;
 import uk.ac.ox.cs.pdq.runtime.util.TupleOutputLimitEnforcer;
-import uk.ac.ox.cs.pdq.util.BooleanResult;
-import uk.ac.ox.cs.pdq.util.Result;
-import uk.ac.ox.cs.pdq.util.Table;
 import uk.ac.ox.cs.pdq.util.Tuple;
 import uk.ac.ox.cs.pdq.util.Utility;
 

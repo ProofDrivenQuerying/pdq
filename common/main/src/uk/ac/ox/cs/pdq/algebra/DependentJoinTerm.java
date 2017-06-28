@@ -18,12 +18,12 @@ public class DependentJoinTerm extends RelationalTerm {
 	protected final RelationalTerm[] children = new RelationalTerm[2];
 
 	/** The predicate associated with this selection. */
-	protected final Predicate predicate;
+	protected final Condition predicate;
 
 	/**  Cashed string representation. */
 	protected String toString = null;
 
-	protected DependentJoinTerm(Predicate predicate, RelationalTerm child1, RelationalTerm child2) {
+	protected DependentJoinTerm(Condition predicate, RelationalTerm child1, RelationalTerm child2) {
 		super(AlgebraUtilities.getInputAttributes(child1, child2), AlgebraUtilities.getOutputAttributes(child1, child2));
 		Assert.assertNotNull(predicate);
 		Assert.assertNotNull(child1);
@@ -35,7 +35,7 @@ public class DependentJoinTerm extends RelationalTerm {
 		this.children[1] = child2;
 	}
 
-	public Predicate getPredicate() {
+	public Condition getPredicate() {
 		return this.predicate;
 	}
 
@@ -80,7 +80,7 @@ public class DependentJoinTerm extends RelationalTerm {
         return s_interningManager.intern(this);
     }
 
-    public static DependentJoinTerm create(Predicate predicate, RelationalTerm child1, RelationalTerm child2) {
+    public static DependentJoinTerm create(Condition predicate, RelationalTerm child1, RelationalTerm child2) {
         return s_interningManager.intern(new DependentJoinTerm(predicate, child1, child2));
     }
 }

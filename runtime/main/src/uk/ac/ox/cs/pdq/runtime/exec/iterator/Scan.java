@@ -3,8 +3,8 @@ package uk.ac.ox.cs.pdq.runtime.exec.iterator;
 import java.util.NoSuchElementException;
 
 import uk.ac.ox.cs.pdq.algebra.predicates.Predicate;
-import uk.ac.ox.cs.pdq.db.wrappers.RelationAccessWrapper;
-import uk.ac.ox.cs.pdq.util.ResetableIterator;
+import uk.ac.ox.cs.pdq.datasources.ResetableIterator;
+import uk.ac.ox.cs.pdq.datasources.memory.RelationAccessWrapper;
 import uk.ac.ox.cs.pdq.util.Tuple;
 import uk.ac.ox.cs.pdq.util.Typed;
 
@@ -95,7 +95,7 @@ public class Scan extends TupleIterator {
 	/**
 	 * 
 	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.util.ResetableIterator#open()
+	 * @see uk.ac.ox.cs.pdq.datasources.ResetableIterator#open()
 	 */
 	@Override
 	public void open() {
@@ -133,7 +133,7 @@ public class Scan extends TupleIterator {
 	/**
 	 * 
 	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.util.ResetableIterator#reset()
+	 * @see uk.ac.ox.cs.pdq.datasources.ResetableIterator#reset()
 	 */
 	@Override
 	public void reset() {

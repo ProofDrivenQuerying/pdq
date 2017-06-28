@@ -91,9 +91,9 @@ public class OperatorReader extends AbstractXMLReader<RelationalOperator> {
 
 	protected Join.Variants variant;
 
-	protected Predicate predicate = null;
+	protected Condition predicate = null;
 
-	protected List<Predicate> conjunction = Lists.newLinkedList();
+	protected List<Condition> conjunction = Lists.newLinkedList();
 
 	/** TOCOMMENT: ??? */
 	protected List<Integer> sideways = Lists.newLinkedList();
@@ -244,14 +244,14 @@ public class OperatorReader extends AbstractXMLReader<RelationalOperator> {
 			this.inConjunction = true;
 			int left = Integer.valueOf(this.getValue(atts, QNames.LEFT));
 			if (this.getValue(atts, QNames.RIGHT) == null) {
-				this.predicate = new ConstantEqualityPredicate(
+				this.predicate = new ConstantEqualityCondition(
 						left,
 						new TypedConstant<>(
 								uk.ac.ox.cs.pdq.util.Types.cast(
 										this.outputs.get(left).getType(),
 										this.getValue(atts, QNames.VALUE))));
 			} else {
-				this.predicate = new AttributeEqualityPredicate(
+				this.predicate = new AttributeEqualityCondition(
 						left,
 						Integer.valueOf(this.getValue(atts, QNames.RIGHT)));
 			}
@@ -460,7 +460,7 @@ public class OperatorReader extends AbstractXMLReader<RelationalOperator> {
 			break;
 		case CONJUNCTION:
 			this.inConjunction = false;
-			this.predicate = new ConjunctivePredicate<>(this.conjunction);
+			this.predicate = new ConjunctiveCondition<>(this.conjunction);
 			this.conjunction = Lists.newArrayList();
 			break;
 		case PREDICATE:
