@@ -19,7 +19,7 @@ public abstract class RelationalTerm implements Serializable {
 	
 	protected final Attribute[] outputAttributes;
 
-	public RelationalTerm(Attribute[] inputAttributes, Attribute[] outputAttributes) {
+	protected RelationalTerm(Attribute[] inputAttributes, Attribute[] outputAttributes) {
 		Assert.assertTrue(outputAttributes != null && outputAttributes.length > 0);
 		this.inputAttributes = inputAttributes;
 		this.outputAttributes = outputAttributes;

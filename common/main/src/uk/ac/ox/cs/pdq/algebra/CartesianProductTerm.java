@@ -18,7 +18,7 @@ public class CartesianProductTerm extends RelationalTerm {
 	/**  Cashed string representation. */
 	protected String toString = null;
 
-	protected CartesianProductTerm(RelationalTerm child1, RelationalTerm child2) {
+	private CartesianProductTerm(RelationalTerm child1, RelationalTerm child2) {
 		super(AlgebraUtilities.getInputAttributes(child1, child2), AlgebraUtilities.getOutputAttributes(child1, child2));
 		Assert.assertNotNull(child1);
 		Assert.assertNotNull(child2);

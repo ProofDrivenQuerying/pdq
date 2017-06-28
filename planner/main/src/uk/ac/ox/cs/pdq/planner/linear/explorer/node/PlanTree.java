@@ -7,10 +7,10 @@ import java.util.Set;
 import org.jgrapht.EdgeFactory;
 import org.jgrapht.graph.DefaultEdge;
 
-import uk.ac.ox.cs.pdq.util.IndexedDirectedGraph;
-import uk.ac.ox.cs.pdq.util.TreeGraph;
-
 import com.google.common.base.Preconditions;
+
+import uk.ac.ox.cs.pdq.planner.IndexedDirectedGraph;
+import uk.ac.ox.cs.pdq.planner.TreeGraph;
 
 // TODO: Auto-generated Javadoc
 /**

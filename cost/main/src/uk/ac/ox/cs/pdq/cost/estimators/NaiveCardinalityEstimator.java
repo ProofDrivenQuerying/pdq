@@ -10,11 +10,11 @@ import uk.ac.ox.cs.pdq.algebra.Scan;
 import uk.ac.ox.cs.pdq.algebra.Selection;
 import uk.ac.ox.cs.pdq.algebra.Union;
 import uk.ac.ox.cs.pdq.algebra.predicates.ConjunctivePredicate;
+import uk.ac.ox.cs.pdq.cost.EstimateProvider;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.AccessMethod.Types;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.plan.EstimateProvider;
 
 // TODO: Auto-generated Javadoc
 /**

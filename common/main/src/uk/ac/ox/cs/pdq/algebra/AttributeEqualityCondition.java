@@ -19,7 +19,7 @@ public class AttributeEqualityCondition implements SimpleCondition {
 	/**  The other position to which position must be equals for a given tuple. */
 	protected final Integer other;
 
-	public AttributeEqualityCondition(Integer position, Integer other) {
+	private AttributeEqualityCondition(Integer position, Integer other) {
 		Assert.assertTrue(position >= 0 && other >= 0);
 		this.position = position;
 		this.other = other;

@@ -1,60 +1,28 @@
 package uk.ac.ox.cs.pdq.fol;
 
-import java.util.Objects;
-import java.util.Set;
+import java.io.Serializable;
 
-import com.google.common.collect.ImmutableSet;
+import uk.ac.ox.cs.pdq.InterningManager;
 
 /**
  * A disjunction of literals
  *
  * @author Efthymia Tsamoura
  */
-public class Clause {
-	
+public class Clause implements Serializable{
+	private static final long serialVersionUID = -4433034581780675663L;
+
 	/**   Cashed string representation of the literal. */
 	private String toString = null;
-
-	private Integer hash = null;
 	
-	private final Set<Literal> literals;
+	private final Literal[] literals;
 	
-	public Clause(Set<Literal> literals) {
-		this.literals = ImmutableSet.copyOf(literals);
+	private Clause(Literal... literals) {
+		this.literals = literals.clone();
 	}
 	
-	public Clause(Literal... literals) {
-		this.literals = ImmutableSet.copyOf(literals);
-	}
-	
-	public Set<Literal> getLiterals() {
-		return this.literals;
-	}
-	
-	/**
-	 *
-	 * @param o Object
-	 * @return boolean
-	 */
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null) {
-			return false;
-		}
-		return this.getClass().isInstance(o)
-				&& this.literals.equals(((Clause) o).literals);
-	}
-
-
-	@Override
-	public int hashCode() {
-		if(this.hash == null) {
-			this.hash = Objects.hash(this.literals);
-		}
-		return this.hash;
+	public Literal[] getLiterals() {
+		return this.literals.clone();
 	}
 	
 	/**
@@ -69,7 +37,7 @@ public class Clause {
 			int i = 0;
 			for(Literal literal:this.literals) {
 				this.toString += literal.toString();
-				if(i < this.literals.size() - 1) {
+				if(i < this.literals.length - 1) {
 					this.toString += " | ";
 				}
 				++i;
@@ -77,5 +45,31 @@ public class Clause {
 		}
 		return this.toString;
 	}
+	
+    protected Object readResolve() {
+        return s_interningManager.intern(this);
+    }
+
+    protected static final InterningManager<Clause> s_interningManager = new InterningManager<Clause>() {
+        protected boolean equal(Clause object1, Clause object2) {
+            if (object1.literals.length != object2.literals.length)
+                return false;
+            for (int index = object1.literals.length - 1; index >= 0; --index)
+                if (!object1.literals[index].equals(object2.literals[index]))
+                    return false;
+            return true;
+        }
+
+        protected int getHashCode(Clause object) {
+            int hashCode = 0;
+            for (int index = object.literals.length - 1; index >= 0; --index)
+                hashCode = hashCode * 7 + object.literals[index].hashCode();
+            return hashCode;
+        }
+    };
+
+    public static Clause create(Literal... literals) {
+        return s_interningManager.intern(new Clause(literals));
+    }
 
 }

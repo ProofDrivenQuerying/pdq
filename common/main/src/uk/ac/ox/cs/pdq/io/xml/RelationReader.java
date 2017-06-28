@@ -18,6 +18,8 @@ import org.xml.sax.SAXException;
 import com.google.common.base.Preconditions;
 
 import uk.ac.ox.cs.pdq.builder.SchemaDiscoverer;
+import uk.ac.ox.cs.pdq.cost.Cost;
+import uk.ac.ox.cs.pdq.cost.DoubleCost;
 import uk.ac.ox.cs.pdq.datasources.memory.InMemoryTableWrapper;
 import uk.ac.ox.cs.pdq.datasources.memory.InMemoryViewWrapper;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
@@ -29,8 +31,6 @@ import uk.ac.ox.cs.pdq.db.builder.SchemaBuilder;
 import uk.ac.ox.cs.pdq.db.metadata.RelationMetadata;
 import uk.ac.ox.cs.pdq.db.metadata.StaticMetadata;
 import uk.ac.ox.cs.pdq.io.ReaderException;
-import uk.ac.ox.cs.pdq.plan.Cost;
-import uk.ac.ox.cs.pdq.plan.DoubleCost;
 
 /**
  * Reads relations from XML.

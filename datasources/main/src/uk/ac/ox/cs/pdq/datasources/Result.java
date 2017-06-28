@@ -1,7 +1,6 @@
 package uk.ac.ox.cs.pdq.datasources;
 
-import uk.ac.ox.cs.pdq.util.Differentiable;
-import uk.ac.ox.cs.pdq.util.Differentiable.Levels;
+import uk.ac.ox.cs.pdq.datasources.Differentiable.Levels;
 
 // TODO: Auto-generated Javadoc
 /**

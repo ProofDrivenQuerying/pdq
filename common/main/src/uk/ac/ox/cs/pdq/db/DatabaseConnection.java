@@ -142,7 +142,8 @@ public class DatabaseConnection implements AutoCloseable{
 		for (int index = 0; index < relation.getAttributes().length; index++) 
 			attributes[index] = new Attribute(String.class, attrPrefix + index);
 		
-		return new Relation(relation.getName(), attributes, relation.isEquality()){};	
+		return new Relation(relation.getName(), attributes, relation.isEquality()){
+			private static final long serialVersionUID = -5890010433295072114L;};	
 	}
 
 	/**

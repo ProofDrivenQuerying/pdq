@@ -12,10 +12,10 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 import uk.ac.ox.cs.pdq.algebra.RelationalOperator;
+import uk.ac.ox.cs.pdq.cost.DoubleCost;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.io.ReaderException;
 import uk.ac.ox.cs.pdq.plan.DAGPlan;
-import uk.ac.ox.cs.pdq.plan.DoubleCost;
 
 /**
  * Reads plans from XML.

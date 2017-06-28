@@ -21,14 +21,14 @@ import uk.ac.ox.cs.pdq.algebra.StaticInput;
 import uk.ac.ox.cs.pdq.algebra.UnaryOperator;
 import uk.ac.ox.cs.pdq.algebra.predicates.ConjunctivePredicate;
 import uk.ac.ox.cs.pdq.algebra.predicates.Predicate;
+import uk.ac.ox.cs.pdq.cost.DoubleCost;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.logging.performance.StatisticsCollector;
-import uk.ac.ox.cs.pdq.plan.Cost;
 import uk.ac.ox.cs.pdq.plan.DAGPlan;
-import uk.ac.ox.cs.pdq.plan.DoubleCost;
 import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.plan.SubPlanAlias;
+import uk.ac.ox.cs.pdq.util.Cost;
 
 import com.google.common.collect.Lists;
 

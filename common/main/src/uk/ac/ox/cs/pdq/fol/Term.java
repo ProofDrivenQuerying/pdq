@@ -1,5 +1,6 @@
 package uk.ac.ox.cs.pdq.fol;
 
+import java.io.Serializable;
 
 /**
  * TOCOMMENT I disaggree with this being an interface. Interfaces are there to describe common functions.
@@ -11,7 +12,7 @@ package uk.ac.ox.cs.pdq.fol;
  * @author Efthymia Tsamoura
  * @author Julien Leblay
  */
-public interface Term {
+public interface Term extends Serializable{
 	
 	/**
 	 * Checks if is variable.
@@ -26,6 +27,4 @@ public interface Term {
 	 * @return true if the term is a Skolem
 	 */
 	public boolean isUntypedConstant();
-	
-	public Term clone();
 }

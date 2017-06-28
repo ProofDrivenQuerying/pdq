@@ -3,9 +3,9 @@ package uk.ac.ox.cs.pdq.cost.estimators;
 import java.util.ArrayList;
 import java.util.List;
 
+import uk.ac.ox.cs.pdq.cost.DoubleCost;
 import uk.ac.ox.cs.pdq.logging.performance.StatisticsCollector;
 import uk.ac.ox.cs.pdq.plan.AccessOperator;
-import uk.ac.ox.cs.pdq.plan.DoubleCost;
 import uk.ac.ox.cs.pdq.plan.Plan;
 
 // TODO: Auto-generated Javadoc

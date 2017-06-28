@@ -1,8 +1,8 @@
 package uk.ac.ox.cs.pdq.fol;
 
-import java.util.Objects;
+import org.junit.Assert;
 
-import com.google.common.base.Preconditions;
+import uk.ac.ox.cs.pdq.InterningManager;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -12,7 +12,8 @@ import com.google.common.base.Preconditions;
  * @author Julien Leblay
  */
 public class Variable implements Term {
-	
+	private static final long serialVersionUID = 6326879040237354094L;
+
 	/**  The variable's name. */
 	private final String symbol;
 
@@ -21,45 +22,20 @@ public class Variable implements Term {
 	 *
 	 * @param name The name of this variable
 	 */
-	public Variable(String name) {
-		Preconditions.checkArgument(name != null);
-		Preconditions.checkArgument(!name.isEmpty());
+	private Variable(String name) {
+		Assert.assertNotNull(name);
+		Assert.assertTrue(!name.isEmpty());
 		this.symbol = name;
 	}
-
 
 	@Override
 	public boolean isVariable() {
 		return true;
 	}
 
-
 	@Override
 	public boolean isUntypedConstant() {
 		return false;
-	}
-
-	/**
-	 * Two variables are equal of their names are equal (using equals()).
-	 *
-	 * @param o Object
-	 * @return boolean
-	 */
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null) {
-			return false;
-		}
-		return this.getClass().isInstance(o)
-				&& this.symbol.equals(((Variable) o).symbol);
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(this.symbol);
 	}
 
 	@Override
@@ -69,11 +45,6 @@ public class Variable implements Term {
 	
 	public String getSymbol() {
 		return this.symbol;
-	}
-	
-	@Override
-	public Variable clone() {
-		return new Variable(this.symbol);
 	}
 	
 	/**  The default prefix of the variable terms. */
@@ -97,4 +68,22 @@ public class Variable implements Term {
 	public static Variable getFreshVariable() {
 		return new Variable(DEFAULT_VARIABLE_PREFIX + (freshVariableCounter++));
 	}
+	
+    protected Object readResolve() {
+        return s_interningManager.intern(this);
+    }
+
+    protected static final InterningManager<Variable> s_interningManager = new InterningManager<Variable>() {
+        protected boolean equal(Variable object1, Variable object2) {
+            return object1.symbol.equals(object2.symbol);
+        }
+
+        protected int getHashCode(Variable object) {
+            return object.symbol.hashCode() * 7;
+        }
+    };
+
+    public static Variable create(String symbol) {
+        return s_interningManager.intern(new Variable(symbol));
+    }
 }

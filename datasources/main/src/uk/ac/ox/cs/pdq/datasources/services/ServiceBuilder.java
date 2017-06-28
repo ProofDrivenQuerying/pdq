@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.ws.rs.core.MediaType;
 
 import uk.ac.ox.cs.pdq.builder.Builder;
+import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.datasources.services.policies.UsagePolicy;
 import uk.ac.ox.cs.pdq.datasources.services.rest.InputMethod;
 import uk.ac.ox.cs.pdq.datasources.services.rest.OutputMethod;
@@ -19,7 +20,6 @@ import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.metadata.StaticMetadata;
-import uk.ac.ox.cs.pdq.plan.Cost;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.LinkedHashMultimap;

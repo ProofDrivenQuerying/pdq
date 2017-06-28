@@ -5,9 +5,9 @@ import static uk.ac.ox.cs.pdq.cost.CostStatKeys.COST_ESTIMATION_TIME;
 
 import java.util.Collection;
 
+import uk.ac.ox.cs.pdq.cost.DoubleCost;
 import uk.ac.ox.cs.pdq.logging.performance.StatisticsCollector;
 import uk.ac.ox.cs.pdq.plan.AccessOperator;
-import uk.ac.ox.cs.pdq.plan.DoubleCost;
 import uk.ac.ox.cs.pdq.plan.Plan;
 
 

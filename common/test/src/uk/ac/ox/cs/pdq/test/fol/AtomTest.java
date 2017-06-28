@@ -77,7 +77,7 @@ public class AtomTest {
 		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
 				new Variable("x1"), new Variable("x2"), new Variable("x3"),
-				new UntypedConstant("x4"), new TypedConstant<>("x5")
+				new UntypedConstant("x4"), new TypedConstant("x5")
 				);
 		Atom p = new Atom( s, t);
 		Assert.assertEquals("Atom must have name signature " + s, s, p.getPredicate());
@@ -191,7 +191,7 @@ public class AtomTest {
 		Relation r = new Relation("r", Lists.newArrayList(
 				new Attribute(String.class, "a1"), 
 				new Attribute(String.class, "a2"))) {};
-		TypedConstant<String> c = new TypedConstant<>("c");
+		TypedConstant<String> c = new TypedConstant("c");
 		UntypedConstant s = new UntypedConstant("s");
 		Variable v = new Variable("v");
 		set.add(new Atom(r, Lists.newArrayList(c, v)));
@@ -212,7 +212,7 @@ public class AtomTest {
 		Set<Atom> set = new LinkedHashSet<>();
 		Relation r = new Relation("r", Lists.newArrayList(
 				new Attribute(String.class, "a1"), new Attribute(String.class, "a2"))) {};
-		TypedConstant<String> c = new TypedConstant<>("c");
+		TypedConstant<String> c = new TypedConstant("c");
 		UntypedConstant s = new UntypedConstant("s");
 		Variable v = new Variable("v");
 		set.add(new Atom(r, Lists.newArrayList(c, v)));
@@ -233,7 +233,7 @@ public class AtomTest {
 		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
 				new Variable("x1"), new Variable("x2"), new Variable("x3"),
-				new UntypedConstant("x4"), new TypedConstant<>("x5")
+				new UntypedConstant("x4"), new TypedConstant("x5")
 				);
 		Atom p = new Atom(s, t);
 		Assert.assertEquals("Atom must have " + t.size() +  " terms ",
@@ -247,7 +247,7 @@ public class AtomTest {
 		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
 				new Variable("x1"), new Variable("x2"), new Variable("x3"),
-				new UntypedConstant("x4"), new TypedConstant<>("x5")
+				new UntypedConstant("x4"), new TypedConstant("x5")
 				);
 		Atom p = new Atom(s, t);
 		for (int i = 0, l = t.size(); i < l; i++) {
@@ -264,7 +264,7 @@ public class AtomTest {
 		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
 				new Variable("x1"), new Variable("x2"), new Variable("x3"),
-				new UntypedConstant("x4"), new TypedConstant<>("x5")
+				new UntypedConstant("x4"), new TypedConstant("x5")
 				);
 		new Atom(s, t).getTerm(-1);
 	}
@@ -277,7 +277,7 @@ public class AtomTest {
 		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
 				new Variable("x1"), new Variable("x2"), new Variable("x3"),
-				new UntypedConstant("x4"), new TypedConstant<>("x5")
+				new UntypedConstant("x4"), new TypedConstant("x5")
 				);
 		new Atom(s, t).getTerm(5);
 	}
@@ -289,7 +289,7 @@ public class AtomTest {
 		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
 				new Variable("x1"), new Variable("x2"), new Variable("x3"),
-				new UntypedConstant("x4"), new TypedConstant<>("x5")
+				new UntypedConstant("x4"), new TypedConstant("x5")
 				);
 		Atom p = new Atom(s, t);
 		Assert.assertEquals("Atom terms must match term list of constructor",
@@ -303,7 +303,7 @@ public class AtomTest {
 		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
 				new Variable("x1"), new Variable("x2"), new Variable("x3"),
-				new UntypedConstant("x4"), new TypedConstant<>("x5")
+				new UntypedConstant("x4"), new TypedConstant("x5")
 				);
 		Atom p = new Atom(s, t);
 		Assert.assertEquals("Atom terms subset must match",
@@ -313,7 +313,7 @@ public class AtomTest {
 				Sets.newHashSet(new Variable("x1")),
 				p.getTerms(Lists.<Integer>newArrayList(0)));
 		Assert.assertEquals("Atom terms subset must match",
-				Sets.newHashSet(new Variable("x3"), new UntypedConstant("x4"), new TypedConstant<>("x5")),
+				Sets.newHashSet(new Variable("x3"), new UntypedConstant("x4"), new TypedConstant("x5")),
 				p.getTerms(Lists.<Integer>newArrayList(2, 3, 4)));
 	}
 
@@ -325,7 +325,7 @@ public class AtomTest {
 		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
 				new Variable("x1"), new Variable("x2"), new Variable("x3"),
-				new UntypedConstant("x4"), new TypedConstant<>("x5")
+				new UntypedConstant("x4"), new TypedConstant("x5")
 				);
 		new Atom(s, t).getTerms(Lists.<Integer>newArrayList(0, 2, -1));
 	}
@@ -338,7 +338,7 @@ public class AtomTest {
 		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
 				new Variable("x1"), new Variable("x2"), new Variable("x3"),
-				new UntypedConstant("x4"), new TypedConstant<>("x5")
+				new UntypedConstant("x4"), new TypedConstant("x5")
 				);
 		new Atom(s, t).getTerms(Lists.<Integer>newArrayList(2, 1, 5));
 	}
@@ -350,10 +350,10 @@ public class AtomTest {
 		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
 				new Variable("x1"), new Variable("x2"), new Variable("x3"),
-				new UntypedConstant("x4"), new TypedConstant<>("x5"));
+				new UntypedConstant("x4"), new TypedConstant("x5"));
 		Atom p = new Atom(s, t);
 		Assert.assertEquals("Atom terms subset must match",
-				Lists.newArrayList(new UntypedConstant("x4"), new TypedConstant<>("x5")),
+				Lists.newArrayList(new UntypedConstant("x4"), new TypedConstant("x5")),
 				Utility.getTypedAndUntypedConstants(p, Lists.newArrayList(3, 4)));
 	}
 
@@ -365,7 +365,7 @@ public class AtomTest {
 		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
 				new Variable("x1"), new Variable("x2"), new Variable("x3"),
-				new UntypedConstant("x4"), new TypedConstant<>("x5"));
+				new UntypedConstant("x4"), new TypedConstant("x5"));
 		Utility.getTypedAndUntypedConstants(new Atom(s, t),(Lists.newArrayList(0, 1)));
 	}
 
@@ -376,7 +376,7 @@ public class AtomTest {
 		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
 				new Variable("x1"), new Variable("x2"), new UntypedConstant("x3"),
-				new Variable("x4"), new TypedConstant<>("x5")
+				new Variable("x4"), new TypedConstant("x5")
 				);
 		Atom p = new Atom(s, t);
 		Assert.assertEquals("Atom variables subset must match",
@@ -391,11 +391,11 @@ public class AtomTest {
 		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
 				new Variable("x1"), new Variable("x2"), new UntypedConstant("x3"),
-				new Variable("x4"), new TypedConstant<>("x5")
+				new Variable("x4"), new TypedConstant("x5")
 				);
 		Atom p = new Atom(s, t);
 		Assert.assertEquals("Atom variables subset must match",
-				Sets.newHashSet(new UntypedConstant("x3"), new TypedConstant<>("x5")),
+				Sets.newHashSet(new UntypedConstant("x3"), new TypedConstant("x5")),
 				Utility.getTypedAndUntypedConstants(p));
 	}
 
@@ -407,12 +407,12 @@ public class AtomTest {
 	@Test public void getSchemaConstants() {
 		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
-				new Variable("x1"), new TypedConstant<>("x2"), new UntypedConstant("x3"),
-				new Variable("x4"), new TypedConstant<>("x5")
+				new Variable("x1"), new TypedConstant("x2"), new UntypedConstant("x3"),
+				new Variable("x4"), new TypedConstant("x5")
 				);
 		Atom p = new Atom(s, t);
 		Assert.assertEquals("Atom variables subset must match",
-				Lists.newArrayList(new TypedConstant<>("x2"), new TypedConstant<>("x5")),
+				Lists.newArrayList(new TypedConstant("x2"), new TypedConstant("x5")),
 				Utility.getTypedConstants(p));
 	}
 
@@ -422,8 +422,8 @@ public class AtomTest {
 	@Test public void testGetPredicates() {
 		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
-				new Variable("x1"), new TypedConstant<>("x2"), new UntypedConstant("x3"),
-				new Variable("x4"), new TypedConstant<>("x5")
+				new Variable("x1"), new TypedConstant("x2"), new UntypedConstant("x3"),
+				new Variable("x4"), new TypedConstant("x5")
 				);
 		Atom p = new Atom(s, t);
 		Assert.assertEquals("Atom lists must match",
@@ -436,8 +436,8 @@ public class AtomTest {
 	@Test public void testGetAtoms() {
 		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
-				new Variable("x1"), new TypedConstant<>("x2"), new UntypedConstant("x3"),
-				new Variable("x4"), new TypedConstant<>("x5")
+				new Variable("x1"), new TypedConstant("x2"), new UntypedConstant("x3"),
+				new Variable("x4"), new TypedConstant("x5")
 				);
 		Atom p = new Atom(s, t);
 		Assert.assertEquals("Atom lists must match",
@@ -451,13 +451,13 @@ public class AtomTest {
 		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
 				new Variable("x1"), new Variable("x2"), new UntypedConstant("x3"),
-				new Variable("x1"), new TypedConstant<>("x4")
+				new Variable("x1"), new TypedConstant("x4")
 				);
 		Atom p = new Atom(s, t);
 		Assert.assertEquals("Atom x1 term positions must match", Lists.newArrayList(0, 3), p.getTermPositions(new Variable("x1")));
 		Assert.assertEquals("Atom x2 term positions must match", Lists.newArrayList(1), p.getTermPositions(new Variable("x2")));
 		Assert.assertEquals("Atom x3 term positions must match", Lists.newArrayList(2), p.getTermPositions(new UntypedConstant("x3")));
-		Assert.assertEquals("Atom x4 term positions must match", Lists.newArrayList(4), p.getTermPositions(new TypedConstant<>("x4")));
+		Assert.assertEquals("Atom x4 term positions must match", Lists.newArrayList(4), p.getTermPositions(new TypedConstant("x4")));
 	}
 
 	/**
@@ -469,7 +469,7 @@ public class AtomTest {
 		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
 				new Variable("x1"), new Variable("x2"), new UntypedConstant("x3"),
-				new Variable("x1"), new TypedConstant<>("x4")
+				new Variable("x1"), new TypedConstant("x4")
 				);
 		Assert.assertTrue("Atom term positions list must be empty",
 				new Atom(s, t).getTermPositions(new Variable("x5"))
@@ -483,8 +483,8 @@ public class AtomTest {
 	@Test public void testIsFact() {
 		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
-				new TypedConstant<>("x1"), new TypedConstant<>("x2"), new TypedConstant<>("x3"),
-				new TypedConstant<>("x1"), new TypedConstant<>("x4")
+				new TypedConstant("x1"), new TypedConstant("x2"), new TypedConstant("x3"),
+				new TypedConstant("x1"), new TypedConstant("x4")
 				);
 		Atom p = new Atom(s, t);
 		Assert.assertTrue("Fact terms must contain schema constants only", p.isFact());
@@ -497,7 +497,7 @@ public class AtomTest {
 		Predicate s = new Predicate("s", 5);
 		List<Term> t = Lists.<Term>newArrayList(
 				new Variable("x1"), new Variable("x2"), new UntypedConstant("x3"),
-				new Variable("x1"), new TypedConstant<>("x4")
+				new Variable("x1"), new TypedConstant("x4")
 				);
 		Atom p = new Atom(s, t);
 		Assert.assertFalse("Fact terms must contain schema constants only", p.isFact());

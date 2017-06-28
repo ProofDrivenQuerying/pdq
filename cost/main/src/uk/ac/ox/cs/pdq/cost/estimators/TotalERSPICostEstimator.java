@@ -10,10 +10,10 @@ import org.apache.log4j.Logger;
 import uk.ac.ox.cs.pdq.algebra.Access;
 import uk.ac.ox.cs.pdq.algebra.DependentAccess;
 import uk.ac.ox.cs.pdq.algebra.Scan;
+import uk.ac.ox.cs.pdq.cost.DoubleCost;
 import uk.ac.ox.cs.pdq.cost.statistics.Catalog;
 import uk.ac.ox.cs.pdq.logging.performance.StatisticsCollector;
 import uk.ac.ox.cs.pdq.plan.AccessOperator;
-import uk.ac.ox.cs.pdq.plan.DoubleCost;
 import uk.ac.ox.cs.pdq.plan.Plan;
 
 

@@ -32,7 +32,7 @@ public class AccessTerm extends RelationalTerm {
 	/**  Cashed string representation. */
 	protected String toString = null;
 
-	protected AccessTerm(Relation relation, AccessMethod accessMethod) {
+	private AccessTerm(Relation relation, AccessMethod accessMethod) {
 		super(AlgebraUtilities.getInputAttributes(relation, accessMethod), relation.getAttributes());
 		Assert.assertNotNull(relation);
 		Assert.assertNotNull(accessMethod);
@@ -41,7 +41,7 @@ public class AccessTerm extends RelationalTerm {
 		this.inputConstants = new LinkedHashMap<>();
 	}
 
-	protected AccessTerm(Relation relation, AccessMethod accessMethod, Map<Integer, TypedConstant> inputConstants) {
+	private AccessTerm(Relation relation, AccessMethod accessMethod, Map<Integer, TypedConstant> inputConstants) {
 		super(AlgebraUtilities.getInputAttributes(relation, accessMethod, inputConstants), relation.getAttributes());
 		Assert.assertNotNull(relation);
 		Assert.assertNotNull(accessMethod);

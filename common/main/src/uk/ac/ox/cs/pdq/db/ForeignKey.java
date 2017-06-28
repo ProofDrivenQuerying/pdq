@@ -23,14 +23,9 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.set.ListOrderedSet;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-
-import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.LinearGuarded;
-import uk.ac.ox.cs.pdq.fol.Variable;
 
 /**
  * Represents a database foreign key.
@@ -68,23 +63,6 @@ public class ForeignKey implements Cloneable {
 	 */
 	public ForeignKey(String name) {
 		this._name = name;
-	}
-
-	/**
-	 * Creates a new foreign key object.
-	 *
-	 * @param dep LinearGuarded
-	 */
-	public ForeignKey(LinearGuarded dep) {
-		Atom left = dep.getBody().getAtoms().get(0);
-		Atom right = dep.getHead().getAtoms().get(0);
-		Relation leftRel = (Relation) left.getPredicate();
-		Relation rightRel = (Relation) right.getPredicate();
-		this.setForeignRelation(rightRel);
-		this.setForeignRelationName(rightRel.getName());
-		for (Variable v:CollectionUtils.intersection(left.getVariables(), right.getVariables())) {
-			this.addReference(new Reference(leftRel.getAttribute(left.getTerms().indexOf(v)), rightRel.getAttribute(right.getTerms().indexOf(v))));
-		}
 	}
 
 	/**

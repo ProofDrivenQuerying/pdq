@@ -13,12 +13,12 @@ import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 
+import uk.ac.ox.cs.pdq.cost.Cost;
+import uk.ac.ox.cs.pdq.cost.DoubleCost;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.View;
 import uk.ac.ox.cs.pdq.db.metadata.StaticMetadata;
 import uk.ac.ox.cs.pdq.fol.LinearGuarded;
-import uk.ac.ox.cs.pdq.plan.Cost;
-import uk.ac.ox.cs.pdq.plan.DoubleCost;
 
 // TODO: Auto-generated Javadoc
 /**

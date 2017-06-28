@@ -1,11 +1,11 @@
 package uk.ac.ox.cs.pdq.planner.dominance;
 
+import uk.ac.ox.cs.pdq.cost.Costable;
 import uk.ac.ox.cs.pdq.cost.estimators.AccessCountCostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.SimpleCostEstimator;
 import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.SuccessDominanceTypes;
-import uk.ac.ox.cs.pdq.util.Costable;
 
 // TODO: Auto-generated Javadoc
 /**

@@ -16,12 +16,12 @@ public class Dependency extends QuantifiedFormula {
 	protected final Formula head;
 	
 	/**  The dependency's universally quantified variables. */
-	protected List<Variable> universal;
+	protected Variable[] universal;
 
 	/**  The dependency's existentially quantified variables. */
-	protected List<Variable> existential;
+	protected Variable[] existential;
 	
-	public Dependency(LogicalSymbols operator, List<Variable> variables, Implication implication) {
+	public Dependency(LogicalSymbols operator, Variable[] variables, Implication implication) {
 		super(operator, variables, implication);
 		Preconditions.checkArgument(isUnquantified(implication.getChildren().get(0)));
 		Preconditions.checkArgument(isExistentiallyQuantified(implication.getChildren().get(1)) ||

@@ -1,9 +1,9 @@
 package uk.ac.ox.cs.pdq.planner.dag.cost;
 
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
-import uk.ac.ox.cs.pdq.plan.Cost;
 import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.planner.reasoning.Configuration;
+import uk.ac.ox.cs.pdq.util.Cost;
 
 // TODO: Auto-generated Javadoc
 /**

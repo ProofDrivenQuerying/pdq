@@ -1,14 +1,13 @@
 package uk.ac.ox.cs.pdq.fol;
 
-import java.util.Collection;
+import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 
-import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
+import org.junit.Assert;
+
+import uk.ac.ox.cs.pdq.InterningManager;
 
 /**
  * 
@@ -16,8 +15,9 @@ import com.google.common.collect.Sets;
  *
  */
 public final class Conjunction extends Formula {
+	private static final long serialVersionUID = -7225410764505518905L;
 
-	protected final List<Formula> children;
+	protected final Formula[] children;
 
 	/**  The unary operator. */
 	protected final LogicalSymbols operator = LogicalSymbols.AND;
@@ -25,83 +25,41 @@ public final class Conjunction extends Formula {
 	/**  Cashed string representation of the atom. */
 	private String toString = null;
 
-	/** The hash. */
-	private Integer hash;
-
 	/**  Cashed list of atoms. */
-	private List<Atom> atoms = null;
+	private Atom[] atoms;
 
 	/**  Cashed list of terms. */
-	private List<Term> terms = null;
+	private Term[] terms;
 
 	/**  Cashed list of free variables. */
-	private List<Variable> freeVariables = null;
+	private Variable[] freeVariables;
 
 	/**  Cashed list of bound variables. */
-	private List<Variable> boundVariables = null;
+	private Variable[] boundVariables;
 
-	public Conjunction(List<Formula> children) {
-		Preconditions.checkArgument(children != null);
-		Preconditions.checkArgument(children.size() == 2);
-		this.children = ImmutableList.copyOf(children);
-	}
-
-	public Conjunction(Formula... children) {
-		Preconditions.checkArgument(children != null);
-		Preconditions.checkArgument(children.length == 2);
-		this.children = ImmutableList.copyOf(children);
+	private Conjunction(Formula... children) {
+		Assert.assertNotNull(children);
+		Assert.assertTrue(children.length == 2);
+		this.children = children.clone();
 	}
 
 	public static Formula of(Formula... children) {
-		return Conjunction.of(Lists.newArrayList(children));
-	}
-	
-	public static Formula of(Collection<? extends Formula> children) {
-		return Conjunction.of(Lists.newArrayList(children));
+		return Conjunction.of(children);
 	}
 
 	public static Formula of(List<Formula> children) {
-		if(children.size() == 2) {
-			return new Conjunction(children.get(0), children.get(1));
-		}
+		if(children.size() == 2) 
+			return Conjunction.create(children.get(0), children.get(1));
 		else if(children.size() > 2) {
 			Formula right = Conjunction.of(children.subList(1, children.size()));
-			return new Conjunction(children.get(0), right);
+			return Conjunction.create(children.get(0), right);
 		}
-		else if(children.size() == 1) {
+		else if(children.size() == 1) 
 			return children.get(0);
-		}
-		else {
+		else 
 			throw new java.lang.RuntimeException("Illegal number of arguments");
-		}
 	}
 
-	/**
-	 *
-	 * @param o Object
-	 * @return boolean
-	 */
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null) {
-			return false;
-		}
-		return this.getClass().isInstance(o)
-				&& this.children.equals(((Conjunction) o).children);
-	}
-
-
-	@Override
-	public int hashCode() {
-		if(this.hash == null) {
-			this.hash = Objects.hash(this.operator, this.children);
-		}
-		return this.hash;
-	}
-	
 	/**
 	 * To string.
 	 *
@@ -111,7 +69,7 @@ public final class Conjunction extends Formula {
 	public String toString() {
 		if(this.toString == null) {
 			this.toString = "";
-			this.toString += "(" +this.children.get(0).toString() + " & " + this.children.get(1).toString() + ")";
+			this.toString += "(" + this.children[0].toString() + " & " + this.children[1].toString() + ")";
 		}
 		return this.toString;
 	}
@@ -121,52 +79,79 @@ public final class Conjunction extends Formula {
 		return this.hashCode();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public List<Formula> getChildren() {
-		return this.children;
+	public Formula[] getChildren() {
+		return this.children.clone();
 	}
 
 	@Override
-	public List<Atom> getAtoms() {
+	public Atom[] getAtoms() {
 		if(this.atoms == null) {
-			Set<Atom> atoms = Sets.newLinkedHashSet();
-			atoms.addAll(this.children.get(0).getAtoms());
-			atoms.addAll(this.children.get(1).getAtoms());
-			this.atoms = Lists.newArrayList(atoms);
+			Set<Atom> atoms = new LinkedHashSet<>();
+			atoms.addAll(Arrays.asList(this.children[0].getAtoms()));
+			atoms.addAll(Arrays.asList(this.children[1].getAtoms()));
+			this.atoms = atoms.toArray(new Atom[atoms.size()]);
 		}
-		return this.atoms;
+		return this.atoms.clone();
 	}
 
 	@Override
-	public List<Term> getTerms() {
+	public Term[] getTerms() {
 		if(this.terms == null) {
-			Set<Term> terms = Sets.newLinkedHashSet();
-			terms.addAll(this.children.get(0).getTerms());
-			terms.addAll(this.children.get(1).getTerms());
-			this.terms = Lists.newArrayList(terms);
+			Set<Term> terms = new LinkedHashSet<>();
+			terms.addAll(Arrays.asList(this.children[0].getTerms()));
+			terms.addAll(Arrays.asList(this.children[1].getTerms()));
+			this.terms = terms.toArray(new Term[terms.size()]);
 		}
 		return this.terms;
 	}
 
 	@Override
-	public List<Variable> getFreeVariables() {
+	public Variable[] getFreeVariables() {
 		if(this.freeVariables == null) {
-			Set<Variable> variables = Sets.newLinkedHashSet();
-			variables.addAll(this.children.get(0).getFreeVariables());
-			variables.addAll(this.children.get(1).getFreeVariables());
-			this.freeVariables = Lists.newArrayList(variables);
+			Set<Variable> variables = new LinkedHashSet<>();
+			variables.addAll(Arrays.asList(this.children[0].getFreeVariables()));
+			variables.addAll(Arrays.asList(this.children[1].getFreeVariables()));
+			this.freeVariables = variables.toArray(new Variable[variables.size()]);
 		}
-		return this.freeVariables;
+		return this.freeVariables.clone();
 	}
 
 	@Override
-	public List<Variable> getBoundVariables() {
+	public Variable[] getBoundVariables() {
 		if(this.boundVariables == null) {
-			Set<Variable> variables = Sets.newLinkedHashSet();
-			variables.addAll(this.children.get(0).getBoundVariables());
-			variables.addAll(this.children.get(1).getBoundVariables());
-			this.boundVariables = Lists.newArrayList(variables);
+			Set<Variable> variables = new LinkedHashSet<>();
+			variables.addAll(Arrays.asList(this.children[0].getBoundVariables()));
+			variables.addAll(Arrays.asList(this.children[1].getBoundVariables()));
+			this.boundVariables = variables.toArray(new Variable[variables.size()]);
 		}
-		return this.boundVariables;
+		return this.boundVariables.clone();
+	}
+
+	protected Object readResolve() {
+		return s_interningManager.intern(this);
+	}
+
+	protected static final InterningManager<Conjunction> s_interningManager = new InterningManager<Conjunction>() {
+		protected boolean equal(Conjunction object1, Conjunction object2) {
+			if (object1.children.length != object2.children.length)
+				return false;
+			for (int index = object1.children.length - 1; index >= 0; --index)
+				if (!object1.children[index].equals(object2.children[index]))
+					return false;
+			return true;
+		}
+
+		protected int getHashCode(Conjunction object) {
+			int hashCode = 0;
+			for (int index = object.children.length - 1; index >= 0; --index)
+				hashCode = hashCode * 7 + object.children[index].hashCode();
+			return hashCode;
+		}
+	};
+
+	public static Conjunction create(Formula... children) {
+		return s_interningManager.intern(new Conjunction(children));
 	}
 }

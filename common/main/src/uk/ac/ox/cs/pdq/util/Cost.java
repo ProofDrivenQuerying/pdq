@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.plan;
+package uk.ac.ox.cs.pdq.util;
 
 // TODO: Auto-generated Javadoc
 /**

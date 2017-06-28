@@ -1,8 +1,9 @@
 package uk.ac.ox.cs.pdq.fol;
 
-import java.util.Objects;
+import org.junit.Assert;
 
-import com.google.common.base.Preconditions;
+import uk.ac.ox.cs.pdq.InterningManager;
+
 
 /**
  * A predicate's signature, associate a symbol with an arity.
@@ -15,43 +16,27 @@ public class Predicate {
 	protected final String name;
 
 	/**  Predicate arity. */
-	protected final int arity;
+	protected final Integer arity;
 
 	/**  true, if this is the signature for an equality predicate. */
-	protected final boolean isEquality;
+	protected final Boolean isEquality;
 
-	/**
-	 * Constructor for Predicate.
-	 * @param name String
-	 * @param arity int
-	 * @param equality boolean
-	 */
-	public Predicate(String name, int arity) {
-		Preconditions.checkArgument(name != null);
-		Preconditions.checkArgument(!name.isEmpty());
-		Preconditions.checkArgument(arity >= 0);
+	public Predicate(String name, Integer arity) {
+		Assert.assertNotNull(name);
+		Assert.assertTrue(!name.isEmpty());
+		Assert.assertTrue(arity >= 0);
 		this.name = name;
 		this.arity = arity;
 		this.isEquality = false;
-		this.hash = Objects.hash(this.name, this.arity);
-		this.rep = this.makeString();
 	}
 	
-	/**
-	 * Constructor for Predicate.
-	 * @param name String
-	 * @param arity int
-	 * @param equality boolean
-	 */
-	public Predicate(String name, int arity, boolean isEquality) {
-		Preconditions.checkArgument(name != null);
-		Preconditions.checkArgument(!name.isEmpty());
-		Preconditions.checkArgument(arity >= 0);
+	public Predicate(String name, Integer arity, boolean isEquality) {
+		Assert.assertNotNull(name);
+		Assert.assertTrue(!name.isEmpty());
+		Assert.assertTrue(arity >= 0);
 		this.name = name;
 		this.arity = arity;
 		this.isEquality = isEquality;
-		this.hash = Objects.hash(this.name, this.arity);
-		this.rep = this.makeString();
 	}
 
 	/**
@@ -82,43 +67,27 @@ public class Predicate {
 		return this.isEquality;
 	}
 
-	/**
-	 * Two predicates are equal if their names and arities are equal.
-	 *
-	 * @param o Object
-	 * @return boolean
-	 */
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null) {
-			return false;
-		}
-		return this.getClass().isInstance(o)
-				&& this.name.equals(((Predicate) o).name)
-				&& this.arity == ((Predicate) o).arity;
-	}
-
-	@Override
-	public int hashCode() {
-		return this.hash;
-	}
-
 	@Override
 	public String toString() {
-		return this.rep;
+		return this.name;
 	}
+	
+    protected Object readResolve() {
+        return s_interningManager.intern(this);
+    }
 
-	/**
-	 * Helper printing method.
-	 *
-	 * @return String
-	 */
-	private String makeString() {
-		StringBuilder result = new StringBuilder();
-		result.append(this.name).append('[').append(this.arity).append(']');
-		return result.toString().intern();
-	}
+    protected static final InterningManager<Predicate> s_interningManager = new InterningManager<Predicate>() {
+        protected boolean equal(Predicate object1, Predicate object2) {
+            return object1.name.equals(object2.name) && object1.arity == object2.arity && object1.isEquality == object2.isEquality;
+        }
+
+        protected int getHashCode(Predicate object) {
+            return object.name.hashCode() + object.arity.hashCode() * 7;
+        }
+    };
+
+    public static Predicate create(String name, Integer arity) {
+        return s_interningManager.intern(new Predicate(name, arity));
+    }
+
 }

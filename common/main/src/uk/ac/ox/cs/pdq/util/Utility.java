@@ -630,5 +630,27 @@ public class Utility {
 		}
 		return new Atom(relation, variableTerms);
 	}
+	
+	
+	/**
+	 * Gets the term positions.
+	 *
+	 * @param term Term
+	 * @return List<Integer>
+	 */
+	public List<Integer> getTermPositions(Term term) {
+		return Utility.search(this.terms, term);
+	}
+	
+	/**
+	 * Helper printing method.
+	 *
+	 * @return String
+	 */
+	private String makeString() {
+		StringBuilder result = new StringBuilder();
+		result.append(this.name).append('[').append(this.arity).append(']');
+		return result.toString().intern();
+	}
 
 }

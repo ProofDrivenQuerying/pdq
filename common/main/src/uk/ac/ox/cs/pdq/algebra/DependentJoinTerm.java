@@ -23,7 +23,7 @@ public class DependentJoinTerm extends RelationalTerm {
 	/**  Cashed string representation. */
 	protected String toString = null;
 
-	protected DependentJoinTerm(Condition predicate, RelationalTerm child1, RelationalTerm child2) {
+	private DependentJoinTerm(Condition predicate, RelationalTerm child1, RelationalTerm child2) {
 		super(AlgebraUtilities.getInputAttributes(child1, child2), AlgebraUtilities.getOutputAttributes(child1, child2));
 		Assert.assertNotNull(predicate);
 		Assert.assertNotNull(child1);

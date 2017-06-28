@@ -17,10 +17,10 @@ import org.xml.sax.SAXException;
 import com.google.common.collect.Iterators;
 
 import uk.ac.ox.cs.pdq.algebra.RelationalOperator;
+import uk.ac.ox.cs.pdq.cost.DoubleCost;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.io.ReaderException;
 import uk.ac.ox.cs.pdq.plan.AccessOperator;
-import uk.ac.ox.cs.pdq.plan.DoubleCost;
 import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 
 /**

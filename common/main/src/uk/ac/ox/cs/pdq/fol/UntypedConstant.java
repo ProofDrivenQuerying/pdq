@@ -1,8 +1,8 @@
 package uk.ac.ox.cs.pdq.fol;
 
-import java.util.Objects;
+import org.junit.Assert;
 
-import com.google.common.base.Preconditions;
+import uk.ac.ox.cs.pdq.InterningManager;
 
 /**
  * 
@@ -10,44 +10,20 @@ import com.google.common.base.Preconditions;
  *
  */
 public final class UntypedConstant implements Constant {
+	private static final long serialVersionUID = 7918785072370309908L;
 
 	/**  The constant's name. */
 	private final String symbol;
 
-	/** Cached String representation. */
-	private String rep = null;
-
-	public UntypedConstant(String name) {
-		Preconditions.checkArgument(name != null);
-		Preconditions.checkArgument(!name.isEmpty());
+	private UntypedConstant(String name) {
+		Assert.assertNotNull(name);
+		Assert.assertTrue(!name.isEmpty());
 		this.symbol = name;
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null) {
-			return false;
-		}
-		return this.getClass().isInstance(o)
-				&& this.symbol.equals(((UntypedConstant) o).symbol);
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(this.symbol);
-	}
-
-	@Override
 	public String toString() {
-		if (this.rep == null) {
-			StringBuilder result = new StringBuilder();
-			result.append(this.symbol);
-			this.rep = result.toString().intern();
-		}
-		return this.rep;
+		return this.symbol;
 	}
 
 	public String getSymbol() {
@@ -67,11 +43,6 @@ public final class UntypedConstant implements Constant {
 	public boolean isVariable() {
 		return false;
 	}
-	
-	@Override
-	public UntypedConstant clone() {
-		return new UntypedConstant(this.symbol);
-	}
 
 	/**  The default prefix of the constant terms. */
 	public static final String DEFAULT_CONSTANT_PREFIX = "c";
@@ -86,4 +57,22 @@ public final class UntypedConstant implements Constant {
 	public static UntypedConstant getFreshConstant() {
 		return new UntypedConstant(DEFAULT_CONSTANT_PREFIX + (freshConstantCounter++));
 	}
+	
+    protected Object readResolve() {
+        return s_interningManager.intern(this);
+    }
+
+    protected static final InterningManager<UntypedConstant> s_interningManager = new InterningManager<UntypedConstant>() {
+        protected boolean equal(UntypedConstant object1, UntypedConstant object2) {
+            return object1.symbol.equals(object2.symbol);
+        }
+
+        protected int getHashCode(UntypedConstant object) {
+            return object.symbol.hashCode() * 7;
+        }
+    };
+
+    public static UntypedConstant create(String symbol) {
+        return s_interningManager.intern(new UntypedConstant(symbol));
+    }
 }

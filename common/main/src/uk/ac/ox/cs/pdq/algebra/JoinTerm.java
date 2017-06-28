@@ -20,7 +20,7 @@ public class JoinTerm extends RelationalTerm {
 	/**  Cashed string representation. */
 	protected String toString = null;
 
-	public JoinTerm(Condition predicate, RelationalTerm child1, RelationalTerm child2) {
+	private JoinTerm(Condition predicate, RelationalTerm child1, RelationalTerm child2) {
 		super(AlgebraUtilities.getInputAttributes(child1, child2), AlgebraUtilities.getOutputAttributes(child1, child2));
 		Assert.assertNotNull(predicate);
 		Assert.assertNotNull(child1);

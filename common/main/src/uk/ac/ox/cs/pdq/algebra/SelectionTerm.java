@@ -21,7 +21,7 @@ public class SelectionTerm extends RelationalTerm {
 	/**  Cashed string representation. */
 	private String toString = null;
 
-	public SelectionTerm(Condition predicate, RelationalTerm child) {
+	private SelectionTerm(Condition predicate, RelationalTerm child) {
 		super(child.getInputAttributes(), child.getOutputAttributes());
 		Assert.assertNotNull(predicate);
 		Assert.assertNotNull(child);

@@ -5,9 +5,9 @@ import java.util.Map;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Relation;
-import uk.ac.ox.cs.pdq.plan.Cost;
 import uk.ac.ox.cs.pdq.util.Tuple;
 
 

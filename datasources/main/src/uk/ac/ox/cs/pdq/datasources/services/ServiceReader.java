@@ -20,6 +20,7 @@ import org.xml.sax.SAXException;
 
 import uk.ac.ox.cs.pdq.builder.BuilderException;
 import uk.ac.ox.cs.pdq.builder.SchemaDiscoverer;
+import uk.ac.ox.cs.pdq.cost.DoubleCost;
 import uk.ac.ox.cs.pdq.datasources.services.policies.PolicyFactory;
 import uk.ac.ox.cs.pdq.datasources.services.policies.UsagePolicy;
 import uk.ac.ox.cs.pdq.datasources.services.rest.InputMethod;
@@ -34,7 +35,6 @@ import uk.ac.ox.cs.pdq.db.builder.SchemaBuilder;
 import uk.ac.ox.cs.pdq.io.ReaderException;
 import uk.ac.ox.cs.pdq.io.xml.AbstractXMLReader;
 import uk.ac.ox.cs.pdq.io.xml.QNames;
-import uk.ac.ox.cs.pdq.plan.DoubleCost;
 
 import com.google.common.base.CaseFormat;
 import com.google.common.base.Preconditions;

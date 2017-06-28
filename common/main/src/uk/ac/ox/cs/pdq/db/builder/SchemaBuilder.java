@@ -7,6 +7,9 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import org.apache.commons.collections4.CollectionUtils;
+
 import java.util.Set;
 
 import com.google.common.base.Preconditions;
@@ -14,6 +17,7 @@ import com.google.common.base.Preconditions;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.ForeignKey;
+import uk.ac.ox.cs.pdq.db.Reference;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.View;
@@ -24,6 +28,7 @@ import uk.ac.ox.cs.pdq.fol.FormulaEquivalence;
 import uk.ac.ox.cs.pdq.fol.LinearGuarded;
 import uk.ac.ox.cs.pdq.fol.QuantifiedFormula;
 import uk.ac.ox.cs.pdq.fol.TGD;
+import uk.ac.ox.cs.pdq.fol.Variable;
 
 
 /**
@@ -312,6 +317,23 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 			}
 		}
 	}
+	
+//	/**
+//	 * Creates a new foreign key object.
+//	 *
+//	 * @param dep LinearGuarded
+//	 */
+//	public ForeignKey(LinearGuarded dep) {
+//		Atom left = dep.getBody().getAtoms().get(0);
+//		Atom right = dep.getHead().getAtoms().get(0);
+//		Relation leftRel = (Relation) left.getPredicate();
+//		Relation rightRel = (Relation) right.getPredicate();
+//		this.setForeignRelation(rightRel);
+//		this.setForeignRelationName(rightRel.getName());
+//		for (Variable v:CollectionUtils.intersection(left.getVariables(), right.getVariables())) {
+//			this.addReference(new Reference(leftRel.getAttribute(left.getTerms().indexOf(v)), rightRel.getAttribute(right.getTerms().indexOf(v))));
+//		}
+//	}
 
 	/**
 	 * Remove dependencies that refer to relation that are not part of the schema.

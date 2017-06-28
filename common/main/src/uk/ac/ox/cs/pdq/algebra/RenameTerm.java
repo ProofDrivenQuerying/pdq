@@ -20,7 +20,7 @@ public class RenameTerm extends RelationalTerm {
 	/**  Cashed string representation. */
 	private String toString = null;
 
-	public RenameTerm(Attribute[] renamings, RelationalTerm child) {
+	private RenameTerm(Attribute[] renamings, RelationalTerm child) {
 		super(child.getInputAttributes(), renamings);
 		Assert.assertNotNull(renamings);
 		Assert.assertNotNull(child);

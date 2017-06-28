@@ -7,6 +7,7 @@ import java.util.Map;
 
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.CanonicalNameGenerator;
 import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
@@ -14,7 +15,6 @@ import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.io.xml.AbstractXMLWriter;
 import uk.ac.ox.cs.pdq.io.xml.QNames;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
-import uk.ac.ox.cs.pdq.reasoning.utility.CanonicalNameGenerator;
 import uk.ac.ox.cs.pdq.ui.proof.Proof;
 
 // TODO: Auto-generated Javadoc

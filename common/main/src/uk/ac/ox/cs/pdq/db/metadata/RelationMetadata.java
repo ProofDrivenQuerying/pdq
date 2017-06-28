@@ -3,8 +3,8 @@ package uk.ac.ox.cs.pdq.db.metadata;
 import java.util.List;
 import java.util.Map;
 
+import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
-import uk.ac.ox.cs.pdq.plan.Cost;
 import uk.ac.ox.cs.pdq.util.Tuple;
 
 // TODO: Auto-generated Javadoc

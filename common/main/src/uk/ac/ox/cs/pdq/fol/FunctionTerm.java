@@ -1,12 +1,10 @@
 package uk.ac.ox.cs.pdq.fol;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
-import com.google.common.base.Joiner;
-import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableList;
+import org.junit.Assert;
 
 /**
  * 
@@ -14,20 +12,20 @@ import com.google.common.collect.ImmutableList;
  *
  */
 public class FunctionTerm implements Term{
+	private static final long serialVersionUID = 4513191157046218083L;
 
 	private final Function function;
-	private final List<Term> terms;
-	private Integer hash = null;
+	private final Term[] terms;
 	protected String toString = null;
-	protected List<Variable> variables;
-	
-	public FunctionTerm(Function function, List<Term> terms) {
-		Preconditions.checkArgument(terms != null);
-		Preconditions.checkArgument(function.getArity() == terms.size());
+	protected Variable[] variables;
+
+	public FunctionTerm(Function function, Term... terms) {
+		Assert.assertNotNull(terms);
+		Assert.assertTrue(function.getArity() == terms.length);
 		this.function = function;
-		this.terms = ImmutableList.copyOf(terms);
+		this.terms = terms.clone();
 	}
-	
+
 	@Override
 	public boolean isVariable() {
 		return !(this.function.getArity() == 0);
@@ -53,67 +51,39 @@ public class FunctionTerm implements Term{
 	/**
 	 * @return the terms
 	 */
-	public List<Term> getTerms() {
-		return this.terms;
-	}
-	
-	/**
-	 * Equals.
-	 *
-	 * @param o Object
-	 * @return boolean
-	 */
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null) {
-			return false;
-		}
-		return this.getClass().isInstance(o)
-				&& this.function.equals(((FunctionTerm) o).function)
-				&& this.terms.equals(((FunctionTerm) o).terms);
+	public Term[] getTerms() {
+		return this.terms.clone();
 	}
 
-	/**
-	 * Hash code.
-	 *
-	 * @return int
-	 */
-	@Override
-	public int hashCode() {
-		if(this.hash == null) {
-			this.hash = Objects.hash(this.function, this.terms);
-		}
-		return this.hash;
-	}
-
-	/**
-	 * To string.
-	 *
-	 * @return String
-	 */
 	@Override
 	public String toString() {
 		if(this.toString == null) {
-			this.toString = this.function.getName() + (this.function.arity > 0 ? "(" + Joiner.on(",").join(this.terms) + ")" : "");
+			StringBuilder builder = new StringBuilder();
+			builder.append(this.function.getName());
+            if (this.terms.length > 0) {
+                builder.append('(');
+                for (int index = 0; index < this.terms.length; index++) {
+                    if (index > 0)
+                        builder.append(',');
+                    builder.append(this.terms[index]).toString();
+                }
+                builder.append(')');
+            }
 		}
 		return this.toString;
 	}
-	
-	public List<Variable> getVariables() {
+
+	public Variable[] getVariables() {
 		if(this.variables == null) {
-			this.variables = new ArrayList<>();
+			List<Variable> variables = new ArrayList<>();
 			for (Term term: this.terms) {
-				if(term instanceof Variable) {
-					this.variables.add((Variable) term);
-				}
-				else if(term instanceof FunctionTerm) {
-					this.variables.addAll(((FunctionTerm) term).getVariables());
-				}
+				if(term instanceof Variable) 
+					variables.add((Variable) term);
+				else if(term instanceof FunctionTerm) 
+					variables.addAll(Arrays.asList(((FunctionTerm) term).getVariables()));
 			}
+			this.variables = variables.toArray(new Variable[variables.size()]);
 		}
-		return this.variables;
+		return this.variables.clone();
 	}
 }

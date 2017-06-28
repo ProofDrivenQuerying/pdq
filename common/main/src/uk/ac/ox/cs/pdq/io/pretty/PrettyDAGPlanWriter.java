@@ -10,9 +10,9 @@ import uk.ac.ox.cs.pdq.algebra.Projection;
 import uk.ac.ox.cs.pdq.algebra.RelationalOperator;
 import uk.ac.ox.cs.pdq.algebra.Selection;
 import uk.ac.ox.cs.pdq.algebra.UnaryOperator;
+import uk.ac.ox.cs.pdq.cost.EstimateProvider;
 import uk.ac.ox.cs.pdq.io.Writer;
 import uk.ac.ox.cs.pdq.plan.DAGPlan;
-import uk.ac.ox.cs.pdq.plan.EstimateProvider;
  
 // TODO: Auto-generated Javadoc
 /**

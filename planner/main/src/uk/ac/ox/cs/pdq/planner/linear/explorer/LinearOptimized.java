@@ -29,6 +29,7 @@ import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
+import uk.ac.ox.cs.pdq.planner.IndexedDirectedGraph;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.linear.LinearConfiguration;
@@ -51,7 +52,6 @@ import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.StatusUpdateMetadat
 import uk.ac.ox.cs.pdq.planner.linear.explorer.pruning.PostPruning;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
-import uk.ac.ox.cs.pdq.util.IndexedDirectedGraph;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;

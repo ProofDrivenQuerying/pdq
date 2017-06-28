@@ -10,7 +10,7 @@ public class ConjunctiveCondition implements Condition {
 	
 	protected final SimpleCondition[] predicates;
 
-	protected ConjunctiveCondition(SimpleCondition[] predicates) {
+	private ConjunctiveCondition(SimpleCondition[] predicates) {
 		Assert.assertNotNull(predicates);
 		this.predicates = predicates.clone();
 	}

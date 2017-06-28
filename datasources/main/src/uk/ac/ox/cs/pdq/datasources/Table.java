@@ -5,12 +5,11 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import uk.ac.ox.cs.pdq.datasources.Differentiable.Levels;
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.util.Differentiable;
 import uk.ac.ox.cs.pdq.util.Tuple;
 import uk.ac.ox.cs.pdq.util.TupleType;
 import uk.ac.ox.cs.pdq.util.Typed;
-import uk.ac.ox.cs.pdq.util.Differentiable.Levels;
 import uk.ac.ox.cs.pdq.util.TupleType.DefaultFactory;
 
 import com.google.common.base.Preconditions;

@@ -16,7 +16,7 @@ public class ConstantEqualityCondition implements SimpleCondition {
 	protected final TypedConstant constant;
 
 
-	protected ConstantEqualityCondition(int position, TypedConstant constant) {
+	private ConstantEqualityCondition(int position, TypedConstant constant) {
 		Assert.assertTrue(position >= 0 && constant != null);
 		this.position = position;
 		this.constant = constant;

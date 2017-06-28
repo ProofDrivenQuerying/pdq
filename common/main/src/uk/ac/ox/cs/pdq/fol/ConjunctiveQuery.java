@@ -1,18 +1,13 @@
 package uk.ac.ox.cs.pdq.fol;
 
+import java.util.Arrays;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
-import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import org.junit.Assert;
 
-import com.google.common.base.Joiner;
-import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Maps;
-
-import uk.ac.ox.cs.pdq.reasoning.utility.CanonicalNameGenerator;
+import uk.ac.ox.cs.pdq.InterningManager;
 
 //TODO fix the comments
 /**
@@ -24,17 +19,10 @@ import uk.ac.ox.cs.pdq.reasoning.utility.CanonicalNameGenerator;
  *
  */
 public class ConjunctiveQuery extends Formula {
+	
+	private static final long serialVersionUID = 2619152028298729812L;
 
 	protected final Formula child;
-	
-	/** The hash. */
-	private Integer hash;
-
-	/**  Cashed list of atoms. */
-	private List<Atom> atoms = null;
-
-	/**  Cashed list of terms. */
-	private List<Term> terms = null;
 	
 	/**  Cashed string representation of the atom. */
 	private String toString = null;
@@ -43,74 +31,73 @@ public class ConjunctiveQuery extends Formula {
 	 * TOCOMMENT we should get rid of this when we fix #42
 	 * 
 	 * The grounding. */
-	protected Map<Variable, Constant> canonicalSubstitution;
+	protected final Map<Variable, Constant> canonicalSubstitution;
 	
 	/**  
 	 * TOCOMMENT we should get rid of this when we fix #42, together with the grounding field a few lines below, they are very confusing.
 	 * 
 	 * Map of query's free variables to chase constants. */
-	protected Map<Variable, Constant> canonicalSubstitutionOfFreeVariables;
+	protected final Map<Variable, Constant> canonicalSubstitutionOfFreeVariables;
 	
 	/**  Cashed list of free variables. */
-	private List<Variable> freeVariables = null;
+	private final Variable[] freeVariables;
 
 	/**  Cashed list of bound variables. */
-	private List<Variable> boundVariables = null;
+	private final Variable[] boundVariables;
 
-	
 	/**
 	 * Builds a query given a set of free variables and its conjunction.
 	 * The query is grounded using the input mapping of variables to constants.
 	 */
-	public ConjunctiveQuery(List<Variable> freeVariables, Conjunction child, Map<Variable, Constant> canonicalSubstitution) {
+	private ConjunctiveQuery(Variable[] freeVariables, Conjunction child, Map<Variable, Constant> canonicalSubstitution) {
 		//Check that the body is a conjunction of positive atoms
-		Preconditions.checkArgument(isConjunctionOfAtoms(child));
-		Preconditions.checkArgument(child.getFreeVariables().containsAll(freeVariables));
+		Assert.assertTrue(isConjunctionOfAtoms(child));
+		Assert.assertTrue(Arrays.asList(child.getFreeVariables()).containsAll(Arrays.asList(freeVariables)));
 		this.child = child;
-		this.freeVariables = ImmutableList.copyOf(freeVariables);
-		this.boundVariables = ImmutableList.copyOf(CollectionUtils.removeAll(child.getFreeVariables(), freeVariables));
+		this.freeVariables = freeVariables.clone();
+		this.boundVariables = ArrayUtils.removeElements(child.getFreeVariables(), freeVariables);
 		this.canonicalSubstitution = canonicalSubstitution;
-		this.canonicalSubstitutionOfFreeVariables = Maps.newHashMap(canonicalSubstitution);
-		for(Variable variable:this.getBoundVariables()) {
+		this.canonicalSubstitutionOfFreeVariables = new LinkedHashMap<>();
+		this.canonicalSubstitutionOfFreeVariables.putAll(canonicalSubstitution);
+		for(Variable variable:this.getBoundVariables()) 
 			this.canonicalSubstitutionOfFreeVariables.remove(variable);
-		}
 	}
 	
 	/**
 	 * Builds a query given a set of free variables and an atom.
 	 * The query is grounded using the input mapping of variables to constants.
 	 */
-	public ConjunctiveQuery(List<Variable> freeVariables, Atom child, Map<Variable, Constant> canonicalSubstitution) {
+	private ConjunctiveQuery(Variable[] freeVariables, Atom child, Map<Variable, Constant> canonicalSubstitution) {
 		//Check that the body is a conjunction of positive atoms
-		Preconditions.checkArgument(isConjunctionOfAtoms(child));
-		Preconditions.checkArgument(child.getFreeVariables().containsAll(freeVariables));
+		Assert.assertTrue(isConjunctionOfAtoms(child));
+		Assert.assertTrue(Arrays.asList(child.getFreeVariables()).containsAll(Arrays.asList(freeVariables)));
 		this.child = child;
-		this.freeVariables = ImmutableList.copyOf(freeVariables);
-		this.boundVariables = ImmutableList.copyOf(CollectionUtils.removeAll(child.getFreeVariables(), freeVariables));
+		this.freeVariables = freeVariables.clone();
+		this.boundVariables = ArrayUtils.removeElements(child.getFreeVariables(), freeVariables);
 		this.canonicalSubstitution = canonicalSubstitution;
-		this.canonicalSubstitutionOfFreeVariables = Maps.newHashMap(canonicalSubstitution);
-		for(Variable variable:this.getBoundVariables()) {
+		this.canonicalSubstitutionOfFreeVariables = new LinkedHashMap<>();
+		this.canonicalSubstitutionOfFreeVariables.putAll(canonicalSubstitution);
+		for(Variable variable:this.getBoundVariables()) 
 			this.canonicalSubstitutionOfFreeVariables.remove(variable);
-		}
 	}
 	
 	/**
 	 * Builds a query given a set of free variables and its conjunction.
 	 */
-	public ConjunctiveQuery(List<Variable> freeVariables, Conjunction child) {
+	private ConjunctiveQuery(Variable[] freeVariables, Conjunction child) {
 		this(freeVariables, child, generateSubstitutionToCanonicalVariables(child));
 	}
 	
 	/**
 	 * Builds a query given a set of free variables and an atom.
 	 */
-	public ConjunctiveQuery(List<Variable> freeVariables, Atom child) {
+	private ConjunctiveQuery(Variable[] freeVariables, Atom child) {
 		this(freeVariables, child, generateSubstitutionToCanonicalVariables(child));
 	}
 	
 	private static boolean isConjunctionOfAtoms(Formula formula) {
 		if(formula instanceof Conjunction) {
-			return isConjunctionOfAtoms(formula.getChildren().get(0)) && isConjunctionOfAtoms(formula.getChildren().get(1));
+			return isConjunctionOfAtoms(formula.getChildren()[0]) && isConjunctionOfAtoms(formula.getChildren()[1]);
 		}
 		if(formula instanceof Atom) {
 			return true;
@@ -134,7 +121,7 @@ public class ConjunctiveQuery extends Formula {
 					if (t.isVariable()) {
 						Constant c = canonicalMapping.get(t);
 						if (c == null) {
-							c = new UntypedConstant(CanonicalNameGenerator.getName());
+							c = UntypedConstant.create(CanonicalNameGenerator.getName());
 							canonicalMapping.put((Variable) t, c);
 						}
 					}
@@ -148,7 +135,7 @@ public class ConjunctiveQuery extends Formula {
 	 *
 	 */
 	public boolean isBoolean() {
-		return this.getFreeVariables().isEmpty();
+		return this.getFreeVariables().length == 0;
 	}
 	
 	/**
@@ -166,41 +153,20 @@ public class ConjunctiveQuery extends Formula {
 		return this.canonicalSubstitution;
 	}
 
-	/**
-	 * Equals.
-	 *
-	 * @param o Object
-	 * @return boolean
-	 */
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null) {
-			return false;
-		}
-		return this.getClass().isInstance(o)
-				&& this.freeVariables.equals(((ConjunctiveQuery) o).freeVariables)
-				&& this.child.equals(((ConjunctiveQuery) o).child);
-	}
-
-
-	@Override
-	public int hashCode() {
-		if(this.hash == null) {
-			this.hash = Objects.hash(this.freeVariables, this.child);
-		}
-		return this.hash;
-	}
-
-
 	@Override
 	public java.lang.String toString() {
 		if(this.toString == null) {
 			this.toString = "";
-			String op = this.boundVariables.isEmpty() ? "" : "exists";
-			this.toString += "(" + op + "[" + Joiner.on(",").join(this.boundVariables) + "]" + this.child.toString() + ")";
+			String op = this.boundVariables.length == 0 ? "" : "exists";
+			this.toString += "(" + op;
+			this.toString += "[";
+            for (int index = 0; index < boundVariables.length; index++) {
+                if (index > 0)
+                	this.toString += ",";
+                this.toString += boundVariables[index].toString();
+            }
+            this.toString += "]";
+            this.toString += this.child.toString() + ")";
 		}
 		return this.toString;
 	}
@@ -210,34 +176,75 @@ public class ConjunctiveQuery extends Formula {
 		return this.hashCode();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public List<Formula> getChildren() {
-		return ImmutableList.of(this.child);
+	public Formula[] getChildren() {
+		return new Formula[]{this.child};
 	}
 
 	@Override
-	public List<Atom> getAtoms() {
-		if(this.atoms == null) {
-			this.atoms = this.child.getAtoms();
-		}
-		return this.atoms;
+	public Atom[] getAtoms() {
+		return this.child.getAtoms();
 	}
 
 	@Override
-	public List<Term> getTerms() {
-		if(this.terms == null) {
-			this.terms = this.child.getTerms();
-		}
-		return this.terms;
+	public Term[] getTerms() {
+		return this.child.getTerms();
 	}
 
 	@Override
-	public List<Variable> getFreeVariables() {
-		return this.freeVariables;
+	public Variable[] getFreeVariables() {
+		return this.freeVariables.clone();
 	}
 
 	@Override
-	public List<Variable> getBoundVariables() {
-		return this.boundVariables;
+	public Variable[] getBoundVariables() {
+		return this.boundVariables.clone();
 	}
+	
+	
+    protected Object readResolve() {
+        return s_interningManager.intern(this);
+    }
+
+    protected static final InterningManager<ConjunctiveQuery> s_interningManager = new InterningManager<ConjunctiveQuery>() {
+        protected boolean equal(ConjunctiveQuery object1, ConjunctiveQuery object2) {
+            if (!object1.child.equals(object2.child) || object1.freeVariables.length != object2.freeVariables.length)
+                return false;
+            for (int index = object1.freeVariables.length - 1; index >= 0; --index)
+                if (!object1.freeVariables[index].equals(object2.freeVariables[index]))
+                    return false;
+            
+            for (java.util.Map.Entry<Variable, Constant> entry:object1.canonicalSubstitution.entrySet())
+                if (!object2.canonicalSubstitution.containsKey(entry.getKey()) || 
+                		!object2.canonicalSubstitution.get(entry.getKey()).equals(entry.getValue()))
+                    return false;
+            return true;
+        }
+
+        protected int getHashCode(ConjunctiveQuery object) {
+            int hashCode = object.child.hashCode();
+            for (int index = object.freeVariables.length - 1; index >= 0; --index)
+                hashCode = hashCode * 7 + object.freeVariables[index].hashCode();
+            for (java.util.Map.Entry<Variable, Constant> entry:object.canonicalSubstitution.entrySet())
+            	hashCode = hashCode * 7 + entry.getKey().hashCode() + entry.getValue().hashCode();
+            return hashCode;
+        }
+    };
+
+    public static ConjunctiveQuery create(Variable[] freeVariables, Conjunction child, Map<Variable, Constant> canonicalSubstitution) {
+        return s_interningManager.intern(new ConjunctiveQuery(freeVariables, child, canonicalSubstitution));
+    }
+    
+    public static ConjunctiveQuery create(Variable[] freeVariables, Atom child, Map<Variable, Constant> canonicalSubstitution) {
+        return s_interningManager.intern(new ConjunctiveQuery(freeVariables, child, canonicalSubstitution));
+    }
+    
+    public static ConjunctiveQuery create(Variable[] freeVariables, Conjunction child) {
+        return s_interningManager.intern(new ConjunctiveQuery(freeVariables, child));
+    }
+    
+    public static ConjunctiveQuery create(Variable[] freeVariables, Atom child) {
+        return s_interningManager.intern(new ConjunctiveQuery(freeVariables, child));
+    }
 }

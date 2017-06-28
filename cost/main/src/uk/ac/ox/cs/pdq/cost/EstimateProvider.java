@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.plan;
+package uk.ac.ox.cs.pdq.cost;
 
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 

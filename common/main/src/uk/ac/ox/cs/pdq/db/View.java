@@ -57,7 +57,7 @@ public class View extends Relation {
 	 */
 	public void setDependency(LinearGuarded dependency) {
 		this.dependency = new LinearGuarded(
-				new Atom(this, dependency.getBody().getAtoms().get(0).getTerms()),
+				new Atom(this, dependency.getBody().getAtoms()[0].getTerms()),
 				dependency.getHead() instanceof QuantifiedFormula ? 
 						dependency.getHead().getChildren().get(0) :
 				dependency.getHead());

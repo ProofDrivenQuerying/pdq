@@ -7,10 +7,10 @@ import java.util.Collection;
 
 import org.apache.log4j.Logger;
 
+import uk.ac.ox.cs.pdq.cost.DoubleCost;
 import uk.ac.ox.cs.pdq.db.metadata.RelationMetadata;
 import uk.ac.ox.cs.pdq.logging.performance.StatisticsCollector;
 import uk.ac.ox.cs.pdq.plan.AccessOperator;
-import uk.ac.ox.cs.pdq.plan.DoubleCost;
 import uk.ac.ox.cs.pdq.plan.Plan;
 
 import com.google.common.base.Preconditions;

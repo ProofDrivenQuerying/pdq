@@ -12,13 +12,13 @@ import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import uk.ac.ox.cs.pdq.cost.DoubleCost;
 import uk.ac.ox.cs.pdq.cost.CostParameters.BlackBoxQueryTypes;
 import uk.ac.ox.cs.pdq.cost.estimators.BlackBoxCostEstimator;
 import uk.ac.ox.cs.pdq.logging.performance.StatisticsCollector;
-import uk.ac.ox.cs.pdq.plan.Cost;
-import uk.ac.ox.cs.pdq.plan.DoubleCost;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.dag.cost.sql.DAGConfigurationToSQLTranslator;
+import uk.ac.ox.cs.pdq.util.Cost;
 
 import com.google.common.eventbus.EventBus;
 

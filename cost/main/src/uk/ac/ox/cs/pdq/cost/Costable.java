@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.util;
+package uk.ac.ox.cs.pdq.cost;
 
 /**
  * TOCOMMENT there is nothing here, this can go
