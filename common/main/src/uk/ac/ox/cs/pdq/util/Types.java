@@ -9,7 +9,6 @@ import java.text.SimpleDateFormat;
 import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.db.DataType;
-import uk.ac.ox.cs.pdq.db.TypedConstant;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -30,7 +29,7 @@ public class Types {
 	 */
 	public static String simpleName(Type type) {
 		if (type instanceof Class) {
-			return ((Class) type).getSimpleName();
+			return ((Class<?>) type).getSimpleName();
 		}
 		if (type instanceof DataType) {
 			return ((DataType) type).getName();
@@ -49,7 +48,7 @@ public class Types {
 	 */
 	public static String canonicalName(Type type) {
 		if (type instanceof Class) {
-			return ((Class) type).getCanonicalName();
+			return ((Class<?>) type).getCanonicalName();
 		}
 		if (type instanceof DataType) {
 			return ((DataType) type).getName();
@@ -80,7 +79,7 @@ public class Types {
 	 */
 	public static boolean isNumeric(Type type) {
 		if (type instanceof Class) {
-			return Number.class.isAssignableFrom((Class) type);
+			return Number.class.isAssignableFrom((Class<?>) type);
 		}
 		return false;
 
@@ -95,6 +94,7 @@ public class Types {
 	 * @param o the o
 	 * @return a representation of s cast to the given class.
 	 */
+	@SuppressWarnings("unchecked")
 	public static <T> T cast(Type type, Object o) {
 		if (o == null) {
 			return null;
@@ -102,7 +102,7 @@ public class Types {
 		try {
 			if (type instanceof Class) {
 				String s = String.valueOf(o);
-				Class<?> cl = (Class) type;
+				Class<?> cl = (Class<?>) type;
 				if (Integer.class.equals(cl)) {
 					return (T) (s.isEmpty() ? null : cl.cast(Integer.valueOf(s.trim())));
 				} else if (Long.class.equals(cl)) {
@@ -128,28 +128,5 @@ public class Types {
 			log.error(e);
 		}
 		throw new ClassCastException(o + " could not be cast to " + type);
-	}
-	
-	/**
-	 * Make constant.
-	 *
-	 * @param <T> the generic type
-	 * @param c the c
-	 * @return the typed constant
-	 */
-	public static <T> TypedConstant<T> makeConstant(T c) {
-		return new TypedConstant<>(c);
-	}
-	
-	/**
-	 * Make constant.
-	 *
-	 * @param <T> the generic type
-	 * @param t the t
-	 * @param o the o
-	 * @return the typed constant
-	 */
-	public static <T> TypedConstant<T> makeConstant(Type t, Object o) {
-		return new TypedConstant<>((T) cast(t, o));
 	}
 }

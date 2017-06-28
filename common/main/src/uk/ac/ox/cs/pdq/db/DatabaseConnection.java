@@ -56,7 +56,6 @@ public class DatabaseConnection implements AutoCloseable{
 		return schema;
 	}
 
-
 	public DatabaseConnection(DatabaseParameters dbParams, Schema schema) throws SQLException {
 		String driver = dbParams.getDatabaseDriver();
 		String url = dbParams.getConnectionUrl();
@@ -87,17 +86,13 @@ public class DatabaseConnection implements AutoCloseable{
 		this.relations = Lists.newArrayList(schema.getRelations());
 		this.schema = schema;
 
-
 		for(int j=0; j<=synchronousThreadsNumber; j++)
-		{
 			this.synchronousConnections.add(DatabaseInstance.getConnection(driver, url, database, username, password));
-		}
 
 		this.dbParams = dbParams;
 		this.relationNamesToRelationObjects = new LinkedHashMap<>();
 		initialize();
 	}
-
 
 
 	public void initialize() throws SQLException {
@@ -114,9 +109,8 @@ public class DatabaseConnection implements AutoCloseable{
 	protected void setup() throws SQLException {
 		Statement sqlStatement = this.synchronousConnections.get(0).createStatement();
 
-		for (String sql: this.getBuilder().createDatabaseStatements(database)) {
+		for (String sql: this.getBuilder().createDatabaseStatements(database)) 
 			sqlStatement.addBatch(sql);
-		}
 
 		//Put relations into a set so as to make them unique
 		Set<Relation> relationset = new HashSet<Relation>();
@@ -144,11 +138,10 @@ public class DatabaseConnection implements AutoCloseable{
 	private Relation createDatabaseRelation(Relation relation) {
 		/** The attr prefix. THIS SHOULD DISAPPEAR */
 		String attrPrefix = "x";
-
-		List<Attribute> attributes = new ArrayList<>();
-		for (int index = 0; index < relation.getAttributes().size(); index++) {
-			attributes.add(new Attribute(String.class, attrPrefix + index));
-		}
+		Attribute[] attributes = new Attribute[relation.getAttributes().length];
+		for (int index = 0; index < relation.getAttributes().length; index++) 
+			attributes[index] = new Attribute(String.class, attrPrefix + index);
+		
 		return new Relation(relation.getName(), attributes, relation.isEquality()){};	
 	}
 
@@ -162,9 +155,9 @@ public class DatabaseConnection implements AutoCloseable{
 		Statement sqlStatement = this.synchronousConnections.get(0).createStatement();
 		//Statement sqlStatement = this.synchronousConnections.createStatement();
 
-		for (String sql: this.getBuilder().createDropStatements(database)) {
+		for (String sql: this.getBuilder().createDropStatements(this.database)) 
 			sqlStatement.addBatch(sql);
-		}
+		
 		sqlStatement.executeBatch();
 	}
 	/*

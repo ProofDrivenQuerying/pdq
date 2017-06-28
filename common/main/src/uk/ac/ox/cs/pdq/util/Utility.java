@@ -32,6 +32,7 @@ import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.io.xml.QNames;
+import uk.ac.ox.cs.pdq.reasoning.utility.CanonicalNameGenerator;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;

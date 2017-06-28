@@ -7,12 +7,12 @@ import java.util.Objects;
 
 import org.apache.commons.collections4.CollectionUtils;
 
-import uk.ac.ox.cs.pdq.util.CanonicalNameGenerator;
-
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
+
+import uk.ac.ox.cs.pdq.reasoning.utility.CanonicalNameGenerator;
 
 //TODO fix the comments
 /**

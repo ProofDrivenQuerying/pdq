@@ -18,9 +18,9 @@ import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.plan.DAGPlan;
-import uk.ac.ox.cs.pdq.plan.PlanUtils;
 import uk.ac.ox.cs.pdq.plan.TreePlan;
 import uk.ac.ox.cs.pdq.planner.dag.BinaryConfiguration.BinaryConfigurationTypes;
+import uk.ac.ox.cs.pdq.planner.util.PlanUtils;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;

@@ -11,6 +11,7 @@ import java.util.Arrays;
  * @author Julien Leblay
  */
 class TupleImpl implements Tuple {
+	private static final long serialVersionUID = -7835253137670265442L;
 
 	/**  The type of the tuple. */
 	private final TupleType type;

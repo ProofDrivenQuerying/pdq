@@ -58,7 +58,7 @@ public interface TupleType extends Serializable{
 	 * @param values the values
 	 * @return Tuple
 	 */
-	Tuple createTuple(List<TypedConstant<?>> values);
+	Tuple createTuple(List<TypedConstant> values);
 
 	/**
 	 * Creates a tuple by appending the given left and right tuples.

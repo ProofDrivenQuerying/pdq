@@ -14,6 +14,13 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 
+import com.google.common.base.Joiner;
+import com.google.common.base.Preconditions;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Multimap;
+
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
@@ -23,7 +30,6 @@ import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismProperty.MapProperty;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
-import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.EGD;
 import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Predicate;
@@ -31,13 +37,6 @@ import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.util.Utility;
-
-import com.google.common.base.Joiner;
-import com.google.common.base.Preconditions;
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
-import com.google.common.collect.LinkedHashMultimap;
-import com.google.common.collect.Multimap;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -86,21 +85,7 @@ public abstract class SQLStatementBuilder {
 		return result;
 	}
 
-
-	//used for debugging purposes
-	public Collection<String> createGetAllTuplesStatement(Map<String, Relation> toDatabaseTables) {
-		Collection<String> result = new LinkedList<>();
-		for (String key:toDatabaseTables.keySet()) {
-			Relation relation = toDatabaseTables.get(key);
-			String selectAll = "SELECT * FROM " + relation.getName();
-			result.add(selectAll);
-		}
-		log.trace(result);
-		return result;
-	}
-
 	public abstract String createBulkInsertStatement(Predicate predicate, Collection<Atom> facts, Map<String, Relation> toDatabaseTables);
-
 
 	/**
 	 * Creates delete statements
@@ -133,8 +118,8 @@ public abstract class SQLStatementBuilder {
 	public String createTableStatement(Relation relation) {
 		StringBuilder result = new StringBuilder();
 		result.append("CREATE TABLE  ").append(relation.getName()).append('(');
-		for (int it = 0; it < relation.getAttributes().size(); ++it) {
-			result.append(' ').append(relation.getAttributes().get(it).getName());
+		for (int it = 0; it < relation.getAttributes().length; ++it) {
+			result.append(' ').append(relation.getAttributes()[it].getName());
 			if (relation.getAttribute(it).getType() instanceof Class && String.class.isAssignableFrom((Class<?>) relation.getAttribute(it).getType())) {
 				result.append(" VARCHAR(500),");
 			}
@@ -382,7 +367,7 @@ public abstract class SQLStatementBuilder {
 				if (!term.isVariable() && !term.isUntypedConstant()) {
 					StringBuilder eq = new StringBuilder();
 					eq.append(alias==null ? fact.getPredicate().getName():alias).append(".").append(((Relation) fact.getPredicate()).getAttribute(it).getName()).append('=');
-					eq.append("'").append(((TypedConstant<?>) term).toString()).append("'");
+					eq.append("'").append(((TypedConstant) term).toString()).append("'");
 					constantPredicates.add(eq.toString());
 				}
 			}

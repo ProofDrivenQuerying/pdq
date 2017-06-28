@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.util;
+package uk.ac.ox.cs.pdq.reasoning.utility;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

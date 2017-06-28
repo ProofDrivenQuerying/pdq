@@ -14,8 +14,8 @@ import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.io.xml.AbstractXMLWriter;
 import uk.ac.ox.cs.pdq.io.xml.QNames;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
+import uk.ac.ox.cs.pdq.reasoning.utility.CanonicalNameGenerator;
 import uk.ac.ox.cs.pdq.ui.proof.Proof;
-import uk.ac.ox.cs.pdq.util.CanonicalNameGenerator;
 
 // TODO: Auto-generated Javadoc
 /**

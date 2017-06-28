@@ -1,18 +1,14 @@
-package uk.ac.ox.cs.pdq.plan;
+package uk.ac.ox.cs.pdq.planner.util;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import uk.ac.ox.cs.pdq.algebra.DependentJoin;
-import uk.ac.ox.cs.pdq.algebra.Projection;
-import uk.ac.ox.cs.pdq.algebra.RelationalOperator;
-import uk.ac.ox.cs.pdq.algebra.StaticInput;
-import uk.ac.ox.cs.pdq.algebra.predicates.AttributeEqualityPredicate;
-import uk.ac.ox.cs.pdq.algebra.predicates.ConjunctivePredicate;
-import uk.ac.ox.cs.pdq.algebra.predicates.ConstantEqualityPredicate;
-import uk.ac.ox.cs.pdq.algebra.predicates.Predicate;
+import uk.ac.ox.cs.pdq.algebra.AttributeEqualityCondition;
+import uk.ac.ox.cs.pdq.algebra.Condition;
+import uk.ac.ox.cs.pdq.algebra.ConstantEqualityCondition;
+import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
@@ -47,7 +43,7 @@ public class PlanUtils {
 
 			if (term instanceof TypedConstant) {
 				result.add(new ConstantEqualityCondition(
-						termIndex, (TypedConstant<?>) term));
+						termIndex, (TypedConstant) term));
 			} else {
 				List<Integer> appearances = Utility.search(terms, term);
 				if (appearances.size() > 1) {
@@ -62,7 +58,7 @@ public class PlanUtils {
 			}
 			++termIndex;
 		}
-		return result.isEmpty() ? null : new ConjunctiveCondition<>(result);
+		return result.isEmpty() ? null : new ConjunctiveCondition(result);
 	}
 
 	/**
@@ -72,7 +68,7 @@ public class PlanUtils {
 	 * @param childOp LogicalOperator
 	 * @return Projection
 	 */
-	public static Projection createFinalProjection(ConjunctiveQuery query, RelationalOperator childOp) {
+	public static ProjectionTerm createFinalProjection(ConjunctiveQuery query, RelationalTerm childOp) {
 //		List<Term> freeTerms = query.getHeadTerms();
 		List<Term> toProject = new ArrayList<>();
 		for (Variable term: query.getFreeVariables()) {
@@ -86,10 +82,10 @@ public class PlanUtils {
 //			}
 		}
 		if (!childOp.getInputTerms().isEmpty()) {
-			List<TypedConstant<?>> constants = new ArrayList<>(childOp.getInputTerms().size());
+			List<TypedConstant> constants = new ArrayList<>(childOp.getInputTerms().size());
 			for (Term t: childOp.getInputTerms()) {
 				Preconditions.checkState(!t.isVariable() && !t.isUntypedConstant(), "Successful plan cannot be open.");
-				constants.add((TypedConstant<?>) t);
+				constants.add((TypedConstant) t);
 			}
 			return new Projection(new DependentJoin(new StaticInput(constants), childOp),
 					toProject);

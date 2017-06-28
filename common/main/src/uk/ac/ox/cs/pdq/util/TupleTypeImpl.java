@@ -21,7 +21,7 @@ import com.google.common.collect.Lists;
  * @author Julien Leblay
  */
 class TupleTypeImpl implements TupleType {
-
+	private static final long serialVersionUID = 1418501776722101770L;
 	/**  The internal tuple type representation. */
 	private final Type[] types;
 
@@ -124,16 +124,16 @@ class TupleTypeImpl implements TupleType {
 	/**
 	 * Creates the tuple.
 	 *
-	 * @param values List<TypedConstant<?>>
+	 * @param values List<TypedConstant>
 	 * @return a fresh tuple, with this tuple type as type, from the give list
 	 *  of constants.
-	 * @see uk.ac.ox.cs.pdq.structures.TupleType#createTuple(List<TypedConstant<?>>)
+	 * @see uk.ac.ox.cs.pdq.structures.TupleType#createTuple(List<TypedConstant>)
 	 */
 	@Override
-	public Tuple createTuple(List<TypedConstant<?>> values) {
+	public Tuple createTuple(List<TypedConstant> values) {
 		Object[] objects = new Object[values.size()];
 		int i = 0;
-		for (TypedConstant<?> c: values) {
+		for (TypedConstant c: values) {
 			objects[i++] = c.getValue();
 		}
 
