@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq;
+package uk.ac.ox.cs.pdq.datasources;
 
 // TODO: Auto-generated Javadoc
 /**

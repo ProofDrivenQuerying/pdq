@@ -8,9 +8,9 @@ import java.util.Set;
 
 import org.jgrapht.graph.DefaultEdge;
 
-import uk.ac.ox.cs.pdq.LimitReachedException;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
+import uk.ac.ox.cs.pdq.planner.LimitReachedException;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema.AccessibleRelation;

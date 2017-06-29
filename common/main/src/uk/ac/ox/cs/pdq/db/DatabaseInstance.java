@@ -29,8 +29,6 @@ import org.apache.log4j.Logger;
 import com.google.common.base.Strings;
 import com.google.common.collect.Sets;
 
-import uk.ac.ox.cs.pdq.LimitReachedException;
-import uk.ac.ox.cs.pdq.LimitReachedException.Reasons;
 import uk.ac.ox.cs.pdq.db.sql.DerbyStatementBuilder;
 import uk.ac.ox.cs.pdq.db.sql.ExecuteSQLQueryThread;
 import uk.ac.ox.cs.pdq.db.sql.ExecuteSynchronousSQLUpdateThread;
@@ -40,6 +38,8 @@ import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Variable;
+import uk.ac.ox.cs.pdq.planner.LimitReachedException;
+import uk.ac.ox.cs.pdq.planner.LimitReachedException.Reasons;
 import uk.ac.ox.cs.pdq.util.Utility;
 /**
  * 

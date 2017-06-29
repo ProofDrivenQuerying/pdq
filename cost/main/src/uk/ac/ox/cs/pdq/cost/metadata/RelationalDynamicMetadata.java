@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.db.metadata;
+package uk.ac.ox.cs.pdq.cost.metadata;
 
 import java.util.List;
 import java.util.Map;
@@ -57,7 +57,7 @@ public class RelationalDynamicMetadata implements RelationMetadata {
 	 * Gets the size.
 	 *
 	 * @return Long
-	 * @see uk.ac.ox.cs.pdq.db.metadata.RelationMetadata#getSize()
+	 * @see uk.ac.ox.cs.pdq.cost.metadata.RelationMetadata#getSize()
 	 */
 	@Override
 	public Long getSize() {
@@ -103,7 +103,7 @@ public class RelationalDynamicMetadata implements RelationMetadata {
 	 *
 	 * @param accessMethod AccessMethod
 	 * @param c Cost
-	 * @see uk.ac.ox.cs.pdq.db.metadata.RelationMetadata#setPerInputTupleCost(AccessMethod, Cost)
+	 * @see uk.ac.ox.cs.pdq.cost.metadata.RelationMetadata#setPerInputTupleCost(AccessMethod, Cost)
 	 */
 	@Override
 	public void setPerInputTupleCost(AccessMethod accessMethod, Cost c) {
@@ -126,7 +126,7 @@ public class RelationalDynamicMetadata implements RelationMetadata {
 	 * Sets the size.
 	 *
 	 * @param s Long
-	 * @see uk.ac.ox.cs.pdq.db.metadata.RelationMetadata#setSize(Long)
+	 * @see uk.ac.ox.cs.pdq.cost.metadata.RelationMetadata#setSize(Long)
 	 */
 	@Override
 	public void setSize(Long s) {
@@ -138,7 +138,7 @@ public class RelationalDynamicMetadata implements RelationMetadata {
 	 *
 	 * @param accessMethod AccessMethod
 	 * @return Cost
-	 * @see uk.ac.ox.cs.pdq.db.metadata.RelationMetadata#getPerInputTupleCost(AccessMethod)
+	 * @see uk.ac.ox.cs.pdq.cost.metadata.RelationMetadata#getPerInputTupleCost(AccessMethod)
 	 */
 	@Override
 	public Cost getPerInputTupleCost(AccessMethod accessMethod) {

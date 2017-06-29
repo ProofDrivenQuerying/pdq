@@ -112,17 +112,15 @@ public class QuantifiedFormula extends Formula {
 
 	@Override
 	public Atom[] getAtoms() {
-		if(this.atoms == null) {
+		if(this.atoms == null) 
 			this.atoms = this.child.getAtoms();
-		}
 		return this.atoms.clone();
 	}
 
 	@Override
 	public Term[] getTerms() {
-		if(this.terms == null) {
+		if(this.terms == null) 
 			this.terms = this.child.getTerms();
-		}
 		return this.terms.clone();
 	}
 
@@ -134,7 +132,7 @@ public class QuantifiedFormula extends Formula {
 			variables.removeAll(Arrays.asList(this.variables));
 			this.freeVariables = variables.toArray(new Variable[variables.size()]);
 		}
-		return this.freeVariables;
+		return this.freeVariables.clone();
 	}
 
 	@Override
@@ -145,7 +143,7 @@ public class QuantifiedFormula extends Formula {
 			variables.addAll(Arrays.asList(this.variables));
 			this.boundVariables = variables.toArray(new Variable[variables.size()]);
 		}
-		return this.boundVariables;
+		return this.boundVariables.clone();
 	}
 
 	public static QuantifiedFormula of(LogicalSymbols operator, Variable[] variables, Formula child) {

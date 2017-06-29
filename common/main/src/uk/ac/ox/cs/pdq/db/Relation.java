@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Properties;
 
-import uk.ac.ox.cs.pdq.db.metadata.RelationMetadata;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 
 /**
@@ -43,9 +42,6 @@ public abstract class Relation extends Predicate implements Serializable {
 	protected ForeignKey[] foreignKeys;
 
 	protected PrimaryKey primaryKey;
-
-	/** Every relation has associated metadata stored in a separate object **/
-	protected RelationMetadata metadataRelation;
 
 	/** 
 	 * Properties associated with this relation; these may be SQL
@@ -212,19 +208,6 @@ public abstract class Relation extends Predicate implements Serializable {
 			result.append(')');
 		}
 
-		if (this.accessMethods.length > 0) {
-			char sep = '{';
-			for (AccessMethod method:this.accessMethods) {
-				result.append(sep).append(method);
-				RelationMetadata md = this.getMetadata();
-				if (md != null) {
-					result.append('/').append(md.getPerInputTupleCost(method));
-				}
-				sep = ',';
-			}
-			result.append('}');
-		}
-
 		if (this.foreignKeys.length > 0) {
 			char sep = '{';
 			for (ForeignKey foreignKey:this.foreignKeys) {
@@ -247,22 +230,5 @@ public abstract class Relation extends Predicate implements Serializable {
 	public Properties getProperties() {
 		return this.properties;
 	}
-
-	/**
-	 * Gets the metadata object of the relation.
-	 *
-	 * @return RelationMetadata
-	 */
-	public RelationMetadata getMetadata() {
-		return this.metadataRelation;
-	}
-
-	/**
-	 * Sets the metadata of the Relation.
-	 *
-	 * @param metadata RelationMetadata
-	 */
-	public void setMetadata(RelationMetadata metadata) {
-		this.metadataRelation = metadata;
-	}
+	
 }

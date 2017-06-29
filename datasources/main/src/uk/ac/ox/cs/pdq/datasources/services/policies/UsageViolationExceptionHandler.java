@@ -1,6 +1,6 @@
 package uk.ac.ox.cs.pdq.datasources.services.policies;
 
-import uk.ac.ox.cs.pdq.AccessException;
+import uk.ac.ox.cs.pdq.datasources.AccessException;
 import uk.ac.ox.cs.pdq.datasources.services.AccessEvent;
 
 import com.google.common.eventbus.SubscriberExceptionContext;

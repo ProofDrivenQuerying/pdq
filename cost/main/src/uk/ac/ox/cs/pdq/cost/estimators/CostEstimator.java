@@ -1,7 +1,7 @@
 package uk.ac.ox.cs.pdq.cost.estimators;
 
 import uk.ac.ox.cs.pdq.cost.Costable;
-import uk.ac.ox.cs.pdq.util.Cost;
+import uk.ac.ox.cs.pdq.datasources.Cost;
 
 
 // TODO: Auto-generated Javadoc

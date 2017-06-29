@@ -2,7 +2,7 @@ package uk.ac.ox.cs.pdq.cost;
 
 import com.google.common.base.Preconditions;
 
-import uk.ac.ox.cs.pdq.util.Cost;
+import uk.ac.ox.cs.pdq.datasources.Cost;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -47,7 +47,7 @@ public final class DoubleCost implements Cost {
 	 *
 	 * @param cost Cost
 	 * @return boolean
-	 * @see uk.ac.ox.cs.pdq.util.Cost#lessOrEquals(Cost)
+	 * @see uk.ac.ox.cs.pdq.datasources.Cost#lessOrEquals(Cost)
 	 */
 	@Override
 	public boolean lessOrEquals(Cost cost) {
@@ -58,7 +58,7 @@ public final class DoubleCost implements Cost {
 	/**
 	 * Sets the max.
 	 *
-	 * @see uk.ac.ox.cs.pdq.util.Cost#setMax()
+	 * @see uk.ac.ox.cs.pdq.datasources.Cost#setMax()
 	 */
 	@Override
 	public void setMax() {
@@ -70,7 +70,7 @@ public final class DoubleCost implements Cost {
 	 *
 	 * @param cost Cost
 	 * @return boolean
-	 * @see uk.ac.ox.cs.pdq.util.Cost#greaterOrEquals(Cost)
+	 * @see uk.ac.ox.cs.pdq.datasources.Cost#greaterOrEquals(Cost)
 	 */
 	@Override
 	public boolean greaterOrEquals(Cost cost) {
@@ -84,7 +84,7 @@ public final class DoubleCost implements Cost {
 	 *
 	 * @param cost Cost
 	 * @return boolean
-	 * @see uk.ac.ox.cs.pdq.util.Cost#lessThan(Cost)
+	 * @see uk.ac.ox.cs.pdq.datasources.Cost#lessThan(Cost)
 	 */
 	@Override
 	public boolean lessThan(Cost cost) {
@@ -97,7 +97,7 @@ public final class DoubleCost implements Cost {
 	 *
 	 * @param cost Cost
 	 * @return boolean
-	 * @see uk.ac.ox.cs.pdq.util.Cost#greaterThan(Cost)
+	 * @see uk.ac.ox.cs.pdq.datasources.Cost#greaterThan(Cost)
 	 */
 	@Override
 	public boolean greaterThan(Cost cost) {
@@ -148,7 +148,7 @@ public final class DoubleCost implements Cost {
 	 *
 	 * @param cost Cost
 	 * @return Cost
-	 * @see uk.ac.ox.cs.pdq.util.Cost#add(Cost)
+	 * @see uk.ac.ox.cs.pdq.datasources.Cost#add(Cost)
 	 */
 	@Override
 	public Cost add(Cost cost) {
@@ -160,7 +160,7 @@ public final class DoubleCost implements Cost {
 	 * Gets the value.
 	 *
 	 * @return Number
-	 * @see uk.ac.ox.cs.pdq.util.Cost#getValue()
+	 * @see uk.ac.ox.cs.pdq.datasources.Cost#getValue()
 	 */
 	@Override
 	public Number getValue() {
@@ -171,7 +171,7 @@ public final class DoubleCost implements Cost {
 	 * Clone.
 	 *
 	 * @return Cost
-	 * @see uk.ac.ox.cs.pdq.util.Cost#clone()
+	 * @see uk.ac.ox.cs.pdq.datasources.Cost#clone()
 	 */
 	@Override
 	public Cost clone() {
@@ -202,7 +202,7 @@ public final class DoubleCost implements Cost {
 	 * Checks if is upper bound.
 	 *
 	 * @return boolean
-	 * @see uk.ac.ox.cs.pdq.util.Cost#isUpperBound()
+	 * @see uk.ac.ox.cs.pdq.datasources.Cost#isUpperBound()
 	 */
 	@Override
 	public boolean isUpperBound() {

@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.db.metadata;
+package uk.ac.ox.cs.pdq.cost.metadata;
 
 import java.util.List;
 import java.util.Map;

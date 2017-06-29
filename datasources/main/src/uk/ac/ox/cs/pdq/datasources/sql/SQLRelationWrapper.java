@@ -18,7 +18,7 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import uk.ac.ox.cs.pdq.AccessException;
+import uk.ac.ox.cs.pdq.datasources.AccessException;
 import uk.ac.ox.cs.pdq.datasources.ResetableIterator;
 import uk.ac.ox.cs.pdq.datasources.Table;
 import uk.ac.ox.cs.pdq.datasources.memory.RelationAccessWrapper;

@@ -6,11 +6,11 @@ import org.apache.log4j.Logger;
 import org.jgrapht.graph.DefaultEdge;
 
 import uk.ac.ox.cs.pdq.cost.estimators.SimpleCostEstimator;
+import uk.ac.ox.cs.pdq.datasources.Cost;
 import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.PlanTree;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SimpleNode;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode.NodeStatus;
-import uk.ac.ox.cs.pdq.util.Cost;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;

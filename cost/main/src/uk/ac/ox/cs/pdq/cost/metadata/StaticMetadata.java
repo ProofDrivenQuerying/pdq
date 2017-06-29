@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.db.metadata;
+package uk.ac.ox.cs.pdq.cost.metadata;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -65,7 +65,7 @@ public class StaticMetadata implements RelationMetadata {
 	 * Gets the size.
 	 *
 	 * @return Long
-	 * @see uk.ac.ox.cs.pdq.db.metadata.RelationMetadata#getSize()
+	 * @see uk.ac.ox.cs.pdq.cost.metadata.RelationMetadata#getSize()
 	 */
 	@Override
 	public Long getSize() {
@@ -103,7 +103,7 @@ public class StaticMetadata implements RelationMetadata {
 	 *
 	 * @param binding AccessMethod
 	 * @return Cost
-	 * @see uk.ac.ox.cs.pdq.db.metadata.RelationMetadata#getPerInputTupleCost(AccessMethod)
+	 * @see uk.ac.ox.cs.pdq.cost.metadata.RelationMetadata#getPerInputTupleCost(AccessMethod)
 	 */
 	@Override
 	public Cost getPerInputTupleCost(AccessMethod binding) {
@@ -119,7 +119,7 @@ public class StaticMetadata implements RelationMetadata {
 	 *
 	 * @param binding AccessMethod
 	 * @param c Cost
-	 * @see uk.ac.ox.cs.pdq.db.metadata.RelationMetadata#setPerInputTupleCost(AccessMethod, Cost)
+	 * @see uk.ac.ox.cs.pdq.cost.metadata.RelationMetadata#setPerInputTupleCost(AccessMethod, Cost)
 	 */
 	@Override
 	public void setPerInputTupleCost(AccessMethod binding, Cost c) {
@@ -142,7 +142,7 @@ public class StaticMetadata implements RelationMetadata {
 	 * Sets the size.
 	 *
 	 * @param s Long
-	 * @see uk.ac.ox.cs.pdq.db.metadata.RelationMetadata#setSize(Long)
+	 * @see uk.ac.ox.cs.pdq.cost.metadata.RelationMetadata#setSize(Long)
 	 */
 	@Override
 	public void setSize(Long s) {

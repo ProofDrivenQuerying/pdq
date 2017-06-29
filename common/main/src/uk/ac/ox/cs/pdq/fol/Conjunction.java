@@ -104,7 +104,7 @@ public final class Conjunction extends Formula {
 			terms.addAll(Arrays.asList(this.children[1].getTerms()));
 			this.terms = terms.toArray(new Term[terms.size()]);
 		}
-		return this.terms;
+		return this.terms.clone();
 	}
 
 	@Override

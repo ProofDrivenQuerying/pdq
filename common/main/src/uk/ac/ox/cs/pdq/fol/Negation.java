@@ -1,10 +1,8 @@
 package uk.ac.ox.cs.pdq.fol;
 
-import java.util.List;
-import java.util.Objects;
+import org.junit.Assert;
 
-import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableList;
+import uk.ac.ox.cs.pdq.InterningManager;
 
 /**
  * 
@@ -12,6 +10,8 @@ import com.google.common.collect.ImmutableList;
  *
  */
 public final class Negation extends Formula {
+
+	private static final long serialVersionUID = 2571574465306118274L;
 
 	protected final Formula child;
 
@@ -21,27 +21,24 @@ public final class Negation extends Formula {
 	/**  Cashed string representation of the atom. */
 	private String toString = null;
 
-	/** The hash. */
-	private Integer hash;
-
 	/**  Cashed list of atoms. */
-	private List<Atom> atoms = null;
+	private Atom[] atoms;
 
 	/**  Cashed list of terms. */
-	private List<Term> terms = null;
+	private Term[] terms;
 
 	/**  Cashed list of free variables. */
-	private List<Variable> freeVariables = null;
+	private Variable[] freeVariables;
 
 	/**  Cashed list of bound variables. */
-	private List<Variable> boundVariables = null;
+	private Variable[] boundVariables;
 
 	/**
 	 * Constructor for Negation.
 	 * @param sf T
 	 */
 	public Negation(Formula child) {
-		Preconditions.checkArgument(child != null);
+		Assert.assertNotNull(child);
 		this.child = child;
 	}
 
@@ -53,71 +50,42 @@ public final class Negation extends Formula {
 	 * @return Negation<T>
 	 */
 	public static Negation of(Formula f) {
-		Preconditions.checkArgument(f != null);
+		Assert.assertNotNull(f);
 		return new Negation(f);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public List<Formula> getChildren() {
-		return ImmutableList.of(this.child);
+	public Formula[] getChildren() {
+		return new Formula[]{this.child};
 	}
 
 	@Override
-	public List<Atom> getAtoms() {
-		if(this.atoms == null) {
+	public Atom[] getAtoms() {
+		if(this.atoms == null) 
 			this.atoms = this.child.getAtoms();
-		}
-		return this.atoms;
+		return this.atoms.clone();
 	}
 
 	@Override
-	public List<Term> getTerms() {
-		if(this.terms == null) {
+	public Term[] getTerms() {
+		if(this.terms == null) 
 			this.terms = this.child.getTerms();
-		}
-		return this.terms;
+		return this.terms.clone();
 	}
 
 	@Override
-	public List<Variable> getFreeVariables() {
-		if(this.freeVariables == null) {
+	public Variable[] getFreeVariables() {
+		if(this.freeVariables == null) 
 			this.freeVariables = this.child.getFreeVariables();
-		}
-		return this.freeVariables;
+		return this.freeVariables.clone();
 	}
 
 	@Override
-	public List<Variable> getBoundVariables() {
-		if(this.boundVariables == null) {
+	public Variable[] getBoundVariables() {
+		if(this.boundVariables == null) 
 			this.boundVariables = this.child.getBoundVariables();
-		}
-		return this.boundVariables;
-	}
-
-	/**
-	 *
-	 * @param o Object
-	 * @return boolean
-	 */
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null) {
-			return false;
-		}
-		return this.getClass().isInstance(o)
-				&& this.child.equals(((Negation) o).child);
-	}
-
-
-	@Override
-	public int hashCode() {
-		if(this.hash == null) {
-			this.hash = Objects.hash(this.operator, this.child);
-		}
-		return this.hash;
+		return this.boundVariables.clone();
 	}
 	
 	/**
@@ -138,4 +106,25 @@ public final class Negation extends Formula {
 	public int getId() {
 		return this.hashCode();
 	}
+	
+    protected Object readResolve() {
+        return s_interningManager.intern(this);
+    }
+
+    protected static final InterningManager<Negation> s_interningManager = new InterningManager<Negation>() {
+        protected boolean equal(Negation object1, Negation object2) {
+            if (!object1.child.equals(object2.child) || !object1.operator.equals(object2.operator))
+                return false;
+            return true;
+        }
+        
+        protected int getHashCode(Negation object) {
+            int hashCode = object.child.hashCode() + object.operator.hashCode() * 7;
+            return hashCode;
+        }
+    };
+
+    public static Negation create(Formula child) {
+        return s_interningManager.intern(new Negation(child));
+    }
 }

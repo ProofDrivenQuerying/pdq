@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq;
+package uk.ac.ox.cs.pdq.planner;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -15,10 +15,10 @@ public class LimitReachedException extends Exception {
 	 * The Enum Reasons.
 	 */
 	public static enum Reasons {
-/** The timeout. */
-TIMEOUT, 
- /** The max iteration. */
- MAX_ITERATION}
+		/** The timeout. */
+		TIMEOUT, 
+		/** The max iteration. */
+		MAX_ITERATION}
 
 	/** The reason. */
 	private final Reasons reason;

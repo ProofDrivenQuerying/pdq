@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 
 import javafx.beans.property.SimpleObjectProperty;
+import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.cost.CostParameters.CostTypes;
 import uk.ac.ox.cs.pdq.io.xml.PlanWriter;
@@ -16,7 +17,6 @@ import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters.ReasoningTypes;
 import uk.ac.ox.cs.pdq.ui.UserInterfaceException;
 import uk.ac.ox.cs.pdq.ui.io.xml.ProofWriter;
 import uk.ac.ox.cs.pdq.ui.proof.Proof;
-import uk.ac.ox.cs.pdq.util.Cost;
 
 import com.google.common.base.Preconditions;
 

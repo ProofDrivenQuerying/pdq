@@ -3,8 +3,8 @@ package uk.ac.ox.cs.pdq.cost.estimators;
 import java.util.Collection;
 
 import uk.ac.ox.cs.pdq.cost.Costable;
+import uk.ac.ox.cs.pdq.datasources.Cost;
 import uk.ac.ox.cs.pdq.plan.AccessOperator;
-import uk.ac.ox.cs.pdq.util.Cost;
 
 // TODO: Auto-generated Javadoc
 /**

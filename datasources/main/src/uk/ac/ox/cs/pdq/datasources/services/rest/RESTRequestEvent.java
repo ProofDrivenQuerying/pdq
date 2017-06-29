@@ -8,7 +8,7 @@ import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
 
-import uk.ac.ox.cs.pdq.AccessException;
+import uk.ac.ox.cs.pdq.datasources.AccessException;
 import uk.ac.ox.cs.pdq.datasources.Table;
 import uk.ac.ox.cs.pdq.datasources.services.RequestEvent;
 

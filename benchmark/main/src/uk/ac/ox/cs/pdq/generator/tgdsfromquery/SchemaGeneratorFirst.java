@@ -6,12 +6,12 @@ import java.util.Random;
 
 import uk.ac.ox.cs.pdq.benchmark.BenchmarkParameters;
 import uk.ac.ox.cs.pdq.cost.DoubleCost;
+import uk.ac.ox.cs.pdq.cost.metadata.RelationMetadata;
+import uk.ac.ox.cs.pdq.cost.metadata.StaticMetadata;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.AccessMethod.Types;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.db.metadata.RelationMetadata;
-import uk.ac.ox.cs.pdq.db.metadata.StaticMetadata;
 import uk.ac.ox.cs.pdq.generator.SchemaGenerator;
 import uk.ac.ox.cs.pdq.util.Utility;
 
