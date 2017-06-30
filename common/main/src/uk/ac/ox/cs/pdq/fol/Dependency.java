@@ -1,8 +1,10 @@
 package uk.ac.ox.cs.pdq.fol;
 
-import java.util.List;
+import java.util.Arrays;
 
-import com.google.common.base.Preconditions;
+import org.junit.Assert;
+
+import uk.ac.ox.cs.pdq.InterningManager;
 
 /**
  * A universally quantified implication where the body is a quantifier-free formula and 
@@ -12,6 +14,7 @@ import com.google.common.base.Preconditions;
  */
 public class Dependency extends QuantifiedFormula {
 
+	private static final long serialVersionUID = 6522148218362709983L;
 	protected final Formula body;
 	protected final Formula head;
 	
@@ -21,58 +24,38 @@ public class Dependency extends QuantifiedFormula {
 	/**  The dependency's existentially quantified variables. */
 	protected Variable[] existential;
 	
-	public Dependency(LogicalSymbols operator, Variable[] variables, Implication implication) {
-		super(operator, variables, implication);
-		Preconditions.checkArgument(isUnquantified(implication.getChildren().get(0)));
-		Preconditions.checkArgument(isExistentiallyQuantified(implication.getChildren().get(1)) ||
-				isUnquantified(implication.getChildren().get(1)));
-		Preconditions.checkArgument(implication.getChildren().get(0).getFreeVariables().
-				containsAll(implication.getChildren().get(1).getFreeVariables()));
-		this.body = implication.getChildren().get(0);
-		this.head = implication.getChildren().get(1);
-	}
-	
-	public Dependency(Formula body, Formula head) {
-		super(LogicalSymbols.UNIVERSAL, body.getFreeVariables(), new Implication(body,head));
-		Preconditions.checkArgument(isUnquantified(body));
-		Preconditions.checkArgument(isExistentiallyQuantified(head) || isUnquantified(head));
-		Preconditions.checkArgument(body.getFreeVariables().containsAll(head.getFreeVariables()));
+	protected Dependency(Formula body, Formula head) {
+		super(LogicalSymbols.UNIVERSAL, body.getFreeVariables(), Implication.create(body,head));
+		Assert.assertTrue(isUnquantified(body));
+		Assert.assertTrue(isExistentiallyQuantified(head) || isUnquantified(head));
+		Assert.assertTrue(Arrays.asList(body.getFreeVariables()).containsAll(Arrays.asList(head.getFreeVariables())));
 		this.body = body;
 		this.head = head;
 	}
 	
 	private static boolean isUnquantified(Formula formula) {
-		if(formula instanceof Conjunction || formula instanceof Implication || formula instanceof Disjunction) {
-			return isUnquantified(formula.getChildren().get(0)) && isUnquantified(formula.getChildren().get(1));
-		}
-		else if(formula instanceof Negation) {
-			return isUnquantified(formula.getChildren().get(0));
-		}
-		else if(formula instanceof Literal) {
+		if(formula instanceof Conjunction || formula instanceof Implication || formula instanceof Disjunction) 
+			return isUnquantified(formula.getChildren()[0]) && isUnquantified(formula.getChildren()[1]);
+		else if(formula instanceof Negation) 
+			return isUnquantified(formula.getChildren()[0]);
+		else if(formula instanceof Literal) 
 			return true;
-		}
-		else if(formula instanceof Atom) {
+		else if(formula instanceof Atom) 
 			return true;
-		}
-		else if(formula instanceof QuantifiedFormula) {
+		else if(formula instanceof QuantifiedFormula) 
 			return false;
-		}
 		return false;
 	}
 	
 	private static boolean isExistentiallyQuantified(Formula formula) {
-		if(formula instanceof Conjunction || formula instanceof Implication || formula instanceof Disjunction) {
-			return isUnquantified(formula.getChildren().get(0)) && isUnquantified(formula.getChildren().get(1));
-		}
-		else if(formula instanceof Negation) {
-			return isUnquantified(formula.getChildren().get(0));
-		}
-		else if(formula instanceof Literal) {
+		if(formula instanceof Conjunction || formula instanceof Implication || formula instanceof Disjunction) 
+			return isUnquantified(formula.getChildren()[0]) && isUnquantified(formula.getChildren()[0]);
+		else if(formula instanceof Negation) 
+			return isUnquantified(formula.getChildren()[0]);
+		else if(formula instanceof Literal) 
 			return true;
-		}
-		else if(formula instanceof Atom) {
+		else if(formula instanceof Atom) 
 			return true;
-		}
 		else if(formula instanceof QuantifiedFormula) {
 			if(((QuantifiedFormula) formula).isExistential()) {
 				return true;
@@ -108,11 +91,10 @@ public class Dependency extends QuantifiedFormula {
 	 *
 	 * @return List<Variable>
 	 */
-	public List<Variable> getUniversal() {
-		if(this.universal == null) {
+	public Variable[] getUniversal() {
+		if(this.universal == null) 
 			this.universal = this.variables;
-		}
-		return this.universal;
+		return this.universal.clone();
 	}
 
 	/**
@@ -120,10 +102,35 @@ public class Dependency extends QuantifiedFormula {
 	 *
 	 * @return List<Variable>
 	 */
-	public List<Variable> getExistential() {
-		if(this.existential == null) {
+	public Variable[] getExistential() {
+		if(this.existential == null) 
 			this.existential = this.head.getBoundVariables();
-		}
-		return this.existential;
+		return this.existential.clone();
 	}
+	
+    protected Object readResolve() {
+        return s_interningManager.intern(this);
+    }
+
+    protected static final InterningManager<Dependency> s_interningManager = new InterningManager<Dependency>() {
+        protected boolean equal(Dependency object1, Dependency object2) {
+            if (!object1.head.equals(object2.head) || !object1.body.equals(object2.body) || object1.variables.length != object2.variables.length) 
+                return false;
+            for (int index = object1.variables.length - 1; index >= 0; --index)
+                if (!object1.variables[index].equals(object2.variables[index]))
+                    return false;
+            return true;
+        }
+        
+        protected int getHashCode(Dependency object) {
+            int hashCode = object.head.hashCode() + object.body.hashCode() * 7;
+            for (int index = object.variables.length - 1; index >= 0; --index)
+                hashCode = hashCode * 8 + object.variables[index].hashCode();
+            return hashCode;
+        }
+    };
+    
+    public static Dependency create(Formula head, Formula body) {
+        return s_interningManager.intern(new Dependency(head, body));
+    }
 }

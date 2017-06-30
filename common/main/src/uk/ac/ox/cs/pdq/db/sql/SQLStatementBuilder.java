@@ -1,6 +1,7 @@
 package uk.ac.ox.cs.pdq.db.sql;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -70,12 +71,11 @@ public abstract class SQLStatementBuilder {
 		Collection<String> result = new LinkedList<>();
 		for (Atom fact:facts) {
 			Relation relation = toDatabaseTables.get(fact.getPredicate().getName());
-			List<Term> terms = fact.getTerms();
+			Term[] terms = fact.getTerms();
 			String insertInto = "INSERT INTO " + relation.getName() + " " + "VALUES ( ";
 			for (Term term : terms) {
-				if (!term.isVariable()) {
+				if (!term.isVariable()) 
 					insertInto += "'" + term + "'" + ",";
-				}
 			}
 			insertInto = insertInto.substring(0,insertInto.lastIndexOf(","));
 			insertInto += ")";
@@ -204,7 +204,7 @@ public abstract class SQLStatementBuilder {
 	 * @param toDatabaseRelation the relation map
 	 * @return the collection
 	 */
-	public Collection<String> createTruncateTableStatements(List<Atom> queryRelations, Map<String, Relation> toDatabaseRelation) {
+	public Collection<String> createTruncateTableStatements(Atom[] queryRelations, Map<String, Relation> toDatabaseRelation) {
 		Set<String> result = new LinkedHashSet<>();
 		for(Atom pred: queryRelations)
 			result.add("TRUNCATE TABLE  " + toDatabaseRelation.get(pred.getPredicate().getName()).getName());
@@ -259,7 +259,7 @@ public abstract class SQLStatementBuilder {
 			Collection<Atom> atoms = clusters.get(t);
 			if (atoms.size() > 1) {
 				for (Atom atom: atoms) {
-					for (int i = 0, l = atom.getTerms().size(); i < l; i++) {
+					for (int i = 0; i < atom.getTerms().length; i++) {
 						if (atom.getTerm(i).equals(t)) {
 							Pair<String,String> createAndDropIndices = this.createTableIndices(existingIndices, toDatabaseRelations.get(atom.getPredicate().getName()), i);
 							if(createAndDropIndices != null) {	
@@ -311,9 +311,9 @@ public abstract class SQLStatementBuilder {
 		List<Variable> attributes = new ArrayList<>();
 		for (Atom fact:atoms) {
 			String alias = this.aliases.get(fact);
-			List<Term> terms = fact.getTerms();
-			for (int it = 0; it < terms.size(); ++it) {
-				Term term = terms.get(it);
+			Term[] terms = fact.getTerms();
+			for (int it = 0; it < terms.length; ++it) {
+				Term term = terms[it];
 				if (term instanceof Variable && !attributes.contains(((Variable) term).getSymbol())) {
 					projected.put(createProjectionStatementForArgument(it, (Relation) fact.getPredicate(), alias), (Variable)term);
 					attributes.add(((Variable) term));
@@ -361,9 +361,9 @@ public abstract class SQLStatementBuilder {
 		List<String> constantPredicates = new ArrayList<>();
 		for (Atom fact:source) {
 			String alias = this.aliases.get(fact);
-			List<Term> terms = fact.getTerms();
-			for (int it = 0; it < terms.size(); ++it) {
-				Term term = terms.get(it);
+			Term[] terms = fact.getTerms();
+			for (int it = 0; it < terms.length; ++it) {
+				Term term = terms[it];
 				if (!term.isVariable() && !term.isUntypedConstant()) {
 					StringBuilder eq = new StringBuilder();
 					eq.append(alias==null ? fact.getPredicate().getName():alias).append(".").append(((Relation) fact.getPredicate()).getAttribute(it).getName()).append('=');
@@ -413,7 +413,7 @@ public abstract class SQLStatementBuilder {
 				Map<Variable, Constant> m = ((MapProperty) c).mapping;
 				for(Entry<Variable, Constant> pair:m.entrySet()) {
 					for (Atom fact:source) {
-						int it = fact.getTerms().indexOf(pair.getKey());
+						int it = Arrays.asList(fact.getTerms()).indexOf(pair.getKey());
 						if(it != -1) {
 							StringBuilder eq = new StringBuilder();
 							eq.append(this.aliases.get(fact)==null ? fact.getPredicate().getName():this.aliases.get(fact)).append(".").append(((Relation) fact.getPredicate()).getAttribute(it).getName()).append('=');

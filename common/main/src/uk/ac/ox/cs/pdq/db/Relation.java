@@ -15,6 +15,7 @@ import uk.ac.ox.cs.pdq.fol.Predicate;
  * @author Efthymia Tsamoura
  * @author Julien Leblay
  */
+
 public abstract class Relation extends Predicate implements Serializable {
 
 	/** The Constant serialVersionUID. */
@@ -34,6 +35,7 @@ public abstract class Relation extends Predicate implements Serializable {
 	 */
 	protected Map<String, AccessMethod> accessMethodsMaps;
 
+	//@XmlElement
 	protected AccessMethod[] accessMethods;
 
 	/**

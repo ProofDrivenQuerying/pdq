@@ -74,7 +74,7 @@ public class ExecuteSQLQueryThread implements Callable<List<Match>> {
 						Variable variable = variables.getValue();
 						String assigned = resultSet.getString(f);
 						TypedConstant constant = this.constants.get(assigned);
-						Constant constantTerm = constant != null ? constant : new UntypedConstant(assigned);
+						Constant constantTerm = constant != null ? constant : UntypedConstant.create(assigned);
 						map.put(variable, constantTerm);
 						f++;
 					}

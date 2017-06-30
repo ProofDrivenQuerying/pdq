@@ -1,12 +1,10 @@
 package uk.ac.ox.cs.pdq.fol;
 
-import java.util.Collection;
-import java.util.List;
+import java.util.Arrays;
 
-import org.apache.commons.collections4.CollectionUtils;
+import org.junit.Assert;
 
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
+import uk.ac.ox.cs.pdq.InterningManager;
 
 /**
  * TOCOMMENT agree on a way to write formulas in javadoc
@@ -16,45 +14,20 @@ import com.google.common.collect.Lists;
  * @author Efthymia Tsamoura
  */
 public class TGD extends Dependency {
-	
-	public TGD(LogicalSymbols operator, List<Variable> variables, Implication implication) {
-		super(operator, variables, implication);
-		Preconditions.checkArgument(isConjunctionOfAtoms(implication.getChildren().get(0)));
-		Preconditions.checkArgument(implication.getChildren().get(1) instanceof QuantifiedFormula || 
-				isConjunctionOfAtoms(implication.getChildren().get(1)));
-	}
 
-	public TGD(Formula body, Formula head) {
-		this(LogicalSymbols.UNIVERSAL, body.getFreeVariables(), createImplication(body,head));
+	private static final long serialVersionUID = 2745278271063580698L;
+
+	protected TGD(Formula body, Formula head) {
+		super(body, head);
+		Assert.assertTrue(isConjunctionOfAtoms(body));
+		Assert.assertTrue(head instanceof QuantifiedFormula || isConjunctionOfAtoms(head));
 	}
 	
-	private static Implication createImplication(Formula body, Formula head) {
-		Preconditions.checkArgument(body instanceof Conjunction || body instanceof Atom, "Input formula body " + body + " is not a conjunction of atoms or a single atom" );
-		Preconditions.checkArgument(head instanceof Conjunction || head instanceof Atom, "Input formula head " + head + " is not a conjunction of atoms or a single atom" );
-		Preconditions.checkArgument(body.getBoundVariables().isEmpty());
-		Preconditions.checkArgument(head.getBoundVariables().isEmpty());
-		//Preconditions.checkArgument(!CollectionUtils.intersection(body.getFreeVariables(), head.getFreeVariables()).isEmpty());
-		Collection<Variable> headFree = head.getFreeVariables();
-		Collection<Variable> bodyFree = body.getFreeVariables();
-		List<Variable> boundVariables = Lists.newArrayList(CollectionUtils.removeAll(headFree, bodyFree));
-		if(!boundVariables.isEmpty()) {
-			return new Implication(body, new QuantifiedFormula(LogicalSymbols.EXISTENTIAL, boundVariables, head));
-		}
-		else {
-			return new Implication(body, head);
-		}
-	}
-
 	private static boolean isConjunctionOfAtoms(Formula formula) {
-		if(formula instanceof QuantifiedFormula) {
-			return isConjunctionOfAtoms(formula.getChildren().get(0));
-		}
-		if(formula instanceof Conjunction) {
-			return isConjunctionOfAtoms(formula.getChildren().get(0)) && isConjunctionOfAtoms(formula.getChildren().get(1));
-		}
-		if(formula instanceof Atom) {
+		if(formula instanceof Conjunction) 
+			return isConjunctionOfAtoms(formula.getChildren()[0]) && isConjunctionOfAtoms(formula.getChildren()[1]);
+		if(formula instanceof Atom) 
 			return true;
-		}
 		return false;
 	}
 
@@ -62,34 +35,56 @@ public class TGD extends Dependency {
 	public String toString() {
 		String f = "";
 		String b = "";
-
-		if(!this.getUniversal().isEmpty()) {
+		
+		if(this.getUniversal().length > 0) 
 			f = this.getUniversal().toString();
-		}
-
-		if(!this.getExistential().isEmpty()) {
+		
+		if(this.getExistential().length > 0) 
 			b = this.getExistential().toString();
-		}
+		
 		return f + this.body + LogicalSymbols.IMPLIES + b + this.head;
 	}
 	
 	public boolean isLinear() {
-		return this.body.getAtoms().size() == 1;
+		return this.body.getAtoms().length == 1;
 	}
 	
 	public boolean isGuarded() {
-		List<Atom> atoms = this.body.getAtoms();
+		Atom[] atoms = this.body.getAtoms();
 		Atom guard = null;
 		for(Atom atom:atoms) {
-			if(guard == null || atom.getPredicate().getArity() >  guard.getPredicate().getArity()) {
+			if(guard == null || atom.getPredicate().getArity() >  guard.getPredicate().getArity()) 
 				guard = atom;
-			}
 		}	
 		for(Atom atom:atoms) {
-			if(!guard.getVariables().containsAll(atom.getVariables())) {
+			if(!Arrays.asList(guard.getVariables()).containsAll(Arrays.asList(atom.getVariables()))) 
 				return false;
-			}
 		}
 		return true;
 	}
+	
+    protected Object readResolve() {
+        return s_interningManager.intern(this);
+    }
+    protected static final InterningManager<TGD> s_interningManager = new InterningManager<TGD>() {
+        protected boolean equal(TGD object1, TGD object2) {
+            if (!object1.head.equals(object2.head) || !object1.body.equals(object2.body) || object1.variables.length != object2.variables.length) 
+                return false;
+            for (int index = object1.variables.length - 1; index >= 0; --index)
+                if (!object1.variables[index].equals(object2.variables[index]))
+                    return false;
+            return true;
+        }
+        
+        protected int getHashCode(TGD object) {
+            int hashCode = object.head.hashCode() + object.body.hashCode() * 7;
+            for (int index = object.variables.length - 1; index >= 0; --index)
+                hashCode = hashCode * 8 + object.variables[index].hashCode();
+            return hashCode;
+        }
+    };
+    
+    public static TGD create(Formula head, Formula body) {
+        return s_interningManager.intern(new TGD(head, body));
+    }
 }

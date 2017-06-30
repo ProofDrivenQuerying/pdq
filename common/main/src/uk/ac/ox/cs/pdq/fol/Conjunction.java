@@ -2,7 +2,6 @@ package uk.ac.ox.cs.pdq.fol;
 
 import java.util.Arrays;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.junit.Assert;
@@ -44,18 +43,16 @@ public final class Conjunction extends Formula {
 	}
 
 	public static Formula of(Formula... children) {
-		return Conjunction.of(children);
-	}
-
-	public static Formula of(List<Formula> children) {
-		if(children.size() == 2) 
-			return Conjunction.create(children.get(0), children.get(1));
-		else if(children.size() > 2) {
-			Formula right = Conjunction.of(children.subList(1, children.size()));
-			return Conjunction.create(children.get(0), right);
+		if(children.length == 2) 
+			return Conjunction.create(children[0], children[1]);
+		else if(children.length > 2) {
+			Formula[] destination = new Formula[children.length - 1];
+			System.arraycopy(children, 1, destination, 0, children.length - 1);
+			Formula right = Conjunction.of(destination);
+			return Conjunction.create(children[0], right);
 		}
-		else if(children.size() == 1) 
-			return children.get(0);
+		else if(children.length == 1) 
+			return children[0];
 		else 
 			throw new java.lang.RuntimeException("Illegal number of arguments");
 	}
@@ -67,10 +64,8 @@ public final class Conjunction extends Formula {
 	 */
 	@Override
 	public String toString() {
-		if(this.toString == null) {
-			this.toString = "";
-			this.toString += "(" + this.children[0].toString() + " & " + this.children[1].toString() + ")";
-		}
+		if(this.toString == null) 
+			this.toString = "(" + this.children[0].toString() + " & " + this.children[1].toString() + ")";
 		return this.toString;
 	}
 

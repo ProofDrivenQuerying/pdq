@@ -56,15 +56,15 @@ public class View extends Relation {
 	 * @param dependency LinearGuarded
 	 */
 	public void setDependency(LinearGuarded dependency) {
-		this.dependency = new LinearGuarded(
-				new Atom(this, dependency.getBody().getAtoms()[0].getTerms()),
+		this.dependency = LinearGuarded.create(
+				Atom.create(this, dependency.getBody().getAtoms()[0].getTerms()),
 				dependency.getHead() instanceof QuantifiedFormula ? 
-						dependency.getHead().getChildren().get(0) :
+						dependency.getHead().getChildren()[0] :
 				dependency.getHead());
 		
-		this.definition = new TGD(
+		this.definition = TGD.create(
 				this.dependency.getHead() instanceof QuantifiedFormula ? 
-						this.dependency.getHead().getChildren().get(0) :
+						this.dependency.getHead().getChildren()[0] :
 							this.dependency.getHead(), 
 							this.dependency.getBody());
 	}

@@ -16,8 +16,6 @@ public interface Tuple extends Serializable{
 
 	/** The Constant EmptyTuple. */
 	public static final Tuple EmptyTuple = new TupleImpl(TupleType.EmptyTupleType);
-	
-//	public static final Tuple ErrorTuple = new TupleImpl(TupleType.EmptyTupleType);
 
 	/**
  * Gets the type.

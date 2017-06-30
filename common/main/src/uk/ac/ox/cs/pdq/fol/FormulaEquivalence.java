@@ -63,7 +63,7 @@ public class FormulaEquivalence {
 	 * @return boolean
 	 */
 	private static boolean approximateUnaryEquivalence(Negation left, Negation right) {
-		return approximateEquivalence(left.getChildren().get(0), right.getChildren().get(0));
+		return approximateEquivalence(left.getChildren()[0], right.getChildren()[0]);
 	}
 
 	/**
@@ -77,31 +77,31 @@ public class FormulaEquivalence {
 		if (!variableSignature(left.getAtoms()).equals(variableSignature(right.getAtoms()))) {
 			return false;
 		}
-		return approximateEquivalence(left.getChildren().get(0), right.getChildren().get(0))
-				&& approximateEquivalence(left.getChildren().get(1), right.getChildren().get(1));
+		return approximateEquivalence(left.getChildren()[0], right.getChildren()[0])
+				&& approximateEquivalence(left.getChildren()[1], right.getChildren()[1]);
 	}
 	
 	private static boolean approximateBinaryEquivalence(Disjunction left, Disjunction right) {
 		if (!variableSignature(left.getAtoms()).equals(variableSignature(right.getAtoms()))) {
 			return false;
 		}
-		return approximateEquivalence(left.getChildren().get(0), right.getChildren().get(0))
-				&& approximateEquivalence(left.getChildren().get(1), right.getChildren().get(1));
+		return approximateEquivalence(left.getChildren()[0], right.getChildren()[0])
+				&& approximateEquivalence(left.getChildren()[1], right.getChildren()[1]);
 	}
 	
 	private static boolean approximateBinaryEquivalence(Implication left, Implication right) {
 		if (!variableSignature(left.getAtoms()).equals(variableSignature(right.getAtoms()))) {
 			return false;
 		}
-		return approximateEquivalence(left.getChildren().get(0), right.getChildren().get(0))
-				&& approximateEquivalence(left.getChildren().get(1), right.getChildren().get(1));
+		return approximateEquivalence(left.getChildren()[0], right.getChildren()[0])
+				&& approximateEquivalence(left.getChildren()[1], right.getChildren()[1]);
 	}
 	
 	private static boolean approximateBinaryEquivalence(Dependency left, Dependency right) {
 		if (!variableSignature(left.getAtoms()).equals(variableSignature(right.getAtoms()))) {
 			return false;
 		}
-		return approximateEquivalence(left.getChildren().get(0), right.getChildren().get(0));
+		return approximateEquivalence(left.getChildren()[0], right.getChildren()[0]);
 	}
 	
 	private static boolean approximateUnaryEquivalence(QuantifiedFormula left, QuantifiedFormula right) {
@@ -111,7 +111,7 @@ public class FormulaEquivalence {
 		if(!left.getTopLevelQuantifiedVariables().equals(right.getTopLevelQuantifiedVariables())) {
 			return false;
 		}
-		return approximateEquivalence(left.getChildren().get(0), right.getChildren().get(0));
+		return approximateEquivalence(left.getChildren()[0], right.getChildren()[0]);
 	}
 	
 	/**
@@ -120,7 +120,7 @@ public class FormulaEquivalence {
 	 * @param atoms List<PredicateFormula>
 	 * @return List<Integer>
 	 */
-	private static List<Integer> variableSignature(List<Atom> atoms) {
+	private static List<Integer> variableSignature(Atom[] atoms) {
 		List<Integer> result = new LinkedList<>();
 		Map<Term, Integer> varMap = new LinkedHashMap<>();
 		int i = 0;

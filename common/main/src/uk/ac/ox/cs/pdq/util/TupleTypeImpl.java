@@ -189,7 +189,7 @@ class TupleTypeImpl implements TupleType {
 			// TODO: find an efficient way to type check accounting for (un)boxing
 			if (nthType instanceof Class
 					&& nthOther instanceof Class
-					&& !((Class) nthType).isAssignableFrom((Class) nthOther)) {
+					&& !((Class<?>) nthType).isAssignableFrom((Class<?>) nthOther)) {
 				return false;
 			}
 			if (nthType != nthOther) {
@@ -226,7 +226,7 @@ class TupleTypeImpl implements TupleType {
 			final Object nthValue = values[i];
 			if (nthValue != null) {
 				if (nthType instanceof Class
-						&& !((Class) nthType).isAssignableFrom(nthValue.getClass())) {
+						&& !((Class<?>) nthType).isAssignableFrom(nthValue.getClass())) {
 					return false;
 				} else if (nthType instanceof DataType
 						&& !(((DataType) nthType).isAssignableFrom(nthValue))) {
@@ -265,7 +265,7 @@ class TupleTypeImpl implements TupleType {
 			return false;
 		}
 		for (int i = 0, l = this.types.length; i < l; i++) {
-			if (!Types.equals(this.getType(i), that.getType(i))) {
+			if (!this.getType(i).equals(that.getType(i))) {
 				return false;
 			}
 		}

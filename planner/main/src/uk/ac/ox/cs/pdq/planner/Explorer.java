@@ -3,9 +3,10 @@ package uk.ac.ox.cs.pdq.planner;
 
 import org.apache.log4j.Logger;
 
+import uk.ac.ox.cs.pdq.LimitReachedException;
+import uk.ac.ox.cs.pdq.LimitReachedException.Reasons;
 import uk.ac.ox.cs.pdq.logging.performance.StatisticsCollector;
 import uk.ac.ox.cs.pdq.plan.Plan;
-import uk.ac.ox.cs.pdq.planner.LimitReachedException.Reasons;
 
 import com.google.common.base.Preconditions;
 import com.google.common.eventbus.EventBus;

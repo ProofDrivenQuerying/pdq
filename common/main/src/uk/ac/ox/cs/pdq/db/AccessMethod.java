@@ -87,13 +87,16 @@ public class AccessMethod implements Serializable {
 	public String toString() {
 		if (this.toString == null) {
 			StringBuilder result = new StringBuilder();
-			result.append(this.name).append(':');
-			char sep = '[';
-			for (int i:this.inputs) {
-				result.append(sep).append(i);
-				sep = ',';
+			result.append(this.name);
+			if(this.inputs.length > 0) {
+				result.append(':');
+				char sep = '[';
+				for (int i:this.inputs) {
+					result.append(sep).append(i);
+					sep = ',';
+				}
+				result.append(']');
 			}
-			result.append(']');
 			this.toString = result.toString();
 		}
 		return this.toString;

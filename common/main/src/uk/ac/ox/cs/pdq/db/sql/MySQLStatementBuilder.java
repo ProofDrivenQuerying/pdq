@@ -90,9 +90,9 @@ public class MySQLStatementBuilder extends SQLStatementBuilder {
 		Collection<String> result = new LinkedList<>();
 		for (Atom fact:facts) {
 			Relation rel = toDatabaseTables.get(fact.getPredicate().getName());
-			List<Term> terms = fact.getTerms();
+			Term[] terms = fact.getTerms();
 			String insertInto = "INSERT IGNORE INTO " + toDatabaseTables.get(rel.getName()).getName() + " " + "VALUES ( ";
-			for (Term term : terms) {
+			for (Term term:terms) {
 				if (!term.isVariable()) {
 					insertInto += "'" + term + "'" + ",";
 				}
@@ -121,11 +121,10 @@ public class MySQLStatementBuilder extends SQLStatementBuilder {
 		List<String> tuples = new ArrayList<String>();
 		for (Atom fact:facts) {
 			String tuple = "(";
-			List<Term> terms = fact.getTerms();
+			Term[] terms = fact.getTerms();
 			for (Term term : terms) {
-				if (!term.isVariable()) {
+				if (!term.isVariable()) 
 					tuple += "'" + term + "'" + ",";
-				}
 			}
 			tuple = tuple.substring(0,tuple.lastIndexOf(","));
 			//tuple += "'"+fact.getId()+"'";

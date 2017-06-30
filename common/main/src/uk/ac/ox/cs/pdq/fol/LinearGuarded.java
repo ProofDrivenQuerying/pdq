@@ -1,8 +1,8 @@
 package uk.ac.ox.cs.pdq.fol;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.junit.Assert;
 
+import uk.ac.ox.cs.pdq.InterningManager;
 import uk.ac.ox.cs.pdq.db.ForeignKey;
 import uk.ac.ox.cs.pdq.db.Reference;
 import uk.ac.ox.cs.pdq.db.Relation;
@@ -17,8 +17,11 @@ import uk.ac.ox.cs.pdq.db.Relation;
  */
 public class LinearGuarded extends TGD {
 
-	public LinearGuarded(Formula body, Formula head) {
+	private static final long serialVersionUID = -6527657738786432098L;
+
+	private LinearGuarded(Formula body, Formula head) {
 		super(body,head);
+		Assert.assertTrue(body.getAtoms().length == 1);
 	}
 	
 	/**
@@ -38,13 +41,11 @@ public class LinearGuarded extends TGD {
 	 * @return the body formula of a linear guarded dependency for the given relation
 	 */
 	private static Formula createBody(Relation relation) {
-		List<Variable> free = new ArrayList<>();
+		Variable[] free = new Variable[relation.getArity()];
 		int index = 0;
-		for (int i = 0, l = relation.getArity(); i < l; i++) {
-			Variable v = new Variable(Variable.DEFAULT_VARIABLE_PREFIX + (index++));
-			free.add(v);
-		}
-		return new Atom(relation, free);
+		for (int variableIndex = 0; variableIndex < relation.getArity(); variableIndex++) 
+			free[variableIndex] = Variable.create(Variable.DEFAULT_VARIABLE_PREFIX + (index++));
+		return Atom.create(relation, free);
 	}
 
 	/**
@@ -54,26 +55,22 @@ public class LinearGuarded extends TGD {
 	 * @return the head formula of a linear guarded dependency for the given relation and foreign key constraint
 	 */
 	private static Formula createHead(Relation relation, ForeignKey foreignKey) {
-		List<Variable> free = new ArrayList<>();
+		Variable[] free = new Variable[relation.getArity()];
 		int index = 0;
-		for (int i = 0, l = relation.getArity(); i < l; i++) {
-			Variable v = new Variable(Variable.DEFAULT_VARIABLE_PREFIX + (index++));
-			free.add(v);
-		}
+		for (int variableIndex = 0; variableIndex < relation.getArity(); variableIndex++) 
+			free[variableIndex] = Variable.create(Variable.DEFAULT_VARIABLE_PREFIX + (index++));
 
-		List<Variable> remoteTerms = new ArrayList<>();
-		for (int i = 0, l = foreignKey.getForeignRelation().getArity(); i < l; i++) {
-			Variable v = new Variable(Variable.DEFAULT_VARIABLE_PREFIX + (index++));
-			remoteTerms.add(v);
-		}
-
+		Variable[] remoteTerms = new Variable[foreignKey.getForeignRelation().getArity()];
+		for (int variableIndex = 0; variableIndex < foreignKey.getForeignRelation().getArity(); variableIndex++) 
+			remoteTerms[variableIndex] = Variable.create(Variable.DEFAULT_VARIABLE_PREFIX + (index++));
+		
 		Reference[] references = foreignKey.getReferences();
 		for (Reference rf:references) {
 			int remoteTermIndex = foreignKey.getForeignRelation().getAttributePosition(rf.getForeignAttributeName());
 			int localTermIndex = relation.getAttributePosition(rf.getLocalAttributeName());
-			remoteTerms.set(remoteTermIndex, free.get(localTermIndex));
+			remoteTerms[remoteTermIndex] = free[localTermIndex];
 		}
-		return new Atom(foreignKey.getForeignRelation(), remoteTerms);
+		return Atom.create(foreignKey.getForeignRelation(), remoteTerms);
 	}
 
 	/**
@@ -81,11 +78,36 @@ public class LinearGuarded extends TGD {
 	 *
 	 */
 	public Atom getGuard() {
-		return this.getBody().getAtoms().get(0);
+		return this.getBody().getAtoms()[0];
 	}
 	
 	@Override
 	public boolean isGuarded() {
 		return true;
 	}
+	
+    protected Object readResolve() {
+        return s_interningManager.intern(this);
+    }
+    protected static final InterningManager<LinearGuarded> s_interningManager = new InterningManager<LinearGuarded>() {
+        protected boolean equal(LinearGuarded object1, LinearGuarded object2) {
+            if (!object1.head.equals(object2.head) || !object1.body.equals(object2.body) || object1.variables.length != object2.variables.length) 
+                return false;
+            for (int index = object1.variables.length - 1; index >= 0; --index)
+                if (!object1.variables[index].equals(object2.variables[index]))
+                    return false;
+            return true;
+        }
+        
+        protected int getHashCode(LinearGuarded object) {
+            int hashCode = object.head.hashCode() + object.body.hashCode() * 7;
+            for (int index = object.variables.length - 1; index >= 0; --index)
+                hashCode = hashCode * 8 + object.variables[index].hashCode();
+            return hashCode;
+        }
+    };
+    
+    public static LinearGuarded create(Formula head, Formula body) {
+        return s_interningManager.intern(new LinearGuarded(head, body));
+    }
 }

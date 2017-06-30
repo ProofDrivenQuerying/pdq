@@ -1,19 +1,13 @@
 package uk.ac.ox.cs.pdq.fol;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 
-import uk.ac.ox.cs.pdq.util.Utility;
+import org.junit.Assert;
 
-import com.google.common.base.Joiner;
-import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
+import uk.ac.ox.cs.pdq.InterningManager;
 
 /**
  * A positive or a negative atom
@@ -21,6 +15,8 @@ import com.google.common.collect.Sets;
  * @author Efthymia Tsamoura
  */
 public class Literal extends Formula{
+
+	private static final long serialVersionUID = -8815583036643488336L;
 
 	protected final LogicalSymbols operator;
 	
@@ -30,42 +26,28 @@ public class Literal extends Formula{
 	private final Predicate predicate;
 
 	/**  The terms of this atom. */
-	private final List<Term> terms;
+	private final Term[] terms;
 
 	/**   Cashed string representation of the atom. */
 	protected String toString = null;
-
-	private Integer hash = null;
 	
 	/**  Cashed list of free variables. */
-	private List<Variable> freeVariables = null;
+	private Variable[] freeVariables;
 	
 	private final Atom atom;
-	
 
-	public Literal(Predicate predicate, Collection<? extends Term> terms) {
+	private Literal(Predicate predicate, Term... terms) {
 		this(null, predicate, terms);
 	}
 	
-
-	public Literal(Predicate predicate, Term... terms) {
-		this(null, predicate, terms);
-	}
-	
-	public Literal(LogicalSymbols operator, Predicate predicate, Collection<? extends Term> terms) {
-		Preconditions.checkArgument(predicate != null && terms != null,
-				"Predicate and terms list cannot be null. (predicate: " + predicate + ", terms:" + terms + ")");
-		Preconditions.checkArgument(predicate.getArity() == terms.size(),
-				"Atom predicate does not match terms lists " + predicate.getName()
-				+ "(" + predicate.getArity() + ") <> " + terms);
+	private Literal(LogicalSymbols operator, Predicate predicate, Term... terms) {
+		Assert.assertTrue("Predicate and terms list cannot be null. (predicate: " + predicate + ", terms:" + terms + ")", predicate != null && terms != null);
+		Assert.assertTrue("Atom predicate does not match terms lists " + predicate.getName() + "(" + predicate.getArity() + ") <> " + terms, 
+				predicate.getArity() == terms.length);
 		this.predicate = predicate;
-		this.terms = ImmutableList.copyOf(terms);
+		this.terms = terms.clone();
 		this.operator = operator;
-		this.atom = new Atom(this.predicate, this.terms);
-	}
-	
-	public Literal(LogicalSymbols operator, Predicate predicate, Term... terms) {
-		this(operator, predicate, Lists.newArrayList(terms));
+		this.atom = Atom.create(this.predicate, this.terms);
 	}
 	
 	public boolean isPositive() {
@@ -74,10 +56,8 @@ public class Literal extends Formula{
 	
 	@Override
 	public String toString() {
-		if(this.toString == null) {
-			String atomString = this.predicate.getName() + (this.predicate.arity > 0 ? "(" + Joiner.on(",").join(this.terms) + ")" : "");
-			this.toString = this.isPositive() == true ? atomString : "~" + atomString;
-		}
+		if(this.toString == null) 
+			this.toString = this.isPositive() == true ? super.toString() : "~" + super.toString();
 		return this.toString;
 	}
 	
@@ -88,7 +68,7 @@ public class Literal extends Formula{
 	 * @return the atom's n-th term
 	 */
 	public Term getTerm(int n) {
-		return this.terms.get(n);
+		return this.terms[n];
 	}
 
 	/**
@@ -98,8 +78,8 @@ public class Literal extends Formula{
 	 * @see uk.ac.ox.cs.pdq.fol.Formula#getTerms()
 	 */
 	@Override
-	public List<Term> getTerms() {
-		return this.terms;
+	public Term[] getTerms() {
+		return this.terms.clone();
 	}
 
 
@@ -111,9 +91,8 @@ public class Literal extends Formula{
 	 */
 	public Set<Term> getTerms(List<Integer> positions) {
 		Set<Term> t = new LinkedHashSet<>();
-		for(Integer i: positions) {
-			t.add(this.terms.get(i));
-		}
+		for(Integer i: positions) 
+			t.add(this.terms[i]);
 		return t;
 	}
 
@@ -122,7 +101,7 @@ public class Literal extends Formula{
 	 *
 	 * @return List<Variable>
 	 */
-	public List<Variable> getVariables() {
+	public Variable[] getVariables() {
 		return this.getFreeVariables();
 	}
 
@@ -133,18 +112,8 @@ public class Literal extends Formula{
 	 * @see uk.ac.ox.cs.pdq.fol.Formula#getAtoms()
 	 */
 	@Override
-	public List<Atom> getAtoms() {
-		return Lists.newArrayList(atom);
-	}
-
-	/**
-	 * Gets the term positions.
-	 *
-	 * @param term Term
-	 * @return List<Integer>
-	 */
-	public List<Integer> getTermPositions(Term term) {
-		return Utility.search(this.terms, term);
+	public Atom[] getAtoms() {
+		return new Atom[]{this.atom};
 	}
 
 	/**
@@ -154,9 +123,8 @@ public class Literal extends Formula{
 	 */
 	public Boolean isFact() {
 		for(Term term:this.terms) {
-			if(term instanceof Variable) {
+			if(term instanceof Variable) 
 				return false;
-			}
 		}
 		return true;
 	}
@@ -167,66 +135,30 @@ public class Literal extends Formula{
 	 * @return Collection<Formula>
 	 * @see uk.ac.ox.cs.pdq.fol.Formula#getSubFormulas()
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
-	public List<Formula> getChildren() {
-		return ImmutableList.of();
+	public Formula[] getChildren() {
+		return new Formula[]{};
 	}
 
 	@Override
-	public List<Variable> getFreeVariables() {
+	public Variable[] getFreeVariables() {
 		if(this.freeVariables == null) {
-			this.freeVariables = new ArrayList<>();
-			Set<Variable> freeVariablesSet = Sets.newHashSet();
+			Set<Variable> freeVariablesSet = new LinkedHashSet<>();
 			for (Term term: this.terms) {
-				if(term instanceof Variable) {
+				if(term instanceof Variable) 
 					freeVariablesSet.add((Variable) term);
-				}
-				else if(term instanceof FunctionTerm) {
-					freeVariablesSet.addAll(((FunctionTerm) term).getVariables());
-				}
+				else if(term instanceof FunctionTerm) 
+					freeVariablesSet.addAll(Arrays.asList(((FunctionTerm) term).getVariables()));
 			}
-			this.freeVariables.addAll(freeVariablesSet);
+			this.freeVariables = freeVariablesSet.toArray(new Variable[freeVariablesSet.size()]);
 		}
-		return this.freeVariables;
+		return this.freeVariables.clone();
 	}
 
 	@Override
-	public List<Variable> getBoundVariables() {
-		return ImmutableList.of();
-	}
-	
-	/**
-	 * Equals.
-	 *
-	 * @param o Object
-	 * @return boolean
-	 */
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null) {
-			return false;
-		}
-		return this.getClass().isInstance(o)
-				&& (this.operator!= null && ((Literal) o).operator != null && this.operator.equals(((Literal) o).operator) ||
-						this.operator== null && ((Literal) o).operator == null)
-				&& this.predicate.equals(((Literal) o).predicate)
-				&& this.terms.equals(((Literal) o).terms);
-	}
-
-	/**
-	 * Hash code.
-	 *
-	 * @return int
-	 */
-	@Override
-	public int hashCode() {
-		if(this.hash == null) {
-			this.hash = Objects.hash(this.operator, this.terms, this.predicate);
-		}
-		return this.hash;
+	public Variable[] getBoundVariables() {
+		return new Variable[]{};
 	}
 
 	/**
@@ -238,5 +170,35 @@ public class Literal extends Formula{
 	public int getId() {
 		return this.hashCode();
 	}
+	
+    protected Object readResolve() {
+        return s_interningManager.intern(this);
+    }
+
+    protected static final InterningManager<Literal> s_interningManager = new InterningManager<Literal>() {
+        protected boolean equal(Literal object1, Literal object2) {
+            if (!object1.operator.equals(object2.operator) || !object1.predicate.equals(object2.predicate) || object1.terms.length != object2.terms.length)
+                return false;
+            for (int index = object1.terms.length - 1; index >= 0; --index)
+                if (!object1.terms[index].equals(object2.terms[index]))
+                    return false;
+            return true;
+        }
+
+        protected int getHashCode(Literal object) {
+            int hashCode = object.predicate.hashCode();
+            for (int index = object.terms.length - 1; index >= 0; --index)
+                hashCode = hashCode * 7 + object.terms[index].hashCode();
+            return hashCode;
+        }
+    };
+
+    public static Literal create(Predicate predicate, Term... arguments) {
+        return s_interningManager.intern(new Literal(predicate, arguments));
+    }
+    
+    public static Literal create(LogicalSymbols operator, Predicate predicate, Term... arguments) {
+        return s_interningManager.intern(new Literal(operator, predicate, arguments));
+    }
 	
 }
