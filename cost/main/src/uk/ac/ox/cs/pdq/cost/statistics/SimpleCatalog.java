@@ -213,8 +213,8 @@ public class SimpleCatalog implements Catalog{
 			String erspi = m.group(6);
 			if(schema.contains(relation)) {
 				Relation r = schema.getRelation(relation);
-				if(r.getAccessMethod(binding) != null) {
-					AccessMethod b = r.getAccessMethod(binding);
+				AccessMethod b = Utility.getAccessMethod(r, binding);
+				if(b != null) {
 					this.erpsi.put( Pair.of(r,b), Integer.parseInt(erspi));  
 					log.info("RELATION: " + relation + " BINDING: " + binding + " ERPSI: " + erspi);
 				}
@@ -236,8 +236,8 @@ public class SimpleCatalog implements Catalog{
 			String cost = m.group(6);
 			if(schema.contains(relation)) {
 				Relation r = schema.getRelation(relation);
-				if(r.getAccessMethod(binding) != null) {
-					AccessMethod b = r.getAccessMethod(binding);
+				AccessMethod b = Utility.getAccessMethod(r, binding);
+				if(b != null) {
 					this.costs.put( Pair.of(r,b), Double.parseDouble(cost));  
 					log.info("RELATION: " + relation + " BINDING: " + binding + " COST: " + cost);
 				}
@@ -256,7 +256,6 @@ public class SimpleCatalog implements Catalog{
 			this.frequencyMaps.put(Pair.of(h.getRelation(), h.getAttibute()), h);
 			return;
 		}
-		
 		
 		p = Pattern.compile(READ_SQLSERVERHISTOGRAM);
 		m = p.matcher(line);
@@ -323,14 +322,14 @@ public class SimpleCatalog implements Catalog{
 	/* (non-Javadoc)
 	 * @see uk.ac.ox.cs.pdq.cost.statistics.Catalog#getSelectivity(uk.ac.ox.cs.pdq.db.Relation, uk.ac.ox.cs.pdq.db.Attribute, uk.ac.ox.cs.pdq.db.TypedConstant)
 	 */
-	public Double getSelectivity(Relation relation, Attribute attribute, TypedConstant<?> constant) {
+	public Double getSelectivity(Relation relation, Attribute attribute, TypedConstant constant) {
 		Preconditions.checkNotNull(relation);
 		Preconditions.checkNotNull(attribute);
 		Preconditions.checkNotNull(constant);
 
 		SimpleFrequencyMap histogram = this.frequencyMaps.get(Pair.of(relation, attribute));
 		String search = constant.toString();
-		if(constant.getType() instanceof Class && BigDecimal.class.isAssignableFrom((Class) constant.getType())) {
+		if(constant.getType() instanceof Class && BigDecimal.class.isAssignableFrom((Class<?>) constant.getType())) {
 			BigInteger integer = new BigDecimal(constant.toString()).toBigInteger();
 			search = integer.toString();
 		}
@@ -346,14 +345,14 @@ public class SimpleCatalog implements Catalog{
 	 * @see uk.ac.ox.cs.pdq.cost.statistics.Catalog#getSize(uk.ac.ox.cs.pdq.db.Relation, uk.ac.ox.cs.pdq.db.Attribute, uk.ac.ox.cs.pdq.db.TypedConstant)
 	 */
 	@Override
-	public int getSize(Relation relation, Attribute attribute, TypedConstant<?> constant) {
+	public int getSize(Relation relation, Attribute attribute, TypedConstant constant) {
 		Preconditions.checkNotNull(relation);
 		Preconditions.checkNotNull(attribute);
 		Preconditions.checkNotNull(constant);
 
 		SimpleFrequencyMap histogram = this.frequencyMaps.get(Pair.of(relation, attribute));
 		String search = constant.toString();
-		if(constant.getType() instanceof Class && BigDecimal.class.isAssignableFrom((Class) constant.getType())) {
+		if(constant.getType() instanceof Class && BigDecimal.class.isAssignableFrom((Class<?>) constant.getType())) {
 			BigInteger integer = new BigDecimal(constant.toString()).toBigInteger();
 			search = integer.toString();
 		}
@@ -455,11 +454,11 @@ public class SimpleCatalog implements Catalog{
 	 * @see uk.ac.ox.cs.pdq.cost.statistics.Catalog#getERPSI(uk.ac.ox.cs.pdq.db.Relation, uk.ac.ox.cs.pdq.db.AccessMethod, java.util.Map)
 	 */
 	@Override
-	public int getERPSI(Relation relation, AccessMethod method, Map<Integer, TypedConstant<?>> inputs) {
+	public int getERPSI(Relation relation, AccessMethod method, Map<Integer, TypedConstant> inputs) {
 		Preconditions.checkNotNull(relation);
 		Preconditions.checkNotNull(inputs);
-		if(inputs.size() == 1 && method.getZeroBasedInputs().size() == 1) {
-			Attribute attribute = relation.getAttribute(method.getZeroBasedInputs().get(0));
+		if(inputs.size() == 1 && method.getZeroBasedInputs().length == 1) {
+			Attribute attribute = relation.getAttribute(method.getZeroBasedInputs().length);
 			SimpleFrequencyMap histogram = this.frequencyMaps.get(Pair.of(relation, attribute));
 			if(histogram != null && histogram.getFrequency(inputs.get(0).toString()) != null) {
 				int erpsi = histogram.getFrequency(inputs.get(0).toString());
@@ -511,12 +510,12 @@ public class SimpleCatalog implements Catalog{
 	 * @see uk.ac.ox.cs.pdq.cost.statistics.Catalog#getCost(uk.ac.ox.cs.pdq.db.Relation, uk.ac.ox.cs.pdq.db.AccessMethod, java.util.Map)
 	 */
 	@Override
-	public double getCost(Relation relation, AccessMethod method, Map<Integer, TypedConstant<?>> inputs) {
+	public double getCost(Relation relation, AccessMethod method, Map<Integer, TypedConstant> inputs) {
 		Preconditions.checkNotNull(relation);		
 		Preconditions.checkNotNull(method);		
 		double erpsi = -1;
 		if(inputs.size() == 1) {
-			Attribute attribute = relation.getAttribute(method.getZeroBasedInputs().get(0));
+			Attribute attribute = relation.getAttribute(method.getZeroBasedInputs()[0]);
 			SimpleFrequencyMap histogram = this.frequencyMaps.get(Pair.of(relation, attribute));
 			if(histogram != null && histogram.getFrequency(inputs.get(0).toString()) != null) {
 				erpsi = histogram.getFrequency(inputs.get(0).toString());

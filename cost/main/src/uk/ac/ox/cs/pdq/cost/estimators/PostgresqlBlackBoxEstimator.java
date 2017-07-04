@@ -119,12 +119,10 @@ public class PostgresqlBlackBoxEstimator<P extends Plan> implements BlackBoxCost
 			try {
 				switch (this.queryType) {
 				case SQL_WITH:
-					sql.append(SQLTranslator.target(SupportedDialect.POSTGRESQL)
-							.toSQLWith(plan.getEffectiveOperator()));
+					sql.append(SQLTranslator.target(SupportedDialect.POSTGRESQL).toSQLWith(plan.getEffectiveOperator()));
 					break;
 				default:
-					sql.append(SQLTranslator.target(SupportedDialect.POSTGRESQL)
-							.toSQL(plan.getEffectiveOperator()));
+					sql.append(SQLTranslator.target(SupportedDialect.POSTGRESQL).toSQL(plan.getEffectiveOperator()));
 					break;
 				}
 			} catch (RewriterException e) {

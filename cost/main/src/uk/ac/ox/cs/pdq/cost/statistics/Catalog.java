@@ -2,7 +2,6 @@
 package uk.ac.ox.cs.pdq.cost.statistics;
 
 
-import java.util.Collection;
 import java.util.Map;
 
 import uk.ac.ox.cs.pdq.db.AccessMethod;
@@ -26,7 +25,7 @@ public interface Catalog {
 	 * @param constant the constant
 	 * @return 		the number of tuples in relation which satisfy relation.attribute=constant divided by |relation|.
 	 */
-	public Double getSelectivity(Relation relation, Attribute attribute, TypedConstant<?> constant);
+	public Double getSelectivity(Relation relation, Attribute attribute, TypedConstant constant);
 	
 	/**
 	 * Gets the size.
@@ -36,7 +35,7 @@ public interface Catalog {
 	 * @param constant the constant
 	 * @return 		the number of tuples in relation which satisfy relation.attribute=constant
 	 */
-	public int getSize(Relation relation, Attribute attribute, TypedConstant<?> constant);
+	public int getSize(Relation relation, Attribute attribute, TypedConstant constant);
 	
 	/**
 	 * Gets the cardinality.
@@ -73,7 +72,7 @@ public interface Catalog {
 	 * @param inputs the inputs
 	 * @return the estimated result size per invocation of the input access
 	 */
-	int getERPSI(Relation relation, AccessMethod method, Map<Integer, TypedConstant<?>> inputs);
+	int getERPSI(Relation relation, AccessMethod method, Map<Integer, TypedConstant> inputs);
 		
 	/**
 	 * Gets the cost.
@@ -92,7 +91,7 @@ public interface Catalog {
 	 * @param inputs the inputs
 	 * @return the estimated cost of the input access
 	 */
-	double getCost(Relation relation, AccessMethod method, Map<Integer, TypedConstant<?>> inputs);
+	double getCost(Relation relation, AccessMethod method, Map<Integer, TypedConstant> inputs);
 	
 	
 	/**

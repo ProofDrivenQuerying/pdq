@@ -18,6 +18,7 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
+import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.DataType;
 import uk.ac.ox.cs.pdq.db.Relation;
@@ -775,6 +776,10 @@ public class Utility {
 			log.error(e);
 		}
 		throw new ClassCastException(o + " could not be cast to " + type);
+	}
+	
+	public static AccessMethod getAccessMethod(Relation relation, String acceessMethodName) {
+		
 	}
 
 }

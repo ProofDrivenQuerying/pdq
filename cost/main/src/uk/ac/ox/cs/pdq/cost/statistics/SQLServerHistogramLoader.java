@@ -12,11 +12,11 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.log4j.Logger;
 
 import com.google.common.collect.Lists;
 
-import uk.ac.ox.cs.pdq.util.Types;
+import uk.ac.ox.cs.pdq.util.Utility;
+
 
 // TODO: Auto-generated Javadoc
 /**
@@ -25,9 +25,6 @@ import uk.ac.ox.cs.pdq.util.Types;
  * @author Efthymia Tsamoura
  */
 public class SQLServerHistogramLoader {
-
-	/** Logger. */
-	private static Logger log = Logger.getLogger(SQLServerHistogramLoader.class);
 
 	/**
 	 * Load.
@@ -49,15 +46,15 @@ public class SQLServerHistogramLoader {
 				while((line = bufferedReader.readLine()) != null) {
 					String regex = null;
 					List<Integer> groupIndex = null;
-					if(type instanceof Class && String.class.isAssignableFrom((Class) type)) {
+					if(type instanceof Class && String.class.isAssignableFrom((Class<?>) type)) {
 						regex = "^((.+)(\\s+)(\\d+(\\.\\d+)?)(\\s+)(\\d+(\\.\\d+)?)(\\s+)(\\d+(\\.\\d+)?)(\\s+)(\\d+(\\.\\d+)?))";
 						groupIndex = Lists.newArrayList(2, 4, 7, 10, 13);
 					}
-					else if(type instanceof Class && Number.class.isAssignableFrom((Class) type)) {
+					else if(type instanceof Class && Number.class.isAssignableFrom((Class<?>) type)) {
 						regex = "^(([+-]?\\d+(\\.\\d+)?)(\\s+)(\\d+(\\.\\d+)?)(\\s+)(\\d+(\\.\\d+)?)(\\s+)(\\d+(\\.\\d+)?)(\\s+)(\\d+(\\.\\d+)?))";
 						groupIndex = Lists.newArrayList(2, 5, 8, 11, 14);
 					}
-					else if(type instanceof Class && Date.class.isAssignableFrom((Class) type)) {
+					else if(type instanceof Class && Date.class.isAssignableFrom((Class<?>) type)) {
 						regex = "^((\\d+/\\d+/\\d+ 00:00:00)(\\s+)(\\d+(\\.\\d+)?)(\\s+)(\\d+(\\.\\d+)?)(\\s+)(\\d+(\\.\\d+)?)(\\s+)(\\d+(\\.\\d+)?))";
 						groupIndex = Lists.newArrayList(2, 4, 7, 10, 13);
 					}
@@ -76,7 +73,7 @@ public class SQLServerHistogramLoader {
 						new java.lang.IllegalStateException("Unsupported data type");
 					}
 					
-					Object range_hi_key = Types.cast(type, elements[0]);
+					Object range_hi_key = Utility.cast(type, elements[0]);
 					BigInteger range_rows;
 					range_rows = new BigDecimal(elements[1]).toBigInteger();
 					BigInteger eq_rows = new BigDecimal(elements[2]).toBigInteger();

@@ -2,8 +2,6 @@ package uk.ac.ox.cs.pdq.cost.statistics;
 
 import java.io.PrintStream;
 
-import org.apache.log4j.Logger;
-
 // TODO: Auto-generated Javadoc
 /**
  * Loads SQL Server 2014 histograms.
@@ -11,10 +9,6 @@ import org.apache.log4j.Logger;
  * @author Efthymia Tsamoura
  */
 public class SQLServerHistogramWriter {
-
-	/** Logger. */
-	private static Logger log = Logger.getLogger(SQLServerHistogramWriter.class);
-
 	
 	/**
 	 * Writes the input histogram to the specified output. 

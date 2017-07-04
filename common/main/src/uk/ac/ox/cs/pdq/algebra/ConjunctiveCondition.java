@@ -14,6 +14,10 @@ public class ConjunctiveCondition implements Condition {
 		Assert.assertNotNull(predicates);
 		this.predicates = predicates.clone();
 	}
+	
+	public SimpleCondition[] getSimpleConditions() {
+		return this.predicates.clone();
+	}
 
 	public int getNumberOfConjuncts() {
 		return this.predicates.length;

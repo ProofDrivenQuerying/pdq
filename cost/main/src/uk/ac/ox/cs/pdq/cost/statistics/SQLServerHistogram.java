@@ -4,8 +4,8 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.Objects;
 
-import uk.ac.ox.cs.pdq.algebra.predicates.AttributeEqualityPredicate;
-import uk.ac.ox.cs.pdq.algebra.predicates.ConstantEqualityPredicate;
+import uk.ac.ox.cs.pdq.algebra.AttributeEqualityCondition;
+import uk.ac.ox.cs.pdq.algebra.ConstantEqualityCondition;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
@@ -58,7 +58,7 @@ public class SQLServerHistogram implements Histogram{
 	 * @param predicate the predicate
 	 * @return 		the number of database tuples that satisfy the input constant equality predicate
 	 */
-	public BigInteger getRows(ConstantEqualityPredicate predicate) {
+	public BigInteger getRows(ConstantEqualityCondition predicate) {
 		throw new java.lang.UnsupportedOperationException();
 	}
 	
@@ -69,7 +69,7 @@ public class SQLServerHistogram implements Histogram{
 	 * @param predicate the predicate
 	 * @return 		the number of database tuples that satisfy the input attribute equality predicate
 	 */
-	public BigInteger getRows(AttributeEqualityPredicate predicate) {
+	public BigInteger getRows(AttributeEqualityCondition predicate) {
 		throw new java.lang.UnsupportedOperationException();
 	}
 	
