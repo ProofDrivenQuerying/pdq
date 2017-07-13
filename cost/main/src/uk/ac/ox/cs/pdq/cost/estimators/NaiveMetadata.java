@@ -1,7 +1,7 @@
 package uk.ac.ox.cs.pdq.cost.estimators;
 
 import uk.ac.ox.cs.pdq.algebra.RelationalOperator;
-import uk.ac.ox.cs.pdq.cost.EstimateProvider;
+import uk.ac.ox.cs.pdq.cost.RelationalTermCardinalityMetadata;
 
 import com.google.common.base.Preconditions;
 
@@ -11,7 +11,7 @@ import com.google.common.base.Preconditions;
  *
  * @author Julien Leblay
  */
-public class NaiveMetadata implements EstimateProvider<RelationalOperator> {
+public class NaiveMetadata implements RelationalTermCardinalityMetadata<RelationalOperator> {
 
 	/** The input card. */
 	private double inputCard = 0L;
@@ -26,7 +26,7 @@ public class NaiveMetadata implements EstimateProvider<RelationalOperator> {
 	 * Gets the parent.
 	 *
 	 * @return LogicalOperator
-	 * @see uk.ac.ox.cs.pdq.cost.EstimateProvider#getParent()
+	 * @see uk.ac.ox.cs.pdq.cost.RelationalTermCardinalityMetadata#getParent()
 	 */
 	@Override
 	public RelationalOperator getParent() {
@@ -37,7 +37,7 @@ public class NaiveMetadata implements EstimateProvider<RelationalOperator> {
 	 * Sets the parent.
 	 *
 	 * @param o LogicalOperator
-	 * @see uk.ac.ox.cs.pdq.cost.EstimateProvider#setParent(RelationalOperator)
+	 * @see uk.ac.ox.cs.pdq.cost.RelationalTermCardinalityMetadata#setParent(RelationalOperator)
 	 */
 	@Override
 	public void setParent(RelationalOperator o) {
@@ -48,7 +48,7 @@ public class NaiveMetadata implements EstimateProvider<RelationalOperator> {
 	 * Gets the input cardinality.
 	 *
 	 * @return the last estimated input cardinality of the operator
-	 * @see uk.ac.ox.cs.pdq.cost.EstimateProvider#getInputCardinality()
+	 * @see uk.ac.ox.cs.pdq.cost.RelationalTermCardinalityMetadata#getInputCardinality()
 	 */
 	@Override
 	public final Double getInputCardinality() {
@@ -59,7 +59,7 @@ public class NaiveMetadata implements EstimateProvider<RelationalOperator> {
 	 * Gets the output cardinality.
 	 *
 	 * @return the last estimated output cardinality of the operator
-	 * @see uk.ac.ox.cs.pdq.cost.EstimateProvider#getOutputCardinality()
+	 * @see uk.ac.ox.cs.pdq.cost.RelationalTermCardinalityMetadata#getOutputCardinality()
 	 */
 	@Override
 	public final Double getOutputCardinality() {
@@ -70,7 +70,7 @@ public class NaiveMetadata implements EstimateProvider<RelationalOperator> {
 	 * Sets the input cardinality.
 	 *
 	 * @param l Double
-	 * @see uk.ac.ox.cs.pdq.cost.EstimateProvider#setInputCardinality(Double)
+	 * @see uk.ac.ox.cs.pdq.cost.RelationalTermCardinalityMetadata#setInputCardinality(Double)
 	 */
 	@Override
 	public final void setInputCardinality(Double l) {
@@ -82,7 +82,7 @@ public class NaiveMetadata implements EstimateProvider<RelationalOperator> {
 	 * Sets the output cardinality.
 	 *
 	 * @param l Double
-	 * @see uk.ac.ox.cs.pdq.cost.EstimateProvider#setOutputCardinality(Double)
+	 * @see uk.ac.ox.cs.pdq.cost.RelationalTermCardinalityMetadata#setOutputCardinality(Double)
 	 */
 	@Override
 	public final void setOutputCardinality(Double  l) {

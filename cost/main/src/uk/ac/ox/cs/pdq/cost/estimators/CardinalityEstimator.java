@@ -1,6 +1,6 @@
 package uk.ac.ox.cs.pdq.cost.estimators;
 
-import uk.ac.ox.cs.pdq.algebra.RelationalOperator;
+import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -16,7 +16,7 @@ public interface CardinalityEstimator extends Cloneable {
 	 *
 	 * @param logOp the log op
 	 */
-	void estimate(RelationalOperator logOp);
+	void estimate(RelationalTerm logOp);
 
 	/**
 	 * Computes and updates the estimated cardinality of the given operator,
@@ -24,7 +24,7 @@ public interface CardinalityEstimator extends Cloneable {
 	 *
 	 * @param logOp the log op
 	 */
-	void estimateIfNeeded(RelationalOperator logOp);
+	void estimateIfNeeded(RelationalTerm logOp);
 
 	/**
 	 * Clone.

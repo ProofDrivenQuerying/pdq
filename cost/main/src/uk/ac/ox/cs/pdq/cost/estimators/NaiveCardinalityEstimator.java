@@ -10,7 +10,7 @@ import uk.ac.ox.cs.pdq.algebra.Scan;
 import uk.ac.ox.cs.pdq.algebra.Selection;
 import uk.ac.ox.cs.pdq.algebra.Union;
 import uk.ac.ox.cs.pdq.algebra.predicates.ConjunctivePredicate;
-import uk.ac.ox.cs.pdq.cost.EstimateProvider;
+import uk.ac.ox.cs.pdq.cost.RelationalTermCardinalityMetadata;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.AccessMethod.Types;
 import uk.ac.ox.cs.pdq.db.Relation;
@@ -89,7 +89,7 @@ public class NaiveCardinalityEstimator extends AbstractCardinalityEstimator<Naiv
 	 * @return Double
 	 */
 	private Double getParentInputCardinality(RelationalOperator o) {
-		EstimateProvider<RelationalOperator> metadata = this.getMetadata(o);
+		RelationalTermCardinalityMetadata<RelationalOperator> metadata = this.getMetadata(o);
 		RelationalOperator parent = metadata.getParent();
 		if (parent != null) {
 			return this.getMetadata(parent).getInputCardinality();

@@ -1,21 +1,11 @@
 package uk.ac.ox.cs.pdq.cost.estimators;
 
-import uk.ac.ox.cs.pdq.algebra.Access;
-import uk.ac.ox.cs.pdq.algebra.Count;
-import uk.ac.ox.cs.pdq.algebra.CrossProduct;
-import uk.ac.ox.cs.pdq.algebra.DependentAccess;
-import uk.ac.ox.cs.pdq.algebra.Distinct;
-import uk.ac.ox.cs.pdq.algebra.IsEmpty;
-import uk.ac.ox.cs.pdq.algebra.Join;
-import uk.ac.ox.cs.pdq.algebra.NaryOperator;
-import uk.ac.ox.cs.pdq.algebra.RelationalOperator;
-import uk.ac.ox.cs.pdq.algebra.Scan;
-import uk.ac.ox.cs.pdq.algebra.Selection;
-import uk.ac.ox.cs.pdq.algebra.StaticInput;
-import uk.ac.ox.cs.pdq.algebra.UnaryOperator;
-import uk.ac.ox.cs.pdq.algebra.Union;
-import uk.ac.ox.cs.pdq.cost.EstimateProvider;
-import uk.ac.ox.cs.pdq.plan.SubPlanAlias;
+
+import uk.ac.ox.cs.pdq.algebra.AccessTerm;
+import uk.ac.ox.cs.pdq.algebra.JoinTerm;
+import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
+import uk.ac.ox.cs.pdq.algebra.SelectionTerm;
+import uk.ac.ox.cs.pdq.cost.RelationalTermCardinalityMetadata;
 
 import com.google.common.base.Preconditions;
 
@@ -28,7 +18,7 @@ import com.google.common.base.Preconditions;
  * @author Julien Leblay
  * @param <M> the generic type
  */
-public abstract class AbstractCardinalityEstimator<M extends EstimateProvider<RelationalOperator>> implements CardinalityEstimator {
+public abstract class AbstractCardinalityEstimator implements CardinalityEstimator {
 
 	/**
 	 * Clone.
@@ -37,7 +27,7 @@ public abstract class AbstractCardinalityEstimator<M extends EstimateProvider<Re
 	 * @see uk.ac.ox.cs.pdq.cost.estimators.CardinalityEstimator#clone()
 	 */
 	@Override
-	public abstract AbstractCardinalityEstimator<M> clone();
+	public abstract AbstractCardinalityEstimator clone();
 
 	/**
 	 * Estimate if needed.
@@ -46,8 +36,8 @@ public abstract class AbstractCardinalityEstimator<M extends EstimateProvider<Re
 	 * @see uk.ac.ox.cs.pdq.cost.estimators.CardinalityEstimator#estimateIfNeeded(RelationalOperator)
 	 */
 	@Override
-	public void estimateIfNeeded(RelationalOperator logOp) {
-		EstimateProvider<RelationalOperator> metadata = this.getMetadata(logOp);
+	public void estimateIfNeeded(RelationalTerm logOp) {
+		RelationalTermCardinalityMetadata metadata = this.getMetadata(logOp);
 		if (metadata.getOutputCardinality() < 0) {
 			this.estimate(logOp);
 		}
@@ -60,13 +50,13 @@ public abstract class AbstractCardinalityEstimator<M extends EstimateProvider<Re
 	 * @see uk.ac.ox.cs.pdq.cost.estimators.CardinalityEstimator#estimate(RelationalOperator)
 	 */
 	@Override
-	public void estimate(RelationalOperator logOp) {
+	public void estimate(RelationalTerm logOp) {
 		synchronized (logOp) {
 			Double output = -1.0;
 
-			EstimateProvider<RelationalOperator> metadata = this.getMetadata(logOp);
+			RelationalTermCardinalityMetadata metadata = this.getMetadata(logOp);
 			Double input = metadata.getInputCardinality();
-			RelationalOperator parent = metadata.getParent();
+			RelationalTerm parent = metadata.getParent();
 			if (input < 0) {
 				input = 0.0;
 				if (parent != null) {
@@ -77,29 +67,35 @@ public abstract class AbstractCardinalityEstimator<M extends EstimateProvider<Re
 
 			// For Scan, Access, Distinct, Union, Selection and Join
 			// The estimation is delegated to specialised estimators.
-			if (logOp instanceof Join) {
-				output = this.estimateOutput((Join) logOp);
-			} else if (logOp instanceof Scan) {
+			if (logOp instanceof JoinTerm) {
+				output = this.estimateOutput((JoinTerm) logOp);
+			} 
+			else if (logOp instanceof AccessTerm) {
 				Preconditions.checkState(input == 0, "Input cardinality for a Scan can only by 0");
-				output = this.estimateOutput((Scan) logOp);
-			} else if (logOp instanceof Access) {
-				Preconditions.checkState(input == 0, "Input cardinality for a non-dependent Access can only by 0");
-				output = this.estimateOutput((Access) logOp);
-			} else if (logOp instanceof DependentAccess) {
-				output = this.estimateOutput((DependentAccess) logOp);
-			} else if (logOp instanceof Selection) {
-				output = this.estimateOutput((Selection) logOp);
-			} else if (logOp instanceof Distinct) {
-				output = this.estimateOutput((Distinct) logOp);
-			} else if (logOp instanceof Union) {
-				output = this.estimateOutput((Union) logOp);
-			} else
+				output = this.estimateOutput((AccessTerm) logOp);
+			} 
+//			else if (logOp instanceof Access) {
+//				Preconditions.checkState(input == 0, "Input cardinality for a non-dependent Access can only by 0");
+//				output = this.estimateOutput((Access) logOp);
+//			} 
+//			else if (logOp instanceof DependentAccess) {
+//				output = this.estimateOutput((DependentAccess) logOp);
+//			} 
+			else if (logOp instanceof SelectionTerm) {
+				output = this.estimateOutput((SelectionTerm) logOp);
+			} 
+//			else if (logOp instanceof Distinct) {
+//				output = this.estimateOutput((Distinct) logOp);
+//			} else if (logOp instanceof Union) {
+//				output = this.estimateOutput((Union) logOp);
+//			} 
+			else
 
 				// Cross Products: cardinality is the product of the children's cardinalities
 				if (logOp instanceof CrossProduct) {
 					output = 1.0;
 					for (RelationalOperator child: ((NaryOperator) logOp).getChildren()) {
-						EstimateProvider childMetadata = this.getMetadata(child);
+						RelationalTermCardinalityMetadata childMetadata = this.getMetadata(child);
 						childMetadata.setParent(logOp);
 						childMetadata.setInputCardinality(input);
 						this.estimateIfNeeded(child);
@@ -115,7 +111,7 @@ public abstract class AbstractCardinalityEstimator<M extends EstimateProvider<Re
 						// SubPlanAlias: the cardinality is given directly by the operator after computing if needed.
 						if (logOp instanceof SubPlanAlias) {
 							RelationalOperator alias = (((SubPlanAlias) logOp).getPlan()).getOperator();
-							EstimateProvider aliasMetadata = this.getMetadata(alias);
+							RelationalTermCardinalityMetadata aliasMetadata = this.getMetadata(alias);
 							aliasMetadata.setInputCardinality(input);
 							this.estimateIfNeeded(alias);
 							input = aliasMetadata.getInputCardinality();
@@ -130,7 +126,7 @@ public abstract class AbstractCardinalityEstimator<M extends EstimateProvider<Re
 								// Arbitrary unary operators: the cardinalities are unchanged from the child.
 								if (logOp instanceof UnaryOperator) {
 									RelationalOperator child = ((UnaryOperator) logOp).getChild();
-									EstimateProvider childMetadata = this.getMetadata(child);
+									RelationalTermCardinalityMetadata childMetadata = this.getMetadata(child);
 									childMetadata.setParent(logOp);
 									childMetadata.setInputCardinality(input);
 									this.estimateIfNeeded(child);
@@ -152,7 +148,7 @@ public abstract class AbstractCardinalityEstimator<M extends EstimateProvider<Re
 	 * i.e. implementation should returned a fresh dataguide object if none
 	 * already existed on the given operator.
 	 */
-	protected abstract M initMetadata(RelationalOperator o);
+	protected abstract RelationalTermCardinalityMetadata initMetadata(RelationalTerm o);
 
 	/**
 	 * Gets the metadata.
@@ -160,7 +156,7 @@ public abstract class AbstractCardinalityEstimator<M extends EstimateProvider<Re
 	 * @param o LogicalOperator
 	 * @return M
 	 */
-	protected M getMetadata(RelationalOperator o) {
+	protected RelationalTermCardinalityMetadata getMetadata(RelationalTerm o) {
 		M result = (M) o.getMetadata();
 		if (result == null) {
 			o.setMetadata((result = this.initMetadata(o)));

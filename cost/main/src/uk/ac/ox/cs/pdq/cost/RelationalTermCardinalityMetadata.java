@@ -2,7 +2,6 @@ package uk.ac.ox.cs.pdq.cost;
 
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 
-
 // TODO: Auto-generated Javadoc
 /**
  * Interface providing cardinality estimations for plan operators.
@@ -11,21 +10,21 @@ import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
  * @param <P> the generic type
  */
  //Efi: This class should be moved to the cost package 
-public interface EstimateProvider<P extends RelationalTerm> {
+public interface RelationalTermCardinalityMetadata {
 
 	/**
 	 * Gets the parent.
 	 *
 	 * @return LogicalOperator
 	 */
-	P getParent();
+	RelationalTerm getParent();
 	
 	/**
 	 * Sets the parent.
 	 *
 	 * @param parent LogicalOperator
 	 */
-	void setParent(P parent);
+	void setParent(RelationalTerm parent);
 	
 	/**
 	 * Gets the input cardinality.
@@ -48,10 +47,10 @@ public interface EstimateProvider<P extends RelationalTerm> {
 	 */
 	void setInputCardinality(Double l);
 	
-	/**
-	 * Sets the output cardinality.
-	 *
-	 * @param l Double
-	 */
-	void setOutputCardinality(Double l);
+//	/**
+//	 * Sets the output cardinality.
+//	 *
+//	 * @param l Double
+//	 */
+//	void setOutputCardinality(Double l);
 }
