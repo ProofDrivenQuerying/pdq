@@ -1,7 +1,5 @@
 package uk.ac.ox.cs.pdq.cost.estimators;
 
-import uk.ac.ox.cs.pdq.cost.Costable;
-
 // TODO: Auto-generated Javadoc
 /**
  * Top level interface for all blackbox plan cost estimators.
@@ -9,15 +7,14 @@ import uk.ac.ox.cs.pdq.cost.Costable;
  *
  * @author Julien Leblay
  * @author Efthymia Tsamoura
- * @param <P> the generic type
  */
-public interface BlackBoxCostEstimator<P extends Costable> extends CostEstimator<P> {
+public interface BlackBoxCostEstimator extends CostEstimator {
 
 	/**
 	 * Clone.
 	 *
 	 * @return BlackBoxCostEstimator<P>
 	 */
-	BlackBoxCostEstimator<P> clone();
+	BlackBoxCostEstimator clone();
 	
 }

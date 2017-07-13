@@ -1,7 +1,7 @@
 package uk.ac.ox.cs.pdq.cost.estimators;
 
-import uk.ac.ox.cs.pdq.cost.Costable;
-import uk.ac.ox.cs.pdq.datasources.Cost;
+import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
+import uk.ac.ox.cs.pdq.cost.Cost;
 
 
 // TODO: Auto-generated Javadoc
@@ -10,9 +10,8 @@ import uk.ac.ox.cs.pdq.datasources.Cost;
  *
  * @author Efthymia Tsamoura
  * @author Julien Leblay
- * @param <C> the generic type
  */
-public interface CostEstimator<C extends Costable> {
+public interface CostEstimator {
 	
 	/**
 	 * Estimates and sets the cost of the input plan.
@@ -20,20 +19,12 @@ public interface CostEstimator<C extends Costable> {
 	 * @param plan the plan
 	 * @return the cost of the input plan
 	 */
-	Cost cost(C plan);
-	
-	/**
-	 * Estimates the cost of the input plan.
-	 *
-	 * @param plan the plan
-	 * @return the cost of the input plan
-	 */
-	Cost estimateCost(C plan);
+	Cost cost(RelationalTerm plan);
 	
 	/**
 	 * Clone.
 	 *
 	 * @return the cost estimator
 	 */
-	CostEstimator<C> clone();
+	CostEstimator clone();
 }

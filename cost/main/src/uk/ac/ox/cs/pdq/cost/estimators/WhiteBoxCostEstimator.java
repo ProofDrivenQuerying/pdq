@@ -7,29 +7,14 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import uk.ac.ox.cs.pdq.algebra.Access;
-import uk.ac.ox.cs.pdq.algebra.Count;
-import uk.ac.ox.cs.pdq.algebra.DependentJoin;
-import uk.ac.ox.cs.pdq.algebra.IsEmpty;
-import uk.ac.ox.cs.pdq.algebra.Join;
-import uk.ac.ox.cs.pdq.algebra.NaryOperator;
-import uk.ac.ox.cs.pdq.algebra.PredicateBasedOperator;
-import uk.ac.ox.cs.pdq.algebra.Projection;
-import uk.ac.ox.cs.pdq.algebra.RelationalOperator;
-import uk.ac.ox.cs.pdq.algebra.StaticInput;
+import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
+import uk.ac.ox.cs.pdq.cost.Cost;
+
 /* import uk.ac.ox.cs.pdq.algebra.SubPlanAlias; */
-import uk.ac.ox.cs.pdq.algebra.UnaryOperator;
-import uk.ac.ox.cs.pdq.algebra.predicates.ConjunctivePredicate;
-import uk.ac.ox.cs.pdq.algebra.predicates.Predicate;
+
 import uk.ac.ox.cs.pdq.cost.DoubleCost;
-import uk.ac.ox.cs.pdq.datasources.Cost;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.logging.performance.StatisticsCollector;
-import uk.ac.ox.cs.pdq.plan.DAGPlan;
-import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
-import uk.ac.ox.cs.pdq.plan.Plan;
-import uk.ac.ox.cs.pdq.plan.SubPlanAlias;
-
 import com.google.common.collect.Lists;
 
 
@@ -46,7 +31,7 @@ import com.google.common.collect.Lists;
  * @author Julien Leblay
  * @param <P> the generic type
  */
-public class WhiteBoxCostEstimator<P extends Plan> implements BlackBoxCostEstimator<P> {
+public class WhiteBoxCostEstimator implements BlackBoxCostEstimator {
 
 	/** The stats. */
 	protected final StatisticsCollector stats;
@@ -79,8 +64,8 @@ public class WhiteBoxCostEstimator<P extends Plan> implements BlackBoxCostEstima
 	 * @see java.lang.Object#clone()
 	 */
 	@Override
-	public WhiteBoxCostEstimator<P> clone() {
-		return (WhiteBoxCostEstimator<P>) (this.stats == null ? new WhiteBoxCostEstimator<>(null,  this.cardEstimator.clone()) : new WhiteBoxCostEstimator<>(this.stats.clone(),  this.cardEstimator.clone()));
+	public WhiteBoxCostEstimator clone() {
+		return (WhiteBoxCostEstimator) (this.stats == null ? new WhiteBoxCostEstimator(null,  this.cardEstimator.clone()) : new WhiteBoxCostEstimator(this.stats.clone(),  this.cardEstimator.clone()));
 	}
 
 	/**
@@ -122,7 +107,7 @@ public class WhiteBoxCostEstimator<P extends Plan> implements BlackBoxCostEstima
 	 * @param logOp the log op
 	 * @return the cost of the given operator.
 	 */
-	public double recursiveCost(RelationalOperator logOp) {
+	public double recursiveCost(RelationalTerm logOp) {
 		return this.recursiveCost(logOp, Lists.<DAGPlan>newArrayList());
 	}
 
@@ -133,7 +118,7 @@ public class WhiteBoxCostEstimator<P extends Plan> implements BlackBoxCostEstima
 	 * @param descendants the descendants
 	 * @return the cost of the given operator.
 	 */
-	private double recursiveCost(RelationalOperator logOp, Collection<DAGPlan> descendants) {
+	private double recursiveCost(RelationalTerm logOp, Collection<DAGPlan> descendants) {
 		if (descendants != null) {
 			for (DAGPlan child: descendants) {
 				if (child.getOperator().equals(logOp)) {
@@ -239,19 +224,6 @@ public class WhiteBoxCostEstimator<P extends Plan> implements BlackBoxCostEstima
 		}
 		return (double) o.getColumns().size();
 	}
-
-	/* (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.cost.estimators.CostEstimator#estimateCost(uk.ac.ox.cs.pdq.util.Costable)
-	 */
-	@Override
-	public Cost estimateCost(P plan) {
-		if(this.stats != null){this.stats.start(COST_ESTIMATION_TIME);}
-		DoubleCost result = new DoubleCost(this.recursiveCost(plan));
-		if(this.stats != null){this.stats.stop(COST_ESTIMATION_TIME);}
-		if(this.stats != null){this.stats.increase(COST_ESTIMATION_COUNT, 1);}
-//		this.planIndex.update(plan);
-		return result;
-	}
 	
 	/**
 	 * Cost.
@@ -261,8 +233,12 @@ public class WhiteBoxCostEstimator<P extends Plan> implements BlackBoxCostEstima
 	 * @see uk.ac.ox.cs.pdq.cost.estimators.CostEstimator#cost(P)
 	 */
 	@Override
-	public Cost cost(P plan) {
-		plan.setCost(this.estimateCost(plan));
-		return plan.getCost();
+	public Cost cost(RelationalTerm plan) {
+		if(this.stats != null){this.stats.start(COST_ESTIMATION_TIME);}
+		DoubleCost result = new DoubleCost(this.recursiveCost(plan));
+		if(this.stats != null){this.stats.stop(COST_ESTIMATION_TIME);}
+		if(this.stats != null){this.stats.increase(COST_ESTIMATION_COUNT, 1);}
+//		this.planIndex.update(plan);
+		return result;
 	}
 }

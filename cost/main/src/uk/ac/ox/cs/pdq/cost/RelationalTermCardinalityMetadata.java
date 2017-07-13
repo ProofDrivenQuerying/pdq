@@ -47,10 +47,10 @@ public interface RelationalTermCardinalityMetadata {
 	 */
 	void setInputCardinality(Double l);
 	
-//	/**
-//	 * Sets the output cardinality.
-//	 *
-//	 * @param l Double
-//	 */
-//	void setOutputCardinality(Double l);
+	/**
+	 * Sets the output cardinality.
+	 *
+	 * @param l Double
+	 */
+	void setOutputCardinality(Double l);
 }

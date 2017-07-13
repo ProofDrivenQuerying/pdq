@@ -2,7 +2,6 @@ package uk.ac.ox.cs.pdq.cost;
 
 import com.google.common.base.Preconditions;
 
-import uk.ac.ox.cs.pdq.datasources.Cost;
 
 // TODO: Auto-generated Javadoc
 /**

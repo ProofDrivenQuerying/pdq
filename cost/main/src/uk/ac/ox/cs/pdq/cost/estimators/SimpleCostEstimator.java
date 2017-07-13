@@ -2,9 +2,8 @@ package uk.ac.ox.cs.pdq.cost.estimators;
 
 import java.util.Collection;
 
-import uk.ac.ox.cs.pdq.cost.Costable;
-import uk.ac.ox.cs.pdq.datasources.Cost;
-import uk.ac.ox.cs.pdq.plan.AccessOperator;
+import uk.ac.ox.cs.pdq.algebra.AccessTerm;
+import uk.ac.ox.cs.pdq.cost.Cost;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -15,7 +14,7 @@ import uk.ac.ox.cs.pdq.plan.AccessOperator;
  * @author Efthymia Tsamoura
  * @param <P> the generic type
  */
-public interface SimpleCostEstimator<P extends Costable> extends CostEstimator<P> {
+public interface SimpleCostEstimator extends CostEstimator {
 	
 	/**
 	 * Cost.
@@ -23,12 +22,12 @@ public interface SimpleCostEstimator<P extends Costable> extends CostEstimator<P
 	 * @param accesses The accesses of a plan
 	 * @return the cost of the accesses
 	 */
-	Cost cost(Collection<AccessOperator> accesses);
+	Cost cost(Collection<AccessTerm> accesses);
 
 	/**
 	 * Clone.
 	 *
 	 * @return SimpleCostEstimator<P>
 	 */
-	SimpleCostEstimator<P> clone();
+	SimpleCostEstimator clone();
 }

@@ -1,18 +1,10 @@
 package uk.ac.ox.cs.pdq.cost.estimators;
 
-import uk.ac.ox.cs.pdq.algebra.Access;
-import uk.ac.ox.cs.pdq.algebra.DependentAccess;
-import uk.ac.ox.cs.pdq.algebra.DependentJoin;
-import uk.ac.ox.cs.pdq.algebra.Distinct;
-import uk.ac.ox.cs.pdq.algebra.Join;
-import uk.ac.ox.cs.pdq.algebra.RelationalOperator;
-import uk.ac.ox.cs.pdq.algebra.Scan;
-import uk.ac.ox.cs.pdq.algebra.Selection;
-import uk.ac.ox.cs.pdq.algebra.Union;
-import uk.ac.ox.cs.pdq.algebra.predicates.ConjunctivePredicate;
+import uk.ac.ox.cs.pdq.algebra.DependentJoinTerm;
+import uk.ac.ox.cs.pdq.algebra.JoinTerm;
+import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.RelationalTermCardinalityMetadata;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
-import uk.ac.ox.cs.pdq.db.AccessMethod.Types;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 
@@ -24,7 +16,7 @@ import uk.ac.ox.cs.pdq.db.Schema;
  *
  * @author Julien Leblay
  */
-public class NaiveCardinalityEstimator extends AbstractCardinalityEstimator<NaiveMetadata> {
+public class NaiveCardinalityEstimator extends AbstractCardinalityEstimator {
 
 	/** The Constant UNION_REDUCTION. */
 	public static final Double UNION_REDUCTION = 2.0;
@@ -67,7 +59,7 @@ public class NaiveCardinalityEstimator extends AbstractCardinalityEstimator<Naiv
 	 * @return NaiveMetadata
 	 */
 	@Override
-	protected NaiveMetadata initMetadata(RelationalOperator o) {
+	protected NaiveMetadata initMetadata(RelationalTerm o) {
 		return new NaiveMetadata();
 	}
 
@@ -88,9 +80,9 @@ public class NaiveCardinalityEstimator extends AbstractCardinalityEstimator<Naiv
 	 * @param o LogicalOperator
 	 * @return Double
 	 */
-	private Double getParentInputCardinality(RelationalOperator o) {
-		RelationalTermCardinalityMetadata<RelationalOperator> metadata = this.getMetadata(o);
-		RelationalOperator parent = metadata.getParent();
+	private Double getParentInputCardinality(RelationalTerm o) {
+		RelationalTermCardinalityMetadata metadata = this.getMetadata(o);
+		RelationalTerm parent = metadata.getParent();
 		if (parent != null) {
 			return this.getMetadata(parent).getInputCardinality();
 		}
@@ -104,19 +96,19 @@ public class NaiveCardinalityEstimator extends AbstractCardinalityEstimator<Naiv
 	 * @return Double
 	 */
 	@Override
-	protected Double estimateOutput(Join o) {
+	protected Double estimateOutput(JoinTerm o) {
 		Double result = 1.0;
 		Double largestChild = 1.0;
 		Double inputCard = this.getParentInputCardinality(o);
 
 		// Compute the horizontal increase of input card.
 		Double rightInputCard = inputCard;
-		RelationalOperator leftChild = o.getChildren().get(0);
+		RelationalTerm leftChild = o.getChildren().get(0);
 		NaiveMetadata lcMetadata = this.getMetadata(leftChild);
 		lcMetadata.setParent(o);
 		lcMetadata.setInputCardinality(inputCard);
 		this.estimateIfNeeded(leftChild);
-		if (o instanceof DependentJoin) {
+		if (o instanceof DependentJoinTerm) {
 			rightInputCard = lcMetadata.getOutputCardinality() * Math.max(1.0, inputCard);
 		}
 
@@ -143,7 +135,7 @@ public class NaiveCardinalityEstimator extends AbstractCardinalityEstimator<Naiv
 	 * @return Double
 	 */
 	@Override
-	protected Double estimateOutput(Access o) {
+	protected Double estimateOutput(AccessTerm o) {
 		RelationalOperator child = o.getChild();
 		if (child == null) {
 			return (double) o.getRelation().getMetadata().getSize();
@@ -189,43 +181,5 @@ public class NaiveCardinalityEstimator extends AbstractCardinalityEstimator<Naiv
 				(cMetadata.getOutputCardinality()
 						/ Math.pow(SELECTIVITY_REDUCTION,
 								((ConjunctivePredicate) o.getPredicate()).size())));
-	}
-
-	/**
-	 * Estimate output.
-	 *
-	 * @param o Distinct
-	 * @return Double
-	 */
-	@Override
-	protected Double estimateOutput(Distinct o) {
-		RelationalOperator child = o.getChild();
-		NaiveMetadata cMetadata = this.getMetadata(child);
-		cMetadata.setParent(o);
-		Double inputCard = this.getParentInputCardinality(o);
-		cMetadata.setInputCardinality(inputCard);
-		this.estimate(child);
-		return (cMetadata.getOutputCardinality() / DISTINCT_REDUCTION);
-	}
-
-	/**
-	 * Estimate output.
-	 *
-	 * @param o Union
-	 * @return Double
-	 */
-	@Override
-	protected Double estimateOutput(Union o) {
-		Double result = 0.0;
-		for (RelationalOperator child: o.getChildren()) {
-			NaiveMetadata cMetadata = this.getMetadata(child);
-			cMetadata.setParent(o);
-			Double inputCard = this.getParentInputCardinality(o);
-			cMetadata.setInputCardinality(inputCard);
-			this.estimate(child);
-			result += cMetadata.getOutputCardinality();
-		}
-		result /= UNION_REDUCTION;
-		return result;
 	}
 }

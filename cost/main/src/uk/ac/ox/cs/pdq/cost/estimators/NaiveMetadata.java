@@ -1,6 +1,6 @@
 package uk.ac.ox.cs.pdq.cost.estimators;
 
-import uk.ac.ox.cs.pdq.algebra.RelationalOperator;
+import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.RelationalTermCardinalityMetadata;
 
 import com.google.common.base.Preconditions;
@@ -11,7 +11,7 @@ import com.google.common.base.Preconditions;
  *
  * @author Julien Leblay
  */
-public class NaiveMetadata implements RelationalTermCardinalityMetadata<RelationalOperator> {
+public class NaiveMetadata implements RelationalTermCardinalityMetadata {
 
 	/** The input card. */
 	private double inputCard = 0L;
@@ -20,7 +20,7 @@ public class NaiveMetadata implements RelationalTermCardinalityMetadata<Relation
 	private double outputCard = -1L;
 	
 	/** The parent. */
-	private RelationalOperator parent;
+	private RelationalTerm parent;
 
 	/**
 	 * Gets the parent.
@@ -29,7 +29,7 @@ public class NaiveMetadata implements RelationalTermCardinalityMetadata<Relation
 	 * @see uk.ac.ox.cs.pdq.cost.RelationalTermCardinalityMetadata#getParent()
 	 */
 	@Override
-	public RelationalOperator getParent() {
+	public RelationalTerm getParent() {
 		return this.parent;
 	}
 
@@ -40,7 +40,7 @@ public class NaiveMetadata implements RelationalTermCardinalityMetadata<Relation
 	 * @see uk.ac.ox.cs.pdq.cost.RelationalTermCardinalityMetadata#setParent(RelationalOperator)
 	 */
 	@Override
-	public void setParent(RelationalOperator o) {
+	public void setParent(RelationalTerm o) {
 		this.parent = o;
 	}
 

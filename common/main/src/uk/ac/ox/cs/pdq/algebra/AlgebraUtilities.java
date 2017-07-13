@@ -2,8 +2,10 @@ package uk.ac.ox.cs.pdq.algebra;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.junit.Assert;
 
@@ -70,5 +72,36 @@ public class AlgebraUtilities {
 		output.addAll(Arrays.asList(child.getOutputAttributes()));
 		output.removeAll(Arrays.asList(child.getInputAttributes()));
 		return output.toArray(new Attribute[output.size()]);
+	}
+	
+	/**
+	 * Gets the accesses.
+	 *
+	 * @param operator the operator
+	 * @return the access operators that are children of the input operator
+	 */
+	public static Set<AccessTerm> getAccesses(RelationalTerm operator) {
+		Set<AccessTerm> result = new LinkedHashSet<>();
+		if (operator instanceof AccessTerm) {
+			result.add(((AccessTerm) operator));
+			return result;
+		}
+		else if (operator instanceof JoinTerm) {
+			for (RelationalTerm child: ((JoinTerm)operator).getChildren()) 
+				result.addAll(getAccesses(child));
+			return result;
+		}
+		else if (operator instanceof DependentJoinTerm) {
+			for (RelationalTerm child: ((DependentJoinTerm)operator).getChildren()) 
+				result.addAll(getAccesses(child));
+			return result;
+		}
+		else if (operator instanceof SelectionTerm) {
+			result.addAll(getAccesses(((SelectionTerm)operator).getChildren()[0]));
+		}
+		else if (operator instanceof ProjectionTerm) {
+			result.addAll(getAccesses(((ProjectionTerm)operator).getChildren()[0]));
+		}
+		return result;
 	}
 }

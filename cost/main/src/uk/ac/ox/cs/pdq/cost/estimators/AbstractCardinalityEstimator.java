@@ -2,10 +2,14 @@ package uk.ac.ox.cs.pdq.cost.estimators;
 
 
 import uk.ac.ox.cs.pdq.algebra.AccessTerm;
+import uk.ac.ox.cs.pdq.algebra.CartesianProductTerm;
 import uk.ac.ox.cs.pdq.algebra.JoinTerm;
+import uk.ac.ox.cs.pdq.algebra.ProjectionTerm;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.algebra.SelectionTerm;
 import uk.ac.ox.cs.pdq.cost.RelationalTermCardinalityMetadata;
+
+import java.util.Map;
 
 import com.google.common.base.Preconditions;
 
@@ -20,6 +24,8 @@ import com.google.common.base.Preconditions;
  */
 public abstract class AbstractCardinalityEstimator implements CardinalityEstimator {
 
+	protected Map<RelationalTerm,RelationalTermCardinalityMetadata> cardinalityMetadata;
+	
 	/**
 	 * Clone.
 	 *
@@ -32,29 +38,28 @@ public abstract class AbstractCardinalityEstimator implements CardinalityEstimat
 	/**
 	 * Estimate if needed.
 	 *
-	 * @param logOp LogicalOperator
+	 * @param term LogicalOperator
 	 * @see uk.ac.ox.cs.pdq.cost.estimators.CardinalityEstimator#estimateIfNeeded(RelationalOperator)
 	 */
 	@Override
-	public void estimateIfNeeded(RelationalTerm logOp) {
-		RelationalTermCardinalityMetadata metadata = this.getMetadata(logOp);
+	public void estimateIfNeeded(RelationalTerm term) {
+		RelationalTermCardinalityMetadata metadata = this.getMetadata(term);
 		if (metadata.getOutputCardinality() < 0) {
-			this.estimate(logOp);
+			this.estimate(term);
 		}
 	}
 
 	/**
 	 * Estimate.
 	 *
-	 * @param logOp LogicalOperator
+	 * @param term LogicalOperator
 	 * @see uk.ac.ox.cs.pdq.cost.estimators.CardinalityEstimator#estimate(RelationalOperator)
 	 */
 	@Override
-	public void estimate(RelationalTerm logOp) {
-		synchronized (logOp) {
+	public void estimate(RelationalTerm term) {
+		synchronized (term) {
 			Double output = -1.0;
-
-			RelationalTermCardinalityMetadata metadata = this.getMetadata(logOp);
+			RelationalTermCardinalityMetadata metadata = this.getMetadata(term);
 			Double input = metadata.getInputCardinality();
 			RelationalTerm parent = metadata.getParent();
 			if (input < 0) {
@@ -62,79 +67,40 @@ public abstract class AbstractCardinalityEstimator implements CardinalityEstimat
 				if (parent != null) {
 					input = this.getMetadata(parent).getInputCardinality();
 				}
-				throw new IllegalStateException("Inconsistent input cardinality '" + input + "' for " + logOp);
+				throw new IllegalStateException("Inconsistent input cardinality '" + input + "' for " + term);
 			}
 
 			// For Scan, Access, Distinct, Union, Selection and Join
 			// The estimation is delegated to specialised estimators.
-			if (logOp instanceof JoinTerm) {
-				output = this.estimateOutput((JoinTerm) logOp);
+			if (term instanceof JoinTerm) {
+				output = this.estimateOutput((JoinTerm) term);
 			} 
-			else if (logOp instanceof AccessTerm) {
+			else if (term instanceof AccessTerm) {
 				Preconditions.checkState(input == 0, "Input cardinality for a Scan can only by 0");
-				output = this.estimateOutput((AccessTerm) logOp);
+				output = this.estimateOutput((AccessTerm) term);
 			} 
-//			else if (logOp instanceof Access) {
-//				Preconditions.checkState(input == 0, "Input cardinality for a non-dependent Access can only by 0");
-//				output = this.estimateOutput((Access) logOp);
-//			} 
-//			else if (logOp instanceof DependentAccess) {
-//				output = this.estimateOutput((DependentAccess) logOp);
-//			} 
-			else if (logOp instanceof SelectionTerm) {
-				output = this.estimateOutput((SelectionTerm) logOp);
+			else if (term instanceof SelectionTerm) {
+				output = this.estimateOutput((SelectionTerm) term);
 			} 
-//			else if (logOp instanceof Distinct) {
-//				output = this.estimateOutput((Distinct) logOp);
-//			} else if (logOp instanceof Union) {
-//				output = this.estimateOutput((Union) logOp);
-//			} 
-			else
-
-				// Cross Products: cardinality is the product of the children's cardinalities
-				if (logOp instanceof CrossProduct) {
-					output = 1.0;
-					for (RelationalOperator child: ((NaryOperator) logOp).getChildren()) {
-						RelationalTermCardinalityMetadata childMetadata = this.getMetadata(child);
-						childMetadata.setParent(logOp);
-						childMetadata.setInputCardinality(input);
-						this.estimateIfNeeded(child);
-						output *= childMetadata.getOutputCardinality();
-					}
-				} else
-
-					// StaticInput: the cardinality is given by the tuple in the operator
-					if (logOp instanceof StaticInput) {
-						output = (double) ((StaticInput) logOp).getTuples().size();
-					} else
-
-						// SubPlanAlias: the cardinality is given directly by the operator after computing if needed.
-						if (logOp instanceof SubPlanAlias) {
-							RelationalOperator alias = (((SubPlanAlias) logOp).getPlan()).getOperator();
-							RelationalTermCardinalityMetadata aliasMetadata = this.getMetadata(alias);
-							aliasMetadata.setInputCardinality(input);
-							this.estimateIfNeeded(alias);
-							input = aliasMetadata.getInputCardinality();
-							output = aliasMetadata.getOutputCardinality();
-						} else
-
-							// IsEmpty || Count: the cardinality is always 1.
-							if (logOp instanceof IsEmpty || logOp instanceof Count) {
-								output = 1.0;
-							} else
-
-								// Arbitrary unary operators: the cardinalities are unchanged from the child.
-								if (logOp instanceof UnaryOperator) {
-									RelationalOperator child = ((UnaryOperator) logOp).getChild();
-									RelationalTermCardinalityMetadata childMetadata = this.getMetadata(child);
-									childMetadata.setParent(logOp);
-									childMetadata.setInputCardinality(input);
-									this.estimateIfNeeded(child);
-									output = childMetadata.getOutputCardinality();
-								} else {
-									throw new IllegalStateException("Unsupported operator " + logOp.getClass().getSimpleName() + " for cardinality estimation.");
-								}
-
+			else if (term instanceof ProjectionTerm) {
+				RelationalTerm child = ((ProjectionTerm) term).getChildren()[0];
+				RelationalTermCardinalityMetadata childMetadata = this.getMetadata(child);
+				childMetadata.setParent(term);
+				childMetadata.setInputCardinality(input);
+				this.estimateIfNeeded(child);
+				output = childMetadata.getOutputCardinality();
+			} 
+			// Cross Products: cardinality is the product of the children's cardinalities
+			else if (term instanceof CartesianProductTerm) {
+				output = 1.0;
+				for (RelationalTerm child: term.getChildren()) {
+					RelationalTermCardinalityMetadata childMetadata = this.getMetadata(child);
+					childMetadata.setParent(term);
+					childMetadata.setInputCardinality(input);
+					this.estimateIfNeeded(child);
+					output *= childMetadata.getOutputCardinality();
+				}
+			} 
 			metadata.setInputCardinality(input);
 			metadata.setOutputCardinality(output);
 		}
@@ -157,9 +123,9 @@ public abstract class AbstractCardinalityEstimator implements CardinalityEstimat
 	 * @return M
 	 */
 	protected RelationalTermCardinalityMetadata getMetadata(RelationalTerm o) {
-		M result = (M) o.getMetadata();
+		RelationalTermCardinalityMetadata result = this.cardinalityMetadata.get(o);
 		if (result == null) {
-			o.setMetadata((result = this.initMetadata(o)));
+			this.cardinalityMetadata.put(o, this.initMetadata(o));
 		}
 		return result;
 	}
@@ -168,25 +134,9 @@ public abstract class AbstractCardinalityEstimator implements CardinalityEstimat
 	 * Estimate output.
 	 *
 	 * @param o the operator
-	 * @return the estimated output cardinality of a Scan operator
-	 */
-	protected abstract Double estimateOutput(Scan o);
-
-	/**
-	 * Estimate output.
-	 *
-	 * @param o the operator
 	 * @return the estimated output cardinality of a Access operator
 	 */
-	protected abstract Double estimateOutput(Access o);
-
-	/**
-	 * Estimate output.
-	 *
-	 * @param o the operator
-	 * @return the estimated output cardinality of a DependentAccess operator
-	 */
-	protected abstract Double estimateOutput(DependentAccess o);
+	protected abstract Double estimateOutput(AccessTerm o);
 
 	/**
 	 * Estimate output.
@@ -194,7 +144,7 @@ public abstract class AbstractCardinalityEstimator implements CardinalityEstimat
 	 * @param o the operator
 	 * @return the estimated output cardinality of a Join operator
 	 */
-	protected abstract Double estimateOutput(Join o);
+	protected abstract Double estimateOutput(JoinTerm o);
 
 	/**
 	 * Estimate output.
@@ -202,21 +152,5 @@ public abstract class AbstractCardinalityEstimator implements CardinalityEstimat
 	 * @param o the operator
 	 * @return the estimated output cardinality of a Selection operator
 	 */
-	protected abstract Double estimateOutput(Selection o);
-
-	/**
-	 * Estimate output.
-	 *
-	 * @param o the operator
-	 * @return the estimated output cardinality of a Distinct operator
-	 */
-	protected abstract Double estimateOutput(Distinct o);
-
-	/**
-	 * Estimate output.
-	 *
-	 * @param o the operator
-	 * @return the estimated output cardinality of a Union operator
-	 */
-	protected abstract Double estimateOutput(Union o);
+	protected abstract Double estimateOutput(SelectionTerm o);
 }

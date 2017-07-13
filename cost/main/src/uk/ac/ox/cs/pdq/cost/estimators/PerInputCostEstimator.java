@@ -7,11 +7,11 @@ import java.util.Collection;
 
 import org.apache.log4j.Logger;
 
+import uk.ac.ox.cs.pdq.algebra.AccessTerm;
+import uk.ac.ox.cs.pdq.algebra.AlgebraUtilities;
+import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.DoubleCost;
-import uk.ac.ox.cs.pdq.db.metadata.RelationMetadata;
 import uk.ac.ox.cs.pdq.logging.performance.StatisticsCollector;
-import uk.ac.ox.cs.pdq.plan.AccessOperator;
-import uk.ac.ox.cs.pdq.plan.Plan;
 
 import com.google.common.base.Preconditions;
 
@@ -24,13 +24,10 @@ import com.google.common.base.Preconditions;
  * @author Efthymia Tsamoura
  * @param <P> the generic type
  */
-public class PerInputCostEstimator<P extends Plan> implements SimpleCostEstimator<P>{
+public class PerInputCostEstimator implements SimpleCostEstimator{
 
 	/** The stats. */
 	protected final StatisticsCollector stats;
-	
-	/**  Logger. */
-	protected static Logger log = Logger.getLogger(PerInputCostEstimator.class);
 
 	/**
 	 * Default constructor.
@@ -56,34 +53,21 @@ public class PerInputCostEstimator<P extends Plan> implements SimpleCostEstimato
 	 * @see uk.ac.ox.cs.pdq.cost.estimators.SimpleCostEstimator#clone()
 	 */
 	@Override
-	public PerInputCostEstimator<P> clone() {
-		return (PerInputCostEstimator<P>) (this.stats == null ? new PerInputCostEstimator<>(null) : new PerInputCostEstimator<>(this.stats.clone()));
+	public PerInputCostEstimator clone() {
+		return (PerInputCostEstimator) (this.stats == null ? new PerInputCostEstimator(null) : new PerInputCostEstimator(this.stats.clone()));
 	}
 
 	/**
 	 * Cost.
 	 *
-	 * @param plan P
+	 * @param term P
 	 * @return DoubleCost
 	 * @see uk.ac.ox.cs.pdq.cost.estimators.CostEstimator#cost(P)
 	 */
 	@Override
-	public DoubleCost cost(P plan) {
-		DoubleCost result = this.cost(plan.getAccesses());
-		plan.setCost(result);
+	public DoubleCost cost(RelationalTerm term) {
+		DoubleCost result = this.cost(AlgebraUtilities.getAccesses(term));
 		return result;
-	}
-
-	/**
-	 * Estimate cost.
-	 *
-	 * @param plan P
-	 * @return Cost
-	 * @see uk.ac.ox.cs.pdq.cost.estimators.SimpleCostEstimator#estimateCost(P)
-	 */
-	@Override
-	public DoubleCost estimateCost(P plan) {
-		return this.cost(plan.getAccesses());
 	}
 
 	/**
@@ -94,10 +78,10 @@ public class PerInputCostEstimator<P extends Plan> implements SimpleCostEstimato
 	 * @see uk.ac.ox.cs.pdq.costs.SimpleCostEstimator#cost(Collection<AccessOperator>)
 	 */
 	@Override
-	public DoubleCost cost(Collection<AccessOperator> accesses) {
+	public DoubleCost cost(Collection<AccessTerm> accesses) {
 		if(this.stats != null){this.stats.start(COST_ESTIMATION_TIME);}
 		double totalCost = 0;
-		for (AccessOperator access: accesses) {
+		for (AccessTerm access: accesses) {
 			Preconditions.checkState(access.getAccessMethod() != null);
 			RelationMetadata metadata = access.getRelation().getMetadata();
 			totalCost += metadata.getPerInputTupleCost(access.getAccessMethod()).getValue().doubleValue();
