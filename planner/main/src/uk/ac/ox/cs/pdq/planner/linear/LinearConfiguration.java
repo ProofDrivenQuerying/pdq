@@ -3,7 +3,6 @@ package uk.ac.ox.cs.pdq.planner.linear;
 import java.util.Collection;
 import java.util.Set;
 
-import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.Candidate;
 import uk.ac.ox.cs.pdq.planner.reasoning.Configuration;
 
@@ -15,7 +14,7 @@ import uk.ac.ox.cs.pdq.planner.reasoning.Configuration;
  * @author Efthymia Tsamoura
  * @author Julien Leblay
  */
-public interface LinearConfiguration extends Configuration<LeftDeepPlan> {
+public interface LinearConfiguration extends Configuration {
 
 	/**
 	 * Gets the candidates.

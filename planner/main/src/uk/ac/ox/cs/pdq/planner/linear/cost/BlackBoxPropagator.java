@@ -8,7 +8,6 @@ import java.util.Set;
 import org.jgrapht.graph.DefaultEdge;
 
 import uk.ac.ox.cs.pdq.cost.estimators.BlackBoxCostEstimator;
-import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.BlackBoxNode;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.PlanTree;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode.NodeStatus;

@@ -14,7 +14,6 @@ import java.util.Set;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
@@ -38,7 +37,7 @@ import com.google.common.collect.Sets;
  *
  * @author Efthymia Tsamoura
  */
-public class LinearChaseConfiguration extends ChaseConfiguration<LeftDeepPlan> implements LinearConfiguration {
+public class LinearChaseConfiguration extends ChaseConfiguration implements LinearConfiguration {
 
 	/**  The parent linear configuration. */
 	private final LinearChaseConfiguration parent;
@@ -298,7 +297,7 @@ public class LinearChaseConfiguration extends ChaseConfiguration<LeftDeepPlan> i
 	 * @see uk.ac.ox.cs.pdq.planner.reasoning.Configuration#compareTo(uk.ac.ox.cs.pdq.planner.reasoning.Configuration)
 	 */
 	@Override
-	public int compareTo(Configuration<LeftDeepPlan> o) {
-		return this.getPlan().compareTo(o.getPlan());
+	public int compareTo(Configuration o) {
+		return this.getCost().compareTo(o.getCost());
 	} 
 }
