@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.cost;
+package uk.ac.ox.cs.pdq.cost.estimators;
 
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 

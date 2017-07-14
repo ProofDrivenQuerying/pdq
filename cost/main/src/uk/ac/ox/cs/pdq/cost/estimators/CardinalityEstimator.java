@@ -1,7 +1,6 @@
 package uk.ac.ox.cs.pdq.cost.estimators;
 
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
-import uk.ac.ox.cs.pdq.cost.RelationalTermCardinalityMetadata;
 
 // TODO: Auto-generated Javadoc
 /**

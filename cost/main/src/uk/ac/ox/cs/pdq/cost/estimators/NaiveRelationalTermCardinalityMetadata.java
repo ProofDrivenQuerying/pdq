@@ -1,7 +1,6 @@
 package uk.ac.ox.cs.pdq.cost.estimators;
 
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
-import uk.ac.ox.cs.pdq.cost.RelationalTermCardinalityMetadata;
 
 import com.google.common.base.Preconditions;
 
@@ -26,7 +25,7 @@ public class NaiveRelationalTermCardinalityMetadata implements RelationalTermCar
 	 * Gets the parent.
 	 *
 	 * @return LogicalOperator
-	 * @see uk.ac.ox.cs.pdq.cost.RelationalTermCardinalityMetadata#getParent()
+	 * @see uk.ac.ox.cs.pdq.cost.estimators.RelationalTermCardinalityMetadata#getParent()
 	 */
 	@Override
 	public RelationalTerm getParent() {
@@ -37,7 +36,7 @@ public class NaiveRelationalTermCardinalityMetadata implements RelationalTermCar
 	 * Sets the parent.
 	 *
 	 * @param o LogicalOperator
-	 * @see uk.ac.ox.cs.pdq.cost.RelationalTermCardinalityMetadata#setParent(RelationalOperator)
+	 * @see uk.ac.ox.cs.pdq.cost.estimators.RelationalTermCardinalityMetadata#setParent(RelationalOperator)
 	 */
 	@Override
 	public void setParent(RelationalTerm o) {
@@ -48,7 +47,7 @@ public class NaiveRelationalTermCardinalityMetadata implements RelationalTermCar
 	 * Gets the input cardinality.
 	 *
 	 * @return the last estimated input cardinality of the operator
-	 * @see uk.ac.ox.cs.pdq.cost.RelationalTermCardinalityMetadata#getInputCardinality()
+	 * @see uk.ac.ox.cs.pdq.cost.estimators.RelationalTermCardinalityMetadata#getInputCardinality()
 	 */
 	@Override
 	public final Double getInputCardinality() {
@@ -59,7 +58,7 @@ public class NaiveRelationalTermCardinalityMetadata implements RelationalTermCar
 	 * Gets the output cardinality.
 	 *
 	 * @return the last estimated output cardinality of the operator
-	 * @see uk.ac.ox.cs.pdq.cost.RelationalTermCardinalityMetadata#getOutputCardinality()
+	 * @see uk.ac.ox.cs.pdq.cost.estimators.RelationalTermCardinalityMetadata#getOutputCardinality()
 	 */
 	@Override
 	public final Double getOutputCardinality() {
@@ -70,7 +69,7 @@ public class NaiveRelationalTermCardinalityMetadata implements RelationalTermCar
 	 * Sets the input cardinality.
 	 *
 	 * @param l Double
-	 * @see uk.ac.ox.cs.pdq.cost.RelationalTermCardinalityMetadata#setInputCardinality(Double)
+	 * @see uk.ac.ox.cs.pdq.cost.estimators.RelationalTermCardinalityMetadata#setInputCardinality(Double)
 	 */
 	@Override
 	public final void setInputCardinality(Double l) {
@@ -82,7 +81,7 @@ public class NaiveRelationalTermCardinalityMetadata implements RelationalTermCar
 	 * Sets the output cardinality.
 	 *
 	 * @param l Double
-	 * @see uk.ac.ox.cs.pdq.cost.RelationalTermCardinalityMetadata#setOutputCardinality(Double)
+	 * @see uk.ac.ox.cs.pdq.cost.estimators.RelationalTermCardinalityMetadata#setOutputCardinality(Double)
 	 */
 	@Override
 	public final void setOutputCardinality(Double  l) {
