@@ -56,7 +56,7 @@ public class QueryBuilder implements Builder<ConjunctiveQuery> {
 				uniTerms.add(t);
 			}
 		}
-		return new Atom(p.getPredicate(), uniTerms);
+		return Atom.create(p.getPredicate(), uniTerms.toArray(new Term[uniTerms.size()]));
 	}
 
 	/**
@@ -105,13 +105,11 @@ public class QueryBuilder implements Builder<ConjunctiveQuery> {
 	 */
 	@Override
 	public ConjunctiveQuery build() {
-		if(this.body.size() == 1) {
-			return new ConjunctiveQuery(this.head, (Atom)this.body.get(0));
-		}
-		else {
-			return new ConjunctiveQuery(this.head, (Conjunction) Conjunction.of(this.body));
-		}
-		
+		if(this.body.size() == 1) 
+			return ConjunctiveQuery.create(this.head.toArray(new Variable[this.head.size()]), (Atom)this.body.get(0));
+		else 
+			return ConjunctiveQuery.create(this.head.toArray(new Variable[this.head.size()]), 
+					(Conjunction) Conjunction.of(this.body.toArray(new Atom[this.body.size()])));
 	}
 
 }

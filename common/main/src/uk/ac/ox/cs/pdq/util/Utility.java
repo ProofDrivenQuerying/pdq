@@ -22,6 +22,8 @@ import org.junit.Assert;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.DataType;
+import uk.ac.ox.cs.pdq.db.ForeignKey;
+import uk.ac.ox.cs.pdq.db.Reference;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
@@ -32,6 +34,7 @@ import uk.ac.ox.cs.pdq.fol.Disjunction;
 import uk.ac.ox.cs.pdq.fol.EGD;
 import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Implication;
+import uk.ac.ox.cs.pdq.fol.LinearGuarded;
 import uk.ac.ox.cs.pdq.fol.Negation;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.QuantifiedFormula;
@@ -798,6 +801,24 @@ public class Utility {
 	public static Attribute[] getAttributes(Atom fact) {
 		Assert.assertTrue(fact.getPredicate() instanceof Relation);
 		return ((Relation) fact.getPredicate()).getAttributes();
+	}
+	
+	/**
+	 * Creates a new foreign key object.
+	 *
+	 * @param dep LinearGuarded
+	 */
+	public static ForeignKey createForeignKey(LinearGuarded dep) {
+		ForeignKey foreignKey = new ForeignKey();
+		Atom left = dep.getBody().getAtoms()[0];
+		Atom right = dep.getHead().getAtoms()[0];
+		Relation leftRel = (Relation) left.getPredicate();
+		Relation rightRel = (Relation) right.getPredicate();
+		foreignKey.setForeignRelation(rightRel);
+		foreignKey.setForeignRelationName(rightRel.getName());
+		for (Variable v:CollectionUtils.intersection(left.getVariables(), right.getVariables())) {
+			foreignKey.addReference(new Reference(leftRel.getAttribute(left.getTerms().indexOf(v)), rightRel.getAttribute(right.getTerms().indexOf(v))));
+		}
 	}
 
 }

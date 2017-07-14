@@ -6,18 +6,12 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
-import java.util.Map.Entry;
-
-import org.apache.commons.collections4.CollectionUtils;
-
 import java.util.Set;
 
-import com.google.common.base.Preconditions;
+import org.junit.Assert;
 
-import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.ForeignKey;
-import uk.ac.ox.cs.pdq.db.Reference;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.View;
@@ -28,7 +22,7 @@ import uk.ac.ox.cs.pdq.fol.FormulaEquivalence;
 import uk.ac.ox.cs.pdq.fol.LinearGuarded;
 import uk.ac.ox.cs.pdq.fol.QuantifiedFormula;
 import uk.ac.ox.cs.pdq.fol.TGD;
-import uk.ac.ox.cs.pdq.fol.Variable;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 
 /**
@@ -67,18 +61,18 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	 * Add the given relation to the schema under construction iff no
 	 * relation other than TemporaryRelation under the name already exists.
 	 *
-	 * @param r the r
+	 * @param relation the r
 	 * @return this builder
 	 */
-	public SchemaBuilder addRelation(Relation r) {
-		Preconditions.checkArgument(r != null);
-		Relation existing = this.relations.get(r.getName());
+	public SchemaBuilder addRelation(Relation relation) {
+		Assert.assertNotNull(relation);
+		Relation existing = this.relations.get(relation.getName());
 		if (existing != null
 				&& !(existing instanceof SchemaBuilder.TemporaryRelation)
-				&& r instanceof SchemaBuilder.TemporaryRelation) {
+				&& relation instanceof SchemaBuilder.TemporaryRelation) {
 			throw new IllegalStateException();
 		}
-		this.relations.put(r.getName(), r);
+		this.relations.put(relation.getName(), relation);
 		return this;
 	}
 
@@ -297,36 +291,19 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	 */
 	private void ensureForeignKeyDefinition(Relation relation) {
 		for (ForeignKey fkey: relation.getForeignKeys()) {
-			LinearGuarded gd = new LinearGuarded(relation, fkey);
-			if (this.findFKDependency(gd) == null) {
-				this.addDependency(gd);
+			LinearGuarded dependency = new LinearGuarded(relation, fkey);
+			if (this.findFKDependency(dependency) == null) {
+				this.addDependency(dependency);
 			}
 		}
-		for (LinearGuarded gd: this.findFKDependency(relation)) {
-			ForeignKey fk = new ForeignKey(gd);
+		for (LinearGuarded dependency: this.findFKDependency(relation)) {
+			ForeignKey fk = Utility.createForeignKey(dependency);
 			if (!Arrays.asList(relation.getForeignKeys()).contains(fk)) {
 				relation.addForeignKey(fk);
 			}
 		}
 	}
 	
-//	/**
-//	 * Creates a new foreign key object.
-//	 *
-//	 * @param dep LinearGuarded
-//	 */
-//	public ForeignKey(LinearGuarded dep) {
-//		Atom left = dep.getBody().getAtoms().get(0);
-//		Atom right = dep.getHead().getAtoms().get(0);
-//		Relation leftRel = (Relation) left.getPredicate();
-//		Relation rightRel = (Relation) right.getPredicate();
-//		this.setForeignRelation(rightRel);
-//		this.setForeignRelationName(rightRel.getName());
-//		for (Variable v:CollectionUtils.intersection(left.getVariables(), right.getVariables())) {
-//			this.addReference(new Reference(leftRel.getAttribute(left.getTerms().indexOf(v)), rightRel.getAttribute(right.getTerms().indexOf(v))));
-//		}
-//	}
-
 	/**
 	 * Remove dependencies that refer to relation that are not part of the schema.
 	 */
@@ -375,11 +352,9 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	private LinearGuarded findViewDependency(View v) {
 		if (this.dependencies != null) {
 			for (Dependency dependency:this.dependencies.values()) {
-				if (dependency.getBody().getAtoms().size() == 1) {
-					if (dependency.getBody().getAtoms().get(0)
-							.getPredicate().getName().equals(v.getName())) {
+				if (dependency.getBody().getAtoms().length == 1) {
+					if (dependency.getBody().getAtoms()[0].getPredicate().getName().equals(v.getName())) 
 						return (LinearGuarded) dependency;
-					}
 				}
 			}
 		}
@@ -432,7 +407,7 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 		if (this.dependencies != null) {
 			for (Dependency dependency: this.dependencies.values()) {
 				if (dependency instanceof LinearGuarded
-						&& ((LinearGuarded) dependency).getHead().getAtoms().size() == 1
+						&& ((LinearGuarded) dependency).getHead().getAtoms().length == 1
 						&& ((LinearGuarded) dependency).getGuard().getPredicate().equals(r)) {
 					result.add((LinearGuarded) dependency);
 				}
