@@ -41,6 +41,9 @@ public class AccessMethod implements Serializable {
 	public Integer[] getInputs() {
 		return this.inputs.clone();
 	}
+	public int getNumberOfInputs() {
+		return this.inputs.length;
+	}
 
 	/**
 	 * Gets the zero based inputs.

@@ -1,20 +1,26 @@
 package uk.ac.ox.cs.pdq.cost.estimators;
 
-import static uk.ac.ox.cs.pdq.cost.CostStatKeys.COST_ESTIMATION_COUNT;
-import static uk.ac.ox.cs.pdq.cost.CostStatKeys.COST_ESTIMATION_TIME;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import uk.ac.ox.cs.pdq.algebra.Condition;
+import uk.ac.ox.cs.pdq.algebra.ConjunctiveCondition;
+import uk.ac.ox.cs.pdq.algebra.DependentJoinTerm;
+import uk.ac.ox.cs.pdq.algebra.JoinTerm;
+import uk.ac.ox.cs.pdq.algebra.ProjectionTerm;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
-import uk.ac.ox.cs.pdq.cost.Cost;
-
-/* import uk.ac.ox.cs.pdq.algebra.SubPlanAlias; */
-
-import uk.ac.ox.cs.pdq.cost.DoubleCost;
+import uk.ac.ox.cs.pdq.algebra.RenameTerm;
+import uk.ac.ox.cs.pdq.algebra.SelectionTerm;
+import uk.ac.ox.cs.pdq.algebra.SimpleCondition;
+/* import uk.ac.ox.cs.pdq.algebra.SubPlanAlias;
+ */
+import uk.ac.ox.cs.pdq.cost.statistics.Catalog;
+import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.fol.Term;
-import uk.ac.ox.cs.pdq.logging.performance.StatisticsCollector;
+import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
+
 import com.google.common.collect.Lists;
 
 
@@ -39,14 +45,7 @@ public class WhiteBoxCostEstimator implements BlackBoxCostEstimator {
 	/** The card estimator. */
 	protected final CardinalityEstimator cardEstimator;
 
-	/**
-	 * Default constructor.
-	 *
-	 * @param ce CardinalityEstimator
-	 */
-	public WhiteBoxCostEstimator(CardinalityEstimator ce) {
-		this(null, ce);
-	}
+	protected final Catalog catalog;
 
 	/**
 	 * Constructor.
@@ -54,19 +53,20 @@ public class WhiteBoxCostEstimator implements BlackBoxCostEstimator {
 	 * @param stats the stats
 	 * @param ce CardinalityEstimator
 	 */
-	public WhiteBoxCostEstimator(StatisticsCollector stats, CardinalityEstimator ce) {
+	public WhiteBoxCostEstimator(StatisticsCollector stats, CardinalityEstimator ce, Catalog catalog) {
 		this.stats = stats;
 		this.cardEstimator = ce;
+		this.catalog = catalog;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see java.lang.Object#clone()
-	 */
-	@Override
-	public WhiteBoxCostEstimator clone() {
-		return (WhiteBoxCostEstimator) (this.stats == null ? new WhiteBoxCostEstimator(null,  this.cardEstimator.clone()) : new WhiteBoxCostEstimator(this.stats.clone(),  this.cardEstimator.clone()));
-	}
+	//	/*
+	//	 * (non-Javadoc)
+	//	 * @see java.lang.Object#clone()
+	//	 */
+	//	@Override
+	//	public WhiteBoxCostEstimator clone() {
+	//		return (WhiteBoxCostEstimator) (this.stats == null ? new WhiteBoxCostEstimator(null,  this.cardEstimator.clone()) : new WhiteBoxCostEstimator<>(this.stats.clone(),  this.cardEstimator.clone()));
+	//	}
 
 	/**
 	 * Gets the cardinality estimator.
@@ -107,7 +107,7 @@ public class WhiteBoxCostEstimator implements BlackBoxCostEstimator {
 	 * @param logOp the log op
 	 * @return the cost of the given operator.
 	 */
-	public double recursiveCost(RelationalTerm logOp) {
+	public double recursiveCost(RelationalOperator logOp) {
 		return this.recursiveCost(logOp, Lists.<DAGPlan>newArrayList());
 	}
 
@@ -118,7 +118,7 @@ public class WhiteBoxCostEstimator implements BlackBoxCostEstimator {
 	 * @param descendants the descendants
 	 * @return the cost of the given operator.
 	 */
-	private double recursiveCost(RelationalTerm logOp, Collection<DAGPlan> descendants) {
+	private double recursiveCost(RelationalOperator logOp, Collection<DAGPlan> descendants) {
 		if (descendants != null) {
 			for (DAGPlan child: descendants) {
 				if (child.getOperator().equals(logOp)) {
@@ -135,19 +135,20 @@ public class WhiteBoxCostEstimator implements BlackBoxCostEstimator {
 		double card = Math.max(1.0, logOp.getMetadata().getOutputCardinality());
 		double localCost =
 				Math.max(0.0, card * perOutputTupleCost(logOp));
-		if (logOp instanceof SubPlanAlias) {
-			Plan subPlan = ((SubPlanAlias) logOp).getPlan();
-			Cost aliasCost = new DoubleCost(Double.POSITIVE_INFINITY);
-			if (subPlan != null) {
-				aliasCost = subPlan.getCost();
-				if (aliasCost == null || aliasCost.isUpperBound()) {
-					aliasCost = new DoubleCost(this.recursiveCost((RelationalOperator) subPlan.getOperator()));
-				}
-				subPlan.setCost(aliasCost);
-			}
-			return aliasCost.getValue().doubleValue();
-
-		} else if (logOp instanceof UnaryOperator) {
+//		if (logOp instanceof SubPlanAlias) {
+//			Plan subPlan = ((SubPlanAlias) logOp).getPlan();
+//			Cost aliasCost = new DoubleCost(Double.POSITIVE_INFINITY);
+//			if (subPlan != null) {
+//				aliasCost = subPlan.getCost();
+//				if (aliasCost == null || aliasCost.isUpperBound()) {
+//					aliasCost = new DoubleCost(this.recursiveCost((RelationalOperator) subPlan.getOperator()));
+//				}
+//				subPlan.setCost(aliasCost);
+//			}
+//			return aliasCost.getValue().doubleValue();
+//
+//		} else 
+		if (logOp instanceof UnaryOperator) {
 			RelationalOperator child = ((UnaryOperator) logOp).getChild();
 			if (logOp instanceof Access) {
 				if (child != null) {
@@ -191,40 +192,77 @@ public class WhiteBoxCostEstimator implements BlackBoxCostEstimator {
 	 * @param o the o
 	 * @return the per-output tuple I/O cost of the given operator.
 	 */
-	private static Double perOutputTupleCost(RelationalOperator o) {
-		if (o instanceof PredicateBasedOperator) {
-			Predicate predicate = ((PredicateBasedOperator) o).getPredicate();
-			if (predicate instanceof ConjunctivePredicate) {
-				return (double) ((ConjunctivePredicate) predicate).size();
-			}
-			return 1.0;
-		}
-		if (o instanceof Projection) {
-			Projection p = ((Projection) o);
-			RelationalOperator child = p.getChild();
-			List<Term> projected = p.getColumns();
-			Map<Integer, Term> renaming = p.getRenaming();
-			if (renaming != null && projected.equals(child.getColumns())) {
+	private static Double perOutputTupleCost(RelationalTerm o) {
+		if(o instanceof JoinTerm) {
+			Condition predicate = ((JoinTerm) o).getPredicate();
+			if (predicate instanceof SimpleCondition) 
 				return 1.0;
-			}
-			return (projected.size() / (double) child.getColumns().size());
-		}
-		if (o instanceof SubPlanAlias) {
-			Plan subPlan = ((SubPlanAlias) o).getPlan();
-			if (subPlan != null) {
-				return perOutputTupleCost((RelationalOperator) subPlan.getOperator());
-			}
-			return null;
-		}
-		if (o instanceof Count || o instanceof IsEmpty) {
+			else if (predicate instanceof ConjunctiveCondition) 
+				return (double) ((ConjunctiveCondition) predicate).getNumberOfConjuncts();
 			return 1.0;
 		}
-		if (o instanceof StaticInput) {
-			return 0.0;
+		else if(o instanceof DependentJoinTerm) {
+			Condition predicate = ((DependentJoinTerm) o).getPredicate();
+			if (predicate instanceof SimpleCondition) 
+				return 1.0;
+			else if (predicate instanceof ConjunctiveCondition) 
+				return (double) ((ConjunctiveCondition) predicate).getNumberOfConjuncts();
+			return 1.0;
 		}
-		return (double) o.getColumns().size();
+		else if(o instanceof SelectionTerm) {
+			Condition predicate = ((SelectionTerm) o).getPredicate();
+			if (predicate instanceof SimpleCondition) 
+				return 1.0;
+			else if (predicate instanceof ConjunctiveCondition) 
+				return (double) ((ConjunctiveCondition) predicate).getNumberOfConjuncts();
+			return 1.0;
+		}
+		else if (o instanceof ProjectionTerm) {
+			ProjectionTerm p = ((ProjectionTerm) o);
+			RelationalTerm child = p.getChildren()[0];
+			Attribute[] projected = p.getOutputAttributes();
+			if (projected.length == child.getOutputAttributes().length) 
+				return 1.0;
+			else 
+				return (projected.length / (double) child.getNumberOfOutputAttributes());
+		}
+		if (o instanceof RenameTerm) {
+			RenameTerm p = ((RenameTerm) o);
+			RelationalTerm child = p.getChildren()[0];
+			Attribute[] projected = p.getOutputAttributes();
+			if (projected.length == child.getOutputAttributes().length) 
+				return 1.0;
+			return (projected.length / (double) child.getNumberOfOutputAttributes());
+		}
+		//		if (o instanceof SubPlanAlias) {
+		//			Plan subPlan = ((SubPlanAlias) o).getPlan();
+		//			if (subPlan != null) {
+		//				return perOutputTupleCost((RelationalOperator) subPlan.getOperator());
+		//			}
+		//			return null;
+		//		}
+		//		if (o instanceof Count || o instanceof IsEmpty) {
+		//			return 1.0;
+		//		}
+		//		if (o instanceof StaticInput) {
+		//			return 0.0;
+		//		}
+		return (double) o.getNumberOfOutputAttributes();
 	}
-	
+
+	//	/* (non-Javadoc)
+	//	 * @see uk.ac.ox.cs.pdq.cost.estimators.CostEstimator#estimateCost(uk.ac.ox.cs.pdq.util.Costable)
+	//	 */
+	//	@Override
+	//	public Cost estimateCost(P plan) {
+	//		if(this.stats != null){this.stats.start(COST_ESTIMATION_TIME);}
+	//		DoubleCost result = new DoubleCost(this.recursiveCost(plan));
+	//		if(this.stats != null){this.stats.stop(COST_ESTIMATION_TIME);}
+	//		if(this.stats != null){this.stats.increase(COST_ESTIMATION_COUNT, 1);}
+	////		this.planIndex.update(plan);
+	//		return result;
+	//	}
+
 	/**
 	 * Cost.
 	 *
@@ -233,12 +271,12 @@ public class WhiteBoxCostEstimator implements BlackBoxCostEstimator {
 	 * @see uk.ac.ox.cs.pdq.cost.estimators.CostEstimator#cost(P)
 	 */
 	@Override
-	public Cost cost(RelationalTerm plan) {
+	public Cost cost(P plan) {
 		if(this.stats != null){this.stats.start(COST_ESTIMATION_TIME);}
 		DoubleCost result = new DoubleCost(this.recursiveCost(plan));
 		if(this.stats != null){this.stats.stop(COST_ESTIMATION_TIME);}
 		if(this.stats != null){this.stats.increase(COST_ESTIMATION_COUNT, 1);}
-//		this.planIndex.update(plan);
+		//		this.planIndex.update(plan);
 		return result;
 	}
 }

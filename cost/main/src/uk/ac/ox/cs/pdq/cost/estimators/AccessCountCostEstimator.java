@@ -1,7 +1,7 @@
 package uk.ac.ox.cs.pdq.cost.estimators;
 
-import static uk.ac.ox.cs.pdq.cost.CostStatKeys.COST_ESTIMATION_COUNT;
-import static uk.ac.ox.cs.pdq.cost.CostStatKeys.COST_ESTIMATION_TIME;
+import static uk.ac.ox.cs.pdq.cost.logging.CostStatKeys.COST_ESTIMATION_COUNT;
+import static uk.ac.ox.cs.pdq.cost.logging.CostStatKeys.COST_ESTIMATION_TIME;
 
 import java.util.Collection;
 
@@ -9,7 +9,7 @@ import uk.ac.ox.cs.pdq.algebra.AccessTerm;
 import uk.ac.ox.cs.pdq.algebra.AlgebraUtilities;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.DoubleCost;
-import uk.ac.ox.cs.pdq.logging.performance.StatisticsCollector;
+import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
 
 
 // TODO: Auto-generated Javadoc
@@ -23,14 +23,6 @@ public class AccessCountCostEstimator implements SimpleCostEstimator {
 
 	/** The stats. */
 	protected final StatisticsCollector stats;
-	
-	/**
-	 * Default constructor. By-passed any statistic collection.
-	 */
-	public AccessCountCostEstimator() {
-		this(null);
-	}
-
 
 	/**
 	 * Constructor.

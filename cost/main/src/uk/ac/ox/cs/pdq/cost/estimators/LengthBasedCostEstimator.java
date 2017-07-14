@@ -7,7 +7,7 @@ import uk.ac.ox.cs.pdq.algebra.AccessTerm;
 import uk.ac.ox.cs.pdq.algebra.AlgebraUtilities;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.DoubleCost;
-import uk.ac.ox.cs.pdq.logging.performance.StatisticsCollector;
+import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
 
 // TODO: Auto-generated Javadoc
 /**

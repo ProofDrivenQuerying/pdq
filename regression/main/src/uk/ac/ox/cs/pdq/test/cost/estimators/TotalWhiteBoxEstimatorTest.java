@@ -14,7 +14,7 @@ import uk.ac.ox.cs.pdq.cost.estimators.CardinalityEstimatorFactory;
 import uk.ac.ox.cs.pdq.cost.estimators.WhiteBoxCostEstimator;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
-import uk.ac.ox.cs.pdq.logging.performance.StatisticsCollector;
+import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
 import uk.ac.ox.cs.pdq.plan.DAGPlan;
 import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.plan.Plan;

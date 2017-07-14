@@ -1,19 +1,18 @@
 package uk.ac.ox.cs.pdq.cost.estimators;
 
-import static uk.ac.ox.cs.pdq.cost.CostStatKeys.COST_ESTIMATION_COUNT;
-import static uk.ac.ox.cs.pdq.cost.CostStatKeys.COST_ESTIMATION_TIME;
+import static uk.ac.ox.cs.pdq.cost.logging.CostStatKeys.COST_ESTIMATION_COUNT;
+import static uk.ac.ox.cs.pdq.cost.logging.CostStatKeys.COST_ESTIMATION_TIME;
 
 import java.util.Collection;
 
-import org.apache.log4j.Logger;
+import org.junit.Assert;
 
 import uk.ac.ox.cs.pdq.algebra.AccessTerm;
 import uk.ac.ox.cs.pdq.algebra.AlgebraUtilities;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.DoubleCost;
-import uk.ac.ox.cs.pdq.logging.performance.StatisticsCollector;
-
-import com.google.common.base.Preconditions;
+import uk.ac.ox.cs.pdq.cost.statistics.Catalog;
+import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -22,28 +21,23 @@ import com.google.common.base.Preconditions;
  * associated accesses
  *
  * @author Efthymia Tsamoura
- * @param <P> the generic type
  */
 public class PerInputCostEstimator implements SimpleCostEstimator{
 
 	/** The stats. */
 	protected final StatisticsCollector stats;
-
-	/**
-	 * Default constructor.
-	 */
-	public PerInputCostEstimator() {
-		this(null);
-	}
-
+	
+	/**  The database statistics. */
+	protected final Catalog catalog;
 
 	/**
 	 * Default constructor.
 	 *
 	 * @param stats StatisticsCollector
 	 */
-	public PerInputCostEstimator(StatisticsCollector stats) {
+	public PerInputCostEstimator(StatisticsCollector stats, Catalog catalog) {
 		this.stats = stats;
+		this.catalog = catalog;
 	}
 
 	/**
@@ -54,7 +48,7 @@ public class PerInputCostEstimator implements SimpleCostEstimator{
 	 */
 	@Override
 	public PerInputCostEstimator clone() {
-		return (PerInputCostEstimator) (this.stats == null ? new PerInputCostEstimator(null) : new PerInputCostEstimator(this.stats.clone()));
+		return (PerInputCostEstimator) (this.stats == null ? new PerInputCostEstimator(null, this.catalog.clone()) : new PerInputCostEstimator(this.stats.clone(), this.catalog.clone()));
 	}
 
 	/**
@@ -82,9 +76,8 @@ public class PerInputCostEstimator implements SimpleCostEstimator{
 		if(this.stats != null){this.stats.start(COST_ESTIMATION_TIME);}
 		double totalCost = 0;
 		for (AccessTerm access: accesses) {
-			Preconditions.checkState(access.getAccessMethod() != null);
-			RelationMetadata metadata = access.getRelation().getMetadata();
-			totalCost += metadata.getPerInputTupleCost(access.getAccessMethod()).getValue().doubleValue();
+			Assert.assertNotNull(access.getAccessMethod());
+			totalCost += this.catalog.getCost(access.getRelation(), access.getAccessMethod());
 		}
 		if(this.stats != null){this.stats.stop(COST_ESTIMATION_TIME);}
 		if(this.stats != null){this.stats.increase(COST_ESTIMATION_COUNT, 1);}

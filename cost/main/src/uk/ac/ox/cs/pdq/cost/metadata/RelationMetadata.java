@@ -1,10 +1,7 @@
 package uk.ac.ox.cs.pdq.cost.metadata;
 
 import java.util.List;
-import java.util.Map;
 
-import uk.ac.ox.cs.pdq.cost.Cost;
-import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.util.Tuple;
 
 // TODO: Auto-generated Javadoc
@@ -47,27 +44,27 @@ public interface RelationMetadata {
 	 */
 	Double getSelectivity(List<Integer> positions, Tuple tuple);
 
-	/**
-	 * Gets the per input tuple cost.
-	 *
-	 * @param accessMethod AccessMethod
-	 * @return the cardinality of the relation.
-	 */
-	Cost getPerInputTupleCost(AccessMethod accessMethod);
-
-	/**
-	 * Sets the per input tuple cost.
-	 *
-	 * @param accessMethod AccessMethod
-	 * @param c Cost
-	 */
-	void setPerInputTupleCost(AccessMethod accessMethod, Cost c);
-
-	/**
-	 * Sets the per input tuple costs.
-	 * TOCOMMENT: how different from previous
-	 *
-	 * @param costs Map<AccessMethod,Cost>
-	 */
-	void setPerInputTupleCosts(Map<AccessMethod, Cost> costs);
+//	/**
+//	 * Gets the per input tuple cost.
+//	 *
+//	 * @param accessMethod AccessMethod
+//	 * @return the cardinality of the relation.
+//	 */
+//	Cost getPerInputTupleCost(AccessMethod accessMethod);
+//
+//	/**
+//	 * Sets the per input tuple cost.
+//	 *
+//	 * @param accessMethod AccessMethod
+//	 * @param c Cost
+//	 */
+//	void setPerInputTupleCost(AccessMethod accessMethod, Cost c);
+//
+//	/**
+//	 * Sets the per input tuple costs.
+//	 * TOCOMMENT: how different from previous
+//	 *
+//	 * @param costs Map<AccessMethod,Cost>
+//	 */
+//	void setPerInputTupleCosts(Map<AccessMethod, Cost> costs);
 }

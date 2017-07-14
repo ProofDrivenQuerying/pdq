@@ -98,29 +98,29 @@ public class RelationalDynamicMetadata implements RelationMetadata {
 		return 0.0;
 	}
 
-	/**
-	 * Sets the per input tuple cost.
-	 *
-	 * @param accessMethod AccessMethod
-	 * @param c Cost
-	 * @see uk.ac.ox.cs.pdq.cost.metadata.RelationMetadata#setPerInputTupleCost(AccessMethod, Cost)
-	 */
-	@Override
-	public void setPerInputTupleCost(AccessMethod accessMethod, Cost c) {
-		this.perInputTupleCost.put(accessMethod, c);
-	}
-
-	/**
-	 * Sets the per input tuple costs.
-	 * TOCOMMENT: what is the difference from the previous?
-	 *
-	 * @param accessCosts Map<AccessMethod,Cost>
-	 * @see uk.ac.ox.cs.pdq.costs.statistics.RelationMetadata#setPerInputTupleCosts(Map<AccessMethod,Cost>)
-	 */
-	@Override
-	public void setPerInputTupleCosts(Map<AccessMethod, Cost> accessCosts) {
-		this.perInputTupleCost.putAll(accessCosts);
-	}
+//	/**
+//	 * Sets the per input tuple cost.
+//	 *
+//	 * @param accessMethod AccessMethod
+//	 * @param c Cost
+//	 * @see uk.ac.ox.cs.pdq.cost.metadata.RelationMetadata#setPerInputTupleCost(AccessMethod, Cost)
+//	 */
+//	@Override
+//	public void setPerInputTupleCost(AccessMethod accessMethod, Cost c) {
+//		this.perInputTupleCost.put(accessMethod, c);
+//	}
+//
+//	/**
+//	 * Sets the per input tuple costs.
+//	 * TOCOMMENT: what is the difference from the previous?
+//	 *
+//	 * @param accessCosts Map<AccessMethod,Cost>
+//	 * @see uk.ac.ox.cs.pdq.costs.statistics.RelationMetadata#setPerInputTupleCosts(Map<AccessMethod,Cost>)
+//	 */
+//	@Override
+//	public void setPerInputTupleCosts(Map<AccessMethod, Cost> accessCosts) {
+//		this.perInputTupleCost.putAll(accessCosts);
+//	}
 
 	/**
 	 * Sets the size.
@@ -133,15 +133,15 @@ public class RelationalDynamicMetadata implements RelationMetadata {
 		this.size = s;
 	}
 
-	/**
-	 * Gets the per input tuple cost.
-	 *
-	 * @param accessMethod AccessMethod
-	 * @return Cost
-	 * @see uk.ac.ox.cs.pdq.cost.metadata.RelationMetadata#getPerInputTupleCost(AccessMethod)
-	 */
-	@Override
-	public Cost getPerInputTupleCost(AccessMethod accessMethod) {
-		return this.perInputTupleCost.get(accessMethod);
-	}
+//	/**
+//	 * Gets the per input tuple cost.
+//	 *
+//	 * @param accessMethod AccessMethod
+//	 * @return Cost
+//	 * @see uk.ac.ox.cs.pdq.cost.metadata.RelationMetadata#getPerInputTupleCost(AccessMethod)
+//	 */
+//	@Override
+//	public Cost getPerInputTupleCost(AccessMethod accessMethod) {
+//		return this.perInputTupleCost.get(accessMethod);
+//	}
 }

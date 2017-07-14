@@ -1,8 +1,8 @@
 package uk.ac.ox.cs.pdq.reasoning.logging.performance;
 
-import uk.ac.ox.cs.pdq.logging.performance.StatKey;
-
 import com.google.common.base.CaseFormat;
+
+import uk.ac.ox.cs.pdq.logging.StatKey;
 
 
 // TODO: Auto-generated Javadoc

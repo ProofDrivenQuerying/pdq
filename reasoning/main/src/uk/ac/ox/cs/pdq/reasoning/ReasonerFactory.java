@@ -2,7 +2,7 @@ package uk.ac.ox.cs.pdq.reasoning;
 
 import org.apache.log4j.Logger;
 
-import uk.ac.ox.cs.pdq.logging.performance.StatisticsCollector;
+import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters.ReasoningTypes;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.KTerminationChaser;

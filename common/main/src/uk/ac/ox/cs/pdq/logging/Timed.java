@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.logging.performance;
+package uk.ac.ox.cs.pdq.logging;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

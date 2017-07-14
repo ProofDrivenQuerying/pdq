@@ -5,7 +5,7 @@ import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.LimitReachedException;
 import uk.ac.ox.cs.pdq.LimitReachedException.Reasons;
-import uk.ac.ox.cs.pdq.logging.performance.StatisticsCollector;
+import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
 import uk.ac.ox.cs.pdq.plan.Plan;
 
 import com.google.common.base.Preconditions;

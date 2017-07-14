@@ -1,7 +1,7 @@
 package uk.ac.ox.cs.pdq.planner.dag.cost;
 
-import static uk.ac.ox.cs.pdq.cost.CostStatKeys.COST_ESTIMATION_COUNT;
-import static uk.ac.ox.cs.pdq.cost.CostStatKeys.COST_ESTIMATION_TIME;
+import static uk.ac.ox.cs.pdq.cost.logging.CostStatKeys.COST_ESTIMATION_COUNT;
+import static uk.ac.ox.cs.pdq.cost.logging.CostStatKeys.COST_ESTIMATION_TIME;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -16,7 +16,7 @@ import uk.ac.ox.cs.pdq.cost.DoubleCost;
 import uk.ac.ox.cs.pdq.cost.CostParameters.BlackBoxQueryTypes;
 import uk.ac.ox.cs.pdq.cost.estimators.BlackBoxCostEstimator;
 import uk.ac.ox.cs.pdq.datasources.Cost;
-import uk.ac.ox.cs.pdq.logging.performance.StatisticsCollector;
+import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.dag.cost.sql.DAGConfigurationToSQLTranslator;
 

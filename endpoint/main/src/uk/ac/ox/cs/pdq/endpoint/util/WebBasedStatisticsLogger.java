@@ -7,7 +7,7 @@ import java.io.PrintStream;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.log4j.Logger;
 
-import uk.ac.ox.cs.pdq.logging.performance.ChainedStatistics;
+import uk.ac.ox.cs.pdq.logging.ChainedStatistics;
 
 // TODO: Auto-generated Javadoc
 /**

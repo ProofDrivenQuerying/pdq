@@ -7,7 +7,7 @@ import java.util.Set;
 import uk.ac.ox.cs.pdq.EventHandler;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Term;
-import uk.ac.ox.cs.pdq.logging.performance.StatisticsLogger;
+import uk.ac.ox.cs.pdq.logging.StatisticsLogger;
 
 import com.google.common.base.Preconditions;
 import com.google.common.eventbus.Subscribe;

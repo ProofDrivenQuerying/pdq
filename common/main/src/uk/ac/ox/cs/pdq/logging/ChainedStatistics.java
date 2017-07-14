@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.logging.performance;
+package uk.ac.ox.cs.pdq.logging;
 
 import java.io.PrintStream;
 import java.text.DateFormat;
@@ -7,8 +7,6 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
-import uk.ac.ox.cs.pdq.logging.ProgressLogger;
 
 /**
  * Statistics logger that works by appending logs from a sequence of delegate

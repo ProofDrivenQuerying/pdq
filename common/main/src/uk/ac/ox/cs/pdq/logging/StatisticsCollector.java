@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.logging.performance;
+package uk.ac.ox.cs.pdq.logging;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

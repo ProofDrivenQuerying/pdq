@@ -1,17 +1,16 @@
 package uk.ac.ox.cs.pdq.cost.estimators;
 
 
+import java.util.Map;
+
 import uk.ac.ox.cs.pdq.algebra.AccessTerm;
 import uk.ac.ox.cs.pdq.algebra.CartesianProductTerm;
+import uk.ac.ox.cs.pdq.algebra.DependentJoinTerm;
 import uk.ac.ox.cs.pdq.algebra.JoinTerm;
 import uk.ac.ox.cs.pdq.algebra.ProjectionTerm;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.algebra.SelectionTerm;
 import uk.ac.ox.cs.pdq.cost.RelationalTermCardinalityMetadata;
-
-import java.util.Map;
-
-import com.google.common.base.Preconditions;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -20,11 +19,10 @@ import com.google.common.base.Preconditions;
  * products and static operators).
  *
  * @author Julien Leblay
- * @param <M> the generic type
  */
 public abstract class AbstractCardinalityEstimator implements CardinalityEstimator {
 
-	protected Map<RelationalTerm,RelationalTermCardinalityMetadata> cardinalityMetadata;
+	private Map<RelationalTerm,RelationalTermCardinalityMetadata> cardinalityMetadata;
 	
 	/**
 	 * Clone.
@@ -76,7 +74,6 @@ public abstract class AbstractCardinalityEstimator implements CardinalityEstimat
 				output = this.estimateOutput((JoinTerm) term);
 			} 
 			else if (term instanceof AccessTerm) {
-				Preconditions.checkState(input == 0, "Input cardinality for a Scan can only by 0");
 				output = this.estimateOutput((AccessTerm) term);
 			} 
 			else if (term instanceof SelectionTerm) {
@@ -145,6 +142,14 @@ public abstract class AbstractCardinalityEstimator implements CardinalityEstimat
 	 * @return the estimated output cardinality of a Join operator
 	 */
 	protected abstract Double estimateOutput(JoinTerm o);
+	
+	/**
+	 * Estimate output.
+	 *
+	 * @param o the operator
+	 * @return the estimated output cardinality of a Join operator
+	 */
+	protected abstract Double estimateOutput(DependentJoinTerm o);
 
 	/**
 	 * Estimate output.

@@ -98,45 +98,45 @@ public class StaticMetadata implements RelationMetadata {
 		return 0.1;
 	}
 
-	/**
-	 * Gets the per input tuple cost.
-	 *
-	 * @param binding AccessMethod
-	 * @return Cost
-	 * @see uk.ac.ox.cs.pdq.cost.metadata.RelationMetadata#getPerInputTupleCost(AccessMethod)
-	 */
-	@Override
-	public Cost getPerInputTupleCost(AccessMethod binding) {
-		Cost result = this.perInputTupleCost.get(binding);
-		if (result == null) {
-			result = DoubleCost.UPPER_BOUND;
-		}
-		return result;
-	}
-
-	/**
-	 * Sets the per input tuple cost.
-	 *
-	 * @param binding AccessMethod
-	 * @param c Cost
-	 * @see uk.ac.ox.cs.pdq.cost.metadata.RelationMetadata#setPerInputTupleCost(AccessMethod, Cost)
-	 */
-	@Override
-	public void setPerInputTupleCost(AccessMethod binding, Cost c) {
-		this.perInputTupleCost.put(binding, c);
-	}
-
-	/**
-	 * Sets the per input tuple costs.
-	 * TOCOMMENT: difference from above?
-	 *
-	 * @param accessCosts Map<AccessMethod,Cost>
-	 * @see uk.ac.ox.cs.pdq.costs.statistics.RelationMetadata#setPerInputTupleCosts(Map<AccessMethod,Cost>)
-	 */
-	@Override
-	public void setPerInputTupleCosts(Map<AccessMethod, Cost> accessCosts) {
-		this.perInputTupleCost.putAll(accessCosts);
-	}
+//	/**
+//	 * Gets the per input tuple cost.
+//	 *
+//	 * @param binding AccessMethod
+//	 * @return Cost
+//	 * @see uk.ac.ox.cs.pdq.cost.metadata.RelationMetadata#getPerInputTupleCost(AccessMethod)
+//	 */
+//	@Override
+//	public Cost getPerInputTupleCost(AccessMethod binding) {
+//		Cost result = this.perInputTupleCost.get(binding);
+//		if (result == null) {
+//			result = DoubleCost.UPPER_BOUND;
+//		}
+//		return result;
+//	}
+//
+//	/**
+//	 * Sets the per input tuple cost.
+//	 *
+//	 * @param binding AccessMethod
+//	 * @param c Cost
+//	 * @see uk.ac.ox.cs.pdq.cost.metadata.RelationMetadata#setPerInputTupleCost(AccessMethod, Cost)
+//	 */
+//	@Override
+//	public void setPerInputTupleCost(AccessMethod binding, Cost c) {
+//		this.perInputTupleCost.put(binding, c);
+//	}
+//
+//	/**
+//	 * Sets the per input tuple costs.
+//	 * TOCOMMENT: difference from above?
+//	 *
+//	 * @param accessCosts Map<AccessMethod,Cost>
+//	 * @see uk.ac.ox.cs.pdq.costs.statistics.RelationMetadata#setPerInputTupleCosts(Map<AccessMethod,Cost>)
+//	 */
+//	@Override
+//	public void setPerInputTupleCosts(Map<AccessMethod, Cost> accessCosts) {
+//		this.perInputTupleCost.putAll(accessCosts);
+//	}
 
 	/**
 	 * Sets the size.

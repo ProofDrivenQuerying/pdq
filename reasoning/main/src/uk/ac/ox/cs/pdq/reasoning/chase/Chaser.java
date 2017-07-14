@@ -5,7 +5,7 @@ import java.util.Collection;
 import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.fol.Dependency;
-import uk.ac.ox.cs.pdq.logging.performance.StatisticsCollector;
+import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
 
 // TODO: Auto-generated Javadoc

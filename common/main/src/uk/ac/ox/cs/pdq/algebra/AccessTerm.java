@@ -75,6 +75,10 @@ public class AccessTerm extends RelationalTerm {
 	public AccessMethod getAccessMethod() {
 		return this.accessMethod;
 	}
+	
+	public Map<Integer, TypedConstant> getInputConstants() {
+		return new LinkedHashMap<>(this.inputConstants);
+	}
 
 	@Override
 	public String toString() {
