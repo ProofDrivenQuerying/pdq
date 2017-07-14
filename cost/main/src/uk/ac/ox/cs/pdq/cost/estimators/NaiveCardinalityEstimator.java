@@ -276,8 +276,6 @@ public class NaiveCardinalityEstimator implements CardinalityEstimator {
 		else if(o.getPredicate() instanceof ConjunctiveCondition) 
 			return Math.max(1L, (cMetadata.getOutputCardinality() / Math.pow(SELECTIVITY_REDUCTION, ((ConjunctiveCondition) o.getPredicate()).getNumberOfConjuncts())));
 		else 
-			throw new IllegalStateException("Unknown condition type");
-			
-		
+			throw new IllegalStateException("Unknown condition type");	
 	}
 }
