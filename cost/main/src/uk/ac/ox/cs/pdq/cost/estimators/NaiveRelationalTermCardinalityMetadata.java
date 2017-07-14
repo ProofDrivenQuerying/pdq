@@ -11,7 +11,7 @@ import com.google.common.base.Preconditions;
  *
  * @author Julien Leblay
  */
-public class NaiveMetadata implements RelationalTermCardinalityMetadata {
+public class NaiveRelationalTermCardinalityMetadata implements RelationalTermCardinalityMetadata {
 
 	/** The input card. */
 	private double inputCard = 0L;

@@ -15,6 +15,7 @@ import uk.ac.ox.cs.pdq.cost.estimators.NaiveCardinalityEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.PerInputCostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.TotalERSPICostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.WhiteBoxCostEstimator;
+import uk.ac.ox.cs.pdq.cost.statistics.Catalog;
 import uk.ac.ox.cs.pdq.cost.statistics.SimpleCatalog;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
@@ -69,28 +70,33 @@ public class CostEstimatorFactory {
 			Schema schema) {
 		Assert.assertNotNull("Cost type parameter is not defined.", costParams.getCostType());
 		CostEstimator result = null;
+		
+		Catalog catalog = null;
+		if(costParams.getCatalog() != null)
+			catalog = new SimpleCatalog(schema, costParams.getCatalog());
+		
 		switch (costParams.getCostType()) {
 		case BLACKBOX:
 			CardinalityEstimator card = null;
 			switch (costParams.getCardinalityEstimationType()) {
 			case NAIVE:
-				card = new NaiveCardinalityEstimator(schema);
+				card = new NaiveCardinalityEstimator(catalog);
 				break;
 			default:
 				throw new IllegalArgumentException("Cardinality estimation " + costParams.getCardinalityEstimationType() + "  not yet supported.");
 			}
-			result = new WhiteBoxCostEstimator(new StatisticsCollector(collectStats, eventBus), card);
+			result = new WhiteBoxCostEstimator(new StatisticsCollector(collectStats, eventBus), card, catalog);
 			break;
 		case BLACKBOX_DB:
 			throw new UnsupportedOperationException("BLACKBOX_DB cost estimator is not currently supported.");
 		case SIMPLE_ERSPI:
 			Assert.assertNotNull(costParams.getCatalog());
-			result = new TotalERSPICostEstimator(new StatisticsCollector(collectStats, eventBus), new SimpleCatalog(schema, costParams.getCatalog()));
+			result = new TotalERSPICostEstimator(new StatisticsCollector(collectStats, eventBus), catalog);
 			break;
 		case SIMPLE_CONSTANT:
 		case SIMPLE_GIVEN:
 			Assert.assertNotNull(costParams.getCatalog());
-			result =  new PerInputCostEstimator(new StatisticsCollector(collectStats, eventBus), new SimpleCatalog(schema, costParams.getCatalog()));
+			result =  new PerInputCostEstimator(new StatisticsCollector(collectStats, eventBus), catalog);
 			break;
 		case INVERSE_LENGTH:
 			result =  new LengthBasedCostEstimator(new StatisticsCollector(collectStats, eventBus));
