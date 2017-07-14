@@ -12,20 +12,6 @@ import uk.ac.ox.cs.pdq.util.Tuple;
  * @author Julien Leblay
  */
 public interface RelationMetadata {
-
-	/**
-	 * Gets the size.
-	 *
-	 * @return the cardinality of the relation.
-	 */
-	Long getSize();
-
-	/**
-	 * Sets the cardinality of the relation.
-	 * @param s Long
-	 */
-	void setSize(Long s);
-
 	/**
 	 * Gets the selectivity.
 	 *
@@ -43,7 +29,20 @@ public interface RelationMetadata {
 	 * @return the cardinality of the relation.
 	 */
 	Double getSelectivity(List<Integer> positions, Tuple tuple);
-
+	
+//
+//	/**
+//	 * Sets the cardinality of the relation.
+//	 * @param s Long
+//	 */
+//	void setSize(Long s);
+//	/**
+//	 * Gets the size.
+//	 *
+//	 * @return the cardinality of the relation.
+//	 */
+//	Long getSize();
+//
 //	/**
 //	 * Gets the per input tuple cost.
 //	 *

@@ -1,6 +1,7 @@
 package uk.ac.ox.cs.pdq.cost.estimators;
 
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
+import uk.ac.ox.cs.pdq.cost.RelationalTermCardinalityMetadata;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -25,6 +26,8 @@ public interface CardinalityEstimator extends Cloneable {
 	 * @param logOp the log op
 	 */
 	void estimateIfNeeded(RelationalTerm logOp);
+	
+	RelationalTermCardinalityMetadata getMetadata(RelationalTerm o);
 
 	/**
 	 * Clone.

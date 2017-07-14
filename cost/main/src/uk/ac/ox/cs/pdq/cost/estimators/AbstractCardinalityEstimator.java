@@ -102,6 +102,21 @@ public abstract class AbstractCardinalityEstimator implements CardinalityEstimat
 			metadata.setOutputCardinality(output);
 		}
 	}
+	
+	/**
+	 * Gets the metadata.
+	 *
+	 * @param o LogicalOperator
+	 * @return M
+	 */
+	@Override
+	public RelationalTermCardinalityMetadata getMetadata(RelationalTerm o) {
+		RelationalTermCardinalityMetadata result = this.cardinalityMetadata.get(o);
+		if (result == null) {
+			this.cardinalityMetadata.put(o, this.initMetadata(o));
+		}
+		return result;
+	}
 
 	/**
 	 * Inits the metadata.
@@ -112,20 +127,6 @@ public abstract class AbstractCardinalityEstimator implements CardinalityEstimat
 	 * already existed on the given operator.
 	 */
 	protected abstract RelationalTermCardinalityMetadata initMetadata(RelationalTerm o);
-
-	/**
-	 * Gets the metadata.
-	 *
-	 * @param o LogicalOperator
-	 * @return M
-	 */
-	protected RelationalTermCardinalityMetadata getMetadata(RelationalTerm o) {
-		RelationalTermCardinalityMetadata result = this.cardinalityMetadata.get(o);
-		if (result == null) {
-			this.cardinalityMetadata.put(o, this.initMetadata(o));
-		}
-		return result;
-	}
 
 	/**
 	 * Estimate output.

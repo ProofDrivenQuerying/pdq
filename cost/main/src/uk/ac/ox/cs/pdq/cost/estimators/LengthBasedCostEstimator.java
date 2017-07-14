@@ -1,5 +1,8 @@
 package uk.ac.ox.cs.pdq.cost.estimators;
 
+import static uk.ac.ox.cs.pdq.cost.logging.CostStatKeys.COST_ESTIMATION_COUNT;
+import static uk.ac.ox.cs.pdq.cost.logging.CostStatKeys.COST_ESTIMATION_TIME;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,12 +60,15 @@ public class LengthBasedCostEstimator implements BlackBoxCostEstimator {
 	 */
 	@Override
 	public DoubleCost cost(RelationalTerm term) {
+		if(this.stats != null){this.stats.start(COST_ESTIMATION_TIME);}
 		List<AccessTerm> accesses = new ArrayList<>();
 		for (AccessTerm access:AlgebraUtilities.getAccesses(term)) {
 			if (!accesses.contains(access)) 
 				accesses.add(access);
 		}
 		DoubleCost result = new DoubleCost(1.0 / accesses.size());
+		if(this.stats != null){this.stats.stop(COST_ESTIMATION_TIME);}
+		if(this.stats != null){this.stats.increase(COST_ESTIMATION_COUNT, 1);}
 		return result;
 	}
 }
