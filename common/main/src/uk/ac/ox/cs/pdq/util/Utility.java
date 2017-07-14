@@ -80,6 +80,27 @@ public class Utility {
 		}
 		return result;
 	}
+	
+	/**
+	 * Search.
+	 *
+	 * @param <T> the generic type
+	 * @param collection the collection
+	 * @param object the object
+	 * @return 		the positions where the input object appears in collection.
+	 * 		If object does not appear in source, then an empty list is returned
+	 */
+	public static <T> List<Integer> search(T[] collection, T object) {
+		List<Integer> result = new ArrayList<>();
+		int index = 0;
+		for (T obj : collection) {
+			if (obj.equals(object)) {
+				result.add(index);
+			}
+			index++;
+		}
+		return result;
+	}
 
 	/**
 	 * Removes the duplicates.
@@ -820,5 +841,7 @@ public class Utility {
 			foreignKey.addReference(new Reference(leftRel.getAttribute(left.getTerms().indexOf(v)), rightRel.getAttribute(right.getTerms().indexOf(v))));
 		}
 	}
+	
+	
 
 }

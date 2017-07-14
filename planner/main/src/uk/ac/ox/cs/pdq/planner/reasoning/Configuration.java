@@ -1,8 +1,8 @@
 package uk.ac.ox.cs.pdq.planner.reasoning;
 
-import uk.ac.ox.cs.pdq.cost.Costable;
+import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
+import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.plan.Plan;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -14,28 +14,32 @@ import uk.ac.ox.cs.pdq.plan.Plan;
  * @author Julien Leblay
  * @param <P> the generic type
  */
-public interface Configuration<P extends Plan> extends Costable, Cloneable, Comparable<Configuration<P>>{
+public interface Configuration extends Cloneable, Comparable<Configuration>{
 	
 	/**
 	 * Gets the plan.
 	 *
 	 * @return 		the plan of this configuration
 	 */
-	P getPlan();
+	RelationalTerm getPlan();
 	
 	/**
 	 * Sets the plan.
 	 *
 	 * @param plan the new plan
 	 */
-	void setPlan(P plan);
+	void setPlan(RelationalTerm plan);
+	
+	Cost getCost();
+	
+	void setCost(Cost cost);
 	
 	/**
 	 * Clone.
 	 *
 	 * @return the configuration
 	 */
-	Configuration<P> clone();
+	Configuration clone();
 	
 	/**
 	 * Checks if is successful.
@@ -51,5 +55,5 @@ public interface Configuration<P extends Plan> extends Costable, Cloneable, Comp
 	/* (non-Javadoc)
 	 * @see java.lang.Comparable#compareTo(java.lang.Object)
 	 */
-	int compareTo(Configuration<P> o);
+	int compareTo(Configuration o);
 }

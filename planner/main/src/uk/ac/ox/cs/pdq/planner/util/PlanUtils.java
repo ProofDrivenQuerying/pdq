@@ -7,8 +7,10 @@ import java.util.Set;
 
 import uk.ac.ox.cs.pdq.algebra.AttributeEqualityCondition;
 import uk.ac.ox.cs.pdq.algebra.Condition;
+import uk.ac.ox.cs.pdq.algebra.ConjunctiveCondition;
 import uk.ac.ox.cs.pdq.algebra.ConstantEqualityCondition;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
+import uk.ac.ox.cs.pdq.algebra.SimpleCondition;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
@@ -36,29 +38,27 @@ public class PlanUtils {
 	 * 		and equality to a constant when an exposed fact's term is mapped to a schema constant.
 	 * 		The returned list is null if there does not exist any select condition
 	 */
-	public static Condition createSelectPredicates(List<Term> terms) {
-		Set<Condition> result = new LinkedHashSet<>();
+	public static Condition createSelectPredicates(Term[] terms) {
+		Set<SimpleCondition> result = new LinkedHashSet<>();
 		Integer termIndex = 0;
 		for (Term term : terms) {
-
-			if (term instanceof TypedConstant) {
-				result.add(new ConstantEqualityCondition(
-						termIndex, (TypedConstant) term));
-			} else {
+			if (term instanceof TypedConstant) 
+				result.add(ConstantEqualityCondition.create(termIndex, (TypedConstant) term));
+			else {
 				List<Integer> appearances = Utility.search(terms, term);
 				if (appearances.size() > 1) {
 					for (int i = 0; i < appearances.size() - 1; ++i) {
 						Integer indexI = appearances.get(i);
 						for (int j = i + 1; j < appearances.size(); ++j) {
 							Integer indexJ = appearances.get(j);
-							result.add(new AttributeEqualityCondition(indexI, indexJ));
+							result.add(AttributeEqualityCondition.create(indexI, indexJ));
 						}
 					}
 				}
 			}
 			++termIndex;
 		}
-		return result.isEmpty() ? null : new ConjunctiveCondition(result);
+		return result.isEmpty() ? null : ConjunctiveCondition.create(result.toArray(new SimpleCondition[result.size()]));
 	}
 
 	/**
@@ -69,17 +69,17 @@ public class PlanUtils {
 	 * @return Projection
 	 */
 	public static ProjectionTerm createFinalProjection(ConjunctiveQuery query, RelationalTerm childOp) {
-//		List<Term> freeTerms = query.getHeadTerms();
+		//		List<Term> freeTerms = query.getHeadTerms();
 		List<Term> toProject = new ArrayList<>();
 		for (Variable term: query.getFreeVariables()) {
-//			if (term.isVariable()) {
-				Constant constant = query.getSubstitutionOfFreeVariablesToCanonicalConstants().get(term);
-				Preconditions.checkState(childOp.getColumns().contains(constant), constant + " not in " + childOp.getColumns() + "\nQuery: " + query + "\nCanonical Mapping: " + query.getSubstitutionOfFreeVariablesToCanonicalConstants() + "\nSubplan: " + childOp);
-				toProject.add(constant);
-//			} 
-//		else {
-//				toProject.add(term);
-//			}
+			//			if (term.isVariable()) {
+			Constant constant = query.getSubstitutionOfFreeVariablesToCanonicalConstants().get(term);
+			Preconditions.checkState(childOp.getColumns().contains(constant), constant + " not in " + childOp.getColumns() + "\nQuery: " + query + "\nCanonical Mapping: " + query.getSubstitutionOfFreeVariablesToCanonicalConstants() + "\nSubplan: " + childOp);
+			toProject.add(constant);
+			//			} 
+			//		else {
+			//				toProject.add(term);
+			//			}
 		}
 		if (!childOp.getInputTerms().isEmpty()) {
 			List<TypedConstant> constants = new ArrayList<>(childOp.getInputTerms().size());

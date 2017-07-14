@@ -334,7 +334,7 @@ public abstract class SQLStatementBuilder {
 			Relation leftRelation = null;
 			String leftAlias = null;
 			for (Atom fact:source) {
-				List<Integer> positions = fact.getTermPositions(term); //all the positions for the same term should be equated
+				List<Integer> positions = Utility.search(fact.getTerms(), term); //all the positions for the same term should be equated
 				for (Integer pos:positions) {
 					if(leftPosition == null) {
 						leftPosition = pos;

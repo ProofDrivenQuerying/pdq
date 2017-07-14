@@ -138,14 +138,14 @@ public class VeryShortDependencyWriter<T extends Dependency>
 			leftAttributes.keySet().retainAll(rightAttributes.keySet());
 			rightAttributes.keySet().retainAll(leftAttributes.keySet());
 
-			result.append(tgd.getBody().getAtoms().iterator().next().getPredicate().getName());
+			result.append(tgd.getBody().getAtoms()[0].getPredicate().getName());
 			String sep = "(";
 			for (Attribute a: leftAttributes.values()) {
 				result.append(sep).append(a.getName());
 				sep = ",";
 			}
 			result.append("): ");
-			result.append(tgd.getHead().getAtoms().iterator().next().getPredicate().getName());
+			result.append(tgd.getHead().getAtoms()[0].getPredicate().getName());
 			sep = "(";
 			for (Attribute a: rightAttributes.values()) {
 				result.append(sep).append(a.getName());

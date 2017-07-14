@@ -6,13 +6,14 @@ import java.util.List;
 import com.google.common.collect.Lists;
 
 import uk.ac.ox.cs.pdq.LimitReachedException;
+import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
+import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance.LimitTofacts;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Dependency;
-import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.reasoning.Configuration;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState;
@@ -40,13 +41,15 @@ import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
  * @param <P>
  * 		type of configuration plans. Plans depending on the type of proof configuration can be either DAG or sequential.
  */
-public abstract class ChaseConfiguration<P extends Plan> implements Configuration<P> {
+public abstract class ChaseConfiguration implements Configuration {
 
 	/** The configuration's chase state. Keeps the output facts of this configuration */
 	protected final AccessibleChaseState state;
 
 	/**  The plan that corresponds to this configuration. */
-	protected P plan;
+	protected RelationalTerm plan;
+	
+	protected Cost cost;
 
 	/**  Input constants. */
 	protected final Collection<Constant> input;
@@ -110,7 +113,7 @@ public abstract class ChaseConfiguration<P extends Plan> implements Configuratio
 	 * @see uk.ac.ox.cs.pdq.reasoning.Configuration#getPlan()
 	 */
 	@Override
-	public P getPlan() {
+	public RelationalTerm getPlan() {
 		return this.plan;
 	}
 
@@ -118,8 +121,18 @@ public abstract class ChaseConfiguration<P extends Plan> implements Configuratio
 	 * @see uk.ac.ox.cs.pdq.planner.reasoning.Configuration#setPlan(uk.ac.ox.cs.pdq.plan.Plan)
 	 */
 	@Override
-	public void setPlan(P plan) {
+	public void setPlan(RelationalTerm plan) {
 		this.plan = plan;
+	}
+	
+	@Override
+	public Cost getCost() {
+		return this.cost;
+	}
+	
+	@Override
+	public void setCost(Cost cost) {
+		this.cost = cost;
 	}
 
 	/**
@@ -236,6 +249,6 @@ public abstract class ChaseConfiguration<P extends Plan> implements Configuratio
 	 * @see uk.ac.ox.cs.pdq.reasoning.Configuration#clone()
 	 */
 	@Override
-	public abstract ChaseConfiguration<P> clone();
+	public abstract ChaseConfiguration clone();
 
 }

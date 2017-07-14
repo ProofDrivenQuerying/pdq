@@ -3,7 +3,6 @@ package uk.ac.ox.cs.pdq.planner.dag;
 import java.util.Collection;
 import java.util.List;
 
-import uk.ac.ox.cs.pdq.plan.DAGPlan;
 import uk.ac.ox.cs.pdq.planner.reasoning.Configuration;
 
 
@@ -15,7 +14,7 @@ import uk.ac.ox.cs.pdq.planner.reasoning.Configuration;
  * @author Efthymia Tsamoura
  *
  */
-public interface DAGConfiguration extends Configuration<DAGPlan> {
+public interface DAGConfiguration extends Configuration {
 	
 	/**
 	 * Gets the height.

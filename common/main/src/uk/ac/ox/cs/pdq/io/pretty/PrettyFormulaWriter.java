@@ -66,7 +66,7 @@ public class PrettyFormulaWriter extends PrettyWriter<Formula> implements Writer
 	@Override
 	public void write(PrintStream out, Formula formula) {
 		if (formula instanceof Disjunction || formula instanceof Conjunction || formula instanceof Implication) {
-			this.write(out, formula.getChildren().get(0));
+			this.write(out, formula.getChildren()[0]);
 			if(formula instanceof Disjunction) {
 				out.print((this.indented ? "\n\t" : " ") + LogicalSymbols.OR + ' ');
 			}
@@ -76,12 +76,12 @@ public class PrettyFormulaWriter extends PrettyWriter<Formula> implements Writer
 			else if(formula instanceof Implication) {
 				out.print((this.indented ? "\n\t" : " ") + LogicalSymbols.IMPLIES + ' ');
 			}
-			this.write(out, formula.getChildren().get(1));
+			this.write(out, formula.getChildren()[1]);
 			return;
 		}
 		if (formula instanceof Negation) {
 			out.print((this.indented ? "\n\t" : " ") + LogicalSymbols.NEGATION + ' ');
-			this.write(out, formula.getChildren().get(0));
+			this.write(out, formula.getChildren()[0]);
 			return;
 		}
 		if (formula instanceof Atom) {

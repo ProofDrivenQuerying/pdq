@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.Objects;
 
 import uk.ac.ox.cs.pdq.fol.Constant;
-import uk.ac.ox.cs.pdq.plan.DAGPlan;
 import uk.ac.ox.cs.pdq.planner.reasoning.Configuration;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
@@ -24,7 +23,7 @@ import com.google.common.base.Preconditions;
  * @author Efthymia Tsamoura
  *
  */
-public abstract class DAGChaseConfiguration extends ChaseConfiguration<DAGPlan> implements DAGConfiguration {
+public abstract class DAGChaseConfiguration extends ChaseConfiguration implements DAGConfiguration {
 
 	/** The id. */
 	private final Integer id;
@@ -125,7 +124,7 @@ public abstract class DAGChaseConfiguration extends ChaseConfiguration<DAGPlan> 
 	 */
 	@Override
 	public int compareTo(Configuration o) {
-		return this.getPlan().compareTo(o.getPlan());
+		return this.getCost().compareTo(o.getCost());
 	}
 
 	/* (non-Javadoc)

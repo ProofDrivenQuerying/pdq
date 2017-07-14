@@ -6,19 +6,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import uk.ac.ox.cs.pdq.algebra.DependentAccess;
-import uk.ac.ox.cs.pdq.algebra.DependentJoin;
-import uk.ac.ox.cs.pdq.algebra.Join;
-import uk.ac.ox.cs.pdq.algebra.Projection;
-import uk.ac.ox.cs.pdq.algebra.RelationalOperator;
-import uk.ac.ox.cs.pdq.algebra.Selection;
+import uk.ac.ox.cs.pdq.algebra.AccessTerm;
+import uk.ac.ox.cs.pdq.algebra.Condition;
+import uk.ac.ox.cs.pdq.algebra.DependentJoinTerm;
+import uk.ac.ox.cs.pdq.algebra.JoinTerm;
+import uk.ac.ox.cs.pdq.algebra.ProjectionTerm;
+import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
+import uk.ac.ox.cs.pdq.algebra.SelectionTerm;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Term;
-import uk.ac.ox.cs.pdq.plan.DAGPlan;
-import uk.ac.ox.cs.pdq.plan.TreePlan;
 import uk.ac.ox.cs.pdq.planner.dag.BinaryConfiguration.BinaryConfigurationTypes;
 import uk.ac.ox.cs.pdq.planner.util.PlanUtils;
 
@@ -49,15 +48,15 @@ public class DAGPlanGenerator {
 		return toDAGPlan(inputs, left, right, type);
 	}
 
-	/**
-	 * Creates a top-down physical plan from a DAG plan.
-	 *
-	 * @param config BinaryConfiguration<S>
-	 * @return a relational expression equivalent to the given linear plan
-	 */
-	public static DAGPlan toDAGPlan(BinaryConfiguration config) {
-		return toDAGPlan(config, config.getInput(), config.getLeft(), config.getRight(), config.getType());
-	}
+//	/**
+//	 * Creates a top-down physical plan from a DAG plan.
+//	 *
+//	 * @param config BinaryConfiguration<S>
+//	 * @return a relational expression equivalent to the given linear plan
+//	 */
+//	public static DAGPlan toDAGPlan(BinaryConfiguration config) {
+//		return toDAGPlan(config, config.getInput(), config.getLeft(), config.getRight(), config.getType());
+//	}
 
 	/**
 	 * Creates a top-down physical plan from a DAG plan.
@@ -82,32 +81,30 @@ public class DAGPlanGenerator {
 	 * @param type BinaryConfigurationTypes
 	 * @return a relational expression equivalent to the given linear plan
 	 */
-	private static DAGPlan toDAGPlan(DAGChaseConfiguration config, Collection<? extends Term> inputs, DAGChaseConfiguration left, DAGChaseConfiguration right, BinaryConfigurationTypes type) {
-		RelationalOperator lOp = left.getPlan().getOperator();
-		RelationalOperator rOp = right.getPlan().getOperator();
-		RelationalOperator operator = null;
+	private static RelationalTerm toDAGPlan(DAGChaseConfiguration config, Collection<? extends Term> inputs, DAGChaseConfiguration left, DAGChaseConfiguration right, BinaryConfigurationTypes type) {
+		RelationalTerm lOp = left.getPlan();
+		RelationalTerm rOp = right.getPlan();
+		RelationalTerm operator = null;
 
 		switch(type) {
 		case PCOMPOSE:
-			operator = new DependentJoin(lOp, rOp);
+			operator = new DependentJoinTerm(lOp, rOp);
 			break;
 		case MERGE:
-			operator = new Join(lOp, rOp);
+			operator = new JoinTerm(lOp, rOp);
 			break;
 		case JCOMPOSE:
-			operator = new DependentJoin(lOp, rOp);
+			operator = new DependentJoinTerm(lOp, rOp);
 			break;
 		case GENCOMPOSE:
-			operator = new DependentJoin(lOp, rOp);
+			operator = new DependentJoinTerm(lOp, rOp);
 			break;
 		default:
 			throw new java.lang.IllegalArgumentException();
 		}
-
-		TreePlan plan = new TreePlan(inputs, operator);
-		plan.addChild(left.getPlan());
+		
 		plan.addChild(right.getPlan());
-		return plan;
+		return operator;
 	}
 
 	/**
@@ -116,7 +113,7 @@ public class DAGPlanGenerator {
 	 * @param config DAGConfiguration<S>
 	 * @return a relational expression equivalent to the given linear plan
 	 */
-	public static DAGPlan toDAGPlan(DAGChaseConfiguration config) {
+	public static RelationalTerm toDAGPlan(DAGChaseConfiguration config) {
 		if (config instanceof ApplyRule) {
 			return toDAGPlan((ApplyRule) config);
 		} else if (config instanceof BinaryConfiguration) {
@@ -131,7 +128,7 @@ public class DAGPlanGenerator {
 	 * @param config ApplyRule
 	 * @return a relational expression equivalent to the given linear plan
 	 */
-	private static DAGPlan toDAGPlan(ApplyRule config) {
+	private static RelationalTerm toDAGPlan(ApplyRule config) {
 		Relation relation = config.getRelation();
 		AccessMethod binding = config.getBindingPositions();
 		Collection<Atom> facts = config.getFacts();
@@ -139,27 +136,26 @@ public class DAGPlanGenerator {
 			//planRelation is a copy of the relation without the extra attribute in the schema, needed for chasing
 			Relation planRelation = new Relation(relation.getName(), relation.getAttributes().subList(0, relation.getAttributes().size()-1)){};
 			planRelation.setMetadata(relation.getMetadata());
-			return new DAGPlan(new DependentAccess(planRelation, binding));
+			return AccessTerm.create(planRelation, binding);
 		}
-		RelationalOperator op = null;
+		RelationalTerm op = null;
 		for (Atom fact: facts) {
 			//planRelation is a copy of the relation without the extra attribute in the schema, needed for chasing
 			Relation planRelation = new Relation(relation.getName(), relation.getAttributes().subList(0, relation.getAttributes().size()-1)){};
 			planRelation.setMetadata(relation.getMetadata());
 			planRelation.setAccessMethods(relation.getAccessMethods());
-			RelationalOperator access = new DependentAccess(planRelation, binding, fact.getTerms());
-			uk.ac.ox.cs.pdq.algebra.predicates.Predicate selectPredicates = PlanUtils.createSelectPredicates(fact.getTerms());
-			if (selectPredicates != null) {
-				access = new Selection(selectPredicates, access);
-			}
-			access = new Projection(access, renameAllVariables(access.getColumns(), fact.getTerms()));
+			RelationalTerm access = AccessTerm.create(planRelation, binding);//, fact.getTerms()
+			Condition selectPredicates = PlanUtils.createSelectPredicates(fact.getTerms());
+			if (selectPredicates != null) 
+				access = SelectionTerm.create(selectPredicates, access);
+			access = ProjectionTerm.create(access, renameAllVariables(access.getColumns(), fact.getTerms()));
 			if (op == null) {
 				op = access;
 			} else {
-				op = new Join(op, access);
+				op = new JoinTerm(op, access);
 			}
 		}
-		return new DAGPlan(config.getInput(), op);
+		return op;
 	}
 
 	/**
