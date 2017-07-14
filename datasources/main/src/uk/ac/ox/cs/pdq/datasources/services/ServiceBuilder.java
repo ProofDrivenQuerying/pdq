@@ -8,6 +8,8 @@ import java.util.Map;
 
 import javax.ws.rs.core.MediaType;
 
+import org.junit.Assert;
+
 import uk.ac.ox.cs.pdq.builder.Builder;
 import uk.ac.ox.cs.pdq.datasources.services.policies.UsagePolicy;
 import uk.ac.ox.cs.pdq.datasources.services.rest.InputMethod;
@@ -20,9 +22,9 @@ import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.PrimaryKey;
 import uk.ac.ox.cs.pdq.db.Relation;
 
-import com.google.common.base.Preconditions;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
+
 
 // TODO: Auto-generated Javadoc
 /**
@@ -176,8 +178,8 @@ public class ServiceBuilder implements Builder<Service> {
 	 * @return ServiceBuilder
 	 */
 	public ServiceBuilder addStaticInput(Attribute a, Object defaultValue, InputMethod m, String... additionalParams) {
-		Preconditions.checkArgument(a != null);
-		Preconditions.checkArgument(m != null);
+		Assert.assertNotNull(a);
+		Assert.assertNotNull(m);
 		this.attributes.add(a);
 		this.staticInputs.put(a, m);
 		this.staticvalues.put(a, defaultValue);
@@ -223,7 +225,7 @@ public class ServiceBuilder implements Builder<Service> {
 	 * @return ServiceBuilder
 	 */
 	public ServiceBuilder addAttribute(Attribute a, OutputMethod om, InputMethod im, String... additionalParams) {
-		Preconditions.checkArgument(a != null);
+		Assert.assertNotNull(a);
 		this.attributes.add(a);
 		this.nonStaticAttributes.add(a);
 		this.outputMethods.put(a, om);
@@ -288,7 +290,7 @@ public class ServiceBuilder implements Builder<Service> {
 	 */
 	@Override
 	public Service build() {
-		Preconditions.checkArgument(this.protocol != null);
+		Assert.assertNotNull(this.protocol);
 		switch (this.protocol.toLowerCase()) {
 		case "rest":
 			List<RESTAttribute> allAttributes = new ArrayList<>();
@@ -311,8 +313,11 @@ public class ServiceBuilder implements Builder<Service> {
 				}
 				allAttributes.add(r);
 			}
-			Relation result = new RESTRelation(this.name, nonStaticInputs, this.accessMethods,
-					allAttributes, this.url, this.mediaType, this.resultDelimiter, this.policies);
+			Relation result = new RESTRelation(this.name, 
+					nonStaticInputs.toArray(new RESTAttribute[nonStaticInputs.size()]),
+					this.accessMethods.toArray(new AccessMethod[this.accessMethods.size()]),
+					allAttributes.toArray(new RESTAttribute[allAttributes.size()]),
+					this.url, this.mediaType, this.resultDelimiter, this.policies);
 			result.setKey(this.primaryKey);
 			return (Service) result;
 		default:

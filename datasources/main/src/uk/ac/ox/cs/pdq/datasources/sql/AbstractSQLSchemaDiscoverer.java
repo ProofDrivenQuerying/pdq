@@ -161,8 +161,7 @@ public abstract class AbstractSQLSchemaDiscoverer implements SchemaDiscoverer {
 	 * @param attributes the attributes
 	 * @return an database-specific instance of Relation
 	 */
-	protected abstract Relation getRelationInstance(Properties p,
-			String relationName, List<Attribute> attributes);
+	protected abstract Relation getRelationInstance(Properties p, String relationName, Attribute[] attributes);
 	
 	/**
 	 * Gets the view instance.
@@ -192,7 +191,7 @@ public abstract class AbstractSQLSchemaDiscoverer implements SchemaDiscoverer {
 				Class<?> cl = Class.forName(rsmd.getColumnClassName(i + 1));
 				attributes.add(Attribute.create(cl, rsmd.getColumnName(i + 1)));
 			}
-			Relation result = this.getRelationInstance(this.properties, relationName, attributes);
+			Relation result = this.getRelationInstance(this.properties, relationName, attributes.toArray(new Attribute[attributes.size()]));
 			return result;
 		} catch (ClassNotFoundException | SQLException e) {
 			log.error(e);

@@ -50,8 +50,7 @@ public interface Service {
 	 * @param inputTuples the input tuples
 	 * @return the output table resulting from the access.
 	 */
-	Table access(List<? extends Attribute> inputHeader,
-			ResetableIterator<Tuple> inputTuples);
+	Table access(List<? extends Attribute> inputHeader, ResetableIterator<Tuple> inputTuples);
 
 	/**
 	 * Registers a usage policy.

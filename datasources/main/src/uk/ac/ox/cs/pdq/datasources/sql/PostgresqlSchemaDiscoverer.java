@@ -14,28 +14,26 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.log4j.Logger;
-
-import uk.ac.ox.cs.pdq.builder.BuilderException;
-import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.db.Relation;
-import uk.ac.ox.cs.pdq.db.TypedConstant;
-import uk.ac.ox.cs.pdq.db.View;
-import uk.ac.ox.cs.pdq.fol.Conjunction;
-import uk.ac.ox.cs.pdq.fol.LinearGuarded;
-import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Formula;
-import uk.ac.ox.cs.pdq.fol.Term;
-import uk.ac.ox.cs.pdq.fol.UntypedConstant;
-import uk.ac.ox.cs.pdq.fol.Variable;
-import uk.ac.ox.cs.pdq.util.Triple;
-import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.Lists;
+
+import uk.ac.ox.cs.pdq.builder.BuilderException;
+import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.db.Relation;
+import uk.ac.ox.cs.pdq.db.TypedConstant;
+import uk.ac.ox.cs.pdq.db.View;
+import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.Conjunction;
+import uk.ac.ox.cs.pdq.fol.Formula;
+import uk.ac.ox.cs.pdq.fol.LinearGuarded;
+import uk.ac.ox.cs.pdq.fol.Term;
+import uk.ac.ox.cs.pdq.fol.UntypedConstant;
+import uk.ac.ox.cs.pdq.util.Triple;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -45,9 +43,6 @@ import com.google.common.collect.Lists;
  *
  */
 public class PostgresqlSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
-
-	/**  The logger. */
-	public static Logger log = Logger.getLogger(PostgresqlSchemaDiscoverer.class);
 
 	/*
 	 * (non-Javadoc)
@@ -102,8 +97,7 @@ public class PostgresqlSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 	 * @see uk.ac.ox.cs.pdq.builder.discovery.sql.AbstractSQLSchemaDiscoverer#getRelationInstance(java.util.Properties, java.lang.String, java.util.List)
 	 */
 	@Override
-	protected Relation getRelationInstance(Properties properties,
-			String relationName, List<Attribute> attributes) {
+	protected Relation getRelationInstance(Properties properties, String relationName, Attribute[] attributes) {
 		return new PostgresqlRelationWrapper(properties, relationName, attributes);
 	}
 
@@ -171,6 +165,7 @@ public class PostgresqlSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 	 * @return the corresponding linear guarded dependency representation of the
 	 * given SQL view definition.
 	 */
+	@SuppressWarnings("serial")
 	public LinearGuarded parseViewDefinition(String viewName, String viewDef, Map<String, Relation> relationMap) {
 		Preconditions.checkArgument(viewDef != null && !viewDef.isEmpty());
 		String crFreeViewDef = viewDef.replace("\n", " ");
@@ -189,16 +184,11 @@ public class PostgresqlSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 		BiMap<String, Atom> atoms = this.makePredicate(from, relationMap);
 		this.makeJoins(where, atoms);
 		Pair<List<Term>, List<Attribute>> freeTermsAndAttributes = this.makeFreeTerms(select, atoms);
-		List<Formula> right = Lists.newArrayList();
-		right.addAll(atoms.values());
-		List<Variable> boundTerms = new ArrayList<>(Utility.getVariables(right));
-		boundTerms.removeAll(freeTermsAndAttributes.getLeft());
-		return new LinearGuarded(
-				//this.toVariable(freeTermsAndAttributes.getLeft()),
-				new Atom(
-						new Relation(viewName, freeTermsAndAttributes.getRight()) {},
-						freeTermsAndAttributes.getLeft()), 
-				//boundTerms,
+		List<Term> freeTerms = freeTermsAndAttributes.getLeft();
+		List<Attribute> attributes = freeTermsAndAttributes.getRight();
+		Formula[] right = atoms.values().toArray(new Formula[atoms.values().size()]);
+		return LinearGuarded.create(
+				Atom.create(new Relation(viewName, attributes.toArray(new Attribute[attributes.size()])) {}, freeTerms.toArray(new Term[freeTerms.size()])), 
 				Conjunction.of(right));
 	}
 	
@@ -215,7 +205,7 @@ public class PostgresqlSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 		for (String token: fromClause.trim().split(",")) {
 			String[] aliased = token.trim().split("(AS|\\s)");
 			Relation r = relationMap.get(aliased[0].trim());
-			Atom pred = Atom.create(r, Utility.generateVariables(r));
+			Atom pred = Atom.create(r, Utility.createVariables(r));
 			if (aliased.length == 1) {
 				result.put(aliased[0].trim(), pred);
 			} else {
@@ -267,7 +257,7 @@ public class PostgresqlSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 				List<Term> terms = Lists.newArrayList(p2.getTerms());
 				terms.set(t2.getSecond(), t1.getFirst().getTerm(t1.getSecond()));
 				String key = predMap.inverse().get(p2);
-				predMap.forcePut(key, new Atom(p2.getPredicate(), terms));
+				predMap.forcePut(key, Atom.create(p2.getPredicate(), terms.toArray(new Term[terms.size()])));
 			}
 		}
 	}
@@ -339,9 +329,8 @@ public class PostgresqlSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 				index = ((Relation) pred.getPredicate()).getAttributePosition(attribute);
 			}
 		}
-		if (renamed != null && !renamed.isEmpty()){
-			att = new Attribute(((Relation) pred.getPredicate()).getAttribute(index).getType(), renamed);
-		}
+		if (renamed != null && !renamed.isEmpty())
+			att = Attribute.create(((Relation) pred.getPredicate()).getAttribute(index).getType(), renamed);
 		return new Triple<>(pred, index, att);
 	}
 	
@@ -372,11 +361,10 @@ public class PostgresqlSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 		if (attribute != null
 				&& ((attribute.startsWith("\"") && attribute.endsWith("\""))
 				|| (attribute.startsWith("'") && attribute.endsWith("'")))) {
-			term = new TypedConstant<>(attribute.substring(1, attribute.length() - 1));
+			term = TypedConstant.create(attribute.substring(1, attribute.length() - 1));
 		}
-		if (renamed != null && !renamed.isEmpty()) {
-			att = new Attribute(String.class, String.valueOf(UntypedConstant.getFreshConstant()));
-		}
+		if (renamed != null && !renamed.isEmpty()) 
+			att = Attribute.create(String.class, String.valueOf(UntypedConstant.getFreshConstant()));
 		return Pair.of(term, att);
 	}
 }

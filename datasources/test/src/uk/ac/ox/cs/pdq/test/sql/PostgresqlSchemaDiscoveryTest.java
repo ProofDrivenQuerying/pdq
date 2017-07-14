@@ -3,12 +3,11 @@ package uk.ac.ox.cs.pdq.test.sql;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -17,11 +16,9 @@ import uk.ac.ox.cs.pdq.builder.BuilderException;
 import uk.ac.ox.cs.pdq.datasources.sql.PostgresqlSchemaDiscoverer;
 import uk.ac.ox.cs.pdq.util.Utility;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
-import uk.ac.ox.cs.pdq.db.AccessMethod.Types;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Schema;
 
-import com.google.common.collect.Lists;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -41,45 +38,28 @@ import com.google.common.collect.Lists;
 		String name;
 		
 		/** The attributes. */
-		List<String> attributes;
+		String[] attributes;
 		
 		/** The bindings. */
-		List<AccessMethod> bindings;
+		AccessMethod[] bindings;
 	}
 	
 	/** The relations. */
 	private Map<String, Relation> relations = new LinkedHashMap<>();
 	
 	/** The relation names. */
-	private List<String> relationNames = Lists.newArrayList(
-			new String[] {"customer", "lineitem", "nation", "orders",
+	private String[] relationNames = new String[] {"customer", "lineitem", "nation", "orders",
 					"part", "partsupp", "region", "supplier",
-					"order_customer", "order_supplier", "region_nation"}
-	);
+					"order_customer", "order_supplier", "region_nation"};
 	
 	/** The relation arities. */
-	private List<Integer> relationArities = Lists.newArrayList(
-			new Integer[] {8, 16, 4, 9, 9, 5, 3, 7}
-	);
-	
-	/** The binding types. */
-	private List<Types> bindingTypes = Lists.newArrayList(
-			new Types[] {
-					Types.FREE, Types.FREE, Types.FREE, 
-					Types.FREE, Types.FREE, Types.FREE, 
-					Types.FREE, Types.FREE, Types.FREE, 
-					Types.FREE, Types.FREE
-			}
-	);
+	private Integer[] relationArities = new Integer[] {8, 16, 4, 9, 9, 5, 3, 7};
 	
 	/** The binding positions. */
-	private List<Integer[]> bindingPositions = Lists.newArrayList(
-			new Integer[][] {{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}}
-	);
+	private Integer[][] bindingPositions = new Integer[][] {{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}};
 	
 	/** The attributes names. */
-	private List<String[]> attributesNames = Lists.newArrayList(
-			new String[][] {
+	private String[][] attributesNames = new String[][] {
 					{"c_custkey", "c_name", "c_address", "c_nationkey", "c_phone", "c_acctbal", "c_mktsegment", "c_comment"},
 					{"l_orderkey", "l_partkey", "l_suppkey", "l_linenumber", "l_quantity", "l_extendedprice", "l_discount", "l_tax", "l_returnflag", "l_linestatus", "l_shipdate", "l_commitdate", "l_receiptdate", "l_shipinstruct", "l_shipmode", "l_comment"},
 					{"n_nationkey", "n_name", "n_regionkey", "n_comment"},
@@ -91,8 +71,7 @@ import com.google.common.collect.Lists;
 					{"cname", "caddress", "cnation", "cactbal", "opriority", "oclerk", "pname", "pbrand", "ptype", "lextendedprice", "ldiscount", "ltax", "lflag"},
 					{"sname", "saddress", "snation", "sactbal", "opriority", "oclerk", "pname", "pbrand", "ptype", "lextendedprice", "ldiscount", "ltax", "lflag"},
 					{"nation_key", "nation_name", "region_key", "region_name"}
-			}
-	);
+			};
 	
 	/**
 	 * Instantiates a new postgresql schema discovery test.
@@ -109,10 +88,8 @@ import com.google.common.collect.Lists;
 		for(String n: this.relationNames) {
 			Relation r = new Relation();
 			r.name = n;
-			r.attributes = Lists.newArrayList(this.attributesNames.get(i));
-			r.bindings = Lists.newArrayList(new AccessMethod(
-					this.bindingTypes.get(i), 
-					Lists.newArrayList(this.bindingPositions.get(i))));
+			r.attributes = this.attributesNames[i];
+			r.bindings = new AccessMethod[]{AccessMethod.create(this.bindingPositions[i])};
 			this.relations.put(n, r);
 			i++;
 		}
@@ -127,11 +104,10 @@ import com.google.common.collect.Lists;
 	 * @param attributeNames the attribute names
 	 * @return the list
 	 */
-	private List<Attribute> makeAttributes(String[] attributeNames) {
-		List<Attribute> result = new ArrayList<>();
-		for (String a: attributeNames) {
-			result.add(new Attribute(String.class, a));
-		}
+	private Attribute[] makeAttributes(String[] attributeNames) {
+		Attribute[] result = new Attribute[attributeNames.length];
+		for (int index = 0; index < attributeNames.length; ++index) 
+			result[index] = Attribute.create(String.class, attributeNames[index]);
 		return result;
 	}
 	
@@ -154,10 +130,10 @@ import com.google.common.collect.Lists;
 		properties.put("username", "root");
 		properties.put("password", "root");
 		Map<String, uk.ac.ox.cs.pdq.db.Relation> map = new LinkedHashMap<>();
-		map.put("customer", new uk.ac.ox.cs.pdq.db.Relation("customer", this.makeAttributes(this.attributesNames.get(0))){});
-		map.put("lineitem", new uk.ac.ox.cs.pdq.db.Relation("lineitem", this.makeAttributes(this.attributesNames.get(1))){});
-		map.put("orders", new uk.ac.ox.cs.pdq.db.Relation("orders", this.makeAttributes(this.attributesNames.get(3))){});
-		map.put("part", new uk.ac.ox.cs.pdq.db.Relation("part", this.makeAttributes(this.attributesNames.get(4))){});
+		map.put("customer", new uk.ac.ox.cs.pdq.db.Relation("customer", this.makeAttributes(this.attributesNames[0])){});
+		map.put("lineitem", new uk.ac.ox.cs.pdq.db.Relation("lineitem", this.makeAttributes(this.attributesNames[1])){});
+		map.put("orders", new uk.ac.ox.cs.pdq.db.Relation("orders", this.makeAttributes(this.attributesNames[3])){});
+		map.put("part", new uk.ac.ox.cs.pdq.db.Relation("part", this.makeAttributes(this.attributesNames[4])){});
 		PostgresqlSchemaDiscoverer disco = new PostgresqlSchemaDiscoverer();
 		disco.setProperties(properties);
 //		disco.parseViewDefinition(
@@ -194,7 +170,7 @@ import com.google.common.collect.Lists;
 	 */
 	@Test
 	public void testNumberOfRelations() {
-		assertEquals(this.schema.getRelations().size(), this.relationNames.size());
+		assertEquals(this.schema.getNumberOfRelations(), this.relationNames.length);
 	}
 	
 	/**
@@ -213,7 +189,7 @@ import com.google.common.collect.Lists;
 	@Test
 	public void testRelationArities() {
 		for (uk.ac.ox.cs.pdq.db.Relation r: this.schema.getRelations()) {
-			assertEquals((Integer) r.getArity(), (Integer) this.relations.get(r.getName()).attributes.size());
+			assertEquals((Integer) r.getArity(), (Integer) this.relations.get(r.getName()).attributes.length);
 		}
 	}
 	
@@ -225,7 +201,7 @@ import com.google.common.collect.Lists;
 		for (uk.ac.ox.cs.pdq.db.Relation r: this.schema.getRelations()) {
 			int j = 0;
 			for (Attribute a: r.getAttributes()) {
-				assertEquals(a.getName(),  this.relations.get(r.getName()).attributes.get(j++));
+				assertEquals(a.getName(),  this.relations.get(r.getName()).attributes[j++]);
 			}
 		}
 	}
@@ -237,10 +213,8 @@ import com.google.common.collect.Lists;
 	public void testAccessMethodMethods() {
 		for (uk.ac.ox.cs.pdq.db.Relation r: this.schema.getRelations()) {
 			int i = 0;
-			for (AccessMethod b: r.getAccessMethods()) {
-				assertEquals(b.getType(), this.relations.get(r.getName()).bindings.get(i).getType());
-				assertEquals(b.getInputs(), this.relations.get(r.getName()).bindings.get(i++).getInputs());
-			}
+			for (AccessMethod b: r.getAccessMethods()) 
+				Assert.assertEquals(b.getInputs(), this.relations.get(r.getName()).bindings[i++].getInputs());
 		}
 	}
 

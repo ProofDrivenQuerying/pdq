@@ -87,6 +87,10 @@ public class Schema {
 	public Relation[] getRelations() {
 		return this.relations.clone();
 	}
+	
+	public int getNumberOfRelations() {
+		return this.relations.length;
+	}
 
 	/**
 	 * Gets the schema dependencies.

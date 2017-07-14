@@ -14,28 +14,26 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.log4j.Logger;
-
-import uk.ac.ox.cs.pdq.builder.BuilderException;
-import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.db.Relation;
-import uk.ac.ox.cs.pdq.db.TypedConstant;
-import uk.ac.ox.cs.pdq.db.View;
-import uk.ac.ox.cs.pdq.fol.Conjunction;
-import uk.ac.ox.cs.pdq.fol.LinearGuarded;
-import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Formula;
-import uk.ac.ox.cs.pdq.fol.Term;
-import uk.ac.ox.cs.pdq.fol.UntypedConstant;
-import uk.ac.ox.cs.pdq.fol.Variable;
-import uk.ac.ox.cs.pdq.util.Triple;
-import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.Lists;
+
+import uk.ac.ox.cs.pdq.builder.BuilderException;
+import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.db.Relation;
+import uk.ac.ox.cs.pdq.db.TypedConstant;
+import uk.ac.ox.cs.pdq.db.View;
+import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.Conjunction;
+import uk.ac.ox.cs.pdq.fol.Formula;
+import uk.ac.ox.cs.pdq.fol.LinearGuarded;
+import uk.ac.ox.cs.pdq.fol.Term;
+import uk.ac.ox.cs.pdq.fol.UntypedConstant;
+import uk.ac.ox.cs.pdq.util.Triple;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -45,9 +43,6 @@ import com.google.common.collect.Lists;
  *
  */
 public class MySQLSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
-
-	/**  The logger. */
-	public static Logger log = Logger.getLogger(MySQLSchemaDiscoverer.class);
 	
 	/*
 	 * (non-Javadoc)
@@ -94,7 +89,7 @@ public class MySQLSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 	 */
 	@Override
 	protected Relation getRelationInstance(Properties props,
-			String relationName, List<Attribute> attributes) {
+			String relationName, Attribute[] attributes) {
 		return new SQLRelationWrapper(props, relationName, attributes);
 	}
 
@@ -171,6 +166,7 @@ public class MySQLSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 	 * @return the corresponding linear guarded dependency representation of the
 	 * given SQL view definition.
 	 */
+	@SuppressWarnings("serial")
 	protected LinearGuarded parseViewDefinition(String viewName, String viewDef, Map<String, Relation> relationMap) {
 		Preconditions.checkArgument(viewDef != null && !viewDef.isEmpty());
 		
@@ -189,16 +185,11 @@ public class MySQLSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 		BiMap<String, Atom> atoms = this.makePredicate(from, relationMap);
 		this.makeJoins(where, atoms);
 		Pair<List<Term>, List<Attribute>> freeTermsAndAttributes = this.makeFreeTerms(select, atoms);
-		List<Formula> right = Lists.newArrayList();
-		right.addAll(atoms.values());
-		List<Variable> boundTerms = new ArrayList<>(Utility.getVariables(right));
-		boundTerms.removeAll(freeTermsAndAttributes.getLeft());
-		return new LinearGuarded(
-				//this.toVariable(freeTermsAndAttributes.getLeft()),
-				Atom.create(
-						Relation.create(viewName, freeTermsAndAttributes.getRight()) {},
-						freeTermsAndAttributes.getLeft()), 
-				//boundTerms,
+		List<Term> freeTerms = freeTermsAndAttributes.getLeft();
+		List<Attribute> attributes = freeTermsAndAttributes.getRight();
+		Formula[] right = atoms.values().toArray(new Formula[atoms.values().size()]);
+		return LinearGuarded.create(
+				Atom.create(new Relation(viewName, attributes.toArray(new Attribute[attributes.size()])){}, freeTerms.toArray(new Term[freeTerms.size()])), 
 				Conjunction.of(right));
 	}
 	
@@ -219,7 +210,7 @@ public class MySQLSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 		for (String token: from.trim().split("(,|join)")) {
 			String[] aliased = token.trim().replace("`", "").split("(AS|\\s)");
 			Relation r = relationMap.get(aliased[0].trim());
-			Atom pred = Atom.create(r, Utility.generateVariables(r));
+			Atom pred = Atom.create(r, Utility.createVariables(r));
 			if (aliased.length == 1) {
 				result.put(aliased[0].trim(), pred);
 			} else {
@@ -271,7 +262,7 @@ public class MySQLSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 				List<Term> terms = Lists.newArrayList(p2.getTerms());
 				terms.set(t2.getSecond(), t1.getFirst().getTerm(t1.getSecond()));
 				String key = predMap.inverse().get(p2);
-				predMap.forcePut(key, Atom.create(p2.getPredicate(), terms));
+				predMap.forcePut(key, Atom.create(p2.getPredicate(), terms.toArray(new Term[terms.size()])));
 			}
 		}
 	}

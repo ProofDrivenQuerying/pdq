@@ -251,8 +251,8 @@ public class PDQController {
         			continue;
         		}
 	       		int index = this.currentSchemaViewitems.getParent().getChildren().indexOf(this.currentSchemaViewitems);
-	       		index -= this.currentSchema.get().getSchema().getRelations().size();
-	       		Dependency dependency = this.currentSchema.get().getSchema().getDependencies().get(index);
+	       		index -= this.currentSchema.get().getSchema().getNumberOfRelations();
+	       		Dependency dependency = this.currentSchema.get().getSchema().getDependencies()[index];
         		if (dependency != null) {
         			this.deleteDependency(schema, dependency);
         			this.reloadTreeItem(item.getParent(), schema);

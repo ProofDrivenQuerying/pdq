@@ -93,7 +93,7 @@ public class QueryGeneratorFirst extends AbstractDependencyGenerator implements 
 			if (!this.params.getRepeatedRelations()) {
 				relations.remove(choice);
 			}
-			tmpBody.add(new Atom(selectedRelation, Utility.generateVariables(selectedRelation)));
+			tmpBody.add(new Atom(selectedRelation, Utility.createVariables(selectedRelation)));
 		}
 
 		// Swapping variable ensuring no cycles are created

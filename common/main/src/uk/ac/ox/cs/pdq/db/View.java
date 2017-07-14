@@ -27,9 +27,12 @@ public class View extends Relation {
 	 * The dependency that defines the view. */
 	protected TGD definition;
 
-	
 	public View(String name, Attribute[] attributes) {
 		super(name, attributes);
+	}
+	
+	public View(String name, Attribute[] attributes, AccessMethod[] methods) {
+		super(name, attributes, methods);
 	}
 	
 	/**
@@ -39,7 +42,7 @@ public class View extends Relation {
 	 * @param accessMethods 		The binding patterns with which a view can be accessed. By default, a view has free access
 	 */
 	public View(LinearGuarded dependency, AccessMethod[] accessMethods) {
-		super(dependency.getBody().getAtoms()[0].getPredicate().getName(), Utility.makeAttributes(dependency.getGuard()));
+		super(dependency.getBody().getAtoms()[0].getPredicate().getName(), Utility.getAttributes(dependency.getGuard()));
 		this.dependency = dependency;
 		this.definition = TGD.create(this.dependency.getHead(), this.dependency.getBody());
 		this.setAccessMethods(accessMethods);

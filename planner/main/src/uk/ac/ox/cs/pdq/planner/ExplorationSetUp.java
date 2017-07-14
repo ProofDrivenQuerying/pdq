@@ -116,9 +116,7 @@ public class ExplorationSetUp {
 	private void addAdditionalAttributeToSchema(Schema schema, Attribute atribute) {
 		//final static Attribute StateIDAttribute = new Attribute(Integer.class, "ChaseStateID");
 		for(Relation r:schema.getRelations())
-		{
 			r.appendAttribute(atribute);
-		}
 	}
 
 	/**

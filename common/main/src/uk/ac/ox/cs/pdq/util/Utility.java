@@ -17,6 +17,7 @@ import java.util.Random;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.junit.Assert;
 
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
@@ -210,11 +211,10 @@ public class Utility {
 	 * @param r Relation
 	 * @return List<Term>
 	 */
-	public static List<Term> generateVariables(Relation r) {
-		List<Term> result = new ArrayList<>();
-		for (int i = 0, l = r.getArity(); i < l; i++) {
-			result.add(Variable.getFreshVariable());
-		}
+	public static Term[] createVariables(Relation r) {
+		Term[] result = new Term[r.getArity()];
+		for (int i = 0, l = r.getArity(); i < l; i++) 
+			result[i] = Variable.getFreshVariable();
 		return result;
 	}
 
@@ -627,7 +627,7 @@ public class Utility {
 		}
 		return new Atom(relation, variableTerms);
 	}
-	
+
 	public static Atom createAtomsWithoutExtraAttribute(Relation relation) {
 		List<Term> variableTerms = new ArrayList<>();
 		for (Attribute attribute : relation.getAttributes().subList(0, relation.getAttributes().size()-1)) {
@@ -635,29 +635,7 @@ public class Utility {
 		}
 		return new Atom(relation, variableTerms);
 	}
-	
-	
-	/**
-	 * Gets the term positions.
-	 *
-	 * @param term Term
-	 * @return List<Integer>
-	 */
-	public List<Integer> getTermPositions(Term term) {
-		return Utility.search(this.terms, term);
-	}
-	
-	/**
-	 * Helper printing method.
-	 *
-	 * @return String
-	 */
-	private String makeString() {
-		StringBuilder result = new StringBuilder();
-		result.append(this.name).append('[').append(this.arity).append(']');
-		return result.toString().intern();
-	}
-	
+
 
 	/**
 	 * Gets the term positions.
@@ -668,7 +646,29 @@ public class Utility {
 	public List<Integer> getTermPositions(Term term) {
 		return Utility.search(this.terms, term);
 	}
-	
+
+	/**
+	 * Helper printing method.
+	 *
+	 * @return String
+	 */
+	private String makeString() {
+		StringBuilder result = new StringBuilder();
+		result.append(this.name).append('[').append(this.arity).append(']');
+		return result.toString().intern();
+	}
+
+
+	/**
+	 * Gets the term positions.
+	 *
+	 * @param term Term
+	 * @return List<Integer>
+	 */
+	public List<Integer> getTermPositions(Term term) {
+		return Utility.search(this.terms, term);
+	}
+
 	/**
 	 * Simple name.
 	 *
@@ -777,11 +777,11 @@ public class Utility {
 		}
 		throw new ClassCastException(o + " could not be cast to " + type);
 	}
-	
+
 	public static AccessMethod getAccessMethod(Relation relation, String acceessMethodName) {
-		
+
 	}
-	
+
 	/**
 	 * Gets the type of the attributes of the relation.
 	 *
@@ -789,6 +789,15 @@ public class Utility {
 	 */
 	public static TupleType getType(Relation relation) {
 		return null;
+	}
+
+	/**
+	 * @param fact An input fact
+	 * @return The list of attributes coming from this fact
+	 */
+	public static Attribute[] getAttributes(Atom fact) {
+		Assert.assertTrue(fact.getPredicate() instanceof Relation);
+		return ((Relation) fact.getPredicate()).getAttributes();
 	}
 
 }

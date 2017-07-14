@@ -109,7 +109,7 @@ public class InclusionDependencyGraphNode {
 			Relation prevRel) {
 		List<Atom> result = new LinkedList<>();
 		if (maxDepth > 0) {
-			List<Term> terms = Utility.generateVariables(this.node);
+			List<Term> terms = Utility.createVariables(this.node);
 			if (prevPred != null) {
 				for (ForeignKey fk : prevRel.getForeignKeys()) {
 					if (this.node.equals(fk.getForeignRelation())) {

@@ -16,11 +16,8 @@ import uk.ac.ox.cs.pdq.builder.BuilderException;
 import uk.ac.ox.cs.pdq.datasources.sql.MySQLSchemaDiscoverer;
 import uk.ac.ox.cs.pdq.util.Utility;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
-import uk.ac.ox.cs.pdq.db.AccessMethod.Types;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Schema;
-
-import com.google.common.collect.Lists;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -40,43 +37,24 @@ import com.google.common.collect.Lists;
 		String name;
 		
 		/** The attributes. */
-		List<String> attributes;
+		String[] attributes;
 		
 		/** The bindings. */
-		List<AccessMethod> bindings;
+		AccessMethod[] bindings;
 	}
 	
 	/** The relations. */
 	private Map<String, Relation> relations = new LinkedHashMap<>();
 	
 	/** The relation names. */
-	private List<String> relationNames = Lists.newArrayList(
-			new String[] {"customer", "lineitem", "nation", "orders",
-					"part", "partsupp", "region", "supplier"}
-	);
-	
-	/** The relation arities. */
-	private List<Integer> relationArities = Lists.newArrayList(
-			new Integer[] {8, 16, 4, 9, 9, 5, 3, 7}
-	);
-	
-	/** The binding types. */
-	private List<Types> bindingTypes = Lists.newArrayList(
-			new Types[] {
-					Types.FREE, Types.FREE, Types.FREE, 
-					Types.FREE, Types.FREE, Types.FREE, 
-					Types.FREE, Types.FREE
-			}
-	);
-	
+	private String[] relationNames = new String[] {"customer", "lineitem", "nation", "orders",
+					"part", "partsupp", "region", "supplier"};
+
 	/** The binding positions. */
-	private List<Integer[]> bindingPositions = Lists.newArrayList(
-			new Integer[][] {{}, {}, {}, {}, {}, {}, {}, {}}
-	);
+	private Integer[][] bindingPositions = new Integer[][] {{}, {}, {}, {}, {}, {}, {}, {}};
 	
 	/** The attributes names. */
-	private List<String[]> attributesNames = Lists.newArrayList(
-			new String[][] {
+	private String[][] attributesNames = new String[][] {
 					{"c_custkey", "c_name", "c_address", "c_nationkey", 
 						"c_phone", "c_acctbal", "c_mktsegment", "c_comment"},
 					{"l_orderkey", "l_partkey", "l_suppkey", "l_linenumber",
@@ -95,9 +73,8 @@ import com.google.common.collect.Lists;
 					{"r_regionkey", "r_name", "r_comment"},
 					{"s_suppkey", "s_name", "s_address", "s_nationkey", 
 						"s_phone", "s_acctbal", "s_comment"}
-			}
-	);
-	
+			};
+			
 	/**
 	 * Instantiates a new my sql schema discovery test.
 	 *
@@ -113,10 +90,8 @@ import com.google.common.collect.Lists;
 		for(String n: this.relationNames) {
 			Relation r = new Relation();
 			r.name = n;
-			r.attributes = Lists.newArrayList(this.attributesNames.get(i));
-			r.bindings = Lists.newArrayList(new AccessMethod(
-					this.bindingTypes.get(i), 
-					Lists.newArrayList(this.bindingPositions.get(i))));
+			r.attributes = this.attributesNames[i];
+			r.bindings = new AccessMethod[]{AccessMethod.create(this.bindingPositions[i])};
 			this.relations.put(n, r);
 			i++;
 		}
@@ -138,7 +113,7 @@ import com.google.common.collect.Lists;
 	 */
 	@Test
 	public void testNumberOfRelations() {
-		assertEquals(this.schema.getRelations().size(), this.relationNames.size());
+		assertEquals(this.schema.getRelations().length, this.relationNames.length);
 	}
 	
 	/**
@@ -157,7 +132,7 @@ import com.google.common.collect.Lists;
 	@Test
 	public void testRelationArities() {
 		for (uk.ac.ox.cs.pdq.db.Relation r: this.schema.getRelations()) {
-			assertEquals((Integer) r.getArity(), (Integer) this.relations.get(r.getName()).attributes.size());
+			assertEquals((Integer) r.getArity(), (Integer) this.relations.get(r.getName()).attributes.length);
 		}
 	}
 	
@@ -169,7 +144,7 @@ import com.google.common.collect.Lists;
 		for (uk.ac.ox.cs.pdq.db.Relation r: this.schema.getRelations()) {
 			int j = 0;
 			for (Attribute a: r.getAttributes()) {
-				assertEquals(a.getName(),  this.relations.get(r.getName()).attributes.get(j++));
+				assertEquals(a.getName(),  this.relations.get(r.getName()).attributes[j++]);
 			}
 		}
 	}
@@ -181,10 +156,8 @@ import com.google.common.collect.Lists;
 	public void testAccessMethodMethods() {
 		for (uk.ac.ox.cs.pdq.db.Relation r: this.schema.getRelations()) {
 			int i = 0;
-			for (AccessMethod b: r.getAccessMethods()) {
-				assertEquals(b.getType(), this.relations.get(r.getName()).bindings.get(i).getType());
-				assertEquals(b.getInputs(), this.relations.get(r.getName()).bindings.get(i++).getInputs());
-			}
+			for (AccessMethod b: r.getAccessMethods()) 
+				assertEquals(b.getInputs(), this.relations.get(r.getName()).bindings[i++].getInputs());
 		}
 	}
 

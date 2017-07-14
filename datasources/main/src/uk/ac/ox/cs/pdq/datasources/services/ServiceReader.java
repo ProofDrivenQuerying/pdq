@@ -15,6 +15,7 @@ import javax.xml.parsers.SAXParserFactory;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
+import org.junit.Assert;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -252,7 +253,7 @@ public class ServiceReader extends AbstractXMLReader<ServiceRepository> implemen
 						 break;
 					}
 				}
-				Preconditions.checkNotNull(k, "Undentified input key");
+				Assert.assertNotNull("Undentified input key", k);
 				skey.add(k);
 			}
 			this.builder.addPrimaryKey(PrimaryKey.create(skey.toArray(new Attribute[skey.size()])));

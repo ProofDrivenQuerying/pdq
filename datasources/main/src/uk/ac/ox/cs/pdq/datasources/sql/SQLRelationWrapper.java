@@ -4,19 +4,19 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+
+import com.google.common.base.Joiner;
+import com.google.common.base.Preconditions;
 
 import uk.ac.ox.cs.pdq.datasources.AccessException;
 import uk.ac.ox.cs.pdq.datasources.RelationAccessWrapper;
@@ -27,9 +27,6 @@ import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.util.Tuple;
 import uk.ac.ox.cs.pdq.util.Utility;
-
-import com.google.common.base.Joiner;
-import com.google.common.base.Preconditions;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -49,9 +46,6 @@ public class SQLRelationWrapper extends Relation implements RelationAccessWrappe
 
 	/** Connection. */
 	private Connection connection = null;
-
-	/** Prepared statement for single input tuple access requested. */
-	private Map<List<Attribute>, PreparedStatement> statements = new LinkedHashMap<>();
 
 	/**
 	 * Instantiates a new SQL relation wrapper.
