@@ -67,9 +67,7 @@ public class RESTAccess implements uk.ac.ox.cs.pdq.builder.Builder<WebTarget> {
 			url.append(this.pathParams.get(key.getName()));
 		}
 		@SuppressWarnings("deprecation")
-		WebTarget result = ClientBuilder.newClient()
-				.register(JacksonFeatures.class)
-				.target(url.toString());
+		WebTarget result = ClientBuilder.newClient().register(JacksonFeatures.class).target(url.toString());
 		for (Map.Entry<String, Object> entry: this.urlParams.entrySet()) {
 			result = result.queryParam(entry.getKey(), entry.getValue());
 		}

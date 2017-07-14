@@ -103,15 +103,15 @@ public class PagingLimit implements UsagePolicy,
 		this(Integer.parseInt(properties.getProperty(PAGE_SIZE)),
 			Integer.parseInt(properties.getProperty(START_INDEX)),
 				new RESTAttribute(
-						new Attribute(Integer.class, properties.getProperty(PAGE_SIZE_ATTRIBUTE)),
+						Attribute.create(Integer.class, properties.getProperty(PAGE_SIZE_ATTRIBUTE)),
 						new PathOutputMethod(properties.getProperty(PAGE_SIZE_ATTRIBUTE)),
 						getInputMethod(repo, properties.getProperty(PAGE_SIZE_ATTRIBUTE))),
 				new RESTAttribute(
-						new Attribute(Integer.class, properties.getProperty(PAGE_INDEX_ATTRIBUTE)),
+						Attribute.create(Integer.class, properties.getProperty(PAGE_INDEX_ATTRIBUTE)),
 						new PathOutputMethod(properties.getProperty(PAGE_INDEX_ATTRIBUTE)),
 						getInputMethod(repo, properties.getProperty(PAGE_INDEX_ATTRIBUTE))),
 				new RESTAttribute(
-						new Attribute(Integer.class, properties.getProperty(TOTAL_ITEMS_ATTRIBUTE)),
+						Attribute.create(Integer.class, properties.getProperty(TOTAL_ITEMS_ATTRIBUTE)),
 						new PathOutputMethod(properties.getProperty(TOTAL_ITEMS_ATTRIBUTE))));
 	}
 

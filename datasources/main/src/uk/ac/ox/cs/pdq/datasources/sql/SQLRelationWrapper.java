@@ -19,14 +19,14 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.datasources.AccessException;
+import uk.ac.ox.cs.pdq.datasources.RelationAccessWrapper;
 import uk.ac.ox.cs.pdq.datasources.ResetableIterator;
 import uk.ac.ox.cs.pdq.datasources.Table;
-import uk.ac.ox.cs.pdq.datasources.memory.RelationAccessWrapper;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.util.Tuple;
-import uk.ac.ox.cs.pdq.util.Types;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
@@ -51,7 +51,7 @@ public class SQLRelationWrapper extends Relation implements RelationAccessWrappe
 	private Connection connection = null;
 
 	/** Prepared statement for single input tuple access requested. */
-	private Map<List<Attribute>, PreparedStatement> stmts = new LinkedHashMap<>();
+	private Map<List<Attribute>, PreparedStatement> statements = new LinkedHashMap<>();
 
 	/**
 	 * Instantiates a new SQL relation wrapper.
@@ -70,7 +70,7 @@ public class SQLRelationWrapper extends Relation implements RelationAccessWrappe
 	 * @param name String
 	 * @param attributes List<Attribute>
 	 */
-	public SQLRelationWrapper(Properties properties, String name, List<Attribute> attributes) {
+	public SQLRelationWrapper(Properties properties, String name, Attribute[] attributes) {
 		this(properties, name, attributes, null);
 	}
 
@@ -80,10 +80,10 @@ public class SQLRelationWrapper extends Relation implements RelationAccessWrappe
 	 * @param properties the properties
 	 * @param name String
 	 * @param attributes List<Attribute>
-	 * @param bm List<AccessMethod>
+	 * @param methods List<AccessMethod>
 	 */
-	public SQLRelationWrapper(Properties properties, String name, List<Attribute> attributes, List<AccessMethod> bm) {
-		super(name, attributes, bm);
+	public SQLRelationWrapper(Properties properties, String name, Attribute[] attributes, AccessMethod[] methods) {
+		super(name, attributes, methods);
 		this.properties.putAll(properties);
 	}
 
@@ -114,7 +114,7 @@ public class SQLRelationWrapper extends Relation implements RelationAccessWrappe
 					char sep2 = '(';
 					result.append(sep);
 					for (int i = 0, l = tuple.size(); i < l; i++) {
-						if (Types.isNumeric(sourceAttributes.get(i).getType())) {
+						if (Utility.isNumeric(sourceAttributes.get(i).getType())) {
 							result.append(sep2).append((Object) tuple.getValue(i));
 						} else {
 							result.append(sep2).append('\'').append((Object) tuple.getValue(i)).append('\'');
@@ -164,7 +164,7 @@ public class SQLRelationWrapper extends Relation implements RelationAccessWrappe
 						ndata[index] = rs.getString(index + 1).trim();
 
 					} else {
-						Method m = ResultSet.class.getMethod("get" + Types.simpleName(columnType), int.class);
+						Method m = ResultSet.class.getMethod("get" + Utility.simpleName(columnType), int.class);
 						ndata[index] = m.invoke(rs, index + 1);
 					}
 				}

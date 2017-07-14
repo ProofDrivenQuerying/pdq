@@ -35,7 +35,6 @@ public abstract class Relation extends Predicate implements Serializable {
 	 */
 	protected Map<String, AccessMethod> accessMethodsMaps;
 
-	//@XmlElement
 	protected AccessMethod[] accessMethods;
 
 	/**

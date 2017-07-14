@@ -55,8 +55,7 @@ public class URLAuthentication  implements UsagePolicy, AccessPreProcessor<RESTR
 	 */
 	public URLAuthentication(ServiceRepository repo, Properties properties) {
 		this(new RESTAttribute(
-			new Attribute(String.class,
-				repo.getInputMethod(properties.getProperty(INPUT_METHOD)).getName()),
+				Attribute.create(String.class, repo.getInputMethod(properties.getProperty(INPUT_METHOD)).getName()),
 			repo.getInputMethod(properties.getProperty(INPUT_METHOD))));
 	}
 

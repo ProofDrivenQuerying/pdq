@@ -20,7 +20,6 @@ import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.builder.BuilderException;
 import uk.ac.ox.cs.pdq.builder.SchemaDiscoverer;
-import uk.ac.ox.cs.pdq.datasources.metadata.StaticMetadata;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.ForeignKey;
 import uk.ac.ox.cs.pdq.db.Reference;
@@ -191,10 +190,9 @@ public abstract class AbstractSQLSchemaDiscoverer implements SchemaDiscoverer {
 			List<Attribute> attributes = new ArrayList<>();
 			for (int i = 0, l = rsmd.getColumnCount(); i < l; i++) {
 				Class<?> cl = Class.forName(rsmd.getColumnClassName(i + 1));
-				attributes.add(new Attribute(cl, rsmd.getColumnName(i + 1)));
+				attributes.add(Attribute.create(cl, rsmd.getColumnName(i + 1)));
 			}
 			Relation result = this.getRelationInstance(this.properties, relationName, attributes);
-			result.setMetadata(new StaticMetadata((long) this.discoverRelationSize(relationName)));
 			return result;
 		} catch (ClassNotFoundException | SQLException e) {
 			log.error(e);
@@ -356,10 +354,9 @@ public abstract class AbstractSQLSchemaDiscoverer implements SchemaDiscoverer {
 			List<Attribute> attributes = new ArrayList<>();
 			for (int i = 0, l = rsmd.getColumnCount(); i < l; i++) {
 				Class<?> cl = Class.forName(rsmd.getColumnClassName(i + 1));
-				attributes.add(new Attribute(cl, rsmd.getColumnName(i + 1)));
+				attributes.add(Attribute.create(cl, rsmd.getColumnName(i + 1)));
 			}
 			View result = this.getViewInstance(this.properties, viewName, relationMap);
-			result.setMetadata(new StaticMetadata((long) this.discoverRelationSize(viewName)));
 			return result;
 		} catch (ClassNotFoundException | SQLException e) {
 			log.error(e);

@@ -6,6 +6,7 @@ import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.LinearGuarded;
 import uk.ac.ox.cs.pdq.fol.QuantifiedFormula;
 import uk.ac.ox.cs.pdq.fol.TGD;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 /**
  * @author Efthymia Tsamoura
@@ -29,6 +30,19 @@ public class View extends Relation {
 	
 	public View(String name, Attribute[] attributes) {
 		super(name, attributes);
+	}
+	
+	/**
+	 * Instantiates a new view.
+	 *
+	 * @param dependency 		The dependency that defines the view
+	 * @param accessMethods 		The binding patterns with which a view can be accessed. By default, a view has free access
+	 */
+	public View(LinearGuarded dependency, AccessMethod[] accessMethods) {
+		super(dependency.getBody().getAtoms()[0].getPredicate().getName(), Utility.makeAttributes(dependency.getGuard()));
+		this.dependency = dependency;
+		this.definition = TGD.create(this.dependency.getHead(), this.dependency.getBody());
+		this.setAccessMethods(accessMethods);
 	}
 
 	/**

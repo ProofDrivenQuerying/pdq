@@ -1,7 +1,5 @@
 package uk.ac.ox.cs.pdq.datasources.services.rest;
 
-import java.io.IOException;
-
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
@@ -11,9 +9,6 @@ import org.apache.log4j.Logger;
 import uk.ac.ox.cs.pdq.datasources.AccessException;
 import uk.ac.ox.cs.pdq.datasources.Table;
 import uk.ac.ox.cs.pdq.datasources.services.RequestEvent;
-
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 
 // TODO: Auto-generated Javadoc
 /**

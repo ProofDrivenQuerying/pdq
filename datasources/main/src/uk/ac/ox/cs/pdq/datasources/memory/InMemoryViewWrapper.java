@@ -8,9 +8,9 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 
 import uk.ac.ox.cs.pdq.datasources.Pipelineable;
+import uk.ac.ox.cs.pdq.datasources.RelationAccessWrapper;
 import uk.ac.ox.cs.pdq.datasources.ResetableIterator;
 import uk.ac.ox.cs.pdq.datasources.Table;
-import uk.ac.ox.cs.pdq.datasources.metadata.StaticMetadata;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.View;
@@ -28,8 +28,7 @@ import com.google.common.base.Preconditions;
  * 
  * @author Julien Leblay
  */
-public class InMemoryViewWrapper extends View
-		implements Pipelineable, RelationAccessWrapper, InMemoryRelation {
+public class InMemoryViewWrapper extends View implements Pipelineable, RelationAccessWrapper, InMemoryRelation {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -3167783211904676965L;
@@ -42,10 +41,10 @@ public class InMemoryViewWrapper extends View
 	 *
 	 * @param name String
 	 * @param attributes List<Attribute>
-	 * @param bm List<AccessMethod>
+	 * @param methods List<AccessMethod>
 	 */
-	public InMemoryViewWrapper(String name, List<Attribute> attributes, List<AccessMethod> bm) {
-		super(name, attributes, bm);
+	public InMemoryViewWrapper(String name, Attribute[] attributes, AccessMethod[] methods) {
+		super(name, attributes, methods);
 	}
 	
 	/**
@@ -54,7 +53,7 @@ public class InMemoryViewWrapper extends View
 	 * @param name String
 	 * @param attributes List<Attribute>
 	 */
-	public InMemoryViewWrapper(String name, List<Attribute> attributes) {
+	public InMemoryViewWrapper(String name, Attribute[] attributes) {
 		super(name, attributes);
 	}
 
@@ -64,7 +63,6 @@ public class InMemoryViewWrapper extends View
 	 */
 	public void load(Collection<Tuple> d) {
 		this.data.addAll(d);
-		this.setMetadata(new StaticMetadata((long) this.data.size()));
 	}
 
 	/*
@@ -95,8 +93,7 @@ public class InMemoryViewWrapper extends View
 	 * @see uk.ac.ox.cs.pdq.datasources.memory.runtime.RelationAccessWrapper#access(Table)
 	 */
 	@Override
-	public Table access(List<? extends Attribute> inputHeader,
-			ResetableIterator<Tuple> inputTuples) {
+	public Table access(List<? extends Attribute> inputHeader, ResetableIterator<Tuple> inputTuples) {
 		Preconditions.checkArgument(inputHeader != null);
 		Preconditions.checkArgument(inputTuples != null);
 		

@@ -9,8 +9,6 @@ import java.util.Map;
 import javax.ws.rs.core.MediaType;
 
 import uk.ac.ox.cs.pdq.builder.Builder;
-import uk.ac.ox.cs.pdq.cost.Cost;
-import uk.ac.ox.cs.pdq.datasources.metadata.StaticMetadata;
 import uk.ac.ox.cs.pdq.datasources.services.policies.UsagePolicy;
 import uk.ac.ox.cs.pdq.datasources.services.rest.InputMethod;
 import uk.ac.ox.cs.pdq.datasources.services.rest.OutputMethod;
@@ -19,6 +17,7 @@ import uk.ac.ox.cs.pdq.datasources.services.rest.RESTRelation;
 import uk.ac.ox.cs.pdq.datasources.services.rest.RESTStaticInput;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.db.PrimaryKey;
 import uk.ac.ox.cs.pdq.db.Relation;
 
 import com.google.common.base.Preconditions;
@@ -73,14 +72,11 @@ public class ServiceBuilder implements Builder<Service> {
 	/** The access methods. */
 	private List<AccessMethod> accessMethods = new ArrayList<>();
 
-	/** The access costs. */
-	private Map<AccessMethod, Cost> accessCosts = new LinkedHashMap<>();
-
 	/** The policies. */
 	private Collection<UsagePolicy> policies = new ArrayList<>();
 	
 	/** The key. */
-	private List<Attribute> key = new ArrayList<>();
+	private PrimaryKey primaryKey;
 	
 	/**
 	 * Sets the name.
@@ -256,11 +252,11 @@ public class ServiceBuilder implements Builder<Service> {
 	/**
 	 * Adds the key.
 	 *
-	 * @param key the key
+	 * @param primaryKey the key
 	 * @return the service builder
 	 */
-	public ServiceBuilder addKey(List<Attribute> key) {
-		this.key = key;
+	public ServiceBuilder addPrimaryKey(PrimaryKey primaryKey) {
+		this.primaryKey = primaryKey;
 		return this;
 	}
 	
@@ -272,9 +268,8 @@ public class ServiceBuilder implements Builder<Service> {
 	 * @param c Cost
 	 * @return ServiceBuilder
 	 */
-	public ServiceBuilder addAccessMethod(AccessMethod b, Cost c) {
+	public ServiceBuilder addAccessMethod(AccessMethod b) {
 		this.accessMethods.add(b);
-		this.accessCosts.put(b, c);
 		return this;
 	}
 	
@@ -316,11 +311,9 @@ public class ServiceBuilder implements Builder<Service> {
 				}
 				allAttributes.add(r);
 			}
-			Relation result = new RESTRelation(
-					this.name, nonStaticInputs, this.accessMethods,
+			Relation result = new RESTRelation(this.name, nonStaticInputs, this.accessMethods,
 					allAttributes, this.url, this.mediaType, this.resultDelimiter, this.policies);
-			result.setMetadata(new StaticMetadata(this.accessCosts));
-			result.setKey(this.key);
+			result.setKey(this.primaryKey);
 			return (Service) result;
 		default:
 			throw new UnsupportedOperationException(this.protocol + " is not a supported protocol.");

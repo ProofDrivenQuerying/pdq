@@ -16,15 +16,15 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.datasources.AccessException;
+import uk.ac.ox.cs.pdq.datasources.RelationAccessWrapper;
 import uk.ac.ox.cs.pdq.datasources.ResetableIterator;
 import uk.ac.ox.cs.pdq.datasources.Table;
-import uk.ac.ox.cs.pdq.datasources.memory.RelationAccessWrapper;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.View;
 import uk.ac.ox.cs.pdq.fol.LinearGuarded;
 import uk.ac.ox.cs.pdq.util.Tuple;
-import uk.ac.ox.cs.pdq.util.Types;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.base.Joiner;
 
@@ -69,10 +69,10 @@ public class SQLViewWrapper extends View implements RelationAccessWrapper {
 	 *
 	 * @param properties the properties
 	 * @param definition LinearGuarded
-	 * @param bm List<AccessMethod>
+	 * @param methods List<AccessMethod>
 	 */
-	public SQLViewWrapper(Properties properties, LinearGuarded definition, List<AccessMethod> bm) {
-		super(definition, bm);
+	public SQLViewWrapper(Properties properties, LinearGuarded definition, AccessMethod[] methods) {
+		super(definition, methods);
 		this.properties.putAll(properties);
 	}
 
@@ -101,7 +101,7 @@ public class SQLViewWrapper extends View implements RelationAccessWrapper {
 					char sep2 = '(';
 					result.append(sep);
 					for (int i = 0, l = tuple.size(); i < l; i++) {
-						if (Types.isNumeric(sourceAttributes.get(i).getType())) {
+						if (Utility.isNumeric(sourceAttributes.get(i).getType())) {
 							result.append(sep2).append((Object) tuple.getValue(i));
 						} else {
 							result.append(sep2).append('\'').append((Object) tuple.getValue(i)).append('\'');
@@ -151,7 +151,7 @@ public class SQLViewWrapper extends View implements RelationAccessWrapper {
 						ndata[index] = rs.getString(index + 1).trim();
 
 					} else {
-						Method m = ResultSet.class.getMethod("get" + Types.simpleName(columnType), int.class);
+						Method m = ResultSet.class.getMethod("get" + Utility.simpleName(columnType), int.class);
 						ndata[index] = m.invoke(rs, index + 1);
 					}
 				}

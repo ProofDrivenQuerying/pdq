@@ -13,6 +13,8 @@ import uk.ac.ox.cs.pdq.db.Attribute;
  */
 public class RESTAttribute extends Attribute {
 	
+	private static final long serialVersionUID = -4628829110700152694L;
+
 	/**  The input method of this attribute. */
 	private final InputMethod inputMethod;
 	

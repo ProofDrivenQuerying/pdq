@@ -20,15 +20,14 @@ import org.xml.sax.SAXException;
 
 import uk.ac.ox.cs.pdq.builder.BuilderException;
 import uk.ac.ox.cs.pdq.builder.SchemaDiscoverer;
-import uk.ac.ox.cs.pdq.cost.DoubleCost;
 import uk.ac.ox.cs.pdq.datasources.services.policies.PolicyFactory;
 import uk.ac.ox.cs.pdq.datasources.services.policies.UsagePolicy;
 import uk.ac.ox.cs.pdq.datasources.services.rest.InputMethod;
 import uk.ac.ox.cs.pdq.datasources.services.rest.OutputMethod;
 import uk.ac.ox.cs.pdq.datasources.services.rest.PathOutputMethod;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
-import uk.ac.ox.cs.pdq.db.AccessMethod.Types;
 import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.db.PrimaryKey;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.builder.SchemaBuilder;
@@ -174,7 +173,7 @@ public class ServiceReader extends AbstractXMLReader<ServiceRepository> implemen
 			
 		case STATIC_INPUT:
 			{
-				Attribute attribute = new Attribute(String.class, this.getValue(atts, QNames.NAME));
+				Attribute attribute = Attribute.create(String.class, this.getValue(atts, QNames.NAME));
 				String im = this.getValue(atts, QNames.INPUT_METHOD);
 				if (im == null) {
 					this.builder.addStaticInput(attribute, this.getValue(atts, QNames.VALUE));
@@ -199,7 +198,7 @@ public class ServiceReader extends AbstractXMLReader<ServiceRepository> implemen
 				if (type == null) {
 					throw new ReaderException("Syntax error. Type of attribute '" + name + "' is missing.");
 				}
-				Attribute attribute = new Attribute(Class.forName(type), name);
+				Attribute attribute = Attribute.create(Class.forName(type), name);
 				String path = this.getValue(atts, QNames.PATH);
 				OutputMethod om = null;
 				if (path != null) {
@@ -228,21 +227,19 @@ public class ServiceReader extends AbstractXMLReader<ServiceRepository> implemen
 		case ACCESS_METHOD:
 			String positions = this.getValue(atts, QNames.INPUTS);
 			List<Integer> inputs = new ArrayList<>();
-			if (positions != null && !positions.trim().isEmpty()) {
+			if (positions != null && !positions.trim().isEmpty()) 
 				inputs.addAll(toIntList(positions));
-			}
 			AccessMethod b = null;
 			String n = this.getValue(atts, QNames.NAME);
-			if (n != null && !n.trim().isEmpty()) {
-				b = new AccessMethod(n, Types.valueOf(this.getValue(atts, QNames.TYPE)), inputs);
-			} else {
-				b = new AccessMethod(Types.valueOf(this.getValue(atts, QNames.TYPE)), inputs);
-			}
+			if (n != null && !n.trim().isEmpty()) 
+				b = AccessMethod.create(n, inputs.toArray(new Integer[inputs.size()]));
+			else 
+				b = AccessMethod.create(inputs.toArray(new Integer[inputs.size()]));
 			String cost = this.getValue(atts, QNames.COST);
 			if (cost == null || cost.trim().isEmpty()) {
 				throw new ReaderException("Cost is a mandatory attribute in " + QNames.ACCESS_METHOD);
 			}
-			this.builder.addAccessMethod(b, new DoubleCost(Double.valueOf(cost)));
+			this.builder.addAccessMethod(b);
 			break;	
 		case KEY:
 			List<Attribute> skey = new ArrayList<>();
@@ -258,7 +255,7 @@ public class ServiceReader extends AbstractXMLReader<ServiceRepository> implemen
 				Preconditions.checkNotNull(k, "Undentified input key");
 				skey.add(k);
 			}
-			this.builder.addKey(skey);
+			this.builder.addPrimaryKey(PrimaryKey.create(skey.toArray(new Attribute[skey.size()])));
 			break;
 		default:
 			throw new ReaderException("Illegal element " + qName);
@@ -324,7 +321,7 @@ public class ServiceReader extends AbstractXMLReader<ServiceRepository> implemen
 			log.info("Reading service initialConfig '" + f.getAbsolutePath() + "'...");
 			try (FileInputStream fis = new FileInputStream(f.getAbsolutePath())) {
 				ServiceRepository repo = this.read(fis);
-				SchemaBuilder b = Schema.builder();
+				SchemaBuilder b = new SchemaBuilder();
 				for (Service s: repo.getServices()) {
 					b.addRelation((Relation) s);
 				}

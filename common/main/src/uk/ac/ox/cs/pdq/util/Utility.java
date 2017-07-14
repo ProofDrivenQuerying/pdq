@@ -781,5 +781,14 @@ public class Utility {
 	public static AccessMethod getAccessMethod(Relation relation, String acceessMethodName) {
 		
 	}
+	
+	/**
+	 * Gets the type of the attributes of the relation.
+	 *
+	 * @return the relation's type
+	 */
+	public static TupleType getType(Relation relation) {
+		return null;
+	}
 
 }

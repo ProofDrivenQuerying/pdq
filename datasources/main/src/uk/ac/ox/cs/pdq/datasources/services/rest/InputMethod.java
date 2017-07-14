@@ -26,17 +26,17 @@ public class InputMethod {
 	 *  Allowed types.
 	 */
 	public static enum Types {
-/** The url param. */
-URL_PARAM, 
- /** The path element. */
- PATH_ELEMENT}
+		/** The url param. */
+		URL_PARAM, 
+		/** The path element. */
+		PATH_ELEMENT}
 
 	/** Separator for parameters. */
 	private static final String PARAM_SEPARATOR = ".";
 
 	/**  The input method name. */
 	private final String name;
-	
+
 	/**  The input method type. */
 	private final Types type;
 
@@ -48,7 +48,7 @@ URL_PARAM,
 
 	/**  If batch input is allowed, input should be separated with this string. */
 	private final String batchDelimiter;
-	
+
 	/** If batch input is allowed, this defined how many input are allowed in a single batch. */
 	private final int batchSize;
 
@@ -93,7 +93,7 @@ URL_PARAM,
 	public String compoundKey(String key) {
 		return this.name + PARAM_SEPARATOR + key;
 	}
-	
+
 	/**
 	 * Format.
 	 *
@@ -115,7 +115,7 @@ URL_PARAM,
 		}
 		return result.toString();
 	}
-	
+
 	/**
 	 * Apply template.
 	 *
@@ -149,7 +149,7 @@ URL_PARAM,
 	public String getName() {
 		return this.name;
 	}
-	
+
 	/**
 	 * TODO redundant with compound key. will be removed.
 	 *
@@ -195,7 +195,7 @@ URL_PARAM,
 	public Integer getBatchSize() {
 		return this.batchSize;
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * @see java.lang.Object#toString()
@@ -204,11 +204,11 @@ URL_PARAM,
 	public String toString() {
 		StringBuilder result = new StringBuilder();
 		result.append("InputMethod(")
-			.append(this.name).append(',')
-			.append(this.type).append(',')
-			.append(this.template).append(',')
-			.append(this.defaultValue).append(',')
-			.append(this.batchDelimiter).append(')');
+		.append(this.name).append(',')
+		.append(this.type).append(',')
+		.append(this.template).append(',')
+		.append(this.defaultValue).append(',')
+		.append(this.batchDelimiter).append(')');
 		return result.toString();
 	}
 }

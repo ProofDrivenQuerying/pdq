@@ -32,6 +32,10 @@ public class AccessMethod implements Serializable {
 	protected AccessMethod() {
 		this(DEFAULT_PREFIX + globalCounter++, new Integer[]{});
 	}
+	
+	protected AccessMethod(Integer[] inputs) {
+		this(DEFAULT_PREFIX + globalCounter++, inputs);
+	}
 
 	protected AccessMethod(String name, Integer[] inputs) {
 		this.name = name;
@@ -41,6 +45,7 @@ public class AccessMethod implements Serializable {
 	public Integer[] getInputs() {
 		return this.inputs.clone();
 	}
+	
 	public int getNumberOfInputs() {
 		return this.inputs.length;
 	}
@@ -84,6 +89,10 @@ public class AccessMethod implements Serializable {
 
 	public static AccessMethod create(String name, Integer[] inputs) {
 		return s_interningManager.intern(new AccessMethod(name, inputs));
+	}
+	
+	public static AccessMethod create(Integer[] inputs) {
+		return s_interningManager.intern(new AccessMethod(inputs));
 	}
 
 	@Override

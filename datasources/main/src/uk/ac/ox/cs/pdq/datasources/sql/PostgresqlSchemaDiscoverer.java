@@ -215,7 +215,7 @@ public class PostgresqlSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 		for (String token: fromClause.trim().split(",")) {
 			String[] aliased = token.trim().split("(AS|\\s)");
 			Relation r = relationMap.get(aliased[0].trim());
-			Atom pred = new Atom(r, Utility.generateVariables(r));
+			Atom pred = Atom.create(r, Utility.generateVariables(r));
 			if (aliased.length == 1) {
 				result.put(aliased[0].trim(), pred);
 			} else {

@@ -4,10 +4,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
+
+import org.junit.Assert;
+
+import com.google.common.base.Preconditions;
 
 import uk.ac.ox.cs.pdq.datasources.Pipelineable;
 import uk.ac.ox.cs.pdq.datasources.RelationAccessWrapper;
@@ -18,8 +21,7 @@ import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.util.Tuple;
 import uk.ac.ox.cs.pdq.util.TupleType;
-
-import com.google.common.base.Preconditions;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 /**
  * TOCOMMENT If this is the default implementation of a relation, why do we call this wrapper?
@@ -31,8 +33,7 @@ import com.google.common.base.Preconditions;
  * 
  * @author Julien Leblay
  */
-public class InMemoryTableWrapper extends Relation
-		implements Pipelineable, RelationAccessWrapper, InMemoryRelation {
+public class InMemoryTableWrapper extends Relation implements Pipelineable, RelationAccessWrapper, InMemoryRelation {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -3167783211904676965L;
@@ -46,8 +47,7 @@ public class InMemoryTableWrapper extends Relation
 	 * @param relation Relation
 	 */
 	public InMemoryTableWrapper(Relation relation) {
-		this(relation.getName(), relation.getAttributes(),
-				relation.getAccessMethods(), relation.isEquality());
+		this(relation.getName(), relation.getAttributes(), relation.getAccessMethods(), relation.isEquality());
 	}
 	
 	/**
@@ -55,12 +55,11 @@ public class InMemoryTableWrapper extends Relation
 	 *
 	 * @param name String
 	 * @param attributes List<Attribute>
-	 * @param bm List<AccessMethod>
+	 * @param methods List<AccessMethod>
 	 * @param isEquality the is equality
 	 */
-	public InMemoryTableWrapper(String name, List<Attribute> attributes,
-			List<AccessMethod> bm, boolean isEquality) {
-		super(name, attributes, bm, isEquality);
+	public InMemoryTableWrapper(String name, Attribute[] attributes, AccessMethod[] methods, boolean isEquality) {
+		super(name, attributes, methods, isEquality);
 	}
 	
 	/**
@@ -70,9 +69,8 @@ public class InMemoryTableWrapper extends Relation
 	 * @param attributes List<Attribute>
 	 * @param bm List<AccessMethod>
 	 */
-	public InMemoryTableWrapper(String name, List<Attribute> attributes,
-			List<AccessMethod> bm) {
-		this(name, attributes, bm, false);
+	public InMemoryTableWrapper(String name, Attribute[] attributes, AccessMethod[] methods) {
+		this(name, attributes, methods, false);
 	}
 	
 	/**
@@ -82,8 +80,8 @@ public class InMemoryTableWrapper extends Relation
 	 * @param attributes List<Attribute>
 	 * @param isEquality the is equality
 	 */
-	public InMemoryTableWrapper(String name, List<Attribute> attributes, boolean isEquality) {
-		this(name, attributes, new LinkedList<AccessMethod>(), isEquality);
+	public InMemoryTableWrapper(String name, Attribute[] attributes, boolean isEquality) {
+		this(name, attributes, new AccessMethod[]{}, isEquality);
 	}
 	
 	/**
@@ -92,7 +90,7 @@ public class InMemoryTableWrapper extends Relation
 	 * @param name String
 	 * @param attributes List<Attribute>
 	 */
-	public InMemoryTableWrapper(String name, List<Attribute> attributes) {
+	public InMemoryTableWrapper(String name, Attribute[] attributes) {
 		this(name, attributes, false);
 	}
 
@@ -101,11 +99,11 @@ public class InMemoryTableWrapper extends Relation
 	 * @see uk.ac.ox.cs.pdq.runtime.wrappers.InMemoryRelation#load(java.util.Collection)
 	 */
 	public void load(Collection<Tuple> d) {
+		TupleType type = Utility.getType(this);
 		for (Tuple t: d) {
-			Preconditions.checkState(t.getType().equals(this.getType()));
+			Assert.assertTrue(t.getType().equals(type));
 			this.data.add(t);
 		}
-		this.setMetadata(new StaticMetadata((long) this.data.size()));
 	}
 
 	/*
@@ -136,8 +134,7 @@ public class InMemoryTableWrapper extends Relation
 	 * @see uk.ac.ox.cs.pdq.datasources.memory.runtime.RelationAccessWrapper#access(Table)
 	 */
 	@Override
-	public Table access(List<? extends Attribute> inputHeader,
-			ResetableIterator<Tuple> inputTuples) {
+	public Table access(List<? extends Attribute> inputHeader, ResetableIterator<Tuple> inputTuples) {
 		Preconditions.checkArgument(inputHeader != null);
 		Preconditions.checkArgument(inputTuples != null);
 		
@@ -178,8 +175,7 @@ public class InMemoryTableWrapper extends Relation
 	 * @return ResetableIterator<Tuple>
 	 * @see uk.ac.ox.cs.pdq.runtime.wrappers.Pipelineable#iterator(List<? extends Attribute>, ResetableIterator<Tuple>)
 	 */
-	public ResetableIterator<Tuple> iterator(
-			List<? extends Attribute> inputAttributes, ResetableIterator<Tuple> inputs) {
+	public ResetableIterator<Tuple> iterator(List<? extends Attribute> inputAttributes, ResetableIterator<Tuple> inputs) {
 		return new AccessIterator((List<Attribute>) inputAttributes, inputs);
 	}
 

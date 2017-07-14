@@ -1,7 +1,5 @@
 package uk.ac.ox.cs.pdq.datasources;
 
-import uk.ac.ox.cs.pdq.datasources.Differentiable.Levels;
-
 /**
  * Representation of a Boolean query/plan result.
  *

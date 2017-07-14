@@ -5,18 +5,16 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import uk.ac.ox.cs.pdq.datasources.Differentiable.Levels;
-import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.util.Tuple;
-import uk.ac.ox.cs.pdq.util.TupleType;
-import uk.ac.ox.cs.pdq.util.Typed;
-import uk.ac.ox.cs.pdq.util.TupleType.DefaultFactory;
-
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Interner;
 import com.google.common.collect.Interners;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+
+import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.util.Tuple;
+import uk.ac.ox.cs.pdq.util.TupleType;
+import uk.ac.ox.cs.pdq.util.Typed;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -158,6 +156,7 @@ public class Table implements Result, Iterable<Tuple> {
 	 * @return the data of this column
 	 */
 	public <T> T[] getColumn(int c) {
+		@SuppressWarnings("unchecked")
 		T[] column = (T[]) new Object[this.data.size()];
 		int i = 0;
 		for (Tuple t : this.data) {

@@ -24,11 +24,18 @@ import org.apache.jcs.access.exception.CacheException;
 import org.apache.jcs.engine.control.CompositeCacheManager;
 import org.apache.log4j.Logger;
 
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
+import com.google.common.eventbus.EventBus;
+
 import uk.ac.ox.cs.pdq.datasources.AccessException;
 import uk.ac.ox.cs.pdq.datasources.Pipelineable;
+import uk.ac.ox.cs.pdq.datasources.RelationAccessWrapper;
 import uk.ac.ox.cs.pdq.datasources.ResetableIterator;
 import uk.ac.ox.cs.pdq.datasources.Table;
-import uk.ac.ox.cs.pdq.datasources.memory.RelationAccessWrapper;
 import uk.ac.ox.cs.pdq.datasources.services.Service;
 import uk.ac.ox.cs.pdq.datasources.services.policies.UsagePolicy;
 import uk.ac.ox.cs.pdq.datasources.services.policies.UsagePolicyViolationException;
@@ -38,15 +45,7 @@ import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.util.Tuple;
 import uk.ac.ox.cs.pdq.util.TupleType;
-import uk.ac.ox.cs.pdq.util.Types;
-
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
-import com.google.common.eventbus.EventBus;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 
 // TODO: Auto-generated Javadoc
@@ -69,7 +68,7 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 	 * All list of attributes the including the relations actual attributes,
 	 * plus additional, possibly interleaved static attributes.
 	 */
-	private final List<RESTAttribute> allAttributes;
+	private final RESTAttribute[] allAttributes;
 
 	/** Event bus where pre- and post-process event are propagated. */
 	private final EventBus eventBus = new EventBus(new UsageViolationExceptionHandler());
@@ -102,9 +101,9 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 	 * @param policies the policies
 	 */
 	public RESTRelation(
-			String name, List<RESTAttribute> attributes,
-			List<AccessMethod> accessMethods,
-			List<RESTAttribute> allAttributes, 
+			String name, RESTAttribute[] attributes,
+			AccessMethod[] accessMethods,
+			RESTAttribute[] allAttributes, 
 			String url, 
 			MediaType mimeType, 
 			String resultDelim,
@@ -113,7 +112,7 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 		Preconditions.checkArgument(url != null);
 		Preconditions.checkArgument(policies != null);
 
-		this.allAttributes = allAttributes;
+		this.allAttributes = allAttributes.clone();
 		this.url = url;
 		this.mediaType = mimeType;
 		this.resultDelimiter = resultDelim != null ? resultDelim : "";
@@ -162,8 +161,7 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 	 * @see uk.ac.ox.cs.pdq.datasources.services.Service#access(Table)
 	 */
 	@Override
-	public Table access(List<? extends Attribute> inputHeader,
-			ResetableIterator<Tuple> inputTuples) {
+	public Table access(List<? extends Attribute> inputHeader, ResetableIterator<Tuple> inputTuples) {
 		List<RESTAttribute> inputAttributes = new LinkedList<>();
 		for (Attribute a: inputHeader) {
 			inputAttributes.add((RESTAttribute) this.getAttribute(a.getName()));
@@ -280,7 +278,7 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 			Object value = null;
 			int i = -1;
 			if (input instanceof StaticInput) {
-				value = ((StaticInput) input).getDefaultValue();
+				value = ((StaticInput<?>) input).getDefaultValue();
 			} else {
 				if ((i = inputs.indexOf(input)) >= 0) {
 					value = tuple.getValue(i);
@@ -666,11 +664,11 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 					|| inputTable.size() > 1) {
 				OutputMethod om = ((RESTAttribute) column).getOutputMethod();
 				if (om != null) {
-					result[i]= Types.cast(column.getType(), om.extract(item));
+					result[i]= Utility.cast(column.getType(), om.extract(item));
 				}
 				hasValue |= result[i] != null;
 			} else if ((j = inputHeader.indexOf(column)) >=0 ) {
-				result[i]= Types.cast(column.getType(), first.getValue(j));
+				result[i]= Utility.cast(column.getType(), first.getValue(j));
 				hasValue = true;
 			}
 

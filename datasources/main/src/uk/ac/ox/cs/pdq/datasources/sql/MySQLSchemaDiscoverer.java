@@ -195,8 +195,8 @@ public class MySQLSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 		boundTerms.removeAll(freeTermsAndAttributes.getLeft());
 		return new LinearGuarded(
 				//this.toVariable(freeTermsAndAttributes.getLeft()),
-				new Atom(
-						new Relation(viewName, freeTermsAndAttributes.getRight()) {},
+				Atom.create(
+						Relation.create(viewName, freeTermsAndAttributes.getRight()) {},
 						freeTermsAndAttributes.getLeft()), 
 				//boundTerms,
 				Conjunction.of(right));
@@ -219,7 +219,7 @@ public class MySQLSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 		for (String token: from.trim().split("(,|join)")) {
 			String[] aliased = token.trim().replace("`", "").split("(AS|\\s)");
 			Relation r = relationMap.get(aliased[0].trim());
-			Atom pred = new Atom(r, Utility.generateVariables(r));
+			Atom pred = Atom.create(r, Utility.generateVariables(r));
 			if (aliased.length == 1) {
 				result.put(aliased[0].trim(), pred);
 			} else {
@@ -271,7 +271,7 @@ public class MySQLSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 				List<Term> terms = Lists.newArrayList(p2.getTerms());
 				terms.set(t2.getSecond(), t1.getFirst().getTerm(t1.getSecond()));
 				String key = predMap.inverse().get(p2);
-				predMap.forcePut(key, new Atom(p2.getPredicate(), terms));
+				predMap.forcePut(key, Atom.create(p2.getPredicate(), terms));
 			}
 		}
 	}
@@ -344,7 +344,7 @@ public class MySQLSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 			}
 		}
 		if (renamed != null && !renamed.isEmpty()){
-			att = new Attribute(((Relation) pred.getPredicate()).getAttribute(index).getType(), renamed);
+			att = Attribute.create(((Relation) pred.getPredicate()).getAttribute(index).getType(), renamed);
 		}
 		return new Triple<>(pred, index, att);
 	}
@@ -376,11 +376,10 @@ public class MySQLSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 		if (attribute != null
 				&& ((attribute.startsWith("\"") && attribute.endsWith("\""))
 				|| (attribute.startsWith("'") && attribute.endsWith("'")))) {
-			term = new TypedConstant<>(attribute.substring(1, attribute.length() - 1));
+			term = TypedConstant.create(attribute.substring(1, attribute.length() - 1));
 		}
-		if (renamed != null && !renamed.isEmpty()) {
-			att = new Attribute(String.class, String.valueOf(UntypedConstant.getFreshConstant()));
-		}
+		if (renamed != null && !renamed.isEmpty()) 
+			att = Attribute.create(String.class, String.valueOf(UntypedConstant.getFreshConstant()));
 		return Pair.of(term, att);
 	}
 }

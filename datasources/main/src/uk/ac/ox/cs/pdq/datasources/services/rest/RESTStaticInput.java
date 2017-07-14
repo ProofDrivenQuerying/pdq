@@ -15,7 +15,7 @@ import uk.ac.ox.cs.pdq.db.Attribute;
  * @param <T> the generic type
  */
 public class RESTStaticInput<T> extends RESTAttribute implements StaticInput<T> {
-	
+	private static final long serialVersionUID = 454377200312328329L;
 	/**  The input's default value. */
 	private final T defaultValue;
 

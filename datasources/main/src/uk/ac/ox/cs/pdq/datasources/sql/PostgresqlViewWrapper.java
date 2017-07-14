@@ -13,9 +13,6 @@ import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 
-import uk.ac.ox.cs.pdq.cost.Cost;
-import uk.ac.ox.cs.pdq.cost.DoubleCost;
-import uk.ac.ox.cs.pdq.datasources.metadata.StaticMetadata;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.View;
 import uk.ac.ox.cs.pdq.fol.LinearGuarded;
@@ -70,7 +67,7 @@ public final class PostgresqlViewWrapper extends SQLViewWrapper {
 	 * @param definition LinearGuarded
 	 * @param b List<AccessMethod>
 	 */
-	public PostgresqlViewWrapper(Properties properties, LinearGuarded definition, List<AccessMethod> b) {
+	public PostgresqlViewWrapper(Properties properties, LinearGuarded definition, AccessMethod[] b) {
 		super(properties, definition, b);
 	}
 
