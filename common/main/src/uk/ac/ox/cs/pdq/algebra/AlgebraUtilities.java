@@ -21,8 +21,26 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 
 public class AlgebraUtilities {
-	
-	
+
+	protected static Integer[] computePositionsOfInputAttributes(RelationalTerm left, RelationalTerm right) {
+		List<Integer> result = new ArrayList<>();
+		for (Attribute attribute: right.getInputAttributes()) {
+			int indexOf = Arrays.asList(left.getOutputAttributes()).indexOf(attribute);
+			if(indexOf >= 0)
+				result.add(indexOf);
+		}
+		return result.toArray(new Integer[result.size()]);
+	}
+
+	protected static Attribute[] computeInputAttributes(RelationalTerm left, RelationalTerm right, Integer[] sidewaysInput) {
+		Attribute[] leftInputs = left.getInputAttributes();
+		Attribute[] rightInputs = right.getInputAttributes();
+		List<Attribute> result = Lists.newArrayList(leftInputs);
+		for (int i = 0; i < sidewaysInput.length; i++) 
+			result.add(rightInputs[i]);
+		return result.toArray(new Attribute[result.size()]);
+	}
+
 	protected static ConjunctiveCondition computeJoinConditions(RelationalTerm[] children) {
 		Multimap<Attribute, Integer> joinVariables = LinkedHashMultimap.create();
 		int totalCol = 0;
@@ -58,7 +76,7 @@ public class AlgebraUtilities {
 		return ConjunctiveCondition.create(equalities.toArray(new SimpleCondition[equalities.size()]));
 	}
 
-	public static Attribute[] getInputAttributes(Relation relation, AccessMethod accessMethod) {
+	public static Attribute[] computeInputAttributes(Relation relation, AccessMethod accessMethod) {
 		Assert.assertNotNull(relation);
 		Assert.assertNotNull(accessMethod);
 		if(accessMethod.getInputs().length == 0) {
@@ -71,7 +89,7 @@ public class AlgebraUtilities {
 		return inputs.toArray(new Attribute[inputs.size()]);
 	}
 
-	public static Attribute[] getInputAttributes(Relation relation, AccessMethod accessMethod, Map<Integer, TypedConstant> inputConstants) {
+	public static Attribute[] computeInputAttributes(Relation relation, AccessMethod accessMethod, Map<Integer, TypedConstant> inputConstants) {
 		Assert.assertNotNull(relation);
 		Assert.assertTrue(accessMethod != null && accessMethod.getInputs().length > 0);
 		Assert.assertNotNull(inputConstants);
@@ -87,8 +105,8 @@ public class AlgebraUtilities {
 		}
 		return inputs.toArray(new Attribute[inputs.size()]);
 	}
-	
-	public static Attribute[] getInputAttributes(RelationalTerm child1, RelationalTerm child2) {
+
+	public static Attribute[] computeInputAttributes(RelationalTerm child1, RelationalTerm child2) {
 		Assert.assertNotNull(child1);
 		Assert.assertNotNull(child2);
 		Attribute[] input = new Attribute[child1.getNumberOfInputAttributes() + child2.getNumberOfInputAttributes()];
@@ -96,8 +114,8 @@ public class AlgebraUtilities {
 		System.arraycopy(child2.getInputAttributes(), 0, input, child1.getNumberOfInputAttributes(), child2.getNumberOfInputAttributes());
 		return input;
 	}
-	
-	public static Attribute[] getOutputAttributes(RelationalTerm child1, RelationalTerm child2) {
+
+	public static Attribute[] computeOutputAttributes(RelationalTerm child1, RelationalTerm child2) {
 		Assert.assertNotNull(child1);
 		Assert.assertNotNull(child2);
 		Attribute[] input = new Attribute[child1.getNumberOfOutputAttributes() + child2.getNumberOfOutputAttributes()];
@@ -105,15 +123,15 @@ public class AlgebraUtilities {
 		System.arraycopy(child2.getNumberOfOutputAttributes(), 0, input, child1.getNumberOfOutputAttributes(), child2.getNumberOfOutputAttributes());
 		return input;
 	}
-	
-	public static Attribute[] getProperOutputAttributes(RelationalTerm child) {
+
+	public static Attribute[] computeProperOutputAttributes(RelationalTerm child) {
 		Assert.assertNotNull(child);
 		List<Attribute> output = Lists.newArrayList();
 		output.addAll(Arrays.asList(child.getOutputAttributes()));
 		output.removeAll(Arrays.asList(child.getInputAttributes()));
 		return output.toArray(new Attribute[output.size()]);
 	}
-	
+
 	/**
 	 * Gets the accesses.
 	 *
@@ -141,6 +159,9 @@ public class AlgebraUtilities {
 		}
 		else if (operator instanceof ProjectionTerm) {
 			result.addAll(getAccesses(((ProjectionTerm)operator).getChildren()[0]));
+		}
+		else if (operator instanceof RenameTerm) {
+			result.addAll(getAccesses(((RenameTerm)operator).getChildren()[0]));
 		}
 		return result;
 	}

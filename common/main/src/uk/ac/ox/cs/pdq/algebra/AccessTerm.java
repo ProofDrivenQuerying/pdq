@@ -33,7 +33,7 @@ public class AccessTerm extends RelationalTerm {
 	protected String toString = null;
 
 	private AccessTerm(Relation relation, AccessMethod accessMethod) {
-		super(AlgebraUtilities.getInputAttributes(relation, accessMethod), relation.getAttributes());
+		super(AlgebraUtilities.computeInputAttributes(relation, accessMethod), relation.getAttributes());
 		Assert.assertNotNull(relation);
 		Assert.assertNotNull(accessMethod);
 		this.relation = relation;
@@ -42,7 +42,7 @@ public class AccessTerm extends RelationalTerm {
 	}
 
 	private AccessTerm(Relation relation, AccessMethod accessMethod, Map<Integer, TypedConstant> inputConstants) {
-		super(AlgebraUtilities.getInputAttributes(relation, accessMethod, inputConstants), relation.getAttributes());
+		super(AlgebraUtilities.computeInputAttributes(relation, accessMethod, inputConstants), relation.getAttributes());
 		Assert.assertNotNull(relation);
 		Assert.assertNotNull(accessMethod);
 		for(Integer position:inputConstants.keySet()) {

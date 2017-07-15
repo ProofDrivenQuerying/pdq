@@ -19,20 +19,23 @@ public class DependentJoinTerm extends RelationalTerm {
 
 	/** The predicate associated with this selection. */
 	protected final Condition predicate;
+	
+	/** Input positions for the right hand child**/
+	protected final Integer[] sidewaysInput;
 
 	/**  Cashed string representation. */
 	protected String toString = null;
 
-	private DependentJoinTerm(Condition predicate, RelationalTerm child1, RelationalTerm child2) {
-		super(AlgebraUtilities.getInputAttributes(child1, child2), AlgebraUtilities.getOutputAttributes(child1, child2));
-		Assert.assertNotNull(predicate);
+	private DependentJoinTerm(RelationalTerm child1, RelationalTerm child2) {
+		super(AlgebraUtilities.computeInputAttributes(child1, child2, AlgebraUtilities.computePositionsOfInputAttributes(child1, child2)), AlgebraUtilities.computeOutputAttributes(child1, child2));
 		Assert.assertNotNull(child1);
 		Assert.assertNotNull(child2);
 		for(int inputAttributeIndex = 0; inputAttributeIndex < child2.getNumberOfInputAttributes(); ++inputAttributeIndex) 
 			Assert.assertTrue(Arrays.asList(child1.getOutputAttributes()).contains(child2.getInputAttributes()[inputAttributeIndex]));
-		this.predicate = predicate;
 		this.children[0] = child1;
 		this.children[1] = child2;
+		this.sidewaysInput = AlgebraUtilities.computePositionsOfInputAttributes(child1, child2);
+		this.predicate = AlgebraUtilities.computeJoinConditions(this.children);
 	}
 
 	public Condition getPredicate() {
@@ -62,7 +65,7 @@ public class DependentJoinTerm extends RelationalTerm {
 	
     protected static final InterningManager<DependentJoinTerm> s_interningManager = new InterningManager<DependentJoinTerm>() {
         protected boolean equal(DependentJoinTerm object1, DependentJoinTerm object2) {
-            for (int index = 1; index >= 0; --index)
+        	for (int index = 1; index >= 0; --index)
                 if (!object1.children[index].equals(object2.children[index]))
                     return false;
             return true;
@@ -80,7 +83,7 @@ public class DependentJoinTerm extends RelationalTerm {
         return s_interningManager.intern(this);
     }
 
-    public static DependentJoinTerm create(Condition predicate, RelationalTerm child1, RelationalTerm child2) {
-        return s_interningManager.intern(new DependentJoinTerm(predicate, child1, child2));
+    public static DependentJoinTerm create(RelationalTerm child1, RelationalTerm child2) {
+        return s_interningManager.intern(new DependentJoinTerm(child1, child2));
     }
 }

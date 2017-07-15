@@ -4,7 +4,6 @@ import org.junit.Assert;
 
 import uk.ac.ox.cs.pdq.InterningManager;
 
-
 /**
  * 
  * @author Efthymia Tsamoura
@@ -21,7 +20,7 @@ public class JoinTerm extends RelationalTerm {
 	protected String toString = null;
 
 	private JoinTerm(Condition predicate, RelationalTerm child1, RelationalTerm child2) {
-		super(AlgebraUtilities.getInputAttributes(child1, child2), AlgebraUtilities.getOutputAttributes(child1, child2));
+		super(AlgebraUtilities.computeInputAttributes(child1, child2), AlgebraUtilities.computeOutputAttributes(child1, child2));
 		Assert.assertNotNull(predicate);
 		Assert.assertNotNull(child1);
 		Assert.assertNotNull(child2);
@@ -31,7 +30,7 @@ public class JoinTerm extends RelationalTerm {
 	}
 	
 	private JoinTerm(RelationalTerm child1, RelationalTerm child2) {
-		super(AlgebraUtilities.getInputAttributes(child1, child2), AlgebraUtilities.getOutputAttributes(child1, child2));
+		super(AlgebraUtilities.computeInputAttributes(child1, child2), AlgebraUtilities.computeOutputAttributes(child1, child2));
 		Assert.assertNotNull(child1);
 		Assert.assertNotNull(child2);
 		this.children[0] = child1;
