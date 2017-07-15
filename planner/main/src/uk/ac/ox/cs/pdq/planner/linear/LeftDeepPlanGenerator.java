@@ -6,7 +6,9 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
-import uk.ac.ox.cs.pdq.db.AccessMethod.Types;
+import uk.ac.ox.cs.pdq.algebra.AccessTerm;
+import uk.ac.ox.cs.pdq.algebra.ProjectionTerm;
+import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Term;
@@ -32,7 +34,7 @@ public class LeftDeepPlanGenerator {
 	 * @param parent the parent
 	 * @return the left deep plan
 	 */
-	public static LeftDeepPlan createLeftDeepPlan(LinearChaseConfiguration configuration, LeftDeepPlan parent) {
+	public static RelationalTerm createLeftDeepPlan(LinearChaseConfiguration configuration, RelationalTerm parent) {
 		return createLeftDeepPlan(configuration, parent, inferOutputChaseConstants(configuration));
 	}
 
@@ -43,8 +45,8 @@ public class LeftDeepPlanGenerator {
 	 * @param nodes List<T>
 	 * @return the left deep plan
 	 */
-	public static<T extends SearchNode> LeftDeepPlan createLeftDeepPlan(List<T> nodes) {
-		LeftDeepPlan parentPlan = null;
+	public static<T extends SearchNode> RelationalTerm createLeftDeepPlan(List<T> nodes) {
+		RelationalTerm parentPlan = null;
 		for (T node: nodes) {
 			parentPlan = LeftDeepPlanGenerator.createLeftDeepPlan(node.getConfiguration(), parentPlan);
 			
@@ -67,34 +69,37 @@ public class LeftDeepPlanGenerator {
 	 * @param toProject 		Terms to project in the resulting plan
 	 * @return the left deep plan
 	 */
-	private static LeftDeepPlan createLeftDeepPlan(LinearConfiguration c,
-			LeftDeepPlan parent,
-			List<Term> toProject) {
+	private static RelationalTerm createLeftDeepPlan(LinearConfiguration c, RelationalTerm parent, List<Term> toProject) {
 		Preconditions.checkArgument(c.getExposedCandidates() != null);
-		RelationalOperator op1 = null;
-		AccessOperator access = null;
-		RelationalOperator predAlias = null;
-		if (parent != null) {
-			predAlias = new SubPlanAlias(parent);
-		}
+		RelationalTerm op1 = null;
+		AccessTerm access = null;
+//		RelationalTerm predAlias = null;
+//		if (parent != null) {
+//			predAlias = new SubPlanAlias(parent);
+//		}
 
 		//Iterate over each exposed fact
 		for (Candidate candidate: c.getExposedCandidates()) {
 			if (access == null) {
-				//If this fact has been exposed by an input-free accessibility axiom (access method), then create an input-free access
-				//else create a dependent access operator
-				if (candidate.getAccessMethod().getType() == Types.FREE) {
-					Relation planRelation = new Relation(candidate.getRelation().getName(), candidate.getRelation().getAttributes().subList(0, candidate.getRelation().getAttributes().size()-1)){};
-					planRelation.setMetadata(candidate.getRelation().getMetadata());
-					planRelation.setAccessMethods(candidate.getRelation().getAccessMethods());
-					access =  new Scan(planRelation);
-				} else {
-					//planRelation is a copy of the relation without the extra attribute in the schema, needed for chasing
-					Relation planRelation = new Relation(candidate.getRelation().getName(), candidate.getRelation().getAttributes().subList(0, candidate.getRelation().getAttributes().size()-1)){};
-					planRelation.setMetadata(candidate.getRelation().getMetadata());
-					planRelation.setAccessMethods(candidate.getRelation().getAccessMethods());
-					access = new DependentAccess(planRelation,candidate.getAccessMethod(), candidate.getFact().getTerms());
-				}
+//				//If this fact has been exposed by an input-free accessibility axiom (access method), then create an input-free access
+//				//else create a dependent access operator
+//				if (candidate.getAccessMethod().getType() == Types.FREE) {
+//					Relation planRelation = new Relation(candidate.getRelation().getName(), candidate.getRelation().getAttributes().subList(0, candidate.getRelation().getAttributes().size()-1)){};
+//					planRelation.setMetadata(candidate.getRelation().getMetadata());
+//					planRelation.setAccessMethods(candidate.getRelation().getAccessMethods());
+//					access =  new Scan(planRelation);
+//				} else {
+//					//planRelation is a copy of the relation without the extra attribute in the schema, needed for chasing
+//					Relation planRelation = new Relation(candidate.getRelation().getName(), candidate.getRelation().getAttributes().subList(0, candidate.getRelation().getAttributes().size()-1)){};
+//					planRelation.setMetadata(candidate.getRelation().getMetadata());
+//					planRelation.setAccessMethods(candidate.getRelation().getAccessMethods());
+//					access = new DependentAccess(planRelation,candidate.getAccessMethod(), candidate.getFact().getTerms());
+//				}
+				//Compute the input constants if any 
+				access = AccessTerm.create(planRelation, candidate.getAccessMethod(), candidate.getFact().getTerms());
+				
+				//Add a projection operator 
+				access = ProjectionTerm.create(projections, access); 
 			}
 			RelationalOperator op2 = (RelationalOperator) access;
 			//Find if this fact has schema constants in output positions or repeated constants
