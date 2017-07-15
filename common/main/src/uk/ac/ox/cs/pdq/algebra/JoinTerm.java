@@ -29,6 +29,15 @@ public class JoinTerm extends RelationalTerm {
 		this.children[0] = child1;
 		this.children[1] = child2;
 	}
+	
+	private JoinTerm(RelationalTerm child1, RelationalTerm child2) {
+		super(AlgebraUtilities.getInputAttributes(child1, child2), AlgebraUtilities.getOutputAttributes(child1, child2));
+		Assert.assertNotNull(child1);
+		Assert.assertNotNull(child2);
+		this.children[0] = child1;
+		this.children[1] = child2;
+		this.predicate = AlgebraUtilities.computeJoinConditions(this.children);
+	}
 
 
 	public Condition getPredicate() {
@@ -78,5 +87,9 @@ public class JoinTerm extends RelationalTerm {
 
     public static JoinTerm create(Condition predicate, RelationalTerm child1, RelationalTerm child2) {
         return s_interningManager.intern(new JoinTerm(predicate, child1, child2));
+    }
+    
+    public static JoinTerm create(RelationalTerm child1, RelationalTerm child2) {
+        return s_interningManager.intern(new JoinTerm(child1, child2));
     }
 }

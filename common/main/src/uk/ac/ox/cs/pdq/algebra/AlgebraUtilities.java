@@ -2,6 +2,8 @@ package uk.ac.ox.cs.pdq.algebra;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -9,7 +11,9 @@ import java.util.Set;
 
 import org.junit.Assert;
 
+import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Multimap;
 
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
@@ -17,6 +21,42 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 
 public class AlgebraUtilities {
+	
+	
+	protected static ConjunctiveCondition computeJoinConditions(RelationalTerm[] children) {
+		Multimap<Attribute, Integer> joinVariables = LinkedHashMultimap.create();
+		int totalCol = 0;
+		// Cluster patterns by variables
+		Set<Attribute> inChild = new LinkedHashSet<>();
+		for (RelationalTerm child : children) {
+			inChild.clear();
+			for (int i = 0, l = child.getNumberOfOutputAttributes(); i < l; i++) {
+				Attribute col = child.getOutputAttributes()[i];
+				if (!inChild.contains(col)) {
+					joinVariables.put(col, totalCol);
+					inChild.add(col);
+				}
+				totalCol++;
+			}
+		}
+
+		List<SimpleCondition> equalities = new ArrayList<>();
+		// Remove clusters containing only one pattern
+		for (Iterator<Attribute> keys = joinVariables.keySet().iterator(); keys.hasNext();) {
+			Collection<Integer> cluster = joinVariables.get(keys.next());
+			if (cluster.size() < 2) {
+				keys.remove();
+			} else {
+				Iterator<Integer> i = cluster.iterator();
+				Integer left = i.next();
+				while (i.hasNext()) {
+					Integer right = i.next();
+					equalities.add(AttributeEqualityCondition.create(left, right));
+				}
+			}
+		}
+		return ConjunctiveCondition.create(equalities.toArray(new SimpleCondition[equalities.size()]));
+	}
 
 	public static Attribute[] getInputAttributes(Relation relation, AccessMethod accessMethod) {
 		Assert.assertNotNull(relation);
