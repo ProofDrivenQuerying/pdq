@@ -201,10 +201,10 @@ public class NaiveCardinalityEstimator implements CardinalityEstimator {
 			largestChild = Math.max(largestChild, childCard);
 		}
 		
-		if(o.getPredicate() instanceof SimpleCondition) 
+		if(o.getJoinConditions() instanceof SimpleCondition) 
 			return Math.max(largestChild, (result / Math.pow(JOIN_REDUCTION,1)));
-		else if(o.getPredicate() instanceof ConjunctiveCondition) 
-			return Math.max(largestChild, (result / Math.pow(JOIN_REDUCTION, ((ConjunctiveCondition) o.getPredicate()).getNumberOfConjuncts())));
+		else if(o.getJoinConditions() instanceof ConjunctiveCondition) 
+			return Math.max(largestChild, (result / Math.pow(JOIN_REDUCTION, ((ConjunctiveCondition) o.getJoinConditions()).getNumberOfConjuncts())));
 		else 
 			throw new IllegalStateException("Unknown condition type");
 	}

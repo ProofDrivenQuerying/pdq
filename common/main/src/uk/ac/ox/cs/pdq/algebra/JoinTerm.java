@@ -14,20 +14,11 @@ public class JoinTerm extends RelationalTerm {
 
 	protected final RelationalTerm[] children = new RelationalTerm[2];
 
-	protected final Condition predicate;
+	/** The join conditions. */
+	protected final Condition joinConditions;
 
 	/**  Cashed string representation. */
 	protected String toString = null;
-
-	private JoinTerm(Condition predicate, RelationalTerm child1, RelationalTerm child2) {
-		super(AlgebraUtilities.computeInputAttributes(child1, child2), AlgebraUtilities.computeOutputAttributes(child1, child2));
-		Assert.assertNotNull(predicate);
-		Assert.assertNotNull(child1);
-		Assert.assertNotNull(child2);
-		this.predicate = predicate;
-		this.children[0] = child1;
-		this.children[1] = child2;
-	}
 	
 	private JoinTerm(RelationalTerm child1, RelationalTerm child2) {
 		super(AlgebraUtilities.computeInputAttributes(child1, child2), AlgebraUtilities.computeOutputAttributes(child1, child2));
@@ -35,12 +26,12 @@ public class JoinTerm extends RelationalTerm {
 		Assert.assertNotNull(child2);
 		this.children[0] = child1;
 		this.children[1] = child2;
-		this.predicate = AlgebraUtilities.computeJoinConditions(this.children);
+		this.joinConditions = AlgebraUtilities.computeJoinConditions(this.children);
 	}
 
 
-	public Condition getPredicate() {
-		return this.predicate;
+	public Condition getJoinConditions() {
+		return this.joinConditions;
 	}
 
 	@Override
@@ -49,7 +40,7 @@ public class JoinTerm extends RelationalTerm {
 			StringBuilder result = new StringBuilder();
 			result.append("Join");
 			result.append('{');
-			result.append('[').append(this.predicate).append(']');
+			result.append('[').append(this.joinConditions).append(']');
 			result.append(this.children[0].toString());
 			result.append(',');
 			result.append(this.children[1].toString());
@@ -82,10 +73,6 @@ public class JoinTerm extends RelationalTerm {
     
     protected Object readResolve() {
         return s_interningManager.intern(this);
-    }
-
-    public static JoinTerm create(Condition predicate, RelationalTerm child1, RelationalTerm child2) {
-        return s_interningManager.intern(new JoinTerm(predicate, child1, child2));
     }
     
     public static JoinTerm create(RelationalTerm child1, RelationalTerm child2) {

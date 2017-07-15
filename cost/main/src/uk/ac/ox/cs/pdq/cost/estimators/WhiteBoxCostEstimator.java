@@ -141,7 +141,7 @@ public class WhiteBoxCostEstimator implements BlackBoxCostEstimator {
 	 */
 	private static Double perOutputTupleCost(RelationalTerm o) {
 		if(o instanceof JoinTerm) {
-			Condition predicate = ((JoinTerm) o).getPredicate();
+			Condition predicate = ((JoinTerm) o).getJoinConditions();
 			if (predicate instanceof SimpleCondition) 
 				return 1.0;
 			else if (predicate instanceof ConjunctiveCondition) 

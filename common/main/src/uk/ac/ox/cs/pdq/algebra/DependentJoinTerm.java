@@ -17,8 +17,8 @@ public class DependentJoinTerm extends RelationalTerm {
 
 	protected final RelationalTerm[] children = new RelationalTerm[2];
 
-	/** The predicate associated with this selection. */
-	protected final Condition predicate;
+	/** The join conditions. */
+	protected final Condition joinConditions;
 	
 	/** Input positions for the right hand child**/
 	protected final Integer[] sidewaysInput;
@@ -35,11 +35,11 @@ public class DependentJoinTerm extends RelationalTerm {
 		this.children[0] = child1;
 		this.children[1] = child2;
 		this.sidewaysInput = AlgebraUtilities.computePositionsOfInputAttributes(child1, child2);
-		this.predicate = AlgebraUtilities.computeJoinConditions(this.children);
+		this.joinConditions = AlgebraUtilities.computeJoinConditions(this.children);
 	}
 
 	public Condition getPredicate() {
-		return this.predicate;
+		return this.joinConditions;
 	}
 
 	@Override
@@ -48,7 +48,7 @@ public class DependentJoinTerm extends RelationalTerm {
 			StringBuilder result = new StringBuilder();
 			result.append("DependentJoin");
 			result.append('{');
-			result.append('[').append(this.predicate).append(']');
+			result.append('[').append(this.joinConditions).append(']');
 			result.append(this.children[0].toString());
 			result.append(',');
 			result.append(this.children[1].toString());

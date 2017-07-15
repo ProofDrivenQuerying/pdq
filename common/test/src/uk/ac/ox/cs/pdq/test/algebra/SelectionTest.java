@@ -89,7 +89,7 @@ public class SelectionTest extends UnaryOperatorTest {
 		Assert.assertEquals("Selection operator type must match that of child", child.getType(), this.operator.getType());
 		Assert.assertEquals("Selection operator inputs must match that of child", child.getInputTerms(), this.operator.getInputTerms());
 		Assert.assertEquals("Selection operator input type must match that of child", child.getInputType(), this.operator.getInputType());
-		Assert.assertEquals("Selection predicate must match that of initialization", this.predicate, this.operator.getPredicate());
+		Assert.assertEquals("Selection predicate must match that of initialization", this.predicate, this.operator.getJoinConditions());
 	}
 
 	/**
@@ -104,7 +104,7 @@ public class SelectionTest extends UnaryOperatorTest {
 		Assert.assertEquals("Selection operator type must match that of child", this.outputType, copy.getType());
 		Assert.assertEquals("Selection operator inputs must match that of child", this.inputTerms, copy.getInputTerms());
 		Assert.assertEquals("Selection operator input type must match that of child", this.inputType, copy.getInputType());
-		Assert.assertEquals("Selection predicate must match that of initialization", this.predicate, copy.getPredicate());
+		Assert.assertEquals("Selection predicate must match that of initialization", this.predicate, copy.getJoinConditions());
 	}
 
 	/**

@@ -232,7 +232,7 @@ public class XMLRelationOperatorIOTest {
 		writer.write(new PrintStream(bos), expected);
 		Selection observed = (Selection) reader.read(new ByteArrayInputStream(bos.toByteArray()));
 		
-		Assert.assertEquals(expected.getPredicate(), observed.getPredicate());
+		Assert.assertEquals(expected.getJoinConditions(), observed.getJoinConditions());
 		Assert.assertEquals(expected.getChild(), observed.getChild());
 		Assert.assertEquals(expected.getColumns(), observed.getColumns());
 		Assert.assertEquals(expected.getDepth(), observed.getDepth());
@@ -254,7 +254,7 @@ public class XMLRelationOperatorIOTest {
 		writer.write(new PrintStream(bos), expected);
 		Selection observed = (Selection) reader.read(new ByteArrayInputStream(bos.toByteArray()));
 		
-		Assert.assertEquals(expected.getPredicate(), observed.getPredicate());
+		Assert.assertEquals(expected.getJoinConditions(), observed.getJoinConditions());
 		Assert.assertEquals(expected.getChild(), observed.getChild());
 		Assert.assertEquals(expected.getColumns(), observed.getColumns());
 		Assert.assertEquals(expected.getDepth(), observed.getDepth());
@@ -499,7 +499,7 @@ public class XMLRelationOperatorIOTest {
 		writer.write(new PrintStream(bos), expected);
 		Join observed = (Join) reader.read(new ByteArrayInputStream(bos.toByteArray()));
 		
-		Assert.assertEquals(expected.getPredicate(), observed.getPredicate());
+		Assert.assertEquals(expected.getJoinConditions(), observed.getJoinConditions());
 		Assert.assertEquals(expected.getChildren(), observed.getChildren());
 		Assert.assertEquals(expected.getColumns(), observed.getColumns());
 		Assert.assertEquals(expected.getDepth(), observed.getDepth());
@@ -519,7 +519,7 @@ public class XMLRelationOperatorIOTest {
 		writer.write(new PrintStream(bos), expected);
 		DependentJoin observed = (DependentJoin) reader.read(new ByteArrayInputStream(bos.toByteArray()));
 		
-		Assert.assertEquals(expected.getPredicate(), observed.getPredicate());
+		Assert.assertEquals(expected.getJoinConditions(), observed.getJoinConditions());
 		Assert.assertEquals(expected.getChildren(), observed.getChildren());
 		Assert.assertEquals(expected.getColumns(), observed.getColumns());
 		Assert.assertEquals(expected.getDepth(), observed.getDepth());
@@ -542,7 +542,7 @@ public class XMLRelationOperatorIOTest {
 		writer.write(new PrintStream(bos), expected);
 		Join observed = (Join) reader.read(new ByteArrayInputStream(bos.toByteArray()));
 		
-		Assert.assertEquals(expected.getPredicate(), observed.getPredicate());
+		Assert.assertEquals(expected.getJoinConditions(), observed.getJoinConditions());
 		Assert.assertEquals(expected.getChildren(), observed.getChildren());
 		Assert.assertEquals(expected.getColumns(), observed.getColumns());
 		Assert.assertEquals(expected.getDepth(), observed.getDepth());
@@ -576,7 +576,7 @@ public class XMLRelationOperatorIOTest {
 		writer.write(new PrintStream(bos), expected);
 		Selection observed = (Selection) reader.read(new ByteArrayInputStream(bos.toByteArray()));
 		
-		Assert.assertEquals(expected.getPredicate(), observed.getPredicate());
+		Assert.assertEquals(expected.getJoinConditions(), observed.getJoinConditions());
 		Assert.assertEquals(expected.getChild(), observed.getChild());
 		Assert.assertEquals(expected.getColumns(), observed.getColumns());
 		Assert.assertEquals(expected.getDepth(), observed.getDepth());

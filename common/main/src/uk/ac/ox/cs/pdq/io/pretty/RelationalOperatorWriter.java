@@ -289,7 +289,7 @@ public class RelationalOperatorWriter extends PrettyWriter<RelationalOperator>
 	 * @param selection the selection
 	 */
 	private void formatPredicate(StringBuilder sb, Selection selection) {
-		Condition predicate = selection.getPredicate();
+		Condition predicate = selection.getJoinConditions();
 		List<Term> columns = selection.getColumns();
 		this.formatPredicate(sb, predicate, columns);
 	}
@@ -342,7 +342,7 @@ public class RelationalOperatorWriter extends PrettyWriter<RelationalOperator>
 	 * @param aliases the aliases
 	 */
 	private void formatPredicate(StringBuilder sb, Join join, Map<RelationalOperator, String> aliases) {
-		Condition predicate = join.getPredicate();
+		Condition predicate = join.getJoinConditions();
 		List<Term> columns = join.getColumns();
 		RelationalOperator subLeft = this.findSubPlanAlias(join.getChildren().get(0));
 		String lAlias = aliases.get(subLeft);

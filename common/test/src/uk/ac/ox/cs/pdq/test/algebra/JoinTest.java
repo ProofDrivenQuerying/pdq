@@ -115,7 +115,7 @@ public class JoinTest extends NaryOperatorTest {
 		Assert.assertEquals("Join output type must match the concatenation of childrens", outputType, this.operator.getType());
 		Assert.assertEquals("Join input must match the concatenation of childrens", inputTerms, this.operator.getInputTerms());
 		Assert.assertEquals("Join input type must match the concatenation of childrens", inputType, this.operator.getInputType());
-		Assert.assertEquals("Join predicate must match that of initialization", predicate, this.operator.getPredicate());
+		Assert.assertEquals("Join predicate must match that of initialization", predicate, this.operator.getJoinConditions());
 	}
 
 	/**
@@ -130,7 +130,7 @@ public class JoinTest extends NaryOperatorTest {
 		Assert.assertEquals("Join copy's output type must match that of operator", this.operator.getType(), copy.getType());
 		Assert.assertEquals("Join copy's input must match that of operator", this.operator.getInputTerms(), copy.getInputTerms());
 		Assert.assertEquals("Join copy's input type must match that of operator", this.operator.getInputType(), copy.getInputType());
-		Assert.assertEquals("Join copy's predicate must match that of operator's", this.operator.getPredicate(), copy.getPredicate());
+		Assert.assertEquals("Join copy's predicate must match that of operator's", this.operator.getJoinConditions(), copy.getJoinConditions());
 		Assert.assertEquals("Join copy's variant must match that of operator's", this.operator.getVariant(), copy.getVariant());
 	}
 
@@ -147,7 +147,7 @@ public class JoinTest extends NaryOperatorTest {
 		Assert.assertEquals("Join copy's output type must match that of operator", this.operator.getType(), copy.getType());
 		Assert.assertEquals("Join copy's input must match that of operator", this.operator.getInputTerms(), copy.getInputTerms());
 		Assert.assertEquals("Join copy's input type must match that of operator", this.operator.getInputType(), copy.getInputType());
-		Assert.assertEquals("Join copy's predicate must match that of operator's", this.operator.getPredicate(), copy.getPredicate());
+		Assert.assertEquals("Join copy's predicate must match that of operator's", this.operator.getJoinConditions(), copy.getJoinConditions());
 		Assert.assertEquals("Join copy's variant must match that of operator's", this.operator.getVariant(), copy.getVariant());
 	}
 

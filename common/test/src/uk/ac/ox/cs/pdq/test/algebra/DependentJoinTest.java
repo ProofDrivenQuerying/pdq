@@ -159,7 +159,7 @@ public class DependentJoinTest extends JoinTest{
 		Assert.assertEquals("DependentJoin output type must match the concatenation of childrens", outputType12, this.operator.getType());
 		Assert.assertEquals("DependentJoin input must match the concatenation of childrens", inputTerms12, this.operator.getInputTerms());
 		Assert.assertEquals("DependentJoin input type must match the concatenation of childrens", inputType12, this.operator.getInputType());
-		Assert.assertEquals("DependentJoin predicate must match that of initialization", new ConjunctiveCondition(predicate12), this.operator.getPredicate());
+		Assert.assertEquals("DependentJoin predicate must match that of initialization", new ConjunctiveCondition(predicate12), this.operator.getJoinConditions());
 		Assert.assertEquals("DependentJoin left child must match that of initialization", child1, this.operator.getLeft());
 		Assert.assertEquals("DependentJoin right child must match that of initialization", child2, this.operator.getRight());
 		Assert.assertFalse("DependentJoin sideways input must match that of initialization", this.operator.hasSidewaysInputs());
@@ -175,7 +175,7 @@ public class DependentJoinTest extends JoinTest{
 		Assert.assertEquals("DependentJoin output type must match the concatenation of childrens", outputType23, this.operator.getType());
 		Assert.assertTrue("DependentJoin input must be empty (because of sideways input).", this.operator.getInputTerms().isEmpty());
 		Assert.assertEquals("DependentJoin input type must be empty (because of sideways input)", TupleType.EmptyTupleType, this.operator.getInputType());
-		Assert.assertEquals("DependentJoin predicate must match that of initialization", new ConjunctiveCondition(predicate23), this.operator.getPredicate());
+		Assert.assertEquals("DependentJoin predicate must match that of initialization", new ConjunctiveCondition(predicate23), this.operator.getJoinConditions());
 		Assert.assertEquals("DependentJoin left child must match that of initialization", child2, this.operator.getLeft());
 		Assert.assertEquals("DependentJoin right child must match that of initialization", child3, this.operator.getRight());
 		Assert.assertEquals("DependentJoin sideways input must match that of initialization", swInput, this.operator.getSidewaysInput());
@@ -208,7 +208,7 @@ public class DependentJoinTest extends JoinTest{
 		Assert.assertEquals("DependentJoin copy's output type must match that of operator", this.operator.getType(), copy.getType());
 		Assert.assertEquals("DependentJoin copy's input must match that of operator", this.operator.getInputTerms(), copy.getInputTerms());
 		Assert.assertEquals("DependentJoin copy's input type must match that of operator", this.operator.getInputType(), copy.getInputType());
-		Assert.assertEquals("DependentJoin copy's predicate must match that of operator's", this.operator.getPredicate(), copy.getPredicate());
+		Assert.assertEquals("DependentJoin copy's predicate must match that of operator's", this.operator.getJoinConditions(), copy.getJoinConditions());
 		Assert.assertEquals("DependentJoin copy's variant must match that of operator's", this.operator.getVariant(), copy.getVariant());
 	}
 
@@ -223,7 +223,7 @@ public class DependentJoinTest extends JoinTest{
 		Assert.assertEquals("DependentJoin copy's output type must match that of operator", this.operator.getType(), copy.getType());
 		Assert.assertEquals("DependentJoin copy's input must match that of operator", this.operator.getInputTerms(), copy.getInputTerms());
 		Assert.assertEquals("DependentJoin copy's input type must match that of operator", this.operator.getInputType(), copy.getInputType());
-		Assert.assertEquals("DependentJoin copy's predicate must match that of operator's", this.operator.getPredicate(), copy.getPredicate());
+		Assert.assertEquals("DependentJoin copy's predicate must match that of operator's", this.operator.getJoinConditions(), copy.getJoinConditions());
 		Assert.assertEquals("DependentJoin copy's variant must match that of operator's", this.operator.getVariant(), copy.getVariant());
 	}
 

@@ -92,14 +92,14 @@ public class PrettyDAGPlanWriter extends PrettyWriter<DAGPlan> implements Writer
 				return;
 			}
 			if (op instanceof Selection) {
-				out.println(prefix + op.getClass().getSimpleName() + "[" + ((Selection) op).getPredicate() + "] (" + outputCard + ")");
+				out.println(prefix + op.getClass().getSimpleName() + "[" + ((Selection) op).getJoinConditions() + "] (" + outputCard + ")");
 				this.write(out, ((UnaryOperator) op).getChild(), "\t" + prefix);
 				return;
 			}
 		}
 		if (op instanceof NaryOperator) {
 			if (op instanceof Join) {
-				out.println(prefix + op.getClass().getSimpleName() + "[" + ((Join) op).getPredicate() + "] (" + outputCard + ")");
+				out.println(prefix + op.getClass().getSimpleName() + "[" + ((Join) op).getJoinConditions() + "] (" + outputCard + ")");
 			} else {
 				out.println(prefix + op.getClass().getSimpleName() + "(" + outputCard + ")");
 			}

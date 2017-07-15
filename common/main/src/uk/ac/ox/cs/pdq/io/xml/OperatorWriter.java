@@ -231,14 +231,14 @@ public class OperatorWriter extends AbstractXMLWriter<RelationalOperator> {
 			close(out, QNames.PROJECT);
 			break;
 		case SELECT:
-			Condition sp = ((Selection) operator).getPredicate();
+			Condition sp = ((Selection) operator).getJoinConditions();
 			if (sp != null) {
 				this.writePredicate(out, sp);
 			}
 			break;
 		case JOIN:
 			if (((Join) operator).hasPredicate()) {
-				this.writePredicate(out, ((Join) operator).getPredicate());
+				this.writePredicate(out, ((Join) operator).getJoinConditions());
 			}
 			break;
 		case ACCESS:
