@@ -52,4 +52,24 @@ public class PlannerUtility {
 		List<Constant> ret  = Utility.getTypedAndUntypedConstants(fact,binding.getZeroBasedInputs());
 		return Lists.newArrayList(uk.ac.ox.cs.pdq.util.Utility.removeDuplicates(ret));
 	}
+	
+	/**
+	 * Gets the constants lying at the input positions.
+	 *
+	 * @throws IllegalArgumentException if there is a non-constant at one of the input positions
+	 * @param positions List<Integer>
+	 * @return the List<Constant> at the given positions.
+	 */
+	public static List<Constant> getTypedAndUntypedConstants(Atom atom, List<Integer> positions) {
+		List<Constant> result = new ArrayList<>();
+		for(Integer i: positions) {
+			if(i < atom.getTerms().size() && !atom.getTerms().get(i).isVariable()) {
+				result.add((Constant) atom.getTerms().get(i));
+			}
+			else {
+				throw new java.lang.IllegalArgumentException();
+			}
+		}
+		return result;
+	}
 }

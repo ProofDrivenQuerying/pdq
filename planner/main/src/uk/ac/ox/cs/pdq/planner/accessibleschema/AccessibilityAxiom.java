@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import uk.ac.ox.cs.pdq.db.AccessMethod;
-import uk.ac.ox.cs.pdq.db.AccessMethod.Types;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Conjunction;

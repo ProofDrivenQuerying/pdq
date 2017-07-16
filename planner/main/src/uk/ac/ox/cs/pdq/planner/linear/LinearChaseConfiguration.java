@@ -12,6 +12,7 @@ import java.util.Random;
 import java.util.Set;
 
 import uk.ac.ox.cs.pdq.fol.Constant;
+import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
@@ -51,6 +52,12 @@ public class LinearChaseConfiguration extends ChaseConfiguration implements Line
 
 	/** Random engine. Used when selecting candidate facts to expose*/
 	protected final Random random;
+	
+	/**  An accessibility axiom. */
+	private final AccessibilityAxiom rule;
+	
+	/** The facts of this configuration. These must share the same constants for the input positions of the accessibility axiom */
+	private final Set<Atom> facts;
 
 	/**
 	 * Instantiates a new linear chase configuration.
@@ -76,11 +83,10 @@ public class LinearChaseConfiguration extends ChaseConfiguration implements Line
 		this.parent = parent;
 		this.exposedCandidates = exposedCandidates;
 		List<Match> matches = new ArrayList<>();
-		for (Candidate candidate:exposedCandidates) {
+		for (Candidate candidate:exposedCandidates) 
 			matches.add(candidate.getMatch());
-		}
 		this.chaseStep(matches);
-		LeftDeepPlan plan = LeftDeepPlanGenerator.createLeftDeepPlan(this, this.parent.getPlan());
+		RelationalTerm plan = LeftDeepPlanGenerator.createLeftDeepPlan(this.rule.getBaseRelation(), this.rule.getAccessMethod(), this.facts, this.parent.getPlan());
 		this.setPlan(plan);
 	}
 
@@ -299,5 +305,13 @@ public class LinearChaseConfiguration extends ChaseConfiguration implements Line
 	@Override
 	public int compareTo(Configuration o) {
 		return this.getCost().compareTo(o.getCost());
+	}
+
+	public AccessibilityAxiom getRule() {
+		return rule;
+	}
+
+	public Set<Atom> getFacts() {
+		return facts;
 	} 
 }
