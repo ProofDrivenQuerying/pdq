@@ -55,9 +55,6 @@ public class AccessibleSchema extends Schema {
 	/**  Mapping from a dependency to its inferred accessible counterpart. */
 	private final Dependency[] inferredAccessibilityAxioms;
 
-	private static AccessibilityAxiom[] lastComputedaccessibilityAxioms;
-	private static Dependency[] lastComputedinferredAccessibilityAxioms;
-
 	/**
 	 * Instantiates a new accessible schema.
 	 *
@@ -68,45 +65,9 @@ public class AccessibleSchema extends Schema {
 	private AccessibleSchema(Relation[] relations, Dependency[] dependencies, Map<String, TypedConstant> constantsMap) {
 		super(computeAccessibleSchemaRelations(relations), computeAccessibleSchemaAxioms(relations, dependencies));
 		this.constants = constantsMap;
-		this.accessibilityAxioms = lastComputedaccessibilityAxioms;
-		this.inferredAccessibilityAxioms = lastComputedinferredAccessibilityAxioms;
+		this.accessibilityAxioms = lastComputedaccessibilityAxioms.clone();
+		this.inferredAccessibilityAxioms = lastComputedinferredAccessibilityAxioms.clone();
 	}
-
-	public static Relation[] computeAccessibleSchemaRelations(Relation[] relations) {
-		Collection<Relation> output  = new LinkedHashSet<>();
-		output.addAll(Arrays.asList(relations));
-		for(Relation relation:relations) 
-			output.add(Relation.create(AccessibleSchema.inferredAccessiblePrefix + relation.getName(), relation.getAttributes(), relation.getAccessMethods(), relation.getForeignKeys()));
-		return output.toArray(new Relation[output.size()]);
-	}
-
-	public static AccessibilityAxiom[] computeAccessibilityAxioms(Relation[] relations) {
-		List<AccessibilityAxiom> accessibilityAxioms = new LinkedList<>();
-		for (Relation relation:relations) {
-			for (AccessMethod method:relation.getAccessMethods()) 
-				accessibilityAxioms.add(new AccessibilityAxiom(relation, method));
-		}
-		return accessibilityAxioms.toArray(new AccessibilityAxiom[accessibilityAxioms.size()]);
-	}
-
-	public static Dependency[] computeInferredAccessibleAxioms(Dependency[] dependencies) {
-		List<Dependency> inferredAccessibleDependencies = new ArrayList<>();
-		for (Dependency dependency: dependencies)
-			if (dependency instanceof TGD) 
-				inferredAccessibleDependencies.add(createInferredAccessibleAxiom((TGD)dependency));
-		return inferredAccessibleDependencies.toArray(new Dependency[inferredAccessibleDependencies.size()]);
-	}
-
-	public static Dependency[] computeAccessibleSchemaAxioms(Relation[] relations, Dependency[] dependencies) {
-		lastComputedaccessibilityAxioms = computeAccessibilityAxioms(relations);
-		lastComputedinferredAccessibilityAxioms = computeInferredAccessibleAxioms(dependencies);
-		Dependency[] allDependencies = new Dependency[dependencies.length + lastComputedaccessibilityAxioms.length + lastComputedinferredAccessibilityAxioms.length];
-		System.arraycopy(dependencies, 0, allDependencies, 0, dependencies.length);
-		System.arraycopy(lastComputedaccessibilityAxioms, 0, allDependencies, dependencies.length, lastComputedaccessibilityAxioms.length);
-		System.arraycopy(lastComputedinferredAccessibilityAxioms, 0, allDependencies, dependencies.length + lastComputedaccessibilityAxioms.length, lastComputedinferredAccessibilityAxioms.length);
-		return allDependencies;
-	}
-
 
 	/**
 	 * Constructor for AccessibleSchema.
@@ -219,5 +180,44 @@ public class AccessibleSchema extends Schema {
 	 */
 	private static Atom substitute(Atom atom) {
 		return Atom.create(Predicate.create(inferredAccessiblePrefix + atom.getPredicate().getName(), atom.getPredicate().getArity()), atom.getTerms());
+	}
+	
+	public static Relation[] computeAccessibleSchemaRelations(Relation[] relations) {
+		Collection<Relation> output  = new LinkedHashSet<>();
+		output.addAll(Arrays.asList(relations));
+		for(Relation relation:relations) 
+			output.add(Relation.create(AccessibleSchema.inferredAccessiblePrefix + relation.getName(), relation.getAttributes(), relation.getAccessMethods(), relation.getForeignKeys()));
+		return output.toArray(new Relation[output.size()]);
+	}
+
+	public static AccessibilityAxiom[] computeAccessibilityAxioms(Relation[] relations) {
+		List<AccessibilityAxiom> accessibilityAxioms = new LinkedList<>();
+		for (Relation relation:relations) {
+			for (AccessMethod method:relation.getAccessMethods()) 
+				accessibilityAxioms.add(new AccessibilityAxiom(relation, method));
+		}
+		return accessibilityAxioms.toArray(new AccessibilityAxiom[accessibilityAxioms.size()]);
+	}
+
+	public static Dependency[] computeInferredAccessibleAxioms(Dependency[] dependencies) {
+		List<Dependency> inferredAccessibleDependencies = new ArrayList<>();
+		for (Dependency dependency: dependencies)
+			if (dependency instanceof TGD) 
+				inferredAccessibleDependencies.add(createInferredAccessibleAxiom((TGD)dependency));
+		return inferredAccessibleDependencies.toArray(new Dependency[inferredAccessibleDependencies.size()]);
+	}
+
+	private static AccessibilityAxiom[] lastComputedaccessibilityAxioms;
+	
+	private static Dependency[] lastComputedinferredAccessibilityAxioms;
+	
+	public static Dependency[] computeAccessibleSchemaAxioms(Relation[] relations, Dependency[] dependencies) {
+		lastComputedaccessibilityAxioms = computeAccessibilityAxioms(relations);
+		lastComputedinferredAccessibilityAxioms = computeInferredAccessibleAxioms(dependencies);
+		Dependency[] allDependencies = new Dependency[dependencies.length + lastComputedaccessibilityAxioms.length + lastComputedinferredAccessibilityAxioms.length];
+		System.arraycopy(dependencies, 0, allDependencies, 0, dependencies.length);
+		System.arraycopy(lastComputedaccessibilityAxioms, 0, allDependencies, dependencies.length, lastComputedaccessibilityAxioms.length);
+		System.arraycopy(lastComputedinferredAccessibilityAxioms, 0, allDependencies, dependencies.length + lastComputedaccessibilityAxioms.length, lastComputedinferredAccessibilityAxioms.length);
+		return allDependencies;
 	}
 }
