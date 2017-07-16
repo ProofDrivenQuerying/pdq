@@ -38,8 +38,8 @@ public class Schema {
 	 *
 	 * @param relations the relations
 	 */
-	public Schema(Collection<Relation> relations) {
-		this(relations, new ArrayList<Dependency>());
+	public Schema(Relation[] relations) {
+		this(relations, new Dependency[]{});
 	}
 
 	/**
@@ -48,8 +48,8 @@ public class Schema {
 	 * @param relations 		The input relations
 	 * @param dependencies 		The input dependencies
 	 */
-	public Schema(Collection<Relation> relations, Collection<Dependency> dependencies) {
-		this.relations = new Relation[relations.size()];
+	public Schema(Relation[] relations, Dependency[] dependencies) {
+		this.relations = new Relation[relations.length];
 		this.relationsMap = new LinkedHashMap<>();
 		int relationIndex = 0;
 		for(Relation relation:relations) {
@@ -58,7 +58,7 @@ public class Schema {
 		}
 		
 		int dependencyIndex = 0;
-		this.dependencies = new Dependency[dependencies.size()];
+		this.dependencies = new Dependency[dependencies.length];
 		for(Dependency dependency:dependencies) 
 			this.dependencies[dependencyIndex++] = dependency;
 		
@@ -77,7 +77,6 @@ public class Schema {
 			}				
 		}
 	}
-	
 
 	/**
 	 * Gets all schema relations.

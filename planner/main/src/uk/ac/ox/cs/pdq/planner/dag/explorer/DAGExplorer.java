@@ -189,6 +189,7 @@ public abstract class DAGExplorer extends Explorer<DAGPlan> {
 	protected List<DAGChaseConfiguration> createInitialConfigurations() throws PlannerException, SQLException {
 		AccessibleDatabaseListState state = null;
 		state = new AccessibleDatabaseListState(this.reasoningParams, this.query, this.schema, this.connection, false);
+		//TODO this should change to original and infacc
 		this.chaser.reasonUntilTermination(state, this.schema.getDependencies());
 
 		List<DAGChaseConfiguration> collection = new ArrayList<>();

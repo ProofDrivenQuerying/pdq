@@ -3,32 +3,25 @@ package uk.ac.ox.cs.pdq.planner.accessibleschema;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.commons.lang3.tuple.Pair;
 
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
-import uk.ac.ox.cs.pdq.db.View;
-import uk.ac.ox.cs.pdq.fol.Conjunction;
-import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Constant;
-import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.Conjunction;
+import uk.ac.ox.cs.pdq.fol.Dependency;
+import uk.ac.ox.cs.pdq.fol.Disjunction;
 import uk.ac.ox.cs.pdq.fol.Formula;
+import uk.ac.ox.cs.pdq.fol.Negation;
+import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.QuantifiedFormula;
 import uk.ac.ox.cs.pdq.fol.TGD;
-import uk.ac.ox.cs.pdq.fol.Variable;
-import uk.ac.ox.cs.pdq.util.Utility;
-
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -49,21 +42,22 @@ import com.google.common.collect.Lists;
  */
 public class AccessibleSchema extends Schema {
 
-	/**  The accessible relations. */
-	private final List<AccessibleRelation> accessibleRelations;
+	public static final String inferredAccessiblePrefix = "InferredAccessible";
 
-	/**  Mapping from schema relations to the corresponding inferred accessible relations. */
-	private final Map<String, InferredAccessibleRelation> infAccessibleRelations;
+	/**  The accessible relations. */
+	public static final Relation accessibleRelation = Relation.create("Accessible", 
+			new Attribute[]{Attribute.create(String.class, "x0"), Attribute.create(Integer.class, "FactID")}, 
+			new AccessMethod[]{AccessMethod.create(new Integer[]{})});
 
 	/**  Mapping from a relation-access method pair to an accessibility axioms. */
-	private final Map<Pair<? extends Relation, AccessMethod>, AccessibilityAxiom> accessibilityAxioms;
+	private final AccessibilityAxiom[] accessibilityAxioms;
 
 	/**  Mapping from a dependency to its inferred accessible counterpart. */
-	private final Map<Dependency, InferredAccessibleAxiom> infAccessibilityAxioms;
+	private final Dependency[] inferredAccessibilityAxioms;
 
-//	/**  The inferred accessible axioms*. */
-//	private final List<InferredAccessibleAxiom> infAccessibleViews = new ArrayList<>();
-	
+	private static AccessibilityAxiom[] lastComputedaccessibilityAxioms;
+	private static Dependency[] lastComputedinferredAccessibilityAxioms;
+
 	/**
 	 * Instantiates a new accessible schema.
 	 *
@@ -71,42 +65,48 @@ public class AccessibleSchema extends Schema {
 	 * @param dependencies 		list if schema dependencies
 	 * @param constantsMap 		Map of schema constant names to constants
 	 */
-	public AccessibleSchema(List<Relation> relations, List<Dependency> dependencies, Map<String, TypedConstant<?>> constantsMap) {
-		super(relations, dependencies);
+	private AccessibleSchema(Relation[] relations, Dependency[] dependencies, Map<String, TypedConstant> constantsMap) {
+		super(computeAccessibleSchemaRelations(relations), computeAccessibleSchemaAxioms(relations, dependencies));
 		this.constants = constantsMap;
-		ImmutableMap.Builder<String, InferredAccessibleRelation> relationNameToInfAccVersion = ImmutableMap.builder();
-		ImmutableMap.Builder<Pair<? extends Relation, AccessMethod>, AccessibilityAxiom> relAndAccMethodToAccAxiom = ImmutableMap.builder();
-		for (Relation relation:relations) {
-			InferredAccessibleRelation infAcc = new InferredAccessibleRelation(relation);
-			relationNameToInfAccVersion.put(relation.getName(), infAcc);
-			// Accessibility axioms/
-			for (AccessMethod bindingMethod:relation.getAccessMethods()) {
-				relAndAccMethodToAccAxiom.put(Pair.of(relation, bindingMethod), new AccessibilityAxiom(infAcc, bindingMethod));
-			}
-		}
-
-		ImmutableMap.Builder<Dependency, InferredAccessibleAxiom> b6 = ImmutableMap.builder();
-		this.accessibleRelations = ImmutableList.of(AccessibleRelation.getInstance());
-		this.infAccessibleRelations = relationNameToInfAccVersion.build();
-
-		// Inferred accessible axioms the schema ICs
-		for (Dependency dependency: dependencies) {
-			Map<Atom, InferredAccessibleRelation> predicateToInfAccessibleRelation = new LinkedHashMap<>();
-			for (Atom p: dependency.getAtoms()) {
-				predicateToInfAccessibleRelation.put(p, this.infAccessibleRelations.get(p.getPredicate().getName()));
-			}
-			if (dependency instanceof TGD) {
-				InferredAccessibleAxiom infAcc = new InferredAccessibleAxiom((TGD) dependency, predicateToInfAccessibleRelation);
-				b6.put(dependency, infAcc);
-			}
-		}
-		try {
-			this.accessibilityAxioms = relAndAccMethodToAccAxiom.build();
-			this.infAccessibilityAxioms = b6.build();
-		} catch (Exception e) {
-			throw e;
-		}
+		this.accessibilityAxioms = lastComputedaccessibilityAxioms;
+		this.inferredAccessibilityAxioms = lastComputedinferredAccessibilityAxioms;
 	}
+
+	public static Relation[] computeAccessibleSchemaRelations(Relation[] relations) {
+		Collection<Relation> output  = new LinkedHashSet<>();
+		output.addAll(Arrays.asList(relations));
+		for(Relation relation:relations) 
+			output.add(Relation.create(AccessibleSchema.inferredAccessiblePrefix + relation.getName(), relation.getAttributes(), relation.getAccessMethods(), relation.getForeignKeys()));
+		return output.toArray(new Relation[output.size()]);
+	}
+
+	public static AccessibilityAxiom[] computeAccessibilityAxioms(Relation[] relations) {
+		List<AccessibilityAxiom> accessibilityAxioms = new LinkedList<>();
+		for (Relation relation:relations) {
+			for (AccessMethod method:relation.getAccessMethods()) 
+				accessibilityAxioms.add(new AccessibilityAxiom(relation, method));
+		}
+		return accessibilityAxioms.toArray(new AccessibilityAxiom[accessibilityAxioms.size()]);
+	}
+
+	public static Dependency[] computeInferredAccessibleAxioms(Dependency[] dependencies) {
+		List<Dependency> inferredAccessibleDependencies = new ArrayList<>();
+		for (Dependency dependency: dependencies)
+			if (dependency instanceof TGD) 
+				inferredAccessibleDependencies.add(createInferredAccessibleAxiom((TGD)dependency));
+		return inferredAccessibleDependencies.toArray(new Dependency[inferredAccessibleDependencies.size()]);
+	}
+
+	public static Dependency[] computeAccessibleSchemaAxioms(Relation[] relations, Dependency[] dependencies) {
+		lastComputedaccessibilityAxioms = computeAccessibilityAxioms(relations);
+		lastComputedinferredAccessibilityAxioms = computeInferredAccessibleAxioms(dependencies);
+		Dependency[] allDependencies = new Dependency[dependencies.length + lastComputedaccessibilityAxioms.length + lastComputedinferredAccessibilityAxioms.length];
+		System.arraycopy(dependencies, 0, allDependencies, 0, dependencies.length);
+		System.arraycopy(lastComputedaccessibilityAxioms, 0, allDependencies, dependencies.length, lastComputedaccessibilityAxioms.length);
+		System.arraycopy(lastComputedinferredAccessibilityAxioms, 0, allDependencies, dependencies.length + lastComputedaccessibilityAxioms.length, lastComputedinferredAccessibilityAxioms.length);
+		return allDependencies;
+	}
+
 
 	/**
 	 * Constructor for AccessibleSchema.
@@ -115,14 +115,14 @@ public class AccessibleSchema extends Schema {
 	public AccessibleSchema(Schema schema) {
 		this(schema.getRelations(), schema.getDependencies(), schema.getConstants());
 	}
-	
+
 	/**
 	 * Gets the inferred accessibility axioms.
 	 *
 	 * @return the inferred accessible counterparts of the schema dependencies
 	 */
-	public Collection<InferredAccessibleAxiom> getInferredAccessibilityAxioms() {
-		return this.infAccessibilityAxioms.values();
+	public Dependency[] getInferredAccessibilityAxioms() {
+		return this.inferredAccessibilityAxioms.clone();
 	}
 
 
@@ -131,288 +131,93 @@ public class AccessibleSchema extends Schema {
 	 *
 	 * @return 		the accessibility axioms of this schema
 	 */
-	public Collection<AccessibilityAxiom> getAccessibilityAxioms() {
-		return this.accessibilityAxioms.values();
+	public AccessibilityAxiom[] getAccessibilityAxioms() {
+		return this.accessibilityAxioms.clone();
 	}
 
 	/**
-	 * Gets the accessibility axiom.
+	 * Creates an inferred accessible axiom.
 	 *
-	 * @param r Input relation
-	 * @param b Input access method
-	 * @return The accessibility axiom that corresponds to the relation-access method pair
+	 * @param dependency the dependency
+	 * @param predToInfAcc the pred to inf acc
 	 */
-	public AccessibilityAxiom getAccessibilityAxiom(Relation r, AccessMethod b) {
-		return this.accessibilityAxioms.get(Pair.of(r, b));
-	}
-	
-	/* (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.db.Schema#getRelations()
-	 */
-	@Override
-	public List<Relation> getRelations() {
-		return Lists.newArrayList(
-				Iterables.concat(
-						this.relations,
-						this.infAccessibleRelations.values(),
-						this.accessibleRelations));
+	private static TGD createInferredAccessibleAxiom(TGD dependency) {
+		return TGD.create(substitute(dependency.getBody()), substitute(dependency.getHead()));
 	}
 
 	/**
-	 * Gets the relation.
+	 * Substitute.
 	 *
-	 * @param relationName String
-	 * @return Relation
+	 * @param f Formula
+	 * @return Formula
 	 */
-	@Override
-	public Relation getRelation(String relationName) {
-		Relation result = super.getRelation(relationName);
-		if (result == null && this.accessibleRelations.get(0).getName().equals(relationName)) {
-			result = this.accessibleRelations.get(0);
+	private static Formula substitute(Formula f) {
+		if (f instanceof Conjunction) {
+			return substitute((Conjunction) f);
 		}
-		if (result == null) {
-			result = this.infAccessibleRelations.get(relationName);
+		else if (f instanceof Disjunction) {
+			return substitute((Disjunction) f);
 		}
-		return result;
+		else if (f instanceof Negation) {
+			return substitute((Negation) f);
+		}
+		else if (f instanceof QuantifiedFormula) {
+			return substitute((QuantifiedFormula) f);
+		}
+		else if (f instanceof Atom) {
+			return substitute((Atom) f);
+		}
+		return f;
 	}
 
 	/**
-	 * Gets the accessible relation.
+	 * Substitute.
 	 *
-	 * @return AccessibleRelation
+	 * @param conjunction Conjunction<Formula>
+	 * @return Conjunction<Formula>
 	 */
-	public AccessibleRelation getAccessibleRelation() {
-		return this.accessibleRelations.get(0);
+	private static Formula substitute(Conjunction conjunction) {
+		List<Formula> result = new LinkedList<>();
+		for (Formula f:conjunction.getChildren()) 
+			result.add(substitute(f));
+		return Conjunction.of(result.toArray(new Formula[result.size()]));
 	}
 
 	/**
-	 * Gets the inferred accessible relation.
+	 * Substitute.
 	 *
-	 * @param r Relation
-	 * @return InferredAccessibleRelation
+	 * @param disjunction Disjunction<Formula>
+	 * @return Disjunction<Formula>
 	 */
-	public InferredAccessibleRelation getInferredAccessibleRelation(Relation r) {
-		return this.infAccessibleRelations.get(r.getName());
+	private static Formula substitute(Disjunction disjunction) {
+		List<Formula> result = new LinkedList<>();
+		for (Formula f: disjunction.getChildren()) 
+			result.add(substitute(f));
+		return Disjunction.of(result.toArray(new Formula[result.size()]));
 	}
 
 	/**
-	 * Gets the dependencies.
+	 * Substitute.
 	 *
-	 * @return all the accessible schema dependencies including the ones of the original schema
+	 * @param negation Negation<Formula>
+	 * @return Negation<Formula>
 	 */
-	@Override
-	public List<Dependency> getDependencies() {
-		return Lists.newArrayList(
-				Iterables.concat(
-						this.dependencies,
-						this.infAccessibilityAxioms.values()));
+	private static Negation substitute(Negation negation) {
+		return Negation.of(substitute(negation.getChildren()[0]));
+	}
+
+	private static QuantifiedFormula substitute(QuantifiedFormula quantifiedFormula) {
+		return QuantifiedFormula.create(quantifiedFormula.getOperator(), 
+				quantifiedFormula.getFreeVariables(), quantifiedFormula.getChildren()[0]);
 	}
 
 	/**
-	 * Accessible.
+	 * Substitute.
 	 *
-	 * @param <Q> the generic type
-	 * @param query the query
-	 * @return the accessible query
-	 * @see uk.ac.ox.cs.pdq.fol.Query#accessible(AccessibleSchema)
+	 * @param atom PredicateFormula
+	 * @return PredicateFormula
 	 */
-	public ConjunctiveQuery accessible(ConjunctiveQuery query) {
-		List<Formula> atoms = new ArrayList<>();
-		for (Atom af: query.getAtoms()) {
-			atoms.add(
-					new Atom(this.getInferredAccessibleRelation((Relation) af.getPredicate()), af.getTerms()));
-		}
-		if(atoms.size() == 1) {
-			return new ConjunctiveQuery(query.getFreeVariables(), (Atom)atoms.get(0));
-		}
-		else {
-			return new ConjunctiveQuery(query.getFreeVariables(), (Conjunction) Conjunction.of(atoms));
-		}
-	}
-	
-	/**
-	 * Accessible.
-	 *
-	 * @param <Q> the generic type
-	 * @param query the query
-	 * @param canonicalMapping the canonical mapping
-	 * @return the accessible query
-	 * @see uk.ac.ox.cs.pdq.fol.Query#accessible(AccessibleSchema)
-	 */
-	public ConjunctiveQuery accessible(ConjunctiveQuery query, Map<Variable, Constant> canonicalMapping) {
-		List<Formula> atoms = new ArrayList<>();
-		for (Atom af: query.getAtoms()) {
-			atoms.add(
-					new Atom(this.getInferredAccessibleRelation((Relation) af.getPredicate()), af.getTerms()));
-		}
-		if(atoms.size() == 1) {
-			return new ConjunctiveQuery(query.getFreeVariables(), (Atom)atoms.get(0), canonicalMapping);
-		}
-		else {
-			return new ConjunctiveQuery(query.getFreeVariables(), (Conjunction) Conjunction.of(atoms), canonicalMapping);
-		}
-	}
-	
-	/**
-	 * To string.
-	 *
-	 * @return String
-	 */
-	@Override
-	public String toString() {
-		StringBuilder result = new StringBuilder();
-		result.append('{');
-		if (!this.relations.isEmpty()) {
-			result.append("\n\t{");
-			for (Relation r : this.relations) {
-				result.append("\n\t\t").append(r);
-			}
-			result.append("\n\t}");
-		}
-		if (!this.dependencies.isEmpty()) {
-			result.append("\n\t{");
-			for (Dependency ic : this.dependencies) {
-				result.append("\n\t\t").append(ic);
-			}
-			result.append("\n\t}");
-		}
-		if (!this.accessibilityAxioms.isEmpty()) {
-			result.append("\n\t{");
-			for (Dependency ic : this.accessibilityAxioms.values()) {
-				result.append("\n\t\t").append(ic);
-			}
-			result.append("\n\t}");
-		}
-		if (!this.infAccessibilityAxioms.isEmpty()) {
-			result.append("\n\t{");
-			for (Dependency ic : this.infAccessibilityAxioms.values()) {
-				result.append("\n\t\t").append(ic);
-			}
-			result.append("\n\t}");
-		}
-		result.append("\n}");
-		return result.toString();
-	}
-
-	/**
-	 * Accessible relations implementation.
-	 *
-	 * @author Efthymia Tsamoura
-	 */
-	public static class AccessibleRelation extends Relation {
-
-		/** The Constant serialVersionUID. */
-		private static final long serialVersionUID = 5762653825140737301L;
-		
-		/** The Constant PREFIX. */
-		public static final String PREFIX = "Access";
-		
-		/** The singleton. */
-		private static AccessibleRelation singleton = null;
-
-		/**
-		 * Instantiates a new accessible relation.
-		 */
-		private AccessibleRelation() {
-			super(PREFIX, Arrays.asList((new Attribute(String.class, "x0")),(new Attribute(Integer.class, "FactID"))),
-					Lists.newArrayList(
-							new AccessMethod(
-									AccessMethod.DEFAULT_PREFIX +
-									AccessMethod.Types.FREE + PREFIX,
-									AccessMethod.Types.FREE,
-									Lists.<Integer>newArrayList())));
-
-		}
-
-		/**
-		 * Gets the accessible fact.
-		 *
-		 * @param constant TypedConstant<?>
-		 * @return PredicateFormula
-		 */
-		public static Atom getAccessibleFact(TypedConstant<?> constant) {
-			return new Atom(AccessibleRelation.getInstance(), new TypedConstant<>(constant));
-		}
-
-		/**
-		 * As list.
-		 *
-		 * @param a Attribute
-		 * @return List<Attribute>
-		 */
-		private static List<Attribute> asList(Attribute a) {
-			List<Attribute> result = new ArrayList<>(1);
-			result.add(a);
-			return result;
-		}
-
-		/**
-		 * Gets the single instance of AccessibleRelation.
-		 *
-		 * @return AccessibleRelation
-		 */
-		public static AccessibleRelation getInstance() {
-			if (singleton == null) {
-				singleton = new AccessibleRelation();
-			}
-			return singleton;
-		}
-	}
-
-	/**
-	 * Inferred accessible relations implementation.
-	 *
-	 * @author Efthymia Tsamoura
-	 */
-	public static class InferredAccessibleRelation extends Relation {
-
-		/** The Constant serialVersionUID. */
-		private static final long serialVersionUID = 5612488076416617646L;
-		
-		/** The Constant PREFIX. */
-		public static final String PREFIX = "InferredAccessible";
-		
-		/** The base relation. */
-		private final Relation baseRelation;
-
-		/**
-		 * Constructor for InferredAccessibleRelation.
-		 * @param r Relation
-		 */
-		public InferredAccessibleRelation(Relation r) {
-			super(PREFIX + r.getName(), r.getAttributes(),
-					Lists.newArrayList(
-							new AccessMethod(
-									AccessMethod.DEFAULT_PREFIX +
-									AccessMethod.Types.FREE + r.getName(),
-									AccessMethod.Types.FREE,
-									Lists.<Integer>newArrayList())));
-			this.baseRelation = r;
-		}
-
-		/**
-		 * Constructor for InferredAccessibleRelation.
-		 * @param view View
-		 */
-		public InferredAccessibleRelation(View view) {
-			super(PREFIX + view.getName(),
-					Utility.canonicalAttributes(view.getAttributes()),
-					Lists.newArrayList(
-							new AccessMethod(
-									AccessMethod.DEFAULT_PREFIX +
-									AccessMethod.Types.FREE + view.getName(),
-									AccessMethod.Types.FREE,
-									Lists.<Integer>newArrayList())));
-			this.baseRelation = view;
-		}
-
-		/**
-		 * Gets the base relation.
-		 *
-		 * @return Relation
-		 */
-		public Relation getBaseRelation() {
-			return this.baseRelation;
-		}
+	private static Atom substitute(Atom atom) {
+		return Atom.create(Predicate.create(inferredAccessiblePrefix + atom.getPredicate().getName(), atom.getPredicate().getArity()), atom.getTerms());
 	}
 }

@@ -1,13 +1,20 @@
 package uk.ac.ox.cs.pdq.planner.util;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.Constant;
+import uk.ac.ox.cs.pdq.fol.Formula;
+import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.Conjunction;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.util.Utility;
 
@@ -71,5 +78,50 @@ public class PlannerUtility {
 			}
 		}
 		return result;
+	}
+	
+	/**
+	 * Accessible.
+	 *
+	 * @param <Q> the generic type
+	 * @param query the query
+	 * @return the accessible query
+	 * @see uk.ac.ox.cs.pdq.fol.Query#accessible(AccessibleSchema)
+	 */
+	public ConjunctiveQuery accessible(ConjunctiveQuery query) {
+		List<Formula> atoms = new ArrayList<>();
+		for (Atom af: query.getAtoms()) {
+			atoms.add(
+					new Atom(this.getInferredAccessibleRelation((Relation) af.getPredicate()), af.getTerms()));
+		}
+		if(atoms.size() == 1) {
+			return new ConjunctiveQuery(query.getFreeVariables(), (Atom)atoms.get(0));
+		}
+		else {
+			return new ConjunctiveQuery(query.getFreeVariables(), (Conjunction) Conjunction.of(atoms));
+		}
+	}
+
+	/**
+	 * Accessible.
+	 *
+	 * @param <Q> the generic type
+	 * @param query the query
+	 * @param canonicalMapping the canonical mapping
+	 * @return the accessible query
+	 * @see uk.ac.ox.cs.pdq.fol.Query#accessible(AccessibleSchema)
+	 */
+	public ConjunctiveQuery accessible(ConjunctiveQuery query, Map<Variable, Constant> canonicalMapping) {
+		List<Formula> atoms = new ArrayList<>();
+		for (Atom af: query.getAtoms()) {
+			atoms.add(
+					new Atom(this.getInferredAccessibleRelation((Relation) af.getPredicate()), af.getTerms()));
+		}
+		if(atoms.size() == 1) {
+			return new ConjunctiveQuery(query.getFreeVariables(), (Atom)atoms.get(0), canonicalMapping);
+		}
+		else {
+			return new ConjunctiveQuery(query.getFreeVariables(), (Conjunction) Conjunction.of(atoms), canonicalMapping);
+		}
 	}
 }

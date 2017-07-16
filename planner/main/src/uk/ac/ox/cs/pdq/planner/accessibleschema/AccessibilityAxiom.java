@@ -1,18 +1,18 @@
 package uk.ac.ox.cs.pdq.planner.accessibleschema;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.fol.Term;
-import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema.AccessibleRelation;
-import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema.InferredAccessibleRelation;
-import uk.ac.ox.cs.pdq.util.Utility;
+import uk.ac.ox.cs.pdq.fol.Variable;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -25,24 +25,24 @@ import uk.ac.ox.cs.pdq.util.Utility;
  *
  * @author Efthymia Tsamoura
  */
-public class AccessibilityAxiom extends TGD {
+public class AccessibilityAxiom extends TGD {	
+	private static final long serialVersionUID = 4888518579167846542L;
 
-	/**  The inferred accessible relation of the axiom *. */
-	private final InferredAccessibleRelation infAccRelation;
-	
 	/**  The access method that this axiom maps to *. */
 	private final AccessMethod method;
+	
+	private final Relation relation;
 
 	/**
 	 * Instantiates a new accessibility axiom.
 	 *
-	 * @param infAccRel 		An inferred accessible relation
+	 * @param relation 		An inferred accessible relation
 	 * @param method 		A method to access this relation
 	 */
-	public AccessibilityAxiom(InferredAccessibleRelation infAccRel, AccessMethod method) {
-		super(createLeft(infAccRel.getBaseRelation(), method), createRight(infAccRel, method));
+	public AccessibilityAxiom(Relation relation, AccessMethod method) {
+		super(createLeft(relation, method), createRight(relation, method));
+		this.relation = relation;
 		this.method = method;
-		this.infAccRelation = infAccRel;
 	}
 
 	/**
@@ -54,49 +54,41 @@ public class AccessibilityAxiom extends TGD {
 	 */
 	private static Formula createLeft(Relation relation, AccessMethod method) {
 		List<Formula> leftAtoms = new ArrayList<>();
-		List<Integer> bindingPositions = method.getInputs();
-		Relation r = AccessibleRelation.getInstance();
-		Atom f = Utility.createAtomsWithoutExtraAttribute(relation);
-		List<Term> terms = f.getTerms();
-		for (int bindingPos: bindingPositions) {
-			if (method.getType() != Types.FREE) {
-				leftAtoms.add(new Atom(r, terms.get(bindingPos - 1)));
-			}
-		}
-		leftAtoms.add(f);
-		return Conjunction.of(leftAtoms);
+		Integer[] bindingPositions = method.getInputs();
+		Atom atom = createAtomsWithoutExtraAttribute(relation);
+		Term[] terms = atom.getTerms();
+		for (int bindingPos: bindingPositions) 
+			leftAtoms.add(Atom.create(AccessibleSchema.accessibleRelation, terms[bindingPos - 1]));
+		leftAtoms.add(atom);
+		return Conjunction.of(leftAtoms.toArray(new Atom[leftAtoms.size()]));
+	}
+
+	private static Atom createAtomsWithoutExtraAttribute(Relation relation) {
+		Term[] terms = new Term[relation.getArity()-1];
+		Attribute[] attributes = relation.getAttributes();
+		for (int index = 0; index < attributes.length; ++index) 
+			terms[index] = Variable.create(attributes[index].getName());
+		return Atom.create(relation, terms);
 	}
 
 	/**
 	 * Creates the right.
 	 *
-	 * @param infAccRel the inf acc rel
-	 * @param binding the binding
+	 * @param relation the inf acc rel
+	 * @param method the binding
 	 * @return 		the atoms of the right-hand side of the accessibility axiom that corresponds to the input relation and the input access method
 	 */
-	private static Formula createRight(InferredAccessibleRelation infAccRel, AccessMethod binding) {
+	private static Formula createRight(Relation relation, AccessMethod method) {
 		List<Formula> rightAtoms = new ArrayList<>();
-		List<Integer> bindingPositions = binding.getInputs();
-		Relation accessible = AccessibleRelation.getInstance();
-	//	Atom f = Utility.createAtom(infAccRel);
-		Atom f = Utility.createAtomsWithoutExtraAttribute(infAccRel);
-		List<Term> terms = f.getTerms();
-		for (int i = 1; i <= f.getTerms().size(); ++i) {
-			if (!bindingPositions.contains(i)) {
-				rightAtoms.add(new Atom(accessible, terms.get(i - 1)));
-			}
+		Integer[] bindingPositions = method.getInputs();
+		Atom f = createAtomsWithoutExtraAttribute(Relation.create(AccessibleSchema.inferredAccessiblePrefix + relation.getName(), relation.getAttributes(), relation.getAccessMethods(), relation.getForeignKeys()));
+		Term[] terms = f.getTerms();
+		for (int i = 1; i <= terms.length; ++i) {
+			if (!Arrays.asList(bindingPositions).contains(i)) 
+				rightAtoms.add(Atom.create(AccessibleSchema.accessibleRelation, terms[i-1]));
 		}
 		rightAtoms.add(f);
-		return Conjunction.of(rightAtoms);
-	}
-
-	/**
-	 * Gets the inferred accessible relation.
-	 *
-	 * @return the inferred accessible relation of the accessibility axiom.
-	 */
-	public InferredAccessibleRelation getInferredAccessibleRelation() {
-		return this.infAccRelation;
+		return Conjunction.of(rightAtoms.toArray(new Atom[rightAtoms.size()]));
 	}
 
 	/**
@@ -105,7 +97,7 @@ public class AccessibilityAxiom extends TGD {
 	 * @return the base relation of the accessibility axiom.
 	 */
 	public Relation getBaseRelation() {
-		return this.infAccRelation.getBaseRelation();
+		return this.relation;
 	}
 
 	/**
@@ -116,7 +108,7 @@ public class AccessibilityAxiom extends TGD {
 	public AccessMethod getAccessMethod() {
 		return this.method;
 	}
-	
+
 	/**
 	 * Gets the guard.
 	 *
@@ -124,6 +116,6 @@ public class AccessibilityAxiom extends TGD {
 	 * @see uk.ac.ox.cs.pdq.fol.GuardedDependency#getGuard()
 	 */
 	public Atom getGuard() {
-		return this.getBody().getAtoms().get(this.getBody().getAtoms().size()-1);
+		return this.getBody().getAtoms()[this.getBody().getAtoms().length-1];
 	}
 }

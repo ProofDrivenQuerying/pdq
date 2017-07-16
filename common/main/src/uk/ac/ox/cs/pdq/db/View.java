@@ -42,10 +42,10 @@ public class View extends Relation {
 	 * @param accessMethods 		The binding patterns with which a view can be accessed. By default, a view has free access
 	 */
 	public View(LinearGuarded dependency, AccessMethod[] accessMethods) {
-		super(dependency.getBody().getAtoms()[0].getPredicate().getName(), Utility.getAttributes(dependency.getGuard()));
+		super(dependency.getBody().getAtoms()[0].getPredicate().getName(), Utility.getAttributes(dependency.getGuard()), accessMethods);
 		this.dependency = dependency;
 		this.definition = TGD.create(this.dependency.getHead(), this.dependency.getBody());
-		this.setAccessMethods(accessMethods);
+//		this.setAccessMethods(accessMethods);
 	}
 
 	/**

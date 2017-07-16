@@ -4,9 +4,9 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Properties;
 
+import uk.ac.ox.cs.pdq.InterningManager;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 
 /**
@@ -52,23 +52,23 @@ public abstract class Relation extends Predicate implements Serializable {
 	protected final Properties properties = new Properties();
 
 	
-	public Relation(String name, Attribute[] attributes, AccessMethod[] accessMethods, ForeignKey[] foreignKeys) {
+	protected Relation(String name, Attribute[] attributes, AccessMethod[] accessMethods, ForeignKey[] foreignKeys) {
 		this(name, attributes, accessMethods, foreignKeys, false);
 	}
 
-	public Relation(String name, Attribute[] attributes, AccessMethod[] accessMethods) {
+	protected Relation(String name, Attribute[] attributes, AccessMethod[] accessMethods) {
 		this(name, attributes, accessMethods, false);
 	}
 
-	public Relation(String name, Attribute[] attributes, AccessMethod[] accessMethods, boolean isEquality) {
+	protected Relation(String name, Attribute[] attributes, AccessMethod[] accessMethods, boolean isEquality) {
 		this(name, attributes, accessMethods, new ForeignKey[]{}, isEquality);
 	}
 
-	public Relation(String name, Attribute[] attributes, boolean isEquality) {
+	protected Relation(String name, Attribute[] attributes, boolean isEquality) {
 		this(name, attributes, new AccessMethod[]{}, isEquality);
 	}
 
-	public Relation(String name, Attribute[] attributes) {
+	protected Relation(String name, Attribute[] attributes) {
 		this(name, attributes, new AccessMethod[]{}, false);
 	}
 
@@ -142,15 +142,15 @@ public abstract class Relation extends Predicate implements Serializable {
 		return this.foreignKeys.clone();
 	}
 
-	public void setAccessMethods(AccessMethod[] accessMethods) {
-		this.accessMethodsMaps.clear();
-		this.accessMethods = new AccessMethod[accessMethods.length];
-		int accessMethodIndex = 0;
-		for(AccessMethod accessMethod:accessMethods) {
-			this.accessMethodsMaps.put(accessMethod.getName(), accessMethod);
-			this.accessMethods[accessMethodIndex] = accessMethod;
-		}
-	}
+//	public void setAccessMethods(AccessMethod[] accessMethods) {
+//		this.accessMethodsMaps.clear();
+//		this.accessMethods = new AccessMethod[accessMethods.length];
+//		int accessMethodIndex = 0;
+//		for(AccessMethod accessMethod:accessMethods) {
+//			this.accessMethodsMaps.put(accessMethod.getName(), accessMethod);
+//			this.accessMethods[accessMethodIndex] = accessMethod;
+//		}
+//	}
 
 	public PrimaryKey getKey() {
 		return this.primaryKey;
@@ -178,22 +178,22 @@ public abstract class Relation extends Predicate implements Serializable {
 		this.attributePositions.put(attribute.getName(), this.attributes.length);
 	}
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null) {
-			return false;
-		}
-		return Relation.class.isInstance(o)
-				&& this.name.equals(((Relation) o).name);
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(this.name);
-	}
+//	@Override
+//	public boolean equals(Object o) {
+//		if (this == o) {
+//			return true;
+//		}
+//		if (o == null) {
+//			return false;
+//		}
+//		return Relation.class.isInstance(o)
+//				&& this.name.equals(((Relation) o).name);
+//	}
+//
+//	@Override
+//	public int hashCode() {
+//		return Objects.hash(this.name);
+//	}
 
 	@Override
 	public String toString() {
@@ -230,6 +230,48 @@ public abstract class Relation extends Predicate implements Serializable {
 	 */
 	public Properties getProperties() {
 		return this.properties;
+	}
+	
+	protected Object readResolve() {
+		return s_interningManager.intern(this);
+	}
+
+	protected static final InterningManager<Relation> s_interningManager = new InterningManager<Relation>() {
+		protected boolean equal(Relation object1, Relation object2) {
+			if (!object1.name.equals(object2.name))
+				return false;
+			return true;
+		}
+
+		protected int getHashCode(Relation object) {
+			int hashCode = object.name.hashCode();
+			return hashCode;
+		}
+	};
+
+	public static Relation create(String name, Attribute[] attributes, AccessMethod[] accessMethods, ForeignKey[] foreignKeys) {
+		return s_interningManager.intern(new Relation(name, attributes, accessMethods, foreignKeys){
+			private static final long serialVersionUID = -3703847952934804655L;});
+	}
+	
+	public static  Relation create(String name, Attribute[] attributes, AccessMethod[] accessMethods) {
+		return s_interningManager.intern(new Relation(name, attributes, accessMethods){
+			private static final long serialVersionUID = -8683688887610525202L;});
+	}
+	
+	public static  Relation create(String name, Attribute[] attributes, AccessMethod[] accessMethods, boolean isEquality) {
+		return s_interningManager.intern(new Relation(name, attributes, accessMethods,isEquality){
+			private static final long serialVersionUID = 6919596537308356684L;});
+	}
+	
+	public static  Relation create(String name, Attribute[] attributes, boolean isEquality) {
+		return s_interningManager.intern(new Relation(name, attributes, isEquality){
+			private static final long serialVersionUID = 4962368915083031145L;});
+	}
+	
+	public static  Relation create(String name, Attribute[] attributes) {
+		return s_interningManager.intern(new Relation(name, attributes){
+			private static final long serialVersionUID = -8215821247702132205L;});
 	}
 	
 }
