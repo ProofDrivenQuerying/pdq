@@ -46,9 +46,9 @@ public class LinearChaseConfiguration extends ChaseConfiguration implements Line
 	/**  The (un)exposed candidate facts. */
 	private List<Candidate> candidates;
 
-	/**  The candidate facts exposed in this configuration. */
-/** TOCOMMENT: WHY WOULD A CANDIDATE BE EXPOSED ALREADY? */
-	private final Set<Candidate> exposedCandidates;
+//	/**  The candidate facts exposed in this configuration. */
+///** TOCOMMENT: WHY WOULD A CANDIDATE BE EXPOSED ALREADY? */
+//	private final Set<Candidate> exposedCandidates;
 
 	/** Random engine. Used when selecting candidate facts to expose*/
 	protected final Random random;
@@ -198,16 +198,16 @@ public class LinearChaseConfiguration extends ChaseConfiguration implements Line
 		return this.candidates;
 	}
 
-	/**
-	 * Gets the exposed candidates.
-	 *
-	 * @return Collection<Candidate>
-	 * @see uk.ac.ox.cs.pdq.planner.linear.LinearConfiguration#getExposedCandidates()
-	 */
-	@Override
-	public Collection<Candidate> getExposedCandidates() {
-		return this.exposedCandidates;
-	}
+//	/**
+//	 * Gets the exposed candidates.
+//	 *
+//	 * @return Collection<Candidate>
+//	 * @see uk.ac.ox.cs.pdq.planner.linear.LinearConfiguration#getExposedCandidates()
+//	 */
+//	@Override
+//	public Collection<Candidate> getExposedCandidates() {
+//		return this.exposedCandidates;
+//	}
 
 
 	/**

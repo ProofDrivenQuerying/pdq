@@ -28,8 +28,6 @@ import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
-import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema.AccessibleRelation;
-import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema.InferredAccessibleRelation;
 import uk.ac.ox.cs.pdq.planner.reasoning.MatchFactory;
 import uk.ac.ox.cs.pdq.planner.util.FiringGraph;
 import uk.ac.ox.cs.pdq.planner.util.MapFiringGraph;
