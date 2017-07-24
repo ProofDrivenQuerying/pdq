@@ -39,7 +39,7 @@ public class ExplorerUtils {
 		for (N parentNode: parentsNodes) {
 			if (!parentNode.equals(childNode)
 					&& parentNode.isFullyGenerated()
-					&& parentNode.getPointer() == null
+					&& parentNode.getEquivalentNode() == null
 					&& !parentNode.getStatus().equals(NodeStatus.TERMINAL)
 					&& !parentNode.getStatus().equals(NodeStatus.FAKE_TERMINAL)
 					&& factEquivalence.isEquivalent(childNode.getConfiguration(), parentNode.getConfiguration())) {

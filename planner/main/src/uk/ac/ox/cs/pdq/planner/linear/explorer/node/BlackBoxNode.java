@@ -110,7 +110,7 @@ public class BlackBoxNode extends SearchNode {
 	 * @return BlackBoxNode
 	 */
 	@Override
-	public BlackBoxNode getPointer() {
-		return (BlackBoxNode) super.getPointer();
+	public BlackBoxNode getEquivalentNode() {
+		return (BlackBoxNode) super.getEquivalentNode();
 	}
 }

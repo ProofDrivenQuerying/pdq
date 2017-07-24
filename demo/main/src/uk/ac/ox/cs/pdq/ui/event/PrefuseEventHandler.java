@@ -113,14 +113,14 @@ public class PrefuseEventHandler implements EventHandler {
 	@Subscribe
 	public void processNode(SearchNode node) {
 
-		if (node == null || node.getMetadata() == null || (node.getMetadata() instanceof EquivalenceMetadata && node.getPointer() == null)) {
+		if (node == null || node.getMetadata() == null || (node.getMetadata() instanceof EquivalenceMetadata && node.getEquivalentNode() == null)) {
 			throw new java.lang.IllegalArgumentException();
 		}
 
 		Metadata metadata = node.getMetadata();
 
 		if (metadata instanceof EquivalenceMetadata) {
-			Utils.addEdge(this.graph, node, node.getPointer(), EdgeTypes.POINTER);
+			Utils.addEdge(this.graph, node, node.getEquivalentNode(), EdgeTypes.POINTER);
 		} 
 		else if (metadata instanceof BestPlanMetadata) {
 

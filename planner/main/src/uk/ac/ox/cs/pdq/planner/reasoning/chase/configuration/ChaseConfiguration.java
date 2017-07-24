@@ -91,9 +91,8 @@ public abstract class ChaseConfiguration implements Configuration {
 			properOutput = Lists.newArrayList(output);
 			properOutput.removeAll(input);
 		}
-		else {
+		else 
 			properOutput = null;
-		}
 		return properOutput;
 	}
 	
@@ -180,7 +179,7 @@ public abstract class ChaseConfiguration implements Configuration {
 	 * @throws PlannerException the planner exception
 	 * @throws LimitReachedException the limit reached exception
 	 */
-	public void reasonUntilTermination(Chaser chaser, ConjunctiveQuery query, Collection<? extends Dependency> dependencies) throws PlannerException, LimitReachedException {
+	public void reasonUntilTermination(Chaser chaser, ConjunctiveQuery query, Dependency[] dependencies) throws PlannerException, LimitReachedException {
 		chaser.reasonUntilTermination(this.state, dependencies);
 	}
 
@@ -242,13 +241,13 @@ public abstract class ChaseConfiguration implements Configuration {
 		}
 	}
 
-	/**
-	 * Clone.
-	 *
-	 * @return ChaseConfiguration<S>
-	 * @see uk.ac.ox.cs.pdq.reasoning.Configuration#clone()
-	 */
-	@Override
-	public abstract ChaseConfiguration clone();
+//	/**
+//	 * Clone.
+//	 *
+//	 * @return ChaseConfiguration<S>
+//	 * @see uk.ac.ox.cs.pdq.reasoning.Configuration#clone()
+//	 */
+//	@Override
+//	public abstract ChaseConfiguration clone();
 
 }

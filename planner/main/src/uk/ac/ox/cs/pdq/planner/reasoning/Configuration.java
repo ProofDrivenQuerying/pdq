@@ -34,12 +34,12 @@ public interface Configuration extends Cloneable, Comparable<Configuration>{
 	
 	void setCost(Cost cost);
 	
-	/**
-	 * Clone.
-	 *
-	 * @return the configuration
-	 */
-	Configuration clone();
+//	/**
+//	 * Clone.
+//	 *
+//	 * @return the configuration
+//	 */
+//	Configuration clone();
 	
 	/**
 	 * Checks if is successful.

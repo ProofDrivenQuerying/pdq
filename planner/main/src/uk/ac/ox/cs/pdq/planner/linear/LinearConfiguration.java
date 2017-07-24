@@ -23,12 +23,12 @@ public interface LinearConfiguration extends Configuration {
 	 */
 	Collection<Candidate> getCandidates();
 
-	/**
-	 * Gets the exposed candidates.
-	 *
-	 * @return the exposed candidates of this configuration
-	 */
-	Collection<Candidate> getExposedCandidates();
+//	/**
+//	 * Gets the exposed candidates.
+//	 *
+//	 * @return the exposed candidates of this configuration
+//	 */
+//	Collection<Candidate> getExposedCandidates();
 
 	/**
 	 * Choose candidate.
@@ -59,10 +59,10 @@ public interface LinearConfiguration extends Configuration {
 	 */
 	Set<Candidate> getSimilarCandidates(Candidate candidate);
 	
-	/* (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.planner.reasoning.Configuration#clone()
-	 */
-	@Override
-	LinearConfiguration clone(); 
+//	/* (non-Javadoc)
+//	 * @see uk.ac.ox.cs.pdq.planner.reasoning.Configuration#clone()
+//	 */
+//	@Override
+//	LinearConfiguration clone(); 
 
 }

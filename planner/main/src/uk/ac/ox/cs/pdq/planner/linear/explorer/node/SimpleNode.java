@@ -72,7 +72,7 @@ public class SimpleNode extends SearchNode {
 	 * @return SimpleNode
 	 */
 	@Override
-	public SimpleNode getPointer() {
-		return (SimpleNode) super.getPointer();
+	public SimpleNode getEquivalentNode() {
+		return (SimpleNode) super.getEquivalentNode();
 	}
 }

@@ -1,22 +1,21 @@
 package uk.ac.ox.cs.pdq.planner.linear.explorer.node;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 import uk.ac.ox.cs.pdq.LimitReachedException;
+import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
+import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Dependency;
-import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.dominance.FactDominance;
 import uk.ac.ox.cs.pdq.planner.dominance.FastFactDominance;
 import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
-import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.Metadata;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 
-import com.google.common.collect.Lists;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -43,8 +42,8 @@ public abstract class SearchNode implements Cloneable{
 		/**  A node under which no path will not be explored. */
 		TERMINAL,
 		
-		/** The fake terminal. */
-		FAKE_TERMINAL
+//		/** The fake terminal. */
+//		FAKE_TERMINAL
 	}
 
 	/** Status of the current node. ONGOING by default */
@@ -60,13 +59,10 @@ public abstract class SearchNode implements Cloneable{
 	private final LinearChaseConfiguration configuration;
 
 	/** Pointer node. Pointers are created during global equivalence checks */
-	private SearchNode pointer = null;
+	private SearchNode equivalentNode = null;
 
 	/**  The node's depth. */
-	private int depth = 0;
-
-	/** The metadata. */
-	private Metadata metadata = null;
+	private final int depth;
 
 	/**  True if the node is fully generated. */
 	private Boolean isFullyGenerated = false;
@@ -78,10 +74,14 @@ public abstract class SearchNode implements Cloneable{
 	private List<Integer> bestPathFromRoot = null;
 
 	/**  The path plan from root. */
-	private LeftDeepPlan bestPlanFromRoot = null;
+	private RelationalTerm bestPlanFromRoot = null;
+	
+	private Cost bestPlanFromRootCost = null;
 
 	/**  The plan that cost dominates the node. */
-	private LeftDeepPlan dominancePlan = null;
+	private RelationalTerm dominancePlan = null;
+	
+	private Cost dominancePlanCost = null;
 
 	/**
 	 * Instantiates a new search node.
@@ -90,6 +90,7 @@ public abstract class SearchNode implements Cloneable{
 	 * @throws PlannerException the planner exception
 	 */
 	public SearchNode(LinearChaseConfiguration configuration) throws PlannerException {
+		this.depth = 0;
 		this.id = globalId++;
 		this.configuration = configuration;
 		this.pathFromRoot = null;
@@ -107,22 +108,19 @@ public abstract class SearchNode implements Cloneable{
 		this.depth = parent.getDepth() + 1;
 		this.configuration = configuration;
 		List<Integer> pathFromRoot = null;
-		if(parent.getPathFromRoot() == null) {
-			pathFromRoot = Lists.newArrayList();
-		}
-		else {
-			pathFromRoot = Lists.newArrayList(parent.getPathFromRoot());
-		}
+		if(parent.getPathFromRoot() == null) 
+			pathFromRoot = new ArrayList<>();
+		else 
+			pathFromRoot = new ArrayList<>(parent.getPathFromRoot());
 		pathFromRoot.add(this.id);
 		this.pathFromRoot = pathFromRoot;
 
 		List<Integer> bestPathFromRoot = null;
-		if(parent.getBestPathFromRoot() == null) {
-			bestPathFromRoot = Lists.newArrayList();
-		}
-		else {
-			bestPathFromRoot = Lists.newArrayList(parent.getBestPathFromRoot());
-		}
+		if(parent.getBestPathFromRoot() == null) 
+			bestPathFromRoot = new ArrayList<>();
+		else 
+			bestPathFromRoot = new ArrayList<>(parent.getBestPathFromRoot());
+		
 		bestPathFromRoot.add(this.getId());
 		this.setBestPathFromRoot(bestPathFromRoot);
 		this.setBestPlanFromRoot(this.configuration.getPlan());
@@ -149,7 +147,7 @@ public abstract class SearchNode implements Cloneable{
 	 * @throws PlannerException the planner exception
 	 * @throws LimitReachedException the limit reached exception
 	 */
-	public void close(Chaser chaser, ConjunctiveQuery query, Collection<? extends Dependency> dependencies) throws PlannerException, LimitReachedException {
+	public void close(Chaser chaser, ConjunctiveQuery query, Dependency[] dependencies) throws PlannerException, LimitReachedException {
 		this.configuration.reasonUntilTermination(chaser, query, dependencies);
 		this.isFullyGenerated = true;
 	}
@@ -204,8 +202,8 @@ public abstract class SearchNode implements Cloneable{
 	 *
 	 * @param pointer The pointer node
 	 */
-	public void setPointer(SearchNode pointer) {
-		this.pointer = pointer;
+	public void setEquivalentNode(SearchNode pointer) {
+		this.equivalentNode = pointer;
 	}
 
 	/**
@@ -213,17 +211,8 @@ public abstract class SearchNode implements Cloneable{
 	 *
 	 * @return the pointer
 	 */
-	public SearchNode getPointer() {
-		return this.pointer;
-	}
-
-	/**
-	 * Sets the depth.
-	 *
-	 * @param depth the new depth
-	 */
-	public void setDepth(int depth) {
-		this.depth = depth;
+	public SearchNode getEquivalentNode() {
+		return this.equivalentNode;
 	}
 
 	/**
@@ -262,25 +251,6 @@ public abstract class SearchNode implements Cloneable{
 	public void setIsFullyGenerated(Boolean isFullyGenerated) {
 		this.isFullyGenerated = isFullyGenerated;
 	}
-
-	/**
-	 * Gets the metadata.
-	 *
-	 * @return the metadata
-	 */
-	public Metadata getMetadata() {
-		return this.metadata;
-	}
-
-
-	/**
-	 * Sets the metadata.
-	 *
-	 * @param metadata the new metadata
-	 */
-	public void setMetadata(Metadata metadata) {
-		this.metadata = metadata;
-	}
 	
 	/**
 	 * Gets the best path from root.
@@ -305,7 +275,7 @@ public abstract class SearchNode implements Cloneable{
 	 *
 	 * @return LeftDeepPlan
 	 */
-	public LeftDeepPlan getBestPlanFromRoot() {
+	public RelationalTerm getBestPlanFromRoot() {
 		return this.bestPlanFromRoot;
 	}
 
@@ -323,7 +293,7 @@ public abstract class SearchNode implements Cloneable{
 	 *
 	 * @param planFromRoot LeftDeepPlan
 	 */
-	public void setBestPlanFromRoot(LeftDeepPlan planFromRoot) {
+	public void setBestPlanFromRoot(RelationalTerm planFromRoot) {
 		this.bestPlanFromRoot = planFromRoot;
 	}
 
@@ -332,7 +302,7 @@ public abstract class SearchNode implements Cloneable{
 	 *
 	 * @return LeftDeepPlan
 	 */
-	public LeftDeepPlan getDominancePlan() {
+	public RelationalTerm getDominancePlan() {
 		return this.dominancePlan;
 	}
 
@@ -341,7 +311,7 @@ public abstract class SearchNode implements Cloneable{
 	 *
 	 * @param dominancePlan LeftDeepPlan
 	 */
-	public void setDominancePlan(LeftDeepPlan dominancePlan) {
+	public void setDominancePlan(RelationalTerm dominancePlan) {
 		this.dominancePlan = dominancePlan;
 	}
 
@@ -380,6 +350,22 @@ public abstract class SearchNode implements Cloneable{
 	 */
 	public abstract void setPathToSuccess(List<Integer> pathToSuccess);
 
+	public Cost getBestPlanFromRootCost() {
+		return bestPlanFromRootCost;
+	}
+
+	public void setBestPlanFromRootCost(Cost bestPlanFromRootCost) {
+		this.bestPlanFromRootCost = bestPlanFromRootCost;
+	}
+
+	public Cost getDominancePlanCost() {
+		return dominancePlanCost;
+	}
+
+	public void setDominancePlanCost(Cost dominancePlanCost) {
+		this.dominancePlanCost = dominancePlanCost;
+	}
+
 	/**
 	 * The Class Dominance.
 	 *
@@ -400,7 +386,7 @@ public abstract class SearchNode implements Cloneable{
 		public boolean isDominated(SearchNode source, SearchNode target) {
 			if(source.getBestPlanFromRoot() != null &&
 					target.getBestPlanFromRoot() != null &&
-					source.getBestPlanFromRoot().getCost().greaterOrEquals(target.getBestPlanFromRoot().getCost())) {
+					source.getBestPlanFromRootCost().greaterOrEquals(target.getBestPlanFromRootCost())) {
 				return this.factDominance.isDominated(source.getConfiguration(), target.getConfiguration());
 			}
 			return false;

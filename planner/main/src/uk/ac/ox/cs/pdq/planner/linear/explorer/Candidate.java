@@ -35,9 +35,6 @@ public class Candidate implements Cloneable{
 	 *  e.g., the grounding of its variables to constants */
 	private final Match match;
 
-	/**  The accessible counterpart of the input schema *. */
-	private final AccessibleSchema accessibleSchema;
-
 	/**  The axiom that will be fired given this candidate fact*. */
 	private final AccessibilityAxiom rule;
 
@@ -65,8 +62,7 @@ public class Candidate implements Cloneable{
 	 * @param matching Matching
 	 * 		Keeps information relevant to the exposed fact
 	 */
-	public Candidate(AccessibleSchema accessibleSchema, AccessibilityAxiom rule, Atom fact, Match matching) {
-		this.accessibleSchema = accessibleSchema;
+	public Candidate(AccessibilityAxiom rule, Atom fact, Match matching) {
 		this.rule = rule;
 		this.fact = fact;
 		this.match = matching;
@@ -154,8 +150,8 @@ public class Candidate implements Cloneable{
 	 */
 	public Atom getInferredAccessibleFact() {
 		Atom accessed = (Atom) Utility.applySubstitution(this.rule.getGuard(),this.match.getMapping());
-		Relation baseRelation = this.rule.getBaseRelation();
-		return new Atom(this.accessibleSchema.getInferredAccessibleRelation(baseRelation), accessed.getTerms() );
+		Relation relation = this.rule.getBaseRelation();
+		return Atom.create(Relation.create(AccessibleSchema.inferredAccessiblePrefix + relation.getName(), relation.getAttributes(), relation.getAccessMethods(), relation.getForeignKeys()), accessed.getTerms());
 	}
 
 	/**
@@ -220,13 +216,13 @@ public class Candidate implements Cloneable{
 		return "EMPTY CANDIDATE";
 	}
 
-	/**
-	 * Clone.
-	 *
-	 * @return Candidate
-	 */
-	@Override
-	public Candidate clone() {
-		return new Candidate(this.accessibleSchema, this.rule, this.fact, this.match);
-	}
+//	/**
+//	 * Clone.
+//	 *
+//	 * @return Candidate
+//	 */
+//	@Override
+//	public Candidate clone() {
+//		return new Candidate(this.accessibleSchema, this.rule, this.fact, this.match);
+//	}
 }

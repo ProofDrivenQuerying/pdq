@@ -1,19 +1,18 @@
 package uk.ac.ox.cs.pdq.planner.linear.explorer;
 
-import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.List; 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import org.jgrapht.graph.DefaultEdge;
+import org.junit.Assert;
+
+import com.google.common.eventbus.EventBus;
 
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
-import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
-import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.planner.Explorer;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
@@ -22,15 +21,10 @@ import uk.ac.ox.cs.pdq.planner.linear.explorer.node.NodeFactory;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.PlanTree;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode.NodeStatus;
-import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.CreationMetadata;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleDatabaseListState;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
-
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
-import com.google.common.eventbus.EventBus;
 
 
 // TODO: Auto-generated Javadoc
@@ -48,17 +42,14 @@ import com.google.common.eventbus.EventBus;
  * @author Efthymia Tsamoura
  *
  */
-public abstract class LinearExplorer extends Explorer<LeftDeepPlan> {
+public abstract class LinearExplorer extends Explorer {
 
 	/**  The input user query *. */
 	protected final ConjunctiveQuery  query;
-	
+
 	/**  The accessible counterpart of the user query *. */
 	protected final ConjunctiveQuery  accessibleQuery;
 
-	/**  The input schema *. */
-	protected final Schema schema;
-	
 	/**  The accessible counterpart of the input schema *. */
 	protected final AccessibleSchema accessibleSchema;
 
@@ -69,7 +60,7 @@ public abstract class LinearExplorer extends Explorer<LeftDeepPlan> {
 	protected final DatabaseConnection connection;
 
 	/**  Estimates the cost of a plan *. */
-	protected final CostEstimator<LeftDeepPlan> costEstimator;
+	protected final CostEstimator costEstimator;
 
 	/**  Creates new nodes. */
 	private final NodeFactory nodeFactory;
@@ -84,7 +75,7 @@ public abstract class LinearExplorer extends Explorer<LeftDeepPlan> {
 
 	/**  Maximum exploration depth. */
 	protected final int depth;
-	
+
 	/** The best configurations list. */
 	protected List<LinearChaseConfiguration> bestConfigurationsList;
 
@@ -111,29 +102,26 @@ public abstract class LinearExplorer extends Explorer<LeftDeepPlan> {
 			boolean collectStats,
 			ConjunctiveQuery query,
 			ConjunctiveQuery accessibleQuery,
-			Schema schema,
 			AccessibleSchema accessibleSchema, 
 			Chaser chaser,
-			 DatabaseConnection dbConn,
-			CostEstimator<LeftDeepPlan> costEstimator,
+			DatabaseConnection dbConn,
+			CostEstimator costEstimator,
 			NodeFactory nodeFactory,
 			int depth,
 			ReasoningParameters reasoningParams
 			) throws PlannerException, SQLException {
 		super(eventBus, collectStats);
-		Preconditions.checkArgument(eventBus != null);
-		Preconditions.checkArgument(nodeFactory != null);
-		Preconditions.checkArgument(query != null);
-		Preconditions.checkArgument(accessibleQuery != null);
-		Preconditions.checkArgument(schema != null);
-		Preconditions.checkArgument(accessibleSchema != null);
-		Preconditions.checkArgument(chaser != null);
-		Preconditions.checkArgument(dbConn != null);
-		Preconditions.checkArgument(costEstimator != null);
+		Assert.assertNotNull(eventBus);
+		Assert.assertNotNull(nodeFactory);
+		Assert.assertNotNull(query);
+		Assert.assertNotNull(accessibleQuery);
+		Assert.assertNotNull(accessibleSchema);
+		Assert.assertNotNull(chaser);
+		Assert.assertNotNull(dbConn);
+		Assert.assertNotNull(costEstimator);
 
 		this.query = query;
 		this.accessibleQuery = accessibleQuery;
-		this.schema = schema;
 		this.accessibleSchema = accessibleSchema;
 		this.chaser = chaser;
 		this.connection = dbConn;
@@ -151,20 +139,15 @@ public abstract class LinearExplorer extends Explorer<LeftDeepPlan> {
 	 * @throws SQLException 
 	 */
 	private void initialise() throws PlannerException, SQLException {
-		AccessibleChaseState state = null;
-		state = (uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState) 
-				new AccessibleDatabaseListState(this.reasoningParameters, this.query, this.schema, connection, true);
-		this.chaser.reasonUntilTermination(state, this.schema.getDependencies());
-
+		AccessibleChaseState state = (uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState) 
+				new AccessibleDatabaseListState(this.reasoningParameters, this.query, this.accessibleSchema, this.connection, true);
+		this.chaser.reasonUntilTermination(state, this.accessibleSchema.getOriginalDependencies());
 		this.tick = System.nanoTime();
 		SearchNode root = this.nodeFactory.getInstance(state);
 		root.getConfiguration().detectCandidates(this.accessibleSchema);
-		if (!root.getConfiguration().hasCandidates()) {
+		if (!root.getConfiguration().hasCandidates()) 
 			root.setStatus(NodeStatus.TERMINAL);
-		}
 		this.elapsedTime += System.nanoTime() - this.tick;
-		CreationMetadata metadata = new CreationMetadata(null, this.getElapsedTime());
-		root.setMetadata(metadata);
 		this.eventBus.post(root);
 		this.planTree.addVertex(root);
 	}
@@ -178,14 +161,12 @@ public abstract class LinearExplorer extends Explorer<LeftDeepPlan> {
 	@Override
 	protected boolean terminates() {
 		Set<SearchNode> nodes = this.planTree.vertexSet();
-		if (nodes.size() == 0) {
+		if (nodes.size() == 0) 
 			return false;
-		}
 		if (nodes.size() > 0) {
 			for (SearchNode node:nodes) {
-				if (node.getStatus() == NodeStatus.ONGOING && node.getDepth() < this.depth) {
+				if (node.getStatus() == NodeStatus.ONGOING && node.getDepth() < this.depth) 
 					return false;
-				}
 			}
 		}
 		return true;
@@ -217,7 +198,7 @@ public abstract class LinearExplorer extends Explorer<LeftDeepPlan> {
 	public NodeFactory getNodeFactory() {
 		return this.nodeFactory;
 	}
-	
+
 	/**
 	 * Gets the configurations.
 	 *
@@ -226,16 +207,16 @@ public abstract class LinearExplorer extends Explorer<LeftDeepPlan> {
 	 * 		The nodes are indexed using their ids.
 	 */
 	protected List<LinearChaseConfiguration> getConfigurations(List<Integer> path) {
-		Preconditions.checkArgument(path != null && !path.isEmpty());
-		List<LinearChaseConfiguration> configurations = Lists.newArrayList();
+		Assert.assertTrue(path != null && !path.isEmpty());
+		List<LinearChaseConfiguration> configurations = new ArrayList<>();
 		for (Integer n: path) {
 			SearchNode node = this.planTree.getVertex(n);
-			Preconditions.checkNotNull(node);
+			Assert.assertNotNull(node);
 			configurations.add(node.getConfiguration());
 		}
 		return configurations;
 	}
-	
+
 	/**
 	 * Gets the best configurations list.
 	 *
@@ -244,5 +225,5 @@ public abstract class LinearExplorer extends Explorer<LeftDeepPlan> {
 	public List<LinearChaseConfiguration> getBestConfigurationsList() {
 		return this.bestConfigurationsList;
 	}
-	
+
 }

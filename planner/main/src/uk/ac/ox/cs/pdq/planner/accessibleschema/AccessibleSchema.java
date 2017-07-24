@@ -54,6 +54,8 @@ public class AccessibleSchema extends Schema {
 
 	/**  Mapping from a dependency to its inferred accessible counterpart. */
 	private final Dependency[] inferredAccessibilityAxioms;
+	
+	private final Dependency[] originalDependencies;
 
 	/**
 	 * Instantiates a new accessible schema.
@@ -64,6 +66,7 @@ public class AccessibleSchema extends Schema {
 	 */
 	private AccessibleSchema(Relation[] relations, Dependency[] dependencies, Map<String, TypedConstant> constantsMap) {
 		super(computeAccessibleSchemaRelations(relations), computeAccessibleSchemaAxioms(relations, dependencies));
+		this.originalDependencies = dependencies.clone();
 		this.constants = constantsMap;
 		this.accessibilityAxioms = lastComputedaccessibilityAxioms.clone();
 		this.inferredAccessibilityAxioms = lastComputedinferredAccessibilityAxioms.clone();
@@ -86,7 +89,6 @@ public class AccessibleSchema extends Schema {
 		return this.inferredAccessibilityAxioms.clone();
 	}
 
-
 	/**
 	 * Gets the accessibility axioms.
 	 *
@@ -94,6 +96,10 @@ public class AccessibleSchema extends Schema {
 	 */
 	public AccessibilityAxiom[] getAccessibilityAxioms() {
 		return this.accessibilityAxioms.clone();
+	}
+	
+	public Dependency[] getOriginalDependencies() {
+		return originalDependencies.clone();
 	}
 
 	/**

@@ -5,7 +5,6 @@ import java.util.Set;
 
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.SimpleCostEstimator;
-import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
@@ -21,14 +20,14 @@ import com.google.common.base.Preconditions;
  * @author Efthymia Tsamoura
  */
 public final class NodeFactory {
-	
+
 	/** The planner parameters. */
 	private final PlannerParameters plannerParameters;
-	
+
 	/** Estimates the cost of linear plan visited during exploration.
 	 * If  instance of SimpleCostEstimator, then the factory returns a simple node. Otherwise, a blackbox one. **/
-	private final CostEstimator<LeftDeepPlan> costEstimator;
-	
+	private final CostEstimator costEstimator;
+
 	/** The random. */
 	private final Random random;
 
@@ -38,14 +37,14 @@ public final class NodeFactory {
 	 * @param parameters the parameters
 	 * @param costEstimator the cost estimator
 	 */
-	public NodeFactory(PlannerParameters parameters, CostEstimator<LeftDeepPlan> costEstimator) {
+	public NodeFactory(PlannerParameters parameters, CostEstimator costEstimator) {
 		Preconditions.checkNotNull(parameters);
 		Preconditions.checkNotNull(costEstimator);
 		this.plannerParameters = parameters;
 		this.costEstimator = costEstimator;
 		this.random = new Random(this.plannerParameters.getSeed());
 	}
-	
+
 	/**
 	 * Gets the single instance of NodeFactory.
 	 *
@@ -56,10 +55,10 @@ public final class NodeFactory {
 	public SearchNode getInstance(AccessibleChaseState state) throws PlannerException {
 		Preconditions.checkNotNull(state);
 		LinearChaseConfiguration configuration = new LinearChaseConfiguration(state, this.random);
-		if (this.costEstimator instanceof SimpleCostEstimator) {
+		if (this.costEstimator instanceof SimpleCostEstimator) 
 			return new SimpleNode(configuration);
-		}
-		return new BlackBoxNode(configuration);
+		else
+			return new BlackBoxNode(configuration);
 	}
 
 	/**
@@ -75,10 +74,10 @@ public final class NodeFactory {
 				parent.getConfiguration(),
 				exposedCandidates,
 				this.random);
-		if (parent instanceof SimpleNode) {
+		if (parent instanceof SimpleNode) 
 			return new SimpleNode((SimpleNode) parent, configuration);
-		}
-		return new BlackBoxNode((BlackBoxNode) parent, configuration);
+		else
+			return new BlackBoxNode((BlackBoxNode) parent, configuration);
 	}
-	
+
 }

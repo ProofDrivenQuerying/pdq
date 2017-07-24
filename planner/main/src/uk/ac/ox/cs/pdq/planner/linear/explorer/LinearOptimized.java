@@ -22,13 +22,13 @@ import org.apache.log4j.Logger;
 import org.jgrapht.graph.DefaultEdge;
 
 import uk.ac.ox.cs.pdq.LimitReachedException;
+import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.planner.IndexedDirectedGraph;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
@@ -43,12 +43,6 @@ import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode.NodeStatus;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.equivalence.PathEquivalenceClasses;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.equivalence.PathEquivalenceClasses.PathEquivalenceClass;
-import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.BestPlanMetadata;
-import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.CreationMetadata;
-import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.DominanceMetadata;
-import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.EquivalenceMetadata;
-import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.Metadata;
-import uk.ac.ox.cs.pdq.planner.linear.explorer.node.metadata.StatusUpdateMetadata;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.pruning.PostPruning;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
@@ -94,9 +88,8 @@ public class LinearOptimized extends LinearExplorer {
 	private final Queue<SearchNode> unexploredDescendants = new PriorityQueue<>(10, new Comparator<SearchNode>() {
 		@Override
 		public int compare(SearchNode o1, SearchNode o2) {
-			if(o1.getId() >= o2.getId()) {
+			if(o1.getId() >= o2.getId()) 
 				return -1;
-			}
 			return 1;
 		}
 	});
@@ -127,17 +120,16 @@ public class LinearOptimized extends LinearExplorer {
 			boolean collectStats,
 			ConjunctiveQuery query,
 			ConjunctiveQuery accessibleQuery,
-			Schema schema,
 			AccessibleSchema accessibleSchema, 
 			Chaser chaser,
 			DatabaseConnection dbConn,
-			CostEstimator<LeftDeepPlan> costEstimator,
+			CostEstimator costEstimator,
 			NodeFactory nodeFactory,
 			int depth,
 			int queryMatchInterval, 
 			PostPruning postPruning,
 			boolean zombification, ReasoningParameters reasoningParameters) throws PlannerException, SQLException {
-		super(eventBus, collectStats, query, accessibleQuery, schema, accessibleSchema, chaser, dbConn, costEstimator, nodeFactory, depth, reasoningParameters);
+		super(eventBus, collectStats, query, accessibleQuery, accessibleSchema, chaser, dbConn, costEstimator, nodeFactory, depth, reasoningParameters);
 		this.costPropagator = PropagatorUtils.getPropagator(costEstimator);
 		this.queryMatchInterval = queryMatchInterval;
 		this.postPruning = postPruning;
@@ -155,20 +147,17 @@ public class LinearOptimized extends LinearExplorer {
 		if(this.unexploredDescendants.isEmpty()) {
 			// Choose the next node to explore below it
 			SearchNode selectedNode = this.chooseNode();
-			if (selectedNode == null) {
+			if (selectedNode == null) 
 				return;
-			}
 			this.explorationStep(selectedNode);
 		}
 		else {
 			SearchNode selectedNode = this.unexploredDescendants.peek();
-			if (selectedNode == null) {
+			if (selectedNode == null) 
 				return;
-			}
 			SearchNode freshNode = this.explorationStep(selectedNode);
-			if(freshNode.getStatus().equals(NodeStatus.ONGOING)) {
+			if(freshNode.getStatus().equals(NodeStatus.ONGOING)) 
 				this.unexploredDescendants.add(freshNode);
-			}
 			this.unexploredDescendants.remove(selectedNode);
 		}
 	}
@@ -193,9 +182,6 @@ public class LinearOptimized extends LinearExplorer {
 		Candidate selectedCandidate = selectedConfig.chooseCandidate();
 		if(selectedCandidate == null) {
 			selectedNode.setStatus(NodeStatus.TERMINAL);
-			Metadata metadata = new StatusUpdateMetadata(selectedNode, this.getElapsedTime());
-			selectedNode.setMetadata(metadata);
-			this.eventBus.post(selectedNode);
 			return null;
 		}
 
@@ -214,23 +200,18 @@ public class LinearOptimized extends LinearExplorer {
 		}
 		this.costEstimator.cost(freshNode.getConfiguration().getPlan());
 
-		log.info("SELECTED NODE: " + selectedNode);
-		log.info("EXPOSED CANDIDATES\t");
-		if(selectedNode.getConfiguration().getExposedCandidates() != null) {
-			log.info(Joiner.on("\n\t").join(selectedNode.getConfiguration().getExposedCandidates()));
-		}
-		log.info("UNEXPOSED CANDIDATES\t");
-		log.info(Joiner.on("\n\t").join(selectedNode.getConfiguration().getCandidates()));
-		log.info("FRESH: " + freshNode + " PARENT: " + selectedNode);
-		log.info("EXPOSED CANDIDATES\t");
-		log.info(Joiner.on("\n\t").join(freshNode.getConfiguration().getExposedCandidates()));
-		log.info("UNEXPOSED CANDIDATES\t");
-		log.info(Joiner.on("\n\t").join(freshNode.getConfiguration().getCandidates()));
-
-
-		Metadata metadata = new CreationMetadata(selectedNode, this.getElapsedTime());
-		freshNode.setMetadata(metadata);
-		this.eventBus.post(freshNode);
+//		log.info("SELECTED NODE: " + selectedNode);
+//		log.info("EXPOSED CANDIDATES\t");
+//		if(selectedNode.getConfiguration().getExposedCandidates() != null) {
+//			log.info(Joiner.on("\n\t").join(selectedNode.getConfiguration().getExposedCandidates()));
+//		}
+//		log.info("UNEXPOSED CANDIDATES\t");
+//		log.info(Joiner.on("\n\t").join(selectedNode.getConfiguration().getCandidates()));
+//		log.info("FRESH: " + freshNode + " PARENT: " + selectedNode);
+//		log.info("EXPOSED CANDIDATES\t");
+//		log.info(Joiner.on("\n\t").join(freshNode.getConfiguration().getExposedCandidates()));
+//		log.info("UNEXPOSED CANDIDATES\t");
+//		log.info(Joiner.on("\n\t").join(freshNode.getConfiguration().getCandidates()));
 
 		this.planTree.addVertex(freshNode);
 		this.planTree.addEdge(selectedNode, freshNode, new DefaultEdge());
@@ -238,7 +219,7 @@ public class LinearOptimized extends LinearExplorer {
 		// If the cost of the plan of the newly created node is higher than the best plan found so far 
 		//then zombify the newly created node  
 		boolean domination = false;
-		LeftDeepPlan freshNodePlan = freshNode.getBestPlanFromRoot();
+		RelationalTerm freshNodePlan = freshNode.getBestPlanFromRoot();
 		if (this.bestPlan != null) {
 			if (freshNodePlan.getCost().greaterOrEquals(this.bestPlan.getCost())) {
 				domination = true;
@@ -289,17 +270,13 @@ public class LinearOptimized extends LinearExplorer {
 			 * -stop exploring plans below the newly created node
 			 */
 			if (parentEquivalent != null && !parentEquivalent.getStatus().equals(NodeStatus.SUCCESSFUL)) {
-				freshNode.setPointer(parentEquivalent);
+				freshNode.setEquivalentNode(parentEquivalent);
 				if(this.zombification) {
 					PathEquivalenceClass equivalenceClass = this.equivalenceClasses.addEntry(parentEquivalent, freshNode);
-					if (this.costPropagator instanceof BlackBoxPropagator) {
+					if (this.costPropagator instanceof BlackBoxPropagator) 
 						this.wakeupDescendants(freshNode.getPathFromRoot(), equivalenceClass);
-					}
 				}
 				freshNode.setStatus(NodeStatus.TERMINAL);
-				metadata = new EquivalenceMetadata(selectedNode, this.getElapsedTime());
-				freshNode.setMetadata(metadata);
-				this.eventBus.post(freshNode);
 				//Cannot do postpruning here
 				this.updateBestPlan(selectedNode, freshNode);
 				this.stats.increase(EQUIVALENCE_PRUNING, 1);
@@ -337,7 +314,7 @@ public class LinearOptimized extends LinearExplorer {
 	 */
 	private void updateBestPlan(SearchNode parentNode, SearchNode freshNode, Match match) throws PlannerException, LimitReachedException {
 		this.costPropagator.propagate(freshNode, this.planTree);
-		LeftDeepPlan successfulPlan = this.costPropagator.getBestPlan();
+		RelationalTerm successfulPlan = this.costPropagator.getBestPlan();
 		if ((this.bestPlan == null && successfulPlan != null) || 
 				(this.bestPlan != null && successfulPlan != null && successfulPlan.getCost().lessThan(this.bestPlan.getCost()))) {
 			this.bestPlan = successfulPlan;
@@ -364,11 +341,6 @@ public class LinearOptimized extends LinearExplorer {
 				}
 			}
 			log.trace("\t+++BEST PLAN: " + this.bestPlan.getAccesses() + " " + this.bestPlan.getCost());
-
-			BestPlanMetadata successMetadata = new BestPlanMetadata(parentNode, this.bestPlan, this.costPropagator.getBestPath(), 
-					this.bestConfigurationsList, this.getElapsedTime());
-			freshNode.setMetadata(successMetadata);
-			this.eventBus.post(freshNode);
 		}
 	}
 	
@@ -383,7 +355,7 @@ public class LinearOptimized extends LinearExplorer {
 	 */
 	private void updateBestPlan(SearchNode parentNode, SearchNode freshNode) throws PlannerException, LimitReachedException {
 		this.costPropagator.propagate(freshNode, this.planTree);
-		LeftDeepPlan successfulPlan = this.costPropagator.getBestPlan();
+		RelationalTerm successfulPlan = this.costPropagator.getBestPlan();
 		if ((this.bestPlan == null && successfulPlan != null) 
 			|| (this.bestPlan != null && successfulPlan != null 
 				&& successfulPlan.getCost().lessThan(this.bestPlan.getCost()))) {
@@ -391,11 +363,6 @@ public class LinearOptimized extends LinearExplorer {
 			this.bestConfigurationsList = this.getConfigurations(this.costPropagator.getBestPath());
 			this.eventBus.post(this.getBestPlan());
 			log.trace("\t+++BEST PLAN: " + this.bestPlan.getAccesses() + " " + this.bestPlan.getCost());
-
-			BestPlanMetadata successMetadata = new BestPlanMetadata(parentNode, this.bestPlan, this.costPropagator.getBestPath(), 
-					this.bestConfigurationsList, this.getElapsedTime());
-			freshNode.setMetadata(successMetadata);
-			this.eventBus.post(freshNode);
 		}
 	}
 

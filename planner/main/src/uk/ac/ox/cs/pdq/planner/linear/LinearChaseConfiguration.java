@@ -2,19 +2,19 @@ package uk.ac.ox.cs.pdq.planner.linear;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
 
-import uk.ac.ox.cs.pdq.fol.Constant;
-import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
+import org.junit.Assert;
+
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
@@ -23,10 +23,6 @@ import uk.ac.ox.cs.pdq.planner.reasoning.Configuration;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
 import uk.ac.ox.cs.pdq.reasoning.chase.Utility;
-
-import com.google.common.base.Joiner;
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Sets;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -40,16 +36,8 @@ import com.google.common.collect.Sets;
  */
 public class LinearChaseConfiguration extends ChaseConfiguration implements LinearConfiguration {
 
-	/**  The parent linear configuration. */
-	private final LinearChaseConfiguration parent;
-
 	/**  The (un)exposed candidate facts. */
 	private List<Candidate> candidates;
-
-//	/**  The candidate facts exposed in this configuration. */
-///** TOCOMMENT: WHY WOULD A CANDIDATE BE EXPOSED ALREADY? */
-//	private final Set<Candidate> exposedCandidates;
-
 	/** Random engine. Used when selecting candidate facts to expose*/
 	protected final Random random;
 	
@@ -63,31 +51,27 @@ public class LinearChaseConfiguration extends ChaseConfiguration implements Line
 	 * Instantiates a new linear chase configuration.
 	 *
 	 * @param parent 		The parent linear configuration
-	 * @param exposedCandidates 		The candidate facts exposed in this configuration
+	 * @param candidatesToExpose 		The candidate facts exposed in this configuration
 	 * @param random the random
 	 */
-	public LinearChaseConfiguration(
-			LinearChaseConfiguration parent,
-			Set<Candidate> exposedCandidates,
-			Random random) {		
-		super(parent.getState().clone(),
-				Collections.EMPTY_SET,
-				LinearUtility.getOutputConstants(exposedCandidates)
-				);
-		Preconditions.checkNotNull(parent);
-		Preconditions.checkNotNull(exposedCandidates);
-		Preconditions.checkArgument(!exposedCandidates.isEmpty());
-		Preconditions.checkNotNull(this.getInput());
-		Preconditions.checkNotNull(this.getOutput());
+	public LinearChaseConfiguration(LinearChaseConfiguration parent, Set<Candidate> candidatesToExpose, Random random) {		
+		super(parent.getState().clone(), new LinkedHashSet<Constant>(), LinearUtility.getOutputConstants(candidatesToExpose));
+		Assert.assertNotNull(parent);
+		Assert.assertTrue(candidatesToExpose!= null && !candidatesToExpose.isEmpty());
+		Assert.assertTrue(this.getInput() != null && this.getInput().isEmpty());
+		Assert.assertNotNull(this.getOutput());
 		this.random = random;
-		this.parent = parent;
-		this.exposedCandidates = exposedCandidates;
+		this.rule = candidatesToExpose.iterator().next().getRule();
+		this.facts = new LinkedHashSet<>();
+		for (Candidate candidate:candidatesToExpose) {
+			Assert.assertTrue(this.rule.equals(candidate.getRule()));
+			this.facts.add(candidate.getFact());
+		}
 		List<Match> matches = new ArrayList<>();
-		for (Candidate candidate:exposedCandidates) 
+		for (Candidate candidate:candidatesToExpose) 
 			matches.add(candidate.getMatch());
 		this.chaseStep(matches);
-		RelationalTerm plan = LeftDeepPlanGenerator.createLeftDeepPlan(this.rule.getBaseRelation(), this.rule.getAccessMethod(), this.facts, this.parent.getPlan());
-		this.setPlan(plan);
+		this.plan = LeftDeepPlanGenerator.createLeftDeepPlan(this.rule.getBaseRelation(), this.rule.getAccessMethod(), this.facts, parent.getPlan());
 	}
 
 	/**
@@ -97,17 +81,12 @@ public class LinearChaseConfiguration extends ChaseConfiguration implements Line
 	 * @param state the state; i.e. the set of facts
 	 * @param random the random
 	 */
-	public LinearChaseConfiguration(
-			AccessibleChaseState state,
-			Random random) {
-		super(state,
-				null,
-				null
-				);
+	public LinearChaseConfiguration(AccessibleChaseState state, Random random) {
+		super(state, null, null);
 		this.random = random;
-		this.parent = null;
-		this.exposedCandidates = null;
-		this.setPlan(null);
+		this.rule = null;
+		this.facts = null;
+		this.plan = null;
 	}
 
 	/**
@@ -139,14 +118,13 @@ public class LinearChaseConfiguration extends ChaseConfiguration implements Line
 	 * @return List<Candidate>
 	 * @throws PlannerException the planner exception
 	 */
-	public void detectCandidates(AccessibleSchema accessibleSchema) throws PlannerException {
+	public void detectCandidates(AccessibleSchema accessibleSchema) {
 		List<Candidate> result = new ArrayList<>();
-		Map<AccessibilityAxiom, List<Match>> nonFiredAxioms =
-				this.getState().getUnexposedFacts(accessibleSchema);
+		Map<AccessibilityAxiom, List<Match>> nonFiredAxioms = this.getState().getUnexposedFacts(accessibleSchema);
 		for (AccessibilityAxiom axiom:nonFiredAxioms.keySet()) {
 			for (Match matching:nonFiredAxioms.get(axiom)) {
 				Atom fact = (Atom) Utility.applySubstitution(axiom.getGuard(), matching.getMapping());
-				result.add(new Candidate(accessibleSchema, axiom, fact, matching));
+				result.add(new Candidate(axiom, fact, matching));
 			}
 		}
 		this.candidates = result;
@@ -164,9 +142,8 @@ public class LinearChaseConfiguration extends ChaseConfiguration implements Line
 		Iterator<Candidate> iterator = this.candidates.iterator();
 		while(iterator.hasNext()) {
 			Candidate current = iterator.next();
-			if(this.isExposed(candidate)) {
+			if(this.isExposed(candidate)) 
 				iterator.remove();
-			}
 			else 
 				if (candidate.getRelation().equals(current.getRelation())
 						&& candidate.getAccessMethod().equals(current.getAccessMethod())) {
@@ -175,11 +152,10 @@ public class LinearChaseConfiguration extends ChaseConfiguration implements Line
 					if (terms1 == null && terms2 == null) {
 						similarCandidates.add(current);
 					} else if (terms1 != null && terms2 != null) {
-						Set<Constant> set1 = Sets.newLinkedHashSet(terms1);
-						Set<Constant> set2 = Sets.newLinkedHashSet(terms2);
-						if (set1.equals(set2)) {
+						Set<Constant> set1 = new LinkedHashSet<>(terms1);
+						Set<Constant> set2 = new LinkedHashSet<>(terms2);
+						if (set1.equals(set2)) 
 							similarCandidates.add(current);
-						}
 					}
 				}
 		}
@@ -232,72 +208,41 @@ public class LinearChaseConfiguration extends ChaseConfiguration implements Line
 		while(!this.candidates.isEmpty()) {
 			int selection = this.random.nextInt(this.candidates.size());
 			Candidate candidate = this.candidates.get(selection);
-			if(!this.isExposed(candidate)) {
+			if(!this.isExposed(candidate)) 
 				return candidate;
-			}
-			else {
+			else 
 				this.candidates.remove(selection);
-			}
 		}
 		return null;
 	}
 
-	/**
-	 * 
-	 *
-	 * @param o Object
-	 * @return boolean
-	 */
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null) {
-			return false;
-		}
-		return this.getClass().isInstance(o)
-				&& this.getState().equals(((LinearChaseConfiguration) o).getState());
-	}
-
-	/**
-	 * Hash code.
-	 *
-	 * @return int
-	 */
-	@Override
-	public int hashCode() {
-		return Objects.hash(this.getState());
-	}
-
-	/**
-	 * TOCOMMENT: CONVERT WHAT TO A STRING?
-	 *
-	 * @return String
-	 */
-	@Override
-	public String toString() {
-		return Joiner.on("\n").join(this.exposedCandidates);
-	}
-
-	/**
-	 * Clone.
-	 *
-	 * @return LinearChaseConfiguration
-	 * @see uk.ac.ox.cs.pdq.planner.linear.LinearConfiguration#clone()
-	 */
-	@Override
-	public LinearChaseConfiguration clone() {
-		if(this.parent != null) {
-			return new LinearChaseConfiguration(
-					this.parent,
-					this.exposedCandidates,
-					this.random);
-		}
-		return new LinearChaseConfiguration(
-				this.getState().clone(),
-				this.random);
-	}
+//	/**
+//	 * 
+//	 *
+//	 * @param o Object
+//	 * @return boolean
+//	 */
+//	@Override
+//	public boolean equals(Object o) {
+//		if (this == o) {
+//			return true;
+//		}
+//		if (o == null) {
+//			return false;
+//		}
+//		return this.getClass().isInstance(o)
+//				&& this.getState().equals(((LinearChaseConfiguration) o).getState());
+//	}
+//
+//	/**
+//	 * Hash code.
+//	 *
+//	 * @return int
+//	 */
+//	@Override
+//	public int hashCode() {
+//		return Objects.hash(this.getState());
+//	}
 
 	/* (non-Javadoc)
 	 * @see uk.ac.ox.cs.pdq.planner.reasoning.Configuration#compareTo(uk.ac.ox.cs.pdq.planner.reasoning.Configuration)

@@ -2,8 +2,9 @@ package uk.ac.ox.cs.pdq.planner.linear.cost;
 
 import java.util.List;
 
+import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
+import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
-import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.PlanTree;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
 
@@ -19,10 +20,12 @@ import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
 public abstract class CostPropagator<T extends SearchNode> {
 
 	/** The cost estimator. */
-	protected final CostEstimator<LeftDeepPlan> costEstimator;
+	protected final CostEstimator costEstimator;
 	
 	/** The best plan found after propagation. It is null if no plan is found */
-	protected LeftDeepPlan bestPlan = null;
+	protected RelationalTerm bestPlan = null;
+	
+	protected Cost bestCost = null;
 	
 	/** The best path. */
 	protected List<Integer> bestPath = null;
@@ -32,7 +35,7 @@ public abstract class CostPropagator<T extends SearchNode> {
 	 *
 	 * @param estimator the estimator
 	 */
-	protected CostPropagator(CostEstimator<LeftDeepPlan> estimator) {
+	protected CostPropagator(CostEstimator estimator) {
 		this.costEstimator = estimator;
 	}
 
@@ -41,7 +44,7 @@ public abstract class CostPropagator<T extends SearchNode> {
 	 *
 	 * @return the cost estimator
 	 */
-	public CostEstimator<LeftDeepPlan> getCostEstimator() {
+	public CostEstimator getCostEstimator() {
 		return this.costEstimator;
 	}
 	
@@ -50,7 +53,7 @@ public abstract class CostPropagator<T extends SearchNode> {
 	 *
 	 * @return the best plan
 	 */
-	public LeftDeepPlan getBestPlan() {
+	public RelationalTerm getBestPlan() {
 		return this.bestPlan;
 	}
 	

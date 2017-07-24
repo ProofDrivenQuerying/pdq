@@ -215,7 +215,7 @@ public class LinearKChase extends LinearExplorer {
 				 * -stop exploring plans below the newly created node
 				 */
 				if (parentEquivalent != null && !parentEquivalent.getStatus().equals(NodeStatus.SUCCESSFUL)) {
-					leaf.setPointer(parentEquivalent);
+					leaf.setEquivalentNode(parentEquivalent);
 					leaf.setStatus(NodeStatus.TERMINAL);
 					SearchNode parentNode = this.planTree.getParent(leaf);
 					Metadata metadata = new EquivalenceMetadata(parentNode, this.getElapsedTime());
@@ -229,7 +229,7 @@ public class LinearKChase extends LinearExplorer {
 
 			// Check for query match
 			for (SearchNode leaf: leaves) {
-				if((leaf.getStatus() == NodeStatus.TERMINAL || leaf.getStatus() == NodeStatus.ONGOING) && leaf.getPointer() == null) {
+				if((leaf.getStatus() == NodeStatus.TERMINAL || leaf.getStatus() == NodeStatus.ONGOING) && leaf.getEquivalentNode() == null) {
 					this.stats.start(MILLI_QUERY_MATCH);
 					List<Match> matches = leaf.matchesQuery(this.accessibleQuery);
 					this.stats.stop(MILLI_QUERY_MATCH);

@@ -158,7 +158,7 @@ public class NodePropertiesDialog extends JFrame {
 
 		Metadata metadata = node.getMetadata();
 		if(metadata instanceof EquivalenceMetadata) {
-			PopupUtils.addBorderAndTextToContainer(titledBorders, BorderFactory.createTitledBorder("Equivalent node"), node.getPointer().toString());
+			PopupUtils.addBorderAndTextToContainer(titledBorders, BorderFactory.createTitledBorder("Equivalent node"), node.getEquivalentNode().toString());
 		}
 		else {
 			throw new java.lang.IllegalArgumentException();

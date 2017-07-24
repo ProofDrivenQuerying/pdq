@@ -2,13 +2,14 @@ package uk.ac.ox.cs.pdq.planner;
 
 
 import org.apache.log4j.Logger;
+import org.junit.Assert;
 
 import uk.ac.ox.cs.pdq.LimitReachedException;
 import uk.ac.ox.cs.pdq.LimitReachedException.Reasons;
+import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
+import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
-import uk.ac.ox.cs.pdq.plan.Plan;
 
-import com.google.common.base.Preconditions;
 import com.google.common.eventbus.EventBus;
 
 // TODO: Auto-generated Javadoc
@@ -16,15 +17,17 @@ import com.google.common.eventbus.EventBus;
  * Searches for a feasible plan w.r.t. the relations' bindings and the schema dependencies.
  *
  * @author Efthymia Tsamoura
- * @param <P> the generic type
  */
-public abstract class Explorer<P extends Plan> {
+public abstract class Explorer {
 
 	/**  */
 	protected static Logger log = Logger.getLogger(Explorer.class);
 
 	/**  The best plan found this far. */
-	protected P bestPlan = null;
+	protected RelationalTerm bestPlan = null;
+	
+	/**  The cost of the best plan found this far. */
+	protected Cost bestCost = null;
 	
 	/**  If true then the explorer must terminate immediately. */
 	protected boolean forcedTermination = false;
@@ -59,7 +62,7 @@ public abstract class Explorer<P extends Plan> {
 	 * @param collectStats boolean
 	 */
 	public Explorer(EventBus eventBus, boolean collectStats) {
-		Preconditions.checkArgument(eventBus != null);
+		Assert.assertNotNull(eventBus);
 		this.eventBus = eventBus;
 		this.stats = new StatisticsCollector(collectStats, eventBus);
 	}
@@ -106,13 +109,11 @@ public abstract class Explorer<P extends Plan> {
 	protected boolean checkLimitReached() throws LimitReachedException {
 		this.updateClock();
 		boolean hasTimedOut = (this.elapsedTime / 1e6) > this.maxElapsedTime;
-		if (hasTimedOut && this.exceptionOnLimit) {
+		if (hasTimedOut && this.exceptionOnLimit) 
 			throw new LimitReachedException("Planning timeout reached: " + (this.elapsedTime / 1e6) + ">" + this.maxElapsedTime, Reasons.TIMEOUT);
-		}
 		boolean hasReachMaxRounds = this.rounds > this.maxRounds;
-		if (hasReachMaxRounds && this.exceptionOnLimit) {
+		if (hasReachMaxRounds && this.exceptionOnLimit) 
 			throw new LimitReachedException("Planning max number of iterations reached: " + this.rounds + ">" + this.maxRounds, Reasons.MAX_ITERATION);
-		}
 		return hasTimedOut || hasReachMaxRounds;
 	}
 
@@ -122,10 +123,9 @@ public abstract class Explorer<P extends Plan> {
 	protected void post() {
 		this.updateClock();
 		this.eventBus.post(this);
-		P plan = this.getBestPlan();
-		if (plan != null) {
+		RelationalTerm plan = this.getBestPlan();
+		if (plan != null) 
 			this.eventBus.post(plan);
-		}
 	}
 
 	/**
@@ -143,12 +143,7 @@ public abstract class Explorer<P extends Plan> {
 	 */
 	protected abstract void _explore() throws PlannerException, LimitReachedException ;
 
-	/**
-	 * Gets the best plan.
-	 *
-	 * @return P
-	 */
-	public P getBestPlan() {
+	public RelationalTerm getBestPlan() {
 		return this.bestPlan;
 	}
 

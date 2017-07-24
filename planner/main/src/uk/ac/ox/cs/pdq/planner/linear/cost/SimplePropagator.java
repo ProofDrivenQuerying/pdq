@@ -5,9 +5,8 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.jgrapht.graph.DefaultEdge;
 
+import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.estimators.SimpleCostEstimator;
-import uk.ac.ox.cs.pdq.datasources.Cost;
-import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.PlanTree;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SimpleNode;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode.NodeStatus;
@@ -29,16 +28,13 @@ import com.google.common.collect.Lists;
  * @author Efthymia Tsamoura
  */
 public class SimplePropagator extends CostPropagator<SimpleNode> {
-
-	/** Logger. */
-	private static Logger log = Logger.getLogger(SimplePropagator.class);
 	
 	/**
 	 * Empty constructor.
 	 *
 	 * @param estimator SimpleCostEstimator<LeftDeepPlan>
 	 */
-	public SimplePropagator(SimpleCostEstimator<LeftDeepPlan> estimator) {
+	public SimplePropagator(SimpleCostEstimator estimator) {
 		super(estimator);
 	}
 
@@ -59,9 +55,9 @@ public class SimplePropagator extends CostPropagator<SimpleNode> {
 		if (node.getStatus() == NodeStatus.SUCCESSFUL) {
 			node.ground();
 		}
-		else if (node.getPointer() != null) {
-			if (node.getPointer().getPathToSuccess() != null) {
-				node.setPathToSuccess(node.getPointer().getPathToSuccess());
+		else if (node.getEquivalentNode() != null) {
+			if (node.getEquivalentNode().getPathToSuccess() != null) {
+				node.setPathToSuccess(node.getEquivalentNode().getPathToSuccess());
 			}
 
 		} else {
@@ -94,7 +90,7 @@ public class SimplePropagator extends CostPropagator<SimpleNode> {
 				this.propagate(planTree.getEdgeSource(edge), planTree);
 			}
 			for (SimpleNode n: planTree.vertexSet()) {
-				if (n.getPointer() != null && n.getPointer().equals(node)) {
+				if (n.getEquivalentNode() != null && n.getEquivalentNode().equals(node)) {
 					this.propagate(n, planTree);
 				}
 			}

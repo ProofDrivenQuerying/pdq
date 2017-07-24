@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.jgrapht.graph.DefaultEdge;
 
+import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.estimators.BlackBoxCostEstimator;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.BlackBoxNode;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.PlanTree;
@@ -38,7 +39,7 @@ public class BlackBoxPropagator extends CostPropagator<BlackBoxNode> {
 	 *
 	 * @param estimator BlackBoxCostEstimator<LeftDeepPlan,?>
 	 */
-	public BlackBoxPropagator(BlackBoxCostEstimator<LeftDeepPlan> estimator) {
+	public BlackBoxPropagator(BlackBoxCostEstimator estimator) {
 		super(estimator);
 	}
 
@@ -72,8 +73,8 @@ public class BlackBoxPropagator extends CostPropagator<BlackBoxNode> {
 			node.ground();
 		}
 
-		else if (node.getPointer() != null) {
-			BlackBoxNode pointer = node.getPointer();
+		else if (node.getEquivalentNode() != null) {
+			BlackBoxNode pointer = node.getEquivalentNode();
 			if (pointer.getPathsToSuccess() != null) {
 				node.setPathsToSuccess(pointer.getPathsToSuccess());
 			}
@@ -105,7 +106,7 @@ public class BlackBoxPropagator extends CostPropagator<BlackBoxNode> {
 			Set<List<Integer>> paths = node.getPathsToSuccess();
 			if (paths != null) {
 				for (List<Integer> path:paths) {
-					LeftDeepPlan plan = PropagatorUtils.createLeftDeepPlan(planTree, path, this.costEstimator);
+					RelationalTerm plan = PropagatorUtils.createLeftDeepPlan(planTree, path, this.costEstimator);
 					Preconditions.checkState(plan != null);
 					if (this.bestPlan == null || plan.getCost().lessThan(this.bestPlan.getCost())) {
 						this.bestPlan = plan;
@@ -120,7 +121,7 @@ public class BlackBoxPropagator extends CostPropagator<BlackBoxNode> {
 				this._propagate(planTree.getEdgeSource(edge), planTree);
 			}
 			for (BlackBoxNode n:planTree.vertexSet()) {
-				if (n.getPointer() != null && n.getPointer().equals(node) && !this.updated.contains(n)) {
+				if (n.getEquivalentNode() != null && n.getEquivalentNode().equals(node) && !this.updated.contains(n)) {
 					this._propagate(n, planTree);
 				}
 			}
