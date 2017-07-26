@@ -2,7 +2,6 @@ package uk.ac.ox.cs.pdq.test;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -48,21 +47,6 @@ public abstract class ParameterizedTest {
 		List<Object[]> result = new LinkedList<>();
 		for (List<?> param : Sets.cartesianProduct(params)) {
 			result.add(param.toArray());
-		}
-		return result;
-	}
-
-	/**
-	 * As set.
-	 *
-	 * @param <T> the generic type
-	 * @param array the array
-	 * @return the sets the
-	 */
-	protected static <T> Set<T> asSet(T... array) {
-		Set<T> result = new LinkedHashSet<>();
-		for (T i: array) {
-			result.add(i);
 		}
 		return result;
 	}
