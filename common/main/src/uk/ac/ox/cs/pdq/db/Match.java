@@ -11,7 +11,7 @@ import uk.ac.ox.cs.pdq.fol.Variable;
 
 import com.google.common.base.Preconditions;
 
-
+//TODO add cache manager 
 /**
  *
  * @author Efthymia Tsamoura

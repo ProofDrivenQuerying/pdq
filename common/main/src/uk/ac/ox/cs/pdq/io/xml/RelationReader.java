@@ -202,7 +202,7 @@ public class RelationReader extends AbstractXMLReader<Relation> {
 			if (this.relation == null) {
 				boolean isEq = "true".equalsIgnoreCase(this.isEquality);
 				if (this.attributes != null && !this.attributes.isEmpty()) {
-					this.relation = new InMemoryTableWrapper(this.relationName, this.attributes, isEq);
+					this.relation = Relation.create(this.relationName, this.attributes, isEq){};
 				} else {
 					throw new IllegalStateException(this.relationName + " not properly loaded.");
 				}
@@ -211,7 +211,7 @@ public class RelationReader extends AbstractXMLReader<Relation> {
 		case VIEW:
 			if (this.relation == null) {
 				if (this.attributes != null && !this.attributes.isEmpty()) {
-					this.relation = new InMemoryViewWrapper(this.relationName, this.attributes, this.accessMethods);
+					this.relation = Relation.create(this.relationName, this.attributes, this.accessMethods){};
 				} else {
 					throw new IllegalStateException(this.relationName + " not properly loaded.");
 				}

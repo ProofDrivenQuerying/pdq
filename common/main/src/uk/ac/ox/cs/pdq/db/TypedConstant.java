@@ -18,6 +18,7 @@ import uk.ac.ox.cs.pdq.util.Typed;
 public class TypedConstant implements Typed, Constant, Serializable {
 	private static final long serialVersionUID = 314066835619901611L;
 
+	//TODO remove the type
 	/**  The constant's type. */
 	private final Type type;
 

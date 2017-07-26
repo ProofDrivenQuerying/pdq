@@ -14,7 +14,6 @@ import org.junit.runners.Parameterized.Parameters;
 
 import com.google.common.collect.Sets;
 
-import uk.ac.ox.cs.pdq.algebra.RelationalOperatorException;
 import uk.ac.ox.cs.pdq.util.Utility;
 
 // TODO: Auto-generated Javadoc
