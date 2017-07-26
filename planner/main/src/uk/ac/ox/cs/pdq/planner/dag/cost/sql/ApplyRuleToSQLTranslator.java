@@ -1,5 +1,6 @@
 package uk.ac.ox.cs.pdq.planner.dag.cost.sql;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -148,10 +149,10 @@ public class ApplyRuleToSQLTranslator {
 			Atom fi = facts.get(i);
 			for(int j = i + 1; j < facts.size(); ++j) {
 				Atom fj = facts.get(j);
-				Collection<Term> constants = CollectionUtils.intersection(fi.getTerms(), fj.getTerms());
+				Collection<Term> constants = CollectionUtils.intersection(Arrays.asList(fi.getTerms()), Arrays.asList(fj.getTerms()));
 				for(Term constant:constants) {
-					List<Integer> pi = fi.getTermPositions(constant);
-					List<Integer> pj = fj.getTermPositions(constant);
+					List<Integer> pi = Utility.getTermPositions(fi,constant);
+					List<Integer> pj = Utility.getTermPositions(fj, constant);
 					if(pi.size() > 0 && pj.size() > 0) {
 						Attribute ai = ((Relation)fi.getPredicate()).getAttribute(pi.get(0));
 						Attribute aj = ((Relation)fj.getPredicate()).getAttribute(pj.get(0));
@@ -176,7 +177,7 @@ public class ApplyRuleToSQLTranslator {
 		for(int i = 0; i < facts.size(); ++i) {
 			Atom fi = facts.get(i);
 			for(Term constant:fi.getTerms()) {
-				List<Integer> joinPositions = fi.getTermPositions(constant);
+				List<Integer> joinPositions = Utility.getTermPositions(fi, constant);
 				if(joinPositions.size() > 1) {
 					for(int pi = 0; pi < joinPositions.size() - 1; ++pi) {
 						Attribute ai = ((Relation)fi.getPredicate()).getAttribute(joinPositions.get(pi));
@@ -239,7 +240,7 @@ public class ApplyRuleToSQLTranslator {
 		int i = 0;
 		for(Constant constant:constants) {
 			for(Atom fact:configuration.getFacts()) {
-				List<Integer> p = fact.getTermPositions(constant);
+				List<Integer> p = Utility.getTermPositions(fact, constant);
 				if(!p.isEmpty()) {
 					Attribute a = ((Relation)fact.getPredicate()).getAttribute(p.get(0));
 					String alias = COLUMN_ALIAS_PREFIX + i++;
