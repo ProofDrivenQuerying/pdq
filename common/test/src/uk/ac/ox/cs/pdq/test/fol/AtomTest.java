@@ -315,7 +315,7 @@ public class AtomTest {
 		Atom p = Atom.create(s, t);
 		Assert.assertEquals("Atom terms subset must match",
 				new Term[]{UntypedConstant.create("x4"), TypedConstant.create("x5")},
-				Utility.getTypedAndUntypedConstants(p, Lists.newArrayList(3, 4)));
+				Utility.getTypedAndUntypedConstants(p, new Integer[]{3, 4}));
 	}
 
 	/**
@@ -327,7 +327,7 @@ public class AtomTest {
 		Term[] t = new Term[]{
 				Variable.create("x1"), Variable.create("x2"), Variable.create("x3"),
 				UntypedConstant.create("x4"), TypedConstant.create("x5")};
-		Utility.getTypedAndUntypedConstants(Atom.create(s, t),(Lists.newArrayList(0, 1)));
+		Utility.getTypedAndUntypedConstants(Atom.create(s, t),new Integer[]{0, 1});
 	}
 
 	/**

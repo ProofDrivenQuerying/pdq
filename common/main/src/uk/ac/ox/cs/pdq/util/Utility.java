@@ -302,7 +302,7 @@ public class Utility {
 	 * @param positions List<Integer>
 	 * @return the List<Constant> at the given positions.
 	 */
-	public static List<Constant> getTypedAndUntypedConstants(Atom atom, List<Integer> positions) {
+	public static List<Constant> getTypedAndUntypedConstants(Atom atom, Integer[] positions) {
 		List<Constant> result = new ArrayList<>();
 		for(Integer i: positions) {
 			if(i < atom.getNumberOfTerms() && !atom.getTerm(i).isVariable()) 
@@ -542,4 +542,16 @@ public class Utility {
 		return Utility.search(atom.getTerms(), term);
 	}
 
+	/**
+	 * Gets only the terms at the specified input positions.
+	 *
+	 * @param positions List<Integer>
+	 * @return the Set<Term> at the given positions.
+	 */
+	public static Set<Term> getTerms(Atom atom, Integer[] positions) {
+		Set<Term> t = new LinkedHashSet<>();
+		for(Integer index: positions) 
+			t.add(atom.getTerm(index));
+		return t;
+	}
 }

@@ -1,6 +1,7 @@
 package uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate;
 
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -11,9 +12,15 @@ import java.util.Map;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
+import com.google.common.base.Preconditions;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Sets;
+
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.Match;
-import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
@@ -34,13 +41,6 @@ import uk.ac.ox.cs.pdq.planner.util.MapFiringGraph;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 import uk.ac.ox.cs.pdq.reasoning.utility.EqualConstantsClasses;
-
-import com.google.common.base.Preconditions;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.LinkedHashMultimap;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.Sets;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -69,7 +69,7 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 	protected final Collection<Atom> derivedInferred;
 
 	/**  Maps each schema signature (relation) to its chase facts. */
-	private final Multimap<Predicate, Atom> signatureGroups;
+	private final Multimap<Predicate, Atom> atomsMap;
 
 	/**  Maps each chase constant the Accessed facts it appears. */
 	private final Multimap<Term,Atom> accessibleTerms;
@@ -89,9 +89,9 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 				new EqualConstantsClasses(),
 				createdConstantsMap(createInitialFacts(query, schema)),
 				Utility.inferInferred(createInitialFacts(query, schema)),
-				Utility.inferDerivedInferred(),
-				Utility.inferSignatureGroups(createInitialFacts(query, schema)),
-				Utility.inferAccessibleTerms(createInitialFacts(query, schema)),
+				new LinkedHashSet<Atom>(),
+				Utility.createAtomsMap(createInitialFacts(query, schema)),
+				Utility.getAccessibleTerms(createInitialFacts(query, schema)),
 				connection);
 		this.addFacts(this.facts);
 	}
@@ -102,9 +102,9 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 				new EqualConstantsClasses(),
 				createdConstantsMap(facts),
 				Utility.inferInferred(facts),
-				Utility.inferDerivedInferred(),
-				Utility.inferSignatureGroups(facts),
-				Utility.inferAccessibleTerms(facts),
+				new LinkedHashSet<Atom>(),
+				Utility.createAtomsMap(facts),
+				Utility.getAccessibleTerms(facts),
 				connection);
 		this.addFacts(this.facts);
 	}
@@ -118,15 +118,14 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 	 */
 	private static Collection<Atom> createInitialFacts(ConjunctiveQuery query, Schema schema) {
 		// Gets the canonical database of the query
-		Collection<Atom> facts = uk.ac.ox.cs.pdq.reasoning.chase.Utility.applySubstitution(query, query.getSubstitutionToCanonicalConstants()).getAtoms();
+		List<Atom> facts = Arrays.asList(uk.ac.ox.cs.pdq.reasoning.chase.Utility.applySubstitution(query, query.getSubstitutionToCanonicalConstants()).getAtoms());
 		// Create the Accessible(.) facts
 		// One Accessible(.) is being created for every schema constant
-		for (TypedConstant<?> constant : uk.ac.ox.cs.pdq.util.Utility.getTypedConstants(query)) {
-			facts.add(AccessibleRelation.getAccessibleFact(constant));
-		}
-		for (TypedConstant<?> constant:schema.getDependencyTypedConstants()) {
-			facts.add(AccessibleRelation.getAccessibleFact(constant));
-		}
+		for (TypedConstant constant:uk.ac.ox.cs.pdq.util.Utility.getTypedConstants(query)) 
+			facts.add(Atom.create(AccessibleSchema.accessibleRelation, constant));
+		
+		for (TypedConstant constant:schema.getConstants().values())
+			facts.add(Atom.create(AccessibleSchema.accessibleRelation, constant));
 		return facts;
 	}
 	
@@ -139,7 +138,7 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 	 * @param constantClasses the constant classes
 	 * @param inferred the inferred
 	 * @param derivedInferred the derived inferred
-	 * @param signatureGroups the signature groups
+	 * @param atomsMap the signature groups
 	 * @param accessibleTerms the accessible terms
 	 * @throws SQLException 
 	 */
@@ -150,7 +149,7 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 			Multimap<Constant,Atom> constants,
 			Collection<String> inferred,
 			Collection<Atom> derivedInferred,
-			Multimap<Predicate, Atom> signatureGroups,
+			Multimap<Predicate, Atom> atomsMap,
 			Multimap<Term,Atom> accessibleTerms, 
 			DatabaseConnection connection
 			) throws SQLException {
@@ -158,12 +157,12 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 		
 		Preconditions.checkNotNull(inferred);
 		Preconditions.checkNotNull(derivedInferred);
-		Preconditions.checkNotNull(signatureGroups);
+		Preconditions.checkNotNull(atomsMap);
 		Preconditions.checkNotNull(accessibleTerms);
 		this.graph = graph;
 		this.inferred = inferred;
 		this.derivedInferred = derivedInferred;
-		this.signatureGroups = signatureGroups;
+		this.atomsMap = atomsMap;
 		this.accessibleTerms = accessibleTerms;
 	}
 
@@ -194,8 +193,8 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 	 *
 	 * @return Multimap<Predicate,PredicateFormula>
 	 */
-	protected Multimap<Predicate, Atom> getSignatureGroups() {
-		return this.signatureGroups;
+	protected Multimap<Predicate, Atom> getAtomsMap() {
+		return this.atomsMap;
 	}
 
 	/**
@@ -207,16 +206,16 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 		return this.accessibleTerms;
 	}
 
-	/**
-	 * Updates this.state
-	 *
-	 * @param match the match
-	 * @return true, if successful
-	 */
-	@Override
-	public boolean chaseStep(Match match) {
-		return this.chaseStep(Sets.newHashSet(match));
-	}
+//	/**
+//	 * Updates this.state
+//	 *
+//	 * @param match the match
+//	 * @return true, if successful
+//	 */
+//	@Override
+//	public boolean chaseStep(Match match) {
+//		return this.chaseStep(Sets.newHashSet(match));
+//	}
 
 	/* (non-Javadoc)
 	 * @see uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseListState#chaseStep(java.util.Collection)
@@ -230,24 +229,19 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 			Preconditions.checkArgument(dependency instanceof TGD, "EGDs are not allowed inside TGDchaseStep");
 			Map<Variable, Constant> mapping = match.getMapping();
 			Implication grounded = uk.ac.ox.cs.pdq.reasoning.chase.Utility.fire(dependency, mapping, true);
-			Formula left = grounded.getChildren().get(0);
-			Formula right = grounded.getChildren().get(1);
+			Formula left = grounded.getChild(0);
+			Formula right = grounded.getChild(1);
 			for(Atom fact:right.getAtoms()) {
-				if(fact.getPredicate() instanceof InferredAccessibleRelation) {
+				if(fact.getPredicate().getName().startsWith(AccessibleSchema.inferredAccessiblePrefix)) {
 					this.derivedInferred.add(fact);
-				}
-				if (!(fact.getPredicate() instanceof AccessibleRelation) && 
-						!(fact.getPredicate() instanceof InferredAccessibleRelation)) {
-					this.signatureGroups.put(fact.getPredicate(), fact);
-				}
-				if (fact.getPredicate() instanceof AccessibleRelation) {
-					this.accessibleTerms.put(fact.getTerm(0), fact);
-				}
-				if (fact.getPredicate() instanceof InferredAccessibleRelation) {
 					this.inferred.add(fact.toString());
 				}
+				else if (fact.getPredicate().equals(AccessibleSchema.accessibleRelation)) 
+					this.accessibleTerms.put(fact.getTerm(0), fact);
+				else 
+					this.atomsMap.put(fact.getPredicate(), fact);
 			}
-			newFacts.addAll(right.getAtoms());
+			newFacts.addAll(Arrays.asList(right.getAtoms()));
 			if(this.graph != null) {
 				//Update the provenance of facts
 				this.graph.put(dependency, Sets.newHashSet(left.getAtoms()), Sets.newHashSet(right.getAtoms()));
@@ -268,8 +262,8 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 	 * @see uk.ac.ox.cs.pdq.chase.state.ChaseState#groupByBinding(Collection<AccessibilityAxiom>)
 	 */
 	@Override
-	public List<Pair<AccessibilityAxiom, Collection<Atom>>> groupByBinding(Collection<AccessibilityAxiom> axioms) {
-		return new Utility().groupByBinding(axioms, this.getSignatureGroups());
+	public List<Pair<AccessibilityAxiom, Collection<Atom>>> groupAtomsByAccessMethods(AccessibilityAxiom[] axioms) {
+		return new Utility().groupFactsByAccessMethods(axioms, this.getAtomsMap());
 	}
 
 	/**
@@ -281,7 +275,7 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 	 */
 	@Override
 	public Map<AccessibilityAxiom, List<Match>> getUnexposedFacts(AccessibleSchema accessibleSchema) {
-		return this.getUnexposedFacts(accessibleSchema, this.getSignatureGroups(), this.getAccessibleTerms(), this.getFiringGraph());
+		return this.getUnexposedFacts(accessibleSchema, this.getAtomsMap(), this.getAccessibleTerms(), this.getFiringGraph());
 	}
 
 	/* (non-Javadoc)
@@ -310,14 +304,14 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 			FiringGraph graph) {
 		Map<AccessibilityAxiom, List<Match>> ret = new LinkedHashMap<>();
 		List<Pair<AccessibilityAxiom,Collection<Atom>>> groups = 
-				new Utility().groupByBinding(accessibleSchema.getAccessibilityAxioms(), signatureGroups);
+				new Utility().groupFactsByAccessMethods(accessibleSchema.getAccessibilityAxioms(), signatureGroups);
 		for(Pair<AccessibilityAxiom, Collection<Atom>> pair: groups) {
 			AccessibilityAxiom axiom = pair.getLeft();
 			Iterator<Atom> iterator = pair.getRight().iterator();
 			while (iterator.hasNext()) {
 				Atom fact = iterator.next();
-				Atom accessedFact = new Atom(accessibleSchema.getInferredAccessibleRelation((Relation) fact.getPredicate()), fact.getTerms());
-				Collection<Term> inputTerms = accessedFact.getTerms(axiom.getAccessMethod().getZeroBasedInputs());
+				Atom accessedFact = Atom.create(Predicate.create(AccessibleSchema.inferredAccessiblePrefix + fact.getPredicate().getName(), fact.getNumberOfTerms()), fact.getTerms());
+				Collection<Term> inputTerms = uk.ac.ox.cs.pdq.util.Utility.getTerms(accessedFact,axiom.getAccessMethod().getZeroBasedInputs());
 				if(graph.getFactProvenance(accessedFact) == null && accessibleTerms.keySet().containsAll(inputTerms)) {
 					Match matching = MatchFactory.getMatch(pair.getLeft(), fact);
 					List<Match> matchings = ret.get(pair.getLeft());
@@ -381,7 +375,7 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 					constantsToAtoms,
 					new LinkedHashSet<>(this.inferred),
 					new LinkedHashSet<>(this.derivedInferred), 
-					LinkedHashMultimap.create(this.signatureGroups), 
+					LinkedHashMultimap.create(this.atomsMap), 
 					LinkedHashMultimap.create(this.accessibleTerms),this.getDatabaseConnection());
 		} catch (SQLException e) {
 			throw new RuntimeException("Cloning of AccessibleDatabaseListState failed due to an SQL exception "+e);
@@ -399,8 +393,8 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 		
 		Collection<String> inferred = CollectionUtils.union(this.inferred, ((AccessibleDatabaseListState)s).inferred);
 		Collection<Atom> derivedInferred = CollectionUtils.union(this.derivedInferred, ((AccessibleDatabaseListState)s).derivedInferred);
-		Multimap<Predicate, Atom> signatureGroups = LinkedHashMultimap.create(this.signatureGroups);
-		signatureGroups.putAll(((AccessibleDatabaseListState)s).signatureGroups);
+		Multimap<Predicate, Atom> signatureGroups = LinkedHashMultimap.create(this.atomsMap);
+		signatureGroups.putAll(((AccessibleDatabaseListState)s).atomsMap);
 		Multimap<Term,Atom> accessibleTerms = LinkedHashMultimap.create(this.accessibleTerms);
 		accessibleTerms.putAll(((AccessibleDatabaseListState)s).accessibleTerms);
 		

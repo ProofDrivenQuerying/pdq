@@ -43,7 +43,7 @@ public class IntervalEventDrivenLogger implements EventHandler {
 	 * @param explorer Explorer<?>
 	 */
 	@Subscribe
-	public void log(Explorer<?> explorer) {
+	public void log(Explorer explorer) {
 		int rounds = explorer.getRounds();
 		if (rounds % this.intervals == 0
 				|| rounds % this.shortIntervals == 0) {

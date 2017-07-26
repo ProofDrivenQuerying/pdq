@@ -203,16 +203,16 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 			private static final long serialVersionUID = -5013454684785833853L;};
 	}	
 
-	/**
-	 * Updates that state given the input match. 
-	 *
-	 * @param match the match
-	 * @return true, if step successful
-	 */
-	@Override
-	public boolean chaseStep(Match match) {	
-		return this.chaseStep(Sets.newHashSet(match));
-	}
+//	/**
+//	 * Updates that state given the input match. 
+//	 *
+//	 * @param match the match
+//	 * @return true, if step successful
+//	 */
+//	@Override
+//	public boolean chaseStep(Match match) {	
+//		return this.chaseStep(Sets.newHashSet(match));
+//	}
 
 	/* 
 	 * ??? What does false here mean?

@@ -26,29 +26,14 @@ public class MatchFactory {
 	 * @return 		a match given the input accessibility axiom and the input fact
 	 */
 	public static Match getMatch(AccessibilityAxiom axiom, Atom fact) {
-		Map<Variable, Constant> map = createMapping(axiom, fact);
-		return new Match(axiom, map);
-	}
-
-	/**
-	 * Creates a new Match object.
-	 *
-	 * @param axiom AccessibilityAxiom
-	 * @param fact PredicateFormula
-	 * @return Map<Variable, Constant>
-	 */
-	private static Map<Variable, Constant> createMapping(AccessibilityAxiom axiom, Atom fact) {
 		Map<Variable, Constant> map = new LinkedHashMap<>();
-		int i = 0;
-		for(Term term:axiom.getGuard().getTerms()) {
-			if(term instanceof Variable && fact.getTerm(i) instanceof Constant) {
-				map.put((Variable)term, (Constant) fact.getTerm(i));
-			}
-			else {
+		for(int termIndex = 0; termIndex < axiom.getGuard().getNumberOfTerms(); ++termIndex) {
+			Term term = axiom.getGuard().getTerm(termIndex);
+			if(term instanceof Variable && fact.getTerm(termIndex) instanceof Constant) 
+				map.put((Variable)term, (Constant) fact.getTerm(termIndex));
+			else 
 				throw new java.lang.RuntimeException("Cannot map constants to constants or variables to variables, but only variables to constants");
-			}
-			i++;
 		}
-		return map;
+		return Match.create(axiom, map);
 	}
 }

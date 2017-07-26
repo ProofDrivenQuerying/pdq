@@ -120,7 +120,6 @@ public abstract class SearchNode implements Cloneable{
 			bestPathFromRoot = new ArrayList<>();
 		else 
 			bestPathFromRoot = new ArrayList<>(parent.getBestPathFromRoot());
-		
 		bestPathFromRoot.add(this.getId());
 		this.setBestPathFromRoot(bestPathFromRoot);
 		this.setBestPlanFromRoot(this.configuration.getPlan());

@@ -193,7 +193,7 @@ public abstract class DAGExplorer extends Explorer<DAGPlan> {
 		this.chaser.reasonUntilTermination(state, this.schema.getDependencies());
 
 		List<DAGChaseConfiguration> collection = new ArrayList<>();
-		Collection<Pair<AccessibilityAxiom,Collection<Atom>>> pairs = state.groupByBinding(this.accessibleSchema.getAccessibilityAxioms());
+		Collection<Pair<AccessibilityAxiom,Collection<Atom>>> pairs = state.groupAtomsByAccessMethods(this.accessibleSchema.getAccessibilityAxioms());
 		for (Pair<AccessibilityAxiom, Collection<Atom>> pair: pairs) {
 			ApplyRule applyRule = null;
 			Collection<Collection<Atom>> bindings = new LinkedHashSet<>();

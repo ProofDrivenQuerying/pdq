@@ -29,7 +29,7 @@ public interface AccessibleChaseState extends ChaseInstance {
 	 * @param axioms the axioms
 	 * @return 		pairs of accessibility axioms to chase facts
 	 */
-	Collection<Pair<AccessibilityAxiom, Collection<Atom>>> groupByBinding(Collection<AccessibilityAxiom> axioms);
+	Collection<Pair<AccessibilityAxiom, Collection<Atom>>> groupAtomsByAccessMethods(AccessibilityAxiom[] axioms);
 
 	/**
 	 * Adds the accessible and inferred accessible facts associated with each input fact.

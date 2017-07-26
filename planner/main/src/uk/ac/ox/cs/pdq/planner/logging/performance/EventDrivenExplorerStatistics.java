@@ -1,8 +1,9 @@
 package uk.ac.ox.cs.pdq.planner.logging.performance;
 
 import uk.ac.ox.cs.pdq.EventHandler;
+import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
+import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.logging.StatisticsLogger;
-import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.planner.Explorer;
 
 import com.google.common.eventbus.Subscribe;
@@ -19,10 +20,10 @@ public class EventDrivenExplorerStatistics extends StatisticsLogger implements E
 	protected int round = 0;
 
 	/**  The cost of the best plan so far. */
-	protected String bestCost = "N/A";
+	protected Cost bestCost = null;
 
 	/**  The best plan so far. */
-	protected Plan bestPlan = null;
+	protected RelationalTerm bestPlan = null;
 
 	/**  The total exploration time. */
 	protected double milliTotal = 0;
@@ -46,7 +47,7 @@ public class EventDrivenExplorerStatistics extends StatisticsLogger implements E
 	 * @param explorer the explorer
 	 */
 	@Subscribe
-	public void process(Explorer<?> explorer) {
+	public void process(Explorer explorer) {
 		this.round = explorer.getRounds();
 		this.milliTotal = explorer.getElapsedTime() / 1e6;
 	}
@@ -57,13 +58,13 @@ public class EventDrivenExplorerStatistics extends StatisticsLogger implements E
 	 * @param plan Plan
 	 */
 	@Subscribe
-	public void process(Plan plan) {
-		if (this.bestPlan == null || plan.getCost().lessThan(this.bestPlan.getCost())) {
+	public void process(RelationalTerm plan, Cost cost) {
+		if (this.bestPlan == null || cost.lessThan(this.bestCost)) {
 			this.roundBestMatch = this.round;
 			this.milliBestMatch = this.milliTotal;
 		}
 		this.bestPlan = plan;
-		this.bestCost = String.valueOf(plan.getCost());
+		this.bestCost = cost;
 		if (this.roundFirstMatch == 0) {
 			this.roundFirstMatch = this.round;
 			this.milliFirstMatch = this.milliTotal;

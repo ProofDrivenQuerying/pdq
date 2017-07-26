@@ -7,18 +7,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.google.common.collect.Lists;
+
 import uk.ac.ox.cs.pdq.db.AccessMethod;
-import uk.ac.ox.cs.pdq.db.Relation;
-import uk.ac.ox.cs.pdq.fol.Constant;
-import uk.ac.ox.cs.pdq.fol.Formula;
-import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+import uk.ac.ox.cs.pdq.fol.Constant;
+import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
+import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.util.Utility;
-
-import com.google.common.collect.Lists;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -47,7 +47,7 @@ public class PlannerUtility {
 		}
 		return inputs;
 	}
-	
+
 	/**
 	 * Gets the input constants.
 	 *
@@ -59,7 +59,7 @@ public class PlannerUtility {
 		List<Constant> ret  = Utility.getTypedAndUntypedConstants(fact,binding.getZeroBasedInputs());
 		return Lists.newArrayList(uk.ac.ox.cs.pdq.util.Utility.removeDuplicates(ret));
 	}
-	
+
 	/**
 	 * Gets the constants lying at the input positions.
 	 *
@@ -67,19 +67,17 @@ public class PlannerUtility {
 	 * @param positions List<Integer>
 	 * @return the List<Constant> at the given positions.
 	 */
-	public static List<Constant> getTypedAndUntypedConstants(Atom atom, List<Integer> positions) {
+	public static List<Constant> getTypedAndUntypedConstants(Atom atom, Integer[] positions) {
 		List<Constant> result = new ArrayList<>();
 		for(Integer i: positions) {
-			if(i < atom.getTerms().size() && !atom.getTerms().get(i).isVariable()) {
-				result.add((Constant) atom.getTerms().get(i));
-			}
-			else {
+			if(i < atom.getTerms().length && !atom.getTerm(i).isVariable()) 
+				result.add((Constant) atom.getTerm(i));
+			else 
 				throw new java.lang.IllegalArgumentException();
-			}
 		}
 		return result;
 	}
-	
+
 	/**
 	 * Accessible.
 	 *
@@ -89,17 +87,15 @@ public class PlannerUtility {
 	 * @see uk.ac.ox.cs.pdq.fol.Query#accessible(AccessibleSchema)
 	 */
 	public ConjunctiveQuery accessible(ConjunctiveQuery query) {
-		List<Formula> atoms = new ArrayList<>();
-		for (Atom af: query.getAtoms()) {
-			atoms.add(
-					new Atom(this.getInferredAccessibleRelation((Relation) af.getPredicate()), af.getTerms()));
+		Atom[] atoms = new Atom[query.getNumberOfAtoms()];
+		for (int atomIndex = 0; atomIndex < query.getNumberOfAtoms(); ++atomIndex) {
+			Atom queryAtom = query.getAtom(atomIndex);
+			atoms[atomIndex] = Atom.create(Predicate.create(AccessibleSchema.inferredAccessiblePrefix + queryAtom.getPredicate().getName(), queryAtom.getNumberOfTerms()), queryAtom.getTerms());
 		}
-		if(atoms.size() == 1) {
-			return new ConjunctiveQuery(query.getFreeVariables(), (Atom)atoms.get(0));
-		}
-		else {
-			return new ConjunctiveQuery(query.getFreeVariables(), (Conjunction) Conjunction.of(atoms));
-		}
+		if(atoms.length == 1) 
+			return ConjunctiveQuery.create(query.getFreeVariables(), atoms[0]);
+		else 
+			return ConjunctiveQuery.create(query.getFreeVariables(), (Conjunction) Conjunction.of(atoms));
 	}
 
 	/**
@@ -112,16 +108,14 @@ public class PlannerUtility {
 	 * @see uk.ac.ox.cs.pdq.fol.Query#accessible(AccessibleSchema)
 	 */
 	public ConjunctiveQuery accessible(ConjunctiveQuery query, Map<Variable, Constant> canonicalMapping) {
-		List<Formula> atoms = new ArrayList<>();
-		for (Atom af: query.getAtoms()) {
-			atoms.add(
-					new Atom(this.getInferredAccessibleRelation((Relation) af.getPredicate()), af.getTerms()));
+		Atom[] atoms = new Atom[query.getNumberOfAtoms()];
+		for (int atomIndex = 0; atomIndex < query.getNumberOfAtoms(); ++atomIndex) {
+			Atom queryAtom = query.getAtom(atomIndex);
+			atoms[atomIndex] = Atom.create(Predicate.create(AccessibleSchema.inferredAccessiblePrefix + queryAtom.getPredicate().getName(), queryAtom.getNumberOfTerms()), queryAtom.getTerms());
 		}
-		if(atoms.size() == 1) {
-			return new ConjunctiveQuery(query.getFreeVariables(), (Atom)atoms.get(0), canonicalMapping);
-		}
-		else {
-			return new ConjunctiveQuery(query.getFreeVariables(), (Conjunction) Conjunction.of(atoms), canonicalMapping);
-		}
+		if(atoms.length == 1) 
+			return ConjunctiveQuery.create(query.getFreeVariables(), atoms[0], canonicalMapping);
+		else 
+			return ConjunctiveQuery.create(query.getFreeVariables(), (Conjunction) Conjunction.of(atoms), canonicalMapping);
 	}
 }
