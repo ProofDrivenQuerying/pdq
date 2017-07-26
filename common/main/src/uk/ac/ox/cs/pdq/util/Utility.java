@@ -484,13 +484,26 @@ public class Utility {
 		throw new ClassCastException(o + " could not be cast to " + type);
 	}
 
+//	/**
+//	 * Gets the type of the attributes of the relation.
+//	 *
+//	 * @return the relation's type
+//	 */
+//	public static TupleType getType(Relation relation) {
+//		return TupleType.DefaultFactory.createFromTyped(relation.getAttributes());
+//	}
+	
 	/**
-	 * Gets the type of the attributes of the relation.
+	 * Creates a new Default object.
 	 *
-	 * @return the relation's type
+	 * @param typed List<? extends Typed>
+	 * @return TupleType
 	 */
-	public static TupleType getType(Relation relation) {
-		return null;
+	public static TupleType createFromTyped(Attribute[] typed) {
+		Type[] types = new Type[typed.length];
+		for(int attributeIndex = 0; attributeIndex < typed.length; ++attributeIndex) 
+			types[attributeIndex] = typed[attributeIndex].getType();
+		return TupleType.DefaultFactory.create(types);
 	}
 
 	/**
@@ -520,7 +533,5 @@ public class Utility {
 		}
 		return foreignKey;
 	}
-
-
 
 }

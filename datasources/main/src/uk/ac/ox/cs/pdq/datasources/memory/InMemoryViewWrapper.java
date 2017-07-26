@@ -16,6 +16,7 @@ import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.View;
 import uk.ac.ox.cs.pdq.util.Tuple;
 import uk.ac.ox.cs.pdq.util.TupleType;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.base.Preconditions;
 
@@ -197,7 +198,7 @@ public class InMemoryViewWrapper extends View implements Pipelineable, RelationA
 			}
 			this.outputs = d.iterator();
 			if (inputAttributes != null) {
-				this.inputType = TupleType.DefaultFactory.createFromTyped(inputAttributes);
+				this.inputType = Utility.createFromTyped(inputAttributes.toArray(new Attribute[inputAttributes.size()]));
 			} else {
 				this.inputType = TupleType.EmptyTupleType;
 			}

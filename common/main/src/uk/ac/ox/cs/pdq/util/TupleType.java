@@ -125,14 +125,14 @@ public interface TupleType extends Serializable{
 			return interner.intern(new TupleTypeImpl(types));
 		}
 
-		/**
-		 * Creates a new Default object.
-		 *
-		 * @param typed List<? extends Typed>
-		 * @return TupleType
-		 */
-		public static TupleType createFromTyped(final List<? extends Typed> typed) {
-			return interner.intern(new TupleTypeImpl(typed));
-		}
+//		/**
+//		 * Creates a new Default object.
+//		 *
+//		 * @param typed List<? extends Typed>
+//		 * @return TupleType
+//		 */
+//		public static TupleType createFromTyped(final List<? extends Typed> typed) {
+//			return interner.intern(new TupleTypeImpl(typed));
+//		}
 	}
 }

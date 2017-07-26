@@ -99,7 +99,7 @@ public class InMemoryTableWrapper extends Relation implements Pipelineable, Rela
 	 * @see uk.ac.ox.cs.pdq.runtime.wrappers.InMemoryRelation#load(java.util.Collection)
 	 */
 	public void load(Collection<Tuple> d) {
-		TupleType type = Utility.getType(this);
+		TupleType type = Utility.createFromTyped(this.getAttributes());
 		for (Tuple t: d) {
 			Assert.assertTrue(t.getType().equals(type));
 			this.data.add(t);
@@ -236,7 +236,7 @@ public class InMemoryTableWrapper extends Relation implements Pipelineable, Rela
 			this.inputs = inputTuples;
 			this.outputs = InMemoryTableWrapper.this.getData().iterator();
 			if (inputAttributes != null) {
-				this.inputType = TupleType.DefaultFactory.createFromTyped(inputAttributes);
+				this.inputType = Utility.createFromTyped(inputAttributes.toArray(new Attribute[inputAttributes.size()]));
 			} else {
 				this.inputType = TupleType.EmptyTupleType;
 			}

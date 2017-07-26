@@ -15,6 +15,7 @@ import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.util.Tuple;
 import uk.ac.ox.cs.pdq.util.TupleType;
 import uk.ac.ox.cs.pdq.util.Typed;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -62,7 +63,7 @@ public class Table implements Result, Iterable<Tuple> {
 		Preconditions.checkArgument(
 				attributes != null && attributes.size() >= 0,
 				"Invalid dynamic table type");
-		this.type = TupleType.DefaultFactory.createFromTyped(attributes);
+		this.type = Utility.createFromTyped(attributes.toArray(new Attribute[attributes.size()]));
 		this.header = Lists.newArrayList(attributes);
 		this.internTuples = intern;
 		this.name = Table.prefix + Table.count++;
