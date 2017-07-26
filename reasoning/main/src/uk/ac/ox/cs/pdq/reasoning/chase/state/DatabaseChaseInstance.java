@@ -19,6 +19,13 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
+import com.google.common.base.Joiner;
+import com.google.common.base.Preconditions;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Sets;
+
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.DatabaseInstance;
@@ -43,14 +50,6 @@ import uk.ac.ox.cs.pdq.io.xml.QNames;
 import uk.ac.ox.cs.pdq.reasoning.utility.EqualConstantsClass;
 import uk.ac.ox.cs.pdq.reasoning.utility.EqualConstantsClasses;
 import uk.ac.ox.cs.pdq.util.Utility;
-
-import com.google.common.base.Joiner;
-import com.google.common.base.Preconditions;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.Sets;
 
 /**
  *
@@ -93,7 +92,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		super(connection);
 		this.addFacts(Sets.newHashSet(uk.ac.ox.cs.pdq.reasoning.chase.Utility.applySubstitution(query, Utility.generateCanonicalMapping(query)).getAtoms()));
 		this.classes = new EqualConstantsClasses();
-		this.constantsToAtoms = inferConstantsMap(this.facts);
+		this.constantsToAtoms = createdConstantsMap(this.facts);
 		this.indexConstraints();
 		this.indexLastAttributeOfAllRelations();
 	}
@@ -109,7 +108,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		Preconditions.checkNotNull(facts);
 		this.addFacts(facts);
 		this.classes = new EqualConstantsClasses();
-		this.constantsToAtoms = inferConstantsMap(this.facts);
+		this.constantsToAtoms = createdConstantsMap(this.facts);
 		this.indexConstraints();
 		this.indexLastAttributeOfAllRelations();
 	}
@@ -148,7 +147,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 	 * An exception is thrown when there is an equality in the input
 	 */
 	//TOCOMMENT: What does this do exactly? where is it used?
-	protected static Multimap<Constant,Atom> inferConstantsMap(Collection<Atom> facts) {
+	protected static Multimap<Constant,Atom> createdConstantsMap(Collection<Atom> facts) {
 		Multimap<Constant, Atom> constantsToAtoms = HashMultimap.create();
 		for(Atom fact:facts) {
 			Preconditions.checkArgument(!fact.isEquality());
@@ -286,7 +285,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 			Preconditions.checkArgument(dependency instanceof EGD, "TGDs are not allowed inside EGDchaseStep");
 			Map<Variable, Constant> mapping = match.getMapping();
 			Implication grounded = uk.ac.ox.cs.pdq.reasoning.chase.Utility.fire(dependency, mapping);
-			Formula left = grounded.getChild(0);
+//			Formula left = grounded.getChild(0);
 			Formula right = grounded.getChild(1);
 			for(Atom atom:right.getAtoms()) {
 				//Find all the constants that each constant in the equality is representing 
@@ -351,7 +350,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		Term representative_l = null;
 		if(class_l != null) {
 			constants_l.addAll(class_l.getConstants());
-			representative_l = class_l.getRepresentative().clone();
+			representative_l = class_l.getRepresentative();
 		}
 
 		Constant c_r = (Constant) atom.getTerm(1);
@@ -362,7 +361,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		Term representative_r = null;
 		if(class_r != null) {
 			constants_r.addAll(class_r.getConstants());
-			representative_r = class_r.getRepresentative().clone();
+			representative_r = class_r.getRepresentative();
 		}
 
 		boolean successfull;
@@ -519,7 +518,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 	 * (non-Javadoc)
 	 * @see uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance#getTriggers(java.util.Collection, uk.ac.ox.cs.pdq.db.homomorphism.TriggerProperty, uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance.LimitTofacts)
 	 */
-	public List<Match> getTriggers(Collection<? extends Dependency> dependencies, TriggerProperty t, LimitTofacts limitToFacts) {
+	public List<Match> getTriggers(Dependency[] dependencies, TriggerProperty t, LimitTofacts limitToFacts) {
 		HomomorphismProperty[] properties = new HomomorphismProperty[2];
 		if(t.equals(TriggerProperty.ACTIVE)) {
 			properties[0] = HomomorphismProperty.createActiveTriggerProperty();

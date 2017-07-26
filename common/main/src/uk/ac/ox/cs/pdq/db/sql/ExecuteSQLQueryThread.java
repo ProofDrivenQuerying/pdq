@@ -78,7 +78,7 @@ public class ExecuteSQLQueryThread implements Callable<List<Match>> {
 						map.put(variable, constantTerm);
 						f++;
 					}
-					results.add(new Match(source,map));
+					results.add(Match.create(source,map));
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();;

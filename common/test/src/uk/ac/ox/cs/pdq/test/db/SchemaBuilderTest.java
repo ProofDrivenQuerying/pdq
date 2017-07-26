@@ -1,15 +1,14 @@
 package uk.ac.ox.cs.pdq.test.db;
 
-import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.util.List;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.db.AccessMethod;
-import uk.ac.ox.cs.pdq.db.AccessMethod.Types;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -37,30 +36,20 @@ public class SchemaBuilderTest {
 			new Integer[] {2, 1, 3, 2}
 	);
 	
-	/** The binding types. */
-	private List<Types> bindingTypes = Lists.newArrayList(
-			new Types[] {
-					Types.FREE, Types.BOOLEAN,
-					Types.LIMITED
-			}
-	);
-	
 	/** The binding positions. */
-	private List<Integer[]> bindingPositions = Lists.newArrayList(
+	private Integer[][] bindingPositions = 
 			new Integer[][] {
 					{}, {1}, {2, 3}, {}
-			}
-	);
+			};
 	
 	/** The attributes. */
-	private List<Attribute[]> attributes = Lists.newArrayList(
+	private Attribute[][] attributes = 
 			new Attribute[][] {
-					{new Attribute(String.class, "r1.1"), new Attribute(Integer.class, "r1.1")},
-					{new Attribute(String.class, "r2.1")},
-					{new Attribute(String.class, "r3.1"), new Attribute(Integer.class, "r3.2"), new Attribute(Integer.class, "r3.3")},
-					{new Attribute(Integer.class, "r4.1"), new Attribute(Integer.class, "r4.1")}
-			}
-	);
+					{Attribute.create(String.class, "r1.1"), Attribute.create(Integer.class, "r1.1")},
+					{Attribute.create(String.class, "r2.1")},
+					{Attribute.create(String.class, "r3.1"), Attribute.create(Integer.class, "r3.2"), Attribute.create(Integer.class, "r3.3")},
+					{Attribute.create(Integer.class, "r4.1"), Attribute.create(Integer.class, "r4.1")}
+			};
 	
 	/**
 	 * Instantiates a new schema builder test.
@@ -78,13 +67,13 @@ public class SchemaBuilderTest {
 	 * @return the schema
 	 */
 	private Schema build() {
-		SchemaBuilder result = Schema.builder();
+		SchemaBuilder result = new SchemaBuilder();
 		for (int i = 0, l = this.relationNames.size(); i < l; i++) {
-			result.addRelation(new Relation(
+			result.addRelation(Relation.create(
 					this.relationNames.get(i),
-					Lists.newArrayList(this.attributes.get(i)),
-					Lists.newArrayList(new AccessMethod(this.bindingTypes.get(i%bindingTypes.size()), Lists.newArrayList(this.bindingPositions.get(i))))
-					) {});
+					this.attributes[i],
+					new AccessMethod[]{AccessMethod.create(this.bindingPositions[i])}
+					));
 		}
 		return result.build();
 	}
@@ -102,7 +91,7 @@ public class SchemaBuilderTest {
 	 */
 	@Test
 	public void testNumberOfRelations() {
-		assertEquals(this.schema.getRelations().size(), 4);
+		Assert.assertEquals(this.schema.getRelations().length, 4);
 	}
 	
 	/**
@@ -112,7 +101,7 @@ public class SchemaBuilderTest {
 	public void testRelationNames() {
 		int i = 0;
 		for (Relation r: this.schema.getRelations()) {
-			assertEquals(r.getName(), this.relationNames.get(i++));
+			Assert.assertEquals(r.getName(), this.relationNames.get(i++));
 		}
 	}
 	
@@ -123,7 +112,7 @@ public class SchemaBuilderTest {
 	public void testRelationArities() {
 		int i = 0;
 		for (Relation r: this.schema.getRelations()) {
-			assertEquals((Integer) r.getArity(), this.relationArities.get(i++));
+			Assert.assertEquals((Integer) r.getArity(), this.relationArities.get(i++));
 		}
 	}
 	
@@ -136,7 +125,7 @@ public class SchemaBuilderTest {
 		for (Relation r: this.schema.getRelations()) {
 			int j = 0;
 			for (Attribute a: r.getAttributes()) {
-				assertEquals(a, this.attributes.get(i)[j++]);
+				Assert.assertEquals(a, this.attributes[i][j++]);
 			}
 			i++;
 		}
@@ -149,14 +138,8 @@ public class SchemaBuilderTest {
 	public void testAccessMethodMethods() {
 		int i = 0;
 		for (Relation r: this.schema.getRelations()) {
-			int j = 0;
-			for (AccessMethod b: r.getAccessMethods()) {
-				assertEquals(b.getType(), this.bindingTypes.get(i%bindingTypes.size()));
-				if (b.getType() == Types.BOOLEAN 
-						|| b.getType() == Types.LIMITED) {
-					assertEquals(b.getInputs(), Lists.newArrayList(this.bindingPositions.get(i)));
-				}
-			}
+			for (AccessMethod b: r.getAccessMethods()) 
+				Assert.assertArrayEquals(b.getInputs(), this.bindingPositions[i]);
 			i++;
 		}
 	}

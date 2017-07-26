@@ -33,11 +33,11 @@ public class TermTest {
 		int n = 100;
 		HashSet<Variable> terms = new HashSet<>();
 		for (int i = 0; i < n; i++) {
-			terms.add(new Variable("x" + i));
+			terms.add(Variable.create("x" + i));
 		}
 		assertEquals(n, terms.size());
 		for (int i = 0; i < n; i++) {
-			assertTrue(terms.contains(new Variable("x" + i)));
+			assertTrue(terms.contains(Variable.create("x" + i)));
 		}
 	}
 
@@ -48,7 +48,7 @@ public class TermTest {
 	public void testEquals() {
 		int n = 100;
 		for (int i = 0; i < n; i++) {
-			assertEquals(new Variable("x" + i), new Variable("x" + i));
+			assertEquals(Variable.create("x" + i), Variable.create("x" + i));
 		}
 	}
 }

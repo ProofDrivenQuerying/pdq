@@ -1,17 +1,16 @@
 package uk.ac.ox.cs.pdq.db;
 
 import java.util.Map;
-import java.util.Objects;
 
+import com.google.common.base.Preconditions;
+
+import uk.ac.ox.cs.pdq.InterningManager;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Variable;
 
-import com.google.common.base.Preconditions;
-
-//TODO add cache manager 
 /**
  *
  * @author Efthymia Tsamoura
@@ -26,7 +25,7 @@ public class Match {
 	/** The mapping of query's variables to constants.*/
 	protected final Map<Variable, Constant> mapping;
 
-	public Match(Formula formula, Map<Variable, Constant> mapping) {
+	protected Match(Formula formula, Map<Variable, Constant> mapping) {
 		Preconditions.checkArgument(formula instanceof ConjunctiveQuery || formula instanceof Dependency);
 		Preconditions.checkArgument(mapping != null);
 		this.mapping = mapping;
@@ -41,33 +40,36 @@ public class Match {
 		return this.formula;
 	}
 
-	/**
-	 * Two matches are equal if the queries and the mappings they contain are equal (using equals accordingly).
-	 *
-	 * @param o Object
-	 * @return boolean
-	 */
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null) {
-			return false;
-		}
-		return this.getClass().isInstance(o)
-				&& this.formula.equals(((Match) o).formula)
-				&& this.mapping.equals(((Match) o).mapping);
-	}
-
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(this.formula, this.mapping);
-	}
-
 	@Override
 	public String toString() {
 		return this.mapping.toString() + "\n" + this.formula.toString(); 
 	}
+	
+    protected static final InterningManager<Match> s_interningManager = new InterningManager<Match>() {
+        protected boolean equal(Match object1, Match object2) {
+            if (!object1.formula.equals(object2.formula) || 
+            		object1.mapping.size() != object2.mapping.size())
+                return false;
+            for(java.util.Map.Entry<Variable, Constant> entry:object1.mapping.entrySet()) {
+            	if(!object2.mapping.containsKey(entry.getKey()) || object2.mapping.get(entry.getKey()).equals(entry.getValue())) 
+            		return false;
+            }
+            return true;
+        }
+
+        protected int getHashCode(Match object) {
+            int hashCode = object.formula.hashCode();
+            for(java.util.Map.Entry<Variable, Constant> entry:object.mapping.entrySet()) 
+                hashCode = hashCode * 8 + entry.getKey().hashCode() * 9 + entry.getValue().hashCode() * 10;
+            return hashCode;
+        }
+    };
+    
+    protected Object readResolve() {
+        return s_interningManager.intern(this);
+    }
+
+    public static Match create(Formula formula, Map<Variable, Constant> mapping) {
+        return s_interningManager.intern(new Match(formula, mapping));
+    }
 }

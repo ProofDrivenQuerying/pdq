@@ -45,21 +45,21 @@ public final class UntypedConstantTest {
 	 * Test skolem is skolem.
 	 */
 	@Test public void testUntypedConstantIsUntypedConstant() {
-		Assert.assertTrue("UntypedConstant.isUntypedConstant must be always true", new UntypedConstant("v").isUntypedConstant());
+		Assert.assertTrue("UntypedConstant.isUntypedConstant must be always true", UntypedConstant.create("v").isUntypedConstant());
 	}
 
 	/**
 	 * Test skolem is not variable.
 	 */
 	@Test public void testUntypedConstantIsNotVariable() {
-		Assert.assertFalse("UntypedConstant.isVariable must be always false", new UntypedConstant("v").isVariable());
+		Assert.assertFalse("UntypedConstant.isVariable must be always false", UntypedConstant.create("v").isVariable());
 	}
 
 	/**
 	 * Test skolem valid.
 	 */
 	@Test public void testUntypedConstantValid() {
-		UntypedConstant v = new UntypedConstant("v");
+		UntypedConstant v = UntypedConstant.create("v");
 		Assert.assertEquals("UntypedConstant must have name 'v'", "v", v.getSymbol());
 	}
 
@@ -68,7 +68,7 @@ public final class UntypedConstantTest {
 	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void testUntypedConstantEmptyName() {
-		new UntypedConstant("");
+		UntypedConstant.create("");
 	}
 
 	/**
@@ -76,7 +76,7 @@ public final class UntypedConstantTest {
 	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void testUntypedConstantNullName() {
-		new UntypedConstant(null);
+		UntypedConstant.create(null);
 	}
 
 	/**
@@ -86,18 +86,18 @@ public final class UntypedConstantTest {
 		int n = 100;
 		HashSet<UntypedConstant> terms = new HashSet<>();
 		for (int i = 0; i < n; i++) {
-			terms.add(new UntypedConstant("x" + i));
+			terms.add(UntypedConstant.create("x" + i));
 		}
 		assertEquals(n, terms.size());
 		for (int i = 0; i < n; i++) {
-			assertTrue(terms.contains(new UntypedConstant("x" + i)));
+			assertTrue(terms.contains(UntypedConstant.create("x" + i)));
 		}
 		for (int i = 0; i < n; i++) {
-			terms.add(new UntypedConstant("x" + i));
+			terms.add(UntypedConstant.create("x" + i));
 		}
 		assertEquals(n, terms.size());
 		for (int i = 0; i < n; i++) {
-			assertTrue(terms.contains(new UntypedConstant("x" + i)));
+			assertTrue(terms.contains(UntypedConstant.create("x" + i)));
 		}
 	}
 
@@ -107,7 +107,7 @@ public final class UntypedConstantTest {
 	@Test public void testEquals() {
 		int n = 100;
 		for (int i = 0; i < n; i++) {
-			assertEquals(new UntypedConstant("x" + i), new UntypedConstant("x" + i));
+			assertEquals(UntypedConstant.create("x" + i), UntypedConstant.create("x" + i));
 		}
 	}
 
@@ -117,7 +117,7 @@ public final class UntypedConstantTest {
 	@Test public void testNotEquals() {
 		int n = 100;
 		for (int i = 0; i < n; i++) {
-			assertNotEquals(new UntypedConstant("x" + i), new UntypedConstant("y" + i));
+			assertNotEquals(UntypedConstant.create("x" + i), UntypedConstant.create("y" + i));
 		}
 	}
 }

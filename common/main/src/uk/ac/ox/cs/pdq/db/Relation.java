@@ -230,19 +230,29 @@ public abstract class Relation extends Predicate implements Serializable {
 		return s_interningManager.intern(this);
 	}
 
-	protected static final InterningManager<Relation> s_interningManager = new InterningManager<Relation>() {
-		protected boolean equal(Relation object1, Relation object2) {
-			if (!object1.name.equals(object2.name))
-				return false;
-			return true;
-		}
+    protected static final InterningManager<Relation> s_interningManager = new InterningManager<Relation>() {
+        protected boolean equal(Relation object1, Relation object2) {
+            if (!object1.name.equals(object2.name) || object1.attributes.length != object2.attributes.length || 
+            		object1.accessMethods.length != object2.accessMethods.length)
+                return false;
+            for (int index = object1.attributes.length - 1; index >= 0; --index)
+                if (!object1.attributes[index].equals(object2.attributes[index]))
+                    return false;
+            for (int index = object1.accessMethods.length - 1; index >= 0; --index)
+                if (!object1.accessMethods[index].equals(object2.accessMethods[index]))
+                    return false;
+            return true;
+        }
 
-		protected int getHashCode(Relation object) {
-			int hashCode = object.name.hashCode();
-			return hashCode;
-		}
-	};
-
+        protected int getHashCode(Relation object) {
+            int hashCode = object.name.hashCode();
+            for (int index = object.attributes.length - 1; index >= 0; --index)
+                hashCode = hashCode * 7 + object.attributes[index].hashCode();
+            for (int index = object.accessMethods.length - 1; index >= 0; --index)
+                hashCode = hashCode * 7 + object.accessMethods[index].hashCode();
+            return hashCode;
+        }
+    };
 	public static Relation create(String name, Attribute[] attributes, AccessMethod[] accessMethods, ForeignKey[] foreignKeys) {
 		return s_interningManager.intern(new Relation(name, attributes, accessMethods, foreignKeys){
 			private static final long serialVersionUID = -3703847952934804655L;});

@@ -1,7 +1,5 @@
 package uk.ac.ox.cs.pdq.test.db;
 
-import java.util.List;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,8 +9,6 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.builder.SchemaBuilder;
 import uk.ac.ox.cs.pdq.util.Utility;
-
-import com.google.common.collect.Lists;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -31,9 +27,7 @@ public class SchemaTest {
 	@Before public void setup() {
 		Utility.assertsEnabled();
 		SchemaBuilder builder = new SchemaBuilder();
-		builder.addRelation(
-				new Relation("R", Lists.newArrayList(new Attribute(Integer.class, "A"))) {
-		});
+		builder.addRelation(Relation.create("R", new Attribute[]{Attribute.create(Integer.class, "A")}));
 		this.schema = builder.build();
 	}
 	
@@ -42,8 +36,8 @@ public class SchemaTest {
 	 */
 	@Test 
 	public void testGetRelations() {
-		List<Relation> r1 = schema.getRelations();
-		List<Relation> r2 = schema.getRelations();
-		Assert.assertSame(r1, r2);
+		Relation[] r1 = schema.getRelations();
+		Relation[] r2 = schema.getRelations();
+		Assert.assertArrayEquals(r1, r2);
 	}
 }

@@ -1,7 +1,5 @@
 package uk.ac.ox.cs.pdq.test.fol;
 
-import java.util.List;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,8 +14,6 @@ import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.util.Utility;
 
-import com.google.common.collect.Lists;
-
 // TODO: Auto-generated Javadoc
 /**
  * The Class NegationTest.
@@ -25,7 +21,7 @@ import com.google.common.collect.Lists;
  * @author Julien Leblay
  */
 public final class NegationTest {
-	
+
 	/**
 	 * Makes sure assertions are enabled.
 	 */
@@ -39,16 +35,16 @@ public final class NegationTest {
 	 */
 	@Test public void testOf() {
 		Predicate s = new Predicate("s", 5);
-		List<Term> t = Lists.<Term>newArrayList(
-				new Variable("x1"), 
-				new Variable("x2"), 
-				new Variable("x3"),
-				new UntypedConstant("x4"), 
-				new TypedConstant<>("x5")
-				);
-		Atom p = new Atom( s, t);
+		Term[] t = new Term[]{
+				Variable.create("x1"), 
+				Variable.create("x2"), 
+				Variable.create("x3"),
+				UntypedConstant.create("x4"), 
+				TypedConstant.create("x5")
+		};
+		Atom p = Atom.create( s, t);
 		Negation n = Negation.of(p);
-		Assert.assertEquals("Negation subformulation must match that of construction ", p, n.getChildren().get(0));
+		Assert.assertEquals("Negation subformulation must match that of construction ", p, n.getChild(0));
 	}
 
 	/**
@@ -56,23 +52,23 @@ public final class NegationTest {
 	 */
 	@Test public void testEquals() {
 		Predicate s1 = new Predicate("s", 5);
-		List<Term> t1 = Lists.<Term>newArrayList(
-				new Variable("x1"), 
-				new Variable("x2"), 
-				new Variable("x3"),
-				new UntypedConstant("x4"), 
-				new TypedConstant<>("x5")
-				);
-		Atom p1 = new Atom(s1, t1);
+		Term[] t1 = new Term[]{
+				Variable.create("x1"), 
+				Variable.create("x2"), 
+				Variable.create("x3"),
+				UntypedConstant.create("x4"), 
+				TypedConstant.create("x5")
+		};
+		Atom p1 = Atom.create(s1, t1);
 		Predicate s2 = new Predicate("s", 5);
-		List<Term> t2 = Lists.<Term>newArrayList(
-				new Variable("x1"), 
-				new Variable("x2"), 
-				new Variable("x3"),
-				new UntypedConstant("x4"), 
-				new TypedConstant<>("x5")
-				);
-		Atom p2 = new Atom(s2, t2);
+		Term[] t2 = new Term[]{
+				Variable.create("x1"), 
+				Variable.create("x2"), 
+				Variable.create("x3"),
+				UntypedConstant.create("x4"), 
+				TypedConstant.create("x5")
+		};
+		Atom p2 = Atom.create(s2, t2);
 		Formula n1 = Negation.of(p1);
 		Formula n2 = Negation.of(p2);
 		Assert.assertTrue("Negation subformulation must match that of construction ", n1.equals(n2));
@@ -83,23 +79,23 @@ public final class NegationTest {
 	 */
 	@Test public void testNotEquals() {
 		Predicate s1 = new Predicate("s", 5);
-		List<Term> t1 = Lists.<Term>newArrayList(
-				new Variable("x1"), 
-				new Variable("x2"), 
-				new Variable("x3"),
-				new UntypedConstant("x4"), 
-				new TypedConstant<>("x5")
-				);
-		Atom p1 = new Atom(s1, t1);
+		Term[] t1 = new Term[]{
+				Variable.create("x1"), 
+				Variable.create("x2"), 
+				Variable.create("x3"),
+				UntypedConstant.create("x4"), 
+				TypedConstant.create("x5")
+		};
+		Atom p1 = Atom.create(s1, t1);
 		Predicate s2 = new Predicate("s", 5);
-		List<Term> t2 = Lists.<Term>newArrayList(
-				new Variable("x1"), 
-				new Variable("x2"), 
-				new Variable("x3"),
-				new UntypedConstant("x4"), 
-				new TypedConstant<>("y")
-				);
-		Atom p2 = new Atom(s2, t2);
+		Term[] t2 = new Term[]{
+				Variable.create("x1"), 
+				Variable.create("x2"), 
+				Variable.create("x3"),
+				UntypedConstant.create("x4"), 
+				TypedConstant.create("y")
+		};
+		Atom p2 = Atom.create(s2, t2);
 		Formula n1 = Negation.of(p1);
 		Formula n2 = Negation.of(p2);
 		Assert.assertFalse("Negation subformulation must match that of construction ", n1.equals(n2));

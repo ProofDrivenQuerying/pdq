@@ -31,21 +31,21 @@ public class VariableTest {
 	 * Test variable is variable.
 	 */
 	@Test public void testVariableIsVariable() {
-		Assert.assertTrue("Variable.isVariable must be always true", new Variable("v").isVariable());
+		Assert.assertTrue("Variable.isVariable must be always true", Variable.create("v").isVariable());
 	}
 
 	/**
 	 * Test variable is not skolem.
 	 */
 	@Test public void testVariableIsNotSkolem() {
-		Assert.assertFalse("Variable.isSkolem must be always false", new Variable("v").isUntypedConstant());
+		Assert.assertFalse("Variable.isSkolem must be always false", Variable.create("v").isUntypedConstant());
 	}
 
 	/**
 	 * Test variable valid.
 	 */
 	@Test public void testVariableValid() {
-		Variable v = new Variable("v");
+		Variable v = Variable.create("v");
 		Assert.assertEquals("Variable must have name 'v'", "v", v.getSymbol());
 	}
 
@@ -54,7 +54,7 @@ public class VariableTest {
 	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void testVariableEmptyName() {
-		new Variable("");
+		Variable.create("");
 	}
 
 	/**
@@ -62,7 +62,7 @@ public class VariableTest {
 	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void testVariableNullName() {
-		new Variable(null);
+		Variable.create(null);
 	}
 
 	/**
@@ -72,18 +72,18 @@ public class VariableTest {
 		int n = 100;
 		HashSet<Variable> terms = new HashSet<>();
 		for (int i = 0; i < n; i++) {
-			terms.add(new Variable("x" + i));
+			terms.add(Variable.create("x" + i));
 		}
 		assertEquals(n, terms.size());
 		for (int i = 0; i < n; i++) {
-			assertTrue(terms.contains(new Variable("x" + i)));
+			assertTrue(terms.contains(Variable.create("x" + i)));
 		}
 		for (int i = 0; i < n; i++) {
-			terms.add(new Variable("x" + i));
+			terms.add(Variable.create("x" + i));
 		}
 		assertEquals(n, terms.size());
 		for (int i = 0; i < n; i++) {
-			assertTrue(terms.contains(new Variable("x" + i)));
+			assertTrue(terms.contains(Variable.create("x" + i)));
 		}
 	}
 
@@ -93,7 +93,7 @@ public class VariableTest {
 	@Test public void testEquals() {
 		int n = 100;
 		for (int i = 0; i < n; i++) {
-			assertEquals(new Variable("x" + i), new Variable("x" + i));
+			assertEquals(Variable.create("x" + i), Variable.create("x" + i));
 		}
 	}
 
@@ -103,7 +103,7 @@ public class VariableTest {
 	@Test public void testNotEquals() {
 		int n = 100;
 		for (int i = 0; i < n; i++) {
-			assertNotEquals(new Variable("x" + i), new Variable("y" + i));
+			assertNotEquals(Variable.create("x" + i), Variable.create("y" + i));
 		}
 	}
 }

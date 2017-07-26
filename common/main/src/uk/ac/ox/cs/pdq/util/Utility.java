@@ -110,7 +110,7 @@ public class Utility {
 	 * @param formulas the atoms
 	 * @return the variables of the input atoms
 	 */
-	public static List<Variable> getVariables(Collection<? extends Formula> formulas) {
+	public static List<Variable> getVariables(Formula[] formulas) {
 		Set<Variable> result = new LinkedHashSet<>();
 		for (Formula formula: formulas) {
 			for(Atom atom:formula.getAtoms()) 
@@ -295,25 +295,23 @@ public class Utility {
 		return typedConstants;
 	}
 
-	//	/**
-	//	 * Gets the constants lying at the input positions.
-	//	 *
-	//	 * @throws IllegalArgumentException if there is a non-constant at one of the input positions
-	//	 * @param positions List<Integer>
-	//	 * @return the List<Constant> at the given positions.
-	//	 */
-	//	public static List<Constant> getTypedAndUntypedConstants(Atom atom, List<Integer> positions) {
-	//		List<Constant> result = new ArrayList<>();
-	//		for(Integer i: positions) {
-	//			if(i < atom.getTerms().size() && !atom.getTerms().get(i).isVariable()) {
-	//				result.add((Constant) atom.getTerms().get(i));
-	//			}
-	//			else {
-	//				throw new java.lang.IllegalArgumentException();
-	//			}
-	//		}
-	//		return result;
-	//	}
+	/**
+	 * Gets the constants lying at the input positions.
+	 *
+	 * @throws IllegalArgumentException if there is a non-constant at one of the input positions
+	 * @param positions List<Integer>
+	 * @return the List<Constant> at the given positions.
+	 */
+	public static List<Constant> getTypedAndUntypedConstants(Atom atom, List<Integer> positions) {
+		List<Constant> result = new ArrayList<>();
+		for(Integer i: positions) {
+			if(i < atom.getNumberOfTerms() && !atom.getTerm(i).isVariable()) 
+				result.add((Constant) atom.getTerm(i));
+			else 
+				throw new java.lang.IllegalArgumentException();
+		}
+		return result;
+	}
 
 	/**
 	 * TOCOMMENT the next 3 methods are discussed in #42

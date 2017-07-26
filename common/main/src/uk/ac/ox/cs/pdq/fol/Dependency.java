@@ -1,10 +1,12 @@
 package uk.ac.ox.cs.pdq.fol;
 
 import java.util.Arrays;
+import java.util.List;
 
 import org.junit.Assert;
 
 import uk.ac.ox.cs.pdq.InterningManager;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 /**
  * A universally quantified implication where the body is a quantifier-free formula and 
@@ -41,14 +43,18 @@ public class Dependency extends QuantifiedFormula {
 	
 	
 	protected Dependency(Atom[] body, Atom[] head) {
-//		super(LogicalSymbols.UNIVERSAL, body.getFreeVariables(), Implication.create(body,head));
-//		Assert.assertTrue(isUnquantified(body));
-//		Assert.assertTrue(isExistentiallyQuantified(head) || isUnquantified(head));
-//		Assert.assertTrue(Arrays.asList(body.getFreeVariables()).containsAll(Arrays.asList(head.getFreeVariables())));
-//		this.body = body;
-//		this.head = head;
-//		this.bodyAtoms = this.body.getAtoms();
-//		this.headAtoms = this.head.getAtoms();
+		this(Conjunction.of(body), createHead(body, head));
+	}
+	
+	private static Formula createHead(Atom[] body, Atom[] head) {
+		List<Variable> bodyVariables = Utility.getVariables(body);
+		List<Variable> headVariables = Utility.getVariables(head);
+		if(bodyVariables.containsAll(headVariables)) 
+			return Conjunction.of(head);
+		else {
+			headVariables.removeAll(bodyVariables);
+			return QuantifiedFormula.create(LogicalSymbols.EXISTENTIAL, headVariables.toArray(new Variable[headVariables.size()]), Conjunction.of(head));
+		}
 	}
 	
 	private static boolean isUnquantified(Formula formula) {
@@ -173,10 +179,10 @@ public class Dependency extends QuantifiedFormula {
         }
     };
     
-    public static Dependency create(Formula body, Formula head) {
-        return s_interningManager.intern(new Dependency(body, head));
-    }
-    
+//    public static Dependency create(Formula body, Formula head) {
+//        return s_interningManager.intern(new Dependency(body, head));
+//    }
+//    
     public static Dependency create(Atom[] body, Atom[] head) {
         return s_interningManager.intern(new Dependency(body, head));
     }
