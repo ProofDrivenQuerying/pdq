@@ -6,20 +6,21 @@ import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.Set;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.junit.Assert;
 
-import uk.ac.ox.cs.pdq.db.AccessMethod;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.DataType;
 import uk.ac.ox.cs.pdq.db.ForeignKey;
@@ -27,6 +28,7 @@ import uk.ac.ox.cs.pdq.db.Reference;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.CanonicalNameGenerator;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
@@ -43,10 +45,6 @@ import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.io.xml.QNames;
 
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-
 // TODO: Auto-generated Javadoc
 /**
  * Provide utility function, that don't fit anywhere else.
@@ -60,27 +58,6 @@ public class Utility {
 	/**  The logger. */
 	public static Logger log = Logger.getLogger(Utility.class);
 
-	/**
-	 * Search.
-	 *
-	 * @param <T> the generic type
-	 * @param collection the collection
-	 * @param object the object
-	 * @return 		the positions where the input object appears in collection.
-	 * 		If object does not appear in source, then an empty list is returned
-	 */
-	public static <T> List<Integer> search(Collection<? extends T> collection, T object) {
-		List<Integer> result = new ArrayList<>();
-		int index = 0;
-		for (T obj : collection) {
-			if (obj.equals(object)) {
-				result.add(index);
-			}
-			index++;
-		}
-		return result;
-	}
-	
 	/**
 	 * Search.
 	 *
@@ -113,47 +90,16 @@ public class Utility {
 		return new LinkedHashSet<>(l);
 	}
 
-//	/**
-//	 * Typed to terms.
-//	 *
-//	 * @param typed the typed
-//	 * @return List<Term>
-//	 */
-//	public static List<Term> typedToTerms(Collection<? extends Typed> typed) {
-//		List<Term> result = new ArrayList<>(typed.size());
-//		for (Typed o : typed) {
-//			result.add(typedToTerm(o));
-//		}
-//		return result;
-//	}
-
 	/**
-	 * Typed to term.
+	 * Typed to terms.
 	 *
 	 * @param typed the typed
-	 * @return Term
+	 * @return List<Term>
 	 */
-	public static Term typedToTerm(Typed typed) {
-		if (typed instanceof TypedConstant) {
-			return (TypedConstant) typed;
-		}
-		return new Variable(String.valueOf(typed));
-	}
-
-	/**
-	 * To typed constants.
-	 *
-	 * @param typed the typed
-	 * @return List<TypedConstant<?>>
-	 */
-	public static List<TypedConstant> toTypedConstants(List<Typed> typed) {
-		List<TypedConstant> result = new ArrayList<>();
-		for (Typed t: typed) {
-			if (t instanceof TypedConstant) {
-				result.add((TypedConstant) t);
-			} else {
-				result.add(new TypedConstant(Types.cast(t.getType(), String.valueOf(t))));
-			}
+	public static Term[] typedToTerms(Attribute[] typed) {
+		Term[] result = new Term[typed.length];
+		for (int index = 0; index < typed.length; ++index) {
+			result[index] = Variable.create(String.valueOf(typed));
 		}
 		return result;
 	}
@@ -167,20 +113,18 @@ public class Utility {
 	public static List<Variable> getVariables(Collection<? extends Formula> formulas) {
 		Set<Variable> result = new LinkedHashSet<>();
 		for (Formula formula: formulas) {
-			for(Atom atom:formula.getAtoms()) {
-				result.addAll(atom.getVariables());
-			}
+			for(Atom atom:formula.getAtoms()) 
+				result.addAll(Arrays.asList(atom.getVariables()));
 		}
-		return Lists.newArrayList(result);
+		return new ArrayList<>(result);
 	}
 
 	public static Collection<Constant> getTypedConstants(Collection<Atom> atoms) {
 		Collection<Constant> result = new LinkedHashSet<>();
 		for (Atom atom:atoms) {
 			for (Term term:atom.getTerms()) {
-				if (term instanceof Constant && ((Constant) term).isUntypedConstant()) {
+				if (term instanceof Constant && ((Constant) term).isUntypedConstant()) 
 					result.add((Constant) term);
-				}
 			}
 		}
 		return result;
@@ -225,164 +169,7 @@ public class Utility {
 		}
 		return result;
 	}
-
-//	/**
-//	 * Generates a list of terms matching the attributes of the input relation.
-//	 *
-//	 * @param r Relation
-//	 * @return List<Term>
-//	 */
-//	public static Term[] createVariables(Relation r) {
-//		Term[] result = new Term[r.getArity()];
-//		for (int i = 0, l = r.getArity(); i < l; i++) 
-//			result[i] = Variable.getFreshVariable();
-//		return result;
-//	}
-
-//	/**
-//	 * Generates a list of attribute whose name are the name as those of term in
-//	 * the given predicate, and types match with the predicate attribute types.
-//	 * @param variables List<? extends Term>
-//	 * @param type TupleType
-//	 * @return List<Attribute>
-//	 */
-//	public static List<Attribute> variablesToAttributes(List<Variable> variables, TupleType type) {
-//		Preconditions.checkArgument(variables.size() == type.size());
-//		List<Attribute> result = new ArrayList<>();
-//		int i = 0;
-//		for (Term t : variables) {
-//			result.add(new Attribute(type.getType(i++), t.toString()));
-//		}
-//		return result;
-//	}
-
-//	/**
-//	 * Converts a list of Term to a list of Typed.
-//	 *
-//	 * @param variables List<? extends Term>
-//	 * @param type TupleType
-//	 * @return List<Typed>
-//	 */
-//	public static List<Typed> variablesToTyped(List<Variable> variables, TupleType type) {
-//		Preconditions.checkArgument(variables.size() == type.size());
-//		List<Typed> result = new ArrayList<>();
-//		int i = 0;
-//		for (Term t: variables) {
-//			result.add(termToTyped(t, type.getType(i)));
-//			i++;
-//		}
-//		return result;
-//	}
-
-//	/**
-//	 * Generates a list of terms matching the attributes of the input relation.
-//	 *
-//	 * @param q ConjunctiveQuery
-//	 * @return List<Attribute>
-//	 */
-//	public static List<Attribute> termsToAttributes(ConjunctiveQuery q) {
-//		List<Attribute> result = new ArrayList<>();
-//		for (Variable t:q.getFreeVariables()) {
-//			boolean found = false;
-//			for (Atom p:q.getAtoms()) {
-//				Predicate s = p.getPredicate();
-//				if (s instanceof Relation) {
-//					Relation r = (Relation) s;
-//					int i = 0;
-//					for (Term v : p.getTerms()) {
-//						if (v.equals(t)) {
-//							result.add(new Attribute(r.getAttribute(i).getType(), t.toString()));
-//							found = true;
-//							break;
-//						}
-//						i++;
-//					}
-//				}
-//				if (found) {
-//					break;
-//				}
-//			}
-//		}
-//		assert result.size() == q.getFreeVariables().size() : "Could not infer type of projected term in the query";
-//		return result;
-//	}
-
-
-//	/**
-//	 * Converts a Term to a Typed.
-//	 *
-//	 * @param t Term
-//	 * @param type Class<?>
-//	 * @return Typed
-//	 */
-//	public static Typed termToTyped(Term t, Type type) {
-//		if (t.isVariable() || t.isUntypedConstant()) {
-//			return new Attribute(type, String.valueOf(t));
-//		} else if (t instanceof TypedConstant) {
-//			return (TypedConstant) t;
-//		} else {
-//			throw new IllegalStateException("Unknown typed object: " + t);
-//		}
-//	}
-
-//	/**
-//	 * Generates a list of terms matching the list of input attributes.
-//	 *
-//	 * @param attributes the attributes
-//	 * @return List<Attribute>
-//	 */
-//	public static List<Attribute> canonicalAttributes(List<Attribute> attributes) {
-//		List<Attribute> result = new ArrayList<>();
-//		for (int index = 0, l = attributes.size(); index < l; ++index) {
-//			result.add(new Attribute(attributes.get(index).getClass(), "x" + index));
-//		}
-//		return result;
-//	}
-
-//	/**
-//	 * Mean dist.
-//	 *
-//	 * @param random Random
-//	 * @param mean double
-//	 * @param min double
-//	 * @param max double
-//	 * @return double
-//	 */
-//	public static double meanDist(Random random, double mean, double min, double max) {
-//		if (random.nextBoolean()) {
-//			return min + random.nextDouble() * (mean - min);
-//		}
-//		return mean + random.nextDouble() * (max - mean);
-//	}
-
-//	/**
-//	 * Connected components.
-//	 *
-//	 * @param clusters the clusters
-//	 * @return 		a partition of the given clusters, such that all predicates in the
-//	 *      each component are connected, and no predicates part of distinct
-//	 *      component are connected.
-//	 */
-//	public static List<Set<Atom>> connectedComponents(List<Set<Atom>> clusters) {
-//		List<Set<Atom>> result = new LinkedList<>();
-//		if (clusters.isEmpty()) {
-//			return result;
-//		}
-//		Set<Atom> first = clusters.get(0);
-//		if (clusters.size() > 1) {
-//			List<Set<Atom>> rest = connectedComponents(clusters.subList(1, clusters.size()));
-//			for (Set<Atom> s : rest) {
-//				if (!Collections.disjoint(first, s)) {
-//					first.addAll(s);
-//				} else {
-//					result.add(s);
-//				}
-//			}
-//		}
-//		result.add(first);
-//		return result;
-//	}
-
+	
 	/**
 	 * Format the given value so as to call the proper type conversion function.
 	 *
@@ -425,25 +212,25 @@ public class Utility {
 	public static List<Variable> getVariables(Formula formula) {
 		List<Variable> variables = Lists.newArrayList();
 		if(formula instanceof Conjunction) {
-			variables.addAll(getVariables(((Conjunction)formula).getChildren().get(0)));
-			variables.addAll(getVariables(((Conjunction)formula).getChildren().get(1)));
+			variables.addAll(getVariables(((Conjunction)formula).getChildren()[0]));
+			variables.addAll(getVariables(((Conjunction)formula).getChildren()[1]));
 		}
 		else if(formula instanceof Disjunction) {
-			variables.addAll(getVariables(((Disjunction)formula).getChildren().get(0)));
-			variables.addAll(getVariables(((Disjunction)formula).getChildren().get(1)));
+			variables.addAll(getVariables(((Disjunction)formula).getChildren()[0]));
+			variables.addAll(getVariables(((Disjunction)formula).getChildren()[1]));
 		}
 		else if(formula instanceof Negation) {
-			variables.addAll(getVariables(((Negation)formula).getChildren().get(0)));
+			variables.addAll(getVariables(((Negation)formula).getChildren()[0]));
 		}
 		else if(formula instanceof Atom) {
-			variables.addAll(((Atom)formula).getVariables());
+			variables.addAll(Arrays.asList(((Atom)formula).getVariables()));
 		}
 		else if(formula instanceof Implication) {
-			variables.addAll(getVariables(((Implication)formula).getChildren().get(0)));
-			variables.addAll(getVariables(((Implication)formula).getChildren().get(1)));
+			variables.addAll(getVariables(((Implication)formula).getChildren()[0]));
+			variables.addAll(getVariables(((Implication)formula).getChildren()[0]));
 		}
 		else if(formula instanceof QuantifiedFormula) {
-			variables.addAll(getVariables(((QuantifiedFormula)formula).getChildren().get(0)));
+			variables.addAll(getVariables(((QuantifiedFormula)formula).getChildren()[0]));
 		}
 		return variables;
 	}
@@ -459,29 +246,29 @@ public class Utility {
 	 * @return 		a collection of EGDs for the input relation and keys
 	 */
 	public static EGD getEGDs(Predicate predicate, Attribute[] attributes, Attribute[] keys) {
-		List<Term> leftTerms = Utility.typedToTerms(attributes);
-		List<Term> copiedTerms = Lists.newArrayList(leftTerms);
+		Term[] leftTerms = Utility.typedToTerms(attributes);
+		Term[] copiedTerms = leftTerms.clone();
 		//Keeps the terms that should be equal
 		Map<Term,Term> tobeEqual = com.google.common.collect.Maps.newHashMap();
 		int i = 0;
 		for(Attribute typed:attributes) {
-			if(!keys.contains(typed)) {
-				Term term = new Variable(String.valueOf("?" + typed));//TOCOMMENT why are we using a "?" here?
-				copiedTerms.set(i, term);
-				tobeEqual.put(leftTerms.get(i), term);
+			if(!Arrays.asList(keys).contains(typed)) {
+				Term term = Variable.create(String.valueOf("?" + typed));//TOCOMMENT why are we using a "?" here?
+				copiedTerms[i] = term;
+				tobeEqual.put(leftTerms[i], term);
 			}
 			i++;
 		}
 		Predicate equality = new Predicate(QNames.EQUALITY.toString(), 2, true);
 		//Create the constant equality predicates
-		List<Formula> equalities = Lists.newArrayList();
-		for(java.util.Map.Entry<Term, Term> pair:tobeEqual.entrySet()) {
-			equalities.add(new Atom(equality, pair.getKey(), pair.getValue()));
-		}
+		int index = 0;
+		Formula[] equalities = new Formula[tobeEqual.entrySet().size()];
+		for(java.util.Map.Entry<Term, Term> pair:tobeEqual.entrySet()) 
+			equalities[index++] = Atom.create(equality, pair.getKey(), pair.getValue());
 		Formula body =
-				Conjunction.of(new Atom(new Predicate(predicate.getName(), leftTerms.size()), leftTerms), 
-						new Atom(new Predicate(predicate.getName(), copiedTerms.size()), copiedTerms));
-		return new EGD(body, Conjunction.of(equalities));
+				Conjunction.of(Atom.create(Predicate.create(predicate.getName(), leftTerms.length), leftTerms), 
+						Atom.create(Predicate.create(predicate.getName(), copiedTerms.length), copiedTerms));
+		return EGD.create(body, Conjunction.of(equalities));
 	}
 
 	/**
@@ -508,25 +295,25 @@ public class Utility {
 		return typedConstants;
 	}
 
-//	/**
-//	 * Gets the constants lying at the input positions.
-//	 *
-//	 * @throws IllegalArgumentException if there is a non-constant at one of the input positions
-//	 * @param positions List<Integer>
-//	 * @return the List<Constant> at the given positions.
-//	 */
-//	public static List<Constant> getTypedAndUntypedConstants(Atom atom, List<Integer> positions) {
-//		List<Constant> result = new ArrayList<>();
-//		for(Integer i: positions) {
-//			if(i < atom.getTerms().size() && !atom.getTerms().get(i).isVariable()) {
-//				result.add((Constant) atom.getTerms().get(i));
-//			}
-//			else {
-//				throw new java.lang.IllegalArgumentException();
-//			}
-//		}
-//		return result;
-//	}
+	//	/**
+	//	 * Gets the constants lying at the input positions.
+	//	 *
+	//	 * @throws IllegalArgumentException if there is a non-constant at one of the input positions
+	//	 * @param positions List<Integer>
+	//	 * @return the List<Constant> at the given positions.
+	//	 */
+	//	public static List<Constant> getTypedAndUntypedConstants(Atom atom, List<Integer> positions) {
+	//		List<Constant> result = new ArrayList<>();
+	//		for(Integer i: positions) {
+	//			if(i < atom.getTerms().size() && !atom.getTerms().get(i).isVariable()) {
+	//				result.add((Constant) atom.getTerms().get(i));
+	//			}
+	//			else {
+	//				throw new java.lang.IllegalArgumentException();
+	//			}
+	//		}
+	//		return result;
+	//	}
 
 	/**
 	 * TOCOMMENT the next 3 methods are discussed in #42
@@ -545,7 +332,7 @@ public class Utility {
 				if (t.isVariable()) {
 					Constant c = canonicalMapping.get(t);
 					if (c == null) {
-						c = new UntypedConstant(CanonicalNameGenerator.getName());
+						c = UntypedConstant.create(CanonicalNameGenerator.getName());
 						canonicalMapping.put((Variable) t, c);
 					}
 				}
@@ -562,11 +349,10 @@ public class Utility {
 	 * @return PredicateFormula
 	 */
 	public static Atom makeFact(Predicate predicate, Tuple tuple) {
-		TypedConstant<?>[] terms = new TypedConstant[tuple.size()];
-		for (int i = 0, l = tuple.size(); i < l; i++) {
-			terms[i++] = new TypedConstant<>(tuple.getValue(i));
-		}
-		return new Atom(predicate, terms);
+		TypedConstant[] terms = new TypedConstant[tuple.size()];
+		for (int i = 0, l = tuple.size(); i < l; i++) 
+			terms[i++] = TypedConstant.create(tuple.getValue(i));
+		return Atom.create(predicate, terms);
 	}
 	/**
 	 * Clusters the input atoms based on their signature
@@ -588,58 +374,6 @@ public class Utility {
 		}
 		return clusters;
 	}
-
-//	/**
-//	 * @return an atom with predicate the input relation.
-//	 */
-//	public static Atom createAtom(Relation relation) {
-//		List<Term> variableTerms = new ArrayList<>();
-//		for (Attribute attribute : relation.getAttributes()) {
-//			variableTerms.add(new Variable(attribute.getName()));
-//		}
-//		return new Atom(relation, variableTerms);
-//	}
-
-//	public static Atom createAtomsWithoutExtraAttribute(Relation relation) {
-//		List<Term> variableTerms = new ArrayList<>();
-//		for (Attribute attribute : relation.getAttributes().subList(0, relation.getAttributes().size()-1)) {
-//			variableTerms.add(new Variable(attribute.getName()));
-//		}
-//		return new Atom(relation, variableTerms);
-//	}
-
-
-//	/**
-//	 * Gets the term positions.
-//	 *
-//	 * @param term Term
-//	 * @return List<Integer>
-//	 */
-//	public List<Integer> getTermPositions(Term term) {
-//		return Utility.search(this.terms, term);
-//	}
-
-//	/**
-//	 * Helper printing method.
-//	 *
-//	 * @return String
-//	 */
-//	private String makeString() {
-//		StringBuilder result = new StringBuilder();
-//		result.append(this.name).append('[').append(this.arity).append(']');
-//		return result.toString().intern();
-//	}
-//
-//
-//	/**
-//	 * Gets the term positions.
-//	 *
-//	 * @param term Term
-//	 * @return List<Integer>
-//	 */
-//	public List<Integer> getTermPositions(Term term) {
-//		return Utility.search(this.terms, term);
-//	}
 
 	/**
 	 * Simple name.
@@ -750,10 +484,6 @@ public class Utility {
 		throw new ClassCastException(o + " could not be cast to " + type);
 	}
 
-	public static AccessMethod getAccessMethod(Relation relation, String acceessMethodName) {
-
-	}
-
 	/**
 	 * Gets the type of the attributes of the relation.
 	 *
@@ -771,25 +501,26 @@ public class Utility {
 		Assert.assertTrue(fact.getPredicate() instanceof Relation);
 		return ((Relation) fact.getPredicate()).getAttributes();
 	}
-	
+
 	/**
 	 * Creates a new foreign key object.
 	 *
-	 * @param dep LinearGuarded
+	 * @param dependency LinearGuarded
 	 */
-	public static ForeignKey createForeignKey(LinearGuarded dep) {
+	public static ForeignKey createForeignKey(LinearGuarded dependency) {
 		ForeignKey foreignKey = new ForeignKey();
-		Atom left = dep.getBody().getAtoms()[0];
-		Atom right = dep.getHead().getAtoms()[0];
+		Atom left = dependency.getBody().getAtoms()[0];
+		Atom right = dependency.getHead().getAtoms()[0];
 		Relation leftRel = (Relation) left.getPredicate();
 		Relation rightRel = (Relation) right.getPredicate();
 		foreignKey.setForeignRelation(rightRel);
 		foreignKey.setForeignRelationName(rightRel.getName());
-		for (Variable v:CollectionUtils.intersection(left.getVariables(), right.getVariables())) {
-			foreignKey.addReference(new Reference(leftRel.getAttribute(left.getTerms().indexOf(v)), rightRel.getAttribute(right.getTerms().indexOf(v))));
+		for (Variable v:CollectionUtils.intersection(Arrays.asList(left.getVariables()), Arrays.asList(right.getVariables()))) {
+			foreignKey.addReference(new Reference(leftRel.getAttribute(Arrays.asList(left.getTerms()).indexOf(v)), rightRel.getAttribute(Arrays.asList(right.getTerms()).indexOf(v))));
 		}
+		return foreignKey;
 	}
-	
-	
+
+
 
 }

@@ -213,7 +213,7 @@ public class SimpleCatalog implements Catalog{
 			String erspi = m.group(6);
 			if(schema.contains(relation)) {
 				Relation r = schema.getRelation(relation);
-				AccessMethod b = Utility.getAccessMethod(r, binding);
+				AccessMethod b = r.getAccessMethod(binding);
 				if(b != null) {
 					this.erpsi.put( Pair.of(r,b), Integer.parseInt(erspi));  
 					log.info("RELATION: " + relation + " BINDING: " + binding + " ERPSI: " + erspi);
@@ -236,7 +236,7 @@ public class SimpleCatalog implements Catalog{
 			String cost = m.group(6);
 			if(schema.contains(relation)) {
 				Relation r = schema.getRelation(relation);
-				AccessMethod b = Utility.getAccessMethod(r, binding);
+				AccessMethod b = r.getAccessMethod(binding);
 				if(b != null) {
 					this.costs.put( Pair.of(r,b), Double.parseDouble(cost));  
 					log.info("RELATION: " + relation + " BINDING: " + binding + " COST: " + cost);

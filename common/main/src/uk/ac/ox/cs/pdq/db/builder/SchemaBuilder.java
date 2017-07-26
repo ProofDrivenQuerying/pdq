@@ -10,7 +10,6 @@ import java.util.Set;
 
 import org.junit.Assert;
 
-import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.ForeignKey;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -66,12 +65,13 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	 */
 	public SchemaBuilder addRelation(Relation relation) {
 		Assert.assertNotNull(relation);
-		Relation existing = this.relations.get(relation.getName());
-		if (existing != null
-				&& !(existing instanceof SchemaBuilder.TemporaryRelation)
-				&& relation instanceof SchemaBuilder.TemporaryRelation) {
-			throw new IllegalStateException();
-		}
+		//Efi: I do not understand this part of the code
+//		Relation existing = this.relations.get(relation.getName());
+//		if (existing != null
+//				&& !(existing instanceof SchemaBuilder.TemporaryRelation)
+//				&& relation instanceof SchemaBuilder.TemporaryRelation) {
+//			throw new IllegalStateException();
+//		}
 		this.relations.put(relation.getName(), relation);
 		return this;
 	}
@@ -191,17 +191,17 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 		return this;
 	}
 
-	/**
-	 * Adds the relations.
-	 *
-	 * @param relations the relations
-	 * @return this builder
-	 */
-	public SchemaBuilder addRelations(Relation[] relations) {
-		for (Relation relation:relations) 
-			this.addRelation(relation);
-		return this;
-	}
+//	/**
+//	 * Adds the relations.
+//	 *
+//	 * @param relations the relations
+//	 * @return this builder
+//	 */
+//	public SchemaBuilder addRelations(Relation[] relations) {
+//		for (Relation relation:relations) 
+//			this.addRelation(relation);
+//		return this;
+//	}
 
 //	/**
 //	 * Adds the schema.
@@ -426,53 +426,32 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	 */
 	@Override
 	public Schema build() {
-		if (!this.disableDependencies) {
+		if (!this.disableDependencies) 
 			this.consolidateDependencies();
-		} else {
+		else 
 			this.dependencies.clear();
-		}
-		return new Schema(this.relations.values(), this.dependencies.values());
+		return new Schema(this.relations.values().toArray(new Relation[this.relations.values().size()]), 
+				this.dependencies.values().toArray(new Dependency[this.dependencies.values().size()]));
 	}
-	
 
 //	/**
-//	 * Instantiates a new SchemaBuilder.
-//	 *
-//	 * @return a new schema builder
+//	 * A relation that temporarily hold signature related information in
+//	 * preparation for instantiatiating a relation.
+//	 * @author Julien Leblay
 //	 */
-//	public static SchemaBuilder builder() {
-//		return new SchemaBuilder();
+//	private static class TemporaryRelation extends Relation {
+//
+//		/** The Constant serialVersionUID. */
+//		private static final long serialVersionUID = 7049363904713889121L;
+//
+//		/**
+//		 * Constructor for TemporaryRelation.
+//		 * @param name String
+//		 * @param attributes List<Attribute>
+//		 * @param isEq true if the relation acts as an equality
+//		 */
+//		public TemporaryRelation(String name, Attribute[] attributes, boolean isEq) {
+//			super(name, attributes, isEq);
+//		}
 //	}
-
-//	/**
-//	 * Builder.
-//	 *
-//	 * @param schema the schema
-//	 * @return a new schema builder containing all the relations and
-//	 *         dependencies already in the given schema
-//	 */
-//	public static SchemaBuilder builder(Schema schema) {
-//		return new SchemaBuilder(schema);
-//	}
-
-	/**
-	 * A relation that temporarily hold signature related information in
-	 * preparation for instantiatiating a relation.
-	 * @author Julien Leblay
-	 */
-	private static class TemporaryRelation extends Relation {
-
-		/** The Constant serialVersionUID. */
-		private static final long serialVersionUID = 7049363904713889121L;
-
-		/**
-		 * Constructor for TemporaryRelation.
-		 * @param name String
-		 * @param attributes List<Attribute>
-		 * @param isEq true if the relation acts as an equality
-		 */
-		public TemporaryRelation(String name, Attribute[] attributes, boolean isEq) {
-			super(name, attributes, isEq);
-		}
-	}
 }

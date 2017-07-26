@@ -126,6 +126,10 @@ public abstract class Relation extends Predicate implements Serializable {
 	public AccessMethod[] getAccessMethods() {
 		return this.accessMethods.clone();
 	}
+	
+	public AccessMethod getAccessMethod(String acceessMethodName) {
+		return this.accessMethodsMaps.get(acceessMethodName);
+	}
 
 	public void addForeignKey(ForeignKey foreingKey) {
 		if(this.foreignKeys.length == 0)
@@ -141,16 +145,6 @@ public abstract class Relation extends Predicate implements Serializable {
 	public ForeignKey[] getForeignKeys() {
 		return this.foreignKeys.clone();
 	}
-
-//	public void setAccessMethods(AccessMethod[] accessMethods) {
-//		this.accessMethodsMaps.clear();
-//		this.accessMethods = new AccessMethod[accessMethods.length];
-//		int accessMethodIndex = 0;
-//		for(AccessMethod accessMethod:accessMethods) {
-//			this.accessMethodsMaps.put(accessMethod.getName(), accessMethod);
-//			this.accessMethods[accessMethodIndex] = accessMethod;
-//		}
-//	}
 
 	public PrimaryKey getKey() {
 		return this.primaryKey;
