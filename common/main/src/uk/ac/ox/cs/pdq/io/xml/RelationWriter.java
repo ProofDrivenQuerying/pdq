@@ -9,8 +9,7 @@ import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.View;
-import uk.ac.ox.cs.pdq.db.metadata.StaticMetadata;
-import uk.ac.ox.cs.pdq.util.Types;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 /**
  * Writes relations to XML.
@@ -41,10 +40,10 @@ public class RelationWriter extends AbstractXMLWriter<Relation> {
 			describedExternally = true;
 		}
 
-		StaticMetadata rs = (StaticMetadata) relation.getMetadata();
-		if (rs != null && rs.getSize() != 1) {
-			att.put(QNames.SIZE, String.valueOf(rs.getSize()));
-		}
+//		StaticMetadata rs = (StaticMetadata) relation.getMetadata();
+//		if (rs != null && rs.getSize() != 1) {
+//			att.put(QNames.SIZE, String.valueOf(rs.getSize()));
+//		}
 		if (relation instanceof View) {
 			open(out, QNames.VIEW, att);
 		} else {
@@ -75,7 +74,7 @@ public class RelationWriter extends AbstractXMLWriter<Relation> {
 	public void writeAttribute(PrintStream out, Attribute attribute) {
 		Map<QNames, String> att = new LinkedHashMap<>();
 		att.put(QNames.NAME, attribute.getName());
-		att.put(QNames.TYPE, Types.canonicalName(attribute.getType()));
+		att.put(QNames.TYPE, Utility.canonicalName(attribute.getType()));
 		openclose(out, QNames.ATTRIBUTE, att);
 	}
 
@@ -89,7 +88,7 @@ public class RelationWriter extends AbstractXMLWriter<Relation> {
 	public void writeAccessMethod(PrintStream out, Relation r, AccessMethod ar) {
 		Map<QNames, String> att = new LinkedHashMap<>();
 		att.put(QNames.NAME, ar.getName());
-		att.put(QNames.TYPE, ar.getType().name());
+//		att.put(QNames.TYPE, ar.getType().name());
 		String ints = "";
 		for (int i: ar.getInputs()) {
 			ints += i + ",";
@@ -97,9 +96,9 @@ public class RelationWriter extends AbstractXMLWriter<Relation> {
 		if (!ints.isEmpty()) {
 			att.put(QNames.INPUTS, ints.substring(0, ints.length() - 1));
 		}
-		if (r.getMetadata() != null && r.getMetadata().getPerInputTupleCost(ar) != null) {
-			att.put(QNames.COST, String.valueOf(r.getMetadata().getPerInputTupleCost(ar).getValue()));
-		}
+//		if (r.getMetadata() != null && r.getMetadata().getPerInputTupleCost(ar) != null) {
+//			att.put(QNames.COST, String.valueOf(r.getMetadata().getPerInputTupleCost(ar).getValue()));
+//		}
 		openclose(out, QNames.ACCESS_METHOD, att);
 	}
 

@@ -101,7 +101,7 @@ public class QueryReader extends AbstractXMLReader<ConjunctiveQuery> {
 			if (this.inBody) {
 				this.atomReader.startElement(uri, localName, qName, atts);
 			} else {
-				this.builder.addHeadTerm(new Variable(this.getValue(atts, QNames.NAME)));
+				this.builder.addHeadTerm(Variable.create(this.getValue(atts, QNames.NAME)));
 			}
 			break;
 

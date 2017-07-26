@@ -92,7 +92,7 @@ public class SchemaWriter extends AbstractXMLWriter<Schema> {
 	 * @param out the out
 	 * @param rs Collection<Relation>
 	 */
-	private void writeSources(PrintStream out, Collection<Relation> rs) {
+	private void writeSources(PrintStream out, Relation[] rs) {
 		Set<Properties> properties = new LinkedHashSet<>();
 		for (Relation r: rs) {
 			properties.add(r.getProperties());
@@ -116,7 +116,7 @@ public class SchemaWriter extends AbstractXMLWriter<Schema> {
 	 * @param out the out
 	 * @param rs Collection<Relation>
 	 */
-	private void writeRelations(PrintStream out, Collection<Relation> rs) {
+	private void writeRelations(PrintStream out, Relation[] rs) {
 		open(out, QNames.RELATIONS);
 		for (Relation r : rs) {
 			this.relationWriter.writeRelation(out, r);
@@ -130,7 +130,7 @@ public class SchemaWriter extends AbstractXMLWriter<Schema> {
 	 * @param out the out
 	 * @param ds the ds
 	 */
-	private void writeDependencies(PrintStream out, Collection<Dependency> ds) {
+	private void writeDependencies(PrintStream out, Dependency[] ds) {
 		open(out, QNames.DEPENDENCIES);
 		for (Dependency d : ds) {
 			if (d instanceof TGD) {

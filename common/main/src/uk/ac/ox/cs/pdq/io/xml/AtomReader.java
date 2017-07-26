@@ -22,7 +22,7 @@ import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.io.ReaderException;
-import uk.ac.ox.cs.pdq.util.Types;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.base.Preconditions;
 
@@ -141,14 +141,14 @@ public class AtomReader extends AbstractXMLReader<Atom> {
 			if (value == null) {
 				throw new ReaderException("Syntax error. Constant requires a value attribute");
 			}
-			this.terms.add(new TypedConstant<>(Types.cast(attribute.getType(), value)));
+			this.terms.add(TypedConstant.create(Utility.cast(attribute.getType(), value)));
 			this.position++;
 			break;
 
 		case VARIABLE:
 			String name = this.getValue(atts, QNames.NAME);
 			if (name != null) {
-				this.terms.add(new Variable(name));
+				this.terms.add(Variable.create(name));
 			} else {
 				this.terms.add(generateVariable());
 			}
@@ -168,7 +168,7 @@ public class AtomReader extends AbstractXMLReader<Atom> {
 	public void endElement(String uri, String localName, String qName) {
 		switch(QNames.parse(qName)) {
 		case ATOM:
-			this.atom = new Atom(this.relation, this.terms);
+			this.atom = Atom.create(this.relation, this.terms.toArray(new Term[this.terms.size()]));
 			this.atoms.add(this.atom);
 			this.terms = new ArrayList<>();
 			this.relation = null;
@@ -202,7 +202,7 @@ public class AtomReader extends AbstractXMLReader<Atom> {
 	 */
 	private static Variable generateVariable() {
 		synchronized (counter) {
-			return new Variable(UNBOUND_VARIABLE_PREFIX + (counter++));
+			return Variable.create(UNBOUND_VARIABLE_PREFIX + (counter++));
 		}
 	}
 }

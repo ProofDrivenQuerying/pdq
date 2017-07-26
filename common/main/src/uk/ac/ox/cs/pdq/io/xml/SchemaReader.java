@@ -60,7 +60,7 @@ public class SchemaReader extends AbstractXMLReader<Schema> {
 	 * @param discovered Map<String,SchemaDiscoverer>
 	 */
 	public SchemaReader(Map<String, SchemaDiscoverer> discovered) {
-		this.builder = Schema.builder();
+		this.builder = new SchemaBuilder();
 		this.discovered = discovered;
 		this.relationReader = new RelationReader(this.builder, this.discovered);
 		this.dependencyReader = new DependencyReader(this.builder);

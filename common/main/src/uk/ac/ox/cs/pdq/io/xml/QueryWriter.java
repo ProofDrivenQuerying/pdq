@@ -2,7 +2,6 @@ package uk.ac.ox.cs.pdq.io.xml;
 
 import java.io.PrintStream;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 import uk.ac.ox.cs.pdq.fol.Atom;
@@ -28,7 +27,7 @@ public class QueryWriter extends AbstractXMLWriter<ConjunctiveQuery> {
 		Map<QNames, String> att = new LinkedHashMap<>();
 		att.put(QNames.TYPE, "conjunctive");
 		open(out, QNames.QUERY, att);
-		this.writeBody(out, query.getChildren().get(0));
+		this.writeBody(out, query.getChildren()[0]);
 		this.writeHead(out, query.getFreeVariables());
 		close(out, QNames.QUERY);
 	}
@@ -44,7 +43,7 @@ public class QueryWriter extends AbstractXMLWriter<ConjunctiveQuery> {
 		Map<QNames, String> att = new LinkedHashMap<>(atts);
 		att.put(QNames.TYPE, "conjunctive");
 		open(out, QNames.QUERY, att);
-		this.writeBody(out, query.getChildren().get(0));
+		this.writeBody(out, query.getChildren()[0]);
 		this.writeHead(out, query.getFreeVariables());
 		close(out, QNames.QUERY);
 	}
@@ -93,7 +92,7 @@ public class QueryWriter extends AbstractXMLWriter<ConjunctiveQuery> {
 	 * @param out the out
 	 * @param p Atom
 	 */
-	public void writeHead(PrintStream out, List<Variable> variables) {
+	public void writeHead(PrintStream out, Variable[] variables) {
 		Map<QNames, String> att = new LinkedHashMap<>();
 		att.put(QNames.NAME, "Q");
 		open(out, QNames.HEAD, att);

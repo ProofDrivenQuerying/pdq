@@ -20,6 +20,7 @@ import com.google.common.base.Preconditions;
 import uk.ac.ox.cs.pdq.builder.SchemaDiscoverer;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.db.PrimaryKey;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.builder.SchemaBuilder;
@@ -52,10 +53,10 @@ public class RelationReader extends AbstractXMLReader<Relation> {
 	private List<AccessMethod> accessMethods = new ArrayList<>();
 	
 	/** Temporary list of keys being built. */
-	private List<Attribute> key = new ArrayList<>();
-
-	/** Temporary map of binding patterns to their per-tuple costs. */
-	private Map<AccessMethod, Cost> accessCosts = new LinkedHashMap<>();
+	private Attribute[] key;
+//
+//	/** Temporary map of binding patterns to their per-tuple costs. */
+//	private Map<AccessMethod, Cost> accessCosts = new LinkedHashMap<>();
 
 	/** The schema. */
 	protected SchemaBuilder schema;
@@ -165,22 +166,24 @@ public class RelationReader extends AbstractXMLReader<Relation> {
 					throw new ReaderException("No such access method " + name);
 				}
 			} else if (name != null && !name.trim().isEmpty()) {
-				b = new AccessMethod(name, Types.valueOf(type), inputs);
+				b = AccessMethod.create(name, inputs.toArray(new Integer[inputs.size()]));
 			} else {
-				b = new AccessMethod(Types.valueOf(type), inputs);
+				b = AccessMethod.create(inputs.toArray(new Integer[inputs.size()]));
 			}
-			String cost = this.getValue(atts, QNames.COST);
-			if (cost != null && !cost.trim().isEmpty()) {
-				this.accessCosts.put(b, new DoubleCost(Double.valueOf(cost)));
-			}
+//			String cost = this.getValue(atts, QNames.COST);
+//			if (cost != null && !cost.trim().isEmpty()) {
+//				this.accessCosts.put(b, new DoubleCost(Double.valueOf(cost)));
+//			}
 			this.accessMethods.add(b);
 			break;
 		case KEY:
 			String attributes = this.getValue(atts, QNames.ATTRIBUTES);
-			for(String key:attributes.split(",")) {
+			String keys[] = attributes.split(",");
+			for(int keyIndex = 0; keyIndex< keys.length; ++keyIndex) {
+				String key = keys[keyIndex];
 				Attribute k = this.relation.getAttribute(key);
 				Preconditions.checkNotNull(k, "Undentified input key");
-				this.key.add(k);
+				this.key[keyIndex] = k;
 			}
 			break;
 		default:
@@ -217,25 +220,25 @@ public class RelationReader extends AbstractXMLReader<Relation> {
 		default:
 			return;
 		}
-		RelationMetadata metadata = this.relation.getMetadata();
-		if (metadata == null) {
-			metadata = new StaticMetadata();
-			this.relation.setMetadata(metadata);
-		}
-		if (this.size != null) {
-			metadata.setSize(this.size);
-		}
-		if (!this.accessCosts.isEmpty()) {
-			metadata.setPerInputTupleCosts(this.accessCosts);
-		}
-		this.relation.setAccessMethods(this.accessMethods, true);
-		this.relation.setKey(this.key);
+//		RelationMetadata metadata = this.relation.getMetadata();
+//		if (metadata == null) {
+//			metadata = new StaticMetadata();
+//			this.relation.setMetadata(metadata);
+//		}
+//		if (this.size != null) {
+//			metadata.setSize(this.size);
+//		}
+//		if (!this.accessCosts.isEmpty()) {
+//			metadata.setPerInputTupleCosts(this.accessCosts);
+//		}
+//		this.relation.setAccessMethods(this.accessMethods, true);
+		this.relation.setKey(PrimaryKey.create(this.key));
 		if (this.schema != null) {
 			this.schema.addRelation(this.relation);
 		}
 		this.attributes = new ArrayList<>();
 		this.accessMethods = new ArrayList<>();
-		this.key = new ArrayList<>();
+		this.key = null;
 	}
 
 	/**	
