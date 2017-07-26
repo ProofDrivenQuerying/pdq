@@ -149,4 +149,15 @@ public final class Conjunction extends Formula {
 	public static Conjunction create(Formula... children) {
 		return s_interningManager.intern(new Conjunction(children));
 	}
+
+	@Override
+	public Formula getChild(int childIndex) {
+		// TODO Auto-generated method stub
+		return this.children[childIndex];
+	}
+
+	@Override
+	public int getNumberOfChildlen() {
+		return this.children.length;
+	}
 }

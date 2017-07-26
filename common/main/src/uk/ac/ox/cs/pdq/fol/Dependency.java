@@ -24,6 +24,10 @@ public class Dependency extends QuantifiedFormula {
 	/**  The dependency's existentially quantified variables. */
 	protected Variable[] existential;
 	
+	protected final Atom[] bodyAtoms;
+	
+	protected final Atom[] headAtoms;
+	
 	protected Dependency(Formula body, Formula head) {
 		super(LogicalSymbols.UNIVERSAL, body.getFreeVariables(), Implication.create(body,head));
 		Assert.assertTrue(isUnquantified(body));
@@ -31,6 +35,20 @@ public class Dependency extends QuantifiedFormula {
 		Assert.assertTrue(Arrays.asList(body.getFreeVariables()).containsAll(Arrays.asList(head.getFreeVariables())));
 		this.body = body;
 		this.head = head;
+		this.bodyAtoms = this.body.getAtoms();
+		this.headAtoms = this.head.getAtoms();
+	}
+	
+	
+	protected Dependency(Atom[] body, Atom[] head) {
+//		super(LogicalSymbols.UNIVERSAL, body.getFreeVariables(), Implication.create(body,head));
+//		Assert.assertTrue(isUnquantified(body));
+//		Assert.assertTrue(isExistentiallyQuantified(head) || isUnquantified(head));
+//		Assert.assertTrue(Arrays.asList(body.getFreeVariables()).containsAll(Arrays.asList(head.getFreeVariables())));
+//		this.body = body;
+//		this.head = head;
+//		this.bodyAtoms = this.body.getAtoms();
+//		this.headAtoms = this.head.getAtoms();
 	}
 	
 	private static boolean isUnquantified(Formula formula) {
@@ -108,6 +126,31 @@ public class Dependency extends QuantifiedFormula {
 		return this.existential.clone();
 	}
 	
+	
+	public int getNumberOfBodyAtoms() {
+		return this.bodyAtoms.length;
+	}
+	
+	public int getNumberOfHeadAtoms() {
+		return this.bodyAtoms.length;
+	}
+	
+	public Atom getBodyAtom(int bodyAtomIndex) {
+		return this.bodyAtoms[bodyAtomIndex];
+	}
+	
+	public Atom getHeadAtom(int headAtomIndex) {
+		return this.headAtoms[headAtomIndex];
+	}
+	
+	public Atom[] getBodyAtoms() {
+		return this.bodyAtoms.clone();
+	}
+	
+	public Atom[] getHeadAtoms() {
+		return this.headAtoms.clone();
+	}
+	
     protected Object readResolve() {
         return s_interningManager.intern(this);
     }
@@ -130,7 +173,11 @@ public class Dependency extends QuantifiedFormula {
         }
     };
     
-    public static Dependency create(Formula head, Formula body) {
-        return s_interningManager.intern(new Dependency(head, body));
+    public static Dependency create(Formula body, Formula head) {
+        return s_interningManager.intern(new Dependency(body, head));
+    }
+    
+    public static Dependency create(Atom[] body, Atom[] head) {
+        return s_interningManager.intern(new Dependency(body, head));
     }
 }

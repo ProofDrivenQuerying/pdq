@@ -1,7 +1,9 @@
 package uk.ac.ox.cs.pdq.reasoning.utility;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
@@ -57,26 +59,25 @@ public class ReasonerUtility {
 				Dependency dependency = iterator.next();
 				for(Atom headAtom:dependency.getHead().getAtoms()) {
 					if(relevantPredicates.contains(headAtom.getPredicate())) {
-						for(Atom atom:dependency.getBody().getAtoms()) {
-							relevantPredicates.add(atom.getPredicate());
-						}
+						for(int bodyAtomIndex = 0; bodyAtomIndex < dependency.getNumberOfBodyAtoms(); ++bodyAtomIndex) 
+							relevantPredicates.add(dependency.getBodyAtom(bodyAtomIndex).getPredicate());
 						//Remove from the dependency all the irrelevant atoms
-						Dependency dep = new Dependency(dependency.getBody(), dependency.getHead());
-						Iterator<Atom> it = null;
-						it = dep.getHead().getAtoms().iterator();
-						while(it.hasNext()) {
-							if(!relevantPredicates.contains(it.next().getPredicate())) {
-								it.remove();
-							}
+						List<Atom> relevantHeadAtoms = new ArrayList<>();
+						for(int headAtomIndex = 0; headAtomIndex < dependency.getNumberOfHeadAtoms(); ++headAtomIndex) {
+							if(relevantPredicates.contains(dependency.getHeadAtom(headAtomIndex).getPredicate())) 
+								relevantHeadAtoms.add(dependency.getHeadAtom(headAtomIndex));
 						}
 						
-						it = dep.getBody().getAtoms().iterator();
-						while(it.hasNext()) {
-							if(!relevantPredicates.contains(it.next().getPredicate())) {
-								it.remove();
-							}
+						List<Atom> relevantBodyAtoms = new ArrayList<>();
+						for(int bodyAtomIndex = 0; bodyAtomIndex < dependency.getNumberOfBodyAtoms(); ++bodyAtomIndex) {
+							if(relevantPredicates.contains(dependency.getBodyAtom(bodyAtomIndex).getPredicate())) 
+								relevantBodyAtoms.add(dependency.getBodyAtom(bodyAtomIndex));
 						}
-						relevantDependencies.add(dep);
+						
+						Dependency relevantDependency = Dependency.create(relevantBodyAtoms.toArray(new Atom[relevantBodyAtoms.size()]), 
+								relevantHeadAtoms.toArray(new Atom[relevantHeadAtoms.size()]));
+						
+						relevantDependencies.add(relevantDependency);
 						iterator.remove();
 						change = true;
 						break;
@@ -94,7 +95,7 @@ public class ReasonerUtility {
 	 * @return
 	 * 		true if the input set of dependencies containts EGDs
 	 */
-	public static boolean checkEGDs(Collection<? extends Dependency> dependencies) {
+	public static boolean checkEGDs(Dependency[] dependencies) {
 		for(Dependency dependency:dependencies) {
 			if(dependency instanceof EGD) {
 				return true;

@@ -42,7 +42,7 @@ public class View extends Relation {
 	 * @param accessMethods 		The binding patterns with which a view can be accessed. By default, a view has free access
 	 */
 	public View(LinearGuarded dependency, AccessMethod[] accessMethods) {
-		super(dependency.getBody().getAtoms()[0].getPredicate().getName(), Utility.getAttributes(dependency.getGuard()), accessMethods);
+		super(dependency.getBodyAtom(0).getPredicate().getName(), Utility.getAttributes(dependency.getGuard()), accessMethods);
 		this.dependency = dependency;
 		this.definition = TGD.create(this.dependency.getHead(), this.dependency.getBody());
 //		this.setAccessMethods(accessMethods);
@@ -74,14 +74,14 @@ public class View extends Relation {
 	 */
 	public void setDependency(LinearGuarded dependency) {
 		this.dependency = LinearGuarded.create(
-				Atom.create(this, dependency.getBody().getAtoms()[0].getTerms()),
+				Atom.create(this, dependency.getBodyAtom(0).getTerms()),
 				dependency.getHead() instanceof QuantifiedFormula ? 
-						dependency.getHead().getChildren()[0] :
+						dependency.getHead().getChild(0) :
 				dependency.getHead());
 		
 		this.definition = TGD.create(
 				this.dependency.getHead() instanceof QuantifiedFormula ? 
-						this.dependency.getHead().getChildren()[0] :
+						this.dependency.getHead().getChild(0) :
 							this.dependency.getHead(), 
 							this.dependency.getBody());
 	}

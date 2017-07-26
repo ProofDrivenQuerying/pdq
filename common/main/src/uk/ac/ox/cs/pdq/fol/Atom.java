@@ -60,11 +60,11 @@ public class Atom extends Formula {
 	/**
 	 * Gets the term at the input position.
 	 *
-	 * @param n int
+	 * @param termIndex int
 	 * @return the atom's n-th term
 	 */
-	public Term getTerm(int n) {
-		return this.terms[n];
+	public Term getTerm(int termIndex) {
+		return this.terms[termIndex];
 	}
 
 	/**
@@ -126,18 +126,6 @@ public class Atom extends Formula {
 			}
 		}
 		return true;
-	}
-
-	/**
-	 * Gets the children.
-	 *
-	 * @return Collection<Formula>
-	 * @see uk.ac.ox.cs.pdq.fol.Formula#getSubFormulas()
-	 */
-	@SuppressWarnings("unchecked")
-	@Override
-	public Formula[] getChildren() {
-		return new Formula[]{};
 	}
 
 	@Override
@@ -208,4 +196,30 @@ public class Atom extends Formula {
     public static Atom create(Predicate predicate, Term... arguments) {
         return s_interningManager.intern(new Atom(predicate, arguments));
     }
+    
+	/**
+	 * Gets the children.
+	 *
+	 * @return Collection<Formula>
+	 * @see uk.ac.ox.cs.pdq.fol.Formula#getSubFormulas()
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public Formula[] getChildren() {
+		return new Formula[]{};
+	}
+
+	@Override
+	public Formula getChild(int childIndex) {
+		return null;
+	}
+
+	@Override
+	public int getNumberOfChildlen() {
+		return 0;
+	}
+	
+	public int getNumberOfTerms() {
+		return this.terms.length;
+	}
 }

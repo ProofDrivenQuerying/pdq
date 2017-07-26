@@ -13,6 +13,10 @@ public abstract class Formula implements Serializable{
 	public abstract int getId();
 	
 	public abstract <T extends Formula> T[] getChildren();
+	
+	public abstract Formula getChild(int childIndex);
+	
+	public abstract int getNumberOfChildlen();
 
 	public abstract Atom[] getAtoms();
 

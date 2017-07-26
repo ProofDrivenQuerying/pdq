@@ -127,4 +127,15 @@ public final class Negation extends Formula {
     public static Negation create(Formula child) {
         return s_interningManager.intern(new Negation(child));
     }
+    
+	@Override
+	public Formula getChild(int childIndex) {
+		Assert.assertTrue(childIndex == 0);
+		return this.child;
+	}
+
+	@Override
+	public int getNumberOfChildlen() {
+		return 1;
+	}
 }

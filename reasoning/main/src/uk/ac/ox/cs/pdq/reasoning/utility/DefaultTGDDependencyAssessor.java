@@ -5,19 +5,18 @@ import java.util.List;
 
 import org.apache.commons.collections4.CollectionUtils;
 
+import com.beust.jcommander.internal.Lists;
+import com.beust.jcommander.internal.Sets;
+import com.google.common.base.Preconditions;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
+
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.EGD;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
-import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
-
-import com.beust.jcommander.internal.Lists;
-import com.beust.jcommander.internal.Sets;
-import com.google.common.base.Preconditions;
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -54,7 +53,7 @@ public final class DefaultTGDDependencyAssessor implements TGDDependencyAssessor
 	 *
 	 * @param dependencies the dependencies
 	 */
-	public DefaultTGDDependencyAssessor(Collection<? extends Dependency> dependencies) {
+	public DefaultTGDDependencyAssessor(Dependency[] dependencies) {
 		Preconditions.checkNotNull(dependencies);
 		this.dependencies = Lists.newArrayList();
 		List<Dependency> egds = Lists.newArrayList();
@@ -62,7 +61,8 @@ public final class DefaultTGDDependencyAssessor implements TGDDependencyAssessor
 		
 		//Build the dependency map
 		for(Dependency dependency:dependencies) {
-			for(Atom atom:dependency.getBody().getAtoms()) {
+			for(int bodyAtomIndex = 0; bodyAtomIndex < dependency.getNumberOfBodyAtoms(); ++bodyAtomIndex) {
+				Atom atom = dependency.getBodyAtom(bodyAtomIndex);
 				Predicate s = atom.getPredicate();
 				if(dependency instanceof EGD) {
 					this.egdMap.put(s.getName(), (EGD) dependency);
@@ -85,25 +85,21 @@ public final class DefaultTGDDependencyAssessor implements TGDDependencyAssessor
 	 * @return 		the dependencies that are most likely to be fired in the next chase round.
 	 */
 	@Override
-	public Collection<? extends Dependency> getDependencies(ChaseInstance state) {
+	public Dependency[] getDependencies(ChaseInstance state) {
 		Collection<Dependency> constraints = Sets.newLinkedHashSet();
 		Collection<Atom> newFacts = null;
-		if(this.stateFacts == null) {
+		if(this.stateFacts == null) 
 			newFacts = state.getFacts();
-		}
-		else {
+		else 
 			newFacts = CollectionUtils.subtract(state.getFacts(), this.stateFacts);
-		}
 		
 		Multimap<String, Atom> newFactsMap = ArrayListMultimap.create();
-		for(Atom fact:newFacts) {
+		for(Atom fact:newFacts) 
 			newFactsMap.put(fact.getPredicate().getName(), fact);
-		}
-		
+	
 		Multimap<String, Atom> allFactsMap = ArrayListMultimap.create();
-		for(Atom fact:state.getFacts()) {
+		for(Atom fact:state.getFacts()) 
 			allFactsMap.put(fact.getPredicate().getName(), fact);
-		}
 		
 		for(Dependency dependency:this.dependencies) {
 			for(Atom atom:dependency.getBody().getAtoms()) {
@@ -121,7 +117,7 @@ public final class DefaultTGDDependencyAssessor implements TGDDependencyAssessor
 		}
 		this.stateFacts = Sets.newLinkedHashSet();
 		this.stateFacts.addAll(state.getFacts());
-		return constraints;
+		return constraints.toArray(new Dependency[constraints.size()]);
 	}
 
 }

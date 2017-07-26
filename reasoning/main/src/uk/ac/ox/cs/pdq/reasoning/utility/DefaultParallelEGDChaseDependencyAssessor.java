@@ -54,18 +54,17 @@ public final class DefaultParallelEGDChaseDependencyAssessor implements Parallel
 	 *
 	 * @param dependencies the dependencies
 	 */
-	public DefaultParallelEGDChaseDependencyAssessor(Collection<? extends Dependency> dependencies) {
+	public DefaultParallelEGDChaseDependencyAssessor(Dependency[] dependencies) {
 		Preconditions.checkNotNull(dependencies);
 		//Build the dependency map
 		for(Dependency dependency:dependencies) {
-			for(Atom atom:dependency.getBody().getAtoms()) {
+			for(int bodyAtomIndex = 0; bodyAtomIndex < dependency.getNumberOfBodyAtoms(); ++bodyAtomIndex) {
+				Atom atom = dependency.getBodyAtom(bodyAtomIndex);
 				Predicate s = atom.getPredicate();
-				if(dependency instanceof EGD) {
+				if(dependency instanceof EGD) 
 					this.egdMap.put(s.getName(), (EGD) dependency);
-				}
-				else if(dependency instanceof TGD) {
+				else if(dependency instanceof TGD) 
 					this.tgdMap.put(s.getName(), (TGD) dependency);
-				}
 			}
 		}
 	}
@@ -78,21 +77,18 @@ public final class DefaultParallelEGDChaseDependencyAssessor implements Parallel
 	 * @return 		the dependencies that are most likely to be fired in the next chase round.
 	 */
 	@Override
-	public Collection<? extends Dependency> getDependencies(ChaseInstance state, EGDROUND round) {
+	public Dependency[] getDependencies(ChaseInstance state, EGDROUND round) {
 		Collection<Dependency> constraints = Sets.newHashSet();
 		Collection<Atom> newFacts = null;
 		if(this.stateFacts == null || (round.equals(EGDROUND.EGD) && this.firstEGDRound == true) || 
-				(round.equals(EGDROUND.TGD) && this.firstTGDRound == true)) {
+				(round.equals(EGDROUND.TGD) && this.firstTGDRound == true)) 
 			newFacts = state.getFacts();
-		}
-		else {
+		else 
 			newFacts = CollectionUtils.subtract(state.getFacts(), this.stateFacts);
-		}
 		
 		Multimap<String, Atom> newFactsMap = ArrayListMultimap.create();
-		for(Atom fact:newFacts) {
+		for(Atom fact:newFacts) 
 			newFactsMap.put(fact.getPredicate().getName(), fact);
-		}
 		
 		Multimap<String, Atom> allFactsMap = ArrayListMultimap.create();
 		for(Atom fact:state.getFacts()) {
@@ -113,14 +109,12 @@ public final class DefaultParallelEGDChaseDependencyAssessor implements Parallel
 		this.stateFacts = Sets.newLinkedHashSet();
 		this.stateFacts.addAll(state.getFacts());
 		
-		if(round.equals(EGDROUND.EGD)) {
+		if(round.equals(EGDROUND.EGD)) 
 			this.firstEGDRound = false;
-		}
-		else {
+		else 
 			this.firstTGDRound = false;
-		}
 		
-		return constraints;
+		return constraints.toArray(new Dependency[constraints.size()]);
 	}
 
 }

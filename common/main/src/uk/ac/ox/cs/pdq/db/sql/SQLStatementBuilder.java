@@ -287,7 +287,7 @@ public abstract class SQLStatementBuilder {
 	public abstract String translateLimitConstraints(HomomorphismProperty... constraints);
 
 
-	public List<String> createFromStatement(Collection<Atom> facts) {
+	public List<String> createFromStatement(Atom[] facts) {
 		List<String> relations = new ArrayList<String>();
 		for (Atom fact:facts) {
 			String aliasName = this.aliasPrefix + this.aliasCounter;
@@ -306,7 +306,7 @@ public abstract class SQLStatementBuilder {
 	 * 		If the input is an egd or tgd we project the attributes that map to universally quantified variables.
 	 * 		If the input is a query we project the attributes that map to its free variables.
 	 */
-	public LinkedHashMap<String,Variable> createProjections(Collection<Atom> atoms) {
+	public LinkedHashMap<String,Variable> createProjections(Atom[] atoms) {
 		LinkedHashMap<String,Variable> projected = new LinkedHashMap<>();
 		List<Variable> attributes = new ArrayList<>();
 		for (Atom fact:atoms) {
@@ -325,7 +325,7 @@ public abstract class SQLStatementBuilder {
 
 
 
-	public List<String> createAttributeEqualities(Collection<Atom> source) {
+	public List<String> createAttributeEqualities(Atom[] source) {
 		List<String> attributePredicates = new ArrayList<String>();
 		Collection<Term> terms = Utility.getTerms(source);
 		terms = Utility.removeDuplicates(terms);
@@ -357,7 +357,7 @@ public abstract class SQLStatementBuilder {
 		return attributePredicates;
 	}
 
-	public List<String> createEqualitiesWithConstants(Collection<Atom> source) {
+	public List<String> createEqualitiesWithConstants(Atom[] source) {
 		List<String> constantPredicates = new ArrayList<>();
 		for (Atom fact:source) {
 			String alias = this.aliases.get(fact);
@@ -382,7 +382,7 @@ public abstract class SQLStatementBuilder {
 	 * @param constraints the constraints
 	 * @return 		predicates that correspond to fact constraints
 	 */
-	public List<String> translateFactProperties(Collection<Atom> source,  Map<String, Relation> relationNamesToRelationObjects, HomomorphismProperty... constraints) {
+	public List<String> translateFactProperties(Atom[] source,  Map<String, Relation> relationNamesToRelationObjects, HomomorphismProperty... constraints) {
 		List<String> setPredicates = new ArrayList<>();
 		for(HomomorphismProperty c:constraints) {
 			if(c instanceof FactProperty) {
@@ -406,7 +406,7 @@ public abstract class SQLStatementBuilder {
 	 * @param constraints the constraints
 	 * @return 		predicates that correspond to canonical constraints
 	 */
-	public List<String> createEqualitiesForHomomorphicProperties(Collection<Atom> source, HomomorphismProperty... constraints) {
+	public List<String> createEqualitiesForHomomorphicProperties(Atom[] source, HomomorphismProperty... constraints) {
 		List<String> constantPredicates = new ArrayList<>();
 		for(HomomorphismProperty c:constraints) {
 			if(c instanceof MapProperty) {

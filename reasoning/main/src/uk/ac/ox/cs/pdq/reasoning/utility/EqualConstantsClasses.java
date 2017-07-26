@@ -3,19 +3,18 @@ package uk.ac.ox.cs.pdq.reasoning.utility;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
+import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 
 import org.apache.commons.collections4.CollectionUtils;
 
+import com.google.common.base.Joiner;
+import com.google.common.base.Preconditions;
+
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.reasoning.chase.ChaseException;
-
-import com.beust.jcommander.internal.Sets;
-import com.google.common.base.Joiner;
-import com.google.common.base.Preconditions;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -54,15 +53,15 @@ public class EqualConstantsClasses {
 	 */
 	public boolean add(Atom equality) { 
 		Preconditions.checkArgument(equality.isEquality());
-		List<Term> terms = equality.getTerms();
-		EqualConstantsClass c0 = this.getClass(terms.get(0));
-		EqualConstantsClass c1 = this.getClass(terms.get(1));
+		Term[] terms = equality.getTerms();
+		EqualConstantsClass c0 = this.getClass(terms[0]);
+		EqualConstantsClass c1 = this.getClass(terms[1]);
 
 		if(c0 != null && c1 != null && c0.equals(c1)) {
 			return true;
 		}
 		if(c0 != null && c1 != null) {
-			if(c0.add(terms.get(1), c1)) {
+			if(c0.add(terms[1], c1)) {
 				if(!c0.equals(c1)) {
 					Set<EqualConstantsClass> classes = new HashSet<>();
 					Iterator<EqualConstantsClass> iterator = this.classes.iterator();
@@ -80,10 +79,10 @@ public class EqualConstantsClasses {
 			}
 		}
 		if(c0 != null) {
-			return c0.add(terms.get(1), c1);
+			return c0.add(terms[1], c1);
 		}
 		if(c1 != null) {
-			return c1.add(terms.get(0), c0);
+			return c1.add(terms[0], c0);
 		}
 		if(c0 == null && c1 == null) {
 			try {
@@ -177,7 +176,7 @@ public class EqualConstantsClasses {
 	 * 		Two classes of equal constants fail to merge if they contain different schema constants.
 	 */
 	public boolean merge(EqualConstantsClasses classes) {
-		Collection<EqualConstantsClass> classesToAppend = Sets.newHashSet();
+		Collection<EqualConstantsClass> classesToAppend = new LinkedHashSet<>();
 		for(EqualConstantsClass cls:this.classes) {
 			for(EqualConstantsClass target:classes.classes) {
 				if(CollectionUtils.containsAny(cls.getConstants(), target.getConstants())) {

@@ -1,7 +1,5 @@
 package uk.ac.ox.cs.pdq.reasoning.utility;
 
-import java.util.Collection;
-
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
 
@@ -22,6 +20,6 @@ public interface TGDDependencyAssessor {
 	 * @param state 		A collection of chase facts
 	 * @return 		the dependencies that are most likely to be fired in the next chase round.
 	 */
-	Collection<? extends Dependency> getDependencies(ChaseInstance state);
+	Dependency[] getDependencies(ChaseInstance state);
 	
 }

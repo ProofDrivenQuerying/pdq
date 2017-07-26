@@ -161,7 +161,7 @@ public class Utility {
 		return result;
 	}
 
-	public static Collection<Term> getTerms(Iterable<Atom> atoms) {
+	public static Collection<Term> getTerms(Atom[] atoms) {
 		Set<Term> result = new LinkedHashSet<>();
 		for (Atom atom:atoms) {
 			for (Term term:atom.getTerms()) 
@@ -522,8 +522,8 @@ public class Utility {
 	 */
 	public static ForeignKey createForeignKey(LinearGuarded dependency) {
 		ForeignKey foreignKey = new ForeignKey();
-		Atom left = dependency.getBody().getAtoms()[0];
-		Atom right = dependency.getHead().getAtoms()[0];
+		Atom left = dependency.getBodyAtom(0);
+		Atom right = dependency.getHeadAtom(0);
 		Relation leftRel = (Relation) left.getPredicate();
 		Relation rightRel = (Relation) right.getPredicate();
 		foreignKey.setForeignRelation(rightRel);
@@ -532,6 +532,16 @@ public class Utility {
 			foreignKey.addReference(new Reference(leftRel.getAttribute(Arrays.asList(left.getTerms()).indexOf(v)), rightRel.getAttribute(Arrays.asList(right.getTerms()).indexOf(v))));
 		}
 		return foreignKey;
+	}
+	
+	/**
+	 * Gets the term positions.
+	 *
+	 * @param term Term
+	 * @return List<Integer>
+	 */
+	public static List<Integer> getTermPositions(Atom atom, Term term) {
+		return Utility.search(atom.getTerms(), term);
 	}
 
 }

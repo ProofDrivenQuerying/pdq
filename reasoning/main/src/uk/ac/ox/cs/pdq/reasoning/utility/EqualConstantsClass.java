@@ -3,8 +3,11 @@ package uk.ac.ox.cs.pdq.reasoning.utility;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Objects;
+
+import com.google.common.base.Joiner;
+import com.google.common.base.Preconditions;
+import com.google.common.collect.Sets;
 
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
@@ -12,10 +15,6 @@ import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.reasoning.chase.ChaseException;
-
-import com.google.common.base.Joiner;
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Sets;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -29,7 +28,7 @@ public class EqualConstantsClass {
 	private final Collection<Term> constants;
 
 	/**  The schema constant that belongs to this class *. */
-	private TypedConstant<?> schemaConstant; 
+	private TypedConstant schemaConstant; 
 
 	/** The representative term. If this.schemaConstant <> null the representative should equal this.schemaConstant**/
 	private Term representative;
@@ -42,31 +41,34 @@ public class EqualConstantsClass {
 	 */
 	public EqualConstantsClass(Atom equality) throws ChaseException{
 		this.constants = new HashSet<>();
-		List<Term> terms = equality.getTerms();
-		Preconditions.checkArgument(terms.get(0) instanceof Constant && terms.get(1) instanceof Constant);
+		Term[] terms = equality.getTerms();
+		Preconditions.checkArgument(terms[0] instanceof Constant && terms[1] instanceof Constant);
 		//If both inputs are schema constants
-		if(terms.get(0) instanceof TypedConstant && terms.get(1) instanceof TypedConstant) {
-			if(!terms.get(0).equals(terms.get(1))) {
+		if(terms[0] instanceof TypedConstant && terms[1] instanceof TypedConstant) {
+			if(!terms[0].equals(terms[1])) {
 				throw new ChaseException("Trying to add different schema constants in the same class");
 			}
 			else {
 				//Create a class that keeps the input schema constant 
-				this.schemaConstant = (TypedConstant<?>) terms.get(0);
-				this.constants.add(terms.get(0));
+				this.schemaConstant = (TypedConstant) terms[0];
+				this.constants.add(terms[0]);
 			}
 		}
 		//If only one of the inputs is schema constant
-		else if(terms.get(0) instanceof TypedConstant) {
-			this.schemaConstant = (TypedConstant<?>) terms.get(0);
-			this.constants.addAll(terms);
+		else if(terms[0] instanceof TypedConstant) {
+			this.schemaConstant = (TypedConstant) terms[0];
+			this.constants.add(terms[0]);
+			this.constants.add(terms[1]);
 		}
-		else if(terms.get(1) instanceof TypedConstant) {
-			this.schemaConstant = (TypedConstant<?>) terms.get(1);
-			this.constants.addAll(terms);
+		else if(terms[1] instanceof TypedConstant) {
+			this.schemaConstant = (TypedConstant) terms[1];
+			this.constants.add(terms[0]);
+			this.constants.add(terms[1]);
 		}
 		else {
 			//If both inputs are chase constants
-			this.constants.addAll(equality.getTerms());
+			this.constants.add(terms[0]);
+			this.constants.add(terms[1]);
 		}
 		//Find out the representative. 
 		this.setRepresentative();
@@ -79,7 +81,7 @@ public class EqualConstantsClass {
 	 * @param representative the representative
 	 * @param schemaConstant the schema constant
 	 */
-	private EqualConstantsClass(Collection<Term> constants, Term representative, TypedConstant<?> schemaConstant) {
+	private EqualConstantsClass(Collection<Term> constants, Term representative, TypedConstant schemaConstant) {
 		Preconditions.checkNotNull(constants);
 		this.constants = new LinkedHashSet<>();
 		this.constants.addAll(constants);
@@ -100,7 +102,7 @@ public class EqualConstantsClass {
 		Preconditions.checkArgument(input instanceof Constant);
 		//If the input constant already belongs to a class
 		if(inputClass != null) {
-			TypedConstant<?> inputSchemaConstant = inputClass.getSchemaConstant();
+			TypedConstant inputSchemaConstant = inputClass.getSchemaConstant();
 			if(this.schemaConstant != null && inputSchemaConstant != null) {
 				if(!this.schemaConstant.equals(inputSchemaConstant)) {
 					return false;
@@ -134,7 +136,7 @@ public class EqualConstantsClass {
 			}
 			else if(this.schemaConstant == null) {
 				this.constants.add(input);
-				this.schemaConstant = (TypedConstant<?>) input;
+				this.schemaConstant = (TypedConstant) input;
 			}
 			else if(!(input instanceof TypedConstant)) {
 				this.constants.add(input);
@@ -198,7 +200,7 @@ public class EqualConstantsClass {
 	 *
 	 * @return the schema constant
 	 */
-	public TypedConstant<?> getSchemaConstant() {
+	public TypedConstant getSchemaConstant() {
 		return this.schemaConstant;
 	}
 

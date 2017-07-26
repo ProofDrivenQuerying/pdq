@@ -200,5 +200,15 @@ public class Literal extends Formula{
     public static Literal create(LogicalSymbols operator, Predicate predicate, Term... arguments) {
         return s_interningManager.intern(new Literal(operator, predicate, arguments));
     }
+    
+	@Override
+	public Formula getChild(int childIndex) {
+		return null;
+	}
+
+	@Override
+	public int getNumberOfChildlen() {
+		return 0;
+	}
 	
 }

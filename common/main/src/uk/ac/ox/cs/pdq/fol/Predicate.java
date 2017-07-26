@@ -89,5 +89,9 @@ public class Predicate {
     public static Predicate create(String name, Integer arity) {
         return s_interningManager.intern(new Predicate(name, arity));
     }
+    
+    public static Predicate create(String name, Integer arity, Boolean isEquality) {
+        return s_interningManager.intern(new Predicate(name, arity, isEquality));
+    }
 
 }

@@ -1,7 +1,5 @@
 package uk.ac.ox.cs.pdq.reasoning.chase;
 
-import java.util.Collection;
-
 import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.fol.Dependency;

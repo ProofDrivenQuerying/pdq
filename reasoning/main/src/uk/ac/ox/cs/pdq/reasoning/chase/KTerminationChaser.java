@@ -1,7 +1,8 @@
 package uk.ac.ox.cs.pdq.reasoning.chase;
 
-import java.util.Collection;
 import java.util.List;
+
+import com.google.common.base.Preconditions;
 
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.fol.Dependency;
@@ -10,8 +11,6 @@ import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance.LimitTofacts;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.TriggerProperty;
 import uk.ac.ox.cs.pdq.reasoning.utility.ReasonerUtility;
-
-import com.google.common.base.Preconditions;
 
 
 // TODO: Auto-generated Javadoc
@@ -51,7 +50,7 @@ public class KTerminationChaser extends RestrictedChaser {
 	 * @param dependencies Collection<? extends Constraint>
 	 */
 	@Override
-	public <S extends ChaseInstance> void reasonUntilTermination(S instance, Collection<? extends Dependency> dependencies) {
+	public <S extends ChaseInstance> void reasonUntilTermination(S instance, Dependency[] dependencies) {
 		Preconditions.checkArgument(instance instanceof ChaseInstance);
 		Preconditions.checkArgument(!ReasonerUtility.checkEGDs(dependencies), "KTerminationChaser is not allowed with EGDs");
 		int rounds = 0;

@@ -4,8 +4,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.db.TypedConstant;
@@ -36,264 +35,261 @@ public class TestUtility {
 	@Test 
 	public void testGround1() {
 		Predicate s1 = new Predicate("s", 5);
-		List<Term> t1 = Lists.<Term>newArrayList(
-				new Variable("x1"), new Variable("x2"), new UntypedConstant("x3"),
-				new Variable("x4"), new TypedConstant<>("x5")
-				);
+		Term[] t1 = new Term[]{
+				Variable.create("x1"), Variable.create("x2"), UntypedConstant.create("x3"),
+				Variable.create("x4"), TypedConstant.create("x5")
+		};
 		Predicate s2 = new Predicate("s", 2);
-		List<Term> t2 = Lists.<Term>newArrayList(
-				new TypedConstant<>("x5"), new Variable("x1"));
-		Atom p1 = new Atom(s1, t1);
-		Atom p2 = new Atom(s2, t2);
+		Term[] t2 = new Term[]{TypedConstant.create("x5"), Variable.create("x1")};
+		Atom p1 = Atom.create(s1, t1);
+		Atom p2 = Atom.create(s2, t2);
 		List<Term> g = Lists.<Term>newArrayList(
-				new TypedConstant<>("c1"), new TypedConstant<>("c2"),
-				new UntypedConstant("x3"), new TypedConstant<>("c4"),
-				new TypedConstant<>("x5")
+				TypedConstant.create("c1"), TypedConstant.create("c2"),
+				UntypedConstant.create("x3"), TypedConstant.create("c4"),
+				TypedConstant.create("x5")
 				);
 		Map<Variable, Constant> m = new LinkedHashMap<>();
-		m.put(new Variable("x1"), new TypedConstant<>("c1"));
-		m.put(new Variable("x2"), new TypedConstant<>("c2"));
-		m.put(new Variable("x4"), new TypedConstant<>("c4"));
+		m.put(Variable.create("x1"), TypedConstant.create("c1"));
+		m.put(Variable.create("x2"), TypedConstant.create("c2"));
+		m.put(Variable.create("x4"), TypedConstant.create("c4"));
 		Formula i = Conjunction.of(p1, p2);
 		Assert.assertEquals("Grounded conjunction must comply to mapping ", g, Utility.applySubstitution(i, m).getTerms());
 	}
-	
+
 	/**
 	 * Test ground.
 	 */
 	@Test 
 	public void testGround2() {
 		Predicate s = new Predicate("s", 5);
-		List<Term> t = Lists.<Term>newArrayList(
-				new Variable("x1"), new Variable("x2"), new UntypedConstant("x3"),
-				new Variable("x4"), new TypedConstant<>("x5")
-				);
-		List<Term> g = Lists.<Term>newArrayList(
-				new TypedConstant<>("c1"), new TypedConstant<>("c2"), new UntypedConstant("x3"),
-				new TypedConstant<>("c4"), new TypedConstant<>("x5")
-				);
+		Term[] t = new Term[]{
+				Variable.create("x1"), Variable.create("x2"), UntypedConstant.create("x3"),
+				Variable.create("x4"), TypedConstant.create("x5")
+		};
+		Term[] g = new Term[]{
+				TypedConstant.create("c1"), TypedConstant.create("c2"), UntypedConstant.create("x3"),
+				TypedConstant.create("c4"), TypedConstant.create("x5")
+		};
 		Map<Variable, Constant> m = new LinkedHashMap<>();
-		m.put(new Variable("x1"), new TypedConstant<>("c1"));
-		m.put(new Variable("x2"), new TypedConstant<>("c2"));
-		m.put(new Variable("x4"), new TypedConstant<>("c4"));
-		Atom p = new Atom(s, t);
-		Assert.assertEquals("Grounded negation must comply to mapping ",g, Utility.applySubstitution(p, m).getTerms());
+		m.put(Variable.create("x1"), TypedConstant.create("c1"));
+		m.put(Variable.create("x2"), TypedConstant.create("c2"));
+		m.put(Variable.create("x4"), TypedConstant.create("c4"));
+		Atom p = Atom.create(s, t);
+		Assert.assertArrayEquals("Grounded negation must comply to mapping ",g, Utility.applySubstitution(p, m).getTerms());
 	}
-	
+
 	/**
 	 * Test ground.
 	 */
 	@Test 
 	public void testGround3() {
 		Predicate s1 = new Predicate("s", 5);
-		List<Term> t1 = Lists.<Term>newArrayList(
-				new Variable("x1"), 
-				new Variable("x2"), 
-				new UntypedConstant("x3"),
-				new Variable("x4"), 
-				new TypedConstant<>("x5")
-				);
+		Term[] t1 = new Term[]{
+				Variable.create("x1"), 
+				Variable.create("x2"), 
+				UntypedConstant.create("x3"),
+				Variable.create("x4"), 
+				TypedConstant.create("x5")
+		};
 		Predicate s2 = new Predicate("s", 2);
-		List<Term> t2 = Lists.<Term>newArrayList(
-				new TypedConstant<>("x5"), 
-				new Variable("x1"));
-		Atom p1 = new Atom(s1, t1);
-		Atom p2 = new Atom(s2, t2);
-		List<Term> g = Lists.<Term>newArrayList(
-				new TypedConstant<>("c1"), 
-				new TypedConstant<>("c2"),
-				new UntypedConstant("x3"), 
-				new TypedConstant<>("c4"),
-				new TypedConstant<>("x5")
-				);
+		Term[] t2 =new Term[]{
+				TypedConstant.create("x5"), 
+				Variable.create("x1")};
+		Atom p1 = Atom.create(s1, t1);
+		Atom p2 = Atom.create(s2, t2);
+		Term[] g = new Term[]{
+				TypedConstant.create("c1"), 
+				TypedConstant.create("c2"),
+				UntypedConstant.create("x3"), 
+				TypedConstant.create("c4"),
+				TypedConstant.create("x5")
+		};
 		Map<Variable, Constant> m = new LinkedHashMap<>();
-		m.put(new Variable("x1"), new TypedConstant<>("c1"));
-		m.put(new Variable("x2"), new TypedConstant<>("c2"));
-		m.put(new Variable("x4"), new TypedConstant<>("c4"));
+		m.put(Variable.create("x1"), TypedConstant.create("c1"));
+		m.put(Variable.create("x2"), TypedConstant.create("c2"));
+		m.put(Variable.create("x4"), TypedConstant.create("c4"));
 		Formula i = Disjunction.of(p1, p2);
-		Assert.assertEquals("Grounded disjunction must comply to mapping ", g, Utility.applySubstitution(i, m).getTerms());
+		Assert.assertArrayEquals("Grounded disjunction must comply to mapping ", g, Utility.applySubstitution(i, m).getTerms());
 	}
-	
+
 	/**
 	 * Test ground.
 	 */
 	@Test 
 	public void testGround4() {
 		Predicate s1 = new Predicate("s", 5);
-		List<Term> t1 = Lists.<Term>newArrayList(
-				new Variable("x1"), 
-				new Variable("x2"), 
-				new UntypedConstant("x3"),
-				new Variable("x4"), 
-				new TypedConstant<>("x5")
-				);
+		Term[] t1 = new Term[]{
+				Variable.create("x1"), 
+				Variable.create("x2"), 
+				UntypedConstant.create("x3"),
+				Variable.create("x4"), 
+				TypedConstant.create("x5")
+		};
 		Predicate s2 = new Predicate("s", 2);
-		List<Term> t2 = Lists.<Term>newArrayList(
-				new TypedConstant<>("x5"), 
-				new Variable("x1"));
-		Atom p1 = new Atom(s1, t1);
-		Atom p2 = new Atom(s2, t2);
-		List<Term> g = Lists.<Term>newArrayList(
-				new TypedConstant<>("c1"), 
-				new TypedConstant<>("c2"),
-				new UntypedConstant("x3"), 
-				new TypedConstant<>("c4"),
-				new TypedConstant<>("x5")
-				);
+		Term[] t2 = new Term[]{
+				TypedConstant.create("x5"), 
+				Variable.create("x1")};
+		Atom p1 = Atom.create(s1, t1);
+		Atom p2 = Atom.create(s2, t2);
+		Term[] g = new Term[]{
+				TypedConstant.create("c1"), 
+				TypedConstant.create("c2"),
+				UntypedConstant.create("x3"), 
+				TypedConstant.create("c4"),
+				TypedConstant.create("x5")
+		};
 		Map<Variable, Constant> m = new LinkedHashMap<>();
-		m.put(new Variable("x1"), new TypedConstant<>("c1"));
-		m.put(new Variable("x2"), new TypedConstant<>("c2"));
-		m.put(new Variable("x4"), new TypedConstant<>("c4"));
+		m.put(Variable.create("x1"), TypedConstant.create("c1"));
+		m.put(Variable.create("x2"), TypedConstant.create("c2"));
+		m.put(Variable.create("x4"), TypedConstant.create("c4"));
 		Formula i = Implication.of(p1, p2);
-		Assert.assertEquals("Grounded negation must comply to mapping ", g, Utility.applySubstitution(i, m).getTerms());
+		Assert.assertArrayEquals("Grounded negation must comply to mapping ", g, Utility.applySubstitution(i, m).getTerms());
 	}
-	
 
-//	/**
-//	 * Test ground universal.
-//	 */
-//	@Test public void testGroundUniversal() {
-//		Predicate s = new Predicate("s", 5);
-//		List<Term> t = Lists.<Term>newArrayList(
-//				new Variable("x1"), 
-//				new Variable("x2"), 
-//				new UntypedConstant("x3"),
-//				new Variable("x4"), 
-//				new TypedConstant<>("x5")
-//				);
-//		List<Term> g = Lists.<Term>newArrayList(
-//				new Variable("x1"), 
-//				new TypedConstant<>("c2"), 
-//				new UntypedConstant("x3"),
-//				new TypedConstant<>("c4"), 
-//				new TypedConstant<>("x5")
-//				);
-//		Map<Variable, Constant> m = new LinkedHashMap<>();
-//		m.put(new Variable("x2"), new TypedConstant<>("c2"));
-//		m.put(new Variable("x4"), new TypedConstant<>("c4"));
-//		Atom p = new Atom(s, t);
-//		List<Variable> v = Lists.newArrayList(new Variable("x1"));
-//		QuantifiedFormula n = new QuantifiedFormula(LogicalSymbols.UNIVERSAL, v, p);
-//		Assert.assertEquals("Grounded universal must comply to mapping ", g, n.ground(m).getTerms());
-//	}
-//	
-//
-//	/**
-//	 * Test ground universal invalid.
-//	 */
-//	@Test(expected=IllegalArgumentException.class)
-//	public void testGroundUniversalInvalid() {
-//		Predicate s = new Predicate("s", 5);
-//		List<Term> t = Lists.<Term>newArrayList(
-//				new Variable("x1"), 
-//				new Variable("x2"), 
-//				new UntypedConstant("x3"),
-//				new Variable("x4"), 
-//				new TypedConstant<>("x5")
-//				);
-//		List<Term> g = Lists.<Term>newArrayList(
-//				new Variable("x1"), 
-//				new TypedConstant<>("c2"), 
-//				new UntypedConstant("x3"),
-//				new TypedConstant<>("c4"), 
-//				new TypedConstant<>("x5")
-//				);
-//		Map<Variable, Constant> m = new LinkedHashMap<>();
-//		m.put(new Variable("x1"), new TypedConstant<>("c1"));
-//		m.put(new Variable("x2"), new TypedConstant<>("c2"));
-//		m.put(new Variable("x4"), new TypedConstant<>("c4"));
-//		Atom p = new Atom(s, t);
-//		List<Variable> v = Lists.newArrayList(new Variable("x1"));
-//		QuantifiedFormula n = new QuantifiedFormula(LogicalSymbols.UNIVERSAL, v, p);
-//		Assert.assertEquals("Grounded universal must comply to mapping ", g, n.ground(m).getTerms());
-//	}
-//	
-//	/**
-//	 * Test ground existential invalid.
-//	 */
-//	@Test(expected=IllegalArgumentException.class)
-//	public void testGroundExistentialInvalid() {
-//		Predicate s = new Predicate("s", 5);
-//		List<Term> t = Lists.<Term>newArrayList(
-//				new Variable("x1"), 
-//				new Variable("x2"), 
-//				new UntypedConstant("x3"),
-//				new Variable("x4"), 
-//				new TypedConstant<>("x5")
-//				);
-//		List<Term> g = Lists.<Term>newArrayList(
-//				new TypedConstant<>("c1"), 
-//				new TypedConstant<>("c2"), 
-//				new UntypedConstant("x3"),
-//				new TypedConstant<>("c4"), 
-//				new TypedConstant<>("x5")
-//				);
-//		Map<Variable, Constant> m = new LinkedHashMap<>();
-//		m.put(new Variable("x1"), new TypedConstant<>("c1"));
-//		m.put(new Variable("x2"), new TypedConstant<>("c2"));
-//		m.put(new Variable("x4"), new TypedConstant<>("c4"));
-//		Atom p = new Atom(s, t);
-//		List<Variable> v = Lists.newArrayList(new Variable("x1"));
-//		QuantifiedFormula n = new QuantifiedFormula(LogicalSymbols.EXISTENTIAL, v, p);
-//		Assert.assertEquals("Grounded universal must comply to mapping ", g, n.ground(m).getTerms());
-//	}
-//	
-//
-//	/**
-//	 * Test ground existential.
-//	 */
-//	@Test public void testGroundExistential() {
-//		Predicate s = new Predicate("s", 5);
-//		List<Term> t = Lists.<Term>newArrayList(
-//				new Variable("x1"), 
-//				new Variable("x2"), 
-//				new UntypedConstant("x3"),
-//				new Variable("x4"), 
-//				new TypedConstant<>("x5")
-//				);
-//		List<Term> g = Lists.<Term>newArrayList(
-//				new Variable("x1"), 
-//				new TypedConstant<>("c2"), 
-//				new UntypedConstant("x3"),
-//				new TypedConstant<>("c4"), 
-//				new TypedConstant<>("x5")
-//				);
-//		Map<Variable, Constant> m = new LinkedHashMap<>();
-//		m.put(new Variable("x2"), new TypedConstant<>("c2"));
-//		m.put(new Variable("x4"), new TypedConstant<>("c4"));
-//		Atom p = new Atom(s, t);
-//		List<Variable> v = Lists.newArrayList(new Variable("x1"));
-//		QuantifiedFormula n = new QuantifiedFormula(LogicalSymbols.EXISTENTIAL, v, p);
-//		Assert.assertEquals("Grounded universal must comply to mapping ", g, n.ground(m).getTerms());
-//	}
-	
+
+	//	/**
+	//	 * Test ground universal.
+	//	 */
+	//	@Test public void testGroundUniversal() {
+	//		Predicate s = new Predicate("s", 5);
+	//		List<Term> t = Lists.<Term>newArrayList(
+	//				Variable.create("x1"), 
+	//				Variable.create("x2"), 
+	//				UntypedConstant.create("x3"),
+	//				Variable.create("x4"), 
+	//				TypedConstant.create("x5")
+	//				);
+	//		List<Term> g = Lists.<Term>newArrayList(
+	//				Variable.create("x1"), 
+	//				TypedConstant.create("c2"), 
+	//				UntypedConstant.create("x3"),
+	//				TypedConstant.create("c4"), 
+	//				TypedConstant.create("x5")
+	//				);
+	//		Map<Variable, Constant> m = new LinkedHashMap<>();
+	//		m.put(Variable.create("x2"), TypedConstant.create("c2"));
+	//		m.put(Variable.create("x4"), TypedConstant.create("c4"));
+	//		Atom p = Atom.create(s, t);
+	//		List<Variable> v = Lists.newArrayList(Variable.create("x1"));
+	//		QuantifiedFormula n = new QuantifiedFormula(LogicalSymbols.UNIVERSAL, v, p);
+	//		Assert.assertEquals("Grounded universal must comply to mapping ", g, n.ground(m).getTerms());
+	//	}
+	//	
+	//
+	//	/**
+	//	 * Test ground universal invalid.
+	//	 */
+	//	@Test(expected=IllegalArgumentException.class)
+	//	public void testGroundUniversalInvalid() {
+	//		Predicate s = new Predicate("s", 5);
+	//		List<Term> t = Lists.<Term>newArrayList(
+	//				Variable.create("x1"), 
+	//				Variable.create("x2"), 
+	//				UntypedConstant.create("x3"),
+	//				Variable.create("x4"), 
+	//				TypedConstant.create("x5")
+	//				);
+	//		List<Term> g = Lists.<Term>newArrayList(
+	//				Variable.create("x1"), 
+	//				TypedConstant.create("c2"), 
+	//				UntypedConstant.create("x3"),
+	//				TypedConstant.create("c4"), 
+	//				TypedConstant.create("x5")
+	//				);
+	//		Map<Variable, Constant> m = new LinkedHashMap<>();
+	//		m.put(Variable.create("x1"), TypedConstant.create("c1"));
+	//		m.put(Variable.create("x2"), TypedConstant.create("c2"));
+	//		m.put(Variable.create("x4"), TypedConstant.create("c4"));
+	//		Atom p = Atom.create(s, t);
+	//		List<Variable> v = Lists.newArrayList(Variable.create("x1"));
+	//		QuantifiedFormula n = new QuantifiedFormula(LogicalSymbols.UNIVERSAL, v, p);
+	//		Assert.assertEquals("Grounded universal must comply to mapping ", g, n.ground(m).getTerms());
+	//	}
+	//	
+	//	/**
+	//	 * Test ground existential invalid.
+	//	 */
+	//	@Test(expected=IllegalArgumentException.class)
+	//	public void testGroundExistentialInvalid() {
+	//		Predicate s = new Predicate("s", 5);
+	//		List<Term> t = Lists.<Term>newArrayList(
+	//				Variable.create("x1"), 
+	//				Variable.create("x2"), 
+	//				UntypedConstant.create("x3"),
+	//				Variable.create("x4"), 
+	//				TypedConstant.create("x5")
+	//				);
+	//		List<Term> g = Lists.<Term>newArrayList(
+	//				TypedConstant.create("c1"), 
+	//				TypedConstant.create("c2"), 
+	//				UntypedConstant.create("x3"),
+	//				TypedConstant.create("c4"), 
+	//				TypedConstant.create("x5")
+	//				);
+	//		Map<Variable, Constant> m = new LinkedHashMap<>();
+	//		m.put(Variable.create("x1"), TypedConstant.create("c1"));
+	//		m.put(Variable.create("x2"), TypedConstant.create("c2"));
+	//		m.put(Variable.create("x4"), TypedConstant.create("c4"));
+	//		Atom p = Atom.create(s, t);
+	//		List<Variable> v = Lists.newArrayList(Variable.create("x1"));
+	//		QuantifiedFormula n = new QuantifiedFormula(LogicalSymbols.EXISTENTIAL, v, p);
+	//		Assert.assertEquals("Grounded universal must comply to mapping ", g, n.ground(m).getTerms());
+	//	}
+	//	
+	//
+	//	/**
+	//	 * Test ground existential.
+	//	 */
+	//	@Test public void testGroundExistential() {
+	//		Predicate s = new Predicate("s", 5);
+	//		List<Term> t = Lists.<Term>newArrayList(
+	//				Variable.create("x1"), 
+	//				Variable.create("x2"), 
+	//				UntypedConstant.create("x3"),
+	//				Variable.create("x4"), 
+	//				TypedConstant.create("x5")
+	//				);
+	//		List<Term> g = Lists.<Term>newArrayList(
+	//				Variable.create("x1"), 
+	//				TypedConstant.create("c2"), 
+	//				UntypedConstant.create("x3"),
+	//				TypedConstant.create("c4"), 
+	//				TypedConstant.create("x5")
+	//				);
+	//		Map<Variable, Constant> m = new LinkedHashMap<>();
+	//		m.put(Variable.create("x2"), TypedConstant.create("c2"));
+	//		m.put(Variable.create("x4"), TypedConstant.create("c4"));
+	//		Atom p = Atom.create(s, t);
+	//		List<Variable> v = Lists.newArrayList(Variable.create("x1"));
+	//		QuantifiedFormula n = new QuantifiedFormula(LogicalSymbols.EXISTENTIAL, v, p);
+	//		Assert.assertEquals("Grounded universal must comply to mapping ", g, n.ground(m).getTerms());
+	//	}
+
 	/**
 	 * Test ground.
 	 */
 	@Test public void testGround() {
 		Predicate s1 = new Predicate("s", 5);
-		List<Term> t1 = Lists.<Term>newArrayList(
-				new Variable("x1"), 
-				new Variable("x2"), 
-				new UntypedConstant("x3"),
-				new Variable("x4"), 
-				new TypedConstant<>("x5"));
+		Term[] t1 = new Term[]{
+				Variable.create("x1"), 
+				Variable.create("x2"), 
+				UntypedConstant.create("x3"),
+				Variable.create("x4"), 
+				TypedConstant.create("x5")};
 		Predicate s2 = new Predicate("s", 2);
-		List<Term> t2 = Lists.<Term>newArrayList(
-				new TypedConstant<>("x5"), 
-				new Variable("x1"));
-		Atom p1 = new Atom(s1, t1);
-		Atom p2 = new Atom(s2, t2);
+		Term[] t2 = new Term[]{TypedConstant.create("x5"), Variable.create("x1")};
+		Atom p1 = Atom.create(s1, t1);
+		Atom p2 = Atom.create(s2, t2);
 		List<Term> g = Lists.<Term>newArrayList(
-				new TypedConstant<>("c1"), 
-				new TypedConstant<>("c2"),
-				new UntypedConstant("x3"), 
-				new TypedConstant<>("c4"),
-				new TypedConstant<>("x5"));
+				TypedConstant.create("c1"), 
+				TypedConstant.create("c2"),
+				UntypedConstant.create("x3"), 
+				TypedConstant.create("c4"),
+				TypedConstant.create("x5"));
 		Map<Variable, Constant> m = new LinkedHashMap<>();
-		m.put(new Variable("x1"), new TypedConstant<>("c1"));
-		m.put(new Variable("x2"), new TypedConstant<>("c2"));
-		m.put(new Variable("x4"), new TypedConstant<>("c4"));
+		m.put(Variable.create("x1"), TypedConstant.create("c1"));
+		m.put(Variable.create("x2"), TypedConstant.create("c2"));
+		m.put(Variable.create("x4"), TypedConstant.create("c4"));
 		Conjunction i = (Conjunction) Conjunction.of(p1, p2);
 		Assert.assertEquals("Grounded conjunction must comply to mapping ", g, Utility.applySubstitution(i, m).getTerms());
 	}

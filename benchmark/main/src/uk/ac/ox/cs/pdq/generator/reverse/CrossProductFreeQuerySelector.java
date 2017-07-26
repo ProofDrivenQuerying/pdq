@@ -31,8 +31,8 @@ public class CrossProductFreeQuerySelector implements QuerySelector {
 	 */
 	@Override
 	public boolean accept(ConjunctiveQuery q) {
-		for (Conjunction body : this.enumerateConjunctions(q.getChildren().get(0))) {
-			if (body.getChildren().size() > 1) {
+		for (Conjunction body : this.enumerateConjunctions(q.getChild(0))) {
+			if (body.getNumberOfChildlen() > 1) {
 				Multimap<Term, Atom> clusters = LinkedHashMultimap.create();
 				for (Atom pred: body.getAtoms()) {
 					for (Term t: pred.getTerms()) {

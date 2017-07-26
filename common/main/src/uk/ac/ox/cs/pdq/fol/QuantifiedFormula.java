@@ -183,4 +183,15 @@ public class QuantifiedFormula extends Formula {
     public static QuantifiedFormula create(LogicalSymbols operator, Variable[] variables, Formula child) {
         return s_interningManager.intern(new QuantifiedFormula(operator, variables, child));
     }
+    
+	@Override
+	public Formula getChild(int childIndex) {
+		Assert.assertTrue(childIndex == 0);
+		return this.child;
+	}
+
+	@Override
+	public int getNumberOfChildlen() {
+		return 1;
+	}
 }

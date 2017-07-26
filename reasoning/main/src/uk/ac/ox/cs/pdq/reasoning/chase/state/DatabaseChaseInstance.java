@@ -3,6 +3,7 @@ package uk.ac.ox.cs.pdq.reasoning.chase.state;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -139,7 +140,6 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 	}
 
 
-
 	/**
 	 *
 	 * 
@@ -152,9 +152,8 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		Multimap<Constant, Atom> constantsToAtoms = HashMultimap.create();
 		for(Atom fact:facts) {
 			Preconditions.checkArgument(!fact.isEquality());
-			for(Term term:fact.getTerms()) {
+			for(Term term:fact.getTerms()) 
 				constantsToAtoms.put((Constant)term, fact);
-			}
 		}
 		return constantsToAtoms;
 	}
@@ -172,15 +171,13 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		//sqlStatement.addBatch(this.getDatabaseConnection().getBuilder().createColumnIndexStatement(equalityRelation, equalityRelation.getAttribute(equalityRelation.getArity()-1)));
 		//Create indices for the joins in the body of the dependencies
 		Set<String> joinIndexes = Sets.newLinkedHashSet();
-		for (Dependency constraint:schema.getDependencies()) {
+		for (Dependency constraint:schema.getDependencies()) 
 			joinIndexes.addAll(this.getDatabaseConnection().getBuilder().setupIndices(false, this.relationNamesToRelationObjects, constraint, this.existingIndices).getLeft());
-		}
-		for (String b: joinIndexes) {
+		for (String b: joinIndexes) 
 			sqlStatement.addBatch(b);
-		}
 		sqlStatement.executeBatch();
 	}
-	
+
 	/**
 	 * Creates indices in the RDBMS for the last position of every relation schema
 	 * 
@@ -188,30 +185,25 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 	 */
 	private void indexLastAttributeOfAllRelations() throws SQLException {
 		Statement sqlStatement = this.getDatabaseConnection().getSynchronousConnections().get(0).createStatement();
-
 		for(Relation relation:this.relationNamesToRelationObjects.values())
 			sqlStatement.addBatch(this.getDatabaseConnection().getBuilder().createColumnIndexStatement(relation, relation.getAttribute(relation.getArity()-1)));
-		
 		sqlStatement.executeBatch();
 	}
-	
+
 	/**
 	 * Creates an "equality" relation for storing terms in the chase that are equated by EGDs
 	 * 
 	 * @return
 	 */
 	private Relation createDatabaseEqualityRelation() {	
-		
 		String attrPrefix = "x";
-		
-		Attribute Fact = new Attribute(Integer.class, "FactID");
-		List<Attribute> attributes = new ArrayList<>();
-		attributes.add(new Attribute(String.class, attrPrefix + 0));
-		attributes.add(new Attribute(String.class, attrPrefix + 1));
-		attributes.add(Fact);
-		return new Relation(QNames.EQUALITY.toString(), attributes, true){};
+		Attribute Fact = Attribute.create(Integer.class, "FactID");
+		Attribute[] attributes = new Attribute[]{Attribute.create(String.class, attrPrefix + 0),
+				Attribute.create(String.class, attrPrefix + 1), Fact};
+		return new Relation(QNames.EQUALITY.toString(), attributes, true){
+			private static final long serialVersionUID = -5013454684785833853L;};
 	}	
-	
+
 	/**
 	 * Updates that state given the input match. 
 	 *
@@ -257,15 +249,14 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 			Preconditions.checkArgument(dependency instanceof TGD, "EGDs are not allowed inside TGDchaseStep");
 			Map<Variable, Constant> mapping = match.getMapping();
 			Implication grounded = uk.ac.ox.cs.pdq.reasoning.chase.Utility.fire(dependency, mapping, true);
-			Formula left = grounded.getChildren().get(0);
-			Formula right = grounded.getChildren().get(1);
+//			Formula left = grounded.getChild(0);
+			Formula right = grounded.getChild(1);
 			//Add information about new facts to constantsToAtoms
 			for(Atom atom:right.getAtoms()) {
-				for(Term term:atom.getTerms()) {
+				for(Term term:atom.getTerms()) 
 					this.constantsToAtoms.put((Constant)term, atom);
-				}
 			}
-			newFacts.addAll(right.getAtoms());
+			newFacts.addAll(Arrays.asList(right.getAtoms()));
 		}
 		//Add the newly created facts to the database
 		this.addFacts(newFacts);
@@ -295,16 +286,16 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 			Preconditions.checkArgument(dependency instanceof EGD, "TGDs are not allowed inside EGDchaseStep");
 			Map<Variable, Constant> mapping = match.getMapping();
 			Implication grounded = uk.ac.ox.cs.pdq.reasoning.chase.Utility.fire(dependency, mapping);
-			Formula left = grounded.getChildren().get(0);
-			Formula right = grounded.getChildren().get(1);
+			Formula left = grounded.getChild(0);
+			Formula right = grounded.getChild(1);
 			for(Atom atom:right.getAtoms()) {
 				//Find all the constants that each constant in the equality is representing 
 				obsoleteToRepresentative.putAll(this.updateEqualConstantClasses(atom));
-				if(this._isFailed) {
+				if(this._isFailed) 
 					return false;
-				}
+				
 				//Equalities should be added into the database 
-				newFacts.addAll(right.getAtoms());
+				newFacts.addAll(Arrays.asList(right.getAtoms()));
 			}	
 		}
 
@@ -317,12 +308,12 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		}
 
 		for(Atom fact:obsoleteFacts) {
-			List<Term> newTerms = Lists.newArrayList();
-			for(Term term:fact.getTerms()) {
-				EqualConstantsClass cls = this.classes.getClass(term);
-				newTerms.add(cls != null ? cls.getRepresentative() : term);
+			Term[] newTerms = new Term[fact.getNumberOfTerms()];
+			for(int termIndex = 0; termIndex < fact.getNumberOfTerms(); ++termIndex) {
+				EqualConstantsClass cls = this.classes.getClass(fact.getTerm(termIndex));
+				newTerms[termIndex] = cls != null ? cls.getRepresentative() : fact.getTerm(termIndex);
 			}
-			Atom newFact = new Atom(fact.getPredicate(), newTerms);
+			Atom newFact = Atom.create(fact.getPredicate(), newTerms);
 			newFacts.add(newFact);
 
 			//Add information about new facts to constantsToAtoms
@@ -445,14 +436,12 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 
 	private Collection<Atom> extendFactsUsingFactID(Collection<Atom> facts) {		
 		Collection<Atom> extendedFacts = new LinkedHashSet<Atom>();
-		
-		for(Atom f: facts)
-		{
-			ArrayList<Term> terms = new ArrayList<Term>(f.getTerms());
-			terms.add(new TypedConstant<Integer>(f.getId()));
-			extendedFacts.add(new Atom(f.getPredicate(), terms)); 
+		for(Atom f: facts) {
+			Term[] terms = new Term[f.getNumberOfTerms() + 1];
+			System.arraycopy(f.getTerms(), 0, terms, 0, f.getNumberOfTerms());
+			terms[terms.length - 1] = TypedConstant.create(f.getId());
+			extendedFacts.add(Atom.create(f.getPredicate(), terms)); 
 		}
-		
 		return extendedFacts;
 	}
 
@@ -517,7 +506,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		Queue<Triple<Formula, String, LinkedHashMap<String, Variable>>> queries = new ConcurrentLinkedQueue<>();
 		//Create a new query out of each input query that references only the cleaned predicates
 		ConjunctiveQuery converted = this.convert(query);
-		HomomorphismProperty[] c = null;
+//		HomomorphismProperty[] c = null;
 		//Create an SQL statement for the cleaned query
 		Pair<String, LinkedHashMap<String, Variable>> pair = createQuery(converted, properties);
 		queries.add(Triple.of((Formula)query, pair.getLeft(), pair.getRight()));
@@ -573,43 +562,48 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 	 */
 	private Dependency convert(Dependency source) {
 		int f = 0;
-		List<Formula> left = Lists.newArrayList();
-		for(Atom atom:((Dependency) source).getBody().getAtoms()) {
+		Formula[] left = new Formula[source.getNumberOfBodyAtoms()];
+		for(int bodyAtomIndex = 0; bodyAtomIndex < source.getNumberOfBodyAtoms(); ++bodyAtomIndex) {
+			Atom atom = source.getBodyAtom(bodyAtomIndex);
 			Relation relation = this.relationNamesToRelationObjects.get(atom.getPredicate().getName());
-			List<Term> terms = Lists.newArrayList(atom.getTerms());
-			terms.add(new Variable("fact" + f++));
-			left.add(new Atom(relation, terms));
+			Term[] terms = new Term[atom.getNumberOfTerms() + 1];
+			System.arraycopy(atom.getTerms(), 0, terms, 0, atom.getNumberOfTerms());
+			terms[terms.length-1] = Variable.create("fact" + f++);
+			left[bodyAtomIndex] = Atom.create(relation, terms);
 		}
-		List<Formula> right = Lists.newArrayList();
-		for(Atom atom:((Dependency) source).getHead().getAtoms()) {
+		Formula[] right = new Formula[source.getNumberOfHeadAtoms()];
+		for(int headAtomIndex = 0; headAtomIndex < source.getNumberOfHeadAtoms(); ++headAtomIndex) {
+			Atom atom = source.getHeadAtom(headAtomIndex);
 			Relation relation = this.relationNamesToRelationObjects.get(atom.getPredicate().getName());
-			List<Term> terms = Lists.newArrayList(atom.getTerms());
-			terms.add(new Variable("fact" + f++));
-			right.add(new Atom(relation, terms));
+			Term[] terms = new Term[atom.getNumberOfTerms() + 1];
+			System.arraycopy(atom.getTerms(), 0, terms, 0, atom.getNumberOfTerms());
+			terms[terms.length-1] = Variable.create("fact" + f++);
+			right[headAtomIndex] = Atom.create(relation, terms);
 		}
-		if(source instanceof TGD || source instanceof EGD) {
-			return new TGD(Conjunction.of(left), Conjunction.of(right));
-		}
-		throw new java.lang.RuntimeException("Unsupported formula type.");
+		if(source instanceof TGD || source instanceof EGD) 
+			return TGD.create(Conjunction.of(left), Conjunction.of(right));
+		else
+			throw new java.lang.RuntimeException("Unsupported formula type.");
 	}
 
 
 	private ConjunctiveQuery convert(ConjunctiveQuery source) {
 		int f = 0;
-		List<Formula> body = Lists.newArrayList();
-		for(Atom atom:((ConjunctiveQuery) source).getAtoms()) {
+		Formula[] body = new Formula[source.getNumberOfAtoms()];
+		for(int atomIndex = 0; atomIndex < source.getNumberOfAtoms(); ++atomIndex) {
+			Atom atom = source.getAtom(atomIndex);
 			Relation relation = this.relationNamesToRelationObjects.get(atom.getPredicate().getName());
-			List<Term> terms = Lists.newArrayList(atom.getTerms());
-			terms.add(new Variable("fact" + f++));
-			body.add(new Atom(relation, terms));
+			Term[] terms = new Term[atom.getNumberOfTerms() + 1];
+			System.arraycopy(atom.getTerms(), 0, terms, 0, atom.getNumberOfTerms());
+			terms[terms.length-1] = Variable.create("fact" + f++);
+			body[atomIndex] = Atom.create(relation, terms);
 		}
-		if(body.size() == 1) {
-			return new ConjunctiveQuery(((ConjunctiveQuery) source).getFreeVariables(), (Atom)body.get(0));
-		}
-		else {
-			return new ConjunctiveQuery(((ConjunctiveQuery) source).getFreeVariables(), (Conjunction) Conjunction.of(body));
-		}
+		if(body.length == 1) 
+			return ConjunctiveQuery.create(((ConjunctiveQuery) source).getFreeVariables(), (Atom)body[0]);
+		else 
+			return ConjunctiveQuery.create(((ConjunctiveQuery) source).getFreeVariables(), (Conjunction) Conjunction.of(body));
 		
+
 	}
 	public enum LimitTofacts{
 		ALL,
@@ -683,7 +677,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 			List<String> nestedConstantEqualities = this.builder.createEqualitiesWithConstants(source.getAtoms());
 			predicates2.addAll(nestedAttributeEqualities);
 			predicates2.addAll(nestedConstantEqualities);
-			
+
 			/*
 			 * if the target set of facts is not null, we
 			 * add in the WHERE statement a predicate which limits the identifiers
@@ -691,7 +685,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 			 */
 			List<String> nestedFactproperties = this.builder.translateFactProperties(source.getHead().getAtoms(), relationNamesToRelationObjects, constraints);
 			predicates2.addAll(nestedFactproperties);
-			
+
 			String query2 = 
 					"(SELECT " 	+ Joiner.on(",").join(nestedProjections.keySet()) + "\n" +  
 							"FROM " 	+ Joiner.on(",").join(from2);
@@ -709,14 +703,14 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		if(limit != null) {
 			query += "\n" + limit;
 		}
-		
+
 		log.trace(source);
 		log.trace(query);
 		log.trace("\n\n");
 		return Pair.of(query, projections);
 	}
-	
-	
+
+
 	public Pair<String,LinkedHashMap<String,Variable>> createQuery(ConjunctiveQuery source, HomomorphismProperty[] constraints) {
 		String query = "";
 		List<String> from = this.builder.createFromStatement(source.getAtoms());
@@ -750,7 +744,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		if(limit != null) {
 			query += "\n" + limit;
 		}
-		
+
 		log.trace(source);
 		log.trace(query);
 		log.trace("\n\n");
@@ -772,17 +766,19 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 			List<String> attributePredicates = new ArrayList<String>();
 			//The right atom should be an equality
 			//We add additional checks to be sure that we have to do with EGDs
-			for(Atom rightAtom:source.getHead().getAtoms()) {
+			for(int headAtomIndex = 0; headAtomIndex < source.getNumberOfHeadAtoms(); ++headAtomIndex) {
+				Atom rightAtom = source.getHeadAtom(headAtomIndex);
 				Relation rightRelation = (Relation) rightAtom.getPredicate();
 				String rightAlias = this.builder.aliases.get(rightAtom);
 				Map<Integer,Pair<String,Attribute>> rightToLeft = new HashMap<Integer,Pair<String,Attribute>>();
 				for(Term term:rightAtom.getTerms()) {
-					List<Integer> rightPositions = rightAtom.getTermPositions(term); //all the positions for the same term should be equated
+					List<Integer> rightPositions = Utility.getTermPositions(rightAtom, term); //all the positions for the same term should be equated
 					Preconditions.checkArgument(rightPositions.size() == 1);
-					for(Atom leftAtom:source.getBody().getAtoms()) {
+					for(int bodyAtomIndex = 0; bodyAtomIndex < source.getNumberOfBodyAtoms(); ++bodyAtomIndex) {
+						Atom leftAtom = source.getBodyAtom(bodyAtomIndex);
 						Relation leftRelation = (Relation) leftAtom.getPredicate();
 						String leftAlias = this.builder.aliases.get(leftAtom);
-						List<Integer> leftPositions = leftAtom.getTermPositions(term); 
+						List<Integer> leftPositions = Utility.getTermPositions(leftAtom, term);
 						Preconditions.checkArgument(leftPositions.size() <= 1);
 						if(leftPositions.size() == 1) {
 							rightToLeft.put(rightPositions.get(0), Pair.of(leftAlias==null ? leftRelation.getName():leftAlias, leftRelation.getAttribute(leftPositions.get(0))));
@@ -792,44 +788,44 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 				Preconditions.checkArgument(rightToLeft.size()==2);
 				Iterator<Entry<Integer, Pair<String, Attribute>>> entries;
 				Entry<Integer, Pair<String, Attribute>> entry;
-				
+
 				entries = rightToLeft.entrySet().iterator();
 				entry = entries.next();
-				
+
 				StringBuilder result = new StringBuilder();
 				result.append("(");
 				result.append(entry.getValue().getLeft()).append(".").append(entry.getValue().getRight().getName()).append('=');
 				result.append(rightAlias==null ? rightRelation.getName():rightAlias).append(".").append(rightRelation.getAttribute(0).getName());
-				
+
 				entry = entries.next();
-				
+
 				result.append(" AND ");
 				result.append(entry.getValue().getLeft()).append(".").append(entry.getValue().getRight().getName()).append('=');
 				result.append(rightAlias==null ? rightRelation.getName():rightAlias).append(".").append(rightRelation.getAttribute(1).getName());
-				
+
 				entries = rightToLeft.entrySet().iterator();
 				entry = entries.next();
-	
+
 				result.append(" OR ");
 				result.append(entry.getValue().getLeft()).append(".").append(entry.getValue().getRight().getName()).append('=');
 				result.append(rightAlias==null ? rightRelation.getName():rightAlias).append(".").append(rightRelation.getAttribute(1).getName());
-				
+
 				entry = entries.next();
-				
+
 				result.append(" AND ");
 				result.append(entry.getValue().getLeft()).append(".").append(entry.getValue().getRight().getName()).append('=');
 				result.append(rightAlias==null ? rightRelation.getName():rightAlias).append(".").append(rightRelation.getAttribute(0).getName());
-				
+
 				result.append(")");
 
 				attributePredicates.add(result.toString());
-				
+
 			}
 			return attributePredicates;
 		}
 	}
-	
-	
+
+
 	/**
 	 * Translate egd homomorphism constraints.
 	 * TOCOMMENT: I am not sure what this is for. It seems to be returning the part of the where clause of an sql query that compares
@@ -843,17 +839,17 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 	public String translateEGDHomomorphicProperties(Dependency source, Map<String, Relation> relationNamesToRelationObjects,HomomorphismProperty... constraints) {
 		for(HomomorphismProperty c:constraints) {
 			if(c instanceof EGDHomomorphismProperty) {
-				List<Atom> conjuncts = source.getBody().getAtoms();
-				String lalias = this.builder.aliases.get(conjuncts.get(0));
-				String ralias = this.builder.aliases.get(conjuncts.get(1));
-				lalias = lalias==null ? conjuncts.get(0).getPredicate().getName():lalias;
-				ralias = ralias==null ? conjuncts.get(1).getPredicate().getName():ralias;
+				Atom[] conjuncts = source.getBody().getAtoms();
+				String lalias = this.builder.aliases.get(conjuncts[0]);
+				String ralias = this.builder.aliases.get(conjuncts[1]);
+				lalias = lalias==null ? conjuncts[0].getPredicate().getName():lalias;
+				ralias = ralias==null ? conjuncts[1].getPredicate().getName():ralias;
 				StringBuilder eq = new StringBuilder();
-				
-				String leftAttributeName = relationNamesToRelationObjects.get(conjuncts.get(0).getPredicate().getName()).getAttribute(conjuncts.get(0).getPredicate().getArity()-1).getName();
-				String rightAttributeName = relationNamesToRelationObjects.get(conjuncts.get(1).getPredicate().getName()).getAttribute(conjuncts.get(1).getPredicate().getArity()-1).getName();
 
-				
+				String leftAttributeName = relationNamesToRelationObjects.get(conjuncts[0].getPredicate().getName()).getAttribute(conjuncts[0].getPredicate().getArity()-1).getName();
+				String rightAttributeName = relationNamesToRelationObjects.get(conjuncts[1].getPredicate().getName()).getAttribute(conjuncts[1].getPredicate().getArity()-1).getName();
+
+
 				eq.append(lalias).append(".").
 				append(leftAttributeName).append(">");
 				eq.append(ralias).append(".").
@@ -863,6 +859,6 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		}
 		return null;
 	}
-	
-	
+
+
 }

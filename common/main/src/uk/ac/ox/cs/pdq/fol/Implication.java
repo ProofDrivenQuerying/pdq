@@ -140,4 +140,15 @@ public final class Implication extends Formula {
 	public static Implication create(Formula... children) {
 		return s_interningManager.intern(new Implication(children));
 	}
+	
+	@Override
+	public Formula getChild(int childIndex) {
+		// TODO Auto-generated method stub
+		return this.children[childIndex];
+	}
+
+	@Override
+	public int getNumberOfChildlen() {
+		return this.children.length;
+	}
 }

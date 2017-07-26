@@ -44,6 +44,8 @@ public class ConjunctiveQuery extends Formula {
 
 	/**  Cashed list of bound variables. */
 	private final Variable[] boundVariables;
+	
+	private final Atom[] atoms;
 
 	/**
 	 * Builds a query given a set of free variables and its conjunction.
@@ -61,6 +63,7 @@ public class ConjunctiveQuery extends Formula {
 		this.canonicalSubstitutionOfFreeVariables.putAll(canonicalSubstitution);
 		for(Variable variable:this.getBoundVariables()) 
 			this.canonicalSubstitutionOfFreeVariables.remove(variable);
+		this.atoms = child.getAtoms();
 	}
 	
 	/**
@@ -79,6 +82,7 @@ public class ConjunctiveQuery extends Formula {
 		this.canonicalSubstitutionOfFreeVariables.putAll(canonicalSubstitution);
 		for(Variable variable:this.getBoundVariables()) 
 			this.canonicalSubstitutionOfFreeVariables.remove(variable);
+		this.atoms = child.getAtoms();
 	}
 	
 	/**
@@ -247,4 +251,24 @@ public class ConjunctiveQuery extends Formula {
     public static ConjunctiveQuery create(Variable[] freeVariables, Atom child) {
         return s_interningManager.intern(new ConjunctiveQuery(freeVariables, child));
     }
+    
+	@Override
+	public Formula getChild(int childIndex) {
+		Assert.assertTrue(childIndex == 0);
+		return this.child;
+	}
+
+	@Override
+	public int getNumberOfChildlen() {
+		return 1;
+	}
+
+	public Atom getAtom(int atomIndex) {
+		return this.atoms[atomIndex];
+	}
+	
+	public int getNumberOfAtoms() {
+		return this.atoms.length;
+	}
+	
 }

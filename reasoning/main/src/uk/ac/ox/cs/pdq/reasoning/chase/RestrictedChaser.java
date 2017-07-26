@@ -1,7 +1,8 @@
 package uk.ac.ox.cs.pdq.reasoning.chase;
 
-import java.util.Collection;
 import java.util.List;
+
+import com.google.common.base.Preconditions;
 
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.fol.Dependency;
@@ -11,9 +12,6 @@ import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance.LimitTofacts;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.TriggerProperty;
 import uk.ac.ox.cs.pdq.reasoning.utility.DefaultTGDDependencyAssessor;
 import uk.ac.ox.cs.pdq.reasoning.utility.TGDDependencyAssessor;
-
-import com.beust.jcommander.internal.Lists;
-import com.google.common.base.Preconditions;
 
 
 // TODO: Auto-generated Javadoc
@@ -53,15 +51,15 @@ public class RestrictedChaser extends Chaser {
 	 * @param dependencies the dependencies
 	 */
 	@Override
-	public <S extends ChaseInstance> void reasonUntilTermination(S instance,  Collection<? extends Dependency> dependencies) {
+	public <S extends ChaseInstance> void reasonUntilTermination(S instance,  Dependency[] dependencies) {
 		Preconditions.checkArgument(instance instanceof ChaseInstance);
 		TGDDependencyAssessor accessor = new DefaultTGDDependencyAssessor(dependencies);
 		boolean appliedStep = false;
-		Collection<? extends Dependency> d = dependencies;
+		Dependency[] d = dependencies;
 		do {
 			appliedStep = false;
 			for(Dependency dependency:d) {
-				List<Match> matches = instance.getTriggers(Lists.newArrayList(dependency), TriggerProperty.ACTIVE, LimitTofacts.THIS);	
+				List<Match> matches = instance.getTriggers(new Dependency[]{dependency}, TriggerProperty.ACTIVE, LimitTofacts.THIS);	
 				if(!matches.isEmpty()) {
 					appliedStep = true;
 					instance.chaseStep(matches);

@@ -44,7 +44,7 @@ public interface ChaseInstance extends Instance{
 	 * @return 		the list of matches (both candidates and not candidates) of the input dependencies in this database instance.
 	 */
 	//TOCOMMENT: I can "push" the argument limitToFacts inside the implementation
-	List<Match> getTriggers(Collection<? extends Dependency> dependencies, TriggerProperty t,LimitTofacts limitToFacts);
+	List<Match> getTriggers(Dependency[] dependencies, TriggerProperty t, LimitTofacts limitToFacts);
 	
 	/**
 	 * Checks if is failed.

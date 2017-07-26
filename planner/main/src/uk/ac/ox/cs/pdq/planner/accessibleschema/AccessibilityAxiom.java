@@ -116,6 +116,6 @@ public class AccessibilityAxiom extends TGD {
 	 * @see uk.ac.ox.cs.pdq.fol.GuardedDependency#getGuard()
 	 */
 	public Atom getGuard() {
-		return this.getBody().getAtoms()[this.getBody().getAtoms().length-1];
+		return this.getBodyAtom(this.getNumberOfBodyAtoms()-1);
 	}
 }

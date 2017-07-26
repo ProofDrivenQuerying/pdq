@@ -262,7 +262,7 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 		LinearGuarded d = view.getDependency();
 		LinearGuarded t = this.findViewDependency(view);
 		if (d != null) {
-			TGD inverse = TGD.create(d.getHead() instanceof QuantifiedFormula ? d.getHead().getChildren()[0] : d.getHead(), d.getBody());
+			TGD inverse = TGD.create(d.getHead() instanceof QuantifiedFormula ? d.getHead().getChild(0) : d.getHead(), d.getBody());
 			if (t == null) {
 				this.dependencies.put(d.getId(), d);
 			}
@@ -273,7 +273,7 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 		} else {
 			if (t != null) {
 				view.setDependency(t);
-				TGD inverse = TGD.create(t.getHead() instanceof QuantifiedFormula ? t.getHead().getChildren()[0] : t.getHead(), t.getBody());
+				TGD inverse = TGD.create(t.getHead() instanceof QuantifiedFormula ? t.getHead().getChild(0) : t.getHead(), t.getBody());
 				TGD i = this.findDependency(inverse);
 				if (i == null) {
 					this.dependencies.put(inverse.getId(), inverse);
@@ -352,8 +352,8 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	private LinearGuarded findViewDependency(View v) {
 		if (this.dependencies != null) {
 			for (Dependency dependency:this.dependencies.values()) {
-				if (dependency.getBody().getAtoms().length == 1) {
-					if (dependency.getBody().getAtoms()[0].getPredicate().getName().equals(v.getName())) 
+				if (dependency.getNumberOfBodyAtoms() == 1) {
+					if (dependency.getBodyAtom(0).getPredicate().getName().equals(v.getName())) 
 						return (LinearGuarded) dependency;
 				}
 			}

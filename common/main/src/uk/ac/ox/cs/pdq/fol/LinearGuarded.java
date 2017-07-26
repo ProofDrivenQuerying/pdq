@@ -78,7 +78,7 @@ public class LinearGuarded extends TGD {
 	 *
 	 */
 	public Atom getGuard() {
-		return this.getBody().getAtoms()[0];
+		return this.getBodyAtom(0);
 	}
 	
 	@Override
