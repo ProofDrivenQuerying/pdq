@@ -175,6 +175,7 @@ public class InMemoryTableWrapper extends Relation implements Pipelineable, Rela
 	 * @return ResetableIterator<Tuple>
 	 * @see uk.ac.ox.cs.pdq.runtime.wrappers.Pipelineable#iterator(List<? extends Attribute>, ResetableIterator<Tuple>)
 	 */
+	@SuppressWarnings("unchecked")
 	public ResetableIterator<Tuple> iterator(List<? extends Attribute> inputAttributes, ResetableIterator<Tuple> inputs) {
 		return new AccessIterator((List<Attribute>) inputAttributes, inputs);
 	}

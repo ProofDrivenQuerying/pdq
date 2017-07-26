@@ -2,7 +2,6 @@
 package uk.ac.ox.cs.pdq.io.xml;
 
 import java.io.PrintStream;
-import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;

@@ -132,6 +132,7 @@ public class InMemoryViewWrapper extends View implements Pipelineable, RelationA
 	 * @return ResetableIterator<Tuple>
 	 * @see uk.ac.ox.cs.pdq.runtime.wrappers.Pipelineable#iterator(List<? extends Attribute>, ResetableIterator<Tuple>)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public ResetableIterator<Tuple> iterator(
 			List<? extends Attribute> inputAttributes, ResetableIterator<Tuple> inputs) {

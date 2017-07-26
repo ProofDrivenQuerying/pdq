@@ -141,6 +141,7 @@ public class ServiceReader extends AbstractXMLReader<ServiceRepository> implemen
 						prop.put(atts.getLocalName(i), atts.getValue(i));
 					}
 					try {
+						@SuppressWarnings("unchecked")
 						Class<UsagePolicy> cl = (Class<UsagePolicy>) Class.forName(this.getValue(atts, QNames.TYPE));
 						if (this.inUsagePolicies) {
 							this.services.registerUsagePolicy(name, cl, prop);
