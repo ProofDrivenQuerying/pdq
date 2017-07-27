@@ -8,7 +8,6 @@ import java.util.List;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.DatabaseInstance;
-import uk.ac.ox.cs.pdq.plan.DAGPlan;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator;
 import uk.ac.ox.cs.pdq.planner.dominance.Dominance;
 import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominance;
@@ -37,7 +36,7 @@ public class MultiThreadedContext implements Context{
 	private DatabaseConnection[] connections;
 	
 	/**  Estimate the cost of a plan*. */
-	private final CostEstimator<DAGPlan>[] costEstimators;
+	private final CostEstimator[] costEstimators;
 	
 	/**  Perform success domination checks*. */
 	private final SuccessDominance[] successDominances;
@@ -64,8 +63,8 @@ public class MultiThreadedContext implements Context{
 	 */
 	public MultiThreadedContext(int parallelThreads,
 			Chaser chaser,
-			DatabaseConnection dbConn,
-			CostEstimator<DAGPlan> costEstimator,
+			DatabaseConnection connection,
+			CostEstimator costEstimator,
 			SuccessDominance successDominance,
 			Dominance[] dominance,
 			List<Validator> validators, ReasoningParameters reasoningParameters) throws Exception {
@@ -78,9 +77,9 @@ public class MultiThreadedContext implements Context{
 		this.dominances = new Dominance[this.parallelThreads][];
 				
 		for(int p = 0; p < this.parallelThreads; ++p) {
-			this.reasoners[p] = (Chaser) chaser.clone();
-			this.connections[p] = (DatabaseConnection) dbConn.clone();
-			this.costEstimators[p] = (CostEstimator<DAGPlan>) costEstimator.clone();
+			this.reasoners[p] = chaser.clone();
+			this.connections[p] = (DatabaseConnection) connection.clone();
+			this.costEstimators[p] = costEstimator.clone();
 			this.successDominances[p] = successDominance.clone();
 			this.validators[p] = deepCopy(validators);
 			this.dominances[p] = deepCopy(dominance);
@@ -148,7 +147,7 @@ public class MultiThreadedContext implements Context{
 	 *
 	 * @return CostEstimator<DAGPlan>[]
 	 */
-	public CostEstimator<DAGPlan>[] getCostEstimators() {
+	public CostEstimator[] getCostEstimators() {
 		return this.costEstimators;
 	}
 

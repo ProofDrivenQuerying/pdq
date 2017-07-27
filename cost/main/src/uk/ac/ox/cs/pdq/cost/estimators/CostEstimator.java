@@ -21,10 +21,10 @@ public interface CostEstimator {
 	 */
 	Cost cost(RelationalTerm plan);
 	
-	/**
-	 * Clone.
-	 *
-	 * @return the cost estimator
-	 */
-	CostEstimator clone();
+//	/**
+//	 * Clone.
+//	 *
+//	 * @return the cost estimator
+//	 */
+//	CostEstimator clone();
 }

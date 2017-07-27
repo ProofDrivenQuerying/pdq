@@ -1,6 +1,5 @@
 package uk.ac.ox.cs.pdq.planner.dominance;
 
-import uk.ac.ox.cs.pdq.plan.Plan;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -35,14 +34,14 @@ public class ClosedSuccessDominance extends SuccessDominance{
 		return false;
 	}
 
-	/**
-	 * Clone.
-	 *
-	 * @return ClosedSuccessDominance
-	 */
-	@Override
-	public ClosedSuccessDominance clone() {
-		return new ClosedSuccessDominance(this.simpleFunction());
-	}
+//	/**
+//	 * Clone.
+//	 *
+//	 * @return ClosedSuccessDominance
+//	 */
+//	@Override
+//	public ClosedSuccessDominance clone() {
+//		return new ClosedSuccessDominance(this.simpleFunction());
+//	}
 
 }

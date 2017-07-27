@@ -1,24 +1,25 @@
 package uk.ac.ox.cs.pdq.planner.dag;
 
 import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-
-import uk.ac.ox.cs.pdq.db.AccessMethod;
-import uk.ac.ox.cs.pdq.db.Relation;
-import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
-import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState;
-import uk.ac.ox.cs.pdq.planner.util.PlannerUtility;
-import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
-import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+
+import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.Relation;
+import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+import uk.ac.ox.cs.pdq.fol.Dependency;
+import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
+import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState;
+import uk.ac.ox.cs.pdq.planner.util.PlannerUtility;
+import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -67,10 +68,9 @@ public class ApplyRule extends DAGChaseConfiguration {
 		Preconditions.checkNotNull(facts);
 		this.rule = rule;
 		this.facts = facts;
-		DAGPlan plan = DAGPlanGenerator.toDAGPlan(this);
-		this.setPlan(plan);
-		Preconditions.checkState(this.getInput().containsAll(this.getPlan().getInputs()));
-		Preconditions.checkState(this.getPlan().getInputs().containsAll(this.getPlan().getInputs()));
+		this.plan = DAGPlanGenerator.toDAGPlan(this);
+//		Preconditions.checkState(this.getInput().containsAll(this.getPlan().getInputs()));
+//		Preconditions.checkState(this.getPlan().getInputs().containsAll(this.getPlan().getInputs()));
 	}
 
 	/**
@@ -117,9 +117,9 @@ public class ApplyRule extends DAGChaseConfiguration {
 	 * @param query the query
 	 * @param accessibleSchema the accessible schema
 	 */
-	public void generate(Chaser chaser, ConjunctiveQuery query, AccessibleSchema accessibleSchema) {
-		this.getState().generate(accessibleSchema, this.rule, this.facts);
-		chaser.reasonUntilTermination(this.getState(), accessibleSchema.getInferredAccessibilityAxioms());
+	public void generate(Chaser chaser, ConjunctiveQuery query, Dependency[] dependencies) {
+		this.getState().generate(this.rule, this.facts);
+		chaser.reasonUntilTermination(this.getState(), dependencies);
 	}
 	
 	/**
@@ -148,7 +148,7 @@ public class ApplyRule extends DAGChaseConfiguration {
 		return new ApplyRule(
 				this.getState().clone(),
 				this.getRule(),
-				Sets.newHashSet(this.facts));
+				new LinkedHashSet<>(this.facts));
 	}
 	
 	/* (non-Javadoc)

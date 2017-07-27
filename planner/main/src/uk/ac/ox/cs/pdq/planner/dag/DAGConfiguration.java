@@ -65,10 +65,10 @@ public interface DAGConfiguration extends Configuration {
 	 */
 	List<ApplyRule> getApplyRulesList();
 	
-	/* (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.planner.reasoning.Configuration#clone()
-	 */
-	@Override
-	DAGConfiguration clone();
+//	/* (non-Javadoc)
+//	 * @see uk.ac.ox.cs.pdq.planner.reasoning.Configuration#clone()
+//	 */
+//	@Override
+//	DAGConfiguration clone();
 
 }

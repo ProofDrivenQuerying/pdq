@@ -3,7 +3,6 @@ package uk.ac.ox.cs.pdq.planner.dag.explorer;
 import static uk.ac.ox.cs.pdq.planner.logging.performance.PlannerStatKeys.CANDIDATES;
 import static uk.ac.ox.cs.pdq.planner.logging.performance.PlannerStatKeys.CONFIGURATIONS;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,12 +15,15 @@ import java.util.Set;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
+import com.google.common.base.Preconditions;
+import com.google.common.collect.Sets;
+import com.google.common.eventbus.EventBus;
+
 import uk.ac.ox.cs.pdq.LimitReachedException;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.plan.DAGPlan;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
@@ -35,11 +37,6 @@ import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominance;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
-import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
-
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Sets;
-import com.google.common.eventbus.EventBus;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -110,14 +107,14 @@ public class DAGGeneric extends DAGExplorer {
 			Schema schema,
 			AccessibleSchema accessibleSchema, 
 			Chaser chaser,
-			DatabaseConnection dbConn,
-			CostEstimator<DAGPlan> costEstimator,
+			DatabaseConnection connection,
+			CostEstimator costEstimator,
 			SuccessDominance successDominance,
 			Filter filter,
 			List<Validator> validators,
 			int maxDepth,
 			boolean orderAware) throws PlannerException, SQLException {
-		super(eventBus, collectStats, parameters,reasoningParameters, query, accessibleQuery, schema, accessibleSchema, chaser, dbConn, costEstimator);
+		super(eventBus, collectStats, parameters,reasoningParameters, query, accessibleQuery, schema, accessibleSchema, chaser, connection, costEstimator);
 		Preconditions.checkNotNull(successDominance);
 		Preconditions.checkArgument(validators != null);
 		Preconditions.checkArgument(!validators.isEmpty());
@@ -157,7 +154,7 @@ public class DAGGeneric extends DAGExplorer {
 				this.costEstimator.cost(configuration.getPlan());
 				if (configuration.isClosed()
 						&& (this.bestPlan == null
-						|| configuration.getPlan().getCost().lessThan(this.bestPlan.getCost()))
+						|| configuration.getCost().lessThan(this.bestCost))
 						&& configuration.isSuccessful(this.accessibleQuery)) {
 					this.setBestPlan(configuration);
 				}

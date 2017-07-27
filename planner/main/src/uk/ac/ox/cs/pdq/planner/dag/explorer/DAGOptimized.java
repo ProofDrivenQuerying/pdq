@@ -17,7 +17,6 @@ import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.plan.DAGPlan;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
@@ -98,7 +97,7 @@ public class DAGOptimized extends DAGExplorer {
 			AccessibleSchema accessibleSchema, 
 			Chaser chaser, 
 			DatabaseConnection dbConn,
-			CostEstimator<DAGPlan> costEstimator,
+			CostEstimator costEstimator,
 			Filter filter,
 			IterativeExecutor reasoningThreads,
 			IterativeExecutor explorationThreads,
@@ -141,7 +140,7 @@ public class DAGOptimized extends DAGExplorer {
 			for (DAGChaseConfiguration configuration: this.left) {
 				this.costEstimator.cost(configuration.getPlan());
 				if (this.bestPlan == null
-						|| (configuration.isClosed() && configuration.getPlan().getCost().lessThan(this.bestPlan.getCost()))) {
+						|| (configuration.isClosed() && configuration.getCost().lessThan(this.bestCost))) {
 					if (configuration.isClosed() && configuration.isSuccessful(this.accessibleQuery)) {
 						this.setBestPlan(configuration);
 					}

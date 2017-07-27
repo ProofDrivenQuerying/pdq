@@ -9,13 +9,13 @@ import java.util.List;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import uk.ac.ox.cs.pdq.algebra.RelationalOperator;
+import uk.ac.ox.cs.pdq.algebra.ProjectionTerm;
+import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.plan.DAGPlan;
 import uk.ac.ox.cs.pdq.planner.Explorer;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
@@ -46,7 +46,7 @@ import com.google.common.eventbus.EventBus;
  * @author Efthymia Tsamoura
  *
  */
-public abstract class DAGExplorer extends Explorer<DAGPlan> {
+public abstract class DAGExplorer extends Explorer {
 
 	/**  The input user query *. */
 	protected final ConjunctiveQuery query;
@@ -67,7 +67,7 @@ public abstract class DAGExplorer extends Explorer<DAGPlan> {
 	DatabaseConnection connection;
 
 	/**  Estimates the cost of a plan *. */
-	protected final CostEstimator<DAGPlan> costEstimator;
+	protected final CostEstimator costEstimator;
 
 	/**  The minimum cost configuration. */
 	protected DAGChaseConfiguration bestConfiguration = null;
@@ -102,7 +102,7 @@ public abstract class DAGExplorer extends Explorer<DAGPlan> {
 			AccessibleSchema accessibleSchema, 
 			Chaser chaser, 
 			DatabaseConnection dbConn,
-			CostEstimator<DAGPlan> costEstimator) {
+			CostEstimator costEstimator) {
 		super(eventBus, collectStats);
 		Preconditions.checkArgument(parameters != null);
 		Preconditions.checkArgument(query != null);
@@ -132,20 +132,21 @@ public abstract class DAGExplorer extends Explorer<DAGPlan> {
 	 */
 	public boolean setBestPlan(DAGChaseConfiguration configuration) {
 		if(this.bestConfiguration != null && configuration != null &&
-				this.bestConfiguration.getPlan().getCost().lessOrEquals(configuration.getPlan().getCost())) {
+				this.bestConfiguration.getCost().lessOrEquals(configuration.getCost())) {
 			return false;
 		}
 		this.bestConfiguration = configuration;
 		//Add the final projection to the best plan
-		RelationalOperator project = PlanUtils.createFinalProjection(
+		ProjectionTerm project = PlanUtils.createFinalProjection(
 				this.accessibleQuery,
-				this.bestConfiguration.getPlan().getOperator());
-		this.bestPlan = new DAGPlan(project);
-		this.bestPlan.addChild(this.bestConfiguration.getPlan());
-		this.bestPlan.setCost(this.bestConfiguration.getPlan().getCost());
+				this.bestConfiguration.getPlan());
+//		this.bestPlan = new DAGPlan(project);
+//		this.bestPlan.addChild(this.bestConfiguration.getPlan());
+//		this.bestPlan.setCost(this.bestConfiguration.getPlan().getCost());
+		this.bestPlan = project;
 		this.eventBus.post(this);
 		this.eventBus.post(this.getBestPlan());
-		log.trace("\t+ BEST CONFIGURATION	" + configuration + "\t" + configuration.getPlan().getCost());
+		log.trace("\t+ BEST CONFIGURATION	" + configuration + "\t" + configuration.getCost());
 		return true;
 	}
 
@@ -153,10 +154,9 @@ public abstract class DAGExplorer extends Explorer<DAGPlan> {
 	 * @see uk.ac.ox.cs.pdq.planner.Explorer#getBestPlan()
 	 */
 	@Override
-	public DAGPlan getBestPlan() {
-		if (this.bestConfiguration == null) {
+	public RelationalTerm getBestPlan() {
+		if (this.bestConfiguration == null) 
 			return null;
-		}
 		return this.bestPlan;
 	}
 
@@ -193,7 +193,7 @@ public abstract class DAGExplorer extends Explorer<DAGPlan> {
 		this.chaser.reasonUntilTermination(state, this.schema.getDependencies());
 
 		List<DAGChaseConfiguration> collection = new ArrayList<>();
-		Collection<Pair<AccessibilityAxiom,Collection<Atom>>> pairs = state.groupAtomsByAccessMethods(this.accessibleSchema.getAccessibilityAxioms());
+		Collection<Pair<AccessibilityAxiom,Collection<Atom>>> pairs = state.groupFactsByAccessMethods(this.accessibleSchema.getAccessibilityAxioms());
 		for (Pair<AccessibilityAxiom, Collection<Atom>> pair: pairs) {
 			ApplyRule applyRule = null;
 			Collection<Collection<Atom>> bindings = new LinkedHashSet<>();

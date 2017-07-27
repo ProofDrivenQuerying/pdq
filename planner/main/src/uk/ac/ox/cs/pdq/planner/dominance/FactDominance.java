@@ -1,7 +1,5 @@
 package uk.ac.ox.cs.pdq.planner.dominance;
 
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
-
 // TODO: Auto-generated Javadoc
 /**
  * Fact dominance. A configuration c and c' is fact dominated by another configuration c' if there exists an homomorphism from the facts of c to the facts of c' and
@@ -9,13 +7,13 @@ import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
  *
  * @author Efthymia Tsamoura
  */
-public interface FactDominance extends Dominance<ChaseConfiguration> {
+public interface FactDominance extends Dominance {
 
-	/**
-	 * Clone.
-	 *
-	 * @return FactDominance<C>
-	 */
-	@Override
-	FactDominance clone();
+//	/**
+//	 * Clone.
+//	 *
+//	 * @return FactDominance<C>
+//	 */
+//	@Override
+//	FactDominance clone();
 }

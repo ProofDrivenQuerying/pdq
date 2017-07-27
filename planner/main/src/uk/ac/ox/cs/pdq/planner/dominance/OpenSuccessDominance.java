@@ -1,7 +1,6 @@
 package uk.ac.ox.cs.pdq.planner.dominance;
 
 import uk.ac.ox.cs.pdq.cost.estimators.SimpleCostEstimator;
-import uk.ac.ox.cs.pdq.plan.Plan;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -15,7 +14,7 @@ import uk.ac.ox.cs.pdq.plan.Plan;
 public class OpenSuccessDominance extends SuccessDominance{
 
 	/** The estimator. */
-	private final SimpleCostEstimator<Plan> estimator;
+	private final SimpleCostEstimator estimator;
 	
 	/** The closed dominance. */
 	private final ClosedSuccessDominance closedDominance;
@@ -25,7 +24,7 @@ public class OpenSuccessDominance extends SuccessDominance{
 	 * @param simpleFunction Boolean
 	 * @param simpleCostEstimator SimpleCostEstimator<Plan>
 	 */
-	public OpenSuccessDominance(Boolean simpleFunction, SimpleCostEstimator<Plan> simpleCostEstimator) {
+	public OpenSuccessDominance(Boolean simpleFunction, SimpleCostEstimator simpleCostEstimator) {
 		super(simpleFunction);
 		this.estimator = simpleCostEstimator;
 		this.closedDominance = new ClosedSuccessDominance(this.simpleFunction());

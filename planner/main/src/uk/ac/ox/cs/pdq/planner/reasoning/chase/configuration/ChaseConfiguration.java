@@ -214,6 +214,7 @@ public abstract class ChaseConfiguration implements Configuration {
 		return this.properOutput.isEmpty();
 	}
 
+	//TODO this should go to Configuration? 
 	/**
 	 * Checks if is closed.
 	 *

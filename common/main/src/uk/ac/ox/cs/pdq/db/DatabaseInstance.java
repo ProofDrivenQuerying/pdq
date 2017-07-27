@@ -45,7 +45,6 @@ import uk.ac.ox.cs.pdq.util.Utility;
  * 
  * A database instance is a set of facts stored in an RDBMS. 
  * This object provides basic functionalities, for storing, indexing querying and deleting a database instance.
- * @author George K
  *
  */
 public class DatabaseInstance implements Instance {
@@ -92,16 +91,15 @@ public class DatabaseInstance implements Instance {
 	protected DatabaseConnection databaseConnection;
 
 	protected DatabaseConnection getDatabaseConnection() {
-		return databaseConnection;
+		return this.databaseConnection;
 	}
 
-	public DatabaseInstance(DatabaseConnection databaseConnection) throws SQLException
-	{
-		connections = databaseConnection.synchronousConnections;
-		builder = databaseConnection.getSQLStatementBuilder();
-		relationNamesToRelationObjects = databaseConnection.getRelationNamesToRelationObjects();
-		synchronousThreadsNumber = databaseConnection.synchronousThreadsNumber;
-		constants = databaseConnection.getSchema().getConstants();
+	public DatabaseInstance(DatabaseConnection databaseConnection) {
+		this.connections = databaseConnection.synchronousConnections;
+		this.builder = databaseConnection.getSQLStatementBuilder();
+		this.relationNamesToRelationObjects = databaseConnection.getRelationNamesToRelationObjects();
+		this.synchronousThreadsNumber = databaseConnection.synchronousThreadsNumber;
+		this.constants = databaseConnection.getSchema().getConstants();
 		this.databaseConnection = databaseConnection;
 		this.schema = databaseConnection.getSchema();
 	}

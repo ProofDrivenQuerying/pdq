@@ -1,6 +1,6 @@
 package uk.ac.ox.cs.pdq.planner.dominance;
 
-import uk.ac.ox.cs.pdq.plan.Plan;
+import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -28,15 +28,15 @@ public abstract class SuccessDominance {
 	 * @param target the target
 	 * @return true if the source plan is success dominated by the target
 	 */
-	public abstract boolean isDominated(Plan source, Plan target);
+	public abstract boolean isDominated(RelationalTerm source, RelationalTerm target);
 
-	/**
-	 * Clone.
-	 *
-	 * @return SuccessDominance
-	 */
-	@Override
-	public abstract SuccessDominance clone();
+//	/**
+//	 * Clone.
+//	 *
+//	 * @return SuccessDominance
+//	 */
+//	@Override
+//	public abstract SuccessDominance clone();
 
 	/**
 	 * Simple function.

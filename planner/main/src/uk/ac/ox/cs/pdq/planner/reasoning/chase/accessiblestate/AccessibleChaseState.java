@@ -29,7 +29,7 @@ public interface AccessibleChaseState extends ChaseInstance {
 	 * @param axioms the axioms
 	 * @return 		pairs of accessibility axioms to chase facts
 	 */
-	Collection<Pair<AccessibilityAxiom, Collection<Atom>>> groupAtomsByAccessMethods(AccessibilityAxiom[] axioms);
+	Collection<Pair<AccessibilityAxiom, Collection<Atom>>> groupFactsByAccessMethods(AccessibilityAxiom[] axioms);
 
 	/**
 	 * Adds the accessible and inferred accessible facts associated with each input fact.
@@ -41,7 +41,7 @@ public interface AccessibleChaseState extends ChaseInstance {
 	 * @param facts
 	 * 			Input facts
 	 */
-	void generate(AccessibleSchema schema, AccessibilityAxiom axiom, Collection<Atom> facts);
+	void generate(AccessibilityAxiom axiom, Collection<Atom> facts);
 
 	/**
 	 * Gets the unexposed facts.
@@ -55,7 +55,7 @@ public interface AccessibleChaseState extends ChaseInstance {
 	 *
 	 * @return 		the inferred accessible facts of the state
 	 */
-	Collection<String> getInferred();
+	Collection<Atom> getInferred();
 
 	/**
 	 *

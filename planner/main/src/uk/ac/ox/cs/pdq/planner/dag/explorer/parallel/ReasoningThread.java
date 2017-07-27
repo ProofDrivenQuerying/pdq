@@ -14,7 +14,6 @@ import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Dependency;
-import uk.ac.ox.cs.pdq.plan.DAGPlan;
 import uk.ac.ox.cs.pdq.planner.dag.BinaryConfiguration;
 import uk.ac.ox.cs.pdq.planner.dag.ConfigurationUtility;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
@@ -45,7 +44,7 @@ public class ReasoningThread implements Callable<Boolean> {
 	protected final ConjunctiveQuery query;
 	
 	/**  The schema dependencies*. */
-	protected final Collection<? extends Dependency> dependencies;
+	protected final Dependency[] dependencies;
 	
 	/**  Saturates newly created binary configurations using the chase reasoning tool. */
 	protected final Chaser chaser;
@@ -54,7 +53,7 @@ public class ReasoningThread implements Callable<Boolean> {
 	protected final DatabaseConnection connection;
 
 	/**  Estimates the cost of the plans. */
-	protected final CostEstimator<DAGPlan> costEstimator;
+	protected final CostEstimator costEstimator;
 	
 	/**  Classes of structurally equivalent configurations. */
 	protected final DAGEquivalenceClasses equivalenceClasses;
@@ -117,10 +116,10 @@ public class ReasoningThread implements Callable<Boolean> {
 			Queue<DAGChaseConfiguration> left,
 			Collection<DAGChaseConfiguration> right,
 			ConjunctiveQuery query,
-			Collection<? extends Dependency> dependencies,
+			Dependency[] dependencies,
 			Chaser chaser,
 			DatabaseConnection connection,
-			CostEstimator<DAGPlan> costEstimator,
+			CostEstimator costEstimator,
 			SuccessDominance successDominance,
 			DAGChaseConfiguration best,
 			List<Validator> validators,

@@ -11,9 +11,9 @@ import com.google.common.base.Preconditions;
 
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
+import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.plan.DAGPlan;
 import uk.ac.ox.cs.pdq.planner.dag.ConfigurationUtility;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.dag.equivalence.DAGEquivalenceClasses;
@@ -159,7 +159,7 @@ public class ExplorationThread implements Callable<DAGChaseConfiguration> {
 	 * @param successDominance 		Performs success dominance checks
 	 * @return true if the input configuration is not success dominated by the best plan
 	 */
-	protected Boolean getPotential(DAGChaseConfiguration configuration, DAGPlan bestPlan, SuccessDominance successDominance) {
+	protected Boolean getPotential(DAGChaseConfiguration configuration, RelationalTerm bestPlan, SuccessDominance successDominance) {
 		return ConfigurationUtility.getPotential(configuration, bestPlan, successDominance);
 	}
 }

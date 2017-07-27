@@ -7,13 +7,12 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.plan.DAGPlan;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
-import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema.InferredAccessibleRelation;
 import uk.ac.ox.cs.pdq.planner.dag.BinaryConfiguration.BinaryConfigurationTypes;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator;
 import uk.ac.ox.cs.pdq.planner.dominance.Dominance;
@@ -162,25 +161,23 @@ public class ConfigurationUtility {
 	 * 			subconfigurations of left and right do not overlap.
 	 */
 	public static Boolean isNonTrivial(DAGChaseConfiguration left, DAGChaseConfiguration right) {
-		if (left.equals(right)){
+		if (left.equals(right))
 			return false;
-		}
-
+		
 		// Julien: Commented out -> not part of the definition of non-trivial
 		Collection<ApplyRule> leftApplyRules = left.getApplyRules();
 		Collection<ApplyRule> rightApplyRules = right.getApplyRules();
 		for (ApplyRule leftApplyRule:leftApplyRules) {
 			for (ApplyRule rightApplyRule:rightApplyRules) {
-				if (leftApplyRule.getFacts().equals(rightApplyRule.getFacts())) {
+				if (leftApplyRule.getFacts().equals(rightApplyRule.getFacts())) 
 					return false;
-				}
 			}
 		}
 
 		if (left.getOutputFacts().containsAll(right.getOutputFacts())
-				|| right.getOutputFacts().containsAll(left.getOutputFacts())) {
+				|| right.getOutputFacts().containsAll(left.getOutputFacts())) 
 			return false;
-		}
+		
 		for (DAGConfiguration l:left.getSubconfigurations()) {
 			for (DAGConfiguration r:right.getSubconfigurations()) {
 				if (l.equals(r)
@@ -323,7 +320,7 @@ public class ConfigurationUtility {
 	 * @param successDominance Success dominance checks
 	 * @return true if the input configuration is not success dominated by the best plan
 	 */
-	public static Boolean getPotential(DAGChaseConfiguration configuration, DAGPlan bestPlan, SuccessDominance successDominance) {
+	public static Boolean getPotential(DAGChaseConfiguration configuration, RelationalTerm bestPlan, SuccessDominance successDominance) {
 		return bestPlan == null || !successDominance.isDominated(configuration.getPlan(), bestPlan);
 	}
 	
@@ -356,15 +353,14 @@ public class ConfigurationUtility {
 	 */
 	public static Boolean getPotential(DAGChaseConfiguration left, 
 			DAGChaseConfiguration right,
-			DAGPlan bestPlan, 
-			CostEstimator<DAGPlan> costEstimator, 
+			RelationalTerm bestPlan, 
+			CostEstimator costEstimator, 
 			SuccessDominance successDominance) {
 		BinaryConfiguration.BinaryConfigurationTypes type = getCombinationType(left, right);
 		if(type != null) {
-			if(bestPlan == null) {
+			if(bestPlan == null) 
 				return true;
-			}
-			DAGPlan plan = DAGPlanGenerator.toDAGPlan(left, right, type);
+			RelationalTerm plan = DAGPlanGenerator.toDAGPlan(left, right, type);
 			costEstimator.cost(plan);
 			return !successDominance.isDominated(plan, bestPlan);
 		}
@@ -379,7 +375,7 @@ public class ConfigurationUtility {
 	 * @param accessibleSchema the accessible schema
 	 * @return 		the output facts of the input configuration that are sufficient to make each input constant accessible
 	 */
-	public static Collection<Set<Atom>> getMinimalSetThatExposesConstants(DAGChaseConfiguration configuration, Collection<Constant> constants, AccessibleSchema accessibleSchema) {
+	public static Collection<Set<Atom>> getMinimalSetThatExposesConstants(DAGChaseConfiguration configuration, Collection<Constant> constants) {
 		Collection<Set<Atom>> ret = new LinkedHashSet<>();
 		Collection<ApplyRule> applyRules = configuration.getApplyRules();
 		//Create all combinations of the constituting ApplyRule configurations
@@ -396,10 +392,8 @@ public class ConfigurationUtility {
 			Set<Constant> remaining = Sets.newLinkedHashSet(constants);
 
 			for(ApplyRule applyRule:set) {
-
 				Relation baseRelation = applyRule.getRelation();
-				InferredAccessibleRelation infAccRelation = accessibleSchema.getInferredAccessibleRelation(baseRelation);
-
+				//Relation infAccRelation = accessibleSchema.getInferredAccessibleRelation(baseRelation);
 				Collection<Atom> facts = applyRule.getFacts();
 				if(observed.containsAll(applyRule.getInput())) {
 					/*

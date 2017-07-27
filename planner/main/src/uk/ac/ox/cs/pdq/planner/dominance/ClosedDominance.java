@@ -1,12 +1,11 @@
 package uk.ac.ox.cs.pdq.planner.dominance;
 
+import com.google.common.base.Preconditions;
+
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.SimpleCostEstimator;
-import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.planner.dag.ApplyRule;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
-
-import com.google.common.base.Preconditions;
+import uk.ac.ox.cs.pdq.planner.reasoning.Configuration;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -14,10 +13,10 @@ import com.google.common.base.Preconditions;
  *
  * @author Efthymia Tsamoura
  */
-public class ClosedDominance implements Dominance<ChaseConfiguration>{
+public class ClosedDominance implements Dominance{
 
 	/** The cost estimator. */
-	private final CostEstimator<Plan> costEstimator;
+	private final CostEstimator costEstimator;
 	
 	/** The fact dominance. */
 	private final FactDominance factDominance;
@@ -27,7 +26,7 @@ public class ClosedDominance implements Dominance<ChaseConfiguration>{
 	 *
 	 * @param costEstimator the cost estimator
 	 */
-	public ClosedDominance(CostEstimator<Plan> costEstimator){
+	public ClosedDominance(CostEstimator costEstimator){
 		Preconditions.checkNotNull(costEstimator);
 		this.costEstimator = costEstimator;
 		this.factDominance = new FastFactDominance(false);
@@ -55,18 +54,18 @@ public class ClosedDominance implements Dominance<ChaseConfiguration>{
 	 * @see uk.ac.ox.cs.pdq.dominance.detectors.Dominance#isDominated(DAGConfiguration<?>, DAGConfiguration<?>)
 	 */
 	@Override
-	public boolean isDominated(ChaseConfiguration source, ChaseConfiguration target) {
+	public boolean isDominated(Configuration source, Configuration target) {
 		Preconditions.checkNotNull(source);
 		Preconditions.checkNotNull(target);
 		if(!(source instanceof ApplyRule)
-				&& source.isClosed()
-				&& target.isClosed()
-				&& source.getPlan().getCost().greaterThan(target.getPlan().getCost())
+				&& source.getPlan().isClosed()
+				&& target.getPlan().isClosed()
+				&& source.getCost().greaterThan(target.getCost())
 				&& this.factDominance.isDominated(source, target) ) {
 			return true;
 		} else if(!(source instanceof ApplyRule)
 				&& this.costEstimator instanceof SimpleCostEstimator
-				&& source.getPlan().getCost().greaterThan(target.getPlan().getCost())
+				&& source.getCost().greaterThan(target.getCost())
 				&& this.factDominance.isDominated(source, target) ) {
 			return true;
 		} else {
@@ -74,14 +73,14 @@ public class ClosedDominance implements Dominance<ChaseConfiguration>{
 		}
 	}
 
-	/**
-	 * Clone.
-	 *
-	 * @return ClosedDominance
-	 * @see uk.ac.ox.cs.pdq.dag.dominance.Dominance#clone()
-	 */
-	@Override
-	public ClosedDominance clone() {
-		return new ClosedDominance(this.costEstimator.clone(), this.factDominance.clone());
-	}
+//	/**
+//	 * Clone.
+//	 *
+//	 * @return ClosedDominance
+//	 * @see uk.ac.ox.cs.pdq.dag.dominance.Dominance#clone()
+//	 */
+//	@Override
+//	public ClosedDominance clone() {
+//		return new ClosedDominance(this.costEstimator.clone(), this.factDominance.clone());
+//	}
 }

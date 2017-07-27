@@ -13,9 +13,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import uk.ac.ox.cs.pdq.cost.DoubleCost;
+import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
+import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.CostParameters.BlackBoxQueryTypes;
 import uk.ac.ox.cs.pdq.cost.estimators.BlackBoxCostEstimator;
-import uk.ac.ox.cs.pdq.datasources.Cost;
 import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.dag.cost.sql.DAGConfigurationToSQLTranslator;
@@ -29,12 +30,12 @@ import com.google.common.eventbus.EventBus;
  *
  * @author Efthymia Tsamoura
  */
-public class PostgresqlBlackBoxEstimator implements BlackBoxCostEstimator<DAGChaseConfiguration> {
+public class PostgresqlBlackBoxEstimator implements BlackBoxCostEstimator {
 
 	/** The stats. */
 	protected final StatisticsCollector stats;
 
-	/**
+	/**s
 	 * The regular expression used to retrieve the costs from the answer of
 	 * an EXPLAIN ANALYZE query to postgresql.
 	 */
@@ -109,24 +110,24 @@ public class PostgresqlBlackBoxEstimator implements BlackBoxCostEstimator<DAGCha
 		return DriverManager.getConnection(url + database, username, password);
 	}
 
-	/**
-	 * Cost.
-	 *
-	 * @param configuration DAGConfiguration<S>
-	 * @return Cost
-	 * @see uk.ac.ox.cs.pdq.costs.DAGConfigurationCostEstimator#cost(DAGConfiguration<S>)
-	 */
-	@Override
-	public Cost cost(DAGChaseConfiguration configuration) {
-		configuration.getPlan().setCost(this.estimateCost(configuration));
-		return configuration.getPlan().getCost();
-	}
+//	/**
+//	 * Cost.
+//	 *
+//	 * @param configuration DAGConfiguration<S>
+//	 * @return Cost
+//	 * @see uk.ac.ox.cs.pdq.costs.DAGConfigurationCostEstimator#cost(DAGConfiguration<S>)
+//	 */
+//	@Override
+//	public Cost cost(DAGChaseConfiguration configuration) {
+//		configuration.getPlan().setCost(this.estimateCost(configuration));
+//		return configuration.getPlan().getCost();
+//	}
 
 	/* (non-Javadoc)
 	 * @see uk.ac.ox.cs.pdq.cost.estimators.CostEstimator#estimateCost(uk.ac.ox.cs.pdq.util.Costable)
 	 */
-	@Override
-	public Cost estimateCost(DAGChaseConfiguration configuration) {
+//	public Cost estimateCost(DAGChaseConfiguration configuration) {
+	public Cost cost(DAGChaseConfiguration configuration) {
 		double result = Double.POSITIVE_INFINITY;
 		if(this.stats != null){this.stats.start(COST_ESTIMATION_TIME);}
 		if (configuration.isClosed()) {
@@ -158,6 +159,12 @@ public class PostgresqlBlackBoxEstimator implements BlackBoxCostEstimator<DAGCha
 		if(this.stats != null){this.stats.stop(COST_ESTIMATION_TIME);}
 		if(this.stats != null){this.stats.increase(COST_ESTIMATION_COUNT, 1);}
 		return new DoubleCost(result);
+	}
+
+	@Override
+	public Cost cost(RelationalTerm plan) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

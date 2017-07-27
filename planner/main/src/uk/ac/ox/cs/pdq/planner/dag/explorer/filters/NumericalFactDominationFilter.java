@@ -8,7 +8,6 @@ import java.util.List;
 import uk.ac.ox.cs.pdq.planner.dag.ApplyRule;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.dominance.NumericalFactDominance;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState;
 
 
 // TODO: Auto-generated Javadoc
@@ -18,7 +17,7 @@ import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseSt
  * @author Efthymia Tsamoura
  * @param <S> the generic type
  */
-public class NumericalFactDominationFilter<S extends AccessibleChaseState> implements Filter {
+public class NumericalFactDominationFilter implements Filter {
 
 	/** The fact dominance. */
 	private final NumericalFactDominance factDominance = new NumericalFactDominance();

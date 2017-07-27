@@ -1,19 +1,15 @@
 package uk.ac.ox.cs.pdq.planner.dag.explorer.parallel;
 
-import java.sql.Connection;
 import java.util.List;
 
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
-import uk.ac.ox.cs.pdq.plan.DAGPlan;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.IterativeExecutorTypes;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator;
 import uk.ac.ox.cs.pdq.planner.dominance.Dominance;
 import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominance;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
-import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
-import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -45,7 +41,7 @@ public class IterativeExecutorFactory {
 			int parallelThreads,
 			Chaser chaser,
 			DatabaseConnection dbConn,
-			CostEstimator<DAGPlan> estimator,
+			CostEstimator estimator,
 			SuccessDominance successDominance,
 			Dominance[] dominance,
 			List<Validator> validators, ReasoningParameters reasoningParameters) throws Exception{
@@ -57,7 +53,8 @@ public class IterativeExecutorFactory {
 					estimator,
 					successDominance,
 					dominance,
-					validators, reasoningParameters);
+					validators, 
+					reasoningParameters);
 			return new MultiThreadedExecutor(mtcontext);
 		default:
 			throw new java.lang.IllegalArgumentException();

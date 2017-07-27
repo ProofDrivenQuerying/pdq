@@ -9,7 +9,7 @@ import uk.ac.ox.cs.pdq.planner.reasoning.Configuration;
  * @author Efthymia Tsamoura
  * @param <C> the generic type
  */
-public interface Dominance<C extends Configuration> {
+public interface Dominance {
 	
 	/**
 	 * Checks if is dominated.
@@ -18,12 +18,12 @@ public interface Dominance<C extends Configuration> {
 	 * @param target the target
 	 * @return true if the source is dominated by the target
 	 */
-	boolean isDominated(C source, C target);
+	boolean isDominated(Configuration source, Configuration target);
 
-	/**
-	 * Clone.
-	 *
-	 * @return Dominance
-	 */
-	Dominance<C> clone();
+//	/**
+//	 * Clone.
+//	 *
+//	 * @return Dominance
+//	 */
+//	Dominance<C> clone();
 }

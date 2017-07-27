@@ -79,7 +79,7 @@ public class DAGSimpleDP extends DAGGeneric {
 			AccessibleSchema accessibleSchema, 
 			Chaser chaser,
 			DatabaseConnection dbConn,
-			CostEstimator<DAGPlan> costEstimator,
+			CostEstimator costEstimator,
 			SuccessDominance successDominance,
 			Dominance[] dominance,
 			Filter filter, 

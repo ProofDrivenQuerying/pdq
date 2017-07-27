@@ -7,7 +7,6 @@ import java.util.List;
 
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Dependency;
-import uk.ac.ox.cs.pdq.plan.DAGPlan;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 
@@ -85,10 +84,10 @@ public class BinaryConfiguration extends DAGChaseConfiguration {
 		this.left = left;
 		this.right = right;
 		this.type = ConfigurationUtility.getCombinationType(left, right);
-		DAGPlan plan = DAGPlanGenerator.toDAGPlan(this);
-		this.setPlan(plan);
-		Preconditions.checkState(this.getInput().containsAll(this.getPlan().getInputs()));
-		Preconditions.checkState(this.getPlan().getInputs().containsAll(this.getPlan().getInputs()));
+		this.plan = DAGPlanGenerator.toDAGPlan(this);
+//		this.setPlan(plan);
+//		Preconditions.checkState(this.getInput().containsAll(this.getPlan().getInputs()));
+//		Preconditions.checkState(this.getPlan().getInputs().containsAll(this.getPlan().getInputs()));
 		this.rules = ConfigurationUtility.getApplyRules(this);
 		this.rulesList = ConfigurationUtility.getApplyRulesList(this);
 	}
@@ -116,10 +115,10 @@ public class BinaryConfiguration extends DAGChaseConfiguration {
 		this.left = left;
 		this.right = right;
 		this.type = ConfigurationUtility.getCombinationType(left, right);
-		DAGPlan plan = DAGPlanGenerator.toDAGPlan(this);
-		this.setPlan(plan);
-		Preconditions.checkState(this.getInput().containsAll(this.getPlan().getInputs()));
-		Preconditions.checkState(this.getPlan().getInputs().containsAll(this.getPlan().getInputs()));
+		this.plan = DAGPlanGenerator.toDAGPlan(this);
+//		this.setPlan(plan);
+//		Preconditions.checkState(this.getInput().containsAll(this.getPlan().getInputs()));
+//		Preconditions.checkState(this.getPlan().getInputs().containsAll(this.getPlan().getInputs()));
 		this.rules = ConfigurationUtility.getApplyRules(this);
 		this.rulesList = ConfigurationUtility.getApplyRulesList(this);
 	}
@@ -131,7 +130,7 @@ public class BinaryConfiguration extends DAGChaseConfiguration {
 	 * @param query the query
 	 * @param dependencies the dependencies
 	 */
-	public void reasonUntilTermination(Chaser chaser, ConjunctiveQuery query, Collection<? extends Dependency> dependencies) {
+	public void reasonUntilTermination(Chaser chaser, ConjunctiveQuery query, Dependency[] dependencies) {
 		chaser.reasonUntilTermination(this.getState(), dependencies);
 	}
 

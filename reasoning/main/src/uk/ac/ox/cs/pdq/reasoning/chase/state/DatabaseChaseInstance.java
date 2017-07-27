@@ -63,8 +63,6 @@ import uk.ac.ox.cs.pdq.util.Utility;
  *
  */
 public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInstance  {
-
-
 	/** The _is failed. */
 	private boolean _isFailed = false;
 
@@ -137,7 +135,6 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		this.classes = classes;
 		this.constantsToAtoms = constants; 
 	}
-
 
 	/**
 	 *
@@ -419,10 +416,9 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		return this._isFailed;
 	}
 
-
-	public Multimap<Constant, Atom> getConstantsToAtoms() {
-		return this.constantsToAtoms;
-	}
+//	public Multimap<Constant, Atom> getConstantsToAtoms() {
+//		return this.constantsToAtoms;
+//	}
 
 	/* (non-Javadoc)
 	 * @see uk.ac.ox.cs.pdq.reasoning.chase.state.ListState#addFacts(java.util.Collection)
@@ -473,10 +469,9 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		facts.addAll(s.getFacts());
 
 		EqualConstantsClasses classes = this.classes.clone();
-		if(!classes.merge(((DatabaseChaseInstance)s).classes)) {
+		if(!classes.merge(((DatabaseChaseInstance)s).classes)) 
 			return null;
-		}
-
+		
 		Multimap<Constant, Atom> constantsToAtoms = HashMultimap.create();
 		constantsToAtoms.putAll(this.constantsToAtoms);
 		constantsToAtoms.putAll(((DatabaseChaseInstance)s).constantsToAtoms);
