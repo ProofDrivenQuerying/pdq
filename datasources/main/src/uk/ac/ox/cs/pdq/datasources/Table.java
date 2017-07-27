@@ -43,15 +43,6 @@ public class Table implements Result, Iterable<Tuple> {
 
 	/** If true, tuple added to the table are first interned. */
 	private final boolean internTuples;
-	
-	/** The Constant prefix. */
-	private final static String prefix = "T"; 
-	
-	/** The count. */
-	private static int count = 0; 
-	
-	/** The name. */
-	private final String name;
 
 	/**
 	 * Instantiates a new table.
@@ -66,7 +57,6 @@ public class Table implements Result, Iterable<Tuple> {
 		this.type = Utility.createFromTyped(attributes.toArray(new Attribute[attributes.size()]));
 		this.header = Lists.newArrayList(attributes);
 		this.internTuples = intern;
-		this.name = Table.prefix + Table.count++;
 	}
 
 	/**
@@ -395,14 +385,5 @@ public class Table implements Result, Iterable<Tuple> {
 		Table dyn = new Table(this.header);
 		dyn.appendRows(this);
 		return dyn;
-	}
-
-	/**
-	 * Gets the name.
-	 *
-	 * @return the name
-	 */
-	public String getName() {
-		return this.name;
 	}
 }
