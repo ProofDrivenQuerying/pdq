@@ -41,14 +41,13 @@ public class ExplorerUtils {
 					&& parentNode.isFullyGenerated()
 					&& parentNode.getEquivalentNode() == null
 					&& !parentNode.getStatus().equals(NodeStatus.TERMINAL)
-					&& !parentNode.getStatus().equals(NodeStatus.FAKE_TERMINAL)
+					//					&& !parentNode.getStatus().equals(NodeStatus.FAKE_TERMINAL)
 					&& factEquivalence.isEquivalent(childNode.getConfiguration(), parentNode.getConfiguration())) {
-				if (equivalent == null) {
+				if (equivalent == null) 
 					equivalent = parentNode;
-				} else {
-					if (parentNode.getId() < equivalent.getId()) {
+				else {
+					if (parentNode.getId() < equivalent.getId()) 
 						equivalent = parentNode;
-					}
 				}
 			}
 		}
@@ -66,7 +65,8 @@ public class ExplorerUtils {
 	public static <N extends SearchNode> N isDominated(Collection<N> parentsNodes, N childNode) {
 		for (N parentNode: parentsNodes) {
 			if (!parentNode.equals(childNode)
-					&& !parentNode.getStatus().equals(NodeStatus.FAKE_TERMINAL)
+					//					&& !parentNode.getStatus().equals(NodeStatus.FAKE_TERMINAL)
+					&& !parentNode.getStatus().equals(NodeStatus.TERMINAL)
 					&& childNode.isDominatedBy(parentNode)) {
 				return parentNode;
 			}
@@ -84,9 +84,8 @@ public class ExplorerUtils {
 	public static <N extends SearchNode> Collection<N> getFullyGeneratedNodes(DirectedGraph<N, DefaultEdge> planTree) {
 		Collection<N> fullyGenerated = new LinkedHashSet<>();
 		for (N node: planTree.vertexSet()) {
-			if (node.isFullyGenerated()) {
+			if (node.isFullyGenerated()) 
 				fullyGenerated.add(node);
-			}
 		}
 		return fullyGenerated;
 	}
@@ -101,9 +100,8 @@ public class ExplorerUtils {
 	public static <N extends SearchNode> Collection<N> getPartiallyGeneratedLeaves(DirectedGraph<N, DefaultEdge> planTree) {
 		Collection<N> partiallyGenerated = new LinkedHashSet<>();
 		for (N node:planTree.vertexSet()) {
-			if (planTree.outDegreeOf(node) == 0 && !node.isFullyGenerated()) {
+			if (planTree.outDegreeOf(node) == 0 && !node.isFullyGenerated()) 
 				partiallyGenerated.add(node);
-			}
 		}
 		return partiallyGenerated;
 	}
@@ -135,9 +133,8 @@ public class ExplorerUtils {
 		Collection<N> result = new LinkedHashSet<>();
 		for (DefaultEdge n:planTree.incomingEdgesOf(node)) {
 			N sourceNode = planTree.getEdgeSource(n);
-			if (!result.contains(sourceNode)) {
+			if (!result.contains(sourceNode)) 
 				result.addAll(ancestorsOf(planTree, sourceNode));
-			}
 			result.add(sourceNode);
 		}
 		return result;

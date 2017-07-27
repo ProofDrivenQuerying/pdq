@@ -70,7 +70,7 @@ public class ExplorationSetUp {
 
 
 	/** The external cost estimator. */
-	private CostEstimator<?> externalCostEstimator = null;
+	private CostEstimator externalCostEstimator = null;
 
 	/** The auxiliary schema, including axioms capturing access methods  */
 	private AccessibleSchema accessibleSchema;
@@ -103,7 +103,7 @@ public class ExplorationSetUp {
 		this.costParams = costParams;
 		this.reasoningParams = reasoningParams;
 		this.dbParams = dbParams;
-		final Attribute Fact = new Attribute(Integer.class, "FactID");
+		final Attribute Fact = Attribute.create(Integer.class, "FactID");
 		addAdditionalAttributeToSchema(schema, Fact);//new Attribute(Integer.class, "ChaseStateID"));
 		this.schema = schema;
 		this.statsLogger = statsLogger;
@@ -152,7 +152,7 @@ public class ExplorationSetUp {
 	 *
 	 * @param estimator CostEstimator<?>
 	 */
-	public void setCostEstimator(CostEstimator<?> estimator) {
+	public void setCostEstimator(CostEstimator estimator) {
 		this.externalCostEstimator = estimator;
 	}
 

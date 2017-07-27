@@ -12,6 +12,7 @@ import org.jgrapht.graph.DefaultEdge;
 import com.google.common.eventbus.EventBus;
 
 import uk.ac.ox.cs.pdq.LimitReachedException;
+import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.Match;
@@ -81,29 +82,30 @@ public class LinearGeneric extends LinearExplorer {
 		if (selectedNode == null) 
 			return;
 		
-		LinearConfiguration selectedConfig = selectedNode.getConfiguration();
+		LinearConfiguration selectedConfiguration = selectedNode.getConfiguration();
 
 		/*
 		 * Choose a new candidate fact. A candidate fact F(c1,c2,...,cN) is one for which
 		 * (i) there exists Accessible(c_i) facts for any c_i
 		 * (ii) AccessedF(c_1,c_2,...,c_N) does not exist in the current configuration
 		 */
-		candidate = selectedConfig.chooseCandidate();
+		candidate = selectedConfiguration.chooseCandidate();
 
 		// Search for other candidate facts that could be exposed along with the selected candidate.
-		Set<Candidate> similarCandidates = selectedConfig.getSimilarCandidates(candidate);
-		selectedConfig.removeCandidates(similarCandidates);
-		if (!selectedConfig.hasCandidates()) 
+		Set<Candidate> similarCandidates = selectedConfiguration.getSimilarCandidates(candidate);
+		selectedConfiguration.removeCandidates(similarCandidates);
+		if (!selectedConfiguration.hasCandidates()) 
 			selectedNode.setStatus(NodeStatus.TERMINAL);
 		
 
 		// Create a new node from the exposed facts and add it to the plan tree
-		SearchNode freshNode = this.getNodeFactory().getInstance(selectedNode, similarCandidates);
+		SearchNode freshNode = this.nodeFactory.getInstance(selectedNode, similarCandidates);
 		freshNode.getConfiguration().detectCandidates(this.accessibleSchema);
 		if (!freshNode.getConfiguration().hasCandidates()) 
 			freshNode.setStatus(NodeStatus.TERMINAL);
 	
-		this.costEstimator.cost(freshNode.getConfiguration().getPlan());
+		Cost cost = this.costEstimator.cost(freshNode.getConfiguration().getPlan());
+		freshNode.getConfiguration().setCost(cost);
 		
 		this.stats.start(MILLI_CLOSE);
 		freshNode.close(this.chaser, this.accessibleQuery, this.accessibleSchema.getInferredAccessibilityAxioms());

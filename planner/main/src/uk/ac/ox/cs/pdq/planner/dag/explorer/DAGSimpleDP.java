@@ -104,7 +104,7 @@ public class DAGSimpleDP extends DAGGeneric {
 						pair.getRight());
 				this.costEstimator.cost(configuration.getPlan());
 				configuration.reasonUntilTermination(this.chaser, this.accessibleQuery, this.accessibleSchema.getInferredAccessibilityAxioms());
-				if (this.bestPlan == null || !this.successDominance.isDominated(configuration.getPlan(), this.bestPlan) &&
+				if (this.bestPlan == null || !this.successDominance.isDominated(configuration.getPlan(), configuration.getCost(), this.bestPlan, this.bestCost) &&
 						ExplorerUtils.isDominated(this.dominance, this.getRight(), configuration) == null &&
 						ExplorerUtils.isDominated(this.dominance, last.values(), configuration) == null
 								) {

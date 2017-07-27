@@ -2,17 +2,17 @@ package uk.ac.ox.cs.pdq.planner.linear.cost;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.jgrapht.graph.DefaultEdge;
-
-import uk.ac.ox.cs.pdq.cost.Cost;
-import uk.ac.ox.cs.pdq.cost.estimators.SimpleCostEstimator;
-import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SimpleNode;
-import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode.NodeStatus;
-import uk.ac.ox.cs.pdq.planner.util.PlanTree;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
+
+import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
+import uk.ac.ox.cs.pdq.cost.Cost;
+import uk.ac.ox.cs.pdq.cost.estimators.SimpleCostEstimator;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode.NodeStatus;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SimpleNode;
+import uk.ac.ox.cs.pdq.planner.util.PlanTree;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -28,7 +28,7 @@ import com.google.common.collect.Lists;
  * @author Efthymia Tsamoura
  */
 public class SimplePropagator extends CostPropagator<SimpleNode> {
-	
+
 	/**
 	 * Empty constructor.
 	 *
@@ -52,47 +52,51 @@ public class SimplePropagator extends CostPropagator<SimpleNode> {
 	 */
 	@Override
 	public void propagate(SimpleNode node, PlanTree<SimpleNode> planTree) {
-		if (node.getStatus() == NodeStatus.SUCCESSFUL) {
+		if (node.getStatus() == NodeStatus.SUCCESSFUL) 
 			node.ground();
-		}
+		
 		else if (node.getEquivalentNode() != null) {
-			if (node.getEquivalentNode().getPathToSuccess() != null) {
+			if (node.getEquivalentNode().getPathToSuccess() != null) 
 				node.setPathToSuccess(node.getEquivalentNode().getPathToSuccess());
+		} 
+		else {
+			RelationalTerm plan = null;
+			Cost currentCost = null;
+			if(node.getPathToSuccess() != null) {
+				plan = PropagatorUtils.createLeftDeepPlan(planTree, node.getPathToSuccess());
+				currentCost = this.costEstimator.cost(plan);
 			}
-
-		} else {
-			Cost currentCost = node.getPathToSuccess() == null ? null: 
-			PropagatorUtils.createLeftDeepPlan(planTree, node.getPathToSuccess(), this.costEstimator).getCost();
 			// Iterate over all children of the given node.
 			for (DefaultEdge edge:planTree.outgoingEdgesOf(node)) {
 				SimpleNode child = planTree.getEdgeTarget(edge);
 				if (child.getPathToSuccess() != null) {
 					List<Integer> sequence = Lists.newArrayList(child.getId());
 					sequence.addAll(child.getPathToSuccess());
-					Cost childCost = PropagatorUtils.createLeftDeepPlan(planTree, sequence, this.costEstimator).getCost();
+					plan = PropagatorUtils.createLeftDeepPlan(planTree, node.getPathToSuccess());
+					Cost childCost = this.costEstimator.cost(plan);
 					if (currentCost == null || childCost.lessThan(currentCost)) {
 						node.setPathToSuccess(sequence);
-						currentCost = PropagatorUtils.createLeftDeepPlan(planTree, node.getPathToSuccess(), this.costEstimator).getCost();
+						plan = PropagatorUtils.createLeftDeepPlan(planTree, node.getPathToSuccess());
+						currentCost = this.costEstimator.cost(plan);
 					}
 				}
 			}
 		}
 
-
 		// Update the best plan at the root if necessary
 		if (node.equals(planTree.getRoot()) && node.getPathToSuccess() != null) {
-			this.bestPlan = PropagatorUtils.createLeftDeepPlan(planTree, node.getPathToSuccess(), this.costEstimator);
+			this.bestPlan = PropagatorUtils.createLeftDeepPlan(planTree, node.getPathToSuccess());
+			this.bestCost = this.costEstimator.cost(bestPlan);
 			this.bestPath = node.getPathToSuccess();
 			Preconditions.checkState(this.bestPlan != null);
 			Preconditions.checkState(this.bestPath != null);
 		} else {
-			for (DefaultEdge edge: planTree.incomingEdgesOf(node)) {
+			for (DefaultEdge edge: planTree.incomingEdgesOf(node)) 
 				this.propagate(planTree.getEdgeSource(edge), planTree);
-			}
+			
 			for (SimpleNode n: planTree.vertexSet()) {
-				if (n.getEquivalentNode() != null && n.getEquivalentNode().equals(node)) {
+				if (n.getEquivalentNode() != null && n.getEquivalentNode().equals(node)) 
 					this.propagate(n, planTree);
-				}
 			}
 		}
 	}

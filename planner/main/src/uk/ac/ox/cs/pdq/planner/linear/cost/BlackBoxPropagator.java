@@ -8,6 +8,7 @@ import java.util.Set;
 import org.jgrapht.graph.DefaultEdge;
 
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
+import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.estimators.BlackBoxCostEstimator;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.BlackBoxNode;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode.NodeStatus;
@@ -32,7 +33,7 @@ import com.google.common.collect.Sets;
 public class BlackBoxPropagator extends CostPropagator<BlackBoxNode> {
 
 	/**  the nodes that have been already updated */
-	private Set<BlackBoxNode> updated = Sets.newHashSet();
+	private Set<BlackBoxNode> updatedNodes = Sets.newHashSet();
 
 	/**
 	 * Empty constructor.
@@ -56,7 +57,7 @@ public class BlackBoxPropagator extends CostPropagator<BlackBoxNode> {
 	 */
 	@Override
 	public void propagate(BlackBoxNode node, PlanTree<BlackBoxNode> planTree) {
-		this.updated.clear();
+		this.updatedNodes.clear();
 		this._propagate(node, planTree);
 	}
 
@@ -67,24 +68,18 @@ public class BlackBoxPropagator extends CostPropagator<BlackBoxNode> {
 	 * @param planTree PlanTree<BlackBoxNode>
 	 */
 	public void _propagate(BlackBoxNode node, PlanTree<BlackBoxNode> planTree) {
-		this.updated.add(node);
-
-		if (node.getStatus() == NodeStatus.SUCCESSFUL) {
+		this.updatedNodes.add(node);
+		if (node.getStatus() == NodeStatus.SUCCESSFUL) 
 			node.ground();
-		}
-
 		else if (node.getEquivalentNode() != null) {
 			BlackBoxNode pointer = node.getEquivalentNode();
-			if (pointer.getPathsToSuccess() != null) {
+			if (pointer.getPathsToSuccess() != null) 
 				node.setPathsToSuccess(pointer.getPathsToSuccess());
-			}
-
 		} else {
 			Set<BlackBoxNode> children = new LinkedHashSet<>();
-			for (DefaultEdge edge : planTree.outgoingEdgesOf(node)) {
+			for (DefaultEdge edge : planTree.outgoingEdgesOf(node)) 
 				children.add(planTree.getEdgeTarget(edge));
-			}
-
+			
 			// Iterate over all children and copy their corresponding paths-to-success
 			for (BlackBoxNode child:children) {
 				Set<List<Integer>> paths = child.getPathsToSuccess();
@@ -106,10 +101,12 @@ public class BlackBoxPropagator extends CostPropagator<BlackBoxNode> {
 			Set<List<Integer>> paths = node.getPathsToSuccess();
 			if (paths != null) {
 				for (List<Integer> path:paths) {
-					RelationalTerm plan = PropagatorUtils.createLeftDeepPlan(planTree, path, this.costEstimator);
+					RelationalTerm plan = PropagatorUtils.createLeftDeepPlan(planTree, path);
+					Cost cost = this.costEstimator.cost(plan);
 					Preconditions.checkState(plan != null);
-					if (this.bestPlan == null || plan.getCost().lessThan(this.bestPlan.getCost())) {
+					if (this.bestPlan == null || cost.lessThan(this.bestCost)) {
 						this.bestPlan = plan;
+						this.bestCost = cost;
 						this.bestPath = path;
 					}
 				}
@@ -117,13 +114,12 @@ public class BlackBoxPropagator extends CostPropagator<BlackBoxNode> {
 		} 
 
 		else {
-			for (DefaultEdge edge: planTree.incomingEdgesOf(node)) {
+			for (DefaultEdge edge: planTree.incomingEdgesOf(node)) 
 				this._propagate(planTree.getEdgeSource(edge), planTree);
-			}
+			
 			for (BlackBoxNode n:planTree.vertexSet()) {
-				if (n.getEquivalentNode() != null && n.getEquivalentNode().equals(node) && !this.updated.contains(n)) {
+				if (n.getEquivalentNode() != null && n.getEquivalentNode().equals(node) && !this.updatedNodes.contains(n)) 
 					this._propagate(n, planTree);
-				}
 			}
 		}
 	}

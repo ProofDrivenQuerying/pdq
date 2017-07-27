@@ -146,6 +146,10 @@ public abstract class Explorer {
 	public RelationalTerm getBestPlan() {
 		return this.bestPlan;
 	}
+	
+	public Cost getBestCost() {
+		return this.bestCost;
+	}
 
 	/**
 	 * Sets the max elapsed time.

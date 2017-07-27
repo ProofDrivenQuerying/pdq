@@ -63,7 +63,7 @@ public abstract class LinearExplorer extends Explorer {
 	protected final CostEstimator costEstimator;
 
 	/**  Creates new nodes. */
-	private final NodeFactory nodeFactory;
+	protected final NodeFactory nodeFactory;
 
 	/**
 	 * The tree of plans.
@@ -129,7 +129,7 @@ public abstract class LinearExplorer extends Explorer {
 		this.nodeFactory = nodeFactory;
 		this.depth = depth;
 		this.reasoningParameters = reasoningParams;
-		this.initialise();
+		this.initialisePlanTree();
 	}
 
 	/**
@@ -138,7 +138,7 @@ public abstract class LinearExplorer extends Explorer {
 	 * @throws PlannerException the planner exception
 	 * @throws SQLException 
 	 */
-	private void initialise() throws PlannerException, SQLException {
+	private void initialisePlanTree() throws PlannerException, SQLException {
 		AccessibleChaseState state = (uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState) 
 				new AccessibleDatabaseListState(this.reasoningParameters, this.query, this.accessibleSchema, this.connection, true);
 		this.chaser.reasonUntilTermination(state, this.accessibleSchema.getOriginalDependencies());
@@ -190,14 +190,14 @@ public abstract class LinearExplorer extends Explorer {
 		return selection;
 	}
 
-	/**
-	 * Gets the node factory.
-	 *
-	 * @return the node factory
-	 */
-	public NodeFactory getNodeFactory() {
-		return this.nodeFactory;
-	}
+//	/**
+//	 * Gets the node factory.
+//	 *
+//	 * @return the node factory
+//	 */
+//	public NodeFactory getNodeFactory() {
+//		return this.nodeFactory;
+//	}
 
 	/**
 	 * Gets the configurations.

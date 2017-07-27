@@ -108,7 +108,7 @@ public class ExplorerFactory {
 			ConjunctiveQuery accessibleQuery,
 			Chaser chaser,
 			DatabaseConnection dbConn,
-			CostEstimator<P> costEstimator,
+			CostEstimator costEstimator,
 			PlannerParameters parameters,
 			ReasoningParameters reasoningParameters, DatabaseParameters dbParams) throws Exception {
 

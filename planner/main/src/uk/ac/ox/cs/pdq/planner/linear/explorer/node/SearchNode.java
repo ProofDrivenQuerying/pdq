@@ -76,12 +76,12 @@ public abstract class SearchNode implements Cloneable{
 	/**  The path plan from root. */
 	private RelationalTerm bestPlanFromRoot = null;
 	
-	private Cost bestPlanFromRootCost = null;
+	private Cost costOfBestPlanFromRoot = null;
 
 	/**  The plan that cost dominates the node. */
-	private RelationalTerm dominancePlan = null;
+	private RelationalTerm dominatingPlan = null;
 	
-	private Cost dominancePlanCost = null;
+	private Cost costOfDominatingPlan = null;
 
 	/**
 	 * Instantiates a new search node.
@@ -121,8 +121,8 @@ public abstract class SearchNode implements Cloneable{
 		else 
 			bestPathFromRoot = new ArrayList<>(parent.getBestPathFromRoot());
 		bestPathFromRoot.add(this.getId());
-		this.setBestPathFromRoot(bestPathFromRoot);
-		this.setBestPlanFromRoot(this.configuration.getPlan());
+		this.bestPathFromRoot = bestPathFromRoot;
+		this.bestPlanFromRoot = this.configuration.getPlan();
 	}
 
 	/**
@@ -301,17 +301,17 @@ public abstract class SearchNode implements Cloneable{
 	 *
 	 * @return LeftDeepPlan
 	 */
-	public RelationalTerm getDominancePlan() {
-		return this.dominancePlan;
+	public RelationalTerm getDominatingPlan() {
+		return this.dominatingPlan;
 	}
 
 	/**
 	 * Sets the dominance plan.
 	 *
-	 * @param dominancePlan LeftDeepPlan
+	 * @param dominatingPlan LeftDeepPlan
 	 */
-	public void setDominancePlan(RelationalTerm dominancePlan) {
-		this.dominancePlan = dominancePlan;
+	public void setDominatingPlan(RelationalTerm dominatingPlan) {
+		this.dominatingPlan = dominatingPlan;
 	}
 
 	/**
@@ -349,20 +349,20 @@ public abstract class SearchNode implements Cloneable{
 	 */
 	public abstract void setPathToSuccess(List<Integer> pathToSuccess);
 
-	public Cost getBestPlanFromRootCost() {
-		return bestPlanFromRootCost;
+	public Cost getCostOfDominatingPlan() {
+		return this.costOfDominatingPlan;
 	}
 
-	public void setBestPlanFromRootCost(Cost bestPlanFromRootCost) {
-		this.bestPlanFromRootCost = bestPlanFromRootCost;
+	public void setCostOfDominatingPlan(Cost costOfDominatingPlan) {
+		this.costOfDominatingPlan = costOfDominatingPlan;
 	}
 
-	public Cost getDominancePlanCost() {
-		return dominancePlanCost;
+	public Cost getCostOfBestPlanFromRoot() {
+		return costOfBestPlanFromRoot;
 	}
 
-	public void setDominancePlanCost(Cost dominancePlanCost) {
-		this.dominancePlanCost = dominancePlanCost;
+	public void setCostOfBestPlanFromRoot(Cost costOfBestPlanFromRoot) {
+		this.costOfBestPlanFromRoot = costOfBestPlanFromRoot;
 	}
 
 	/**
@@ -383,9 +383,9 @@ public abstract class SearchNode implements Cloneable{
 		 * @return true if the source is dominated by the target
 		 */
 		public boolean isDominated(SearchNode source, SearchNode target) {
-			if(source.getBestPlanFromRoot() != null &&
-					target.getBestPlanFromRoot() != null &&
-					source.getBestPlanFromRootCost().greaterOrEquals(target.getBestPlanFromRootCost())) {
+			if(source.costOfBestPlanFromRoot != null &&
+					target.costOfBestPlanFromRoot != null &&
+					source.costOfBestPlanFromRoot.greaterOrEquals(target.costOfBestPlanFromRoot)) {
 				return this.factDominance.isDominated(source.getConfiguration(), target.getConfiguration());
 			}
 			return false;

@@ -50,13 +50,13 @@ public class PropagatorUtils {
 	 * @param costEstimator CostEstimator<LeftDeepPlan>
 	 * @return a linear plan that corresponds to the input path to success
 	 */
-	public static <T extends SearchNode> RelationalTerm createLeftDeepPlan(IndexedDirectedGraph<T> nodesSet, List<Integer> path, CostEstimator costEstimator) {
+	public static <T extends SearchNode> RelationalTerm createLeftDeepPlan(IndexedDirectedGraph<T> nodesSet, List<Integer> path) {
 		Preconditions.checkArgument(path != null && !path.isEmpty());
 		List<T> nodes = LinearUtility.createPath(nodesSet, path);
 		RelationalTerm plan = LeftDeepPlanGenerator.createLeftDeepPlan(nodes);
-		costEstimator.cost(plan); 
-		for (T next:nodes) 
-			costEstimator.cost(next.getConfiguration().getPlan());
+//		costEstimator.cost(plan); 
+//		for (T next:nodes) 
+//			costEstimator.cost(next.getConfiguration().getPlan());
 		return plan;
 	}
 }

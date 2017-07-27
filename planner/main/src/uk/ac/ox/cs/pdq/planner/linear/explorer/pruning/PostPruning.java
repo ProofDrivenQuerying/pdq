@@ -9,12 +9,10 @@ import java.util.Set;
 import org.jgrapht.graph.DefaultEdge;
 
 import uk.ac.ox.cs.pdq.LimitReachedException;
+import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
-import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema.AccessibleRelation;
-import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema.InferredAccessibleRelation;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.Candidate;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.NodeFactory;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
@@ -43,7 +41,7 @@ public abstract class PostPruning {
 	protected List<SearchNode> path = null;
 	
 	/** The plan. */
-	protected LeftDeepPlan plan = null;
+	protected RelationalTerm plan = null;
 
 	/**
 	 * Instantiates a new post pruning.
@@ -69,7 +67,7 @@ public abstract class PostPruning {
 	 * @throws PlannerException the planner exception
 	 * @throws LimitReachedException the limit reached exception
 	 */
-	public boolean prune(SearchNode root, List<SearchNode> path, Collection<Atom> queryFacts) throws PlannerException, LimitReachedException {
+	public boolean prune(SearchNode root, List<SearchNode> path, Atom[] queryFacts) throws PlannerException, LimitReachedException {
 		Preconditions.checkArgument(path != null);
 		Preconditions.checkArgument(queryFacts != null);
 		this.isPruned = false;
@@ -84,9 +82,8 @@ public abstract class PostPruning {
 			}
 		}
 		Collection<Atom> factsToExpose = this.findFactsToExpose(path, qF);
-		if(this.isPruned) {
+		if(this.isPruned) 
 			this.createPath(root, path, factsToExpose);
-		}
 		return this.isPruned;
 	}
 
@@ -149,7 +146,7 @@ public abstract class PostPruning {
 	 *
 	 * @return the plan
 	 */
-	public LeftDeepPlan getPlan() {
+	public RelationalTerm getPlan() {
 		return this.plan;
 	}
 
