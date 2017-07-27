@@ -9,11 +9,11 @@ package uk.ac.ox.cs.pdq.planner.dominance;
  */
 public interface FactDominance extends Dominance {
 
-//	/**
-//	 * Clone.
-//	 *
-//	 * @return FactDominance<C>
-//	 */
-//	@Override
-//	FactDominance clone();
+	/**
+	 * Clone.
+	 *
+	 * @return FactDominance<C>
+	 */
+	@Override
+	FactDominance clone();
 }

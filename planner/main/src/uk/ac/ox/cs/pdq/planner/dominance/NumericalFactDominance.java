@@ -28,13 +28,13 @@ public class NumericalFactDominance implements FactDominance{
 		return false;
 	}
 	
-//	/**
-//	 * Clone.
-//	 *
-//	 * @return NumericalFactDominance<C>
-//	 */
-//	@Override
-//	public NumericalFactDominance clone() {
-//		return new NumericalFactDominance();
-//	}
+	/**
+	 * Clone.
+	 *
+	 * @return NumericalFactDominance<C>
+	 */
+	@Override
+	public NumericalFactDominance clone() {
+		return new NumericalFactDominance();
+	}
 }

@@ -46,13 +46,13 @@ public class FastFactDominance implements FactDominance{
 		return false;
 	}
 
-//	/**
-//	 * Clone.
-//	 *
-//	 * @return FastFactDominance<C>
-//	 */
-//	@Override
-//	public FastFactDominance clone() {
-//		return new FastFactDominance(this.isStrict);
-//	}
+	/**
+	 * Clone.
+	 *
+	 * @return FastFactDominance<C>
+	 */
+	@Override
+	public FastFactDominance clone() {
+		return new FastFactDominance(this.isStrict);
+	}
 }

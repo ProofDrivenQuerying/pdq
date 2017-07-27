@@ -5,7 +5,6 @@ import static uk.ac.ox.cs.pdq.test.acceptance.AcceptanceCriterion.AcceptanceLeve
 
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.DoubleCost;
-import uk.ac.ox.cs.pdq.plan.Plan;
 
 // TODO: Auto-generated Javadoc
 /**

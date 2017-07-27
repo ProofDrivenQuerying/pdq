@@ -87,14 +87,14 @@ public class CostFactDominance implements Dominance{
 			return false;
 	}
 
-//	/**
-//	 * Clone.
-//	 *
-//	 * @return ClosedDominance
-//	 * @see uk.ac.ox.cs.pdq.dag.dominance.Dominance#clone()
-//	 */
-//	@Override
-//	public ClosedDominance clone() {
-//		return new ClosedDominance(this.costEstimator.clone(), this.factDominance.clone());
-//	}
+	/**
+	 * Clone.
+	 *
+	 * @return ClosedDominance
+	 * @see uk.ac.ox.cs.pdq.dag.dominance.Dominance#clone()
+	 */
+	@Override
+	public CostFactDominance clone() {
+		return new CostFactDominance(this.costEstimator.clone(), this.inputFactDominance.clone(), this.isStrict);
+	}
 }

@@ -53,20 +53,13 @@ public class SuccessDominance {
 		return false;
 	}
 
-	//	/**
-	//	 * Clone.
-	//	 *
-	//	 * @return SuccessDominance
-	//	 */
-	//	@Override
-	//	public abstract SuccessDominance clone();
-
-	//	/**
-	//	 * Simple function.
-	//	 *
-	//	 * @return true if we use a simple cost function to compare plans
-	//	 */
-	//	public boolean simpleFunction() {
-	//		return this.simpleFunction;
-	//	}
+	/**
+	 * Clone.
+	 *
+	 * @return SuccessDominance
+	 */
+	@Override
+	public SuccessDominance clone() {
+		return new SuccessDominance(this.estimator);
+	}
 }

@@ -20,10 +20,10 @@ public interface Dominance {
 	 */
 	boolean isDominated(Configuration source, Configuration target);
 
-//	/**
-//	 * Clone.
-//	 *
-//	 * @return Dominance
-//	 */
-//	Dominance<C> clone();
+	/**
+	 * Clone.
+	 *
+	 * @return Dominance
+	 */
+	Dominance clone();
 }
