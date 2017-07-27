@@ -8,11 +8,10 @@ import java.util.LinkedHashMap;
 import java.util.Properties;
 import java.util.Set;
 
-import uk.ac.ox.cs.pdq.algebra.RelationalOperator;
+import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.datasources.BooleanResult;
 import uk.ac.ox.cs.pdq.datasources.Result;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
 import uk.ac.ox.cs.pdq.runtime.EvaluationException;
 import uk.ac.ox.cs.pdq.runtime.RuntimeParameters.Semantics;
 import uk.ac.ox.cs.pdq.runtime.query.SQLQueryEvaluator;
@@ -40,7 +39,7 @@ public class SQLStepPlanExecutor extends SQLPlanExecutor {
 	 * @param sem Semantics
 	 * @param properties the properties
 	 */
-	public SQLStepPlanExecutor(LeftDeepPlan plan, ConjunctiveQuery q, Semantics sem, Properties properties) {
+	public SQLStepPlanExecutor(RelationalTerm plan, ConjunctiveQuery q, Semantics sem, Properties properties) {
 		super(plan, q, sem, properties);
 	}
 
@@ -94,7 +93,7 @@ public class SQLStepPlanExecutor extends SQLPlanExecutor {
 			} while (aliases.hasNext());
 
 			// Retrieve the final result
-			RelationalOperator lastCommand = this.plan.getEffectiveOperator();
+			RelationalTerm lastCommand = this.plan;
 			try (Connection connection = SQLQueryEvaluator.getConnection(this.properties)) {
 				SQLQueryEvaluator evaluator = SQLQueryEvaluator.newEvaluator(connection);
 				evaluator.setEventBus(this.eventBus);

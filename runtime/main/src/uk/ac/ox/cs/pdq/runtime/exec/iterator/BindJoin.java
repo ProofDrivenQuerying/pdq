@@ -13,7 +13,7 @@ import org.apache.jcs.access.CacheAccess;
 import org.apache.jcs.access.exception.CacheException;
 import org.apache.jcs.engine.control.CompositeCacheManager;
 
-import uk.ac.ox.cs.pdq.algebra.predicates.Predicate;
+import uk.ac.ox.cs.pdq.algebra.Condition;
 import uk.ac.ox.cs.pdq.util.Tuple;
 import uk.ac.ox.cs.pdq.util.Typed;
 
@@ -83,7 +83,7 @@ public class BindJoin extends Join {
 	 * @param left TupleIterator
 	 * @param right TupleIterator
 	 */
-	public BindJoin(Predicate pred, TupleIterator left, TupleIterator right) {
+	public BindJoin(Condition pred, TupleIterator left, TupleIterator right) {
 		this(pred, 
 				inferInputMappings(left.getColumns(), right.getInputColumns()),
 				left, right);
@@ -96,7 +96,7 @@ public class BindJoin extends Join {
 	 * @param left TupleIterator
 	 * @param right TupleIterator
 	 */
-	public BindJoin(Predicate pred, List<Integer> sideWays, TupleIterator left, TupleIterator right) {
+	public BindJoin(Condition pred, List<Integer> sideWays, TupleIterator left, TupleIterator right) {
 		super(pred, inferInputColumns(left, right), toList(left, right));
 		this.left = left;
 		this.right = right;

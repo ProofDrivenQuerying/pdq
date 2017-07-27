@@ -2,7 +2,7 @@ package uk.ac.ox.cs.pdq.runtime.exec.iterator;
 
 import java.util.NoSuchElementException;
 
-import uk.ac.ox.cs.pdq.algebra.predicates.Predicate;
+import uk.ac.ox.cs.pdq.algebra.Condition;
 import uk.ac.ox.cs.pdq.util.Tuple;
 
 import com.google.common.base.Preconditions;
@@ -17,7 +17,7 @@ import com.google.common.base.Preconditions;
 public class Selection extends UnaryIterator {
 
 	/** The predicate associated with this selection. */
-	private final Predicate predicate;
+	private final Condition predicate;
 
 	/**  The next Tuple to return. */
 	private Tuple nextTuple = null;
@@ -27,7 +27,7 @@ public class Selection extends UnaryIterator {
 	 * @param p Atom
 	 * @param child TupleIterator
 	 */
-	public Selection(Predicate p, TupleIterator child) {
+	public Selection(Condition p, TupleIterator child) {
 		super(child);
 		Preconditions.checkArgument(p != null);
 		this.predicate = p;
@@ -100,7 +100,7 @@ public class Selection extends UnaryIterator {
 	 *
 	 * @return Atom
 	 */
-	public Predicate getPredicate() {
+	public Condition getPredicate() {
 		return this.predicate;
 	}
 

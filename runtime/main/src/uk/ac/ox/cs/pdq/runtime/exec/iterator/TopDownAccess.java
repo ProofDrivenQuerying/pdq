@@ -6,15 +6,16 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
+import uk.ac.ox.cs.pdq.datasources.RelationAccessWrapper;
 import uk.ac.ox.cs.pdq.datasources.ResetableIterator;
 import uk.ac.ox.cs.pdq.datasources.Table;
-import uk.ac.ox.cs.pdq.datasources.memory.RelationAccessWrapper;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
-import uk.ac.ox.cs.pdq.db.AccessMethod.Types;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
+import uk.ac.ox.cs.pdq.runtime.util.RuntimeUtilities;
 import uk.ac.ox.cs.pdq.util.Tuple;
 import uk.ac.ox.cs.pdq.util.TupleType;
 import uk.ac.ox.cs.pdq.util.Typed;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
@@ -41,7 +42,7 @@ public class TopDownAccess extends TupleIterator {
 	private final TupleType inputBindingType;
 
 	/** The map some of the inputs to static values. */
-	private final Map<Integer, TypedConstant<?>> staticInputs;
+	private final Map<Integer, TypedConstant> staticInputs;
 
 	/** Iterator over the output tuples. */
 	protected Map<Tuple, ResetableIterator<Tuple>> outputs = null;
@@ -74,11 +75,10 @@ public class TopDownAccess extends TupleIterator {
 	 * statically provided (indices correspond to original attributes positions
 	 * in the relation, regardless of how input positions are ordered.)
 	 */
-	public TopDownAccess(RelationAccessWrapper relation, AccessMethod accessMethod, Map<Integer, TypedConstant<?>> staticInputs) {
+	public TopDownAccess(RelationAccessWrapper relation, AccessMethod accessMethod, Map<Integer, TypedConstant> staticInputs) {
 		super(inferInput(relation, accessMethod, keySet(staticInputs)),
 				Lists.<Typed>newArrayList(relation.getAttributes()));
 		Preconditions.checkArgument(accessMethod != null);
-		Preconditions.checkArgument(accessMethod.getType() != Types.FREE);
 		Preconditions.checkArgument(relation.getAccessMethod(accessMethod.getName()) != null);
 		this.relation = relation;
 		this.accessMethod = accessMethod;
@@ -96,7 +96,7 @@ public class TopDownAccess extends TupleIterator {
 	 * @return the boolean
 	 */
 	private static Boolean isStaticInputsConsistentWithAccessMethod(
-			RelationAccessWrapper relation, AccessMethod mt, Map<Integer, TypedConstant<?>> staticInputs) {
+			RelationAccessWrapper relation, AccessMethod mt, Map<Integer, TypedConstant> staticInputs) {
 		for (Integer i: mt.getZeroBasedInputs()) {
 			if (staticInputs.containsKey(i)) {
 				if (!relation.getAttributes().get(i).getType().equals(staticInputs.get(i).getType())) {
@@ -287,7 +287,7 @@ public class TopDownAccess extends TupleIterator {
 		Object[] result = new Object[this.inputBindingType.size()];
 		int j = 0, k = 0;
 		for (int i : this.accessMethod.getZeroBasedInputs()) {
-			TypedConstant<?> staticInput = this.staticInputs.get(i);
+			TypedConstant staticInput = this.staticInputs.get(i);
 			if (staticInput != null) {
 				result[k++] = staticInput.getValue();
 			} else {

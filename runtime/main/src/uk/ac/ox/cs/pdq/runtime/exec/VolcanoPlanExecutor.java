@@ -5,12 +5,11 @@ import java.util.concurrent.Executors;
 
 import org.apache.log4j.Logger;
 
-import uk.ac.ox.cs.pdq.algebra.RelationalOperator;
+import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.datasources.BooleanResult;
 import uk.ac.ox.cs.pdq.datasources.Result;
 import uk.ac.ox.cs.pdq.datasources.Table;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.runtime.EvaluationException;
 import uk.ac.ox.cs.pdq.runtime.RuntimeParameters.Semantics;
 import uk.ac.ox.cs.pdq.runtime.TimeoutException;
@@ -41,7 +40,7 @@ public class VolcanoPlanExecutor implements PlanExecutor {
 	private Table universalTable = null;
 	
 	/** The plan. */
-	private final Plan plan;
+	private final RelationalTerm plan;
 	
 	/** The query. */
 	private final ConjunctiveQuery query;
@@ -69,7 +68,7 @@ public class VolcanoPlanExecutor implements PlanExecutor {
 	 * @param sem Semantics
 	 * @param timeout Long
 	 */
-	public VolcanoPlanExecutor(Plan plan, ConjunctiveQuery query, Semantics sem, Long timeout) {
+	public VolcanoPlanExecutor(RelationalTerm plan, ConjunctiveQuery query, Semantics sem, Long timeout) {
 		this.plan = plan;
 		this.query = query;
 		this.semantics = sem;
@@ -83,7 +82,7 @@ public class VolcanoPlanExecutor implements PlanExecutor {
 	 * @param query the query
 	 * @param sem Semantics
 	 */
-	public VolcanoPlanExecutor(Plan plan, ConjunctiveQuery query, Semantics sem) {
+	public VolcanoPlanExecutor(RelationalTerm plan, ConjunctiveQuery query, Semantics sem) {
 		this(plan, query, sem, Long.MAX_VALUE);
 	}
 
@@ -113,7 +112,7 @@ public class VolcanoPlanExecutor implements PlanExecutor {
 	 */
 	@Override
 	public Result execute(ExecutionModes mode) throws EvaluationException {
-		RelationalOperator logOp = this.plan.getEffectiveOperator();
+		RelationalTerm logOp = this.plan;
 		// Boolean query
 		if (this.query.isBoolean()) {
 			logOp = new uk.ac.ox.cs.pdq.algebra.IsEmpty(logOp);

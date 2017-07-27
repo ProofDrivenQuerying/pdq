@@ -9,15 +9,12 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.io.pretty.DataReader;
-import uk.ac.ox.cs.pdq.io.xml.DAGPlanReader;
-import uk.ac.ox.cs.pdq.io.xml.LeftDeepPlanReader;
 import uk.ac.ox.cs.pdq.io.xml.QueryReader;
 import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
-import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.runtime.util.TupleCounter;
 import uk.ac.ox.cs.pdq.runtime.util.TuplePrinter;
 
@@ -216,7 +213,7 @@ public class Bootstrap {
 	 * @param planPath the plan path
 	 * @return Plan
 	 */
-	private Plan obtainPlan(Schema schema, String planPath) {
+	private RelationalTerm obtainPlan(Schema schema, String planPath) {
 		try (FileInputStream pis = new FileInputStream(planPath)) {
 			try {
 				return new LeftDeepPlanReader(schema).read(pis); 

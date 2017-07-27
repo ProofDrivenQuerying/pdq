@@ -2,9 +2,9 @@ package uk.ac.ox.cs.pdq.runtime.exec.iterator;
 
 import java.util.NoSuchElementException;
 
-import uk.ac.ox.cs.pdq.algebra.predicates.Predicate;
+import uk.ac.ox.cs.pdq.algebra.Condition;
+import uk.ac.ox.cs.pdq.datasources.RelationAccessWrapper;
 import uk.ac.ox.cs.pdq.datasources.ResetableIterator;
-import uk.ac.ox.cs.pdq.datasources.memory.RelationAccessWrapper;
 import uk.ac.ox.cs.pdq.util.Tuple;
 import uk.ac.ox.cs.pdq.util.Typed;
 
@@ -32,7 +32,7 @@ public class Scan extends TupleIterator {
 	private Tuple nextTuple;
 	
 	/** The filter. */
-	protected final Predicate filter;	
+	protected final Condition filter;	
 
 	/**
 	 * Instantiates a new join.
@@ -40,7 +40,7 @@ public class Scan extends TupleIterator {
 	 * @param relation RelationAccessWrapper
 	 * @param filter additional filtering condition
 	 */
-	public Scan(RelationAccessWrapper relation, Predicate filter) {
+	public Scan(RelationAccessWrapper relation, Condition filter) {
 		super(Lists.<Typed>newArrayList(), 
 				Lists.<Typed>newArrayList(relation.getAttributes()));
 		this.relation = relation;
@@ -70,7 +70,7 @@ public class Scan extends TupleIterator {
 	 *
 	 * @return the filter for this scan if any
 	 */
-	public Predicate getFilter() {
+	public Condition getFilter() {
 		return this.filter;
 	}
 	

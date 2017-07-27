@@ -9,20 +9,20 @@ import java.util.Map;
 import java.util.Set;
 
 import uk.ac.ox.cs.pdq.EventHandler;
+import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.datasources.Result;
 import uk.ac.ox.cs.pdq.datasources.Table;
 import uk.ac.ox.cs.pdq.datasources.memory.InMemoryRelation;
 import uk.ac.ox.cs.pdq.datasources.memory.InMemoryTableWrapper;
+import uk.ac.ox.cs.pdq.datasources.memory.InMemoryViewWrapper;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.db.wrappers.InMemoryViewWrapper;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.LinearGuarded;
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.runtime.exec.Middleware;
 import uk.ac.ox.cs.pdq.runtime.exec.PlanExecutor;
 import uk.ac.ox.cs.pdq.runtime.exec.PlanExecutor.ExecutionModes;
@@ -31,7 +31,7 @@ import uk.ac.ox.cs.pdq.runtime.query.QueryEvaluator;
 import uk.ac.ox.cs.pdq.runtime.query.QueryEvaluatorFactory;
 import uk.ac.ox.cs.pdq.util.Tuple;
 import uk.ac.ox.cs.pdq.util.TupleType;
-import uk.ac.ox.cs.pdq.util.Types;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.base.Preconditions;
 import com.google.common.eventbus.EventBus;
@@ -135,7 +135,7 @@ public class Runtime {
 
 		for (Atom fact: this.facts) {
 			InMemoryRelation w = relations.get(fact.getPredicate().getName());
-			List<Attribute> attributes = ((Relation) fact.getPredicate()).getAttributes();
+			Attribute[] attributes = ((Relation) fact.getPredicate()).getAttributes();
 			TupleType type = types.get(w);
 			if (type == null) {
 				type = TupleType.DefaultFactory.createFromTyped(attributes);
@@ -147,8 +147,7 @@ public class Runtime {
 				dataDist.put(w.getName(), data);
 				relations.put(w.getName(), w);
 			}
-			data.add(toTuple(type, attributes,
-					fact.getTerms().toArray(new Constant[fact.getTerms().size()])));
+			data.add(toTuple(type, attributes, fact.getTerms()));
 		}
 		for (String r: dataDist.keySet()) {
 			relations.get(r).load(dataDist.get(r));
@@ -171,7 +170,7 @@ public class Runtime {
 		for (InMemoryViewWrapper v: views) {
 			
 			LinearGuarded dependency = v.getDependency();
-			ConjunctiveQuery cq = new ConjunctiveQuery(
+			ConjunctiveQuery cq = ConjunctiveQuery.create(
 					dependency.getFreeVariables(),
 					(Conjunction) Conjunction.of(dependency.getHead()));
 			Collection<Tuple> data = new LinkedList<>();
@@ -199,7 +198,7 @@ public class Runtime {
 	 * @return the result of the plan evaluation.
 	 * @throws EvaluationException the evaluation exception
 	 */
-	public Result evaluatePlan(Plan p, ConjunctiveQuery query)
+	public Result evaluatePlan(RelationalTerm p, ConjunctiveQuery query)
 			throws EvaluationException {
 		return this.evaluatePlan(p, query, ExecutionModes.DEFAULT);
 	}
@@ -213,7 +212,7 @@ public class Runtime {
 	 * @return the result of the plan evaluation.
 	 * @throws EvaluationException the evaluation exception
 	 */
-	public Result evaluatePlan(Plan p, ConjunctiveQuery query, ExecutionModes mode)
+	public Result evaluatePlan(RelationalTerm p, ConjunctiveQuery query, ExecutionModes mode)
 			throws EvaluationException {
 		PlanExecutor executor = Middleware.newExecutor(this.params, p, query);
 		executor.setTuplesLimit(this.params.getTuplesLimit());
@@ -246,11 +245,11 @@ public class Runtime {
 	 * @param values Constant[]
 	 * @return a tuple view of the given collection of terms.
 	 */
-	private static Tuple toTuple(TupleType type, List<Attribute> attributes, Constant[] values) {
-		Preconditions.checkArgument(attributes.size() == values.length);
+	private static Tuple toTuple(TupleType type, Attribute[] attributes, Constant[] values) {
+		Preconditions.checkArgument(attributes.length == values.length);
 		Object[] constants = new Object[values.length];
 		for (int i = 0, l = values.length; i < l; i++) {
-			constants[i] = Types.cast(attributes.get(i).getType(), values[i].toString());
+			constants[i] = Utility.cast(attributes[i].getType(), values[i].toString());
 		}
 		return type.createTuple(constants);
 	}

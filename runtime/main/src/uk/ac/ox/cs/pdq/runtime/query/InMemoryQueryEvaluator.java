@@ -12,9 +12,10 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import uk.ac.ox.cs.pdq.algebra.predicates.AttributeEqualityPredicate;
-import uk.ac.ox.cs.pdq.algebra.predicates.ConjunctivePredicate;
-import uk.ac.ox.cs.pdq.algebra.predicates.ConstantEqualityPredicate;
+import uk.ac.ox.cs.pdq.algebra.AttributeEqualityCondition;
+import uk.ac.ox.cs.pdq.algebra.Condition;
+import uk.ac.ox.cs.pdq.algebra.ConjunctiveCondition;
+import uk.ac.ox.cs.pdq.algebra.ConstantEqualityCondition;
 import uk.ac.ox.cs.pdq.datasources.BooleanResult;
 import uk.ac.ox.cs.pdq.datasources.Result;
 import uk.ac.ox.cs.pdq.datasources.Table;
@@ -33,6 +34,7 @@ import uk.ac.ox.cs.pdq.runtime.exec.iterator.Projection;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.Selection;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.SymmetricMemoryHashJoin;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator;
+import uk.ac.ox.cs.pdq.runtime.util.RuntimeUtilities;
 import uk.ac.ox.cs.pdq.util.Tuple;
 import uk.ac.ox.cs.pdq.util.TupleType;
 import uk.ac.ox.cs.pdq.util.Typed;
@@ -83,10 +85,7 @@ public class InMemoryQueryEvaluator implements QueryEvaluator {
 	 */
 	@Override
 	public Result evaluate() throws EvaluationException {
-		if (!(this.query instanceof ConjunctiveQuery)) {
-			throw new UnsupportedOperationException("Non-conjunctive queries not yet supported.");
-		}
-		ConjunctiveQuery q = (ConjunctiveQuery) this.query;
+		ConjunctiveQuery q = this.query;
 		try (TupleIterator phyPlan = this.makePhysicalPlan(q)) {
 			phyPlan.open();
 			if (q.isBoolean()) {
@@ -96,7 +95,7 @@ public class InMemoryQueryEvaluator implements QueryEvaluator {
 				}
 				return new BooleanResult(!result);
 			}
-			Table result = new Table(Utility.termsToAttributes(q));
+			Table result = new Table(RuntimeUtilities.termsToAttributes(q));
 			while(phyPlan.hasNext()) {
 				Tuple t = phyPlan.next();
 				result.appendRow(t);
@@ -137,7 +136,7 @@ public class InMemoryQueryEvaluator implements QueryEvaluator {
 			result = new IsEmpty(result);
 		} else {
 			TupleType type = Utility.getTupleType(q);
-			result = new Projection(Utility.variablesToTyped(q.getFreeVariables(),  type), result);
+			result = new Projection(RuntimeUtilities.variablesToTyped(q.getFreeVariables(),  type), result);
 		}
 		return result;
 	}
@@ -156,13 +155,12 @@ public class InMemoryQueryEvaluator implements QueryEvaluator {
 					" relations not supported in In-Mem query evaluator.");
 		}
 		InMemoryTableWrapper r = (InMemoryTableWrapper) p.getPredicate();
-		List<Term> terms = p.getTerms();
-		TupleType type = TupleType.DefaultFactory.createFromTyped(r.getAttributes());
-		List<uk.ac.ox.cs.pdq.algebra.predicates.Predicate> preds = this.makeSelectionPredicates(r.getAttributes(), terms); 
-		if (preds.isEmpty()) {
-			return new MemoryScan(Utility.termsToTyped(terms, type), r.getData());
-		}
-		return new Selection(new ConjunctivePredicate<>(preds), new MemoryScan(Utility.termsToTyped(terms, type), r.getData()));
+		Term[] terms = p.getTerms();
+		TupleType type = Utility.createFromTyped(r.getAttributes());
+		List<Condition> preds = this.makeSelectionPredicates(r.getAttributes(), terms); 
+		if (preds.isEmpty()) 
+			return new MemoryScan(RuntimeUtilities.termsToTyped(terms, type), r.getData());
+		return new Selection(ConjunctiveCondition.create(preds), new MemoryScan(RuntimeUtilities.termsToTyped(terms, type), r.getData()));
 	}
 
 	/**
@@ -172,17 +170,17 @@ public class InMemoryQueryEvaluator implements QueryEvaluator {
 	 * @param terms List<Term>
 	 * @return List<Atom>
 	 */
-	private List<uk.ac.ox.cs.pdq.algebra.predicates.Predicate> makeSelectionPredicates(List<Attribute> attributes, List<Term> terms) {
-		List<uk.ac.ox.cs.pdq.algebra.predicates.Predicate> result = new ArrayList<>();
+	private List<Condition> makeSelectionPredicates(Attribute[] attributes, List<Term> terms) {
+		List<Condition> result = new ArrayList<>();
 		Map<Term, Integer> positions = new LinkedHashMap<>();
 		int i = 0;
 		for (Term t: terms) {
 			if (t instanceof TypedConstant) {
-				result.add(new ConstantEqualityPredicate(i, (TypedConstant) t));
+				result.add(ConstantEqualityCondition.create(i, (TypedConstant) t));
 			} else {
 				Integer position = positions.get(t);
 				if (position != null) {
-					result.add(new AttributeEqualityPredicate(position, i));
+					result.add(AttributeEqualityCondition.create(position, i));
 				} else {
 					positions.put(t, i);
 				}
@@ -203,7 +201,7 @@ public class InMemoryQueryEvaluator implements QueryEvaluator {
 			Map<Atom, TupleIterator> scans,
 			List<Set<Atom>> clusters) {
 		TupleIterator outer = null;
-		Iterator<Set<Atom>> i = Utility.connectedComponents(clusters).iterator();
+		Iterator<Set<Atom>> i = RuntimeUtilities.connectedComponents(clusters).iterator();
 		if (i.hasNext()) {
 			do {
 				TupleIterator inner = null;
@@ -236,19 +234,18 @@ public class InMemoryQueryEvaluator implements QueryEvaluator {
 	 * @param right TupleIterator
 	 * @return ConjunctivePredicate<AttributeEqualityPredicate>
 	 */
-	private ConjunctivePredicate<AttributeEqualityPredicate> makeNaturalJoinPredicate(TupleIterator left, TupleIterator right) {
-		Collection<AttributeEqualityPredicate> result = new ArrayList<>();
+	private ConjunctiveCondition makeNaturalJoinPredicate(TupleIterator left, TupleIterator right) {
+		Collection<AttributeEqualityCondition> result = new ArrayList<>();
 		int i = 0;
 		for (Typed l: left.getColumns()) {
 			int j = 0;
 			for (Typed r: right.getColumns()) {
-				if (l.equals(r)) {
-					result.add(new AttributeEqualityPredicate(i, left.getColumns().size() + j));
-				}
+				if (l.equals(r)) 
+					result.add(AttributeEqualityCondition.create(i, left.getColumns().size() + j));
 				j++;
 			}
 			i++;
 		}
-		return new ConjunctivePredicate<>(result);
+		return ConjunctivePredicate.create(result);
 	}
 }

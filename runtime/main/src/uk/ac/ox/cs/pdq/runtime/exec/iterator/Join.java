@@ -11,10 +11,11 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import uk.ac.ox.cs.pdq.algebra.predicates.AttributeEqualityPredicate;
-import uk.ac.ox.cs.pdq.algebra.predicates.ConjunctivePredicate;
-import uk.ac.ox.cs.pdq.algebra.predicates.EqualityPredicate;
-import uk.ac.ox.cs.pdq.algebra.predicates.Predicate;
+import uk.ac.ox.cs.pdq.algebra.AttributeEqualityCondition;
+import uk.ac.ox.cs.pdq.algebra.Condition;
+import uk.ac.ox.cs.pdq.algebra.ConjunctiveCondition;
+import uk.ac.ox.cs.pdq.algebra.ConstantEqualityCondition;
+import uk.ac.ox.cs.pdq.algebra.SimpleCondition;
 import uk.ac.ox.cs.pdq.util.Tuple;
 import uk.ac.ox.cs.pdq.util.TupleType;
 import uk.ac.ox.cs.pdq.util.Typed;
@@ -33,7 +34,7 @@ import com.google.common.collect.Lists;
 public abstract class Join extends NaryIterator {
 
 	/** The predicate. */
-	protected Predicate predicate;
+	protected Condition predicate;
 	
 	/** Determines whether the operator is known to have an empty result. */
 	protected boolean isEmpty = false;
@@ -68,7 +69,7 @@ public abstract class Join extends NaryIterator {
 	 * @param children
 	 *            the children
 	 */
-	protected Join(Predicate predicate, List<Typed> inputs, Collection<TupleIterator> children) {
+	protected Join(Condition predicate, List<Typed> inputs, Collection<TupleIterator> children) {
 		super(TupleType.DefaultFactory.createFromTyped(inputs), inputs,
 				inferType(children), inferColumns(children), children);
 		Preconditions.checkArgument(children.size() > 1);
@@ -84,28 +85,31 @@ public abstract class Join extends NaryIterator {
 	 * @param columns the columns
 	 * @return true if the predicate if position-consistent with columns.
 	 */
-	private static boolean isPredicateConsistent(Predicate predicate, List<Typed> columns) {
-		if (predicate instanceof ConjunctivePredicate) {
-			ConjunctivePredicate<Predicate> conjunction = ((ConjunctivePredicate) predicate);
-			for (Predicate subPred: conjunction) {
-				if (!isPredicateConsistent(subPred, columns)) {
+	private static boolean isPredicateConsistent(Condition predicate, List<Typed> columns) {
+		if (predicate instanceof ConjunctiveCondition) {
+			for (SimpleCondition subPred: ((ConjunctiveCondition) predicate).getSimpleConditions()) {
+				if (!isPredicateConsistent(subPred, columns)) 
 					return false;
-				}
 			}
-			
 		}
-		if (predicate instanceof EqualityPredicate) {
-			int pos = ((EqualityPredicate) predicate).getPosition();
+		else if (predicate instanceof ConstantEqualityCondition) {
+			int pos = ((ConstantEqualityCondition) predicate).getPosition();
 			if (pos < 0 || pos >= columns.size()) {
 				return false;
 			}
-			if (predicate instanceof AttributeEqualityPredicate) {
-				int other = ((AttributeEqualityPredicate) predicate).getOther();
+		}
+		else if (predicate instanceof AttributeEqualityCondition) {
+			int pos = ((AttributeEqualityCondition) predicate).getPosition();
+			if (pos < 0 || pos >= columns.size()) {
+				return false;
+			}
+			if (predicate instanceof AttributeEqualityCondition) {
+				int other = ((AttributeEqualityCondition) predicate).getOther();
 				if (other < 0 || other >= columns.size()) {
 					return false;
 				}
 			}
-		}
+		} 
 		return true;
 	}
 	
@@ -114,7 +118,7 @@ public abstract class Join extends NaryIterator {
 	 *
 	 * @return the join predicate
 	 */
-	public Predicate getPredicate() {
+	public Condition getPredicate() {
 		return this.predicate;
 	}
 
@@ -135,7 +139,7 @@ public abstract class Join extends NaryIterator {
 	 * @param children TupleIterator[]
 	 * @return Atom
 	 */
-	protected static Predicate inferNaturalJoin(Collection<TupleIterator> children) {
+	protected static Condition inferNaturalJoin(Collection<TupleIterator> children) {
 		Map<Typed, SortedSet<Integer>> joinVariables = new LinkedHashMap<>();
 		int totalCol = 0;
 		// Cluster patterns by variables
@@ -152,7 +156,7 @@ public abstract class Join extends NaryIterator {
 			}
 		}
 		
-		Collection<AttributeEqualityPredicate> equalities = new ArrayList<>();
+		Collection<AttributeEqualityCondition> equalities = new ArrayList<>();
 		// Remove clusters containing only one pattern
 		for (Iterator<Typed> keys = joinVariables.keySet().iterator(); keys.hasNext();) {
 			Set<Integer> cluster = joinVariables.get(keys.next());
@@ -163,12 +167,12 @@ public abstract class Join extends NaryIterator {
 				Integer left = i.next();
 				while (i.hasNext()) {
 					Integer right = i.next();
-					equalities.add(new AttributeEqualityPredicate(left, right));
+					equalities.add(AttributeEqualityCondition.create(left, right));
 				}
 			}
 		}
 
-		return new ConjunctivePredicate<>(equalities);
+		return ConjunctiveCondition.create(equalities);
 	}
 
 	/**

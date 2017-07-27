@@ -4,7 +4,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import uk.ac.ox.cs.pdq.algebra.predicates.Predicate;
+import uk.ac.ox.cs.pdq.algebra.Condition;
 import uk.ac.ox.cs.pdq.util.Tuple;
 import uk.ac.ox.cs.pdq.util.TupleType;
 import uk.ac.ox.cs.pdq.util.Typed;
@@ -30,7 +30,7 @@ public class MemoryScan extends TupleIterator {
 	private Tuple nextTuple;
 	
 	/** The filter. */
-	protected final Predicate filter;	
+	protected final Condition filter;	
 
 	/**
 	 * Instantiates a new memory scan.
@@ -38,7 +38,7 @@ public class MemoryScan extends TupleIterator {
 	 * @param data Iterable<Tuple>
 	 * @param filter additional filtering on the scan 
 	 */
-	public MemoryScan(List<Typed> columns, Iterable<Tuple> data, Predicate filter) {
+	public MemoryScan(List<Typed> columns, Iterable<Tuple> data, Condition filter) {
 		super(Lists.<Typed>newArrayList(), columns);
 		Preconditions.checkArgument(data != null);
 		Iterator<Tuple> testIterator = data.iterator();
@@ -63,7 +63,7 @@ public class MemoryScan extends TupleIterator {
 	 *
 	 * @return the filter for this scan if any
 	 */
-	public Predicate getFilter() {
+	public Condition getFilter() {
 		return this.filter;
 	}
 

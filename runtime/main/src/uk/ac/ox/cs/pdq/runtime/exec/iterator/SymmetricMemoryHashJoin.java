@@ -10,10 +10,11 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-import uk.ac.ox.cs.pdq.algebra.predicates.AttributeEqualityPredicate;
-import uk.ac.ox.cs.pdq.algebra.predicates.ConjunctivePredicate;
-import uk.ac.ox.cs.pdq.algebra.predicates.ConstantEqualityPredicate;
-import uk.ac.ox.cs.pdq.algebra.predicates.Predicate;
+import uk.ac.ox.cs.pdq.algebra.AttributeEqualityCondition;
+import uk.ac.ox.cs.pdq.algebra.Condition;
+import uk.ac.ox.cs.pdq.algebra.ConjunctiveCondition;
+import uk.ac.ox.cs.pdq.algebra.ConstantEqualityCondition;
+import uk.ac.ox.cs.pdq.algebra.SimpleCondition;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.util.Tuple;
 import uk.ac.ox.cs.pdq.util.Typed;
@@ -80,7 +81,7 @@ public class SymmetricMemoryHashJoin extends Join {
 	 * @param right TupleIterator
 	 */
 	public SymmetricMemoryHashJoin(
-			Predicate predicate, TupleIterator left, TupleIterator right) {
+			Condition predicate, TupleIterator left, TupleIterator right) {
 		this(predicate, inferInputColumns(toList(left, right)), left, right);
 	}
 
@@ -105,7 +106,7 @@ public class SymmetricMemoryHashJoin extends Join {
 	 * @param right TupleIterator
 	 */
 	public SymmetricMemoryHashJoin(
-			Predicate predicate,
+			Condition predicate,
 			List<Typed> inputs,
 			TupleIterator left, TupleIterator right) {
 		super(predicate, inputs, toList(left, right));
@@ -209,18 +210,18 @@ public class SymmetricMemoryHashJoin extends Join {
 	 * @param predicate the predicate
 	 * @return the iterable
 	 */
-	private Iterable<AttributeEqualityPredicate> listAttributeEqualityPredicates(Predicate predicate) {
-		Set<AttributeEqualityPredicate> result = new LinkedHashSet<>();
-		if (predicate instanceof ConjunctivePredicate) {
-			ConjunctivePredicate<?> conjunction = (ConjunctivePredicate) predicate;
-			for (Predicate subPred : conjunction) {
-				for (AttributeEqualityPredicate p: listAttributeEqualityPredicates(subPred)) {
+	private Iterable<AttributeEqualityCondition> listAttributeEqualityPredicates(Condition predicate) {
+		Set<AttributeEqualityCondition> result = new LinkedHashSet<>();
+		if (predicate instanceof ConjunctiveCondition) {
+			ConjunctiveCondition conjunction = (ConjunctiveCondition) predicate;
+			for (SimpleCondition subPred : conjunction.getSimpleConditions()) {
+				for (AttributeEqualityCondition p: listAttributeEqualityPredicates(subPred)) {
 					result.add(p);
 				}
 			}
-		} else  if (predicate instanceof AttributeEqualityPredicate) {
-			result.add((AttributeEqualityPredicate) predicate);
-		} else if (!(predicate instanceof ConstantEqualityPredicate)) {
+		} else  if (predicate instanceof AttributeEqualityCondition) {
+			result.add((AttributeEqualityCondition) predicate);
+		} else if (!(predicate instanceof ConstantEqualityCondition)) {
 			throw new UnsupportedOperationException("Unsupported predicate type " + predicate);
 		}
 		return result;
@@ -233,7 +234,7 @@ public class SymmetricMemoryHashJoin extends Join {
 	 */
 	protected Integer[] makeLeftKey() {
 		List<Integer> result = new ArrayList<>();
-		for (AttributeEqualityPredicate p: listAttributeEqualityPredicates(this.predicate)) {
+		for (AttributeEqualityCondition p: listAttributeEqualityPredicates(this.predicate)) {
 			result.add(p.getPosition());
 		}
 		return result.toArray(new Integer[result.size()]);
@@ -247,7 +248,7 @@ public class SymmetricMemoryHashJoin extends Join {
 	 */
 	protected Integer[] makeRightKey(int offset) {
 		List<Integer> result = new ArrayList<>();
-		for (AttributeEqualityPredicate p: listAttributeEqualityPredicates(this.predicate)) {
+		for (AttributeEqualityCondition p: listAttributeEqualityPredicates(this.predicate)) {
 			result.add(p.getOther() - offset);
 		}
 		return result.toArray(new Integer[result.size()]);
@@ -265,7 +266,7 @@ public class SymmetricMemoryHashJoin extends Join {
 			clones.add(child.deepCopy());
 		}
 		return new SymmetricMemoryHashJoin(
-				(ConjunctivePredicate<AttributeEqualityPredicate>) this.predicate,
+				(ConjunctiveCondition) this.predicate,
 				this.inputColumns,
 				this.left, this.right);
 	}

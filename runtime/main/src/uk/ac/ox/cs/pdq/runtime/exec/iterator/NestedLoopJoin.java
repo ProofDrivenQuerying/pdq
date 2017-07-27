@@ -6,7 +6,7 @@ import java.util.Deque;
 import java.util.Iterator;
 import java.util.List;
 
-import uk.ac.ox.cs.pdq.algebra.predicates.Predicate;
+import uk.ac.ox.cs.pdq.algebra.Condition;
 import uk.ac.ox.cs.pdq.util.Tuple;
 import uk.ac.ox.cs.pdq.util.Typed;
 
@@ -45,7 +45,7 @@ public class NestedLoopJoin extends Join {
 	 * @param predicate the join predicate
 	 * @param children the children
 	 */
-	public NestedLoopJoin(Predicate predicate, TupleIterator... children) {
+	public NestedLoopJoin(Condition predicate, TupleIterator... children) {
 		this(predicate, inferInputColumns(toList(children)), toList(children));
 	}
 
@@ -75,7 +75,7 @@ public class NestedLoopJoin extends Join {
 	 * @param inputs List<Typed>
 	 * @param children the children
 	 */
-	public NestedLoopJoin(Predicate predicate, List<Typed> inputs, 
+	public NestedLoopJoin(Condition predicate, List<Typed> inputs, 
 			List<TupleIterator> children) {
 		super(predicate, inputs, children);
 	}

@@ -30,7 +30,7 @@ public class IsEmpty extends UnaryIterator {
 	 */
 	public IsEmpty(TupleIterator child) {
 		super(Lists.<Typed>newArrayList(
-				new Attribute(Boolean.class, IsEmpty.class.getSimpleName())),
+				Attribute.create(Boolean.class, IsEmpty.class.getSimpleName())),
 				child);
 	}
 

@@ -4,14 +4,11 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
 
+import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.datasources.BooleanResult;
 import uk.ac.ox.cs.pdq.datasources.Result;
 import uk.ac.ox.cs.pdq.datasources.Table;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.plan.Plan;
-import uk.ac.ox.cs.pdq.rewrite.RewriterException;
-import uk.ac.ox.cs.pdq.rewrite.sql.SQLTranslator;
-import uk.ac.ox.cs.pdq.rewrite.sql.SQLTranslator.SupportedDialect;
 import uk.ac.ox.cs.pdq.runtime.EvaluationException;
 import uk.ac.ox.cs.pdq.runtime.RuntimeParameters.Semantics;
 import uk.ac.ox.cs.pdq.runtime.query.SQLQueryEvaluator;
@@ -37,7 +34,7 @@ public class SQLPlanExecutor implements PlanExecutor {
 	protected final Properties properties;
 	
 	/** The plan. */
-	protected final Plan plan;
+	protected final RelationalTerm plan;
 	
 	/** The query. */
 	protected final ConjunctiveQuery query;
@@ -65,7 +62,7 @@ public class SQLPlanExecutor implements PlanExecutor {
 	 * @param sem Semantics
 	 * @param properties the properties
 	 */
-	public SQLPlanExecutor(Plan plan, ConjunctiveQuery query, Semantics sem, Properties properties) {
+	public SQLPlanExecutor(RelationalTerm plan, ConjunctiveQuery query, Semantics sem, Properties properties) {
 		this.plan = plan;
 		this.properties = properties;
 		this.query = query;

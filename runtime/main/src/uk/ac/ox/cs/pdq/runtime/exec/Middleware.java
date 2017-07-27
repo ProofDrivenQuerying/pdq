@@ -4,6 +4,9 @@ import java.util.Properties;
 
 import uk.ac.ox.cs.pdq.InconsistentParametersException;
 import uk.ac.ox.cs.pdq.Parameters.EnumParameterValue;
+import uk.ac.ox.cs.pdq.algebra.AccessTerm;
+import uk.ac.ox.cs.pdq.algebra.AlgebraUtilities;
+import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.runtime.RuntimeParameters;
@@ -47,7 +50,7 @@ public final class Middleware {
 	 * type.
 	 * @throws MiddlewareException the middleware exception
 	 */
-	public static PlanExecutor newExecutor(RuntimeParameters params, Plan p, ConjunctiveQuery q) throws MiddlewareException {
+	public static PlanExecutor newExecutor(RuntimeParameters params, RelationalTerm p, ConjunctiveQuery q) throws MiddlewareException {
 		Preconditions.checkArgument(p != null, "Cannot execute null plan");
 		Properties properties = findRelationalProperties(p);
 		switch(params.getExecutorType()) {
@@ -57,7 +60,7 @@ public final class Middleware {
 			if (!(p instanceof LeftDeepPlan)) {
 				throw new InconsistentParametersException("Executor type " + ExecutorTypes.SQL_STEP + " can only be used in conjunction with linear plans.");
 			}
-			return new SQLStepPlanExecutor((LeftDeepPlan) p, q, params.getSemantics(), properties);
+			return new SQLStepPlanExecutor(p, q, params.getSemantics(), properties);
 		case SQL_WITH: 
 			return new SQLWithPlanExecutor(p, q, params.getSemantics(), properties);
 		default: 
@@ -72,9 +75,9 @@ public final class Middleware {
 	 * @return the schema underlying relational's properties if all of the
 	 * relations in the schema have the same properties, null otherwise.
 	 */
-	private static Properties findRelationalProperties(Plan plan) {
+	private static Properties findRelationalProperties(RelationalTerm plan) {
 		Properties result = null;
-		for (AccessOperator access: plan.getAccesses()) {
+		for (AccessTerm access: AlgebraUtilities.getAccesses(plan)) {
 			Properties properties = new Properties();
 			properties.putAll(access.getRelation().getProperties());
 			if (result == null) {

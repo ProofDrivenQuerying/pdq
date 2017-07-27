@@ -21,12 +21,9 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Predicate;
-import uk.ac.ox.cs.pdq.rewrite.RewriterException;
-import uk.ac.ox.cs.pdq.rewrite.sql.SQLTranslator;
 import uk.ac.ox.cs.pdq.runtime.EvaluationException;
 import uk.ac.ox.cs.pdq.util.Tuple;
 import uk.ac.ox.cs.pdq.util.Typed;
-import uk.ac.ox.cs.pdq.util.Types;
 import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.base.Preconditions;
@@ -138,7 +135,7 @@ public class SQLQueryEvaluator implements QueryEvaluator {
 						ndata[index] = rs.getString(index + 1).trim();
 
 					} else {
-						Method m = ResultSet.class.getMethod("get" + Types.simpleName(columnType), int.class);
+						Method m = ResultSet.class.getMethod("get" + Utility.simpleName(columnType), int.class);
 						ndata[index] = m.invoke(rs, index + 1);
 					}
 				}
@@ -187,7 +184,7 @@ public class SQLQueryEvaluator implements QueryEvaluator {
 		log.debug("Evaluating query : " + sql);
 		try(Statement stmt = this.connection.createStatement();
 			ResultSet rs = stmt.executeQuery(sql)) {
-			if (q.getFreeVariables().isEmpty()) {
+			if (q.getFreeVariables().length == 0) {
 				if (rs.next()) {
 					return new BooleanResult(true);
 				}
@@ -208,7 +205,7 @@ public class SQLQueryEvaluator implements QueryEvaluator {
 
 					} else {
 						Method m = ResultSet.class.getMethod(
-								"get" + Types.simpleName(columnType),
+								"get" + Utility.simpleName(columnType),
 								int.class);
 						ndata[index] = m.invoke(rs, index + 1);
 					}

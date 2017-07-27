@@ -4,12 +4,10 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
 
+import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.datasources.BooleanResult;
 import uk.ac.ox.cs.pdq.datasources.Result;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.plan.Plan;
-import uk.ac.ox.cs.pdq.rewrite.RewriterException;
-import uk.ac.ox.cs.pdq.rewrite.sql.SQLTranslator;
 import uk.ac.ox.cs.pdq.runtime.EvaluationException;
 import uk.ac.ox.cs.pdq.runtime.RuntimeParameters.Semantics;
 import uk.ac.ox.cs.pdq.runtime.query.SQLQueryEvaluator;
@@ -36,7 +34,7 @@ public class SQLWithPlanExecutor extends SQLPlanExecutor {
 	 * @param sem Semantics
 	 * @param properties the properties
 	 */
-	public SQLWithPlanExecutor(Plan plan, ConjunctiveQuery q, Semantics sem, Properties properties) {
+	public SQLWithPlanExecutor(RelationalTerm plan, ConjunctiveQuery q, Semantics sem, Properties properties) {
 		super(plan, q, sem, properties);
 	}
 
@@ -62,7 +60,7 @@ public class SQLWithPlanExecutor extends SQLPlanExecutor {
 		try (Connection connection = SQLQueryEvaluator.getConnection(this.properties)) {
 			String sqlStatement = 
 					SQLTranslator.target(SQLPlanExecutor.resolveDialect(this.properties))
-						.toSQLWith(this.plan.getEffectiveOperator());
+						.toSQLWith(this.plan);
 			SQLQueryEvaluator evaluator = SQLQueryEvaluator.newEvaluator(connection);
 			evaluator.setEventBus(this.eventBus);
 			this.universalTable = evaluator.evaluate(sqlStatement, this.plan.getOutputAttributes());
