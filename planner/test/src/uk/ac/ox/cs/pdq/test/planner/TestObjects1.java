@@ -4,16 +4,17 @@ import org.junit.Before;
 import org.mockito.Mock;
 
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
+import uk.ac.ox.cs.pdq.cost.Cost;
+import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState;
 import uk.ac.ox.cs.pdq.util.Utility;
-
-import com.google.common.collect.Lists;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -36,52 +37,51 @@ public class TestObjects1 {
 			new Attribute[]{Attribute.create(String.class, "a1"), Attribute.create(String.class, "a2"), Attribute.create(String.class, "a3")});
 	
 			/** The p1. */
-			protected Atom p1 = new Atom(new AccessibleSchema.InferredAccessibleRelation(r1),
-			new Term[]{UntypedConstant.create("c1"), UntypedConstant.create("c2"), UntypedConstant.create("c3"))
-			);
+			protected Atom p1 = Atom.create(Relation.create(AccessibleSchema.inferredAccessiblePrefix + r1.getName(), r1.getAttributes(), new AccessMethod[]{AccessMethod.create(new Integer[]{})}, r1.isEquality()),
+			new Term[]{UntypedConstant.create("c1"), UntypedConstant.create("c2"), UntypedConstant.create("c3")});
 	
 			/** The r2. */
 			protected Relation r2 = Relation.create("R2", 
 			new Attribute[]{Attribute.create(String.class, "a1"), Attribute.create(String.class, "a2"), Attribute.create(String.class, "a3"), Attribute.create(String.class, "a4")});
 	
 			/** The p2. */
-			protected Atom p2 = new Atom(new AccessibleSchema.InferredAccessibleRelation(r2),
+			protected Atom p2 = Atom.create(Relation.create(AccessibleSchema.inferredAccessiblePrefix + r2.getName(), r2.getAttributes(), new AccessMethod[]{AccessMethod.create(new Integer[]{})}, r2.isEquality()),
 			new Term[]{UntypedConstant.create("c1"), UntypedConstant.create("c2"), UntypedConstant.create("c3"), UntypedConstant.create("c4")}
 			);
 	
 			/** The r3. */
 			protected Relation r3 = Relation.create("R3", 
-			new Term[]{Attribute.create(String.class, "a1"), Attribute.create(String.class, "a2")});
+			new Attribute[]{Attribute.create(String.class, "a1"), Attribute.create(String.class, "a2")});
 	
 			/** The p3. */
-			protected Atom p3 = new Atom(new AccessibleSchema.InferredAccessibleRelation(r3),
+			protected Atom p3 = Atom.create(Relation.create(AccessibleSchema.inferredAccessiblePrefix + r3.getName(), r3.getAttributes(), new AccessMethod[]{AccessMethod.create(new Integer[]{})}, r3.isEquality()),
 			new Term[]{UntypedConstant.create("c1"), UntypedConstant.create("c2")}
 			);
 	
 			/** The r4. */
 			protected Relation r4 = Relation.create("R4", 
-			new Term[]{Attribute.create(String.class, "a1")});
+			new Attribute[]{Attribute.create(String.class, "a1")});
 			
 			/** The p4. */
-			protected Atom p4 = new Atom(new AccessibleSchema.InferredAccessibleRelation(r4),
+			protected Atom p4 = Atom.create(Relation.create(AccessibleSchema.inferredAccessiblePrefix + r4.getName(), r4.getAttributes(), new AccessMethod[]{AccessMethod.create(new Integer[]{})}, r4.isEquality()),
 			new Term[]{UntypedConstant.create("c1")}
 			);
 	
 			/** The r5. */
 			protected Relation r5 = Relation.create("R5", 
-			new Term[]{Attribute.create(String.class, "a1"), Attribute.create(String.class, "a3"), Attribute.create(String.class, "a2")));
+			new Attribute[]{Attribute.create(String.class, "a1"), Attribute.create(String.class, "a3"), Attribute.create(String.class, "a2")});
 	
 			/** The p5. */
-			protected Atom p5 = new Atom(new AccessibleSchema.InferredAccessibleRelation(r5),
-			new Term[]{UntypedConstant.create("c1"), UntypedConstant.create("c3"), UntypedConstant.create("c2"))
+			protected Atom p5 = Atom.create(Relation.create(AccessibleSchema.inferredAccessiblePrefix + r5.getName(), r5.getAttributes(), new AccessMethod[]{AccessMethod.create(new Integer[]{})}, r5.isEquality()),
+			new Term[]{UntypedConstant.create("c1"), UntypedConstant.create("c3"), UntypedConstant.create("c2")}
 			);
 	
 			/** The r6. */
 			protected Relation r6 = Relation.create("R6", 
-			new Term[]{Attribute.create(String.class, "a1"), Attribute.create(String.class, "a3")));
+			new Attribute[]{Attribute.create(String.class, "a1"), Attribute.create(String.class, "a3")});
 	
 			/** The p6. */
-			protected Atom p6 = new Atom(new AccessibleSchema.InferredAccessibleRelation(r6),
+			protected Atom p6 = Atom.create(Relation.create(AccessibleSchema.inferredAccessiblePrefix + r6.getName(), r6.getAttributes(), new AccessMethod[]{AccessMethod.create(new Integer[]{})}, r6.isEquality()),
 			new Term[]{UntypedConstant.create("c1"), UntypedConstant.create("c3")}
 			);
 	
@@ -90,7 +90,7 @@ public class TestObjects1 {
 			new Attribute[]{Attribute.create(String.class, "a1")});
 	
 			/** The p7. */
-			protected Atom p7 = new Atom(new AccessibleSchema.InferredAccessibleRelation(r7),
+			protected Atom p7 = Atom.create(Relation.create(AccessibleSchema.inferredAccessiblePrefix + r7.getName(), r7.getAttributes(), new AccessMethod[]{AccessMethod.create(new Integer[]{})}, r7.isEquality()),
 			new Term[]{UntypedConstant.create("c1")}
 			);
 
@@ -112,6 +112,12 @@ public class TestObjects1 {
 	
 	/** The plan12. */
 	@Mock protected RelationalTerm plan12;
+	
+	/** The plan11. */
+	@Mock protected Cost plan11Cost;
+	
+	/** The plan12. */
+	@Mock protected Cost plan12Cost;
 
 	/** The config21. */
 	@Mock protected DAGChaseConfiguration config21;
@@ -130,6 +136,12 @@ public class TestObjects1 {
 	
 	/** The plan22. */
 	@Mock protected RelationalTerm plan22;
+	
+	/** The plan11. */
+	@Mock protected Cost plan21Cost;
+	
+	/** The plan12. */
+	@Mock protected Cost plan22Cost;
 
 	/** The config31. */
 	@Mock protected DAGChaseConfiguration config31;
@@ -148,4 +160,10 @@ public class TestObjects1 {
 	
 	/** The plan32. */
 	@Mock protected RelationalTerm plan32;
+	
+	/** The plan11. */
+	@Mock protected Cost plan31Cost;
+	
+	/** The plan12. */
+	@Mock protected Cost plan32Cost;
 }
