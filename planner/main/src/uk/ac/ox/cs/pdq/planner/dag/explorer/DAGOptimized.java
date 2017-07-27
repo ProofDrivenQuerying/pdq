@@ -96,21 +96,21 @@ public class DAGOptimized extends DAGExplorer {
 			Schema schema,
 			AccessibleSchema accessibleSchema, 
 			Chaser chaser, 
-			DatabaseConnection dbConn,
+			DatabaseConnection connection,
 			CostEstimator costEstimator,
 			Filter filter,
 			IterativeExecutor reasoningThreads,
 			IterativeExecutor explorationThreads,
 			int maxDepth) throws PlannerException, SQLException {
 		super(eventBus, collectStats, parameters, reasoningParameters, 
-				query, accessibleQuery, schema, accessibleSchema, chaser, dbConn, costEstimator);
+				query, accessibleQuery, accessibleSchema, chaser, connection, costEstimator);
 		Preconditions.checkNotNull(reasoningThreads);
 		Preconditions.checkNotNull(explorationThreads);
 		this.filter = filter;
 		this.reasoningThreads = reasoningThreads;
 		this.explorationThreads = explorationThreads;
 		this.maxDepth = maxDepth;
-		List<DAGChaseConfiguration> initialConfigurations = this.createInitialConfigurations();
+		List<DAGChaseConfiguration> initialConfigurations = this.createApplyRuleConfigurations();
 		if(this.filter != null) {
 			Collection<DAGChaseConfiguration> toDelete = this.filter.filter(initialConfigurations);
 			initialConfigurations.removeAll(toDelete);

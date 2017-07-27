@@ -51,12 +51,12 @@ public class PlannerUtility {
 	/**
 	 * Gets the input constants.
 	 *
-	 * @param binding the binding
+	 * @param accessMethod the binding
 	 * @param fact the fact
 	 * @return the constants in the input positions of the given fact
 	 */
-	public static List<Constant> getInputConstants(AccessMethod binding, Atom fact) {
-		List<Constant> ret  = Utility.getTypedAndUntypedConstants(fact,binding.getZeroBasedInputs());
+	public static List<Constant> getInputConstants(AccessMethod accessMethod, Atom fact) {
+		List<Constant> ret  = Utility.getTypedAndUntypedConstants(fact,accessMethod.getZeroBasedInputs());
 		return Lists.newArrayList(uk.ac.ox.cs.pdq.util.Utility.removeDuplicates(ret));
 	}
 

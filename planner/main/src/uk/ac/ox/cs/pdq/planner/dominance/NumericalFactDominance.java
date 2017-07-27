@@ -1,6 +1,7 @@
 package uk.ac.ox.cs.pdq.planner.dominance;
 
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
+import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
+import uk.ac.ox.cs.pdq.planner.reasoning.Configuration;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -17,24 +18,23 @@ public class NumericalFactDominance implements FactDominance{
 	 * @return BijectiveMap<Constant,Constant>
 	 */
 	@Override
-	public boolean isDominated(ChaseConfiguration source, ChaseConfiguration target) {
-		if(source.equals(target)) {
+	public boolean isDominated(Configuration source, Configuration target) {
+		if(source.equals(target)) 
 			return false;
-		}
-		if (source.getInput().containsAll(target.getInput())
-			&& source.getOutputFacts().size() <= target.getOutputFacts().size()) {
+		else if (source instanceof DAGChaseConfiguration && target instanceof DAGChaseConfiguration && 
+				source.getInput().containsAll(target.getInput()) && 
+				((DAGChaseConfiguration)source).getOutputFacts().size() <= ((DAGChaseConfiguration)target).getOutputFacts().size()) 
 			return true;
-		}
 		return false;
 	}
-
-	/**
-	 * Clone.
-	 *
-	 * @return NumericalFactDominance<C>
-	 */
-	@Override
-	public NumericalFactDominance clone() {
-		return new NumericalFactDominance();
-	}
+	
+//	/**
+//	 * Clone.
+//	 *
+//	 * @return NumericalFactDominance<C>
+//	 */
+//	@Override
+//	public NumericalFactDominance clone() {
+//		return new NumericalFactDominance();
+//	}
 }

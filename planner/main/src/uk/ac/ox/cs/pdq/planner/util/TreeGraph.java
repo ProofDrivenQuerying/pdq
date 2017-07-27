@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.planner;
+package uk.ac.ox.cs.pdq.planner.util;
 
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;

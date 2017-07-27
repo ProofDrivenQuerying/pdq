@@ -1,8 +1,11 @@
 package uk.ac.ox.cs.pdq.planner.reasoning;
 
+import java.util.Collection;
+
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+import uk.ac.ox.cs.pdq.fol.Constant;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -51,6 +54,21 @@ public interface Configuration extends Cloneable, Comparable<Configuration>{
 	 * mapping each free variable into the corresponding element is called a match for Q′ in v.
 	 */
 	boolean isSuccessful(ConjunctiveQuery query);
+	
+	
+	/**
+	 * Gets the input.
+	 *
+	 * @return the configuration's input constants
+	 */
+	public Collection<Constant> getInput();
+
+	/**
+	 * Gets the output.
+	 *
+	 * @return the configuration's output facts
+	 */
+	public Collection<Constant> getOutput();
 
 	/* (non-Javadoc)
 	 * @see java.lang.Comparable#compareTo(java.lang.Object)

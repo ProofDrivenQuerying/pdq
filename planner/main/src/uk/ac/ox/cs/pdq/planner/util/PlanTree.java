@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.planner.linear.explorer.node;
+package uk.ac.ox.cs.pdq.planner.util;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -9,8 +9,7 @@ import org.jgrapht.graph.DefaultEdge;
 
 import com.google.common.base.Preconditions;
 
-import uk.ac.ox.cs.pdq.planner.IndexedDirectedGraph;
-import uk.ac.ox.cs.pdq.planner.TreeGraph;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
 
 // TODO: Auto-generated Javadoc
 /**

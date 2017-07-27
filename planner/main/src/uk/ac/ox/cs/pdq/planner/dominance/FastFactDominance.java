@@ -1,6 +1,7 @@
 package uk.ac.ox.cs.pdq.planner.dominance;
 
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
+import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
+import uk.ac.ox.cs.pdq.planner.reasoning.Configuration;
 
 
 // TODO: Auto-generated Javadoc
@@ -33,26 +34,25 @@ public class FastFactDominance implements FactDominance{
 	 * @return true if the source configuration is dominated by target configuration
 	 */
 	@Override
-	public boolean isDominated(ChaseConfiguration source, ChaseConfiguration target) {
-		if (source.equals(target)) {
+	public boolean isDominated(Configuration source, Configuration target) {
+		if (source.equals(target)) 
 			return false;
-		}
-		if (source.getInput().containsAll(target.getInput()) &&
-				target.getState().getInferred().containsAll(source.getState().getInferred())) {
-			if (!this.isStrict ||  ( this.isStrict && source.getOutputFacts().size() < target.getOutputFacts().size())) {
+		if (source instanceof DAGChaseConfiguration && target instanceof DAGChaseConfiguration && 
+				source.getInput().containsAll(target.getInput()) && 
+				((DAGChaseConfiguration)target).getState().getInferred().containsAll(((DAGChaseConfiguration)source).getState().getInferred())) {
+			if (!this.isStrict || this.isStrict && ((DAGChaseConfiguration)source).getOutputFacts().size() < ((DAGChaseConfiguration)target).getOutputFacts().size()) 
 				return true;
-			}
 		}
 		return false;
 	}
 
-	/**
-	 * Clone.
-	 *
-	 * @return FastFactDominance<C>
-	 */
-	@Override
-	public FastFactDominance clone() {
-		return new FastFactDominance(this.isStrict);
-	}
+//	/**
+//	 * Clone.
+//	 *
+//	 * @return FastFactDominance<C>
+//	 */
+//	@Override
+//	public FastFactDominance clone() {
+//		return new FastFactDominance(this.isStrict);
+//	}
 }

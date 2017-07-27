@@ -139,6 +139,7 @@ public abstract class ChaseConfiguration implements Configuration {
 	 *
 	 * @return the configuration's input constants
 	 */
+	@Override
 	public Collection<Constant> getInput() {
 		return this.input;
 	}
@@ -148,6 +149,7 @@ public abstract class ChaseConfiguration implements Configuration {
 	 *
 	 * @return the configuration's output facts
 	 */
+	@Override
 	public Collection<Constant> getOutput() {
 		return this.output;
 	}

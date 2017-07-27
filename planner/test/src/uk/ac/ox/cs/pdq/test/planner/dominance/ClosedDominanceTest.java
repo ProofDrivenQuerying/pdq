@@ -9,7 +9,7 @@ import org.mockito.MockitoAnnotations;
 
 import uk.ac.ox.cs.pdq.cost.DoubleCost;
 import uk.ac.ox.cs.pdq.cost.estimators.AccessCountCostEstimator;
-import uk.ac.ox.cs.pdq.planner.dominance.ClosedDominance;
+import uk.ac.ox.cs.pdq.planner.dominance.CostFactDominance;
 import uk.ac.ox.cs.pdq.test.planner.TestObjects1;
 
 import com.google.common.collect.Lists;
@@ -24,7 +24,7 @@ import com.google.common.collect.Lists;
 public class ClosedDominanceTest extends TestObjects1{
 
 	/** The cdomominance. */
-	ClosedDominance cdomominance = new ClosedDominance(new AccessCountCostEstimator());
+	CostFactDominance cdomominance = new CostFactDominance(new AccessCountCostEstimator());
 
 	/* (non-Javadoc)
 	 * @see uk.ac.ox.cs.pdq.test.planner.TestObjects1#setup()

@@ -1,6 +1,5 @@
 package uk.ac.ox.cs.pdq.planner.dag.explorer;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -9,11 +8,14 @@ import java.util.List;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import com.google.common.base.Preconditions;
+import com.google.common.collect.Sets;
+import com.google.common.eventbus.EventBus;
+
 import uk.ac.ox.cs.pdq.algebra.ProjectionTerm;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
-import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.planner.Explorer;
@@ -28,12 +30,6 @@ import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleDatabas
 import uk.ac.ox.cs.pdq.planner.util.PlanUtils;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
-import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
-import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
-
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Sets;
-import com.google.common.eventbus.EventBus;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -54,8 +50,8 @@ public abstract class DAGExplorer extends Explorer {
 	/**  The accessible counterpart of the user query *. */
 	protected final ConjunctiveQuery accessibleQuery;
 
-	/**  The input schema *. */
-	protected final Schema schema;
+//	/**  The input schema *. */
+//	protected final Schema schema;
 	
 	/**  The accessible counterpart of the input schema *. */
 	protected final AccessibleSchema accessibleSchema;
@@ -98,7 +94,7 @@ public abstract class DAGExplorer extends Explorer {
 			ReasoningParameters reasoningParameters,
 			ConjunctiveQuery query, 
 			ConjunctiveQuery accessibleQuery,
-			Schema schema,
+//			Schema schema,
 			AccessibleSchema accessibleSchema, 
 			Chaser chaser, 
 			DatabaseConnection dbConn,
@@ -107,7 +103,7 @@ public abstract class DAGExplorer extends Explorer {
 		Preconditions.checkArgument(parameters != null);
 		Preconditions.checkArgument(query != null);
 		Preconditions.checkArgument(accessibleQuery != null);
-		Preconditions.checkArgument(schema != null);
+//		Preconditions.checkArgument(schema != null);
 		Preconditions.checkArgument(accessibleSchema != null);
 		Preconditions.checkArgument(chaser != null);
 		Preconditions.checkArgument(dbConn != null);
@@ -116,7 +112,7 @@ public abstract class DAGExplorer extends Explorer {
 		this.parameters = parameters;
 		this.query = query;
 		this.accessibleQuery = accessibleQuery;
-		this.schema = schema;
+//		this.schema = schema;
 		this.accessibleSchema = accessibleSchema;
 		this.chaser = chaser;
 		this.connection = dbConn;
@@ -186,11 +182,11 @@ public abstract class DAGExplorer extends Explorer {
 	 * @throws PlannerException the planner exception
 	 * @throws SQLException 
 	 */
-	protected List<DAGChaseConfiguration> createInitialConfigurations() throws PlannerException, SQLException {
+	protected List<DAGChaseConfiguration> createApplyRuleConfigurations() throws SQLException {
 		AccessibleDatabaseListState state = null;
-		state = new AccessibleDatabaseListState(this.reasoningParams, this.query, this.schema, this.connection, false);
+		state = new AccessibleDatabaseListState(this.reasoningParams, this.query, this.accessibleSchema, this.connection, false);
 		//TODO this should change to original and infacc
-		this.chaser.reasonUntilTermination(state, this.schema.getDependencies());
+		this.chaser.reasonUntilTermination(state, this.accessibleSchema.getOriginalDependencies());
 
 		List<DAGChaseConfiguration> collection = new ArrayList<>();
 		Collection<Pair<AccessibilityAxiom,Collection<Atom>>> pairs = state.groupFactsByAccessMethods(this.accessibleSchema.getAccessibilityAxioms());
@@ -215,7 +211,7 @@ public abstract class DAGExplorer extends Explorer {
 						pair.getLeft(),
 						Sets.newHashSet(binding)
 						);
-				applyRule.generate(this.chaser, this.query, this.accessibleSchema);
+				applyRule.generate(this.chaser, this.query, this.accessibleSchema.getInferredAccessibilityAxioms());
 				collection.add(applyRule);
 			}
 		}

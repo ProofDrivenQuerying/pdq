@@ -22,7 +22,6 @@ import com.google.common.eventbus.EventBus;
 import uk.ac.ox.cs.pdq.LimitReachedException;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
-import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
@@ -104,7 +103,7 @@ public class DAGGeneric extends DAGExplorer {
 			ReasoningParameters reasoningParameters,
 			ConjunctiveQuery query,
 			ConjunctiveQuery accessibleQuery,
-			Schema schema,
+//			Schema schema,
 			AccessibleSchema accessibleSchema, 
 			Chaser chaser,
 			DatabaseConnection connection,
@@ -114,7 +113,7 @@ public class DAGGeneric extends DAGExplorer {
 			List<Validator> validators,
 			int maxDepth,
 			boolean orderAware) throws PlannerException, SQLException {
-		super(eventBus, collectStats, parameters,reasoningParameters, query, accessibleQuery, schema, accessibleSchema, chaser, connection, costEstimator);
+		super(eventBus, collectStats, parameters,reasoningParameters, query, accessibleQuery, accessibleSchema, chaser, connection, costEstimator);
 		Preconditions.checkNotNull(successDominance);
 		Preconditions.checkArgument(validators != null);
 		Preconditions.checkArgument(!validators.isEmpty());
@@ -123,7 +122,7 @@ public class DAGGeneric extends DAGExplorer {
 		this.validators = validators;
 		this.orderAware = orderAware;
 		this.maxDepth = maxDepth;
-		List<DAGChaseConfiguration> initialConfigurations = this.createInitialConfigurations();
+		List<DAGChaseConfiguration> initialConfigurations = this.createApplyRuleConfigurations();
 		if(this.filter != null) {
 			Collection<DAGChaseConfiguration> toDelete = this.filter.filter(initialConfigurations);
 			initialConfigurations.removeAll(toDelete);
