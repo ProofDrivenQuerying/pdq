@@ -1,6 +1,10 @@
 package uk.ac.ox.cs.pdq.planner.dominance;
 
+import com.google.common.base.Preconditions;
+
+import uk.ac.ox.cs.pdq.cost.estimators.AccessCountCostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.SimpleCostEstimator;
+import uk.ac.ox.cs.pdq.planner.PlannerParameters.SuccessDominanceTypes;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -13,18 +17,21 @@ import uk.ac.ox.cs.pdq.cost.estimators.SimpleCostEstimator;
  */
 public class SuccessDominanceFactory {
 
+	private final SuccessDominanceTypes type;
 	/** The estimator. */
-	private final SimpleCostEstimator estimator;
+	private final SimpleCostEstimator estimator = new AccessCountCostEstimator(null);
 
 	/**
-	 * Constructor for SuccessDominanceFactory.
-	 * @param estimator CostEstimator<P>
-	 * @param type SuccessDominanceTypes
+	 * Constructor for DominanceFactory.
+	 *
+	 * @param type DominanceTypes
+	 * @param costEstimator the cost estimator
 	 */
-	public SuccessDominanceFactory(SimpleCostEstimator estimator) {
-		this.estimator = estimator;
+	public SuccessDominanceFactory(SuccessDominanceTypes type) {
+		Preconditions.checkNotNull(type);
+		this.type = type;
 	}
-
+	
 	/**
 	 * Gets the single instance of SuccessDominanceFactory.
 	 *

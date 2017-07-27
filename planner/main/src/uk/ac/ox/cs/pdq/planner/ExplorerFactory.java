@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -12,10 +11,11 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import com.google.common.eventbus.EventBus;
+
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
-import uk.ac.ox.cs.pdq.db.DatabaseInstance;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -45,10 +45,6 @@ import uk.ac.ox.cs.pdq.planner.linear.explorer.pruning.PostPruning;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.pruning.PostPruningFactory;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
-import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
-import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
-
-import com.google.common.eventbus.EventBus;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -109,8 +105,8 @@ public class ExplorerFactory {
 			PlannerParameters parameters,
 			ReasoningParameters reasoningParameters, DatabaseParameters dbParams) throws Exception {
 
-		Dominance[] dominance = new DominanceFactory(parameters.getDominanceType(), costEstimator).getInstance();
-		SuccessDominance successDominance = new SuccessDominanceFactory(costEstimator, parameters.getSuccessDominanceType()).getInstance();
+		Dominance[] dominance = new DominanceFactory(parameters.getDominanceType()).getInstance();
+		SuccessDominance successDominance = new SuccessDominanceFactory(parameters.getSuccessDominanceType()).getInstance();
 		
 		NodeFactory nodeFactory = null;
 		PostPruning postPruning = null;

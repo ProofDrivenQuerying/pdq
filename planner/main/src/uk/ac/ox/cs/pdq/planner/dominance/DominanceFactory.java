@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.google.common.base.Preconditions;
 
+import uk.ac.ox.cs.pdq.cost.estimators.AccessCountCostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.SimpleCostEstimator;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.DominanceTypes;
 
@@ -25,9 +26,9 @@ public class DominanceFactory {
 	private final DominanceTypes type;
 	
 	/** The cost estimator. */
-	private final SimpleCostEstimator costEstimator;
+	private final SimpleCostEstimator costEstimator = new AccessCountCostEstimator(null);
 	
-	private final FactDominance factDominance;
+	private final FactDominance factDominance = new FastFactDominance(false);
 
 	/**
 	 * Constructor for DominanceFactory.
@@ -35,12 +36,10 @@ public class DominanceFactory {
 	 * @param type DominanceTypes
 	 * @param costEstimator the cost estimator
 	 */
-	public DominanceFactory(DominanceTypes type, FactDominance factDominance, SimpleCostEstimator costEstimator) {
+	public DominanceFactory(DominanceTypes type) {
 		Preconditions.checkNotNull(type);
 		Preconditions.checkNotNull(costEstimator);
 		this.type = type;
-		this.factDominance = factDominance;
-		this.costEstimator = costEstimator;
 	}
 
 	/**
@@ -52,7 +51,7 @@ public class DominanceFactory {
 		ArrayList<Dominance> detector = new ArrayList<>();
 		switch(this.type) {
 		case CLOSED:
-			detector.add(new CostFactDominance(this.costEstimator, this.factDominance, false));
+			detector.add(new CostFactDominance(null, this.factDominance, false));
 			break;
 		case OPEN:
 			detector.add(new CostFactDominance(this.costEstimator, this.factDominance, true));
