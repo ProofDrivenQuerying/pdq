@@ -4,13 +4,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
 
-import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Conjunction;
-import uk.ac.ox.cs.pdq.fol.EGD;
-import uk.ac.ox.cs.pdq.fol.Predicate;
-import uk.ac.ox.cs.pdq.fol.Term;
-import uk.ac.ox.cs.pdq.fol.Variable;
-import uk.ac.ox.cs.pdq.io.xml.QNames;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 
 
@@ -23,14 +16,14 @@ public class TestDatabaseChaseListState {
 
 	protected DatabaseChaseInstance state;
 	
-	private Atom R2 = Atom.create(Predicate.create("R2",2), 
-			new Term[]{Variable.create("y"),Variable.create("z")});
-	private Atom R2p = Atom.create(Predicate.create("R2",2), 
-			new Term[]{Variable.create("y"),Variable.create("w")});
+//	private Atom R2 = Atom.create(Predicate.create("R2",2), 
+//			new Term[]{Variable.create("y"),Variable.create("z")});
+//	private Atom R2p = Atom.create(Predicate.create("R2",2), 
+//			new Term[]{Variable.create("y"),Variable.create("w")});
 	
-	private EGD egd = EGD.create(Conjunction.of(R2,R2p), Conjunction.of(
-			Atom.create(Predicate.create(QNames.EQUALITY.toString(), 2, true), 
-			Variable.create("z"),Variable.create("w"))));
+//	private EGD egd = EGD.create(Conjunction.of(R2,R2p), Conjunction.of(
+//			Atom.create(Predicate.create(QNames.EQUALITY.toString(), 2, true), 
+//			Variable.create("z"),Variable.create("w"))));
 			
 	@Before
 	public void setup() {
