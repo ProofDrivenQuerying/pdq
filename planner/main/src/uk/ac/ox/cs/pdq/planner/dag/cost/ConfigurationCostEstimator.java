@@ -52,11 +52,11 @@ public class ConfigurationCostEstimator implements CostEstimator {
 //		return estimator.estimateCost(config.getPlan());
 //	}
 //
-//	/* (non-Javadoc)
-//	 * @see java.lang.Object#clone()
-//	 */
-//	@Override
-//	public CostEstimator<Configuration> clone() {
-//		return new ConfigurationCostEstimator(this.estimator);
-//	}
+	/* (non-Javadoc)
+	 * @see java.lang.Object#clone()
+	 */
+	@Override
+	public CostEstimator clone() {
+		return new ConfigurationCostEstimator(this.estimator);
+	}
 }
