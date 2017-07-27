@@ -146,7 +146,7 @@ public class ExplorationThread implements Callable<DAGChaseConfiguration> {
 	private void setBestConfiguration(DAGChaseConfiguration configuration) {
 		if (this.best == null
 				|| (this.best != null && configuration != null
-				&& this.best.getPlan().getCost().greaterThan(configuration.getPlan().getCost()))) {
+				&& this.best.getCost().greaterThan(configuration.getCost()))) {
 			this.best = configuration;
 		}
 	}

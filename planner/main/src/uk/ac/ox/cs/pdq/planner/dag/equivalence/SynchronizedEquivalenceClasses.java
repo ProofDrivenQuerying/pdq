@@ -8,7 +8,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
-import uk.ac.ox.cs.pdq.plan.Plan;
+import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
+import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.dominance.Dominance;
 
@@ -189,9 +190,9 @@ public class SynchronizedEquivalenceClasses implements DAGEquivalenceClasses{
 	 *
 	 * @param plan Plan
 	 */
-	public void wakeupSleep(Plan plan) {
+	public void wakeupSleep(Cost cost) {
 		for(SynchronizedEquivalenceClass c: this.configurationToEquivalenceClass.values()) {
-			c.wakeupSleep(plan);
+			c.wakeupSleep(cost);
 		}
 	}
 

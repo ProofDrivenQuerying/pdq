@@ -12,10 +12,12 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.collections4.CollectionUtils;
 
+import com.google.common.base.Preconditions;
+import com.google.common.eventbus.EventBus;
+
 import uk.ac.ox.cs.pdq.LimitReachedException;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
-import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
@@ -28,9 +30,6 @@ import uk.ac.ox.cs.pdq.planner.dag.explorer.parallel.ExplorationResults;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.parallel.IterativeExecutor;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
-
-import com.google.common.base.Preconditions;
-import com.google.common.eventbus.EventBus;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -93,7 +92,6 @@ public class DAGOptimized extends DAGExplorer {
 			ReasoningParameters reasoningParameters,
 			ConjunctiveQuery query,
 			ConjunctiveQuery accessibleQuery,
-			Schema schema,
 			AccessibleSchema accessibleSchema, 
 			Chaser chaser, 
 			DatabaseConnection connection,

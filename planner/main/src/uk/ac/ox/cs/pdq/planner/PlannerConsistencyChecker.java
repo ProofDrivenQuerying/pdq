@@ -27,20 +27,20 @@ public class PlannerConsistencyChecker implements ConsistencyChecker<PlannerPara
 	public void check(PlannerParameters p, CostParameters c, ReasoningParameters r, DatabaseParameters d) throws InconsistentParametersException {
 	}
 	
-	/**
-	 * Checks if is left deep planner.
-	 *
-	 * @param p the p
-	 * @return true, if is left deep planner
-	 */
-	private boolean isLeftDeepPlanner(PlannerParameters p) {
-		switch(p.getPlannerType()) {
-		case DAG_GENERIC:
-		case DAG_SIMPLEDP:
-		case DAG_CHASEFRIENDLYDP:
-		case DAG_OPTIMIZED:
-			return false;
-		}
-		return true;
-	}
+//	/**
+//	 * Checks if is left deep planner.
+//	 *
+//	 * @param p the p
+//	 * @return true, if is left deep planner
+//	 */
+//	private boolean isLeftDeepPlanner(PlannerParameters p) {
+//		switch(p.getPlannerType()) {
+//		case DAG_GENERIC:
+//		case DAG_SIMPLEDP:
+//		case DAG_CHASEFRIENDLYDP:
+//		case DAG_OPTIMIZED:
+//			return false;
+//		}
+//		return true;
+//	}
 }

@@ -7,11 +7,11 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.io.xml.PlanWriter;
 import uk.ac.ox.cs.pdq.io.xml.QueryReader;
 import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
 import uk.ac.ox.cs.pdq.logging.ProgressLogger;
@@ -152,7 +152,7 @@ public class Bootstrap {
 				new ReasoningParameters(this.getConfigFile()) :
 				new ReasoningParameters() ;
 				
-				DatabaseParameters dbParams = this.getConfigFile() != null ?
+		DatabaseParameters dbParams = this.getConfigFile() != null ?
 						new DatabaseParameters(this.getConfigFile()) :
 						new DatabaseParameters() ;
 				
@@ -164,7 +164,7 @@ public class Bootstrap {
 
 			Schema schema = new SchemaReader().read(sis);
 			ConjunctiveQuery query = new QueryReader(schema).read(qis);
-			Plan plan = null;
+			RelationalTerm plan = null;
 			try(ProgressLogger pLog = new SimpleProgressLogger(System.out)) {
 				ExplorationSetUp planner = new ExplorationSetUp(planParams, costParams, reasoningParams, dbParams, schema);
 				if (verbose) {
@@ -176,7 +176,7 @@ public class Bootstrap {
 				plan = planner.search(query);
 			}
 			if (plan != null) {
-				PlanWriter.to(System.out).write(plan);
+				System.out.println(plan);
 				return;
 			} 
 			log.trace("No plan found.");

@@ -6,6 +6,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.EventHandler;
+import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.CostEstimatorFactory;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
@@ -24,7 +25,8 @@ import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
 import uk.ac.ox.cs.pdq.planner.logging.performance.ConstantsStatistics;
 import uk.ac.ox.cs.pdq.planner.logging.performance.EventDrivenExplorerStatistics;
 import uk.ac.ox.cs.pdq.planner.logging.performance.PlannerStatKeys;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState;
+import uk.ac.ox.cs.pdq.planner.util.PlannerUtility;
+import uk.ac.ox.cs.pdq.reasoning.ReasonerFactory;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.util.Utility;
@@ -56,7 +58,7 @@ public class ExplorationSetUp {
 	private ReasoningParameters reasoningParams;
 	
 	/**  */
-	private DatabaseParameters dbParams;
+	private DatabaseParameters databaseParams;
 
 
 	/**   */
@@ -102,7 +104,7 @@ public class ExplorationSetUp {
 		this.plannerParams = params;
 		this.costParams = costParams;
 		this.reasoningParams = reasoningParams;
-		this.dbParams = dbParams;
+		this.databaseParams = dbParams;
 		final Attribute Fact = Attribute.create(Integer.class, "FactID");
 		addAdditionalAttributeToSchema(schema, Fact);//new Attribute(Integer.class, "ChaseStateID"));
 		this.schema = schema;
@@ -168,7 +170,7 @@ public class ExplorationSetUp {
 	 * @throws PlannerException the planner exception
 	 * @throws SQLException 
 	 */
-	public <P extends Plan> P search(ConjunctiveQuery query) throws PlannerException, SQLException {
+	public RelationalTerm search(ConjunctiveQuery query) throws PlannerException, SQLException {
 		return this.search(query,false);
 	}
 	
@@ -187,12 +189,12 @@ public class ExplorationSetUp {
 	 * @throws PlannerException the planner exception
 	 * @throws SQLException 
 	 */
-	public <S extends AccessibleChaseState, P extends Plan> P search(ConjunctiveQuery query, boolean noDep) throws PlannerException, SQLException {
+	public RelationalTerm search(ConjunctiveQuery query, boolean noDep) throws PlannerException, SQLException {
 		
 		boolean collectStats = this.statsLogger != null;
 		
 		if (noDep) {
-			this.schema = Schema.builder(this.schema).disableDependencies().build();
+			this.schema = new Schema(this.schema.getRelations());
 			this.schema.addConstants(Utility.getTypedConstants(query));
 			this.accessibleSchema = new AccessibleSchema(this.schema);
 		}
@@ -201,21 +203,17 @@ public class ExplorationSetUp {
 			this.accessibleSchema.addConstants(Utility.getTypedConstants(query));
 		}
 
-		ConjunctiveQuery accessibleQuery = this.accessibleSchema.accessible(query, query.getSubstitutionOfFreeVariablesToCanonicalConstants());
-		Explorer<P> explorer = null;
-		DatabaseConnection dbConn = new DatabaseConnection(dbParams,accessibleSchema);
+		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(query, query.getSubstitutionOfFreeVariablesToCanonicalConstants());
+		Explorer explorer = null;
+		DatabaseConnection dbConn = new DatabaseConnection(databaseParams,accessibleSchema);
 
 		try{
 			// Top-level initialisations
-			CostEstimator<P> costEstimator = (CostEstimator<P>) this.externalCostEstimator;
-			if (costEstimator == null) {
+			CostEstimator costEstimator = this.externalCostEstimator;
+			if (costEstimator == null) 
 				costEstimator = CostEstimatorFactory.getEstimator(this.costParams, this.schema);
-			}
 
-			Chaser reasoner = new ReasonerFactory(
-					this.eventBus, 
-					collectStats,
-					this.reasoningParams, this.dbParams).getInstance();
+			Chaser reasoner = new ReasonerFactory(this.eventBus, collectStats, this.reasoningParams).getInstance();
 			
 			explorer = ExplorerFactory.createExplorer(
 					this.eventBus, 
@@ -228,7 +226,7 @@ public class ExplorationSetUp {
 					dbConn,
 					costEstimator,
 					this.plannerParams,
-					this.reasoningParams, this.dbParams);
+					this.reasoningParams, this.databaseParams);
 
 			// Chain all statistics collectors
 			if (collectStats) {
@@ -292,7 +290,7 @@ public class ExplorationSetUp {
 	 *
 	 * @param ex Explorer<?>
 	 */
-	private void handleEarlyTermination(Explorer<?> ex) {
+	private void handleEarlyTermination(Explorer ex) {
 		if (ex != null) {
 			ex.updateClock();
 			if (this.eventBus != null) {
@@ -317,7 +315,7 @@ public class ExplorationSetUp {
 	 *
 	 * @return the best plan found and the search node in which it was found.
 	 */
-	public Pair<Plan, SearchNode> dynamicSearch() {
+	public Pair<RelationalTerm, SearchNode> dynamicSearch() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -330,7 +328,7 @@ public class ExplorationSetUp {
 	 *         the plan that was previously found at that node, and the search
 	 *         node where it was found.
 	 */
-	public Pair<Plan, SearchNode> resumeSearch(SearchNode node) {
+	public Pair<RelationalTerm, SearchNode> resumeSearch(SearchNode node) {
 		throw new UnsupportedOperationException();
 	}
 }

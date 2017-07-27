@@ -6,7 +6,8 @@ import java.util.LinkedHashSet;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-import uk.ac.ox.cs.pdq.plan.Plan;
+import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
+import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.planner.dag.ApplyRule;
 import uk.ac.ox.cs.pdq.planner.dag.ConfigurationUtility;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
@@ -82,7 +83,7 @@ public class SynchronizedEquivalenceClass extends DAGEquivalenceClass{
 				this.representative = configuration;
 			}
 			if(configuration.isClosed() && (this.minCostConfiguration == null ||
-					this.minCostConfiguration.getPlan().getCost().greaterThan(configuration.getPlan().getCost()))
+					this.minCostConfiguration.getCost().greaterThan(configuration.getCost()))
 					) {
 				this.minCostConfiguration = configuration;
 			}
@@ -139,7 +140,7 @@ public class SynchronizedEquivalenceClass extends DAGEquivalenceClass{
 				for (DAGChaseConfiguration configuration: this.nonRepresentatives) {
 					if (configuration.isClosed()
 							&& (this.minCostConfiguration == null
-							|| configuration.getPlan().getCost().lessThan(this.minCostConfiguration.getPlan().getCost()))) {
+							|| configuration.getCost().lessThan(this.minCostConfiguration.getCost()))) {
 						this.minCostConfiguration = configuration;
 					}
 					if(configuration.getHeight() < this.minHeight) {
@@ -272,12 +273,12 @@ public class SynchronizedEquivalenceClass extends DAGEquivalenceClass{
 	 *
 	 * @param bestPlan Plan
 	 */
-	public void wakeupSleep(Plan bestPlan) {
+	public void wakeupSleep(Cost bestCost) {
 		if(!this.isEmpty() &&
 				!this.applyRule &&
 				this.minCostConfiguration != null &&
-				bestPlan != null &&
-				this.minCostConfiguration.getPlan().getCost().greaterThan(bestPlan.getCost())) {
+				bestCost != null &&
+				this.minCostConfiguration.getCost().greaterThan(bestCost)) {
 			this.isSleeping = true;
 		}
 		else {

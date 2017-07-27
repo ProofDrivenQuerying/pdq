@@ -84,9 +84,9 @@ public class PlannerUtility {
 	 * @param <Q> the generic type
 	 * @param query the query
 	 * @return the accessible query
-	 * @see uk.ac.ox.cs.pdq.fol.Query#accessible(AccessibleSchema)
+	 * @see uk.ac.ox.cs.pdq.fol.Query#createAccessibleQuery(AccessibleSchema)
 	 */
-	public ConjunctiveQuery accessible(ConjunctiveQuery query) {
+	public static ConjunctiveQuery createAccessibleQuery(ConjunctiveQuery query) {
 		Atom[] atoms = new Atom[query.getNumberOfAtoms()];
 		for (int atomIndex = 0; atomIndex < query.getNumberOfAtoms(); ++atomIndex) {
 			Atom queryAtom = query.getAtom(atomIndex);
@@ -105,9 +105,9 @@ public class PlannerUtility {
 	 * @param query the query
 	 * @param canonicalMapping the canonical mapping
 	 * @return the accessible query
-	 * @see uk.ac.ox.cs.pdq.fol.Query#accessible(AccessibleSchema)
+	 * @see uk.ac.ox.cs.pdq.fol.Query#createAccessibleQuery(AccessibleSchema)
 	 */
-	public ConjunctiveQuery accessible(ConjunctiveQuery query, Map<Variable, Constant> canonicalMapping) {
+	public static ConjunctiveQuery createAccessibleQuery(ConjunctiveQuery query, Map<Variable, Constant> canonicalMapping) {
 		Atom[] atoms = new Atom[query.getNumberOfAtoms()];
 		for (int atomIndex = 0; atomIndex < query.getNumberOfAtoms(); ++atomIndex) {
 			Atom queryAtom = query.getAtom(atomIndex);

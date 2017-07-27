@@ -78,7 +78,7 @@ public class MultiThreadedExecutor extends IterativeExecutor {
 			Queue<DAGChaseConfiguration> left,
 			Collection<DAGChaseConfiguration> right,
 			ConjunctiveQuery query,
-			Collection<? extends Dependency> dependencies,
+			Dependency[] dependencies,
 			DAGChaseConfiguration bestConfiguration,
 			DAGEquivalenceClasses equivalenceClasses, 
 			boolean twoWay,
@@ -220,14 +220,14 @@ public class MultiThreadedExecutor extends IterativeExecutor {
 					DAGChaseConfiguration r = result.get();
 					if(configuration == null
 							|| (r != null
-							&& configuration.getPlan().getCost().greaterThan(r.getPlan().getCost())))
+							&& configuration.getCost().greaterThan(r.getCost())))
 					{
 						configuration = r;
 					}
 				}
 
 				if(equivalenceClasses instanceof SynchronizedEquivalenceClasses) {
-					((SynchronizedEquivalenceClasses)equivalenceClasses).wakeupSleep(configuration != null ? configuration.getPlan() : null);
+					((SynchronizedEquivalenceClasses)equivalenceClasses).wakeupSleep(configuration != null ? configuration.getCost() : null);
 				}
 			}
 			catch(java.util.concurrent.CancellationException e) {

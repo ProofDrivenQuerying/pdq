@@ -20,9 +20,6 @@ import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.plan.DAGPlan;
-import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
-import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.PlannerTypes;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.DAGOptimized;
@@ -99,7 +96,7 @@ public class ExplorerFactory {
 	 * @return the explorer< p>
 	 * @throws Exception the exception
 	 */
-	public static <P extends Plan> Explorer<P> createExplorer(
+	public static Explorer createExplorer(
 			EventBus eventBus, 
 			boolean collectStats,
 			Schema schema,
@@ -107,13 +104,13 @@ public class ExplorerFactory {
 			ConjunctiveQuery query,
 			ConjunctiveQuery accessibleQuery,
 			Chaser chaser,
-			DatabaseConnection dbConn,
+			DatabaseConnection connection,
 			CostEstimator costEstimator,
 			PlannerParameters parameters,
 			ReasoningParameters reasoningParameters, DatabaseParameters dbParams) throws Exception {
 
-		Dominance[] dominance = new DominanceFactory(parameters.getDominanceType(), (CostEstimator<Plan>) costEstimator).getInstance();
-		SuccessDominance successDominance = new SuccessDominanceFactory<>(costEstimator, parameters.getSuccessDominanceType()).getInstance();
+		Dominance[] dominance = new DominanceFactory(parameters.getDominanceType(), costEstimator).getInstance();
+		SuccessDominance successDominance = new SuccessDominanceFactory(costEstimator, parameters.getSuccessDominanceType()).getInstance();
 		
 		NodeFactory nodeFactory = null;
 		PostPruning postPruning = null;
@@ -125,7 +122,7 @@ public class ExplorerFactory {
 		if (parameters.getPlannerType().equals(PlannerTypes.LINEAR_GENERIC)
 				|| parameters.getPlannerType().equals(PlannerTypes.LINEAR_KCHASE)
 				|| parameters.getPlannerType().equals(PlannerTypes.LINEAR_OPTIMIZED)) {
-			nodeFactory = new NodeFactory(parameters, (CostEstimator<LeftDeepPlan>) costEstimator);
+			nodeFactory = new NodeFactory(parameters, costEstimator);
 			postPruning = new PostPruningFactory(parameters.getPostPruningType(), nodeFactory, chaser, query, accessibleSchema).getInstance();
 		}
 		else {
@@ -147,8 +144,8 @@ public class ExplorerFactory {
 					parameters.getIterativeExecutorType(),
 					parameters.getFirstPhaseThreads(),
 					chaser,
-					dbConn,
-					(CostEstimator<DAGPlan>) costEstimator,
+					connection,
+					costEstimator,
 					successDominance,
 					dominance,
 					validators,reasoningParameters);
@@ -157,8 +154,8 @@ public class ExplorerFactory {
 					parameters.getIterativeExecutorType(),
 					parameters.getSecondPhaseThreads(),
 					chaser,
-					dbConn,
-					(CostEstimator<DAGPlan>) costEstimator,
+					connection,
+					costEstimator,
 					successDominance,
 					dominance,
 					validators,reasoningParameters);
@@ -166,45 +163,42 @@ public class ExplorerFactory {
 
 		switch(parameters.getPlannerType()) {
 		case LINEAR_GENERIC:
-			return (Explorer<P>) new LinearGeneric(
+			return new LinearGeneric(
 					eventBus, 
 					collectStats,
 					query, 
 					accessibleQuery,
-					schema,
 					accessibleSchema, 
 					chaser, 
-					dbConn, 
-					(CostEstimator<LeftDeepPlan>) costEstimator,
+					connection, 
+					costEstimator,
 					nodeFactory,
 					parameters.getMaxDepth(),reasoningParameters);
 		case LINEAR_KCHASE:
-			return (Explorer<P>) new LinearKChase(
+			return  new LinearKChase(
 					eventBus, 
 					collectStats,
 					query, 
 					accessibleQuery,
-					schema,
 					accessibleSchema, 
 					chaser, 
-					dbConn, 
-					(CostEstimator<LeftDeepPlan>) costEstimator,
+					connection, 
+					costEstimator,
 					nodeFactory,
 					parameters.getMaxDepth(),
 					parameters.getChaseInterval(), reasoningParameters);
 
 		case DAG_GENERIC:
-			return (Explorer<P>) new uk.ac.ox.cs.pdq.planner.dag.explorer.DAGGeneric(
+			return new uk.ac.ox.cs.pdq.planner.dag.explorer.DAGGeneric(
 					eventBus, collectStats,
 					parameters,
 					reasoningParameters,
 					query, 
 					accessibleQuery,
-					schema,
 					accessibleSchema, 
 					chaser,
-					dbConn,
-					(CostEstimator<DAGPlan>) costEstimator,
+					connection,
+					costEstimator,
 					successDominance,
 					filter,
 					validators,
@@ -212,17 +206,16 @@ public class ExplorerFactory {
 					parameters.getOrderAware());
 
 		case DAG_SIMPLEDP:
-			return (Explorer<P>) new uk.ac.ox.cs.pdq.planner.dag.explorer.DAGSimpleDP(
+			return new uk.ac.ox.cs.pdq.planner.dag.explorer.DAGSimpleDP(
 					eventBus, collectStats,
 					parameters,
 					reasoningParameters,
 					query, 
 					accessibleQuery,
-					schema,
 					accessibleSchema, 
 					chaser,
-					dbConn,
-					(CostEstimator<DAGPlan>) costEstimator,
+					connection,
+					costEstimator,
 					successDominance,
 					dominance,
 					filter,
@@ -231,17 +224,16 @@ public class ExplorerFactory {
 					parameters.getOrderAware());
 
 		case DAG_CHASEFRIENDLYDP:
-			return (Explorer<P>) new uk.ac.ox.cs.pdq.planner.dag.explorer.DAGChaseFriendlyDP(
+			return new uk.ac.ox.cs.pdq.planner.dag.explorer.DAGChaseFriendlyDP(
 					eventBus, collectStats,
 					parameters,
 					reasoningParameters,
 					query, 
 					accessibleQuery,
-					schema,
 					accessibleSchema, 
 					chaser,
-					dbConn,
-					(CostEstimator<DAGPlan>) costEstimator,
+					connection,
+					costEstimator,
 					successDominance,
 					dominance,
 					filter,
@@ -250,32 +242,30 @@ public class ExplorerFactory {
 					parameters.getOrderAware());
 
 		case DAG_OPTIMIZED:
-			return (Explorer<P>) new DAGOptimized(
+			return new DAGOptimized(
 					eventBus, collectStats,
 					parameters,
 					reasoningParameters,
 					query, 
 					accessibleQuery,
-					schema,
 					accessibleSchema, 
 					chaser,
-					dbConn,
-					(CostEstimator<DAGPlan>) costEstimator,
+					connection,
+					costEstimator,
 					filter,
 					executor0, executor1,
 					parameters.getMaxDepth());
 
 		case LINEAR_OPTIMIZED:
-			return (Explorer<P>) new LinearOptimized(
+			return new LinearOptimized(
 					eventBus, 
 					collectStats,
 					query, 
 					accessibleQuery,
-					schema,
 					accessibleSchema, 
 					chaser,
-					dbConn,
-					(CostEstimator<LeftDeepPlan>) costEstimator,
+					connection,
+					costEstimator,
 					nodeFactory,
 					parameters.getMaxDepth(),
 					parameters.getQueryMatchInterval(),
