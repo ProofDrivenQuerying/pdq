@@ -221,10 +221,10 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		Preconditions.checkNotNull(matches);
 		if(!matches.isEmpty()) {
 			Match match = matches.iterator().next();
-			if(match.getQuery() instanceof EGD) {
+			if(match.getFormula() instanceof EGD) {
 				return this.EGDchaseStep(matches);
 			}
-			else if(match.getQuery() instanceof TGD) {
+			else if(match.getFormula() instanceof TGD) {
 				return this.TGDchaseStep(matches);
 			}
 		}
@@ -241,7 +241,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		Preconditions.checkNotNull(matches);
 		Collection<Atom> newFacts = new LinkedHashSet<>();
 		for(Match match:matches) {
-			Dependency dependency = (Dependency) match.getQuery();
+			Dependency dependency = (Dependency) match.getFormula();
 			Preconditions.checkArgument(dependency instanceof TGD, "EGDs are not allowed inside TGDchaseStep");
 			Map<Variable, Constant> mapping = match.getMapping();
 			Implication grounded = uk.ac.ox.cs.pdq.reasoning.chase.Utility.fire(dependency, mapping, true);
@@ -278,7 +278,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		//Maps each constant to its new representative  
 		Map<Constant,Constant> obsoleteToRepresentative = Maps.newHashMap();
 		for(Match match:matches) {
-			Dependency dependency = (Dependency) match.getQuery();
+			Dependency dependency = (Dependency) match.getFormula();
 			Preconditions.checkArgument(dependency instanceof EGD, "TGDs are not allowed inside EGDchaseStep");
 			Map<Variable, Constant> mapping = match.getMapping();
 			Implication grounded = uk.ac.ox.cs.pdq.reasoning.chase.Utility.fire(dependency, mapping);

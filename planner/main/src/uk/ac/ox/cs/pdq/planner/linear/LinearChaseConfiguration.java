@@ -38,6 +38,11 @@ public class LinearChaseConfiguration extends ChaseConfiguration implements Line
 
 	/**  The (un)exposed candidate facts. */
 	private List<Candidate> candidates;
+	
+	/**  The candidate facts exposed in this configuration. */
+/** TOCOMMENT: WHY WOULD A CANDIDATE BE EXPOSED ALREADY? */
+	private final Set<Candidate> exposedCandidates;
+	
 	/** Random engine. Used when selecting candidate facts to expose*/
 	protected final Random random;
 	
@@ -63,6 +68,7 @@ public class LinearChaseConfiguration extends ChaseConfiguration implements Line
 		this.random = random;
 		this.rule = candidatesToExpose.iterator().next().getRule();
 		this.facts = new LinkedHashSet<>();
+		this.exposedCandidates = candidatesToExpose;
 		for (Candidate candidate:candidatesToExpose) {
 			Assert.assertTrue(this.rule.equals(candidate.getRule()));
 			this.facts.add(candidate.getFact());
@@ -87,6 +93,7 @@ public class LinearChaseConfiguration extends ChaseConfiguration implements Line
 		this.rule = null;
 		this.facts = null;
 		this.plan = null;
+		this.exposedCandidates = null;
 	}
 
 	/**
@@ -174,18 +181,6 @@ public class LinearChaseConfiguration extends ChaseConfiguration implements Line
 		return this.candidates;
 	}
 
-//	/**
-//	 * Gets the exposed candidates.
-//	 *
-//	 * @return Collection<Candidate>
-//	 * @see uk.ac.ox.cs.pdq.planner.linear.LinearConfiguration#getExposedCandidates()
-//	 */
-//	@Override
-//	public Collection<Candidate> getExposedCandidates() {
-//		return this.exposedCandidates;
-//	}
-
-
 	/**
 	 * Checks for candidates.
 	 *
@@ -253,10 +248,14 @@ public class LinearChaseConfiguration extends ChaseConfiguration implements Line
 	}
 
 	public AccessibilityAxiom getRule() {
-		return rule;
+		return this.rule;
 	}
 
 	public Set<Atom> getFacts() {
-		return facts;
+		return this.facts;
+	}
+
+	public Set<Candidate> getExposedCandidates() {
+		return this.exposedCandidates;
 	} 
 }

@@ -10,17 +10,17 @@ import java.util.Set;
 import org.apache.commons.lang3.tuple.Pair;
 
 import uk.ac.ox.cs.pdq.LimitReachedException;
+import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Dependency;
+import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
-import uk.ac.ox.cs.pdq.planner.accessibleschema.InferredAccessibleAxiom;
-import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema.AccessibleRelation;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.Candidate;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.NodeFactory;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
@@ -89,14 +89,11 @@ public final class PostPruningRemoveFollowUps extends PostPruning {
 				Set<Candidate> mustBeExposed = getUtilisedCandidates(alreadyExposed, factsToExpose);
 				if(!mustBeExposed.isEmpty()) {
 					SearchNode freshNode;
-					if(i > 0) {
-						SearchNode parentNode = path.get(i-1);
-						freshNode = this.nodeFactory.getInstance(parentNode, Sets.newHashSet(alreadyExposed));
-					}
-					else {
+					if(i > 0)
+						freshNode = this.nodeFactory.getInstance(path.get(i-1), Sets.newHashSet(alreadyExposed));
+					else 
 						freshNode = this.nodeFactory.getInstance(root, Sets.newHashSet(alreadyExposed));
-					}
-					freshNode.setStatus(NodeStatus.FAKE_TERMINAL);
+					freshNode.setStatus(NodeStatus.TERMINAL);
 					//Find the consequences of the newly created node
 					freshNode.close(this.chaser, this.query, this.accessibleSchema.getAccessibilityAxioms());
 					this.path.add(freshNode);
@@ -105,9 +102,8 @@ public final class PostPruningRemoveFollowUps extends PostPruning {
 			}
 
 			int n;
-			for(n = 0; n < this.path.size() - 1; ++n) {
+			for(n = 0; n < this.path.size() - 1; ++n) 
 				this.path.get(n).setPathToSuccess(Lists.<Integer>newArrayList(nodeIds.subList(n+1, nodeIds.size())));
-			}
 			this.path.get(n).setPathToSuccess(Lists.<Integer>newArrayList());
 			this.path.get(n).setStatus(NodeStatus.SUCCESSFUL);
 			List<Match> matches = this.path.get(n).matchesQuery(this.query);
@@ -188,21 +184,19 @@ public final class PostPruningRemoveFollowUps extends PostPruning {
 		// For each input fact
 		for(Atom fact:facts) {
 			// Get its provenance
-			Pair<Dependency, Collection<Atom>> icToFacts = factProvenance.get(fact);
-			if(icToFacts == null) {
+			Pair<Dependency, Collection<Atom>> dependenciesToFacts = factProvenance.get(fact);
+			if(dependenciesToFacts == null) 
 				return new LinkedHashSet<>();
-			}
-			Dependency ic = icToFacts.getLeft();
+			Dependency dependency = dependenciesToFacts.getLeft();
 			/*
 			 * If the dependency (query) that leads to the derivation of the current atom is the inferred accessible version of a schema dependency
 			 * then add the current atom in the output list of facts and continue the recursion with the facts that were used to fire the considered dependency.
 			 * The recursion continues in order to reduce to the case where all of the returned inferred accessible facts come from accessibility
 			 */
-			if(ic instanceof InferredAccessibleAxiom) {
-				parentFacts.addAll(this.getMinimalFactsRecursive(icToFacts.getRight(), inputTerms, outputTerms, factProvenance));
-			}
+			if(this.accessibleSchema.containsInferredAccessibleAxiom(dependency)) 
+				parentFacts.addAll(this.getMinimalFactsRecursive(dependenciesToFacts.getRight(), inputTerms, outputTerms, factProvenance));
 			// If the dependency is an accessibility axiom
-			else if(ic instanceof AccessibilityAxiom) {
+			else if(dependency instanceof AccessibilityAxiom) {
 				if(!outputTerms.containsAll(inputTerms)) {
 					/*
 					 * Find the accessible facts I that were used to fire the considered dependency (query),
@@ -211,7 +205,7 @@ public final class PostPruningRemoveFollowUps extends PostPruning {
 					 * Update the list of input and output constants and continue the recursion for each accessible fact in I.
 					 * The recursion continues in order to find the accesses that must be performed in order to expose the current fact
 					 */
-					Element elements = this.getElement(icToFacts.getRight());
+					Element elements = this.getElement(dependenciesToFacts.getRight());
 					inputTerms.addAll(elements.getInputTerms());
 					outputTerms.addAll(elements.getOutputTerms());
 					outputTerms.removeAll(elements.getInputTerms());  // Julien-bugfix: if a terms previously thought to be accessible turns out to be a required input earlier in the plan, remove it from the output.
@@ -240,7 +234,7 @@ public final class PostPruningRemoveFollowUps extends PostPruning {
 		Collection<Atom> inputAccessibleFacts = new LinkedHashSet<>();
 		Atom inferredAccessibleFact = null;
 		for(Atom fact:facts) {
-			if(fact.getPredicate() instanceof AccessibleRelation) {
+			if(fact.getPredicate().equals(AccessibleSchema.accessibleRelation)) {
 				Set<Constant> constants = Utility.getUntypedConstants(fact);
 				if(!constants.isEmpty()) {
 					inputTerms.addAll(constants);
@@ -249,8 +243,18 @@ public final class PostPruningRemoveFollowUps extends PostPruning {
 			}
 			else if(fact.getPredicate() instanceof Relation) {
 				outputTerms.addAll(Utility.getTypedAndUntypedConstants(fact));
-				Relation relation = (Relation) fact.getPredicate();
-				inferredAccessibleFact = new Atom(this.accessibleSchema.getInferredAccessibleRelation(relation), fact.getTerms() );
+				//Relation relation = (Relation) fact.getPredicate();
+				//inferredAccessibleFact = new Atom(this.accessibleSchema.getInferredAccessibleRelation(relation), fact.getTerms() );
+				Predicate predicate = null;
+				if(fact.getPredicate() instanceof Relation) {
+					Relation relation = (Relation) fact.getPredicate();
+					predicate = Relation.create(AccessibleSchema.inferredAccessiblePrefix + relation.getName(), relation.getAttributes(), new AccessMethod[]{AccessMethod.create(new Integer[]{})}, relation.isEquality());
+				}
+				else 
+					predicate = Predicate.create(AccessibleSchema.inferredAccessiblePrefix + fact.getPredicate().getName(), fact.getPredicate().getArity());
+				inferredAccessibleFact = Atom.create(predicate, fact.getTerms());
+				
+				
 			}
 			else {
 				throw new java.lang.IllegalArgumentException();

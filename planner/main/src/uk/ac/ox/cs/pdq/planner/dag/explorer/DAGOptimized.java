@@ -16,6 +16,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.eventbus.EventBus;
 
 import uk.ac.ox.cs.pdq.LimitReachedException;
+import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
@@ -136,7 +137,8 @@ public class DAGOptimized extends DAGExplorer {
 		//Check the ApplyRule configurations for success
 		if (this.depth == 1) {
 			for (DAGChaseConfiguration configuration: this.left) {
-				this.costEstimator.cost(configuration.getPlan());
+				Cost cost = this.costEstimator.cost(configuration.getPlan());
+				configuration.setCost(cost);
 				if (this.bestPlan == null
 						|| (configuration.isClosed() && configuration.getCost().lessThan(this.bestCost))) {
 					if (configuration.isClosed() && configuration.isSuccessful(this.accessibleQuery)) {

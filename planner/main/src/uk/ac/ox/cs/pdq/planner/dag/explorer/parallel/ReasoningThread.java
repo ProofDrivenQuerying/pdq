@@ -10,6 +10,7 @@ import java.util.concurrent.Callable;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
@@ -203,11 +204,9 @@ public class ReasoningThread implements Callable<Boolean> {
 			Preconditions.checkState(!equivalenceClasses.getEquivalenceClass(configuration).isEmpty());
 			if(!equivalenceClasses.getEquivalenceClass(configuration).isSleeping() &&
 					this.validate(left, configuration, depth) &&
-					ConfigurationUtility.getPotential(left, configuration, this.best == null ? null : this.best.getPlan(), 
-							this.costEstimator, this.successDominance)
-					){
+					ConfigurationUtility.getPotential(left, configuration, this.best == null ? null : this.best.getPlan(), this.best.getCost(), this.costEstimator, this.successDominance)
+					)
 				selected.add(configuration);
-			}
 		}
 		return selected;
 	}
@@ -269,7 +268,8 @@ public class ReasoningThread implements Callable<Boolean> {
 					representative.getState().clone()
 					);
 		}
-		this.costEstimator.cost(configuration.getPlan());
+		Cost cost = this.costEstimator.cost(configuration.getPlan());
+		configuration.setCost(cost);
 		return configuration;
 	}
 }

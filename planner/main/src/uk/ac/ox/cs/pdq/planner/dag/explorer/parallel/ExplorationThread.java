@@ -7,7 +7,6 @@ import java.util.concurrent.Callable;
 
 import com.google.common.base.Preconditions;
 
-import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.planner.dag.ConfigurationUtility;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
@@ -104,7 +103,7 @@ public class ExplorationThread implements Callable<DAGChaseConfiguration> {
 					) {
 			} else {
 				//Assess its potential
-				if (this.getPotential(configuration, this.best == null ? null : this.best.getPlan(), this.successDominance)) {
+				if (ConfigurationUtility.getPotential(configuration, this.best == null ? null : this.best.getPlan(), this.best.getCost(), this.successDominance)) {
 					//Find the configurations dominated by the current one and remove them
 					Collection<DAGChaseConfiguration> dominated = this.equivalenceClasses.dominatedBy(this.dominance, configuration);
 					if(!dominated.isEmpty()) {
@@ -143,17 +142,5 @@ public class ExplorationThread implements Callable<DAGChaseConfiguration> {
 				&& this.best.getCost().greaterThan(configuration.getCost()))) {
 			this.best = configuration;
 		}
-	}
-	
-	/**
-	 * Gets the potential.
-	 *
-	 * @param configuration the configuration
-	 * @param bestPlan 		Best plan found so far
-	 * @param successDominance 		Performs success dominance checks
-	 * @return true if the input configuration is not success dominated by the best plan
-	 */
-	protected Boolean getPotential(DAGChaseConfiguration configuration, RelationalTerm bestPlan, SuccessDominance successDominance) {
-		return ConfigurationUtility.getPotential(configuration, bestPlan, successDominance);
 	}
 }

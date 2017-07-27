@@ -20,6 +20,7 @@ import com.google.common.collect.Sets;
 import com.google.common.eventbus.EventBus;
 
 import uk.ac.ox.cs.pdq.LimitReachedException;
+import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
@@ -45,33 +46,33 @@ import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
  *
  */
 public class DAGGeneric extends DAGExplorer {
-	
+
 	/**
 	 * The maximum depth we can explore. The exploration ends when
 	 * there does not exist any configuration with depth < maxDepth
 	 */
 	protected final int maxDepth;
-	
+
 	/**  Filters out configurations at the end of each iteration. */
 	private final Filter filter;
 	/** Check whether the binary configuration composed from a given configuration pair satisfies given shape restrictions.*/
 	private final List<Validator> validators;
-	
+
 	/** The left. */
 	private final List<DAGChaseConfiguration> left;
-	
+
 	/** The right. */
 	private final List<DAGChaseConfiguration> right;
-	
+
 	/**  The current exploration depth. */
 	protected int depth = 1;
-	
+
 	/**  True if pair selection is order aware. */
 	protected boolean orderAware;
-	
+
 	/**  Returns pairs of configurations to combine. */
 	protected PairSelector selector;
-	
+
 	/**  Removes success dominated configurations *. */
 	protected final SuccessDominance successDominance;
 
@@ -103,7 +104,7 @@ public class DAGGeneric extends DAGExplorer {
 			ReasoningParameters reasoningParameters,
 			ConjunctiveQuery query,
 			ConjunctiveQuery accessibleQuery,
-//			Schema schema,
+			//			Schema schema,
 			AccessibleSchema accessibleSchema, 
 			Chaser chaser,
 			DatabaseConnection connection,
@@ -150,7 +151,8 @@ public class DAGGeneric extends DAGExplorer {
 		//Check the ApplyRule configurations for success
 		if (this.depth == 1) {
 			for (DAGChaseConfiguration configuration:this.right) {
-				this.costEstimator.cost(configuration.getPlan());
+				Cost cost = this.costEstimator.cost(configuration.getPlan());
+				configuration.setCost(cost);
 				if (configuration.isClosed()
 						&& (this.bestPlan == null
 						|| configuration.getCost().lessThan(this.bestCost))
@@ -205,7 +207,8 @@ public class DAGGeneric extends DAGExplorer {
 				BinaryConfiguration configuration = new BinaryConfiguration(
 						pair.getLeft(),
 						pair.getRight());
-				this.costEstimator.cost(configuration.getPlan());
+				Cost cost = this.costEstimator.cost(configuration.getPlan());
+				configuration.setCost(cost);
 				configuration.reasonUntilTermination(this.chaser, this.accessibleQuery, this.accessibleSchema.getInferredAccessibilityAxioms());
 				//If the newly created binary configuration has the potential to lead to the optimal plan
 				if (this.bestPlan == null || !this.successDominance.isDominated(configuration.getPlan(), configuration.getCost(), this.bestPlan, this.bestCost)) {
@@ -233,30 +236,30 @@ public class DAGGeneric extends DAGExplorer {
 	 * @param <S> the generic type
 	 */
 	protected static class PairSelector<S extends AccessibleChaseState> {
-		
+
 		/**  Configurations to consider on the left. */
 		private List<DAGChaseConfiguration> left;
-		
+
 		/**  Configurations to consider on the right. */
 		private List<DAGChaseConfiguration> right;
 		/** Checks whether the binary configuration composed from a given configuration pair satisfies given shape restrictions. */
 		private final List<Validator> validators;
-		
+
 		/** The order aware. */
 		private final boolean orderAware;
-		
+
 		/** The cache. */
 		private final Set<Set<Integer>> cache = Sets.newLinkedHashSet();
-		
+
 		/** The reverse. */
 		private Pair<DAGChaseConfiguration, DAGChaseConfiguration> reverse = null;
-		
+
 		/** The i. */
 		private int i = 0;
-		
+
 		/** The j. */
 		private int j = 0;
-		
+
 		/** The send reverse. */
 		private boolean sendReverse = false;
 

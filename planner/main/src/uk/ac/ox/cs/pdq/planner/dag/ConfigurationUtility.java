@@ -8,7 +8,9 @@ import java.util.List;
 import java.util.Set;
 
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
+import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
+import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Atom;
@@ -46,9 +48,8 @@ public class ConfigurationUtility {
 	 */
 	public static boolean isLeftDeep(DAGConfiguration configuration) {
 		if(configuration instanceof BinaryConfiguration) {
-			if (((BinaryConfiguration) configuration).getRight() instanceof BinaryConfiguration) {
+			if (((BinaryConfiguration) configuration).getRight() instanceof BinaryConfiguration) 
 				return false;
-			}
 			return isLeftDeep(((BinaryConfiguration) configuration).getLeft());
 		}
 		return true;
@@ -66,9 +67,8 @@ public class ConfigurationUtility {
 			ret.addAll(getApplyRules(((BinaryConfiguration) configuration).getLeft()));
 			ret.addAll(getApplyRules(((BinaryConfiguration) configuration).getRight()));
 		}
-		else {
+		else 
 			ret.add((ApplyRule) configuration);
-		}
 		return ret;
 	}
 
@@ -84,9 +84,8 @@ public class ConfigurationUtility {
 			ret.addAll(getApplyRules(((BinaryConfiguration) configuration).getLeft()));
 			ret.addAll(getApplyRules(((BinaryConfiguration) configuration).getRight()));
 		}
-		else {
+		else 
 			ret.add((ApplyRule) configuration);
-		}
 		return ret;
 	}
 
@@ -103,9 +102,8 @@ public class ConfigurationUtility {
 			ret.addAll(getSubconfigurations(((BinaryConfiguration) configuration).getLeft()));
 			ret.addAll(getSubconfigurations(((BinaryConfiguration) configuration).getRight()));
 		}
-		else {
+		else 
 			ret.add(configuration);
-		}
 		return ret;
 	}
 
@@ -117,9 +115,8 @@ public class ConfigurationUtility {
 	 * @return true if the input pair of configurations is composable
 	 */
 	public static Boolean isComposable(DAGChaseConfiguration left, DAGChaseConfiguration right) {
-		if(!right.getInput().isEmpty() && left.getOutput().containsAll(right.getInput())) {
+		if(!right.getInput().isEmpty() && left.getOutput().containsAll(right.getInput())) 
 			return true;
-		}
 		return false;
 	}
 
@@ -142,10 +139,8 @@ public class ConfigurationUtility {
 	 * @return true if the input pair of configurations is mergeable
 	 */
 	public static Boolean isMergeable(DAGChaseConfiguration left, DAGChaseConfiguration right) {
-		if (Collections.disjoint(left.getProperOutput(), right.getInput())
-				&& Collections.disjoint(left.getInput(), right.getProperOutput())) {
+		if (Collections.disjoint(left.getProperOutput(), right.getInput()) && Collections.disjoint(left.getInput(), right.getProperOutput())) 
 			return true;
-		}
 		return false;
 	}
 
@@ -174,8 +169,7 @@ public class ConfigurationUtility {
 			}
 		}
 
-		if (left.getOutputFacts().containsAll(right.getOutputFacts())
-				|| right.getOutputFacts().containsAll(left.getOutputFacts())) 
+		if (left.getOutputFacts().containsAll(right.getOutputFacts()) || right.getOutputFacts().containsAll(left.getOutputFacts())) 
 			return false;
 		
 		for (DAGConfiguration l:left.getSubconfigurations()) {
@@ -241,9 +235,8 @@ public class ConfigurationUtility {
 	 */
 	public static Integer getBushiness(DAGChaseConfiguration left, DAGChaseConfiguration right) {
 		int bushiness = left.getBushiness() + right.getBushiness();
-		if(right instanceof BinaryConfiguration) {
+		if(right instanceof BinaryConfiguration) 
 			bushiness++;
-		}
 		return bushiness;
 	}
 
@@ -257,16 +250,14 @@ public class ConfigurationUtility {
 	public static BinaryConfigurationTypes getCombinationType(DAGChaseConfiguration left, DAGChaseConfiguration right) {
 		if (isNonTrivial(left, right)) {
 			if (isComposable(left, right)) {
-				if (isOutputIndependent(left, right)) {
+				if (isOutputIndependent(left, right)) 
 					return BinaryConfigurationTypes.PCOMPOSE;
-				}
+				
 				return BinaryConfigurationTypes.JCOMPOSE;
-			} else if (isMergeable(left, right)) {
+			} else if (isMergeable(left, right)) 
 				return BinaryConfigurationTypes.MERGE;
-			}
-			else {
+			else 
 				return BinaryConfigurationTypes.GENCOMPOSE;
-			}
 		}
 		return null;
 	}
@@ -285,16 +276,14 @@ public class ConfigurationUtility {
 	public static boolean validate(DAGChaseConfiguration left, DAGChaseConfiguration right, List<Validator> validators, int depth) {
 		if(depth > 0) {
 			for(int i = 0; i < validators.size(); ++i) {
-				if(!validators.get(i).validate(left, right, depth)) {
+				if(!validators.get(i).validate(left, right, depth)) 
 					return false;
-				}
 			}
 			return true;
 		}
 		for(int i = 0; i < validators.size(); ++i) {
-			if(!validators.get(i).validate(left, right)) {
+			if(!validators.get(i).validate(left, right)) 
 				return false;
-			}
 		}
 		return true;
 	}
@@ -320,8 +309,8 @@ public class ConfigurationUtility {
 	 * @param successDominance Success dominance checks
 	 * @return true if the input configuration is not success dominated by the best plan
 	 */
-	public static Boolean getPotential(DAGChaseConfiguration configuration, RelationalTerm bestPlan, SuccessDominance successDominance) {
-		return bestPlan == null || !successDominance.isDominated(configuration.getPlan(), bestPlan);
+	public static Boolean getPotential(DAGChaseConfiguration configuration, RelationalTerm bestPlan, Cost costOfBestPlan, SuccessDominance successDominance) {
+		return bestPlan == null || !successDominance.isDominated(configuration.getPlan(), configuration.getCost(), bestPlan, costOfBestPlan);
 	}
 	
 	/**
@@ -354,6 +343,7 @@ public class ConfigurationUtility {
 	public static Boolean getPotential(DAGChaseConfiguration left, 
 			DAGChaseConfiguration right,
 			RelationalTerm bestPlan, 
+			Cost costOfBestPlan,
 			CostEstimator costEstimator, 
 			SuccessDominance successDominance) {
 		BinaryConfiguration.BinaryConfigurationTypes type = getCombinationType(left, right);
@@ -361,8 +351,8 @@ public class ConfigurationUtility {
 			if(bestPlan == null) 
 				return true;
 			RelationalTerm plan = DAGPlanGenerator.toDAGPlan(left, right, type);
-			costEstimator.cost(plan);
-			return !successDominance.isDominated(plan, bestPlan);
+			Cost cost = costEstimator.cost(plan);
+			return !successDominance.isDominated(plan, cost, bestPlan, costOfBestPlan);
 		}
 		return false;
 	}
@@ -393,7 +383,7 @@ public class ConfigurationUtility {
 
 			for(ApplyRule applyRule:set) {
 				Relation baseRelation = applyRule.getRelation();
-				//Relation infAccRelation = accessibleSchema.getInferredAccessibleRelation(baseRelation);
+				Relation infAccRelation = Relation.create(AccessibleSchema.inferredAccessiblePrefix + baseRelation.getName(), baseRelation.getAttributes(), new AccessMethod[]{AccessMethod.create(new Integer[]{})}, baseRelation.isEquality());
 				Collection<Atom> facts = applyRule.getFacts();
 				if(observed.containsAll(applyRule.getInput())) {
 					/*
@@ -407,7 +397,7 @@ public class ConfigurationUtility {
 						if(!Sets.intersection(remaining, properOutput).isEmpty()) {
 							remaining.removeAll(properOutput);
 							observed.addAll(properOutput);
-							minimalSet.add(new Atom(infAccRelation, fact.getTerms()));
+							minimalSet.add(Atom.create(infAccRelation, fact.getTerms()));
 						}
 					}
 				}

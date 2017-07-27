@@ -89,9 +89,8 @@ public class MultiThreadedContext implements Context{
 	 */
 	private List<Validator> deepCopy(List<Validator> validators) {
 		List<Validator> ret = new ArrayList<Validator>();
-		for(Validator v:validators) {
+		for(Validator v:validators) 
 			ret.add(v.clone());
-		}
 		return ret;
 	}
 	
@@ -103,9 +102,8 @@ public class MultiThreadedContext implements Context{
 	 */
 	private Dominance[] deepCopy(Dominance[] input) {
 		Dominance[] array = new Dominance[input.length];
-		for(int i = 0; i < input.length; ++i) {
+		for(int i = 0; i < input.length; ++i) 
 			array[i] = input[i].clone();
-		}
 		return array;
 	}
 	

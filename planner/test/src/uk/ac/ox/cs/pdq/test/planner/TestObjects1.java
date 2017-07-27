@@ -3,11 +3,11 @@ package uk.ac.ox.cs.pdq.test.planner;
 import org.junit.Before;
 import org.mockito.Mock;
 
+import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
-import uk.ac.ox.cs.pdq.plan.DAGPlan;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState;
@@ -32,66 +32,66 @@ public class TestObjects1 {
 	}
 	
 			/** The r1. */
-			protected Relation r1 = new Relation("R1", 
-			Lists.newArrayList(new Attribute(String.class, "a1"), new Attribute(String.class, "a2"), new Attribute(String.class, "a3"))) {};
+			protected Relation r1 = Relation.create("R1", 
+			new Attribute[]{Attribute.create(String.class, "a1"), Attribute.create(String.class, "a2"), Attribute.create(String.class, "a3")});
 	
 			/** The p1. */
 			protected Atom p1 = new Atom(new AccessibleSchema.InferredAccessibleRelation(r1),
-			Lists.newArrayList(new UntypedConstant("c1"), new UntypedConstant("c2"), new UntypedConstant("c3"))
+			new Term[]{UntypedConstant.create("c1"), UntypedConstant.create("c2"), UntypedConstant.create("c3"))
 			);
 	
 			/** The r2. */
-			protected Relation r2 = new Relation("R2", 
-			Lists.newArrayList(new Attribute(String.class, "a1"), new Attribute(String.class, "a2"), new Attribute(String.class, "a3"), new Attribute(String.class, "a4"))) {};
+			protected Relation r2 = Relation.create("R2", 
+			new Attribute[]{Attribute.create(String.class, "a1"), Attribute.create(String.class, "a2"), Attribute.create(String.class, "a3"), Attribute.create(String.class, "a4")});
 	
 			/** The p2. */
 			protected Atom p2 = new Atom(new AccessibleSchema.InferredAccessibleRelation(r2),
-			Lists.newArrayList(new UntypedConstant("c1"), new UntypedConstant("c2"), new UntypedConstant("c3"), new UntypedConstant("c4"))
+			new Term[]{UntypedConstant.create("c1"), UntypedConstant.create("c2"), UntypedConstant.create("c3"), UntypedConstant.create("c4")}
 			);
 	
 			/** The r3. */
-			protected Relation r3 = new Relation("R3", 
-			Lists.newArrayList(new Attribute(String.class, "a1"), new Attribute(String.class, "a2"))) {};
+			protected Relation r3 = Relation.create("R3", 
+			new Term[]{Attribute.create(String.class, "a1"), Attribute.create(String.class, "a2")});
 	
 			/** The p3. */
 			protected Atom p3 = new Atom(new AccessibleSchema.InferredAccessibleRelation(r3),
-			Lists.newArrayList(new UntypedConstant("c1"), new UntypedConstant("c2"))
+			new Term[]{UntypedConstant.create("c1"), UntypedConstant.create("c2")}
 			);
 	
 			/** The r4. */
-			protected Relation r4 = new Relation("R4", 
-			Lists.newArrayList(new Attribute(String.class, "a1"))) {};
+			protected Relation r4 = Relation.create("R4", 
+			new Term[]{Attribute.create(String.class, "a1")});
 			
 			/** The p4. */
 			protected Atom p4 = new Atom(new AccessibleSchema.InferredAccessibleRelation(r4),
-			Lists.newArrayList(new UntypedConstant("c1"))
+			new Term[]{UntypedConstant.create("c1")}
 			);
 	
 			/** The r5. */
-			protected Relation r5 = new Relation("R5", 
-			Lists.newArrayList(new Attribute(String.class, "a1"), new Attribute(String.class, "a3"), new Attribute(String.class, "a2"))) {};
+			protected Relation r5 = Relation.create("R5", 
+			new Term[]{Attribute.create(String.class, "a1"), Attribute.create(String.class, "a3"), Attribute.create(String.class, "a2")));
 	
 			/** The p5. */
 			protected Atom p5 = new Atom(new AccessibleSchema.InferredAccessibleRelation(r5),
-			Lists.newArrayList(new UntypedConstant("c1"), new UntypedConstant("c3"), new UntypedConstant("c2"))
+			new Term[]{UntypedConstant.create("c1"), UntypedConstant.create("c3"), UntypedConstant.create("c2"))
 			);
 	
 			/** The r6. */
-			protected Relation r6 = new Relation("R6", 
-			Lists.newArrayList(new Attribute(String.class, "a1"), new Attribute(String.class, "a3"))) {};
+			protected Relation r6 = Relation.create("R6", 
+			new Term[]{Attribute.create(String.class, "a1"), Attribute.create(String.class, "a3")));
 	
 			/** The p6. */
 			protected Atom p6 = new Atom(new AccessibleSchema.InferredAccessibleRelation(r6),
-			Lists.newArrayList(new UntypedConstant("c1"), new UntypedConstant("c3"))
+			new Term[]{UntypedConstant.create("c1"), UntypedConstant.create("c3")}
 			);
 	
 			/** The r7. */
-			protected Relation r7 = new Relation("R7", 
-			Lists.newArrayList(new Attribute(String.class, "a1"))) {};
+			protected Relation r7 = Relation.create("R7", 
+			new Attribute[]{Attribute.create(String.class, "a1")});
 	
 			/** The p7. */
 			protected Atom p7 = new Atom(new AccessibleSchema.InferredAccessibleRelation(r7),
-			Lists.newArrayList(new UntypedConstant("c1"))
+			new Term[]{UntypedConstant.create("c1")}
 			);
 
 
@@ -108,10 +108,10 @@ public class TestObjects1 {
 	@Mock protected AccessibleChaseState config12State;
 	
 	/** The plan11. */
-	@Mock protected DAGPlan plan11;
+	@Mock protected RelationalTerm plan11;
 	
 	/** The plan12. */
-	@Mock protected DAGPlan plan12;
+	@Mock protected RelationalTerm plan12;
 
 	/** The config21. */
 	@Mock protected DAGChaseConfiguration config21;
@@ -126,10 +126,10 @@ public class TestObjects1 {
 	@Mock protected AccessibleChaseState config22State;
 	
 	/** The plan21. */
-	@Mock protected DAGPlan plan21;
+	@Mock protected RelationalTerm plan21;
 	
 	/** The plan22. */
-	@Mock protected DAGPlan plan22;
+	@Mock protected RelationalTerm plan22;
 
 	/** The config31. */
 	@Mock protected DAGChaseConfiguration config31;
@@ -144,8 +144,8 @@ public class TestObjects1 {
 	@Mock protected AccessibleChaseState config32State;
 	
 	/** The plan31. */
-	@Mock protected DAGPlan plan31;
+	@Mock protected RelationalTerm plan31;
 	
 	/** The plan32. */
-	@Mock protected DAGPlan plan32;
+	@Mock protected RelationalTerm plan32;
 }

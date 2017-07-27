@@ -54,7 +54,7 @@ public class AccessibleSchema extends Schema {
 
 	/**  Mapping from a dependency to its inferred accessible counterpart. */
 	private final Dependency[] inferredAccessibilityAxioms;
-	
+
 	private final Dependency[] originalDependencies;
 
 	/**
@@ -97,9 +97,13 @@ public class AccessibleSchema extends Schema {
 	public AccessibilityAxiom[] getAccessibilityAxioms() {
 		return this.accessibilityAxioms.clone();
 	}
-	
+
 	public Dependency[] getOriginalDependencies() {
 		return originalDependencies.clone();
+	}
+	
+	public boolean containsInferredAccessibleAxiom(Dependency dependency) {
+		return Arrays.asList(this.inferredAccessibilityAxioms).contains(dependency);
 	}
 
 	/**
@@ -185,14 +189,21 @@ public class AccessibleSchema extends Schema {
 	 * @return PredicateFormula
 	 */
 	private static Atom substitute(Atom atom) {
-		return Atom.create(Predicate.create(inferredAccessiblePrefix + atom.getPredicate().getName(), atom.getPredicate().getArity()), atom.getTerms());
+		Predicate predicate = null;
+		if(atom.getPredicate() instanceof Relation) {
+			Relation relation = (Relation) atom.getPredicate();
+			predicate = Relation.create(AccessibleSchema.inferredAccessiblePrefix + relation.getName(), relation.getAttributes(), new AccessMethod[]{AccessMethod.create(new Integer[]{})}, relation.isEquality());
+		}
+		else 
+			predicate = Predicate.create(inferredAccessiblePrefix + atom.getPredicate().getName(), atom.getPredicate().getArity());
+		return Atom.create(predicate, atom.getTerms());
 	}
-	
+
 	public static Relation[] computeAccessibleSchemaRelations(Relation[] relations) {
 		Collection<Relation> output  = new LinkedHashSet<>();
 		output.addAll(Arrays.asList(relations));
 		for(Relation relation:relations) 
-			output.add(Relation.create(AccessibleSchema.inferredAccessiblePrefix + relation.getName(), relation.getAttributes(), relation.getAccessMethods(), relation.getForeignKeys()));
+			output.add(Relation.create(AccessibleSchema.inferredAccessiblePrefix + relation.getName(), relation.getAttributes(), new AccessMethod[]{AccessMethod.create(new Integer[]{})}, relation.isEquality()));
 		return output.toArray(new Relation[output.size()]);
 	}
 
@@ -214,9 +225,9 @@ public class AccessibleSchema extends Schema {
 	}
 
 	private static AccessibilityAxiom[] lastComputedaccessibilityAxioms;
-	
+
 	private static Dependency[] lastComputedinferredAccessibilityAxioms;
-	
+
 	public static Dependency[] computeAccessibleSchemaAxioms(Relation[] relations, Dependency[] dependencies) {
 		lastComputedaccessibilityAxioms = computeAccessibilityAxioms(relations);
 		lastComputedinferredAccessibilityAxioms = computeInferredAccessibleAxioms(dependencies);

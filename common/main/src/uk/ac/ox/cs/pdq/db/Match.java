@@ -36,7 +36,7 @@ public class Match {
 		return this.mapping;
 	}
 
-	public Formula getQuery() {
+	public Formula getFormula() {
 		return this.formula;
 	}
 

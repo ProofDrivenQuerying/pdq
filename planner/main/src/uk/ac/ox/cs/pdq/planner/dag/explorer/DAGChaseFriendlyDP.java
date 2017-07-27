@@ -12,6 +12,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.eventbus.EventBus;
 
 import uk.ac.ox.cs.pdq.LimitReachedException;
+import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
@@ -105,7 +106,8 @@ public class DAGChaseFriendlyDP extends DAGGeneric {
 				BinaryConfiguration configuration = new BinaryConfiguration(
 						pair.getLeft(),
 						pair.getRight());
-				this.costEstimator.cost(configuration.getPlan());
+				Cost cost = this.costEstimator.cost(configuration.getPlan());
+				configuration.setCost(cost);
 				if (this.bestPlan == null || !this.successDominance.isDominated(configuration.getPlan(), configuration.getCost(), this.bestPlan, this.bestCost)) {
 					configuration.reasonUntilTermination(this.chaser, this.accessibleQuery, this.accessibleSchema.getInferredAccessibilityAxioms());
 					if (ExplorerUtils.isDominated(this.dominance, this.getRight(), configuration) == null

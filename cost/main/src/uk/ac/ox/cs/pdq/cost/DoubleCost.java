@@ -55,16 +55,6 @@ public final class DoubleCost implements Cost {
 	}
 
 	/**
-	 * Sets the max.
-	 *
-	 * @see uk.ac.ox.cs.pdq.datasources.Cost#setMax()
-	 */
-	@Override
-	public void setMax() {
-		this.value = UPPER_BOUND.getValue().doubleValue();
-	}
-
-	/**
 	 * Greater or equals.
 	 *
 	 * @param cost Cost
@@ -143,19 +133,6 @@ public final class DoubleCost implements Cost {
 	}
 
 	/**
-	 * Adds the.
-	 *
-	 * @param cost Cost
-	 * @return Cost
-	 * @see uk.ac.ox.cs.pdq.datasources.Cost#add(Cost)
-	 */
-	@Override
-	public Cost add(Cost cost) {
-		Preconditions.checkState(cost instanceof DoubleCost);
-		return new DoubleCost(this.value + ((DoubleCost) cost).value);
-	}
-
-	/**
 	 * Gets the value.
 	 *
 	 * @return Number
@@ -164,17 +141,6 @@ public final class DoubleCost implements Cost {
 	@Override
 	public Number getValue() {
 		return this.value;
-	}
-
-	/**
-	 * Clone.
-	 *
-	 * @return Cost
-	 * @see uk.ac.ox.cs.pdq.datasources.Cost#clone()
-	 */
-	@Override
-	public Cost clone() {
-		return new DoubleCost(this.value);
 	}
 
 	/**
@@ -195,16 +161,5 @@ public final class DoubleCost implements Cost {
 			return -1;
 		}
 		throw new java.lang.IllegalArgumentException();
-	}
-
-	/**
-	 * Checks if is upper bound.
-	 *
-	 * @return boolean
-	 * @see uk.ac.ox.cs.pdq.datasources.Cost#isUpperBound()
-	 */
-	@Override
-	public boolean isUpperBound() {
-		return this.equals(UPPER_BOUND);
 	}
 }

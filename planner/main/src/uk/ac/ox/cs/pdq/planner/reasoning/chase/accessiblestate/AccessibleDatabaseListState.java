@@ -19,8 +19,10 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 
+import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.Match;
+import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
@@ -225,7 +227,7 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 		Preconditions.checkNotNull(matches);
 		Collection<Atom> newFacts = new LinkedHashSet<>();
 		for(Match match:matches) {
-			Dependency dependency = (Dependency) match.getQuery();
+			Dependency dependency = (Dependency) match.getFormula();
 			Preconditions.checkArgument(dependency instanceof TGD, "EGDs are not allowed inside TGDchaseStep");
 			Map<Variable, Constant> mapping = match.getMapping();
 			Implication grounded = uk.ac.ox.cs.pdq.reasoning.chase.Utility.fire(dependency, mapping, true);
@@ -290,7 +292,14 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 		for(Atom fact:facts) {			
 			Atom accessedFact = Atom.create(fact.getPredicate(), fact.getTerms());
 			createdFacts.add(accessedFact);
-			Atom inferredAccessibleFact = Atom.create(Predicate.create(AccessibleSchema.inferredAccessiblePrefix + fact.getPredicate().getName(), fact.getNumberOfTerms()), fact.getTerms());
+			Predicate predicate = null;
+			if(fact.getPredicate() instanceof Relation) {
+				Relation relation = (Relation) fact.getPredicate();
+				predicate = Relation.create(AccessibleSchema.inferredAccessiblePrefix + relation.getName(), relation.getAttributes(), new AccessMethod[]{AccessMethod.create(new Integer[]{})}, relation.isEquality());
+			}
+			else 
+				predicate = Predicate.create(AccessibleSchema.inferredAccessiblePrefix + fact.getPredicate().getName(), fact.getPredicate().getArity());
+			Atom inferredAccessibleFact = Atom.create(predicate, fact.getTerms());
 			createdFacts.add(inferredAccessibleFact);
 			this.inferredAccessibleAtoms.add(inferredAccessibleFact);
 			this.derivedInferredAccessibleAtoms.add(inferredAccessibleFact);
@@ -325,7 +334,14 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 			Iterator<Atom> iterator = pair.getRight().iterator();
 			while (iterator.hasNext()) {
 				Atom fact = iterator.next();
-				Atom accessedFact = Atom.create(Predicate.create(AccessibleSchema.inferredAccessiblePrefix + fact.getPredicate().getName(), fact.getNumberOfTerms()), fact.getTerms());
+				Predicate predicate = null;
+				if(fact.getPredicate() instanceof Relation) {
+					Relation relation = (Relation) fact.getPredicate();
+					predicate = Relation.create(AccessibleSchema.inferredAccessiblePrefix + relation.getName(), relation.getAttributes(), new AccessMethod[]{AccessMethod.create(new Integer[]{})}, relation.isEquality());
+				}
+				else 
+					predicate = Predicate.create(AccessibleSchema.inferredAccessiblePrefix + fact.getPredicate().getName(), fact.getPredicate().getArity());
+				Atom accessedFact = Atom.create(predicate, fact.getTerms());
 				Collection<Term> inputTerms = uk.ac.ox.cs.pdq.util.Utility.getTerms(accessedFact,axiom.getAccessMethod().getZeroBasedInputs());
 				if(graph.getFactProvenance(accessedFact) == null && accessibleTerms.keySet().containsAll(inputTerms)) {
 					Match matching = MatchFactory.getMatch(pair.getLeft(), fact);

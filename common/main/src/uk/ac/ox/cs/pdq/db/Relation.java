@@ -50,7 +50,6 @@ public abstract class Relation extends Predicate implements Serializable {
 	 * underlying implementation.
 	 * If no properties are defined, then this an an empty Properties instance. */
 	protected final Properties properties = new Properties();
-
 	
 	protected Relation(String name, Attribute[] attributes, AccessMethod[] accessMethods, ForeignKey[] foreignKeys) {
 		this(name, attributes, accessMethods, foreignKeys, false);
@@ -72,7 +71,7 @@ public abstract class Relation extends Predicate implements Serializable {
 		this(name, attributes, new AccessMethod[]{}, false);
 	}
 
-	public Relation(String name, Attribute[] attributes, AccessMethod[] accessMethods, ForeignKey[] foreignKeys, boolean isEquality) {
+	protected Relation(String name, Attribute[] attributes, AccessMethod[] accessMethods, ForeignKey[] foreignKeys, boolean isEquality) {
 		super(name, attributes.length, isEquality);
 		this.attributes = attributes.clone();
 		Map<String, Integer> positions = new LinkedHashMap<>();
@@ -275,6 +274,11 @@ public abstract class Relation extends Predicate implements Serializable {
 	
 	public static  Relation create(String name, Attribute[] attributes) {
 		return s_interningManager.intern(new Relation(name, attributes){
+			private static final long serialVersionUID = -8215821247702132205L;});
+	}
+	
+	public static  Relation create (String name, Attribute[] attributes, AccessMethod[] accessMethods, ForeignKey[] foreignKeys, boolean isEquality) {
+		return s_interningManager.intern(new Relation(name, attributes, accessMethods, foreignKeys, isEquality){
 			private static final long serialVersionUID = -8215821247702132205L;});
 	}
 	
