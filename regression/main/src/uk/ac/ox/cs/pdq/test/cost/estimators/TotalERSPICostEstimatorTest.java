@@ -26,7 +26,7 @@ import com.google.common.eventbus.EventBus;
  *
  * @author Efthymia Tsamoura
  */
-public class TotalERSPICostEstimatorTest extends CostEstimatorTest{
+public class TotalERSPICostEstimatorTest{
 
 	/** The event bus. */
 	private EventBus eventBus = new EventBus();

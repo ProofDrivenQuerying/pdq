@@ -6,9 +6,7 @@ import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.Map;
 
-import jersey.repackaged.com.google.common.base.Preconditions;
-
-import org.apache.log4j.Logger;
+import com.google.common.base.Preconditions;
 
 import uk.ac.ox.cs.pdq.Parameters;
 
@@ -20,37 +18,34 @@ import uk.ac.ox.cs.pdq.Parameters;
  */
 public abstract class RegressionTest {
 
-	/** Runner's logger. */
-	private static Logger log = Logger.getLogger(RegressionTest.class);
-
 	/**
 	 * The Enum Types.
 	 */
 	enum Types {
-		
+
 		/** The planner. */
 		planner, 
- /** The kstepblocking. */
- kstepblocking, 
- /** The runtime. */
- runtime, 
- /** The proof. */
- proof, 
- /** The plangen. */
- plangen, 
- /** The user_driven. */
- user_driven,
-		
+		/** The kstepblocking. */
+		kstepblocking, 
+		/** The runtime. */
+		runtime, 
+		/** The proof. */
+		proof, 
+		/** The plangen. */
+		plangen, 
+		/** The user_driven. */
+		user_driven,
+
 		/** The optimizations. */
 		optimizations, 
- /** The cost. */
- cost, 
- /** The jungvis. */
- jungvis, 
- /** The prefusevis. */
- prefusevis, 
- /** The dag_explorers. */
- dag_explorers}
+		/** The cost. */
+		cost, 
+		/** The jungvis. */
+		jungvis, 
+		/** The prefusevis. */
+		prefusevis, 
+		/** The dag_explorers. */
+		dag_explorers}
 
 	/** The out. */
 	protected PrintStream out = System.out;
@@ -80,7 +75,7 @@ public abstract class RegressionTest {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * Overrides the given params with the given maps entries.
 	 *

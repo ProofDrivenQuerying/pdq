@@ -28,7 +28,7 @@ import uk.ac.ox.cs.pdq.test.planner.PlannerTestUtilities;
  *
  * @author Efthymia Tsamoura
  */
-public class TotalWhiteBoxEstimatorTest extends CostEstimatorTest{
+public class TotalWhiteBoxEstimatorTest{
 
 	/** The event bus. */
 	private EventBus eventBus = new EventBus();
