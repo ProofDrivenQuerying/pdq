@@ -4,8 +4,8 @@ import java.io.PrintStream;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import uk.ac.ox.cs.pdq.EventHandler;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator;
+import uk.ac.ox.cs.pdq.util.EventHandler;
 
 import com.google.common.eventbus.Subscribe;
 

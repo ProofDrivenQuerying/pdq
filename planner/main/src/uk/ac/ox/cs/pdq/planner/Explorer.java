@@ -4,11 +4,11 @@ package uk.ac.ox.cs.pdq.planner;
 import org.apache.log4j.Logger;
 import org.junit.Assert;
 
-import uk.ac.ox.cs.pdq.LimitReachedException;
-import uk.ac.ox.cs.pdq.LimitReachedException.Reasons;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
+import uk.ac.ox.cs.pdq.util.LimitReachedException;
+import uk.ac.ox.cs.pdq.util.LimitReachedException.Reasons;
 
 import com.google.common.eventbus.EventBus;
 

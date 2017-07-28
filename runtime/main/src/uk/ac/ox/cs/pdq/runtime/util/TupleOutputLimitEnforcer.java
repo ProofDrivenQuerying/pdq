@@ -1,7 +1,7 @@
 package uk.ac.ox.cs.pdq.runtime.util;
 
-import uk.ac.ox.cs.pdq.EventHandler;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator;
+import uk.ac.ox.cs.pdq.util.EventHandler;
 import uk.ac.ox.cs.pdq.util.Tuple;
 
 import com.google.common.eventbus.Subscribe;

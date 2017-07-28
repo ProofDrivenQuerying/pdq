@@ -4,10 +4,10 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import uk.ac.ox.cs.pdq.EventHandler;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.logging.StatisticsLogger;
+import uk.ac.ox.cs.pdq.util.EventHandler;
 
 import com.google.common.base.Preconditions;
 import com.google.common.eventbus.Subscribe;

@@ -13,8 +13,6 @@ import java.util.Map.Entry;
 import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.InconsistentParametersException;
-import uk.ac.ox.cs.pdq.LimitReachedException;
-import uk.ac.ox.cs.pdq.LimitReachedException.Reasons;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
@@ -39,6 +37,8 @@ import uk.ac.ox.cs.pdq.test.Bootstrap.Command;
 import uk.ac.ox.cs.pdq.test.acceptance.AcceptanceCriterion;
 import uk.ac.ox.cs.pdq.test.acceptance.ApproximateCostAcceptanceCheck;
 import uk.ac.ox.cs.pdq.test.acceptance.SameCostAcceptanceCheck;
+import uk.ac.ox.cs.pdq.util.LimitReachedException;
+import uk.ac.ox.cs.pdq.util.LimitReachedException.Reasons;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;

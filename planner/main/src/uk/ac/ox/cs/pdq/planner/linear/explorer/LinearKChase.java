@@ -18,7 +18,6 @@ import org.jgrapht.graph.DefaultEdge;
 
 import com.google.common.eventbus.EventBus;
 
-import uk.ac.ox.cs.pdq.LimitReachedException;
 import uk.ac.ox.cs.pdq.algebra.AlgebraUtilities;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
@@ -37,6 +36,7 @@ import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode.NodeStatus;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
+import uk.ac.ox.cs.pdq.util.LimitReachedException;
 
 // TODO: Auto-generated Javadoc
 /**

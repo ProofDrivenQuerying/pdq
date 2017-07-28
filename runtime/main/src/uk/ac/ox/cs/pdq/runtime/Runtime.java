@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import uk.ac.ox.cs.pdq.EventHandler;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.datasources.Result;
 import uk.ac.ox.cs.pdq.datasources.Table;
@@ -29,6 +28,7 @@ import uk.ac.ox.cs.pdq.runtime.exec.PlanExecutor.ExecutionModes;
 import uk.ac.ox.cs.pdq.runtime.query.InMemoryQueryEvaluator;
 import uk.ac.ox.cs.pdq.runtime.query.QueryEvaluator;
 import uk.ac.ox.cs.pdq.runtime.query.QueryEvaluatorFactory;
+import uk.ac.ox.cs.pdq.util.EventHandler;
 import uk.ac.ox.cs.pdq.util.Tuple;
 import uk.ac.ox.cs.pdq.util.TupleType;
 import uk.ac.ox.cs.pdq.util.Utility;

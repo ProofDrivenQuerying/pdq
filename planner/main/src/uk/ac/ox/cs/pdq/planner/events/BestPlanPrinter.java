@@ -1,8 +1,8 @@
 package uk.ac.ox.cs.pdq.planner.events;
 
-import uk.ac.ox.cs.pdq.EventHandler;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
+import uk.ac.ox.cs.pdq.util.EventHandler;
 
 import com.google.common.eventbus.Subscribe;
 

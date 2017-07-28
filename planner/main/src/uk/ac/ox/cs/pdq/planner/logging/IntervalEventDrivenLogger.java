@@ -1,8 +1,8 @@
 package uk.ac.ox.cs.pdq.planner.logging;
 
-import uk.ac.ox.cs.pdq.EventHandler;
 import uk.ac.ox.cs.pdq.logging.ProgressLogger;
 import uk.ac.ox.cs.pdq.planner.Explorer;
+import uk.ac.ox.cs.pdq.util.EventHandler;
 
 import com.google.common.eventbus.Subscribe;
 

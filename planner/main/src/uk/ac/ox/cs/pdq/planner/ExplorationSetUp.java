@@ -8,7 +8,6 @@ import org.apache.log4j.Logger;
 
 import com.google.common.eventbus.EventBus;
 
-import uk.ac.ox.cs.pdq.EventHandler;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.CostEstimatorFactory;
@@ -32,6 +31,7 @@ import uk.ac.ox.cs.pdq.planner.util.PlannerUtility;
 import uk.ac.ox.cs.pdq.reasoning.ReasonerFactory;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
+import uk.ac.ox.cs.pdq.util.EventHandler;
 import uk.ac.ox.cs.pdq.util.Utility;
 
 // TODO: Auto-generated Javadoc

@@ -3,10 +3,10 @@ package uk.ac.ox.cs.pdq.logging;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import uk.ac.ox.cs.pdq.EventHandler;
-
 import com.google.common.base.Preconditions;
 import com.google.common.eventbus.Subscribe;
+
+import uk.ac.ox.cs.pdq.util.EventHandler;
 
 /**
  * A dynamic statistics logger allows logging data point as key-value pair,

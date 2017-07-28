@@ -8,7 +8,6 @@ import java.util.Set;
 
 import org.jgrapht.graph.DefaultEdge;
 
-import uk.ac.ox.cs.pdq.LimitReachedException;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
@@ -17,6 +16,7 @@ import uk.ac.ox.cs.pdq.planner.linear.explorer.Candidate;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.NodeFactory;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
 import uk.ac.ox.cs.pdq.planner.util.PlanTree;
+import uk.ac.ox.cs.pdq.util.LimitReachedException;
 
 import com.google.common.base.Preconditions;
 
