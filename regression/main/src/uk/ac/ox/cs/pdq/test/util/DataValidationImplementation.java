@@ -20,7 +20,7 @@ import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.TriggerProperty;
-import uk.ac.ox.cs.pdq.runtime.exec.AccessException;
+import uk.ac.ox.cs.pdq.runtime.util.AccessException;
 
 // TODO: Auto-generated Javadoc
 /**

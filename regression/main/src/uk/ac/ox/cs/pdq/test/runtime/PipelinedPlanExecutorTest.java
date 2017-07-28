@@ -19,7 +19,7 @@ import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
 import uk.ac.ox.cs.pdq.runtime.EvaluationException;
 import uk.ac.ox.cs.pdq.runtime.RuntimeParameters;
 import uk.ac.ox.cs.pdq.runtime.RuntimeParameters.ExecutorTypes;
-import uk.ac.ox.cs.pdq.runtime.exec.Middleware;
+import uk.ac.ox.cs.pdq.runtime.exec.SetupPlanExecutor;
 import uk.ac.ox.cs.pdq.runtime.exec.PlanExecutor;
 import uk.ac.ox.cs.pdq.runtime.exec.PlanExecutor.ExecutionModes;
 import uk.ac.ox.cs.pdq.test.planner.PlannerTestUtilities;
@@ -157,7 +157,7 @@ public class PipelinedPlanExecutorTest {
 	private Result evaluatePlan(RuntimeParameters runtimeParams, RelationalTerm p, ConjunctiveQuery query, ExecutionModes mode)
 			throws EvaluationException {
 		//this.eventBus.register(new TuplePrinterTest(System.out));
-		PlanExecutor executor = Middleware.newExecutor(runtimeParams, p, query);
+		PlanExecutor executor = SetupPlanExecutor.newExecutor(runtimeParams, p, query);
 		executor.setEventBus(this.eventBus);
 		executor.setTuplesLimit(runtimeParams.getTuplesLimit());
 		executor.setCache(runtimeParams.getDoCache());

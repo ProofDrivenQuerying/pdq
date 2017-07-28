@@ -16,6 +16,8 @@ import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
 
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
+import uk.ac.ox.cs.pdq.datasources.utility.TupleCounter;
+import uk.ac.ox.cs.pdq.datasources.utility.TuplePrinter;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
@@ -23,8 +25,6 @@ import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.io.xml.QueryReader;
 import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
 import uk.ac.ox.cs.pdq.runtime.io.DataReader;
-import uk.ac.ox.cs.pdq.runtime.util.TupleCounter;
-import uk.ac.ox.cs.pdq.runtime.util.TuplePrinter;
 
 // TODO: Auto-generated Javadoc
 /**

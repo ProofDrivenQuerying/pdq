@@ -7,7 +7,7 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
-import uk.ac.ox.cs.pdq.runtime.exec.Middleware.ControlFlows;
+import uk.ac.ox.cs.pdq.runtime.exec.SetupPlanExecutor.ControlFlows;
 
 // TODO: Auto-generated Javadoc
 /**

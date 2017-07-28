@@ -24,7 +24,7 @@ import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.LinearGuarded;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.runtime.exec.Middleware;
+import uk.ac.ox.cs.pdq.runtime.exec.SetupPlanExecutor;
 import uk.ac.ox.cs.pdq.runtime.exec.PlanExecutor;
 import uk.ac.ox.cs.pdq.runtime.exec.PlanExecutor.ExecutionModes;
 import uk.ac.ox.cs.pdq.runtime.query.InMemoryQueryEvaluator;
@@ -214,7 +214,7 @@ public class Runtime {
 	 */
 	public Result evaluatePlan(RelationalTerm p, ConjunctiveQuery query, ExecutionModes mode)
 			throws EvaluationException {
-		PlanExecutor executor = Middleware.newExecutor(this.params, p, query);
+		PlanExecutor executor = SetupPlanExecutor.newExecutor(this.params, p, query);
 		executor.setTuplesLimit(this.params.getTuplesLimit());
 		executor.setCache(this.params.getDoCache());
 		executor.setEventBus(this.eventBus);

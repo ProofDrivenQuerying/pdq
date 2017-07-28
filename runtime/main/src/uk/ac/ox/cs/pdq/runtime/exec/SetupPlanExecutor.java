@@ -1,18 +1,11 @@
 package uk.ac.ox.cs.pdq.runtime.exec;
 
-import java.util.Properties;
+import com.google.common.base.Preconditions;
 
-import uk.ac.ox.cs.pdq.InconsistentParametersException;
 import uk.ac.ox.cs.pdq.Parameters.EnumParameterValue;
-import uk.ac.ox.cs.pdq.algebra.AccessTerm;
-import uk.ac.ox.cs.pdq.algebra.AlgebraUtilities;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
-import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.runtime.RuntimeParameters;
-import uk.ac.ox.cs.pdq.runtime.RuntimeParameters.ExecutorTypes;
-
-import com.google.common.base.Preconditions;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -24,7 +17,7 @@ import com.google.common.base.Preconditions;
  * @author Efi Tsamoura
  * @author Julien Leblay
  */
-public final class Middleware {
+public final class SetupPlanExecutor {
 
 	/**
 	 *  Types of control flows supported by the plans.

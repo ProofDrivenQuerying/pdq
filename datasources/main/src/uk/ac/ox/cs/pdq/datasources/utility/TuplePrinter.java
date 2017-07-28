@@ -1,10 +1,9 @@
-package uk.ac.ox.cs.pdq.runtime.util;
+package uk.ac.ox.cs.pdq.datasources.utility;
 
 import java.io.PrintStream;
 
 import org.apache.log4j.Logger;
 
-import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
 import uk.ac.ox.cs.pdq.util.EventHandler;
 
 import com.google.common.eventbus.Subscribe;
