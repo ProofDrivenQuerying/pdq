@@ -34,7 +34,7 @@ import com.google.common.collect.Lists;
 public abstract class Join extends NaryIterator {
 
 	/** The predicate. */
-	protected Condition predicate;
+	protected Condition condition;
 	
 	/** Determines whether the operator is known to have an empty result. */
 	protected boolean isEmpty = false;
@@ -75,7 +75,7 @@ public abstract class Join extends NaryIterator {
 		Preconditions.checkArgument(children.size() > 1);
 		assert isPredicateConsistent(predicate, this.columns);
 		this.relativeInputPositions = ImmutableMap.copyOf(inferInputMappings(inputs, children));
-		this.predicate = predicate;
+		this.condition = predicate;
 	}
 	
 	/**
@@ -118,8 +118,8 @@ public abstract class Join extends NaryIterator {
 	 *
 	 * @return the join predicate
 	 */
-	public Condition getPredicate() {
-		return this.predicate;
+	public Condition getCondition() {
+		return this.condition;
 	}
 
 	/**
@@ -183,7 +183,7 @@ public abstract class Join extends NaryIterator {
 	public String toString() {
 		StringBuilder result = new StringBuilder();
 		result.append(this.getClass().getSimpleName());
-		result.append(this.predicate).append('(');
+		result.append(this.condition).append('(');
 		if (this.children != null) {
 			for (TupleIterator child: this.children) {
 				result.append(child.toString()).append(',');

@@ -12,6 +12,10 @@ import org.junit.Test;
 import org.mockito.MockitoAnnotations;
 import org.mockito.internal.util.collections.Sets;
 
+import uk.ac.ox.cs.pdq.algebra.AttributeEqualityCondition;
+import uk.ac.ox.cs.pdq.algebra.Condition;
+import uk.ac.ox.cs.pdq.algebra.ConjunctiveCondition;
+import uk.ac.ox.cs.pdq.algebra.SimpleCondition;
 import uk.ac.ox.cs.pdq.datasources.memory.InMemoryTableWrapper;
 import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
 import uk.ac.ox.cs.pdq.datasources.utility.TupleType;
@@ -65,7 +69,7 @@ public class BindJoinTest extends NaryIteratorTest {
 	@Before public void setup() {
 		super.setup();
         MockitoAnnotations.initMocks(this);
-		d = new Attribute(String.class, "d");
+		d = Attribute.create(String.class, "d");
 		out12 = Lists.newArrayList(a, b, c, d, c, e);
 		out21 = Lists.newArrayList(c, e, a, b, c, d);
 		in21 = Lists.newArrayList(c);
@@ -73,21 +77,22 @@ public class BindJoinTest extends NaryIteratorTest {
 		in34 = Lists.newArrayList(e, a, b);
         // Using mocks for test the bind join is tricky because of the complex
         // uses of hasNext and next methods. Reverting to memory scans below.
-        free = new AccessMethod();
-        mt1 = new AccessMethod("m1", Types.LIMITED, Lists.newArrayList(1));
-        mt2 = new AccessMethod("m2", Types.LIMITED, Lists.newArrayList(2));
-        mt3 = new AccessMethod("m3", Types.LIMITED, Lists.newArrayList(1, 2));
+        free = AccessMethod.create(new Integer[]{});
+        mt1 = AccessMethod.create("m1", new Integer[]{1});
+        mt2 = AccessMethod.create("m2", new Integer[]{2});
+        mt3 = AccessMethod.create("m3", new Integer[]{1,2});
         rel1 = new InMemoryTableWrapper("R1", 
-        		Lists.newArrayList((Attribute) a, (Attribute) b, (Attribute) c, (Attribute) d),
-	    		Lists.newArrayList(free, mt3));
+        		new Attribute[]{(Attribute) a, (Attribute) b, (Attribute) c, (Attribute) d},
+	    		new AccessMethod[]{free, mt3});
         rel1.load(Lists.newArrayList(
         		child1Type.createTuple("A", 10, 1, "D"),
         		child1Type.createTuple("A", 10, 2, "D"),
         		child1Type.createTuple("A", 20, 1, "D"),
         		child1Type.createTuple("B", 20, 1, "D")));
         rel2 = new InMemoryTableWrapper("R2", 
-        		Lists.newArrayList((Attribute) c, (Attribute) e),
-        		Lists.newArrayList(mt1, mt2));
+        		new Attribute[]{(Attribute) c, (Attribute) e},
+	    		new AccessMethod[]{mt1, mt2});
+        
         rel2.load(Lists.newArrayList(
         		child2Type.createTuple(1, "A"),
         		child2Type.createTuple(2, "B"),
@@ -156,63 +161,63 @@ public class BindJoinTest extends NaryIteratorTest {
 	 * Inits the two children12.
 	 */
 	@Test public void initTwoChildren12() {
-		Predicate natural = new ConjunctivePredicate<>(new AttributeEqualityPredicate(2, 4));
+		Condition natural = ConjunctiveCondition.create(new SimpleCondition[]{AttributeEqualityCondition.create(2, 4)});
 		this.iterator = new BindJoin(child1, child2);
 		Assert.assertEquals("BindJoin iterator columns must match that of the concatenation of its children", out12, this.iterator.getColumns());
 		Assert.assertEquals("BindJoin iterator type must match that of the concatenation of its children", TupleType.DefaultFactory.createFromTyped(out12), this.iterator.getType());
 		Assert.assertEquals("BindJoin iterator input columns must match that of the concatenation of its children", Collections.EMPTY_LIST, this.iterator.getInputColumns());
 		Assert.assertEquals("BindJoin iterator input type must match that of the concatenation of its children", TupleType.EmptyTupleType, this.iterator.getInputType());
 		Assert.assertEquals("BindJoin iterator children must match that of initialization", Lists.newArrayList(child1, child2), this.iterator.getChildren());
-		Assert.assertEquals("BindJoin iterator predicate must match that of natural join", natural, this.iterator.getPredicate());
+		Assert.assertEquals("BindJoin iterator Condition must match that of natural join", natural, this.iterator.getCondition());
 	}
 
 	/**
 	 * Inits the two children21.
 	 */
 	@Test public void initTwoChildren21() {
-		Predicate natural = new ConjunctivePredicate<>(new AttributeEqualityPredicate(0, 4));
+		Condition natural = ConjunctiveCondition.create(new SimpleCondition[]{AttributeEqualityCondition.create(0, 4)});
 		this.iterator = new BindJoin(child2, child1);
 		Assert.assertEquals("BindJoin iterator columns must match that of the concatenation of its children", out21, this.iterator.getColumns());
 		Assert.assertEquals("BindJoin iterator type must match that of the concatenation of its children", TupleType.DefaultFactory.createFromTyped(out21), this.iterator.getType());
 		Assert.assertEquals("BindJoin iterator input columns must match that of the concatenation of its children", in21, this.iterator.getInputColumns());
 		Assert.assertEquals("BindJoin iterator input type must match that of the concatenation of its children", TupleType.DefaultFactory.createFromTyped(in21), this.iterator.getInputType());
 		Assert.assertEquals("BindJoin iterator children must match that of initialization", Lists.newArrayList(child2, child1), this.iterator.getChildren());
-		Assert.assertEquals("BindJoin iterator predicate must match that of natural join", natural, this.iterator.getPredicate());
+		Assert.assertEquals("BindJoin iterator Condition must match that of natural join", natural, this.iterator.getCondition());
 	}
 
 	/**
 	 * Inits the two children34.
 	 */
 	@Test public void initTwoChildren34() {
-		Predicate natural = new ConjunctivePredicate<>(new AttributeEqualityPredicate(0, 4));
+		Condition natural = ConjunctiveCondition.create(new SimpleCondition[]{AttributeEqualityCondition.create(0, 4)});
 		this.iterator = new BindJoin(child3, child4);
 		Assert.assertEquals("BindJoin iterator columns must match that of the concatenation of its children", out34, this.iterator.getColumns());
 		Assert.assertEquals("BindJoin iterator type must match that of the concatenation of its children", TupleType.DefaultFactory.createFromTyped(out34), this.iterator.getType());
 		Assert.assertEquals("BindJoin iterator input columns must match that of the concatenation of its children", in34, this.iterator.getInputColumns());
 		Assert.assertEquals("BindJoin iterator input type must match that of the concatenation of its children", TupleType.DefaultFactory.createFromTyped(in34), this.iterator.getInputType());
 		Assert.assertEquals("BindJoin iterator children must match that of initialization", Lists.newArrayList(child3, child4), this.iterator.getChildren());
-		Assert.assertEquals("BindJoin iterator predicate must match that of natural join", natural, this.iterator.getPredicate());
+		Assert.assertEquals("BindJoin iterator Condition must match that of natural join", natural, this.iterator.getCondition());
 	}
 
 	/**
-	 * Inits the with inconsistent predicate.
+	 * Inits the with inconsistent Condition.
 	 */
 	@Test(expected=AssertionError.class)
-	public void initWithInconsistentPredicate() {
-		Predicate c1Toc2 = new AttributeEqualityPredicate(2, 4);
-		Predicate c1ToOutOfBounds = new AttributeEqualityPredicate(2, 10);
-		Predicate conjunct = new ConjunctivePredicate<>(Lists.newArrayList(c1Toc2, c1ToOutOfBounds));
+	public void initWithInconsistentCondition() {
+		SimpleCondition c1Toc2 = AttributeEqualityCondition.create(2, 4);
+		SimpleCondition c1ToOutOfBounds = AttributeEqualityCondition.create(2, 10);
+		Condition conjunct = ConjunctiveCondition.create(new SimpleCondition[]{c1Toc2, c1ToOutOfBounds});
 		new BindJoin(conjunct, child1, child2);
 	}
 
 	/**
-	 * Inits the with inconsistent predicate2.
+	 * Inits the with inconsistent Condition2.
 	 */
 	@Test(expected=AssertionError.class)
-	public void initWithInconsistentPredicate2() {
-		Predicate c1Toc2 = new AttributeEqualityPredicate(2, 4);
-		Predicate c1ToOutOfBounds = new AttributeEqualityPredicate(2, -1);
-		Predicate conjunct = new ConjunctivePredicate<>(Lists.newArrayList(c1Toc2, c1ToOutOfBounds));
+	public void initWithInconsistentCondition2() {
+		SimpleCondition c1Toc2 = AttributeEqualityCondition.create(2, 4);
+		SimpleCondition c1ToOutOfBounds = AttributeEqualityCondition.create(2, -1);
+		Condition conjunct = ConjunctiveCondition.create(new SimpleCondition[]{c1Toc2, c1ToOutOfBounds});
 		new BindJoin(conjunct, child1, child2);
 	}
 

@@ -11,12 +11,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
 
-import uk.ac.ox.cs.pdq.algebra.RelationalOperatorException;
 import uk.ac.ox.cs.pdq.datasources.memory.InMemoryTableWrapper;
 import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
 import uk.ac.ox.cs.pdq.datasources.utility.TupleType;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
-import uk.ac.ox.cs.pdq.db.AccessMethod.Types;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.TopDownAccess;
@@ -34,10 +32,10 @@ import com.google.common.collect.Lists;
 public class TopDownAccessTest {
 
 	/** The d. */
-	Attribute a = new Attribute(Integer.class, "a"), 
-			b = new Attribute(String.class, "b"), 
-			c = new Attribute(String.class, "c"), 
-			d = new Attribute(Integer.class, "d");
+	Attribute a = Attribute.create(Integer.class, "a"), 
+			b = Attribute.create(String.class, "b"), 
+			c = Attribute.create(String.class, "c"), 
+			d = Attribute.create(Integer.class, "d");
 	
 	/** The output columns. */
 	List<Typed> outputColumns;
@@ -76,19 +74,19 @@ public class TopDownAccessTest {
 	Tuple binding5;
 	
 	/** The static1. */
-	Map<Integer, TypedConstant<?>> static1 = new LinkedHashMap<>();
+	Map<Integer, TypedConstant> static1 = new LinkedHashMap<>();
 	
 	/** The static2. */
-	Map<Integer, TypedConstant<?>> static2 = new LinkedHashMap<>();
+	Map<Integer, TypedConstant> static2 = new LinkedHashMap<>();
 	
 	/** The static3. */
-	Map<Integer, TypedConstant<?>> static3 = new LinkedHashMap<>();
+	Map<Integer, TypedConstant> static3 = new LinkedHashMap<>();
 	
 	/** The static4. */
-	Map<Integer, TypedConstant<?>> static4 = new LinkedHashMap<>();
+	Map<Integer, TypedConstant> static4 = new LinkedHashMap<>();
 	
 	/** The static5. */
-	Map<Integer, TypedConstant<?>> static5 = new LinkedHashMap<>();
+	Map<Integer, TypedConstant> static5 = new LinkedHashMap<>();
 	
 	/**
 	 * Setup.
@@ -100,13 +98,14 @@ public class TopDownAccessTest {
 		this.inputColumns = Lists.<Typed>newArrayList(b, a);
 		this.inputType = TupleType.DefaultFactory.create(Integer.class, String.class);
 
-		this.relation = new InMemoryTableWrapper("test", Lists.newArrayList(a, b, c, d));
+		this.relation = new InMemoryTableWrapper("test", new Attribute[]{a, b, c, d}, 
+				new AccessMethod[]{mt1,mt2,mt3,free});
 		
-		this.free = new AccessMethod("mt1", Types.FREE, Lists.<Integer>newArrayList());
-		this.mt1 = new AccessMethod("mt2", Types.LIMITED, Lists.newArrayList(1));
-		this.mt2 = new AccessMethod("mt3", Types.LIMITED, Lists.newArrayList(2, 1));
-		this.mt3 = new AccessMethod("mt4", Types.BOOLEAN, Lists.newArrayList(2, 3, 1, 4));
-		this.unrelated = new AccessMethod("unrelated", Types.LIMITED, Lists.newArrayList(3));
+		this.free = AccessMethod.create("mt1", new Integer[]{});
+		this.mt1 = AccessMethod.create("mt2", new Integer[]{1});
+		this.mt2 = AccessMethod.create("mt3", new Integer[]{2,1});
+		this.mt3 = AccessMethod.create("mt4", new Integer[]{2,3,1,4});
+		this.unrelated = AccessMethod.create("unrelated", new Integer[]{3});
 		
 		this.relation.load(Lists.newArrayList(
 				outputType.createTuple(1, "x", "one", 2), 
@@ -114,10 +113,6 @@ public class TopDownAccessTest {
 				outputType.createTuple(3, "x", "one", 8),
 				outputType.createTuple(3, "x", "four", 32),
 				outputType.createTuple(3, "y", "one", 256)));
-		this.relation.addAccessMethods(mt1);
-		this.relation.addAccessMethods(mt2);
-		this.relation.addAccessMethods(mt3);
-		this.relation.addAccessMethods(free);
 		
 		this.binding1 = TupleType.DefaultFactory.create(Integer.class).createTuple(3);
 		this.binding2 = TupleType.DefaultFactory.create(String.class, Integer.class).createTuple("x", 3);
@@ -125,15 +120,15 @@ public class TopDownAccessTest {
 		this.binding4 = TupleType.DefaultFactory.create(Integer.class).createTuple(2);
 		this.binding5 = TupleType.DefaultFactory.create(Integer.class).createTuple(5);
 		
-		this.static1.put(0, new TypedConstant<>(3));
-		this.static2.put(1, new TypedConstant<>("x"));
-		this.static2.put(0, new TypedConstant<>(3));
-		this.static3.put(1, new TypedConstant<>("x"));
-		this.static3.put(3, new TypedConstant<>("one"));
-		this.static3.put(0, new TypedConstant<>(3));
-		this.static3.put(3, new TypedConstant<>(256));
-		this.static4.put(0, new TypedConstant<>("x"));
-		this.static5.put(1, new TypedConstant<>("x"));
+		this.static1.put(0, TypedConstant.create(3));
+		this.static2.put(1, TypedConstant.create("x"));
+		this.static2.put(0, TypedConstant.create(3));
+		this.static3.put(1, TypedConstant.create("x"));
+		this.static3.put(3, TypedConstant.create("one"));
+		this.static3.put(0, TypedConstant.create(3));
+		this.static3.put(3, TypedConstant.create(256));
+		this.static4.put(0, TypedConstant.create("x"));
+		this.static5.put(1, TypedConstant.create("x"));
 
         MockitoAnnotations.initMocks(this);
 	}
@@ -281,23 +276,6 @@ public class TopDownAccessTest {
 	@Test(expected=IllegalArgumentException.class) 
 	public void initAccessNullChild() {
 		new TopDownAccess(relation, mt1, null);
-	}
-
-	/**
-	 * Deep copy.
-	 *
-	 * @throws RelationalOperatorException the relational operator exception
-	 */
-	@Test public void deepCopy() throws RelationalOperatorException {
-		this.iterator = new TopDownAccess(relation, mt2, static1);
-		TopDownAccess copy = this.iterator.deepCopy();
-		Assert.assertEquals("TopDownAccess iterators deep copy relation must be equal to itself", this.relation, copy.getRelation());
-		Assert.assertEquals("TopDownAccess iterators deep copy access method must be equal to itself", this.mt2, copy.getAccessMethod());
-		Assert.assertEquals("TopDownAccess iterators deep copy static inputs must be equal to itself", this.static1, copy.getStaticInputs());
-		Assert.assertEquals("TopDownAccess iterator columns must match that of initialization", this.iterator.getColumns(), copy.getColumns());
-		Assert.assertEquals("TopDownAccess iterator type must match that of child", this.iterator.getType(), copy.getType());
-		Assert.assertEquals("TopDownAccess iterator inputs must match that of child", this.iterator.getInputColumns(), copy.getInputColumns());
-		Assert.assertEquals("TopDownAccess iterator input type must match that of child", this.iterator.getInputType(), copy.getInputType());
 	}
 	
 	/**

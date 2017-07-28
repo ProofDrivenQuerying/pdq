@@ -183,7 +183,7 @@ public class BindJoin extends Join {
 	public String toString() {
 		StringBuilder result = new StringBuilder();
 		result.append(this.getClass().getSimpleName());
-		result.append(this.predicate).append('(');
+		result.append(this.condition).append('(');
 		if (this.children != null) {
 			for (TupleIterator child: this.children) {
 				result.append(child.toString()).append(',');
@@ -208,7 +208,7 @@ public class BindJoin extends Join {
 					this.cached.add(right); 
 				}							
 				Tuple t = this.leftTuple.appendTuple(right);
-				if (RuntimeUtilities.isSatisfied(this.predicate, t)) {
+				if (RuntimeUtilities.isSatisfied(this.condition, t)) {
 					this.nextTuple = t;
 					return;
 				}
@@ -247,24 +247,13 @@ public class BindJoin extends Join {
 					this.cached.add(rightTuple);
 				}								
 				Tuple t = this.leftTuple.appendTuple(rightTuple);
-				if (RuntimeUtilities.isSatisfied(this.predicate, t)) {
+				if (RuntimeUtilities.isSatisfied(this.condition, t)) {
 					this.nextTuple = t;
 					return;
 				}
 			}
 		} while (!this.cachedIterator.hasNext());
 	}
-
-//	/**
-//	 * Deep copy.
-//	 *
-//	 * @return BindJoinTest
-//	 * @see uk.ac.ox.cs.pdq.datasources.ResetableIterator#deepCopy()
-//	 */
-//	@Override
-//	public BindJoin deepCopy() {
-//		return new BindJoin(this.predicate, this.left.deepCopy(), this.right.deepCopy());
-//	}
 
 	/**
 	 * Bind.

@@ -234,7 +234,7 @@ public class SymmetricMemoryHashJoin extends Join {
 	 */
 	protected Integer[] makeLeftKey() {
 		List<Integer> result = new ArrayList<>();
-		for (AttributeEqualityCondition p: listAttributeEqualityPredicates(this.predicate)) {
+		for (AttributeEqualityCondition p: listAttributeEqualityPredicates(this.condition)) {
 			result.add(p.getPosition());
 		}
 		return result.toArray(new Integer[result.size()]);
@@ -248,7 +248,7 @@ public class SymmetricMemoryHashJoin extends Join {
 	 */
 	protected Integer[] makeRightKey(int offset) {
 		List<Integer> result = new ArrayList<>();
-		for (AttributeEqualityCondition p: listAttributeEqualityPredicates(this.predicate)) {
+		for (AttributeEqualityCondition p: listAttributeEqualityPredicates(this.condition)) {
 			result.add(p.getOther() - offset);
 		}
 		return result.toArray(new Integer[result.size()]);

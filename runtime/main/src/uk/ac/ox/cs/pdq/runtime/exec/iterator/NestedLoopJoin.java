@@ -163,6 +163,6 @@ public class NestedLoopJoin extends Join {
 				this.hasNext = false;
 				break;
 			}
-		} while (!RuntimeUtilities.isSatisfied(this.predicate, this.nextTuple));
+		} while (!RuntimeUtilities.isSatisfied(this.condition, this.nextTuple));
 	}
 }

@@ -7,15 +7,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
 
-import uk.ac.ox.cs.pdq.algebra.RelationalOperatorException;
-import uk.ac.ox.cs.pdq.algebra.predicates.ConjunctivePredicate;
-import uk.ac.ox.cs.pdq.algebra.predicates.ConstantEqualityPredicate;
-import uk.ac.ox.cs.pdq.algebra.predicates.Predicate;
+import uk.ac.ox.cs.pdq.algebra.Condition;
+import uk.ac.ox.cs.pdq.algebra.ConjunctiveCondition;
+import uk.ac.ox.cs.pdq.algebra.ConstantEqualityCondition;
+import uk.ac.ox.cs.pdq.algebra.SimpleCondition;
 import uk.ac.ox.cs.pdq.datasources.memory.InMemoryTableWrapper;
 import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
 import uk.ac.ox.cs.pdq.datasources.utility.TupleType;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
-import uk.ac.ox.cs.pdq.db.AccessMethod.Types;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.Scan;
@@ -32,12 +31,12 @@ import com.google.common.collect.Lists;
 public class ScanTest {
 
 	/** The c. */
-	Attribute a = new Attribute(Integer.class, "a"), 
-			b = new Attribute(String.class, "b"), 
-			c = new Attribute(String.class, "c");
+	Attribute a = Attribute.create(Integer.class, "a"), 
+			b = Attribute.create(String.class, "b"), 
+			c = Attribute.create(String.class, "c");
 	
 	/** The output columns. */
-	List<Attribute> outputColumns = Lists.newArrayList(a, b, c);
+	Attribute[] outputColumns = new Attribute[]{a, b, c};
 	
 	/** The output type. */
 	TupleType outputType = TupleType.DefaultFactory.create(
@@ -45,20 +44,22 @@ public class ScanTest {
 			String.class,
 			String.class);
 	
-	/** The relation. */
-	InMemoryTableWrapper relation = new InMemoryTableWrapper("test", outputColumns);
-	
 	/** The mt. */
-	AccessMethod mt = new AccessMethod("mt", Types.LIMITED, Lists.newArrayList(2, 1));
+	AccessMethod mt = AccessMethod.create("mt", new Integer[]{2, 1});
+	
+	/** The relation. */
+	InMemoryTableWrapper relation = new InMemoryTableWrapper("test", outputColumns, new AccessMethod[]{mt});
+	
+
 	
 	/** The filter1. */
-	Predicate filter1 = new ConstantEqualityPredicate(0, new TypedConstant<>(2));
+	SimpleCondition filter1 = ConstantEqualityCondition.create(0, TypedConstant.create(2));
 	
 	/** The filter2. */
-	Predicate filter2 = new ConstantEqualityPredicate(1, new TypedConstant<>("x"));
+	SimpleCondition filter2 = ConstantEqualityCondition.create(1, TypedConstant.create("x"));
 	
 	/** The filter3. */
-	Predicate filter3 = new ConjunctivePredicate<>(Lists.newArrayList(filter1, filter2));
+	Condition filter3 = ConjunctiveCondition.create(new SimpleCondition[]{filter1, filter2});
 	
 	/**
 	 * Setup.
@@ -69,7 +70,6 @@ public class ScanTest {
 				outputType.createTuple(1, "x", "one"), 
 				outputType.createTuple(2, "x", "two"), 
 				outputType.createTuple(3, "x", "three")));
-		this.relation.addAccessMethods(mt);
 
         MockitoAnnotations.initMocks(this);
 	}
@@ -108,25 +108,6 @@ public class ScanTest {
 		Scan scan = new Scan(relation, filter3);
 		Assert.assertEquals(relation, scan.getRelation());
 		Assert.assertEquals(filter3, scan.getFilter());
-	}
-
-	/**
-	 * Deep copy.
-	 *
-	 * @throws RelationalOperatorException the relational operator exception
-	 */
-	@Test public void deepCopy() throws RelationalOperatorException {
-		Scan scan = new Scan(relation, filter3);
-		Scan copy = scan.deepCopy();
-		Assert.assertEquals("Scan iterators deep copy relation must be equals to itself", this.relation, copy.getRelation());
-		Assert.assertEquals("Scan iterators deep copy relation must be equals to itself", this.filter3, copy.getFilter());
-		Assert.assertEquals("Scan iterator columns must match that of initialization", scan.getColumns(), copy.getColumns());
-		Assert.assertEquals("Scan iterator type must match that of child", scan.getType(), copy.getType());
-		Assert.assertEquals("Scan iterator inputs must match that of child", scan.getInputColumns(), copy.getInputColumns());
-		Assert.assertEquals("Scan iterator input type must match that of child", scan.getInputType(), copy.getInputType());
-		scan.open();
-		copy.open();
-		Assert.assertEquals("Scan next item must match", scan.next(), copy.next());
 	}
 
 	/**

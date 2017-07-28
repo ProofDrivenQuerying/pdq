@@ -2,7 +2,6 @@ package uk.ac.ox.cs.pdq.test.runtime.exec.iterator;
 
 import static org.mockito.Mockito.when;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -10,6 +9,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
+
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 import uk.ac.ox.cs.pdq.datasources.memory.InMemoryTableWrapper;
 import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
@@ -22,9 +24,6 @@ import uk.ac.ox.cs.pdq.runtime.exec.iterator.Scan;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.TopDownAccess;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator;
 import uk.ac.ox.cs.pdq.util.Typed;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -64,9 +63,10 @@ public class ProjectionTest extends UnaryIteratorTest {
 	@Before public void setup() {
         super.setup();
 		this.projectedType = TupleType.DefaultFactory.create(Integer.class, String.class, String.class);
-		this.projected = Lists.<Typed>newArrayList(b, new TypedConstant<>("x"), a);
-		this.relation = new InMemoryTableWrapper("test", Lists.newArrayList(a, b, c, d));
-		this.mt = new AccessMethod("mt", Types.LIMITED, Lists.newArrayList(2, 1));
+		this.projected = Lists.<Typed>newArrayList(b, TypedConstant.create("x"), a);
+		this.mt = AccessMethod.create("mt", new Integer[]{2, 1});
+		this.relation = new InMemoryTableWrapper("test", new Attribute[]{a, b, c, d}, new AccessMethod[]{mt});
+
 
 		this.renaming = Maps.newLinkedHashMap();
 		this.renaming.put(0, A);
@@ -76,14 +76,13 @@ public class ProjectionTest extends UnaryIteratorTest {
 				outputType.createTuple("one", 1, "str", 6), 
 				outputType.createTuple("two", 2, "str", 6), 
 				outputType.createTuple("three", 3, "str", 6)));
-		this.relation.addAccessMethods(mt);
+
 
         MockitoAnnotations.initMocks(this);
         when(child.getColumns()).thenReturn(outputColumns);
 		when(child.getType()).thenReturn(outputType);
 		when(child.getInputColumns()).thenReturn(inputColumns);
 		when(child.getInputType()).thenReturn(inputType);
-		when(child.deepCopy()).thenReturn(child);
 		when(child.next()).thenReturn(
 				outputType.createTuple("one", 1, "str", 6), 
 				outputType.createTuple("two", 2, "str", 6), 
@@ -105,7 +104,7 @@ public class ProjectionTest extends UnaryIteratorTest {
 	 */
 	@Test public void initProjectionWithRenaming() {
 		this.iterator = new Projection(projected, renaming, child);
-		List<Typed> renamedOutput = Lists.<Typed>newArrayList(B, new TypedConstant<>("x"), A);
+		List<Typed> renamedOutput = Lists.<Typed>newArrayList(B, TypedConstant.create("x"), A);
 		List<Typed> renamedInput = Lists.<Typed>newArrayList(B, A);
 		Assert.assertEquals("Projection input type must match that of initialization", this.inputType, this.iterator.getInputType());
 		Assert.assertEquals("Projection header type must match that of initialization", this.projectedType, this.iterator.getType());
@@ -128,21 +127,6 @@ public class ProjectionTest extends UnaryIteratorTest {
 	@Test(expected=IllegalArgumentException.class) 
 	public void initSelectionNullHeader() {
 		new Projection(null, renaming, child);
-	}
-		
-	/**
-	 * Deep copy.
-	 *
-	 * @throws RelationalOperatorException the relational operator exception
-	 */
-	@Test public void deepCopy() throws RelationalOperatorException {
-		this.iterator = new Projection(projected, renaming, child);
-		Projection copy = this.iterator.deepCopy();
-		Assert.assertEquals("Projection iterators deep copy child must be equals to itself", this.child, copy.getChild());
-		Assert.assertEquals("Projection iterator columns must match that of initialization", this.iterator.getColumns(), copy.getColumns());
-		Assert.assertEquals("Projection iterator type must match that of child", this.iterator.getType(), copy.getType());
-		Assert.assertEquals("Projection iterator inputs must match that of child", this.iterator.getInputColumns(), copy.getInputColumns());
-		Assert.assertEquals("Projection iterator input type must match that of child", this.iterator.getInputType(), copy.getInputType());
 	}
 
 	/**
