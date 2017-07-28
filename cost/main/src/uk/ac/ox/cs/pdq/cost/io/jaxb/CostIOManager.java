@@ -2,6 +2,7 @@ package uk.ac.ox.cs.pdq.cost.io.jaxb;
 
 import java.io.File;
 
+import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
@@ -9,5 +10,8 @@ import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 public class CostIOManager extends IOManager{
 	public static Cost readRelationalTermCost(File file, Schema schema) {
 		return null;
+	}
+	
+	public static void writeRelationalTermAndCost(File file, RelationalTerm plan, Cost cost) {
 	}
 }

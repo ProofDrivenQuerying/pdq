@@ -5,26 +5,22 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
+
+import com.beust.jcommander.Parameter;
+import com.beust.jcommander.Parameters;
 
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.datasources.Result;
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
-import uk.ac.ox.cs.pdq.db.DatabaseInstance;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
-import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
-import uk.ac.ox.cs.pdq.db.sql.MySQLStatementBuilder;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.io.xml.QueryReader;
@@ -33,8 +29,9 @@ import uk.ac.ox.cs.pdq.logging.ProgressLogger;
 import uk.ac.ox.cs.pdq.logging.SimpleProgressLogger;
 import uk.ac.ox.cs.pdq.planner.ExplorationSetUp;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
-import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.logging.IntervalEventDrivenLogger;
+import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 import uk.ac.ox.cs.pdq.runtime.EvaluationException;
 import uk.ac.ox.cs.pdq.runtime.Runtime;
 import uk.ac.ox.cs.pdq.runtime.RuntimeParameters;
@@ -51,10 +48,8 @@ import uk.ac.ox.cs.pdq.test.acceptance.AcceptanceCriterion.AcceptanceLevels;
 import uk.ac.ox.cs.pdq.test.acceptance.AcceptanceCriterion.AcceptanceResult;
 import uk.ac.ox.cs.pdq.test.acceptance.ExpectedCardinalityAcceptanceCheck;
 import uk.ac.ox.cs.pdq.test.acceptance.SetEquivalentResultSetsAcceptanceCheck;
+import uk.ac.ox.cs.pdq.test.planner.PlannerTestUtilities;
 import uk.ac.ox.cs.pdq.test.util.DataValidationImplementation;
-
-import com.beust.jcommander.Parameter;
-import com.beust.jcommander.Parameters;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -148,7 +143,7 @@ public class RuntimeTest extends RegressionTest {
 	protected boolean run(File directory) throws RegressionTestException, IOException, ReflectiveOperationException {
 		return this.loadCase(directory, this.full);
 	}
-	
+
 	/**
 	 * Validate data.
 	 *
@@ -159,19 +154,12 @@ public class RuntimeTest extends RegressionTest {
 	 * @throws SQLException 
 	 */
 	private static void validateData(File directory, Schema schema, ConjunctiveQuery query) throws EvaluationException, SQLException {
-		PlannerParameters plParams = new PlannerParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
-		ReasoningParameters reasoningParams = new ReasoningParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
-		DatabaseParameters dbParams = new DatabaseParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
-		
-		AccessibleSchema accessibleSchema = new AccessibleSchema(schema);
-		ConjunctiveQuery accessibleQuery = accessibleSchema.accessible(query);				
+		DatabaseParameters dbParams = new DatabaseParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));	
 		try  
 		{
 			DatabaseChaseInstance dbinst = new DatabaseChaseInstance(query,new DatabaseConnection(dbParams, schema));
-//			chaseState.addQuery(accessibleQuery);
 			DataValidationImplementation dataValidator = new DataValidationImplementation(schema, dbinst);
 			dataValidator.validate();
-//			chaseState.clearQuery();
 		} catch (Exception e) {
 			throw new EvaluationException(e.getMessage(), e);
 		}
@@ -202,20 +190,9 @@ public class RuntimeTest extends RegressionTest {
 				return null;
 			}
 		}
-		try (FileInputStream pis = new FileInputStream(directory.getAbsolutePath() + '/' + PLAN_FILE)) {
-			try {
-				return new LeftDeepPlanReader(schema).read(pis); 
-			} catch (Exception re) {
-				try (FileInputStream bis = new FileInputStream(directory.getAbsolutePath() + '/' + PLAN_FILE)) {
-					return new DAGPlanReader(schema).read(bis); 
-				}
-			}
-		} catch (IOException e) {
-			log.debug(e);
-			return null;
-		}
+		return PlannerTestUtilities.obtainPlan(directory.getAbsolutePath() + '/' + PLAN_FILE, schema);
 	}
-	
+
 	/**
 	 * Runs a single test case base on the.
 	 *
@@ -228,7 +205,7 @@ public class RuntimeTest extends RegressionTest {
 	private boolean loadCase(File directory, boolean full) throws ReflectiveOperationException {
 		boolean result = true;
 		try(FileInputStream sis = new FileInputStream(directory.getAbsolutePath() + '/' + SCHEMA_FILE);
-			FileInputStream qis = new FileInputStream(directory.getAbsolutePath() + '/' + QUERY_FILE);) {
+				FileInputStream qis = new FileInputStream(directory.getAbsolutePath() + '/' + QUERY_FILE);) {
 
 			this.out.println("Starting case '" + directory.getAbsolutePath() + "'");
 
@@ -284,7 +261,7 @@ public class RuntimeTest extends RegressionTest {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * Compare result.
 	 *
@@ -308,7 +285,7 @@ public class RuntimeTest extends RegressionTest {
 			types = new ExecutorTypes[1];
 			types[0] = forcedType;
 		}
-		
+
 		AcceptanceCriterion<Result, Result> acceptance = new SetEquivalentResultSetsAcceptanceCheck();
 		Runtime runtime = null;
 		for (ExecutorTypes type: types) {
@@ -355,7 +332,7 @@ public class RuntimeTest extends RegressionTest {
 			throws EvaluationException, AccessException {
 		RuntimeParameters params = new RuntimeParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
 		Runtime runtime = new Runtime(params, s, f);
-		
+
 		try {
 			Result queryResult = runtime.evaluateQuery(q);
 			return this.compareResult(params, s, q, p, f, queryResult);
@@ -364,7 +341,7 @@ public class RuntimeTest extends RegressionTest {
 			RegressionParameters regParams = new RegressionParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
 			if (!regParams.getSkipRuntime()) {
 				AcceptanceResult result = new ExpectedCardinalityAcceptanceCheck()
-					.check(regParams.getExpectedCardinality(), runtime.evaluatePlan(p, q));
+						.check(regParams.getExpectedCardinality(), runtime.evaluatePlan(p, q));
 				result.report(this.out);
 			} else {
 				this.out.println("\tSKIP: runtime test explicitly skipped.");

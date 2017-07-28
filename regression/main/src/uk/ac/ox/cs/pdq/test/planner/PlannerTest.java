@@ -18,6 +18,7 @@ import uk.ac.ox.cs.pdq.LimitReachedException.Reasons;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
+import uk.ac.ox.cs.pdq.cost.io.jaxb.CostIOManager;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
@@ -166,7 +167,7 @@ public class PlannerTest extends RegressionTest {
 				
 				Schema schema = new SchemaReader().read(sis);
 				ConjunctiveQuery query = new QueryReader(schema).read(qis);
-				Entry<RelationalTerm, Cost> expectedPlan = obtainPlan(directory, schema, query);
+				Entry<RelationalTerm, Cost> expectedPlan = PlannerTestUtilities.obtainPlan(directory.getAbsolutePath() + '/' + PLAN_FILE, schema);
 				if (schema == null || query == null) {
 					throw new RegressionTestException(
 							"Schema and query must be provided for each regression test. "
@@ -191,9 +192,8 @@ public class PlannerTest extends RegressionTest {
 				if (observedPlan != null
 						&& (expectedPlan == null || expectedPlan.getValue().greaterThan(observedPlan.getValue())) ) {
 					this.out.print("\twriting plan: " + observedPlan + " " + observedPlan.getValue());
-					try (PrintStream o = new PrintStream(directory.getAbsolutePath() + '/' + PLAN_FILE)) {
-						PlanWriter.to(o).write(observedPlan);
-					}
+					CostIOManager.writeRelationalTermAndCost(new File(directory.getAbsolutePath() + '/' + PLAN_FILE),  observedPlan.getKey(), observedPlan.getValue());
+					
 				}
 			} catch (Throwable e) {
 				return handleException(e, directory);
@@ -244,28 +244,6 @@ public class PlannerTest extends RegressionTest {
 			this.out.println("ERROR: " + e.getClass().getSimpleName() + " " + e.getMessage());
 			System.exit(-1);
 			return false;
-		}
-
-		/**
-		 * Obtain plan.
-		 *
-		 * @param directory File
-		 * @param schema Schema
-		 * @param query Query
-		 * @return Plan
-		 */
-		private Entry<RelationalTerm,Cost> obtainPlan(File directory, Schema schema, ConjunctiveQuery query) {
-			try(FileInputStream pis = new FileInputStream(directory.getAbsolutePath() + '/' + PLAN_FILE);
-					BufferedInputStream bis = new BufferedInputStream(pis)) {
-				try {
-					bis.mark(1024);
-					return new LeftDeepPlanReader(schema).read(bis); 
-				} catch (Exception re) {
-					bis.reset();
-				}
-			} catch (IOException e) {
-			}
-			return null;
 		}
 
 		/**
@@ -382,9 +360,7 @@ public class PlannerTest extends RegressionTest {
 				}
 				if (plan != null) {
 					this.out.print("\twriting plan: " + plan + " " + plan.getValue());
-					try (PrintStream o = new PrintStream(directory.getAbsolutePath() + '/' + PLAN_FILE)) {
-						PlanWriter.to(o).write(plan);
-					}
+					CostIOManager.writeRelationalTermAndCost(new File(directory.getAbsolutePath() + '/' + PLAN_FILE),  plan.getKey(), plan.getValue());
 				} else {
 					this.out.print("\tno plan found.");
 					//				new File(directory.getAbsolutePath() + '/' + PLAN_FILE).delete();

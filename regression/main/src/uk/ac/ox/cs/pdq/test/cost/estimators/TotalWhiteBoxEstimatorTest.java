@@ -20,6 +20,7 @@ import uk.ac.ox.cs.pdq.cost.statistics.SimpleCatalog;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
 import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
+import uk.ac.ox.cs.pdq.test.planner.PlannerTestUtilities;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -104,7 +105,7 @@ public class TotalWhiteBoxEstimatorTest extends CostEstimatorTest{
 				if (schema == null) 
 					throw new IllegalStateException("Schema must be provided.");
 				
-				Entry<RelationalTerm, Cost> plan = this.obtainPlan(PLAN_PATH + f, schema);
+				Entry<RelationalTerm, Cost> plan = PlannerTestUtilities.obtainPlan(PLAN_PATH + f, schema);
 				Catalog catalog = new SimpleCatalog(schema, CATALOG);
 				CardinalityEstimator card = new NaiveCardinalityEstimator(catalog);
 				WhiteBoxCostEstimator costEstimator = null;

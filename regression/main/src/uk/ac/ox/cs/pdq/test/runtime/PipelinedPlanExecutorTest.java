@@ -1,13 +1,13 @@
 package uk.ac.ox.cs.pdq.test.runtime;
 
 
-import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.Map.Entry;
 
 import org.junit.Test;
+
+import com.google.common.eventbus.EventBus;
 
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
@@ -22,9 +22,8 @@ import uk.ac.ox.cs.pdq.runtime.RuntimeParameters.ExecutorTypes;
 import uk.ac.ox.cs.pdq.runtime.exec.Middleware;
 import uk.ac.ox.cs.pdq.runtime.exec.PlanExecutor;
 import uk.ac.ox.cs.pdq.runtime.exec.PlanExecutor.ExecutionModes;
+import uk.ac.ox.cs.pdq.test.planner.PlannerTestUtilities;
 import uk.ac.ox.cs.pdq.util.Utility;
-
-import com.google.common.eventbus.EventBus;
 
 
 // TODO: Auto-generated Javadoc
@@ -104,7 +103,7 @@ public class PipelinedPlanExecutorTest {
 
 				schema.addConstants(Utility.getTypedConstants(query));
 
-				Entry<RelationalTerm, Cost> plan = readPlan(PATH + p, schema, query);
+				Entry<RelationalTerm, Cost> plan = PlannerTestUtilities.obtainPlan(PATH + p, schema); //readPlan(PATH + p, schema, query);
 
 				RuntimeParameters runtimeParams = new RuntimeParameters();
 				runtimeParams.setExecutorType(ExecutorTypes.PIPELINED);
@@ -128,22 +127,22 @@ public class PipelinedPlanExecutorTest {
 
 	}
 
-	/**
-	 * Read plan.
-	 *
-	 * @param plan the plan
-	 * @param schema Schema
-	 * @param query Query
-	 * @return Plan
-	 */
-	private Entry<RelationalTerm,Cost> readPlan(String plan, Schema schema, ConjunctiveQuery query) {
-		try(FileInputStream pis = new FileInputStream(plan);
-				BufferedInputStream bis = new BufferedInputStream(pis)) {
-			return new DAGPlanReader(schema).read(bis); 
-		} catch (IOException e) {
-			return null;
-		}
-	}
+//	/**
+//	 * Read plan.
+//	 *
+//	 * @param plan the plan
+//	 * @param schema Schema
+//	 * @param query Query
+//	 * @return Plan
+//	 */
+//	private Entry<RelationalTerm,Cost> readPlan(String plan, Schema schema, ConjunctiveQuery query) {
+//		try(FileInputStream pis = new FileInputStream(plan);
+//				BufferedInputStream bis = new BufferedInputStream(pis)) {
+//			return new DAGPlanReader(schema).read(bis); 
+//		} catch (IOException e) {
+//			return null;
+//		}
+//	}
 
 	/**
 	 * Evaluates the given plan and returns its result. 

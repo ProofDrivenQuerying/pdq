@@ -16,6 +16,7 @@ import uk.ac.ox.cs.pdq.cost.statistics.SimpleCatalog;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
 import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
+import uk.ac.ox.cs.pdq.test.planner.PlannerTestUtilities;
 
 import com.google.common.eventbus.EventBus;
 
@@ -105,7 +106,7 @@ public class TotalERSPICostEstimatorTest extends CostEstimatorTest{
 				Schema schema = new SchemaReader().read(sis);
 				if (schema == null) 
 					throw new IllegalStateException("Schema must be provided.");
-				Entry<RelationalTerm, Cost> plan = this.obtainPlan(PLAN_PATH + f, schema);
+				Entry<RelationalTerm, Cost> plan = PlannerTestUtilities.obtainPlan(PLAN_PATH + f, schema);
 				Catalog catalog = new SimpleCatalog(schema, CATALOG);
 				TotalERSPICostEstimator costEstimator = null;
 				costEstimator = new TotalERSPICostEstimator(new StatisticsCollector(false, this.eventBus), catalog);
