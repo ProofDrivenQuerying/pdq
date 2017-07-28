@@ -10,7 +10,7 @@ import uk.ac.ox.cs.pdq.datasources.services.AccessPostProcessor;
 import uk.ac.ox.cs.pdq.datasources.services.AccessPreProcessor;
 import uk.ac.ox.cs.pdq.datasources.services.rest.RESTRequestEvent;
 import uk.ac.ox.cs.pdq.datasources.services.rest.RESTResponseEvent;
-import uk.ac.ox.cs.pdq.util.Periods;
+import uk.ac.ox.cs.pdq.logging.Periods;
 
 // TODO: Auto-generated Javadoc
 /**

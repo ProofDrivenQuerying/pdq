@@ -3,7 +3,6 @@ package uk.ac.ox.cs.pdq.test.runtime.exec.iterator;
 import static org.mockito.Mockito.when;
 
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -13,18 +12,15 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
 import org.mockito.internal.util.collections.Sets;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
+import com.google.common.collect.Lists;
+
+import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
+import uk.ac.ox.cs.pdq.datasources.utility.TupleType;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.CrossProduct;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.EmptyIterator;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.MemoryScan;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator;
-import uk.ac.ox.cs.pdq.util.Tuple;
-import uk.ac.ox.cs.pdq.util.TupleType;
-
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 
 // TODO: Auto-generated Javadoc
 /**

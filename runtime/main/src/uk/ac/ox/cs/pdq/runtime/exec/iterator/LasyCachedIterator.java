@@ -4,9 +4,9 @@ import java.util.Deque;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import uk.ac.ox.cs.pdq.util.Tuple;
-
 import com.google.common.base.Preconditions;
+
+import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -120,16 +120,6 @@ public class LasyCachedIterator extends TupleIterator {
 			this.cache.removeLast();
 		}
 	}
-	
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#deepCopy()
-	 */
-	@Override
-	public LasyCachedIterator deepCopy() {
-		return new LasyCachedIterator(this.inner);
-	}
 
 	/**
 	 * 
@@ -146,7 +136,7 @@ public class LasyCachedIterator extends TupleIterator {
 	/**
 	 * 
 	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#bind(uk.ac.ox.cs.pdq.util.Tuple)
+	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#bind(uk.ac.ox.cs.pdq.datasources.utility.Tuple)
 	 */
 	@Override
 	public void bind(Tuple t) {

@@ -4,10 +4,10 @@ import java.util.List;
 
 import org.mockito.Mock;
 
+import uk.ac.ox.cs.pdq.datasources.utility.TupleType;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator;
-import uk.ac.ox.cs.pdq.util.TupleType;
 import uk.ac.ox.cs.pdq.util.Typed;
 
 import com.google.common.collect.Lists;
@@ -24,11 +24,11 @@ public abstract class NaryIteratorTest extends TupleIteratorTest {
 	@Mock TupleIterator child1, child2, child3, child4, child5;
 	
 	/** The e. */
-	Typed a = new Attribute(String.class, "a"), 
-		b = new Attribute(Integer.class, "b"), 
-		c = new Attribute(Integer.class, "c"), 
-		d = new TypedConstant<>("d"), 
-		e = new Attribute(String.class, "e");
+	Typed a = Attribute.create(String.class, "a"), 
+		b = Attribute.create(Integer.class, "b"), 
+		c = Attribute.create(Integer.class, "c"), 
+		d = TypedConstant.create("d"), 
+		e = Attribute.create(String.class, "e");
 	
 	/** The child1 columns. */
 	List<Typed> child1Columns = Lists.<Typed>newArrayList(a, b, c, d);

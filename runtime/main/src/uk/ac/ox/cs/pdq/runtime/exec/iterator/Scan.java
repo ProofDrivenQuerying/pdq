@@ -5,8 +5,8 @@ import java.util.NoSuchElementException;
 import uk.ac.ox.cs.pdq.algebra.Condition;
 import uk.ac.ox.cs.pdq.datasources.RelationAccessWrapper;
 import uk.ac.ox.cs.pdq.datasources.ResetableIterator;
+import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
 import uk.ac.ox.cs.pdq.runtime.util.RuntimeUtilities;
-import uk.ac.ox.cs.pdq.util.Tuple;
 import uk.ac.ox.cs.pdq.util.Typed;
 
 import com.google.common.base.Preconditions;
@@ -172,16 +172,6 @@ public class Scan extends TupleIterator {
 		Tuple result = this.nextTuple;
 		this.nextTuple();
 		return result;
-	}
-
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#deepCopy()
-	 */
-	@Override
-	public Scan deepCopy() {
-		return new Scan(this.relation, this.filter);
 	}
 
 	/**

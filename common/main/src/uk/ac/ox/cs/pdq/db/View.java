@@ -12,6 +12,7 @@ import uk.ac.ox.cs.pdq.util.Utility;
  * @author Efthymia Tsamoura
  * @author Julien Leblay
  */
+//TODO fix the equals and 
 public class View extends Relation {
 
 	/** The Constant serialVersionUID. */
@@ -20,12 +21,12 @@ public class View extends Relation {
 	/** 
 	 * TOCOMMENT what is this supposed to mean, and why is it a LinearGuarded dependency?
 	 *  The inverse dependency that defines the view. */
-	protected LinearGuarded dependency;
+	protected LinearGuarded viewToRelationDependency;
 
 	/**  
 	 * TOCOMMENT So a view extends a Relation?? And does not have a declared connection to TGD except that it essentially is a TGD wrapper.
 	 * The dependency that defines the view. */
-	protected TGD definition;
+	protected TGD relationToViewDependency;
 
 	public View(String name, Attribute[] attributes) {
 		super(name, attributes);
@@ -43,8 +44,8 @@ public class View extends Relation {
 	 */
 	public View(LinearGuarded dependency, AccessMethod[] accessMethods) {
 		super(dependency.getBodyAtom(0).getPredicate().getName(), Utility.getAttributes(dependency.getGuard()), accessMethods);
-		this.dependency = dependency;
-		this.definition = TGD.create(this.dependency.getHead(), this.dependency.getBody());
+		this.viewToRelationDependency = dependency;
+		this.relationToViewDependency = TGD.create(this.viewToRelationDependency.getHead(), this.viewToRelationDependency.getBody());
 //		this.setAccessMethods(accessMethods);
 	}
 
@@ -54,8 +55,8 @@ public class View extends Relation {
 	 *
 	 * @return LinearGuarded
 	 */
-	public LinearGuarded getDependency() {
-		return this.dependency;
+	public LinearGuarded getViewToRelationDependency() {
+		return this.viewToRelationDependency;
 	}
 
 	/**
@@ -63,27 +64,27 @@ public class View extends Relation {
 	 *
 	 * @return the TGD defining the view
 	 */
-	public TGD getDefinition() {
-		return this.definition;
+	public TGD getRelationToViewDependency() {
+		return this.relationToViewDependency;
 	}
 
 	/**
 	 * Sets the dependency.
 	 *
-	 * @param dependency LinearGuarded
+	 * @param viewToRelationDependency LinearGuarded
 	 */
-	public void setDependency(LinearGuarded dependency) {
-		this.dependency = LinearGuarded.create(
-				Atom.create(this, dependency.getBodyAtom(0).getTerms()),
-				dependency.getHead() instanceof QuantifiedFormula ? 
-						dependency.getHead().getChild(0) :
-				dependency.getHead());
+	public void setViewToRelationDependency(LinearGuarded viewToRelationDependency) {
+		this.viewToRelationDependency = LinearGuarded.create(
+				Atom.create(this, viewToRelationDependency.getBodyAtom(0).getTerms()),
+				viewToRelationDependency.getHead() instanceof QuantifiedFormula ? 
+						viewToRelationDependency.getHead().getChild(0) :
+				viewToRelationDependency.getHead());
 		
-		this.definition = TGD.create(
-				this.dependency.getHead() instanceof QuantifiedFormula ? 
-						this.dependency.getHead().getChild(0) :
-							this.dependency.getHead(), 
-							this.dependency.getBody());
+		this.relationToViewDependency = TGD.create(
+				this.viewToRelationDependency.getHead() instanceof QuantifiedFormula ? 
+						this.viewToRelationDependency.getHead().getChild(0) :
+							this.viewToRelationDependency.getHead(), 
+							this.viewToRelationDependency.getBody());
 	}
 
 	@Override

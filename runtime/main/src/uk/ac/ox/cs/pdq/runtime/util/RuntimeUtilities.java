@@ -18,6 +18,10 @@ import uk.ac.ox.cs.pdq.algebra.Condition;
 import uk.ac.ox.cs.pdq.algebra.ConjunctiveCondition;
 import uk.ac.ox.cs.pdq.algebra.ConstantEqualityCondition;
 import uk.ac.ox.cs.pdq.algebra.SimpleCondition;
+import uk.ac.ox.cs.pdq.datasources.RelationAccessWrapper;
+import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
+import uk.ac.ox.cs.pdq.datasources.utility.TupleType;
+import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
@@ -26,8 +30,6 @@ import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
-import uk.ac.ox.cs.pdq.util.Tuple;
-import uk.ac.ox.cs.pdq.util.TupleType;
 import uk.ac.ox.cs.pdq.util.Typed;
 import uk.ac.ox.cs.pdq.util.Utility;
 
@@ -246,5 +248,18 @@ public class RuntimeUtilities {
 			return true;
 		}
 		throw new RuntimeException("Unknown condition type");
+	}
+	
+	/**
+	 * @param accessMethod an access method of this relation
+	 * @return 		the relation's input attributes for input binding
+	 */
+	public static Attribute[] getInputAttributes(RelationAccessWrapper relation, AccessMethod accessMethod) {
+		Preconditions.checkArgument(relation.getAccessMethod(accessMethod.getName()) != null);
+		Attribute[] attributes = relation.getAttributes();
+		Attribute[] result = new Attribute[accessMethod.getNumberOfInputs()];
+		for (int index = 0; index < accessMethod.getNumberOfInputs(); ++index) 
+			result[index] = attributes[accessMethod.getInputPosition(index) - 1];
+		return result;
 	}
 }

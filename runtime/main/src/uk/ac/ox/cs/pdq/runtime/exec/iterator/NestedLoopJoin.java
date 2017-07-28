@@ -1,14 +1,13 @@
 package uk.ac.ox.cs.pdq.runtime.exec.iterator;
 
 import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.Deque;
 import java.util.Iterator;
 import java.util.List;
 
 import uk.ac.ox.cs.pdq.algebra.Condition;
+import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
 import uk.ac.ox.cs.pdq.runtime.util.RuntimeUtilities;
-import uk.ac.ox.cs.pdq.util.Tuple;
 import uk.ac.ox.cs.pdq.util.Typed;
 
 
@@ -36,7 +35,7 @@ public class NestedLoopJoin extends Join {
 	 *            the children
 	 */
 	public NestedLoopJoin(TupleIterator... children) {
-		this(createNaturalJoinConditions(toList(children)),
+		this(computeNaturalJoinConditions(toList(children)),
 				inferInputColumns(toList(children)), toList(children));
 	}
 
@@ -57,7 +56,7 @@ public class NestedLoopJoin extends Join {
 	 * @param children the children
 	 */
 	public NestedLoopJoin(List<Typed> inputs, TupleIterator... children) {
-		this(createNaturalJoinConditions(toList(children)), inputs, toList(children));
+		this(computeNaturalJoinConditions(toList(children)), inputs, toList(children));
 	}
 
 	/**
@@ -67,7 +66,7 @@ public class NestedLoopJoin extends Join {
 	 * @param children            the children
 	 */
 	public NestedLoopJoin(List<Typed> inputs, List<TupleIterator> children) {
-		this(createNaturalJoinConditions(children), inputs, children);
+		this(computeNaturalJoinConditions(children), inputs, children);
 	}
 
 	/**
@@ -165,19 +164,5 @@ public class NestedLoopJoin extends Join {
 				break;
 			}
 		} while (!RuntimeUtilities.isSatisfied(this.predicate, this.nextTuple));
-	}
-
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#deepCopy()
-	 */
-	@Override
-	public NestedLoopJoin deepCopy() {
-		List<TupleIterator> clones = new ArrayList<>();
-		for (TupleIterator child: this.children) {
-			clones.add(child.deepCopy());
-		}
-		return new NestedLoopJoin(this.getInputColumns(), clones);
 	}
 }

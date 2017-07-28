@@ -3,8 +3,6 @@ package uk.ac.ox.cs.pdq.reasoning.chase;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import com.google.common.base.Preconditions;
-
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.CanonicalNameGenerator;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
@@ -72,23 +70,14 @@ public class Utility {
 	 *      the existentially quantified variables
 	 */
 	public static Map<Variable, Constant> skolemizeMapping(Dependency dependency, Map<Variable, Constant> mapping) {
-		String namesOfUniversalVariables = "";
 		Map<Variable, Constant> result = new LinkedHashMap<>(mapping);
-		for (Variable variable: dependency.getUniversal()) {
-			Variable variableTerm = variable;
-			Preconditions.checkState(result.get(variableTerm) != null);
-			namesOfUniversalVariables += variable.getSymbol() + result.get(variableTerm);
-		}
 		for(Variable variable:dependency.getExistential()) {
 			if (!result.containsKey(variable)) {
-				result.put(variable,
-						UntypedConstant.create(
-								CanonicalNameGenerator.getName("TGD" + dependency.getId(),
-										namesOfUniversalVariables,
-										variable.getSymbol()))
-						);
+				result.put(variable, 
+						UntypedConstant.create(CanonicalNameGenerator.getTriggerWitness(dependency, mapping, variable)));
 			}
 		}
+		
 		return result;
 	}
 

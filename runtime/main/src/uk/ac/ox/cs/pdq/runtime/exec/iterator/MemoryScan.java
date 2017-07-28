@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import uk.ac.ox.cs.pdq.algebra.Condition;
+import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
+import uk.ac.ox.cs.pdq.datasources.utility.TupleType;
 import uk.ac.ox.cs.pdq.runtime.util.RuntimeUtilities;
-import uk.ac.ox.cs.pdq.util.Tuple;
-import uk.ac.ox.cs.pdq.util.TupleType;
 import uk.ac.ox.cs.pdq.util.Typed;
 
 import com.google.common.base.Preconditions;
@@ -163,16 +163,6 @@ public class MemoryScan extends TupleIterator {
 	public boolean hasNext() {
 		Preconditions.checkState(this.open != null && this.open);
 		return !this.interrupted && this.nextTuple != null;
-	}
-
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#deepCopy()
-	 */
-	@Override
-	public MemoryScan deepCopy() {
-		return new MemoryScan(this.columns, this.data, this.filter);
 	}
 
 	/**

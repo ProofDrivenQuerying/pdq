@@ -21,6 +21,7 @@ import org.junit.Assert;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
+
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.DataType;
 import uk.ac.ox.cs.pdq.db.ForeignKey;
@@ -340,19 +341,6 @@ public class Utility {
 	}
 
 	/**
-	 * Make fact.
-	 *
-	 * @param predicate Predicate
-	 * @param tuple Tuple
-	 * @return PredicateFormula
-	 */
-	public static Atom makeFact(Predicate predicate, Tuple tuple) {
-		TypedConstant[] terms = new TypedConstant[tuple.size()];
-		for (int i = 0, l = tuple.size(); i < l; i++) 
-			terms[i++] = TypedConstant.create(tuple.getValue(i));
-		return Atom.create(predicate, terms);
-	}
-	/**
 	 * Clusters the input atoms based on their signature
 	 * @param atoms
 	 * @return
@@ -491,18 +479,18 @@ public class Utility {
 //		return TupleType.DefaultFactory.createFromTyped(relation.getAttributes());
 //	}
 	
-	/**
-	 * Creates a new Default object.
-	 *
-	 * @param typed List<? extends Typed>
-	 * @return TupleType
-	 */
-	public static TupleType createFromTyped(Attribute[] typed) {
-		Type[] types = new Type[typed.length];
-		for(int attributeIndex = 0; attributeIndex < typed.length; ++attributeIndex) 
-			types[attributeIndex] = typed[attributeIndex].getType();
-		return TupleType.DefaultFactory.create(types);
-	}
+//	/**
+//	 * Creates a new Default object.
+//	 *
+//	 * @param typed List<? extends Typed>
+//	 * @return TupleType
+//	 */
+//	public static TupleType createFromTyped(Attribute[] typed) {
+//		Type[] types = new Type[typed.length];
+//		for(int attributeIndex = 0; attributeIndex < typed.length; ++attributeIndex) 
+//			types[attributeIndex] = typed[attributeIndex].getType();
+//		return TupleType.DefaultFactory.create(types);
+//	}
 
 	/**
 	 * @param fact An input fact

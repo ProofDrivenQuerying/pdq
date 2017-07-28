@@ -3,22 +3,21 @@ package uk.ac.ox.cs.pdq.datasources.memory;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
+
+import com.google.common.base.Preconditions;
 
 import uk.ac.ox.cs.pdq.datasources.Pipelineable;
 import uk.ac.ox.cs.pdq.datasources.RelationAccessWrapper;
 import uk.ac.ox.cs.pdq.datasources.ResetableIterator;
-import uk.ac.ox.cs.pdq.datasources.Table;
+import uk.ac.ox.cs.pdq.datasources.utility.Table;
+import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
+import uk.ac.ox.cs.pdq.datasources.utility.TupleType;
+import uk.ac.ox.cs.pdq.datasources.utility.Utility;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.View;
-import uk.ac.ox.cs.pdq.util.Tuple;
-import uk.ac.ox.cs.pdq.util.TupleType;
-import uk.ac.ox.cs.pdq.util.Utility;
-
-import com.google.common.base.Preconditions;
 
 /**
  * TOCOMMENT this class is copy pasted by InMemoryRelationWrapper. Same questions apply here.
@@ -94,7 +93,7 @@ public class InMemoryViewWrapper extends View implements Pipelineable, RelationA
 	 * @see uk.ac.ox.cs.pdq.datasources.memory.runtime.RelationAccessWrapper#access(Table)
 	 */
 	@Override
-	public Table access(List<? extends Attribute> inputHeader, ResetableIterator<Tuple> inputTuples) {
+	public Table access(Attribute[] inputHeader, ResetableIterator<Tuple> inputTuples) {
 		Preconditions.checkArgument(inputHeader != null);
 		Preconditions.checkArgument(inputTuples != null);
 		
@@ -133,11 +132,9 @@ public class InMemoryViewWrapper extends View implements Pipelineable, RelationA
 	 * @return ResetableIterator<Tuple>
 	 * @see uk.ac.ox.cs.pdq.runtime.wrappers.Pipelineable#iterator(List<? extends Attribute>, ResetableIterator<Tuple>)
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
-	public ResetableIterator<Tuple> iterator(
-			List<? extends Attribute> inputAttributes, ResetableIterator<Tuple> inputs) {
-		return new AccessIterator((List<Attribute>) inputAttributes, inputs);
+	public ResetableIterator<Tuple> iterator(Attribute[] inputAttributes, ResetableIterator<Tuple> inputs) {
+		return new AccessIterator(inputAttributes, inputs);
 	}
 
 	/**
@@ -159,7 +156,7 @@ public class InMemoryViewWrapper extends View implements Pipelineable, RelationA
 	private class AccessIterator implements ResetableIterator<Tuple> {
 
 		/**  The list of input attributes. */
-		private final List<Attribute> inputAttributes;
+		private final Attribute[] inputAttributes;
 		
 		/** Iterator over a set of the input tuples. */
 		private final ResetableIterator<Tuple> inputs;
@@ -189,7 +186,7 @@ public class InMemoryViewWrapper extends View implements Pipelineable, RelationA
 		 * @param inputAttributes List<Attribute>
 		 * @param inputTuples ResetableIterator<Tuple>
 		 */
-		public AccessIterator(List<Attribute> inputAttributes, ResetableIterator<Tuple> inputTuples) {
+		public AccessIterator(Attribute[] inputAttributes, ResetableIterator<Tuple> inputTuples) {
 			this.inputAttributes = inputAttributes;
 			this.inputs = inputTuples;
 			Table d = new Table(InMemoryViewWrapper.this.getAttributes());
@@ -198,7 +195,7 @@ public class InMemoryViewWrapper extends View implements Pipelineable, RelationA
 			}
 			this.outputs = d.iterator();
 			if (inputAttributes != null) {
-				this.inputType = Utility.createFromTyped(inputAttributes.toArray(new Attribute[inputAttributes.size()]));
+				this.inputType = Utility.createFromTyped(inputAttributes);
 			} else {
 				this.inputType = TupleType.EmptyTupleType;
 			}
@@ -227,19 +224,6 @@ public class InMemoryViewWrapper extends View implements Pipelineable, RelationA
 		public void reset() {
 			this.outputs.reset();
 			this.nextTuple();
-		}
-
-		/**
-		 * Deep copy.
-		 *
-		 * @return AccessIterator
-		 * @see uk.ac.ox.cs.pdq.datasources.ResetableIterator#deepCopy()
-		 */
-		@Override
-		public AccessIterator deepCopy() {
-			return new AccessIterator(
-					this.inputAttributes,
-					this.inputs != null ? this.inputs.deepCopy() : null);
 		}
 		
 		/**

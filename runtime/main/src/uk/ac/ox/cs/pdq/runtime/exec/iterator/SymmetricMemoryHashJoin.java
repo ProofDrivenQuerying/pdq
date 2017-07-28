@@ -15,8 +15,8 @@ import uk.ac.ox.cs.pdq.algebra.Condition;
 import uk.ac.ox.cs.pdq.algebra.ConjunctiveCondition;
 import uk.ac.ox.cs.pdq.algebra.ConstantEqualityCondition;
 import uk.ac.ox.cs.pdq.algebra.SimpleCondition;
+import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
 import uk.ac.ox.cs.pdq.fol.Term;
-import uk.ac.ox.cs.pdq.util.Tuple;
 import uk.ac.ox.cs.pdq.util.Typed;
 
 import com.google.common.collect.LinkedListMultimap;
@@ -69,7 +69,7 @@ public class SymmetricMemoryHashJoin extends Join {
 	 * @param right TupleIterator
 	 */
 	public SymmetricMemoryHashJoin(TupleIterator left, TupleIterator right) {
-		this(createNaturalJoinConditions(toList(left, right)), 
+		this(computeNaturalJoinConditions(toList(left, right)), 
 			inferInputColumns(toList(left, right)), left, right);
 	}
 
@@ -94,7 +94,7 @@ public class SymmetricMemoryHashJoin extends Join {
 	 */
 	public SymmetricMemoryHashJoin(
 			List<Typed> inputs, TupleIterator left, TupleIterator right) {
-		this(createNaturalJoinConditions(toList(left, right)), inputs, left, right);
+		this(computeNaturalJoinConditions(toList(left, right)), inputs, left, right);
 	}
 
 	/**
@@ -252,23 +252,6 @@ public class SymmetricMemoryHashJoin extends Join {
 			result.add(p.getOther() - offset);
 		}
 		return result.toArray(new Integer[result.size()]);
-	}
-
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#deepCopy()
-	 */
-	@Override
-	public SymmetricMemoryHashJoin deepCopy() {
-		List<TupleIterator> clones = new ArrayList<>();
-		for (TupleIterator child: this.children) {
-			clones.add(child.deepCopy());
-		}
-		return new SymmetricMemoryHashJoin(
-				(ConjunctiveCondition) this.predicate,
-				this.inputColumns,
-				this.left, this.right);
 	}
 
 	/**

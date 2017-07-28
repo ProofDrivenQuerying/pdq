@@ -14,11 +14,11 @@ import org.mockito.MockitoAnnotations;
 import com.google.common.collect.Lists;
 
 import uk.ac.ox.cs.pdq.algebra.RelationalOperatorException;
+import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
+import uk.ac.ox.cs.pdq.datasources.utility.TupleType;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.IsEmpty;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator;
-import uk.ac.ox.cs.pdq.util.Tuple;
-import uk.ac.ox.cs.pdq.util.TupleType;
 
 // TODO: Auto-generated Javadoc
 /**

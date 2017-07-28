@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.util.Tuple;
 import uk.ac.ox.cs.pdq.util.Typed;
 
 import com.google.common.base.Preconditions;
@@ -32,15 +32,6 @@ public class IsEmpty extends UnaryIterator {
 		super(Lists.<Typed>newArrayList(
 				Attribute.create(Boolean.class, IsEmpty.class.getSimpleName())),
 				child);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#deepCopy()
-	 */
-	@Override
-	public IsEmpty deepCopy() {
-		return new IsEmpty(this.child.deepCopy());
 	}
 
 	/**

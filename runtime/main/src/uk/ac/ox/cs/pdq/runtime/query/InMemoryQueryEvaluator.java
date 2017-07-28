@@ -12,18 +12,22 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
+import com.google.common.eventbus.EventBus;
+
 import uk.ac.ox.cs.pdq.algebra.AttributeEqualityCondition;
-import uk.ac.ox.cs.pdq.algebra.Condition;
 import uk.ac.ox.cs.pdq.algebra.ConjunctiveCondition;
 import uk.ac.ox.cs.pdq.algebra.ConstantEqualityCondition;
-import uk.ac.ox.cs.pdq.datasources.BooleanResult;
-import uk.ac.ox.cs.pdq.datasources.Result;
-import uk.ac.ox.cs.pdq.datasources.Table;
+import uk.ac.ox.cs.pdq.algebra.SimpleCondition;
 import uk.ac.ox.cs.pdq.datasources.memory.InMemoryTableWrapper;
+import uk.ac.ox.cs.pdq.datasources.utility.BooleanResult;
+import uk.ac.ox.cs.pdq.datasources.utility.Result;
+import uk.ac.ox.cs.pdq.datasources.utility.Table;
+import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
+import uk.ac.ox.cs.pdq.datasources.utility.TupleType;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
-import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.runtime.EvaluationException;
@@ -35,12 +39,7 @@ import uk.ac.ox.cs.pdq.runtime.exec.iterator.Selection;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.SymmetricMemoryHashJoin;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator;
 import uk.ac.ox.cs.pdq.runtime.util.RuntimeUtilities;
-import uk.ac.ox.cs.pdq.util.Tuple;
-import uk.ac.ox.cs.pdq.util.TupleType;
 import uk.ac.ox.cs.pdq.util.Typed;
-import uk.ac.ox.cs.pdq.util.Utility;
-
-import com.google.common.eventbus.EventBus;
 
 
 // TODO: Auto-generated Javadoc
@@ -156,9 +155,9 @@ public class InMemoryQueryEvaluator implements QueryEvaluator {
 		}
 		InMemoryTableWrapper r = (InMemoryTableWrapper) p.getPredicate();
 		Term[] terms = p.getTerms();
-		TupleType type = Utility.createFromTyped(r.getAttributes());
-		List<Condition> preds = this.makeSelectionPredicates(r.getAttributes(), terms); 
-		if (preds.isEmpty()) 
+		TupleType type = TupleType.DefaultFactory.createFromTyped(r.getAttributes());
+		SimpleCondition[] preds = this.computeSelectionConditions(r.getAttributes(), terms); 
+		if (preds.length == 0) 
 			return new MemoryScan(RuntimeUtilities.termsToTyped(terms, type), r.getData());
 		return new Selection(ConjunctiveCondition.create(preds), new MemoryScan(RuntimeUtilities.termsToTyped(terms, type), r.getData()));
 	}
@@ -170,8 +169,8 @@ public class InMemoryQueryEvaluator implements QueryEvaluator {
 	 * @param terms List<Term>
 	 * @return List<Atom>
 	 */
-	private List<Condition> makeSelectionPredicates(Attribute[] attributes, List<Term> terms) {
-		List<Condition> result = new ArrayList<>();
+	private SimpleCondition[] computeSelectionConditions(Attribute[] attributes, Term[] terms) {
+		List<SimpleCondition> result = new ArrayList<>();
 		Map<Term, Integer> positions = new LinkedHashMap<>();
 		int i = 0;
 		for (Term t: terms) {
@@ -187,7 +186,7 @@ public class InMemoryQueryEvaluator implements QueryEvaluator {
 			}
 			i++;
 		}
-		return result;
+		return result.toArray(new SimpleCondition[result.size()]);
 	}
 	
 	/**
@@ -213,7 +212,7 @@ public class InMemoryQueryEvaluator implements QueryEvaluator {
 						if (inner == null) {
 							inner = scans.get(atom);
 						} else {
-							inner = new SymmetricMemoryHashJoin(this.makeNaturalJoinPredicate(inner, scans.get(atom)), inner, scans.get(atom));
+							inner = new SymmetricMemoryHashJoin(this.computeNaturalJoinCondition(inner, scans.get(atom)), inner, scans.get(atom));
 						}
 					} while (j.hasNext());
 				}
@@ -234,7 +233,7 @@ public class InMemoryQueryEvaluator implements QueryEvaluator {
 	 * @param right TupleIterator
 	 * @return ConjunctivePredicate<AttributeEqualityPredicate>
 	 */
-	private ConjunctiveCondition makeNaturalJoinPredicate(TupleIterator left, TupleIterator right) {
+	private ConjunctiveCondition computeNaturalJoinCondition(TupleIterator left, TupleIterator right) {
 		Collection<AttributeEqualityCondition> result = new ArrayList<>();
 		int i = 0;
 		for (Typed l: left.getColumns()) {
@@ -246,6 +245,6 @@ public class InMemoryQueryEvaluator implements QueryEvaluator {
 			}
 			i++;
 		}
-		return ConjunctivePredicate.create(result);
+		return ConjunctiveCondition.create(result.toArray(new SimpleCondition[result.size()]));
 	}
 }

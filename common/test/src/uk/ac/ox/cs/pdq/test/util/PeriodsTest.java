@@ -4,7 +4,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import uk.ac.ox.cs.pdq.util.Periods;
+import uk.ac.ox.cs.pdq.logging.Periods;
 import uk.ac.ox.cs.pdq.util.Utility;
 
 // TODO: Auto-generated Javadoc

@@ -12,15 +12,15 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
 
-import uk.ac.ox.cs.pdq.algebra.predicates.AttributeEqualityPredicate;
-import uk.ac.ox.cs.pdq.algebra.predicates.ConjunctivePredicate;
-import uk.ac.ox.cs.pdq.algebra.predicates.Predicate;
+import uk.ac.ox.cs.pdq.algebra.AttributeEqualityCondition;
+import uk.ac.ox.cs.pdq.algebra.Condition;
+import uk.ac.ox.cs.pdq.algebra.ConjunctiveCondition;
+import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
+import uk.ac.ox.cs.pdq.datasources.utility.TupleType;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.EmptyIterator;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.MemoryScan;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.NestedLoopJoin;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator;
-import uk.ac.ox.cs.pdq.util.Tuple;
-import uk.ac.ox.cs.pdq.util.TupleType;
 
 import com.google.common.collect.Lists;
 
@@ -117,147 +117,147 @@ public class NestedLoopJoinTest extends NaryIteratorTest {
 	 * Inits the two children.
 	 */
 	@Test public void initTwoChildren() {
-		Predicate bEqualsC = new AttributeEqualityPredicate(1, 4);
+		Condition bEqualsC = AttributeEqualityCondition.create(1, 4);
 		this.iterator = new NestedLoopJoin(bEqualsC, child1, child2);
 		Assert.assertEquals("NestedLoopJoin iterator columns must match that of the concatenation of its children", child1To2, this.iterator.getColumns());
 		Assert.assertEquals("NestedLoopJoin iterator type must match that of the concatenation of its children", child1To2Type, this.iterator.getType());
 		Assert.assertEquals("NestedLoopJoin iterator input columns must match that of the concatenation of its children", child1To2Input, this.iterator.getInputColumns());
 		Assert.assertEquals("NestedLoopJoin iterator input type must match that of the concatenation of its children", child1To2InputType, this.iterator.getInputType());
 		Assert.assertEquals("NestedLoopJoin iterator children must match that of initialization", Lists.newArrayList(child1, child2), this.iterator.getChildren());
-		Assert.assertEquals("NestedLoopJoin iterator predicate must match that of initialization", bEqualsC , this.iterator.getPredicate());
+		Assert.assertEquals("NestedLoopJoin iterator Condition must match that of initialization", bEqualsC , this.iterator.getCondition());
 	}
 
 	/**
 	 * Inits the many children.
 	 */
 	@Test public void initManyChildren() {
-		Predicate bEqualsC = new AttributeEqualityPredicate(1, 4);
-		Predicate dEqualsE = new AttributeEqualityPredicate(3, 5);
-		Predicate cEqualsC = new AttributeEqualityPredicate(4, 7);
-		Predicate conjunct = new ConjunctivePredicate<>(Lists.newArrayList(bEqualsC, dEqualsE, cEqualsC));
+		Condition bEqualsC = AttributeEqualityCondition.create(1, 4);
+		Condition dEqualsE = AttributeEqualityCondition.create(3, 5);
+		Condition cEqualsC = AttributeEqualityCondition.create(4, 7);
+		Condition conjunct = ConjunctiveCondition.create(Lists.newArrayList(bEqualsC, dEqualsE, cEqualsC));
 		this.iterator = new NestedLoopJoin(conjunct, child1, child2, child3, child4);
 		Assert.assertEquals("NestedLoopJoin iterator columns must match that of the concatenation of its children", child1To4, this.iterator.getColumns());
 		Assert.assertEquals("NestedLoopJoin iterator type must match that of the concatenation of its children", child1To4Type, this.iterator.getType());
 		Assert.assertEquals("NestedLoopJoin iterator input columns must match that of the concatenation of its children", child1To4Input, this.iterator.getInputColumns());
 		Assert.assertEquals("NestedLoopJoin iterator input type must match that of the concatenation of its children", child1To4InputType, this.iterator.getInputType());
 		Assert.assertEquals("NestedLoopJoin iterator children must match that of initialization", Lists.newArrayList(child1, child2, child3, child4), this.iterator.getChildren());
-		Assert.assertEquals("NestedLoopJoin iterator predicate must match that of initialization", conjunct , this.iterator.getPredicate());
+		Assert.assertEquals("NestedLoopJoin iterator Condition must match that of initialization", conjunct , this.iterator.getCondition());
 	}
 
 	/**
 	 * Inits the two children natural join.
 	 */
 	@Test public void initTwoChildrenNaturalJoin() {
-		Predicate natural = new ConjunctivePredicate<>(new AttributeEqualityPredicate(2, 4));
+		Condition natural = ConjunctiveCondition.create(AttributeEqualityCondition.create(2, 4));
 		this.iterator = new NestedLoopJoin(child1, child2);
 		Assert.assertEquals("NestedLoopJoin iterator columns must match that of the concatenation of its children",child1To2, this.iterator.getColumns());
 		Assert.assertEquals("NestedLoopJoin iterator type must match that of the concatenation of its children", child1To2Type, this.iterator.getType());
 		Assert.assertEquals("NestedLoopJoin iterator input columns must match that of the concatenation of its children",child1To2Input, this.iterator.getInputColumns());
 		Assert.assertEquals("NestedLoopJoin iterator input type must match that of the concatenation of its children", child1To2InputType, this.iterator.getInputType());
 		Assert.assertEquals("NestedLoopJoin iterator children must match that of initialization", Lists.newArrayList(child1, child2), this.iterator.getChildren());
-		Assert.assertEquals("NestedLoopJoin iterator predicate must match that of natural join", natural, this.iterator.getPredicate());
+		Assert.assertEquals("NestedLoopJoin iterator Condition must match that of natural join", natural, this.iterator.getCondition());
 	}
 
 	/**
 	 * Inits the many children natural join.
 	 */
 	@Test public void initManyChildrenNaturalJoin() {
-		Predicate c1Toc2 = new AttributeEqualityPredicate(2, 4);
-		Predicate c1Toc4 = new AttributeEqualityPredicate(2, 7);
-		Predicate c2Toc3 = new AttributeEqualityPredicate(5, 6);
-		Predicate c3Toc4 = new AttributeEqualityPredicate(5, 8);
-		Predicate natural = new ConjunctivePredicate<>(Lists.newArrayList(c1Toc2, c1Toc4, c2Toc3, c3Toc4));
+		Condition c1Toc2 = AttributeEqualityCondition.create(2, 4);
+		Condition c1Toc4 = AttributeEqualityCondition.create(2, 7);
+		Condition c2Toc3 = AttributeEqualityCondition.create(5, 6);
+		Condition c3Toc4 = AttributeEqualityCondition.create(5, 8);
+		Condition natural = ConjunctiveCondition.create(Lists.newArrayList(c1Toc2, c1Toc4, c2Toc3, c3Toc4));
 		this.iterator = new NestedLoopJoin(child1, child2, child3, child4);
 		Assert.assertEquals("NestedLoopJoin iterator columns must match that of the concatenation of its children", child1To4, this.iterator.getColumns());
 		Assert.assertEquals("NestedLoopJoin iterator type must match that of the concatenation of its children", child1To4Type, this.iterator.getType());
 		Assert.assertEquals("NestedLoopJoin iterator input columns must match that of the concatenation of its children", child1To4Input, this.iterator.getInputColumns());
 		Assert.assertEquals("NestedLoopJoin iterator input type must match that of the concatenation of its children", child1To4InputType, this.iterator.getInputType());
 		Assert.assertEquals("NestedLoopJoin iterator children must match that of initialization", Lists.newArrayList(child1, child2, child3, child4), this.iterator.getChildren());
-		Assert.assertEquals("NestedLoopJoin iterator predicate must match that of natural join", natural, this.iterator.getPredicate());
+		Assert.assertEquals("NestedLoopJoin iterator Condition must match that of natural join", natural, this.iterator.getCondition());
 	}
 
 	/**
 	 * Inits the two children closed.
 	 */
 	@Test public void initTwoChildrenClosed() {
-		Predicate bEqualsC = new AttributeEqualityPredicate(1, 4);
+		Condition bEqualsC = AttributeEqualityCondition.create(1, 4);
 		this.iterator = new NestedLoopJoin(bEqualsC, nonMock1, nonMock2);
 		Assert.assertEquals("NestedLoopJoin iterator columns must match that of the concatenation of its children", child1To2, this.iterator.getColumns());
 		Assert.assertEquals("NestedLoopJoin iterator type must match that of the concatenation of its children", child1To2Type, this.iterator.getType());
 		Assert.assertEquals("NestedLoopJoin iterator input columns must match that of the concatenation of its children", Collections.EMPTY_LIST, this.iterator.getInputColumns());
 		Assert.assertEquals("NestedLoopJoin iterator input type must match that of the concatenation of its children", TupleType.EmptyTupleType, this.iterator.getInputType());
 		Assert.assertEquals("NestedLoopJoin iterator children must match that of initialization", Lists.newArrayList(nonMock1, nonMock2), this.iterator.getChildren());
-		Assert.assertEquals("NestedLoopJoin iterator predicate must match that of initialization", bEqualsC , this.iterator.getPredicate());
+		Assert.assertEquals("NestedLoopJoin iterator Condition must match that of initialization", bEqualsC , this.iterator.getCondition());
 	}
 
 	/**
 	 * Inits the many children closed.
 	 */
 	@Test public void initManyChildrenClosed() {
-		Predicate bEqualsC = new AttributeEqualityPredicate(1, 4);
-		Predicate dEqualsE = new AttributeEqualityPredicate(3, 5);
-		Predicate cEqualsC = new AttributeEqualityPredicate(4, 7);
-		Predicate conjunct = new ConjunctivePredicate<>(Lists.newArrayList(bEqualsC, dEqualsE, cEqualsC));
+		Condition bEqualsC = AttributeEqualityCondition.create(1, 4);
+		Condition dEqualsE = AttributeEqualityCondition.create(3, 5);
+		Condition cEqualsC = AttributeEqualityCondition.create(4, 7);
+		Condition conjunct = ConjunctiveCondition.create(Lists.newArrayList(bEqualsC, dEqualsE, cEqualsC));
 		this.iterator = new NestedLoopJoin(conjunct, nonMock1, nonMock2, nonMock3, nonMock4);
 		Assert.assertEquals("NestedLoopJoin iterator columns must match that of the concatenation of its children", child1To4, this.iterator.getColumns());
 		Assert.assertEquals("NestedLoopJoin iterator type must match that of the concatenation of its children", child1To4Type, this.iterator.getType());
 		Assert.assertEquals("NestedLoopJoin iterator input columns must match that of the concatenation of its children", Collections.EMPTY_LIST, this.iterator.getInputColumns());
 		Assert.assertEquals("NestedLoopJoin iterator input type must match that of the concatenation of its children", TupleType.EmptyTupleType, this.iterator.getInputType());
 		Assert.assertEquals("NestedLoopJoin iterator children must match that of initialization", Lists.newArrayList(nonMock1, nonMock2, nonMock3, nonMock4), this.iterator.getChildren());
-		Assert.assertEquals("NestedLoopJoin iterator predicate must match that of initialization", conjunct , this.iterator.getPredicate());
+		Assert.assertEquals("NestedLoopJoin iterator Condition must match that of initialization", conjunct , this.iterator.getCondition());
 	}
 
 	/**
 	 * Inits the two children natural join closed.
 	 */
 	@Test public void initTwoChildrenNaturalJoinClosed() {
-		Predicate natural = new ConjunctivePredicate<>(new AttributeEqualityPredicate(2, 4));
+		Condition natural = ConjunctiveCondition.create(AttributeEqualityCondition.create(2, 4));
 		this.iterator = new NestedLoopJoin(nonMock1, nonMock2);
 		Assert.assertEquals("NestedLoopJoin iterator columns must match that of the concatenation of its children",child1To2, this.iterator.getColumns());
 		Assert.assertEquals("NestedLoopJoin iterator type must match that of the concatenation of its children", child1To2Type, this.iterator.getType());
 		Assert.assertEquals("NestedLoopJoin iterator input columns must match that of the concatenation of its children",Collections.EMPTY_LIST, this.iterator.getInputColumns());
 		Assert.assertEquals("NestedLoopJoin iterator input type must match that of the concatenation of its children", TupleType.EmptyTupleType, this.iterator.getInputType());
 		Assert.assertEquals("NestedLoopJoin iterator children must match that of initialization", Lists.newArrayList(nonMock1, nonMock2), this.iterator.getChildren());
-		Assert.assertEquals("NestedLoopJoin iterator predicate must match that of natural join", natural, this.iterator.getPredicate());
+		Assert.assertEquals("NestedLoopJoin iterator Condition must match that of natural join", natural, this.iterator.getCondition());
 	}
 
 	/**
 	 * Inits the many children natural join closed.
 	 */
 	@Test public void initManyChildrenNaturalJoinClosed() {
-		Predicate c1Toc2 = new AttributeEqualityPredicate(2, 4);
-		Predicate c1Toc4 = new AttributeEqualityPredicate(2, 7);
-		Predicate c2Toc3 = new AttributeEqualityPredicate(5, 6);
-		Predicate c3Toc4 = new AttributeEqualityPredicate(5, 8);
-		Predicate natural = new ConjunctivePredicate<>(Lists.newArrayList(c1Toc2, c1Toc4, c2Toc3, c3Toc4));
+		Condition c1Toc2 = AttributeEqualityCondition.create(2, 4);
+		Condition c1Toc4 = AttributeEqualityCondition.create(2, 7);
+		Condition c2Toc3 = AttributeEqualityCondition.create(5, 6);
+		Condition c3Toc4 = AttributeEqualityCondition.create(5, 8);
+		Condition natural = ConjunctiveCondition.create(Lists.newArrayList(c1Toc2, c1Toc4, c2Toc3, c3Toc4));
 		this.iterator = new NestedLoopJoin(nonMock1, nonMock2, nonMock3, nonMock4);
 		Assert.assertEquals("NestedLoopJoin iterator columns must match that of the concatenation of its children", child1To4, this.iterator.getColumns());
 		Assert.assertEquals("NestedLoopJoin iterator type must match that of the concatenation of its children", child1To4Type, this.iterator.getType());
 		Assert.assertEquals("NestedLoopJoin iterator input columns must match that of the concatenation of its children", Collections.EMPTY_LIST, this.iterator.getInputColumns());
 		Assert.assertEquals("NestedLoopJoin iterator input type must match that of the concatenation of its children", TupleType.EmptyTupleType, this.iterator.getInputType());
 		Assert.assertEquals("NestedLoopJoin iterator children must match that of initialization", Lists.newArrayList(nonMock1, nonMock2, nonMock3, nonMock4), this.iterator.getChildren());
-		Assert.assertEquals("NestedLoopJoin iterator predicate must match that of natural join", natural, this.iterator.getPredicate());
+		Assert.assertEquals("NestedLoopJoin iterator Condition must match that of natural join", natural, this.iterator.getCondition());
 	}
 
 	/**
-	 * Inits the with inconsistent predicate.
+	 * Inits the with inconsistent Condition.
 	 */
 	@Test(expected=AssertionError.class)
-	public void initWithInconsistentPredicate() {
-		Predicate c1Toc2 = new AttributeEqualityPredicate(2, 4);
-		Predicate c1ToOutOfBounds = new AttributeEqualityPredicate(2, 10);
-		Predicate conjunct = new ConjunctivePredicate<>(Lists.newArrayList(c1Toc2, c1ToOutOfBounds));
+	public void initWithInconsistentCondition() {
+		Condition c1Toc2 = AttributeEqualityCondition.create(2, 4);
+		Condition c1ToOutOfBounds = AttributeEqualityCondition.create(2, 10);
+		Condition conjunct = ConjunctiveCondition.create(Lists.newArrayList(c1Toc2, c1ToOutOfBounds));
 		new NestedLoopJoin(conjunct, child1, child2, child3, child4);
 	}
 
 	/**
-	 * Inits the with inconsistent predicate2.
+	 * Inits the with inconsistent Condition2.
 	 */
 	@Test(expected=AssertionError.class)
-	public void initWithInconsistentPredicate2() {
-		Predicate c1Toc2 = new AttributeEqualityPredicate(2, 4);
-		Predicate c1ToOutOfBounds = new AttributeEqualityPredicate(2, -1);
-		Predicate conjunct = new ConjunctivePredicate<>(Lists.newArrayList(c1Toc2, c1ToOutOfBounds));
+	public void initWithInconsistentCondition2() {
+		Condition c1Toc2 = AttributeEqualityCondition.create(2, 4);
+		Condition c1ToOutOfBounds = AttributeEqualityCondition.create(2, -1);
+		Condition conjunct = ConjunctiveCondition.create(Lists.newArrayList(c1Toc2, c1ToOutOfBounds));
 		new NestedLoopJoin(conjunct, child1, child2, child3, child4);
 	}
 	
@@ -291,7 +291,7 @@ public class NestedLoopJoinTest extends NaryIteratorTest {
 	 * Iterate two children.
 	 */
 	@Test public void iterateTwoChildren() {
-		Predicate aEqualsE = new ConjunctivePredicate<>(new AttributeEqualityPredicate(0, 5));
+		Condition aEqualsE = ConjunctiveCondition.create(AttributeEqualityCondition.create(0, 5));
 		this.iterator = new NestedLoopJoin(aEqualsE, nonMock1, nonMock2);
 		this.iterator.open();
 		Set<Tuple> expected = new LinkedHashSet<>();
@@ -313,7 +313,7 @@ public class NestedLoopJoinTest extends NaryIteratorTest {
 	 */
 	@Test(expected=NoSuchElementException.class) 
 	public void nextTwoChildrenTooMany() {
-		Predicate aEqualsE = new ConjunctivePredicate<>(new AttributeEqualityPredicate(0, 5));
+		Condition aEqualsE = ConjunctiveCondition.create(AttributeEqualityCondition.create(0, 5));
 		this.iterator = new NestedLoopJoin(aEqualsE, nonMock1, nonMock2);
 		this.iterator.open();
 		for (int i = 0, l = 6; i < l; i++) {
@@ -337,7 +337,7 @@ public class NestedLoopJoinTest extends NaryIteratorTest {
 	 * Reset two children.
 	 */
 	@Test public void resetTwoChildren() {
-		Predicate aEqualsE = new ConjunctivePredicate<>(new AttributeEqualityPredicate(0, 5));
+		Condition aEqualsE = ConjunctiveCondition.create(AttributeEqualityCondition.create(0, 5));
 		this.iterator = new NestedLoopJoin(aEqualsE, nonMock1, nonMock2);
 		this.iterator.open();
 		Set<Tuple> expected = new LinkedHashSet<>();
@@ -454,10 +454,10 @@ public class NestedLoopJoinTest extends NaryIteratorTest {
 	 * Iterate four children.
 	 */
 	@Test public void iterateFourChildren() {
-        Predicate c1toc3 = new AttributeEqualityPredicate(3, 6);
-		Predicate c2toc4 = new AttributeEqualityPredicate(4, 7);
-		Predicate c3toc4 = new AttributeEqualityPredicate(6, 8);
-		Predicate conjunct = new ConjunctivePredicate<>(Lists.newArrayList(c1toc3, c2toc4, c3toc4));
+        Condition c1toc3 = AttributeEqualityCondition.create(3, 6);
+		Condition c2toc4 = AttributeEqualityCondition.create(4, 7);
+		Condition c3toc4 = AttributeEqualityCondition.create(6, 8);
+		Condition conjunct = ConjunctiveCondition.create(Lists.newArrayList(c1toc3, c2toc4, c3toc4));
 		this.iterator = new NestedLoopJoin(conjunct, nonMock1, nonMock2, nonMock3, nonMock4);
 		this.iterator.open();
 		Set<Tuple> expected = new LinkedHashSet<>();
@@ -478,10 +478,10 @@ public class NestedLoopJoinTest extends NaryIteratorTest {
 	 */
 	@Test(expected=NoSuchElementException.class) 
 	public void nextFourChildrenTooMany() {
-		Predicate p1 = new AttributeEqualityPredicate(0, 5);
-		Predicate p2 = new AttributeEqualityPredicate(5, 6);
-		Predicate p3 = new AttributeEqualityPredicate(6, 8);
-		Predicate conjunct = new ConjunctivePredicate<>(Lists.newArrayList(p1, p2, p3));
+		Condition p1 = AttributeEqualityCondition.create(0, 5);
+		Condition p2 = AttributeEqualityCondition.create(5, 6);
+		Condition p3 = AttributeEqualityCondition.create(6, 8);
+		Condition conjunct = ConjunctiveCondition.create(Lists.newArrayList(p1, p2, p3));
 		this.iterator = new NestedLoopJoin(conjunct, nonMock1, nonMock2, nonMock3, nonMock4);
 		this.iterator.open();
 		for (int i = 0, l = 9; i < l; i++) {
@@ -505,10 +505,10 @@ public class NestedLoopJoinTest extends NaryIteratorTest {
 	 * Reset four children.
 	 */
 	@Test public void resetFourChildren() {
-        Predicate c1toc3 = new AttributeEqualityPredicate(3, 6);
-		Predicate c2toc4 = new AttributeEqualityPredicate(4, 7);
-		Predicate c3toc4 = new AttributeEqualityPredicate(6, 8);
-		Predicate conjunct = new ConjunctivePredicate<>(Lists.newArrayList(c1toc3, c2toc4, c3toc4));
+        Condition c1toc3 = AttributeEqualityCondition.create(3, 6);
+		Condition c2toc4 = AttributeEqualityCondition.create(4, 7);
+		Condition c3toc4 = AttributeEqualityCondition.create(6, 8);
+		Condition conjunct = ConjunctiveCondition.create(Lists.newArrayList(c1toc3, c2toc4, c3toc4));
 		this.iterator = new NestedLoopJoin(conjunct, nonMock1, nonMock2, nonMock3, nonMock4);
 		this.iterator.open();
 		Set<Tuple> expected = new LinkedHashSet<>();

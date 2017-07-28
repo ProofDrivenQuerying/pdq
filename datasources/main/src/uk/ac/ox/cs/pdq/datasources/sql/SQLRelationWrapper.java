@@ -9,7 +9,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
@@ -21,11 +20,11 @@ import com.google.common.base.Preconditions;
 import uk.ac.ox.cs.pdq.datasources.AccessException;
 import uk.ac.ox.cs.pdq.datasources.RelationAccessWrapper;
 import uk.ac.ox.cs.pdq.datasources.ResetableIterator;
-import uk.ac.ox.cs.pdq.datasources.Table;
+import uk.ac.ox.cs.pdq.datasources.utility.Table;
+import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
-import uk.ac.ox.cs.pdq.util.Tuple;
 import uk.ac.ox.cs.pdq.util.Utility;
 
 // TODO: Auto-generated Javadoc
@@ -88,7 +87,7 @@ public class SQLRelationWrapper extends Relation implements RelationAccessWrappe
 	 * @param inputTuples the input tuples
 	 * @return the where clause of the SQL statement for the given tuple
 	 */
-	private String whereClause(List<? extends Attribute> sourceAttributes, Iterator<Tuple> inputTuples) {
+	private String whereClause(Attribute[] sourceAttributes, Iterator<Tuple> inputTuples) {
 		Preconditions.checkArgument(sourceAttributes != null);
 		Preconditions.checkArgument(inputTuples != null);
 		StringBuilder result = new StringBuilder();
@@ -108,7 +107,7 @@ public class SQLRelationWrapper extends Relation implements RelationAccessWrappe
 					char sep2 = '(';
 					result.append(sep);
 					for (int i = 0, l = tuple.size(); i < l; i++) {
-						if (Utility.isNumeric(sourceAttributes.get(i).getType())) {
+						if (Utility.isNumeric(sourceAttributes[i].getType())) {
 							result.append(sep2).append((Object) tuple.getValue(i));
 						} else {
 							result.append(sep2).append('\'').append((Object) tuple.getValue(i)).append('\'');
@@ -192,7 +191,7 @@ public class SQLRelationWrapper extends Relation implements RelationAccessWrappe
 	 */
 	@Override
 	public Table access(
-			List<? extends Attribute> inputAttributes,
+			Attribute[] inputAttributes,
 			ResetableIterator<Tuple> inputs) {
 		return fetchTuples(this.selectClause() + " FROM " + this.getName()
 				+ this.whereClause(inputAttributes, inputs));
@@ -203,7 +202,7 @@ public class SQLRelationWrapper extends Relation implements RelationAccessWrappe
 	 */
 	@Override
 	public ResetableIterator<Tuple> iterator(
-			List<? extends Attribute> inputAttributes,
+			Attribute[] inputAttributes,
 			ResetableIterator<Tuple> inputs) {
 		return this.access(inputAttributes, inputs).iterator();
 	}

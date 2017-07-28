@@ -7,19 +7,20 @@ import java.util.List;
 import com.google.common.base.Preconditions;
 
 import uk.ac.ox.cs.pdq.datasources.RelationAccessWrapper;
-import uk.ac.ox.cs.pdq.datasources.Table;
+import uk.ac.ox.cs.pdq.datasources.utility.Table;
+import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
+import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Dependency;
+import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.TriggerProperty;
 import uk.ac.ox.cs.pdq.runtime.exec.AccessException;
-import uk.ac.ox.cs.pdq.util.Tuple;
-import uk.ac.ox.cs.pdq.util.Utility;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -93,9 +94,23 @@ public final class DataValidationImplementation extends DataValidation{
 	private void saveRelation(Relation relation, Table table) throws PlannerException {
 		Collection<Atom> atoms = new HashSet<>();
 		for(Tuple tuple: table.getData()) {
-			atoms.add(Utility.makeFact(relation, tuple));
+			atoms.add(makeFact(relation, tuple));
 		}
 		this.manager.addFacts(atoms);
+	}
+	
+	/**
+	 * Make fact.
+	 *
+	 * @param predicate Predicate
+	 * @param tuple Tuple
+	 * @return PredicateFormula
+	 */
+	public static Atom makeFact(Predicate predicate, Tuple tuple) {
+		TypedConstant[] terms = new TypedConstant[tuple.size()];
+		for (int i = 0, l = tuple.size(); i < l; i++) 
+			terms[i++] = TypedConstant.create(tuple.getValue(i));
+		return Atom.create(predicate, terms);
 	}
 
 	/**

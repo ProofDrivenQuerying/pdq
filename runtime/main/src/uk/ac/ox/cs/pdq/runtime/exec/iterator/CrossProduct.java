@@ -1,18 +1,17 @@
 package uk.ac.ox.cs.pdq.runtime.exec.iterator;
 
 import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.Deque;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import uk.ac.ox.cs.pdq.util.Tuple;
-import uk.ac.ox.cs.pdq.util.TupleType;
-import uk.ac.ox.cs.pdq.util.Typed;
-
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
+
+import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
+import uk.ac.ox.cs.pdq.datasources.utility.TupleType;
+import uk.ac.ox.cs.pdq.util.Typed;
 
 
 // TODO: Auto-generated Javadoc
@@ -125,19 +124,6 @@ public class CrossProduct extends NaryIterator {
 		} else {
 			this.nextTuple = null;
 		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#deepCopy()
-	 */
-	@Override
-	public CrossProduct deepCopy() {
-		List<TupleIterator> clones = new ArrayList<>();
-		for (TupleIterator child: this.children) {
-			clones.add(child.deepCopy());
-		}
-		return new CrossProduct(this.inputColumns, clones);
 	}
 
 	/**

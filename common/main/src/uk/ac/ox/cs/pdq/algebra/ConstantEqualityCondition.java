@@ -15,7 +15,6 @@ public class ConstantEqualityCondition implements SimpleCondition {
 	/**  The value to which the tuple must equal at the given position. */
 	protected final TypedConstant constant;
 
-
 	private ConstantEqualityCondition(int position, TypedConstant constant) {
 		Assert.assertTrue(position >= 0 && constant != null);
 		this.position = position;

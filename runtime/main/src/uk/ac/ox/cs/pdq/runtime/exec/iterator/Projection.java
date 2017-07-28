@@ -7,10 +7,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
+import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
+import uk.ac.ox.cs.pdq.datasources.utility.TupleType;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
-import uk.ac.ox.cs.pdq.util.Tuple;
-import uk.ac.ox.cs.pdq.util.TupleType;
 import uk.ac.ox.cs.pdq.util.Typed;
 
 import com.google.common.base.Preconditions;
@@ -150,19 +150,6 @@ public class Projection extends UnaryIterator {
 			}
 		}
 		return this.outputType.createTuple(result);
-	}
-
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#deepCopy()
-	 */
-	@Override
-	public Projection deepCopy() {
-		return new Projection(
-				this.projected,
-				this.renaming,
-				this.child.deepCopy());
 	}
 
 	/**

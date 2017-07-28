@@ -1,12 +1,10 @@
 package uk.ac.ox.cs.pdq.runtime.query;
 
-import java.sql.SQLException;
-
 import uk.ac.ox.cs.pdq.datasources.memory.InMemoryTableWrapper;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.runtime.EvaluationException;
 
 
@@ -31,19 +29,12 @@ public class QueryEvaluatorFactory {
 	 * @throws EvaluationException the evaluation exception
 	 */
 	public static QueryEvaluator newEvaluator(Schema schema, ConjunctiveQuery query) throws EvaluationException {
-		try {
-			QueryEvaluator result = null;
-			for (Atom p: query.getAtoms()) {
-				Relation r = (Relation) p.getPredicate();
-			    if (r instanceof InMemoryTableWrapper) {
-			    	return new InMemoryQueryEvaluator(query);
-			    } else {
-					return SQLQueryEvaluator.newEvaluator(query);
-				}
-			}
-			return result;
-		} catch (SQLException e) {
-			throw new EvaluationException(e.getMessage(), e);
+		QueryEvaluator result = null;
+		for (Atom p: query.getAtoms()) {
+			Relation r = (Relation) p.getPredicate();
+			if (r instanceof InMemoryTableWrapper) 
+				return new InMemoryQueryEvaluator(query);
 		}
+		return result;
 	}
 }

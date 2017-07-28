@@ -342,7 +342,7 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 				else 
 					predicate = Predicate.create(AccessibleSchema.inferredAccessiblePrefix + fact.getPredicate().getName(), fact.getPredicate().getArity());
 				Atom accessedFact = Atom.create(predicate, fact.getTerms());
-				Collection<Term> inputTerms = uk.ac.ox.cs.pdq.util.Utility.getTerms(accessedFact,axiom.getAccessMethod().getZeroBasedInputs());
+				Collection<Term> inputTerms = uk.ac.ox.cs.pdq.util.Utility.getTerms(accessedFact,axiom.getAccessMethod().getZeroBasedInputPositions());
 				if(graph.getFactProvenance(accessedFact) == null && accessibleTerms.keySet().containsAll(inputTerms)) {
 					Match matching = MatchFactory.getMatch(pair.getLeft(), fact);
 					List<Match> matches = ret.get(pair.getLeft());

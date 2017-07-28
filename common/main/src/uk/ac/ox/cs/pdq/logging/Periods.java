@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.util;
+package uk.ac.ox.cs.pdq.logging;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

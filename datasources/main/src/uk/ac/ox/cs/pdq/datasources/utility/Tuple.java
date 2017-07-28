@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.util;
+package uk.ac.ox.cs.pdq.datasources.utility;
 
 import java.io.Serializable;
 

@@ -3,8 +3,8 @@ package uk.ac.ox.cs.pdq.runtime.exec.iterator;
 import java.util.NoSuchElementException;
 
 import uk.ac.ox.cs.pdq.algebra.Condition;
+import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
 import uk.ac.ox.cs.pdq.runtime.util.RuntimeUtilities;
-import uk.ac.ox.cs.pdq.util.Tuple;
 
 import com.google.common.base.Preconditions;
 
@@ -85,17 +85,7 @@ public class Selection extends UnaryIterator {
 		this.nextTuple();
 		return result;
 	}
-
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#deepCopy()
-	 */
-	@Override
-	public Selection deepCopy() {
-		return new Selection(this.predicate, this.child.deepCopy());
-	}
-
+	
 	/**
 	 * Gets the predicate.
 	 *

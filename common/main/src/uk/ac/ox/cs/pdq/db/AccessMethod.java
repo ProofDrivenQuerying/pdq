@@ -2,6 +2,8 @@ package uk.ac.ox.cs.pdq.db;
 
 import java.io.Serializable;
 
+import org.junit.Assert;
+
 import uk.ac.ox.cs.pdq.InterningManager;
 
 /**
@@ -28,10 +30,6 @@ public class AccessMethod implements Serializable {
 
 	/**  String representation of the object. */
 	protected String toString = null;
-
-	protected AccessMethod() {
-		this(DEFAULT_PREFIX + globalCounter++, new Integer[]{});
-	}
 	
 	protected AccessMethod(Integer[] inputs) {
 		this(DEFAULT_PREFIX + globalCounter++, inputs);
@@ -49,12 +47,17 @@ public class AccessMethod implements Serializable {
 	public int getNumberOfInputs() {
 		return this.inputs.length;
 	}
+	
+	public int getInputPosition(int index) {
+		Assert.assertTrue(index >=0 && index < this.inputs.length);
+		return this.inputs[index];
+	}
 
 	/**
 	 * Gets the zero based inputs.
 	 *
 	 */
-	public Integer[] getZeroBasedInputs() {
+	public Integer[] getZeroBasedInputPositions() {
 		Integer[] zero = new Integer[this.inputs.length];
 		for(int index = 0; index < this.inputs.length; ++index) 
 			zero[index] = this.inputs[index] - 1;

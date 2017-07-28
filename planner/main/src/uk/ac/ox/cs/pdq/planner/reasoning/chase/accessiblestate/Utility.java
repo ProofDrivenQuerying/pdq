@@ -43,7 +43,7 @@ public class Utility {
 			Collection<Atom> facts = atomsMap.get(axiom.getBaseRelation());
 			Multimap<Collection<Term>, Atom> groupsOfFacts = LinkedHashMultimap.create();
 			for(Atom fact: facts) 
-				groupsOfFacts.put(uk.ac.ox.cs.pdq.util.Utility.getTerms(fact,axiom.getAccessMethod().getZeroBasedInputs()), fact);
+				groupsOfFacts.put(uk.ac.ox.cs.pdq.util.Utility.getTerms(fact,axiom.getAccessMethod().getZeroBasedInputPositions()), fact);
 			Iterator<Collection<Term>> keyIterator = groupsOfFacts.keySet().iterator();
 			while(keyIterator.hasNext()) {
 				Collection<Atom> collection = Sets.newLinkedHashSet(groupsOfFacts.get(keyIterator.next()));

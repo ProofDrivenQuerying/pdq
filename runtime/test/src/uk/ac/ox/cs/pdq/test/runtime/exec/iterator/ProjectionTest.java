@@ -11,18 +11,16 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
 
-import uk.ac.ox.cs.pdq.algebra.RelationalOperatorException;
 import uk.ac.ox.cs.pdq.datasources.memory.InMemoryTableWrapper;
+import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
+import uk.ac.ox.cs.pdq.datasources.utility.TupleType;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
-import uk.ac.ox.cs.pdq.db.AccessMethod.Types;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.Projection;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.Scan;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.TopDownAccess;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator;
-import uk.ac.ox.cs.pdq.util.Tuple;
-import uk.ac.ox.cs.pdq.util.TupleType;
 import uk.ac.ox.cs.pdq.util.Typed;
 
 import com.google.common.collect.Lists;
@@ -55,10 +53,10 @@ public class ProjectionTest extends UnaryIteratorTest {
 	AccessMethod mt;
 	
 	/** The d. */
-	Attribute A = new Attribute(String.class, "A"), 
-			B = new Attribute(Integer.class, "B"), 
-			c = new Attribute(String.class, "c"), 
-			d = new Attribute(Integer.class, "d");
+	Attribute A = Attribute.create(String.class, "A"), 
+			B = Attribute.create(Integer.class, "B"), 
+			c = Attribute.create(String.class, "c"), 
+			d = Attribute.create(Integer.class, "d");
 	
 	/* (non-Javadoc)
 	 * @see uk.ac.ox.cs.pdq.test.runtime.exec.iterator.TupleIteratorTest#setup()

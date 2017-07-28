@@ -18,11 +18,11 @@ public interface ResetableIterator<T> extends Iterator<T> {
 	/** Resets the iterator to its initial position. */
 	void reset();
 
-	/**
-	 * Deep copy.
-	 *
-	 * @return a copy of the iterator.
-	 */
-	ResetableIterator<T> deepCopy();
+//	/**
+//	 * Deep copy.
+//	 *
+//	 * @return a copy of the iterator.
+//	 */
+//	ResetableIterator<T> deepCopy();
 
 }

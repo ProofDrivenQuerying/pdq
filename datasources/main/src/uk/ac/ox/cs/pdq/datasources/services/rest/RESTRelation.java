@@ -3,6 +3,7 @@ package uk.ac.ox.cs.pdq.datasources.services.rest;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -35,16 +36,16 @@ import uk.ac.ox.cs.pdq.datasources.AccessException;
 import uk.ac.ox.cs.pdq.datasources.Pipelineable;
 import uk.ac.ox.cs.pdq.datasources.RelationAccessWrapper;
 import uk.ac.ox.cs.pdq.datasources.ResetableIterator;
-import uk.ac.ox.cs.pdq.datasources.Table;
 import uk.ac.ox.cs.pdq.datasources.services.Service;
 import uk.ac.ox.cs.pdq.datasources.services.policies.UsagePolicy;
 import uk.ac.ox.cs.pdq.datasources.services.policies.UsagePolicyViolationException;
 import uk.ac.ox.cs.pdq.datasources.services.policies.UsageViolationExceptionHandler;
+import uk.ac.ox.cs.pdq.datasources.utility.Table;
+import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
+import uk.ac.ox.cs.pdq.datasources.utility.TupleType;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
-import uk.ac.ox.cs.pdq.util.Tuple;
-import uk.ac.ox.cs.pdq.util.TupleType;
 import uk.ac.ox.cs.pdq.util.Utility;
 
 
@@ -139,8 +140,10 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 	 * @see uk.ac.ox.cs.pdq.wrappers.Pipelineable#iterator(List<? extends Attribute>, ResetableIterator<Tuple>)
 	 */
 	@Override
-	public ResetableIterator<Tuple> iterator(List<? extends Attribute> inputAttributes, ResetableIterator<Tuple> inputs) {
-		return new AccessIterator((List<RESTAttribute>) inputAttributes, inputs); 
+	public ResetableIterator<Tuple> iterator(Attribute[] inputAttributes, ResetableIterator<Tuple> inputs) {
+		RESTAttribute[] attributes = new RESTAttribute[inputAttributes.length];
+		System.arraycopy(inputAttributes, 0, attributes, 0, inputAttributes.length);
+		return new AccessIterator(attributes, inputs); 
 	}
 
 	/*
@@ -161,11 +164,10 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 	 * @see uk.ac.ox.cs.pdq.datasources.services.Service#access(Table)
 	 */
 	@Override
-	public Table access(List<? extends Attribute> inputHeader, ResetableIterator<Tuple> inputTuples) {
-		List<RESTAttribute> inputAttributes = new LinkedList<>();
-		for (Attribute a: inputHeader) {
-			inputAttributes.add((RESTAttribute) this.getAttribute(a.getName()));
-		}
+	public Table access(Attribute[] inputHeader, ResetableIterator<Tuple> inputTuples) {
+		RESTAttribute[] inputAttributes = new RESTAttribute[inputHeader.length];
+		for (int attributeIndex = 0; attributeIndex < inputHeader.length; ++attributeIndex) 
+			inputAttributes[attributeIndex] = (RESTAttribute) this.getAttribute(inputHeader[attributeIndex].getName());
 		ResetableIterator<Tuple> iterator = this.iterator(inputAttributes, inputTuples);
 		iterator.open();
 		Table result = new Table(this.getAttributes());
@@ -208,10 +210,10 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 	 * @return the set of input methods appearing in the given REST attributes
 	 * list.
 	 */
-	private Set<InputMethod> getInputMethod(List<RESTAttribute> inputs) {
+	private Set<InputMethod> getInputMethod(RESTAttribute[] inputs) {
 		Set<InputMethod> result = new LinkedHashSet<>();
 		for (RESTAttribute a: this.allAttributes) {
-			if (a instanceof StaticInput || inputs.contains(a)) {
+			if (a instanceof StaticInput || Arrays.asList(inputs).contains(a)) {
 				InputMethod m = a.getInputMethod();
 				if (m != null) {
 					result.add(m);
@@ -221,45 +223,45 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 		return result;
 	}
 
-	/**
-	 * Gets the input params.
-	 *
-	 * @param inputs the inputs
-	 * @param tuples Table
-	 * @return a map containing input parameter to be use to build a service
-	 * request. The parameters include static parameters and access-specific
-	 * parameters. The key of the map correspond to either input method names,
-	 * template entries or the input attribute names themselves.
-	 */
-	private Map<String, Object> getInputParams(List<RESTAttribute> inputs, Table tuples) {
-		Map<String, Object> result = new LinkedHashMap<>();
-		Map<String, Object> partial = null;
-		for (Tuple t: tuples) {
-			partial = this.getInputParams(inputs, t);
-			for (RESTAttribute a: inputs) {
-				InputMethod im = a.getInputMethod();
-				String pname = im.getParameterizedName(a.getInputParams());
-				Object o = result.get(pname);
-				if (o == null) {
-					result.put(pname, partial.get(pname));
-				} else if (a.allowsBatch()) {
-					result.put(pname, String.valueOf(o) + im.getBatchDelimiter() + partial.get(pname));
-				} else {
-					throw new AccessException("Attempting to perform batch input, while access method does not allow it.");
-				}
-
-			}
-		}
-		if (partial != null) {
-			for (RESTAttribute a: inputs) {
-				InputMethod im = a.getInputMethod();
-				String pname = im.getParameterizedName(a.getInputParams());
-				partial.remove(pname);
-			}
-			result.putAll(partial);
-		}
-		return result;
-	}
+//	/**
+//	 * Gets the input params.
+//	 *
+//	 * @param inputs the inputs
+//	 * @param tuples Table
+//	 * @return a map containing input parameter to be use to build a service
+//	 * request. The parameters include static parameters and access-specific
+//	 * parameters. The key of the map correspond to either input method names,
+//	 * template entries or the input attribute names themselves.
+//	 */
+//	private Map<String, Object> getInputParams(RESTAttribute[] inputs, Table tuples) {
+//		Map<String, Object> result = new LinkedHashMap<>();
+//		Map<String, Object> partial = null;
+//		for (Tuple t: tuples) {
+//			partial = this.getInputParams(inputs, t);
+//			for (RESTAttribute a: inputs) {
+//				InputMethod im = a.getInputMethod();
+//				String pname = im.getParameterizedName(a.getInputParams());
+//				Object o = result.get(pname);
+//				if (o == null) {
+//					result.put(pname, partial.get(pname));
+//				} else if (a.allowsBatch()) {
+//					result.put(pname, String.valueOf(o) + im.getBatchDelimiter() + partial.get(pname));
+//				} else {
+//					throw new AccessException("Attempting to perform batch input, while access method does not allow it.");
+//				}
+//
+//			}
+//		}
+//		if (partial != null) {
+//			for (RESTAttribute a: inputs) {
+//				InputMethod im = a.getInputMethod();
+//				String pname = im.getParameterizedName(a.getInputParams());
+//				partial.remove(pname);
+//			}
+//			result.putAll(partial);
+//		}
+//		return result;
+//	}
 
 	/**
 	 * Gets the input params.
@@ -271,7 +273,7 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 	 * parameters. The key of the map correspond to either input method names,
 	 * template entries or the input attribute names themselves.
 	 */
-	private Map<String, Object> getInputParams(List<RESTAttribute> inputs, Tuple tuple) {
+	private Map<String, Object> getInputParams(RESTAttribute[] inputs, Tuple tuple) {
 		Map<String, Object> result = new LinkedHashMap<>();
 		for (RESTAttribute input: this.allAttributes) {
 			InputMethod m = input.getInputMethod();
@@ -280,7 +282,7 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 			if (input instanceof StaticInput) {
 				value = ((StaticInput<?>) input).getDefaultValue();
 			} else {
-				if ((i = inputs.indexOf(input)) >= 0) {
+				if ((i = Arrays.asList(inputs).indexOf(input)) >= 0) {
 					value = tuple.getValue(i);
 				} else {
 					continue;
@@ -397,10 +399,10 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 	 * @throws AccessException the access exception
 	 * @throws ProcessingException the processing exception
 	 */
-	RESTResponseEvent accessSingleInput(List<RESTAttribute> inputAttributes, Tuple inputTuple) throws AccessException, ProcessingException {
+	RESTResponseEvent accessSingleInput(RESTAttribute[] inputAttributes, Tuple inputTuple) throws AccessException, ProcessingException {
 		Preconditions.checkArgument(inputTuple != null ?
-				inputAttributes.size() == inputTuple.size() :
-					inputAttributes.isEmpty());
+				inputAttributes.length == inputTuple.size() :
+					inputAttributes.length == 0);
 
 		Table inputTable = new Table(inputAttributes);
 		if (inputTuple != null) {
@@ -424,7 +426,7 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 	 * @throws ProcessingException the processing exception
 	 */
 	RESTResponseEvent accessInputFree() throws AccessException, ProcessingException {
-		List<RESTAttribute> inputAttributes = new LinkedList<>();
+		RESTAttribute[] inputAttributes = new RESTAttribute[]{};
 		Table inputTable = new Table(inputAttributes);
 
 		Set<InputMethod> inputMethods = this.getInputMethod(inputAttributes);
@@ -707,12 +709,11 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 	 */
 	private class AccessIterator implements ResetableIterator<Tuple> {
 
-
 		/** Iterator over the input tuples. */
 		private final ResetableIterator<Tuple> inputs;
 
 		/**  The list of input attributes. */
-		private final List<RESTAttribute> inputAttributes;
+		private final RESTAttribute[] inputAttributes;
 
 		/** Iterator over a subset of the output tuples. */
 		private List<Tuple> cached;
@@ -751,7 +752,7 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 		 * @param inputAttributes List<RESTAttribute>
 		 * @param inputTuples ResetableIterator<Tuple>
 		 */
-		public AccessIterator(List<RESTAttribute> inputAttributes, ResetableIterator<Tuple> inputTuples) {
+		public AccessIterator(RESTAttribute[] inputAttributes, ResetableIterator<Tuple> inputTuples) {
 			this.inputs = inputTuples;
 			this.inputAttributes = inputAttributes;
 		}
@@ -794,18 +795,18 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 			}
 		}
 
-		/**
-		 * Deep copy.
-		 *
-		 * @return AccessIterator
-		 * @see uk.ac.ox.cs.pdq.datasources.ResetableIterator#deepCopy()
-		 */
-		@Override
-		public AccessIterator deepCopy() {
-			return new AccessIterator(
-					Lists.newArrayList(this.inputAttributes),
-					this.inputs.deepCopy());
-		}
+//		/**
+//		 * Deep copy.
+//		 *
+//		 * @return AccessIterator
+//		 * @see uk.ac.ox.cs.pdq.datasources.ResetableIterator#deepCopy()
+//		 */
+//		@Override
+//		public AccessIterator deepCopy() {
+//			return new AccessIterator(
+//					this.inputAttributes,
+//					this.inputs.deepCopy());
+//		}
 
 		/**
 		 * Checks for next.

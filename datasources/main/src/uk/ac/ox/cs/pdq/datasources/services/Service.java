@@ -1,12 +1,10 @@
 package uk.ac.ox.cs.pdq.datasources.services;
 
-import java.util.List;
-
 import uk.ac.ox.cs.pdq.datasources.ResetableIterator;
-import uk.ac.ox.cs.pdq.datasources.Table;
 import uk.ac.ox.cs.pdq.datasources.services.policies.UsagePolicy;
+import uk.ac.ox.cs.pdq.datasources.utility.Table;
+import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.util.Tuple;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -50,7 +48,7 @@ public interface Service {
 	 * @param inputTuples the input tuples
 	 * @return the output table resulting from the access.
 	 */
-	Table access(List<? extends Attribute> inputHeader, ResetableIterator<Tuple> inputTuples);
+	Table access(Attribute[] inputHeader, ResetableIterator<Tuple> inputTuples);
 
 	/**
 	 * Registers a usage policy.

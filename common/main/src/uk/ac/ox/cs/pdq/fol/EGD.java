@@ -54,10 +54,8 @@ public class EGD extends Dependency {
 	@Override
 	public String toString() {
 		String f = "";
-		
 		if(this.getUniversal().length > 0) 
 			f = this.getUniversal().toString();
-
 		return f + this.body + LogicalSymbols.IMPLIES + this.head;
 	}
 	

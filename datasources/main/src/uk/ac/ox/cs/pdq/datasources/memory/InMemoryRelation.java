@@ -2,7 +2,7 @@ package uk.ac.ox.cs.pdq.datasources.memory;
 
 import java.util.Collection;
 
-import uk.ac.ox.cs.pdq.util.Tuple;
+import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
 
 /**
  * TOCOMMENT shouldn't this be connected to other Relation objects?
@@ -12,12 +12,12 @@ import uk.ac.ox.cs.pdq.util.Tuple;
  */
 public interface InMemoryRelation {
 
-//	/**
-//	 * Gets the name of the relation.
-//	 *
-//	 * @return the name of the relation
-//	 */
-//	String getName();
+	/**
+	 * Gets the name of the relation.
+	 *
+	 * @return the name of the relation
+	 */
+	String getName();
 
 	/**
 	 * Load tuples into the relation. Any existing tuples in the relation will 

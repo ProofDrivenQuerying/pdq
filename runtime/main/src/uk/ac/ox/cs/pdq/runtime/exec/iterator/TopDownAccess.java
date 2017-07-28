@@ -1,26 +1,26 @@
 package uk.ac.ox.cs.pdq.runtime.exec.iterator;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
-import uk.ac.ox.cs.pdq.datasources.RelationAccessWrapper;
-import uk.ac.ox.cs.pdq.datasources.ResetableIterator;
-import uk.ac.ox.cs.pdq.datasources.Table;
-import uk.ac.ox.cs.pdq.db.AccessMethod;
-import uk.ac.ox.cs.pdq.db.TypedConstant;
-import uk.ac.ox.cs.pdq.runtime.util.RuntimeUtilities;
-import uk.ac.ox.cs.pdq.util.Tuple;
-import uk.ac.ox.cs.pdq.util.TupleType;
-import uk.ac.ox.cs.pdq.util.Typed;
-import uk.ac.ox.cs.pdq.util.Utility;
-
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+
+import uk.ac.ox.cs.pdq.datasources.RelationAccessWrapper;
+import uk.ac.ox.cs.pdq.datasources.ResetableIterator;
+import uk.ac.ox.cs.pdq.datasources.utility.Table;
+import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
+import uk.ac.ox.cs.pdq.datasources.utility.TupleType;
+import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.TypedConstant;
+import uk.ac.ox.cs.pdq.runtime.util.RuntimeUtilities;
+import uk.ac.ox.cs.pdq.util.Typed;
 
 
 // TODO: Auto-generated Javadoc
@@ -83,8 +83,8 @@ public class TopDownAccess extends TupleIterator {
 		this.relation = relation;
 		this.accessMethod = accessMethod;
 		this.staticInputs = staticInputs;
-		this.inputBindingType = TupleType.DefaultFactory.createFromTyped(relation.getInputAttributes(accessMethod));
-		Preconditions.checkArgument(isStaticInputsConsistentWithAccessMethod(relation, accessMethod, staticInputs));
+		this.inputBindingType = TupleType.DefaultFactory.createFromTyped(RuntimeUtilities.getInputAttributes(relation, accessMethod));
+		Preconditions.checkArgument(isInputConstantsConsistentWithAccessMethod(relation, accessMethod, staticInputs));
 	}
 
 	/**
@@ -92,20 +92,20 @@ public class TopDownAccess extends TupleIterator {
 	 *
 	 * @param relation the relation
 	 * @param mt the mt
-	 * @param staticInputs the static inputs
+	 * @param inputConstants the static inputs
 	 * @return the boolean
 	 */
-	private static Boolean isStaticInputsConsistentWithAccessMethod(
-			RelationAccessWrapper relation, AccessMethod mt, Map<Integer, TypedConstant> staticInputs) {
-		for (Integer i: mt.getZeroBasedInputs()) {
-			if (staticInputs.containsKey(i)) {
-				if (!relation.getAttributes().get(i).getType().equals(staticInputs.get(i).getType())) {
+	private static Boolean isInputConstantsConsistentWithAccessMethod(
+			RelationAccessWrapper relation, AccessMethod mt, Map<Integer, TypedConstant> inputConstants) {
+		for (Integer i: mt.getZeroBasedInputPositions()) {
+			if (inputConstants.containsKey(i)) {
+				if (!relation.getAttributes()[i].getType().equals(inputConstants.get(i).getType())) {
 					return false;
 				}
 			}
 		}
-		List<Integer> remains = Lists.newArrayList(staticInputs.keySet());
-		remains.removeAll(mt.getZeroBasedInputs());
+		List<Integer> remains = Lists.newArrayList(inputConstants.keySet());
+		remains.removeAll(Arrays.asList(mt.getZeroBasedInputPositions()));
 		return remains.isEmpty();
 	}
 
@@ -132,9 +132,9 @@ public class TopDownAccess extends TupleIterator {
 		Preconditions.checkArgument(relation != null);
 		Preconditions.checkArgument(accessMethod != null);
 		List<Typed> result = new ArrayList<>();
-		for (Integer i: accessMethod.getZeroBasedInputs()) {
+		for (Integer i: accessMethod.getZeroBasedInputPositions()) {
 			if (!staticInputs.contains(i)) {
-				result.add(relation.getAttributes().get(i));
+				result.add(relation.getAttributes()[i]);
 			}
 		}
 		return result;
@@ -235,11 +235,9 @@ public class TopDownAccess extends TupleIterator {
 			// inputs this access are statically defined.
 			// Preconditions.checkState(this.inputType.size() == 0);
 			Tuple staticInput = this.makeInput(Tuple.EmptyTuple);
-			Table inputs = new Table(this.relation.getInputAttributes(this.accessMethod));
+			Table inputs = new Table(RuntimeUtilities.getInputAttributes(this.relation, this.accessMethod));
 			inputs.appendRow(staticInput);
-			this.iterator = this.relation.iterator(
-					this.relation.getInputAttributes(this.accessMethod), 
-					inputs.iterator());
+			this.iterator = this.relation.iterator(RuntimeUtilities.getInputAttributes(this.relation, this.accessMethod), inputs.iterator());
 			this.iterator.open();
 			this.outputs.put(staticInput, this.iterator);
 		}
@@ -251,7 +249,7 @@ public class TopDownAccess extends TupleIterator {
 	/**
 	 * 
 	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#bind(uk.ac.ox.cs.pdq.util.Tuple)
+	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#bind(uk.ac.ox.cs.pdq.datasources.utility.Tuple)
 	 */
 	@Override
 	public void bind(Tuple input) {
@@ -262,11 +260,9 @@ public class TopDownAccess extends TupleIterator {
 		Tuple combinedInputs = this.makeInput(input);
 		this.iterator = this.outputs.get(combinedInputs);
 		if (this.iterator == null) {
-			Table inputs = new Table(this.relation.getInputAttributes(this.accessMethod));
+			Table inputs = new Table(RuntimeUtilities.getInputAttributes(this.relation, this.accessMethod));
 			inputs.appendRow(combinedInputs);
-			this.iterator = this.relation.iterator(
-					this.relation.getInputAttributes(this.accessMethod),
-					inputs.iterator());
+			this.iterator = this.relation.iterator(RuntimeUtilities.getInputAttributes(this.relation, this.accessMethod), inputs.iterator());
 			this.iterator.open();
 			this.outputs.put(combinedInputs, this.iterator);
 		} else {
@@ -286,7 +282,7 @@ public class TopDownAccess extends TupleIterator {
 	private Tuple makeInput(Tuple dynamicInput) {
 		Object[] result = new Object[this.inputBindingType.size()];
 		int j = 0, k = 0;
-		for (int i : this.accessMethod.getZeroBasedInputs()) {
+		for (int i : this.accessMethod.getZeroBasedInputPositions()) {
 			TypedConstant staticInput = this.staticInputs.get(i);
 			if (staticInput != null) {
 				result[k++] = staticInput.getValue();
@@ -322,16 +318,6 @@ public class TopDownAccess extends TupleIterator {
 	 */
 	public Map<Integer, TypedConstant> getStaticInputs() {
 		return this.staticInputs;
-	}
-
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#deepCopy()
-	 */
-	@Override
-	public TopDownAccess deepCopy() {
-		return new TopDownAccess(this.relation, this.accessMethod, this.staticInputs);
 	}
 
 	/**

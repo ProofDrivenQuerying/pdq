@@ -1,9 +1,7 @@
 package uk.ac.ox.cs.pdq.datasources;
 
-import java.util.List;
-
+import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.util.Tuple;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -22,7 +20,7 @@ public interface Pipelineable {
 	 * @param inputs the iterator over the input tuples
 	 * @return an iterator on output tuples.
 	 */
-	ResetableIterator<Tuple> iterator(List<? extends Attribute> inputAttributes, ResetableIterator<Tuple> inputs);
+	ResetableIterator<Tuple> iterator(Attribute[] inputAttributes, ResetableIterator<Tuple> inputs);
 	
 	/**
 	 * Returns an input free tuple iterator .

@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.datasources;
+package uk.ac.ox.cs.pdq.datasources.utility;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -11,11 +11,9 @@ import com.google.common.collect.Interners;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
+import uk.ac.ox.cs.pdq.datasources.ResetableIterator;
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.util.Tuple;
-import uk.ac.ox.cs.pdq.util.TupleType;
 import uk.ac.ox.cs.pdq.util.Typed;
-import uk.ac.ox.cs.pdq.util.Utility;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -266,11 +264,6 @@ public class Table implements Result, Iterable<Tuple> {
 			@Override
 			public void reset() {
 				this.i = Table.this.data.iterator();
-			}
-
-			@Override
-			public ResetableIterator<Tuple> deepCopy() {
-				return Table.this.iterator();
 			}
 		};
 		//		result.open();

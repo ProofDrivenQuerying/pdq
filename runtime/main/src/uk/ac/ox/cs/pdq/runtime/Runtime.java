@@ -9,17 +9,18 @@ import java.util.Map;
 import java.util.Set;
 
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
-import uk.ac.ox.cs.pdq.datasources.Result;
-import uk.ac.ox.cs.pdq.datasources.Table;
 import uk.ac.ox.cs.pdq.datasources.memory.InMemoryRelation;
 import uk.ac.ox.cs.pdq.datasources.memory.InMemoryTableWrapper;
 import uk.ac.ox.cs.pdq.datasources.memory.InMemoryViewWrapper;
+import uk.ac.ox.cs.pdq.datasources.utility.Result;
+import uk.ac.ox.cs.pdq.datasources.utility.Table;
+import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
+import uk.ac.ox.cs.pdq.datasources.utility.TupleType;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.LinearGuarded;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Atom;
@@ -30,8 +31,6 @@ import uk.ac.ox.cs.pdq.runtime.query.InMemoryQueryEvaluator;
 import uk.ac.ox.cs.pdq.runtime.query.QueryEvaluator;
 import uk.ac.ox.cs.pdq.runtime.query.QueryEvaluatorFactory;
 import uk.ac.ox.cs.pdq.util.EventHandler;
-import uk.ac.ox.cs.pdq.util.Tuple;
-import uk.ac.ox.cs.pdq.util.TupleType;
 import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.google.common.base.Preconditions;
@@ -170,7 +169,7 @@ public class Runtime {
 			Map<String, Collection<Tuple>> dataDist) {
 		for (InMemoryViewWrapper v: views) {
 			
-			LinearGuarded dependency = v.getDependency();
+			LinearGuarded dependency = v.getViewToRelationDependency();
 			ConjunctiveQuery cq = ConjunctiveQuery.create(
 					dependency.getFreeVariables(),
 					(Conjunction) Conjunction.of(dependency.getHead()));

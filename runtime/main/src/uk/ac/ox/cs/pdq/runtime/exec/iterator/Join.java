@@ -16,8 +16,8 @@ import uk.ac.ox.cs.pdq.algebra.Condition;
 import uk.ac.ox.cs.pdq.algebra.ConjunctiveCondition;
 import uk.ac.ox.cs.pdq.algebra.ConstantEqualityCondition;
 import uk.ac.ox.cs.pdq.algebra.SimpleCondition;
-import uk.ac.ox.cs.pdq.util.Tuple;
-import uk.ac.ox.cs.pdq.util.TupleType;
+import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
+import uk.ac.ox.cs.pdq.datasources.utility.TupleType;
 import uk.ac.ox.cs.pdq.util.Typed;
 
 import com.google.common.base.Preconditions;
@@ -49,7 +49,7 @@ public abstract class Join extends NaryIterator {
 	 * @param children            the children
 	 */
 	protected Join(List<Typed> inputs, TupleIterator... children) {
-		this(createNaturalJoinConditions(Lists.newArrayList(children)), inputs, Lists.newArrayList(children));
+		this(computeNaturalJoinConditions(Lists.newArrayList(children)), inputs, Lists.newArrayList(children));
 	}
 	
 	/**
@@ -59,7 +59,7 @@ public abstract class Join extends NaryIterator {
 	 * @param children            the children
 	 */
 	protected Join(List<Typed> inputs, List<TupleIterator> children) {
-		this(createNaturalJoinConditions(children), inputs, children);
+		this(computeNaturalJoinConditions(children), inputs, children);
 	}
 	
 	/**
@@ -139,7 +139,7 @@ public abstract class Join extends NaryIterator {
 	 * @param children TupleIterator[]
 	 * @return Atom
 	 */
-	protected static Condition createNaturalJoinConditions(Collection<TupleIterator> children) {
+	protected static Condition computeNaturalJoinConditions(Collection<TupleIterator> children) {
 		Map<Typed, SortedSet<Integer>> joinVariables = new LinkedHashMap<>();
 		int totalCol = 0;
 		// Cluster patterns by variables
@@ -156,7 +156,7 @@ public abstract class Join extends NaryIterator {
 			}
 		}
 		
-		Collection<AttributeEqualityCondition> equalities = new ArrayList<>();
+		Collection<SimpleCondition> equalities = new ArrayList<>();
 		// Remove clusters containing only one pattern
 		for (Iterator<Typed> keys = joinVariables.keySet().iterator(); keys.hasNext();) {
 			Set<Integer> cluster = joinVariables.get(keys.next());
@@ -172,7 +172,7 @@ public abstract class Join extends NaryIterator {
 			}
 		}
 
-		return ConjunctiveCondition.create(equalities);
+		return ConjunctiveCondition.create(equalities.toArray(new SimpleCondition[equalities.size()]));
 	}
 
 	/**
@@ -241,7 +241,7 @@ public abstract class Join extends NaryIterator {
 	
 	/**
 	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.NaryIterator#bind(uk.ac.ox.cs.pdq.util.Tuple)
+	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.NaryIterator#bind(uk.ac.ox.cs.pdq.datasources.utility.Tuple)
 	 */
 	@Override
 	public void bind(Tuple t) {

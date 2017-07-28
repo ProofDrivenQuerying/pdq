@@ -1,10 +1,12 @@
-package uk.ac.ox.cs.pdq.util;
+package uk.ac.ox.cs.pdq.datasources.utility;
 
 import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.List;
 
+import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
+import uk.ac.ox.cs.pdq.util.Typed;
 
 import com.google.common.collect.Interner;
 import com.google.common.collect.Interners;
@@ -133,6 +135,19 @@ public interface TupleType extends Serializable{
 		 */
 		public static TupleType createFromTyped(final List<Typed> typed) {
 			return interner.intern(new TupleTypeImpl(typed));
+		}
+		
+		/**
+		 * Creates a new Default object.
+		 *
+		 * @param attributes List<? extends Typed>
+		 * @return TupleType
+		 */
+		public static TupleType createFromTyped(final Attribute[] attributes) {
+			Type[] types = new Type[attributes.length];
+			for(int index = 0; index < attributes.length; ++index) 
+				types[index] = attributes[index].getType();
+			return interner.intern(new TupleTypeImpl(types));
 		}
 	}
 }

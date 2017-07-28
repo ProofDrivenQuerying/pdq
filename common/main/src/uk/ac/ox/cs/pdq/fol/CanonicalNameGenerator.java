@@ -3,6 +3,8 @@ package uk.ac.ox.cs.pdq.fol;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import com.google.common.base.Preconditions;
+
 /**
  * TOCOMMENT this class uses strings called "skolems" but not Skolem objects, which seems strange
  * 
@@ -41,8 +43,14 @@ public final class CanonicalNameGenerator {
 	 * @return 		a canonical name which equals to the dependency name + the assignment
 	 * 		of the canonical names to universal variables + the existential's variable name
 	 */
-	public static String getName(String dependency, String universalVariables, String existentialVariable) {
-		String key = dependency + existentialVariable + universalVariables;
+	public static String getTriggerWitness(Dependency dependency, Map<Variable, Constant> mapping, Variable existentialVariable) {
+		String namesOfUniversalVariables = "";
+		for (Variable variable: dependency.getUniversal()) {
+			Variable variableTerm = variable;
+			Preconditions.checkState(mapping.get(variableTerm) != null);
+			namesOfUniversalVariables += variable.getSymbol() + mapping.get(variableTerm);
+		}
+		String key = "TGD" + dependency.getId() + existentialVariable.getSymbol() + namesOfUniversalVariables;
 		String result = skolems.get(key);
 		if (result == null) {
 			result = getName(CANONICAL_PREFIX);

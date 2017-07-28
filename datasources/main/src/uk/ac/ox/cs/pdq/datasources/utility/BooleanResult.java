@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.datasources;
+package uk.ac.ox.cs.pdq.datasources.utility;
 
 /**
  * Representation of a Boolean query/plan result.

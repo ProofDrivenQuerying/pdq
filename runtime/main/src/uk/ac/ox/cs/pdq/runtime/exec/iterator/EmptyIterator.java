@@ -3,7 +3,7 @@ package uk.ac.ox.cs.pdq.runtime.exec.iterator;
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
 
-import uk.ac.ox.cs.pdq.util.Tuple;
+import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
 import uk.ac.ox.cs.pdq.util.Typed;
 
 import com.google.common.base.Preconditions;
@@ -91,15 +91,6 @@ public class EmptyIterator extends TupleIterator {
 
 	/**
 	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#deepCopy()
-	 */
-	@Override
-	public EmptyIterator deepCopy() {
-		return new EmptyIterator();
-	}
-
-	/**
-	 * {@inheritDoc}
 	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#interrupt()
 	 */
 	@Override
@@ -111,7 +102,7 @@ public class EmptyIterator extends TupleIterator {
 
 	/**
 	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#bind(uk.ac.ox.cs.pdq.util.Tuple)
+	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#bind(uk.ac.ox.cs.pdq.datasources.utility.Tuple)
 	 */
 	@Override
 	public void bind(Tuple t) {

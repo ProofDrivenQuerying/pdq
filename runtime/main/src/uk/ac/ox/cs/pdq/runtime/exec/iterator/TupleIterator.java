@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import uk.ac.ox.cs.pdq.datasources.ResetableIterator;
-import uk.ac.ox.cs.pdq.util.Tuple;
-import uk.ac.ox.cs.pdq.util.TupleType;
+import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
+import uk.ac.ox.cs.pdq.datasources.utility.TupleType;
 import uk.ac.ox.cs.pdq.util.Typed;
 
 import com.google.common.base.Preconditions;
@@ -119,15 +119,6 @@ public abstract class TupleIterator  implements AutoCloseable, ResetableIterator
 	}
 
 	/**
-	 * Deep copy.
-	 *
-	 * @return a deep copy of the operator.
-	 * @see uk.ac.ox.cs.pdq.datasources.ResetableIterator#deepCopy()
-	 */
-	@Override
-	public abstract TupleIterator deepCopy();
-
-	/**
 	 * Gets the input tuple type.
 	 * 
 	 * @return the input type
@@ -186,17 +177,6 @@ public abstract class TupleIterator  implements AutoCloseable, ResetableIterator
 	 */ 
 	public void setEventBus(EventBus eb) {
 		this.eventBus = eb;
-	}
-
-	/**
-	 * Removes the.
-	 *
-	 * @throws UnsupportedOperationException the unsupported operation exception
-	 * @see java.util.Iterator#remove()
-	 */
-	@Override
-	public void remove() {
-		throw new UnsupportedOperationException();
 	}
 
 	/**

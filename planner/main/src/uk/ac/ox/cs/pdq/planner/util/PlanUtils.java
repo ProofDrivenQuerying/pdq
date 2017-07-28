@@ -33,7 +33,6 @@ import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
-import uk.ac.ox.cs.pdq.util.TupleType;
 import uk.ac.ox.cs.pdq.util.Utility;
 
 // TODO: Auto-generated Javadoc
@@ -98,6 +97,7 @@ public class PlanUtils {
 		return op1;
 	}
 	
+	//TODO implement this method
 	private static Map<Integer, TypedConstant> computeInputConstants(AccessMethod method, Term[] terms) {
 		return null;
 	}
@@ -148,7 +148,7 @@ public class PlanUtils {
 	 * @param query the q
 	 * @return the tuple type of the input query
 	 */
-	private static TupleType computeTupleType(ConjunctiveQuery query) {
+	private static Type[] computeVariableTypes(ConjunctiveQuery query) {
 		Variable[] freeVariables = query.getFreeVariables();
 		Type[] types = new Class<?>[query.getFreeVariables().length];
 		boolean assigned = false;
@@ -170,7 +170,7 @@ public class PlanUtils {
 			if (!assigned) 
 				throw new IllegalStateException("Could not infer query type.");
 		}
-		return TupleType.DefaultFactory.create(types);
+		return types;
 	}
 
 	/**
@@ -182,11 +182,11 @@ public class PlanUtils {
 	 */
 	public static ProjectionTerm createFinalProjection(ConjunctiveQuery query, RelationalTerm plan) {
 		List<Attribute> projections = new ArrayList<>();
-		TupleType tupleType = computeTupleType(query);
+		Type[] variableTypes = computeVariableTypes(query);
 		Variable[] freeVariables = query.getFreeVariables();
 		for (int index = 0; index < freeVariables.length; ++index)  {
 			Constant constant = query.getSubstitutionOfFreeVariablesToCanonicalConstants().get(freeVariables[index]);
-			Attribute attribute = Attribute.create(tupleType.getType(index), ((UntypedConstant)constant).getSymbol());
+			Attribute attribute = Attribute.create(variableTypes[index], ((UntypedConstant)constant).getSymbol());
 			Assert.assertTrue(Arrays.asList(plan.getOutputAttributes()).contains(attribute));
 			projections.add(attribute);
 		}

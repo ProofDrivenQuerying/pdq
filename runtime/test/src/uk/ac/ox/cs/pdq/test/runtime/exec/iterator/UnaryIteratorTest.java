@@ -4,10 +4,10 @@ import java.util.List;
 
 import org.mockito.Mock;
 
+import uk.ac.ox.cs.pdq.datasources.utility.TupleType;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator;
-import uk.ac.ox.cs.pdq.util.TupleType;
 import uk.ac.ox.cs.pdq.util.Typed;
 
 import com.google.common.collect.Lists;
@@ -21,14 +21,14 @@ import com.google.common.collect.Lists;
 public abstract class UnaryIteratorTest extends TupleIteratorTest {
 
 	/** The b. */
-	Attribute a = new Attribute(String.class, "a"), 
-			b = new Attribute(Integer.class, "b");
+	Attribute a = Attribute.create(String.class, "a"), 
+			b = Attribute.create(Integer.class, "b");
 	
 	/** The child. */
 	@Mock TupleIterator child;
 	
 	/** The output columns. */
-	List<Typed> outputColumns = Lists.<Typed>newArrayList(a, b, new TypedConstant<>("str"), new TypedConstant<>(6));
+	List<Typed> outputColumns = Lists.<Typed>newArrayList(a, b, TypedConstant.create("str"), TypedConstant.create(6));
 	
 	/** The input columns. */
 	List<Typed> inputColumns = Lists.<Typed>newArrayList(b, a);

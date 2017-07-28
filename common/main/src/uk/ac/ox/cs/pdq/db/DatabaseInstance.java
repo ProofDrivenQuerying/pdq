@@ -48,8 +48,6 @@ import uk.ac.ox.cs.pdq.util.LimitReachedException.Reasons;
  *
  */
 public class DatabaseInstance implements Instance {
-
-
 	protected static Logger log = Logger.getLogger(DatabaseInstance.class);
 
 	/** The schema relations */
@@ -64,7 +62,6 @@ public class DatabaseInstance implements Instance {
 	protected final long timeout = 3600000;
 	protected final TimeUnit unit = TimeUnit.MILLISECONDS;
 	protected final static int insertCacheSize = 1000; 
-
 
 	/** A datqabase instance can be associated to a current query, for the join positions of which, indices are created.. */
 	ConjunctiveQuery currentQuery = null;
@@ -152,7 +149,6 @@ public class DatabaseInstance implements Instance {
 
 	public void addFacts(Collection<Atom> facts) {
 		Queue<String> queries = new ConcurrentLinkedQueue<>();
-
 		if(this.builder instanceof DerbyStatementBuilder) {
 			queries.addAll(this.builder.createInsertStatements(facts, this.relationNamesToRelationObjects));
 		}
@@ -182,13 +178,11 @@ public class DatabaseInstance implements Instance {
 			}
 			clusters.clear();
 		}
-
 		executeQueries(queries);		
 	}
 
 
-	public void executeQueries(Queue<String> queries)
-	{		
+	public void executeQueries(Queue<String> queries) {		
 		ExecutorService executorService = null;
 		try {
 			//Create a pool of threads to run in parallel
@@ -246,10 +240,8 @@ public class DatabaseInstance implements Instance {
 				subList.clear();
 			}
 		}
-
 		executeQueries(queries);
 	}
-
 
 	public List<Match> answerQuery(ConjunctiveQuery q) {
 		throw new UnsupportedOperationException("Method not implemented yet - use answerQueries()");
@@ -272,7 +264,6 @@ public class DatabaseInstance implements Instance {
 		this.clearedLastQuery = false;
 		try {
 			Statement sqlStatement = this.connections.get(0).createStatement();
-
 			//Create statements that set up or drop the indices for the joins in the body of the input query
 			Set<String> joinIndexes = Sets.newLinkedHashSet();
 			Pair<Collection<String>, Collection<String>> dropAndCreateStms = 
@@ -290,7 +281,7 @@ public class DatabaseInstance implements Instance {
 	}
 
 	public void clearQuery() {
-		try {
+		try { 
 			Statement sqlStatement = this.connections.get(0).createStatement();
 			//Drop the join indices for input query
 			for (String b: this.dropQueryIndexStatements) {
@@ -322,7 +313,6 @@ public class DatabaseInstance implements Instance {
 		//Run the SQL query statements in multiple threads
 		ExecutorService executorService = null;
 		try {
-
 			//Create a pool of threads to run in parallel
 			executorService = Executors.newFixedThreadPool(this.synchronousThreadsNumber);
 			List<Callable<List<Match>>> threads = new ArrayList<>();

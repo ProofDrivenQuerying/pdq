@@ -14,7 +14,8 @@ import org.apache.jcs.access.exception.CacheException;
 import org.apache.jcs.engine.control.CompositeCacheManager;
 
 import uk.ac.ox.cs.pdq.algebra.Condition;
-import uk.ac.ox.cs.pdq.util.Tuple;
+import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
+import uk.ac.ox.cs.pdq.runtime.util.RuntimeUtilities;
 import uk.ac.ox.cs.pdq.util.Typed;
 
 import com.google.common.base.Preconditions;
@@ -30,7 +31,7 @@ import com.google.common.collect.Lists;
 public class BindJoin extends Join {
 
 	/** The input sideways mapping. */
-	protected final List<Integer> inputSidewaysMapping;
+	protected final List<Integer> sidewaysInputPositions;
 
 	/** The left. */
 	protected final TupleIterator left;
@@ -72,35 +73,33 @@ public class BindJoin extends Join {
 	 * @param right TupleIterator
 	 */
 	public BindJoin(TupleIterator left, TupleIterator right) {
-		this(createNaturalJoinConditions(toList(left, right)), 
-			inferInputMappings(left.getColumns(), right.getInputColumns()), 
+		this(computeNaturalJoinConditions(toList(left, right)), 
+			computeSidewaysInputs(left.getColumns(), right.getInputColumns()), 
 			left, right);
 	}
 
 	/**
 	 * Instantiates a new join.
-	 * @param pred Atom
+	 * @param condition Atom
 	 * @param left TupleIterator
 	 * @param right TupleIterator
 	 */
-	public BindJoin(Condition pred, TupleIterator left, TupleIterator right) {
-		this(pred, 
-				inferInputMappings(left.getColumns(), right.getInputColumns()),
-				left, right);
+	public BindJoin(Condition condition, TupleIterator left, TupleIterator right) {
+		this(condition, computeSidewaysInputs(left.getColumns(), right.getInputColumns()), left, right);
 	}
 
 	/**
 	 * Instantiates a new join.
-	 * @param pred Atom
-	 * @param sideWays List<Integer>
+	 * @param condition Atom
+	 * @param sidewaysInputPositions List<Integer>
 	 * @param left TupleIterator
 	 * @param right TupleIterator
 	 */
-	public BindJoin(Condition pred, List<Integer> sideWays, TupleIterator left, TupleIterator right) {
-		super(pred, inferInputColumns(left, right), toList(left, right));
+	public BindJoin(Condition condition, List<Integer> sidewaysInputPositions, TupleIterator left, TupleIterator right) {
+		super(condition, computeInputColumns(left, right), toList(left, right));
 		this.left = left;
 		this.right = right;
-		this.inputSidewaysMapping = sideWays;
+		this.sidewaysInputPositions = sidewaysInputPositions;
 		this.joinId = BindJoin.joinIds++;
 		CompositeCacheManager ccm = CompositeCacheManager.getUnconfiguredInstance(); 
 		Properties properties = new Properties(); 
@@ -130,8 +129,7 @@ public class BindJoin extends Join {
 	 * @return a mapping from right input position to their position on the left output.
 	 * Right input positions that comes from the parent are distinguished as negative numbers.
 	 */
-	private static List<Integer> inferInputMappings(
-			List<Typed> leftOutput, List<? extends Typed> rightInput) {
+	private static List<Integer> computeSidewaysInputs(List<Typed> leftOutput, List<? extends Typed> rightInput) {
 		List<Integer> result = new ArrayList<>(rightInput.size());
 		for (Typed t: rightInput) {
 			result.add(leftOutput.indexOf(t));
@@ -145,7 +143,7 @@ public class BindJoin extends Join {
 	 * @param right TupleIterator
 	 * @return List<Typed>
 	 */
-	private static List<Typed> inferInputColumns(TupleIterator left, TupleIterator right) {
+	private static List<Typed> computeInputColumns(TupleIterator left, TupleIterator right) {
 		List<Typed> result = Lists.newArrayList(left.getInputColumns());
 		List<Typed> rInputs = right.getInputColumns();
 		for (int i = 0, l = rInputs.size(); i < l; i++) {
@@ -167,9 +165,9 @@ public class BindJoin extends Join {
 	 */
 	protected Tuple project(Tuple currentInput, Tuple leftInput) {
 		Object[] result = new Object[this.right.getInputType().size()];
-		for (int i = 0, j = 0, l = this.inputSidewaysMapping.size(); i < l; i++) {
-			if (this.inputSidewaysMapping.get(i) >= 0) {
-				result[i] = leftInput.getValue(this.inputSidewaysMapping.get(i));
+		for (int i = 0, j = 0, l = this.sidewaysInputPositions.size(); i < l; i++) {
+			if (this.sidewaysInputPositions.get(i) >= 0) {
+				result[i] = leftInput.getValue(this.sidewaysInputPositions.get(i));
 			} else {
 				result[i] = currentInput.getValue(this.left.inputType.size() + j++);
 			}
@@ -210,7 +208,7 @@ public class BindJoin extends Join {
 					this.cached.add(right); 
 				}							
 				Tuple t = this.leftTuple.appendTuple(right);
-				if (this.predicate.isSatisfied(t)) {
+				if (RuntimeUtilities.isSatisfied(this.predicate, t)) {
 					this.nextTuple = t;
 					return;
 				}
@@ -249,7 +247,7 @@ public class BindJoin extends Join {
 					this.cached.add(rightTuple);
 				}								
 				Tuple t = this.leftTuple.appendTuple(rightTuple);
-				if (this.predicate.isSatisfied(t)) {
+				if (RuntimeUtilities.isSatisfied(this.predicate, t)) {
 					this.nextTuple = t;
 					return;
 				}
@@ -257,16 +255,16 @@ public class BindJoin extends Join {
 		} while (!this.cachedIterator.hasNext());
 	}
 
-	/**
-	 * Deep copy.
-	 *
-	 * @return BindJoinTest
-	 * @see uk.ac.ox.cs.pdq.datasources.ResetableIterator#deepCopy()
-	 */
-	@Override
-	public BindJoin deepCopy() {
-		return new BindJoin(this.predicate, this.left.deepCopy(), this.right.deepCopy());
-	}
+//	/**
+//	 * Deep copy.
+//	 *
+//	 * @return BindJoinTest
+//	 * @see uk.ac.ox.cs.pdq.datasources.ResetableIterator#deepCopy()
+//	 */
+//	@Override
+//	public BindJoin deepCopy() {
+//		return new BindJoin(this.predicate, this.left.deepCopy(), this.right.deepCopy());
+//	}
 
 	/**
 	 * Bind.

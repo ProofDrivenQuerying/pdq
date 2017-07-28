@@ -5,10 +5,13 @@ import java.util.concurrent.Executors;
 
 import org.apache.log4j.Logger;
 
+import com.google.common.eventbus.EventBus;
+
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
-import uk.ac.ox.cs.pdq.datasources.BooleanResult;
-import uk.ac.ox.cs.pdq.datasources.Result;
-import uk.ac.ox.cs.pdq.datasources.Table;
+import uk.ac.ox.cs.pdq.datasources.utility.BooleanResult;
+import uk.ac.ox.cs.pdq.datasources.utility.Result;
+import uk.ac.ox.cs.pdq.datasources.utility.Table;
+import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.runtime.EvaluationException;
 import uk.ac.ox.cs.pdq.runtime.RuntimeParameters.Semantics;
@@ -17,10 +20,6 @@ import uk.ac.ox.cs.pdq.runtime.exec.iterator.Distinct;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator;
 import uk.ac.ox.cs.pdq.runtime.util.RuntimeUtilities;
 import uk.ac.ox.cs.pdq.runtime.util.TupleOutputLimitEnforcer;
-import uk.ac.ox.cs.pdq.util.Tuple;
-import uk.ac.ox.cs.pdq.util.Utility;
-
-import com.google.common.eventbus.EventBus;
 
 
 // TODO: Auto-generated Javadoc
@@ -116,7 +115,7 @@ public class VolcanoPlanExecutor implements PlanExecutor {
 		RelationalTerm logOp = this.plan;
 		// Boolean query
 		if (this.query.isBoolean()) {
-			logOp = new uk.ac.ox.cs.pdq.algebra.IsEmpty(logOp);
+//			logOp = new uk.ac.ox.cs.pdq.algebra.IsEmpty(logOp);
 			try (TupleIterator phyOp = PlanTranslator.translate(logOp)) {
 				phyOp.open();
 				return new BooleanResult(!((boolean) phyOp.next().getValue(0)));

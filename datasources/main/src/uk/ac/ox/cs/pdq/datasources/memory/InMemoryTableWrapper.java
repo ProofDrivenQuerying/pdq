@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
@@ -15,13 +14,13 @@ import com.google.common.base.Preconditions;
 import uk.ac.ox.cs.pdq.datasources.Pipelineable;
 import uk.ac.ox.cs.pdq.datasources.RelationAccessWrapper;
 import uk.ac.ox.cs.pdq.datasources.ResetableIterator;
-import uk.ac.ox.cs.pdq.datasources.Table;
+import uk.ac.ox.cs.pdq.datasources.utility.Table;
+import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
+import uk.ac.ox.cs.pdq.datasources.utility.TupleType;
+import uk.ac.ox.cs.pdq.datasources.utility.Utility;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
-import uk.ac.ox.cs.pdq.util.Tuple;
-import uk.ac.ox.cs.pdq.util.TupleType;
-import uk.ac.ox.cs.pdq.util.Utility;
 
 /**
  * TOCOMMENT If this is the default implementation of a relation, why do we call this wrapper?
@@ -40,7 +39,7 @@ public class InMemoryTableWrapper extends Relation implements Pipelineable, Rela
 
 	/**  The underlying data. */
 	private Collection<Tuple> data = new ArrayList<>();
-	
+
 	/**
 	 * Instantiates a new in memory table wrapper.
 	 *
@@ -49,7 +48,7 @@ public class InMemoryTableWrapper extends Relation implements Pipelineable, Rela
 	public InMemoryTableWrapper(Relation relation) {
 		this(relation.getName(), relation.getAttributes(), relation.getAccessMethods(), relation.isEquality());
 	}
-	
+
 	/**
 	 * Instantiates a new in memory table wrapper.
 	 *
@@ -61,7 +60,7 @@ public class InMemoryTableWrapper extends Relation implements Pipelineable, Rela
 	public InMemoryTableWrapper(String name, Attribute[] attributes, AccessMethod[] methods, boolean isEquality) {
 		super(name, attributes, methods, isEquality);
 	}
-	
+
 	/**
 	 * Instantiates a new in memory table wrapper.
 	 *
@@ -72,7 +71,7 @@ public class InMemoryTableWrapper extends Relation implements Pipelineable, Rela
 	public InMemoryTableWrapper(String name, Attribute[] attributes, AccessMethod[] methods) {
 		this(name, attributes, methods, false);
 	}
-	
+
 	/**
 	 * Instantiates a new in memory table wrapper.
 	 *
@@ -83,7 +82,7 @@ public class InMemoryTableWrapper extends Relation implements Pipelineable, Rela
 	public InMemoryTableWrapper(String name, Attribute[] attributes, boolean isEquality) {
 		this(name, attributes, new AccessMethod[]{}, isEquality);
 	}
-	
+
 	/**
 	 * Instantiates a new in memory table wrapper.
 	 *
@@ -113,7 +112,7 @@ public class InMemoryTableWrapper extends Relation implements Pipelineable, Rela
 	public void clear() {
 		this.data.clear();
 	}
-	
+
 	/**
 	 * Gets the underlying data tuples.
 	 *
@@ -122,7 +121,7 @@ public class InMemoryTableWrapper extends Relation implements Pipelineable, Rela
 	public Collection<Tuple> getData() {
 		return this.data;
 	}
-	
+
 	/**
 	 * TOCOMMENT Not sure what this method does, and why you would need yet another ``access'' to a relation already loaded in memory 
 	 * 
@@ -134,12 +133,10 @@ public class InMemoryTableWrapper extends Relation implements Pipelineable, Rela
 	 * @see uk.ac.ox.cs.pdq.datasources.memory.runtime.RelationAccessWrapper#access(Table)
 	 */
 	@Override
-	public Table access(List<? extends Attribute> inputHeader, ResetableIterator<Tuple> inputTuples) {
+	public Table access(Attribute[] inputHeader, ResetableIterator<Tuple> inputTuples) {
 		Preconditions.checkArgument(inputHeader != null);
 		Preconditions.checkArgument(inputTuples != null);
-		
 		Table result = new Table(this.attributes);
-
 		ResetableIterator<Tuple> iterator = this.iterator(inputHeader, inputTuples);
 		iterator.open();
 		while (iterator.hasNext()) {
@@ -175,9 +172,8 @@ public class InMemoryTableWrapper extends Relation implements Pipelineable, Rela
 	 * @return ResetableIterator<Tuple>
 	 * @see uk.ac.ox.cs.pdq.runtime.wrappers.Pipelineable#iterator(List<? extends Attribute>, ResetableIterator<Tuple>)
 	 */
-	@SuppressWarnings("unchecked")
-	public ResetableIterator<Tuple> iterator(List<? extends Attribute> inputAttributes, ResetableIterator<Tuple> inputs) {
-		return new AccessIterator((List<Attribute>) inputAttributes, inputs);
+	public ResetableIterator<Tuple> iterator(Attribute[] inputAttributes, ResetableIterator<Tuple> inputs) {
+		return new AccessIterator(inputAttributes, inputs);
 	}
 
 	/**
@@ -189,7 +185,7 @@ public class InMemoryTableWrapper extends Relation implements Pipelineable, Rela
 	public ResetableIterator<Tuple> iterator() {
 		return new AccessIterator();
 	}
-
+	
 	/**
 	 * TOCOMMENT this is not connected hierarchically to the InMemoryTableWrapper nor to any Access object. We do we need this?
 	 *
@@ -201,8 +197,8 @@ public class InMemoryTableWrapper extends Relation implements Pipelineable, Rela
 	private class AccessIterator implements ResetableIterator<Tuple> {
 
 		/**  The list of input attributes. */
-		private final List<Attribute> inputAttributes;
-		
+		private final Attribute[] inputAttributes;
+
 		/** Iterator over a set of the input tuples. */
 		private final ResetableIterator<Tuple> inputs;
 
@@ -211,10 +207,10 @@ public class InMemoryTableWrapper extends Relation implements Pipelineable, Rela
 
 		/** The input type. */
 		private final TupleType inputType;
-		
+
 		/** The filter. */
 		private Set<Tuple> filter = new LinkedHashSet<>();
-		
+
 		/** The next tuple. */
 		private Tuple nextTuple = null;
 
@@ -224,19 +220,19 @@ public class InMemoryTableWrapper extends Relation implements Pipelineable, Rela
 		public AccessIterator() {
 			this(null, (ResetableIterator<Tuple>) null);
 		}
-		
+
 		/**
 		 * Constructor with input tuple iterator.
 		 *
 		 * @param inputAttributes List<Attribute>
 		 * @param inputTuples ResetableIterator<Tuple>
 		 */
-		public AccessIterator(List<Attribute> inputAttributes, ResetableIterator<Tuple> inputTuples) {
+		public AccessIterator(Attribute[] inputAttributes, ResetableIterator<Tuple> inputTuples) {
 			this.inputAttributes = inputAttributes;
 			this.inputs = inputTuples;
 			this.outputs = InMemoryTableWrapper.this.getData().iterator();
 			if (inputAttributes != null) {
-				this.inputType = Utility.createFromTyped(inputAttributes.toArray(new Attribute[inputAttributes.size()]));
+				this.inputType = Utility.createFromTyped(inputAttributes);
 			} else {
 				this.inputType = TupleType.EmptyTupleType;
 			}
@@ -267,19 +263,6 @@ public class InMemoryTableWrapper extends Relation implements Pipelineable, Rela
 			this.nextTuple();
 		}
 
-		/**
-		 * Deep copy.
-		 *
-		 * @return AccessIterator
-		 * @see uk.ac.ox.cs.pdq.datasources.ResetableIterator#deepCopy()
-		 */
-		@Override
-		public AccessIterator deepCopy() {
-			return new AccessIterator(
-					this.inputAttributes,
-					this.inputs != null ? this.inputs.deepCopy() : null);
-		}
-		
 		/**
 		 * Checks for next.
 		 *
@@ -319,13 +302,13 @@ public class InMemoryTableWrapper extends Relation implements Pipelineable, Rela
 		public String toString() {
 			StringBuilder result = new StringBuilder();
 			result.append(Relation.class.getSimpleName()).append('{')
-				.append(InMemoryTableWrapper.this.getName()).append('}').append('.')
-				.append(this.getClass().getSimpleName()).append('(')
-				.append(this.inputs).append(')');
-			
+			.append(InMemoryTableWrapper.this.getName()).append('}').append('.')
+			.append(this.getClass().getSimpleName()).append('(')
+			.append(this.inputs).append(')');
+
 			return result.toString();
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see java.util.Iterator#remove()
 		 */
@@ -336,7 +319,7 @@ public class InMemoryTableWrapper extends Relation implements Pipelineable, Rela
 		public void remove() {
 			throw new UnsupportedOperationException();
 		}
-		
+
 		/**
 		 * Set the next tuple to the following item on the output iterator, 
 		 * using the next input tuple if necessary.

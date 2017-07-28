@@ -2,8 +2,10 @@ package uk.ac.ox.cs.pdq.datasources;
 
 import java.util.List;
 
+import uk.ac.ox.cs.pdq.datasources.utility.Table;
+import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
+import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.util.Tuple;
 
 /**
  * TOCOMMENT I understqnd that there are two views of database objects reflected in the code in common. 
@@ -32,15 +34,15 @@ public interface RelationAccessWrapper extends Pipelineable {
 	 * @param inputTuples the input tuples
 	 * @return the Table containing the tuples resulting from the access.
 	 */
-	Table access(List<? extends Attribute> inputHeader, ResetableIterator<Tuple> inputTuples);
+	Table access(Attribute[] inputHeader, ResetableIterator<Tuple> inputTuples);
+	
+	/**
+	 * Gets the attributes.
+	 *
+	 * @return the list of attributes of the relation.
+	 */
+	Attribute[] getAttributes();
 
-//	/**
-//	 * Gets the attributes.
-//	 *
-//	 * @return the list of attributes of the relation.
-//	 */
-//	Attribute[] getAttributes();
-//
 //	/**
 //	 * Gets the input attributes.
 //	 *
@@ -48,19 +50,19 @@ public interface RelationAccessWrapper extends Pipelineable {
 //	 * @return the list of attributes of the relation.
 //	 */
 //	Attribute[] getInputAttributes(AccessMethod method);
-//
-//	/**
-//	 * Gets the name of the relation.
-//	 *
-//	 * @return the name of the relation.
-//	 */
-//	String getName();
-//
-//	/**
-//	 * Gets the access method by its name.
-//	 *
-//	 * @param name the name
-//	 * @return an access method by its name.
-//	 */
-//	AccessMethod getAccessMethod(String name);
+
+	/**
+	 * Gets the name of the relation.
+	 *
+	 * @return the name of the relation.
+	 */
+	String getName();
+
+	/**
+	 * Gets the access method by its name.
+	 *
+	 * @param name the name
+	 * @return an access method by its name.
+	 */
+	AccessMethod getAccessMethod(String name);
 }

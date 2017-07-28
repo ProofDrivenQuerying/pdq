@@ -26,7 +26,6 @@ public class Attribute implements Typed, Serializable {
 	/**  String representation of the object. */
 	protected String toString = null;
 
-
 	protected Attribute(Type type, String name) {
 		Assert.assertNotNull(type);
 		Assert.assertNotNull(name);

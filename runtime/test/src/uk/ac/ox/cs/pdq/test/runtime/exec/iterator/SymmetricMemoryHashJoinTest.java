@@ -15,12 +15,12 @@ import org.mockito.MockitoAnnotations;
 import uk.ac.ox.cs.pdq.algebra.predicates.AttributeEqualityPredicate;
 import uk.ac.ox.cs.pdq.algebra.predicates.ConjunctivePredicate;
 import uk.ac.ox.cs.pdq.algebra.predicates.Predicate;
+import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
+import uk.ac.ox.cs.pdq.datasources.utility.TupleType;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.EmptyIterator;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.MemoryScan;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.SymmetricMemoryHashJoin;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator;
-import uk.ac.ox.cs.pdq.util.Tuple;
-import uk.ac.ox.cs.pdq.util.TupleType;
 
 import com.google.common.collect.Lists;
 

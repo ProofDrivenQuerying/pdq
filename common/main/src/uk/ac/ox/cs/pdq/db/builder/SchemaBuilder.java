@@ -118,7 +118,7 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	 * @param view the view
 	 */
 	private void ensureViewDefinition(View view) {
-		LinearGuarded d = view.getDependency();
+		LinearGuarded d = view.getViewToRelationDependency();
 		LinearGuarded t = this.findViewDependency(view);
 		if (d != null) {
 			TGD inverse = TGD.create(d.getHead() instanceof QuantifiedFormula ? d.getHead().getChild(0) : d.getHead(), d.getBody());
@@ -131,7 +131,7 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 			}
 		} else {
 			if (t != null) {
-				view.setDependency(t);
+				view.setViewToRelationDependency(t);
 				TGD inverse = TGD.create(t.getHead() instanceof QuantifiedFormula ? t.getHead().getChild(0) : t.getHead(), t.getBody());
 				TGD i = this.findDependency(inverse);
 				if (i == null) {

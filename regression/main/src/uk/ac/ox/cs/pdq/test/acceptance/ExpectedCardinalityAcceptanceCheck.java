@@ -3,7 +3,7 @@ package uk.ac.ox.cs.pdq.test.acceptance;
 import static uk.ac.ox.cs.pdq.test.acceptance.AcceptanceCriterion.AcceptanceLevels.FAIL;
 import static uk.ac.ox.cs.pdq.test.acceptance.AcceptanceCriterion.AcceptanceLevels.PASS;
 
-import uk.ac.ox.cs.pdq.datasources.Result;
+import uk.ac.ox.cs.pdq.datasources.utility.Result;
 
 // TODO: Auto-generated Javadoc
 /**
