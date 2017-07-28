@@ -51,14 +51,12 @@ class TupleTypeImpl implements TupleType {
 	 * @return an array of Class corresponding to the given list of typed objects.
 	 */
 	private static Type[] toClassArray(List<? extends Typed> items) {
-		if (items == null) {
+		if (items == null) 
 			return null;
-		}
 		Type[] result = new Type[items.size()];
 		int i = 0;
-		for (Typed a : items) {
+		for (Typed a : items) 
 			result[i++] = a.getType();
-		}
 		return result;
 	}
 

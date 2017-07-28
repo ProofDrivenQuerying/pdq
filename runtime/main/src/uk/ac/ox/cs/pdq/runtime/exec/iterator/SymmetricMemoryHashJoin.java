@@ -69,7 +69,7 @@ public class SymmetricMemoryHashJoin extends Join {
 	 * @param right TupleIterator
 	 */
 	public SymmetricMemoryHashJoin(TupleIterator left, TupleIterator right) {
-		this(inferNaturalJoin(toList(left, right)), 
+		this(createNaturalJoinConditions(toList(left, right)), 
 			inferInputColumns(toList(left, right)), left, right);
 	}
 
@@ -94,7 +94,7 @@ public class SymmetricMemoryHashJoin extends Join {
 	 */
 	public SymmetricMemoryHashJoin(
 			List<Typed> inputs, TupleIterator left, TupleIterator right) {
-		this(inferNaturalJoin(toList(left, right)), inputs, left, right);
+		this(createNaturalJoinConditions(toList(left, right)), inputs, left, right);
 	}
 
 	/**

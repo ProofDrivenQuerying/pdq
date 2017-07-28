@@ -110,15 +110,15 @@ public class InMemoryQueryEvaluator implements QueryEvaluator {
 	/**
 	 * Make physical plan.
 	 *
-	 * @param q the q
+	 * @param query the q
 	 * @return a physical plan as a tuple iterator.
 	 * @throws EvaluationException if the statement could not be generated.
 	 */
-	private TupleIterator makePhysicalPlan(ConjunctiveQuery q) throws EvaluationException {
+	private TupleIterator makePhysicalPlan(ConjunctiveQuery query) throws EvaluationException {
 		
 		Map<Variable, Set<Atom>> joins = new LinkedHashMap<>();
 		Map<Atom, TupleIterator> scans = new LinkedHashMap<>();
-		for (Atom p: q.getAtoms()) {
+		for (Atom p: query.getAtoms()) {
 			scans.put(p, this.makeScans(p));
 			for (Term t: p.getTerms()) {
 				if (t instanceof Variable) {
@@ -132,11 +132,11 @@ public class InMemoryQueryEvaluator implements QueryEvaluator {
 			}
 		}
 		TupleIterator result = this.makeJoins(scans, new LinkedList<>(joins.values()));
-		if (q.isBoolean()) {
+		if (query.isBoolean()) {
 			result = new IsEmpty(result);
 		} else {
-			TupleType type = Utility.getTupleType(q);
-			result = new Projection(RuntimeUtilities.variablesToTyped(q.getFreeVariables(),  type), result);
+			TupleType type = RuntimeUtilities.getTupleType(query);
+			result = new Projection(RuntimeUtilities.variablesToTyped(query.getFreeVariables(),  type), result);
 		}
 		return result;
 	}

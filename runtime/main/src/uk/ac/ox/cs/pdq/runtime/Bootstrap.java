@@ -15,6 +15,7 @@ import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.io.xml.QueryReader;
 import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
+import uk.ac.ox.cs.pdq.runtime.io.DataReader;
 import uk.ac.ox.cs.pdq.runtime.util.TupleCounter;
 import uk.ac.ox.cs.pdq.runtime.util.TuplePrinter;
 

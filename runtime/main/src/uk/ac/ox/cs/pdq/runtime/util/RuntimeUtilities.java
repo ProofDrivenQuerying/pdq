@@ -1,5 +1,7 @@
 package uk.ac.ox.cs.pdq.runtime.util;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -7,8 +9,15 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
 import com.google.common.base.Preconditions;
 
+import uk.ac.ox.cs.pdq.algebra.AttributeEqualityCondition;
+import uk.ac.ox.cs.pdq.algebra.Condition;
+import uk.ac.ox.cs.pdq.algebra.ConjunctiveCondition;
+import uk.ac.ox.cs.pdq.algebra.ConstantEqualityCondition;
+import uk.ac.ox.cs.pdq.algebra.SimpleCondition;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
@@ -17,11 +26,15 @@ import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
+import uk.ac.ox.cs.pdq.util.Tuple;
 import uk.ac.ox.cs.pdq.util.TupleType;
 import uk.ac.ox.cs.pdq.util.Typed;
 import uk.ac.ox.cs.pdq.util.Utility;
 
 public class RuntimeUtilities {
+
+	/** The log. */
+	private static Logger log = Logger.getLogger(RuntimeUtilities.class);
 
 	/**
 	 * Converts a list of Term to a list of Typed.
@@ -40,7 +53,7 @@ public class RuntimeUtilities {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * Converts a Term to a Typed.
 	 *
@@ -56,7 +69,7 @@ public class RuntimeUtilities {
 		else 
 			throw new IllegalStateException("Unknown typed object: " + t);
 	}
-	
+
 	/**
 	 * Connected components.
 	 *
@@ -84,7 +97,7 @@ public class RuntimeUtilities {
 		result.add(first);
 		return result;
 	}
-	
+
 	/**
 	 * Converts a list of Term to a list of Typed.
 	 *
@@ -106,14 +119,14 @@ public class RuntimeUtilities {
 	/**
 	 * Generates a list of terms matching the attributes of the input relation.
 	 *
-	 * @param q ConjunctiveQuery
+	 * @param query ConjunctiveQuery
 	 * @return List<Attribute>
 	 */
-	public static List<Attribute> termsToAttributes(ConjunctiveQuery q) {
+	public static List<Attribute> termsToAttributes(ConjunctiveQuery query) {
 		List<Attribute> result = new ArrayList<>();
-		for (Variable t:q.getFreeVariables()) {
+		for (Variable t:query.getFreeVariables()) {
 			boolean found = false;
-			for (Atom p:q.getAtoms()) {
+			for (Atom p:query.getAtoms()) {
 				Predicate s = p.getPredicate();
 				if (s instanceof Relation) {
 					Relation r = (Relation) s;
@@ -132,23 +145,23 @@ public class RuntimeUtilities {
 				}
 			}
 		}
-		assert result.size() == q.getFreeVariables().length : "Could not infer type of projected term in the query";
+		assert result.size() == query.getFreeVariables().length : "Could not infer type of projected term in the query";
 		return result;
 	}
-	
+
 	/**
 	 * Gets the tuple type.
 	 *
-	 * @param q the q
+	 * @param query the q
 	 * @return the tuple type of the input query
 	 */
-	public static TupleType getTupleType(ConjunctiveQuery q) {
-		Type[] result = new Class<?>[q.getFreeVariables().length];
+	public static TupleType getTupleType(ConjunctiveQuery query) {
+		Type[] result = new Class<?>[query.getFreeVariables().length];
 		boolean assigned = false;
 		for (int i = 0, l = result.length; i < l; i++) {
 			assigned = false;
-			Variable t = q.getFreeVariables()[i];
-			for (Atom f: q.getAtoms()) {
+			Variable t = query.getFreeVariables()[i];
+			for (Atom f: query.getAtoms()) {
 				Predicate s = f.getPredicate();
 				if (s instanceof Relation) {
 					List<Integer> pos = Utility.getTermPositions(f, t);
@@ -164,5 +177,57 @@ public class RuntimeUtilities {
 			}
 		}
 		return TupleType.DefaultFactory.create(result);
+	}
+
+	public static boolean isSatisfied(Condition condition, Tuple tuple) {
+		if(condition instanceof AttributeEqualityCondition) {
+			assert tuple.size() > ((AttributeEqualityCondition)condition).getPosition() && 
+			tuple.size() > ((AttributeEqualityCondition)condition).getOther():"Tuple must comply for bound given by the predicate positions";
+			try {
+				Object sourceValue = tuple.getValue(((AttributeEqualityCondition)condition).getPosition());
+				Object targetValue = tuple.getValue(((AttributeEqualityCondition)condition).getOther());
+				if (sourceValue == null) {
+					return tuple.getType().getType(((AttributeEqualityCondition)condition).getPosition())
+							.equals(tuple.getType().getType(((AttributeEqualityCondition)condition).getOther()))
+							&& targetValue == null;
+				}
+				if (sourceValue instanceof Comparable<?> && targetValue instanceof Comparable<?>) {
+					try {
+						Method m = Comparable.class.getMethod("compareTo", Object.class);
+						return ((int) m.invoke(sourceValue, targetValue)) == 0;
+					} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+						log.warn(e.getMessage());
+					}
+				}
+				return sourceValue.equals(targetValue);
+			} catch (Exception e) {
+				log.error(e.getMessage(),e);
+			}
+			return false;
+		}
+		else if(condition instanceof ConstantEqualityCondition) {
+			assert tuple.size() > ((ConstantEqualityCondition)condition).getPosition() : "Tuple must comply for bound given by the predicate positions";
+			Object sourceValue = tuple.getValue(((ConstantEqualityCondition)condition).getPosition());
+			Object targetValue = ((ConstantEqualityCondition)condition).getConstant();
+			if (sourceValue == null) 
+				return targetValue == null;
+			if (sourceValue instanceof Comparable<?> && targetValue instanceof Comparable<?>) {
+				try {
+					Method m = Comparable.class.getMethod("compareTo", Object.class);
+					return ((int) m.invoke(sourceValue, targetValue)) == 0;
+				} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+					log.warn("Problem comparing " + sourceValue + " to " + targetValue + ": " + e);
+				}
+			}
+			return sourceValue.equals(targetValue);
+		}
+		else if(condition instanceof ConjunctiveCondition) {
+			for (SimpleCondition simpleCondition: ((ConjunctiveCondition) condition).getSimpleConditions()) {
+				if (!isSatisfied(simpleCondition,tuple)) 
+					return false;
+			}
+			return true;
+		}
+		throw new RuntimeException("Unknown condition type");
 	}
 }

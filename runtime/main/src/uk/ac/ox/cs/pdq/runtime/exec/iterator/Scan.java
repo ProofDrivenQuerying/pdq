@@ -5,6 +5,7 @@ import java.util.NoSuchElementException;
 import uk.ac.ox.cs.pdq.algebra.Condition;
 import uk.ac.ox.cs.pdq.datasources.RelationAccessWrapper;
 import uk.ac.ox.cs.pdq.datasources.ResetableIterator;
+import uk.ac.ox.cs.pdq.runtime.util.RuntimeUtilities;
 import uk.ac.ox.cs.pdq.util.Tuple;
 import uk.ac.ox.cs.pdq.util.Typed;
 
@@ -41,8 +42,7 @@ public class Scan extends TupleIterator {
 	 * @param filter additional filtering condition
 	 */
 	public Scan(RelationAccessWrapper relation, Condition filter) {
-		super(Lists.<Typed>newArrayList(), 
-				Lists.<Typed>newArrayList(relation.getAttributes()));
+		super(Lists.<Typed>newArrayList(), Lists.<Typed>newArrayList(relation.getAttributes()));
 		this.relation = relation;
 		this.filter = filter;
 	}
@@ -112,7 +112,7 @@ public class Scan extends TupleIterator {
 	private void nextTuple() {
 		while (this.tupleIterator.hasNext()) {
 			this.nextTuple = this.tupleIterator.next();
-			if (this.filter == null || this.filter.isSatisfied(this.nextTuple)) {
+			if (this.filter == null || RuntimeUtilities.isSatisfied(this.filter, this.nextTuple)) {
 				return;
 			}
 		}

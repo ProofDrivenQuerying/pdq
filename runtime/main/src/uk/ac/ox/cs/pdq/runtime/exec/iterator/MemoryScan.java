@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import uk.ac.ox.cs.pdq.algebra.Condition;
+import uk.ac.ox.cs.pdq.runtime.util.RuntimeUtilities;
 import uk.ac.ox.cs.pdq.util.Tuple;
 import uk.ac.ox.cs.pdq.util.TupleType;
 import uk.ac.ox.cs.pdq.util.Typed;
@@ -101,7 +102,7 @@ public class MemoryScan extends TupleIterator {
 	private void nextTuple() {
 		while (this.tupleIterator.hasNext()) {
 			this.nextTuple = this.tupleIterator.next();
-			if (this.filter == null || this.filter.isSatisfied(this.nextTuple)) {
+			if (this.filter == null || RuntimeUtilities.isSatisfied(this.filter, this.nextTuple)) {
 				return;
 			}
 		}

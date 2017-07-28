@@ -21,6 +21,7 @@ import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.LinearGuarded;
+import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.runtime.exec.Middleware;
 import uk.ac.ox.cs.pdq.runtime.exec.PlanExecutor;
@@ -245,7 +246,7 @@ public class Runtime {
 	 * @param values Constant[]
 	 * @return a tuple view of the given collection of terms.
 	 */
-	private static Tuple toTuple(TupleType type, Attribute[] attributes, Constant[] values) {
+	private static Tuple toTuple(TupleType type, Attribute[] attributes, Term[] values) {
 		Preconditions.checkArgument(attributes.length == values.length);
 		Object[] constants = new Object[values.length];
 		for (int i = 0, l = values.length; i < l; i++) {

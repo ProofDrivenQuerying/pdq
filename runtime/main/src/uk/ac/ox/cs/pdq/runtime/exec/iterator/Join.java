@@ -49,7 +49,7 @@ public abstract class Join extends NaryIterator {
 	 * @param children            the children
 	 */
 	protected Join(List<Typed> inputs, TupleIterator... children) {
-		this(inferNaturalJoin(Lists.newArrayList(children)), inputs, Lists.newArrayList(children));
+		this(createNaturalJoinConditions(Lists.newArrayList(children)), inputs, Lists.newArrayList(children));
 	}
 	
 	/**
@@ -59,7 +59,7 @@ public abstract class Join extends NaryIterator {
 	 * @param children            the children
 	 */
 	protected Join(List<Typed> inputs, List<TupleIterator> children) {
-		this(inferNaturalJoin(children), inputs, children);
+		this(createNaturalJoinConditions(children), inputs, children);
 	}
 	
 	/**
@@ -139,7 +139,7 @@ public abstract class Join extends NaryIterator {
 	 * @param children TupleIterator[]
 	 * @return Atom
 	 */
-	protected static Condition inferNaturalJoin(Collection<TupleIterator> children) {
+	protected static Condition createNaturalJoinConditions(Collection<TupleIterator> children) {
 		Map<Typed, SortedSet<Integer>> joinVariables = new LinkedHashMap<>();
 		int totalCol = 0;
 		// Cluster patterns by variables

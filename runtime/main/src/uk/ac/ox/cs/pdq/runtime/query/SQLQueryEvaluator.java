@@ -22,6 +22,7 @@ import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.runtime.EvaluationException;
+import uk.ac.ox.cs.pdq.runtime.util.RuntimeUtilities;
 import uk.ac.ox.cs.pdq.util.Tuple;
 import uk.ac.ox.cs.pdq.util.Typed;
 import uk.ac.ox.cs.pdq.util.Utility;
@@ -171,7 +172,7 @@ public class SQLQueryEvaluator implements QueryEvaluator {
 			throw new EvaluationException(e.getMessage(), e);
 		}
 
-		Table result = new Table(Utility.termsToAttributes(q));
+		Table result = new Table(RuntimeUtilities.termsToAttributes(q));
 		try {
 			if (this.connection.isClosed()) {
 				throw new EvaluationException("Attempting to evalute query on a closed connection.");

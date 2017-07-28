@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import uk.ac.ox.cs.pdq.algebra.Condition;
+import uk.ac.ox.cs.pdq.runtime.util.RuntimeUtilities;
 import uk.ac.ox.cs.pdq.util.Tuple;
 import uk.ac.ox.cs.pdq.util.Typed;
 
@@ -35,7 +36,7 @@ public class NestedLoopJoin extends Join {
 	 *            the children
 	 */
 	public NestedLoopJoin(TupleIterator... children) {
-		this(inferNaturalJoin(toList(children)),
+		this(createNaturalJoinConditions(toList(children)),
 				inferInputColumns(toList(children)), toList(children));
 	}
 
@@ -56,7 +57,7 @@ public class NestedLoopJoin extends Join {
 	 * @param children the children
 	 */
 	public NestedLoopJoin(List<Typed> inputs, TupleIterator... children) {
-		this(inferNaturalJoin(toList(children)), inputs, toList(children));
+		this(createNaturalJoinConditions(toList(children)), inputs, toList(children));
 	}
 
 	/**
@@ -66,7 +67,7 @@ public class NestedLoopJoin extends Join {
 	 * @param children            the children
 	 */
 	public NestedLoopJoin(List<Typed> inputs, List<TupleIterator> children) {
-		this(inferNaturalJoin(children), inputs, children);
+		this(createNaturalJoinConditions(children), inputs, children);
 	}
 
 	/**
@@ -163,7 +164,7 @@ public class NestedLoopJoin extends Join {
 				this.hasNext = false;
 				break;
 			}
-		} while (!this.predicate.isSatisfied(this.nextTuple));
+		} while (!RuntimeUtilities.isSatisfied(this.predicate, this.nextTuple));
 	}
 
 	/**

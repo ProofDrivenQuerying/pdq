@@ -72,7 +72,7 @@ public class BindJoin extends Join {
 	 * @param right TupleIterator
 	 */
 	public BindJoin(TupleIterator left, TupleIterator right) {
-		this(inferNaturalJoin(toList(left, right)), 
+		this(createNaturalJoinConditions(toList(left, right)), 
 			inferInputMappings(left.getColumns(), right.getInputColumns()), 
 			left, right);
 	}

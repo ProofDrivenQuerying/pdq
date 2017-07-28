@@ -63,7 +63,7 @@ public class TopDownAccess extends TupleIterator {
 	 * @param accessMethod AccessMethod
 	 */
 	public TopDownAccess(RelationAccessWrapper relation, AccessMethod accessMethod) {
-		this(relation, accessMethod, ImmutableMap.<Integer, TypedConstant<?>>of());
+		this(relation, accessMethod, ImmutableMap.<Integer, TypedConstant>of());
 	}
 
 	/**
@@ -320,7 +320,7 @@ public class TopDownAccess extends TupleIterator {
 	 *
 	 * @return the static inputs
 	 */
-	public Map<Integer, TypedConstant<?>> getStaticInputs() {
+	public Map<Integer, TypedConstant> getStaticInputs() {
 		return this.staticInputs;
 	}
 
