@@ -173,7 +173,7 @@ public class LinearKChase extends LinearExplorer {
 			log.debug("Number of partially generated leaves " + leaves.size());
 			this.stats.start(MILLI_CLOSE);
 			for(SearchNode leaf:leaves) {
-				leaf.close(this.chaser, this.accessibleQuery, this.accessibleSchema.getInferredAccessibilityAxioms());
+				leaf.close(this.chaser, this.accessibleSchema.getInferredAccessibilityAxioms());
 				log.debug("Close leaf: " + leaf);
 			}	
 			this.stats.stop(MILLI_CLOSE);

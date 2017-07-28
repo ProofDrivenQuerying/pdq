@@ -108,7 +108,7 @@ public class LinearGeneric extends LinearExplorer {
 		freshNode.getConfiguration().setCost(cost);
 		
 		this.stats.start(MILLI_CLOSE);
-		freshNode.close(this.chaser, this.accessibleQuery, this.accessibleSchema.getInferredAccessibilityAxioms());
+		freshNode.close(this.chaser, this.accessibleSchema.getInferredAccessibilityAxioms());
 		this.stats.stop(MILLI_CLOSE);
 		
 		this.planTree.addVertex(freshNode);

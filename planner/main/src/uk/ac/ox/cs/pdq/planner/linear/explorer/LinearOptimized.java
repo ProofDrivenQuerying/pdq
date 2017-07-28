@@ -247,7 +247,7 @@ public class LinearOptimized extends LinearExplorer {
 
 		// Close the newly created node using the inferred accessible dependencies of the accessible schema
 		this.stats.start(MILLI_CLOSE);
-		freshNode.close(this.chaser, this.accessibleQuery, this.accessibleSchema.getInferredAccessibilityAxioms());
+		freshNode.close(this.chaser, this.accessibleSchema.getInferredAccessibilityAxioms());
 		this.stats.stop(MILLI_CLOSE);
 
 		if (domination) {

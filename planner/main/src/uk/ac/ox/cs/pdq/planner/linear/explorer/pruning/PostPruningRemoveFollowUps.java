@@ -95,7 +95,7 @@ public final class PostPruningRemoveFollowUps extends PostPruning {
 						freshNode = this.nodeFactory.getInstance(root, Sets.newHashSet(alreadyExposed));
 					freshNode.setStatus(NodeStatus.TERMINAL);
 					//Find the consequences of the newly created node
-					freshNode.close(this.chaser, this.query, this.accessibleSchema.getAccessibilityAxioms());
+					freshNode.close(this.chaser, this.accessibleSchema.getAccessibilityAxioms());
 					this.path.add(freshNode);
 					nodeIds.add(freshNode.getId());
 				}
