@@ -4,10 +4,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
+import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -164,7 +166,9 @@ public class Bootstrap {
 
 			Schema schema = new SchemaReader().read(sis);
 			ConjunctiveQuery query = new QueryReader(schema).read(qis);
-			RelationalTerm plan = null;
+//			RelationalTerm plan = null;
+//			Cost cost = null;
+			Entry<RelationalTerm, Cost> entry = null;
 			try(ProgressLogger pLog = new SimpleProgressLogger(System.out)) {
 				ExplorationSetUp planner = new ExplorationSetUp(planParams, costParams, reasoningParams, dbParams, schema);
 				if (verbose) {
@@ -173,10 +177,10 @@ public class Bootstrap {
 									pLog, planParams.getLogIntervals(),
 									planParams.getShortLogIntervals()));
 				}
-				plan = planner.search(query);
+				entry = planner.search(query);
 			}
-			if (plan != null) {
-				System.out.println(plan);
+			if (entry != null) {
+				System.out.println(entry.getKey());
 				return;
 			} 
 			log.trace("No plan found.");

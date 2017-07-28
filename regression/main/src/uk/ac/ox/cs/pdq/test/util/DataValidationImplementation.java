@@ -4,9 +4,10 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
-import jersey.repackaged.com.google.common.collect.Lists;
+import com.google.common.base.Preconditions;
+
+import uk.ac.ox.cs.pdq.datasources.RelationAccessWrapper;
 import uk.ac.ox.cs.pdq.datasources.Table;
-import uk.ac.ox.cs.pdq.datasources.memory.RelationAccessWrapper;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -19,8 +20,6 @@ import uk.ac.ox.cs.pdq.reasoning.chase.state.TriggerProperty;
 import uk.ac.ox.cs.pdq.runtime.exec.AccessException;
 import uk.ac.ox.cs.pdq.util.Tuple;
 import uk.ac.ox.cs.pdq.util.Utility;
-
-import com.google.common.base.Preconditions;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -38,7 +37,7 @@ public final class DataValidationImplementation extends DataValidation{
 	private final ChaseInstance manager;
 	
 	/** The ics. */
-	private final List<Dependency> ics;
+	private final Dependency[] dependencies;
 
 	/**
 	 * Constructor for DataValidationImplementation.
@@ -48,9 +47,9 @@ public final class DataValidationImplementation extends DataValidation{
 	public DataValidationImplementation(Schema schema, ChaseInstance manager) {
 		super(schema);
 		this.manager = manager;
-		this.ics = schema.getDependencies();
+		this.dependencies = schema.getDependencies();
 		Preconditions.checkArgument(this.manager != null);
-		Preconditions.checkArgument(this.ics != null);
+		Preconditions.checkArgument(this.dependencies != null);
 	}
 
 	/**
@@ -63,7 +62,7 @@ public final class DataValidationImplementation extends DataValidation{
 	@Override
 	public Boolean validate() throws AccessException, PlannerException {
 		this.save();
-		for(Dependency ic: this.ics) {
+		for(Dependency ic: this.dependencies) {
 			this.validate(ic);
 		}
 		return true;
@@ -108,14 +107,14 @@ public final class DataValidationImplementation extends DataValidation{
 	 */
 	private void validate(Dependency constraint) throws PlannerException, AccessException {
 		// Checks if the there exists at least one set of facts that satisfies the left-hand side of the input dependency
-		List<Match> matchings = this.manager.getTriggers(Lists.newArrayList(constraint),TriggerProperty.ACTIVE,null);
+		List<Match> matchings = this.manager.getTriggers(new Dependency[]{constraint}, TriggerProperty.ACTIVE, null);
 		if (!matchings.isEmpty()) {
 			/*
 			 * For each set of facts F1 that satisfy the left-hand side of the input dependency check whether or not 
 			 * there exists another set of facts F2 that satisfies the right-hand side of the input dependency w.r.t F1 
 			 */
-			for (Match m: matchings) {
-				List<Match> subMatchings = this.manager.getTriggers(Lists.newArrayList(this.invert(constraint)),TriggerProperty.ACTIVE,null);//, HomomorphismProperty.createMapProperty(m.getMapping()));
+			for (Match match: matchings) {
+				List<Match> subMatchings = this.manager.getTriggers(new Dependency[]{this.invert(constraint)},TriggerProperty.ACTIVE,null);//, HomomorphismProperty.createMapProperty(m.getMapping()));
 				if (subMatchings.isEmpty()) {
 					throw new java.lang.IllegalArgumentException("Data does not satisfy constraint " + constraint.toString() );
 				}
@@ -129,8 +128,8 @@ public final class DataValidationImplementation extends DataValidation{
 	 * @param ic Constraint
 	 * @return Constraint
 	 */
-	private static Dependency invert(Dependency ic) {
-		return new TGD(ic.getHead(), ic.getHead());
+	private Dependency invert(Dependency ic) {
+		return TGD.create(ic.getHead(), ic.getBody());
 	}
 
 }

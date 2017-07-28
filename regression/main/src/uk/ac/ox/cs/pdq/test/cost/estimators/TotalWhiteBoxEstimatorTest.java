@@ -2,24 +2,24 @@ package uk.ac.ox.cs.pdq.test.cost.estimators;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.Map.Entry;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import uk.ac.ox.cs.pdq.cost.CostParameters.CardinalityEstimationTypes;
-import uk.ac.ox.cs.pdq.cost.CostParameters.CostTypes;
+import com.google.common.eventbus.EventBus;
+
+import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
+import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.estimators.CardinalityEstimator;
-import uk.ac.ox.cs.pdq.cost.estimators.CardinalityEstimatorFactory;
+import uk.ac.ox.cs.pdq.cost.estimators.NaiveCardinalityEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.WhiteBoxCostEstimator;
+import uk.ac.ox.cs.pdq.cost.statistics.Catalog;
+import uk.ac.ox.cs.pdq.cost.statistics.SimpleCatalog;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
 import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
-import uk.ac.ox.cs.pdq.plan.DAGPlan;
-import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
-import uk.ac.ox.cs.pdq.plan.Plan;
-
-import com.google.common.eventbus.EventBus;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -31,16 +31,19 @@ public class TotalWhiteBoxEstimatorTest extends CostEstimatorTest{
 
 	/** The event bus. */
 	private EventBus eventBus = new EventBus();
-	
+
 	/** The shema path. */
 	private static String SHEMA_PATH = "test/cost/";
-	
+
 	/** The plan path. */
 	private static String PLAN_PATH = "test/cost/blackbox/";
 	
+	/** The catalog. */
+	private static String CATALOG = "test/cost/erspi/catalog/catalog.properties";
+
 	/** The schemata. */
 	String schemata = "schema_bio.xml";
-	
+
 	/** The plans. */
 	String[] plans = {
 			"plan_bio_1.xml",
@@ -58,23 +61,23 @@ public class TotalWhiteBoxEstimatorTest extends CostEstimatorTest{
 			"plan_bio_13.xml",
 			"plan_bio_14.xml",
 			"plan_bio_15.xml"
-			};
-	
+	};
+
 	/** The canonical names. */
 	boolean canonicalNames = true;
-	
+
 	/** The driver. */
 	String driver = null;
-	
+
 	/** The url. */
 	String url = "jdbc:mysql://localhost/";
-	
+
 	/** The database. */
 	String database = "pdq_chase";
-	
+
 	/** The username. */
 	String username = "root";
-	
+
 	/** The password. */
 	String password ="root";
 
@@ -97,25 +100,16 @@ public class TotalWhiteBoxEstimatorTest extends CostEstimatorTest{
 			String f = this.plans[i];
 
 			try(FileInputStream sis = new FileInputStream(SHEMA_PATH + s)) {
-
 				Schema schema = new SchemaReader().read(sis);
-				if (schema == null) {
+				if (schema == null) 
 					throw new IllegalStateException("Schema must be provided.");
-				}
-				Plan plan = this.obtainPlan(PLAN_PATH + f, schema);
-
-				CardinalityEstimator card = CardinalityEstimatorFactory.getInstance(CostTypes.BLACKBOX, CardinalityEstimationTypes.NAIVE, schema);
-
+				
+				Entry<RelationalTerm, Cost> plan = this.obtainPlan(PLAN_PATH + f, schema);
+				Catalog catalog = new SimpleCatalog(schema, CATALOG);
+				CardinalityEstimator card = new NaiveCardinalityEstimator(catalog);
 				WhiteBoxCostEstimator costEstimator = null;
-				if(plan instanceof DAGPlan) {
-					costEstimator = new WhiteBoxCostEstimator<DAGPlan>(new StatisticsCollector(false, this.eventBus), card);
-				}
-				else {
-					costEstimator = new WhiteBoxCostEstimator<LeftDeepPlan>(new StatisticsCollector(false, this.eventBus), card);
-				}
-			
-				Assert.assertEquals(plan.getCost(), costEstimator.estimateCost(plan));
-
+				costEstimator = new WhiteBoxCostEstimator(new StatisticsCollector(false, this.eventBus), card, catalog);
+				Assert.assertEquals(plan.getValue(), costEstimator.cost(plan.getKey()));
 			} catch (FileNotFoundException e) {
 				System.out.println("Cannot find input files");
 			} catch (Exception e) {

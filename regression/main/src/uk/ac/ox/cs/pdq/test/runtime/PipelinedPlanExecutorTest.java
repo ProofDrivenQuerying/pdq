@@ -5,16 +5,17 @@ import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Map.Entry;
 
 import org.junit.Test;
 
+import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
+import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.datasources.Result;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.io.xml.DAGPlanReader;
 import uk.ac.ox.cs.pdq.io.xml.QueryReader;
 import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
-import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.runtime.EvaluationException;
 import uk.ac.ox.cs.pdq.runtime.RuntimeParameters;
 import uk.ac.ox.cs.pdq.runtime.RuntimeParameters.ExecutorTypes;
@@ -103,12 +104,12 @@ public class PipelinedPlanExecutorTest {
 
 				schema.addConstants(Utility.getTypedConstants(query));
 
-				Plan plan = readPlan(PATH + p, schema, query);
+				Entry<RelationalTerm, Cost> plan = readPlan(PATH + p, schema, query);
 
 				RuntimeParameters runtimeParams = new RuntimeParameters();
 				runtimeParams.setExecutorType(ExecutorTypes.PIPELINED);
 
-				Result caching = this.evaluatePlan(runtimeParams, plan, query, ExecutionModes.DEFAULT);
+				Result caching = this.evaluatePlan(runtimeParams, plan.getKey(), query, ExecutionModes.DEFAULT);
 				assert(caching.size()==this.tuples[i]);
 
 			} catch (FileNotFoundException e) {
@@ -135,7 +136,7 @@ public class PipelinedPlanExecutorTest {
 	 * @param query Query
 	 * @return Plan
 	 */
-	private Plan readPlan(String plan, Schema schema, ConjunctiveQuery query) {
+	private Entry<RelationalTerm,Cost> readPlan(String plan, Schema schema, ConjunctiveQuery query) {
 		try(FileInputStream pis = new FileInputStream(plan);
 				BufferedInputStream bis = new BufferedInputStream(pis)) {
 			return new DAGPlanReader(schema).read(bis); 
@@ -154,7 +155,7 @@ public class PipelinedPlanExecutorTest {
 	 * @return the result of the plan evaluation.
 	 * @throws EvaluationException the evaluation exception
 	 */
-	private Result evaluatePlan(RuntimeParameters runtimeParams, Plan p, ConjunctiveQuery query, ExecutionModes mode)
+	private Result evaluatePlan(RuntimeParameters runtimeParams, RelationalTerm p, ConjunctiveQuery query, ExecutionModes mode)
 			throws EvaluationException {
 		//this.eventBus.register(new TuplePrinterTest(System.out));
 		PlanExecutor executor = Middleware.newExecutor(runtimeParams, p, query);

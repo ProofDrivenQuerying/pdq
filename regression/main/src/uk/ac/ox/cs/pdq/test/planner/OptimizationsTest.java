@@ -4,9 +4,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
 
+import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
+import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -15,7 +18,6 @@ import uk.ac.ox.cs.pdq.io.xml.QueryReader;
 import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
 import uk.ac.ox.cs.pdq.logging.ProgressLogger;
 import uk.ac.ox.cs.pdq.logging.SimpleProgressLogger;
-import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.planner.ExplorationSetUp;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.PlannerTypes;
@@ -108,7 +110,8 @@ public class OptimizationsTest extends RegressionTest {
 				return true;
 			}
 
-			Plan plan1, plan2;
+			Entry<RelationalTerm, Cost> plan1;
+			Entry<RelationalTerm, Cost> plan2;
 			try(ProgressLogger pLog = new SimpleProgressLogger(this.out)) {
 				planParams.setPlannerType(PlannerTypes.LINEAR_GENERIC);
 				ExplorationSetUp planner1 = new ExplorationSetUp(planParams, costParams, reasoningParams, dbParams, schema);
@@ -133,14 +136,14 @@ public class OptimizationsTest extends RegressionTest {
 			}
 
 			else {
-				switch (plan1.howDifferent(plan2)) {
+				switch (PlannerTestUtilities.howDifferent(plan1.getKey(), plan1.getValue(), plan2.getKey(), plan2.getValue())) {
 				case IDENTICAL:
 					this.out.println("PASS: " + directory.getAbsolutePath());
 					break;
 				case EQUIVALENT:
 					this.out.println("PASS: Results differ, but are equivalent - "
 							+ directory.getAbsolutePath());
-					this.out.println("\tdiff: " + plan1.diff(plan2));
+					this.out.println("\tdiff: " + PlannerTestUtilities.diff(plan1.getKey(), plan1.getValue(), plan2.getKey(), plan2.getValue()));
 					break;
 				default:
 					this.out.println("FAIL: " + directory.getAbsolutePath());

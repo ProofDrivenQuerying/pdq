@@ -8,24 +8,23 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.InconsistentParametersException;
 import uk.ac.ox.cs.pdq.LimitReachedException;
 import uk.ac.ox.cs.pdq.LimitReachedException.Reasons;
+import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
+import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.io.xml.DAGPlanReader;
-import uk.ac.ox.cs.pdq.io.xml.LeftDeepPlanReader;
-import uk.ac.ox.cs.pdq.io.xml.PlanWriter;
 import uk.ac.ox.cs.pdq.io.xml.QueryReader;
 import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
 import uk.ac.ox.cs.pdq.logging.ProgressLogger;
 import uk.ac.ox.cs.pdq.logging.SimpleProgressLogger;
-import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.planner.ExplorationSetUp;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
@@ -167,14 +166,14 @@ public class PlannerTest extends RegressionTest {
 				
 				Schema schema = new SchemaReader().read(sis);
 				ConjunctiveQuery query = new QueryReader(schema).read(qis);
-				Plan expectedPlan = obtainPlan(directory, schema, query);
+				Entry<RelationalTerm, Cost> expectedPlan = obtainPlan(directory, schema, query);
 				if (schema == null || query == null) {
 					throw new RegressionTestException(
 							"Schema and query must be provided for each regression test. "
 									+ "(schema:" + schema + ", query: " + query + ", plan: " + expectedPlan + ")");
 				}
 
-				Plan observedPlan = null;
+				Entry<RelationalTerm, Cost> observedPlan = null;
 				try(ProgressLogger pLog = new SimpleProgressLogger(this.out)) {
 					ExplorationSetUp planner = new ExplorationSetUp(plannerParams, costParams, reasoningParams, dbParams, schema);
 					planner.registerEventHandler(
@@ -185,13 +184,13 @@ public class PlannerTest extends RegressionTest {
 				} catch (LimitReachedException lre) {
 					log.warn(lre);
 				}
-				AcceptanceCriterion<Plan, Plan> acceptance = acceptance(plannerParams, costParams);
+				AcceptanceCriterion<Entry<RelationalTerm, Cost>, Entry<RelationalTerm, Cost>> acceptance = acceptance(plannerParams, costParams);
 				this.out.print("Using " + acceptance.getClass().getSimpleName() + ": ");
 				acceptance.check(expectedPlan, observedPlan).report(this.out);
 
 				if (observedPlan != null
-						&& (expectedPlan == null || expectedPlan.getCost().greaterThan(observedPlan.getCost())) ) {
-					this.out.print("\twriting plan: " + observedPlan + " " + observedPlan.getCost());
+						&& (expectedPlan == null || expectedPlan.getValue().greaterThan(observedPlan.getValue())) ) {
+					this.out.print("\twriting plan: " + observedPlan + " " + observedPlan.getValue());
 					try (PrintStream o = new PrintStream(directory.getAbsolutePath() + '/' + PLAN_FILE)) {
 						PlanWriter.to(o).write(observedPlan);
 					}
@@ -255,7 +254,7 @@ public class PlannerTest extends RegressionTest {
 		 * @param query Query
 		 * @return Plan
 		 */
-		private Plan obtainPlan(File directory, Schema schema, ConjunctiveQuery query) {
+		private Entry<RelationalTerm,Cost> obtainPlan(File directory, Schema schema, ConjunctiveQuery query) {
 			try(FileInputStream pis = new FileInputStream(directory.getAbsolutePath() + '/' + PLAN_FILE);
 					BufferedInputStream bis = new BufferedInputStream(pis)) {
 				try {
@@ -263,17 +262,6 @@ public class PlannerTest extends RegressionTest {
 					return new LeftDeepPlanReader(schema).read(bis); 
 				} catch (Exception re) {
 					bis.reset();
-				}
-			} catch (IOException e) {
-			}
-			try(FileInputStream pis = new FileInputStream(directory.getAbsolutePath() + '/' + PLAN_FILE);
-					BufferedInputStream bis = new BufferedInputStream(pis)) {
-				try {
-					bis.mark(1024);
-					return new DAGPlanReader(schema).read(bis); 
-				} catch (Exception re) {
-					bis.reset();
-					log.error(re);
 				}
 			} catch (IOException e) {
 			}
@@ -287,7 +275,7 @@ public class PlannerTest extends RegressionTest {
 		 * @param cost the cost
 		 * @return a acceptance matching the given parameters
 		 */
-		private static AcceptanceCriterion<Plan, Plan> acceptance(
+		private static AcceptanceCriterion<Entry<RelationalTerm, Cost>, Entry<RelationalTerm, Cost>> acceptance(
 				PlannerParameters params, CostParameters cost) {
 			switch (params.getPlannerType()) {
 			case DAG_CHASEFRIENDLYDP:
@@ -343,10 +331,6 @@ public class PlannerTest extends RegressionTest {
 			try(FileInputStream sis = new FileInputStream(directory.getAbsolutePath() + '/' + SCHEMA_FILE);
 					FileInputStream qis = new FileInputStream(directory.getAbsolutePath() + '/' + QUERY_FILE)) {
 				this.out.println("\nStarting case '" + directory.getAbsolutePath() + "'");
-				PlannerParameters plannerParams = new PlannerParameters(
-						new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE), true);
-				CostParameters costParams = new CostParameters(
-						new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE), true);
 				Schema schema = new SchemaReader().read(sis);
 				ConjunctiveQuery query = new QueryReader(schema).read(qis);
 				if (schema == null || query == null) {
@@ -388,7 +372,7 @@ public class PlannerTest extends RegressionTest {
 					throw new RegressionTestException("Schema and query must be provided for each regression test. (schema:" + schema + ", query: " + query + ")");
 				}
 
-				Plan plan = null;
+				Entry<RelationalTerm, Cost> plan = null;
 				try(ProgressLogger pLog = new SimpleProgressLogger(this.out)) {
 					ExplorationSetUp planner = new ExplorationSetUp(plannerParams, costParams, reasoningParams, dbParams, schema);
 					planner.registerEventHandler(new IntervalEventDrivenLogger(pLog, plannerParams.getLogIntervals(), plannerParams.getShortLogIntervals()));
@@ -397,7 +381,7 @@ public class PlannerTest extends RegressionTest {
 					log.warn(lre);
 				}
 				if (plan != null) {
-					this.out.print("\twriting plan: " + plan + " " + plan.getCost());
+					this.out.print("\twriting plan: " + plan + " " + plan.getValue());
 					try (PrintStream o = new PrintStream(directory.getAbsolutePath() + '/' + PLAN_FILE)) {
 						PlanWriter.to(o).write(plan);
 					}

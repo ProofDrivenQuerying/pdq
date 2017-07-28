@@ -860,7 +860,6 @@ public class PlannerParameters extends Parameters {
 		/** The linear validator. */
 		@EnumParameterValue(description = "Requires the input pair of configurations to be non trivial and their composition to be a closed left-deep configuration")
 		LINEAR_VALIDATOR,
-		
 	}
 
 	/**

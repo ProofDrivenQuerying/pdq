@@ -4,9 +4,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
 
+import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
+import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.cost.CostParameters.CostTypes;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
@@ -16,7 +19,6 @@ import uk.ac.ox.cs.pdq.io.xml.QueryReader;
 import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
 import uk.ac.ox.cs.pdq.logging.ProgressLogger;
 import uk.ac.ox.cs.pdq.logging.SimpleProgressLogger;
-import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.planner.ExplorationSetUp;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.logging.IntervalEventDrivenLogger;
@@ -106,7 +108,8 @@ public class PlannerCostFunctionTest extends RegressionTest {
 				return true;
 			}
 
-			Plan plan1, plan2;
+			Entry<RelationalTerm, Cost> plan1;
+			Entry<RelationalTerm, Cost> plan2;
 			try (ProgressLogger pLog = new SimpleProgressLogger(this.out)) {
 				costParams.setCostType(CostTypes.SIMPLE_CONSTANT);
 				ExplorationSetUp planner1 = new ExplorationSetUp(planParams, costParams, reasoningParams,dbParams, schema);
@@ -122,11 +125,10 @@ public class PlannerCostFunctionTest extends RegressionTest {
 
 			if (plan1 == null && plan2 == null) {
 				this.out.println("PASS: " + directory.getAbsolutePath());
-			} else if ((plan1 != null && plan2 == null)
-					|| (plan1 == null && plan2 != null)) {
+			} else if ((plan1 != null && plan2 == null) || (plan1 == null && plan2 != null)) {
 				this.out.println("FAIL: " + directory.getAbsolutePath());
-				this.out.println("\tPlan returned by simple cost: " + plan1);
-				this.out.println("\tPlan returned by black box: " + plan2);
+				this.out.println("\tPlan returned by simple cost: " + plan1.getKey());
+				this.out.println("\tPlan returned by black box: " + plan2.getKey());
 			}
 
 			else {
@@ -136,12 +138,10 @@ public class PlannerCostFunctionTest extends RegressionTest {
 
 		} catch (FileNotFoundException e) {
 			log.debug(e);
-			this.out.println("Skipping '" + directory.getAbsolutePath()
-					+ "' (not a case directory)");
+			this.out.println("Skipping '" + directory.getAbsolutePath() + "' (not a case directory)");
 		} catch (Exception e) {
 			this.out.println("\tFAIL: " + directory.getAbsolutePath());
-			this.out.println("\texception thrown: "
-					+ e.getClass().getSimpleName() + " " + e.getMessage());
+			this.out.println("\texception thrown: " + e.getClass().getSimpleName() + " " + e.getMessage());
 			e.printStackTrace(this.out);
 			return false;
 		}

@@ -19,11 +19,11 @@ public interface AcceptanceCriterion<Expected, Observed> {
 	 * The Enum AcceptanceLevels.
 	 */
 	enum AcceptanceLevels { 
- /** The pass. */
- PASS, 
- /** The fail. */
- FAIL }
-	
+		/** The pass. */
+		PASS, 
+		/** The fail. */
+		FAIL }
+
 	/**
 	 * The result of an acceptance criterion check. 
 	 * It consists of an acceptance level and supporting information as a list 
@@ -32,13 +32,13 @@ public interface AcceptanceCriterion<Expected, Observed> {
 	 * @author Julien Leblay
 	 */
 	static class AcceptanceResult {
-		
+
 		/** The level. */
 		private final AcceptanceLevels level;
-		
+
 		/** The supporting info. */
 		private final List<String> supportingInfo;
-		
+
 		/**
 		 * Default constructor .
 		 *
@@ -49,7 +49,7 @@ public interface AcceptanceCriterion<Expected, Observed> {
 			this.level = level;
 			this.supportingInfo = ImmutableList.copyOf(supportingInfo);
 		}
-		
+
 		/**
 		 * Prints a report of the acceptance result to the given output stream.
 		 *
@@ -61,7 +61,7 @@ public interface AcceptanceCriterion<Expected, Observed> {
 				out.println("\t" + reason);
 			}
 		}
-		
+
 		/**
 		 * Gets the level.
 		 *
@@ -71,7 +71,7 @@ public interface AcceptanceCriterion<Expected, Observed> {
 			return this.level;
 		}
 	}
-	
+
 	/**
 	 * Check.
 	 *

@@ -4,9 +4,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
 
+import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
+import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -15,7 +18,6 @@ import uk.ac.ox.cs.pdq.io.xml.QueryReader;
 import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
 import uk.ac.ox.cs.pdq.logging.ProgressLogger;
 import uk.ac.ox.cs.pdq.logging.SimpleProgressLogger;
-import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.planner.ExplorationSetUp;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.PlannerTypes;
@@ -96,10 +98,10 @@ public class DAGExplorersTest extends RegressionTest {
 
 			// Loading schema
 			Schema schema = new SchemaReader().read(sis);
-			PlannerParameters planParams = new PlannerParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
+			PlannerParameters plannerParams = new PlannerParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
 			CostParameters costParams = new CostParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
 			ReasoningParameters reasoningParams = new ReasoningParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
-			DatabaseParameters dbParams = new DatabaseParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
+			DatabaseParameters databaseParams = new DatabaseParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
 
 			// Loading query
 			ConjunctiveQuery query = new QueryReader(schema).read(qis);
@@ -108,36 +110,37 @@ public class DAGExplorersTest extends RegressionTest {
 				return true;
 			}
 
-			Plan plan = null;
+			RelationalTerm plan = null;
+			Cost cost = null;
 			PlannerTypes masterType = null;
 			for (PlannerTypes type: PlannerTypes.values()) {
 				if (type.toString().startsWith("DAG")) {
 					try (ProgressLogger pLog = new SimpleProgressLogger(this.out)) {
-						planParams.setPlannerType(type);
-						ExplorationSetUp planner1 = new ExplorationSetUp(planParams, costParams, reasoningParams, dbParams, schema);
-						planner1.registerEventHandler(new IntervalEventDrivenLogger(pLog, planParams.getLogIntervals(), planParams.getShortLogIntervals()));
-						Plan p = planner1.search(query);
+						plannerParams.setPlannerType(type);
+						ExplorationSetUp planner1 = new ExplorationSetUp(plannerParams, costParams, reasoningParams, databaseParams, schema);
+						planner1.registerEventHandler(new IntervalEventDrivenLogger(pLog, plannerParams.getLogIntervals(), plannerParams.getShortLogIntervals()));
+						Entry<RelationalTerm, Cost> entry = planner1.search(query);
 						if (plan == null) {
 							masterType = type;
-							plan = p;
+							plan = entry.getKey();
+							cost = entry.getValue();
 						} else {
 							this.out.println("\nComparing " + masterType + " with " + type);
-							switch (plan.howDifferent(p)) {
+							switch (PlannerTestUtilities.howDifferent(plan, cost, entry.getKey(), entry.getValue())) {
 							case IDENTICAL:
 								this.out.println("PASS: " + directory.getAbsolutePath());
 								break;
 							case EQUIVALENT:
 								this.out.println("PASS: Results differ, but are equivalent - "
 										+ directory.getAbsolutePath());
-								this.out.println("\tdiff: " + plan.diff(p));
+								this.out.println("\tdiff: " + PlannerTestUtilities.diff(plan, cost, entry.getKey(), entry.getValue()));
 								break;
 							default:
 								this.out.println("FAIL: " + directory.getAbsolutePath());
 								this.out.println("\tPlan returned by first explorer: " + plan);
-								this.out.println("\tPlan returned by this explorer: " + p);
+								this.out.println("\tPlan returned by this explorer: " + entry.getKey());
 								return false;
 							}
-
 						}
 					}
 				}

@@ -2,20 +2,20 @@ package uk.ac.ox.cs.pdq.test.cost.estimators;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.Map.Entry;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
+import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.estimators.TotalERSPICostEstimator;
 import uk.ac.ox.cs.pdq.cost.statistics.Catalog;
 import uk.ac.ox.cs.pdq.cost.statistics.SimpleCatalog;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
 import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
-import uk.ac.ox.cs.pdq.plan.DAGPlan;
-import uk.ac.ox.cs.pdq.plan.LeftDeepPlan;
-import uk.ac.ox.cs.pdq.plan.Plan;
 
 import com.google.common.eventbus.EventBus;
 
@@ -98,30 +98,18 @@ public class TotalERSPICostEstimatorTest extends CostEstimatorTest{
 	 */
 	@Test
 	public void test() {
-
 		for(int i = 0; i < this.schemata.length; ++i) {
 			String s = this.schemata[i];
 			String f = this.plans[i];
-
 			try(FileInputStream sis = new FileInputStream(SHEMA_PATH + s)) {
-
 				Schema schema = new SchemaReader().read(sis);
-				if (schema == null) {
+				if (schema == null) 
 					throw new IllegalStateException("Schema must be provided.");
-				}
-				Plan plan = this.obtainPlan(PLAN_PATH + f, schema);
-
+				Entry<RelationalTerm, Cost> plan = this.obtainPlan(PLAN_PATH + f, schema);
 				Catalog catalog = new SimpleCatalog(schema, CATALOG);
-				
 				TotalERSPICostEstimator costEstimator = null;
-				if(plan instanceof DAGPlan) {
-					costEstimator = new TotalERSPICostEstimator<DAGPlan>(new StatisticsCollector(false, this.eventBus), catalog);
-				}
-				else {
-					costEstimator = new TotalERSPICostEstimator<LeftDeepPlan>(new StatisticsCollector(false, this.eventBus), catalog);
-				}
-			
-				Assert.assertEquals(plan.getCost(), costEstimator.estimateCost(plan));
+				costEstimator = new TotalERSPICostEstimator(new StatisticsCollector(false, this.eventBus), catalog);
+				Assert.assertEquals(plan.getValue(), costEstimator.cost(plan.getKey()));
 
 			} catch (FileNotFoundException e) {
 				System.out.println("Cannot find input files");

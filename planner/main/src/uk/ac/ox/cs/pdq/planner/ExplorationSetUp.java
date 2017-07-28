@@ -1,12 +1,16 @@
 package uk.ac.ox.cs.pdq.planner;
 
 import java.sql.SQLException;
+import java.util.AbstractMap;
+import java.util.Map.Entry;
 
-import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
+
+import com.google.common.eventbus.EventBus;
 
 import uk.ac.ox.cs.pdq.EventHandler;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
+import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.CostEstimatorFactory;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
@@ -21,7 +25,6 @@ import uk.ac.ox.cs.pdq.logging.ChainedStatistics;
 import uk.ac.ox.cs.pdq.logging.DynamicStatistics;
 import uk.ac.ox.cs.pdq.logging.StatKey;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
-import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
 import uk.ac.ox.cs.pdq.planner.logging.performance.ConstantsStatistics;
 import uk.ac.ox.cs.pdq.planner.logging.performance.EventDrivenExplorerStatistics;
 import uk.ac.ox.cs.pdq.planner.logging.performance.PlannerStatKeys;
@@ -30,8 +33,6 @@ import uk.ac.ox.cs.pdq.reasoning.ReasonerFactory;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.util.Utility;
-
-import com.google.common.eventbus.EventBus;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -99,12 +100,11 @@ public class ExplorationSetUp {
 	 * @param schema the schema
 	 * @param statsLogger the stats logger
 	 */
-	public ExplorationSetUp(PlannerParameters params, CostParameters costParams, ReasoningParameters reasoningParams, DatabaseParameters dbParams, Schema schema, ChainedStatistics statsLogger) {
-		checkParametersConsistency(params, costParams, reasoningParams, dbParams);
+	public ExplorationSetUp(PlannerParameters params, CostParameters costParams, ReasoningParameters reasoningParams, DatabaseParameters databaseParams, Schema schema, ChainedStatistics statsLogger) {
 		this.plannerParams = params;
 		this.costParams = costParams;
 		this.reasoningParams = reasoningParams;
-		this.databaseParams = dbParams;
+		this.databaseParams = databaseParams;
 		final Attribute Fact = Attribute.create(Integer.class, "FactID");
 		addAdditionalAttributeToSchema(schema, Fact);//new Attribute(Integer.class, "ChaseStateID"));
 		this.schema = schema;
@@ -117,18 +117,6 @@ public class ExplorationSetUp {
 		//final static Attribute StateIDAttribute = new Attribute(Integer.class, "ChaseStateID");
 		for(Relation r:schema.getRelations())
 			r.appendAttribute(atribute);
-	}
-
-	/**
-	 * Check parameters consistency.
-	 *
-	 * @param params PlannerParameters
-	 * @param costParams the cost params
-	 * @param reasoningParams the reasoning params
-	 * @return boolean
-	 */
-	private static void checkParametersConsistency(PlannerParameters params, CostParameters costParams, ReasoningParameters reasoningParams, DatabaseParameters dbParams) {
-		new PlannerConsistencyChecker().check(params, costParams, reasoningParams, dbParams);
 	}
 
 	/**
@@ -170,7 +158,7 @@ public class ExplorationSetUp {
 	 * @throws PlannerException the planner exception
 	 * @throws SQLException 
 	 */
-	public RelationalTerm search(ConjunctiveQuery query) throws PlannerException, SQLException {
+	public Entry<RelationalTerm, Cost> search(ConjunctiveQuery query) throws PlannerException, SQLException {
 		return this.search(query,false);
 	}
 	
@@ -189,10 +177,8 @@ public class ExplorationSetUp {
 	 * @throws PlannerException the planner exception
 	 * @throws SQLException 
 	 */
-	public RelationalTerm search(ConjunctiveQuery query, boolean noDep) throws PlannerException, SQLException {
-		
+	public Entry<RelationalTerm, Cost> search(ConjunctiveQuery query, boolean noDep) throws PlannerException, SQLException {
 		boolean collectStats = this.statsLogger != null;
-		
 		if (noDep) {
 			this.schema = new Schema(this.schema.getRelations());
 			this.schema.addConstants(Utility.getTypedConstants(query));
@@ -205,7 +191,7 @@ public class ExplorationSetUp {
 
 		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(query, query.getSubstitutionOfFreeVariablesToCanonicalConstants());
 		Explorer explorer = null;
-		DatabaseConnection dbConn = new DatabaseConnection(databaseParams,accessibleSchema);
+		DatabaseConnection databaseConnection = new DatabaseConnection(this.databaseParams,this.accessibleSchema);
 
 		try{
 			// Top-level initialisations
@@ -223,7 +209,7 @@ public class ExplorationSetUp {
 					query,
 					accessibleQuery,
 					reasoner,
-					dbConn,
+					databaseConnection,
 					costEstimator,
 					this.plannerParams,
 					this.reasoningParams, this.databaseParams);
@@ -245,12 +231,14 @@ public class ExplorationSetUp {
 				this.registerEventHandler(ds);
 				this.statsLogger.addStatistics(ds);
 			}
-
 			explorer.setExceptionOnLimit(this.plannerParams.getExceptionOnLimit());
 			explorer.setMaxRounds(this.plannerParams.getMaxIterations().doubleValue());
 			explorer.setMaxElapsedTime(this.plannerParams.getTimeout());
 			explorer.explore();
-			return explorer.getBestPlan();
+			if(explorer.getBestPlan() != null && explorer.getBestCost() != null)
+				return new AbstractMap.SimpleEntry<RelationalTerm, Cost>(explorer.getBestPlan(), explorer.getBestCost());
+			else
+				return null;
 		} catch (PlannerException e) {
 			this.handleEarlyTermination(explorer);
 			throw e;
@@ -297,38 +285,5 @@ public class ExplorationSetUp {
 				this.eventBus.post(ex);
 			}
 		}
-	}
-
-	/**
-	 * 
-	 *
-	 * @return the planner's underlying schema
-	 */
-	public Schema getSchema() {
-		return this.schema;
-	}
-
-	/**
-	 * Performs a search, and returns not only the best plan found
-	 * but also the search node in which it is was found. The returned search
-	 * node may be used later as parameters to the resumeSearch method.
-	 *
-	 * @return the best plan found and the search node in which it was found.
-	 */
-	public Pair<RelationalTerm, SearchNode> dynamicSearch() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * Resumes the search from the given node and return the new best plan
-	 * found.
-	 *
-	 * @param node the node
-	 * @return the best plan found from the given search node, after discarding
-	 *         the plan that was previously found at that node, and the search
-	 *         node where it was found.
-	 */
-	public Pair<RelationalTerm, SearchNode> resumeSearch(SearchNode node) {
-		throw new UnsupportedOperationException();
 	}
 }

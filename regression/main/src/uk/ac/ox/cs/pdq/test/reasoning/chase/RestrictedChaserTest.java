@@ -5,14 +5,13 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
+
+import com.google.common.eventbus.EventBus;
 
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
@@ -29,8 +28,6 @@ import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 import uk.ac.ox.cs.pdq.util.Utility;
-
-import com.google.common.eventbus.EventBus;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -213,11 +210,9 @@ public class RestrictedChaserTest {
 				
 				reasoner.reasonUntilTermination(state, schema.getDependencies());
 				Collection<Atom> expected = loadFacts(PATH + f, schema);
-				if(expected.size() != state.getFacts().size()) {
+				if(expected.size() != state.getFacts().size()) 
 					System.out.println();
-				}
 				Assert.assertEquals(expected.size(), state.getFacts().size());
-
 			} catch (FileNotFoundException e) {
 				System.out.println("Cannot find input files");
 			} catch (Exception e) {
@@ -274,21 +269,20 @@ public class RestrictedChaserTest {
 		int index2 = pred.indexOf(")");
 		String relationName = (String) pred.subSequence(0, index1);
 		Predicate predicate = schema.getRelation(relationName);
-		if(predicate==null) {
+		if(predicate==null)
 			return null;
-		}
 		String terms = (String) pred.subSequence(index1 + 1, index2);
-		List<Term> variables = new ArrayList<>();
-		for(String term:terms.split(",")) {
-			TypedConstant<?> constant = schema.getConstant(term);
-			if(constant != null) {
-				variables.add(new TypedConstant<>(constant));
-			}
-			else {
-				variables.add(new UntypedConstant(term));
-			}
+		String[] strings = terms.split(",");
+		Term[] variables = new Term[strings.length];
+		for(int stringIndex = 0; stringIndex < strings.length; ++stringIndex) {
+			String term = strings[stringIndex];
+			TypedConstant constant = schema.getConstant(term);
+			if(constant != null) 
+				variables[stringIndex] = TypedConstant.create(constant);
+			else 
+				variables[stringIndex] = UntypedConstant.create(term);
 		}
-		return new Atom(predicate, variables);
+		return Atom.create(predicate, variables);
 	}
 
 

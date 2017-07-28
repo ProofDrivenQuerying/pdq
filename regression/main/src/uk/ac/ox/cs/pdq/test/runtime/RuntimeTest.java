@@ -10,9 +10,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
 
+import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
+import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.datasources.Result;
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
@@ -24,14 +27,10 @@ import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 import uk.ac.ox.cs.pdq.db.sql.MySQLStatementBuilder;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.io.pretty.DataReader;
-import uk.ac.ox.cs.pdq.io.xml.DAGPlanReader;
-import uk.ac.ox.cs.pdq.io.xml.LeftDeepPlanReader;
 import uk.ac.ox.cs.pdq.io.xml.QueryReader;
 import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
 import uk.ac.ox.cs.pdq.logging.ProgressLogger;
 import uk.ac.ox.cs.pdq.logging.SimpleProgressLogger;
-import uk.ac.ox.cs.pdq.plan.Plan;
 import uk.ac.ox.cs.pdq.planner.ExplorationSetUp;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
@@ -42,6 +41,7 @@ import uk.ac.ox.cs.pdq.runtime.RuntimeParameters;
 import uk.ac.ox.cs.pdq.runtime.RuntimeParameters.ExecutorTypes;
 import uk.ac.ox.cs.pdq.runtime.exec.AccessException;
 import uk.ac.ox.cs.pdq.runtime.exec.MiddlewareException;
+import uk.ac.ox.cs.pdq.runtime.io.DataReader;
 import uk.ac.ox.cs.pdq.test.Bootstrap.Command;
 import uk.ac.ox.cs.pdq.test.RegressionParameters;
 import uk.ac.ox.cs.pdq.test.RegressionTest;
@@ -184,9 +184,10 @@ public class RuntimeTest extends RegressionTest {
 	 * @param schema Schema
 	 * @param query Query
 	 * @param full boolean
+	 * @return 
 	 * @return Plan
 	 */
-	private Plan obtainPlan(File directory, Schema schema, ConjunctiveQuery query, boolean full) {
+	private  Entry<RelationalTerm, Cost> obtainPlan(File directory, Schema schema, ConjunctiveQuery query, boolean full) {
 		if (full) {
 			PlannerParameters plParams = new PlannerParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
 			CostParameters costParams = new CostParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
@@ -242,8 +243,8 @@ public class RuntimeTest extends RegressionTest {
 				validateData(directory, schema, query);
 			}
 
-			Plan plan = this.obtainPlan(directory, schema, query, full);
-			if (plan == null || plan.isEmpty()) {
+			Entry<RelationalTerm, Cost> plan = this.obtainPlan(directory, schema, query, full);
+			if (plan == null) {
 				this.out.println("\tSKIP: Plan is empty in " + directory.getAbsolutePath());
 				return true;
 			}
@@ -266,11 +267,11 @@ public class RuntimeTest extends RegressionTest {
 					}
 
 					this.out.println("\tData file '" + dataFile.getAbsolutePath() + "'");
-					result &= this.run(directory, schema, query, plan, facts);
+					result &= this.run(directory, schema, query, plan.getKey(), facts);
 				}
 			} else {
 				this.out.println("\tUsing underlying database ");
-				result &= this.run(directory, schema, query, plan, facts);
+				result &= this.run(directory, schema, query, plan.getKey(), facts);
 			}
 
 		} catch (FileNotFoundException e) {
@@ -295,7 +296,7 @@ public class RuntimeTest extends RegressionTest {
 	 * @param queryResult Result
 	 * @return boolean
 	 */
-	private boolean compareResult(RuntimeParameters params, Schema s, ConjunctiveQuery q, Plan p, List<Atom> f, Result queryResult) {
+	private boolean compareResult(RuntimeParameters params, Schema s, ConjunctiveQuery q, RelationalTerm p, List<Atom> f, Result queryResult) {
 		boolean accepted = true;
 		ExecutorTypes[] types = new ExecutorTypes[] {
 				ExecutorTypes.PIPELINED, 
@@ -350,7 +351,7 @@ public class RuntimeTest extends RegressionTest {
 	 * @throws EvaluationException the evaluation exception
 	 * @throws AccessException the access exception
 	 */
-	private boolean run(File directory, Schema s, ConjunctiveQuery q, Plan p, List<Atom> f)
+	private boolean run(File directory, Schema s, ConjunctiveQuery q, RelationalTerm p, List<Atom> f)
 			throws EvaluationException, AccessException {
 		RuntimeParameters params = new RuntimeParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
 		Runtime runtime = new Runtime(params, s, f);

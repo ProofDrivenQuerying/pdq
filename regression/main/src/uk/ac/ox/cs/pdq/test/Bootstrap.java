@@ -11,7 +11,6 @@ import org.apache.log4j.Logger;
 
 import uk.ac.ox.cs.pdq.ParametersException;
 import uk.ac.ox.cs.pdq.test.planner.PlannerTest.PlannerTestCommand;
-import uk.ac.ox.cs.pdq.test.planner.UserPlannerTest.UserPlannerTestCommand;
 import uk.ac.ox.cs.pdq.test.runtime.RuntimeTest.RuntimeTestCommand;
 
 import com.beust.jcommander.DynamicParameter;
@@ -59,10 +58,6 @@ public class Bootstrap {
 			jc.addCommand(c.name, c);
 
 			c = new RuntimeTestCommand();
-			commands.put(c.name, c);
-			jc.addCommand(c.name, c);
-			
-			c = new UserPlannerTestCommand();
 			commands.put(c.name, c);
 			jc.addCommand(c.name, c);
 		}
