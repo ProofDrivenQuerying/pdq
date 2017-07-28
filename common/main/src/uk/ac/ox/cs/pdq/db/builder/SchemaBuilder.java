@@ -46,16 +46,6 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	public SchemaBuilder() {
 	}
 
-//	/**
-//	 * Instantiates a schema from an existing one.
-//	 *
-//	 * @param schema the schema
-//	 */
-//	public SchemaBuilder(Schema schema) {
-//		this.addRelations(schema.getRelations());
-//		this.addDependencies(schema.getDependencies());
-//	}
-
 	/**
 	 * Add the given relation to the schema under construction iff no
 	 * relation other than TemporaryRelation under the name already exists.
@@ -76,57 +66,6 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 		return this;
 	}
 
-//	/**
-//	 * Change the given relation's access methods to the ones provided
-//	 * as parameter. Any pre-existing access methods are discarded.
-//	 * If no access method is provided, the relation becomes inaccessible.
-//	 * The method has no effect, if no relation by the given name currently
-//	 * exists, and the relation is not a temporary one.
-//	 *
-//	 * @param name String
-//	 * @param am the am
-//	 * @return this builder
-//	 */
-//	public SchemaBuilder setAccessMethods(String name, AccessMethod... am) {
-//		Relation existing = this.relations.get(name);
-//		if (existing != null) 
-//			existing.setAccessMethods(am);
-//		return this;
-//	}
-
-//	/**
-//	 * Add the given relation to the schema under construction, if it does
-//	 * already exists. oOherwise, places a TemporaryRelation there under
-//	 * that name.
-//	 * @param name String
-//	 * @param attributes List<Attribute>
-//	 * @return this builder
-//	 */
-//	public Relation addOrReplaceRelation(String name, Attribute[] attributes) {
-//		return this.addOrReplaceRelation(name, attributes, false);
-//	}
-//
-//	/**
-//	 * Add the given relation to the schema under construction, if it does
-//	 * already exists. oOherwise, places a TemporaryRelation there under
-//	 * that name.
-//	 *
-//	 * @param name String
-//	 * @param attributes List<Attribute>
-//	 * @param isEquality the is equality
-//	 * @return this builder
-//	 */
-//	public Relation addOrReplaceRelation(String name, Attribute[] attributes, boolean isEquality) {
-//		Relation result = this.relations.get(name);
-//		if (result != null && result.getAttributes().equals(attributes)) {
-//			return result;
-//		}
-//		this.relations.remove(name);
-//		result = new TemporaryRelation(name, attributes, isEquality);
-//		this.addRelation(result);
-//		return result;
-//	}
-
 	/**
 	 * Adds the dependency.
 	 *
@@ -141,34 +80,6 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 		this.dependencies.put(((TGD) dependency).getId(), dependency);
 		return this;
 	}
-
-//	/**
-//	 * Removes the dependency.
-//	 *
-//	 * @param dependency IC
-//	 * @return this builder
-//	 */
-//	public SchemaBuilder removeDependency(Dependency dependency) {
-//		if (this.dependencies.remove(((TGD) dependency).getId()) == null) {
-//			for (Iterator<Entry<Integer, Dependency>> it = this.dependencies.entrySet().iterator(); it.hasNext();) {
-//				if (FormulaEquivalence.approximateEquivalence((Formula) it.next().getValue(), (Formula) dependency) ) 
-//					it.remove();
-//				
-//			}
-//		};
-//		return this;
-//	}
-
-//	/**
-//	 * Removes the relation.
-//	 *
-//	 * @param r the relation to remove
-//	 * @return this builder
-//	 */
-//	public SchemaBuilder removeRelation(Relation r) {
-//		this.relations.remove(r);
-//		return this;
-//	}
 
 	/**
 	 * Adds the dependencies.
@@ -191,30 +102,6 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 		return this;
 	}
 
-//	/**
-//	 * Adds the relations.
-//	 *
-//	 * @param relations the relations
-//	 * @return this builder
-//	 */
-//	public SchemaBuilder addRelations(Relation[] relations) {
-//		for (Relation relation:relations) 
-//			this.addRelation(relation);
-//		return this;
-//	}
-
-//	/**
-//	 * Adds the schema.
-//	 *
-//	 * @param schema the schema
-//	 * @return this builder
-//	 */
-//	public SchemaBuilder addSchema(Schema schema) {
-//		this.addRelations(schema.getRelations());
-//		this.addDependencies(schema.getDependencies());
-//		return this;
-//	}
-
 	/**
 	 * Gets the relation.
 	 *
@@ -224,34 +111,6 @@ public class SchemaBuilder implements uk.ac.ox.cs.pdq.builder.Builder<Schema> {
 	public Relation getRelation(String name) {
 		return this.relations.get(name);
 	}
-
-//	/**
-//	 * Gets the relations.
-//	 *
-//	 * @return a Collection of all relations currently held by the builder.
-//	 */
-//	public Collection<Relation> getRelations() {
-//		return this.relations.values();
-//	}
-
-//	/**
-//	 * Gets the relation map.
-//	 *
-//	 * @return a map from relation names to relations for all currently held
-//	 *         by the builder.
-//	 */
-//	public Map<String, Relation> getRelationMap() {
-//		return this.relations;
-//	}
-
-//	/**
-//	 * Gets the dependencies.
-//	 *
-//	 * @return Collection<IC>
-//	 */
-//	public Collection<Dependency> getDependencies() {
-//		return this.dependencies.values();
-//	}
 
 	/**
 	 * Ensure every view has its corresponding definition as constraints.
