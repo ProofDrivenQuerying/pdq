@@ -9,21 +9,22 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
-import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.io.xml.QueryReader;
-import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
-import uk.ac.ox.cs.pdq.runtime.io.DataReader;
-import uk.ac.ox.cs.pdq.runtime.util.TupleCounter;
-import uk.ac.ox.cs.pdq.runtime.util.TuplePrinter;
-
 import com.beust.jcommander.DynamicParameter;
 import com.beust.jcommander.IParameterValidator;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
+
+import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
+import uk.ac.ox.cs.pdq.db.Schema;
+import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
+import uk.ac.ox.cs.pdq.io.xml.QueryReader;
+import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
+import uk.ac.ox.cs.pdq.runtime.io.DataReader;
+import uk.ac.ox.cs.pdq.runtime.util.TupleCounter;
+import uk.ac.ox.cs.pdq.runtime.util.TuplePrinter;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -182,7 +183,7 @@ public class Bootstrap {
 
 			Schema schema = new SchemaReader().read(sis);
 			ConjunctiveQuery query = new QueryReader(schema).read(qis);
-			Plan plan = obtainPlan(schema, this.getPlanPath());
+			RelationalTerm plan = obtainPlan(this.getPlanPath(), schema);
 
 			List<Atom> facts = null;
 			if (this.getDataPath() != null) {
@@ -207,24 +208,12 @@ public class Bootstrap {
 			System.exit(-1);
 		}
 	}
-	/**
-	 * Obtain plan.
-	 *
-	 * @param schema Schema
-	 * @param planPath the plan path
-	 * @return Plan
-	 */
-	private RelationalTerm obtainPlan(Schema schema, String planPath) {
-		try (FileInputStream pis = new FileInputStream(planPath)) {
-			try {
-				return new LeftDeepPlanReader(schema).read(pis); 
-			} catch (Exception re) {
-				try (FileInputStream bis = new FileInputStream(planPath)) {
-					return new DAGPlanReader(schema).read(bis); 
-				}
-			}
+	
+	public static RelationalTerm obtainPlan(String fileName, Schema schema) {
+		try(FileInputStream pis = new FileInputStream(fileName) ){
+			File file = new File(fileName);
+			return IOManager.readRelationalTerm(file, schema);
 		} catch (IOException e) {
-			log.warn(e);
 			return null;
 		}
 	}

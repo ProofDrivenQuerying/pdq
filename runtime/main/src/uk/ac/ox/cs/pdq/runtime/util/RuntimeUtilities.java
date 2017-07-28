@@ -115,6 +115,23 @@ public class RuntimeUtilities {
 		}
 		return result;
 	}
+	
+	/**
+	 * Generates a list of attribute whose name are the name as those of term in
+	 * the given predicate, and types match with the predicate attribute types.
+	 * @param variables List<? extends Term>
+	 * @param type TupleType
+	 * @return List<Attribute>
+	 */
+	public static List<Attribute> variablesToAttributes(Variable[] variables, TupleType type) {
+		Preconditions.checkArgument(variables.length == type.size());
+		List<Attribute> result = new ArrayList<>();
+		int i = 0;
+		for (Term t:variables) {
+			result.add(Attribute.create(type.getType(i++), t.toString()));
+		}
+		return result;
+	}
 
 	/**
 	 * Generates a list of terms matching the attributes of the input relation.

@@ -15,6 +15,7 @@ import uk.ac.ox.cs.pdq.runtime.RuntimeParameters.Semantics;
 import uk.ac.ox.cs.pdq.runtime.TimeoutException;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.Distinct;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator;
+import uk.ac.ox.cs.pdq.runtime.util.RuntimeUtilities;
 import uk.ac.ox.cs.pdq.runtime.util.TupleOutputLimitEnforcer;
 import uk.ac.ox.cs.pdq.util.Tuple;
 import uk.ac.ox.cs.pdq.util.Utility;
@@ -142,7 +143,7 @@ public class VolcanoPlanExecutor implements PlanExecutor {
 			if (top.isInterrupted()) {
 				throw new TimeoutException();
 			}
-			this.universalTable.setHeader(Utility.variablesToAttributes(
+			this.universalTable.setHeader(RuntimeUtilities.variablesToAttributes(
 					this.query.getFreeVariables(), this.universalTable.getType()));
 		}
 		return this.universalTable;
