@@ -193,7 +193,6 @@ public class LinearChaseConfiguration extends ChaseConfiguration implements Line
 	}
 
 	/**
-	 * Choose candidate.
 	 *
 	 * @return Candidate
 	 * @see uk.ac.ox.cs.pdq.planner.linear.LinearConfiguration#chooseCandidate()

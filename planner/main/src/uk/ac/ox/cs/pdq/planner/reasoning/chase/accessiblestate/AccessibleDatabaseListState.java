@@ -180,7 +180,7 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 	}
 
 	/**
-	 * Gets the derived inferred.
+	 * TOCOMMENT: FIX THIS!
 	 *
 	 * @return Collection<PredicateFormula>
 	 * @see uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState#getDerivedInferred()
@@ -200,7 +200,6 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 //	}
 
 	/**
-	 * Gets the accessible terms.
 	 *
 	 * @return Multimap<Term,PredicateFormula>
 	 */
@@ -313,7 +312,6 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 
 
 	/**
-	 * Gets the unexposed facts.
 	 *
 	 * @param accessibleSchema the accessible schema
 	 * @param atomsMap 		Maps each schema signature (relation) to its chase facts
@@ -371,7 +369,6 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 
 
 	/**
-	 * Gets the provenance.
 	 *
 	 * @param fact PredicateFormula
 	 * @return Pair<Constraint,Collection<PredicateFormula>>
@@ -385,7 +382,6 @@ public class AccessibleDatabaseListState extends uk.ac.ox.cs.pdq.reasoning.chase
 	}
 
 	/**
-	 * Clone.
 	 *
 	 * @return DatabaseListState
 	 * @see uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState#clone()

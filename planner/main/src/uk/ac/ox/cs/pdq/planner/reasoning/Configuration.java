@@ -20,14 +20,12 @@ import uk.ac.ox.cs.pdq.fol.Constant;
 public interface Configuration extends Cloneable, Comparable<Configuration>{
 	
 	/**
-	 * Gets the plan.
 	 *
 	 * @return 		the plan of this configuration
 	 */
 	RelationalTerm getPlan();
 	
 	/**
-	 * Sets the plan.
 	 *
 	 * @param plan the new plan
 	 */
@@ -45,7 +43,6 @@ public interface Configuration extends Cloneable, Comparable<Configuration>{
 //	Configuration clone();
 	
 	/**
-	 * Checks if is successful.
 	 *
 	 * @param query the query
 	 * @return true if the configuration matches the input query.
@@ -57,14 +54,12 @@ public interface Configuration extends Cloneable, Comparable<Configuration>{
 	
 	
 	/**
-	 * Gets the input.
 	 *
 	 * @return the configuration's input constants
 	 */
 	public Collection<Constant> getInput();
 
 	/**
-	 * Gets the output.
 	 *
 	 * @return the configuration's output facts
 	 */

@@ -73,7 +73,7 @@ public class ConfigurationUtility {
 	}
 
 	/**
-	 * Gets the apply rules list.
+	 * TOCOMMENT: WHAT IS THIS
 	 *
 	 * @param configuration the configuration
 	 * @return 		the ApplyRule sub-configurations (ordered by appearance) of the input configuration
@@ -90,7 +90,7 @@ public class ConfigurationUtility {
 	}
 
 	/**
-	 * Gets the subconfigurations.
+	 * TOCOMMENT: WHAT IS THIS
 	 *
 	 * @param configuration the configuration
 	 * @return 		the subconfigurations of the input configuration
@@ -121,7 +121,7 @@ public class ConfigurationUtility {
 	}
 
 	/**
-	 * Checks if is output independent.
+	 * TOCOMMENT: WHAT IS THIS
 	 *
 	 * @param left the left
 	 * @param right the right
@@ -132,7 +132,6 @@ public class ConfigurationUtility {
 	}
 
 	/**
-	 * Checks if is mergeable.
 	 *
 	 * @param left the left
 	 * @param right the right
@@ -145,7 +144,7 @@ public class ConfigurationUtility {
 	}
 
 	/**
-	 * Checks if is non trivial.
+	 * TOCOMMENT: WHAT DOES IT MEAN
 	 *
 	 * @param left the left
 	 * @param right the right
@@ -198,7 +197,6 @@ public class ConfigurationUtility {
 	}
 	
 	/**
-	 * Gets the input.
 	 *
 	 * @param left the left
 	 * @param right the right
@@ -214,7 +212,6 @@ public class ConfigurationUtility {
 	}
 	
 	/**
-	 * Gets the output.
 	 *
 	 * @param left the left
 	 * @param right the right
@@ -227,7 +224,6 @@ public class ConfigurationUtility {
 	}
 
 	/**
-	 * Gets the bushiness.
 	 *
 	 * @param left the left
 	 * @param right the right
@@ -241,7 +237,6 @@ public class ConfigurationUtility {
 	}
 
 	/**
-	 * Gets the combination type.
 	 *
 	 * @param left the left
 	 * @param right the right
@@ -263,7 +258,6 @@ public class ConfigurationUtility {
 	}
 
 	/**
-	 * Validate.
 	 *
 	 * @param left the left
 	 * @param right the right
@@ -314,7 +308,6 @@ public class ConfigurationUtility {
 	}
 	
 	/**
-	 * Checks if is dominated by.
 	 *
 	 * @param dominance the dominance
 	 * @param target the target
@@ -331,7 +324,6 @@ public class ConfigurationUtility {
 	}
 
 	/**
-	 * Gets the potential.
 	 *
 	 * @param left the left
 	 * @param right the right
@@ -358,7 +350,6 @@ public class ConfigurationUtility {
 	}
 	
 	/**
-	 * Gets the minimal set that exposes constants.
 	 *
 	 * @param configuration the configuration
 	 * @param constants the constants

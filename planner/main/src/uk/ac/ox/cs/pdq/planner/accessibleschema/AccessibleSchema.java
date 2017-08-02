@@ -142,7 +142,6 @@ public class AccessibleSchema extends Schema {
 	}
 
 	/**
-	 * Substitute.
 	 *
 	 * @param conjunction Conjunction<Formula>
 	 * @return Conjunction<Formula>
@@ -155,7 +154,6 @@ public class AccessibleSchema extends Schema {
 	}
 
 	/**
-	 * Substitute.
 	 *
 	 * @param disjunction Disjunction<Formula>
 	 * @return Disjunction<Formula>
@@ -168,7 +166,6 @@ public class AccessibleSchema extends Schema {
 	}
 
 	/**
-	 * Substitute.
 	 *
 	 * @param negation Negation<Formula>
 	 * @return Negation<Formula>
@@ -183,7 +180,6 @@ public class AccessibleSchema extends Schema {
 	}
 
 	/**
-	 * Substitute.
 	 *
 	 * @param atom PredicateFormula
 	 * @return PredicateFormula

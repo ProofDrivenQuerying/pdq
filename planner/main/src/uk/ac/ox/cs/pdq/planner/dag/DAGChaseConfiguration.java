@@ -25,16 +25,15 @@ import com.google.common.base.Preconditions;
  */
 public abstract class DAGChaseConfiguration extends ChaseConfiguration implements DAGConfiguration {
 
-	/** The id. */
+	/** TOCOMMENT: WHY TWO IDS? . */
 	private final Integer id;
 
-	/** The global id. */
 	private static Integer globalId = 0;
 	
-	/**  The depth of this configuration. */
+	/**  TOCOMMENT: WHAT
 	private final Integer high;
 
-	/**  The bushiness of this configuration. */
+	/**  TOCOMMENT: WHAT
 	private final Integer bushiness;
 	
 	/**  True if the configuration is a left-deep one. */

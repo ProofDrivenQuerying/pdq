@@ -26,7 +26,7 @@ import com.google.common.base.Preconditions;
 public class BinaryConfiguration extends DAGChaseConfiguration {
 
 	/**
-	 * Binary configuration types.
+	 * TCOMMENT THIS SHOULD GO
 	 *
 	 * @author Efthymia Tsamoura
 	 */
@@ -135,7 +135,6 @@ public class BinaryConfiguration extends DAGChaseConfiguration {
 	}
 
 	/**
-	 * Gets the type.
 	 *
 	 * @return the type of the binary configuration, e.g., Merge, PCompose, JCompose, GenCompose
 	 */
@@ -144,7 +143,6 @@ public class BinaryConfiguration extends DAGChaseConfiguration {
 	}
 
 	/**
-	 * Gets the left.
 	 *
 	 * @return the left sub-configuration
 	 */
@@ -153,7 +151,6 @@ public class BinaryConfiguration extends DAGChaseConfiguration {
 	}
 
 	/**
-	 * Gets the right.
 	 *
 	 * @return the right sub-configuration
 	 */
@@ -162,7 +159,6 @@ public class BinaryConfiguration extends DAGChaseConfiguration {
 	}
 
 	/**
-	 * To string.
 	 *
 	 * @return String
 	 */
@@ -176,7 +172,6 @@ public class BinaryConfiguration extends DAGChaseConfiguration {
 	}
 	
 	/**
-	 * Clone.
 	 *
 	 * @return BinaryConfiguration<S>
 	 * @see uk.ac.ox.cs.pdq.reasoning.Configuration#clone()

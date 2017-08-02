@@ -44,7 +44,6 @@ public interface AccessibleChaseState extends ChaseInstance {
 	void generate(AccessibilityAxiom axiom, Collection<Atom> facts);
 
 	/**
-	 * Gets the unexposed facts.
 	 *
 	 * @param accessibleSchema the accessible schema
 	 * @return 		the unexposed facts and information to expose them
@@ -77,7 +76,6 @@ public interface AccessibleChaseState extends ChaseInstance {
 	Pair<Dependency, Collection<Atom>> getProvenance(Atom fact);
 	
 	/**
-	 * Merge.
 	 *
 	 * @param s 		An input chase state
 	 * @return 		a state that is the union of this state and the input one

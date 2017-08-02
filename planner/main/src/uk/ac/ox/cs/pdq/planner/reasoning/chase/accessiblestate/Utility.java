@@ -90,7 +90,7 @@ public class Utility {
 //	}
 
 	/**
-	 * Infer inferred.
+	 * TOCOMMENT: FIX THIS
 	 *
 	 * @param facts the facts
 	 * @return the collection
@@ -105,7 +105,6 @@ public class Utility {
 	}
 	
 	/**
-	 * Infer signature groups.
 	 *
 	 * @param facts the facts
 	 * @return the multimap
@@ -122,7 +121,7 @@ public class Utility {
 	}
 
 	/**
-	 * Infer accessible terms.
+ *TOCOMMENT: WHAT ARE THESE!!!!
 	 *
 	 * @param facts the facts
 	 * @return the multimap

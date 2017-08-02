@@ -79,7 +79,7 @@ public abstract class ChaseConfiguration implements Configuration {
 	}
 	
 	/**
-	 * Gets the proper output.
+ * TOCOMMENT: WHAT IS IT
 	 *
 	 * @param input the input
 	 * @param output the output
@@ -97,7 +97,6 @@ public abstract class ChaseConfiguration implements Configuration {
 	}
 	
 	/**
-	 * Gets the state.
 	 *
 	 * @return 		the chase state of this configuration.
 	 */
@@ -106,7 +105,6 @@ public abstract class ChaseConfiguration implements Configuration {
 	}
 	
 	/**
-	 * Gets the plan.
 	 *
 	 * @return P
 	 * @see uk.ac.ox.cs.pdq.reasoning.Configuration#getPlan()
@@ -135,7 +133,6 @@ public abstract class ChaseConfiguration implements Configuration {
 	}
 
 	/**
-	 * Gets the input.
 	 *
 	 * @return the configuration's input constants
 	 */
@@ -145,7 +142,6 @@ public abstract class ChaseConfiguration implements Configuration {
 	}
 
 	/**
-	 * Gets the output.
 	 *
 	 * @return the configuration's output facts
 	 */
@@ -155,8 +151,7 @@ public abstract class ChaseConfiguration implements Configuration {
 	}
 
 	/**
-	 * Gets the proper output.
-	 *
+	 *TOCOMMENT: WHAT IS IT 
 	 * @return the configuration's proper output facts
 	 */
 	public Collection<Constant> getProperOutput() {
@@ -164,7 +159,6 @@ public abstract class ChaseConfiguration implements Configuration {
 	}
 
 	/**
-	 * Gets the output facts.
 	 *
 	 * @return the configuration's output facts
 	 */
@@ -218,7 +212,6 @@ public abstract class ChaseConfiguration implements Configuration {
 
 	//TODO this should go to Configuration? 
 	/**
-	 * Checks if is closed.
 	 *
 	 * @return true if the configuration has no input constants
 	 */
@@ -227,7 +220,6 @@ public abstract class ChaseConfiguration implements Configuration {
 	}
 	
 	/**
-	 * Checks if is successful.
 	 *
 	 * @param query the query
 	 * @return true if the configuration matches the input query.

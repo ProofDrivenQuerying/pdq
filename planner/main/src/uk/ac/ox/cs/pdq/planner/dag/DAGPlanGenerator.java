@@ -21,7 +21,6 @@ import uk.ac.ox.cs.pdq.planner.util.PlanUtils;
 public class DAGPlanGenerator {
 	
 	/**
-	 * To dag plan.
 	 *
 	 * @param left DAGConfiguration<S>
 	 * @param right DAGConfiguration<S>

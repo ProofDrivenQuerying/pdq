@@ -17,7 +17,6 @@ import uk.ac.ox.cs.pdq.planner.reasoning.Configuration;
 public interface LinearConfiguration extends Configuration {
 
 	/**
-	 * Gets the candidates.
 	 *
 	 * @return the candidates to expose of this configuration
 	 */
@@ -31,14 +30,12 @@ public interface LinearConfiguration extends Configuration {
 //	Collection<Candidate> getExposedCandidates();
 
 	/**
-	 * Choose candidate.
 	 *
 	 * @return a randomly chosen candidate of this configuration
 	 */
 	Candidate chooseCandidate();
 
 	/**
-	 * Checks for candidates.
 	 *
 	 * @return true if the configuration has candidates
 	 */
@@ -52,7 +49,6 @@ public interface LinearConfiguration extends Configuration {
 	void removeCandidates(Set<Candidate> candidates);
 
 	/**
-	 * Gets the similar candidates.
 	 *
 	 * @param candidate the candidate
 	 * @return a list of candidates sharing the same chase constants in their input positions with this configuration

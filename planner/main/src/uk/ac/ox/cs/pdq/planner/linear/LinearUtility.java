@@ -26,7 +26,6 @@ import com.google.common.collect.Sets;
 public class LinearUtility {
 
 	/**
-	 * Gets the input constants.
 	 *
 	 * @param exposed the exposed
 	 * @return 		the input constants of the input candidate facts
@@ -39,7 +38,6 @@ public class LinearUtility {
 	}
 	
 	/**
-	 * Gets the output constants.
 	 *
 	 * @param candidates the candidates
 	 * @return 		the output constants of the input candidate facts
@@ -53,7 +51,6 @@ public class LinearUtility {
 	}
 	
 	/**
-	 * Creates the path.
 	 *
 	 * @param <T> the generic type
 	 * @param tree 		the input node tree

@@ -19,7 +19,6 @@ import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
 public class MatchFactory {
 
 	/**
-	 * Gets the match.
 	 *
 	 * @param axiom the axiom
 	 * @param fact the fact

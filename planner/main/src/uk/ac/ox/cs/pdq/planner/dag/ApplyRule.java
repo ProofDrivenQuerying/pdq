@@ -74,7 +74,6 @@ public class ApplyRule extends DAGChaseConfiguration {
 	}
 
 	/**
-	 * Gets the rule.
 	 *
 	 * @return AccessibilityAxiom
 	 */
@@ -84,7 +83,6 @@ public class ApplyRule extends DAGChaseConfiguration {
 
 
 	/**
-	 * Gets the facts.
 	 *
 	 * @return 		the facts of this configuration
 	 */
@@ -93,7 +91,6 @@ public class ApplyRule extends DAGChaseConfiguration {
 	}
 
 	/**
-	 * Gets the binding positions.
 	 *
 	 * @return 		the access method
 	 */
@@ -102,7 +99,6 @@ public class ApplyRule extends DAGChaseConfiguration {
 	}
 
 	/**
-	 * Gets the relation.
 	 *
 	 * @return 		the relation of this configuration
 	 */
@@ -123,7 +119,6 @@ public class ApplyRule extends DAGChaseConfiguration {
 	}
 	
 	/**
-	 * To string.
 	 *
 	 * @return String
 	 */

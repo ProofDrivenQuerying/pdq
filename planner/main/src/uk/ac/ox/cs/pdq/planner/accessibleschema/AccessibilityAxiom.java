@@ -46,7 +46,6 @@ public class AccessibilityAxiom extends TGD {
 	}
 
 	/**
-	 * Creates the left.
 	 *
 	 * @param relation 		A schema relation 
 	 * @param method 		A method to access this relation
@@ -72,7 +71,6 @@ public class AccessibilityAxiom extends TGD {
 	}
 
 	/**
-	 * Creates the right.
 	 *
 	 * @param relation the inf acc rel
 	 * @param method the binding
@@ -92,7 +90,6 @@ public class AccessibilityAxiom extends TGD {
 	}
 
 	/**
-	 * Gets the base relation.
 	 *
 	 * @return the base relation of the accessibility axiom.
 	 */
@@ -101,7 +98,6 @@ public class AccessibilityAxiom extends TGD {
 	}
 
 	/**
-	 * Gets the access method.
 	 *
 	 * @return the access method of the accessibility axiom.
 	 */
@@ -110,7 +106,6 @@ public class AccessibilityAxiom extends TGD {
 	}
 
 	/**
-	 * Gets the guard.
 	 *
 	 * @return PredicateFormula
 	 * @see uk.ac.ox.cs.pdq.fol.GuardedDependency#getGuard()
