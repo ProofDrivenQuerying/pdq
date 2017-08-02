@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.util.AbstractMap;
 import java.util.Map.Entry;
 
+import javax.xml.bind.JAXBException;
+
 import uk.ac.ox.cs.pdq.algebra.AlgebraUtilities;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
@@ -66,7 +68,7 @@ public class PlannerTestUtilities {
 			RelationalTerm plan = IOManager.readRelationalTerm(file, schema);
 			Cost cost = CostIOManager.readRelationalTermCost(file, schema);
 			return new AbstractMap.SimpleEntry<RelationalTerm,Cost>(plan, cost);
-		} catch (IOException e) {
+		} catch (IOException | JAXBException e) {
 			return null;
 		}
 	}
