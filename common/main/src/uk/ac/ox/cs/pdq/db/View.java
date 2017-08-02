@@ -2,10 +2,13 @@ package uk.ac.ox.cs.pdq.db;
 
 import java.util.Objects;
 
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.LinearGuarded;
 import uk.ac.ox.cs.pdq.fol.QuantifiedFormula;
 import uk.ac.ox.cs.pdq.fol.TGD;
+import uk.ac.ox.cs.pdq.io.jaxb.adapters.ViewAdapter;
 import uk.ac.ox.cs.pdq.util.Utility;
 
 /**
@@ -13,6 +16,7 @@ import uk.ac.ox.cs.pdq.util.Utility;
  * @author Julien Leblay
  */
 //TODO fix the equals and 
+@XmlJavaTypeAdapter(ViewAdapter.class)
 public class View extends Relation {
 
 	/** The Constant serialVersionUID. */

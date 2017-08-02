@@ -11,7 +11,7 @@ import org.junit.Assert;
  * @author Efthtymia Tsamoura
  *
  */
-public class FunctionTerm implements Term{
+public class FunctionTerm extends Term{
 	private static final long serialVersionUID = 4513191157046218083L;
 
 	private final Function function;

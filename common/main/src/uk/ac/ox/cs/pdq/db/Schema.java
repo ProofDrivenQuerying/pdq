@@ -6,8 +6,12 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.EGD;
+import uk.ac.ox.cs.pdq.io.jaxb.adapters.SchemaAdapter;
 import uk.ac.ox.cs.pdq.util.Utility;
 
 /**
@@ -16,6 +20,8 @@ import uk.ac.ox.cs.pdq.util.Utility;
  * @author Efthymia Tsamoura
  * @author Julien Leblay
  */
+@XmlRootElement
+@XmlJavaTypeAdapter(SchemaAdapter.class)
 public class Schema {
 
 	/**  Relations indexed based on their name. */

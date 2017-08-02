@@ -9,7 +9,7 @@ import uk.ac.ox.cs.pdq.InterningManager;
  * @author Efthymia Tsamoura
  *
  */
-public final class UntypedConstant implements Constant {
+public final class UntypedConstant extends Constant {
 	private static final long serialVersionUID = 7918785072370309908L;
 
 	/**  The constant's name. */

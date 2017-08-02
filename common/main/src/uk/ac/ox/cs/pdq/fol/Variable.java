@@ -1,8 +1,11 @@
 package uk.ac.ox.cs.pdq.fol;
 
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
 import org.junit.Assert;
 
 import uk.ac.ox.cs.pdq.InterningManager;
+import uk.ac.ox.cs.pdq.io.jaxb.adapters.VariableAdapter;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -11,12 +14,12 @@ import uk.ac.ox.cs.pdq.InterningManager;
  * @author Efthymia Tsamoura
  * @author Julien Leblay
  */
-public class Variable implements Term {
+@XmlJavaTypeAdapter(VariableAdapter.class)
+public class Variable extends Term {
 	private static final long serialVersionUID = 6326879040237354094L;
 
 	/**  The variable's name. */
 	private final String symbol;
-
 	/**
 	 * Instantiates a new variable.
 	 *
@@ -85,5 +88,30 @@ public class Variable implements Term {
 
     public static Variable create(String symbol) {
         return s_interningManager.intern(new Variable(symbol));
+    }
+    
+    /** 
+     * Needed for the xml import/export
+     */
+    public static Variable createFromXml(String symbol) {
+        return new Variable(symbol);
+    }
+    
+    /**
+     * Needed for the xml import/export
+     */
+    @Override
+    public boolean equals(Object obj) {
+    	if (obj == null || !(obj instanceof Variable))
+    		return false;
+    	if (((Variable)obj).isVariable() != isVariable())
+    		return false;
+    	if (((Variable)obj).isUntypedConstant() != isUntypedConstant())
+    		return false;
+    	if (((Variable)obj).getSymbol() == null)
+    		return false;
+    	if (((Variable)obj).getSymbol().equals(getSymbol()))
+    		return true;
+    	return false;
     }
 }

@@ -5,9 +5,12 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
 import org.junit.Assert;
 
 import uk.ac.ox.cs.pdq.InterningManager;
+import uk.ac.ox.cs.pdq.io.jaxb.adapters.AtomAdapter;
 
 /**
  * A formula that contains no logical connectives.
@@ -15,6 +18,7 @@ import uk.ac.ox.cs.pdq.InterningManager;
  *
  * @author Efthymia Tsamoura
  */
+@XmlJavaTypeAdapter(AtomAdapter.class)
 public class Atom extends Formula {
 	private static final long serialVersionUID = 8284527612446931534L;
 
@@ -195,6 +199,13 @@ public class Atom extends Formula {
 
     public static Atom create(Predicate predicate, Term... arguments) {
         return s_interningManager.intern(new Atom(predicate, arguments));
+    }
+    
+    /** 
+     * xml parsing will fail if we return the same reference
+     */
+    public static Atom createFromXml(Predicate predicate, Term... arguments) {
+        return new Atom(predicate, arguments);
     }
     
 	/**

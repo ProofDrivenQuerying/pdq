@@ -4,10 +4,13 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
 import org.apache.commons.lang3.ArrayUtils;
 import org.junit.Assert;
 
 import uk.ac.ox.cs.pdq.InterningManager;
+import uk.ac.ox.cs.pdq.io.jaxb.adapters.QueryAdapter;
 
 //TODO fix the comments
 /**
@@ -18,6 +21,7 @@ import uk.ac.ox.cs.pdq.InterningManager;
  * @author Efthymia Tsamoura
  *
  */
+@XmlJavaTypeAdapter(QueryAdapter.class)
 public class ConjunctiveQuery extends Formula {
 	
 	private static final long serialVersionUID = 2619152028298729812L;

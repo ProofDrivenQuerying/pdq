@@ -2,9 +2,10 @@ package uk.ac.ox.cs.pdq.db;
 
 import java.io.Serializable;
 
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import org.junit.Assert;
-
 import uk.ac.ox.cs.pdq.InterningManager;
+import uk.ac.ox.cs.pdq.io.jaxb.adapters.AccessMethodAdapter;
 
 /**
  * An access method defines the positions of a relation's attributes whose values are required to access the relation.
@@ -12,6 +13,7 @@ import uk.ac.ox.cs.pdq.InterningManager;
  * @author Efthymia Tsamoura
  * @author Julien Leblay
  */
+@XmlJavaTypeAdapter(AccessMethodAdapter.class)
 public class AccessMethod implements Serializable {
 
 	protected static final long serialVersionUID = -5821292665848480210L;
@@ -63,7 +65,7 @@ public class AccessMethod implements Serializable {
 			zero[index] = this.inputs[index] - 1;
 		return zero;
 	}
-
+	
 	public String getName() {
 		return this.name;
 	}
