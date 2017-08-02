@@ -7,6 +7,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.bind.JAXBException;
+
 import org.apache.log4j.Logger;
 
 import com.beust.jcommander.DynamicParameter;
@@ -213,7 +215,7 @@ public class Bootstrap {
 		try(FileInputStream pis = new FileInputStream(fileName) ){
 			File file = new File(fileName);
 			return IOManager.readRelationalTerm(file, schema);
-		} catch (IOException e) {
+		} catch (IOException | JAXBException e) {
 			return null;
 		}
 	}

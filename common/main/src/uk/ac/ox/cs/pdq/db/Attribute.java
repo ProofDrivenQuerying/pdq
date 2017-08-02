@@ -3,9 +3,12 @@ package uk.ac.ox.cs.pdq.db;
 import java.io.Serializable;
 import java.lang.reflect.Type;
 
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
 import org.junit.Assert;
 
 import uk.ac.ox.cs.pdq.InterningManager;
+import uk.ac.ox.cs.pdq.io.jaxb.adapters.AttributeAdapter;
 import uk.ac.ox.cs.pdq.util.Typed;
 
 /**
@@ -14,6 +17,7 @@ import uk.ac.ox.cs.pdq.util.Typed;
  * @author Efthymia Tsamoura
  * @author Julien Leblay
  */
+@XmlJavaTypeAdapter(AttributeAdapter.class)
 public class Attribute implements Typed, Serializable {
 	private static final long serialVersionUID = -2103116468417078713L;
 
@@ -42,7 +46,7 @@ public class Attribute implements Typed, Serializable {
 	public Type getType() {
 		return this.type;
 	}
-
+	
 	public String getName() {
 		return this.name;
 	}

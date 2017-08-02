@@ -3,9 +3,12 @@ package uk.ac.ox.cs.pdq.fol;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
 import org.junit.Assert;
 
 import uk.ac.ox.cs.pdq.InterningManager;
+import uk.ac.ox.cs.pdq.io.jaxb.adapters.DependencyAdapter;
 import uk.ac.ox.cs.pdq.util.Utility;
 
 /**
@@ -14,6 +17,7 @@ import uk.ac.ox.cs.pdq.util.Utility;
  *
  * @author Efthymia Tsamoura
  */
+@XmlJavaTypeAdapter(DependencyAdapter.class)
 public class Dependency extends QuantifiedFormula {
 
 	private static final long serialVersionUID = 6522148218362709983L;

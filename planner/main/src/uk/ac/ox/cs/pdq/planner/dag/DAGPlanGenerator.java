@@ -11,6 +11,7 @@ import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.planner.dag.BinaryConfiguration.BinaryConfigurationTypes;
 import uk.ac.ox.cs.pdq.planner.util.PlanUtils;
 
+//TODO 
 /** TOCOMMENT: WHAT NOTES??
 /**
  * Implement algorithms 1 and 2 from the dependent join notes.

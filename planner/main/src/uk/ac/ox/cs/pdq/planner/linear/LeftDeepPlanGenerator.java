@@ -20,6 +20,7 @@ import uk.ac.ox.cs.pdq.planner.util.PlanUtils;
  */
 public class LeftDeepPlanGenerator {
 
+	//TODO comment
 	/**
 	 * Creates a linear plan using the subplans of the input sequence of nodes.
 	 *

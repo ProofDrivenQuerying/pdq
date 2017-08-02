@@ -24,7 +24,7 @@ public class MatchFactory {
 	 * @param fact the fact
 	 * @return 		a match given the input accessibility axiom and the input fact
 	 */
-	public static Match getMatch(AccessibilityAxiom axiom, Atom fact) {
+	public static Match createMatchForAccessibilityAxiom(AccessibilityAxiom axiom, Atom fact) {
 		Map<Variable, Constant> map = new LinkedHashMap<>();
 		for(int termIndex = 0; termIndex < axiom.getGuard().getNumberOfTerms(); ++termIndex) {
 			Term term = axiom.getGuard().getTerm(termIndex);

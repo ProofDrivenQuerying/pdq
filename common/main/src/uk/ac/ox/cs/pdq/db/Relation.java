@@ -6,8 +6,11 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
 import uk.ac.ox.cs.pdq.InterningManager;
 import uk.ac.ox.cs.pdq.fol.Predicate;
+import uk.ac.ox.cs.pdq.io.jaxb.adapters.RelationAdapter;
 
 /**
  * The schema of a relation.
@@ -15,7 +18,7 @@ import uk.ac.ox.cs.pdq.fol.Predicate;
  * @author Efthymia Tsamoura
  * @author Julien Leblay
  */
-
+@XmlJavaTypeAdapter(RelationAdapter.class)
 public abstract class Relation extends Predicate implements Serializable {
 	protected static InterningManager<Relation> s_interningManager = createCache();
 	/** The Constant serialVersionUID. */
