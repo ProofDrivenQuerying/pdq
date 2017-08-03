@@ -1,22 +1,10 @@
 package uk.ac.ox.cs.pdq.reasoning;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-
-import uk.ac.ox.cs.pdq.db.DatabaseConnection;
-import uk.ac.ox.cs.pdq.db.DatabaseParameters;
-import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.io.xml.QueryReader;
-import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
-import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
-import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
-import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
-import uk.ac.ox.cs.pdq.util.Utility;
 
 import com.beust.jcommander.DynamicParameter;
 import com.beust.jcommander.IParameterValidator;
@@ -24,6 +12,16 @@ import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
 import com.google.common.eventbus.EventBus;
+
+import uk.ac.ox.cs.pdq.db.DatabaseConnection;
+import uk.ac.ox.cs.pdq.db.DatabaseParameters;
+import uk.ac.ox.cs.pdq.db.Schema;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
+import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -154,12 +152,10 @@ public class Reason {
 		for (String k : this.dynamicParams.keySet()) {
 			reasoningParams.set(k, this.dynamicParams.get(k));
 		}
-		try(FileInputStream sis = new FileInputStream(this.getSchemaPath());
-			FileInputStream qis = new FileInputStream(this.getQueryPath())) {
+		try {
+			Schema schema = IOManager.importSchema(new File(this.getSchemaPath()));
+			ConjunctiveQuery query = IOManager.importQuery(new File(this.getQueryPath()));
 
-			Schema schema = new SchemaReader().read(sis);
-			ConjunctiveQuery query = new QueryReader(schema).read(qis);
-			
 			if (schema == null || query == null) {
 				throw new IllegalStateException("Schema and query must be provided.");
 			}

@@ -1,6 +1,6 @@
 package uk.ac.ox.cs.pdq.test.cost.estimators;
 
-import java.io.FileInputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Map.Entry;
 
@@ -8,17 +8,17 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.google.common.eventbus.EventBus;
+
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.estimators.TotalERSPICostEstimator;
 import uk.ac.ox.cs.pdq.cost.statistics.Catalog;
 import uk.ac.ox.cs.pdq.cost.statistics.SimpleCatalog;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
+import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
 import uk.ac.ox.cs.pdq.test.planner.PlannerTestUtilities;
-
-import com.google.common.eventbus.EventBus;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -102,8 +102,8 @@ public class TotalERSPICostEstimatorTest{
 		for(int i = 0; i < this.schemata.length; ++i) {
 			String s = this.schemata[i];
 			String f = this.plans[i];
-			try(FileInputStream sis = new FileInputStream(SHEMA_PATH + s)) {
-				Schema schema = new SchemaReader().read(sis);
+			try {
+				Schema schema = IOManager.importSchema(new File(SHEMA_PATH + s));
 				if (schema == null) 
 					throw new IllegalStateException("Schema must be provided.");
 				Entry<RelationalTerm, Cost> plan = PlannerTestUtilities.obtainPlan(PLAN_PATH + f, schema);

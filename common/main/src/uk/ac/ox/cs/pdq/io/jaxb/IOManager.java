@@ -1,6 +1,7 @@
 package uk.ac.ox.cs.pdq.io.jaxb;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.OutputStream;
 
 import javax.xml.bind.JAXBContext;
@@ -39,8 +40,11 @@ public class IOManager {
 	 * @return parsed Schema object
 	 * @throws JAXBException
 	 *             In case importing fails.
+	 * @throws FileNotFoundException 
 	 */
-	public static Schema importSchema(File schema) throws JAXBException {
+	public static Schema importSchema(File schema) throws JAXBException, FileNotFoundException {
+		if (!schema.exists() )
+			throw new FileNotFoundException(schema.getAbsolutePath());
 		JAXBContext jaxbContext = JAXBContext.newInstance(AdaptedSchema.class);
 		Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 		AdaptedSchema customer = (AdaptedSchema) jaxbUnmarshaller.unmarshal(schema);
@@ -55,8 +59,11 @@ public class IOManager {
 	 * @return imported Query object
 	 * @throws JAXBException
 	 *             In case importing fails.
+	 * @throws FileNotFoundException 
 	 */
-	public static ConjunctiveQuery importQuery(File query) throws JAXBException {
+	public static ConjunctiveQuery importQuery(File query) throws JAXBException, FileNotFoundException {
+		if (!query.exists() )
+			throw new FileNotFoundException(query.getAbsolutePath());
 		JAXBContext jaxbContext = JAXBContext.newInstance(AdaptedQuery.class);
 		Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 		AdaptedQuery customer = (AdaptedQuery) jaxbUnmarshaller.unmarshal(query);
@@ -73,8 +80,9 @@ public class IOManager {
 	 * @return Pair of ConjunctiveQuery and Schema objects.
 	 * @throws JAXBException
 	 *             in case there is a parsing error.
+	 * @throws FileNotFoundException 
 	 */
-	public static Pair<Schema, ConjunctiveQuery> importSchemaAndQuery(File folder) throws JAXBException {
+	public static Pair<Schema, ConjunctiveQuery> importSchemaAndQuery(File folder) throws JAXBException, FileNotFoundException {
 		Schema left = null;
 		ConjunctiveQuery right = null;
 		File schema = new File(folder, "schema.xml");

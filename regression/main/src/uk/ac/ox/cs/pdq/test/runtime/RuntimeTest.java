@@ -23,8 +23,7 @@ import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.io.xml.QueryReader;
-import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
+import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.logging.ProgressLogger;
 import uk.ac.ox.cs.pdq.logging.SimpleProgressLogger;
 import uk.ac.ox.cs.pdq.planner.ExplorationSetUp;
@@ -204,14 +203,12 @@ public class RuntimeTest extends RegressionTest {
 	 */
 	private boolean loadCase(File directory, boolean full) throws ReflectiveOperationException {
 		boolean result = true;
-		try(FileInputStream sis = new FileInputStream(directory.getAbsolutePath() + '/' + SCHEMA_FILE);
-				FileInputStream qis = new FileInputStream(directory.getAbsolutePath() + '/' + QUERY_FILE);) {
-
+		try {
 			this.out.println("Starting case '" + directory.getAbsolutePath() + "'");
 
 			// Loading schema & query
-			Schema schema = new SchemaReader().read(sis);
-			ConjunctiveQuery query = new QueryReader(schema).read(qis);
+			Schema schema = IOManager.importSchema(new File(directory.getAbsolutePath() + '/' + SCHEMA_FILE));
+			ConjunctiveQuery query = IOManager.importQuery(new File(directory.getAbsolutePath() + '/' + QUERY_FILE));
 			if (schema == null || query == null) {
 				this.out.println("\tSKIP: Could not read schema/query in " + directory.getAbsolutePath());
 				return true;

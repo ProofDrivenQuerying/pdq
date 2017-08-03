@@ -1,7 +1,7 @@
 package uk.ac.ox.cs.pdq.test.runtime;
 
 
-import java.io.FileInputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Map.Entry;
 
@@ -14,14 +14,13 @@ import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.datasources.utility.Result;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.io.xml.QueryReader;
-import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
+import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.runtime.EvaluationException;
 import uk.ac.ox.cs.pdq.runtime.RuntimeParameters;
 import uk.ac.ox.cs.pdq.runtime.RuntimeParameters.ExecutorTypes;
-import uk.ac.ox.cs.pdq.runtime.exec.SetupPlanExecutor;
 import uk.ac.ox.cs.pdq.runtime.exec.PlanExecutor;
 import uk.ac.ox.cs.pdq.runtime.exec.PlanExecutor.ExecutionModes;
+import uk.ac.ox.cs.pdq.runtime.exec.SetupPlanExecutor;
 import uk.ac.ox.cs.pdq.test.planner.PlannerTestUtilities;
 import uk.ac.ox.cs.pdq.util.Utility;
 
@@ -91,11 +90,9 @@ public class PipelinedPlanExecutorTest {
 			String p = plans[i];
 
 			System.out.println("RUNNING CASE: " + i/(double)schemata.length);
-			try(FileInputStream sis = new FileInputStream(PATH + s);
-					FileInputStream qis = new FileInputStream(PATH + q)) {
-
-				Schema schema = new SchemaReader().read(sis);
-				ConjunctiveQuery query = new QueryReader(schema).read(qis);
+			try {
+				Schema schema = IOManager.importSchema(new File(PATH + s));
+				ConjunctiveQuery query = IOManager.importQuery(new File(PATH + q));
 
 				if (schema == null || query == null) {
 					throw new IllegalStateException("Schema and query must be provided.");

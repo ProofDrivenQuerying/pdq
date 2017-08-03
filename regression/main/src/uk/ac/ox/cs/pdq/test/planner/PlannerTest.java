@@ -1,7 +1,6 @@
 package uk.ac.ox.cs.pdq.test.planner;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
@@ -22,8 +21,7 @@ import uk.ac.ox.cs.pdq.cost.io.jaxb.CostIOManager;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.io.xml.QueryReader;
-import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
+import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.logging.ProgressLogger;
 import uk.ac.ox.cs.pdq.logging.SimpleProgressLogger;
 import uk.ac.ox.cs.pdq.planner.ExplorationSetUp;
@@ -152,8 +150,7 @@ public class PlannerTest extends RegressionTest {
 		 * @throws ReflectiveOperationException the reflective operation exception
 		 */
 		private boolean compare(File directory) throws ReflectiveOperationException {
-			try(FileInputStream sis = new FileInputStream(directory.getAbsolutePath() + '/' + SCHEMA_FILE);
-					FileInputStream qis = new FileInputStream(directory.getAbsolutePath() + '/' + QUERY_FILE)) {
+			try {
 
 				this.out.println("\nStarting case '" + directory.getAbsolutePath() + "'");
 				PlannerParameters plannerParams = new PlannerParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
@@ -162,9 +159,9 @@ public class PlannerTest extends RegressionTest {
 				override(costParams, paramOverrides);
 				ReasoningParameters reasoningParams = new ReasoningParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
 				DatabaseParameters dbParams = new DatabaseParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
-				
-				Schema schema = new SchemaReader().read(sis);
-				ConjunctiveQuery query = new QueryReader(schema).read(qis);
+				Schema schema = IOManager.importSchema(new File(directory.getAbsolutePath() + '/' + SCHEMA_FILE));
+				ConjunctiveQuery query = IOManager.importQuery(new File(directory.getAbsolutePath() + '/' + QUERY_FILE));
+			
 				Entry<RelationalTerm, Cost> expectedPlan = PlannerTestUtilities.obtainPlan(directory.getAbsolutePath() + '/' + PLAN_FILE, schema);
 				if (schema == null || query == null) {
 					throw new RegressionTestException(
@@ -304,11 +301,10 @@ public class PlannerTest extends RegressionTest {
 		 * @throws ReflectiveOperationException the reflective operation exception
 		 */
 		private boolean validate(File directory) throws ReflectiveOperationException {
-			try(FileInputStream sis = new FileInputStream(directory.getAbsolutePath() + '/' + SCHEMA_FILE);
-					FileInputStream qis = new FileInputStream(directory.getAbsolutePath() + '/' + QUERY_FILE)) {
+			try {
 				this.out.println("\nStarting case '" + directory.getAbsolutePath() + "'");
-				Schema schema = new SchemaReader().read(sis);
-				ConjunctiveQuery query = new QueryReader(schema).read(qis);
+				Schema schema = IOManager.importSchema(new File(directory.getAbsolutePath() + '/' + SCHEMA_FILE));
+				ConjunctiveQuery query = IOManager.importQuery(new File(directory.getAbsolutePath() + '/' + QUERY_FILE));
 				if (schema == null || query == null) {
 					throw new RegressionTestException("Schema and query must be provided for each regression test. (schema:" + schema + ", query: " + query + ")");
 				}
@@ -334,16 +330,15 @@ public class PlannerTest extends RegressionTest {
 		 * @throws ReflectiveOperationException the reflective operation exception
 		 */
 		private boolean prepare(File directory) throws ReflectiveOperationException {
-			try(FileInputStream sis = new FileInputStream(directory.getAbsolutePath() + '/' + SCHEMA_FILE);
-					FileInputStream qis = new FileInputStream(directory.getAbsolutePath() + '/' + QUERY_FILE)) {
+			try {
 				this.out.println("\nStarting case '" + directory.getAbsolutePath() + "'");
 				PlannerParameters plannerParams = new PlannerParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
 				CostParameters costParams = new CostParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
 				ReasoningParameters reasoningParams = new ReasoningParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
 				DatabaseParameters dbParams = new DatabaseParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
 				
-				Schema schema = new SchemaReader().read(sis);
-				ConjunctiveQuery query = new QueryReader(schema).read(qis);
+				Schema schema = IOManager.importSchema(new File(directory.getAbsolutePath() + '/' + SCHEMA_FILE));
+				ConjunctiveQuery query = IOManager.importQuery(new File(directory.getAbsolutePath() + '/' + QUERY_FILE));
 				if (schema == null || query == null) {
 					throw new RegressionTestException("Schema and query must be provided for each regression test. (schema:" + schema + ", query: " + query + ")");
 				}

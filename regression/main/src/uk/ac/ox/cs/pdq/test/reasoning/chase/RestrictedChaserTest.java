@@ -1,7 +1,7 @@
 package uk.ac.ox.cs.pdq.test.reasoning.chase;
 
 import java.io.BufferedReader;
-import java.io.FileInputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -22,8 +22,7 @@ import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
-import uk.ac.ox.cs.pdq.io.xml.QueryReader;
-import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
+import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
@@ -192,13 +191,9 @@ public class RestrictedChaserTest {
 			String s = schemata[i];
 			String q = queries[i];
 			String f = facts[i];
-
-			try(FileInputStream sis = new FileInputStream(PATH + s);
-					FileInputStream qis = new FileInputStream(PATH + q)) {
-
-				Schema schema = new SchemaReader().read(sis);
-				ConjunctiveQuery query = new QueryReader(schema).read(qis);
-
+			try {
+				Schema schema = IOManager.importSchema(new File(PATH + s));
+				ConjunctiveQuery query = IOManager.importQuery(new File(PATH + s));
 				if (schema == null || query == null) {
 					throw new IllegalStateException("Schema and query must be provided.");
 				}

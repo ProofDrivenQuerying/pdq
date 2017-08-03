@@ -1,6 +1,6 @@
 package uk.ac.ox.cs.pdq.test.cost.estimators;
 
-import java.io.FileInputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Map.Entry;
 
@@ -18,7 +18,7 @@ import uk.ac.ox.cs.pdq.cost.estimators.WhiteBoxCostEstimator;
 import uk.ac.ox.cs.pdq.cost.statistics.Catalog;
 import uk.ac.ox.cs.pdq.cost.statistics.SimpleCatalog;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
+import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
 import uk.ac.ox.cs.pdq.test.planner.PlannerTestUtilities;
 
@@ -99,9 +99,8 @@ public class TotalWhiteBoxEstimatorTest{
 		for(int i = 0; i < this.plans.length; ++i) {
 			String s = this.schemata;
 			String f = this.plans[i];
-
-			try(FileInputStream sis = new FileInputStream(SHEMA_PATH + s)) {
-				Schema schema = new SchemaReader().read(sis);
+			try {
+				Schema schema = IOManager.importSchema(new File(SHEMA_PATH + s));
 				if (schema == null) 
 					throw new IllegalStateException("Schema must be provided.");
 				

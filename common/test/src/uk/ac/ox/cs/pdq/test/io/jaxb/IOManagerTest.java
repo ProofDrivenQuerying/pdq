@@ -2,8 +2,6 @@ package uk.ac.ox.cs.pdq.test.io.jaxb;
 
 import java.io.File;
 
-import javax.xml.bind.JAXBException;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,7 +35,7 @@ public class IOManagerTest {
 			Assert.assertNotNull(q.getAtoms()[0].getFreeVariables());
 			Assert.assertNotNull(q.getFreeVariables());
 			Assert.assertTrue(q.getFreeVariables().length > 0);
-		} catch (JAXBException e) {
+		} catch (Exception e) {
 			Assert.fail(e.getMessage());
 			e.printStackTrace();
 		}
@@ -54,7 +52,7 @@ public class IOManagerTest {
 			Assert.assertTrue(out.exists());
 			Assert.assertEquals(ref.length(), out.length());
 			out.delete();
-		} catch (JAXBException e) {
+		} catch (Exception e) {
 			Assert.fail(e.getMessage());
 			e.printStackTrace();
 		}
@@ -71,7 +69,7 @@ public class IOManagerTest {
 			Assert.assertNotNull(s.getRelations()[0].getName());
 			Assert.assertNotNull(s.getDependencies());
 			Assert.assertTrue(s.getDependencies().length > 0);
-		} catch (JAXBException e) {
+		} catch (Exception e) {
 			Assert.fail(e.getMessage());
 			e.printStackTrace();
 		}
@@ -99,7 +97,7 @@ public class IOManagerTest {
 			Assert.assertEquals(out.length(), out2.length());
 			out.delete();
 			out2.delete();
-		} catch (JAXBException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail(e.getMessage());
 		}
@@ -117,7 +115,7 @@ public class IOManagerTest {
 			Assert.assertTrue(out.exists());
 			Assert.assertEquals(in.length(), out.length());
 			out.delete();
-		} catch (JAXBException e) {
+		} catch (Exception e) {
 			Assert.fail(e.getMessage());
 			e.printStackTrace();
 		}
@@ -136,7 +134,7 @@ public class IOManagerTest {
 			Assert.assertTrue(out.exists());
 			Assert.assertEquals(ref.length(), out.length());
 			out.delete();
-		} catch (JAXBException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail(e.getMessage());
 		}
@@ -157,7 +155,7 @@ public class IOManagerTest {
 			Assert.assertTrue(out.exists());
 			Assert.assertEquals(ref.length(), out.length());
 			out.delete();
-		} catch (JAXBException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail(e.getMessage());
 		}

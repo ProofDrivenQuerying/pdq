@@ -1,7 +1,6 @@
 package uk.ac.ox.cs.pdq.test.planner;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Map.Entry;
@@ -14,8 +13,7 @@ import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.io.xml.QueryReader;
-import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
+import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.logging.ProgressLogger;
 import uk.ac.ox.cs.pdq.logging.SimpleProgressLogger;
 import uk.ac.ox.cs.pdq.planner.ExplorationSetUp;
@@ -23,9 +21,9 @@ import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.PlannerTypes;
 import uk.ac.ox.cs.pdq.planner.logging.IntervalEventDrivenLogger;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
+import uk.ac.ox.cs.pdq.test.Bootstrap.Command;
 import uk.ac.ox.cs.pdq.test.RegressionTest;
 import uk.ac.ox.cs.pdq.test.RegressionTestException;
-import uk.ac.ox.cs.pdq.test.Bootstrap.Command;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -90,21 +88,18 @@ public class DAGExplorersTest extends RegressionTest {
 	 */
 	protected boolean compare(File directory) {
 		boolean result = true;
-		try (
-				FileInputStream sis = new FileInputStream(directory.getAbsolutePath() + '/' + SCHEMA_FILE);
-				FileInputStream qis = new FileInputStream(directory.getAbsolutePath() + '/' + QUERY_FILE)) {
-
+		try {
 			this.out.println("\nStarting case '" + directory.getAbsolutePath() + "'");
 
 			// Loading schema
-			Schema schema = new SchemaReader().read(sis);
+			Schema schema = IOManager.importSchema(new File(directory.getAbsolutePath() + '/' + SCHEMA_FILE));
 			PlannerParameters plannerParams = new PlannerParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
 			CostParameters costParams = new CostParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
 			ReasoningParameters reasoningParams = new ReasoningParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
 			DatabaseParameters databaseParams = new DatabaseParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
 
 			// Loading query
-			ConjunctiveQuery query = new QueryReader(schema).read(qis);
+			ConjunctiveQuery query = IOManager.importQuery(new File(directory.getAbsolutePath() + '/' + QUERY_FILE));
 			if (schema == null || query == null) {
 				this.out.println("\tSKIP: Could not read schema/query in " + directory.getAbsolutePath());
 				return true;

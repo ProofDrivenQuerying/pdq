@@ -21,7 +21,6 @@ import org.junit.Assert;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
-
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.DataType;
 import uk.ac.ox.cs.pdq.db.ForeignKey;
@@ -44,7 +43,6 @@ import uk.ac.ox.cs.pdq.fol.QuantifiedFormula;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
-import uk.ac.ox.cs.pdq.io.xml.QNames;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -260,7 +258,7 @@ public class Utility {
 			}
 			i++;
 		}
-		Predicate equality = new Predicate(QNames.EQUALITY.toString(), 2, true);
+		Predicate equality = new Predicate("equality", 2, true);
 		//Create the constant equality predicates
 		int index = 0;
 		Formula[] equalities = new Formula[tobeEqual.entrySet().size()];

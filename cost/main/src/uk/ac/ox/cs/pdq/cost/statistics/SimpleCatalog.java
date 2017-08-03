@@ -2,7 +2,7 @@ package uk.ac.ox.cs.pdq.cost.statistics;
 
 
 import java.io.BufferedReader;
-import java.io.FileInputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -16,19 +16,18 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 
+import com.google.common.base.Joiner;
+import com.google.common.base.Preconditions;
+import com.google.common.collect.Maps;
+
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
-import uk.ac.ox.cs.pdq.io.xml.QueryReader;
-import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
+import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.util.Utility;
-
-import com.google.common.base.Joiner;
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Maps;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -606,12 +605,9 @@ public class SimpleCatalog implements Catalog{
 		String schemafile = "SCHEMA FILE";
 		String queryfile = "QUERY FILE";
 		String catalogfile = "CATALOG FILE";
-		try(FileInputStream sis = new FileInputStream(PATH + schemafile);
-				FileInputStream qis = new FileInputStream(PATH + queryfile)) {
-
-			Schema schema = new SchemaReader().read(sis);
-			ConjunctiveQuery query = new QueryReader(schema).read(qis);
-
+		try {
+			Schema schema = IOManager.importSchema(new File(PATH + schemafile));
+			ConjunctiveQuery query = IOManager.importQuery(new File(PATH + queryfile));
 			if (schema == null || query == null) {
 				throw new IllegalStateException("Schema and query must be provided.");
 			}

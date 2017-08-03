@@ -24,8 +24,6 @@ import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
-import uk.ac.ox.cs.pdq.io.xml.QueryReader;
-import uk.ac.ox.cs.pdq.io.xml.SchemaReader;
 import uk.ac.ox.cs.pdq.runtime.io.DataReader;
 
 // TODO: Auto-generated Javadoc
@@ -180,11 +178,10 @@ public class Bootstrap {
 		for (String k : this.dynamicParams.keySet()) {
 			params.set(k, this.dynamicParams.get(k));
 		}
-		try(FileInputStream sis = new FileInputStream(this.getSchemaPath());
-			FileInputStream qis = new FileInputStream(this.getQueryPath())) {
+		try {
+			Schema schema = IOManager.importSchema(new File(this.getSchemaPath()));
+			ConjunctiveQuery query = IOManager.importQuery(new File(this.getQueryPath()));
 
-			Schema schema = new SchemaReader().read(sis);
-			ConjunctiveQuery query = new QueryReader(schema).read(qis);
 			RelationalTerm plan = obtainPlan(this.getPlanPath(), schema);
 
 			List<Atom> facts = null;
