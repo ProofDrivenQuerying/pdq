@@ -21,7 +21,7 @@ import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.Projection;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.Scan;
-import uk.ac.ox.cs.pdq.runtime.exec.iterator.TopDownAccess;
+import uk.ac.ox.cs.pdq.runtime.exec.iterator.Access;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator;
 import uk.ac.ox.cs.pdq.util.Typed;
 
@@ -182,7 +182,7 @@ public class ProjectionTest extends UnaryIteratorTest {
 	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void bindNull() {
-		this.iterator = new Projection(projected, renaming, new TopDownAccess(relation, mt));
+		this.iterator = new Projection(projected, renaming, new Access(relation, mt));
 		this.iterator.open();
 		this.iterator.bind(null);
 	}
@@ -192,7 +192,7 @@ public class ProjectionTest extends UnaryIteratorTest {
 	 */
 	@Test(expected=IllegalStateException.class)
 	public void bindOnUnopened() {
-		this.iterator = new Projection(projected, renaming, new TopDownAccess(relation, mt));
+		this.iterator = new Projection(projected, renaming, new Access(relation, mt));
 		this.iterator.bind(inputType.createTuple(4, "four"));
 	}
 	
@@ -201,7 +201,7 @@ public class ProjectionTest extends UnaryIteratorTest {
 	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void bindIllegalType() {
-		this.iterator = new Projection(projected, renaming, new TopDownAccess(relation, mt));
+		this.iterator = new Projection(projected, renaming, new Access(relation, mt));
 		this.iterator.open();
 		this.iterator.bind(inputType.createTuple("four", 4));
 	}
@@ -211,7 +211,7 @@ public class ProjectionTest extends UnaryIteratorTest {
 	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void bindEmptyTuple() {
-		this.iterator = new Projection(projected, renaming, new TopDownAccess(relation, mt));
+		this.iterator = new Projection(projected, renaming, new Access(relation, mt));
 		this.iterator.open();
 		this.iterator.bind(Tuple.EmptyTuple);
 	}
@@ -220,7 +220,7 @@ public class ProjectionTest extends UnaryIteratorTest {
 	 * Bind.
 	 */
 	@Test public void bind() {
-		this.iterator = new Projection(projected, renaming, new TopDownAccess(relation, mt));
+		this.iterator = new Projection(projected, renaming, new Access(relation, mt));
 		this.iterator.open();
 		this.iterator.bind(inputType.createTuple(4, "four"));
 		Assert.assertFalse(this.iterator.hasNext());

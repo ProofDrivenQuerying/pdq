@@ -77,4 +77,10 @@ public class SelectionTerm extends RelationalTerm {
     public static SelectionTerm create(Condition predicate, RelationalTerm child) {
         return s_interningManager.intern(new SelectionTerm(predicate, child));
     }
+    
+	@Override
+	public RelationalTerm getChild(int childIndex) {
+		Assert.assertTrue(childIndex == 0);
+		return this.child;
+	}
 }

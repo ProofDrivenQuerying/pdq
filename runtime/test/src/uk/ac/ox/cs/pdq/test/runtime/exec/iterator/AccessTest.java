@@ -17,7 +17,7 @@ import uk.ac.ox.cs.pdq.datasources.utility.TupleType;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
-import uk.ac.ox.cs.pdq.runtime.exec.iterator.TopDownAccess;
+import uk.ac.ox.cs.pdq.runtime.exec.iterator.Access;
 import uk.ac.ox.cs.pdq.util.Typed;
 import uk.ac.ox.cs.pdq.util.Utility;
 
@@ -29,7 +29,7 @@ import com.google.common.collect.Lists;
  *
  * @author Julien LEBLAY
  */
-public class TopDownAccessTest {
+public class AccessTest {
 
 	/** The d. */
 	Attribute a = Attribute.create(Integer.class, "a"), 
@@ -50,7 +50,7 @@ public class TopDownAccessTest {
 	TupleType inputType;
 	
 	/** The iterator. */
-	TopDownAccess iterator;
+	Access iterator;
 	
 	/** The relation. */
 	InMemoryTableWrapper relation;
@@ -138,7 +138,7 @@ public class TopDownAccessTest {
 	 */
 	@Test(expected=IllegalArgumentException.class) 
 	public void initWithInconsistentAccessMethod() {
-		new TopDownAccess(relation, unrelated);
+		new Access(relation, unrelated);
 	}
 	
 	/**
@@ -146,7 +146,7 @@ public class TopDownAccessTest {
 	 */
 	@Test(expected=IllegalArgumentException.class) 
 	public void initAccessFreeAccess() {
-		this.iterator = new TopDownAccess(relation, free);
+		this.iterator = new Access(relation, free);
 		Assert.assertEquals(relation, this.iterator.getRelation());
 		Assert.assertEquals(free, this.iterator.getAccessMethod());
 		Assert.assertEquals(new HashMap<>(), this.iterator.getStaticInputs());
@@ -156,7 +156,7 @@ public class TopDownAccessTest {
 	 * Inits the access limited access1.
 	 */
 	@Test public void initAccessLimitedAccess1() {
-		this.iterator = new TopDownAccess(relation, mt1);
+		this.iterator = new Access(relation, mt1);
 		Assert.assertEquals(relation, this.iterator.getRelation());
 		Assert.assertEquals(mt1, this.iterator.getAccessMethod());
 		Assert.assertEquals(new HashMap<>(), this.iterator.getStaticInputs());
@@ -166,7 +166,7 @@ public class TopDownAccessTest {
 	 * Inits the access limited access2.
 	 */
 	@Test public void initAccessLimitedAccess2() {
-		this.iterator = new TopDownAccess(relation, mt2);
+		this.iterator = new Access(relation, mt2);
 		Assert.assertEquals(relation, this.iterator.getRelation());
 		Assert.assertEquals(mt2, this.iterator.getAccessMethod());
 		Assert.assertEquals(new HashMap<>(), this.iterator.getStaticInputs());
@@ -176,7 +176,7 @@ public class TopDownAccessTest {
 	 * Inits the access boolean access.
 	 */
 	@Test public void initAccessBooleanAccess() {
-		this.iterator = new TopDownAccess(relation, mt3);
+		this.iterator = new Access(relation, mt3);
 		Assert.assertEquals(relation, this.iterator.getRelation());
 		Assert.assertEquals(mt3, this.iterator.getAccessMethod());
 		Assert.assertEquals(new HashMap<>(), this.iterator.getStaticInputs());
@@ -186,7 +186,7 @@ public class TopDownAccessTest {
 	 * Inits the access limited access1 with static input.
 	 */
 	@Test public void initAccessLimitedAccess1WithStaticInput() {
-		this.iterator = new TopDownAccess(relation, mt1, static1);
+		this.iterator = new Access(relation, mt1, static1);
 		Assert.assertEquals(relation, this.iterator.getRelation());
 		Assert.assertEquals(mt1, this.iterator.getAccessMethod());
 		Assert.assertEquals(static1, this.iterator.getStaticInputs());
@@ -197,7 +197,7 @@ public class TopDownAccessTest {
 	 */
 	@Test(expected=IllegalArgumentException.class) 
 	public void initAccessLimitedAccess1WithInconsistentTypeStaticInput() {
-		this.iterator = new TopDownAccess(relation, mt1, static4);
+		this.iterator = new Access(relation, mt1, static4);
 		Assert.assertEquals(relation, this.iterator.getRelation());
 		Assert.assertEquals(mt1, this.iterator.getAccessMethod());
 		Assert.assertEquals(static4, this.iterator.getStaticInputs());
@@ -208,7 +208,7 @@ public class TopDownAccessTest {
 	 */
 	@Test(expected=IllegalArgumentException.class) 
 	public void initAccessLimitedAccess1WithInconsistentEntryStaticInput() {
-		this.iterator = new TopDownAccess(relation, mt1, static5);
+		this.iterator = new Access(relation, mt1, static5);
 		Assert.assertEquals(relation, this.iterator.getRelation());
 		Assert.assertEquals(mt1, this.iterator.getAccessMethod());
 		Assert.assertEquals(static5, this.iterator.getStaticInputs());
@@ -218,7 +218,7 @@ public class TopDownAccessTest {
 	 * Inits the access limited access2 with partial static input.
 	 */
 	@Test public void initAccessLimitedAccess2WithPartialStaticInput() {
-		this.iterator = new TopDownAccess(relation, mt2, static1);
+		this.iterator = new Access(relation, mt2, static1);
 		Assert.assertEquals(relation, this.iterator.getRelation());
 		Assert.assertEquals(mt2, this.iterator.getAccessMethod());
 		Assert.assertEquals(static1, this.iterator.getStaticInputs());
@@ -228,7 +228,7 @@ public class TopDownAccessTest {
 	 * Inits the access limited access2 with full static input.
 	 */
 	@Test public void initAccessLimitedAccess2WithFullStaticInput() {
-		this.iterator = new TopDownAccess(relation, mt2, static2);
+		this.iterator = new Access(relation, mt2, static2);
 		Assert.assertEquals(relation, this.iterator.getRelation());
 		Assert.assertEquals(mt2, this.iterator.getAccessMethod());
 		Assert.assertEquals(static2, this.iterator.getStaticInputs());
@@ -238,7 +238,7 @@ public class TopDownAccessTest {
 	 * Inits the access boolean access with partial static input.
 	 */
 	@Test public void initAccessBooleanAccessWithPartialStaticInput() {
-		this.iterator = new TopDownAccess(relation, mt3, static1);
+		this.iterator = new Access(relation, mt3, static1);
 		Assert.assertEquals(relation, this.iterator.getRelation());
 		Assert.assertEquals(mt3, this.iterator.getAccessMethod());
 		Assert.assertEquals(static1, this.iterator.getStaticInputs());
@@ -248,7 +248,7 @@ public class TopDownAccessTest {
 	 * Inits the access boolean access with full static input.
 	 */
 	@Test public void initAccessBooleanAccessWithFullStaticInput() {
-		this.iterator = new TopDownAccess(relation, mt3, static3);
+		this.iterator = new Access(relation, mt3, static3);
 		Assert.assertEquals(relation, this.iterator.getRelation());
 		Assert.assertEquals(mt3, this.iterator.getAccessMethod());
 		Assert.assertEquals(static3, this.iterator.getStaticInputs());
@@ -259,7 +259,7 @@ public class TopDownAccessTest {
 	 */
 	@Test(expected=IllegalArgumentException.class) 
 	public void initAccessNullRelation() {
-		new TopDownAccess(null, mt1);
+		new Access(null, mt1);
 	}
 
 	/**
@@ -267,7 +267,7 @@ public class TopDownAccessTest {
 	 */
 	@Test(expected=IllegalArgumentException.class) 
 	public void initAccessNullAccessMethod() {
-		new TopDownAccess(relation, null);
+		new Access(relation, null);
 	}
 
 	/**
@@ -275,7 +275,7 @@ public class TopDownAccessTest {
 	 */
 	@Test(expected=IllegalArgumentException.class) 
 	public void initAccessNullChild() {
-		new TopDownAccess(relation, mt1, null);
+		new Access(relation, mt1, null);
 	}
 	
 	/**
@@ -283,7 +283,7 @@ public class TopDownAccessTest {
 	 */
 	@Test(expected=IllegalArgumentException.class) 
 	public void bindInconsistentEmptyInput() {
-		this.iterator = new TopDownAccess(relation, mt1);
+		this.iterator = new Access(relation, mt1);
 		this.iterator.open();
 		this.iterator.bind(Tuple.EmptyTuple);
 	}		
@@ -293,7 +293,7 @@ public class TopDownAccessTest {
 	 */
 	@Test(expected=IllegalArgumentException.class) 
 	public void initInconsistentInputType() {
-		this.iterator = new TopDownAccess(relation, mt1);
+		this.iterator = new Access(relation, mt1);
 		this.iterator.open();
 		this.iterator.bind(TupleType.DefaultFactory.create(String.class).createTuple("str"));
 	}		
@@ -303,7 +303,7 @@ public class TopDownAccessTest {
 	 */
 	@Test(expected=IllegalArgumentException.class) 
 	public void bindInconsistentInputArity() {
-		this.iterator = new TopDownAccess(relation, mt1);
+		this.iterator = new Access(relation, mt1);
 		this.iterator.open();
 		this.iterator.bind(TupleType.DefaultFactory.create(String.class, Integer.class).createTuple("str", 1));
 	}		
@@ -312,7 +312,7 @@ public class TopDownAccessTest {
 	 * Checks for next limited1.
 	 */
 	@Test public void hasNextLimited1() {
-		this.iterator = new TopDownAccess(relation, mt1);
+		this.iterator = new Access(relation, mt1);
 		this.iterator.open();
 		this.iterator.bind(binding1);
 		Assert.assertTrue(this.iterator.hasNext()); this.iterator.next();
@@ -335,7 +335,7 @@ public class TopDownAccessTest {
 	 * Checks for next limited1 with static input.
 	 */
 	@Test public void hasNextLimited1WithStaticInput() {
-		this.iterator = new TopDownAccess(relation, mt1, static1);
+		this.iterator = new Access(relation, mt1, static1);
 		this.iterator.open();
 		Assert.assertTrue(this.iterator.hasNext()); this.iterator.next();
 		Assert.assertTrue(this.iterator.hasNext()); this.iterator.next();
@@ -347,7 +347,7 @@ public class TopDownAccessTest {
 	 * Next limited1 with static input.
 	 */
 	@Test public void nextLimited1WithStaticInput() {
-		this.iterator = new TopDownAccess(relation, mt1, static1);
+		this.iterator = new Access(relation, mt1, static1);
 		this.iterator.open();
 		Assert.assertEquals(outputType.createTuple(3, "x", "one", 8), this.iterator.next());
 		Assert.assertEquals(outputType.createTuple(3, "x", "four", 32), this.iterator.next());
@@ -358,7 +358,7 @@ public class TopDownAccessTest {
 	 * Reset limited1 with static input.
 	 */
 	@Test public void resetLimited1WithStaticInput() {
-		this.iterator = new TopDownAccess(relation, mt1, static1);
+		this.iterator = new Access(relation, mt1, static1);
 		this.iterator.open();
 		Assert.assertEquals(outputType.createTuple(3, "x", "one", 8), this.iterator.next());
 		Assert.assertEquals(outputType.createTuple(3, "x", "four", 32), this.iterator.next());
@@ -373,7 +373,7 @@ public class TopDownAccessTest {
 	 * Checks for next limited2.
 	 */
 	@Test public void hasNextLimited2() {
-		this.iterator = new TopDownAccess(relation, mt2);
+		this.iterator = new Access(relation, mt2);
 		this.iterator.open();
 		this.iterator.bind(binding2);
 		Assert.assertTrue(this.iterator.hasNext()); this.iterator.next();
@@ -390,7 +390,7 @@ public class TopDownAccessTest {
 	 * Checks for next limited2 with partial static input.
 	 */
 	@Test public void hasNextLimited2WithPartialStaticInput() {
-		this.iterator = new TopDownAccess(relation, mt2, static5);
+		this.iterator = new Access(relation, mt2, static5);
 		this.iterator.open();
 		this.iterator.bind(binding1); // (x, 3) => 1 tuple
 		Assert.assertTrue(this.iterator.hasNext()); this.iterator.next();
@@ -409,7 +409,7 @@ public class TopDownAccessTest {
 	 * Next limited2 with partial static input.
 	 */
 	@Test public void nextLimited2WithPartialStaticInput() {
-		this.iterator = new TopDownAccess(relation, mt2, static5);
+		this.iterator = new Access(relation, mt2, static5);
 		this.iterator.open();
 		this.iterator.bind(binding1); // (x, 3) => 1 tuple
 		Assert.assertTrue(this.iterator.hasNext()); 
@@ -431,7 +431,7 @@ public class TopDownAccessTest {
 	 * Reset limited2 with partial static input.
 	 */
 	@Test public void resetLimited2WithPartialStaticInput() {
-		this.iterator = new TopDownAccess(relation, mt2, static5);
+		this.iterator = new Access(relation, mt2, static5);
 		this.iterator.open();
 		this.iterator.bind(binding1); // (x, 3) => 2 tuples
 		Assert.assertTrue(this.iterator.hasNext()); 
@@ -464,7 +464,7 @@ public class TopDownAccessTest {
 	 * Checks for next boolean.
 	 */
 	@Test public void hasNextBoolean() {
-		this.iterator = new TopDownAccess(relation, mt3);
+		this.iterator = new Access(relation, mt3);
 		this.iterator.open();
 		this.iterator.bind(binding3);
 		Assert.assertTrue(this.iterator.hasNext()); this.iterator.next();
@@ -479,7 +479,7 @@ public class TopDownAccessTest {
 	 * Next limited1.
 	 */
 	@Test public void nextLimited1() {
-		this.iterator = new TopDownAccess(relation, mt1);
+		this.iterator = new Access(relation, mt1);
 		this.iterator.open();
 		this.iterator.bind(binding1);
 		Assert.assertEquals(outputType.createTuple(3, "x", "one", 8), this.iterator.next());
@@ -496,7 +496,7 @@ public class TopDownAccessTest {
 	 * Next limited2.
 	 */
 	@Test public void nextLimited2() {
-		this.iterator = new TopDownAccess(relation, mt2);
+		this.iterator = new Access(relation, mt2);
 		this.iterator.open();
 		this.iterator.bind(binding2);
 		Assert.assertEquals(outputType.createTuple(3, "x", "one", 8), this.iterator.next());
@@ -511,7 +511,7 @@ public class TopDownAccessTest {
 	 * Next boolean.
 	 */
 	@Test public void nextBoolean() {
-		this.iterator = new TopDownAccess(relation, mt3);
+		this.iterator = new Access(relation, mt3);
 		this.iterator.open();
 		this.iterator.bind(binding3);
 		Assert.assertEquals(outputType.createTuple(3, "y", "one", 256), this.iterator.next());
@@ -525,7 +525,7 @@ public class TopDownAccessTest {
 	 */
 	@Test (expected=NoSuchElementException.class)
 	public void nextBooleanLimitReached() {
-		this.iterator = new TopDownAccess(relation, mt3);
+		this.iterator = new Access(relation, mt3);
 		this.iterator.open();
 		this.iterator.bind(binding3);
 		this.iterator.next();
@@ -537,7 +537,7 @@ public class TopDownAccessTest {
 	 */
 	@Test(expected=NoSuchElementException.class) 
 	public void resetLimited1() {
-		this.iterator = new TopDownAccess(relation, mt1);
+		this.iterator = new Access(relation, mt1);
 		this.iterator.open();
 		this.iterator.bind(binding1);
 		Assert.assertTrue(this.iterator.hasNext());
@@ -564,7 +564,7 @@ public class TopDownAccessTest {
 	 */
 	@Test(expected=NoSuchElementException.class) 
 	public void resetLimited2() {
-		this.iterator = new TopDownAccess(relation, mt2);
+		this.iterator = new Access(relation, mt2);
 		this.iterator.open();
 		this.iterator.bind(binding2);
 		Assert.assertTrue(this.iterator.hasNext());
@@ -587,7 +587,7 @@ public class TopDownAccessTest {
 	 */
 	@Test(expected=NoSuchElementException.class) 
 	public void resetBoolean() {
-		this.iterator = new TopDownAccess(relation, mt3);
+		this.iterator = new Access(relation, mt3);
 		this.iterator.open();
 		this.iterator.bind(binding3);
 		Assert.assertTrue(this.iterator.hasNext());
@@ -606,7 +606,7 @@ public class TopDownAccessTest {
 	 */
 	@Test(expected=IllegalStateException.class) 
 	public void iterateOverUnboundAccess() {
-		this.iterator = new TopDownAccess(relation, mt1);
+		this.iterator = new Access(relation, mt1);
 		this.iterator.open();
 		this.iterator.next();
 	}		
@@ -616,7 +616,7 @@ public class TopDownAccessTest {
 	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void bindNull() {
-		this.iterator = new TopDownAccess(relation, mt1);
+		this.iterator = new Access(relation, mt1);
 		this.iterator.open();
 		this.iterator.bind(null);
 	}
@@ -626,7 +626,7 @@ public class TopDownAccessTest {
 	 */
 	@Test(expected=IllegalStateException.class)
 	public void bindOnUnopened() {
-		this.iterator = new TopDownAccess(relation, mt1);
+		this.iterator = new Access(relation, mt1);
 		this.iterator.bind(Tuple.EmptyTuple);
 	}
 	
@@ -635,7 +635,7 @@ public class TopDownAccessTest {
 	 */
 	@Test(expected=IllegalStateException.class)
 	public void bindOnInterrupted() {
-		this.iterator = new TopDownAccess(relation, mt1);
+		this.iterator = new Access(relation, mt1);
 		this.iterator.bind(Tuple.EmptyTuple);
 	}
 	
@@ -644,7 +644,7 @@ public class TopDownAccessTest {
 	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void bindInconsistentType() {
-		this.iterator = new TopDownAccess(relation, mt1);
+		this.iterator = new Access(relation, mt1);
 		this.iterator.open();
 		this.iterator.bind(outputType.createTuple("four", 4));
 	}
@@ -654,7 +654,7 @@ public class TopDownAccessTest {
 	 */
 	@Test(expected=IllegalArgumentException.class) 
 	public void bindEmptyTuple() {
-		this.iterator = new TopDownAccess(relation, mt1);
+		this.iterator = new Access(relation, mt1);
 		this.iterator.open();
 		this.iterator.bind(Tuple.EmptyTuple);
 	}
@@ -664,7 +664,7 @@ public class TopDownAccessTest {
 	 */
 	@Test(expected=IllegalArgumentException.class) 
 	public void bindWithFullStaticInput1() {
-		this.iterator = new TopDownAccess(relation, mt1, static1);
+		this.iterator = new Access(relation, mt1, static1);
 		this.iterator.open();
 		this.iterator.bind(binding1);
 	}
@@ -674,7 +674,7 @@ public class TopDownAccessTest {
 	 */
 	@Test(expected=IllegalArgumentException.class) 
 	public void bindWithFullStaticInput2() {
-		this.iterator = new TopDownAccess(relation, mt1, static2);
+		this.iterator = new Access(relation, mt1, static2);
 		this.iterator.open();
 		this.iterator.bind(binding2);
 	}
@@ -684,7 +684,7 @@ public class TopDownAccessTest {
 	 */
 	@Test(expected=IllegalArgumentException.class) 
 	public void bindWithFullStaticInput3() {
-		this.iterator = new TopDownAccess(relation, mt1, static3);
+		this.iterator = new Access(relation, mt1, static3);
 		this.iterator.open();
 		this.iterator.bind(binding3);
 	}

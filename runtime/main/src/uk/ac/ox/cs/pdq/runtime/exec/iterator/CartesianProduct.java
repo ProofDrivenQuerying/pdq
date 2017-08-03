@@ -20,7 +20,7 @@ import uk.ac.ox.cs.pdq.util.Typed;
  * 
  * @author Julien Leblay
  */
-public class CrossProduct extends NaryIterator {
+public class CartesianProduct extends NaryIterator {
 
 	/** A stack of tuple fragment, used in the incremental computation of the cross product. */
 	protected Deque<Tuple> tupleStack = new ArrayDeque<>();
@@ -36,7 +36,7 @@ public class CrossProduct extends NaryIterator {
 	 *
 	 * @param children the children
 	 */
-	public CrossProduct(TupleIterator... children) {
+	public CartesianProduct(TupleIterator... children) {
 		this(toList(children));
 	}
 
@@ -45,7 +45,7 @@ public class CrossProduct extends NaryIterator {
 	 *
 	 * @param children the children
 	 */
-	public CrossProduct(List<TupleIterator> children) {
+	public CartesianProduct(List<TupleIterator> children) {
 		this(inferInputColumns(children), children);
 	}
 
@@ -55,7 +55,7 @@ public class CrossProduct extends NaryIterator {
 	 * @param inputs List<Typed>
 	 * @param children            the children
 	 */
-	public CrossProduct(List<Typed> inputs, List<TupleIterator> children) {
+	public CartesianProduct(List<Typed> inputs, List<TupleIterator> children) {
 		super(TupleType.DefaultFactory.createFromTyped(inputs), inputs,
 				inferType(children), inferColumns(children), children);
 		this.relativeInputPositions = ImmutableMap.copyOf(inferInputMappings(inputs, children));

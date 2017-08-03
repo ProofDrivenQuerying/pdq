@@ -29,7 +29,7 @@ import uk.ac.ox.cs.pdq.util.Typed;
  * 
  * @author Julien Leblay
  */
-public class TopDownAccess extends TupleIterator {
+public class Access extends TupleIterator {
 
 
 	/** The input table of the access. */
@@ -62,7 +62,7 @@ public class TopDownAccess extends TupleIterator {
 	 * @param relation RelationAccessWrapper
 	 * @param accessMethod AccessMethod
 	 */
-	public TopDownAccess(RelationAccessWrapper relation, AccessMethod accessMethod) {
+	public Access(RelationAccessWrapper relation, AccessMethod accessMethod) {
 		this(relation, accessMethod, ImmutableMap.<Integer, TypedConstant>of());
 	}
 
@@ -75,7 +75,7 @@ public class TopDownAccess extends TupleIterator {
 	 * statically provided (indices correspond to original attributes positions
 	 * in the relation, regardless of how input positions are ordered.)
 	 */
-	public TopDownAccess(RelationAccessWrapper relation, AccessMethod accessMethod, Map<Integer, TypedConstant> staticInputs) {
+	public Access(RelationAccessWrapper relation, AccessMethod accessMethod, Map<Integer, TypedConstant> staticInputs) {
 		super(inferInput(relation, accessMethod, keySet(staticInputs)),
 				Lists.<Typed>newArrayList(relation.getAttributes()));
 		Preconditions.checkArgument(accessMethod != null);

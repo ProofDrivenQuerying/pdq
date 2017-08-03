@@ -88,4 +88,10 @@ public class RenameTerm extends RelationalTerm {
     public static RenameTerm create(Attribute[] renamings, RelationalTerm child) {
         return s_interningManager.intern(new RenameTerm(renamings, child));
     }
+    
+	@Override
+	public RelationalTerm getChild(int childIndex) {
+		Assert.assertTrue(childIndex == 0);
+		return this.child;
+	}
 }

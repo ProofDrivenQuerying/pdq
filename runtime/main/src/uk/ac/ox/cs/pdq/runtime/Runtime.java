@@ -30,6 +30,7 @@ import uk.ac.ox.cs.pdq.runtime.exec.PlanExecutor.ExecutionModes;
 import uk.ac.ox.cs.pdq.runtime.query.InMemoryQueryEvaluator;
 import uk.ac.ox.cs.pdq.runtime.query.QueryEvaluator;
 import uk.ac.ox.cs.pdq.runtime.query.QueryEvaluatorFactory;
+import uk.ac.ox.cs.pdq.runtime.util.RuntimeUtilities;
 import uk.ac.ox.cs.pdq.util.EventHandler;
 import uk.ac.ox.cs.pdq.util.Utility;
 
@@ -147,7 +148,7 @@ public class Runtime {
 				dataDist.put(w.getName(), data);
 				relations.put(w.getName(), w);
 			}
-			data.add(toTuple(type, attributes, fact.getTerms()));
+			data.add(RuntimeUtilities.toTuple(type, attributes, fact.getTerms()));
 		}
 		for (String r: dataDist.keySet()) {
 			relations.get(r).load(dataDist.get(r));
@@ -198,8 +199,7 @@ public class Runtime {
 	 * @return the result of the plan evaluation.
 	 * @throws EvaluationException the evaluation exception
 	 */
-	public Result evaluatePlan(RelationalTerm p, ConjunctiveQuery query)
-			throws EvaluationException {
+	public Result evaluatePlan(RelationalTerm p, ConjunctiveQuery query) throws EvaluationException {
 		return this.evaluatePlan(p, query, ExecutionModes.DEFAULT);
 	}
 
@@ -212,8 +212,7 @@ public class Runtime {
 	 * @return the result of the plan evaluation.
 	 * @throws EvaluationException the evaluation exception
 	 */
-	public Result evaluatePlan(RelationalTerm p, ConjunctiveQuery query, ExecutionModes mode)
-			throws EvaluationException {
+	public Result evaluatePlan(RelationalTerm p, ConjunctiveQuery query, ExecutionModes mode) throws EvaluationException {
 		PlanExecutor executor = SetupPlanExecutor.newExecutor(this.params, p, query);
 		executor.setTuplesLimit(this.params.getTuplesLimit());
 		executor.setCache(this.params.getDoCache());
@@ -237,20 +236,4 @@ public class Runtime {
 		throw new EvaluationException("Query cannot be directly evaluated.");
 	}
 	
-	/**
-	 * To tuple.
-	 *
-	 * @param type TupleType
-	 * @param attributes List<Attribute>
-	 * @param values Constant[]
-	 * @return a tuple view of the given collection of terms.
-	 */
-	private static Tuple toTuple(TupleType type, Attribute[] attributes, Term[] values) {
-		Preconditions.checkArgument(attributes.length == values.length);
-		Object[] constants = new Object[values.length];
-		for (int i = 0, l = values.length; i < l; i++) {
-			constants[i] = Utility.cast(attributes[i].getType(), values[i].toString());
-		}
-		return type.createTuple(constants);
-	}
 }

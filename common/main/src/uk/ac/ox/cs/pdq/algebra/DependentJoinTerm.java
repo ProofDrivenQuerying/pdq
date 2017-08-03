@@ -86,4 +86,10 @@ public class DependentJoinTerm extends RelationalTerm {
     public static DependentJoinTerm create(RelationalTerm child1, RelationalTerm child2) {
         return s_interningManager.intern(new DependentJoinTerm(child1, child2));
     }
+    
+	@Override
+	public RelationalTerm getChild(int childIndex) {
+		Assert.assertTrue(childIndex == 0 || childIndex == 1);
+		return this.children[0];
+	}
 }

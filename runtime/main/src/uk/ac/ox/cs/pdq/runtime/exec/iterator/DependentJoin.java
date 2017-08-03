@@ -28,7 +28,7 @@ import com.google.common.collect.Lists;
  * @author Julien Leblay
  * @author Efthymia Tsamoura
  */
-public class BindJoin extends Join {
+public class DependentJoin extends Join {
 
 	/** The input sideways mapping. */
 	protected final List<Integer> sidewaysInputPositions;
@@ -72,7 +72,7 @@ public class BindJoin extends Join {
 	 * @param left TupleIterator
 	 * @param right TupleIterator
 	 */
-	public BindJoin(TupleIterator left, TupleIterator right) {
+	public DependentJoin(TupleIterator left, TupleIterator right) {
 		this(computeNaturalJoinConditions(toList(left, right)), 
 			computeSidewaysInputs(left.getColumns(), right.getInputColumns()), 
 			left, right);
@@ -84,7 +84,7 @@ public class BindJoin extends Join {
 	 * @param left TupleIterator
 	 * @param right TupleIterator
 	 */
-	public BindJoin(Condition condition, TupleIterator left, TupleIterator right) {
+	public DependentJoin(Condition condition, TupleIterator left, TupleIterator right) {
 		this(condition, computeSidewaysInputs(left.getColumns(), right.getInputColumns()), left, right);
 	}
 
@@ -95,12 +95,12 @@ public class BindJoin extends Join {
 	 * @param left TupleIterator
 	 * @param right TupleIterator
 	 */
-	public BindJoin(Condition condition, List<Integer> sidewaysInputPositions, TupleIterator left, TupleIterator right) {
+	public DependentJoin(Condition condition, List<Integer> sidewaysInputPositions, TupleIterator left, TupleIterator right) {
 		super(condition, computeInputColumns(left, right), toList(left, right));
 		this.left = left;
 		this.right = right;
 		this.sidewaysInputPositions = sidewaysInputPositions;
-		this.joinId = BindJoin.joinIds++;
+		this.joinId = DependentJoin.joinIds++;
 		CompositeCacheManager ccm = CompositeCacheManager.getUnconfiguredInstance(); 
 		Properties properties = new Properties(); 
 		try {

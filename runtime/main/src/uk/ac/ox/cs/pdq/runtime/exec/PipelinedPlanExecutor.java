@@ -31,10 +31,10 @@ import uk.ac.ox.cs.pdq.runtime.util.TupleOutputLimitEnforcer;
  * @author Julien Leblay
  * 
  */
-public class VolcanoPlanExecutor implements PlanExecutor {
+public class PipelinedPlanExecutor implements PlanExecutor {
 
 	/** Logger. */
-	private static Logger log = Logger.getLogger(VolcanoPlanExecutor.class);
+	private static Logger log = Logger.getLogger(PipelinedPlanExecutor.class);
 
 	/** The universal table. */
 	private Table universalTable = null;
@@ -68,7 +68,7 @@ public class VolcanoPlanExecutor implements PlanExecutor {
 	 * @param sem Semantics
 	 * @param timeout Long
 	 */
-	public VolcanoPlanExecutor(RelationalTerm plan, ConjunctiveQuery query, Semantics sem, Long timeout) {
+	public PipelinedPlanExecutor(RelationalTerm plan, ConjunctiveQuery query, Semantics sem, Long timeout) {
 		this.plan = plan;
 		this.query = query;
 		this.semantics = sem;
@@ -82,7 +82,7 @@ public class VolcanoPlanExecutor implements PlanExecutor {
 	 * @param query the query
 	 * @param sem Semantics
 	 */
-	public VolcanoPlanExecutor(RelationalTerm plan, ConjunctiveQuery query, Semantics sem) {
+	public PipelinedPlanExecutor(RelationalTerm plan, ConjunctiveQuery query, Semantics sem) {
 		this(plan, query, sem, Long.MAX_VALUE);
 	}
 

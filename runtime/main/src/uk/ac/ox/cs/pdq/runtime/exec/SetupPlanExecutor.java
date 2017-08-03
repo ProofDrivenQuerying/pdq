@@ -47,7 +47,7 @@ public final class SetupPlanExecutor {
 		Preconditions.checkArgument(p != null, "Cannot execute null plan");
 		switch(params.getExecutorType()) {
 		default: 
-			return new VolcanoPlanExecutor(p, q, params.getSemantics(), params.getTimeout().longValue());
+			return new PipelinedPlanExecutor(p, q, params.getSemantics(), params.getTimeout().longValue());
 		}
 	}
 }

@@ -31,7 +31,7 @@ import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.runtime.EvaluationException;
-import uk.ac.ox.cs.pdq.runtime.exec.iterator.CrossProduct;
+import uk.ac.ox.cs.pdq.runtime.exec.iterator.CartesianProduct;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.IsEmpty;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.MemoryScan;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.Projection;
@@ -114,7 +114,6 @@ public class InMemoryQueryEvaluator implements QueryEvaluator {
 	 * @throws EvaluationException if the statement could not be generated.
 	 */
 	private TupleIterator makePhysicalPlan(ConjunctiveQuery query) throws EvaluationException {
-		
 		Map<Variable, Set<Atom>> joins = new LinkedHashMap<>();
 		Map<Atom, TupleIterator> scans = new LinkedHashMap<>();
 		for (Atom p: query.getAtoms()) {
@@ -219,7 +218,7 @@ public class InMemoryQueryEvaluator implements QueryEvaluator {
 				if (outer == null) {
 					outer = inner;
 				} else {
-					outer = new CrossProduct(outer, inner);
+					outer = new CartesianProduct(outer, inner);
 				}
 			} while (i.hasNext());
 		}

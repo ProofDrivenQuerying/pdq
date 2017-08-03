@@ -262,4 +262,21 @@ public class RuntimeUtilities {
 			result[index] = attributes[accessMethod.getInputPosition(index) - 1];
 		return result;
 	}
+	
+	/**
+	 * To tuple.
+	 *
+	 * @param type TupleType
+	 * @param attributes List<Attribute>
+	 * @param values Constant[]
+	 * @return a tuple view of the given collection of terms.
+	 */
+	public static Tuple toTuple(TupleType type, Attribute[] attributes, Term[] values) {
+		Preconditions.checkArgument(attributes.length == values.length);
+		Object[] constants = new Object[values.length];
+		for (int i = 0, l = values.length; i < l; i++) {
+			constants[i] = Utility.cast(attributes[i].getType(), values[i].toString());
+		}
+		return type.createTuple(constants);
+	}
 }

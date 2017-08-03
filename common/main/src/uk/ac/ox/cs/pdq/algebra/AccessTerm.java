@@ -135,4 +135,9 @@ public class AccessTerm extends RelationalTerm {
     public static AccessTerm create(Relation relation, AccessMethod accessMethod, Map<Integer, TypedConstant> inputConstants) {
         return s_interningManager.intern(new AccessTerm(relation, accessMethod, inputConstants));
     }
+
+	@Override
+	public RelationalTerm getChild(int childIndex) {
+		return null;
+	}
 }

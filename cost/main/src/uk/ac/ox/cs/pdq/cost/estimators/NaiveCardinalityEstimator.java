@@ -54,13 +54,12 @@ public class NaiveCardinalityEstimator implements CardinalityEstimator {
 	 * Estimate if needed.
 	 *
 	 * @param term LogicalOperator
-	 * @see uk.ac.ox.cs.pdq.cost.estimators.CardinalityEstimator#estimateIfNeeded(RelationalOperator)
+	 * @see uk.ac.ox.cs.pdq.cost.estimators.CardinalityEstimator#estimateCardinalityIfNeeded(RelationalOperator)
 	 */
-	@Override
-	public void estimateIfNeeded(RelationalTerm term) {
-		RelationalTermCardinalityMetadata metadata = this.getMetadata(term);
+	public void estimateCardinalityIfNeeded(RelationalTerm term) {
+		RelationalTermCardinalityMetadata metadata = this.getCardinalityMetadata(term);
 		if (metadata.getOutputCardinality() < 0) {
-			this.estimate(term);
+			this.estimateCardinality(term);
 		}
 	}
 
@@ -68,49 +67,50 @@ public class NaiveCardinalityEstimator implements CardinalityEstimator {
 	 * Estimate.
 	 *
 	 * @param term LogicalOperator
-	 * @see uk.ac.ox.cs.pdq.cost.estimators.CardinalityEstimator#estimate(RelationalOperator)
+	 * @see uk.ac.ox.cs.pdq.cost.estimators.CardinalityEstimator#estimateCardinality(RelationalOperator)
 	 */
 	@Override
-	public void estimate(RelationalTerm term) {
+	public void estimateCardinality(RelationalTerm term) {
 		synchronized (term) {
 			Double output = -1.0;
-			RelationalTermCardinalityMetadata metadata = this.getMetadata(term);
+			RelationalTermCardinalityMetadata metadata = this.getCardinalityMetadata(term);
 			Double input = metadata.getInputCardinality();
 			RelationalTerm parent = metadata.getParent();
 			if (input < 0) {
 				input = 0.0;
 				if (parent != null) 
-					input = this.getMetadata(parent).getInputCardinality();
+					input = this.getCardinalityMetadata(parent).getInputCardinality();
 				throw new IllegalStateException("Inconsistent input cardinality '" + input + "' for " + term);
 			}
 
 			// For Scan, Access, Distinct, Union, Selection and Join
 			// The estimation is delegated to specialised estimators.
 			if (term instanceof JoinTerm) {
-				output = this.estimateOutput((JoinTerm) term);
+				output = this.estimateOutputCardinality((JoinTerm) term);
 			} 
 			else if (term instanceof AccessTerm) {
-				output = this.estimateOutput((AccessTerm) term);
+				output = this.estimateOutputCardinality((AccessTerm) term);
 			} 
 			else if (term instanceof SelectionTerm) {
-				output = this.estimateOutput((SelectionTerm) term);
+				output = this.estimateOutputCardinality((SelectionTerm) term);
 			} 
 			else if (term instanceof ProjectionTerm || term instanceof RenameTerm) {
-				RelationalTerm child = term.getChildren()[0];
-				RelationalTermCardinalityMetadata childMetadata = this.getMetadata(child);
+				RelationalTerm child = term.getChild(0);
+				RelationalTermCardinalityMetadata childMetadata = this.getCardinalityMetadata(child);
 				childMetadata.setParent(term);
 				childMetadata.setInputCardinality(input);
-				this.estimateIfNeeded(child);
+				this.estimateCardinalityIfNeeded(child);
 				output = childMetadata.getOutputCardinality();
 			} 
 			// Cross Products: cardinality is the product of the children's cardinalities
 			else if (term instanceof CartesianProductTerm) {
 				output = 1.0;
-				for (RelationalTerm child: term.getChildren()) {
-					RelationalTermCardinalityMetadata childMetadata = this.getMetadata(child);
+				for (int childIndex = 0; childIndex < 2; ++childIndex) {
+					RelationalTerm child = term.getChild(childIndex);
+					RelationalTermCardinalityMetadata childMetadata = this.getCardinalityMetadata(child);
 					childMetadata.setParent(term);
 					childMetadata.setInputCardinality(input);
-					this.estimateIfNeeded(child);
+					this.estimateCardinalityIfNeeded(child);
 					output *= childMetadata.getOutputCardinality();
 				}
 			} 
@@ -126,7 +126,7 @@ public class NaiveCardinalityEstimator implements CardinalityEstimator {
 	 * @return M
 	 */
 	@Override
-	public RelationalTermCardinalityMetadata getMetadata(RelationalTerm o) {
+	public RelationalTermCardinalityMetadata getCardinalityMetadata(RelationalTerm o) {
 		RelationalTermCardinalityMetadata result = this.cardinalityMetadata.get(o);
 		if (result == null) {
 			this.cardinalityMetadata.put(o, this.initMetadata(o));
@@ -162,10 +162,10 @@ public class NaiveCardinalityEstimator implements CardinalityEstimator {
 	 * @return Double
 	 */
 	private Double getParentInputCardinality(RelationalTerm o) {
-		RelationalTermCardinalityMetadata metadata = this.getMetadata(o);
+		RelationalTermCardinalityMetadata metadata = this.getCardinalityMetadata(o);
 		RelationalTerm parent = metadata.getParent();
 		if (parent != null) {
-			return this.getMetadata(parent).getInputCardinality();
+			return this.getCardinalityMetadata(parent).getInputCardinality();
 		}
 		return 0.0;
 	}
@@ -176,27 +176,27 @@ public class NaiveCardinalityEstimator implements CardinalityEstimator {
 	 * @param o Join
 	 * @return Double
 	 */
-	protected Double estimateOutput(JoinTerm o) {
+	protected Double estimateOutputCardinality(JoinTerm o) {
 		Double result = 1.0;
 		Double largestChild = 1.0;
 		Double inputCard = this.getParentInputCardinality(o);
 		// Compute the horizontal increase of input card.
-		RelationalTerm leftChild = o.getChildren()[0];
-		RelationalTermCardinalityMetadata lcMetadata = this.getMetadata(leftChild);
+		RelationalTerm leftChild = o.getChild(0);
+		RelationalTermCardinalityMetadata lcMetadata = this.getCardinalityMetadata(leftChild);
 		lcMetadata.setParent(o);
 		lcMetadata.setInputCardinality(inputCard);
-		this.estimateIfNeeded(leftChild);
+		this.estimateCardinalityIfNeeded(leftChild);
 		// Compute the join cardinality itself.
-		RelationalTerm rightChild = o.getChildren()[1];
+		RelationalTerm rightChild = o.getChild(1);
 		
 		Double rightInputCard = inputCard;
 
-		RelationalTermCardinalityMetadata rcMetadata = this.getMetadata(rightChild);
+		RelationalTermCardinalityMetadata rcMetadata = this.getCardinalityMetadata(rightChild);
 		rcMetadata.setParent(o);
 		rcMetadata.setInputCardinality(rightInputCard);
-		this.estimateIfNeeded(rightChild);
+		this.estimateCardinalityIfNeeded(rightChild);
 		for (RelationalTerm child: o.getChildren()) {
-			Double childCard = this.getMetadata(child).getOutputCardinality();
+			Double childCard = this.getCardinalityMetadata(child).getOutputCardinality();
 			result *= childCard;
 			largestChild = Math.max(largestChild, childCard);
 		}
@@ -215,27 +215,28 @@ public class NaiveCardinalityEstimator implements CardinalityEstimator {
 	 * @param o Join
 	 * @return Double
 	 */
-	protected Double estimateOutput(DependentJoinTerm o) {
+	protected Double estimateOutputCardinality(DependentJoinTerm o) {
 		Double result = 1.0;
 		Double largestChild = 1.0;
 		Double inputCard = this.getParentInputCardinality(o);
 		// Compute the horizontal increase of input card.
-		RelationalTerm leftChild = o.getChildren()[0];
-		RelationalTermCardinalityMetadata lcMetadata = this.getMetadata(leftChild);
+		RelationalTerm leftChild = o.getChild(0);
+		RelationalTermCardinalityMetadata lcMetadata = this.getCardinalityMetadata(leftChild);
 		lcMetadata.setParent(o);
 		lcMetadata.setInputCardinality(inputCard);
-		this.estimateIfNeeded(leftChild);
+		this.estimateCardinalityIfNeeded(leftChild);
 		// Compute the join cardinality itself.
-		RelationalTerm rightChild = o.getChildren()[1];
+		RelationalTerm rightChild = o.getChild(1);
 		
 		Double rightInputCard = lcMetadata.getOutputCardinality() * Math.max(1.0, inputCard);
 		
-		RelationalTermCardinalityMetadata rcMetadata = this.getMetadata(rightChild);
+		RelationalTermCardinalityMetadata rcMetadata = this.getCardinalityMetadata(rightChild);
 		rcMetadata.setParent(o);
 		rcMetadata.setInputCardinality(rightInputCard);
-		this.estimateIfNeeded(rightChild);
-		for (RelationalTerm child: o.getChildren()) {
-			Double childCard = this.getMetadata(child).getOutputCardinality();
+		this.estimateCardinalityIfNeeded(rightChild);
+		for (int childIndex = 0; childIndex < 0; ++childIndex) {
+			RelationalTerm child = o.getChild(childIndex);
+			Double childCard = this.getCardinalityMetadata(child).getOutputCardinality();
 			result *= childCard;
 			largestChild = Math.max(largestChild, childCard);
 		}
@@ -248,7 +249,7 @@ public class NaiveCardinalityEstimator implements CardinalityEstimator {
 			throw new IllegalStateException("Unknown condition type");
 	}
 	
-	protected Double estimateOutput(AccessTerm o) {
+	protected Double estimateOutputCardinality(AccessTerm o) {
 		AccessMethod binding = o.getAccessMethod();
 		Relation relation = o.getRelation();
 		if (binding.getNumberOfInputs() == 0) 
@@ -263,13 +264,13 @@ public class NaiveCardinalityEstimator implements CardinalityEstimator {
 	 * @param o Selection
 	 * @return Double
 	 */
-	protected Double estimateOutput(SelectionTerm o) {
-		RelationalTerm child = o.getChildren()[0];
-		RelationalTermCardinalityMetadata cMetadata = this.getMetadata(child);
+	protected Double estimateOutputCardinality(SelectionTerm o) {
+		RelationalTerm child = o.getChild(0);
+		RelationalTermCardinalityMetadata cMetadata = this.getCardinalityMetadata(child);
 		cMetadata.setParent(o);
 		Double inputCard = this.getParentInputCardinality(o);
 		cMetadata.setInputCardinality(inputCard);
-		this.estimate(child);
+		this.estimateCardinality(child);
 		if(o.getPredicate() instanceof SimpleCondition) 
 			return Math.max(1L, (cMetadata.getOutputCardinality() / Math.pow(SELECTIVITY_REDUCTION,1)));
 		else if(o.getPredicate() instanceof ConjunctiveCondition) 

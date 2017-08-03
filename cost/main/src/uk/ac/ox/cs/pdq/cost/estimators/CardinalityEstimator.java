@@ -16,17 +16,9 @@ public interface CardinalityEstimator extends Cloneable {
 	 *
 	 * @param logOp the log op
 	 */
-	void estimate(RelationalTerm logOp);
-
-	/**
-	 * Computes and updates the estimated cardinality of the given operator,
-	 * and all its descendants, but only if this has not already been done.
-	 *
-	 * @param logOp the log op
-	 */
-	void estimateIfNeeded(RelationalTerm logOp);
+	void estimateCardinality(RelationalTerm logOp);
 	
-	RelationalTermCardinalityMetadata getMetadata(RelationalTerm o);
+	RelationalTermCardinalityMetadata getCardinalityMetadata(RelationalTerm o);
 
 	/**
 	 * Clone.

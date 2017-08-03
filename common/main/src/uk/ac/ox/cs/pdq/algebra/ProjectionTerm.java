@@ -88,4 +88,10 @@ public class ProjectionTerm extends RelationalTerm {
     public static ProjectionTerm create(Attribute[] projections, RelationalTerm child) {
         return s_interningManager.intern(new ProjectionTerm(projections, child));
     }
+    
+	@Override
+	public RelationalTerm getChild(int childIndex) {
+		Assert.assertTrue(childIndex == 0);
+		return this.child;
+	}
 }
