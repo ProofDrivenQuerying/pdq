@@ -13,7 +13,6 @@ import uk.ac.ox.cs.pdq.planner.reasoning.Configuration;
 public interface Equivalence<C extends Configuration> {
 
 	/**
-	 * Checks if is equivalent.
 	 *
 	 * @param source C
 	 * @param target C
@@ -22,7 +21,6 @@ public interface Equivalence<C extends Configuration> {
 	boolean isEquivalent(C source, C target);
 
 	/**
-	 * Clone.
 	 *
 	 * @return Equivalence
 	 */
