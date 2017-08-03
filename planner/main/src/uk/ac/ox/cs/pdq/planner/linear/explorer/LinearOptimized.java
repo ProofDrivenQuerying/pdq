@@ -40,7 +40,7 @@ import uk.ac.ox.cs.pdq.planner.linear.LinearConfiguration;
 import uk.ac.ox.cs.pdq.planner.linear.LinearUtility;
 import uk.ac.ox.cs.pdq.planner.linear.cost.BlackBoxPropagator;
 import uk.ac.ox.cs.pdq.planner.linear.cost.CostPropagator;
-import uk.ac.ox.cs.pdq.planner.linear.cost.PropagatorUtils;
+import uk.ac.ox.cs.pdq.planner.linear.cost.CostPropagatorUtility;
 import uk.ac.ox.cs.pdq.planner.linear.cost.SimplePropagator;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.NodeFactory;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
@@ -130,7 +130,7 @@ public class LinearOptimized extends LinearExplorer {
 			PostPruning postPruning,
 			boolean zombification, ReasoningParameters reasoningParameters) throws PlannerException, SQLException {
 		super(eventBus, collectStats, query, accessibleQuery, accessibleSchema, chaser, dbConn, costEstimator, nodeFactory, depth, reasoningParameters);
-		this.costPropagator = PropagatorUtils.getPropagator(costEstimator);
+		this.costPropagator = CostPropagatorUtility.getPropagator(costEstimator);
 		this.queryMatchInterval = queryMatchInterval;
 		this.postPruning = postPruning;
 		this.zombification = zombification;
@@ -234,7 +234,7 @@ public class LinearOptimized extends LinearExplorer {
 		// If at least one node in the plan tree dominates the newly created node, then zombify the newly created node
 		if (!domination && this.costPropagator instanceof SimplePropagator) {
 			this.stats.start(MILLI_DOMINANCE);
-			SearchNode dominatingNode = ExplorerUtils.isDominated(this.planTree.vertexSet(), freshNode);
+			SearchNode dominatingNode = ExplorerUtility.isDominated(this.planTree.vertexSet(), freshNode);
 			this.stats.stop(MILLI_DOMINANCE);
 			if(dominatingNode != null) {
 				domination = true;
@@ -257,7 +257,7 @@ public class LinearOptimized extends LinearExplorer {
 		} else {
 			// Find a node that is globally equivalent to the newly created node.
 			this.stats.start(MILLI_EQUIVALENCE);
-			SearchNode parentEquivalent = ExplorerUtils.isEquivalent(ExplorerUtils.allButAncestorsOf(this.planTree, freshNode), freshNode);
+			SearchNode parentEquivalent = ExplorerUtility.isEquivalent(ExplorerUtility.allButAncestorsOf(this.planTree, freshNode), freshNode);
 			this.stats.stop(MILLI_EQUIVALENCE);
 
 			/*
@@ -402,7 +402,7 @@ public class LinearOptimized extends LinearExplorer {
 
 			List<Integer> pathFromRoot = deadDescendant.getPathFromRoot();
 			List<Integer> equivalencePath = this.createPath(representativePath, path, pathFromRoot);
-			RelationalTerm equivalencePlan = PropagatorUtils.createLeftDeepPlan(this.planTree, equivalencePath);
+			RelationalTerm equivalencePlan = CostPropagatorUtility.createLeftDeepPlan(this.planTree, equivalencePath);
 			Cost costOfEquivalencePlan = this.costPropagator.getCostEstimator().cost(equivalencePlan);
 
 			if(costOfEquivalencePlan.lessThan(deadDescendant.getCostOfBestPlanFromRoot())) {

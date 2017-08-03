@@ -41,7 +41,7 @@ import uk.ac.ox.cs.pdq.util.Utility;
  *
  * @author Julien Leblay
  */
-public class PlanUtils {
+public class PlanCreationUtility {
 
 	/**
 	 * Creates a linear plan by appending the access and middlewares commands of the input configuration to the input parent plan.
@@ -86,7 +86,7 @@ public class PlanUtils {
 			RelationalTerm op2 = RenameTerm.create(renamings, access); 		
 			//Find if this fact has schema constants in output positions or repeated constants
 			//If yes, then compute the filtering conditions
-			Condition filteringConditions = PlanUtils.createFilteringConditions(exposedFact.getTerms());
+			Condition filteringConditions = PlanCreationUtility.createFilteringConditions(exposedFact.getTerms());
 			if (filteringConditions != null) 
 				op2 = SelectionTerm.create(filteringConditions, access);
 			if (op1 == null) 

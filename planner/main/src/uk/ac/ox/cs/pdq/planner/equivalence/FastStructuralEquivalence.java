@@ -22,7 +22,7 @@ public class FastStructuralEquivalence implements StructuralEquivalence{
 	 */
 	@Override
 	public boolean isEquivalent(ChaseConfiguration source, ChaseConfiguration target) {
-		if (source.getState().getInferred().equals(target.getState().getInferred())) {
+		if (source.getState().getInferredAccessibleFacts().equals(target.getState().getInferredAccessibleFacts())) {
 			return true;
 		}
 		return false;

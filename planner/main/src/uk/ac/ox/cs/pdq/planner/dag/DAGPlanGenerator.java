@@ -9,7 +9,7 @@ import uk.ac.ox.cs.pdq.algebra.JoinTerm;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.planner.dag.BinaryConfiguration.BinaryConfigurationTypes;
-import uk.ac.ox.cs.pdq.planner.util.PlanUtils;
+import uk.ac.ox.cs.pdq.planner.util.PlanCreationUtility;
 
 //TODO 
 /** TOCOMMENT: WHAT NOTES??
@@ -64,7 +64,7 @@ public class DAGPlanGenerator {
 	 */
 	public static RelationalTerm toDAGPlan(DAGChaseConfiguration config) {
 		if (config instanceof ApplyRule) 
-			return PlanUtils.createSingleAccessPlan(((ApplyRule) config).getRelation(), ((ApplyRule) config).getRule().getAccessMethod(), ((ApplyRule) config).getFacts());
+			return PlanCreationUtility.createSingleAccessPlan(((ApplyRule) config).getRelation(), ((ApplyRule) config).getRule().getAccessMethod(), ((ApplyRule) config).getFacts());
 		else if (config instanceof BinaryConfiguration) 
 			return toDAGPlan((BinaryConfiguration) config);
 		throw new IllegalStateException("DAGConfiguration type " + config + " not supported.");

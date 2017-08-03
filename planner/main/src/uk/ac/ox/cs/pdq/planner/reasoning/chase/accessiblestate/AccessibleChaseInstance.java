@@ -54,13 +54,13 @@ public interface AccessibleChaseInstance extends ChaseInstance {
 	 *
 	 * @return 		the inferred accessible facts of the state
 	 */
-	Collection<Atom> getInferred();
+	Collection<Atom> getInferredAccessibleFacts();
 
 	/**
 	 *
 	 * @return 		the inferred accessible facts that were derived when chasing the state
 	 */
-	Collection<Atom> getDerivedInferred();
+	Collection<Atom> getDerivedInferredAccessibleFacts();
 	
 	/**
 	 *

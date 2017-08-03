@@ -29,7 +29,7 @@ import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.linear.LinearConfiguration;
 import uk.ac.ox.cs.pdq.planner.linear.cost.CostPropagator;
-import uk.ac.ox.cs.pdq.planner.linear.cost.PropagatorUtils;
+import uk.ac.ox.cs.pdq.planner.linear.cost.CostPropagatorUtility;
 import uk.ac.ox.cs.pdq.planner.linear.cost.SimplePropagator;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.NodeFactory;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
@@ -88,7 +88,7 @@ public class LinearKChase extends LinearExplorer {
 			int depth,
 			int chaseInterval, ReasoningParameters reasoningParameters) throws PlannerException, SQLException {
 		super(eventBus, collectStats, query, accessibleQuery, accessibleSchema, chaser, dbConn, costEstimator, nodeFactory, depth, reasoningParameters);
-		this.costPropagator = PropagatorUtils.getPropagator(costEstimator);
+		this.costPropagator = CostPropagatorUtility.getPropagator(costEstimator);
 		this.chaseInterval = chaseInterval;
 	}
 
@@ -152,7 +152,7 @@ public class LinearKChase extends LinearExplorer {
 			/* If at least one node in the plan tree dominates the newly created node, then kill the newly created node   */
 			if (!domination && this.costPropagator instanceof SimplePropagator) {
 				this.stats.start(MILLI_DOMINANCE);
-				SearchNode dominatingNode = ExplorerUtils.isDominated(ExplorerUtils.getFullyGeneratedNodes(this.planTree), freshNode);
+				SearchNode dominatingNode = ExplorerUtility.isDominated(ExplorerUtility.getFullyGeneratedNodes(this.planTree), freshNode);
 				this.stats.stop(MILLI_DOMINANCE);
 				if(dominatingNode != null) {
 					domination = true;
@@ -169,7 +169,7 @@ public class LinearKChase extends LinearExplorer {
 			}
 		}
 		else {
-			Collection<SearchNode> leaves = ExplorerUtils.getPartiallyGeneratedLeaves(this.planTree);
+			Collection<SearchNode> leaves = ExplorerUtility.getPartiallyGeneratedLeaves(this.planTree);
 			log.debug("Number of partially generated leaves " + leaves.size());
 			this.stats.start(MILLI_CLOSE);
 			for(SearchNode leaf:leaves) {
@@ -181,7 +181,7 @@ public class LinearKChase extends LinearExplorer {
 			// Perform global equivalence checks
 			for(SearchNode leaf: leaves) {
 				this.stats.start(MILLI_EQUIVALENCE);
-				SearchNode parentEquivalent = ExplorerUtils.isEquivalent(leaves, leaf);
+				SearchNode parentEquivalent = ExplorerUtility.isEquivalent(leaves, leaf);
 				this.stats.stop(MILLI_EQUIVALENCE);
 
 				/*

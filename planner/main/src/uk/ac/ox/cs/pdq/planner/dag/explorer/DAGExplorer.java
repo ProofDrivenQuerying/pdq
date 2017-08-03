@@ -27,7 +27,7 @@ import uk.ac.ox.cs.pdq.planner.dag.ApplyRule;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleDatabaseChaseInstance;
-import uk.ac.ox.cs.pdq.planner.util.PlanUtils;
+import uk.ac.ox.cs.pdq.planner.util.PlanCreationUtility;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 
@@ -133,7 +133,7 @@ public abstract class DAGExplorer extends Explorer {
 		}
 		this.bestConfiguration = configuration;
 		//Add the final projection to the best plan
-		ProjectionTerm project = PlanUtils.createFinalProjection(
+		ProjectionTerm project = PlanCreationUtility.createFinalProjection(
 				this.accessibleQuery,
 				this.bestConfiguration.getPlan());
 //		this.bestPlan = new DAGPlan(project);

@@ -90,10 +90,10 @@ public class AccessibleDatabaseChaseInstance extends uk.ac.ox.cs.pdq.reasoning.c
 				maintainProvenance == true ? new MapFiringGraph() : null,
 				new EqualConstantsClasses(),
 				createdConstantsMap(createCanonicalDatabaseAndAccessibleFactsForSchemaConstants(query, schema)),
-				Utility.getInferredAtoms(createCanonicalDatabaseAndAccessibleFactsForSchemaConstants(query, schema)),
+				AccessibleStateUtility.getInferredAccessibleAtoms(createCanonicalDatabaseAndAccessibleFactsForSchemaConstants(query, schema)),
 				new LinkedHashSet<Atom>(),
-				Utility.createAtomsMap(createCanonicalDatabaseAndAccessibleFactsForSchemaConstants(query, schema)),
-				Utility.getAccessibleTerms(createCanonicalDatabaseAndAccessibleFactsForSchemaConstants(query, schema)),
+				AccessibleStateUtility.createAtomsMap(createCanonicalDatabaseAndAccessibleFactsForSchemaConstants(query, schema)),
+				AccessibleStateUtility.getAllTermsAppearingInAccessibleFacts(createCanonicalDatabaseAndAccessibleFactsForSchemaConstants(query, schema)),
 				connection);
 		this.addFacts(this.facts);
 	}
@@ -103,10 +103,10 @@ public class AccessibleDatabaseChaseInstance extends uk.ac.ox.cs.pdq.reasoning.c
 				maintainProvenance == true ? new MapFiringGraph() : null,
 				new EqualConstantsClasses(),
 				createdConstantsMap(facts),
-				Utility.getInferredAtoms(facts),
+				AccessibleStateUtility.getInferredAccessibleAtoms(facts),
 				new LinkedHashSet<Atom>(),
-				Utility.createAtomsMap(facts),
-				Utility.getAccessibleTerms(facts),
+				AccessibleStateUtility.createAtomsMap(facts),
+				AccessibleStateUtility.getAllTermsAppearingInAccessibleFacts(facts),
 				connection);
 		this.addFacts(this.facts);
 	}
@@ -172,10 +172,10 @@ public class AccessibleDatabaseChaseInstance extends uk.ac.ox.cs.pdq.reasoning.c
 	 * Gets the inferred.
 	 *
 	 * @return Collection<String>
-	 * @see uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance#getInferred()
+	 * @see uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance#getInferredAccessibleFacts()
 	 */
 	@Override
-	public Collection<Atom> getInferred() {
+	public Collection<Atom> getInferredAccessibleFacts() {
 		return this.inferredAccessibleAtoms;
 	}
 
@@ -183,10 +183,10 @@ public class AccessibleDatabaseChaseInstance extends uk.ac.ox.cs.pdq.reasoning.c
 	 * TOCOMMENT: FIX THIS!
 	 *
 	 * @return Collection<PredicateFormula>
-	 * @see uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance#getDerivedInferred()
+	 * @see uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance#getDerivedInferredAccessibleFacts()
 	 */
 	@Override
-	public Collection<Atom> getDerivedInferred() {
+	public Collection<Atom> getDerivedInferredAccessibleFacts() {
 		return this.derivedInferredAccessibleAtoms;
 	}
 
@@ -272,7 +272,7 @@ public class AccessibleDatabaseChaseInstance extends uk.ac.ox.cs.pdq.reasoning.c
 	 */
 	@Override
 	public List<Pair<AccessibilityAxiom, Collection<Atom>>> groupFactsByAccessMethods(AccessibilityAxiom[] axioms) {
-		return Utility.groupFactsByAccessMethods(axioms, this.atomsMap);
+		return AccessibleStateUtility.groupFactsByAccessMethods(axioms, this.atomsMap);
 	}
 
 	/**
@@ -334,7 +334,7 @@ public class AccessibleDatabaseChaseInstance extends uk.ac.ox.cs.pdq.reasoning.c
 			FiringGraph graph) {
 		Map<AccessibilityAxiom, List<Match>> ret = new LinkedHashMap<>();
 		List<Pair<AccessibilityAxiom,Collection<Atom>>> groups = 
-				Utility.groupFactsByAccessMethods(accessibleSchema.getAccessibilityAxioms(), atomsMap);
+				AccessibleStateUtility.groupFactsByAccessMethods(accessibleSchema.getAccessibilityAxioms(), atomsMap);
 		for(Pair<AccessibilityAxiom, Collection<Atom>> pair: groups) {
 			AccessibilityAxiom axiom = pair.getLeft();
 			Iterator<Atom> iterator = pair.getRight().iterator();

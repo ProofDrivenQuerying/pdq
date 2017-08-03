@@ -39,7 +39,7 @@ public class FastFactDominance implements FactDominance{
 			return false;
 		if (source instanceof DAGChaseConfiguration && target instanceof DAGChaseConfiguration && 
 				source.getInput().containsAll(target.getInput()) && 
-				((DAGChaseConfiguration)target).getState().getInferred().containsAll(((DAGChaseConfiguration)source).getState().getInferred())) {
+				((DAGChaseConfiguration)target).getState().getInferredAccessibleFacts().containsAll(((DAGChaseConfiguration)source).getState().getInferredAccessibleFacts())) {
 			if (!this.isStrict || this.isStrict && ((DAGChaseConfiguration)source).getOutputFacts().size() < ((DAGChaseConfiguration)target).getOutputFacts().size()) 
 				return true;
 		}

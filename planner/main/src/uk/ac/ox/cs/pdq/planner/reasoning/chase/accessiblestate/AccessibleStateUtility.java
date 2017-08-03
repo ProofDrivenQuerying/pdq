@@ -24,7 +24,7 @@ import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
  *
  * @author Efthymia Tsamoura
  */
-public class Utility {
+public class AccessibleStateUtility {
 	
 	/**
 	 * Group by binding.
@@ -53,49 +53,13 @@ public class Utility {
 		return ret;
 	}
 
-//	//TODO Update the firing history of the accessed and accessible facts
-//	/**
-//	 * Generate facts.
-//	 *
-//	 * @param schema the schema
-//	 * @param axiom the axiom
-//	 * @param facts the facts
-//	 * @param inferred the inferred
-//	 * @param derivedInferred the derived inferred
-//	 * @param graph the graph
-//	 * @return 		the corresponding accessed, accessible and inferred accessible facts for each fact in the input collection
-//	 */
-//	public static Collection<Atom> getFactsProducedAfterFiringAccessibilityAxiom(
-//			AccessibilityAxiom axiom, 
-//			Collection<Atom> facts,
-//			Collection<Atom> inferred,
-//			Collection<Atom> derivedInferred,
-//			FiringGraph graph
-//			) {
-//		Collection<Atom> createdFacts = new LinkedHashSet<>();
-//		for(Atom fact:facts) {			
-//			Atom accessedFact = Atom.create(fact.getPredicate(), fact.getTerms());
-//			createdFacts.add(accessedFact);
-//			Atom inferredAccessibleFact = Atom.create(Predicate.create(AccessibleSchema.inferredAccessiblePrefix + fact.getPredicate().getName(), fact.getNumberOfTerms()), fact.getTerms());
-//			createdFacts.add(inferredAccessibleFact);
-//			inferred.add(inferredAccessibleFact);
-//			derivedInferred.add(inferredAccessibleFact);
-//			if(graph != null) 
-//				graph.put(axiom, accessedFact, inferredAccessibleFact);
-//			
-//			for(Term term:fact.getTerms()) 
-//				createdFacts.add(Atom.create(AccessibleSchema.accessibleRelation, term));
-//		}
-//		return createdFacts;
-//	}
-
 	/**
 	 * TOCOMMENT: FIX THIS
 	 *
 	 * @param facts the facts
 	 * @return the collection
 	 */
-	public static Collection<Atom> getInferredAtoms(Collection<Atom> facts) {
+	public static Collection<Atom> getInferredAccessibleAtoms(Collection<Atom> facts) {
 		Collection<Atom> inferred = new LinkedHashSet<>();
 		for(Atom fact:facts) {
 			if (fact.getPredicate().getName().startsWith(AccessibleSchema.inferredAccessiblePrefix)) 
@@ -126,7 +90,7 @@ public class Utility {
 	 * @param facts the facts
 	 * @return the multimap
 	 */
-	public static Multimap<Term,Atom> getAccessibleTerms(Collection<Atom> facts) {
+	public static Multimap<Term,Atom> getAllTermsAppearingInAccessibleFacts(Collection<Atom> facts) {
 		Multimap<Term,Atom> accessibleTerms = LinkedHashMultimap.create();
 		for(Atom fact:facts) {
 			if (fact.getPredicate().equals(AccessibleSchema.accessibleRelation)) 
@@ -134,19 +98,5 @@ public class Utility {
 		}
 		return accessibleTerms;
 	}
-	
-//	/**
-//	 * Infer terms.
-//	 *
-//	 * @param facts the facts
-//	 * @return the collection
-//	 */
-//	public static Collection<Term> getTerms(Collection<Atom> facts) {
-//		Collection<Term> terms = new LinkedHashSet<>();
-//		for(Atom fact:facts) {
-//			terms.addAll(fact.getTerms());
-//		}
-//		return terms;
-//	}
 
 }
