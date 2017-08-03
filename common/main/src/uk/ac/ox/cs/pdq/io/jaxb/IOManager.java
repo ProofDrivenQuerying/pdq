@@ -18,8 +18,28 @@ import uk.ac.ox.cs.pdq.io.jaxb.adapted.AdaptedQuery;
 import uk.ac.ox.cs.pdq.io.jaxb.adapted.AdaptedRelationalTerm;
 import uk.ac.ox.cs.pdq.io.jaxb.adapted.AdaptedSchema;
 
+/**
+ * Main class for the jaxb xml parser. It can export RelationalTerms, Schemas
+ * and ConjuntiveQueries to xml or import them from xml.
+ * 
+ * @see RelationalTerm
+ * @see Schema
+ * @see ConjunctiveQuery
+ * 
+ * @author Gabor
+ *
+ */
 public class IOManager {
 
+	/**
+	 * Imports a Schema object from file.
+	 * 
+	 * @param schema
+	 *            File pointer to the xml file.
+	 * @return parsed Schema object
+	 * @throws JAXBException
+	 *             In case importing fails.
+	 */
 	public static Schema importSchema(File schema) throws JAXBException {
 		JAXBContext jaxbContext = JAXBContext.newInstance(AdaptedSchema.class);
 		Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
@@ -27,6 +47,15 @@ public class IOManager {
 		return customer.toSchema();
 	}
 
+	/**
+	 * Imports a Query object from file.
+	 * 
+	 * @param schema
+	 *            File pointer to the xml file.
+	 * @return imported Query object
+	 * @throws JAXBException
+	 *             In case importing fails.
+	 */
 	public static ConjunctiveQuery importQuery(File query) throws JAXBException {
 		JAXBContext jaxbContext = JAXBContext.newInstance(AdaptedQuery.class);
 		Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
@@ -34,6 +63,17 @@ public class IOManager {
 		return customer.toQuery();
 	}
 
+	/**
+	 * Helper function that expects a folder with "query.xml" and "schema.xml" files
+	 * and parses them both.
+	 * 
+	 * @param folder
+	 *            File pointer to the folder containing "query.xml" and "schema.xml"
+	 *            files.
+	 * @return Pair of ConjunctiveQuery and Schema objects.
+	 * @throws JAXBException
+	 *             in case there is a parsing error.
+	 */
 	public static Pair<Schema, ConjunctiveQuery> importSchemaAndQuery(File folder) throws JAXBException {
 		Schema left = null;
 		ConjunctiveQuery right = null;
@@ -48,6 +88,16 @@ public class IOManager {
 		return new ImmutablePair<Schema, ConjunctiveQuery>(left, right);
 	}
 
+	/**
+	 * Creates a new file describing the query object.
+	 * 
+	 * @param q
+	 *            the object to export to the file.
+	 * @param targetFile
+	 *            File pointer to a non-existing query.xml file.
+	 * @throws JAXBException
+	 *             in case exporting fails.
+	 */
 	public static void exportQueryToXml(ConjunctiveQuery q, File targetFile) throws JAXBException {
 		JAXBContext jaxbContext = JAXBContext.newInstance(AdaptedQuery.class);
 		Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
@@ -57,6 +107,17 @@ public class IOManager {
 		jaxbMarshaller.marshal(aq, targetFile);
 	}
 
+	/**
+	 * Same as above but the output is not a file but an output stream. Can be used
+	 * to print out the xml to the console:
+	 * 
+	 * <example>IOManager.exportQueryToXml(q, System.out);</example>
+	 * 
+	 * @see IOManager.exportQueryToXml(ConjunctiveQuery q, File targetFile)
+	 * @param q the query to export
+	 * @param out OutputStream where the print should go.
+	 * @throws JAXBException in case parsing fails.
+	 */
 	public static void exportQueryToXml(ConjunctiveQuery q, OutputStream out) throws JAXBException {
 		JAXBContext jaxbContext = JAXBContext.newInstance(AdaptedQuery.class);
 		Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
@@ -66,6 +127,13 @@ public class IOManager {
 		jaxbMarshaller.marshal(aq, out);
 	}
 
+	/**
+	 * Creates a new file describing the Schema object.
+	 * 
+	 * @param schema Schema to export
+	 * @param targetFile target file pointer
+	 * @throws JAXBException in case parsing error happens.
+	 */
 	public static void exportSchemaToXml(Schema schema, File targetFile) throws JAXBException {
 		JAXBContext jaxbContext = JAXBContext.newInstance(AdaptedSchema.class);
 		Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
@@ -73,23 +141,49 @@ public class IOManager {
 		jaxbMarshaller.marshal(new AdaptedSchema(schema), targetFile);
 	}
 
+	/**
+	 * Same as above but the output is not a file but an output stream. Can be used
+	 * to print out the xml to the console:
+	 * 
+	 * <example>IOManager.exportSchemaToXml(schema, System.out);</example>
+	 * 
+	 * @see IOManager.exportSchemaToXml(Schema schema, File targetFile)
+	 * @param schema the Schema to export
+	 * @param out OutputStream where the print should go.
+	 * @throws JAXBException in case parsing fails.
+	 */
 	public static void exportSchemaToXml(Schema schema, OutputStream out) throws JAXBException {
 		JAXBContext jaxbContext = JAXBContext.newInstance(AdaptedSchema.class);
 		Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
 		jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 		jaxbMarshaller.marshal(new AdaptedSchema(schema), out);
 	}
-	
+
+	/** 
+	 * Creates a RelationalTerm object with all it's nested relationalTerms, described by the xml file.
+	 * See examples in the IOManagerTest class.
+	 * @param file File pointer to the xml
+	 * @param schema This is not used currently, in the future it will be used for sanity checks on the generated schemas.
+	 * @return the imported RelationalTerm object.
+	 * @throws JAXBException in case parsing fails.
+	 */
 	public static RelationalTerm readRelationalTerm(File file, Schema schema) throws JAXBException {
 		JAXBContext jaxbContext = JAXBContext.newInstance(AdaptedRelationalTerm.class);
 		Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-		return ((AdaptedRelationalTerm)jaxbUnmarshaller.unmarshal(file)).toRelationalTerm();
+		return ((AdaptedRelationalTerm) jaxbUnmarshaller.unmarshal(file)).toRelationalTerm();
 	}
+
+	/** 
+	 * Creates an xml file representing the full hierarchy of a RelationalTerm object.
+	 * @param t The relationalterm to export.
+	 * @param targetFile Target file.
+	 * @throws JAXBException in case parsing fails.
+	 */
 	public static void writeRelationalTerm(RelationalTerm t, File targetFile) throws JAXBException {
 		JAXBContext jaxbContext = JAXBContext.newInstance(AdaptedRelationalTerm.class);
 		Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
 		jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 		jaxbMarshaller.marshal(new AdaptedRelationalTerm(t), targetFile);
 	}
-	
+
 }
