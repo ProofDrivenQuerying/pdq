@@ -20,8 +20,8 @@ import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.NodeFactory;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode.NodeStatus;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleDatabaseListState;
+import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance;
+import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleDatabaseChaseInstance;
 import uk.ac.ox.cs.pdq.planner.util.PlanTree;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
@@ -139,8 +139,8 @@ public abstract class LinearExplorer extends Explorer {
 	 * @throws SQLException 
 	 */
 	private void initialisePlanTree() throws PlannerException, SQLException {
-		AccessibleChaseState state = (uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState) 
-				new AccessibleDatabaseListState(this.reasoningParameters, this.query, this.accessibleSchema, this.connection, true);
+		AccessibleChaseInstance state = (uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance) 
+				new AccessibleDatabaseChaseInstance(this.reasoningParameters, this.query, this.accessibleSchema, this.connection, true);
 		this.chaser.reasonUntilTermination(state, this.accessibleSchema.getOriginalDependencies());
 		this.tick = System.nanoTime();
 		SearchNode root = this.nodeFactory.getInstance(state);

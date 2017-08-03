@@ -33,7 +33,7 @@ import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.filters.Filter;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator;
 import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominance;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState;
+import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.util.LimitReachedException;
@@ -235,7 +235,7 @@ public class DAGGeneric extends DAGExplorer {
 	 * @author Efthymia Tsamoura
 	 * @param <S> the generic type
 	 */
-	protected static class PairSelector<S extends AccessibleChaseState> {
+	protected static class PairSelector<S extends AccessibleChaseInstance> {
 
 		/**  Configurations to consider on the left. */
 		private List<DAGChaseConfiguration> left;

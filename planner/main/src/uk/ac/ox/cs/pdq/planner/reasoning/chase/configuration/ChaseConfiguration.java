@@ -8,7 +8,7 @@ import com.google.common.collect.Lists;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.db.Match;
-import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance.LimitTofacts;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance.LimitToThisOrAllInstances;
 import uk.ac.ox.cs.pdq.util.LimitReachedException;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
@@ -16,7 +16,7 @@ import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.reasoning.Configuration;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState;
+import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 
 
@@ -44,7 +44,7 @@ import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 public abstract class ChaseConfiguration implements Configuration {
 
 	/** The configuration's chase state. Keeps the output facts of this configuration */
-	protected final AccessibleChaseState state;
+	protected final AccessibleChaseInstance state;
 
 	/**  The plan that corresponds to this configuration. */
 	protected RelationalTerm plan;
@@ -68,7 +68,7 @@ public abstract class ChaseConfiguration implements Configuration {
 	 * @param output 		The output constants
 	 */
 	public ChaseConfiguration(
-			AccessibleChaseState state,
+			AccessibleChaseInstance state,
 			Collection<Constant> input,
 			Collection<Constant> output
 			) {
@@ -100,7 +100,7 @@ public abstract class ChaseConfiguration implements Configuration {
 	 *
 	 * @return 		the chase state of this configuration.
 	 */
-	public AccessibleChaseState getState() {
+	public AccessibleChaseInstance getState() {
 		return this.state;
 	}
 	
@@ -198,7 +198,7 @@ public abstract class ChaseConfiguration implements Configuration {
 	 * @throws PlannerException the planner exception
 	 */
 	public List<Match> matchesQuery(ConjunctiveQuery query) throws PlannerException {
-		return this.state.getMatches(query,LimitTofacts.THIS);
+		return this.state.getMatches(query,LimitToThisOrAllInstances.THIS);
 	}
 
 	/**

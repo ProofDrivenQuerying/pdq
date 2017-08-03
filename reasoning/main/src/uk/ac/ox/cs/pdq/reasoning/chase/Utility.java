@@ -31,7 +31,7 @@ public class Utility {
 	 * @return TGD<L,R>
 	 * @see uk.ac.ox.cs.pdq.ics.IC#fire(Map<Variable,Term>, boolean)
 	 */
-	public static Implication fire(Dependency dependency, Map<Variable, Constant> mapping, boolean skolemize) {
+	public static Implication ground(Dependency dependency, Map<Variable, Constant> mapping, boolean skolemize) {
 		Map<Variable, Constant> skolemizedMapping = mapping;
 		if(skolemize) 
 			skolemizedMapping = Utility.skolemizeMapping(dependency, mapping);

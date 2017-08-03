@@ -12,7 +12,7 @@ import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.planner.dag.ApplyRule;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState;
+import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance;
 
 import com.google.common.base.Preconditions;
 
@@ -23,7 +23,7 @@ import com.google.common.base.Preconditions;
  * @author Efthymia Tsamoura
  * @param <S> the generic type
  */
-public class ExistenceFilter<S extends AccessibleChaseState> implements Filter {
+public class ExistenceFilter<S extends AccessibleChaseInstance> implements Filter {
 
 	/** The accesses. */
 	private final List<Pair<Relation,AccessMethod>> accesses;

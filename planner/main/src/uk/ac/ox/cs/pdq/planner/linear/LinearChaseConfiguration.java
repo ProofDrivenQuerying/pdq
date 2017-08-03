@@ -20,7 +20,7 @@ import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.Candidate;
 import uk.ac.ox.cs.pdq.planner.reasoning.Configuration;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState;
+import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
 import uk.ac.ox.cs.pdq.reasoning.chase.Utility;
 
@@ -87,7 +87,7 @@ public class LinearChaseConfiguration extends ChaseConfiguration implements Line
 	 * @param state the state; i.e. the set of facts
 	 * @param random the random
 	 */
-	public LinearChaseConfiguration(AccessibleChaseState state, Random random) {
+	public LinearChaseConfiguration(AccessibleChaseInstance state, Random random) {
 		super(state, null, null);
 		this.random = random;
 		this.rule = null;

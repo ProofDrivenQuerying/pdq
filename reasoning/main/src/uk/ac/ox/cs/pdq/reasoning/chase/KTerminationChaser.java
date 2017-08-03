@@ -8,7 +8,7 @@ import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
-import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance.LimitTofacts;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance.LimitToThisOrAllInstances;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.TriggerProperty;
 import uk.ac.ox.cs.pdq.reasoning.utility.ReasonerUtility;
 
@@ -57,7 +57,7 @@ public class KTerminationChaser extends RestrictedChaser {
 		boolean appliedStep = true;
 		while (rounds < this.k && appliedStep) {
 			appliedStep = false;
-			List<Match> matches = instance.getTriggers(dependencies, TriggerProperty.ACTIVE, LimitTofacts.THIS);
+			List<Match> matches = instance.getTriggers(dependencies, TriggerProperty.ACTIVE, LimitToThisOrAllInstances.THIS);
 			if(!matches.isEmpty()) {
 				instance.chaseStep(matches);
 				appliedStep = true;

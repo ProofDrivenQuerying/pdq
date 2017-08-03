@@ -113,6 +113,8 @@ public class ExplorationSetUp {
 		this.accessibleSchema = new AccessibleSchema(schema);
 	}
 
+	//Change attributes to Strings 
+	//add an extra attribute
 	private void addAdditionalAttributeToSchema(Schema schema, Attribute atribute) {
 		//final static Attribute StateIDAttribute = new Attribute(Integer.class, "ChaseStateID");
 		for(Relation r:schema.getRelations())

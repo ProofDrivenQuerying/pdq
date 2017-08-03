@@ -7,7 +7,7 @@ import java.util.List;
 
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Dependency;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState;
+import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 
 import com.google.common.base.Preconditions;
@@ -102,7 +102,7 @@ public class BinaryConfiguration extends DAGChaseConfiguration {
 	public BinaryConfiguration(
 			DAGChaseConfiguration left,
 			DAGChaseConfiguration right,
-			AccessibleChaseState state
+			AccessibleChaseInstance state
 			) {
 		super(state,
 				ConfigurationUtility.getInput(left, right),

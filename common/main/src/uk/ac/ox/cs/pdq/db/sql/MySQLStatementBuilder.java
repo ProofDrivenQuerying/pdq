@@ -8,10 +8,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.junit.Assert;
 
 import uk.ac.ox.cs.pdq.db.Relation;
-import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismProperty;
-import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismProperty.TopKProperty;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
@@ -55,19 +54,6 @@ public class MySQLStatementBuilder extends SQLStatementBuilder {
 		return result;
 	}
 
-	/* (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.reasoning.homomorphism.SQLStatementBuilder#translateLimitConstraints(uk.ac.ox.cs.pdq.fol.Evaluatable, uk.ac.ox.cs.pdq.reasoning.homomorphism.HomomorphismConstraint[])
-	 */
-	@Override
-	public String translateLimitConstraints(HomomorphismProperty... constraints) {
-		for(HomomorphismProperty c:constraints) {
-			if(c instanceof TopKProperty) {
-				return "LIMIT " + ((TopKProperty) c).k;
-			}
-		}
-		return null;
-	}
-
 	/**
 	 * Clone.
 	 *
@@ -86,20 +72,28 @@ public class MySQLStatementBuilder extends SQLStatementBuilder {
 	 * @return insert statements that add the input fact to the fact database.
 	 */
 	@Override
-	public Collection<String> createInsertStatements(Collection<Atom> facts, Map<String, Relation> toDatabaseTables) {
+	public Collection<String> createInsertStatements(Collection<Atom> facts, Map<String, Relation> relationNamesToRelationObjects) {
 		Collection<String> result = new LinkedList<>();
 		for (Atom fact:facts) {
-			Relation rel = toDatabaseTables.get(fact.getPredicate().getName());
-			Term[] terms = fact.getTerms();
-			String insertInto = "INSERT IGNORE INTO " + toDatabaseTables.get(rel.getName()).getName() + " " + "VALUES ( ";
-			for (Term term:terms) {
-				if (!term.isVariable()) {
-					insertInto += "'" + term + "'" + ",";
-				}
+			Assert.assertTrue(fact.getPredicate() instanceof Relation);
+			Relation relation = (Relation) fact.getPredicate();
+			String insertInto = "INSERT IGNORE INTO " + fact.getPredicate().getName() + " " + "VALUES ( ";
+			for (int termIndex = 0; termIndex < fact.getNumberOfTerms(); ++termIndex) {
+				Term term = fact.getTerm(termIndex);
+				if (!term.isVariable()) 
+					if (String.class.isAssignableFrom((Class<?>) relation.getAttribute(termIndex).getType()))
+						insertInto += "'" + term + "'";
+					else if (Integer.class.isAssignableFrom((Class<?>) relation.getAttribute(termIndex).getType()))
+						insertInto +=  term;
+					else if (Double.class.isAssignableFrom((Class<?>) relation.getAttribute(termIndex).getType()))
+						insertInto +=  term;
+					else if (Float.class.isAssignableFrom((Class<?>) relation.getAttribute(termIndex).getType()))
+						insertInto +=  term;
+					else 
+						throw new RuntimeException("Unsupported type");
+				if(termIndex < fact.getNumberOfTerms() -1)
+					insertInto +=  ",";
 			}
-			insertInto = insertInto.substring(0,insertInto.lastIndexOf(","));
-//			insertInto += 0 + ",";
-//			insertInto += fact.getId();
 			insertInto += ")";
 			result.add(insertInto);
 		}
@@ -115,19 +109,18 @@ public class MySQLStatementBuilder extends SQLStatementBuilder {
 	 * @return insert statements that add the input fact to the fact database.
 	 */
 	@Override
-	public String createBulkInsertStatement(Predicate predicate, Collection<Atom> facts, Map<String, Relation> toDatabaseTables) {
-		String insertInto = "INSERT IGNORE INTO " + toDatabaseTables.get(predicate.getName()).getName() + "\n" +
-				"VALUES" + "\n";
+	public String createBulkInsertStatement(Predicate predicate, Collection<Atom> facts) {
+		String insertInto = "INSERT IGNORE INTO " + predicate.getName() + "\n" + "VALUES" + "\n";
 		List<String> tuples = new ArrayList<String>();
 		for (Atom fact:facts) {
 			String tuple = "(";
-			Term[] terms = fact.getTerms();
-			for (Term term : terms) {
+			for (int termIndex = 0; termIndex < fact.getNumberOfTerms(); ++termIndex) {
+				Term term = fact.getTerm(termIndex);
 				if (!term.isVariable()) 
-					tuple += "'" + term + "'" + ",";
+					tuple += "'" + term + "'";
+				if(termIndex < fact.getNumberOfTerms() - 1)
+					tuple += ",";
 			}
-			tuple = tuple.substring(0,tuple.lastIndexOf(","));
-			//tuple += "'"+fact.getId()+"'";
 			tuple += ")";
 			tuples.add(tuple);
 		}

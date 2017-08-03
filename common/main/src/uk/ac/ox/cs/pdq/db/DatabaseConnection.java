@@ -3,68 +3,50 @@ package uk.ac.ox.cs.pdq.db;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+
 import uk.ac.ox.cs.pdq.db.sql.DerbyStatementBuilder;
 import uk.ac.ox.cs.pdq.db.sql.MySQLStatementBuilder;
 import uk.ac.ox.cs.pdq.db.sql.SQLStatementBuilder;
 /**
  * Models a database connection. It is responsible for creating database tables for the input schema.
  * 
- * @author george
  *
  */
 public class DatabaseConnection implements AutoCloseable{
 	public final int synchronousThreadsNumber = 1;
+
+	private static Integer counter = 0;
 
 	private boolean isInitialized = false;
 
 	/**  Open database connections. */
 	protected List<Connection> synchronousConnections = Lists.newArrayList();
 
-	public List<Connection> getSynchronousConnections() {
-		return synchronousConnections;
-	}
 	/** Map schema relation to database tables. */
 	private Map<String, Relation> relationNamesToRelationObjects = null;
 
 	/**  Creates SQL statements to detect homomorphisms or add/delete facts in a database. */
-	private SQLStatementBuilder builder = null;
+	private final SQLStatementBuilder builder;
 
-	public SQLStatementBuilder getSQLStatementBuilder() {
-		return getBuilder();
-	}
+	private final DatabaseParameters databaseParameters;
 
-	private DatabaseParameters dbParams;
+	private final Schema schema;
 
-	private String database;
-
-	private ArrayList<Relation> relations;
-
-	private static Integer counter = 0;
-
-	private Schema schema;
-
-	public Schema getSchema() {
-		return schema;
-	}
-
-	public DatabaseConnection(DatabaseParameters dbParams, Schema schema) throws SQLException {
-		String driver = dbParams.getDatabaseDriver();
-		String url = dbParams.getConnectionUrl();
-		database = dbParams.getDatabaseName(); 
-		String username = dbParams.getDatabaseUser();
-		String password = dbParams.getDatabasePassword();
+	public DatabaseConnection(DatabaseParameters databaseParameters, Schema schema) throws SQLException {
+		String driver = databaseParameters.getDatabaseDriver();
+		String url = databaseParameters.getConnectionUrl();
+		String database = databaseParameters.getDatabaseName(); 
+		String username = databaseParameters.getDatabaseUser();
+		String password = databaseParameters.getDatabasePassword();
 
 		if (url != null && url.contains("mysql")) {
-			setBuilder(new MySQLStatementBuilder());
+			this.builder = new MySQLStatementBuilder();
 		} else {
 			if (Strings.isNullOrEmpty(driver)) {
 				driver = "org.apache.derby.jdbc.EmbeddedDriver";
@@ -80,20 +62,17 @@ public class DatabaseConnection implements AutoCloseable{
 				username = "APP_" + (counter++);
 			}
 			password = "";
-			setBuilder(new DerbyStatementBuilder());
+			this.builder = new DerbyStatementBuilder();
 		}
 
-		this.relations = Lists.newArrayList(schema.getRelations());
-		this.schema = schema;
-
 		for(int j=0; j<=synchronousThreadsNumber; j++)
-			this.synchronousConnections.add(DatabaseInstance.getConnection(driver, url, database, username, password));
+			this.synchronousConnections.add(DatabaseUtilities.getConnection(driver, url, database, username, password));
 
-		this.dbParams = dbParams;
+		this.schema = schema;
+		this.databaseParameters = databaseParameters;
 		this.relationNamesToRelationObjects = new LinkedHashMap<>();
-		initialize();
+		this.initialize();
 	}
-
 
 	public void initialize() throws SQLException {
 		if (!this.isInitialized) {
@@ -108,22 +87,13 @@ public class DatabaseConnection implements AutoCloseable{
 	 */
 	protected void setup() throws SQLException {
 		Statement sqlStatement = this.synchronousConnections.get(0).createStatement();
-
-		for (String sql: this.getBuilder().createDatabaseStatements(database)) 
+		for (String sql: this.builder.createDatabaseStatements(this.databaseParameters.getDatabaseName())) 
 			sqlStatement.addBatch(sql);
-
-		//Put relations into a set so as to make them unique
-		Set<Relation> relationset = new HashSet<Relation>();
-		relationset.addAll(this.relations);
-		this.relations.clear();
-		this.relations.addAll(relationset);
-
 		//Create the database tables and create column indices
-		for (Relation relation:this.relations) {
+		for (Relation relation:this.schema.getRelations()) {
 			Relation dbRelation = this.createDatabaseRelation(relation);
 			this.relationNamesToRelationObjects.put(relation.getName(), dbRelation);
-			sqlStatement.addBatch(this.getBuilder().createTableStatement(dbRelation));
-			//				sqlStatement.addBatch(this.getBuilder().createColumnIndexStatement(dbRelation, dbRelation.getAttribute(dbRelation.getArity()-1)));
+			sqlStatement.addBatch(this.builder.createTableStatement(dbRelation));
 		}
 		sqlStatement.executeBatch();
 	}
@@ -136,14 +106,16 @@ public class DatabaseConnection implements AutoCloseable{
 	 *         x_i maps to the i-th relation's attribute
 	 */
 	private Relation createDatabaseRelation(Relation relation) {
-		/** The attr prefix. THIS SHOULD DISAPPEAR */
 		String attrPrefix = "x";
-		Attribute[] attributes = new Attribute[relation.getAttributes().length];
-		for (int index = 0; index < relation.getAttributes().length; index++) 
-			attributes[index] = new Attribute(String.class, attrPrefix + index);
-		
-		return new Relation(relation.getName(), attributes, relation.isEquality()){
-			private static final long serialVersionUID = -5890010433295072114L;};	
+		Attribute[] attributes = new Attribute[relation.getArity()];
+		for (int index = 0; index < relation.getArity(); index++) {
+			Attribute attribute = relation.getAttribute(index);
+			if (Integer.class.isAssignableFrom((Class<?>) attribute.getType()) && attribute.getName().equals("InstanceID")) 
+				attributes[index] = Attribute.create(Integer.class, "InstanceID");
+			else 
+				attributes[index] = Attribute.create(String.class, attrPrefix + index);
+		}
+		return Relation.create(relation.getName(), attributes, relation.isEquality());
 	}
 
 	/**
@@ -154,11 +126,8 @@ public class DatabaseConnection implements AutoCloseable{
 	 */
 	protected void dropDatabase() throws SQLException {
 		Statement sqlStatement = this.synchronousConnections.get(0).createStatement();
-		//Statement sqlStatement = this.synchronousConnections.createStatement();
-
-		for (String sql: this.getBuilder().createDropStatements(this.database)) 
+		for (String sql: this.builder.createDropStatements(this.databaseParameters.getDatabaseName())) 
 			sqlStatement.addBatch(sql);
-		
 		sqlStatement.executeBatch();
 	}
 	/*
@@ -168,15 +137,14 @@ public class DatabaseConnection implements AutoCloseable{
 	@Override
 	public void close() throws Exception {
 		this.dropDatabase();
-		for(Connection con:this.synchronousConnections) {
-			con.close();
-		}
+		for(Connection connection:this.synchronousConnections) 
+			connection.close();
 	}
 
 	@Override
 	public DatabaseConnection clone() {
 		try {
-			DatabaseConnection cloneCon = new DatabaseConnection(dbParams,schema);
+			DatabaseConnection cloneCon = new DatabaseConnection(this.databaseParameters,this.schema);
 			cloneCon.isInitialized = this.isInitialized;
 			return cloneCon;
 		} catch (SQLException e) {
@@ -188,17 +156,31 @@ public class DatabaseConnection implements AutoCloseable{
 	 * TOCOMMENT: See issue 168
 	 */
 	public Map<String, Relation> getRelationNamesToRelationObjects() {
-		return relationNamesToRelationObjects;
+		return this.relationNamesToRelationObjects;
 	}
 
-
-	public SQLStatementBuilder getBuilder() {
-		return builder;
+	public SQLStatementBuilder getSQLStatementBuilder() {
+		return this.builder;
 	}
 
-
-	public void setBuilder(SQLStatementBuilder builder) {
-		this.builder = builder;
+	public Schema getSchema() {
+		return this.schema;
+	}
+	
+	public List<Connection> getSynchronousConnections() {
+		return this.synchronousConnections;
+	}
+	
+	public Connection getSynchronousConnections(int index) {
+		return this.synchronousConnections.get(index);
+	}
+	
+	public DatabaseParameters getDatabaseParameters() {
+		return this.databaseParameters;
+	}
+	
+	public int getNumberOfSynchronousConnections() {
+		return this.synchronousConnections.size();
 	}
 
 }

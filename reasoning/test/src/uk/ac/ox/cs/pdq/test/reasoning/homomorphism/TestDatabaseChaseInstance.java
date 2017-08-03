@@ -28,7 +28,7 @@ import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.io.xml.QNames;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
-import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance.LimitTofacts;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance.LimitToThisOrAllInstances;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.TriggerProperty;
 
 import com.google.common.collect.Lists;
@@ -122,7 +122,7 @@ public class TestDatabaseChaseInstance {
 				new Term[]{UntypedConstant.create("k6"), UntypedConstant.create("c"),TypedConstant.create(new String("Michael"))});
 		
 		this.chaseState.addFacts(Lists.newArrayList(f20,f21,f22,f23,f24,f25));
-		List<Match> matches = this.chaseState.getTriggers(new Dependency[]{this.tgd},TriggerProperty.ACTIVE,LimitTofacts.THIS);
+		List<Match> matches = this.chaseState.getTriggers(new Dependency[]{this.tgd},TriggerProperty.ACTIVE,LimitToThisOrAllInstances.THIS);
 		Assert.assertEquals(6, matches.size());
 	}
 	
@@ -147,7 +147,7 @@ public class TestDatabaseChaseInstance {
 				new Term[]{UntypedConstant.create("p"),TypedConstant.create(new String("Michael"))});
 		
 		this.chaseState.addFacts(Lists.newArrayList(f20,f21,f22,f23,f24,f25));
-		List<Match> matches = this.chaseState.getTriggers(new Dependency[]{this.egd},TriggerProperty.ACTIVE,LimitTofacts.THIS);
+		List<Match> matches = this.chaseState.getTriggers(new Dependency[]{this.egd},TriggerProperty.ACTIVE,LimitToThisOrAllInstances.THIS);
 		Assert.assertEquals(4, matches.size());
 	}
 	
@@ -175,7 +175,7 @@ public class TestDatabaseChaseInstance {
 		Atom eq2 = Atom.create(new Predicate(QNames.EQUALITY.toString(), 2), UntypedConstant.create("c1"), UntypedConstant.create("c3"));
 		
 		this.chaseState.addFacts(Lists.newArrayList(f20,f21,f22,f23,f24,f25, eq1,eq2));
-		List<Match> matches = this.chaseState.getTriggers(new Dependency[]{this.egd},TriggerProperty.ALL,LimitTofacts.THIS);
+		List<Match> matches = this.chaseState.getTriggers(new Dependency[]{this.egd},TriggerProperty.ALL,LimitToThisOrAllInstances.THIS);
 		Assert.assertEquals(4, matches.size());
 	}	
 	
@@ -203,7 +203,7 @@ public class TestDatabaseChaseInstance {
 		Atom eq2 = Atom.create(new Predicate(QNames.EQUALITY.toString(), 2), UntypedConstant.create("c1"), UntypedConstant.create("c3"));
 		
 		this.chaseState.addFacts(Lists.newArrayList(f20,f21,f22,f23,f24,f25, eq1,eq2));
-		List<Match> matches = this.chaseState.getTriggers(new Dependency[]{this.egd},TriggerProperty.ACTIVE,LimitTofacts.THIS);
+		List<Match> matches = this.chaseState.getTriggers(new Dependency[]{this.egd},TriggerProperty.ACTIVE,LimitToThisOrAllInstances.THIS);
 		Assert.assertEquals(3, matches.size());
 	}	
 	
@@ -234,7 +234,7 @@ public class TestDatabaseChaseInstance {
 				new Term[]{UntypedConstant.create("c"),UntypedConstant.create("c2")});
 		
 		this.chaseState.addFacts(Lists.newArrayList(f20,f21,f22,f23,f24,f25, f26, f27));
-		List<Match> matches = this.chaseState.getTriggers(new Dependency[]{this.tgd}, TriggerProperty.ACTIVE,LimitTofacts.THIS);
+		List<Match> matches = this.chaseState.getTriggers(new Dependency[]{this.tgd}, TriggerProperty.ACTIVE,LimitToThisOrAllInstances.THIS);
 		Assert.assertEquals(4, matches.size());
 	}
 	
@@ -256,7 +256,7 @@ public class TestDatabaseChaseInstance {
 				new Term[]{UntypedConstant.create("r2"),UntypedConstant.create("UntypedConstant2")});
 		
 		this.chaseState.addFacts(Lists.newArrayList(f20,f21,f22,f26,f27));
-		List<Match> matches = this.chaseState.getTriggers(new Dependency[]{this.tgd2}, TriggerProperty.ACTIVE,LimitTofacts.THIS);
+		List<Match> matches = this.chaseState.getTriggers(new Dependency[]{this.tgd2}, TriggerProperty.ACTIVE,LimitToThisOrAllInstances.THIS);
 		Assert.assertEquals(1, matches.size());
 	}
 }
