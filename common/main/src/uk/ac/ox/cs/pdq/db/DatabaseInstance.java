@@ -1,7 +1,5 @@
 package uk.ac.ox.cs.pdq.db;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -26,39 +24,29 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 import org.apache.log4j.Logger;
 
-import com.google.common.base.Strings;
 import com.google.common.collect.Sets;
 
 import uk.ac.ox.cs.pdq.db.sql.DerbyStatementBuilder;
 import uk.ac.ox.cs.pdq.db.sql.ExecuteSQLQueryThread;
 import uk.ac.ox.cs.pdq.db.sql.ExecuteSynchronousSQLUpdateThread;
-import uk.ac.ox.cs.pdq.db.sql.SQLStatementBuilder;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.util.LimitReachedException;
-import uk.ac.ox.cs.pdq.util.Utility;
 import uk.ac.ox.cs.pdq.util.LimitReachedException.Reasons;
+import uk.ac.ox.cs.pdq.util.Utility;
 /**
  * 
  * A database instance is a set of facts stored in an RDBMS. 
  * This object provides basic functionalities, for storing, indexing querying and deleting a database instance.
  *
  */
-public class DatabaseInstance implements Instance {
+public abstract class DatabaseInstance implements Instance {
 	protected static Logger log = Logger.getLogger(DatabaseInstance.class);
-
-	/** The schema relations */
-	protected List<Relation> relations = null;
-
-	/**  Maps of the string representation of a constant to the constant. */
-	protected Map<String, TypedConstant> constants = null;
-
+	
 	/** Number of parallel threads. **/
-	protected int synchronousThreadsNumber = 1;
-
 	protected final long timeout = 3600000;
 	protected final TimeUnit unit = TimeUnit.MILLISECONDS;
 	protected final static int insertCacheSize = 1000; 
@@ -68,100 +56,34 @@ public class DatabaseInstance implements Instance {
 
 	/** True if previous query indices were cleared. */
 	private boolean clearedLastQuery = true;
-	
-	protected DatabaseParameters dbParams;
 
 	protected Set<String> existingIndices =  new LinkedHashSet<String>();
 
-	/** Statemenets that drop the query indices. */
+	/** Statements that drop the query indices. */
 	Set<String> dropQueryIndexStatements = Sets.newLinkedHashSet();
 	//------------------------------------------------------//
 
-	public Schema schema;
-
-	protected List<Connection> connections;
-
-	protected SQLStatementBuilder builder;
-
-	protected Map<String, Relation> relationNamesToRelationObjects;
-
 	protected DatabaseConnection databaseConnection;
 
-	protected DatabaseConnection getDatabaseConnection() {
-		return this.databaseConnection;
-	}
-
 	public DatabaseInstance(DatabaseConnection databaseConnection) {
-		this.connections = databaseConnection.synchronousConnections;
-		this.builder = databaseConnection.getSQLStatementBuilder();
-		this.relationNamesToRelationObjects = databaseConnection.getRelationNamesToRelationObjects();
-		this.synchronousThreadsNumber = databaseConnection.synchronousThreadsNumber;
-		this.constants = databaseConnection.getSchema().getConstants();
 		this.databaseConnection = databaseConnection;
-		this.schema = databaseConnection.getSchema();
 	}
-
-	/**
-	 * Gets the connection.
-	 *
-	 * @param driver String
-	 * @param url the url
-	 * @param database the database
-	 * @param username the username
-	 * @param password the password
-	 * @return a connection database connection for the given properties.
-	 * @throws SQLException the SQL exception
-	 */
-	public static Connection getConnection(String driver, String url, String database, String username, String password) throws SQLException {
-		if (!Strings.isNullOrEmpty(driver)) {
-			try {
-				Class.forName(driver).newInstance();
-			} catch (ClassNotFoundException e) {
-				throw new IllegalStateException("Could not load chase database driver '" + driver + "'");
-			} catch (InstantiationException e) {
-				// TODO Auto-generated catch block
-				log.error(e.getMessage(),e);
-				throw new RuntimeException(e);
-			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
-				log.error(e.getMessage(),e);
-				throw new RuntimeException(e);
-			}
-		}
-		String u = null;
-		if (url.contains("{1}")) {
-			u = url.replace("{1}", database);
-		} else {
-			u = url + database;
-		}
-		try {
-			Connection result = DriverManager.getConnection(u, username, password);
-			result.setAutoCommit(true);
-			return result;
-		} catch (SQLException e) {
-			log.debug(e.getMessage());
-		}
-		Connection result = DriverManager.getConnection(url, username, password);
-		result.setAutoCommit(true);
-		return result;
-	}
-
 
 	public void addFacts(Collection<Atom> facts) {
 		Queue<String> queries = new ConcurrentLinkedQueue<>();
-		if(this.builder instanceof DerbyStatementBuilder) {
-			queries.addAll(this.builder.createInsertStatements(facts, this.relationNamesToRelationObjects));
+		if(this.databaseConnection.getSQLStatementBuilder() instanceof DerbyStatementBuilder) {
+			queries.addAll(this.databaseConnection.getSQLStatementBuilder().createInsertStatements(facts, this.databaseConnection.getRelationNamesToRelationObjects()));
 		}
 		else {
 			Map<Predicate, List<Atom>> clusters = Utility.clusterAtomsWithSamePredicateName(facts);
 			//Find the total number of tuples that will be inserted in the database
 			int totalTuples = facts.size();
 			int tuplesPerThread;
-			if(totalTuples < this.synchronousThreadsNumber) {
+			if(totalTuples < this.databaseConnection.getNumberOfSynchronousConnections()) {
 				tuplesPerThread = totalTuples;
 			}
 			else {
-				tuplesPerThread = (int) Math.ceil(totalTuples / this.synchronousThreadsNumber);
+				tuplesPerThread = (int) Math.ceil(totalTuples / this.databaseConnection.getNumberOfSynchronousConnections());
 			}
 			if(tuplesPerThread > insertCacheSize) {
 				tuplesPerThread = insertCacheSize;
@@ -172,7 +94,7 @@ public class DatabaseInstance implements Instance {
 				while(!clusterFacts.isEmpty()) {
 					int position = tuplesPerThread < clusterFacts.size() ? tuplesPerThread:clusterFacts.size();
 					List<Atom> subList = clusterFacts.subList(0, position);
-					queries.add(this.builder.createBulkInsertStatement(predicate, subList, this.relationNamesToRelationObjects));
+					queries.add(this.databaseConnection.getSQLStatementBuilder().createBulkInsertStatement(predicate, subList));
 					subList.clear();
 				}
 			}
@@ -186,11 +108,11 @@ public class DatabaseInstance implements Instance {
 		ExecutorService executorService = null;
 		try {
 			//Create a pool of threads to run in parallel
-			executorService = Executors.newFixedThreadPool(this.synchronousThreadsNumber);
+			executorService = Executors.newFixedThreadPool(this.databaseConnection.getNumberOfSynchronousConnections());
 			List<Callable<Boolean>> threads = new ArrayList<>();
-			for(int j = 0; j < this.synchronousThreadsNumber; ++j) {
+			for(int j = 0; j < this.databaseConnection.getNumberOfSynchronousConnections(); ++j) {
 				//Create the threads that will run the database update statements
-				threads.add(new ExecuteSynchronousSQLUpdateThread(queries, this.connections.get(j)));
+				threads.add(new ExecuteSynchronousSQLUpdateThread(queries, this.getDatabaseConnection().getSynchronousConnections(j)));
 			}
 			long start = System.currentTimeMillis();
 			try {
@@ -221,11 +143,11 @@ public class DatabaseInstance implements Instance {
 		//Find the total number of tuples that will be deleted from the database
 		int totalTuples = facts.size();
 		int tuplesPerThread;
-		if(totalTuples < this.synchronousThreadsNumber) {
+		if(totalTuples < this.databaseConnection.getNumberOfSynchronousConnections()) {
 			tuplesPerThread = totalTuples;
 		}
 		else {
-			tuplesPerThread = (int) Math.ceil(totalTuples / this.synchronousThreadsNumber);
+			tuplesPerThread = (int) Math.ceil(totalTuples / this.databaseConnection.getNumberOfSynchronousConnections());
 		}
 		if(tuplesPerThread > insertCacheSize) {
 			tuplesPerThread = insertCacheSize;
@@ -236,7 +158,7 @@ public class DatabaseInstance implements Instance {
 			while(!clusterFacts.isEmpty()) {
 				int position = tuplesPerThread > clusterFacts.size() ? clusterFacts.size():tuplesPerThread;
 				List<Atom> subList = clusterFacts.subList(0, position);
-				queries.add(this.builder.createBulkDeleteStatement(predicate, subList, this.relationNamesToRelationObjects));
+				queries.add(this.databaseConnection.getSQLStatementBuilder().createBulkDeleteStatement(predicate, subList, this.databaseConnection.getRelationNamesToRelationObjects()));
 				subList.clear();
 			}
 		}
@@ -247,27 +169,27 @@ public class DatabaseInstance implements Instance {
 		throw new UnsupportedOperationException("Method not implemented yet - use answerQueries()");
 	}
 
-	public DatabaseInstance clone() {
-		try {
-			DatabaseConnection dbconn= new DatabaseConnection(dbParams, schema);
-			DatabaseInstance clone = new DatabaseInstance(dbconn);
-			clone.dbParams = this.dbParams;
-			return clone;
-		} catch (SQLException e) {
-			log.error(e.getMessage(),e);
-			return null;
-		}
-	}
+//	public DatabaseInstance clone() {
+//		try {
+//			DatabaseConnection dbconn= new DatabaseConnection(this.databaseConnection.getDatabaseParameters(), this.databaseConnection.getSchema());
+//			DatabaseInstance clone = new DatabaseInstance(dbconn);
+//			return clone;
+//		} catch (SQLException e) {
+//			log.error(e.getMessage(),e);
+//			return null;
+//		}
+//	}
+	
 	public void addQuery(ConjunctiveQuery query) {
 		if(!this.clearedLastQuery)
 			throw new RuntimeException("Method clearQuery should have been called in order to clear previous query's tables from the database.");
 		this.clearedLastQuery = false;
 		try {
-			Statement sqlStatement = this.connections.get(0).createStatement();
+			Statement sqlStatement = this.getDatabaseConnection().getSynchronousConnections(0).createStatement();
 			//Create statements that set up or drop the indices for the joins in the body of the input query
 			Set<String> joinIndexes = Sets.newLinkedHashSet();
 			Pair<Collection<String>, Collection<String>> dropAndCreateStms = 
-					this.builder.setupIndices(true, this.relationNamesToRelationObjects, query, this.existingIndices);
+					this.databaseConnection.getSQLStatementBuilder().setupIndices(true, this.databaseConnection.getRelationNamesToRelationObjects(), query, this.existingIndices);
 			this.dropQueryIndexStatements.addAll(dropAndCreateStms.getRight());
 			joinIndexes.addAll(dropAndCreateStms.getLeft());
 			for (String b: joinIndexes) {
@@ -282,14 +204,14 @@ public class DatabaseInstance implements Instance {
 
 	public void clearQuery() {
 		try { 
-			Statement sqlStatement = this.connections.get(0).createStatement();
+			Statement sqlStatement = this.getDatabaseConnection().getSynchronousConnections(0).createStatement();
 			//Drop the join indices for input query
 			for (String b: this.dropQueryIndexStatements) {
 				sqlStatement.addBatch(b);
 			}
 			//Clear the database tables built for the query
-			Collection<String> clearTablesSQLExpressions = this.builder.createTruncateTableStatements(this.currentQuery.getAtoms(), 
-					this.relationNamesToRelationObjects);
+			Collection<String> clearTablesSQLExpressions = this.databaseConnection.getSQLStatementBuilder().createTruncateTableStatements(this.currentQuery.getAtoms(), 
+					this.databaseConnection.getRelationNamesToRelationObjects());
 			for (String b: clearTablesSQLExpressions) {
 				sqlStatement.addBatch(b);
 			}
@@ -314,11 +236,11 @@ public class DatabaseInstance implements Instance {
 		ExecutorService executorService = null;
 		try {
 			//Create a pool of threads to run in parallel
-			executorService = Executors.newFixedThreadPool(this.synchronousThreadsNumber);
+			executorService = Executors.newFixedThreadPool(this.databaseConnection.getNumberOfSynchronousConnections());
 			List<Callable<List<Match>>> threads = new ArrayList<>();
-			for(int j = 0; j < this.synchronousThreadsNumber; ++j) {
+			for(int j = 0; j < this.databaseConnection.getNumberOfSynchronousConnections(); ++j) {
 				//Create the threads that will run the database queries
-				threads.add(new ExecuteSQLQueryThread(queries, this.constants, this.connections.get(j)));
+				threads.add(new ExecuteSQLQueryThread(queries, this.databaseConnection.getSchema().getConstants(), this.getDatabaseConnection().getSynchronousConnections(j)));
 			}
 			long start = System.currentTimeMillis();
 			try {
@@ -345,10 +267,9 @@ public class DatabaseInstance implements Instance {
 		} 
 		return result;
 	}
-
-	public Collection<Atom> getFacts() {
-		// TODO How to return the facts? Query The database?
-		throw new RuntimeException("getFacts() is unimplemented in DatabaseInstance.java");
+	
+	protected DatabaseConnection getDatabaseConnection() {
+		return this.databaseConnection;
 	}
 
 	public void close() throws Exception {

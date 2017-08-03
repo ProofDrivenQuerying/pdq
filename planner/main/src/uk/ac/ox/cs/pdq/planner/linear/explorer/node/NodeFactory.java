@@ -9,7 +9,7 @@ import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.Candidate;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState;
+import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance;
 
 import com.google.common.base.Preconditions;
 
@@ -52,7 +52,7 @@ public final class NodeFactory {
 	 * @return a node with the input accessible chase state
 	 * @throws PlannerException the planner exception
 	 */
-	public SearchNode getInstance(AccessibleChaseState state) throws PlannerException {
+	public SearchNode getInstance(AccessibleChaseInstance state) throws PlannerException {
 		Preconditions.checkNotNull(state);
 		LinearChaseConfiguration configuration = new LinearChaseConfiguration(state, this.random);
 		if (this.costEstimator instanceof SimpleCostEstimator) 

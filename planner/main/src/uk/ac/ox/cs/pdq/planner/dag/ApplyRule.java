@@ -16,7 +16,7 @@ import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState;
+import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance;
 import uk.ac.ox.cs.pdq.planner.util.PlannerUtility;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.util.Utility;
@@ -55,7 +55,7 @@ public class ApplyRule extends DAGChaseConfiguration {
 	 * @param facts 		Input facts. These must share the same constants for the input positions of the input accessibility axiom
 	 */
 	public ApplyRule(
-			AccessibleChaseState state,
+			AccessibleChaseInstance state,
 			AccessibilityAxiom rule,
 			Set<Atom> facts
 			) {		

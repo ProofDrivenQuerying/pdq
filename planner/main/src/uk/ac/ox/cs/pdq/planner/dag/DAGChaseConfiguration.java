@@ -5,7 +5,7 @@ import java.util.Objects;
 
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.planner.reasoning.Configuration;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState;
+import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
 
 import com.google.common.base.Preconditions;
@@ -30,10 +30,10 @@ public abstract class DAGChaseConfiguration extends ChaseConfiguration implement
 
 	private static Integer globalId = 0;
 	
-	/**  TOCOMMENT: WHAT
+	/**  TOCOMMENT: WHAT*/
 	private final Integer high;
 
-	/**  TOCOMMENT: WHAT
+	/**  TOCOMMENT: WHAT*/
 	private final Integer bushiness;
 	
 	/**  True if the configuration is a left-deep one. */
@@ -52,7 +52,7 @@ public abstract class DAGChaseConfiguration extends ChaseConfiguration implement
 	 * @param bushiness 		The bushiness of this configuration
 	 */
 	public DAGChaseConfiguration(
-			AccessibleChaseState state, 
+			AccessibleChaseInstance state, 
 			Collection<Constant> input,
 			Collection<Constant> output, 
 			Integer high,

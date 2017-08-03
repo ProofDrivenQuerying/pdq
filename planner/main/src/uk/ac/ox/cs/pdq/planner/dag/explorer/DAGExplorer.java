@@ -25,9 +25,9 @@ import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.dag.ApplyRule;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleDatabaseListState;
-import uk.ac.ox.cs.pdq.planner.util.PlanUtils;
+import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance;
+import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleDatabaseChaseInstance;
+import uk.ac.ox.cs.pdq.planner.util.PlanCreationUtility;
 import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 
@@ -133,7 +133,7 @@ public abstract class DAGExplorer extends Explorer {
 		}
 		this.bestConfiguration = configuration;
 		//Add the final projection to the best plan
-		ProjectionTerm project = PlanUtils.createFinalProjection(
+		ProjectionTerm project = PlanCreationUtility.createFinalProjection(
 				this.accessibleQuery,
 				this.bestConfiguration.getPlan());
 //		this.bestPlan = new DAGPlan(project);
@@ -183,8 +183,8 @@ public abstract class DAGExplorer extends Explorer {
 	 * @throws SQLException 
 	 */
 	protected List<DAGChaseConfiguration> createApplyRuleConfigurations() throws SQLException {
-		AccessibleDatabaseListState state = null;
-		state = new AccessibleDatabaseListState(this.reasoningParams, this.query, this.accessibleSchema, this.connection, false);
+		AccessibleDatabaseChaseInstance state = null;
+		state = new AccessibleDatabaseChaseInstance(this.reasoningParams, this.query, this.accessibleSchema, this.connection, false);
 		//TODO this should change to original and infacc
 		this.chaser.reasonUntilTermination(state, this.accessibleSchema.getOriginalDependencies());
 
@@ -204,8 +204,8 @@ public abstract class DAGExplorer extends Explorer {
 				break;
 			}
 			for (Collection<Atom> binding:bindings) {
-				AccessibleChaseState newState = (uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState) 
-						new AccessibleDatabaseListState(this.reasoningParams, binding, this.connection, false);
+				AccessibleChaseInstance newState = (uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance) 
+						new AccessibleDatabaseChaseInstance(this.reasoningParams, binding, this.connection, false);
 				applyRule = new ApplyRule(
 						newState,
 						pair.getLeft(),

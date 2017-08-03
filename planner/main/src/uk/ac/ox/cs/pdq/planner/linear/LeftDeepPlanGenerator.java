@@ -10,7 +10,7 @@ import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
-import uk.ac.ox.cs.pdq.planner.util.PlanUtils;
+import uk.ac.ox.cs.pdq.planner.util.PlanCreationUtility;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -51,7 +51,7 @@ public class LeftDeepPlanGenerator {
 	 * @return the left deep plan
 	 */
 	public static RelationalTerm createLeftDeepPlan(Relation relation, AccessMethod accessMethod, Set<Atom> exposedFacts, RelationalTerm parent) {
-		RelationalTerm op1 = PlanUtils.createSingleAccessPlan(relation, accessMethod, exposedFacts);
+		RelationalTerm op1 = PlanCreationUtility.createSingleAccessPlan(relation, accessMethod, exposedFacts);
 		if (parent != null) {
 			if (accessMethod.getNumberOfInputs() > 0) 
 				op1 = DependentJoinTerm.create(parent, op1);

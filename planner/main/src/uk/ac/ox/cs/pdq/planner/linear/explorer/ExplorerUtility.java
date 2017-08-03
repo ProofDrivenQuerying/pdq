@@ -22,7 +22,7 @@ import com.google.common.base.Preconditions;
  * @author Efthymia Tsamoura
  */
 
-public class ExplorerUtils {
+public class ExplorerUtility {
 
 	/**
 	 * Checks if is equivalent.

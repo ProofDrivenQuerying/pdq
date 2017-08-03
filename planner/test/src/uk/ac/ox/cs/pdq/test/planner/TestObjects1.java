@@ -13,7 +13,7 @@ import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState;
+import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance;
 import uk.ac.ox.cs.pdq.util.Utility;
 
 // TODO: Auto-generated Javadoc
@@ -102,10 +102,10 @@ public class TestObjects1 {
 	@Mock protected DAGChaseConfiguration config12;
 	
 	/** The config11 state. */
-	@Mock protected AccessibleChaseState config11State;
+	@Mock protected AccessibleChaseInstance config11State;
 	
 	/** The config12 state. */
-	@Mock protected AccessibleChaseState config12State;
+	@Mock protected AccessibleChaseInstance config12State;
 	
 	/** The plan11. */
 	@Mock protected RelationalTerm plan11;
@@ -126,10 +126,10 @@ public class TestObjects1 {
 	@Mock protected DAGChaseConfiguration config22;
 	
 	/** The config21 state. */
-	@Mock protected AccessibleChaseState config21State;
+	@Mock protected AccessibleChaseInstance config21State;
 	
 	/** The config22 state. */
-	@Mock protected AccessibleChaseState config22State;
+	@Mock protected AccessibleChaseInstance config22State;
 	
 	/** The plan21. */
 	@Mock protected RelationalTerm plan21;
@@ -150,10 +150,10 @@ public class TestObjects1 {
 	@Mock protected DAGChaseConfiguration config32;
 	
 	/** The config31 state. */
-	@Mock protected AccessibleChaseState config31State;
+	@Mock protected AccessibleChaseInstance config31State;
 	
 	/** The config32 state. */
-	@Mock protected AccessibleChaseState config32State;
+	@Mock protected AccessibleChaseInstance config32State;
 	
 	/** The plan31. */
 	@Mock protected RelationalTerm plan31;

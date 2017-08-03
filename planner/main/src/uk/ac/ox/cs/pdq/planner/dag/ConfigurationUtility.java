@@ -21,7 +21,7 @@ import uk.ac.ox.cs.pdq.planner.dominance.Dominance;
 import uk.ac.ox.cs.pdq.planner.dominance.FactDominance;
 import uk.ac.ox.cs.pdq.planner.dominance.FastFactDominance;
 import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominance;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseState;
+import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
 import uk.ac.ox.cs.pdq.util.Utility;
 
@@ -192,7 +192,7 @@ public class ConfigurationUtility {
 	 * @param right the right
 	 * @return a state that is the union of the left and right input states
 	 */
-	public static AccessibleChaseState merge(DAGChaseConfiguration left, DAGChaseConfiguration right) {
+	public static AccessibleChaseInstance merge(DAGChaseConfiguration left, DAGChaseConfiguration right) {
 		return left.getState().merge(right.getState());
 	}
 	

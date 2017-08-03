@@ -46,7 +46,7 @@ public class AccessibleSchema extends Schema {
 
 	/**  The accessible relations. */
 	public static final Relation accessibleRelation = Relation.create("Accessible", 
-			new Attribute[]{Attribute.create(String.class, "x0"), Attribute.create(Integer.class, "FactID")}, 
+			new Attribute[]{Attribute.create(String.class, "x0"), Attribute.create(Integer.class, "InstanceID")}, 
 			new AccessMethod[]{AccessMethod.create(new Integer[]{})});
 
 	/**  Mapping from a relation-access method pair to an accessibility axioms. */
@@ -113,7 +113,7 @@ public class AccessibleSchema extends Schema {
 	 * @param predToInfAcc the pred to inf acc
 	 */
 	private static TGD createInferredAccessibleAxiom(TGD dependency) {
-		return TGD.create(substitute(dependency.getBody()), substitute(dependency.getHead()));
+		return TGD.create(computeInferredAccessibleFormula(dependency.getBody()), computeInferredAccessibleFormula(dependency.getHead()));
 	}
 
 	/**
@@ -122,77 +122,36 @@ public class AccessibleSchema extends Schema {
 	 * @param f Formula
 	 * @return Formula
 	 */
-	private static Formula substitute(Formula f) {
+	public static Formula computeInferredAccessibleFormula(Formula f) {
 		if (f instanceof Conjunction) {
-			return substitute((Conjunction) f);
+			Formula[] result = new Formula[f.getNumberOfChildlen()];
+			for (int index = 0; index < f.getNumberOfChildlen(); ++index) 
+				result[index] = computeInferredAccessibleFormula(f.getChild(index));
+			return Conjunction.of(result);
 		}
 		else if (f instanceof Disjunction) {
-			return substitute((Disjunction) f);
+			Formula[] result = new Formula[f.getNumberOfChildlen()];
+			for (int index = 0; index < f.getNumberOfChildlen(); ++index) 
+				result[index] = computeInferredAccessibleFormula(f.getChild(index));
+			return Disjunction.of(result);
 		}
 		else if (f instanceof Negation) {
-			return substitute((Negation) f);
+			return Negation.of(computeInferredAccessibleFormula(f.getChild(0)));
 		}
 		else if (f instanceof QuantifiedFormula) {
-			return substitute((QuantifiedFormula) f);
+			return QuantifiedFormula.create(((QuantifiedFormula)f).getOperator(), f.getFreeVariables(), f.getChild(0));
 		}
 		else if (f instanceof Atom) {
-			return substitute((Atom) f);
+			Predicate predicate = null;
+			if(((Atom)f).getPredicate() instanceof Relation) {
+				Relation relation = (Relation) ((Atom)f).getPredicate();
+				predicate = Relation.create(AccessibleSchema.inferredAccessiblePrefix + relation.getName(), relation.getAttributes(), new AccessMethod[]{AccessMethod.create(new Integer[]{})}, relation.isEquality());
+			}
+			else 
+				predicate = Predicate.create(inferredAccessiblePrefix + ((Atom)f).getPredicate().getName(), ((Atom)f).getPredicate().getArity());
+			return Atom.create(predicate, ((Atom)f).getTerms());
 		}
 		return f;
-	}
-
-	/**
-	 *
-	 * @param conjunction Conjunction<Formula>
-	 * @return Conjunction<Formula>
-	 */
-	private static Formula substitute(Conjunction conjunction) {
-		List<Formula> result = new LinkedList<>();
-		for (Formula f:conjunction.getChildren()) 
-			result.add(substitute(f));
-		return Conjunction.of(result.toArray(new Formula[result.size()]));
-	}
-
-	/**
-	 *
-	 * @param disjunction Disjunction<Formula>
-	 * @return Disjunction<Formula>
-	 */
-	private static Formula substitute(Disjunction disjunction) {
-		List<Formula> result = new LinkedList<>();
-		for (Formula f: disjunction.getChildren()) 
-			result.add(substitute(f));
-		return Disjunction.of(result.toArray(new Formula[result.size()]));
-	}
-
-	/**
-	 *
-	 * @param negation Negation<Formula>
-	 * @return Negation<Formula>
-	 */
-	private static Negation substitute(Negation negation) {
-		return Negation.of(substitute(negation.getChildren()[0]));
-	}
-
-	private static QuantifiedFormula substitute(QuantifiedFormula quantifiedFormula) {
-		return QuantifiedFormula.create(quantifiedFormula.getOperator(), 
-				quantifiedFormula.getFreeVariables(), quantifiedFormula.getChildren()[0]);
-	}
-
-	/**
-	 *
-	 * @param atom PredicateFormula
-	 * @return PredicateFormula
-	 */
-	private static Atom substitute(Atom atom) {
-		Predicate predicate = null;
-		if(atom.getPredicate() instanceof Relation) {
-			Relation relation = (Relation) atom.getPredicate();
-			predicate = Relation.create(AccessibleSchema.inferredAccessiblePrefix + relation.getName(), relation.getAttributes(), new AccessMethod[]{AccessMethod.create(new Integer[]{})}, relation.isEquality());
-		}
-		else 
-			predicate = Predicate.create(inferredAccessiblePrefix + atom.getPredicate().getName(), atom.getPredicate().getArity());
-		return Atom.create(predicate, atom.getTerms());
 	}
 
 	public static Relation[] computeAccessibleSchemaRelations(Relation[] relations) {

@@ -2,16 +2,13 @@ package uk.ac.ox.cs.pdq.reasoning.chase.state;
 
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -19,7 +16,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
-import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Maps;
@@ -32,9 +28,9 @@ import uk.ac.ox.cs.pdq.db.DatabaseInstance;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
-import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismProperty;
-import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismProperty.ActiveTriggerProperty;
-import uk.ac.ox.cs.pdq.db.homomorphism.HomomorphismProperty.EGDHomomorphismProperty;
+import uk.ac.ox.cs.pdq.db.sql.FromCondition;
+import uk.ac.ox.cs.pdq.db.sql.SelectCondition;
+import uk.ac.ox.cs.pdq.db.sql.WhereCondition;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
@@ -59,7 +55,6 @@ import uk.ac.ox.cs.pdq.util.Utility;
  * Homomorphisms are detected using the DBMS the stores the chase facts. 
  *
  * @author Efthymia Tsamoura
- * @author George K
  *
  */
 public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInstance  {
@@ -69,22 +64,29 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 	/**  The state's facts. */
 	protected Collection<Atom> facts = new LinkedHashSet<Atom>();
 
-	/**  Keeps the classes of equal constants. */
+	/**  Keeps the classes of equivalence classes of constants, that are equated in EGD chasing. */
 	protected EqualConstantsClasses classes;
-
-	/** The canonical names. */
-	protected final boolean canonicalNames = true;
 
 	/** Maps each constant to the atom and the position inside this atom where it appears. 
 	 * We need this table when we are applying an EGD chase step. **/
 	protected final Multimap<Constant, Atom> constantsToAtoms;
+	
+	//used to create an "instanceID" unique per instance
+	private Integer hash = null;
 
 	/**
-	 * Instantiates a new database chase state.
-	 *
-	 * @param query the query
-	 * @param chaseState the chaseState
-	 * @throws SQLException 
+	 * Instantiates a new DatabaseChaseInstance in order to chase a (canonical database of a query).
+	 * It creates and executes SQL in order to insert the facts of the canonical database of the query 
+	 * in the underlying instance. By convention the schema of the input query is assumed 
+	 * to contain an instanceID attribute, where each fact will 
+	 * store the instanceID of the instance that contains it. This constructor also performs indexing
+	 * for all positions that contain joins in the dependencies, as well as the last position of all
+	 * relations. Additionally the constructor creates an "Equality" relation (used in EGD chasing), 
+	 * and initialises internal maps needed for EGD chasing.
+	 * 
+	 * @param query The query whose canonical database is to be inserted and then chased
+	 * @param connection The database connection to the RDBMS
+	 * @throws SQLException Exception risen if something goes wrong with the SQL that inserts the facts.
 	 */
 	public DatabaseChaseInstance(ConjunctiveQuery query, DatabaseConnection connection) throws SQLException {
 		super(connection);
@@ -112,21 +114,24 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 	}
 
 	/**
-	 * Instantiates a new database chase instance
-	 * This protected constructor does not(!) add the facts into the rdbms. 
-	 * Using this constructor one would need to call addFacts explicitly. It also does not perform any contraint or attribute indexing.
-	 *
-	 * @param chaseState TOCOMMENT: why doesn't state contain facts?
-	 * @param facts 
-	 * @param constants TOCOMMENT what is this
-	 * @param classes TCOMMENT: what is this
+	 * Instantiates a new DatabaseChaseInstance in order to chase a set of facts.
+	 * This protected constructor does not(!) add the facts into the RDBMS. 
+	 * Using this constructor one would need to call addFacts explicitly. 
+	 * It also does not perform any constraint or attribute indexing. 
+	 * It accepts as input the sets internal maps needed for EGD chasing.
+	 * 
+	 * 
+	 * @param facts The facts to inserted and later chased
+	 * @param classes an EqualConstantsClasses object that keeps multiple classes of equal constants created during EGD chasing.
+	 * @param constantsToAtoms a map of each constant to the atom and the position inside this atom where it appears, used in EGD chasing.
+	 * @param connection The database connection to the RDBMS
 	 */
 	protected DatabaseChaseInstance(
 			Collection<Atom> facts,
 			EqualConstantsClasses classes,
 			Multimap<Constant,Atom> constants,
 			DatabaseConnection connection 
-			) throws SQLException {
+			) {
 		super(connection);
 		Preconditions.checkNotNull(facts);
 		Preconditions.checkNotNull(classes);
@@ -162,13 +167,13 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 	public void indexConstraints() throws SQLException {
 		Statement sqlStatement = this.getDatabaseConnection().getSynchronousConnections().get(0).createStatement();
 		Relation equalityRelation = this.createDatabaseEqualityRelation();
-		this.relationNamesToRelationObjects.put(QNames.EQUALITY.toString(), equalityRelation);
-		sqlStatement.addBatch(this.getDatabaseConnection().getBuilder().createTableStatement(equalityRelation));
+		this.databaseConnection.getRelationNamesToRelationObjects().put(QNames.EQUALITY.toString(), equalityRelation);
+		sqlStatement.addBatch(this.getDatabaseConnection().getSQLStatementBuilder().createTableStatement(equalityRelation));
 		//sqlStatement.addBatch(this.getDatabaseConnection().getBuilder().createColumnIndexStatement(equalityRelation, equalityRelation.getAttribute(equalityRelation.getArity()-1)));
 		//Create indices for the joins in the body of the dependencies
 		Set<String> joinIndexes = Sets.newLinkedHashSet();
-		for (Dependency constraint:schema.getDependencies()) 
-			joinIndexes.addAll(this.getDatabaseConnection().getBuilder().setupIndices(false, this.relationNamesToRelationObjects, constraint, this.existingIndices).getLeft());
+		for (Dependency constraint:this.getDatabaseConnection().getSchema().getDependencies()) 
+			joinIndexes.addAll(this.getDatabaseConnection().getSQLStatementBuilder().setupIndices(false, this.databaseConnection.getRelationNamesToRelationObjects(), constraint, this.existingIndices).getLeft());
 		for (String b: joinIndexes) 
 			sqlStatement.addBatch(b);
 		sqlStatement.executeBatch();
@@ -181,8 +186,8 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 	 */
 	private void indexLastAttributeOfAllRelations() throws SQLException {
 		Statement sqlStatement = this.getDatabaseConnection().getSynchronousConnections().get(0).createStatement();
-		for(Relation relation:this.relationNamesToRelationObjects.values())
-			sqlStatement.addBatch(this.getDatabaseConnection().getBuilder().createColumnIndexStatement(relation, relation.getAttribute(relation.getArity()-1)));
+		for(Relation relation:this.databaseConnection.getRelationNamesToRelationObjects().values())
+			sqlStatement.addBatch(this.getDatabaseConnection().getSQLStatementBuilder().createColumnIndexStatement(relation, relation.getAttribute(relation.getArity()-1)));
 		sqlStatement.executeBatch();
 	}
 
@@ -193,23 +198,11 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 	 */
 	private Relation createDatabaseEqualityRelation() {	
 		String attrPrefix = "x";
-		Attribute Fact = Attribute.create(Integer.class, "FactID");
+		Attribute Fact = Attribute.create(Integer.class, "InstanceID");
 		Attribute[] attributes = new Attribute[]{Attribute.create(String.class, attrPrefix + 0),
 				Attribute.create(String.class, attrPrefix + 1), Fact};
-		return new Relation(QNames.EQUALITY.toString(), attributes, true){
-			private static final long serialVersionUID = -5013454684785833853L;};
+		return Relation.create(QNames.EQUALITY.toString(), attributes, true);
 	}	
-
-//	/**
-//	 * Updates that state given the input match. 
-//	 *
-//	 * @param match the match
-//	 * @return true, if step successful
-//	 */
-//	@Override
-//	public boolean chaseStep(Match match) {	
-//		return this.chaseStep(Sets.newHashSet(match));
-//	}
 
 	/* 
 	 * ??? What does false here mean?
@@ -234,8 +227,8 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 	/**
 	 * Applies chase steps for TGDs. 
 	 * An exception is thrown when a match does not come from a TGD
-	 * @param matches
-	 * @return
+	 * @param matches the input triggers (and dependencies) to be applied
+	 * @return //TOCOMMENT: WHY DOESN'T THIS RETURN ALWAYS TRUE??
 	 */
 	public boolean TGDchaseStep(Collection<Match> matches) {
 		Preconditions.checkNotNull(matches);
@@ -244,7 +237,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 			Dependency dependency = (Dependency) match.getFormula();
 			Preconditions.checkArgument(dependency instanceof TGD, "EGDs are not allowed inside TGDchaseStep");
 			Map<Variable, Constant> mapping = match.getMapping();
-			Implication grounded = uk.ac.ox.cs.pdq.reasoning.chase.Utility.fire(dependency, mapping, true);
+			Implication grounded = uk.ac.ox.cs.pdq.reasoning.chase.Utility.ground(dependency, mapping, true);
 //			Formula left = grounded.getChild(0);
 			Formula right = grounded.getChild(1);
 			//Add information about new facts to constantsToAtoms
@@ -269,6 +262,9 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 	 * The constants whose representatives will change are detected.
 	 * We create new facts based on the updated representatives. 
 	 * We delete the facts with obsolete representatives  
+	 * 
+	 * @param matches the input triggers (and dependencies) to be applied
+	 * @return  true, if the chase step is successful
 	 */
 	public boolean EGDchaseStep(Collection<Match> matches) {
 		Preconditions.checkNotNull(matches);
@@ -331,8 +327,9 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 
 	/**
 	 * Updates the classes of equal constants and returns the constants whose representative changed. 
-	 * @param atom
-	 * @return
+	 * @param atom an equality atom
+	 * @return a map mapping each constant that is to be replaced by its representative to the a latter, 
+	 * after taking the input equality into account.
 	 */
 	public Map<Constant,Constant> updateEqualConstantClasses(Atom atom) {
 		Preconditions.checkArgument(atom.isEquality());
@@ -425,19 +422,59 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 	 */
 	@Override
 	public void addFacts(Collection<Atom> facts) {
-		super.addFacts(extendFactsUsingFactID(facts));
+		super.addFacts(extendFactsUsingInstanceID(facts));
 		this.facts.addAll(facts);
 	}
-
-	private Collection<Atom> extendFactsUsingFactID(Collection<Atom> facts) {		
+	
+	/**
+	 * Takes a collection of facts and extends them (returns facts with all the same plus an extra term)
+	 * with the id of this instance.
+	 * @param facts the collection of facts to be changed
+	 * @return the input facts each one extended by one term: the instance id
+	 */
+	private Collection<Atom> extendFactsUsingInstanceID(Collection<Atom> facts) {		
 		Collection<Atom> extendedFacts = new LinkedHashSet<Atom>();
 		for(Atom f: facts) {
-			Term[] terms = new Term[f.getNumberOfTerms() + 1];
+			Term[] terms = new Term[f.getNumberOfTerms()+1]; 
 			System.arraycopy(f.getTerms(), 0, terms, 0, f.getNumberOfTerms());
-			terms[terms.length - 1] = TypedConstant.create(f.getId());
+			terms[terms.length-1] = TypedConstant.create(f.getId()/*this.getInstanceId()*/);
 			extendedFacts.add(Atom.create(f.getPredicate(), terms)); 
 		}
+
 		return extendedFacts;
+	}
+	
+	/**
+	 * Converts the input list of atoms extending them to include an extra attribute at the end (different variable per atom).
+	 * By convention, the underlying schema has been extended such that each relation contains an extra attribute used to
+	 * store the id of the DatabaseChaseInstance every fact belongs to. This method transforms the input according to
+	 * this extended schema. When this method is called more than once for the same formula, the variablecount argument should
+	 * be increased so that the new invented variables do not accidentally join in the formula. The variablecount participates
+	 * in the fresh name of the new variables.
+	 * 
+	 * @param atoms the input list of atoms
+	 * @param variablecount a counter that is used to invent variable names. 
+	 * @return
+	 */
+	 
+	private Atom[] extendAtomsWithInstanceIDAttribute(Atom[] atoms, int variablecount) {
+		Atom[] result = new Atom[atoms.length];
+		for(int atomIndex = 0; atomIndex < atoms.length; ++atomIndex) {
+			Atom atom = atoms[atomIndex];
+			Relation relation = this.databaseConnection.getRelationNamesToRelationObjects().get(atom.getPredicate().getName());
+			try{
+				relation.getAttributePosition("InstanceID");
+			}
+			catch (NullPointerException e) {
+				System.out.println(relation);
+				throw new RuntimeException("InstanceID attribute is missing from the schema");
+			}
+			Term[] terms = new Term[atom.getNumberOfTerms()];
+			System.arraycopy(atom.getTerms(), 0, terms, 0, atom.getNumberOfTerms());
+			terms[relation.getAttributePosition("InstanceID")] = Variable.create("instance_id" + variablecount++);
+			result[atomIndex]= Atom.create(relation, terms);
+		}
+		return result;
 	}
 
 	/* (non-Javadoc)
@@ -486,23 +523,12 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 	 * (non-Javadoc)
 	 * @see uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance#getMatches(uk.ac.ox.cs.pdq.fol.ConjunctiveQuery, uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance.LimitTofacts)
 	 */
-	public List<Match> getMatches(ConjunctiveQuery query, LimitTofacts l) {
-		HomomorphismProperty[] properties = new HomomorphismProperty[2];
-		if(l.equals(LimitTofacts.THIS)) {
-			properties[0] = HomomorphismProperty.createMapProperty(query.getSubstitutionOfFreeVariablesToCanonicalConstants());
-			properties[1] = HomomorphismProperty.createFactProperty(this.facts);
-		}
-		else {
-			properties = new HomomorphismProperty[1];
-			properties[0] = HomomorphismProperty.createMapProperty(query.getSubstitutionOfFreeVariablesToCanonicalConstants());
-		}
-
+	public List<Match> getMatches(ConjunctiveQuery query, LimitToThisOrAllInstances l) {
 		Queue<Triple<Formula, String, LinkedHashMap<String, Variable>>> queries = new ConcurrentLinkedQueue<>();
 		//Create a new query out of each input query that references only the cleaned predicates
 		ConjunctiveQuery converted = this.convert(query);
-//		HomomorphismProperty[] c = null;
 		//Create an SQL statement for the cleaned query
-		Pair<String, LinkedHashMap<String, Variable>> pair = createQuery(converted, properties);
+		Pair<String, LinkedHashMap<String, Variable>> pair = createSQLQuery(converted, l, query.getSubstitutionOfFreeVariablesToCanonicalConstants());
 		queries.add(Triple.of((Formula)query, pair.getLeft(), pair.getRight()));
 		return this.answerQueries(queries);
 	}
@@ -513,346 +539,171 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 	 * (non-Javadoc)
 	 * @see uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance#getTriggers(java.util.Collection, uk.ac.ox.cs.pdq.db.homomorphism.TriggerProperty, uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance.LimitTofacts)
 	 */
-	public List<Match> getTriggers(Dependency[] dependencies, TriggerProperty t, LimitTofacts limitToFacts) {
-		HomomorphismProperty[] properties = new HomomorphismProperty[2];
-		if(t.equals(TriggerProperty.ACTIVE)) {
-			properties[0] = HomomorphismProperty.createActiveTriggerProperty();
-		}
-		if(limitToFacts.equals(LimitTofacts.THIS)) {
-			Preconditions.checkNotNull(facts);
-			properties[1] = HomomorphismProperty.createFactProperty(this.facts);
-		}
+	public List<Match> getTriggers(Dependency[] dependencies, TriggerProperty t, LimitToThisOrAllInstances limitToThisOrAllInstances) {
 		Preconditions.checkNotNull(dependencies);
 		Queue<Triple<Formula, String, LinkedHashMap<String, Variable>>> queries = new ConcurrentLinkedQueue<>();
-		//Create a new query out of each input query that references only the cleaned predicates
+		//Create a new query out of each input query that references only the clean predicates
 		for(Dependency source:dependencies) {
-			Dependency s = this.convert(source);
-			HomomorphismProperty[] c = null;
-			if(source instanceof EGD) {
-				c = new HomomorphismProperty[properties.length+1];
-				System.arraycopy(properties, 0, c, 0, properties.length);
-				c[properties.length] = HomomorphismProperty.createEGDHomomorphismProperty();
-			}
-			else {
-				c = properties;
-			}
-			//Create an SQL statement for the cleaned query
-			Pair<String, LinkedHashMap<String, Variable>> pair = createQuery(s, c);
+			Pair<String, LinkedHashMap<String, Variable>> pair = createSQLQuery(source, t, limitToThisOrAllInstances);
 			queries.add(Triple.of((Formula)source, pair.getLeft(), pair.getRight()));
 		}
 		return this.answerQueries(queries);
 	}
 
 	/**
-
-	/**
-	 * Convert.
-	 *
-	 * @param <Q> the generic type
-	 * @param source 		An input formula
-	 * @param toDatabaseTables 		Map of schema relation names to *clean* names
-	 * @param constraints 		A set of constraints that should be satisfied by the homomorphisms of the input formula to the facts of the database 
-	 * @return 		a formula that uses the input *clean* names
+	 * Converts the query extending its atoms to include an extra variable (different variable per atom) at the position
+	 * where the instanceID attribute lies on the corresponding relation's extended schema .
+	 * By convention, the underlying schema has been extended such that each relation contains an extra attribute used to
+	 * store the id of the DatabaseChaseInstance every fact belongs to. This method transforms the query according to
+	 * this extended schema.
+	 * 
+	 * @param source the input query
+	 * @return  the transformed query where each atom is extended by one extra fresh variable.
 	 */
-	private Dependency convert(Dependency source) {
-		int f = 0;
-		Formula[] left = new Formula[source.getNumberOfBodyAtoms()];
-		for(int bodyAtomIndex = 0; bodyAtomIndex < source.getNumberOfBodyAtoms(); ++bodyAtomIndex) {
-			Atom atom = source.getBodyAtom(bodyAtomIndex);
-			Relation relation = this.relationNamesToRelationObjects.get(atom.getPredicate().getName());
-			Term[] terms = new Term[atom.getNumberOfTerms() + 1];
-			System.arraycopy(atom.getTerms(), 0, terms, 0, atom.getNumberOfTerms());
-			terms[terms.length-1] = Variable.create("fact" + f++);
-			left[bodyAtomIndex] = Atom.create(relation, terms);
-		}
-		Formula[] right = new Formula[source.getNumberOfHeadAtoms()];
-		for(int headAtomIndex = 0; headAtomIndex < source.getNumberOfHeadAtoms(); ++headAtomIndex) {
-			Atom atom = source.getHeadAtom(headAtomIndex);
-			Relation relation = this.relationNamesToRelationObjects.get(atom.getPredicate().getName());
-			Term[] terms = new Term[atom.getNumberOfTerms() + 1];
-			System.arraycopy(atom.getTerms(), 0, terms, 0, atom.getNumberOfTerms());
-			terms[terms.length-1] = Variable.create("fact" + f++);
-			right[headAtomIndex] = Atom.create(relation, terms);
-		}
-		if(source instanceof TGD || source instanceof EGD) 
-			return TGD.create(Conjunction.of(left), Conjunction.of(right));
-		else
-			throw new java.lang.RuntimeException("Unsupported formula type.");
-	}
-
-
 	private ConjunctiveQuery convert(ConjunctiveQuery source) {
-		int f = 0;
-		Formula[] body = new Formula[source.getNumberOfAtoms()];
-		for(int atomIndex = 0; atomIndex < source.getNumberOfAtoms(); ++atomIndex) {
-			Atom atom = source.getAtom(atomIndex);
-			Relation relation = this.relationNamesToRelationObjects.get(atom.getPredicate().getName());
-			Term[] terms = new Term[atom.getNumberOfTerms() + 1];
-			System.arraycopy(atom.getTerms(), 0, terms, 0, atom.getNumberOfTerms());
-			terms[terms.length-1] = Variable.create("fact" + f++);
-			body[atomIndex] = Atom.create(relation, terms);
-		}
+		Atom[] body = extendAtomsWithInstanceIDAttribute(source.getAtoms(), 0);
 		if(body.length == 1) 
-			return ConjunctiveQuery.create(((ConjunctiveQuery) source).getFreeVariables(), (Atom)body[0]);
+			return ConjunctiveQuery.create(((ConjunctiveQuery) source).getFreeVariables(), body[0]);
 		else 
 			return ConjunctiveQuery.create(((ConjunctiveQuery) source).getFreeVariables(), (Conjunction) Conjunction.of(body));
-		
-
 	}
-	public enum LimitTofacts{
+	
+	/**
+	 * Enumeration that holds the option to execute a query limiting the answers to facts of this DatabaseChaseInstance, or to facts of the entire database. 
+	 *
+	 */
+	public static enum LimitToThisOrAllInstances{
 		ALL,
 		THIS
 	}
+	
 	public void setDatabaseConnection(DatabaseConnection connection) {
 		this.databaseConnection = connection;
-		this.connections = connection.getSynchronousConnections();
-		this.builder = connection.getSQLStatementBuilder();
-		this.relationNamesToRelationObjects = connection.getRelationNamesToRelationObjects();
-		this.synchronousThreadsNumber = connection.synchronousThreadsNumber;
-		this.constants = connection.getSchema().getConstants();
+	}
+
+	/**
+	 * Creates an SQL statement that detects homomorphisms of the input dependency to facts kept in a database.
+	 *
+	 * @param source the input dependency; the sql query return detects its triggers
+	 * @param t determines whether the triggers detected by the returned query are active or not
+	 * @param l determines whether the triggers detected by the returned query will be limited in facts of THIS DatabaseChaseInstance or of ALL instances.
+	 * @param isEGD if the input dependency comes from an EGD. TOCOMMENT:// convert method in getTriggers converts all dependencies to TGDs - WHY? - so we we need this flag
+	 * @return This method returns a pair containing (a) an SQL query that detects triggers (active or not depends on t) for the input dependency, 
+	 * and (b) a map with the attributes to be projected. TOCOMMENT:// I'm not sure what is in this map exactly.
+	 */
+	public Pair<String,LinkedHashMap<String,Variable>> createSQLQuery(Dependency dep, TriggerProperty t, LimitToThisOrAllInstances l) {
+		
+		boolean isEGD = (dep instanceof EGD);
+		
+		int freshcounter = 0;
+		Atom[] extendedBodyAtoms = extendAtomsWithInstanceIDAttribute(dep.getBodyAtoms(), freshcounter);
+		Atom[] extendedHeadAtoms =  extendAtomsWithInstanceIDAttribute(dep.getHeadAtoms(), freshcounter+extendedBodyAtoms.length+1);
+		Atom[] allExtendedAtoms =  new Atom[extendedBodyAtoms.length + extendedHeadAtoms.length];
+		System.arraycopy(extendedBodyAtoms, 0, allExtendedAtoms, 0, extendedBodyAtoms.length);
+		System.arraycopy(extendedHeadAtoms, 0, allExtendedAtoms, allExtendedAtoms.length, extendedHeadAtoms.length);
+		
+		String query = "";
+		//TOCOMMENT: Rename appropriately and comment each of the following methods.
+		FromCondition from = this.databaseConnection.getSQLStatementBuilder().createFromStatement(extendedBodyAtoms);
+		SelectCondition projections = this.databaseConnection.getSQLStatementBuilder().createProjections(extendedBodyAtoms);
+		WhereCondition where = new WhereCondition();
+		WhereCondition equalities = this.databaseConnection.getSQLStatementBuilder().createAttributeEqualities(extendedBodyAtoms);
+		WhereCondition constantEqualities = this.databaseConnection.getSQLStatementBuilder().createEqualitiesWithConstants(extendedBodyAtoms);
+
+		WhereCondition factproperties = null;
+		if(facts != null && !facts.isEmpty())
+			factproperties = this.databaseConnection.getSQLStatementBuilder().enforceStateMembership(extendedBodyAtoms, this.databaseConnection.getRelationNamesToRelationObjects(), ((l.equals(LimitToThisOrAllInstances.THIS))?this.facts:null));
+		else
+			factproperties = new WhereCondition();
+			
+		WhereCondition egdProperties = null;
+		if(isEGD)
+			egdProperties = this.databaseConnection.getSQLStatementBuilder().translateEGDHomomorphicProperties(extendedBodyAtoms, this.databaseConnection.getRelationNamesToRelationObjects());
+		if(egdProperties!=null) {
+			where.addCondition(egdProperties);
+		}
+		where.addCondition(equalities);
+		where.addCondition(constantEqualities);
+		where.addCondition(factproperties);
+
+		query = this.databaseConnection.getSQLStatementBuilder().buildSQLQuery(projections,from,where);
+
+
+
+		if(t.equals(TriggerProperty.ACTIVE)) {
+			FromCondition from2 = this.databaseConnection.getSQLStatementBuilder().createFromStatement(extendedHeadAtoms);
+			SelectCondition nestedProjections = this.databaseConnection.getSQLStatementBuilder().createProjections(extendedHeadAtoms);
+			WhereCondition predicates2 = new WhereCondition();
+			WhereCondition nestedAttributeEqualities = (!(isEGD))?this.databaseConnection.getSQLStatementBuilder().createAttributeEqualities(allExtendedAtoms):this.databaseConnection.getSQLStatementBuilder().createNestedAttributeEqualitiesForActiveTriggers(extendedBodyAtoms,extendedHeadAtoms);
+			WhereCondition nestedConstantEqualities = this.databaseConnection.getSQLStatementBuilder().createEqualitiesWithConstants(allExtendedAtoms);
+			predicates2.addCondition(nestedAttributeEqualities);
+			predicates2.addCondition(nestedConstantEqualities);
+
+			WhereCondition nestedFactproperties = null;
+			if(facts != null && !facts.isEmpty())
+				nestedFactproperties = this.databaseConnection.getSQLStatementBuilder().enforceStateMembership(extendedHeadAtoms, this.databaseConnection.getRelationNamesToRelationObjects(), ((l.equals(LimitToThisOrAllInstances.THIS))?this.facts:null));
+			else
+				nestedFactproperties = new WhereCondition();
+			predicates2.addCondition(nestedFactproperties);
+
+			String nestedQuery = this.databaseConnection.getSQLStatementBuilder().buildSQLQuery(nestedProjections, from2, predicates2);
+
+			query = this.databaseConnection.getSQLStatementBuilder().nestQueries(query,where,nestedQuery);
+		}
+
+		log.trace(dep);
+		log.trace(query);
+		log.trace("\n\n");
+		return Pair.of(query, projections.getInternalMap());
 	}
 
 	/**
 	 * Creates an SQL statement that detects homomorphisms of the input query to facts kept in a database.
-	 *
-	 * @param source the source
-	 * @param constraints 		A set of constraints that should be satisfied by the homomorphisms of the input formula to the facts of the database 
-	 * @param typedConstants the constants
-	 * @param connection the connection
-	 * @return homomorphisms of the input query to facts kept in a database.
+	 * @param source the input query
+	 * @param l determines whether the answers of the query will be limited in facts of THIS DatabaseChaseInstance or of ALL instances.
+	 * @param finalProjectionMapping a mapping of the query free variables to canonical constants
+	 * @return This method returns a pair containing (a) an SQL query that detects homomorphisms of the input query, 
+	 * and (b) a map with the attributes to be projected. TOCOMMENT:// I'm not sure what is in this map exactly.
 	 */
-	public Pair<String,LinkedHashMap<String,Variable>> createQuery(Dependency source, HomomorphismProperty[] constraints) {
+	public Pair<String,LinkedHashMap<String,Variable>> createSQLQuery(ConjunctiveQuery source, LimitToThisOrAllInstances l, Map<Variable, Constant> finalProjectionMapping) {
 		String query = "";
-		List<String> from = this.builder.createFromStatement(source.getBody().getAtoms());
-		LinkedHashMap<String,Variable> projections = this.builder.createProjections(source.getBody().getAtoms());
-		List<String> predicates = new ArrayList<String>();
-		List<String> equalities = this.builder.createAttributeEqualities(source.getBody().getAtoms());
-		List<String> constantEqualities = this.builder.createEqualitiesWithConstants(source.getBody().getAtoms());
-		List<String> equalitiesForHomomorphicProperties = this.builder.createEqualitiesForHomomorphicProperties(source.getBody().getAtoms(), constraints);
+		FromCondition from = this.databaseConnection.getSQLStatementBuilder().createFromStatement(source.getAtoms());
+		//TOCOMMENT: Rename appropriately and comment each of the following methods.
+		SelectCondition projections = this.databaseConnection.getSQLStatementBuilder().createProjections(source.getAtoms());
+		WhereCondition where = new WhereCondition();
+		WhereCondition equalities = this.databaseConnection.getSQLStatementBuilder().createAttributeEqualities(source.getAtoms());
+		WhereCondition constantEqualities = this.databaseConnection.getSQLStatementBuilder().createEqualitiesWithConstants(source.getAtoms());
+		WhereCondition equalitiesWithProjectedVars = this.databaseConnection.getSQLStatementBuilder().createEqualitiesRespectingInputMapping(source.getAtoms(), finalProjectionMapping);
 
-		/*
-		 * if the target set of facts is not null, we
-		 * add in the WHERE statement a predicate which limits the identifiers
-		 * of the facts that satisfy any homomorphism to the identifiers of these facts
-		 */
-		List<String> factproperties = this.builder.translateFactProperties(source.getBody().getAtoms(),relationNamesToRelationObjects, constraints);
+		WhereCondition factproperties = null;
+		if(facts != null && !facts.isEmpty())
+			factproperties = this.databaseConnection.getSQLStatementBuilder().enforceStateMembership(source.getAtoms(), this.databaseConnection.getRelationNamesToRelationObjects(), ((l.equals(LimitToThisOrAllInstances.THIS))?this.facts:null));
+		else
+			factproperties = new WhereCondition();
+		
+		where.addCondition(equalities);
+		where.addCondition(constantEqualities);
+		where.addCondition(equalitiesWithProjectedVars);
+		where.addCondition(factproperties);
 
-		String egdProperties = this.translateEGDHomomorphicProperties(source, relationNamesToRelationObjects, constraints);
-		if(egdProperties!=null) {
-			predicates.add(egdProperties);
-		}
-		predicates.addAll(equalities);
-		predicates.addAll(constantEqualities);
-		predicates.addAll(equalitiesForHomomorphicProperties);
-		predicates.addAll(factproperties);
 
-		//Limit the this.builder of returned homomorphisms
-		String limit = this.builder.translateLimitConstraints(constraints); 
-
-		query = "SELECT " 	+ Joiner.on(",").join(projections.keySet()) + "\n" +  
-				"FROM " 	+ Joiner.on(",").join(from);
-		if(!predicates.isEmpty()) {
-			query += "\n" + "WHERE " + Joiner.on(" AND ").join(predicates);
-		}	
-
-		boolean activeTrigger = false;
-		for(HomomorphismProperty c:constraints) {
-			if(c instanceof ActiveTriggerProperty) {
-				activeTrigger = true;
-				break;
-			}			
-		}
-
-		if(activeTrigger) {
-			List<String> from2 = this.builder.createFromStatement(source.getHead().getAtoms());
-			LinkedHashMap<String,Variable> nestedProjections = this.builder.createProjections(source.getHead().getAtoms());
-			List<String> predicates2 = new ArrayList<String>();
-			List<String> nestedAttributeEqualities = this.createNestedAttributeEqualitiesForActiveTriggers(source);
-			List<String> nestedConstantEqualities = this.builder.createEqualitiesWithConstants(source.getAtoms());
-			predicates2.addAll(nestedAttributeEqualities);
-			predicates2.addAll(nestedConstantEqualities);
-
-			/*
-			 * if the target set of facts is not null, we
-			 * add in the WHERE statement a predicate which limits the identifiers
-			 * of the facts that satisfy any homomorphism to the identifiers of these facts
-			 */
-			List<String> nestedFactproperties = this.builder.translateFactProperties(source.getHead().getAtoms(), relationNamesToRelationObjects, constraints);
-			predicates2.addAll(nestedFactproperties);
-
-			String query2 = 
-					"(SELECT " 	+ Joiner.on(",").join(nestedProjections.keySet()) + "\n" +  
-							"FROM " 	+ Joiner.on(",").join(from2);
-			if(!predicates2.isEmpty()) {
-				query2 += "\n" + "WHERE " + Joiner.on(" AND ").join(predicates2);
-			}	
-			query2 += ")";
-			if(predicates.isEmpty()) {
-				query += "\n" + "WHERE " + " NOT EXISTS" + "\n" + query2;
-			}	
-			else {
-				query += "\n" + "AND " + " NOT EXISTS" + "\n" + query2;
-			}
-		}
-		if(limit != null) {
-			query += "\n" + limit;
-		}
+		query = this.databaseConnection.getSQLStatementBuilder().buildSQLQuery(projections, from, where);
 
 		log.trace(source);
 		log.trace(query);
 		log.trace("\n\n");
-		return Pair.of(query, projections);
+		return Pair.of(query, projections.getInternalMap());
 	}
-
-
-	public Pair<String,LinkedHashMap<String,Variable>> createQuery(ConjunctiveQuery source, HomomorphismProperty[] constraints) {
-		String query = "";
-		List<String> from = this.builder.createFromStatement(source.getAtoms());
-		LinkedHashMap<String,Variable> projections = this.builder.createProjections(source.getAtoms());
-		List<String> predicates = new ArrayList<String>();
-		List<String> equalities = this.builder.createAttributeEqualities(source.getAtoms());
-		List<String> constantEqualities = this.builder.createEqualitiesWithConstants(source.getAtoms());
-		List<String> equalitiesForHomomorphicProperties = this.builder.createEqualitiesForHomomorphicProperties(source.getAtoms(), constraints);
-
-		/*
-		 * if the target set of facts is not null, we
-		 * add in the WHERE statement a predicate which limits the identifiers
-		 * of the facts that satisfy any homomorphism to the identifiers of these facts
-		 */
-		List<String> factproperties = this.builder.translateFactProperties(source.getAtoms(), relationNamesToRelationObjects, constraints);
-
-		predicates.addAll(equalities);
-		predicates.addAll(constantEqualities);
-		predicates.addAll(equalitiesForHomomorphicProperties);
-		predicates.addAll(factproperties);
-
-		//Limit the number of returned homomorphisms
-		String limit = this.builder.translateLimitConstraints(constraints); 
-
-		query = "SELECT " 	+ Joiner.on(",").join(projections.keySet()) + "\n" +  
-				"FROM " 	+ Joiner.on(",").join(from);
-		if(!predicates.isEmpty()) {
-			query += "\n" + "WHERE " + Joiner.on(" AND ").join(predicates);
-		}	
-
-		if(limit != null) {
-			query += "\n" + limit;
-		}
-
-		log.trace(source);
-		log.trace(query);
-		log.trace("\n\n");
-		return Pair.of(query, projections);
+	
+	
+	@Override
+	public int hashCode() {
+		if(this.hash == null) 
+			this.hash = Objects.hash(this.facts, this.databaseConnection);
+		return this.hash;
 	}
-
-
-	/**
-	 * Creates the attribute equalities.
-	 *
-	 * @param source the source
-	 * @return 		explicit equalities (String objects of the form A.x1 = B.x2) of the implicit equalities in the input conjunction (the latter is denoted by repetition of the same term)
-	 */
-	public List<String> createNestedAttributeEqualitiesForActiveTriggers(Dependency source) {
-		if(!(source instanceof EGD)) {
-			return this.builder.createAttributeEqualities(source.getAtoms());
-		}
-		else {
-			List<String> attributePredicates = new ArrayList<String>();
-			//The right atom should be an equality
-			//We add additional checks to be sure that we have to do with EGDs
-			for(int headAtomIndex = 0; headAtomIndex < source.getNumberOfHeadAtoms(); ++headAtomIndex) {
-				Atom rightAtom = source.getHeadAtom(headAtomIndex);
-				Relation rightRelation = (Relation) rightAtom.getPredicate();
-				String rightAlias = this.builder.aliases.get(rightAtom);
-				Map<Integer,Pair<String,Attribute>> rightToLeft = new HashMap<Integer,Pair<String,Attribute>>();
-				for(Term term:rightAtom.getTerms()) {
-					List<Integer> rightPositions = Utility.getTermPositions(rightAtom, term); //all the positions for the same term should be equated
-					Preconditions.checkArgument(rightPositions.size() == 1);
-					for(int bodyAtomIndex = 0; bodyAtomIndex < source.getNumberOfBodyAtoms(); ++bodyAtomIndex) {
-						Atom leftAtom = source.getBodyAtom(bodyAtomIndex);
-						Relation leftRelation = (Relation) leftAtom.getPredicate();
-						String leftAlias = this.builder.aliases.get(leftAtom);
-						List<Integer> leftPositions = Utility.getTermPositions(leftAtom, term);
-						Preconditions.checkArgument(leftPositions.size() <= 1);
-						if(leftPositions.size() == 1) {
-							rightToLeft.put(rightPositions.get(0), Pair.of(leftAlias==null ? leftRelation.getName():leftAlias, leftRelation.getAttribute(leftPositions.get(0))));
-						}
-					}
-				}
-				Preconditions.checkArgument(rightToLeft.size()==2);
-				Iterator<Entry<Integer, Pair<String, Attribute>>> entries;
-				Entry<Integer, Pair<String, Attribute>> entry;
-
-				entries = rightToLeft.entrySet().iterator();
-				entry = entries.next();
-
-				StringBuilder result = new StringBuilder();
-				result.append("(");
-				result.append(entry.getValue().getLeft()).append(".").append(entry.getValue().getRight().getName()).append('=');
-				result.append(rightAlias==null ? rightRelation.getName():rightAlias).append(".").append(rightRelation.getAttribute(0).getName());
-
-				entry = entries.next();
-
-				result.append(" AND ");
-				result.append(entry.getValue().getLeft()).append(".").append(entry.getValue().getRight().getName()).append('=');
-				result.append(rightAlias==null ? rightRelation.getName():rightAlias).append(".").append(rightRelation.getAttribute(1).getName());
-
-				entries = rightToLeft.entrySet().iterator();
-				entry = entries.next();
-
-				result.append(" OR ");
-				result.append(entry.getValue().getLeft()).append(".").append(entry.getValue().getRight().getName()).append('=');
-				result.append(rightAlias==null ? rightRelation.getName():rightAlias).append(".").append(rightRelation.getAttribute(1).getName());
-
-				entry = entries.next();
-
-				result.append(" AND ");
-				result.append(entry.getValue().getLeft()).append(".").append(entry.getValue().getRight().getName()).append('=');
-				result.append(rightAlias==null ? rightRelation.getName():rightAlias).append(".").append(rightRelation.getAttribute(0).getName());
-
-				result.append(")");
-
-				attributePredicates.add(result.toString());
-
-			}
-			return attributePredicates;
-		}
+	
+	public int getInstanceId() {
+		return this.hashCode();
 	}
-
-
-	/**
-	 * Translate egd homomorphism constraints.
-	 * TOCOMMENT: I am not sure what this is for. It seems to be returning the part of the where clause of an sql query that compares
-	 * two atoms in the body of an EGD and checks they have different fact.id
-	 *
-	 * @param source the source
-	 * @param constraints the constraints
-	 * @param relationNamesToRelationObjects 
-	 * @return 		predicates that correspond to fact constraints
-	 */
-	public String translateEGDHomomorphicProperties(Dependency source, Map<String, Relation> relationNamesToRelationObjects,HomomorphismProperty... constraints) {
-		for(HomomorphismProperty c:constraints) {
-			if(c instanceof EGDHomomorphismProperty) {
-				Atom[] conjuncts = source.getBody().getAtoms();
-				String lalias = this.builder.aliases.get(conjuncts[0]);
-				String ralias = this.builder.aliases.get(conjuncts[1]);
-				lalias = lalias==null ? conjuncts[0].getPredicate().getName():lalias;
-				ralias = ralias==null ? conjuncts[1].getPredicate().getName():ralias;
-				StringBuilder eq = new StringBuilder();
-
-				String leftAttributeName = relationNamesToRelationObjects.get(conjuncts[0].getPredicate().getName()).getAttribute(conjuncts[0].getPredicate().getArity()-1).getName();
-				String rightAttributeName = relationNamesToRelationObjects.get(conjuncts[1].getPredicate().getName()).getAttribute(conjuncts[1].getPredicate().getArity()-1).getName();
-
-
-				eq.append(lalias).append(".").
-				append(leftAttributeName).append(">");
-				eq.append(ralias).append(".").
-				append(rightAttributeName);
-				return eq.toString();
-			}
-		}
-		return null;
-	}
-
-
 }

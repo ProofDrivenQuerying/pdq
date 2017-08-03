@@ -9,7 +9,7 @@ import uk.ac.ox.cs.pdq.fol.EGD;
 import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
-import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance.LimitTofacts;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance.LimitToThisOrAllInstances;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.TriggerProperty;
 import uk.ac.ox.cs.pdq.reasoning.utility.DefaultParallelEGDChaseDependencyAssessor;
 import uk.ac.ox.cs.pdq.reasoning.utility.ParallelEGDChaseDependencyAssessor;
@@ -90,7 +90,7 @@ public class ParallelEGDChaser extends Chaser {
 			++step;
 			//Find all active triggers
 			Dependency[] d = step % 2 == 0 ? accessor.getDependencies(instance, EGDROUND.TGD):accessor.getDependencies(instance, EGDROUND.EGD);
-			List<Match> activeTriggers = instance.getTriggers(d,TriggerProperty.ACTIVE,LimitTofacts.THIS);
+			List<Match> activeTriggers = instance.getTriggers(d, TriggerProperty.ACTIVE, LimitToThisOrAllInstances.THIS);
 			boolean succeeds = instance.chaseStep(activeTriggers);
 			if(!succeeds) {
 				break;

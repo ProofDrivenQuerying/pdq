@@ -20,7 +20,7 @@ import com.google.common.base.Preconditions;
  *
  * @author Efthymia Tsamoura
  */
-public class PropagatorUtils {
+public class CostPropagatorUtility {
 
 	/**
 	 * Gets the propagator.

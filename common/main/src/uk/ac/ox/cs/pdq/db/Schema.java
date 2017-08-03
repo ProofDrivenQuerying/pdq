@@ -93,6 +93,10 @@ public class Schema {
 		return this.relations.clone();
 	}
 	
+	public Relation getRelation(int index) {
+		return this.relations[index];
+	}
+	
 	public int getNumberOfRelations() {
 		return this.relations.length;
 	}

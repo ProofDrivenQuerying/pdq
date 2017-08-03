@@ -63,7 +63,7 @@ public class SimplePropagator extends CostPropagator<SimpleNode> {
 			RelationalTerm plan = null;
 			Cost currentCost = null;
 			if(node.getPathToSuccess() != null) {
-				plan = PropagatorUtils.createLeftDeepPlan(planTree, node.getPathToSuccess());
+				plan = CostPropagatorUtility.createLeftDeepPlan(planTree, node.getPathToSuccess());
 				currentCost = this.costEstimator.cost(plan);
 			}
 			// Iterate over all children of the given node.
@@ -72,11 +72,11 @@ public class SimplePropagator extends CostPropagator<SimpleNode> {
 				if (child.getPathToSuccess() != null) {
 					List<Integer> sequence = Lists.newArrayList(child.getId());
 					sequence.addAll(child.getPathToSuccess());
-					plan = PropagatorUtils.createLeftDeepPlan(planTree, node.getPathToSuccess());
+					plan = CostPropagatorUtility.createLeftDeepPlan(planTree, node.getPathToSuccess());
 					Cost childCost = this.costEstimator.cost(plan);
 					if (currentCost == null || childCost.lessThan(currentCost)) {
 						node.setPathToSuccess(sequence);
-						plan = PropagatorUtils.createLeftDeepPlan(planTree, node.getPathToSuccess());
+						plan = CostPropagatorUtility.createLeftDeepPlan(planTree, node.getPathToSuccess());
 						currentCost = this.costEstimator.cost(plan);
 					}
 				}
@@ -85,7 +85,7 @@ public class SimplePropagator extends CostPropagator<SimpleNode> {
 
 		// Update the best plan at the root if necessary
 		if (node.equals(planTree.getRoot()) && node.getPathToSuccess() != null) {
-			this.bestPlan = PropagatorUtils.createLeftDeepPlan(planTree, node.getPathToSuccess());
+			this.bestPlan = CostPropagatorUtility.createLeftDeepPlan(planTree, node.getPathToSuccess());
 			this.bestCost = this.costEstimator.cost(bestPlan);
 			this.bestPath = node.getPathToSuccess();
 			Preconditions.checkState(this.bestPlan != null);

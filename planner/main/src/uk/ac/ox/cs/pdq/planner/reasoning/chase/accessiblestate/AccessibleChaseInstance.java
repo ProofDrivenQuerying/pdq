@@ -19,7 +19,7 @@ import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
  *
  * @author Efthymia Tsamoura
  */
-public interface AccessibleChaseState extends ChaseInstance {
+public interface AccessibleChaseInstance extends ChaseInstance {
 
 	/**
 	 * For each input accessibility axiom, it
@@ -54,13 +54,13 @@ public interface AccessibleChaseState extends ChaseInstance {
 	 *
 	 * @return 		the inferred accessible facts of the state
 	 */
-	Collection<Atom> getInferred();
+	Collection<Atom> getInferredAccessibleFacts();
 
 	/**
 	 *
 	 * @return 		the inferred accessible facts that were derived when chasing the state
 	 */
-	Collection<Atom> getDerivedInferred();
+	Collection<Atom> getDerivedInferredAccessibleFacts();
 	
 	/**
 	 *
@@ -80,9 +80,9 @@ public interface AccessibleChaseState extends ChaseInstance {
 	 * @param s 		An input chase state
 	 * @return 		a state that is the union of this state and the input one
 	 */
-	AccessibleChaseState merge(AccessibleChaseState s);
+	AccessibleChaseInstance merge(AccessibleChaseInstance s);
 	
 
-	AccessibleChaseState clone();
+	AccessibleChaseInstance clone();
 	
 }
