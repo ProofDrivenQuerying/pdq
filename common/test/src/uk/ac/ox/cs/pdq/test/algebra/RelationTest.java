@@ -8,6 +8,10 @@ import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.util.Utility;
 
+/**
+ * @author Gabor
+ *
+ */
 public class RelationTest {
 
 	public RelationTest() {

@@ -1,16 +1,25 @@
 package uk.ac.ox.cs.pdq.test.algebra;
 
+import java.io.File;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.algebra.AccessTerm;
+import uk.ac.ox.cs.pdq.algebra.ProjectionTerm;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
+import uk.ac.ox.cs.pdq.db.Schema;
+import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.util.Utility;
 
+/**
+ * @author Gabor
+ *
+ */
 public class RelationTermTest {
 	/**
 	 * Makes sure assertions are enabled.
@@ -35,6 +44,139 @@ public class RelationTermTest {
 		}
 		if (child1 == child2) { // ATTENTIONAL! it have to be different reference
 			Assert.fail("Relation cache should not provide same reference");
+		}
+	}
+	
+	@Test
+	public void testProjectionTerm() {
+		try {
+			File schemaFile = new File("test\\src\\uk\\ac\\ox\\cs\\pdq\\test\\io\\jaxb\\schema.xml");
+			Schema schema = IOManager.importSchema(schemaFile);
+			RelationalTerm access = AccessTerm.create(schema.getRelations()[0], schema.getRelations()[0].getAccessMethods()[1]);
+			Attribute[] attributes = new Attribute[] { schema.getRelations()[0].getAttributes()[0], schema.getRelations()[0].getAttributes()[1] };
+			RelationalTerm projection = ProjectionTerm.create(attributes, access);
+			Attribute[] in = projection.getInputAttributes();
+			Attribute[] out = projection.getOutputAttributes();
+			Assert.assertNotNull(in);
+			Assert.assertNotNull(out);
+			Assert.assertEquals(2, in.length);
+			Assert.assertEquals("r1.1", in[0].getName());
+			Assert.assertEquals("r1.2", in[1].getName());
+			Assert.assertArrayEquals(in,out);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail(e.getMessage());
+		}
+	}
+	@Test
+	public void testCartesianProductTerm() {
+		try {
+			File schemaFile = new File("test\\src\\uk\\ac\\ox\\cs\\pdq\\test\\io\\jaxb\\schema.xml");
+			Schema schema = IOManager.importSchema(schemaFile);
+			RelationalTerm access = AccessTerm.create(schema.getRelations()[0], schema.getRelations()[0].getAccessMethods()[1]);
+			Attribute[] attributes = new Attribute[] { schema.getRelations()[0].getAttributes()[0], schema.getRelations()[0].getAttributes()[1] };
+			RelationalTerm projection = ProjectionTerm.create(attributes, access);
+			Attribute[] in = projection.getInputAttributes();
+			Attribute[] out = projection.getOutputAttributes();
+			Assert.assertNotNull(in);
+			Assert.assertNotNull(out);
+			Assert.assertEquals(2, in.length);
+			Assert.assertEquals("r1.1", in[0].getName());
+			Assert.assertEquals("r1.2", in[1].getName());
+			Assert.assertArrayEquals(in,out);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail(e.getMessage());
+		}
+	}
+	@Test
+	public void testDependentJoinTerm() {
+		try {
+			File schemaFile = new File("test\\src\\uk\\ac\\ox\\cs\\pdq\\test\\io\\jaxb\\schema.xml");
+			Schema schema = IOManager.importSchema(schemaFile);
+			RelationalTerm access = AccessTerm.create(schema.getRelations()[0], schema.getRelations()[0].getAccessMethods()[1]);
+			Attribute[] attributes = new Attribute[] { schema.getRelations()[0].getAttributes()[0], schema.getRelations()[0].getAttributes()[1] };
+			RelationalTerm projection = ProjectionTerm.create(attributes, access);
+			Attribute[] in = projection.getInputAttributes();
+			Attribute[] out = projection.getOutputAttributes();
+			Assert.assertNotNull(in);
+			Assert.assertNotNull(out);
+			Assert.assertEquals(2, in.length);
+			Assert.assertEquals("r1.1", in[0].getName());
+			Assert.assertEquals("r1.2", in[1].getName());
+			Assert.assertArrayEquals(in,out);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail(e.getMessage());
+		}
+	}
+	@Test
+	public void testJoinTerm() {
+		try {
+			File schemaFile = new File("test\\src\\uk\\ac\\ox\\cs\\pdq\\test\\io\\jaxb\\schema.xml");
+			Schema schema = IOManager.importSchema(schemaFile);
+			RelationalTerm access = AccessTerm.create(schema.getRelations()[0], schema.getRelations()[0].getAccessMethods()[1]);
+			Attribute[] attributes = new Attribute[] { schema.getRelations()[0].getAttributes()[0], schema.getRelations()[0].getAttributes()[1] };
+			RelationalTerm projection = ProjectionTerm.create(attributes, access);
+			Attribute[] in = projection.getInputAttributes();
+			Attribute[] out = projection.getOutputAttributes();
+			Assert.assertNotNull(in);
+			Assert.assertNotNull(out);
+			Assert.assertEquals(2, in.length);
+			Assert.assertEquals("r1.1", in[0].getName());
+			Assert.assertEquals("r1.2", in[1].getName());
+			Assert.assertArrayEquals(in,out);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail(e.getMessage());
+		}
+	}
+	@Test
+	public void testRenameTerm() {
+		try {
+			File schemaFile = new File("test\\src\\uk\\ac\\ox\\cs\\pdq\\test\\io\\jaxb\\schema.xml");
+			Schema schema = IOManager.importSchema(schemaFile);
+			RelationalTerm access = AccessTerm.create(schema.getRelations()[0], schema.getRelations()[0].getAccessMethods()[1]);
+			Attribute[] attributes = new Attribute[] { schema.getRelations()[0].getAttributes()[0], schema.getRelations()[0].getAttributes()[1] };
+			RelationalTerm projection = ProjectionTerm.create(attributes, access);
+			Attribute[] in = projection.getInputAttributes();
+			Attribute[] out = projection.getOutputAttributes();
+			Assert.assertNotNull(in);
+			Assert.assertNotNull(out);
+			Assert.assertEquals(2, in.length);
+			Assert.assertEquals("r1.1", in[0].getName());
+			Assert.assertEquals("r1.2", in[1].getName());
+			Assert.assertArrayEquals(in,out);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail(e.getMessage());
+		}
+	}
+	@Test
+	public void testSelectionTerm() {
+		try {
+			File schemaFile = new File("test\\src\\uk\\ac\\ox\\cs\\pdq\\test\\io\\jaxb\\schema.xml");
+			Schema schema = IOManager.importSchema(schemaFile);
+			RelationalTerm access = AccessTerm.create(schema.getRelations()[0], schema.getRelations()[0].getAccessMethods()[1]);
+			Attribute[] attributes = new Attribute[] { schema.getRelations()[0].getAttributes()[0], schema.getRelations()[0].getAttributes()[1] };
+			RelationalTerm projection = ProjectionTerm.create(attributes, access);
+			Attribute[] in = projection.getInputAttributes();
+			Attribute[] out = projection.getOutputAttributes();
+			Assert.assertNotNull(in);
+			Assert.assertNotNull(out);
+			Assert.assertEquals(2, in.length);
+			Assert.assertEquals("r1.1", in[0].getName());
+			Assert.assertEquals("r1.2", in[1].getName());
+			Assert.assertArrayEquals(in,out);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail(e.getMessage());
 		}
 	}
 
