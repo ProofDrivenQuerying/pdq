@@ -10,7 +10,7 @@ import uk.ac.ox.cs.pdq.InterningManager;
  *
  * @author Julien Leblay
  */
-public class AttributeEqualityCondition implements SimpleCondition {
+public class AttributeEqualityCondition extends SimpleCondition {
 	private static final long serialVersionUID = 590156716681307220L;
 
 	/**  The first of the two positions to be compared for equality. */

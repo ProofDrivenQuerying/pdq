@@ -4,23 +4,23 @@
         <relation name="r1">
             <attribute name="r1.1" type="java.lang.Integer"/>
             <attribute name="r1.2" type="java.lang.Integer"/>
-            <access-method type="FREE" name="m1"/>
-            <access-method type="LIMITED" name="m2" inputs="1,2"/>
+            <access-method name="m1"/>
+            <access-method name="m2" inputs="0,1"/>
         </relation>
         <relation name="r2">
             <attribute name="r2.1" type="java.lang.Integer"/>
-            <access-method type="FREE" name="m3"/>
+            <access-method name="m3"/>
         </relation>
         <relation name="r3">
             <attribute name="r3.1" type="java.lang.Integer"/>
             <attribute name="r3.2" type="java.lang.Integer"/>
             <attribute name="r3.3" type="java.lang.Integer"/>
-            <access-method type="LIMITED" name="m4" inputs="2,3"/>
+            <access-method name="m4" inputs="2,3"/>
         </relation>
         <relation name="r4">
             <attribute name="r4.1" type="java.lang.Integer"/>
             <attribute name="r4.2" type="java.lang.Integer"/>
-            <access-method type="FREE" name="m5"/>
+            <access-method name="m5"/>
         </relation>
     </relations>
     <dependencies>

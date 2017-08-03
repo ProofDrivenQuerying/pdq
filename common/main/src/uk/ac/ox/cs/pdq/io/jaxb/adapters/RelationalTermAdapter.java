@@ -2,6 +2,7 @@ package uk.ac.ox.cs.pdq.io.jaxb.adapters;
 
 import java.io.Serializable;
 
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 import org.apache.log4j.Logger;
@@ -13,6 +14,7 @@ import uk.ac.ox.cs.pdq.io.jaxb.adapted.AdaptedRelationalTerm;
  * @author Gabor
  *
  */
+@XmlRootElement
 public class RelationalTermAdapter extends XmlAdapter<AdaptedRelationalTerm, RelationalTerm> implements Serializable {
 	
 	private static final long serialVersionUID = 1734503933593174613L;
@@ -25,7 +27,7 @@ public class RelationalTermAdapter extends XmlAdapter<AdaptedRelationalTerm, Rel
 		if (v==null)
 			return null;
 		try {
-			return v.toRelationalTerm(v);
+			return v.toRelationalTerm();
 		}catch(Throwable t) {
 			Logger.getLogger(this.getClass()).error(t.getMessage(),t);
 			throw t;

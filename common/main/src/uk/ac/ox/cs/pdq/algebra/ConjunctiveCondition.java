@@ -5,7 +5,7 @@ import org.junit.Assert;
 import uk.ac.ox.cs.pdq.InterningManager;
 
 
-public class ConjunctiveCondition implements Condition {
+public class ConjunctiveCondition extends Condition {
 	private static final long serialVersionUID = 3482096951862132845L;
 	
 	protected final SimpleCondition[] predicates;

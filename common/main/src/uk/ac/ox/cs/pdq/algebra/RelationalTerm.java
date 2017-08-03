@@ -2,15 +2,19 @@ package uk.ac.ox.cs.pdq.algebra;
 
 import java.io.Serializable;
 
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
 import org.junit.Assert;
 
 import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.io.jaxb.adapters.RelationalTermAdapter;
 
 /**
  * 
  * @author Efthymia Tsamoura
  *
  */
+@XmlJavaTypeAdapter(RelationalTermAdapter.class)
 public abstract class RelationalTerm implements Serializable {
 	
 	private static final long serialVersionUID = 1734503933593174613L;

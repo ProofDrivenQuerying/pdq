@@ -4,22 +4,18 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-
 import org.junit.Assert;
 
 import uk.ac.ox.cs.pdq.InterningManager;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
-import uk.ac.ox.cs.pdq.io.jaxb.adapters.RelationalTermAdapter;
 
 
 /**
  *
  * @author Efthymia Tsamoura
  */
-@XmlJavaTypeAdapter(RelationalTermAdapter.class)
 public class AccessTerm extends RelationalTerm {
 
 	protected static final long serialVersionUID = -6298959701083011594L;

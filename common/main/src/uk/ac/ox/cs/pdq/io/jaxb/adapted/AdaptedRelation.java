@@ -37,9 +37,9 @@ public class AdaptedRelation implements Serializable {
 	}
 
 	public AdaptedRelation(Relation r) {
-		this.attributes = r.getAttributes().clone();
-		this.accessMethods = r.getAccessMethods().clone();
-		this.foreignKeys = r.getForeignKeys().clone();
+		this.attributes = r.getAttributes();
+		this.accessMethods = r.getAccessMethods();
+		this.foreignKeys = r.getForeignKeys();
 		this.primaryKey = r.getKey();
 		this.properties = r.getProperties();
 		this.setName(r.getName());

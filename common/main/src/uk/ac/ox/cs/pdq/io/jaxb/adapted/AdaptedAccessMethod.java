@@ -49,9 +49,10 @@ public class AdaptedAccessMethod implements Serializable {
 
 	@XmlAttribute
 	public String getType() {
-		if (inputs == null || inputs.length() == 0)
-			return "FREE";
-		return "LIMITED";
+		return null;
+//		if (inputs == null || inputs.length() == 0)
+//			return "FREE";
+//		return "LIMITED";
 	}
 
 	public void setType(String type) {

@@ -15,6 +15,7 @@ import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.io.jaxb.adapted.AdaptedQuery;
+import uk.ac.ox.cs.pdq.io.jaxb.adapted.AdaptedRelationalTerm;
 import uk.ac.ox.cs.pdq.io.jaxb.adapted.AdaptedSchema;
 
 public class IOManager {
@@ -79,14 +80,16 @@ public class IOManager {
 		jaxbMarshaller.marshal(new AdaptedSchema(schema), out);
 	}
 	
-	/**
-	 * @deprecated - unfinished function
-	 */
 	public static RelationalTerm readRelationalTerm(File file, Schema schema) throws JAXBException {
-		JAXBContext jaxbContext = JAXBContext.newInstance(Schema.class);
+		JAXBContext jaxbContext = JAXBContext.newInstance(AdaptedRelationalTerm.class);
+		Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+		return ((AdaptedRelationalTerm)jaxbUnmarshaller.unmarshal(file)).toRelationalTerm();
+	}
+	public static void writeRelationalTerm(RelationalTerm t, File targetFile) throws JAXBException {
+		JAXBContext jaxbContext = JAXBContext.newInstance(AdaptedRelationalTerm.class);
 		Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
 		jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-		jaxbMarshaller.marshal(schema, file);
-		return null;
+		jaxbMarshaller.marshal(new AdaptedRelationalTerm(t), targetFile);
 	}
+	
 }

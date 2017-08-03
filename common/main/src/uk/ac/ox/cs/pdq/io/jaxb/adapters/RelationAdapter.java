@@ -30,6 +30,8 @@ public class RelationAdapter extends XmlAdapter<AdaptedRelation, Relation> imple
 	@Override
 	public AdaptedRelation marshal(Relation v) throws Exception {
 		try {
+			if (v==null)
+				return null;
 			return new AdaptedRelation(v);
 		} catch (Throwable t) {
 			Logger.getLogger(this.getClass()).error(t.getMessage(), t);

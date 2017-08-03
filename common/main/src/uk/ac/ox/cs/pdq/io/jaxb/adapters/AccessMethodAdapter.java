@@ -26,6 +26,8 @@ public class AccessMethodAdapter extends XmlAdapter<AdaptedAccessMethod, AccessM
 	@Override
 	public AdaptedAccessMethod marshal(AccessMethod v) throws Exception {
 		try {
+			if (v==null)
+				return null;
 			return new AdaptedAccessMethod(v.getName(), v.getInputs());
 		} catch (Throwable t) {
 			Logger.getLogger(this.getClass()).error(t.getMessage(), t);

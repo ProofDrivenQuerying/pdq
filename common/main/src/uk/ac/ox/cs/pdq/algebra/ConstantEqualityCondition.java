@@ -6,7 +6,7 @@ import uk.ac.ox.cs.pdq.InterningManager;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 
 
-public class ConstantEqualityCondition implements SimpleCondition {
+public class ConstantEqualityCondition extends SimpleCondition {
 	private static final long serialVersionUID = 1040523371703814834L;
 
 	/**  The position of the tuple, whose value we will compare. */
