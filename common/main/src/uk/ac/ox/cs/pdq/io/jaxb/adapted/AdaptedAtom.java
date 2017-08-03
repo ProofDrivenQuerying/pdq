@@ -51,7 +51,7 @@ public class AdaptedAtom {
 		return predicateName;
 	}
 
-	@XmlElements({ @XmlElement(name = "variable", type = AdaptedVariable.class), @XmlElement(name = "constant", type = AdaptedConstant.class), })
+	@XmlElements({ @XmlElement(name = "variable", type = AdaptedVariable.class), @XmlElement(name = "constant", type = AdaptedConstant.class) })
 	public AdaptedVariable[] getTerms() {
 		try {
 			ArrayList<AdaptedVariable> v = new ArrayList<AdaptedVariable>();

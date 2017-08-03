@@ -16,18 +16,14 @@ import uk.ac.ox.cs.pdq.fol.LinearGuarded;
  *
  */
 @XmlType(propOrder = { "attributes", "accessMethods", "dependency", "foreignKeys", "primaryKey" })
-public class AdaptedView {
-
+public class AdaptedView extends AdaptedRelation {
+	private static final long serialVersionUID = -734207998605158179L;
+	
 	private LinearGuarded dependency;
 	protected Attribute[] attributes;
 	protected AccessMethod[] accessMethods;
 	protected ForeignKey[] foreignKeys;
 	protected PrimaryKey primaryKey;
-	private String name;
-
-	public AdaptedView(String name, Attribute[] attributes) {
-		this.name = name;
-	}
 
 	public AdaptedView() {
 	}
@@ -61,15 +57,6 @@ public class AdaptedView {
 
 	public void setDependency(LinearGuarded dependency) {
 		this.dependency = dependency;
-	}
-
-	@XmlAttribute
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	@XmlElement(name = "attribute")
