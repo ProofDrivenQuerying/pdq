@@ -13,7 +13,7 @@ import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.LengthBasedCostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.NaiveCardinalityEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.PerInputCostEstimator;
-import uk.ac.ox.cs.pdq.cost.estimators.TotalERSPICostEstimator;
+import uk.ac.ox.cs.pdq.cost.estimators.TotalNumberOfOutputTuplesPerAccessCostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.WhiteBoxCostEstimator;
 import uk.ac.ox.cs.pdq.cost.statistics.Catalog;
 import uk.ac.ox.cs.pdq.cost.statistics.SimpleCatalog;
@@ -89,9 +89,9 @@ public class CostEstimatorFactory {
 			break;
 		case BLACKBOX_DB:
 			throw new UnsupportedOperationException("BLACKBOX_DB cost estimator is not currently supported.");
-		case SIMPLE_ERSPI:
+		case NUMBER_OF_OUTPUT_TUPLES_PER_ACCESS:
 			Assert.assertNotNull(costParams.getCatalog());
-			result = new TotalERSPICostEstimator(new StatisticsCollector(collectStats, eventBus), catalog);
+			result = new TotalNumberOfOutputTuplesPerAccessCostEstimator(new StatisticsCollector(collectStats, eventBus), catalog);
 			break;
 		case SIMPLE_CONSTANT:
 		case SIMPLE_GIVEN:

@@ -20,7 +20,7 @@ import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
  * @author Efthymia Tsamoura
  * @param <P> the generic type
  */
-public class TotalERSPICostEstimator implements SimpleCostEstimator{
+public class TotalNumberOfOutputTuplesPerAccessCostEstimator implements SimpleCostEstimator{
 
 	/** The stats. */
 	protected final StatisticsCollector stats;
@@ -34,7 +34,7 @@ public class TotalERSPICostEstimator implements SimpleCostEstimator{
 	 * @param stats the stats
 	 * @param catalog 		The database statistics
 	 */
-	public TotalERSPICostEstimator(StatisticsCollector stats, Catalog catalog) {
+	public TotalNumberOfOutputTuplesPerAccessCostEstimator(StatisticsCollector stats, Catalog catalog) {
 		this.stats = stats;
 		this.catalog = catalog;
 	}
@@ -44,8 +44,8 @@ public class TotalERSPICostEstimator implements SimpleCostEstimator{
 	 * @see java.lang.Object#clone()
 	 */
 	@Override
-	public TotalERSPICostEstimator clone() {
-		return (TotalERSPICostEstimator) (this.stats == null ? new TotalERSPICostEstimator(null, this.catalog.clone()) : new TotalERSPICostEstimator(this.stats.clone(), this.catalog.clone()));
+	public TotalNumberOfOutputTuplesPerAccessCostEstimator clone() {
+		return (TotalNumberOfOutputTuplesPerAccessCostEstimator) (this.stats == null ? new TotalNumberOfOutputTuplesPerAccessCostEstimator(null, this.catalog.clone()) : new TotalNumberOfOutputTuplesPerAccessCostEstimator(this.stats.clone(), this.catalog.clone()));
 	}
 
 	/*

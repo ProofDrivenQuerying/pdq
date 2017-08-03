@@ -12,7 +12,7 @@ import com.google.common.eventbus.EventBus;
 
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
-import uk.ac.ox.cs.pdq.cost.estimators.TotalERSPICostEstimator;
+import uk.ac.ox.cs.pdq.cost.estimators.TotalNumberOfOutputTuplesPerAccessCostEstimator;
 import uk.ac.ox.cs.pdq.cost.statistics.Catalog;
 import uk.ac.ox.cs.pdq.cost.statistics.SimpleCatalog;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -108,8 +108,8 @@ public class TotalERSPICostEstimatorTest{
 					throw new IllegalStateException("Schema must be provided.");
 				Entry<RelationalTerm, Cost> plan = PlannerTestUtilities.obtainPlan(PLAN_PATH + f, schema);
 				Catalog catalog = new SimpleCatalog(schema, CATALOG);
-				TotalERSPICostEstimator costEstimator = null;
-				costEstimator = new TotalERSPICostEstimator(new StatisticsCollector(false, this.eventBus), catalog);
+				TotalNumberOfOutputTuplesPerAccessCostEstimator costEstimator = null;
+				costEstimator = new TotalNumberOfOutputTuplesPerAccessCostEstimator(new StatisticsCollector(false, this.eventBus), catalog);
 				Assert.assertEquals(plan.getValue(), costEstimator.cost(plan.getKey()));
 
 			} catch (FileNotFoundException e) {
