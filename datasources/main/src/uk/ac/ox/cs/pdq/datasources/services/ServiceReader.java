@@ -19,6 +19,9 @@ import org.junit.Assert;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
+import com.google.common.base.CaseFormat;
+import com.google.common.base.Preconditions;
+
 import uk.ac.ox.cs.pdq.builder.BuilderException;
 import uk.ac.ox.cs.pdq.builder.SchemaDiscoverer;
 import uk.ac.ox.cs.pdq.datasources.services.policies.PolicyFactory;
@@ -31,13 +34,9 @@ import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.PrimaryKey;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.db.builder.SchemaBuilder;
 import uk.ac.ox.cs.pdq.io.ReaderException;
 import uk.ac.ox.cs.pdq.io.xml.AbstractXMLReader;
 import uk.ac.ox.cs.pdq.io.xml.QNames;
-
-import com.google.common.base.CaseFormat;
-import com.google.common.base.Preconditions;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -323,11 +322,13 @@ public class ServiceReader extends AbstractXMLReader<ServiceRepository> implemen
 			log.info("Reading service initialConfig '" + f.getAbsolutePath() + "'...");
 			try (FileInputStream fis = new FileInputStream(f.getAbsolutePath())) {
 				ServiceRepository repo = this.read(fis);
-				SchemaBuilder b = new SchemaBuilder();
+				Relation[] relations = new Relation[repo.getServices().size()];
+				int i = 0;
 				for (Service s: repo.getServices()) {
-					b.addRelation((Relation) s);
+					relations[i] = (Relation) s;
+					i++;
 				}
-				this.discovered = b.build();
+				this.discovered = new Schema(relations);
 			} catch (IOException e) {
 				throw new ReaderException(e.getMessage(), e);
 			}
