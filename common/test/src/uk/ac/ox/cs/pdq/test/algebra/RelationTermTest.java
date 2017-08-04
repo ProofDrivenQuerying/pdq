@@ -7,6 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.algebra.AccessTerm;
+import uk.ac.ox.cs.pdq.algebra.CartesianProductTerm;
 import uk.ac.ox.cs.pdq.algebra.ProjectionTerm;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
@@ -74,19 +75,11 @@ public class RelationTermTest {
 		try {
 			File schemaFile = new File("test\\src\\uk\\ac\\ox\\cs\\pdq\\test\\io\\jaxb\\schema.xml");
 			Schema schema = IOManager.importSchema(schemaFile);
-			RelationalTerm access = AccessTerm.create(schema.getRelations()[0], schema.getRelations()[0].getAccessMethods()[1]);
-			//CartesianProductTerm
-			Attribute[] attributes = new Attribute[] { schema.getRelations()[0].getAttributes()[0], schema.getRelations()[0].getAttributes()[1] };
-			RelationalTerm projection = ProjectionTerm.create(attributes, access);
-			Attribute[] in = projection.getInputAttributes();
-			Attribute[] out = projection.getOutputAttributes();
-			Assert.assertNotNull(in);
+			AccessTerm access1 = AccessTerm.create(schema.getRelations()[0], schema.getRelations()[0].getAccessMethods()[1]);
+			AccessTerm access2 = AccessTerm.create(schema.getRelations()[0], schema.getRelations()[0].getAccessMethods()[1]);
+			CartesianProductTerm cartasianp = CartesianProductTerm.create(access1, access2);
+			Attribute[] out = cartasianp.getOutputAttributes();
 			Assert.assertNotNull(out);
-			Assert.assertEquals(2, in.length);
-			Assert.assertEquals("r1.1", in[0].getName());
-			Assert.assertEquals("r1.2", in[1].getName());
-			Assert.assertArrayEquals(in,out);
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail(e.getMessage());

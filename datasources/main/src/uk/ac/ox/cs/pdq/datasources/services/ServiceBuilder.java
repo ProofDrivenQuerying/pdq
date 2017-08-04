@@ -10,7 +10,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.junit.Assert;
 
-import uk.ac.ox.cs.pdq.builder.Builder;
+import uk.ac.ox.cs.pdq.datasources.builder.Builder;
 import uk.ac.ox.cs.pdq.datasources.services.policies.UsagePolicy;
 import uk.ac.ox.cs.pdq.datasources.services.rest.InputMethod;
 import uk.ac.ox.cs.pdq.datasources.services.rest.OutputMethod;

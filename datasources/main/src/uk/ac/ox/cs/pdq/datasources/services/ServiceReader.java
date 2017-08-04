@@ -22,8 +22,8 @@ import org.xml.sax.SAXException;
 import com.google.common.base.CaseFormat;
 import com.google.common.base.Preconditions;
 
-import uk.ac.ox.cs.pdq.builder.BuilderException;
-import uk.ac.ox.cs.pdq.builder.SchemaDiscoverer;
+import uk.ac.ox.cs.pdq.datasources.builder.BuilderException;
+import uk.ac.ox.cs.pdq.datasources.builder.SchemaDiscoverer;
 import uk.ac.ox.cs.pdq.datasources.services.policies.PolicyFactory;
 import uk.ac.ox.cs.pdq.datasources.services.policies.UsagePolicy;
 import uk.ac.ox.cs.pdq.datasources.services.rest.InputMethod;
@@ -292,7 +292,7 @@ public class ServiceReader extends AbstractXMLReader<ServiceRepository> implemen
 	 * Sets the properties.
 	 *
 	 * @param p Properties
-	 * @see uk.ac.ox.cs.pdq.builder.SchemaDiscoverer#setProperties(Properties)
+	 * @see uk.ac.ox.cs.pdq.datasources.builder.SchemaDiscoverer#setProperties(Properties)
 	 */
 	@Override
 	public void setProperties(Properties p) {
@@ -303,7 +303,7 @@ public class ServiceReader extends AbstractXMLReader<ServiceRepository> implemen
 	 * Gets the properties.
 	 *
 	 * @return Properties
-	 * @see uk.ac.ox.cs.pdq.builder.SchemaDiscoverer#getProperties()
+	 * @see uk.ac.ox.cs.pdq.datasources.builder.SchemaDiscoverer#getProperties()
 	 */
 	@Override
 	public Properties getProperties() {

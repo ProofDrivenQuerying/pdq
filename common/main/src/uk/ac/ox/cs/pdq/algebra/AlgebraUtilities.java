@@ -119,8 +119,8 @@ public class AlgebraUtilities {
 		Assert.assertNotNull(child1);
 		Assert.assertNotNull(child2);
 		Attribute[] input = new Attribute[child1.getNumberOfOutputAttributes() + child2.getNumberOfOutputAttributes()];
-		System.arraycopy(child1.getNumberOfOutputAttributes(), 0, input, 0, child1.getNumberOfOutputAttributes());
-		System.arraycopy(child2.getNumberOfOutputAttributes(), 0, input, child1.getNumberOfOutputAttributes(), child2.getNumberOfOutputAttributes());
+		System.arraycopy(child1.getOutputAttributes(), 0, input, 0, child1.getNumberOfOutputAttributes());
+		System.arraycopy(child2.getOutputAttributes(), 0, input, child1.getNumberOfOutputAttributes(), child2.getNumberOfOutputAttributes());
 		return input;
 	}
 

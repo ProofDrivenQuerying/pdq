@@ -16,7 +16,7 @@ import com.fasterxml.jackson.jaxrs.json.annotation.JacksonFeatures;
  * builder, i.e. for modifying a request until it is eventually sent.
  * @author Julien Leblay
  */
-public class RESTAccess implements uk.ac.ox.cs.pdq.builder.Builder<WebTarget> {
+public class RESTAccess implements uk.ac.ox.cs.pdq.datasources.builder.Builder<WebTarget> {
 
 	/** The access's URL. */
 	private final String baseUrl;
@@ -58,7 +58,7 @@ public class RESTAccess implements uk.ac.ox.cs.pdq.builder.Builder<WebTarget> {
 	 *
 	 * @return a WebTarget forms by append the input params respecting
 	 * input parameters and methods.
-	 * @see uk.ac.ox.cs.pdq.builder.Builder#build()
+	 * @see uk.ac.ox.cs.pdq.datasources.builder.Builder#build()
 	 */
 	@Override 
 	public WebTarget build() {
