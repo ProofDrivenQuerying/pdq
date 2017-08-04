@@ -4,7 +4,6 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.junit.Assert;
 
-import uk.ac.ox.cs.pdq.InterningManager;
 import uk.ac.ox.cs.pdq.io.jaxb.adapters.VariableAdapter;
 
 // TODO: Auto-generated Javadoc
@@ -19,7 +18,7 @@ public class Variable extends Term {
 	private static final long serialVersionUID = 6326879040237354094L;
 
 	/**  The variable's name. */
-	private final String symbol;
+	protected final String symbol;
 	/**
 	 * Instantiates a new variable.
 	 *
@@ -72,22 +71,8 @@ public class Variable extends Term {
 		return new Variable(DEFAULT_VARIABLE_PREFIX + (freshVariableCounter++));
 	}
 	
-    protected Object readResolve() {
-        return s_interningManager.intern(this);
-    }
-
-    protected static final InterningManager<Variable> s_interningManager = new InterningManager<Variable>() {
-        protected boolean equal(Variable object1, Variable object2) {
-            return object1.symbol.equals(object2.symbol);
-        }
-
-        protected int getHashCode(Variable object) {
-            return object.symbol.hashCode() * 7;
-        }
-    };
-
     public static Variable create(String symbol) {
-        return s_interningManager.intern(new Variable(symbol));
+        return Cache.variable.intern(new Variable(symbol));
     }
     
     /** 

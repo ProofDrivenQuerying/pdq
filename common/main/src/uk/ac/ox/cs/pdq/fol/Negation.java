@@ -2,8 +2,6 @@ package uk.ac.ox.cs.pdq.fol;
 
 import org.junit.Assert;
 
-import uk.ac.ox.cs.pdq.InterningManager;
-
 /**
  * 
  * @author Efthymia Tsamoura
@@ -107,25 +105,8 @@ public final class Negation extends Formula {
 		return this.hashCode();
 	}
 	
-    protected Object readResolve() {
-        return s_interningManager.intern(this);
-    }
-
-    protected static final InterningManager<Negation> s_interningManager = new InterningManager<Negation>() {
-        protected boolean equal(Negation object1, Negation object2) {
-            if (!object1.child.equals(object2.child) || !object1.operator.equals(object2.operator))
-                return false;
-            return true;
-        }
-        
-        protected int getHashCode(Negation object) {
-            int hashCode = object.child.hashCode() + object.operator.hashCode() * 7;
-            return hashCode;
-        }
-    };
-
     public static Negation create(Formula child) {
-        return s_interningManager.intern(new Negation(child));
+        return Cache.negation.intern(new Negation(child));
     }
     
 	@Override

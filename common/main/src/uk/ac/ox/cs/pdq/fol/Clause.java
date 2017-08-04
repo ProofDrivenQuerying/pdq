@@ -2,8 +2,6 @@ package uk.ac.ox.cs.pdq.fol;
 
 import java.io.Serializable;
 
-import uk.ac.ox.cs.pdq.InterningManager;
-
 /**
  * A disjunction of literals
  *
@@ -15,7 +13,7 @@ public class Clause implements Serializable{
 	/**   Cashed string representation of the literal. */
 	private String toString = null;
 	
-	private final Literal[] literals;
+	protected final Literal[] literals;
 	
 	private Clause(Literal... literals) {
 		this.literals = literals.clone();
@@ -46,30 +44,8 @@ public class Clause implements Serializable{
 		return this.toString;
 	}
 	
-    protected Object readResolve() {
-        return s_interningManager.intern(this);
-    }
-
-    protected static final InterningManager<Clause> s_interningManager = new InterningManager<Clause>() {
-        protected boolean equal(Clause object1, Clause object2) {
-            if (object1.literals.length != object2.literals.length)
-                return false;
-            for (int index = object1.literals.length - 1; index >= 0; --index)
-                if (!object1.literals[index].equals(object2.literals[index]))
-                    return false;
-            return true;
-        }
-
-        protected int getHashCode(Clause object) {
-            int hashCode = 0;
-            for (int index = object.literals.length - 1; index >= 0; --index)
-                hashCode = hashCode * 7 + object.literals[index].hashCode();
-            return hashCode;
-        }
-    };
-
     public static Clause create(Literal... literals) {
-        return s_interningManager.intern(new Clause(literals));
+        return Cache.clause.intern(new Clause(literals));
     }
 
 }

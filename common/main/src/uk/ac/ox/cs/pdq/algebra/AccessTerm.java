@@ -6,7 +6,6 @@ import java.util.Map;
 
 import org.junit.Assert;
 
-import uk.ac.ox.cs.pdq.InterningManager;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
@@ -104,36 +103,12 @@ public class AccessTerm extends RelationalTerm {
 		 return new RelationalTerm[]{};
 	}
 
-    protected static final InterningManager<AccessTerm> s_interningManager = new InterningManager<AccessTerm>() {
-        protected boolean equal(AccessTerm object1, AccessTerm object2) {
-            if (!object1.relation.equals(object2.relation) || !object1.accessMethod.equals(object2.accessMethod) || 
-            		object1.inputConstants.size() != object2.inputConstants.size())
-                return false;
-            for(java.util.Map.Entry<Integer, TypedConstant> entry:object1.inputConstants.entrySet()) {
-            	if(!object2.inputConstants.containsKey(entry.getKey()) || object2.inputConstants.get(entry.getKey()).equals(entry.getValue())) 
-            		return false;
-            }
-            return true;
-        }
-
-        protected int getHashCode(AccessTerm object) {
-            int hashCode = object.relation.hashCode() + object.accessMethod.hashCode() * 7;
-            for(java.util.Map.Entry<Integer, TypedConstant> entry:object.inputConstants.entrySet()) 
-                hashCode = hashCode * 8 + entry.getKey().hashCode() * 9 + entry.getValue().hashCode() * 10;
-            return hashCode;
-        }
-    };
-    
-    protected Object readResolve() {
-        return s_interningManager.intern(this);
-    }
-
     public static AccessTerm create(Relation relation, AccessMethod accessMethod) {
-        return s_interningManager.intern(new AccessTerm(relation, accessMethod));
+        return Cache.accessTerm.intern(new AccessTerm(relation, accessMethod));
     }
     
     public static AccessTerm create(Relation relation, AccessMethod accessMethod, Map<Integer, TypedConstant> inputConstants) {
-        return s_interningManager.intern(new AccessTerm(relation, accessMethod, inputConstants));
+        return Cache.accessTerm.intern(new AccessTerm(relation, accessMethod, inputConstants));
     }
 
 	@Override

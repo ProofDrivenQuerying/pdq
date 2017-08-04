@@ -9,7 +9,6 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import org.apache.commons.lang3.ArrayUtils;
 import org.junit.Assert;
 
-import uk.ac.ox.cs.pdq.InterningManager;
 import uk.ac.ox.cs.pdq.io.jaxb.adapters.QueryAdapter;
 
 //TODO fix the comments
@@ -44,7 +43,7 @@ public class ConjunctiveQuery extends Formula {
 	protected final Map<Variable, Constant> canonicalSubstitutionOfFreeVariables;
 	
 	/**  Cashed list of free variables. */
-	private final Variable[] freeVariables;
+	protected final Variable[] freeVariables;
 
 	/**  Cashed list of bound variables. */
 	private final Variable[] boundVariables;
@@ -211,49 +210,20 @@ public class ConjunctiveQuery extends Formula {
 	}
 	
 	
-    protected Object readResolve() {
-        return s_interningManager.intern(this);
-    }
-
-    protected static final InterningManager<ConjunctiveQuery> s_interningManager = new InterningManager<ConjunctiveQuery>() {
-        protected boolean equal(ConjunctiveQuery object1, ConjunctiveQuery object2) {
-            if (!object1.child.equals(object2.child) || object1.freeVariables.length != object2.freeVariables.length)
-                return false;
-            for (int index = object1.freeVariables.length - 1; index >= 0; --index)
-                if (!object1.freeVariables[index].equals(object2.freeVariables[index]))
-                    return false;
-            
-            for (java.util.Map.Entry<Variable, Constant> entry:object1.canonicalSubstitution.entrySet())
-                if (!object2.canonicalSubstitution.containsKey(entry.getKey()) || 
-                		!object2.canonicalSubstitution.get(entry.getKey()).equals(entry.getValue()))
-                    return false;
-            return true;
-        }
-
-        protected int getHashCode(ConjunctiveQuery object) {
-            int hashCode = object.child.hashCode();
-            for (int index = object.freeVariables.length - 1; index >= 0; --index)
-                hashCode = hashCode * 7 + object.freeVariables[index].hashCode();
-            for (java.util.Map.Entry<Variable, Constant> entry:object.canonicalSubstitution.entrySet())
-            	hashCode = hashCode * 7 + entry.getKey().hashCode() + entry.getValue().hashCode();
-            return hashCode;
-        }
-    };
-
     public static ConjunctiveQuery create(Variable[] freeVariables, Conjunction child, Map<Variable, Constant> canonicalSubstitution) {
-        return s_interningManager.intern(new ConjunctiveQuery(freeVariables, child, canonicalSubstitution));
+        return Cache.conjunctiveQuery.intern(new ConjunctiveQuery(freeVariables, child, canonicalSubstitution));
     }
     
     public static ConjunctiveQuery create(Variable[] freeVariables, Atom child, Map<Variable, Constant> canonicalSubstitution) {
-        return s_interningManager.intern(new ConjunctiveQuery(freeVariables, child, canonicalSubstitution));
+        return Cache.conjunctiveQuery.intern(new ConjunctiveQuery(freeVariables, child, canonicalSubstitution));
     }
     
     public static ConjunctiveQuery create(Variable[] freeVariables, Conjunction child) {
-        return s_interningManager.intern(new ConjunctiveQuery(freeVariables, child));
+        return Cache.conjunctiveQuery.intern(new ConjunctiveQuery(freeVariables, child));
     }
     
     public static ConjunctiveQuery create(Variable[] freeVariables, Atom child) {
-        return s_interningManager.intern(new ConjunctiveQuery(freeVariables, child));
+        return Cache.conjunctiveQuery.intern(new ConjunctiveQuery(freeVariables, child));
     }
     
 	@Override

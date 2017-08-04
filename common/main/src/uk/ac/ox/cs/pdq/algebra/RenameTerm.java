@@ -2,7 +2,6 @@ package uk.ac.ox.cs.pdq.algebra;
 
 import org.junit.Assert;
 
-import uk.ac.ox.cs.pdq.InterningManager;
 import uk.ac.ox.cs.pdq.db.Attribute;
 
 /**
@@ -63,30 +62,8 @@ public class RenameTerm extends RelationalTerm {
 		return this.renamings.clone();
 	}
 	
-    protected static final InterningManager<RenameTerm> s_interningManager = new InterningManager<RenameTerm>() {
-        protected boolean equal(RenameTerm object1, RenameTerm object2) {
-            if (!object1.child.equals(object2.child) || object1.renamings.length != object2.renamings.length)
-                return false;
-            for (int index = object1.renamings.length - 1; index >= 0; --index)
-                if (!object1.renamings[index].equals(object2.renamings[index]))
-                    return false;
-            return true;
-        }
-
-        protected int getHashCode(RenameTerm object) {
-            int hashCode = object.child.hashCode();
-            for (int index = object.renamings.length - 1; index >= 0; --index)
-                hashCode = hashCode * 7 + object.renamings[index].hashCode();
-            return hashCode;
-        }
-    };
-    
-    protected Object readResolve() {
-        return s_interningManager.intern(this);
-    }
-
     public static RenameTerm create(Attribute[] renamings, RelationalTerm child) {
-        return s_interningManager.intern(new RenameTerm(renamings, child));
+        return Cache.renameTerm.intern(new RenameTerm(renamings, child));
     }
     
 	@Override

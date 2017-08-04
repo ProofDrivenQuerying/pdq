@@ -2,7 +2,6 @@ package uk.ac.ox.cs.pdq.algebra;
 
 import org.junit.Assert;
 
-import uk.ac.ox.cs.pdq.InterningManager;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 
 
@@ -29,25 +28,8 @@ public class ConstantEqualityCondition extends SimpleCondition {
 		return this.constant;
 	}
 	
-    protected static final InterningManager<ConstantEqualityCondition> s_interningManager = new InterningManager<ConstantEqualityCondition>() {
-        protected boolean equal(ConstantEqualityCondition object1, ConstantEqualityCondition object2) {
-            if (object1.position != object2.position || !object1.constant.equals(object1.constant))  
-                return false;
-            return true;
-        }
-
-        protected int getHashCode(ConstantEqualityCondition object) {
-            int hashCode = object.position.hashCode() + object.constant.hashCode() * 7;
-            return hashCode;
-        }
-    };
-    
-    protected Object readResolve() {
-        return s_interningManager.intern(this);
-    }
-
     public static ConstantEqualityCondition create(int position, TypedConstant constant) {
-        return s_interningManager.intern(new ConstantEqualityCondition(position, constant));
+        return Cache.constantEqualityCondition.intern(new ConstantEqualityCondition(position, constant));
     }
 
 	@Override

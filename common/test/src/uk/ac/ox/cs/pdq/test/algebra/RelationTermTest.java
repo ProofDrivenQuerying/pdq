@@ -30,7 +30,7 @@ public class RelationTermTest {
 	}
 
 	@Test
-	public void testSimpleCreation() {
+	public void testAccessCreation() {
 		AccessMethod am = AccessMethod.create("test",new Integer[] {0});
 		AccessMethod am1 = AccessMethod.create("test1",new Integer[] {0});
 		Relation relation = Relation.create("R0", new Attribute[] {Attribute.create(Integer.class, "attr1")});
@@ -75,6 +75,7 @@ public class RelationTermTest {
 			File schemaFile = new File("test\\src\\uk\\ac\\ox\\cs\\pdq\\test\\io\\jaxb\\schema.xml");
 			Schema schema = IOManager.importSchema(schemaFile);
 			RelationalTerm access = AccessTerm.create(schema.getRelations()[0], schema.getRelations()[0].getAccessMethods()[1]);
+			//CartesianProductTerm
 			Attribute[] attributes = new Attribute[] { schema.getRelations()[0].getAttributes()[0], schema.getRelations()[0].getAttributes()[1] };
 			RelationalTerm projection = ProjectionTerm.create(attributes, access);
 			Attribute[] in = projection.getInputAttributes();

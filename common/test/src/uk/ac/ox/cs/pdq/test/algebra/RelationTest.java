@@ -51,7 +51,9 @@ public class RelationTest {
 		if (relation1 != relationSameAs1) { // ATTENTIONAL! it have to be the same reference
 			Assert.fail("Relation cache does not provide same reference");
 		}
-		Relation.resetCache();
+		uk.ac.ox.cs.pdq.algebra.Cache.reStartCaches();
+		uk.ac.ox.cs.pdq.db.Cache.reStartCaches();
+		uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
 		Relation relationSameAs1_2 = Relation.create("R1", new Attribute[] {Attribute.create(Integer.class, "attr2")});
 		if (relation1 == relationSameAs1_2) { // ATTENTIONAL! it would be the same reference if we did not reset.
 			Assert.fail("Relation cache did not reset.");

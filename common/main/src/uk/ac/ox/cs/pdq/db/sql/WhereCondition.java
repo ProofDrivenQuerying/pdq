@@ -1,7 +1,6 @@
 package uk.ac.ox.cs.pdq.db.sql;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 import com.google.common.base.Joiner;

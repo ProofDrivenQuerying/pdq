@@ -5,7 +5,6 @@ import java.lang.reflect.Type;
 
 import org.junit.Assert;
 
-import uk.ac.ox.cs.pdq.InterningManager;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.util.Typed;
 
@@ -60,22 +59,8 @@ public class TypedConstant extends Constant implements Typed, Serializable {
 		return new TypedConstant(this.value);
 	}
 	
-    protected Object readResolve() {
-        return s_interningManager.intern(this);
-    }
-
-    protected static final InterningManager<TypedConstant> s_interningManager = new InterningManager<TypedConstant>() {
-        protected boolean equal(TypedConstant object1, TypedConstant object2) {
-            return object1.value.equals(object2.value);
-        }
-
-        protected int getHashCode(TypedConstant object) {
-            return object.value.hashCode() * 7;
-        }
-    };
-
     public static TypedConstant create(Object value) {
-        return s_interningManager.intern(new TypedConstant(value));
+        return Cache.typedConstant.intern(new TypedConstant(value));
     }
 	
 }

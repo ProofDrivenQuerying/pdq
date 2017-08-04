@@ -7,8 +7,6 @@ import java.util.Set;
 
 import org.junit.Assert;
 
-import uk.ac.ox.cs.pdq.InterningManager;
-
 /**
  * A positive or a negative atom
  *
@@ -23,10 +21,10 @@ public class Literal extends Formula{
 	/**
 	 * The predicate of this atom.
 	 */
-	private final Predicate predicate;
+	protected final Predicate predicate;
 
 	/**  The terms of this atom. */
-	private final Term[] terms;
+	protected final Term[] terms;
 
 	/**   Cashed string representation of the atom. */
 	protected String toString = null;
@@ -171,34 +169,12 @@ public class Literal extends Formula{
 		return this.hashCode();
 	}
 	
-    protected Object readResolve() {
-        return s_interningManager.intern(this);
-    }
-
-    protected static final InterningManager<Literal> s_interningManager = new InterningManager<Literal>() {
-        protected boolean equal(Literal object1, Literal object2) {
-            if (!object1.operator.equals(object2.operator) || !object1.predicate.equals(object2.predicate) || object1.terms.length != object2.terms.length)
-                return false;
-            for (int index = object1.terms.length - 1; index >= 0; --index)
-                if (!object1.terms[index].equals(object2.terms[index]))
-                    return false;
-            return true;
-        }
-
-        protected int getHashCode(Literal object) {
-            int hashCode = object.predicate.hashCode();
-            for (int index = object.terms.length - 1; index >= 0; --index)
-                hashCode = hashCode * 7 + object.terms[index].hashCode();
-            return hashCode;
-        }
-    };
-
     public static Literal create(Predicate predicate, Term... arguments) {
-        return s_interningManager.intern(new Literal(predicate, arguments));
+        return Cache.literal.intern(new Literal(predicate, arguments));
     }
     
     public static Literal create(LogicalSymbols operator, Predicate predicate, Term... arguments) {
-        return s_interningManager.intern(new Literal(operator, predicate, arguments));
+        return Cache.literal.intern(new Literal(operator, predicate, arguments));
     }
     
 	@Override

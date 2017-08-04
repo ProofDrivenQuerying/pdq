@@ -4,7 +4,6 @@ import java.util.Arrays;
 
 import org.junit.Assert;
 
-import uk.ac.ox.cs.pdq.InterningManager;
 import uk.ac.ox.cs.pdq.db.Attribute;
 
 /**
@@ -63,30 +62,8 @@ public class ProjectionTerm extends RelationalTerm {
 		return this.projections.clone();
 	}
 	
-    protected static final InterningManager<ProjectionTerm> s_interningManager = new InterningManager<ProjectionTerm>() {
-        protected boolean equal(ProjectionTerm object1, ProjectionTerm object2) {
-            if (!object1.child.equals(object2.child) || object1.projections.length != object2.projections.length)
-                return false;
-            for (int index = object1.projections.length - 1; index >= 0; --index)
-                if (!object1.projections[index].equals(object2.projections[index]))
-                    return false;
-            return true;
-        }
-
-        protected int getHashCode(ProjectionTerm object) {
-            int hashCode = object.child.hashCode();
-            for (int index = object.projections.length - 1; index >= 0; --index)
-                hashCode = hashCode * 7 + object.projections[index].hashCode();
-            return hashCode;
-        }
-    };
-    
-    protected Object readResolve() {
-        return s_interningManager.intern(this);
-    }
-
     public static ProjectionTerm create(Attribute[] projections, RelationalTerm child) {
-        return s_interningManager.intern(new ProjectionTerm(projections, child));
+        return Cache.projectionTerm.intern(new ProjectionTerm(projections, child));
     }
     
 	@Override

@@ -9,7 +9,6 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.junit.Assert;
 
-import uk.ac.ox.cs.pdq.InterningManager;
 import uk.ac.ox.cs.pdq.io.jaxb.adapters.AtomAdapter;
 
 /**
@@ -25,10 +24,10 @@ public class Atom extends Formula {
 	/**
 	 * The predicate of this atom.
 	 */
-	private final Predicate predicate;
+	protected final Predicate predicate;
 
 	/**  The terms of this atom. */
-	private final Term[] terms;
+	protected final Term[] terms;
 
 	/**   Cashed string representation of the atom. */
 	protected String toString = null;
@@ -175,30 +174,8 @@ public class Atom extends Formula {
 		return this.hashCode();
 	}
 	
-    protected Object readResolve() {
-        return s_interningManager.intern(this);
-    }
-
-    protected static final InterningManager<Atom> s_interningManager = new InterningManager<Atom>() {
-        protected boolean equal(Atom object1, Atom object2) {
-            if (!object1.predicate.equals(object2.predicate) || object1.terms.length != object2.terms.length)
-                return false;
-            for (int index = object1.terms.length - 1; index >= 0; --index)
-                if (!object1.terms[index].equals(object2.terms[index]))
-                    return false;
-            return true;
-        }
-
-        protected int getHashCode(Atom object) {
-            int hashCode = object.predicate.hashCode();
-            for (int index = object.terms.length - 1; index >= 0; --index)
-                hashCode = hashCode * 7 + object.terms[index].hashCode();
-            return hashCode;
-        }
-    };
-
     public static Atom create(Predicate predicate, Term... arguments) {
-        return s_interningManager.intern(new Atom(predicate, arguments));
+        return Cache.atom.intern(new Atom(predicate, arguments));
     }
     
     /** 

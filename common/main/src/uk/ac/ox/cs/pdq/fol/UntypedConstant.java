@@ -2,8 +2,6 @@ package uk.ac.ox.cs.pdq.fol;
 
 import org.junit.Assert;
 
-import uk.ac.ox.cs.pdq.InterningManager;
-
 /**
  * 
  * @author Efthymia Tsamoura
@@ -13,7 +11,7 @@ public final class UntypedConstant extends Constant {
 	private static final long serialVersionUID = 7918785072370309908L;
 
 	/**  The constant's name. */
-	private final String symbol;
+	protected final String symbol;
 
 	private UntypedConstant(String name) {
 		Assert.assertNotNull(name);
@@ -58,21 +56,7 @@ public final class UntypedConstant extends Constant {
 		return new UntypedConstant(DEFAULT_CONSTANT_PREFIX + (freshConstantCounter++));
 	}
 	
-    protected Object readResolve() {
-        return s_interningManager.intern(this);
-    }
-
-    protected static final InterningManager<UntypedConstant> s_interningManager = new InterningManager<UntypedConstant>() {
-        protected boolean equal(UntypedConstant object1, UntypedConstant object2) {
-            return object1.symbol.equals(object2.symbol);
-        }
-
-        protected int getHashCode(UntypedConstant object) {
-            return object.symbol.hashCode() * 7;
-        }
-    };
-
     public static UntypedConstant create(String symbol) {
-        return s_interningManager.intern(new UntypedConstant(symbol));
+        return Cache.untypedConstant.intern(new UntypedConstant(symbol));
     }
 }

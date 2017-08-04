@@ -2,7 +2,6 @@ package uk.ac.ox.cs.pdq.fol;
 
 import org.junit.Assert;
 
-import uk.ac.ox.cs.pdq.InterningManager;
 import uk.ac.ox.cs.pdq.db.ForeignKey;
 import uk.ac.ox.cs.pdq.db.Reference;
 import uk.ac.ox.cs.pdq.db.Relation;
@@ -85,29 +84,8 @@ public class LinearGuarded extends TGD {
 	public boolean isGuarded() {
 		return true;
 	}
-	
-    protected Object readResolve() {
-        return s_interningManager.intern(this);
-    }
-    protected static final InterningManager<LinearGuarded> s_interningManager = new InterningManager<LinearGuarded>() {
-        protected boolean equal(LinearGuarded object1, LinearGuarded object2) {
-            if (!object1.head.equals(object2.head) || !object1.body.equals(object2.body) || object1.variables.length != object2.variables.length) 
-                return false;
-            for (int index = object1.variables.length - 1; index >= 0; --index)
-                if (!object1.variables[index].equals(object2.variables[index]))
-                    return false;
-            return true;
-        }
-        
-        protected int getHashCode(LinearGuarded object) {
-            int hashCode = object.head.hashCode() + object.body.hashCode() * 7;
-            for (int index = object.variables.length - 1; index >= 0; --index)
-                hashCode = hashCode * 8 + object.variables[index].hashCode();
-            return hashCode;
-        }
-    };
     
     public static LinearGuarded create(Formula head, Formula body) {
-        return s_interningManager.intern(new LinearGuarded(head, body));
+        return Cache.linearGuarded.intern(new LinearGuarded(head, body));
     }
 }

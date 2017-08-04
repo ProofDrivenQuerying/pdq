@@ -3,8 +3,9 @@ package uk.ac.ox.cs.pdq.db;
 import java.io.Serializable;
 
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
 import org.junit.Assert;
-import uk.ac.ox.cs.pdq.InterningManager;
+
 import uk.ac.ox.cs.pdq.io.jaxb.adapters.AccessMethodAdapter;
 
 /**
@@ -70,34 +71,12 @@ public class AccessMethod implements Serializable {
 		return this.name;
 	}
 
-	protected Object readResolve() {
-		return s_interningManager.intern(this);
-	}
-
-	protected static final InterningManager<AccessMethod> s_interningManager = new InterningManager<AccessMethod>() {
-		protected boolean equal(AccessMethod object1, AccessMethod object2) {
-			if (!object1.name.equals(object2.name) || object1.inputs.length != object2.inputs.length)
-				return false;
-			for (int index = object1.inputs.length - 1; index >= 0; --index)
-				if (!object1.inputs[index].equals(object2.inputs[index]))
-					return false;
-			return true;
-		}
-
-		protected int getHashCode(AccessMethod object) {
-			int hashCode = object.name.hashCode();
-			for (int index = object.inputs.length - 1; index >= 0; --index)
-				hashCode = hashCode * 7 + object.inputs[index].hashCode();
-			return hashCode;
-		}
-	};
-
 	public static AccessMethod create(String name, Integer[] inputs) {
-		return s_interningManager.intern(new AccessMethod(name, inputs));
+		return Cache.accessMethod.intern(new AccessMethod(name, inputs));
 	}
 	
 	public static AccessMethod create(Integer[] inputs) {
-		return s_interningManager.intern(new AccessMethod(inputs));
+		return Cache.accessMethod.intern(new AccessMethod(inputs));
 	}
 
 	@Override

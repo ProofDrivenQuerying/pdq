@@ -2,8 +2,6 @@ package uk.ac.ox.cs.pdq.algebra;
 
 import org.junit.Assert;
 
-import uk.ac.ox.cs.pdq.InterningManager;
-
 
 /**
  * Compares the values at two given positions in a tuple.
@@ -40,25 +38,8 @@ public class AttributeEqualityCondition extends SimpleCondition {
 		return result.toString();
 	}
 	
-    protected static final InterningManager<AttributeEqualityCondition> s_interningManager = new InterningManager<AttributeEqualityCondition>() {
-        protected boolean equal(AttributeEqualityCondition object1, AttributeEqualityCondition object2) {
-            if (object1.position != object2.position || object1.other != object2.other)  
-                return false;
-            return true;
-        }
-
-        protected int getHashCode(AttributeEqualityCondition object) {
-            int hashCode = object.position.hashCode() + object.other.hashCode() * 7;
-            return hashCode;
-        }
-    };
-    
-    protected Object readResolve() {
-        return s_interningManager.intern(this);
-    }
-
     public static AttributeEqualityCondition create(int position, int other) {
-        return s_interningManager.intern(new AttributeEqualityCondition(position, other));
+        return Cache.attributeEqualityCondition.intern(new AttributeEqualityCondition(position, other));
     }
  
 }

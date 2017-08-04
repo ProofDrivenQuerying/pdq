@@ -7,7 +7,6 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.junit.Assert;
 
-import uk.ac.ox.cs.pdq.InterningManager;
 import uk.ac.ox.cs.pdq.io.jaxb.adapters.AttributeAdapter;
 import uk.ac.ox.cs.pdq.util.Typed;
 
@@ -51,25 +50,8 @@ public class Attribute implements Typed, Serializable {
 		return this.name;
 	}
 	
-	protected Object readResolve() {
-		return s_interningManager.intern(this);
-	}
-
-	protected static final InterningManager<Attribute> s_interningManager = new InterningManager<Attribute>() {
-		protected boolean equal(Attribute object1, Attribute object2) {
-			if (!object1.name.equals(object2.name) || object1.type != object2.type)
-				return false;
-			return true;
-		}
-
-		protected int getHashCode(Attribute object) {
-			int hashCode = object.name.hashCode() + object.type.hashCode() * 7;
-			return hashCode;
-		}
-	};
-
 	public static Attribute create(Type type, String name) {
-		return s_interningManager.intern(new Attribute(type, name));
+		return Cache.attribute.intern(new Attribute(type, name));
 	}
 
 	@Override

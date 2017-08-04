@@ -9,7 +9,6 @@ import java.util.Set;
 
 import org.junit.Assert;
 
-import uk.ac.ox.cs.pdq.InterningManager;
 import uk.ac.ox.cs.pdq.util.Utility;
 
 /**
@@ -158,30 +157,8 @@ public class QuantifiedFormula extends Formula {
 		return this.variables.clone();
 	}
 	
-    protected Object readResolve() {
-        return s_interningManager.intern(this);
-    }
-
-    protected static final InterningManager<QuantifiedFormula> s_interningManager = new InterningManager<QuantifiedFormula>() {
-        protected boolean equal(QuantifiedFormula object1, QuantifiedFormula object2) {
-            if (!object1.operator.equals(object2.operator) || !object1.child.equals(object2.child) || object1.variables.length != object2.variables.length)
-                return false;
-            for (int index = object1.variables.length - 1; index >= 0; --index)
-                if (!object1.variables[index].equals(object2.variables[index]))
-                    return false;
-            return true;
-        }
-        
-        protected int getHashCode(QuantifiedFormula object) {
-            int hashCode = object.child.hashCode() + object.operator.hashCode() * 7;
-            for (int index = object.variables.length - 1; index >= 0; --index)
-                hashCode = hashCode * 8 + object.variables[index].hashCode();
-            return hashCode;
-        }
-    };
-
     public static QuantifiedFormula create(LogicalSymbols operator, Variable[] variables, Formula child) {
-        return s_interningManager.intern(new QuantifiedFormula(operator, variables, child));
+        return Cache.quantifiedFormula.intern(new QuantifiedFormula(operator, variables, child));
     }
     
 	@Override

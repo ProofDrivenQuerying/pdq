@@ -6,8 +6,6 @@ import java.util.Set;
 
 import org.junit.Assert;
 
-import uk.ac.ox.cs.pdq.InterningManager;
-
 /**
  * 
  * @author Efthymia Tsamoura
@@ -125,30 +123,8 @@ public final class Disjunction extends Formula {
 		return this.boundVariables.clone();
 	}
 
-	protected Object readResolve() {
-		return s_interningManager.intern(this);
-	}
-
-	protected static final InterningManager<Disjunction> s_interningManager = new InterningManager<Disjunction>() {
-		protected boolean equal(Disjunction object1, Disjunction object2) {
-			if (object1.children.length != object2.children.length)
-				return false;
-			for (int index = object1.children.length - 1; index >= 0; --index)
-				if (!object1.children[index].equals(object2.children[index]))
-					return false;
-			return true;
-		}
-
-		protected int getHashCode(Disjunction object) {
-			int hashCode = 0;
-			for (int index = object.children.length - 1; index >= 0; --index)
-				hashCode = hashCode * 7 + object.children[index].hashCode();
-			return hashCode;
-		}
-	};
-
 	public static Disjunction create(Formula... children) {
-		return s_interningManager.intern(new Disjunction(children));
+		return Cache.disjunction.intern(new Disjunction(children));
 	}
 	
 	@Override
