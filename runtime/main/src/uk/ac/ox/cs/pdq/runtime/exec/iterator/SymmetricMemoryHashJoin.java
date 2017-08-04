@@ -10,6 +10,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+import com.google.common.collect.LinkedListMultimap;
+import com.google.common.collect.Multimap;
+
 import uk.ac.ox.cs.pdq.algebra.AttributeEqualityCondition;
 import uk.ac.ox.cs.pdq.algebra.Condition;
 import uk.ac.ox.cs.pdq.algebra.ConjunctiveCondition;
@@ -17,10 +20,7 @@ import uk.ac.ox.cs.pdq.algebra.ConstantEqualityCondition;
 import uk.ac.ox.cs.pdq.algebra.SimpleCondition;
 import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
 import uk.ac.ox.cs.pdq.fol.Term;
-import uk.ac.ox.cs.pdq.util.Typed;
-
-import com.google.common.collect.LinkedListMultimap;
-import com.google.common.collect.Multimap;
+import uk.ac.ox.cs.pdq.runtime.util.RuntimeUtilities;
 
 
 // TODO: Auto-generated Javadoc
@@ -55,67 +55,30 @@ public class SymmetricMemoryHashJoin extends Join {
 
 	/** The side. */
 	protected boolean side = true;
-
-	/** The left. */
-	protected final TupleIterator left;
-
-	/** The right. */
-	protected final TupleIterator right;
-
+	
 	/**
 	 * Constructor an unbound array of children.
 	 *
 	 * @param left TupleIterator
 	 * @param right TupleIterator
 	 */
-	public SymmetricMemoryHashJoin(TupleIterator left, TupleIterator right) {
-		this(computeNaturalJoinConditions(toList(left, right)), 
-			inferInputColumns(toList(left, right)), left, right);
+	public SymmetricMemoryHashJoin(TupleIterator child1, TupleIterator child2) {
+		super(child1, child2);
 	}
 
 	/**
-	 * Constructor an unbound array of children.
-	 *
-	 * @param predicate ConjunctivePredicate<AttributeEqualityPredicate>
-	 * @param left TupleIterator
-	 * @param right TupleIterator
+	 * 
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.NaryIterator#reset()
 	 */
-	public SymmetricMemoryHashJoin(
-			Condition predicate, TupleIterator left, TupleIterator right) {
-		this(predicate, inferInputColumns(toList(left, right)), left, right);
+	@Override
+	public void reset() {
+		super.reset();
+		this.leftHashTable.clear();
+		this.rightHashTable.clear();
 	}
 
-	/**
-	 * Constructor an unbound array of children.
-	 *
-	 * @param inputs List<Typed>
-	 * @param left TupleIterator
-	 * @param right TupleIterator
-	 */
-	public SymmetricMemoryHashJoin(
-			List<Typed> inputs, TupleIterator left, TupleIterator right) {
-		this(computeNaturalJoinConditions(toList(left, right)), inputs, left, right);
-	}
-
-	/**
-	 * Constructor an unbound array of children.
-	 *
-	 * @param predicate ConjunctivePredicate<AttributeEqualityPredicate>
-	 * @param inputs List<Typed>
-	 * @param left TupleIterator
-	 * @param right TupleIterator
-	 */
-	public SymmetricMemoryHashJoin(
-			Condition predicate,
-			List<Typed> inputs,
-			TupleIterator left, TupleIterator right) {
-		super(predicate, inputs, toList(left, right));
-		this.left = left;
-		this.right = right;
-		this.leftKeys = this.makeLeftKey();
-		this.rightKeys = this.makeRightKey(left.getType().size());
-	}
-
+	
 	/**
 	 * 
 	 * {@inheritDoc}
@@ -124,12 +87,12 @@ public class SymmetricMemoryHashJoin extends Join {
 	@Override
 	protected void nextTuple() {
 		while (this.bucketIterator == null || !this.bucketIterator.hasNext()) {
-			TupleIterator child = this.left;
+			TupleIterator child = this.children[0];
 			Integer[] keys = this.leftKeys;
 			Multimap<JoinKey, Tuple> table = this.leftHashTable;
 			Multimap<JoinKey, Tuple> table2 = this.rightHashTable;
 			if (!this.side) {
-				child = this.right;
+				child = this.children[1];
 				keys  = this.rightKeys;
 				table = this.rightHashTable;
 				table2 = this.leftHashTable;
@@ -147,7 +110,7 @@ public class SymmetricMemoryHashJoin extends Join {
 				}
 			}
 			this.side = !this.side;
-			if (!this.left.hasNext() && !this.right.hasNext()) {
+			if (!this.children[0].hasNext() && !this.children[1].hasNext()) {
 				break;
 			}
 		}
@@ -158,9 +121,9 @@ public class SymmetricMemoryHashJoin extends Join {
 				return;
 			}
 			if (this.side) {
-				this.nextTuple = this.outputType.appendTuples(this.bucketIterator.next(), this.partialTuple);
+				this.nextTuple = RuntimeUtilities.createTuple(this.bucketIterator.next(), this.children[0].getOutputAttributes(), this.partialTuple, this.children[1].getOutputAttributes()); 
 			} else {
-				this.nextTuple = this.outputType.appendTuples(this.partialTuple, this.bucketIterator.next());
+				this.nextTuple = RuntimeUtilities.createTuple(this.partialTuple, this.children[0].getOutputAttributes(), this.bucketIterator.next(), this.children[1].getOutputAttributes()); 
 			}
 		}
 	}
@@ -188,8 +151,7 @@ public class SymmetricMemoryHashJoin extends Join {
 	 * @param right Collection<? extends Term>
 	 * @return the position in arg1 of variable appearing in both arg1 and arg2
 	 */
-	protected Map<Integer, Term> joinColumns(
-			List<? extends Term> left, Collection<? extends Term> right) {
+	protected Map<Integer, Term> joinColumns(List<? extends Term> left, Collection<? extends Term> right) {
 		Map<Integer, Term> result = new LinkedHashMap<>();
 
 		List<Term> inter = new ArrayList<>(right);
@@ -234,7 +196,7 @@ public class SymmetricMemoryHashJoin extends Join {
 	 */
 	protected Integer[] makeLeftKey() {
 		List<Integer> result = new ArrayList<>();
-		for (AttributeEqualityCondition p: listAttributeEqualityPredicates(this.condition)) {
+		for (AttributeEqualityCondition p: listAttributeEqualityPredicates(this.joinConditions)) {
 			result.add(p.getPosition());
 		}
 		return result.toArray(new Integer[result.size()]);
@@ -248,23 +210,12 @@ public class SymmetricMemoryHashJoin extends Join {
 	 */
 	protected Integer[] makeRightKey(int offset) {
 		List<Integer> result = new ArrayList<>();
-		for (AttributeEqualityCondition p: listAttributeEqualityPredicates(this.condition)) {
+		for (AttributeEqualityCondition p: listAttributeEqualityPredicates(this.joinConditions)) {
 			result.add(p.getOther() - offset);
 		}
 		return result.toArray(new Integer[result.size()]);
 	}
 
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.NaryIterator#reset()
-	 */
-	@Override
-	public void reset() {
-		super.reset();
-		this.leftHashTable.clear();
-		this.rightHashTable.clear();
-	}
 
 
 	/**

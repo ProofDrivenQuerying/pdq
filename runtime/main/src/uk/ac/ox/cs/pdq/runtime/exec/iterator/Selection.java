@@ -2,11 +2,15 @@ package uk.ac.ox.cs.pdq.runtime.exec.iterator;
 
 import java.util.NoSuchElementException;
 
+import org.junit.Assert;
+
+import com.google.common.eventbus.EventBus;
+
+import uk.ac.ox.cs.pdq.algebra.AlgebraUtilities;
 import uk.ac.ox.cs.pdq.algebra.Condition;
 import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
+import uk.ac.ox.cs.pdq.datasources.utility.TupleType;
 import uk.ac.ox.cs.pdq.runtime.util.RuntimeUtilities;
-
-import com.google.common.base.Preconditions;
 
 
 // TODO: Auto-generated Javadoc
@@ -15,40 +19,121 @@ import com.google.common.base.Preconditions;
  * 
  * @author Julien Leblay
  */
-public class Selection extends UnaryIterator {
+public class Selection extends TupleIterator {
+	
+	protected final TupleIterator child;
+	
+	protected final TupleType cachedChildTupleType;
 
 	/** The predicate associated with this selection. */
-	private final Condition predicate;
+	protected final Condition selectionCondition;
 
 	/**  The next Tuple to return. */
-	private Tuple nextTuple = null;
+	protected Tuple nextTuple = null;
 
 	/**
 	 * Instantiates a new selection.
 	 * @param p Atom
 	 * @param child TupleIterator
 	 */
-	public Selection(Condition p, TupleIterator child) {
-		super(child);
-		Preconditions.checkArgument(p != null);
-		this.predicate = p;
+	public Selection(Condition selectionCondition, TupleIterator child) {
+		super(child.getInputAttributes(), child.getOutputAttributes());
+		Assert.assertNotNull(selectionCondition);
+		Assert.assertNotNull(child);
+		Assert.assertTrue(AlgebraUtilities.assertSelectionCondition(selectionCondition, child.getOutputAttributes()));
+		this.selectionCondition = selectionCondition;
+		this.child = child;
+		this.cachedChildTupleType = TupleType.DefaultFactory.createFromTyped(this.inputAttributes);
 	}
 
 	/**
-	 * Prepares the next tuple to be returned. If the end of the iterator
-	 * was reached, this.nextTuple is null.
+	 * 
+	 * {@inheritDoc}
+	 * @see java.lang.Object#toString()
 	 */
-	private void nextTuple() {
-		while (this.child.hasNext()) {
-			Tuple next = this.child.next();
-			if (RuntimeUtilities.isSatisfied(this.predicate, next)) {
-				this.nextTuple = next;
-				return;
-			}
-		}
-		this.nextTuple = null;
+	@Override
+	public String toString() {
+		StringBuilder result = new StringBuilder();
+		result.append(this.getClass().getSimpleName());
+		result.append('{').append(this.selectionCondition).append('}');
+		result.append('(').append(this.child.toString()).append(')');
+		return result.toString();
+	}
+	
+	@Override
+	public TupleIterator[] getChildren() {
+		return new TupleIterator[]{this.child};
 	}
 
+	@Override
+	public TupleIterator getChild(int childIndex) {
+		Assert.assertTrue(childIndex == 0);
+		return this.child;
+	}
+	
+	public Condition getSelectionCondition() {
+		return this.selectionCondition;
+	}
+	
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#setEventBus(com.google.common.eventbus.EventBus)
+	 */
+	@Override
+	public void setEventBus(EventBus eb) {
+		super.setEventBus(eb);
+		this.child.setEventBus(eb);
+	}
+
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.datasources.ResetableIterator#open()
+	 */
+	@Override
+	public void open() {
+		Assert.assertTrue(this.open == null || this.open);
+		this.child.open();
+		this.open = true;
+	}
+
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#close()
+	 */
+	@Override
+	public void close() {
+		Assert.assertTrue(this.open != null && this.open);
+		super.close();
+		this.child.close();
+	}
+
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.datasources.ResetableIterator#reset()
+	 */
+	@Override
+	public void reset() {
+		Assert.assertTrue(this.open != null && this.open);
+		Assert.assertTrue(!this.interrupted);
+		this.child.reset();
+	}
+
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#interrupt()
+	 */
+	@Override
+	public void interrupt() {
+		Assert.assertTrue(this.open != null && this.open);
+		this.interrupted = true;
+		this.child.interrupt();
+	}
+	
 	/**
 	 * 
 	 * {@inheritDoc}
@@ -56,7 +141,7 @@ public class Selection extends UnaryIterator {
 	 */
 	@Override
 	public boolean hasNext() {
-		Preconditions.checkState(this.open != null && this.open);
+		Assert.assertTrue(this.open != null && this.open);
 		if (this.interrupted) {
 			return false;
 		}
@@ -87,25 +172,30 @@ public class Selection extends UnaryIterator {
 	}
 	
 	/**
-	 * Gets the predicate.
-	 *
-	 * @return Atom
+	 * Prepares the next tuple to be returned. If the end of the iterator
+	 * was reached, this.nextTuple is null.
 	 */
-	public Condition getPredicate() {
-		return this.predicate;
+	private void nextTuple() {
+		while (this.child.hasNext()) {
+			Tuple next = this.child.next();
+			if (RuntimeUtilities.isSatisfied(this.selectionCondition, next)) {
+				this.nextTuple = next;
+				return;
+			}
+		}
+		this.nextTuple = null;
 	}
-
+	
 	/**
 	 * 
 	 * {@inheritDoc}
-	 * @see java.lang.Object#toString()
+	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#bind(uk.ac.ox.cs.pdq.datasources.utility.Tuple)
 	 */
 	@Override
-	public String toString() {
-		StringBuilder result = new StringBuilder();
-		result.append(this.getClass().getSimpleName());
-		result.append('{').append(this.predicate).append('}');
-		result.append('(').append(this.child.toString()).append(')');
-		return result.toString();
+	public void bind(Tuple t) {
+		Assert.assertTrue(this.open != null && this.open);
+		Assert.assertTrue(t != null);
+		Assert.assertTrue(t.getType().equals(this.cachedChildTupleType));
+		this.child.bind(t);
 	}
 }

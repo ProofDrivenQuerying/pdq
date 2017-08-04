@@ -3,9 +3,9 @@ package uk.ac.ox.cs.pdq.planner.linear.cost;
 import java.util.List;
 
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
-import uk.ac.ox.cs.pdq.cost.estimators.BlackBoxCostEstimator;
+import uk.ac.ox.cs.pdq.cost.estimators.OrderDependentCostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
-import uk.ac.ox.cs.pdq.cost.estimators.SimpleCostEstimator;
+import uk.ac.ox.cs.pdq.cost.estimators.OrderIndependentCostEstimator;
 import uk.ac.ox.cs.pdq.planner.linear.LeftDeepPlanGenerator;
 import uk.ac.ox.cs.pdq.planner.linear.LinearUtility;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
@@ -30,10 +30,10 @@ public class CostPropagatorUtility {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T extends SearchNode> CostPropagator<T> getPropagator(CostEstimator e) {
-		if (e instanceof BlackBoxCostEstimator) 
-			return (CostPropagator<T>) new BlackBoxPropagator((BlackBoxCostEstimator) e);
-		else if (e instanceof SimpleCostEstimator) 
-			return (CostPropagator<T>) new SimplePropagator((SimpleCostEstimator) e);
+		if (e instanceof OrderDependentCostEstimator) 
+			return (CostPropagator<T>) new BlackBoxPropagator((OrderDependentCostEstimator) e);
+		else if (e instanceof OrderIndependentCostEstimator) 
+			return (CostPropagator<T>) new SimplePropagator((OrderIndependentCostEstimator) e);
 		else
 			throw new IllegalStateException("Attempting to get a propagator for a cost estimator that is neither blackbox nor simple");
 	}

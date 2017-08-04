@@ -80,7 +80,7 @@ public class ProjectionTest extends UnaryIteratorTest {
 
         MockitoAnnotations.initMocks(this);
         when(child.getColumns()).thenReturn(outputColumns);
-		when(child.getType()).thenReturn(outputType);
+		when(child.getOutputType()).thenReturn(outputType);
 		when(child.getInputColumns()).thenReturn(inputColumns);
 		when(child.getInputType()).thenReturn(inputType);
 		when(child.next()).thenReturn(
@@ -107,7 +107,7 @@ public class ProjectionTest extends UnaryIteratorTest {
 		List<Typed> renamedOutput = Lists.<Typed>newArrayList(B, TypedConstant.create("x"), A);
 		List<Typed> renamedInput = Lists.<Typed>newArrayList(B, A);
 		Assert.assertEquals("Projection input type must match that of initialization", this.inputType, this.iterator.getInputType());
-		Assert.assertEquals("Projection header type must match that of initialization", this.projectedType, this.iterator.getType());
+		Assert.assertEquals("Projection header type must match that of initialization", this.projectedType, this.iterator.getOutputType());
 		Assert.assertEquals("Projection child must match that of initialization", this.child, this.iterator.getChild());
 		Assert.assertEquals("Projection renamed output must match that of initialization", renamedOutput, this.iterator.getColumns());
 		Assert.assertEquals("Projection renamed input must match that of initialization", renamedInput, this.iterator.getInputColumns());

@@ -2,7 +2,7 @@ package uk.ac.ox.cs.pdq.planner.dominance;
 
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
-import uk.ac.ox.cs.pdq.cost.estimators.SimpleCostEstimator;
+import uk.ac.ox.cs.pdq.cost.estimators.OrderIndependentCostEstimator;
 
 //TODO: Auto-generated Javadoc
 /**
@@ -28,13 +28,13 @@ public class SuccessDominance {
 	//	private final boolean simpleFunction;
 
 	/** The estimator. */
-	private final SimpleCostEstimator estimator;
+	private final OrderIndependentCostEstimator estimator;
 
 	/**
 	 * Constructor for SuccessDominance.
 	 * @param simpleFunction Boolean
 	 */
-	public SuccessDominance(SimpleCostEstimator estimator) {
+	public SuccessDominance(OrderIndependentCostEstimator estimator) {
 		this.estimator = estimator;
 	}
 

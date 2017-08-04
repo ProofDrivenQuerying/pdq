@@ -14,21 +14,22 @@ public class SelectionTerm extends RelationalTerm {
 	protected final RelationalTerm child;
 
 	/** The predicate associated with this selection. */
-	protected final Condition predicate;
+	protected final Condition selectionCondition;
 
 	/**  Cashed string representation. */
 	private String toString = null;
 
-	private SelectionTerm(Condition predicate, RelationalTerm child) {
+	private SelectionTerm(Condition selectionCondition, RelationalTerm child) {
 		super(child.getInputAttributes(), child.getOutputAttributes());
-		Assert.assertNotNull(predicate);
+		Assert.assertNotNull(selectionCondition);
 		Assert.assertNotNull(child);
-		this.predicate = predicate;
+		Assert.assertTrue(AlgebraUtilities.assertSelectionCondition(selectionCondition, child.getOutputAttributes()));
+		this.selectionCondition = selectionCondition;
 		this.child = child;
 	}
 
-	public Condition getPredicate() {
-		return this.predicate;
+	public Condition getSelectionCondition() {
+		return this.selectionCondition;
 	}
 
 	/* (non-Javadoc)
@@ -40,7 +41,7 @@ public class SelectionTerm extends RelationalTerm {
 			StringBuilder result = new StringBuilder();
 			result.append("Select");
 			result.append('{');
-			result.append('[').append(this.predicate).append(']');
+			result.append('[').append(this.selectionCondition).append(']');
 			result.append(this.child.toString());
 			result.append('}');
 			this.toString = result.toString();

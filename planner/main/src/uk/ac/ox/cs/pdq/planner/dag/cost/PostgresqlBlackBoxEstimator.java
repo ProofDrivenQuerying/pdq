@@ -16,7 +16,7 @@ import uk.ac.ox.cs.pdq.cost.DoubleCost;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.CostParameters.BlackBoxQueryTypes;
-import uk.ac.ox.cs.pdq.cost.estimators.BlackBoxCostEstimator;
+import uk.ac.ox.cs.pdq.cost.estimators.OrderDependentCostEstimator;
 import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.dag.cost.sql.DAGConfigurationToSQLTranslator;
@@ -30,7 +30,7 @@ import com.google.common.eventbus.EventBus;
  *
  * @author Efthymia Tsamoura
  */
-public class PostgresqlBlackBoxEstimator implements BlackBoxCostEstimator {
+public class PostgresqlBlackBoxEstimator implements OrderDependentCostEstimator {
 
 	/** The stats. */
 	protected final StatisticsCollector stats;

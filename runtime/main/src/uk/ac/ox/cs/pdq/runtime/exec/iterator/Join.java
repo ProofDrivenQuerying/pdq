@@ -1,28 +1,14 @@
 package uk.ac.ox.cs.pdq.runtime.exec.iterator;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.Arrays;
 import java.util.NoSuchElementException;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
-import uk.ac.ox.cs.pdq.algebra.AttributeEqualityCondition;
+import org.junit.Assert;
+
 import uk.ac.ox.cs.pdq.algebra.Condition;
-import uk.ac.ox.cs.pdq.algebra.ConjunctiveCondition;
-import uk.ac.ox.cs.pdq.algebra.ConstantEqualityCondition;
-import uk.ac.ox.cs.pdq.algebra.SimpleCondition;
 import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
 import uk.ac.ox.cs.pdq.datasources.utility.TupleType;
-import uk.ac.ox.cs.pdq.util.Typed;
-
-import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Lists;
+import uk.ac.ox.cs.pdq.runtime.util.RuntimeUtilities;
 
 
 // TODO: Auto-generated Javadoc
@@ -31,37 +17,26 @@ import com.google.common.collect.Lists;
  * 
  * @author Julien Leblay
  */
-public abstract class Join extends NaryIterator {
+public abstract class Join extends TupleIterator {
+
+	/** The children. */
+	protected final TupleIterator[] children = new TupleIterator[2];
+
+	protected final Integer[] inputPositionsForChild1;
+
+	protected final Integer[] inputPositionsForChild2;
 
 	/** The predicate. */
-	protected Condition condition;
+	protected final Condition joinConditions;
 	
+	protected final TupleType cachedChildrenInputTupleType;
+
 	/** Determines whether the operator is known to have an empty result. */
 	protected boolean isEmpty = false;
-	
+
 	/** The next tuple to return. */
 	protected Tuple nextTuple = null;
 
-	/**
-	 * Instantiates a new join.
-	 *
-	 * @param inputs List<Typed>
-	 * @param children            the children
-	 */
-	protected Join(List<Typed> inputs, TupleIterator... children) {
-		this(computeNaturalJoinConditions(Lists.newArrayList(children)), inputs, Lists.newArrayList(children));
-	}
-	
-	/**
-	 * Instantiates a new join.
-	 *
-	 * @param inputs List<Typed>
-	 * @param children            the children
-	 */
-	protected Join(List<Typed> inputs, List<TupleIterator> children) {
-		this(computeNaturalJoinConditions(children), inputs, children);
-	}
-	
 	/**
 	 * Instantiates a new join.
 	 * @param predicate Atom
@@ -69,112 +44,51 @@ public abstract class Join extends NaryIterator {
 	 * @param children
 	 *            the children
 	 */
-	protected Join(Condition predicate, List<Typed> inputs, Collection<TupleIterator> children) {
-		super(TupleType.DefaultFactory.createFromTyped(inputs), inputs,
-				inferType(children), inferColumns(children), children);
-		Preconditions.checkArgument(children.size() > 1);
-		assert isPredicateConsistent(predicate, this.columns);
-		this.relativeInputPositions = ImmutableMap.copyOf(inferInputMappings(inputs, children));
-		this.condition = predicate;
+	protected Join(TupleIterator child1, TupleIterator child2) {
+		super(RuntimeUtilities.computeInputAttributes(child1, child2), 
+				RuntimeUtilities.computeOutputAttributes(child1, child2));
+		Assert.assertNotNull(child1);
+		Assert.assertNotNull(child2);
+		this.children[0] = child1;
+		this.children[1] = child2;
+		this.joinConditions = RuntimeUtilities.computeJoinConditions(this.children);
+		this.inputPositionsForChild1 = new Integer[child1.getNumberOfInputAttributes()];
+		this.inputPositionsForChild2 = new Integer[child2.getNumberOfInputAttributes()];
+		int index = 0;
+		for(int inputAttributeIndex = 0; inputAttributeIndex < child1.getNumberOfInputAttributes(); ++inputAttributeIndex) { 
+			int position = Arrays.asList(child1.getOutputAttributes()).indexOf(child1.getInputAttribute(inputAttributeIndex));
+			Assert.assertTrue(position >= 0);
+			this.inputPositionsForChild1[index++] = position;
+		}
+		index = 0;
+		for(int inputAttributeIndex = 0; inputAttributeIndex < child2.getNumberOfInputAttributes(); ++inputAttributeIndex) { 
+			int position = Arrays.asList(child2.getOutputAttributes()).indexOf(child2.getInputAttribute(inputAttributeIndex));
+			Assert.assertTrue(position >= 0);
+			this.inputPositionsForChild2[index++] = position;
+		}
+		this.cachedChildrenInputTupleType = TupleType.DefaultFactory.createFromTyped(this.inputAttributes);
 	}
 	
-	/**
-	 * Checks if is predicate consistent.
-	 *
-	 * @param predicate the predicate
-	 * @param columns the columns
-	 * @return true if the predicate if position-consistent with columns.
-	 */
-	private static boolean isPredicateConsistent(Condition predicate, List<Typed> columns) {
-		if (predicate instanceof ConjunctiveCondition) {
-			for (SimpleCondition subPred: ((ConjunctiveCondition) predicate).getSimpleConditions()) {
-				if (!isPredicateConsistent(subPred, columns)) 
-					return false;
-			}
-		}
-		else if (predicate instanceof ConstantEqualityCondition) {
-			int pos = ((ConstantEqualityCondition) predicate).getPosition();
-			if (pos < 0 || pos >= columns.size()) {
-				return false;
-			}
-		}
-		else if (predicate instanceof AttributeEqualityCondition) {
-			int pos = ((AttributeEqualityCondition) predicate).getPosition();
-			if (pos < 0 || pos >= columns.size()) {
-				return false;
-			}
-			if (predicate instanceof AttributeEqualityCondition) {
-				int other = ((AttributeEqualityCondition) predicate).getOther();
-				if (other < 0 || other >= columns.size()) {
-					return false;
-				}
-			}
-		} 
-		return true;
+	@Override
+	public TupleIterator[] getChildren() {
+		return this.children.clone();
 	}
-	
+
+	@Override
+	public TupleIterator getChild(int childIndex) {
+		Assert.assertTrue(childIndex < 2 && childIndex >= 0);
+		return this.children[childIndex];
+	}
+
 	/**
 	 * Gets the predicate.
 	 *
 	 * @return the join predicate
 	 */
-	public Condition getCondition() {
-		return this.condition;
+	public Condition getJoinConditions() {
+		return this.joinConditions;
 	}
-
-	/**
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.NaryIterator#open()
-	 */
-	@Override
-	public void open() {
-		super.open();
-		if (this.inputType == TupleType.EmptyTupleType) {
-			this.nextTuple();
-		}
-	}
-
-	/**
-	 * Initialises the join variables.
-	 * @param children TupleIterator[]
-	 * @return Atom
-	 */
-	protected static Condition computeNaturalJoinConditions(Collection<TupleIterator> children) {
-		Map<Typed, SortedSet<Integer>> joinVariables = new LinkedHashMap<>();
-		int totalCol = 0;
-		// Cluster patterns by variables
-		for (TupleIterator child : children) {
-			for (int i = 0; i < child.getColumns().size(); i++) {
-				Typed col = child.getColumns().get(i);
-				SortedSet<Integer> joined = joinVariables.get(col);
-				if (joined == null) {
-					joined = new TreeSet<>();
-					joinVariables.put(col, joined);
-				}
-				joined.add(totalCol);
-				totalCol++;
-			}
-		}
-		
-		Collection<SimpleCondition> equalities = new ArrayList<>();
-		// Remove clusters containing only one pattern
-		for (Iterator<Typed> keys = joinVariables.keySet().iterator(); keys.hasNext();) {
-			Set<Integer> cluster = joinVariables.get(keys.next());
-			if (cluster.size() < 2) {
-				keys.remove();
-			} else {
-				Iterator<Integer> i = cluster.iterator();
-				Integer left = i.next();
-				while (i.hasNext()) {
-					Integer right = i.next();
-					equalities.add(AttributeEqualityCondition.create(left, right));
-				}
-			}
-		}
-
-		return ConjunctiveCondition.create(equalities.toArray(new SimpleCondition[equalities.size()]));
-	}
-
+	
 	/**
 	 * {@inheritDoc}
 	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.NaryIterator#toString()
@@ -183,7 +97,7 @@ public abstract class Join extends NaryIterator {
 	public String toString() {
 		StringBuilder result = new StringBuilder();
 		result.append(this.getClass().getSimpleName());
-		result.append(this.condition).append('(');
+		result.append(this.joinConditions).append('(');
 		if (this.children != null) {
 			for (TupleIterator child: this.children) {
 				result.append(child.toString()).append(',');
@@ -195,9 +109,56 @@ public abstract class Join extends NaryIterator {
 	}
 
 	/**
-	 * Move the iterator forward and prepares the next tuple to be returned.
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.NaryIterator#open()
 	 */
-	protected abstract void nextTuple() ;
+	@Override
+	public void open() {
+		Assert.assertTrue(this.open == null || this.open);
+		this.children[0].open();
+		this.children[1].open();
+		this.open = true;
+		if (this.cachedChildrenInputTupleType.size() == 0) {
+			this.nextTuple();
+		}
+	}
+
+	@Override
+	public void close() {
+		super.close();
+		for (TupleIterator child: this.children) {
+			child.close();
+		}
+	}
+
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.datasources.ResetableIterator#reset()
+	 */
+	@Override
+	public void reset() {
+		Assert.assertTrue(this.open != null && this.open);
+		Assert.assertTrue(!this.interrupted);
+		for (TupleIterator child: this.children) {
+			child.reset();
+		}
+	}
+
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#interrupt()
+	 */
+	@Override
+	public void interrupt() {
+		Assert.assertTrue(this.open != null && this.open);
+		Assert.assertTrue(!this.interrupted);
+		this.interrupted = true;
+		for (TupleIterator child: this.children) {
+			child.interrupt();
+		}
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -205,7 +166,7 @@ public abstract class Join extends NaryIterator {
 	 */
 	@Override
 	public boolean hasNext() {
-		Preconditions.checkState(this.open != null && this.open);
+		Assert.assertTrue(this.open != null && this.open);
 		if (this.interrupted) {
 			return false;
 		}
@@ -228,8 +189,8 @@ public abstract class Join extends NaryIterator {
 		if (this.eventBus != null) {
 			this.eventBus.post(this);
 		}
-		Preconditions.checkState(this.open != null && this.open);
-		Preconditions.checkState(!this.interrupted);
+		Assert.assertTrue(this.open != null && this.open);
+		Assert.assertTrue(!this.interrupted);
 		Tuple result = this.nextTuple;
 		this.nextTuple = null;
 		if ((!this.hasNext() && result == null) || this.isEmpty) {
@@ -237,15 +198,24 @@ public abstract class Join extends NaryIterator {
 		}
 		return result;
 	}
-
 	
+	/**
+	 * Move the iterator forward and prepares the next tuple to be returned.
+	 */
+	protected abstract void nextTuple();
+
+
 	/**
 	 * {@inheritDoc}
 	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.NaryIterator#bind(uk.ac.ox.cs.pdq.datasources.utility.Tuple)
 	 */
 	@Override
-	public void bind(Tuple t) {
-		super.bind(t);
+	public void bind(Tuple tuple) {
+		Assert.assertTrue(this.open != null && this.open);
+		Assert.assertTrue(!this.interrupted);
+		this.children[0].bind(RuntimeUtilities.projectInputValuesForChild(this.children[0], tuple, this.inputPositionsForChild1));
+		this.children[1].bind(RuntimeUtilities.projectInputValuesForChild(this.children[1], tuple, this.inputPositionsForChild2));
 		this.nextTuple();
 	}
+
 }

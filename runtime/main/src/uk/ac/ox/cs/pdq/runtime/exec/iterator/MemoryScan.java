@@ -1,17 +1,13 @@
 package uk.ac.ox.cs.pdq.runtime.exec.iterator;
 
 import java.util.Iterator;
-import java.util.List;
 import java.util.NoSuchElementException;
 
-import uk.ac.ox.cs.pdq.algebra.Condition;
-import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
-import uk.ac.ox.cs.pdq.datasources.utility.TupleType;
-import uk.ac.ox.cs.pdq.runtime.util.RuntimeUtilities;
-import uk.ac.ox.cs.pdq.util.Typed;
+import org.junit.Assert;
 
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
+import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
+import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.runtime.util.RuntimeUtilities;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -28,10 +24,7 @@ public class MemoryScan extends TupleIterator {
 	protected Iterable<Tuple> data = null;
 
 	/**  The next tuple to return. */
-	private Tuple nextTuple;
-	
-	/** The filter. */
-	protected final Condition filter;	
+	protected Tuple nextTuple;
 
 	/**
 	 * Instantiates a new memory scan.
@@ -39,33 +32,22 @@ public class MemoryScan extends TupleIterator {
 	 * @param data Iterable<Tuple>
 	 * @param filter additional filtering on the scan 
 	 */
-	public MemoryScan(List<Typed> columns, Iterable<Tuple> data, Condition filter) {
-		super(Lists.<Typed>newArrayList(), columns);
-		Preconditions.checkArgument(data != null);
+	public MemoryScan(Attribute[] outputAttributes, Iterable<Tuple> data) {
+		super(new Attribute[0], outputAttributes);
+		Assert.assertTrue(data != null);
 		Iterator<Tuple> testIterator = data.iterator();
-		Preconditions.checkArgument(!testIterator.hasNext()
-				|| TupleType.DefaultFactory.createFromTyped(columns)
-						.equals(testIterator.next().getType()));
+		Assert.assertTrue(!testIterator.hasNext() || RuntimeUtilities.typeOfAttributesEqualsTupleType(testIterator.next().getType(), this.outputAttributes));
 		this.data = data;
-		this.filter = filter;
-	}
-
-	/**
-	 * Instantiates a new memory scan.
-	 * @param columns List<Typed>
-	 * @param data Iterable<Tuple>
-	 */
-	public MemoryScan(List<Typed> columns, Iterable<Tuple> data) {
-		this(columns, data, null);
 	}
 	
-	/**
-	 * Gets the filter.
-	 *
-	 * @return the filter for this scan if any
-	 */
-	public Condition getFilter() {
-		return this.filter;
+	@Override
+	public TupleIterator[] getChildren() {
+		return new TupleIterator[]{};
+	}
+
+	@Override
+	public TupleIterator getChild(int childIndex) {
+		return null;
 	}
 
 	/**
@@ -77,9 +59,6 @@ public class MemoryScan extends TupleIterator {
 	public String toString() {
 		StringBuilder result = new StringBuilder();
 		result.append(this.getClass().getSimpleName());
-		if (this.filter != null) {
-			result.append("[#").append(filter).append(']');
-		}
 		return result.toString();
 	}
 
@@ -90,23 +69,10 @@ public class MemoryScan extends TupleIterator {
 	 */
 	@Override
 	public void open() {
-		Preconditions.checkState(this.open == null);
+		Assert.assertTrue(this.open == null);
 		this.open = true;
 		this.tupleIterator = this.data.iterator();
 		this.nextTuple();
-	}
-
-	/**
-	 * Moves to the next valid tuple to return.
-	 */
-	private void nextTuple() {
-		while (this.tupleIterator.hasNext()) {
-			this.nextTuple = this.tupleIterator.next();
-			if (this.filter == null || RuntimeUtilities.isSatisfied(this.filter, this.nextTuple)) {
-				return;
-			}
-		}
-		this.nextTuple = null;
 	}
 	
 	/**
@@ -116,7 +82,7 @@ public class MemoryScan extends TupleIterator {
 	 */
 	@Override
 	public void close() {
-		Preconditions.checkState(this.open != null && this.open);
+		Assert.assertTrue(this.open != null && this.open);
 		super.close();
 	}
 
@@ -127,10 +93,34 @@ public class MemoryScan extends TupleIterator {
 	 */
 	@Override
 	public void reset() {
-		Preconditions.checkState(this.open != null && this.open);
-		Preconditions.checkState(!this.interrupted);
+		Assert.assertTrue(this.open != null && this.open);
+		Assert.assertTrue(!this.interrupted);
 		this.tupleIterator = this.data.iterator();
 		this.nextTuple();
+	}
+	
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#interrupt()
+	 */
+	@Override
+	public void interrupt() {
+		Assert.assertTrue(this.open != null && this.open);
+		Assert.assertTrue(!this.interrupted);
+		this.interrupted = true;
+	}
+	
+	/**
+	 * Checks for next.
+	 *
+	 * @return boolean
+	 * @see java.util.Iterator#hasNext()
+	 */
+	@Override
+	public boolean hasNext() {
+		Assert.assertTrue(this.open != null && this.open);
+		return !this.interrupted && this.nextTuple != null;
 	}
 
 	/**
@@ -140,8 +130,8 @@ public class MemoryScan extends TupleIterator {
 	 */
 	@Override
 	public Tuple next() {
-		Preconditions.checkState(this.open != null && this.open);
-		Preconditions.checkState(!this.interrupted);
+		Assert.assertTrue(this.open != null && this.open);
+		Assert.assertTrue(!this.interrupted);
 		if (this.eventBus != null) {
 			this.eventBus.post(this);
 		}
@@ -152,31 +142,18 @@ public class MemoryScan extends TupleIterator {
 		this.nextTuple();
 		return result;
 	}
-
+	
 	/**
-	 * Checks for next.
-	 *
-	 * @return boolean
-	 * @see java.util.Iterator#hasNext()
+	 * Moves to the next valid tuple to return.
 	 */
-	@Override
-	public boolean hasNext() {
-		Preconditions.checkState(this.open != null && this.open);
-		return !this.interrupted && this.nextTuple != null;
+	private void nextTuple() {
+		while (this.tupleIterator.hasNext()) {
+			this.nextTuple = this.tupleIterator.next();
+			return;
+		}
+		this.nextTuple = null;
 	}
-
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#interrupt()
-	 */
-	@Override
-	public void interrupt() {
-		Preconditions.checkState(this.open != null && this.open);
-		Preconditions.checkState(!this.interrupted);
-		this.interrupted = true;
-	}
-
+	
 	/**
 	 * Bind.
 	 *
@@ -184,9 +161,9 @@ public class MemoryScan extends TupleIterator {
 	 */
 	@Override
 	public void bind(Tuple t) {
-		Preconditions.checkState(this.open != null && this.open);
-		Preconditions.checkState(!this.interrupted);
-		Preconditions.checkArgument(t.size() == 0);
+		Assert.assertTrue(this.open != null && this.open);
+		Assert.assertTrue(!this.interrupted);
+		Assert.assertTrue(t.size() == 0);
 		// Important: this iterator MUST be reiterated from scratch
 		this.reset(); 
 	}

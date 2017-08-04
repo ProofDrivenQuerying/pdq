@@ -18,7 +18,6 @@ import uk.ac.ox.cs.pdq.runtime.RuntimeParameters.Semantics;
 import uk.ac.ox.cs.pdq.runtime.TimeoutException;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.Distinct;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator;
-import uk.ac.ox.cs.pdq.runtime.util.RuntimeUtilities;
 import uk.ac.ox.cs.pdq.runtime.util.TupleOutputLimitEnforcer;
 
 
@@ -124,7 +123,7 @@ public class PipelinedPlanExecutor implements PlanExecutor {
 		// Non-boolean query
 		try (TupleIterator phyOp = PlanTranslator.translate(logOp)) {
 			TupleIterator top = (this.semantics == Semantics.SET ? new Distinct(phyOp) : phyOp);
-			this.universalTable = new Table(phyOp.getColumns());
+			this.universalTable = new Table(phyOp.getOutputAttributes());
 
 			ExecutorService execService = Executors.newFixedThreadPool(1);
 			execService.execute(new TimeoutChecker(this.timeout, top));
@@ -142,8 +141,8 @@ public class PipelinedPlanExecutor implements PlanExecutor {
 			if (top.isInterrupted()) {
 				throw new TimeoutException();
 			}
-			this.universalTable.setHeader(RuntimeUtilities.variablesToAttributes(
-					this.query.getFreeVariables(), this.universalTable.getType()));
+//			this.universalTable.setHeader(RuntimeUtilities.variablesToAttributes(
+//					this.query.getFreeVariables(), this.universalTable.getType()));
 		}
 		return this.universalTable;
 	}

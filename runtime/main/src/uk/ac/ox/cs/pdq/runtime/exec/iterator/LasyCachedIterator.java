@@ -4,7 +4,7 @@ import java.util.Deque;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import com.google.common.base.Preconditions;
+import org.junit.Assert;
 
 import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
 
@@ -22,7 +22,7 @@ public class LasyCachedIterator extends TupleIterator {
 	protected final Deque<Tuple> cache = new LinkedList<>();
 
 	/** Inner iterator. */
-	protected final TupleIterator inner;
+	protected final TupleIterator child;
 
 	/** True if the iterator has been reset. */
 	protected boolean isReset = false;
@@ -33,11 +33,22 @@ public class LasyCachedIterator extends TupleIterator {
 	/**
 	 * Instantiates a new join.
 	 * 
-	 * @param inner TupleIterator
+	 * @param child TupleIterator
 	 */
-	public LasyCachedIterator(TupleIterator inner) {
-		super(inner.getInputColumns(), inner.getColumns());
-		this.inner = inner;
+	public LasyCachedIterator(TupleIterator child) {
+		super(child.getInputAttributes(), child.getOutputAttributes());
+		this.child = child;
+	}
+	
+	@Override
+	public TupleIterator[] getChildren() {
+		return new TupleIterator[]{this.child};
+	}
+
+	@Override
+	public TupleIterator getChild(int childIndex) {
+		Assert.assertTrue(childIndex == 0);
+		return this.child;
 	}
 
 	/**
@@ -48,7 +59,7 @@ public class LasyCachedIterator extends TupleIterator {
 	public String toString() {
 		StringBuilder result = new StringBuilder();
 		result.append(this.getClass().getSimpleName());
-		result.append('(').append(this.inner).append(')');
+		result.append('(').append(this.child).append(')');
 		return result.toString();
 	}
 
@@ -58,7 +69,7 @@ public class LasyCachedIterator extends TupleIterator {
 	 */
 	@Override
 	public void open() {
-		Preconditions.checkState(this.open == null);
+		Assert.assertTrue(this.open == null);
 		this.isReset = false;
 	}
 
@@ -69,10 +80,22 @@ public class LasyCachedIterator extends TupleIterator {
 	 */
 	@Override
 	public void reset() {
-		Preconditions.checkState(this.open != null && this.open);
-		Preconditions.checkState(!this.interrupted);
+		Assert.assertTrue(this.open != null && this.open);
+		Assert.assertTrue(!this.interrupted);
 		this.isReset = true;
 		this.iterator = this.cache.iterator();
+	}
+	
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#interrupt()
+	 */
+	@Override
+	public void interrupt() {
+		Assert.assertTrue(this.open != null && this.open);
+		Assert.assertTrue(!this.interrupted);
+		this.interrupted = true;
 	}
 
 	/**
@@ -82,14 +105,14 @@ public class LasyCachedIterator extends TupleIterator {
 	 */
 	@Override
 	public boolean hasNext() {
-		Preconditions.checkState(this.open != null && this.open);
+		Assert.assertTrue(this.open != null && this.open);
 		if (this.interrupted) {
 			return false;
 		}
 		if (this.isReset) {
 			return this.iterator.hasNext();
 		}
-		return this.inner.hasNext();
+		return this.child.hasNext();
 	}
 
 	/**
@@ -99,12 +122,12 @@ public class LasyCachedIterator extends TupleIterator {
 	 */
 	@Override
 	public Tuple next() {
-		Preconditions.checkState(this.open != null && this.open);
-		Preconditions.checkState(!this.interrupted);
+		Assert.assertTrue(this.open != null && this.open);
+		Assert.assertTrue(!this.interrupted);
 		if (this.isReset) {
 			return this.iterator.next();
 		}
-		Tuple result = this.inner.next();
+		Tuple result = this.child.next();
 		this.cache.add(result);
 		return result;
 	}
@@ -124,24 +147,12 @@ public class LasyCachedIterator extends TupleIterator {
 	/**
 	 * 
 	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#interrupt()
-	 */
-	@Override
-	public void interrupt() {
-		Preconditions.checkState(this.open != null && this.open);
-		Preconditions.checkState(!this.interrupted);
-		this.interrupted = true;
-	}
-
-	/**
-	 * 
-	 * {@inheritDoc}
 	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#bind(uk.ac.ox.cs.pdq.datasources.utility.Tuple)
 	 */
 	@Override
-	public void bind(Tuple t) {
-		Preconditions.checkState(this.open != null && this.open);
-		Preconditions.checkState(!this.interrupted);
-		this.inner.bind(t);
+	public void bind(Tuple tuple) {
+		Assert.assertTrue(this.open != null && this.open);
+		Assert.assertTrue(!this.interrupted);
+		this.child.bind(tuple);
 	}
 }

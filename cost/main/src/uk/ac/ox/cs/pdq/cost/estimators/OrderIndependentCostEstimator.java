@@ -14,7 +14,7 @@ import uk.ac.ox.cs.pdq.cost.Cost;
  * @author Efthymia Tsamoura
  * @param <P> the generic type
  */
-public interface SimpleCostEstimator extends CostEstimator {
+public interface OrderIndependentCostEstimator extends CostEstimator {
 	
 	/**
 	 * Cost.
@@ -29,5 +29,5 @@ public interface SimpleCostEstimator extends CostEstimator {
 	 *
 	 * @return SimpleCostEstimator<P>
 	 */
-	SimpleCostEstimator clone();
+	OrderIndependentCostEstimator clone();
 }

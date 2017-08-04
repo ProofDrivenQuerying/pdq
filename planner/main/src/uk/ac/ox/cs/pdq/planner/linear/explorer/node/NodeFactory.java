@@ -4,7 +4,7 @@ import java.util.Random;
 import java.util.Set;
 
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
-import uk.ac.ox.cs.pdq.cost.estimators.SimpleCostEstimator;
+import uk.ac.ox.cs.pdq.cost.estimators.OrderIndependentCostEstimator;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
@@ -55,7 +55,7 @@ public final class NodeFactory {
 	public SearchNode getInstance(AccessibleChaseInstance state) throws PlannerException {
 		Preconditions.checkNotNull(state);
 		LinearChaseConfiguration configuration = new LinearChaseConfiguration(state, this.random);
-		if (this.costEstimator instanceof SimpleCostEstimator) 
+		if (this.costEstimator instanceof OrderIndependentCostEstimator) 
 			return new SimpleNode(configuration);
 		else
 			return new BlackBoxNode(configuration);

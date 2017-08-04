@@ -2,7 +2,7 @@ package uk.ac.ox.cs.pdq.planner.dominance;
 
 import com.google.common.base.Preconditions;
 
-import uk.ac.ox.cs.pdq.cost.estimators.SimpleCostEstimator;
+import uk.ac.ox.cs.pdq.cost.estimators.OrderIndependentCostEstimator;
 import uk.ac.ox.cs.pdq.planner.dag.ApplyRule;
 import uk.ac.ox.cs.pdq.planner.reasoning.Configuration;
 
@@ -15,7 +15,7 @@ import uk.ac.ox.cs.pdq.planner.reasoning.Configuration;
 public class CostFactDominance implements Dominance{
 
 	/** The cost estimator. */
-	private final SimpleCostEstimator costEstimator;
+	private final OrderIndependentCostEstimator costEstimator;
 	
 	/** The fact dominance. */
 	private final FactDominance inputFactDominance;
@@ -28,7 +28,7 @@ public class CostFactDominance implements Dominance{
 	 * @param costEstimator the cost estimator
 	 * @param inputFactDominance FactDominance<DAGConfiguration<?>>
 	 */
-	public CostFactDominance(SimpleCostEstimator costEstimator, FactDominance inputFactDominance, boolean isStrict){
+	public CostFactDominance(OrderIndependentCostEstimator costEstimator, FactDominance inputFactDominance, boolean isStrict){
 		Preconditions.checkNotNull(inputFactDominance);
 		Preconditions.checkNotNull(costEstimator);
 		this.costEstimator = costEstimator;

@@ -14,7 +14,7 @@ import uk.ac.ox.cs.pdq.cost.estimators.LengthBasedCostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.NaiveCardinalityEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.PerInputCostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.TotalNumberOfOutputTuplesPerAccessCostEstimator;
-import uk.ac.ox.cs.pdq.cost.estimators.WhiteBoxCostEstimator;
+import uk.ac.ox.cs.pdq.cost.estimators.TextBookCostEstimator;
 import uk.ac.ox.cs.pdq.cost.statistics.Catalog;
 import uk.ac.ox.cs.pdq.cost.statistics.SimpleCatalog;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -85,7 +85,7 @@ public class CostEstimatorFactory {
 			default:
 				throw new IllegalArgumentException("Cardinality estimation " + costParams.getCardinalityEstimationType() + "  not yet supported.");
 			}
-			result = new WhiteBoxCostEstimator(new StatisticsCollector(collectStats, eventBus), card, catalog);
+			result = new TextBookCostEstimator(new StatisticsCollector(collectStats, eventBus), card, catalog);
 			break;
 		case BLACKBOX_DB:
 			throw new UnsupportedOperationException("BLACKBOX_DB cost estimator is not currently supported.");

@@ -3,12 +3,9 @@ package uk.ac.ox.cs.pdq.runtime.exec.iterator;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Iterator;
-import java.util.List;
 
-import uk.ac.ox.cs.pdq.algebra.Condition;
 import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
 import uk.ac.ox.cs.pdq.runtime.util.RuntimeUtilities;
-import uk.ac.ox.cs.pdq.util.Typed;
 
 
 // TODO: Auto-generated Javadoc
@@ -29,55 +26,13 @@ public class NestedLoopJoin extends Join {
 	protected boolean hasNext = true;
 
 	/**
-	 * Instantiates a new nested loop multi-join.
-	 * 
-	 * @param children
-	 *            the children
-	 */
-	public NestedLoopJoin(TupleIterator... children) {
-		this(computeNaturalJoinConditions(toList(children)),
-				inferInputColumns(toList(children)), toList(children));
-	}
-
-	/**
-	 * Instantiates a new nested loop multi-join.
-	 * 
-	 * @param predicate the join predicate
-	 * @param children the children
-	 */
-	public NestedLoopJoin(Condition predicate, TupleIterator... children) {
-		this(predicate, inferInputColumns(toList(children)), toList(children));
-	}
-
-	/**
-	 * Instantiates a new nested loop multi-join.
-	 * 
-	 * @param inputs List<Typed>
-	 * @param children the children
-	 */
-	public NestedLoopJoin(List<Typed> inputs, TupleIterator... children) {
-		this(computeNaturalJoinConditions(toList(children)), inputs, toList(children));
-	}
-
-	/**
-	 * Instantiates a new nested loop multi-join.
+	 * Constructor an unbound array of children.
 	 *
-	 * @param inputs List<Typed>
-	 * @param children            the children
+	 * @param left TupleIterator
+	 * @param right TupleIterator
 	 */
-	public NestedLoopJoin(List<Typed> inputs, List<TupleIterator> children) {
-		this(computeNaturalJoinConditions(children), inputs, children);
-	}
-
-	/**
-	 * Instantiates a new nested loop multi-join.
-	 * @param predicate the join predicate
-	 * @param inputs List<Typed>
-	 * @param children the children
-	 */
-	public NestedLoopJoin(Condition predicate, List<Typed> inputs, 
-			List<TupleIterator> children) {
-		super(predicate, inputs, children);
+	public NestedLoopJoin(TupleIterator child1, TupleIterator child2) {
+		super(child1, child2);
 	}
 
 	/**
@@ -111,36 +66,6 @@ public class NestedLoopJoin extends Join {
 	}
 
 	/**
-	 * Computes the next tuple in the cross product.
-	 * 
-	 * @param i
-	 *            the level at which to start the computation
-	 * @return true, if the tuple fragment at the given level could be completed.
-	 */
-	protected boolean nextInCrossProduct(int i) {
-		if (i < this.children.size()) {
-			TupleIterator child = this.children.get(i);
-			if (this.tupleStack.size() > i) {
-				if (this.nextInCrossProduct(i + 1)) {
-					return true;
-				}
-			}
-			while (child.hasNext()) {
-				this.tupleStack.push(child.next());
-				if (this.nextInCrossProduct(i + 1)) {
-					return true;
-				}
-			}
-			child.reset();
-			if (!this.tupleStack.isEmpty()) {
-				this.tupleStack.pop();
-			}
-			return false;
-		}
-		return true;
-	}
-
-	/**
 	 * Finds the next tuple to return. If new tuple can be obtain for this 
 	 * operator, the nextTuple attribute will be set to null.
 	 * 
@@ -163,6 +88,36 @@ public class NestedLoopJoin extends Join {
 				this.hasNext = false;
 				break;
 			}
-		} while (!RuntimeUtilities.isSatisfied(this.condition, this.nextTuple));
+		} while (!RuntimeUtilities.isSatisfied(this.joinConditions, this.nextTuple));
+	}
+	
+	/**
+	 * Computes the next tuple in the cross product.
+	 * 
+	 * @param i
+	 *            the level at which to start the computation
+	 * @return true, if the tuple fragment at the given level could be completed.
+	 */
+	protected boolean nextInCrossProduct(int i) {
+		if (i < this.children.length) {
+			TupleIterator child = this.children[i];
+			if (this.tupleStack.size() > i) {
+				if (this.nextInCrossProduct(i + 1)) {
+					return true;
+				}
+			}
+			while (child.hasNext()) {
+				this.tupleStack.push(child.next());
+				if (this.nextInCrossProduct(i + 1)) {
+					return true;
+				}
+			}
+			child.reset();
+			if (!this.tupleStack.isEmpty()) {
+				this.tupleStack.pop();
+			}
+			return false;
+		}
+		return true;
 	}
 }

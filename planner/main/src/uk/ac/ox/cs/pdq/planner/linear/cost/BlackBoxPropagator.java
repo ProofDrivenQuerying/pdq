@@ -9,7 +9,7 @@ import org.jgrapht.graph.DefaultEdge;
 
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
-import uk.ac.ox.cs.pdq.cost.estimators.BlackBoxCostEstimator;
+import uk.ac.ox.cs.pdq.cost.estimators.OrderDependentCostEstimator;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.BlackBoxNode;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode.NodeStatus;
 import uk.ac.ox.cs.pdq.planner.util.PlanTree;
@@ -40,7 +40,7 @@ public class BlackBoxPropagator extends CostPropagator<BlackBoxNode> {
 	 *
 	 * @param estimator BlackBoxCostEstimator<LeftDeepPlan,?>
 	 */
-	public BlackBoxPropagator(BlackBoxCostEstimator estimator) {
+	public BlackBoxPropagator(OrderDependentCostEstimator estimator) {
 		super(estimator);
 	}
 

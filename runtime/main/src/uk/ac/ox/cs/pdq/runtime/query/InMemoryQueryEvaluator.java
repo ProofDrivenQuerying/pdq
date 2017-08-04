@@ -2,6 +2,7 @@ package uk.ac.ox.cs.pdq.runtime.query;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -199,7 +200,7 @@ public class InMemoryQueryEvaluator implements QueryEvaluator {
 			Map<Atom, TupleIterator> scans,
 			List<Set<Atom>> clusters) {
 		TupleIterator outer = null;
-		Iterator<Set<Atom>> i = RuntimeUtilities.connectedComponents(clusters).iterator();
+		Iterator<Set<Atom>> i = connectedComponents(clusters).iterator();
 		if (i.hasNext()) {
 			do {
 				TupleIterator inner = null;
@@ -224,7 +225,7 @@ public class InMemoryQueryEvaluator implements QueryEvaluator {
 		}
 		return outer;
 	}
-	
+		
 	/**
 	 * Make natural join predicate.
 	 *
@@ -235,15 +236,42 @@ public class InMemoryQueryEvaluator implements QueryEvaluator {
 	private ConjunctiveCondition computeNaturalJoinCondition(TupleIterator left, TupleIterator right) {
 		Collection<AttributeEqualityCondition> result = new ArrayList<>();
 		int i = 0;
-		for (Typed l: left.getColumns()) {
+		for (Typed l: left.getOutputAttributes()) {
 			int j = 0;
-			for (Typed r: right.getColumns()) {
+			for (Typed r: right.getOutputAttributes()) {
 				if (l.equals(r)) 
-					result.add(AttributeEqualityCondition.create(i, left.getColumns().size() + j));
+					result.add(AttributeEqualityCondition.create(i, left.getOutputAttributes().length + j));
 				j++;
 			}
 			i++;
 		}
 		return ConjunctiveCondition.create(result.toArray(new SimpleCondition[result.size()]));
+	}
+	
+	/**
+	 * Connected components.
+	 *
+	 * @param clusters the clusters
+	 * @return 		a partition of the given clusters, such that all predicates in the
+	 *      each component are connected, and no predicates part of distinct
+	 *      component are connected.
+	 */
+	private List<Set<Atom>> connectedComponents(List<Set<Atom>> clusters) {
+		List<Set<Atom>> result = new LinkedList<>();
+		if (clusters.isEmpty()) 
+			return result;
+		Set<Atom> first = clusters.get(0);
+		if (clusters.size() > 1) {
+			List<Set<Atom>> rest = connectedComponents(clusters.subList(1, clusters.size()));
+			for (Set<Atom> s : rest) {
+				if (!Collections.disjoint(first, s)) {
+					first.addAll(s);
+				} else {
+					result.add(s);
+				}
+			}
+		}
+		result.add(first);
+		return result;
 	}
 }

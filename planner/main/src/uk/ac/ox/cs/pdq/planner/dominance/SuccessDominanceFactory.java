@@ -3,7 +3,7 @@ package uk.ac.ox.cs.pdq.planner.dominance;
 import com.google.common.base.Preconditions;
 
 import uk.ac.ox.cs.pdq.cost.estimators.AccessCountCostEstimator;
-import uk.ac.ox.cs.pdq.cost.estimators.SimpleCostEstimator;
+import uk.ac.ox.cs.pdq.cost.estimators.OrderIndependentCostEstimator;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.SuccessDominanceTypes;
 
 // TODO: Auto-generated Javadoc
@@ -19,7 +19,7 @@ public class SuccessDominanceFactory {
 
 	private final SuccessDominanceTypes type;
 	/** The estimator. */
-	private final SimpleCostEstimator estimator = new AccessCountCostEstimator(null);
+	private final OrderIndependentCostEstimator estimator = new AccessCountCostEstimator(null);
 
 	/**
 	 * Constructor for DominanceFactory.

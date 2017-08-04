@@ -22,7 +22,7 @@ import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
  *
  * @author Efthymia Tsamoura
  */
-public class PerInputCostEstimator implements SimpleCostEstimator{
+public class PerInputCostEstimator implements OrderIndependentCostEstimator{
 
 	/** The stats. */
 	protected final StatisticsCollector stats;
@@ -44,7 +44,7 @@ public class PerInputCostEstimator implements SimpleCostEstimator{
 	 * Clone.
 	 *
 	 * @return DefaultSimpleCostEstimator<P,S>
-	 * @see uk.ac.ox.cs.pdq.cost.estimators.SimpleCostEstimator#clone()
+	 * @see uk.ac.ox.cs.pdq.cost.estimators.OrderIndependentCostEstimator#clone()
 	 */
 	@Override
 	public PerInputCostEstimator clone() {

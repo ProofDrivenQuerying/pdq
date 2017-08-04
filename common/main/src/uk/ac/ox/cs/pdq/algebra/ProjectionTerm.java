@@ -24,9 +24,8 @@ public class ProjectionTerm extends RelationalTerm {
 		super(child.getInputAttributes(), child.getOutputAttributes());
 		Assert.assertNotNull(projections);
 		Assert.assertNotNull(child);
-		for(int outputAttributeIndex = 0; outputAttributeIndex < child.getNumberOfOutputAttributes(); ++outputAttributeIndex) 
-			Assert.assertTrue(Arrays.asList(projections).contains(child.getOutputAttributes()[outputAttributeIndex]));
-
+		for(int outputAttributeIndex = 0; outputAttributeIndex < projections.length; ++outputAttributeIndex) 
+			Assert.assertTrue(Arrays.asList(child.getOutputAttributes()).indexOf(projections[outputAttributeIndex]) >= 0);
 		this.projections = projections.clone();
 		this.child = child;
 	}

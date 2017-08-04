@@ -21,6 +21,10 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 
 public class AlgebraUtilities {
+	
+	public static boolean assertSelectionCondition(Condition selectionCondition, Attribute[] outputAttributes) {
+		return true;
+	}
 
 	protected static Integer[] computePositionsOfInputAttributes(RelationalTerm left, RelationalTerm right) {
 		List<Integer> result = new ArrayList<>();
@@ -46,7 +50,7 @@ public class AlgebraUtilities {
 		int totalCol = 0;
 		// Cluster patterns by variables
 		Set<Attribute> inChild = new LinkedHashSet<>();
-		for (RelationalTerm child : children) {
+		for (RelationalTerm child:children) {
 			inChild.clear();
 			for (int i = 0, l = child.getNumberOfOutputAttributes(); i < l; i++) {
 				Attribute col = child.getOutputAttributes()[i];

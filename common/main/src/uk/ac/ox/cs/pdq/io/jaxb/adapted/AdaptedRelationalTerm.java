@@ -94,7 +94,7 @@ public class AdaptedRelationalTerm implements Serializable {
 			children = ((RenameTerm) v).getChildren();
 			break;
 		case SelectionTerm:
-			predicate = ((SelectionTerm) v).getPredicate();
+			predicate = ((SelectionTerm) v).getSelectionCondition();
 			children = ((SelectionTerm) v).getChildren();
 			break;
 		default:

@@ -8,13 +8,13 @@ package uk.ac.ox.cs.pdq.cost.estimators;
  * @author Julien Leblay
  * @author Efthymia Tsamoura
  */
-public interface BlackBoxCostEstimator extends CostEstimator {
+public interface OrderDependentCostEstimator extends CostEstimator {
 
 	/**
 	 * Clone.
 	 *
 	 * @return BlackBoxCostEstimator<P>
 	 */
-	BlackBoxCostEstimator clone();
+	OrderDependentCostEstimator clone();
 	
 }

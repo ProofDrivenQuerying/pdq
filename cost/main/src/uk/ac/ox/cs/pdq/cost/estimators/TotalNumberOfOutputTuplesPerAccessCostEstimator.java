@@ -20,7 +20,7 @@ import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
  * @author Efthymia Tsamoura
  * @param <P> the generic type
  */
-public class TotalNumberOfOutputTuplesPerAccessCostEstimator implements SimpleCostEstimator{
+public class TotalNumberOfOutputTuplesPerAccessCostEstimator implements OrderIndependentCostEstimator{
 
 	/** The stats. */
 	protected final StatisticsCollector stats;

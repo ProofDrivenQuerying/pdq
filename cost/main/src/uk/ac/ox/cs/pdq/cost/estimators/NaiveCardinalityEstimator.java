@@ -271,10 +271,10 @@ public class NaiveCardinalityEstimator implements CardinalityEstimator {
 		Double inputCard = this.getParentInputCardinality(o);
 		cMetadata.setInputCardinality(inputCard);
 		this.estimateCardinality(child);
-		if(o.getPredicate() instanceof SimpleCondition) 
+		if(o.getSelectionCondition() instanceof SimpleCondition) 
 			return Math.max(1L, (cMetadata.getOutputCardinality() / Math.pow(SELECTIVITY_REDUCTION,1)));
-		else if(o.getPredicate() instanceof ConjunctiveCondition) 
-			return Math.max(1L, (cMetadata.getOutputCardinality() / Math.pow(SELECTIVITY_REDUCTION, ((ConjunctiveCondition) o.getPredicate()).getNumberOfConjuncts())));
+		else if(o.getSelectionCondition() instanceof ConjunctiveCondition) 
+			return Math.max(1L, (cMetadata.getOutputCardinality() / Math.pow(SELECTIVITY_REDUCTION, ((ConjunctiveCondition) o.getSelectionCondition()).getNumberOfConjuncts())));
 		else 
 			throw new IllegalStateException("Unknown condition type");	
 	}

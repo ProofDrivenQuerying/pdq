@@ -19,7 +19,8 @@ public class JoinTerm extends RelationalTerm {
 	protected String toString = null;
 	
 	private JoinTerm(RelationalTerm child1, RelationalTerm child2) {
-		super(AlgebraUtilities.computeInputAttributes(child1, child2), AlgebraUtilities.computeOutputAttributes(child1, child2));
+		super(AlgebraUtilities.computeInputAttributes(child1, child2), 
+				AlgebraUtilities.computeOutputAttributes(child1, child2));
 		Assert.assertNotNull(child1);
 		Assert.assertNotNull(child2);
 		this.children[0] = child1;

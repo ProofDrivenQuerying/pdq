@@ -1,15 +1,12 @@
 package uk.ac.ox.cs.pdq.runtime.exec.iterator;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.junit.Assert;
+
+import com.google.common.eventbus.EventBus;
 
 import uk.ac.ox.cs.pdq.datasources.ResetableIterator;
 import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
-import uk.ac.ox.cs.pdq.datasources.utility.TupleType;
-import uk.ac.ox.cs.pdq.util.Typed;
-
-import com.google.common.base.Preconditions;
-import com.google.common.eventbus.EventBus;
+import uk.ac.ox.cs.pdq.db.Attribute;
 
 
 // TODO: Auto-generated Javadoc
@@ -18,19 +15,11 @@ import com.google.common.eventbus.EventBus;
  * 
  * @author Julien Leblay
  */
-public abstract class TupleIterator  implements AutoCloseable, ResetableIterator<Tuple> {
-
-	/** The columns. */
-	protected final List<Typed> columns;
+public abstract class TupleIterator  implements AutoCloseable, ResetableIterator<Tuple> {		
 	
-	/** The iterator's type. */
-	protected final TupleType outputType;
+	protected final Attribute[] inputAttributes;
 	
-	/** The iterator's input columns. */
-	protected final List<Typed> inputColumns;
-	
-	/** The iterator's input type. */
-	protected final TupleType inputType;
+	protected final Attribute[] outputAttributes;
 	
 	/**  Tells whether the operator was voluntarily interrupted. */
 	protected boolean interrupted = false;
@@ -45,77 +34,16 @@ public abstract class TupleIterator  implements AutoCloseable, ResetableIterator
 	/**
 	 * Instantiates a new operator.
 	 * 
-	 * @param inputColumns List<Typed>
-	 * @param outputColumns List<Typed>
-	 */
-	public TupleIterator(List<Typed> inputColumns, List<Typed> outputColumns) {
-		this(TupleType.DefaultFactory.createFromTyped(inputColumns), 
-				inputColumns, 
-				TupleType.DefaultFactory.createFromTyped(outputColumns),
-				outputColumns);
-	}
-
-	/**
-	 * Instantiates a new operator.
-	 * 
 	 * @param inputType TupleType
 	 * @param inputColumns List<Typed>
-	 * @param outputType TupleType
+	 * @param outputAttributes TupleType
 	 * @param outputColumns List<Typed>
 	 */
-	public TupleIterator(TupleType inputType, List<Typed> inputColumns, TupleType outputType, List<Typed> outputColumns) {
-		Preconditions.checkArgument(inputType != null);
-		Preconditions.checkArgument(inputColumns != null);
-		Preconditions.checkArgument(outputType != null);
-		Preconditions.checkArgument(outputColumns != null);
-		this.outputType = outputType;
-		this.columns = outputColumns;
-		this.inputColumns = inputColumns;
-		this.inputType = inputType;
-	}
-
-	/**
-	 * Output columns.
-	 *
-	 * @param i the i
-	 * @return the list
-	 */
-	protected static List<Typed> outputColumns(TupleIterator i) {
-		Preconditions.checkArgument(i != null);
-		return i.getColumns();
-	}
-
-	/**
-	 * Input columns.
-	 *
-	 * @param i the i
-	 * @return the list
-	 */
-	protected static List<Typed> inputColumns(TupleIterator i) {
-		Preconditions.checkArgument(i != null);
-		return i.getInputColumns();
-	}
-
-	/**
-	 * Output type.
-	 *
-	 * @param i the i
-	 * @return the tuple type
-	 */
-	protected static TupleType outputType(TupleIterator i) {
-		Preconditions.checkArgument(i != null);
-		return i.getType();
-	}
-
-	/**
-	 * Input type.
-	 *
-	 * @param i the i
-	 * @return the tuple type
-	 */
-	protected static TupleType inputType(TupleIterator i) {
-		Preconditions.checkArgument(i != null);
-		return i.getType();
+	public TupleIterator(Attribute[] inputAttributes, Attribute[] outputAttributes) {
+		Assert.assertNotNull(inputAttributes != null);
+		Assert.assertNotNull(outputAttributes != null);
+		this.inputAttributes = inputAttributes;
+		this.outputAttributes = outputAttributes;
 	}
 
 	/**
@@ -123,52 +51,49 @@ public abstract class TupleIterator  implements AutoCloseable, ResetableIterator
 	 * 
 	 * @return the input type
 	 */
-	public TupleType getInputType() {
-		return this.inputType;
-	}
-
-	/**
-	 * Gets the input terms.
-	 * 
-	 * @return the input terms
-	 */
-	public List<Typed> getInputColumns() {
-		return this.inputColumns;
+	public Attribute[] getInputAttributes() {
+		return this.inputAttributes.clone();
 	}
 	
 	/**
-	 * Bind.
+	 * Gets the input tuple type.
+	 * 
+	 * @return the input type
+	 */
+	public Attribute[] getOutputAttributes() {
+		return this.outputAttributes.clone();
+	}
+	
+	public Attribute getOutputAttribute(int index) {
+		return this.outputAttributes[index];
+	}
+	
+	public Attribute getInputAttribute(int index) {
+		return this.inputAttributes[index];
+	}
+	
+	public Integer getNumberOfOutputAttributes() {
+		return this.outputAttributes.length;
+	}
+	
+	public Integer getNumberOfInputAttributes() {
+		return this.inputAttributes.length;
+	}
+	
+	public abstract TupleIterator[] getChildren();
+	
+	public abstract TupleIterator getChild(int childIndex);
+		
+	/**
+	 * Gets the columns display.
 	 *
-	 * @param t Tuple
+	 * @return a list of human readable column headers.
 	 */
-	public abstract void bind(Tuple t);
-	
-	/**
-	 * Gets the column at index i.
-	 * 
-	 * @param i the index of the column to return.
-	 * @return the column at index i.
-	 */
-	public Typed getColumn(int i) {
-		return this.columns.get(i);
-	}
-
-	/**
-	 * Gets the columns.
-	 * 
-	 * @return the columns
-	 */
-	public List<Typed> getColumns() {
-		return this.columns;
-	}
-
-	/**
-	 * Gets the tuple type.
-	 * 
-	 * @return the type
-	 */
-	public TupleType getType() {
-		return this.outputType;
+	public String[] getColumnsDisplay() {
+		String[] result = new String[this.outputAttributes.length];
+		for(int index = 0; index < this.outputAttributes.length; ++index)
+			result[index] = this.outputAttributes[index].getType().toString();
+		return result;
 	}
 	
 	/**
@@ -189,26 +114,13 @@ public abstract class TupleIterator  implements AutoCloseable, ResetableIterator
 	}
 	
 	/**
-	 * Gets the columns display.
-	 *
-	 * @return a list of human readable column headers.
-	 */
-	public List<String> getColumnsDisplay() {
-		List<String> result = new ArrayList<>();
-		for (Typed t: this.getColumns()) {
-			result.add(t.toString());
-		}
-		return result;
-	}
-	
-	/**
 	 * Closes the operator. This method throws an exception if called when 
 	 * already closed. 
 	 * @see java.lang.AutoCloseable#close()
 	 */
 	@Override
 	public void close() {
-		Preconditions.checkState(this.open != null && this.open);
+		Assert.assertTrue(this.open != null && this.open);
 		this.open = false;
 	}
 	
@@ -217,4 +129,11 @@ public abstract class TupleIterator  implements AutoCloseable, ResetableIterator
 	 * already closed.
 	 */
 	public abstract void interrupt();
+	
+	/**
+	 * Bind.
+	 *
+	 * @param tuple Tuple
+	 */
+	public abstract void bind(Tuple tuple);
 }

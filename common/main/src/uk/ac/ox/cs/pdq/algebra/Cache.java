@@ -194,13 +194,13 @@ public class Cache {
 
 		selectionTerm = new InterningManager<SelectionTerm>() {
 			protected boolean equal(SelectionTerm object1, SelectionTerm object2) {
-				if (!object1.child.equals(object2.child) || !object1.predicate.equals(object2.predicate))
+				if (!object1.child.equals(object2.child) || !object1.selectionCondition.equals(object2.selectionCondition))
 					return false;
 				return true;
 			}
 
 			protected int getHashCode(SelectionTerm object) {
-				int hashCode = object.child.hashCode() + object.predicate.hashCode() * 7;
+				int hashCode = object.child.hashCode() + object.selectionCondition.hashCode() * 7;
 				return hashCode;
 			}
 		};

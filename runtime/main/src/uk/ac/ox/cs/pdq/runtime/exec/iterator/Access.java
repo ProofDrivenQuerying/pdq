@@ -1,16 +1,12 @@
 package uk.ac.ox.cs.pdq.runtime.exec.iterator;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.Set;
 
-import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+import org.junit.Assert;
 
 import uk.ac.ox.cs.pdq.datasources.RelationAccessWrapper;
 import uk.ac.ox.cs.pdq.datasources.ResetableIterator;
@@ -20,7 +16,6 @@ import uk.ac.ox.cs.pdq.datasources.utility.TupleType;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.runtime.util.RuntimeUtilities;
-import uk.ac.ox.cs.pdq.util.Typed;
 
 
 // TODO: Auto-generated Javadoc
@@ -31,18 +26,17 @@ import uk.ac.ox.cs.pdq.util.Typed;
  */
 public class Access extends TupleIterator {
 
-
 	/** The input table of the access. */
-	private final RelationAccessWrapper relation;
+	protected final RelationAccessWrapper relation;
 
 	/** The access method to use. */
-	private final AccessMethod accessMethod;
+	protected final AccessMethod accessMethod;
 
 	/** The complete input type, including statically and dynamically bound. */
-	private final TupleType inputBindingType;
+	protected final TupleType inputTupleType;
 
 	/** The map some of the inputs to static values. */
-	private final Map<Integer, TypedConstant> staticInputs;
+	protected final Map<Integer, TypedConstant> inputConstants;
 
 	/** Iterator over the output tuples. */
 	protected Map<Tuple, ResetableIterator<Tuple>> outputs = null;
@@ -63,7 +57,7 @@ public class Access extends TupleIterator {
 	 * @param accessMethod AccessMethod
 	 */
 	public Access(RelationAccessWrapper relation, AccessMethod accessMethod) {
-		this(relation, accessMethod, ImmutableMap.<Integer, TypedConstant>of());
+		this(relation, accessMethod, new HashMap<Integer, TypedConstant>());
 	}
 
 	/**
@@ -71,228 +65,36 @@ public class Access extends TupleIterator {
 	 * 
 	 * @param relation RelationAccessWrapper
 	 * @param accessMethod AccessMethod
-	 * @param staticInputs maps of the inputs in the access method that are 
+	 * @param inputConstants maps of the inputs in the access method that are 
 	 * statically provided (indices correspond to original attributes positions
 	 * in the relation, regardless of how input positions are ordered.)
 	 */
-	public Access(RelationAccessWrapper relation, AccessMethod accessMethod, Map<Integer, TypedConstant> staticInputs) {
-		super(inferInput(relation, accessMethod, keySet(staticInputs)),
-				Lists.<Typed>newArrayList(relation.getAttributes()));
-		Preconditions.checkArgument(accessMethod != null);
-		Preconditions.checkArgument(relation.getAccessMethod(accessMethod.getName()) != null);
+	public Access(RelationAccessWrapper relation, AccessMethod accessMethod, Map<Integer, TypedConstant> inputConstants) {
+		super(RuntimeUtilities.computeInputAttributes(relation, accessMethod, inputConstants), relation.getAttributes());
+		Assert.assertNotNull(relation);
+		Assert.assertNotNull(accessMethod);
+		for(Integer position:inputConstants.keySet()) {
+			Assert.assertTrue(position < relation.getArity());
+			Assert.assertTrue(Arrays.asList(accessMethod.getInputs()).contains(position));
+		}
 		this.relation = relation;
 		this.accessMethod = accessMethod;
-		this.staticInputs = staticInputs;
-		this.inputBindingType = TupleType.DefaultFactory.createFromTyped(RuntimeUtilities.getInputAttributes(relation, accessMethod));
-		Preconditions.checkArgument(isInputConstantsConsistentWithAccessMethod(relation, accessMethod, staticInputs));
-	}
-
-	/**
-	 * Checks if is static inputs consistent with access method.
-	 *
-	 * @param relation the relation
-	 * @param mt the mt
-	 * @param inputConstants the static inputs
-	 * @return the boolean
-	 */
-	private static Boolean isInputConstantsConsistentWithAccessMethod(
-			RelationAccessWrapper relation, AccessMethod mt, Map<Integer, TypedConstant> inputConstants) {
-		for (Integer i: mt.getZeroBasedInputPositions()) {
-			if (inputConstants.containsKey(i)) {
-				if (!relation.getAttributes()[i].getType().equals(inputConstants.get(i).getType())) {
-					return false;
-				}
-			}
-		}
-		List<Integer> remains = Lists.newArrayList(inputConstants.keySet());
-		remains.removeAll(Arrays.asList(mt.getZeroBasedInputPositions()));
-		return remains.isEmpty();
-	}
-
-	/**
-	 * Key set.
-	 *
-	 * @param m the m
-	 * @return the sets the
-	 */
-	private static Set<Integer> keySet(Map<Integer, ?> m) {
-		Preconditions.checkArgument(m != null);
-		return m.keySet();
+		this.inputConstants = new LinkedHashMap<>();
+		for(java.util.Map.Entry<Integer, TypedConstant> entry:inputConstants.entrySet()) 
+			this.inputConstants.put(entry.getKey(), entry.getValue().clone());
+		this.inputTupleType = TupleType.DefaultFactory.createFromTyped(RuntimeUtilities.getInputAttributes(relation, accessMethod));
 	}
 	
-	/**
-	 * Infer input.
-	 *
-	 * @param relation RelationAccessWrapper
-	 * @param accessMethod AccessMethod
-	 * @param staticInputs Set<Integer>
-	 * @return List<Typed>
-	 */
-	private static List<Typed> inferInput(RelationAccessWrapper relation, AccessMethod accessMethod, Set<Integer> staticInputs) {
-		Preconditions.checkArgument(relation != null);
-		Preconditions.checkArgument(accessMethod != null);
-		List<Typed> result = new ArrayList<>();
-		for (Integer i: accessMethod.getZeroBasedInputPositions()) {
-			if (!staticInputs.contains(i)) {
-				result.add(relation.getAttributes()[i]);
-			}
-		}
-		return result;
-	}
-
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
-	public String toString() {
-		StringBuilder result = new StringBuilder();
-		result.append(this.getClass().getSimpleName());
-		result.append('[').append(this.relation.getName()).append('/');
-		result.append(this.accessMethod).append(']');
-		return result.toString();
+	public TupleIterator[] getChildren() {
+		return new TupleIterator[]{};
 	}
 
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.datasources.ResetableIterator#open()
-	 */
 	@Override
-	public void open() {
-		Preconditions.checkState(this.open == null);
-		this.outputs = Maps.newLinkedHashMap();
-		this.open = true;
-		// If there is no dynamic input, bind the empty tuple once and for all
-		if (this.inputType.size() == 0) {
-			bind(Tuple.EmptyTuple);
-		}
+	public TupleIterator getChild(int childIndex) {
+		return null;
 	}
-
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.datasources.ResetableIterator#reset()
-	 */
-	@Override
-	public void reset() {
-		Preconditions.checkState(this.open != null && this.open);
-		Preconditions.checkState(!this.interrupted);
-		this.iterator.reset();
-		this.nextTuple();
-	}
-
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see java.util.Iterator#hasNext()
-	 */
-	@Override
-	public boolean hasNext() {
-		Preconditions.checkState(this.open != null && this.open);
-		if (this.interrupted) {
-			return false;
-		}
-		if (this.nextTuple != null) {
-			return true;
-		}
-		this.nextTuple();
-		return this.nextTuple != null;
-	}
-
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see java.util.Iterator#next()
-	 */
-	@Override
-	public Tuple next() {
-		Preconditions.checkState(this.open != null && this.open);
-		Preconditions.checkState(!this.interrupted);
-		Preconditions.checkState(this.lastInput != null);
-		if (this.eventBus != null) {
-			this.eventBus.post(this);
-		}
-		Tuple result = this.nextTuple;
-		this.nextTuple = null;
-		if (!this.hasNext() && result == null) {
-			throw new NoSuchElementException("End of operator reached.");
-		}
-		return result;
-	}
-
-	/**
-	 * Next tuple.
-	 */
-	public void nextTuple() {
-		this.nextTuple = null;
-		if (this.interrupted) {
-			return;
-		}
-		if (this.iterator == null) {
-			// If iterator has not been set at this stage, it implies all 
-			// inputs this access are statically defined.
-			// Preconditions.checkState(this.inputType.size() == 0);
-			Tuple staticInput = this.makeInput(Tuple.EmptyTuple);
-			Table inputs = new Table(RuntimeUtilities.getInputAttributes(this.relation, this.accessMethod));
-			inputs.appendRow(staticInput);
-			this.iterator = this.relation.iterator(RuntimeUtilities.getInputAttributes(this.relation, this.accessMethod), inputs.iterator());
-			this.iterator.open();
-			this.outputs.put(staticInput, this.iterator);
-		}
-		if (this.iterator.hasNext()) {
-			this.nextTuple = this.iterator.next();
-		}
-	}
-
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#bind(uk.ac.ox.cs.pdq.datasources.utility.Tuple)
-	 */
-	@Override
-	public void bind(Tuple input) {
-		Preconditions.checkState(this.open != null && this.open);
-		Preconditions.checkState(!this.interrupted);
-		Preconditions.checkArgument(input != null);
-		Preconditions.checkArgument(input.getType().equals(this.inputType));
-		Tuple combinedInputs = this.makeInput(input);
-		this.iterator = this.outputs.get(combinedInputs);
-		if (this.iterator == null) {
-			Table inputs = new Table(RuntimeUtilities.getInputAttributes(this.relation, this.accessMethod));
-			inputs.appendRow(combinedInputs);
-			this.iterator = this.relation.iterator(RuntimeUtilities.getInputAttributes(this.relation, this.accessMethod), inputs.iterator());
-			this.iterator.open();
-			this.outputs.put(combinedInputs, this.iterator);
-		} else {
-			this.iterator.reset();
-		}
-		this.nextTuple();
-		this.lastInput = input;
-	}
-
-	/**
-	 * Make input.
-	 *
-	 * @param dynamicInput the dynamic input
-	 * @return an tuple obtained by mixing input from dynamicInput with inputs
-	 * defined statically for this access.
-	 */
-	private Tuple makeInput(Tuple dynamicInput) {
-		Object[] result = new Object[this.inputBindingType.size()];
-		int j = 0, k = 0;
-		for (int i : this.accessMethod.getZeroBasedInputPositions()) {
-			TypedConstant staticInput = this.staticInputs.get(i);
-			if (staticInput != null) {
-				result[k++] = staticInput.getValue();
-			} else {
-				result[k++] = dynamicInput.getValue(j++);
-			}
-		}
-		return this.inputBindingType.createTuple(result);
-	}
-
+	
 	/**
 	 * Gets the relation.
 	 *
@@ -316,10 +118,40 @@ public class Access extends TupleIterator {
 	 *
 	 * @return the static inputs
 	 */
-	public Map<Integer, TypedConstant> getStaticInputs() {
-		return this.staticInputs;
+	public Map<Integer, TypedConstant> getInputConstants() {
+		return this.inputConstants;
 	}
 
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder result = new StringBuilder();
+		result.append(this.getClass().getSimpleName());
+		result.append('[').append(this.relation.getName()).append('/');
+		result.append(this.accessMethod).append(']');
+		return result.toString();
+	}
+
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.datasources.ResetableIterator#open()
+	 */
+	@Override
+	public void open() {
+		Assert.assertTrue(this.open == null);
+		this.outputs = new LinkedHashMap<>();
+		this.open = true;
+		// If there is no dynamic input, bind the empty tuple once and for all
+		if (this.inputAttributes.length == 0) {
+			bind(Tuple.EmptyTuple);
+		}
+	}
+	
 	/**
 	 * Close.
 	 *
@@ -343,8 +175,131 @@ public class Access extends TupleIterator {
 	 */
 	@Override
 	public void interrupt() {
-		Preconditions.checkState(this.open != null && this.open);
-		Preconditions.checkState(!this.interrupted);
+		Assert.assertTrue(this.open != null && this.open);
+		Assert.assertTrue(!this.interrupted);
 		this.interrupted = true;
+	}
+
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.datasources.ResetableIterator#reset()
+	 */
+	@Override
+	public void reset() {
+		Assert.assertTrue(this.open != null && this.open);
+		Assert.assertTrue(!this.interrupted);
+		this.iterator.reset();
+		this.nextTuple();
+	}
+
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see java.util.Iterator#hasNext()
+	 */
+	@Override
+	public boolean hasNext() {
+		Assert.assertTrue(this.open != null && this.open);
+		if (this.interrupted) {
+			return false;
+		}
+		if (this.nextTuple != null) {
+			return true;
+		}
+		this.nextTuple();
+		return this.nextTuple != null;
+	}
+
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see java.util.Iterator#next()
+	 */
+	@Override
+	public Tuple next() {
+		Assert.assertTrue(this.open != null && this.open);
+		Assert.assertTrue(!this.interrupted);
+		Assert.assertTrue(this.lastInput != null);
+		if (this.eventBus != null) {
+			this.eventBus.post(this);
+		}
+		Tuple result = this.nextTuple;
+		this.nextTuple = null;
+		if (!this.hasNext() && result == null) {
+			throw new NoSuchElementException("End of operator reached.");
+		}
+		return result;
+	}
+
+	/**
+	 * Next tuple.
+	 */
+	public void nextTuple() {
+		this.nextTuple = null;
+		if (this.interrupted) {
+			return;
+		}
+		if (this.iterator == null) {
+			// If iterator has not been set at this stage, it implies all 
+			// inputs this access are statically defined.
+			// Assert.assertTrue(this.inputType.size() == 0);
+			Tuple staticInput = this.makeInput(Tuple.EmptyTuple);
+			Table inputs = new Table(RuntimeUtilities.getInputAttributes(this.relation, this.accessMethod));
+			inputs.appendRow(staticInput);
+			this.iterator = this.relation.iterator(RuntimeUtilities.getInputAttributes(this.relation, this.accessMethod), inputs.iterator());
+			this.iterator.open();
+			this.outputs.put(staticInput, this.iterator);
+		}
+		if (this.iterator.hasNext()) {
+			this.nextTuple = this.iterator.next();
+		}
+	}
+
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#bind(uk.ac.ox.cs.pdq.datasources.utility.Tuple)
+	 */
+	@Override
+	public void bind(Tuple tuple) {
+		Assert.assertTrue(this.open != null && this.open);
+		Assert.assertTrue(!this.interrupted);
+		Assert.assertTrue(tuple != null);
+		Assert.assertTrue(RuntimeUtilities.typeOfAttributesEqualsTupleType(tuple.getType(), this.inputAttributes));
+		Tuple combinedInputs = this.makeInput(tuple);
+		this.iterator = this.outputs.get(combinedInputs);
+		if (this.iterator == null) {
+			Table inputs = new Table(RuntimeUtilities.getInputAttributes(this.relation, this.accessMethod));
+			inputs.appendRow(combinedInputs);
+			this.iterator = this.relation.iterator(RuntimeUtilities.getInputAttributes(this.relation, this.accessMethod), inputs.iterator());
+			this.iterator.open();
+			this.outputs.put(combinedInputs, this.iterator);
+		} else {
+			this.iterator.reset();
+		}
+		this.nextTuple();
+		this.lastInput = tuple;
+	}
+	
+	/**
+	 * Make input.
+	 *
+	 * @param dynamicInput the dynamic input
+	 * @return an tuple obtained by mixing input from dynamicInput with inputs
+	 * defined statically for this access.
+	 */
+	private Tuple makeInput(Tuple dynamicInput) {
+		Object[] result = new Object[this.inputTupleType.size()];
+		int j = 0, k = 0;
+		for (int i : this.accessMethod.getZeroBasedInputPositions()) {
+			TypedConstant staticInput = this.inputConstants.get(i);
+			if (staticInput != null) {
+				result[k++] = staticInput.getValue();
+			} else {
+				result[k++] = dynamicInput.getValue(j++);
+			}
+		}
+		return this.inputTupleType.createTuple(result);
 	}
 }

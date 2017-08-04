@@ -1,15 +1,15 @@
 package uk.ac.ox.cs.pdq.runtime.exec.iterator;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.NoSuchElementException;
 
-import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
-import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.util.Typed;
+import org.junit.Assert;
 
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
+
+import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
+import uk.ac.ox.cs.pdq.datasources.utility.TupleType;
+import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.runtime.util.RuntimeUtilities;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -18,7 +18,12 @@ import com.google.common.collect.Lists;
  * 
  * @author Julien Leblay
  */
-public class IsEmpty extends UnaryIterator {
+public class IsEmpty extends TupleIterator {
+	
+	/**  The sole child of the operator. */
+	protected final TupleIterator child;
+	
+	protected final TupleType cachedChildTupleType;
 
 	/** The next tuple in the iterator. */
 	private Tuple nextTuple = null;
@@ -29,11 +34,67 @@ public class IsEmpty extends UnaryIterator {
 	 * @param child TupleIterator
 	 */
 	public IsEmpty(TupleIterator child) {
-		super(Lists.<Typed>newArrayList(
-				Attribute.create(Boolean.class, IsEmpty.class.getSimpleName())),
-				child);
+		super(child.getInputAttributes(), new Attribute[]{Attribute.create(Boolean.class, IsEmpty.class.getSimpleName())});
+		this.child = child;
+		this.cachedChildTupleType = TupleType.DefaultFactory.createFromTyped(this.inputAttributes);
+	}
+	
+	@Override
+	public TupleIterator[] getChildren() {
+		return new TupleIterator[]{this.child};
 	}
 
+	@Override
+	public TupleIterator getChild(int childIndex) {
+		Assert.assertTrue(childIndex == 0);
+		return this.child;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#getColumnsDisplay()
+	 */
+	@Override
+	public String[] getColumnsDisplay() {
+		return new String[]{"IS_EMPTY"};
+	}
+	
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.datasources.ResetableIterator#open()
+	 */
+	@Override
+	public void open() {
+		Assert.assertTrue(this.open == null || this.open);
+		this.child.open();
+		this.open = true;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.UnaryIterator#reset()
+	 */
+	@Override
+	public void reset() {
+		Assert.assertTrue(this.open != null && this.open);
+		Assert.assertTrue(!this.interrupted);
+		this.child.reset();
+		this.nextTuple = null;
+	}
+	
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#interrupt()
+	 */
+	@Override
+	public void interrupt() {
+		Assert.assertTrue(this.open != null && this.open);
+		this.interrupted = true;
+		this.child.interrupt();
+	}
+	
 	/**
 	 * {@inheritDoc}
 	 * @see java.util.Iterator#hasNext()
@@ -53,30 +114,22 @@ public class IsEmpty extends UnaryIterator {
 		Preconditions.checkState(this.open != null && this.open);
 		Preconditions.checkState(!this.interrupted);
 		if (this.nextTuple == null) {
-			this.nextTuple = this.getType().createTuple(!this.child.hasNext());
+			this.nextTuple = RuntimeUtilities.createTuple(new Object[]{!this.child.hasNext()}, this.outputAttributes);
 			return nextTuple;
 		}
 		throw new NoSuchElementException("End of operator reached.");
 	}
-
+	
 	/**
+	 * 
 	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.UnaryIterator#reset()
+	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#bind(uk.ac.ox.cs.pdq.datasources.utility.Tuple)
 	 */
 	@Override
-	public void reset() {
-		super.reset();
-		this.nextTuple = null;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#getColumnsDisplay()
-	 */
-	@Override
-	public List<String> getColumnsDisplay() {
-		List<String> result = new ArrayList<>();
-		result.add("IS_EMPTY");
-		return result;
+	public void bind(Tuple tuple) {
+		Assert.assertTrue(this.open != null && this.open);
+		Assert.assertTrue(tuple != null);
+		Assert.assertTrue(tuple.getType().equals(this.cachedChildTupleType));
+		this.child.bind(tuple);
 	}
 }

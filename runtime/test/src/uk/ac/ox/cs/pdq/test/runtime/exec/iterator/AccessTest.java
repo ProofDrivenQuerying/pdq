@@ -149,7 +149,7 @@ public class AccessTest {
 		this.iterator = new Access(relation, free);
 		Assert.assertEquals(relation, this.iterator.getRelation());
 		Assert.assertEquals(free, this.iterator.getAccessMethod());
-		Assert.assertEquals(new HashMap<>(), this.iterator.getStaticInputs());
+		Assert.assertEquals(new HashMap<>(), this.iterator.getInputConstants());
 	}
 	
 	/**
@@ -159,7 +159,7 @@ public class AccessTest {
 		this.iterator = new Access(relation, mt1);
 		Assert.assertEquals(relation, this.iterator.getRelation());
 		Assert.assertEquals(mt1, this.iterator.getAccessMethod());
-		Assert.assertEquals(new HashMap<>(), this.iterator.getStaticInputs());
+		Assert.assertEquals(new HashMap<>(), this.iterator.getInputConstants());
 	}
 	
 	/**
@@ -169,7 +169,7 @@ public class AccessTest {
 		this.iterator = new Access(relation, mt2);
 		Assert.assertEquals(relation, this.iterator.getRelation());
 		Assert.assertEquals(mt2, this.iterator.getAccessMethod());
-		Assert.assertEquals(new HashMap<>(), this.iterator.getStaticInputs());
+		Assert.assertEquals(new HashMap<>(), this.iterator.getInputConstants());
 	}
 	
 	/**
@@ -179,7 +179,7 @@ public class AccessTest {
 		this.iterator = new Access(relation, mt3);
 		Assert.assertEquals(relation, this.iterator.getRelation());
 		Assert.assertEquals(mt3, this.iterator.getAccessMethod());
-		Assert.assertEquals(new HashMap<>(), this.iterator.getStaticInputs());
+		Assert.assertEquals(new HashMap<>(), this.iterator.getInputConstants());
 	}
 	
 	/**
@@ -189,7 +189,7 @@ public class AccessTest {
 		this.iterator = new Access(relation, mt1, static1);
 		Assert.assertEquals(relation, this.iterator.getRelation());
 		Assert.assertEquals(mt1, this.iterator.getAccessMethod());
-		Assert.assertEquals(static1, this.iterator.getStaticInputs());
+		Assert.assertEquals(static1, this.iterator.getInputConstants());
 	}
 	
 	/**
@@ -200,7 +200,7 @@ public class AccessTest {
 		this.iterator = new Access(relation, mt1, static4);
 		Assert.assertEquals(relation, this.iterator.getRelation());
 		Assert.assertEquals(mt1, this.iterator.getAccessMethod());
-		Assert.assertEquals(static4, this.iterator.getStaticInputs());
+		Assert.assertEquals(static4, this.iterator.getInputConstants());
 	}
 	
 	/**
@@ -211,7 +211,7 @@ public class AccessTest {
 		this.iterator = new Access(relation, mt1, static5);
 		Assert.assertEquals(relation, this.iterator.getRelation());
 		Assert.assertEquals(mt1, this.iterator.getAccessMethod());
-		Assert.assertEquals(static5, this.iterator.getStaticInputs());
+		Assert.assertEquals(static5, this.iterator.getInputConstants());
 	}
 	
 	/**
@@ -221,7 +221,7 @@ public class AccessTest {
 		this.iterator = new Access(relation, mt2, static1);
 		Assert.assertEquals(relation, this.iterator.getRelation());
 		Assert.assertEquals(mt2, this.iterator.getAccessMethod());
-		Assert.assertEquals(static1, this.iterator.getStaticInputs());
+		Assert.assertEquals(static1, this.iterator.getInputConstants());
 	}
 	
 	/**
@@ -231,7 +231,7 @@ public class AccessTest {
 		this.iterator = new Access(relation, mt2, static2);
 		Assert.assertEquals(relation, this.iterator.getRelation());
 		Assert.assertEquals(mt2, this.iterator.getAccessMethod());
-		Assert.assertEquals(static2, this.iterator.getStaticInputs());
+		Assert.assertEquals(static2, this.iterator.getInputConstants());
 	}
 	
 	/**
@@ -241,7 +241,7 @@ public class AccessTest {
 		this.iterator = new Access(relation, mt3, static1);
 		Assert.assertEquals(relation, this.iterator.getRelation());
 		Assert.assertEquals(mt3, this.iterator.getAccessMethod());
-		Assert.assertEquals(static1, this.iterator.getStaticInputs());
+		Assert.assertEquals(static1, this.iterator.getInputConstants());
 	}
 	
 	/**
@@ -251,7 +251,7 @@ public class AccessTest {
 		this.iterator = new Access(relation, mt3, static3);
 		Assert.assertEquals(relation, this.iterator.getRelation());
 		Assert.assertEquals(mt3, this.iterator.getAccessMethod());
-		Assert.assertEquals(static3, this.iterator.getStaticInputs());
+		Assert.assertEquals(static3, this.iterator.getInputConstants());
 	}
 	
 	/**

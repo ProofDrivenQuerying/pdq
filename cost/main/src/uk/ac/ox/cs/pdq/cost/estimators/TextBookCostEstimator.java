@@ -34,7 +34,7 @@ import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
  * @author Julien Leblay
  * @param <P> the generic type
  */
-public class WhiteBoxCostEstimator implements BlackBoxCostEstimator {
+public class TextBookCostEstimator implements OrderDependentCostEstimator {
 
 	/** The stats. */
 	protected final StatisticsCollector stats;
@@ -50,20 +50,20 @@ public class WhiteBoxCostEstimator implements BlackBoxCostEstimator {
 	 * @param stats the stats
 	 * @param ce CardinalityEstimator
 	 */
-	public WhiteBoxCostEstimator(StatisticsCollector stats, CardinalityEstimator ce, Catalog catalog) {
+	public TextBookCostEstimator(StatisticsCollector stats, CardinalityEstimator ce, Catalog catalog) {
 		this.stats = stats;
 		this.cardEstimator = ce;
 		this.catalog = catalog;
 	}
 
-		/*
-		 * (non-Javadoc)
-		 * @see java.lang.Object#clone()
-		 */
-		@Override
-		public WhiteBoxCostEstimator clone() {
-			return (WhiteBoxCostEstimator) (this.stats == null ? new WhiteBoxCostEstimator(null,  this.cardEstimator.clone(), this.catalog) : new WhiteBoxCostEstimator(this.stats.clone(),  this.cardEstimator.clone(), this.catalog));
-		}
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Object#clone()
+	 */
+	@Override
+	public TextBookCostEstimator clone() {
+		return (TextBookCostEstimator) (this.stats == null ? new TextBookCostEstimator(null,  this.cardEstimator.clone(), this.catalog) : new TextBookCostEstimator(this.stats.clone(),  this.cardEstimator.clone(), this.catalog));
+	}
 
 	/**
 	 * Gets the cardinality estimator.
@@ -73,7 +73,7 @@ public class WhiteBoxCostEstimator implements BlackBoxCostEstimator {
 	public CardinalityEstimator getCardinalityEstimator() {
 		return this.cardEstimator;
 	}
-	
+
 	/**
 	 * Recursively computes the cost of the given operator.
 	 *
@@ -144,7 +144,7 @@ public class WhiteBoxCostEstimator implements BlackBoxCostEstimator {
 			return 1.0;
 		}
 		else if(o instanceof SelectionTerm) {
-			Condition predicate = ((SelectionTerm) o).getPredicate();
+			Condition predicate = ((SelectionTerm) o).getSelectionCondition();
 			if (predicate instanceof SimpleCondition) 
 				return 1.0;
 			else if (predicate instanceof ConjunctiveCondition) 

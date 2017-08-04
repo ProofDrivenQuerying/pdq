@@ -46,19 +46,19 @@ public class CrossProductTest extends NaryIteratorTest {
         
         when(child1.getColumns()).thenReturn(child1Columns);
         when(child1.getInputColumns()).thenReturn(child1InputColumns);
-        when(child1.getType()).thenReturn(child1Type);
+        when(child1.getOutputType()).thenReturn(child1Type);
         when(child1.getInputType()).thenReturn(child1InputType);
         when(child2.getColumns()).thenReturn(child2Columns);
         when(child2.getInputColumns()).thenReturn(child2InputColumns);
-        when(child2.getType()).thenReturn(child2Type);
+        when(child2.getOutputType()).thenReturn(child2Type);
         when(child2.getInputType()).thenReturn(child2InputType);
         when(child3.getColumns()).thenReturn(child3Columns);
         when(child3.getInputColumns()).thenReturn(child3InputColumns);
-        when(child3.getType()).thenReturn(child3Type);
+        when(child3.getOutputType()).thenReturn(child3Type);
         when(child3.getInputType()).thenReturn(child3InputType);
         when(child4.getColumns()).thenReturn(child4Columns);
         when(child4.getInputColumns()).thenReturn(child4InputColumns);
-        when(child4.getType()).thenReturn(child4Type);
+        when(child4.getOutputType()).thenReturn(child4Type);
         when(child4.getInputType()).thenReturn(child4InputType);
 
         // Using all-mocks for this test is tricky because of the complex
@@ -109,7 +109,7 @@ public class CrossProductTest extends NaryIteratorTest {
 	@Test public void initTwoChildren() {
 		this.iterator = new CartesianProduct(child1, child2);
 		Assert.assertEquals("CrossProduct iterator columns must match that of the concatenation of its children",child1To2, this.iterator.getColumns());
-		Assert.assertEquals("CrossProduct iterator type must match that of the concatenation of its children", child1To2Type, this.iterator.getType());
+		Assert.assertEquals("CrossProduct iterator type must match that of the concatenation of its children", child1To2Type, this.iterator.getOutputType());
 		Assert.assertEquals("CrossProduct iterator input columns must match that of the concatenation of its children",child1To2Input, this.iterator.getInputColumns());
 		Assert.assertEquals("CrossProduct iterator input type must match that of the concatenation of its children", child1To2InputType, this.iterator.getInputType());
 		Assert.assertEquals("CrossProduct iterator children must match that of initialization", Lists.newArrayList(child1, child2), this.iterator.getChildren());
@@ -121,7 +121,7 @@ public class CrossProductTest extends NaryIteratorTest {
 	@Test public void initManyChildren() {
 		this.iterator = new CartesianProduct(child1, child2, child3, child4);
 		Assert.assertEquals("CrossProduct iterator columns must match that of the concatenation of its children", child1To4, this.iterator.getColumns());
-		Assert.assertEquals("CrossProduct iterator type must match that of the concatenation of its children", child1To4Type, this.iterator.getType());
+		Assert.assertEquals("CrossProduct iterator type must match that of the concatenation of its children", child1To4Type, this.iterator.getOutputType());
 		Assert.assertEquals("CrossProduct iterator input columns must match that of the concatenation of its children", child1To4Input, this.iterator.getInputColumns());
 		Assert.assertEquals("CrossProduct iterator input type must match that of the concatenation of its children", child1To4InputType, this.iterator.getInputType());
 		Assert.assertEquals("CrossProduct iterator children must match that of initialization", Lists.newArrayList(child1, child2, child3, child4), this.iterator.getChildren());
@@ -133,7 +133,7 @@ public class CrossProductTest extends NaryIteratorTest {
 	@Test public void initTwoChildrenClosed() {
 		this.iterator = new CartesianProduct(nonMock1, nonMock2);
 		Assert.assertEquals("CrossProduct iterator columns must match that of the concatenation of its children",child1To2, this.iterator.getColumns());
-		Assert.assertEquals("CrossProduct iterator type must match that of the concatenation of its children", child1To2Type, this.iterator.getType());
+		Assert.assertEquals("CrossProduct iterator type must match that of the concatenation of its children", child1To2Type, this.iterator.getOutputType());
 		Assert.assertEquals("CrossProduct iterator input columns must match that of the concatenation of its children", Collections.EMPTY_LIST, this.iterator.getInputColumns());
 		Assert.assertEquals("CrossProduct iterator input type must match that of the concatenation of its children", TupleType.EmptyTupleType, this.iterator.getInputType());
 		Assert.assertEquals("CrossProduct iterator children must match that of initialization", Lists.newArrayList(nonMock1, nonMock2), this.iterator.getChildren());
@@ -145,7 +145,7 @@ public class CrossProductTest extends NaryIteratorTest {
 	@Test public void initManyChildrenClosed() {
 		this.iterator = new CartesianProduct(nonMock1, nonMock2, nonMock3, nonMock4);
 		Assert.assertEquals("CrossProduct iterator columns must match that of the concatenation of its children", child1To4, this.iterator.getColumns());
-		Assert.assertEquals("CrossProduct iterator type must match that of the concatenation of its children", child1To4Type, this.iterator.getType());
+		Assert.assertEquals("CrossProduct iterator type must match that of the concatenation of its children", child1To4Type, this.iterator.getOutputType());
 		Assert.assertEquals("CrossProduct iterator input columns must match that of the concatenation of its children", Collections.EMPTY_LIST, this.iterator.getInputColumns());
 		Assert.assertEquals("CrossProduct iterator input type must match that of the concatenation of its children", TupleType.EmptyTupleType, this.iterator.getInputType());
 		Assert.assertEquals("CrossProduct iterator children must match that of initialization", Lists.newArrayList(nonMock1, nonMock2, nonMock3, nonMock4), this.iterator.getChildren());

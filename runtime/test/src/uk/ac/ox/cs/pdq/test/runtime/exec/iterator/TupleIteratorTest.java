@@ -66,7 +66,7 @@ public abstract class TupleIteratorTest {
 	@Test public void getType() {
 		Assert.assertEquals("Iterator type must match that given by columns",
 				TupleType.DefaultFactory.createFromTyped(getIterator().getColumns()),
-				getIterator().getType());
+				getIterator().getOutputType());
 	}
 	
 	/**

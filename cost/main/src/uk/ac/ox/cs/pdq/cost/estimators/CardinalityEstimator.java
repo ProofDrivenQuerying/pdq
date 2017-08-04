@@ -8,7 +8,7 @@ import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
  *
  * @author Julien Leblay
  */
-public interface CardinalityEstimator extends Cloneable {
+public interface CardinalityEstimator {
 	
 	/**
 	 * Computes and updates the estimated cardinality of the given operator,

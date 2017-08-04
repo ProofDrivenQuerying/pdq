@@ -2,15 +2,12 @@ package uk.ac.ox.cs.pdq.runtime.exec.iterator;
 
 import java.util.NoSuchElementException;
 
-import uk.ac.ox.cs.pdq.algebra.Condition;
+import org.junit.Assert;
+
 import uk.ac.ox.cs.pdq.datasources.RelationAccessWrapper;
 import uk.ac.ox.cs.pdq.datasources.ResetableIterator;
 import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
-import uk.ac.ox.cs.pdq.runtime.util.RuntimeUtilities;
-import uk.ac.ox.cs.pdq.util.Typed;
-
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
+import uk.ac.ox.cs.pdq.db.Attribute;
 
 
 // TODO: Auto-generated Javadoc
@@ -23,17 +20,14 @@ import com.google.common.collect.Lists;
  */
 public class Scan extends TupleIterator {
 
+	/** The underlying relation. */
+	protected final RelationAccessWrapper relation;	
+
 	/** The next tuple to return. */
 	protected ResetableIterator<Tuple> tupleIterator = null;
 
-	/** The underlying relation. */
-	protected RelationAccessWrapper relation = null;	
-
 	/**  The next tuple to return. */
-	private Tuple nextTuple;
-	
-	/** The filter. */
-	protected final Condition filter;	
+	protected Tuple nextTuple;
 
 	/**
 	 * Instantiates a new join.
@@ -41,19 +35,10 @@ public class Scan extends TupleIterator {
 	 * @param relation RelationAccessWrapper
 	 * @param filter additional filtering condition
 	 */
-	public Scan(RelationAccessWrapper relation, Condition filter) {
-		super(Lists.<Typed>newArrayList(), Lists.<Typed>newArrayList(relation.getAttributes()));
-		this.relation = relation;
-		this.filter = filter;
-	}
-
-	/**
-	 * Instantiates a new join.
-	 * 
-	 * @param relation RelationAccessWrapper
-	 */
 	public Scan(RelationAccessWrapper relation) {
-		this(relation, null);
+		super(new Attribute[0], relation.getAttributes());
+		Assert.assertNotNull(relation);
+		this.relation = relation;
 	}
 
 	/**
@@ -64,16 +49,17 @@ public class Scan extends TupleIterator {
 	public RelationAccessWrapper getRelation() {
 		return this.relation;
 	}
-
-	/**
-	 * Gets the filter.
-	 *
-	 * @return the filter for this scan if any
-	 */
-	public Condition getFilter() {
-		return this.filter;
-	}
 	
+	@Override
+	public TupleIterator[] getChildren() {
+		return new TupleIterator[]{};
+	}
+
+	@Override
+	public TupleIterator getChild(int childIndex) {
+		return null;
+	}
+
 	/**
 	 * 
 	 * {@inheritDoc}
@@ -83,12 +69,7 @@ public class Scan extends TupleIterator {
 	public String toString() {
 		StringBuilder result = new StringBuilder();
 		result.append(this.getClass().getSimpleName());
-		if (this.filter != null) {
-			result.append("[#").append(filter).append(']');
-		}
-		if (this.relation != null) {
-			result.append('(').append(this.relation.getName()).append(')');
-		}
+		result.append('(').append(this.relation.getName()).append(')');
 		return result.toString();
 	}
 
@@ -99,7 +80,7 @@ public class Scan extends TupleIterator {
 	 */
 	@Override
 	public void open() {
-		Preconditions.checkState(this.open == null || this.open);
+		Assert.assertTrue(this.open == null || this.open);
 		this.open = true;
 		this.tupleIterator = this.relation.iterator();
 		this.tupleIterator.open();
@@ -107,26 +88,13 @@ public class Scan extends TupleIterator {
 	}
 
 	/**
-	 * Moves to the next valid tuple to return.
-	 */
-	private void nextTuple() {
-		while (this.tupleIterator.hasNext()) {
-			this.nextTuple = this.tupleIterator.next();
-			if (this.filter == null || RuntimeUtilities.isSatisfied(this.filter, this.nextTuple)) {
-				return;
-			}
-		}
-		this.nextTuple = null;
-	}
-	
-	/**
 	 * 
 	 * {@inheritDoc}
 	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#close()
 	 */
 	@Override
 	public void close() {
-		Preconditions.checkState(this.open != null && this.open);
+		Assert.assertTrue(this.open != null && this.open);
 		super.close();
 	}
 
@@ -137,10 +105,22 @@ public class Scan extends TupleIterator {
 	 */
 	@Override
 	public void reset() {
-		Preconditions.checkState(this.open != null && this.open);
-		Preconditions.checkState(!this.interrupted);
+		Assert.assertTrue(this.open != null && this.open);
+		Assert.assertTrue(!this.interrupted);
 		this.tupleIterator.reset();
 		this.nextTuple();
+	}
+
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#interrupt()
+	 */
+	@Override
+	public void interrupt() {
+		Assert.assertTrue(this.open != null && this.open);
+		Assert.assertTrue(!this.interrupted);
+		this.interrupted = true;
 	}
 
 	/**
@@ -150,7 +130,7 @@ public class Scan extends TupleIterator {
 	 */
 	@Override
 	public boolean hasNext() {
-		Preconditions.checkState(this.open != null && this.open);
+		Assert.assertTrue(this.open != null && this.open);
 		return !this.interrupted && this.nextTuple != null;
 	}
 
@@ -161,8 +141,8 @@ public class Scan extends TupleIterator {
 	 */
 	@Override
 	public Tuple next() {
-		Preconditions.checkState(this.open != null && this.open);
-		Preconditions.checkState(!this.interrupted);
+		Assert.assertTrue(this.open != null && this.open);
+		Assert.assertTrue(!this.interrupted);
 		if (this.eventBus != null) {
 			this.eventBus.post(this);
 		}
@@ -173,19 +153,18 @@ public class Scan extends TupleIterator {
 		this.nextTuple();
 		return result;
 	}
-
+	
 	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#interrupt()
+	 * Moves to the next valid tuple to return.
 	 */
-	@Override
-	public void interrupt() {
-		Preconditions.checkState(this.open != null && this.open);
-		Preconditions.checkState(!this.interrupted);
-		this.interrupted = true;
+	private void nextTuple() {
+		while (this.tupleIterator.hasNext()) {
+			this.nextTuple = this.tupleIterator.next();
+			return;
+		}
+		this.nextTuple = null;
 	}
-
+	
 	/**
 	 * Bind.
 	 *
@@ -193,10 +172,10 @@ public class Scan extends TupleIterator {
 	 */
 	@Override
 	public void bind(Tuple t) {
-		Preconditions.checkState(this.open != null && this.open);
-		Preconditions.checkState(!this.interrupted);
-		Preconditions.checkArgument(t != null);
-		Preconditions.checkArgument(t.size() == 0);
+		Assert.assertTrue(this.open != null && this.open);
+		Assert.assertTrue(!this.interrupted);
+		Assert.assertTrue(t != null);
+		Assert.assertTrue(t.size() == 0);
 		// Important: this iterator MUST be reiterated from scratch
 		this.reset();
 	}

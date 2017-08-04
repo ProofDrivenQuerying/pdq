@@ -25,7 +25,7 @@ import uk.ac.ox.cs.pdq.util.Typed;
 public class Table implements Result, Iterable<Tuple> {
 
 	/**  The table's header. */
-	private List<? extends Typed> header = new ArrayList<>();
+	private Typed[] header;
 
 	/**  The table's tuples. */
 	private List<Tuple> data = new ArrayList<>();
@@ -48,33 +48,31 @@ public class Table implements Result, Iterable<Tuple> {
 	 * @param intern boolean
 	 * @param attributes 		The table's header
 	 */
-	public Table(boolean intern, List<? extends Typed> attributes) {
-		Preconditions.checkArgument(
-				attributes != null && attributes.size() >= 0,
-				"Invalid dynamic table type");
-		this.type = Utility.createFromTyped(attributes.toArray(new Attribute[attributes.size()]));
-		this.header = Lists.newArrayList(attributes);
+	public Table(boolean intern, Typed[] attributes) {
+		Preconditions.checkArgument(attributes != null && attributes.length >= 0, "Invalid dynamic table type");
+		this.type = TupleType.DefaultFactory.create(attributes);
+		this.header = attributes;
 		this.internTuples = intern;
 	}
 
-	/**
-	 * Instantiates a new table.
-	 *
-	 * @param intern boolean
-	 * @param attributes 		The table's header
-	 */
-	public Table(boolean intern, Typed... attributes) {
-		this(intern, Lists.newArrayList(attributes));
-	}
+//	/**
+//	 * Instantiates a new table.
+//	 *
+//	 * @param intern boolean
+//	 * @param attributes 		The table's header
+//	 */
+//	public Table(boolean intern, Typed... attributes) {
+//		this(intern, Lists.newArrayList(attributes));
+//	}
 
-	/**
-	 * Instantiates a new table.
-	 *
-	 * @param attributes 		The table's header
-	 */
-	public Table(List<? extends Typed> attributes) {
-		this(false, attributes);
-	}
+//	/**
+//	 * Instantiates a new table.
+//	 *
+//	 * @param attributes 		The table's header
+//	 */
+//	public Table(Typed[] attributes) {
+//		this(false, attributes);
+//	}
 
 	/**
 	 * Instantiates a new table.
@@ -275,7 +273,7 @@ public class Table implements Result, Iterable<Tuple> {
 	 *
 	 * @return the table header
 	 */
-	public List<? extends Typed> getHeader() {
+	public Typed[] getHeader() {
 		return this.header;
 	}
 
@@ -284,8 +282,8 @@ public class Table implements Result, Iterable<Tuple> {
 	 *
 	 * @param schema the new header
 	 */
-	public void setHeader(List<? extends Attribute> schema) {
-		this.header = Lists.newArrayList(schema);
+	public void setHeader(Attribute[] schema) {
+		this.header = schema;
 	}
 
 	/**
@@ -294,7 +292,7 @@ public class Table implements Result, Iterable<Tuple> {
 	 * @return true, if the table has a non-empty header
 	 */
 	public boolean hasHeader() {
-		return !this.header.isEmpty();
+		return !(this.header.length==0);
 
 	}
 

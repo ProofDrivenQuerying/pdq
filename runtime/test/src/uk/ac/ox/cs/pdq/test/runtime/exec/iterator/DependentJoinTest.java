@@ -164,11 +164,11 @@ public class DependentJoinTest extends NaryIteratorTest {
 		Condition natural = ConjunctiveCondition.create(new SimpleCondition[]{AttributeEqualityCondition.create(2, 4)});
 		this.iterator = new DependentJoin(child1, child2);
 		Assert.assertEquals("BindJoin iterator columns must match that of the concatenation of its children", out12, this.iterator.getColumns());
-		Assert.assertEquals("BindJoin iterator type must match that of the concatenation of its children", TupleType.DefaultFactory.createFromTyped(out12), this.iterator.getType());
+		Assert.assertEquals("BindJoin iterator type must match that of the concatenation of its children", TupleType.DefaultFactory.createFromTyped(out12), this.iterator.getOutputType());
 		Assert.assertEquals("BindJoin iterator input columns must match that of the concatenation of its children", Collections.EMPTY_LIST, this.iterator.getInputColumns());
 		Assert.assertEquals("BindJoin iterator input type must match that of the concatenation of its children", TupleType.EmptyTupleType, this.iterator.getInputType());
 		Assert.assertEquals("BindJoin iterator children must match that of initialization", Lists.newArrayList(child1, child2), this.iterator.getChildren());
-		Assert.assertEquals("BindJoin iterator Condition must match that of natural join", natural, this.iterator.getCondition());
+		Assert.assertEquals("BindJoin iterator Condition must match that of natural join", natural, this.iterator.getJoinConditions());
 	}
 
 	/**
@@ -178,11 +178,11 @@ public class DependentJoinTest extends NaryIteratorTest {
 		Condition natural = ConjunctiveCondition.create(new SimpleCondition[]{AttributeEqualityCondition.create(0, 4)});
 		this.iterator = new DependentJoin(child2, child1);
 		Assert.assertEquals("BindJoin iterator columns must match that of the concatenation of its children", out21, this.iterator.getColumns());
-		Assert.assertEquals("BindJoin iterator type must match that of the concatenation of its children", TupleType.DefaultFactory.createFromTyped(out21), this.iterator.getType());
+		Assert.assertEquals("BindJoin iterator type must match that of the concatenation of its children", TupleType.DefaultFactory.createFromTyped(out21), this.iterator.getOutputType());
 		Assert.assertEquals("BindJoin iterator input columns must match that of the concatenation of its children", in21, this.iterator.getInputColumns());
 		Assert.assertEquals("BindJoin iterator input type must match that of the concatenation of its children", TupleType.DefaultFactory.createFromTyped(in21), this.iterator.getInputType());
 		Assert.assertEquals("BindJoin iterator children must match that of initialization", Lists.newArrayList(child2, child1), this.iterator.getChildren());
-		Assert.assertEquals("BindJoin iterator Condition must match that of natural join", natural, this.iterator.getCondition());
+		Assert.assertEquals("BindJoin iterator Condition must match that of natural join", natural, this.iterator.getJoinConditions());
 	}
 
 	/**
@@ -192,11 +192,11 @@ public class DependentJoinTest extends NaryIteratorTest {
 		Condition natural = ConjunctiveCondition.create(new SimpleCondition[]{AttributeEqualityCondition.create(0, 4)});
 		this.iterator = new DependentJoin(child3, child4);
 		Assert.assertEquals("BindJoin iterator columns must match that of the concatenation of its children", out34, this.iterator.getColumns());
-		Assert.assertEquals("BindJoin iterator type must match that of the concatenation of its children", TupleType.DefaultFactory.createFromTyped(out34), this.iterator.getType());
+		Assert.assertEquals("BindJoin iterator type must match that of the concatenation of its children", TupleType.DefaultFactory.createFromTyped(out34), this.iterator.getOutputType());
 		Assert.assertEquals("BindJoin iterator input columns must match that of the concatenation of its children", in34, this.iterator.getInputColumns());
 		Assert.assertEquals("BindJoin iterator input type must match that of the concatenation of its children", TupleType.DefaultFactory.createFromTyped(in34), this.iterator.getInputType());
 		Assert.assertEquals("BindJoin iterator children must match that of initialization", Lists.newArrayList(child3, child4), this.iterator.getChildren());
-		Assert.assertEquals("BindJoin iterator Condition must match that of natural join", natural, this.iterator.getCondition());
+		Assert.assertEquals("BindJoin iterator Condition must match that of natural join", natural, this.iterator.getJoinConditions());
 	}
 
 	/**

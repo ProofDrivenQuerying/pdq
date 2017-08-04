@@ -14,7 +14,7 @@ import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.estimators.CardinalityEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.NaiveCardinalityEstimator;
-import uk.ac.ox.cs.pdq.cost.estimators.WhiteBoxCostEstimator;
+import uk.ac.ox.cs.pdq.cost.estimators.TextBookCostEstimator;
 import uk.ac.ox.cs.pdq.cost.statistics.Catalog;
 import uk.ac.ox.cs.pdq.cost.statistics.SimpleCatalog;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -107,8 +107,8 @@ public class TotalWhiteBoxEstimatorTest{
 				Entry<RelationalTerm, Cost> plan = PlannerTestUtilities.obtainPlan(PLAN_PATH + f, schema);
 				Catalog catalog = new SimpleCatalog(schema, CATALOG);
 				CardinalityEstimator card = new NaiveCardinalityEstimator(catalog);
-				WhiteBoxCostEstimator costEstimator = null;
-				costEstimator = new WhiteBoxCostEstimator(new StatisticsCollector(false, this.eventBus), card, catalog);
+				TextBookCostEstimator costEstimator = null;
+				costEstimator = new TextBookCostEstimator(new StatisticsCollector(false, this.eventBus), card, catalog);
 				Assert.assertEquals(plan.getValue(), costEstimator.cost(plan.getKey()));
 			} catch (FileNotFoundException e) {
 				System.out.println("Cannot find input files");

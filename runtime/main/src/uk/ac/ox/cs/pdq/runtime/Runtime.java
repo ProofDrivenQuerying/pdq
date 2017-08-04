@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.google.common.eventbus.EventBus;
+
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.datasources.memory.InMemoryRelation;
 import uk.ac.ox.cs.pdq.datasources.memory.InMemoryTableWrapper;
@@ -19,23 +21,18 @@ import uk.ac.ox.cs.pdq.datasources.utility.TupleType;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.LinearGuarded;
-import uk.ac.ox.cs.pdq.fol.Term;
-import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.runtime.exec.SetupPlanExecutor;
 import uk.ac.ox.cs.pdq.runtime.exec.PlanExecutor;
 import uk.ac.ox.cs.pdq.runtime.exec.PlanExecutor.ExecutionModes;
+import uk.ac.ox.cs.pdq.runtime.exec.SetupPlanExecutor;
 import uk.ac.ox.cs.pdq.runtime.query.InMemoryQueryEvaluator;
 import uk.ac.ox.cs.pdq.runtime.query.QueryEvaluator;
 import uk.ac.ox.cs.pdq.runtime.query.QueryEvaluatorFactory;
 import uk.ac.ox.cs.pdq.runtime.util.RuntimeUtilities;
 import uk.ac.ox.cs.pdq.util.EventHandler;
-import uk.ac.ox.cs.pdq.util.Utility;
-
-import com.google.common.base.Preconditions;
-import com.google.common.eventbus.EventBus;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -148,7 +145,7 @@ public class Runtime {
 				dataDist.put(w.getName(), data);
 				relations.put(w.getName(), w);
 			}
-			data.add(RuntimeUtilities.toTuple(type, attributes, fact.getTerms()));
+			data.add(RuntimeUtilities.createTuple(attributes, fact.getTerms()));
 		}
 		for (String r: dataDist.keySet()) {
 			relations.get(r).load(dataDist.get(r));

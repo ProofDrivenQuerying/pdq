@@ -1,12 +1,11 @@
 package uk.ac.ox.cs.pdq.runtime.exec.iterator;
 
-import java.util.LinkedList;
 import java.util.NoSuchElementException;
 
-import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
-import uk.ac.ox.cs.pdq.util.Typed;
+import org.junit.Assert;
 
-import com.google.common.base.Preconditions;
+import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
+import uk.ac.ox.cs.pdq.db.Attribute;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -23,7 +22,17 @@ public class EmptyIterator extends TupleIterator {
 	 * 
 	 */
 	public EmptyIterator() {
-		super(new LinkedList<Typed>(), new LinkedList<Typed>());
+		super(new Attribute[]{}, new Attribute[]{});
+	}
+	
+	@Override
+	public TupleIterator[] getChildren() {
+		return new TupleIterator[]{};
+	}
+
+	@Override
+	public TupleIterator getChild(int childIndex) {
+		return null;
 	}
 
 	/**
@@ -43,7 +52,7 @@ public class EmptyIterator extends TupleIterator {
 	 */
 	@Override
 	public void open() {
-		Preconditions.checkState(this.open == null);
+		Assert.assertTrue(this.open == null);
 		this.open = true;
 	}
 
@@ -53,7 +62,7 @@ public class EmptyIterator extends TupleIterator {
 	 */
 	@Override
 	public void close() {
-		Preconditions.checkState(this.open != null && this.open);
+		Assert.assertTrue(this.open != null && this.open);
 		this.open = false;
 	}
 
@@ -63,8 +72,19 @@ public class EmptyIterator extends TupleIterator {
 	 */
 	@Override
 	public void reset() {
-		Preconditions.checkState(this.open != null && this.open);
-		Preconditions.checkState(!this.interrupted);
+		Assert.assertTrue(this.open != null && this.open);
+		Assert.assertTrue(!this.interrupted);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#interrupt()
+	 */
+	@Override
+	public void interrupt() {
+		Assert.assertTrue(this.open != null && this.open);
+		Assert.assertTrue(!this.interrupted);
+		this.interrupted = true;
 	}
 
 	/**
@@ -73,8 +93,8 @@ public class EmptyIterator extends TupleIterator {
 	 */
 	@Override
 	public boolean hasNext() {
-		Preconditions.checkState(this.open != null && this.open);
-		Preconditions.checkState(!this.interrupted);
+		Assert.assertTrue(this.open != null && this.open);
+		Assert.assertTrue(!this.interrupted);
 		return false;
 	}
 
@@ -84,20 +104,9 @@ public class EmptyIterator extends TupleIterator {
 	 */
 	@Override
 	public Tuple next() {
-		Preconditions.checkState(this.open != null && this.open);
-		Preconditions.checkState(!this.interrupted);
+		Assert.assertTrue(this.open != null && this.open);
+		Assert.assertTrue(!this.interrupted);
 		throw new NoSuchElementException();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#interrupt()
-	 */
-	@Override
-	public void interrupt() {
-		Preconditions.checkState(this.open != null && this.open);
-		Preconditions.checkState(!this.interrupted);
-		this.interrupted = true;
 	}
 
 	/**
@@ -105,10 +114,10 @@ public class EmptyIterator extends TupleIterator {
 	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#bind(uk.ac.ox.cs.pdq.datasources.utility.Tuple)
 	 */
 	@Override
-	public void bind(Tuple t) {
-		Preconditions.checkState(this.open != null && this.open);
-		Preconditions.checkState(!this.interrupted);
-		Preconditions.checkArgument(t != null);
-		Preconditions.checkArgument(t.getType().equals(this.inputType));
+	public void bind(Tuple tuple) {
+		Assert.assertTrue(this.open != null && this.open);
+		Assert.assertTrue(!this.interrupted);
+		Assert.assertTrue(tuple != null);
+		Assert.assertTrue(tuple.size() == 0);
 	}
 }

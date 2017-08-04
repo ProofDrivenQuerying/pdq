@@ -1,19 +1,19 @@
 package uk.ac.ox.cs.pdq.runtime.exec.iterator;
 
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+
+import org.junit.Assert;
+
+import com.google.common.eventbus.EventBus;
 
 import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
 import uk.ac.ox.cs.pdq.datasources.utility.TupleType;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
-import uk.ac.ox.cs.pdq.util.Typed;
-
-import com.google.common.base.Preconditions;
+import uk.ac.ox.cs.pdq.runtime.util.RuntimeUtilities;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -21,154 +21,49 @@ import com.google.common.base.Preconditions;
  * 
  * @author Julien Leblay
  */
-public class Projection extends UnaryIterator {
+public class Projection extends TupleIterator {
 
-	/** The head, the list of term projected by this operator. */
-	public List<Typed> projected;
+	/**  The sole child of the operator. */
+	protected final TupleIterator child;
+	
+	protected final Attribute[] projections;
 
 	/** Maps each variable is the head to a position in the children. */
-	public Map<Typed, Integer> positions;
-
-	/** Maps each child term position to its (optional renaming). */
-	public Map<Integer, Typed> renaming;
-
-	/**
-	 * Instantiates a new projection.
-	 * 
-	 * @param head the head
-	 * @param child TupleIterator
-	 */
-	public Projection(List<Typed> head, TupleIterator child) {
-		this(head, new LinkedHashMap<Integer, Typed>(), child);
-	}
-
-	/**
-	 * Instantiates a new projection.
-	 * 
-	 * @param projected the head
-	 * @param renaming Map<Integer,Typed>
-	 * @param child TupleIterator
-	 */
-	public Projection(List<Typed> projected, Map<Integer, Typed> renaming, TupleIterator child) {
-		super(applyRenaming(inputColumns(child), renaming, outputColumns(child)),
-				TupleType.DefaultFactory.createFromTyped(projected),
-				applyRenaming(projected, renaming, outputColumns(child)),
-				child);
-		this.projected = projected != null ? new ArrayList<>(projected) : null;
-		this.renaming = renaming;
-		this.positions = new LinkedHashMap<>();
-		int i = 0;
-		for (Typed c : this.child.getColumns()) {
-			if (c instanceof Attribute 
-					&& containsName(this.projected, (Attribute) c) 
-					&& !this.positions.containsKey(c)) {
-				this.positions.put(c, i);
-			}
-			i++;
+	protected final Map<Attribute, Integer> positionsOfProjectedAttributes;
+	
+	protected final TupleType cachedChildTupleType;
+	
+	public Projection(Attribute[] projections, TupleIterator child) {
+		super(child.getInputAttributes(), child.getOutputAttributes());
+		Assert.assertNotNull(projections);
+		Assert.assertNotNull(child);
+		this.positionsOfProjectedAttributes = new LinkedHashMap<>();
+		for(int outputAttributeIndex = 0; outputAttributeIndex < projections.length; ++outputAttributeIndex) { 
+			int position = Arrays.asList(child.getOutputAttributes()).indexOf(projections[outputAttributeIndex]);
+			Assert.assertTrue(position >= 0);
+			this.positionsOfProjectedAttributes.put(projections[outputAttributeIndex], position);
 		}
+		this.projections = projections.clone();
+		this.child = child;
+		this.cachedChildTupleType = TupleType.DefaultFactory.createFromTyped(this.inputAttributes);
 	}
-
-	/**
-	 * Method containsName.
-	 * @param projected List<Typed>
-	 * @param attribute Attribute
-	 * @return boolean
-	 */
-	private static boolean containsName(List<Typed> projected, Attribute attribute) {
-		for (Iterator<Typed> it = projected.iterator(); it.hasNext();) {
-			Typed t = it.next();
-			if (t instanceof Attribute && ((Attribute) t).getName().equals(attribute.getName())) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * Method applyRenaming.
-	 * @param projected List<Typed>
-	 * @param renaming Map<Integer,Typed>
-	 * @param columns List<Typed>
-	 * @return List<Typed>
-	 */
-	private static List<Typed> applyRenaming(List<Typed> projected, Map<Integer, Typed> renaming, List<Typed> columns) {
-		Preconditions.checkArgument(projected != null);
-		Preconditions.checkArgument(columns != null);
-		if (renaming != null && !renaming.isEmpty()) {
-			List<Typed> result = new ArrayList<>(projected.size());
-			for (Typed t : projected) {
-				if (t instanceof Attribute) {
-					int pos = columns.indexOf(t);
-					if (renaming.containsKey(pos)) {
-						result.add(renaming.get(pos));
-					} else {
-						throw new IllegalStateException(t + " not found in child attributes list.");
-					}
-				} else {
-					result.add(t);
-				}
-			}
-			return result;
-		}
-		return projected;
-	}
-
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see java.util.Iterator#hasNext()
-	 */
+	
 	@Override
-	public boolean hasNext() {
-		Preconditions.checkState(this.open != null && this.open);
-		return !this.interrupted && this.child.hasNext();
+	public TupleIterator[] getChildren() {
+		return new TupleIterator[]{this.child};
 	}
 
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see java.util.Iterator#next()
-	 */
 	@Override
-	public Tuple next() {
-		Preconditions.checkState(this.open != null && this.open);
-		Preconditions.checkState(!this.interrupted);
-		if (this.eventBus != null) {
-			this.eventBus.post(this);
-		}
-		Tuple next = this.child.next();
-		if (next == null) {
-			throw new NoSuchElementException("End of projection operator reached.");
-		}
-		Object[] result = new Object[this.projected.size()];
-		int i = 0;
-		for (Typed t : this.projected) {
-			if (t instanceof Attribute) {
-				result[i++] = next.getValue(this.positions.get(t));
-			} else if (t instanceof TypedConstant) {
-				result[i++] = ((TypedConstant) t).getValue();
-			}
-		}
-		return this.outputType.createTuple(result);
+	public TupleIterator getChild(int childIndex) {
+		Assert.assertTrue(childIndex == 0);
+		return this.child;
 	}
-
-	/**
-	 * Gets the columns display.
-	 *
-	 * @return a list of human readable column headers.
-	 */
+	
 	@Override
-	public List<String> getColumnsDisplay() {
-		List<String> result = new ArrayList<>();
-		int i = 0;
-		for (Typed t : this.projected) {
-			String s = t.toString();
-			if (this.renaming.containsKey(i)) {
-				s += "/" + this.renaming.get(i);
-			}
-			result.add(s);
-			i++;
-		}
+	public String[] getColumnsDisplay() {
+		String[] result = new String[this.projections.length];
+		for(int index = 0; index < this.projections.length; ++index)
+			result[index] = this.projections[index].getType().toString();
 		return result;
 	}
 
@@ -184,5 +79,116 @@ public class Projection extends UnaryIterator {
 		result.append(this.getColumnsDisplay());
 		result.append('(').append(this.child).append(')');
 		return result.toString();
+	}
+	
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#setEventBus(com.google.common.eventbus.EventBus)
+	 */
+	@Override
+	public void setEventBus(EventBus eb) {
+		super.setEventBus(eb);
+		this.child.setEventBus(eb);
+	}
+
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see java.util.Iterator#hasNext()
+	 */
+	@Override
+	public boolean hasNext() {
+		Assert.assertTrue(this.open != null && this.open);
+		return !this.interrupted && this.child.hasNext();
+	}
+
+
+
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.datasources.ResetableIterator#open()
+	 */
+	@Override
+	public void open() {
+		Assert.assertTrue(this.open == null || this.open);
+		this.child.open();
+		this.open = true;
+	}
+
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#close()
+	 */
+	@Override
+	public void close() {
+		Assert.assertTrue(this.open != null && this.open);
+		super.close();
+		this.child.close();
+	}
+
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.datasources.ResetableIterator#reset()
+	 */
+	@Override
+	public void reset() {
+		Assert.assertTrue(this.open != null && this.open);
+		Assert.assertTrue(!this.interrupted);
+		this.child.reset();
+	}
+
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#interrupt()
+	 */
+	@Override
+	public void interrupt() {
+		Assert.assertTrue(this.open != null && this.open);
+		this.interrupted = true;
+		this.child.interrupt();
+	}
+	
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see java.util.Iterator#next()
+	 */
+	@Override
+	public Tuple next() {
+		Assert.assertTrue(this.open != null && this.open);
+		Assert.assertTrue(!this.interrupted);
+		if (this.eventBus != null) {
+			this.eventBus.post(this);
+		}
+		Tuple next = this.child.next();
+		if (next == null) {
+			throw new NoSuchElementException("End of projection operator reached.");
+		}
+		Object[] result = new Object[this.projections.length];
+		for(int index = 0; index < this.projections.length; ++index) {
+			if (this.projections[index].getType() instanceof Attribute) 
+				result[index] = next.getValue(this.positionsOfProjectedAttributes.get(this.projections[index].getType()));
+			else if (this.projections[index].getType() instanceof TypedConstant) 
+				result[index] = ((TypedConstant) this.projections[index].getType()).getValue();
+		}
+		return RuntimeUtilities.createTuple(result, this.projections);
+	}
+
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#bind(uk.ac.ox.cs.pdq.datasources.utility.Tuple)
+	 */
+	@Override
+	public void bind(Tuple tuple) {
+		Assert.assertTrue(this.open != null && this.open);
+		Assert.assertTrue(tuple != null);
+		Assert.assertTrue(tuple.getType().equals(this.cachedChildTupleType));
+		this.child.bind(tuple);
 	}
 }

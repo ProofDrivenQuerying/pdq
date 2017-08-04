@@ -9,7 +9,7 @@ import com.google.common.collect.Lists;
 
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
-import uk.ac.ox.cs.pdq.cost.estimators.SimpleCostEstimator;
+import uk.ac.ox.cs.pdq.cost.estimators.OrderIndependentCostEstimator;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode.NodeStatus;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SimpleNode;
 import uk.ac.ox.cs.pdq.planner.util.PlanTree;
@@ -34,7 +34,7 @@ public class SimplePropagator extends CostPropagator<SimpleNode> {
 	 *
 	 * @param estimator SimpleCostEstimator<LeftDeepPlan>
 	 */
-	public SimplePropagator(SimpleCostEstimator estimator) {
+	public SimplePropagator(OrderIndependentCostEstimator estimator) {
 		super(estimator);
 	}
 

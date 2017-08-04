@@ -1,7 +1,5 @@
 package uk.ac.ox.cs.pdq.datasources;
 
-import java.util.List;
-
 import uk.ac.ox.cs.pdq.datasources.utility.Table;
 import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
@@ -42,6 +40,8 @@ public interface RelationAccessWrapper extends Pipelineable {
 	 * @return the list of attributes of the relation.
 	 */
 	Attribute[] getAttributes();
+	
+	Attribute getAttribute(int attributeIndex);
 
 //	/**
 //	 * Gets the input attributes.
@@ -65,4 +65,6 @@ public interface RelationAccessWrapper extends Pipelineable {
 	 * @return an access method by its name.
 	 */
 	AccessMethod getAccessMethod(String name);
+	
+	int getArity();
 }

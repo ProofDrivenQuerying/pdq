@@ -37,6 +37,14 @@ public abstract class RelationalTerm implements Serializable {
 		return this.inputAttributes.clone();
 	}
 	
+	public Attribute getOutputAttribute(int index) {
+		return this.outputAttributes[index];
+	}
+	
+	public Attribute getInputAttribute(int index) {
+		return this.inputAttributes[index];
+	}
+	
 	public Integer getNumberOfOutputAttributes() {
 		return this.outputAttributes.length;
 	}

@@ -39,6 +39,14 @@ public class DependentJoinTerm extends RelationalTerm {
 	public Condition getPredicate() {
 		return this.joinConditions;
 	}
+	
+	public Integer[] getSidewaysInput() {
+		return this.sidewaysInput.clone();
+	}
+	
+	public Condition getJoinConditions() {
+		return this.joinConditions;
+	}
 
 	@Override
 	public String toString() {

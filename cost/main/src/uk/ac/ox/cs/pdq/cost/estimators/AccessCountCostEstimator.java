@@ -19,7 +19,7 @@ import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
  *
  * @author Efthymia Tsamoura
  */
-public class AccessCountCostEstimator implements SimpleCostEstimator {
+public class AccessCountCostEstimator implements OrderIndependentCostEstimator {
 
 	/** The stats. */
 	protected final StatisticsCollector stats;
@@ -37,7 +37,7 @@ public class AccessCountCostEstimator implements SimpleCostEstimator {
 	 * Clone.
 	 *
 	 * @return SimpleCountCostEstimator<P,S>
-	 * @see uk.ac.ox.cs.pdq.cost.estimators.SimpleCostEstimator#clone()
+	 * @see uk.ac.ox.cs.pdq.cost.estimators.OrderIndependentCostEstimator#clone()
 	 */
 	@Override
 	public AccessCountCostEstimator clone() {
@@ -72,5 +72,4 @@ public class AccessCountCostEstimator implements SimpleCostEstimator {
 		if(this.stats != null){this.stats.increase(COST_ESTIMATION_COUNT, 1);}
 		return result;
 	}
-
 }

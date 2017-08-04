@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import com.google.common.base.Preconditions;
 
 import uk.ac.ox.cs.pdq.cost.estimators.AccessCountCostEstimator;
-import uk.ac.ox.cs.pdq.cost.estimators.SimpleCostEstimator;
+import uk.ac.ox.cs.pdq.cost.estimators.OrderIndependentCostEstimator;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.DominanceTypes;
 
 // TODO: Auto-generated Javadoc
@@ -26,7 +26,7 @@ public class DominanceFactory {
 	private final DominanceTypes type;
 	
 	/** The cost estimator. */
-	private final SimpleCostEstimator costEstimator = new AccessCountCostEstimator(null);
+	private final OrderIndependentCostEstimator costEstimator = new AccessCountCostEstimator(null);
 	
 	private final FactDominance factDominance = new FastFactDominance(false);
 

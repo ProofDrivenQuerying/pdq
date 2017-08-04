@@ -19,7 +19,7 @@ import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
  * @author Julien Leblay
  * @param <P> the generic type
  */
-public class LengthBasedCostEstimator implements BlackBoxCostEstimator {
+public class LengthBasedCostEstimator implements OrderDependentCostEstimator {
 
 	/** The stats. */
 	protected final StatisticsCollector stats;
