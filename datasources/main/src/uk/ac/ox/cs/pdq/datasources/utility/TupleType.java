@@ -133,7 +133,7 @@ public interface TupleType extends Serializable{
 		 * @param typed List<? extends Typed>
 		 * @return TupleType
 		 */
-		public static TupleType createFromTyped(final List<Typed> typed) {
+		public static TupleType createFromTyped(final Typed... typed) {
 			return interner.intern(new TupleTypeImpl(typed));
 		}
 		

@@ -1,7 +1,6 @@
 package uk.ac.ox.cs.pdq.runtime.query;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -40,7 +39,6 @@ import uk.ac.ox.cs.pdq.runtime.exec.iterator.Selection;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.SymmetricMemoryHashJoin;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator;
 import uk.ac.ox.cs.pdq.runtime.util.RuntimeUtilities;
-import uk.ac.ox.cs.pdq.util.Typed;
 
 
 // TODO: Auto-generated Javadoc
@@ -85,17 +83,16 @@ public class InMemoryQueryEvaluator implements QueryEvaluator {
 	 */
 	@Override
 	public Result evaluate() throws EvaluationException {
-		ConjunctiveQuery q = this.query;
-		try (TupleIterator phyPlan = this.makePhysicalPlan(q)) {
+		try (TupleIterator phyPlan = this.makePhysicalPlan(this.query)) {
 			phyPlan.open();
-			if (q.isBoolean()) {
+			if (this.query.isBoolean()) {
 				boolean result = (boolean) phyPlan.next().getValue(0);
 				if (this.eventBus != null) {
 					this.eventBus.post(TupleType.DefaultFactory.create(Boolean.class).createTuple(result));
 				}
 				return new BooleanResult(!result);
 			}
-			Table result = new Table(RuntimeUtilities.termsToAttributes(q));
+			Table result = new Table(RuntimeUtilities.getAttributesCorrespondingToFreeVariables(this.query));
 			while(phyPlan.hasNext()) {
 				Tuple t = phyPlan.next();
 				result.appendRow(t);
@@ -134,8 +131,7 @@ public class InMemoryQueryEvaluator implements QueryEvaluator {
 		if (query.isBoolean()) {
 			result = new IsEmpty(result);
 		} else {
-			TupleType type = RuntimeUtilities.getTupleType(query);
-			result = new Projection(RuntimeUtilities.variablesToTyped(query.getFreeVariables(),  type), result);
+			result = new Projection(RuntimeUtilities.getAttributesCorrespondingToFreeVariables(query), result);
 		}
 		return result;
 	}
@@ -143,23 +139,21 @@ public class InMemoryQueryEvaluator implements QueryEvaluator {
 	/**
 	 * Make scans.
 	 *
-	 * @param p Atom
+	 * @param atom Atom
 	 * @return TupleIterator
 	 * @throws EvaluationException the evaluation exception
 	 */
-	private TupleIterator makeScans(Atom p) throws EvaluationException {
-		if (!(p.getPredicate() instanceof InMemoryTableWrapper)) {
+	private TupleIterator makeScans(Atom atom) throws EvaluationException {
+		if (!(atom.getPredicate() instanceof InMemoryTableWrapper)) {
 			throw new EvaluationException(
-					p.getPredicate().getClass().getSimpleName() +
+					atom.getPredicate().getClass().getSimpleName() +
 					" relations not supported in In-Mem query evaluator.");
 		}
-		InMemoryTableWrapper r = (InMemoryTableWrapper) p.getPredicate();
-		Term[] terms = p.getTerms();
-		TupleType type = TupleType.DefaultFactory.createFromTyped(r.getAttributes());
-		SimpleCondition[] preds = this.computeSelectionConditions(r.getAttributes(), terms); 
-		if (preds.length == 0) 
-			return new MemoryScan(RuntimeUtilities.termsToTyped(terms, type), r.getData());
-		return new Selection(ConjunctiveCondition.create(preds), new MemoryScan(RuntimeUtilities.termsToTyped(terms, type), r.getData()));
+		InMemoryTableWrapper r = (InMemoryTableWrapper) atom.getPredicate();
+		SimpleCondition[] conditions = this.computeSelectionConditions(r.getAttributes(), atom.getTerms()); 
+		if (conditions.length == 0) 
+			return new MemoryScan(r.getAttributes(), r.getData());
+		return new Selection(ConjunctiveCondition.create(conditions), new MemoryScan(r.getAttributes(), r.getData()));
 	}
 
 	/**
@@ -196,9 +190,7 @@ public class InMemoryQueryEvaluator implements QueryEvaluator {
 	 * @param clusters the clusters
 	 * @return a join/cross product relation tree
 	 */
-	private TupleIterator makeJoins(
-			Map<Atom, TupleIterator> scans,
-			List<Set<Atom>> clusters) {
+	private TupleIterator makeJoins(Map<Atom, TupleIterator> scans, List<Set<Atom>> clusters) {
 		TupleIterator outer = null;
 		Iterator<Set<Atom>> i = connectedComponents(clusters).iterator();
 		if (i.hasNext()) {
@@ -212,7 +204,7 @@ public class InMemoryQueryEvaluator implements QueryEvaluator {
 						if (inner == null) {
 							inner = scans.get(atom);
 						} else {
-							inner = new SymmetricMemoryHashJoin(this.computeNaturalJoinCondition(inner, scans.get(atom)), inner, scans.get(atom));
+							inner = new SymmetricMemoryHashJoin(inner, scans.get(atom));
 						}
 					} while (j.hasNext());
 				}
@@ -224,28 +216,6 @@ public class InMemoryQueryEvaluator implements QueryEvaluator {
 			} while (i.hasNext());
 		}
 		return outer;
-	}
-		
-	/**
-	 * Make natural join predicate.
-	 *
-	 * @param left TupleIterator
-	 * @param right TupleIterator
-	 * @return ConjunctivePredicate<AttributeEqualityPredicate>
-	 */
-	private ConjunctiveCondition computeNaturalJoinCondition(TupleIterator left, TupleIterator right) {
-		Collection<AttributeEqualityCondition> result = new ArrayList<>();
-		int i = 0;
-		for (Typed l: left.getOutputAttributes()) {
-			int j = 0;
-			for (Typed r: right.getOutputAttributes()) {
-				if (l.equals(r)) 
-					result.add(AttributeEqualityCondition.create(i, left.getOutputAttributes().length + j));
-				j++;
-			}
-			i++;
-		}
-		return ConjunctiveCondition.create(result.toArray(new SimpleCondition[result.size()]));
 	}
 	
 	/**

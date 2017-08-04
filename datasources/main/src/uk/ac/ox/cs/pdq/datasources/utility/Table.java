@@ -50,7 +50,7 @@ public class Table implements Result, Iterable<Tuple> {
 	 */
 	public Table(boolean intern, Typed[] attributes) {
 		Preconditions.checkArgument(attributes != null && attributes.length >= 0, "Invalid dynamic table type");
-		this.type = TupleType.DefaultFactory.create(attributes);
+		this.type = TupleType.DefaultFactory.createFromTyped(attributes);
 		this.header = attributes;
 		this.internTuples = intern;
 	}

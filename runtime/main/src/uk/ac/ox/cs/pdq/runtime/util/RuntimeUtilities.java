@@ -69,11 +69,11 @@ public class RuntimeUtilities {
 	 */
 	public static Tuple createTuple(Attribute[] attributes, Term[] values) {
 		Preconditions.checkArgument(attributes.length == values.length);
-		Object[] constants = new Object[values.length];
+		Typed[] constants = new TypedConstant[values.length];
 		for (int i = 0, l = values.length; i < l; i++) {
 			constants[i] = Utility.cast(attributes[i].getType(), values[i].toString());
 		}
-		return type.createTuple(constants);
+		return TupleType.DefaultFactory.createFromTyped(constants).createTuple(constants);
 	}
 	
 	public static boolean typeOfAttributesEqualsTupleType(TupleType tupleType, Attribute[] attributes) {
@@ -320,6 +320,43 @@ public class RuntimeUtilities {
 //		}
 //		return TupleType.DefaultFactory.create(result);
 //	}
+	
+	/**
+	 * Generates a list of terms matching the attributes of the input relation.
+	 *
+	 * @param query ConjunctiveQuery
+	 * @return List<Attribute>
+	 */
+	public static Attribute[] getAttributesCorrespondingToFreeVariables(ConjunctiveQuery query) {
+		Variable[] queryVariables = query.getFreeVariables();
+		Attribute[] result = new Attribute[query.getFreeVariables().length];
+		//for (Variable t:query.getFreeVariables()) {
+		for(int index = 0; index < queryVariables.length; ++index) {
+			Variable t = queryVariables[index];
+			boolean found = false;
+			for (Atom p:query.getAtoms()) {
+				Predicate s = p.getPredicate();
+				if (s instanceof Relation) {
+					Relation r = (Relation) s;
+					int i = 0;
+					for (Term v : p.getTerms()) {
+						if (v.equals(t)) {
+							result[index] = Attribute.create(r.getAttribute(i).getType(), t.toString());
+							found = true;
+							break;
+						}
+						i++;
+					}
+				}
+				if (found) {
+					break;
+				}
+			}
+		}
+		assert result.length == query.getFreeVariables().length : "Could not infer type of projected term in the query";
+		return result;
+	}
+
 
 	public static boolean isSatisfied(Condition condition, Tuple tuple) {
 		if(condition instanceof AttributeEqualityCondition) {
