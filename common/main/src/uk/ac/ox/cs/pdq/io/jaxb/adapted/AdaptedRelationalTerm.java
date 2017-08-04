@@ -29,7 +29,7 @@ import uk.ac.ox.cs.pdq.db.TypedConstant;
  *
  */
 @XmlRootElement(name = "RelationalTerm")
-@XmlType(propOrder = { "outputAttributes", "inputAttributes","accessMethod", "inputConstants","joinConditions","predicate","projections","relation","renamings","children" })
+@XmlType(propOrder = { "outputAttributes", "inputAttributes","accessMethod", "inputConstants","predicate","projections","relation","renamings","children" })
 public class AdaptedRelationalTerm implements Serializable {
 
 	private static final long serialVersionUID = 1734503933593174613L;
@@ -50,7 +50,6 @@ public class AdaptedRelationalTerm implements Serializable {
 
 	protected Attribute[] renamings;
 
-	protected Condition joinConditions;
 	private Condition predicate;
 
 	/** Input positions for the right hand child **/
@@ -95,7 +94,7 @@ public class AdaptedRelationalTerm implements Serializable {
 			children = ((RenameTerm) v).getChildren();
 			break;
 		case SelectionTerm:
-			//predicate = ((SelectionTerm) v).getPredicate();
+			predicate = ((SelectionTerm) v).getPredicate();
 			children = ((SelectionTerm) v).getChildren();
 			break;
 		default:
@@ -164,16 +163,9 @@ public class AdaptedRelationalTerm implements Serializable {
 		this.renamings = renamings;
 	}
 
+	@XmlElement
 	public Condition getPredicate() {
 		return predicate;
-	}
-
-	public Condition getJoinConditions() {
-		return joinConditions;
-	}
-
-	public void setJoinConditions(Condition joinConditions) {
-		this.joinConditions = joinConditions;
 	}
 
 	@XmlAttribute

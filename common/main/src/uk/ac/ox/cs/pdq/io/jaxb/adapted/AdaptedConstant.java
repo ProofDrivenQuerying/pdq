@@ -3,20 +3,15 @@ package uk.ac.ox.cs.pdq.io.jaxb.adapted;
 import java.lang.reflect.Type;
 
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-
-import org.junit.Assert;
 
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
-import uk.ac.ox.cs.pdq.io.jaxb.adapters.ConstantAdapter;
 
 /**
  * @author Gabor
  *
  */
-@XmlJavaTypeAdapter(ConstantAdapter.class)
 public class AdaptedConstant extends AdaptedVariable {
 	private Type type;
 	private String value;
@@ -25,7 +20,6 @@ public class AdaptedConstant extends AdaptedVariable {
 	}
 
 	public AdaptedConstant(Constant value) {
-		Assert.assertNotNull(value);
 		if (value instanceof TypedConstant) {
 			this.type = ((TypedConstant) value).getType();
 			this.value = String.valueOf(((TypedConstant) value).getValue());

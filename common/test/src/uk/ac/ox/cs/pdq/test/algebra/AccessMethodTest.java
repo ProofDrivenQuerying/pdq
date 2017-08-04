@@ -7,6 +7,10 @@ import org.junit.Test;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.util.Utility;
 
+/**
+ * @author Gabor
+ *
+ */
 public class AccessMethodTest {
 
 	public AccessMethodTest() {
@@ -18,7 +22,7 @@ public class AccessMethodTest {
 	public void setup() {
 		Utility.assertsEnabled();
 	}
-	
+
 	/**
 	 * Test number of relations.
 	 */
