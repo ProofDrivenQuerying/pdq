@@ -9,7 +9,6 @@ import com.google.common.base.Preconditions;
 import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
 import uk.ac.ox.cs.pdq.datasources.utility.TupleType;
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.runtime.util.RuntimeUtilities;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -23,7 +22,9 @@ public class IsEmpty extends TupleIterator {
 	/**  The sole child of the operator. */
 	protected final TupleIterator child;
 	
-	protected final TupleType cachedChildTupleType;
+	protected final TupleType childTupleType;
+	
+	protected final TupleType outputTupleType;
 
 	/** The next tuple in the iterator. */
 	private Tuple nextTuple = null;
@@ -36,7 +37,8 @@ public class IsEmpty extends TupleIterator {
 	public IsEmpty(TupleIterator child) {
 		super(child.getInputAttributes(), new Attribute[]{Attribute.create(Boolean.class, IsEmpty.class.getSimpleName())});
 		this.child = child;
-		this.cachedChildTupleType = TupleType.DefaultFactory.createFromTyped(this.inputAttributes);
+		this.childTupleType = TupleType.DefaultFactory.createFromTyped(this.inputAttributes);
+		this.outputTupleType = TupleType.DefaultFactory.createFromTyped(this.outputAttributes);
 	}
 	
 	@Override
@@ -114,7 +116,7 @@ public class IsEmpty extends TupleIterator {
 		Preconditions.checkState(this.open != null && this.open);
 		Preconditions.checkState(!this.interrupted);
 		if (this.nextTuple == null) {
-			this.nextTuple = RuntimeUtilities.createTuple(new Object[]{!this.child.hasNext()}, this.outputAttributes);
+			this.nextTuple = this.outputTupleType.createTuple(new Object[]{!this.child.hasNext()});
 			return nextTuple;
 		}
 		throw new NoSuchElementException("End of operator reached.");
@@ -129,7 +131,7 @@ public class IsEmpty extends TupleIterator {
 	public void bind(Tuple tuple) {
 		Assert.assertTrue(this.open != null && this.open);
 		Assert.assertTrue(tuple != null);
-		Assert.assertTrue(tuple.getType().equals(this.cachedChildTupleType));
+		Assert.assertTrue(tuple.getType().equals(this.childTupleType));
 		this.child.bind(tuple);
 	}
 }

@@ -42,7 +42,9 @@ public class DependentJoin extends TupleIterator {
 
 	protected final Integer[] inputPositionsForChild2;
 	
-	protected final TupleType cachedChildrenInputTupleType;
+	protected final TupleType child1TupleType;
+	
+	protected final TupleType child2TupleType;
 	
 	/** Determines whether the operator is known to have an empty result. */
 	protected boolean isEmpty = false;
@@ -102,7 +104,9 @@ public class DependentJoin extends TupleIterator {
 			Assert.assertTrue(position >= 0);
 			this.inputPositionsForChild2[index++] = position;
 		}
-		this.cachedChildrenInputTupleType = TupleType.DefaultFactory.createFromTyped(this.inputAttributes);
+//		this.cachedChildrenInputTupleType = TupleType.DefaultFactory.createFromTyped(this.inputAttributes);
+		this.child1TupleType = TupleType.DefaultFactory.createFromTyped(this.children[0].getInputAttributes());
+		this.child2TupleType = TupleType.DefaultFactory.createFromTyped(this.children[1].getInputAttributes());
 		
 		CompositeCacheManager ccm = CompositeCacheManager.getUnconfiguredInstance(); 
 		Properties properties = new Properties(); 
@@ -329,7 +333,7 @@ public class DependentJoin extends TupleIterator {
 			else 
 				result[attributeIndex] = currentInput.getValue(this.children[0].getNumberOfInputAttributes() + attributeIndex);
 		}
-		return RuntimeUtilities.createTuple(result, this.children[1].getInputAttributes());
+		return this.child2TupleType.createTuple(result);
 	}
 	
 	/**
@@ -342,9 +346,8 @@ public class DependentJoin extends TupleIterator {
 		Assert.assertTrue(this.open != null && this.open);
 		Assert.assertTrue(!this.interrupted);
 		Assert.assertTrue(tuple != null);
-		Assert.assertTrue(tuple.getType().equals(this.cachedChildrenInputTupleType));
 		Object[] inputsForLeftChild = RuntimeUtilities.projectValuesInInputPositions(tuple, this.inputPositionsForChild1);
-		this.children[0].bind(RuntimeUtilities.createTuple(inputsForLeftChild, this.children[0].getInputAttributes()));
+		this.children[0].bind(this.child1TupleType.createTuple(inputsForLeftChild));
 		this.currentInput = tuple;
 	}
 }

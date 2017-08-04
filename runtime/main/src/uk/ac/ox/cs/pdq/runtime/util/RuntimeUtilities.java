@@ -2,15 +2,12 @@ package uk.ac.ox.cs.pdq.runtime.util;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -21,14 +18,12 @@ import org.junit.Assert;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 
 import uk.ac.ox.cs.pdq.algebra.AttributeEqualityCondition;
 import uk.ac.ox.cs.pdq.algebra.Condition;
 import uk.ac.ox.cs.pdq.algebra.ConjunctiveCondition;
 import uk.ac.ox.cs.pdq.algebra.ConstantEqualityCondition;
-import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.algebra.SimpleCondition;
 import uk.ac.ox.cs.pdq.datasources.RelationAccessWrapper;
 import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
@@ -43,22 +38,12 @@ import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator;
-import uk.ac.ox.cs.pdq.util.Typed;
 import uk.ac.ox.cs.pdq.util.Utility;
 
 public class RuntimeUtilities {
-
+	
 	/** The log. */
 	private static Logger log = Logger.getLogger(RuntimeUtilities.class);
-	
-	
-	public static Tuple createTuple(Object[] values, Attribute[] attributes) {
-		return null;
-	}
-	
-	public static Tuple createTuple(Tuple values1, Attribute[] attributes1, Tuple values2, Attribute[] attributes2) {
-		return null;
-	}
 	
 	/**
 	 * To tuple.
@@ -70,14 +55,20 @@ public class RuntimeUtilities {
 	 */
 	public static Tuple createTuple(Attribute[] attributes, Term[] values) {
 		Preconditions.checkArgument(attributes.length == values.length);
-		Typed[] constants = new TypedConstant[values.length];
-		for (int i = 0, l = values.length; i < l; i++) {
-			constants[i] = Utility.cast(attributes[i].getType(), values[i].toString());
-		}
-		return TupleType.DefaultFactory.createFromTyped(constants).createTuple(constants);
+		Object[] output = new TypedConstant[values.length];
+		for (int i = 0, l = values.length; i < l; i++) 
+			output[i] = Utility.cast(attributes[i].getType(), values[i].toString());
+		TupleType tupleType = TupleType.DefaultFactory.createFromTyped(attributes);
+		return tupleType.createTuple(output);
 	}
 	
 	public static boolean typeOfAttributesEqualsTupleType(TupleType tupleType, Attribute[] attributes) {
+		if(attributes.length != tupleType.size())
+			return false;
+		for(int attributeIndex = 0; attributeIndex < attributes.length; ++attributeIndex) {
+			if(!attributes[attributeIndex].equals(tupleType.getType(attributeIndex)))
+				return false;
+		}
 		return true;
 	}
 	
@@ -93,7 +84,6 @@ public class RuntimeUtilities {
 		for (int i = 0, l = inputPositions.length; i < l; i++) 
 			result[i] = inputTuple.getValue(inputPositions[i]);
 		return result;
-		//return RuntimeUtilities.createTuple(result, child.getInputAttributes());
 	}
 		
 	public static ConjunctiveCondition computeJoinConditions(TupleIterator[] children) {
@@ -130,177 +120,6 @@ public class RuntimeUtilities {
 		}
 		return ConjunctiveCondition.create(equalities.toArray(new SimpleCondition[equalities.size()]));
 	}
-	
-//	/**
-//	 * Infer input mappings.
-//	 *
-//	 * @param inputColumns List<? extends Typed>
-//	 * @param operators Collection<TupleIterator>
-//	 * @return Map<TupleIterator,List<Integer>>
-//	 */
-//	protected static Map<TupleIterator, List<Integer>> inferInputMappings(
-//			List<? extends Typed> inputColumns, Collection<TupleIterator> operators) {
-//		Map<TupleIterator, List<Integer>> result = Maps.newLinkedHashMap();
-//		List<Typed> unassigned = Lists.newArrayList(inputColumns);
-//		for (TupleIterator op: operators) {
-//			List<Typed> inputs = op.getInputColumns();
-//			List<Integer> positions = new ArrayList<>(inputs.size());
-//			for (Typed t: inputs) {
-//				int position = inputColumns.indexOf(t);
-//				if (position >= 0) {
-//					positions.add(position);
-//					unassigned.remove(t);
-//				}
-//			}
-//			result.put(op, positions);
-//		}
-//		if (!unassigned.isEmpty()) {
-//			throw new IllegalStateException("Inconsistent input mapping");
-//		}
-//		return result;
-//	}
-
-//	/**
-//	 * Converts a list of Term to a list of Typed.
-//	 *
-//	 * @param terms List<? extends Term>
-//	 * @param type TupleType
-//	 * @return List<Typed>
-//	 */
-//	public static List<Typed> termsToTyped(Term[] terms, TupleType type) {
-//		Preconditions.checkArgument(terms.length == type.size());
-//		List<Typed> result = new ArrayList<>();
-//		int i = 0;
-//		for (Term t: terms) {
-//			result.add(termToTyped(t, type.getType(i)));
-//			i++;
-//		}
-//		return result;
-//	}
-//	
-//	public static TupleType attributesToTyped(Attribute[] terms) {
-//		Type[] result = new Type[terms.length];
-//		int i = 0;
-//		for (Attribute t: terms)
-//			result[i++] = t.getType();
-//		return TupleType.DefaultFactory.create(result);
-//	}
-//
-//	/**
-//	 * Converts a Term to a Typed.
-//	 *
-//	 * @param t Term
-//	 * @param type Class<?>
-//	 * @return Typed
-//	 */
-//	public static Typed termToTyped(Term t, Type type) {
-//		if (t.isVariable() || t.isUntypedConstant()) 
-//			return Attribute.create(type, String.valueOf(t));
-//		else if (t instanceof TypedConstant) 
-//			return (TypedConstant) t;
-//		else 
-//			throw new IllegalStateException("Unknown typed object: " + t);
-//	}
-//
-
-//
-//	/**
-//	 * Converts a list of Term to a list of Typed.
-//	 *
-//	 * @param variables List<? extends Term>
-//	 * @param type TupleType
-//	 * @return List<Typed>
-//	 */
-//	public static List<Typed> variablesToTyped(Variable[] variables, TupleType type) {
-//		Preconditions.checkArgument(variables.length == type.size());
-//		List<Typed> result = new ArrayList<>();
-//		int i = 0;
-//		for (Term t: variables) {
-//			result.add(termToTyped(t, type.getType(i)));
-//			i++;
-//		}
-//		return result;
-//	}
-//	
-//	/**
-//	 * Generates a list of attribute whose name are the name as those of term in
-//	 * the given predicate, and types match with the predicate attribute types.
-//	 * @param variables List<? extends Term>
-//	 * @param type TupleType
-//	 * @return List<Attribute>
-//	 */
-//	public static List<Attribute> variablesToAttributes(Variable[] variables, TupleType type) {
-//		Preconditions.checkArgument(variables.length == type.size());
-//		List<Attribute> result = new ArrayList<>();
-//		int i = 0;
-//		for (Term t:variables) {
-//			result.add(Attribute.create(type.getType(i++), t.toString()));
-//		}
-//		return result;
-//	}
-//
-//	/**
-//	 * Generates a list of terms matching the attributes of the input relation.
-//	 *
-//	 * @param query ConjunctiveQuery
-//	 * @return List<Attribute>
-//	 */
-//	public static List<Attribute> termsToAttributes(ConjunctiveQuery query) {
-//		List<Attribute> result = new ArrayList<>();
-//		for (Variable t:query.getFreeVariables()) {
-//			boolean found = false;
-//			for (Atom p:query.getAtoms()) {
-//				Predicate s = p.getPredicate();
-//				if (s instanceof Relation) {
-//					Relation r = (Relation) s;
-//					int i = 0;
-//					for (Term v : p.getTerms()) {
-//						if (v.equals(t)) {
-//							result.add(Attribute.create(r.getAttribute(i).getType(), t.toString()));
-//							found = true;
-//							break;
-//						}
-//						i++;
-//					}
-//				}
-//				if (found) {
-//					break;
-//				}
-//			}
-//		}
-//		assert result.size() == query.getFreeVariables().length : "Could not infer type of projected term in the query";
-//		return result;
-//	}
-//
-//	/**
-//	 * Gets the tuple type.
-//	 *
-//	 * @param query the q
-//	 * @return the tuple type of the input query
-//	 */
-//	public static TupleType getTupleType(ConjunctiveQuery query) {
-//		Type[] result = new Class<?>[query.getFreeVariables().length];
-//		boolean assigned = false;
-//		for (int i = 0, l = result.length; i < l; i++) {
-//			assigned = false;
-//			Variable t = query.getFreeVariables()[i];
-//			for (Atom f: query.getAtoms()) {
-//				Predicate s = f.getPredicate();
-//				if (s instanceof Relation) {
-//					List<Integer> pos = Utility.getTermPositions(f, t);
-//					if (!pos.isEmpty()) {
-//						result[i] = ((Relation) s).getAttribute(pos.get(0)).getType();
-//						assigned = true;
-//						break;
-//					}
-//				}
-//			}
-//			if (!assigned) {
-//				throw new IllegalStateException("Could not infer query type.");
-//			}
-//		}
-//		return TupleType.DefaultFactory.create(result);
-//	}
 	
 	/**
 	 * Generates a list of terms matching the attributes of the input relation.
@@ -439,25 +258,6 @@ public class RuntimeUtilities {
 		return input;
 	}
 	
-//	public static Integer[] computePositionsInLeftChildThatAreInputToRightChild(TupleIterator left, TupleIterator right) {
-//		List<Integer> result = new ArrayList<>();
-//		for (Attribute attribute: right.getInputAttributes()) {
-//			int indexOf = Arrays.asList(left.getOutputAttributes()).indexOf(attribute);
-//			if(indexOf >= 0)
-//				result.add(indexOf);
-//		}
-//		return result.toArray(new Integer[result.size()]);
-//	}
-//	
-//	public static Attribute[] computeInputAttributes(TupleIterator left, TupleIterator right, Integer[] sidewaysInput) {
-//		Attribute[] leftInputs = left.getInputAttributes();
-//		Attribute[] rightInputs = right.getInputAttributes();
-//		List<Attribute> result = Lists.newArrayList(leftInputs);
-//		for (int i = 0; i < sidewaysInput.length; i++) 
-//			result.add(rightInputs[i]);
-//		return result.toArray(new Attribute[result.size()]);
-//	}
-	
 	public static Map<Integer,Integer> computePositionsInRightChildThatAreBoundFromLeftChild(TupleIterator left, TupleIterator right) {
 		Map<Integer,Integer> result = new LinkedHashMap<>();
 		for (int index = 0; index < right.getNumberOfInputAttributes(); ++index) {
@@ -480,21 +280,4 @@ public class RuntimeUtilities {
 		}
 		return result.toArray(new Attribute[result.size()]);
 	}
-	
-//	/**
-//	 * To tuple.
-//	 *
-//	 * @param type TupleType
-//	 * @param attributes List<Attribute>
-//	 * @param values Constant[]
-//	 * @return a tuple view of the given collection of terms.
-//	 */
-//	public static Tuple toTuple(TupleType type, Attribute[] attributes, Term[] values) {
-//		Preconditions.checkArgument(attributes.length == values.length);
-//		Object[] constants = new Object[values.length];
-//		for (int i = 0, l = values.length; i < l; i++) {
-//			constants[i] = Utility.cast(attributes[i].getType(), values[i].toString());
-//		}
-//		return type.createTuple(constants);
-//	}
 }

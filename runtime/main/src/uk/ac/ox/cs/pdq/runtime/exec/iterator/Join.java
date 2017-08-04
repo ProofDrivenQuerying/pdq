@@ -29,7 +29,11 @@ public abstract class Join extends TupleIterator {
 	/** The predicate. */
 	protected final Condition joinConditions;
 	
-	protected final TupleType cachedChildrenInputTupleType;
+	protected final TupleType child1TupleType;
+	
+	protected final TupleType child2TupleType;
+	
+	protected final TupleType outputTupleType;
 
 	/** Determines whether the operator is known to have an empty result. */
 	protected boolean isEmpty = false;
@@ -66,7 +70,9 @@ public abstract class Join extends TupleIterator {
 			Assert.assertTrue(position >= 0);
 			this.inputPositionsForChild2[index++] = position;
 		}
-		this.cachedChildrenInputTupleType = TupleType.DefaultFactory.createFromTyped(this.inputAttributes);
+		this.child1TupleType = TupleType.DefaultFactory.createFromTyped(this.children[0].getInputAttributes());
+		this.child2TupleType = TupleType.DefaultFactory.createFromTyped(this.children[1].getInputAttributes());
+		this.outputTupleType = TupleType.DefaultFactory.createFromTyped(this.outputAttributes);
 	}
 	
 	@Override
@@ -118,7 +124,7 @@ public abstract class Join extends TupleIterator {
 		this.children[0].open();
 		this.children[1].open();
 		this.open = true;
-		if (this.cachedChildrenInputTupleType.size() == 0) {
+		if (this.inputAttributes.length == 0) {
 			this.nextTuple();
 		}
 	}
@@ -215,8 +221,8 @@ public abstract class Join extends TupleIterator {
 		Assert.assertTrue(!this.interrupted);
 		Object[] inputsForLeftChild = RuntimeUtilities.projectValuesInInputPositions(tuple, this.inputPositionsForChild1);
 		Object[] inputsForRightChild = RuntimeUtilities.projectValuesInInputPositions(tuple, this.inputPositionsForChild2);
-		this.children[0].bind(RuntimeUtilities.createTuple(inputsForLeftChild, this.children[0].getInputAttributes()));
-		this.children[1].bind(RuntimeUtilities.createTuple(inputsForRightChild, this.children[1].getInputAttributes()));
+		this.children[0].bind(this.child1TupleType.createTuple(inputsForLeftChild));
+		this.children[1].bind(this.child2TupleType.createTuple(inputsForRightChild));
 		this.nextTuple();
 	}
 

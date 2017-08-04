@@ -23,7 +23,7 @@ public class Selection extends TupleIterator {
 	
 	protected final TupleIterator child;
 	
-	protected final TupleType cachedChildTupleType;
+	protected final TupleType childTupleType;
 
 	/** The predicate associated with this selection. */
 	protected final Condition selectionCondition;
@@ -43,7 +43,7 @@ public class Selection extends TupleIterator {
 		Assert.assertTrue(AlgebraUtilities.assertSelectionCondition(selectionCondition, child.getOutputAttributes()));
 		this.selectionCondition = selectionCondition;
 		this.child = child;
-		this.cachedChildTupleType = TupleType.DefaultFactory.createFromTyped(this.inputAttributes);
+		this.childTupleType = TupleType.DefaultFactory.createFromTyped(this.inputAttributes);
 	}
 
 	/**
@@ -195,7 +195,7 @@ public class Selection extends TupleIterator {
 	public void bind(Tuple t) {
 		Assert.assertTrue(this.open != null && this.open);
 		Assert.assertTrue(t != null);
-		Assert.assertTrue(t.getType().equals(this.cachedChildTupleType));
+		Assert.assertTrue(t.getType().equals(this.childTupleType));
 		this.child.bind(t);
 	}
 }

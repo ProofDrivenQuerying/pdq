@@ -9,6 +9,7 @@ import java.util.NoSuchElementException;
 import org.junit.Assert;
 
 import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
+import uk.ac.ox.cs.pdq.datasources.utility.TupleType;
 import uk.ac.ox.cs.pdq.runtime.util.RuntimeUtilities;
 
 
@@ -25,6 +26,10 @@ public class CartesianProduct extends TupleIterator {
 	protected final Integer[] inputPositionsForChild1;
 
 	protected final Integer[] inputPositionsForChild2;
+	
+	protected final TupleType child1TupleType;
+	
+	protected final TupleType child2TupleType;
 	
 	/** A stack of tuple fragment, used in the incremental computation of the cross product. */
 	protected Deque<Tuple> tupleStack = new ArrayDeque<>();
@@ -60,6 +65,8 @@ public class CartesianProduct extends TupleIterator {
 			Assert.assertTrue(position >= 0);
 			this.inputPositionsForChild2[index++] = position;
 		}
+		this.child1TupleType = TupleType.DefaultFactory.createFromTyped(this.children[0].getInputAttributes());
+		this.child2TupleType = TupleType.DefaultFactory.createFromTyped(this.children[1].getInputAttributes());
 	}
 	
 	@Override
@@ -234,7 +241,7 @@ public class CartesianProduct extends TupleIterator {
 		Assert.assertTrue(!this.interrupted);
 		Object[] inputsForLeftChild = RuntimeUtilities.projectValuesInInputPositions(tuple, this.inputPositionsForChild1);
 		Object[] inputsForRightChild = RuntimeUtilities.projectValuesInInputPositions(tuple, this.inputPositionsForChild2);
-		this.children[0].bind(RuntimeUtilities.createTuple(inputsForLeftChild, this.children[0].getInputAttributes()));
-		this.children[1].bind(RuntimeUtilities.createTuple(inputsForRightChild, this.children[1].getInputAttributes()));
+		this.children[0].bind(this.child1TupleType.createTuple(inputsForLeftChild));
+		this.children[1].bind(this.child2TupleType.createTuple(inputsForRightChild));
 	}
 }

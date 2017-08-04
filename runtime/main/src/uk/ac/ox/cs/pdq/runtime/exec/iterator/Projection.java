@@ -13,7 +13,6 @@ import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
 import uk.ac.ox.cs.pdq.datasources.utility.TupleType;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
-import uk.ac.ox.cs.pdq.runtime.util.RuntimeUtilities;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -31,7 +30,9 @@ public class Projection extends TupleIterator {
 	/** Maps each variable is the head to a position in the children. */
 	protected final Map<Attribute, Integer> positionsOfProjectedAttributes;
 	
-	protected final TupleType cachedChildTupleType;
+	protected final TupleType childTupleType;
+	
+	protected final TupleType projectionsTupleType;
 	
 	public Projection(Attribute[] projections, TupleIterator child) {
 		super(child.getInputAttributes(), child.getOutputAttributes());
@@ -45,7 +46,8 @@ public class Projection extends TupleIterator {
 		}
 		this.projections = projections.clone();
 		this.child = child;
-		this.cachedChildTupleType = TupleType.DefaultFactory.createFromTyped(this.inputAttributes);
+		this.childTupleType = TupleType.DefaultFactory.createFromTyped(this.inputAttributes);
+		this.projectionsTupleType = TupleType.DefaultFactory.createFromTyped(this.projections);
 	}
 	
 	@Override
@@ -174,7 +176,7 @@ public class Projection extends TupleIterator {
 			else if (this.projections[index].getType() instanceof TypedConstant) 
 				result[index] = ((TypedConstant) this.projections[index].getType()).getValue();
 		}
-		return RuntimeUtilities.createTuple(result, this.projections);
+		return this.projectionsTupleType.createTuple(result);
 	}
 
 	/**
@@ -186,7 +188,7 @@ public class Projection extends TupleIterator {
 	public void bind(Tuple tuple) {
 		Assert.assertTrue(this.open != null && this.open);
 		Assert.assertTrue(tuple != null);
-		Assert.assertTrue(tuple.getType().equals(this.cachedChildTupleType));
+		Assert.assertTrue(tuple.getType().equals(this.childTupleType));
 		this.child.bind(tuple);
 	}
 }

@@ -20,7 +20,6 @@ import uk.ac.ox.cs.pdq.algebra.ConstantEqualityCondition;
 import uk.ac.ox.cs.pdq.algebra.SimpleCondition;
 import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
 import uk.ac.ox.cs.pdq.fol.Term;
-import uk.ac.ox.cs.pdq.runtime.util.RuntimeUtilities;
 
 
 // TODO: Auto-generated Javadoc
@@ -120,11 +119,11 @@ public class SymmetricMemoryHashJoin extends Join {
 				this.nextTuple = null;
 				return;
 			}
-			if (this.side) {
-				this.nextTuple = RuntimeUtilities.createTuple(this.bucketIterator.next(), this.children[0].getOutputAttributes(), this.partialTuple, this.children[1].getOutputAttributes()); 
-			} else {
-				this.nextTuple = RuntimeUtilities.createTuple(this.partialTuple, this.children[0].getOutputAttributes(), this.bucketIterator.next(), this.children[1].getOutputAttributes()); 
-			}
+			if (this.side) 
+				this.nextTuple = this.outputTupleType.appendTuples(this.bucketIterator.next(), this.partialTuple);
+			else 
+				this.nextTuple = this.outputTupleType.appendTuples(this.partialTuple, this.bucketIterator.next()); 
+			
 		}
 	}
 
