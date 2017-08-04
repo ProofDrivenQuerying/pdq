@@ -22,9 +22,39 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 
 public class AlgebraUtilities {
-	
+
 	public static boolean assertSelectionCondition(Condition selectionCondition, Attribute[] outputAttributes) {
-		return true;
+		if(selectionCondition instanceof ConjunctiveCondition) {
+			for(SimpleCondition conjunct:((ConjunctiveCondition) selectionCondition).getSimpleConditions()) {
+				if(assertSelectionCondition(conjunct, outputAttributes) == false)
+					return false;
+			}
+			return true;
+		}
+		else 
+			return assertSelectionCondition((SimpleCondition) selectionCondition, outputAttributes);
+		
+	}
+
+	public static boolean assertSelectionCondition(SimpleCondition selectionCondition, Attribute[] outputAttributes) {
+		if(selectionCondition instanceof ConstantEqualityCondition) {
+			int position = ((ConstantEqualityCondition) selectionCondition).getPosition();
+			if( position > outputAttributes.length || 
+					((ConstantEqualityCondition) selectionCondition).getConstant().getType().equals(outputAttributes[position])) 
+				return false;
+			else 
+				return true;
+		}
+		else if(selectionCondition instanceof AttributeEqualityCondition) {
+			int position = ((AttributeEqualityCondition) selectionCondition).getPosition();
+			int other = ((AttributeEqualityCondition) selectionCondition).getOther();
+			if( position > outputAttributes.length || other > outputAttributes.length) 
+				return false;
+			else 
+				return true;
+		}
+		else 
+			throw new RuntimeException("Unknown operator type");
 	}
 
 	protected static Map<Integer,Integer> computePositionsInRightChildThatAreBoundFromLeftChild(RelationalTerm left, RelationalTerm right) {
@@ -45,7 +75,7 @@ public class AlgebraUtilities {
 		for (int attributeIndex = 0; attributeIndex < right.getNumberOfInputAttributes(); attributeIndex++) {
 			Attribute inputAttribute = right.getInputAttribute(attributeIndex);
 			if(!Arrays.asList(leftInputs).contains(inputAttribute));
-				result.add(rightInputs[attributeIndex]);
+			result.add(rightInputs[attributeIndex]);
 		}
 		return result.toArray(new Attribute[result.size()]);
 	}
