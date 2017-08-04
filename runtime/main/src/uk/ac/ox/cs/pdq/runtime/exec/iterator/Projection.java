@@ -91,20 +91,7 @@ public class Projection extends TupleIterator {
 		super.setEventBus(eb);
 		this.child.setEventBus(eb);
 	}
-
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see java.util.Iterator#hasNext()
-	 */
-	@Override
-	public boolean hasNext() {
-		Assert.assertTrue(this.open != null && this.open);
-		return !this.interrupted && this.child.hasNext();
-	}
-
-
-
+	
 	/**
 	 * 
 	 * {@inheritDoc}
@@ -151,6 +138,17 @@ public class Projection extends TupleIterator {
 		Assert.assertTrue(this.open != null && this.open);
 		this.interrupted = true;
 		this.child.interrupt();
+	}
+	
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see java.util.Iterator#hasNext()
+	 */
+	@Override
+	public boolean hasNext() {
+		Assert.assertTrue(this.open != null && this.open);
+		return !this.interrupted && this.child.hasNext();
 	}
 	
 	/**

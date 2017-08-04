@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -87,34 +88,14 @@ public class RuntimeUtilities {
 	 * @param inputTuple Tuple
 	 * @return Tuple
 	 */
-	public static Tuple projectInputValuesForChild(TupleIterator child, Tuple inputTuple, Integer[] inputPositions) {
-		Object[] result = new Object[child.getNumberOfInputAttributes()];
+	public static Object[] projectValuesInInputPositions(Tuple inputTuple, Integer[] inputPositions) {
+		Object[] result = new Object[inputPositions.length];
 		for (int i = 0, l = inputPositions.length; i < l; i++) 
 			result[i] = inputTuple.getValue(inputPositions[i]);
-		return RuntimeUtilities.createTuple(result, child.getInputAttributes());
+		return result;
+		//return RuntimeUtilities.createTuple(result, child.getInputAttributes());
 	}
-	
-	/**
-	 * Project.
-	 *
-	 * @param parentInput the current input
-	 * @param leftInput the left input
-	 * @return an input tuple obtained by mixing inputs coming from the parent
-	 * (currentInput) and the LHS (leftInput).
-	 */
-	public static Tuple projectInputValuesForChild(TupleIterator leftChild, TupleIterator rightChild, Tuple parentInput, Tuple leftInput, Integer sidewaysInputs[]) {
-		Object[] result = new Object[rightChild.getNumberOfInputAttributes()];
-		for (int i = 0, j = 0, l = sidewaysInputs.length; i < l; i++) {
-			if (sidewaysInputs[i] >= 0) {
-				result[i] = leftInput.getValue(sidewaysInputs[i]);
-			} else {
-				result[i] = parentInput.getValue(leftChild.getNumberOfInputAttributes() + j++);
-			}
-		}
-		return createTuple(result, rightChild.getInputAttributes());
-	}
-	
-	
+		
 	public static ConjunctiveCondition computeJoinConditions(TupleIterator[] children) {
 		Multimap<Attribute, Integer> joinVariables = LinkedHashMultimap.create();
 		int totalCol = 0;
@@ -458,22 +439,45 @@ public class RuntimeUtilities {
 		return input;
 	}
 	
-	public static Integer[] computePositionsOfInputAttributes(TupleIterator left, TupleIterator right) {
-		List<Integer> result = new ArrayList<>();
-		for (Attribute attribute: right.getInputAttributes()) {
+//	public static Integer[] computePositionsInLeftChildThatAreInputToRightChild(TupleIterator left, TupleIterator right) {
+//		List<Integer> result = new ArrayList<>();
+//		for (Attribute attribute: right.getInputAttributes()) {
+//			int indexOf = Arrays.asList(left.getOutputAttributes()).indexOf(attribute);
+//			if(indexOf >= 0)
+//				result.add(indexOf);
+//		}
+//		return result.toArray(new Integer[result.size()]);
+//	}
+//	
+//	public static Attribute[] computeInputAttributes(TupleIterator left, TupleIterator right, Integer[] sidewaysInput) {
+//		Attribute[] leftInputs = left.getInputAttributes();
+//		Attribute[] rightInputs = right.getInputAttributes();
+//		List<Attribute> result = Lists.newArrayList(leftInputs);
+//		for (int i = 0; i < sidewaysInput.length; i++) 
+//			result.add(rightInputs[i]);
+//		return result.toArray(new Attribute[result.size()]);
+//	}
+	
+	public static Map<Integer,Integer> computePositionsInRightChildThatAreBoundFromLeftChild(TupleIterator left, TupleIterator right) {
+		Map<Integer,Integer> result = new LinkedHashMap<>();
+		for (int index = 0; index < right.getNumberOfInputAttributes(); ++index) {
+			Attribute attribute = right.getInputAttribute(index);
 			int indexOf = Arrays.asList(left.getOutputAttributes()).indexOf(attribute);
 			if(indexOf >= 0)
-				result.add(indexOf);
+				result.put(index, indexOf);
 		}
-		return result.toArray(new Integer[result.size()]);
+		return result;
 	}
-	
-	public static Attribute[] computeInputAttributes(TupleIterator left, TupleIterator right, Integer[] sidewaysInput) {
+
+	public static Attribute[] computeInputAttributesForDependentJoinTerm(TupleIterator left, TupleIterator right) {
 		Attribute[] leftInputs = left.getInputAttributes();
 		Attribute[] rightInputs = right.getInputAttributes();
 		List<Attribute> result = Lists.newArrayList(leftInputs);
-		for (int i = 0; i < sidewaysInput.length; i++) 
-			result.add(rightInputs[i]);
+		for (int attributeIndex = 0; attributeIndex < right.getNumberOfInputAttributes(); attributeIndex++) {
+			Attribute inputAttribute = right.getInputAttribute(attributeIndex);
+			if(!Arrays.asList(leftInputs).contains(inputAttribute));
+				result.add(rightInputs[attributeIndex]);
+		}
 		return result.toArray(new Attribute[result.size()]);
 	}
 	

@@ -213,8 +213,10 @@ public abstract class Join extends TupleIterator {
 	public void bind(Tuple tuple) {
 		Assert.assertTrue(this.open != null && this.open);
 		Assert.assertTrue(!this.interrupted);
-		this.children[0].bind(RuntimeUtilities.projectInputValuesForChild(this.children[0], tuple, this.inputPositionsForChild1));
-		this.children[1].bind(RuntimeUtilities.projectInputValuesForChild(this.children[1], tuple, this.inputPositionsForChild2));
+		Object[] inputsForLeftChild = RuntimeUtilities.projectValuesInInputPositions(tuple, this.inputPositionsForChild1);
+		Object[] inputsForRightChild = RuntimeUtilities.projectValuesInInputPositions(tuple, this.inputPositionsForChild2);
+		this.children[0].bind(RuntimeUtilities.createTuple(inputsForLeftChild, this.children[0].getInputAttributes()));
+		this.children[1].bind(RuntimeUtilities.createTuple(inputsForRightChild, this.children[1].getInputAttributes()));
 		this.nextTuple();
 	}
 

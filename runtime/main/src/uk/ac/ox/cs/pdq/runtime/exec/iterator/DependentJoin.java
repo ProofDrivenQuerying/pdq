@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Deque;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Properties;
 
@@ -34,8 +35,8 @@ public class DependentJoin extends TupleIterator {
 	/** The predicate. */
 	protected final Condition joinConditions;
 
-	/** The input sideways mapping. */
-	protected final Integer[] sidewaysInputs;
+	/** Positions that will be populated with values from the left hand child. */
+	protected final Map<Integer, Integer> positionsInLeftChildThatAreInputToRightChild;
 	
 	protected final Integer[] inputPositionsForChild1;
 
@@ -77,14 +78,14 @@ public class DependentJoin extends TupleIterator {
 	protected Tuple nextTuple = null;
 
 	public DependentJoin(TupleIterator child1, TupleIterator child2) {
-		super(RuntimeUtilities.computeInputAttributes(child1, child2, RuntimeUtilities.computePositionsOfInputAttributes(child1, child2)), RuntimeUtilities.computeOutputAttributes(child1, child2));
+		super(RuntimeUtilities.computeInputAttributes(child1, child2), RuntimeUtilities.computeOutputAttributes(child1, child2));
 		Assert.assertNotNull(child1);
 		Assert.assertNotNull(child2);
 		for(int inputAttributeIndex = 0; inputAttributeIndex < child2.getNumberOfInputAttributes(); ++inputAttributeIndex) 
 			Assert.assertTrue(Arrays.asList(child1.getOutputAttributes()).contains(child2.getInputAttributes()[inputAttributeIndex]));
 		this.children[0] = child1;
 		this.children[1] = child2;
-		this.sidewaysInputs = RuntimeUtilities.computePositionsOfInputAttributes(child1, child2);
+		this.positionsInLeftChildThatAreInputToRightChild = RuntimeUtilities.computePositionsInRightChildThatAreBoundFromLeftChild(child1, child2);
 		this.joinConditions = RuntimeUtilities.computeJoinConditions(this.children);
 		this.joinId = DependentJoin.joinIds++;
 		this.inputPositionsForChild1 = new Integer[child1.getNumberOfInputAttributes()];
@@ -165,6 +166,9 @@ public class DependentJoin extends TupleIterator {
 			child.open();
 		}
 		this.open = true;
+		if (this.inputAttributes.length == 0) {
+			this.nextTuple();
+		}
 	}
 
 	/**
@@ -282,8 +286,7 @@ public class DependentJoin extends TupleIterator {
 				throw new IllegalStateException();
 			}
 			this.leftTuple = this.children[0].next();
-			this.rInput = RuntimeUtilities.projectInputValuesForChild(this.children[0], this.children[1], 
-					this.currentInput, this.leftTuple, this.sidewaysInputs);
+			this.rInput = this.projectInputValuesForRightChild(this.currentInput, this.leftTuple);
 			this.cached = (Deque<Tuple>) this.cache.get(Pair.of(this.joinId, this.rInput));
 			if (this.cached == null) {
 				this.children[1].bind(this.rInput);
@@ -310,17 +313,38 @@ public class DependentJoin extends TupleIterator {
 	}
 	
 	/**
+	 * Project.
+	 *
+	 * @param currentInput the current input
+	 * @param leftInput the left input
+	 * @return an input tuple obtained by mixing inputs coming from the parent
+	 * (currentInput) and the LHS (leftInput).
+	 */
+	protected Tuple projectInputValuesForRightChild(Tuple currentInput, Tuple leftInput) {
+		Object[] result = new Object[this.children[1].getNumberOfInputAttributes()];
+		for(int attributeIndex = 0; attributeIndex < this.children[1].getNumberOfInputAttributes(); ++attributeIndex) {
+			Integer positionInLeftChild = this.positionsInLeftChildThatAreInputToRightChild.get(attributeIndex);
+			if(positionInLeftChild != null) 
+				result[attributeIndex] = leftInput.getValue(positionInLeftChild);
+			else 
+				result[attributeIndex] = currentInput.getValue(this.children[0].getNumberOfInputAttributes() + attributeIndex);
+		}
+		return RuntimeUtilities.createTuple(result, this.children[1].getInputAttributes());
+	}
+	
+	/**
 	 * Bind.
 	 *
-	 * @param t Tuple
+	 * @param tuple Tuple
 	 */
 	@Override
-	public void bind(Tuple t) {
+	public void bind(Tuple tuple) {
 		Assert.assertTrue(this.open != null && this.open);
 		Assert.assertTrue(!this.interrupted);
-		Assert.assertTrue(t != null);
-		Assert.assertTrue(t.getType().equals(this.cachedChildrenInputTupleType));
-		this.children[0].bind(RuntimeUtilities.projectInputValuesForChild(this.children[0], t, this.inputPositionsForChild1));
-		this.currentInput = t;
+		Assert.assertTrue(tuple != null);
+		Assert.assertTrue(tuple.getType().equals(this.cachedChildrenInputTupleType));
+		Object[] inputsForLeftChild = RuntimeUtilities.projectValuesInInputPositions(tuple, this.inputPositionsForChild1);
+		this.children[0].bind(RuntimeUtilities.createTuple(inputsForLeftChild, this.children[0].getInputAttributes()));
+		this.currentInput = tuple;
 	}
 }

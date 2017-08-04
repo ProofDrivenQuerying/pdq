@@ -1,6 +1,7 @@
 package uk.ac.ox.cs.pdq.algebra;
 
 import java.util.Arrays;
+import java.util.Map;
 
 import org.junit.Assert;
 
@@ -19,29 +20,25 @@ public class DependentJoinTerm extends RelationalTerm {
 	protected final Condition joinConditions;
 	
 	/** Input positions for the right hand child**/
-	protected final Integer[] sidewaysInput;
+	protected final Map<Integer,Integer> positionsInRightChildThatAreBoundFromLeftChild;
 
 	/**  Cashed string representation. */
 	protected String toString = null;
 
 	private DependentJoinTerm(RelationalTerm child1, RelationalTerm child2) {
-		super(AlgebraUtilities.computeInputAttributes(child1, child2, AlgebraUtilities.computePositionsOfInputAttributes(child1, child2)), AlgebraUtilities.computeOutputAttributes(child1, child2));
+		super(AlgebraUtilities.computeInputAttributesForDependentJoinTerm(child1, child2), AlgebraUtilities.computeOutputAttributes(child1, child2));
 		Assert.assertNotNull(child1);
 		Assert.assertNotNull(child2);
 		for(int inputAttributeIndex = 0; inputAttributeIndex < child2.getNumberOfInputAttributes(); ++inputAttributeIndex) 
 			Assert.assertTrue(Arrays.asList(child1.getOutputAttributes()).contains(child2.getInputAttributes()[inputAttributeIndex]));
 		this.children[0] = child1;
 		this.children[1] = child2;
-		this.sidewaysInput = AlgebraUtilities.computePositionsOfInputAttributes(child1, child2);
+		this.positionsInRightChildThatAreBoundFromLeftChild = AlgebraUtilities.computePositionsInRightChildThatAreBoundFromLeftChild(child1, child2);
 		this.joinConditions = AlgebraUtilities.computeJoinConditions(this.children);
 	}
-
-	public Condition getPredicate() {
-		return this.joinConditions;
-	}
 	
-	public Integer[] getSidewaysInput() {
-		return this.sidewaysInput.clone();
+	public Map<Integer,Integer> getpositionsInLeftChildThatAreInputToRightChild() {
+		return this.positionsInRightChildThatAreBoundFromLeftChild;
 	}
 	
 	public Condition getJoinConditions() {

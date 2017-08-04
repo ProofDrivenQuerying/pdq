@@ -14,6 +14,7 @@ import uk.ac.ox.cs.pdq.datasources.utility.Table;
 import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
 import uk.ac.ox.cs.pdq.datasources.utility.TupleType;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.runtime.util.RuntimeUtilities;
 
@@ -37,6 +38,8 @@ public class Access extends TupleIterator {
 
 	/** The map some of the inputs to static values. */
 	protected final Map<Integer, TypedConstant> inputConstants;
+	
+	protected final Attribute[] attributesOfInputPositions;
 
 	/** Iterator over the output tuples. */
 	protected Map<Tuple, ResetableIterator<Tuple>> outputs = null;
@@ -82,7 +85,8 @@ public class Access extends TupleIterator {
 		this.inputConstants = new LinkedHashMap<>();
 		for(java.util.Map.Entry<Integer, TypedConstant> entry:inputConstants.entrySet()) 
 			this.inputConstants.put(entry.getKey(), entry.getValue().clone());
-		this.inputTupleType = TupleType.DefaultFactory.createFromTyped(RuntimeUtilities.getInputAttributes(relation, accessMethod));
+		this.attributesOfInputPositions = RuntimeUtilities.getInputAttributes(relation, accessMethod);
+		this.inputTupleType = TupleType.DefaultFactory.createFromTyped(this.attributesOfInputPositions);
 	}
 	
 	@Override
@@ -244,10 +248,10 @@ public class Access extends TupleIterator {
 			// If iterator has not been set at this stage, it implies all 
 			// inputs this access are statically defined.
 			// Assert.assertTrue(this.inputType.size() == 0);
-			Tuple staticInput = this.makeInput(Tuple.EmptyTuple);
-			Table inputs = new Table(RuntimeUtilities.getInputAttributes(this.relation, this.accessMethod));
+			Tuple staticInput = this.makeInputTupleByCombiningInputsFromParentsWithInputConstants(Tuple.EmptyTuple);
+			Table inputs = new Table(this.attributesOfInputPositions);
 			inputs.appendRow(staticInput);
-			this.iterator = this.relation.iterator(RuntimeUtilities.getInputAttributes(this.relation, this.accessMethod), inputs.iterator());
+			this.iterator = this.relation.iterator(this.attributesOfInputPositions, inputs.iterator());
 			this.iterator.open();
 			this.outputs.put(staticInput, this.iterator);
 		}
@@ -267,12 +271,12 @@ public class Access extends TupleIterator {
 		Assert.assertTrue(!this.interrupted);
 		Assert.assertTrue(tuple != null);
 		Assert.assertTrue(RuntimeUtilities.typeOfAttributesEqualsTupleType(tuple.getType(), this.inputAttributes));
-		Tuple combinedInputs = this.makeInput(tuple);
+		Tuple combinedInputs = this.makeInputTupleByCombiningInputsFromParentsWithInputConstants(tuple);
 		this.iterator = this.outputs.get(combinedInputs);
 		if (this.iterator == null) {
-			Table inputs = new Table(RuntimeUtilities.getInputAttributes(this.relation, this.accessMethod));
+			Table inputs = new Table(this.attributesOfInputPositions);
 			inputs.appendRow(combinedInputs);
-			this.iterator = this.relation.iterator(RuntimeUtilities.getInputAttributes(this.relation, this.accessMethod), inputs.iterator());
+			this.iterator = this.relation.iterator(this.attributesOfInputPositions, inputs.iterator());
 			this.iterator.open();
 			this.outputs.put(combinedInputs, this.iterator);
 		} else {
@@ -289,7 +293,7 @@ public class Access extends TupleIterator {
 	 * @return an tuple obtained by mixing input from dynamicInput with inputs
 	 * defined statically for this access.
 	 */
-	private Tuple makeInput(Tuple dynamicInput) {
+	private Tuple makeInputTupleByCombiningInputsFromParentsWithInputConstants(Tuple dynamicInput) {
 		Object[] result = new Object[this.inputTupleType.size()];
 		int j = 0, k = 0;
 		for (int i : this.accessMethod.getZeroBasedInputPositions()) {

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -26,22 +27,26 @@ public class AlgebraUtilities {
 		return true;
 	}
 
-	protected static Integer[] computePositionsOfInputAttributes(RelationalTerm left, RelationalTerm right) {
-		List<Integer> result = new ArrayList<>();
-		for (Attribute attribute: right.getInputAttributes()) {
+	protected static Map<Integer,Integer> computePositionsInRightChildThatAreBoundFromLeftChild(RelationalTerm left, RelationalTerm right) {
+		Map<Integer,Integer> result = new LinkedHashMap<>();
+		for (int index = 0; index < right.getNumberOfInputAttributes(); ++index) {
+			Attribute attribute = right.getInputAttribute(index);
 			int indexOf = Arrays.asList(left.getOutputAttributes()).indexOf(attribute);
 			if(indexOf >= 0)
-				result.add(indexOf);
+				result.put(index, indexOf);
 		}
-		return result.toArray(new Integer[result.size()]);
+		return result;
 	}
 
-	protected static Attribute[] computeInputAttributes(RelationalTerm left, RelationalTerm right, Integer[] sidewaysInput) {
+	protected static Attribute[] computeInputAttributesForDependentJoinTerm(RelationalTerm left, RelationalTerm right) {
 		Attribute[] leftInputs = left.getInputAttributes();
 		Attribute[] rightInputs = right.getInputAttributes();
 		List<Attribute> result = Lists.newArrayList(leftInputs);
-		for (int i = 0; i < sidewaysInput.length; i++) 
-			result.add(rightInputs[i]);
+		for (int attributeIndex = 0; attributeIndex < right.getNumberOfInputAttributes(); attributeIndex++) {
+			Attribute inputAttribute = right.getInputAttribute(attributeIndex);
+			if(!Arrays.asList(leftInputs).contains(inputAttribute));
+				result.add(rightInputs[attributeIndex]);
+		}
 		return result.toArray(new Attribute[result.size()]);
 	}
 

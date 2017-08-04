@@ -41,8 +41,7 @@ public class CartesianProduct extends TupleIterator {
 	 * @param children the children
 	 */
 	public CartesianProduct(TupleIterator child1, TupleIterator child2) {
-		super(RuntimeUtilities.computeInputAttributes(child1, child2), 
-				RuntimeUtilities.computeOutputAttributes(child1, child2));
+		super(RuntimeUtilities.computeInputAttributes(child1, child2), RuntimeUtilities.computeOutputAttributes(child1, child2));
 		Assert.assertNotNull(child1);
 		Assert.assertNotNull(child2);
 		this.children[0] = child1;
@@ -87,6 +86,19 @@ public class CartesianProduct extends TupleIterator {
 		this.open = true;
 		if (this.inputAttributes.length == 0) {
 			this.nextTuple();
+		}
+	}
+	
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#close()
+	 */
+	@Override
+	public void close() {
+		super.close();
+		for (TupleIterator child: this.children) {
+			child.close();
 		}
 	}
 
@@ -220,7 +232,9 @@ public class CartesianProduct extends TupleIterator {
 	public void bind(Tuple tuple) {
 		Assert.assertTrue(this.open != null && this.open);
 		Assert.assertTrue(!this.interrupted);
-		this.children[0].bind(RuntimeUtilities.projectInputValuesForChild(this.children[0], tuple, this.inputPositionsForChild1));
-		this.children[1].bind(RuntimeUtilities.projectInputValuesForChild(this.children[1], tuple, this.inputPositionsForChild2));
+		Object[] inputsForLeftChild = RuntimeUtilities.projectValuesInInputPositions(tuple, this.inputPositionsForChild1);
+		Object[] inputsForRightChild = RuntimeUtilities.projectValuesInInputPositions(tuple, this.inputPositionsForChild2);
+		this.children[0].bind(RuntimeUtilities.createTuple(inputsForLeftChild, this.children[0].getInputAttributes()));
+		this.children[1].bind(RuntimeUtilities.createTuple(inputsForRightChild, this.children[1].getInputAttributes()));
 	}
 }
