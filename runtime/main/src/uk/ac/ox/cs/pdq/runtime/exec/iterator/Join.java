@@ -213,16 +213,16 @@ public abstract class Join extends TupleIterator {
 
 	/**
 	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.NaryIterator#bind(uk.ac.ox.cs.pdq.datasources.utility.Tuple)
+	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.NaryIterator#receiveTupleFromParentAndPassItToChildren(uk.ac.ox.cs.pdq.datasources.utility.Tuple)
 	 */
 	@Override
-	public void bind(Tuple tuple) {
+	public void receiveTupleFromParentAndPassItToChildren(Tuple tuple) {
 		Assert.assertTrue(this.open != null && this.open);
 		Assert.assertTrue(!this.interrupted);
 		Object[] inputsForLeftChild = RuntimeUtilities.projectValuesInInputPositions(tuple, this.inputPositionsForChild1);
 		Object[] inputsForRightChild = RuntimeUtilities.projectValuesInInputPositions(tuple, this.inputPositionsForChild2);
-		this.children[0].bind(this.child1TupleType.createTuple(inputsForLeftChild));
-		this.children[1].bind(this.child2TupleType.createTuple(inputsForRightChild));
+		this.children[0].receiveTupleFromParentAndPassItToChildren(this.child1TupleType.createTuple(inputsForLeftChild));
+		this.children[1].receiveTupleFromParentAndPassItToChildren(this.child2TupleType.createTuple(inputsForRightChild));
 		this.nextTuple();
 	}
 

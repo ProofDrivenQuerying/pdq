@@ -171,7 +171,7 @@ public class Scan extends TupleIterator {
 	 * @param t Tuple
 	 */
 	@Override
-	public void bind(Tuple t) {
+	public void receiveTupleFromParentAndPassItToChildren(Tuple t) {
 		Assert.assertTrue(this.open != null && this.open);
 		Assert.assertTrue(!this.interrupted);
 		Assert.assertTrue(t != null);

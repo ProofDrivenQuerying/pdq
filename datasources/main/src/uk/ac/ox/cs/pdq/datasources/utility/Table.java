@@ -55,25 +55,6 @@ public class Table implements Result, Iterable<Tuple> {
 		this.internTuples = intern;
 	}
 
-//	/**
-//	 * Instantiates a new table.
-//	 *
-//	 * @param intern boolean
-//	 * @param attributes 		The table's header
-//	 */
-//	public Table(boolean intern, Typed... attributes) {
-//		this(intern, Lists.newArrayList(attributes));
-//	}
-
-//	/**
-//	 * Instantiates a new table.
-//	 *
-//	 * @param attributes 		The table's header
-//	 */
-//	public Table(Typed[] attributes) {
-//		this(false, attributes);
-//	}
-
 	/**
 	 * Instantiates a new table.
 	 *

@@ -189,13 +189,13 @@ public class Selection extends TupleIterator {
 	/**
 	 * 
 	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#bind(uk.ac.ox.cs.pdq.datasources.utility.Tuple)
+	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#receiveTupleFromParentAndPassItToChildren(uk.ac.ox.cs.pdq.datasources.utility.Tuple)
 	 */
 	@Override
-	public void bind(Tuple t) {
+	public void receiveTupleFromParentAndPassItToChildren(Tuple t) {
 		Assert.assertTrue(this.open != null && this.open);
 		Assert.assertTrue(t != null);
 		Assert.assertTrue(t.getType().equals(this.childTupleType));
-		this.child.bind(t);
+		this.child.receiveTupleFromParentAndPassItToChildren(t);
 	}
 }

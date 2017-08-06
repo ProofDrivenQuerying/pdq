@@ -85,7 +85,7 @@ public class Access extends TupleIterator {
 		this.inputConstants = new LinkedHashMap<>();
 		for(java.util.Map.Entry<Integer, TypedConstant> entry:inputConstants.entrySet()) 
 			this.inputConstants.put(entry.getKey(), entry.getValue().clone());
-		this.attributesOfInputPositions = RuntimeUtilities.getInputAttributes(relation, accessMethod);
+		this.attributesOfInputPositions = RuntimeUtilities.computeInputAttributes(relation, accessMethod);
 		this.inputTupleType = TupleType.DefaultFactory.createFromTyped(this.attributesOfInputPositions);
 	}
 	
@@ -152,7 +152,7 @@ public class Access extends TupleIterator {
 		this.open = true;
 		// If there is no dynamic input, bind the empty tuple once and for all
 		if (this.inputAttributes.length == 0) {
-			bind(Tuple.EmptyTuple);
+			receiveTupleFromParentAndPassItToChildren(Tuple.EmptyTuple);
 		}
 	}
 	
@@ -263,10 +263,10 @@ public class Access extends TupleIterator {
 	/**
 	 * 
 	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#bind(uk.ac.ox.cs.pdq.datasources.utility.Tuple)
+	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#receiveTupleFromParentAndPassItToChildren(uk.ac.ox.cs.pdq.datasources.utility.Tuple)
 	 */
 	@Override
-	public void bind(Tuple tuple) {
+	public void receiveTupleFromParentAndPassItToChildren(Tuple tuple) {
 		Assert.assertTrue(this.open != null && this.open);
 		Assert.assertTrue(!this.interrupted);
 		Assert.assertTrue(tuple != null);

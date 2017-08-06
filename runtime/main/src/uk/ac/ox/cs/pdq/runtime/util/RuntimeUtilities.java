@@ -214,7 +214,7 @@ public class RuntimeUtilities {
 	 * @param accessMethod an access method of this relation
 	 * @return 		the relation's input attributes for input binding
 	 */
-	public static Attribute[] getInputAttributes(RelationAccessWrapper relation, AccessMethod accessMethod) {
+	public static Attribute[] computeInputAttributes(RelationAccessWrapper relation, AccessMethod accessMethod) {
 		Preconditions.checkArgument(relation.getAccessMethod(accessMethod.getName()) != null);
 		Attribute[] attributes = relation.getAttributes();
 		Attribute[] result = new Attribute[accessMethod.getNumberOfInputs()];
@@ -269,7 +269,7 @@ public class RuntimeUtilities {
 		return result;
 	}
 
-	public static Attribute[] computeInputAttributesForDependentJoinTerm(TupleIterator left, TupleIterator right) {
+	public static Attribute[] computeInputAttributesForDependentJoin(TupleIterator left, TupleIterator right) {
 		Attribute[] leftInputs = left.getInputAttributes();
 		Attribute[] rightInputs = right.getInputAttributes();
 		List<Attribute> result = Lists.newArrayList(leftInputs);

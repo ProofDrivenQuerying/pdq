@@ -133,13 +133,13 @@ public class Distinct extends TupleIterator {
 	/**
 	 * 
 	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#bind(uk.ac.ox.cs.pdq.util.Tuple)
+	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#receiveTupleFromParentAndPassItToChildren(uk.ac.ox.cs.pdq.util.Tuple)
 	 */
 	@Override
-	public void bind(Tuple t) {
+	public void receiveTupleFromParentAndPassItToChildren(Tuple t) {
 		Assert.assertTrue(this.open != null && this.open);
 		Assert.assertTrue(t != null);
 		Assert.assertTrue(RuntimeUtilities.typeOfAttributesEqualsTupleType(t.getType(), this.inputAttributes));
-		this.child.bind(t);
+		this.child.receiveTupleFromParentAndPassItToChildren(t);
 	}
 }

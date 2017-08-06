@@ -135,5 +135,5 @@ public abstract class TupleIterator  implements AutoCloseable, ResetableIterator
 	 *
 	 * @param tuple Tuple
 	 */
-	public abstract void bind(Tuple tuple);
+	public abstract void receiveTupleFromParentAndPassItToChildren(Tuple tuple);
 }

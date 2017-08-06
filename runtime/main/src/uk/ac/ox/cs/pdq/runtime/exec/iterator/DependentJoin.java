@@ -293,7 +293,7 @@ public class DependentJoin extends TupleIterator {
 			this.rInput = this.projectInputValuesForRightChild(this.currentInput, this.leftTuple);
 			this.cached = (Deque<Tuple>) this.cache.get(Pair.of(this.joinId, this.rInput));
 			if (this.cached == null) {
-				this.children[1].bind(this.rInput);
+				this.children[1].receiveTupleFromParentAndPassItToChildren(this.rInput);
 				this.cachedIterator = this.children[1];
 				this.cached = new LinkedList<>();
 				this.doCache = true;
@@ -342,12 +342,12 @@ public class DependentJoin extends TupleIterator {
 	 * @param tuple Tuple
 	 */
 	@Override
-	public void bind(Tuple tuple) {
+	public void receiveTupleFromParentAndPassItToChildren(Tuple tuple) {
 		Assert.assertTrue(this.open != null && this.open);
 		Assert.assertTrue(!this.interrupted);
 		Assert.assertTrue(tuple != null);
 		Object[] inputsForLeftChild = RuntimeUtilities.projectValuesInInputPositions(tuple, this.inputPositionsForChild1);
-		this.children[0].bind(this.child1TupleType.createTuple(inputsForLeftChild));
+		this.children[0].receiveTupleFromParentAndPassItToChildren(this.child1TupleType.createTuple(inputsForLeftChild));
 		this.currentInput = tuple;
 	}
 }
