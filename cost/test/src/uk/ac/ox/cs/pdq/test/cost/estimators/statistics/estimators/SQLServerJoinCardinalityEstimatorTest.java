@@ -2,6 +2,7 @@ package uk.ac.ox.cs.pdq.test.cost.estimators.statistics.estimators;
 
 import java.math.BigInteger;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
@@ -36,6 +37,7 @@ public class SQLServerJoinCardinalityEstimatorTest {
 		
 		SQLServerJoinCardinalityEstimator estimator = new SQLServerJoinCardinalityEstimator();
 		BigInteger cardinality = estimator.estimateIntersectionCardinality(hl, hr);
+		Assert.assertNotNull(cardinality);
 	}
 	
 	/**
@@ -47,6 +49,8 @@ public class SQLServerJoinCardinalityEstimatorTest {
 		
 		SQLServerJoinCardinalityEstimator estimator = new SQLServerJoinCardinalityEstimator();
 		BigInteger cardinality = estimator.estimateSingleJoinAttributeCardinality(hl, hr);
+		Assert.assertNotNull(cardinality);
+		
 	}
 	
 	/**
@@ -58,6 +62,7 @@ public class SQLServerJoinCardinalityEstimatorTest {
 		
 		SQLServerJoinCardinalityEstimator estimator = new SQLServerJoinCardinalityEstimator();
 		BigInteger cardinality = estimator.estimateIntersectionCardinality(hl, hr);
+		Assert.assertNotNull(cardinality);
 	}
 	
 	/**
@@ -69,6 +74,7 @@ public class SQLServerJoinCardinalityEstimatorTest {
 		
 		SQLServerJoinCardinalityEstimator estimator = new SQLServerJoinCardinalityEstimator();
 		BigInteger cardinality = estimator.estimateIntersectionCardinality(hl, hr);
+		Assert.assertNotNull(cardinality);
 	}
 	
 	/**
@@ -80,6 +86,7 @@ public class SQLServerJoinCardinalityEstimatorTest {
 		
 		SQLServerJoinCardinalityEstimator estimator = new SQLServerJoinCardinalityEstimator();
 		BigInteger cardinality = estimator.estimateSingleJoinAttributeCardinality(hl, hr);
+		Assert.assertNotNull(cardinality);
 	}
 	
 	/**
@@ -91,6 +98,7 @@ public class SQLServerJoinCardinalityEstimatorTest {
 		
 		SQLServerJoinCardinalityEstimator estimator = new SQLServerJoinCardinalityEstimator();
 		BigInteger cardinality = estimator.estimateSingleJoinAttributeCardinality(hl, hr);
+		Assert.assertNotNull(cardinality);
 	}
 	
 	/**
@@ -102,6 +110,7 @@ public class SQLServerJoinCardinalityEstimatorTest {
 
 		SQLServerJoinCardinalityEstimator estimator = new SQLServerJoinCardinalityEstimator();
 		BigInteger cardinality = estimator.estimateSingleJoinAttributeCardinality(hl, hr);
+		Assert.assertNotNull(cardinality);
 	}
 	
 }

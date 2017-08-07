@@ -1,6 +1,5 @@
 package uk.ac.ox.cs.pdq.io.jaxb.adapted;
 
-import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 

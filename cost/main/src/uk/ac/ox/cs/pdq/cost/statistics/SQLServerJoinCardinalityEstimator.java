@@ -241,6 +241,7 @@ public class SQLServerJoinCardinalityEstimator {
 	 * @param r2 right boundary of a object 2
 	 * @return 		true if the object boundaries intersect
 	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	boolean doIntersect(Object l1, Object r1, Object l2, Object r2) {
 		if(l1 instanceof Comparable && r1 instanceof Comparable &&
 				l2 instanceof Comparable && r2 instanceof Comparable) {
