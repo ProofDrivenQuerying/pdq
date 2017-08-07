@@ -72,7 +72,7 @@ public class MySQLStatementBuilder extends SQLStatementBuilder {
 	 * @return insert statements that add the input fact to the fact database.
 	 */
 	@Override
-	public Collection<String> createInsertStatements(Collection<Atom> facts, Map<String, Relation> relationNamesToRelationObjects) {
+	public Collection<String> createInsertStatements(Collection<Atom> facts, Map<String, Relation> relationNamesToDatabaseTables) {
 		Collection<String> result = new LinkedList<>();
 		for (Atom fact:facts) {
 			Assert.assertTrue(fact.getPredicate() instanceof Relation);
@@ -130,8 +130,8 @@ public class MySQLStatementBuilder extends SQLStatementBuilder {
 	
 	
 	@Override
-	public String createBulkDeleteStatement(Predicate predicate, Collection<Atom> facts, Map<String, Relation> toDatabaseTables) {
-		return super.createBulkDeleteStatement(predicate, facts, toDatabaseTables)+";";
+	public String createBulkDeleteStatement(Predicate predicate, Collection<Atom> facts, Map<String, Relation> relationNamesToDatabaseTables) {
+		return super.createBulkDeleteStatement(predicate, facts, relationNamesToDatabaseTables)+";";
 	}
 }
 

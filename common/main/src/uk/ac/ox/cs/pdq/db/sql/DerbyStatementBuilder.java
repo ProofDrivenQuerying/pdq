@@ -59,7 +59,7 @@ public class DerbyStatementBuilder extends SQLStatementBuilder {
 	}
 
 	@Override
-	public String createBulkDeleteStatement(Predicate predicate, Collection<Atom> facts, Map<String, Relation> toDatabaseTables) {
-		return super.createBulkDeleteStatement(predicate, facts, toDatabaseTables);
+	public String createBulkDeleteStatement(Predicate predicate, Collection<Atom> facts, Map<String, Relation> relationNamesToDatabaseTables) {
+		return super.createBulkDeleteStatement(predicate, facts, relationNamesToDatabaseTables);
 	}
 }

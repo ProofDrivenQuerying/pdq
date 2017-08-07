@@ -72,7 +72,7 @@ public abstract class DatabaseInstance implements Instance {
 	public void addFacts(Collection<Atom> facts) {
 		Queue<String> queries = new ConcurrentLinkedQueue<>();
 		if(this.databaseConnection.getSQLStatementBuilder() instanceof DerbyStatementBuilder) {
-			queries.addAll(this.databaseConnection.getSQLStatementBuilder().createInsertStatements(facts, this.databaseConnection.getRelationNamesToRelationObjects()));
+			queries.addAll(this.databaseConnection.getSQLStatementBuilder().createInsertStatements(facts, this.databaseConnection.getRelationNamesToDatabaseTables()));
 		}
 		else {
 			Map<Predicate, List<Atom>> clusters = Utility.clusterAtomsWithSamePredicateName(facts);
@@ -158,7 +158,7 @@ public abstract class DatabaseInstance implements Instance {
 			while(!clusterFacts.isEmpty()) {
 				int position = tuplesPerThread > clusterFacts.size() ? clusterFacts.size():tuplesPerThread;
 				List<Atom> subList = clusterFacts.subList(0, position);
-				queries.add(this.databaseConnection.getSQLStatementBuilder().createBulkDeleteStatement(predicate, subList, this.databaseConnection.getRelationNamesToRelationObjects()));
+				queries.add(this.databaseConnection.getSQLStatementBuilder().createBulkDeleteStatement(predicate, subList, this.databaseConnection.getRelationNamesToDatabaseTables()));
 				subList.clear();
 			}
 		}
@@ -180,7 +180,7 @@ public abstract class DatabaseInstance implements Instance {
 //		}
 //	}
 	
-	public void addQuery(ConjunctiveQuery query) {
+	public void setupQueryIndices(ConjunctiveQuery query) {
 		if(!this.clearedLastQuery)
 			throw new RuntimeException("Method clearQuery should have been called in order to clear previous query's tables from the database.");
 		this.clearedLastQuery = false;
@@ -189,7 +189,7 @@ public abstract class DatabaseInstance implements Instance {
 			//Create statements that set up or drop the indices for the joins in the body of the input query
 			Set<String> joinIndexes = Sets.newLinkedHashSet();
 			Pair<Collection<String>, Collection<String>> dropAndCreateStms = 
-					this.databaseConnection.getSQLStatementBuilder().setupIndices(true, this.databaseConnection.getRelationNamesToRelationObjects(), query, this.existingIndices);
+					this.databaseConnection.getSQLStatementBuilder().setupIndices(true, this.databaseConnection.getRelationNamesToDatabaseTables(), query, this.existingIndices);
 			this.dropQueryIndexStatements.addAll(dropAndCreateStms.getRight());
 			joinIndexes.addAll(dropAndCreateStms.getLeft());
 			for (String b: joinIndexes) {
@@ -202,25 +202,26 @@ public abstract class DatabaseInstance implements Instance {
 		this.currentQuery = query;
 	}
 
-	public void clearQuery() {
-		try { 
-			Statement sqlStatement = this.getDatabaseConnection().getSynchronousConnections(0).createStatement();
-			//Drop the join indices for input query
-			for (String b: this.dropQueryIndexStatements) {
-				sqlStatement.addBatch(b);
-			}
-			//Clear the database tables built for the query
-			Collection<String> clearTablesSQLExpressions = this.databaseConnection.getSQLStatementBuilder().createTruncateTableStatements(this.currentQuery.getAtoms(), 
-					this.databaseConnection.getRelationNamesToRelationObjects());
-			for (String b: clearTablesSQLExpressions) {
-				sqlStatement.addBatch(b);
-			}
-			sqlStatement.executeBatch();
-		} catch (SQLException ex) {
-			throw new IllegalStateException(ex.getMessage(), ex);
-		}
-		this.clearedLastQuery = true;
-	}
+//	public void clearQuery() {
+//		try { 
+//			Statement sqlStatement = this.getDatabaseConnection().getSynchronousConnections(0).createStatement();
+//			//Drop the join indices for input query
+//			for (String b: this.dropQueryIndexStatements) {
+//				sqlStatement.addBatch(b);
+//			}
+//			
+//			//Clear the database tables built for the query
+//			Collection<String> clearTablesSQLExpressions = this.databaseConnection.getSQLStatementBuilder().createTruncateTableStatements(this.currentQuery.getAtoms(), 
+//					this.databaseConnection.getRelationNamesToRelationObjects());
+//			for (String b: clearTablesSQLExpressions) {
+//				sqlStatement.addBatch(b);
+//			}
+//			sqlStatement.executeBatch();
+//		} catch (SQLException ex) {
+//			throw new IllegalStateException(ex.getMessage(), ex);
+//		}
+//		this.clearedLastQuery = true;
+//	}
 
 	/**
 	 * 

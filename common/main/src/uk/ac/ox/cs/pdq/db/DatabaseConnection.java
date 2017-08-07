@@ -29,7 +29,7 @@ public class DatabaseConnection implements AutoCloseable{
 	protected List<Connection> synchronousConnections = Lists.newArrayList();
 
 	/** Map schema relation to database tables. */
-	private Map<String, Relation> relationNamesToRelationObjects = null;
+	private Map<String, Relation> relationNamesToDatabaseTables = null;
 
 	/**  Creates SQL statements to detect homomorphisms or add/delete facts in a database. */
 	private final SQLStatementBuilder builder;
@@ -70,7 +70,7 @@ public class DatabaseConnection implements AutoCloseable{
 
 		this.schema = schema;
 		this.databaseParameters = databaseParameters;
-		this.relationNamesToRelationObjects = new LinkedHashMap<>();
+		this.relationNamesToDatabaseTables = new LinkedHashMap<>();
 		this.initialize();
 	}
 
@@ -92,7 +92,7 @@ public class DatabaseConnection implements AutoCloseable{
 		//Create the database tables and create column indices
 		for (Relation relation:this.schema.getRelations()) {
 			Relation dbRelation = this.createDatabaseRelation(relation);
-			this.relationNamesToRelationObjects.put(relation.getName(), dbRelation);
+			this.relationNamesToDatabaseTables.put(relation.getName(), dbRelation);
 			sqlStatement.addBatch(this.builder.createTableStatement(dbRelation));
 		}
 		sqlStatement.executeBatch();
@@ -155,8 +155,8 @@ public class DatabaseConnection implements AutoCloseable{
 	 * Map from relation names to the main memory objects existing for these names. 
 	 * TOCOMMENT: See issue 168
 	 */
-	public Map<String, Relation> getRelationNamesToRelationObjects() {
-		return this.relationNamesToRelationObjects;
+	public Map<String, Relation> getRelationNamesToDatabaseTables() {
+		return this.relationNamesToDatabaseTables;
 	}
 
 	public SQLStatementBuilder getSQLStatementBuilder() {

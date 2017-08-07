@@ -66,11 +66,11 @@ public abstract class SQLStatementBuilder {
 	 * @param toDatabaseTables map to the relation objects 
 	 * @return insert statements that add the input fact to the fact database.
 	 */
-	public Collection<String> createInsertStatements(Collection<Atom> facts, Map<String, Relation> relationNamesToRelationObjects) {
+	public Collection<String> createInsertStatements(Collection<Atom> facts, Map<String, Relation> relationNamesToDatabaseTables) {
 		Collection<String> result = new LinkedList<>();
 		for (Atom fact:facts) {
 			Assert.assertTrue(fact.getPredicate() instanceof Relation);
-			Relation relation = relationNamesToRelationObjects.get(fact.getPredicate().getName());
+			Relation relation = relationNamesToDatabaseTables.get(fact.getPredicate().getName());
 			String insertInto = "INSERT INTO " + fact.getPredicate().getName() + " " + "VALUES ( ";
 			for (int termIndex = 0; termIndex < fact.getNumberOfTerms(); ++termIndex) {
 				Term term = fact.getTerm(termIndex);
@@ -107,12 +107,12 @@ public abstract class SQLStatementBuilder {
 	 * Creates delete statements
 	 *
 	 * @param facts 		Facts to delete from the database
-	 * @param toDatabaseTables 		Map of schema relation names to *clean* names
+	 * @param relationNamesToDatabaseTables 		Map of schema relation names to *clean* names
 	 * @return 		a set of statements that delete the input facts from the fact database.
 	 */
-	public String createBulkDeleteStatement(Predicate predicate, Collection<Atom> facts, Map<String, Relation> toDatabaseTables) {
-		String deleteFrom = "DELETE FROM " + toDatabaseTables.get(predicate.getName()).getName() + " " + "WHERE "; 
-		String lastAttributeName = toDatabaseTables.get(predicate.getName()).getAttribute(predicate.getArity()-1).getName();
+	public String createBulkDeleteStatement(Predicate predicate, Collection<Atom> facts, Map<String, Relation> relationNamesToDatabaseTables) {
+		String deleteFrom = "DELETE FROM " + relationNamesToDatabaseTables.get(predicate.getName()).getName() + " " + "WHERE "; 
+		String lastAttributeName = relationNamesToDatabaseTables.get(predicate.getName()).getAttribute(predicate.getArity()-1).getName();
 		deleteFrom += lastAttributeName;
 		deleteFrom += " IN" + "\n"; 
 
@@ -241,12 +241,12 @@ public abstract class SQLStatementBuilder {
 	 * Creates the table indexes.
 	 *
 	 * @param isForQuery the is for query
-	 * @param toDatabaseRelations the relation map
+	 * @param relationNamesToDatabaseTables the relation map
 	 * @param rule the rule
 	 * @param existingIndices the constraint indices
 	 * @return the pair
 	 */
-	public Pair<Collection<String>,Collection<String>> setupIndices(boolean isForQuery, Map<String, Relation> toDatabaseRelations, Formula rule, Set<String> existingIndices) {
+	public Pair<Collection<String>,Collection<String>> setupIndices(boolean isForQuery, Map<String, Relation> relationNamesToDatabaseTables, Formula rule, Set<String> existingIndices) {
 		Formula body = null;
 		if (rule instanceof Atom) {
 			body = rule;
@@ -275,7 +275,7 @@ public abstract class SQLStatementBuilder {
 				for (Atom atom: atoms) {
 					for (int i = 0; i < atom.getTerms().length; i++) {
 						if (atom.getTerm(i).equals(t)) {
-							Pair<String,String> createAndDropIndices = this.createTableIndices(existingIndices, toDatabaseRelations.get(atom.getPredicate().getName()), i);
+							Pair<String,String> createAndDropIndices = this.createTableIndices(existingIndices, relationNamesToDatabaseTables.get(atom.getPredicate().getName()), i);
 							if(createAndDropIndices != null) {	
 								createIndices.add(createAndDropIndices.getLeft());
 								if(isForQuery)
@@ -571,17 +571,17 @@ public abstract class SQLStatementBuilder {
 	 *
 	 * @param source the source
 	 * @param constraints the constraints
-	 * @param relationNamesToRelationObjects 
+	 * @param relationNamesToDatabaseTables 
 	 * @return 		predicates that correspond to fact constraints
 	 */
-	public WhereCondition translateEGDHomomorphicProperties(Atom[] conjuncts, Map<String, Relation> relationNamesToRelationObjects) {
+	public WhereCondition translateEGDHomomorphicProperties(Atom[] conjuncts, Map<String, Relation> relationNamesToDatabaseTables) {
 		String lalias = this.aliases.get(conjuncts[0]);
 		String ralias = this.aliases.get(conjuncts[1]);
 		lalias = lalias==null ? conjuncts[0].getPredicate().getName():lalias;
 		ralias = ralias==null ? conjuncts[1].getPredicate().getName():ralias;
 		StringBuilder eq = new StringBuilder();
-		String leftAttributeName = relationNamesToRelationObjects.get(conjuncts[0].getPredicate().getName()).getAttribute(conjuncts[0].getPredicate().getArity()-1).getName();
-		String rightAttributeName = relationNamesToRelationObjects.get(conjuncts[1].getPredicate().getName()).getAttribute(conjuncts[1].getPredicate().getArity()-1).getName();
+		String leftAttributeName = relationNamesToDatabaseTables.get(conjuncts[0].getPredicate().getName()).getAttribute(conjuncts[0].getPredicate().getArity()-1).getName();
+		String rightAttributeName = relationNamesToDatabaseTables.get(conjuncts[1].getPredicate().getName()).getAttribute(conjuncts[1].getPredicate().getArity()-1).getName();
 		eq.append(lalias).append(".").
 		append(leftAttributeName).append(">");
 		eq.append(ralias).append(".").

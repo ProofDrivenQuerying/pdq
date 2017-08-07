@@ -167,13 +167,13 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 	public void indexConstraints() throws SQLException {
 		Statement sqlStatement = this.getDatabaseConnection().getSynchronousConnections().get(0).createStatement();
 		Relation equalityRelation = this.createDatabaseEqualityRelation();
-		this.databaseConnection.getRelationNamesToRelationObjects().put(QNames.EQUALITY.toString(), equalityRelation);
+		this.databaseConnection.getRelationNamesToDatabaseTables().put(QNames.EQUALITY.toString(), equalityRelation);
 		sqlStatement.addBatch(this.getDatabaseConnection().getSQLStatementBuilder().createTableStatement(equalityRelation));
 		//sqlStatement.addBatch(this.getDatabaseConnection().getBuilder().createColumnIndexStatement(equalityRelation, equalityRelation.getAttribute(equalityRelation.getArity()-1)));
 		//Create indices for the joins in the body of the dependencies
 		Set<String> joinIndexes = Sets.newLinkedHashSet();
 		for (Dependency constraint:this.getDatabaseConnection().getSchema().getDependencies()) 
-			joinIndexes.addAll(this.getDatabaseConnection().getSQLStatementBuilder().setupIndices(false, this.databaseConnection.getRelationNamesToRelationObjects(), constraint, this.existingIndices).getLeft());
+			joinIndexes.addAll(this.getDatabaseConnection().getSQLStatementBuilder().setupIndices(false, this.databaseConnection.getRelationNamesToDatabaseTables(), constraint, this.existingIndices).getLeft());
 		for (String b: joinIndexes) 
 			sqlStatement.addBatch(b);
 		sqlStatement.executeBatch();
@@ -186,7 +186,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 	 */
 	private void indexLastAttributeOfAllRelations() throws SQLException {
 		Statement sqlStatement = this.getDatabaseConnection().getSynchronousConnections().get(0).createStatement();
-		for(Relation relation:this.databaseConnection.getRelationNamesToRelationObjects().values())
+		for(Relation relation:this.databaseConnection.getRelationNamesToDatabaseTables().values())
 			sqlStatement.addBatch(this.getDatabaseConnection().getSQLStatementBuilder().createColumnIndexStatement(relation, relation.getAttribute(relation.getArity()-1)));
 		sqlStatement.executeBatch();
 	}
@@ -461,7 +461,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		Atom[] result = new Atom[atoms.length];
 		for(int atomIndex = 0; atomIndex < atoms.length; ++atomIndex) {
 			Atom atom = atoms[atomIndex];
-			Relation relation = this.databaseConnection.getRelationNamesToRelationObjects().get(atom.getPredicate().getName());
+			Relation relation = this.databaseConnection.getRelationNamesToDatabaseTables().get(atom.getPredicate().getName());
 			try{
 				relation.getAttributePosition("InstanceID");
 			}
@@ -612,13 +612,13 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 
 		WhereCondition factproperties = null;
 		if(facts != null && !facts.isEmpty())
-			factproperties = this.databaseConnection.getSQLStatementBuilder().enforceStateMembership(extendedBodyAtoms, this.databaseConnection.getRelationNamesToRelationObjects(), ((l.equals(LimitToThisOrAllInstances.THIS))?this.facts:null));
+			factproperties = this.databaseConnection.getSQLStatementBuilder().enforceStateMembership(extendedBodyAtoms, this.databaseConnection.getRelationNamesToDatabaseTables(), ((l.equals(LimitToThisOrAllInstances.THIS))?this.facts:null));
 		else
 			factproperties = new WhereCondition();
 			
 		WhereCondition egdProperties = null;
 		if(isEGD)
-			egdProperties = this.databaseConnection.getSQLStatementBuilder().translateEGDHomomorphicProperties(extendedBodyAtoms, this.databaseConnection.getRelationNamesToRelationObjects());
+			egdProperties = this.databaseConnection.getSQLStatementBuilder().translateEGDHomomorphicProperties(extendedBodyAtoms, this.databaseConnection.getRelationNamesToDatabaseTables());
 		if(egdProperties!=null) {
 			where.addCondition(egdProperties);
 		}
@@ -641,7 +641,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 
 			WhereCondition nestedFactproperties = null;
 			if(facts != null && !facts.isEmpty())
-				nestedFactproperties = this.databaseConnection.getSQLStatementBuilder().enforceStateMembership(extendedHeadAtoms, this.databaseConnection.getRelationNamesToRelationObjects(), ((l.equals(LimitToThisOrAllInstances.THIS))?this.facts:null));
+				nestedFactproperties = this.databaseConnection.getSQLStatementBuilder().enforceStateMembership(extendedHeadAtoms, this.databaseConnection.getRelationNamesToDatabaseTables(), ((l.equals(LimitToThisOrAllInstances.THIS))?this.facts:null));
 			else
 				nestedFactproperties = new WhereCondition();
 			predicates2.addCondition(nestedFactproperties);
@@ -677,7 +677,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 
 		WhereCondition factproperties = null;
 		if(facts != null && !facts.isEmpty())
-			factproperties = this.databaseConnection.getSQLStatementBuilder().enforceStateMembership(source.getAtoms(), this.databaseConnection.getRelationNamesToRelationObjects(), ((l.equals(LimitToThisOrAllInstances.THIS))?this.facts:null));
+			factproperties = this.databaseConnection.getSQLStatementBuilder().enforceStateMembership(source.getAtoms(), this.databaseConnection.getRelationNamesToDatabaseTables(), ((l.equals(LimitToThisOrAllInstances.THIS))?this.facts:null));
 		else
 			factproperties = new WhereCondition();
 		
