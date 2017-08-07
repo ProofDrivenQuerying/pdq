@@ -19,7 +19,7 @@ public abstract class Cost implements Comparable<Cost>{
 	 * @param cost Input cost object
 	 * @return true if this.cost <= cost
 	 */
-	abstract boolean lessOrEquals(Cost cost);
+	public abstract boolean lessOrEquals(Cost cost);
 
 	/**
 	 * Less than.
@@ -27,7 +27,7 @@ public abstract class Cost implements Comparable<Cost>{
 	 * @param cost Input cost object
 	 * @return true if this.cost < cost
 	 */
-	abstract boolean lessThan(Cost cost);
+	public abstract boolean lessThan(Cost cost);
 
 	/**
 	 * Greater or equals.
@@ -35,7 +35,7 @@ public abstract class Cost implements Comparable<Cost>{
 	 * @param cost Input cost object
 	 * @return true if this.cost >= cost
 	 */
-	abstract boolean greaterOrEquals(Cost cost);
+	public abstract boolean greaterOrEquals(Cost cost);
 
 	/**
 	 * Greater than.
@@ -43,12 +43,12 @@ public abstract class Cost implements Comparable<Cost>{
 	 * @param cost Input cost object
 	 * @return true if this.cost > cost
 	 */
-	abstract boolean greaterThan(Cost cost);
+	public abstract boolean greaterThan(Cost cost);
 
 	/**
 	 * Gets the value.
 	 *
 	 * @return a numeric representation of the cost
 	 */
-	abstract Number getValue();
+	public abstract Number getValue();
 }
