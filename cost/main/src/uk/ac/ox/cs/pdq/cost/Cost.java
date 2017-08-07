@@ -1,12 +1,17 @@
 package uk.ac.ox.cs.pdq.cost;
 
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+import uk.ac.ox.cs.pdq.cost.io.jaxb.adapters.CostAdapter;
+
 // TODO: Auto-generated Javadoc
 /**
  * Abstract plan cost.
  *
  * @author Efthymia Tsamoura
  */
-public interface Cost extends Comparable<Cost>{
+@XmlJavaTypeAdapter(CostAdapter.class)
+public abstract class Cost implements Comparable<Cost>{
 	
 	/**
 	 * Less or equals.
@@ -14,7 +19,7 @@ public interface Cost extends Comparable<Cost>{
 	 * @param cost Input cost object
 	 * @return true if this.cost <= cost
 	 */
-	boolean lessOrEquals(Cost cost);
+	abstract boolean lessOrEquals(Cost cost);
 
 	/**
 	 * Less than.
@@ -22,7 +27,7 @@ public interface Cost extends Comparable<Cost>{
 	 * @param cost Input cost object
 	 * @return true if this.cost < cost
 	 */
-	boolean lessThan(Cost cost);
+	abstract boolean lessThan(Cost cost);
 
 	/**
 	 * Greater or equals.
@@ -30,7 +35,7 @@ public interface Cost extends Comparable<Cost>{
 	 * @param cost Input cost object
 	 * @return true if this.cost >= cost
 	 */
-	boolean greaterOrEquals(Cost cost);
+	abstract boolean greaterOrEquals(Cost cost);
 
 	/**
 	 * Greater than.
@@ -38,12 +43,12 @@ public interface Cost extends Comparable<Cost>{
 	 * @param cost Input cost object
 	 * @return true if this.cost > cost
 	 */
-	boolean greaterThan(Cost cost);
+	abstract boolean greaterThan(Cost cost);
 
 	/**
 	 * Gets the value.
 	 *
 	 * @return a numeric representation of the cost
 	 */
-	Number getValue();
+	abstract Number getValue();
 }

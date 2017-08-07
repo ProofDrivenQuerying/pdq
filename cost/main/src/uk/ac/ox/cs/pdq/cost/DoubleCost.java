@@ -9,7 +9,7 @@ import com.google.common.base.Preconditions;
  *
  * @author Efthymia Tsamoura
  */
-public final class DoubleCost implements Cost {
+public final class DoubleCost extends Cost {
 	
 	/** The Constant UPPER_BOUND. */
 	public static final DoubleCost UPPER_BOUND = new DoubleCost(Double.POSITIVE_INFINITY);
