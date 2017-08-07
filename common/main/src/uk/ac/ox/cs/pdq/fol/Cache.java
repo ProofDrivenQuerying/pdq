@@ -1,6 +1,6 @@
 package uk.ac.ox.cs.pdq.fol;
 
-import uk.ac.ox.cs.pdq.InterningManager;
+import uk.ac.ox.cs.pdq.ClassManager;
 
 /**
  * Creates and maintains a cache of each object type in this package. The
@@ -11,22 +11,22 @@ import uk.ac.ox.cs.pdq.InterningManager;
  */
 public class Cache {
 
-	protected static InterningManager<Atom> atom = null;
-	protected static InterningManager<Clause> clause = null;
-	protected static InterningManager<Conjunction> conjunction = null;
-	protected static InterningManager<ConjunctiveQuery> conjunctiveQuery = null;
-	protected static InterningManager<Dependency> dependency = null;
-	protected static InterningManager<Disjunction> disjunction = null;
-	protected static InterningManager<EGD> egd = null;
-	protected static InterningManager<Implication> implication = null;
-	protected static InterningManager<LinearGuarded> linearGuarded = null;
-	protected static InterningManager<Literal> literal = null;
-	protected static InterningManager<Negation> negation = null;
-	protected static InterningManager<Predicate> predicate = null;
-	protected static InterningManager<QuantifiedFormula> quantifiedFormula = null;
-	protected static InterningManager<TGD> tgd = null;
-	protected static InterningManager<UntypedConstant> untypedConstant = null;
-	protected static InterningManager<Variable> variable = null;
+	protected static ClassManager<Atom> atom = null;
+	protected static ClassManager<Clause> clause = null;
+	protected static ClassManager<Conjunction> conjunction = null;
+	protected static ClassManager<ConjunctiveQuery> conjunctiveQuery = null;
+	protected static ClassManager<Dependency> dependency = null;
+	protected static ClassManager<Disjunction> disjunction = null;
+	protected static ClassManager<EGD> egd = null;
+	protected static ClassManager<Implication> implication = null;
+	protected static ClassManager<LinearGuarded> linearGuarded = null;
+	protected static ClassManager<Literal> literal = null;
+	protected static ClassManager<Negation> negation = null;
+	protected static ClassManager<Predicate> predicate = null;
+	protected static ClassManager<QuantifiedFormula> quantifiedFormula = null;
+	protected static ClassManager<TGD> tgd = null;
+	protected static ClassManager<UntypedConstant> untypedConstant = null;
+	protected static ClassManager<Variable> variable = null;
 
 	static {
 		startCaches();
@@ -57,7 +57,7 @@ public class Cache {
 	}
 
 	private static void startCaches() {
-		atom = new InterningManager<Atom>() {
+		atom = new ClassManager<Atom>() {
 			protected boolean equal(Atom object1, Atom object2) {
 				if (!object1.predicate.equals(object2.predicate) || object1.terms.length != object2.terms.length)
 					return false;
@@ -75,7 +75,7 @@ public class Cache {
 			}
 		};
 
-		clause = new InterningManager<Clause>() {
+		clause = new ClassManager<Clause>() {
 			protected boolean equal(Clause object1, Clause object2) {
 				if (object1.literals.length != object2.literals.length)
 					return false;
@@ -93,7 +93,7 @@ public class Cache {
 			}
 		};
 
-		conjunction = new InterningManager<Conjunction>() {
+		conjunction = new ClassManager<Conjunction>() {
 			protected boolean equal(Conjunction object1, Conjunction object2) {
 				if (object1.children.length != object2.children.length)
 					return false;
@@ -111,7 +111,7 @@ public class Cache {
 			}
 		};
 
-		conjunctiveQuery = new InterningManager<ConjunctiveQuery>() {
+		conjunctiveQuery = new ClassManager<ConjunctiveQuery>() {
 			protected boolean equal(ConjunctiveQuery object1, ConjunctiveQuery object2) {
 				if (!object1.child.equals(object2.child) || object1.freeVariables.length != object2.freeVariables.length)
 					return false;
@@ -135,7 +135,7 @@ public class Cache {
 			}
 		};
 
-		dependency = new InterningManager<Dependency>() {
+		dependency = new ClassManager<Dependency>() {
 			protected boolean equal(Dependency object1, Dependency object2) {
 				if (!object1.head.equals(object2.head) || !object1.body.equals(object2.body) || object1.variables.length != object2.variables.length)
 					return false;
@@ -153,7 +153,7 @@ public class Cache {
 			}
 		};
 
-		disjunction = new InterningManager<Disjunction>() {
+		disjunction = new ClassManager<Disjunction>() {
 			protected boolean equal(Disjunction object1, Disjunction object2) {
 				if (object1.children.length != object2.children.length)
 					return false;
@@ -171,7 +171,7 @@ public class Cache {
 			}
 		};
 
-		egd = new InterningManager<EGD>() {
+		egd = new ClassManager<EGD>() {
 			protected boolean equal(EGD object1, EGD object2) {
 				if (!object1.head.equals(object2.head) || !object1.body.equals(object2.body) || object1.variables.length != object2.variables.length)
 					return false;
@@ -189,7 +189,7 @@ public class Cache {
 			}
 		};
 
-		implication = new InterningManager<Implication>() {
+		implication = new ClassManager<Implication>() {
 			protected boolean equal(Implication object1, Implication object2) {
 				if (object1.children.length != object2.children.length)
 					return false;
@@ -207,7 +207,7 @@ public class Cache {
 			}
 		};
 
-		linearGuarded = new InterningManager<LinearGuarded>() {
+		linearGuarded = new ClassManager<LinearGuarded>() {
 			protected boolean equal(LinearGuarded object1, LinearGuarded object2) {
 				if (!object1.head.equals(object2.head) || !object1.body.equals(object2.body) || object1.variables.length != object2.variables.length)
 					return false;
@@ -225,7 +225,7 @@ public class Cache {
 			}
 		};
 
-		literal = new InterningManager<Literal>() {
+		literal = new ClassManager<Literal>() {
 			protected boolean equal(Literal object1, Literal object2) {
 				if (!object1.operator.equals(object2.operator) || !object1.predicate.equals(object2.predicate) || object1.terms.length != object2.terms.length)
 					return false;
@@ -243,7 +243,7 @@ public class Cache {
 			}
 		};
 
-		negation = new InterningManager<Negation>() {
+		negation = new ClassManager<Negation>() {
 			protected boolean equal(Negation object1, Negation object2) {
 				if (!object1.child.equals(object2.child) || !object1.operator.equals(object2.operator))
 					return false;
@@ -256,7 +256,7 @@ public class Cache {
 			}
 		};
 
-		predicate = new InterningManager<Predicate>() {
+		predicate = new ClassManager<Predicate>() {
 			protected boolean equal(Predicate object1, Predicate object2) {
 				return object1.name.equals(object2.name) && object1.arity == object2.arity && object1.isEquality == object2.isEquality;
 			}
@@ -266,7 +266,7 @@ public class Cache {
 			}
 		};
 
-		quantifiedFormula = new InterningManager<QuantifiedFormula>() {
+		quantifiedFormula = new ClassManager<QuantifiedFormula>() {
 			protected boolean equal(QuantifiedFormula object1, QuantifiedFormula object2) {
 				if (!object1.operator.equals(object2.operator) || !object1.child.equals(object2.child) || object1.variables.length != object2.variables.length)
 					return false;
@@ -284,7 +284,7 @@ public class Cache {
 			}
 		};
 
-		tgd = new InterningManager<TGD>() {
+		tgd = new ClassManager<TGD>() {
 			protected boolean equal(TGD object1, TGD object2) {
 				if (!object1.head.equals(object2.head) || !object1.body.equals(object2.body) || object1.variables.length != object2.variables.length)
 					return false;
@@ -302,7 +302,7 @@ public class Cache {
 			}
 		};
 
-		untypedConstant = new InterningManager<UntypedConstant>() {
+		untypedConstant = new ClassManager<UntypedConstant>() {
 			protected boolean equal(UntypedConstant object1, UntypedConstant object2) {
 				return object1.symbol.equals(object2.symbol);
 			}
@@ -312,7 +312,7 @@ public class Cache {
 			}
 		};
 
-		variable = new InterningManager<Variable>() {
+		variable = new ClassManager<Variable>() {
 			protected boolean equal(Variable object1, Variable object2) {
 				return object1.symbol.equals(object2.symbol);
 			}

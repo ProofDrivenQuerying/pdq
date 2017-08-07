@@ -1,6 +1,6 @@
 package uk.ac.ox.cs.pdq.db;
 
-import uk.ac.ox.cs.pdq.InterningManager;
+import uk.ac.ox.cs.pdq.ClassManager;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Variable;
 
@@ -12,12 +12,12 @@ import uk.ac.ox.cs.pdq.fol.Variable;
  *
  */
 public class Cache {
-	protected static InterningManager<AccessMethod> accessMethod = null;
-	protected static InterningManager<Attribute> attribute = null;
-	protected static InterningManager<Match> match = null;
-	protected static InterningManager<PrimaryKey> primaryKey = null;
-	protected static InterningManager<TypedConstant> typedConstant = null;
-	protected static InterningManager<Relation> relation = null;
+	protected static ClassManager<AccessMethod> accessMethod = null;
+	protected static ClassManager<Attribute> attribute = null;
+	protected static ClassManager<Match> match = null;
+	protected static ClassManager<PrimaryKey> primaryKey = null;
+	protected static ClassManager<TypedConstant> typedConstant = null;
+	protected static ClassManager<Relation> relation = null;
 
 	static {
 		startCaches();
@@ -39,7 +39,7 @@ public class Cache {
 	}
 
 	private static void startCaches() {
-		accessMethod = new InterningManager<AccessMethod>() {
+		accessMethod = new ClassManager<AccessMethod>() {
 			protected boolean equal(AccessMethod object1, AccessMethod object2) {
 				if (!object1.name.equals(object2.name) || object1.inputs.length != object2.inputs.length)
 					return false;
@@ -57,7 +57,7 @@ public class Cache {
 			}
 		};
 		
-		attribute  = new InterningManager<Attribute>() {
+		attribute  = new ClassManager<Attribute>() {
 			protected boolean equal(Attribute object1, Attribute object2) {
 				if (!object1.name.equals(object2.name) || object1.type != object2.type)
 					return false;
@@ -70,7 +70,7 @@ public class Cache {
 			}
 		};
 		
-	    match  = new InterningManager<Match>() {
+	    match  = new ClassManager<Match>() {
 	        protected boolean equal(Match object1, Match object2) {
 	            if (!object1.formula.equals(object2.formula) || 
 	            		object1.mapping.size() != object2.mapping.size())
@@ -90,7 +90,7 @@ public class Cache {
 	        }
 	    };
 
-		primaryKey  = new InterningManager<PrimaryKey>() {
+		primaryKey  = new ClassManager<PrimaryKey>() {
 			protected boolean equal(PrimaryKey object1, PrimaryKey object2) {
 				if (object1.attributes.length != object2.attributes.length)
 					return false;
@@ -108,7 +108,7 @@ public class Cache {
 			}
 		};
 		
-	    typedConstant  = new InterningManager<TypedConstant>() {
+	    typedConstant  = new ClassManager<TypedConstant>() {
 	        protected boolean equal(TypedConstant object1, TypedConstant object2) {
 	            return object1.value.equals(object2.value);
 	        }
@@ -117,7 +117,7 @@ public class Cache {
 	            return object.value.hashCode() * 7;
 	        }
 	    };
-		relation  = new InterningManager<Relation>() {
+		relation  = new ClassManager<Relation>() {
 	        protected boolean equal(Relation object1, Relation object2) {
 	            if (!object1.getName().equals(object2.getName()) || object1.attributes.length != object2.attributes.length || 
 	            		object1.accessMethods.length != object2.accessMethods.length)

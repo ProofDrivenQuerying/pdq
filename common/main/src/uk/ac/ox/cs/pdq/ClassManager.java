@@ -3,7 +3,15 @@ package uk.ac.ox.cs.pdq;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 
-public abstract class InterningManager<E> {
+/**
+ *  Creates a cache for immutable objects. Makes sure that two instance with the same values cannot be used.
+ *  Used by Cache instances such as uk.ac.ox.cs.pdq.algebra.Cache
+ *   
+ * @author Efthymia Tsamoura
+ *
+ * @param <E>
+ */
+public abstract class ClassManager<E> {
     protected static final double LOAD_FACTOR = 0.75;
 
     protected final ReferenceQueue<E> m_referenceQueue;
@@ -11,7 +19,7 @@ public abstract class InterningManager<E> {
     protected int m_size;
     protected int m_resizeThreshold;
 
-    public InterningManager() {
+    public ClassManager() {
         m_referenceQueue = new ReferenceQueue<E>();
         m_entries = createEntries(16);
         m_size = 0;

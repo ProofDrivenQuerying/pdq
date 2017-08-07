@@ -1,26 +1,26 @@
 package uk.ac.ox.cs.pdq.algebra;
 
-import uk.ac.ox.cs.pdq.InterningManager;
+import uk.ac.ox.cs.pdq.ClassManager;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 
 /**
  * Creates and maintains a cache of each object type in this package. The
- * purpose of this class is it make sure objects are never duplicated.
+ * purpose of this class is to make sure objects are never duplicated.
  * 
  * @author Gabor
  *
  */
 public class Cache {
-	protected static InterningManager<AccessTerm> accessTerm = null;
-	protected static InterningManager<AttributeEqualityCondition> attributeEqualityCondition = null;
-	protected static InterningManager<CartesianProductTerm> cartesianProductTerm = null;
-	protected static InterningManager<ConjunctiveCondition> conjunctiveCondition = null;
-	protected static InterningManager<ConstantEqualityCondition> constantEqualityCondition = null;
-	protected static InterningManager<DependentJoinTerm> dependentJoinTerm = null;
-	protected static InterningManager<JoinTerm> joinTerm = null;
-	protected static InterningManager<ProjectionTerm> projectionTerm = null;
-	protected static InterningManager<RenameTerm> renameTerm = null;
-	protected static InterningManager<SelectionTerm> selectionTerm = null;
+	protected static ClassManager<AccessTerm> accessTerm = null;
+	protected static ClassManager<AttributeEqualityCondition> attributeEqualityCondition = null;
+	protected static ClassManager<CartesianProductTerm> cartesianProductTerm = null;
+	protected static ClassManager<ConjunctiveCondition> conjunctiveCondition = null;
+	protected static ClassManager<ConstantEqualityCondition> constantEqualityCondition = null;
+	protected static ClassManager<DependentJoinTerm> dependentJoinTerm = null;
+	protected static ClassManager<JoinTerm> joinTerm = null;
+	protected static ClassManager<ProjectionTerm> projectionTerm = null;
+	protected static ClassManager<RenameTerm> renameTerm = null;
+	protected static ClassManager<SelectionTerm> selectionTerm = null;
 
 	static {
 		startCaches();
@@ -46,7 +46,7 @@ public class Cache {
 	}
 
 	private static void startCaches() {
-		accessTerm = new InterningManager<AccessTerm>() {
+		accessTerm = new ClassManager<AccessTerm>() {
 			protected boolean equal(AccessTerm object1, AccessTerm object2) {
 				if (!object1.relation.equals(object2.relation) || !object1.accessMethod.equals(object2.accessMethod)
 						|| object1.inputConstants.size() != object2.inputConstants.size())
@@ -66,7 +66,7 @@ public class Cache {
 			}
 		};
 
-		attributeEqualityCondition = new InterningManager<AttributeEqualityCondition>() {
+		attributeEqualityCondition = new ClassManager<AttributeEqualityCondition>() {
 			protected boolean equal(AttributeEqualityCondition object1, AttributeEqualityCondition object2) {
 				if (object1.position != object2.position || object1.other != object2.other)
 					return false;
@@ -79,7 +79,7 @@ public class Cache {
 			}
 		};
 
-		cartesianProductTerm = new InterningManager<CartesianProductTerm>() {
+		cartesianProductTerm = new ClassManager<CartesianProductTerm>() {
 			protected boolean equal(CartesianProductTerm object1, CartesianProductTerm object2) {
 				for (int index = 1; index >= 0; --index)
 					if (!object1.children[index].equals(object2.children[index]))
@@ -95,7 +95,7 @@ public class Cache {
 			}
 		};
 
-		conjunctiveCondition = new InterningManager<ConjunctiveCondition>() {
+		conjunctiveCondition = new ClassManager<ConjunctiveCondition>() {
 			protected boolean equal(ConjunctiveCondition object1, ConjunctiveCondition object2) {
 				if (object1.predicates.length != object2.predicates.length)
 					return false;
@@ -112,7 +112,7 @@ public class Cache {
 				return hashCode;
 			}
 		};
-		constantEqualityCondition = new InterningManager<ConstantEqualityCondition>() {
+		constantEqualityCondition = new ClassManager<ConstantEqualityCondition>() {
 			protected boolean equal(ConstantEqualityCondition object1, ConstantEqualityCondition object2) {
 				if (object1.position != object2.position || !object1.constant.equals(object1.constant))
 					return false;
@@ -124,7 +124,7 @@ public class Cache {
 				return hashCode;
 			}
 		};
-		dependentJoinTerm = new InterningManager<DependentJoinTerm>() {
+		dependentJoinTerm = new ClassManager<DependentJoinTerm>() {
 			protected boolean equal(DependentJoinTerm object1, DependentJoinTerm object2) {
 				for (int index = 1; index >= 0; --index)
 					if (!object1.children[index].equals(object2.children[index]))
@@ -140,7 +140,7 @@ public class Cache {
 			}
 		};
 
-		joinTerm = new InterningManager<JoinTerm>() {
+		joinTerm = new ClassManager<JoinTerm>() {
 			protected boolean equal(JoinTerm object1, JoinTerm object2) {
 				for (int index = 1; index >= 0; --index)
 					if (!object1.children[index].equals(object2.children[index]))
@@ -156,7 +156,7 @@ public class Cache {
 			}
 		};
 
-		projectionTerm = new InterningManager<ProjectionTerm>() {
+		projectionTerm = new ClassManager<ProjectionTerm>() {
 			protected boolean equal(ProjectionTerm object1, ProjectionTerm object2) {
 				if (!object1.child.equals(object2.child) || object1.projections.length != object2.projections.length)
 					return false;
@@ -174,7 +174,7 @@ public class Cache {
 			}
 		};
 
-		renameTerm = new InterningManager<RenameTerm>() {
+		renameTerm = new ClassManager<RenameTerm>() {
 			protected boolean equal(RenameTerm object1, RenameTerm object2) {
 				if (!object1.child.equals(object2.child) || object1.renamings.length != object2.renamings.length)
 					return false;
@@ -192,7 +192,7 @@ public class Cache {
 			}
 		};
 
-		selectionTerm = new InterningManager<SelectionTerm>() {
+		selectionTerm = new ClassManager<SelectionTerm>() {
 			protected boolean equal(SelectionTerm object1, SelectionTerm object2) {
 				if (!object1.child.equals(object2.child) || !object1.selectionCondition.equals(object2.selectionCondition))
 					return false;
