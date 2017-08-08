@@ -133,7 +133,8 @@ public abstract class AbstractSQLSchemaDiscoverer implements SchemaDiscoverer {
 					}
 				} while(rs.next());
 			}
-		} catch (SQLException e) {
+		} catch (Throwable e) {
+			e.printStackTrace();
 			log.error(e);
 			throw e;
 		}
@@ -330,7 +331,8 @@ public abstract class AbstractSQLSchemaDiscoverer implements SchemaDiscoverer {
 				} while(rs.next());
 			}
 			
-		} catch (SQLException e) {
+		} catch (Throwable e) {
+			e.printStackTrace();
 			log.error(e);
 			throw e;
 		}
