@@ -9,15 +9,14 @@ import java.util.Properties;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.datasources.builder.BuilderException;
 import uk.ac.ox.cs.pdq.datasources.sql.PostgresqlSchemaDiscoverer;
-import uk.ac.ox.cs.pdq.util.Utility;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Schema;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 
 // TODO: Auto-generated Javadoc

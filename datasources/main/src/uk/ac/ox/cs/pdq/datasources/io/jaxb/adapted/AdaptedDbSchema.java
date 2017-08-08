@@ -13,9 +13,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 import uk.ac.ox.cs.pdq.datasources.builder.SchemaDiscoverer;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.Source;
 import uk.ac.ox.cs.pdq.datasources.sql.PostgresqlSchemaDiscoverer;
-import uk.ac.ox.cs.pdq.db.AccessMethod;
-import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.db.ForeignKey;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.View;
@@ -75,7 +72,6 @@ public class AdaptedDbSchema {
 						i++;
 					}
 				}
-				PostgresqlSchemaDiscoverer sad;
 				discoveredSources.add(s.getName());
 			}
 			if (i != relations.length) {
