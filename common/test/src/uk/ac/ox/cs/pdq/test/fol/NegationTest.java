@@ -34,7 +34,7 @@ public final class NegationTest {
 	 * Test of.
 	 */
 	@Test public void testOf() {
-		Predicate s = new Predicate("s", 5);
+		Predicate s = Predicate.create("s", 5);
 		Term[] t = new Term[]{
 				Variable.create("x1"), 
 				Variable.create("x2"), 
@@ -51,7 +51,7 @@ public final class NegationTest {
 	 * Test equals.
 	 */
 	@Test public void testEquals() {
-		Predicate s1 = new Predicate("s", 5);
+		Predicate s1 = Predicate.create("s", 5);
 		Term[] t1 = new Term[]{
 				Variable.create("x1"), 
 				Variable.create("x2"), 
@@ -60,7 +60,8 @@ public final class NegationTest {
 				TypedConstant.create("x5")
 		};
 		Atom p1 = Atom.create(s1, t1);
-		Predicate s2 = new Predicate("s", 5);
+		
+		Predicate s2 = Predicate.create("s", 5);
 		Term[] t2 = new Term[]{
 				Variable.create("x1"), 
 				Variable.create("x2"), 
@@ -78,7 +79,7 @@ public final class NegationTest {
 	 * Test not equals.
 	 */
 	@Test public void testNotEquals() {
-		Predicate s1 = new Predicate("s", 5);
+		Predicate s1 = Predicate.create("s", 5);
 		Term[] t1 = new Term[]{
 				Variable.create("x1"), 
 				Variable.create("x2"), 
@@ -87,7 +88,7 @@ public final class NegationTest {
 				TypedConstant.create("x5")
 		};
 		Atom p1 = Atom.create(s1, t1);
-		Predicate s2 = new Predicate("s", 5);
+		Predicate s2 = Predicate.create("s", 5);
 		Term[] t2 = new Term[]{
 				Variable.create("x1"), 
 				Variable.create("x2"), 

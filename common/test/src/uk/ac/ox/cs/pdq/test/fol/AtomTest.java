@@ -1,8 +1,6 @@
 package uk.ac.ox.cs.pdq.test.fol;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.Random;
 import java.util.Set;
@@ -55,17 +53,17 @@ public class AtomTest {
 			for (int j = 0, l = terms.length; j < l; j++) {
 				terms[j] = Variable.create("x" + j);
 			}
-			Predicate predicate = new Predicate("r" + i, terms.length);
+			Predicate predicate = Predicate.create("r" + i, terms.length);
 			formulae.add(Atom.create(predicate, terms));
 		}
-		assertEquals(n, formulae.size());
+		Assert.assertEquals(n, formulae.size());
 		for (int i = 0; i < n; i++) {
 			Term[] terms = new Term[arities[i]];
 			for (int j = 0, l = terms.length; j < l; j++) {
 				terms[j] = Variable.create("x" + j);
 			}
-			Predicate predicate = new Predicate("r" + i, terms.length);
-			assertTrue(formulae.contains(Atom.create(predicate, terms)));
+			Predicate predicate = Predicate.create("r" + i, terms.length);
+			Assert.assertTrue(formulae.contains(Atom.create(predicate, terms)));
 		}
 	}
 
@@ -73,7 +71,7 @@ public class AtomTest {
 	 * Test predicate formula valid.
 	 */
 	@Test public void testPredicateFormulaValid() {
-		Predicate s = new Predicate("s", 5);
+		Predicate s = Predicate.create("s", 5);
 		Term[] t = new Term[]{
 				Variable.create("x1"), Variable.create("x2"), Variable.create("x3"),
 				UntypedConstant.create("x4"), TypedConstant.create("x5")
@@ -87,7 +85,7 @@ public class AtomTest {
 	 * Test predicate formula zero arity.
 	 */
 	@Test public void testPredicateFormulaZeroArity() {
-		Predicate s = new Predicate("s", 0);
+		Predicate s = Predicate.create("s", 0);
 		Term[] t = new Term[0];
 		Atom p = Atom.create( s, t);
 		Assert.assertEquals("Atom must have name signature " + s, s, p.getPredicate());
@@ -202,7 +200,7 @@ public class AtomTest {
 	 * Test get term count.
 	 */
 	@Test public void testGetTermCount() {
-		Predicate s = new Predicate("s", 5);
+		Predicate s = Predicate.create("s", 5);
 		Term[] t = new Term[]{
 				Variable.create("x1"), Variable.create("x2"), Variable.create("x3"),
 				UntypedConstant.create("x4"), TypedConstant.create("x5")
@@ -215,7 +213,7 @@ public class AtomTest {
 	 * Test get term.
 	 */
 	@Test public void testGetTerm() {
-		Predicate s = new Predicate("s", 5);
+		Predicate s = Predicate.create("s", 5);
 		Term[] t = new Term[]{Variable.create("x1"), Variable.create("x2"), Variable.create("x3"),
 				UntypedConstant.create("x4"), TypedConstant.create("x5")};
 		Atom p = Atom.create(s, t);
@@ -230,7 +228,7 @@ public class AtomTest {
 	 */
 	@Test (expected=IndexOutOfBoundsException.class)
 	public void testGetTermOutOfRange1() {
-		Predicate s = new Predicate("s", 5);
+		Predicate s = Predicate.create("s", 5);
 		Term[] t = new Term[]{Variable.create("x1"), Variable.create("x2"), Variable.create("x3"),
 				UntypedConstant.create("x4"), TypedConstant.create("x5")};
 		Atom.create(s, t).getTerm(-1);
@@ -241,7 +239,7 @@ public class AtomTest {
 	 */
 	@Test (expected=IndexOutOfBoundsException.class)
 	public void testGetTermOutOfRange2() {
-		Predicate s = new Predicate("s", 5);
+		Predicate s = Predicate.create("s", 5);
 		Term[] t = new Term[]{Variable.create("x1"), Variable.create("x2"), Variable.create("x3"),
 				UntypedConstant.create("x4"), TypedConstant.create("x5")};
 		Atom.create(s, t).getTerm(5);
@@ -251,7 +249,7 @@ public class AtomTest {
 	 * Test get terms.
 	 */
 	@Test public void testGetTerms() {
-		Predicate s = new Predicate("s", 5);
+		Predicate s = Predicate.create("s", 5);
 		Term[] t = new Term[]{Variable.create("x1"), Variable.create("x2"), Variable.create("x3"),
 				UntypedConstant.create("x4"), TypedConstant.create("x5")
 		};
@@ -263,15 +261,15 @@ public class AtomTest {
 	 * Test get selected terms.
 	 */
 	@Test public void testGetSelectedTerms() {
-		Predicate s = new Predicate("s", 5);
+		Predicate s = Predicate.create("s", 5);
 		Term[] t = new Term[]{
 				Variable.create("x1"), Variable.create("x2"), Variable.create("x3"),
 				UntypedConstant.create("x4"), TypedConstant.create("x5")
 		};
 		Atom p = Atom.create(s, t);
 		Assert.assertEquals("Atom terms subset must match",
-				Sets.newLinkedHashSet(),
-				p.getTerms(Lists.<Integer>newArrayList()));
+				new LinkedHashSet<>(),
+				p.getTerms(new ArrayList<Integer>()));
 		Assert.assertEquals("Atom terms subset must match",
 				Sets.newHashSet(Variable.create("x1")),
 				p.getTerms(Lists.<Integer>newArrayList(0)));
@@ -285,7 +283,7 @@ public class AtomTest {
 	 */
 	@Test(expected=IndexOutOfBoundsException.class)
 	public void testGetSelectedTermsOutofRange1() {
-		Predicate s = new Predicate("s", 5);
+		Predicate s = Predicate.create("s", 5);
 		Term[] t = new Term[]{
 				Variable.create("x1"), Variable.create("x2"), Variable.create("x3"),
 				UntypedConstant.create("x4"), TypedConstant.create("x5")
@@ -298,7 +296,7 @@ public class AtomTest {
 	 */
 	@Test(expected=IndexOutOfBoundsException.class)
 	public void testGetSelectedTermsOutofRange2() {
-		Predicate s = new Predicate("s", 5);
+		Predicate s = Predicate.create("s", 5);
 		Term[] t = new Term[]{Variable.create("x1"), Variable.create("x2"), Variable.create("x3"),
 				UntypedConstant.create("x4"), TypedConstant.create("x5")
 		};
@@ -309,12 +307,12 @@ public class AtomTest {
 	 * Test get constants.
 	 */
 	@Test public void testGetConstants() {
-		Predicate s = new Predicate("s", 5);
+		Predicate s = Predicate.create("s", 5);
 		Term[] t = new Term[]{Variable.create("x1"), Variable.create("x2"), Variable.create("x3"),
 				UntypedConstant.create("x4"), TypedConstant.create("x5")};
 		Atom p = Atom.create(s, t);
 		Assert.assertEquals("Atom terms subset must match",
-				new Term[]{UntypedConstant.create("x4"), TypedConstant.create("x5")},
+				Lists.newArrayList(UntypedConstant.create("x4"), TypedConstant.create("x5")),
 				Utility.getTypedAndUntypedConstants(p, new Integer[]{3, 4}));
 	}
 
@@ -323,7 +321,7 @@ public class AtomTest {
 	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void testGetConstantsInvalid() {
-		Predicate s = new Predicate("s", 5);
+		Predicate s = Predicate.create("s", 5);
 		Term[] t = new Term[]{
 				Variable.create("x1"), Variable.create("x2"), Variable.create("x3"),
 				UntypedConstant.create("x4"), TypedConstant.create("x5")};
@@ -334,13 +332,13 @@ public class AtomTest {
 	 * Test get variable.
 	 */
 	@Test public void testGetVariable() {
-		Predicate s = new Predicate("s", 5);
+		Predicate s = Predicate.create("s", 5);
 		Term[] t = new Term[]{
 				Variable.create("x1"), Variable.create("x2"), UntypedConstant.create("x3"),
 				Variable.create("x4"), TypedConstant.create("x5")};
 		Atom p = Atom.create(s, t);
-		Assert.assertEquals("Atom variables subset must match",
-				Lists.<Term>newArrayList(Variable.create("x1"), Variable.create("x2"), Variable.create("x4")),
+		Assert.assertArrayEquals("Atom variables subset must match",
+				new Variable[]{Variable.create("x1"), Variable.create("x2"), Variable.create("x4")},
 				p.getVariables());
 	}
 
@@ -348,7 +346,7 @@ public class AtomTest {
 	 * Test get all constants.
 	 */
 	@Test public void testGetAllConstants() {
-		Predicate s = new Predicate("s", 5);
+		Predicate s = Predicate.create("s", 5);
 		Term[] t = new Term[]{
 				Variable.create("x1"), Variable.create("x2"), UntypedConstant.create("x3"),
 				Variable.create("x4"), TypedConstant.create("x5")};
@@ -364,45 +362,46 @@ public class AtomTest {
 	 * @return the schema constants
 	 */
 	@Test public void getSchemaConstants() {
-		Predicate s = new Predicate("s", 5);
+		Predicate s = Predicate.create("s", 5);
 		Term[] t = new Term[]{
 				Variable.create("x1"), TypedConstant.create("x2"), UntypedConstant.create("x3"),
 				Variable.create("x4"), TypedConstant.create("x5")};
 		Atom p = Atom.create(s, t);
 		Assert.assertEquals("Atom variables subset must match",
-				Lists.newArrayList(TypedConstant.create("x2"), TypedConstant.create("x5")), Utility.getTypedConstants(p));
+				Lists.newArrayList(TypedConstant.create("x2"), TypedConstant.create("x5")), 
+				Utility.getTypedConstants(p));
 	}
 
 	/**
 	 * Test get predicates.
 	 */
 	@Test public void testGetPredicates() {
-		Predicate s = new Predicate("s", 5);
+		Predicate s = Predicate.create("s", 5);
 		Term[] t = new Term[]{
 				Variable.create("x1"), TypedConstant.create("x2"), UntypedConstant.create("x3"),
 				Variable.create("x4"), TypedConstant.create("x5")};
 		Atom p = Atom.create(s, t);
-		Assert.assertEquals("Atom lists must match", Lists.newArrayList(p), p.getAtoms());
+		Assert.assertArrayEquals("Atom lists must match", new Atom[]{p}, p.getAtoms());
 	}
 
 	/**
 	 * Test get atoms.
 	 */
 	@Test public void testGetAtoms() {
-		Predicate s = new Predicate("s", 5);
+		Predicate s = Predicate.create("s", 5);
 		Term[] t = new Term[]{
 				Variable.create("x1"), TypedConstant.create("x2"), UntypedConstant.create("x3"),
 				Variable.create("x4"), TypedConstant.create("x5")
 		};
 		Atom p = Atom.create(s, t);
-		Assert.assertEquals("Atom lists must match", Lists.newArrayList(p), p.getAtoms());
+		Assert.assertArrayEquals("Atom lists must match", new Atom[]{p}, p.getAtoms());
 	}
 
 	/**
 	 * Test get term positions.
 	 */
 	@Test public void testGetTermPositions() {
-		Predicate s = new Predicate("s", 5);
+		Predicate s = Predicate.create("s", 5);
 		Term[] t = new Term[]{
 				Variable.create("x1"), Variable.create("x2"), UntypedConstant.create("x3"),
 				Variable.create("x1"), TypedConstant.create("x4")
@@ -420,7 +419,7 @@ public class AtomTest {
 	 * @return the term positions not found
 	 */
 	@Test public void getTermPositionsNotFound() {
-		Predicate s = new Predicate("s", 5);
+		Predicate s = Predicate.create("s", 5);
 		Term[] t = new Term[]{
 				Variable.create("x1"), Variable.create("x2"), UntypedConstant.create("x3"),
 				Variable.create("x1"), TypedConstant.create("x4")
@@ -433,7 +432,7 @@ public class AtomTest {
 	 * Test is fact.
 	 */
 	@Test public void testIsFact() {
-		Predicate s = new Predicate("s", 5);
+		Predicate s = Predicate.create("s", 5);
 		Term[] t = new Term[]{
 				TypedConstant.create("x1"), TypedConstant.create("x2"), TypedConstant.create("x3"),
 				TypedConstant.create("x1"), TypedConstant.create("x4")
@@ -446,7 +445,7 @@ public class AtomTest {
 	 * Test is not fact.
 	 */
 	@Test public void testIsNotFact() {
-		Predicate s = new Predicate("s", 5);
+		Predicate s = Predicate.create("s", 5);
 		Term[] t = new Term[]{Variable.create("x1"), Variable.create("x2"), UntypedConstant.create("x3"), Variable.create("x1"), TypedConstant.create("x4")};
 		Atom p = Atom.create(s, t);
 		Assert.assertFalse("Fact terms must contain schema constants only", p.isFact());

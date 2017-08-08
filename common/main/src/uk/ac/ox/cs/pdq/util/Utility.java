@@ -258,7 +258,7 @@ public class Utility {
 			}
 			i++;
 		}
-		Predicate equality = new Predicate("equality", 2, true);
+		Predicate equality = Predicate.create("equality", 2, true);
 		//Create the constant equality predicates
 		int index = 0;
 		Formula[] equalities = new Formula[tobeEqual.entrySet().size()];
@@ -279,7 +279,7 @@ public class Utility {
 	 * @return the EGD representing the primary key
 	 */
 	public static EGD getEGDs(Relation relation, Attribute[] keys) {
-		return getEGDs(new Predicate(relation.getName(), relation.getArity()), relation.getAttributes(), keys);
+		return getEGDs(Predicate.create(relation.getName(), relation.getArity()), relation.getAttributes(), keys);
 	}
 
 	public static List<TypedConstant> getTypedConstants(Formula formula) {
@@ -467,28 +467,6 @@ public class Utility {
 		}
 		throw new ClassCastException(o + " could not be cast to " + type);
 	}
-
-//	/**
-//	 * Gets the type of the attributes of the relation.
-//	 *
-//	 * @return the relation's type
-//	 */
-//	public static TupleType getType(Relation relation) {
-//		return TupleType.DefaultFactory.createFromTyped(relation.getAttributes());
-//	}
-	
-//	/**
-//	 * Creates a new Default object.
-//	 *
-//	 * @param typed List<? extends Typed>
-//	 * @return TupleType
-//	 */
-//	public static TupleType createFromTyped(Attribute[] typed) {
-//		Type[] types = new Type[typed.length];
-//		for(int attributeIndex = 0; attributeIndex < typed.length; ++attributeIndex) 
-//			types[attributeIndex] = typed[attributeIndex].getType();
-//		return TupleType.DefaultFactory.create(types);
-//	}
 
 	/**
 	 * @param fact An input fact

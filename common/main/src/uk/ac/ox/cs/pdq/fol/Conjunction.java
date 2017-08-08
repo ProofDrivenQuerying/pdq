@@ -127,7 +127,6 @@ public final class Conjunction extends Formula {
 
 	@Override
 	public Formula getChild(int childIndex) {
-		// TODO Auto-generated method stub
 		return this.children[childIndex];
 	}
 

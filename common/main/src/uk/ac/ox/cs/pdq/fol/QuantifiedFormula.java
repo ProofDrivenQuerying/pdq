@@ -50,7 +50,7 @@ public class QuantifiedFormula extends Formula {
 	 * @param variables 		Input quantified variables
 	 * @param child 		Input child
 	 */
-	public QuantifiedFormula(LogicalSymbols operator, Variable[] variables, Formula child) {
+	protected QuantifiedFormula(LogicalSymbols operator, Variable[] variables, Formula child) {
 		Assert.assertTrue(operator == UNIVERSAL || operator == EXISTENTIAL);
 		Assert.assertNotNull(child);
 		Assert.assertNotNull(variables);

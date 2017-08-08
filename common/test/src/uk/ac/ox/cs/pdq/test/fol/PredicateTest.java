@@ -30,7 +30,7 @@ public class PredicateTest {
 	 * Test signature valid.
 	 */
 	@Test public void testSignatureValid() {
-		Predicate s = new Predicate("s", 1);
+		Predicate s = Predicate.create("s", 1);
 		Assert.assertEquals("Predicate must have name 's'", "s", s.getName());
 		Assert.assertEquals("Predicate must have arity 1", 1, s.getArity());
 	}
@@ -39,7 +39,7 @@ public class PredicateTest {
 	 * Test signature zero arity.
 	 */
 	@Test public void testSignatureZeroArity() {
-		Predicate s = new Predicate("s", 0);
+		Predicate s = Predicate.create("s", 0);
 		Assert.assertEquals("Predicate must have name 's'", "s", s.getName());
 		Assert.assertEquals("Predicate must have arity 0", 0, s.getArity());
 	}
@@ -49,7 +49,7 @@ public class PredicateTest {
 	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void testSignatureEmptyName() {
-		new Predicate("", 0);
+		Predicate.create("", 0);
 	}
 
 	/**
@@ -57,7 +57,7 @@ public class PredicateTest {
 	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void testSignatureNullName() {
-		new Predicate(null, 0);
+		Predicate.create(null, 0);
 	}
 
 	/**
@@ -65,15 +65,15 @@ public class PredicateTest {
 	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void testNegativeArity() {
-		new Predicate("s", -1);
+		Predicate.create("s", -1);
 	}
 
 	/**
 	 * Test equality.
 	 */
 	@Test public void testEquality() {
-		Predicate s1 = new Predicate("s", 5);
-		Predicate s2 = new Predicate("s", 5);
+		Predicate s1 = Predicate.create("s", 5);
+		Predicate s2 = Predicate.create("s", 5);
 		Assert.assertTrue("Signatures s1 and s2 must be the same", s1.equals(s2));
 	}
 
@@ -81,8 +81,8 @@ public class PredicateTest {
 	 * Test equality wrong arity.
 	 */
 	@Test public void testEqualityWrongArity() {
-		Predicate s1 = new Predicate("s", 5);
-		Predicate s2 = new Predicate("s", 1);
+		Predicate s1 = Predicate.create("s", 5);
+		Predicate s2 = Predicate.create("s", 1);
 		Assert.assertFalse("Signatures s1 and s2 have different arities", s1.equals(s2));
 	}
 
@@ -90,8 +90,8 @@ public class PredicateTest {
 	 * Test equality wrong name.
 	 */
 	@Test public void testEqualityWrongName() {
-		Predicate s1 = new Predicate("s", 5);
-		Predicate s2 = new Predicate("s", 1);
+		Predicate s1 = Predicate.create("s", 5);
+		Predicate s2 = Predicate.create("s", 1);
 		Assert.assertNotEquals("Signatures s1 and s2 have different arities", s1.equals(s2));
 	}
 
@@ -100,14 +100,14 @@ public class PredicateTest {
 	 */
 	@Test public void testHashDuplicates() {
 		Set<Predicate> set = new LinkedHashSet<>();
-		set.add(new Predicate("s", 0));
-		set.add(new Predicate("s", 1));
-		set.add(new Predicate("s", 2));
-		set.add(new Predicate("s", 4));
-		set.add(new Predicate("s", 0));
-		set.add(new Predicate("s", 1));
-		set.add(new Predicate("s", 2));
-		set.add(new Predicate("s", 4));
+		set.add(Predicate.create("s", 0));
+		set.add(Predicate.create("s", 1));
+		set.add(Predicate.create("s", 2));
+		set.add(Predicate.create("s", 4));
+		set.add(Predicate.create("s", 0));
+		set.add(Predicate.create("s", 1));
+		set.add(Predicate.create("s", 2));
+		set.add(Predicate.create("s", 4));
 		Assert.assertEquals("Predicate set must have 4 elements", 4, set.size());
 	}
 
@@ -116,14 +116,14 @@ public class PredicateTest {
 	 */
 	@Test public void testHashNoDuplicates() {
 		Set<Predicate> set = new LinkedHashSet<>();
-		set.add(new Predicate("s", 0));
-		set.add(new Predicate("s", 1));
-		set.add(new Predicate("s", 2));
-		set.add(new Predicate("s", 4));
-		set.add(new Predicate("r", 0));
-		set.add(new Predicate("r", 1));
-		set.add(new Predicate("r", 2));
-		set.add(new Predicate("r", 4));
+		set.add(Predicate.create("s", 0));
+		set.add(Predicate.create("s", 1));
+		set.add(Predicate.create("s", 2));
+		set.add(Predicate.create("s", 4));
+		set.add(Predicate.create("r", 0));
+		set.add(Predicate.create("r", 1));
+		set.add(Predicate.create("r", 2));
+		set.add(Predicate.create("r", 4));
 		Assert.assertEquals("Predicate set must have 8 elements", 8, set.size());
 	}
 }

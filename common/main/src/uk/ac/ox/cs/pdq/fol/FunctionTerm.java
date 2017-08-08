@@ -19,7 +19,7 @@ public class FunctionTerm extends Term{
 	protected String toString = null;
 	protected Variable[] variables;
 
-	public FunctionTerm(Function function, Term... terms) {
+	private FunctionTerm(Function function, Term... terms) {
 		Assert.assertNotNull(terms);
 		Assert.assertTrue(function.getArity() == terms.length);
 		this.function = function;

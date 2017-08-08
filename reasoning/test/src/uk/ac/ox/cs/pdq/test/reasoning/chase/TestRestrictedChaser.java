@@ -74,7 +74,7 @@ public class TestRestrictedChaser {
 				new Term[]{Variable.create("y"),Variable.create("w")});
 
 		this.tgd = TGD.create(Conjunction.of(R1),Conjunction.of(R2));
-		this.egd = EGD.create(Conjunction.of(R2,R2p), Conjunction.of(Atom.create(new Predicate(QNames.EQUALITY.toString(), 2, true), 
+		this.egd = EGD.create(Conjunction.of(R2,R2p), Conjunction.of(Atom.create(Predicate.create(QNames.EQUALITY.toString(), 2, true), 
 				Variable.create("z"),Variable.create("w"))));
 
 		this.schema = new Schema(new Relation[]{this.rel1, this.rel2}, new Dependency[]{this.tgd,this.egd});

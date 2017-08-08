@@ -19,7 +19,7 @@ public class Predicate {
 	/**  true, if this is the signature for an equality predicate. */
 	protected final Boolean isEquality;
 
-	public Predicate(String name, Integer arity) {
+	protected Predicate(String name, Integer arity) {
 		Assert.assertNotNull(name);
 		Assert.assertTrue(!name.isEmpty());
 		Assert.assertTrue(arity >= 0);
@@ -28,7 +28,7 @@ public class Predicate {
 		this.isEquality = false;
 	}
 	
-	public Predicate(String name, Integer arity, boolean isEquality) {
+	protected Predicate(String name, Integer arity, boolean isEquality) {
 		Assert.assertNotNull(name);
 		Assert.assertTrue(!name.isEmpty());
 		Assert.assertTrue(arity >= 0);

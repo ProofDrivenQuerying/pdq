@@ -33,7 +33,7 @@ public class QuantifiedFormulaTest {
 	 * Test universal.
 	 */
 	@Test public void testUniversal() {
-		Predicate s = new Predicate("s", 5);
+		Predicate s = Predicate.create("s", 5);
 		Term[] t = new Term[]{
 				Variable.create("x1"), 
 				Variable.create("x2"), 
@@ -50,7 +50,7 @@ public class QuantifiedFormulaTest {
 	 * Test equals universal.
 	 */
 	@Test public void testEqualsUniversal() {
-		Predicate s1 = new Predicate("s", 5);
+		Predicate s1 = Predicate.create("s", 5);
 		Term[] t1 = new Term[]{
 				Variable.create("x1"), 
 				Variable.create("x2"), 
@@ -59,7 +59,7 @@ public class QuantifiedFormulaTest {
 				TypedConstant.create("x5")
 		};
 		Atom p1 = Atom.create(s1, t1);
-		Predicate s2 = new Predicate("s", 5);
+		Predicate s2 = Predicate.create("s", 5);
 		Term[] t2 = new Term[]{
 				Variable.create("x1"), 
 				Variable.create("x2"), 
@@ -79,7 +79,7 @@ public class QuantifiedFormulaTest {
 	 * Test not equals universal.
 	 */
 	@Test public void testNotEqualsUniversal() {
-		Predicate s1 = new Predicate("s", 5);
+		Predicate s1 = Predicate.create("s", 5);
 		Term[] t1 = new Term[]{
 				Variable.create("x1"), 
 				Variable.create("x2"), 
@@ -88,7 +88,7 @@ public class QuantifiedFormulaTest {
 				TypedConstant.create("x5")
 		};
 		Atom p1 = Atom.create(s1, t1);
-		Predicate s2 = new Predicate("s", 5);
+		Predicate s2 = Predicate.create("s", 5);
 		Term[] t2 = new Term[]{
 				Variable.create("x1"), 
 				Variable.create("x2"), 
@@ -106,7 +106,7 @@ public class QuantifiedFormulaTest {
 	 * Test existential.
 	 */
 	@Test public void testExistential() {
-		Predicate s = new Predicate("s", 5);
+		Predicate s = Predicate.create("s", 5);
 		Term[] t = new Term[]{
 				Variable.create("x1"), 
 				Variable.create("x2"), 
@@ -123,7 +123,7 @@ public class QuantifiedFormulaTest {
 	 * Test equals existential.
 	 */
 	@Test public void testEqualsExistential() {
-		Predicate s1 = new Predicate("s", 5);
+		Predicate s1 = Predicate.create("s", 5);
 		Term[] t1 = new Term[]{
 				Variable.create("x1"), 
 				Variable.create("x2"), 
@@ -132,7 +132,7 @@ public class QuantifiedFormulaTest {
 				TypedConstant.create("x5")
 		};
 		Atom p1 = Atom.create(s1, t1);
-		Predicate s2 = new Predicate("s", 5);
+		Predicate s2 = Predicate.create("s", 5);
 		Term[] t2 = new Term[]{
 				Variable.create("x1"), 
 				Variable.create("x2"), 
@@ -152,7 +152,7 @@ public class QuantifiedFormulaTest {
 	 * Test not equals existential.
 	 */
 	@Test public void testNotEqualsExistential() {
-		Predicate s1 = new Predicate("s", 5);
+		Predicate s1 = Predicate.create("s", 5);
 		Term[] t1 = new Term[]{
 				Variable.create("x1"), 
 				Variable.create("x2"), 
@@ -161,7 +161,7 @@ public class QuantifiedFormulaTest {
 				TypedConstant.create("x5")
 		};
 		Atom p1 = Atom.create(s1, t1);
-		Predicate s2 = new Predicate("s", 5);
+		Predicate s2 = Predicate.create("s", 5);
 		Term[] t2 = new Term[]{
 				Variable.create("x1"), 
 				Variable.create("x2"), 

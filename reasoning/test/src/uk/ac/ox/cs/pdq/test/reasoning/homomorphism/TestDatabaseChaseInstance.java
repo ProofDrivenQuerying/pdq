@@ -77,7 +77,7 @@ public class TestDatabaseChaseInstance {
 		
 		this.tgd = TGD.create(Conjunction.of(R1),Conjunction.of(R2));
 		this.tgd2 = TGD.create(Conjunction.of(R1,R2p),Conjunction.of(R3));
-		this.egd = EGD.create(Conjunction.of(R2,R2p), Conjunction.of(Atom.create(new Predicate(QNames.EQUALITY.toString(), 2, true), 
+		this.egd = EGD.create(Conjunction.of(R2,R2p), Conjunction.of(Atom.create(Predicate.create(QNames.EQUALITY.toString(), 2, true), 
 				Variable.create("z"),Variable.create("w"))));
 
 		this.schema = new Schema(new Relation[]{this.rel1, this.rel2, this.rel3}, new Dependency[]{this.tgd,this.tgd2, this.egd});
@@ -159,8 +159,8 @@ public class TestDatabaseChaseInstance {
 		Atom f25 = Atom.create(this.rel2, 
 				new Term[]{UntypedConstant.create("p"),TypedConstant.create(new String("Michael"))});
 		
-		Atom eq1 = Atom.create(new Predicate(QNames.EQUALITY.toString(), 2), UntypedConstant.create("c1"), UntypedConstant.create("c2"));
-		Atom eq2 = Atom.create(new Predicate(QNames.EQUALITY.toString(), 2), UntypedConstant.create("c1"), UntypedConstant.create("c3"));
+		Atom eq1 = Atom.create(Predicate.create(QNames.EQUALITY.toString(), 2), UntypedConstant.create("c1"), UntypedConstant.create("c2"));
+		Atom eq2 = Atom.create(Predicate.create(QNames.EQUALITY.toString(), 2), UntypedConstant.create("c1"), UntypedConstant.create("c3"));
 		
 		this.chaseState.addFacts(Lists.newArrayList(f20,f21,f22,f23,f24,f25, eq1,eq2));
 		List<Match> matches = this.chaseState.getTriggers(new Dependency[]{this.egd},TriggerProperty.ALL,LimitToThisOrAllInstances.THIS);
@@ -187,8 +187,8 @@ public class TestDatabaseChaseInstance {
 		Atom f25 = Atom.create(this.rel2, 
 				new Term[]{UntypedConstant.create("p"),TypedConstant.create(new String("Michael"))});
 		
-		Atom eq1 = Atom.create(new Predicate(QNames.EQUALITY.toString(), 2), UntypedConstant.create("c1"), UntypedConstant.create("c2"));
-		Atom eq2 = Atom.create(new Predicate(QNames.EQUALITY.toString(), 2), UntypedConstant.create("c1"), UntypedConstant.create("c3"));
+		Atom eq1 = Atom.create(Predicate.create(QNames.EQUALITY.toString(), 2), UntypedConstant.create("c1"), UntypedConstant.create("c2"));
+		Atom eq2 = Atom.create(Predicate.create(QNames.EQUALITY.toString(), 2), UntypedConstant.create("c1"), UntypedConstant.create("c3"));
 		
 		this.chaseState.addFacts(Lists.newArrayList(f20,f21,f22,f23,f24,f25, eq1,eq2));
 		List<Match> matches = this.chaseState.getTriggers(new Dependency[]{this.egd},TriggerProperty.ACTIVE,LimitToThisOrAllInstances.THIS);

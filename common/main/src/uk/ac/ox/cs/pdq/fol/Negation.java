@@ -35,7 +35,7 @@ public final class Negation extends Formula {
 	 * Constructor for Negation.
 	 * @param sf T
 	 */
-	public Negation(Formula child) {
+	private Negation(Formula child) {
 		Assert.assertNotNull(child);
 		this.child = child;
 	}
@@ -49,7 +49,7 @@ public final class Negation extends Formula {
 	 */
 	public static Negation of(Formula f) {
 		Assert.assertNotNull(f);
-		return new Negation(f);
+		return Negation.create(f);
 	}
 
 	@SuppressWarnings("unchecked")

@@ -34,7 +34,7 @@ public class ImplicationTest {
 	 * Test of.
 	 */
 	@Test public void testOf() {
-		Predicate s1 = new Predicate("s", 5);
+		Predicate s1 = Predicate.create("s", 5);
 		Term[] t1 = new Term[]{
 				Variable.create("x1"), 
 				Variable.create("x2"), 
@@ -42,7 +42,7 @@ public class ImplicationTest {
 				UntypedConstant.create("x4"), 
 				TypedConstant.create("x5")
 		};
-		Predicate s2 = new Predicate("s", 2);
+		Predicate s2 = Predicate.create("s", 2);
 		Term[] t2 = new Term[]{
 				TypedConstant.create("x5"), 
 				Variable.create("x1")};
@@ -57,7 +57,7 @@ public class ImplicationTest {
 	 * Test equals.
 	 */
 	@Test public void testEquals() {
-		Predicate s1 = new Predicate("s", 5);
+		Predicate s1 = Predicate.create("s", 5);
 		Term[] t1 = new Term[]{
 				Variable.create("x1"), 
 				Variable.create("x2"), 
@@ -66,7 +66,7 @@ public class ImplicationTest {
 				TypedConstant.create("x5")
 		};
 		Atom p1 = Atom.create(s1, t1);
-		Predicate s2 = new Predicate("s", 5);
+		Predicate s2 = Predicate.create("s", 5);
 		Term[] t2 = new Term[]{
 				Variable.create("x1"), 
 				Variable.create("x2"), 
@@ -84,7 +84,7 @@ public class ImplicationTest {
 	 * Test not equals.
 	 */
 	@Test public void testNotEquals() {
-		Predicate s1 = new Predicate("s", 5);
+		Predicate s1 = Predicate.create("s", 5);
 		Term[] t1 = new Term[]{
 				Variable.create("x1"), 
 				Variable.create("x2"), 
@@ -93,7 +93,7 @@ public class ImplicationTest {
 				TypedConstant.create("x5")
 		};
 		Atom p1 = Atom.create(s1, t1);
-		Predicate s2 = new Predicate("s", 5);
+		Predicate s2 = Predicate.create("s", 5);
 		Term[] t2 = new Term[]{
 				Variable.create("x1"), 
 				Variable.create("x2"), 
@@ -102,7 +102,7 @@ public class ImplicationTest {
 				TypedConstant.create("y1")
 		};
 		Atom p2 = Atom.create(s2, t2);
-		Predicate s3 = new Predicate("s", 5);
+		Predicate s3 = Predicate.create("s", 5);
 		Term[] t3 = new Term[]{
 				Variable.create("x1"), 
 				Variable.create("x2"), 

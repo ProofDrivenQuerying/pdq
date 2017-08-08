@@ -34,12 +34,12 @@ public class TestUtility {
 	 */
 	@Test 
 	public void testGround1() {
-		Predicate s1 = new Predicate("s", 5);
+		Predicate s1 = Predicate.create("s", 5);
 		Term[] t1 = new Term[]{
 				Variable.create("x1"), Variable.create("x2"), UntypedConstant.create("x3"),
 				Variable.create("x4"), TypedConstant.create("x5")
 		};
-		Predicate s2 = new Predicate("s", 2);
+		Predicate s2 = Predicate.create("s", 2);
 		Term[] t2 = new Term[]{TypedConstant.create("x5"), Variable.create("x1")};
 		Atom p1 = Atom.create(s1, t1);
 		Atom p2 = Atom.create(s2, t2);
@@ -61,7 +61,7 @@ public class TestUtility {
 	 */
 	@Test 
 	public void testGround2() {
-		Predicate s = new Predicate("s", 5);
+		Predicate s = Predicate.create("s", 5);
 		Term[] t = new Term[]{
 				Variable.create("x1"), Variable.create("x2"), UntypedConstant.create("x3"),
 				Variable.create("x4"), TypedConstant.create("x5")
@@ -83,7 +83,7 @@ public class TestUtility {
 	 */
 	@Test 
 	public void testGround3() {
-		Predicate s1 = new Predicate("s", 5);
+		Predicate s1 = Predicate.create("s", 5);
 		Term[] t1 = new Term[]{
 				Variable.create("x1"), 
 				Variable.create("x2"), 
@@ -91,7 +91,7 @@ public class TestUtility {
 				Variable.create("x4"), 
 				TypedConstant.create("x5")
 		};
-		Predicate s2 = new Predicate("s", 2);
+		Predicate s2 = Predicate.create("s", 2);
 		Term[] t2 =new Term[]{
 				TypedConstant.create("x5"), 
 				Variable.create("x1")};
@@ -117,7 +117,7 @@ public class TestUtility {
 	 */
 	@Test 
 	public void testGround4() {
-		Predicate s1 = new Predicate("s", 5);
+		Predicate s1 = Predicate.create("s", 5);
 		Term[] t1 = new Term[]{
 				Variable.create("x1"), 
 				Variable.create("x2"), 
@@ -125,7 +125,7 @@ public class TestUtility {
 				Variable.create("x4"), 
 				TypedConstant.create("x5")
 		};
-		Predicate s2 = new Predicate("s", 2);
+		Predicate s2 = Predicate.create("s", 2);
 		Term[] t2 = new Term[]{
 				TypedConstant.create("x5"), 
 				Variable.create("x1")};
@@ -151,7 +151,7 @@ public class TestUtility {
 	//	 * Test ground universal.
 	//	 */
 	//	@Test public void testGroundUniversal() {
-	//		Predicate s = new Predicate("s", 5);
+	//		Predicate s = Predicate.create("s", 5);
 	//		List<Term> t = Lists.<Term>newArrayList(
 	//				Variable.create("x1"), 
 	//				Variable.create("x2"), 
@@ -181,7 +181,7 @@ public class TestUtility {
 	//	 */
 	//	@Test(expected=IllegalArgumentException.class)
 	//	public void testGroundUniversalInvalid() {
-	//		Predicate s = new Predicate("s", 5);
+	//		Predicate s = Predicate.create("s", 5);
 	//		List<Term> t = Lists.<Term>newArrayList(
 	//				Variable.create("x1"), 
 	//				Variable.create("x2"), 
@@ -211,7 +211,7 @@ public class TestUtility {
 	//	 */
 	//	@Test(expected=IllegalArgumentException.class)
 	//	public void testGroundExistentialInvalid() {
-	//		Predicate s = new Predicate("s", 5);
+	//		Predicate s = Predicate.create("s", 5);
 	//		List<Term> t = Lists.<Term>newArrayList(
 	//				Variable.create("x1"), 
 	//				Variable.create("x2"), 
@@ -241,7 +241,7 @@ public class TestUtility {
 	//	 * Test ground existential.
 	//	 */
 	//	@Test public void testGroundExistential() {
-	//		Predicate s = new Predicate("s", 5);
+	//		Predicate s = Predicate.create("s", 5);
 	//		List<Term> t = Lists.<Term>newArrayList(
 	//				Variable.create("x1"), 
 	//				Variable.create("x2"), 
@@ -269,14 +269,14 @@ public class TestUtility {
 	 * Test ground.
 	 */
 	@Test public void testGround() {
-		Predicate s1 = new Predicate("s", 5);
+		Predicate s1 = Predicate.create("s", 5);
 		Term[] t1 = new Term[]{
 				Variable.create("x1"), 
 				Variable.create("x2"), 
 				UntypedConstant.create("x3"),
 				Variable.create("x4"), 
 				TypedConstant.create("x5")};
-		Predicate s2 = new Predicate("s", 2);
+		Predicate s2 = Predicate.create("s", 2);
 		Term[] t2 = new Term[]{TypedConstant.create("x5"), Variable.create("x1")};
 		Atom p1 = Atom.create(s1, t1);
 		Atom p2 = Atom.create(s2, t2);
