@@ -6,11 +6,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
 
+import uk.ac.ox.cs.pdq.datasources.io.xml.QNames;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
-import uk.ac.ox.cs.pdq.io.xml.QNames;
 import uk.ac.ox.cs.pdq.reasoning.utility.EqualConstantsClasses;
 
 /**

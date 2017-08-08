@@ -11,6 +11,7 @@ import com.google.common.eventbus.EventBus;
 
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
+import uk.ac.ox.cs.pdq.datasources.io.jaxb.DbIOManager;
 import uk.ac.ox.cs.pdq.datasources.utility.Result;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
@@ -91,7 +92,7 @@ public class PipelinedPlanExecutorTest {
 
 			System.out.println("RUNNING CASE: " + i/(double)schemata.length);
 			try {
-				Schema schema = IOManager.importSchema(new File(PATH + s));
+				Schema schema = DbIOManager.importSchema(new File(PATH + s));
 				ConjunctiveQuery query = IOManager.importQuery(new File(PATH + q));
 
 				if (schema == null || query == null) {

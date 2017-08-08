@@ -13,6 +13,7 @@ import org.junit.Test;
 
 import com.google.common.eventbus.EventBus;
 
+import uk.ac.ox.cs.pdq.datasources.io.jaxb.DbIOManager;
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -192,7 +193,7 @@ public class RestrictedChaserTest {
 			String q = queries[i];
 			String f = facts[i];
 			try {
-				Schema schema = IOManager.importSchema(new File(PATH + s));
+				Schema schema = DbIOManager.importSchema(new File(PATH + s));
 				ConjunctiveQuery query = IOManager.importQuery(new File(PATH + s));
 				if (schema == null || query == null) {
 					throw new IllegalStateException("Schema and query must be provided.");

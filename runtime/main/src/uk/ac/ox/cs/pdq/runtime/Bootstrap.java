@@ -18,6 +18,7 @@ import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
 
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
+import uk.ac.ox.cs.pdq.datasources.io.jaxb.DbIOManager;
 import uk.ac.ox.cs.pdq.datasources.utility.TupleCounter;
 import uk.ac.ox.cs.pdq.datasources.utility.TuplePrinter;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -179,7 +180,7 @@ public class Bootstrap {
 			params.set(k, this.dynamicParams.get(k));
 		}
 		try {
-			Schema schema = IOManager.importSchema(new File(this.getSchemaPath()));
+			Schema schema = DbIOManager.importSchema(new File(this.getSchemaPath()));
 			ConjunctiveQuery query = IOManager.importQuery(new File(this.getQueryPath()));
 
 			RelationalTerm plan = obtainPlan(this.getPlanPath(), schema);
