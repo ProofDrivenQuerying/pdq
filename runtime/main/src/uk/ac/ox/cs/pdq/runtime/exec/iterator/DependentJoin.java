@@ -56,19 +56,19 @@ public class DependentJoin extends TupleIterator {
 	private CacheAccess cache = null;
 
 	/**  RHS tuples acquired given the current left tuple. */
-	private Deque<Tuple> cached = null;
+	private Deque<Tuple> cachedTuplesReceivedFromRightChild = null;
 
 	/**  True if the currently acquired RHS tuples are not present in the cache. */
 	private boolean doCache = false;
 
 	/** The left tuple. */
-	protected Tuple leftTuple = null;
+	protected Tuple tupleReceivedFromLeftChild = null;
 	
 	/** The current input. */
-	protected Tuple currentInput = null;
+	protected Tuple tupleReceivedFromParent = null;
 	
 	/** The r input. */
-	private Tuple rInput = null;
+	private Tuple inputTupleForRightChild = null;
 	
 	/** The join ids. */
 	private static Integer joinIds = 0;
@@ -261,14 +261,14 @@ public class DependentJoin extends TupleIterator {
 	 * 
 	 */
 	protected void nextTuple() {
-		Assert.assertTrue(this.inputAttributes.length == 0 || this.currentInput != null);
+		Assert.assertTrue(this.inputAttributes.length == 0 || this.tupleReceivedFromParent != null);
 		if (this.cachedIterator != null) {
 			while (this.cachedIterator.hasNext()) {
 				Tuple right = this.cachedIterator.next();
 				if(this.doCache) {  		
-					this.cached.add(right); 
+					this.cachedTuplesReceivedFromRightChild.add(right); 
 				}							
-				Tuple t = this.leftTuple.appendTuple(right);
+				Tuple t = this.tupleReceivedFromLeftChild.appendTuple(right);
 				if (RuntimeUtilities.isSatisfied(this.joinConditions, t)) {
 					this.nextTuple = t;
 					return;
@@ -284,30 +284,30 @@ public class DependentJoin extends TupleIterator {
 			//store the tuples of the LHS that are retrieved for the current left tuple
 			try {
 				if(this.doCache) {								
-					this.cache.put(Pair.of(this.joinId, this.rInput), this.cached);	
+					this.cache.put(Pair.of(this.joinId, this.inputTupleForRightChild), this.cachedTuplesReceivedFromRightChild);	
 				}												
 			} catch (CacheException e) {
 				throw new IllegalStateException();
 			}
-			this.leftTuple = this.children[0].next();
-			this.rInput = this.projectInputValuesForRightChild(this.currentInput, this.leftTuple);
-			this.cached = (Deque<Tuple>) this.cache.get(Pair.of(this.joinId, this.rInput));
-			if (this.cached == null) {
-				this.children[1].receiveTupleFromParentAndPassItToChildren(this.rInput);
+			this.tupleReceivedFromLeftChild = this.children[0].next();
+			this.inputTupleForRightChild = this.projectInputValuesForRightChild(this.tupleReceivedFromParent, this.tupleReceivedFromLeftChild);
+			this.cachedTuplesReceivedFromRightChild = (Deque<Tuple>) this.cache.get(Pair.of(this.joinId, this.inputTupleForRightChild));
+			if (this.cachedTuplesReceivedFromRightChild == null) {
+				this.children[1].receiveTupleFromParentAndPassItToChildren(this.inputTupleForRightChild);
 				this.cachedIterator = this.children[1];
-				this.cached = new LinkedList<>();
+				this.cachedTuplesReceivedFromRightChild = new LinkedList<>();
 				this.doCache = true;
 			} else {
-				this.cachedIterator = new MemoryScan(this.children[1].getOutputAttributes(), this.cached);
+				this.cachedIterator = new MemoryScan(this.children[1].getOutputAttributes(), this.cachedTuplesReceivedFromRightChild);
 				this.cachedIterator.open();
 				this.doCache = false;
 			}
 			while (this.cachedIterator.hasNext()) {
 				Tuple rightTuple = this.cachedIterator.next();
 				if(this.doCache) {				
-					this.cached.add(rightTuple);
+					this.cachedTuplesReceivedFromRightChild.add(rightTuple);
 				}								
-				Tuple t = this.leftTuple.appendTuple(rightTuple);
+				Tuple t = this.tupleReceivedFromLeftChild.appendTuple(rightTuple);
 				if (RuntimeUtilities.isSatisfied(this.joinConditions, t)) {
 					this.nextTuple = t;
 					return;
@@ -348,6 +348,6 @@ public class DependentJoin extends TupleIterator {
 		Assert.assertTrue(tuple != null);
 		Object[] inputsForLeftChild = RuntimeUtilities.projectValuesInInputPositions(tuple, this.inputPositionsForChild1);
 		this.children[0].receiveTupleFromParentAndPassItToChildren(this.child1TupleType.createTuple(inputsForLeftChild));
-		this.currentInput = tuple;
+		this.tupleReceivedFromParent = tuple;
 	}
 }

@@ -1,12 +1,17 @@
 package uk.ac.ox.cs.pdq.planner.linear;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import org.apache.commons.collections4.CollectionUtils;
 
 import uk.ac.ox.cs.pdq.algebra.DependentJoinTerm;
 import uk.ac.ox.cs.pdq.algebra.JoinTerm;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
@@ -53,7 +58,10 @@ public class LeftDeepPlanGenerator {
 	public static RelationalTerm createLeftDeepPlan(Relation relation, AccessMethod accessMethod, Set<Atom> exposedFacts, RelationalTerm parent) {
 		RelationalTerm op1 = PlanCreationUtility.createSingleAccessPlan(relation, accessMethod, exposedFacts);
 		if (parent != null) {
-			if (accessMethod.getNumberOfInputs() > 0) 
+			//Check if the parent outputs any of the inputs of its child
+			Set<Attribute> outputs = new HashSet<Attribute>(Arrays.asList(parent.getOutputAttributes()));
+			Set<Attribute> inputs = new HashSet<Attribute>(Arrays.asList(parent.getOutputAttributes()));
+			if (accessMethod.getNumberOfInputs() > 0 && CollectionUtils.containsAny(outputs, inputs)) 
 				op1 = DependentJoinTerm.create(parent, op1);
 			else 
 				op1 = JoinTerm.create(parent, op1);

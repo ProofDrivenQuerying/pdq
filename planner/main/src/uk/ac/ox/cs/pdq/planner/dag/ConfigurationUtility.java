@@ -247,7 +247,6 @@ public class ConfigurationUtility {
 			if (isComposable(left, right)) {
 				if (isOutputIndependent(left, right)) 
 					return BinaryConfigurationTypes.PCOMPOSE;
-				
 				return BinaryConfigurationTypes.JCOMPOSE;
 			} else if (isMergeable(left, right)) 
 				return BinaryConfigurationTypes.MERGE;

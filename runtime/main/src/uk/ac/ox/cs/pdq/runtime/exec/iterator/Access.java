@@ -33,7 +33,7 @@ public class Access extends TupleIterator {
 	/** The access method to use. */
 	protected final AccessMethod accessMethod;
 
-	/** The complete input type, including statically and dynamically bound. */
+	/** The types of all input positions */
 	protected final TupleType inputTupleType;
 
 	/** The map some of the inputs to static values. */
@@ -42,7 +42,7 @@ public class Access extends TupleIterator {
 	protected final Attribute[] attributesOfInputPositions;
 
 	/** Iterator over the output tuples. */
-	protected Map<Tuple, ResetableIterator<Tuple>> outputs = null;
+	protected Map<Tuple, ResetableIterator<Tuple>> outputTuplesCache = null;
 
 	/** Iterator over the output tuples. */
 	protected ResetableIterator<Tuple> iterator = null;
@@ -51,27 +51,12 @@ public class Access extends TupleIterator {
 	protected Tuple nextTuple = null;
 
 	/** The last input tuple bound. */
-	private Tuple lastInput;
+	private Tuple tupleReceivedFromParent;
 
-	/**
-	 * Instantiates a new join.
-	 * 
-	 * @param relation RelationAccessWrapper
-	 * @param accessMethod AccessMethod
-	 */
 	public Access(RelationAccessWrapper relation, AccessMethod accessMethod) {
 		this(relation, accessMethod, new HashMap<Integer, TypedConstant>());
 	}
 
-	/**
-	 * Instantiates a new join.
-	 * 
-	 * @param relation RelationAccessWrapper
-	 * @param accessMethod AccessMethod
-	 * @param inputConstants maps of the inputs in the access method that are 
-	 * statically provided (indices correspond to original attributes positions
-	 * in the relation, regardless of how input positions are ordered.)
-	 */
 	public Access(RelationAccessWrapper relation, AccessMethod accessMethod, Map<Integer, TypedConstant> inputConstants) {
 		super(RuntimeUtilities.computeInputAttributes(relation, accessMethod, inputConstants), relation.getAttributes());
 		Assert.assertNotNull(relation);
@@ -117,11 +102,6 @@ public class Access extends TupleIterator {
 		return this.accessMethod;
 	}
 
-	/**
-	 * Gets the static inputs.
-	 *
-	 * @return the static inputs
-	 */
 	public Map<Integer, TypedConstant> getInputConstants() {
 		return this.inputConstants;
 	}
@@ -148,7 +128,7 @@ public class Access extends TupleIterator {
 	@Override
 	public void open() {
 		Assert.assertTrue(this.open == null);
-		this.outputs = new LinkedHashMap<>();
+		this.outputTuplesCache = new LinkedHashMap<>();
 		this.open = true;
 		// If there is no dynamic input, bind the empty tuple once and for all
 		if (this.inputAttributes.length == 0) {
@@ -164,12 +144,12 @@ public class Access extends TupleIterator {
 	@Override
 	public void close() {
 		super.close();
-		for (ResetableIterator<Tuple> i: this.outputs.values()) {
+		for (ResetableIterator<Tuple> i: this.outputTuplesCache.values()) {
 			if (i instanceof TupleIterator) {
 				((TupleIterator) i).close();
 			}
 		}
-		this.outputs = null;
+		this.outputTuplesCache = null;
 	}
 
 	/**
@@ -224,7 +204,7 @@ public class Access extends TupleIterator {
 	public Tuple next() {
 		Assert.assertTrue(this.open != null && this.open);
 		Assert.assertTrue(!this.interrupted);
-		Assert.assertTrue(this.lastInput != null);
+		Assert.assertTrue(this.tupleReceivedFromParent != null);
 		if (this.eventBus != null) {
 			this.eventBus.post(this);
 		}
@@ -248,12 +228,12 @@ public class Access extends TupleIterator {
 			// If iterator has not been set at this stage, it implies all 
 			// inputs this access are statically defined.
 			// Assert.assertTrue(this.inputType.size() == 0);
-			Tuple staticInput = this.makeInputTupleByCombiningInputsFromParentsWithInputConstants(Tuple.EmptyTuple);
+			Tuple tupleOfInputConstants = this.makeInputTupleByCombiningInputsFromParentsWithInputConstants(Tuple.EmptyTuple);
 			Table inputs = new Table(this.attributesOfInputPositions);
-			inputs.appendRow(staticInput);
+			inputs.appendRow(tupleOfInputConstants);
 			this.iterator = this.relation.iterator(this.attributesOfInputPositions, inputs.iterator());
 			this.iterator.open();
-			this.outputs.put(staticInput, this.iterator);
+			this.outputTuplesCache.put(tupleOfInputConstants, this.iterator);
 		}
 		if (this.iterator.hasNext()) {
 			this.nextTuple = this.iterator.next();
@@ -272,18 +252,18 @@ public class Access extends TupleIterator {
 		Assert.assertTrue(tuple != null);
 		Assert.assertTrue(RuntimeUtilities.typeOfAttributesEqualsTupleType(tuple.getType(), this.inputAttributes));
 		Tuple combinedInputs = this.makeInputTupleByCombiningInputsFromParentsWithInputConstants(tuple);
-		this.iterator = this.outputs.get(combinedInputs);
+		this.iterator = this.outputTuplesCache.get(combinedInputs);
 		if (this.iterator == null) {
 			Table inputs = new Table(this.attributesOfInputPositions);
 			inputs.appendRow(combinedInputs);
 			this.iterator = this.relation.iterator(this.attributesOfInputPositions, inputs.iterator());
 			this.iterator.open();
-			this.outputs.put(combinedInputs, this.iterator);
+			this.outputTuplesCache.put(combinedInputs, this.iterator);
 		} else {
 			this.iterator.reset();
 		}
 		this.nextTuple();
-		this.lastInput = tuple;
+		this.tupleReceivedFromParent = tuple;
 	}
 	
 	/**
