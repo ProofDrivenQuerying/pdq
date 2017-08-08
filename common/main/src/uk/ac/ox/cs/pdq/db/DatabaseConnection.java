@@ -3,6 +3,7 @@ package uk.ac.ox.cs.pdq.db;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -90,12 +91,23 @@ public class DatabaseConnection implements AutoCloseable{
 		for (String sql: this.builder.createDatabaseStatements(this.databaseParameters.getDatabaseName())) 
 			sqlStatement.addBatch(sql);
 		//Create the database tables and create column indices
+		List<String> commandBuffer = new ArrayList<String>();
 		for (Relation relation:this.schema.getRelations()) {
 			Relation dbRelation = this.createDatabaseRelation(relation);
 			this.relationNamesToDatabaseTables.put(relation.getName(), dbRelation);
-			sqlStatement.addBatch(this.builder.createTableStatement(dbRelation));
+			String command = this.builder.createTableStatement(dbRelation);
+			sqlStatement.addBatch(command);
+			commandBuffer.add(command);
 		}
-		sqlStatement.executeBatch();
+		try {
+			sqlStatement.executeBatch();
+		}catch(Throwable t) {
+			if (sqlStatement!=null) {
+				System.err.println("SQL warnings: " + sqlStatement.getWarnings());
+				System.err.println("Batch commands: " + commandBuffer);
+			}
+			throw t;
+		}
 	}
 
 	/**
