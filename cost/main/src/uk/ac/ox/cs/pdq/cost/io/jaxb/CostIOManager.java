@@ -14,26 +14,35 @@ import uk.ac.ox.cs.pdq.cost.io.jaxb.adapted.AdaptedRelationalTermWithCost;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 
-public class CostIOManager extends IOManager{
-	
-	/** 
-	 * Reads the cost from a relationalTerm descriptor xml if the file contains a cost.
-	 * @throws FileNotFoundException 
-	 * @throws JAXBException 
+/**
+ * Can read and write a relationalTerm object that contains a cost. This cost is
+ * the full cost of the plan represented in the given RelationalTerm.
+ * 
+ * @author Gabor
+ *
+ */
+public class CostIOManager extends IOManager {
+
+	/**
+	 * Reads the cost from a relationalTerm descriptor xml if the file contains a
+	 * cost.
+	 * 
+	 * @throws FileNotFoundException
+	 * @throws JAXBException
 	 */
 	public static Cost readRelationalTermCost(File planFile, Schema schema) throws FileNotFoundException, JAXBException {
-		if (!planFile.exists() )
+		if (!planFile.exists())
 			throw new FileNotFoundException(planFile.getAbsolutePath());
 		JAXBContext jaxbContext = JAXBContext.newInstance(AdaptedRelationalTermWithCost.class);
 		Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 		AdaptedRelationalTermWithCost customer = (AdaptedRelationalTermWithCost) jaxbUnmarshaller.unmarshal(planFile);
 		return customer.getCost();
 	}
-	
+
 	public static void writeRelationalTermAndCost(File targetPlanFile, RelationalTerm plan, Cost cost) throws JAXBException {
 		AdaptedRelationalTermWithCost rt = new AdaptedRelationalTermWithCost(plan);
 		rt.setCost(cost);
-		
+
 		JAXBContext jaxbContext = JAXBContext.newInstance(AdaptedRelationalTermWithCost.class);
 		Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
 		jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
