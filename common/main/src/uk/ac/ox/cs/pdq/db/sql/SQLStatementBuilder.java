@@ -26,6 +26,7 @@ import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 
 import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.db.PrimaryKey;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
@@ -150,7 +151,19 @@ public abstract class SQLStatementBuilder {
 				result.append(", ");
 		}
 		String keyAttributes = null;
-		result.append(" PRIMARY KEY ").append("(").append(keyAttributes).append(")");
+		PrimaryKey pk = relation.getKey();
+		if (pk != null) {
+			for (Attribute a:pk.getAttributes()) {
+				if (keyAttributes==null) {
+					keyAttributes = "";
+				} else {
+					keyAttributes += ",";
+				}
+				keyAttributes += a.getName();
+				keyAttributes += " ";
+			}
+			result.append(" PRIMARY KEY ").append("(").append(keyAttributes).append(")");
+		}
 		result.append(')');
 		log.trace(relation);
 		log.trace(result);
@@ -316,7 +329,9 @@ public abstract class SQLStatementBuilder {
 			String alias = this.aliases.get(fact);
 			for (int index = 0; index < fact.getNumberOfTerms(); ++index) {
 				Term term = fact.getTerm(index);
-				if (term instanceof Variable && !attributes.contains(((Variable) term).getSymbol())) {
+				// Most likely broken if replaced with working one. 
+				//if (term instanceof Variable && !attributes.contains(((Variable) term).getSymbol())) {
+				if (term instanceof Variable && !attributes.contains(term)) {
 					projected.put(createProjectionStatementForArgument(index, (Relation) fact.getPredicate(), alias), (Variable)term);
 					attributes.add(((Variable) term));
 				}
