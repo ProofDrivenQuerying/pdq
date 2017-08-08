@@ -466,7 +466,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 				relation.getAttributePosition("InstanceID");
 			}
 			catch (NullPointerException e) {
-				System.out.println(relation);
+				System.out.println(relation + " has no instance id!");
 				throw new RuntimeException("InstanceID attribute is missing from the schema");
 			}
 			Term[] terms = new Term[atom.getNumberOfTerms()];

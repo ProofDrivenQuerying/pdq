@@ -87,25 +87,27 @@ public class DatabaseConnection implements AutoCloseable{
 	 * @throws SQLException 
 	 */
 	protected void setup() throws SQLException {
-		Statement sqlStatement = this.synchronousConnections.get(0).createStatement();
-		for (String sql: this.builder.createDatabaseStatements(this.databaseParameters.getDatabaseName())) 
-			sqlStatement.addBatch(sql);
-		//Create the database tables and create column indices
+		Statement sqlStatement = null;
 		List<String> commandBuffer = new ArrayList<String>();
-		for (Relation relation:this.schema.getRelations()) {
-			Relation dbRelation = this.createDatabaseRelation(relation);
-			this.relationNamesToDatabaseTables.put(relation.getName(), dbRelation);
-			String command = this.builder.createTableStatement(dbRelation);
-			sqlStatement.addBatch(command);
-			commandBuffer.add(command);
-		}
 		try {
+			sqlStatement = this.synchronousConnections.get(0).createStatement();
+			for (String sql: this.builder.createDatabaseStatements(this.databaseParameters.getDatabaseName())) 
+				sqlStatement.addBatch(sql);
+			//Create the database tables and create column indices
+			for (Relation relation:this.schema.getRelations()) {
+				Relation dbRelation = this.createDatabaseRelation(relation);
+				this.relationNamesToDatabaseTables.put(relation.getName(), dbRelation);
+				String command = this.builder.createTableStatement(dbRelation);
+				sqlStatement.addBatch(command);
+				commandBuffer.add(command);
+			}
 			sqlStatement.executeBatch();
 		}catch(Throwable t) {
 			if (sqlStatement!=null) {
 				System.err.println("SQL warnings: " + sqlStatement.getWarnings());
 				System.err.println("Batch commands: " + commandBuffer);
 			}
+			t.printStackTrace();
 			throw t;
 		}
 	}
