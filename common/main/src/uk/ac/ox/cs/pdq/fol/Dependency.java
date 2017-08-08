@@ -161,6 +161,6 @@ public class Dependency extends QuantifiedFormula {
 	}
 	
     public static Dependency create(Atom[] body, Atom[] head) {
-        return Cache.dependency.intern(new Dependency(body, head));
+        return Cache.dependency.retrieve(new Dependency(body, head));
     }
 }

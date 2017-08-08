@@ -51,7 +51,7 @@ public class Attribute implements Typed, Serializable {
 	}
 	
 	public static Attribute create(Type type, String name) {
-		return Cache.attribute.intern(new Attribute(type, name));
+		return Cache.attribute.retrieve(new Attribute(type, name));
 	}
 
 	@Override

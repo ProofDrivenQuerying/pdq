@@ -67,7 +67,7 @@ public class DependentJoinTerm extends RelationalTerm {
 	}
 	
     public static DependentJoinTerm create(RelationalTerm child1, RelationalTerm child2) {
-        return Cache.dependentJoinTerm.intern(new DependentJoinTerm(child1, child2));
+        return Cache.dependentJoinTerm.retrieve(new DependentJoinTerm(child1, child2));
     }
     
 	@Override

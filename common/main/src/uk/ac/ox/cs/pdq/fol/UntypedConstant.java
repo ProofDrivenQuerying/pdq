@@ -57,6 +57,6 @@ public final class UntypedConstant extends Constant {
 	}
 	
     public static UntypedConstant create(String symbol) {
-        return Cache.untypedConstant.intern(new UntypedConstant(symbol));
+        return Cache.untypedConstant.retrieve(new UntypedConstant(symbol));
     }
 }

@@ -71,11 +71,11 @@ public class AccessMethod implements Serializable {
 	}
 
 	public static AccessMethod create(String name, Integer[] inputs) {
-		return Cache.accessMethod.intern(new AccessMethod(name, inputs));
+		return Cache.accessMethod.retrieve(new AccessMethod(name, inputs));
 	}
 	
 	public static AccessMethod create(Integer[] inputs) {
-		return Cache.accessMethod.intern(new AccessMethod(inputs));
+		return Cache.accessMethod.retrieve(new AccessMethod(inputs));
 	}
 
 	@Override

@@ -60,7 +60,7 @@ public class TypedConstant extends Constant implements Typed, Serializable {
 	}
 	
     public static TypedConstant create(Object value) {
-        return Cache.typedConstant.intern(new TypedConstant(value));
+        return Cache.typedConstant.retrieve(new TypedConstant(value));
     }
 	
 }

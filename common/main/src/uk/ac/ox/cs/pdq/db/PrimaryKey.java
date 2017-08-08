@@ -19,7 +19,7 @@ public class PrimaryKey implements Serializable{
 	}
 	
 	public static PrimaryKey create(Attribute[] attributes) {
-		return Cache.primaryKey.intern(new PrimaryKey(attributes));
+		return Cache.primaryKey.retrieve(new PrimaryKey(attributes));
 	}
 
 }

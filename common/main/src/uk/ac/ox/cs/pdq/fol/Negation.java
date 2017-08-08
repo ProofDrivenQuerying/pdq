@@ -106,7 +106,7 @@ public final class Negation extends Formula {
 	}
 	
     public static Negation create(Formula child) {
-        return Cache.negation.intern(new Negation(child));
+        return Cache.negation.retrieve(new Negation(child));
     }
     
 	@Override

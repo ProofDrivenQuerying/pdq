@@ -55,7 +55,7 @@ public class JoinTerm extends RelationalTerm {
 	}
     
     public static JoinTerm create(RelationalTerm child1, RelationalTerm child2) {
-        return Cache.joinTerm.intern(new JoinTerm(child1, child2));
+        return Cache.joinTerm.retrieve(new JoinTerm(child1, child2));
     }
     
 	@Override

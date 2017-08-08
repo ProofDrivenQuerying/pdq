@@ -72,7 +72,7 @@ public class Variable extends Term {
 	}
 	
     public static Variable create(String symbol) {
-        return Cache.variable.intern(new Variable(symbol));
+        return Cache.variable.retrieve(new Variable(symbol));
     }
     
     /** 

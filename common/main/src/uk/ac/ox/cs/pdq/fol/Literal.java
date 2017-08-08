@@ -170,11 +170,11 @@ public class Literal extends Formula{
 	}
 	
     public static Literal create(Predicate predicate, Term... arguments) {
-        return Cache.literal.intern(new Literal(predicate, arguments));
+        return Cache.literal.retrieve(new Literal(predicate, arguments));
     }
     
     public static Literal create(LogicalSymbols operator, Predicate predicate, Term... arguments) {
-        return Cache.literal.intern(new Literal(operator, predicate, arguments));
+        return Cache.literal.retrieve(new Literal(operator, predicate, arguments));
     }
     
 	@Override

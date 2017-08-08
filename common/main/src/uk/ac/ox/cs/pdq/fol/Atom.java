@@ -175,7 +175,7 @@ public class Atom extends Formula {
 	}
 	
     public static Atom create(Predicate predicate, Term... arguments) {
-        return Cache.atom.intern(new Atom(predicate, arguments));
+        return Cache.atom.retrieve(new Atom(predicate, arguments));
     }
     
     /** 

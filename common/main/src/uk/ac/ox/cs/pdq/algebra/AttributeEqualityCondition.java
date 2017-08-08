@@ -39,7 +39,7 @@ public class AttributeEqualityCondition extends SimpleCondition {
 	}
 	
     public static AttributeEqualityCondition create(int position, int other) {
-        return Cache.attributeEqualityCondition.intern(new AttributeEqualityCondition(position, other));
+        return Cache.attributeEqualityCondition.retrieve(new AttributeEqualityCondition(position, other));
     }
  
 }

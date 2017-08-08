@@ -55,6 +55,6 @@ public class EGD extends Dependency {
 	}
 	
     public static EGD create(Formula head, Formula body) {
-        return Cache.egd.intern(new EGD(head, body));
+        return Cache.egd.retrieve(new EGD(head, body));
     }
 }

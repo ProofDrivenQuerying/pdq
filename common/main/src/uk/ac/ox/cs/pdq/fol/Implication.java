@@ -113,7 +113,7 @@ public final class Implication extends Formula {
 	}
 	
 	public static Implication create(Formula... children) {
-		return Cache.implication.intern(new Implication(children));
+		return Cache.implication.retrieve(new Implication(children));
 	}
 	
 	@Override

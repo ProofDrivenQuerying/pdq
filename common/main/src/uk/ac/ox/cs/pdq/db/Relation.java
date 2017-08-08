@@ -211,32 +211,32 @@ public abstract class Relation extends Predicate implements Serializable {
 	}
 	
 	public static Relation create(String name, Attribute[] attributes, AccessMethod[] accessMethods, ForeignKey[] foreignKeys) {
-		return Cache.relation.intern(new Relation(name, attributes, accessMethods, foreignKeys){
+		return Cache.relation.retrieve(new Relation(name, attributes, accessMethods, foreignKeys){
 			private static final long serialVersionUID = -3703847952934804655L;});
 	}
 	
 	public static  Relation create(String name, Attribute[] attributes, AccessMethod[] accessMethods) {
-		return Cache.relation.intern(new Relation(name, attributes, accessMethods){
+		return Cache.relation.retrieve(new Relation(name, attributes, accessMethods){
 			private static final long serialVersionUID = -8683688887610525202L;});
 	}
 	
 	public static  Relation create(String name, Attribute[] attributes, AccessMethod[] accessMethods, boolean isEquality) {
-		return Cache.relation.intern(new Relation(name, attributes, accessMethods,isEquality){
+		return Cache.relation.retrieve(new Relation(name, attributes, accessMethods,isEquality){
 			private static final long serialVersionUID = 6919596537308356684L;});
 	}
 	
 	public static  Relation create(String name, Attribute[] attributes, boolean isEquality) {
-		return Cache.relation.intern(new Relation(name, attributes, isEquality){
+		return Cache.relation.retrieve(new Relation(name, attributes, isEquality){
 			private static final long serialVersionUID = 4962368915083031145L;});
 	}
 	
 	public static  Relation create(String name, Attribute[] attributes) {
-		return Cache.relation.intern(new Relation(name, attributes){
+		return Cache.relation.retrieve(new Relation(name, attributes){
 			private static final long serialVersionUID = -8215821247702132205L;});
 	}
 	
 	public static  Relation create (String name, Attribute[] attributes, AccessMethod[] accessMethods, ForeignKey[] foreignKeys, boolean isEquality) {
-		return Cache.relation.intern(new Relation(name, attributes, accessMethods, foreignKeys, isEquality){
+		return Cache.relation.retrieve(new Relation(name, attributes, accessMethods, foreignKeys, isEquality){
 			private static final long serialVersionUID = -8215821247702132205L;});
 	}
 

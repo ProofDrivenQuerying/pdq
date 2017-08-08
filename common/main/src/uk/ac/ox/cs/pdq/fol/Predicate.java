@@ -71,11 +71,11 @@ public class Predicate {
 	}
 	
     public static Predicate create(String name, Integer arity) {
-        return Cache.predicate.intern(new Predicate(name, arity));
+        return Cache.predicate.retrieve(new Predicate(name, arity));
     }
     
     public static Predicate create(String name, Integer arity, Boolean isEquality) {
-        return Cache.predicate.intern(new Predicate(name, arity, isEquality));
+        return Cache.predicate.retrieve(new Predicate(name, arity, isEquality));
     }
 
 }

@@ -37,7 +37,7 @@ public class ConstantEqualityCondition extends SimpleCondition {
 	}
 	
     public static ConstantEqualityCondition create(int position, TypedConstant constant) {
-        return Cache.constantEqualityCondition.intern(new ConstantEqualityCondition(position, constant));
+        return Cache.constantEqualityCondition.retrieve(new ConstantEqualityCondition(position, constant));
     }
 
 	@Override

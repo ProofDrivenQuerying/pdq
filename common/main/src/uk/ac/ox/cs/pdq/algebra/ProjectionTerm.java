@@ -62,7 +62,7 @@ public class ProjectionTerm extends RelationalTerm {
 	}
 	
     public static ProjectionTerm create(Attribute[] projections, RelationalTerm child) {
-        return Cache.projectionTerm.intern(new ProjectionTerm(projections, child));
+        return Cache.projectionTerm.retrieve(new ProjectionTerm(projections, child));
     }
     
 	@Override

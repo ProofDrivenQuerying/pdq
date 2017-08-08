@@ -1,0 +1,13 @@
+----------------------------------------------------------------
+Tue Aug 08 14:03:52 BST 2017:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.10.1.1 - (1458268): instance a816c00e-015d-c1f1-bf11-000006b70ad8 
+on database directory memory:C:\Users\Gabor\git\pdq\datasources\chase_1502197431911_0 with class loader sun.misc.Launcher$AppClassLoader@18b4aac2 
+Loaded from file:/C:/Users/Gabor/.m2/repository/org/apache/derby/derby/10.10.1.1/derby-10.10.1.1.jar
+java.vendor=Oracle Corporation
+java.runtime.version=1.8.0_131-b11
+user.dir=C:\Users\Gabor\git\pdq\datasources
+os.name=Windows 10
+os.arch=amd64
+os.version=10.0
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''

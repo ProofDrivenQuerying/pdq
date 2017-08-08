@@ -104,11 +104,11 @@ public class AccessTerm extends RelationalTerm {
 	}
 
     public static AccessTerm create(Relation relation, AccessMethod accessMethod) {
-        return Cache.accessTerm.intern(new AccessTerm(relation, accessMethod));
+        return Cache.accessTerm.retrieve(new AccessTerm(relation, accessMethod));
     }
     
     public static AccessTerm create(Relation relation, AccessMethod accessMethod, Map<Integer, TypedConstant> inputConstants) {
-        return Cache.accessTerm.intern(new AccessTerm(relation, accessMethod, inputConstants));
+        return Cache.accessTerm.retrieve(new AccessTerm(relation, accessMethod, inputConstants));
     }
 
 	@Override

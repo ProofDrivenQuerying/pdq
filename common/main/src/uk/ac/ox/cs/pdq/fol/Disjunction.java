@@ -123,7 +123,7 @@ public final class Disjunction extends Formula {
 	}
 
 	public static Disjunction create(Formula... children) {
-		return Cache.disjunction.intern(new Disjunction(children));
+		return Cache.disjunction.retrieve(new Disjunction(children));
 	}
 	
 	@Override

@@ -83,6 +83,6 @@ public class LinearGuarded extends TGD {
 	}
     
     public static LinearGuarded create(Formula head, Formula body) {
-        return Cache.linearGuarded.intern(new LinearGuarded(head, body));
+        return Cache.linearGuarded.retrieve(new LinearGuarded(head, body));
     }
 }

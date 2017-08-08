@@ -122,7 +122,7 @@ public final class Conjunction extends Formula {
 	}
 
 	public static Conjunction create(Formula... children) {
-		return Cache.conjunction.intern(new Conjunction(children));
+		return Cache.conjunction.retrieve(new Conjunction(children));
 	}
 
 	@Override

@@ -48,7 +48,7 @@ public class CartesianProductTerm extends RelationalTerm {
 	}
 	
     public static CartesianProductTerm create(RelationalTerm child1, RelationalTerm child2) {
-        return Cache.cartesianProductTerm.intern(new CartesianProductTerm(child1, child2));
+        return Cache.cartesianProductTerm.retrieve(new CartesianProductTerm(child1, child2));
     }
 
 	@Override

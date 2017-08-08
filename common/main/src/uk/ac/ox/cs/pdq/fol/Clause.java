@@ -44,7 +44,7 @@ public class Clause implements Serializable{
 	}
 	
     public static Clause create(Literal... literals) {
-        return Cache.clause.intern(new Clause(literals));
+        return Cache.clause.retrieve(new Clause(literals));
     }
 
 }

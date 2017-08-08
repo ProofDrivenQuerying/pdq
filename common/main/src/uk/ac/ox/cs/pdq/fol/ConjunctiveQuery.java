@@ -211,19 +211,19 @@ public class ConjunctiveQuery extends Formula {
 	
 	
     public static ConjunctiveQuery create(Variable[] freeVariables, Conjunction child, Map<Variable, Constant> canonicalSubstitution) {
-        return Cache.conjunctiveQuery.intern(new ConjunctiveQuery(freeVariables, child, canonicalSubstitution));
+        return Cache.conjunctiveQuery.retrieve(new ConjunctiveQuery(freeVariables, child, canonicalSubstitution));
     }
     
     public static ConjunctiveQuery create(Variable[] freeVariables, Atom child, Map<Variable, Constant> canonicalSubstitution) {
-        return Cache.conjunctiveQuery.intern(new ConjunctiveQuery(freeVariables, child, canonicalSubstitution));
+        return Cache.conjunctiveQuery.retrieve(new ConjunctiveQuery(freeVariables, child, canonicalSubstitution));
     }
     
     public static ConjunctiveQuery create(Variable[] freeVariables, Conjunction child) {
-        return Cache.conjunctiveQuery.intern(new ConjunctiveQuery(freeVariables, child));
+        return Cache.conjunctiveQuery.retrieve(new ConjunctiveQuery(freeVariables, child));
     }
     
     public static ConjunctiveQuery create(Variable[] freeVariables, Atom child) {
-        return Cache.conjunctiveQuery.intern(new ConjunctiveQuery(freeVariables, child));
+        return Cache.conjunctiveQuery.retrieve(new ConjunctiveQuery(freeVariables, child));
     }
     
 	@Override

@@ -63,7 +63,7 @@ public class RenameTerm extends RelationalTerm {
 	}
 	
     public static RenameTerm create(Attribute[] renamings, RelationalTerm child) {
-        return Cache.renameTerm.intern(new RenameTerm(renamings, child));
+        return Cache.renameTerm.retrieve(new RenameTerm(renamings, child));
     }
     
 	@Override

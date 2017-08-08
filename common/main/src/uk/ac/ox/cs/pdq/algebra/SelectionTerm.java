@@ -57,7 +57,7 @@ public class SelectionTerm extends RelationalTerm {
 	}
 	
     public static SelectionTerm create(Condition predicate, RelationalTerm child) {
-        return Cache.selectionTerm.intern(new SelectionTerm(predicate, child));
+        return Cache.selectionTerm.retrieve(new SelectionTerm(predicate, child));
     }
     
 	@Override

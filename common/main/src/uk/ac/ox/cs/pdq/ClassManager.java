@@ -26,7 +26,7 @@ public abstract class ClassManager<E> {
         m_resizeThreshold = (int) (m_entries.length * LOAD_FACTOR);
     }
 
-    public synchronized E intern(E object) {
+    public synchronized E retrieve(E object) {
         processQueue();
         int hashCode = getHashCode(object);
         int objectEntryIndex = getIndexFor(hashCode, m_entries.length);

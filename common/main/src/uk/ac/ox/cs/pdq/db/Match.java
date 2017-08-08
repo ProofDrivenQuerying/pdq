@@ -45,6 +45,6 @@ public class Match {
 	}
 	
     public static Match create(Formula formula, Map<Variable, Constant> mapping) {
-        return Cache.match.intern(new Match(formula, mapping));
+        return Cache.match.retrieve(new Match(formula, mapping));
     }
 }

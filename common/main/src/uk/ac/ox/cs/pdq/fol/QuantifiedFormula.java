@@ -158,7 +158,7 @@ public class QuantifiedFormula extends Formula {
 	}
 	
     public static QuantifiedFormula create(LogicalSymbols operator, Variable[] variables, Formula child) {
-        return Cache.quantifiedFormula.intern(new QuantifiedFormula(operator, variables, child));
+        return Cache.quantifiedFormula.retrieve(new QuantifiedFormula(operator, variables, child));
     }
     
 	@Override

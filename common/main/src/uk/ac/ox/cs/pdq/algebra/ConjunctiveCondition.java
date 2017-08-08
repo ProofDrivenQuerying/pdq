@@ -43,7 +43,7 @@ public class ConjunctiveCondition extends Condition {
 	}
 	
     public static ConjunctiveCondition create(SimpleCondition[] predicates) {
-        return Cache.conjunctiveCondition.intern(new ConjunctiveCondition(predicates));
+        return Cache.conjunctiveCondition.retrieve(new ConjunctiveCondition(predicates));
     }
     
 }
