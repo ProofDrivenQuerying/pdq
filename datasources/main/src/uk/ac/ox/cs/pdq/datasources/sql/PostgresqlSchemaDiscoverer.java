@@ -231,6 +231,9 @@ public class PostgresqlSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 				nested = m.group("condition");
 				rest = m.group("rest");
 				if (rest != null) {
+					if (rest.startsWith("(") && !rest.endsWith(")")) {
+						rest +=  ")";
+					}
 					this.makeJoins(rest.trim(), predMap);
 				}
 				this.makeJoins(nested.trim(), predMap);
