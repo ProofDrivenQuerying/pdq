@@ -214,7 +214,7 @@ public class PostgresqlSchemaDiscoveryTest {
 		for (uk.ac.ox.cs.pdq.db.Relation r: this.schema.getRelations()) {
 			int i = 0;
 			for (AccessMethod b: r.getAccessMethods()) 
-				Assert.assertEquals(b.getInputs(), this.relations.get(r.getName()).bindings[i++].getInputs());
+				Assert.assertArrayEquals(b.getInputs(), this.relations.get(r.getName()).bindings[i++].getInputs());
 		}
 	}
 
