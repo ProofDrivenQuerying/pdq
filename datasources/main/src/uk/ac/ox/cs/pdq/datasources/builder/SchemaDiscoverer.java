@@ -6,7 +6,9 @@ import uk.ac.ox.cs.pdq.db.Schema;
 
 /**
  * Common interface to all schema discoverers.
+ * Creates a schema based on a database instance. Have to be implemented for each database manager like postgres, mysql and so on.
  * 
+ * @author Gabor
  * @author Julien Leblay
  */
 public interface SchemaDiscoverer {
