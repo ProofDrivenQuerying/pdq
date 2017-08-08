@@ -130,6 +130,7 @@ public class ForeignKey implements Cloneable {
 
 	/**
 	 * Returns the number of references.
+	 * TOCOMMENT: WHAT IS THIS?
 	 *
 	 * @return The number of references
 	 */
@@ -148,7 +149,7 @@ public class ForeignKey implements Cloneable {
 	}
 
 	/**
-	 * Returns the references.
+	 *TOCOMMENT: NOT SURE WHAT THIS IS 
 	 *
 	 * @return The references
 	 */

@@ -96,6 +96,7 @@ public class Reference implements Cloneable, Serializable {
 
 	/**
 	 * Returns the local column.
+	 * TOCOMMENT: WHAT IS LOCAL?
 	 *
 	 * @return The local column
 	 */
@@ -104,7 +105,6 @@ public class Reference implements Cloneable, Serializable {
 	}
 
 	/**
-	 * Sets the local column.
 	 *
 	 * @param localAttribute
 	 *            The local column
@@ -115,7 +115,6 @@ public class Reference implements Cloneable, Serializable {
 	}
 
 	/**
-	 * Returns the foreign column.
 	 *
 	 * @return The foreign column
 	 */
@@ -136,6 +135,7 @@ public class Reference implements Cloneable, Serializable {
 
 	/**
 	 * Returns the name of the local column.
+	 * TOCOMMENT: WHAT IS THE LOCAL COLUMN?
 	 *
 	 * @return The column name
 	 */

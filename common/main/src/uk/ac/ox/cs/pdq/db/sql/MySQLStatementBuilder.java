@@ -25,7 +25,6 @@ import com.google.common.base.Joiner;
  */
 public class MySQLStatementBuilder extends SQLStatementBuilder {
 
-	/** The log. */
 	private static Logger log = Logger.getLogger(MySQLStatementBuilder.class);
 
 	/*
@@ -55,7 +54,6 @@ public class MySQLStatementBuilder extends SQLStatementBuilder {
 	}
 
 	/**
-	 * Clone.
 	 *
 	 * @return MySQLHomomorphismStatementBuilder
 	 */
@@ -102,7 +100,7 @@ public class MySQLStatementBuilder extends SQLStatementBuilder {
 	}
 
 	/**
-	 * Make inserts.
+	 * TOCOMMENT: EXPLAIN DIFFERENCE FROM PRIOR
 	 *
 	 * @param facts the facts
 	 * @param toDatabaseTables the dbrelations

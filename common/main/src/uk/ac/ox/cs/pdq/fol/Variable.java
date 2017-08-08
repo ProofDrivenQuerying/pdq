@@ -77,6 +77,7 @@ public class Variable extends Term {
     
     /** 
      * Needed for the xml import/export
+     * TOCOMMENT: DO WE STILL NEED THIS?
      */
     public static Variable createFromXml(String symbol) {
         return new Variable(symbol);

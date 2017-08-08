@@ -25,7 +25,6 @@ public class ExecuteSynchronousSQLUpdateThread implements Callable<Boolean> {
 	}
 	
 	/**
-	 * Call.
 	 *
 	 * @return Boolean
 	 * @see java.util.concurrent.Callable#call()

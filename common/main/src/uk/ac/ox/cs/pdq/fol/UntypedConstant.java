@@ -49,7 +49,7 @@ public final class UntypedConstant extends Constant {
 	private static int freshConstantCounter = 0;
 	
 	/**
-	 * Gets the fresh constant.
+	 * TOCOMMENT: WHAT IS THIS? .
 	 *
 	 */
 	public static UntypedConstant getFreshConstant() {

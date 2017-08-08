@@ -5,9 +5,6 @@ import java.util.Arrays;
 import org.junit.Assert;
 
 /**
- * TOCOMMENT agree on a way to write formulas in javadoc
- * A dependency of the form \delta = \forall x  \sigma(\vec{x}) --> \exists y  \tau(\vec{x}, \vec{y})
- * where \sigma and \tau are conjunctions of atoms.
  *
  * @author Efthymia Tsamoura
  */

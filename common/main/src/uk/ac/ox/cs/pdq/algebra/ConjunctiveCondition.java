@@ -2,6 +2,13 @@ package uk.ac.ox.cs.pdq.algebra;
 
 import org.junit.Assert;
 
+/**
+ *  *
+ *   *    *TOCOMMENT: NO AUTHOR, NO COMMENTS
+ *    *
+ *          */
+
+
 
 public class ConjunctiveCondition extends Condition {
 	private static final long serialVersionUID = 3482096951862132845L;

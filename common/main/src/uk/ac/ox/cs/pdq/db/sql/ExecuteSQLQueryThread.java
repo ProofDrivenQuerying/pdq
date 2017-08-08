@@ -51,7 +51,6 @@ public class ExecuteSQLQueryThread implements Callable<List<Match>> {
 	}
 	
 	/**
-	 * Call.
 	 *
 	 * @return Boolean
 	 * @see java.util.concurrent.Callable#call()

@@ -24,7 +24,6 @@ public class Clause implements Serializable{
 	}
 	
 	/**
-	 * To string.
 	 *
 	 * @return String
 	 */

@@ -16,22 +16,22 @@ public final class Implication extends Formula {
 
 	protected final Formula[] children;
 
-	/**  The unary operator. */
+	/**  TOCOMMENT: THIS MAKES NO SENSE The unary operator. */
 	protected final LogicalSymbols operator = LogicalSymbols.IMPLIES;
 	
-	/**  Cashed string representation of the atom. */
+	/**  Cached string representation of the atom. */
 	private String toString = null;
 
-	/**  Cashed list of atoms. */
+	/**  Cached list of atoms. */
 	private Atom[] atoms;
 
-	/**  Cashed list of terms. */
+	/**  Cached list of terms. */
 	private Term[] terms;
 
-	/**  Cashed list of free variables. */
+	/**  Cached list of free variables. */
 	private Variable[] freeVariables;
 
-	/**  Cashed list of bound variables. */
+	/**  Cached list of bound variables. */
 	private Variable[] boundVariables;
 	
 	private Implication(Formula... children) {
@@ -45,7 +45,6 @@ public final class Implication extends Formula {
 	}
 	
 	/**
-	 * To string.
 	 *
 	 * @return String
 	 */

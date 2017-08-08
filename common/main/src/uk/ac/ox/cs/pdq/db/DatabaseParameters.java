@@ -88,7 +88,6 @@ public class DatabaseParameters extends Parameters {
 	protected String databasePassword;
 
 	/**
-	 * Gets the database driver.
 	 *
 	 * @return String
 	 */
@@ -97,7 +96,6 @@ public class DatabaseParameters extends Parameters {
 	}
 
 	/**
-	 * Gets the connection url.
 	 *
 	 * @return String
 	 */
@@ -106,7 +104,6 @@ public class DatabaseParameters extends Parameters {
 	}
 
 	/**
-	 * Gets the database name.
 	 *
 	 * @return String
 	 */
@@ -115,7 +112,6 @@ public class DatabaseParameters extends Parameters {
 	}
 
 	/**
-	 * Gets the database password.
 	 *
 	 * @return String
 	 */
@@ -124,7 +120,6 @@ public class DatabaseParameters extends Parameters {
 	}
 
 	/**
-	 * Gets the database user.
 	 *
 	 * @return String
 	 */
@@ -133,7 +128,6 @@ public class DatabaseParameters extends Parameters {
 	}
 	
 	/**
-	 * Sets the database driver.
 	 *
 	 * @param d String
 	 */
@@ -148,7 +142,6 @@ public class DatabaseParameters extends Parameters {
 	}
 
 	/**
-	 * Sets the connection url.
 	 *
 	 * @param connectionUrl String
 	 */
@@ -157,7 +150,6 @@ public class DatabaseParameters extends Parameters {
 	}
 
 	/**
-	 * Sets the database name.
 	 *
 	 * @param databaseName String
 	 */
@@ -166,7 +158,6 @@ public class DatabaseParameters extends Parameters {
 	}
 
 	/**
-	 * Sets the database password.
 	 *
 	 * @param databasePassword String
 	 */
@@ -175,7 +166,6 @@ public class DatabaseParameters extends Parameters {
 	}
 
 	/**
-	 * Sets the database user.
 	 *
 	 * @param databaseUser String
 	 */

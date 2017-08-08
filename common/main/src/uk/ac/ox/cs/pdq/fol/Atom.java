@@ -186,7 +186,6 @@ public class Atom extends Formula {
     }
     
 	/**
-	 * Gets the children.
 	 *
 	 * @return Collection<Formula>
 	 * @see uk.ac.ox.cs.pdq.fol.Formula#getSubFormulas()

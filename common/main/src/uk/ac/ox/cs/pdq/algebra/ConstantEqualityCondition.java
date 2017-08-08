@@ -4,6 +4,14 @@ import org.junit.Assert;
 
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 
+/**
+ *  *  *
+ *   *   *    *TOCOMMENT: NO AUTHOR
+ *    *    *
+ *     *          */
+
+
+
 
 public class ConstantEqualityCondition extends SimpleCondition {
 	private static final long serialVersionUID = 1040523371703814834L;

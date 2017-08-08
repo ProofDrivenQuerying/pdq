@@ -7,9 +7,6 @@ import uk.ac.ox.cs.pdq.db.Reference;
 import uk.ac.ox.cs.pdq.db.Relation;
 
 /**
- * TOCOMMENT this is not well readable in javadoc we need to find out how to write formulas in javadoc (maybe html?)
- * A dependency of the form \delta = \forall x  \sigma(\vec{x}) --> \exists y  \tau(\vec{x}, \vec{y})
- * where \sigma is a single atim and \tau is a conjunction of atoms.
  *
  * @author Efthymia Tsamoura
  * @author Julien Leblay

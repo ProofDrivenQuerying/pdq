@@ -165,7 +165,6 @@ public class Schema {
 	}
 
 	/**
-	 * Gets the constants.
 	 *
 	 * @return 		the schema constants
 	 */
@@ -174,7 +173,6 @@ public class Schema {
 	}
 
 	/**
-	 * Gets the constant.
 	 *
 	 * @param name the name
 	 * @return 		the constant with the given name

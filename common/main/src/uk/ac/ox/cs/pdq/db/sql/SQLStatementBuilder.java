@@ -47,7 +47,6 @@ import uk.ac.ox.cs.pdq.util.Utility;
  */
 public abstract class SQLStatementBuilder {
 
-	/** Logger. */
 	private static Logger log = Logger.getLogger(SQLStatementBuilder.class);
 
 	/**  Aliases for the relations in the query FROM statements. */
@@ -56,7 +55,7 @@ public abstract class SQLStatementBuilder {
 	/** The alias prefix. */
 	private String aliasPrefix = "A";
 
-	/** The alias counter. */
+	/** TOCOMMENT: EXPLAIN The alias counter. */
 	private int aliasCounter = 0;
 
 	/**

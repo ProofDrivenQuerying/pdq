@@ -57,7 +57,6 @@ public class AccessMethod implements Serializable {
 	}
 
 	/**
-	 * Gets the zero based inputs.
 	 *
 	 */
 	public Integer[] getZeroBasedInputPositions() {
