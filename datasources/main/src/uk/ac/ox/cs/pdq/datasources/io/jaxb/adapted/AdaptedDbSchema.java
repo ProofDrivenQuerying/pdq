@@ -12,7 +12,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import uk.ac.ox.cs.pdq.datasources.builder.SchemaDiscoverer;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.Source;
-import uk.ac.ox.cs.pdq.datasources.sql.PostgresqlSchemaDiscoverer;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.View;
