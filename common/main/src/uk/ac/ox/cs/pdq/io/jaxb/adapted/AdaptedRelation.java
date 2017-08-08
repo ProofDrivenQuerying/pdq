@@ -30,6 +30,9 @@ public class AdaptedRelation implements Serializable {
 	private String name;
 	private Boolean isEquality = null;
 
+	/**
+	 * Source is needed for the case when the relation is definied in the database.
+	 */
 	private String source;
 	private String size;
 
