@@ -49,10 +49,8 @@ public class View extends Relation {
 	public View(LinearGuarded dependency, AccessMethod[] accessMethods) {
 		super(dependency.getBodyAtom(0).getPredicate().getName(), Utility.getAttributes(dependency.getGuard()), accessMethods);
 		this.viewToRelationDependency = dependency;
-		this.relationToViewDependency = TGD.create(this.viewToRelationDependency.getHead(), this.viewToRelationDependency.getBody());
-//		this.setAccessMethods(accessMethods);
+		this.relationToViewDependency = TGD.create(this.viewToRelationDependency.getBody(),this.viewToRelationDependency.getHead());
 	}
-
 	/**
 	 * TOCOMMENT ???
 	 * Gets the dependency.
