@@ -39,7 +39,7 @@ public class Access extends TupleIterator {
 	/** The map some of the inputs to static values. */
 	protected final Map<Integer, TypedConstant> inputConstants;
 	
-	protected final Attribute[] attributesOfInputPositions;
+	protected final Attribute[] attributesInInputPositions;
 
 	/** Iterator over the output tuples. */
 	protected Map<Tuple, ResetableIterator<Tuple>> outputTuplesCache = null;
@@ -70,8 +70,8 @@ public class Access extends TupleIterator {
 		this.inputConstants = new LinkedHashMap<>();
 		for(java.util.Map.Entry<Integer, TypedConstant> entry:inputConstants.entrySet()) 
 			this.inputConstants.put(entry.getKey(), entry.getValue().clone());
-		this.attributesOfInputPositions = RuntimeUtilities.computeInputAttributes(relation, accessMethod);
-		this.inputTupleType = TupleType.DefaultFactory.createFromTyped(this.attributesOfInputPositions);
+		this.attributesInInputPositions = RuntimeUtilities.computeInputAttributes(relation, accessMethod);
+		this.inputTupleType = TupleType.DefaultFactory.createFromTyped(this.attributesInInputPositions);
 	}
 	
 	@Override
@@ -229,9 +229,9 @@ public class Access extends TupleIterator {
 			// inputs this access are statically defined.
 			// Assert.assertTrue(this.inputType.size() == 0);
 			Tuple tupleOfInputConstants = this.makeInputTupleByCombiningInputsFromParentsWithInputConstants(Tuple.EmptyTuple);
-			Table inputs = new Table(this.attributesOfInputPositions);
+			Table inputs = new Table(this.attributesInInputPositions);
 			inputs.appendRow(tupleOfInputConstants);
-			this.iterator = this.relation.iterator(this.attributesOfInputPositions, inputs.iterator());
+			this.iterator = this.relation.iterator(this.attributesInInputPositions, inputs.iterator());
 			this.iterator.open();
 			this.outputTuplesCache.put(tupleOfInputConstants, this.iterator);
 		}
@@ -254,9 +254,9 @@ public class Access extends TupleIterator {
 		Tuple combinedInputs = this.makeInputTupleByCombiningInputsFromParentsWithInputConstants(tuple);
 		this.iterator = this.outputTuplesCache.get(combinedInputs);
 		if (this.iterator == null) {
-			Table inputs = new Table(this.attributesOfInputPositions);
+			Table inputs = new Table(this.attributesInInputPositions);
 			inputs.appendRow(combinedInputs);
-			this.iterator = this.relation.iterator(this.attributesOfInputPositions, inputs.iterator());
+			this.iterator = this.relation.iterator(this.attributesInInputPositions, inputs.iterator());
 			this.iterator.open();
 			this.outputTuplesCache.put(combinedInputs, this.iterator);
 		} else {
