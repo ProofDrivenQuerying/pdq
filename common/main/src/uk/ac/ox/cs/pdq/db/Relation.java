@@ -80,9 +80,13 @@ public abstract class Relation extends Predicate implements Serializable {
 			positions.put(this.attributes[attributeIndex].getName(), attributeIndex);
 		this.attributePositions = new LinkedHashMap<>();
 		this.attributePositions.putAll(positions);
-		this.accessMethods = accessMethods.clone();
+		if (accessMethods==null) {
+			this.accessMethods = new AccessMethod[]{};
+		} else {
+			this.accessMethods = accessMethods.clone();
+		}
 		this.accessMethodsMaps = new LinkedHashMap<>();
-		for(AccessMethod accessMethod:accessMethods) 
+		for(AccessMethod accessMethod:this.accessMethods) 
 			this.accessMethodsMaps.put(accessMethod.getName(), accessMethod);
 		this.foreignKeys = foreignKeys.clone();
 	}
