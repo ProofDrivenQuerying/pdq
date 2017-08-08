@@ -76,23 +76,11 @@ public class TestDatabaseChaseInstance {
 		Atom R3 = Atom.create(this.rel3, new Term[]{Variable.create("y"),Variable.create("w")});
 		
 		this.tgd = TGD.create(Conjunction.of(R1),Conjunction.of(R2));
-		this.tgd2 = TGD.create(Conjunction.of(R1),Conjunction.of(R3));
+		this.tgd2 = TGD.create(Conjunction.of(R1,R2p),Conjunction.of(R3));
 		this.egd = EGD.create(Conjunction.of(R2,R2p), Conjunction.of(Atom.create(new Predicate(QNames.EQUALITY.toString(), 2, true), 
 				Variable.create("z"),Variable.create("w"))));
 
 		this.schema = new Schema(new Relation[]{this.rel1, this.rel2, this.rel3}, new Dependency[]{this.tgd,this.tgd2, this.egd});
-		
-//		/** The driver. */
-//		String driver = null;
-//		/** The url. */
-//		String url = "jdbc:mysql://localhost/";
-//		/** The database. */
-//		String database = "pdq_chase";
-//		/** The username. */
-//		String username = "root";
-//		/** The password. */
-//		String password ="root";
-				
 		this.chaseState = new DatabaseChaseInstance(new ArrayList<Atom>(),new DatabaseConnection(new DatabaseParameters(), this.schema));
 	}
 	
