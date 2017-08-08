@@ -18,6 +18,7 @@ import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.cost.io.jaxb.CostIOManager;
+import uk.ac.ox.cs.pdq.datasources.io.jaxb.DbIOManager;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
@@ -159,7 +160,7 @@ public class PlannerTest extends RegressionTest {
 				override(costParams, paramOverrides);
 				ReasoningParameters reasoningParams = new ReasoningParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
 				DatabaseParameters dbParams = new DatabaseParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
-				Schema schema = IOManager.importSchema(new File(directory.getAbsolutePath() + '/' + SCHEMA_FILE));
+				Schema schema = DbIOManager.importSchema(new File(directory.getAbsolutePath() + '/' + SCHEMA_FILE));
 				ConjunctiveQuery query = IOManager.importQuery(new File(directory.getAbsolutePath() + '/' + QUERY_FILE));
 			
 				Entry<RelationalTerm, Cost> expectedPlan = PlannerTestUtilities.obtainPlan(directory.getAbsolutePath() + '/' + PLAN_FILE, schema);
@@ -303,7 +304,7 @@ public class PlannerTest extends RegressionTest {
 		private boolean validate(File directory) throws ReflectiveOperationException {
 			try {
 				this.out.println("\nStarting case '" + directory.getAbsolutePath() + "'");
-				Schema schema = IOManager.importSchema(new File(directory.getAbsolutePath() + '/' + SCHEMA_FILE));
+				Schema schema = DbIOManager.importSchema(new File(directory.getAbsolutePath() + '/' + SCHEMA_FILE));
 				ConjunctiveQuery query = IOManager.importQuery(new File(directory.getAbsolutePath() + '/' + QUERY_FILE));
 				if (schema == null || query == null) {
 					throw new RegressionTestException("Schema and query must be provided for each regression test. (schema:" + schema + ", query: " + query + ")");

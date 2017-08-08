@@ -17,6 +17,7 @@ import com.beust.jcommander.Parameters;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
+import uk.ac.ox.cs.pdq.datasources.io.jaxb.DbIOManager;
 import uk.ac.ox.cs.pdq.datasources.utility.Result;
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
@@ -207,7 +208,7 @@ public class RuntimeTest extends RegressionTest {
 			this.out.println("Starting case '" + directory.getAbsolutePath() + "'");
 
 			// Loading schema & query
-			Schema schema = IOManager.importSchema(new File(directory.getAbsolutePath() + '/' + SCHEMA_FILE));
+			Schema schema = DbIOManager.importSchema(new File(directory.getAbsolutePath() + '/' + SCHEMA_FILE));
 			ConjunctiveQuery query = IOManager.importQuery(new File(directory.getAbsolutePath() + '/' + QUERY_FILE));
 			if (schema == null || query == null) {
 				this.out.println("\tSKIP: Could not read schema/query in " + directory.getAbsolutePath());

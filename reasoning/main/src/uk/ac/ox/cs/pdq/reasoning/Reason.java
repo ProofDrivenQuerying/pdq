@@ -13,6 +13,7 @@ import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
 import com.google.common.eventbus.EventBus;
 
+import uk.ac.ox.cs.pdq.datasources.io.jaxb.DbIOManager;
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -153,7 +154,7 @@ public class Reason {
 			reasoningParams.set(k, this.dynamicParams.get(k));
 		}
 		try {
-			Schema schema = IOManager.importSchema(new File(this.getSchemaPath()));
+			Schema schema = DbIOManager.importSchema(new File(this.getSchemaPath()));
 			ConjunctiveQuery query = IOManager.importQuery(new File(this.getQueryPath()));
 
 			if (schema == null || query == null) {

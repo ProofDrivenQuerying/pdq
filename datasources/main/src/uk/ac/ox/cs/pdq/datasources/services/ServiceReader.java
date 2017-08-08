@@ -24,6 +24,8 @@ import com.google.common.base.Preconditions;
 
 import uk.ac.ox.cs.pdq.datasources.builder.BuilderException;
 import uk.ac.ox.cs.pdq.datasources.builder.SchemaDiscoverer;
+import uk.ac.ox.cs.pdq.datasources.io.xml.AbstractXMLReader;
+import uk.ac.ox.cs.pdq.datasources.io.xml.QNames;
 import uk.ac.ox.cs.pdq.datasources.services.policies.PolicyFactory;
 import uk.ac.ox.cs.pdq.datasources.services.policies.UsagePolicy;
 import uk.ac.ox.cs.pdq.datasources.services.rest.InputMethod;
@@ -35,8 +37,6 @@ import uk.ac.ox.cs.pdq.db.PrimaryKey;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.io.ReaderException;
-import uk.ac.ox.cs.pdq.io.xml.AbstractXMLReader;
-import uk.ac.ox.cs.pdq.io.xml.QNames;
 
 // TODO: Auto-generated Javadoc
 /**
