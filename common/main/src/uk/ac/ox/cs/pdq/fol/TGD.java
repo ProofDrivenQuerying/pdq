@@ -58,7 +58,7 @@ public class TGD extends Dependency {
 		return true;
 	}
 	
-    public static TGD create(Formula head, Formula body) {
-        return Cache.tgd.retrieve(new TGD(head, body));
+    public static TGD create(Formula body, Formula head) {
+        return Cache.tgd.retrieve(new TGD(body, head));
     }
 }
