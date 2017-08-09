@@ -1,5 +1,6 @@
 package uk.ac.ox.cs.pdq.test.reasoning.chase;
 
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,7 +54,7 @@ public class TestUtility {
 		m.put(Variable.create("x2"), TypedConstant.create("c2"));
 		m.put(Variable.create("x4"), TypedConstant.create("c4"));
 		Formula i = Conjunction.of(p1, p2);
-		Assert.assertEquals("Grounded conjunction must comply to mapping ", g, Utility.applySubstitution(i, m).getTerms());
+		Assert.assertEquals("Grounded conjunction must comply to mapping ", g, Arrays.asList(Utility.applySubstitution(i, m).getTerms()));
 	}
 
 	/**
@@ -291,6 +292,6 @@ public class TestUtility {
 		m.put(Variable.create("x2"), TypedConstant.create("c2"));
 		m.put(Variable.create("x4"), TypedConstant.create("c4"));
 		Conjunction i = (Conjunction) Conjunction.of(p1, p2);
-		Assert.assertEquals("Grounded conjunction must comply to mapping ", g, Utility.applySubstitution(i, m).getTerms());
+		Assert.assertEquals("Grounded conjunction must comply to mapping ", g, Arrays.asList(Utility.applySubstitution(i, m).getTerms()));
 	}
 }
