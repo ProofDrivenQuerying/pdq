@@ -187,9 +187,7 @@ public class PostgresqlSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 		List<Term> freeTerms = freeTermsAndAttributes.getLeft();
 		List<Attribute> attributes = freeTermsAndAttributes.getRight();
 		Formula[] right = atoms.values().toArray(new Formula[atoms.values().size()]);
-		return LinearGuarded.create(
-				Atom.create(new Relation(viewName, attributes.toArray(new Attribute[attributes.size()])) {}, freeTerms.toArray(new Term[freeTerms.size()])), 
-				Conjunction.of(right));
+		return LinearGuarded.create(Atom.create(new Relation(viewName, attributes.toArray(new Attribute[attributes.size()])) {}, freeTerms.toArray(new Term[freeTerms.size()])), Conjunction.of(right));
 	}
 	
 	/**
