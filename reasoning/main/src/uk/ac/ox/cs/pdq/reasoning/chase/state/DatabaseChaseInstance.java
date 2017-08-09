@@ -168,12 +168,12 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		Statement sqlStatement = this.getDatabaseConnection().getSynchronousConnections().get(0).createStatement();
 		Relation equalityRelation = this.createDatabaseEqualityRelation();
 		this.databaseConnection.getRelationNamesToDatabaseTables().put(QNames.EQUALITY.toString(), equalityRelation);
-		sqlStatement.addBatch(this.getDatabaseConnection().getSQLStatementBuilder().createTableStatement(equalityRelation));
+		sqlStatement.addBatch(this.databaseConnection.getSQLStatementBuilder().createTableStatement(equalityRelation));
 		//sqlStatement.addBatch(this.getDatabaseConnection().getBuilder().createColumnIndexStatement(equalityRelation, equalityRelation.getAttribute(equalityRelation.getArity()-1)));
 		//Create indices for the joins in the body of the dependencies
 		Set<String> joinIndexes = Sets.newLinkedHashSet();
-		for (Dependency constraint:this.getDatabaseConnection().getSchema().getDependencies()) 
-			joinIndexes.addAll(this.getDatabaseConnection().getSQLStatementBuilder().setupIndices(false, this.databaseConnection.getRelationNamesToDatabaseTables(), constraint, this.existingIndices).getLeft());
+		for (Dependency constraint:this.databaseConnection.getSchema().getDependencies()) 
+			joinIndexes.addAll(this.databaseConnection.getSQLStatementBuilder().setupIndices(false, this.databaseConnection.getRelationNamesToDatabaseTables(), constraint, this.existingIndices).getLeft());
 		for (String b: joinIndexes) 
 			sqlStatement.addBatch(b);
 		sqlStatement.executeBatch();
@@ -185,9 +185,9 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 	 * @throws SQLException
 	 */
 	private void indexLastAttributeOfAllRelations() throws SQLException {
-		Statement sqlStatement = this.getDatabaseConnection().getSynchronousConnections().get(0).createStatement();
+		Statement sqlStatement = this.databaseConnection.getSynchronousConnections().get(0).createStatement();
 		for(Relation relation:this.databaseConnection.getRelationNamesToDatabaseTables().values())
-			sqlStatement.addBatch(this.getDatabaseConnection().getSQLStatementBuilder().createColumnIndexStatement(relation, relation.getAttribute(relation.getArity()-1)));
+			sqlStatement.addBatch(this.databaseConnection.getSQLStatementBuilder().createColumnIndexStatement(relation, relation.getAttribute(relation.getArity()-1)));
 		sqlStatement.executeBatch();
 	}
 
@@ -199,8 +199,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 	private Relation createDatabaseEqualityRelation() {	
 		String attrPrefix = "x";
 		Attribute Fact = Attribute.create(Integer.class, "InstanceID");
-		Attribute[] attributes = new Attribute[]{Attribute.create(String.class, attrPrefix + 0),
-				Attribute.create(String.class, attrPrefix + 1), Fact};
+		Attribute[] attributes = new Attribute[]{Attribute.create(String.class, attrPrefix + 0), Attribute.create(String.class, attrPrefix + 1), Fact};
 		return Relation.create(QNames.EQUALITY.toString(), attributes, true);
 	}	
 

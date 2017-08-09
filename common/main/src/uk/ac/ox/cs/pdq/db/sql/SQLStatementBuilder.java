@@ -69,7 +69,7 @@ public abstract class SQLStatementBuilder {
 	public Collection<String> createInsertStatements(Collection<Atom> facts, Map<String, Relation> relationNamesToDatabaseTables) {
 		Collection<String> result = new LinkedList<>();
 		for (Atom fact:facts) {
-			Assert.assertTrue(fact.getPredicate() instanceof Relation);
+			Assert.assertTrue(relationNamesToDatabaseTables.containsKey(fact.getPredicate().getName()));
 			Relation relation = relationNamesToDatabaseTables.get(fact.getPredicate().getName());
 			String insertInto = "INSERT INTO " + fact.getPredicate().getName() + " " + "VALUES ( ";
 			for (int termIndex = 0; termIndex < fact.getNumberOfTerms(); ++termIndex) {
