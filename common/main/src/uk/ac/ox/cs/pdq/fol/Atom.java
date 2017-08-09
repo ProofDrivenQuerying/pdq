@@ -165,6 +165,7 @@ public class Atom extends Formula {
                 }
                 builder.append(')');
             }
+            this.toString = builder.toString();
 		}
 		return this.toString;
 	}
