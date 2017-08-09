@@ -54,7 +54,7 @@ public class TestDatabaseChaseInstance {
 				
 	@Before
 	public void setup() throws SQLException {
-		Attribute factId = Attribute.create(Integer.class, "factID");
+		Attribute factId = Attribute.create(Integer.class, "InstanceID");
 		
 		Attribute at11 = Attribute.create(String.class, "at11");
 		Attribute at12 = Attribute.create(String.class, "at12");

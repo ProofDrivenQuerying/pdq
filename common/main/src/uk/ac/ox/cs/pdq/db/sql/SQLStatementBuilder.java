@@ -432,11 +432,19 @@ public abstract class SQLStatementBuilder {
 		String set = "";
 		int v = 0;
 		for(v = 0; v < values.size()-1; ++v) 
-			set += "'" + values.get(v) + "'" + ",";
-		set += "'" + values.get(v) + "'";
+			set += convertValue(values.get(v)) + ",";
+		set += convertValue(values.get(v));
 		result.append(alias==null ? relation.getName():alias).append(".").append(relation.getAttribute(position).getName()).
 		append(" IN ").append("(").append(set).append(")");
 		return result.toString();
+	}
+
+	private String convertValue(Object object) {
+		if (object==null)
+			throw new IllegalArgumentException("Null value cannot be converted to SQL statement");
+		if (object instanceof String)
+			return "'" + object + "'";
+		return object.toString();
 	}
 
 	/**

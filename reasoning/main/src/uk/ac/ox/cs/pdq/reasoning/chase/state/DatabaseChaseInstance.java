@@ -469,7 +469,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 				System.out.println(relation + " has no instance id!");
 				throw new RuntimeException("InstanceID attribute is missing from the schema");
 			}
-			Term[] terms = new Term[atom.getNumberOfTerms()];
+			Term[] terms = new Term[atom.getNumberOfTerms()+1];
 			System.arraycopy(atom.getTerms(), 0, terms, 0, atom.getNumberOfTerms());
 			terms[relation.getAttributePosition("InstanceID")] = Variable.create("instance_id" + variablecount++);
 			result[atomIndex]= Atom.create(relation, terms);
@@ -592,15 +592,13 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 	 * and (b) a map with the attributes to be projected. TOCOMMENT:// I'm not sure what is in this map exactly.
 	 */
 	public Pair<String,LinkedHashMap<String,Variable>> createSQLQuery(Dependency dep, TriggerProperty t, LimitToThisOrAllInstances l) {
-		
 		boolean isEGD = (dep instanceof EGD);
-		
 		int freshcounter = 0;
 		Atom[] extendedBodyAtoms = extendAtomsWithInstanceIDAttribute(dep.getBodyAtoms(), freshcounter);
 		Atom[] extendedHeadAtoms =  extendAtomsWithInstanceIDAttribute(dep.getHeadAtoms(), freshcounter+extendedBodyAtoms.length+1);
 		Atom[] allExtendedAtoms =  new Atom[extendedBodyAtoms.length + extendedHeadAtoms.length];
 		System.arraycopy(extendedBodyAtoms, 0, allExtendedAtoms, 0, extendedBodyAtoms.length);
-		System.arraycopy(extendedHeadAtoms, 0, allExtendedAtoms, allExtendedAtoms.length, extendedHeadAtoms.length);
+		System.arraycopy(extendedHeadAtoms, 0, allExtendedAtoms, extendedBodyAtoms.length, extendedHeadAtoms.length);
 		
 		String query = "";
 		//TOCOMMENT: Rename appropriately and comment each of the following methods.

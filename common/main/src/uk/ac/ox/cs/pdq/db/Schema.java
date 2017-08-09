@@ -34,7 +34,7 @@ public class Schema {
 	protected final Dependency[] dependencies;
 
 	/**  A map from a constant's name to the constant object. */
-	protected Map<String, TypedConstant> constants;
+	protected final Map<String, TypedConstant> constants = new LinkedHashMap<>();
 
 	/**  The EGDs of the keys*. */
 	protected final EGD[] keyDependencies;
@@ -77,8 +77,6 @@ public class Schema {
 
 		for (Dependency dependency:this.dependencies) {
 			for (TypedConstant constant: Utility.getTypedConstants(dependency)) {
-				if(this.constants == null)
-					this.constants = new LinkedHashMap<>();
 				this.constants.put(constant.toString(), constant);
 			}				
 		}
@@ -157,11 +155,8 @@ public class Schema {
 	 * @param constants the constants
 	 */
 	public void addConstants(Collection<TypedConstant> constants) {
-		for (TypedConstant constant: constants) {
-			if(this.constants == null)
-				this.constants = new LinkedHashMap<>();
+		for (TypedConstant constant: constants) 
 			this.constants.put(constant.toString(), constant);
-		}
 	}
 
 	/**
