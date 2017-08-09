@@ -47,7 +47,7 @@ public class AtomTest {
 		Relation r = AccessibleSchema.accessibleRelation;
 		UntypedConstant s = UntypedConstant.create("s");
 		Assert.assertTrue("PredicateFormula must be of type Accessible",
-				Atom.create(r, new Term[]{s}).getPredicate().getName().startsWith(AccessibleSchema.inferredAccessiblePrefix));
+				Atom.create(r, new Term[]{s}).getPredicate().getName().startsWith("Accessible"));
 	}
 
 	/**

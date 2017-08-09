@@ -23,7 +23,7 @@ import uk.ac.ox.cs.pdq.util.Utility;
 /**
  * The Class MySQLSchemaDiscoveryTest.
  */
-@Ignore public class MySQLSchemaDiscoveryTest {
+public class MySQLSchemaDiscoveryTest {
 
 	/** The schema. */
 	private Schema schema = null;
@@ -84,6 +84,7 @@ import uk.ac.ox.cs.pdq.util.Utility;
 		Properties properties = new Properties();
 		properties.put("url", "jdbc:mysql://localhost/");
 		properties.put("database", "tpch_1");
+		properties.put("driver", "com.mysql.jdbc.Driver");
 		properties.put("username", "pdq");
 		properties.put("password", "pdq");
 		int i = 0;
