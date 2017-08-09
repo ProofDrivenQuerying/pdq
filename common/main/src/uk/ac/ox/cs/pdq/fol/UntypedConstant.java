@@ -2,6 +2,8 @@ package uk.ac.ox.cs.pdq.fol;
 
 import org.junit.Assert;
 
+import com.google.common.base.Preconditions;
+
 /**
  * 
  * @author Efthymia Tsamoura
@@ -14,8 +16,8 @@ public final class UntypedConstant extends Constant {
 	protected final String symbol;
 
 	private UntypedConstant(String name) {
-		Assert.assertNotNull(name);
-		Assert.assertTrue(!name.isEmpty());
+		Preconditions.checkArgument(name!=null);
+		Preconditions.checkArgument(!name.isEmpty());
 		this.symbol = name;
 	}
 

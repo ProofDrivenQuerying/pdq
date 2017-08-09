@@ -9,6 +9,8 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.junit.Assert;
 
+import com.google.common.base.Preconditions;
+
 import uk.ac.ox.cs.pdq.io.jaxb.adapters.AtomAdapter;
 
 /**
@@ -37,7 +39,7 @@ public class Atom extends Formula {
 
 	
 	private Atom(Predicate predicate, Term[] terms) {
-		Assert.assertTrue("Predicate and terms list cannot be null. (predicate: " + predicate + ", terms:" + terms + ")", predicate != null && terms != null);
+		Preconditions.checkArgument(predicate != null && terms != null,"Predicate and terms list cannot be null. (predicate: " + predicate + ", terms:" + terms + ")");
 		this.predicate = predicate;
 		this.terms = terms.clone();
 	}

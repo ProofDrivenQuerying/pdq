@@ -2,6 +2,8 @@ package uk.ac.ox.cs.pdq.fol;
 
 import org.junit.Assert;
 
+import com.google.common.base.Preconditions;
+
 
 /**
  * A predicate's signature, associate a symbol with an arity.
@@ -20,18 +22,13 @@ public class Predicate {
 	protected final Boolean isEquality;
 
 	protected Predicate(String name, Integer arity) {
-		Assert.assertNotNull(name);
-		Assert.assertTrue(!name.isEmpty());
-		Assert.assertTrue(arity >= 0);
-		this.name = name;
-		this.arity = arity;
-		this.isEquality = false;
+		this(name,arity,false);
 	}
 	
 	protected Predicate(String name, Integer arity, boolean isEquality) {
-		Assert.assertNotNull(name);
-		Assert.assertTrue(!name.isEmpty());
-		Assert.assertTrue(arity >= 0);
+		Preconditions.checkArgument(name!=null);
+		Preconditions.checkArgument(!name.isEmpty());
+		Preconditions.checkArgument(arity >= 0);
 		this.name = name;
 		this.arity = arity;
 		this.isEquality = isEquality;
