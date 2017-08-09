@@ -72,10 +72,12 @@ public class ConjunctiveQueryTest {
 		Term[] t3 = new Term[]{Variable.create("x3"), UntypedConstant.create("x4"), TypedConstant.create("x5")};
 		Atom p3 = Atom.create(s3, t3);
 		
-		ConjunctiveQuery q1 = ConjunctiveQuery.create(new Variable[]{Variable.create("x1"), Variable.create("x3")}, 
-				(Conjunction) Conjunction.of(p2, p3));
-		ConjunctiveQuery q2 = ConjunctiveQuery.create(new Variable[]{Variable.create("x1"), Variable.create("x3")}, 
-				(Conjunction) Conjunction.of(p2, p3));
+		Variable[] v1 = new Variable[]{Variable.create("x1"), Variable.create("x3")};
+		Variable[] v2 = new Variable[]{Variable.create("x1"), Variable.create("x3")};
+		Conjunction c1 = (Conjunction) Conjunction.of(p2, p3);
+		Conjunction c2 = (Conjunction) Conjunction.of(p2, p3);
+		ConjunctiveQuery q1 = ConjunctiveQuery.create(v1,c1);
+		ConjunctiveQuery q2 = ConjunctiveQuery.create(v2,c2);
 		Assert.assertTrue("Conjunctive queries must be equal ", q1.equals(q2));
 	}
 

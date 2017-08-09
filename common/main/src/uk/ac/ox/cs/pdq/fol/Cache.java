@@ -115,22 +115,19 @@ public class Cache {
 			protected boolean equal(ConjunctiveQuery object1, ConjunctiveQuery object2) {
 				if (!object1.child.equals(object2.child) || object1.freeVariables.length != object2.freeVariables.length)
 					return false;
+				
 				for (int index = object1.freeVariables.length - 1; index >= 0; --index)
 					if (!object1.freeVariables[index].equals(object2.freeVariables[index]))
 						return false;
-
-				for (java.util.Map.Entry<Variable, Constant> entry : object1.canonicalSubstitution.entrySet())
-					if (!object2.canonicalSubstitution.containsKey(entry.getKey()) || !object2.canonicalSubstitution.get(entry.getKey()).equals(entry.getValue()))
-						return false;
+				
 				return true;
 			}
 
 			protected int getHashCode(ConjunctiveQuery object) {
 				int hashCode = object.child.hashCode();
-				for (int index = object.freeVariables.length - 1; index >= 0; --index)
+				for (int index = object.freeVariables.length - 1; index >= 0; --index) {
 					hashCode = hashCode * 7 + object.freeVariables[index].hashCode();
-				for (java.util.Map.Entry<Variable, Constant> entry : object.canonicalSubstitution.entrySet())
-					hashCode = hashCode * 7 + entry.getKey().hashCode() + entry.getValue().hashCode();
+				}
 				return hashCode;
 			}
 		};
