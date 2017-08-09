@@ -73,7 +73,7 @@ public class TestRestrictedChaser {
 		Atom R2p = Atom.create(this.rel2, 
 				new Term[]{Variable.create("y"),Variable.create("w")});
 
-		this.tgd = TGD.create(Conjunction.of(R1),Conjunction.of(R2));
+		this.tgd = TGD.create(new Atom[]{R1},new Atom[]{R2});
 		this.egd = EGD.create(Conjunction.of(R2,R2p), Conjunction.of(Atom.create(Predicate.create(QNames.EQUALITY.toString(), 2, true), 
 				Variable.create("z"),Variable.create("w"))));
 

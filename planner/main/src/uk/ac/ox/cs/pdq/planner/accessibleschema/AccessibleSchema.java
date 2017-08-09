@@ -113,7 +113,7 @@ public class AccessibleSchema extends Schema {
 	 * @param predToInfAcc the pred to inf acc
 	 */
 	private static TGD createInferredAccessibleAxiom(TGD dependency) {
-		return TGD.create(computeInferredAccessibleFormula(dependency.getBody()), computeInferredAccessibleFormula(dependency.getHead()));
+		return TGD.create(computeInferredAccessibleFormula(dependency.getBody()).getAtoms(), computeInferredAccessibleFormula(dependency.getHead()).getAtoms());
 	}
 
 	/**

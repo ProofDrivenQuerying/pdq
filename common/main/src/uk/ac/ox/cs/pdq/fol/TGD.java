@@ -12,10 +12,14 @@ public class TGD extends Dependency {
 
 	private static final long serialVersionUID = 2745278271063580698L;
 
-	protected TGD(Formula body, Formula head) {
-		super(body, head);
-		Assert.assertTrue(isConjunctionOfAtoms(body));
-		Assert.assertTrue(head instanceof QuantifiedFormula || isConjunctionOfAtoms(head));
+//	protected TGD(Formula body, Formula head) {
+//		super(body, head);
+//		Assert.assertTrue(isConjunctionOfAtoms(body));
+//		Assert.assertTrue(head instanceof QuantifiedFormula || isConjunctionOfAtoms(head));
+//	}
+	
+	protected TGD(Atom[] body, Atom[] head) {
+		super(body,head);
 	}
 	
 	private static boolean isConjunctionOfAtoms(Formula formula) {
@@ -58,7 +62,11 @@ public class TGD extends Dependency {
 		return true;
 	}
 	
-    public static TGD create(Formula body, Formula head) {
+//    public static TGD create(Formula body, Formula head) {
+//        return Cache.tgd.retrieve(new TGD(body, head));
+//    }
+	
+    public static TGD create(Atom[] body, Atom[] head) {
         return Cache.tgd.retrieve(new TGD(body, head));
     }
 }

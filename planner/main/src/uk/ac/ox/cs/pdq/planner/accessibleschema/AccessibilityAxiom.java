@@ -51,7 +51,7 @@ public class AccessibilityAxiom extends TGD {
 	 * @param method 		A method to access this relation
 	 * @return 		the atoms of the left-hand side of the accessibility axiom that corresponds to the input relation and the input access method
 	 */
-	private static Formula createLeft(Relation relation, AccessMethod method) {
+	private static Atom[] createLeft(Relation relation, AccessMethod method) {
 		List<Formula> leftAtoms = new ArrayList<>();
 		Integer[] bindingPositions = method.getInputs();
 		Atom atom = createAtomsWithoutExtraAttribute(relation);
@@ -59,7 +59,7 @@ public class AccessibilityAxiom extends TGD {
 		for (int bindingPos: bindingPositions) 
 			leftAtoms.add(Atom.create(AccessibleSchema.accessibleRelation, terms[bindingPos - 1]));
 		leftAtoms.add(atom);
-		return Conjunction.of(leftAtoms.toArray(new Atom[leftAtoms.size()]));
+		return leftAtoms.toArray(new Atom[leftAtoms.size()]);
 	}
 
 	private static Atom createAtomsWithoutExtraAttribute(Relation relation) {
@@ -76,7 +76,7 @@ public class AccessibilityAxiom extends TGD {
 	 * @param method the binding
 	 * @return 		the atoms of the right-hand side of the accessibility axiom that corresponds to the input relation and the input access method
 	 */
-	private static Formula createRight(Relation relation, AccessMethod method) {
+	private static Atom[] createRight(Relation relation, AccessMethod method) {
 		List<Formula> rightAtoms = new ArrayList<>();
 		Integer[] bindingPositions = method.getInputs();
 		Atom f = createAtomsWithoutExtraAttribute(Relation.create(AccessibleSchema.inferredAccessiblePrefix + relation.getName(), relation.getAttributes(), new AccessMethod[]{AccessMethod.create(new Integer[]{})}, relation.isEquality()));
@@ -86,7 +86,7 @@ public class AccessibilityAxiom extends TGD {
 				rightAtoms.add(Atom.create(AccessibleSchema.accessibleRelation, terms[i-1]));
 		}
 		rightAtoms.add(f);
-		return Conjunction.of(rightAtoms.toArray(new Atom[rightAtoms.size()]));
+		return rightAtoms.toArray(new Atom[rightAtoms.size()]);
 	}
 
 	/**

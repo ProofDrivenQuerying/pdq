@@ -4,7 +4,6 @@ import java.util.Objects;
 
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.LinearGuarded;
 import uk.ac.ox.cs.pdq.fol.QuantifiedFormula;
 import uk.ac.ox.cs.pdq.fol.TGD;
@@ -49,7 +48,7 @@ public class View extends Relation {
 	public View(LinearGuarded dependency, AccessMethod[] accessMethods) {
 		super(dependency.getBodyAtom(0).getPredicate().getName(), Utility.getAttributes(dependency.getGuard()), accessMethods);
 		this.viewToRelationDependency = dependency;
-		this.relationToViewDependency = TGD.create(this.viewToRelationDependency.getBody(),this.viewToRelationDependency.getHead());
+		this.relationToViewDependency = TGD.create(this.viewToRelationDependency.getBody().getAtoms(), this.viewToRelationDependency.getHead().getAtoms());
 	}
 	/**
 	 * TOCOMMENT ???
@@ -76,17 +75,15 @@ public class View extends Relation {
 	 * @param viewToRelationDependency LinearGuarded
 	 */
 	public void setViewToRelationDependency(LinearGuarded viewToRelationDependency) {
-		this.viewToRelationDependency = LinearGuarded.create(
-				Atom.create(this, viewToRelationDependency.getBodyAtom(0).getTerms()),
-				viewToRelationDependency.getHead() instanceof QuantifiedFormula ? 
-						viewToRelationDependency.getHead().getChild(0) :
-				viewToRelationDependency.getHead());
+//		this.viewToRelationDependency = LinearGuarded.create(
+//				Atom.create(this, viewToRelationDependency.getBodyAtom(0).getTerms()),
+//				viewToRelationDependency.getHead() instanceof QuantifiedFormula ? 
+//						viewToRelationDependency.getHead().getChild(0) :
+//				viewToRelationDependency.getHead());
 		
-		this.relationToViewDependency = TGD.create(
-				this.viewToRelationDependency.getHead() instanceof QuantifiedFormula ? 
-						this.viewToRelationDependency.getHead().getChild(0) :
-							this.viewToRelationDependency.getHead(), 
-							this.viewToRelationDependency.getBody());
+		this.viewToRelationDependency = viewToRelationDependency;
+		
+		this.relationToViewDependency = TGD.create(this.viewToRelationDependency.getHead().getAtoms(), this.viewToRelationDependency.getBody().getAtoms());
 	}
 
 	@Override

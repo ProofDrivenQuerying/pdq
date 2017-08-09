@@ -129,7 +129,7 @@ public final class DataValidationImplementation extends DataValidation{
 			 * there exists another set of facts F2 that satisfies the right-hand side of the input dependency w.r.t F1 
 			 */
 			for (Match match: matchings) {
-				List<Match> subMatchings = this.manager.getTriggers(new Dependency[]{this.invert(constraint)},TriggerProperty.ACTIVE,null);//, HomomorphismProperty.createMapProperty(m.getMapping()));
+				List<Match> subMatchings = this.manager.getTriggers(new Dependency[]{Dependency.create(constraint.getHeadAtoms(), constraint.getBodyAtoms())},TriggerProperty.ACTIVE,null);//, HomomorphismProperty.createMapProperty(m.getMapping()));
 				if (subMatchings.isEmpty()) {
 					throw new java.lang.IllegalArgumentException("Data does not satisfy constraint " + constraint.toString() );
 				}
@@ -137,14 +137,14 @@ public final class DataValidationImplementation extends DataValidation{
 		}
 	}
 	
-	/**
-	 * Invert.
-	 *
-	 * @param ic Constraint
-	 * @return Constraint
-	 */
-	private Dependency invert(Dependency ic) {
-		return TGD.create(ic.getHead(), ic.getBody());
-	}
+//	/**
+//	 * Invert.
+//	 *
+//	 * @param ic Constraint
+//	 * @return Constraint
+//	 */
+//	private Dependency invert(Dependency ic) {
+//		return TGD.create(ic.getHead(), ic.getBody());
+//	}
 
 }

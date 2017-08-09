@@ -28,8 +28,6 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.db.View;
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Conjunction;
-import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.LinearGuarded;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
@@ -186,8 +184,8 @@ public class PostgresqlSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 		Pair<List<Term>, List<Attribute>> freeTermsAndAttributes = this.makeFreeTerms(select, atoms);
 		List<Term> freeTerms = freeTermsAndAttributes.getLeft();
 		List<Attribute> attributes = freeTermsAndAttributes.getRight();
-		Formula[] right = atoms.values().toArray(new Formula[atoms.values().size()]);
-		return LinearGuarded.create(Atom.create(new Relation(viewName, attributes.toArray(new Attribute[attributes.size()])) {}, freeTerms.toArray(new Term[freeTerms.size()])), Conjunction.of(right));
+		Atom[] right = atoms.values().toArray(new Atom[atoms.values().size()]);
+		return LinearGuarded.create(Atom.create(new Relation(viewName, attributes.toArray(new Attribute[attributes.size()])) {}, freeTerms.toArray(new Term[freeTerms.size()])), right);
 	}
 	
 	/**

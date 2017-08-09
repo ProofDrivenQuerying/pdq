@@ -75,8 +75,8 @@ public class TestDatabaseChaseInstance {
 		
 		Atom R3 = Atom.create(this.rel3, new Term[]{Variable.create("y"),Variable.create("w")});
 		
-		this.tgd = TGD.create(Conjunction.of(R1),Conjunction.of(R2));
-		this.tgd2 = TGD.create(Conjunction.of(R1,R2p),Conjunction.of(R3));
+		this.tgd = TGD.create(new Atom[]{R1},new Atom[]{R2});
+		this.tgd2 = TGD.create(new Atom[]{R1,R2p},new Atom[]{R3});
 		this.egd = EGD.create(Conjunction.of(R2,R2p), Conjunction.of(Atom.create(Predicate.create(QNames.EQUALITY.toString(), 2, true), 
 				Variable.create("z"),Variable.create("w"))));
 
