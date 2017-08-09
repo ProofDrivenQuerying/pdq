@@ -27,6 +27,7 @@ public class DatabaseConnection implements AutoCloseable{
 	private boolean isInitialized = false;
 
 	/**  Open database connections. */
+	//TOCOMMENT: this should be done with org.apache.commons.dbcp2 connection pooling.
 	protected List<Connection> synchronousConnections = Lists.newArrayList();
 
 	/** Map schema relation to database tables. */
@@ -45,7 +46,6 @@ public class DatabaseConnection implements AutoCloseable{
 		String database = databaseParameters.getDatabaseName(); 
 		String username = databaseParameters.getDatabaseUser();
 		String password = databaseParameters.getDatabasePassword();
-
 		if (url != null && url.contains("mysql")) {
 			this.builder = new MySQLStatementBuilder();
 		} else {
