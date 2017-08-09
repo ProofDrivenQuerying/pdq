@@ -245,6 +245,6 @@ public class TestDatabaseChaseInstance {
 		
 		this.chaseState.addFacts(Lists.newArrayList(f20,f21,f22,f26,f27));
 		List<Match> matches = this.chaseState.getTriggers(new Dependency[]{this.tgd2}, TriggerProperty.ACTIVE,LimitToThisOrAllInstances.THIS);
-		Assert.assertEquals(1, matches.size());
+		Assert.assertEquals(1, matches.size());		
 	}
 }
