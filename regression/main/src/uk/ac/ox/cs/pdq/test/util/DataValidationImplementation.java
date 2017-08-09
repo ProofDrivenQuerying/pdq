@@ -16,7 +16,6 @@ import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.Predicate;
-import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.TriggerProperty;
@@ -136,15 +135,5 @@ public final class DataValidationImplementation extends DataValidation{
 			}
 		}
 	}
-	
-//	/**
-//	 * Invert.
-//	 *
-//	 * @param ic Constraint
-//	 * @return Constraint
-//	 */
-//	private Dependency invert(Dependency ic) {
-//		return TGD.create(ic.getHead(), ic.getBody());
-//	}
 
 }

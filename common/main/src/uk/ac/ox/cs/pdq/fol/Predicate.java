@@ -1,7 +1,5 @@
 package uk.ac.ox.cs.pdq.fol;
 
-import org.junit.Assert;
-
 import com.google.common.base.Preconditions;
 
 

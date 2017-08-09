@@ -5,7 +5,6 @@ import java.util.Objects;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import uk.ac.ox.cs.pdq.fol.LinearGuarded;
-import uk.ac.ox.cs.pdq.fol.QuantifiedFormula;
 import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.io.jaxb.adapters.ViewAdapter;
 import uk.ac.ox.cs.pdq.util.Utility;
@@ -75,14 +74,7 @@ public class View extends Relation {
 	 * @param viewToRelationDependency LinearGuarded
 	 */
 	public void setViewToRelationDependency(LinearGuarded viewToRelationDependency) {
-//		this.viewToRelationDependency = LinearGuarded.create(
-//				Atom.create(this, viewToRelationDependency.getBodyAtom(0).getTerms()),
-//				viewToRelationDependency.getHead() instanceof QuantifiedFormula ? 
-//						viewToRelationDependency.getHead().getChild(0) :
-//				viewToRelationDependency.getHead());
-		
 		this.viewToRelationDependency = viewToRelationDependency;
-		
 		this.relationToViewDependency = TGD.create(this.viewToRelationDependency.getHead().getAtoms(), this.viewToRelationDependency.getBody().getAtoms());
 	}
 
