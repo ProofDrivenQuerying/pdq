@@ -9,7 +9,6 @@ import org.junit.Test;
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.db.sql.MySQLStatementBuilder;
 import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.util.Utility;
 
@@ -26,9 +25,10 @@ public class DatabaseInstanceTest {
 			Schema schema = IOManager.importSchema(new File("test\\src\\uk\\ac\\ox\\cs\\pdq\\test\\io\\jaxb\\schema.xml"));
 			
 			DatabaseConnection dc = new DatabaseConnection(new DatabaseParameters(), schema);
-			MySQLStatementBuilder mssb = new MySQLStatementBuilder();
 			Assert.assertNotNull(dc);
-			Assert.assertNotNull(mssb);
+			Assert.assertNotNull(dc.getSQLStatementBuilder());
+			Assert.assertNotNull(dc.getSynchronousConnections());
+			Assert.assertTrue(dc.getSynchronousConnections().size()>0);
 		}catch(Throwable t ) {
 			t.printStackTrace();
 			Assert.fail(t.getMessage());
