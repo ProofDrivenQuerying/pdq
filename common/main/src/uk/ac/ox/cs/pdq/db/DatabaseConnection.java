@@ -13,6 +13,7 @@ import com.google.common.collect.Lists;
 
 import uk.ac.ox.cs.pdq.db.sql.DerbyStatementBuilder;
 import uk.ac.ox.cs.pdq.db.sql.MySQLStatementBuilder;
+import uk.ac.ox.cs.pdq.db.sql.PostgresStatementBuilder;
 import uk.ac.ox.cs.pdq.db.sql.SQLStatementBuilder;
 /**
  * Models a database connection. It is responsible for creating database tables for the input schema.
@@ -48,6 +49,8 @@ public class DatabaseConnection implements AutoCloseable{
 		String password = databaseParameters.getDatabasePassword();
 		if (url != null && url.contains("mysql")) {
 			this.builder = new MySQLStatementBuilder();
+		} else if (url != null && url.contains("postgres")) {
+			this.builder = new PostgresStatementBuilder();
 		} else {
 			if (Strings.isNullOrEmpty(driver)) {
 				driver = "org.apache.derby.jdbc.EmbeddedDriver";
@@ -91,8 +94,10 @@ public class DatabaseConnection implements AutoCloseable{
 		List<String> commandBuffer = new ArrayList<String>();
 		try {
 			sqlStatement = this.synchronousConnections.get(0).createStatement();
-			for (String sql: this.builder.createDatabaseStatements(this.databaseParameters.getDatabaseName())) 
+			for (String sql: this.builder.createDatabaseStatements(this.databaseParameters.getDatabaseName())) {
+				commandBuffer.add(sql);
 				sqlStatement.addBatch(sql);
+			}
 			//Create the database tables and create column indices
 			for (Relation relation:this.schema.getRelations()) {
 				Relation dbRelation = this.createDatabaseRelation(relation);
@@ -108,6 +113,7 @@ public class DatabaseConnection implements AutoCloseable{
 				System.err.println("Batch commands: " + commandBuffer);
 			}
 			t.printStackTrace();
+			//((java.sql.BatchUpdateException)t).getNextException()
 			throw t;
 		}
 	}
