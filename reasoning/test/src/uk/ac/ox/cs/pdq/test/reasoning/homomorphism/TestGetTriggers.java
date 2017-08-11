@@ -38,7 +38,7 @@ import com.google.common.collect.Lists;
  * @author Efthymia Tsamoura
  *
  */
-public class TestDatabaseChaseInstance {
+public class TestGetTriggers {
 	protected DatabaseChaseInstance chaseState;
 
 	private Relation rel1;

@@ -39,7 +39,7 @@ import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
  * @author Efthymia Tsamoura
  *
  */
-public class TestDatabaseChaseListState {
+public class TestChaseSteps {
 
 	private DatabaseChaseInstance state;
 	private Schema schema;
