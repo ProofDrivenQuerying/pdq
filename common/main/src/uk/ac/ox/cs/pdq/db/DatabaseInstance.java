@@ -52,7 +52,8 @@ public abstract class DatabaseInstance implements Instance {
 	protected final static int insertCacheSize = 1000; 
 
 	/** A datqabase instance can be associated to a current query, for the join positions of which, indices are created.. */
-	ConjunctiveQuery currentQuery = null;
+	//TOCOMMENT not used
+	private ConjunctiveQuery currentQuery = null;
 
 	/** True if previous query indices were cleared. */
 	private boolean clearedLastQuery = true;
@@ -64,6 +65,7 @@ public abstract class DatabaseInstance implements Instance {
 	//------------------------------------------------------//
 
 	protected DatabaseConnection databaseConnection;
+	private ExecutorService executorService = null;
 
 	public DatabaseInstance(DatabaseConnection databaseConnection) {
 		this.databaseConnection = databaseConnection;
@@ -104,8 +106,7 @@ public abstract class DatabaseInstance implements Instance {
 	}
 
 
-	ExecutorService executorService = null;
-	public void executeQueries(Queue<String> queries) {		
+	private void executeQueries(Queue<String> queries) {		
 		try {
 			if (executorService==null) {
 				//	Create a pool of threads to run in parallel
@@ -167,21 +168,6 @@ public abstract class DatabaseInstance implements Instance {
 		executeQueries(queries);
 	}
 
-	public List<Match> answerQuery(ConjunctiveQuery q) {
-		throw new UnsupportedOperationException("Method not implemented yet - use answerQueries()");
-	}
-
-//	public DatabaseInstance clone() {
-//		try {
-//			DatabaseConnection dbconn= new DatabaseConnection(this.databaseConnection.getDatabaseParameters(), this.databaseConnection.getSchema());
-//			DatabaseInstance clone = new DatabaseInstance(dbconn);
-//			return clone;
-//		} catch (SQLException e) {
-//			log.error(e.getMessage(),e);
-//			return null;
-//		}
-//	}
-	
 	public void setupQueryIndices(ConjunctiveQuery query) {
 		if(!this.clearedLastQuery)
 			throw new RuntimeException("Method clearQuery should have been called in order to clear previous query's tables from the database.");
@@ -204,27 +190,6 @@ public abstract class DatabaseInstance implements Instance {
 		this.currentQuery = query;
 	}
 
-//	public void clearQuery() {
-//		try { 
-//			Statement sqlStatement = this.getDatabaseConnection().getSynchronousConnections(0).createStatement();
-//			//Drop the join indices for input query
-//			for (String b: this.dropQueryIndexStatements) {
-//				sqlStatement.addBatch(b);
-//			}
-//			
-//			//Clear the database tables built for the query
-//			Collection<String> clearTablesSQLExpressions = this.databaseConnection.getSQLStatementBuilder().createTruncateTableStatements(this.currentQuery.getAtoms(), 
-//					this.databaseConnection.getRelationNamesToRelationObjects());
-//			for (String b: clearTablesSQLExpressions) {
-//				sqlStatement.addBatch(b);
-//			}
-//			sqlStatement.executeBatch();
-//		} catch (SQLException ex) {
-//			throw new IllegalStateException(ex.getMessage(), ex);
-//		}
-//		this.clearedLastQuery = true;
-//	}
-
 	/**
 	 * 
 	 * @param queries A queue of triples, representing a query.bEach triple holds, 
@@ -236,10 +201,10 @@ public abstract class DatabaseInstance implements Instance {
 	protected List<Match> answerQueries(Queue<Triple<Formula, String, LinkedHashMap<String, Variable>>> queries) {
 		List<Match> result = new LinkedList<>();
 		//Run the SQL query statements in multiple threads
-		ExecutorService executorService = null;
 		try {
 			//Create a pool of threads to run in parallel
-			executorService = Executors.newFixedThreadPool(this.databaseConnection.getNumberOfSynchronousConnections());
+			if (executorService==null)
+				executorService = Executors.newFixedThreadPool(this.databaseConnection.getNumberOfSynchronousConnections());
 			List<Callable<List<Match>>> threads = new ArrayList<>();
 			for(int j = 0; j < this.databaseConnection.getNumberOfSynchronousConnections(); ++j) {
 				//Create the threads that will run the database queries
@@ -251,20 +216,19 @@ public abstract class DatabaseInstance implements Instance {
 					result.addAll(output.get());
 				}
 			} catch(java.util.concurrent.CancellationException e) {
-				executorService.shutdownNow();
 				if (this.timeout <= (System.currentTimeMillis() - start)) {
 					try {
 						throw new LimitReachedException(Reasons.TIMEOUT);
 					} catch (LimitReachedException e1) {
+						executorService.shutdownNow();
+						executorService = Executors.newFixedThreadPool(this.databaseConnection.getNumberOfSynchronousConnections());
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 				}
 				return null;
 			}
-			executorService.shutdown();
 		} catch (InterruptedException | ExecutionException e) {
-			executorService.shutdownNow();
 			e.printStackTrace();
 			return null;
 		} 
@@ -276,7 +240,11 @@ public abstract class DatabaseInstance implements Instance {
 	}
 
 	public void close() throws Exception {
+		if (executorService!=null)
+			executorService.shutdownNow();
 		//is this the right thing to do?
 		this.databaseConnection.close();
+		
+		
 	}
 }
