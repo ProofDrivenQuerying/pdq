@@ -32,7 +32,9 @@ public class DerbyStatementBuilder extends SQLStatementBuilder {
 	 */
 	@Override
 	public Collection<String> createDropStatements(String databaseName) {
-		return new LinkedList<>();
+		LinkedList<String> ret = new LinkedList<>();
+		ret.add("drop schema "+databaseName+" restrict");
+		return ret;
 	}
 
 	/**
@@ -62,4 +64,5 @@ public class DerbyStatementBuilder extends SQLStatementBuilder {
 	public String createBulkDeleteStatement(Predicate predicate, Collection<Atom> facts, Map<String, Relation> relationNamesToDatabaseTables) {
 		return super.createBulkDeleteStatement(predicate, facts, relationNamesToDatabaseTables);
 	}
+	
 }
