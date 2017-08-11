@@ -6,8 +6,8 @@ import java.sql.Statement;
 import java.util.Queue;
 import java.util.concurrent.Callable;
 
-// TODO: Auto-generated Javadoc
-/**
+// 
+/** TOCOMMENT: WHAT DOES IT DO???
  *
  * @author Efthymia Tsamoura
  */
