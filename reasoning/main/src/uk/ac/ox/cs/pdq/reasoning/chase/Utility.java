@@ -105,8 +105,8 @@ public class Utility {
 			return Conjunction.of(bodyAtoms);
 		}
 		else if(formula instanceof Atom) {
-			Term[] nterms = new Term[((Atom)formula).getPredicate().getArity()];
-			for (int termIndex = 0; termIndex < ((Atom)formula).getPredicate().getArity(); ++termIndex) {
+			Term[] nterms = new Term[((Atom)formula).getNumberOfTerms()];
+			for (int termIndex = 0; termIndex < ((Atom)formula).getNumberOfTerms(); ++termIndex) {
 				Term term = ((Atom)formula).getTerm(termIndex);
 				if (term.isVariable() && mapping.containsKey(term)) 
 					nterms[termIndex] = mapping.get(term);

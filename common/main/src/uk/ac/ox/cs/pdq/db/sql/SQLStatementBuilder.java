@@ -111,8 +111,9 @@ public abstract class SQLStatementBuilder {
 	 * @return 		a set of statements that delete the input facts from the fact database.
 	 */
 	public String createBulkDeleteStatement(Predicate predicate, Collection<Atom> facts, Map<String, Relation> relationNamesToDatabaseTables) {
-		String deleteFrom = "DELETE FROM " + relationNamesToDatabaseTables.get(predicate.getName()).getName() + " " + "WHERE "; 
-		String lastAttributeName = relationNamesToDatabaseTables.get(predicate.getName()).getAttribute(predicate.getArity()-1).getName();
+		Relation relation = relationNamesToDatabaseTables.get(predicate.getName());
+		String deleteFrom = "DELETE FROM " + relation.getName() + " " + "WHERE "; 
+		String lastAttributeName = relation.getAttribute(relation.getArity()-1).getName();
 		deleteFrom += lastAttributeName;
 		deleteFrom += " IN" + "\n"; 
 

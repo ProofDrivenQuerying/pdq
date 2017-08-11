@@ -141,7 +141,7 @@ public class Dependency extends QuantifiedFormula {
 	}
 	
 	public int getNumberOfHeadAtoms() {
-		return this.bodyAtoms.length;
+		return this.headAtoms.length;
 	}
 	
 	public Atom getBodyAtom(int bodyAtomIndex) {
