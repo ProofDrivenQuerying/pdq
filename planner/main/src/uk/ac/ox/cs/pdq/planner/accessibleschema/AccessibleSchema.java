@@ -67,7 +67,7 @@ public class AccessibleSchema extends Schema {
 	private AccessibleSchema(Relation[] relations, Dependency[] dependencies, Map<String, TypedConstant> constantsMap) {
 		super(computeAccessibleSchemaRelations(relations), computeAccessibleSchemaAxioms(relations, dependencies));
 		this.originalDependencies = dependencies.clone();
-		this.constants = constantsMap;
+		this.constants.putAll(constantsMap);
 		this.accessibilityAxioms = lastComputedaccessibilityAxioms.clone();
 		this.inferredAccessibilityAxioms = lastComputedinferredAccessibilityAxioms.clone();
 	}
