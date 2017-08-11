@@ -66,18 +66,23 @@ public class ExecuteSQLQueryThread implements Callable<List<Match>> {
 				String query = entry.getMiddle();
 				LinkedHashMap<String, Variable> projectedVariables = entry.getRight();
 				ResultSet resultSet = sqlStatement.executeQuery(query);
-				while (resultSet.next()) {
-					int f = 1;
-					Map<Variable, Constant> map = new LinkedHashMap<>();
-					for(Entry<String, Variable> variables:projectedVariables.entrySet()) {
-						Variable variable = variables.getValue();
-						String assigned = resultSet.getString(f);
-						TypedConstant constant = this.constants.get(assigned);
-						Constant constantTerm = constant != null ? constant : UntypedConstant.create(assigned);
-						map.put(variable, constantTerm);
-						f++;
+				try {
+					while (resultSet.next()) {
+						int f = 1;
+						Map<Variable, Constant> map = new LinkedHashMap<>();
+						for(Entry<String, Variable> variables:projectedVariables.entrySet()) {
+							Variable variable = variables.getValue();
+							String assigned = resultSet.getString(f);
+							TypedConstant constant = this.constants.get(assigned);
+							Constant constantTerm = constant != null ? constant : UntypedConstant.create(assigned);
+							map.put(variable, constantTerm);
+							f++;
+						}
+						results.add(Match.create(source,map));
 					}
-					results.add(Match.create(source,map));
+				}finally {
+					if (resultSet!=null)
+						resultSet.close();
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();;

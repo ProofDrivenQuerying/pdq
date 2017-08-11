@@ -21,7 +21,7 @@ import uk.ac.ox.cs.pdq.db.sql.SQLStatementBuilder;
  *
  */
 public class DatabaseConnection implements AutoCloseable{
-	public final int synchronousThreadsNumber = 1;
+	private int synchronousThreadsNumber = 1;
 
 	private static Integer counter = 0;
 
@@ -40,8 +40,12 @@ public class DatabaseConnection implements AutoCloseable{
 	private final DatabaseParameters databaseParameters;
 
 	private final Schema schema;
-
 	public DatabaseConnection(DatabaseParameters databaseParameters, Schema schema) throws SQLException {
+		this(databaseParameters, schema,1);
+	}
+
+	public DatabaseConnection(DatabaseParameters databaseParameters, Schema schema,int numberOfSynchConn) throws SQLException {
+		this.synchronousThreadsNumber = numberOfSynchConn;
 		String driver = databaseParameters.getDatabaseDriver();
 		String url = databaseParameters.getConnectionUrl();
 		String database = databaseParameters.getDatabaseName(); 
@@ -69,7 +73,7 @@ public class DatabaseConnection implements AutoCloseable{
 			this.builder = new DerbyStatementBuilder();
 		}
 
-		for(int j=0; j<=synchronousThreadsNumber; j++)
+		for(int j=0; j<synchronousThreadsNumber; j++)
 			this.synchronousConnections.add(DatabaseUtilities.getConnection(driver, url, database, username, password));
 
 		this.schema = schema;
@@ -202,5 +206,4 @@ public class DatabaseConnection implements AutoCloseable{
 	public int getNumberOfSynchronousConnections() {
 		return this.synchronousConnections.size();
 	}
-
 }

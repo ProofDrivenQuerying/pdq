@@ -104,11 +104,13 @@ public abstract class DatabaseInstance implements Instance {
 	}
 
 
+	ExecutorService executorService = null;
 	public void executeQueries(Queue<String> queries) {		
-		ExecutorService executorService = null;
 		try {
-			//Create a pool of threads to run in parallel
-			executorService = Executors.newFixedThreadPool(this.databaseConnection.getNumberOfSynchronousConnections());
+			if (executorService==null) {
+				//	Create a pool of threads to run in parallel
+				executorService = Executors.newFixedThreadPool(this.databaseConnection.getNumberOfSynchronousConnections());
+			}
 			List<Callable<Boolean>> threads = new ArrayList<>();
 			for(int j = 0; j < this.databaseConnection.getNumberOfSynchronousConnections(); ++j) {
 				//Create the threads that will run the database update statements
@@ -129,9 +131,9 @@ public abstract class DatabaseInstance implements Instance {
 					}
 				}
 			}
-			executorService.shutdown();
+			//executorService.shutdown();
 		} catch (InterruptedException | ExecutionException e) {
-			executorService.shutdownNow();
+			//executorService.shutdownNow();
 			e.printStackTrace();
 		} 
 	}

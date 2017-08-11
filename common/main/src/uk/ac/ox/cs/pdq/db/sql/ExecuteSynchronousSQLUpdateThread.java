@@ -32,9 +32,11 @@ public class ExecuteSynchronousSQLUpdateThread implements Callable<Boolean> {
 	@Override
 	public Boolean call() {
 		String query;
+		Statement sqlStatement = null;
+		try {
 		while ((query = this.queries.poll()) != null) {
 			try {
-				Statement sqlStatement = this.connection.createStatement();
+				sqlStatement = this.connection.createStatement();
 				sqlStatement.executeUpdate(query);
 			} catch (SQLException ex) {
 				if(ex.getCause()==null || ex.getCause().getMessage() == null || !ex.getCause().getMessage().contains("duplicate key value")) {
@@ -45,6 +47,14 @@ public class ExecuteSynchronousSQLUpdateThread implements Callable<Boolean> {
 			}
 		}
 		return true;
+		} finally {
+			if (sqlStatement!=null)
+				try {
+					sqlStatement.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+		}
 	}
 
 }
