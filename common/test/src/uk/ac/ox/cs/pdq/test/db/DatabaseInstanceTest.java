@@ -74,8 +74,8 @@ public class DatabaseInstanceTest {
 			Pair<String, LinkedHashMap<String, Variable>> pair = createSQLQuery(q, dc, q.getSubstitutionOfFreeVariablesToCanonicalConstants());
 			Queue<Triple<Formula, String, LinkedHashMap<String, Variable>>> queries = new ConcurrentLinkedQueue<>();  
 			queries.add(Triple.of((Formula)q, pair.getLeft(), pair.getRight()));
-			List<Match> asd = di.answerQueries(queries);
-			System.out.println(asd);
+//			List<Match> asd = di.answerQueries(queries);
+	//		System.out.println(asd);
 			//di.answerQuery(q);
 			//di.setupQueryIndices( q);
 			//di.executeQueries(q);
