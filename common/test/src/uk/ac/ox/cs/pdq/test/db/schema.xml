@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<schema>
+    <relations>
+        <relation name="r1">
+            <attribute name="r1_1" type="java.lang.String"/>
+            <attribute name="r1_2" type="java.lang.String"/>
+            <access-method name="m1"/>
+            <access-method name="m2" inputs="0,1"/>
+        </relation>
+        <relation name="r2">
+            <attribute name="r2_1" type="java.lang.String"/>
+            <access-method name="m3"/>
+        </relation>
+        <relation name="r3">
+            <attribute name="r3_1" type="java.lang.String"/>
+            <attribute name="r3_2" type="java.lang.String"/>
+            <attribute name="r3_3" type="java.lang.String"/>
+            <access-method name="m4" inputs="2,3"/>
+        </relation>
+        <relation name="r4">
+            <attribute name="r4_1" type="java.lang.String"/>
+            <attribute name="r4_2" type="java.lang.String"/>
+            <access-method name="m5"/>
+        </relation>
+    </relations>
+    <dependencies>
+        <dependency>
+            <body>
+                <atom name="r1">
+                    <variable name="y"/>
+                    <variable name="z"/>
+                </atom>
+                <atom name="r2">
+                    <variable name="z"/>
+                </atom>
+                <atom name="r3">
+                    <variable name="x"/>
+                    <variable name="y"/>
+                    <variable name="z"/>
+                </atom>
+                <atom name="r3">
+                    <variable name="z"/>
+                    <variable name="y"/>
+                    <variable name="y"/>
+                </atom>
+            </body>
+            <head>
+                <atom name="r1">
+                    <variable name="x"/>
+                    <variable name="z"/>
+                </atom>
+                <atom name="r1">
+                    <variable name="x"/>
+                    <variable name="z"/>
+                </atom>
+            </head>
+        </dependency>
+        <dependency>
+            <body>
+                <atom name="r2">
+                    <variable name="z"/>
+                </atom>
+                <atom name="r3">
+                    <variable name="x"/>
+                    <variable name="y"/>
+                    <variable name="z"/>
+                </atom>
+                <atom name="r3">
+                    <variable name="z"/>
+                    <variable name="y"/>
+                    <variable name="y"/>
+                </atom>
+            </body>
+            <head>
+                <atom name="r1">
+                    <variable name="x"/>
+                    <variable name="z"/>
+                </atom>
+                <atom name="r1">
+                    <variable name="x"/>
+                    <variable name="z"/>
+                </atom>
+                <atom name="r1">
+                    <variable name="y"/>
+                    <variable name="z"/>
+                </atom>
+            </head>
+        </dependency>
+    </dependencies>
+</schema>
