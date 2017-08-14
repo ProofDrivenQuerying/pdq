@@ -615,7 +615,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 			
 		WhereCondition egdProperties = null;
 		if(isEGD)
-			egdProperties = this.databaseConnection.getSQLStatementBuilder().translateEGDHomomorphicProperties(extendedBodyAtoms, this.databaseConnection.getRelationNamesToDatabaseTables());
+			egdProperties = uk.ac.ox.cs.pdq.reasoning.chase.Utility.translateEGDHomomorphicProperties(extendedBodyAtoms, this.databaseConnection.getRelationNamesToDatabaseTables(),this.databaseConnection.getSQLStatementBuilder());
 		if(egdProperties!=null) {
 			where.addCondition(egdProperties);
 		}

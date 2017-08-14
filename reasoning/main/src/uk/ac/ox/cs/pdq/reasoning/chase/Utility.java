@@ -1,8 +1,13 @@
 package uk.ac.ox.cs.pdq.reasoning.chase;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
+import uk.ac.ox.cs.pdq.db.Relation;
+import uk.ac.ox.cs.pdq.db.sql.SQLStatementBuilder;
+import uk.ac.ox.cs.pdq.db.sql.WhereCondition;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.CanonicalNameGenerator;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
@@ -116,6 +121,33 @@ public class Utility {
 			return Atom.create(((Atom)formula).getPredicate(), nterms);
 		}
 		throw new java.lang.RuntimeException("Unsupported formula type");
+	}
+
+	/**
+	 * Translate egd homomorphism constraints.
+	 * TOCOMMENT: I am not sure what this is for. It seems to be returning the part of the where clause of an sql query that compares
+	 * two atoms in the body of an EGD and checks they have different fact.id
+	 *
+	 * @param source the source
+	 * @param constraints the constraints
+	 * @param relationNamesToDatabaseTables 
+	 * @return 		predicates that correspond to fact constraints
+	 */
+	public static WhereCondition translateEGDHomomorphicProperties(Atom[] conjuncts, Map<String, Relation> relationNamesToDatabaseTables, SQLStatementBuilder builder) {
+		String lalias = builder.aliases.get(conjuncts[0]);
+		String ralias = builder.aliases.get(conjuncts[1]);
+		lalias = lalias==null ? conjuncts[0].getPredicate().getName():lalias;
+		ralias = ralias==null ? conjuncts[1].getPredicate().getName():ralias;
+		StringBuilder eq = new StringBuilder();
+		String leftAttributeName = relationNamesToDatabaseTables.get(conjuncts[0].getPredicate().getName()).getAttribute(conjuncts[0].getPredicate().getArity()-1).getName();
+		String rightAttributeName = relationNamesToDatabaseTables.get(conjuncts[1].getPredicate().getName()).getAttribute(conjuncts[1].getPredicate().getArity()-1).getName();
+		eq.append(lalias).append(".").
+		append(leftAttributeName).append(">");
+		eq.append(ralias).append(".").
+		append(rightAttributeName);
+		List<String> res = new ArrayList<String>();
+		res.add(eq.toString());
+		return new WhereCondition(res);
 	}
 
 }

@@ -587,31 +587,4 @@ public abstract class SQLStatementBuilder {
 		return query;
 	}
 
-
-	/**
-	 * Translate egd homomorphism constraints.
-	 * TOCOMMENT: I am not sure what this is for. It seems to be returning the part of the where clause of an sql query that compares
-	 * two atoms in the body of an EGD and checks they have different fact.id
-	 *
-	 * @param source the source
-	 * @param constraints the constraints
-	 * @param relationNamesToDatabaseTables 
-	 * @return 		predicates that correspond to fact constraints
-	 */
-	public WhereCondition translateEGDHomomorphicProperties(Atom[] conjuncts, Map<String, Relation> relationNamesToDatabaseTables) {
-		String lalias = this.aliases.get(conjuncts[0]);
-		String ralias = this.aliases.get(conjuncts[1]);
-		lalias = lalias==null ? conjuncts[0].getPredicate().getName():lalias;
-		ralias = ralias==null ? conjuncts[1].getPredicate().getName():ralias;
-		StringBuilder eq = new StringBuilder();
-		String leftAttributeName = relationNamesToDatabaseTables.get(conjuncts[0].getPredicate().getName()).getAttribute(conjuncts[0].getPredicate().getArity()-1).getName();
-		String rightAttributeName = relationNamesToDatabaseTables.get(conjuncts[1].getPredicate().getName()).getAttribute(conjuncts[1].getPredicate().getArity()-1).getName();
-		eq.append(lalias).append(".").
-		append(leftAttributeName).append(">");
-		eq.append(ralias).append(".").
-		append(rightAttributeName);
-		List<String> res = new ArrayList<String>();
-		res.add(eq.toString());
-		return new WhereCondition(res);
-	}
 }
