@@ -23,6 +23,7 @@ public class DerbyStatementBuilder extends SQLStatementBuilder {
 	 */
 	@Override
 	public Collection<String> createDatabaseStatements(String databaseName) {
+		this.databaseName = databaseName;
 		return new LinkedList<>();
 	}
 

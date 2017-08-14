@@ -38,11 +38,11 @@ import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.util.Utility;
 
-// TODO: Auto-generated Javadoc
 /**
  * Creates SQL statements to detect homomorphisms or add/delete facts in a database.
  *
  * @author Efthymia Tsamoura
+ * @author Gabor
  */
 public abstract class SQLStatementBuilder {
 
@@ -56,6 +56,7 @@ public abstract class SQLStatementBuilder {
 
 	/** TOCOMMENT: EXPLAIN The alias counter. */
 	private int aliasCounter = 0;
+	protected String databaseName;
 
 	/**
 	 * Creates SQL insert statements, for the input facts.
@@ -517,6 +518,10 @@ public abstract class SQLStatementBuilder {
 		else 
 			query += "\n" + "AND " + " NOT EXISTS" + "\n" + "("+nestedQuery+")";
 		return query;
+	}
+
+	public String getDatabaseName() {
+		return databaseName;
 	}
 
 }

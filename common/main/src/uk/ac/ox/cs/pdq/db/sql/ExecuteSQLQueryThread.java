@@ -21,10 +21,11 @@ import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
 
-// TODO: Auto-generated Javadoc
 /**
  *
  * @author Efthymia Tsamoura
+ * @author Gabor
+ *
  */
 public class ExecuteSQLQueryThread implements Callable<List<Match>> {
 
@@ -41,13 +42,16 @@ public class ExecuteSQLQueryThread implements Callable<List<Match>> {
 	//TOCOMMENT this class should not be aware of constants
 	protected final Map<String, TypedConstant> constants;
 
+	private String databaseName;
+
 	public ExecuteSQLQueryThread(Queue<Triple<Formula, String, LinkedHashMap<String, Variable>>> queries, 
 			Map<String, TypedConstant> constants,
-			Connection connection) {
+			Connection connection, String databaseName) {
 		//TODO check input arguments
 		this.connection = connection;
 		this.queries = queries;
 		this.constants = constants;
+		this.databaseName = databaseName;
 	}
 	
 	/**
@@ -59,12 +63,17 @@ public class ExecuteSQLQueryThread implements Callable<List<Match>> {
 	public List<Match> call() {
 		List<Match> results = new ArrayList<Match>();
 		Triple<Formula, String, LinkedHashMap<String, Variable>> entry;
+		String query = null;
 		while ((entry = this.queries.poll()) != null) {
 			try {
 				Statement sqlStatement = this.connection.createStatement();
 				Formula source = entry.getLeft();
-				String query = entry.getMiddle();
+				query = entry.getMiddle();
 				LinkedHashMap<String, Variable> projectedVariables = entry.getRight();
+				//connection.createStatement().execute("USE " + databaseName+";\n");
+				if (databaseName!=null) {
+					sqlStatement.execute("USE " + databaseName+";\n");
+				}
 				ResultSet resultSet = sqlStatement.executeQuery(query);
 				try {
 					while (resultSet.next()) {
@@ -85,6 +94,7 @@ public class ExecuteSQLQueryThread implements Callable<List<Match>> {
 						resultSet.close();
 				}
 			} catch (SQLException e) {
+				System.err.println("Error while executing: " + query);
 				e.printStackTrace();;
 				return null;
 			}

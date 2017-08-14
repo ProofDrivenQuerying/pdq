@@ -27,7 +27,6 @@ import com.google.common.base.Joiner;
 public class PostgresStatementBuilder extends SQLStatementBuilder {
 
 	private static Logger log = Logger.getLogger(PostgresStatementBuilder.class);
-	private String databaseName;
 
 	/*
 	 * (non-Javadoc)
@@ -166,7 +165,9 @@ public class PostgresStatementBuilder extends SQLStatementBuilder {
 		return insertInto;
 	}
 	
-	
+	public String getDatabaseName() {
+		return null;
+	}
 	@Override
 	public String createBulkDeleteStatement(Predicate predicate, Collection<Atom> facts, Map<String, Relation> relationNamesToDatabaseTables) {
 		return super.createBulkDeleteStatement(predicate, facts, relationNamesToDatabaseTables)+";";

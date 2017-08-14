@@ -33,6 +33,7 @@ public class MySQLStatementBuilder extends SQLStatementBuilder {
 	 */
 	@Override
 	public Collection<String> createDatabaseStatements(String databaseName) {
+		this.databaseName = databaseName;
 		Collection<String> result = new LinkedList<>();
 		result.add("DROP DATABASE IF EXISTS " + databaseName);
 		result.add("CREATE DATABASE " + databaseName);
@@ -75,7 +76,7 @@ public class MySQLStatementBuilder extends SQLStatementBuilder {
 		for (Atom fact:facts) {
 			Assert.assertTrue(fact.getPredicate() instanceof Relation);
 			Relation relation = (Relation) fact.getPredicate();
-			String insertInto = "INSERT IGNORE INTO " + fact.getPredicate().getName() + " " + "VALUES ( ";
+			String insertInto = "INSERT IGNORE INTO " + databaseName+"." + fact.getPredicate().getName() + " " + "VALUES ( ";
 			for (int termIndex = 0; termIndex < fact.getNumberOfTerms(); ++termIndex) {
 				Term term = fact.getTerm(termIndex);
 				if (!term.isVariable()) 
@@ -108,7 +109,8 @@ public class MySQLStatementBuilder extends SQLStatementBuilder {
 	 */
 	@Override
 	public String createBulkInsertStatement(Predicate predicate, Collection<Atom> facts) {
-		String insertInto = "INSERT IGNORE INTO " + predicate.getName() + "\n" + "VALUES" + "\n";
+		
+		String insertInto = "INSERT IGNORE INTO " + databaseName+"." + predicate.getName() + "\n" + "VALUES" + "\n";
 		List<String> tuples = new ArrayList<String>();
 		for (Atom fact:facts) {
 			String tuple = "(";

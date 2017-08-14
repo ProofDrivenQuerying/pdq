@@ -177,7 +177,8 @@ public abstract class DatabaseInstance implements Instance {
 			List<Callable<List<Match>>> threads = new ArrayList<>();
 			for(int j = 0; j < this.databaseConnection.getNumberOfSynchronousConnections(); ++j) {
 				//Create the threads that will run the database queries
-				threads.add(new ExecuteSQLQueryThread(queries, this.databaseConnection.getSchema().getConstants(), this.getDatabaseConnection().getSynchronousConnections(j)));
+				String dbName = this.databaseConnection.getSQLStatementBuilder().getDatabaseName();
+				threads.add(new ExecuteSQLQueryThread(queries, this.databaseConnection.getSchema().getConstants(), this.getDatabaseConnection().getSynchronousConnections(j), dbName));
 			}
 			long start = System.currentTimeMillis();
 			try {
