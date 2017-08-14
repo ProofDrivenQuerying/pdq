@@ -168,27 +168,27 @@ public abstract class DatabaseInstance implements Instance {
 		executeQueries(queries);
 	}
 
-	public void setupQueryIndices(ConjunctiveQuery query) {
-		if(!this.clearedLastQuery)
-			throw new RuntimeException("Method clearQuery should have been called in order to clear previous query's tables from the database.");
-		this.clearedLastQuery = false;
-		try {
-			Statement sqlStatement = this.getDatabaseConnection().getSynchronousConnections(0).createStatement();
-			//Create statements that set up or drop the indices for the joins in the body of the input query
-			Set<String> joinIndexes = Sets.newLinkedHashSet();
-			Pair<Collection<String>, Collection<String>> dropAndCreateStms = 
-					this.databaseConnection.getSQLStatementBuilder().setupIndices(true, this.databaseConnection.getRelationNamesToDatabaseTables(), query, this.existingIndices);
-			this.dropQueryIndexStatements.addAll(dropAndCreateStms.getRight());
-			joinIndexes.addAll(dropAndCreateStms.getLeft());
-			for (String b: joinIndexes) {
-				sqlStatement.addBatch(b);
-			}
-			sqlStatement.executeBatch();
-		} catch (SQLException ex) {
-			throw new IllegalStateException(ex.getMessage(), ex);
-		}
-		this.currentQuery = query;
-	}
+//	public void setupQueryIndices(ConjunctiveQuery query) {
+//		if(!this.clearedLastQuery)
+//			throw new RuntimeException("Method clearQuery should have been called in order to clear previous query's tables from the database.");
+//		this.clearedLastQuery = false;
+//		try {
+//			Statement sqlStatement = this.getDatabaseConnection().getSynchronousConnections(0).createStatement();
+//			//Create statements that set up or drop the indices for the joins in the body of the input query
+//			Set<String> joinIndexes = Sets.newLinkedHashSet();
+//			Pair<Collection<String>, Collection<String>> dropAndCreateStms = 
+//					this.databaseConnection.getSQLStatementBuilder().setupIndices(true, this.databaseConnection.getRelationNamesToDatabaseTables(), query, this.existingIndices);
+//			this.dropQueryIndexStatements.addAll(dropAndCreateStms.getRight());
+//			joinIndexes.addAll(dropAndCreateStms.getLeft());
+//			for (String b: joinIndexes) {
+//				sqlStatement.addBatch(b);
+//			}
+//			sqlStatement.executeBatch();
+//		} catch (SQLException ex) {
+//			throw new IllegalStateException(ex.getMessage(), ex);
+//		}
+//		this.currentQuery = query;
+//	}
 
 	/**
 	 * 
