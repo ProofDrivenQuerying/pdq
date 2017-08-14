@@ -186,6 +186,8 @@ public class DatabaseConnection implements AutoCloseable {
 	public void close() throws Exception {
 		try {
 			this.dropDatabase();
+		} catch(java.sql.BatchUpdateException bu) {
+			bu.getNextException().printStackTrace();
 		} catch (Throwable t) {
 			t.printStackTrace();
 		}

@@ -52,7 +52,7 @@ public class PostgresStatementBuilder extends SQLStatementBuilder {
 	@Override
 	public Collection<String> createDropStatements(String databaseName) {
 		Collection<String> result = new LinkedList<>();
-		result.add("DROP DATABASE " + databaseName);
+		result.add("DROP SCHEMA " + databaseName + " CASCADE");
 		log.trace(result);
 		return result;
 	}
