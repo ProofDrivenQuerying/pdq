@@ -631,7 +631,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 			FromCondition from2 = this.databaseConnection.getSQLStatementBuilder().createFromStatement(extendedHeadAtoms);
 			SelectCondition nestedProjections = this.databaseConnection.getSQLStatementBuilder().createProjections(extendedHeadAtoms);
 			WhereCondition predicates2 = new WhereCondition();
-			WhereCondition nestedAttributeEqualities = (!(isEGD))?this.databaseConnection.getSQLStatementBuilder().createAttributeEqualities(allExtendedAtoms):this.databaseConnection.getSQLStatementBuilder().createNestedAttributeEqualitiesForActiveTriggers(extendedBodyAtoms,extendedHeadAtoms);
+			WhereCondition nestedAttributeEqualities = (!(isEGD))?this.databaseConnection.getSQLStatementBuilder().createAttributeEqualities(allExtendedAtoms):uk.ac.ox.cs.pdq.reasoning.chase.Utility.createNestedAttributeEqualitiesForActiveTriggers(extendedBodyAtoms,extendedHeadAtoms,this.databaseConnection.getSQLStatementBuilder());
 			WhereCondition nestedConstantEqualities = this.databaseConnection.getSQLStatementBuilder().createEqualitiesWithConstants(allExtendedAtoms);
 			predicates2.addCondition(nestedAttributeEqualities);
 			predicates2.addCondition(nestedConstantEqualities);

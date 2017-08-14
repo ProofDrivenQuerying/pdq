@@ -1,10 +1,18 @@
 package uk.ac.ox.cs.pdq.reasoning.chase;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
+import org.apache.commons.lang3.tuple.Pair;
+
+import com.google.common.base.Preconditions;
+
+import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.sql.SQLStatementBuilder;
 import uk.ac.ox.cs.pdq.db.sql.WhereCondition;
@@ -149,5 +157,71 @@ public class Utility {
 		res.add(eq.toString());
 		return new WhereCondition(res);
 	}
+	/**
+	 * Creates the attribute equalities.
+	 *
+	 * @param source the source
+	 * @return 		explicit equalities (String objects of the form A.x1 = B.x2) of the implicit equalities in the input conjunction (the latter is denoted by repetition of the same term)
+	 */
+	public static WhereCondition createNestedAttributeEqualitiesForActiveTriggers(Atom[] extendedBodyAtoms, Atom[] extendedHeadAtoms, SQLStatementBuilder builder) {
+			List<String> attributePredicates = new ArrayList<String>();
+			//The right atom should be an equality
+			//We add additional checks to be sure that we have to do with EGDs
+			for(Atom rightAtom:extendedHeadAtoms) {
+				Relation rightRelation = (Relation) rightAtom.getPredicate();
+				String rightAlias = builder.aliases.get(rightAtom);
+				Map<Integer,Pair<String,Attribute>> rightToLeft = new HashMap<Integer,Pair<String,Attribute>>();
+				for(Term term:rightAtom.getTerms()) {
+					List<Integer> rightPositions = uk.ac.ox.cs.pdq.util.Utility.search(rightAtom.getTerms(), term); //all the positions for the same term should be equated
+					Preconditions.checkArgument(rightPositions.size() == 1);
+					for(Atom leftAtom:extendedBodyAtoms) {
+						Relation leftRelation = (Relation) leftAtom.getPredicate();
+						String leftAlias = builder.aliases.get(leftAtom);
+						List<Integer> leftPositions = uk.ac.ox.cs.pdq.util.Utility.search(leftAtom.getTerms(), term); 
+						Preconditions.checkArgument(leftPositions.size() <= 1);
+						if(leftPositions.size() == 1) {
+							rightToLeft.put(rightPositions.get(0), Pair.of(leftAlias==null ? leftRelation.getName():leftAlias, leftRelation.getAttribute(leftPositions.get(0))));
+						}
+					}
+				}
+				Preconditions.checkArgument(rightToLeft.size()==2);
+				Iterator<Entry<Integer, Pair<String, Attribute>>> entries;
+				Entry<Integer, Pair<String, Attribute>> entry;
+
+				entries = rightToLeft.entrySet().iterator();
+				entry = entries.next();
+
+				StringBuilder result = new StringBuilder();
+				result.append("(");
+				result.append(entry.getValue().getLeft()).append(".").append(entry.getValue().getRight().getName()).append('=');
+				result.append(rightAlias==null ? rightRelation.getName():rightAlias).append(".").append(rightRelation.getAttribute(0).getName());
+
+				entry = entries.next();
+
+				result.append(" AND ");
+				result.append(entry.getValue().getLeft()).append(".").append(entry.getValue().getRight().getName()).append('=');
+				result.append(rightAlias==null ? rightRelation.getName():rightAlias).append(".").append(rightRelation.getAttribute(1).getName());
+
+				entries = rightToLeft.entrySet().iterator();
+				entry = entries.next();
+
+				result.append(" OR ");
+				result.append(entry.getValue().getLeft()).append(".").append(entry.getValue().getRight().getName()).append('=');
+				result.append(rightAlias==null ? rightRelation.getName():rightAlias).append(".").append(rightRelation.getAttribute(1).getName());
+
+				entry = entries.next();
+
+				result.append(" AND ");
+				result.append(entry.getValue().getLeft()).append(".").append(entry.getValue().getRight().getName()).append('=');
+				result.append(rightAlias==null ? rightRelation.getName():rightAlias).append(".").append(rightRelation.getAttribute(0).getName());
+
+				result.append(")");
+
+				attributePredicates.add(result.toString());
+
+			}
+			return new WhereCondition(attributePredicates);
+	}
+
 
 }
