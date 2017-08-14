@@ -34,6 +34,10 @@ import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.util.Utility;
 
+/**
+ * @author Gabor
+ *
+ */
 public class DatabaseInstanceTest {
 	
 	@Before

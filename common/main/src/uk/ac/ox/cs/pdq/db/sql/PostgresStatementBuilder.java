@@ -19,11 +19,10 @@ import uk.ac.ox.cs.pdq.fol.Term;
 
 import com.google.common.base.Joiner;
 
-// TODO: Auto-generated Javadoc
 /**
- * Builds queries for detecting homomorphisms in MySQL.
+ * Builds queries for detecting homomorphisms in Postgres.
  *
- * @author Efthymia Tsamoura
+ * @author gabor
  */
 public class PostgresStatementBuilder extends SQLStatementBuilder {
 
@@ -57,10 +56,6 @@ public class PostgresStatementBuilder extends SQLStatementBuilder {
 		return result;
 	}
 
-	/**
-	 *
-	 * @return MySQLHomomorphismStatementBuilder
-	 */
 	@Override
 	public PostgresStatementBuilder clone() {
 		return new PostgresStatementBuilder();
@@ -103,6 +98,9 @@ public class PostgresStatementBuilder extends SQLStatementBuilder {
 		return result;
 	}
 	
+	/** 
+	 * Creates the "create table ..." statement for a relation
+	 */
 	@Override
 	public String createTableStatement(Relation relation) {
 		StringBuilder result = new StringBuilder();
@@ -144,10 +142,8 @@ public class PostgresStatementBuilder extends SQLStatementBuilder {
 	}
 
 	/**
-	 * TOCOMMENT: EXPLAIN DIFFERENCE FROM PRIOR
+	 * Creates "insert into ..." statements from a set of facts. The predicate must define the table name where we want to insert.
 	 *
-	 * @param facts the facts
-	 * @param toDatabaseTables the dbrelations
 	 * @return insert statements that add the input fact to the fact database.
 	 */
 	@Override

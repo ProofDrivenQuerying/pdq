@@ -1,7 +1,5 @@
 package uk.ac.ox.cs.pdq.db;
 
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -20,7 +18,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 import org.apache.log4j.Logger;
 
@@ -30,7 +27,6 @@ import uk.ac.ox.cs.pdq.db.sql.DerbyStatementBuilder;
 import uk.ac.ox.cs.pdq.db.sql.ExecuteSQLQueryThread;
 import uk.ac.ox.cs.pdq.db.sql.ExecuteSynchronousSQLUpdateThread;
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Variable;
@@ -41,7 +37,8 @@ import uk.ac.ox.cs.pdq.util.Utility;
  * 
  * A database instance is a set of facts stored in an RDBMS. 
  * This object provides basic functionalities, for storing, indexing querying and deleting a database instance.
- *
+ * 
+ * @author Gabor
  */
 public abstract class DatabaseInstance implements Instance {
 	protected static Logger log = Logger.getLogger(DatabaseInstance.class);
@@ -50,13 +47,6 @@ public abstract class DatabaseInstance implements Instance {
 	protected final long timeout = 3600000;
 	protected final TimeUnit unit = TimeUnit.MILLISECONDS;
 	protected final static int insertCacheSize = 1000; 
-
-	/** A datqabase instance can be associated to a current query, for the join positions of which, indices are created.. */
-	//TOCOMMENT not used
-	private ConjunctiveQuery currentQuery = null;
-
-	/** True if previous query indices were cleared. */
-	private boolean clearedLastQuery = true;
 
 	protected Set<String> existingIndices =  new LinkedHashSet<String>();
 
@@ -102,11 +92,14 @@ public abstract class DatabaseInstance implements Instance {
 			}
 			clusters.clear();
 		}
-		executeQueries(queries);		
+		executeUpdates(queries);		
 	}
 
 
-	private void executeQueries(Queue<String> queries) {		
+	/** Utiliti function for add and delete fact updates.
+	 * @param queries
+	 */
+	private void executeUpdates(Queue<String> queries) {		
 		try {
 			if (executorService==null) {
 				//	Create a pool of threads to run in parallel
@@ -132,9 +125,7 @@ public abstract class DatabaseInstance implements Instance {
 					}
 				}
 			}
-			//executorService.shutdown();
 		} catch (InterruptedException | ExecutionException e) {
-			//executorService.shutdownNow();
 			e.printStackTrace();
 		} 
 	}
@@ -165,32 +156,10 @@ public abstract class DatabaseInstance implements Instance {
 				subList.clear();
 			}
 		}
-		executeQueries(queries);
+		executeUpdates(queries);
 	}
 
-//	public void setupQueryIndices(ConjunctiveQuery query) {
-//		if(!this.clearedLastQuery)
-//			throw new RuntimeException("Method clearQuery should have been called in order to clear previous query's tables from the database.");
-//		this.clearedLastQuery = false;
-//		try {
-//			Statement sqlStatement = this.getDatabaseConnection().getSynchronousConnections(0).createStatement();
-//			//Create statements that set up or drop the indices for the joins in the body of the input query
-//			Set<String> joinIndexes = Sets.newLinkedHashSet();
-//			Pair<Collection<String>, Collection<String>> dropAndCreateStms = 
-//					this.databaseConnection.getSQLStatementBuilder().setupIndices(true, this.databaseConnection.getRelationNamesToDatabaseTables(), query, this.existingIndices);
-//			this.dropQueryIndexStatements.addAll(dropAndCreateStms.getRight());
-//			joinIndexes.addAll(dropAndCreateStms.getLeft());
-//			for (String b: joinIndexes) {
-//				sqlStatement.addBatch(b);
-//			}
-//			sqlStatement.executeBatch();
-//		} catch (SQLException ex) {
-//			throw new IllegalStateException(ex.getMessage(), ex);
-//		}
-//		this.currentQuery = query;
-//	}
-
-	/**
+	/** Main query function used by getTriggers and getMatches. The correct argument is a mystery. 
 	 * 
 	 * @param queries A queue of triples, representing a query.bEach triple holds, 
 	 * - the query or the constraint we want to detect homomorphisms for
@@ -239,12 +208,13 @@ public abstract class DatabaseInstance implements Instance {
 		return this.databaseConnection;
 	}
 
+	/** Shuts this databaseInstance down. Closes all connections and threadpools.
+	 * @throws Exception
+	 */
 	public void close() throws Exception {
 		if (executorService!=null)
 			executorService.shutdownNow();
 		//is this the right thing to do?
 		this.databaseConnection.close();
-		
-		
 	}
 }
