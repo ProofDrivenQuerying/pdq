@@ -3,7 +3,6 @@ package uk.ac.ox.cs.pdq.test.db;
 import java.io.File;
 import java.util.Collection;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -19,7 +18,6 @@ import com.google.common.collect.Lists;
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.DatabaseInstance;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
-import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
@@ -44,7 +42,7 @@ public class DatabaseInstanceTest {
 	}
 	
 	@Test
-	public void mySqlStatementBuioderTest () {
+	public void derbyStatementBuilderTest () {
 		try {
 			Schema schema = IOManager.importSchema(new File("test\\src\\uk\\ac\\ox\\cs\\pdq\\test\\db\\schema.xml"));
 			
