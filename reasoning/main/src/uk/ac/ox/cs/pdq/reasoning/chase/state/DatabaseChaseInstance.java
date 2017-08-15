@@ -355,10 +355,10 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		EqualConstantsClass class_l = this.classes.getClass(c_l);
 		//Find all constants of this class and its representative
 		Collection<Term> constants_l = Sets.newHashSet();
-		Term representative_l = null;
+		Term old_representative_l = null;
 		if(class_l != null) {
 			constants_l.addAll(class_l.getConstants());
-			representative_l = class_l.getRepresentative();
+			old_representative_l = class_l.getRepresentative();
 		}
 
 		Constant c_r = (Constant) atom.getTerm(1);
@@ -366,10 +366,10 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		EqualConstantsClass class_r = this.classes.getClass(c_r);
 		//Find all constants of this class and its representative
 		Collection<Term> constants_r = Sets.newHashSet();
-		Term representative_r = null;
+		Term old_representative_r = null;
 		if(class_r != null) {
 			constants_r.addAll(class_r.getConstants());
-			representative_r = class_r.getRepresentative();
+			old_representative_r = class_r.getRepresentative();
 		}
 
 		boolean successfull;
@@ -382,28 +382,61 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 				this._isFailed = true;
 				return Maps.newHashMap();
 			}
+			
+			// doesn't matter left or right representative, the new one should always be the same.
+			Constant newRepresentative = (Constant)this.classes.getClass(c_r).getRepresentative();
+			
+			if (newRepresentative==null || !newRepresentative.equals(this.classes.getClass(c_l).getRepresentative())) {
+				// we have two different representatives
+				this._isFailed = true;
+				return Maps.newHashMap();
+			}
+			
 			//Detect all constants whose representative will change 
-			if(representative_l == null && representative_r == null) {
-				if(this.classes.getClass(c_l).getRepresentative().equals(c_l)) {
-					obsoleteToRepresentative.put(c_r, c_l);
+			if(old_representative_l == null && old_representative_r == null) {
+				// Both new, no classes to update
+				if(newRepresentative.equals(c_l)) {
+					obsoleteToRepresentative.put(c_r, newRepresentative);
 				}
-				else if(this.classes.getClass(c_r).getRepresentative().equals(c_r)) {
-					obsoleteToRepresentative.put(c_l, c_r);
+				else if(newRepresentative.equals(c_r)) {
+					obsoleteToRepresentative.put(c_l, newRepresentative);
+				} 
+			}
+			else if(old_representative_l == null) {
+				// left side is new
+				obsoleteToRepresentative.put(c_l, newRepresentative);
+				
+				if (!old_representative_r.equals(newRepresentative)) {
+					// the new element on the left become the representative for the whole class on the right
+					for(Term term:constants_r) {
+						obsoleteToRepresentative.put((Constant)term, newRepresentative);
+					}
 				}
 			}
-			else if(representative_l == null && !this.classes.getClass(c_l).getRepresentative().equals(c_l) || 
-					!this.classes.getClass(c_l).getRepresentative().equals(representative_l)) {
-				for(Term term:constants_l) {
-					obsoleteToRepresentative.put((Constant)term, (Constant)this.classes.getClass(c_l).getRepresentative());
+			else if(old_representative_r == null) {
+				// right side is new
+				obsoleteToRepresentative.put(c_r, newRepresentative);
+				if (!old_representative_l.equals(newRepresentative)) {
+					// the new element on the right become the representative for the whole class on the left
+					for(Term term:constants_l) {
+						obsoleteToRepresentative.put((Constant)term, newRepresentative);
+					}
 				}
-				obsoleteToRepresentative.put(c_l, (Constant)this.classes.getClass(c_l).getRepresentative());
-			}
-			else if(representative_r == null && !this.classes.getClass(c_r).getRepresentative().equals(c_r) || 
-					!this.classes.getClass(c_r).getRepresentative().equals(representative_r)) {
-				for(Term term:constants_r) {
-					obsoleteToRepresentative.put((Constant)term, (Constant)this.classes.getClass(c_r).getRepresentative());
+			} else {
+				// both side had representative we need to update according who is the winner
+				if (newRepresentative.equals(old_representative_r)) {
+					// the right side constant's representative become the king of all classes
+					for(Term term:constants_l) {
+						obsoleteToRepresentative.put((Constant)term, newRepresentative);
+					}
+					obsoleteToRepresentative.put(c_l, newRepresentative);
+				} else {
+					// the left side constant's representative become the king of all classes
+					for(Term term:constants_r) {
+						obsoleteToRepresentative.put((Constant)term, newRepresentative);
+					}
+					obsoleteToRepresentative.put(c_r, newRepresentative);
 				}
-				obsoleteToRepresentative.put(c_r, (Constant)this.classes.getClass(c_r).getRepresentative());
 			}
 		}
 		return obsoleteToRepresentative;
