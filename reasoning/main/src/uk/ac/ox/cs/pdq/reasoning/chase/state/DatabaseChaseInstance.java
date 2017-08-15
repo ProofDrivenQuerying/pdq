@@ -2,6 +2,7 @@ package uk.ac.ox.cs.pdq.reasoning.chase.state;
 
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -15,6 +16,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
+import org.apache.derby.iapi.sql.dictionary.StatementTablePermission;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.HashMultimap;
@@ -165,18 +167,31 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 	 * @throws SQLException
 	 */
 	public void indexConstraints() throws SQLException {
-		Statement sqlStatement = this.getDatabaseConnection().getSynchronousConnections().get(0).createStatement();
-		Relation equalityRelation = this.createDatabaseEqualityRelation();
-		this.databaseConnection.getRelationNamesToDatabaseTables().put(QNames.EQUALITY.toString(), equalityRelation);
-		sqlStatement.addBatch(this.databaseConnection.getSQLStatementBuilder().createTableStatement(equalityRelation));
-		//sqlStatement.addBatch(this.getDatabaseConnection().getBuilder().createColumnIndexStatement(equalityRelation, equalityRelation.getAttribute(equalityRelation.getArity()-1)));
-		//Create indices for the joins in the body of the dependencies
-		Set<String> joinIndexes = Sets.newLinkedHashSet();
-		for (Dependency constraint:this.databaseConnection.getSchema().getDependencies()) 
-			joinIndexes.addAll(this.databaseConnection.getSQLStatementBuilder().setupIndices(false, this.databaseConnection.getRelationNamesToDatabaseTables(), constraint, this.existingIndices).getLeft());
-		for (String b: joinIndexes) 
-			sqlStatement.addBatch(b);
-		sqlStatement.executeBatch();
+		List<String> statementBuffer = new ArrayList<>(); 
+		try {
+			Statement sqlStatement = this.getDatabaseConnection().getSynchronousConnections().get(0).createStatement();
+			Relation equalityRelation = this.createDatabaseEqualityRelation();
+			this.databaseConnection.getRelationNamesToDatabaseTables().put(QNames.EQUALITY.toString(), equalityRelation);
+			String statement = this.databaseConnection.getSQLStatementBuilder().createTableStatement(equalityRelation);
+			sqlStatement.addBatch(statement);
+			statementBuffer.add(statement);
+			//Create indices for the joins in the body of the dependencies
+			Set<String> joinIndexes = Sets.newLinkedHashSet();
+			for (Dependency constraint:this.databaseConnection.getSchema().getDependencies()) 
+				joinIndexes.addAll(this.databaseConnection.getSQLStatementBuilder().setupIndices(false, this.databaseConnection.getRelationNamesToDatabaseTables(), constraint, this.existingIndices).getLeft());
+			for (String b: joinIndexes) { 
+				sqlStatement.addBatch(b);
+				statementBuffer.add(b);
+			}
+			sqlStatement.executeBatch();
+		}catch(SQLException e) {
+			System.err.println("Error while executing commands: " + statementBuffer);
+			if (e.getNextException()!=null)
+				e.getNextException().printStackTrace();
+			else
+				e.printStackTrace();
+			throw e;
+		}
 	}
 
 	/**
