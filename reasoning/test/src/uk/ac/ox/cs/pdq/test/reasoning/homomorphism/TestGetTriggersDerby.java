@@ -38,7 +38,8 @@ import com.google.common.collect.Lists;
  * @author Efthymia Tsamoura
  *
  */
-public class TestGetTriggers {
+public class TestGetTriggersDerby {
+	private static final int PARALLEL_THREADS = 10;
 	protected DatabaseChaseInstance chaseState;
 
 	private Relation rel1;
@@ -81,7 +82,7 @@ public class TestGetTriggers {
 				Conjunction.of(Atom.create(Predicate.create(QNames.EQUALITY.toString(), 2, true), Variable.create("z"), Variable.create("w"))));
 
 		this.schema = new Schema(new Relation[] { this.rel1, this.rel2, this.rel3 }, new Dependency[] { this.tgd, this.tgd2, this.egd });
-		this.chaseState = new DatabaseChaseInstance(new ArrayList<Atom>(), new DatabaseConnection(new DatabaseParameters(), this.schema));
+		this.chaseState = new DatabaseChaseInstance(new ArrayList<Atom>(), new DatabaseConnection(new DatabaseParameters(), this.schema, PARALLEL_THREADS));
 	}
 
 	@After

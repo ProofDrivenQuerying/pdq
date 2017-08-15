@@ -40,7 +40,7 @@ import com.google.common.collect.Lists;
  *
  */
 public class TestGetTriggersMySql {
-	private static final int PARALLEL_THREADS = 1;
+	private static final int PARALLEL_THREADS = 10;
 
 	protected DatabaseChaseInstance chaseState;
 
