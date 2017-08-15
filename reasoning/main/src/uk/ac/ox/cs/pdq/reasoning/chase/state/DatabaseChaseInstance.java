@@ -340,7 +340,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 	}
 
 	/**
-	 * Updates the classes of equal constants and returns the constants whose representative changed. 
+	 * Updates the classes of equal constants and returns the constants whose representative changed, for use in fact-propagation 
 	 * @param atom an equality atom
 	 * @return a map mapping each constant that is to be replaced by its representative to the a latter, 
 	 * after taking the input equality into account.
@@ -373,10 +373,12 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		}
 
 		boolean successfull;
+		//if already the same class nothing to do
 		if(class_r != null && class_l != null && class_r.equals(class_l)) {
 			successfull = true;
 		}
 		else {
+			//does the actual update of the representatives, or returns false if the update cannot be done and the chase fails
 			successfull = this.classes.add(atom);
 			if(!successfull) {
 				this._isFailed = true;
