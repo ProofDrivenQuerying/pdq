@@ -7,6 +7,10 @@ import org.junit.Test;
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 
+/**
+ * @author Gabor
+ *
+ */
 public class TestChaseStepMultiRun {
 	private static final int REPEAT = 35;
 	@Test

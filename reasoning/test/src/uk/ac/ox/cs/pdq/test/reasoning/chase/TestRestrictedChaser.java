@@ -39,7 +39,7 @@ import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
  */
 public class TestRestrictedChaser {
 
-	private DatabaseChaseInstance state;
+	public DatabaseChaseInstance state;
 	private RestrictedChaser chaser;
 
 	private Relation rel1;
@@ -48,7 +48,7 @@ public class TestRestrictedChaser {
 	private TGD tgd;
 	private EGD egd;
 
-	private Schema schema;
+	protected Schema schema;
 	private DatabaseConnection connection;
 
 	@Before
@@ -76,9 +76,40 @@ public class TestRestrictedChaser {
 		this.schema = new Schema(new Relation[]{this.rel1, this.rel2}, new Dependency[]{this.tgd});
 		this.schema.addConstants(Lists.<TypedConstant>newArrayList(TypedConstant.create(new String("John"))));
 
-		this.connection = new DatabaseConnection(new DatabaseParameters(), this.schema);
+		this.setConnection(new DatabaseConnection(new DatabaseParameters(), this.schema));
 		this.chaser = new RestrictedChaser(new StatisticsCollector(true, new EventBus()));
 	}
+	public void createSchema() {
+		Attribute fact= Attribute.create(Integer.class, "InstanceID");
+		
+		Attribute at11 = Attribute.create(String.class, "at11");
+		Attribute at12 = Attribute.create(String.class, "at12");
+		Attribute at13 = Attribute.create(String.class, "at13");
+		
+		this.rel1 = Relation.create("R1", new Attribute[]{at11, at12, at13, fact});
+
+		Attribute at21 = Attribute.create(String.class, "at21");
+		Attribute at22 = Attribute.create(String.class, "at22");
+		this.rel2 = Relation.create("R2", new Attribute[]{at21, at22, fact});
+
+		Atom R1 = Atom.create(this.rel1, new Term[]{Variable.create("x"),Variable.create("y"),Variable.create("z")});
+		Atom R2 = Atom.create(this.rel2, new Term[]{Variable.create("y"),Variable.create("z")});
+		Atom R2p = Atom.create(this.rel2, new Term[]{Variable.create("y"),Variable.create("w")});
+
+		this.tgd = TGD.create(new Atom[]{R1},new Atom[]{R2});
+		this.egd = EGD.create(Conjunction.of(R2,R2p), Conjunction.of(Atom.create(Predicate.create(QNames.EQUALITY.toString(), 2, true), 
+				Variable.create("z"),Variable.create("w"))));
+
+		this.schema = new Schema(new Relation[]{this.rel1, this.rel2}, new Dependency[]{this.tgd});
+		this.schema.addConstants(Lists.<TypedConstant>newArrayList(TypedConstant.create(new String("John"))));
+	}
+	
+	public void setup(DatabaseConnection c) throws SQLException {
+
+		this.setConnection(c);
+		this.chaser = new RestrictedChaser(new StatisticsCollector(true, new EventBus()));
+	}
+	
 
 	@Test 
 	public void test_reasonUntilTermination1() {
@@ -98,7 +129,7 @@ public class TestRestrictedChaser {
 				new Term[]{UntypedConstant.create("k5"), UntypedConstant.create("c"),TypedConstant.create(new String("John"))});
 
 		try {
-			this.state = new DatabaseChaseInstance(Sets.<Atom>newHashSet(f20,f21,f22,f23,f24), this.connection);
+			this.state = new DatabaseChaseInstance(Sets.<Atom>newHashSet(f20,f21,f22,f23,f24), this.getConnection());
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
@@ -135,5 +166,15 @@ public class TestRestrictedChaser {
 		Assert.assertEquals(Sets.newHashSet(n00,n01,n02,n03,n04,n1), facts);
 	}
 
+	public void tearDown() throws Exception {
+		getConnection().close();
+	}
 
+	public DatabaseConnection getConnection() {
+		return connection;
+	}
+
+	public void setConnection(DatabaseConnection connection) {
+		this.connection = connection;
+	}
 }
