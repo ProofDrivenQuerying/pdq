@@ -62,37 +62,42 @@ public abstract class DatabaseInstance implements Instance {
 	}
 
 	public void addFacts(Collection<Atom> facts) {
-		Queue<String> queries = new ConcurrentLinkedQueue<>();
-		if(this.databaseConnection.getSQLStatementBuilder() instanceof DerbyStatementBuilder) {
-			queries.addAll(this.databaseConnection.getSQLStatementBuilder().createInsertStatements(facts, this.databaseConnection.getRelationNamesToDatabaseTables()));
-		}
-		else {
-			Map<Predicate, List<Atom>> clusters = Utility.clusterAtomsWithSamePredicateName(facts);
-			//Find the total number of tuples that will be inserted in the database
-			int totalTuples = facts.size();
-			int tuplesPerThread;
-			if(totalTuples < this.databaseConnection.getNumberOfSynchronousConnections()) {
-				tuplesPerThread = totalTuples;
+		try {
+			Queue<String> queries = new ConcurrentLinkedQueue<>();
+			if(this.databaseConnection.getSQLStatementBuilder() instanceof DerbyStatementBuilder) {
+				queries.addAll(this.databaseConnection.getSQLStatementBuilder().createInsertStatements(facts, this.databaseConnection.getRelationNamesToDatabaseTables()));
 			}
 			else {
-				tuplesPerThread = (int) Math.ceil(totalTuples / this.databaseConnection.getNumberOfSynchronousConnections());
-			}
-			if(tuplesPerThread > insertCacheSize) {
-				tuplesPerThread = insertCacheSize;
-			}
-			for(Entry<Predicate, List<Atom>> entry:clusters.entrySet()) {
-				Predicate predicate = entry.getKey();
-				List<Atom> clusterFacts = entry.getValue();
-				while(!clusterFacts.isEmpty()) {
-					int position = tuplesPerThread < clusterFacts.size() ? tuplesPerThread:clusterFacts.size();
-					List<Atom> subList = clusterFacts.subList(0, position);
-					queries.add(this.databaseConnection.getSQLStatementBuilder().createBulkInsertStatement(predicate, subList));
-					subList.clear();
+				Map<Predicate, List<Atom>> clusters = Utility.clusterAtomsWithSamePredicateName(facts);
+				//Find the total number of tuples that will be inserted in the database
+				int totalTuples = facts.size();
+				int tuplesPerThread;
+				if(totalTuples < this.databaseConnection.getNumberOfSynchronousConnections()) {
+					tuplesPerThread = totalTuples;
 				}
+				else {
+					tuplesPerThread = (int) Math.ceil(totalTuples / this.databaseConnection.getNumberOfSynchronousConnections());
+				}
+				if(tuplesPerThread > insertCacheSize) {
+					tuplesPerThread = insertCacheSize;
+				}
+				for(Entry<Predicate, List<Atom>> entry:clusters.entrySet()) {
+					Predicate predicate = entry.getKey();
+					List<Atom> clusterFacts = entry.getValue();
+					while(!clusterFacts.isEmpty()) {
+						int position = tuplesPerThread < clusterFacts.size() ? tuplesPerThread:clusterFacts.size();
+						List<Atom> subList = clusterFacts.subList(0, position);
+						queries.add(this.databaseConnection.getSQLStatementBuilder().createBulkInsertStatement(predicate, subList));
+						subList.clear();
+					}
+				}
+				clusters.clear();
 			}
-			clusters.clear();
+			executeUpdates(queries);
+		} catch(Throwable t) {
+			t.printStackTrace();
+			throw t;
 		}
-		executeUpdates(queries);		
 	}
 
 
@@ -131,32 +136,37 @@ public abstract class DatabaseInstance implements Instance {
 	}
 
 	public void deleteFacts(Collection<Atom> facts) {
-		Queue<String> queries = new ConcurrentLinkedQueue<>();
-		Map<Predicate, List<Atom>> clusters = Utility.clusterAtomsWithSamePredicateName(facts);
-
-		//Find the total number of tuples that will be deleted from the database
-		int totalTuples = facts.size();
-		int tuplesPerThread;
-		if(totalTuples < this.databaseConnection.getNumberOfSynchronousConnections()) {
-			tuplesPerThread = totalTuples;
-		}
-		else {
-			tuplesPerThread = (int) Math.ceil(totalTuples / this.databaseConnection.getNumberOfSynchronousConnections());
-		}
-		if(tuplesPerThread > insertCacheSize) {
-			tuplesPerThread = insertCacheSize;
-		}
-		for(Entry<Predicate, List<Atom>> entry:clusters.entrySet()) {
-			Predicate predicate = entry.getKey();
-			List<Atom> clusterFacts = entry.getValue();
-			while(!clusterFacts.isEmpty()) {
-				int position = tuplesPerThread > clusterFacts.size() ? clusterFacts.size():tuplesPerThread;
-				List<Atom> subList = clusterFacts.subList(0, position);
-				queries.add(this.databaseConnection.getSQLStatementBuilder().createBulkDeleteStatement(predicate, subList, this.databaseConnection.getRelationNamesToDatabaseTables()));
-				subList.clear();
+		try {
+			Queue<String> queries = new ConcurrentLinkedQueue<>();
+			Map<Predicate, List<Atom>> clusters = Utility.clusterAtomsWithSamePredicateName(facts);
+	
+			//Find the total number of tuples that will be deleted from the database
+			int totalTuples = facts.size();
+			int tuplesPerThread;
+			if(totalTuples < this.databaseConnection.getNumberOfSynchronousConnections()) {
+				tuplesPerThread = totalTuples;
 			}
+			else {
+				tuplesPerThread = (int) Math.ceil(totalTuples / this.databaseConnection.getNumberOfSynchronousConnections());
+			}
+			if(tuplesPerThread > insertCacheSize) {
+				tuplesPerThread = insertCacheSize;
+			}
+			for(Entry<Predicate, List<Atom>> entry:clusters.entrySet()) {
+				Predicate predicate = entry.getKey();
+				List<Atom> clusterFacts = entry.getValue();
+				while(!clusterFacts.isEmpty()) {
+					int position = tuplesPerThread > clusterFacts.size() ? clusterFacts.size():tuplesPerThread;
+					List<Atom> subList = clusterFacts.subList(0, position);
+					queries.add(this.databaseConnection.getSQLStatementBuilder().createBulkDeleteStatement(predicate, subList, this.databaseConnection.getRelationNamesToDatabaseTables()));
+					subList.clear();
+				}
+			}
+			executeUpdates(queries);
+		} catch(Throwable t) {
+			t.printStackTrace();
+			throw t;
 		}
-		executeUpdates(queries);
 	}
 
 	/** Main query function used by getTriggers and getMatches. The correct argument is a mystery. 
