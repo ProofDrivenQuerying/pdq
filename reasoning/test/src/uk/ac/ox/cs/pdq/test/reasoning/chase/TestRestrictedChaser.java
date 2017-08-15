@@ -168,6 +168,7 @@ public class TestRestrictedChaser {
 
 	public void tearDown() throws Exception {
 		getConnection().close();
+		state.close();
 	}
 
 	public DatabaseConnection getConnection() {
