@@ -178,6 +178,10 @@ public abstract class DatabaseInstance implements Instance {
 			for(int j = 0; j < this.databaseConnection.getNumberOfSynchronousConnections(); ++j) {
 				//Create the threads that will run the database queries
 				String dbName = this.databaseConnection.getSQLStatementBuilder().getDatabaseName();
+				if (this.databaseConnection.getDatabaseParameters().getDatabaseDriver().contains("derby")) {
+					// derby doesn't like the USE databaseName command, so we switch it off.
+					dbName = null;
+				}
 				threads.add(new ExecuteSQLQueryThread(queries, this.databaseConnection.getSchema().getConstants(), this.getDatabaseConnection().getSynchronousConnections(j), dbName));
 			}
 			long start = System.currentTimeMillis();
@@ -201,7 +205,7 @@ public abstract class DatabaseInstance implements Instance {
 		} catch (InterruptedException | ExecutionException e) {
 			e.printStackTrace();
 			return null;
-		} 
+		}
 		return result;
 	}
 	
@@ -218,4 +222,5 @@ public abstract class DatabaseInstance implements Instance {
 		//is this the right thing to do?
 		this.databaseConnection.close();
 	}
+
 }

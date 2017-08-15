@@ -14,6 +14,7 @@ import uk.ac.ox.cs.pdq.fol.Predicate;
  *
  * @author Efthymia Tsamoura
  * @author Julien leblay
+ * @author Gabor
  */
 public class DerbyStatementBuilder extends SQLStatementBuilder {
 
@@ -34,7 +35,17 @@ public class DerbyStatementBuilder extends SQLStatementBuilder {
 	@Override
 	public Collection<String> createDropStatements(String databaseName) {
 		LinkedList<String> ret = new LinkedList<>();
-		ret.add("drop schema "+databaseName+" restrict");
+		
+		// Derby won't drop a schema if it has contents, so we need a drop statement that finds all tables and drop them all before droping the schema.
+		ret.add(
+		"SELECT 'ALTER TABLE '||S.SCHEMANAME||'.'||T.TABLENAME||' DROP CONSTRAINT '||C.CONSTRAINTNAME||';' " +
+		"FROM SYS.SYSCONSTRAINTS C, SYS.SYSSCHEMAS S, SYS.SYSTABLES T "+
+		"WHERE C.SCHEMAID = S.SCHEMAID AND C.TABLEID = T.TABLEID AND " + 
+		"S.SCHEMANAME = '" + databaseName + "' " +
+		"UNION SELECT 'DROP TABLE ' || schemaname ||'.' || tablename || ';' " +
+		"FROM SYS.SYSTABLES INNER JOIN SYS.SYSSCHEMAS ON SYS.SYSTABLES.SCHEMAID = SYS.SYSSCHEMAS.SCHEMAID " +
+		"WHERE schemaname='" + databaseName + "'"
+		);
 		return ret;
 	}
 

@@ -13,8 +13,13 @@ public class FromCondition {
 		fromRelations = relations;
 	}
 
-	public String getConditionsSQLSubstring() {
-		return Joiner.on(",").join(fromRelations); 
+	public String getConditionsSQLSubstring(String databaseName) {
+		List<String> relations = new ArrayList<>();
+		for (String r:fromRelations) {
+			relations.add(databaseName + "." + r);
+		}
+		
+		return Joiner.on(",").join(relations); 
 	}
 
 }

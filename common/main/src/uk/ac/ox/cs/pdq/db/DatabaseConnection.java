@@ -20,7 +20,7 @@ import uk.ac.ox.cs.pdq.db.sql.SQLStatementBuilder;
  * Models a database connection. It is responsible for creating database tables
  * for the input schema.
  * 
- *
+ * @author Gabor
  */
 public class DatabaseConnection implements AutoCloseable {
 	private int synchronousThreadsNumber = 1;
@@ -46,6 +46,10 @@ public class DatabaseConnection implements AutoCloseable {
 	private final DatabaseParameters databaseParameters;
 
 	private final Schema schema;
+
+	protected boolean ready;
+
+	private boolean isDerby = false;
 
 	public DatabaseConnection(DatabaseParameters databaseParameters, Schema schema) throws SQLException {
 		this(databaseParameters, schema, 1);
@@ -87,16 +91,14 @@ public class DatabaseConnection implements AutoCloseable {
 			this.synchronousConnections.add(DatabaseUtilities.getConnection(driver, url, database, username, password));
 
 		if (driver.contains("derby")) {
+			isDerby = true;
 			Statement st = this.synchronousConnections.get(0).createStatement();
 			st.execute("create schema " + database);
 		}
 		this.schema = schema;
 		this.databaseParameters = databaseParameters;
 		this.relationNamesToDatabaseTables = new LinkedHashMap<>();
-		this.initialize();
-	}
 
-	public void initialize() throws SQLException {
 		if (!this.isInitialized) {
 			this.setup();
 			this.isInitialized = true;
@@ -132,12 +134,16 @@ public class DatabaseConnection implements AutoCloseable {
 				System.err.println("Batch commands: " + commandBuffer);
 			}
 			t.printStackTrace();
-			// ((java.sql.BatchUpdateException)t).getNextException()
+			if (t instanceof java.sql.BatchUpdateException) {
+				if (((java.sql.BatchUpdateException)t).getNextException() !=null)
+					((java.sql.BatchUpdateException)t).getNextException().printStackTrace();
+			}
 			throw t;
 		} finally {
 			if (sqlStatement != null)
 				sqlStatement.close();
 		}
+		ready = true;
 	}
 
 	/**
@@ -171,10 +177,22 @@ public class DatabaseConnection implements AutoCloseable {
 	 */
 	protected void dropDatabase() throws SQLException {
 		Statement sqlStatement = this.synchronousConnections.get(0).createStatement();
-		for (String sql : this.builder.createDropStatements(this.databaseParameters.getDatabaseName()))
-			sqlStatement.addBatch(sql);
-		sqlStatement.executeBatch();
-		sqlStatement.close();
+		try {
+			for (String sql : this.builder.createDropStatements(this.databaseParameters.getDatabaseName())) {
+				if (isDerby) {
+					sqlStatement.execute(sql);
+				} else {
+					sqlStatement.addBatch(sql);
+				}
+			}
+			if (!isDerby)
+				sqlStatement.executeBatch();
+		} catch (Exception e) {
+			System.err.println("Error with command: " + this.builder.createDropStatements(this.databaseParameters.getDatabaseName()));
+			throw e;
+		} finally {
+			sqlStatement.close();
+		}
 	}
 
 	/*
@@ -184,17 +202,27 @@ public class DatabaseConnection implements AutoCloseable {
 	 */
 	@Override
 	public void close() throws Exception {
+		boolean drop = false;
 		try {
 			this.dropDatabase();
-		} catch(java.sql.BatchUpdateException bu) {
-			bu.getNextException().printStackTrace();
+			drop = true;
+		} catch (java.sql.BatchUpdateException bu) {
+			Exception e = bu.getNextException();
+			if (e != null) {
+				e.printStackTrace();
+			} else
+				bu.printStackTrace();
 		} catch (Throwable t) {
 			t.printStackTrace();
+		}
+		if (!drop) {
+
 		}
 		try {
 			for (Connection connection : this.synchronousConnections)
 				connection.close();
 			synchronousConnections.clear();
+
 		} catch (Throwable t) {
 			t.printStackTrace();
 		}
