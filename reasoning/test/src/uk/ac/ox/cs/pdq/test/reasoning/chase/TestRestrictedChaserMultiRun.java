@@ -40,7 +40,6 @@ public class TestRestrictedChaserMultiRun {
 			trc.test_reasonUntilTermination1();
 		}catch(Throwable t) {
 			t.printStackTrace();
-			System.out.println(trc.state.obsoleteToRepresentative);
 		}
 		trc.tearDown();
 	}
