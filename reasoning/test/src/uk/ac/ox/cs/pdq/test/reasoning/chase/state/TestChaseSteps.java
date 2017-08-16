@@ -66,8 +66,8 @@ public class TestChaseSteps {
 		Atom R2 = Atom.create(Predicate.create("R2", 2), new Term[] { Variable.create("y"), Variable.create("z") });
 		Atom R2p = Atom.create(Predicate.create("R2", 2), new Term[] { Variable.create("y"), Variable.create("w") });
 
-		this.egd = EGD.create(Conjunction.of(R2, R2p),
-				Conjunction.of(Atom.create(Predicate.create(QNames.EQUALITY.toString(), 2, true), new Term[] { Variable.create("z"), Variable.create("w") })));
+		this.egd = EGD.create(new Atom[]{R2, R2p},
+				new Atom[]{Atom.create(Predicate.create(QNames.EQUALITY.toString(), 2, true), new Term[] { Variable.create("z"), Variable.create("w") })});
 
 		this.schema = new Schema(new Relation[] { this.rel2 }, new Dependency[] { this.egd });
 		this.schema.addConstants(Lists.<TypedConstant>newArrayList(TypedConstant.create(new String("John"))));

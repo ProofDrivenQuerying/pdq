@@ -11,28 +11,18 @@ public class EGD extends Dependency {
 	/**  The dependency's universally quantified variables. */
 	protected Variable[] universal;
 	
-	protected EGD(Formula body, Formula head) {
+	protected EGD(Atom[] body, Atom[] head) {
 		super(body, head);
-		Assert.assertTrue(isConjunctionOfAtoms(body));
-		Assert.assertTrue(isConjunctionOfEqualities(head));
+		Assert.assertTrue(isConjunctionOfNonEqualities(body));
+		Assert.assertTrue(!isConjunctionOfNonEqualities(head));
 	}
 
-	private static boolean isConjunctionOfAtoms(Formula formula) {
-		if(formula instanceof Conjunction) 
-			return isConjunctionOfAtoms(formula.getChildren()[0]) && isConjunctionOfAtoms(formula.getChildren()[1]);
-		if(formula instanceof Atom) 
-			return true;
-		return false;
-	}
-
-	private static boolean isConjunctionOfEqualities(Formula formula) {
-		if(formula instanceof Conjunction) 
-			return isConjunctionOfEqualities(formula.getChildren()[0]) && isConjunctionOfEqualities(formula.getChildren()[1]);
-		if(formula instanceof Atom) {
-			if(((Atom)formula).isEquality()) 
-				return true;
+	private static boolean isConjunctionOfNonEqualities(Atom[] atoms) {
+		for(Atom atom:atoms) {
+			if(atom.isEquality())
+				return false;
 		}
-		return false;
+		return true;
 	}
 
 	/**
@@ -54,7 +44,7 @@ public class EGD extends Dependency {
 		return f + this.body + LogicalSymbols.IMPLIES + this.head;
 	}
 	
-    public static EGD create(Formula head, Formula body) {
+    public static EGD create(Atom[] head, Atom[] body) {
         return Cache.egd.retrieve(new EGD(head, body));
     }
 }
