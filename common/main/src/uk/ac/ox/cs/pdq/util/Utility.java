@@ -117,6 +117,14 @@ public class Utility {
 		}
 		return new ArrayList<>(result);
 	}
+	
+	/** Same as above but works with lists
+	 * @param formulas
+	 * @return
+	 */
+	public static List<Variable> getVariables(List<Atom> formulas) {
+		return getVariables(formulas.toArray(new Formula[formulas.size()]));
+	}
 
 	public static Collection<Constant> getTypedConstants(Collection<Atom> atoms) {
 		Collection<Constant> result = new LinkedHashSet<>();
@@ -261,13 +269,12 @@ public class Utility {
 		Predicate equality = Predicate.create("equality", 2, true);
 		//Create the constant equality predicates
 		int index = 0;
-		Formula[] equalities = new Formula[tobeEqual.entrySet().size()];
+		Atom[] equalities = new Atom[tobeEqual.entrySet().size()];
 		for(java.util.Map.Entry<Term, Term> pair:tobeEqual.entrySet()) 
 			equalities[index++] = Atom.create(equality, pair.getKey(), pair.getValue());
-		Formula body =
-				Conjunction.of(Atom.create(Predicate.create(predicate.getName(), leftTerms.length), leftTerms), 
-						Atom.create(Predicate.create(predicate.getName(), copiedTerms.length), copiedTerms));
-		return EGD.create(body, Conjunction.of(equalities));
+		Atom body[] = new Atom[]{Atom.create(Predicate.create(predicate.getName(), leftTerms.length), leftTerms), 
+						Atom.create(Predicate.create(predicate.getName(), copiedTerms.length), copiedTerms)};
+		return EGD.create(body, equalities);
 	}
 
 	/**
