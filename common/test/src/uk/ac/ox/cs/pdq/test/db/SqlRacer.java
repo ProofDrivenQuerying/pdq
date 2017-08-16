@@ -19,9 +19,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Test;
 
 import com.google.common.collect.Lists;
 
@@ -35,7 +33,6 @@ import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.db.sql.DerbyStatementBuilder;
 import uk.ac.ox.cs.pdq.db.sql.ExecuteSynchronousSQLUpdateThread;
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.EGD;
 import uk.ac.ox.cs.pdq.fol.Predicate;
@@ -154,7 +151,7 @@ public class SqlRacer {
 
 		this.tgd = TGD.create(new Atom[] { R1 }, new Atom[] { R2 });
 		this.tgd2 = TGD.create(new Atom[] { R1 }, new Atom[] { R3 });
-		this.egd = EGD.create(Conjunction.of(R2, R2p), Conjunction.of(Atom.create(Predicate.create("EQUALITY", 2, true), Variable.create("z"), Variable.create("w"))));
+		this.egd = EGD.create(new Atom[] {R2, R2p}, new Atom[]{ Atom.create(Predicate.create("EQUALITY", 2, true), Variable.create("z"), Variable.create("w")) });
 		this.schema = new Schema(new Relation[] { this.rel1, this.rel2, this.rel3 }, new Dependency[] { this.tgd, this.tgd2, this.egd });
 	}
 
