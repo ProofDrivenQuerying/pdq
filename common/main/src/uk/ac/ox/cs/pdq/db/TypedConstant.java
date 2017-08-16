@@ -6,6 +6,7 @@ import java.lang.reflect.Type;
 import org.junit.Assert;
 
 import uk.ac.ox.cs.pdq.fol.Constant;
+import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.util.Typed;
 
 /**
@@ -14,7 +15,7 @@ import uk.ac.ox.cs.pdq.util.Typed;
  * @author Efthymia Tsamoura
  * @author Julien Leblay
  */
-public class TypedConstant extends Constant implements Typed, Serializable {
+public class TypedConstant extends Constant implements Typed, Serializable, Comparable<Constant> {
 	private static final long serialVersionUID = 314066835619901611L;
 
 	//TODO remove the type
@@ -62,5 +63,24 @@ public class TypedConstant extends Constant implements Typed, Serializable {
     public static TypedConstant create(Object value) {
         return Cache.typedConstant.retrieve(new TypedConstant(value));
     }
+
+	@Override
+	public int compareTo(Constant con) {
+		if (con instanceof UntypedConstant) {
+			return -1;
+		}
+		TypedConstant o = (TypedConstant) con;
+		if (this.type != o.type) {
+			// numbers first, string after
+			if (this.type.equals(Integer.class)) {
+				return -1;
+			}
+			return 1;
+		}
+		if (this.type.equals(Integer.class)) {
+			return ((Integer)this.getValue()).compareTo((Integer)o.getValue());
+		}
+		return ((String)this.getValue()).compareTo((String)o.getValue());
+	}
 	
 }

@@ -2,12 +2,14 @@ package uk.ac.ox.cs.pdq.fol;
 
 import com.google.common.base.Preconditions;
 
+import uk.ac.ox.cs.pdq.db.TypedConstant;
+
 /**
  * 
  * @author Efthymia Tsamoura
  *
  */
-public final class UntypedConstant extends Constant {
+public final class UntypedConstant extends Constant implements Comparable<Constant>{
 	private static final long serialVersionUID = 7918785072370309908L;
 
 	/**  The constant's name. */
@@ -59,4 +61,12 @@ public final class UntypedConstant extends Constant {
     public static UntypedConstant create(String symbol) {
         return Cache.untypedConstant.retrieve(new UntypedConstant(symbol));
     }
+
+	@Override
+	public int compareTo(Constant o) {
+		if (o instanceof UntypedConstant) {
+			return this.symbol.compareTo(((UntypedConstant) o).symbol);
+		}
+		return -1;
+	}
 }

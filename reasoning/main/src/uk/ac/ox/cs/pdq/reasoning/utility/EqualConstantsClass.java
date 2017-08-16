@@ -1,9 +1,9 @@
 package uk.ac.ox.cs.pdq.reasoning.utility;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Objects;
+import java.util.TreeSet;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
@@ -40,7 +40,7 @@ public class EqualConstantsClass {
 	 * @throws ChaseException the chase exception
 	 */
 	public EqualConstantsClass(Atom equality) throws ChaseException{
-		this.constants = new HashSet<>();
+		this.constants = new TreeSet<>();
 		Term[] terms = equality.getTerms();
 		Preconditions.checkArgument(terms[0] instanceof Constant && terms[1] instanceof Constant);
 		//If both inputs are schema constants
@@ -273,7 +273,7 @@ public class EqualConstantsClass {
 	 */
 	@Override
 	public String toString() {
-		return "[" + Joiner.on(",").join(this.constants) + "," + this.schemaConstant + "]";
+		return "[" + Joiner.on(",").join(this.constants) + " =" + this.schemaConstant + "]";
 	}
 
 	/* (non-Javadoc)

@@ -406,7 +406,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 			}
 			else if(old_representative_l == null) {
 				// left side is new
-				obsoleteToRepresentative.put(c_l, newRepresentative);
+				if (!newRepresentative.equals(c_l)) obsoleteToRepresentative.put(c_l, newRepresentative);
 				
 				if (!old_representative_r.equals(newRepresentative)) {
 					// the new element on the left become the representative for the whole class on the right
@@ -417,7 +417,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 			}
 			else if(old_representative_r == null) {
 				// right side is new
-				obsoleteToRepresentative.put(c_r, newRepresentative);
+				if (!newRepresentative.equals(c_r)) obsoleteToRepresentative.put(c_r, newRepresentative);
 				if (!old_representative_l.equals(newRepresentative)) {
 					// the new element on the right become the representative for the whole class on the left
 					for(Term term:constants_l) {
