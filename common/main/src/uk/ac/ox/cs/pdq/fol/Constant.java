@@ -10,6 +10,7 @@ import uk.ac.ox.cs.pdq.io.jaxb.adapters.ConstantAdapter;
  *
  * @author Efthymia Tsamoura
  * @author Julien Leblay
+ * @author Gabor
  */
 @XmlJavaTypeAdapter(ConstantAdapter.class)
 public abstract class Constant extends Term {

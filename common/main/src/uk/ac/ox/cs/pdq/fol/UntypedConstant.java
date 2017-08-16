@@ -7,7 +7,7 @@ import uk.ac.ox.cs.pdq.db.TypedConstant;
 /**
  * 
  * @author Efthymia Tsamoura
- *
+ * @author Gabor
  */
 public final class UntypedConstant extends Constant implements Comparable<Constant>{
 	private static final long serialVersionUID = 7918785072370309908L;

@@ -35,7 +35,7 @@ import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 /**
  * Tests the reasonUntilTermination method of the RestrictedChaser class
  * 
- * @author Efthymia Tsamoura
+ * @author Gabor
  *
  */
 public class TestAddingEqualities {
