@@ -84,7 +84,7 @@ public class AdaptedAtom {
 	public Formula toFormula() {
 		try {
 			if (terms2 != null) {
-				predicate = Predicate.create(predicateName, terms2.length);
+				predicate = Predicate.create(predicateName, terms2.length,"EQUALITY".equals(predicateName));
 				Term[] newTerms = new Term[terms2.length];
 				for (int i = 0; i < terms2.length; i++) {
 					AdaptedVariable v = terms2[i];
@@ -92,14 +92,17 @@ public class AdaptedAtom {
 					if (v instanceof AdaptedConstant) {
 						newTerms[i] = ((AdaptedConstant) v).toConstant();
 					} else if (v instanceof AdaptedVariable) {
-
-						newTerms[i] = v.toVariable();
+						if ("EQUALITY".equals(predicateName)) {
+							newTerms[i] = TypedConstant.create(v.getSymbol());
+						} else {
+							newTerms[i] = v.toVariable();
+						}
 					}
 				}
 				return Atom.createFromXml(predicate, newTerms);
 			}
 			if (predicate == null) {
-				predicate = Predicate.create(predicateName, freeVariables.length);
+				predicate = Predicate.create(predicateName, freeVariables.length,"EQUALITY".equals(predicateName));
 			}
 			return Atom.createFromXml(predicate, freeVariables);
 		} catch (Throwable t) {

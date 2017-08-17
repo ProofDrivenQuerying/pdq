@@ -95,7 +95,7 @@ public class ExecuteSQLQueryThread implements Callable<List<Match>> {
 				}
 			} catch (SQLException e) {
 				System.err.println("Error while executing: " + query);
-				e.printStackTrace();;
+				e.printStackTrace();
 				return null;
 			}
 		}

@@ -19,7 +19,7 @@ import uk.ac.ox.cs.pdq.db.Relation;
  * @author Gabor
  *
  */
-@XmlType(propOrder = { "attributes", "accessMethods", "key" })
+@XmlType(propOrder = { "attributes", "accessMethods", "key", "equality"})
 public class AdaptedRelation implements Serializable {
 	private static final long serialVersionUID = -9222721018270749836L;
 	protected Attribute[] attributes;
@@ -107,8 +107,11 @@ public class AdaptedRelation implements Serializable {
 
 	public Relation toRelation() {
 		Attribute[] attr = getAttributes();
-		if (attr == null && source != null) {
+ 		if (attr == null && source != null) {
 			attr = getAttributesFromSrc();
+		}
+		if (isEquality() == null && "EQUALITY".equals(name)) {
+			setEquality(true);
 		}
 		if (isEquality() != null) {
 			return Relation.create(getName(), attr, getAccessMethods(), getForeignKeys(), isEquality());
@@ -139,6 +142,7 @@ public class AdaptedRelation implements Serializable {
 		this.name = name;
 	}
 
+	@XmlAttribute(name="isEquality")
 	public Boolean isEquality() {
 		return isEquality;
 	}

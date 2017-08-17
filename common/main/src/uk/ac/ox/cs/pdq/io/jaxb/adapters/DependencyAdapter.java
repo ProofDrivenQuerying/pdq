@@ -27,7 +27,7 @@ public class DependencyAdapter extends XmlAdapter<AdaptedDependency, Dependency>
 	@Override
 	public AdaptedDependency marshal(Dependency v) throws Exception {
 		try {
-			return new AdaptedDependency(v.getBody(), v.getHead());
+			return new AdaptedDependency(v);
 		} catch (Throwable t) {
 			Logger.getLogger(this.getClass()).error(t.getMessage(), t);
 			throw t;

@@ -100,4 +100,11 @@ public class Variable extends Term {
     		return true;
     	return false;
     }
+    
+    @Override
+    public int hashCode() {
+    	if (isVariable())
+    		return getSymbol().hashCode();
+    	return super.hashCode();
+    }
 }

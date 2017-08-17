@@ -188,7 +188,7 @@ public abstract class DatabaseInstance implements Instance {
 			for(int j = 0; j < this.databaseConnection.getNumberOfSynchronousConnections(); ++j) {
 				//Create the threads that will run the database queries
 				String dbName = this.databaseConnection.getSQLStatementBuilder().getDatabaseName();
-				if (this.databaseConnection.getDatabaseParameters().getDatabaseDriver().contains("derby")) {
+				if (this.databaseConnection.getDatabaseParameters().getDatabaseDriver()== null || this.databaseConnection.getDatabaseParameters().getDatabaseDriver().contains("derby")) {
 					// derby doesn't like the USE databaseName command, so we switch it off.
 					dbName = null;
 				}

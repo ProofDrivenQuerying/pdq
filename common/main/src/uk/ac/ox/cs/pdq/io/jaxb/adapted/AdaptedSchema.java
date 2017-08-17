@@ -1,6 +1,7 @@
 package uk.ac.ox.cs.pdq.io.jaxb.adapted;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlAttribute;
@@ -31,7 +32,10 @@ public class AdaptedSchema {
 
 	public AdaptedSchema(Schema s) {
 		relations = s.getRelations();
-		setDependencies(s.getDependencies());
+		List<Dependency> dependencies = new ArrayList<>();
+		dependencies.addAll(Arrays.asList(s.getDependencies()));
+		dependencies.addAll(Arrays.asList(s.getKeyDependencies()));
+		setDependencies(dependencies.toArray(new Dependency[dependencies.size()]));
 	}
 
 	public Schema toSchema() {
