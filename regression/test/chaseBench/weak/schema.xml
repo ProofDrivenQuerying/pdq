@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<schema>
+    <relations>
+        <relation isEquality="false" name="emp">
+            <attribute name="e" type="java.lang.String"/>
+            <attribute name="d" type="java.lang.String"/>
+            <attribute name="InstanceID" type="java.lang.Integer"/>
+        </relation>
+        <relation isEquality="false" name="deptemp">
+            <attribute name="d" type="java.lang.String"/>
+            <attribute name="n" type="java.lang.String"/>
+            <attribute name="e" type="java.lang.String"/>
+            <attribute name="InstanceID" type="java.lang.Integer"/>
+        </relation>
+        <relation isEquality="false" name="dept">
+            <attribute name="d" type="java.lang.String"/>
+            <attribute name="m" type="java.lang.String"/>
+            <attribute name="n" type="java.lang.String"/>
+            <attribute name="InstanceID" type="java.lang.Integer"/>
+        </relation>
+    </relations>
+    <dependencies>
+        <dependency type="TGD">
+            <body>
+                <atom name="deptemp">
+                    <variable name="d"/>
+                    <variable name="n"/>
+                    <variable name="e"/>
+                </atom>
+            </body>
+            <head>
+                <atom name="dept">
+                    <variable name="d"/>
+                    <variable name="M"/>
+                    <variable name="n"/>
+                </atom>
+                <atom name="emp">
+                    <variable name="e"/>
+                    <variable name="d"/>
+                </atom>
+            </head>
+        </dependency>
+        <dependency type="TGD">
+            <body>
+                <atom name="dept">
+                    <variable name="d"/>
+                    <variable name="m"/>
+                    <variable name="n"/>
+                </atom>
+            </body>
+            <head>
+                <atom name="emp">
+                    <variable name="m"/>
+                    <variable name="d"/>
+                </atom>
+            </head>
+        </dependency>
+        <dependency type="TGD">
+            <body>
+                <atom name="emp">
+                    <variable name="e"/>
+                    <variable name="d"/>
+                </atom>
+            </body>
+            <head>
+                <atom name="dept">
+                    <variable name="d"/>
+                    <variable name="M"/>
+                    <variable name="N"/>
+                </atom>
+            </head>
+        </dependency>
+    </dependencies>
+</schema>

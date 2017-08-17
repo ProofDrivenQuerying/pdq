@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<schema>
+    <relations>
+        <relation isEquality="false" name="A">
+            <attribute name="a" type="java.lang.String"/>
+            <attribute name="b" type="java.lang.String"/>
+            <attribute name="InstanceID" type="java.lang.Integer"/>
+        </relation>
+        <relation isEquality="false" name="R">
+            <attribute name="c" type="java.lang.String"/>
+            <attribute name="d" type="java.lang.String"/>
+            <attribute name="InstanceID" type="java.lang.Integer"/>
+        </relation>
+    </relations>
+    <dependencies>
+        <dependency type="TGD">
+            <body>
+                <atom name="A">
+                    <variable name="x"/>
+                    <variable name="y"/>
+                </atom>
+            </body>
+            <head>
+                <atom name="R">
+                    <variable name="x"/>
+                    <variable name="C1"/>
+                </atom>
+                <atom name="R">
+                    <variable name="y"/>
+                    <variable name="C1"/>
+                </atom>
+            </head>
+        </dependency>
+        <dependency type="EGD">
+            <body>
+                <atom name="R">
+                    <variable name="one"/>
+                    <variable name="two1"/>
+                </atom>
+                <atom name="R">
+                    <variable name="one"/>
+                    <variable name="two2"/>
+                </atom>
+            </body>
+            <head>
+                <atom name="EQUALITY">
+                    <variable name="two1"/>
+                    <variable name="two2"/>
+                </atom>
+            </head>
+        </dependency>
+    </dependencies>
+</schema>

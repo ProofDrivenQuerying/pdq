@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<schema>
+    <relations>
+        <relation isEquality="false" name="s0">
+            <attribute name="a" type="java.lang.String"/>
+            <attribute name="b" type="java.lang.String"/>
+            <attribute name="c" type="java.lang.String"/>
+            <attribute name="d" type="java.lang.String"/>
+            <attribute name="InstanceID" type="java.lang.Integer"/>
+        </relation>
+        <relation isEquality="false" name="t1">
+            <attribute name="a" type="java.lang.String"/>
+            <attribute name="b" type="java.lang.String"/>
+            <attribute name="c" type="java.lang.String"/>
+            <attribute name="InstanceID" type="java.lang.Integer"/>
+        </relation>
+        <relation isEquality="false" name="s1">
+            <attribute name="a" type="java.lang.String"/>
+            <attribute name="b" type="java.lang.String"/>
+            <attribute name="c" type="java.lang.String"/>
+            <attribute name="d" type="java.lang.String"/>
+            <attribute name="InstanceID" type="java.lang.Integer"/>
+        </relation>
+        <relation isEquality="false" name="t2">
+            <attribute name="a" type="java.lang.String"/>
+            <attribute name="b" type="java.lang.String"/>
+            <attribute name="c" type="java.lang.String"/>
+            <attribute name="InstanceID" type="java.lang.Integer"/>
+        </relation>
+        <relation isEquality="false" name="t3">
+            <attribute name="a" type="java.lang.String"/>
+            <attribute name="b" type="java.lang.String"/>
+            <attribute name="c" type="java.lang.String"/>
+            <attribute name="InstanceID" type="java.lang.Integer"/>
+        </relation>
+    </relations>
+    <dependencies>
+        <dependency type="TGD">
+            <body>
+                <atom name="s0">
+                    <variable name="x1"/>
+                    <variable name="x2"/>
+                    <variable name="x3"/>
+                    <variable name="x4"/>
+                </atom>
+            </body>
+            <head>
+                <atom name="t1">
+                    <variable name="x1"/>
+                    <variable name="x2"/>
+                    <variable name="x3"/>
+                </atom>
+                <atom name="t2">
+                    <variable name="x1"/>
+                    <variable name="x3"/>
+                    <variable name="x3"/>
+                </atom>
+                <atom name="t3">
+                    <variable name="x2"/>
+                    <variable name="x2"/>
+                    <variable name="x2"/>
+                </atom>
+            </head>
+        </dependency>
+        <dependency type="TGD">
+            <body>
+                <atom name="s0">
+                    <variable name="x1"/>
+                    <variable name="x2"/>
+                    <variable name="x3"/>
+                    <variable name="x4"/>
+                </atom>
+            </body>
+            <head>
+                <atom name="t1">
+                    <variable name="x1"/>
+                    <variable name="x2"/>
+                    <variable name="Y1"/>
+                </atom>
+                <atom name="t2">
+                    <variable name="Y1"/>
+                    <variable name="Y2"/>
+                    <variable name="x3"/>
+                </atom>
+                <atom name="t3">
+                    <variable name="Y2"/>
+                    <variable name="x3"/>
+                    <variable name="x4"/>
+                </atom>
+            </head>
+        </dependency>
+        <dependency type="TGD">
+            <body>
+                <atom name="s0">
+                    <variable name="x1"/>
+                    <variable name="x2"/>
+                    <variable name="x3"/>
+                    <variable name="x4"/>
+                </atom>
+                <atom name="s1">
+                    <variable name="x1"/>
+                    <variable name="x5"/>
+                    <variable name="x6"/>
+                    <variable name="x7"/>
+                </atom>
+            </body>
+            <head>
+                <atom name="t1">
+                    <variable name="x1"/>
+                    <variable name="x2"/>
+                    <variable name="x3"/>
+                </atom>
+                <atom name="t2">
+                    <variable name="x1"/>
+                    <variable name="Y2"/>
+                    <variable name="x4"/>
+                </atom>
+                <atom name="t3">
+                    <variable name="x6"/>
+                    <variable name="x5"/>
+                    <variable name="Y2"/>
+                </atom>
+            </head>
+        </dependency>
+        <dependency type="TGD">
+            <body>
+                <atom name="s1">
+                    <variable name="x1"/>
+                    <variable name="x5"/>
+                    <variable name="x6"/>
+                    <variable name="x6"/>
+                </atom>
+            </body>
+            <head>
+                <atom name="t1">
+                    <variable name="x1"/>
+                    <variable name="x6"/>
+                    <variable name="Y3"/>
+                </atom>
+                <atom name="t2">
+                    <variable name="x6"/>
+                    <variable name="x6"/>
+                    <variable name="Y2"/>
+                </atom>
+                <atom name="t3">
+                    <variable name="x6"/>
+                    <variable name="x5"/>
+                    <variable name="Y2"/>
+                </atom>
+            </head>
+        </dependency>
+        <dependency type="TGD">
+            <body>
+                <atom name="s1">
+                    <variable name="x1"/>
+                    <variable name="x5"/>
+                    <variable name="x6"/>
+                    <variable name="x7"/>
+                </atom>
+            </body>
+            <head>
+                <atom name="t1">
+                    <variable name="x1"/>
+                    <variable name="x6"/>
+                    <variable name="Y3"/>
+                </atom>
+                <atom name="t1">
+                    <variable name="x6"/>
+                    <variable name="x7"/>
+                    <variable name="Y2"/>
+                </atom>
+                <atom name="t1">
+                    <variable name="x7"/>
+                    <variable name="x6"/>
+                    <variable name="Y3"/>
+                </atom>
+            </head>
+        </dependency>
+        <dependency type="TGD">
+            <body>
+                <atom name="t1">
+                    <variable name="x1"/>
+                    <variable name="x2"/>
+                    <variable name="x3"/>
+                </atom>
+                <atom name="t2">
+                    <variable name="x1"/>
+                    <variable name="x2"/>
+                    <variable name="x6"/>
+                </atom>
+            </body>
+            <head>
+                <atom name="t2">
+                    <variable name="x1"/>
+                    <variable name="x3"/>
+                    <variable name="Y2"/>
+                </atom>
+                <atom name="t3">
+                    <variable name="x5"/>
+                    <variable name="Y2"/>
+                    <variable name="x5"/>
+                </atom>
+            </head>
+        </dependency>
+    </dependencies>
+</schema>
