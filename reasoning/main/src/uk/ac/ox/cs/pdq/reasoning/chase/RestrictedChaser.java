@@ -6,6 +6,8 @@ import com.google.common.base.Preconditions;
 
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.fol.Dependency;
+import uk.ac.ox.cs.pdq.logging.SimpleStatisticsCollector;
+import uk.ac.ox.cs.pdq.logging.SimpleStatisticsCollector.StatisticsRecord;
 import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance.LimitToThisOrAllInstances;
@@ -59,10 +61,21 @@ public class RestrictedChaser extends Chaser {
 		do {
 			appliedStep = false;
 			for(Dependency dependency:d) {
-				List<Match> matches = instance.getTriggers(new Dependency[]{dependency}, TriggerProperty.ACTIVE, LimitToThisOrAllInstances.THIS);	
+				StatisticsRecord r = (statistics instanceof SimpleStatisticsCollector) ?((SimpleStatisticsCollector)statistics).addNewRecord("getTriggers"):null;
+				List<Match> matches = null;
+				try {
+					matches = instance.getTriggers(new Dependency[]{dependency}, TriggerProperty.ACTIVE, LimitToThisOrAllInstances.THIS);
+				} finally {
+					if (r!=null) r.setEndTime();
+				}
 				if(!matches.isEmpty()) {
 					appliedStep = true;
-					instance.chaseStep(matches);
+					StatisticsRecord r1 = (statistics instanceof SimpleStatisticsCollector) ?((SimpleStatisticsCollector)statistics).addNewRecord("chaseStep"):null;
+					try {
+						instance.chaseStep(matches);
+					} finally {
+						if (r1!=null) r1.setEndTime();
+					}
 				}
 			}
 			d = accessor.getDependencies(instance);	

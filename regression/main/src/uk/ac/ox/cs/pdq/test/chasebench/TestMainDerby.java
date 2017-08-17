@@ -2,6 +2,7 @@ package uk.ac.ox.cs.pdq.test.chasebench;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,6 +27,7 @@ import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
+import uk.ac.ox.cs.pdq.logging.SimpleStatisticsCollector;
 import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
@@ -240,12 +242,14 @@ public class TestMainDerby {
 		}
 		
 		Collection<Atom> facts0 = CommonToPDQTranslator.importFacts(schema, "s", "test\\chaseBench\\tgdsEgdsLarge\\data\\s.csv");
+		RestrictedChaser chaser = null;
+		SimpleStatisticsCollector ssc = new SimpleStatisticsCollector();
 		try {
 			DatabaseChaseInstance state = new DatabaseChaseInstance(facts0, new DatabaseConnection(new DatabaseParameters(), schema));
 			Collection<Atom> res = state.getFacts();
 			System.out.println("INITIAL STATE: " + res);
 
-			RestrictedChaser chaser = new RestrictedChaser(new StatisticsCollector(new EventBus()));
+			chaser = new RestrictedChaser(ssc);
 			chaser.reasonUntilTermination(state, schema.getDependencies());
 			res = state.getFacts();
 			System.out.println("REASONING FAILED:" + state.isFailed());
@@ -289,6 +293,12 @@ public class TestMainDerby {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			Assert.fail();
+		} finally {
+			try {
+				ssc.printStatsToFile(new File("test\\chaseBench\\stats\\testChaseBench_tgdsEgdsLarge.txt"));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 
 	}
