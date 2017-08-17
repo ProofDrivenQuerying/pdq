@@ -154,7 +154,7 @@ public class TestGetTriggersMySql {
 	}
 
 	@Test
-	public void test_getMatches4a1000times() throws SQLException {
+	public void test_getMatches4a100times() throws SQLException {
 		System.out.print("[");
 		for (int i = 0; i < 100; i++) {
 			System.out.print(" ");
@@ -163,11 +163,11 @@ public class TestGetTriggersMySql {
 		System.out.println("");
 		System.out.print("[");
 		try {
-			for (int i = 0; i < 1000; i++) {
+			for (int i = 0; i < 100; i++) {
 				chaseState.close();
 				setup();
 				test_getMatches4();
-				if (i % 10 == 0)
+				if (i % 1 == 0)
 					System.out.print(".");
 			}
 		} catch (Exception e) {
