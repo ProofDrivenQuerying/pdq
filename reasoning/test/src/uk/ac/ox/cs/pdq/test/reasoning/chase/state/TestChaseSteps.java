@@ -24,7 +24,6 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
-import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.EGD;
@@ -269,8 +268,8 @@ public class TestChaseSteps {
 
 		Atom n7 = Atom.create(Predicate.create(QNames.EQUALITY.toString(), 2, true), new Term[] { UntypedConstant.create("c1"), UntypedConstant.create("c3") });
 
-//		if (repeatCounter==0)
-//			Assert.assertEquals(Sets.newHashSet(n0, n1, n2, n3, n4, n5, n6, n7), this.state.getFacts());
+		if (repeatCounter==0)
+			Assert.assertEquals(Sets.newHashSet(n0, n1, n2, n3, n4, n5, n6, n7), this.state.getFacts());
 
 		Map<Variable, Constant> map6 = new HashMap<>();
 		map6.put(Variable.create("y"), UntypedConstant.create("c"));
