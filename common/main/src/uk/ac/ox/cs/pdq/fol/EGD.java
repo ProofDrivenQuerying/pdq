@@ -1,5 +1,7 @@
 package uk.ac.ox.cs.pdq.fol;
 
+import java.util.Arrays;
+
 import org.junit.Assert;
 
 /**
@@ -39,9 +41,15 @@ public class EGD extends Dependency {
 	@Override
 	public String toString() {
 		String f = "";
-		if(this.getUniversal().length > 0) 
-			f = this.getUniversal().toString();
+		
+		if(this.getUniversal().length > 0)
+			f = Arrays.asList(this.getUniversal()).toString();
+		
 		return f + this.body + LogicalSymbols.IMPLIES + this.head;
+	}
+	
+	public boolean isLinear() {
+		return this.body.getAtoms().length == 1;
 	}
 	
     public static EGD create(Atom[] head, Atom[] body) {

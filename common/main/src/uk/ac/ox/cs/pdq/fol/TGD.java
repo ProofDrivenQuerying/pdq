@@ -19,11 +19,11 @@ public class TGD extends Dependency {
 		String f = "";
 		String b = "";
 		
-		if(this.getUniversal().length > 0) 
-			f = this.getUniversal().toString();
+		if(this.getUniversal().length > 0)
+			f = Arrays.asList(this.getUniversal()).toString();
 		
 		if(this.getExistential().length > 0) 
-			b = this.getExistential().toString();
+			b = Arrays.asList(this.getExistential()).toString();
 		
 		return f + this.body + LogicalSymbols.IMPLIES + b + this.head;
 	}
