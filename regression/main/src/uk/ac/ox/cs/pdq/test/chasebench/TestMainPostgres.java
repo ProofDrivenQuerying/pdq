@@ -34,7 +34,7 @@ import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
  * @author Gabor
  *
  */
-public class TestMain {
+public class TestMainPostgres {
 
 	@Before
 	public void setup() {
@@ -70,7 +70,8 @@ public class TestMain {
 		Collection<Atom> facts = CommonToPDQTranslator.importFacts(schema, "s", "test\\chaseBench\\tgds\\data\\s.csv");
 
 		try {
-			DatabaseChaseInstance state = new DatabaseChaseInstance(facts, new DatabaseConnection(new DatabaseParameters(), schema));
+			DatabaseConnection dc = new DatabaseConnection(new DatabaseParameters(new File("main\\src\\uk\\ac\\ox\\cs\\pdq\\test\\chasebench\\Postgres_case.properties")), schema,10);
+			DatabaseChaseInstance state = new DatabaseChaseInstance(facts, dc);
 			Collection<Atom> res = state.getFacts();
 			System.out.println("INITIAL STATE: " + res);
 
