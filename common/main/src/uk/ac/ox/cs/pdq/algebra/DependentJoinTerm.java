@@ -17,7 +17,7 @@ public class DependentJoinTerm extends RelationalTerm {
 	protected final RelationalTerm[] children = new RelationalTerm[2];
 
 	/** The join conditions. */
-	protected final Condition joinConditions;
+	protected final Condition followupJoinConditions;
 	
 	/** Input positions for the right hand child**/
 	protected final Map<Integer,Integer> positionsInRightChildThatAreBoundFromLeftChild;
@@ -34,15 +34,15 @@ public class DependentJoinTerm extends RelationalTerm {
 		this.children[0] = child1;
 		this.children[1] = child2;
 		this.positionsInRightChildThatAreBoundFromLeftChild = AlgebraUtilities.computePositionsInRightChildThatAreBoundFromLeftChild(child1, child2);
-		this.joinConditions = AlgebraUtilities.computeJoinConditions(this.children);
+		this.followupJoinConditions = AlgebraUtilities.computeJoinConditions(this.children);
 	}
 	
-	public Map<Integer,Integer> getpositionsInLeftChildThatAreInputToRightChild() {
+	public Map<Integer,Integer> getPositionsInLeftChildThatAreInputToRightChild() {
 		return this.positionsInRightChildThatAreBoundFromLeftChild;
 	}
 	
-	public Condition getJoinConditions() {
-		return this.joinConditions;
+	public Condition getFollowupJoinConditions() {
+		return this.followupJoinConditions;
 	}
 
 	@Override
@@ -51,7 +51,7 @@ public class DependentJoinTerm extends RelationalTerm {
 			StringBuilder result = new StringBuilder();
 			result.append("DependentJoin");
 			result.append('{');
-			result.append('[').append(this.joinConditions).append(']');
+			result.append('[').append(this.followupJoinConditions).append(']');
 			result.append(this.children[0].toString());
 			result.append(',');
 			result.append(this.children[1].toString());

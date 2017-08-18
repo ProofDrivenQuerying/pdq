@@ -1,5 +1,6 @@
 package uk.ac.ox.cs.pdq.cost.estimators;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import uk.ac.ox.cs.pdq.algebra.AccessTerm;
@@ -25,21 +26,21 @@ import uk.ac.ox.cs.pdq.db.Relation;
  * @author Julien Leblay
  */
 public class NaiveCardinalityEstimator implements CardinalityEstimator {
-	
-	private Map<RelationalTerm,RelationalTermCardinalityMetadata> cardinalityMetadata;
+
+	private final Map<RelationalTerm,RelationalTermCardinalityMetadata> cardinalityMetadata;
 
 	/** The Constant UNION_REDUCTION. */
 	public static final Double UNION_REDUCTION = 2.0;
-	
+
 	/** The Constant SELECTIVITY_REDUCTION. */
 	public static final Double SELECTIVITY_REDUCTION = 10.0;
-	
+
 	/** The Constant DISTINCT_REDUCTION. */
 	public static final Double DISTINCT_REDUCTION = 2.0;
-	
+
 	/** The Constant JOIN_REDUCTION. */
 	public static final Double JOIN_REDUCTION = 10.0;
-	
+
 	protected final Catalog catalog;
 
 	/**
@@ -48,8 +49,9 @@ public class NaiveCardinalityEstimator implements CardinalityEstimator {
 	 */
 	public NaiveCardinalityEstimator(Catalog catalog) {
 		this.catalog = catalog;
+		this.cardinalityMetadata = new LinkedHashMap<>();
 	}
-	
+
 	/**
 	 * Estimate if needed.
 	 *
@@ -118,7 +120,7 @@ public class NaiveCardinalityEstimator implements CardinalityEstimator {
 			metadata.setOutputCardinality(output);
 		}
 	}
-	
+
 	/**
 	 * Gets the metadata.
 	 *
@@ -129,7 +131,8 @@ public class NaiveCardinalityEstimator implements CardinalityEstimator {
 	public RelationalTermCardinalityMetadata getCardinalityMetadata(RelationalTerm o) {
 		RelationalTermCardinalityMetadata result = this.cardinalityMetadata.get(o);
 		if (result == null) {
-			this.cardinalityMetadata.put(o, this.initMetadata(o));
+			result = this.initMetadata(o);
+			this.cardinalityMetadata.put(o, result);
 		}
 		return result;
 	}
@@ -188,7 +191,7 @@ public class NaiveCardinalityEstimator implements CardinalityEstimator {
 		this.estimateCardinalityIfNeeded(leftChild);
 		// Compute the join cardinality itself.
 		RelationalTerm rightChild = o.getChild(1);
-		
+
 		Double rightInputCard = inputCard;
 
 		RelationalTermCardinalityMetadata rcMetadata = this.getCardinalityMetadata(rightChild);
@@ -200,7 +203,7 @@ public class NaiveCardinalityEstimator implements CardinalityEstimator {
 			result *= childCard;
 			largestChild = Math.max(largestChild, childCard);
 		}
-		
+
 		if(o.getJoinConditions() instanceof SimpleCondition) 
 			return Math.max(largestChild, (result / Math.pow(JOIN_REDUCTION,1)));
 		else if(o.getJoinConditions() instanceof ConjunctiveCondition) 
@@ -208,7 +211,7 @@ public class NaiveCardinalityEstimator implements CardinalityEstimator {
 		else 
 			throw new IllegalStateException("Unknown condition type");
 	}
-	
+
 	/**
 	 * Estimate output.
 	 *
@@ -227,9 +230,9 @@ public class NaiveCardinalityEstimator implements CardinalityEstimator {
 		this.estimateCardinalityIfNeeded(leftChild);
 		// Compute the join cardinality itself.
 		RelationalTerm rightChild = o.getChild(1);
-		
+
 		Double rightInputCard = lcMetadata.getOutputCardinality() * Math.max(1.0, inputCard);
-		
+
 		RelationalTermCardinalityMetadata rcMetadata = this.getCardinalityMetadata(rightChild);
 		rcMetadata.setParent(o);
 		rcMetadata.setInputCardinality(rightInputCard);
@@ -240,15 +243,15 @@ public class NaiveCardinalityEstimator implements CardinalityEstimator {
 			result *= childCard;
 			largestChild = Math.max(largestChild, childCard);
 		}
-		
-		if(o.getJoinConditions() instanceof SimpleCondition) 
+
+		if(o.getFollowupJoinConditions() instanceof SimpleCondition) 
 			return Math.max(largestChild, (result / Math.pow(JOIN_REDUCTION,1)));
-		else if(o.getJoinConditions() instanceof ConjunctiveCondition) 
-			return Math.max(largestChild, (result / Math.pow(JOIN_REDUCTION, ((ConjunctiveCondition) o.getJoinConditions()).getNumberOfConjuncts())));
+		else if(o.getFollowupJoinConditions() instanceof ConjunctiveCondition) 
+			return Math.max(largestChild, (result / Math.pow(JOIN_REDUCTION, ((ConjunctiveCondition) o.getFollowupJoinConditions()).getNumberOfConjuncts())));
 		else 
 			throw new IllegalStateException("Unknown condition type");
 	}
-	
+
 	protected Double estimateOutputCardinality(AccessTerm o) {
 		AccessMethod binding = o.getAccessMethod();
 		Relation relation = o.getRelation();
@@ -257,7 +260,7 @@ public class NaiveCardinalityEstimator implements CardinalityEstimator {
 		else 
 			return Math.max(1.0, (long) (this.catalog.getCardinality(relation) / Math.pow(SELECTIVITY_REDUCTION, binding.getNumberOfInputs())));
 	}
-		
+
 	/**
 	 * Estimate output.
 	 *

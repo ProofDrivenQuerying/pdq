@@ -12,6 +12,7 @@ import java.util.Set;
 
 import org.junit.Assert;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
@@ -32,8 +33,7 @@ public class AlgebraUtilities {
 			return true;
 		}
 		else 
-			return assertSelectionCondition((SimpleCondition) selectionCondition, outputAttributes);
-		
+			return assertSelectionCondition((SimpleCondition) selectionCondition, outputAttributes);	
 	}
 
 	public static boolean assertSelectionCondition(SimpleCondition selectionCondition, Attribute[] outputAttributes) {
@@ -70,12 +70,13 @@ public class AlgebraUtilities {
 
 	protected static Attribute[] computeInputAttributesForDependentJoinTerm(RelationalTerm left, RelationalTerm right) {
 		Attribute[] leftInputs = left.getInputAttributes();
+		Attribute[] leftOutputs = left.getOutputAttributes();
 		Attribute[] rightInputs = right.getInputAttributes();
 		List<Attribute> result = Lists.newArrayList(leftInputs);
 		for (int attributeIndex = 0; attributeIndex < right.getNumberOfInputAttributes(); attributeIndex++) {
 			Attribute inputAttribute = right.getInputAttribute(attributeIndex);
-			if(!Arrays.asList(leftInputs).contains(inputAttribute));
-			result.add(rightInputs[attributeIndex]);
+			if(!Arrays.asList(leftOutputs).contains(inputAttribute))
+				result.add(rightInputs[attributeIndex]);
 		}
 		return result.toArray(new Attribute[result.size()]);
 	}
@@ -204,4 +205,16 @@ public class AlgebraUtilities {
 		}
 		return result;
 	}
+
+	public static Attribute[] computeRenamedInputAttributes(Attribute[] renamings, RelationalTerm child) {
+		Attribute[] newInputAttributes = new Attribute[child.getNumberOfInputAttributes()];
+		Attribute[] oldOutputAttributes = child.getOutputAttributes();
+		for(int index = 0; index < child.getNumberOfInputAttributes(); ++index) {
+			int indexInputAttribute = Arrays.asList(oldOutputAttributes).indexOf(child.getInputAttribute(index));
+			Preconditions.checkArgument(indexInputAttribute >=0, "Input attribute not found");
+			newInputAttributes[index] = renamings[indexInputAttribute];
+		}
+		return newInputAttributes;
+	}	
+
 }

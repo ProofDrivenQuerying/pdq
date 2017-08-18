@@ -271,11 +271,12 @@ public class RuntimeUtilities {
 
 	public static Attribute[] computeInputAttributesForDependentJoin(TupleIterator left, TupleIterator right) {
 		Attribute[] leftInputs = left.getInputAttributes();
+		Attribute[] leftOutputs = left.getOutputAttributes();
 		Attribute[] rightInputs = right.getInputAttributes();
 		List<Attribute> result = Lists.newArrayList(leftInputs);
 		for (int attributeIndex = 0; attributeIndex < right.getNumberOfInputAttributes(); attributeIndex++) {
 			Attribute inputAttribute = right.getInputAttribute(attributeIndex);
-			if(!Arrays.asList(leftInputs).contains(inputAttribute));
+			if(!Arrays.asList(leftOutputs).contains(inputAttribute))
 				result.add(rightInputs[attributeIndex]);
 		}
 		return result.toArray(new Attribute[result.size()]);

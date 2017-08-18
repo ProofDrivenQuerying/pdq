@@ -20,7 +20,7 @@ public class RenameTerm extends RelationalTerm {
 	private String toString = null;
 
 	private RenameTerm(Attribute[] renamings, RelationalTerm child) {
-		super(child.getInputAttributes(), renamings);
+		super(AlgebraUtilities.computeRenamedInputAttributes(renamings, child), renamings);
 		Assert.assertNotNull(renamings);
 		Assert.assertNotNull(child);
 		Assert.assertTrue(renamings.length == child.getOutputAttributes().length);

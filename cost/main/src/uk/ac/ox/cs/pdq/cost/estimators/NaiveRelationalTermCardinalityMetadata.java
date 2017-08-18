@@ -97,4 +97,9 @@ public class NaiveRelationalTermCardinalityMetadata implements RelationalTermCar
 		this.inputCard = -1L;
 		this.outputCard = -1L;
 	}
+	
+	@Override
+	public String toString() {
+		return "(" + this.inputCard + " " + this.outputCard + " " + "{" + this.parent + "}" + ")";
+	}
 }

@@ -90,9 +90,9 @@ public class TextBookCostEstimator implements OrderDependentCostEstimator {
 		double localCost = Math.max(0.0, card * perCostPerOutputTuple(logOp));
 		if(logOp instanceof AccessTerm) {
 			localCost *= Math.max(1.0, Math.log(this.cardEstimator.getCardinalityMetadata(logOp).getOutputCardinality()));
-			subCost = this.recursiveCost(logOp.getChild(0));
+			//subCost = this.recursiveCost(logOp.getChild(0));
 		}
-		if (logOp instanceof ProjectionTerm || logOp instanceof RenameTerm) 
+		else if (logOp instanceof ProjectionTerm || logOp instanceof RenameTerm || logOp instanceof SelectionTerm) 
 			subCost = this.recursiveCost(logOp.getChild(0));
 		else if (logOp instanceof DependentJoinTerm) {
 			RelationalTerm leftOp = logOp.getChild(0);
@@ -117,6 +117,7 @@ public class TextBookCostEstimator implements OrderDependentCostEstimator {
 		}
 		else 
 			throw new RuntimeException("Unknown relational term type");
+		System.out.println("Plan " + logOp + " cost " + subCost + localCost);
 		return subCost + localCost;
 	}
 
@@ -136,7 +137,7 @@ public class TextBookCostEstimator implements OrderDependentCostEstimator {
 			return 1.0;
 		}
 		else if(o instanceof DependentJoinTerm) {
-			Condition predicate = ((DependentJoinTerm) o).getJoinConditions();
+			Condition predicate = ((DependentJoinTerm) o).getFollowupJoinConditions();
 			if (predicate instanceof SimpleCondition) 
 				return 1.0;
 			else if (predicate instanceof ConjunctiveCondition) 
