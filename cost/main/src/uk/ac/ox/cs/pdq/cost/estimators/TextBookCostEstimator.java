@@ -90,7 +90,6 @@ public class TextBookCostEstimator implements OrderDependentCostEstimator {
 		double localCost = Math.max(0.0, card * perCostPerOutputTuple(logOp));
 		if(logOp instanceof AccessTerm) {
 			localCost *= Math.max(1.0, Math.log(this.cardEstimator.getCardinalityMetadata(logOp).getOutputCardinality()));
-			//subCost = this.recursiveCost(logOp.getChild(0));
 		}
 		else if (logOp instanceof ProjectionTerm || logOp instanceof RenameTerm || logOp instanceof SelectionTerm) 
 			subCost = this.recursiveCost(logOp.getChild(0));
@@ -117,7 +116,6 @@ public class TextBookCostEstimator implements OrderDependentCostEstimator {
 		}
 		else 
 			throw new RuntimeException("Unknown relational term type");
-		System.out.println("Plan " + logOp + " cost " + subCost + localCost);
 		return subCost + localCost;
 	}
 
@@ -177,6 +175,8 @@ public class TextBookCostEstimator implements OrderDependentCostEstimator {
 	@Override
 	public Cost cost(RelationalTerm plan) {
 		if(this.stats != null){this.stats.start(COST_ESTIMATION_TIME);}
+		if (plan.isClosed())
+			this.cardEstimator.estimateCardinality(plan);
 		DoubleCost result = new DoubleCost(this.recursiveCost(plan));
 		if(this.stats != null){this.stats.stop(COST_ESTIMATION_TIME);}
 		if(this.stats != null){this.stats.increase(COST_ESTIMATION_COUNT, 1);}

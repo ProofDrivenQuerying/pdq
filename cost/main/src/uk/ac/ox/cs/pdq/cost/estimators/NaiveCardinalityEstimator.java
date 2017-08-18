@@ -90,6 +90,9 @@ public class NaiveCardinalityEstimator implements CardinalityEstimator {
 			if (term instanceof JoinTerm) {
 				output = this.estimateOutputCardinality((JoinTerm) term);
 			} 
+			else if (term instanceof DependentJoinTerm) {
+				output = this.estimateOutputCardinality((DependentJoinTerm) term);
+			} 
 			else if (term instanceof AccessTerm) {
 				output = this.estimateOutputCardinality((AccessTerm) term);
 			} 
