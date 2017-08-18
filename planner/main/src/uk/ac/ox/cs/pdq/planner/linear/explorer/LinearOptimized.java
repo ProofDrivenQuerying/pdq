@@ -67,6 +67,7 @@ public class LinearOptimized extends LinearExplorer {
 	private static Logger log = Logger.getLogger(LinearOptimized.class);
 
 	/**  Propagates to the root of the plan tree the best plan found so far. */
+	@SuppressWarnings("rawtypes")
 	protected final CostPropagator costPropagator;
 
 	/**  How often we check for query matches. */
@@ -310,6 +311,7 @@ public class LinearOptimized extends LinearExplorer {
 	 * @throws PlannerException the planner exception
 	 * @throws LimitReachedException the limit reached exception
 	 */
+	@SuppressWarnings("unchecked")
 	private void updateBestPlan(SearchNode parentNode, SearchNode freshNode, Match match) throws PlannerException, LimitReachedException {
 		this.costPropagator.propagate(freshNode, this.planTree);
 		RelationalTerm successfulPlan = this.costPropagator.getBestPlan();
@@ -354,6 +356,7 @@ public class LinearOptimized extends LinearExplorer {
 	 * @throws PlannerException the planner exception
 	 * @throws LimitReachedException the limit reached exception
 	 */
+	@SuppressWarnings("unchecked")
 	private void updateBestPlan(SearchNode parentNode, SearchNode freshNode) throws PlannerException, LimitReachedException {
 		this.costPropagator.propagate(freshNode, this.planTree);
 		RelationalTerm successfulPlan = this.costPropagator.getBestPlan();

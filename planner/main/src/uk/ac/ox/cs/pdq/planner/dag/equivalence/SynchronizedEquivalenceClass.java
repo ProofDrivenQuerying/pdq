@@ -6,7 +6,9 @@ import java.util.LinkedHashSet;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
+import com.google.common.base.Joiner;
+import com.google.common.collect.Lists;
+
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.planner.dag.ApplyRule;
 import uk.ac.ox.cs.pdq.planner.dag.ConfigurationUtility;
@@ -14,9 +16,6 @@ import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.dominance.Dominance;
 import uk.ac.ox.cs.pdq.planner.equivalence.FastStructuralEquivalence;
 import uk.ac.ox.cs.pdq.planner.equivalence.StructuralEquivalence;
-
-import com.google.common.base.Joiner;
-import com.google.common.collect.Lists;
 
 // TODO: Auto-generated Javadoc
 /**

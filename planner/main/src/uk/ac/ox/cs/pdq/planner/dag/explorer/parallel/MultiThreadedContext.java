@@ -56,6 +56,7 @@ public class MultiThreadedContext implements Context{
 	 * @param reasoningParameters 
 	 * @throws Exception the exception
 	 */
+	@SuppressWarnings("unchecked")
 	public MultiThreadedContext(int parallelThreads,
 			Chaser chaser,
 			DatabaseConnection connection,

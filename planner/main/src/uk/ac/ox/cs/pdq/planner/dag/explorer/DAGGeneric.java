@@ -71,6 +71,7 @@ public class DAGGeneric extends DAGExplorer {
 	protected boolean orderAware;
 
 	/**  Returns pairs of configurations to combine. */
+	@SuppressWarnings("rawtypes")
 	protected PairSelector selector;
 
 	/**  Removes success dominated configurations *. */
@@ -197,6 +198,7 @@ public class DAGGeneric extends DAGExplorer {
 	 * @throws PlannerException the planner exception
 	 * @throws LimitReachedException the limit reached exception
 	 */
+	@SuppressWarnings("unchecked")
 	protected Collection<DAGChaseConfiguration> mainLoop() throws PlannerException, LimitReachedException {
 		Map<Pair<DAGChaseConfiguration, DAGChaseConfiguration>, DAGChaseConfiguration> last = new HashMap<>();
 		Pair<DAGChaseConfiguration, DAGChaseConfiguration> pair = null;

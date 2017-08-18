@@ -17,7 +17,7 @@ import uk.ac.ox.cs.pdq.planner.PlannerParameters.SuccessDominanceTypes;
  */
 public class SuccessDominanceFactory {
 
-	private final SuccessDominanceTypes type;
+	//private final SuccessDominanceTypes type;
 	/** The estimator. */
 	private final OrderIndependentCostEstimator estimator = new AccessCountCostEstimator(null);
 
@@ -29,7 +29,7 @@ public class SuccessDominanceFactory {
 	 */
 	public SuccessDominanceFactory(SuccessDominanceTypes type) {
 		Preconditions.checkNotNull(type);
-		this.type = type;
+		//this.type = type;
 	}
 	
 	/**

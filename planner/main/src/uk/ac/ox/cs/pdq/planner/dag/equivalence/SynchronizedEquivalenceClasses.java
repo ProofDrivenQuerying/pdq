@@ -8,14 +8,13 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
-import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
-import uk.ac.ox.cs.pdq.cost.Cost;
-import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
-import uk.ac.ox.cs.pdq.planner.dominance.Dominance;
-
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+
+import uk.ac.ox.cs.pdq.cost.Cost;
+import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
+import uk.ac.ox.cs.pdq.planner.dominance.Dominance;
 
 
 // TODO: Auto-generated Javadoc

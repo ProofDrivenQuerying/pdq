@@ -157,7 +157,7 @@ public class MapFiringGraph implements FiringGraph{
 	 * @param graph0 Graph<PredicateFormula,DefaultEdge>
 	 * @return Graph<PredicateFormula,DefaultEdge>
 	 */
-	private Graph<Atom, DefaultEdge> clone(Graph<Atom, DefaultEdge> graph0) {
+	protected Graph<Atom, DefaultEdge> clone(Graph<Atom, DefaultEdge> graph0) {
 		Graph<Atom, DefaultEdge> graph = new SimpleGraph<Atom, DefaultEdge>(DefaultEdge.class);
 		for(Atom vertex:graph0.vertexSet()) {
 			graph.addVertex(vertex);
@@ -175,7 +175,7 @@ public class MapFiringGraph implements FiringGraph{
 	 * @param graph1 Graph<PredicateFormula,DefaultEdge>
 	 * @return Graph<PredicateFormula,DefaultEdge>
 	 */
-	private Graph<Atom, DefaultEdge> merge(Graph<Atom, DefaultEdge> graph0, Graph<Atom, DefaultEdge> graph1) {
+	protected Graph<Atom, DefaultEdge> merge(Graph<Atom, DefaultEdge> graph0, Graph<Atom, DefaultEdge> graph1) {
 		Graph<Atom, DefaultEdge> graph = new SimpleGraph<Atom, DefaultEdge>(DefaultEdge.class);
 		for(Atom vertex:graph0.vertexSet()) {
 			graph.addVertex(vertex);

@@ -94,6 +94,7 @@ public class DAGSimpleDP extends DAGGeneric {
 	 * @throws PlannerException the planner exception
 	 * @throws LimitReachedException the limit reached exception
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	protected Collection<DAGChaseConfiguration> mainLoop() throws PlannerException, LimitReachedException {
 		Map<Pair<DAGChaseConfiguration,DAGChaseConfiguration>,DAGChaseConfiguration> last = new HashMap<>();

@@ -51,6 +51,7 @@ public class LinearKChase extends LinearExplorer {
 	private static Logger log = Logger.getLogger(LinearKChase.class);
 
 	/**  Propagates to the root of the plan tree the best plan found so far. */
+	@SuppressWarnings("rawtypes")
 	protected final CostPropagator costPropagator;
 
 	/**  How often to perform chasing. */
@@ -225,6 +226,7 @@ public class LinearKChase extends LinearExplorer {
 	 * @param parentNode the parent node
 	 * @param freshNode the fresh node
 	 */
+	@SuppressWarnings("unchecked")
 	private void updateBestPlan(SearchNode parentNode, SearchNode freshNode) {
 		this.costPropagator.propagate(freshNode, this.planTree);
 		RelationalTerm successfulPlan = this.costPropagator.getBestPlan();
