@@ -37,7 +37,7 @@ public class PipelinedPlanExecutor implements PlanExecutor {
 	private static Logger log = Logger.getLogger(PipelinedPlanExecutor.class);
 
 	/** The universal table. */
-	private Table universalTable = null;
+	private Table results = null;
 	
 	/** The plan. */
 	private final RelationalTerm plan;
@@ -121,7 +121,7 @@ public class PipelinedPlanExecutor implements PlanExecutor {
 		// Non-boolean query
 		try (TupleIterator phyOp = PlanTranslator.translate(logOp)) {
 			TupleIterator top = (this.semantics == Semantics.SET ? new Distinct(phyOp) : phyOp);
-			this.universalTable = new Table(phyOp.getOutputAttributes());
+			this.results = new Table(phyOp.getOutputAttributes());
 
 			ExecutorService execService = Executors.newFixedThreadPool(1);
 			execService.execute(new TimeoutChecker(this.timeout, top));
@@ -132,7 +132,7 @@ public class PipelinedPlanExecutor implements PlanExecutor {
 			top.open();
 			while (top.hasNext()) {
 				Tuple t = top.next();
-				this.universalTable.appendRow(t);
+				this.results.appendRow(t);
 				this.attemptPost(t);
 			}
 			execService.shutdownNow();
@@ -142,7 +142,7 @@ public class PipelinedPlanExecutor implements PlanExecutor {
 //			this.universalTable.setHeader(RuntimeUtilities.variablesToAttributes(
 //					this.query.getFreeVariables(), this.universalTable.getType()));
 		}
-		return this.universalTable;
+		return this.results;
 	}
 
 	/**
@@ -181,7 +181,7 @@ public class PipelinedPlanExecutor implements PlanExecutor {
 	 * @author Julien Leblay
 	 *
 	 */
-	public class TimeoutChecker extends Thread {
+	public static class TimeoutChecker extends Thread {
 
 		/** The timeout. */
 		private final long timeout;
