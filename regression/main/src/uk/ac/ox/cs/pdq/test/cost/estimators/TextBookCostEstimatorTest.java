@@ -28,7 +28,7 @@ import uk.ac.ox.cs.pdq.test.planner.PlannerTestUtilities;
  *
  * @author Efthymia Tsamoura
  */
-public class TotalWhiteBoxEstimatorTest{
+public class TextBookCostEstimatorTest{
 
 	/** The event bus. */
 	private EventBus eventBus = new EventBus();
@@ -95,7 +95,6 @@ public class TotalWhiteBoxEstimatorTest{
 	 */
 	@Test
 	public void test() {
-
 		for(int i = 0; i < this.plans.length; ++i) {
 			String s = this.schemata;
 			String f = this.plans[i];
@@ -108,7 +107,7 @@ public class TotalWhiteBoxEstimatorTest{
 				Catalog catalog = new SimpleCatalog(schema, CATALOG);
 				CardinalityEstimator card = new NaiveCardinalityEstimator(catalog);
 				TextBookCostEstimator costEstimator = null;
-				costEstimator = new TextBookCostEstimator(new StatisticsCollector(false, this.eventBus), card, catalog);
+				costEstimator = new TextBookCostEstimator(new StatisticsCollector(false, this.eventBus), card);
 				Assert.assertEquals(plan.getValue(), costEstimator.cost(plan.getKey()));
 			} catch (FileNotFoundException e) {
 				System.out.println("Cannot find input files");

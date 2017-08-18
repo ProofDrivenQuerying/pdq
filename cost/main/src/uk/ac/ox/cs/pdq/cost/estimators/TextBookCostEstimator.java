@@ -16,7 +16,6 @@ import uk.ac.ox.cs.pdq.algebra.SelectionTerm;
 import uk.ac.ox.cs.pdq.algebra.SimpleCondition;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.DoubleCost;
-import uk.ac.ox.cs.pdq.cost.statistics.Catalog;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
 
@@ -42,18 +41,15 @@ public class TextBookCostEstimator implements OrderDependentCostEstimator {
 	/** The card estimator. */
 	protected final CardinalityEstimator cardEstimator;
 
-	protected final Catalog catalog;
-
 	/**
 	 * Constructor.
 	 *
 	 * @param stats the stats
 	 * @param ce CardinalityEstimator
 	 */
-	public TextBookCostEstimator(StatisticsCollector stats, CardinalityEstimator ce, Catalog catalog) {
+	public TextBookCostEstimator(StatisticsCollector stats, CardinalityEstimator ce) {
 		this.stats = stats;
 		this.cardEstimator = ce;
-		this.catalog = catalog;
 	}
 
 	/*
@@ -62,7 +58,7 @@ public class TextBookCostEstimator implements OrderDependentCostEstimator {
 	 */
 	@Override
 	public TextBookCostEstimator clone() {
-		return (TextBookCostEstimator) (this.stats == null ? new TextBookCostEstimator(null,  this.cardEstimator.clone(), this.catalog) : new TextBookCostEstimator(this.stats.clone(),  this.cardEstimator.clone(), this.catalog));
+		return (TextBookCostEstimator) (this.stats == null ? new TextBookCostEstimator(null,  this.cardEstimator.clone()) : new TextBookCostEstimator(this.stats.clone(),  this.cardEstimator.clone()));
 	}
 
 	/**

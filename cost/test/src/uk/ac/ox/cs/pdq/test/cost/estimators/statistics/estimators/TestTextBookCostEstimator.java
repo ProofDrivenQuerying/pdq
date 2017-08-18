@@ -96,7 +96,7 @@ public class TestTextBookCostEstimator {
 		DependentJoinTerm plan1 = DependentJoinTerm.create(rename1, rename2);
 		DependentJoinTerm plan2 = DependentJoinTerm.create(plan1, rename3);
 		
-		TextBookCostEstimator estimator = new TextBookCostEstimator(null, new NaiveCardinalityEstimator(this.catalog), this.catalog);
+		TextBookCostEstimator estimator = new TextBookCostEstimator(null, new NaiveCardinalityEstimator(this.catalog));
 		Cost cost = estimator.cost(plan2);
 		System.out.println(cost);
 	}
