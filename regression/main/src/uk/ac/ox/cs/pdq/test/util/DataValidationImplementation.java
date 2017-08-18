@@ -119,6 +119,7 @@ public final class DataValidationImplementation extends DataValidation{
 	 * @throws PlannerException the planner exception
 	 * @throws AccessException the access exception
 	 */
+	@SuppressWarnings("unused")
 	private void validate(Dependency constraint) throws PlannerException, AccessException {
 		// Checks if the there exists at least one set of facts that satisfies the left-hand side of the input dependency
 		List<Match> matchings = this.manager.getTriggers(new Dependency[]{constraint}, TriggerProperty.ACTIVE, null);
@@ -128,6 +129,7 @@ public final class DataValidationImplementation extends DataValidation{
 			 * there exists another set of facts F2 that satisfies the right-hand side of the input dependency w.r.t F1 
 			 */
 			for (Match match: matchings) {
+				//TOCOMMENT match should be used here? 
 				List<Match> subMatchings = this.manager.getTriggers(new Dependency[]{Dependency.create(constraint.getHeadAtoms(), constraint.getBodyAtoms())},TriggerProperty.ACTIVE,null);//, HomomorphismProperty.createMapProperty(m.getMapping()));
 				if (subMatchings.isEmpty()) {
 					throw new java.lang.IllegalArgumentException("Data does not satisfy constraint " + constraint.toString() );

@@ -190,7 +190,6 @@ public class RestrictedChaserTest {
 	public void test(String[] schemata, String[] queries, String[] facts) {
 		for(int i = 0; i < schemata.length; ++i) {
 			String s = schemata[i];
-			String q = queries[i];
 			String f = facts[i];
 			try {
 				Schema schema = DbIOManager.importSchema(new File(PATH + s));

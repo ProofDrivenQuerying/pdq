@@ -172,7 +172,7 @@ public class Projection extends TupleIterator {
 		Object[] result = new Object[this.projections.length];
 		for(int index = 0; index < this.projections.length; ++index) {
 			if (this.projections[index].getType() instanceof Attribute) 
-				result[index] = next.getValue(this.positionsOfProjectedAttributes.get(this.projections[index].getType()));
+				result[index] = next.getValue(this.positionsOfProjectedAttributes.get((Attribute)this.projections[index].getType()));
 			else if (this.projections[index].getType() instanceof TypedConstant) 
 				result[index] = ((TypedConstant) this.projections[index].getType()).getValue();
 		}

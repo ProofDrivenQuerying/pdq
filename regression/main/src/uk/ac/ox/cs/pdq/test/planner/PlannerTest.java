@@ -265,6 +265,8 @@ public class PlannerTest extends RegressionTest {
 				case APPLYRULE_DEPTH_VALIDATOR:
 				case RIGHT_DEPTH_VALIDATOR:
 					return new ApproximateCostAcceptanceCheck();
+				default:
+					break;
 				}
 				if (params.getFilterType() != null) {
 					return new ApproximateCostAcceptanceCheck();

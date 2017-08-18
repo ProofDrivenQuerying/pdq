@@ -260,6 +260,7 @@ public class DependentJoin extends TupleIterator {
 	 * Move the iterator forward and prepares the next tuple to be returned.
 	 * 
 	 */
+	@SuppressWarnings("unchecked")
 	protected void nextTuple() {
 		Assert.assertTrue(this.inputAttributes.length == 0 || this.tupleReceivedFromParent != null);
 		if (this.cachedIterator != null) {

@@ -3,6 +3,7 @@ package uk.ac.ox.cs.pdq.runtime.exec;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.apache.commons.lang3.NotImplementedException;
 import org.apache.log4j.Logger;
 
 import com.google.common.eventbus.EventBus;
@@ -56,9 +57,6 @@ public class PipelinedPlanExecutor implements PlanExecutor {
 	/** The tuple limit. */
 	private int tupleLimit = -1;
 	
-	/** The do cache. */
-	private boolean doCache;
-
 	/**
 	 * Default constructor.
 	 *
@@ -174,7 +172,7 @@ public class PipelinedPlanExecutor implements PlanExecutor {
 	 */
 	@Override
 	public void setCache(boolean doCache) {
-		this.doCache = doCache; 
+		throw new NotImplementedException("PipelinedPlanExecutor.setCache");
 	}
 
 	/**
