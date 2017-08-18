@@ -85,7 +85,7 @@ public class CostEstimatorFactory {
 			default:
 				throw new IllegalArgumentException("Cardinality estimation " + costParams.getCardinalityEstimationType() + "  not yet supported.");
 			}
-			result = new TextBookCostEstimator(new StatisticsCollector(collectStats, eventBus), card, catalog);
+			result = new TextBookCostEstimator(new StatisticsCollector(collectStats, eventBus), card);
 			break;
 		case BLACKBOX_DB:
 			throw new UnsupportedOperationException("BLACKBOX_DB cost estimator is not currently supported.");
