@@ -66,7 +66,7 @@ public class RuntimeUtilities {
 		if(attributes.length != tupleType.size())
 			return false;
 		for(int attributeIndex = 0; attributeIndex < attributes.length; ++attributeIndex) {
-			if(!attributes[attributeIndex].equals(tupleType.getType(attributeIndex)))
+			if(!attributes[attributeIndex].getType().equals(tupleType.getType(attributeIndex)))
 				return false;
 		}
 		return true;

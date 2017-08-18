@@ -306,6 +306,7 @@ public class AtomTest {
 	/**
 	 * Test get constants.
 	 */
+	@SuppressWarnings("unchecked")
 	@Test public void testGetConstants() {
 		Predicate s = Predicate.create("s", 5);
 		Term[] t = new Term[]{Variable.create("x1"), Variable.create("x2"), Variable.create("x3"),
@@ -345,6 +346,7 @@ public class AtomTest {
 	/**
 	 * Test get all constants.
 	 */
+	@SuppressWarnings("unchecked")
 	@Test public void testGetAllConstants() {
 		Predicate s = Predicate.create("s", 5);
 		Term[] t = new Term[]{

@@ -16,6 +16,7 @@ import com.fasterxml.jackson.jaxrs.json.annotation.JacksonFeatures;
  * builder, i.e. for modifying a request until it is eventually sent.
  * @author Julien Leblay
  */
+@SuppressWarnings("deprecation")
 public class RESTAccess implements uk.ac.ox.cs.pdq.datasources.builder.Builder<WebTarget> {
 
 	/** The access's URL. */
@@ -66,7 +67,6 @@ public class RESTAccess implements uk.ac.ox.cs.pdq.datasources.builder.Builder<W
 		for (InputMethod key: this.pathMethods) {
 			url.append(this.pathParams.get(key.getName()));
 		}
-		@SuppressWarnings("deprecation")
 		WebTarget result = ClientBuilder.newClient().register(JacksonFeatures.class).target(url.toString());
 		for (Map.Entry<String, Object> entry: this.urlParams.entrySet()) {
 			result = result.queryParam(entry.getKey(), entry.getValue());

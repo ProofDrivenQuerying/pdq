@@ -91,6 +91,7 @@ public class PathOutputMethod implements OutputMethod {
 	 * @param subPath the sub path
 	 * @return recursively extract an object form the given subPath
 	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private Object extract(Map<String, Object> wrapper, List<String> subPath) {
 		Preconditions.checkArgument(subPath != null && !subPath.isEmpty());
 		Pair<String, String> pathElement = this.indexedPath(subPath.get(0));
@@ -148,6 +149,7 @@ public class PathOutputMethod implements OutputMethod {
 	 * @param index String
 	 * @return recursively extract an object form the given subPath
 	 */
+	@SuppressWarnings("rawtypes")
 	private Object extract(List<Object> wrapper, String index) {
 		Preconditions.checkArgument(wrapper != null);
 		Preconditions.checkArgument(index != null);

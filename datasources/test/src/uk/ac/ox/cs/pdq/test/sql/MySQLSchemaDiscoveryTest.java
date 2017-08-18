@@ -32,9 +32,6 @@ public class MySQLSchemaDiscoveryTest {
 	 */
 	private static class Relation {
 		
-		/** The name. */
-		String name;
-		
 		/** The attributes. */
 		String[] attributes;
 		
@@ -89,7 +86,6 @@ public class MySQLSchemaDiscoveryTest {
 		int i = 0;
 		for(String n: this.relationNames) {
 			Relation r = new Relation();
-			r.name = n;
 			r.attributes = this.attributesNames[i];
 			r.bindings = new AccessMethod[]{AccessMethod.create(this.bindingPositions[i])};
 			this.relations.put(n, r);

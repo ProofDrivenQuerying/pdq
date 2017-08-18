@@ -16,7 +16,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
-import org.apache.derby.iapi.sql.dictionary.StatementTablePermission;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.HashMultimap;

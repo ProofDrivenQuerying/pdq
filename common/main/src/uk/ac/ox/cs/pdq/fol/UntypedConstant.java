@@ -2,8 +2,6 @@ package uk.ac.ox.cs.pdq.fol;
 
 import com.google.common.base.Preconditions;
 
-import uk.ac.ox.cs.pdq.db.TypedConstant;
-
 /**
  * 
  * @author Efthymia Tsamoura

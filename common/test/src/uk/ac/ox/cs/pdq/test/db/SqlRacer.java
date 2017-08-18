@@ -61,8 +61,6 @@ public class SqlRacer {
 	private final int PARALLEL_THREADS = 10;
 	
 	protected final long timeout = 3600000;
-	private final String[][] EXPECTED_RESULTS = new String[][] { new String[] { "k1", "k2", "k3", "k4", "k5", "k6" }, new String[] { "c", "c", "c", "c", "c", "c" },
-			new String[] { "c1", "c2", "c3", "c4", "John", "Michael" }, };
 	private Relation rel1;
 	private Relation rel2;
 	private Relation rel3;
@@ -264,7 +262,7 @@ public class SqlRacer {
 		return resultsRowCount;
 	}
 
-	private Collection<Atom> createTestFacts() {
+	protected Collection<Atom> createTestFacts() {
 		Atom f20 = Atom.create(this.rel1, new Term[] { UntypedConstant.create("k1"), UntypedConstant.create("c"), UntypedConstant.create("c1") });
 		Atom f21 = Atom.create(this.rel1, new Term[] { UntypedConstant.create("k2"), UntypedConstant.create("c"), UntypedConstant.create("c2") });
 		Atom f22 = Atom.create(this.rel1, new Term[] { UntypedConstant.create("k3"), UntypedConstant.create("c"), UntypedConstant.create("c3") });
@@ -285,7 +283,7 @@ public class SqlRacer {
 	/**
 	 * Copied from DatabaseInstance
 	 */
-	private void addFacts2(Collection<Atom> facts, DatabaseConnection databaseConnection) {
+	protected void addFacts2(Collection<Atom> facts, DatabaseConnection databaseConnection) {
 		Queue<String> queries = new ConcurrentLinkedQueue<>();
 		if (databaseConnection.getSQLStatementBuilder() instanceof DerbyStatementBuilder) {
 			queries.addAll(databaseConnection.getSQLStatementBuilder().createInsertStatements(facts, databaseConnection.getRelationNamesToDatabaseTables()));

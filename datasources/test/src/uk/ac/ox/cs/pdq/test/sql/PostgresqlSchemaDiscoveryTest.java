@@ -33,9 +33,6 @@ public class PostgresqlSchemaDiscoveryTest {
 	 */
 	private static class Relation {
 		
-		/** The name. */
-		String name;
-		
 		/** The attributes. */
 		String[] attributes;
 		
@@ -50,9 +47,6 @@ public class PostgresqlSchemaDiscoveryTest {
 	private String[] relationNames = new String[] {"customer", "lineitem", "nation", "orders",
 					"part", "partsupp", "region", "supplier",
 					"order_customer", "order_supplier", "region_nation"};
-	
-	/** The relation arities. */
-	private Integer[] relationArities = new Integer[] {8, 16, 4, 9, 9, 5, 3, 7};
 	
 	/** The binding positions. */
 	private Integer[][] bindingPositions = new Integer[][] {{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}};
@@ -87,7 +81,6 @@ public class PostgresqlSchemaDiscoveryTest {
 		int i = 0;
 		for(String n: this.relationNames) {
 			Relation r = new Relation();
-			r.name = n;
 			r.attributes = this.attributesNames[i];
 			r.bindings = new AccessMethod[]{AccessMethod.create(this.bindingPositions[i])};
 			this.relations.put(n, r);
@@ -122,6 +115,7 @@ public class PostgresqlSchemaDiscoveryTest {
 	/**
 	 * Test parse view defintion.
 	 */
+	@SuppressWarnings("serial")
 	@Test
 	public void testParseViewDefintion() {
 		Properties properties = new Properties();

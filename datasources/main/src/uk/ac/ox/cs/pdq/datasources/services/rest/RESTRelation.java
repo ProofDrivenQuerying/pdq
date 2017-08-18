@@ -296,7 +296,8 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 					value = m.getDefaultValue();
 				}
 				if (p != null && !p.isEmpty()) {
-					for (String s: p) {
+					for (@SuppressWarnings("unused") String s: p) {
+						//TOCOMMENT s supposed to be used in this for loop right?
 						result.put(m.getParameterizedName(p), value);
 					}
 				} else {
@@ -551,6 +552,7 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 	 * response, using the output methods defined externally.
 	 * @throws AccessException the access exception
 	 */
+	@SuppressWarnings("rawtypes")
 	Table parseXml(Response response, Table inputs) throws AccessException {
 		Table result = new Table(this.getAttributes());
 
@@ -611,6 +613,7 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 	 * matching the given header and type.
 	 * @throws AccessException the access exception
 	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private Collection<Tuple> processItems (
 			List<String> delimiters, Object response, TupleType type,
 			Table inputTable) throws AccessException{
@@ -733,11 +736,11 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 		/**  The last collection tuple considered as input. */
 		private Collection<Tuple> lastInput = null;
 
-		/** The failed tuple. */
-		private Tuple failedTuple = null;
-
-		/** The failed request. */
-		private RESTRequestEvent failedRequest = null; 
+//		/** The failed tuple. */
+//		private Tuple failedTuple = null;
+//
+//		/** The failed request. */
+//		private RESTRequestEvent failedRequest = null; 
 
 		/**
 		 * Constructor without input tuples, i.e. free access
@@ -867,6 +870,7 @@ public final class RESTRelation extends Relation implements Service, Pipelineabl
 		 *
 		 * @throws AccessException the access exception
 		 */
+		@SuppressWarnings("unchecked")
 		public void nextTuple() throws AccessException {
 			this.nextTuple = null;
 			// No more intermediary result, and the access is not free
