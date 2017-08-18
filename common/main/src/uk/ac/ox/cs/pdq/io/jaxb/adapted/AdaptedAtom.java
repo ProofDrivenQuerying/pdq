@@ -92,11 +92,7 @@ public class AdaptedAtom {
 					if (v instanceof AdaptedConstant) {
 						newTerms[i] = ((AdaptedConstant) v).toConstant();
 					} else if (v instanceof AdaptedVariable) {
-						if ("EQUALITY".equals(predicateName)) {
-							newTerms[i] = TypedConstant.create(v.getSymbol());
-						} else {
-							newTerms[i] = v.toVariable();
-						}
+						newTerms[i] = v.toVariable();
 					}
 				}
 				return Atom.createFromXml(predicate, newTerms);
