@@ -95,7 +95,7 @@ public class Runtime {
 	}
 	
 	/**
-	 * Register the given event handler.
+	 * TOCOMMENT: DIFFERENTIATE FROM PRIOR
 	 *
 	 * @param handler the handler
 	 */

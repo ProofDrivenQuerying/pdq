@@ -24,11 +24,11 @@ public final class SetupPlanExecutor {
 	 */
 	public static enum ControlFlows {
 		
-		/** The pull. */
+		/** TOCOMMENT */
 		@EnumParameterValue(description="Control flow where parent request tuples from their children.")
 		PULL,
 
-		/** The push. */
+		/** TOCOMMENT. */
 		@EnumParameterValue(description="Control flow where children inform their parent when tuple are available")
 		PUSH
 	}

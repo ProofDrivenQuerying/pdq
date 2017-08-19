@@ -35,33 +35,28 @@ import uk.ac.ox.cs.pdq.runtime.io.DataReader;
  */
 public class Bootstrap {
 
-	/** Logger. */
 	private static Logger log = Logger.getLogger(Bootstrap.class); 
 	
-	/** The program name. */
 	private static final String PROGRAM_NAME = "pdq-runtime-<version>.jar";
 	
-	/** The help. */
 	@Parameter(names = { "-h", "--help" }, help = true, description = "Displays this help message.")
 	private boolean help;
 	
 	/**
-	 * Checks if is help.
-	 *
+	 *TOCOMMENT:???
 	 * @return true, if is help
 	 */
 	public boolean isHelp() {
 		return this.help;
 	}
 	
-	/** The schema path. */
+	/** TOCOMMENT:??? */
 	@Parameter(names = { "-s", "--schema" }, required = true,
 			validateWith=FileValidator.class,
 			description ="Path to the input schema definition file.")
 	private String schemaPath;
 	
 	/**
-	 * Gets the schema path.
 	 *
 	 * @return the schema path
 	 */
@@ -69,14 +64,14 @@ public class Bootstrap {
 		return this.schemaPath;
 	}
 	
-	/** The query path. */
+	/** TOCOMMENT: WHAT IS IT?. */
 	@Parameter(names = { "-q", "--query" }, required = true,
 			validateWith=FileValidator.class,
 			description ="Path to the input query definition file.")
 	private String queryPath;
 	
 	/**
-	 * Gets the query path.
+	 * TCOMMMENT: WHAT IS IT
 	 *
 	 * @return the query path
 	 */
@@ -84,14 +79,14 @@ public class Bootstrap {
 		return this.queryPath;
 	}
 	
-	/** The plan path. */
+	/** TOCOMMENT: WHAT IS IT. */
 	@Parameter(names = { "-p", "--plan" }, required = true,
 			validateWith=FileValidator.class,
 			description ="Path to the input plan definition file.")
 	private String planPath;
 	
 	/**
-	 * Gets the plan path.
+	 * TOCOMMENT: WHAT IS IT
 	 *
 	 * @return the plan path
 	 */
@@ -99,14 +94,14 @@ public class Bootstrap {
 		return this.planPath;
 	}
 	
-	/** The data path. */
+	/** TOCOMMENT: WHAT IS IT*/
 	@Parameter(names = { "-d", "--data" }, required = false,
 		validateWith=FileValidator.class,
 		description ="Path to the input data file (for in-memory relation).")
 	private String dataPath;
 	
 	/**
-	 * Gets the data path.
+	 * TOCOMMENT WHAT IS IT
 	 *
 	 * @return the data path
 	 */
@@ -114,14 +109,12 @@ public class Bootstrap {
 		return this.dataPath;
 	}
 	
-	/** The config file. */
 	@Parameter(names = { "-c", "--config" }, validateWith=FileValidator.class,
 		description = "Path to a configuration file. If none is specified, "
 		+ "A file with default name will be looked for in the current directory.")
 	private File configFile;
 	
 	/**
-	 * Gets the config file.
 	 *
 	 * @return the config file
 	 */
@@ -129,13 +122,11 @@ public class Bootstrap {
 		return this.configFile;
 	}
 	
-	/** The verbose mode. */
 	@Parameter(names = { "-v", "--verbose" }, required = false,
 		description ="Path to the input query definition file.")
 	private boolean verbose = false;
 	
 	/**
-	 * Checks if is verbose.
 	 *
 	 * @return true, if is verbose
 	 */
@@ -143,7 +134,7 @@ public class Bootstrap {
 		return this.verbose;
 	}
 
-	/** The dynamic params. */
+	/**  */
 	@DynamicParameter(names = "-D", description = "Dynamic parameters. Override values defined in the configuration files.")
 	protected Map<String, String> dynamicParams = new LinkedHashMap<>();
 

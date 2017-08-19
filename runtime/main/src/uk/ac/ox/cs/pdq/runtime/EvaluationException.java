@@ -28,7 +28,7 @@ public class EvaluationException extends Exception {
 	}
 
 	/**
-	 * Instantiates a new evaluation exception.
+	 * TOCOMMENT: DIFFERENTIATE CONSTRUCTORS
 	 *
 	 * @param cause Throwable
 	 */
@@ -37,7 +37,7 @@ public class EvaluationException extends Exception {
 	}
 
 	/**
-	 * Instantiates a new evaluation exception.
+	 * TOCOMMENT: DIFFERENTIATE CONSTRUCTORS
 	 *
 	 * @param msg exception's message
 	 * @param cause root cause of the problem.

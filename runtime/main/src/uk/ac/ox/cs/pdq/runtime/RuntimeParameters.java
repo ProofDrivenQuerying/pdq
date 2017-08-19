@@ -11,16 +11,14 @@ import uk.ac.ox.cs.pdq.runtime.exec.SetupPlanExecutor.ControlFlows;
 
 // TODO: Auto-generated Javadoc
 /**
- * Hold the configuration of an runtime execution.
+ * Hold the configuration of a runtime execution.
  * 
  * @author Julien Leblay
  */
 public class RuntimeParameters extends uk.ac.ox.cs.pdq.Parameters {
 
-	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -5183026336708644030L;
 
-	/** Logger. */
 	private static Logger log = Logger.getLogger(RuntimeParameters.class);
 
 	/**  Properties file name. */
@@ -33,7 +31,7 @@ public class RuntimeParameters extends uk.ac.ox.cs.pdq.Parameters {
 	@Parameter(description="Type of executor to use in plan evaluation")
 	protected ExecutorTypes executorType;
 
-	/** The semantics. */
+	/** TOCOMMENT: IS THIS MEANINGFUL? DO WE SUPPORT MULTIPLE SEMANTICS?  */
 	@Parameter(description="Semantics to use in plan execution",
 			defaultValue = "SET")
 	protected Semantics semantics = Semantics.SET;
@@ -63,17 +61,17 @@ public class RuntimeParameters extends uk.ac.ox.cs.pdq.Parameters {
 	@Parameter(description="Password for the internal database used for sql query evaluation")
 	protected String databasePassword;
 
-	/** The do cache. */
+	/** TOCOMMENT: WHAT IS IT. */
 	@Parameter(description="Enable caching at access level")
 	protected Boolean doCache;
 	
-	/** The control flow. */
+	/** TOCOMMENT: DESCRIBE ALTERNATIVES CLEARLY -- DO NOT JUST PRIVATE JARGON */
 	@Parameter(description = "Plan control flow.\n ",
 			defaultValue = "PULL")
 	protected ControlFlows controlFlow = ControlFlows.PULL;
 	
 	/**
-	 * Gets the control flow.
+	 * TOCOMMENT
 	 *
 	 * @return ControlFlows
 	 */
@@ -82,7 +80,7 @@ public class RuntimeParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 
 	/**
-	 * Sets the control flow.
+	 * TOCOMMENT 
 	 *
 	 * @param controlFlow ControlFlows
 	 */
@@ -91,7 +89,7 @@ public class RuntimeParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 
 	/**
-	 * Sets the control flow.
+	 * TOCOMMENT: DIFFERENTIATE FROM ABOVE
 	 *
 	 * @param controlFlow String
 	 */
@@ -145,7 +143,7 @@ public class RuntimeParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 
 	/**
-	 * Constructor for RuntimeParameters.
+	 * TOCOMMENT: DIFFERENTIATE FROM PRIOR -- DO NOT JUST REPEAT THE SAME COMMENT
 	 * @param config path to the configuration file to read
 	 * @param delay true if the loading of the given config file should be delayed
 	 * @param verbose if true, param loading problem will be reported
@@ -158,7 +156,7 @@ public class RuntimeParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 
 	/**
-	 * Constructor for RuntimeParameters.
+	 * TOCOMMENT: DIFFERENTIATE FROM PRIOR
 	 * @param config path to the configuration file to read
 	 * @param delay true if the loading of the given config file should be delayed
 	 * @param verbose if true, param loading problem will be reported
@@ -172,7 +170,7 @@ public class RuntimeParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 
 	/**
-	 * Gets the executor type.
+	 * TOCOMMENT: WHAT IS IT
 	 *
 	 * @return ExecutorTypes
 	 */
@@ -181,7 +179,7 @@ public class RuntimeParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 
 	/**
-	 * Sets the executor type.
+	 * TOCOMMENT: WHAT IS IT
 	 *
 	 * @param executorType ExecutorTypes
 	 */
@@ -197,7 +195,6 @@ public class RuntimeParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 
 	/**
-	 * Sets the executor type.
 	 *
 	 * @param executorType String
 	 */
@@ -206,7 +203,6 @@ public class RuntimeParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 
 	/**
-	 * Gets the semantics.
 	 *
 	 * @return Semantics
 	 */
@@ -218,7 +214,6 @@ public class RuntimeParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 
 	/**
-	 * Sets the semantics.
 	 *
 	 * @param semantics Semantics
 	 */
@@ -227,7 +222,7 @@ public class RuntimeParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 
 	/**
-	 * Sets the semantics.
+	 * TOCOMMENT: IF SEMANTICS IS AN ENUM, WHY A STRING????
 	 *
 	 * @param s String
 	 */
@@ -242,7 +237,6 @@ public class RuntimeParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 	
 	/**
-	 * Gets the tuples limit.
 	 *
 	 * @return the tuples limit
 	 */
@@ -254,7 +248,6 @@ public class RuntimeParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 	
 	/**
-	 * Sets the tuples limit.
 	 *
 	 * @param tuples the new tuples limit
 	 */
@@ -263,7 +256,6 @@ public class RuntimeParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 	
 	/**
-	 * Sets the tuples limit.
 	 *
 	 * @param tuples the new tuples limit
 	 */
@@ -272,7 +264,7 @@ public class RuntimeParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 	
 	/**
-	 * Gets the do cache.
+	 * TOCOMMENT: WHAT IS IT
 	 *
 	 * @return Boolean
 	 */
@@ -281,7 +273,6 @@ public class RuntimeParameters extends uk.ac.ox.cs.pdq.Parameters {
 	}
 
 	/**
-	 * Sets the do cache.
 	 *
 	 * @param doCache the new do cache
 	 */

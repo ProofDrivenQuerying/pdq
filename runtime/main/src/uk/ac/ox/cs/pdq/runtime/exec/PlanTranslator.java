@@ -24,6 +24,7 @@ import uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator;
 // TODO: Auto-generated Javadoc
 /**
  * Translate logical plans to physical relation plans.
+ * TOCOMMENT: ALL COMMENTS APPEAR TO BE OUT OF DATE
  * 
  * @author Julien Leblay
  */
@@ -37,6 +38,7 @@ public class PlanTranslator {
 
 	/**
 	 * Translate a logical plan to a bottom-up physical plan.
+	 * TOCOMMENT: DO NOT USE MEANINGLESS JARGON LIKE "BOTTOM-UP"
 	 *
 	 * @param logOp the logical operator
 	 * @return a physical that corresponds exactly to the given logical plan.

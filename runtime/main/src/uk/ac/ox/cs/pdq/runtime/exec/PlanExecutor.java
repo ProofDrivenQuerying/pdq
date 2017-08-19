@@ -17,9 +17,9 @@ public interface PlanExecutor {
 	 * The Enum ExecutionModes.
 	 */
 	public static enum ExecutionModes {
-		/** The default. */
+		/** TOCOMMENT: WHAT . */
 		DEFAULT, 
-		/** The profile. */
+		/** TOCOMMENT: WHAT  */
 		PROFILE}; 
 
 		/**
@@ -32,6 +32,7 @@ public interface PlanExecutor {
 
 		/**
 		 * Execute a plan executor and returns a result with a given mode.
+		 * TOCOMMENT: WHAT IS "WITH A GIVEN MODE"
 		 *
 		 * @param mode the mode
 		 * @return Result
