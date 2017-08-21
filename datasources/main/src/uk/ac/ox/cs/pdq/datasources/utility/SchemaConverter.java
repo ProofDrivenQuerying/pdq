@@ -8,6 +8,10 @@ import javax.xml.bind.JAXBException;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.DbIOManager;
 import uk.ac.ox.cs.pdq.db.Schema;
 
+/**
+ * @author Gabor
+ *
+ */
 public class SchemaConverter {
 
 	public static void convert(File from, File to) throws FileNotFoundException, JAXBException {
