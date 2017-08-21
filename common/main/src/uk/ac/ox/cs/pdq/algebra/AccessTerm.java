@@ -115,4 +115,9 @@ public class AccessTerm extends RelationalTerm {
 	public RelationalTerm getChild(int childIndex) {
 		return null;
 	}
+
+	@Override
+	public Integer getNumberOfChildren() {
+		return 0;
+	}
 }

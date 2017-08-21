@@ -71,4 +71,9 @@ public class RenameTerm extends RelationalTerm {
 		Assert.assertTrue(childIndex == 0);
 		return this.child;
 	}
+	
+	@Override
+	public Integer getNumberOfChildren() {
+		return 1;
+	}
 }

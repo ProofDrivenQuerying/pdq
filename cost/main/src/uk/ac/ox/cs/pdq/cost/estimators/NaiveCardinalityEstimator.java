@@ -201,7 +201,8 @@ public class NaiveCardinalityEstimator implements CardinalityEstimator {
 		rcMetadata.setParent(o);
 		rcMetadata.setInputCardinality(rightInputCard);
 		this.estimateCardinalityIfNeeded(rightChild);
-		for (RelationalTerm child: o.getChildren()) {
+		for (int childIndex = 0; childIndex < o.getNumberOfChildren(); ++childIndex) {
+			RelationalTerm child = o.getChild(childIndex);
 			Double childCard = this.getCardinalityMetadata(child).getOutputCardinality();
 			result *= childCard;
 			largestChild = Math.max(largestChild, childCard);
@@ -240,7 +241,7 @@ public class NaiveCardinalityEstimator implements CardinalityEstimator {
 		rcMetadata.setParent(o);
 		rcMetadata.setInputCardinality(rightInputCard);
 		this.estimateCardinalityIfNeeded(rightChild);
-		for (int childIndex = 0; childIndex < 0; ++childIndex) {
+		for (int childIndex = 0; childIndex < o.getNumberOfChildren(); ++childIndex) {
 			RelationalTerm child = o.getChild(childIndex);
 			Double childCard = this.getCardinalityMetadata(child).getOutputCardinality();
 			result *= childCard;

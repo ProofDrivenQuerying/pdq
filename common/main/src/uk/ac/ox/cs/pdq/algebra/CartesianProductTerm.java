@@ -56,4 +56,9 @@ public class CartesianProductTerm extends RelationalTerm {
 		Assert.assertTrue(childIndex == 0 || childIndex == 1);
 		return this.children[0];
 	}
+
+	@Override
+	public Integer getNumberOfChildren() {
+		return this.children.length;
+	}
 }

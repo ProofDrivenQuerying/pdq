@@ -73,6 +73,11 @@ public class DependentJoinTerm extends RelationalTerm {
 	@Override
 	public RelationalTerm getChild(int childIndex) {
 		Assert.assertTrue(childIndex == 0 || childIndex == 1);
-		return this.children[0];
+		return this.children[childIndex];
+	}
+	
+	@Override
+	public Integer getNumberOfChildren() {
+		return this.children.length;
 	}
 }

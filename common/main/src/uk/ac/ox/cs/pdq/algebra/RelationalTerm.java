@@ -56,6 +56,8 @@ public abstract class RelationalTerm implements Serializable {
 	public abstract RelationalTerm[] getChildren();
 	
 	public abstract RelationalTerm getChild(int childIndex);
+
+	public abstract Integer getNumberOfChildren();
 	
 	public boolean isClosed() {
 		return this.inputAttributes.length == 0;
