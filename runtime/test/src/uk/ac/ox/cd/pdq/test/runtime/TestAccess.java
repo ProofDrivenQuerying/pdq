@@ -2,6 +2,7 @@ package uk.ac.ox.cd.pdq.test.runtime;
 
 
 import java.util.HashMap;
+
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -30,8 +31,10 @@ import uk.ac.ox.cs.pdq.runtime.exec.iterator.Selection;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.SymmetricMemoryHashJoin;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator;
 
+@SuppressWarnings("unused")
 public class TestAccess {
 
+	@SuppressWarnings("resource")
 	@Test
 	public void case1() {
 		AccessMethod am1 = AccessMethod.create("access_method1",new Integer[] {});
@@ -65,6 +68,7 @@ public class TestAccess {
 		Map<Integer, TypedConstant> inputConstants2 = new HashMap<>();
 		inputConstants2.put(0, TypedConstant.create(100));
 		inputConstants2.put(1, TypedConstant.create(200));
+		
 		Access relation2InputonFirstAndSecond = new Access(relation2, am3, inputConstants2);
 		//The previous two access plans can be executed since they have all the inputs they need
 		

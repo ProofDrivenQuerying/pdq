@@ -147,7 +147,6 @@ public class ServiceReader extends AbstractXMLReader<ServiceRepository> implemen
 						String className = this.getValue(atts, QNames.TYPE);
 						if (className!=null && className.startsWith("uk.ac.ox.cs.pdq.services.policies")) {
 							className = className.replace("uk.ac.ox.cs.pdq.services.policies", "uk.ac.ox.cs.pdq.datasources.services.policies");
-							uk.ac.ox.cs.pdq.datasources.services.policies.URLAuthentication asd;
 						}
 						try {
 							cl = (Class<UsagePolicy>) Class.forName(className);

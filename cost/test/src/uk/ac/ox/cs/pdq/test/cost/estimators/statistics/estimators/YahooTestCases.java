@@ -12,7 +12,6 @@ import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.algebra.AccessTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
-import uk.ac.ox.cs.pdq.cost.CostParameters.BlackBoxQueryTypes;
 import uk.ac.ox.cs.pdq.cost.estimators.NaiveCardinalityEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.PerInputCostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.TextBookCostEstimator;
