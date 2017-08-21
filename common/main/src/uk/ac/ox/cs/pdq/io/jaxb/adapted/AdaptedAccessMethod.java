@@ -2,7 +2,9 @@ package uk.ac.ox.cs.pdq.io.jaxb.adapted;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
@@ -15,11 +17,13 @@ import uk.ac.ox.cs.pdq.db.AccessMethod;
  * @author Gabor
  *
  */
-@XmlType(propOrder = { "type", "name", "inputs" })
+@XmlType(propOrder = { "type", "name", "inputs", "cost" })
 public class AdaptedAccessMethod implements Serializable {
+	private static Map<AccessMethod,String> costs = new HashMap<>();
 	protected static final long serialVersionUID = -5821292665848480210L;
 	private String inputs = null;
 	private String name;
+	private String cost;
 
 	public AdaptedAccessMethod() {
 	}
@@ -31,15 +35,25 @@ public class AdaptedAccessMethod implements Serializable {
 
 	public AccessMethod toAccessMethod() {
 		try {
-			if (getInputs() != null)
-				return AccessMethod.create(getName(), parseIntArrayFromCommaSeparatedList(getInputs()));
-			return AccessMethod.create(getName(), new Integer[] {});
+			AccessMethod ret;
+			if (getInputs() != null) {
+				ret = AccessMethod.create(getName(), parseIntArrayFromCommaSeparatedList(getInputs()));
+			} else {
+				ret = AccessMethod.create(getName(), new Integer[] {});
+			}
+			
+			if (cost!=null)
+				costs.put(ret, cost);
+			return ret;
 		} catch (Throwable t) {
 			Logger.getLogger(this.getClass()).error(t.getMessage(), t);
 			throw t;
 		}
 	}
-
+	public static Map<AccessMethod,String> getMapOfCosts() {
+		return costs;
+	}
+	
 	@XmlAttribute
 	public String getInputs() {
 		if (inputs != null && inputs.length() == 0)
@@ -49,10 +63,18 @@ public class AdaptedAccessMethod implements Serializable {
 
 	@XmlAttribute
 	public String getType() {
+		// we don't want to display this parameter in the xml, but in old xml files the parameter is present.
 		return null;
-//		if (inputs == null || inputs.length() == 0)
-//			return "FREE";
-//		return "LIMITED";
+	}
+	
+	@XmlAttribute
+	public String getCost() {
+		// we don't want to display this parameter in the xml, but in some cases we might want to read it.
+		return null;
+	}
+	
+	public void setCost(String cost) {
+		this.cost = cost;
 	}
 
 	public void setType(String type) {
@@ -82,6 +104,10 @@ public class AdaptedAccessMethod implements Serializable {
 			if (string == null || string.isEmpty()) {
 				// this case is only possible when we have remote sources declared.
 				return ints.toArray(new Integer[] {});
+			}
+			if (!string.contains(",")) {
+				// this case is only possible when we have remote sources declared.
+				return new Integer[] {new Integer(Integer.parseInt(string))};
 			}
 			for (final String s : string.split(",")) {
 				final String trimmed = s.trim();
