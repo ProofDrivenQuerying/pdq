@@ -78,8 +78,6 @@ public class TextBookCostEstimator implements OrderDependentCostEstimator {
 	 * @return the cost of the given operator.
 	 */
 	private double recursiveCost(RelationalTerm logOp) {
-		if (!logOp.isClosed())
-			return Double.POSITIVE_INFINITY;
 		double subCost = 0;
 		double inputCard = this.cardEstimator.getCardinalityMetadata(logOp).getInputCardinality();
 		double card = Math.max(1.0, this.cardEstimator.getCardinalityMetadata(logOp).getOutputCardinality());

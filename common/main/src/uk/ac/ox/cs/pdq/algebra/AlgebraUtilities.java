@@ -120,7 +120,7 @@ public class AlgebraUtilities {
 		Assert.assertNotNull(relation);
 		Assert.assertNotNull(accessMethod);
 		if(accessMethod.getInputs().length == 0) {
-			return null;
+			return new Attribute[]{};
 		}
 		List<Attribute> inputs = new ArrayList<>();
 		for(Integer i:accessMethod.getInputs()) {
