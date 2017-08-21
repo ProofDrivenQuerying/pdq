@@ -3,7 +3,10 @@ package uk.ac.ox.cs.pdq.test.planner;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -19,9 +22,12 @@ import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.CostParameters;
 import uk.ac.ox.cs.pdq.cost.io.jaxb.CostIOManager;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.DbIOManager;
+import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
+import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.logging.ProgressLogger;
 import uk.ac.ox.cs.pdq.logging.SimpleProgressLogger;
@@ -169,7 +175,10 @@ public class PlannerTest extends RegressionTest {
 							"Schema and query must be provided for each regression test. "
 									+ "(schema:" + schema + ", query: " + query + ", plan: " + expectedPlan + ")");
 				}
-
+				//File convert = new File("c:\\work\\tmp\\regressionConvertedSchemas\\"+directory.getParentFile().getName(),directory.getName());
+				//convert.mkdirs();
+				//DbIOManager.exportSchemaToXml(schema, new File(convert,"OriginalSchema.xml"));
+				schema = addAccessibleToSchema(schema);
 				Entry<RelationalTerm, Cost> observedPlan = null;
 				try(ProgressLogger pLog = new SimpleProgressLogger(this.out)) {
 					ExplorationSetUp planner = new ExplorationSetUp(plannerParams, costParams, reasoningParams, dbParams, schema);
@@ -192,9 +201,20 @@ public class PlannerTest extends RegressionTest {
 					
 				}
 			} catch (Throwable e) {
+				e.printStackTrace();
 				return handleException(e, directory);
 			}
 			return true;
+		}
+
+		private Schema addAccessibleToSchema(Schema schema) {
+			List<Dependency> dep = new ArrayList<>();
+			dep.addAll(Arrays.asList(schema.getDependencies()));
+			dep.addAll(Arrays.asList(schema.getKeyDependencies()));
+			List<Relation> rel = new ArrayList<>(); 
+			rel.addAll(Arrays.asList(schema.getRelations()));
+			rel.add(Relation.create("Accessible", new Attribute[] {Attribute.create(String.class, "name"),Attribute.create(Integer.class, "InstanceID")}));
+			return new Schema(rel.toArray(new Relation[rel.size()]),dep.toArray(new Dependency[dep.size()]));
 		}
 
 		/**
