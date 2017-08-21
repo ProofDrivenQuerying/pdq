@@ -2,6 +2,7 @@ package uk.ac.ox.cs.pdq.db;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -55,10 +56,12 @@ public abstract class DatabaseInstance implements Instance {
 	//------------------------------------------------------//
 
 	protected DatabaseConnection databaseConnection;
+	private static Map<Integer,ExecutorService> cachedExecutors = new HashMap<>();
 	private ExecutorService executorService = null;
 
 	public DatabaseInstance(DatabaseConnection databaseConnection) {
 		this.databaseConnection = databaseConnection;
+		executorService = cachedExecutors.get(databaseConnection.hashCode());
 	}
 
 	public void addFacts(Collection<Atom> facts) {
@@ -111,6 +114,7 @@ public abstract class DatabaseInstance implements Instance {
 			if (executorService==null) {
 				//	Create a pool of threads to run in parallel
 				executorService = Executors.newFixedThreadPool(this.databaseConnection.getNumberOfSynchronousConnections());
+				cachedExecutors.put(this.databaseConnection.hashCode(), executorService);
 			}
 			List<Callable<Boolean>> threads = new ArrayList<>();
 			for(int j = 0; j < this.databaseConnection.getNumberOfSynchronousConnections(); ++j) {
