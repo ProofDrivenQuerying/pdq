@@ -26,14 +26,18 @@ import uk.ac.ox.cs.pdq.util.Utility;
 public class TestTextBookCostEstimator {
 	protected Attribute[] attributes3Old = new Attribute[3];
 	protected Attribute[] attributes6Old = new Attribute[6];
+	protected Attribute[] attributes18Old = new Attribute[18];
 	protected Attribute[] attributes21Old = new Attribute[21];
 	protected Attribute[] newAttributes = new Attribute[30];
 	
 	protected AccessMethod method1 = AccessMethod.create(new Integer[]{0});
 	protected AccessMethod method2 = AccessMethod.create(new Integer[]{0,1});
+	protected AccessMethod method3 = AccessMethod.create(new Integer[]{1});
+	
 	protected Relation YahooPlaceCode;
 	protected Relation YahooPlaceRelationship;
 	protected Relation YahooWeather;
+	protected Relation YahooPlaces;
 	
 	@Mock
 	protected SimpleCatalog catalog;
@@ -45,30 +49,32 @@ public class TestTextBookCostEstimator {
 		Utility.assertsEnabled();
         MockitoAnnotations.initMocks(this);
         
-        for(int index = 0; index < attributes3Old.length; ++index) {
+        for(int index = 0; index < attributes3Old.length; ++index) 
         	this.attributes3Old[index] = Attribute.create(String.class, "a" + index);
-        }
         
-        for(int index = 0; index < attributes6Old.length; ++index) {
+        for(int index = 0; index < attributes6Old.length; ++index) 
         	this.attributes6Old[index] = Attribute.create(String.class, "a" + index);
-        }
         
-        for(int index = 0; index < attributes21Old.length; ++index) {
+        for(int index = 0; index < attributes18Old.length; ++index) 
+        	this.attributes18Old[index] = Attribute.create(String.class, "a" + index);
+        
+        for(int index = 0; index < attributes21Old.length; ++index) 
         	this.attributes21Old[index] = Attribute.create(String.class, "a" + index);
-        }
         
-        for(int index = 0; index < newAttributes.length; ++index) {
+        for(int index = 0; index < newAttributes.length; ++index) 
         	this.newAttributes[index] = Attribute.create(String.class, "c" + index);
-        }
+        
     
         this.YahooPlaceCode = Relation.create("YahooPlaceCode", this.attributes3Old, new AccessMethod[]{this.method2});
         this.YahooPlaceRelationship = Relation.create("YahooPlaceRelationship", this.attributes6Old, new AccessMethod[]{this.method2});
         this.YahooWeather = Relation.create("YahooWeather", this.attributes21Old, new AccessMethod[]{this.method1});
+        this.YahooPlaces = Relation.create("YahooPlaces", this.attributes18Old, new AccessMethod[]{this.method3});
     	
         //Create the mock catalog object
         when(this.catalog.getCardinality(this.YahooPlaceCode)).thenReturn(10000000);
         when(this.catalog.getCardinality(this.YahooPlaceRelationship)).thenReturn(10000000);
-        when(this.catalog.getCardinality(this.YahooWeather)).thenReturn(100000000);    
+        when(this.catalog.getCardinality(this.YahooWeather)).thenReturn(100000000);
+        when(this.catalog.getCardinality(this.YahooPlaces)).thenReturn(100000000);
 	}
 	
 	@Test public void test1() {
@@ -96,8 +102,24 @@ public class TestTextBookCostEstimator {
 		DependentJoinTerm plan1 = DependentJoinTerm.create(rename1, rename2);
 		DependentJoinTerm plan2 = DependentJoinTerm.create(plan1, rename3);
 		
-		TextBookCostEstimator estimator = new TextBookCostEstimator(null, new NaiveCardinalityEstimator(this.catalog));
+		NaiveCardinalityEstimator cardinalityEstimator = new NaiveCardinalityEstimator(this.catalog);
+		TextBookCostEstimator estimator = new TextBookCostEstimator(null, cardinalityEstimator);
 		Cost cost = estimator.cost(plan2);
+		cardinalityEstimator.estimateCardinalityIfNeeded(plan2);
+		System.out.println(cardinalityEstimator.getCardinalityMetadata(plan2).getOutputCardinality());
+		System.out.println(cost);
+	}
+	
+	@Test public void test2() {
+		Map<Integer, TypedConstant> inputConstants1 = new HashMap<>();
+		inputConstants1.put(1, TypedConstant.create("Eiffel Tower"));
+		AccessTerm access1 = AccessTerm.create(this.YahooPlaces, this.method3, inputConstants1);
+		
+		NaiveCardinalityEstimator cardinalityEstimator = new NaiveCardinalityEstimator(this.catalog);
+		TextBookCostEstimator estimator = new TextBookCostEstimator(null, cardinalityEstimator);
+		Cost cost = estimator.cost(access1);
+		cardinalityEstimator.estimateCardinalityIfNeeded(access1);
+		System.out.println(cardinalityEstimator.getCardinalityMetadata(access1).getOutputCardinality());
 		System.out.println(cost);
 	}
 	
