@@ -74,7 +74,7 @@ public class TestTextBookCostEstimator {
         when(this.catalog.getCardinality(this.YahooPlaceCode)).thenReturn(10000000);
         when(this.catalog.getCardinality(this.YahooPlaceRelationship)).thenReturn(10000000);
         when(this.catalog.getCardinality(this.YahooWeather)).thenReturn(100000000);
-        when(this.catalog.getCardinality(this.YahooPlaces)).thenReturn(100000000);
+        when(this.catalog.getCardinality(this.YahooPlaces)).thenReturn(10000000);
 	}
 	
 	@Test public void test1() {
