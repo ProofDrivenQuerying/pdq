@@ -55,11 +55,15 @@ public class AdaptedDbSchema {
 				} else if ("uk.ac.ox.cs.pdq.sql.MySQLSchemaDiscoverer".equals(discoverer)) {
 					discoverer = "uk.ac.ox.cs.pdq.datasources.sql.MySQLSchemaDiscoverer";
 				}
-				propertiesClone.setProperty("driver", s.getDriver());
-				propertiesClone.setProperty("url", s.getUrl());
-				propertiesClone.setProperty("database", s.getDatabase());
-				propertiesClone.setProperty("username", s.getUsername());
-				propertiesClone.setProperty("password", s.getPassword());
+				else if ("uk.ac.ox.cs.pdq.services.ServiceReader".equals(discoverer)) {
+					discoverer = "uk.ac.ox.cs.pdq.datasources.services.ServiceReader";
+				}
+				
+				if (s.getDriver()!=null) propertiesClone.setProperty("driver", s.getDriver());
+				if (s.getUrl()!=null) propertiesClone.setProperty("url", s.getUrl());
+				if (s.getDatabase()!=null) propertiesClone.setProperty("database", s.getDatabase());
+				if (s.getUsername()!=null) propertiesClone.setProperty("username", s.getUsername());
+				if (s.getPassword()!=null) propertiesClone.setProperty("password", s.getPassword());
 				SchemaDiscoverer sd = (SchemaDiscoverer) Class.forName(discoverer).newInstance();
 				sd.setProperties(propertiesClone);
 				Schema discoveredPartialSchema = sd.discover();
