@@ -471,7 +471,21 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 	@Override
 	public void addFacts(Collection<Atom> facts) {
 		super.addFacts(extendFactsUsingInstanceID(facts));
-		this.facts.addAll(facts);
+		try {
+			if (this.facts instanceof LinkedHashSet) {
+				//this.addFacts(this.facts);
+				this.facts.addAll(facts);
+			} else {
+				LinkedHashSet<Atom> newFacts = new LinkedHashSet<Atom>();
+				newFacts.addAll(this.facts);
+				newFacts.addAll(facts);
+				this.facts = newFacts;
+			}
+		}catch(Throwable t) {
+			System.err.println("Could not add facts: " + this.facts);
+			t.printStackTrace();
+		}
+		
 	}
 	
 	/**

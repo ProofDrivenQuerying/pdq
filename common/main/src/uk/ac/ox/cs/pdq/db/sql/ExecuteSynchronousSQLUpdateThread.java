@@ -40,7 +40,7 @@ public class ExecuteSynchronousSQLUpdateThread implements Callable<Boolean> {
 				sqlStatement.executeUpdate(query);
 			} catch (SQLException ex) {
 				if(ex.getCause()==null || ex.getCause().getMessage() == null || !ex.getCause().getMessage().contains("duplicate key value")) {
-					throw new IllegalStateException(ex.getMessage(), ex);
+					throw new IllegalStateException("Error while executing query: " + query  + ", error:" + ex.getMessage(), ex);
 				} else {
 					ex.printStackTrace();
 				}

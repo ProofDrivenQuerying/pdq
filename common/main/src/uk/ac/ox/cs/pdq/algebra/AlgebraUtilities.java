@@ -131,6 +131,9 @@ public class AlgebraUtilities {
 
 	public static Attribute[] computeInputAttributes(Relation relation, AccessMethod accessMethod, Map<Integer, TypedConstant> inputConstants) {
 		Assert.assertNotNull(relation);
+		if (!(accessMethod != null && accessMethod.getInputs().length > 0) && (inputConstants ==null || inputConstants.isEmpty())) {
+			return new Attribute[0];
+		}
 		Assert.assertTrue(accessMethod != null && accessMethod.getInputs().length > 0);
 		Assert.assertNotNull(inputConstants);
 		for(Integer position:inputConstants.keySet()) {

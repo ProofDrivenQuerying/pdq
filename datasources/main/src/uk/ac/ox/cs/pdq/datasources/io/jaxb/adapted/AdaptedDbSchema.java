@@ -1,6 +1,8 @@
 package uk.ac.ox.cs.pdq.datasources.io.jaxb.adapted;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
 
@@ -42,9 +44,8 @@ public class AdaptedDbSchema {
 
 	public Schema toSchema(Properties properties) throws  ClassNotFoundException, InstantiationException, IllegalAccessException {
 		try {
-			Relation[] discoveredRelations = new Relation[relations.length];
+			HashSet<Relation> discoveredRelations = new HashSet<Relation>();
 			List<String> discoveredSources = new ArrayList<>();
-			int i = 0;
 			for (Source s : sources) {
 				Properties propertiesClone = new Properties();
 				if (properties!=null)
@@ -64,6 +65,8 @@ public class AdaptedDbSchema {
 				if (s.getDatabase()!=null) propertiesClone.setProperty("database", s.getDatabase());
 				if (s.getUsername()!=null) propertiesClone.setProperty("username", s.getUsername());
 				if (s.getPassword()!=null) propertiesClone.setProperty("password", s.getPassword());
+				if (s.getName()!=null) propertiesClone.setProperty("name", s.getName());
+				if (s.getFile()!=null) propertiesClone.setProperty("file", s.getFile());
 				SchemaDiscoverer sd = (SchemaDiscoverer) Class.forName(discoverer).newInstance();
 				sd.setProperties(propertiesClone);
 				Schema discoveredPartialSchema = sd.discover();
@@ -71,18 +74,19 @@ public class AdaptedDbSchema {
 					if (s.getName() != null && s.getName().equals(r.getSource())) {
 						//create (String name, Attribute[] attributes, AccessMethod[] accessMethods, ForeignKey[] foreignKeys, boolean isEquality)
 						Relation dr = discoveredPartialSchema.getRelation(r.getName());
-						discoveredRelations[i] = Relation.create(r.getName(), dr.getAttributes(),r.getAccessMethods(),dr.getForeignKeys(),dr.isEquality());
-						i++;
+						discoveredRelations.add(Relation.create(r.getName(), dr.getAttributes(),r.getAccessMethods(),dr.getForeignKeys(),dr.isEquality()));
+					} else if (r.getSource()==null) {
+						discoveredRelations.add(r.toRelation());
 					}
 				}
 				discoveredSources.add(s.getName());
 			}
-			if (i != relations.length) {
-				throw new IllegalArgumentException("Not every relations were discovered. Discovered sources:" + discoveredSources);
+			if (discoveredRelations.size() != relations.length) {
+				throw new IllegalArgumentException("Not every relations were discovered. Discovered sources:" + discoveredSources + " out of : " + Arrays.asList(relations));
 			}
 			if (getDependencies() != null && getDependencies().length > 0)
-				return new Schema(discoveredRelations, getDependencies());
-			Schema s = new Schema(discoveredRelations);
+				return new Schema(discoveredRelations.toArray(new Relation[discoveredRelations.size()]), getDependencies());
+			Schema s = new Schema(discoveredRelations.toArray(new Relation[discoveredRelations.size()]));
 			return s;
 		} catch ( ClassNotFoundException t) {
 			t.printStackTrace();

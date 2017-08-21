@@ -44,15 +44,17 @@ public class AccessTerm extends RelationalTerm {
 		super(AlgebraUtilities.computeInputAttributes(relation, accessMethod, inputConstants), relation.getAttributes());
 		Assert.assertNotNull(relation);
 		Assert.assertNotNull(accessMethod);
-		for(Integer position:inputConstants.keySet()) {
-			Assert.assertTrue(position < relation.getArity());
-			Assert.assertTrue(Arrays.asList(accessMethod.getInputs()).contains(position));
-		}
 		this.relation = relation;
 		this.accessMethod = accessMethod;
 		this.inputConstants = new LinkedHashMap<>();
-		for(java.util.Map.Entry<Integer, TypedConstant> entry:inputConstants.entrySet()) 
-			this.inputConstants.put(entry.getKey(), entry.getValue().clone());
+		if (inputConstants!=null) {
+			for(Integer position:inputConstants.keySet()) {
+				Assert.assertTrue(position < relation.getArity());
+				Assert.assertTrue(Arrays.asList(accessMethod.getInputs()).contains(position));
+			}
+			for(java.util.Map.Entry<Integer, TypedConstant> entry:inputConstants.entrySet()) 
+				this.inputConstants.put(entry.getKey(), entry.getValue().clone());
+		}
 	}
 
 	/**

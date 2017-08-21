@@ -98,6 +98,7 @@ public class ServiceReader extends AbstractXMLReader<ServiceRepository> implemen
 	 * (non-Javadoc)
 	 * @see org.xml.sax.helpers.DefaultHandler#startElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void startElement(String uri, String localName, String qName, Attributes atts) {
 		
@@ -139,17 +140,28 @@ public class ServiceReader extends AbstractXMLReader<ServiceRepository> implemen
 					for (int i = 0, l = atts.getLength(); i < l; i++) {
 						prop.put(atts.getLocalName(i), atts.getValue(i));
 					}
+					Class<UsagePolicy> cl = null;
 					try {
-						@SuppressWarnings("unchecked")
-						Class<UsagePolicy> cl = (Class<UsagePolicy>) Class.forName(this.getValue(atts, QNames.TYPE));
+						cl = (Class<UsagePolicy>) Class.forName(this.getValue(atts, QNames.TYPE));
+					} catch (ClassNotFoundException e) {
+						String className = this.getValue(atts, QNames.TYPE);
+						if (className!=null && className.startsWith("uk.ac.ox.cs.pdq.services.policies")) {
+							className = className.replace("uk.ac.ox.cs.pdq.services.policies", "uk.ac.ox.cs.pdq.datasources.services.policies");
+							uk.ac.ox.cs.pdq.datasources.services.policies.URLAuthentication asd;
+						}
+						try {
+							cl = (Class<UsagePolicy>) Class.forName(className);
+						} catch (ClassNotFoundException e1) {
+							throw new ReaderException("Class '" 
+									+ this.getValue(atts, QNames.TYPE) + "' not found.");
+						}
+					}
+					if (cl!=null) {
 						if (this.inUsagePolicies) {
 							this.services.registerUsagePolicy(name, cl, prop);
 						} else {
 							this.builder.addUsagePolicy(PolicyFactory.getInstance(this.services, cl, prop));
 						}
-					} catch (ClassNotFoundException e) {
-						throw new ReaderException("Class '" 
-								+ this.getValue(atts, QNames.TYPE) + "' not found.");
 					}
 				}
 			}

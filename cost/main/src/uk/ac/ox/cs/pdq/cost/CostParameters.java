@@ -410,7 +410,7 @@ public class CostParameters extends uk.ac.ox.cs.pdq.Parameters {
 		
 		/** The naive. */
 		@EnumParameterValue(description = "Naive cardinality estimation, based on external defined constant join/selectivity reduction factors")
-		NAIVE,
+		NAIVE
 	}
 
 }

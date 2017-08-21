@@ -4,6 +4,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -99,7 +100,12 @@ public class PlanCreationUtility {
 	
 	//TODO implement this method
 	private static Map<Integer, TypedConstant> computeInputConstants(AccessMethod method, Term[] terms) {
-		return null;
+		Map<Integer, TypedConstant> ret = new HashMap<>();
+		for(Integer i: method.getInputs()) {
+			if (terms[i] instanceof TypedConstant)
+				ret.put(i, (TypedConstant)terms[i]);
+		}
+		return ret;
 	}
 	
 	private static Attribute[] computeRenamedAttributes(Attribute[] attributes, Term[] terms) {

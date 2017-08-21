@@ -12,6 +12,7 @@ import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 
+import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.Term;
@@ -40,7 +41,11 @@ public class AccessibleStateUtility {
 		for(AccessibilityAxiom axiom: axioms) {
 			//For each axiom, we get the relevant facts
 			//and group them based on the constants of their input positions
-			Collection<Atom> facts = atomsMap.get(axiom.getBaseRelation());
+			Collection<Atom> facts = null;
+			for (Predicate r :atomsMap.keySet()) {
+				if (r.getName().equals(axiom.getBaseRelation().getName())) 
+					facts = atomsMap.get(r);
+			}
 			Multimap<Collection<Term>, Atom> groupsOfFacts = LinkedHashMultimap.create();
 			for(Atom fact: facts) 
 				groupsOfFacts.put(uk.ac.ox.cs.pdq.util.Utility.getTerms(fact,axiom.getAccessMethod().getZeroBasedInputPositions()), fact);

@@ -60,7 +60,7 @@ public class LeftDeepPlanGenerator {
 		if (parent != null) {
 			//Check if the parent outputs any of the inputs of its child
 			Set<Attribute> outputs = new HashSet<Attribute>(Arrays.asList(parent.getOutputAttributes()));
-			Set<Attribute> inputs = new HashSet<Attribute>(Arrays.asList(parent.getOutputAttributes()));
+			Set<Attribute> inputs = new HashSet<Attribute>(Arrays.asList(op1.getInputAttributes()));
 			if (accessMethod.getNumberOfInputs() > 0 && CollectionUtils.containsAny(outputs, inputs)) 
 				op1 = DependentJoinTerm.create(parent, op1);
 			else 

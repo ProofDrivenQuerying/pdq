@@ -64,7 +64,7 @@ public class AccessibilityAxiom extends TGD {
 	private static Atom createAtomsWithoutExtraAttribute(Relation relation) {
 		Term[] terms = new Term[relation.getArity()-1];
 		Attribute[] attributes = relation.getAttributes();
-		for (int index = 0; index < attributes.length; ++index) 
+		for (int index = 0; index < relation.getArity()-1; ++index) 
 			terms[index] = Variable.create(attributes[index].getName());
 		return Atom.create(relation, terms);
 	}

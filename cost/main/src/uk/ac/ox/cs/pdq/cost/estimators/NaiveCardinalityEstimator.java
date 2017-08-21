@@ -3,6 +3,8 @@ package uk.ac.ox.cs.pdq.cost.estimators;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import com.google.common.base.Preconditions;
+
 import uk.ac.ox.cs.pdq.algebra.AccessTerm;
 import uk.ac.ox.cs.pdq.algebra.CartesianProductTerm;
 import uk.ac.ox.cs.pdq.algebra.ConjunctiveCondition;
@@ -48,6 +50,7 @@ public class NaiveCardinalityEstimator implements CardinalityEstimator {
 	 * @param schema Schema
 	 */
 	public NaiveCardinalityEstimator(Catalog catalog) {
+		Preconditions.checkNotNull(catalog);
 		this.catalog = catalog;
 		this.cardinalityMetadata = new LinkedHashMap<>();
 	}

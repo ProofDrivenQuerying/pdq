@@ -95,6 +95,8 @@ public abstract class DatabaseInstance implements Instance {
 			}
 			executeUpdates(queries);
 		} catch(Throwable t) {
+			System.err.println("Error while adding facts:" + facts);
+			t.printStackTrace();
 			t.printStackTrace();
 			throw t;
 		}

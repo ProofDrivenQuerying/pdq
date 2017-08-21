@@ -10,6 +10,7 @@ import javax.xml.bind.annotation.XmlAttribute;
  */
 public class Source {
 	private String name;
+	private String file;
 	private String discoverer;
 	private String driver;
 	private String url;
@@ -77,6 +78,15 @@ public class Source {
 	@XmlAttribute
 	public String getPassword() {
 		return password;
+	}
+	
+	@XmlAttribute
+	public String getFile() {
+		return file;
+	}
+	
+	public void setFile(String file) {
+		this.file = file;
 	}
 
 	public void setPassword(String password) {

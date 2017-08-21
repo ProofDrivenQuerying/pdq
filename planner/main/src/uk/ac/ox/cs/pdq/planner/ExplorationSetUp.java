@@ -113,8 +113,10 @@ public class ExplorationSetUp {
 
 	//add an extra attribute
 	private void addAdditionalAttributeToSchema(Schema schema, Attribute atribute) {
-		for(int index = 0; index < schema.getNumberOfRelations(); ++index)
-			schema.getRelation(0).appendAttribute(atribute);
+		for(int index = 0; index < schema.getNumberOfRelations(); ++index) {
+			if (schema.getRelation(index).getAttribute("InstanceID") == null)
+				schema.getRelation(index).appendAttribute(atribute);
+		}
 	}
 
 	/**
