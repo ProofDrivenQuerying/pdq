@@ -11,7 +11,6 @@ import org.mockito.MockitoAnnotations;
 import uk.ac.ox.cs.pdq.algebra.AccessTerm;
 import uk.ac.ox.cs.pdq.algebra.ConstantEqualityCondition;
 import uk.ac.ox.cs.pdq.algebra.DependentJoinTerm;
-import uk.ac.ox.cs.pdq.algebra.ProjectionTerm;
 import uk.ac.ox.cs.pdq.algebra.SelectionTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.estimators.NaiveCardinalityEstimator;
@@ -58,7 +57,6 @@ public class TestNaiveCardinalityEstimator {
 		AccessTerm access2 = AccessTerm.create(this.S, this.method1);
 				
 		DependentJoinTerm plan1 = DependentJoinTerm.create(access1, access2);
-		ProjectionTerm plan2 = ProjectionTerm.create(new Attribute[]{this.b}, plan1);
 		
 		NaiveCardinalityEstimator cardinalityEstimator = new NaiveCardinalityEstimator(this.catalog);		
 		cardinalityEstimator.estimateCardinalityIfNeeded(plan1);
@@ -73,8 +71,8 @@ public class TestNaiveCardinalityEstimator {
 		Assert.assertEquals(new Double(100.0), cardinalityEstimator.getCardinalityMetadata(plan1).getOutputCardinality());
 		
 		TextBookCostEstimator estimator = new TextBookCostEstimator(null, cardinalityEstimator);
-		Cost cost = estimator.cost(plan2);
-		Assert.assertEquals(new Double(3600.0), cost);
+		Cost cost = estimator.cost(plan1);
+		Assert.assertEquals(new Double(4800.0), cost);
 	}
 	
 	
@@ -83,7 +81,6 @@ public class TestNaiveCardinalityEstimator {
 		AccessTerm access2 = AccessTerm.create(this.S, this.method2);
 				
 		DependentJoinTerm plan1 = DependentJoinTerm.create(access1, access2);
-		ProjectionTerm plan2 = ProjectionTerm.create(new Attribute[]{this.b}, plan1);
 		
 		NaiveCardinalityEstimator cardinalityEstimator = new NaiveCardinalityEstimator(this.catalog);		
 		cardinalityEstimator.estimateCardinalityIfNeeded(plan1);
@@ -98,8 +95,8 @@ public class TestNaiveCardinalityEstimator {
 		Assert.assertEquals(new Double(100.0), cardinalityEstimator.getCardinalityMetadata(plan1).getOutputCardinality());
 		
 		TextBookCostEstimator estimator = new TextBookCostEstimator(null, cardinalityEstimator);
-		Cost cost = estimator.cost(plan2);
-		Assert.assertEquals(new Double(900.0), cost);
+		Cost cost = estimator.cost(plan1);
+		Assert.assertEquals(new Double(1200.0), cost);
 	}
 	
 	@Test public void test3() {
@@ -109,7 +106,6 @@ public class TestNaiveCardinalityEstimator {
 		SelectionTerm selectionTerm = SelectionTerm.create(ConstantEqualityCondition.create(0, TypedConstant.create("1")), access1);
 	
 		DependentJoinTerm plan1 = DependentJoinTerm.create(selectionTerm, access2);
-		ProjectionTerm plan2 = ProjectionTerm.create(new Attribute[]{this.b}, plan1);
 		
 		NaiveCardinalityEstimator cardinalityEstimator = new NaiveCardinalityEstimator(this.catalog);		
 		cardinalityEstimator.estimateCardinalityIfNeeded(plan1);
@@ -127,8 +123,8 @@ public class TestNaiveCardinalityEstimator {
 		Assert.assertEquals(new Double(10.0), cardinalityEstimator.getCardinalityMetadata(plan1).getOutputCardinality());
 		
 		TextBookCostEstimator estimator = new TextBookCostEstimator(null, cardinalityEstimator);
-		Cost cost = estimator.cost(plan2);
-		Assert.assertEquals(new Double(366.6666666666667), cost);
+		Cost cost = estimator.cost(plan1);
+		Assert.assertEquals(new Double(390), cost);
 	}
 	
 }
