@@ -1,14 +1,20 @@
 package uk.ac.ox.cs.pdq.io.jaxb.adapted;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Formula;
+import uk.ac.ox.cs.pdq.fol.Term;
+import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
 
 /**
@@ -36,7 +42,20 @@ public class AdaptedQuery {
 
 	public ConjunctiveQuery toQuery() {
 		try {
-			Formula something = Conjunction.of(atoms);
+			List<Atom> newAtoms = new ArrayList<>();
+			
+			for (Atom a: atoms) {
+				List<Term> terms = new ArrayList<>();
+				for(Term t: a.getTerms()) {
+					if (t instanceof UntypedConstant) {
+						terms.add(TypedConstant.create(((UntypedConstant) t).getSymbol()));
+					} else {
+						terms.add(t);
+					}
+				}
+				newAtoms.add(Atom.create(a.getPredicate(),terms.toArray(new Term[terms.size()])));
+			}
+			Formula something = Conjunction.of( newAtoms.toArray(new Atom[newAtoms.size()]));
 			ConjunctiveQuery ret = null;
 			if (something instanceof Atom) {
 				ret = ConjunctiveQuery.create(freeVariables, (Atom) something);

@@ -1,6 +1,7 @@
 package uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
@@ -120,7 +121,8 @@ public class AccessibleDatabaseChaseInstance extends uk.ac.ox.cs.pdq.reasoning.c
 	 */
 	private static Collection<Atom> createCanonicalDatabaseAndAccessibleFactsForSchemaConstants(ConjunctiveQuery query, Schema schema) {
 		// Gets the canonical database of the query
-		List<Atom> facts = Arrays.asList(uk.ac.ox.cs.pdq.reasoning.chase.Utility.applySubstitution(query, query.getSubstitutionToCanonicalConstants()).getAtoms());
+		List<Atom> facts = new ArrayList<>(); 
+		facts.addAll(Arrays.asList(uk.ac.ox.cs.pdq.reasoning.chase.Utility.applySubstitution(query, query.getSubstitutionToCanonicalConstants()).getAtoms()));
 		// Create the Accessible(.) facts
 		// One Accessible(.) is being created for every schema constant
 		for (TypedConstant constant:uk.ac.ox.cs.pdq.util.Utility.getTypedConstants(query)) 

@@ -45,13 +45,16 @@ public class AccessibleStateUtility {
 				if (r.getName().equals(axiom.getBaseRelation().getName())) 
 					facts = atomsMap.get(r);
 			}
-			Multimap<Collection<Term>, Atom> groupsOfFacts = LinkedHashMultimap.create();
-			for(Atom fact: facts) 
-				groupsOfFacts.put(uk.ac.ox.cs.pdq.util.Utility.getTerms(fact,axiom.getAccessMethod().getZeroBasedInputPositions()), fact);
-			Iterator<Collection<Term>> keyIterator = groupsOfFacts.keySet().iterator();
-			while(keyIterator.hasNext()) {
-				Collection<Atom> collection = Sets.newLinkedHashSet(groupsOfFacts.get(keyIterator.next()));
-				ret.add(Pair.of(axiom, collection));
+			if (facts!=null) {
+				Multimap<Collection<Term>, Atom> groupsOfFacts = LinkedHashMultimap.create();
+				for(Atom fact: facts)  {
+					groupsOfFacts.put(uk.ac.ox.cs.pdq.util.Utility.getTerms(fact,axiom.getAccessMethod().getZeroBasedInputPositions()), fact);
+				}
+				Iterator<Collection<Term>> keyIterator = groupsOfFacts.keySet().iterator();
+				while(keyIterator.hasNext()) {
+					Collection<Atom> collection = Sets.newLinkedHashSet(groupsOfFacts.get(keyIterator.next()));
+					ret.add(Pair.of(axiom, collection));
+				}
 			}
 		}
 		return ret;

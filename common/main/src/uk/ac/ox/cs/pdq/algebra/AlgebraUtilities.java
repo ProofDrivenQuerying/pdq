@@ -40,7 +40,7 @@ public class AlgebraUtilities {
 		if(selectionCondition instanceof ConstantEqualityCondition) {
 			int position = ((ConstantEqualityCondition) selectionCondition).getPosition();
 			if( position > outputAttributes.length || 
-					((ConstantEqualityCondition) selectionCondition).getConstant().getType().equals(outputAttributes[position].getType())) 
+					!((ConstantEqualityCondition) selectionCondition).getConstant().getType().equals(outputAttributes[position].getType())) 
 				return false;
 			else 
 				return true;
