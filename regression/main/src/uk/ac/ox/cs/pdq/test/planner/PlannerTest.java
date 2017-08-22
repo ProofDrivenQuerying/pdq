@@ -158,7 +158,6 @@ public class PlannerTest extends RegressionTest {
 		 */
 		private boolean compare(File directory) throws ReflectiveOperationException {
 			try {
-
 				this.out.println("\nStarting case '" + directory.getAbsolutePath() + "'");
 				PlannerParameters plannerParams = new PlannerParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
 				CostParameters costParams = new CostParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
@@ -166,7 +165,7 @@ public class PlannerTest extends RegressionTest {
 				override(costParams, paramOverrides);
 				ReasoningParameters reasoningParams = new ReasoningParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
 				DatabaseParameters dbParams = new DatabaseParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
-				Schema schema = DbIOManager.importSchema(new File(directory.getAbsolutePath() + '/' + SCHEMA_FILE));
+				Schema schema = IOManager.importSchema(new File(directory.getAbsolutePath() + '/' + SCHEMA_FILE));
 				ConjunctiveQuery query = IOManager.importQuery(new File(directory.getAbsolutePath() + '/' + QUERY_FILE));
 			
 				Entry<RelationalTerm, Cost> expectedPlan = PlannerTestUtilities.obtainPlan(directory.getAbsolutePath() + '/' + PLAN_FILE, schema);
@@ -175,9 +174,11 @@ public class PlannerTest extends RegressionTest {
 							"Schema and query must be provided for each regression test. "
 									+ "(schema:" + schema + ", query: " + query + ", plan: " + expectedPlan + ")");
 				}
-				//File convert = new File("c:\\work\\tmp\\regressionConvertedSchemas\\"+directory.getParentFile().getName(),directory.getName());
-				//convert.mkdirs();
-				//DbIOManager.exportSchemaToXml(schema, new File(convert,"OriginalSchema.xml"));
+				if (costParams.getCatalog() == null) {
+					File catalog = new File(directory, "catalog.properties");
+					if (catalog.exists())
+						costParams.setCatalog(catalog.getAbsolutePath());
+				}
 				schema = addAccessibleToSchema(schema);
 				Entry<RelationalTerm, Cost> observedPlan = null;
 				try(ProgressLogger pLog = new SimpleProgressLogger(this.out)) {

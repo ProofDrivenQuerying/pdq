@@ -98,6 +98,7 @@ public class AdaptedAccessMethod implements Serializable {
 	 * converting to get comma separated list of numbers. Mostly used in the
 	 * "inputs" attribute.
 	 */
+	private static final boolean IS_CONVERTING=false;
 	private Integer[] parseIntArrayFromCommaSeparatedList(final String string) {
 		try {
 			final List<Integer> ints = new ArrayList<Integer>();
@@ -105,15 +106,17 @@ public class AdaptedAccessMethod implements Serializable {
 				// this case is only possible when we have remote sources declared.
 				return ints.toArray(new Integer[] {});
 			}
+			int deduct = 0;
+			if (IS_CONVERTING) deduct = 1;
 			if (!string.contains(",")) {
 				// this case is only possible when we have remote sources declared.
-				return new Integer[] {new Integer(Integer.parseInt(string))};
+				return new Integer[] {new Integer(Integer.parseInt(string) - deduct)};
 			}
 			for (final String s : string.split(",")) {
 				final String trimmed = s.trim();
 
 				if (trimmed.length() > 0) {
-					ints.add(Integer.parseInt(trimmed));
+					ints.add(Integer.parseInt(trimmed) - deduct);
 				}
 			}
 			return ints.toArray(new Integer[] {});
