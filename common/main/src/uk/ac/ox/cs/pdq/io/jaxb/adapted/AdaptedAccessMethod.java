@@ -107,13 +107,13 @@ public class AdaptedAccessMethod implements Serializable {
 			}
 			if (!string.contains(",")) {
 				// this case is only possible when we have remote sources declared.
-				return new Integer[] {new Integer(Integer.parseInt(string))};
+				return new Integer[] {new Integer(Integer.parseInt(string)-1)};
 			}
 			for (final String s : string.split(",")) {
 				final String trimmed = s.trim();
 
 				if (trimmed.length() > 0) {
-					ints.add(Integer.parseInt(trimmed));
+					ints.add(Integer.parseInt(trimmed)-1);
 				}
 			}
 			return ints.toArray(new Integer[] {});

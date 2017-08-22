@@ -8,6 +8,7 @@ import javax.xml.bind.annotation.XmlElements;
 
 import org.apache.log4j.Logger;
 
+import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Formula;
@@ -84,13 +85,22 @@ public class AdaptedAtom {
 	public Formula toFormula() {
 		try {
 			if (terms2 != null) {
-				predicate = Predicate.create(predicateName, terms2.length,"EQUALITY".equals(predicateName));
+				if (AdaptedSchema.getCurrentSchema()!=null) {
+					Relation r = AdaptedSchema.getCurrentSchema().getRelation(predicate.getName());
+					if (r !=null)
+						predicate = r;
+				}
+				if (predicate==null)
+					predicate = Predicate.create(predicateName, terms2.length,"EQUALITY".equals(predicateName));
 				Term[] newTerms = new Term[terms2.length];
 				for (int i = 0; i < terms2.length; i++) {
 					AdaptedVariable v = terms2[i];
-
 					if (v instanceof AdaptedConstant) {
-						newTerms[i] = ((AdaptedConstant) v).toConstant();
+						if (predicate instanceof Relation) {
+							newTerms[i] = ((AdaptedConstant) v).toConstant(((Relation)predicate).getAttribute(i).getType());
+						} else {
+							newTerms[i] = ((AdaptedConstant) v).toConstant();
+						}
 					} else if (v instanceof AdaptedVariable) {
 						newTerms[i] = v.toVariable();
 					}

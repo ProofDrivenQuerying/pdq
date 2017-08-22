@@ -56,7 +56,7 @@ public class AccessibilityAxiom extends TGD {
 		Atom atom = createAtomsWithoutExtraAttribute(relation);
 		Term[] terms = atom.getTerms();
 		for (int bindingPos: bindingPositions) 
-			leftAtoms.add(Atom.create(AccessibleSchema.accessibleRelation, terms[bindingPos - 1]));
+			leftAtoms.add(Atom.create(AccessibleSchema.accessibleRelation, terms[bindingPos]));
 		leftAtoms.add(atom);
 		return leftAtoms.toArray(new Atom[leftAtoms.size()]);
 	}

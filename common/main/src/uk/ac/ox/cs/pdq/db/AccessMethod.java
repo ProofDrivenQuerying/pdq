@@ -62,7 +62,7 @@ public class AccessMethod implements Serializable {
 	public Integer[] getZeroBasedInputPositions() {
 		Integer[] zero = new Integer[this.inputs.length];
 		for(int index = 0; index < this.inputs.length; ++index) 
-			zero[index] = this.inputs[index] - 1;
+			zero[index] = this.inputs[index];
 		return zero;
 	}
 	

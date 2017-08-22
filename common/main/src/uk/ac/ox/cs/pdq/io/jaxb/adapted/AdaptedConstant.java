@@ -35,17 +35,22 @@ public class AdaptedConstant extends AdaptedVariable {
 	public String getValue() {
 		return this.value;
 	}
-
 	public Constant toConstant() {
-		if (type == null)
-			return UntypedConstant.create(value);
+		return toConstant(null);
+	}
+	public Constant toConstant(Type preferedType) {
+		if (type == null) {
+			type = preferedType;
+		}
 		TypedConstant ret = null;
-		if (type != null && type == Integer.class) {
-			ret = TypedConstant.create(Integer.parseInt(value));
+		if (type != null && type == Double.class) {
+			ret = TypedConstant.create(new Double(Double.parseDouble(value)));
+		} else if (type != null && type == Integer.class) {
+			ret = TypedConstant.create(new Integer(Integer.parseInt(value)));
 		} else {
 			ret = TypedConstant.create(value);
 		}
-		if (ret.getType() != type) {
+		if (type!=null && ret.getType() != type) {
 			throw new IllegalArgumentException("Type should match!");
 		}
 		return ret;
@@ -66,4 +71,5 @@ public class AdaptedConstant extends AdaptedVariable {
 	public String toString() {
 		return value;
 	}
+
 }

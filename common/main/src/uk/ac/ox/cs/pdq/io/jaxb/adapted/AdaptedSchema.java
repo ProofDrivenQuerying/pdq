@@ -27,7 +27,9 @@ public class AdaptedSchema {
 	private Relation[] relations;
 	private String description;
 	private Dependency[] dependencies;
+	private static AdaptedSchema currentSchema = null;
 	public AdaptedSchema() {
+		currentSchema = this;
 	}
 
 	public AdaptedSchema(Schema s) {
@@ -36,8 +38,12 @@ public class AdaptedSchema {
 		dependencies.addAll(Arrays.asList(s.getDependencies()));
 		dependencies.addAll(Arrays.asList(s.getKeyDependencies()));
 		setDependencies(dependencies.toArray(new Dependency[dependencies.size()]));
+		currentSchema = this;
 	}
 
+	protected static AdaptedSchema getCurrentSchema() {
+		return currentSchema;
+	}
 	public Schema toSchema() {
 		if (getDependencies()!=null && getDependencies().length>0)
 			return new Schema(relations,getDependencies());
@@ -103,5 +109,10 @@ public class AdaptedSchema {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public Relation getRelation(String name2) {
+		for (Relation r: relations) if (r.getName().equals(name2)) return r;
+		return null;
 	}
 }
