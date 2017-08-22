@@ -86,7 +86,7 @@ public class AdaptedAtom {
 		try {
 			if (terms2 != null) {
 				if (AdaptedSchema.getCurrentSchema()!=null) {
-					Relation r = AdaptedSchema.getCurrentSchema().getRelation(predicate.getName());
+					Relation r = AdaptedSchema.getCurrentSchema().getRelation(predicateName);
 					if (r !=null)
 						predicate = r;
 				}

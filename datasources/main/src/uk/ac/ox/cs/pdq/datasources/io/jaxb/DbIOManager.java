@@ -9,6 +9,7 @@ import java.util.Properties;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.adapted.AdaptedDbSchema;
@@ -66,6 +67,19 @@ public class DbIOManager extends IOManager {
 		}
 	}
 	
+	public static AdaptedDbSchema readAdaptedSchema(File schema) throws JAXBException, FileNotFoundException {
+		try {
+			if (!schema.exists() )
+				throw new FileNotFoundException(schema.getAbsolutePath());
+			JAXBContext jaxbContext = JAXBContext.newInstance(AdaptedDbSchema.class);
+			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+			AdaptedDbSchema customer = (AdaptedDbSchema) jaxbUnmarshaller.unmarshal(schema);
+			return customer;
+		}catch(Throwable t) {
+			throw new JAXBException("Error while parsing file: "+ schema.getAbsolutePath(),t);
+		}
+	}
+	
 	public static Map<AccessMethod,String> createCatalog(File schema, File to) throws JAXBException, FileNotFoundException {
 		try {
 			if (!schema.exists() )
@@ -78,21 +92,35 @@ public class DbIOManager extends IOManager {
 			customer.toSchema(null);
 			Map<AccessMethod, String> map = AdaptedAccessMethod.getMapOfCosts();
 			for (AdaptedRelation r: customer.getAdaptedRelations()) {
-				System.out.println("" + r.getName() + " size = " + r.getSize());
-				//RE:AssayLimited										CA:1148942
-				bw.write("RE:"+r.getName() + "\t\t\t\t\t\t\t\t\t" + "CA:"+r.getSize()+"\n");
-				for (AccessMethod am: r.getAccessMethods()) {
-					//RE:relation_name  BI:access_method_name  			RT:cost_as_in_xml
-					bw.write("RE:"+r.getName() + "\t\t\t\t" + "BI:" + am.getName() + "\t\tRT:"+map.get(am)+"\n");
-					System.out.println("\t" + r.getName() + "." + am.getName() + " cost = " + map.get(am));
+				if (r.getSize()!=null) {
+					//System.out.println("" + r.getName() + " size = " + r.getSize());
+					//RE:AssayLimited										CA:1148942
+					bw.write("RE:"+r.getName() + "\t\t\t\t\t\t\t\t\t" + "CA:"+r.getSize()+"\n");
+				}
+				if (r.getAccessMethods()!=null) {
+					for (AccessMethod am: r.getAccessMethods()) {
+						//RE:relation_name  BI:access_method_name  			RT:cost_as_in_xml
+						bw.write("RE:"+r.getName() + "\t\t\t\t" + "BI:" + am.getName() + "\t\tRT:"+map.get(am)+"\n");
+						//System.out.println("\t" + r.getName() + "." + am.getName() + " cost = " + map.get(am));
+					}
 				}
 				
 			}
 			bw.close();
+			if (to.length()==0) {
+				to.delete();
+			}
 			return map;
 		}catch(Throwable t) {
 			throw new JAXBException("Error while parsing file: "+ schema.getAbsolutePath(),t);
 		}
+	}
+
+	public static void exportAdaptedSchemaToXml(AdaptedDbSchema s, File out) throws JAXBException {
+		JAXBContext jaxbContext = JAXBContext.newInstance(AdaptedDbSchema.class);
+		Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+		jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+		jaxbMarshaller.marshal(s, out);
 	}
 	
 }

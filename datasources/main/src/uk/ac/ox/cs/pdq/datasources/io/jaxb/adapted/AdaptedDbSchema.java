@@ -11,6 +11,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 
 import uk.ac.ox.cs.pdq.datasources.builder.SchemaDiscoverer;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.Source;
@@ -26,6 +27,7 @@ import uk.ac.ox.cs.pdq.io.jaxb.adapted.AdaptedView;
  *
  */
 @XmlRootElement(name = "schema")
+@XmlType (propOrder={"sources","relations","dependencies"})
 public class AdaptedDbSchema {
 	private Source[] sources;
 	private String name;
@@ -44,6 +46,13 @@ public class AdaptedDbSchema {
 
 	public Schema toSchema(Properties properties) throws  ClassNotFoundException, InstantiationException, IllegalAccessException {
 		try {
+			if (sources==null) {
+				// not every schema has external sources
+				if (getDependencies()!=null && getDependencies().length>0)
+					return new Schema(relations,getDependencies());
+				Schema s = new Schema(relations);
+				return s;
+			}
 			HashSet<Relation> discoveredRelations = new HashSet<Relation>();
 			List<String> discoveredSources = new ArrayList<>();
 			for (Source s : sources) {
@@ -108,6 +117,18 @@ public class AdaptedDbSchema {
 	@XmlElements({ @XmlElement(name = "relation", type = AdaptedRelation.class), @XmlElement(name = "view", type = AdaptedView.class) })
 	public AdaptedRelation[] getRelations() {
 		List<AdaptedRelation> ret = new ArrayList<>();
+		if (ars!=null) {
+			// we have read an old schema file and now we want to export the new format.
+			try {
+				Schema s = this.toSchema(null);
+				if (s!=null) {
+					relations = s.getRelations();
+				}
+			} catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+				e.printStackTrace();
+			}
+		}
+		
 		if (relations == null)
 			return null;
 		for (Relation r : relations) {
@@ -118,6 +139,11 @@ public class AdaptedDbSchema {
 		}
 		AdaptedRelation[] t = new AdaptedRelation[ret.size()];
 		t = ret.toArray(t);
+		if (ars!=null) {
+			for (int i = 0; i < t.length; i++) {
+				t[i].setSource(ars[i].getSource());
+			}
+		}
 		return t;
 	}
 

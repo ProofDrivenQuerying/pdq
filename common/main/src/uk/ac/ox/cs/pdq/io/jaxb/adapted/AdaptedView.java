@@ -40,7 +40,11 @@ public class AdaptedView extends AdaptedRelation {
 			return new View(getDependency(), getAccessMethods());
 		}
 		if (getAccessMethods() != null) {
-			return new View(getName(), getAttributes(), getAccessMethods());
+			Attribute[] attr = getAttributes();
+			if (attr==null) {
+				attr = new Attribute[] {}; 
+			}
+			return new View(getName(), attr, getAccessMethods());
 		}
 		if (getAttributes() != null) {
 			return new View(getName(), getAttributes());
