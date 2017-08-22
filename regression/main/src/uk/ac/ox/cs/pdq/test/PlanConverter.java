@@ -35,9 +35,9 @@ public class PlanConverter {
 					saved.mkdirs();
 					AdaptedDbSchema s = DbIOManager.readAdaptedSchema(child);
 					DbIOManager.createCatalog(child,new File(child.getParentFile(),"catalog.properties"));			
-					//child.renameTo(saved);
+					child.renameTo(saved);
 					DbIOManager.exportAdaptedSchemaToXml(s, new File("c:\\work\\temp.xml"));
-					//DbIOManager.exportAdaptedSchemaToXml(s, child);
+					DbIOManager.exportAdaptedSchemaToXml(s, child);
 					counter++;
 				}
 			}
