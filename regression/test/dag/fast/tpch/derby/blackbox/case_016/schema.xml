@@ -1,18 +1,21 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <schema>
-	<sources>
-		<source name="tpch"
-			discoverer="uk.ac.ox.cs.pdq.sql.PostgresqlSchemaDiscoverer"
-			driver="org.postgresql.Driver"
-			url="jdbc:postgresql://localhost/" database="tpch_0001" username="root"
-			password="root" />
-	</sources>
-	<relations>
-		<relation name="nation" source="tpch">
-			<access-method name="m10" type="FREE" cost="5" />
-		</relation>
-		<relation name="region" source="tpch">
-			<access-method name="m12" type="FREE" cost="5" />
-		</relation>
-	</relations>
+    <sources>
+        <source database="tpch_0001" discoverer="uk.ac.ox.cs.pdq.sql.PostgresqlSchemaDiscoverer" driver="org.postgresql.Driver" name="tpch" password="root" url="jdbc:postgresql://localhost/" username="root"/>
+    </sources>
+    <relations>
+        <relation name="region" source="tpch">
+            <attribute name="r_regionkey" type="java.lang.Integer"/>
+            <attribute name="r_name" type="java.lang.String"/>
+            <attribute name="r_comment" type="java.lang.String"/>
+            <access-method name="m12"/>
+        </relation>
+        <relation name="nation" source="tpch">
+            <attribute name="n_nationkey" type="java.lang.Integer"/>
+            <attribute name="n_name" type="java.lang.String"/>
+            <attribute name="n_regionkey" type="java.lang.Integer"/>
+            <attribute name="n_comment" type="java.lang.String"/>
+            <access-method name="m10"/>
+        </relation>
+    </relations>
 </schema>

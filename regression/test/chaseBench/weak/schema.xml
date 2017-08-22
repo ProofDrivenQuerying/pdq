@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <schema>
     <relations>
-        <relation isEquality="false" name="emp">
+        <relation name="emp">
             <attribute name="e" type="java.lang.String"/>
             <attribute name="d" type="java.lang.String"/>
             <attribute name="InstanceID" type="java.lang.Integer"/>
         </relation>
-        <relation isEquality="false" name="deptemp">
+        <relation name="deptemp">
             <attribute name="d" type="java.lang.String"/>
             <attribute name="n" type="java.lang.String"/>
             <attribute name="e" type="java.lang.String"/>
             <attribute name="InstanceID" type="java.lang.Integer"/>
         </relation>
-        <relation isEquality="false" name="dept">
+        <relation name="dept">
             <attribute name="d" type="java.lang.String"/>
             <attribute name="m" type="java.lang.String"/>
             <attribute name="n" type="java.lang.String"/>

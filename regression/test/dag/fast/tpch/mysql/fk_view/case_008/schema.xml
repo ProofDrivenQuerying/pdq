@@ -1,419 +1,472 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <schema>
-	<sources>
-		<source name="tpch"
-			discoverer="uk.ac.ox.cs.pdq.sql.PostgresqlSchemaDiscoverer"
-			driver="org.postgresql.Driver"
-			url="jdbc:postgresql://localhost/" database="tpch_0001" username="root"
-			password="root" />
-	</sources>
-	<relations>
-		<relation name="customer" source="tpch">
-			<access-method name="m1" type="LIMITED" inputs="4" cost="50.0" />
-		</relation>
-		<relation name="part" source="tpch">
-			<access-method name="m2" type="FREE" cost="100.0" />
-		</relation>
-		<relation name="supplier" source="tpch">
-			<access-method name="m3" type="LIMITED" inputs="4" cost="50.0" />
-			<access-method name="m20" type="FREE" cost="100.0" />
-		</relation>
-		<relation name="partsupp" source="tpch">
-			<access-method name="m4" type="LIMITED" inputs="1" cost="50.0" />
-			<access-method name="m5" type="LIMITED" inputs="2" cost="50.0" />
-			<access-method name="m6" type="LIMITED" inputs="1,2" cost="25.0" />
-		</relation>
-		<relation name="nation" source="tpch">
-			<access-method name="m7" type="LIMITED" inputs="3" cost="50.0" />
-		</relation>
-		<relation name="region" source="tpch">
-			<access-method name="m8" type="FREE" cost="100.0" />
-		</relation>
-		<relation name="orders" source="tpch">
-			<access-method name="m9" type="LIMITED" inputs="2" cost="50.0" />
-		</relation>
-		<relation name="lineitem" source="tpch">
-			<access-method name="m10" type="LIMITED" inputs="2" cost="50.0" />
-			<access-method name="m11" type="LIMITED" inputs="3," cost="50.0" />
-			<access-method name="m12" type="LIMITED" inputs="2,3" cost="25.0" />
-		</relation>
-		<!--
-			CREATE VIEW region_nation AS
-				SELECT n.n_nationkey as nation_key, n_name as nation_name,
-					r.r_regionkey as region_key, r_name as region_name
-				FROM nation as n, region as r
-				WHERE n.n_regionkey = r.r_regionkey
-			-->
-		<relation name="region_nation" source="tpch">
-			<access-method type="LIMITED" name="m21" inputs="1" cost="50.0" />
-			<access-method type="FREE" name="f9" cost="100.0" />
-		</relation>
-		<!--
-			CREATE VIEW order_customer AS
-				SELECT c.c_name as cname, c.c_address as caddress,
-					c.c_nationkey as cnation, c.c_acctbal as cactbal,
-					o.o_orderpriority as opriority, o.o_clerk as oclerk,
-					p.p_name as pname, p.p_brand as pbrand, p.p_type as ptype,
-					l.l_extendedprice as lextendedprice,
-					l.l_discount as ldiscount, l.l_tax as ltax,
-					l.l_returnflag as lflag
-				FROM customer as c, orders as o, lineitem as l, part as p
-				WHERE o.o_orderkey = l.l_orderkey
-				AND o.o_custkey = c.c_custkey
-				AND l.l_partkey = p.p_partkey
-			-->
-		<relation name="order_customer" source="tpch">
-			<access-method type="LIMITED" name="m14" inputs="3" cost="50.0" />
-			<access-method type="LIMITED" name="m15" inputs="1,3,5,7" cost="6.25" />
-			<access-method type="FREE" name="f10" cost="100.0" />
-		</relation>
-		<!--
-			CREATE VIEW order_supplier AS SELECT s.s_name as sname,
-				s.s_address as saddress, s.s_nationkey as snation, 
-				s.s_acctbal as sactbal, o.o_orderpriority as opriority,
-				o.o_clerk as oclerk, p.p_name as pname, p.p_brand as pbrand,
-				p.p_type as ptype, l.l_extendedprice as lextendedprice, 
-				l.l_discount as ldiscount, l.l_tax as ltax,
-				l.l_returnflag as lflag
-			FROM supplier as s, orders as o, lineitem as l, part as p
-			WHERE o.o_orderkey = l.l_orderkey 
-			AND l.l_partkey = p.p_partkey
-			AND l.l_suppkey = s.s_suppkey
-			-->
-		<relation name="order_supplier" source="tpch">
-			<access-method type="LIMITED" name="m17" inputs="3" cost="50.0" />
-			<access-method type="LIMITED" name="m18" inputs="1,3,5,7" cost="6.25" />
-			<access-method type="FREE" name="f11" cost="100.0" />
-		</relation>
-	</relations>
-	<dependencies>
-		<dependency>
-			<body>
-				<atom name="nation">
-					<variable name="nkey" />
-					<variable name="nname" />
-					<variable name="rkey" />
-					<variable />
-				</atom>
-				<atom name="region">
-					<variable name="rkey" />
-					<variable name="rname" />
-					<variable />
-				</atom>
-			</body>
-			<head>
-				<atom name="region_nation">
-					<variable name="nkey" />
-					<variable name="nname" />
-					<variable name="rkey" />
-					<variable name="rname" />
-				</atom>
-			</head>
-		</dependency>
-		<dependency>
-			<body>
-				<atom name="region_nation">
-					<variable name="nkey" />
-					<variable name="nname" />
-					<variable name="rkey" />
-					<variable name="rname" />
-				</atom>
-			</body>
-			<head>
-				<atom name="nation">
-					<variable name="nkey" />
-					<variable name="nname" />
-					<variable name="rkey" />
-					<variable />
-				</atom>
-				<atom name="region">
-					<variable name="rkey" />
-					<variable name="rname" />
-					<variable />
-				</atom>
-			</head>
-		</dependency>
-		<dependency>
-			<body>
-				<atom name="customer">
-					<variable name="ckey" />
-					<variable name="cname" />
-					<variable name="caddress" />
-					<variable name="cnation" />
-					<variable name="cphone" />
-					<variable name="cacctbal" />
-					<variable name="cmktsegment" />
-					<variable name="ccomment" />
-				</atom>
-				<atom name="orders">
-					<variable name="okey" />
-					<variable name="ckey" />
-					<variable name="ostatus" />
-					<variable name="ototalprice" />
-					<variable name="orderdate" />
-					<variable name="opriority" />
-					<variable name="oclerk" />
-					<variable name="oshipprio" />
-					<variable name="ocomment" />
-				</atom>
-				<atom name="lineitem">
-					<variable name="okey" />
-					<variable name="pkey" />
-					<variable name="skey" />
-					<variable name="linenumber" />
-					<variable name="lquantity" />
-					<variable name="lextendedprice" />
-					<variable name="ldiscount" />
-					<variable name="ltax" />
-					<variable name="lflag" />
-					<variable name="lstatus" />
-					<variable name="lshipdata" />
-					<variable name="lcommitdate" />
-					<variable name="lreceiptdate" />
-					<variable name="lshipinstruct" />
-					<variable name="lshipmode" />
-					<variable name="lcomment" />
-				</atom>
-				<atom name="part">
-					<variable name="pkey" />
-					<variable name="pname" />
-					<variable />
-					<variable name="pbrand" />
-					<variable name="ptype" />
-					<variable />
-					<variable />
-					<variable />
-					<variable />
-				</atom>
-			</body>
-			<head>
-				<atom name="order_customer">
-					<variable name="cname" />
-					<variable name="caddress" />
-					<variable name="cnation" />
-					<variable name="cacctbal" />
-					<variable name="opriority" />
-					<variable name="oclerk" />
-					<variable name="pname" />
-					<variable name="pbrand" />
-					<variable name="ptype" />
-					<variable name="l_extendedprice" />
-					<variable name="ldiscount" />
-					<variable name="ltax" />
-					<variable name="lflag" />
-				</atom>
-			</head>
-		</dependency>
-		<dependency>
-			<body>
-				<atom name="order_customer">
-					<variable name="cname" />
-					<variable name="caddress" />
-					<variable name="cnation" />
-					<variable name="cactbal" />
-					<variable name="opriority" />
-					<variable name="oclerk" />
-					<variable name="pname" />
-					<variable name="pbrand" />
-					<variable name="ptype" />
-					<variable name="l_extendedprice" />
-					<variable name="ldiscount" />
-					<variable name="ltax" />
-					<variable name="lflag" />
-				</atom>
-			</body>
-			<head>
-				<atom name="customer">
-					<variable name="ckey" />
-					<variable name="cname" />
-					<variable name="caddress" />
-					<variable name="cnation" />
-					<variable name="cphone" />
-					<variable name="cacctbal" />
-					<variable name="cmktsegment" />
-					<variable name="ccomment" />
-				</atom>
-				<atom name="orders">
-					<variable name="okey" />
-					<variable name="ckey" />
-					<variable name="ostatus" />
-					<variable name="ototalprice" />
-					<variable name="orderdate" />
-					<variable name="opriority" />
-					<variable name="oclerk" />
-					<variable name="oshipprio" />
-					<variable name="ocomment" />
-				</atom>
-				<atom name="lineitem">
-					<variable name="okey" />
-					<variable name="pkey" />
-					<variable name="skey" />
-					<variable name="linenumber" />
-					<variable name="lquantity" />
-					<variable name="lextendedprice" />
-					<variable name="ldiscount" />
-					<variable name="ltax" />
-					<variable name="lflag" />
-					<variable name="lstatus" />
-					<variable name="lshipdata" />
-					<variable name="lcommitdate" />
-					<variable name="lreceiptdate" />
-					<variable name="lshipinstruct" />
-					<variable name="lshipmode" />
-					<variable name="lcomment" />
-				</atom>
-				<atom name="part">
-					<variable name="pkey" />
-					<variable name="pname" />
-					<variable />
-					<variable name="pbrand" />
-					<variable name="ptype" />
-					<variable />
-					<variable />
-					<variable />
-					<variable />
-				</atom>
-			</head>
-		</dependency>
-		<dependency>
-			<body>
-				<atom name="orders">
-					<variable name="okey" />
-					<variable name="ckey" />
-					<variable name="ostatus" />
-					<variable name="ototalprice" />
-					<variable name="orderdate" />
-					<variable name="opriority" />
-					<variable name="oclerk" />
-					<variable name="oshipprio" />
-					<variable name="ocomment" />
-				</atom>
-				<atom name="lineitem">
-					<variable name="okey" />
-					<variable name="pkey" />
-					<variable name="skey" />
-					<variable name="linenumber" />
-					<variable name="lquantity" />
-					<variable name="lextendedprice" />
-					<variable name="ldiscount" />
-					<variable name="ltax" />
-					<variable name="lflag" />
-					<variable name="lstatus" />
-					<variable name="lshipdata" />
-					<variable name="lcommitdate" />
-					<variable name="lreceiptdate" />
-					<variable name="lshipinstruct" />
-					<variable name="lshipmode" />
-					<variable name="lcomment" />
-				</atom>
-				<atom name="part">
-					<variable name="pkey" />
-					<variable name="pname" />
-					<variable />
-					<variable name="pbrand" />
-					<variable name="ptype" />
-					<variable />
-					<variable />
-					<variable />
-					<variable />
-				</atom>
-				<atom name="supplier">
-					<variable name="skey" />
-					<variable name="sname" />
-					<variable name="saddress" />
-					<variable name="snation" />
-					<variable name="sphone"/>
-					<variable name="sacctbal"/>
-					<variable name="scomment"/>
-				</atom>
-			</body>
-			<head>
-				<atom name="order_supplier">
-					<variable name="sname" />
-					<variable name="saddress" />
-					<variable name="snation" />
-					<variable name="sacctbal" />
-					<variable name="opriority" />
-					<variable name="oclerk" />
-					<variable name="pname" />
-					<variable name="pbrand" />
-					<variable name="ptype" />
-					<variable name="l_extendedprice" />
-					<variable name="ldiscount" />
-					<variable name="ltax" />
-					<variable name="lflag" />
-				</atom>
-			</head>
-		</dependency>
-		<dependency>
-			<body>
-				<atom name="order_supplier">
-					<variable name="sname" />
-					<variable name="saddress" />
-					<variable name="snation" />
-					<variable name="sactbal" />
-					<variable name="opriority" />
-					<variable name="oclerk" />
-					<variable name="pname" />
-					<variable name="pbrand" />
-					<variable name="ptype" />
-					<variable name="l_extendedprice" />
-					<variable name="ldiscount" />
-					<variable name="ltax" />
-					<variable name="lflag" />
-				</atom>
-			</body>
-			<head>
-				<atom name="orders">
-					<variable name="okey" />
-					<variable name="ckey" />
-					<variable name="ostatus" />
-					<variable name="ototalprice" />
-					<variable name="orderdate" />
-					<variable name="opriority" />
-					<variable name="oclerk" />
-					<variable name="oshipprio" />
-					<variable name="ocomment" />
-				</atom>
-				<atom name="lineitem">
-					<variable name="okey" />
-					<variable name="pkey" />
-					<variable name="skey" />
-					<variable name="linenumber" />
-					<variable name="lquantity" />
-					<variable name="lextendedprice" />
-					<variable name="ldiscount" />
-					<variable name="ltax" />
-					<variable name="lflag" />
-					<variable name="lstatus" />
-					<variable name="lshipdata" />
-					<variable name="lcommitdate" />
-					<variable name="lreceiptdate" />
-					<variable name="lshipinstruct" />
-					<variable name="lshipmode" />
-					<variable name="lcomment" />
-				</atom>
-				<atom name="part">
-					<variable name="pkey" />
-					<variable name="pname" />
-					<variable />
-					<variable name="pbrand" />
-					<variable name="ptype" />
-					<variable />
-					<variable />
-					<variable />
-					<variable />
-				</atom>
-				<atom name="supplier">
-					<variable name="skey" />
-					<variable name="sname" />
-					<variable name="saddress" />
-					<variable name="snation" />
-					<variable name="sphone"/>
-					<variable name="sacctbal"/>
-					<variable name="scomment"/>
-				</atom>
-			</head>
-		</dependency>
-	</dependencies>
+    <sources>
+        <source database="tpch_0001" discoverer="uk.ac.ox.cs.pdq.sql.PostgresqlSchemaDiscoverer" driver="org.postgresql.Driver" name="tpch" password="root" url="jdbc:postgresql://localhost/" username="root"/>
+    </sources>
+    <relations>
+        <relation name="supplier" source="tpch">
+            <attribute name="s_suppkey" type="java.lang.Integer"/>
+            <attribute name="s_name" type="java.lang.String"/>
+            <attribute name="s_address" type="java.lang.String"/>
+            <attribute name="s_nationkey" type="java.lang.Integer"/>
+            <attribute name="s_phone" type="java.lang.String"/>
+            <attribute name="s_acctbal" type="java.math.BigDecimal"/>
+            <attribute name="s_comment" type="java.lang.String"/>
+            <access-method name="m3" inputs="3"/>
+            <access-method name="m20"/>
+        </relation>
+        <relation name="nation" source="tpch">
+            <attribute name="n_nationkey" type="java.lang.Integer"/>
+            <attribute name="n_name" type="java.lang.String"/>
+            <attribute name="n_regionkey" type="java.lang.Integer"/>
+            <attribute name="n_comment" type="java.lang.String"/>
+            <access-method name="m7" inputs="2"/>
+        </relation>
+        <relation name="order_customer" source="tpch">
+            <attribute name="cname" type="java.lang.String"/>
+            <attribute name="caddress" type="java.lang.String"/>
+            <attribute name="cnation" type="java.lang.Integer"/>
+            <attribute name="cactbal" type="java.math.BigDecimal"/>
+            <attribute name="opriority" type="java.lang.String"/>
+            <attribute name="oclerk" type="java.lang.String"/>
+            <attribute name="pname" type="java.lang.String"/>
+            <attribute name="pbrand" type="java.lang.String"/>
+            <attribute name="ptype" type="java.lang.String"/>
+            <attribute name="lextendedprice" type="java.math.BigDecimal"/>
+            <attribute name="ldiscount" type="java.math.BigDecimal"/>
+            <attribute name="ltax" type="java.math.BigDecimal"/>
+            <attribute name="lflag" type="java.lang.String"/>
+            <access-method name="m14" inputs="2"/>
+            <access-method name="m15" inputs="0,2,4,6"/>
+            <access-method name="f10"/>
+        </relation>
+        <relation name="region" source="tpch">
+            <attribute name="r_regionkey" type="java.lang.Integer"/>
+            <attribute name="r_name" type="java.lang.String"/>
+            <attribute name="r_comment" type="java.lang.String"/>
+            <access-method name="m8"/>
+        </relation>
+        <relation name="orders" source="tpch">
+            <attribute name="o_orderkey" type="java.lang.Integer"/>
+            <attribute name="o_custkey" type="java.lang.Integer"/>
+            <attribute name="o_orderstatus" type="java.lang.String"/>
+            <attribute name="o_totalprice" type="java.math.BigDecimal"/>
+            <attribute name="o_orderdate" type="java.sql.Date"/>
+            <attribute name="o_orderpriority" type="java.lang.String"/>
+            <attribute name="o_clerk" type="java.lang.String"/>
+            <attribute name="o_shippriority" type="java.lang.Integer"/>
+            <attribute name="o_comment" type="java.lang.String"/>
+            <access-method name="m9" inputs="1"/>
+        </relation>
+        <relation name="lineitem" source="tpch">
+            <attribute name="l_orderkey" type="java.lang.Integer"/>
+            <attribute name="l_partkey" type="java.lang.Integer"/>
+            <attribute name="l_suppkey" type="java.lang.Integer"/>
+            <attribute name="l_linenumber" type="java.lang.Integer"/>
+            <attribute name="l_quantity" type="java.math.BigDecimal"/>
+            <attribute name="l_extendedprice" type="java.math.BigDecimal"/>
+            <attribute name="l_discount" type="java.math.BigDecimal"/>
+            <attribute name="l_tax" type="java.math.BigDecimal"/>
+            <attribute name="l_returnflag" type="java.lang.String"/>
+            <attribute name="l_linestatus" type="java.lang.String"/>
+            <attribute name="l_shipdate" type="java.sql.Date"/>
+            <attribute name="l_commitdate" type="java.sql.Date"/>
+            <attribute name="l_receiptdate" type="java.sql.Date"/>
+            <attribute name="l_shipinstruct" type="java.lang.String"/>
+            <attribute name="l_shipmode" type="java.lang.String"/>
+            <attribute name="l_comment" type="java.lang.String"/>
+            <access-method name="m10" inputs="1"/>
+            <access-method name="m11" inputs="2"/>
+            <access-method name="m12" inputs="1,2"/>
+        </relation>
+        <relation name="partsupp" source="tpch">
+            <attribute name="ps_partkey" type="java.lang.Integer"/>
+            <attribute name="ps_suppkey" type="java.lang.Integer"/>
+            <attribute name="ps_availqty" type="java.lang.Integer"/>
+            <attribute name="ps_supplycost" type="java.math.BigDecimal"/>
+            <attribute name="ps_comment" type="java.lang.String"/>
+            <access-method name="m4" inputs="0"/>
+            <access-method name="m5" inputs="1"/>
+            <access-method name="m6" inputs="0,1"/>
+        </relation>
+        <relation name="customer" source="tpch">
+            <attribute name="c_custkey" type="java.lang.Integer"/>
+            <attribute name="c_name" type="java.lang.String"/>
+            <attribute name="c_address" type="java.lang.String"/>
+            <attribute name="c_nationkey" type="java.lang.Integer"/>
+            <attribute name="c_phone" type="java.lang.String"/>
+            <attribute name="c_acctbal" type="java.math.BigDecimal"/>
+            <attribute name="c_mktsegment" type="java.lang.String"/>
+            <attribute name="c_comment" type="java.lang.String"/>
+            <access-method name="m1" inputs="3"/>
+        </relation>
+        <relation name="region_nation" source="tpch">
+            <attribute name="nation_key" type="java.lang.Integer"/>
+            <attribute name="nation_name" type="java.lang.String"/>
+            <attribute name="region_key" type="java.lang.Integer"/>
+            <attribute name="region_name" type="java.lang.String"/>
+            <access-method name="m21" inputs="0"/>
+            <access-method name="f9"/>
+        </relation>
+        <relation name="order_supplier" source="tpch">
+            <attribute name="sname" type="java.lang.String"/>
+            <attribute name="saddress" type="java.lang.String"/>
+            <attribute name="snation" type="java.lang.Integer"/>
+            <attribute name="sactbal" type="java.math.BigDecimal"/>
+            <attribute name="opriority" type="java.lang.String"/>
+            <attribute name="oclerk" type="java.lang.String"/>
+            <attribute name="pname" type="java.lang.String"/>
+            <attribute name="pbrand" type="java.lang.String"/>
+            <attribute name="ptype" type="java.lang.String"/>
+            <attribute name="lextendedprice" type="java.math.BigDecimal"/>
+            <attribute name="ldiscount" type="java.math.BigDecimal"/>
+            <attribute name="ltax" type="java.math.BigDecimal"/>
+            <attribute name="lflag" type="java.lang.String"/>
+            <access-method name="m17" inputs="2"/>
+            <access-method name="m18" inputs="0,2,4,6"/>
+            <access-method name="f11"/>
+        </relation>
+        <relation name="part" source="tpch">
+            <attribute name="p_partkey" type="java.lang.Integer"/>
+            <attribute name="p_name" type="java.lang.String"/>
+            <attribute name="p_mfgr" type="java.lang.String"/>
+            <attribute name="p_brand" type="java.lang.String"/>
+            <attribute name="p_type" type="java.lang.String"/>
+            <attribute name="p_size" type="java.lang.Integer"/>
+            <attribute name="p_container" type="java.lang.String"/>
+            <attribute name="p_retailprice" type="java.math.BigDecimal"/>
+            <attribute name="p_comment" type="java.lang.String"/>
+            <access-method name="m2"/>
+        </relation>
+    </relations>
+    <dependencies>
+        <dependency type="TGD">
+            <body>
+                <atom name="nation">
+                    <variable name="nkey"/>
+                    <variable name="nname"/>
+                    <variable name="rkey"/>
+                    <variable name="_6471"/>
+                </atom>
+                <atom name="region">
+                    <variable name="rkey"/>
+                    <variable name="rname"/>
+                    <variable name="_6472"/>
+                </atom>
+            </body>
+            <head>
+                <atom name="region_nation">
+                    <variable name="nkey"/>
+                    <variable name="nname"/>
+                    <variable name="rkey"/>
+                    <variable name="rname"/>
+                </atom>
+            </head>
+        </dependency>
+        <dependency type="TGD">
+            <body>
+                <atom name="region_nation">
+                    <variable name="nkey"/>
+                    <variable name="nname"/>
+                    <variable name="rkey"/>
+                    <variable name="rname"/>
+                </atom>
+            </body>
+            <head>
+                <atom name="nation">
+                    <variable name="nkey"/>
+                    <variable name="nname"/>
+                    <variable name="rkey"/>
+                    <variable name="_6473"/>
+                </atom>
+                <atom name="region">
+                    <variable name="rkey"/>
+                    <variable name="rname"/>
+                    <variable name="_6474"/>
+                </atom>
+            </head>
+        </dependency>
+        <dependency type="TGD">
+            <body>
+                <atom name="customer">
+                    <variable name="ckey"/>
+                    <variable name="cname"/>
+                    <variable name="caddress"/>
+                    <variable name="cnation"/>
+                    <variable name="cphone"/>
+                    <variable name="cacctbal"/>
+                    <variable name="cmktsegment"/>
+                    <variable name="ccomment"/>
+                </atom>
+                <atom name="orders">
+                    <variable name="okey"/>
+                    <variable name="ckey"/>
+                    <variable name="ostatus"/>
+                    <variable name="ototalprice"/>
+                    <variable name="orderdate"/>
+                    <variable name="opriority"/>
+                    <variable name="oclerk"/>
+                    <variable name="oshipprio"/>
+                    <variable name="ocomment"/>
+                </atom>
+                <atom name="lineitem">
+                    <variable name="okey"/>
+                    <variable name="pkey"/>
+                    <variable name="skey"/>
+                    <variable name="linenumber"/>
+                    <variable name="lquantity"/>
+                    <variable name="lextendedprice"/>
+                    <variable name="ldiscount"/>
+                    <variable name="ltax"/>
+                    <variable name="lflag"/>
+                    <variable name="lstatus"/>
+                    <variable name="lshipdata"/>
+                    <variable name="lcommitdate"/>
+                    <variable name="lreceiptdate"/>
+                    <variable name="lshipinstruct"/>
+                    <variable name="lshipmode"/>
+                    <variable name="lcomment"/>
+                </atom>
+                <atom name="part">
+                    <variable name="pkey"/>
+                    <variable name="pname"/>
+                    <variable name="_6475"/>
+                    <variable name="pbrand"/>
+                    <variable name="ptype"/>
+                    <variable name="_6476"/>
+                    <variable name="_6477"/>
+                    <variable name="_6478"/>
+                    <variable name="_6479"/>
+                </atom>
+            </body>
+            <head>
+                <atom name="order_customer">
+                    <variable name="cname"/>
+                    <variable name="caddress"/>
+                    <variable name="cnation"/>
+                    <variable name="cacctbal"/>
+                    <variable name="opriority"/>
+                    <variable name="oclerk"/>
+                    <variable name="pname"/>
+                    <variable name="pbrand"/>
+                    <variable name="ptype"/>
+                    <variable name="l_extendedprice"/>
+                    <variable name="ldiscount"/>
+                    <variable name="ltax"/>
+                    <variable name="lflag"/>
+                </atom>
+            </head>
+        </dependency>
+        <dependency type="TGD">
+            <body>
+                <atom name="order_customer">
+                    <variable name="cname"/>
+                    <variable name="caddress"/>
+                    <variable name="cnation"/>
+                    <variable name="cactbal"/>
+                    <variable name="opriority"/>
+                    <variable name="oclerk"/>
+                    <variable name="pname"/>
+                    <variable name="pbrand"/>
+                    <variable name="ptype"/>
+                    <variable name="l_extendedprice"/>
+                    <variable name="ldiscount"/>
+                    <variable name="ltax"/>
+                    <variable name="lflag"/>
+                </atom>
+            </body>
+            <head>
+                <atom name="customer">
+                    <variable name="ckey"/>
+                    <variable name="cname"/>
+                    <variable name="caddress"/>
+                    <variable name="cnation"/>
+                    <variable name="cphone"/>
+                    <variable name="cacctbal"/>
+                    <variable name="cmktsegment"/>
+                    <variable name="ccomment"/>
+                </atom>
+                <atom name="orders">
+                    <variable name="okey"/>
+                    <variable name="ckey"/>
+                    <variable name="ostatus"/>
+                    <variable name="ototalprice"/>
+                    <variable name="orderdate"/>
+                    <variable name="opriority"/>
+                    <variable name="oclerk"/>
+                    <variable name="oshipprio"/>
+                    <variable name="ocomment"/>
+                </atom>
+                <atom name="lineitem">
+                    <variable name="okey"/>
+                    <variable name="pkey"/>
+                    <variable name="skey"/>
+                    <variable name="linenumber"/>
+                    <variable name="lquantity"/>
+                    <variable name="lextendedprice"/>
+                    <variable name="ldiscount"/>
+                    <variable name="ltax"/>
+                    <variable name="lflag"/>
+                    <variable name="lstatus"/>
+                    <variable name="lshipdata"/>
+                    <variable name="lcommitdate"/>
+                    <variable name="lreceiptdate"/>
+                    <variable name="lshipinstruct"/>
+                    <variable name="lshipmode"/>
+                    <variable name="lcomment"/>
+                </atom>
+                <atom name="part">
+                    <variable name="pkey"/>
+                    <variable name="pname"/>
+                    <variable name="_6480"/>
+                    <variable name="pbrand"/>
+                    <variable name="ptype"/>
+                    <variable name="_6481"/>
+                    <variable name="_6482"/>
+                    <variable name="_6483"/>
+                    <variable name="_6484"/>
+                </atom>
+            </head>
+        </dependency>
+        <dependency type="TGD">
+            <body>
+                <atom name="orders">
+                    <variable name="okey"/>
+                    <variable name="ckey"/>
+                    <variable name="ostatus"/>
+                    <variable name="ototalprice"/>
+                    <variable name="orderdate"/>
+                    <variable name="opriority"/>
+                    <variable name="oclerk"/>
+                    <variable name="oshipprio"/>
+                    <variable name="ocomment"/>
+                </atom>
+                <atom name="lineitem">
+                    <variable name="okey"/>
+                    <variable name="pkey"/>
+                    <variable name="skey"/>
+                    <variable name="linenumber"/>
+                    <variable name="lquantity"/>
+                    <variable name="lextendedprice"/>
+                    <variable name="ldiscount"/>
+                    <variable name="ltax"/>
+                    <variable name="lflag"/>
+                    <variable name="lstatus"/>
+                    <variable name="lshipdata"/>
+                    <variable name="lcommitdate"/>
+                    <variable name="lreceiptdate"/>
+                    <variable name="lshipinstruct"/>
+                    <variable name="lshipmode"/>
+                    <variable name="lcomment"/>
+                </atom>
+                <atom name="part">
+                    <variable name="pkey"/>
+                    <variable name="pname"/>
+                    <variable name="_6485"/>
+                    <variable name="pbrand"/>
+                    <variable name="ptype"/>
+                    <variable name="_6486"/>
+                    <variable name="_6487"/>
+                    <variable name="_6488"/>
+                    <variable name="_6489"/>
+                </atom>
+                <atom name="supplier">
+                    <variable name="skey"/>
+                    <variable name="sname"/>
+                    <variable name="saddress"/>
+                    <variable name="snation"/>
+                    <variable name="sphone"/>
+                    <variable name="sacctbal"/>
+                    <variable name="scomment"/>
+                </atom>
+            </body>
+            <head>
+                <atom name="order_supplier">
+                    <variable name="sname"/>
+                    <variable name="saddress"/>
+                    <variable name="snation"/>
+                    <variable name="sacctbal"/>
+                    <variable name="opriority"/>
+                    <variable name="oclerk"/>
+                    <variable name="pname"/>
+                    <variable name="pbrand"/>
+                    <variable name="ptype"/>
+                    <variable name="l_extendedprice"/>
+                    <variable name="ldiscount"/>
+                    <variable name="ltax"/>
+                    <variable name="lflag"/>
+                </atom>
+            </head>
+        </dependency>
+        <dependency type="TGD">
+            <body>
+                <atom name="order_supplier">
+                    <variable name="sname"/>
+                    <variable name="saddress"/>
+                    <variable name="snation"/>
+                    <variable name="sactbal"/>
+                    <variable name="opriority"/>
+                    <variable name="oclerk"/>
+                    <variable name="pname"/>
+                    <variable name="pbrand"/>
+                    <variable name="ptype"/>
+                    <variable name="l_extendedprice"/>
+                    <variable name="ldiscount"/>
+                    <variable name="ltax"/>
+                    <variable name="lflag"/>
+                </atom>
+            </body>
+            <head>
+                <atom name="orders">
+                    <variable name="okey"/>
+                    <variable name="ckey"/>
+                    <variable name="ostatus"/>
+                    <variable name="ototalprice"/>
+                    <variable name="orderdate"/>
+                    <variable name="opriority"/>
+                    <variable name="oclerk"/>
+                    <variable name="oshipprio"/>
+                    <variable name="ocomment"/>
+                </atom>
+                <atom name="lineitem">
+                    <variable name="okey"/>
+                    <variable name="pkey"/>
+                    <variable name="skey"/>
+                    <variable name="linenumber"/>
+                    <variable name="lquantity"/>
+                    <variable name="lextendedprice"/>
+                    <variable name="ldiscount"/>
+                    <variable name="ltax"/>
+                    <variable name="lflag"/>
+                    <variable name="lstatus"/>
+                    <variable name="lshipdata"/>
+                    <variable name="lcommitdate"/>
+                    <variable name="lreceiptdate"/>
+                    <variable name="lshipinstruct"/>
+                    <variable name="lshipmode"/>
+                    <variable name="lcomment"/>
+                </atom>
+                <atom name="part">
+                    <variable name="pkey"/>
+                    <variable name="pname"/>
+                    <variable name="_6490"/>
+                    <variable name="pbrand"/>
+                    <variable name="ptype"/>
+                    <variable name="_6491"/>
+                    <variable name="_6492"/>
+                    <variable name="_6493"/>
+                    <variable name="_6494"/>
+                </atom>
+                <atom name="supplier">
+                    <variable name="skey"/>
+                    <variable name="sname"/>
+                    <variable name="saddress"/>
+                    <variable name="snation"/>
+                    <variable name="sphone"/>
+                    <variable name="sacctbal"/>
+                    <variable name="scomment"/>
+                </atom>
+            </head>
+        </dependency>
+    </dependencies>
 </schema>

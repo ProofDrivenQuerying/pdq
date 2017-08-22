@@ -1,28 +1,93 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <schema>
-	<sources>
-		<source name="tpch"
-			discoverer="uk.ac.ox.cs.pdq.sql.PostgresqlSchemaDiscoverer"
-			driver="org.postgresql.Driver"
-			url="jdbc:postgresql://localhost/" database="tpch_0001" username="root"
-			password="root" />
-	</sources>
-	<relations>
-		<relation name="customer" source="tpch" />
-		<relation name="part" source="tpch" />
-		<relation name="supplier" source="tpch" />
-		<relation name="partsupp" source="tpch" />
-		<relation name="nation" source="tpch" />
-		<relation name="region" source="tpch" />
-		<relation name="orders" source="tpch" />
-		<relation name="lineitem" source="tpch" />
-		<!-- CREATE VIEW region_nation AS SELECT n.n_nationkey as nation_key, n_name 
-			as nation_name, r.r_regionkey as region_key, r_name as region_name FROM nation 
-			as n, region as r WHERE n.n_regionkey = r.r_regionkey -->
-		<view name="region_nation" source="tpch">
-			<access-method type="FREE" name="m1" cost="5.0" />
-		</view>
-	</relations>
-	<dependencies>
-	</dependencies>
+    <sources>
+        <source database="tpch_0001" discoverer="uk.ac.ox.cs.pdq.sql.PostgresqlSchemaDiscoverer" driver="org.postgresql.Driver" name="tpch" password="root" url="jdbc:postgresql://localhost/" username="root"/>
+    </sources>
+    <relations>
+        <relation name="part" source="tpch">
+            <attribute name="p_partkey" type="java.lang.Integer"/>
+            <attribute name="p_name" type="java.lang.String"/>
+            <attribute name="p_mfgr" type="java.lang.String"/>
+            <attribute name="p_brand" type="java.lang.String"/>
+            <attribute name="p_type" type="java.lang.String"/>
+            <attribute name="p_size" type="java.lang.Integer"/>
+            <attribute name="p_container" type="java.lang.String"/>
+            <attribute name="p_retailprice" type="java.math.BigDecimal"/>
+            <attribute name="p_comment" type="java.lang.String"/>
+        </relation>
+        <relation name="partsupp" source="tpch">
+            <attribute name="ps_partkey" type="java.lang.Integer"/>
+            <attribute name="ps_suppkey" type="java.lang.Integer"/>
+            <attribute name="ps_availqty" type="java.lang.Integer"/>
+            <attribute name="ps_supplycost" type="java.math.BigDecimal"/>
+            <attribute name="ps_comment" type="java.lang.String"/>
+        </relation>
+        <relation name="supplier" source="tpch">
+            <attribute name="s_suppkey" type="java.lang.Integer"/>
+            <attribute name="s_name" type="java.lang.String"/>
+            <attribute name="s_address" type="java.lang.String"/>
+            <attribute name="s_nationkey" type="java.lang.Integer"/>
+            <attribute name="s_phone" type="java.lang.String"/>
+            <attribute name="s_acctbal" type="java.math.BigDecimal"/>
+            <attribute name="s_comment" type="java.lang.String"/>
+        </relation>
+        <relation name="customer" source="tpch">
+            <attribute name="c_custkey" type="java.lang.Integer"/>
+            <attribute name="c_name" type="java.lang.String"/>
+            <attribute name="c_address" type="java.lang.String"/>
+            <attribute name="c_nationkey" type="java.lang.Integer"/>
+            <attribute name="c_phone" type="java.lang.String"/>
+            <attribute name="c_acctbal" type="java.math.BigDecimal"/>
+            <attribute name="c_mktsegment" type="java.lang.String"/>
+            <attribute name="c_comment" type="java.lang.String"/>
+        </relation>
+        <relation name="orders" source="tpch">
+            <attribute name="o_orderkey" type="java.lang.Integer"/>
+            <attribute name="o_custkey" type="java.lang.Integer"/>
+            <attribute name="o_orderstatus" type="java.lang.String"/>
+            <attribute name="o_totalprice" type="java.math.BigDecimal"/>
+            <attribute name="o_orderdate" type="java.sql.Date"/>
+            <attribute name="o_orderpriority" type="java.lang.String"/>
+            <attribute name="o_clerk" type="java.lang.String"/>
+            <attribute name="o_shippriority" type="java.lang.Integer"/>
+            <attribute name="o_comment" type="java.lang.String"/>
+        </relation>
+        <relation name="region_nation" source="tpch">
+            <attribute name="nation_key" type="java.lang.Integer"/>
+            <attribute name="nation_name" type="java.lang.String"/>
+            <attribute name="region_key" type="java.lang.Integer"/>
+            <attribute name="region_name" type="java.lang.String"/>
+            <access-method name="m1"/>
+        </relation>
+        <relation name="region" source="tpch">
+            <attribute name="r_regionkey" type="java.lang.Integer"/>
+            <attribute name="r_name" type="java.lang.String"/>
+            <attribute name="r_comment" type="java.lang.String"/>
+        </relation>
+        <relation name="lineitem" source="tpch">
+            <attribute name="l_orderkey" type="java.lang.Integer"/>
+            <attribute name="l_partkey" type="java.lang.Integer"/>
+            <attribute name="l_suppkey" type="java.lang.Integer"/>
+            <attribute name="l_linenumber" type="java.lang.Integer"/>
+            <attribute name="l_quantity" type="java.math.BigDecimal"/>
+            <attribute name="l_extendedprice" type="java.math.BigDecimal"/>
+            <attribute name="l_discount" type="java.math.BigDecimal"/>
+            <attribute name="l_tax" type="java.math.BigDecimal"/>
+            <attribute name="l_returnflag" type="java.lang.String"/>
+            <attribute name="l_linestatus" type="java.lang.String"/>
+            <attribute name="l_shipdate" type="java.sql.Date"/>
+            <attribute name="l_commitdate" type="java.sql.Date"/>
+            <attribute name="l_receiptdate" type="java.sql.Date"/>
+            <attribute name="l_shipinstruct" type="java.lang.String"/>
+            <attribute name="l_shipmode" type="java.lang.String"/>
+            <attribute name="l_comment" type="java.lang.String"/>
+        </relation>
+        <relation name="nation" source="tpch">
+            <attribute name="n_nationkey" type="java.lang.Integer"/>
+            <attribute name="n_name" type="java.lang.String"/>
+            <attribute name="n_regionkey" type="java.lang.Integer"/>
+            <attribute name="n_comment" type="java.lang.String"/>
+        </relation>
+    </relations>
+    <dependencies/>
 </schema>

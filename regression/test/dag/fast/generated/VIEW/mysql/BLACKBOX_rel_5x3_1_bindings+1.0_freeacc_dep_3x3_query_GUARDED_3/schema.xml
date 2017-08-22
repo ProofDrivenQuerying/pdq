@@ -1,144 +1,144 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <schema>
-	<relations>
-		<relation name="R0" size="596">
-			<attribute name="x0" type="java.lang.String" />
-			<attribute name="x1" type="java.lang.String" />
-		</relation>
-		<relation name="R1" size="535">
-			<attribute name="x0" type="java.lang.String" />
-			<attribute name="x1" type="java.lang.String" />
-		</relation>
-		<relation name="R2" size="657">
-			<attribute name="x0" type="java.lang.String" />
-			<attribute name="x1" type="java.lang.String" />
-			<attribute name="x2" type="java.lang.String" />
-		</relation>
-		<relation name="R3" size="273">
-			<attribute name="x0" type="java.lang.String" />
-			<attribute name="x1" type="java.lang.String" />
-			<attribute name="x2" type="java.lang.String" />
-		</relation>
-		<relation name="R4" size="776">
-			<attribute name="x0" type="java.lang.String" />
-			<attribute name="x1" type="java.lang.String" />
-			<attribute name="x2" type="java.lang.String" />
-		</relation>
-		<view name="V15">
-			<attribute name="x1" type="java.lang.String" />
-			<access-method name="mt_15" type="FREE" cost="4.21499994773329" />
-		</view>
-		<view name="V0">
-			<attribute name="x0" type="java.lang.String" />
-			<access-method name="mt_0" type="FREE" cost="1.2636548106697187" />
-		</view>
-		<view name="V29">
-			<attribute name="x1" type="java.lang.String" />
-			<access-method name="mt_29" type="FREE" cost="2.954249857973836" />
-		</view>
-	</relations>
-	<dependencies>
-		<dependency>
-			<body>
-				<atom name="V15">
-					<variable name="x1" />
-				</atom>
-			</body>
-			<head>
-				<atom name="R3">
-					<variable name="x0" />
-					<variable name="x1" />
-					<variable name="x2" />
-				</atom>
-				<atom name="R2">
-					<variable name="x2" />
-					<variable name="x1" />
-					<variable name="x1" />
-				</atom>
-			</head>
-		</dependency>
-		<dependency>
-			<body>
-				<atom name="R3">
-					<variable name="x0" />
-					<variable name="x1" />
-					<variable name="x2" />
-				</atom>
-				<atom name="R2">
-					<variable name="x2" />
-					<variable name="x1" />
-					<variable name="x1" />
-				</atom>
-			</body>
-			<head>
-				<atom name="V15">
-					<variable name="x1" />
-				</atom>
-			</head>
-		</dependency>
-		<dependency>
-			<body>
-				<atom name="V0">
-					<variable name="x0" />
-				</atom>
-			</body>
-			<head>
-				<atom name="R3">
-					<variable name="x0" />
-					<variable name="x1" />
-					<variable name="x2" />
-				</atom>
-			</head>
-		</dependency>
-		<dependency>
-			<body>
-				<atom name="R3">
-					<variable name="x0" />
-					<variable name="x1" />
-					<variable name="x2" />
-				</atom>
-			</body>
-			<head>
-				<atom name="V0">
-					<variable name="x0" />
-				</atom>
-			</head>
-		</dependency>
-		<dependency>
-			<body>
-				<atom name="V29">
-					<variable name="x1" />
-				</atom>
-			</body>
-			<head>
-				<atom name="R3">
-					<variable name="x0" />
-					<variable name="x1" />
-					<variable name="x2" />
-				</atom>
-				<atom name="R1">
-					<variable name="x1" />
-					<variable name="x1" />
-				</atom>
-			</head>
-		</dependency>
-		<dependency>
-			<body>
-				<atom name="R3">
-					<variable name="x0" />
-					<variable name="x1" />
-					<variable name="x2" />
-				</atom>
-				<atom name="R1">
-					<variable name="x1" />
-					<variable name="x1" />
-				</atom>
-			</body>
-			<head>
-				<atom name="V29">
-					<variable name="x1" />
-				</atom>
-			</head>
-		</dependency>
-	</dependencies>
+    <relations>
+        <relation name="R0">
+            <attribute name="x0" type="java.lang.String"/>
+            <attribute name="x1" type="java.lang.String"/>
+        </relation>
+        <relation name="R1">
+            <attribute name="x0" type="java.lang.String"/>
+            <attribute name="x1" type="java.lang.String"/>
+        </relation>
+        <relation name="R2">
+            <attribute name="x0" type="java.lang.String"/>
+            <attribute name="x1" type="java.lang.String"/>
+            <attribute name="x2" type="java.lang.String"/>
+        </relation>
+        <relation name="R3">
+            <attribute name="x0" type="java.lang.String"/>
+            <attribute name="x1" type="java.lang.String"/>
+            <attribute name="x2" type="java.lang.String"/>
+        </relation>
+        <relation name="R4">
+            <attribute name="x0" type="java.lang.String"/>
+            <attribute name="x1" type="java.lang.String"/>
+            <attribute name="x2" type="java.lang.String"/>
+        </relation>
+        <view name="V15">
+            <attribute name="x1" type="java.lang.String"/>
+            <access-method name="mt_15"/>
+        </view>
+        <view name="V0">
+            <attribute name="x0" type="java.lang.String"/>
+            <access-method name="mt_0"/>
+        </view>
+        <view name="V29">
+            <attribute name="x1" type="java.lang.String"/>
+            <access-method name="mt_29"/>
+        </view>
+    </relations>
+    <dependencies>
+        <dependency type="TGD">
+            <body>
+                <atom name="V15">
+                    <variable name="x1"/>
+                </atom>
+            </body>
+            <head>
+                <atom name="R3">
+                    <variable name="x0"/>
+                    <variable name="x1"/>
+                    <variable name="x2"/>
+                </atom>
+                <atom name="R2">
+                    <variable name="x2"/>
+                    <variable name="x1"/>
+                    <variable name="x1"/>
+                </atom>
+            </head>
+        </dependency>
+        <dependency type="TGD">
+            <body>
+                <atom name="R3">
+                    <variable name="x0"/>
+                    <variable name="x1"/>
+                    <variable name="x2"/>
+                </atom>
+                <atom name="R2">
+                    <variable name="x2"/>
+                    <variable name="x1"/>
+                    <variable name="x1"/>
+                </atom>
+            </body>
+            <head>
+                <atom name="V15">
+                    <variable name="x1"/>
+                </atom>
+            </head>
+        </dependency>
+        <dependency type="TGD">
+            <body>
+                <atom name="V0">
+                    <variable name="x0"/>
+                </atom>
+            </body>
+            <head>
+                <atom name="R3">
+                    <variable name="x0"/>
+                    <variable name="x1"/>
+                    <variable name="x2"/>
+                </atom>
+            </head>
+        </dependency>
+        <dependency type="TGD">
+            <body>
+                <atom name="R3">
+                    <variable name="x0"/>
+                    <variable name="x1"/>
+                    <variable name="x2"/>
+                </atom>
+            </body>
+            <head>
+                <atom name="V0">
+                    <variable name="x0"/>
+                </atom>
+            </head>
+        </dependency>
+        <dependency type="TGD">
+            <body>
+                <atom name="V29">
+                    <variable name="x1"/>
+                </atom>
+            </body>
+            <head>
+                <atom name="R3">
+                    <variable name="x0"/>
+                    <variable name="x1"/>
+                    <variable name="x2"/>
+                </atom>
+                <atom name="R1">
+                    <variable name="x1"/>
+                    <variable name="x1"/>
+                </atom>
+            </head>
+        </dependency>
+        <dependency type="TGD">
+            <body>
+                <atom name="R3">
+                    <variable name="x0"/>
+                    <variable name="x1"/>
+                    <variable name="x2"/>
+                </atom>
+                <atom name="R1">
+                    <variable name="x1"/>
+                    <variable name="x1"/>
+                </atom>
+            </body>
+            <head>
+                <atom name="V29">
+                    <variable name="x1"/>
+                </atom>
+            </head>
+        </dependency>
+    </dependencies>
 </schema>

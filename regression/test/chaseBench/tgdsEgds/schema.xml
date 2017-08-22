@@ -1,34 +1,34 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <schema>
     <relations>
-        <relation isEquality="false" name="s">
+        <relation name="s">
             <attribute name="a" type="java.lang.String"/>
             <attribute name="b" type="java.lang.String"/>
             <attribute name="c" type="java.lang.String"/>
             <attribute name="InstanceID" type="java.lang.Integer"/>
         </relation>
-        <relation isEquality="false" name="w1">
+        <relation name="w1">
             <attribute name="a" type="java.lang.String"/>
             <attribute name="b" type="java.lang.String"/>
             <attribute name="InstanceID" type="java.lang.Integer"/>
         </relation>
-        <relation isEquality="false" name="w2">
+        <relation name="w2">
             <attribute name="a" type="java.lang.String"/>
             <attribute name="b" type="java.lang.String"/>
             <attribute name="InstanceID" type="java.lang.Integer"/>
         </relation>
-        <relation isEquality="false" name="t1">
+        <relation name="t1">
             <attribute name="a" type="java.lang.String"/>
             <attribute name="b" type="java.lang.String"/>
             <attribute name="c" type="java.lang.String"/>
             <attribute name="InstanceID" type="java.lang.Integer"/>
         </relation>
-        <relation isEquality="false" name="t2">
+        <relation name="t2">
             <attribute name="a" type="java.lang.String"/>
             <attribute name="b" type="java.lang.String"/>
             <attribute name="InstanceID" type="java.lang.Integer"/>
         </relation>
-        <relation isEquality="false" name="t3">
+        <relation name="t3">
             <attribute name="a" type="java.lang.String"/>
             <attribute name="b" type="java.lang.String"/>
             <attribute name="c" type="java.lang.String"/>

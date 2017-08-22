@@ -1,523 +1,729 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<schema name="Demo API" description="">
-	<sources>
-		<source name="geonames" file="test/linear/fast/demo/geonames-services.xml"
-			discoverer="uk.ac.ox.cs.pdq.services.ServiceReader" />
-		<source name="yahoo" file="test/linear/fast/demo/yahoo-services.xml"
-			discoverer="uk.ac.ox.cs.pdq.services.ServiceReader" />
-		<source name="google" file="test/linear/fast/demo/google-services.xml"
-			discoverer="uk.ac.ox.cs.pdq.services.ServiceReader" />
-		<source name="worldbank" file="test/linear/fast/demo/worldbank-services.xml"
-			discoverer="uk.ac.ox.cs.pdq.services.ServiceReader" />
-	</sources>
-	<relations>
-		<relation name="Continent">
-			<attribute name="id" type="java.lang.String" />
-			<attribute name="name" type="java.lang.String" />
-			<attribute name="surface" type="java.lang.Integer" />
-			<attribute name="bbNorth" type="java.lang.Double" />
-			<attribute name="bbSouth" type="java.lang.Double" />
-			<attribute name="bbEast" type="java.lang.Double" />
-			<attribute name="bbWest" type="java.lang.Double" />
-		</relation>
-		<relation name="Country">
-			<attribute name="id" type="java.lang.String" />
-			<attribute name="isoCode" type="java.lang.String" />
-			<attribute name="name" type="java.lang.String" />
-			<attribute name="continent" type="java.lang.String" />
-			<attribute name="capital" type="java.lang.String" />
-			<attribute name="currencyCode" type="java.lang.String" />
-			<attribute name="surface" type="java.lang.Integer" />
-			<attribute name="bbNorth" type="java.lang.Double" />
-			<attribute name="bbSouth" type="java.lang.Double" />
-			<attribute name="bbEast" type="java.lang.Double" />
-			<attribute name="bbWest" type="java.lang.Double" />
-		</relation>
-		<relation name="City">
-			<attribute name="id" type="java.lang.String" />
-			<attribute name="name" type="java.lang.String" />
-			<attribute name="countryCode" type="java.lang.String" />
-			<attribute name="cityBBNorth" type="java.lang.Double" />
-			<attribute name="cityBBSouth" type="java.lang.Double" />
-			<attribute name="cityBBEast" type="java.lang.Double" />
-			<attribute name="cityBBWest" type="java.lang.Double" />
-		</relation>
-		<relation name="CapitalCity">
-			<attribute name="id" type="java.lang.String" />
-			<attribute name="name" type="java.lang.String" />
-			<attribute name="countryCode" type="java.lang.String" />
-			<attribute name="cityBBNorth" type="java.lang.Double" />
-			<attribute name="cityBBSouth" type="java.lang.Double" />
-			<attribute name="cityBBEast" type="java.lang.Double" />
-			<attribute name="cityBBWest" type="java.lang.Double" />
-		</relation>
-		<relation name="YahooContinents" source="yahoo" size="7">
-			<access-method name="yh_geo_continent" type="FREE"
-				cost="1.0" />
-		</relation>
-		<relation name="YahooCountries" source="yahoo" size="250">
-			<access-method name="yh_geo_country" type="FREE" cost="1.0" />
-		</relation>
-		<relation name="YahooPlaces" source="yahoo" size="10000000">
-			<access-method name="yh_geo_name" type="LIMITED"
-				inputs="2" cost="100.0" />
-			<access-method name="yh_geo_woeid" type="LIMITED"
-				inputs="1" cost="1.0" />
-			<access-method name="yh_geo_type" type="LIMITED"
-				inputs="2,3" cost="50.0" />
-		</relation>
-		<relation name="YahooPlaceCode" source="yahoo" size="100000000">
-			<access-method name="yh_geo_code" type="LIMITED"
-				inputs="1,2" cost="1.0" />
-		</relation>
-		<relation name="YahooBelongsTo" source="yahoo" size="100000000">
-			<access-method name="yh_geo_belongs" type="LIMITED"
-				inputs="1" cost="50.0" />
-		</relation>
-		<relation name="YahooWeather" source="yahoo" size="100000000">
-			<access-method name="yh_wtr_woeid" type="LIMITED"
-				inputs="1" cost="10.0" />
-		</relation>
-		<relation name="GNCountryInfo" source="geonames" size="250">
-			<access-method name="gn_cinfo" type="FREE" cost="100.0" />
-			<access-method name="gn_cinfo_cc" type="LIMITED"
-				inputs="2" cost="1.0" />
-		</relation>
-		<relation name="WBCountries" source="worldbank" size="250">
-			<access-method name="c_free" type="FREE" cost="1.0" />
-			<access-method name="c_il" type="LIMITED" inputs="4"
-				cost="1.0" />
-		</relation>
-	</relations>
-	<dependencies>
-		<!-- Required for Example 1 -->
-		<dependency>
-			<body>
-				<atom name="YahooCountries">
-					<variable name="woeid" />
-					<variable name="type" />
-					<constant value="Country" />
-					<variable name="countryName" />
-				</atom>
-			</body>
-			<head>
-				<atom name="YahooPlaces">
-					<variable name="woeid" />
-					<variable name="countryName" />
-					<variable name="type" />
-					<constant value="Country" />
-					<variable /><variable /><variable />
-					<variable /><variable /><variable />
-					<variable /><variable /><variable />
-					<variable /><variable /><variable />
-					<variable /><variable />
-				</atom>
-			</head>
-		</dependency>
-		<dependency>
-			<body>
-				<atom name="YahooPlaces">
-					<variable name="woeid" />
-					<variable name="countryName" />
-					<variable name="type" />
-					<constant value="Country" />
-					<variable /><variable /><variable />
-					<variable /><variable /><variable />
-					<variable /><variable /><variable />
-					<variable /><variable /><variable />
-					<variable /><variable />
-				</atom>
-			</body>
-			<head>
-				<atom name="YahooCountries">
-					<variable name="woeid" />
-					<variable name="type" />
-					<constant value="Country" />
-					<variable name="countryName" />
-				</atom>
-			</head>
-		</dependency>
-
-		<!-- Required for Example 2 -->
-		<dependency>
-			<body>
-				<atom name="CapitalCity">
-					<variable name="cityId" />
-					<variable name="name" />
-					<variable name="countryCode" />
-					<variable /><variable /><variable />
-					<variable />
-				</atom>
-			</body>
-			<head>
-				<atom name="City">
-					<variable name="cityId" />
-					<variable name="name" />
-					<variable name="countryCode" />
-					<variable /><variable /><variable />
-					<variable />
-				</atom>
-			</head>
-		</dependency>
-		<dependency>
-			<body>
-				<atom name="City">
-					<variable name="cityId" />
-					<variable name="cityName" />
-					<variable name="countryCode" />
-					<variable /><variable /><variable />
-					<variable />
-				</atom>
-				<atom name="Country">
-					<variable name="countryId" />
-					<variable name="countryCode" />
-					<variable name="countryName" />
-					<variable name="continentName" />
-					<variable name="capital" />
-					<variable /><variable /><variable />
-					<variable /><variable /><variable />
-				</atom>
-			</body>
-			<head>
-				<atom name="YahooPlaces">
-					<variable name="cityId" />
-					<variable name="cityName" />
-					<variable name="type" />
-					<constant value="Town" />
-					<variable /><variable /><variable />
-					<variable /><variable /><variable />
-					<variable /><variable /><variable />
-					<variable /><variable /><variable />
-					<variable /><variable />
-				</atom>
-				<atom name="YahooCountries">
-					<variable name="countryId" />
-					<variable name="type" />
-					<constant value="Country" />
-					<variable name="countryName" />
-				</atom>
-				<atom name="YahooBelongsTo">
-					<variable name="cityId" />
-					<variable name="countryId" />
-					<variable /><variable /><variable />
-				</atom>
-			</head>
-		</dependency>
-		<dependency>
-			<body>
-				<atom name="YahooPlaces">
-					<variable name="cityId" />
-					<variable name="cityName" />
-					<variable name="type" />
-					<constant value="Town" />
-					<variable /><variable /><variable />
-					<variable /><variable /><variable />
-					<variable /><variable /><variable />
-					<variable /><variable /><variable />
-					<variable /><variable />
-				</atom>
-				<atom name="YahooCountries">
-					<variable name="countryId" />
-					<variable name="type" />
-					<constant value="Country" />
-					<variable name="countryName" />
-				</atom>
-				<atom name="YahooBelongsTo">
-					<variable name="cityId" />
-					<variable name="countryId" />
-					<variable /><variable /><variable />
-				</atom>
-			</body>
-			<head>
-				<atom name="City">
-					<variable name="cityId" />
-					<variable name="cityName" />
-					<variable name="countryCode" />
-					<variable /><variable /><variable />
-					<variable />
-				</atom>
-				<atom name="Country">
-					<variable name="countryId" />
-					<variable name="countryCode" />
-					<variable name="countryName" />
-					<variable name="continentName" />
-					<variable name="capital" />
-					<variable /><variable /><variable />
-					<variable /><variable /><variable />
-				</atom>
-			</head>
-		</dependency>
-		<dependency>
-			<body>
-				<atom name="Continent">
-					<variable name="continentId" />
-					<variable name="continentName" />
-					<variable /><variable /><variable />
-					<variable /><variable />
-				</atom>
-				<atom name="Country">
-					<variable name="countryId" />
-					<variable name="countryCode" />
-					<variable name="countryName" />
-					<variable name="continentName" />
-					<variable /><variable /><variable />
-					<variable /><variable /><variable />
-					<variable />
-				</atom>
-			</body>
-			<head>
-				<atom name="GNCountryInfo">
-					<variable name="geonameId" />
-					<variable name="countryCode" />
-					<variable name="countryName" />
-					<variable name="continentCode" />
-					<variable name="continentName" />
-					<variable /><variable /><variable />
-					<variable /><variable /><variable />
-					<variable /><variable /><variable />
-					<variable /><variable /><variable />
-				</atom>
-			</head>
-		</dependency>
-		<dependency>
-			<body>
-				<atom name="GNCountryInfo">
-					<variable name="geonameId" />
-					<variable name="countryCode" />
-					<variable name="countryName" />
-					<variable name="continentCode" />
-					<variable name="continentName" />
-					<variable /><variable /><variable />
-					<variable /><variable /><variable />
-					<variable /><variable /><variable />
-					<variable /><variable /><variable />
-				</atom>
-			</body>
-			<head>
-				<atom name="Continent">
-					<variable name="continentId" />
-					<variable name="continentName" />
-					<variable /><variable /><variable />
-					<variable /><variable />
-				</atom>
-				<atom name="Country">
-					<variable name="countryId" />
-					<variable name="countryCode" />
-					<variable name="countryName" />
-					<variable name="continentName" />
-					<variable /><variable /><variable />
-					<variable /><variable /><variable />
-					<variable />
-				</atom>
-			</head>
-		</dependency>
-
-		<dependency>
-			<body>
-				<atom name="Country">
-					<variable name="countryId" />
-					<variable name="countryCode" />
-					<variable name="countryName" />
-					<variable /><variable /><variable />
-					<variable /><variable /><variable />
-					<variable /><variable />
-				</atom>
-				<atom name="CapitalCity">
-					<variable name="cityId" />
-					<variable name="capital" />
-					<variable name="countryCode" />
-					<variable /><variable /><variable />
-					<variable />
-				</atom>
-			</body>
-			<head>
-				<atom name="GNCountryInfo">
-					<variable name="geonameId" />
-					<variable name="countryCode" />
-					<variable name="countryName" />
-					<variable /><variable /><variable />
-					<variable /><variable />
-					<variable name="capital" />
-					<variable /><variable /><variable />
-					<variable /><variable /><variable />
-					<variable /><variable />
-				</atom>
-			</head>
-		</dependency>
-		<dependency>
-			<body>
-				<atom name="GNCountryInfo">
-					<variable name="geonameId" />
-					<variable name="countryCode" />
-					<variable name="countryName" />
-					<variable /><variable /><variable />
-					<variable /><variable />
-					<variable name="capital" />
-					<variable /><variable /><variable />
-					<variable /><variable /><variable />
-					<variable /><variable />
-				</atom>
-			</body>
-			<head>
-				<atom name="Country">
-					<variable name="countryId" />
-					<variable name="countryCode" />
-					<variable name="countryName" />
-					<variable /><variable /><variable />
-					<variable /><variable /><variable />
-					<variable /><variable />
-				</atom>
-				<atom name="CapitalCity">
-					<variable name="cityId" />
-					<variable name="capital" />
-					<variable name="countryCode" />
-					<variable /><variable /><variable />
-					<variable />
-				</atom>
-			</head>
-		</dependency>
-
-		<dependency>
-			<body>
-				<atom name="Continent">
-					<variable name="continentId" />
-					<variable name="continentName" />
-					<variable /><variable /><variable />
-					<variable /><variable />
-				</atom>
-				<atom name="Country">
-					<variable name="countryId" />
-					<variable name="countryCode" />
-					<variable name="countryName" />
-					<variable name="continentName" />
-					<variable /><variable /><variable />
-					<variable /><variable /><variable />
-					<variable />
-				</atom>
-			</body>
-			<head>
-				<atom name="YahooContinents">
-					<variable name="continentId" />
-					<variable name="type" />
-					<constant value="Continent" />
-					<variable name="continentName" />
-				</atom>
-				<atom name="YahooCountries">
-					<variable name="countryId" />
-					<variable name="type" />
-					<constant value="Country" />
-					<variable name="countryName" />
-				</atom>
-				<atom name="YahooBelongsTo">
-					<variable name="countryId" />
-					<variable name="continentId" />
-					<variable /><variable /><variable />
-				</atom>
-			</head>
-		</dependency>
-		<dependency>
-			<body>
-				<atom name="YahooContinents">
-					<variable name="continentId" />
-					<variable name="type" />
-					<constant value="Continent" />
-					<variable name="continentName" />
-				</atom>
-				<atom name="YahooCountries">
-					<variable name="countryId" />
-					<variable name="type" />
-					<constant value="Country" />
-					<variable name="countryName" />
-				</atom>
-				<atom name="YahooBelongsTo">
-					<variable name="countryId" />
-					<variable name="continentId" />
-					<variable /><variable /><variable />
-				</atom>
-			</body>
-			<head>
-				<atom name="Continent">
-					<variable name="continentId" />
-					<variable name="continentName" />
-					<variable /><variable /><variable />
-					<variable /><variable />
-				</atom>
-				<atom name="Country">
-					<variable name="countryId" />
-					<variable name="countryCode" />
-					<variable name="countryName" />
-					<variable name="continentName" />
-					<variable /><variable /><variable />
-					<variable /><variable /><variable />
-					<variable />
-				</atom>
-			</head>
-		</dependency>
-		<dependency>
-			<body>
-				<atom name="WBCountries">
-					<variable name="wbid" />
-					<variable name="countryCode" />
-					<variable name="countryName" />
-					<variable name="incomeLevel" />
-					<variable name="lendingType" />
-					<variable name="capital" />
-					<variable name="latitude" />
-					<variable name="longitude" />
-				</atom>
-			</body>
-			<head>
-				<atom name="Country">
-					<variable name="countryId" />
-					<variable name="countryCode" />
-					<variable name="countryName" />
-					<variable name="continentName" />
-					<variable /><variable /><variable />
-					<variable /><variable /><variable />
-					<variable />
-				</atom>
-				<atom name="CapitalCity">
-					<variable name="cityId" />
-					<variable name="capital" />
-					<variable name="countryCode" />
-					<variable /><variable /><variable />
-					<variable />
-				</atom>
-			</head>
-		</dependency>
-		<dependency>
-			<body>
-				<atom name="Country">
-					<variable name="countryId" />
-					<variable name="countryCode" />
-					<variable name="countryName" />
-					<variable name="continentName" />
-					<variable /><variable /><variable />
-					<variable /><variable /><variable />
-					<variable />
-				</atom>
-				<atom name="CapitalCity">
-					<variable name="cityId" />
-					<variable name="capital" />
-					<variable name="countryCode" />
-					<variable /><variable /><variable />
-					<variable />
-				</atom>
-			</body>
-			<head>
-				<atom name="WBCountries">
-					<variable name="wbid" />
-					<variable name="countryCode" />
-					<variable name="countryName" />
-					<variable name="incomeLevel" />
-					<variable name="lendingType" />
-					<variable name="capital" />
-					<variable name="latitude" />
-					<variable name="longitude" />
-				</atom>
-			</head>
-		</dependency>
-
-	</dependencies>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<schema description="" name="Demo API">
+    <sources>
+        <source discoverer="uk.ac.ox.cs.pdq.services.ServiceReader" file="test/linear/fast/demo/geonames-services.xml" name="geonames"/>
+        <source discoverer="uk.ac.ox.cs.pdq.services.ServiceReader" file="test/linear/fast/demo/yahoo-services.xml" name="yahoo"/>
+        <source discoverer="uk.ac.ox.cs.pdq.services.ServiceReader" file="test/linear/fast/demo/google-services.xml" name="google"/>
+        <source discoverer="uk.ac.ox.cs.pdq.services.ServiceReader" file="test/linear/fast/demo/worldbank-services.xml" name="worldbank"/>
+    </sources>
+    <relations>
+        <relation name="YahooBelongsTo">
+            <attribute name="source" type="java.lang.Integer"/>
+            <attribute name="target" type="java.lang.Integer"/>
+            <attribute name="placeTypeName" type="java.lang.String"/>
+            <attribute name="name" type="java.lang.String"/>
+            <attribute name="uri" type="java.lang.String"/>
+            <access-method name="yh_geo_belongs" inputs="0"/>
+        </relation>
+        <relation name="YahooPlaces">
+            <attribute name="woeid" type="java.lang.Integer"/>
+            <attribute name="name" type="java.lang.String"/>
+            <attribute name="type" type="java.lang.Integer"/>
+            <attribute name="placeTypeName" type="java.lang.String"/>
+            <attribute name="country" type="java.lang.String"/>
+            <attribute name="admin1" type="java.lang.String"/>
+            <attribute name="admin2" type="java.lang.String"/>
+            <attribute name="admin3" type="java.lang.String"/>
+            <attribute name="locality1" type="java.lang.String"/>
+            <attribute name="locality2" type="java.lang.String"/>
+            <attribute name="postal" type="java.lang.String"/>
+            <attribute name="centroid_lat" type="java.lang.Double"/>
+            <attribute name="centroid_lng" type="java.lang.Double"/>
+            <attribute name="bboxNorth" type="java.lang.Double"/>
+            <attribute name="bboxSouth" type="java.lang.Double"/>
+            <attribute name="bboxEast" type="java.lang.Double"/>
+            <attribute name="bboxWest" type="java.lang.Double"/>
+            <attribute name="timezone" type="java.lang.String"/>
+            <access-method name="yh_geo_name" inputs="1"/>
+            <access-method name="yh_geo_woeid" inputs="0"/>
+            <access-method name="yh_geo_type" inputs="1,2"/>
+        </relation>
+        <relation name="Country">
+            <attribute name="id" type="java.lang.String"/>
+            <attribute name="isoCode" type="java.lang.String"/>
+            <attribute name="name" type="java.lang.String"/>
+            <attribute name="continent" type="java.lang.String"/>
+            <attribute name="capital" type="java.lang.String"/>
+            <attribute name="currencyCode" type="java.lang.String"/>
+            <attribute name="surface" type="java.lang.Integer"/>
+            <attribute name="bbNorth" type="java.lang.Double"/>
+            <attribute name="bbSouth" type="java.lang.Double"/>
+            <attribute name="bbEast" type="java.lang.Double"/>
+            <attribute name="bbWest" type="java.lang.Double"/>
+        </relation>
+        <relation name="GNCountryInfo">
+            <attribute name="id" type="java.lang.Integer"/>
+            <attribute name="countryCode" type="java.lang.String"/>
+            <attribute name="countryName" type="java.lang.String"/>
+            <attribute name="continentCode" type="java.lang.String"/>
+            <attribute name="continentName" type="java.lang.String"/>
+            <attribute name="iso3Alpha" type="java.lang.String"/>
+            <attribute name="isoNumeric" type="java.lang.String"/>
+            <attribute name="fipsCode" type="java.lang.String"/>
+            <attribute name="capital" type="java.lang.String"/>
+            <attribute name="population" type="java.lang.Integer"/>
+            <attribute name="bbNorth" type="java.lang.Double"/>
+            <attribute name="bbSouth" type="java.lang.Double"/>
+            <attribute name="bbEast" type="java.lang.Double"/>
+            <attribute name="bbWest" type="java.lang.Double"/>
+            <attribute name="languages" type="java.lang.String"/>
+            <attribute name="currencyCode" type="java.lang.String"/>
+            <attribute name="areaInSqKm" type="java.lang.Double"/>
+            <access-method name="gn_cinfo"/>
+            <access-method name="gn_cinfo_cc" inputs="1"/>
+        </relation>
+        <relation name="YahooPlaceCode" source="yahoo">
+            <attribute name="namespace" type="java.lang.String"/>
+            <attribute name="code" type="java.lang.String"/>
+            <attribute name="woeid" type="java.lang.Integer"/>
+            <access-method name="yh_geo_code" inputs="0,1"/>
+        </relation>
+        <relation name="YahooContinents" source="yahoo">
+            <attribute name="woeid" type="java.lang.Integer"/>
+            <attribute name="placeType" type="java.lang.Integer"/>
+            <attribute name="placeTypeName" type="java.lang.String"/>
+            <attribute name="name" type="java.lang.String"/>
+            <access-method name="yh_geo_continent"/>
+        </relation>
+        <relation name="YahooCountries" source="yahoo">
+            <attribute name="woeid" type="java.lang.Integer"/>
+            <attribute name="placeType" type="java.lang.Integer"/>
+            <attribute name="placeTypeName" type="java.lang.String"/>
+            <attribute name="name" type="java.lang.String"/>
+            <access-method name="yh_geo_country"/>
+        </relation>
+        <relation name="WBCountries" source="yahoo">
+            <attribute name="id" type="java.lang.String"/>
+            <attribute name="iso2" type="java.lang.String"/>
+            <attribute name="name" type="java.lang.String"/>
+            <attribute name="incomeLevel" type="java.lang.String"/>
+            <attribute name="lendingType" type="java.lang.String"/>
+            <attribute name="capitalCity" type="java.lang.String"/>
+            <attribute name="latitude" type="java.lang.Double"/>
+            <attribute name="longitude" type="java.lang.Double"/>
+            <access-method name="c_free"/>
+            <access-method name="c_il" inputs="3"/>
+        </relation>
+        <relation name="YahooWeather" source="yahoo">
+            <attribute name="woeid" type="java.lang.Integer"/>
+            <attribute name="city" type="java.lang.String"/>
+            <attribute name="country" type="java.lang.String"/>
+            <attribute name="region" type="java.lang.String"/>
+            <attribute name="distance_unit" type="java.lang.String"/>
+            <attribute name="pressure_unit" type="java.lang.String"/>
+            <attribute name="speed_unit" type="java.lang.String"/>
+            <attribute name="temp_unit" type="java.lang.String"/>
+            <attribute name="wind_chill" type="java.lang.Integer"/>
+            <attribute name="wind_direction" type="java.lang.Integer"/>
+            <attribute name="wind_speed" type="java.lang.String"/>
+            <attribute name="humidity" type="java.lang.Double"/>
+            <attribute name="pressure" type="java.lang.Double"/>
+            <attribute name="rising" type="java.lang.Integer"/>
+            <attribute name="visibility" type="java.lang.Double"/>
+            <attribute name="sunrise" type="java.lang.String"/>
+            <attribute name="sunset" type="java.lang.String"/>
+            <attribute name="date" type="java.lang.String"/>
+            <attribute name="temperature" type="java.lang.Double"/>
+            <attribute name="condition" type="java.lang.String"/>
+            <attribute name="code" type="java.lang.Integer"/>
+            <access-method name="yh_wtr_woeid" inputs="0"/>
+        </relation>
+        <relation name="Continent" source="yahoo">
+            <attribute name="id" type="java.lang.String"/>
+            <attribute name="name" type="java.lang.String"/>
+            <attribute name="surface" type="java.lang.Integer"/>
+            <attribute name="bbNorth" type="java.lang.Double"/>
+            <attribute name="bbSouth" type="java.lang.Double"/>
+            <attribute name="bbEast" type="java.lang.Double"/>
+            <attribute name="bbWest" type="java.lang.Double"/>
+        </relation>
+        <relation name="City" source="geonames">
+            <attribute name="id" type="java.lang.String"/>
+            <attribute name="name" type="java.lang.String"/>
+            <attribute name="countryCode" type="java.lang.String"/>
+            <attribute name="cityBBNorth" type="java.lang.Double"/>
+            <attribute name="cityBBSouth" type="java.lang.Double"/>
+            <attribute name="cityBBEast" type="java.lang.Double"/>
+            <attribute name="cityBBWest" type="java.lang.Double"/>
+        </relation>
+        <relation name="CapitalCity" source="worldbank">
+            <attribute name="id" type="java.lang.String"/>
+            <attribute name="name" type="java.lang.String"/>
+            <attribute name="countryCode" type="java.lang.String"/>
+            <attribute name="cityBBNorth" type="java.lang.Double"/>
+            <attribute name="cityBBSouth" type="java.lang.Double"/>
+            <attribute name="cityBBEast" type="java.lang.Double"/>
+            <attribute name="cityBBWest" type="java.lang.Double"/>
+        </relation>
+    </relations>
+    <dependencies>
+        <dependency type="TGD">
+            <body>
+                <atom name="YahooCountries">
+                    <variable name="woeid"/>
+                    <variable name="type"/>
+                    <constant value="Country"/>
+                    <variable name="countryName"/>
+                </atom>
+            </body>
+            <head>
+                <atom name="YahooPlaces">
+                    <variable name="woeid"/>
+                    <variable name="countryName"/>
+                    <variable name="type"/>
+                    <constant value="Country"/>
+                    <variable name="_11791"/>
+                    <variable name="_11792"/>
+                    <variable name="_11793"/>
+                    <variable name="_11794"/>
+                    <variable name="_11795"/>
+                    <variable name="_11796"/>
+                    <variable name="_11797"/>
+                    <variable name="_11798"/>
+                    <variable name="_11799"/>
+                    <variable name="_11800"/>
+                    <variable name="_11801"/>
+                    <variable name="_11802"/>
+                    <variable name="_11803"/>
+                    <variable name="_11804"/>
+                </atom>
+            </head>
+        </dependency>
+        <dependency type="TGD">
+            <body>
+                <atom name="YahooPlaces">
+                    <variable name="woeid"/>
+                    <variable name="countryName"/>
+                    <variable name="type"/>
+                    <constant value="Country"/>
+                    <variable name="_11805"/>
+                    <variable name="_11806"/>
+                    <variable name="_11807"/>
+                    <variable name="_11808"/>
+                    <variable name="_11809"/>
+                    <variable name="_11810"/>
+                    <variable name="_11811"/>
+                    <variable name="_11812"/>
+                    <variable name="_11813"/>
+                    <variable name="_11814"/>
+                    <variable name="_11815"/>
+                    <variable name="_11816"/>
+                    <variable name="_11817"/>
+                    <variable name="_11818"/>
+                </atom>
+            </body>
+            <head>
+                <atom name="YahooCountries">
+                    <variable name="woeid"/>
+                    <variable name="type"/>
+                    <constant value="Country"/>
+                    <variable name="countryName"/>
+                </atom>
+            </head>
+        </dependency>
+        <dependency type="TGD">
+            <body>
+                <atom name="CapitalCity">
+                    <variable name="cityId"/>
+                    <variable name="name"/>
+                    <variable name="countryCode"/>
+                    <variable name="_11819"/>
+                    <variable name="_11820"/>
+                    <variable name="_11821"/>
+                    <variable name="_11822"/>
+                </atom>
+            </body>
+            <head>
+                <atom name="City">
+                    <variable name="cityId"/>
+                    <variable name="name"/>
+                    <variable name="countryCode"/>
+                    <variable name="_11823"/>
+                    <variable name="_11824"/>
+                    <variable name="_11825"/>
+                    <variable name="_11826"/>
+                </atom>
+            </head>
+        </dependency>
+        <dependency type="TGD">
+            <body>
+                <atom name="City">
+                    <variable name="cityId"/>
+                    <variable name="cityName"/>
+                    <variable name="countryCode"/>
+                    <variable name="_11827"/>
+                    <variable name="_11828"/>
+                    <variable name="_11829"/>
+                    <variable name="_11830"/>
+                </atom>
+                <atom name="Country">
+                    <variable name="countryId"/>
+                    <variable name="countryCode"/>
+                    <variable name="countryName"/>
+                    <variable name="continentName"/>
+                    <variable name="capital"/>
+                    <variable name="_11831"/>
+                    <variable name="_11832"/>
+                    <variable name="_11833"/>
+                    <variable name="_11834"/>
+                    <variable name="_11835"/>
+                    <variable name="_11836"/>
+                </atom>
+            </body>
+            <head>
+                <atom name="YahooPlaces">
+                    <variable name="cityId"/>
+                    <variable name="cityName"/>
+                    <variable name="type"/>
+                    <constant value="Town"/>
+                    <variable name="_11837"/>
+                    <variable name="_11838"/>
+                    <variable name="_11839"/>
+                    <variable name="_11840"/>
+                    <variable name="_11841"/>
+                    <variable name="_11842"/>
+                    <variable name="_11843"/>
+                    <variable name="_11844"/>
+                    <variable name="_11845"/>
+                    <variable name="_11846"/>
+                    <variable name="_11847"/>
+                    <variable name="_11848"/>
+                    <variable name="_11849"/>
+                    <variable name="_11850"/>
+                </atom>
+                <atom name="YahooCountries">
+                    <variable name="countryId"/>
+                    <variable name="type"/>
+                    <constant value="Country"/>
+                    <variable name="countryName"/>
+                </atom>
+                <atom name="YahooBelongsTo">
+                    <variable name="cityId"/>
+                    <variable name="countryId"/>
+                    <variable name="_11851"/>
+                    <variable name="_11852"/>
+                    <variable name="_11853"/>
+                </atom>
+            </head>
+        </dependency>
+        <dependency type="TGD">
+            <body>
+                <atom name="YahooPlaces">
+                    <variable name="cityId"/>
+                    <variable name="cityName"/>
+                    <variable name="type"/>
+                    <constant value="Town"/>
+                    <variable name="_11854"/>
+                    <variable name="_11855"/>
+                    <variable name="_11856"/>
+                    <variable name="_11857"/>
+                    <variable name="_11858"/>
+                    <variable name="_11859"/>
+                    <variable name="_11860"/>
+                    <variable name="_11861"/>
+                    <variable name="_11862"/>
+                    <variable name="_11863"/>
+                    <variable name="_11864"/>
+                    <variable name="_11865"/>
+                    <variable name="_11866"/>
+                    <variable name="_11867"/>
+                </atom>
+                <atom name="YahooCountries">
+                    <variable name="countryId"/>
+                    <variable name="type"/>
+                    <constant value="Country"/>
+                    <variable name="countryName"/>
+                </atom>
+                <atom name="YahooBelongsTo">
+                    <variable name="cityId"/>
+                    <variable name="countryId"/>
+                    <variable name="_11868"/>
+                    <variable name="_11869"/>
+                    <variable name="_11870"/>
+                </atom>
+            </body>
+            <head>
+                <atom name="City">
+                    <variable name="cityId"/>
+                    <variable name="cityName"/>
+                    <variable name="countryCode"/>
+                    <variable name="_11871"/>
+                    <variable name="_11872"/>
+                    <variable name="_11873"/>
+                    <variable name="_11874"/>
+                </atom>
+                <atom name="Country">
+                    <variable name="countryId"/>
+                    <variable name="countryCode"/>
+                    <variable name="countryName"/>
+                    <variable name="continentName"/>
+                    <variable name="capital"/>
+                    <variable name="_11875"/>
+                    <variable name="_11876"/>
+                    <variable name="_11877"/>
+                    <variable name="_11878"/>
+                    <variable name="_11879"/>
+                    <variable name="_11880"/>
+                </atom>
+            </head>
+        </dependency>
+        <dependency type="TGD">
+            <body>
+                <atom name="Continent">
+                    <variable name="continentId"/>
+                    <variable name="continentName"/>
+                    <variable name="_11881"/>
+                    <variable name="_11882"/>
+                    <variable name="_11883"/>
+                    <variable name="_11884"/>
+                    <variable name="_11885"/>
+                </atom>
+                <atom name="Country">
+                    <variable name="countryId"/>
+                    <variable name="countryCode"/>
+                    <variable name="countryName"/>
+                    <variable name="continentName"/>
+                    <variable name="_11886"/>
+                    <variable name="_11887"/>
+                    <variable name="_11888"/>
+                    <variable name="_11889"/>
+                    <variable name="_11890"/>
+                    <variable name="_11891"/>
+                    <variable name="_11892"/>
+                </atom>
+            </body>
+            <head>
+                <atom name="GNCountryInfo">
+                    <variable name="geonameId"/>
+                    <variable name="countryCode"/>
+                    <variable name="countryName"/>
+                    <variable name="continentCode"/>
+                    <variable name="continentName"/>
+                    <variable name="_11893"/>
+                    <variable name="_11894"/>
+                    <variable name="_11895"/>
+                    <variable name="_11896"/>
+                    <variable name="_11897"/>
+                    <variable name="_11898"/>
+                    <variable name="_11899"/>
+                    <variable name="_11900"/>
+                    <variable name="_11901"/>
+                    <variable name="_11902"/>
+                    <variable name="_11903"/>
+                    <variable name="_11904"/>
+                </atom>
+            </head>
+        </dependency>
+        <dependency type="TGD">
+            <body>
+                <atom name="GNCountryInfo">
+                    <variable name="geonameId"/>
+                    <variable name="countryCode"/>
+                    <variable name="countryName"/>
+                    <variable name="continentCode"/>
+                    <variable name="continentName"/>
+                    <variable name="_11905"/>
+                    <variable name="_11906"/>
+                    <variable name="_11907"/>
+                    <variable name="_11908"/>
+                    <variable name="_11909"/>
+                    <variable name="_11910"/>
+                    <variable name="_11911"/>
+                    <variable name="_11912"/>
+                    <variable name="_11913"/>
+                    <variable name="_11914"/>
+                    <variable name="_11915"/>
+                    <variable name="_11916"/>
+                </atom>
+            </body>
+            <head>
+                <atom name="Continent">
+                    <variable name="continentId"/>
+                    <variable name="continentName"/>
+                    <variable name="_11917"/>
+                    <variable name="_11918"/>
+                    <variable name="_11919"/>
+                    <variable name="_11920"/>
+                    <variable name="_11921"/>
+                </atom>
+                <atom name="Country">
+                    <variable name="countryId"/>
+                    <variable name="countryCode"/>
+                    <variable name="countryName"/>
+                    <variable name="continentName"/>
+                    <variable name="_11922"/>
+                    <variable name="_11923"/>
+                    <variable name="_11924"/>
+                    <variable name="_11925"/>
+                    <variable name="_11926"/>
+                    <variable name="_11927"/>
+                    <variable name="_11928"/>
+                </atom>
+            </head>
+        </dependency>
+        <dependency type="TGD">
+            <body>
+                <atom name="Country">
+                    <variable name="countryId"/>
+                    <variable name="countryCode"/>
+                    <variable name="countryName"/>
+                    <variable name="_11929"/>
+                    <variable name="_11930"/>
+                    <variable name="_11931"/>
+                    <variable name="_11932"/>
+                    <variable name="_11933"/>
+                    <variable name="_11934"/>
+                    <variable name="_11935"/>
+                    <variable name="_11936"/>
+                </atom>
+                <atom name="CapitalCity">
+                    <variable name="cityId"/>
+                    <variable name="capital"/>
+                    <variable name="countryCode"/>
+                    <variable name="_11937"/>
+                    <variable name="_11938"/>
+                    <variable name="_11939"/>
+                    <variable name="_11940"/>
+                </atom>
+            </body>
+            <head>
+                <atom name="GNCountryInfo">
+                    <variable name="geonameId"/>
+                    <variable name="countryCode"/>
+                    <variable name="countryName"/>
+                    <variable name="_11941"/>
+                    <variable name="_11942"/>
+                    <variable name="_11943"/>
+                    <variable name="_11944"/>
+                    <variable name="_11945"/>
+                    <variable name="capital"/>
+                    <variable name="_11946"/>
+                    <variable name="_11947"/>
+                    <variable name="_11948"/>
+                    <variable name="_11949"/>
+                    <variable name="_11950"/>
+                    <variable name="_11951"/>
+                    <variable name="_11952"/>
+                    <variable name="_11953"/>
+                </atom>
+            </head>
+        </dependency>
+        <dependency type="TGD">
+            <body>
+                <atom name="GNCountryInfo">
+                    <variable name="geonameId"/>
+                    <variable name="countryCode"/>
+                    <variable name="countryName"/>
+                    <variable name="_11954"/>
+                    <variable name="_11955"/>
+                    <variable name="_11956"/>
+                    <variable name="_11957"/>
+                    <variable name="_11958"/>
+                    <variable name="capital"/>
+                    <variable name="_11959"/>
+                    <variable name="_11960"/>
+                    <variable name="_11961"/>
+                    <variable name="_11962"/>
+                    <variable name="_11963"/>
+                    <variable name="_11964"/>
+                    <variable name="_11965"/>
+                    <variable name="_11966"/>
+                </atom>
+            </body>
+            <head>
+                <atom name="Country">
+                    <variable name="countryId"/>
+                    <variable name="countryCode"/>
+                    <variable name="countryName"/>
+                    <variable name="_11967"/>
+                    <variable name="_11968"/>
+                    <variable name="_11969"/>
+                    <variable name="_11970"/>
+                    <variable name="_11971"/>
+                    <variable name="_11972"/>
+                    <variable name="_11973"/>
+                    <variable name="_11974"/>
+                </atom>
+                <atom name="CapitalCity">
+                    <variable name="cityId"/>
+                    <variable name="capital"/>
+                    <variable name="countryCode"/>
+                    <variable name="_11975"/>
+                    <variable name="_11976"/>
+                    <variable name="_11977"/>
+                    <variable name="_11978"/>
+                </atom>
+            </head>
+        </dependency>
+        <dependency type="TGD">
+            <body>
+                <atom name="Continent">
+                    <variable name="continentId"/>
+                    <variable name="continentName"/>
+                    <variable name="_11979"/>
+                    <variable name="_11980"/>
+                    <variable name="_11981"/>
+                    <variable name="_11982"/>
+                    <variable name="_11983"/>
+                </atom>
+                <atom name="Country">
+                    <variable name="countryId"/>
+                    <variable name="countryCode"/>
+                    <variable name="countryName"/>
+                    <variable name="continentName"/>
+                    <variable name="_11984"/>
+                    <variable name="_11985"/>
+                    <variable name="_11986"/>
+                    <variable name="_11987"/>
+                    <variable name="_11988"/>
+                    <variable name="_11989"/>
+                    <variable name="_11990"/>
+                </atom>
+            </body>
+            <head>
+                <atom name="YahooContinents">
+                    <variable name="continentId"/>
+                    <variable name="type"/>
+                    <constant value="Continent"/>
+                    <variable name="continentName"/>
+                </atom>
+                <atom name="YahooCountries">
+                    <variable name="countryId"/>
+                    <variable name="type"/>
+                    <constant value="Country"/>
+                    <variable name="countryName"/>
+                </atom>
+                <atom name="YahooBelongsTo">
+                    <variable name="countryId"/>
+                    <variable name="continentId"/>
+                    <variable name="_11991"/>
+                    <variable name="_11992"/>
+                    <variable name="_11993"/>
+                </atom>
+            </head>
+        </dependency>
+        <dependency type="TGD">
+            <body>
+                <atom name="YahooContinents">
+                    <variable name="continentId"/>
+                    <variable name="type"/>
+                    <constant value="Continent"/>
+                    <variable name="continentName"/>
+                </atom>
+                <atom name="YahooCountries">
+                    <variable name="countryId"/>
+                    <variable name="type"/>
+                    <constant value="Country"/>
+                    <variable name="countryName"/>
+                </atom>
+                <atom name="YahooBelongsTo">
+                    <variable name="countryId"/>
+                    <variable name="continentId"/>
+                    <variable name="_11994"/>
+                    <variable name="_11995"/>
+                    <variable name="_11996"/>
+                </atom>
+            </body>
+            <head>
+                <atom name="Continent">
+                    <variable name="continentId"/>
+                    <variable name="continentName"/>
+                    <variable name="_11997"/>
+                    <variable name="_11998"/>
+                    <variable name="_11999"/>
+                    <variable name="_12000"/>
+                    <variable name="_12001"/>
+                </atom>
+                <atom name="Country">
+                    <variable name="countryId"/>
+                    <variable name="countryCode"/>
+                    <variable name="countryName"/>
+                    <variable name="continentName"/>
+                    <variable name="_12002"/>
+                    <variable name="_12003"/>
+                    <variable name="_12004"/>
+                    <variable name="_12005"/>
+                    <variable name="_12006"/>
+                    <variable name="_12007"/>
+                    <variable name="_12008"/>
+                </atom>
+            </head>
+        </dependency>
+        <dependency type="TGD">
+            <body>
+                <atom name="WBCountries">
+                    <variable name="wbid"/>
+                    <variable name="countryCode"/>
+                    <variable name="countryName"/>
+                    <variable name="incomeLevel"/>
+                    <variable name="lendingType"/>
+                    <variable name="capital"/>
+                    <variable name="latitude"/>
+                    <variable name="longitude"/>
+                </atom>
+            </body>
+            <head>
+                <atom name="Country">
+                    <variable name="countryId"/>
+                    <variable name="countryCode"/>
+                    <variable name="countryName"/>
+                    <variable name="continentName"/>
+                    <variable name="_12009"/>
+                    <variable name="_12010"/>
+                    <variable name="_12011"/>
+                    <variable name="_12012"/>
+                    <variable name="_12013"/>
+                    <variable name="_12014"/>
+                    <variable name="_12015"/>
+                </atom>
+                <atom name="CapitalCity">
+                    <variable name="cityId"/>
+                    <variable name="capital"/>
+                    <variable name="countryCode"/>
+                    <variable name="_12016"/>
+                    <variable name="_12017"/>
+                    <variable name="_12018"/>
+                    <variable name="_12019"/>
+                </atom>
+            </head>
+        </dependency>
+        <dependency type="TGD">
+            <body>
+                <atom name="Country">
+                    <variable name="countryId"/>
+                    <variable name="countryCode"/>
+                    <variable name="countryName"/>
+                    <variable name="continentName"/>
+                    <variable name="_12020"/>
+                    <variable name="_12021"/>
+                    <variable name="_12022"/>
+                    <variable name="_12023"/>
+                    <variable name="_12024"/>
+                    <variable name="_12025"/>
+                    <variable name="_12026"/>
+                </atom>
+                <atom name="CapitalCity">
+                    <variable name="cityId"/>
+                    <variable name="capital"/>
+                    <variable name="countryCode"/>
+                    <variable name="_12027"/>
+                    <variable name="_12028"/>
+                    <variable name="_12029"/>
+                    <variable name="_12030"/>
+                </atom>
+            </body>
+            <head>
+                <atom name="WBCountries">
+                    <variable name="wbid"/>
+                    <variable name="countryCode"/>
+                    <variable name="countryName"/>
+                    <variable name="incomeLevel"/>
+                    <variable name="lendingType"/>
+                    <variable name="capital"/>
+                    <variable name="latitude"/>
+                    <variable name="longitude"/>
+                </atom>
+            </head>
+        </dependency>
+    </dependencies>
 </schema>
-

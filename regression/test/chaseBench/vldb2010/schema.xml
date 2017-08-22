@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <schema>
     <relations>
-        <relation isEquality="false" name="A">
+        <relation name="A">
             <attribute name="a" type="java.lang.String"/>
             <attribute name="b" type="java.lang.String"/>
             <attribute name="InstanceID" type="java.lang.Integer"/>
         </relation>
-        <relation isEquality="false" name="R">
+        <relation name="R">
             <attribute name="c" type="java.lang.String"/>
             <attribute name="d" type="java.lang.String"/>
             <attribute name="InstanceID" type="java.lang.Integer"/>
