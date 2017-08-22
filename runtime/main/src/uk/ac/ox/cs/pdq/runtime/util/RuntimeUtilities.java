@@ -215,12 +215,16 @@ public class RuntimeUtilities {
 	 * @return 		the relation's input attributes for input binding
 	 */
 	public static Attribute[] computeInputAttributes(RelationAccessWrapper relation, AccessMethod accessMethod) {
-		Preconditions.checkArgument(relation.getAccessMethod(accessMethod.getName()) != null);
-		Attribute[] attributes = relation.getAttributes();
-		Attribute[] result = new Attribute[accessMethod.getNumberOfInputs()];
-		for (int index = 0; index < accessMethod.getNumberOfInputs(); ++index) 
-			result[index] = attributes[accessMethod.getInputPosition(index) - 1];
-		return result;
+		Assert.assertNotNull(relation);
+		Assert.assertNotNull(accessMethod);
+		if(accessMethod.getInputs().length == 0) {
+			return new Attribute[]{};
+		}
+		List<Attribute> inputs = new ArrayList<>();
+		for(Integer i:accessMethod.getInputs()) {
+			inputs.add(relation.getAttribute(i));
+		}
+		return inputs.toArray(new Attribute[inputs.size()]);
 	}
 	
 	public static Attribute[] computeInputAttributes(RelationAccessWrapper relation, AccessMethod accessMethod, Map<Integer, TypedConstant> inputConstants) {
@@ -256,8 +260,8 @@ public class RuntimeUtilities {
 		Assert.assertNotNull(child1);
 		Assert.assertNotNull(child2);
 		Attribute[] input = new Attribute[child1.getNumberOfOutputAttributes() + child2.getNumberOfOutputAttributes()];
-		System.arraycopy(child1.getNumberOfOutputAttributes(), 0, input, 0, child1.getNumberOfOutputAttributes());
-		System.arraycopy(child2.getNumberOfOutputAttributes(), 0, input, child1.getNumberOfOutputAttributes(), child2.getNumberOfOutputAttributes());
+		System.arraycopy(child1.getOutputAttributes(), 0, input, 0, child1.getNumberOfOutputAttributes());
+		System.arraycopy(child2.getOutputAttributes(), 0, input, child1.getNumberOfOutputAttributes(), child2.getNumberOfOutputAttributes());
 		return input;
 	}
 	
