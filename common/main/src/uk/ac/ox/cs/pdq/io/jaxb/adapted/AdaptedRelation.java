@@ -144,6 +144,8 @@ public class AdaptedRelation implements Serializable {
 
 	@XmlAttribute(name="isEquality")
 	public Boolean isEquality() {
+		if (isEquality==null || !isEquality)
+			return null; // the optional parameter only displayed when it is set to true
 		return isEquality;
 	}
 
