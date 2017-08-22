@@ -54,6 +54,18 @@ public class TestAccess {
 		//Free access on relation R1
 		Access relation1Free = new Access(relation1, am1);
 		
+		//TODO create some tuples
+		//TODO load tuples by calling the load method of relation1  
+		//Execute the plan by calling
+		try {
+			Table result = this.planExecution(relation1Free);
+			//TODO check that the result tuples are the ones you expected
+		} catch (TimeoutException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
 		//Free access on relation R2
 		Access relation2Free = new Access(relation2, am1);
 		
