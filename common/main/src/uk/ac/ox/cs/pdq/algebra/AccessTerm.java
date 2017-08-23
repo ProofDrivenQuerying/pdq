@@ -87,9 +87,14 @@ public class AccessTerm extends RelationalTerm {
 			StringBuilder result = new StringBuilder();
 			result.append("Access").append('{');
 			result.append(this.relation.getName());
+			result.append(".");
+			result.append(this.accessMethod.getName());
 			result.append('[');
 			for(int index = 0; index < this.accessMethod.getInputs().length; ++index) {
+				result.append("#");
 				result.append(this.accessMethod.getInputs()[index]);
+				result.append("=");
+				result.append(inputConstants.get(this.accessMethod.getInputs()[index]));				
 				if(index < this.accessMethod.getInputs().length - 1)
 					result.append(",");
 			}
