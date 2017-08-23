@@ -174,7 +174,6 @@ public abstract class DatabaseInstance implements Instance {
 			throw t;
 		}
 	}
-
 	/** Main query function used by getTriggers and getMatches. The correct argument is a mystery. 
 	 * 
 	 * @param queries A queue of triples, representing a query.bEach triple holds, 
@@ -188,8 +187,9 @@ public abstract class DatabaseInstance implements Instance {
 		//Run the SQL query statements in multiple threads
 		try {
 			//Create a pool of threads to run in parallel
-			if (executorService==null)
+			if (executorService==null) {
 				executorService = Executors.newFixedThreadPool(this.databaseConnection.getNumberOfSynchronousConnections());
+			}
 			List<Callable<List<Match>>> threads = new ArrayList<>();
 			for(int j = 0; j < this.databaseConnection.getNumberOfSynchronousConnections(); ++j) {
 				//Create the threads that will run the database queries
@@ -233,6 +233,8 @@ public abstract class DatabaseInstance implements Instance {
 	 * @throws Exception
 	 */
 	public void close() throws Exception {
+		if (databaseConnection!=null)
+			cachedExecutors.remove(databaseConnection.hashCode());
 		if (executorService!=null)
 			executorService.shutdownNow();
 		//is this the right thing to do?

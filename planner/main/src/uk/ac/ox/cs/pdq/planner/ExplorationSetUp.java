@@ -2,6 +2,7 @@ package uk.ac.ox.cs.pdq.planner;
 
 import java.sql.SQLException;
 import java.util.AbstractMap;
+import java.util.Collection;
 import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
@@ -16,8 +17,10 @@ import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.cost.logging.CostStatKeys;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
+import uk.ac.ox.cs.pdq.db.DatabaseInstance;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.logging.ChainedStatistics;
 import uk.ac.ox.cs.pdq.logging.DynamicStatistics;
@@ -249,6 +252,17 @@ public class ExplorationSetUp {
 		} catch (Throwable e) {
 			this.handleEarlyTermination(explorer);
 			throw e;
+		} finally {
+			try {
+				new DatabaseInstance(databaseConnection) {
+					@Override
+					public Collection<Atom> getFacts() {
+						return null;
+					}}.close();
+			} catch (Exception e) {
+				this.handleEarlyTermination(explorer);
+				e.printStackTrace();
+			}
 		}
 	}
 
