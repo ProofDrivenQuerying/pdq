@@ -63,7 +63,6 @@ import uk.ac.ox.cs.pdq.util.LimitReachedException;
  */
 public class LinearOptimized extends LinearExplorer {
 
-	/** Logger. */
 	private static Logger log = Logger.getLogger(LinearOptimized.class);
 
 	/**  Propagates to the root of the plan tree the best plan found so far. */
@@ -76,10 +75,10 @@ public class LinearOptimized extends LinearExplorer {
 	/**  Performs plan post-pruning. */
 	private final PostPruning postPruning;
 	
-	/** The pruned paths. */
+	/** TOCOMMENT: WHAT IS IT . */
 	private final Set<List<Integer>> prunedPaths = new HashSet<>(); 
 
-	/** The zombification. */
+	/** TOCOMMENT: WHAT IS IT */
 	private final boolean zombification;
 
 	/**  Classes of equivalent configurations. */
@@ -454,7 +453,7 @@ public class LinearOptimized extends LinearExplorer {
 	}
 
 	/**
-	 * Creates the path.
+	 * TOCOMMENT: WHAT DOES IT DO? .
 	 *
 	 * @param target List<Integer>
 	 * @param replacement List<Integer>
@@ -469,7 +468,7 @@ public class LinearOptimized extends LinearExplorer {
 	}
 
 	/**
-	 * Gets the dead descendants.
+	 * TOCOMMENT: WHAT IS IT?
 	 *
 	 * @param representativeNode N
 	 * @param planTree IndexedDirectedGraph<N>
@@ -482,7 +481,7 @@ public class LinearOptimized extends LinearExplorer {
 	}
 
 	/**
-	 * Gets the dead descendants recursive.
+	 *  TOCOMMENT: WHAT IS IT?? 
 	 *
 	 * @param representativeNode N
 	 * @param planTree IndexedDirectedGraph<N>

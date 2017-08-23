@@ -47,7 +47,6 @@ import uk.ac.ox.cs.pdq.util.LimitReachedException;
  */
 public class LinearKChase extends LinearExplorer {
 
-	/** Logger. */
 	private static Logger log = Logger.getLogger(LinearKChase.class);
 
 	/**  Propagates to the root of the plan tree the best plan found so far. */

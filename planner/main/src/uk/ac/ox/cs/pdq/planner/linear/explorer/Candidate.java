@@ -73,7 +73,7 @@ public class Candidate implements Cloneable{
 	}
 
 	/**
-	 * Gets the input.
+	 * TOCOMMENT: WHAT IS IT.
 	 *
 	 * @return List<Constant>
 	 */
@@ -82,7 +82,7 @@ public class Candidate implements Cloneable{
 	}
 
 	/**
-	 * Gets the output.
+	 * TOCOMMENT: WHAT IS IT!  
 	 *
 	 * @return Collection<Constant>
 	 */
@@ -91,7 +91,7 @@ public class Candidate implements Cloneable{
 	}
 
 	/**
-	 * Gets the proper output.
+	 *  TOCOMMENT: WHAT IS IT !!! .
 	 *
 	 * @return Collection<Constant>
 	 */
@@ -100,7 +100,7 @@ public class Candidate implements Cloneable{
 	}
 
 	/**
-	 * Gets the fact.
+	 *  TCOMMENT: WRITE COMMENTS!
 	 *
 	 * @return PredicateFormula
 	 */
@@ -109,7 +109,7 @@ public class Candidate implements Cloneable{
 	}
 
 	/**
-	 * Gets the rule.
+	 *  TCOMMENT: WRITE COMMENTS!.
 	 *
 	 * @return AccessibilityAxiom
 	 */
@@ -118,7 +118,6 @@ public class Candidate implements Cloneable{
 	}
 
 	/**
-	 * Gets the output chase constants.
 	 *
 	 * @return the constants in the output positions of the fact
 	 */
@@ -135,7 +134,6 @@ public class Candidate implements Cloneable{
 	}
 
 	/**
-	 * Gets the match.
 	 *
 	 * @return Matching
 	 */
@@ -144,7 +142,6 @@ public class Candidate implements Cloneable{
 	}
 
 	/**
-	 * Gets the inferred accessible fact.
 	 *
 	 * @return the inferred accessible counterpart of the fact
 	 */
@@ -155,7 +152,6 @@ public class Candidate implements Cloneable{
 	}
 
 	/**
-	 * Gets the relation.
 	 *
 	 * @return Relation
 	 */
@@ -164,7 +160,6 @@ public class Candidate implements Cloneable{
 	}
 
 	/**
-	 * Gets the access method.
 	 *
 	 * @return AccessMethod
 	 */
@@ -192,7 +187,6 @@ public class Candidate implements Cloneable{
 	}
 
 	/**
-	 * Hash code.
 	 *
 	 * @return int
 	 */
@@ -202,7 +196,6 @@ public class Candidate implements Cloneable{
 	}
 
 	/**
-	 * To string.
 	 *
 	 * @return String
 	 */
