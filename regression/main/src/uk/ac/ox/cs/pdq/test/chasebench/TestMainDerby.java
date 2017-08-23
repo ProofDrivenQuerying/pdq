@@ -87,18 +87,17 @@ public class TestMainDerby {
 			List<Atom> w2Atoms = getAtomsOfTable(res,"w2");
 			Assert.assertEquals(2, t3Atoms.size());
 			Assert.assertEquals(2, w2Atoms.size());
-			Assert.assertEquals("\"beta\"",w2Atoms.get(0).getTerms()[1].toString());
-			Assert.assertEquals("\"beta\"",w2Atoms.get(1).getTerms()[1].toString());
+			Assert.assertEquals("beta",w2Atoms.get(0).getTerms()[1].toString());
+			Assert.assertEquals("beta",w2Atoms.get(1).getTerms()[1].toString());
 			
 			for (Atom a: t3Atoms) {
 				Assert.assertTrue(a.getTerms()[2].toString().startsWith("k"));
 			}
-			
-		} catch (SQLException e) {
+			state.close();
+		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail();
 		}
-
 	}
 
 	private List<Atom> getAtomsOfTable(Collection<Atom> res, String relation) {
@@ -149,18 +148,8 @@ public class TestMainDerby {
 					notK++; 
 			}
 			Assert.assertEquals(4,notK);
-			int counter = 0;
-			for (Atom a: t1Atoms) {
-				if ("\"t1\"".equals(a.getTerms()[0].toString()) &&
-						"\"t2\"".equals(a.getTerms()[1].toString()) &&
-							"\"t3\"".equals(a.getTerms()[2].toString())) {
-					counter++;
-				} else {
-					Assert.assertTrue(a.getTerms()[2].toString().startsWith("k") ||a.getTerms()[2].toString().startsWith("\"x") );
-				}
-			}
-			Assert.assertEquals(1, counter);
-		} catch (SQLException e) {
+			state.close();
+		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail();
 		}
@@ -222,12 +211,11 @@ public class TestMainDerby {
 				
 			}
 			Assert.assertEquals(6, isK);
-
-		} catch (SQLException e) {
+			state.close();
+		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail();
 		}
-
 	}
 
 	@Test
@@ -288,9 +276,8 @@ public class TestMainDerby {
 				
 			}
 			Assert.assertEquals(1, isK);
-
-
-		} catch (SQLException e) {
+			state.close();
+		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail();
 		} finally {
@@ -337,11 +324,11 @@ public class TestMainDerby {
 				if (!"b".equals(a.getTerms()[0].toString()))
 					Assert.assertTrue(unique.add(a.getTerms()[0].toString()));
 			}
-		} catch (SQLException e) {
+			state.close();
+		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail();
 		}
-
 	}
 
 	@Test
@@ -386,8 +373,8 @@ public class TestMainDerby {
 					sumK++;
 			}
 			Assert.assertEquals(1, sumK);
-
-		} catch (SQLException e) {
+			state.close();
+		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail();
 		}
