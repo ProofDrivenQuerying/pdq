@@ -314,7 +314,7 @@ public class CommonToPDQTranslator {
 				String[] tuple = line.split(",");
 				List<Term> constants = Lists.newArrayList();
 				for (int i = 0; i < tuple.length; ++i) {
-					constants.add(TypedConstant.create(tuple[i]));
+					constants.add(TypedConstant.create(tuple[i].replace("\"", "")));
 				}
 				if (schema.getRelation(table)==null) {
 					System.out.println();

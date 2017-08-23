@@ -23,12 +23,17 @@ import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
+import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Dependency;
+import uk.ac.ox.cs.pdq.fol.Term;
+import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance.LimitToThisOrAllInstances;
 
 /**
  * @author Gabor
@@ -125,8 +130,10 @@ public class TestMainMySql {
 		Collection<Atom> facts1 = CommonToPDQTranslator.importFacts(schema, "s1", "test\\chaseBench\\tgds5\\data\\s1.csv");
 		facts0.addAll(facts1);
 		try {
-			DatabaseChaseInstance state = new DatabaseChaseInstance(facts0, new DatabaseConnection(new DatabaseParameters(), schema));
+			DatabaseConnection dc = new DatabaseConnection(new DatabaseParameters(new File("main\\src\\uk\\ac\\ox\\cs\\pdq\\test\\chasebench\\MySql_case.properties")), schema,10);
+			DatabaseChaseInstance state = new DatabaseChaseInstance(facts0, dc);
 			Collection<Atom> res = state.getFacts();
+			
 			System.out.println("INITIAL STATE: " + res);
 
 			RestrictedChaser chaser = new RestrictedChaser(new StatisticsCollector(new EventBus()));
@@ -178,7 +185,8 @@ public class TestMainMySql {
 		
 		Collection<Atom> facts0 = CommonToPDQTranslator.importFacts(schema, "s", "test\\chaseBench\\tgdsEgds\\data\\s.csv");
 		try {
-			DatabaseChaseInstance state = new DatabaseChaseInstance(facts0, new DatabaseConnection(new DatabaseParameters(), schema));
+			DatabaseConnection dc = new DatabaseConnection(new DatabaseParameters(new File("main\\src\\uk\\ac\\ox\\cs\\pdq\\test\\chasebench\\MySql_case.properties")), schema,10);
+			DatabaseChaseInstance state = new DatabaseChaseInstance(facts0, dc);
 			Collection<Atom> res = state.getFacts();
 			System.out.println("INITIAL STATE: " + res);
 
@@ -242,7 +250,8 @@ public class TestMainMySql {
 		
 		Collection<Atom> facts0 = CommonToPDQTranslator.importFacts(schema, "s", "test\\chaseBench\\tgdsEgdsLarge\\data\\s.csv");
 		try {
-			DatabaseChaseInstance state = new DatabaseChaseInstance(facts0, new DatabaseConnection(new DatabaseParameters(), schema));
+			DatabaseConnection dc = new DatabaseConnection(new DatabaseParameters(new File("main\\src\\uk\\ac\\ox\\cs\\pdq\\test\\chasebench\\MySql_case.properties")), schema,10);
+			DatabaseChaseInstance state = new DatabaseChaseInstance(facts0, dc);
 			Collection<Atom> res = state.getFacts();
 			System.out.println("INITIAL STATE: " + res);
 
@@ -307,7 +316,8 @@ public class TestMainMySql {
 		
 		Collection<Atom> facts0 = CommonToPDQTranslator.importFacts(schema, "A", "test\\chaseBench\\vldb2010\\data\\A.csv");
 		try {
-			DatabaseChaseInstance state = new DatabaseChaseInstance(facts0, new DatabaseConnection(new DatabaseParameters(), schema));
+			DatabaseConnection dc = new DatabaseConnection(new DatabaseParameters(new File("main\\src\\uk\\ac\\ox\\cs\\pdq\\test\\chasebench\\MySql_case.properties")), schema,10);
+			DatabaseChaseInstance state = new DatabaseChaseInstance(facts0, dc);
 			Collection<Atom> res = state.getFacts();
 			System.out.println("INITIAL STATE: " + res);
 
@@ -349,7 +359,8 @@ public class TestMainMySql {
 
 		Collection<Atom> facts0 = CommonToPDQTranslator.importFacts(schema, "deptemp", "test\\chaseBench\\weak\\data\\deptemp.csv");
 		try {
-			DatabaseChaseInstance state = new DatabaseChaseInstance(facts0, new DatabaseConnection(new DatabaseParameters(), schema));
+			DatabaseConnection dc = new DatabaseConnection(new DatabaseParameters(new File("main\\src\\uk\\ac\\ox\\cs\\pdq\\test\\chasebench\\MySql_case.properties")), schema,10);
+			DatabaseChaseInstance state = new DatabaseChaseInstance(facts0, dc);
 			Collection<Atom> res = state.getFacts();
 			System.out.println("INITIAL STATE: " + res);
 
