@@ -34,7 +34,6 @@ import uk.ac.ox.cs.pdq.planner.linear.cost.SimplePropagator;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.NodeFactory;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode.NodeStatus;
-import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.util.LimitReachedException;
 
@@ -86,8 +85,8 @@ public class LinearKChase extends LinearExplorer {
 			CostEstimator costEstimator,
 			NodeFactory nodeFactory,
 			int depth,
-			int chaseInterval, ReasoningParameters reasoningParameters) throws PlannerException, SQLException {
-		super(eventBus, collectStats, query, accessibleQuery, accessibleSchema, chaser, dbConn, costEstimator, nodeFactory, depth, reasoningParameters);
+			int chaseInterval) throws PlannerException, SQLException {
+		super(eventBus, collectStats, query, accessibleQuery, accessibleSchema, chaser, dbConn, costEstimator, nodeFactory, depth);
 		this.costPropagator = CostPropagatorUtility.getPropagator(costEstimator);
 		this.chaseInterval = chaseInterval;
 	}

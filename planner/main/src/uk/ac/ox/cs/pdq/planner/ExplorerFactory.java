@@ -169,7 +169,7 @@ public class ExplorerFactory {
 					connection, 
 					costEstimator,
 					nodeFactory,
-					parameters.getMaxDepth(),reasoningParameters);
+					parameters.getMaxDepth());
 		case LINEAR_KCHASE:
 			return  new LinearKChase(
 					eventBus, 
@@ -182,7 +182,7 @@ public class ExplorerFactory {
 					costEstimator,
 					nodeFactory,
 					parameters.getMaxDepth(),
-					parameters.getChaseInterval(), reasoningParameters);
+					parameters.getChaseInterval());
 
 		case DAG_GENERIC:
 			return new uk.ac.ox.cs.pdq.planner.dag.explorer.DAGGeneric(
@@ -266,7 +266,7 @@ public class ExplorerFactory {
 					parameters.getMaxDepth(),
 					parameters.getQueryMatchInterval(),
 					postPruning,
-					parameters.getZombification(), reasoningParameters);
+					parameters.getZombification());
 
 		default:
 			throw new IllegalStateException("Unsupported planner type " + parameters.getPlannerType());
