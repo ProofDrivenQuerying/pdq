@@ -200,7 +200,6 @@ public abstract class LinearExplorer extends Explorer {
 //	}
 
 	/**
-	 * Gets the configurations.
 	 *
 	 * @param path the path
 	 * @return 		the configuration of each node in the input path.
@@ -218,7 +217,7 @@ public abstract class LinearExplorer extends Explorer {
 	}
 
 	/**
-	 * Gets the best configurations list.
+	 * TOCOMMENT: WAHT IS IT!
 	 *
 	 * @return the best configurations list
 	 */

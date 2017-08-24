@@ -25,7 +25,6 @@ import com.google.common.base.Preconditions;
 public class ExplorerUtility {
 
 	/**
-	 * Checks if is equivalent.
 	 *
 	 * @param <N> the number type
 	 * @param parentsNodes the parents nodes
@@ -55,7 +54,6 @@ public class ExplorerUtility {
 	}
 
 	/**
-	 * Checks if is dominated.
 	 *
 	 * @param <N> the number type
 	 * @param parentsNodes the parents nodes
@@ -91,7 +89,7 @@ public class ExplorerUtility {
 	}
 
 	/**
-	 * Gets the partially generated leaves.
+	 *TOCOMMENT: WHAT ARE THESE!!! 
 	 *
 	 * @param <N> the number type
 	 * @param planTree the plan tree

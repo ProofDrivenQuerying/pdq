@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.test.planner.accessible;
+package uk.ac.ox.cs.pdq.test.planner.accessibleschema;
 
 import org.junit.Assert;
 import org.junit.Before;

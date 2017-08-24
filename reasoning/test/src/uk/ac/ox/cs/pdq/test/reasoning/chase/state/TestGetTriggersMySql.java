@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.test.reasoning.homomorphism;
+package uk.ac.ox.cs.pdq.test.reasoning.chase.state;
 
 import java.io.File;
 import java.sql.SQLException;
