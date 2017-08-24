@@ -1,15 +1,22 @@
 package uk.ac.ox.cs.pdq.test.algebra;
 
+import static org.mockito.Mockito.when;
+
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import uk.ac.ox.cs.pdq.algebra.AccessTerm;
 import uk.ac.ox.cs.pdq.algebra.AttributeEqualityCondition;
 import uk.ac.ox.cs.pdq.algebra.CartesianProductTerm;
 import uk.ac.ox.cs.pdq.algebra.Condition;
+import uk.ac.ox.cs.pdq.algebra.ConstantEqualityCondition;
 import uk.ac.ox.cs.pdq.algebra.DependentJoinTerm;
 import uk.ac.ox.cs.pdq.algebra.JoinTerm;
 import uk.ac.ox.cs.pdq.algebra.ProjectionTerm;
@@ -20,6 +27,7 @@ import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
+import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
 import uk.ac.ox.cs.pdq.util.Utility;
 
@@ -28,12 +36,29 @@ import uk.ac.ox.cs.pdq.util.Utility;
  *
  */
 public class RelationalTermTest {
+
+	protected AccessMethod method0 = AccessMethod.create(new Integer[]{});
+	protected AccessMethod method1 = AccessMethod.create(new Integer[]{0});
+	protected AccessMethod method2 = AccessMethod.create(new Integer[]{0,1});
+	protected AccessMethod method3 = AccessMethod.create(new Integer[]{1});
+
+    Attribute a = Attribute.create(Integer.class, "a");
+    Attribute b = Attribute.create(Integer.class, "b");
+    Attribute c = Attribute.create(Integer.class, "c");
+    Attribute d = Attribute.create(Integer.class, "d");
+    
+	protected Relation R;
+	protected Relation S;	
+    
 	/**
-	 * Makes sure assertions are enabled.
+	 * Setup.
 	 */
-	@Before 
-	public void setup() {
+	@Before public void setup() {
 		Utility.assertsEnabled();
+        MockitoAnnotations.initMocks(this);
+        
+        this.R = Relation.create("R", new Attribute[]{a,b,c}, new AccessMethod[]{this.method0, this.method2});
+        this.S = Relation.create("S", new Attribute[]{b,c}, new AccessMethod[]{this.method0, this.method1, this.method2});
 	}
 
 	@Test
@@ -219,5 +244,50 @@ public class RelationalTermTest {
 			Assert.fail(e.getMessage());
 		}
 	}
+	
+	@Test public void test3() {
+		AccessTerm access1 = AccessTerm.create(this.R, this.method0);
+		AccessTerm access2 = AccessTerm.create(this.S, this.method1);
+		DependentJoinTerm plan1 = DependentJoinTerm.create(access1, access2);
+		
+		//TODO add assertions
+	}
+	
+	
+	@Test public void test4() {
+		AccessTerm access1 = AccessTerm.create(this.R, this.method0);
+		AccessTerm access2 = AccessTerm.create(this.S, this.method2);			
+		DependentJoinTerm plan1 = DependentJoinTerm.create(access1, access2);
+		
+		//TODO add assertions
+	}
+	
+	@Test public void test5() {
+		AccessTerm access1 = AccessTerm.create(this.R, this.method0);
+		AccessTerm access2 = AccessTerm.create(this.S, this.method2);
+		SelectionTerm selectionTerm = SelectionTerm.create(ConstantEqualityCondition.create(0, TypedConstant.create(new Integer(1))), access1);
+		DependentJoinTerm plan1 = DependentJoinTerm.create(selectionTerm, access2);
+		
+		//TODO add assertions
+	}
+	
+	@Test public void test6() {
+		Map<Integer, TypedConstant> inputConstants1 = new HashMap<>();
+		inputConstants1.put(0, TypedConstant.create(TypedConstant.create(new Integer(1))));
+		AccessTerm access1 = AccessTerm.create(this.R, this.method1, inputConstants1);
+		AccessTerm access2 = AccessTerm.create(this.S, this.method1);
+		DependentJoinTerm plan1 = DependentJoinTerm.create(access1, access2);
+		
+		//TODO add assertions
+	}
+	
+	@Test public void test7() {
+		AccessTerm access1 = AccessTerm.create(this.R, this.method0);
+		AccessTerm access2 = AccessTerm.create(this.S, this.method0);			
+		JoinTerm plan1 = JoinTerm.create(access1, access2);
+	
+		//TODO add assertions
+	}
+
 
 }
