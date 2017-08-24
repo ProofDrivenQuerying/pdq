@@ -1,7 +1,10 @@
 package uk.ac.ox.cs.pdq.test.reasoning.chase;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import org.junit.Assert;
@@ -164,7 +167,73 @@ public class TestRestrictedChaser {
 
 		Assert.assertEquals(Sets.newHashSet(n00,n01,n02,n03,n04,n1), facts);
 	}
-
+	
+	@Test
+	public void efiAskedForThis() {
+// Dependencies:		
+//		C(x) ∧ D(x) → Q(x)
+//		S(x, y) ∧ D(x) → D(y)
+//		R(z, x) → S(x, y1) ∧ T (x, y2)
+//		R(x,y1) ∧ S(x,y2)→y1 = y2
+//		R(x,y1) ∧ T(x,y2)→y1 = y2
+//
+//		facts of the chase instance:
+//		R(a_{i−1}, a_i) for 1 ≤ i ≤ 10,
+//		D(a_1)
+//		C(a_5)
+//
+//		You should assert that the chaser should produces
+//		the facts D(a_i) for 1≤i≤10
+//		and the fact Q(a_5).
+//
+//		Please define the dependencies and the input facts inside the test class and do
+//		not load them from external files.		
+		Relation C = Relation.create("C", new Attribute[] { Attribute.create(String.class, "attribute"),Attribute.create(Integer.class, "InstanceID")});
+		Relation D = Relation.create("D", new Attribute[] { Attribute.create(String.class, "attribute"),Attribute.create(Integer.class, "InstanceID") });
+		Relation Q = Relation.create("Q", new Attribute[] { Attribute.create(String.class, "attribute"),Attribute.create(Integer.class, "InstanceID") });
+		Relation R = Relation.create("R", new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1"),Attribute.create(Integer.class, "InstanceID") });
+		Relation S = Relation.create("S", new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1"),Attribute.create(Integer.class, "InstanceID") });
+		Relation T = Relation.create("T", new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1"),Attribute.create(Integer.class, "InstanceID") });
+		Relation r[] = new Relation[] { C, D, Q, R, S, T };
+		Dependency d[] = new Dependency[] {
+				TGD.create(new Atom[] {Atom.create(C, Variable.create("x")),Atom.create(D, Variable.create("x"))}, new Atom[] {Atom.create(Q, Variable.create("x"))}),
+				TGD.create(new Atom[] {Atom.create(S, Variable.create("x"),Variable.create("y")),Atom.create(D, Variable.create("x"))}, new Atom[] {Atom.create(D, Variable.create("y"))}),
+				TGD.create(new Atom[] {Atom.create(R, Variable.create("z"),Variable.create("x"))}, new Atom[] {Atom.create(S, Variable.create("x"),Variable.create("y1")),Atom.create(T, Variable.create("x"),Variable.create("y2"))}),
+				EGD.create(new Atom[] {Atom.create(R, Variable.create("x"),Variable.create("y1")),Atom.create(S, Variable.create("x"),Variable.create("y2"))}, new Atom[]{Atom.create(Predicate.create(QNames.EQUALITY.toString(), 2, true), Variable.create("y1"),Variable.create("y2"))}),
+				EGD.create(new Atom[] {Atom.create(R, Variable.create("x"),Variable.create("y1")),Atom.create(T, Variable.create("x"),Variable.create("y2"))}, new Atom[]{Atom.create(Predicate.create(QNames.EQUALITY.toString(), 2, true), Variable.create("y1"),Variable.create("y2"))}),
+		};
+		Schema s = new Schema(r,d);
+		List<Atom> facts = new ArrayList<>();
+		facts.add(Atom.create(D, new Term[]{UntypedConstant.create("a_1")}));
+		facts.add(Atom.create(C, new Term[]{UntypedConstant.create("a_5")}));
+		for (int i=1; i <=10; i++) facts.add(Atom.create(R, new Term[]{UntypedConstant.create("a_"+(i-1)),UntypedConstant.create("a_"+i)}));
+		try {
+			this.state = new DatabaseChaseInstance(facts, new DatabaseConnection(new DatabaseParameters(), s));
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+		System.out.println("Schema:" + s);
+		Set<Atom> newfacts = Sets.newHashSet(this.state.getFacts());
+		Iterator<Atom> iterator = newfacts.iterator();
+		System.out.println("Initial facts:");
+		while(iterator.hasNext()) {
+			Atom fact = iterator.next();
+			System.out.println(fact);
+		}
+		this.chaser.reasonUntilTermination(this.state, d);
+		System.out.println("\n\nAfter resoning:");
+		
+		newfacts = Sets.newHashSet(this.state.getFacts());
+		iterator = newfacts.iterator();
+		List<String> set = new ArrayList<>();
+		while(iterator.hasNext()) {
+			Atom fact = iterator.next();
+			set.add(fact.toString());
+		}
+		Collections.sort(set, String.CASE_INSENSITIVE_ORDER);
+		for(String line:set) System.out.println(line);
+	}
+	
 	public void tearDown() throws Exception {
 		getConnection().close();
 		state.close();
