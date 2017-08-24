@@ -103,8 +103,7 @@ public class LinearChaseConfiguration extends ChaseConfiguration implements Line
 	 * @return 		true if the input candidate has been already exposed
 	 */
 	public boolean isExposed(Candidate candidate) {
-		Atom infAcc = candidate.getInferredAccessibleFact();
-		return this.getState().getFacts().contains(infAcc);
+		return this.getState().getFacts().contains(candidate.getInferredAccessibleFact());
 	}
 	
 	/**

@@ -62,7 +62,7 @@ public interface Catalog {
 	 * @param method the method
 	 * @return the estimated result size per invocation of the input access
 	 */
-	int getERPSI(Relation relation, AccessMethod method);
+	int getTotalNumberOfOutputTuplesPerInputTuple(Relation relation, AccessMethod method);
 	
 	/**
 	 * Gets the erpsi.
@@ -72,7 +72,7 @@ public interface Catalog {
 	 * @param inputs the inputs
 	 * @return the estimated result size per invocation of the input access
 	 */
-	int getERPSI(Relation relation, AccessMethod method, Map<Integer, TypedConstant> inputs);
+	int getTotalNumberOfOutputTuplesPerInputTuple(Relation relation, AccessMethod method, Map<Integer, TypedConstant> inputs);
 		
 	/**
 	 * Gets the cost.
@@ -110,7 +110,6 @@ public interface Catalog {
 	 * @return 		the quality of size estimate of the input relation
 	 */
 	double getQuality(Relation relation);
-	
 	
 	/**
 	 * Clone.
