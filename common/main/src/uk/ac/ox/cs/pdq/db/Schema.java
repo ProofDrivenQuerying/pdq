@@ -159,10 +159,17 @@ public class Schema {
 			}
 			result.append("\n\t}");
 		}
-		if (this.nonEgdDependencies.length > 0) {
+		if (this.nonEgdDependencies.length > 0 || this.egdDependencies.length > 0) {
 			result.append("\n\t{");
-			for (Dependency ic : this.nonEgdDependencies) {
-				result.append("\n\t\t").append(ic);
+			if (this.nonEgdDependencies.length > 0) {
+				for (Dependency ic : this.nonEgdDependencies) {
+					result.append("\n\t\t").append(ic);
+				}
+			}
+			if (this.egdDependencies.length > 0) {
+				for (Dependency ic : this.egdDependencies) {
+					result.append("\n\t\t").append(ic);
+				}
 			}
 			result.append("\n\t}");
 		}
