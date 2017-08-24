@@ -19,10 +19,13 @@ import uk.ac.ox.cs.pdq.datasources.io.xml.QNames;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
+import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.Conjunction;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.EGD;
 import uk.ac.ox.cs.pdq.fol.Predicate;
@@ -33,6 +36,7 @@ import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance.LimitToThisOrAllInstances;
 
 /**
  * Tests the reasonUntilTermination method of the RestrictedChaser class 
@@ -169,7 +173,7 @@ public class TestRestrictedChaser {
 	}
 	
 	@Test
-	public void efiAskedForThis() {
+	public void efiTests1() {
 // Dependencies:		
 //		C(x) ∧ D(x) → Q(x)
 //		S(x, y) ∧ D(x) → D(y)
@@ -232,6 +236,64 @@ public class TestRestrictedChaser {
 		}
 		Collections.sort(set, String.CASE_INSENSITIVE_ORDER);
 		for(String line:set) System.out.println(line);
+	}
+	
+	@Test
+	public void efiTests2() {
+//Create the following unit tests for getMatches
+		
+//a. conjunctive query is Q(x,y) = A(x,x), B(x,y), C(y,z,'TypedConstant1') D(z,z)
+//b. conjunctive query is Q(x,y,z) = A('TypedConstant2',y,z,w), B(x,y,z,w),
+//C(y,z,'TypedConstant1') D(x,y), E(x,y,'TypedConstant1')
+//c. conjunctive query is Q = A('TypedConstant2',y,z,w), B(x,y,z,w),
+//C(y,z,'TypedConstant1') D(x,y), E('TypedConstant2',y,y)
+//
+//in each unit test create facts in the database such that two conditions hold:
+//(i) each relation has 10000 facts in the database and (ii) there are only five
+//answer tuples in the answer. You could do this by adding junk tuples and
+//manually creating tuples that participate in the match.
+//In the last unit test the query is boolean so you should only get true
+		Relation A = Relation.create("A", new Attribute[] { Attribute.create(String.class, "attribute0"),Attribute.create(String.class, "attribute1"),Attribute.create(Integer.class, "InstanceID")});
+		Relation B = Relation.create("B", new Attribute[] { Attribute.create(String.class, "attribute0"),Attribute.create(String.class, "attribute1"),Attribute.create(Integer.class, "InstanceID")});
+		Relation D = Relation.create("D", new Attribute[] { Attribute.create(String.class, "attribute0"),Attribute.create(String.class, "attribute1"),Attribute.create(Integer.class, "InstanceID")});
+		Relation C = Relation.create("C", new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1"), Attribute.create(String.class, "attribute2"),Attribute.create(Integer.class, "InstanceID") });
+		Relation E = Relation.create("E", new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1"), Attribute.create(String.class, "attribute2"),Attribute.create(Integer.class, "InstanceID") });
+		Relation r[] = new Relation[] { A,B,C,D,E };
+		Schema s = new Schema(r,new Dependency[0]);
+		List<Atom> facts = new ArrayList<>();
+		final int MAX_NUMBER_OF_TUPLES = 10000;
+//		for (int i=1; i <=MAX_NUMBER_OF_TUPLES; i++) facts.add(Atom.create(A, new Term[]{UntypedConstant.create("a_"+(i-1)),UntypedConstant.create("a_"+i)}));
+//		for (int i=1; i <=MAX_NUMBER_OF_TUPLES; i++) facts.add(Atom.create(B, new Term[]{UntypedConstant.create("b_"+(i-1)),UntypedConstant.create("b_"+i)}));
+//		for (int i=1; i <=MAX_NUMBER_OF_TUPLES; i++) facts.add(Atom.create(D, new Term[]{UntypedConstant.create("d_"+(i-1)),UntypedConstant.create("d_"+i)}));
+//		for (int i=1; i <=MAX_NUMBER_OF_TUPLES; i++) facts.add(Atom.create(C, new Term[]{UntypedConstant.create("c_1_"+(i-1)),UntypedConstant.create("c_2_"+(i-1)),UntypedConstant.create("c_3_"+i)}));
+//		for (int i=1; i <=MAX_NUMBER_OF_TUPLES; i++) facts.add(Atom.create(E, new Term[]{UntypedConstant.create("e_1_"+(i-1)),UntypedConstant.create("e_2_"+(i-1)),UntypedConstant.create("e_3_"+i)}));
+		
+		for (int i=1; i <=5; i++) facts.add(Atom.create(A, new Term[]{TypedConstant.create("x"+i),TypedConstant.create("x"+i)}));
+		for (int i=1; i <=5; i++) facts.add(Atom.create(B, new Term[]{TypedConstant.create("x"+i),TypedConstant.create("y"+i)}));
+		for (int i=1; i <=5; i++) facts.add(Atom.create(C, new Term[]{TypedConstant.create("y"+i),TypedConstant.create("z"+i),UntypedConstant.create("c_constant_3")}));
+		for (int i=1; i <=5; i++) facts.add(Atom.create(D, new Term[]{TypedConstant.create("z"+i),TypedConstant.create("z"+i)}));
+		//for (int i=1; i <=5; i++) facts.add(Atom.create(E, new Term[]{TypedConstant.create("e_constant_1_"+(i-1)),TypedConstant.create("e_constant_2_"+(i-1)),UntypedConstant.create("e_constant_3_"+i)}));
+		
+		try {
+			this.state = new DatabaseChaseInstance(facts, new DatabaseConnection(new DatabaseParameters(), s));
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+
+		ConjunctiveQuery query1; // Q(x,y) = A(x,x), B(x,y), C(y,z,'TypedConstant1') D(z,z)
+		query1 = ConjunctiveQuery.create(new Variable[] {Variable.create("x"),Variable.create("y")}, (Conjunction)Conjunction.of(
+				Atom.create(A, Variable.create("x"),Variable.create("x")),
+				Atom.create(B, Variable.create("x"),Variable.create("y")),
+				Atom.create(C, Variable.create("y"),Variable.create("z"), TypedConstant.create("c_constant_3")),
+				Atom.create(D, Variable.create("z"),Variable.create("z"))
+				));
+		
+		List<Match> matches = this.state.getMatches(query1, LimitToThisOrAllInstances.THIS);
+//		System.out.println("Facts:");
+//		System.out.println(state.getFacts());
+//		System.out.println("\\Facts");
+		System.out.println(matches);
+		System.out.println("\n\n\n");
 	}
 	
 	public void tearDown() throws Exception {
