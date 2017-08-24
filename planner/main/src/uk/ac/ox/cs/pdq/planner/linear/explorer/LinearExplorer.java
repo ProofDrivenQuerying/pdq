@@ -140,7 +140,7 @@ public abstract class LinearExplorer extends Explorer {
 	 */
 	private void initialisePlanTree() throws PlannerException, SQLException {
 		AccessibleChaseInstance state = (uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance) 
-				new AccessibleDatabaseChaseInstance(this.reasoningParameters, this.query, this.accessibleSchema, this.connection, true);
+				new AccessibleDatabaseChaseInstance(this.query, this.accessibleSchema, this.connection, true);
 		this.chaser.reasonUntilTermination(state, this.accessibleSchema.getOriginalDependencies());
 		this.tick = System.nanoTime();
 		SearchNode root = this.nodeFactory.getInstance(state);

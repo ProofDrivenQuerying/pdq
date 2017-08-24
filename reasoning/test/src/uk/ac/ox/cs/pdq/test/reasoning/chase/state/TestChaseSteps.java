@@ -40,14 +40,11 @@ import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
  *
  */
 public class TestChaseSteps {
-
 	private DatabaseChaseInstance state;
+	private DatabaseConnection connection;
 	protected Schema schema;
 	private Relation rel2;
-
 	private EGD egd;
-
-	private DatabaseConnection connection;
 
 	@Before
 	public void setup() throws SQLException {
@@ -65,15 +62,14 @@ public class TestChaseSteps {
 		Atom R2 = Atom.create(Predicate.create("R2", 2), new Term[] { Variable.create("y"), Variable.create("z") });
 		Atom R2p = Atom.create(Predicate.create("R2", 2), new Term[] { Variable.create("y"), Variable.create("w") });
 
-		this.egd = EGD.create(new Atom[]{R2, R2p},
-				new Atom[]{Atom.create(Predicate.create(QNames.EQUALITY.toString(), 2, true), new Term[] { Variable.create("z"), Variable.create("w") })});
+		this.egd = EGD.create(new Atom[]{R2, R2p}, new Atom[]{Atom.create(Predicate.create(QNames.EQUALITY.toString(), 2, true), new Term[] { Variable.create("z"), Variable.create("w") })});
 
 		this.schema = new Schema(new Relation[] { this.rel2 }, new Dependency[] { this.egd });
 		this.schema.addConstants(Lists.<TypedConstant>newArrayList(TypedConstant.create(new String("John"))));
 	}
 
 	public void setConnection(DatabaseConnection dc) {
-		connection = dc;
+		this.connection = dc;
 	}
 
 	@Test
@@ -125,8 +121,7 @@ public class TestChaseSteps {
 		matches.add(Match.create(this.egd, map3));
 		matches.add(Match.create(this.egd, map2));
 
-		boolean _isFailed;
-		_isFailed = this.state.chaseStep(matches);
+		boolean _isFailed = this.state.chaseStep(matches);
 		Assert.assertEquals(false, !_isFailed);
 		Assert.assertEquals(1, this.state.getConstantClasses().size());
 		Assert.assertNotNull(this.state.getConstantClasses().getClass(UntypedConstant.create("c1")));

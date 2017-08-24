@@ -129,9 +129,9 @@ public class LinearChaseConfiguration extends ChaseConfiguration implements Line
 		List<Candidate> result = new ArrayList<>();
 		Map<AccessibilityAxiom, List<Match>> nonFiredAxioms = this.getState().getUnexposedFacts(accessibleSchema);
 		for (AccessibilityAxiom axiom:nonFiredAxioms.keySet()) {
-			for (Match matching:nonFiredAxioms.get(axiom)) {
-				Atom fact = (Atom) Utility.applySubstitution(axiom.getGuard(), matching.getMapping());
-				result.add(new Candidate(axiom, fact, matching));
+			for (Match match:nonFiredAxioms.get(axiom)) {
+				Atom fact = (Atom) Utility.applySubstitution(axiom.getGuard(), match.getMapping());
+				result.add(new Candidate(axiom, fact, match));
 			}
 		}
 		this.candidates = result;
