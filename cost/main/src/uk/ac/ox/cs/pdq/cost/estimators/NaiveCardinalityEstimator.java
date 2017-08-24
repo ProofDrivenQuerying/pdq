@@ -43,7 +43,7 @@ public class NaiveCardinalityEstimator implements CardinalityEstimator {
 	/** The Constant JOIN_REDUCTION. */
 	public static final Double JOIN_REDUCTION = 10.0;
 
-	protected final Catalog catalog;
+	private final Catalog catalog;
 
 	/**
 	 * Constructor for NaiveCardinalityEstimator.
