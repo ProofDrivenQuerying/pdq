@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.test.algebra;
+package uk.ac.ox.cs.pdq.test.db;
 
 import org.junit.Assert;
 import org.junit.Before;

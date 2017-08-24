@@ -27,7 +27,7 @@ import uk.ac.ox.cs.pdq.util.Utility;
  * @author Gabor
  *
  */
-public class RelationTermTest {
+public class RelationalTermTest {
 	/**
 	 * Makes sure assertions are enabled.
 	 */
