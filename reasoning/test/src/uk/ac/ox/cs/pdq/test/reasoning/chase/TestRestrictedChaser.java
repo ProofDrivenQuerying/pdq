@@ -217,7 +217,13 @@ public class TestRestrictedChaser {
 		};
 		Schema s = new Schema(r,d);
 		List<Atom> facts = new ArrayList<>();
-		for (int i=1; i <=10; i++) facts.add(Atom.create(R, new Term[]{TypedConstant.create("a_"+(i-1)),TypedConstant.create("a_"+i)}));
+		List<TypedConstant> constants = new ArrayList<>();
+		for (int i=1; i <=10; i++) {
+			facts.add(Atom.create(R, new Term[]{TypedConstant.create("a_"+(i-1)),TypedConstant.create("a_"+i)}));
+			constants.add(TypedConstant.create("a_"+(i-1)));
+			constants.add(TypedConstant.create("a_"+i));
+		}
+		s.addConstants(constants);
 		try {
 			this.state = new DatabaseChaseInstance(facts, new DatabaseConnection(new DatabaseParameters(), s));
 		} catch (SQLException e) {
