@@ -27,7 +27,7 @@ import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 
 /**
- * Tests the reasonUntilTermination method of the RestrictedChaser class
+ * Tests the updateEqualConstantClasses method of the DatabaseChaseInstance class
  * 
  * @author Gabor
  *

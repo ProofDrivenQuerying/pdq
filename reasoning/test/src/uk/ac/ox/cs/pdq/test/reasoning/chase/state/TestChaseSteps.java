@@ -242,26 +242,8 @@ public class TestChaseSteps {
 		Assert.assertNotNull(this.state.getConstantClasses().getClass(UntypedConstant.create("c3")));
 		Assert.assertNotNull(this.state.getConstantClasses().getClass(UntypedConstant.create("c4")));
 		Assert.assertNotNull(this.state.getConstantClasses().getClass(TypedConstant.create(new String("John"))));
-
-		Atom n0 = Atom.create(Predicate.create("R2", 2), new Term[] { UntypedConstant.create("c"), TypedConstant.create(new String("John")) });
-
-		Atom n1 = Atom.create(Predicate.create("R2", 2), new Term[] { UntypedConstant.create("c"), UntypedConstant.create("k") });
-
-		Atom n2 = Atom.create(Predicate.create("R2", 2), new Term[] { TypedConstant.create(new String("John")), TypedConstant.create(new String("John")) });
-
-		Atom n3 = Atom.create(Predicate.create(QNames.EQUALITY.toString(), 2, true), new Term[] { UntypedConstant.create("c3"), TypedConstant.create(new String("John")) });
-
-		Atom n4 = Atom.create(Predicate.create(QNames.EQUALITY.toString(), 2, true), new Term[] { UntypedConstant.create("c1"), UntypedConstant.create("c2") });
-
-		Atom n5 = Atom.create(Predicate.create(QNames.EQUALITY.toString(), 2, true), new Term[] { UntypedConstant.create("c3"), UntypedConstant.create("c4") });
-
-		Atom n6 = Atom.create(Predicate.create(QNames.EQUALITY.toString(), 2, true), new Term[] { UntypedConstant.create("c2"), UntypedConstant.create("c3") });
-
-		Atom n7 = Atom.create(Predicate.create(QNames.EQUALITY.toString(), 2, true), new Term[] { UntypedConstant.create("c1"), UntypedConstant.create("c3") });
-
 		Assert.assertNotNull(this.state.getFacts());
 		Assert.assertTrue(!this.state.getFacts().isEmpty());
-
 		Map<Variable, Constant> map6 = new HashMap<>();
 		map6.put(Variable.create("y"), UntypedConstant.create("c"));
 		map6.put(Variable.create("z"), UntypedConstant.create("c2"));
