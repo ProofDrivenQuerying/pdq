@@ -49,7 +49,6 @@ import uk.ac.ox.cs.pdq.planner.linear.explorer.node.equivalence.PathEquivalenceC
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.equivalence.PathEquivalenceClasses.PathEquivalenceClass;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.pruning.PostPruning;
 import uk.ac.ox.cs.pdq.planner.util.IndexedDirectedGraph;
-import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.util.LimitReachedException;
 
@@ -128,8 +127,8 @@ public class LinearOptimized extends LinearExplorer {
 			int depth,
 			int queryMatchInterval, 
 			PostPruning postPruning,
-			boolean zombification, ReasoningParameters reasoningParameters) throws PlannerException, SQLException {
-		super(eventBus, collectStats, query, accessibleQuery, accessibleSchema, chaser, dbConn, costEstimator, nodeFactory, depth, reasoningParameters);
+			boolean zombification) throws PlannerException, SQLException {
+		super(eventBus, collectStats, query, accessibleQuery, accessibleSchema, chaser, dbConn, costEstimator, nodeFactory, depth);
 		this.costPropagator = CostPropagatorUtility.getPropagator(costEstimator);
 		this.queryMatchInterval = queryMatchInterval;
 		this.postPruning = postPruning;
