@@ -228,12 +228,16 @@ public class RuntimeUtilities {
 	}
 	
 	public static Attribute[] computeInputAttributes(RelationAccessWrapper relation, AccessMethod accessMethod, Map<Integer, TypedConstant> inputConstants) {
-		Assert.assertNotNull(relation);
+		// Assert.assertNotNull(relation);
+		Preconditions.checkNotNull(relation);
 		if (!(accessMethod != null && accessMethod.getInputs().length > 0) && (inputConstants ==null || inputConstants.isEmpty())) {
 			return new Attribute[0];
 		}
-		Assert.assertTrue(accessMethod != null && accessMethod.getInputs().length > 0);
-		Assert.assertNotNull(inputConstants);
+		//Assert.assertTrue(accessMethod != null && accessMethod.getInputs().length > 0);
+		Preconditions.checkNotNull(accessMethod);
+		Preconditions.checkArgument(accessMethod.getInputs().length > 0);
+		//Assert.assertNotNull(inputConstants);
+		Preconditions.checkNotNull(inputConstants);
 		for(Integer position:inputConstants.keySet()) {
 			Assert.assertTrue(position < relation.getArity());
 			Assert.assertTrue(Arrays.asList(accessMethod.getInputs()).contains(position));
