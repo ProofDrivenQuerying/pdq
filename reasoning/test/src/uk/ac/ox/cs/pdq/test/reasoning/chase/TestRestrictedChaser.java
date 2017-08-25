@@ -173,6 +173,80 @@ public class TestRestrictedChaser {
 	}
 	
 	@Test
+	public void efiTests0() {
+// Dependencies:		
+//		R(z, x) → S(x, y1) ∧ T (x, y2)
+//		R(x,y1) ∧ S(x,y2)→y1 = y2
+//
+//		facts of the chase instance:
+//		R(a_{i−1}, a_i) for 1 ≤ i ≤ 10,
+//
+//		You should assert that the chaser should produce
+//		nine equality classes each one having representatives a_2, ... a_10
+//		EQUALITY(a_2,k1), 
+//		EQUALITY(a_3,k3), 
+//		EQUALITY(a_4,k5), 
+//		EQUALITY(a_5,k7), 
+//		EQUALITY(a_6,k9), 
+//		EQUALITY(a_7,k11), 
+//		EQUALITY(a_8,k13), 
+//		EQUALITY(a_9,k15), 
+//		EQUALITY(a_10,k17), 
+//
+//		and the facts 
+//		S(a_1,a_2), T(a_1,k2), 
+//		S(a_2,a_3), T(a_2,k4), 
+//		S(a_3,a_4), T(a_3,k6), 
+//		S(a_4,a_5), T(a_4,k8), 
+//		S(a_5,a_6), T(a_5,k10), 
+//		S(a_6,a_7), T(a_6,k12), 
+//		S(a_7,a_8), T(a_7,k14), 
+//		S(a_8,a_9), T(a_8,k16), 
+//		S(a_9,a_10), T(a_9,k18), 
+//		S(a_10,k19), T(a_10,k20)]
+		
+//		Please define the dependencies and the input facts inside the test class and do
+//		not load them from external files.		
+		Relation R = Relation.create("R", new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1"),Attribute.create(Integer.class, "InstanceID") });
+		Relation S = Relation.create("S", new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1"),Attribute.create(Integer.class, "InstanceID") });
+		Relation T = Relation.create("T", new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1"),Attribute.create(Integer.class, "InstanceID") });
+		Relation r[] = new Relation[] { R, S, T };
+		Dependency d[] = new Dependency[] {
+				TGD.create(new Atom[] {Atom.create(R, Variable.create("z"),Variable.create("x"))}, new Atom[] {Atom.create(S, Variable.create("x"),Variable.create("y1")),Atom.create(T, Variable.create("x"),Variable.create("y2"))}),
+				EGD.create(new Atom[] {Atom.create(R, Variable.create("x"),Variable.create("y1")),Atom.create(S, Variable.create("x"),Variable.create("y2"))}, new Atom[]{Atom.create(Predicate.create(QNames.EQUALITY.toString(), 2, true), Variable.create("y1"),Variable.create("y2"))}),
+		};
+		Schema s = new Schema(r,d);
+		List<Atom> facts = new ArrayList<>();
+		for (int i=1; i <=10; i++) facts.add(Atom.create(R, new Term[]{TypedConstant.create("a_"+(i-1)),TypedConstant.create("a_"+i)}));
+		try {
+			this.state = new DatabaseChaseInstance(facts, new DatabaseConnection(new DatabaseParameters(), s));
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+		System.out.println("Schema:" + s);
+		Set<Atom> newfacts = Sets.newLinkedHashSet(this.state.getFacts());
+		Iterator<Atom> iterator = newfacts.iterator();
+		System.out.println("Initial facts:");
+		while(iterator.hasNext()) {
+			Atom fact = iterator.next();
+			System.out.println(fact);
+		}
+		this.chaser.reasonUntilTermination(this.state, d);
+		System.out.println("\n\nAfter resoning:");
+		
+		newfacts = Sets.newHashSet(this.state.getFacts());
+		iterator = newfacts.iterator();
+		List<String> set = new ArrayList<>();
+		while(iterator.hasNext()) {
+			Atom fact = iterator.next();
+			set.add(fact.toString());
+		}
+		Collections.sort(set, String.CASE_INSENSITIVE_ORDER);
+		for(String line:set) System.out.println(line);
+		System.out.println("TestRestrictedChaser.efiTests1() finished.");
+	}
+	
+	@Test
 	public void efiTests1() {
 // Dependencies:		
 //		C(x) ∧ D(x) → Q(x)

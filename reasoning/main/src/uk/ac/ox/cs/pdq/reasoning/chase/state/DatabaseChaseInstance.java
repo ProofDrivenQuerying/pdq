@@ -670,19 +670,17 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		else
 			factproperties = new WhereCondition();
 			
-		WhereCondition egdProperties = null;
-		if(isEGD)
-			egdProperties = uk.ac.ox.cs.pdq.reasoning.chase.Utility.translateEGDHomomorphicProperties(extendedBodyAtoms, this.databaseConnection.getRelationNamesToDatabaseTables(),this.databaseConnection.getSQLStatementBuilder());
-		if(egdProperties!=null) {
-			where.addCondition(egdProperties);
-		}
+//		WhereCondition egdProperties = null;
+//		if(isEGD)
+//			egdProperties = uk.ac.ox.cs.pdq.reasoning.chase.Utility.translateEGDHomomorphicProperties(extendedBodyAtoms, this.databaseConnection.getRelationNamesToDatabaseTables(),this.databaseConnection.getSQLStatementBuilder());
+//		if(egdProperties!=null) {
+//			where.addCondition(egdProperties);
+//		}
 		where.addCondition(equalities);
 		where.addCondition(constantEqualities);
 		where.addCondition(factproperties);
 
 		query = this.databaseConnection.getSQLStatementBuilder().buildSQLQuery(projections,from,where);
-
-
 
 		if(t.equals(TriggerProperty.ACTIVE)) {
 			FromCondition from2 = this.databaseConnection.getSQLStatementBuilder().createFromStatement(extendedHeadAtoms);
