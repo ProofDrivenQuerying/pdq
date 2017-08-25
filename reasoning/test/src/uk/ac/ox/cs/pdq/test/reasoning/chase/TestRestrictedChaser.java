@@ -243,10 +243,22 @@ public class TestRestrictedChaser {
 		newfacts = Sets.newHashSet(this.state.getFacts());
 		iterator = newfacts.iterator();
 		List<String> set = new ArrayList<>();
+		int equalities=0;
+		int sCount=0;
+		int tCount=0;
 		while(iterator.hasNext()) {
 			Atom fact = iterator.next();
 			set.add(fact.toString());
+			if (fact.isEquality())
+				equalities++;
+			if ("S".equals(fact.getPredicate().getName()))
+				sCount++;
+			if ("T".equals(fact.getPredicate().getName()))
+				tCount++;
 		}
+		Assert.assertEquals(9, equalities);
+		Assert.assertEquals(10, sCount);
+		Assert.assertEquals(10, tCount);
 		Collections.sort(set, String.CASE_INSENSITIVE_ORDER);
 		for(String line:set) System.out.println(line);
 		System.out.println("TestRestrictedChaser.efiTests1() finished.");
