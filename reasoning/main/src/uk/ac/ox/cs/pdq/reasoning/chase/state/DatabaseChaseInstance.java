@@ -467,7 +467,6 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		super.addFacts(extendFactsUsingInstanceID(facts));
 		try {
 			if (this.facts instanceof LinkedHashSet) {
-				//this.addFacts(this.facts);
 				this.facts.addAll(facts);
 			} else {
 				LinkedHashSet<Atom> newFacts = new LinkedHashSet<Atom>();
@@ -670,12 +669,12 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		else
 			factproperties = new WhereCondition();
 			
-//		WhereCondition egdProperties = null;
-//		if(isEGD)
-//			egdProperties = uk.ac.ox.cs.pdq.reasoning.chase.Utility.translateEGDHomomorphicProperties(extendedBodyAtoms, this.databaseConnection.getRelationNamesToDatabaseTables(),this.databaseConnection.getSQLStatementBuilder());
-//		if(egdProperties!=null) {
-//			where.addCondition(egdProperties);
-//		}
+		if(isEGD) {
+			WhereCondition uniqueEqualities = this.databaseConnection.getSQLStatementBuilder().createDistinctEGDAttributes(dep,extendedBodyAtoms);
+			if (!uniqueEqualities.isEmpty()) where.addCondition(uniqueEqualities);
+			WhereCondition egdProperties = uk.ac.ox.cs.pdq.reasoning.chase.Utility.translateEGDHomomorphicProperties(extendedBodyAtoms, this.databaseConnection.getRelationNamesToDatabaseTables(),this.databaseConnection.getSQLStatementBuilder());
+			if (egdProperties!=null) where.addCondition(egdProperties);
+		}
 		where.addCondition(equalities);
 		where.addCondition(constantEqualities);
 		where.addCondition(factproperties);

@@ -149,6 +149,9 @@ public class Utility {
 		StringBuilder eq = new StringBuilder();
 		String leftAttributeName = relationNamesToDatabaseTables.get(conjuncts[0].getPredicate().getName()).getAttribute(conjuncts[0].getPredicate().getArity()-1).getName();
 		String rightAttributeName = relationNamesToDatabaseTables.get(conjuncts[1].getPredicate().getName()).getAttribute(conjuncts[1].getPredicate().getArity()-1).getName();
+		if (!conjuncts[0].getPredicate().getName().equals(conjuncts[1].getPredicate().getName())) {
+			return null;
+		}
 		eq.append(lalias).append(".").
 		append(leftAttributeName).append(">");
 		eq.append(ralias).append(".").

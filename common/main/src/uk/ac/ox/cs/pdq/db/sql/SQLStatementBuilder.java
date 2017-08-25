@@ -30,6 +30,7 @@ import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
+import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.EGD;
 import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.Predicate;
@@ -396,6 +397,49 @@ public abstract class SQLStatementBuilder {
 						result.append(rightAlias == null ? rightRelation.getName() : rightAlias).append(".").append(rightRelation.getAttribute(rightPosition).getName());
 						attributePredicates.add(result.toString());
 					}
+				}
+			}
+		}
+		return new WhereCondition(attributePredicates);
+	}
+
+	/**
+	 * In case where we query matches for the A(x,y1), B(x,y2) -> y1=y2, it is necessary to filter out
+	 * the case where y1=y2 such as A(apple,constant1), B(apple,constant1) should
+	 * not trigger this equality.
+	 * 
+	 */
+	public WhereCondition createDistinctEGDAttributes(Dependency dep, Atom[] source) {
+		List<String> attributePredicates = new ArrayList<String>();
+		Collection<Term> terms = Utility.getTerms(source);
+		terms = Utility.removeDuplicates(terms);
+		if (dep != null && dep instanceof EGD) {
+			Term right = dep.getHead().getAtoms()[0].getTerm(1);
+			Term left = dep.getHead().getAtoms()[0].getTerm(0);
+			ArrayList<String> leftEqualities = new ArrayList<>();
+			ArrayList<String> rightEqualities = new ArrayList<>();
+			for (Term term : terms) {
+				for (Atom fact : source) {
+					List<Integer> positions = Utility.search(fact.getTerms(), term); // all the positions for the same term should be equated
+					for (Integer pos : positions) {
+						if (left != null && left.equals(fact.getTerm(pos))) {
+							StringBuilder result = new StringBuilder();
+							result.append(this.aliases.get(fact) == null ? fact.getPredicate().getName() : this.aliases.get(fact));
+							result.append(".").append(((Relation) fact.getPredicate()).getAttribute(pos).getName());
+							leftEqualities.add(result.toString());
+						}
+						if (right != null && right.equals(fact.getTerm(pos))) {
+							StringBuilder result = new StringBuilder();
+							result.append(this.aliases.get(fact) == null ? fact.getPredicate().getName() : this.aliases.get(fact));
+							result.append(".").append(((Relation) fact.getPredicate()).getAttribute(pos).getName());
+							rightEqualities.add(result.toString());
+						}
+					}
+				}
+			}
+			for (String s1 : leftEqualities) {
+				for (String s2 : rightEqualities) {
+					attributePredicates.add(s1 + "<>" + s2);
 				}
 			}
 		}
