@@ -1,4 +1,4 @@
-package uk.ac.ox.cd.pdq.test.runtime;
+package uk.ac.ox.cs.pdq.runtime.exec.iterator.test;
 
 
 import java.util.ArrayList;
@@ -40,7 +40,7 @@ import uk.ac.ox.cs.pdq.runtime.exec.iterator.SymmetricMemoryHashJoin;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator;
 
 @SuppressWarnings("unused")
-public class TestAccess {
+public class AccessTest {
 
 	@SuppressWarnings("resource")
 	@Test

@@ -239,8 +239,10 @@ public class RuntimeUtilities {
 		//Assert.assertNotNull(inputConstants);
 		Preconditions.checkNotNull(inputConstants);
 		for(Integer position:inputConstants.keySet()) {
-			Assert.assertTrue(position < relation.getArity());
-			Assert.assertTrue(Arrays.asList(accessMethod.getInputs()).contains(position));
+			// Assert.assertTrue(position < relation.getArity());
+			Preconditions.checkArgument(position < relation.getArity());
+			// Assert.assertTrue(Arrays.asList(accessMethod.getInputs()).contains(position));
+			Preconditions.checkArgument(Arrays.asList(accessMethod.getInputs()).contains(position));
 		}
 		List<Attribute> inputs = new ArrayList<>();
 		for(Integer i:accessMethod.getInputs()) {
