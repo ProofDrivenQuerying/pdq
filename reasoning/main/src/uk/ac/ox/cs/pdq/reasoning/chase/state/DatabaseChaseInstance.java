@@ -387,12 +387,6 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 			// doesn't matter left or right representative, the new one should always be the same.
 			Constant newRepresentative = (Constant)this.classes.getClass(c_r).getRepresentative();
 			
-			if (newRepresentative==null || !newRepresentative.equals(this.classes.getClass(c_l).getRepresentative())) {
-				// we have two different representatives
-				this._isFailed = true;
-				return Maps.newHashMap();
-			}
-			
 			//Detect all constants whose representative will change 
 			if(old_representative_l == null && old_representative_r == null) {
 				// Both new, no classes to update
