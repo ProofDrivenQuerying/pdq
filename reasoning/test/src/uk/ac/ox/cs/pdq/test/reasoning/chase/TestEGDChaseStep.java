@@ -98,7 +98,7 @@ public class TestEGDChaseStep {
 		Relation r[] = new Relation[] { A,B };
 		Schema s = new Schema(r,new Dependency[0]);
 		List<Atom> facts = new ArrayList<>();
-		for (int i=2; i <= 1000; i++) facts.add(Atom.create(B, new Term[]{UntypedConstant.create("c_"+(i-1)),UntypedConstant.create("c_"+i)}));
+		for (int i=2; i <= 1000; i++) facts.add(Atom.create(A, new Term[]{UntypedConstant.create("c_"+(i-1)),UntypedConstant.create("c_"+i)}));
 		
 		DatabaseChaseInstance state = new DatabaseChaseInstance(facts, getDatabaseConnection(sqlType,s));
 		Dependency d[] = new Dependency[] {
@@ -107,15 +107,15 @@ public class TestEGDChaseStep {
 						new Atom[] {Atom.create(Predicate.create("EQUALITY", 2,true), Variable.create("y1"), Variable.create("y2"))})
 				};
 		long start = System.currentTimeMillis();
+		Collection<Match> matches = new HashSet<>();
 		for (int i = 1; i < 1000; i++)  {
-			Collection<Match> matches = new HashSet<>();
 			Map<Variable, Constant> mapping = new HashMap<>();
-			mapping.put(Variable.create("x"),UntypedConstant.create("k1"));
+			//mapping.put(Variable.create("x"),UntypedConstant.create("k1"));
 			mapping.put(Variable.create("y1"),UntypedConstant.create("c_"+i));
 			mapping.put(Variable.create("y2"),UntypedConstant.create("c_"+(i+1)));
 			matches.add(Match.create(d[0], mapping));
-			state.EGDchaseStep(matches );
 		}
+		state.EGDchaseStep(matches );
 		System.out.println("1000 equalities processed in : "+ (System.currentTimeMillis()-start)/1000.0 +" sec. Using: "+ sqlType);
 		Set<Atom> facts2 = Sets.newHashSet(state.getFacts());
 		Iterator<Atom> iterator2 = facts2.iterator();
@@ -168,7 +168,7 @@ public class TestEGDChaseStep {
 		Relation r[] = new Relation[] { A,B };
 		Schema s = new Schema(r,new Dependency[0]);
 		List<Atom> facts = new ArrayList<>();
-		for (int i=2; i <= 1000; i++) facts.add(Atom.create(B, new Term[]{UntypedConstant.create("c_"+(i-1)),UntypedConstant.create("c_"+i)}));
+		for (int i=2; i <= 1000; i++) facts.add(Atom.create(A, new Term[]{UntypedConstant.create("c_"+(i-1)),UntypedConstant.create("c_"+i)}));
 		
 		DatabaseChaseInstance state = new DatabaseChaseInstance(facts, getDatabaseConnection(sqlType,s));
 		Dependency d[] = new Dependency[] {
@@ -177,15 +177,15 @@ public class TestEGDChaseStep {
 						new Atom[] {Atom.create(Predicate.create("EQUALITY", 2,true), Variable.create("y1"), Variable.create("y2"))})
 				};
 		long start = System.currentTimeMillis();
+		Collection<Match> matches = new HashSet<>();
 		for (int i = 1; i < 500; i++)  {
-			Collection<Match> matches = new HashSet<>();
 			Map<Variable, Constant> mapping = new HashMap<>();
 			mapping.put(Variable.create("x"),UntypedConstant.create("k1"));
 			mapping.put(Variable.create("y1"),UntypedConstant.create("c_"+i));
 			mapping.put(Variable.create("y2"),UntypedConstant.create("c_"+(i+1)));
 			matches.add(Match.create(d[0], mapping));
-			state.EGDchaseStep(matches );
 		}
+		state.EGDchaseStep(matches );
 		System.out.println("500 equalities processed in : "+ (System.currentTimeMillis()-start)/1000.0 +" sec. Using: "+ sqlType);
 		Set<Atom> facts2 = Sets.newHashSet(state.getFacts());
 		Iterator<Atom> iterator2 = facts2.iterator();
