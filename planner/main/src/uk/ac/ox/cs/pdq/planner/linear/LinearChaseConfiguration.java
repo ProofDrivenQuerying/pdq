@@ -103,8 +103,7 @@ public class LinearChaseConfiguration extends ChaseConfiguration implements Line
 	 * @return 		true if the input candidate has been already exposed
 	 */
 	public boolean isExposed(Candidate candidate) {
-		Atom infAcc = candidate.getInferredAccessibleFact();
-		return this.getState().getFacts().contains(infAcc);
+		return this.getState().getFacts().contains(candidate.getInferredAccessibleFact());
 	}
 	
 	/**
@@ -129,9 +128,9 @@ public class LinearChaseConfiguration extends ChaseConfiguration implements Line
 		List<Candidate> result = new ArrayList<>();
 		Map<AccessibilityAxiom, List<Match>> nonFiredAxioms = this.getState().getUnexposedFacts(accessibleSchema);
 		for (AccessibilityAxiom axiom:nonFiredAxioms.keySet()) {
-			for (Match matching:nonFiredAxioms.get(axiom)) {
-				Atom fact = (Atom) Utility.applySubstitution(axiom.getGuard(), matching.getMapping());
-				result.add(new Candidate(axiom, fact, matching));
+			for (Match match:nonFiredAxioms.get(axiom)) {
+				Atom fact = (Atom) Utility.applySubstitution(axiom.getGuard(), match.getMapping());
+				result.add(new Candidate(axiom, fact, match));
 			}
 		}
 		this.candidates = result;

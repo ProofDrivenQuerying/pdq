@@ -41,7 +41,6 @@ import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.reasoning.MatchFactory;
 import uk.ac.ox.cs.pdq.planner.util.FiringGraph;
 import uk.ac.ox.cs.pdq.planner.util.MapFiringGraph;
-import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 import uk.ac.ox.cs.pdq.reasoning.utility.EqualConstantsClasses;
 
@@ -85,7 +84,7 @@ public class AccessibleDatabaseChaseInstance extends uk.ac.ox.cs.pdq.reasoning.c
 	 * @param chaseState the chaseState
 	 * @throws SQLException 
 	 */
-	public AccessibleDatabaseChaseInstance(ReasoningParameters reasoningParameters, ConjunctiveQuery query, Schema schema, DatabaseConnection connection, boolean maintainProvenance) throws SQLException {
+	public AccessibleDatabaseChaseInstance(ConjunctiveQuery query, Schema schema, DatabaseConnection connection, boolean maintainProvenance) throws SQLException {
 		this(
 				createCanonicalDatabaseAndAccessibleFactsForSchemaConstants(query, schema), 
 				maintainProvenance == true ? new MapFiringGraph() : null,
@@ -99,7 +98,7 @@ public class AccessibleDatabaseChaseInstance extends uk.ac.ox.cs.pdq.reasoning.c
 		this.addFacts(this.facts);
 	}
 	
-	public AccessibleDatabaseChaseInstance(ReasoningParameters reasoningParameters, Collection<Atom> facts, DatabaseConnection connection, boolean maintainProvenance) throws SQLException {
+	public AccessibleDatabaseChaseInstance(Collection<Atom> facts, DatabaseConnection connection, boolean maintainProvenance) throws SQLException {
 		this(	facts, 
 				maintainProvenance == true ? new MapFiringGraph() : null,
 				new EqualConstantsClasses(),

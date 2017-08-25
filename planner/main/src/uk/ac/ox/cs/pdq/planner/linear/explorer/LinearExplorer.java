@@ -23,7 +23,6 @@ import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode.NodeStatus;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleDatabaseChaseInstance;
 import uk.ac.ox.cs.pdq.planner.util.PlanTree;
-import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 
 
@@ -79,7 +78,6 @@ public abstract class LinearExplorer extends Explorer {
 	/** The best configurations list. */
 	protected List<LinearChaseConfiguration> bestConfigurationsList;
 
-	private ReasoningParameters reasoningParameters;
 
 	/**
 	 * Instantiates a new linear explorer.
@@ -107,8 +105,7 @@ public abstract class LinearExplorer extends Explorer {
 			DatabaseConnection dbConn,
 			CostEstimator costEstimator,
 			NodeFactory nodeFactory,
-			int depth,
-			ReasoningParameters reasoningParams
+			int depth
 			) throws PlannerException, SQLException {
 		super(eventBus, collectStats);
 		Assert.assertNotNull(eventBus);
@@ -128,7 +125,6 @@ public abstract class LinearExplorer extends Explorer {
 		this.costEstimator = costEstimator;
 		this.nodeFactory = nodeFactory;
 		this.depth = depth;
-		this.reasoningParameters = reasoningParams;
 		this.initialisePlanTree();
 	}
 
@@ -140,7 +136,7 @@ public abstract class LinearExplorer extends Explorer {
 	 */
 	private void initialisePlanTree() throws PlannerException, SQLException {
 		AccessibleChaseInstance state = (uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance) 
-				new AccessibleDatabaseChaseInstance(this.reasoningParameters, this.query, this.accessibleSchema, this.connection, true);
+				new AccessibleDatabaseChaseInstance(this.query, this.accessibleSchema, this.connection, true);
 		this.chaser.reasonUntilTermination(state, this.accessibleSchema.getOriginalDependencies());
 		this.tick = System.nanoTime();
 		SearchNode root = this.nodeFactory.getInstance(state);

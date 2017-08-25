@@ -184,7 +184,7 @@ public abstract class DAGExplorer extends Explorer {
 	 */
 	protected List<DAGChaseConfiguration> createApplyRuleConfigurations() throws SQLException {
 		AccessibleDatabaseChaseInstance state = null;
-		state = new AccessibleDatabaseChaseInstance(this.reasoningParams, this.query, this.accessibleSchema, this.connection, false);
+		state = new AccessibleDatabaseChaseInstance(this.query, this.accessibleSchema, this.connection, false);
 		//TODO this should change to original and infacc
 		this.chaser.reasonUntilTermination(state, this.accessibleSchema.getOriginalDependencies());
 
@@ -205,7 +205,7 @@ public abstract class DAGExplorer extends Explorer {
 			}
 			for (Collection<Atom> binding:bindings) {
 				AccessibleChaseInstance newState = (uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance) 
-						new AccessibleDatabaseChaseInstance(this.reasoningParams, binding, this.connection, false);
+						new AccessibleDatabaseChaseInstance(binding, this.connection, false);
 				applyRule = new ApplyRule(
 						newState,
 						pair.getLeft(),

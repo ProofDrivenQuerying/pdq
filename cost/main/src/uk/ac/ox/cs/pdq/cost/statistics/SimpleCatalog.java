@@ -69,7 +69,7 @@ public class SimpleCatalog implements Catalog{
 	/** Cardinalities of the relations' attributes*/
 	private final Map<Pair<Relation,Attribute>,Integer> columnCardinalities;
 	/** The estimated result size per invocation of each access method*/
-	private final Map<Pair<Relation,AccessMethod>,Integer> erpsi;
+	private final Map<Pair<Relation,AccessMethod>,Integer> numberOfOutputTuplesPerInput;
 	/** The response time of each access method*/
 	private final Map<Pair<Relation,AccessMethod>,Double> costs;
 	/** The selectivity of each attribute*/
@@ -100,7 +100,7 @@ public class SimpleCatalog implements Catalog{
 	public SimpleCatalog(Schema schema, String fileName) {
 		Preconditions.checkNotNull(schema);
 		this.schema = schema;
-		this.erpsi = new HashMap<>();
+		this.numberOfOutputTuplesPerInput = new HashMap<>();
 		this.costs = new HashMap<>();
 		this.columnSelectivity = new HashMap<>();
 		this.cardinalities = new HashMap<>();
@@ -214,7 +214,7 @@ public class SimpleCatalog implements Catalog{
 				Relation r = schema.getRelation(relation);
 				AccessMethod b = r.getAccessMethod(binding);
 				if(b != null) {
-					this.erpsi.put( Pair.of(r,b), Integer.parseInt(erspi));  
+					this.numberOfOutputTuplesPerInput.put( Pair.of(r,b), Integer.parseInt(erspi));  
 					log.info("RELATION: " + relation + " BINDING: " + binding + " ERPSI: " + erspi);
 				}
 				else {
@@ -310,7 +310,7 @@ public class SimpleCatalog implements Catalog{
 		Preconditions.checkNotNull(SQLServerHistograms);
 		this.schema = schema;
 		this.cardinalities = Maps.newHashMap(cardinalities);
-		this.erpsi = Maps.newHashMap(erpsi);
+		this.numberOfOutputTuplesPerInput = Maps.newHashMap(erpsi);
 		this.costs = Maps.newHashMap(responseTimes);
 		this.columnSelectivity = Maps.newHashMap(columnSelectivity);
 		this.columnCardinalities = Maps.newHashMap(columnCardinalities);
@@ -419,10 +419,10 @@ public class SimpleCatalog implements Catalog{
 	 * @see uk.ac.ox.cs.pdq.cost.statistics.Catalog#getERPSI(uk.ac.ox.cs.pdq.db.Relation, uk.ac.ox.cs.pdq.db.AccessMethod)
 	 */
 	@Override
-	public int getERPSI(Relation relation, AccessMethod method) {
+	public int getTotalNumberOfOutputTuplesPerInputTuple(Relation relation, AccessMethod method) {
 		Preconditions.checkNotNull(relation);
 		Preconditions.checkNotNull(method);
-		Integer erspi = this.erpsi.get(Pair.of(relation, method));
+		Integer erspi = this.numberOfOutputTuplesPerInput.get(Pair.of(relation, method));
 		if(erspi == null) {
 			double columnProduct = 1.0;
 			for(Integer input:method.getZeroBasedInputPositions()) {
@@ -453,7 +453,7 @@ public class SimpleCatalog implements Catalog{
 	 * @see uk.ac.ox.cs.pdq.cost.statistics.Catalog#getERPSI(uk.ac.ox.cs.pdq.db.Relation, uk.ac.ox.cs.pdq.db.AccessMethod, java.util.Map)
 	 */
 	@Override
-	public int getERPSI(Relation relation, AccessMethod method, Map<Integer, TypedConstant> inputs) {
+	public int getTotalNumberOfOutputTuplesPerInputTuple(Relation relation, AccessMethod method, Map<Integer, TypedConstant> inputs) {
 		Preconditions.checkNotNull(relation);
 		Preconditions.checkNotNull(inputs);
 		if(inputs.size() == 1 && method.getZeroBasedInputPositions().length == 1) {
@@ -465,7 +465,7 @@ public class SimpleCatalog implements Catalog{
 				return erpsi;
 			}
 		}
-		int erpsi = this.getERPSI(relation, method);
+		int erpsi = this.getTotalNumberOfOutputTuplesPerInputTuple(relation, method);
 		log.info("RELATION: " + relation.getName() + " ACCESS: " + method + " INPUTS: " + inputs + " ERPSI: " + erpsi);
 		return erpsi;
 	}
@@ -535,7 +535,7 @@ public class SimpleCatalog implements Catalog{
 	 */
 	@Override
 	public SimpleCatalog clone() {
-		return new SimpleCatalog(this.schema, this.cardinalities, this.erpsi, this.costs, this.columnSelectivity, 
+		return new SimpleCatalog(this.schema, this.cardinalities, this.numberOfOutputTuplesPerInput, this.costs, this.columnSelectivity, 
 				this.columnCardinalities, this.frequencyMaps, this.SQLServerHistograms);
 	}
 
@@ -583,7 +583,7 @@ public class SimpleCatalog implements Catalog{
 						Joiner.on("\n").join(this.columnCardinalities.entrySet()) +
 
 						"\n==================ERSPI=====================\n" + 
-						Joiner.on("\n").join(this.erpsi.entrySet()) +
+						Joiner.on("\n").join(this.numberOfOutputTuplesPerInput.entrySet()) +
 
 						"\n==================COSTS=====================\n" + 
 						Joiner.on("\n").join(this.costs.entrySet()) +

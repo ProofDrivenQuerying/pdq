@@ -52,8 +52,5 @@ public class YahooTestCases {
 		NaiveCardinalityEstimator nce = new NaiveCardinalityEstimator(catalog);
 		nce.estimateCardinality(access1);
 		System.out.println("NaiveCardinalityEstimator:" + new NaiveCardinalityEstimator(catalog).getCardinalityMetadata(access1).getOutputCardinality());
-		
-		
-		
 	}
 }

@@ -68,9 +68,9 @@ public class TotalNumberOfOutputTuplesPerAccessCostEstimator implements OrderInd
 		double totalCost = 0.0;
 		for(AccessTerm access:accesses) {
 			if(access.getNumberOfInputAttributes() ==0) 
-				totalCost += this.catalog.getERPSI(access.getRelation(), access.getAccessMethod());
+				totalCost += this.catalog.getTotalNumberOfOutputTuplesPerInputTuple(access.getRelation(), access.getAccessMethod());
 			else 
-				totalCost += this.catalog.getERPSI(access.getRelation(), access.getAccessMethod(), access.getInputConstants());
+				totalCost += this.catalog.getTotalNumberOfOutputTuplesPerInputTuple(access.getRelation(), access.getAccessMethod(), access.getInputConstants());
 		}
 		if(this.stats != null){this.stats.stop(COST_ESTIMATION_TIME);}
 		if(this.stats != null){this.stats.increase(COST_ESTIMATION_COUNT, 1);}
