@@ -484,24 +484,24 @@ public class Utility {
 		return ((Relation) fact.getPredicate()).getAttributes();
 	}
 
-	/**
-	 * Creates a new foreign key object.
-	 *
-	 * @param dependency LinearGuarded
-	 */
-	public static ForeignKey createForeignKey(LinearGuarded dependency) {
-		ForeignKey foreignKey = new ForeignKey();
-		Atom left = dependency.getBodyAtom(0);
-		Atom right = dependency.getHeadAtom(0);
-		Relation leftRel = (Relation) left.getPredicate();
-		Relation rightRel = (Relation) right.getPredicate();
-		foreignKey.setForeignRelation(rightRel);
-		foreignKey.setForeignRelationName(rightRel.getName());
-		for (Variable v:CollectionUtils.intersection(Arrays.asList(left.getVariables()), Arrays.asList(right.getVariables()))) {
-			foreignKey.addReference(new Reference(leftRel.getAttribute(Arrays.asList(left.getTerms()).indexOf(v)), rightRel.getAttribute(Arrays.asList(right.getTerms()).indexOf(v))));
-		}
-		return foreignKey;
-	}
+//	/**
+//	 * Creates a new foreign key object.
+//	 *
+//	 * @param dependency LinearGuarded
+//	 */
+//	public static ForeignKey createForeignKey(LinearGuarded dependency) {
+//		ForeignKey foreignKey = new ForeignKey();
+//		Atom left = dependency.getBodyAtom(0);
+//		Atom right = dependency.getHeadAtom(0);
+//		Relation leftRel = (Relation) left.getPredicate();
+//		Relation rightRel = (Relation) right.getPredicate();
+//		foreignKey.setForeignRelation(rightRel);
+//		foreignKey.setForeignRelationName(rightRel.getName());
+//		for (Variable v:CollectionUtils.intersection(Arrays.asList(left.getVariables()), Arrays.asList(right.getVariables()))) {
+//			foreignKey.addReference(new Reference(leftRel.getAttribute(Arrays.asList(left.getTerms()).indexOf(v)), rightRel.getAttribute(Arrays.asList(right.getTerms()).indexOf(v))));
+//		}
+//		return foreignKey;
+//	}
 	
 	/**
 	 * Gets the term positions.

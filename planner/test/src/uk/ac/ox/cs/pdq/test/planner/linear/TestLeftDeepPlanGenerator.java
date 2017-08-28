@@ -32,10 +32,10 @@ public class TestLeftDeepPlanGenerator {
 	protected AccessMethod method2 = AccessMethod.create(new Integer[]{0,1});
 	protected AccessMethod method3 = AccessMethod.create(new Integer[]{1});
 	
-    Attribute a = Attribute.create(String.class, "a");
-    Attribute b = Attribute.create(String.class, "b");
-    Attribute c = Attribute.create(String.class, "c");
-    Attribute d = Attribute.create(String.class, "d");
+	protected Attribute a = Attribute.create(String.class, "a");
+	protected Attribute b = Attribute.create(String.class, "b");
+	protected Attribute c = Attribute.create(String.class, "c");
+	protected Attribute d = Attribute.create(String.class, "d");
     
 	protected Relation R;
 	protected Relation S;

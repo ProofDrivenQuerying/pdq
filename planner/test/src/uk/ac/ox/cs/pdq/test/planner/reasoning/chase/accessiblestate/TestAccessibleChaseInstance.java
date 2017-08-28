@@ -39,10 +39,10 @@ public class TestAccessibleChaseInstance {
 	protected AccessMethod method2 = AccessMethod.create(new Integer[]{0,1});
 	protected AccessMethod method3 = AccessMethod.create(new Integer[]{1});
 	
-    Attribute a = Attribute.create(Integer.class, "a");
-    Attribute b = Attribute.create(Integer.class, "b");
-    Attribute c = Attribute.create(Integer.class, "c");
-    Attribute d = Attribute.create(Integer.class, "d");
+	protected Attribute a = Attribute.create(Integer.class, "a");
+	protected Attribute b = Attribute.create(Integer.class, "b");
+	protected Attribute c = Attribute.create(Integer.class, "c");
+	protected Attribute d = Attribute.create(Integer.class, "d");
     
 	protected Relation R;
 	protected Relation InferredAccessibleR;
