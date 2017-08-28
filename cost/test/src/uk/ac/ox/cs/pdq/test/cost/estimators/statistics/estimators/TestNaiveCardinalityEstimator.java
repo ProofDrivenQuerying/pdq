@@ -44,10 +44,10 @@ public class TestNaiveCardinalityEstimator {
 	protected Relation YahooWeather;
 	protected Relation YahooPlaces;
 	
-    Attribute a = Attribute.create(Integer.class, "a");
-    Attribute b = Attribute.create(Integer.class, "b");
-    Attribute c = Attribute.create(Integer.class, "c");
-    Attribute d = Attribute.create(Integer.class, "d");
+	protected Attribute a = Attribute.create(Integer.class, "a");
+	protected Attribute b = Attribute.create(Integer.class, "b");
+	protected Attribute c = Attribute.create(Integer.class, "c");
+	protected Attribute d = Attribute.create(Integer.class, "d");
     
 	protected Relation R;
 	protected Relation S;	

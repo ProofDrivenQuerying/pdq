@@ -188,7 +188,6 @@ public class ExplorerFactory {
 			return new uk.ac.ox.cs.pdq.planner.dag.explorer.DAGGeneric(
 					eventBus, collectStats,
 					parameters,
-					reasoningParameters,
 					query, 
 					accessibleQuery,
 					accessibleSchema, 
@@ -205,7 +204,6 @@ public class ExplorerFactory {
 			return new uk.ac.ox.cs.pdq.planner.dag.explorer.DAGSimpleDP(
 					eventBus, collectStats,
 					parameters,
-					reasoningParameters,
 					query, 
 					accessibleQuery,
 					accessibleSchema, 
@@ -223,7 +221,6 @@ public class ExplorerFactory {
 			return new uk.ac.ox.cs.pdq.planner.dag.explorer.DAGChaseFriendlyDP(
 					eventBus, collectStats,
 					parameters,
-					reasoningParameters,
 					query, 
 					accessibleQuery,
 					accessibleSchema, 
@@ -241,7 +238,6 @@ public class ExplorerFactory {
 			return new DAGOptimized(
 					eventBus, collectStats,
 					parameters,
-					reasoningParameters,
 					query, 
 					accessibleQuery,
 					accessibleSchema, 

@@ -737,7 +737,6 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		where.addCondition(equalitiesWithProjectedVars);
 		where.addCondition(factproperties);
 
-
 		query = this.databaseConnection.getSQLStatementBuilder().buildSQLQuery(projections, from, where);
 
 		log.trace(source);

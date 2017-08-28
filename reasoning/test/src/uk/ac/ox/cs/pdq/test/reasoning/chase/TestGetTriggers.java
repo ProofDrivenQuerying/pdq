@@ -101,14 +101,16 @@ public class TestGetTriggers {
 			Relation C = dc.getSchema().getRelation("C");
 			Relation D = dc.getSchema().getRelation("D");
 			List<Atom> facts = new ArrayList<>();
-			for (int i=2; i <= 5; i++) facts.add(Atom.create(A, new Term[]{TypedConstant.create("a_"+(i-1)),TypedConstant.create("a_"+i)}));
+			for (int i=2; i <= 5; i++) facts.add(Atom.create(A, new Term[]{TypedConstant.create("c_"+(i-1)),TypedConstant.create("c_"+i)}));
+			facts.add(Atom.create(A, new Term[]{TypedConstant.create("c_2"),TypedConstant.create("c_2")}));
+			facts.add(Atom.create(A, new Term[]{TypedConstant.create("c_3"),TypedConstant.create("c_3")}));
 			facts.add(Atom.create(B, new Term[]{TypedConstant.create("c_2"),TypedConstant.create("c_2"),TypedConstant.create("TC1")}));
 			facts.add(Atom.create(B, new Term[]{TypedConstant.create("c_2"),TypedConstant.create("c_3"),TypedConstant.create("TC1")}));
 			facts.add(Atom.create(B, new Term[]{TypedConstant.create("c_3"),TypedConstant.create("c_3"),TypedConstant.create("TC1")}));
 			facts.add(Atom.create(B, new Term[]{TypedConstant.create("c_3"),TypedConstant.create("c_3"),TypedConstant.create("TC2")}));
 			facts.add(Atom.create(B, new Term[]{TypedConstant.create("c_4"),TypedConstant.create("c_5"),TypedConstant.create("TC2")}));
-			for (int i=6; i <= 100; i++) facts.add(Atom.create(B, new Term[]{TypedConstant.create("b_"+i),TypedConstant.create("b_"+(i+1)),TypedConstant.create("TC2")}));
-			for (int i=1; i <= 100; i++) facts.add(Atom.create(C, new Term[]{TypedConstant.create("c_"+i)}));
+			for (int i=6; i <= 10000; i++) facts.add(Atom.create(B, new Term[]{TypedConstant.create("c_"+i),TypedConstant.create("c_"+(i+1)),TypedConstant.create("TC2")}));
+			for (int i=1; i <= 10000; i++) facts.add(Atom.create(C, new Term[]{TypedConstant.create("c_"+i)}));
 			
 			DatabaseChaseInstance state = new DatabaseChaseInstance(facts, dc);
 			 // A(x,y), B(y,y,'TypedConstant1'), C(y) -> D('TypedConstant2', z) 

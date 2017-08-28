@@ -28,7 +28,6 @@ import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleDatabaseChaseInstance;
 import uk.ac.ox.cs.pdq.planner.util.PlanCreationUtility;
-import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 
 // TODO: Auto-generated Javadoc
@@ -71,8 +70,6 @@ public abstract class DAGExplorer extends Explorer {
 	/** The parameters. */
 	protected final PlannerParameters parameters;
 
-	private ReasoningParameters reasoningParams; 
-
 	/**
 	 * Instantiates a new DAG explorer.
 	 *
@@ -91,7 +88,6 @@ public abstract class DAGExplorer extends Explorer {
 	public DAGExplorer(EventBus eventBus, 
 			boolean collectStats, 
 			PlannerParameters parameters,
-			ReasoningParameters reasoningParameters,
 			ConjunctiveQuery query, 
 			ConjunctiveQuery accessibleQuery,
 //			Schema schema,
@@ -117,7 +113,6 @@ public abstract class DAGExplorer extends Explorer {
 		this.chaser = chaser;
 		this.connection = dbConn;
 		this.costEstimator = costEstimator;
-		this.reasoningParams = reasoningParameters;
 	}
 
 	/**

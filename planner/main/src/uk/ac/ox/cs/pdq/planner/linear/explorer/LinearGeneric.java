@@ -58,11 +58,11 @@ public class LinearGeneric extends LinearExplorer {
 			ConjunctiveQuery accessibleQuery,
 			AccessibleSchema accessibleSchema, 
 			Chaser chaser,
-			DatabaseConnection dbConn,
+			DatabaseConnection connection,
 			CostEstimator costEstimator,
 			NodeFactory nodeFactory,
 			int depth) throws PlannerException, SQLException {
-		super(eventBus, collectStats, query, accessibleQuery, accessibleSchema, chaser, dbConn, costEstimator, nodeFactory, depth);
+		super(eventBus, collectStats, query, accessibleQuery, accessibleSchema, chaser, connection, costEstimator, nodeFactory, depth);
 	}
 
 	/**
@@ -72,7 +72,7 @@ public class LinearGeneric extends LinearExplorer {
 	 * @throws LimitReachedException the limit reached exception
 	 */
 	@Override
-	protected void _explore() throws PlannerException, LimitReachedException {
+	public void _explore() throws PlannerException, LimitReachedException {
 		SearchNode selectedNode;
 		Candidate candidate;
 
@@ -126,7 +126,6 @@ public class LinearGeneric extends LinearExplorer {
 			if (this.bestPlan == null || (this.bestPlan != null && freshNode.getConfiguration().getCost().lessThan(this.bestCost))) {
 				this.bestPlan =  freshNode.getConfiguration().getPlan();
 				this.bestCost = freshNode.getConfiguration().getCost();
-				this.bestConfigurationsList = this.getConfigurations(freshNode.getBestPathFromRoot());
 			}
 		}
 	}

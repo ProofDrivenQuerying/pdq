@@ -142,7 +142,7 @@ public class LinearOptimized extends LinearExplorer {
 	 * @throws LimitReachedException the limit reached exception
 	 */
 	@Override
-	protected void _explore() throws PlannerException, LimitReachedException {
+	public void _explore() throws PlannerException, LimitReachedException {
 		if(this.unexploredDescendants.isEmpty()) {
 			// Choose the next node to explore below it
 			SearchNode selectedNode = this.chooseNode();
@@ -317,7 +317,6 @@ public class LinearOptimized extends LinearExplorer {
 		if (this.bestPlan == null && successfulPlan != null || this.bestPlan != null && successfulPlan != null && costOfSuccessfulPlan.lessThan(this.bestCost)) {
 			this.bestPlan = successfulPlan;
 			this.bestCost = costOfSuccessfulPlan;
-			this.bestConfigurationsList = this.getConfigurations(this.costPropagator.getBestPath());
 			this.eventBus.post(this.getBestPlan());
 			this.eventBus.post(this.getBestPlan());
 		
@@ -335,7 +334,6 @@ public class LinearOptimized extends LinearExplorer {
 					if ((this.bestPlan == null && successfulPlan != null) || 
 							(this.bestPlan != null && successfulPlan != null && costOfSuccessfulPlan.lessThan(this.bestCost))) {
 						this.bestPlan = successfulPlan;
-						this.bestConfigurationsList = this.getConfigurations(this.costPropagator.getBestPath());
 						this.eventBus.post(this.getBestPlan());
 					}
 					this.prunedPaths.add(this.costPropagator.getBestPath());
@@ -362,7 +360,6 @@ public class LinearOptimized extends LinearExplorer {
 		if (this.bestPlan == null && successfulPlan != null
 			|| this.bestPlan != null && successfulPlan != null && costOfSuccessfulPlan.lessThan(this.bestCost)) {
 			this.bestPlan = successfulPlan;
-			this.bestConfigurationsList = this.getConfigurations(this.costPropagator.getBestPath());
 			this.eventBus.post(this.getBestPlan());
 			log.trace("\t+++BEST PLAN: " + AlgebraUtilities.getAccesses(this.bestPlan) + " " + this.bestCost);
 		}

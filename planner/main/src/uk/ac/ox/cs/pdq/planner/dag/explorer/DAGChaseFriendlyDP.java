@@ -24,7 +24,6 @@ import uk.ac.ox.cs.pdq.planner.dag.explorer.filters.Filter;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator;
 import uk.ac.ox.cs.pdq.planner.dominance.Dominance;
 import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominance;
-import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.util.LimitReachedException;
 
@@ -70,7 +69,6 @@ public class DAGChaseFriendlyDP extends DAGGeneric {
 			EventBus eventBus, 
 			boolean collectStats,
 			PlannerParameters parameters,
-			ReasoningParameters reasoningParameters,
 			ConjunctiveQuery query,
 			ConjunctiveQuery accessibleQuery,
 			AccessibleSchema accessibleSchema, 
@@ -83,7 +81,7 @@ public class DAGChaseFriendlyDP extends DAGGeneric {
 			List<Validator> validators,
 			int maxDepth, 
 			boolean orderAware) throws PlannerException, SQLException {
-		super(eventBus, collectStats, parameters,reasoningParameters, query, accessibleQuery, accessibleSchema, chaser, connection, costEstimator,
+		super(eventBus, collectStats, parameters, query, accessibleQuery, accessibleSchema, chaser, connection, costEstimator,
 				successDominance, filter, validators, maxDepth, orderAware);
 		Preconditions.checkNotNull(dominance);
 		Preconditions.checkNotNull(successDominance);

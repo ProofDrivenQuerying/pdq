@@ -141,7 +141,7 @@ public abstract class Explorer {
 	 * @throws PlannerException the planner exception
 	 * @throws LimitReachedException the limit reached exception
 	 */
-	protected abstract void _explore() throws PlannerException, LimitReachedException ;
+	public abstract void _explore() throws PlannerException, LimitReachedException ;
 
 	public RelationalTerm getBestPlan() {
 		return this.bestPlan;

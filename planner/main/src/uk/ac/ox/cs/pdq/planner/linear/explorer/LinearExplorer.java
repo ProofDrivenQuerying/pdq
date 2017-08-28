@@ -75,9 +75,6 @@ public abstract class LinearExplorer extends Explorer {
 	/**  Maximum exploration depth. */
 	protected final int depth;
 
-	/** The best configurations list. */
-	protected List<LinearChaseConfiguration> bestConfigurationsList;
-
 
 	/**
 	 * Instantiates a new linear explorer.
@@ -102,7 +99,7 @@ public abstract class LinearExplorer extends Explorer {
 			ConjunctiveQuery accessibleQuery,
 			AccessibleSchema accessibleSchema, 
 			Chaser chaser,
-			DatabaseConnection dbConn,
+			DatabaseConnection connection,
 			CostEstimator costEstimator,
 			NodeFactory nodeFactory,
 			int depth
@@ -114,14 +111,14 @@ public abstract class LinearExplorer extends Explorer {
 		Assert.assertNotNull(accessibleQuery);
 		Assert.assertNotNull(accessibleSchema);
 		Assert.assertNotNull(chaser);
-		Assert.assertNotNull(dbConn);
+		Assert.assertNotNull(connection);
 		Assert.assertNotNull(costEstimator);
 
 		this.query = query;
 		this.accessibleQuery = accessibleQuery;
 		this.accessibleSchema = accessibleSchema;
 		this.chaser = chaser;
-		this.connection = dbConn;
+		this.connection = connection;
 		this.costEstimator = costEstimator;
 		this.nodeFactory = nodeFactory;
 		this.depth = depth;
@@ -210,15 +207,6 @@ public abstract class LinearExplorer extends Explorer {
 			configurations.add(node.getConfiguration());
 		}
 		return configurations;
-	}
-
-	/**
-	 * TOCOMMENT: WAHT IS IT!
-	 *
-	 * @return the best configurations list
-	 */
-	public List<LinearChaseConfiguration> getBestConfigurationsList() {
-		return this.bestConfigurationsList;
 	}
 
 }

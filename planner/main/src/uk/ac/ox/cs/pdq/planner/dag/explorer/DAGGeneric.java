@@ -34,7 +34,6 @@ import uk.ac.ox.cs.pdq.planner.dag.explorer.filters.Filter;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator;
 import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominance;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance;
-import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.util.LimitReachedException;
 
@@ -102,7 +101,6 @@ public class DAGGeneric extends DAGExplorer {
 			EventBus eventBus, 
 			boolean collectStats,
 			PlannerParameters parameters,
-			ReasoningParameters reasoningParameters,
 			ConjunctiveQuery query,
 			ConjunctiveQuery accessibleQuery,
 			//			Schema schema,
@@ -115,7 +113,7 @@ public class DAGGeneric extends DAGExplorer {
 			List<Validator> validators,
 			int maxDepth,
 			boolean orderAware) throws PlannerException, SQLException {
-		super(eventBus, collectStats, parameters,reasoningParameters, query, accessibleQuery, accessibleSchema, chaser, connection, costEstimator);
+		super(eventBus, collectStats, parameters, query, accessibleQuery, accessibleSchema, chaser, connection, costEstimator);
 		Preconditions.checkNotNull(successDominance);
 		Preconditions.checkArgument(validators != null);
 		Preconditions.checkArgument(!validators.isEmpty());
@@ -143,7 +141,7 @@ public class DAGGeneric extends DAGExplorer {
 	 * @throws LimitReachedException the limit reached exception
 	 */
 	@Override
-	protected void _explore() throws PlannerException, LimitReachedException {
+	public void _explore() throws PlannerException, LimitReachedException {
 		//if the current depth exceeds the threshold return
 		if (this.depth > this.maxDepth) {
 			this.forcedTermination = true;

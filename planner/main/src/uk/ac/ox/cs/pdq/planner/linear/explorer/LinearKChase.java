@@ -81,12 +81,12 @@ public class LinearKChase extends LinearExplorer {
 			ConjunctiveQuery accessibleQuery,
 			AccessibleSchema accessibleSchema, 
 			Chaser chaser,
-			DatabaseConnection dbConn,
+			DatabaseConnection connection,
 			CostEstimator costEstimator,
 			NodeFactory nodeFactory,
 			int depth,
 			int chaseInterval) throws PlannerException, SQLException {
-		super(eventBus, collectStats, query, accessibleQuery, accessibleSchema, chaser, dbConn, costEstimator, nodeFactory, depth);
+		super(eventBus, collectStats, query, accessibleQuery, accessibleSchema, chaser, connection, costEstimator, nodeFactory, depth);
 		this.costPropagator = CostPropagatorUtility.getPropagator(costEstimator);
 		this.chaseInterval = chaseInterval;
 	}
@@ -98,7 +98,7 @@ public class LinearKChase extends LinearExplorer {
 	 * @throws LimitReachedException the limit reached exception
 	 */
 	@Override
-	protected void _explore() throws PlannerException, LimitReachedException {
+	public void _explore() throws PlannerException, LimitReachedException {
 		log.debug("Iteration: " + this.rounds);
 		if(this.rounds % this.chaseInterval != 0 ) {
 			// Choose the next node to explore below it
@@ -233,7 +233,6 @@ public class LinearKChase extends LinearExplorer {
 			this.bestPlan != null && successfulPlan != null && costOfSuccessfulPlan.lessThan(this.bestCost)) {
 			this.bestPlan = successfulPlan;
 			this.bestCost = costOfSuccessfulPlan;
-			this.bestConfigurationsList = this.getConfigurations(freshNode.getBestPathFromRoot());
 			this.eventBus.post(this.getBestPlan());
 			log.trace("\t+++BEST PLAN: " + AlgebraUtilities.getAccesses(this.bestPlan) + " " + this.bestCost);
 		}

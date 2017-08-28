@@ -28,7 +28,6 @@ import uk.ac.ox.cs.pdq.planner.dag.equivalence.SynchronizedEquivalenceClasses;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.filters.Filter;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.parallel.ExplorationResults;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.parallel.IterativeExecutor;
-import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.util.LimitReachedException;
 
@@ -90,7 +89,6 @@ public class DAGOptimized extends DAGExplorer {
 			EventBus eventBus, 
 			boolean collectStats, 
 			PlannerParameters parameters,
-			ReasoningParameters reasoningParameters,
 			ConjunctiveQuery query,
 			ConjunctiveQuery accessibleQuery,
 			AccessibleSchema accessibleSchema, 
@@ -101,7 +99,7 @@ public class DAGOptimized extends DAGExplorer {
 			IterativeExecutor reasoningThreads,
 			IterativeExecutor explorationThreads,
 			int maxDepth) throws PlannerException, SQLException {
-		super(eventBus, collectStats, parameters, reasoningParameters, 
+		super(eventBus, collectStats, parameters,
 				query, accessibleQuery, accessibleSchema, chaser, connection, costEstimator);
 		Preconditions.checkNotNull(reasoningThreads);
 		Preconditions.checkNotNull(explorationThreads);
@@ -129,7 +127,7 @@ public class DAGOptimized extends DAGExplorer {
 	 * @throws LimitReachedException the limit reached exception
 	 */
 	@Override
-	protected void _explore() throws PlannerException, LimitReachedException {
+	public void _explore() throws PlannerException, LimitReachedException {
 		if (this.depth > this.maxDepth) {
 			this.forcedTermination = true;
 			return;
