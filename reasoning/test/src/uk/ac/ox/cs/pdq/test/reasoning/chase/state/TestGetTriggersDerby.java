@@ -1,8 +1,12 @@
 package uk.ac.ox.cs.pdq.test.reasoning.chase.state;
 
+import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -10,6 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 import uk.ac.ox.cs.pdq.datasources.io.xml.QNames;
 import uk.ac.ox.cs.pdq.db.Attribute;
@@ -32,14 +37,14 @@ import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance.LimitToThisOr
 import uk.ac.ox.cs.pdq.reasoning.chase.state.TriggerProperty;
 
 /**
- * Tests the getMatches method of the DatabaseChaseInstance class
+ * Tests the getMatches and the getTriggers methods of the DatabaseChaseInstance class
  * 
  * @author Efthymia Tsamoura
- *
+ * @author Gabor
  */
 public class TestGetTriggersDerby {
 	private static final int PARALLEL_THREADS = 10;
-	protected DatabaseChaseInstance chaseState;
+	protected DatabaseChaseInstance[] chaseState = new DatabaseChaseInstance[3];
 
 	private Relation rel1;
 	private Relation rel2;
@@ -52,7 +57,6 @@ public class TestGetTriggersDerby {
 	private Schema schema;
 
 	@Before
-	
 	public void setup() throws SQLException {
 		Attribute factId = Attribute.create(Integer.class, "InstanceID");
 
@@ -81,12 +85,23 @@ public class TestGetTriggersDerby {
 				new Atom[]{Atom.create(Predicate.create(QNames.EQUALITY.toString(), 2, true), Variable.create("z"), Variable.create("w"))});
 
 		this.schema = new Schema(new Relation[] { this.rel1, this.rel2, this.rel3 }, new Dependency[] { this.tgd, this.tgd2, this.egd });
-		this.chaseState = new DatabaseChaseInstance(new ArrayList<Atom>(), new DatabaseConnection(new DatabaseParameters(), this.schema, PARALLEL_THREADS));
+		int DERBY = 0;
+		int MYSQL = 1;
+		int POSTGRES = 2;
+		this.chaseState[DERBY] = new DatabaseChaseInstance(new ArrayList<Atom>(), new DatabaseConnection(new DatabaseParameters(), this.schema, PARALLEL_THREADS));
+		this.chaseState[MYSQL] = new DatabaseChaseInstance(
+				new ArrayList<Atom>(), 
+				new DatabaseConnection(new DatabaseParameters(new File("test\\src\\uk\\ac\\ox\\cs\\pdq\\test\\reasoning\\homomorphism\\MySql_case.properties")), this.schema,PARALLEL_THREADS));
+		this.chaseState[POSTGRES] = new DatabaseChaseInstance(
+				new ArrayList<Atom>(), 
+				new DatabaseConnection(new DatabaseParameters(new File("test\\src\\uk\\ac\\ox\\cs\\pdq\\test\\reasoning\\homomorphism\\Postgres_case.properties")), this.schema,PARALLEL_THREADS));
+
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		this.chaseState.close();
+		for(DatabaseChaseInstance dci:chaseState)
+			dci.close();
 	}
 
 	@Test
@@ -103,9 +118,11 @@ public class TestGetTriggersDerby {
 
 		Atom f25 = Atom.create(this.rel1, new Term[] { UntypedConstant.create("k6"), UntypedConstant.create("c"), TypedConstant.create(new String("Michael")) });
 
-		this.chaseState.addFacts(Lists.newArrayList(f20, f21, f22, f23, f24, f25));
-		List<Match> matches = this.chaseState.getTriggers(new Dependency[] { this.tgd }, TriggerProperty.ACTIVE, LimitToThisOrAllInstances.THIS);
-		Assert.assertEquals(6, matches.size());
+		for(DatabaseChaseInstance state:chaseState) {
+			state.addFacts(Lists.newArrayList(f20, f21, f22, f23, f24, f25));
+			List<Match> matches = state.getTriggers(new Dependency[] { this.tgd }, TriggerProperty.ACTIVE, LimitToThisOrAllInstances.THIS);
+			Assert.assertEquals(6, matches.size());
+		}
 	}
 
 	@Test
@@ -122,9 +139,11 @@ public class TestGetTriggersDerby {
 
 		Atom f25 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("p"), TypedConstant.create(new String("Michael")) });
 
-		this.chaseState.addFacts(Lists.newArrayList(f20, f21, f22, f23, f24, f25));
-		List<Match> matches = this.chaseState.getTriggers(new Dependency[] { this.egd }, TriggerProperty.ACTIVE, LimitToThisOrAllInstances.THIS);
-		Assert.assertEquals(4, matches.size());
+		for(DatabaseChaseInstance state:chaseState) {
+			state.addFacts(Lists.newArrayList(f20, f21, f22, f23, f24, f25));
+			List<Match> matches = state.getTriggers(new Dependency[] { this.egd }, TriggerProperty.ACTIVE, LimitToThisOrAllInstances.THIS);
+			Assert.assertEquals(4, matches.size());
+		}
 	}
 
 	@Test
@@ -144,9 +163,11 @@ public class TestGetTriggersDerby {
 		Atom eq1 = Atom.create(Predicate.create(QNames.EQUALITY.toString(), 2), UntypedConstant.create("c1"), UntypedConstant.create("c2"));
 		Atom eq2 = Atom.create(Predicate.create(QNames.EQUALITY.toString(), 2), UntypedConstant.create("c1"), UntypedConstant.create("c3"));
 
-		this.chaseState.addFacts(Lists.newArrayList(f20, f21, f22, f23, f24, f25, eq1, eq2));
-		List<Match> matches = this.chaseState.getTriggers(new Dependency[] { this.egd }, TriggerProperty.ALL, LimitToThisOrAllInstances.THIS);
-		Assert.assertEquals(4, matches.size());
+		for(DatabaseChaseInstance state:chaseState) {
+			state.addFacts(Lists.newArrayList(f20, f21, f22, f23, f24, f25, eq1, eq2));
+			List<Match> matches = state.getTriggers(new Dependency[] { this.egd }, TriggerProperty.ALL, LimitToThisOrAllInstances.THIS);
+			Assert.assertEquals(4, matches.size());
+		}
 	}
 
 	@Test
@@ -160,14 +181,15 @@ public class TestGetTriggersDerby {
 		System.out.print("[");
 		try {
 			for (int i = 0; i < 100; i++) {
-				chaseState.close();
+				for(DatabaseChaseInstance state:chaseState) {
+					state.close();
+				}
 				setup();
 				test_getMatches4();
 				if (i % 1 == 0)
 					System.out.print(".");
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		System.out.print("]");
@@ -190,10 +212,11 @@ public class TestGetTriggersDerby {
 
 		Atom eq1 = Atom.create(Predicate.create(QNames.EQUALITY.toString(), 2), UntypedConstant.create("c2"), UntypedConstant.create("c1"));
 		Atom eq2 = Atom.create(Predicate.create(QNames.EQUALITY.toString(), 2), UntypedConstant.create("c1"), UntypedConstant.create("c3"));
-
-		this.chaseState.addFacts(Lists.newArrayList(f20, f21, f22, f23, f24, f25, eq1, eq2));
-		List<Match> matches = this.chaseState.getTriggers(new Dependency[] { this.egd }, TriggerProperty.ACTIVE, LimitToThisOrAllInstances.THIS);
-		Assert.assertEquals(3, matches.size());
+		for(DatabaseChaseInstance state:chaseState) {
+			state.addFacts(Lists.newArrayList(f20, f21, f22, f23, f24, f25, eq1, eq2));
+			List<Match> matches = state.getTriggers(new Dependency[] { this.egd }, TriggerProperty.ACTIVE, LimitToThisOrAllInstances.THIS);
+			Assert.assertEquals(3, matches.size());
+		}
 	}
 
 	@Test
@@ -214,9 +237,11 @@ public class TestGetTriggersDerby {
 
 		Atom f27 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c2") });
 
-		this.chaseState.addFacts(Lists.newArrayList(f20, f21, f22, f23, f24, f25, f26, f27));
-		List<Match> matches = this.chaseState.getTriggers(new Dependency[] { this.tgd }, TriggerProperty.ACTIVE, LimitToThisOrAllInstances.THIS);
-		Assert.assertEquals(4, matches.size());
+		for(DatabaseChaseInstance state:chaseState) {
+			state.addFacts(Lists.newArrayList(f20, f21, f22, f23, f24, f25, f26, f27));
+			List<Match> matches = state.getTriggers(new Dependency[] { this.tgd }, TriggerProperty.ACTIVE, LimitToThisOrAllInstances.THIS);
+			Assert.assertEquals(4, matches.size());
+		}
 	}
 
 	@Test
@@ -230,9 +255,129 @@ public class TestGetTriggersDerby {
 		Atom f26 = Atom.create(this.rel3, new Term[] { UntypedConstant.create("r1"), UntypedConstant.create("UntypedConstant1") });
 
 		Atom f27 = Atom.create(this.rel3, new Term[] { UntypedConstant.create("r2"), UntypedConstant.create("UntypedConstant2") });
-
-		this.chaseState.addFacts(Lists.newArrayList(f20, f21, f22, f26, f27));
-		List<Match> matches = this.chaseState.getTriggers(new Dependency[] { this.tgd2 }, TriggerProperty.ACTIVE, LimitToThisOrAllInstances.THIS);
-		Assert.assertEquals(1, matches.size());
+		for(DatabaseChaseInstance state:chaseState) {
+			state.addFacts(Lists.newArrayList(f20, f21, f22, f26, f27));
+			List<Match> matches = state.getTriggers(new Dependency[] { this.tgd2 }, TriggerProperty.ACTIVE, LimitToThisOrAllInstances.THIS);
+			Assert.assertEquals(1, matches.size());
+		}
 	}
+	
+	
+	@Test
+	public void testScanario2Derby() throws SQLException {
+		testScanario2(new DatabaseConnection(new DatabaseParameters(), createSchemaScanario2()));
+	}
+	@Test
+	public void testScanario2MySql() throws SQLException {
+		DatabaseParameters dbParam = new DatabaseParameters();
+		dbParam.setConnectionUrl("jdbc:mysql://localhost/");
+		dbParam.setDatabaseDriver("com.mysql.jdbc.Driver");
+		dbParam.setDatabaseName("test_get_triggers");
+		dbParam.setDatabaseUser("root");
+		dbParam.setDatabasePassword("root");
+		testScanario2(new DatabaseConnection(dbParam , createSchemaScanario2()));
+	}
+	@Test
+	public void testScanario2Postgres() throws SQLException {
+		DatabaseParameters dbParam = new DatabaseParameters();
+		dbParam.setConnectionUrl("jdbc:postgresql://localhost/");
+		dbParam.setDatabaseDriver("org.postgresql.Driver");
+		dbParam.setDatabaseName("test_get_triggers");
+		dbParam.setDatabaseUser("postgres");
+		dbParam.setDatabasePassword("root");
+		testScanario2(new DatabaseConnection(dbParam , createSchemaScanario2()));
+	}
+	private Schema createSchemaScanario2() {
+		Relation A = Relation.create("A", new Attribute[] { Attribute.create(String.class, "attribute0"),Attribute.create(String.class, "attribute1"),Attribute.create(Integer.class, "InstanceID")});
+		Relation B = Relation.create("B", new Attribute[] { Attribute.create(String.class, "attribute0"),Attribute.create(String.class, "attribute1"),Attribute.create(String.class, "attribute2"), Attribute.create(Integer.class, "InstanceID")});
+		Relation C = Relation.create("C", new Attribute[] { Attribute.create(String.class, "attribute0"),Attribute.create(Integer.class, "InstanceID")});
+		Relation D = Relation.create("D", new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1"),Attribute.create(Integer.class, "InstanceID") });
+		Relation r[] = new Relation[] { A,B,C,D };
+		Schema s = new Schema(r,new Dependency[0]);
+		return s;
+	}
+	
+	/**
+	 * 
+	 * Create unit tests for the getTriggers method
+	 * 
+	 * 
+	 *  a. The dependency is A(x,y), B(y,y,'TypedConstant1'), C(y) -> D('TypedConstant2', z) 
+	 *  the chase instance has the facts 
+	 *  A(c_1,c_2) 
+	 *  A(c_2,c_2) 
+	 *  A(c_2,c_3) 
+	 *  A(c_3,c_3) 
+	 *  A(c_4,c_5) 
+	 *  
+	 *  B(c_2, c_2, 'TypedConstant1') 
+	 *  B(c_2, c_3, 'TypedConstant1')
+	 *  B(c_3, c_3, 'TypedConstant1')
+	 *  B(c_3, c_3, 'TypedConstant2')
+	 *  B(c_4, c_5, 'TypedConstant2')
+	 *  B(c_i, c_{i+1}, 'TypedConstant2') i=6,...,10000 
+	 *  C(c_i), i=1,...,10000
+	 *  
+	 *  You should assert that there are returned four matches in total.
+	 *  General guidlines:
+	 *  Please try all the unit tests for all database instances.
+	 *  And please do not load any facts or dependencies for a csv file.
+	 *  Just create them in place. Maybe using a for loop.
+	 * 
+	 * @param dc
+	 */
+	public void testScanario2(DatabaseConnection dc) {
+		try {
+			Relation A = dc.getSchema().getRelation("A");
+			Relation B = dc.getSchema().getRelation("B");
+			Relation C = dc.getSchema().getRelation("C");
+			Relation D = dc.getSchema().getRelation("D");
+			List<Atom> facts = new ArrayList<>();
+			for (int i=2; i <= 5; i++) facts.add(Atom.create(A, new Term[]{TypedConstant.create("c_"+(i-1)),TypedConstant.create("c_"+i)}));
+			facts.add(Atom.create(A, new Term[]{TypedConstant.create("c_2"),TypedConstant.create("c_2")}));
+			facts.add(Atom.create(A, new Term[]{TypedConstant.create("c_3"),TypedConstant.create("c_3")}));
+			facts.add(Atom.create(B, new Term[]{TypedConstant.create("c_2"),TypedConstant.create("c_2"),TypedConstant.create("TC1")}));
+			facts.add(Atom.create(B, new Term[]{TypedConstant.create("c_2"),TypedConstant.create("c_3"),TypedConstant.create("TC1")}));
+			facts.add(Atom.create(B, new Term[]{TypedConstant.create("c_3"),TypedConstant.create("c_3"),TypedConstant.create("TC1")}));
+			facts.add(Atom.create(B, new Term[]{TypedConstant.create("c_3"),TypedConstant.create("c_3"),TypedConstant.create("TC2")}));
+			facts.add(Atom.create(B, new Term[]{TypedConstant.create("c_4"),TypedConstant.create("c_5"),TypedConstant.create("TC2")}));
+			for (int i=6; i <= 10000; i++) facts.add(Atom.create(B, new Term[]{TypedConstant.create("c_"+i),TypedConstant.create("c_"+(i+1)),TypedConstant.create("TC2")}));
+			for (int i=1; i <= 10000; i++) facts.add(Atom.create(C, new Term[]{TypedConstant.create("c_"+i)}));
+			
+			DatabaseChaseInstance state = new DatabaseChaseInstance(facts, dc);
+			 // A(x,y), B(y,y,'TypedConstant1'), C(y) -> D('TypedConstant2', z) 
+			Dependency d[] = new Dependency[] {
+					TGD.create(new Atom[]{ Atom.create(A, Variable.create("x"),Variable.create("y")),
+											Atom.create(B, Variable.create("y"), Variable.create("y"), TypedConstant.create("TC1")),
+											Atom.create(C, Variable.create("y")) }, 
+							new Atom[] {Atom.create(D, TypedConstant.create("TC2"), Variable.create("z"))})
+					};
+			System.out.println("Initial facts:");
+			Set<Atom> newfacts = Sets.newHashSet(state.getFacts());
+			Iterator<Atom> iterator = newfacts.iterator();
+			while(iterator.hasNext()) {
+				Atom fact = iterator.next();
+				System.out.println(fact);
+			}
+			
+			System.out.println("\n\nmatches for dependency: " + d[0]);
+			
+			List<Match> matches = state.getTriggers(d, TriggerProperty.ACTIVE, LimitToThisOrAllInstances.THIS);
+			Assert.assertFalse(matches.isEmpty());
+			Assert.assertEquals(4,matches.size());
+			iterator = newfacts.iterator();
+			List<String> set = new ArrayList<>();
+			for(Match m:matches) {
+				set.add(m.toString());
+			}
+			Collections.sort(set, String.CASE_INSENSITIVE_ORDER);
+			for(String line:set) System.out.println(line);
+			System.out.println("TestGetTriggers finished.");
+			 
+			 
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
 }
