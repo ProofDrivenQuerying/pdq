@@ -106,7 +106,7 @@ public class ProjectionTest {
 		Condition condition = ConjunctiveCondition.create(new SimpleCondition[]{ConstantEqualityCondition.create(0, TypedConstant.create(1)), 
 				AttributeEqualityCondition.create(1, 2)});
 		Projection accessSelectProjection = new Projection(new Attribute[]{Attribute.create(Integer.class, "c")}, 
-				new Selection(condition,relation1Free));
+				new Selection(condition, new Access(relation1, am1)));//relation1Free
 
 		//Execute the plan
 		result = null;

@@ -12,7 +12,6 @@ import com.google.common.eventbus.EventBus;
 import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
 import uk.ac.ox.cs.pdq.datasources.utility.TupleType;
 import uk.ac.ox.cs.pdq.db.Attribute;
-import uk.ac.ox.cs.pdq.db.TypedConstant;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -35,7 +34,7 @@ public class Projection extends TupleIterator {
 	protected final TupleType projectionsTupleType;
 	
 	public Projection(Attribute[] projections, TupleIterator child) {
-		super(child.getInputAttributes(), child.getOutputAttributes());
+		super(child.getInputAttributes(), projections);
 		Assert.assertNotNull(projections);
 		Assert.assertNotNull(child);
 		this.positionsOfProjectedAttributes = new LinkedHashMap<>();
@@ -173,12 +172,14 @@ public class Projection extends TupleIterator {
 			throw new NoSuchElementException("End of projection operator reached.");
 		}
 		Object[] result = new Object[this.projections.length];
-		for(int index = 0; index < this.projections.length; ++index) {
-			 if (this.projections[index].getType() instanceof Attribute)
-				result[index] = next.getValue(this.positionsOfProjectedAttributes.get((Attribute)this.projections[index].getType()));
-			 else if (this.projections[index].getType() instanceof TypedConstant)
-				result[index] = ((TypedConstant) this.projections[index].getType()).getValue();
-		}
+		for(int attributeIndex = 0; attributeIndex < this.projections.length; ++attributeIndex) 
+			result[attributeIndex] = next.getValue(this.positionsOfProjectedAttributes.get(this.projections[attributeIndex]));
+//		for(int index = 0; index < this.projections.length; ++index) {
+//			 if (this.projections[index].getType() instanceof Attribute)
+//				result[index] = next.getValue(this.positionsOfProjectedAttributes.get((Attribute)this.projections[index].getType()));
+//			 else if (this.projections[index].getType() instanceof TypedConstant)
+//				result[index] = ((TypedConstant) this.projections[index].getType()).getValue();
+//		}
 		return this.projectionsTupleType.createTuple(result);
 	}
 

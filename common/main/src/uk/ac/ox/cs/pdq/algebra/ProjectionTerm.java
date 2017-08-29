@@ -21,7 +21,7 @@ public class ProjectionTerm extends RelationalTerm {
 	protected String toString = null;
 	
 	private ProjectionTerm(Attribute[] projections, RelationalTerm child) {
-		super(child.getInputAttributes(), child.getOutputAttributes());
+		super(child.getInputAttributes(), projections);
 		Assert.assertNotNull(projections);
 		Assert.assertNotNull(child);
 		for(int outputAttributeIndex = 0; outputAttributeIndex < projections.length; ++outputAttributeIndex) 
