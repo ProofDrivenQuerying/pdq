@@ -3,10 +3,7 @@ package uk.ac.ox.cs.pdq.test.reasoning.chase.state;
 import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -14,7 +11,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 
 import uk.ac.ox.cs.pdq.datasources.io.xml.QNames;
 import uk.ac.ox.cs.pdq.db.Attribute;
@@ -44,6 +40,7 @@ import uk.ac.ox.cs.pdq.reasoning.chase.state.TriggerProperty;
  * @author Gabor
  */
 public class TestGetTriggers {
+	private static final int NUMBER_OF_DUMMY_DATA = 100;
 	private static final int PARALLEL_THREADS = 10;
 	protected DatabaseChaseInstance[] chaseState = new DatabaseChaseInstance[3];
 	private final int DERBY = 0;
@@ -397,9 +394,9 @@ public class TestGetTriggers {
 			facts.add(Atom.create(B, new Term[] { TypedConstant.create("c_3"), TypedConstant.create("c_3"), TypedConstant.create("TC1") }));
 			facts.add(Atom.create(B, new Term[] { TypedConstant.create("c_3"), TypedConstant.create("c_3"), TypedConstant.create("TC2") }));
 			facts.add(Atom.create(B, new Term[] { TypedConstant.create("c_4"), TypedConstant.create("c_5"), TypedConstant.create("TC2") }));
-			for (int i = 6; i <= 10000; i++)
+			for (int i = 6; i <= NUMBER_OF_DUMMY_DATA; i++)
 				facts.add(Atom.create(B, new Term[] { TypedConstant.create("c_" + i), TypedConstant.create("c_" + (i + 1)), TypedConstant.create("TC2") }));
-			for (int i = 1; i <= 10000; i++)
+			for (int i = 1; i <= NUMBER_OF_DUMMY_DATA; i++)
 				facts.add(Atom.create(C, new Term[] { TypedConstant.create("c_" + i) }));
 
 			DatabaseChaseInstance state = new DatabaseChaseInstance(facts, dc);
@@ -408,29 +405,9 @@ public class TestGetTriggers {
 					new Atom[] { Atom.create(A, Variable.create("x"), Variable.create("y")),
 							Atom.create(B, Variable.create("y"), Variable.create("y"), TypedConstant.create("TC1")), Atom.create(C, Variable.create("y")) },
 					new Atom[] { Atom.create(D, TypedConstant.create("TC2"), Variable.create("z")) }) };
-			System.out.println("Initial facts:");
-			Set<Atom> newfacts = Sets.newHashSet(state.getFacts());
-			Iterator<Atom> iterator = newfacts.iterator();
-			while (iterator.hasNext()) {
-				Atom fact = iterator.next();
-				System.out.println(fact);
-			}
-
-			System.out.println("\n\nmatches for dependency: " + d[0]);
-
 			List<Match> matches = state.getTriggers(d, TriggerProperty.ACTIVE, LimitToThisOrAllInstances.THIS);
 			Assert.assertFalse(matches.isEmpty());
 			Assert.assertEquals(4, matches.size());
-			iterator = newfacts.iterator();
-			List<String> set = new ArrayList<>();
-			for (Match m : matches) {
-				set.add(m.toString());
-			}
-			Collections.sort(set, String.CASE_INSENSITIVE_ORDER);
-			for (String line : set)
-				System.out.println(line);
-			System.out.println("TestGetTriggers finished.");
-
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
