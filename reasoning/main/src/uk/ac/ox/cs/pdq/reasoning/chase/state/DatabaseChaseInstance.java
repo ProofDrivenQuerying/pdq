@@ -5,6 +5,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -584,6 +585,19 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		ConjunctiveQuery converted = this.convert(query);
 		//Create an SQL statement for the cleaned query
 		Pair<String, LinkedHashMap<String, Variable>> pair = createSQLQuery(converted, l, query.getSubstitutionOfFreeVariablesToCanonicalConstants());
+		queries.add(Triple.of((Formula)query, pair.getLeft(), pair.getRight()));
+		return this.answerQueries(queries);
+	}
+	
+	/**
+	 * Same as above but it does not replaces the free variables to be able to unit test it.
+	 */
+	public List<Match> getMatchesNoSubstitution(ConjunctiveQuery query, LimitToThisOrAllInstances l) {
+		Queue<Triple<Formula, String, LinkedHashMap<String, Variable>>> queries = new ConcurrentLinkedQueue<>();
+		//Create a new query out of each input query that references only the cleaned predicates
+		ConjunctiveQuery converted = this.convert(query);
+		//Create an SQL statement for the cleaned query
+		Pair<String, LinkedHashMap<String, Variable>> pair = createSQLQuery(converted, l, new HashMap<Variable,Constant>());
 		queries.add(Triple.of((Formula)query, pair.getLeft(), pair.getRight()));
 		return this.answerQueries(queries);
 	}
