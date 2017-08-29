@@ -41,7 +41,10 @@ public class Projection extends TupleIterator {
 		this.positionsOfProjectedAttributes = new LinkedHashMap<>();
 		for(int outputAttributeIndex = 0; outputAttributeIndex < projections.length; ++outputAttributeIndex) { 
 			int position = Arrays.asList(child.getOutputAttributes()).indexOf(projections[outputAttributeIndex]);
-			Assert.assertTrue(position >= 0);
+			// TPH: 
+			// Assert.assertTrue(position >= 0);
+			if (position == -1)
+				throw new IllegalArgumentException("Inconsistent attributes");
 			this.positionsOfProjectedAttributes.put(projections[outputAttributeIndex], position);
 		}
 		this.projections = projections.clone();
@@ -171,9 +174,9 @@ public class Projection extends TupleIterator {
 		}
 		Object[] result = new Object[this.projections.length];
 		for(int index = 0; index < this.projections.length; ++index) {
-			if (this.projections[index].getType() instanceof Attribute) 
+			 if (this.projections[index].getType() instanceof Attribute)
 				result[index] = next.getValue(this.positionsOfProjectedAttributes.get((Attribute)this.projections[index].getType()));
-			else if (this.projections[index].getType() instanceof TypedConstant) 
+			 else if (this.projections[index].getType() instanceof TypedConstant)
 				result[index] = ((TypedConstant) this.projections[index].getType()).getValue();
 		}
 		return this.projectionsTupleType.createTuple(result);

@@ -44,7 +44,7 @@ public class AccessTest {
 
 	@SuppressWarnings("resource")
 	@Test
-	public void case1() {
+	public void test() {
 		AccessMethod am1 = AccessMethod.create("access_method1",new Integer[] {});
 		AccessMethod am2 = AccessMethod.create("access_method2",new Integer[] {0});
 		AccessMethod am3 = AccessMethod.create("access_method2",new Integer[] {0,1});
