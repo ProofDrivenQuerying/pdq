@@ -29,7 +29,7 @@ public class LinearGuarded extends TGD {
 	 * @param relation the relation
 	 * @param foreignKey One of the foreign keys of this relation
 	 */
-	public LinearGuarded(Relation relation, ForeignKey foreignKey) {
+	protected LinearGuarded(Relation relation, ForeignKey foreignKey) {
 		super(createBody(relation), createHead(relation, foreignKey));
 	}
 

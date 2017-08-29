@@ -4,13 +4,17 @@ import static uk.ac.ox.cs.pdq.planner.logging.performance.PlannerStatKeys.MILLI_
 import static uk.ac.ox.cs.pdq.planner.logging.performance.PlannerStatKeys.MILLI_QUERY_MATCH;
 
 import java.sql.SQLException;
+import java.util.AbstractMap;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.jgrapht.graph.DefaultEdge;
 
 import com.google.common.eventbus.EventBus;
 
+import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
@@ -34,6 +38,8 @@ import uk.ac.ox.cs.pdq.util.LimitReachedException;
  */
 public class LinearGeneric extends LinearExplorer {
 
+	protected List<Entry<RelationalTerm, Cost>> exploredPlans = new ArrayList<>();
+	
 	/**
 	 * Instantiates a new linear generic.
 	 *
@@ -121,7 +127,7 @@ public class LinearGeneric extends LinearExplorer {
 		// If there exists at least one query match
 		if (!matches.isEmpty()) {
 			freshNode.setStatus(NodeStatus.SUCCESSFUL);
-			
+			this.exploredPlans.add(new AbstractMap.SimpleEntry<RelationalTerm, Cost>(freshNode.getConfiguration().getPlan(), freshNode.getConfiguration().getCost()));
 			// Update the best plan found so far
 			if (this.bestPlan == null || (this.bestPlan != null && freshNode.getConfiguration().getCost().lessThan(this.bestCost))) {
 				this.bestPlan =  freshNode.getConfiguration().getPlan();
@@ -129,4 +135,9 @@ public class LinearGeneric extends LinearExplorer {
 			}
 		}
 	}
+	
+	public List<Entry<RelationalTerm, Cost>> getExploredPlans() {
+		return this.exploredPlans;
+	}
+	
 }
