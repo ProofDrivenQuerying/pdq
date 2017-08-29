@@ -404,16 +404,14 @@ public abstract class SQLStatementBuilder {
 	}
 
 	/**
-	 * In case where we query matches for the A(x,y1), B(x,y2) -> y1=y2, it is necessary to filter out
-	 * the case where y1=y2 such as A(apple,constant1), B(apple,constant1) should
-	 * not trigger this equality.
+	 * Creates a WhereCondition for and EGD to make sure only active triggers will be returned by the query.
 	 * 
 	 */
-	public WhereCondition createDistinctEGDAttributes(Dependency dep, Atom[] source) {
+	public WhereCondition createEGDActivenessFilter(EGD dep, Atom[] source) {
 		List<String> attributePredicates = new ArrayList<String>();
 		Collection<Term> terms = Utility.getTerms(source);
 		terms = Utility.removeDuplicates(terms);
-		if (dep != null && dep instanceof EGD) {
+		if (dep != null) {
 			Term right = dep.getHead().getAtoms()[0].getTerm(1);
 			Term left = dep.getHead().getAtoms()[0].getTerm(0);
 			ArrayList<String> leftEqualities = new ArrayList<>();
