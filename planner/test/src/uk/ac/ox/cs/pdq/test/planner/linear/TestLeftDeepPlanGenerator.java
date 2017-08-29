@@ -1,20 +1,13 @@
 package uk.ac.ox.cs.pdq.test.planner.linear;
 
-import java.util.HashMap;
 import java.util.LinkedHashSet;
-import java.util.Map;
 import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
 
-import uk.ac.ox.cs.pdq.algebra.AccessTerm;
-import uk.ac.ox.cs.pdq.algebra.ConstantEqualityCondition;
-import uk.ac.ox.cs.pdq.algebra.DependentJoinTerm;
-import uk.ac.ox.cs.pdq.algebra.JoinTerm;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
-import uk.ac.ox.cs.pdq.algebra.SelectionTerm;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
@@ -24,6 +17,12 @@ import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.planner.linear.LeftDeepPlanGenerator;
 import uk.ac.ox.cs.pdq.util.Utility;
+
+/**
+ * 
+ * @author Efthymia Tsamoura
+ *
+ */
 
 public class TestLeftDeepPlanGenerator {
 

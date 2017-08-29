@@ -20,6 +20,12 @@ import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.util.Utility;
 
+/**
+ * 
+ * @author Efthymia Tsamoura
+ *
+ */
+
 public class TestAccessibleSchema {
 
 	protected AccessMethod method0 = AccessMethod.create(new Integer[]{});

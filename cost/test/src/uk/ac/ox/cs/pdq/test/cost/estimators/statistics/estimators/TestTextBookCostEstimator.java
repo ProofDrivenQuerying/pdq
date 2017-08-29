@@ -26,6 +26,12 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.util.Utility;
 
+/**
+ * 
+ * @author Efthymia Tsamoura
+ *
+ */
+
 public class TestTextBookCostEstimator {
 	protected Attribute[] attributes3Old = new Attribute[3];
 	protected Attribute[] attributes6Old = new Attribute[6];

@@ -1,7 +1,5 @@
 package uk.ac.ox.cs.pdq.test.algebra;
 
-import static org.mockito.Mockito.when;
-
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
@@ -9,7 +7,6 @@ import java.util.Map;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import uk.ac.ox.cs.pdq.algebra.AccessTerm;

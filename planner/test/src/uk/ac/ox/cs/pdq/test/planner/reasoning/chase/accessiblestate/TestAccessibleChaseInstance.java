@@ -28,6 +28,12 @@ import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleDatabaseChaseInstance;
 import uk.ac.ox.cs.pdq.util.Utility;
 
+/**
+ * 
+ * @author Efthymia Tsamoura
+ *
+ */
+
 public class TestAccessibleChaseInstance {
 	private AccessibleDatabaseChaseInstance state;
 	private DatabaseConnection connection;
