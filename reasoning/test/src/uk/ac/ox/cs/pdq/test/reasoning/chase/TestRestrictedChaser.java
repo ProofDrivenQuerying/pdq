@@ -2,7 +2,9 @@ package uk.ac.ox.cs.pdq.test.reasoning.chase;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -41,7 +43,7 @@ import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance.LimitToThisOr
 /**
  * Tests the reasonUntilTermination method of the RestrictedChaser class 
  * @author Efthymia Tsamoura
- *
+ * @author Gabor
  */
 public class TestRestrictedChaser {
 
@@ -246,22 +248,34 @@ public class TestRestrictedChaser {
 		int equalities=0;
 		int sCount=0;
 		int tCount=0;
+		int countOfKsInS = 0; // should be one
+		int countOfKsInT = 0;// should be ten
 		while(iterator.hasNext()) {
 			Atom fact = iterator.next();
 			set.add(fact.toString());
 			if (fact.isEquality())
 				equalities++;
-			if ("S".equals(fact.getPredicate().getName()))
+			if ("S".equals(fact.getPredicate().getName())) {
 				sCount++;
-			if ("T".equals(fact.getPredicate().getName()))
+				Assert.assertTrue(fact.getTerms()[0] instanceof TypedConstant);
+				if (fact.getTerms()[1] instanceof UntypedConstant) {
+					if (((UntypedConstant)fact.getTerms()[1]).getSymbol().startsWith("k"))
+						countOfKsInS++;
+				}
+			}
+			if ("T".equals(fact.getPredicate().getName())) {
 				tCount++;
+				Assert.assertTrue(fact.getTerms()[0] instanceof TypedConstant);
+				Assert.assertTrue(fact.getTerms()[1] instanceof UntypedConstant);
+				if (((UntypedConstant)fact.getTerms()[1]).getSymbol().startsWith("k"))
+					countOfKsInT++;
+			}
 		}
 		Assert.assertEquals(9, equalities);
 		Assert.assertEquals(10, sCount);
 		Assert.assertEquals(10, tCount);
-		Collections.sort(set, String.CASE_INSENSITIVE_ORDER);
-		for(String line:set) System.out.println(line);
-		System.out.println("TestRestrictedChaser.efiTests1() finished.");
+		Assert.assertEquals(10, countOfKsInT);
+		Assert.assertEquals(1, countOfKsInS);
 	}
 	
 	@Test
@@ -299,6 +313,9 @@ public class TestRestrictedChaser {
 				EGD.create(new Atom[] {Atom.create(R, Variable.create("x"),Variable.create("y1")),Atom.create(T, Variable.create("x"),Variable.create("y2"))}, new Atom[]{Atom.create(Predicate.create(QNames.EQUALITY.toString(), 2, true), Variable.create("y1"),Variable.create("y2"))}),
 		};
 		Schema s = new Schema(r,d);
+		Collection<TypedConstant> constants = new ArrayList<>();
+		for (int i=0; i <=10; i++) constants.add(TypedConstant.create("a_"+i));
+		s.addConstants(constants );
 		List<Atom> facts = new ArrayList<>();
 		facts.add(Atom.create(D, new Term[]{TypedConstant.create("a_1")}));
 		facts.add(Atom.create(C, new Term[]{TypedConstant.create("a_5")}));
@@ -322,13 +339,28 @@ public class TestRestrictedChaser {
 		newfacts = Sets.newHashSet(this.state.getFacts());
 		iterator = newfacts.iterator();
 		List<String> set = new ArrayList<>();
+		int dFacts = 0;
+		int dFactHasK = 0;
+		int qFacts = 0;
 		while(iterator.hasNext()) {
 			Atom fact = iterator.next();
+			if (fact.getPredicate().equals(D)) {
+				dFacts++;
+				if (fact.getTerms()[0].toString().startsWith("k"))
+					dFactHasK++;
+			}
+			if (fact.getPredicate().equals(Q)) {
+				qFacts++;
+				Assert.assertEquals("a_5", fact.getTerms()[0].toString());
+			}
 			set.add(fact.toString());
 		}
-		Collections.sort(set, String.CASE_INSENSITIVE_ORDER);
-		for(String line:set) System.out.println(line);
-		System.out.println("TestRestrictedChaser.efiTests1() finished.");
+		Assert.assertEquals(11, dFacts);
+		Assert.assertEquals(1, dFactHasK);
+		Assert.assertEquals(1, qFacts);
+//		Collections.sort(set, String.CASE_INSENSITIVE_ORDER);
+//		for(String line:set) System.out.println(line);
+//		System.out.println("TestRestrictedChaser.efiTests1() finished.");
 	}
 	
 	@Test
@@ -349,19 +381,19 @@ public class TestRestrictedChaser {
 		Relation E = Relation.create("E", new Attribute[] { Attribute.create(String.class, "attribute0"), Attribute.create(String.class, "attribute1"), Attribute.create(String.class, "attribute2"),Attribute.create(Integer.class, "InstanceID") });
 		Relation r[] = new Relation[] { A,B,C,D,E };
 		Schema s = new Schema(r,new Dependency[0]);
-		List<Atom> facts = new ArrayList<>();
-		final int MAX_NUMBER_OF_TUPLES = 10000;
-//		for (int i=1; i <=MAX_NUMBER_OF_TUPLES; i++) facts.add(Atom.create(A, new Term[]{UntypedConstant.create("a_"+(i-1)),UntypedConstant.create("a_"+i)}));
-//		for (int i=1; i <=MAX_NUMBER_OF_TUPLES; i++) facts.add(Atom.create(B, new Term[]{UntypedConstant.create("b_"+(i-1)),UntypedConstant.create("b_"+i)}));
-//		for (int i=1; i <=MAX_NUMBER_OF_TUPLES; i++) facts.add(Atom.create(D, new Term[]{UntypedConstant.create("d_"+(i-1)),UntypedConstant.create("d_"+i)}));
-//		for (int i=1; i <=MAX_NUMBER_OF_TUPLES; i++) facts.add(Atom.create(C, new Term[]{UntypedConstant.create("c_1_"+(i-1)),UntypedConstant.create("c_2_"+(i-1)),UntypedConstant.create("c_3_"+i)}));
-//		for (int i=1; i <=MAX_NUMBER_OF_TUPLES; i++) facts.add(Atom.create(E, new Term[]{UntypedConstant.create("e_1_"+(i-1)),UntypedConstant.create("e_2_"+(i-1)),UntypedConstant.create("e_3_"+i)}));
 		
+		Collection<TypedConstant> constants = new ArrayList<>();
+		for (int i=1; i <=5; i++) constants.add(TypedConstant.create("x"+i));
+		for (int i=1; i <=5; i++) constants.add(TypedConstant.create("y"+i));
+		for (int i=1; i <=5; i++) constants.add(TypedConstant.create("z"+i));
+		constants.add(TypedConstant.create("c_constant_3"));
+		s.addConstants(constants);
+		
+		List<Atom> facts = new ArrayList<>();
 		for (int i=1; i <=5; i++) facts.add(Atom.create(A, new Term[]{TypedConstant.create("x"+i),TypedConstant.create("x"+i)}));
 		for (int i=1; i <=5; i++) facts.add(Atom.create(B, new Term[]{TypedConstant.create("x"+i),TypedConstant.create("y"+i)}));
 		for (int i=1; i <=5; i++) facts.add(Atom.create(C, new Term[]{TypedConstant.create("y"+i),TypedConstant.create("z"+i),TypedConstant.create("c_constant_3")}));
 		for (int i=1; i <=5; i++) facts.add(Atom.create(D, new Term[]{TypedConstant.create("z"+i),TypedConstant.create("z"+i)}));
-		//for (int i=1; i <=5; i++) facts.add(Atom.create(E, new Term[]{TypedConstant.create("e_constant_1_"+(i-1)),TypedConstant.create("e_constant_2_"+(i-1)),UntypedConstant.create("e_constant_3_"+i)}));
 		
 		try {
 			this.state = new DatabaseChaseInstance(facts, new DatabaseConnection(new DatabaseParameters(), s));
@@ -377,10 +409,21 @@ public class TestRestrictedChaser {
 				Atom.create(D, Variable.create("z"),Variable.create("z"))
 				));
 		
+		
+		HashSet<Atom> newfacts = Sets.newHashSet(this.state.getFacts());
+		Iterator<Atom> iterator = newfacts.iterator();
+		List<String> set = new ArrayList<>();
+		while(iterator.hasNext()) {
+			Atom fact = iterator.next();
+			set.add(fact.toString());
+		}
+		Collections.sort(set, String.CASE_INSENSITIVE_ORDER);
+		for(String line:set) System.out.println(line);
+		System.out.println("TestRestrictedChaser.efiTests1() finished.");
+		
+		
+		
 		List<Match> matches = this.state.getMatches(query1, LimitToThisOrAllInstances.THIS);
-//		System.out.println("Facts:");
-//		System.out.println(state.getFacts());
-//		System.out.println("\\Facts");
 		System.out.println(matches);
 		System.out.println("\n\n\n");
 	}
@@ -404,7 +447,7 @@ public class TestRestrictedChaser {
 		Relation r[] = new Relation[] { A,B,C,D,E };
 		Schema s = new Schema(r,new Dependency[0]);
 		List<Atom> facts = new ArrayList<>();
-		final int MAX_NUMBER_OF_TUPLES = 10000;
+//		final int MAX_NUMBER_OF_TUPLES = 10000;
 //		for (int i=1; i <=MAX_NUMBER_OF_TUPLES; i++) facts.add(Atom.create(A, new Term[]{UntypedConstant.create("a_"+(i-1)),UntypedConstant.create("a_"+i)}));
 //		for (int i=1; i <=MAX_NUMBER_OF_TUPLES; i++) facts.add(Atom.create(B, new Term[]{UntypedConstant.create("b_"+(i-1)),UntypedConstant.create("b_"+i)}));
 //		for (int i=1; i <=MAX_NUMBER_OF_TUPLES; i++) facts.add(Atom.create(D, new Term[]{UntypedConstant.create("d_"+(i-1)),UntypedConstant.create("d_"+i)}));
