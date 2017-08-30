@@ -10,29 +10,27 @@ import uk.ac.ox.cs.pdq.db.ForeignKey;
 import uk.ac.ox.cs.pdq.db.PrimaryKey;
 import uk.ac.ox.cs.pdq.db.Reference;
 import uk.ac.ox.cs.pdq.db.Relation;
-import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.EGD;
-import uk.ac.ox.cs.pdq.util.Typed;
+import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.util.Utility;
 
-// TODO: Auto-generated Javadoc
 /**
- * Utility unit test.
+ * Utility unit test for the uk.ac.ox.cs.pdq.util.Utility class.
  *
  * @author Julien Leblay
  */
 public class UtilityTest {
-	
-	protected AccessMethod method0 = AccessMethod.create(new Integer[]{});
-	protected AccessMethod method1 = AccessMethod.create(new Integer[]{0});
-	protected AccessMethod method2 = AccessMethod.create(new Integer[]{0,1});
-	protected AccessMethod method3 = AccessMethod.create(new Integer[]{1});
+
+	protected AccessMethod method0 = AccessMethod.create(new Integer[] {});
+	protected AccessMethod method1 = AccessMethod.create(new Integer[] { 0 });
+	protected AccessMethod method2 = AccessMethod.create(new Integer[] { 0, 1 });
+	protected AccessMethod method3 = AccessMethod.create(new Integer[] { 1 });
 
 	protected Attribute a = Attribute.create(String.class, "a");
 	protected Attribute b = Attribute.create(String.class, "b");
 	protected Attribute c = Attribute.create(String.class, "c");
 	protected Attribute d = Attribute.create(String.class, "d");
-    
+
 	protected Relation R;
 	protected Relation S;
 	protected Relation T;
@@ -40,37 +38,57 @@ public class UtilityTest {
 	/**
 	 * Makes sure assertions are enabled.
 	 */
-	@Before 
+	@Before
 	public void setup() {
 		Utility.assertsEnabled();
-        this.R = Relation.create("R", new Attribute[]{a,b,c}, new AccessMethod[]{this.method0, this.method2});
-        this.S = Relation.create("S", new Attribute[]{a,c}, new AccessMethod[]{this.method0, this.method1, this.method2});
-        this.T = Relation.create("T", new Attribute[]{a,b,c,d}, new AccessMethod[]{this.method0, this.method1, this.method2});
-        this.R.setKey(PrimaryKey.create(new Attribute[]{this.a, this.b}));
-        this.S.setKey(PrimaryKey.create(new Attribute[]{this.a, this.c}));
-        this.T.setKey(PrimaryKey.create(new Attribute[]{this.a, this.b,this.c}));
-        ForeignKey fk = new ForeignKey();
-        fk.addReference(new Reference(this.a, this.a));
-        fk.addReference(new Reference(this.b, this.b));
-        fk.setForeignRelation(this.R);
-        this.T.addForeignKey(new ForeignKey());
+		this.R = Relation.create("R", new Attribute[] { a, b, c }, new AccessMethod[] { this.method0, this.method2 });
+		this.S = Relation.create("S", new Attribute[] { a, c }, new AccessMethod[] { this.method0, this.method1, this.method2 });
+		this.T = Relation.create("T", new Attribute[] { a, b, c, d }, new AccessMethod[] { this.method0, this.method1, this.method2 });
+		this.R.setKey(PrimaryKey.create(new Attribute[] { this.a, this.b }));
+		this.S.setKey(PrimaryKey.create(new Attribute[] { this.a, this.c }));
+		this.T.setKey(PrimaryKey.create(new Attribute[] { this.a, this.b, this.c }));
+		ForeignKey fk = new ForeignKey();
+		fk.addReference(new Reference(this.a, this.a));
+		fk.addReference(new Reference(this.b, this.b));
+		fk.setForeignRelation(this.R);
+		this.T.addForeignKey(new ForeignKey());
 	}
-	
+
 	@Test
 	public void testGetEGDs1() {
 		EGD egds = Utility.getEGDs(this.R, this.R.getKey().getAttributes());
-		//assert 
+		Assert.assertNotNull(egds);
+		Assert.assertNotNull(egds.getAtoms());
+		Assert.assertEquals(3, egds.getAtoms().length);
+		Assert.assertNotNull(egds.getAtoms()[0]);
+		Assert.assertNotNull(egds.getAtoms()[1]);
+		Assert.assertNotNull(egds.getAtoms()[2]);
+		Assert.assertTrue(!(egds.getAtoms()[0].isEquality()));
+		Assert.assertTrue(!(egds.getAtoms()[1].isEquality()));
+		Assert.assertTrue(egds.getAtoms()[2].isEquality());
+		Assert.assertEquals(Variable.create("c"),egds.getAtoms()[2].getTerm(0));
+		Assert.assertEquals(Variable.create("?c"),egds.getAtoms()[2].getTerm(1));
 	}
-	
-	@Test(expected=RuntimeException.class)
+
+	@Test(expected = RuntimeException.class)
 	public void testGetEGDs2() {
-		EGD egds = Utility.getEGDs(this.S, this.S.getKey().getAttributes());
+		Utility.getEGDs(this.S, this.S.getKey().getAttributes());
 	}
-	
+
 	@Test
 	public void testGetEGDs3() {
 		EGD egds = Utility.getEGDs(this.T, this.T.getKey().getAttributes());
-		//assert 
+		Assert.assertNotNull(egds);
+		Assert.assertNotNull(egds.getAtoms());
+		Assert.assertEquals(3, egds.getAtoms().length);
+		Assert.assertNotNull(egds.getAtoms()[0]);
+		Assert.assertNotNull(egds.getAtoms()[1]);
+		Assert.assertNotNull(egds.getAtoms()[2]);
+		Assert.assertTrue(!(egds.getAtoms()[0].isEquality()));
+		Assert.assertTrue(!(egds.getAtoms()[1].isEquality()));
+		Assert.assertTrue(egds.getAtoms()[2].isEquality());
+		Assert.assertEquals(Variable.create("d"),egds.getAtoms()[2].getTerm(0));
+		Assert.assertEquals(Variable.create("?d"),egds.getAtoms()[2].getTerm(1));
 	}
-	
+
 }
