@@ -62,10 +62,9 @@ public class UtilityTest {
 		//assert 
 	}
 	
-	@Test
+	@Test(expected=RuntimeException.class)
 	public void testGetEGDs2() {
 		EGD egds = Utility.getEGDs(this.S, this.S.getKey().getAttributes());
-		//assert 
 	}
 	
 	@Test

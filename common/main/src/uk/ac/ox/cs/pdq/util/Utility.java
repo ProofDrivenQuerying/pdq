@@ -94,7 +94,7 @@ public class Utility {
 	public static Term[] typedToTerms(Attribute[] typed) {
 		Term[] result = new Term[typed.length];
 		for (int index = 0; index < typed.length; ++index) {
-			result[index] = Variable.create(String.valueOf(typed));
+			result[index] = Variable.create(String.valueOf(typed[index].getName()));
 		}
 		return result;
 	}
