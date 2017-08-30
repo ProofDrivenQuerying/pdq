@@ -113,17 +113,17 @@ public class SQLStatementBuilderTest {
 		addFacts(facts,dc);
 		
 		Statement sqlStatement = dc.getSynchronousConnections(0).createStatement();
-		ResultSet rs = sqlStatement.executeQuery("select * from R1");
-		if (print) System.out.println("querying SELECT * FROM R1");
+		ResultSet rs = sqlStatement.executeQuery("select * from "+dc.getDatabaseParameters().getDatabaseName()+".R1");
+		if (print) System.out.println("querying SELECT * FROM  "+dc.getDatabaseParameters().getDatabaseName()+".R1");
 		checkTestFacts(rs,print);
 	}
 	public void deleteAllFacts() throws SQLException {	
 		Statement sqlStatement = dcDerby.getSynchronousConnections(0).createStatement();
-		sqlStatement.executeUpdate("delete from R1");
+		sqlStatement.executeUpdate("delete from  "+dcDerby.getDatabaseParameters().getDatabaseName()+".R1");
 		sqlStatement = dcMySql.getSynchronousConnections(0).createStatement();
-		sqlStatement.executeUpdate("delete from R1");
+		sqlStatement.executeUpdate("delete from "+dcMySql.getDatabaseParameters().getDatabaseName()+".R1");
 		sqlStatement = dcPostgresSql.getSynchronousConnections(0).createStatement();
-		sqlStatement.executeUpdate("delete from R1");
+		sqlStatement.executeUpdate("delete from  "+dcPostgresSql.getDatabaseParameters().getDatabaseName()+".R1");
 	}
 	
 	@Test 
@@ -136,9 +136,9 @@ public class SQLStatementBuilderTest {
 		}
 		
 		Statement sqlStatement = dc.getSynchronousConnections(0).createStatement();
-		ResultSet rs = sqlStatement.executeQuery("select * from R1");
-		if (print) System.out.println("querying SELECT * FROM R1");
-		Assert.assertEquals(6*repeat, checkTestFacts(rs,print));
+		ResultSet rs = sqlStatement.executeQuery("select * from "+dc.getDatabaseParameters().getDatabaseName()+".R1");
+		if (print) System.out.println("querying SELECT * FROM  "+dc.getDatabaseParameters().getDatabaseName()+".R1");
+  		Assert.assertEquals(6*repeat, checkTestFacts(rs,print));
 	}
 	
 	@Test 
