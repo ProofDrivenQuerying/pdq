@@ -575,9 +575,15 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 				constantsToAtoms, this.getDatabaseConnection());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.reasoning.chase.state.ChaseInstance#getMatches(uk.ac.ox.cs.pdq.fol.ConjunctiveQuery, uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance.LimitTofacts)
+	/**
+	 *
+	 * (Conjunctive query match definition) If Q′ is a conjunctive query and v is a chase configuration
+	 * having elements for each free variable of Q′, then a homomorphism of Q′ into v
+	 * mapping each free variable into the corresponding element is called a match for Q′ in v.
+	 * @param query
+	 * 		An input query
+	 * @return
+	 * 		the list of matches of the input query to the facts of this state.
 	 */
 	public List<Match> getMatches(ConjunctiveQuery query, LimitToThisOrAllInstances l) {
 		Queue<Triple<Formula, String, LinkedHashMap<String, Variable>>> queries = new ConcurrentLinkedQueue<>();
@@ -590,7 +596,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 	}
 	
 	/**
-	 * Same as above but it does not replaces the free variables to be able to unit test it.
+	 * Same as above but it does not replaces the free variables. This function is only used for unit testing.
 	 */
 	public List<Match> getMatchesNoSubstitution(ConjunctiveQuery query, LimitToThisOrAllInstances l) {
 		Queue<Triple<Formula, String, LinkedHashMap<String, Variable>>> queries = new ConcurrentLinkedQueue<>();
