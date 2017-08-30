@@ -1,5 +1,6 @@
 package uk.ac.ox.cs.pdq.test.planner.accessibleschema;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
@@ -17,13 +18,14 @@ import uk.ac.ox.cs.pdq.fol.Predicate;
 import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
+import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.util.Utility;
 
 /**
  * 
  * @author Efthymia Tsamoura
- *
+ * @author Gabor
  */
 
 public class TestAccessibleSchema {
@@ -37,6 +39,7 @@ public class TestAccessibleSchema {
 	protected Attribute b = Attribute.create(String.class, "b");
 	protected Attribute c = Attribute.create(String.class, "c");
 	protected Attribute d = Attribute.create(String.class, "d");
+	protected Attribute InstanceID = Attribute.create(String.class, "InstanceID");
     
 	protected Relation R;
 	protected Relation S;
@@ -48,9 +51,9 @@ public class TestAccessibleSchema {
 	@Before public void setup() {
 		Utility.assertsEnabled();
         MockitoAnnotations.initMocks(this);                
-        this.R = Relation.create("R", new Attribute[]{a,b,c}, new AccessMethod[]{this.method0, this.method2});
-        this.S = Relation.create("S", new Attribute[]{b,c}, new AccessMethod[]{this.method0, this.method1, this.method2});
-        this.T = Relation.create("T", new Attribute[]{b,c,d}, new AccessMethod[]{this.method0, this.method1, this.method2});
+        this.R = Relation.create("R", new Attribute[]{a,b,c,InstanceID}, new AccessMethod[]{this.method0, this.method2});
+        this.S = Relation.create("S", new Attribute[]{b,c,InstanceID}, new AccessMethod[]{this.method0, this.method1, this.method2});
+        this.T = Relation.create("T", new Attribute[]{b,c,d,InstanceID}, new AccessMethod[]{this.method0, this.method1, this.method2});
 	}
 	
 	@Test public void test1() {
@@ -70,7 +73,47 @@ public class TestAccessibleSchema {
 		Schema schema = new Schema(new Relation[]{this.R,this.S, this.T}, new Dependency[]{tgd,egd});
 		
 		AccessibleSchema accessibleSchema = new AccessibleSchema(schema);
-		//TODO add assertions 
+		Assert.assertNotNull(accessibleSchema);
+		
+		// constants
+		Assert.assertEquals(2,accessibleSchema.getConstants().size());
+		Assert.assertEquals(TypedConstant.create("constant1"),accessibleSchema.getConstant("constant1"));
+		Assert.assertEquals(TypedConstant.create("constant2"),accessibleSchema.getConstant("constant2"));
+		
+		// accessibility axioms
+		Assert.assertNotNull(accessibleSchema.getAccessibilityAxioms());
+		Assert.assertEquals(8,accessibleSchema.getAccessibilityAxioms().length);
+		int abc=0;
+		int bc=0;
+		int bcd=0;
+		for (AccessibilityAxiom axiom:accessibleSchema.getAccessibilityAxioms()) {
+			if (axiom.getBoundVariables().length==2) {
+				Assert.assertEquals(axiom.getBoundVariables()[0], Variable.create("b"));
+				Assert.assertEquals(axiom.getBoundVariables()[1], Variable.create("c"));
+				bc++;
+			} else
+			if (axiom.getBoundVariables().length==3 && axiom.getBoundVariables()[0].equals(Variable.create("a"))) {
+				Assert.assertEquals(axiom.getBoundVariables()[0], Variable.create("a"));
+				Assert.assertEquals(axiom.getBoundVariables()[1], Variable.create("b"));
+				Assert.assertEquals(axiom.getBoundVariables()[2], Variable.create("c"));
+				abc++;
+			} else
+			if (axiom.getBoundVariables().length==3 && axiom.getBoundVariables()[0].equals(Variable.create("b"))) {
+				Assert.assertEquals(axiom.getBoundVariables()[0], Variable.create("b"));
+				Assert.assertEquals(axiom.getBoundVariables()[1], Variable.create("c"));
+				Assert.assertEquals(axiom.getBoundVariables()[2], Variable.create("d"));
+				bcd++;
+			} else {
+				Assert.fail();
+			}
+		}
+		Assert.assertEquals(2, abc);
+		Assert.assertEquals(3, bc);
+		Assert.assertEquals(3, bcd);
+		
+		
+		Assert.assertNotNull(accessibleSchema.getRelations());
+		Assert.assertEquals(6, accessibleSchema.getRelations().length);
 	}
 	
 }
