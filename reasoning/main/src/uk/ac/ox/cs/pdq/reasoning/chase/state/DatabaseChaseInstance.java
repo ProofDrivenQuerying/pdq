@@ -690,11 +690,12 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 			factproperties = new WhereCondition();
 			
 		if(isEGD) {
-			WhereCondition uniqueEqualities = this.databaseConnection.getSQLStatementBuilder().createEGDActivenessFilter((EGD)dep,extendedBodyAtoms);
-			if (!uniqueEqualities.isEmpty()) where.addCondition(uniqueEqualities);
-			
-			WhereCondition egdProperties = uk.ac.ox.cs.pdq.reasoning.chase.Utility.translateEGDHomomorphicProperties(extendedBodyAtoms, this.databaseConnection.getRelationNamesToDatabaseTables(),this.databaseConnection.getSQLStatementBuilder());
-			if (egdProperties!=null) where.addCondition(egdProperties);
+			WhereCondition activenessFilter = this.databaseConnection.getSQLStatementBuilder().createEGDActivenessFilter((EGD)dep,extendedBodyAtoms);
+			if (!activenessFilter.isEmpty()) where.addCondition(activenessFilter);
+			if (((EGD)dep).isFromFunctionalDependency()) {
+				WhereCondition egdProperties = uk.ac.ox.cs.pdq.reasoning.chase.Utility.createConditionForEGDsCreatedFromFunctionalDependencies(extendedBodyAtoms, this.databaseConnection.getRelationNamesToDatabaseTables(),this.databaseConnection.getSQLStatementBuilder());
+				if (egdProperties!=null) where.addCondition(egdProperties);
+			}
 		}
 		where.addCondition(equalities);
 		where.addCondition(constantEqualities);

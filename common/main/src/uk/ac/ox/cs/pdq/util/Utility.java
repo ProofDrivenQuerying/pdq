@@ -270,7 +270,7 @@ public class Utility {
 			equalities[index++] = Atom.create(equality, pair.getKey(), pair.getValue());
 		Atom body[] = new Atom[]{Atom.create(Predicate.create(predicate.getName(), leftTerms.length), leftTerms), 
 						Atom.create(Predicate.create(predicate.getName(), copiedTerms.length), copiedTerms)};
-		return EGD.create(body, equalities);
+		return EGD.create(body, equalities,true);
 	}
 
 	/**

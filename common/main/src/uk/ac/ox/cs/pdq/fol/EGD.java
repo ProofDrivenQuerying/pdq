@@ -7,16 +7,27 @@ import org.junit.Assert;
 /**
  *
  * @author Efthymia Tsamoura
+ * @author Gabor
  */
 public class EGD extends Dependency {
 	private static final long serialVersionUID = 7220579236533295677L;
 	/**  The dependency's universally quantified variables. */
 	protected Variable[] universal;
 	
-	protected EGD(Atom[] body, Atom[] head) {
+	/**
+	 * Flag to indicate if this EGD was created from a functional dependency.
+	 */
+	private boolean isFromFunctionalDependency;
+	
+	protected EGD(Atom[] body, Atom[] head, boolean isFromFunctionalDependency) {
 		super(body, head);
+		this.isFromFunctionalDependency = isFromFunctionalDependency;
 		Assert.assertTrue(isConjunctionOfNonEqualities(body));
 		Assert.assertTrue(!isConjunctionOfNonEqualities(head));
+		if (isFromFunctionalDependency) {
+			Assert.assertEquals(2,body.length);
+			Assert.assertEquals(body[0].getPredicate(),body[1].getPredicate());
+		}
 	}
 
 	private static boolean isConjunctionOfNonEqualities(Atom[] atoms) {
@@ -53,6 +64,13 @@ public class EGD extends Dependency {
 	}
 	
     public static EGD create(Atom[] head, Atom[] body) {
-        return Cache.egd.retrieve(new EGD(head, body));
+        return Cache.egd.retrieve(new EGD(head, body,false));
     }
+    public static EGD create(Atom[] head, Atom[] body, boolean isFromFunctionalDependency) {
+        return Cache.egd.retrieve(new EGD(head, body,isFromFunctionalDependency));
+    }
+
+	public boolean isFromFunctionalDependency() {
+		return isFromFunctionalDependency;
+	}
 }

@@ -141,7 +141,7 @@ public class Utility {
 	 * @param relationNamesToDatabaseTables 
 	 * @return 		predicates that correspond to fact constraints
 	 */
-	public static WhereCondition translateEGDHomomorphicProperties(Atom[] conjuncts, Map<String, Relation> relationNamesToDatabaseTables, SQLStatementBuilder builder) {
+	public static WhereCondition createConditionForEGDsCreatedFromFunctionalDependencies(Atom[] conjuncts, Map<String, Relation> relationNamesToDatabaseTables, SQLStatementBuilder builder) {
 		String lalias = builder.aliases.get(conjuncts[0]);
 		String ralias = builder.aliases.get(conjuncts[1]);
 		lalias = lalias==null ? conjuncts[0].getPredicate().getName():lalias;
@@ -149,9 +149,6 @@ public class Utility {
 		StringBuilder eq = new StringBuilder();
 		String leftAttributeName = relationNamesToDatabaseTables.get(conjuncts[0].getPredicate().getName()).getAttribute(conjuncts[0].getPredicate().getArity()-1).getName();
 		String rightAttributeName = relationNamesToDatabaseTables.get(conjuncts[1].getPredicate().getName()).getAttribute(conjuncts[1].getPredicate().getArity()-1).getName();
-		if (!conjuncts[0].getPredicate().getName().equals(conjuncts[1].getPredicate().getName())) {
-			return null;
-		}
 		eq.append(lalias).append(".").
 		append(leftAttributeName).append(">");
 		eq.append(ralias).append(".").
