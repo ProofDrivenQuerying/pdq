@@ -66,7 +66,7 @@ public class IOManager {
 			throw new FileNotFoundException(query.getAbsolutePath());
 		JAXBContext jaxbContext = JAXBContext.newInstance(AdaptedQuery.class);
 		Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-		AdaptedSchema s = new AdaptedSchema(); // create an empty schema as current for query reading.
+		new AdaptedSchema(); // create an empty schema as current for query reading.
 		AdaptedQuery customer = (AdaptedQuery) jaxbUnmarshaller.unmarshal(query);
 		return customer.toQuery();
 	}
