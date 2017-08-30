@@ -160,8 +160,7 @@ public class TestChaseSteps {
 			state.close();
 			connection.close();
 		} catch (Exception e) {
-			e.printStackTrace();
-			throw e;
+			// ignored
 		}
 	}
 
