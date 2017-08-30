@@ -1,9 +1,8 @@
 package uk.ac.ox.cs.pdq.runtime.exec.iterator;
 
-import org.junit.Assert;
-
 import com.google.common.eventbus.EventBus;
 
+import jersey.repackaged.com.google.common.base.Preconditions;
 import uk.ac.ox.cs.pdq.datasources.ResetableIterator;
 import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
 import uk.ac.ox.cs.pdq.db.Attribute;
@@ -40,8 +39,8 @@ public abstract class TupleIterator  implements AutoCloseable, ResetableIterator
 	 * @param outputColumns List<Typed>
 	 */
 	public TupleIterator(Attribute[] inputAttributes, Attribute[] outputAttributes) {
-		Assert.assertNotNull(inputAttributes != null);
-		Assert.assertNotNull(outputAttributes != null);
+		Preconditions.checkNotNull(inputAttributes);
+		Preconditions.checkNotNull(outputAttributes);
 		this.inputAttributes = inputAttributes;
 		this.outputAttributes = outputAttributes;
 	}
@@ -120,7 +119,9 @@ public abstract class TupleIterator  implements AutoCloseable, ResetableIterator
 	 */
 	@Override
 	public void close() {
-		Assert.assertTrue(this.open != null && this.open);
+		// Assert.assertTrue(this.open != null && this.open);
+		Preconditions.checkNotNull(this.open);
+		Preconditions.checkState(this.open);
 		this.open = false;
 	}
 	
