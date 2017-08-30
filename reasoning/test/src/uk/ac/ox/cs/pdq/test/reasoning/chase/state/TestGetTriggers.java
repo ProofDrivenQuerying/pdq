@@ -83,7 +83,7 @@ public class TestGetTriggers {
 		this.tgd = TGD.create(new Atom[] { R1 }, new Atom[] { R2 });
 		this.tgd2 = TGD.create(new Atom[] { R1 }, new Atom[] { R3 });
 		this.egd = EGD.create(new Atom[] { R2, R2p },
-				new Atom[] { Atom.create(Predicate.create(QNames.EQUALITY.toString(), 2, true), Variable.create("z"), Variable.create("w")) });
+				new Atom[] { Atom.create(Predicate.create(QNames.EQUALITY.toString(), 2, true), Variable.create("z"), Variable.create("w")) },true);
 
 		this.schema = new Schema(new Relation[] { this.rel1, this.rel2, this.rel3 }, new Dependency[] { this.tgd, this.tgd2, this.egd });
 		this.chaseState[DERBY] = new DatabaseChaseInstance(new ArrayList<Atom>(), new DatabaseConnection(new DatabaseParameters(), this.schema, PARALLEL_THREADS));
