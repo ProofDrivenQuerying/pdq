@@ -112,6 +112,7 @@ public class AdaptedSchema {
 	}
 
 	public Relation getRelation(String name2) {
+		if (relations==null) return null;
 		for (Relation r: relations) if (r.getName().equals(name2)) return r;
 		return null;
 	}

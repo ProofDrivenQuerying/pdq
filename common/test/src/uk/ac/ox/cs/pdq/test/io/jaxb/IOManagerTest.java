@@ -30,8 +30,10 @@ public class IOManagerTest {
 
 	@Test
 	public void testReadingQuery() {
-		try {
-			ConjunctiveQuery q = IOManager.importQuery(new File("test\\src\\uk\\ac\\ox\\cs\\pdq\\test\\io\\jaxb\\query.xml"));
+		try {													 
+			ConjunctiveQuery q = null;
+			for (int i=1; i<30; i++)
+				q = IOManager.importQuery(new File("test\\src\\uk\\ac\\ox\\cs\\pdq\\test\\io\\jaxb\\query.xml"));
 			Assert.assertNotNull(q);
 			Assert.assertNotNull(q.getAtoms());
 			Assert.assertTrue(q.getAtoms().length > 0);
@@ -40,8 +42,8 @@ public class IOManagerTest {
 			Assert.assertNotNull(q.getFreeVariables());
 			Assert.assertTrue(q.getFreeVariables().length > 0);
 		} catch (Exception e) {
-			Assert.fail(e.getMessage());
 			e.printStackTrace();
+			Assert.fail(e.getMessage());
 		}
 	}
 
@@ -57,8 +59,8 @@ public class IOManagerTest {
 			Assert.assertEquals(ref.length(), out.length());
 			out.delete();
 		} catch (Exception e) {
-			Assert.fail(e.getMessage());
 			e.printStackTrace();
+			Assert.fail(e.getMessage());
 		}
 	}
 
@@ -74,8 +76,8 @@ public class IOManagerTest {
 			Assert.assertNotNull(s.getDependencies());
 			Assert.assertTrue(s.getDependencies().length > 0);
 		} catch (Exception e) {
-			Assert.fail(e.getMessage());
 			e.printStackTrace();
+			Assert.fail(e.getMessage());
 		}
 	}
 
@@ -120,8 +122,8 @@ public class IOManagerTest {
 			Assert.assertEquals(in.length(), out.length());
 			out.delete();
 		} catch (Exception e) {
-			Assert.fail(e.getMessage());
 			e.printStackTrace();
+			Assert.fail(e.getMessage());
 		}
 	}
 
