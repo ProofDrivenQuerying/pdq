@@ -35,10 +35,13 @@ public class TestLeftDeepPlanGenerator {
 	protected Attribute b = Attribute.create(String.class, "b");
 	protected Attribute c = Attribute.create(String.class, "c");
 	protected Attribute d = Attribute.create(String.class, "d");
+	protected Attribute InstanceID = Attribute.create(String.class, "InstanceID");
+	protected Attribute i = Attribute.create(String.class, "i");
     
 	protected Relation R;
 	protected Relation S;
 	protected Relation T;
+	protected Relation access;
     
 	/**
 	 * Setup.
@@ -46,9 +49,10 @@ public class TestLeftDeepPlanGenerator {
 	@Before public void setup() {
 		Utility.assertsEnabled();
         MockitoAnnotations.initMocks(this);                
-        this.R = Relation.create("R", new Attribute[]{a,b,c}, new AccessMethod[]{this.method0, this.method2});
-        this.S = Relation.create("S", new Attribute[]{b,c}, new AccessMethod[]{this.method0, this.method1, this.method2});
-        this.T = Relation.create("T", new Attribute[]{b,c,d}, new AccessMethod[]{this.method0, this.method1, this.method2});
+        this.R = Relation.create("R", new Attribute[]{a,b,c,InstanceID}, new AccessMethod[]{this.method0, this.method2});
+        this.S = Relation.create("S", new Attribute[]{b,c,InstanceID}, new AccessMethod[]{this.method0, this.method1, this.method2});
+        this.T = Relation.create("T", new Attribute[]{b,c,d,InstanceID}, new AccessMethod[]{this.method0, this.method1, this.method2});
+        this.access = Relation.create("Accessible", new Attribute[]{i,InstanceID});
 	}
 	
 	@Test public void test1() {
@@ -61,7 +65,7 @@ public class TestLeftDeepPlanGenerator {
 		RelationalTerm plan1 = LeftDeepPlanGenerator.createLeftDeepPlan(this.R, this.method0, exposedFacts1, null);
 		
 		Set<Atom> exposedFacts2 = new LinkedHashSet<>();
-		exposedFacts1.add(fact2);
+		exposedFacts2.add(fact2);
 		RelationalTerm plan2 = LeftDeepPlanGenerator.createLeftDeepPlan(this.S, this.method1, exposedFacts2, plan1);
 		
 		//TODO add assertions 
@@ -78,11 +82,11 @@ public class TestLeftDeepPlanGenerator {
 		RelationalTerm plan1 = LeftDeepPlanGenerator.createLeftDeepPlan(this.R, this.method0, exposedFacts1, null);
 		
 		Set<Atom> exposedFacts2 = new LinkedHashSet<>();
-		exposedFacts1.add(fact2);
+		exposedFacts2.add(fact2);
 		RelationalTerm plan2 = LeftDeepPlanGenerator.createLeftDeepPlan(this.S, this.method1, exposedFacts2, plan1);
 		
 		Set<Atom> exposedFacts3 = new LinkedHashSet<>();
-		exposedFacts1.add(fact3);
+		exposedFacts3.add(fact3);
 		RelationalTerm plan3 = LeftDeepPlanGenerator.createLeftDeepPlan(this.T, this.method2, exposedFacts3, plan2);
 		
 		//TODO add assertions 
@@ -98,7 +102,7 @@ public class TestLeftDeepPlanGenerator {
 		RelationalTerm plan1 = LeftDeepPlanGenerator.createLeftDeepPlan(this.R, this.method0, exposedFacts1, null);
 		
 		Set<Atom> exposedFacts2 = new LinkedHashSet<>();
-		exposedFacts1.add(fact2);
+		exposedFacts2.add(fact2);
 		RelationalTerm plan2 = LeftDeepPlanGenerator.createLeftDeepPlan(this.S, this.method0, exposedFacts2, plan1);
 		
 		//TODO add assertions
@@ -115,11 +119,11 @@ public class TestLeftDeepPlanGenerator {
 		RelationalTerm plan1 = LeftDeepPlanGenerator.createLeftDeepPlan(this.R, this.method0, exposedFacts1, null);
 		
 		Set<Atom> exposedFacts2 = new LinkedHashSet<>();
-		exposedFacts1.add(fact2);
+		exposedFacts2.add(fact2);
 		RelationalTerm plan2 = LeftDeepPlanGenerator.createLeftDeepPlan(this.S, this.method0, exposedFacts2, plan1);
 		
 		Set<Atom> exposedFacts3 = new LinkedHashSet<>();
-		exposedFacts1.add(fact3);
+		exposedFacts3.add(fact3);
 		RelationalTerm plan3 = LeftDeepPlanGenerator.createLeftDeepPlan(this.T, this.method0, exposedFacts3, plan2);
 		
 		//TODO add assertions
@@ -135,7 +139,7 @@ public class TestLeftDeepPlanGenerator {
 		RelationalTerm plan1 = LeftDeepPlanGenerator.createLeftDeepPlan(this.R, this.method0, exposedFacts1, null);
 		
 		Set<Atom> exposedFacts2 = new LinkedHashSet<>();
-		exposedFacts1.add(fact2);
+		exposedFacts2.add(fact2);
 		RelationalTerm plan2 = LeftDeepPlanGenerator.createLeftDeepPlan(this.S, this.method1, exposedFacts2, plan1);
 		
 		//TODO add assertions 
@@ -151,7 +155,7 @@ public class TestLeftDeepPlanGenerator {
 		RelationalTerm plan1 = LeftDeepPlanGenerator.createLeftDeepPlan(this.R, this.method0, exposedFacts1, null);
 		
 		Set<Atom> exposedFacts2 = new LinkedHashSet<>();
-		exposedFacts1.add(fact2);
+		exposedFacts2.add(fact2);
 		RelationalTerm plan2 = LeftDeepPlanGenerator.createLeftDeepPlan(this.S, this.method1, exposedFacts2, plan1);
 		
 		//TODO add assertions 
@@ -167,7 +171,7 @@ public class TestLeftDeepPlanGenerator {
 		RelationalTerm plan1 = LeftDeepPlanGenerator.createLeftDeepPlan(this.R, this.method0, exposedFacts1, null);
 		
 		Set<Atom> exposedFacts2 = new LinkedHashSet<>();
-		exposedFacts1.add(fact2);
+		exposedFacts2.add(fact2);
 		RelationalTerm plan2 = LeftDeepPlanGenerator.createLeftDeepPlan(this.S, this.method1, exposedFacts2, plan1);
 		
 		//TODO add assertions 
@@ -183,7 +187,7 @@ public class TestLeftDeepPlanGenerator {
 		RelationalTerm plan1 = LeftDeepPlanGenerator.createLeftDeepPlan(this.R, this.method0, exposedFacts1, null);
 		
 		Set<Atom> exposedFacts2 = new LinkedHashSet<>();
-		exposedFacts1.add(fact2);
+		exposedFacts2.add(fact2);
 		RelationalTerm plan2 = LeftDeepPlanGenerator.createLeftDeepPlan(this.S, this.method2, exposedFacts2, plan1);
 		
 		//TODO add assertions 
