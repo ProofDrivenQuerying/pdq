@@ -41,7 +41,7 @@ public class FactDominationFilterTest {
 			new Attribute[]{Attribute.create(String.class, "a1"), Attribute.create(String.class, "a2"), Attribute.create(String.class, "a3")});
 
 	/** The p1. */
-	protected Atom p1 = Atom.create(Relation.create(AccessibleSchema.inferredAccessiblePrefix + r1.getName(), r1.getAttributes(), new AccessMethod[]{AccessMethod.create(new Integer[]{})}, r1.isEquality()),
+	protected Atom p1 = Atom.create(Relation.create(AccessibleSchema.inferredAccessiblePrefix + r1.getName(), r1.getAttributes(), new AccessMethod[]{}, r1.isEquality()),
 			new Term[]{UntypedConstant.create("c1"), UntypedConstant.create("c2"), UntypedConstant.create("c3")});
 
 	/** The r2. */
@@ -49,7 +49,7 @@ public class FactDominationFilterTest {
 			new Attribute[]{Attribute.create(String.class, "a1"), Attribute.create(String.class, "a2"), Attribute.create(String.class, "a3"), Attribute.create(String.class, "a4")});
 
 	/** The p2. */
-	protected Atom p2 = Atom.create(Relation.create(AccessibleSchema.inferredAccessiblePrefix + r2.getName(), r2.getAttributes(), new AccessMethod[]{AccessMethod.create(new Integer[]{})}, r2.isEquality()),
+	protected Atom p2 = Atom.create(Relation.create(AccessibleSchema.inferredAccessiblePrefix + r2.getName(), r2.getAttributes(), new AccessMethod[]{}, r2.isEquality()),
 			new Term[]{UntypedConstant.create("c1"), UntypedConstant.create("c2"), UntypedConstant.create("c3"), UntypedConstant.create("c4")}
 			);
 
@@ -58,7 +58,7 @@ public class FactDominationFilterTest {
 			new Attribute[]{Attribute.create(String.class, "a1"), Attribute.create(String.class, "a2")});
 
 	/** The p3. */
-	protected Atom p3 = Atom.create(Relation.create(AccessibleSchema.inferredAccessiblePrefix + r3.getName(), r3.getAttributes(), new AccessMethod[]{AccessMethod.create(new Integer[]{})}, r3.isEquality()),
+	protected Atom p3 = Atom.create(Relation.create(AccessibleSchema.inferredAccessiblePrefix + r3.getName(), r3.getAttributes(), new AccessMethod[]{}, r3.isEquality()),
 			new Term[]{UntypedConstant.create("c1"), UntypedConstant.create("c2")}
 			);
 
@@ -67,7 +67,7 @@ public class FactDominationFilterTest {
 			new Attribute[]{Attribute.create(String.class, "a1")});
 
 	/** The p4. */
-	protected Atom p4 = Atom.create(Relation.create(AccessibleSchema.inferredAccessiblePrefix + r4.getName(), r4.getAttributes(), new AccessMethod[]{AccessMethod.create(new Integer[]{})}, r4.isEquality()),
+	protected Atom p4 = Atom.create(Relation.create(AccessibleSchema.inferredAccessiblePrefix + r4.getName(), r4.getAttributes(), new AccessMethod[]{}, r4.isEquality()),
 			new Term[]{UntypedConstant.create("c1")}
 			);
 
@@ -76,7 +76,7 @@ public class FactDominationFilterTest {
 			new Attribute[]{Attribute.create(String.class, "a1"), Attribute.create(String.class, "a3"), Attribute.create(String.class, "a2")});
 
 	/** The p5. */
-	protected Atom p5 = Atom.create(Relation.create(AccessibleSchema.inferredAccessiblePrefix + r5.getName(), r5.getAttributes(), new AccessMethod[]{AccessMethod.create(new Integer[]{})}, r5.isEquality()),
+	protected Atom p5 = Atom.create(Relation.create(AccessibleSchema.inferredAccessiblePrefix + r5.getName(), r5.getAttributes(), new AccessMethod[]{}, r5.isEquality()),
 			new Term[]{UntypedConstant.create("c1"), UntypedConstant.create("c3"), UntypedConstant.create("c2")}
 			);
 
@@ -85,7 +85,7 @@ public class FactDominationFilterTest {
 			new Attribute[]{Attribute.create(String.class, "a1"), Attribute.create(String.class, "a3")});
 
 	/** The p6. */
-	protected Atom p6 = Atom.create(Relation.create(AccessibleSchema.inferredAccessiblePrefix + r6.getName(), r6.getAttributes(), new AccessMethod[]{AccessMethod.create(new Integer[]{})}, r6.isEquality()),
+	protected Atom p6 = Atom.create(Relation.create(AccessibleSchema.inferredAccessiblePrefix + r6.getName(), r6.getAttributes(), new AccessMethod[]{}, r6.isEquality()),
 			new Term[]{UntypedConstant.create("c1"), UntypedConstant.create("c3")}
 			);
 
@@ -94,7 +94,7 @@ public class FactDominationFilterTest {
 			new Attribute[]{Attribute.create(String.class, "a1")});
 
 	/** The p7. */
-	protected Atom p7 = Atom.create(Relation.create(AccessibleSchema.inferredAccessiblePrefix + r7.getName(), r7.getAttributes(), new AccessMethod[]{AccessMethod.create(new Integer[]{})}, r7.isEquality()),
+	protected Atom p7 = Atom.create(Relation.create(AccessibleSchema.inferredAccessiblePrefix + r7.getName(), r7.getAttributes(), new AccessMethod[]{}, r7.isEquality()),
 			new Term[]{UntypedConstant.create("c1")}
 			);
 

@@ -54,7 +54,7 @@ public class AtomTest {
 	 * Test is inferred accessible fact.
 	 */
 	@Test public void testIsInferredAccessibleFact() {
-		Relation r = Relation.create(AccessibleSchema.inferredAccessiblePrefix + "r", new Attribute[]{Attribute.create(String.class, "a1"), Attribute.create(String.class, "a2")}, new AccessMethod[]{AccessMethod.create(new Integer[]{})}, false);
+		Relation r = Relation.create(AccessibleSchema.inferredAccessiblePrefix + "r", new Attribute[]{Attribute.create(String.class, "a1"), Attribute.create(String.class, "a2")}, new AccessMethod[]{}, false);
 		TypedConstant c = TypedConstant.create("c");
 		UntypedConstant s = UntypedConstant.create("s");
 		Assert.assertTrue("PredicateFormula must be of type InferredAccessible",

@@ -145,7 +145,7 @@ public class AccessibleSchema extends Schema {
 			Predicate predicate = null;
 			if(((Atom)f).getPredicate() instanceof Relation) {
 				Relation relation = (Relation) ((Atom)f).getPredicate();
-				predicate = Relation.create(AccessibleSchema.inferredAccessiblePrefix + relation.getName(), relation.getAttributes(), new AccessMethod[]{AccessMethod.create(new Integer[]{})}, relation.isEquality());
+				predicate = Relation.create(AccessibleSchema.inferredAccessiblePrefix + relation.getName(), relation.getAttributes(), new AccessMethod[]{}, relation.isEquality());
 			}
 			else 
 				predicate = Predicate.create(inferredAccessiblePrefix + ((Atom)f).getPredicate().getName(), ((Atom)f).getPredicate().getArity());
@@ -158,7 +158,7 @@ public class AccessibleSchema extends Schema {
 		Collection<Relation> output  = new LinkedHashSet<>();
 		output.addAll(Arrays.asList(relations));
 		for(Relation relation:relations) 
-			output.add(Relation.create(AccessibleSchema.inferredAccessiblePrefix + relation.getName(), relation.getAttributes(), new AccessMethod[]{AccessMethod.create(new Integer[]{})}, relation.isEquality()));
+			output.add(Relation.create(AccessibleSchema.inferredAccessiblePrefix + relation.getName(), relation.getAttributes(), new AccessMethod[]{}, relation.isEquality()));
 		return output.toArray(new Relation[output.size()]);
 	}
 
