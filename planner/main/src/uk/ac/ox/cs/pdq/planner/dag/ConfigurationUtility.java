@@ -373,7 +373,7 @@ public class ConfigurationUtility {
 
 			for(ApplyRule applyRule:set) {
 				Relation baseRelation = applyRule.getRelation();
-				Relation infAccRelation = Relation.create(AccessibleSchema.inferredAccessiblePrefix + baseRelation.getName(), baseRelation.getAttributes(), new AccessMethod[]{AccessMethod.create(new Integer[]{})}, baseRelation.isEquality());
+				Relation infAccRelation = Relation.create(AccessibleSchema.inferredAccessiblePrefix + baseRelation.getName(), baseRelation.getAttributes(), new AccessMethod[]{}, baseRelation.isEquality());
 				Collection<Atom> facts = applyRule.getFacts();
 				if(observed.containsAll(applyRule.getInput())) {
 					/*

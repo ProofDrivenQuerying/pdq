@@ -148,7 +148,7 @@ public class Candidate implements Cloneable{
 	public Atom getInferredAccessibleFact() {
 		Atom accessed = (Atom) Utility.applySubstitution(this.rule.getGuard(),this.match.getMapping());
 		Relation relation = this.rule.getBaseRelation();
-		return Atom.create(Relation.create(AccessibleSchema.inferredAccessiblePrefix + relation.getName(), relation.getAttributes(), new AccessMethod[]{AccessMethod.create(new Integer[]{})}, relation.isEquality()), accessed.getTerms());
+		return Atom.create(Relation.create(AccessibleSchema.inferredAccessiblePrefix + relation.getName(), relation.getAttributes(), new AccessMethod[]{}, relation.isEquality()), accessed.getTerms());
 	}
 
 	/**

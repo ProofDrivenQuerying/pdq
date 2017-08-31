@@ -58,7 +58,7 @@ public class TestAccessibleChaseInstance {
 	public void setup() throws SQLException {
 		Utility.assertsEnabled();
 		this.R = Relation.create("R", new Attribute[]{a,b,c}, new AccessMethod[]{this.method0, this.method2});
-		this.InferredAccessibleR = Relation.create(AccessibleSchema.inferredAccessiblePrefix + "R", new Attribute[]{a,b,c}, new AccessMethod[]{this.method0, this.method2});
+		this.InferredAccessibleR = Relation.create(AccessibleSchema.inferredAccessiblePrefix + "R", new Attribute[]{a,b,c}, new AccessMethod[]{});
         this.S = Relation.create("S", new Attribute[]{b,c}, new AccessMethod[]{this.method0, this.method1, this.method2});
 		this.connection = new DatabaseConnection(new DatabaseParameters(), this.schema);
 				this.schema = new Schema(new Relation[] { this.R, this.S });
