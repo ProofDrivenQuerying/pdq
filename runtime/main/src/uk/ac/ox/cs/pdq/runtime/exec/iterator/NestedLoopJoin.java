@@ -22,45 +22,24 @@ public class NestedLoopJoin extends Join {
 	 */
 	protected Deque<Tuple> tupleStack = new ArrayDeque<>();
 
-	/** The has next. */
 	protected boolean hasNext = true;
 
-	/**
-	 * Constructor an unbound array of children.
-	 *
-	 * @param left TupleIterator
-	 * @param right TupleIterator
-	 */
 	public NestedLoopJoin(TupleIterator child1, TupleIterator child2) {
 		super(child1, child2);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.Join#open()
-	 */
 	@Override
 	public void open() {
 		super.open();
 		this.hasNext = true;
 	}
 
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.NaryIterator#reset()
-	 */
 	@Override
 	public void reset() {
 		super.reset();
 		this.hasNext = true;
 	}
 	
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.Join#hasNext()
-	 */
 	public boolean hasNext() {
 		return hasNext && super.hasNext() && this.nextTuple != null;
 	}

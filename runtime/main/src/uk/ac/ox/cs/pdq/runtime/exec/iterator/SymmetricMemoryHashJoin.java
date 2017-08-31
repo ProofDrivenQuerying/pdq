@@ -44,32 +44,20 @@ public class SymmetricMemoryHashJoin extends Join {
 	protected Tuple partialTuple = null;
 
 	/** The join keys for the left child. */
-	protected Integer[] leftKeys;
+	protected Integer[] joinKeysForLeftChild;
 
 	/** The join keys for the right child. */
-	protected Integer[] rightKeys;
+	protected Integer[] joinKeysForRightChild;
 
 	/**  Index of the last child. */
 	protected int lastChild = 1;
 
-	/** The side. */
 	protected boolean side = true;
 	
-	/**
-	 * Constructor an unbound array of children.
-	 *
-	 * @param left TupleIterator
-	 * @param right TupleIterator
-	 */
 	public SymmetricMemoryHashJoin(TupleIterator child1, TupleIterator child2) {
 		super(child1, child2);
 	}
 
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.NaryIterator#reset()
-	 */
 	@Override
 	public void reset() {
 		super.reset();
@@ -77,22 +65,16 @@ public class SymmetricMemoryHashJoin extends Join {
 		this.rightHashTable.clear();
 	}
 
-	
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.Join#nextTuple()
-	 */
 	@Override
 	protected void nextTuple() {
 		while (this.bucketIterator == null || !this.bucketIterator.hasNext()) {
 			TupleIterator child = this.children[0];
-			Integer[] keys = this.leftKeys;
+			Integer[] keys = this.joinKeysForLeftChild;
 			Multimap<JoinKey, Tuple> table = this.leftHashTable;
 			Multimap<JoinKey, Tuple> table2 = this.rightHashTable;
 			if (!this.side) {
 				child = this.children[1];
-				keys  = this.rightKeys;
+				keys  = this.joinKeysForRightChild;
 				table = this.rightHashTable;
 				table2 = this.leftHashTable;
 			}
@@ -165,12 +147,6 @@ public class SymmetricMemoryHashJoin extends Join {
 		return result;
 	}
 	
-	/**
-	 * List attribute equality predicates.
-	 *
-	 * @param predicate the predicate
-	 * @return the iterable
-	 */
 	private Iterable<AttributeEqualityCondition> listAttributeEqualityPredicates(Condition predicate) {
 		Set<AttributeEqualityCondition> result = new LinkedHashSet<>();
 		if (predicate instanceof ConjunctiveCondition) {
@@ -188,11 +164,6 @@ public class SymmetricMemoryHashJoin extends Join {
 		return result;
 	}
 
-	/**
-	 * Make left key.
-	 *
-	 * @return Integer[]
-	 */
 	protected Integer[] makeLeftKey() {
 		List<Integer> result = new ArrayList<>();
 		for (AttributeEqualityCondition p: listAttributeEqualityPredicates(this.joinConditions)) {
@@ -201,12 +172,6 @@ public class SymmetricMemoryHashJoin extends Join {
 		return result.toArray(new Integer[result.size()]);
 	}
 
-	/**
-	 * Make right key.
-	 *
-	 * @param offset int
-	 * @return Integer[]
-	 */
 	protected Integer[] makeRightKey(int offset) {
 		List<Integer> result = new ArrayList<>();
 		for (AttributeEqualityCondition p: listAttributeEqualityPredicates(this.joinConditions)) {
@@ -214,8 +179,6 @@ public class SymmetricMemoryHashJoin extends Join {
 		}
 		return result.toArray(new Integer[result.size()]);
 	}
-
-
 
 	/**
 	 * JoinKey is the representation of a key during the execution of a hash
@@ -240,22 +203,11 @@ public class SymmetricMemoryHashJoin extends Join {
 			this.hashCode = Objects.hash(joinValues);
 		}
 
-		/**
-		 * Hash code.
-		 *
-		 * @return int
-		 */
 		@Override
 		public int hashCode() {
 			return this.hashCode;
 		}
 
-		/**
-		 * Equals.
-		 *
-		 * @param o Object
-		 * @return boolean
-		 */
 		@Override
 		public boolean equals(Object o ) {
 			if (this == o) {
@@ -265,11 +217,6 @@ public class SymmetricMemoryHashJoin extends Join {
 					&& ((JoinKey) o).joinValues.equals(this.joinValues);
 		}
 
-		/**
-		 * To string.
-		 *
-		 * @return String
-		 */
 		@Override
 		public String toString() {
 			return this.joinValues.toString();

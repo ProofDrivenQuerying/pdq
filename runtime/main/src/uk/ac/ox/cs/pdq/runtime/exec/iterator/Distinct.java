@@ -21,16 +21,11 @@ public class Distinct extends TupleIterator {
 	protected final TupleIterator child;
 
 	/**  The iteratorCache. */
-	protected Set<Tuple> cache = new LinkedHashSet<>();
+	protected Set<Tuple> cacheOfOutputTuples = new LinkedHashSet<>();
 	
 	/**  The next result to return. */
 	protected Tuple nextResult = null;
 	
-	/**
-	 * Instantiates a new operator.
-	 * 
-	 * @param child TupleIterator
-	 */
 	public Distinct(TupleIterator child) {
 		super(child.getInputAttributes(), child.getOutputAttributes());
 		Assert.assertNotNull(child);
@@ -48,10 +43,6 @@ public class Distinct extends TupleIterator {
 		return this.child;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.UnaryIterator#open()
-	 */
 	@Override
 	public void open() {
 		Assert.assertTrue(this.open == null || this.open);
@@ -60,23 +51,15 @@ public class Distinct extends TupleIterator {
 		this.nextTuple();
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.UnaryIterator#reset()
-	 */
 	@Override
 	public void reset() {
 		Assert.assertTrue(this.open != null && this.open);
 		Assert.assertTrue(!this.interrupted);
 		this.child.reset();
-		this.cache.clear();
+		this.cacheOfOutputTuples.clear();
 		this.nextTuple();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.UnaryIterator#interrupt()
-	 */
 	@Override
 	public void interrupt() {
 		Assert.assertTrue(this.open != null && this.open);
@@ -85,20 +68,12 @@ public class Distinct extends TupleIterator {
 		this.interrupted = true;
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 * @see java.util.Iterator#hasNext()
-	 */
 	@Override
 	public boolean hasNext() {
 		Assert.assertTrue(this.open != null && this.open);
 		return !this.interrupted && this.nextResult != null;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * @see java.util.Iterator#next()
-	 */
 	@Override
 	public Tuple next() {
 		Assert.assertTrue(this.open != null && this.open);
@@ -124,17 +99,12 @@ public class Distinct extends TupleIterator {
 			} else {
 				this.nextResult = null;
 			}
-		} while (this.cache.contains(this.nextResult));
+		} while (this.cacheOfOutputTuples.contains(this.nextResult));
 		if (this.nextResult != null) {
-			this.cache.add(this.nextResult);
+			this.cacheOfOutputTuples.add(this.nextResult);
 		}
 	}
 	
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#receiveTupleFromParentAndPassItToChildren(uk.ac.ox.cs.pdq.util.Tuple)
-	 */
 	@Override
 	public void receiveTupleFromParentAndPassItToChildren(Tuple t) {
 		Assert.assertTrue(this.open != null && this.open);

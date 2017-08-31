@@ -24,28 +24,17 @@ public class Scan extends TupleIterator {
 	protected final RelationAccessWrapper relation;	
 
 	/** The next tuple to return. */
-	protected ResetableIterator<Tuple> tupleIterator = null;
+	protected ResetableIterator<Tuple> outputTuplesIterator = null;
 
 	/**  The next tuple to return. */
 	protected Tuple nextTuple;
 
-	/**
-	 * Instantiates a new join.
-	 * 
-	 * @param relation RelationAccessWrapper
-	 * @param filter additional filtering condition
-	 */
 	public Scan(RelationAccessWrapper relation) {
 		super(new Attribute[0], relation.getAttributes());
 		Assert.assertNotNull(relation);
 		this.relation = relation;
 	}
 
-	/**
-	 * Gets the relation.
-	 *
-	 * @return the relation being scanned
-	 */
 	public RelationAccessWrapper getRelation() {
 		return this.relation;
 	}
@@ -60,11 +49,6 @@ public class Scan extends TupleIterator {
 		return null;
 	}
 
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		StringBuilder result = new StringBuilder();
@@ -73,49 +57,29 @@ public class Scan extends TupleIterator {
 		return result.toString();
 	}
 
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.datasources.ResetableIterator#open()
-	 */
 	@Override
 	public void open() {
 		Assert.assertTrue(this.open == null || this.open);
 		this.open = true;
-		this.tupleIterator = this.relation.iterator();
-		this.tupleIterator.open();
+		this.outputTuplesIterator = this.relation.iterator();
+		this.outputTuplesIterator.open();
 		this.nextTuple();
 	}
 
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#close()
-	 */
 	@Override
 	public void close() {
 		Assert.assertTrue(this.open != null && this.open);
 		super.close();
 	}
 
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.datasources.ResetableIterator#reset()
-	 */
 	@Override
 	public void reset() {
 		Assert.assertTrue(this.open != null && this.open);
 		Assert.assertTrue(!this.interrupted);
-		this.tupleIterator.reset();
+		this.outputTuplesIterator.reset();
 		this.nextTuple();
 	}
 
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#interrupt()
-	 */
 	@Override
 	public void interrupt() {
 		Assert.assertTrue(this.open != null && this.open);
@@ -123,22 +87,12 @@ public class Scan extends TupleIterator {
 		this.interrupted = true;
 	}
 
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see java.util.Iterator#hasNext()
-	 */
 	@Override
 	public boolean hasNext() {
 		Assert.assertTrue(this.open != null && this.open);
 		return !this.interrupted && this.nextTuple != null;
 	}
 
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see java.util.Iterator#next()
-	 */
 	@Override
 	public Tuple next() {
 		Assert.assertTrue(this.open != null && this.open);
@@ -158,18 +112,13 @@ public class Scan extends TupleIterator {
 	 * Moves to the next valid tuple to return.
 	 */
 	private void nextTuple() {
-		while (this.tupleIterator.hasNext()) {
-			this.nextTuple = this.tupleIterator.next();
+		while (this.outputTuplesIterator.hasNext()) {
+			this.nextTuple = this.outputTuplesIterator.next();
 			return;
 		}
 		this.nextTuple = null;
 	}
 	
-	/**
-	 * Bind.
-	 *
-	 * @param t Tuple
-	 */
 	@Override
 	public void receiveTupleFromParentAndPassItToChildren(Tuple t) {
 		Assert.assertTrue(this.open != null && this.open);

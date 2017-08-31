@@ -45,7 +45,7 @@ public class Access extends TupleIterator {
 	protected Map<Tuple, ResetableIterator<Tuple>> outputTuplesCache = null;
 
 	/** Iterator over the output tuples. */
-	protected ResetableIterator<Tuple> iterator = null;
+	protected ResetableIterator<Tuple> outputTuplesIterator = null;
 
 	/**Next tuple to returns. */
 	protected Tuple nextTuple = null;
@@ -84,20 +84,10 @@ public class Access extends TupleIterator {
 		return null;
 	}
 	
-	/**
-	 * Gets the relation.
-	 *
-	 * @return the relation being accessed.
-	 */
 	public RelationAccessWrapper getRelation() {
 		return this.relation;
 	}
 
-	/**
-	 * Gets the access method.
-	 *
-	 * @return the access method in use
-	 */
 	public AccessMethod getAccessMethod() {
 		return this.accessMethod;
 	}
@@ -106,11 +96,6 @@ public class Access extends TupleIterator {
 		return this.inputConstants;
 	}
 
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		StringBuilder result = new StringBuilder();
@@ -120,11 +105,6 @@ public class Access extends TupleIterator {
 		return result.toString();
 	}
 
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.datasources.ResetableIterator#open()
-	 */
 	@Override
 	public void open() {
 		Assert.assertTrue(this.open == null);
@@ -136,11 +116,6 @@ public class Access extends TupleIterator {
 		}
 	}
 	
-	/**
-	 * Close.
-	 *
-	 * @see java.lang.AutoCloseable#close()
-	 */
 	@Override
 	public void close() {
 		super.close();
@@ -152,11 +127,6 @@ public class Access extends TupleIterator {
 		this.outputTuplesCache = null;
 	}
 
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#interrupt()
-	 */
 	@Override
 	public void interrupt() {
 		Assert.assertTrue(this.open != null && this.open);
@@ -164,24 +134,14 @@ public class Access extends TupleIterator {
 		this.interrupted = true;
 	}
 
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.datasources.ResetableIterator#reset()
-	 */
 	@Override
 	public void reset() {
 		Assert.assertTrue(this.open != null && this.open);
 		Assert.assertTrue(!this.interrupted);
-		this.iterator.reset();
+		this.outputTuplesIterator.reset();
 		this.nextTuple();
 	}
 
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see java.util.Iterator#hasNext()
-	 */
 	@Override
 	public boolean hasNext() {
 		Assert.assertTrue(this.open != null && this.open);
@@ -195,11 +155,6 @@ public class Access extends TupleIterator {
 		return this.nextTuple != null;
 	}
 
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see java.util.Iterator#next()
-	 */
 	@Override
 	public Tuple next() {
 		Assert.assertTrue(this.open != null && this.open);
@@ -216,35 +171,27 @@ public class Access extends TupleIterator {
 		return result;
 	}
 
-	/**
-	 * Next tuple.
-	 */
 	public void nextTuple() {
 		this.nextTuple = null;
 		if (this.interrupted) {
 			return;
 		}
-		if (this.iterator == null) {
+		if (this.outputTuplesIterator == null) {
 			// If iterator has not been set at this stage, it implies all 
 			// inputs this access are statically defined.
 			// Assert.assertTrue(this.inputType.size() == 0);
 			Tuple tupleOfInputConstants = this.makeInputTupleByCombiningInputsFromParentsWithInputConstants(Tuple.EmptyTuple);
 			Table inputs = new Table(this.attributesInInputPositions);
 			inputs.appendRow(tupleOfInputConstants);
-			this.iterator = this.relation.iterator(this.attributesInInputPositions, inputs.iterator());
-			this.iterator.open();
-			this.outputTuplesCache.put(tupleOfInputConstants, this.iterator);
+			this.outputTuplesIterator = this.relation.iterator(this.attributesInInputPositions, inputs.iterator());
+			this.outputTuplesIterator.open();
+			this.outputTuplesCache.put(tupleOfInputConstants, this.outputTuplesIterator);
 		}
-		if (this.iterator.hasNext()) {
-			this.nextTuple = this.iterator.next();
+		if (this.outputTuplesIterator.hasNext()) {
+			this.nextTuple = this.outputTuplesIterator.next();
 		}
 	}
 
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#receiveTupleFromParentAndPassItToChildren(uk.ac.ox.cs.pdq.datasources.utility.Tuple)
-	 */
 	@Override
 	public void receiveTupleFromParentAndPassItToChildren(Tuple tuple) {
 		Assert.assertTrue(this.open != null && this.open);
@@ -252,24 +199,21 @@ public class Access extends TupleIterator {
 		Assert.assertTrue(tuple != null);
 		Assert.assertTrue(RuntimeUtilities.typeOfAttributesEqualsTupleType(tuple.getType(), this.inputAttributes));
 		Tuple combinedInputs = this.makeInputTupleByCombiningInputsFromParentsWithInputConstants(tuple);
-		this.iterator = this.outputTuplesCache.get(combinedInputs);
-		if (this.iterator == null) {
+		this.outputTuplesIterator = this.outputTuplesCache.get(combinedInputs);
+		if (this.outputTuplesIterator == null) {
 			Table inputs = new Table(this.attributesInInputPositions);
 			inputs.appendRow(combinedInputs);
-			this.iterator = this.relation.iterator(this.attributesInInputPositions, inputs.iterator());
-			this.iterator.open();
-			this.outputTuplesCache.put(combinedInputs, this.iterator);
+			this.outputTuplesIterator = this.relation.iterator(this.attributesInInputPositions, inputs.iterator());
+			this.outputTuplesIterator.open();
+			this.outputTuplesCache.put(combinedInputs, this.outputTuplesIterator);
 		} else {
-			this.iterator.reset();
+			this.outputTuplesIterator.reset();
 		}
 		this.nextTuple();
 		this.tupleReceivedFromParent = tuple;
 	}
 	
 	/**
-	 * Make input.
-	 *
-	 * @param dynamicInput the dynamic input
 	 * @return an tuple obtained by mixing input from dynamicInput with inputs
 	 * defined statically for this access.
 	 */

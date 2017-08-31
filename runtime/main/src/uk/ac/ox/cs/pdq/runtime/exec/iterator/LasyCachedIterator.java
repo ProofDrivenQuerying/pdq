@@ -19,7 +19,7 @@ import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
 public class LasyCachedIterator extends TupleIterator {
 
 	/** Cached items. */
-	protected final Deque<Tuple> cache = new LinkedList<>();
+	protected final Deque<Tuple> outputTuplesCache = new LinkedList<>();
 
 	/** Inner iterator. */
 	protected final TupleIterator child;
@@ -27,14 +27,8 @@ public class LasyCachedIterator extends TupleIterator {
 	/** True if the iterator has been reset. */
 	protected boolean isReset = false;
 
-	/** Cached items. */
-	protected Iterator<Tuple> iterator;
+	protected Iterator<Tuple> outputTuplesIterator;
 	
-	/**
-	 * Instantiates a new join.
-	 * 
-	 * @param child TupleIterator
-	 */
 	public LasyCachedIterator(TupleIterator child) {
 		super(child.getInputAttributes(), child.getOutputAttributes());
 		this.child = child;
@@ -51,10 +45,6 @@ public class LasyCachedIterator extends TupleIterator {
 		return this.child;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		StringBuilder result = new StringBuilder();
@@ -63,34 +53,20 @@ public class LasyCachedIterator extends TupleIterator {
 		return result.toString();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.datasources.ResetableIterator#open()
-	 */
 	@Override
 	public void open() {
 		Assert.assertTrue(this.open == null);
 		this.isReset = false;
 	}
 
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.datasources.ResetableIterator#reset()
-	 */
 	@Override
 	public void reset() {
 		Assert.assertTrue(this.open != null && this.open);
 		Assert.assertTrue(!this.interrupted);
 		this.isReset = true;
-		this.iterator = this.cache.iterator();
+		this.outputTuplesIterator = this.outputTuplesCache.iterator();
 	}
 	
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#interrupt()
-	 */
 	@Override
 	public void interrupt() {
 		Assert.assertTrue(this.open != null && this.open);
@@ -98,11 +74,6 @@ public class LasyCachedIterator extends TupleIterator {
 		this.interrupted = true;
 	}
 
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see java.util.Iterator#hasNext()
-	 */
 	@Override
 	public boolean hasNext() {
 		Assert.assertTrue(this.open != null && this.open);
@@ -110,45 +81,30 @@ public class LasyCachedIterator extends TupleIterator {
 			return false;
 		}
 		if (this.isReset) {
-			return this.iterator.hasNext();
+			return this.outputTuplesIterator.hasNext();
 		}
 		return this.child.hasNext();
 	}
 
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see java.util.Iterator#next()
-	 */
 	@Override
 	public Tuple next() {
 		Assert.assertTrue(this.open != null && this.open);
 		Assert.assertTrue(!this.interrupted);
 		if (this.isReset) {
-			return this.iterator.next();
+			return this.outputTuplesIterator.next();
 		}
 		Tuple result = this.child.next();
-		this.cache.add(result);
+		this.outputTuplesCache.add(result);
 		return result;
 	}
 
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#remove()
-	 */
 	@Override
 	public void remove() {
 		if (!this.isReset) {
-			this.cache.removeLast();
+			this.outputTuplesCache.removeLast();
 		}
 	}
 
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#receiveTupleFromParentAndPassItToChildren(uk.ac.ox.cs.pdq.datasources.utility.Tuple)
-	 */
 	@Override
 	public void receiveTupleFromParentAndPassItToChildren(Tuple tuple) {
 		Assert.assertTrue(this.open != null && this.open);

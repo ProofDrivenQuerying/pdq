@@ -30,14 +30,6 @@ public abstract class TupleIterator  implements AutoCloseable, ResetableIterator
 	/** The event bus. */
 	protected EventBus eventBus;
 
-	/**
-	 * Instantiates a new operator.
-	 * 
-	 * @param inputType TupleType
-	 * @param inputColumns List<Typed>
-	 * @param outputAttributes TupleType
-	 * @param outputColumns List<Typed>
-	 */
 	public TupleIterator(Attribute[] inputAttributes, Attribute[] outputAttributes) {
 		Preconditions.checkNotNull(inputAttributes);
 		Preconditions.checkNotNull(outputAttributes);
@@ -45,20 +37,10 @@ public abstract class TupleIterator  implements AutoCloseable, ResetableIterator
 		this.outputAttributes = outputAttributes;
 	}
 
-	/**
-	 * Gets the input tuple type.
-	 * 
-	 * @return the input type
-	 */
 	public Attribute[] getInputAttributes() {
 		return this.inputAttributes.clone();
 	}
-	
-	/**
-	 * Gets the input tuple type.
-	 * 
-	 * @return the input type
-	 */
+
 	public Attribute[] getOutputAttributes() {
 		return this.outputAttributes.clone();
 	}
@@ -131,10 +113,5 @@ public abstract class TupleIterator  implements AutoCloseable, ResetableIterator
 	 */
 	public abstract void interrupt();
 	
-	/**
-	 * Bind.
-	 *
-	 * @param tuple Tuple
-	 */
 	public abstract void receiveTupleFromParentAndPassItToChildren(Tuple tuple);
 }

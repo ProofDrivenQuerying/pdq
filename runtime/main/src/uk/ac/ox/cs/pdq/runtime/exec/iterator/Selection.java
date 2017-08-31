@@ -31,11 +31,6 @@ public class Selection extends TupleIterator {
 	/**  The next Tuple to return. */
 	protected Tuple nextTuple = null;
 
-	/**
-	 * Instantiates a new selection.
-	 * @param p Atom
-	 * @param child TupleIterator
-	 */
 	public Selection(Condition selectionCondition, TupleIterator child) {
 		super(child.getInputAttributes(), child.getOutputAttributes());
 		Assert.assertNotNull(selectionCondition);
@@ -46,11 +41,6 @@ public class Selection extends TupleIterator {
 		this.childTupleType = TupleType.DefaultFactory.createFromTyped(this.inputAttributes);
 	}
 
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		StringBuilder result = new StringBuilder();
@@ -75,22 +65,12 @@ public class Selection extends TupleIterator {
 		return this.selectionCondition;
 	}
 	
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#setEventBus(com.google.common.eventbus.EventBus)
-	 */
 	@Override
 	public void setEventBus(EventBus eb) {
 		super.setEventBus(eb);
 		this.child.setEventBus(eb);
 	}
 
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.datasources.ResetableIterator#open()
-	 */
 	@Override
 	public void open() {
 		Assert.assertTrue(this.open == null || this.open);
@@ -98,11 +78,6 @@ public class Selection extends TupleIterator {
 		this.open = true;
 	}
 
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#close()
-	 */
 	@Override
 	public void close() {
 		Assert.assertTrue(this.open != null && this.open);
@@ -110,11 +85,6 @@ public class Selection extends TupleIterator {
 		this.child.close();
 	}
 
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.datasources.ResetableIterator#reset()
-	 */
 	@Override
 	public void reset() {
 		Assert.assertTrue(this.open != null && this.open);
@@ -122,11 +92,6 @@ public class Selection extends TupleIterator {
 		this.child.reset();
 	}
 
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#interrupt()
-	 */
 	@Override
 	public void interrupt() {
 		Assert.assertTrue(this.open != null && this.open);
@@ -134,11 +99,6 @@ public class Selection extends TupleIterator {
 		this.child.interrupt();
 	}
 	
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see java.util.Iterator#hasNext()
-	 */
 	@Override
 	public boolean hasNext() {
 		Assert.assertTrue(this.open != null && this.open);
@@ -152,11 +112,6 @@ public class Selection extends TupleIterator {
 		return this.nextTuple != null;
 	}
 
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see java.util.Iterator#next()
-	 */
 	@Override
 	public Tuple next() {
 		if (this.eventBus != null) {
@@ -186,11 +141,6 @@ public class Selection extends TupleIterator {
 		this.nextTuple = null;
 	}
 	
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#receiveTupleFromParentAndPassItToChildren(uk.ac.ox.cs.pdq.datasources.utility.Tuple)
-	 */
 	@Override
 	public void receiveTupleFromParentAndPassItToChildren(Tuple t) {
 		Assert.assertTrue(this.open != null && this.open);

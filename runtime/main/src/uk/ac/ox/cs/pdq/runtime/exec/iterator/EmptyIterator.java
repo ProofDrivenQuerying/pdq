@@ -17,10 +17,6 @@ import uk.ac.ox.cs.pdq.db.Attribute;
  */
 public class EmptyIterator extends TupleIterator {
 
-	/**
-	 * Instantiates a new memory scan.
-	 * 
-	 */
 	public EmptyIterator() {
 		super(new Attribute[]{}, new Attribute[]{});
 	}
@@ -35,10 +31,6 @@ public class EmptyIterator extends TupleIterator {
 		return null;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		StringBuilder result = new StringBuilder();
@@ -46,40 +38,24 @@ public class EmptyIterator extends TupleIterator {
 		return result.toString();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.datasources.ResetableIterator#open()
-	 */
 	@Override
 	public void open() {
 		Assert.assertTrue(this.open == null);
 		this.open = true;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#close()
-	 */
 	@Override
 	public void close() {
 		Assert.assertTrue(this.open != null && this.open);
 		this.open = false;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.datasources.ResetableIterator#reset()
-	 */
 	@Override
 	public void reset() {
 		Assert.assertTrue(this.open != null && this.open);
 		Assert.assertTrue(!this.interrupted);
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#interrupt()
-	 */
 	@Override
 	public void interrupt() {
 		Assert.assertTrue(this.open != null && this.open);
@@ -87,10 +63,6 @@ public class EmptyIterator extends TupleIterator {
 		this.interrupted = true;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * @see java.util.Iterator#hasNext()
-	 */
 	@Override
 	public boolean hasNext() {
 		Assert.assertTrue(this.open != null && this.open);
@@ -98,10 +70,6 @@ public class EmptyIterator extends TupleIterator {
 		return false;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * @see java.util.Iterator#next()
-	 */
 	@Override
 	public Tuple next() {
 		Assert.assertTrue(this.open != null && this.open);
@@ -109,10 +77,6 @@ public class EmptyIterator extends TupleIterator {
 		throw new NoSuchElementException();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#receiveTupleFromParentAndPassItToChildren(uk.ac.ox.cs.pdq.datasources.utility.Tuple)
-	 */
 	@Override
 	public void receiveTupleFromParentAndPassItToChildren(Tuple tuple) {
 		Assert.assertTrue(this.open != null && this.open);

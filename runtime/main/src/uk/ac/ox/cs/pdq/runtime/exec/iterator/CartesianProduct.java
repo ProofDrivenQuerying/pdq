@@ -40,11 +40,6 @@ public class CartesianProduct extends TupleIterator {
 	/** The next tuple to return. */
 	protected Tuple nextTuple = null;
 
-	/**
-	 * Instantiates a new cross product.
-	 *
-	 * @param children the children
-	 */
 	public CartesianProduct(TupleIterator child1, TupleIterator child2) {
 		super(RuntimeUtilities.computeInputAttributes(child1, child2), RuntimeUtilities.computeOutputAttributes(child1, child2));
 		Assert.assertNotNull(child1);
@@ -80,10 +75,6 @@ public class CartesianProduct extends TupleIterator {
 		return this.children[childIndex];
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.NaryIterator#open()
-	 */
 	@Override
 	public void open() {
 		Assert.assertTrue(this.open == null || this.open);
@@ -96,11 +87,6 @@ public class CartesianProduct extends TupleIterator {
 		}
 	}
 	
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#close()
-	 */
 	@Override
 	public void close() {
 		super.close();
@@ -109,11 +95,6 @@ public class CartesianProduct extends TupleIterator {
 		}
 	}
 
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.util.ResetableIterator#reset()
-	 */
 	@Override
 	public void reset() {
 		Assert.assertTrue(this.open != null && this.open);
@@ -123,11 +104,6 @@ public class CartesianProduct extends TupleIterator {
 		}
 	}
 
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#interrupt()
-	 */
 	@Override
 	public void interrupt() {
 		Assert.assertTrue(this.open != null && this.open);
@@ -138,10 +114,6 @@ public class CartesianProduct extends TupleIterator {
 		}
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 * @see java.util.Iterator#hasNext()
-	 */
 	@Override
 	public boolean hasNext() {
 		Assert.assertTrue(this.open != null && this.open);
@@ -158,10 +130,7 @@ public class CartesianProduct extends TupleIterator {
 		return this.nextTuple != null;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * @see java.util.Iterator#next()
-	 */
+
 	@Override
 	public Tuple next() {
 		Assert.assertTrue(this.open != null && this.open);
@@ -230,11 +199,7 @@ public class CartesianProduct extends TupleIterator {
 		return true;
 	}
 
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#receiveTupleFromParentAndPassItToChildren(uk.ac.ox.cs.pdq.util.Tuple)
-	 */
+
 	@Override
 	public void receiveTupleFromParentAndPassItToChildren(Tuple tuple) {
 		Assert.assertTrue(this.open != null && this.open);

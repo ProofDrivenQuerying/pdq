@@ -18,26 +18,20 @@ import uk.ac.ox.cs.pdq.runtime.util.RuntimeUtilities;
 public class MemoryScan extends TupleIterator {
 
 	/** The next tuple to return. */
-	protected Iterator<Tuple> tupleIterator = null;
+	protected Iterator<Tuple> outputTuplesIterator = null;
 
 	/** The next tuple to return. */
-	protected Iterable<Tuple> data = null;
+	protected Iterable<Tuple> dataStoredInMemory = null;
 
 	/**  The next tuple to return. */
 	protected Tuple nextTuple;
 
-	/**
-	 * Instantiates a new memory scan.
-	 * @param columns List<Typed>
-	 * @param data Iterable<Tuple>
-	 * @param filter additional filtering on the scan 
-	 */
 	public MemoryScan(Attribute[] outputAttributes, Iterable<Tuple> data) {
 		super(new Attribute[0], outputAttributes);
 		Assert.assertTrue(data != null);
 		Iterator<Tuple> testIterator = data.iterator();
 		Assert.assertTrue(!testIterator.hasNext() || RuntimeUtilities.typeOfAttributesEqualsTupleType(testIterator.next().getType(), this.outputAttributes));
-		this.data = data;
+		this.dataStoredInMemory = data;
 	}
 	
 	@Override
@@ -50,11 +44,6 @@ public class MemoryScan extends TupleIterator {
 		return null;
 	}
 
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		StringBuilder result = new StringBuilder();
@@ -62,48 +51,28 @@ public class MemoryScan extends TupleIterator {
 		return result.toString();
 	}
 
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.datasources.ResetableIterator#open()
-	 */
 	@Override
 	public void open() {
 		Assert.assertTrue(this.open == null);
 		this.open = true;
-		this.tupleIterator = this.data.iterator();
+		this.outputTuplesIterator = this.dataStoredInMemory.iterator();
 		this.nextTuple();
 	}
 	
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#close()
-	 */
 	@Override
 	public void close() {
 		Assert.assertTrue(this.open != null && this.open);
 		super.close();
 	}
 
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.datasources.ResetableIterator#reset()
-	 */
 	@Override
 	public void reset() {
 		Assert.assertTrue(this.open != null && this.open);
 		Assert.assertTrue(!this.interrupted);
-		this.tupleIterator = this.data.iterator();
+		this.outputTuplesIterator = this.dataStoredInMemory.iterator();
 		this.nextTuple();
 	}
 	
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#interrupt()
-	 */
 	@Override
 	public void interrupt() {
 		Assert.assertTrue(this.open != null && this.open);
@@ -111,23 +80,12 @@ public class MemoryScan extends TupleIterator {
 		this.interrupted = true;
 	}
 	
-	/**
-	 * Checks for next.
-	 *
-	 * @return boolean
-	 * @see java.util.Iterator#hasNext()
-	 */
 	@Override
 	public boolean hasNext() {
 		Assert.assertTrue(this.open != null && this.open);
 		return !this.interrupted && this.nextTuple != null;
 	}
 
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see java.util.Iterator#next()
-	 */
 	@Override
 	public Tuple next() {
 		Assert.assertTrue(this.open != null && this.open);
@@ -147,18 +105,13 @@ public class MemoryScan extends TupleIterator {
 	 * Moves to the next valid tuple to return.
 	 */
 	private void nextTuple() {
-		while (this.tupleIterator.hasNext()) {
-			this.nextTuple = this.tupleIterator.next();
+		while (this.outputTuplesIterator.hasNext()) {
+			this.nextTuple = this.outputTuplesIterator.next();
 			return;
 		}
 		this.nextTuple = null;
 	}
 	
-	/**
-	 * Bind.
-	 *
-	 * @param t Tuple
-	 */
 	@Override
 	public void receiveTupleFromParentAndPassItToChildren(Tuple t) {
 		Assert.assertTrue(this.open != null && this.open);

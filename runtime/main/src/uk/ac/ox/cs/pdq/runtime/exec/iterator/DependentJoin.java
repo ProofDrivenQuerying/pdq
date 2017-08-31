@@ -53,7 +53,7 @@ public class DependentJoin extends TupleIterator {
 	protected TupleIterator cachedIterator;
 
 	/**  All RHS tuples that have been acquired so far. */
-	private CacheAccess cache = null;
+	private CacheAccess cacheOfTuplesForRightChildBasedOnInputsFromLeftChild = null;
 
 	/**  RHS tuples acquired given the current left tuple. */
 	private Deque<Tuple> cachedTuplesReceivedFromRightChild = null;
@@ -83,13 +83,13 @@ public class DependentJoin extends TupleIterator {
 		super(RuntimeUtilities.computeInputAttributes(child1, child2), RuntimeUtilities.computeOutputAttributes(child1, child2));
 		Assert.assertNotNull(child1);
 		Assert.assertNotNull(child2);
+		this.joinId = DependentJoin.joinIds++;
 		for(int inputAttributeIndex = 0; inputAttributeIndex < child2.getNumberOfInputAttributes(); ++inputAttributeIndex) 
 			Assert.assertTrue(Arrays.asList(child1.getOutputAttributes()).contains(child2.getInputAttributes()[inputAttributeIndex]));
 		this.children[0] = child1;
 		this.children[1] = child2;
 		this.positionsInLeftChildThatAreInputToRightChild = RuntimeUtilities.computePositionsInRightChildThatAreBoundFromLeftChild(child1, child2);
 		this.joinConditions = RuntimeUtilities.computeJoinConditions(this.children);
-		this.joinId = DependentJoin.joinIds++;
 		this.inputPositionsForChild1 = new Integer[child1.getNumberOfInputAttributes()];
 		this.inputPositionsForChild2 = new Integer[child2.getNumberOfInputAttributes()];
 		int index = 0;
@@ -104,7 +104,6 @@ public class DependentJoin extends TupleIterator {
 			Assert.assertTrue(position >= 0);
 			this.inputPositionsForChild2[index++] = position;
 		}
-//		this.cachedChildrenInputTupleType = TupleType.DefaultFactory.createFromTyped(this.inputAttributes);
 		this.child1TupleType = TupleType.DefaultFactory.createFromTyped(this.children[0].getInputAttributes());
 		this.child2TupleType = TupleType.DefaultFactory.createFromTyped(this.children[1].getInputAttributes());
 		
@@ -122,7 +121,7 @@ public class DependentJoin extends TupleIterator {
 			Class.forName(properties.getProperty("jcs.auxiliary.DC.attributes"));
 			// End-of-fix
 			ccm.configure(properties); 
-			this.cache = JCS.getInstance("bindjoin");
+			this.cacheOfTuplesForRightChildBasedOnInputsFromLeftChild = JCS.getInstance("bindjoin");
 		} catch (IOException | CacheException | ClassNotFoundException e) {
 			throw new IllegalStateException("Cache not properly initialized.", e);
 		}
@@ -139,10 +138,6 @@ public class DependentJoin extends TupleIterator {
 		return this.children[childIndex];
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.Join#toString()
-	 */
 	@Override
 	public String toString() {
 		StringBuilder result = new StringBuilder();
@@ -158,11 +153,6 @@ public class DependentJoin extends TupleIterator {
 		return result.toString();
 	}
 	
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.datasources.ResetableIterator#open()
-	 */
 	@Override
 	public void open() {
 		Assert.assertTrue(this.open == null || this.open);
@@ -175,11 +165,6 @@ public class DependentJoin extends TupleIterator {
 		}
 	}
 
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#close()
-	 */
 	@Override
 	public void close() {
 		super.close();
@@ -188,11 +173,6 @@ public class DependentJoin extends TupleIterator {
 		}
 	}
 
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.datasources.ResetableIterator#reset()
-	 */
 	@Override
 	public void reset() {
 		Assert.assertTrue(this.open != null && this.open);
@@ -202,11 +182,6 @@ public class DependentJoin extends TupleIterator {
 		}
 	}
 
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#interrupt()
-	 */
 	@Override
 	public void interrupt() {
 		Assert.assertTrue(this.open != null && this.open);
@@ -217,10 +192,6 @@ public class DependentJoin extends TupleIterator {
 		}
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 * @see java.util.Iterator#hasNext()
-	 */
 	@Override
 	public boolean hasNext() {
 		Assert.assertTrue(this.open != null && this.open);
@@ -237,10 +208,6 @@ public class DependentJoin extends TupleIterator {
 		return this.nextTuple != null;
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 * @see java.util.Iterator#next()
-	 */
 	@Override
 	public Tuple next() {
 		if (this.eventBus != null) {
@@ -258,7 +225,6 @@ public class DependentJoin extends TupleIterator {
 	
 	/**
 	 * Move the iterator forward and prepares the next tuple to be returned.
-	 * 
 	 */
 	@SuppressWarnings("unchecked")
 	protected void nextTuple() {
@@ -285,14 +251,14 @@ public class DependentJoin extends TupleIterator {
 			//store the tuples of the LHS that are retrieved for the current left tuple
 			try {
 				if(this.doCache) {								
-					this.cache.put(Pair.of(this.joinId, this.inputTupleForRightChild), this.cachedTuplesReceivedFromRightChild);	
+					this.cacheOfTuplesForRightChildBasedOnInputsFromLeftChild.put(Pair.of(this.joinId, this.inputTupleForRightChild), this.cachedTuplesReceivedFromRightChild);	
 				}												
 			} catch (CacheException e) {
 				throw new IllegalStateException();
 			}
 			this.tupleReceivedFromLeftChild = this.children[0].next();
 			this.inputTupleForRightChild = this.projectInputValuesForRightChild(this.tupleReceivedFromParent, this.tupleReceivedFromLeftChild);
-			this.cachedTuplesReceivedFromRightChild = (Deque<Tuple>) this.cache.get(Pair.of(this.joinId, this.inputTupleForRightChild));
+			this.cachedTuplesReceivedFromRightChild = (Deque<Tuple>) this.cacheOfTuplesForRightChildBasedOnInputsFromLeftChild.get(Pair.of(this.joinId, this.inputTupleForRightChild));
 			if (this.cachedTuplesReceivedFromRightChild == null) {
 				this.children[1].receiveTupleFromParentAndPassItToChildren(this.inputTupleForRightChild);
 				this.cachedIterator = this.children[1];
@@ -318,11 +284,7 @@ public class DependentJoin extends TupleIterator {
 	}
 	
 	/**
-	 * Project.
-	 *
-	 * @param currentInput the current input
-	 * @param leftInput the left input
-	 * @return an input tuple obtained by mixing inputs coming from the parent
+	 * an input tuple obtained by mixing inputs coming from the parent
 	 * (currentInput) and the LHS (leftInput).
 	 */
 	protected Tuple projectInputValuesForRightChild(Tuple currentInput, Tuple leftInput) {
@@ -337,11 +299,6 @@ public class DependentJoin extends TupleIterator {
 		return this.child2TupleType.createTuple(result);
 	}
 	
-	/**
-	 * Bind.
-	 *
-	 * @param tuple Tuple
-	 */
 	@Override
 	public void receiveTupleFromParentAndPassItToChildren(Tuple tuple) {
 		Assert.assertTrue(this.open != null && this.open);

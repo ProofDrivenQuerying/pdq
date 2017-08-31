@@ -19,14 +19,12 @@ import uk.ac.ox.cs.pdq.runtime.util.RuntimeUtilities;
  */
 public abstract class Join extends TupleIterator {
 
-	/** The children. */
 	protected final TupleIterator[] children = new TupleIterator[2];
 
 	protected final Integer[] inputPositionsForChild1;
 
 	protected final Integer[] inputPositionsForChild2;
 
-	/** The predicate. */
 	protected final Condition joinConditions;
 	
 	protected final TupleType child1TupleType;
@@ -41,13 +39,6 @@ public abstract class Join extends TupleIterator {
 	/** The next tuple to return. */
 	protected Tuple nextTuple = null;
 
-	/**
-	 * Instantiates a new join.
-	 * @param predicate Atom
-	 * @param inputs List<Typed>
-	 * @param children
-	 *            the children
-	 */
 	protected Join(TupleIterator child1, TupleIterator child2) {
 		super(RuntimeUtilities.computeInputAttributes(child1, child2), 
 				RuntimeUtilities.computeOutputAttributes(child1, child2));
@@ -86,19 +77,10 @@ public abstract class Join extends TupleIterator {
 		return this.children[childIndex];
 	}
 
-	/**
-	 * Gets the predicate.
-	 *
-	 * @return the join predicate
-	 */
 	public Condition getJoinConditions() {
 		return this.joinConditions;
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.NaryIterator#toString()
-	 */
 	@Override
 	public String toString() {
 		StringBuilder result = new StringBuilder();
@@ -114,10 +96,6 @@ public abstract class Join extends TupleIterator {
 		return result.toString();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.NaryIterator#open()
-	 */
 	@Override
 	public void open() {
 		Assert.assertTrue(this.open == null || this.open);
@@ -137,11 +115,6 @@ public abstract class Join extends TupleIterator {
 		}
 	}
 
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.datasources.ResetableIterator#reset()
-	 */
 	@Override
 	public void reset() {
 		Assert.assertTrue(this.open != null && this.open);
@@ -151,11 +124,6 @@ public abstract class Join extends TupleIterator {
 		}
 	}
 
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator#interrupt()
-	 */
 	@Override
 	public void interrupt() {
 		Assert.assertTrue(this.open != null && this.open);
@@ -166,10 +134,6 @@ public abstract class Join extends TupleIterator {
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * @see java.util.Iterator#hasNext()
-	 */
 	@Override
 	public boolean hasNext() {
 		Assert.assertTrue(this.open != null && this.open);
@@ -186,10 +150,6 @@ public abstract class Join extends TupleIterator {
 		return this.nextTuple != null;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * @see java.util.Iterator#next()
-	 */
 	@Override
 	public Tuple next() {
 		if (this.eventBus != null) {
@@ -211,10 +171,6 @@ public abstract class Join extends TupleIterator {
 	protected abstract void nextTuple();
 
 
-	/**
-	 * {@inheritDoc}
-	 * @see uk.ac.ox.cs.pdq.runtime.exec.iterator.NaryIterator#receiveTupleFromParentAndPassItToChildren(uk.ac.ox.cs.pdq.datasources.utility.Tuple)
-	 */
 	@Override
 	public void receiveTupleFromParentAndPassItToChildren(Tuple tuple) {
 		Assert.assertTrue(this.open != null && this.open);
