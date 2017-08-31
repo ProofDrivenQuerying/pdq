@@ -7,9 +7,9 @@ import javax.xml.bind.JAXBException;
 
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.DbIOManager;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.adapted.AdaptedDbSchema;
+import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 
 public class PlanConverter {
-	private static int counter = 0;
 	public static void main(String[] args) {
 		File srcRoot  = new File("c:\\Users\\Gabor\\git\\pdq\\regression\\test");
 		File saved = new File("c:\\work\\savedPlans");
@@ -17,7 +17,7 @@ public class PlanConverter {
 				
 		try {
 			loopOverDirectories(srcRoot,saved);
-			System.out.println("Successfully processed "+counter + " schemas.");
+			System.out.println("Successfully processed "+ GlobalCounterProvider.getCurrent("PlanConverterCounter") + " schemas.");
 		} catch (FileNotFoundException | JAXBException e) {
 			e.printStackTrace();
 		}
@@ -25,7 +25,7 @@ public class PlanConverter {
 	}
 
 	private static void loopOverDirectories(File srcRoot, File saved) throws FileNotFoundException, JAXBException {
-		System.out.println("Processing ("+counter+") :"+srcRoot.getAbsolutePath());
+		System.out.println("Processing ("+GlobalCounterProvider.getCurrent("PlanConverterCounter")+") :"+srcRoot.getAbsolutePath());
 		File[] children = srcRoot.listFiles();
 		for (File child:children) {
 			if (child.isDirectory()) {
@@ -38,7 +38,7 @@ public class PlanConverter {
 					child.renameTo(saved);
 					DbIOManager.exportAdaptedSchemaToXml(s, new File("c:\\work\\temp.xml"));
 					DbIOManager.exportAdaptedSchemaToXml(s, child);
-					counter++;
+					GlobalCounterProvider.getNext("PlanConverterCounter");
 				}
 			}
 		}

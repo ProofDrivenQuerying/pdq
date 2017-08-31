@@ -14,6 +14,7 @@ import uk.ac.ox.cs.pdq.planner.dominance.FactDominance;
 import uk.ac.ox.cs.pdq.planner.dominance.FastFactDominance;
 import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
+import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 import uk.ac.ox.cs.pdq.util.LimitReachedException;
 
 
@@ -52,9 +53,6 @@ public abstract class SearchNode implements Cloneable{
 	/**  The node's id. */
 	private final int id;
 
-	/** The global id. */
-	protected static int globalId = 0;
-
 	/**  The node's configuration. */
 	private final LinearChaseConfiguration configuration;
 
@@ -91,7 +89,7 @@ public abstract class SearchNode implements Cloneable{
 	 */
 	public SearchNode(LinearChaseConfiguration configuration) throws PlannerException {
 		this.depth = 0;
-		this.id = globalId++;
+		this.id = GlobalCounterProvider.getNext("SearchNodeID");
 		this.configuration = configuration;
 		this.pathFromRoot = null;
 	}
@@ -104,7 +102,7 @@ public abstract class SearchNode implements Cloneable{
 	 * @throws PlannerException the planner exception
 	 */
 	public SearchNode(SearchNode parent, LinearChaseConfiguration configuration) throws PlannerException {
-		this.id = globalId++;
+		this.id = GlobalCounterProvider.getNext("SearchNodeID");
 		this.depth = parent.getDepth() + 1;
 		this.configuration = configuration;
 		List<Integer> pathFromRoot = null;

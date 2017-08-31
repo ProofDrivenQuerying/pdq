@@ -15,6 +15,7 @@ import uk.ac.ox.cs.pdq.db.sql.DerbyStatementBuilder;
 import uk.ac.ox.cs.pdq.db.sql.MySQLStatementBuilder;
 import uk.ac.ox.cs.pdq.db.sql.PostgresStatementBuilder;
 import uk.ac.ox.cs.pdq.db.sql.SQLStatementBuilder;
+import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 
 /**
  * Models a database connection. It is responsible for creating database tables
@@ -25,7 +26,7 @@ import uk.ac.ox.cs.pdq.db.sql.SQLStatementBuilder;
 public class DatabaseConnection implements AutoCloseable {
 	private int synchronousThreadsNumber = 1;
 
-	private static Integer counter = 0;
+	private static Object LOCK = new Object();
 
 	private boolean isInitialized = false;
 
@@ -77,11 +78,11 @@ public class DatabaseConnection implements AutoCloseable {
 			if (Strings.isNullOrEmpty(database)) {
 				database = "chase";
 			}
-			database += "_" + System.currentTimeMillis() + "_" + counter++;
+			database += "_" + System.currentTimeMillis() + "_" + GlobalCounterProvider.getNext("DatabaseConnectionName");
 			database = database.toUpperCase();
 			databaseParameters.setDatabaseName(database);
-			synchronized (counter) {
-				username = "APP_" + (counter++);
+			synchronized (LOCK) {
+				username = "APP_" + GlobalCounterProvider.getNext("DatabaseConnectionName");
 			}
 			password = "";
 			this.builder = new DerbyStatementBuilder();

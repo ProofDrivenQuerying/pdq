@@ -7,6 +7,7 @@ import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.planner.reasoning.Configuration;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
+import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 
 import com.google.common.base.Preconditions;
 
@@ -28,8 +29,6 @@ public abstract class DAGChaseConfiguration extends ChaseConfiguration implement
 	/** TOCOMMENT: WHY TWO IDS? . */
 	private final Integer id;
 
-	private static Integer globalId = 0;
-	
 	/**  TOCOMMENT: WHAT*/
 	private final Integer high;
 
@@ -61,7 +60,7 @@ public abstract class DAGChaseConfiguration extends ChaseConfiguration implement
 		super(state, input, output);
 		Preconditions.checkNotNull(this.getInput());
 		Preconditions.checkNotNull(this.getOutput());
-		this.id = globalId++;
+		this.id = GlobalCounterProvider.getNext("DAGChaseConfigurationID");
 		this.high = high;
 		this.bushiness = bushiness;
 	}

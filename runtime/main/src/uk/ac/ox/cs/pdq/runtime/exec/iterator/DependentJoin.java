@@ -19,6 +19,7 @@ import uk.ac.ox.cs.pdq.algebra.Condition;
 import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
 import uk.ac.ox.cs.pdq.datasources.utility.TupleType;
 import uk.ac.ox.cs.pdq.runtime.util.RuntimeUtilities;
+import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -70,9 +71,6 @@ public class DependentJoin extends TupleIterator {
 	/** The r input. */
 	private Tuple inputTupleForRightChild = null;
 	
-	/** The join ids. */
-	private static Integer joinIds = 0;
-	
 	/** The join id. */
 	private final Integer joinId;
 	
@@ -83,7 +81,7 @@ public class DependentJoin extends TupleIterator {
 		super(RuntimeUtilities.computeInputAttributes(child1, child2), RuntimeUtilities.computeOutputAttributes(child1, child2));
 		Assert.assertNotNull(child1);
 		Assert.assertNotNull(child2);
-		this.joinId = DependentJoin.joinIds++;
+		this.joinId = GlobalCounterProvider.getNext("DependentJoinID");
 		for(int inputAttributeIndex = 0; inputAttributeIndex < child2.getNumberOfInputAttributes(); ++inputAttributeIndex) 
 			Assert.assertTrue(Arrays.asList(child1.getOutputAttributes()).contains(child2.getInputAttributes()[inputAttributeIndex]));
 		this.children[0] = child1;

@@ -2,6 +2,8 @@ package uk.ac.ox.cs.pdq.fol;
 
 import com.google.common.base.Preconditions;
 
+import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
+
 /**
  * 
  * @author Efthymia Tsamoura
@@ -13,6 +15,9 @@ public final class UntypedConstant extends Constant implements Comparable<Consta
 	/**  The constant's name. */
 	protected final String symbol;
 
+	/**  The default prefix of the constant terms. */
+	public static final String DEFAULT_CONSTANT_PREFIX = "c";
+	
 	private UntypedConstant(String name) {
 		Preconditions.checkArgument(name!=null);
 		Preconditions.checkArgument(!name.isEmpty());
@@ -42,18 +47,12 @@ public final class UntypedConstant extends Constant implements Comparable<Consta
 		return false;
 	}
 
-	/**  The default prefix of the constant terms. */
-	public static final String DEFAULT_CONSTANT_PREFIX = "c";
 
-	/**   A counter used to create new constant terms. */
-	private static int freshConstantCounter = 0;
-	
 	/**
-	 * TOCOMMENT: WHAT IS THIS? .
-	 *
+	 * Creates a new Constant that was never used or existed before.
 	 */
 	public static UntypedConstant getFreshConstant() {
-		return new UntypedConstant(DEFAULT_CONSTANT_PREFIX + (freshConstantCounter++));
+		return new UntypedConstant(DEFAULT_CONSTANT_PREFIX + GlobalCounterProvider.getNext("ConstantName"));
 	}
 	
     public static UntypedConstant create(String symbol) {

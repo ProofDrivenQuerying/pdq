@@ -5,6 +5,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import com.google.common.base.Preconditions;
 
 import uk.ac.ox.cs.pdq.io.jaxb.adapters.VariableAdapter;
+import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -52,23 +53,13 @@ public class Variable extends Term {
 	/**  The default prefix of the variable terms. */
 	public static final String DEFAULT_VARIABLE_PREFIX = "_";
 
-	/**  A counter used to create new variable terms. */
-	private static int freshVariableCounter = 0;
-
-	/**
-	 * Reset counter.
-	 */
-	public static void resetCounter() {
-		Variable.freshVariableCounter = 0;
-	}
-
 	/**
 	 * Gets the fresh variable.
 	 *
 	 * @return a new variable using the default variable prefix an integer
 	 */
 	public static Variable getFreshVariable() {
-		return new Variable(DEFAULT_VARIABLE_PREFIX + (freshVariableCounter++));
+		return new Variable(DEFAULT_VARIABLE_PREFIX + GlobalCounterProvider.getNext("VariableName"));
 	}
 	
     public static Variable create(String symbol) {

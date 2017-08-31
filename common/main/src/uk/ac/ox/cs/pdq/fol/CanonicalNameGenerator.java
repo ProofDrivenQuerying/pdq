@@ -5,6 +5,8 @@ import java.util.Map;
 
 import com.google.common.base.Preconditions;
 
+import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
+
 /**
  * TOCOMMENT this class uses strings called "skolems" but not Skolem objects, which seems strange
  * 
@@ -26,9 +28,6 @@ public final class CanonicalNameGenerator {
 	
 	/** The Constant CANONICAL_PREFIX. */
 	private static final String CANONICAL_PREFIX = "k";
-
-	/** A global counter used in generating new names. */
-	private static int globalId = 0;
 
 	/** Index storing all canonical name stored so far (value) and the canonical string there where generated from (key). */
 	private static Map<String, String> skolems = new LinkedHashMap<>();
@@ -66,7 +65,7 @@ public final class CanonicalNameGenerator {
 	 * @return a fresh constant name with the given prefix.
 	 */
 	private static String getName(String prefix) {
-		return prefix + (++globalId);
+		return prefix + GlobalCounterProvider.getNext("CannonicalName");
 	}
 
 	/**

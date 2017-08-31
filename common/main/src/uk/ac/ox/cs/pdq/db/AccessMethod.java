@@ -7,6 +7,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import org.junit.Assert;
 
 import uk.ac.ox.cs.pdq.io.jaxb.adapters.AccessMethodAdapter;
+import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 
 /**
  * An access method defines the positions of a relation's attributes whose values are required to access the relation.
@@ -22,9 +23,6 @@ public class AccessMethod implements Serializable {
 	/** A Constant DEFAULT_PREFIX for all automatically generated access methods names */
 	public static final String DEFAULT_PREFIX = "mt_";
 
-	/** A global counter appended to the default prefix in order to create a new automatically generated access methods name. */
-	protected static int globalCounter = 0;
-
 	/**  Input attribute positions. */
 	protected final Integer[] inputs;
 
@@ -35,7 +33,7 @@ public class AccessMethod implements Serializable {
 	protected String toString = null;
 	
 	protected AccessMethod(Integer[] inputs) {
-		this(DEFAULT_PREFIX + globalCounter++, inputs);
+		this(DEFAULT_PREFIX + GlobalCounterProvider.getNext("AccessMethodName"), inputs);
 	}
 
 	protected AccessMethod(String name, Integer[] inputs) {

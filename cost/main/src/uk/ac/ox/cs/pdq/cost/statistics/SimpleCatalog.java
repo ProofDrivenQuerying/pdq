@@ -51,18 +51,18 @@ public class SimpleCatalog implements Catalog{
 	
 	public static double DEFAULT_ATTRIBUTE_EQUALITY_SELECTIVITY = 0.1;
 
-	private static int DEFAULT_CARDINALITY = 1000000;
-	private static double DEFAULT_QUALITY = 0.0;
-	private static int DEFAULT_COLUMN_CARDINALITY = 1000;
-	private static double DEFAULT_COST = 1.0;
-	private static String CATALOG_FILE_NAME = "catalog/catalog.properties";
+	private static final int DEFAULT_CARDINALITY = 1000000;
+	private static final double DEFAULT_QUALITY = 0.0;
+	private static final int DEFAULT_COLUMN_CARDINALITY = 1000;
+	private static final double DEFAULT_COST = 1.0;
+	private static final String CATALOG_FILE_NAME = "catalog/catalog.properties";
 
-	private static String READ_CARDINALITY = "^(RE:(\\w+)(\\s+)CA:(\\d+))";
-	private static String READ_COLUMN_CARDINALITY = "^(RE:(\\w+)(\\s+)AT:(\\w+)(\\s+)CC:(\\d+))";
-	private static String READ_COLUMN_SELECTIVITY = "^(RE:(\\w+)(\\s+)AT:(\\w+)(\\s+)SE:(\\d+(\\.\\d+)?))";
-	private static String READ_ERSPI = "^(RE:(\\w+)(\\s+)BI:(\\w+)(\\s+)ERSPI:(\\d+(\\.\\d+)?))";
-	private static String READ_COST = "^(RE:(\\w+)(\\s+)BI:(\\w+)(\\s+)RT:(\\d+(\\.\\d+)?))";
-	private static String READ_SQLSERVERHISTOGRAM = "^(RE:(\\w+)(\\s+)AT:(\\w+)(\\s+)SQLH:((/[a-zA-Z0-9._-]+)+/?))";
+	private static final String READ_CARDINALITY = "^(RE:(\\w+)(\\s+)CA:(\\d+))";
+	private static final String READ_COLUMN_CARDINALITY = "^(RE:(\\w+)(\\s+)AT:(\\w+)(\\s+)CC:(\\d+))";
+	private static final String READ_COLUMN_SELECTIVITY = "^(RE:(\\w+)(\\s+)AT:(\\w+)(\\s+)SE:(\\d+(\\.\\d+)?))";
+	private static final String READ_ERSPI = "^(RE:(\\w+)(\\s+)BI:(\\w+)(\\s+)ERSPI:(\\d+(\\.\\d+)?))";
+	private static final String READ_COST = "^(RE:(\\w+)(\\s+)BI:(\\w+)(\\s+)RT:(\\d+(\\.\\d+)?))";
+	private static final String READ_SQLSERVERHISTOGRAM = "^(RE:(\\w+)(\\s+)AT:(\\w+)(\\s+)SQLH:((/[a-zA-Z0-9._-]+)+/?))";
 
 	/** Cardinalities of the schema relations*/
 	private final Map<Relation,Integer> cardinalities;

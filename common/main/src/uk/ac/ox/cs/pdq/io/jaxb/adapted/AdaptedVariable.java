@@ -3,12 +3,12 @@ package uk.ac.ox.cs.pdq.io.jaxb.adapted;
 import javax.xml.bind.annotation.XmlAttribute;
 
 import uk.ac.ox.cs.pdq.fol.Variable;
+import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 /**
  * @author Gabor
  *
  */
 public class AdaptedVariable {
-	private static int counter = 0;
 	private String symbol;
 	
 	public AdaptedVariable() {
@@ -28,8 +28,7 @@ public class AdaptedVariable {
 
 	public Variable toVariable() {
 		if (getSymbol()==null) {
-			counter++;
-			return Variable.create("_"+counter);
+			return Variable.create("_"+GlobalCounterProvider.getNext("AdaptedVariableName"));
 		}
 		return Variable.createFromXml(getSymbol());
 	}
