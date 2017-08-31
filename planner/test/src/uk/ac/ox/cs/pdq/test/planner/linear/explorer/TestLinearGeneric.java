@@ -19,7 +19,12 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.common.eventbus.EventBus;
 
+import org.junit.Assert;
+
+import uk.ac.ox.cs.pdq.algebra.AccessTerm;
+import uk.ac.ox.cs.pdq.algebra.DependentJoinTerm;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
+import uk.ac.ox.cs.pdq.algebra.RenameTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.DoubleCost;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
@@ -37,6 +42,7 @@ import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.LinearGuarded;
 import uk.ac.ox.cs.pdq.fol.Term;
+import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
@@ -48,6 +54,7 @@ import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
 import uk.ac.ox.cs.pdq.planner.util.PlanTree;
 import uk.ac.ox.cs.pdq.planner.util.PlannerUtility;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
+import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 import uk.ac.ox.cs.pdq.util.LimitReachedException;
 
 /**
@@ -65,6 +72,17 @@ public class TestLinearGeneric {
 	protected Attribute InstanceID = Attribute.create(Integer.class, "InstanceID");
 	
 	@Test 
+	public void test1ExplorationStepsA() {
+		GlobalCounterProvider.resetCounters();
+		GlobalCounterProvider.getNext("CannonicalName");
+		test1ExplorationSteps();
+	}
+	@Test 
+	public void test1ExplorationStepsB() {
+		GlobalCounterProvider.resetCounters();
+		GlobalCounterProvider.getNext("CannonicalName");
+		test1ExplorationSteps();
+	}
 	public void test1ExplorationSteps() {
 		//Create the relations
 		Relation[] relations = new Relation[4];
@@ -138,43 +156,79 @@ public class TestLinearGeneric {
 				planTree = explorer.getPlanTree();
 				SearchNode root = planTree.getRoot();
 				LinearChaseConfiguration configuration0 = root.getConfiguration();
-				//TODO verify that the node tree has a single node with the right facts
+				Assert.assertEquals(1,configuration0.getCandidates().size());
 				
 				//Call the explorer for first time
 				explorer._explore();
-				LinearChaseConfiguration configuration1 = planTree.getVertex(1).getConfiguration();
-				//TODO verify that the facts of the configuration
+				Assert.assertEquals(0,configuration0.getCandidates().size());
+				LinearChaseConfiguration configuration1 = planTree.getVertex(root.getId()+1).getConfiguration();
+				Assert.assertEquals(1,configuration1.getCandidates().size());
+				Assert.assertEquals(1,configuration1.getFacts().size());
+				Atom a = configuration1.getFacts().iterator().next();
+				Assert.assertEquals("R0",a.getPredicate().getName());
+				Assert.assertArrayEquals(new Term[] {UntypedConstant.create("c1"),UntypedConstant.create("c2"),UntypedConstant.create("c3")}, a.getTerms());
+				
 				
 				//Call the explorer for second time
 				explorer._explore();
-				LinearChaseConfiguration configuration2 = planTree.getVertex(2).getConfiguration();
-				//TODO verify that the facts of the configuration
+				LinearChaseConfiguration configuration2 = planTree.getVertex(root.getId()+2).getConfiguration();
+				Assert.assertEquals(1,configuration2.getCandidates().size());
+				Assert.assertEquals(1,configuration2.getFacts().size());
+				a = configuration2.getFacts().iterator().next();
+				Assert.assertEquals("R1",a.getPredicate().getName());
+				Assert.assertArrayEquals(new Term[] {UntypedConstant.create("c1"),UntypedConstant.create("c4"),UntypedConstant.create("c5")}, a.getTerms());
 				
 				//Call the explorer for third time
 				explorer._explore();
-				LinearChaseConfiguration configuration3 = planTree.getVertex(3).getConfiguration();
-				//TODO verify that the facts of the configuration
-				
-				//TODO verify that the explorer found the right plan
+				LinearChaseConfiguration configuration3 = planTree.getVertex(root.getId()+3).getConfiguration();
+				Assert.assertEquals(0,configuration3.getCandidates().size());
+				Assert.assertEquals(1,configuration3.getFacts().size());
+				a = configuration3.getFacts().iterator().next();
+				Assert.assertEquals("R2",a.getPredicate().getName());
+				Assert.assertArrayEquals(new Term[] {UntypedConstant.create("c6"),UntypedConstant.create("c4"),UntypedConstant.create("c7")}, a.getTerms());
+
+				// checking the plan
 				RelationalTerm plan = explorer.getBestPlan();
-				System.out.println(plan);
+				Assert.assertNotNull(plan);
+				Assert.assertTrue(plan instanceof DependentJoinTerm);
+				Assert.assertEquals(0, plan.getInputAttributes().length);
+				Assert.assertEquals(9, plan.getOutputAttributes().length);
+				Assert.assertEquals(2, plan.getChildren().length);
+				Assert.assertTrue(plan.getChildren()[0] instanceof DependentJoinTerm);
+				Assert.assertTrue(plan.getChildren()[1] instanceof RenameTerm);
+				AssertHasAccessTermChild(plan.getChildren()[1]);
+				RelationalTerm subPlan = plan.getChildren()[0];
+				Assert.assertTrue(subPlan instanceof DependentJoinTerm);
+				Assert.assertEquals(2, subPlan.getChildren().length);
+				
+				Assert.assertTrue(subPlan.getChildren()[0] instanceof RenameTerm);
+				Assert.assertTrue(subPlan.getChildren()[1] instanceof RenameTerm);
+				AssertHasAccessTermChild(subPlan.getChildren()[0]);
+				AssertHasAccessTermChild(subPlan.getChildren()[1]);
+				
 		} catch (PlannerException | SQLException e) {
 			e.printStackTrace();
 		} catch (LimitReachedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
+	private static void AssertHasAccessTermChild(RelationalTerm relationalTerm) {
+		Assert.assertNotNull(relationalTerm);
+		Assert.assertNotNull(relationalTerm.getChildren());
+		Assert.assertEquals(1, relationalTerm.getChildren().length);
+		Assert.assertTrue(relationalTerm.getChild(0) instanceof AccessTerm);
+	}
+
 	@Test 
 	public void test2ExplorationSteps() {
 		//Create the relations
 		Relation[] relations = new Relation[4];
-		relations[0] = Relation.create("R0", new Attribute[]{this.a, this.b, this.c, this.d, this.InstanceID}, 
+		relations[0] = Relation.create("R0", new Attribute[]{this.a, this.b, this.c, this.InstanceID}, 
 				new AccessMethod[]{AccessMethod.create(new Integer[]{0})});
-		relations[1] = Relation.create("R1", new Attribute[]{this.a, this.b, this.c, this.d, this.InstanceID}, 
+		relations[1] = Relation.create("R1", new Attribute[]{this.a, this.b, this.c, this.InstanceID}, 
 				new AccessMethod[]{AccessMethod.create(new Integer[]{0})});
-		relations[2] = Relation.create("R2", new Attribute[]{this.a, this.b, this.c, this.d, this.InstanceID}, 
+		relations[2] = Relation.create("R2", new Attribute[]{this.a, this.b, this.c, this.InstanceID}, 
 				new AccessMethod[]{AccessMethod.create(new Integer[]{1})});
 		relations[3] = Relation.create("Accessible", new Attribute[]{this.a,this.InstanceID});
 
@@ -241,19 +295,16 @@ public class TestLinearGeneric {
 				planTree = explorer.getPlanTree();
 				SearchNode root = planTree.getRoot();
 				LinearChaseConfiguration configuration0 = root.getConfiguration();
-				//TODO verify that the node tree has a single node with the right facts
+				Assert.assertEquals(0,configuration0.getCandidates().size());
 				
 				//Call the explorer for first time
 				explorer._explore();
-				LinearChaseConfiguration configuration1 = planTree.getVertex(1).getConfiguration();
-				//TODO verify that the facts of the configuration
-				
-				//TODO verify that we cannot find any plan
+				Assert.assertNull(planTree.getVertex(1));
+				Assert.assertNull(explorer.getBestPlan());
 				  
 		} catch (PlannerException | SQLException e) {
 			e.printStackTrace();
 		} catch (LimitReachedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -262,11 +313,11 @@ public class TestLinearGeneric {
 	public void test3ExplorationSteps() {
 		//Create the relations
 		Relation[] relations = new Relation[4];
-		relations[0] = Relation.create("R0", new Attribute[]{this.a, this.b, this.c, this.d, this.InstanceID}, 
+		relations[0] = Relation.create("R0", new Attribute[]{this.a, this.b, this.c, this.InstanceID}, 
 				new AccessMethod[]{AccessMethod.create(new Integer[]{})});
-		relations[1] = Relation.create("R1", new Attribute[]{this.a, this.b, this.c, this.d, this.InstanceID}, 
+		relations[1] = Relation.create("R1", new Attribute[]{this.a, this.b, this.c, this.InstanceID}, 
 				new AccessMethod[]{AccessMethod.create(new Integer[]{0}),AccessMethod.create(new Integer[]{2})});
-		relations[2] = Relation.create("R2", new Attribute[]{this.a, this.b, this.c, this.d, this.InstanceID}, 
+		relations[2] = Relation.create("R2", new Attribute[]{this.a, this.b, this.c, this.InstanceID}, 
 				new AccessMethod[]{AccessMethod.create(new Integer[]{1})});
 		relations[3] = Relation.create("Accessible", new Attribute[]{this.a,this.InstanceID});
 
@@ -332,7 +383,9 @@ public class TestLinearGeneric {
 				
 				explorer.explore();
 				List<Entry<RelationalTerm, Cost>> exploredPlans = explorer.getExploredPlans();
-				//TODO assert that we got the right number of plans
+				Assert.assertNotNull(exploredPlans);
+				Assert.assertFalse(exploredPlans.isEmpty());
+				Assert.assertEquals(4, exploredPlans.size());
 		} catch (PlannerException | SQLException e) {
 			e.printStackTrace();
 		} catch (LimitReachedException e) {
@@ -341,40 +394,57 @@ public class TestLinearGeneric {
 		}
 	}
 
+	private DatabaseParameters getMySqlConfig() {
+		DatabaseParameters dbParam = new DatabaseParameters();
+		dbParam.setConnectionUrl("jdbc:mysql://localhost/");
+		dbParam.setDatabaseDriver("com.mysql.jdbc.Driver");
+		dbParam.setDatabaseName("test_get_triggers");
+		dbParam.setDatabaseUser("root");
+		dbParam.setDatabasePassword("root");
+		return dbParam; 
+	}
+	
+	private DatabaseParameters getPostgresConfig() {
+		DatabaseParameters dbParam = new DatabaseParameters();
+		dbParam.setConnectionUrl("jdbc:postgresql://localhost/");
+		dbParam.setDatabaseDriver("org.postgresql.Driver");
+		dbParam.setDatabaseName("test_get_triggers");
+		dbParam.setDatabaseUser("postgres");
+		dbParam.setDatabasePassword("root");
+		return dbParam; 
+	}
 	@Test 
-	public void test1ExplorationThreeRelations() {
-		List<Entry<RelationalTerm, Cost>> exploredPlans = findExploredPlans(3);
-		//TODO assert that we explored all possible plans
+	public void test1ExplorationThreeRelationsDerby() {
+		List<Entry<RelationalTerm, Cost>> exploredPlans = findExploredPlans(3,new DatabaseParameters());
+		Assert.assertEquals(68, exploredPlans.size());
 	}
-//	@Test
+	@Test 
+	public void test1ExplorationThreeRelationsMySql() {
+		List<Entry<RelationalTerm, Cost>> exploredPlans = findExploredPlans(3,getMySqlConfig());
+		Assert.assertEquals(68, exploredPlans.size());
+	}
+	@Test 
+	public void test1ExplorationThreeRelationsPostgres() {
+		List<Entry<RelationalTerm, Cost>> exploredPlans = findExploredPlans(3,getPostgresConfig());
+		Assert.assertEquals(68, exploredPlans.size());
+	}
+	//@Test
 	public void test1ExplorationFiveRelationsDerby() {
-		List<Entry<RelationalTerm, Cost>> exploredPlans = findExploredPlans(5);
-		//TODO assert that we explored all possible plans
+		List<Entry<RelationalTerm, Cost>> exploredPlans = findExploredPlans(5,new DatabaseParameters());
+		Assert.assertEquals(6, exploredPlans.size());
 	}
-//	@Test 
+	//@Test 
 	public void test1ExplorationFiveRelationsMySql() {
-		List<Entry<RelationalTerm, Cost>> exploredPlans = findExploredPlans(5);
-		//TODO assert that we explored all possible plans
+		List<Entry<RelationalTerm, Cost>> exploredPlans = findExploredPlans(5,getMySqlConfig());
+		Assert.assertEquals(6, exploredPlans.size());
 	}
-//	@Test 
+	//@Test 
 	public void test1ExplorationFiveRelationsPostgres() {
-		List<Entry<RelationalTerm, Cost>> exploredPlans = findExploredPlans(5);
-		//TODO assert that we explored all possible plans
+		List<Entry<RelationalTerm, Cost>> exploredPlans = findExploredPlans(5,getPostgresConfig());
+		Assert.assertEquals(6, exploredPlans.size());
 	}
 	
-//	@Test 
-	public void test1ExplorationFiveRelations() {
-		List<Entry<RelationalTerm, Cost>> exploredPlans = findExploredPlans(5);
-		//TODO assert that we explored all possible plans
-	}
-	
-//	@Test 
-	public void test1ExplorationTenRelations() {
-		List<Entry<RelationalTerm, Cost>> exploredPlans = findExploredPlans(10);
-		//TODO assert that we explored all possible plans
-	}
-	
-	public List<Entry<RelationalTerm, Cost>> findExploredPlans(int numberOfRelations) {
+	public List<Entry<RelationalTerm, Cost>> findExploredPlans(int numberOfRelations, DatabaseParameters dbParams) {
 		//Create the relations
 		Relation[] relations = new Relation[(int) (numberOfRelations + Math.pow(2.0, numberOfRelations))+1];
 		for(int index = 0; index < numberOfRelations; ++index) 
@@ -431,7 +501,7 @@ public class TestLinearGeneric {
 		//Create database connection
 		DatabaseConnection databaseConnection = null;
 		try {
-			databaseConnection = new DatabaseConnection(new DatabaseParameters(), accessibleSchema);
+			databaseConnection = new DatabaseConnection(dbParams, accessibleSchema);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -466,8 +536,8 @@ public class TestLinearGeneric {
 					nodeFactory,
 					parameters.getMaxDepth());
 				explorer.explore();
-		} catch (PlannerException | SQLException | LimitReachedException e) {
-			e.printStackTrace();
+		} catch (Throwable e) {
+			// exception expected after further exploration fails.
 		}
 		return explorer.getExploredPlans();
 	}
