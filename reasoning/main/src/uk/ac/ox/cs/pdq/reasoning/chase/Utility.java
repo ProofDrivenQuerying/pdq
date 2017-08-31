@@ -132,21 +132,23 @@ public class Utility {
 	}
 
 	/**
-	 * Translate egd homomorphism constraints.
-	 * TOCOMMENT: I am not sure what this is for. It seems to be returning the part of the where clause of an sql query that compares
-	 * two atoms in the body of an EGD and checks they have different fact.id
-	 *
+	 * This will create a where condition that makes sure the left and right side of an equality is different (the EGD is active), and we only return it once. 
+	 * When c!=c' then it is also true that c'!=c, but the query result will only contain one of them.
+	 * This function should be used only in case the EGD is coming from functional dependencies (such that the left and right side's predicates are the same)
+	 * 
 	 * @param source the source
 	 * @param constraints the constraints
 	 * @param relationNamesToDatabaseTables 
 	 * @return 		predicates that correspond to fact constraints
 	 */
 	public static WhereCondition createConditionForEGDsCreatedFromFunctionalDependencies(Atom[] conjuncts, Map<String, Relation> relationNamesToDatabaseTables, SQLStatementBuilder builder) {
+		// get left and right side of the equality
 		String lalias = builder.aliases.get(conjuncts[0]);
 		String ralias = builder.aliases.get(conjuncts[1]);
 		lalias = lalias==null ? conjuncts[0].getPredicate().getName():lalias;
 		ralias = ralias==null ? conjuncts[1].getPredicate().getName():ralias;
 		StringBuilder eq = new StringBuilder();
+		// get InstanceID attribute name that we will use to make sure we only have c!=c' results since c' was created later, hence it has larger InstanceID.
 		String leftAttributeName = relationNamesToDatabaseTables.get(conjuncts[0].getPredicate().getName()).getAttribute(conjuncts[0].getPredicate().getArity()-1).getName();
 		String rightAttributeName = relationNamesToDatabaseTables.get(conjuncts[1].getPredicate().getName()).getAttribute(conjuncts[1].getPredicate().getArity()-1).getName();
 		eq.append(lalias).append(".").

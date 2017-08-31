@@ -596,7 +596,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 	}
 	
 	/**
-	 * Same as above but it does not replaces the free variables. This function is only used for unit testing.
+	 * Same as above but it does not replaces the free variables in the query with the canonical constants. This function is only used for unit testing.
 	 */
 	public List<Match> getMatchesNoSubstitution(ConjunctiveQuery query, LimitToThisOrAllInstances l) {
 		Queue<Triple<Formula, String, LinkedHashMap<String, Variable>>> queries = new ConcurrentLinkedQueue<>();
