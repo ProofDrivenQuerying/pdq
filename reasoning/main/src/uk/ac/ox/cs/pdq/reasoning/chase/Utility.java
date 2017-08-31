@@ -32,7 +32,7 @@ import uk.ac.ox.cs.pdq.fol.Variable;
 /**
  * 
  * @author Efthymia Tsamoura
- *
+ * @author Gabor
  */
 public class Utility {
 
