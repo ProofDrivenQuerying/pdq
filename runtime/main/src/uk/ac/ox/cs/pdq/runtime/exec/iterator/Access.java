@@ -220,7 +220,7 @@ public class Access extends TupleIterator {
 	private Tuple makeInputTupleByCombiningInputsFromParentsWithInputConstants(Tuple dynamicInput) {
 		Object[] result = new Object[this.inputTupleType.size()];
 		int j = 0, k = 0;
-		for (int i : this.accessMethod.getZeroBasedInputPositions()) {
+		for (int i : this.accessMethod.getInputs()) {
 			TypedConstant staticInput = this.inputConstants.get(i);
 			if (staticInput != null) {
 				result[k++] = staticInput.getValue();

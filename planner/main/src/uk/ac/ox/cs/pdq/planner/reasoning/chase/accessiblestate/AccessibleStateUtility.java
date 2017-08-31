@@ -48,7 +48,7 @@ public class AccessibleStateUtility {
 			if (facts!=null) {
 				Multimap<Collection<Term>, Atom> groupsOfFacts = LinkedHashMultimap.create();
 				for(Atom fact: facts)  {
-					groupsOfFacts.put(uk.ac.ox.cs.pdq.util.Utility.getTerms(fact,axiom.getAccessMethod().getZeroBasedInputPositions()), fact);
+					groupsOfFacts.put(uk.ac.ox.cs.pdq.util.Utility.getTerms(fact,axiom.getAccessMethod().getInputs()), fact);
 				}
 				Iterator<Collection<Term>> keyIterator = groupsOfFacts.keySet().iterator();
 				while(keyIterator.hasNext()) {

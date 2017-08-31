@@ -55,16 +55,6 @@ public class AccessMethod implements Serializable {
 		Assert.assertTrue(index >=0 && index < this.inputs.length);
 		return this.inputs[index];
 	}
-
-	/**
-	 *
-	 */
-	public Integer[] getZeroBasedInputPositions() {
-		Integer[] zero = new Integer[this.inputs.length];
-		for(int index = 0; index < this.inputs.length; ++index) 
-			zero[index] = this.inputs[index];
-		return zero;
-	}
 	
 	public String getName() {
 		return this.name;

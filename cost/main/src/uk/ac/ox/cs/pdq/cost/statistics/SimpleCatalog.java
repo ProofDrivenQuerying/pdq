@@ -425,7 +425,7 @@ public class SimpleCatalog implements Catalog{
 		Integer erspi = this.numberOfOutputTuplesPerInput.get(Pair.of(relation, method));
 		if(erspi == null) {
 			double columnProduct = 1.0;
-			for(Integer input:method.getZeroBasedInputPositions()) {
+			for(Integer input:method.getInputs()) {
 				Attribute attribute = relation.getAttribute(input);
 				Integer columnCardinality = this.columnCardinalities.get(Pair.of(relation, attribute));
 				if(columnCardinality != null) {
@@ -456,8 +456,8 @@ public class SimpleCatalog implements Catalog{
 	public int getTotalNumberOfOutputTuplesPerInputTuple(Relation relation, AccessMethod method, Map<Integer, TypedConstant> inputs) {
 		Preconditions.checkNotNull(relation);
 		Preconditions.checkNotNull(inputs);
-		if(inputs.size() == 1 && method.getZeroBasedInputPositions().length == 1) {
-			Attribute attribute = relation.getAttribute(method.getZeroBasedInputPositions().length);
+		if(inputs.size() == 1 && method.getInputs().length == 1) {
+			Attribute attribute = relation.getAttribute(method.getInputs().length);
 			SimpleFrequencyMap histogram = this.frequencyMaps.get(Pair.of(relation, attribute));
 			if(histogram != null && histogram.getFrequency(inputs.get(0).toString()) != null) {
 				int erpsi = histogram.getFrequency(inputs.get(0).toString());
@@ -514,7 +514,7 @@ public class SimpleCatalog implements Catalog{
 		Preconditions.checkNotNull(method);		
 		double erpsi = -1;
 		if(inputs.size() == 1) {
-			Attribute attribute = relation.getAttribute(method.getZeroBasedInputPositions()[0]);
+			Attribute attribute = relation.getAttribute(method.getInputs()[0]);
 			SimpleFrequencyMap histogram = this.frequencyMaps.get(Pair.of(relation, attribute));
 			if(histogram != null && histogram.getFrequency(inputs.get(0).toString()) != null) {
 				erpsi = histogram.getFrequency(inputs.get(0).toString());
