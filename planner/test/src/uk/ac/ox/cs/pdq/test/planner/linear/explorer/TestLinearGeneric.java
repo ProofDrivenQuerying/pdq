@@ -10,7 +10,9 @@ import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Set;
 
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 import org.mockito.Mockito;
 
 import com.google.common.collect.Lists;
@@ -51,26 +53,28 @@ import uk.ac.ox.cs.pdq.util.LimitReachedException;
 /**
  * 
  * @author Efthymia Tsamoura
- *
+ * @author Gabor
  */
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestLinearGeneric {
 
 	protected Attribute a = Attribute.create(Integer.class, "a");
 	protected Attribute b = Attribute.create(Integer.class, "b");
 	protected Attribute c = Attribute.create(Integer.class, "c");
 	protected Attribute d = Attribute.create(Integer.class, "d");
+	protected Attribute InstanceID = Attribute.create(Integer.class, "InstanceID");
 	
 	@Test 
 	public void test1ExplorationSteps() {
 		//Create the relations
-		Relation[] relations = new Relation[3];
-		relations[0] = Relation.create("R0", new Attribute[]{this.a, this.b, this.c, this.d}, 
+		Relation[] relations = new Relation[4];
+		relations[0] = Relation.create("R0", new Attribute[]{this.a, this.b, this.c, this.InstanceID}, 
 				new AccessMethod[]{AccessMethod.create(new Integer[]{})});
-		relations[1] = Relation.create("R1", new Attribute[]{this.a, this.b, this.c, this.d}, 
+		relations[1] = Relation.create("R1", new Attribute[]{this.a, this.b, this.c, this.InstanceID}, 
 				new AccessMethod[]{AccessMethod.create(new Integer[]{0})});
-		relations[2] = Relation.create("R2", new Attribute[]{this.a, this.b, this.c, this.d}, 
+		relations[2] = Relation.create("R2", new Attribute[]{this.a, this.b, this.c, this.InstanceID}, 
 				new AccessMethod[]{AccessMethod.create(new Integer[]{1})});
-		
+		relations[3] = Relation.create("Accessible", new Attribute[]{this.a,this.InstanceID});
 		//Create query
 		Atom[] atoms = new Atom[3];
 		Variable x = Variable.create("x");
@@ -154,6 +158,7 @@ public class TestLinearGeneric {
 				//TODO verify that the explorer found the right plan
 				RelationalTerm plan = explorer.getBestPlan();
 				  
+				System.out.println(plan);
 		} catch (PlannerException | SQLException e) {
 			e.printStackTrace();
 		} catch (LimitReachedException e) {
@@ -165,14 +170,15 @@ public class TestLinearGeneric {
 	@Test 
 	public void test2ExplorationSteps() {
 		//Create the relations
-		Relation[] relations = new Relation[3];
-		relations[0] = Relation.create("R0", new Attribute[]{this.a, this.b, this.c, this.d}, 
+		Relation[] relations = new Relation[4];
+		relations[0] = Relation.create("R0", new Attribute[]{this.a, this.b, this.c, this.d, this.InstanceID}, 
 				new AccessMethod[]{AccessMethod.create(new Integer[]{0})});
-		relations[1] = Relation.create("R1", new Attribute[]{this.a, this.b, this.c, this.d}, 
+		relations[1] = Relation.create("R1", new Attribute[]{this.a, this.b, this.c, this.d, this.InstanceID}, 
 				new AccessMethod[]{AccessMethod.create(new Integer[]{0})});
-		relations[2] = Relation.create("R2", new Attribute[]{this.a, this.b, this.c, this.d}, 
+		relations[2] = Relation.create("R2", new Attribute[]{this.a, this.b, this.c, this.d, this.InstanceID}, 
 				new AccessMethod[]{AccessMethod.create(new Integer[]{1})});
-		
+		relations[3] = Relation.create("Accessible", new Attribute[]{this.a,this.InstanceID});
+
 		//Create query
 		Atom[] atoms = new Atom[3];
 		Variable x = Variable.create("x");
@@ -256,14 +262,15 @@ public class TestLinearGeneric {
 	@Test 
 	public void test3ExplorationSteps() {
 		//Create the relations
-		Relation[] relations = new Relation[3];
-		relations[0] = Relation.create("R0", new Attribute[]{this.a, this.b, this.c, this.d}, 
+		Relation[] relations = new Relation[4];
+		relations[0] = Relation.create("R0", new Attribute[]{this.a, this.b, this.c, this.d, this.InstanceID}, 
 				new AccessMethod[]{AccessMethod.create(new Integer[]{})});
-		relations[1] = Relation.create("R1", new Attribute[]{this.a, this.b, this.c, this.d}, 
+		relations[1] = Relation.create("R1", new Attribute[]{this.a, this.b, this.c, this.d, this.InstanceID}, 
 				new AccessMethod[]{AccessMethod.create(new Integer[]{0}),AccessMethod.create(new Integer[]{2})});
-		relations[2] = Relation.create("R2", new Attribute[]{this.a, this.b, this.c, this.d}, 
+		relations[2] = Relation.create("R2", new Attribute[]{this.a, this.b, this.c, this.d, this.InstanceID}, 
 				new AccessMethod[]{AccessMethod.create(new Integer[]{1})});
-		
+		relations[3] = Relation.create("Accessible", new Attribute[]{this.a,this.InstanceID});
+
 		//Create query
 		Atom[] atoms = new Atom[3];
 		Variable x = Variable.create("x");
@@ -340,14 +347,29 @@ public class TestLinearGeneric {
 		List<Entry<RelationalTerm, Cost>> exploredPlans = findExploredPlans(3);
 		//TODO assert that we explored all possible plans
 	}
+//	@Test
+	public void test1ExplorationFiveRelationsDerby() {
+		List<Entry<RelationalTerm, Cost>> exploredPlans = findExploredPlans(5);
+		//TODO assert that we explored all possible plans
+	}
+//	@Test 
+	public void test1ExplorationFiveRelationsMySql() {
+		List<Entry<RelationalTerm, Cost>> exploredPlans = findExploredPlans(5);
+		//TODO assert that we explored all possible plans
+	}
+//	@Test 
+	public void test1ExplorationFiveRelationsPostgres() {
+		List<Entry<RelationalTerm, Cost>> exploredPlans = findExploredPlans(5);
+		//TODO assert that we explored all possible plans
+	}
 	
-	@Test 
+//	@Test 
 	public void test1ExplorationFiveRelations() {
 		List<Entry<RelationalTerm, Cost>> exploredPlans = findExploredPlans(5);
 		//TODO assert that we explored all possible plans
 	}
 	
-	@Test 
+//	@Test 
 	public void test1ExplorationTenRelations() {
 		List<Entry<RelationalTerm, Cost>> exploredPlans = findExploredPlans(10);
 		//TODO assert that we explored all possible plans
@@ -355,11 +377,12 @@ public class TestLinearGeneric {
 	
 	public List<Entry<RelationalTerm, Cost>> findExploredPlans(int numberOfRelations) {
 		//Create the relations
-		Relation[] relations = new Relation[(int) (numberOfRelations + Math.pow(2.0, numberOfRelations) - 1)];
+		Relation[] relations = new Relation[(int) (numberOfRelations + Math.pow(2.0, numberOfRelations))+1];
 		for(int index = 0; index < numberOfRelations; ++index) 
-			relations[index] = Relation.create("R" + index, new Attribute[]{this.a, this.b, this.c, this.d}, 
+			relations[index] = Relation.create("R" + index, new Attribute[]{this.a, this.b, this.c, this.d, this.InstanceID}, 
 					new AccessMethod[]{AccessMethod.create(new Integer[0])});
-		
+		relations[numberOfRelations] = Relation.create("Accessible", new Attribute[]{this.a,this.InstanceID});
+
 		//Create a conjunctive query that joins all relations in the first three positions 
 		Random random = new Random();
 		Atom[] atoms = new Atom[numberOfRelations];
@@ -377,20 +400,22 @@ public class TestLinearGeneric {
 		Set<Set<Atom>> powerSet = Sets.powerSet(setOfAtoms);
 		int powersetIndex = 0;
 		int dependencyIndex = 0;
-		int viewIndex = numberOfRelations;
+		int viewIndex = numberOfRelations+1;
 		Dependency[] dependencies = new Dependency[(powerSet.size()-1)*2];
 		for(Set<Atom> set:powerSet) {
-			View view = new View("V" + powersetIndex++, new Attribute[]{this.a, this.b, this.c}, new AccessMethod[]{AccessMethod.create(new Integer[0])});
+			View view = new View("V" + powersetIndex++, new Attribute[]{this.a, this.b, this.c,this.InstanceID}, new AccessMethod[]{AccessMethod.create(new Integer[0])});
 			relations[viewIndex++] = view;
 			int index = 0;
 			Atom[] head = new Atom[set.size()];
 			Iterator<Atom> iterator = set.iterator();
 			while(iterator.hasNext())
 				head[index++] = iterator.next();
-			LinearGuarded viewToRelationDependency = LinearGuarded.create(Atom.create(view, new Term[]{x,y,z}), head);
-			view.setViewToRelationDependency(viewToRelationDependency);
-			dependencies[dependencyIndex++] = view.getViewToRelationDependency();
-			dependencies[dependencyIndex++] = view.getRelationToViewDependency();
+			if (index!=0) {
+				LinearGuarded viewToRelationDependency = LinearGuarded.create(Atom.create(view, new Term[]{x,y,z}), head);
+				view.setViewToRelationDependency(viewToRelationDependency);
+				dependencies[dependencyIndex++] = view.getViewToRelationDependency();
+				dependencies[dependencyIndex++] = view.getRelationToViewDependency();
+			}
 		}
 		
 		//Create schema
