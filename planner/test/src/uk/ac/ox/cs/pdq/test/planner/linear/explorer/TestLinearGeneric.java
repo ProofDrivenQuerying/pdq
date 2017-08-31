@@ -147,17 +147,16 @@ public class TestLinearGeneric {
 				
 				//Call the explorer for second time
 				explorer._explore();
-				LinearChaseConfiguration configuration2 = planTree.getVertex(1).getConfiguration();
+				LinearChaseConfiguration configuration2 = planTree.getVertex(2).getConfiguration();
 				//TODO verify that the facts of the configuration
 				
 				//Call the explorer for third time
 				explorer._explore();
-				LinearChaseConfiguration configuration3 = planTree.getVertex(1).getConfiguration();
+				LinearChaseConfiguration configuration3 = planTree.getVertex(3).getConfiguration();
 				//TODO verify that the facts of the configuration
 				
 				//TODO verify that the explorer found the right plan
 				RelationalTerm plan = explorer.getBestPlan();
-				  
 				System.out.println(plan);
 		} catch (PlannerException | SQLException e) {
 			e.printStackTrace();
