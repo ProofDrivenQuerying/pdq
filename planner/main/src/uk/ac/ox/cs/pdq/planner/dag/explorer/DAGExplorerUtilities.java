@@ -40,7 +40,7 @@ public class DAGExplorerUtilities {
 			) throws SQLException {
 		AccessibleDatabaseChaseInstance state = null;
 		state = new AccessibleDatabaseChaseInstance(query, accessibleSchema, connection, false);
-		//TODO this should change to original and infacc
+		//TODO this should change to original and infacc ???
 		chaser.reasonUntilTermination(state, accessibleSchema.getOriginalDependencies());
 
 		List<DAGChaseConfiguration> collection = new ArrayList<>();

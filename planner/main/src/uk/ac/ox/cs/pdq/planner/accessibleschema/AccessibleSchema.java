@@ -99,29 +99,17 @@ public class AccessibleSchema extends Schema {
 	}
 
 	public Dependency[] getOriginalDependencies() {
-		return originalDependencies.clone();
+		return this.originalDependencies.clone();
 	}
 	
 	public boolean containsInferredAccessibleAxiom(Dependency dependency) {
 		return Arrays.asList(this.inferredAccessibilityAxioms).contains(dependency);
 	}
 
-	/**
-	 * Creates an inferred accessible axiom.
-	 *
-	 * @param dependency the dependency
-	 * @param predToInfAcc the pred to inf acc
-	 */
 	private static TGD createInferredAccessibleAxiom(TGD dependency) {
 		return TGD.create(computeInferredAccessibleFormula(dependency.getBody()).getAtoms(), computeInferredAccessibleFormula(dependency.getHead()).getAtoms());
 	}
 
-	/**
-	 * Substitute.
-	 *
-	 * @param f Formula
-	 * @return Formula
-	 */
 	public static Formula computeInferredAccessibleFormula(Formula f) {
 		if (f instanceof Conjunction) {
 			Formula[] result = new Formula[f.getNumberOfChildlen()];
