@@ -516,7 +516,7 @@ public class TestLinearGeneric {
 		//Mock the planner parameters
 		PlannerParameters parameters = Mockito.mock(PlannerParameters.class);
 		when(parameters.getSeed()).thenReturn(1);
-		when(parameters.getMaxDepth()).thenReturn(Integer.MAX_VALUE);
+		when(parameters.getMaxDepth()).thenReturn(numberOfRelations);
 		
 		//Create nodeFactory
 		NodeFactory nodeFactory = new NodeFactory(parameters, costEstimator);
