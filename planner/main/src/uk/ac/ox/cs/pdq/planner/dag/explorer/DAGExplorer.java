@@ -1,32 +1,17 @@
 package uk.ac.ox.cs.pdq.planner.dag.explorer;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.List;
-
-import org.apache.commons.lang3.tuple.Pair;
-
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Sets;
 import com.google.common.eventbus.EventBus;
 
 import uk.ac.ox.cs.pdq.algebra.ProjectionTerm;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
-import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.planner.Explorer;
-import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
-import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
-import uk.ac.ox.cs.pdq.planner.dag.ApplyRule;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleDatabaseChaseInstance;
 import uk.ac.ox.cs.pdq.planner.util.PlanCreationUtility;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 
@@ -93,7 +78,7 @@ public abstract class DAGExplorer extends Explorer {
 //			Schema schema,
 			AccessibleSchema accessibleSchema, 
 			Chaser chaser, 
-			DatabaseConnection dbConn,
+			DatabaseConnection connection,
 			CostEstimator costEstimator) {
 		super(eventBus, collectStats);
 		Preconditions.checkArgument(parameters != null);
@@ -102,7 +87,7 @@ public abstract class DAGExplorer extends Explorer {
 //		Preconditions.checkArgument(schema != null);
 		Preconditions.checkArgument(accessibleSchema != null);
 		Preconditions.checkArgument(chaser != null);
-		Preconditions.checkArgument(dbConn != null);
+		Preconditions.checkArgument(connection != null);
 		Preconditions.checkArgument(costEstimator != null);
 		
 		this.parameters = parameters;
@@ -111,7 +96,7 @@ public abstract class DAGExplorer extends Explorer {
 //		this.schema = schema;
 		this.accessibleSchema = accessibleSchema;
 		this.chaser = chaser;
-		this.connection = dbConn;
+		this.connection = connection;
 		this.costEstimator = costEstimator;
 	}
 
@@ -169,48 +154,4 @@ public abstract class DAGExplorer extends Explorer {
 	protected boolean terminates() {
 		return false;
 	}
-
-	/**
-	 * Creates the initial configurations.
-	 *
-	 * @return a list of ApplyRule configurations based on the facts derived after chasing the input schema with the canonical database of the query
-	 * @throws PlannerException the planner exception
-	 * @throws SQLException 
-	 */
-	protected List<DAGChaseConfiguration> createApplyRuleConfigurations() throws SQLException {
-		AccessibleDatabaseChaseInstance state = null;
-		state = new AccessibleDatabaseChaseInstance(this.query, this.accessibleSchema, this.connection, false);
-		//TODO this should change to original and infacc
-		this.chaser.reasonUntilTermination(state, this.accessibleSchema.getOriginalDependencies());
-
-		List<DAGChaseConfiguration> collection = new ArrayList<>();
-		Collection<Pair<AccessibilityAxiom,Collection<Atom>>> pairs = state.groupFactsByAccessMethods(this.accessibleSchema.getAccessibilityAxioms());
-		for (Pair<AccessibilityAxiom, Collection<Atom>> pair: pairs) {
-			ApplyRule applyRule = null;
-			Collection<Collection<Atom>> bindings = new LinkedHashSet<>();
-			switch (this.parameters.getFollowUpHandling()) {
-			case MINIMAL:
-				for (Atom p: pair.getRight()) {
-					bindings.add(Sets.newHashSet(p));
-				}
-				break;
-			default:
-				bindings.add(pair.getRight());
-				break;
-			}
-			for (Collection<Atom> binding:bindings) {
-				AccessibleChaseInstance newState = (uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance) 
-						new AccessibleDatabaseChaseInstance(binding, this.connection, false);
-				applyRule = new ApplyRule(
-						newState,
-						pair.getLeft(),
-						Sets.newHashSet(binding)
-						);
-				applyRule.generate(this.chaser, this.query, this.accessibleSchema.getInferredAccessibilityAxioms());
-				collection.add(applyRule);
-			}
-		}
-		return collection;
-	}
-
 }

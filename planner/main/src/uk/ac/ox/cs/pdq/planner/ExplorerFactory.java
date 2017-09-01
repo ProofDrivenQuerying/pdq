@@ -197,8 +197,7 @@ public class ExplorerFactory {
 					successDominance,
 					filter,
 					validators,
-					parameters.getMaxDepth(),
-					parameters.getOrderAware());
+					parameters.getMaxDepth());
 
 		case DAG_SIMPLEDP:
 			return new uk.ac.ox.cs.pdq.planner.dag.explorer.DAGSimpleDP(
@@ -214,8 +213,7 @@ public class ExplorerFactory {
 					dominance,
 					filter,
 					validators,
-					parameters.getMaxDepth(),
-					parameters.getOrderAware());
+					parameters.getMaxDepth());
 
 		case DAG_CHASEFRIENDLYDP:
 			return new uk.ac.ox.cs.pdq.planner.dag.explorer.DAGChaseFriendlyDP(
@@ -231,8 +229,7 @@ public class ExplorerFactory {
 					dominance,
 					filter,
 					validators,
-					parameters.getMaxDepth(),
-					parameters.getOrderAware());
+					parameters.getMaxDepth());
 
 		case DAG_OPTIMIZED:
 			return new DAGOptimized(

@@ -4,21 +4,21 @@ import static uk.ac.ox.cs.pdq.planner.logging.performance.PlannerStatKeys.CANDID
 import static uk.ac.ox.cs.pdq.planner.logging.performance.PlannerStatKeys.CONFIGURATIONS;
 
 import java.sql.SQLException;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.Map.Entry;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Sets;
 import com.google.common.eventbus.EventBus;
 
+import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
@@ -26,14 +26,11 @@ import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
-import uk.ac.ox.cs.pdq.planner.dag.ApplyRule;
 import uk.ac.ox.cs.pdq.planner.dag.BinaryConfiguration;
-import uk.ac.ox.cs.pdq.planner.dag.ConfigurationUtility;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.filters.Filter;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator;
 import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominance;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.util.LimitReachedException;
 
@@ -66,15 +63,14 @@ public class DAGGeneric extends DAGExplorer {
 	/**  The current exploration depth. */
 	protected int depth = 1;
 
-	/**  True if pair selection is order aware. */
-	protected boolean orderAware;
-
 	/**  Returns pairs of configurations to combine. */
 	@SuppressWarnings("rawtypes")
 	protected PairSelector selector;
 
 	/**  Removes success dominated configurations *. */
 	protected final SuccessDominance successDominance;
+	
+	protected List<Entry<RelationalTerm, Cost>> exploredPlans = new ArrayList<>();
 
 	/**
 	 * Instantiates a new DAG generic.
@@ -111,8 +107,7 @@ public class DAGGeneric extends DAGExplorer {
 			SuccessDominance successDominance,
 			Filter filter,
 			List<Validator> validators,
-			int maxDepth,
-			boolean orderAware) throws PlannerException, SQLException {
+			int maxDepth) throws PlannerException, SQLException {
 		super(eventBus, collectStats, parameters, query, accessibleQuery, accessibleSchema, chaser, connection, costEstimator);
 		Preconditions.checkNotNull(successDominance);
 		Preconditions.checkArgument(validators != null);
@@ -120,9 +115,9 @@ public class DAGGeneric extends DAGExplorer {
 		this.successDominance = successDominance;
 		this.filter = filter;
 		this.validators = validators;
-		this.orderAware = orderAware;
 		this.maxDepth = maxDepth;
-		List<DAGChaseConfiguration> initialConfigurations = this.createApplyRuleConfigurations();
+		List<DAGChaseConfiguration> initialConfigurations = 
+				DAGExplorerUtilities.createInitialApplyRuleConfigurations(this.parameters, this.query, this.accessibleQuery, this.accessibleSchema, this.chaser, this.connection);
 		if(this.filter != null) {
 			Collection<DAGChaseConfiguration> toDelete = this.filter.filter(initialConfigurations);
 			initialConfigurations.removeAll(toDelete);
@@ -131,7 +126,7 @@ public class DAGGeneric extends DAGExplorer {
 		this.right = new ArrayList<>();
 		this.left.addAll(initialConfigurations);
 		this.right.addAll(initialConfigurations);
-		this.selector = new PairSelector<>(this.left, this.right, this.validators, this.orderAware);
+		this.selector = new PairSelector<>(this.left, this.right, this.validators);
 	}
 
 	/**
@@ -179,7 +174,7 @@ public class DAGGeneric extends DAGExplorer {
 
 			this.left.clear();
 			this.left.addAll(last);
-			this.selector = new PairSelector<>(this.left, this.right, this.validators, this.orderAware);
+			this.selector = new PairSelector<>(this.left, this.right, this.validators);
 
 			this.stats.set(CONFIGURATIONS, this.right.size());
 			this.stats.set(CANDIDATES, this.left.size());
@@ -201,7 +196,7 @@ public class DAGGeneric extends DAGExplorer {
 		Map<Pair<DAGChaseConfiguration, DAGChaseConfiguration>, DAGChaseConfiguration> last = new HashMap<>();
 		Pair<DAGChaseConfiguration, DAGChaseConfiguration> pair = null;
 		//Get the next pair of configurations to combine
-		while ((pair = this.selector.getNext(this.depth)) != null) {
+		while ((pair = this.selector.getNextPairOfConfigurationsToCompose(this.depth)) != null) {
 			if(!last.containsKey(pair)) {
 				//Create a new binary configuration
 				BinaryConfiguration configuration = new BinaryConfiguration(
@@ -214,6 +209,7 @@ public class DAGGeneric extends DAGExplorer {
 				if (this.bestPlan == null || !this.successDominance.isDominated(configuration.getPlan(), configuration.getCost(), this.bestPlan, this.bestCost)) {
 					//If it is closed and has a match, update the best configuration
 					if (configuration.isClosed() && configuration.isSuccessful(this.accessibleQuery)) {
+						this.exploredPlans.add(new AbstractMap.SimpleEntry<RelationalTerm, Cost>(configuration.getPlan(), configuration.getCost()));
 						this.setBestPlan(configuration);
 					} else {
 						last.put(pair, configuration);
@@ -228,154 +224,6 @@ public class DAGGeneric extends DAGExplorer {
 		return last.values();
 	}
 
-
-	/**
-	 * Returns pairs of configurations to combine.
-	 *
-	 * @author Efthymia Tsamoura
-	 * @param <S> the generic type
-	 */
-	protected static class PairSelector<S extends AccessibleChaseInstance> {
-
-		/**  Configurations to consider on the left. */
-		private List<DAGChaseConfiguration> left;
-
-		/**  Configurations to consider on the right. */
-		private List<DAGChaseConfiguration> right;
-		/** Checks whether the binary configuration composed from a given configuration pair satisfies given shape restrictions. */
-		private final List<Validator> validators;
-
-		/** The order aware. */
-		private final boolean orderAware;
-
-		/** The cache. */
-		private final Set<Set<Integer>> cache = Sets.newLinkedHashSet();
-
-		/** The reverse. */
-		private Pair<DAGChaseConfiguration, DAGChaseConfiguration> reverse = null;
-
-		/** The i. */
-		private int i = 0;
-
-		/** The j. */
-		private int j = 0;
-
-		/** The send reverse. */
-		private boolean sendReverse = false;
-
-		/**
-		 * Instantiates a new pair selector.
-		 *
-		 * @param left 		Configurations to consider on the left
-		 * @param right 		Configurations to consider on the right
-		 * @param validators 		Checks whether the binary configuration composed from a given configuration pair satisfies given shape restrictions
-		 */
-		public PairSelector(List<DAGChaseConfiguration> left,
-				List<DAGChaseConfiguration> right, List<Validator> validators) {
-			this(left, right, validators, true);
-		}
-
-		/**
-		 * Instantiates a new pair selector.
-		 *
-		 * @param left 		Configurations to consider on the left
-		 * @param right 		Configurations to consider on the right
-		 * @param validators 		Checks whether the binary configuration composed from a given configuration pair satisfies given shape restrictions
-		 * @param orderAware the order aware
-		 */
-		public PairSelector(
-				List<DAGChaseConfiguration> left,
-				List<DAGChaseConfiguration> right,
-				List<Validator> validators,
-				boolean orderAware) {
-			Preconditions.checkNotNull(left);
-			Preconditions.checkNotNull(right);
-			Preconditions.checkNotNull(validators);
-			this.left = left;
-			this.right = right;
-			this.validators = validators;
-			this.orderAware = orderAware;
-		}
-
-
-		/**
-		 * Gets the next.
-		 *
-		 * @param depth the depth
-		 * @return the next pair of configurations of the given combined depth
-		 */
-		public Pair<DAGChaseConfiguration, DAGChaseConfiguration> getNext(int depth) {
-			if(!this.sendReverse) {
-				if(this.i >= this.left.size() || this.j >= this.right.size()) {
-					return null;
-				}
-				DAGChaseConfiguration l = null;
-				DAGChaseConfiguration r = null;
-				boolean validLR = false;
-				boolean validRL = false;
-				do {
-					l = this.left.get(this.i);
-					r = this.right.get(this.j);
-					if (this.orderAware || !this.cache.contains(this.makeCacheKey(l, r))) {
-						validLR = ConfigurationUtility.validate(l, r, this.validators, depth);
-						validRL = ConfigurationUtility.validate(r, l, this.validators, depth);
-						if (validLR || validRL) {
-							break;
-						}
-					}
-					this.forward();
-					if (this.i >= this.left.size()) {
-						return null;
-					}
-				} while(this.j < this.right.size());
-
-				if (validLR) {
-					this.sendReverse = false;
-					if (this.orderAware && validRL) {
-						this.reverse = Pair.of(r, l);
-						this.sendReverse = true;
-					}
-				} else if (validRL) {
-					this.sendReverse = false;
-				}
-				if (!this.orderAware) {
-					this.cache.add(this.makeCacheKey(l, r));
-				}
-				this.forward();
-				return Pair.of(l, r);
-			}
-			this.sendReverse = false;
-			return this.reverse;
-		}
-
-		/**
-		 * Forward.
-		 */
-		private void forward() {
-			this.j++;
-			if (this.j >= this.right.size()) {
-				this.i++;
-				this.j = 0;
-			}
-		}
-
-		/**
-		 * Make cache key.
-		 *
-		 * @param configs the configs
-		 * @return the sets the
-		 */
-		private Set<Integer> makeCacheKey(DAGChaseConfiguration... configs) {
-			Set<Integer> result = new HashSet<>();
-			for (DAGChaseConfiguration config: configs) {
-				for (ApplyRule applyRule: config.getApplyRules()) {
-					result.add(applyRule.getId());
-				}
-			}
-			return result;
-		}
-	}
-
 	/**
 	 * Gets the right.
 	 *
@@ -384,5 +232,8 @@ public class DAGGeneric extends DAGExplorer {
 	public List<DAGChaseConfiguration> getRight() {
 		return this.right;
 	}
-
+	
+	public List<Entry<RelationalTerm, Cost>> getExploredPlans() {
+		return this.exploredPlans;
+	}
 }

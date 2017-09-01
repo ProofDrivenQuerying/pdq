@@ -107,7 +107,7 @@ public class DAGOptimized extends DAGExplorer {
 		this.reasoningThreads = reasoningThreads;
 		this.explorationThreads = explorationThreads;
 		this.maxDepth = maxDepth;
-		List<DAGChaseConfiguration> initialConfigurations = this.createApplyRuleConfigurations();
+		List<DAGChaseConfiguration> initialConfigurations = DAGExplorerUtilities.createInitialApplyRuleConfigurations(this.parameters, this.query, this.accessibleQuery, this.accessibleSchema, this.chaser, this.connection);
 		if(this.filter != null) {
 			Collection<DAGChaseConfiguration> toDelete = this.filter.filter(initialConfigurations);
 			initialConfigurations.removeAll(toDelete);

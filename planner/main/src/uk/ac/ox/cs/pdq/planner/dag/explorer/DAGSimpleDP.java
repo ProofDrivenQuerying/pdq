@@ -78,9 +78,8 @@ public class DAGSimpleDP extends DAGGeneric {
 			Dominance[] dominance,
 			Filter filter, 
 			List<Validator> validators,
-			int maxDepth, 
-			boolean orderAware) throws PlannerException, SQLException {
-		super(eventBus, collectStats, parameters, query, accessibleQuery, accessibleSchema, chaser, connection, costEstimator, successDominance, filter, validators, maxDepth, orderAware);
+			int maxDepth) throws PlannerException, SQLException {
+		super(eventBus, collectStats, parameters, query, accessibleQuery, accessibleSchema, chaser, connection, costEstimator, successDominance, filter, validators, maxDepth);
 		Preconditions.checkNotNull(dominance);
 		this.dominance = dominance;
 	}
@@ -97,7 +96,7 @@ public class DAGSimpleDP extends DAGGeneric {
 	protected Collection<DAGChaseConfiguration> mainLoop() throws PlannerException, LimitReachedException {
 		Map<Pair<DAGChaseConfiguration,DAGChaseConfiguration>,DAGChaseConfiguration> last = new HashMap<>();
 		Pair<DAGChaseConfiguration, DAGChaseConfiguration> pair = null;
-		while ((pair = this.selector.getNext(this.depth)) != null) {
+		while ((pair = this.selector.getNextPairOfConfigurationsToCompose(this.depth)) != null) {
 			if(!last.containsKey(pair)) {
 				BinaryConfiguration configuration = new BinaryConfiguration(
 						pair.getLeft(),
