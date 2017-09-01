@@ -12,6 +12,7 @@ import java.util.Set;
 
 import org.junit.Assert;
 
+import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Constant;
@@ -22,6 +23,7 @@ import uk.ac.ox.cs.pdq.planner.linear.explorer.Candidate;
 import uk.ac.ox.cs.pdq.planner.reasoning.Configuration;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
+import uk.ac.ox.cs.pdq.planner.util.PlanCreationUtility;
 import uk.ac.ox.cs.pdq.reasoning.chase.Utility;
 
 // TODO: Auto-generated Javadoc
@@ -77,7 +79,12 @@ public class LinearChaseConfiguration extends ChaseConfiguration implements Line
 		for (Candidate candidate:candidatesToExpose) 
 			matches.add(candidate.getMatch());
 		this.chaseStep(matches);
-		this.plan = LeftDeepPlanGenerator.createLeftDeepPlan(this.rule.getBaseRelation(), this.rule.getAccessMethod(), this.facts, parent.getPlan());
+		//this.plan = LeftDeepPlanGenerator.createLeftDeepPlan(this.rule.getBaseRelation(), this.rule.getAccessMethod(), this.facts, parent.getPlan());
+		RelationalTerm op1 = PlanCreationUtility.createSingleAccessPlan(this.rule.getBaseRelation(), this.rule.getAccessMethod(), this.facts);
+		if(parent.getPlan() != null)
+			this.plan = PlanCreationUtility.createPlan(parent.getPlan(),op1);
+		else 
+			this.plan = op1;
 	}
 
 	/**

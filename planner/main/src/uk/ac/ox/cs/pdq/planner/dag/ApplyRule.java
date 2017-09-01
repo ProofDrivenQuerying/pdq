@@ -68,7 +68,7 @@ public class ApplyRule extends DAGChaseConfiguration {
 		Preconditions.checkNotNull(facts);
 		this.rule = rule;
 		this.facts = facts;
-		this.plan = DAGPlanGenerator.toDAGPlan(this);
+		this.plan = DAGPlanGenerator.toPlan(this);
 //		Preconditions.checkState(this.getInput().containsAll(this.getPlan().getInputs()));
 //		Preconditions.checkState(this.getPlan().getInputs().containsAll(this.getPlan().getInputs()));
 	}

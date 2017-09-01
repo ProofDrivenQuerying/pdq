@@ -39,7 +39,7 @@ import com.google.common.collect.Sets;
  *
  * @author Efthymia Tsamoura
  */
-public class ReasoningThread implements Callable<Boolean> {
+public class CreateBinaryConfigurationsThread implements Callable<Boolean> {
 
 	/**  The input query*. */
 	protected final ConjunctiveQuery query;
@@ -70,10 +70,10 @@ public class ReasoningThread implements Callable<Boolean> {
 	private final int depth;
 
 	/**  The configurations to consider on the left. */
-	private final Queue<DAGChaseConfiguration> left;
+	private final Queue<DAGChaseConfiguration> leftSideConfigurations;
 
 	/**  The configurations to consider on the right. */
-	private final Collection<DAGChaseConfiguration> right;
+	private final Collection<DAGChaseConfiguration> rightSideConfigurations;
 	
 	/** The best configuration of the previous exploration round.**/
 	private final DAGChaseConfiguration best;
@@ -88,7 +88,7 @@ public class ReasoningThread implements Callable<Boolean> {
 	private final List<Validator> validators;
 	
 	/**  The output configurations. */
-	private final Map<Pair<DAGChaseConfiguration, DAGChaseConfiguration>, DAGChaseConfiguration> output;
+	private final Map<Pair<DAGChaseConfiguration, DAGChaseConfiguration>, DAGChaseConfiguration> outputConfigurations;
 
 	/**
 	 * Instantiates a new reasoning thread.
@@ -112,7 +112,7 @@ public class ReasoningThread implements Callable<Boolean> {
 	 * 			then we copy the state of c to the state of c' = BinConfiguration(c'_1,c'_2).
 	 * @param output 		The output configurations
 	 */
-	public ReasoningThread(
+	public CreateBinaryConfigurationsThread(
 			int depth,
 			Queue<DAGChaseConfiguration> left,
 			Collection<DAGChaseConfiguration> right,
@@ -138,7 +138,6 @@ public class ReasoningThread implements Callable<Boolean> {
 		Preconditions.checkNotNull(costEstimator);
 		Preconditions.checkNotNull(representatives);
 		Preconditions.checkNotNull(equivalenceClasses);
-
 		this.query = query;
 		this.dependencies = dependencies;
 		this.chaser = chaser;
@@ -146,14 +145,13 @@ public class ReasoningThread implements Callable<Boolean> {
 		this.costEstimator = costEstimator;
 		this.equivalenceClasses = equivalenceClasses;
 		this.representatives = representatives;
-		
 		this.validators = validators;
 		this.depth = depth;
-		this.left = left;
-		this.right = right;
+		this.leftSideConfigurations = left;
+		this.rightSideConfigurations = right;
 		this.best = best;
 		this.successDominance = successDominance;
-		this.output = output;
+		this.outputConfigurations = output;
 	}
 
 	/**
@@ -167,20 +165,19 @@ public class ReasoningThread implements Callable<Boolean> {
 	public Boolean call() throws SQLException {
 		DAGChaseConfiguration left;
 		//Poll the next configuration from the left input
-		while ((left = this.left.poll()) != null) {
+		while ((left = this.leftSideConfigurations.poll()) != null) {
 			Preconditions.checkNotNull(this.equivalenceClasses.getEquivalenceClass(left));
 			Preconditions.checkState(!this.equivalenceClasses.getEquivalenceClass(left).isEmpty());
 			//If it comes from an equivalence class that is not sleeping
 			if(!this.equivalenceClasses.getEquivalenceClass(left).isSleeping()) {
 				//Select configuration from the right input to combine with
-				Collection<DAGChaseConfiguration> selected = this.select(left, this.right, this.equivalenceClasses, this.depth);
+				Collection<DAGChaseConfiguration> selected = this.selectConfigurationsToCombineOnTheRight(left, this.rightSideConfigurations, this.equivalenceClasses, this.depth);
 				for(DAGChaseConfiguration entry:selected) {
 					//If the left configuration participates in the creation of at most topk new binary configurations
-					if (!this.output.containsKey(Pair.of(left, entry)) ) {
-						DAGChaseConfiguration configuration = this.merge(left, entry);
+					if (!this.outputConfigurations.containsKey(Pair.of(left, entry)) ) {
+						DAGChaseConfiguration configuration = this.createBinaryConfiguration(left, entry);
 						//Create a new binary configuration
-						this.output.put(Pair.of(left, entry), configuration);
-						
+						this.outputConfigurations.put(Pair.of(left, entry), configuration);
 					}
 				}
 			}
@@ -197,32 +194,18 @@ public class ReasoningThread implements Callable<Boolean> {
 	 * @param depth the depth
 	 * @return the collection
 	 */
-	private Collection<DAGChaseConfiguration> select(DAGChaseConfiguration left, Collection<DAGChaseConfiguration> right, DAGEquivalenceClasses equivalenceClasses, int depth) {
+	private Collection<DAGChaseConfiguration> selectConfigurationsToCombineOnTheRight(DAGChaseConfiguration left, Collection<DAGChaseConfiguration> right, DAGEquivalenceClasses equivalenceClasses, int depth) {
 		Set<DAGChaseConfiguration> selected = Sets.newLinkedHashSet();
 		for(DAGChaseConfiguration configuration:right) {
 			Preconditions.checkNotNull(equivalenceClasses.getEquivalenceClass(configuration));
 			Preconditions.checkState(!equivalenceClasses.getEquivalenceClass(configuration).isEmpty());
 			if(!equivalenceClasses.getEquivalenceClass(configuration).isSleeping() &&
-					this.validate(left, configuration, depth) &&
+					ConfigurationUtility.validate(left, configuration, this.validators, depth) &&
 					ConfigurationUtility.getPotential(left, configuration, this.best == null ? null : this.best.getPlan(), this.best.getCost(), this.costEstimator, this.successDominance)
 					)
 				selected.add(configuration);
 		}
 		return selected;
-	}
-	
-	/**
-	 * Validate.
-	 *
-	 * @param left the left
-	 * @param right the right
-	 * @param depth the depth
-	 * @return 		true if the binary configuration composed from the left and right input configurations passes the validation tests,
-	 * 		i.e., satisfies given shape restrictions.
-	 * 		If depth > 0, then the corresponding binary configuration must be of the given depth.
-	 */
-	private boolean validate(DAGChaseConfiguration left, DAGChaseConfiguration right, int depth) {
-		return ConfigurationUtility.validate(left, right, this.validators, depth);
 	}
 	
 	/**
@@ -233,7 +216,7 @@ public class ReasoningThread implements Callable<Boolean> {
 	 * @return a new binary configuration BinConfiguration(left, right)
 	 * @throws SQLException 
 	 */
-	protected DAGChaseConfiguration merge(DAGChaseConfiguration left, DAGChaseConfiguration right) throws SQLException {
+	protected DAGChaseConfiguration createBinaryConfiguration(DAGChaseConfiguration left, DAGChaseConfiguration right) throws SQLException {
 		DAGChaseConfiguration configuration = null;
 		//A configuration BinConfiguration(c,c'), where c and c' belong to the equivalence classes of
 		//the left and right input configuration, respectively.
@@ -258,7 +241,6 @@ public class ReasoningThread implements Callable<Boolean> {
 			}	
 			this.chaser.reasonUntilTermination(configuration.getState(), this.dependencies);
 			this.representatives.put(this.equivalenceClasses, left, right, configuration);
-
 		}
 		//otherwise, re-use the state of the representative
 		else if(representative != null) {

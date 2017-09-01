@@ -23,7 +23,7 @@ import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominance;
  * @author Efthymia Tsamoura
  *
  */
-public class ExplorationThread implements Callable<DAGChaseConfiguration> {
+public class ConfigurationSpaceExplorationThread implements Callable<DAGChaseConfiguration> {
 
 	/**  The input query*. */
 	private final ConjunctiveQuery query;
@@ -62,7 +62,7 @@ public class ExplorationThread implements Callable<DAGChaseConfiguration> {
 	 * @param output 		The output non-dominated and not successful configurations
 	 * @param successfulConfigurations 		The output non-dominated and successful (and not closed) configurations
 	 */
-	public ExplorationThread(
+	public ConfigurationSpaceExplorationThread(
 			ConjunctiveQuery query,
 			Queue<DAGChaseConfiguration> input,
 			DAGEquivalenceClasses equivalenceClasses,

@@ -2,31 +2,29 @@ package uk.ac.ox.cs.pdq.planner.dag;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Relation;
-import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
-import uk.ac.ox.cs.pdq.planner.dag.BinaryConfiguration.BinaryConfigurationTypes;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator;
 import uk.ac.ox.cs.pdq.planner.dominance.Dominance;
 import uk.ac.ox.cs.pdq.planner.dominance.FactDominance;
 import uk.ac.ox.cs.pdq.planner.dominance.FastFactDominance;
 import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominance;
-import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
+import uk.ac.ox.cs.pdq.planner.util.PlanCreationUtility;
 import uk.ac.ox.cs.pdq.util.Utility;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 
 
 // TODO: Auto-generated Javadoc
@@ -108,42 +106,6 @@ public class ConfigurationUtility {
 	}
 
 	/**
-	 * Checks if is composable.
-	 *
-	 * @param left the left
-	 * @param right the right
-	 * @return true if the input pair of configurations is composable
-	 */
-	public static Boolean isComposable(DAGChaseConfiguration left, DAGChaseConfiguration right) {
-		if(!right.getInput().isEmpty() && left.getOutput().containsAll(right.getInput())) 
-			return true;
-		return false;
-	}
-
-	/**
-	 * TOCOMMENT: WHAT IS THIS
-	 *
-	 * @param left the left
-	 * @param right the right
-	 * @return true if the input pair of configurations is output independent
-	 */
-	public static Boolean isOutputIndependent(DAGChaseConfiguration left, DAGChaseConfiguration right) {
-		return Collections.disjoint(left.getProperOutput(), right.getProperOutput());
-	}
-
-	/**
-	 *
-	 * @param left the left
-	 * @param right the right
-	 * @return true if the input pair of configurations is mergeable
-	 */
-	public static Boolean isMergeable(DAGChaseConfiguration left, DAGChaseConfiguration right) {
-		if (Collections.disjoint(left.getProperOutput(), right.getInput()) && Collections.disjoint(left.getInput(), right.getProperOutput())) 
-			return true;
-		return false;
-	}
-
-	/**
 	 * TOCOMMENT: WHAT DOES IT MEAN
 	 *
 	 * @param left the left
@@ -183,17 +145,6 @@ public class ConfigurationUtility {
 			}
 		}
 		return true;
-	}
-
-	/**
-	 * Merge.
-	 *
-	 * @param left the left
-	 * @param right the right
-	 * @return a state that is the union of the left and right input states
-	 */
-	public static AccessibleChaseInstance merge(DAGChaseConfiguration left, DAGChaseConfiguration right) {
-		return left.getState().merge(right.getState());
 	}
 	
 	/**
@@ -235,27 +186,7 @@ public class ConfigurationUtility {
 			bushiness++;
 		return bushiness;
 	}
-
-	/**
-	 *
-	 * @param left the left
-	 * @param right the right
-	 * @return the type of the binary configuration composed from the left and right input configurations
-	 */
-	public static BinaryConfigurationTypes getCombinationType(DAGChaseConfiguration left, DAGChaseConfiguration right) {
-		if (isNonTrivial(left, right)) {
-			if (isComposable(left, right)) {
-				if (isOutputIndependent(left, right)) 
-					return BinaryConfigurationTypes.PCOMPOSE;
-				return BinaryConfigurationTypes.JCOMPOSE;
-			} else if (isMergeable(left, right)) 
-				return BinaryConfigurationTypes.MERGE;
-			else 
-				return BinaryConfigurationTypes.GENCOMPOSE;
-		}
-		return null;
-	}
-
+	
 	/**
 	 *
 	 * @param left the left
@@ -337,11 +268,11 @@ public class ConfigurationUtility {
 			Cost costOfBestPlan,
 			CostEstimator costEstimator, 
 			SuccessDominance successDominance) {
-		BinaryConfiguration.BinaryConfigurationTypes type = getCombinationType(left, right);
-		if(type != null) {
+		//BinaryConfiguration.BinaryConfigurationTypes type = getCombinationType(left, right);
+		if (isNonTrivial(left, right)) {
 			if(bestPlan == null) 
 				return true;
-			RelationalTerm plan = DAGPlanGenerator.toDAGPlan(left, right, type);
+			RelationalTerm plan = PlanCreationUtility.createPlan(left.getPlan(), right.getPlan());
 			Cost cost = costEstimator.cost(plan);
 			return !successDominance.isDominated(plan, cost, bestPlan, costOfBestPlan);
 		}

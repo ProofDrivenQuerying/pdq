@@ -26,7 +26,7 @@ import uk.ac.ox.cs.pdq.planner.PlannerParameters.FollowUpHandling;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.DAGExplorerUtilities;
-import uk.ac.ox.cs.pdq.planner.dag.explorer.PairSelector;
+import uk.ac.ox.cs.pdq.planner.dag.explorer.SelectorOfPairsOfConfigurationsToCombine;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.DefaultValidator;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator;
 import uk.ac.ox.cs.pdq.planner.util.PlannerUtility;
@@ -117,7 +117,7 @@ public class TestPairSelector {
 			List<DAGChaseConfiguration> right = configurations;
 			
 			Pair<DAGChaseConfiguration, DAGChaseConfiguration> pair = null;
-			PairSelector selector = new PairSelector<>(left, right, validators);
+			SelectorOfPairsOfConfigurationsToCombine selector = new SelectorOfPairsOfConfigurationsToCombine<>(left, right, validators);
 			
 			while ((pair = selector.getNextPairOfConfigurationsToCompose(4)) != null) {
 				//TODO assert that we got all pairs 

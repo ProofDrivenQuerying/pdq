@@ -55,17 +55,17 @@ public class DAGGeneric extends DAGExplorer {
 	private final List<Validator> validators;
 
 	/** The left. */
-	private final List<DAGChaseConfiguration> left;
+	private final List<DAGChaseConfiguration> leftSideConfigurations;
 
 	/** The right. */
-	private final List<DAGChaseConfiguration> right;
+	private final List<DAGChaseConfiguration> rightSideConfigurations;
 
 	/**  The current exploration depth. */
 	protected int depth = 1;
 
 	/**  Returns pairs of configurations to combine. */
 	@SuppressWarnings("rawtypes")
-	protected PairSelector selector;
+	protected SelectorOfPairsOfConfigurationsToCombine selector;
 
 	/**  Removes success dominated configurations *. */
 	protected final SuccessDominance successDominance;
@@ -122,11 +122,11 @@ public class DAGGeneric extends DAGExplorer {
 			Collection<DAGChaseConfiguration> toDelete = this.filter.filter(initialConfigurations);
 			initialConfigurations.removeAll(toDelete);
 		}
-		this.left = new ArrayList<>();
-		this.right = new ArrayList<>();
-		this.left.addAll(initialConfigurations);
-		this.right.addAll(initialConfigurations);
-		this.selector = new PairSelector<>(this.left, this.right, this.validators);
+		this.leftSideConfigurations = new ArrayList<>();
+		this.rightSideConfigurations = new ArrayList<>();
+		this.leftSideConfigurations.addAll(initialConfigurations);
+		this.rightSideConfigurations.addAll(initialConfigurations);
+		this.selector = new SelectorOfPairsOfConfigurationsToCombine<>(this.leftSideConfigurations, this.rightSideConfigurations, this.validators);
 	}
 
 	/**
@@ -144,7 +144,7 @@ public class DAGGeneric extends DAGExplorer {
 		}
 		//Check the ApplyRule configurations for success
 		if (this.depth == 1) {
-			for (DAGChaseConfiguration configuration:this.right) {
+			for (DAGChaseConfiguration configuration:this.rightSideConfigurations) {
 				Cost cost = this.costEstimator.cost(configuration.getPlan());
 				configuration.setCost(cost);
 				if (configuration.isClosed()
@@ -154,8 +154,8 @@ public class DAGGeneric extends DAGExplorer {
 					this.setBestPlan(configuration);
 				}
 			}
-			this.stats.set(CONFIGURATIONS, this.right.size());
-			this.stats.set(CANDIDATES, this.right.size());
+			this.stats.set(CONFIGURATIONS, this.rightSideConfigurations.size());
+			this.stats.set(CANDIDATES, this.rightSideConfigurations.size());
 		} else if (this.depth > 1) {
 			//Create all binary configurations of depth up to this.depth
 			Collection<DAGChaseConfiguration> last = this.mainLoop();
@@ -167,17 +167,17 @@ public class DAGGeneric extends DAGExplorer {
 			//Filter out configurations
 			if (this.filter != null) {
 				Collection<DAGChaseConfiguration> toDelete;
-				toDelete = this.filter.filter(CollectionUtils.union(last,this.right));
-				this.right.removeAll(toDelete);
+				toDelete = this.filter.filter(CollectionUtils.union(last,this.rightSideConfigurations));
+				this.rightSideConfigurations.removeAll(toDelete);
 				last.removeAll(toDelete);
 			}
 
-			this.left.clear();
-			this.left.addAll(last);
-			this.selector = new PairSelector<>(this.left, this.right, this.validators);
+			this.leftSideConfigurations.clear();
+			this.leftSideConfigurations.addAll(last);
+			this.selector = new SelectorOfPairsOfConfigurationsToCombine<>(this.leftSideConfigurations, this.rightSideConfigurations, this.validators);
 
-			this.stats.set(CONFIGURATIONS, this.right.size());
-			this.stats.set(CANDIDATES, this.left.size());
+			this.stats.set(CONFIGURATIONS, this.rightSideConfigurations.size());
+			this.stats.set(CANDIDATES, this.leftSideConfigurations.size());
 		} else {
 			throw new IllegalStateException("Search depth cannot be < 1");
 		}
@@ -230,7 +230,7 @@ public class DAGGeneric extends DAGExplorer {
 	 * @return the right
 	 */
 	public List<DAGChaseConfiguration> getRight() {
-		return this.right;
+		return this.rightSideConfigurations;
 	}
 	
 	public List<Entry<RelationalTerm, Cost>> getExploredPlans() {

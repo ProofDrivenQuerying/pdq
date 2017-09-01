@@ -8,6 +8,7 @@ import java.util.List;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance;
+import uk.ac.ox.cs.pdq.planner.util.PlanCreationUtility;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 
 import com.google.common.base.Preconditions;
@@ -24,29 +25,6 @@ import com.google.common.base.Preconditions;
  *
  */
 public class BinaryConfiguration extends DAGChaseConfiguration {
-
-	/**
-	 * TCOMMENT THIS SHOULD GO
-	 *
-	 * @author Efthymia Tsamoura
-	 */
-	public enum BinaryConfigurationTypes {
-		
-		/** The pcompose. */
-		PCOMPOSE,
-		
-		/** The jcompose. */
-		JCOMPOSE,
-		
-		/** The merge. */
-		MERGE,
-		
-		/** The gencompose. */
-		GENCOMPOSE;
-	}
-
-	/** The type of the binary configuration, e.g., Merge, PCompose, JCompose, GenCompose */
-	private final BinaryConfigurationTypes type;
 
 	/**  The left sub-configuration. */
 	private final DAGChaseConfiguration left;
@@ -73,7 +51,7 @@ public class BinaryConfiguration extends DAGChaseConfiguration {
 			DAGChaseConfiguration left,
 			DAGChaseConfiguration right
 			) {
-		super(ConfigurationUtility.merge(left, right),
+		super(left.getState().merge(right.getState()),
 				ConfigurationUtility.getInput(left, right),
 				ConfigurationUtility.getOutput(left, right),
 				left.getHeight() + right.getHeight(),
@@ -83,11 +61,7 @@ public class BinaryConfiguration extends DAGChaseConfiguration {
 		Preconditions.checkNotNull(right);
 		this.left = left;
 		this.right = right;
-		this.type = ConfigurationUtility.getCombinationType(left, right);
-		this.plan = DAGPlanGenerator.toDAGPlan(this);
-//		this.setPlan(plan);
-//		Preconditions.checkState(this.getInput().containsAll(this.getPlan().getInputs()));
-//		Preconditions.checkState(this.getPlan().getInputs().containsAll(this.getPlan().getInputs()));
+		this.plan = PlanCreationUtility.createPlan(left.getPlan(), right.getPlan());
 		this.rules = ConfigurationUtility.getApplyRules(this);
 		this.rulesList = ConfigurationUtility.getApplyRulesList(this);
 	}
@@ -114,11 +88,7 @@ public class BinaryConfiguration extends DAGChaseConfiguration {
 		Preconditions.checkNotNull(right);
 		this.left = left;
 		this.right = right;
-		this.type = ConfigurationUtility.getCombinationType(left, right);
-		this.plan = DAGPlanGenerator.toDAGPlan(this);
-//		this.setPlan(plan);
-//		Preconditions.checkState(this.getInput().containsAll(this.getPlan().getInputs()));
-//		Preconditions.checkState(this.getPlan().getInputs().containsAll(this.getPlan().getInputs()));
+		this.plan = PlanCreationUtility.createPlan(left.getPlan(), right.getPlan());
 		this.rules = ConfigurationUtility.getApplyRules(this);
 		this.rulesList = ConfigurationUtility.getApplyRulesList(this);
 	}
@@ -132,14 +102,6 @@ public class BinaryConfiguration extends DAGChaseConfiguration {
 	 */
 	public void reasonUntilTermination(Chaser chaser, ConjunctiveQuery query, Dependency[] dependencies) {
 		chaser.reasonUntilTermination(this.getState(), dependencies);
-	}
-
-	/**
-	 *
-	 * @return the type of the binary configuration, e.g., Merge, PCompose, JCompose, GenCompose
-	 */
-	public BinaryConfigurationTypes getType() {
-		return this.type;
 	}
 
 	/**
@@ -165,7 +127,7 @@ public class BinaryConfiguration extends DAGChaseConfiguration {
 	@Override
 	public String toString() {
 		if(this.toString == null) {
-			this.toString = this.type.toString() +
+			this.toString = "BINARY"+
 					"(" + this.left.toString() + "," + this.right.toString() + ")";
 		}
 		return this.toString;

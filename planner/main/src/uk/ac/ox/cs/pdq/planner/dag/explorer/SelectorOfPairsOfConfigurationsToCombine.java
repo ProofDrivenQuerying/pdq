@@ -21,13 +21,13 @@ import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseIn
  * @author Efthymia Tsamoura
  * @param <S> the generic type
  */
-public class PairSelector<S extends AccessibleChaseInstance> {
+public class SelectorOfPairsOfConfigurationsToCombine<S extends AccessibleChaseInstance> {
 
 	/**  Configurations to consider on the left. */
-	private List<DAGChaseConfiguration> left;
+	private List<DAGChaseConfiguration> leftSideConfigurations;
 
 	/**  Configurations to consider on the right. */
-	private List<DAGChaseConfiguration> right;
+	private List<DAGChaseConfiguration> rightSideConfigurations;
 	
 	/** Checks whether the binary configuration composed from a given configuration pair satisfies given shape restrictions. */
 	private final List<Validator> validators;
@@ -49,15 +49,15 @@ public class PairSelector<S extends AccessibleChaseInstance> {
 	 * @param right 		Configurations to consider on the right
 	 * @param validators 		Checks whether the binary configuration composed from a given configuration pair satisfies given shape restrictions
 	 */
-	public PairSelector(
+	public SelectorOfPairsOfConfigurationsToCombine(
 			List<DAGChaseConfiguration> left,
 			List<DAGChaseConfiguration> right,
 			List<Validator> validators) {
 		Preconditions.checkNotNull(left);
 		Preconditions.checkNotNull(right);
 		Preconditions.checkNotNull(validators);
-		this.left = left;
-		this.right = right;
+		this.leftSideConfigurations = left;
+		this.rightSideConfigurations = right;
 		this.validators = validators;
 	}
 
@@ -68,7 +68,7 @@ public class PairSelector<S extends AccessibleChaseInstance> {
 	 */
 	public Pair<DAGChaseConfiguration, DAGChaseConfiguration> getNextPairOfConfigurationsToCompose(int depth) {
 		if(!this.returnInverseBinaryConfiguration) {
-			if(this.indexOverConfigurationsInLeftList >= this.left.size() || this.indexOverConfigurationsInRightList >= this.right.size()) {
+			if(this.indexOverConfigurationsInLeftList >= this.leftSideConfigurations.size() || this.indexOverConfigurationsInRightList >= this.rightSideConfigurations.size()) {
 				return null;
 			}
 			DAGChaseConfiguration l = null;
@@ -76,8 +76,8 @@ public class PairSelector<S extends AccessibleChaseInstance> {
 			boolean binaryConfigurationOverLeftAndRightInputsValid = false;
 			boolean binaryConfigurationOverRightAndLeftInputsValid = false;
 			do {
-				l = this.left.get(this.indexOverConfigurationsInLeftList);
-				r = this.right.get(this.indexOverConfigurationsInRightList);
+				l = this.leftSideConfigurations.get(this.indexOverConfigurationsInLeftList);
+				r = this.rightSideConfigurations.get(this.indexOverConfigurationsInRightList);
 				if (!this.idsOfBinaryConfigurationsReturnedInThePast.contains(this.createIdForTheCorrespondingOutputBinaryConfiguration(l, r))) {
 					binaryConfigurationOverLeftAndRightInputsValid = ConfigurationUtility.validate(l, r, this.validators, depth);
 					binaryConfigurationOverRightAndLeftInputsValid = ConfigurationUtility.validate(r, l, this.validators, depth);
@@ -86,10 +86,10 @@ public class PairSelector<S extends AccessibleChaseInstance> {
 					}
 				}
 				this.moveIndicesOverLeftAndRightListsForward();
-				if (this.indexOverConfigurationsInLeftList >= this.left.size()) {
+				if (this.indexOverConfigurationsInLeftList >= this.leftSideConfigurations.size()) {
 					return null;
 				}
-			} while(this.indexOverConfigurationsInRightList < this.right.size());
+			} while(this.indexOverConfigurationsInRightList < this.rightSideConfigurations.size());
 			
 			if(binaryConfigurationOverLeftAndRightInputsValid) {
 				if(binaryConfigurationOverRightAndLeftInputsValid) {
@@ -116,7 +116,7 @@ public class PairSelector<S extends AccessibleChaseInstance> {
 
 	private void moveIndicesOverLeftAndRightListsForward() {
 		this.indexOverConfigurationsInRightList++;
-		if (this.indexOverConfigurationsInRightList >= this.right.size()) {
+		if (this.indexOverConfigurationsInRightList >= this.rightSideConfigurations.size()) {
 			this.indexOverConfigurationsInLeftList++;
 			this.indexOverConfigurationsInRightList = 0;
 		}

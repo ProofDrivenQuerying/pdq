@@ -50,16 +50,16 @@ public class DAGOptimized extends DAGExplorer {
 	protected int depth;
 
 	/**  Performs parallel chasing. */
-	private final IterativeExecutor reasoningThreads;
+	private final IterativeExecutor binaryConfigurationCreationThreads;
 
 	/**  Iterate over all newly created configurations in parallel and returns the best configuration. */
-	private final IterativeExecutor explorationThreads;
+	private final IterativeExecutor configurationSpaceExplorationThreads;
 
 	/**  Filters out configurations at the end of each iteration. */
 	private final Filter filter;
 
 	/**  Configurations produced during the previous round. */
-	private final Queue<DAGChaseConfiguration> left;
+	private final Queue<DAGChaseConfiguration> leftSideConfigurations;
 
 	/**  Classes of structurally equivalent configurations. */
 	private final DAGEquivalenceClasses equivalenceClasses;
@@ -79,8 +79,8 @@ public class DAGOptimized extends DAGExplorer {
 	 * @param detector 		Detects homomorphisms during chasing
 	 * @param costEstimator 		Estimates the cost of a plan
 	 * @param filter 		Filters out configurations at the end of each iteration
-	 * @param reasoningThreads 		Performs parallel chasing
-	 * @param explorationThreads 		Iterates over all newly created configurations in parallel and returns the best configuration
+	 * @param binaryConfigurationCreationThreads 		Performs parallel chasing
+	 * @param configurationSpaceExplorationThreads 		Iterates over all newly created configurations in parallel and returns the best configuration
 	 * @param maxDepth 		The maximum depth to explore
 	 * @throws PlannerException the planner exception
 	 * @throws SQLException 
@@ -96,25 +96,25 @@ public class DAGOptimized extends DAGExplorer {
 			DatabaseConnection connection,
 			CostEstimator costEstimator,
 			Filter filter,
-			IterativeExecutor reasoningThreads,
-			IterativeExecutor explorationThreads,
+			IterativeExecutor binaryConfigurationCreationThreads,
+			IterativeExecutor configurationSpaceExplorationThreads,
 			int maxDepth) throws PlannerException, SQLException {
 		super(eventBus, collectStats, parameters,
 				query, accessibleQuery, accessibleSchema, chaser, connection, costEstimator);
-		Preconditions.checkNotNull(reasoningThreads);
-		Preconditions.checkNotNull(explorationThreads);
+		Preconditions.checkNotNull(binaryConfigurationCreationThreads);
+		Preconditions.checkNotNull(configurationSpaceExplorationThreads);
 		this.filter = filter;
-		this.reasoningThreads = reasoningThreads;
-		this.explorationThreads = explorationThreads;
+		this.binaryConfigurationCreationThreads = binaryConfigurationCreationThreads;
+		this.configurationSpaceExplorationThreads = configurationSpaceExplorationThreads;
 		this.maxDepth = maxDepth;
 		List<DAGChaseConfiguration> initialConfigurations = DAGExplorerUtilities.createInitialApplyRuleConfigurations(this.parameters, this.query, this.accessibleQuery, this.accessibleSchema, this.chaser, this.connection);
 		if(this.filter != null) {
 			Collection<DAGChaseConfiguration> toDelete = this.filter.filter(initialConfigurations);
 			initialConfigurations.removeAll(toDelete);
 		}
-		this.left = new ConcurrentLinkedQueue<>();
+		this.leftSideConfigurations = new ConcurrentLinkedQueue<>();
 		this.equivalenceClasses = new SynchronizedEquivalenceClasses();
-		this.left.addAll(initialConfigurations);
+		this.leftSideConfigurations.addAll(initialConfigurations);
 		for(DAGChaseConfiguration initialConfiguration: initialConfigurations) {
 			this.equivalenceClasses.addEntry(initialConfiguration);
 		}
@@ -134,7 +134,7 @@ public class DAGOptimized extends DAGExplorer {
 		}
 		//Check the ApplyRule configurations for success
 		if (this.depth == 1) {
-			for (DAGChaseConfiguration configuration: this.left) {
+			for (DAGChaseConfiguration configuration: this.leftSideConfigurations) {
 				Cost cost = this.costEstimator.cost(configuration.getPlan());
 				configuration.setCost(cost);
 				if (this.bestPlan == null
@@ -144,13 +144,13 @@ public class DAGOptimized extends DAGExplorer {
 					}
 				}
 			}
-			this.stats.set(CONFIGURATIONS, this.left.size());
+			this.stats.set(CONFIGURATIONS, this.leftSideConfigurations.size());
 		} else if (this.depth > 1) {
 			this.checkLimitReached();
 			//Perform parallel chasing
 			Collection<DAGChaseConfiguration> configurations =
-					this.reasoningThreads.reason(this.depth,
-							this.left,
+					this.binaryConfigurationCreationThreads.reason(this.depth,
+							this.leftSideConfigurations,
 							this.equivalenceClasses.getConfigurations(),
 							this.accessibleQuery,
 							this.accessibleSchema.getInferredAccessibilityAxioms(),
@@ -166,7 +166,7 @@ public class DAGOptimized extends DAGExplorer {
 
 			this.checkLimitReached();
 			//Iterate over all newly created configurations in parallel and return the best configuration
-			ExplorationResults results = this.explorationThreads.explore(
+			ExplorationResults results = this.configurationSpaceExplorationThreads.explore(
 					this.accessibleQuery,
 					new ConcurrentLinkedQueue<>(configurations),
 					this.equivalenceClasses,
@@ -191,18 +191,18 @@ public class DAGOptimized extends DAGExplorer {
 				return;
 			}
 
-			this.left.clear();
-			this.left.addAll(CollectionUtils.intersection(output, this.equivalenceClasses.getConfigurations()));
+			this.leftSideConfigurations.clear();
+			this.leftSideConfigurations.addAll(CollectionUtils.intersection(output, this.equivalenceClasses.getConfigurations()));
 
 			//Filter out configurations
 			if(this.filter != null) {
 				Collection<DAGChaseConfiguration> toDelete = this.filter.filter(this.equivalenceClasses.getConfigurations());
 				this.equivalenceClasses.removeAll(toDelete);
-				this.left.removeAll(toDelete);
+				this.leftSideConfigurations.removeAll(toDelete);
 			}
 
  			this.stats.set(CONFIGURATIONS, this.equivalenceClasses.size());
-			this.stats.set(CANDIDATES, this.left.size());
+			this.stats.set(CANDIDATES, this.leftSideConfigurations.size());
 		}
 		this.depth++;
 	}

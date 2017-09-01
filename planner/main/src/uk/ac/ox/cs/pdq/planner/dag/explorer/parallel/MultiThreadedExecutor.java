@@ -107,7 +107,7 @@ public class MultiThreadedExecutor extends IterativeExecutor {
 				List<Callable<Boolean>> threads = new ArrayList<>();
 				for(int j = 0; j < this.mtcontext.getParallelThreads(); ++j) {
 					//Create the threads that will create new binary configurations using the input left, right collections
-					threads.add(new ReasoningThread(
+					threads.add(new CreateBinaryConfigurationsThread(
 							depth,
 							leftInput,
 							rightInput,
@@ -201,7 +201,7 @@ public class MultiThreadedExecutor extends IterativeExecutor {
 			for (int j = 0; j < this.mtcontext.getParallelThreads(); ++j) {
 				//Create the threads that will iterate over the input configurations to find the non-dominated ones,
 				//along with the minimum-cost successful and closed one
-				threads.add(new ExplorationThread(
+				threads.add(new ConfigurationSpaceExplorationThread(
 						query,
 						input,
 						equivalenceClasses,

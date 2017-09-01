@@ -5,18 +5,23 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.junit.Assert;
+
+import com.google.common.base.Preconditions;
 
 import uk.ac.ox.cs.pdq.algebra.AccessTerm;
 import uk.ac.ox.cs.pdq.algebra.AttributeEqualityCondition;
 import uk.ac.ox.cs.pdq.algebra.Condition;
 import uk.ac.ox.cs.pdq.algebra.ConjunctiveCondition;
 import uk.ac.ox.cs.pdq.algebra.ConstantEqualityCondition;
+import uk.ac.ox.cs.pdq.algebra.DependentJoinTerm;
 import uk.ac.ox.cs.pdq.algebra.JoinTerm;
 import uk.ac.ox.cs.pdq.algebra.ProjectionTerm;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
@@ -38,11 +43,22 @@ import uk.ac.ox.cs.pdq.util.Utility;
 
 // TODO: Auto-generated Javadoc
 /**
- * Utility class for common stateless logical operators.
+ * 
+ * @author Efthymia Tsamoura
  *
- * @author Julien Leblay
  */
 public class PlanCreationUtility {
+	
+	public static RelationalTerm createPlan(RelationalTerm left, RelationalTerm right) {
+		Preconditions.checkNotNull(left);
+		Preconditions.checkNotNull(right);
+		Set<Attribute> outputs = new HashSet<Attribute>(Arrays.asList(left.getOutputAttributes()));
+		Set<Attribute> inputs = new HashSet<Attribute>(Arrays.asList(right.getInputAttributes()));
+		if (CollectionUtils.containsAny(outputs, inputs)) 
+			return DependentJoinTerm.create(left, right);
+		else 
+			return JoinTerm.create(left, right);
+	}
 
 	/**
 	 * Creates a linear plan by appending the access and middlewares commands of the input configuration to the input parent plan.
