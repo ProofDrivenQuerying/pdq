@@ -43,10 +43,7 @@ public class NestedLoopJoinTest {
 	public void testNestedLoopJoin() {
 
 		// Sanity check the Join constructor
-		TupleIterator leftChild = new Access(relation1, am1);
-		TupleIterator rightChild = new Access(relation2, am1);
-		
-		Join target = new NestedLoopJoin(leftChild, rightChild);
+		Join target = new NestedLoopJoin(new Access(relation1, am1), new Access(relation2, am1));
 		
 		Assert.assertNotNull(target);
 		Assert.assertNotNull(target.getJoinConditions());
