@@ -34,9 +34,6 @@ public class SelectionTest {
 			Attribute.create(Integer.class, "b"), Attribute.create(Integer.class, "c")},
 			new AccessMethod[] {am1});
 
-	// Free access relation to act as child of the Selection relation.
-	TupleIterator relation1Free = new Access(relation1, am1);
-	
 	/*
 	 * The following are integration tests: Projection instances are constructed and executed.
 	 */
@@ -67,7 +64,7 @@ public class SelectionTest {
 		 *  of first column is equal to the constant "1". 
 		 */
 		Condition condition = ConstantEqualityCondition.create(0, TypedConstant.create(1));
-		Selection target = new Selection(condition, relation1Free);
+		Selection target = new Selection(condition, new Access(relation1, am1));
 
 		// Create some tuples
 		TupleType tt = TupleType.DefaultFactory.create(Integer.class, Integer.class, Integer.class);
@@ -113,7 +110,7 @@ public class SelectionTest {
 
 		// Reconstruct the target selection (TODO: instead, reset ought to work here)
 		target = null;
-		target = new Selection(condition, relation1Free);
+		target = new Selection(condition, new Access(relation1, am1));
 
 		//Execute the plan
 		result = null;
@@ -127,7 +124,7 @@ public class SelectionTest {
 		// We expect N/2 Tuples in the query results because only half of the Tuples 
 		// in tuples12 satisfy the constant equality condition.
 		Assert.assertNotNull(result);
-		Assert.assertEquals(N/4, result.size());
+		Assert.assertEquals(N/2, result.size());
 		for (Tuple x:result.getData())
 			Assert.assertArrayEquals(values1, x.getValues());
 
