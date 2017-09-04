@@ -30,23 +30,20 @@ import uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator;
 
 public class ProjectionTest {
 
+	AccessMethod am1 = AccessMethod.create("access_method1",new Integer[] {});
+
+	InMemoryTableWrapper relation1 = new InMemoryTableWrapper("R1", new Attribute[] {Attribute.create(Integer.class, "a"),
+			Attribute.create(Integer.class, "b"), Attribute.create(Integer.class, "c")},
+			new AccessMethod[] {am1});
+
 	@SuppressWarnings("resource")
 	@Test
-	public void test() {
-		
-		AccessMethod am1 = AccessMethod.create("access_method1",new Integer[] {});
+	public void testProjection() {
 
-		InMemoryTableWrapper relation1 = new InMemoryTableWrapper("R1", new Attribute[] {Attribute.create(Integer.class, "a"),
-				Attribute.create(Integer.class, "b"), Attribute.create(Integer.class, "c")},
-				new AccessMethod[] {am1});
-
-		// Free access relation to act as child of the Projection relation.
-		TupleIterator relation1Free = new Access(relation1, am1);
-		
 		// Sanity check the Projection constructor
 		boolean caught = false;
 		try {
-			new Projection(new Attribute[]{Attribute.create(Integer.class, "d")}, relation1Free);
+			new Projection(new Attribute[]{Attribute.create(Integer.class, "d")}, new Access(relation1, am1));
 		} catch (IllegalArgumentException e) {
 			Assert.assertEquals("Inconsistent attributes", e.getMessage());
 			caught = true;
@@ -55,63 +52,199 @@ public class ProjectionTest {
 
 		caught = false;
 		try {
-			new Projection(new Attribute[]{Attribute.create(String.class, "b")}, relation1Free);
+			new Projection(new Attribute[]{Attribute.create(String.class, "b")}, new Access(relation1, am1));
 		} catch (IllegalArgumentException e) {
 			Assert.assertEquals("Inconsistent attributes", e.getMessage());
 			caught = true;
 		}
 		Assert.assertTrue(caught);
-		
+	}
+
+	/*
+	 * The following are integration tests: Projection instances are constructed and executed.
+	 */
+
+	// Execute plans by passing them to this method
+	private Table planExecution(TupleIterator plan) throws TimeoutException {
+		Table results = new Table(plan.getOutputAttributes());
+		ExecutorService execService = Executors.newFixedThreadPool(1);
+		execService.execute(new TimeoutChecker(3600000, plan));
+		plan.open();
+		while (plan.hasNext()) {
+			Tuple t = plan.next();
+			results.appendRow(t);
+			// System.out.println(t);
+		}
+		execService.shutdownNow();
+		if (plan.isInterrupted()) {
+			throw new TimeoutException();
+		}
+		return results;
+	}
+	
+	@Test
+	public void test1() {
+
 		/*
 		 * Simple plan that does an free access on relation R1 and projects the second column
 		 */
-		Projection accessProjection = new Projection(new Attribute[]{Attribute.create(Integer.class, "b")}, relation1Free);
-		
+		Projection target = new Projection(new Attribute[]{Attribute.create(Integer.class, "b")}, 
+				new Access(relation1, am1));
+
 		// Create some tuples
 		TupleType tt = TupleType.DefaultFactory.create(Integer.class, Integer.class, Integer.class);
-		
+
 		Integer[] values1 = new Integer[] {1, 11, 12};
 		Collection<Tuple> tuples1 = new ArrayList<Tuple>();
 		int N = 100;
 		for (int i = 0; i != N; i++) {
 			tuples1.add(tt.createTuple((Object[]) Arrays.copyOf(values1, values1.length)));
 		}
-		
+
 		// Load tuples by calling the load method of relation1  
 		Assert.assertEquals(0, relation1.getData().size());
 		relation1.load(tuples1);
 		Assert.assertEquals(N, relation1.getData().size());
-		
-		// TODO: plan execution fails: apparent bug at Projection.java line 174/176
+
 		//Execute the plan
 		Table result = null;
 		try {
-			result = this.planExecution(accessProjection);
+			result = this.planExecution(target);
 		} catch (TimeoutException e) {
 			e.printStackTrace();
 		}
 
-		// Check that the result tuples are the ones you expected
+		// Check that the result tuples are the ones expected.
 		Assert.assertNotNull(result);
 		Assert.assertEquals(N, result.size());
-		
-		// TODO: test that the result data include Tuples containing only the second element (i.e. attribute "b") 
-		// Assert.assertArrayEquals(tuples1.toArray(), result.getData().toArray());
 
-		
+		Collection<Tuple> expected = new ArrayList<Tuple>();
+		Integer[] expectedValues = new Integer[] {11};
+		TupleType ett = TupleType.DefaultFactory.create(Integer.class);
+		for (int i = 0; i != N; i++) {
+			expected.add(ett.createTuple((Object[]) Arrays.copyOf(expectedValues, expectedValues.length)));
+		}
+
+		// Test that the result data include Tuples containing only the second element (i.e. attribute "b") 
+		Assert.assertArrayEquals(expected.toArray(), result.getData().toArray());
+	}
+
+	@Test
+	public void test2() {
+
 		/*
 		 *  Simple plan that does a free access on relation R1, then selects the rows where the value
-		 *  of first column is "1" and the second column equals the third and finally projects the last column 
+		 *  of first column is "1" and projects the last column. 
 		 */
-		Condition condition = ConjunctiveCondition.create(new SimpleCondition[]{ConstantEqualityCondition.create(0, TypedConstant.create(1)), 
-				AttributeEqualityCondition.create(1, 2)});
-		Projection accessSelectProjection = new Projection(new Attribute[]{Attribute.create(Integer.class, "c")}, 
-				new Selection(condition, new Access(relation1, am1)));//relation1Free
+		Condition condition = ConstantEqualityCondition.create(0, TypedConstant.create(1));
+		Projection target = new Projection(new Attribute[]{Attribute.create(Integer.class, "c")}, 
+				new Selection(condition, new Access(relation1, am1))); 
+
+		// Create some tuples
+		TupleType tt = TupleType.DefaultFactory.create(Integer.class, Integer.class, Integer.class);
+
+		Integer[] values1 = new Integer[] {1, 11, 12};
+		Collection<Tuple> tuples1 = new ArrayList<Tuple>();
+		int N = 100;
+		for (int i = 0; i != N; i++) {
+			tuples1.add(tt.createTuple((Object[]) Arrays.copyOf(values1, values1.length)));
+		}
+
+		// Load tuples by calling the load method of relation1  
+		Assert.assertEquals(0, relation1.getData().size());
+		relation1.load(tuples1);
+		Assert.assertEquals(N, relation1.getData().size());
+
+		//Execute the plan
+		Table result = null;
+		try {
+			result = this.planExecution(target);
+		} catch (TimeoutException e) {
+			e.printStackTrace();
+		}
+
+		// Check that the result tuples are the ones expected. Here all of the tuples meet the constant equality condition.
+		Assert.assertNotNull(result);
+		Assert.assertEquals(N, result.size());
+
+		// Create some more tuples
+		Integer[] values12 = new Integer[] {2, 11, 12};
+		Collection<Tuple> tuples12 = new ArrayList<Tuple>();
+		for (int i = 0; i != N; i++) {
+			Integer[] values = ((i % 2) == 0) ? values12 : values1;
+			tuples12.add(tt.createTuple((Object[]) Arrays.copyOf(values, values.length)));
+		}
+
+		// Load tuples by calling the load method.
+		relation1.clear();
+		Assert.assertEquals(0, relation1.getData().size());
+		relation1.load(tuples12);
+		Assert.assertEquals(N, relation1.getData().size());
+
+		// Reconstruct the target projection (TODO: instead, reset ought to work here)
+		target = new Projection(new Attribute[]{Attribute.create(Integer.class, "c")}, 
+				new Selection(condition, new Access(relation1, am1)));
 
 		//Execute the plan
 		result = null;
 		try {
-			result = this.planExecution(accessSelectProjection);
+			result = this.planExecution(target);
+		} catch (TimeoutException e) {
+			e.printStackTrace();
+		}
+
+		// Check that the result tuples are the ones expected. 
+		// We expect N/2 Tuples in the query results because only half of the Tuples 
+		// in tuples12 satisfy the constant equality condition.
+		Assert.assertNotNull(result);
+		Assert.assertEquals(N/2, result.size());
+
+		Collection<Tuple> expected = new ArrayList<Tuple>();
+		Integer[] expectedValues = new Integer[] {12};
+		TupleType ett = TupleType.DefaultFactory.create(Integer.class);
+		for (Tuple t: tuples12) {
+			if (Arrays.equals(t.getValues(), values1))
+				expected.add(ett.createTuple((Object[]) Arrays.copyOf(expectedValues, expectedValues.length)));
+		}
+		
+		// Test that the result data include Tuples containing only the last element (i.e. attribute "c") 
+		Assert.assertArrayEquals(expected.toArray(), result.getData().toArray());		
+	}
+
+	@Test
+	public void test3() {
+
+		/*
+		 *  Simple plan that does a free access on relation R1, then selects the rows where the value
+		 *  of first column is "1" and the second column equals the third and finally projects the first 
+		 *  and last columns. 
+		 */
+		Condition condition = ConjunctiveCondition.create(new SimpleCondition[]{ConstantEqualityCondition.create(0, TypedConstant.create(1)), 
+				AttributeEqualityCondition.create(1, 2)});
+		Projection target = new Projection(new Attribute[]{Attribute.create(Integer.class, "a"), 
+				Attribute.create(Integer.class, "c")}, 
+				new Selection(condition, new Access(relation1, am1))); 
+
+		// Create some tuples
+		TupleType tt = TupleType.DefaultFactory.create(Integer.class, Integer.class, Integer.class);
+
+		Integer[] values1 = new Integer[] {1, 11, 12};
+		Collection<Tuple> tuples1 = new ArrayList<Tuple>();
+		int N = 100;
+		for (int i = 0; i != N; i++) {
+			tuples1.add(tt.createTuple((Object[]) Arrays.copyOf(values1, values1.length)));
+		}
+
+		// Load tuples by calling the load method of relation1  
+		relation1.clear();
+		Assert.assertEquals(0, relation1.getData().size());
+		relation1.load(tuples1);
+		Assert.assertEquals(N, relation1.getData().size());
+
+		//Execute the plan
+		Table result = null;
+		try {
+			result = this.planExecution(target);
 		} catch (TimeoutException e) {
 			e.printStackTrace();
 		}
@@ -134,42 +267,37 @@ public class ProjectionTest {
 		Assert.assertEquals(0, relation1.getData().size());
 		relation1.load(tuples2);
 		Assert.assertEquals(N, relation1.getData().size());
-		
+
+		// Reconstruct the target projection (TODO: instead, reset ought to work here)
+		target = new Projection(new Attribute[]{Attribute.create(Integer.class, "a"), 
+				Attribute.create(Integer.class, "c")}, 
+				new Selection(condition, new Access(relation1, am1)));
+
 		//Execute the plan
 		result = null;
 		try {
-			result = this.planExecution(accessSelectProjection);
+			result = this.planExecution(target);
 		} catch (TimeoutException e) {
 			e.printStackTrace();
 		}
 
 		// Check that the result tuples are the ones expected. 
+		// We expect N/2 Tuples in the query results because only half of the Tuples 
+		// in tuples12 satisfy the constant equality condition.
 		Assert.assertNotNull(result);
 		Assert.assertEquals(N/4, result.size());
-		for (Tuple x:result.getData())
-			Assert.assertArrayEquals(values2, x.getValues());
-		
-		
 
+		Collection<Tuple> expected = new ArrayList<Tuple>();
+		Integer[] expectedValues = new Integer[] {1, 12};
+		TupleType ett = TupleType.DefaultFactory.create(Integer.class, Integer.class);
+		for (Tuple t: tuples2) {
+			if (Arrays.equals(t.getValues(), values2))
+				expected.add(ett.createTuple((Object[]) Arrays.copyOf(expectedValues, expectedValues.length)));
+		}
 		
+		// Test that the result data include Tuples containing only the first & last elements 
+		// (i.e. attributes "a" & "c"). 
+		Assert.assertArrayEquals(expected.toArray(), result.getData().toArray());		
 	}
-	
-	
-	//Execute plans by passing them to this method
-	private Table planExecution(TupleIterator plan) throws TimeoutException {
-		Table results = new Table(plan.getOutputAttributes());
-		ExecutorService execService = Executors.newFixedThreadPool(1);
-		execService.execute(new TimeoutChecker(3600000, plan));
-		plan.open();
-		while (plan.hasNext()) {
-			Tuple t = plan.next();
-			results.appendRow(t);
-			// System.out.println(t);
-		}
-		execService.shutdownNow();
-		if (plan.isInterrupted()) {
-			throw new TimeoutException();
-		}
-		return results;
-	}
+
 }
