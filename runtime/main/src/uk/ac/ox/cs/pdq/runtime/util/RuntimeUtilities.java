@@ -187,7 +187,7 @@ public class RuntimeUtilities {
 		else if(condition instanceof ConstantEqualityCondition) {
 			assert tuple.size() > ((ConstantEqualityCondition)condition).getPosition() : "Tuple must comply for bound given by the predicate positions";
 			Object sourceValue = tuple.getValue(((ConstantEqualityCondition)condition).getPosition());
-			Object targetValue = ((ConstantEqualityCondition)condition).getConstant();
+			Object targetValue = ((ConstantEqualityCondition)condition).getConstant().getValue();
 			if (sourceValue == null) 
 				return targetValue == null;
 			if (sourceValue instanceof Comparable<?> && targetValue instanceof Comparable<?>) {
