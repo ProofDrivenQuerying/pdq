@@ -46,10 +46,10 @@ public class TestDAGExplorerUtilities {
 	public void test1() {
 		GlobalCounterProvider.resetCounters();
 		GlobalCounterProvider.getNext("CannonicalName");
-		test1ExplorationSteps();
+		test1CreateInitialApplyRuleConfigurations();
 	}
 	
-	public void test1ExplorationSteps() {
+	public void test1CreateInitialApplyRuleConfigurations() {
 		//Create the relations
 		Relation[] relations = new Relation[5];
 		relations[0] = Relation.create("R0", new Attribute[]{this.a, this.b, this.c, this.d, this.InstanceID}, 

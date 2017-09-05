@@ -38,7 +38,7 @@ import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
  * @author Efthymia Tsamoura
  *
  */
-public class TestPairSelector {
+public class TestSelectorOfPairsOfConfigurationsToCombine {
 
 	protected Attribute a = Attribute.create(Integer.class, "a");
 	protected Attribute b = Attribute.create(Integer.class, "b");
@@ -50,10 +50,10 @@ public class TestPairSelector {
 	public void test1() {
 		GlobalCounterProvider.resetCounters();
 		GlobalCounterProvider.getNext("CannonicalName");
-		test1ExplorationSteps();
+		test1GetNextPairOfConfigurationsToCompose();
 	}
 	
-	public void test1ExplorationSteps() {
+	public void test1GetNextPairOfConfigurationsToCompose() {
 		//Create the relations
 		Relation[] relations = new Relation[5];
 		relations[0] = Relation.create("R0", new Attribute[]{this.a, this.b, this.c, this.d, this.InstanceID}, 
