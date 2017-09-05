@@ -1,7 +1,6 @@
 package uk.ac.ox.cs.pdq.test.reasoning.chase.state;
 
-import java.io.File;
-
+import org.junit.Before;
 import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
@@ -13,6 +12,25 @@ import uk.ac.ox.cs.pdq.db.DatabaseParameters;
  */
 public class TestChaseStepMultiRun {
 	private static final int REPEAT = 35;
+	private DatabaseParameters mySqlDbParam;
+	private DatabaseParameters postgresDbParam;
+
+	@Before
+	public void setup() {
+		mySqlDbParam = new DatabaseParameters();
+		mySqlDbParam.setConnectionUrl("jdbc:mysql://localhost/");
+		mySqlDbParam.setDatabaseDriver("com.mysql.jdbc.Driver");
+		mySqlDbParam.setDatabaseName("test_get_triggers");
+		mySqlDbParam.setDatabaseUser("root");
+		mySqlDbParam.setDatabasePassword("root");
+		postgresDbParam = new DatabaseParameters();
+		postgresDbParam.setConnectionUrl("jdbc:postgresql://localhost/");
+		postgresDbParam.setDatabaseDriver("org.postgresql.Driver");
+		postgresDbParam.setDatabaseName("test_get_triggers");
+		postgresDbParam.setDatabaseUser("postgres");
+		postgresDbParam.setDatabasePassword("root");
+	}
+	
 	@Test
 	public void testSingleThreadDerby() throws Exception {
 		TestChaseSteps tcs = new TestChaseSteps();
@@ -34,8 +52,7 @@ public class TestChaseStepMultiRun {
 	public void testSingleThreadPostgres() throws Exception {
 		TestChaseSteps tcs = new TestChaseSteps();
 		tcs.setupMocks();
-		tcs.setConnection(
-				new DatabaseConnection(new DatabaseParameters(new File("test\\src\\uk\\ac\\ox\\cs\\pdq\\test\\reasoning\\homomorphism\\Postgres_case.properties")), tcs.schema, 1));
+		tcs.setConnection(new DatabaseConnection(postgresDbParam,tcs.schema, 1));
 		tcs.test_chaseStep();
 		tcs.tearDown();
 	}
@@ -44,8 +61,7 @@ public class TestChaseStepMultiRun {
 	public void testMultiThreadPostgres() throws Exception {
 		TestChaseSteps tcs = new TestChaseSteps();
 		tcs.setupMocks();
-		tcs.setConnection(new DatabaseConnection(new DatabaseParameters(new File("test\\src\\uk\\ac\\ox\\cs\\pdq\\test\\reasoning\\homomorphism\\Postgres_case.properties")),
-				tcs.schema, 10));
+		tcs.setConnection(new DatabaseConnection(postgresDbParam,tcs.schema, 10));
 		tcs.test_chaseStep();
 		tcs.tearDown();
 	}
@@ -55,7 +71,7 @@ public class TestChaseStepMultiRun {
 		TestChaseSteps tcs = new TestChaseSteps();
 		tcs.setupMocks();
 		tcs.setConnection(
-				new DatabaseConnection(new DatabaseParameters(new File("test\\src\\uk\\ac\\ox\\cs\\pdq\\test\\reasoning\\homomorphism\\MySql_case.properties")), tcs.schema, 1));
+				new DatabaseConnection(mySqlDbParam, tcs.schema, 1));
 		tcs.test_chaseStep();
 		tcs.tearDown();
 	}
@@ -64,8 +80,7 @@ public class TestChaseStepMultiRun {
 	public void testMultiThreadMySql() throws Exception {
 		TestChaseSteps tcs = new TestChaseSteps();
 		tcs.setupMocks();
-		tcs.setConnection(new DatabaseConnection(new DatabaseParameters(new File("test\\src\\uk\\ac\\ox\\cs\\pdq\\test\\reasoning\\homomorphism\\MySql_case.properties")),
-				tcs.schema, 10));
+		tcs.setConnection(new DatabaseConnection(mySqlDbParam, tcs.schema, 10));
 		tcs.test_chaseStep();
 		tcs.tearDown();
 	}
@@ -75,8 +90,7 @@ public class TestChaseStepMultiRun {
 		for (int i = 0; i < REPEAT; i++) {
 			TestChaseSteps tcs = new TestChaseSteps();
 			tcs.setupMocks();
-			tcs.setConnection(new DatabaseConnection(new DatabaseParameters(new File("test\\src\\uk\\ac\\ox\\cs\\pdq\\test\\reasoning\\homomorphism\\MySql_case.properties")),
-					tcs.schema, 10));
+			tcs.setConnection(new DatabaseConnection(mySqlDbParam, tcs.schema, 10));
 			tcs.test_chaseStepInit();
 			for (int j = 0; j < REPEAT; j++) {
 				tcs.test_chaseStepAddFacts();
@@ -92,8 +106,7 @@ public class TestChaseStepMultiRun {
 		for (int i = 0; i < REPEAT; i++) {
 			TestChaseSteps tcs = new TestChaseSteps();
 			tcs.setupMocks();
-			tcs.setConnection(new DatabaseConnection(new DatabaseParameters(new File("test\\src\\uk\\ac\\ox\\cs\\pdq\\test\\reasoning\\homomorphism\\Postgres_case.properties")),
-					tcs.schema, 10));
+			tcs.setConnection(new DatabaseConnection(postgresDbParam,tcs.schema, 10));
 			tcs.test_chaseStepInit();
 			for (int j = 0; j < REPEAT; j++) {
 				tcs.test_chaseStepAddFacts();
