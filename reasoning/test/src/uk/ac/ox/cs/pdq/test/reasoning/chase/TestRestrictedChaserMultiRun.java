@@ -1,7 +1,5 @@
 package uk.ac.ox.cs.pdq.test.reasoning.chase;
 
-import java.io.File;
-
 import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
@@ -14,6 +12,24 @@ import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 public class TestRestrictedChaserMultiRun {
 	private static final int REPEAT = 50;
 	
+	private DatabaseParameters getMySqlDBParams() {
+		DatabaseParameters mySqlDbParam = new DatabaseParameters();
+		mySqlDbParam.setConnectionUrl("jdbc:mysql://localhost/");
+		mySqlDbParam.setDatabaseDriver("com.mysql.jdbc.Driver");
+		mySqlDbParam.setDatabaseName("test_get_triggers");
+		mySqlDbParam.setDatabaseUser("root");
+		mySqlDbParam.setDatabasePassword("root");
+		return mySqlDbParam;
+	}
+	private DatabaseParameters getPostgresDBParams() {
+		DatabaseParameters postgresDbParam = new DatabaseParameters();
+		postgresDbParam.setConnectionUrl("jdbc:postgresql://localhost/");
+		postgresDbParam.setDatabaseDriver("org.postgresql.Driver");
+		postgresDbParam.setDatabaseName("test_get_triggers");
+		postgresDbParam.setDatabaseUser("postgres");
+		postgresDbParam.setDatabasePassword("root");
+		return postgresDbParam;
+	}
 	@Test
 	public void testSingleThreadDerby() throws Exception {
 		TestRestrictedChaser trc = new TestRestrictedChaser();
@@ -35,7 +51,7 @@ public class TestRestrictedChaserMultiRun {
 	public void testSingleThreadMySQL() throws Exception {
 		TestRestrictedChaser trc = new TestRestrictedChaser();
 		trc.createSchema();
-		trc.setup(new DatabaseConnection(new DatabaseParameters(new File("test\\src\\uk\\ac\\ox\\cs\\pdq\\test\\reasoning\\homomorphism\\MySql_case.properties")), trc.schema, 1));
+		trc.setup(new DatabaseConnection(getMySqlDBParams(), trc.schema, 1));
 		try {
 			trc.test_reasonUntilTermination1();
 		}catch(Throwable t) {
@@ -48,7 +64,7 @@ public class TestRestrictedChaserMultiRun {
 	public void testMultiThreadMySQL() throws Exception {
 		TestRestrictedChaser trc = new TestRestrictedChaser();
 		trc.createSchema();
-		trc.setup(new DatabaseConnection(new DatabaseParameters(new File("test\\src\\uk\\ac\\ox\\cs\\pdq\\test\\reasoning\\homomorphism\\MySql_case.properties")), trc.schema, 10));
+		trc.setup(new DatabaseConnection(getMySqlDBParams(), trc.schema, 10));
 		trc.test_reasonUntilTermination1();
 		trc.tearDown();
 	}
@@ -57,7 +73,7 @@ public class TestRestrictedChaserMultiRun {
 	public void testSingleThreadPostgres() throws Exception {
 		TestRestrictedChaser trc = new TestRestrictedChaser();
 		trc.createSchema();
-		trc.setup(new DatabaseConnection(new DatabaseParameters(new File("test\\src\\uk\\ac\\ox\\cs\\pdq\\test\\reasoning\\homomorphism\\Postgres_case.properties")), trc.schema, 1));
+		trc.setup(new DatabaseConnection(getPostgresDBParams(), trc.schema, 1));
 		trc.test_reasonUntilTermination1();
 		trc.tearDown();
 	}
@@ -66,7 +82,7 @@ public class TestRestrictedChaserMultiRun {
 	public void testMultiThreadPostgres() throws Exception {
 		TestRestrictedChaser trc = new TestRestrictedChaser();
 		trc.createSchema();
-		trc.setup(new DatabaseConnection(new DatabaseParameters(new File("test\\src\\uk\\ac\\ox\\cs\\pdq\\test\\reasoning\\homomorphism\\Postgres_case.properties")), trc.schema, 10));
+		trc.setup(new DatabaseConnection(getPostgresDBParams(), trc.schema, 10));
 		trc.test_reasonUntilTermination1();
 		trc.tearDown();
 	}
@@ -76,7 +92,7 @@ public class TestRestrictedChaserMultiRun {
 		for (int i = 0; i < REPEAT; i++) {
 			TestRestrictedChaser trc = new TestRestrictedChaser();
 			trc.createSchema();
-			trc.setup(new DatabaseConnection(new DatabaseParameters(new File("test\\src\\uk\\ac\\ox\\cs\\pdq\\test\\reasoning\\homomorphism\\MySql_case.properties")), trc.schema, 1));
+			trc.setup(new DatabaseConnection(getMySqlDBParams(), trc.schema, 1));
 			trc.test_reasonUntilTermination1();
 			trc.tearDown();
 		}
@@ -87,7 +103,7 @@ public class TestRestrictedChaserMultiRun {
 		for (int i = 0; i < REPEAT; i++) {
 			TestRestrictedChaser trc = new TestRestrictedChaser();
 			trc.createSchema();
-			trc.setup(new DatabaseConnection(new DatabaseParameters(new File("test\\src\\uk\\ac\\ox\\cs\\pdq\\test\\reasoning\\homomorphism\\Postgres_case.properties")), trc.schema, 1));
+			trc.setup(new DatabaseConnection(getPostgresDBParams(), trc.schema, 1));
 			trc.test_reasonUntilTermination1();
 			trc.tearDown();
 		}
