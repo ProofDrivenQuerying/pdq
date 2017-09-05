@@ -211,12 +211,12 @@ public class NestedLoopJoinTest {
 			Assert.assertArrayEquals(new Integer[] {10, 11, 12, 12, 13, 14}, x.getValues());
 
 		// Load tuples into relation2 such that the join condition is *sometimes* satisfied. 
-		relation2.clear();
 		tuples2.clear();
 		for (int i = 0; i != N; i++) {
 			Integer[] values = ((i % 4) == 0) ? values2 : values1;
 			tuples2.add(tt.createTuple((Object[]) Arrays.copyOf(values, values.length)));
 		}
+		relation2.clear();
 		relation2.load(tuples2);
 
 		// Reconstruct the target Join (TODO: instead, reset ought to work here)
@@ -292,5 +292,58 @@ public class NestedLoopJoinTest {
 		// Note that the result tuples contain the tuple from the right appended onto the tuple from the left.
 		for (Tuple x:result.getData())
 			Assert.assertArrayEquals(new Integer[] {10, 11, 12, 9, 10, 11, 13}, x.getValues());
+	}
+	
+	@Test
+	public void stressTest() {
+
+		/*
+		 * Simple plan that joins the results of two accesses.
+		 * The Join constructor assumes that two attributes should be equal if they have the same name.
+		 * This is the so called equijoin. We use the nested loop join algorithm.
+		 */
+		Join target = new NestedLoopJoin(new Access(relation1, am1), new Access(relation2, am1));
+
+		// Create some tuples
+		TupleType tt = TupleType.DefaultFactory.create(Integer.class, Integer.class, Integer.class);
+	
+		Integer[] values1 = new Integer[] {10, 11, 12};
+		Collection<Tuple> tuples1 = new ArrayList<Tuple>();
+		int N = 1000;
+		for (int i = 0; i != N; i++) {
+			tuples1.add(tt.createTuple((Object[]) Arrays.copyOf(values1, values1.length)));
+		}
+		
+		// Create some more tuples.
+		Integer[] values2 = new Integer[] {12, 13, 14};
+		Collection<Tuple> tuples2 = new ArrayList<Tuple>();
+		for (int i = 0; i != N; i++) {
+			tuples2.add(tt.createTuple((Object[]) Arrays.copyOf(values2, values2.length)));
+		}
+
+		// Load tuples such that the join condition is *always* satisfied.
+		relation1.load(tuples1);
+		relation2.load(tuples2);
+
+		// Reconstruct the target Join (TODO: instead, reset ought to work here)
+		target = new NestedLoopJoin(new Access(relation1, am1), new Access(relation2, am1));
+		
+		//Execute the plan
+		Table result = null;
+		try {
+			result = this.planExecution(target);
+		} catch (TimeoutException e) {
+			e.printStackTrace();
+		}
+
+		// Check that the result tuples are the ones expected.
+		// Since the condition is always satisfied and we are doing a full outer join, 
+		// we expect the result to be the cross product.
+		Assert.assertNotNull(result);
+		Assert.assertEquals(N*N, result.size());
+		// Note that the result tuples contain the tuple from the right appended onto the tuple from the left.
+		for (Tuple x:result.getData())
+			Assert.assertArrayEquals(new Integer[] {10, 11, 12, 12, 13, 14}, x.getValues());
+		
 	}
 }
