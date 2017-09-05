@@ -124,7 +124,13 @@ public class TestNaiveCardinalityEstimator {
 		
 		NaiveCardinalityEstimator cardinalityEstimator = new NaiveCardinalityEstimator(this.catalog);
 		
-		//TODO add assertions for cardinality  
+		cardinalityEstimator.estimateCardinality(plan2);
+		double input = cardinalityEstimator.getCardinalityMetadata(plan2).getInputCardinality();
+		double output = cardinalityEstimator.getCardinalityMetadata(plan2).getOutputCardinality();
+		
+		Assert.assertEquals(0.0, input, 0.0001);
+		Assert.assertEquals(1.0E15, output, 0.0001);
+		
 	}
 	
 	@Test public void test2() {
@@ -133,7 +139,13 @@ public class TestNaiveCardinalityEstimator {
 		AccessTerm access1 = AccessTerm.create(this.YahooPlaces, this.method3, inputConstants1);
 		NaiveCardinalityEstimator cardinalityEstimator = new NaiveCardinalityEstimator(this.catalog);
 		
-		//TODO add assertions for cardinality 
+		cardinalityEstimator.estimateCardinality(access1);
+		double input = cardinalityEstimator.getCardinalityMetadata(access1).getInputCardinality();
+		double output = cardinalityEstimator.getCardinalityMetadata(access1).getOutputCardinality();
+		
+		Assert.assertEquals(0.0, input, 0.0001);
+		Assert.assertEquals(1000000.0, output, 0.0001);
+		
 	}
 	
 	@Test public void test3() {
@@ -217,7 +229,8 @@ public class TestNaiveCardinalityEstimator {
 		NaiveCardinalityEstimator cardinalityEstimator = new NaiveCardinalityEstimator(this.catalog);		
 		cardinalityEstimator.estimateCardinalityIfNeeded(plan1);
 		
-		//TODO add assertions for cardinality
+		Assert.assertEquals(new Double(0.0), cardinalityEstimator.getCardinalityMetadata(plan1).getInputCardinality());
+		Assert.assertEquals(new Double(100.0), cardinalityEstimator.getCardinalityMetadata(plan1).getOutputCardinality());
 	}
 	
 }

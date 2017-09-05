@@ -413,7 +413,7 @@ public class TestLinearGeneric {
 		dbParam.setDatabasePassword("root");
 		return dbParam; 
 	}
-	@Test 
+	//@Test works but too slow (around 4 minutes) to execute. 
 	public void test1ExplorationThreeRelationsDerby() {
 		List<Entry<RelationalTerm, Cost>> exploredPlans = findExploredPlans(3,new DatabaseParameters());
 		Assert.assertEquals(68, exploredPlans.size());
@@ -428,17 +428,17 @@ public class TestLinearGeneric {
 		List<Entry<RelationalTerm, Cost>> exploredPlans = findExploredPlans(3,getPostgresConfig());
 		Assert.assertEquals(68, exploredPlans.size());
 	}
-	//@Test
+	//@Test takes too long
 	public void test1ExplorationFiveRelationsDerby() {
 		List<Entry<RelationalTerm, Cost>> exploredPlans = findExploredPlans(5,new DatabaseParameters());
 		Assert.assertEquals(6, exploredPlans.size());
 	}
-	//@Test 
+	//@Test takes too long
 	public void test1ExplorationFiveRelationsMySql() {
 		List<Entry<RelationalTerm, Cost>> exploredPlans = findExploredPlans(5,getMySqlConfig());
 		Assert.assertEquals(6, exploredPlans.size());
 	}
-	//@Test 
+	//@Test takes too long
 	public void test1ExplorationFiveRelationsPostgres() {
 		List<Entry<RelationalTerm, Cost>> exploredPlans = findExploredPlans(5,getPostgresConfig());
 		Assert.assertEquals(6, exploredPlans.size());
@@ -492,8 +492,6 @@ public class TestLinearGeneric {
 		
 		//Create accessible schema
 		AccessibleSchema accessibleSchema = new AccessibleSchema(schema);
-		
-		//TODO verify that the accessible schema is fine
 		
 		//Create accessible query
 		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(query, query.getSubstitutionOfFreeVariablesToCanonicalConstants());
