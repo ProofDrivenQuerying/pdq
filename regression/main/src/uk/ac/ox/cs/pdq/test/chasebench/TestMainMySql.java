@@ -35,8 +35,25 @@ import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
  */
 public class TestMainMySql {
 
+	private DatabaseParameters mySqlDbParam;
+	private DatabaseParameters postgresDbParam;
+
 	@Before
 	public void setup() {
+		mySqlDbParam = new DatabaseParameters();
+		mySqlDbParam.setConnectionUrl("jdbc:mysql://localhost/");
+		mySqlDbParam.setDatabaseDriver("com.mysql.jdbc.Driver");
+		mySqlDbParam.setDatabaseName("test_get_triggers");
+		mySqlDbParam.setDatabaseUser("root");
+		mySqlDbParam.setDatabasePassword("root");
+		
+		postgresDbParam = new DatabaseParameters();
+		postgresDbParam.setConnectionUrl("jdbc:postgresql://localhost/");
+		postgresDbParam.setDatabaseDriver("org.postgresql.Driver");
+		postgresDbParam.setDatabaseName("test_get_triggers");
+		postgresDbParam.setDatabaseUser("postgres");
+		postgresDbParam.setDatabasePassword("root");
+		
 
 	}
 
@@ -70,7 +87,7 @@ public class TestMainMySql {
 		Collection<Atom> facts = CommonToPDQTranslator.importFacts(schema, "s", "test\\chaseBench\\tgds\\data\\s.csv");
 
 		try {
-			DatabaseConnection dc = new DatabaseConnection(new DatabaseParameters(new File("main\\src\\uk\\ac\\ox\\cs\\pdq\\test\\chasebench\\MySql_case.properties")), schema, 10);
+			DatabaseConnection dc = new DatabaseConnection(mySqlDbParam, schema, 10);
 			DatabaseChaseInstance state = new DatabaseChaseInstance(facts, dc);
 			Collection<Atom> res = state.getFacts();
 			System.out.println("INITIAL STATE: " + res);
@@ -124,7 +141,7 @@ public class TestMainMySql {
 		Collection<Atom> facts1 = CommonToPDQTranslator.importFacts(schema, "s1", "test\\chaseBench\\tgds5\\data\\s1.csv");
 		facts0.addAll(facts1);
 		try {
-			DatabaseConnection dc = new DatabaseConnection(new DatabaseParameters(new File("main\\src\\uk\\ac\\ox\\cs\\pdq\\test\\chasebench\\MySql_case.properties")), schema, 10);
+			DatabaseConnection dc = new DatabaseConnection(mySqlDbParam, schema, 10);
 			DatabaseChaseInstance state = new DatabaseChaseInstance(facts0, dc);
 			Collection<Atom> res = state.getFacts();
 
@@ -167,7 +184,7 @@ public class TestMainMySql {
 
 		Collection<Atom> facts0 = CommonToPDQTranslator.importFacts(schema, "s", "test\\chaseBench\\tgdsEgds\\data\\s.csv");
 		try {
-			DatabaseConnection dc = new DatabaseConnection(new DatabaseParameters(new File("main\\src\\uk\\ac\\ox\\cs\\pdq\\test\\chasebench\\MySql_case.properties")), schema, 10);
+			DatabaseConnection dc = new DatabaseConnection(mySqlDbParam, schema, 10);
 			DatabaseChaseInstance state = new DatabaseChaseInstance(facts0, dc);
 			Collection<Atom> res = state.getFacts();
 			System.out.println("INITIAL STATE: " + res);
@@ -228,7 +245,7 @@ public class TestMainMySql {
 
 		Collection<Atom> facts0 = CommonToPDQTranslator.importFacts(schema, "s", "test\\chaseBench\\tgdsEgdsLarge\\data\\s.csv");
 		try {
-			DatabaseConnection dc = new DatabaseConnection(new DatabaseParameters(new File("main\\src\\uk\\ac\\ox\\cs\\pdq\\test\\chasebench\\MySql_case.properties")), schema, 10);
+			DatabaseConnection dc = new DatabaseConnection(mySqlDbParam, schema, 10);
 			DatabaseChaseInstance state = new DatabaseChaseInstance(facts0, dc);
 			Collection<Atom> res = state.getFacts();
 			System.out.println("INITIAL STATE: " + res);
@@ -289,7 +306,7 @@ public class TestMainMySql {
 
 		Collection<Atom> facts0 = CommonToPDQTranslator.importFacts(schema, "A", "test\\chaseBench\\vldb2010\\data\\A.csv");
 		try {
-			DatabaseConnection dc = new DatabaseConnection(new DatabaseParameters(new File("main\\src\\uk\\ac\\ox\\cs\\pdq\\test\\chasebench\\MySql_case.properties")), schema, 10);
+			DatabaseConnection dc = new DatabaseConnection(mySqlDbParam, schema, 10);
 			DatabaseChaseInstance state = new DatabaseChaseInstance(facts0, dc);
 			Collection<Atom> res = state.getFacts();
 			System.out.println("INITIAL STATE: " + res);
@@ -331,7 +348,7 @@ public class TestMainMySql {
 
 		Collection<Atom> facts0 = CommonToPDQTranslator.importFacts(schema, "deptemp", "test\\chaseBench\\weak\\data\\deptemp.csv");
 		try {
-			DatabaseConnection dc = new DatabaseConnection(new DatabaseParameters(new File("main\\src\\uk\\ac\\ox\\cs\\pdq\\test\\chasebench\\MySql_case.properties")), schema, 10);
+			DatabaseConnection dc = new DatabaseConnection(mySqlDbParam, schema, 10);
 			DatabaseChaseInstance state = new DatabaseChaseInstance(facts0, dc);
 			Collection<Atom> res = state.getFacts();
 			System.out.println("INITIAL STATE: " + res);
