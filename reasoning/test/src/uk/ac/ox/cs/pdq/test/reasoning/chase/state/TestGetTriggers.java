@@ -1,6 +1,5 @@
 package uk.ac.ox.cs.pdq.test.reasoning.chase.state;
 
-import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -87,11 +86,25 @@ public class TestGetTriggers {
 
 		this.schema = new Schema(new Relation[] { this.rel1, this.rel2, this.rel3 }, new Dependency[] { this.tgd, this.tgd2, this.egd });
 		this.chaseState[DERBY] = new DatabaseChaseInstance(new ArrayList<Atom>(), new DatabaseConnection(new DatabaseParameters(), this.schema, PARALLEL_THREADS));
-		this.chaseState[MYSQL] = new DatabaseChaseInstance(new ArrayList<Atom>(), new DatabaseConnection(
-				new DatabaseParameters(new File("test\\src\\uk\\ac\\ox\\cs\\pdq\\test\\reasoning\\homomorphism\\MySql_case.properties")), this.schema, PARALLEL_THREADS));
-		this.chaseState[POSTGRES] = new DatabaseChaseInstance(new ArrayList<Atom>(), new DatabaseConnection(
-				new DatabaseParameters(new File("test\\src\\uk\\ac\\ox\\cs\\pdq\\test\\reasoning\\homomorphism\\Postgres_case.properties")), this.schema, PARALLEL_THREADS));
 
+		DatabaseParameters mySqlDbParam = new DatabaseParameters();
+		mySqlDbParam.setConnectionUrl("jdbc:mysql://localhost/");
+		mySqlDbParam.setDatabaseDriver("com.mysql.jdbc.Driver");
+		mySqlDbParam.setDatabaseName("test_get_triggers");
+		mySqlDbParam.setDatabaseUser("root");
+		mySqlDbParam.setDatabasePassword("root");
+		
+		this.chaseState[MYSQL] = new DatabaseChaseInstance(new ArrayList<Atom>(), new DatabaseConnection(mySqlDbParam, this.schema, PARALLEL_THREADS));
+		
+		DatabaseParameters postgresDbParam = new DatabaseParameters();
+		postgresDbParam.setConnectionUrl("jdbc:postgresql://localhost/");
+		postgresDbParam.setDatabaseDriver("org.postgresql.Driver");
+		postgresDbParam.setDatabaseName("test_get_triggers");
+		postgresDbParam.setDatabaseUser("postgres");
+		postgresDbParam.setDatabasePassword("root");
+		
+		this.chaseState[POSTGRES]  = new DatabaseChaseInstance(new ArrayList<Atom>(), new DatabaseConnection(postgresDbParam, this.schema, PARALLEL_THREADS));
+		
 	}
 
 	@After
