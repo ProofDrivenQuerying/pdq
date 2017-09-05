@@ -14,6 +14,8 @@ import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.algebra.AttributeEqualityCondition;
 import uk.ac.ox.cs.pdq.algebra.Condition;
+import uk.ac.ox.cs.pdq.algebra.ConjunctiveCondition;
+import uk.ac.ox.cs.pdq.algebra.SimpleCondition;
 import uk.ac.ox.cs.pdq.datasources.memory.InMemoryTableWrapper;
 import uk.ac.ox.cs.pdq.datasources.utility.Table;
 import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
@@ -52,8 +54,9 @@ public class SymmetricMemoryHashJoinTest {
 		
 		// Test that the join condition (computed in the Join constructor) requires that the
 		// values associated with the common attribute (i.e. attribute "c") are equal. That is,
-		// the attribute in position 2 of the leftChild equals that in position 0 of the right child. 
-		Condition expected = AttributeEqualityCondition.create(2, 0);
+		// the attribute in position 2 of the leftChild equals that in position 3 (child1.length+position) of the right child. 
+		Condition expected = ConjunctiveCondition.create(
+				new SimpleCondition[] {AttributeEqualityCondition.create(2, 3)});
 		
 		Assert.assertEquals(expected, target.getJoinConditions());
 	}

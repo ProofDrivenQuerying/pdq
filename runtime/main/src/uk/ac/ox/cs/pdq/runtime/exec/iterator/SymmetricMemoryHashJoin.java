@@ -56,6 +56,8 @@ public class SymmetricMemoryHashJoin extends Join {
 	
 	public SymmetricMemoryHashJoin(TupleIterator child1, TupleIterator child2) {
 		super(child1, child2);
+		this.joinKeysForLeftChild = this.makeLeftKey();
+		this.joinKeysForRightChild = this.makeRightKey(child1.getNumberOfOutputAttributes());
 	}
 
 	@Override
