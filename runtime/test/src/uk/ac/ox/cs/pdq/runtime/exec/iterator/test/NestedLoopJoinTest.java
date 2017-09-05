@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -29,15 +30,16 @@ import uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator;
 public class NestedLoopJoinTest {
 
 	AccessMethod am1 = AccessMethod.create("access_method1",new Integer[] {});
-	AccessMethod am2 = AccessMethod.create("access_method2",new Integer[] {0});
-	AccessMethod am3 = AccessMethod.create("access_method2",new Integer[] {0,1});
 	
 	InMemoryTableWrapper relation1 = new InMemoryTableWrapper("R1", new Attribute[] {Attribute.create(Integer.class, "a"),
 			Attribute.create(Integer.class, "b"), Attribute.create(Integer.class, "c")},
 			new AccessMethod[] {am1});
 	InMemoryTableWrapper relation2 = new InMemoryTableWrapper("R2", new Attribute[] {Attribute.create(Integer.class, "c"),
 			Attribute.create(Integer.class, "d"), Attribute.create(Integer.class, "e")},
-			new AccessMethod[] {am1, am2, am3});
+			new AccessMethod[] {am1});
+	InMemoryTableWrapper relation3 = new InMemoryTableWrapper("R3", new Attribute[] {Attribute.create(Integer.class, "b"),
+			Attribute.create(Integer.class, "c"), Attribute.create(Integer.class, "d"), Attribute.create(Integer.class, "f")},
+			new AccessMethod[] {am1});
 	
 	@Test
 	public void testNestedLoopJoin() {
@@ -78,11 +80,72 @@ public class NestedLoopJoinTest {
 	}
 	
 	@Test
+	public void test0() {
+
+		/*
+		 * Simple plan that joins the results of two accesses.
+		 * The Join constructor assumes that two attributes should be equal if they have the same name.
+		 * This is the so called equijoin. We use the nested loop join algorithm.
+		 */
+		Join target = new NestedLoopJoin(new Access(relation1, am1), new Access(relation2, am1));
+
+		// Create some tuples. 
+		TupleType tt = TupleType.DefaultFactory.create(Integer.class, Integer.class, Integer.class);
+	
+		// Here we join on columns containing no duplicates.  
+		Collection<Tuple> tuples1 = new ArrayList<Tuple>();
+		int N = 12;
+		for (int i = 0; i != N; i++) {
+			Integer[] values = new Integer[] {i, i + 1, i + 2};
+			tuples1.add(tt.createTuple((Object[]) Arrays.copyOf(values, values.length)));
+		}
+		Collection<Tuple> tuples2 = new ArrayList<Tuple>();
+		int M = 18;
+		for (int i = 0; i != M; i++) {
+			Integer[] values = new Integer[] {i + 8, i + 9, i + 10};
+			tuples2.add(tt.createTuple((Object[]) Arrays.copyOf(values, values.length)));
+		}
+		
+		// Load tuples   
+		relation1.load(tuples1);
+		relation2.load(tuples2);
+		
+		//Execute the plan
+		Table result = null;
+		try {
+			result = this.planExecution(target);
+		} catch (TimeoutException e) {
+			e.printStackTrace();
+		}
+
+		// Check that the result tuples are the ones expected. 
+		// Here the join condition is *never* satisfied because the attributes named "c" 
+		// (i.e. the last and first, respectively) first have different values in relation1 & relation2.
+		Assert.assertNotNull(result);
+		// In relation1 the "c" column ranges from 2 to 13. In relation2 the "c" column ranges from 8 to 25.
+		// Note that the result tuples contain the tuple from the right appended onto the tuple from the left.
+		TupleType tte = TupleType.DefaultFactory.create(Integer.class, Integer.class, Integer.class, 
+				Integer.class, Integer.class, Integer.class);
+		List<Tuple> expected = new ArrayList<Tuple>();
+		expected.add(tte.createTuple((Object[]) new Integer[] { 6, 7, 8, 8, 9, 10}));
+		expected.add(tte.createTuple((Object[]) new Integer[] { 7, 8, 9, 9, 10, 11}));
+		expected.add(tte.createTuple((Object[]) new Integer[] { 8, 9, 10, 10, 11, 12}));
+		expected.add(tte.createTuple((Object[]) new Integer[] { 9, 10, 11, 11, 12, 13}));
+		expected.add(tte.createTuple((Object[]) new Integer[] { 10, 11, 12, 12, 13, 14}));
+		expected.add(tte.createTuple((Object[]) new Integer[] { 11, 12, 13, 13, 14, 15}));
+		
+		// The values in common are 10 to 13.
+		Assert.assertEquals(6, result.size());
+		Assert.assertEquals(expected, result.getData());
+		
+	}
+	
+	@Test
 	public void test1() {
 
 		/*
 		 * Simple plan that joins the results of two accesses.
-		 * The constructor assumes that two attributes should be equal if they have the same name.
+		 * The Join constructor assumes that two attributes should be equal if they have the same name.
 		 * This is the so called equijoin. We use the nested loop join algorithm.
 		 */
 		Join target = new NestedLoopJoin(new Access(relation1, am1), new Access(relation2, am1));
@@ -138,46 +201,96 @@ public class NestedLoopJoinTest {
 			e.printStackTrace();
 		}
 
-		// Check that the result tuples are the ones you expected
+		// Check that the result tuples are the ones expected.
+		// Since the condition is always satisfied and we are doing a full outer join, 
+		// we expect the result to be the cross product.
 		Assert.assertNotNull(result);
-		Assert.assertEquals(N, result.size());
+		Assert.assertEquals(N*N, result.size());
+		// Note that the result tuples contain the tuple from the right appended onto the tuple from the left.
 		for (Tuple x:result.getData())
-			Assert.assertArrayEquals(new Integer[] {10, 11, 12, 13, 14}, x.getValues());
+			Assert.assertArrayEquals(new Integer[] {10, 11, 12, 12, 13, 14}, x.getValues());
 
+		// Load tuples into relation2 such that the join condition is *sometimes* satisfied. 
+		relation2.clear();
 		tuples2.clear();
 		for (int i = 0; i != N; i++) {
 			Integer[] values = ((i % 4) == 0) ? values2 : values1;
 			tuples2.add(tt.createTuple((Object[]) Arrays.copyOf(values, values.length)));
 		}
+		relation2.load(tuples2);
 
+		// Reconstruct the target Join (TODO: instead, reset ought to work here)
+		target = new NestedLoopJoin(new Access(relation1, am1), new Access(relation2, am1));
 		
-//		// TODO: (perhaps move to a separate test case):
-//		
-//		
-//		// Load tuples into relation2 such that the join condition is *sometimes* satisfied. 
-//		relation2.clear();
-//		relation2.load(tuples2);
-//
-//		// old:
-////		// Note that we must reconstruct the NestedLoopJoin instance to make sure the children are not open initially. 
-////		relation1Free = new Access(relation1, am1);
-////		relation2Free = new Access(relation2, am1);
-////		target = new NestedLoopJoin(relation1Free, relation2Free);
-//		target.reset();
-//
-//		//Execute the plan
-//		result = null;
-//		try {
-//			result = this.planExecution(target);
-//		} catch (TimeoutException e) {
-//			e.printStackTrace();
-//		}
-//
-//		// Check that the result tuples are the ones you expected
-//		Assert.assertNotNull(result);
-//		Assert.assertEquals(N/4, result.size());
-//		for (Tuple x:result.getData())
-//			Assert.assertArrayEquals(new Integer[] {10, 11, 12, 13, 14}, x.getValues());
+		//Execute the plan
+		result = null;
+		try {
+			result = this.planExecution(target);
+		} catch (TimeoutException e) {
+			e.printStackTrace();
+		}
 
+		// Check that the result tuples are the ones expected
+		Assert.assertNotNull(result);
+		Assert.assertEquals(N*(N/4), result.size());
+		// Note that the result tuples contain the tuple from the right appended onto the tuple from the left.
+		for (Tuple x:result.getData())
+			Assert.assertArrayEquals(new Integer[] {10, 11, 12, 12, 13, 14}, x.getValues());
+
+	}
+
+	@Test
+	public void test2() {
+
+		/*
+		 * Another plan that joins the results of two accesses.
+		 * The Join constructor assumes that two attributes should be equal if they have the same name.
+		 * This is the so called equijoin. We use the nested loop join algorithm.
+		 */
+		Join target = new NestedLoopJoin(new Access(relation2, am1), new Access(relation3, am1));
+
+		// Create some tuples
+		TupleType tt2 = TupleType.DefaultFactory.create(Integer.class, Integer.class, Integer.class);
+		TupleType tt3 = TupleType.DefaultFactory.create(Integer.class, Integer.class, Integer.class, Integer.class);
+	
+		Integer[] values1 = new Integer[] {10, 11, 12};
+		Integer[] values2 = new Integer[] {10, 13, 12};
+		Integer[] values3 = new Integer[] {9, 10, 11, 13};
+		Integer[] values4 = new Integer[] {9, 10, 12, 14};
+		
+		Collection<Tuple> tuples2 = new ArrayList<Tuple>();
+		int N = 100;
+		for (int i = 0; i != N; i++) {
+			Integer[] values = ((i % 2) == 0) ? values1 : values2;
+			tuples2.add(tt2.createTuple((Object[]) Arrays.copyOf(values, values.length)));
+		}
+		Collection<Tuple> tuples3 = new ArrayList<Tuple>();
+		int M = 200;
+		for (int i = 0; i != M; i++) {
+			Integer[] values = ((i % 3) == 0) ? values3 : values4;
+			tuples3.add(tt3.createTuple((Object[]) Arrays.copyOf(values, values.length)));
+		}
+
+		// Load tuples   
+		relation2.load(tuples2);
+		relation3.load(tuples3);
+		
+		//Execute the plan
+		Table result = null;
+		try {
+			result = this.planExecution(target);
+		} catch (TimeoutException e) {
+			e.printStackTrace();
+		}
+
+		// Check that the result tuples are the ones expected. 
+		// Here the join condition is only satisfied between values1 and values3.
+		// values1 appears 50 times in relation2 and values3 appears 67 times in relation 3.
+		Assert.assertNotNull(result);
+		Assert.assertEquals(50*67, result.size());
+		
+		// Note that the result tuples contain the tuple from the right appended onto the tuple from the left.
+		for (Tuple x:result.getData())
+			Assert.assertArrayEquals(new Integer[] {10, 11, 12, 9, 10, 11, 13}, x.getValues());
 	}
 }
