@@ -1,6 +1,5 @@
 package uk.ac.ox.cs.pdq.test.db;
 
-import java.io.File;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -97,9 +96,28 @@ public class SQLStatementBuilderTest {
 		this.egd = EGD.create(new Atom[]{R2,R2p}, new Atom[]{Atom.create(Predicate.create("EQUALITY", 2, true), 
 				Variable.create("z"),Variable.create("w"))});
 		this.schema = new Schema(new Relation[]{this.rel1, this.rel2, this.rel3}, new Dependency[]{this.tgd,this.tgd2, this.egd});
-		dcMySql = new DatabaseConnection(new DatabaseParameters(new File("test\\src\\uk\\ac\\ox\\cs\\pdq\\test\\db\\MySql_case.properties")), this.schema);
-		dcPostgresSql = new DatabaseConnection(new DatabaseParameters(new File("test\\src\\uk\\ac\\ox\\cs\\pdq\\test\\db\\Postgres_case.properties")), this.schema);
+		
+		DatabaseParameters mySqlDbParam = new DatabaseParameters();
+		mySqlDbParam.setConnectionUrl("jdbc:mysql://localhost/");
+		mySqlDbParam.setDatabaseDriver("com.mysql.jdbc.Driver");
+		mySqlDbParam.setDatabaseName("test_get_triggers");
+		mySqlDbParam.setDatabaseUser("root");
+		mySqlDbParam.setDatabasePassword("root");
+		
+		dcMySql = new DatabaseConnection(mySqlDbParam, this.schema);
+		
+		DatabaseParameters postgresDbParam = new DatabaseParameters();
+		postgresDbParam.setConnectionUrl("jdbc:postgresql://localhost/");
+		postgresDbParam.setDatabaseDriver("org.postgresql.Driver");
+		postgresDbParam.setDatabaseName("test_get_triggers");
+		postgresDbParam.setDatabaseUser("postgres");
+		postgresDbParam.setDatabasePassword("root");
+		
+		dcPostgresSql = new DatabaseConnection(postgresDbParam, this.schema);
 		dcDerby = new DatabaseConnection(new DatabaseParameters(), this.schema);
+		
+		
+		
 		test_derbyAddFacts();
 		test_mySqlAddFacts();
 		test_PostgresAddFacts();
@@ -144,7 +162,6 @@ public class SQLStatementBuilderTest {
 	@Test 
 	public void test_mySqlAddFacts() throws SQLException {	
 		Collection<Atom> facts = createTestFacts();
-		//DatabaseConnection dc = new DatabaseConnection(new DatabaseParameters(new File("test\\src\\uk\\ac\\ox\\cs\\pdq\\test\\db\\MySql_case.properties")), this.schema);
 		DatabaseConnection dc = dcMySql;
 		addFacts(facts,dc);
 		
@@ -156,7 +173,6 @@ public class SQLStatementBuilderTest {
 	@Test 
 	public void test_mySqlAddFacts100() throws SQLException {	
 		Collection<Atom> facts = createTestFacts();
-		//DatabaseConnection dc = new DatabaseConnection(new DatabaseParameters(new File("test\\src\\uk\\ac\\ox\\cs\\pdq\\test\\db\\MySql_case.properties")), this.schema);
 		DatabaseConnection dc = dcMySql;
 		for (int i = 0; i < repeat; i++) {
 			addFacts(facts,dc);
@@ -194,7 +210,6 @@ public class SQLStatementBuilderTest {
 	public void test_PostgresAddFacts100() throws SQLException {	
 
 		Collection<Atom> facts = createTestFacts();
-		//DatabaseConnection dc = new DatabaseConnection(new DatabaseParameters(new File("test\\src\\uk\\ac\\ox\\cs\\pdq\\test\\db\\MySql_case.properties")), this.schema);
 		DatabaseConnection dc = dcPostgresSql;
 		for (int i = 0; i < repeat; i++) {
 			addFacts(facts,dc);

@@ -1,6 +1,5 @@
 package uk.ac.ox.cs.pdq.test.db;
 
-import java.io.File;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -89,8 +88,23 @@ public class SqlRacer {
 	public SqlRacer() throws SQLException {
 		try {
 			setup();
-			dcMySql = new DatabaseConnection(new DatabaseParameters(new File("test\\src\\uk\\ac\\ox\\cs\\pdq\\test\\db\\MySql_case.properties")), this.schema,PARALLEL_THREADS);
-			dcPostgresSql = new DatabaseConnection(new DatabaseParameters(new File("test\\src\\uk\\ac\\ox\\cs\\pdq\\test\\db\\Postgres_case.properties")), this.schema,PARALLEL_THREADS);
+			DatabaseParameters mySqlDbParam = new DatabaseParameters();
+			mySqlDbParam.setConnectionUrl("jdbc:mysql://localhost/");
+			mySqlDbParam.setDatabaseDriver("com.mysql.jdbc.Driver");
+			mySqlDbParam.setDatabaseName("test_get_triggers");
+			mySqlDbParam.setDatabaseUser("root");
+			mySqlDbParam.setDatabasePassword("root");
+			
+			dcMySql = new DatabaseConnection(mySqlDbParam, this.schema,PARALLEL_THREADS);
+			
+			DatabaseParameters postgresDbParam = new DatabaseParameters();
+			postgresDbParam.setConnectionUrl("jdbc:postgresql://localhost/");
+			postgresDbParam.setDatabaseDriver("org.postgresql.Driver");
+			postgresDbParam.setDatabaseName("test_get_triggers");
+			postgresDbParam.setDatabaseUser("postgres");
+			postgresDbParam.setDatabasePassword("root");
+			
+			dcPostgresSql = new DatabaseConnection(postgresDbParam, this.schema,PARALLEL_THREADS);
 			dcDerby = new DatabaseConnection(new DatabaseParameters(), this.schema);
 
 			derbyInstance = new DatabaseInstance(dcDerby) {
