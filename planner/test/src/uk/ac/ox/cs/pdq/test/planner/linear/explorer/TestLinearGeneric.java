@@ -10,6 +10,7 @@ import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Set;
 
+import org.junit.Assert;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
@@ -18,8 +19,6 @@ import org.mockito.Mockito;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.common.eventbus.EventBus;
-
-import org.junit.Assert;
 
 import uk.ac.ox.cs.pdq.algebra.AccessTerm;
 import uk.ac.ox.cs.pdq.algebra.DependentJoinTerm;
@@ -46,6 +45,7 @@ import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
+import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.LinearGeneric;
@@ -105,11 +105,12 @@ public class TestLinearGeneric {
 		
 		//Create schema
 		Schema schema = new Schema(relations);
-		
+		schema.addConstants(Lists.<TypedConstant>newArrayList(TypedConstant.create(5)));
+
 		//Create accessible schema
 		AccessibleSchema accessibleSchema = new AccessibleSchema(schema);
 		
-		//TODO assert that the accessible schema is fine
+		assertAccessibleSchema(accessibleSchema, schema,3);
 		
 		//Create accessible query
 		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(query, query.getSubstitutionOfFreeVariablesToCanonicalConstants());
@@ -244,11 +245,12 @@ public class TestLinearGeneric {
 		
 		//Create schema
 		Schema schema = new Schema(relations);
-		
+		schema.addConstants(Lists.<TypedConstant>newArrayList(TypedConstant.create(5)));
+
 		//Create accessible schema
 		AccessibleSchema accessibleSchema = new AccessibleSchema(schema);
 		
-		//TODO assert that the accessible schema is fine
+		assertAccessibleSchema(accessibleSchema, schema,3);
 		
 		//Create accessible query
 		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(query, query.getSubstitutionOfFreeVariablesToCanonicalConstants());
@@ -338,7 +340,8 @@ public class TestLinearGeneric {
 		//Create accessible schema
 		AccessibleSchema accessibleSchema = new AccessibleSchema(schema);
 		
-		//TODO assert that the accessible schema is fine
+		assertAccessibleSchema(accessibleSchema, schema,4);
+		
 		
 		//Create accessible query
 		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(query, query.getSubstitutionOfFreeVariablesToCanonicalConstants());
@@ -394,6 +397,48 @@ public class TestLinearGeneric {
 		}
 	}
 
+	private void assertAccessibleSchema(AccessibleSchema accessibleSchema, Schema schema, int numberOfAxioms) {
+		Assert.assertNotNull(accessibleSchema);
+		
+		// constants
+		Assert.assertEquals(1,accessibleSchema.getConstants().size());
+		Assert.assertEquals(TypedConstant.create(5),accessibleSchema.getConstant("5"));
+		// accessibility axioms
+		Assert.assertNotNull(accessibleSchema.getAccessibilityAxioms());
+		Assert.assertEquals(numberOfAxioms,accessibleSchema.getAccessibilityAxioms().length);
+		int abc=0;
+		int bc=0;
+		int bac=0;
+		for (AccessibilityAxiom axiom:accessibleSchema.getAccessibilityAxioms()) {
+			if (axiom.getBoundVariables().length==2) {
+				Assert.assertEquals(axiom.getBoundVariables()[0], Variable.create("b"));
+				Assert.assertEquals(axiom.getBoundVariables()[1], Variable.create("c"));
+				bc++;
+			} else
+			if (axiom.getBoundVariables().length==3 && axiom.getBoundVariables()[0].equals(Variable.create("a"))) {
+				Assert.assertEquals(axiom.getBoundVariables()[0], Variable.create("a"));
+				Assert.assertEquals(axiom.getBoundVariables()[1], Variable.create("b"));
+				Assert.assertEquals(axiom.getBoundVariables()[2], Variable.create("c"));
+				abc++;
+			} else
+			if (axiom.getBoundVariables().length==3 && axiom.getBoundVariables()[0].equals(Variable.create("b"))) {
+				Assert.assertEquals(axiom.getBoundVariables()[0], Variable.create("b"));
+				Assert.assertEquals(axiom.getBoundVariables()[1], Variable.create("a"));
+				Assert.assertEquals(axiom.getBoundVariables()[2], Variable.create("c"));
+				bac++;
+			}
+		}
+		Assert.assertEquals(2, abc);
+		Assert.assertEquals(0, bc);
+		Assert.assertEquals(1, bac);
+		
+		Assert.assertNotNull(accessibleSchema.getRelations());
+		Assert.assertEquals(8, accessibleSchema.getRelations().length);
+		Dependency[] infAccAxioms = accessibleSchema.getInferredAccessibilityAxioms();
+		Assert.assertNotNull(infAccAxioms);
+		Assert.assertEquals(0, infAccAxioms.length);
+	}
+	
 	private DatabaseParameters getMySqlConfig() {
 		DatabaseParameters dbParam = new DatabaseParameters();
 		dbParam.setConnectionUrl("jdbc:mysql://localhost/");
