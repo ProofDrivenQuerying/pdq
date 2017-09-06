@@ -58,14 +58,10 @@ public class Access extends TupleIterator {
 
 	public Access(RelationAccessWrapper relation, AccessMethod accessMethod, Map<Integer, TypedConstant> inputConstants) {
 		super(RuntimeUtilities.computeInputAttributes(relation, accessMethod, inputConstants), relation.getAttributes());
-		// Assert.assertNotNull(relation);
 		Preconditions.checkNotNull(relation);
-		// Assert.assertNotNull(accessMethod);
 		Preconditions.checkNotNull(accessMethod);
 		for(Integer position:inputConstants.keySet()) {
-			// Assert.assertTrue(position < relation.getArity());
 			Preconditions.checkArgument(position < relation.getArity());
-			// Assert.assertTrue(Arrays.asList(accessMethod.getInputs()).contains(position));
 			Preconditions.checkArgument(Arrays.asList(accessMethod.getInputs()).contains(position));
 		}
 		this.relation = relation;
@@ -110,7 +106,6 @@ public class Access extends TupleIterator {
 
 	@Override
 	public void open() {
-		// Assert.assertTrue(this.open == null);
 		Preconditions.checkState(this.open == null);
 		this.outputTuplesCache = new LinkedHashMap<>();
 		this.open = true;
@@ -133,18 +128,14 @@ public class Access extends TupleIterator {
 
 	@Override
 	public void interrupt() {
-		// Assert.assertTrue(this.open != null && this.open);
 		Preconditions.checkState(this.open != null && this.open);
-		// Assert.assertTrue(!this.interrupted);
 		Preconditions.checkState(!this.interrupted);
 		this.interrupted = true;
 	}
 
 	@Override
 	public void reset() {
-		// Assert.assertTrue(this.open != null && this.open);
 		Preconditions.checkState(this.open != null && this.open);
-		// Assert.assertTrue(!this.interrupted);
 		Preconditions.checkState(!this.interrupted);
 		this.outputTuplesIterator.reset();
 		this.nextTuple();
@@ -152,7 +143,6 @@ public class Access extends TupleIterator {
 
 	@Override
 	public boolean hasNext() {
-		// Assert.assertTrue(this.open != null && this.open);
 		Preconditions.checkState(this.open != null && this.open);
 		if (this.interrupted) {
 			return false;
@@ -166,11 +156,8 @@ public class Access extends TupleIterator {
 
 	@Override
 	public Tuple next() {
-		// Assert.assertTrue(this.open != null && this.open);
 		Preconditions.checkState(this.open != null && this.open);
-		// Assert.assertTrue(!this.interrupted);
 		Preconditions.checkState(!this.interrupted);
-		// Assert.assertTrue(this.tupleReceivedFromParent != null);
 		Preconditions.checkState(this.tupleReceivedFromParent != null);
 		if (this.eventBus != null) {
 			this.eventBus.post(this);
@@ -206,13 +193,9 @@ public class Access extends TupleIterator {
 
 	@Override
 	public void receiveTupleFromParentAndPassItToChildren(Tuple tuple) {
-		// Assert.assertTrue(this.open != null && this.open);
 		Preconditions.checkState(this.open != null && this.open);
-		// Assert.assertTrue(!this.interrupted);
 		Preconditions.checkState(!this.interrupted);
-		// Assert.assertTrue(tuple != null);
 		Preconditions.checkState(tuple != null);
-		// Assert.assertTrue(RuntimeUtilities.typeOfAttributesEqualsTupleType(tuple.getType(), this.inputAttributes));
 		Preconditions.checkState(RuntimeUtilities.typeOfAttributesEqualsTupleType(tuple.getType(), this.inputAttributes));
 		Tuple combinedInputs = this.makeInputTupleByCombiningInputsFromParentsWithInputConstants(tuple);
 		this.outputTuplesIterator = this.outputTuplesCache.get(combinedInputs);
