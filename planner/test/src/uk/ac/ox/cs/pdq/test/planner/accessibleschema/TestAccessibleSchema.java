@@ -79,7 +79,6 @@ public class TestAccessibleSchema {
 		Assert.assertEquals(2,accessibleSchema.getConstants().size());
 		Assert.assertEquals(TypedConstant.create("constant1"),accessibleSchema.getConstant("constant1"));
 		Assert.assertEquals(TypedConstant.create("constant2"),accessibleSchema.getConstant("constant2"));
-		
 		// accessibility axioms
 		Assert.assertNotNull(accessibleSchema.getAccessibilityAxioms());
 		Assert.assertEquals(8,accessibleSchema.getAccessibilityAxioms().length);
@@ -114,6 +113,15 @@ public class TestAccessibleSchema {
 		
 		Assert.assertNotNull(accessibleSchema.getRelations());
 		Assert.assertEquals(6, accessibleSchema.getRelations().length);
+		Dependency[] infAccAxioms = accessibleSchema.getInferredAccessibilityAxioms();
+		Assert.assertNotNull(infAccAxioms);
+		Assert.assertEquals(1, infAccAxioms.length);
+		Assert.assertNotNull(infAccAxioms[0]);
+		Assert.assertTrue(infAccAxioms[0] instanceof TGD);
+		TGD inferredAccessibilityAxiom = (TGD) infAccAxioms[0];
+		Assert.assertEquals(tgd.getHead(), inferredAccessibilityAxiom.getHead());
+		Assert.assertEquals("InferredAccessibleT", inferredAccessibilityAxiom.getBodyAtom(0).getPredicate().getName());
+		Assert.assertEquals("InferredAccessibleS", inferredAccessibilityAxiom.getBodyAtom(1).getPredicate().getName());
 	}
 	
 }
