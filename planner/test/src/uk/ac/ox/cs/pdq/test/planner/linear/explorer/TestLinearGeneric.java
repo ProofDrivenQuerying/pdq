@@ -392,7 +392,6 @@ public class TestLinearGeneric {
 		} catch (PlannerException | SQLException e) {
 			e.printStackTrace();
 		} catch (LimitReachedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
