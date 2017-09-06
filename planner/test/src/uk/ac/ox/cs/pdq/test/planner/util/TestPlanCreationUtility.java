@@ -1,5 +1,6 @@
 package uk.ac.ox.cs.pdq.test.planner.util;
 
+import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -8,7 +9,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
 
+import uk.ac.ox.cs.pdq.algebra.JoinTerm;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
+import uk.ac.ox.cs.pdq.algebra.RenameTerm;
+import uk.ac.ox.cs.pdq.algebra.SelectionTerm;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
@@ -72,6 +76,7 @@ public class TestPlanCreationUtility {
 		Assert.assertEquals(1, plan2.getInputAttributes().length);
 		Assert.assertEquals(Attribute.create(String.class, "c2"), plan2.getInputAttributes()[0]);
 		Assert.assertEquals(5, plan2.getOutputAttributes().length);
+		
 	}
 	
 	@Test public void test1b() {
@@ -97,6 +102,11 @@ public class TestPlanCreationUtility {
 		Assert.assertEquals(1, plan3.getInputAttributes().length);
 		Assert.assertEquals(Attribute.create(String.class, "c2"), plan3.getInputAttributes()[0]);
 		Assert.assertEquals(8, plan3.getOutputAttributes().length);
+		Assert.assertTrue(Arrays.asList(plan3.getOutputAttributes()).toString().contains("a, b, c, c2, c1, b, c, d"));
+		Assert.assertEquals(2,plan3.getChildren().length);
+		Assert.assertNotNull(plan3.getChild(0));
+		Assert.assertTrue(plan3.getChild(0) instanceof JoinTerm);
+		Assert.assertTrue(plan3.getChild(1) instanceof SelectionTerm);
 	}
 	
 	@Test public void test2() {
@@ -115,6 +125,12 @@ public class TestPlanCreationUtility {
 		
 		Assert.assertEquals(0, plan2.getInputAttributes().length);
 		Assert.assertEquals(5, plan2.getOutputAttributes().length);
+		Assert.assertTrue(Arrays.asList(plan2.getOutputAttributes()).toString().contains("a, b, c, c2, c1"));
+		Assert.assertEquals(2,plan2.getChildren().length);
+		Assert.assertNotNull(plan2.getChild(0));
+		Assert.assertTrue(plan2.getChild(0) instanceof SelectionTerm);
+		Assert.assertTrue(plan2.getChild(1) instanceof RenameTerm);
+		
 	}
 	
 	@Test public void test2b() {
@@ -139,6 +155,11 @@ public class TestPlanCreationUtility {
 		
 		Assert.assertEquals(0, plan3.getInputAttributes().length);
 		Assert.assertEquals(8, plan3.getOutputAttributes().length);
+		Assert.assertTrue(Arrays.asList(plan3.getOutputAttributes()).toString().contains("a, b, c, c2, c1, b, c, d"));
+		Assert.assertEquals(2,plan3.getChildren().length);
+		Assert.assertNotNull(plan3.getChild(0));
+		Assert.assertTrue(plan3.getChild(0) instanceof JoinTerm);
+		Assert.assertTrue(plan3.getChild(1) instanceof SelectionTerm);
 	}
 	
 	@Test public void test3() {
@@ -158,6 +179,12 @@ public class TestPlanCreationUtility {
 		Assert.assertEquals(1, plan2.getInputAttributes().length);
 		Assert.assertEquals(Attribute.create(String.class, "c2"), plan2.getInputAttributes()[0]);
 		Assert.assertEquals(5, plan2.getOutputAttributes().length);
+		Assert.assertTrue(Arrays.asList(plan2.getOutputAttributes()).toString().contains("a, b, c, c2, c1"));
+		Assert.assertEquals(2,plan2.getChildren().length);
+		Assert.assertNotNull(plan2.getChild(0));
+		Assert.assertTrue(plan2.getChild(0) instanceof SelectionTerm);
+		Assert.assertTrue(plan2.getChild(1) instanceof RenameTerm);
+		
 	}
 	
 	@Test public void test4() {
@@ -176,6 +203,12 @@ public class TestPlanCreationUtility {
 		
 		Assert.assertEquals(0, plan2.getInputAttributes().length);
 		Assert.assertEquals(5, plan2.getOutputAttributes().length);
+		Assert.assertTrue(Arrays.asList(plan2.getOutputAttributes()).toString().contains("a, b, c, b, c"));
+		Assert.assertEquals(2,plan2.getChildren().length);
+		Assert.assertNotNull(plan2.getChild(0));
+		Assert.assertTrue(plan2.getChild(0) instanceof SelectionTerm);
+		Assert.assertTrue(plan2.getChild(1) instanceof SelectionTerm);
+		
 	}
 	
 	@Test public void test5() {
@@ -194,6 +227,12 @@ public class TestPlanCreationUtility {
 		RelationalTerm plan2 = PlanCreationUtility.createPlan(plan1,plan11);
 		Assert.assertEquals(0, plan2.getInputAttributes().length);
 		Assert.assertEquals(5, plan2.getOutputAttributes().length);
+		Assert.assertTrue(Arrays.asList(plan2.getOutputAttributes()).toString().contains("a, b, c, b, c"));
+		Assert.assertEquals(2,plan2.getChildren().length);
+		Assert.assertNotNull(plan2.getChild(0));
+		Assert.assertTrue(plan2.getChild(0) instanceof SelectionTerm);
+		Assert.assertTrue(plan2.getChild(1) instanceof SelectionTerm);
+		
 	}
 	
 	@Test public void test6() {
@@ -213,6 +252,12 @@ public class TestPlanCreationUtility {
 		Assert.assertEquals(1, plan2.getInputAttributes().length);
 		Assert.assertEquals(Attribute.create(String.class, "c"), plan2.getInputAttributes()[0]);
 		Assert.assertEquals(5, plan2.getOutputAttributes().length);
+		Assert.assertTrue(Arrays.asList(plan2.getOutputAttributes()).toString().contains("b, c, a, b, c"));
+		Assert.assertEquals(2,plan2.getChildren().length);
+		Assert.assertNotNull(plan2.getChild(0));
+		Assert.assertTrue(plan2.getChild(0) instanceof SelectionTerm);
+		Assert.assertTrue(plan2.getChild(1) instanceof SelectionTerm);
+		
 	}
 	
 }
