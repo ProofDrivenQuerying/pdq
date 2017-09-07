@@ -58,6 +58,7 @@ import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 import uk.ac.ox.cs.pdq.util.LimitReachedException;
 
 /**
+ * Tests the LinearGeneric explorer class.
  * 
  * @author Efthymia Tsamoura
  * @author Gabor
@@ -209,8 +210,10 @@ public class TestLinearGeneric {
 				
 		} catch (PlannerException | SQLException e) {
 			e.printStackTrace();
+			Assert.fail();
 		} catch (LimitReachedException e) {
 			e.printStackTrace();
+			Assert.fail();
 		}
 	}
 	
@@ -306,8 +309,10 @@ public class TestLinearGeneric {
 				  
 		} catch (PlannerException | SQLException e) {
 			e.printStackTrace();
+			Assert.fail();
 		} catch (LimitReachedException e) {
 			e.printStackTrace();
+			Assert.fail();
 		}
 	}
 	
@@ -352,6 +357,7 @@ public class TestLinearGeneric {
 			databaseConnection = new DatabaseConnection(new DatabaseParameters(), accessibleSchema);
 		} catch (SQLException e) {
 			e.printStackTrace();
+			Assert.fail();
 		}
 		
 		//Create the chaser 
@@ -391,8 +397,10 @@ public class TestLinearGeneric {
 				Assert.assertEquals(4, exploredPlans.size());
 		} catch (PlannerException | SQLException e) {
 			e.printStackTrace();
+			Assert.fail();
 		} catch (LimitReachedException e) {
 			e.printStackTrace();
+			Assert.fail();
 		}
 	}
 
@@ -546,6 +554,7 @@ public class TestLinearGeneric {
 			databaseConnection = new DatabaseConnection(dbParams, accessibleSchema);
 		} catch (SQLException e) {
 			e.printStackTrace();
+			Assert.fail();
 		}
 		
 		//Create the chaser 
