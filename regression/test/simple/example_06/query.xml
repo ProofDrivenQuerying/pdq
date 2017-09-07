@@ -2,7 +2,7 @@
 <query type="conjunctive">
 	<body>
 		<atom name="R">
-			<constant value="1" />
+			<constant type = "Integer.class" value="1" />
 			<variable name="b" />
 			<variable name="c" />
 		</atom>
