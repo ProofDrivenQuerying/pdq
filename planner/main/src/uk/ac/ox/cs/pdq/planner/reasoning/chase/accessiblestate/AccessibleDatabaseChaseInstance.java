@@ -269,9 +269,13 @@ public class AccessibleDatabaseChaseInstance extends uk.ac.ox.cs.pdq.reasoning.c
 	 *
 	 * @param axioms the axioms
 	 * @return 		pairs of accessibility axioms to chase facts
-	 * @see uk.ac.ox.cs.pdq.chase.state.ChaseState#groupByBinding(Collection<AccessibilityAxiom>)
+	 * @see uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance#groupFactsByAccessMethods(AccessibilityAxiom[] axioms)
+	 * 
+	 * Gabor: Not exactly grouping by access methods, rather grouping by unique sets of inputs. 
+	 * So for an access method that has no input it will create one group that contains all. 
+	 * For an access method that has one input it will create as many groups as many different value exists for that parameter. 
+	 * When there are multiple inputs it will create groups for each unique input configuration. 
 	 */
-	@Override
 	public List<Pair<AccessibilityAxiom, Collection<Atom>>> groupFactsByAccessMethods(AccessibilityAxiom[] axioms) {
 		return AccessibleStateUtility.groupFactsByAccessMethods(axioms, this.atomsMap);
 	}
@@ -285,7 +289,7 @@ public class AccessibleDatabaseChaseInstance extends uk.ac.ox.cs.pdq.reasoning.c
 	 */
 	@Override
 	public Map<AccessibilityAxiom, List<Match>> getUnexposedFacts(AccessibleSchema accessibleSchema) {
-		return this.getUnexposedFacts(accessibleSchema, this.atomsMap, this.accessibleTerms, this.graph);
+		return this.getUnexposedFacts(accessibleSchema, this.atomsMap, this.accessibleTerms, this.facts);
 	}
 
 	/* (non-Javadoc)
@@ -325,14 +329,14 @@ public class AccessibleDatabaseChaseInstance extends uk.ac.ox.cs.pdq.reasoning.c
 	 * @param accessibleSchema the accessible schema
 	 * @param atomsMap 		Maps each schema signature (relation) to its chase facts
 	 * @param accessibleTerms 		Maps each chase constant the Accessed facts it appears
-	 * @param graph the graphs
+	 * @param facts the graphs
 	 * @return 		the non-fired accessibility axioms of the state and information to fire them
 	 */
 	private Map<AccessibilityAxiom, List<Match>> getUnexposedFacts(
 			AccessibleSchema accessibleSchema,
 			Multimap<Predicate, Atom> atomsMap,
 			Multimap<Term,Atom> accessibleTerms,
-			FiringGraph graph) {
+			Collection<Atom> facts) {
 		Map<AccessibilityAxiom, List<Match>> ret = new LinkedHashMap<>();
 		List<Pair<AccessibilityAxiom,Collection<Atom>>> groups = 
 				AccessibleStateUtility.groupFactsByAccessMethods(accessibleSchema.getAccessibilityAxioms(), atomsMap);
@@ -350,7 +354,7 @@ public class AccessibleDatabaseChaseInstance extends uk.ac.ox.cs.pdq.reasoning.c
 					predicate = Predicate.create(AccessibleSchema.inferredAccessiblePrefix + fact.getPredicate().getName(), fact.getPredicate().getArity());
 				Atom accessedFact = Atom.create(predicate, fact.getTerms());
 				Collection<Term> inputTerms = uk.ac.ox.cs.pdq.util.Utility.getTerms(accessedFact,axiom.getAccessMethod().getInputs());
-				if(graph.getFactProvenance(accessedFact) == null && accessibleTerms.keySet().containsAll(inputTerms)) {
+				if(!facts.contains(accessedFact) && accessibleTerms.keySet().containsAll(inputTerms)) {
 					Match matching = MatchFactory.createMatchForAccessibilityAxiom(pair.getLeft(), fact);
 					List<Match> matches = ret.get(pair.getLeft());
 					if(matches == null) 
