@@ -3,6 +3,7 @@ package uk.ac.ox.cs.pdq.algebra;
 import java.util.Arrays;
 import java.util.Map;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.junit.Assert;
 
 
@@ -29,8 +30,7 @@ public class DependentJoinTerm extends RelationalTerm {
 		super(AlgebraUtilities.computeInputAttributesForDependentJoinTerm(child1, child2), AlgebraUtilities.computeOutputAttributes(child1, child2));
 		Assert.assertNotNull(child1);
 		Assert.assertNotNull(child2);
-		for(int inputAttributeIndex = 0; inputAttributeIndex < child2.getNumberOfInputAttributes(); ++inputAttributeIndex) 
-			Assert.assertTrue(Arrays.asList(child1.getOutputAttributes()).contains(child2.getInputAttributes()[inputAttributeIndex]));
+		Assert.assertTrue(CollectionUtils.containsAny(Arrays.asList(child1.getOutputAttributes()),Arrays.asList(child2.getInputAttributes())));
 		this.children[0] = child1;
 		this.children[1] = child2;
 		this.positionsInRightChildThatAreBoundFromLeftChild = AlgebraUtilities.computePositionsInRightChildThatAreBoundFromLeftChild(child1, child2);

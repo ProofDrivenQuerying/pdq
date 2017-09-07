@@ -100,20 +100,38 @@ public class PlanCreationUtility {
 			//Rename the output attributes
 			Attribute[] renamings = computeRenamedAttributes(planRelation.getAttributes(), exposedFact.getTerms());
 			//Add a rename operator 
-			RelationalTerm op2 = RenameTerm.create(renamings, access); 		
+			op1 = RenameTerm.create(renamings, access); 		
 			//Find if this fact has schema constants in output positions or repeated constants
 			//If yes, then compute the filtering conditions
 			Condition filteringConditions = PlanCreationUtility.createFilteringConditions(exposedFact.getTerms());
-			if (filteringConditions != null) 
-				op2 = SelectionTerm.create(filteringConditions, access);
-			if (op1 == null) 
-				op1 = op2;
-			else 
-				op1 = JoinTerm.create(op1, op2);
+			if (filteringConditions != null && ! checkEquality(filteringConditions, access.getInputConstants())) {
+				op1 = SelectionTerm.create(filteringConditions, access);
+				op1 = RenameTerm.create(renamings, op1); 		
+			}
 		}
 		return op1;
 	}
 	
+	private static boolean checkEquality(Condition filteringConditions, Map<Integer, TypedConstant> inputConstants) {
+		if (filteringConditions instanceof ConjunctiveCondition) {
+			SimpleCondition[] conditions = ((ConjunctiveCondition) filteringConditions).getSimpleConditions();
+			for (SimpleCondition s: conditions) {
+				if (!checkEquality(s,inputConstants))
+					return false;
+			}
+			return true;
+		}
+		if (filteringConditions instanceof ConstantEqualityCondition) {
+			TypedConstant constant = ((ConstantEqualityCondition) filteringConditions).getConstant();
+			int position = ((ConstantEqualityCondition) filteringConditions).getPosition();
+			if (!inputConstants.containsKey(position))
+				return false;
+			return inputConstants.get(position).equals(constant);
+		}
+		
+		return false;
+	}
+
 	//TODO implement this method
 	private static Map<Integer, TypedConstant> computeInputConstants(AccessMethod method, Term[] terms) {
 		Map<Integer, TypedConstant> ret = new HashMap<>();

@@ -83,5 +83,19 @@ public class TypedConstant extends Constant implements Typed, Serializable, Comp
 		}
 		return ((String)this.getValue()).compareTo((String)o.getValue());
 	}
-	
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof TypedConstant))
+			return false;
+		TypedConstant o = (TypedConstant) obj;
+		if (this.type != o.type) 
+			return false;
+		if (this.value == null && o.value == null)
+			return true;
+		if (this.value == null || o.value == null)
+			return false;
+		if (this.value instanceof String)
+			return ((String)this.value).equals(o.value);
+		return ((Integer)this.value).equals(o.value);
+	}
 }
