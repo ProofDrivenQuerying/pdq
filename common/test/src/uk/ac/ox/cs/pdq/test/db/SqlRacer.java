@@ -7,17 +7,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Queue;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 
+import org.junit.Assert;
 import org.junit.Before;
 
 import com.google.common.collect.Lists;
@@ -29,8 +20,6 @@ import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
-import uk.ac.ox.cs.pdq.db.sql.DerbyStatementBuilder;
-import uk.ac.ox.cs.pdq.db.sql.ExecuteSynchronousSQLUpdateThread;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.EGD;
@@ -39,19 +28,20 @@ import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
-import uk.ac.ox.cs.pdq.util.LimitReachedException;
-import uk.ac.ox.cs.pdq.util.LimitReachedException.Reasons;
-import uk.ac.ox.cs.pdq.util.Utility;
 
 /**
  * This test when executed as a java application can detect memory leaks in the
- * sql database connections. It starts 3 threads one for derby, one for mysql
- * and one postgres. Each threads adds and deletes facts keeping the database
+ * SQL database connections. It starts 3 threads one for derby, one for MySql
+ * and one Postgres. Each threads adds and deletes facts keeping the database
  * size on minimum, but doing lots of operations in an infinite loop.
  * Each thread reports how many loops it have been doing. and what's the average speed.
  * 
  * @author Gabor
- *
+ * 
+ * 07/09/2017 algebra-changes branch: 
+ *   - Derby    : average 0.65 loops per second with 1000 facts inserted and deleted 1 times in each loop.
+ *   - MySql    : average 29.0 loops per second with 1000 facts inserted and deleted 1 times in each loop.
+ *   - Postgres : average 18.0 loops per second with 1000 facts inserted and deleted 1 times in each loop.
  */
 public class SqlRacer {
 	private final boolean print = false;
@@ -79,7 +69,6 @@ public class SqlRacer {
 		try {
 			new SqlRacer();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -111,7 +100,6 @@ public class SqlRacer {
 				
 				@Override
 				public Collection<Atom> getFacts() {
-					// TODO Auto-generated method stub
 					return null;
 				}
 			};			
@@ -119,7 +107,6 @@ public class SqlRacer {
 				
 				@Override
 				public Collection<Atom> getFacts() {
-					// TODO Auto-generated method stub
 					return null;
 				}
 			};			
@@ -127,7 +114,6 @@ public class SqlRacer {
 				
 				@Override
 				public Collection<Atom> getFacts() {
-					// TODO Auto-generated method stub
 					return null;
 				}
 			};			
@@ -144,7 +130,6 @@ public class SqlRacer {
 		Attribute at11 = Attribute.create(String.class, "at11");
 		Attribute at12 = Attribute.create(String.class, "at12");
 		Attribute at13 = Attribute.create(String.class, "at13");
-		// this.rel1 = Relation.create("R1", new Attribute[]{at11, at12, at13,factId});
 		this.rel1 = Relation.create("R1", new Attribute[] { at11, at12, at13 });
 
 		Attribute at21 = Attribute.create(String.class, "at21");
@@ -171,7 +156,6 @@ public class SqlRacer {
 		Thread mySqlThread = new Thread() {
 			public void run() {
 				try {
-					//race(dcMySql, "MySql     ");
 					race(mySqlInstance, dcMySql, "MySql     ");
 				} catch (SQLException e) {
 					e.printStackTrace();
@@ -207,7 +191,6 @@ public class SqlRacer {
 			try {
 				derbyThread.join();
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -222,14 +205,14 @@ public class SqlRacer {
 				Collection<Atom> facts = createTestFacts1000();
 				instance.addFacts(facts);
 				Statement sqlStatement = dc.getSynchronousConnections(0).createStatement();
-				ResultSet rs = sqlStatement.executeQuery("select * from R1");
-				checkTestFacts(rs, print);
+				ResultSet rs = sqlStatement.executeQuery("select * from "+dc.getDatabaseParameters().getDatabaseName()+".R1");
+				Assert.assertEquals(1000, checkTestFacts(rs, print));
 				rs.close();
 			}
 			Statement sqlStatement = dc.getSynchronousConnections(0).createStatement();
-			int deleted = sqlStatement.executeUpdate("delete from R1");
+			int deleted = sqlStatement.executeUpdate("delete from "+dc.getDatabaseParameters().getDatabaseName()+".R1");
 			if (deleted < repeat*1000) {
-				System.err.println("Tuples are not created");
+				System.err.println(deleted + " amount of tuples were created out of 1000.");
 			}
 			counter++;
 			if (counter % 10 == 0) {
@@ -256,19 +239,11 @@ public class SqlRacer {
 			String columnValue = rs.getString(1);
 			if (print)
 				System.out.print(columnValue + "\t");
-//			int expectedIndex = -1;
-//			for (int i = 0; i < EXPECTED_RESULTS[0].length; i++) {
-//				if (EXPECTED_RESULTS[0][i].equals(columnValue)) {
-//					Assert.assertEquals(-1, expectedIndex);// we should not find two match
-//					expectedIndex = i;
-//				}
-//			}
-//			Assert.assertNotEquals(-1, expectedIndex);// we should have found one match
 			for (int i = 2; i <= columnsNumber; i++) {
 				columnValue = rs.getString(i);
+				if (columnValue!=null)
 				if (print)
 					System.out.print(columnValue + "\t");
-				//Assert.assertEquals(EXPECTED_RESULTS[i - 1][expectedIndex], columnValue);
 			}
 			if (print)
 				System.out.println("");
@@ -293,72 +268,4 @@ public class SqlRacer {
 		}
 		return l;
 	}
-
-	/**
-	 * Copied from DatabaseInstance
-	 */
-	protected void addFacts2(Collection<Atom> facts, DatabaseConnection databaseConnection) {
-		Queue<String> queries = new ConcurrentLinkedQueue<>();
-		if (databaseConnection.getSQLStatementBuilder() instanceof DerbyStatementBuilder) {
-			queries.addAll(databaseConnection.getSQLStatementBuilder().createInsertStatements(facts, databaseConnection.getRelationNamesToDatabaseTables()));
-		} else {
-			Map<Predicate, List<Atom>> clusters = Utility.clusterAtomsWithSamePredicateName(facts);
-			// Find the total number of tuples that will be inserted in the database
-			int totalTuples = facts.size();
-			int tuplesPerThread;
-			if (totalTuples < databaseConnection.getNumberOfSynchronousConnections()) {
-				tuplesPerThread = totalTuples;
-			} else {
-				tuplesPerThread = (int) Math.ceil(totalTuples / databaseConnection.getNumberOfSynchronousConnections());
-			}
-			if (tuplesPerThread > insertCacheSize) {
-				tuplesPerThread = insertCacheSize;
-			}
-			for (Entry<Predicate, List<Atom>> entry : clusters.entrySet()) {
-				Predicate predicate = entry.getKey();
-				List<Atom> clusterFacts = entry.getValue();
-				while (!clusterFacts.isEmpty()) {
-					int position = tuplesPerThread < clusterFacts.size() ? tuplesPerThread : clusterFacts.size();
-					List<Atom> subList = clusterFacts.subList(0, position);
-					queries.add(databaseConnection.getSQLStatementBuilder().createBulkInsertStatement(predicate, subList));
-					subList.clear();
-				}
-			}
-			clusters.clear();
-		}
-		executeQueries(queries, databaseConnection);
-	}
-
-	private void executeQueries(Queue<String> queries, DatabaseConnection databaseConnection) {
-		ExecutorService executorService = null;
-		try {
-			// Create a pool of threads to run in parallel
-			executorService = Executors.newFixedThreadPool(databaseConnection.getNumberOfSynchronousConnections());
-			List<Callable<Boolean>> threads = new ArrayList<>();
-			for (int j = 0; j < databaseConnection.getNumberOfSynchronousConnections(); ++j) {
-				// Create the threads that will run the database update statements
-				threads.add(new ExecuteSynchronousSQLUpdateThread(queries, databaseConnection.getSynchronousConnections(j)));
-			}
-			long start = System.currentTimeMillis();
-			try {
-				for (Future<Boolean> output : executorService.invokeAll(threads, this.timeout, TimeUnit.MILLISECONDS)) {
-					output.get();
-				}
-			} catch (java.util.concurrent.CancellationException e) {
-				executorService.shutdownNow();
-				if (this.timeout <= (System.currentTimeMillis() - start)) {
-					try {
-						throw new LimitReachedException(Reasons.TIMEOUT);
-					} catch (LimitReachedException e1) {
-						throw new RuntimeException(e1);
-					}
-				}
-			}
-			executorService.shutdown();
-		} catch (InterruptedException | ExecutionException e) {
-			executorService.shutdownNow();
-			e.printStackTrace();
-		}
-	}
-
 }
