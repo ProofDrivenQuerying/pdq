@@ -44,6 +44,11 @@ import uk.ac.ox.cs.pdq.util.LimitReachedException;
 import uk.ac.ox.cs.pdq.util.LimitReachedException.Reasons;
 import uk.ac.ox.cs.pdq.util.Utility;
 
+/** 
+ * Class-level unit test for SQLStatementBuilder and it's specialised sub classes like MySql and Postgres statement builders.
+ * @author Gabor
+ *
+ */
 public class SQLStatementBuilderTest {
 	private final boolean print = false;
 	protected final static int insertCacheSize = 1000;
@@ -74,7 +79,6 @@ public class SQLStatementBuilderTest {
 		Attribute at11 = Attribute.create(String.class, "at11");
 		Attribute at12 = Attribute.create(String.class, "at12");
 		Attribute at13 = Attribute.create(String.class, "at13");
-//		this.rel1 = Relation.create("R1", new Attribute[]{at11, at12, at13,factId});
 		this.rel1 = Relation.create("R1", new Attribute[]{at11, at12, at13});
 		
 		Attribute at21 = Attribute.create(String.class, "at21");
@@ -147,7 +151,6 @@ public class SQLStatementBuilderTest {
 	@Test 
 	public void test_derbyAddFacts100() throws SQLException {
 		Collection<Atom> facts = createTestFacts();
-		//DatabaseConnection dc = new DatabaseConnection(new DatabaseParameters(), this.schema);
 		DatabaseConnection dc = dcDerby;
 		for (int i = 0; i < repeat; i++) {
 			addFacts(facts,dc);
