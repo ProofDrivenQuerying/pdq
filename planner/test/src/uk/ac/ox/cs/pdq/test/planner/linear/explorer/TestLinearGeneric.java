@@ -395,6 +395,10 @@ public class TestLinearGeneric {
 				Assert.assertNotNull(exploredPlans);
 				Assert.assertFalse(exploredPlans.isEmpty());
 				Assert.assertEquals(4, exploredPlans.size());
+				for (Entry<RelationalTerm, Cost> plan: exploredPlans) {
+					int dependentJoints = countDependentJoinsInPlan(plan.getKey());
+					Assert.assertTrue(dependentJoints >= 1); // each plan must contain at least one dependent join term.
+				}
 		} catch (PlannerException | SQLException e) {
 			e.printStackTrace();
 			Assert.fail();
@@ -404,6 +408,16 @@ public class TestLinearGeneric {
 		}
 	}
 
+	private int countDependentJoinsInPlan(RelationalTerm key) {
+		int ret = 0;
+		if (key instanceof DependentJoinTerm) {
+			ret++;
+		}
+		for (RelationalTerm child:key.getChildren()) {
+			ret += countDependentJoinsInPlan(child);
+		}
+		return ret;
+	}
 	private void assertAccessibleSchema(AccessibleSchema accessibleSchema, Schema schema, int numberOfAxioms) {
 		Assert.assertNotNull(accessibleSchema);
 		
