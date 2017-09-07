@@ -94,7 +94,7 @@ public abstract class AbstractSQLSchemaDiscoverer implements SchemaDiscoverer {
 				relations.addAll(this.discoverViews(relationMap));
 				this.discovered =  new Schema(relations.toArray(new Relation[relations.size()]));
 			} catch (ClassNotFoundException | SQLException e) {
-				throw new BuilderException("Exception thrown will discovering schema " + url, e);
+				throw new BuilderException("Exception thrown while discovering schema " + url, e);
 			}
 		}
 		return this.discovered;
