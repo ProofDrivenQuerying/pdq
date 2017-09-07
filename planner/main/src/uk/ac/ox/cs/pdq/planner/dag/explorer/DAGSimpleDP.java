@@ -93,7 +93,7 @@ public class DAGSimpleDP extends DAGGeneric {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	protected Collection<DAGChaseConfiguration> mainLoop() throws PlannerException, LimitReachedException {
+	public Collection<DAGChaseConfiguration> exploreAllConfigurationsUpToCurrentDepth() throws PlannerException, LimitReachedException {
 		Map<Pair<DAGChaseConfiguration,DAGChaseConfiguration>,DAGChaseConfiguration> last = new HashMap<>();
 		Pair<DAGChaseConfiguration, DAGChaseConfiguration> pair = null;
 		while ((pair = this.selector.getNextPairOfConfigurationsToCompose(this.depth)) != null) {

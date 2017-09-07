@@ -158,7 +158,7 @@ public class DAGGeneric extends DAGExplorer {
 			this.stats.set(CANDIDATES, this.rightSideConfigurations.size());
 		} else if (this.depth > 1) {
 			//Create all binary configurations of depth up to this.depth
-			Collection<DAGChaseConfiguration> last = this.mainLoop();
+			Collection<DAGChaseConfiguration> last = this.exploreAllConfigurationsUpToCurrentDepth();
 			//Stop if we cannot create any new configuration
 			if (last.isEmpty()) {
 				this.forcedTermination = true;
@@ -192,7 +192,7 @@ public class DAGGeneric extends DAGExplorer {
 	 * @throws LimitReachedException the limit reached exception
 	 */
 	@SuppressWarnings("unchecked")
-	protected Collection<DAGChaseConfiguration> mainLoop() throws PlannerException, LimitReachedException {
+	public Collection<DAGChaseConfiguration> exploreAllConfigurationsUpToCurrentDepth() throws PlannerException, LimitReachedException {
 		Map<Pair<DAGChaseConfiguration, DAGChaseConfiguration>, DAGChaseConfiguration> last = new HashMap<>();
 		Pair<DAGChaseConfiguration, DAGChaseConfiguration> pair = null;
 		//Get the next pair of configurations to combine
@@ -205,6 +205,8 @@ public class DAGGeneric extends DAGExplorer {
 				Cost cost = this.costEstimator.cost(configuration.getPlan());
 				configuration.setCost(cost);
 				configuration.reasonUntilTermination(this.chaser, this.accessibleQuery, this.accessibleSchema.getInferredAccessibilityAxioms());
+				
+				System.out.println(configuration + "isClosed() " + configuration.isClosed());
 				//If the newly created binary configuration has the potential to lead to the optimal plan
 				if (this.bestPlan == null || !this.successDominance.isDominated(configuration.getPlan(), configuration.getCost(), this.bestPlan, this.bestCost)) {
 					//If it is closed and has a match, update the best configuration
