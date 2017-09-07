@@ -94,7 +94,12 @@ public class AccessTerm extends RelationalTerm {
 				result.append("#");
 				result.append(this.accessMethod.getInputs()[index]);
 				result.append("=");
-				result.append(inputConstants.get(this.accessMethod.getInputs()[index]));				
+				TypedConstant input = inputConstants.get(this.accessMethod.getInputs()[index]);
+				if (input!=null)
+					result.append(inputConstants.get(this.accessMethod.getInputs()[index]));
+				else 
+					result.append(inputAttributes[index]);
+				
 				if(index < this.accessMethod.getInputs().length - 1)
 					result.append(",");
 			}

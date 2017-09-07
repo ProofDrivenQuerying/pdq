@@ -63,6 +63,20 @@ public class AdaptedConstant extends AdaptedVariable {
 	public void setType(Type type) {
 		this.type = type;
 	}
+	@XmlAttribute(name = "type")
+	public void setType(String type) {
+		if (type!=null && type.equalsIgnoreCase("String.class"))
+			this.type = String.class;
+		if (type!=null && type.equalsIgnoreCase("Integer.class"))
+			this.type = Integer.class;
+		if (type!=null && type.equalsIgnoreCase("Double.class"))
+			this.type = Double.class;
+	}
+	public String getType() {
+		if (type!= null && type != String.class)
+			return type.getTypeName();
+		return null;
+	}
 
 	public void setValue(String value) {
 		this.value = value;
