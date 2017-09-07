@@ -2,6 +2,7 @@ package uk.ac.ox.cs.pdq.test.planner.linear.explorer;
 
 import static org.mockito.Mockito.when;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -43,6 +44,7 @@ import uk.ac.ox.cs.pdq.fol.LinearGuarded;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
+import uk.ac.ox.cs.pdq.io.PlanPrinter;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
@@ -51,6 +53,7 @@ import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.LinearGeneric;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.NodeFactory;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
+import uk.ac.ox.cs.pdq.planner.util.PlanCreationUtility;
 import uk.ac.ox.cs.pdq.planner.util.PlanTree;
 import uk.ac.ox.cs.pdq.planner.util.PlannerUtility;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
@@ -71,6 +74,7 @@ public class TestLinearGeneric {
 	protected Attribute c = Attribute.create(Integer.class, "c");
 	protected Attribute d = Attribute.create(Integer.class, "d");
 	protected Attribute InstanceID = Attribute.create(Integer.class, "InstanceID");
+	private boolean doPrint = false;
 	
 	@Test 
 	public void test1ExplorationStepsA() {
@@ -396,6 +400,11 @@ public class TestLinearGeneric {
 				Assert.assertFalse(exploredPlans.isEmpty());
 				Assert.assertEquals(4, exploredPlans.size());
 				for (Entry<RelationalTerm, Cost> plan: exploredPlans) {
+					try {
+						if (doPrint ) PlanPrinter.openPngPlan(plan.getKey());
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 					int dependentJoints = countDependentJoinsInPlan(plan.getKey());
 					Assert.assertTrue(dependentJoints >= 1); // each plan must contain at least one dependent join term.
 				}

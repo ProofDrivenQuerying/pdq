@@ -105,8 +105,7 @@ public class PlanCreationUtility {
 			//If yes, then compute the filtering conditions
 			Condition filteringConditions = PlanCreationUtility.createFilteringConditions(exposedFact.getTerms());
 			if (filteringConditions != null && ! checkEquality(filteringConditions, access.getInputConstants())) {
-				op1 = SelectionTerm.create(filteringConditions, access);
-				op1 = RenameTerm.create(renamings, op1); 		
+				op1 = SelectionTerm.create(filteringConditions, op1);
 			}
 		}
 		return op1;
