@@ -5,9 +5,13 @@ import static org.mockito.Mockito.when;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map.Entry;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
+
+import com.google.common.eventbus.EventBus;
 
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
@@ -19,14 +23,17 @@ import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
+import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.FollowUpHandling;
+import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.DAGGeneric;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.DefaultValidator;
@@ -40,7 +47,7 @@ import uk.ac.ox.cs.pdq.util.LimitReachedException;
 /**
  * 
  * @author Efthymia Tsamoura
- *
+ * @author Gabor
  */
 public class TestDAGGeneric {
 
@@ -89,7 +96,7 @@ public class TestDAGGeneric {
 		//Create accessible schema
 		AccessibleSchema accessibleSchema = new AccessibleSchema(schema);
 		
-		//TODO assert that the accessible schema is fine
+		assertAccessibleSchema(accessibleSchema, schema,4);
 		
 		//Create accessible query
 		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(query, query.getSubstitutionOfFreeVariablesToCanonicalConstants());
@@ -100,6 +107,7 @@ public class TestDAGGeneric {
 			connection = new DatabaseConnection(new DatabaseParameters(), accessibleSchema);
 		} catch (SQLException e) {
 			e.printStackTrace();
+			Assert.fail();
 		}
 		
 		//Create the chaser 
@@ -121,22 +129,64 @@ public class TestDAGGeneric {
 		validators.add(new DefaultValidator());
 		
 		try {
-			DAGGeneric explorer = new DAGGeneric(null, false, parameters, query, accessibleQuery, accessibleSchema, chaser, connection, costEstimator, successDominance, null, validators, 4);
+			DAGGeneric explorer = new DAGGeneric(new EventBus(), false, parameters, query, accessibleQuery, accessibleSchema, chaser, connection, costEstimator, successDominance, null, validators, 4);
 			explorer.explore();
 			explorer.getExploredPlans();
-			//TODO assert that we got all possible plans
+			List<Entry<RelationalTerm, Cost>> exploredPlans = explorer.getExploredPlans();
+			Assert.assertNotNull(exploredPlans);
+			Assert.assertFalse(exploredPlans.isEmpty());
+			Assert.assertEquals(4, exploredPlans.size());
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			Assert.fail();
 		} catch (PlannerException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			Assert.fail();
 		} catch (LimitReachedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			Assert.fail();
 		}
-		
-		
 	}
+	
+	private void assertAccessibleSchema(AccessibleSchema accessibleSchema, Schema schema, int numberOfAxioms) {
+		Assert.assertNotNull(accessibleSchema);
+		
+		// constants
+		Assert.assertEquals(0,accessibleSchema.getConstants().size());
+		// accessibility axioms
+		Assert.assertNotNull(accessibleSchema.getAccessibilityAxioms());
+		Assert.assertEquals(numberOfAxioms,accessibleSchema.getAccessibilityAxioms().length);
+		int abcd=0;
+		int anythingElse=0;
+		int cdab=0;
+		for (AccessibilityAxiom axiom:accessibleSchema.getAccessibilityAxioms()) {
+			if (axiom.getBoundVariables().length==4 && axiom.getBoundVariables()[0].equals(Variable.create("a"))) {
+				Assert.assertEquals(axiom.getBoundVariables()[0], Variable.create("a"));
+				Assert.assertEquals(axiom.getBoundVariables()[1], Variable.create("b"));
+				Assert.assertEquals(axiom.getBoundVariables()[2], Variable.create("c"));
+				Assert.assertEquals(axiom.getBoundVariables()[3], Variable.create("d"));
+				abcd++;
+			} else
+			if (axiom.getBoundVariables().length==4 && axiom.getBoundVariables()[0].equals(Variable.create("c"))) {
+				Assert.assertEquals(axiom.getBoundVariables()[0], Variable.create("c"));
+				Assert.assertEquals(axiom.getBoundVariables()[1], Variable.create("d"));
+				Assert.assertEquals(axiom.getBoundVariables()[2], Variable.create("a"));
+				Assert.assertEquals(axiom.getBoundVariables()[3], Variable.create("b"));
+				cdab++;
+			} else {
+				anythingElse++;
+			}
+		}
+		Assert.assertEquals(2, abcd);
+		Assert.assertEquals(0, anythingElse);
+		Assert.assertEquals(2, cdab);
+		
+		Assert.assertNotNull(accessibleSchema.getRelations());
+		Assert.assertEquals(10, accessibleSchema.getRelations().length);
+		Dependency[] infAccAxioms = accessibleSchema.getInferredAccessibilityAxioms();
+		Assert.assertNotNull(infAccAxioms);
+		Assert.assertEquals(0, infAccAxioms.length);
+	}
+	
 }
