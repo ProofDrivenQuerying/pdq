@@ -17,7 +17,7 @@ import uk.ac.ox.cs.pdq.algebra.SelectionTerm;
 
 /** 
  * Prints a picture of a plan for better readability, and opens it in explorer.
- * Preconditions: GraphViz have to be installed and the bin directory have to be added to the path, so the command "dot.exe -V" will work in any command line window.
+ * Preconditions: GraphViz (http://www.graphviz.org/Download..php) have to be installed and the bin directory have to be added to the path, so the command "dot.exe -V" will work in any command line window.
  *  
  * @author Gabor
  */
