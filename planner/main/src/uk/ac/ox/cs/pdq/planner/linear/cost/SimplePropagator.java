@@ -72,12 +72,11 @@ public class SimplePropagator extends CostPropagator<SimpleNode> {
 				if (child.getPathToSuccess() != null) {
 					List<Integer> sequence = Lists.newArrayList(child.getId());
 					sequence.addAll(child.getPathToSuccess());
-					plan = CostPropagatorUtility.createLeftDeepPlan(planTree, node.getPathToSuccess());
+					plan = CostPropagatorUtility.createLeftDeepPlan(planTree, sequence);
 					Cost childCost = this.costEstimator.cost(plan);
 					if (currentCost == null || childCost.lessThan(currentCost)) {
 						node.setPathToSuccess(sequence);
-						plan = CostPropagatorUtility.createLeftDeepPlan(planTree, node.getPathToSuccess());
-						currentCost = this.costEstimator.cost(plan);
+						currentCost = childCost;
 					}
 				}
 			}
