@@ -1,6 +1,5 @@
 package uk.ac.ox.cs.pdq.planner.dag.explorer;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -9,7 +8,8 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 
-import uk.ac.ox.cs.pdq.planner.dag.ApplyRule;
+import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
+import uk.ac.ox.cs.pdq.planner.dag.BinaryConfiguration;
 import uk.ac.ox.cs.pdq.planner.dag.ConfigurationUtility;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator;
@@ -32,7 +32,7 @@ public class SelectorOfPairsOfConfigurationsToCombine<S extends AccessibleChaseI
 	/** Checks whether the binary configuration composed from a given configuration pair satisfies given shape restrictions. */
 	private final List<Validator> validators;
 
-	private final Set<Set<Integer>> idsOfBinaryConfigurationsReturnedInThePast = Sets.newLinkedHashSet();
+	private final Set<RelationalTerm> idsOfBinaryConfigurationsReturnedInThePast = Sets.newLinkedHashSet();
 
 	private Pair<DAGChaseConfiguration, DAGChaseConfiguration> inverseBinaryConfiguration = null;
 
@@ -62,6 +62,9 @@ public class SelectorOfPairsOfConfigurationsToCombine<S extends AccessibleChaseI
 	}
 
 	/**
+	 * Makes sure every returned configuration pair has the required depth and it is a unique pair that was never returned before. 
+	 * Uses the validators to further shorten the list. 
+	 * When only the default validator is in use it will make sure that the trivial case is filtered out (An access will not be combined with itself).  
 	 *
 	 * @param depth the depth
 	 * @return the next pair of configurations of the given combined depth
@@ -122,12 +125,13 @@ public class SelectorOfPairsOfConfigurationsToCombine<S extends AccessibleChaseI
 		}
 	}
 
-	private Set<Integer> createIdForTheCorrespondingOutputBinaryConfiguration(DAGChaseConfiguration... configs) {
-		Set<Integer> result = new HashSet<>();
-		for (DAGChaseConfiguration config: configs) {
-			for (ApplyRule applyRule: config.getApplyRules())
-				result.add(applyRule.getId());
-		}
-		return result;
+	/** Creates a plan out of the left and right configurations to be used as ID for this combination of left and right configuration. 
+	 * The same two configuration the other way around should result a new, different plan. 
+	 * @param left
+	 * @param right
+	 * @return
+	 */
+	private RelationalTerm createIdForTheCorrespondingOutputBinaryConfiguration(DAGChaseConfiguration left,DAGChaseConfiguration right) {
+		return new BinaryConfiguration(left,right).getPlan();
 	}
 }

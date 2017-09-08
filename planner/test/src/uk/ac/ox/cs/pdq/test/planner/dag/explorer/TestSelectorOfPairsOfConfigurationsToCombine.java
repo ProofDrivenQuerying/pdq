@@ -2,11 +2,14 @@ package uk.ac.ox.cs.pdq.test.planner.dag.explorer;
 
 import static org.mockito.Mockito.when;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Assert;
@@ -30,15 +33,18 @@ import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
+import uk.ac.ox.cs.pdq.io.PlanPrinter;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.FollowUpHandling;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
+import uk.ac.ox.cs.pdq.planner.dag.ApplyRule;
 import uk.ac.ox.cs.pdq.planner.dag.BinaryConfiguration;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.DAGExplorerUtilities;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.SelectorOfPairsOfConfigurationsToCombine;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.DefaultValidator;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator;
+import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance;
 import uk.ac.ox.cs.pdq.planner.util.PlannerUtility;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
 import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
@@ -46,7 +52,7 @@ import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 /**
  * 
  * @author Efthymia Tsamoura
- *
+ * @author Gabor
  */
 public class TestSelectorOfPairsOfConfigurationsToCombine {
 
@@ -55,6 +61,8 @@ public class TestSelectorOfPairsOfConfigurationsToCombine {
 	protected Attribute c = Attribute.create(Integer.class, "c");
 	protected Attribute d = Attribute.create(Integer.class, "d");
 	protected Attribute InstanceID = Attribute.create(Integer.class, "InstanceID");
+	
+	boolean printPlans=false;
 
 	@Test 
 	public void test1() {
@@ -95,8 +103,6 @@ public class TestSelectorOfPairsOfConfigurationsToCombine {
 		//Create accessible schema
 		AccessibleSchema accessibleSchema = new AccessibleSchema(schema);
 
-		//TODO assert that the accessible schema is fine
-
 		//Create accessible query
 		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(query, query.getSubstitutionOfFreeVariablesToCanonicalConstants());
 
@@ -118,24 +124,93 @@ public class TestSelectorOfPairsOfConfigurationsToCombine {
 
 		try {
 			List<DAGChaseConfiguration> configurations = DAGExplorerUtilities.createInitialApplyRuleConfigurations(parameters, query, accessibleQuery, accessibleSchema, chaser, connection);
-			//TODO assert that we got the right configurations 
-
+			Set<String> predicateNames = new HashSet<>();
+			for (DAGChaseConfiguration c: configurations) {
+				for (ApplyRule app: c.getApplyRules()) {
+					String predicateName = app.getRelation().getName();
+					Assert.assertTrue(!predicateNames.contains(predicateName));
+					predicateNames.add(predicateName);
+				}
+			}
+			Assert.assertEquals(4,predicateNames.size());
+			
 			List<Validator> validators = new ArrayList<>(); 
 			validators.add(new DefaultValidator());
-
 			List<DAGChaseConfiguration> left = configurations;
 			List<DAGChaseConfiguration> right = configurations;
 
 			Pair<DAGChaseConfiguration, DAGChaseConfiguration> pair = null;
-			SelectorOfPairsOfConfigurationsToCombine selector = new SelectorOfPairsOfConfigurationsToCombine<>(left, right, validators);
-
-			while ((pair = selector.getNextPairOfConfigurationsToCompose(4)) != null) {
-				//TODO assert that we got all pairs 
+			SelectorOfPairsOfConfigurationsToCombine<AccessibleChaseInstance> selector = new SelectorOfPairsOfConfigurationsToCombine<>(left, right, validators);
+			List<DAGChaseConfiguration> right2 = new ArrayList<>();
+			while ((pair = selector.getNextPairOfConfigurationsToCompose(2)) != null) {
+				BinaryConfiguration configuration = new BinaryConfiguration(
+						pair.getLeft(),
+						pair.getRight());
+				right2.add(configuration);
 			}
+			// AB, AC, AD
+			// BA, BC, BD
+			// CA, CB, CD
+			// DA, DB, DC
+			Assert.assertEquals(12,right2.size());
+			
+			selector = new SelectorOfPairsOfConfigurationsToCombine<>(left, right2, validators);
+			List<DAGChaseConfiguration> right3 = new ArrayList<>();
+			while ((pair = selector.getNextPairOfConfigurationsToCompose(3)) != null) {
+				BinaryConfiguration configuration = new BinaryConfiguration(
+						pair.getLeft(),
+						pair.getRight());
+				right3.add(configuration);
+			}
+			// AB, AC, AD
+			// BA, BC, BD   + A   =       BC A,BD A,CB A,CD A,DB A,DC A    * 4 = 6*4 =24 combination. plus inverse for all = 48
+			//							  A BC,A BD,A CB,A CD,A DB A DC	
+			// CA, CB, CD   + B   =       AC B,AD B,CA B,CD B,DA B,DC B
+			// DA, DB, DC
+			
+			Assert.assertEquals(48,right3.size());
+		
+			selector = new SelectorOfPairsOfConfigurationsToCombine<>(left, right3, validators);
+			List<DAGChaseConfiguration> right4 = new ArrayList<>();
+			while ((pair = selector.getNextPairOfConfigurationsToCompose(4)) != null) {
+				BinaryConfiguration configuration = new BinaryConfiguration(
+						pair.getLeft(),
+						pair.getRight());
+				right4.add(configuration);
+				try {
+					if (printPlans) PlanPrinter.openPngPlan(configuration.getPlan());
+				} catch (IOException | InterruptedException e) {
+					e.printStackTrace();
+				}
+				
+			}
+			//
+			//BC A,BD A,CB A,CD A,DB A,DC A    + B    =CD A B, DC A B -> and inverse  B CD A, B DC A = 4 combinations with B, 12 combinations with b c and d.
+			//A BC,A BD,A CB,A CD,A DB A DC	   we have 8 rows, 8 * 12 = 96.
+			Assert.assertEquals(96,right4.size());
+			
+			selector = new SelectorOfPairsOfConfigurationsToCombine<>(right2, right2, validators);
+			List<DAGChaseConfiguration> right4b = new ArrayList<>();
+			while ((pair = selector.getNextPairOfConfigurationsToCompose(4)) != null) {
+				BinaryConfiguration configuration = new BinaryConfiguration(
+						pair.getLeft(),
+						pair.getRight());
+				right4b.add(configuration);
+				try {
+					if (printPlans) PlanPrinter.openPngPlan(configuration.getPlan());
+				} catch (IOException | InterruptedException e) {
+					e.printStackTrace();
+				}
+				
+			}
+			// AB, AC, AD   + AB, AC, AD
+			// BA, BC, BD     BA, BC, BD  
+			// 4*3*2*1 = 24 combinations
+			Assert.assertEquals(24,right4b.size());
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			Assert.fail();
 		}
 	}
 
@@ -194,36 +269,50 @@ public class TestSelectorOfPairsOfConfigurationsToCombine {
 
 		try {
 			List<DAGChaseConfiguration> configurations = DAGExplorerUtilities.createInitialApplyRuleConfigurations(parameters, query, accessibleQuery, accessibleSchema, chaser, connection);
-			//TODO assert that we got the right configurations 
+			
+			Set<String> predicateNames = new HashSet<>();
+			for (DAGChaseConfiguration c: configurations) {
+				for (ApplyRule app: c.getApplyRules()) {
+					String predicateName = app.getRelation().getName() + "_" + app.getRule().getAccessMethod().getName();
+					Assert.assertTrue(!predicateNames.contains(predicateName));
+					predicateNames.add(predicateName);
+				}
+			}
+			Assert.assertEquals(4,predicateNames.size());
 
 			List<Validator> validators = new ArrayList<>(); 
 			validators.add(new DefaultValidator());
 
 			List<DAGChaseConfiguration> left = configurations;
-			List<DAGChaseConfiguration> right = configurations;
+			List<DAGChaseConfiguration> right = new ArrayList<>();
+			right.addAll(configurations);
 
 			Pair<DAGChaseConfiguration, DAGChaseConfiguration> pair = null;
-			SelectorOfPairsOfConfigurationsToCombine selector = new SelectorOfPairsOfConfigurationsToCombine<>(left, right, validators);
-
+			SelectorOfPairsOfConfigurationsToCombine<AccessibleChaseInstance> selector = new SelectorOfPairsOfConfigurationsToCombine<>(left, right, validators);
+			int depth = 2;
+			final int CORRECT_NUMBER_OF_PLANS[] = new int[] {10,24,0}; 
 			do {
 				Collection<DAGChaseConfiguration> last = new LinkedHashSet<>();
-				while ((pair = selector.getNextPairOfConfigurationsToCompose(4)) != null) {
-					//TODO assert that we got all pairs 
+				while ((pair = selector.getNextPairOfConfigurationsToCompose(depth)) != null) {
 					BinaryConfiguration configuration = new BinaryConfiguration(
 							pair.getLeft(),
 							pair.getRight());
 					last.add(configuration);
 				}
-				
+				System.out.println("last size: " + last.size());
+				Assert.assertEquals(CORRECT_NUMBER_OF_PLANS[depth-2], last.size());
+				if (last.size()==0)
+					break;
 				left.clear();
 				left.addAll(last);
 				last.clear();
 				selector = new SelectorOfPairsOfConfigurationsToCombine<>(left, right, validators);
+				depth++;
 			}while(true);
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			Assert.fail();
 		}
 	}
 }
