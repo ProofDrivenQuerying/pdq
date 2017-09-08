@@ -90,16 +90,20 @@ public class AccessTerm extends RelationalTerm {
 			result.append(".");
 			result.append(this.accessMethod.getName());
 			result.append('[');
+			int shiftBack = 0;
 			for(int index = 0; index < this.accessMethod.getInputs().length; ++index) {
 				result.append("#");
 				result.append(this.accessMethod.getInputs()[index]);
 				result.append("=");
 				TypedConstant input = inputConstants.get(this.accessMethod.getInputs()[index]);
-				if (input!=null)
+				if (input!=null) {
 					result.append(inputConstants.get(this.accessMethod.getInputs()[index]));
-				else 
-					result.append(inputAttributes[index]);
-				
+					shiftBack++;
+				} else {
+					if (inputAttributes.length > index-shiftBack) {
+						result.append(inputAttributes[index-shiftBack]);
+					}
+				}
 				if(index < this.accessMethod.getInputs().length - 1)
 					result.append(",");
 			}

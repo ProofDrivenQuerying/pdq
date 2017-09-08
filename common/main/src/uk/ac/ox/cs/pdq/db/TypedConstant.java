@@ -96,6 +96,9 @@ public class TypedConstant extends Constant implements Typed, Serializable, Comp
 			return false;
 		if (this.value instanceof String)
 			return ((String)this.value).equals(o.value);
-		return ((Integer)this.value).equals(o.value);
+		if (this.value instanceof Integer)
+			return ((Integer)this.value).equals(o.value);
+		else 
+			return this.value.equals(o.value);
 	}
 }

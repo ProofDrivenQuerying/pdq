@@ -3,6 +3,11 @@ package uk.ac.ox.cs.pdq.io.jaxb;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.OutputStream;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -13,8 +18,15 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
+import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
+import uk.ac.ox.cs.pdq.db.TypedConstant;
+import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+import uk.ac.ox.cs.pdq.fol.Formula;
+import uk.ac.ox.cs.pdq.fol.Term;
+import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.io.jaxb.adapted.AdaptedQuery;
 import uk.ac.ox.cs.pdq.io.jaxb.adapted.AdaptedRelationalTerm;
 import uk.ac.ox.cs.pdq.io.jaxb.adapted.AdaptedSchema;
@@ -193,6 +205,81 @@ public class IOManager {
 		Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
 		jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 		jaxbMarshaller.marshal(new AdaptedRelationalTerm(t), targetFile);
+	}
+
+	/**
+	 * In the old query file format there were no types defined over constants,
+	 * however using the schema we can figure out what the type should be and
+	 * re-create those typed constants with the correct type
+	 * 
+	 * @param query
+	 * @param schema
+	 * @return
+	 * @throws Exception
+	 */
+	public static ConjunctiveQuery convertQueryConstants(ConjunctiveQuery query, Schema schema) throws Exception {
+		List<Atom> newAtoms = new ArrayList<>();
+		for (Atom a :query.getAtoms()) {
+			List<Term> newTerms = new ArrayList<>();
+			for (int i = 0; i < a.getTerms().length; i++) {
+				if (a.getTerm(i) instanceof TypedConstant) {
+					TypedConstant c = (TypedConstant)a.getTerm(i);
+					Type newType = schema.getRelation(a.getPredicate().getName()).getAttribute(i).getType();
+					if (c.getType() == newType) {
+						newTerms.add(a.getTerm(i));
+					} else {
+						newTerms.add(convertTo(c,newType));
+					}
+				} else if (a.getTerm(i) instanceof UntypedConstant) {
+					newTerms.add(a.getTerm(i));
+				} else {
+					newTerms.add(a.getTerm(i));
+				}
+			}
+			newAtoms.add(Atom.create(a.getPredicate(), newTerms.toArray(new Term[newTerms.size()])));
+		}
+		Formula something = Conjunction.of( newAtoms.toArray(new Atom[newAtoms.size()]));
+		if (something instanceof Atom) {
+			return ConjunctiveQuery.create(query.getFreeVariables(), (Atom) something);
+		} else if (something instanceof Conjunction) {
+			return ConjunctiveQuery.create(query.getFreeVariables(), (Conjunction) something);
+		} else {
+			return null;
+		}
+	}
+
+	private static Term convertTo(TypedConstant term, Type type) throws Exception {
+		String stringValue = "" + term.getValue();
+		if (type == String.class) {
+			return TypedConstant.create(stringValue);
+		}
+		if (type == Integer.class) {
+			return TypedConstant.create(Integer.parseInt(stringValue));
+		}
+		if (type == Double.class) {
+			return TypedConstant.create(Double.parseDouble(stringValue));
+		}
+		if (type == Float.class) {
+			return TypedConstant.create(Float.parseFloat(stringValue));
+		}
+		if (type == Boolean.class) {
+			return TypedConstant.create(Boolean.parseBoolean(stringValue));
+		}
+		Constructor<?> constructor=null;
+		try {
+			if (type != null) constructor = Class.forName(type.getTypeName()).getConstructor(String.class);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if (constructor!=null) {
+			try {
+				return TypedConstant.create(constructor.newInstance(stringValue));
+			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+				throw new Exception("Converting from " + stringValue + " to type " + type.getTypeName() + " failed!",e);
+			}
+		} else {
+			throw new Exception("Constructor for " + type.getTypeName() + " not found!");
+		}
 	}
 
 }

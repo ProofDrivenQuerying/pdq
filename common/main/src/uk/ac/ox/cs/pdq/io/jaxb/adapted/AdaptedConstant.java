@@ -1,5 +1,7 @@
 package uk.ac.ox.cs.pdq.io.jaxb.adapted;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Type;
 
 import javax.xml.bind.annotation.XmlAttribute;
@@ -52,7 +54,21 @@ public class AdaptedConstant extends AdaptedVariable {
 				ret = TypedConstant.create(value);
 			}
 		} else {
-			ret = TypedConstant.create(value);
+			Constructor<?> constructor=null;
+			try {
+				if (type != null) constructor = Class.forName(type.getTypeName()).getConstructor(String.class);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			if (constructor!=null) {
+				try {
+					ret = TypedConstant.create(constructor.newInstance(value));
+				} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+					e.printStackTrace();
+				}
+			}
+			if (ret == null)
+				ret = TypedConstant.create(value);
 		}
 		if (type!=null && ret.getType() != type) {
 			throw new IllegalArgumentException("Type should match!");
@@ -67,10 +83,16 @@ public class AdaptedConstant extends AdaptedVariable {
 	public void setType(String type) {
 		if (type!=null && type.equalsIgnoreCase("String.class"))
 			this.type = String.class;
-		if (type!=null && type.equalsIgnoreCase("Integer.class"))
+		else if (type!=null && type.equalsIgnoreCase("Integer.class"))
 			this.type = Integer.class;
-		if (type!=null && type.equalsIgnoreCase("Double.class"))
+		else if (type!=null && type.equalsIgnoreCase("Double.class"))
 			this.type = Double.class;
+		else
+			try {
+				this.type = Class.forName(type);
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
 	}
 	public String getType() {
 		if (type!= null && type != String.class)

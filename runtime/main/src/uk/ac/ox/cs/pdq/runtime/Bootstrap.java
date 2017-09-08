@@ -173,7 +173,7 @@ public class Bootstrap {
 		try {
 			Schema schema = DbIOManager.importSchema(new File(this.getSchemaPath()));
 			ConjunctiveQuery query = IOManager.importQuery(new File(this.getQueryPath()));
-
+			query = IOManager.convertQueryConstants(query,schema);
 			RelationalTerm plan = obtainPlan(this.getPlanPath(), schema);
 
 			List<Atom> facts = null;
