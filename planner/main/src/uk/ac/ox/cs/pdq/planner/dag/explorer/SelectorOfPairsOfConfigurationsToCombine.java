@@ -9,11 +9,11 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
-import uk.ac.ox.cs.pdq.planner.dag.BinaryConfiguration;
 import uk.ac.ox.cs.pdq.planner.dag.ConfigurationUtility;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance;
+import uk.ac.ox.cs.pdq.planner.util.PlanCreationUtility;
 
 /**
  * Returns pairs of configurations to combine.
@@ -32,7 +32,7 @@ public class SelectorOfPairsOfConfigurationsToCombine<S extends AccessibleChaseI
 	/** Checks whether the binary configuration composed from a given configuration pair satisfies given shape restrictions. */
 	private final List<Validator> validators;
 
-	private final Set<RelationalTerm> idsOfBinaryConfigurationsReturnedInThePast = Sets.newLinkedHashSet();
+	private final Set<RelationalTerm> plansOfConfigurationPairsReturnedInThePast = Sets.newLinkedHashSet();
 
 	private Pair<DAGChaseConfiguration, DAGChaseConfiguration> inverseBinaryConfiguration = null;
 
@@ -81,7 +81,7 @@ public class SelectorOfPairsOfConfigurationsToCombine<S extends AccessibleChaseI
 			do {
 				l = this.leftSideConfigurations.get(this.indexOverConfigurationsInLeftList);
 				r = this.rightSideConfigurations.get(this.indexOverConfigurationsInRightList);
-				if (!this.idsOfBinaryConfigurationsReturnedInThePast.contains(this.createIdForTheCorrespondingOutputBinaryConfiguration(l, r))) {
+				if (!this.plansOfConfigurationPairsReturnedInThePast.contains(PlanCreationUtility.createPlan(l.getPlan(), r.getPlan()))) {
 					binaryConfigurationOverLeftAndRightInputsValid = ConfigurationUtility.validate(l, r, this.validators, depth);
 					binaryConfigurationOverRightAndLeftInputsValid = ConfigurationUtility.validate(r, l, this.validators, depth);
 					if (binaryConfigurationOverLeftAndRightInputsValid || binaryConfigurationOverRightAndLeftInputsValid) {
@@ -96,16 +96,16 @@ public class SelectorOfPairsOfConfigurationsToCombine<S extends AccessibleChaseI
 			
 			if(binaryConfigurationOverLeftAndRightInputsValid) {
 				if(binaryConfigurationOverRightAndLeftInputsValid) {
-					this.idsOfBinaryConfigurationsReturnedInThePast.add(this.createIdForTheCorrespondingOutputBinaryConfiguration(r,l));
+					this.plansOfConfigurationPairsReturnedInThePast.add(PlanCreationUtility.createPlan(r.getPlan(), l.getPlan()));
 					this.inverseBinaryConfiguration = Pair.of(r, l);
 					this.returnInverseBinaryConfiguration = true;
 				}
-				this.idsOfBinaryConfigurationsReturnedInThePast.add(this.createIdForTheCorrespondingOutputBinaryConfiguration(l, r));
+				this.plansOfConfigurationPairsReturnedInThePast.add(PlanCreationUtility.createPlan(l.getPlan(), r.getPlan()));
 				return Pair.of(l, r);
 			}
 			else if(binaryConfigurationOverRightAndLeftInputsValid) {
 				this.returnInverseBinaryConfiguration = false;
-				this.idsOfBinaryConfigurationsReturnedInThePast.add(this.createIdForTheCorrespondingOutputBinaryConfiguration(r,l));
+				this.plansOfConfigurationPairsReturnedInThePast.add(PlanCreationUtility.createPlan(r.getPlan(), l.getPlan()));
 				return Pair.of(r,l);
 			}
 			else
@@ -123,15 +123,5 @@ public class SelectorOfPairsOfConfigurationsToCombine<S extends AccessibleChaseI
 			this.indexOverConfigurationsInLeftList++;
 			this.indexOverConfigurationsInRightList = 0;
 		}
-	}
-
-	/** Creates a plan out of the left and right configurations to be used as ID for this combination of left and right configuration. 
-	 * The same two configuration the other way around should result a new, different plan. 
-	 * @param left
-	 * @param right
-	 * @return
-	 */
-	private RelationalTerm createIdForTheCorrespondingOutputBinaryConfiguration(DAGChaseConfiguration left,DAGChaseConfiguration right) {
-		return new BinaryConfiguration(left,right).getPlan();
 	}
 }
