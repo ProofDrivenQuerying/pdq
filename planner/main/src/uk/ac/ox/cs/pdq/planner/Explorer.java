@@ -56,11 +56,6 @@ public abstract class Explorer {
 	/**  Event bus shared across explorer elements. */
 	protected final StatisticsCollector stats;
 
-	/**
-	 * Constructor for Explorer.
-	 * @param eventBus EventBus
-	 * @param collectStats boolean
-	 */
 	public Explorer(EventBus eventBus, boolean collectStats) {
 		Assert.assertNotNull(eventBus);
 		this.eventBus = eventBus;
@@ -83,7 +78,7 @@ public abstract class Explorer {
 				this.forcedTermination = true;
 				break;
 			}
-			this._explore();
+			this.performSingleExplorationStep();
 			this.rounds++;
 			this.post();
 		}
@@ -91,21 +86,12 @@ public abstract class Explorer {
 		this.post();
 	}
 
-	/**
-	 * Update clock.
-	 */
 	public void updateClock() {
 		long tack = System.nanoTime();
 		this.elapsedTime += tack - this.tick;
 		this.tick = tack;
 	}
 
-	/**
-	 * Check limit reached.
-	 *
-	 * @return true if the time or iteration limit is reached.
-	 * @throws LimitReachedException the limit reached exception
-	 */
 	protected boolean checkLimitReached() throws LimitReachedException {
 		this.updateClock();
 		boolean hasTimedOut = (this.elapsedTime / 1e6) > this.maxElapsedTime;
@@ -117,9 +103,6 @@ public abstract class Explorer {
 		return hasTimedOut || hasReachMaxRounds;
 	}
 
-	/**
-	 * Post.
-	 */
 	protected void post() {
 		this.updateClock();
 		this.eventBus.post(this);
@@ -129,7 +112,6 @@ public abstract class Explorer {
 	}
 
 	/**
-	 * Terminates.
 	 *
 	 * @return true if termination is reached. For more details look at specific implementations
 	 */
@@ -138,10 +120,8 @@ public abstract class Explorer {
 	/**
 	 * Does the actual exploration. For more details look at specific implementations
 	 *
-	 * @throws PlannerException the planner exception
-	 * @throws LimitReachedException the limit reached exception
 	 */
-	public abstract void _explore() throws PlannerException, LimitReachedException ;
+	public abstract void performSingleExplorationStep() throws PlannerException, LimitReachedException;
 
 	public RelationalTerm getBestPlan() {
 		return this.bestPlan;
@@ -151,11 +131,6 @@ public abstract class Explorer {
 		return this.bestCost;
 	}
 
-	/**
-	 * Sets the max elapsed time.
-	 *
-	 * @param maxElapsedTime double
-	 */
 	public void setMaxElapsedTime(double maxElapsedTime) {
 		this.maxElapsedTime = maxElapsedTime;
 	}
@@ -169,37 +144,18 @@ public abstract class Explorer {
 		this.maxRounds = maxRounds;
 	}
 
-	/**
-	 *
-	 * @return int
-	 */
 	public int getRounds() {
 		return this.rounds;
 	}
 
-	/**
-	 * Sets the exception on limit.
-	 *
-	 * @param exceptionOnLimit Boolean
-	 */
 	public void setExceptionOnLimit(Boolean exceptionOnLimit) {
 		this.exceptionOnLimit = exceptionOnLimit;
 	}
 
-	/**
-	 * Gets the exception on limit.
-	 *
-	 * @return boolean
-	 */
 	public boolean getExceptionOnLimit() {
 		return this.exceptionOnLimit;
 	}
 
-	/**
-	 * Gets the elapsed time.
-	 *
-	 * @return double
-	 */
 	public double getElapsedTime() {
 		return this.elapsedTime;
 	}

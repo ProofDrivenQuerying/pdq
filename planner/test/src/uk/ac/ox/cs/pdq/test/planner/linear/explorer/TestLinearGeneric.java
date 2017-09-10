@@ -136,7 +136,7 @@ public class TestLinearGeneric {
 		//Mock the planner parameters
 		PlannerParameters parameters = Mockito.mock(PlannerParameters.class);
 		when(parameters.getSeed()).thenReturn(1);
-		when(parameters.getMaxDepth()).thenReturn(Integer.MAX_VALUE);
+		when(parameters.getMaxDepth()).thenReturn(3);
 		
 		//Create nodeFactory
 		NodeFactory nodeFactory = new NodeFactory(parameters, costEstimator);
@@ -163,7 +163,7 @@ public class TestLinearGeneric {
 				Assert.assertEquals(1,configuration0.getCandidates().size());
 				
 				//Call the explorer for first time
-				explorer._explore();
+				explorer.performSingleExplorationStep();
 				Assert.assertEquals(0,configuration0.getCandidates().size());
 				LinearChaseConfiguration configuration1 = planTree.getVertex(root.getId()+1).getConfiguration();
 				Assert.assertEquals(1,configuration1.getCandidates().size());
@@ -174,7 +174,7 @@ public class TestLinearGeneric {
 				
 				
 				//Call the explorer for second time
-				explorer._explore();
+				explorer.performSingleExplorationStep();
 				LinearChaseConfiguration configuration2 = planTree.getVertex(root.getId()+2).getConfiguration();
 				Assert.assertEquals(1,configuration2.getCandidates().size());
 				Assert.assertEquals(1,configuration2.getFacts().size());
@@ -183,7 +183,7 @@ public class TestLinearGeneric {
 				Assert.assertArrayEquals(new Term[] {UntypedConstant.create("c1"),UntypedConstant.create("c4"),UntypedConstant.create("c5")}, a.getTerms());
 				
 				//Call the explorer for third time
-				explorer._explore();
+				explorer.performSingleExplorationStep();
 				LinearChaseConfiguration configuration3 = planTree.getVertex(root.getId()+3).getConfiguration();
 				Assert.assertEquals(0,configuration3.getCandidates().size());
 				Assert.assertEquals(1,configuration3.getFacts().size());
@@ -278,7 +278,7 @@ public class TestLinearGeneric {
 		//Mock the planner parameters
 		PlannerParameters parameters = Mockito.mock(PlannerParameters.class);
 		when(parameters.getSeed()).thenReturn(1);
-		when(parameters.getMaxDepth()).thenReturn(Integer.MAX_VALUE);
+		when(parameters.getMaxDepth()).thenReturn(3);
 		
 		//Create nodeFactory
 		NodeFactory nodeFactory = new NodeFactory(parameters, costEstimator);
@@ -305,7 +305,7 @@ public class TestLinearGeneric {
 				Assert.assertEquals(0,configuration0.getCandidates().size());
 				
 				//Call the explorer for first time
-				explorer._explore();
+				explorer.performSingleExplorationStep();
 				Assert.assertNull(planTree.getVertex(1));
 				Assert.assertNull(explorer.getBestPlan());
 				  
@@ -372,7 +372,7 @@ public class TestLinearGeneric {
 		//Mock the planner parameters
 		PlannerParameters parameters = Mockito.mock(PlannerParameters.class);
 		when(parameters.getSeed()).thenReturn(1);
-		when(parameters.getMaxDepth()).thenReturn(Integer.MAX_VALUE);
+		when(parameters.getMaxDepth()).thenReturn(3);
 		
 		//Create nodeFactory
 		NodeFactory nodeFactory = new NodeFactory(parameters, costEstimator);

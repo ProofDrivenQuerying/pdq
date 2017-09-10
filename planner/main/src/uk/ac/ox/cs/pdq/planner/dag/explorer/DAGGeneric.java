@@ -136,7 +136,7 @@ public class DAGGeneric extends DAGExplorer {
 	 * @throws LimitReachedException the limit reached exception
 	 */
 	@Override
-	public void _explore() throws PlannerException, LimitReachedException {
+	public void performSingleExplorationStep() throws PlannerException, LimitReachedException {
 		//if the current depth exceeds the threshold return
 		if (this.depth > this.maxDepth) {
 			this.forcedTermination = true;
@@ -226,11 +226,6 @@ public class DAGGeneric extends DAGExplorer {
 		return last.values();
 	}
 
-	/**
-	 * Gets the right.
-	 *
-	 * @return the right
-	 */
 	public List<DAGChaseConfiguration> getRight() {
 		return this.rightSideConfigurations;
 	}

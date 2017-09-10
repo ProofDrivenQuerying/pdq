@@ -142,7 +142,7 @@ public class LinearOptimized extends LinearExplorer {
 	 * @throws LimitReachedException the limit reached exception
 	 */
 	@Override
-	public void _explore() throws PlannerException, LimitReachedException {
+	public void performSingleExplorationStep() throws PlannerException, LimitReachedException {
 		if(this.unexploredDescendants.isEmpty()) {
 			// Choose the next node to explore below it
 			SearchNode selectedNode = this.chooseNode();

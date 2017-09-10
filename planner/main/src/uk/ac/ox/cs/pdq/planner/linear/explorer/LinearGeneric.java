@@ -79,7 +79,7 @@ public class LinearGeneric extends LinearExplorer {
 	 * @throws LimitReachedException the limit reached exception
 	 */
 	@Override
-	public void _explore() throws PlannerException, LimitReachedException {
+	public void performSingleExplorationStep() throws PlannerException, LimitReachedException {
 		SearchNode selectedNode;
 		Candidate candidate;
 

@@ -127,7 +127,7 @@ public class DAGOptimized extends DAGExplorer {
 	 * @throws LimitReachedException the limit reached exception
 	 */
 	@Override
-	public void _explore() throws PlannerException, LimitReachedException {
+	public void performSingleExplorationStep() throws PlannerException, LimitReachedException {
 		if (this.depth > this.maxDepth) {
 			this.forcedTermination = true;
 			return;

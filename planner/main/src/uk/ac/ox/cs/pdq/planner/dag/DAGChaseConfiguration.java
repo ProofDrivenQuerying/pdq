@@ -30,7 +30,7 @@ public abstract class DAGChaseConfiguration extends ChaseConfiguration implement
 	private final Integer id;
 
 	/**  TOCOMMENT: WHAT*/
-	private final Integer high;
+	private final Integer height;
 
 	/**  TOCOMMENT: WHAT*/
 	private final Integer bushiness;
@@ -47,21 +47,21 @@ public abstract class DAGChaseConfiguration extends ChaseConfiguration implement
 	 * @param state 		The state of this configuration.
 	 * @param input 		The input constants
 	 * @param output 		The output constants
-	 * @param high 		The depth of this configuration
+	 * @param height 		The depth of this configuration
 	 * @param bushiness 		The bushiness of this configuration
 	 */
 	public DAGChaseConfiguration(
 			AccessibleChaseInstance state, 
 			Collection<Constant> input,
 			Collection<Constant> output, 
-			Integer high,
+			Integer height,
 			Integer bushiness
 			) {
 		super(state, input, output);
 		Preconditions.checkNotNull(this.getInput());
 		Preconditions.checkNotNull(this.getOutput());
 		this.id = GlobalCounterProvider.getNext("DAGChaseConfigurationID");
-		this.high = high;
+		this.height = height;
 		this.bushiness = bushiness;
 	}
 
@@ -76,7 +76,7 @@ public abstract class DAGChaseConfiguration extends ChaseConfiguration implement
 	 */
 	@Override
 	public Integer getHeight() {
-		return this.high;
+		return this.height;
 	}
 
 	/* (non-Javadoc)

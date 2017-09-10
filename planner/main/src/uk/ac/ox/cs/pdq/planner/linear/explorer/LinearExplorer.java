@@ -64,6 +64,9 @@ public abstract class LinearExplorer extends Explorer {
 	/**  Creates new nodes. */
 	protected final NodeFactory nodeFactory;
 
+	/**  Maximum exploration depth. */
+	protected final int depth;
+	
 	/**
 	 * The tree of plans.
 	 * A new node is appended to this tree at the end of each iteration.
@@ -71,9 +74,6 @@ public abstract class LinearExplorer extends Explorer {
 	 * or a BlackBoxNode, when black box plan propagation is employed
 	 */
 	protected final PlanTree<SearchNode> planTree = new PlanTree<>(DefaultEdge.class);
-
-	/**  Maximum exploration depth. */
-	protected final int depth;
 
 
 	/**
@@ -182,15 +182,6 @@ public abstract class LinearExplorer extends Explorer {
 		}
 		return selection;
 	}
-
-//	/**
-//	 * Gets the node factory.
-//	 *
-//	 * @return the node factory
-//	 */
-//	public NodeFactory getNodeFactory() {
-//		return this.nodeFactory;
-//	}
 
 	/**
 	 *

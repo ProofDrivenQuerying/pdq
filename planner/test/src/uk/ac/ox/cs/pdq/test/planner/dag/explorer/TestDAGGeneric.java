@@ -260,7 +260,7 @@ public class TestDAGGeneric {
 		// Mock the planner parameters
 		PlannerParameters parameters = Mockito.mock(PlannerParameters.class);
 		when(parameters.getSeed()).thenReturn(1);
-		when(parameters.getMaxDepth()).thenReturn(Integer.MAX_VALUE);
+		when(parameters.getMaxDepth()).thenReturn(3);
 		when(parameters.getFollowUpHandling()).thenReturn(FollowUpHandling.MINIMAL);
 
 		// Create DAGGeneric
@@ -273,7 +273,7 @@ public class TestDAGGeneric {
 			validators.add(new DefaultValidator());
 			
 			explorer = new DAGGeneric(new EventBus(), false, parameters, query, accessibleQuery, accessibleSchema, chaser, databaseConnection, costEstimator, successDominance, null,
-					validators, 4);
+					validators, 3);
 
 			explorer.explore();
 			List<Entry<RelationalTerm, Cost>> exploredPlans = explorer.getExploredPlans();

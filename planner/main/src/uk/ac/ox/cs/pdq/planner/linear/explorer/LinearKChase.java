@@ -98,7 +98,7 @@ public class LinearKChase extends LinearExplorer {
 	 * @throws LimitReachedException the limit reached exception
 	 */
 	@Override
-	public void _explore() throws PlannerException, LimitReachedException {
+	public void performSingleExplorationStep() throws PlannerException, LimitReachedException {
 		log.debug("Iteration: " + this.rounds);
 		if(this.rounds % this.chaseInterval != 0 ) {
 			// Choose the next node to explore below it
