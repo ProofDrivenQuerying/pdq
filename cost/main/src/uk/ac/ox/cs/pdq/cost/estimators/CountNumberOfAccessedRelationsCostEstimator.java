@@ -19,7 +19,7 @@ import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
  *
  * @author Efthymia Tsamoura
  */
-public class AccessCountCostEstimator implements OrderIndependentCostEstimator {
+public class CountNumberOfAccessedRelationsCostEstimator implements OrderIndependentCostEstimator {
 
 	/** The stats. */
 	protected final StatisticsCollector stats;
@@ -29,7 +29,7 @@ public class AccessCountCostEstimator implements OrderIndependentCostEstimator {
 	 *
 	 * @param stats the stats
 	 */
-	public AccessCountCostEstimator(StatisticsCollector stats) {
+	public CountNumberOfAccessedRelationsCostEstimator(StatisticsCollector stats) {
 		this.stats = stats;
 	}
 
@@ -40,8 +40,8 @@ public class AccessCountCostEstimator implements OrderIndependentCostEstimator {
 	 * @see uk.ac.ox.cs.pdq.cost.estimators.OrderIndependentCostEstimator#clone()
 	 */
 	@Override
-	public AccessCountCostEstimator clone() {
-		return (AccessCountCostEstimator) (this.stats == null ? new AccessCountCostEstimator(null) : new AccessCountCostEstimator(this.stats.clone()));
+	public CountNumberOfAccessedRelationsCostEstimator clone() {
+		return (CountNumberOfAccessedRelationsCostEstimator) (this.stats == null ? new CountNumberOfAccessedRelationsCostEstimator(null) : new CountNumberOfAccessedRelationsCostEstimator(this.stats.clone()));
 	}
 
 	/**

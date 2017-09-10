@@ -107,13 +107,13 @@ public class PlannerCostFunctionTest extends RegressionTest {
 			Entry<RelationalTerm, Cost> plan1;
 			Entry<RelationalTerm, Cost> plan2;
 			try (ProgressLogger pLog = new SimpleProgressLogger(this.out)) {
-				costParams.setCostType(CostTypes.SIMPLE_CONSTANT);
+				costParams.setCostType(CostTypes.FIXED_COST_PER_ACCESS);
 				ExplorationSetUp planner1 = new ExplorationSetUp(planParams, costParams, reasoningParams,dbParams, schema);
 				planner1.registerEventHandler(new IntervalEventDrivenLogger(pLog, planParams.getLogIntervals(), planParams.getShortLogIntervals()));
 				plan1 = planner1.search(query);
 			}
 			try (ProgressLogger pLog = new SimpleProgressLogger(this.out)) {
-				costParams.setCostType(CostTypes.BLACKBOX);
+				costParams.setCostType(CostTypes.TEXTBOOK);
 				ExplorationSetUp planner2 = new ExplorationSetUp(planParams, costParams, reasoningParams,dbParams, schema);
 				planner2.registerEventHandler(new IntervalEventDrivenLogger(pLog, planParams.getLogIntervals(), planParams.getShortLogIntervals()));
 				plan2 = planner2.search(query);

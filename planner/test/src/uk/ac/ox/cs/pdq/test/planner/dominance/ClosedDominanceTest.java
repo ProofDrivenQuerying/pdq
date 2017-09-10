@@ -13,7 +13,7 @@ import com.google.common.collect.Lists;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.DoubleCost;
-import uk.ac.ox.cs.pdq.cost.estimators.AccessCountCostEstimator;
+import uk.ac.ox.cs.pdq.cost.estimators.CountNumberOfAccessedRelationsCostEstimator;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
@@ -36,7 +36,7 @@ import uk.ac.ox.cs.pdq.util.Utility;
 public class ClosedDominanceTest {
 
 	/** The cdomominance. */
-	CostFactDominance cdomominance = new CostFactDominance(new AccessCountCostEstimator(null), new FastFactDominance(false), false);
+	CostFactDominance cdomominance = new CostFactDominance(new CountNumberOfAccessedRelationsCostEstimator(null), new FastFactDominance(false), false);
 
 	/** The r1. */
 	protected Relation r1 = Relation.create("R1", 

@@ -13,7 +13,7 @@ import org.junit.Test;
 import uk.ac.ox.cs.pdq.algebra.AccessTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.estimators.NaiveCardinalityEstimator;
-import uk.ac.ox.cs.pdq.cost.estimators.PerInputCostEstimator;
+import uk.ac.ox.cs.pdq.cost.estimators.FixedCostPerAccessCostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.TextBookCostEstimator;
 import uk.ac.ox.cs.pdq.cost.statistics.SimpleCatalog;
 import uk.ac.ox.cs.pdq.db.Relation;
@@ -45,7 +45,7 @@ public class YahooTestCases {
 		AccessTerm access1 = AccessTerm.create(places , places.getAccessMethod("yh_geo_name"), inputConstants1);
 		TextBookCostEstimator estimator = new TextBookCostEstimator(null, new NaiveCardinalityEstimator(this.catalog));
 		Cost cost = estimator.cost(access1);
-		PerInputCostEstimator est = new PerInputCostEstimator(null, catalog);
+		FixedCostPerAccessCostEstimator est = new FixedCostPerAccessCostEstimator(null, catalog);
 		Cost cost1 = est.cost(access1);
 		System.out.println("TextBookCostEstimator:" + cost);
 		System.out.println("PerInputCostEstimator:" + cost1);

@@ -7,12 +7,12 @@ import org.junit.Assert;
 
 import com.google.common.eventbus.EventBus;
 
-import uk.ac.ox.cs.pdq.cost.estimators.AccessCountCostEstimator;
+import uk.ac.ox.cs.pdq.cost.estimators.CountNumberOfAccessedRelationsCostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.CardinalityEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.LengthBasedCostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.NaiveCardinalityEstimator;
-import uk.ac.ox.cs.pdq.cost.estimators.PerInputCostEstimator;
+import uk.ac.ox.cs.pdq.cost.estimators.FixedCostPerAccessCostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.TotalNumberOfOutputTuplesPerAccessCostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.TextBookCostEstimator;
 import uk.ac.ox.cs.pdq.cost.statistics.Catalog;
@@ -76,7 +76,7 @@ public class CostEstimatorFactory {
 			catalog = new SimpleCatalog(schema, costParams.getCatalog());
 		
 		switch (costParams.getCostType()) {
-		case BLACKBOX:
+		case TEXTBOOK:
 			CardinalityEstimator card = null;
 			switch (costParams.getCardinalityEstimationType()) {
 			case NAIVE:
@@ -93,16 +93,15 @@ public class CostEstimatorFactory {
 			Assert.assertNotNull(costParams.getCatalog());
 			result = new TotalNumberOfOutputTuplesPerAccessCostEstimator(new StatisticsCollector(collectStats, eventBus), catalog);
 			break;
-		case SIMPLE_CONSTANT:
-		case SIMPLE_GIVEN:
+		case FIXED_COST_PER_ACCESS:
 			Assert.assertNotNull(costParams.getCatalog());
-			result =  new PerInputCostEstimator(new StatisticsCollector(collectStats, eventBus), catalog);
+			result =  new FixedCostPerAccessCostEstimator(new StatisticsCollector(collectStats, eventBus), catalog);
 			break;
 		case INVERSE_LENGTH:
 			result =  new LengthBasedCostEstimator(new StatisticsCollector(collectStats, eventBus));
 			break;
 		default:
-			result =  new AccessCountCostEstimator(new StatisticsCollector(collectStats, eventBus));
+			result =  new CountNumberOfAccessedRelationsCostEstimator(new StatisticsCollector(collectStats, eventBus));
 			break;
 		}
 		return result;

@@ -60,7 +60,7 @@ public class CostParameters extends uk.ac.ox.cs.pdq.Parameters {
 			+ "If such requirements are violated, a PlannerException will be "
 			+ "thrown upon initialization of the Planner.",
 			defaultValue = "BLACKBOX")
-	protected CostTypes costType = CostTypes.BLACKBOX;
+	protected CostTypes costType = CostTypes.TEXTBOOK;
 	
 	/** The cardinality estimation type. */
 	@Parameter(description="Type of cardinality estimation to use.",
@@ -372,23 +372,15 @@ public class CostParameters extends uk.ac.ox.cs.pdq.Parameters {
 		
 		/** The simple constant. */
 		@EnumParameterValue(description = "Estimates the cost as the sum of the cost of all accesses in a plan, \n where access cost are provided externally")
-		SIMPLE_CONSTANT,
-		
-		/** The simple random. */
-		@EnumParameterValue(description = "Estimates the cost as the sum of the cost of all accesses in a plan, \n where cost are assigned randomly")
-		SIMPLE_RANDOM,
-		
-		/** The simple given. */
-		@EnumParameterValue(description = "Estimates the cost as the sum of the cost of all accesses in a plan, \n where cost are measured automatically from the underlying datasources")
-		SIMPLE_GIVEN,
+		FIXED_COST_PER_ACCESS,
 		
 		/** The simple count. */
 		@EnumParameterValue(description = "Estimates the cost as the sum of all accesses in a plan")
-		SIMPLE_COUNT,
+		COUNT_NUMBER_OF_ACCESSED_RELATIONS,
 		
 		/** The blackbox. */
 		@EnumParameterValue(description = "Estimates the cost through some externally defined cost function.\nCurrently, this defaults to the white box cost functions relying on textbox cost estimation techniques")
-		BLACKBOX,
+		TEXTBOOK,
 		
 		/** The blackbox db. */
 		@EnumParameterValue(description = "Estimates the cost by translating the query to SQL and asking its cost to a database")

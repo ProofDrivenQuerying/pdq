@@ -6,7 +6,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.algebra.AccessTerm;
-import uk.ac.ox.cs.pdq.cost.estimators.PerInputCostEstimator;
+import uk.ac.ox.cs.pdq.cost.estimators.FixedCostPerAccessCostEstimator;
 import uk.ac.ox.cs.pdq.cost.statistics.SimpleCatalog;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
@@ -40,7 +40,7 @@ public class SimpleCatalogTest {
 			AccessTerm at = AccessTerm.create(relation1, am1);
 			AccessTerm at1 = AccessTerm.create(relation2, am2);
 			
-			PerInputCostEstimator est = new PerInputCostEstimator(null, catalog);
+			FixedCostPerAccessCostEstimator est = new FixedCostPerAccessCostEstimator(null, catalog);
 			Assert.assertTrue(13.0 == est.cost(at).getCost());
 			Assert.assertTrue(15.0 == est.cost(at1).getCost());
 		} catch (Exception e) {
@@ -67,7 +67,7 @@ public class SimpleCatalogTest {
 			AccessTerm at = AccessTerm.create(relation1, am1);
 			AccessTerm at1 = AccessTerm.create(relation2, am2);
 			
-			PerInputCostEstimator est = new PerInputCostEstimator(null, catalog);
+			FixedCostPerAccessCostEstimator est = new FixedCostPerAccessCostEstimator(null, catalog);
 			Assert.assertTrue(13.0 == est.cost(at).getCost());
 			Assert.assertTrue(15.0 == est.cost(at1).getCost());
 		} catch (Exception e) {

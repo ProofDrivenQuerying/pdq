@@ -15,7 +15,7 @@ import uk.ac.ox.cs.pdq.algebra.DependentJoinTerm;
 import uk.ac.ox.cs.pdq.algebra.RenameTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.estimators.NaiveCardinalityEstimator;
-import uk.ac.ox.cs.pdq.cost.estimators.PerInputCostEstimator;
+import uk.ac.ox.cs.pdq.cost.estimators.FixedCostPerAccessCostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.TextBookCostEstimator;
 import uk.ac.ox.cs.pdq.cost.statistics.SimpleCatalog;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
@@ -119,7 +119,7 @@ public class RegressionTestLinearFastDemoDerbyCase002 {
 		
 		//TextBookCostEstimator estimator = new TextBookCostEstimator(null, new NaiveCardinalityEstimator(this.catalog));
 		//Cost cost = estimator.cost(plan2);
-		PerInputCostEstimator est = new PerInputCostEstimator(null, catalog);
+		FixedCostPerAccessCostEstimator est = new FixedCostPerAccessCostEstimator(null, catalog);
 		Cost cost = est.cost(access1);
 		System.out.println(cost);
 	}

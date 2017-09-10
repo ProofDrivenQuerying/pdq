@@ -22,7 +22,7 @@ import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
  *
  * @author Efthymia Tsamoura
  */
-public class PerInputCostEstimator implements OrderIndependentCostEstimator{
+public class FixedCostPerAccessCostEstimator implements OrderIndependentCostEstimator{
 
 	/** The stats. */
 	protected final StatisticsCollector stats;
@@ -35,7 +35,7 @@ public class PerInputCostEstimator implements OrderIndependentCostEstimator{
 	 *
 	 * @param stats StatisticsCollector
 	 */
-	public PerInputCostEstimator(StatisticsCollector stats, Catalog catalog) {
+	public FixedCostPerAccessCostEstimator(StatisticsCollector stats, Catalog catalog) {
 		this.stats = stats;
 		this.catalog = catalog;
 	}
@@ -47,8 +47,8 @@ public class PerInputCostEstimator implements OrderIndependentCostEstimator{
 	 * @see uk.ac.ox.cs.pdq.cost.estimators.OrderIndependentCostEstimator#clone()
 	 */
 	@Override
-	public PerInputCostEstimator clone() {
-		return (PerInputCostEstimator) (this.stats == null ? new PerInputCostEstimator(null, this.catalog.clone()) : new PerInputCostEstimator(this.stats.clone(), this.catalog.clone()));
+	public FixedCostPerAccessCostEstimator clone() {
+		return (FixedCostPerAccessCostEstimator) (this.stats == null ? new FixedCostPerAccessCostEstimator(null, this.catalog.clone()) : new FixedCostPerAccessCostEstimator(this.stats.clone(), this.catalog.clone()));
 	}
 
 	/**
