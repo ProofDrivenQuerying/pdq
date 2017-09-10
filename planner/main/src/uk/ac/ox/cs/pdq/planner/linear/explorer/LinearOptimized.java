@@ -63,7 +63,7 @@ import uk.ac.ox.cs.pdq.util.LimitReachedException;
 public class LinearOptimized extends LinearExplorer {
 
 	private static Logger log = Logger.getLogger(LinearOptimized.class);
-
+	
 	/**  Propagates to the root of the plan tree the best plan found so far. */
 	@SuppressWarnings("rawtypes")
 	protected final CostPropagator costPropagator;
@@ -121,14 +121,14 @@ public class LinearOptimized extends LinearExplorer {
 			ConjunctiveQuery accessibleQuery,
 			AccessibleSchema accessibleSchema, 
 			Chaser chaser,
-			DatabaseConnection dbConn,
+			DatabaseConnection connection,
 			CostEstimator costEstimator,
 			NodeFactory nodeFactory,
 			int depth,
 			int queryMatchInterval, 
 			PostPruning postPruning,
 			boolean zombification) throws PlannerException, SQLException {
-		super(eventBus, collectStats, query, accessibleQuery, accessibleSchema, chaser, dbConn, costEstimator, nodeFactory, depth);
+		super(eventBus, collectStats, query, accessibleQuery, accessibleSchema, chaser, connection, costEstimator, nodeFactory, depth);
 		this.costPropagator = CostPropagatorUtility.getPropagator(costEstimator);
 		this.queryMatchInterval = queryMatchInterval;
 		this.postPruning = postPruning;
@@ -397,17 +397,14 @@ public class LinearOptimized extends LinearExplorer {
 		List<Integer> representativePath = equivalenceClass.getRepresentativePath();
 		Set<SearchNode> deadDescendants = this.getDeadDescendants(equivalenceClass.getRepresentativeNode(), this.planTree);
 		for(SearchNode deadDescendant:deadDescendants) {
-
 			List<Integer> pathFromRoot = deadDescendant.getPathFromRoot();
 			List<Integer> equivalencePath = this.createPath(representativePath, path, pathFromRoot);
 			RelationalTerm equivalencePlan = CostPropagatorUtility.createLeftDeepPlan(this.planTree, equivalencePath);
 			Cost costOfEquivalencePlan = this.costPropagator.getCostEstimator().cost(equivalencePlan);
-
 			if(costOfEquivalencePlan.lessThan(deadDescendant.getCostOfBestPlanFromRoot())) {
 				deadDescendant.setBestPathFromRoot(equivalencePath);
 				deadDescendant.setBestPlanFromRoot(equivalencePlan);
 			}
-
 			if(this.bestPlan == null && costOfEquivalencePlan.lessThan(deadDescendant.getCostOfDominatingPlan()) ||
 					this.bestPlan != null && costOfEquivalencePlan.lessThan(this.bestCost)	) {
 

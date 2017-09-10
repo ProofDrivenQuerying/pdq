@@ -1,8 +1,6 @@
 package uk.ac.ox.cs.pdq.planner.linear.explorer;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 import org.jgrapht.graph.DefaultEdge;
@@ -16,7 +14,6 @@ import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.planner.Explorer;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
-import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.NodeFactory;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode.NodeStatus;
@@ -182,22 +179,9 @@ public abstract class LinearExplorer extends Explorer {
 		}
 		return selection;
 	}
-
-	/**
-	 *
-	 * @param path the path
-	 * @return 		the configuration of each node in the input path.
-	 * 		The nodes are indexed using their ids.
-	 */
-	protected List<LinearChaseConfiguration> getConfigurations(List<Integer> path) {
-		Assert.assertTrue(path != null && !path.isEmpty());
-		List<LinearChaseConfiguration> configurations = new ArrayList<>();
-		for (Integer n: path) {
-			SearchNode node = this.planTree.getVertex(n);
-			Assert.assertNotNull(node);
-			configurations.add(node.getConfiguration());
-		}
-		return configurations;
+	
+	public PlanTree<SearchNode> getPlanTree() {
+		return this.planTree;
 	}
 
 }

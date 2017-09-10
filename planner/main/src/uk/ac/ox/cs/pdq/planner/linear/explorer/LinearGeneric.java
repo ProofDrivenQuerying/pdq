@@ -26,7 +26,6 @@ import uk.ac.ox.cs.pdq.planner.linear.LinearConfiguration;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.NodeFactory;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode.NodeStatus;
-import uk.ac.ox.cs.pdq.planner.util.PlanTree;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.util.LimitReachedException;
 
@@ -139,10 +138,6 @@ public class LinearGeneric extends LinearExplorer {
 	
 	public List<Entry<RelationalTerm, Cost>> getExploredPlans() {
 		return this.exploredPlans;
-	}
-	
-	public PlanTree<SearchNode> getPlanTree() {
-		return this.planTree;
 	}
 	
 }

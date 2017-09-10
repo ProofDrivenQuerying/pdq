@@ -20,7 +20,7 @@ import uk.ac.ox.cs.pdq.planner.dag.equivalence.DAGEquivalenceClasses;
  * @author Efthymia Tsamoura
  *
  */
-public class Representative {
+public class MapOfPairsOfConfigurationsToTheEquivalentBinaryConfiguration {
 	
 	/** The representatives. */
 	private final Map<Pair<DAGEquivalenceClass,DAGEquivalenceClass>,DAGChaseConfiguration> representatives  = new ConcurrentHashMap<>();

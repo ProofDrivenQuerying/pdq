@@ -20,7 +20,7 @@ import com.google.common.collect.Sets;
  * @author Efthymia Tsamoura
  *
  */
-public final class Template {
+public final class MapOfConfigurationsToConstitutingApplyRuleConfigurations {
 
 	/** The templates. */
 	private final Map<Collection<ApplyRule>,DAGChaseConfiguration> templates = new ConcurrentHashMap<>();

@@ -64,7 +64,7 @@ public class CreateBinaryConfigurationsThread implements Callable<Boolean> {
 		if c'_1 and c'_2 are structurally equivalent to c_1 and c_2, respectively, and
 		c = BinConfiguration(c_1,c_2) has already been fully chased,
 		then we copy the state of c to the state of c' = BinConfiguration(c'_1,c'_2).*/
-	protected final Representative representatives;
+	protected final MapOfPairsOfConfigurationsToTheEquivalentBinaryConfiguration representatives;
 	
 	/**  The depth of the output configurations. */
 	private final int depth;
@@ -125,7 +125,7 @@ public class CreateBinaryConfigurationsThread implements Callable<Boolean> {
 			DAGChaseConfiguration best,
 			List<Validator> validators,
 			DAGEquivalenceClasses equivalenceClasses, 
-			Representative representatives,
+			MapOfPairsOfConfigurationsToTheEquivalentBinaryConfiguration representatives,
 			Map<Pair<DAGChaseConfiguration,DAGChaseConfiguration>,DAGChaseConfiguration> output
 			) {
 		Preconditions.checkNotNull(successDominance);
@@ -231,11 +231,7 @@ public class CreateBinaryConfigurationsThread implements Callable<Boolean> {
 		//If the representative is null or we do not use templates or we cannot find a template configuration that
 		//consists of the corresponding ApplyRules, then create a binary configuration from scratch by fully chasing its state
 		if(representative == null) {
-			configuration = new BinaryConfiguration(
-					left,
-					right
-					);
-		
+			configuration = new BinaryConfiguration(left, right);
 			if(configuration.getState() instanceof DatabaseChaseInstance) {
 				((DatabaseChaseInstance)configuration.getState()).setDatabaseConnection(this.connection);
 			}	
@@ -244,11 +240,7 @@ public class CreateBinaryConfigurationsThread implements Callable<Boolean> {
 		}
 		//otherwise, re-use the state of the representative
 		else if(representative != null) {
-			configuration = new BinaryConfiguration(
-					left,
-					right,
-					representative.getState().clone()
-					);
+			configuration = new BinaryConfiguration(left, right, representative.getState().clone());
 		}
 		Cost cost = this.costEstimator.cost(configuration.getPlan());
 		configuration.setCost(cost);

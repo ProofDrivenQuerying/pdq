@@ -94,7 +94,7 @@ public class MultiThreadedExecutor extends IterativeExecutor {
 		//if c'_1 and c'_2 are structurally equivalent to c_1 and c_2, respectively,
 		//and c = BinConfiguration(c_1,c_2) has already been fully chased,
 		//then we copy the state of c to the state of c' = BinConfiguration(c'_1,c'_2).
-		Representative representatives = new Representative();
+		MapOfPairsOfConfigurationsToTheEquivalentBinaryConfiguration representatives = new MapOfPairsOfConfigurationsToTheEquivalentBinaryConfiguration();
 		//The output configurations
 		Map<Pair<DAGChaseConfiguration,DAGChaseConfiguration>,DAGChaseConfiguration> output = new ConcurrentHashMap<>();
 		
