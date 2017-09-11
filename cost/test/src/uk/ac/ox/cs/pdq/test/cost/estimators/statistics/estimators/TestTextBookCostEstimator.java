@@ -41,9 +41,9 @@ public class TestTextBookCostEstimator {
 	protected Attribute[] newAttributes = new Attribute[30];
 
 	protected AccessMethod method0 = AccessMethod.create(new Integer[] {});
-	protected AccessMethod method1 = AccessMethod.create(new Integer[] { 0 });
-	protected AccessMethod method2 = AccessMethod.create(new Integer[] { 0, 1 });
-	protected AccessMethod method3 = AccessMethod.create(new Integer[] { 1 });
+	protected AccessMethod method1 = AccessMethod.create(new Integer[] {0});
+	protected AccessMethod method2 = AccessMethod.create(new Integer[] {0, 1});
+	protected AccessMethod method3 = AccessMethod.create(new Integer[] {1});
 
 	protected Relation YahooPlaceCode;
 	protected Relation YahooPlaceRelationship;
@@ -214,4 +214,5 @@ public class TestTextBookCostEstimator {
 		Assert.assertEquals(93684.95477555826, (double) cost.getValue(), 0.0001);
 	}
 
+	
 }
