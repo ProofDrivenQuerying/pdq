@@ -30,7 +30,7 @@ import com.google.common.collect.Sets;
  * @author Efthymia Tsamoura
  *
  */
-public class BlackBoxPropagator extends CostPropagator<BlackBoxNode> {
+public class OrderDependentCostPropagator extends CostPropagator<BlackBoxNode> {
 
 	/**  the nodes that have been already updated */
 	private Set<BlackBoxNode> updatedNodes = Sets.newHashSet();
@@ -40,7 +40,7 @@ public class BlackBoxPropagator extends CostPropagator<BlackBoxNode> {
 	 *
 	 * @param estimator BlackBoxCostEstimator<LeftDeepPlan,?>
 	 */
-	public BlackBoxPropagator(OrderDependentCostEstimator estimator) {
+	public OrderDependentCostPropagator(OrderDependentCostEstimator estimator) {
 		super(estimator);
 	}
 

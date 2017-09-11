@@ -44,7 +44,8 @@ public class IterativeExecutorFactory {
 			CostEstimator estimator,
 			SuccessDominance successDominance,
 			Dominance[] dominance,
-			List<Validator> validators, ReasoningParameters reasoningParameters) throws Exception{
+			List<Validator> validators, 
+			ReasoningParameters reasoningParameters) throws Exception{
 		switch(executorType) {
 		case MULTITHREADED:
 			MultiThreadedContext mtcontext = new MultiThreadedContext(parallelThreads,

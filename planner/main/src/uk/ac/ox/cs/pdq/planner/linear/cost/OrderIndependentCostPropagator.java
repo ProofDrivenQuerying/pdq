@@ -27,14 +27,14 @@ import uk.ac.ox.cs.pdq.planner.util.PlanTree;
  *
  * @author Efthymia Tsamoura
  */
-public class SimplePropagator extends CostPropagator<SimpleNode> {
+public class OrderIndependentCostPropagator extends CostPropagator<SimpleNode> {
 
 	/**
 	 * Empty constructor.
 	 *
 	 * @param estimator SimpleCostEstimator<LeftDeepPlan>
 	 */
-	public SimplePropagator(OrderIndependentCostEstimator estimator) {
+	public OrderIndependentCostPropagator(OrderIndependentCostEstimator estimator) {
 		super(estimator);
 	}
 

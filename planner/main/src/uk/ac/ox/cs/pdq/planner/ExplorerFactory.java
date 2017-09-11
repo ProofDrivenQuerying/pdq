@@ -6,6 +6,8 @@ import java.util.List;
 import com.google.common.eventbus.EventBus;
 
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
+import uk.ac.ox.cs.pdq.cost.estimators.OrderDependentCostEstimator;
+import uk.ac.ox.cs.pdq.cost.estimators.OrderIndependentCostEstimator;
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Schema;
@@ -23,6 +25,8 @@ import uk.ac.ox.cs.pdq.planner.dominance.Dominance;
 import uk.ac.ox.cs.pdq.planner.dominance.DominanceFactory;
 import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominance;
 import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominanceFactory;
+import uk.ac.ox.cs.pdq.planner.linear.cost.CostPropagator;
+import uk.ac.ox.cs.pdq.planner.linear.cost.OrderDependentCostPropagator;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.LinearGeneric;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.LinearKChase;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.LinearOptimized;
@@ -78,6 +82,7 @@ public class ExplorerFactory {
 	 * @return the explorer< p>
 	 * @throws Exception the exception
 	 */
+	@SuppressWarnings("rawtypes")
 	public static Explorer createExplorer(
 			EventBus eventBus, 
 			boolean collectStats,
@@ -96,6 +101,7 @@ public class ExplorerFactory {
 		
 		NodeFactory nodeFactory = null;
 		PostPruning postPruning = null;
+		CostPropagator costPropagator = null;
 		IterativeExecutor executor0 = null;
 		IterativeExecutor executor1 = null;
 		List<Validator> validators = new ArrayList<>();
@@ -106,6 +112,13 @@ public class ExplorerFactory {
 				|| parameters.getPlannerType().equals(PlannerTypes.LINEAR_OPTIMIZED)) {
 			nodeFactory = new NodeFactory(parameters, costEstimator);
 			postPruning = new PostPruningFactory(parameters.getPostPruningType(), nodeFactory, chaser, query, accessibleSchema).getInstance();
+			if (costEstimator instanceof OrderDependentCostEstimator) 
+				costPropagator = new OrderDependentCostPropagator((OrderDependentCostEstimator) costPropagator);
+			else if (costEstimator instanceof OrderIndependentCostEstimator) 
+				costPropagator = new OrderDependentCostPropagator((OrderDependentCostEstimator) costPropagator);
+			else
+				throw new IllegalStateException("Attempting to get a propagator for a cost estimator that is neither blackbox nor simple");
+
 		}
 		else {
 			Validator validator = (Validator) new ValidatorFactory(parameters.getValidatorType(), parameters.getDepthThreshold()).getInstance();
@@ -156,6 +169,7 @@ public class ExplorerFactory {
 					chaser, 
 					connection, 
 					costEstimator,
+					costPropagator,
 					nodeFactory,
 					parameters.getMaxDepth(),
 					parameters.getChaseInterval());
@@ -231,6 +245,7 @@ public class ExplorerFactory {
 					chaser,
 					connection,
 					costEstimator,
+					costPropagator,
 					nodeFactory,
 					parameters.getMaxDepth(),
 					parameters.getQueryMatchInterval(),

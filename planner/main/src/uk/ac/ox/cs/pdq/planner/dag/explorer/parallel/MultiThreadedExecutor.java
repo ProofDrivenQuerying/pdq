@@ -58,8 +58,8 @@ public class MultiThreadedExecutor extends IterativeExecutor {
 	 * Otherwise, they are of the form  BinaryConfiguration(L,R)
 	 *
 	 * @param depth the target depth of the created configurations
-	 * @param left 		The configurations to consider on the left
-	 * @param right 		The configurations to consider on the right
+	 * @param leftSideConfigurations 		The configurations to consider on the left
+	 * @param rightSideConfigurations 		The configurations to consider on the right
 	 * @param query the query
 	 * @param dependencies the dependencies
 	 * @param bestConfiguration 	 	The minimum cost closed and successful configuration found so far. The plans that correspond to the
@@ -73,16 +73,17 @@ public class MultiThreadedExecutor extends IterativeExecutor {
 	 * @throws LimitReachedException the limit reached exception
 	 */
 	@Override
-	public Collection<DAGChaseConfiguration> reason(
+	public Collection<DAGChaseConfiguration> createBinaryConfigurations(
 			int depth,
-			Queue<DAGChaseConfiguration> left,
-			Collection<DAGChaseConfiguration> right,
+			Queue<DAGChaseConfiguration> leftSideConfigurations,
+			Collection<DAGChaseConfiguration> rightSideConfigurations,
 			ConjunctiveQuery query,
 			Dependency[] dependencies,
 			DAGChaseConfiguration bestConfiguration,
 			DAGEquivalenceClasses equivalenceClasses, 
 			boolean twoWay,
-			long timeout, TimeUnit unit) throws PlannerException, LimitReachedException {
+			long timeout, 
+			TimeUnit unit) throws PlannerException, LimitReachedException {
 		if (timeout <= 0) {
 			throw new LimitReachedException(Reasons.TIMEOUT);
 		}
@@ -98,11 +99,11 @@ public class MultiThreadedExecutor extends IterativeExecutor {
 		//The output configurations
 		Map<Pair<DAGChaseConfiguration,DAGChaseConfiguration>,DAGChaseConfiguration> output = new ConcurrentHashMap<>();
 		
-		Collection<DAGChaseConfiguration> copy = Sets.newLinkedHashSet(left);
+		Collection<DAGChaseConfiguration> copy = Sets.newLinkedHashSet(leftSideConfigurations);
 
 		try {
-			Queue<DAGChaseConfiguration> leftInput = left;
-			Collection<DAGChaseConfiguration> rightInput = right;
+			Queue<DAGChaseConfiguration> leftInput = leftSideConfigurations;
+			Collection<DAGChaseConfiguration> rightInput = rightSideConfigurations;
 			do {
 				List<Callable<Boolean>> threads = new ArrayList<>();
 				for(int j = 0; j < this.mtcontext.getParallelThreads(); ++j) {
@@ -142,7 +143,7 @@ public class MultiThreadedExecutor extends IterativeExecutor {
 				//input collections, respectively.
 				if(twoWay) {
 					executorService = Executors.newFixedThreadPool(this.mtcontext.getParallelThreads());
-					leftInput = new ConcurrentLinkedQueue<>(right);
+					leftInput = new ConcurrentLinkedQueue<>(rightSideConfigurations);
 					rightInput = copy;
 					twoWay = false;
 				}
@@ -176,7 +177,7 @@ public class MultiThreadedExecutor extends IterativeExecutor {
 	 * @throws LimitReachedException the limit reached exception
 	 */
 	@Override
-	public ExplorationResults explore(
+	public ExplorationResults exploreInputConfigurations(
 			ConjunctiveQuery query,
 			Queue<DAGChaseConfiguration> input,
 			DAGEquivalenceClasses equivalenceClasses,

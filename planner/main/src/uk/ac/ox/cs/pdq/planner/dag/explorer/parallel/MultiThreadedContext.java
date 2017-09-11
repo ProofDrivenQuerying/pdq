@@ -63,8 +63,9 @@ public class MultiThreadedContext implements Context{
 			CostEstimator costEstimator,
 			SuccessDominance successDominance,
 			Dominance[] dominance,
-			List<Validator> validators, ReasoningParameters reasoningParameters) throws Exception {
-		this.parallelThreads = 1;//parallelThreads;
+			List<Validator> validators, 
+			ReasoningParameters reasoningParameters) throws Exception {
+		this.parallelThreads = parallelThreads;
 		this.reasoners = new Chaser[this.parallelThreads];
 		this.connections = new DatabaseConnection[this.parallelThreads];
 		this.costEstimators = new CostEstimator[this.parallelThreads];

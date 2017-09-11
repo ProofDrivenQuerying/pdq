@@ -2,16 +2,13 @@ package uk.ac.ox.cs.pdq.planner.linear.cost;
 
 import java.util.List;
 
+import com.google.common.base.Preconditions;
+
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
-import uk.ac.ox.cs.pdq.cost.estimators.OrderDependentCostEstimator;
-import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
-import uk.ac.ox.cs.pdq.cost.estimators.OrderIndependentCostEstimator;
 import uk.ac.ox.cs.pdq.planner.linear.LeftDeepPlanGenerator;
 import uk.ac.ox.cs.pdq.planner.linear.LinearUtility;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
 import uk.ac.ox.cs.pdq.planner.util.IndexedDirectedGraph;
-
-import com.google.common.base.Preconditions;
 
 
 // TODO: Auto-generated Javadoc
@@ -21,24 +18,6 @@ import com.google.common.base.Preconditions;
  * @author Efthymia Tsamoura
  */
 public class CostPropagatorUtility {
-
-	/**
-	 * Gets the propagator.
-	 *
-	 * @param e the e
-	 * @return the propagator
-	 */
-	@SuppressWarnings("unchecked")
-	public static <T extends SearchNode> CostPropagator<T> getPropagator(CostEstimator e) {
-		if (e instanceof OrderDependentCostEstimator) 
-			return (CostPropagator<T>) new BlackBoxPropagator((OrderDependentCostEstimator) e);
-		else if (e instanceof OrderIndependentCostEstimator) 
-			return (CostPropagator<T>) new SimplePropagator((OrderIndependentCostEstimator) e);
-		else
-			throw new IllegalStateException("Attempting to get a propagator for a cost estimator that is neither blackbox nor simple");
-	}
-
-
 	/**
 	 * Creates the left deep plan.
 	 *
@@ -54,9 +33,6 @@ public class CostPropagatorUtility {
 		Preconditions.checkArgument(path != null && !path.isEmpty());
 		List<T> nodes = LinearUtility.createPath(nodesSet, path);
 		RelationalTerm plan = LeftDeepPlanGenerator.createLeftDeepPlan(nodes);
-//		costEstimator.cost(plan); 
-//		for (T next:nodes) 
-//			costEstimator.cost(next.getConfiguration().getPlan());
 		return plan;
 	}
 }

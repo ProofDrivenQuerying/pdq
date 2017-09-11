@@ -94,8 +94,8 @@ public class CreateBinaryConfigurationsThread implements Callable<Boolean> {
 	 * Instantiates a new reasoning thread.
 	 *
 	 * @param depth 		The depth of the output configurations
-	 * @param left 		The configurations to consider on the left
-	 * @param right 		The configurations to consider on the right
+	 * @param leftSideConfigurations 		The configurations to consider on the left
+	 * @param rightSideConfigurations 		The configurations to consider on the right
 	 * @param query the query
 	 * @param dependencies the dependencies
 	 * @param chaser 		Performs reasoning. Closes newly created binary configurations
@@ -114,8 +114,8 @@ public class CreateBinaryConfigurationsThread implements Callable<Boolean> {
 	 */
 	public CreateBinaryConfigurationsThread(
 			int depth,
-			Queue<DAGChaseConfiguration> left,
-			Collection<DAGChaseConfiguration> right,
+			Queue<DAGChaseConfiguration> leftSideConfigurations,
+			Collection<DAGChaseConfiguration> rightSideConfigurations,
 			ConjunctiveQuery query,
 			Dependency[] dependencies,
 			Chaser chaser,
@@ -147,8 +147,8 @@ public class CreateBinaryConfigurationsThread implements Callable<Boolean> {
 		this.representatives = representatives;
 		this.validators = validators;
 		this.depth = depth;
-		this.leftSideConfigurations = left;
-		this.rightSideConfigurations = right;
+		this.leftSideConfigurations = leftSideConfigurations;
+		this.rightSideConfigurations = rightSideConfigurations;
 		this.best = best;
 		this.successDominance = successDominance;
 		this.outputConfigurations = output;

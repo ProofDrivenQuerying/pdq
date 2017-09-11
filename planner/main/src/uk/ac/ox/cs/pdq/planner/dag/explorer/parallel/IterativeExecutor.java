@@ -47,13 +47,13 @@ public abstract class IterativeExecutor {
 	 * Otherwise, they are of the form  BinaryConfiguration(L,R)
 	 *
 	 * @param depth 		The depth of the output configurations
-	 * @param left 		The configurations to consider on the left
-	 * @param right 		The configurations to consider on the right
+	 * @param leftSideConfigurations 		The configurations to consider on the left
+	 * @param rightSideConfigurations 		The configurations to consider on the right
 	 * @param query the query
 	 * @param dependencies the dependencies
 	 * @param best 	 	The minimum cost closed and successful configuration found so far. The plans that correspond to the
 	 * 		returned configurations have cost < the bestConfiguration
-	 * @param classes the classes
+	 * @param equivalenceClasses the classes
 	 * @param twoWay the two way
 	 * @param timeout the timeout
 	 * @param unit the unit
@@ -61,23 +61,24 @@ public abstract class IterativeExecutor {
 	 * @throws PlannerException the planner exception
 	 * @throws LimitReachedException the limit reached exception
 	 */
-	public abstract Collection<DAGChaseConfiguration> reason(
+	public abstract Collection<DAGChaseConfiguration> createBinaryConfigurations(
 			int depth,
-			Queue<DAGChaseConfiguration> left,
-			Collection<DAGChaseConfiguration> right,
+			Queue<DAGChaseConfiguration> leftSideConfigurations,
+			Collection<DAGChaseConfiguration> rightSideConfigurations,
 			ConjunctiveQuery query,
 			Dependency[] dependencies,
 			DAGChaseConfiguration best,
-			DAGEquivalenceClasses classes, 
+			DAGEquivalenceClasses equivalenceClasses, 
 			boolean twoWay,
-			long timeout, TimeUnit unit) throws PlannerException, LimitReachedException;
+			long timeout, 
+			TimeUnit unit) throws PlannerException, LimitReachedException;
 
 	/**
 	 * Iterates over the input collection of configurations to identify the minimum-cost one.
 	 *
 	 * @param query the query
 	 * @param input 		The input set of configurations
-	 * @param classes 		Classes of structurally equivalent configurations
+	 * @param equivalenceClasses 		Classes of structurally equivalent configurations
 	 * @param best 		The minimum cost closed and successful configuration found so far. The plans that correspond to the
 	 * 		returned configurations have cost < the bestConfiguration
 	 * @param timeout the timeout
@@ -87,10 +88,11 @@ public abstract class IterativeExecutor {
 	 * @throws PlannerException the planner exception
 	 * @throws LimitReachedException the limit reached exception
 	 */
-	public abstract ExplorationResults explore(
+	public abstract ExplorationResults exploreInputConfigurations(
 			ConjunctiveQuery query,
 			Queue<DAGChaseConfiguration> input,
-			DAGEquivalenceClasses classes,
+			DAGEquivalenceClasses equivalenceClasses,
 			DAGChaseConfiguration best,
-			long timeout, TimeUnit unit) throws PlannerException, LimitReachedException;
+			long timeout, 
+			TimeUnit unit) throws PlannerException, LimitReachedException;
 }

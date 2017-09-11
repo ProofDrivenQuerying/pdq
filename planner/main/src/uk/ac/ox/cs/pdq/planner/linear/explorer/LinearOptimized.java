@@ -30,6 +30,8 @@ import uk.ac.ox.cs.pdq.algebra.AlgebraUtilities;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
+import uk.ac.ox.cs.pdq.cost.estimators.OrderDependentCostEstimator;
+import uk.ac.ox.cs.pdq.cost.estimators.OrderIndependentCostEstimator;
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.fol.Atom;
@@ -38,10 +40,10 @@ import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.linear.LinearConfiguration;
 import uk.ac.ox.cs.pdq.planner.linear.LinearUtility;
-import uk.ac.ox.cs.pdq.planner.linear.cost.BlackBoxPropagator;
+import uk.ac.ox.cs.pdq.planner.linear.cost.OrderDependentCostPropagator;
 import uk.ac.ox.cs.pdq.planner.linear.cost.CostPropagator;
 import uk.ac.ox.cs.pdq.planner.linear.cost.CostPropagatorUtility;
-import uk.ac.ox.cs.pdq.planner.linear.cost.SimplePropagator;
+import uk.ac.ox.cs.pdq.planner.linear.cost.OrderIndependentCostPropagator;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.NodeFactory;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode.NodeStatus;
@@ -114,6 +116,7 @@ public class LinearOptimized extends LinearExplorer {
 	 * @throws PlannerException the planner exception
 	 * @throws SQLException 
 	 */
+	@SuppressWarnings("rawtypes")
 	public LinearOptimized(
 			EventBus eventBus, 
 			boolean collectStats,
@@ -123,13 +126,18 @@ public class LinearOptimized extends LinearExplorer {
 			Chaser chaser,
 			DatabaseConnection connection,
 			CostEstimator costEstimator,
+			CostPropagator costPropagator,
 			NodeFactory nodeFactory,
 			int depth,
 			int queryMatchInterval, 
 			PostPruning postPruning,
 			boolean zombification) throws PlannerException, SQLException {
 		super(eventBus, collectStats, query, accessibleQuery, accessibleSchema, chaser, connection, costEstimator, nodeFactory, depth);
-		this.costPropagator = CostPropagatorUtility.getPropagator(costEstimator);
+		Preconditions.checkNotNull(costPropagator);
+		Preconditions.checkArgument(queryMatchInterval >= 0);
+		Preconditions.checkArgument(costPropagator instanceof OrderIndependentCostPropagator && costEstimator instanceof OrderIndependentCostEstimator
+				|| costPropagator instanceof OrderDependentCostPropagator && costEstimator instanceof OrderDependentCostEstimator);
+		this.costPropagator = costPropagator;
 		this.queryMatchInterval = queryMatchInterval;
 		this.postPruning = postPruning;
 		this.zombification = zombification;
@@ -219,7 +227,6 @@ public class LinearOptimized extends LinearExplorer {
 		// If the cost of the plan of the newly created node is higher than the best plan found so far 
 		//then zombify the newly created node  
 		boolean domination = false;
-//		RelationalTerm freshNodePlan = freshNode.getBestPlanFromRoot();
 		if (this.bestPlan != null) {
 			if (freshNode.getCostOfBestPlanFromRoot().greaterOrEquals(this.bestCost)) {
 				domination = true;
@@ -231,7 +238,7 @@ public class LinearOptimized extends LinearExplorer {
 		}
 
 		// If at least one node in the plan tree dominates the newly created node, then zombify the newly created node
-		if (!domination && this.costPropagator instanceof SimplePropagator) {
+		if (!domination && this.costPropagator instanceof OrderIndependentCostPropagator) {
 			this.stats.start(MILLI_DOMINANCE);
 			SearchNode dominatingNode = ExplorerUtility.isDominated(this.planTree.vertexSet(), freshNode);
 			this.stats.stop(MILLI_DOMINANCE);
@@ -270,7 +277,7 @@ public class LinearOptimized extends LinearExplorer {
 				freshNode.setEquivalentNode(parentEquivalent);
 				if(this.zombification) {
 					PathEquivalenceClass equivalenceClass = this.equivalenceClasses.addEntry(parentEquivalent, freshNode);
-					if (this.costPropagator instanceof BlackBoxPropagator) 
+					if (this.costPropagator instanceof OrderDependentCostPropagator) 
 						this.wakeupDescendants(freshNode.getPathFromRoot(), equivalenceClass);
 				}
 				freshNode.setStatus(NodeStatus.TERMINAL);

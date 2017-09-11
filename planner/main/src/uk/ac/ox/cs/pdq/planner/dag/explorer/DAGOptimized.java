@@ -99,8 +99,7 @@ public class DAGOptimized extends DAGExplorer {
 			IterativeExecutor binaryConfigurationCreationThreads,
 			IterativeExecutor configurationSpaceExplorationThreads,
 			int maxDepth) throws PlannerException, SQLException {
-		super(eventBus, collectStats, parameters,
-				query, accessibleQuery, accessibleSchema, chaser, connection, costEstimator);
+		super(eventBus, collectStats, parameters, query, accessibleQuery, accessibleSchema, chaser, connection, costEstimator);
 		Preconditions.checkNotNull(binaryConfigurationCreationThreads);
 		Preconditions.checkNotNull(configurationSpaceExplorationThreads);
 		this.filter = filter;
@@ -149,7 +148,7 @@ public class DAGOptimized extends DAGExplorer {
 			this.checkLimitReached();
 			//Perform parallel chasing
 			Collection<DAGChaseConfiguration> configurations =
-					this.binaryConfigurationCreationThreads.reason(this.depth,
+					this.binaryConfigurationCreationThreads.createBinaryConfigurations(this.depth,
 							this.leftSideConfigurations,
 							this.equivalenceClasses.getConfigurations(),
 							this.accessibleQuery,
@@ -166,7 +165,7 @@ public class DAGOptimized extends DAGExplorer {
 
 			this.checkLimitReached();
 			//Iterate over all newly created configurations in parallel and return the best configuration
-			ExplorationResults results = this.configurationSpaceExplorationThreads.explore(
+			ExplorationResults results = this.configurationSpaceExplorationThreads.exploreInputConfigurations(
 					this.accessibleQuery,
 					new ConcurrentLinkedQueue<>(configurations),
 					this.equivalenceClasses,
