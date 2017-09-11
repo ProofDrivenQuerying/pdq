@@ -17,6 +17,7 @@ import uk.ac.ox.cs.pdq.algebra.AccessTerm;
 import uk.ac.ox.cs.pdq.algebra.DependentJoinTerm;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.algebra.RenameTerm;
+import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.estimators.CountNumberOfAccessedRelationsCostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.OrderIndependentCostEstimator;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
@@ -307,9 +308,19 @@ public class TestLinearOptimized {
 				
 				//Call the explorer
 				explorer.explore();
-				
+
 				//TODO Assert that at the end of exploration we found a single plan
 				//This is done by checking that only one path in the plan tree leads to a match
+				RelationalTerm dominatingPlan = root.getDominatingPlan();
+				Cost dominatingPlansCost = root.getCostOfDominatingPlan();
+				Assert.assertEquals(dominatingPlansCost, root.getCostOfDominatingPlan());
+				for (int i = 0; planTree.getVertex(root.getId()+i)!=null; i++){
+					SearchNode node = planTree.getVertex(root.getId()+i);
+					Assert.assertEquals(dominatingPlansCost, node.getCostOfDominatingPlan());
+					Assert.assertEquals(dominatingPlan, node.getDominatingPlan());
+				}
+				Assert.assertNull(dominatingPlan); // no valid plan in this example.
+				Assert.assertNull(explorer.getBestPlan());
 				//TODO Assert also that every path other than the successful one is dominated by the path that leads to a query match  
 				//Domination is checked by iterating over all nodes in the plan tree that are not in the successful path
 				//and checking that getDominatingPlan() and getCostOfDominatingPlan() 
@@ -405,12 +416,34 @@ public class TestLinearOptimized {
 					false);
 				
 				explorer.explore();
+				PlanTree<SearchNode> planTree = null;
+				planTree = explorer.getPlanTree();
+				SearchNode root = planTree.getRoot();
+				
 				//TODO Assert that at the end of exploration we found a single plan
 				//This is done by checking that only one path in the plan tree leads to a match
 				//TODO Assert also that every path other than the successful one is dominated by the path that leads to a query match  
 				//Domination is checked by iterating over all nodes in the plan tree that are not in the successful path
 				//and checking that getDominatingPlan() and getCostOfDominatingPlan() 
 				//return the only successful plan we found and its cost
+				RelationalTerm dominatingPlan = null;
+				Cost dominatingPlansCost = null;
+				
+				Assert.assertEquals(dominatingPlansCost, root.getCostOfDominatingPlan());
+				for (int i = 0; planTree.getVertex(root.getId()+i)!=null; i++){
+					SearchNode node = planTree.getVertex(root.getId()+i);
+					if (node.getDominatingPlan()!=null) {
+						if (dominatingPlan!=null) {
+							Assert.assertEquals(dominatingPlan, node.getDominatingPlan());
+							Assert.assertEquals(dominatingPlansCost, node.getCostOfDominatingPlan());
+						} else { 
+							dominatingPlan = node.getDominatingPlan();  // there should be only one successful plan.
+							dominatingPlansCost = node.getCostOfDominatingPlan();
+						}
+					}
+				}
+				Assert.assertNotNull(dominatingPlan);
+				
 		} catch (PlannerException | SQLException e) {
 			e.printStackTrace();
 			Assert.fail();
