@@ -8,7 +8,6 @@ import uk.ac.ox.cs.pdq.db.DatabaseConnection;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator;
 import uk.ac.ox.cs.pdq.planner.dominance.Dominance;
 import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominance;
-import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 
 // TODO: Auto-generated Javadoc
@@ -63,8 +62,7 @@ public class MultiThreadedContext implements Context{
 			CostEstimator costEstimator,
 			SuccessDominance successDominance,
 			Dominance[] dominance,
-			List<Validator> validators, 
-			ReasoningParameters reasoningParameters) throws Exception {
+			List<Validator> validators) throws Exception {
 		this.parallelThreads = parallelThreads;
 		this.reasoners = new Chaser[this.parallelThreads];
 		this.connections = new DatabaseConnection[this.parallelThreads];
@@ -109,66 +107,30 @@ public class MultiThreadedContext implements Context{
 		return array;
 	}
 	
-
-	/**
-	 * Gets the parallel threads.
-	 *
-	 * @return int
-	 */
 	public int getParallelThreads() {
 		return this.parallelThreads;
 	}
 
-	/**
-	 * Gets the reasoners.
-	 *
-	 * @return Reasoner[]
-	 */
 	public Chaser[] getReasoners() {
 		return this.reasoners;
 	}
 
-	/**
-	 * Gets the detectors.
-	 *
-	 * @return HomomorphismDetector[]
-	 */
 	public DatabaseConnection[] getConnections() {
 		return this.connections;
 	}
 
-	/**
-	 * Gets the cost estimators.
-	 *
-	 * @return CostEstimator<DAGPlan>[]
-	 */
 	public CostEstimator[] getCostEstimators() {
 		return this.costEstimators;
 	}
 
-	/**
-	 * Gets the success dominances.
-	 *
-	 * @return the success dominances
-	 */
 	public SuccessDominance[] getSuccessDominances() {
 		return this.successDominances;
 	}
 	
-	/**
-	 * Gets the dominances.
-	 *
-	 * @return the dominances
-	 */
 	public Dominance[][] getDominances() {
 		return this.dominances;
 	}
 
-	/**
-	 * Gets the validators.
-	 *
-	 * @return the validators
-	 */
 	public List<Validator>[] getValidators() {
 		return this.validators;
 	}

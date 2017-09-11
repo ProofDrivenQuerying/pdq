@@ -10,10 +10,12 @@ import java.util.concurrent.Callable;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import com.google.common.base.Preconditions;
+import com.google.common.collect.Sets;
+
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
-import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.planner.dag.BinaryConfiguration;
 import uk.ac.ox.cs.pdq.planner.dag.ConfigurationUtility;
@@ -23,9 +25,6 @@ import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator;
 import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominance;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
-
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Sets;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -40,9 +39,6 @@ import com.google.common.collect.Sets;
  * @author Efthymia Tsamoura
  */
 public class CreateBinaryConfigurationsThread implements Callable<Boolean> {
-
-	/**  The input query*. */
-	protected final ConjunctiveQuery query;
 	
 	/**  The schema dependencies*. */
 	protected final Dependency[] dependencies;
@@ -116,7 +112,6 @@ public class CreateBinaryConfigurationsThread implements Callable<Boolean> {
 			int depth,
 			Queue<DAGChaseConfiguration> leftSideConfigurations,
 			Collection<DAGChaseConfiguration> rightSideConfigurations,
-			ConjunctiveQuery query,
 			Dependency[] dependencies,
 			Chaser chaser,
 			DatabaseConnection connection,
@@ -131,14 +126,12 @@ public class CreateBinaryConfigurationsThread implements Callable<Boolean> {
 		Preconditions.checkNotNull(successDominance);
 		Preconditions.checkArgument(validators != null);
 		Preconditions.checkArgument(!validators.isEmpty());
-		Preconditions.checkNotNull(query);
 		Preconditions.checkNotNull(dependencies);
 		Preconditions.checkNotNull(chaser);
 		Preconditions.checkNotNull(connection);
 		Preconditions.checkNotNull(costEstimator);
 		Preconditions.checkNotNull(representatives);
 		Preconditions.checkNotNull(equivalenceClasses);
-		this.query = query;
 		this.dependencies = dependencies;
 		this.chaser = chaser;
 		this.connection = connection;

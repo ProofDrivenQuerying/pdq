@@ -123,10 +123,12 @@ public class TestDAGGeneric {
 		CostEstimator costEstimator = Mockito.mock(CostEstimator.class);
 		when(costEstimator.cost(Mockito.any(RelationalTerm.class))).thenReturn(new DoubleCost(1.0));
 
+		//Mock success domination
 		SuccessDominance successDominance = Mockito.mock(SuccessDominance.class);
 		when(successDominance.isDominated(Mockito.any(RelationalTerm.class), Mockito.any(Cost.class), Mockito.any(RelationalTerm.class), Mockito.any(Cost.class)))
 				.thenReturn(false);
 
+		//Create validators
 		List<Validator> validators = new ArrayList<>();
 		validators.add(new DefaultValidator());
 
@@ -266,9 +268,11 @@ public class TestDAGGeneric {
 		// Create DAGGeneric
 		DAGGeneric explorer = null;
 		try {
+			//Mock success domination
 			SuccessDominance successDominance = Mockito.mock(SuccessDominance.class);
 			when(successDominance.isDominated(Mockito.any(RelationalTerm.class), Mockito.any(Cost.class), Mockito.any(RelationalTerm.class), Mockito.any(Cost.class)))
 					.thenReturn(false);
+			//Create validators
 			List<Validator> validators = new ArrayList<>();
 			validators.add(new DefaultValidator());
 			

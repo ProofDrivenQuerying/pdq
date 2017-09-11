@@ -8,7 +8,6 @@ import uk.ac.ox.cs.pdq.planner.PlannerParameters.IterativeExecutorTypes;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator;
 import uk.ac.ox.cs.pdq.planner.dominance.Dominance;
 import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominance;
-import uk.ac.ox.cs.pdq.reasoning.ReasoningParameters;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 
 // TODO: Auto-generated Javadoc
@@ -27,8 +26,8 @@ public class IterativeExecutorFactory {
 	 * @param executorType the executor type
 	 * @param parallelThreads the parallel threads
 	 * @param chaser 		Runs the chase algorithm
-	 * @param dbConn 		Detects homomorphisms during chasing
-	 * @param estimator 		Estimates the cost of a plan
+	 * @param connection 		Detects homomorphisms during chasing
+	 * @param costEstimator 		Estimates the cost of a plan
 	 * @param successDominance 		Removes success dominated configurations
 	 * @param dominance the dominance
 	 * @param validators 		Validates pairs of configurations to be composed
@@ -40,22 +39,20 @@ public class IterativeExecutorFactory {
 			IterativeExecutorTypes executorType,
 			int parallelThreads,
 			Chaser chaser,
-			DatabaseConnection dbConn,
-			CostEstimator estimator,
+			DatabaseConnection connection,
+			CostEstimator costEstimator,
 			SuccessDominance successDominance,
 			Dominance[] dominance,
-			List<Validator> validators, 
-			ReasoningParameters reasoningParameters) throws Exception{
+			List<Validator> validators) throws Exception{
 		switch(executorType) {
 		case MULTITHREADED:
 			MultiThreadedContext mtcontext = new MultiThreadedContext(parallelThreads,
 					chaser,
-					dbConn,
-					estimator,
+					connection,
+					costEstimator,
 					successDominance,
 					dominance,
-					validators, 
-					reasoningParameters);
+					validators);
 			return new MultiThreadedExecutor(mtcontext);
 		default:
 			throw new java.lang.IllegalArgumentException();

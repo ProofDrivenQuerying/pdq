@@ -151,7 +151,6 @@ public class DAGOptimized extends DAGExplorer {
 					this.binaryConfigurationCreationThreads.createBinaryConfigurations(this.depth,
 							this.leftSideConfigurations,
 							this.equivalenceClasses.getConfigurations(),
-							this.accessibleQuery,
 							this.accessibleSchema.getInferredAccessibilityAxioms(),
 							this.bestConfiguration,
 							this.equivalenceClasses,

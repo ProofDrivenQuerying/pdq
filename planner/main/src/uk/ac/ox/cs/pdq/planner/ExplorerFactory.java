@@ -133,7 +133,7 @@ public class ExplorerFactory {
 					costEstimator,
 					successDominance,
 					dominance,
-					validators,reasoningParameters);
+					validators);
 
 			executor1 = IterativeExecutorFactory.createIterativeExecutor(
 					parameters.getIterativeExecutorType(),
@@ -143,7 +143,7 @@ public class ExplorerFactory {
 					costEstimator,
 					successDominance,
 					dominance,
-					validators,reasoningParameters);
+					validators);
 		}
 
 		switch(parameters.getPlannerType()) {

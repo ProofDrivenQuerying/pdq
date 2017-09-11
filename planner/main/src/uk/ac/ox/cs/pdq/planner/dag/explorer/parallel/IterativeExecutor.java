@@ -65,7 +65,6 @@ public abstract class IterativeExecutor {
 			int depth,
 			Queue<DAGChaseConfiguration> leftSideConfigurations,
 			Collection<DAGChaseConfiguration> rightSideConfigurations,
-			ConjunctiveQuery query,
 			Dependency[] dependencies,
 			DAGChaseConfiguration best,
 			DAGEquivalenceClasses equivalenceClasses, 
