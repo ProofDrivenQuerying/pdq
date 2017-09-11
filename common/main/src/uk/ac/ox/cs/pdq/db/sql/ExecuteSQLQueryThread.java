@@ -74,12 +74,7 @@ public class ExecuteSQLQueryThread implements Callable<List<Match>> {
 				if (databaseName!=null) {
 					sqlStatement.execute("USE " + databaseName+";\n");
 				}
-				if (query.contains("Eiffel" )) {
-					System.out.println();
-				}
 				ResultSet resultSet = sqlStatement.executeQuery(query);
-				
-							
 				try {
 					while (resultSet.next()) {
 						int f = 1;
