@@ -46,7 +46,8 @@ public class TestAccessibleSchema {
 	protected Relation T;
     
 	/**
-	 * Setup.
+	 * Create a schema, then make a call to create its accessible version
+	 * and then test if the accessible version is what it should be
 	 */
 	@Before public void setup() {
 		Utility.assertsEnabled();
