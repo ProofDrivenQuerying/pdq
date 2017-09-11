@@ -59,7 +59,6 @@ import uk.ac.ox.cs.pdq.util.LimitReachedException;
 /**
  * 
  * @author Efthymia Tsamoura
- * @author Gabor
  */
 public class TestMultiThreadedExecutor {
 

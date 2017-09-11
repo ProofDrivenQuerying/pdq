@@ -53,7 +53,6 @@ import uk.ac.ox.cs.pdq.util.LimitReachedException;
  * Tests the TestLinearOptimized explorer class.
  * 
  * @author Efthymia Tsamoura
- * @author Gabor
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestLinearOptimized {
