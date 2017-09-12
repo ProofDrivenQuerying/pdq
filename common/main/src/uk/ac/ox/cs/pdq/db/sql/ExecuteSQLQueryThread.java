@@ -55,7 +55,8 @@ public class ExecuteSQLQueryThread implements Callable<List<Match>> {
 	}
 	
 	/**
-	 *TOCOMMMENT: WHAT DOES IT DO!!
+	 * Takes one query from the pool and executes it.
+	 * 
 	 * @return Boolean
 	 * @see java.util.concurrent.Callable#call()
 	 */
@@ -70,7 +71,6 @@ public class ExecuteSQLQueryThread implements Callable<List<Match>> {
 				Formula source = entry.getLeft();
 				query = entry.getMiddle();
 				LinkedHashMap<String, Variable> projectedVariables = entry.getRight();
-				//connection.createStatement().execute("USE " + databaseName+";\n");
 				if (databaseName!=null) {
 					sqlStatement.execute("USE " + databaseName+";\n");
 				}
