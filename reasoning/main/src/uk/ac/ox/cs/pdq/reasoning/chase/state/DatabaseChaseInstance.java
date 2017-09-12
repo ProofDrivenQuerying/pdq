@@ -461,7 +461,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 //	}
 
 	/* (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.reasoning.chase.state.ListState#addFacts(java.util.Collection)
+	 * add the input set of facts to the database 
 	 */
 	@Override
 	public void addFacts(Collection<Atom> facts) {
@@ -469,12 +469,17 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 			LinkedHashSet<Atom> newFacts = new LinkedHashSet<Atom>();
 			LinkedHashSet<Atom> factsToAddToTheDatabase = new LinkedHashSet<Atom>();
 			newFacts.addAll(this.facts);
+/* copy existing facts */
 			for (Atom fact: facts) {
+/* loop through input facts , checking if they overlap existing ones 
+ * TODO: THIS SHOULD EVENTUALLY BE AN ADDITIONAL CHECK SINCE THE DB SHOULD CHECK UNIQUENESS AND DISCARD DUPLIACATES
+ */
 				if (!newFacts.contains(fact)) {
 					factsToAddToTheDatabase.add(fact);
 				}
 			}
 			newFacts.addAll(factsToAddToTheDatabase);
+/* The actual adding of the facts to the db */
 			super.addFacts(extendFactsUsingInstanceID(factsToAddToTheDatabase));
 			this.facts = newFacts;
 		}catch(Throwable t) {
