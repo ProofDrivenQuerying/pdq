@@ -3,8 +3,12 @@ package uk.ac.ox.cs.pdq.test.planner.dag.explorer;
 import static org.mockito.Mockito.when;
 
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -30,9 +34,10 @@ import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
 import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 
 /**
+ * Tests the DAGExplorerUtilities.createInitialApplyRuleConfigurations function over a simple case.
  * 
  * @author Efthymia Tsamoura
- *
+ * @author Gabor
  */
 public class TestDAGExplorerUtilities {
 
@@ -77,13 +82,10 @@ public class TestDAGExplorerUtilities {
 		
 		//Create schema
 		Schema schema = new Schema(relations);
-		//TODO add all constants 
+		schema.addConstants(Arrays.asList(new TypedConstant[] {TypedConstant.create(1),TypedConstant.create(2)} ));
 		
 		//Create accessible schema
 		AccessibleSchema accessibleSchema = new AccessibleSchema(schema);
-		
-		//TODO assert that the accessible schema is fine
-		
 		//Create accessible query
 		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(query, query.getSubstitutionOfFreeVariablesToCanonicalConstants());
 	
@@ -93,6 +95,7 @@ public class TestDAGExplorerUtilities {
 			connection = new DatabaseConnection(new DatabaseParameters(), accessibleSchema);
 		} catch (SQLException e) {
 			e.printStackTrace();
+			Assert.fail();
 		}
 		
 		//Create the chaser 
@@ -105,11 +108,21 @@ public class TestDAGExplorerUtilities {
 		
 		try {
 			List<DAGChaseConfiguration> configurations = DAGExplorerUtilities.createInitialApplyRuleConfigurations(parameters, query, accessibleQuery, accessibleSchema, chaser, connection);
-			//TODO assert that we got the right configurations 
+			Set<DAGChaseConfiguration> uniqueConfigs = new HashSet<>();
+			int index = 0;
+			String predicateNames[] = new String[] {"R0","R0","R1","R1","R2","R3",}; 
+			for (DAGChaseConfiguration conf: configurations) {
+				System.out.println(conf);
+				uniqueConfigs.add(conf);
+				Assert.assertTrue(conf.getApplyRules().toString().contains(predicateNames[index]));
+				index++;
+			}
+			Assert.assertEquals(6, uniqueConfigs.size());
+			Assert.assertEquals(6, configurations.size());
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			Assert.fail();
 		}
 		
 		
