@@ -208,9 +208,7 @@ public class DAGGeneric extends DAGExplorer {
 		while ((pair = this.selector.getNextPairOfConfigurationsToCompose(this.depth)) != null) {
 			if(!last.containsKey(pair)) {
 				//Create a new binary configuration
-				BinaryConfiguration configuration = new BinaryConfiguration(
-						pair.getLeft(),
-						pair.getRight());
+				BinaryConfiguration configuration = new BinaryConfiguration(pair.getLeft(), pair.getRight());
 				Cost cost = this.costEstimator.cost(configuration.getPlan());
 				configuration.setCost(cost);
 				configuration.reasonUntilTermination(this.chaser, this.accessibleQuery, this.accessibleSchema.getInferredAccessibilityAxioms());
