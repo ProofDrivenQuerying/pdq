@@ -38,6 +38,7 @@ import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.FollowUpHandling;
+import uk.ac.ox.cs.pdq.planner.PlannerParameters.SuccessDominanceTypes;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.dag.ApplyRule;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
@@ -50,6 +51,7 @@ import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.DefaultValidator;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator;
 import uk.ac.ox.cs.pdq.planner.dominance.Dominance;
 import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominance;
+import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominanceFactory;
 import uk.ac.ox.cs.pdq.planner.reasoning.Configuration;
 import uk.ac.ox.cs.pdq.planner.util.PlannerUtility;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
@@ -118,6 +120,7 @@ public class TestMultiThreadedExecutor {
 			connection = new DatabaseConnection(new DatabaseParameters(), accessibleSchema);
 		} catch (SQLException e) {
 			e.printStackTrace();
+			Assert.fail();
 		}
 
 		//Create the chaser 
@@ -132,15 +135,18 @@ public class TestMultiThreadedExecutor {
 		// Mock the cost estimator
 		CostEstimator costEstimator = Mockito.mock(CostEstimator.class);
 		when(costEstimator.cost(Mockito.any(RelationalTerm.class))).thenReturn(new DoubleCost(1.0));
+		when(costEstimator.clone()).thenReturn(costEstimator);
 
 		//Mock success domination
-		SuccessDominance successDominance = Mockito.mock(SuccessDominance.class);
-		when(successDominance.isDominated(Mockito.any(RelationalTerm.class), Mockito.any(Cost.class), Mockito.any(RelationalTerm.class), Mockito.any(Cost.class)))
-				.thenReturn(false);
+//		SuccessDominance successDominance = Mockito.mock(SuccessDominance.class);
+		SuccessDominance successDominance = new SuccessDominanceFactory(SuccessDominanceTypes.CLOSED).getInstance();
+//		when(successDominance.isDominated(Mockito.any(RelationalTerm.class), Mockito.any(Cost.class), Mockito.any(RelationalTerm.class), Mockito.any(Cost.class)))
+//				.thenReturn(false);
 		
 		//Mock domination
 		Dominance dominance = Mockito.mock(Dominance.class);
 		when(dominance.isDominated(Mockito.any(Configuration.class), Mockito.any(Configuration.class))).thenReturn(false);
+		when(dominance.clone()).thenReturn(dominance);
 
 		//Create validators
 		List<Validator> validators = new ArrayList<>();
@@ -158,8 +164,8 @@ public class TestMultiThreadedExecutor {
 					new Dominance[]{dominance},
 					validators);
 		} catch (Exception e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
+			Assert.fail();
 		}
 		MultiThreadedExecutor executor = new MultiThreadedExecutor(mtcontext);
 		
@@ -194,18 +200,46 @@ public class TestMultiThreadedExecutor {
 						true, 
 						Long.MAX_VALUE, 
 						TimeUnit.MILLISECONDS);
+				leftSideConfigurations.clear();
+				leftSideConfigurations.addAll(newConfigurations);
+				for(DAGChaseConfiguration configuration: newConfigurations) {
+					equivalenceClasses.addEntry(configuration);
+				}
+				Assert.assertEquals(12, newConfigurations.size());
+				
+				newConfigurations = executor.createBinaryConfigurations(
+						3, 
+						leftSideConfigurations, 
+						equivalenceClasses.getConfigurations(), 
+						new Dependency[]{}, 
+						null, 
+						equivalenceClasses, 
+						true, 
+						Long.MAX_VALUE, 
+						TimeUnit.MILLISECONDS);
+
+				Assert.assertEquals(48, newConfigurations.size());
+				leftSideConfigurations.clear();
+				leftSideConfigurations.addAll(newConfigurations);
+				for(DAGChaseConfiguration configuration: newConfigurations) {
+					equivalenceClasses.addEntry(configuration);
+				}
+				newConfigurations = executor.createBinaryConfigurations(
+						4, 
+						leftSideConfigurations, 
+						equivalenceClasses.getConfigurations(), 
+						new Dependency[]{}, 
+						null, 
+						equivalenceClasses, 
+						true, 
+						Long.MAX_VALUE, 
+						TimeUnit.MILLISECONDS);
+				
+				Assert.assertEquals(96, newConfigurations.size());
 			} catch (PlannerException | LimitReachedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
+				Assert.fail();
 			}
-			
-			leftSideConfigurations.clear();
-			leftSideConfigurations.addAll(newConfigurations);
-			
-			//TODO call the executor two more times, one with depth 3 and one with 4
-			//TODO the left hand side configurations should be the outputs of the previous step
-			//TODO at each step assert that we have the right number of equivalence classes
-			//TODO at each step assert that we get the right number of output configurations 
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -265,11 +299,15 @@ public class TestMultiThreadedExecutor {
 		// Mock the cost estimator
 		CostEstimator costEstimator = Mockito.mock(CostEstimator.class);
 		when(costEstimator.cost(Mockito.any(RelationalTerm.class))).thenReturn(new DoubleCost(1.0));
+		when(costEstimator.clone()).thenReturn(costEstimator);
+		
 
 		//Mock success domination
 		SuccessDominance successDominance = Mockito.mock(SuccessDominance.class);
 		when(successDominance.isDominated(Mockito.any(RelationalTerm.class), Mockito.any(Cost.class), Mockito.any(RelationalTerm.class), Mockito.any(Cost.class)))
 				.thenReturn(false);
+		//SuccessDominance successDominance = new SuccessDominanceFactory(SuccessDominanceTypes.CLOSED).getInstance();
+		when(successDominance.clone()).thenReturn(successDominance);
 		
 		//Mock domination
 		Dominance dominance = Mockito.mock(Dominance.class);
@@ -291,8 +329,8 @@ public class TestMultiThreadedExecutor {
 					new Dominance[]{dominance},
 					validators);
 		} catch (Exception e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
+			Assert.fail();
 		}
 		MultiThreadedExecutor executor = new MultiThreadedExecutor(mtcontext);
 		
@@ -302,11 +340,12 @@ public class TestMultiThreadedExecutor {
 			for (DAGChaseConfiguration c: configurations) {
 				for (ApplyRule app: c.getApplyRules()) {
 					String predicateName = app.getRelation().getName();
-					Assert.assertTrue(!predicateNames.contains(predicateName));
+					if (!predicateName.equals("R1")) // R1 has two access methods, so it will not be unique.
+							Assert.assertTrue(!predicateNames.contains(predicateName));
 					predicateNames.add(predicateName);
 				}
 			}
-			Assert.assertEquals(4,predicateNames.size());
+			Assert.assertEquals(3,predicateNames.size());
 			
 			Queue<DAGChaseConfiguration> leftSideConfigurations = new ConcurrentLinkedQueue<>();
 			DAGEquivalenceClasses equivalenceClasses = new SynchronizedEquivalenceClasses();
@@ -317,28 +356,36 @@ public class TestMultiThreadedExecutor {
 			
 			Collection<DAGChaseConfiguration> newConfigurations = null;
 			try {
-				newConfigurations = executor.createBinaryConfigurations(
-						2, 
-						leftSideConfigurations, 
-						equivalenceClasses.getConfigurations(), 
-						new Dependency[]{}, 
-						null, 
-						equivalenceClasses, 
-						true, 
-						Long.MAX_VALUE, 
-						TimeUnit.MILLISECONDS);
+				
+				//round 1 
+				newConfigurations = executor.createBinaryConfigurations(2, leftSideConfigurations, equivalenceClasses.getConfigurations(), new Dependency[] {}, null,
+						equivalenceClasses, true, Long.MAX_VALUE, TimeUnit.MILLISECONDS);
+
+				Assert.assertEquals(10, newConfigurations.size());
+				
+				//round 2 
+				leftSideConfigurations.clear();
+				leftSideConfigurations.addAll(newConfigurations);
+				for (DAGChaseConfiguration configuration : newConfigurations) {
+					equivalenceClasses.addEntry(configuration);
+				}
+				newConfigurations = executor.createBinaryConfigurations(3, leftSideConfigurations, equivalenceClasses.getConfigurations(), new Dependency[] {}, null,
+						equivalenceClasses, true, Long.MAX_VALUE, TimeUnit.MILLISECONDS);
+				Assert.assertEquals(24, newConfigurations.size());
+				
+				//round 3 
+				leftSideConfigurations.clear();
+				leftSideConfigurations.addAll(newConfigurations);
+				for (DAGChaseConfiguration configuration : newConfigurations) {
+					equivalenceClasses.addEntry(configuration);
+				}
+				newConfigurations = executor.createBinaryConfigurations(4, leftSideConfigurations, equivalenceClasses.getConfigurations(), new Dependency[] {}, null,
+						equivalenceClasses, true, Long.MAX_VALUE, TimeUnit.MILLISECONDS);
+				Assert.assertEquals(0, newConfigurations.size());
 			} catch (PlannerException | LimitReachedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
+				Assert.fail();
 			}
-			
-			leftSideConfigurations.clear();
-			leftSideConfigurations.addAll(newConfigurations);
-			
-			//TODO call the executor one more times, with depth 3
-			//TODO the left hand side configurations should be the outputs of the previous step
-			//TODO at each step assert that we have the right number of equivalence classes
-			//TODO at each step assert that we get the right number of output configurations 
 			
 		} catch (SQLException e) {
 			e.printStackTrace();

@@ -11,7 +11,7 @@ import uk.ac.ox.cs.pdq.cost.Cost;
  * @author Efthymia Tsamoura
  * @author Julien Leblay
  */
-public interface CostEstimator {
+public interface CostEstimator extends Cloneable {
 	
 	/**
 	 * Estimates and sets the cost of the input plan.

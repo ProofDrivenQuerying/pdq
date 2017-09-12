@@ -194,7 +194,7 @@ public class CreateBinaryConfigurationsThread implements Callable<Boolean> {
 			Preconditions.checkState(!equivalenceClasses.getEquivalenceClass(configuration).isEmpty());
 			if(!equivalenceClasses.getEquivalenceClass(configuration).isSleeping() &&
 					ConfigurationUtility.validate(left, configuration, this.validators, depth) &&
-					ConfigurationUtility.getPotential(left, configuration, this.best == null ? null : this.best.getPlan(), this.best.getCost(), this.costEstimator, this.successDominance)
+					ConfigurationUtility.getPotential(left, configuration, this.best == null ? null : this.best.getPlan(), this.best == null ? null : this.best.getCost(), this.costEstimator, this.successDominance)
 					)
 				selected.add(configuration);
 		}

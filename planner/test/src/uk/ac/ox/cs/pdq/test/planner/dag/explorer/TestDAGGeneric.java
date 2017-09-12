@@ -48,6 +48,7 @@ import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 import uk.ac.ox.cs.pdq.util.LimitReachedException;
 
 /**
+ * Tests the DAG generic class. Makes sure we have all possible plans explored.
  * 
  * @author Efthymia Tsamoura
  * @author Gabor
