@@ -59,6 +59,7 @@ public class TestDAGGeneric {
 	protected Attribute c = Attribute.create(Integer.class, "c");
 	protected Attribute d = Attribute.create(Integer.class, "d");
 	protected Attribute InstanceID = Attribute.create(Integer.class, "InstanceID");
+	private final boolean printPlans = false;
 
 	@Test
 	public void test1() {
@@ -105,7 +106,20 @@ public class TestDAGGeneric {
 		// Create database connection
 		DatabaseConnection connection = null;
 		try {
-			connection = new DatabaseConnection(new DatabaseParameters(), accessibleSchema);
+			DatabaseParameters mySqlDbParam = new DatabaseParameters();
+			mySqlDbParam.setConnectionUrl("jdbc:mysql://localhost/");
+			mySqlDbParam.setDatabaseDriver("com.mysql.jdbc.Driver");
+			mySqlDbParam.setDatabaseName("test_get_triggers");
+			mySqlDbParam.setDatabaseUser("root");
+			mySqlDbParam.setDatabasePassword("root");
+			DatabaseParameters postgresDbParam = new DatabaseParameters();
+			postgresDbParam.setConnectionUrl("jdbc:postgresql://localhost/");
+			postgresDbParam.setDatabaseDriver("org.postgresql.Driver");
+			postgresDbParam.setDatabaseName("test_get_triggers");
+			postgresDbParam.setDatabaseUser("postgres");
+			postgresDbParam.setDatabasePassword("root");
+			
+			connection = new DatabaseConnection(mySqlDbParam, accessibleSchema);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			Assert.fail();
@@ -140,16 +154,23 @@ public class TestDAGGeneric {
 			List<Entry<RelationalTerm, Cost>> exploredPlans = explorer.getExploredPlans();
 			Assert.assertNotNull(exploredPlans);
 			Assert.assertFalse(exploredPlans.isEmpty());
-			Assert.assertEquals(1, exploredPlans.size());
+			Assert.assertEquals(24, exploredPlans.size());
+			boolean topIsAlwaysDependentJoin = true;
 			for (Entry<RelationalTerm, Cost> plan: exploredPlans) {
 				try {
-					PlanPrinter.openPngPlan(plan.getKey());
+					if (printPlans) PlanPrinter.openPngPlan(plan.getKey());
 				} catch(Throwable t) {
 					t.printStackTrace();
+				}
+				if (!(plan.getKey() instanceof DependentJoinTerm)) {
+					topIsAlwaysDependentJoin = false;
 				}
 				int dependentJoints = countDependentJoinsInPlan(plan.getKey());
 				Assert.assertTrue(dependentJoints >= 1); // each plan must contain at least one dependent join term.
 			}
+			
+			// left deep and right deep plans have dependent join on top. This makes sure at least one of them is not like that.
+			Assert.assertFalse(topIsAlwaysDependentJoin); 
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -246,7 +267,14 @@ public class TestDAGGeneric {
 		// Create database connection
 		DatabaseConnection databaseConnection = null;
 		try {
-			databaseConnection = new DatabaseConnection(new DatabaseParameters(), accessibleSchema);
+			DatabaseParameters mySqlDbParam = new DatabaseParameters();
+			mySqlDbParam.setConnectionUrl("jdbc:mysql://localhost/");
+			mySqlDbParam.setDatabaseDriver("com.mysql.jdbc.Driver");
+			mySqlDbParam.setDatabaseName("test_get_triggers");
+			mySqlDbParam.setDatabaseUser("root");
+			mySqlDbParam.setDatabasePassword("root");
+			
+			databaseConnection = new DatabaseConnection(mySqlDbParam, accessibleSchema);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			Assert.fail();
@@ -283,7 +311,7 @@ public class TestDAGGeneric {
 			List<Entry<RelationalTerm, Cost>> exploredPlans = explorer.getExploredPlans();
 			Assert.assertNotNull(exploredPlans);
 			Assert.assertFalse(exploredPlans.isEmpty());
-			Assert.assertEquals(3, exploredPlans.size());
+			Assert.assertEquals(8, exploredPlans.size());
 		} catch (PlannerException | SQLException e) {
 			e.printStackTrace();
 			Assert.fail();
