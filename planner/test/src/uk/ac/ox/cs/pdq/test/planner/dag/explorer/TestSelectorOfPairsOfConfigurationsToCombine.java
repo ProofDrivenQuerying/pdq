@@ -296,7 +296,6 @@ public class TestSelectorOfPairsOfConfigurationsToCombine {
 					BinaryConfiguration configuration = new BinaryConfiguration(pair.getLeft(), pair.getRight());
 					last.add(configuration);
 				}
-				System.out.println("last size: " + last.size());
 				Assert.assertEquals(CORRECT_NUMBER_OF_PLANS[depth - 2], last.size());
 				if (last.size() == 0)
 					break;

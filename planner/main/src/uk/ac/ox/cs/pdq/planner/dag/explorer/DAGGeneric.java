@@ -39,7 +39,7 @@ import uk.ac.ox.cs.pdq.util.LimitReachedException;
  * Simple dag explorer. It searches the space of binary configurations exhaustively
  *
  * @author Efthymia Tsamoura
- *
+ * @author Gabor
  */
 public class DAGGeneric extends DAGExplorer {
 
@@ -172,8 +172,17 @@ public class DAGGeneric extends DAGExplorer {
 				last.removeAll(toDelete);
 			}
 
-			this.leftSideConfigurations.clear();
 			this.leftSideConfigurations.addAll(last);
+			if (this.depth+1 > 3) {
+				// in cases when depth is 4 or more we have multiple options to generate a plan with such a depth.
+				// for example depth = 4 can be achieved by adding 3+1 or 2+2 or 1+3. 
+				// The left side already contains plans with 1 and 2 and 3 depth, we have to make sure the right side also contains combinations up to half-depth.
+				for (DAGChaseConfiguration config:leftSideConfigurations) {
+					if (config.getHeight() <= (depth+1)/2.0 && !rightSideConfigurations.contains(config)) {
+						rightSideConfigurations.add(config);
+					}
+				}
+			}
 			this.selector = new SelectorOfPairsOfConfigurationsToCombine<>(this.leftSideConfigurations, this.rightSideConfigurations, this.validators);
 
 			this.stats.set(CONFIGURATIONS, this.rightSideConfigurations.size());

@@ -154,7 +154,7 @@ public class TestDAGGeneric {
 			List<Entry<RelationalTerm, Cost>> exploredPlans = explorer.getExploredPlans();
 			Assert.assertNotNull(exploredPlans);
 			Assert.assertFalse(exploredPlans.isEmpty());
-			Assert.assertEquals(24, exploredPlans.size());
+			Assert.assertEquals(30, exploredPlans.size());
 			boolean topIsAlwaysDependentJoin = true;
 			for (Entry<RelationalTerm, Cost> plan: exploredPlans) {
 				try {
