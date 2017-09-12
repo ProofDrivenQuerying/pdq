@@ -58,9 +58,11 @@ import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
 import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 import uk.ac.ox.cs.pdq.util.LimitReachedException;
 
-/**
+/** 
+ * Tests the MultiThreadedExecutor class by using it mostly with Mock objects and a simple example schema.
  * 
  * @author Efthymia Tsamoura
+ * @author Gabor
  */
 public class TestMultiThreadedExecutor {
 
