@@ -247,7 +247,29 @@ public class DependentJoinTest {
 //			Assert.assertArrayEquals(new Integer[] {10, 11, 12, 9, 10, 11, 13}, x.getValues());
 
 	}
+	
+	@Test
+	public void test3() {
+
+		// Free access on relation R1.
+		Access relation1Free = new Access(relation1, am1);
 		
+		// Access on relation R2 that requires inputs on first position.
+		// Suppose that a user already specified the typed constant "100" to access it 
+		Map<Integer, TypedConstant> inputConstants1 = new HashMap<>();
+		inputConstants1.put(0, TypedConstant.create(100));
+		
+		// Note that it is the access method am2 that specifies that relation2 requires 
+		// input(s) on the first position (i.e. position 0). The inputConstants1 map contains
+		// the TypedConstant that provides that input.
+		Access relation2InputonFirst = new Access(relation2, am2, inputConstants1);
+
+		// A dependent join plan that takes the outputs of the first access and feeds them to the 
+		// first input position (i.e. position 0) of the second accessed relation. 
+		DependentJoin target = new DependentJoin(relation1Free, relation2InputonFirst);
+		//TODO assert that this is not a valid depenent join plan
+	}
+	
 	/// TODO:  
 	
 //	//A dependent join plan that takes the outputs of the first access and feeds them to the first input position of 
