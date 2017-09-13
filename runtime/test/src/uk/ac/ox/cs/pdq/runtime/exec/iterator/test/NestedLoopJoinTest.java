@@ -268,7 +268,7 @@ public class NestedLoopJoinTest {
 			tuples2.add(tt2.createTuple((Object[]) Arrays.copyOf(values, values.length)));
 		}
 		Collection<Tuple> tuples3 = new ArrayList<Tuple>();
-		int M = 200;
+		int M = 33;
 		for (int i = 0; i != M; i++) {
 			Integer[] values = ((i % 3) == 0) ? values3 : values4;
 			tuples3.add(tt3.createTuple((Object[]) Arrays.copyOf(values, values.length)));
@@ -288,9 +288,9 @@ public class NestedLoopJoinTest {
 
 		// Check that the result tuples are the ones expected. 
 		// Here the join condition is only satisfied between values1 and values3.
-		// values1 appears 50 times in relation2 and values3 appears 67 times in relation 3.
+		// values1 appears N/2 times in relation2 and values3 appears M/3 times in relation 3.
 		Assert.assertNotNull(result);
-		Assert.assertEquals(50*67, result.size());
+		Assert.assertEquals((N/2)*(M/3), result.size());
 		
 		// Note that the result tuples contain the tuple from the right appended onto the tuple from the left.
 		for (Tuple x:result.getData())

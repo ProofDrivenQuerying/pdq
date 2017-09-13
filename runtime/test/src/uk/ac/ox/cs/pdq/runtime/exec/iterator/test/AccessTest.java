@@ -56,6 +56,61 @@ public class AccessTest {
 			Attribute.create(Integer.class, "d"), Attribute.create(Integer.class, "e")},
 			new AccessMethod[] {am1, am2, am3});
 	
+	@SuppressWarnings("resource")
+	@Test
+	public void testAccess() {
+
+		/*
+		 * Free access on relation R1 
+		 */
+		
+		// Construct an Access instance by providing consistent access method & input constants 
+		// (in this case free access, i.e. no input constants).
+		Access target = new Access(relation1, am1);
+		Assert.assertNotNull(target);
+		
+		// Note that the Access constructor may be called with an access method not found in the relation.
+		// TODO: - include an integration test for this case (below). 
+		// 		 - Q: given that this construction works, what is the purpose of the "AccessMethod[] methods" 
+		// 			  argument to the InMemoryTableWrapper constructor? 
+		target = new Access(relation1, am2);
+		Assert.assertNotNull(target);
+
+		/*
+		 * Access on relation R2 that requires inputs on first position.
+		 */
+		
+		// Suppose that a user already specified the typed constant "100" to access it 
+		Map<Integer, TypedConstant> inputConstants = new HashMap<>();
+		inputConstants.put(0, TypedConstant.create(100));
+		
+		// Construct an Access instance by providing consistent access method & input constants.
+		target = new Access(relation2, am2, inputConstants);
+		Assert.assertNotNull(target);
+		
+		// An exception is thrown if the input constants map is inconsistent with the access method.
+		boolean caught = false; 
+		try {
+			new Access(relation2, am1, inputConstants);
+		} catch (IllegalArgumentException e) {
+			caught = true;
+		}
+		Assert.assertTrue(caught);
+
+		// An exception is thrown if the input constants map is inconsistent with the access method.
+		inputConstants = new HashMap<>();
+		inputConstants.put(1, TypedConstant.create(100));
+		caught = false; 
+		try {
+			new Access(relation2, am1, inputConstants);
+		} catch (IllegalArgumentException e) {
+			caught = true;
+		}
+		Assert.assertTrue(caught);
+
+		
+	}
+	
 	/*
 	 * The following are integration tests: Access instances are constructed and executed.
 	 */
@@ -83,7 +138,9 @@ public class AccessTest {
 		/*
 		 * Free access on relation R1
 		 */
-		Access target = new Access(relation1, am1);
+		// Construct an Access instance by providing consistent access method & input constants 
+		// (in this case free access, i.e. no input constants).
+		 Access target = new Access(relation1, am1);
 		
 		// Create some tuples
 		Integer[] values = new Integer[] {10, 11, 12};
