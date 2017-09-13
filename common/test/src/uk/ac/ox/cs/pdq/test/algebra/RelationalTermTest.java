@@ -377,6 +377,40 @@ public class RelationalTermTest {
 		Assert.assertTrue(plan1.getChildren()[0] instanceof AccessTerm);
 		Assert.assertTrue(plan1.getChildren()[1] instanceof AccessTerm);
 	}
+	
+	@Test public void test8() {
+		
+		AccessMethod am1 = AccessMethod.create("access_method1",new Integer[] {});
+		AccessMethod am2 = AccessMethod.create("access_method2",new Integer[] {0});
+		AccessMethod am3 = AccessMethod.create("access_method2",new Integer[] {0,1});
+		
+		Relation relation1 = Relation.create("R1", new Attribute[] {Attribute.create(Integer.class, "a"),
+				Attribute.create(Integer.class, "b"), Attribute.create(Integer.class, "c")},
+				new AccessMethod[] {am1});
+		Relation relation2 = Relation.create("R2", new Attribute[] {Attribute.create(Integer.class, "c"),
+				Attribute.create(Integer.class, "d"), Attribute.create(Integer.class, "e")},
+				new AccessMethod[] {am1, am2, am3});
+		
+		// Free access on relation R1.
+		AccessTerm relation1Free = AccessTerm.create(relation1, am1);
+		
+		// Access on relation R2 that requires inputs on first position.
+		// Suppose that a user already specified the typed constant "100" to access it 
+		Map<Integer, TypedConstant> inputConstants1 = new HashMap<>();
+		inputConstants1.put(0, TypedConstant.create(100));
+		
+		// Note that it is the access method am2 that specifies that relation2 requires 
+		// input(s) on the first position (i.e. position 0). The inputConstants1 map contains
+		// the TypedConstant that provides that input.
+		AccessTerm relation2InputonFirst = AccessTerm.create(relation2, am2, inputConstants1);
+
+		// A dependent join plan that takes the outputs of the first access and feeds them to the 
+		// first input position (i.e. position 0) of the second accessed relation. 
+		DependentJoinTerm target = DependentJoinTerm.create(relation1Free, relation2InputonFirst);
+		
+		//TODO assert that target is not a valid depedent join plan
+		Assert.assertTrue(false);
+	}
 
 
 }
