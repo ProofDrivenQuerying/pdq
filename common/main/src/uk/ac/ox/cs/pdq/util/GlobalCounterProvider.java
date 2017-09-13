@@ -21,7 +21,7 @@ public class GlobalCounterProvider {
 	 * @param key
 	 * @return
 	 */
-	public static int getNext(String key) {
+	public static synchronized int getNext(String key) {
 		Integer current = counters.get(key);
 		if (current==null) {
 			counters.put(key,0);
@@ -36,11 +36,11 @@ public class GlobalCounterProvider {
 	 * @param key
 	 * @return
 	 */
-	public static Integer getCurrent(String key) {
+	public static synchronized Integer getCurrent(String key) {
 		return counters.get(key);
 	}
 	
-	public static void resetCounters() {
+	public static synchronized void resetCounters() {
 		counters.clear();
 	}
 

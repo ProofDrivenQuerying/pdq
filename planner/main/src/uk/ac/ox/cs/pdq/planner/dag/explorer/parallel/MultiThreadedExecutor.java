@@ -3,6 +3,7 @@ package uk.ac.ox.cs.pdq.planner.dag.explorer.parallel;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
@@ -16,20 +17,18 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-import uk.ac.ox.cs.pdq.fol.Dependency;
-
 import org.apache.commons.lang3.tuple.Pair;
 
+import com.google.common.collect.Lists;
+
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.dag.equivalence.DAGEquivalenceClasses;
 import uk.ac.ox.cs.pdq.planner.dag.equivalence.SynchronizedEquivalenceClasses;
 import uk.ac.ox.cs.pdq.util.LimitReachedException;
 import uk.ac.ox.cs.pdq.util.LimitReachedException.Reasons;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -96,15 +95,17 @@ public class MultiThreadedExecutor extends IterativeExecutor {
 		//then we copy the state of c to the state of c' = BinConfiguration(c'_1,c'_2).
 		MapOfPairsOfConfigurationsToTheEquivalentBinaryConfiguration representatives = new MapOfPairsOfConfigurationsToTheEquivalentBinaryConfiguration();
 		//The output configurations
-		Map<Pair<DAGChaseConfiguration,DAGChaseConfiguration>,DAGChaseConfiguration> output = new ConcurrentHashMap<>();
+		Map<Pair<DAGChaseConfiguration,DAGChaseConfiguration>,DAGChaseConfiguration> output = new HashMap<>();
+		Map<Pair<DAGChaseConfiguration,DAGChaseConfiguration>,DAGChaseConfiguration> output2 = new HashMap<>();
 		
-		Collection<DAGChaseConfiguration> copy = Sets.newLinkedHashSet(leftSideConfigurations);
-
+		Collection<DAGChaseConfiguration> copy = new ConcurrentLinkedQueue<>();
+		copy.addAll(leftSideConfigurations);
 		try {
-			Queue<DAGChaseConfiguration> leftInput = leftSideConfigurations;
+			Queue<DAGChaseConfiguration> leftInput = new ConcurrentLinkedQueue<>();
+			leftInput.addAll(leftSideConfigurations);
 			Collection<DAGChaseConfiguration> rightInput = rightSideConfigurations;
+			List<CreateBinaryConfigurationsThread> threads = new ArrayList<>();
 			do {
-				List<Callable<Boolean>> threads = new ArrayList<>();
 				for(int j = 0; j < this.mtcontext.getParallelThreads(); ++j) {
 					//Create the threads that will create new binary configurations using the input left, right collections
 					threads.add(new CreateBinaryConfigurationsThread(
@@ -138,6 +139,9 @@ public class MultiThreadedExecutor extends IterativeExecutor {
 				}
 				executorService.shutdown();
 
+				for (CreateBinaryConfigurationsThread t:threads) {
+					if (t.getOutputs().size()>0) output2.putAll(t.getOutputs());
+				}
 				//If twoWay = TRUE create also configurations BinaryConfiguration(R,L), where R and L belong to the right and left
 				//input collections, respectively.
 				if(twoWay) {
@@ -151,7 +155,7 @@ public class MultiThreadedExecutor extends IterativeExecutor {
 					break;
 				}
 			} while(true);
-			return output.values();
+			return output2.values();
 
 		} catch (InterruptedException | ExecutionException e) {
 			executorService.shutdownNow();

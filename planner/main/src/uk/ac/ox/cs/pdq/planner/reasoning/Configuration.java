@@ -25,8 +25,6 @@ public interface Configuration extends Cloneable, Comparable<Configuration>{
 	 */
 	RelationalTerm getPlan();
 	
-	void setPlan(RelationalTerm plan);
-	
 	Cost getCost();
 	
 	void setCost(Cost cost);

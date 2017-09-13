@@ -1,15 +1,13 @@
 package uk.ac.ox.cs.pdq.planner.dag;
 
 import java.util.Collection;
-import java.util.Objects;
+
+import com.google.common.base.Preconditions;
 
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.planner.reasoning.Configuration;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration.ChaseConfiguration;
-import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
-
-import com.google.common.base.Preconditions;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -25,9 +23,6 @@ import com.google.common.base.Preconditions;
  *
  */
 public abstract class DAGChaseConfiguration extends ChaseConfiguration implements DAGConfiguration {
-
-	/** TOCOMMENT: WHY TWO IDS? . */
-	private final Integer id;
 
 	/**  TOCOMMENT: WHAT*/
 	private final Integer height;
@@ -60,7 +55,6 @@ public abstract class DAGChaseConfiguration extends ChaseConfiguration implement
 		super(state, input, output);
 		Preconditions.checkNotNull(this.getInput());
 		Preconditions.checkNotNull(this.getOutput());
-		this.id = GlobalCounterProvider.getNext("DAGChaseConfigurationID");
 		this.height = height;
 		this.bushiness = bushiness;
 	}
@@ -87,14 +81,6 @@ public abstract class DAGChaseConfiguration extends ChaseConfiguration implement
 		return this.bushiness;
 	}
 
-	/* (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.planner.dag.DAGConfiguration#getId()
-	 */
-	@Override
-	public Integer getId() {
-		return this.id;
-	}
-	
 	/* (non-Javadoc)
 	 * @see uk.ac.ox.cs.pdq.planner.dag.DAGConfiguration#getSubconfigurations()
 	 */
@@ -123,29 +109,6 @@ public abstract class DAGChaseConfiguration extends ChaseConfiguration implement
 	@Override
 	public int compareTo(Configuration o) {
 		return this.getCost().compareTo(o.getCost());
-	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null) {
-			return false;
-		}
-		return this.getClass().isInstance(o)
-				&& this.id.equals(((DAGChaseConfiguration) o).getId());
-	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode() {
-		return Objects.hash(this.id);
 	}
 
 }

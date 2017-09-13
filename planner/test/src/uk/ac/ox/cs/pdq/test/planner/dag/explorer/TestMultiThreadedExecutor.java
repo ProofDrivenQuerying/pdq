@@ -71,6 +71,8 @@ public class TestMultiThreadedExecutor {
 	protected Attribute c = Attribute.create(Integer.class, "c");
 	protected Attribute d = Attribute.create(Integer.class, "d");
 	protected Attribute InstanceID = Attribute.create(Integer.class, "InstanceID");
+	int parallelThreads = 20;
+	boolean twoWay = true;
 	
 	boolean printPlans=false;
 
@@ -155,7 +157,6 @@ public class TestMultiThreadedExecutor {
 		validators.add(new DefaultValidator());
 		
 		//Create a multitheaded executor
-		int parallelThreads = 20;
 		MultiThreadedContext mtcontext = null;
 		try {
 			mtcontext = new MultiThreadedContext(parallelThreads,
@@ -199,7 +200,7 @@ public class TestMultiThreadedExecutor {
 						new Dependency[]{}, 
 						null, 
 						equivalenceClasses, 
-						true, 
+						twoWay, 
 						Long.MAX_VALUE, 
 						TimeUnit.MILLISECONDS);
 				leftSideConfigurations.clear();
@@ -216,11 +217,14 @@ public class TestMultiThreadedExecutor {
 						new Dependency[]{}, 
 						null, 
 						equivalenceClasses, 
-						true, 
+						twoWay, 
 						Long.MAX_VALUE, 
 						TimeUnit.MILLISECONDS);
 
-				Assert.assertEquals(48, newConfigurations.size());
+				int excpected = 24;
+				if (twoWay)
+					excpected *= 2; 
+				Assert.assertEquals(excpected, newConfigurations.size());
 				leftSideConfigurations.clear();
 				leftSideConfigurations.addAll(newConfigurations);
 				for(DAGChaseConfiguration configuration: newConfigurations) {
@@ -233,11 +237,14 @@ public class TestMultiThreadedExecutor {
 						new Dependency[]{}, 
 						null, 
 						equivalenceClasses, 
-						true, 
+						twoWay, 
 						Long.MAX_VALUE, 
 						TimeUnit.MILLISECONDS);
 				
-				Assert.assertEquals(96, newConfigurations.size());
+				if (twoWay)
+					Assert.assertEquals(96, newConfigurations.size());
+				else 
+					Assert.assertEquals(24, newConfigurations.size());
 			} catch (PlannerException | LimitReachedException e) {
 				e.printStackTrace();
 				Assert.fail();
@@ -320,7 +327,6 @@ public class TestMultiThreadedExecutor {
 		validators.add(new DefaultValidator());
 		
 		//Create a multitheaded executor
-		int parallelThreads = 20;
 		MultiThreadedContext mtcontext = null;
 		try {
 			mtcontext = new MultiThreadedContext(parallelThreads,
@@ -361,7 +367,7 @@ public class TestMultiThreadedExecutor {
 				
 				//round 1 
 				newConfigurations = executor.createBinaryConfigurations(2, leftSideConfigurations, equivalenceClasses.getConfigurations(), new Dependency[] {}, null,
-						equivalenceClasses, true, Long.MAX_VALUE, TimeUnit.MILLISECONDS);
+						equivalenceClasses, twoWay, Long.MAX_VALUE, TimeUnit.MILLISECONDS);
 
 				Assert.assertEquals(10, newConfigurations.size());
 				
@@ -372,8 +378,12 @@ public class TestMultiThreadedExecutor {
 					equivalenceClasses.addEntry(configuration);
 				}
 				newConfigurations = executor.createBinaryConfigurations(3, leftSideConfigurations, equivalenceClasses.getConfigurations(), new Dependency[] {}, null,
-						equivalenceClasses, true, Long.MAX_VALUE, TimeUnit.MILLISECONDS);
-				Assert.assertEquals(24, newConfigurations.size());
+						equivalenceClasses, twoWay, Long.MAX_VALUE, TimeUnit.MILLISECONDS);
+				int excpected = 12;
+				if (twoWay)
+					excpected *= 2; 
+				
+				Assert.assertEquals(excpected, newConfigurations.size());
 				
 				//round 3 
 				leftSideConfigurations.clear();
@@ -382,7 +392,7 @@ public class TestMultiThreadedExecutor {
 					equivalenceClasses.addEntry(configuration);
 				}
 				newConfigurations = executor.createBinaryConfigurations(4, leftSideConfigurations, equivalenceClasses.getConfigurations(), new Dependency[] {}, null,
-						equivalenceClasses, true, Long.MAX_VALUE, TimeUnit.MILLISECONDS);
+						equivalenceClasses, twoWay, Long.MAX_VALUE, TimeUnit.MILLISECONDS);
 				Assert.assertEquals(0, newConfigurations.size());
 			} catch (PlannerException | LimitReachedException e) {
 				e.printStackTrace();

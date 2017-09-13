@@ -2,6 +2,7 @@ package uk.ac.ox.cs.pdq.planner.dag.explorer.parallel;
 
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
@@ -84,7 +85,7 @@ public class CreateBinaryConfigurationsThread implements Callable<Boolean> {
 	private final List<Validator> validators;
 	
 	/**  The output configurations. */
-	private final Map<Pair<DAGChaseConfiguration, DAGChaseConfiguration>, DAGChaseConfiguration> outputConfigurations;
+	private Map<Pair<DAGChaseConfiguration, DAGChaseConfiguration>, DAGChaseConfiguration> outputConfigurations;
 
 	/**
 	 * Instantiates a new reasoning thread.
@@ -144,9 +145,13 @@ public class CreateBinaryConfigurationsThread implements Callable<Boolean> {
 		this.rightSideConfigurations = rightSideConfigurations;
 		this.best = best;
 		this.successDominance = successDominance;
-		this.outputConfigurations = output;
+		this.outputConfigurations = new HashMap<>();
+		this.outputConfigurations.putAll(output);
 	}
 
+	public Map<Pair<DAGChaseConfiguration, DAGChaseConfiguration>, DAGChaseConfiguration> getOutputs() {
+		return outputConfigurations;
+	}
 	/**
 	 * Call.
 	 *
@@ -187,7 +192,7 @@ public class CreateBinaryConfigurationsThread implements Callable<Boolean> {
 	 * @param depth the depth
 	 * @return the collection
 	 */
-	private Collection<DAGChaseConfiguration> selectConfigurationsToCombineOnTheRight(DAGChaseConfiguration left, Collection<DAGChaseConfiguration> right, DAGEquivalenceClasses equivalenceClasses, int depth) {
+	private synchronized Collection<DAGChaseConfiguration> selectConfigurationsToCombineOnTheRight(DAGChaseConfiguration left, Collection<DAGChaseConfiguration> right, DAGEquivalenceClasses equivalenceClasses, int depth) {
 		Set<DAGChaseConfiguration> selected = Sets.newLinkedHashSet();
 		for(DAGChaseConfiguration configuration:right) {
 			Preconditions.checkNotNull(equivalenceClasses.getEquivalenceClass(configuration));

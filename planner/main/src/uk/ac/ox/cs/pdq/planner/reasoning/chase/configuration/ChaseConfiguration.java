@@ -2,14 +2,13 @@ package uk.ac.ox.cs.pdq.planner.reasoning.chase.configuration;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 import com.google.common.collect.Lists;
 
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.Cost;
 import uk.ac.ox.cs.pdq.db.Match;
-import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance.LimitToThisOrAllInstances;
-import uk.ac.ox.cs.pdq.util.LimitReachedException;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
@@ -18,6 +17,9 @@ import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.reasoning.Configuration;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
+import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance.LimitToThisOrAllInstances;
+import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
+import uk.ac.ox.cs.pdq.util.LimitReachedException;
 
 
 // TODO: Auto-generated Javadoc
@@ -42,6 +44,7 @@ import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
  * 		type of configuration plans. Plans depending on the type of proof configuration can be either DAG or sequential.
  */
 public abstract class ChaseConfiguration implements Configuration {
+	private final Integer id;
 
 	/** The configuration's chase state. Keeps the output facts of this configuration */
 	protected final AccessibleChaseInstance state;
@@ -76,6 +79,7 @@ public abstract class ChaseConfiguration implements Configuration {
 		this.input = input;
 		this.output = output;
 		this.properOutput = getProperOutput(input, output);
+		this.id = GlobalCounterProvider.getNext("ChaseConfigurationID");
 	}
 	
 	/**
@@ -114,14 +118,6 @@ public abstract class ChaseConfiguration implements Configuration {
 		return this.plan;
 	}
 
-	/* (non-Javadoc)
-	 * @see uk.ac.ox.cs.pdq.planner.reasoning.Configuration#setPlan(uk.ac.ox.cs.pdq.plan.Plan)
-	 */
-	@Override
-	public void setPlan(RelationalTerm plan) {
-		this.plan = plan;
-	}
-	
 	@Override
 	public Cost getCost() {
 		return this.cost;
@@ -235,6 +231,38 @@ public abstract class ChaseConfiguration implements Configuration {
 			throw new IllegalStateException(e);
 		}
 	}
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null) {
+			return false;
+		}
+		if (this.plan == null && ((ChaseConfiguration)o).plan==null)
+			return true;
+		if (this.plan == null && ((ChaseConfiguration)o).plan!=null)
+			return false;
+		return this.getClass().isInstance(o) && this.plan.equals(((ChaseConfiguration)o).plan);
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		return Objects.hash(this.plan);
+	}
+	
+	
+	public Integer getId() {
+		return this.id;
+	}
+	
+
 
 //	/**
 //	 * Clone.
