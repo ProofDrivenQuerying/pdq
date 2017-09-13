@@ -11,10 +11,12 @@ import java.util.Random;
 import java.util.Set;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -57,6 +59,7 @@ import uk.ac.ox.cs.pdq.planner.util.PlannerUtility;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
 import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 import uk.ac.ox.cs.pdq.util.LimitReachedException;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 /**
  * Tests the LinearGeneric explorer class.
@@ -74,6 +77,16 @@ public class TestLinearGeneric {
 	protected Attribute InstanceID = Attribute.create(Integer.class, "InstanceID");
 	private boolean doPrint = false;
 	
+	@Before 
+	public void setup() {
+		Utility.assertsEnabled();
+        MockitoAnnotations.initMocks(this);
+        GlobalCounterProvider.resetCounters();
+        uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
+        uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
+        uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
+	}
+
 	@Test 
 	public void test1ExplorationStepsA() {
 		GlobalCounterProvider.resetCounters();
@@ -486,20 +499,20 @@ public class TestLinearGeneric {
 		dbParam.setDatabasePassword("root");
 		return dbParam; 
 	}
-	//@Test works but too slow (around 4 minutes) to execute. 
+	//@Test //works but too slow (around 4 minutes) to execute. 
 	public void test1ExplorationThreeRelationsDerby() {
 		List<Entry<RelationalTerm, Cost>> exploredPlans = findExploredPlans(3,new DatabaseParameters());
-		Assert.assertEquals(68, exploredPlans.size());
+		Assert.assertEquals(16, exploredPlans.size());
 	}
 	@Test 
 	public void test1ExplorationThreeRelationsMySql() {
 		List<Entry<RelationalTerm, Cost>> exploredPlans = findExploredPlans(3,getMySqlConfig());
-		Assert.assertEquals(68, exploredPlans.size());
+		Assert.assertEquals(16, exploredPlans.size());
 	}
 	@Test 
 	public void test1ExplorationThreeRelationsPostgres() {
 		List<Entry<RelationalTerm, Cost>> exploredPlans = findExploredPlans(3,getPostgresConfig());
-		Assert.assertEquals(68, exploredPlans.size());
+		Assert.assertEquals(16, exploredPlans.size());
 	}
 	//@Test takes too long
 	public void test1ExplorationFiveRelationsDerby() {

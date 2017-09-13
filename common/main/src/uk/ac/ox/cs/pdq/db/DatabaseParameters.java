@@ -25,11 +25,36 @@ public class DatabaseParameters extends Parameters {
 	/**  Properties file path. */
 	static final String DEFAULT_CONFIG_FILE_PATH = "./" + DEFAULT_CONFIG_FILE_NAME;
 
+
+	public static final DatabaseParameters MySql = getDefaultForMySql();
+	public static final DatabaseParameters Postgres = getDefaultForPostgres();
+	public static final DatabaseParameters Derby = new DatabaseParameters();
+
 	/**
 	 * Constructor for DatabaseParameters using default configuration file path.
 	 */
 	public DatabaseParameters() {
 		this(new File(DEFAULT_CONFIG_FILE_PATH), false, false);
+	}
+
+	private static DatabaseParameters getDefaultForMySql() {
+		DatabaseParameters dbParam = new DatabaseParameters();
+		dbParam.setConnectionUrl("jdbc:mysql://localhost/");
+		dbParam.setDatabaseDriver("com.mysql.jdbc.Driver");
+		dbParam.setDatabaseName("test_get_triggers");
+		dbParam.setDatabaseUser("root");
+		dbParam.setDatabasePassword("root");
+		return dbParam; 
+	}
+	
+	private static DatabaseParameters getDefaultForPostgres() {
+		DatabaseParameters dbParam = new DatabaseParameters();
+		dbParam.setConnectionUrl("jdbc:postgresql://localhost/");
+		dbParam.setDatabaseDriver("org.postgresql.Driver");
+		dbParam.setDatabaseName("test_get_triggers");
+		dbParam.setDatabaseUser("postgres");
+		dbParam.setDatabasePassword("root");
+		return dbParam; 
 	}
 
 	/**

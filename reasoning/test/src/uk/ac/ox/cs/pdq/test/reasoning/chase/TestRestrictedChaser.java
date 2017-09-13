@@ -165,7 +165,7 @@ public class TestRestrictedChaser {
 	}
 
 	@Test
-	public void efiTests0() {
+	public void testA() {
 		// Dependencies:
 		// R(z, x) → S(x, y1) ∧ T (x, y2)
 		// R(x,y1) ∧ S(x,y2)→y1 = y2
@@ -274,7 +274,7 @@ public class TestRestrictedChaser {
 	}
 
 	@Test
-	public void efiTests1() {
+	public void testB() {
 		// Dependencies:
 		// C(x) ∧ D(x) → Q(x)
 		// S(x, y) ∧ D(x) → D(y)
@@ -362,39 +362,36 @@ public class TestRestrictedChaser {
 		Assert.assertEquals(11, dFacts);
 		Assert.assertEquals(1, dFactHasK);
 		Assert.assertEquals(1, qFacts);
-		// Collections.sort(set, String.CASE_INSENSITIVE_ORDER);
-		// for(String line:set) System.out.println(line);
-		// System.out.println("TestRestrictedChaser.efiTests1() finished.");
 	}
 
 	@Test
-	public void efiTests2aDerby() throws SQLException {
-		efiTests2a(new DatabaseParameters());
+	public void testA1Derby() throws SQLException {
+		testA1(new DatabaseParameters());
 	}
 
 	@Test
-	public void efiTests2aMySql() throws SQLException {
+	public void testA1MySql() throws SQLException {
 		DatabaseParameters dbParam = new DatabaseParameters();
 		dbParam.setConnectionUrl("jdbc:mysql://localhost/");
 		dbParam.setDatabaseDriver("com.mysql.jdbc.Driver");
 		dbParam.setDatabaseName("test_get_triggers");
 		dbParam.setDatabaseUser("root");
 		dbParam.setDatabasePassword("root");
-		efiTests2a(dbParam);
+		testA1(dbParam);
 	}
 
 	@Test
-	public void efiTests2aPostgres() throws SQLException {
+	public void testA1Postgres() throws SQLException {
 		DatabaseParameters dbParam = new DatabaseParameters();
 		dbParam.setConnectionUrl("jdbc:postgresql://localhost/");
 		dbParam.setDatabaseDriver("org.postgresql.Driver");
 		dbParam.setDatabaseName("test_get_triggers");
 		dbParam.setDatabaseUser("postgres");
 		dbParam.setDatabasePassword("root");
-		efiTests2a(dbParam);
+		testA1(dbParam);
 	}
 
-	public void efiTests2a(DatabaseParameters dbParam) {
+	public void testA1(DatabaseParameters dbParam) {
 		// Create the following unit tests for getMatches
 
 		// a. conjunctive query is Q(x,y) = A(x,x), B(x,y), C(y,z,'TypedConstant1')
@@ -468,33 +465,33 @@ public class TestRestrictedChaser {
 	}
 
 	@Test
-	public void efiTests2bDerby() throws SQLException {
-		efiTests2b(new DatabaseParameters());
+	public void testB1Derby() throws SQLException {
+		testB1(new DatabaseParameters());
 	}
 
 	@Test
-	public void efiTests2bMySql() throws SQLException {
+	public void testB1MySql() throws SQLException {
 		DatabaseParameters dbParam = new DatabaseParameters();
 		dbParam.setConnectionUrl("jdbc:mysql://localhost/");
 		dbParam.setDatabaseDriver("com.mysql.jdbc.Driver");
 		dbParam.setDatabaseName("test_get_triggers");
 		dbParam.setDatabaseUser("root");
 		dbParam.setDatabasePassword("root");
-		efiTests2b(dbParam);
+		testB1(dbParam);
 	}
 
 	@Test
-	public void efiTests2bPostgres() throws SQLException {
+	public void testB1Postgres() throws SQLException {
 		DatabaseParameters dbParam = new DatabaseParameters();
 		dbParam.setConnectionUrl("jdbc:postgresql://localhost/");
 		dbParam.setDatabaseDriver("org.postgresql.Driver");
 		dbParam.setDatabaseName("test_get_triggers");
 		dbParam.setDatabaseUser("postgres");
 		dbParam.setDatabasePassword("root");
-		efiTests2b(dbParam);
+		testB1(dbParam);
 	}
 
-	public void efiTests2b(DatabaseParameters dbParam) {
+	public void testB1(DatabaseParameters dbParam) {
 		// Create the following unit tests for getMatches
 		// b. conjunctive query is Q(x,y,z) = A('TypedConstant2',y,z,w), B(x,y,z,w),
 		// C(y,z,'TypedConstant1') D(x,y), E(x,y,'TypedConstant1')
@@ -560,7 +557,7 @@ public class TestRestrictedChaser {
 	}
 
 	@Test
-	public void efiTests2c() {
+	public void testC() {
 		// Create the following unit tests for getMatches
 		// c. conjunctive query is Q = A('TypedConstant2',y,z,w), B(x,y,z,w),
 		// C(y,z,'TypedConstant1') D(x,y), E('TypedConstant2',y,y)

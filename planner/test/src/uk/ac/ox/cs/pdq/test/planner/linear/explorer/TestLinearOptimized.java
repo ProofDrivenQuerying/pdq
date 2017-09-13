@@ -5,10 +5,12 @@ import static org.mockito.Mockito.when;
 import java.sql.SQLException;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 
 import com.google.common.collect.Lists;
 import com.google.common.eventbus.EventBus;
@@ -49,6 +51,7 @@ import uk.ac.ox.cs.pdq.planner.util.PlannerUtility;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
 import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 import uk.ac.ox.cs.pdq.util.LimitReachedException;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 /**
  * Tests the TestLinearOptimized explorer class.
@@ -64,13 +67,25 @@ public class TestLinearOptimized {
 	protected Attribute d = Attribute.create(Integer.class, "d");
 	protected Attribute InstanceID = Attribute.create(Integer.class, "InstanceID");
 	
-	@Test 
+	@Before 
+	public void setup() {
+		Utility.assertsEnabled();
+        MockitoAnnotations.initMocks(this);
+        GlobalCounterProvider.resetCounters();
+        uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
+        uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
+        uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
+	}
+	
+	
+
+//	@Test 
 	public void test1ExplorationStepsA() {
 		GlobalCounterProvider.resetCounters();
 		GlobalCounterProvider.getNext("CannonicalName");
 		test1ExplorationSteps();
 	}
-	@Test 
+//	@Test 
 	public void test1ExplorationStepsB() {
 		GlobalCounterProvider.resetCounters();
 		GlobalCounterProvider.getNext("CannonicalName");
@@ -78,6 +93,7 @@ public class TestLinearOptimized {
 	}
 	@SuppressWarnings("rawtypes")
 	public void test1ExplorationSteps() {
+		GlobalCounterProvider.resetCounters();
 		//Create the relations
 		Relation[] relations = new Relation[4];
 		relations[0] = Relation.create("R0", new Attribute[]{this.a, this.b, this.c, this.InstanceID}, 
@@ -112,7 +128,7 @@ public class TestLinearOptimized {
 		//Create database connection
 		DatabaseConnection databaseConnection = null;
 		try {
-			databaseConnection = new DatabaseConnection(new DatabaseParameters(), accessibleSchema);
+			databaseConnection = new DatabaseConnection(DatabaseParameters.MySql, accessibleSchema);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -259,7 +275,7 @@ public class TestLinearOptimized {
 		//Create database connection
 		DatabaseConnection databaseConnection = null;
 		try {
-			databaseConnection = new DatabaseConnection(new DatabaseParameters(), accessibleSchema);
+			databaseConnection = new DatabaseConnection(DatabaseParameters.MySql, accessibleSchema);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -309,8 +325,6 @@ public class TestLinearOptimized {
 				//Call the explorer
 				explorer.explore();
 
-				//TODO Assert that at the end of exploration we found a single plan
-				//This is done by checking that only one path in the plan tree leads to a match
 				RelationalTerm dominatingPlan = root.getDominatingPlan();
 				Cost dominatingPlansCost = root.getCostOfDominatingPlan();
 				Assert.assertEquals(dominatingPlansCost, root.getCostOfDominatingPlan());
@@ -321,10 +335,7 @@ public class TestLinearOptimized {
 				}
 				Assert.assertNull(dominatingPlan); // no valid plan in this example.
 				Assert.assertNull(explorer.getBestPlan());
-				//TODO Assert also that every path other than the successful one is dominated by the path that leads to a query match  
-				//Domination is checked by iterating over all nodes in the plan tree that are not in the successful path
-				//and checking that getDominatingPlan() and getCostOfDominatingPlan() 
-				//return the only successful plan we found and its cost
+				
 		} catch (PlannerException | SQLException e) {
 			e.printStackTrace();
 			Assert.fail();
@@ -337,6 +348,7 @@ public class TestLinearOptimized {
 	@SuppressWarnings("rawtypes")
 	@Test 
 	public void test3ExplorationSteps() {
+		GlobalCounterProvider.resetCounters();
 		//Create the relations
 		Relation[] relations = new Relation[4];
 		relations[0] = Relation.create("R0", new Attribute[]{this.a, this.b, this.c, this.InstanceID}, 
@@ -373,7 +385,7 @@ public class TestLinearOptimized {
 		//Create database connection
 		DatabaseConnection databaseConnection = null;
 		try {
-			databaseConnection = new DatabaseConnection(new DatabaseParameters(), accessibleSchema);
+			databaseConnection = new DatabaseConnection(DatabaseParameters.Derby, accessibleSchema);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			Assert.fail();
@@ -390,6 +402,7 @@ public class TestLinearOptimized {
 				
 		//Mock the planner parameters
 		PlannerParameters parameters = Mockito.mock(PlannerParameters.class);
+		Mockito.reset(parameters);
 		when(parameters.getSeed()).thenReturn(1);
 		when(parameters.getMaxDepth()).thenReturn(3);
 		
@@ -430,7 +443,7 @@ public class TestLinearOptimized {
 				Cost dominatingPlansCost = null;
 				
 				Assert.assertEquals(dominatingPlansCost, root.getCostOfDominatingPlan());
-				for (int i = 0; planTree.getVertex(root.getId()+i)!=null; i++){
+				for (int i = root.getId(); planTree.getVertex(root.getId()+i)!=null; i++){
 					SearchNode node = planTree.getVertex(root.getId()+i);
 					if (node.getDominatingPlan()!=null) {
 						if (dominatingPlan!=null) {
