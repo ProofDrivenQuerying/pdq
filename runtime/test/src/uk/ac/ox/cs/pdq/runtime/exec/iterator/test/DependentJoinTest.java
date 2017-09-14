@@ -106,6 +106,8 @@ public class DependentJoinTest {
 	//////////////
 	
 	
+	//TODO fix the dependent join contructor such that if the right child does not require any inputs from 
+	//the left, then the constructor should throw exception 
 	@Test
 	public void testDependentJoin() {
 
