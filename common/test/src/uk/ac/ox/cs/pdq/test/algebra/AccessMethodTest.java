@@ -8,6 +8,7 @@ import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.util.Utility;
 
 /**
+ * Tests the AccessMethod class, and if we created it using the cache or not.
  * @author Gabor
  *
  */
