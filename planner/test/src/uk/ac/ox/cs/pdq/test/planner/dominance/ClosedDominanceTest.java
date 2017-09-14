@@ -32,7 +32,11 @@ import uk.ac.ox.cs.pdq.util.Utility;
  * 
  * @author Efthymia Tsamoura
  */
-
+// Gabor: this test attempts to mock relationalTerms, but since we count the
+// cost based on the children and their type it is not possible. For correct
+// cost the RelationalTerm and its children have to be instanceof
+// Access/Rename/etc Terms. I recommend deleting this and creating new test that
+// is based on some real RelationalTerm object.
 public class ClosedDominanceTest {
 
 	/** The cdomominance. */
@@ -183,37 +187,43 @@ public class ClosedDominanceTest {
         when(config11.getState()).thenReturn(config11State);
 		when(config11State.getInferredAccessibleFacts()).thenReturn(Lists.newArrayList(p1,p2,p3));
 		when(config11.getPlan()).thenReturn(plan11);
-		when(plan11Cost).thenReturn(new DoubleCost(3.0));
+		when(config11.getCost()).thenReturn(plan11Cost);
+		when(plan11Cost.getValue()).thenReturn(3.0);
 		when(config11.isClosed()).thenReturn(true);
 		
 		when(config12.getState()).thenReturn(config12State);
 		when(config12State.getInferredAccessibleFacts()).thenReturn(Lists.newArrayList(p3,p2));
 		when(config12.getPlan()).thenReturn(plan12);
-		when(plan12Cost).thenReturn(new DoubleCost(3.0));
+		when(config12.getCost()).thenReturn(plan12Cost);
+		when(plan12Cost.getValue()).thenReturn(3.0);
 		when(config12.isClosed()).thenReturn(true);
 		
 		when(config21.getState()).thenReturn(config21State);
 		when(config21State.getInferredAccessibleFacts()).thenReturn(Lists.newArrayList(p1,p2,p3,p4));
 		when(config21.getPlan()).thenReturn(plan21);
-		when(plan21Cost).thenReturn(new DoubleCost(4.0));
+		when(config21.getCost()).thenReturn(plan21Cost);
+		when(plan21Cost.getValue()).thenReturn(4.0);
 		when(config21.isClosed()).thenReturn(true);
 		
 		when(config22.getState()).thenReturn(config22State);
 		when(config22State.getInferredAccessibleFacts()).thenReturn(Lists.newArrayList(p1,p2,p4));
 		when(config22.getPlan()).thenReturn(plan22);
-		when(plan22Cost).thenReturn(new DoubleCost(2.0));
+		when(config22.getCost()).thenReturn(plan22Cost);
+		when(plan22Cost.getValue()).thenReturn(2.0);
 		when(config22.isClosed()).thenReturn(false);
 		
 		when(config31.getState()).thenReturn(config31State);
 		when(config31State.getInferredAccessibleFacts()).thenReturn(Lists.newArrayList(p1,p2,p3,p4,p5,p6,p7));
 		when(config31.getPlan()).thenReturn(plan31);
-		when(plan31Cost).thenReturn(new DoubleCost(2.0));
+		when(config31.getCost()).thenReturn(plan31Cost);
+		when(plan31Cost.getValue()).thenReturn(2.0);
 		when(config31.isClosed()).thenReturn(false);
 		
 		when(config32.getState()).thenReturn(config32State);
 		when(config32State.getInferredAccessibleFacts()).thenReturn(Lists.newArrayList(p1,p2,p3,p4,p5,p6,p7));
 		when(config32.getPlan()).thenReturn(plan32);
-		when(plan32Cost).thenReturn(new DoubleCost(3.0));
+		when(config32.getCost()).thenReturn(plan32Cost);
+		when(plan32Cost.getValue()).thenReturn(3.0);
 		when(config32.isClosed()).thenReturn(true);
 	}
 
