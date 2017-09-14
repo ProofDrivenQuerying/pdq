@@ -9,8 +9,10 @@ import java.util.List;
 import java.util.Set;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 
 import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Attribute;
@@ -32,6 +34,7 @@ import uk.ac.ox.cs.pdq.planner.dag.explorer.DAGExplorerUtilities;
 import uk.ac.ox.cs.pdq.planner.util.PlannerUtility;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
 import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 /**
  * Tests the DAGExplorerUtilities.createInitialApplyRuleConfigurations function over a simple case.
@@ -46,6 +49,16 @@ public class TestDAGExplorerUtilities {
 	protected Attribute c = Attribute.create(Integer.class, "c");
 	protected Attribute d = Attribute.create(Integer.class, "d");
 	protected Attribute InstanceID = Attribute.create(Integer.class, "InstanceID");
+	
+	@Before 
+	public void setup() {
+		Utility.assertsEnabled();
+        MockitoAnnotations.initMocks(this);
+        GlobalCounterProvider.resetCounters();
+        uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
+        uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
+        uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
+	}
 	
 	@Test 
 	public void test1() {

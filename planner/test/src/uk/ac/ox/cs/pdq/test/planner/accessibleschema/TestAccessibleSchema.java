@@ -23,6 +23,7 @@ import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.util.Utility;
 
 /**
+ * Tests the AccessibleSchema class by creating an example schemas and validating it's accessible version.
  * 
  * @author Efthymia Tsamoura
  * @author Gabor

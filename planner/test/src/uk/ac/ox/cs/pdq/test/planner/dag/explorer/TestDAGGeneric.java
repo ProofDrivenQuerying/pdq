@@ -8,8 +8,10 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 
 import com.google.common.collect.Lists;
 import com.google.common.eventbus.EventBus;
@@ -47,6 +49,7 @@ import uk.ac.ox.cs.pdq.planner.util.PlannerUtility;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
 import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 import uk.ac.ox.cs.pdq.util.LimitReachedException;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 /**
  * Tests the DAG generic class. Makes sure we have all possible plans explored.
@@ -63,6 +66,16 @@ public class TestDAGGeneric {
 	protected Attribute d = Attribute.create(Integer.class, "d");
 	protected Attribute InstanceID = Attribute.create(Integer.class, "InstanceID");
 	private final boolean printPlans = false;
+	
+	@Before 
+	public void setup() {
+		Utility.assertsEnabled();
+        MockitoAnnotations.initMocks(this);
+        GlobalCounterProvider.resetCounters();
+        uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
+        uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
+        uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
+	}
 
 	@Test
 	public void test1() {

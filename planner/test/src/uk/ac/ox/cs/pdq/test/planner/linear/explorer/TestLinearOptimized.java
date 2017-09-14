@@ -57,6 +57,7 @@ import uk.ac.ox.cs.pdq.util.Utility;
  * Tests the TestLinearOptimized explorer class.
  * 
  * @author Efthymia Tsamoura
+ * @author Gabor
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestLinearOptimized {
@@ -77,15 +78,13 @@ public class TestLinearOptimized {
         uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
 	}
 	
-	
-
-//	@Test 
+	@Test 
 	public void test1ExplorationStepsA() {
 		GlobalCounterProvider.resetCounters();
 		GlobalCounterProvider.getNext("CannonicalName");
 		test1ExplorationSteps();
 	}
-//	@Test 
+	@Test 
 	public void test1ExplorationStepsB() {
 		GlobalCounterProvider.resetCounters();
 		GlobalCounterProvider.getNext("CannonicalName");
@@ -93,7 +92,6 @@ public class TestLinearOptimized {
 	}
 	@SuppressWarnings("rawtypes")
 	public void test1ExplorationSteps() {
-		GlobalCounterProvider.resetCounters();
 		//Create the relations
 		Relation[] relations = new Relation[4];
 		relations[0] = Relation.create("R0", new Attribute[]{this.a, this.b, this.c, this.InstanceID}, 
@@ -433,12 +431,6 @@ public class TestLinearOptimized {
 				planTree = explorer.getPlanTree();
 				SearchNode root = planTree.getRoot();
 				
-				//TODO Assert that at the end of exploration we found a single plan
-				//This is done by checking that only one path in the plan tree leads to a match
-				//TODO Assert also that every path other than the successful one is dominated by the path that leads to a query match  
-				//Domination is checked by iterating over all nodes in the plan tree that are not in the successful path
-				//and checking that getDominatingPlan() and getCostOfDominatingPlan() 
-				//return the only successful plan we found and its cost
 				RelationalTerm dominatingPlan = null;
 				Cost dominatingPlansCost = null;
 				
