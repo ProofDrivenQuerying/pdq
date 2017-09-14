@@ -13,8 +13,10 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 
 import com.google.common.collect.Lists;
 
@@ -47,6 +49,7 @@ import uk.ac.ox.cs.pdq.planner.dag.equivalence.SynchronizedEquivalenceClasses;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.DAGExplorerUtilities;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.parallel.MultiThreadedContext;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.parallel.MultiThreadedExecutor;
+import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.ClosedValidator;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.DefaultValidator;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator;
 import uk.ac.ox.cs.pdq.planner.dominance.Dominance;
@@ -57,6 +60,7 @@ import uk.ac.ox.cs.pdq.planner.util.PlannerUtility;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
 import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 import uk.ac.ox.cs.pdq.util.LimitReachedException;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 /** 
  * Tests the MultiThreadedExecutor class by using it mostly with Mock objects and a simple example schema.
@@ -75,6 +79,16 @@ public class TestMultiThreadedExecutor {
 	boolean twoWay = true;
 	
 	boolean printPlans=false;
+	
+	@Before 
+	public void setup() {
+		Utility.assertsEnabled();
+        MockitoAnnotations.initMocks(this);
+        GlobalCounterProvider.resetCounters();
+        uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
+        uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
+        uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
+	}
 
 	@Test 
 	public void test1() {
@@ -404,4 +418,150 @@ public class TestMultiThreadedExecutor {
 			Assert.fail();
 		}
 	}
+	
+	/**
+	 * Creates a schema out of 4,8 or 12 relations where each four relation forms a
+	 * busy sub-plan. Current assertions are set to validate the results of a chase
+	 * execution of 8 relations.
+	 */
+	@Test
+	public void test4LargeBushyPlanExploration() {
+		final int NUMBER_OF_RELATIONS = 8; // can be 4, 8 or 12. With 8 relations, and using the ClosedValidator it should
+											// be successful in 3-4sec. with 12 it takes way too long.
+		// Create the relations
+		Relation[] relations = new Relation[NUMBER_OF_RELATIONS + 1];
+		for (int i = 0; i < relations.length - 1; i++) {
+			if (i % 2 == 0)
+				relations[i] = Relation.create("R" + i, new Attribute[] { this.a, this.b, this.c, this.d, this.InstanceID },
+						new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
+			else
+				relations[i] = Relation.create("R" + i, new Attribute[] { this.a, this.b, this.c, this.d, this.InstanceID },
+						new AccessMethod[] { AccessMethod.create(new Integer[] { 2, 3 }) });
+		}
+		relations[relations.length - 1] = Relation.create("Accessible", new Attribute[] { this.a, this.InstanceID });
+		// Create query
+		// R0(x,y,z,w) R1(_,_,z,w) R2(x,y,z',w') R3(_,_,z',w')
+		Atom[] atoms = new Atom[relations.length - 1];
+		List<Variable> head = new ArrayList<>();
+		for (int z = 0; z < (relations.length - 1) / 4; z++) {
+			Variable x = Variable.create("x" + z);
+			head.add(x);
+			Variable y = Variable.create("y" + z);
+			head.add(y);
+			Variable v = Variable.create("z" + z);
+			Variable w = Variable.create("w" + z);
+			atoms[4 * z + 0] = Atom.create(relations[4 * z + 0], new Term[] { x, y, v, w });
+			atoms[4 * z + 1] = Atom.create(relations[4 * z + 1], new Term[] { Variable.create("x" + z + "b"), Variable.create("y" + z + "b"), v, w });
+			atoms[4 * z + 2] = Atom.create(relations[4 * z + 2], new Term[] { x, y, Variable.create("z" + z + "c"), Variable.create("w" + z + "c") });
+			atoms[4 * z + 3] = Atom.create(relations[4 * z + 3],
+					new Term[] { Variable.create("x" + z + "d"), Variable.create("y" + z + "d"), Variable.create("z" + z + "c"), Variable.create("w" + z + "c") });
+		}
+		ConjunctiveQuery query = ConjunctiveQuery.create(head.toArray(new Variable[head.size()]), (Conjunction) Conjunction.of(atoms));
+
+		// Create schema
+		Schema schema = new Schema(relations);
+
+		// Create accessible schema
+		AccessibleSchema accessibleSchema = new AccessibleSchema(schema);
+
+		// Create accessible query
+		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(query, query.getSubstitutionOfFreeVariablesToCanonicalConstants());
+
+		// Create database connection
+		DatabaseConnection connection = null;
+		try {
+			DatabaseParameters mySqlDbParam = new DatabaseParameters();
+			mySqlDbParam.setConnectionUrl("jdbc:mysql://localhost/");
+			mySqlDbParam.setDatabaseDriver("com.mysql.jdbc.Driver");
+			mySqlDbParam.setDatabaseName("test_get_triggers");
+			mySqlDbParam.setDatabaseUser("root");
+			mySqlDbParam.setDatabasePassword("root");
+			DatabaseParameters postgresDbParam = new DatabaseParameters();
+			postgresDbParam.setConnectionUrl("jdbc:postgresql://localhost/");
+			postgresDbParam.setDatabaseDriver("org.postgresql.Driver");
+			postgresDbParam.setDatabaseName("test_get_triggers");
+			postgresDbParam.setDatabaseUser("postgres");
+			postgresDbParam.setDatabasePassword("root");
+
+			connection = new DatabaseConnection(postgresDbParam, accessibleSchema);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			Assert.fail();
+		}
+
+		// Create the chaser
+		RestrictedChaser chaser = new RestrictedChaser(null);
+
+		// Mock the planner parameters
+		PlannerParameters parameters = Mockito.mock(PlannerParameters.class);
+		when(parameters.getSeed()).thenReturn(1);
+		when(parameters.getFollowUpHandling()).thenReturn(FollowUpHandling.MINIMAL);
+
+		// Mock the cost estimator
+		CostEstimator costEstimator = Mockito.mock(CostEstimator.class);
+		when(costEstimator.cost(Mockito.any(RelationalTerm.class))).thenReturn(new DoubleCost(1.0));
+		when(costEstimator.clone()).thenReturn(costEstimator);
+
+		// Mock success domination
+		SuccessDominance successDominance = Mockito.mock(SuccessDominance.class);
+		when(successDominance.isDominated(Mockito.any(RelationalTerm.class), Mockito.any(Cost.class), Mockito.any(RelationalTerm.class), Mockito.any(Cost.class)))
+				.thenReturn(false);
+		when(successDominance.clone()).thenReturn(successDominance);
+		// Mock domination
+		Dominance dominance = Mockito.mock(Dominance.class);
+		when(dominance.isDominated(Mockito.any(Configuration.class), Mockito.any(Configuration.class))).thenReturn(false);
+
+		// Create validators
+		List<Validator> validators = new ArrayList<>();
+		// validators.add(new DefaultValidator());
+		validators.add(new ClosedValidator());
+
+		try {
+
+			// Create a multitheaded executor
+			MultiThreadedContext mtcontext = null;
+			try {
+				mtcontext = new MultiThreadedContext(parallelThreads, chaser, connection, costEstimator, successDominance, new Dominance[] { dominance }, validators);
+			} catch (Exception e1) {
+				e1.printStackTrace();
+				Assert.fail();
+			}
+
+			MultiThreadedExecutor executor = new MultiThreadedExecutor(mtcontext);
+
+			List<DAGChaseConfiguration> configurations = DAGExplorerUtilities.createInitialApplyRuleConfigurations(parameters, query, accessibleQuery, accessibleSchema, chaser,
+					connection);
+			Queue<DAGChaseConfiguration> leftSideConfigurations = new ConcurrentLinkedQueue<>();
+			DAGEquivalenceClasses equivalenceClasses = new SynchronizedEquivalenceClasses();
+			leftSideConfigurations.addAll(configurations);
+			for (DAGChaseConfiguration initialConfiguration : configurations) {
+				equivalenceClasses.addEntry(initialConfiguration);
+			}
+
+			Collection<DAGChaseConfiguration> newConfigurations = null;
+
+			// round 1
+			newConfigurations = executor.createBinaryConfigurations(2, leftSideConfigurations, equivalenceClasses.getConfigurations(), new Dependency[] {}, null,
+					equivalenceClasses, twoWay, Long.MAX_VALUE, TimeUnit.MILLISECONDS);
+
+			Assert.assertEquals(16, newConfigurations.size());
+
+			// round 2 .. 7
+			for (int round = 2; round < 8; round++) {
+				leftSideConfigurations.addAll(newConfigurations);
+				for (DAGChaseConfiguration configuration : newConfigurations) {
+					equivalenceClasses.addEntry(configuration);
+				}
+				newConfigurations = executor.createBinaryConfigurations(round + 1, leftSideConfigurations, equivalenceClasses.getConfigurations(), new Dependency[] {}, null,
+						equivalenceClasses, twoWay, Long.MAX_VALUE, TimeUnit.MILLISECONDS);
+				//System.out.println("Round: #" + round + " found configs: " + newConfigurations.size());
+			}
+			Assert.assertEquals(120, newConfigurations.size());
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail();
+		}
+	}
+
 }
