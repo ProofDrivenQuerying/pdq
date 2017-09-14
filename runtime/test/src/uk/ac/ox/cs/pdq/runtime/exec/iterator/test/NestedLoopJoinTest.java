@@ -122,8 +122,6 @@ public class NestedLoopJoinTest {
 		}
 
 		// Check that the result tuples are the ones expected. 
-		// Here the join condition is *never* satisfied because the attributes named "c" 
-		// (i.e. the last and first, respectively) first have different values in relation1 & relation2.
 		Assert.assertNotNull(result);
 		// In relation1 the "c" column ranges from 2 to 13. In relation2 the "c" column ranges from 8 to 25.
 		// Note that the result tuples contain the tuple from the right appended onto the tuple from the left.
