@@ -330,8 +330,8 @@ public class LinearOptimized extends LinearExplorer {
 			if(this.postPruning != null && !this.prunedPaths.contains(this.costPropagator.getBestPath())) {
 				this.prunedPaths.add(this.costPropagator.getBestPath());
 				List<SearchNode> path = LinearUtility.createPath(this.planTree, this.costPropagator.getBestPath());
-				Atom[] queryFacts = uk.ac.ox.cs.pdq.reasoning.chase.Utility.applySubstitution(this.accessibleQuery, match.getMapping()).getAtoms();
-				boolean isPruned = this.postPruning.prune(this.planTree.getRoot(), path, queryFacts);
+				Atom[] factsInQueryMatch = uk.ac.ox.cs.pdq.reasoning.chase.Utility.applySubstitution(this.accessibleQuery, match.getMapping()).getAtoms();
+				boolean isPruned = this.postPruning.pruneSearchNodePath(this.planTree.getRoot(), path, factsInQueryMatch);
 				if(isPruned) {
 					this.postPruning.addPrunedPathToTree(this.planTree, this.planTree.getRoot(), this.postPruning.getPath());
 					freshNode = this.postPruning.getPath().get( this.postPruning.getPath().size()-1);

@@ -61,28 +61,28 @@ public abstract class PostPruning {
 	 * Post-prunes the input nodes path.
 	 *
 	 * @param root 		The root of the linear path tree
-	 * @param path 		The path of nodes to be prostpruned 
-	 * @param queryFacts 		The facts of the query match
+	 * @param searchNodePath 		The path of nodes to be prostpruned 
+	 * @param factsInQueryMatch 		The facts of the query match
 	 * @return true, if successful
 	 * @throws PlannerException the planner exception
 	 * @throws LimitReachedException the limit reached exception
 	 */
-	public boolean prune(SearchNode root, List<SearchNode> path, Atom[] queryFacts) throws PlannerException, LimitReachedException {
-		Preconditions.checkArgument(path != null);
-		Preconditions.checkArgument(queryFacts != null);
+	public boolean pruneSearchNodePath(SearchNode root, List<SearchNode> searchNodePath, Atom[] factsInQueryMatch) throws PlannerException, LimitReachedException {
+		Preconditions.checkArgument(searchNodePath != null);
+		Preconditions.checkArgument(factsInQueryMatch != null);
 		this.isPruned = false;
 		this.path = null;
 		this.plan = null;
 		Collection<Atom> qF = new LinkedHashSet<>();
-		for(Atom queryFact: queryFacts) {
+		for(Atom queryFact: factsInQueryMatch) {
 			if (queryFact.getPredicate().getName().startsWith(AccessibleSchema.inferredAccessiblePrefix)) 
 				qF.add(queryFact);
 			else 
 				Preconditions.checkState(queryFact.getPredicate().equals(AccessibleSchema.accessibleRelation));
 		}
-		Collection<Atom> factsToExpose = this.findFactsToExpose(path, qF);
+		Collection<Atom> factsToExpose = this.findExposedFactsThatAreSufficientToLeadToQueryMatch(searchNodePath, qF);
 		if(this.isPruned) 
-			this.createPath(root, path, factsToExpose);
+			this.createPathOfSearchNodesThatExposeInputFacts(root, searchNodePath, factsToExpose);
 		return this.isPruned;
 	}
 
@@ -93,7 +93,7 @@ public abstract class PostPruning {
 	 * @param minimalFacts the minimal facts
 	 * @return the candidates that produced the input facts
 	 */
-	protected static Set<Candidate> getUtilisedCandidates(Collection<Candidate> candidates, Collection<Atom> minimalFacts) {
+	protected static Set<Candidate> getCandidatesThatExposeInputFacts(Collection<Candidate> candidates, Collection<Atom> minimalFacts) {
 		Set<Candidate> useful = new HashSet<>();
 		for(Candidate candidate: candidates) {
 			Atom inferredAccessibleFact = candidate.getInferredAccessibleFact();
@@ -110,20 +110,20 @@ public abstract class PostPruning {
 	 *
 	 * @param planTree 		The input tree of paths
 	 * @param parentNode 		The node below which we will add the input path
-	 * @param path 		The path to the add to the input tree
+	 * @param newPath 		The path to the add to the input tree
 	 */
-	public void addPrunedPathToTree(PlanTree<SearchNode> planTree, SearchNode parentNode, List<SearchNode> path) {
-		Preconditions.checkArgument(path != null);
-		Preconditions.checkArgument(!path.isEmpty());
+	public void addPrunedPathToTree(PlanTree<SearchNode> planTree, SearchNode parentNode, List<SearchNode> newPath) {
+		Preconditions.checkArgument(newPath != null);
+		Preconditions.checkArgument(!newPath.isEmpty());
 		
-		for(int j = 0; j < path.size(); ++j) {
+		for(int j = 0; j < newPath.size(); ++j) {
 			try {
-				planTree.addVertex(path.get(j));
+				planTree.addVertex(newPath.get(j));
 				if(j == 0) {
-					planTree.addEdge(parentNode, path.get(j), new DefaultEdge());
+					planTree.addEdge(parentNode, newPath.get(j), new DefaultEdge());
 				}
 				else {
-					planTree.addEdge(path.get(j-1), path.get(j), new DefaultEdge());
+					planTree.addEdge(newPath.get(j-1), newPath.get(j), new DefaultEdge());
 				}
 			} catch(Exception ex) {
 				throw new IllegalStateException(ex);
@@ -152,20 +152,20 @@ public abstract class PostPruning {
 	/**
 	 * Find facts to expose.
 	 *
-	 * @param path 		A successful path 
-	 * @param queryFacts 		The facts in the query match 
+	 * @param searchNodePath 		A successful path 
+	 * @param factsInQueryMatch 		The facts in the query match 
 	 * @return 		the facts that are sufficient to produce the input queryFacts
 	 */
-	protected abstract Collection<Atom> findFactsToExpose(List<SearchNode> path, Collection<Atom> queryFacts);
+	protected abstract Collection<Atom> findExposedFactsThatAreSufficientToLeadToQueryMatch(List<SearchNode> searchNodePath, Collection<Atom> factsInQueryMatch);
 	
 	/**
 	 * Creates a post-pruned query path .
 	 *
 	 * @param root 		The root of the plan tree
-	 * @param path 		The path that will be post-pruned 
+	 * @param searchNodePath 		The path that will be post-pruned 
 	 * @param factsToExpose 		The facts that we will expose 
 	 * @throws PlannerException the planner exception
 	 * @throws LimitReachedException the limit reached exception
 	 */
-	protected abstract void createPath(SearchNode root, List<SearchNode> path, Collection<Atom> factsToExpose) throws PlannerException, LimitReachedException;
+	protected abstract void createPathOfSearchNodesThatExposeInputFacts(SearchNode root, List<SearchNode> searchNodePath, Collection<Atom> factsToExpose) throws PlannerException, LimitReachedException;
 }

@@ -59,60 +59,35 @@ public class Candidate implements Cloneable{
 	 * 		The axiom that will be fired given this candidate fact
 	 * @param fact Atom
 	 * 		The fact itself
-	 * @param matching Matching
+	 * @param match Matching
 	 * 		Keeps information relevant to the exposed fact
 	 */
-	public Candidate(AccessibilityAxiom rule, Atom fact, Match matching) {
+	public Candidate(AccessibilityAxiom rule, Atom fact, Match match) {
 		this.rule = rule;
 		this.fact = fact;
-		this.match = matching;
+		this.match = match;
 		this.input = PlannerUtility.getInputConstants(rule.getAccessMethod(), fact);
 		this.output = Lists.newArrayList(uk.ac.ox.cs.pdq.util.Utility.getTypedAndUntypedConstants(fact));
 		this.properOutput = Lists.newArrayList(this.output);
 		this.properOutput.removeAll(this.input);
 	}
 
-	/**
-	 * TOCOMMENT: WHAT IS IT.
-	 *
-	 * @return List<Constant>
-	 */
 	public List<Constant> getInput() {
 		return this.input;
 	}
 
-	/**
-	 * TOCOMMENT: WHAT IS IT!  
-	 *
-	 * @return Collection<Constant>
-	 */
 	public Collection<Constant> getOutput() {
 		return this.output;
 	}
 
-	/**
-	 *  TOCOMMENT: WHAT IS IT !!! .
-	 *
-	 * @return Collection<Constant>
-	 */
 	public Collection<Constant> getProperOutput() {
 		return this.properOutput;
 	}
-
-	/**
-	 *  TCOMMENT: WRITE COMMENTS!
-	 *
-	 * @return PredicateFormula
-	 */
+	
 	public Atom getFact() {
 		return this.fact;
 	}
 
-	/**
-	 *  TCOMMENT: WRITE COMMENTS!.
-	 *
-	 * @return AccessibilityAxiom
-	 */
 	public AccessibilityAxiom getRule() {
 		return this.rule;
 	}
@@ -132,47 +107,25 @@ public class Candidate implements Cloneable{
 		}
 		return map;
 	}
-
-	/**
-	 *
-	 * @return Matching
-	 */
+	
 	public Match getMatch() {
 		return this.match;
 	}
-
-	/**
-	 *
-	 * @return the inferred accessible counterpart of the fact
-	 */
+	
 	public Atom getInferredAccessibleFact() {
 		Atom accessed = (Atom) Utility.applySubstitution(this.rule.getGuard(),this.match.getMapping());
 		Relation relation = this.rule.getBaseRelation();
 		return Atom.create(Relation.create(AccessibleSchema.inferredAccessiblePrefix + relation.getName(), relation.getAttributes(), new AccessMethod[]{}, relation.isEquality()), accessed.getTerms());
 	}
 
-	/**
-	 *
-	 * @return Relation
-	 */
 	public Relation getRelation() {
 		return this.rule.getBaseRelation();
 	}
 
-	/**
-	 *
-	 * @return AccessMethod
-	 */
 	public AccessMethod getAccessMethod() {
 		return this.rule.getAccessMethod();
 	}
 
-	/**
-	 * Equals.
-	 *
-	 * @param o Object
-	 * @return boolean
-	 */
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) {
@@ -185,20 +138,11 @@ public class Candidate implements Cloneable{
 				&& this.rule.equals(((Candidate) o).rule)
 				&& this.fact.equals(((Candidate) o).fact);
 	}
-
-	/**
-	 *
-	 * @return int
-	 */
 	@Override
 	public int hashCode() {
 		return Objects.hash(this.rule, this.fact);
 	}
-
-	/**
-	 *
-	 * @return String
-	 */
+	
 	@Override
 	public String toString() {
 		if (this.rule != null) {
@@ -208,14 +152,4 @@ public class Candidate implements Cloneable{
 		}
 		return "EMPTY CANDIDATE";
 	}
-
-//	/**
-//	 * Clone.
-//	 *
-//	 * @return Candidate
-//	 */
-//	@Override
-//	public Candidate clone() {
-//		return new Candidate(this.accessibleSchema, this.rule, this.fact, this.match);
-//	}
 }
