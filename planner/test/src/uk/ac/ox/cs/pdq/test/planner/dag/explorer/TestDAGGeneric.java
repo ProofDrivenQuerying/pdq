@@ -39,6 +39,7 @@ import uk.ac.ox.cs.pdq.planner.PlannerParameters.FollowUpHandling;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.DAGGeneric;
+import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.ClosedValidator;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.DefaultValidator;
 import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator;
 import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominance;
@@ -55,6 +56,7 @@ import uk.ac.ox.cs.pdq.util.LimitReachedException;
  */
 public class TestDAGGeneric {
 
+	protected Attribute alpha = Attribute.create(Integer.class, "alpha");
 	protected Attribute a = Attribute.create(Integer.class, "a");
 	protected Attribute b = Attribute.create(Integer.class, "b");
 	protected Attribute c = Attribute.create(Integer.class, "c");
@@ -314,6 +316,132 @@ public class TestDAGGeneric {
 			Assert.assertFalse(exploredPlans.isEmpty());
 			Assert.assertEquals(8, exploredPlans.size());
 		} catch (PlannerException | SQLException e) {
+			e.printStackTrace();
+			Assert.fail();
+		} catch (LimitReachedException e) {
+			e.printStackTrace();
+			Assert.fail();
+		}
+	}
+	
+	
+	/**
+	 *  Creates a schema out of 4,8 or 12 relations where each four relation forms a busy sub-plan. Current assertions are set to validate the results of a chase execution of 8 relations.  
+	 */
+	@Test
+	public void test4LargeBushyPlanExploration() {
+		final int NUMBER_OF_RELATIONS = 8; // can be 4, 8 or 12. With 8 relations, and using the ClosedValidator it should be successful in 3-4sec. with 12 it takes way too long.
+		// Create the relations
+		Relation[] relations = new Relation[NUMBER_OF_RELATIONS+1];
+		for (int i = 0; i < relations.length-1; i++) {
+			if (i%2 == 0)
+				relations[i] = Relation.create("R"+i, new Attribute[] { this.a, this.b, this.c, this.d, this.InstanceID }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
+			else 
+				relations[i] = Relation.create("R"+i, new Attribute[] { this.a, this.b, this.c, this.d, this.InstanceID },
+						new AccessMethod[] { AccessMethod.create(new Integer[] { 2, 3 }) });
+		}
+		relations[relations.length-1] = Relation.create("Accessible", new Attribute[] { this.a, this.InstanceID });
+		// Create query
+		// R0(x,y,z,w) R1(_,_,z,w) R2(x,y,z',w') R3(_,_,z',w')
+		Atom[] atoms = new Atom[relations.length-1];
+		List<Variable> head = new ArrayList<>();
+		for (int z= 0; z<(relations.length-1)/4; z++) {
+			Variable x = Variable.create("x"+z);
+			head.add(x);
+			Variable y = Variable.create("y"+z);
+			head.add(y);
+			Variable v = Variable.create("z"+z);
+			Variable w = Variable.create("w"+z);
+			atoms[4*z + 0] = Atom.create(relations[4*z + 0], new Term[] { x, y, v, w });
+			atoms[4*z + 1] = Atom.create(relations[4*z + 1], new Term[] { Variable.create("x"+z+"b"), Variable.create("y"+z+"b"), v, w });
+			atoms[4*z + 2] = Atom.create(relations[4*z + 2], new Term[] { x, y, Variable.create("z"+z+"c"), Variable.create("w"+z+"c") });
+			atoms[4*z + 3] = Atom.create(relations[4*z + 3], new Term[] { Variable.create("x"+z+"d"), Variable.create("y"+z+"d"), Variable.create("z"+z+"c"), Variable.create("w"+z+"c") });
+		}
+		ConjunctiveQuery query = ConjunctiveQuery.create(head.toArray(new Variable[head.size()]), (Conjunction) Conjunction.of(atoms));
+
+		// Create schema
+		Schema schema = new Schema(relations);
+
+		// Create accessible schema
+		AccessibleSchema accessibleSchema = new AccessibleSchema(schema);
+
+		// Create accessible query
+		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(query, query.getSubstitutionOfFreeVariablesToCanonicalConstants());
+
+		// Create database connection
+		DatabaseConnection connection = null;
+		try {
+			DatabaseParameters mySqlDbParam = new DatabaseParameters();
+			mySqlDbParam.setConnectionUrl("jdbc:mysql://localhost/");
+			mySqlDbParam.setDatabaseDriver("com.mysql.jdbc.Driver");
+			mySqlDbParam.setDatabaseName("test_get_triggers");
+			mySqlDbParam.setDatabaseUser("root");
+			mySqlDbParam.setDatabasePassword("root");
+			DatabaseParameters postgresDbParam = new DatabaseParameters();
+			postgresDbParam.setConnectionUrl("jdbc:postgresql://localhost/");
+			postgresDbParam.setDatabaseDriver("org.postgresql.Driver");
+			postgresDbParam.setDatabaseName("test_get_triggers");
+			postgresDbParam.setDatabaseUser("postgres");
+			postgresDbParam.setDatabasePassword("root");
+			
+			connection = new DatabaseConnection(postgresDbParam, accessibleSchema);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			Assert.fail();
+		}
+
+		// Create the chaser
+		RestrictedChaser chaser = new RestrictedChaser(null);
+
+		// Mock the planner parameters
+		PlannerParameters parameters = Mockito.mock(PlannerParameters.class);
+		when(parameters.getSeed()).thenReturn(1);
+		when(parameters.getFollowUpHandling()).thenReturn(FollowUpHandling.MINIMAL);
+
+		// Mock the cost estimator
+		CostEstimator costEstimator = Mockito.mock(CostEstimator.class);
+		when(costEstimator.cost(Mockito.any(RelationalTerm.class))).thenReturn(new DoubleCost(1.0));
+
+		//Mock success domination
+		SuccessDominance successDominance = Mockito.mock(SuccessDominance.class);
+		when(successDominance.isDominated(Mockito.any(RelationalTerm.class), Mockito.any(Cost.class), Mockito.any(RelationalTerm.class), Mockito.any(Cost.class)))
+				.thenReturn(false);
+
+		//Create validators
+		List<Validator> validators = new ArrayList<>();
+		//validators.add(new DefaultValidator());
+		validators.add(new ClosedValidator());
+
+		try {
+			DAGGeneric explorer = new DAGGeneric(new EventBus(), false, parameters, query, accessibleQuery, accessibleSchema, chaser, connection, costEstimator, successDominance,
+					null, validators, relations.length);
+			explorer.explore();
+			explorer.getExploredPlans();
+			List<Entry<RelationalTerm, Cost>> exploredPlans = explorer.getExploredPlans();
+			Assert.assertNotNull(exploredPlans);
+			Assert.assertFalse(exploredPlans.isEmpty());
+			Assert.assertEquals(120, exploredPlans.size());
+			boolean topIsAlwaysDependentJoin = true;
+			for (Entry<RelationalTerm, Cost> plan: exploredPlans) {
+				try {
+					if (printPlans) PlanPrinter.openPngPlan(plan.getKey());
+				} catch(Throwable t) {
+					t.printStackTrace();
+				}
+				if (!(plan.getKey() instanceof DependentJoinTerm)) {
+					topIsAlwaysDependentJoin = false;
+				}
+				int dependentJoints = countDependentJoinsInPlan(plan.getKey());
+				Assert.assertTrue(dependentJoints >= 1); // each plan must contain at least one dependent join term.
+			}
+			
+			// left deep and right deep plans have dependent join on top. This makes sure at least one of them is not like that.
+			Assert.assertFalse(topIsAlwaysDependentJoin); 
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			Assert.fail();
+		} catch (PlannerException e) {
 			e.printStackTrace();
 			Assert.fail();
 		} catch (LimitReachedException e) {
