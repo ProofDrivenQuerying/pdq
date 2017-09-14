@@ -78,7 +78,7 @@ public class DependentJoin extends TupleIterator {
 	protected Tuple nextTuple = null;
 
 	public DependentJoin(TupleIterator child1, TupleIterator child2) {
-		super(RuntimeUtilities.computeInputAttributes(child1, child2), RuntimeUtilities.computeOutputAttributes(child1, child2));
+		super(RuntimeUtilities.computeInputAttributesForDependentJoin(child1, child2), RuntimeUtilities.computeOutputAttributes(child1, child2));
 		Assert.assertNotNull(child1);
 		Assert.assertNotNull(child2);
 		this.joinId = GlobalCounterProvider.getNext("DependentJoinID");

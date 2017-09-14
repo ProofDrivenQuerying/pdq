@@ -26,6 +26,8 @@ import uk.ac.ox.cs.pdq.runtime.TimeoutException;
 import uk.ac.ox.cs.pdq.runtime.exec.PipelinedPlanExecutor.TimeoutChecker;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.Access;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.DependentJoin;
+import uk.ac.ox.cs.pdq.runtime.exec.iterator.Join;
+import uk.ac.ox.cs.pdq.runtime.exec.iterator.SymmetricMemoryHashJoin;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator;
 
 public class DependentJoinTest {
@@ -43,6 +45,69 @@ public class DependentJoinTest {
 	
 	TupleType tt = TupleType.DefaultFactory.create(Integer.class, Integer.class, Integer.class);
 
+	//////////// sandbox test (see R & S 
+	@Test
+	public void test() {
+
+		InMemoryTableWrapper relationR = new InMemoryTableWrapper("R", new Attribute[] {Attribute.create(Integer.class, "a"),
+				Attribute.create(Integer.class, "b"), Attribute.create(Integer.class, "c")},
+				new AccessMethod[] {am1});
+		
+		InMemoryTableWrapper relationS = new InMemoryTableWrapper("S", new Attribute[] {Attribute.create(Integer.class, "b"),
+				Attribute.create(Integer.class, "c"), Attribute.create(Integer.class, "d")},
+				new AccessMethod[] {am1, am2, am3});
+		
+		DependentJoin target = new DependentJoin(new Access(relationR, am1), new Access(relationS, am2));
+	
+		// Create some tuples
+		Integer[] values11 = new Integer[] {10, 11, 12};
+		Integer[] values12 = new Integer[] {10, 11, 100};
+		Collection<Tuple> tuples1 = new ArrayList<Tuple>();
+		int N = 100;
+		for (int i = 0; i != N; i++) {
+			Integer[] values = ((i % 2) == 0) ? values12 : values11;
+			tuples1.add(tt.createTuple((Object[]) Arrays.copyOf(values, values.length)));
+		}
+
+		Integer[] values21 = new Integer[] {11, 13, 14}; // matches "b" but not "c"
+		Integer[] values22 = new Integer[] {99, 13, 14}; // fails to match "b"
+		Integer[] values23 = new Integer[] {11, 12, 13}; // matches "b" with both values11 & values12 and "c" with values11 only.  
+		int M = 33;
+		Collection<Tuple> tuples2 = new ArrayList<Tuple>();
+		for (int i = 0; i != M; i++) {
+			Integer[] values = values21;
+			if (i % 2 == 0) {
+				values = values22;
+			}
+			if (i % 3 == 0) {
+				values = values23;
+			}
+			//Integer[] values = ((i % 3) == 0) ? values22 : values21;
+			tuples2.add(tt.createTuple((Object[]) Arrays.copyOf(values, values.length)));
+		}
+
+		// Load tuples   
+		relation1.load(tuples1);
+		relation2.load(tuples2);
+		
+		//Execute the plan
+		Table result = null;
+		try {
+			result = this.planExecution(target);
+		} catch (TimeoutException e) {
+			e.printStackTrace();
+		}
+		
+		// Check that the result tuples are the ones expected. 
+		// values12 appears N/2 times in relation1 and values22 appears M/3 times in relation 3.
+		Assert.assertNotNull(result);
+		
+	}
+	//////////////
+	
+	
+	//TODO fix the dependent join contructor such that if the right child does not require any inputs from 
+	//the left, then the constructor should throw exception 
 	@Test
 	public void testDependentJoin() {
 
@@ -271,6 +336,126 @@ public class DependentJoinTest {
 		//TODO assert that this is not a valid depenent join plan
 	}
 	
+	@Test
+	public void testE1() {
+
+		//
+		// Dependent join on S & R
+		//
+		InMemoryTableWrapper relationS = new InMemoryTableWrapper("S", new Attribute[] {Attribute.create(Integer.class, "a1"),
+				Attribute.create(Integer.class, "b1"), Attribute.create(Integer.class, "c1")},
+				new AccessMethod[] {am1});
+		InMemoryTableWrapper relationR = new InMemoryTableWrapper("R", new Attribute[] {Attribute.create(Integer.class, "b1"),
+				Attribute.create(Integer.class, "c1")},
+				new AccessMethod[] {am1, am2, am3});
+		
+		// Free access on relation S.
+		Access relationSFree = new Access(relationS, am1);
+		// Access on relation R that requires inputs on first position.
+		Access relationRInputonFirst = new Access(relationR, am2);
+
+		DependentJoin dj = new DependentJoin(relationSFree, relationRInputonFirst);
+		
+		//
+		// Equi-join on T1 & T2
+		//
+		InMemoryTableWrapper relationT1 = new InMemoryTableWrapper("T1", new Attribute[] {Attribute.create(Integer.class, "a1"),
+				Attribute.create(Integer.class, "b2")},
+				new AccessMethod[] {am1});
+		InMemoryTableWrapper relationT2 = new InMemoryTableWrapper("T2", new Attribute[] {Attribute.create(Integer.class, "b2"),
+				Attribute.create(Integer.class, "c2")},
+				new AccessMethod[] {am1, am2, am3});
+
+		// Free access on relations T1 & T2.
+		Access relationT1Free = new Access(relationT1, am1);
+		Access relationT2Free = new Access(relationT2, am1);
+		
+		Join ej = new SymmetricMemoryHashJoin(relationT1Free, relationT2Free);
+		
+		Join target = new SymmetricMemoryHashJoin(dj, ej);
+		
+		// Create some tuples
+
+		
+	}
+	
+	
+	@Test
+	public void testE2() {
+
+		//
+		// Dependent join on R & S
+		//
+		InMemoryTableWrapper relationR = new InMemoryTableWrapper("R", new Attribute[] {Attribute.create(Integer.class, "a1"),
+				Attribute.create(Integer.class, "b1"), Attribute.create(Integer.class, "c1")},
+				new AccessMethod[] {am1});
+		InMemoryTableWrapper relationS = new InMemoryTableWrapper("S", new Attribute[] {Attribute.create(Integer.class, "C"),
+				Attribute.create(Integer.class, "c1")},
+				new AccessMethod[] {am1, am2, am3});
+
+		// Free access on relation R.
+		Access relationRFree = new Access(relationR, am1);
+
+		// Access on relation S that requires inputs on both positions.
+		// Suppose that a user already specified the typed constant "100" to access it 
+		Map<Integer, TypedConstant> inputConstants = new HashMap<>();
+		inputConstants.put(0, TypedConstant.create(100));
+		Access relationSInputsonBoth = new Access(relationS, am2, inputConstants);
+		
+		DependentJoin dj = new DependentJoin(relationRFree, relationSInputsonBoth);
+
+		//
+		// Equi-join on T & V
+		//
+		InMemoryTableWrapper relationT = new InMemoryTableWrapper("T", new Attribute[] {Attribute.create(Integer.class, "b1"),
+				Attribute.create(Integer.class, "c2")},
+				new AccessMethod[] {am1});
+		InMemoryTableWrapper relationV = new InMemoryTableWrapper("V", new Attribute[] {Attribute.create(Integer.class, "b1"),
+				Attribute.create(Integer.class, "c3")},
+				new AccessMethod[] {am1, am2, am3});
+
+		// Free access on relations T & V.
+		Access relationTFree = new Access(relationT, am1);
+		Access relationVFree = new Access(relationV, am1);
+		
+		Join ej = new SymmetricMemoryHashJoin(relationTFree, relationVFree);
+		
+		DependentJoin target = new DependentJoin(dj, ej);
+
+		
+
+		// Create some tuples
+		Integer[] values11 = new Integer[] {10, 11, 12};
+		Integer[] values12 = new Integer[] {10, 11, 13};
+		Collection<Tuple> tuples1 = new ArrayList<Tuple>();
+		int N = 100;
+		for (int i = 0; i != N; i++) {
+			Integer[] values = ((i % 2) == 0) ? values12 : values11;
+			tuples1.add(tt.createTuple((Object[]) Arrays.copyOf(values, values.length)));
+		}
+		
+		Integer[] values21 = new Integer[] {12, 14};
+		Integer[] values22 = new Integer[] {100, 14};
+		Integer[] values23 = new Integer[] {100, 22};
+		int M = 200;
+		Collection<Tuple> tuples2 = new ArrayList<Tuple>();
+		for (int i = 0; i != M; i++) {
+			Integer[] values = ((i % 3) == 0) ? values22 : values21;
+			tuples2.add(tt.createTuple((Object[]) Arrays.copyOf(values, values.length)));
+		}
+
+		// Load tuples   
+		relation1.load(tuples1);
+		relation2.load(tuples2);
+		
+		//Execute the plan
+		Table result = null;
+		try {
+			result = this.planExecution(target);
+		} catch (TimeoutException e) {
+			e.printStackTrace();
+		}
+	}
 	/// TODO:  
 	
 //	//A dependent join plan that takes the outputs of the first access and feeds them to the first input position of 
