@@ -355,12 +355,12 @@ public class AccessibleDatabaseChaseInstance extends uk.ac.ox.cs.pdq.reasoning.c
 				Atom accessedFact = Atom.create(predicate, fact.getTerms());
 				Collection<Term> inputTerms = uk.ac.ox.cs.pdq.util.Utility.getTerms(accessedFact,axiom.getAccessMethod().getInputs());
 				if(!facts.contains(accessedFact) && accessibleTerms.keySet().containsAll(inputTerms)) {
-					Match matching = MatchFactory.createMatchForAccessibilityAxiom(pair.getLeft(), fact);
+					Match match = MatchFactory.createMatchForAccessibilityAxiom(pair.getLeft(), fact);
 					List<Match> matches = ret.get(pair.getLeft());
 					if(matches == null) 
-						ret.put(axiom, Lists.newArrayList(matching));
+						ret.put(axiom, Lists.newArrayList(match));
 					else 
-						matches.add(matching);
+						matches.add(match);
 				}
 			}
 		}

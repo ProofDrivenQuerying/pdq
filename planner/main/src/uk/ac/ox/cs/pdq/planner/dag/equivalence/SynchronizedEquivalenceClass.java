@@ -20,7 +20,8 @@ import uk.ac.ox.cs.pdq.planner.equivalence.StructuralEquivalence;
 // TODO: Auto-generated Javadoc
 /**
  * A class of structurally equivalent configurations that supports multi-threading.
- * According to this implementation different threads can add, remove or perform domination detection inside the class concurrently.
+ * According to this implementation different threads can add, 
+ * remove or perform domination detection inside the class concurrently.
  *
  * @author Efthymia Tsamoura
  *

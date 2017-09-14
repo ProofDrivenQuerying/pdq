@@ -72,7 +72,7 @@ public final class PostPruningRemoveFollowUps extends PostPruning {
 	 * @throws LimitReachedException the limit reached exception
 	 */
 	@Override
-	protected void createPath(SearchNode root, List<SearchNode> path, Collection<Atom> factsToExpose) throws PlannerException, LimitReachedException {
+	protected void createPathOfSearchNodesThatExposeInputFacts(SearchNode root, List<SearchNode> path, Collection<Atom> factsToExpose) throws PlannerException, LimitReachedException {
 		if(this.isPruned) {
 			this.path = new ArrayList<>();
 			List<Integer> nodeIds = new ArrayList<>();
@@ -86,7 +86,7 @@ public final class PostPruningRemoveFollowUps extends PostPruning {
 				 * The list C corresponds to the minimal set of candidate facts that must be exposed by this node in order to answer the query.
 				 * If C is empty, then the current node has to be eliminated from the path
 				 */
-				Set<Candidate> mustBeExposed = getUtilisedCandidates(alreadyExposed, factsToExpose);
+				Set<Candidate> mustBeExposed = getCandidatesThatExposeInputFacts(alreadyExposed, factsToExpose);
 				if(!mustBeExposed.isEmpty()) {
 					SearchNode freshNode;
 					if(i > 0)
@@ -116,14 +116,14 @@ public final class PostPruningRemoveFollowUps extends PostPruning {
 	 * Find facts to expose.
 	 *
 	 * @param path 		A successful path 
-	 * @param queryFacts 		The facts in the query match 
+	 * @param factsInQueryMatch 		The facts in the query match 
 	 * @return 		the facts that are sufficient to produce the input queryFacts
 	 */
 	@Override
-	protected Collection<Atom> findFactsToExpose(List<SearchNode> path, Collection<Atom> queryFacts) {
+	protected Collection<Atom> findExposedFactsThatAreSufficientToLeadToQueryMatch(List<SearchNode> path, Collection<Atom> factsInQueryMatch) {
 		SearchNode successNode = path.get(path.size() - 1);
 		// Find the minimal set of facts that have to be exposed in order to make each fact in the query match accessible
-		Collection<Atom> minimalFacts = this.getMinimalFacts(queryFacts, successNode);
+		Collection<Atom> minimalFactsThatShouldBeExposed = this.getMinimalFactsThatShouldBeExposedToHaveQueryMatch(factsInQueryMatch, successNode);
 
 		// For each node in the path
 		int i = 0;
@@ -136,8 +136,8 @@ public final class PostPruningRemoveFollowUps extends PostPruning {
 				 * The list C corresponds to the minimal set of candidate facts that must be exposed in this node.
 				 * If C is empty, then the current node has to be eliminated from the path
 				 */
-				Collection<Candidate> mustBeExposed = getUtilisedCandidates(alreadyExposed, minimalFacts);
-				if (mustBeExposed.isEmpty() || !Sets.newHashSet(alreadyExposed).equals(Sets.newHashSet(mustBeExposed))) {
+				Collection<Candidate> candidatesToExpose = getCandidatesThatExposeInputFacts(alreadyExposed, minimalFactsThatShouldBeExposed);
+				if (candidatesToExpose.isEmpty() || !Sets.newHashSet(alreadyExposed).equals(Sets.newHashSet(candidatesToExpose))) {
 					this.isPruned = true;
 					i = path.size();
 					break;
@@ -145,7 +145,7 @@ public final class PostPruningRemoveFollowUps extends PostPruning {
 			}
 			++i;
 		}
-		return minimalFacts;
+		return minimalFactsThatShouldBeExposed;
 	}
 
 	/**
@@ -155,7 +155,7 @@ public final class PostPruningRemoveFollowUps extends PostPruning {
 	 * @param successNode 		A node with configuration that matches the input query
 	 * @return 		a minimal set of facts that have to be exposed in order to make each input fact accessible
 	 */
-	private Collection<Atom> getMinimalFacts(Collection<Atom> queryMatch, SearchNode successNode) {
+	private Collection<Atom> getMinimalFactsThatShouldBeExposedToHaveQueryMatch(Collection<Atom> queryMatch, SearchNode successNode) {
 		Preconditions.checkArgument(queryMatch != null);
 		Preconditions.checkArgument(successNode != null);
 		Preconditions.checkArgument(successNode.getStatus() == NodeStatus.SUCCESSFUL);
