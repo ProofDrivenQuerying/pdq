@@ -48,6 +48,11 @@ public class DAGGeneric extends DAGExplorer {
 	 * there does not exist any configuration with depth < maxDepth
 	 */
 	protected final int maxDepth;
+	/**
+	 * Initialized by the size of the initialConfigurations. 
+	 * When we reach deeper then the minimum depth we will stop chasing on any depth level that results no new combinations. 
+	 */
+	protected final int minDepth;
 
 	/**  Filters out configurations at the end of each iteration. */
 	private final Filter filter;
@@ -126,6 +131,8 @@ public class DAGGeneric extends DAGExplorer {
 		this.rightSideConfigurations = new ArrayList<>();
 		this.leftSideConfigurations.addAll(initialConfigurations);
 		this.rightSideConfigurations.addAll(initialConfigurations);
+		this.minDepth = initialConfigurations.size();
+		
 		this.selector = new SelectorOfPairsOfConfigurationsToCombine<>(this.leftSideConfigurations, this.rightSideConfigurations, this.validators);
 	}
 
@@ -160,7 +167,7 @@ public class DAGGeneric extends DAGExplorer {
 			//Create all binary configurations of depth up to this.depth
 			Collection<DAGChaseConfiguration> last = this.exploreAllConfigurationsUpToCurrentDepth();
 			//Stop if we cannot create any new configuration
-			if (last.isEmpty()) {
+			if (last.isEmpty() && depth > minDepth) {
 				this.forcedTermination = true;
 				return;
 			}
