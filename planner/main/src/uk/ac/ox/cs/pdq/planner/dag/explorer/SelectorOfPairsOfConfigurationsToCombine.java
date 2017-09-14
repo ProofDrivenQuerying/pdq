@@ -62,59 +62,55 @@ public class SelectorOfPairsOfConfigurationsToCombine<S extends AccessibleChaseI
 	}
 
 	/**
-	 * Makes sure every returned configuration pair has the required depth and it is a unique pair that was never returned before. 
-	 * Uses the validators to further shorten the list. 
-	 * When only the default validator is in use it will make sure that the trivial case is filtered out (An access will not be combined with itself).  
+	 * Creates combinations of accesses and on each call it returns the next
+	 * combination.Makes sure every returned combination is unique. Uses validators
+	 * to filter out not required combinations.
+	 * 
+	 * Using the default validator it makes sure - every returned configuration pair
+	 * has the required depth - the trivial case is filtered out (An access will not
+	 * be combined with itself).
+	 * 
 	 *
-	 * @param depth the depth
+	 * @param depth
+	 *            the required depth, used only as input for validators.
 	 * @return the next pair of configurations of the given combined depth
 	 */
 	public Pair<DAGChaseConfiguration, DAGChaseConfiguration> getNextPairOfConfigurationsToCompose(int depth) {
-		if(!this.returnInverseBinaryConfiguration) {
-			if(this.indexOverConfigurationsInLeftList >= this.leftSideConfigurations.size() || this.indexOverConfigurationsInRightList >= this.rightSideConfigurations.size()) {
-				return null;
-			}
-			DAGChaseConfiguration l = null;
-			DAGChaseConfiguration r = null;
-			boolean binaryConfigurationOverLeftAndRightInputsValid = false;
-			boolean binaryConfigurationOverRightAndLeftInputsValid = false;
-			do {
-				l = this.leftSideConfigurations.get(this.indexOverConfigurationsInLeftList);
-				r = this.rightSideConfigurations.get(this.indexOverConfigurationsInRightList);
-				if (!this.plansOfConfigurationPairsReturnedInThePast.contains(PlanCreationUtility.createPlan(l.getPlan(), r.getPlan()))) {
-					binaryConfigurationOverLeftAndRightInputsValid = ConfigurationUtility.validate(l, r, this.validators, depth);
-					binaryConfigurationOverRightAndLeftInputsValid = ConfigurationUtility.validate(r, l, this.validators, depth);
-					if (binaryConfigurationOverLeftAndRightInputsValid || binaryConfigurationOverRightAndLeftInputsValid) {
-						break;
-					}
-				}
-				this.moveIndicesOverLeftAndRightListsForward();
-				if (this.indexOverConfigurationsInLeftList >= this.leftSideConfigurations.size()) {
-					return null;
-				}
-			} while(this.indexOverConfigurationsInRightList < this.rightSideConfigurations.size());
-			
-			if(binaryConfigurationOverLeftAndRightInputsValid) {
-				if(binaryConfigurationOverRightAndLeftInputsValid) {
+		if (this.returnInverseBinaryConfiguration) {
+			this.returnInverseBinaryConfiguration = false;
+			return this.inverseBinaryConfiguration;
+		}
+		if (this.indexOverConfigurationsInLeftList >= this.leftSideConfigurations.size() || this.indexOverConfigurationsInRightList >= this.rightSideConfigurations.size()) {
+			return null;
+		}
+		do {
+			DAGChaseConfiguration l = this.leftSideConfigurations.get(this.indexOverConfigurationsInLeftList);
+			DAGChaseConfiguration r = this.rightSideConfigurations.get(this.indexOverConfigurationsInRightList);
+
+			// if (l,r) pair is new and valid
+			if (!this.plansOfConfigurationPairsReturnedInThePast.contains(PlanCreationUtility.createPlan(l.getPlan(), r.getPlan()))
+					&& ConfigurationUtility.validate(l, r, this.validators, depth)) {
+				// check if we can return the inverse next time
+				if (!this.plansOfConfigurationPairsReturnedInThePast.contains(PlanCreationUtility.createPlan(r.getPlan(), l.getPlan()))
+						&& ConfigurationUtility.validate(r, l, this.validators, depth)) {
 					this.plansOfConfigurationPairsReturnedInThePast.add(PlanCreationUtility.createPlan(r.getPlan(), l.getPlan()));
 					this.inverseBinaryConfiguration = Pair.of(r, l);
 					this.returnInverseBinaryConfiguration = true;
 				}
 				this.plansOfConfigurationPairsReturnedInThePast.add(PlanCreationUtility.createPlan(l.getPlan(), r.getPlan()));
 				return Pair.of(l, r);
+				// in case (l,r) is not new and valid we check the r,l combination
+			} else if (!this.plansOfConfigurationPairsReturnedInThePast.contains(PlanCreationUtility.createPlan(r.getPlan(), l.getPlan()))
+					&& ConfigurationUtility.validate(r, l, this.validators, depth)) {
+				this.plansOfConfigurationPairsReturnedInThePast.add(PlanCreationUtility.createPlan(l.getPlan(), r.getPlan()));
+				return Pair.of(l, r);
 			}
-			else if(binaryConfigurationOverRightAndLeftInputsValid) {
-				this.returnInverseBinaryConfiguration = false;
-				this.plansOfConfigurationPairsReturnedInThePast.add(PlanCreationUtility.createPlan(r.getPlan(), l.getPlan()));
-				return Pair.of(r,l);
-			}
-			else
+			this.moveIndicesOverLeftAndRightListsForward();
+			if (this.indexOverConfigurationsInLeftList >= this.leftSideConfigurations.size()) {
 				return null;
-		}
-		else {
-			this.returnInverseBinaryConfiguration = false;
-			return this.inverseBinaryConfiguration;
-		}
+			}
+		} while (this.indexOverConfigurationsInRightList < this.rightSideConfigurations.size());
+		return null;
 	}
 
 	private void moveIndicesOverLeftAndRightListsForward() {
