@@ -17,6 +17,7 @@ import org.junit.runners.MethodSorters;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+import uk.ac.ox.cs.pdq.algebra.AccessTerm;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.estimators.CountNumberOfAccessedRelationsCostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.OrderIndependentCostEstimator;
@@ -27,7 +28,6 @@ import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
-import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
@@ -43,6 +43,7 @@ import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.Candidate;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.NodeFactory;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode.NodeStatus;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.pruning.PostPruningRemoveFollowUps;
 import uk.ac.ox.cs.pdq.planner.reasoning.MatchFactory;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance;
@@ -77,19 +78,6 @@ public class TestPostpruningRemoveFollowups {
         uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
 	}
 
-	@Test 
-	public void test1PostpruningA() {
-		GlobalCounterProvider.resetCounters();
-		GlobalCounterProvider.getNext("CannonicalName");
-		test1Postpruning();
-	}
-	@Test 
-	public void test1PostpruningB() {
-		GlobalCounterProvider.resetCounters();
-		GlobalCounterProvider.getNext("CannonicalName");
-		test1Postpruning();
-	}
-	
 	//The query is Q(x,y) = R0(x,y) R1(y,z) R2(z,w)
 	//We have free access on R0
 	//dependent access on R1 on the first position
@@ -98,10 +86,10 @@ public class TestPostpruningRemoveFollowups {
 	//and a relation R3 with free access
 	//Suppose that we found the plan that performs accesses in the following order R0(x,y) R1(y,z) R3(x,y,z) R2(z,w)
 	//postpruning should trash the access on R3
+	@Test 
 	public void test1Postpruning() {
-		Assert.assertTrue(false);
 		//Create the relations
-		Relation[] relations = new Relation[4];
+		Relation[] relations = new Relation[5];
 		relations[0] = Relation.create("R0", new Attribute[]{this.a, this.b, this.InstanceID}, 
 				new AccessMethod[]{AccessMethod.create(new Integer[]{})});
 		relations[1] = Relation.create("R1", new Attribute[]{this.a, this.b, this.InstanceID}, 
@@ -132,8 +120,6 @@ public class TestPostpruningRemoveFollowups {
 		//Create accessible schema
 		AccessibleSchema accessibleSchema = new AccessibleSchema(schema);
 		
-		assertAccessibleSchema(accessibleSchema, schema, 3);
-		
 		//Create accessible query
 		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(query, query.getSubstitutionOfFreeVariablesToCanonicalConstants());
 	
@@ -170,7 +156,7 @@ public class TestPostpruningRemoveFollowups {
 		Atom[] factsInQueryMatch = new Atom[3];
 		factsInQueryMatch[0] = (Atom) Utility.applySubstitution(accessibleQuery.getAtom(0), substitution);
 		factsInQueryMatch[1] = (Atom) Utility.applySubstitution(accessibleQuery.getAtom(1), substitution);
-		factsInQueryMatch[3] = (Atom) Utility.applySubstitution(accessibleQuery.getAtom(2), substitution);
+		factsInQueryMatch[2] = (Atom) Utility.applySubstitution(accessibleQuery.getAtom(2), substitution);
 		
 		//Choose the axioms that will expose the facts in the dummy plan
 		//This is a very simple function assuming that we have one accessibility axiom per relation
@@ -191,15 +177,30 @@ public class TestPostpruningRemoveFollowups {
 		
 		PostPruningRemoveFollowUps postpruning = new PostPruningRemoveFollowUps(nodeFactory, accessibleSchema, chaser, query);
 		try {
-			postpruning.pruneSearchNodePath(searchNodePath.get(0), searchNodePath, factsInQueryMatch);
+			searchNodePath.get(4).setStatus(NodeStatus.SUCCESSFUL);
+			try {
+				postpruning.pruneSearchNodePath(searchNodePath.get(0), searchNodePath, factsInQueryMatch);
+			}catch(Throwable t) {
+				Assert.fail();
+			}
 			RelationalTerm newPlan = postpruning.getPlan();
-			//TODO assert that we get a new plan free of the access on R3
-		} catch (PlannerException | LimitReachedException e) {
-			// TODO Auto-generated catch block
+			Assert.assertFalse(findRelationInPlan("R3",newPlan));
+		} catch (Exception e) {
 			e.printStackTrace();
+			Assert.fail();
 		}
 	}
 	
+	private boolean findRelationInPlan(String relationNameToFind, RelationalTerm plan) {
+		if (plan instanceof AccessTerm) {
+			if (relationNameToFind.equalsIgnoreCase(((AccessTerm)plan).getRelation().getName()))
+				return true;
+		} else {
+			for(RelationalTerm child:plan.getChildren()) if (findRelationInPlan(relationNameToFind, child)) return true;
+		}
+		return false;
+	}
+
 	//The query is Q(x,y) = R0(x,y) R1(y,z) R2(z,w)
 	//We have free access on R0
 	//dependent access on R1 on the first position
@@ -208,10 +209,10 @@ public class TestPostpruningRemoveFollowups {
 	//and a relation R3 with free access
 	//Suppose that we found the plan that performs accesses in the following order R0(x,y) R1(y,z) R3(x,y,z) R2(z,w)
 	//postpruning should trash the access on R3 and on R2
+	@Test
 	public void test2Postpruning() {
-		Assert.assertTrue(false);
 		//Create the relations
-		Relation[] relations = new Relation[4];
+		Relation[] relations = new Relation[5];
 		relations[0] = Relation.create("R0", new Attribute[]{this.a, this.b, this.InstanceID}, 
 				new AccessMethod[]{AccessMethod.create(new Integer[]{})});
 		relations[1] = Relation.create("R1", new Attribute[]{this.a, this.b, this.InstanceID}, 
@@ -242,8 +243,6 @@ public class TestPostpruningRemoveFollowups {
 		//Create accessible schema
 		AccessibleSchema accessibleSchema = new AccessibleSchema(schema);
 		
-		assertAccessibleSchema(accessibleSchema, schema, 3);
-		
 		//Create accessible query
 		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(query, query.getSubstitutionOfFreeVariablesToCanonicalConstants());
 	
@@ -280,7 +279,7 @@ public class TestPostpruningRemoveFollowups {
 		Atom[] factsInQueryMatch = new Atom[3];
 		factsInQueryMatch[0] = (Atom) Utility.applySubstitution(accessibleQuery.getAtom(0), substitution);
 		factsInQueryMatch[1] = (Atom) Utility.applySubstitution(accessibleQuery.getAtom(1), substitution);
-		factsInQueryMatch[3] = (Atom) Utility.applySubstitution(accessibleQuery.getAtom(2), substitution);
+		factsInQueryMatch[2] = (Atom) Utility.applySubstitution(accessibleQuery.getAtom(2), substitution);
 		
 		//Choose the axioms that will expose the facts in the dummy plan
 		//This is a very simple function assuming that we have one accessibility axiom per relation
@@ -301,12 +300,19 @@ public class TestPostpruningRemoveFollowups {
 		
 		PostPruningRemoveFollowUps postpruning = new PostPruningRemoveFollowUps(nodeFactory, accessibleSchema, chaser, query);
 		try {
-			postpruning.pruneSearchNodePath(searchNodePath.get(0), searchNodePath, factsInQueryMatch);
+			searchNodePath.get(4).setStatus(NodeStatus.SUCCESSFUL);
+			try {
+				postpruning.pruneSearchNodePath(searchNodePath.get(0), searchNodePath, factsInQueryMatch);
+			}catch(Throwable t) {
+				Assert.fail();
+			}
 			RelationalTerm newPlan = postpruning.getPlan();
-			//TODO assert that we get a new plan free of the access on R3
-		} catch (PlannerException | LimitReachedException e) {
-			// TODO Auto-generated catch block
+			Assert.assertFalse(findRelationInPlan("R3",newPlan));
+			Assert.assertFalse(findRelationInPlan("R2",newPlan));
+			
+		} catch (Exception e) {
 			e.printStackTrace();
+			Assert.fail();
 		}
 	}
 	
@@ -335,55 +341,14 @@ public class TestPostpruningRemoveFollowups {
 			}
 			return searchNodes;
 		} catch (SQLException | PlannerException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			Assert.fail();
+			
 		} catch (LimitReachedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			Assert.fail();
 		}
 		return null;
-	}
-	
-	private void assertAccessibleSchema(AccessibleSchema accessibleSchema, Schema schema, int numberOfAxioms) {
-		Assert.assertNotNull(accessibleSchema);
-		
-		// constants
-		Assert.assertEquals(1,accessibleSchema.getConstants().size());
-		Assert.assertEquals(TypedConstant.create(5),accessibleSchema.getConstant("5"));
-		// accessibility axioms
-		Assert.assertNotNull(accessibleSchema.getAccessibilityAxioms());
-		Assert.assertEquals(numberOfAxioms,accessibleSchema.getAccessibilityAxioms().length);
-		int abc=0;
-		int bc=0;
-		int bac=0;
-		for (AccessibilityAxiom axiom:accessibleSchema.getAccessibilityAxioms()) {
-			if (axiom.getBoundVariables().length==2) {
-				Assert.assertEquals(axiom.getBoundVariables()[0], Variable.create("b"));
-				Assert.assertEquals(axiom.getBoundVariables()[1], Variable.create("c"));
-				bc++;
-			} else
-			if (axiom.getBoundVariables().length==3 && axiom.getBoundVariables()[0].equals(Variable.create("a"))) {
-				Assert.assertEquals(axiom.getBoundVariables()[0], Variable.create("a"));
-				Assert.assertEquals(axiom.getBoundVariables()[1], Variable.create("b"));
-				Assert.assertEquals(axiom.getBoundVariables()[2], Variable.create("c"));
-				abc++;
-			} else
-			if (axiom.getBoundVariables().length==3 && axiom.getBoundVariables()[0].equals(Variable.create("b"))) {
-				Assert.assertEquals(axiom.getBoundVariables()[0], Variable.create("b"));
-				Assert.assertEquals(axiom.getBoundVariables()[1], Variable.create("a"));
-				Assert.assertEquals(axiom.getBoundVariables()[2], Variable.create("c"));
-				bac++;
-			}
-		}
-		Assert.assertEquals(2, abc);
-		Assert.assertEquals(0, bc);
-		Assert.assertEquals(1, bac);
-		
-		Assert.assertNotNull(accessibleSchema.getRelations());
-		Assert.assertEquals(8, accessibleSchema.getRelations().length);
-		Dependency[] infAccAxioms = accessibleSchema.getInferredAccessibilityAxioms();
-		Assert.assertNotNull(infAccAxioms);
-		Assert.assertEquals(0, infAccAxioms.length);
 	}
 	
 }
