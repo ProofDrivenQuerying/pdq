@@ -405,11 +405,13 @@ public class RelationalTermTest {
 		AccessTerm relation2InputonFirst = AccessTerm.create(relation2, am2, inputConstants1);
 
 		// A dependent join plan that takes the outputs of the first access and feeds them to the 
-		// first input position (i.e. position 0) of the second accessed relation. 
-		DependentJoinTerm target = DependentJoinTerm.create(relation1Free, relation2InputonFirst);
-		
-		//TODO assert that target is not a valid depedent join plan
-		Assert.assertTrue(false);
+		// first input position (i.e. position 0) of the second accessed relation.
+		try {
+			DependentJoinTerm.create(relation1Free, relation2InputonFirst);
+			Assert.fail("Should have thrown exception");
+		} catch(AssertionError e) {
+			// excpected
+		}
 	}
 
 
