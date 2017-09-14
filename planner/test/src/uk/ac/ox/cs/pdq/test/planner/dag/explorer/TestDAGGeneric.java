@@ -157,6 +157,7 @@ public class TestDAGGeneric {
 		SuccessDominance successDominance = Mockito.mock(SuccessDominance.class);
 		when(successDominance.isDominated(Mockito.any(RelationalTerm.class), Mockito.any(Cost.class), Mockito.any(RelationalTerm.class), Mockito.any(Cost.class)))
 				.thenReturn(false);
+		when(successDominance.clone()).thenReturn(successDominance);
 
 		//Create validators
 		List<Validator> validators = new ArrayList<>();
@@ -316,6 +317,8 @@ public class TestDAGGeneric {
 			SuccessDominance successDominance = Mockito.mock(SuccessDominance.class);
 			when(successDominance.isDominated(Mockito.any(RelationalTerm.class), Mockito.any(Cost.class), Mockito.any(RelationalTerm.class), Mockito.any(Cost.class)))
 					.thenReturn(false);
+			when(successDominance.clone()).thenReturn(successDominance);
+
 			//Create validators
 			List<Validator> validators = new ArrayList<>();
 			validators.add(new DefaultValidator());
