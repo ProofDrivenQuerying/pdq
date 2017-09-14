@@ -185,15 +185,16 @@ public class DependentJoinTest {
 		// Free access on relation R1.
 		Access relation1Free = new Access(relation1, am1);
 		
-		// Access on relation R2 that requires inputs on position 1 (i.e. the *second* position, attribute "d").
-		// Suppose that a user already specified the typed constant "100" to access it.
+		// Access on relation R2 that requires inputs on positions 0 & 1 (i.e. attributes "c" & "d").
+		// Suppose that a user already specified the typed constant "100" to access position 1.
 		Map<Integer, TypedConstant> inputConstants = new HashMap<>();
 		inputConstants.put(1, TypedConstant.create(100));
-		Access relation2InputConstant = new Access(relation2, am2, inputConstants);		
+		Access relation2NotFree = new Access(relation2, am3, inputConstants);
 		
 		// A dependent join plan that takes the outputs of the first access and feeds them to 
-		// the first input position of the second accessed relation. 
-		DependentJoin target = new DependentJoin(relation1Free, relation2InputConstant);
+		// the first input position of the second accessed relation.  It accesses the second 
+		// position of the second relation using a constant.
+		DependentJoin target = new DependentJoin(relation1Free, relation2NotFree);
 		
 		// Create some tuples
 		Integer[] values11 = new Integer[] {10, 11, 12};
@@ -227,7 +228,7 @@ public class DependentJoinTest {
 		}
 		
 		// Check that the result tuples are the ones expected. 
-		// values1 appears 50 times in relation2 and values3 appears 67 times in relation 3.
+		// values1 appears 50 times in relation2 and values22 appears 67 times in relation 3.
 		Assert.assertNotNull(result);
 		Assert.assertEquals(50*67, result.size());
 		
