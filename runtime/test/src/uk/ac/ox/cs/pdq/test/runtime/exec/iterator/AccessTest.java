@@ -154,8 +154,10 @@ public class AccessTest {
 		
 		// Load tuples by calling the load method of relation1  
 		Assert.assertEquals(0, relation1.getData().size());
+		
 		relation1.load(tuples);
 		Assert.assertEquals(N, relation1.getData().size());
+		
 		
 		//Execute the plan
 		Table result = null;
