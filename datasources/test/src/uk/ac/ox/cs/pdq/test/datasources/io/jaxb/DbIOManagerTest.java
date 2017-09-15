@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.test.io.jaxb;
+package uk.ac.ox.cs.pdq.test.datasources.io.jaxb;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -24,6 +24,7 @@ public class DbIOManagerTest {
 
 	@Test
 	public void testReadingSchema() {
+		Assert.assertTrue(false);
 		try {
 			Properties props = new Properties();
 			props.load(new FileInputStream(new File("test\\src\\uk\\ac\\ox\\cs\\pdq\\test\\io\\jaxb\\case.properties")));

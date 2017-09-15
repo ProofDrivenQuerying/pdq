@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.runtime.exec.iterator.test;
+package uk.ac.ox.cs.pdq.test.runtime.exec.iterator;
 
 import static org.junit.Assert.*;
 

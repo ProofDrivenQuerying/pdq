@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.test.sql;
+package uk.ac.ox.cs.pdq.test.datasources.sql;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
