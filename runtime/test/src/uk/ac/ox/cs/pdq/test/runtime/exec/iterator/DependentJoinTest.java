@@ -70,42 +70,29 @@ public class DependentJoinTest {
 		Assert.assertNotNull(target);
 		Assert.assertEquals(0, target.getInputAttributes().length);
 
-		// Constructor sanity checks
+		// Note that there is currently no getJoinConditions in DependentJoin (but the fix is, probably,
+		// to make DependentJoin a subclass of Join).
 		
-		AccessMethod am = AccessMethod.create("access_method",new Integer[] {1});
-		Access relation2InputonSecond = new Access(relation2, am);
-
-		boolean caught = false; 
-		// Right child input attributes must be a subset of the left child output attributes.  
-		try {
-			new DependentJoin(relation1Free, relation2InputonSecond);
-		} catch (IllegalArgumentException e) {
-			caught = true;
-		}
-		Assert.assertTrue(caught);
-
+		// Assert.assertEquals(expected, target.getJoinConditions());
+		
+		/*
+		 *  Constructor sanity checks
+		 */
+		
 		// Note that it is the access method am2 that specifies that relation2 requires 
 		// input(s) on the first position (i.e. position 0). The inputConstants1 map contains
 		// the TypedConstant that provides that input.
 		Access relation2ConstantInputonFirst = new Access(relation2, am2, inputConstants1);
 
-		// A dependent join plan that takes the outputs of the first access and feeds them to the 
-		// first input position (i.e. position 0) of the second accessed relation. 
-
 		// An exception is thrown if the right child does not require any inputs from the left
 		// (i.e. the following is not a valid dependent join).
-		caught = false; 
+		boolean caught = false; 
 		try {
 			new DependentJoin(relation1Free, relation2ConstantInputonFirst);
 		} catch (IllegalArgumentException e) {
 			caught = true;
 		}
 		Assert.assertTrue(caught);
-
-		// Note that there is currently no getJoinConditions in DependentJoin (but the fix is, probably,
-		// to make DependentJoin a subclass of Join).
-
-		//Assert.assertEquals(expected, target.getJoinConditions());
 
 		// An exception is thrown if the right child requires inputs which are not supplied from the left.
 		// Here the left child supplies inputs only for the first position of relation2 but not for the second one.
@@ -116,6 +103,21 @@ public class DependentJoinTest {
 			caught = true;
 		}
 		Assert.assertTrue(caught);
+		
+		// An exception is thrown if the right child input attributes are not a subset of the 
+		// left child output attributes.  
+		AccessMethod am = AccessMethod.create("access_method",new Integer[] {1});
+		Access relation2InputonSecond = new Access(relation2, am);
+		
+		caught = false; 
+		try {
+			new DependentJoin(relation1Free, relation2InputonSecond);
+		} catch (IllegalArgumentException e) {
+			caught = true;
+		}
+		Assert.assertTrue(caught);
+
+
 	}
 
 	/*
