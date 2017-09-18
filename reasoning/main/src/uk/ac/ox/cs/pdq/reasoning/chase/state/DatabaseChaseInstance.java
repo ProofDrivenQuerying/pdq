@@ -138,7 +138,7 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		Preconditions.checkNotNull(facts);
 		Preconditions.checkNotNull(classes);
 		Preconditions.checkNotNull(constants);
-		this.facts = facts;
+		addFacts(facts);
 		this.classes = classes;
 		this.constantsToAtoms = constants; 
 	}
