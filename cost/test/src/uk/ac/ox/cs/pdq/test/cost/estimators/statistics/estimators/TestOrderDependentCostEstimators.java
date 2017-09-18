@@ -5,6 +5,7 @@ import static org.mockito.Mockito.when;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -29,7 +30,7 @@ import uk.ac.ox.cs.pdq.util.Utility;
 /**
  * 
  * @author Efthymia Tsamoura
- *
+ * @author Gabor
  */
 
 public class TestOrderDependentCostEstimators {
@@ -42,7 +43,7 @@ public class TestOrderDependentCostEstimators {
 	protected Attribute b = Attribute.create(String.class, "b");
 	protected Attribute c = Attribute.create(String.class, "c");
 	protected Attribute d = Attribute.create(String.class, "d");
-	protected Attribute e = Attribute.create(String.class, "d");
+	protected Attribute e = Attribute.create(String.class, "e");
 	protected Attribute InstanceID = Attribute.create(String.class, "InstanceID");
 	protected Attribute i = Attribute.create(String.class, "i");
     
@@ -93,17 +94,23 @@ public class TestOrderDependentCostEstimators {
 		TextBookCostEstimator estimator = new TextBookCostEstimator(null, cardinalityEstimator);
 		TotalNumberOfOutputTuplesPerAccessCostEstimator estimator2 = new TotalNumberOfOutputTuplesPerAccessCostEstimator(null, this.catalog);
 		
+		double output = cardinalityEstimator.getCardinalityMetadata(bushy).getOutputCardinality();
+		DependentJoinTerm leftdeep = DependentJoinTerm.create(JoinTerm.create(join0, access2), access3);
+		double output2 = cardinalityEstimator.getCardinalityMetadata(leftdeep).getOutputCardinality();
+		
+		
 		Cost cost1 = estimator.cost(bushy); 
 		Cost cost2 = estimator2.cost(bushy);
 		
-		DependentJoinTerm leftdeep = DependentJoinTerm.create(JoinTerm.create(join0, access2), access3);
 		
 		Cost cost3 = estimator.cost(leftdeep); 
 		Cost cost4 = estimator2.cost(leftdeep);
 		
+		Assert.assertNotEquals(cost1,cost3);
+		Assert.assertNotEquals(cost2,cost4);
+		
 		//TODO assert the costs and verify that the numbers look reasonable
 	}
-
 	//We create a bushy plan and a left deep one
 	//We estimate its cost with two order aware cost estimators
 	//the textbook one and the one that counts the total number of output tuples per input
@@ -149,6 +156,9 @@ public class TestOrderDependentCostEstimators {
 		Cost cost4 = estimator2.cost(leftdeep);
 		
 		//TODO assert the costs and verify that the numbers look reasonable
+		Assert.assertNotEquals(cost1,cost3);
+		Assert.assertNotEquals(cost2,cost4);
+		
 	}
 	
 	//We create a bushy plan and a left deep one
@@ -193,5 +203,7 @@ public class TestOrderDependentCostEstimators {
 		Cost cost4 = estimator2.cost(leftdeep);
 		
 		//TODO assert the costs and verify that the numbers look reasonable
+		Assert.assertNotEquals(cost1,cost3);
+		Assert.assertNotEquals(cost2,cost4);
 	}
 }
