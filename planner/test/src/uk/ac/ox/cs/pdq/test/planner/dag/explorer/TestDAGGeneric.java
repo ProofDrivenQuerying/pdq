@@ -508,7 +508,7 @@ public class TestDAGGeneric {
 		Dependency dependency2 = TGD.create(new Atom[] { Atom.create(relations[1], new Term[] { y, z })},
 				new Atom[] { Atom.create(relations[3], new Term[] { y, z })});
 		//R2(x,y), R3(y,z) -> R0(x,w) R1(w,z)
-		Dependency dependency3 = TGD.create(new Atom[] { Atom.create(relations[2], new Term[] { y, z }), Atom.create(relations[3], new Term[] { y, z })},
+		Dependency dependency3 = TGD.create(new Atom[] { Atom.create(relations[2], new Term[] { x, y }), Atom.create(relations[3], new Term[] { y, z })},
 				new Atom[] { Atom.create(relations[0], new Term[] { x, w }), Atom.create(relations[1], new Term[] { w, z })});
 		// Create schema
 		Schema schema = new Schema(relations, new Dependency[] { dependency1, dependency2, dependency3 });
