@@ -3,6 +3,7 @@ package uk.ac.ox.cs.pdq.test.planner.linear.explorer;
 import static org.mockito.Mockito.when;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -42,14 +43,20 @@ import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.fol.LinearGuarded;
+import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.io.PlanPrinter;
 import uk.ac.ox.cs.pdq.planner.PlannerException;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
+import uk.ac.ox.cs.pdq.planner.PlannerParameters.FollowUpHandling;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
+import uk.ac.ox.cs.pdq.planner.dag.explorer.DAGGeneric;
+import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.DefaultValidator;
+import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator;
+import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominance;
 import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.LinearGeneric;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.NodeFactory;
@@ -625,6 +632,133 @@ public class TestLinearGeneric {
 			// exception expected after further exploration fails.
 		}
 		return explorer.getExploredPlans();
+	}
+	
+	
+	/**
+	 *  The query is Q(x,y) = \exists y R0(x,y) R1(y,z) 
+	 *  We also have the dependencies 
+	 *  R0(x,y) -> R2(x,y) 
+	 *  R1(y,z) -> R3(y,z) 
+	 *  R2(x,y), R3(y,z) -> R0(x,w) R1(w,z) 
+	 *  Every relation has a free access. Suppose that we found the plan that performs accesses in the following order R2(x,y) R3(y,z) R0(x,y) R1(y,z) 
+	 *  Postpruning should return R2(x,y) R3(y,z)
+	 *  
+	 *  We should find at least the following plans 
+	 *  R0(x,y) R1(y,z) 
+	 *  R3(x,y) R0(x,y) R1(y,z) 
+	 *  R4(y,z) R0(x,y) R1(y,z) 
+	 *  R3(x,y) R4(y,z) 
+	 *  R4(y,z) R3(x,y) 
+	 *  R4(y,z) R3(x,y) R0(x,y) R1(y,z)
+ 	 */
+	@Test
+	public void test5() {
+		// Create the relations
+		Relation[] relations = new Relation[5];
+		relations[0] = Relation.create("R0", new Attribute[] { this.a, this.b, this.InstanceID }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
+		relations[1] = Relation.create("R1", new Attribute[] { this.a, this.b, this.InstanceID }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
+		relations[2] = Relation.create("R2", new Attribute[] { this.a, this.b, this.InstanceID }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
+		relations[3] = Relation.create("R3", new Attribute[] { this.a, this.b, this.InstanceID }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
+		relations[4] = Relation.create("Accessible", new Attribute[] { this.a, this.InstanceID });
+		// Create query
+		Atom[] atoms = new Atom[2];
+		Variable x = Variable.create("x");
+		Variable y = Variable.create("y");
+		Variable z = Variable.create("z");
+		Variable w = Variable.create("w");
+		atoms[0] = Atom.create(relations[0], new Term[] { x, y });
+		atoms[1] = Atom.create(relations[1], new Term[] { y, z });
+		ConjunctiveQuery query = ConjunctiveQuery.create(new Variable[] { x, y }, (Conjunction) Conjunction.of(atoms));
+
+		Dependency dependency1 = TGD.create(new Atom[] { Atom.create(relations[0], new Term[] { x, y })},
+				new Atom[] { Atom.create(relations[2], new Term[] { x, y })});
+		Dependency dependency2 = TGD.create(new Atom[] { Atom.create(relations[1], new Term[] { y, z })},
+				new Atom[] { Atom.create(relations[3], new Term[] { y, z })});
+		//R2(x,y), R3(y,z) -> R0(x,w) R1(w,z)
+		Dependency dependency3 = TGD.create(new Atom[] { Atom.create(relations[2], new Term[] { y, z }), Atom.create(relations[3], new Term[] { y, z })},
+				new Atom[] { Atom.create(relations[0], new Term[] { x, w }), Atom.create(relations[1], new Term[] { w, z })});
+		// Create schema
+		Schema schema = new Schema(relations, new Dependency[] { dependency1, dependency2, dependency3 });
+
+		// Create accessible schema
+		AccessibleSchema accessibleSchema = new AccessibleSchema(schema);
+
+		// Create accessible query
+		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(query, query.getSubstitutionOfFreeVariablesToCanonicalConstants());
+
+		// Create database connection
+		DatabaseConnection databaseConnection = null;
+		try {
+			DatabaseParameters mySqlDbParam = new DatabaseParameters();
+			mySqlDbParam.setConnectionUrl("jdbc:mysql://localhost/");
+			mySqlDbParam.setDatabaseDriver("com.mysql.jdbc.Driver");
+			mySqlDbParam.setDatabaseName("test_get_triggers");
+			mySqlDbParam.setDatabaseUser("root");
+			mySqlDbParam.setDatabasePassword("root");
+			
+			databaseConnection = new DatabaseConnection(mySqlDbParam, accessibleSchema);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			Assert.fail();
+		}
+
+		// Create the chaser
+		RestrictedChaser chaser = new RestrictedChaser(null);
+
+		// Mock the cost estimator
+		CostEstimator costEstimator = Mockito.mock(CostEstimator.class);
+		when(costEstimator.cost(Mockito.any(RelationalTerm.class))).thenReturn(new DoubleCost(1.0));
+
+		// Mock the planner parameters
+		PlannerParameters parameters = Mockito.mock(PlannerParameters.class);
+		when(parameters.getSeed()).thenReturn(1);
+		when(parameters.getMaxDepth()).thenReturn(3);
+		when(parameters.getFollowUpHandling()).thenReturn(FollowUpHandling.MINIMAL);
+		
+		//Create nodeFactory
+		NodeFactory nodeFactory = new NodeFactory(parameters, costEstimator);
+				
+		
+		// Create DAGGeneric
+		LinearGeneric explorer = null;
+		try {
+				explorer = new LinearGeneric(
+					new EventBus(), 
+					false,
+					query, 
+					accessibleQuery,
+					accessibleSchema, 
+					chaser, 
+					databaseConnection, 
+					costEstimator,
+					nodeFactory,
+					parameters.getMaxDepth());
+//			//Mock success domination
+//			SuccessDominance successDominance = Mockito.mock(SuccessDominance.class);
+//			when(successDominance.isDominated(Mockito.any(RelationalTerm.class), Mockito.any(Cost.class), Mockito.any(RelationalTerm.class), Mockito.any(Cost.class)))
+//					.thenReturn(false);
+//			when(successDominance.clone()).thenReturn(successDominance);
+//
+//			//Create validators
+//			List<Validator> validators = new ArrayList<>();
+//			validators.add(new DefaultValidator());
+//			
+//			explorer = new DAGGeneric(new EventBus(), false, parameters, query, accessibleQuery, accessibleSchema, chaser, databaseConnection, costEstimator, successDominance, null,
+//					validators, 3);
+//
+			explorer.explore();
+			List<Entry<RelationalTerm, Cost>> exploredPlans = explorer.getExploredPlans();
+			Assert.assertNotNull(exploredPlans);
+			Assert.assertFalse(exploredPlans.isEmpty());
+			Assert.assertEquals(8, exploredPlans.size());
+		} catch (PlannerException | SQLException e) {
+			e.printStackTrace();
+			Assert.fail();
+		} catch (LimitReachedException e) {
+			e.printStackTrace();
+			Assert.fail();
+		}
 	}
 	
 }
