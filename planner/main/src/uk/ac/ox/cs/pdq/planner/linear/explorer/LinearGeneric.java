@@ -79,11 +79,8 @@ public class LinearGeneric extends LinearExplorer {
 	 */
 	@Override
 	public void performSingleExplorationStep() throws PlannerException, LimitReachedException {
-		SearchNode selectedNode;
-		Candidate candidate;
-
 		// Choose the next node to explore below it
-		selectedNode = this.chooseNode();
+		SearchNode selectedNode = this.chooseNode();
 		if (selectedNode == null) 
 			return;
 		
@@ -94,10 +91,14 @@ public class LinearGeneric extends LinearExplorer {
 		 * (i) there exists Accessible(c_i) facts for any c_i
 		 * (ii) AccessedF(c_1,c_2,...,c_N) does not exist in the current configuration
 		 */
-		candidate = selectedConfiguration.chooseCandidate();
-
+		Candidate selectedCandidate = selectedConfiguration.chooseCandidate();
+		if(selectedCandidate == null) {
+			selectedNode.setStatus(NodeStatus.TERMINAL);
+			return;
+		}
+		
 		// Search for other candidate facts that could be exposed along with the selected candidate.
-		Set<Candidate> similarCandidates = selectedConfiguration.getSimilarCandidates(candidate);
+		Set<Candidate> similarCandidates = selectedConfiguration.getSimilarCandidates(selectedCandidate);
 		selectedConfiguration.removeCandidates(similarCandidates);
 		if (!selectedConfiguration.hasCandidates()) 
 			selectedNode.setStatus(NodeStatus.TERMINAL);

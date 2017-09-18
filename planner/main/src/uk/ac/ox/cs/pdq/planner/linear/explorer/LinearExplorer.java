@@ -172,7 +172,7 @@ public abstract class LinearExplorer extends Explorer {
 		int maxId = -1;
 		SearchNode selection = null;
 		for (SearchNode snode:this.planTree.vertexSet()) {
-			if (snode.getStatus() == NodeStatus.ONGOING && snode.getId() > maxId) {
+			if (snode.getConfiguration().hasCandidates() && snode.getId() > maxId) {
 				selection = snode;
 				maxId = snode.getId();
 			}

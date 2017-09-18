@@ -3,7 +3,6 @@ package uk.ac.ox.cs.pdq.test.planner.linear.explorer;
 import static org.mockito.Mockito.when;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -53,10 +52,6 @@ import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters.FollowUpHandling;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
-import uk.ac.ox.cs.pdq.planner.dag.explorer.DAGGeneric;
-import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.DefaultValidator;
-import uk.ac.ox.cs.pdq.planner.dag.explorer.validators.Validator;
-import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominance;
 import uk.ac.ox.cs.pdq.planner.linear.LinearChaseConfiguration;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.LinearGeneric;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.NodeFactory;
@@ -713,14 +708,14 @@ public class TestLinearGeneric {
 		// Mock the planner parameters
 		PlannerParameters parameters = Mockito.mock(PlannerParameters.class);
 		when(parameters.getSeed()).thenReturn(1);
-		when(parameters.getMaxDepth()).thenReturn(3);
+		when(parameters.getMaxDepth()).thenReturn(4);
 		when(parameters.getFollowUpHandling()).thenReturn(FollowUpHandling.MINIMAL);
 		
 		//Create nodeFactory
 		NodeFactory nodeFactory = new NodeFactory(parameters, costEstimator);
 				
 		
-		// Create DAGGeneric
+		// Create Linear Generic
 		LinearGeneric explorer = null;
 		try {
 				explorer = new LinearGeneric(
@@ -734,19 +729,6 @@ public class TestLinearGeneric {
 					costEstimator,
 					nodeFactory,
 					parameters.getMaxDepth());
-//			//Mock success domination
-//			SuccessDominance successDominance = Mockito.mock(SuccessDominance.class);
-//			when(successDominance.isDominated(Mockito.any(RelationalTerm.class), Mockito.any(Cost.class), Mockito.any(RelationalTerm.class), Mockito.any(Cost.class)))
-//					.thenReturn(false);
-//			when(successDominance.clone()).thenReturn(successDominance);
-//
-//			//Create validators
-//			List<Validator> validators = new ArrayList<>();
-//			validators.add(new DefaultValidator());
-//			
-//			explorer = new DAGGeneric(new EventBus(), false, parameters, query, accessibleQuery, accessibleSchema, chaser, databaseConnection, costEstimator, successDominance, null,
-//					validators, 3);
-//
 			explorer.explore();
 			List<Entry<RelationalTerm, Cost>> exploredPlans = explorer.getExploredPlans();
 			Assert.assertNotNull(exploredPlans);
