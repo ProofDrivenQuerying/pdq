@@ -95,7 +95,11 @@ public class AccessibleDatabaseChaseInstance extends uk.ac.ox.cs.pdq.reasoning.c
 				AccessibleStateUtility.createAtomsMap(createCanonicalDatabaseAndAccessibleFactsForSchemaConstants(query, schema)),
 				AccessibleStateUtility.getAllTermsAppearingInAccessibleFacts(createCanonicalDatabaseAndAccessibleFactsForSchemaConstants(query, schema)),
 				connection);
-		this.addFacts(this.facts);
+		// the previous constructor added tuples to the local this.facts map without adding them to the database. We need to delete them add them again to make sure they are written to the database.
+		LinkedHashSet<Atom> factsTmp = new LinkedHashSet<Atom>();
+		factsTmp.addAll(this.facts);
+		this.facts.clear();
+		this.addFacts(factsTmp);
 	}
 	
 	public AccessibleDatabaseChaseInstance(Collection<Atom> facts, DatabaseConnection connection, boolean maintainProvenance) throws SQLException {
