@@ -156,10 +156,10 @@ public class TestMultiThreadedExecutor {
 		when(costEstimator.clone()).thenReturn(costEstimator);
 
 		//Mock success domination
-//		SuccessDominance successDominance = Mockito.mock(SuccessDominance.class);
-		SuccessDominance successDominance = new SuccessDominanceFactory(SuccessDominanceTypes.CLOSED).getInstance();
-//		when(successDominance.isDominated(Mockito.any(RelationalTerm.class), Mockito.any(Cost.class), Mockito.any(RelationalTerm.class), Mockito.any(Cost.class)))
-//				.thenReturn(false);
+		SuccessDominance successDominance = Mockito.mock(SuccessDominance.class);
+		when(successDominance.isDominated(Mockito.any(RelationalTerm.class), Mockito.any(Cost.class), Mockito.any(RelationalTerm.class), Mockito.any(Cost.class)))
+				.thenReturn(false);
+		when(successDominance.clone()).thenReturn(successDominance);
 		
 		//Mock domination
 		Dominance dominance = Mockito.mock(Dominance.class);
