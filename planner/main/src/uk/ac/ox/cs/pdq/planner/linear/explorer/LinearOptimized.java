@@ -167,6 +167,7 @@ public class LinearOptimized extends LinearExplorer {
 				this.unexploredDescendants.add(freshNode);
 			this.unexploredDescendants.remove(selectedNode);
 		}
+		this.rounds++;
 	}
 
 	/**
@@ -178,7 +179,6 @@ public class LinearOptimized extends LinearExplorer {
 	 * @throws LimitReachedException the limit reached exception
 	 */
 	protected SearchNode explorationStep(SearchNode selectedNode) throws PlannerException, LimitReachedException  {
-
 		LinearConfiguration selectedConfig = selectedNode.getConfiguration();
 
 		/*

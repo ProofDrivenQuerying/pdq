@@ -34,10 +34,10 @@ public class ExplorerUtility {
 	public static <N extends SearchNode> N isEquivalent(Collection<N> parentsNodes, N childNode) {
 		FactEquivalence factEquivalence = new FastFactEquivalence();
 		N equivalent = null;
-		Preconditions.checkArgument(childNode.isFullyGenerated());
+		Preconditions.checkArgument(childNode.isFullyChased());
 		for (N parentNode: parentsNodes) {
 			if (!parentNode.equals(childNode)
-					&& parentNode.isFullyGenerated()
+					&& parentNode.isFullyChased()
 					&& parentNode.getEquivalentNode() == null
 					&& !parentNode.getStatus().equals(NodeStatus.TERMINAL)
 					//					&& !parentNode.getStatus().equals(NodeStatus.FAKE_TERMINAL)
@@ -79,10 +79,10 @@ public class ExplorerUtility {
 	 * @param planTree the plan tree
 	 * @return the fully generate nodes
 	 */
-	public static <N extends SearchNode> Collection<N> getFullyGeneratedNodes(DirectedGraph<N, DefaultEdge> planTree) {
+	public static <N extends SearchNode> Collection<N> getNodesThatAreFullyChased(DirectedGraph<N, DefaultEdge> planTree) {
 		Collection<N> fullyGenerated = new LinkedHashSet<>();
 		for (N node: planTree.vertexSet()) {
-			if (node.isFullyGenerated()) 
+			if (node.isFullyChased()) 
 				fullyGenerated.add(node);
 		}
 		return fullyGenerated;
@@ -95,10 +95,10 @@ public class ExplorerUtility {
 	 * @param planTree the plan tree
 	 * @return the partially generated leaves
 	 */
-	public static <N extends SearchNode> Collection<N> getPartiallyGeneratedLeaves(DirectedGraph<N, DefaultEdge> planTree) {
+	public static <N extends SearchNode> Collection<N> getLeafNodesThatAreNotFullyChased(DirectedGraph<N, DefaultEdge> planTree) {
 		Collection<N> partiallyGenerated = new LinkedHashSet<>();
 		for (N node:planTree.vertexSet()) {
-			if (planTree.outDegreeOf(node) == 0 && !node.isFullyGenerated()) 
+			if (planTree.outDegreeOf(node) == 0 && !node.isFullyChased()) 
 				partiallyGenerated.add(node);
 		}
 		return partiallyGenerated;

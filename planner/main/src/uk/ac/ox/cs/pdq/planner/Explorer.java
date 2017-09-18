@@ -79,7 +79,6 @@ public abstract class Explorer {
 				break;
 			}
 			this.performSingleExplorationStep();
-			this.rounds++;
 			this.post();
 		}
 		this.checkLimitReached();
