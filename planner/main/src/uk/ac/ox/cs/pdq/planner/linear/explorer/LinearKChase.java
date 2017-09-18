@@ -145,7 +145,6 @@ public class LinearKChase extends LinearExplorer {
 
 			boolean domination = false;
 			/* If the cost of the plan of the newly created node is higher than the best plan found so far then kill the newly created node  */
-//			RelationalTerm freshNodePlan = freshNode.getConfiguration().getPlan();
 			if (this.bestPlan != null) {
 				if (freshNode.getConfiguration().getCost().greaterOrEquals(this.bestCost)) {
 					domination = true;
@@ -159,7 +158,7 @@ public class LinearKChase extends LinearExplorer {
 			/* If at least one node in the plan tree dominates the newly created node, then kill the newly created node   */
 			if (!domination && this.costPropagator instanceof OrderIndependentCostPropagator) {
 				this.stats.start(MILLI_DOMINANCE);
-				SearchNode dominatingNode = ExplorerUtility.isDominated(ExplorerUtility.getFullyGeneratedNodes(this.planTree), freshNode);
+				SearchNode dominatingNode = ExplorerUtility.isDominated(ExplorerUtility.getNodesThatAreFullyChased(this.planTree), freshNode);
 				this.stats.stop(MILLI_DOMINANCE);
 				if(dominatingNode != null) {
 					domination = true;
@@ -176,7 +175,7 @@ public class LinearKChase extends LinearExplorer {
 			}
 		}
 		else {
-			Collection<SearchNode> leaves = ExplorerUtility.getPartiallyGeneratedLeaves(this.planTree);
+			Collection<SearchNode> leaves = ExplorerUtility.getLeafNodesThatAreNotFullyChased(this.planTree);
 			log.debug("Number of partially generated leaves " + leaves.size());
 			this.stats.start(MILLI_CLOSE);
 			for(SearchNode leaf:leaves) {
@@ -209,7 +208,7 @@ public class LinearKChase extends LinearExplorer {
 			}
 
 			// Check for query match
-			for (SearchNode leaf: leaves) {
+			for (SearchNode leaf:leaves) {
 				if((leaf.getStatus() == NodeStatus.TERMINAL || leaf.getStatus() == NodeStatus.ONGOING) && leaf.getEquivalentNode() == null) {
 					this.stats.start(MILLI_QUERY_MATCH);
 					List<Match> matches = leaf.matchesQuery(this.accessibleQuery);
@@ -224,6 +223,7 @@ public class LinearKChase extends LinearExplorer {
 				}
 			}
 		}
+		this.rounds++;
 	}
 	
 	/**

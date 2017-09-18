@@ -134,6 +134,7 @@ public class LinearGeneric extends LinearExplorer {
 				this.bestCost = freshNode.getConfiguration().getCost();
 			}
 		}
+		this.rounds++;
 	}
 	
 	public List<Entry<RelationalTerm, Cost>> getExploredPlans() {

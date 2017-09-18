@@ -691,11 +691,11 @@ public class TestLinearGeneric {
 		DatabaseConnection databaseConnection = null;
 		try {
 			DatabaseParameters mySqlDbParam = new DatabaseParameters();
-			mySqlDbParam.setConnectionUrl("jdbc:mysql://localhost/");
-			mySqlDbParam.setDatabaseDriver("com.mysql.jdbc.Driver");
-			mySqlDbParam.setDatabaseName("test_get_triggers");
-			mySqlDbParam.setDatabaseUser("root");
-			mySqlDbParam.setDatabasePassword("root");
+//			mySqlDbParam.setConnectionUrl("jdbc:mysql://localhost/");
+//			mySqlDbParam.setDatabaseDriver("com.mysql.jdbc.Driver");
+//			mySqlDbParam.setDatabaseName("test_get_triggers");
+//			mySqlDbParam.setDatabaseUser("root");
+//			mySqlDbParam.setDatabasePassword("root");
 			
 			databaseConnection = new DatabaseConnection(mySqlDbParam, accessibleSchema);
 		} catch (SQLException e) {

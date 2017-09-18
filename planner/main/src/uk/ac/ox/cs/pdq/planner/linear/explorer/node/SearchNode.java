@@ -63,7 +63,7 @@ public abstract class SearchNode implements Cloneable{
 	private final int depth;
 
 	/**  True if the node is fully generated. */
-	private Boolean isFullyGenerated = false;
+	private Boolean isFullyChased = false;
 	
 	/**  The path from root. */
 	private final List<Integer> pathFromRoot;
@@ -146,7 +146,7 @@ public abstract class SearchNode implements Cloneable{
 	 */
 	public void close(Chaser chaser, Dependency[] dependencies) throws PlannerException, LimitReachedException {
 		this.configuration.reasonUntilTermination(chaser, dependencies);
-		this.isFullyGenerated = true;
+		this.isFullyChased = true;
 	}
 
 	/**
@@ -235,8 +235,8 @@ public abstract class SearchNode implements Cloneable{
 	 *
 	 * @return true if the configuration is fully closed
 	 */
-	public Boolean isFullyGenerated() {
-		return this.isFullyGenerated;
+	public Boolean isFullyChased() {
+		return this.isFullyChased;
 	}
 
 
@@ -246,7 +246,7 @@ public abstract class SearchNode implements Cloneable{
 	 * @param isFullyGenerated the new checks if is fully generated
 	 */
 	public void setIsFullyGenerated(Boolean isFullyGenerated) {
-		this.isFullyGenerated = isFullyGenerated;
+		this.isFullyChased = isFullyGenerated;
 	}
 	
 	/**

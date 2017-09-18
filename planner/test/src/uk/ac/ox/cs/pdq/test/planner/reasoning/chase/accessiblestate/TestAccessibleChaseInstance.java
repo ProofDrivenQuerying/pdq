@@ -25,11 +25,18 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.fol.Atom;
+import uk.ac.ox.cs.pdq.fol.Conjunction;
+import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
+import uk.ac.ox.cs.pdq.fol.Dependency;
+import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
+import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
+import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleDatabaseChaseInstance;
+import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
 import uk.ac.ox.cs.pdq.util.Utility;
 
 /**
@@ -374,6 +381,58 @@ public class TestAccessibleChaseInstance {
 			if (contains) {
 				Assert.assertTrue(found);
 			}
+		}
+	}
+	
+	
+	@Test
+	public void testChaseTheAccessibleState() {
+		Relation[] relations = new Relation[5];
+		relations[0] = Relation.create("R0", new Attribute[] { this.a, this.b, this.InstanceID }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
+		relations[1] = Relation.create("R1", new Attribute[] { this.a, this.b, this.InstanceID }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
+		relations[2] = Relation.create("R2", new Attribute[] { this.a, this.b, this.InstanceID }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
+		relations[3] = Relation.create("R3", new Attribute[] { this.a, this.b, this.InstanceID }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
+		relations[4] = Relation.create("Accessible", new Attribute[] { this.a, this.InstanceID });
+		// Create query
+		Atom[] atoms = new Atom[2];
+		Variable x = Variable.create("x");
+		Variable y = Variable.create("y");
+		Variable z = Variable.create("z");
+		Variable w = Variable.create("w");
+		atoms[0] = Atom.create(relations[0], new Term[] { x, y });
+		atoms[1] = Atom.create(relations[1], new Term[] { y, z });
+		ConjunctiveQuery query = ConjunctiveQuery.create(new Variable[] { x, y }, (Conjunction) Conjunction.of(atoms));
+
+		Dependency dependency1 = TGD.create(new Atom[] { Atom.create(relations[0], new Term[] { x, y })},
+				new Atom[] { Atom.create(relations[2], new Term[] { x, y })});
+		Dependency dependency2 = TGD.create(new Atom[] { Atom.create(relations[1], new Term[] { y, z })},
+				new Atom[] { Atom.create(relations[3], new Term[] { y, z })});
+		//R2(x,y), R3(y,z) -> R0(x,w) R1(w,z)
+		Dependency dependency3 = TGD.create(new Atom[] { Atom.create(relations[2], new Term[] { y, z }), Atom.create(relations[3], new Term[] { y, z })},
+				new Atom[] { Atom.create(relations[0], new Term[] { x, w }), Atom.create(relations[1], new Term[] { w, z })});
+		// Create schema
+		Schema schema = new Schema(relations, new Dependency[] { dependency1, dependency2, dependency3 });
+
+		// Create accessible schema
+		AccessibleSchema accessibleSchema = new AccessibleSchema(schema);
+		
+		// Create database connection
+		DatabaseConnection connection = null;
+		
+		// Create the chaser
+		RestrictedChaser chaser = new RestrictedChaser(null);
+		
+		try {
+			DatabaseParameters mySqlDbParam = new DatabaseParameters();
+			connection = new DatabaseConnection(mySqlDbParam, accessibleSchema);
+			AccessibleChaseInstance state = (uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance) 
+					new AccessibleDatabaseChaseInstance(query, accessibleSchema, connection, true);
+			chaser.reasonUntilTermination(state, accessibleSchema.getOriginalDependencies());
+			//Assert that we get four facts after chasing this thing
+			Assert.assertTrue(state.getFacts().size() == 4);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			Assert.fail();
 		}
 	}
 
