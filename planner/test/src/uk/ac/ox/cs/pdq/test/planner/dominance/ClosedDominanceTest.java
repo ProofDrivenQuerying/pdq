@@ -27,6 +27,7 @@ import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseIn
 import uk.ac.ox.cs.pdq.util.Utility;
 
 // TODO: Auto-generated Javadoc
+//TODO this test is broken it needs to be revised
 /**
  * 
  * @author Efthymia Tsamoura
