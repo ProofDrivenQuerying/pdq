@@ -33,6 +33,7 @@ import uk.ac.ox.cs.pdq.util.Utility;
  *
  * @author Efthymia Tsamoura
  */
+//TODO this test is broken it needs to be revised
 
 public class FactDominationFilterTest {
 	
