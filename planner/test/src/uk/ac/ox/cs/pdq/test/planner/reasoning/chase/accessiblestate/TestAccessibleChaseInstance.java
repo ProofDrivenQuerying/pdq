@@ -423,7 +423,7 @@ public class TestAccessibleChaseInstance {
 		RestrictedChaser chaser = new RestrictedChaser(null);
 		
 		try {
-			DatabaseParameters mySqlDbParam = new DatabaseParameters();
+			DatabaseParameters mySqlDbParam = getMySqlConfig();
 			connection = new DatabaseConnection(mySqlDbParam, accessibleSchema);
 			AccessibleChaseInstance state = (uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance) 
 					new AccessibleDatabaseChaseInstance(query, accessibleSchema, connection, true);
@@ -434,6 +434,25 @@ public class TestAccessibleChaseInstance {
 			e.printStackTrace();
 			Assert.fail();
 		}
+	}
+	
+	private DatabaseParameters getPostgresConfig() {
+		DatabaseParameters dbParam = new DatabaseParameters();
+		dbParam.setConnectionUrl("jdbc:postgresql://localhost/");
+		dbParam.setDatabaseDriver("org.postgresql.Driver");
+		dbParam.setDatabaseName("test_get_triggers");
+		dbParam.setDatabaseUser("postgres");
+		dbParam.setDatabasePassword("root");
+		return dbParam; 
+	}
+	private DatabaseParameters getMySqlConfig() {
+		DatabaseParameters dbParam = new DatabaseParameters();
+		dbParam.setConnectionUrl("jdbc:mysql://localhost/");
+		dbParam.setDatabaseDriver("com.mysql.jdbc.Driver");
+		dbParam.setDatabaseName("test_get_triggers");
+		dbParam.setDatabaseUser("root");
+		dbParam.setDatabasePassword("root");
+		return dbParam; 
 	}
 
 }
