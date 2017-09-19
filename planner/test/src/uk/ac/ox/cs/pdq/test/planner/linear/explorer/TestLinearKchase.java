@@ -73,19 +73,19 @@ public class TestLinearKchase {
 	}
 
 	@Test 
-	public void test1ExplorationStepsA() {
+	public void test1ExplorationStepsA_k10() {
 		GlobalCounterProvider.resetCounters();
 		GlobalCounterProvider.getNext("CannonicalName");
-		test1ExplorationSteps();
+		test1ExplorationSteps(10);
 	}
 	@Test 
-	public void test1ExplorationStepsB() {
+	public void test1ExplorationStepsB_k2() {
 		GlobalCounterProvider.resetCounters();
 		GlobalCounterProvider.getNext("CannonicalName");
-		test1ExplorationSteps();
+		test1ExplorationSteps(2);
 	}
 	@SuppressWarnings("rawtypes")
-	public void test1ExplorationSteps() {
+	public void test1ExplorationSteps(int chaseInterval) {
 		//Create the relations
 		Relation[] relations = new Relation[4];
 		relations[0] = Relation.create("R0", new Attribute[]{this.a, this.b, this.c, this.InstanceID}, 
@@ -144,7 +144,6 @@ public class TestLinearKchase {
 				CountNumberOfAccessedRelationsCostEstimator est = new CountNumberOfAccessedRelationsCostEstimator(null);
 				CostPropagator costPropagator = new OrderIndependentCostPropagator(est);
 				
-				int chaseInterval = 10;
 				explorer = new LinearKChase(
 					new EventBus(), 
 					false,
