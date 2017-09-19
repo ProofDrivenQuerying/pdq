@@ -733,7 +733,7 @@ public class TestLinearGeneric {
 			List<Entry<RelationalTerm, Cost>> exploredPlans = explorer.getExploredPlans();
 			Assert.assertNotNull(exploredPlans);
 			Assert.assertFalse(exploredPlans.isEmpty());
-			Assert.assertEquals(8, exploredPlans.size());
+			Assert.assertEquals(14, exploredPlans.size());
 		} catch (PlannerException | SQLException e) {
 			e.printStackTrace();
 			Assert.fail();
