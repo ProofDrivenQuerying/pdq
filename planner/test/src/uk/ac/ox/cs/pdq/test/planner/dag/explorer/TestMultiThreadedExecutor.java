@@ -60,8 +60,9 @@ import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 import uk.ac.ox.cs.pdq.util.LimitReachedException;
 import uk.ac.ox.cs.pdq.util.Utility;
 
-/** 
- * Tests the MultiThreadedExecutor class by using it mostly with Mock objects and a simple example schema.
+/**
+ * Tests the MultiThreadedExecutor class by using it mostly with Mock objects
+ * and a simple example schema.
  * 
  * @author Efthymia Tsamoura
  * @author Gabor
@@ -74,63 +75,68 @@ public class TestMultiThreadedExecutor {
 	protected Attribute d = Attribute.create(Integer.class, "d");
 	protected Attribute InstanceID = Attribute.create(Integer.class, "InstanceID");
 	int parallelThreads = 20;
-	boolean twoWay = true;
-	
-	boolean printPlans=false;
-	
-	@Before 
+	boolean twoWay = false;
+
+	boolean printPlans = false;
+
+	@Before
 	public void setup() {
 		Utility.assertsEnabled();
-        MockitoAnnotations.initMocks(this);
-        GlobalCounterProvider.resetCounters();
-        uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
-        uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
-        uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
+		MockitoAnnotations.initMocks(this);
+		GlobalCounterProvider.resetCounters();
+		uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
+		uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
+		uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
 	}
 
-	@Test 
-	public void test1() {
-		GlobalCounterProvider.resetCounters();
-		GlobalCounterProvider.getNext("CannonicalName");
+	@Test
+	public void test1CreateBinaryConfigurations_TwoWay() {
+		twoWay = true;
+		test1CreateBinaryConfigurations();
+	}
+
+	@Test
+	public void test1CreateBinaryConfigurations_SingleWay() {
+		twoWay = false;
 		test1CreateBinaryConfigurations();
 	}
 
 	public void test1CreateBinaryConfigurations() {
-		//Create the relations
+		GlobalCounterProvider.resetCounters();
+		GlobalCounterProvider.getNext("CannonicalName");
+		// Create the relations
 		Relation[] relations = new Relation[5];
-		relations[0] = Relation.create("R0", new Attribute[]{this.a, this.b, this.c, this.d, this.InstanceID}, 
-				new AccessMethod[]{AccessMethod.create(new Integer[]{})});
-		relations[1] = Relation.create("R1", new Attribute[]{this.a, this.b, this.c, this.d, this.InstanceID}, 
-				new AccessMethod[]{AccessMethod.create(new Integer[]{2,3})});
+		relations[0] = Relation.create("R0", new Attribute[] { this.a, this.b, this.c, this.d, this.InstanceID }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
+		relations[1] = Relation.create("R1", new Attribute[] { this.a, this.b, this.c, this.d, this.InstanceID },
+				new AccessMethod[] { AccessMethod.create(new Integer[] { 2, 3 }) });
 
-		relations[2] = Relation.create("R2", new Attribute[]{this.a, this.b, this.c, this.d, this.InstanceID}, 
-				new AccessMethod[]{AccessMethod.create(new Integer[]{})});
-		relations[3] = Relation.create("R3", new Attribute[]{this.a, this.b, this.c, this.d, this.InstanceID}, 
-				new AccessMethod[]{AccessMethod.create(new Integer[]{2,3})});
-		relations[4] = Relation.create("Accessible", new Attribute[]{this.a,this.InstanceID});
-		//Create query
-		//R0(x,y,z,w) R1(_,_,z,w) R2(x,y,z',w') R3(_,_,z',w')
+		relations[2] = Relation.create("R2", new Attribute[] { this.a, this.b, this.c, this.d, this.InstanceID }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
+		relations[3] = Relation.create("R3", new Attribute[] { this.a, this.b, this.c, this.d, this.InstanceID },
+				new AccessMethod[] { AccessMethod.create(new Integer[] { 2, 3 }) });
+		relations[4] = Relation.create("Accessible", new Attribute[] { this.a, this.InstanceID });
+		// Create query
+		// R0(x,y,z,w) R1(_,_,z,w) R2(x,y,z',w') R3(_,_,z',w')
 		Atom[] atoms = new Atom[4];
 		Variable x = Variable.create("x");
 		Variable y = Variable.create("y");
 		Variable z = Variable.create("z");
 		Variable w = Variable.create("w");
-		atoms[0] = Atom.create(relations[0], new Term[]{x,y,z,w});
-		atoms[1] = Atom.create(relations[1], new Term[]{Variable.create("x2"), Variable.create("y2"),z,w});
-		atoms[2] = Atom.create(relations[2], new Term[]{x,y,Variable.create("z3"), Variable.create("w3")});
-		atoms[3] = Atom.create(relations[3], new Term[]{Variable.create("x4"), Variable.create("y4"),Variable.create("z3"), Variable.create("w3")});
-		ConjunctiveQuery query = ConjunctiveQuery.create(new Variable[]{x,y}, (Conjunction) Conjunction.of(atoms));
+		atoms[0] = Atom.create(relations[0], new Term[] { x, y, z, w });
+		atoms[1] = Atom.create(relations[1], new Term[] { Variable.create("x2"), Variable.create("y2"), z, w });
+		atoms[2] = Atom.create(relations[2], new Term[] { x, y, Variable.create("z3"), Variable.create("w3") });
+		atoms[3] = Atom.create(relations[3], new Term[] { Variable.create("x4"), Variable.create("y4"), Variable.create("z3"), Variable.create("w3") });
+		ConjunctiveQuery query = ConjunctiveQuery.create(new Variable[] { x, y }, (Conjunction) Conjunction.of(atoms));
 
-		//Create schema
+		// Create schema
 		Schema schema = new Schema(relations);
 
-		//Create accessible schema
+		// Create accessible schema
 		AccessibleSchema accessibleSchema = new AccessibleSchema(schema);
 
-		//Create accessible query
+		// Create accessible query
 		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(query, query.getSubstitutionOfFreeVariablesToCanonicalConstants());
 
-		//Create database connection
+		// Create database connection
 		DatabaseConnection connection = null;
 		try {
 			connection = new DatabaseConnection(new DatabaseParameters(), accessibleSchema);
@@ -139,10 +145,10 @@ public class TestMultiThreadedExecutor {
 			Assert.fail();
 		}
 
-		//Create the chaser 
+		// Create the chaser
 		RestrictedChaser chaser = new RestrictedChaser(null);
 
-		//Mock the planner parameters
+		// Mock the planner parameters
 		PlannerParameters parameters = Mockito.mock(PlannerParameters.class);
 		when(parameters.getSeed()).thenReturn(1);
 		when(parameters.getFollowUpHandling()).thenReturn(FollowUpHandling.MINIMAL);
@@ -153,121 +159,111 @@ public class TestMultiThreadedExecutor {
 		when(costEstimator.cost(Mockito.any(RelationalTerm.class))).thenReturn(new DoubleCost(1.0));
 		when(costEstimator.clone()).thenReturn(costEstimator);
 
-		//Mock success domination
+		// Mock success domination
 		SuccessDominance successDominance = Mockito.mock(SuccessDominance.class);
 		when(successDominance.isDominated(Mockito.any(RelationalTerm.class), Mockito.any(Cost.class), Mockito.any(RelationalTerm.class), Mockito.any(Cost.class)))
 				.thenReturn(false);
 		when(successDominance.clone()).thenReturn(successDominance);
-		
-		//Mock domination
+
+		// Mock domination
 		Dominance dominance = Mockito.mock(Dominance.class);
 		when(dominance.isDominated(Mockito.any(Configuration.class), Mockito.any(Configuration.class))).thenReturn(false);
 		when(dominance.clone()).thenReturn(dominance);
 
-		//Create validators
+		// Create validators
 		List<Validator> validators = new ArrayList<>();
 		validators.add(new DefaultValidator());
-		
-		//Create a multitheaded executor
+
+		// Create a multitheaded executor
 		MultiThreadedContext mtcontext = null;
 		try {
-			mtcontext = new MultiThreadedContext(parallelThreads,
-					chaser,
-					connection,
-					costEstimator,
-					successDominance,
-					new Dominance[]{dominance},
-					validators);
+			mtcontext = new MultiThreadedContext(parallelThreads, chaser, connection, costEstimator, successDominance, new Dominance[] { dominance }, validators);
 		} catch (Exception e1) {
 			e1.printStackTrace();
 			Assert.fail();
 		}
 		MultiThreadedExecutor executor = new MultiThreadedExecutor(mtcontext);
-		
+
 		try {
-			List<DAGChaseConfiguration> configurations = DAGExplorerUtilities.createInitialApplyRuleConfigurations(parameters, query, accessibleQuery, accessibleSchema, chaser, connection);
+			List<DAGChaseConfiguration> configurations = DAGExplorerUtilities.createInitialApplyRuleConfigurations(parameters, query, accessibleQuery, accessibleSchema, chaser,
+					connection);
 			Set<String> predicateNames = new HashSet<>();
-			for (DAGChaseConfiguration c: configurations) {
-				for (ApplyRule app: c.getApplyRules()) {
+			for (DAGChaseConfiguration c : configurations) {
+				for (ApplyRule app : c.getApplyRules()) {
 					String predicateName = app.getRelation().getName();
 					Assert.assertTrue(!predicateNames.contains(predicateName));
 					predicateNames.add(predicateName);
 				}
 			}
-			Assert.assertEquals(4,predicateNames.size());
-			
+			Assert.assertEquals(4, predicateNames.size());
+
 			Queue<DAGChaseConfiguration> leftSideConfigurations = new ConcurrentLinkedQueue<>();
 			DAGEquivalenceClasses equivalenceClasses = new SynchronizedEquivalenceClasses();
 			leftSideConfigurations.addAll(configurations);
-			for(DAGChaseConfiguration initialConfiguration: configurations) {
+			for (DAGChaseConfiguration initialConfiguration : configurations) {
+				int size = equivalenceClasses.size();
 				equivalenceClasses.addEntry(initialConfiguration);
+				Assert.assertEquals(size + 1, equivalenceClasses.size());
 			}
-			
+
 			Collection<DAGChaseConfiguration> newConfigurations = null;
 			try {
-				newConfigurations = executor.createBinaryConfigurations(
-						2, 
-						leftSideConfigurations, 
-						equivalenceClasses.getConfigurations(), 
-						new Dependency[]{}, 
-						null, 
-						equivalenceClasses, 
-						twoWay, 
-						Long.MAX_VALUE, 
-						TimeUnit.MILLISECONDS);
+				newConfigurations = executor.createBinaryConfigurations(2, leftSideConfigurations, equivalenceClasses.getConfigurations(), new Dependency[] {}, null,
+						equivalenceClasses, twoWay, Long.MAX_VALUE, TimeUnit.MILLISECONDS);
 				leftSideConfigurations.clear();
 				leftSideConfigurations.addAll(newConfigurations);
-				for(DAGChaseConfiguration configuration: newConfigurations) {
+				for (DAGChaseConfiguration configuration : newConfigurations) {
+					int size = equivalenceClasses.size();
 					equivalenceClasses.addEntry(configuration);
+					Assert.assertEquals(size + 1, equivalenceClasses.size());
 				}
 				Assert.assertEquals(12, newConfigurations.size());
-				
-				newConfigurations = executor.createBinaryConfigurations(
-						3, 
-						leftSideConfigurations, 
-						equivalenceClasses.getConfigurations(), 
-						new Dependency[]{}, 
-						null, 
-						equivalenceClasses, 
-						twoWay, 
-						Long.MAX_VALUE, 
-						TimeUnit.MILLISECONDS);
+				Assert.assertEquals(16, equivalenceClasses.size());
+
+				newConfigurations = executor.createBinaryConfigurations(3, leftSideConfigurations, equivalenceClasses.getConfigurations(), new Dependency[] {}, null,
+						equivalenceClasses, twoWay, Long.MAX_VALUE, TimeUnit.MILLISECONDS);
 
 				int excpected = 24;
 				if (twoWay)
-					excpected *= 2; 
+					excpected *= 2;
 				Assert.assertEquals(excpected, newConfigurations.size());
 				leftSideConfigurations.clear();
 				leftSideConfigurations.addAll(newConfigurations);
-				for(DAGChaseConfiguration configuration: newConfigurations) {
+				for (DAGChaseConfiguration configuration : newConfigurations) {
+					int size = equivalenceClasses.size();
 					equivalenceClasses.addEntry(configuration);
+					Assert.assertEquals(size + 1, equivalenceClasses.size());
 				}
-				newConfigurations = executor.createBinaryConfigurations(
-						4, 
-						leftSideConfigurations, 
-						equivalenceClasses.getConfigurations(), 
-						new Dependency[]{}, 
-						null, 
-						equivalenceClasses, 
-						twoWay, 
-						Long.MAX_VALUE, 
-						TimeUnit.MILLISECONDS);
-				
+				if (twoWay)
+					Assert.assertEquals(64, equivalenceClasses.size());
+				else
+					Assert.assertEquals(40, equivalenceClasses.size());
+				newConfigurations = executor.createBinaryConfigurations(4, leftSideConfigurations, equivalenceClasses.getConfigurations(), new Dependency[] {}, null,
+						equivalenceClasses, twoWay, Long.MAX_VALUE, TimeUnit.MILLISECONDS);
+				for (DAGChaseConfiguration configuration : newConfigurations) {
+					int size = equivalenceClasses.size();
+					equivalenceClasses.addEntry(configuration);
+					Assert.assertEquals(size + 1, equivalenceClasses.size());
+				}
+				if (twoWay)
+					Assert.assertEquals(160, equivalenceClasses.size());
+				else
+					Assert.assertEquals(64, equivalenceClasses.size());
+
 				if (twoWay)
 					Assert.assertEquals(96, newConfigurations.size());
-				else 
+				else
 					Assert.assertEquals(24, newConfigurations.size());
 			} catch (PlannerException | LimitReachedException e) {
 				e.printStackTrace();
 				Assert.fail();
 			}
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 			Assert.fail();
 		}
 	}
-
 
 	@Test
 	public void test2CreateBinaryConfigurations() {
@@ -321,69 +317,64 @@ public class TestMultiThreadedExecutor {
 		CostEstimator costEstimator = Mockito.mock(CostEstimator.class);
 		when(costEstimator.cost(Mockito.any(RelationalTerm.class))).thenReturn(new DoubleCost(1.0));
 		when(costEstimator.clone()).thenReturn(costEstimator);
-		
 
-		//Mock success domination
+		// Mock success domination
 		SuccessDominance successDominance = Mockito.mock(SuccessDominance.class);
 		when(successDominance.isDominated(Mockito.any(RelationalTerm.class), Mockito.any(Cost.class), Mockito.any(RelationalTerm.class), Mockito.any(Cost.class)))
 				.thenReturn(false);
-		//SuccessDominance successDominance = new SuccessDominanceFactory(SuccessDominanceTypes.CLOSED).getInstance();
+		// SuccessDominance successDominance = new
+		// SuccessDominanceFactory(SuccessDominanceTypes.CLOSED).getInstance();
 		when(successDominance.clone()).thenReturn(successDominance);
-		
-		//Mock domination
+
+		// Mock domination
 		Dominance dominance = Mockito.mock(Dominance.class);
 		when(dominance.isDominated(Mockito.any(Configuration.class), Mockito.any(Configuration.class))).thenReturn(false);
 
-		//Create validators
+		// Create validators
 		List<Validator> validators = new ArrayList<>();
 		validators.add(new DefaultValidator());
-		
-		//Create a multitheaded executor
+
+		// Create a multitheaded executor
 		MultiThreadedContext mtcontext = null;
 		try {
-			mtcontext = new MultiThreadedContext(parallelThreads,
-					chaser,
-					connection,
-					costEstimator,
-					successDominance,
-					new Dominance[]{dominance},
-					validators);
+			mtcontext = new MultiThreadedContext(parallelThreads, chaser, connection, costEstimator, successDominance, new Dominance[] { dominance }, validators);
 		} catch (Exception e1) {
 			e1.printStackTrace();
 			Assert.fail();
 		}
 		MultiThreadedExecutor executor = new MultiThreadedExecutor(mtcontext);
-		
+
 		try {
-			List<DAGChaseConfiguration> configurations = DAGExplorerUtilities.createInitialApplyRuleConfigurations(parameters, query, accessibleQuery, accessibleSchema, chaser, connection);
+			List<DAGChaseConfiguration> configurations = DAGExplorerUtilities.createInitialApplyRuleConfigurations(parameters, query, accessibleQuery, accessibleSchema, chaser,
+					connection);
 			Set<String> predicateNames = new HashSet<>();
-			for (DAGChaseConfiguration c: configurations) {
-				for (ApplyRule app: c.getApplyRules()) {
+			for (DAGChaseConfiguration c : configurations) {
+				for (ApplyRule app : c.getApplyRules()) {
 					String predicateName = app.getRelation().getName();
 					if (!predicateName.equals("R1")) // R1 has two access methods, so it will not be unique.
-							Assert.assertTrue(!predicateNames.contains(predicateName));
+						Assert.assertTrue(!predicateNames.contains(predicateName));
 					predicateNames.add(predicateName);
 				}
 			}
-			Assert.assertEquals(3,predicateNames.size());
-			
+			Assert.assertEquals(3, predicateNames.size());
+
 			Queue<DAGChaseConfiguration> leftSideConfigurations = new ConcurrentLinkedQueue<>();
 			DAGEquivalenceClasses equivalenceClasses = new SynchronizedEquivalenceClasses();
 			leftSideConfigurations.addAll(configurations);
-			for(DAGChaseConfiguration initialConfiguration: configurations) {
+			for (DAGChaseConfiguration initialConfiguration : configurations) {
 				equivalenceClasses.addEntry(initialConfiguration);
 			}
-			
+
 			Collection<DAGChaseConfiguration> newConfigurations = null;
 			try {
-				
-				//round 1 
+
+				// round 1
 				newConfigurations = executor.createBinaryConfigurations(2, leftSideConfigurations, equivalenceClasses.getConfigurations(), new Dependency[] {}, null,
 						equivalenceClasses, twoWay, Long.MAX_VALUE, TimeUnit.MILLISECONDS);
 
 				Assert.assertEquals(10, newConfigurations.size());
-				
-				//round 2 
+
+				// round 2
 				leftSideConfigurations.clear();
 				leftSideConfigurations.addAll(newConfigurations);
 				for (DAGChaseConfiguration configuration : newConfigurations) {
@@ -393,11 +384,11 @@ public class TestMultiThreadedExecutor {
 						equivalenceClasses, twoWay, Long.MAX_VALUE, TimeUnit.MILLISECONDS);
 				int excpected = 12;
 				if (twoWay)
-					excpected *= 2; 
-				
+					excpected *= 2;
+
 				Assert.assertEquals(excpected, newConfigurations.size());
-				
-				//round 3 
+
+				// round 3
 				leftSideConfigurations.clear();
 				leftSideConfigurations.addAll(newConfigurations);
 				for (DAGChaseConfiguration configuration : newConfigurations) {
@@ -410,13 +401,13 @@ public class TestMultiThreadedExecutor {
 				e.printStackTrace();
 				Assert.fail();
 			}
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 			Assert.fail();
 		}
 	}
-	
+
 	/**
 	 * Creates a schema out of 4,8 or 12 relations where each four relation forms a
 	 * busy sub-plan. Current assertions are set to validate the results of a chase
@@ -552,7 +543,8 @@ public class TestMultiThreadedExecutor {
 				}
 				newConfigurations = executor.createBinaryConfigurations(round + 1, leftSideConfigurations, equivalenceClasses.getConfigurations(), new Dependency[] {}, null,
 						equivalenceClasses, twoWay, Long.MAX_VALUE, TimeUnit.MILLISECONDS);
-				//System.out.println("Round: #" + round + " found configs: " + newConfigurations.size());
+				// System.out.println("Round: #" + round + " found configs: " +
+				// newConfigurations.size());
 			}
 			Assert.assertEquals(120, newConfigurations.size());
 
