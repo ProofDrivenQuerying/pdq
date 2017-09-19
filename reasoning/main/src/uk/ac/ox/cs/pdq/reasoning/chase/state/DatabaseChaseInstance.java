@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -63,8 +64,10 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 	/** The _is failed. */
 	private boolean _isFailed = false;
 
-	/**  The state's facts. */
+	/**  The facts of this database Chase instance. May be different from the actual facts already in the database.*/
 	protected Collection<Atom> facts = new LinkedHashSet<Atom>();
+	/**  The facts of every physical database. We need this to be maintained to avoid writing the same tuples multiple times.*/
+	private static Map<String,Collection<Atom>> globalFactsPerDatabase = new HashMap<>();
 
 	/**  Keeps the classes of equivalence classes of constants, that are equated in EGD chasing. */
 	protected EqualConstantsClasses classes;
@@ -98,7 +101,11 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 		this.indexConstraints();
 		this.indexLastAttributeOfAllRelations();
 	}
-
+	@Override
+	public void deleteFacts(Collection<Atom> facts) {
+		super.deleteFacts(facts);
+		globalFactsPerDatabase.remove(super.getDatabaseConnection().getDatabaseName());
+	}
 	/**
 	 * Instantiates a new database list state.
 	 *
@@ -464,20 +471,31 @@ public class DatabaseChaseInstance extends DatabaseInstance implements ChaseInst
 	 * add the input set of facts to the database 
 	 */
 	@Override
-	public void addFacts(Collection<Atom> facts) {
+	public void addFacts(Collection<Atom> factsToAdd) {
 		try {
 			LinkedHashSet<Atom> newFacts = new LinkedHashSet<Atom>();
 			LinkedHashSet<Atom> factsToAddToTheDatabase = new LinkedHashSet<Atom>();
 			newFacts.addAll(this.facts);
 /* copy existing facts */
-			for (Atom fact: facts) {
+			Collection<Atom> globalDatabaseFacts = globalFactsPerDatabase.get(super.getDatabaseConnection().getDatabaseName());
+			if (globalDatabaseFacts == null) {
+				globalDatabaseFacts = new HashSet<>();
+				globalFactsPerDatabase.put(super.getDatabaseConnection().getDatabaseName(),globalDatabaseFacts);
+			}
+			for (Atom factToAdd: factsToAdd) {
 /* loop through input facts , checking if they overlap existing ones 
  * TODO: THIS SHOULD EVENTUALLY BE AN ADDITIONAL CHECK SINCE THE DB SHOULD CHECK UNIQUENESS AND DISCARD DUPLIACATES
- */
-				if (!newFacts.contains(fact)) {
-					factsToAddToTheDatabase.add(fact);
+ 	*/		
+				if (!globalDatabaseFacts.contains(factToAdd)) {
+					factsToAddToTheDatabase.add(factToAdd);
+				} else {
+					if (!newFacts.contains(factToAdd)) {
+						newFacts.add(factToAdd);
+					}
+						
 				}
 			}
+			globalDatabaseFacts.addAll(factsToAddToTheDatabase);
 			newFacts.addAll(factsToAddToTheDatabase);
 /* The actual adding of the facts to the db */
 			super.addFacts(extendFactsUsingInstanceID(factsToAddToTheDatabase));
