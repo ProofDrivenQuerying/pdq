@@ -127,7 +127,7 @@ public class AccessibleSchema extends Schema {
 			return Negation.of(computeInferredAccessibleFormula(f.getChild(0)));
 		}
 		else if (f instanceof QuantifiedFormula) {
-			return QuantifiedFormula.create(((QuantifiedFormula)f).getOperator(), f.getFreeVariables(), f.getChild(0));
+			return QuantifiedFormula.create(((QuantifiedFormula)f).getOperator(), f.getFreeVariables(), computeInferredAccessibleFormula(f.getChild(0)));
 		}
 		else if (f instanceof Atom) {
 			Predicate predicate = null;
@@ -139,7 +139,8 @@ public class AccessibleSchema extends Schema {
 				predicate = Predicate.create(inferredAccessiblePrefix + ((Atom)f).getPredicate().getName(), ((Atom)f).getPredicate().getArity());
 			return Atom.create(predicate, ((Atom)f).getTerms());
 		}
-		return f;
+		else 
+			throw new RuntimeException("Unknown formula type");
 	}
 
 	public static Relation[] computeAccessibleSchemaRelations(Relation[] relations) {
