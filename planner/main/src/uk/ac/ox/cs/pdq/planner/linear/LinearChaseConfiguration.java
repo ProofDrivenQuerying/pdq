@@ -64,9 +64,6 @@ public class LinearChaseConfiguration extends ChaseConfiguration implements Line
 	public LinearChaseConfiguration(LinearChaseConfiguration parent, Set<Candidate> candidatesToExpose, Random random) {		
 		super(parent.getState().clone(), new LinkedHashSet<Constant>(), LinearUtility.getOutputConstants(candidatesToExpose));
 		Assert.assertNotNull(parent);
-		if(candidatesToExpose== null || candidatesToExpose.isEmpty()) {
-			System.out.println("ss");
-		}
 		Assert.assertTrue(candidatesToExpose!= null && !candidatesToExpose.isEmpty());
 		Assert.assertTrue(this.getInput() != null && this.getInput().isEmpty());
 		Assert.assertNotNull(this.getOutput());
