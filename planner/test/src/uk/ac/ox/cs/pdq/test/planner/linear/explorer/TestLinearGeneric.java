@@ -509,12 +509,12 @@ public class TestLinearGeneric {
 	@Test 
 	public void test1ExplorationThreeRelationsMySql() {
 		List<Entry<RelationalTerm, Cost>> exploredPlans = findExploredPlans(3,getMySqlConfig());
-		Assert.assertEquals(16, exploredPlans.size());
+		Assert.assertEquals(244, exploredPlans.size());
 	}
 	@Test 
 	public void test1ExplorationThreeRelationsPostgres() {
 		List<Entry<RelationalTerm, Cost>> exploredPlans = findExploredPlans(3,getPostgresConfig());
-		Assert.assertEquals(16, exploredPlans.size());
+		Assert.assertEquals(244, exploredPlans.size());
 	}
 	//@Test takes too long
 	public void test1ExplorationFiveRelationsDerby() {
