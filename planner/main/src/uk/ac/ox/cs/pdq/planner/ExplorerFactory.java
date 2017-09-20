@@ -113,9 +113,9 @@ public class ExplorerFactory {
 			nodeFactory = new NodeFactory(parameters, costEstimator);
 			postPruning = new PostPruningFactory(parameters.getPostPruningType(), nodeFactory, chaser, query, accessibleSchema).getInstance();
 			if (costEstimator instanceof OrderDependentCostEstimator) 
-				costPropagator = new OrderDependentCostPropagator((OrderDependentCostEstimator) costPropagator);
+				costPropagator = new OrderDependentCostPropagator((OrderDependentCostEstimator) costEstimator);
 			else if (costEstimator instanceof OrderIndependentCostEstimator) 
-				costPropagator = new OrderDependentCostPropagator((OrderDependentCostEstimator) costPropagator);
+				costPropagator = new OrderDependentCostPropagator((OrderDependentCostEstimator) costEstimator);
 			else
 				throw new IllegalStateException("Attempting to get a propagator for a cost estimator that is neither blackbox nor simple");
 
