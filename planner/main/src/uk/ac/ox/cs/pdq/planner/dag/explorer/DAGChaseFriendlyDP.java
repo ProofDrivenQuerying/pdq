@@ -97,21 +97,21 @@ public class DAGChaseFriendlyDP extends DAGGeneric {
 	@SuppressWarnings("unchecked")
 	@Override
 	public Collection<DAGChaseConfiguration> exploreAllConfigurationsUpToCurrentDepth() throws PlannerException, LimitReachedException {
-		Map<Pair<DAGChaseConfiguration,DAGChaseConfiguration>,DAGChaseConfiguration> last = new HashMap<>();
+		Map<Pair<DAGChaseConfiguration,DAGChaseConfiguration>,DAGChaseConfiguration> newlyCreatedConfigurations = new HashMap<>();
 		Pair<DAGChaseConfiguration, DAGChaseConfiguration> pair = null;
 		while ((pair = this.selector.getNextPairOfConfigurationsToCompose(this.depth)) != null) {
-			if(!last.containsKey(pair)) {
+			if(!newlyCreatedConfigurations.containsKey(pair)) {
 				BinaryConfiguration configuration = new BinaryConfiguration(pair.getLeft(), pair.getRight());
 				Cost cost = this.costEstimator.cost(configuration.getPlan());
 				configuration.setCost(cost);
 				if (this.bestPlan == null || !this.successDominance.isDominated(configuration.getPlan(), configuration.getCost(), this.bestPlan, this.bestCost)) {
 					configuration.reasonUntilTermination(this.chaser, this.accessibleQuery, this.accessibleSchema.getInferredAccessibilityAxioms());
 					if (ExplorerUtils.isDominated(this.dominance, this.getRight(), configuration) == null
-							&& ExplorerUtils.isDominated(this.dominance, last.values(), configuration) == null) {
+							&& ExplorerUtils.isDominated(this.dominance, newlyCreatedConfigurations.values(), configuration) == null) {
 						if (configuration.isClosed() && configuration.isSuccessful(this.accessibleQuery)) {
 							this.setBestPlan(configuration);
 						} else {
-							last.put(pair, configuration);
+							newlyCreatedConfigurations.put(pair, configuration);
 						}
 					}
 				}
@@ -121,6 +121,6 @@ public class DAGChaseFriendlyDP extends DAGGeneric {
 				break;
 			}
 		}
-		return last.values();
+		return newlyCreatedConfigurations.values();
 	}
 }

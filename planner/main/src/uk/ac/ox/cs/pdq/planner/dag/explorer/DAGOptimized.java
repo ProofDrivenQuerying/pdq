@@ -147,7 +147,7 @@ public class DAGOptimized extends DAGExplorer {
 		} else if (this.depth > 1) {
 			this.checkLimitReached();
 			//Perform parallel chasing
-			Collection<DAGChaseConfiguration> configurations =
+			Collection<DAGChaseConfiguration> newlyCreatedConfigurations =
 					this.binaryConfigurationCreationThreads.createBinaryConfigurations(this.depth,
 							this.leftSideConfigurations,
 							this.equivalenceClasses.getConfigurations(),
@@ -157,40 +157,40 @@ public class DAGOptimized extends DAGExplorer {
 							true,
 							Double.valueOf((this.maxElapsedTime - (this.elapsedTime/1e6))).longValue(),
 							TimeUnit.MILLISECONDS);
-			if(configurations == null || configurations.isEmpty()) {
+			if(newlyCreatedConfigurations == null || newlyCreatedConfigurations.isEmpty()) {
 				this.forcedTermination = true;
 				return;
 			}
 
 			this.checkLimitReached();
 			//Iterate over all newly created configurations in parallel and return the best configuration
-			ExplorationResults results = this.configurationSpaceExplorationThreads.exploreInputConfigurations(
+			ExplorationResults explorationResults = this.configurationSpaceExplorationThreads.exploreInputConfigurations(
 					this.accessibleQuery,
-					new ConcurrentLinkedQueue<>(configurations),
+					new ConcurrentLinkedQueue<>(newlyCreatedConfigurations),
 					this.equivalenceClasses,
 					this.bestConfiguration,
 					Double.valueOf((this.maxElapsedTime - (this.elapsedTime/1e6))).longValue(),
 					TimeUnit.MILLISECONDS);
 
 			//Stop if no new configuration is being found
-			if (results == null) {
+			if (explorationResults == null) {
 				this.forcedTermination = true;
 				return;
 			}
 			//Update the best configuration
-			List<DAGChaseConfiguration> output = results.getOutput();
-			DAGChaseConfiguration bestResult = results.getBest();
-			if (bestResult !=  null) {
-				this.setBestPlan(bestResult);
+			List<DAGChaseConfiguration> nonDominatedConfigurations = explorationResults.getNonDominatedConfigurations();
+			DAGChaseConfiguration bestConfiguration = explorationResults.getBest();
+			if (bestConfiguration !=  null) {
+				this.setBestPlan(bestConfiguration);
 			}
 
-			if (output.isEmpty()) {
+			if (nonDominatedConfigurations.isEmpty()) {
 				this.forcedTermination = true;
 				return;
 			}
 
 			this.leftSideConfigurations.clear();
-			this.leftSideConfigurations.addAll(CollectionUtils.intersection(output, this.equivalenceClasses.getConfigurations()));
+			this.leftSideConfigurations.addAll(CollectionUtils.intersection(nonDominatedConfigurations, this.equivalenceClasses.getConfigurations()));
 
 			//Filter out configurations
 			if(this.filter != null) {

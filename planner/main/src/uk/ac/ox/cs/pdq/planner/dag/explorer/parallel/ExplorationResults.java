@@ -14,9 +14,9 @@ import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
  */
 public class ExplorationResults {
 	/** The list of non-dominated configurations that the IterativeExecutor.finalIteration method outputs.  **/
-	private final List<DAGChaseConfiguration> output;
+	private final List<DAGChaseConfiguration> nonDominatedConfigurations;
 	/** The list of non-dominated configurations that the IterativeExecutor.finalIteration method outputs and are also successful. **/
-	private final Set<DAGChaseConfiguration> successful;
+	private final Set<DAGChaseConfiguration> successfulConfigurations;
 	
 	/**  The lowest cost configuration*. */
 	private final DAGChaseConfiguration best;
@@ -31,9 +31,9 @@ public class ExplorationResults {
 	public ExplorationResults(List<DAGChaseConfiguration> output,
 			Set<DAGChaseConfiguration> successful,
 			DAGChaseConfiguration bestConfiguration) {
-		this.output = output;
+		this.nonDominatedConfigurations = output;
 		this.best = bestConfiguration;
-		this.successful = successful;
+		this.successfulConfigurations = successful;
 	}
 
 	/**
@@ -41,8 +41,8 @@ public class ExplorationResults {
 	 *
 	 * @return the output
 	 */
-	public List<DAGChaseConfiguration> getOutput() {
-		return this.output;
+	public List<DAGChaseConfiguration> getNonDominatedConfigurations() {
+		return this.nonDominatedConfigurations;
 	}
 
 	/**
@@ -59,7 +59,7 @@ public class ExplorationResults {
 	 *
 	 * @return the successful
 	 */
-	public Set<DAGChaseConfiguration> getSuccessful() {
-		return this.successful;
+	public Set<DAGChaseConfiguration> getSuccessfulConfigurations() {
+		return this.successfulConfigurations;
 	}
 }

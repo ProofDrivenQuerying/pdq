@@ -121,18 +121,14 @@ public class DAGGeneric extends DAGExplorer {
 		this.filter = filter;
 		this.validators = validators;
 		this.maxDepth = maxDepth;
-		List<DAGChaseConfiguration> initialConfigurations = 
-				DAGExplorerUtilities.createInitialApplyRuleConfigurations(this.parameters, this.query, this.accessibleQuery, this.accessibleSchema, this.chaser, this.connection);
-		if(this.filter != null) {
-			Collection<DAGChaseConfiguration> toDelete = this.filter.filter(initialConfigurations);
-			initialConfigurations.removeAll(toDelete);
-		}
+		List<DAGChaseConfiguration> initialConfigurations = DAGExplorerUtilities.createInitialApplyRuleConfigurations(this.parameters, this.query, this.accessibleQuery, this.accessibleSchema, this.chaser, this.connection);
+		if(this.filter != null)
+			initialConfigurations.removeAll(this.filter.filter(initialConfigurations));
 		this.leftSideConfigurations = new ArrayList<>();
 		this.rightSideConfigurations = new ArrayList<>();
 		this.leftSideConfigurations.addAll(initialConfigurations);
 		this.rightSideConfigurations.addAll(initialConfigurations);
 		this.minDepth = initialConfigurations.size();
-		
 		this.selector = new SelectorOfPairsOfConfigurationsToCombine<>(this.leftSideConfigurations, this.rightSideConfigurations, this.validators);
 	}
 
@@ -165,21 +161,21 @@ public class DAGGeneric extends DAGExplorer {
 			this.stats.set(CANDIDATES, this.rightSideConfigurations.size());
 		} else if (this.depth > 1) {
 			//Create all binary configurations of depth up to this.depth
-			Collection<DAGChaseConfiguration> last = this.exploreAllConfigurationsUpToCurrentDepth();
+			Collection<DAGChaseConfiguration> newlyCreatedConfigurations = this.exploreAllConfigurationsUpToCurrentDepth();
 			//Stop if we cannot create any new configuration
-			if (last.isEmpty() && depth > minDepth) {
+			if (newlyCreatedConfigurations.isEmpty() && depth > minDepth) {
 				this.forcedTermination = true;
 				return;
 			}
 			//Filter out configurations
 			if (this.filter != null) {
 				Collection<DAGChaseConfiguration> toDelete;
-				toDelete = this.filter.filter(CollectionUtils.union(last,this.rightSideConfigurations));
+				toDelete = this.filter.filter(CollectionUtils.union(newlyCreatedConfigurations,this.rightSideConfigurations));
 				this.rightSideConfigurations.removeAll(toDelete);
-				last.removeAll(toDelete);
+				newlyCreatedConfigurations.removeAll(toDelete);
 			}
 
-			this.leftSideConfigurations.addAll(last);
+			this.leftSideConfigurations.addAll(newlyCreatedConfigurations);
 			if (this.depth+1 > 3) {
 				// in cases when depth is 4 or more we have multiple options to generate a plan with such a depth.
 				// for example depth = 4 can be achieved by adding 3+1 or 2+2 or 1+3. 
@@ -209,11 +205,11 @@ public class DAGGeneric extends DAGExplorer {
 	 */
 	@SuppressWarnings("unchecked")
 	public Collection<DAGChaseConfiguration> exploreAllConfigurationsUpToCurrentDepth() throws PlannerException, LimitReachedException {
-		Map<Pair<DAGChaseConfiguration, DAGChaseConfiguration>, DAGChaseConfiguration> last = new HashMap<>();
+		Map<Pair<DAGChaseConfiguration, DAGChaseConfiguration>, DAGChaseConfiguration> newlyCreatedConfigurations = new HashMap<>();
 		Pair<DAGChaseConfiguration, DAGChaseConfiguration> pair = null;
 		//Get the next pair of configurations to combine
 		while ((pair = this.selector.getNextPairOfConfigurationsToCompose(this.depth)) != null) {
-			if(!last.containsKey(pair)) {
+			if(!newlyCreatedConfigurations.containsKey(pair)) {
 				//Create a new binary configuration
 				BinaryConfiguration configuration = new BinaryConfiguration(pair.getLeft(), pair.getRight());
 				Cost cost = this.costEstimator.cost(configuration.getPlan());
@@ -226,7 +222,7 @@ public class DAGGeneric extends DAGExplorer {
 						this.exploredPlans.add(new AbstractMap.SimpleEntry<RelationalTerm, Cost>(configuration.getPlan(), configuration.getCost()));
 						this.setBestPlan(configuration);
 					} else {
-						last.put(pair, configuration);
+						newlyCreatedConfigurations.put(pair, configuration);
 					}
 				}
 			}
@@ -235,7 +231,7 @@ public class DAGGeneric extends DAGExplorer {
 				break;
 			}
 		}
-		return last.values();
+		return newlyCreatedConfigurations.values();
 	}
 
 	public List<DAGChaseConfiguration> getRight() {

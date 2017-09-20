@@ -388,12 +388,6 @@ public class TestDAGGeneric {
 		// Create database connection
 		DatabaseConnection connection = null;
 		try {
-			DatabaseParameters mySqlDbParam = new DatabaseParameters();
-			mySqlDbParam.setConnectionUrl("jdbc:mysql://localhost/");
-			mySqlDbParam.setDatabaseDriver("com.mysql.jdbc.Driver");
-			mySqlDbParam.setDatabaseName("test_get_triggers");
-			mySqlDbParam.setDatabaseUser("root");
-			mySqlDbParam.setDatabasePassword("root");
 			DatabaseParameters postgresDbParam = new DatabaseParameters();
 			postgresDbParam.setConnectionUrl("jdbc:postgresql://localhost/");
 			postgresDbParam.setDatabaseDriver("org.postgresql.Driver");
@@ -468,7 +462,7 @@ public class TestDAGGeneric {
 	}
 
 	/**
-	 *  The query is Q(x,y) = \exists y R0(x,y) R1(y,z) 
+	 *  The query is Q(x,z) = \exists y R0(x,y) R1(y,z) 
 	 *  We also have the dependencies 
 	 *  R0(x,y) -> R2(x,y) 
 	 *  R1(y,z) -> R3(y,z) 
@@ -501,7 +495,7 @@ public class TestDAGGeneric {
 		Variable w = Variable.create("w");
 		atoms[0] = Atom.create(relations[0], new Term[] { x, y });
 		atoms[1] = Atom.create(relations[1], new Term[] { y, z });
-		ConjunctiveQuery query = ConjunctiveQuery.create(new Variable[] { x, y }, (Conjunction) Conjunction.of(atoms));
+		ConjunctiveQuery query = ConjunctiveQuery.create(new Variable[] { x, z }, (Conjunction) Conjunction.of(atoms));
 
 		Dependency dependency1 = TGD.create(new Atom[] { Atom.create(relations[0], new Term[] { x, y })},
 				new Atom[] { Atom.create(relations[2], new Term[] { x, y })});
@@ -527,8 +521,7 @@ public class TestDAGGeneric {
 			mySqlDbParam.setDatabaseDriver("com.mysql.jdbc.Driver");
 			mySqlDbParam.setDatabaseName("test_get_triggers");
 			mySqlDbParam.setDatabaseUser("root");
-			mySqlDbParam.setDatabasePassword("root");
-			
+			mySqlDbParam.setDatabasePassword("root");			
 			databaseConnection = new DatabaseConnection(mySqlDbParam, accessibleSchema);
 		} catch (SQLException e) {
 			e.printStackTrace();
