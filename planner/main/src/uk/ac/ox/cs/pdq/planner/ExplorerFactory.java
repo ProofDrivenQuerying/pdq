@@ -27,6 +27,7 @@ import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominance;
 import uk.ac.ox.cs.pdq.planner.dominance.SuccessDominanceFactory;
 import uk.ac.ox.cs.pdq.planner.linear.cost.CostPropagator;
 import uk.ac.ox.cs.pdq.planner.linear.cost.OrderDependentCostPropagator;
+import uk.ac.ox.cs.pdq.planner.linear.cost.OrderIndependentCostPropagator;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.LinearGeneric;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.LinearKChase;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.LinearOptimized;
@@ -115,10 +116,9 @@ public class ExplorerFactory {
 			if (costEstimator instanceof OrderDependentCostEstimator) 
 				costPropagator = new OrderDependentCostPropagator((OrderDependentCostEstimator) costEstimator);
 			else if (costEstimator instanceof OrderIndependentCostEstimator) 
-				costPropagator = new OrderDependentCostPropagator((OrderDependentCostEstimator) costEstimator);
+				costPropagator = new OrderIndependentCostPropagator((OrderIndependentCostEstimator) costEstimator);
 			else
 				throw new IllegalStateException("Attempting to get a propagator for a cost estimator that is neither blackbox nor simple");
-
 		}
 		else {
 			Validator validator = (Validator) new ValidatorFactory(parameters.getValidatorType(), parameters.getDepthThreshold()).getInstance();
