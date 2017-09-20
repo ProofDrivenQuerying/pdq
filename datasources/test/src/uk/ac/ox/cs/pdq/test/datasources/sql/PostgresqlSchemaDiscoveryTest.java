@@ -115,7 +115,6 @@ public class PostgresqlSchemaDiscoveryTest {
 	/**
 	 * Test parse view defintion.
 	 */
-	@SuppressWarnings("serial")
 	@Test
 	public void testParseViewDefintion() {
 		Properties properties = new Properties();
@@ -124,10 +123,10 @@ public class PostgresqlSchemaDiscoveryTest {
 		properties.put("username", "root");
 		properties.put("password", "root");
 		Map<String, uk.ac.ox.cs.pdq.db.Relation> map = new LinkedHashMap<>();
-		map.put("customer", new uk.ac.ox.cs.pdq.db.Relation("customer", this.makeAttributes(this.attributesNames[0])){});
-		map.put("lineitem", new uk.ac.ox.cs.pdq.db.Relation("lineitem", this.makeAttributes(this.attributesNames[1])){});
-		map.put("orders", new uk.ac.ox.cs.pdq.db.Relation("orders", this.makeAttributes(this.attributesNames[3])){});
-		map.put("part", new uk.ac.ox.cs.pdq.db.Relation("part", this.makeAttributes(this.attributesNames[4])){});
+		map.put("customer", uk.ac.ox.cs.pdq.db.Relation.create("customer", this.makeAttributes(this.attributesNames[0])));
+		map.put("lineitem", uk.ac.ox.cs.pdq.db.Relation.create("lineitem", this.makeAttributes(this.attributesNames[1])));
+		map.put("orders", uk.ac.ox.cs.pdq.db.Relation.create("orders", this.makeAttributes(this.attributesNames[3])));
+		map.put("part", uk.ac.ox.cs.pdq.db.Relation.create("part", this.makeAttributes(this.attributesNames[4])));
 		PostgresqlSchemaDiscoverer disco = new PostgresqlSchemaDiscoverer();
 		disco.setProperties(properties);
 //		disco.parseViewDefinition(
