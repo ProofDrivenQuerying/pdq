@@ -100,7 +100,9 @@ public class LinearKChase extends LinearExplorer {
 	}
 
 	/**
-	 * _explore.
+	 * It will explore without chasing K times and then does a chase step. Exceptional cases:
+	 *   - when K=1 it will do both parts in each round.
+	 *   - before termination it will do a chasing round. 
 	 *
 	 * @throws PlannerException the planner exception
 	 * @throws LimitReachedException the limit reached exception
@@ -108,124 +110,148 @@ public class LinearKChase extends LinearExplorer {
 	@Override
 	public void performSingleExplorationStep() throws PlannerException, LimitReachedException {
 		log.debug("Iteration: " + this.rounds);
-		if(this.rounds % this.chaseInterval != 0 ) {
-			// Choose the next node to explore below it
-			SearchNode selectedNode = this.chooseNode();
-			if (selectedNode == null) 
-				return;
-			LinearConfiguration selectedConfig = selectedNode.getConfiguration();
-			/*
-			 * Choose a new candidate fact. A candidate fact F(c1,c2,...,cN) is one for which
-			 * (i) there exists Accessible(c_i) facts for any c_i
-			 * (ii) AccessedF(c1,c2,...,cN) does not exist in the current initialConfig
-			 */
-			Candidate selectedCandidate = selectedConfig.chooseCandidate();
-			if(selectedCandidate == null) {
-				selectedNode.setStatus(NodeStatus.TERMINAL);
-				return;
-			}
-
-			// Search for other candidate facts that could be exposed along with the selected candidate. 
-			Set<Candidate> similarCandidates = selectedConfig.getSimilarCandidates(selectedCandidate);
-			selectedConfig.removeCandidates(similarCandidates);
-			if (!selectedConfig.hasCandidates()) 
-				selectedNode.setStatus(NodeStatus.TERMINAL);
-			
-			// Create a new node from the exposed facts and add it to the plan tree
-			SearchNode freshNode = this.nodeFactory.getInstance(selectedNode, similarCandidates);	
-			freshNode.getConfiguration().detectCandidates(this.accessibleSchema);
-			if (!freshNode.getConfiguration().hasCandidates()) 
-				freshNode.setStatus(NodeStatus.TERMINAL);
-		
-			Cost cost = this.costEstimator.cost(freshNode.getConfiguration().getPlan());
-			freshNode.getConfiguration().setCost(cost);
-			
-			this.planTree.addVertex(freshNode);
-			this.planTree.addEdge(selectedNode, freshNode, new DefaultEdge());
-
-			boolean domination = false;
-			/* If the cost of the plan of the newly created node is higher than the best plan found so far then kill the newly created node  */
-			if (this.bestPlan != null) {
-				if (freshNode.getConfiguration().getCost().greaterOrEquals(this.bestCost)) {
-					domination = true;
-					freshNode.setDominatingPlan(this.bestPlan);
-					freshNode.setCostOfDominatingPlan(this.bestCost);
-					this.stats.increase(HIGHER_COST_PRUNING, 1);
-					log.debug(freshNode.getConfiguration().getPlan() + " has higher cost than plan " + this.bestPlan + " Costs " + freshNode.getConfiguration().getCost() + ">=" + this.bestCost);
-				}
-			}
-
-			/* If at least one node in the plan tree dominates the newly created node, then kill the newly created node   */
-			if (!domination && this.costPropagator instanceof OrderIndependentCostPropagator) {
-				this.stats.start(MILLI_DOMINANCE);
-				SearchNode dominatingNode = ExplorerUtility.isDominated(ExplorerUtility.getNodesThatAreFullyChased(this.planTree), freshNode);
-				this.stats.stop(MILLI_DOMINANCE);
-				if(dominatingNode != null) {
-					domination = true;
-					freshNode.setDominatingPlan(dominatingNode.getConfiguration().getPlan());
-					freshNode.setCostOfDominatingPlan(dominatingNode.getConfiguration().getCost());
-					this.stats.increase(DOMINANCE_PRUNING, 1);
-					log.debug(dominatingNode.getConfiguration().getPlan() + " dominates " + freshNode.getConfiguration().getPlan() + dominatingNode.getConfiguration().getCost() + "<" + freshNode.getConfiguration().getCost());
-				}
-			}
-			if (domination) {
-				freshNode.setStatus(NodeStatus.TERMINAL);
-				this.eventBus.post(freshNode);
-				this.planTree.removeVertex(freshNode);
-			}
+		if(this.rounds % this.chaseInterval != 0  || chaseInterval==1) {
+			_performeSingleExplorationStepWithoutChasing();
 		}
-		else {
-			Collection<SearchNode> leaves = ExplorerUtility.getLeafNodesThatAreNotFullyChased(this.planTree);
-			log.debug("Number of partially generated leaves " + leaves.size());
-			this.stats.start(MILLI_CLOSE);
-			for(SearchNode leaf:leaves) {
-				leaf.close(this.chaser, this.accessibleSchema.getInferredAccessibilityAxioms());
-				log.debug("Close leaf: " + leaf);
-			}	
-			this.stats.stop(MILLI_CLOSE);
-
-			// Perform global equivalence checks
-			for(SearchNode leaf: leaves) {
-				this.stats.start(MILLI_EQUIVALENCE);
-				SearchNode parentEquivalent = ExplorerUtility.isEquivalent(leaves, leaf);
-				this.stats.stop(MILLI_EQUIVALENCE);
-
-				/*
-				 * If such a node exists then
-				 * -create a pointer from the newly created node to the one that is globally equivalent to
-				 * -propagate upwards the best paths to success
-				 * -update the best plan found so far
-				 * -stop exploring plans below the newly created node
-				 */
-				if (parentEquivalent != null && !parentEquivalent.getStatus().equals(NodeStatus.SUCCESSFUL)) {
-					leaf.setEquivalentNode(parentEquivalent);
-					leaf.setStatus(NodeStatus.TERMINAL);
-					SearchNode parentNode = this.planTree.getParent(leaf);
-					this.updateBestPlan(parentNode, leaf);
-					log.debug("Node " + parentEquivalent.toString() + " is equivalent to " + leaf.toString());
-					this.stats.increase(EQUIVALENCE_PRUNING, 1);
-				}
-			}
-
-			// Check for query match
-			for (SearchNode leaf:leaves) {
-				if((leaf.getStatus() == NodeStatus.TERMINAL || leaf.getStatus() == NodeStatus.ONGOING) && leaf.getEquivalentNode() == null) {
-					this.stats.start(MILLI_QUERY_MATCH);
-					List<Match> matches = leaf.matchesQuery(this.accessibleQuery);
-					this.stats.stop(MILLI_QUERY_MATCH);
-
-					// If there exists at least one query match
-					if (!matches.isEmpty()) {
-						leaf.setStatus(NodeStatus.SUCCESSFUL);
-						SearchNode parentNode = this.planTree.getParent(leaf);
-						this.updateBestPlan(parentNode, leaf);
-					}
-				}
-			}
+		if (this.terminates() || chaseInterval==1 || this.rounds % this.chaseInterval == 0 ) {
+			// we do cases when:
+			//  - This is the last round (exploration will terminate)
+			//  - chaseInterval == 1, so we do chase in every round,
+			//  - this is the K round without chasing (this.rounds % this.chaseInterval == 0)
+			_performeSingleExplorationStepWithChasing();
 		}
 		this.rounds++;
 	}
 	
+	/** 
+	 * Does the exploration step in case when the round_number is a multiple of K. chasing is needed. 
+	 * 
+	 * @throws PlannerException
+	 * @throws LimitReachedException
+	 */
+	private void _performeSingleExplorationStepWithChasing() throws PlannerException, LimitReachedException {
+		Collection<SearchNode> leaves = ExplorerUtility.getLeafNodesThatAreNotFullyChased(this.planTree);
+		log.debug("Number of partially generated leaves " + leaves.size());
+		this.stats.start(MILLI_CLOSE);
+		for(SearchNode leaf:leaves) {
+			leaf.close(this.chaser, this.accessibleSchema.getInferredAccessibilityAxioms());
+			log.debug("Close leaf: " + leaf);
+		}	
+		this.stats.stop(MILLI_CLOSE);
+
+		// Perform global equivalence checks
+		for(SearchNode leaf: leaves) {
+			this.stats.start(MILLI_EQUIVALENCE);
+			SearchNode parentEquivalent = ExplorerUtility.isEquivalent(leaves, leaf);
+			this.stats.stop(MILLI_EQUIVALENCE);
+
+			/*
+			 * If such a node exists then
+			 * -create a pointer from the newly created node to the one that is globally equivalent to
+			 * -propagate upwards the best paths to success
+			 * -update the best plan found so far
+			 * -stop exploring plans below the newly created node
+			 */
+			if (parentEquivalent != null && !parentEquivalent.getStatus().equals(NodeStatus.SUCCESSFUL)) {
+				leaf.setEquivalentNode(parentEquivalent);
+				leaf.setStatus(NodeStatus.TERMINAL);
+				SearchNode parentNode = this.planTree.getParent(leaf);
+				this.updateBestPlan(parentNode, leaf);
+				log.debug("Node " + parentEquivalent.toString() + " is equivalent to " + leaf.toString());
+				this.stats.increase(EQUIVALENCE_PRUNING, 1);
+			}
+		}
+
+		// Check for query match
+		for (SearchNode leaf:leaves) {
+			if((leaf.getStatus() == NodeStatus.TERMINAL || leaf.getStatus() == NodeStatus.ONGOING) && leaf.getEquivalentNode() == null) {
+				this.stats.start(MILLI_QUERY_MATCH);
+				List<Match> matches = leaf.matchesQuery(this.accessibleQuery);
+				this.stats.stop(MILLI_QUERY_MATCH);
+
+				// If there exists at least one query match
+				if (!matches.isEmpty()) {
+					leaf.setStatus(NodeStatus.SUCCESSFUL);
+					SearchNode parentNode = this.planTree.getParent(leaf);
+					this.updateBestPlan(parentNode, leaf);
+				}
+			}
+		}
+	}
+
+	/** 
+	 * Does the exploration step in case when the round_number is not multiple of K. No chasing this time.    
+	 * 
+	 * @throws PlannerException
+	 * @throws LimitReachedException
+	 */
+	private void _performeSingleExplorationStepWithoutChasing() throws PlannerException {
+		// Choose the next node to explore below it
+		SearchNode selectedNode = this.chooseNode();
+		if (selectedNode == null) 
+			return;
+		LinearConfiguration selectedConfig = selectedNode.getConfiguration();
+		/*
+		 * Choose a new candidate fact. A candidate fact F(c1,c2,...,cN) is one for which
+		 * (i) there exists Accessible(c_i) facts for any c_i
+		 * (ii) AccessedF(c1,c2,...,cN) does not exist in the current initialConfig
+		 */
+		Candidate selectedCandidate = selectedConfig.chooseCandidate();
+		if(selectedCandidate == null) {
+			selectedNode.setStatus(NodeStatus.TERMINAL);
+			return;
+		}
+
+		// Search for other candidate facts that could be exposed along with the selected candidate. 
+		Set<Candidate> similarCandidates = selectedConfig.getSimilarCandidates(selectedCandidate);
+		selectedConfig.removeCandidates(similarCandidates);
+		if (!selectedConfig.hasCandidates()) 
+			selectedNode.setStatus(NodeStatus.TERMINAL);
+		
+		// Create a new node from the exposed facts and add it to the plan tree
+		SearchNode freshNode = this.nodeFactory.getInstance(selectedNode, similarCandidates);	
+		freshNode.getConfiguration().detectCandidates(this.accessibleSchema);
+		if (!freshNode.getConfiguration().hasCandidates()) 
+			freshNode.setStatus(NodeStatus.TERMINAL);
+	
+		Cost cost = this.costEstimator.cost(freshNode.getConfiguration().getPlan());
+		freshNode.getConfiguration().setCost(cost);
+		
+		this.planTree.addVertex(freshNode);
+		this.planTree.addEdge(selectedNode, freshNode, new DefaultEdge());
+
+		boolean domination = false;
+		/* If the cost of the plan of the newly created node is higher than the best plan found so far then kill the newly created node  */
+		if (this.bestPlan != null) {
+			if (freshNode.getConfiguration().getCost().greaterOrEquals(this.bestCost)) {
+				domination = true;
+				freshNode.setDominatingPlan(this.bestPlan);
+				freshNode.setCostOfDominatingPlan(this.bestCost);
+				this.stats.increase(HIGHER_COST_PRUNING, 1);
+				log.debug(freshNode.getConfiguration().getPlan() + " has higher cost than plan " + this.bestPlan + " Costs " + freshNode.getConfiguration().getCost() + ">=" + this.bestCost);
+			}
+		}
+
+		/* If at least one node in the plan tree dominates the newly created node, then kill the newly created node   */
+		if (!domination && this.costPropagator instanceof OrderIndependentCostPropagator) {
+			this.stats.start(MILLI_DOMINANCE);
+			SearchNode dominatingNode = ExplorerUtility.isDominated(ExplorerUtility.getNodesThatAreFullyChased(this.planTree), freshNode);
+			this.stats.stop(MILLI_DOMINANCE);
+			if(dominatingNode != null) {
+				domination = true;
+				freshNode.setDominatingPlan(dominatingNode.getConfiguration().getPlan());
+				freshNode.setCostOfDominatingPlan(dominatingNode.getConfiguration().getCost());
+				this.stats.increase(DOMINANCE_PRUNING, 1);
+				log.debug(dominatingNode.getConfiguration().getPlan() + " dominates " + freshNode.getConfiguration().getPlan() + dominatingNode.getConfiguration().getCost() + "<" + freshNode.getConfiguration().getCost());
+			}
+		}
+		if (domination) {
+			freshNode.setStatus(NodeStatus.TERMINAL);
+			this.eventBus.post(freshNode);
+			this.planTree.removeVertex(freshNode);
+		}
+	}
+
 	/**
 	 * Update best plan.
 	 *
