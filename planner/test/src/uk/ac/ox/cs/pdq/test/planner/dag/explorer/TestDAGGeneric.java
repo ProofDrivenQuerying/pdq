@@ -129,12 +129,6 @@ public class TestDAGGeneric {
 			mySqlDbParam.setDatabaseName("test_get_triggers");
 			mySqlDbParam.setDatabaseUser("root");
 			mySqlDbParam.setDatabasePassword("root");
-			DatabaseParameters postgresDbParam = new DatabaseParameters();
-			postgresDbParam.setConnectionUrl("jdbc:postgresql://localhost/");
-			postgresDbParam.setDatabaseDriver("org.postgresql.Driver");
-			postgresDbParam.setDatabaseName("test_get_triggers");
-			postgresDbParam.setDatabaseUser("postgres");
-			postgresDbParam.setDatabasePassword("root");
 			
 			connection = new DatabaseConnection(mySqlDbParam, accessibleSchema);
 		} catch (SQLException e) {
