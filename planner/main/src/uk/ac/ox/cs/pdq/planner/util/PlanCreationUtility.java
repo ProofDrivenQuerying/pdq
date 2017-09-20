@@ -75,7 +75,6 @@ public class PlanCreationUtility {
 	 * @param toProject 		Terms to project in the resulting plan
 	 * @return the left deep plan
 	 */
-	@SuppressWarnings("serial")
 	public static RelationalTerm createSingleAccessPlan(Relation relation, AccessMethod accessMethod, Collection<Atom> exposedFacts) {
 		Assert.assertNotNull(relation);
 		Assert.assertNotNull(accessMethod);
@@ -91,7 +90,7 @@ public class PlanCreationUtility {
 			if (access == null) {
 				Attribute[] attributes = new Attribute[relation.getArity()-1];
 				System.arraycopy(relation.getAttributes(), 0, attributes, 0, attributes.length); 
-				planRelation = new Relation(relation.getName(), attributes, relation.getAccessMethods()){};
+				planRelation = Relation.create(relation.getName(), attributes, relation.getAccessMethods());
 				//Compute the input constants
 				Map<Integer, TypedConstant> inputConstants = computeInputConstants(accessMethod, exposedFact.getTerms());
 				//Create an access operator

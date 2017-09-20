@@ -163,7 +163,6 @@ public class PostgresqlSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 	 * @return the corresponding linear guarded dependency representation of the
 	 * given SQL view definition.
 	 */
-	@SuppressWarnings("serial")
 	public LinearGuarded parseViewDefinition(String viewName, String viewDef, Map<String, Relation> relationMap) {
 		Preconditions.checkArgument(viewDef != null && !viewDef.isEmpty());
 		String crFreeViewDef = viewDef.replace("\n", " ");
@@ -185,7 +184,7 @@ public class PostgresqlSchemaDiscoverer extends AbstractSQLSchemaDiscoverer {
 		List<Term> freeTerms = freeTermsAndAttributes.getLeft();
 		List<Attribute> attributes = freeTermsAndAttributes.getRight();
 		Atom[] right = atoms.values().toArray(new Atom[atoms.values().size()]);
-		return LinearGuarded.create(Atom.create(new Relation(viewName, attributes.toArray(new Attribute[attributes.size()])) {}, freeTerms.toArray(new Term[freeTerms.size()])), right);
+		return LinearGuarded.create(Atom.create(Relation.create(viewName, attributes.toArray(new Attribute[attributes.size()])), freeTerms.toArray(new Term[freeTerms.size()])), right);
 	}
 	
 	/**
