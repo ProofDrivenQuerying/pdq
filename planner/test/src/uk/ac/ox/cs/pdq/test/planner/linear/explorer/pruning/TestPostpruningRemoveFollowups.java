@@ -4,9 +4,12 @@ import static org.mockito.Mockito.when;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Random;
 import java.util.Set;
 
 import org.junit.Assert;
@@ -17,8 +20,14 @@ import org.junit.runners.MethodSorters;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+import com.google.common.collect.Sets;
+import com.google.common.eventbus.EventBus;
+
 import uk.ac.ox.cs.pdq.algebra.AccessTerm;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
+import uk.ac.ox.cs.pdq.cost.Cost;
+import uk.ac.ox.cs.pdq.cost.DoubleCost;
+import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.CountNumberOfAccessedRelationsCostEstimator;
 import uk.ac.ox.cs.pdq.cost.estimators.OrderIndependentCostEstimator;
 import uk.ac.ox.cs.pdq.db.AccessMethod;
@@ -28,11 +37,13 @@ import uk.ac.ox.cs.pdq.db.DatabaseParameters;
 import uk.ac.ox.cs.pdq.db.Match;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
+import uk.ac.ox.cs.pdq.db.View;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Conjunction;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Constant;
 import uk.ac.ox.cs.pdq.fol.Dependency;
+import uk.ac.ox.cs.pdq.fol.LinearGuarded;
 import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.Variable;
@@ -41,6 +52,7 @@ import uk.ac.ox.cs.pdq.planner.PlannerParameters;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibleSchema;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.Candidate;
+import uk.ac.ox.cs.pdq.planner.linear.explorer.LinearGeneric;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.NodeFactory;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode;
 import uk.ac.ox.cs.pdq.planner.linear.explorer.node.SearchNode.NodeStatus;
@@ -68,324 +80,126 @@ public class TestPostpruningRemoveFollowups {
 	protected Attribute d = Attribute.create(Integer.class, "d");
 	protected Attribute InstanceID = Attribute.create(Integer.class, "InstanceID");
 
-	@Before 
+	@Before
 	public void setup() {
 		uk.ac.ox.cs.pdq.util.Utility.assertsEnabled();
-        MockitoAnnotations.initMocks(this);
-        GlobalCounterProvider.resetCounters();
-        uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
-        uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
-        uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
+		MockitoAnnotations.initMocks(this);
+		GlobalCounterProvider.resetCounters();
+		uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
+		uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
+		uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
 	}
 
-	//The query is Q(x,y) = R0(x,y) R1(y,z) R2(z,w)
-	//We have free access on R0
-	//dependent access on R1 on the first position
-	//and dependent access on R2 on the first position again.
-	//We also have a dependency R0(x,y) R1(y,z) -> R3(x,y,z)
-	//and a relation R3 with free access
-	//Suppose that we found the plan that performs accesses in the following order R0(x,y) R1(y,z) R3(x,y,z) R2(z,w)
-	//postpruning should trash the access on R3
-	@Test 
-	public void test1Postpruning() {
-		//Create the relations
-		Relation[] relations = new Relation[5];
-		relations[0] = Relation.create("R0", new Attribute[]{this.a, this.b, this.InstanceID}, 
-				new AccessMethod[]{AccessMethod.create(new Integer[]{})});
-		relations[1] = Relation.create("R1", new Attribute[]{this.a, this.b, this.InstanceID}, 
-				new AccessMethod[]{AccessMethod.create(new Integer[]{0})});
-		relations[2] = Relation.create("R2", new Attribute[]{this.a, this.b, this.InstanceID}, 
-				new AccessMethod[]{AccessMethod.create(new Integer[]{0})});
-		relations[3] = Relation.create("R3", new Attribute[]{this.a, this.b, this.c, this.InstanceID}, 
-				new AccessMethod[]{AccessMethod.create(new Integer[]{})});
-		relations[4] = Relation.create("Accessible", new Attribute[]{this.a,this.InstanceID});
-		//Create query
-		Atom[] atoms = new Atom[3];
-		Variable x = Variable.create("x");
-		Variable y = Variable.create("y");
-		Variable z = Variable.create("z");
-		Variable w = Variable.create("w");
-		atoms[0] = Atom.create(relations[0], new Term[]{x,y});
-		atoms[1] = Atom.create(relations[1], new Term[]{y,z});
-		atoms[2] = Atom.create(relations[2], new Term[]{z,w});
-		ConjunctiveQuery query = ConjunctiveQuery.create(new Variable[]{x,y,z}, (Conjunction) Conjunction.of(atoms));
-		Atom dummyAtom = Atom.create(relations[3], new Term[]{x,y,z});
-				
-		Dependency dependency = TGD.create(new Atom[]{Atom.create(relations[0], new Term[]{x,y}), Atom.create(relations[1], new Term[]{y,z})}, 
-				new Atom[]{Atom.create(relations[3], new Term[]{x,y,z})});
-		
-		//Create schema
-		Schema schema = new Schema(relations, new Dependency[]{dependency});
-
-		//Create accessible schema
-		AccessibleSchema accessibleSchema = new AccessibleSchema(schema);
-		
-		//Create accessible query
-		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(query, query.getSubstitutionToCanonicalConstants());
-	
-		//Create database connection
-		DatabaseConnection databaseConnection = null;
-		try {
-			databaseConnection = new DatabaseConnection(new DatabaseParameters(), accessibleSchema);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-		//Create the chaser 
-		RestrictedChaser chaser = new RestrictedChaser(null);
-		
-		//Create the cost estimator 
-		OrderIndependentCostEstimator costEstimator = new CountNumberOfAccessedRelationsCostEstimator(null);
-				
-		//Mock the planner parameters
-		PlannerParameters parameters = Mockito.mock(PlannerParameters.class);
-		when(parameters.getSeed()).thenReturn(1);
-		when(parameters.getMaxDepth()).thenReturn(3);
-		
-		//Create the nodeFactory
-		NodeFactory nodeFactory = new NodeFactory(parameters, costEstimator);
-		
-		//Create the query match for the dummy plan
-		Map<Variable, Constant> substitution = query.getSubstitutionToCanonicalConstants();
-		Atom[] factsToExpose = new Atom[4];
-		factsToExpose[0] = (Atom) Utility.applySubstitution(atoms[0], substitution);
-		factsToExpose[1] = (Atom) Utility.applySubstitution(atoms[1], substitution);
-		factsToExpose[2] = (Atom) Utility.applySubstitution(dummyAtom, substitution);
-		factsToExpose[3] = (Atom) Utility.applySubstitution(atoms[2], substitution);
-		
-		Atom[] factsInQueryMatch = new Atom[3];
-		factsInQueryMatch[0] = (Atom) Utility.applySubstitution(accessibleQuery.getAtom(0), substitution);
-		factsInQueryMatch[1] = (Atom) Utility.applySubstitution(accessibleQuery.getAtom(1), substitution);
-		factsInQueryMatch[2] = (Atom) Utility.applySubstitution(accessibleQuery.getAtom(2), substitution);
-		
-		//Choose the axioms that will expose the facts in the dummy plan
-		//This is a very simple function assuming that we have one accessibility axiom per relation
-		//Something more sofisticted should be implemented if there exist more axioms per relation 
-		AccessibilityAxiom[] axiomsThatExposeFacts = new AccessibilityAxiom[4];
-		AccessibilityAxiom[] accessibilityAxioms = accessibleSchema.getAccessibilityAxioms();
-		for(int atomIndex = 0; atomIndex < factsToExpose.length; ++atomIndex) {
-			Atom atom = factsToExpose[atomIndex];
-			for(int accessibilityAxiomIndex = 0; accessibilityAxiomIndex < accessibilityAxioms.length; ++accessibilityAxiomIndex) {
-				if(accessibilityAxioms[accessibilityAxiomIndex].getBaseRelation().equals(atom.getPredicate())) {
-					axiomsThatExposeFacts[atomIndex] = accessibilityAxioms[accessibilityAxiomIndex];
-					break;
-				}
-			}
-		}
-		List<SearchNode> searchNodePath = this.createPathOfNodesExposingInputFactsInGivenOrder(factsToExpose, axiomsThatExposeFacts, accessibleQuery, 
-				accessibleSchema, chaser, databaseConnection, nodeFactory);
-		
-		PostPruningRemoveFollowUps postpruning = new PostPruningRemoveFollowUps(nodeFactory, accessibleSchema, chaser, query);
-		try {
-			searchNodePath.get(4).setStatus(NodeStatus.SUCCESSFUL);
-			try {
-				postpruning.pruneSearchNodePath(searchNodePath.get(0), searchNodePath, factsInQueryMatch);
-			}catch(Throwable t) {
-				t.printStackTrace();
-				Assert.fail();
-			}
-			RelationalTerm newPlan = postpruning.getPlan();
-			Assert.assertFalse(findRelationInPlan("R3",newPlan));
-		} catch (Exception e) {
-			e.printStackTrace();
-			Assert.fail();
-		}
-	}
-	
-	private boolean findRelationInPlan(String relationNameToFind, RelationalTerm plan) {
-		if (plan instanceof AccessTerm) {
-			if (relationNameToFind.equalsIgnoreCase(((AccessTerm)plan).getRelation().getName()))
-				return true;
-		} else {
-			for(RelationalTerm child:plan.getChildren()) if (findRelationInPlan(relationNameToFind, child)) return true;
-		}
-		return false;
-	}
-
-	//The query is Q(x,y) = R0(x,y) R1(y,z) R2(z,w)
-	//We have free access on R0
-	//dependent access on R1 on the first position
-	//and dependent access on R2 on the first position again.
-	//We also have a dependency R0(x,y) R1(y,z) -> R3(x,y,z) R2(z,w)
-	//and a relation R3 with free access
-	//Suppose that we found the plan that performs accesses in the following order R0(x,y) R1(y,z) R3(x,y,z) R2(z,w)
-	//postpruning should trash the access on R3 and on R2
 	@Test
-	public void test2Postpruning() {
-		//Create the relations
-		Relation[] relations = new Relation[5];
-		relations[0] = Relation.create("R0", new Attribute[]{this.a, this.b, this.InstanceID}, 
-				new AccessMethod[]{AccessMethod.create(new Integer[]{})});
-		relations[1] = Relation.create("R1", new Attribute[]{this.a, this.b, this.InstanceID}, 
-				new AccessMethod[]{AccessMethod.create(new Integer[]{0})});
-		relations[2] = Relation.create("R2", new Attribute[]{this.a, this.b, this.InstanceID}, 
-				new AccessMethod[]{AccessMethod.create(new Integer[]{1})});
-		relations[3] = Relation.create("R3", new Attribute[]{this.a, this.b, this.InstanceID}, 
-				new AccessMethod[]{AccessMethod.create(new Integer[]{})});
-		relations[4] = Relation.create("Accessible", new Attribute[]{this.a,this.InstanceID});
-		//Create query
-		Atom[] atoms = new Atom[3];
-		Variable x = Variable.create("x");
-		Variable y = Variable.create("y");
-		Variable z = Variable.create("z");
-		Variable w = Variable.create("w");
-		atoms[0] = Atom.create(relations[0], new Term[]{x,y});
-		atoms[1] = Atom.create(relations[1], new Term[]{y,z});
-		atoms[2] = Atom.create(relations[2], new Term[]{z,w});
-		ConjunctiveQuery query = ConjunctiveQuery.create(new Variable[]{x,y,z}, (Conjunction) Conjunction.of(atoms));
-		Atom dummyAtom = Atom.create(relations[3], new Term[]{x,y,z});
-				
-		Dependency dependency = TGD.create(new Atom[]{Atom.create(relations[0], new Term[]{x,y}), Atom.create(relations[1], new Term[]{y,z})}, 
-				new Atom[]{Atom.create(relations[3], new Term[]{x,y,z}), Atom.create(relations[2], new Term[]{z,w})});
-		
-		//Create schema
-		Schema schema = new Schema(relations, new Dependency[]{dependency});
+	public void notImplementedTestCases() {
+		// The query is Q(x,y) = R0(x,y) R1(y,z) R2(z,w)
+		// We have free access on R0
+		// dependent access on R1 on the first position
+		// and dependent access on R2 on the first position again.
+		// We also have a dependency R0(x,y) R1(y,z) -> R3(x,y,z)
+		// and a relation R3 with free access
+		// Suppose that we found the plan that performs accesses in the following order
+		// R0(x,y) R1(y,z) R3(x,y,z) R2(z,w)
+		// postpruning should trash the access on R3
 
-		//Create accessible schema
-		AccessibleSchema accessibleSchema = new AccessibleSchema(schema);
-		
-		//Create accessible query
-		ConjunctiveQuery accessibleQuery = PlannerUtility.createAccessibleQuery(query, query.getSubstitutionOfFreeVariablesToCanonicalConstants());
-	
-		//Create database connection
-		DatabaseConnection databaseConnection = null;
-		try {
-			databaseConnection = new DatabaseConnection(new DatabaseParameters(), accessibleSchema);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-		//Create the chaser 
-		RestrictedChaser chaser = new RestrictedChaser(null);
-		
-		//Create the cost estimator 
-		OrderIndependentCostEstimator costEstimator = new CountNumberOfAccessedRelationsCostEstimator(null);
-				
-		//Mock the planner parameters
-		PlannerParameters parameters = Mockito.mock(PlannerParameters.class);
-		when(parameters.getSeed()).thenReturn(1);
-		when(parameters.getMaxDepth()).thenReturn(3);
-		
-		//Create the nodeFactory
-		NodeFactory nodeFactory = new NodeFactory(parameters, costEstimator);
-		
-		//Create the query match for the dummy plan
-		Map<Variable, Constant> substitution = query.getSubstitutionToCanonicalConstants();
-		Atom[] factsToExpose = new Atom[4];
-		factsToExpose[0] = (Atom) Utility.applySubstitution(atoms[0], substitution);
-		factsToExpose[1] = (Atom) Utility.applySubstitution(atoms[1], substitution);
-		factsToExpose[2] = (Atom) Utility.applySubstitution(dummyAtom, substitution);
-		factsToExpose[3] = (Atom) Utility.applySubstitution(atoms[2], substitution);
-		
-		Atom[] factsInQueryMatch = new Atom[3];
-		factsInQueryMatch[0] = (Atom) Utility.applySubstitution(accessibleQuery.getAtom(0), substitution);
-		factsInQueryMatch[1] = (Atom) Utility.applySubstitution(accessibleQuery.getAtom(1), substitution);
-		factsInQueryMatch[2] = (Atom) Utility.applySubstitution(accessibleQuery.getAtom(2), substitution);
-		
-		//Choose the axioms that will expose the facts in the dummy plan
-		//This is a very simple function assuming that we have one accessibility axiom per relation
-		//Something more sofisticted should be implemented if there exist more axioms per relation 
-		AccessibilityAxiom[] axiomsThatExposeFacts = new AccessibilityAxiom[4];
-		AccessibilityAxiom[] accessibilityAxioms = accessibleSchema.getAccessibilityAxioms();
-		for(int atomIndex = 0; atomIndex < factsToExpose.length; ++atomIndex) {
-			Atom atom = factsToExpose[atomIndex];
-			for(int accessibilityAxiomIndex = 0; accessibilityAxiomIndex < accessibilityAxioms.length; ++accessibilityAxiomIndex) {
-				if(accessibilityAxioms[accessibilityAxiomIndex].getBaseRelation().equals(atom.getPredicate())) {
-					axiomsThatExposeFacts[atomIndex] = accessibilityAxioms[accessibilityAxiomIndex];
-					break;
-				}
-			}
-		}
-		List<SearchNode> searchNodePath = this.createPathOfNodesExposingInputFactsInGivenOrder(factsToExpose, axiomsThatExposeFacts, accessibleQuery, 
-				accessibleSchema, chaser, databaseConnection, nodeFactory);
-		
-		PostPruningRemoveFollowUps postpruning = new PostPruningRemoveFollowUps(nodeFactory, accessibleSchema, chaser, query);
-		try {
-			searchNodePath.get(4).setStatus(NodeStatus.SUCCESSFUL);
-			try {
-				postpruning.pruneSearchNodePath(searchNodePath.get(0), searchNodePath, factsInQueryMatch);
-			}catch(Throwable t) {
-				t.printStackTrace();
-				Assert.fail();
-			}
-			RelationalTerm newPlan = postpruning.getPlan();
-			Assert.assertFalse(findRelationInPlan("R3",newPlan));
-			Assert.assertFalse(findRelationInPlan("R2",newPlan));
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			Assert.fail();
-		}
-	}
-	
-	private List<SearchNode> createPathOfNodesExposingInputFactsInGivenOrder(
-			Atom[] factsToExpose, AccessibilityAxiom[] axiomsThatExposeFacts, 
-			ConjunctiveQuery query, AccessibleSchema accessibleSchema, RestrictedChaser chaser, 
-			DatabaseConnection connection, NodeFactory nodeFactory) {
-		try {
-			List<SearchNode> searchNodes = new ArrayList<>();
-			//Create the root node
-			AccessibleChaseInstance state = (uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance) 
-					new AccessibleDatabaseChaseInstance(query, accessibleSchema, connection, true);
-			chaser.reasonUntilTermination(state, accessibleSchema.getOriginalDependencies());
-			SearchNode root = nodeFactory.getInstance(state);
-			searchNodes.add(root);
-			SearchNode parentNode = root;
-			for(int factIndex = 0; factIndex < factsToExpose.length; ++factIndex) {
-				Match match = MatchFactory.createMatchForAccessibilityAxiom(axiomsThatExposeFacts[factIndex], factsToExpose[factIndex]);
-				Candidate candidate = new Candidate(axiomsThatExposeFacts[factIndex], factsToExpose[factIndex], match);
-				Set<Candidate> candidates = new LinkedHashSet<>();
-				candidates.add(candidate);
-				SearchNode freshNode = nodeFactory.getInstance(parentNode, candidates);
-				freshNode.close(chaser, accessibleSchema.getInferredAccessibilityAxioms());
-				parentNode = freshNode; 
-				searchNodes.add(freshNode);
-			}
-			return searchNodes;
-		} catch (SQLException | PlannerException e) {
-			e.printStackTrace();
-			Assert.fail();
-			
-		} catch (LimitReachedException e) {
-			e.printStackTrace();
-			Assert.fail();
-		}
-		return null;
+		// The query is Q(x,y) = R0(x,y) R1(y,z) R2(z,w)
+		// We have free access on R0
+		// dependent access on R1 on the first position
+		// and dependent access on R2 on the first position again.
+		// We also have a dependency R0(x,y) R1(y,z) -> R3(x,y,z) R2(z,w)
+		// and a relation R3 with free access
+		// Suppose that we found the plan that performs accesses in the following order
+		// R0(x,y) R1(y,z) R3(x,y,z) R2(z,w)
+		// postpruning should trash the access on R3 and on R2
+		// @Test
+		/**
+		 * The query is Q(x,y) = R0(x,y) R1(y,z) We also have the dependencies R0(x,y)->
+		 * R2(x,y), R1(y,z) -> R3(y,z) Every relation has a free access. Suppose that we
+		 * found the plan that performs accesses in the following order R2(x,y) R3(y,z)
+		 * R0(x,y) R1(y,z) Postpruning should return R0(x,y) R1(y,z)
+		 */
+		//
+		// -------For post pruning-------
+		// The query is Q(x,y) = \exists y R0(x,y) R1(y,z)
+		// We also have the dependencies
+		// R0(x,y) -> R3(x,y)
+		// R1(y,z) -> R4(y,z)
+		// R3(x,y), R4(y,z) -> R0(x,w) R1(w,z)
+		// Every relation has a free access
+		// Suppose that we found the plan that performs accesses in the following order
+		// R3(x,y) R4(y,z) R0(x,y) R1(y,z)
+		// Postpruning should return
+		// R3(x,y) R4(y,z)
+		Assert.fail("Missing test cases");
 	}
 
-	/**
-	 * The query is Q(x,y) = R0(x,y) R1(y,z) We also have the dependencies 
-	 * R0(x,y)-> R2(x,y), R1(y,z) -> R3(y,z) Every relation has a free access. Suppose that
-	 * we found the plan that performs accesses in the following order 
-	 * R2(x,y) R3(y,z) R0(x,y) R1(y,z) Postpruning should return R0(x,y) R1(y,z)
-	 */
 	@Test
-	public void test3() {
-		Relation[] relations = new Relation[5];
-		relations[0] = Relation.create("R0", new Attribute[] { this.a, this.b, this.InstanceID }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
-		relations[1] = Relation.create("R1", new Attribute[] { this.a, this.b, this.InstanceID }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
-		relations[2] = Relation.create("R2", new Attribute[] { this.a, this.b, this.InstanceID }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
-		relations[3] = Relation.create("R3", new Attribute[] { this.a, this.b, this.InstanceID }, new AccessMethod[] { AccessMethod.create(new Integer[] {}) });
-		relations[4] = Relation.create("Accessible", new Attribute[] { this.a, this.InstanceID });
-		// Create query
-		Atom[] atoms = new Atom[2];
+	public void testPruningSamePlanReturning() {
+		// -------For post pruning-------
+		// The query is Q(x,y) = R0(x,y) R1(y,z)
+		// We also have the dependencies
+		// R0(x,y) -> R3(x,y)
+		// R1(y,z) -> R4(y,z)
+		// Relations R3 and R4 have free access
+		// Relation R0 requires input on the first position
+		// Relation R1 requires input on the second position
+		// Suppose that we found the plan that performs accesses in the following order
+		// R3(x,y) R4(y,z) R0(x,y) R1(y,z)
+		// Postpruning should return the same plan
+
+		DatabaseParameters dbParams = new DatabaseParameters();
+		dbParams.setConnectionUrl("jdbc:mysql://localhost/");
+		dbParams.setDatabaseDriver("com.mysql.jdbc.Driver");
+		dbParams.setDatabaseName("test_get_triggers");
+		dbParams.setDatabaseUser("root");
+		dbParams.setDatabasePassword("root");
+		int numberOfRelations = 2;
+
+		// Create the relations
+		Relation[] relations = new Relation[(int) (numberOfRelations + Math.pow(2.0, numberOfRelations)) + 1];
+		for (int index = 0; index < numberOfRelations; ++index)
+			relations[index] = Relation.create("R" + index, new Attribute[] { this.a, this.b, this.c, this.d, this.InstanceID },
+					new AccessMethod[] { AccessMethod.create(new Integer[0]) });
+		relations[numberOfRelations] = Relation.create("Accessible", new Attribute[] { this.a, this.InstanceID });
+
+		// Create a conjunctive query that joins all relations in the first three
+		// positions
+		Random random = new Random();
+		Atom[] atoms = new Atom[numberOfRelations];
 		Variable x = Variable.create("x");
 		Variable y = Variable.create("y");
 		Variable z = Variable.create("z");
-		Variable w = Variable.create("w");
-		atoms[0] = Atom.create(relations[0], new Term[] { x, y });
-		atoms[1] = Atom.create(relations[1], new Term[] { y, z });
-		//atoms[2] = Atom.create(relations[2], new Term[] { z, w });
-		ConjunctiveQuery query = ConjunctiveQuery.create(new Variable[] { x, y }, (Conjunction) Conjunction.of(atoms));
-		Atom dummyAtom = Atom.create(relations[3], new Term[] { x, y, z });
+		for (int index = 0; index < numberOfRelations; ++index)
+			atoms[index] = Atom.create(relations[index], new Term[] { x, y, z, Variable.create("v" + random.nextInt()) });
+		ConjunctiveQuery query = ConjunctiveQuery.create(new Variable[] { x, y, z }, (Conjunction) Conjunction.of(atoms));
 
-		Dependency dependency1 = TGD.create(new Atom[] { Atom.create(relations[0], new Term[] { x, y })},
-				new Atom[] { Atom.create(relations[2], new Term[] { x, y })});
-		Dependency dependency2 = TGD.create(new Atom[] { Atom.create(relations[1], new Term[] { y, z })},
-				new Atom[] { Atom.create(relations[3], new Term[] { y, z })});
+		// Create all views and update the relations with the newly create views
+		Set<Atom> setOfAtoms = new LinkedHashSet<>();
+		for (int index = 0; index < numberOfRelations; ++index)
+			setOfAtoms.add(atoms[index]);
+		Set<Set<Atom>> powerSet = Sets.powerSet(setOfAtoms);
+		int powersetIndex = 0;
+		int dependencyIndex = 0;
+		int viewIndex = numberOfRelations + 1;
+		Dependency[] dependencies = new Dependency[(powerSet.size() - 1) * 2];
+		for (Set<Atom> set : powerSet) {
+			View view = new View("V" + powersetIndex++, new Attribute[] { this.a, this.b, this.c, this.InstanceID }, new AccessMethod[] { AccessMethod.create(new Integer[0]) });
+			relations[viewIndex++] = view;
+			int index = 0;
+			Atom[] head = new Atom[set.size()];
+			Iterator<Atom> iterator = set.iterator();
+			while (iterator.hasNext())
+				head[index++] = iterator.next();
+			if (index != 0) {
+				LinearGuarded viewToRelationDependency = LinearGuarded.create(Atom.create(view, new Term[] { x, y, z }), head);
+				view.setViewToRelationDependency(viewToRelationDependency);
+				dependencies[dependencyIndex++] = view.getViewToRelationDependency();
+				dependencies[dependencyIndex++] = view.getRelationToViewDependency();
+			}
+		}
 
 		// Create schema
-		Schema schema = new Schema(relations, new Dependency[] { dependency1,dependency2 });
+		Schema schema = new Schema(relations, dependencies);
 
 		// Create accessible schema
 		AccessibleSchema accessibleSchema = new AccessibleSchema(schema);
@@ -396,108 +210,72 @@ public class TestPostpruningRemoveFollowups {
 		// Create database connection
 		DatabaseConnection databaseConnection = null;
 		try {
-			databaseConnection = new DatabaseConnection(new DatabaseParameters(), accessibleSchema);
+			databaseConnection = new DatabaseConnection(dbParams, accessibleSchema);
 		} catch (SQLException e) {
 			e.printStackTrace();
+			Assert.fail();
 		}
 
 		// Create the chaser
 		RestrictedChaser chaser = new RestrictedChaser(null);
 
-		// Create the cost estimator
-		OrderIndependentCostEstimator costEstimator = new CountNumberOfAccessedRelationsCostEstimator(null);
+		// Mock the cost estimator
+		CostEstimator costEstimator = Mockito.mock(CostEstimator.class);
+		when(costEstimator.cost(Mockito.any(RelationalTerm.class))).thenReturn(new DoubleCost(1.0));
 
 		// Mock the planner parameters
 		PlannerParameters parameters = Mockito.mock(PlannerParameters.class);
 		when(parameters.getSeed()).thenReturn(1);
-		when(parameters.getMaxDepth()).thenReturn(3);
+		when(parameters.getMaxDepth()).thenReturn(numberOfRelations);
 
-		// Create the nodeFactory
+		// Create nodeFactory
 		NodeFactory nodeFactory = new NodeFactory(parameters, costEstimator);
 
-		// Create the query match for the dummy plan
-		Map<Variable, Constant> substitution = query.getSubstitutionToCanonicalConstants();
-		// Choose the axioms that will expose the facts in the dummy plan
-		// This is a very simple function assuming that we have one accessibility axiom
-		// per relation
-		// Something more sofisticted should be implemented if there exist more axioms
-		// per relation
-//		AccessibilityAxiom[] axiomsThatExposeFacts = new AccessibilityAxiom[4];
-//		AccessibilityAxiom[] accessibilityAxioms = accessibleSchema.getAccessibilityAxioms();
-//		for (int atomIndex = 0; atomIndex < factsToExpose.length; ++atomIndex) {
-//			Atom atom = factsToExpose[atomIndex];
-//			for (int accessibilityAxiomIndex = 0; accessibilityAxiomIndex < accessibilityAxioms.length; ++accessibilityAxiomIndex) {
-//				if (accessibilityAxioms[accessibilityAxiomIndex].getBaseRelation().equals(atom.getPredicate())) {
-//					axiomsThatExposeFacts[atomIndex] = accessibilityAxioms[accessibilityAxiomIndex];
-//					break;
-//				}
-//			}
-//		}
-		List<SearchNode> searchNodes = new ArrayList<>();
+		// Create linear explorer
+		LinearGeneric explorer = null;
 		try {
-		//Create the root node
-		AccessibleChaseInstance state = (uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance) 
-				new AccessibleDatabaseChaseInstance(query, accessibleSchema, databaseConnection, true);
-		chaser.reasonUntilTermination(state, accessibleSchema.getOriginalDependencies());
-//		state.get
-//		SearchNode root = nodeFactory.getInstance(state);
-//		searchNodes.add(root);
-//		SearchNode parentNode = root;
-//		for(int factIndex = 0; factIndex < factsToExpose.length; ++factIndex) {
-//			Match match = MatchFactory.createMatchForAccessibilityAxiom(axiomsThatExposeFacts[factIndex], factsToExpose[factIndex]);
-//			Candidate candidate = new Candidate(axiomsThatExposeFacts[factIndex], factsToExpose[factIndex], match);
-//			Set<Candidate> candidates = new LinkedHashSet<>();
-//			candidates.add(candidate);
-//			SearchNode freshNode = nodeFactory.getInstance(parentNode, candidates);
-//			freshNode.close(chaser, accessibleSchema.getInferredAccessibilityAxioms());
-//			parentNode = freshNode; 
-//			searchNodes.add(freshNode);
-//		}
-//		
-//		
-//		List<SearchNode> searchNodePath = this.createPathOfNodesExposingInputFactsInGivenOrder(factsToExpose, axiomsThatExposeFacts, accessibleQuery, accessibleSchema, chaser,
-//				databaseConnection, nodeFactory);
-//
+			explorer = new LinearGeneric(new EventBus(), false, query, accessibleQuery, accessibleSchema, chaser, databaseConnection, costEstimator, nodeFactory, 4);
+			explorer.explore();
+		} catch (Throwable e) {
+			// exception expected after further exploration fails.
+		}
 		PostPruningRemoveFollowUps postpruning = new PostPruningRemoveFollowUps(nodeFactory, accessibleSchema, chaser, query);
-//		
-//			searchNodePath.get(4).setStatus(NodeStatus.SUCCESSFUL);
-//			try {
-//				postpruning.pruneSearchNodePath(searchNodePath.get(0), searchNodePath, factsInQueryMatch);
-//			} catch (Throwable t) {
-//				Assert.fail();
-//			}
-			RelationalTerm newPlan = postpruning.getPlan();
-			Assert.assertFalse(findRelationInPlan("R3", newPlan));
-			Assert.assertFalse(findRelationInPlan("R2", newPlan));
+		try {
+			int failed = 0;
+			int successful = 0;
+			List<SearchNode> blockedNodes = new ArrayList<>();
+			for (int i = 0; i < 10; i++) {
+				List<Integer> bestPath = null;
+				SearchNode bestNode = null;
+				for (int rootId = explorer.getPlanTree().getRoot().getId(); rootId < 20; rootId++) {
+					SearchNode currentNode = explorer.getPlanTree().getVertex(rootId);
+					if (!blockedNodes.contains(currentNode)) {
+						if (currentNode.getStatus() == NodeStatus.SUCCESSFUL) {
+							bestPath = currentNode.getBestPathFromRoot();
+							bestNode = currentNode;
+							break;
+						}
+					}
+				}
+				Atom[] factsInQueryMatch = uk.ac.ox.cs.pdq.reasoning.chase.Utility
+						.applySubstitution(accessibleQuery, explorer.getPlanTree().getPath(bestPath).get(bestPath.size() - 1).matchesQuery(accessibleQuery).get(0).getMapping())
+						.getAtoms();
+				if (postpruning.pruneSearchNodePath(bestNode, explorer.getPlanTree().getPath(bestPath), factsInQueryMatch)) {
+					Assert.assertEquals(bestNode.getBestPlanFromRoot(), postpruning.getPlan());
+					successful++;
+				} else {
+					failed++;
+				}
+				blockedNodes.add(bestNode);
+			}
 
+			Assert.assertEquals(2, successful);
+			Assert.assertEquals(8, failed);
 		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail();
 		}
+
 	}
-//-------For post pruning-------
-//The query is Q(x,y) = R0(x,y) R1(y,z)
-//We also have the dependencies
-//R0(x,y) -> R3(x,y)
-//R1(y,z) -> R4(y,z)
-//Relations R3 and R4 have free access
-//Relation R0 requires input on the first position
-//Relation R1 requires input on the second position
-//Suppose that we found the plan that performs accesses in the following order
-//R3(x,y) R4(y,z) R0(x,y) R1(y,z)
-//Postpruning should return the same plan
-//
-//
-//-------For post pruning-------
-//The query is Q(x,y) = \exists y R0(x,y) R1(y,z)
-//We also have the dependencies
-//R0(x,y) -> R3(x,y)
-//R1(y,z) -> R4(y,z)
-//R3(x,y), R4(y,z) -> R0(x,w) R1(w,z)
-//Every relation has a free access
-//Suppose that we found the plan that performs accesses in the following order
-//R3(x,y) R4(y,z) R0(x,y) R1(y,z)
-//Postpruning should return
-//R3(x,y) R4(y,z)
-	
+
 }
