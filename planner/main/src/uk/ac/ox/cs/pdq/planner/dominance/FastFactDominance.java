@@ -16,14 +16,14 @@ import uk.ac.ox.cs.pdq.planner.reasoning.Configuration;
 public class FastFactDominance implements FactDominance{
 
 	/** The is strict. */
-	private final boolean isStrict;
+	private final boolean hasStrictlyFewerFactsCheck;
 
 	/**
 	 * Constructor for FastFactDominance.
-	 * @param isStrict boolean
+	 * @param hasStrictlyFewerFactsCheck boolean
 	 */
-	public FastFactDominance(boolean isStrict) {
-		this.isStrict = isStrict;
+	public FastFactDominance(boolean hasStrictlyFewerFactsCheck) {
+		this.hasStrictlyFewerFactsCheck = hasStrictlyFewerFactsCheck;
 	}
 
 	/**
@@ -37,22 +37,18 @@ public class FastFactDominance implements FactDominance{
 	public boolean isDominated(Configuration source, Configuration target) {
 		if (source.equals(target)) 
 			return false;
-		if (source instanceof DAGChaseConfiguration && target instanceof DAGChaseConfiguration && 
+		if (source instanceof DAGChaseConfiguration && 
+				target instanceof DAGChaseConfiguration && 
 				source.getInput().containsAll(target.getInput()) && 
 				((DAGChaseConfiguration)target).getState().getInferredAccessibleFacts().containsAll(((DAGChaseConfiguration)source).getState().getInferredAccessibleFacts())) {
-			if (!this.isStrict || this.isStrict && ((DAGChaseConfiguration)source).getOutputFacts().size() < ((DAGChaseConfiguration)target).getOutputFacts().size()) 
+			if (!this.hasStrictlyFewerFactsCheck || this.hasStrictlyFewerFactsCheck && ((DAGChaseConfiguration)source).getOutputFacts().size() < ((DAGChaseConfiguration)target).getOutputFacts().size()) 
 				return true;
 		}
 		return false;
 	}
-
-	/**
-	 * Clone.
-	 *
-	 * @return FastFactDominance<C>
-	 */
+	
 	@Override
 	public FastFactDominance clone() {
-		return new FastFactDominance(this.isStrict);
+		return new FastFactDominance(this.hasStrictlyFewerFactsCheck);
 	}
 }

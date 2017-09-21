@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.test.reasoning.chase;
+package uk.ac.ox.cs.pdq.test.reasoning.chase.state;
 
 import java.sql.SQLException;
 import java.util.Map;

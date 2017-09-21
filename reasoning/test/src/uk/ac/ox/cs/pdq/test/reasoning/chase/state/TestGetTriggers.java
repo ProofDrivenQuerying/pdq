@@ -76,7 +76,6 @@ public class TestGetTriggers {
 		Atom R1 = Atom.create(this.rel1, new Term[] { Variable.create("x"), Variable.create("y"), Variable.create("z") });
 		Atom R2 = Atom.create(this.rel2, new Term[] { Variable.create("y"), Variable.create("z") });
 		Atom R2p = Atom.create(this.rel2, new Term[] { Variable.create("y"), Variable.create("w") });
-
 		Atom R3 = Atom.create(this.rel3, new Term[] { Variable.create("y"), Variable.create("w") });
 
 		this.tgd = TGD.create(new Atom[] { R1 }, new Atom[] { R2 });
@@ -130,15 +129,10 @@ public class TestGetTriggers {
 
 	public void test_getMatches1(DatabaseChaseInstance state) {
 		Atom f20 = Atom.create(this.rel1, new Term[] { UntypedConstant.create("k1"), UntypedConstant.create("c"), UntypedConstant.create("c1") });
-
 		Atom f21 = Atom.create(this.rel1, new Term[] { UntypedConstant.create("k2"), UntypedConstant.create("c"), UntypedConstant.create("c2") });
-
 		Atom f22 = Atom.create(this.rel1, new Term[] { UntypedConstant.create("k3"), UntypedConstant.create("c"), UntypedConstant.create("c3") });
-
 		Atom f23 = Atom.create(this.rel1, new Term[] { UntypedConstant.create("k4"), UntypedConstant.create("c"), UntypedConstant.create("c4") });
-
 		Atom f24 = Atom.create(this.rel1, new Term[] { UntypedConstant.create("k5"), UntypedConstant.create("c"), TypedConstant.create(new String("John")) });
-
 		Atom f25 = Atom.create(this.rel1, new Term[] { UntypedConstant.create("k6"), UntypedConstant.create("c"), TypedConstant.create(new String("Michael")) });
 
 		state.addFacts(Lists.newArrayList(f20, f21, f22, f23, f24, f25));
@@ -163,15 +157,10 @@ public class TestGetTriggers {
 
 	public void test_getMatches2(DatabaseChaseInstance state) {
 		Atom f20 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c1") });
-
 		Atom f21 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c2") });
-
 		Atom f22 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("k"), UntypedConstant.create("c3") });
-
 		Atom f23 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("p"), UntypedConstant.create("c4") });
-
 		Atom f24 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("p"), TypedConstant.create(new String("John")) });
-
 		Atom f25 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("p"), TypedConstant.create(new String("Michael")) });
 
 		state.addFacts(Lists.newArrayList(f20, f21, f22, f23, f24, f25));
@@ -196,17 +185,11 @@ public class TestGetTriggers {
 
 	public void test_getMatches3(DatabaseChaseInstance state) {
 		Atom f20 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c1") });
-
 		Atom f21 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c2") });
-
 		Atom f22 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("k"), UntypedConstant.create("c3") });
-
 		Atom f23 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("p"), UntypedConstant.create("c4") });
-
 		Atom f24 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("p"), TypedConstant.create(new String("John")) });
-
 		Atom f25 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("p"), TypedConstant.create(new String("Michael")) });
-
 		Atom eq1 = Atom.create(Predicate.create(QNames.EQUALITY.toString(), 2), UntypedConstant.create("c1"), UntypedConstant.create("c2"));
 		Atom eq2 = Atom.create(Predicate.create(QNames.EQUALITY.toString(), 2), UntypedConstant.create("c1"), UntypedConstant.create("c3"));
 
@@ -244,17 +227,11 @@ public class TestGetTriggers {
 	@Test
 	public void test_getMatches4() {
 		Atom f20 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c1") });
-
 		Atom f21 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c2") });
-
 		Atom f22 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("k"), UntypedConstant.create("c3") });
-
 		Atom f23 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("p"), UntypedConstant.create("c4") });
-
 		Atom f24 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("p"), TypedConstant.create(new String("John")) });
-
 		Atom f25 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("p"), TypedConstant.create(new String("Michael")) });
-
 		Atom eq1 = Atom.create(Predicate.create(QNames.EQUALITY.toString(), 2), UntypedConstant.create("c2"), UntypedConstant.create("c1"));
 		Atom eq2 = Atom.create(Predicate.create(QNames.EQUALITY.toString(), 2), UntypedConstant.create("c1"), UntypedConstant.create("c3"));
 		for (DatabaseChaseInstance state : chaseState) {
@@ -281,19 +258,12 @@ public class TestGetTriggers {
 
 	public void test_getMatches5(DatabaseChaseInstance state) {
 		Atom f20 = Atom.create(this.rel1, new Term[] { UntypedConstant.create("k1"), UntypedConstant.create("c"), UntypedConstant.create("c1") });
-
 		Atom f21 = Atom.create(this.rel1, new Term[] { UntypedConstant.create("k2"), UntypedConstant.create("c"), UntypedConstant.create("c2") });
-
 		Atom f22 = Atom.create(this.rel1, new Term[] { UntypedConstant.create("k3"), UntypedConstant.create("c"), UntypedConstant.create("c3") });
-
 		Atom f23 = Atom.create(this.rel1, new Term[] { UntypedConstant.create("k4"), UntypedConstant.create("c"), UntypedConstant.create("c4") });
-
 		Atom f24 = Atom.create(this.rel1, new Term[] { UntypedConstant.create("k5"), UntypedConstant.create("c"), TypedConstant.create(new String("John")) });
-
 		Atom f25 = Atom.create(this.rel1, new Term[] { UntypedConstant.create("k6"), UntypedConstant.create("c"), TypedConstant.create(new String("Michael")) });
-
 		Atom f26 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c1") });
-
 		Atom f27 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c2") });
 
 		state.addFacts(Lists.newArrayList(f20, f21, f22, f23, f24, f25, f26, f27));
@@ -318,13 +288,9 @@ public class TestGetTriggers {
 
 	public void test_getMatches6(DatabaseChaseInstance state) {
 		Atom f20 = Atom.create(this.rel1, new Term[] { UntypedConstant.create("k1"), UntypedConstant.create("r1"), UntypedConstant.create("c1") });
-
 		Atom f21 = Atom.create(this.rel1, new Term[] { UntypedConstant.create("k2"), UntypedConstant.create("r2"), UntypedConstant.create("c2") });
-
 		Atom f22 = Atom.create(this.rel1, new Term[] { UntypedConstant.create("k3"), UntypedConstant.create("r3"), UntypedConstant.create("c3") });
-
 		Atom f26 = Atom.create(this.rel3, new Term[] { UntypedConstant.create("r1"), UntypedConstant.create("UntypedConstant1") });
-
 		Atom f27 = Atom.create(this.rel3, new Term[] { UntypedConstant.create("r2"), UntypedConstant.create("UntypedConstant2") });
 		state.addFacts(Lists.newArrayList(f20, f21, f22, f26, f27));
 		List<Match> matches = state.getTriggers(new Dependency[] { this.tgd2 }, TriggerProperty.ACTIVE, LimitToThisOrAllInstances.THIS);

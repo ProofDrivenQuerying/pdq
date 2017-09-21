@@ -63,13 +63,10 @@ public class TestRestrictedChaser {
 	@Before
 	public void setup() throws SQLException {
 		Attribute fact = Attribute.create(Integer.class, "InstanceID");
-
 		Attribute at11 = Attribute.create(String.class, "at11");
 		Attribute at12 = Attribute.create(String.class, "at12");
 		Attribute at13 = Attribute.create(String.class, "at13");
-
 		this.rel1 = Relation.create("R1", new Attribute[] { at11, at12, at13, fact });
-
 		Attribute at21 = Attribute.create(String.class, "at21");
 		Attribute at22 = Attribute.create(String.class, "at22");
 		this.rel2 = Relation.create("R2", new Attribute[] { at21, at22, fact });
@@ -91,11 +88,9 @@ public class TestRestrictedChaser {
 
 	public void createSchema() {
 		Attribute fact = Attribute.create(Integer.class, "InstanceID");
-
 		Attribute at11 = Attribute.create(String.class, "at11");
 		Attribute at12 = Attribute.create(String.class, "at12");
 		Attribute at13 = Attribute.create(String.class, "at13");
-
 		this.rel1 = Relation.create("R1", new Attribute[] { at11, at12, at13, fact });
 
 		Attribute at21 = Attribute.create(String.class, "at21");
@@ -123,13 +118,9 @@ public class TestRestrictedChaser {
 	@Test
 	public void test_reasonUntilTermination1() {
 		Atom f20 = Atom.create(this.rel1, new Term[] { UntypedConstant.create("k1"), UntypedConstant.create("c"), UntypedConstant.create("c1") });
-
 		Atom f21 = Atom.create(this.rel1, new Term[] { UntypedConstant.create("k2"), UntypedConstant.create("c"), UntypedConstant.create("c2") });
-
 		Atom f22 = Atom.create(this.rel1, new Term[] { UntypedConstant.create("k3"), UntypedConstant.create("c"), UntypedConstant.create("c3") });
-
 		Atom f23 = Atom.create(this.rel1, new Term[] { UntypedConstant.create("k4"), UntypedConstant.create("c"), UntypedConstant.create("c4") });
-
 		Atom f24 = Atom.create(this.rel1, new Term[] { UntypedConstant.create("k5"), UntypedConstant.create("c"), TypedConstant.create(new String("John")) });
 
 		try {
@@ -141,15 +132,10 @@ public class TestRestrictedChaser {
 		Assert.assertEquals(false, this.state.isFailed());
 
 		Atom n00 = Atom.create(this.rel1, new Term[] { UntypedConstant.create("k5"), UntypedConstant.create("c"), TypedConstant.create(new String("John")) });
-
 		Atom n01 = Atom.create(this.rel1, new Term[] { UntypedConstant.create("k4"), UntypedConstant.create("c"), TypedConstant.create(new String("John")) });
-
 		Atom n02 = Atom.create(this.rel1, new Term[] { UntypedConstant.create("k3"), UntypedConstant.create("c"), TypedConstant.create(new String("John")) });
-
 		Atom n03 = Atom.create(this.rel1, new Term[] { UntypedConstant.create("k1"), UntypedConstant.create("c"), TypedConstant.create(new String("John")) });
-
 		Atom n04 = Atom.create(this.rel1, new Term[] { UntypedConstant.create("k2"), UntypedConstant.create("c"), TypedConstant.create(new String("John")) });
-
 		Atom n1 = Atom.create(this.rel2, new Term[] { UntypedConstant.create("c"), TypedConstant.create(new String("John")) });
 
 		Set<Atom> facts = Sets.newHashSet(this.state.getFacts());

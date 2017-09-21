@@ -227,19 +227,20 @@ public class DependentJoin extends TupleIterator {
 	@SuppressWarnings("unchecked")
 	protected void nextTuple() {
 		Assert.assertTrue(this.inputAttributes.length == 0 || this.tupleReceivedFromParent != null);
-		if (this.cachedIterator != null) {
-			while (this.cachedIterator.hasNext()) {
-				Tuple right = this.cachedIterator.next();
-				if(this.doCache) {  		
-					this.cachedTuplesReceivedFromRightChild.add(right); 
-				}							
-				Tuple t = this.tupleReceivedFromLeftChild.appendTuple(right);
-				if (RuntimeUtilities.isSatisfied(this.joinConditions, t)) {
-					this.nextTuple = t;
-					return;
-				}
-			}
-		}
+		//TODO this part of the code causes failures in regression tests
+//		if (this.cachedIterator != null) {
+//			while (this.cachedIterator.hasNext()) {
+//				Tuple right = this.cachedIterator.next();
+//				if(this.doCache) {  		
+//					this.cachedTuplesReceivedFromRightChild.add(right); 
+//				}							
+//				Tuple t = this.tupleReceivedFromLeftChild.appendTuple(right);
+//				if (RuntimeUtilities.isSatisfied(this.joinConditions, t)) {
+//					this.nextTuple = t;
+//					return;
+//				}
+//			}
+//		}
 		this.nextTuple = null;
 		do {
 			if (!this.children[0].hasNext()) {

@@ -126,21 +126,13 @@ public class TestChaseSteps {
 		Assert.assertNotNull(this.state.getConstantClasses().getClass(TypedConstant.create(new String("John"))));
 
 		Atom n0 = Atom.create(Predicate.create("R2", 2), new Term[] { UntypedConstant.create("c"), TypedConstant.create(new String("John")) });
-
 		Atom n1 = Atom.create(Predicate.create("R2", 2), new Term[] { UntypedConstant.create("c"), UntypedConstant.create("k") });
-
 		Atom n2 = Atom.create(Predicate.create("R2", 2), new Term[] { TypedConstant.create(new String("John")), TypedConstant.create(new String("John")) });
-
 		Atom n3 = Atom.create(Predicate.create(QNames.EQUALITY.toString(), 2, true), new Term[] { UntypedConstant.create("c3"), TypedConstant.create(new String("John")) });
-
 		Atom n4 = Atom.create(Predicate.create(QNames.EQUALITY.toString(), 2, true), new Term[] { UntypedConstant.create("c1"), UntypedConstant.create("c2") });
-
 		Atom n5 = Atom.create(Predicate.create(QNames.EQUALITY.toString(), 2, true), new Term[] { UntypedConstant.create("c3"), UntypedConstant.create("c4") });
-
 		Atom n6 = Atom.create(Predicate.create(QNames.EQUALITY.toString(), 2, true), new Term[] { UntypedConstant.create("c2"), UntypedConstant.create("c3") });
-
 		Atom n7 = Atom.create(Predicate.create(QNames.EQUALITY.toString(), 2, true), new Term[] { UntypedConstant.create("c1"), UntypedConstant.create("c3") });
-
 		Assert.assertEquals(Sets.newHashSet(n0, n1, n2, n3, n4, n5, n6, n7), this.state.getFacts());
 
 		Map<Variable, Constant> map6 = new HashMap<>();
@@ -166,26 +158,18 @@ public class TestChaseSteps {
 
 	protected void test_chaseStepAddFacts() {
 		Atom f0 = Atom.create(Predicate.create("R2", 2), new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c1") });
-
 		Atom f1 = Atom.create(Predicate.create("R2", 2), new Term[] { UntypedConstant.create("c"), TypedConstant.create(new String("John")) });
-
 		Atom f2 = Atom.create(Predicate.create("R2", 2), new Term[] { UntypedConstant.create("c"), UntypedConstant.create("k") });
-
 		Atom f3 = Atom.create(Predicate.create("R2", 2), new Term[] { UntypedConstant.create("c3"), TypedConstant.create(new String("John")) });
-
 		Atom f4 = Atom.create(Predicate.create("R2", 2), new Term[] { UntypedConstant.create("c2"), UntypedConstant.create("c4") });
 		this.state.addFacts(Sets.<Atom>newHashSet(f0, f1, f2, f3, f4));
 	}
 
 	protected void test_chaseStepDeleteFacts() {
 		Atom f0 = Atom.create(Predicate.create("R2", 2), new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c1") });
-
 		Atom f1 = Atom.create(Predicate.create("R2", 2), new Term[] { UntypedConstant.create("c"), TypedConstant.create(new String("John")) });
-
 		Atom f2 = Atom.create(Predicate.create("R2", 2), new Term[] { UntypedConstant.create("c"), UntypedConstant.create("k") });
-
 		Atom f3 = Atom.create(Predicate.create("R2", 2), new Term[] { UntypedConstant.create("c3"), TypedConstant.create(new String("John")) });
-
 		Atom f4 = Atom.create(Predicate.create("R2", 2), new Term[] { UntypedConstant.create("c2"), UntypedConstant.create("c4") });
 		this.state.deleteFacts(Sets.<Atom>newHashSet(f0, f1, f2, f3, f4));
 	}

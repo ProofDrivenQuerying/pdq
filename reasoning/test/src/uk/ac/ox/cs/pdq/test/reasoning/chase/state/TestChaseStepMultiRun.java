@@ -17,12 +17,6 @@ public class TestChaseStepMultiRun {
 
 	@Before
 	public void setup() {
-		mySqlDbParam = new DatabaseParameters();
-		mySqlDbParam.setConnectionUrl("jdbc:mysql://localhost/");
-		mySqlDbParam.setDatabaseDriver("com.mysql.jdbc.Driver");
-		mySqlDbParam.setDatabaseName("test_get_triggers");
-		mySqlDbParam.setDatabaseUser("root");
-		mySqlDbParam.setDatabasePassword("root");
 		postgresDbParam = new DatabaseParameters();
 		postgresDbParam.setConnectionUrl("jdbc:postgresql://localhost/");
 		postgresDbParam.setDatabaseDriver("org.postgresql.Driver");
@@ -70,8 +64,7 @@ public class TestChaseStepMultiRun {
 	public void testSingleThreadMySql() throws Exception {
 		TestChaseSteps tcs = new TestChaseSteps();
 		tcs.setupMocks();
-		tcs.setConnection(
-				new DatabaseConnection(mySqlDbParam, tcs.schema, 1));
+		tcs.setConnection(new DatabaseConnection(mySqlDbParam, tcs.schema, 1));
 		tcs.test_chaseStep();
 		tcs.tearDown();
 	}

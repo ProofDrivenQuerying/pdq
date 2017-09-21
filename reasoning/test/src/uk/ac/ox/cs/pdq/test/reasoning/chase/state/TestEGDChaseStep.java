@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.test.reasoning.chase;
+package uk.ac.ox.cs.pdq.test.reasoning.chase.state;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -110,7 +110,6 @@ public class TestEGDChaseStep {
 		Collection<Match> matches = new HashSet<>();
 		for (int i = 1; i < 1000; i++)  {
 			Map<Variable, Constant> mapping = new HashMap<>();
-			//mapping.put(Variable.create("x"),UntypedConstant.create("k1"));
 			mapping.put(Variable.create("y1"),UntypedConstant.create("c_"+i));
 			mapping.put(Variable.create("y2"),UntypedConstant.create("c_"+(i+1)));
 			matches.add(Match.create(d[0], mapping));

@@ -5,9 +5,11 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
 
+import com.google.common.base.Preconditions;
+
 import uk.ac.ox.cs.pdq.planner.dag.ApplyRule;
 import uk.ac.ox.cs.pdq.planner.dag.DAGChaseConfiguration;
-import uk.ac.ox.cs.pdq.planner.dominance.FastFactDominance;
+import uk.ac.ox.cs.pdq.planner.dominance.Dominance;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -15,10 +17,15 @@ import uk.ac.ox.cs.pdq.planner.dominance.FastFactDominance;
  *
  * @author Efthymia Tsamoura
  */
-public class FactDominationFilter implements Filter {
+public class DominationFilter implements Filter {
 
 	/** The fact dominance. */
-	private final FastFactDominance factDominance = new FastFactDominance(false);
+	private final Dominance dominance;
+	
+	public DominationFilter(Dominance dominance) {
+		Preconditions.checkNotNull(dominance);
+		this.dominance = dominance;
+	}
 
 	/**
 	 * Filter.
@@ -39,12 +46,13 @@ public class FactDominationFilter implements Filter {
 			j = i + 1;
 			if(!filtered.contains(input.get(i))) {
 				while(j < lSize) {
-					if(!(input.get(i) instanceof ApplyRule) && this.factDominance.isDominated(input.get(i), input.get(j))) {
+					if(!(input.get(i) instanceof ApplyRule) && this.dominance.isDominated(input.get(i), input.get(j))) {
 						filtered.add(input.get(i));
 						break;
 					}
-					if(!(input.get(j) instanceof ApplyRule) && this.factDominance.isDominated(input.get(j), input.get(i))) {
+					if(!(input.get(j) instanceof ApplyRule) && this.dominance.isDominated(input.get(j), input.get(i))) {
 						filtered.add(input.get(j));
+						break;
 					}
 					++j;
 				}

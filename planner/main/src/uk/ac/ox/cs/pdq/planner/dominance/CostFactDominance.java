@@ -8,32 +8,33 @@ import uk.ac.ox.cs.pdq.planner.reasoning.Configuration;
 
 // TODO: Auto-generated Javadoc
 /**
- * Closed dominance. A closed configuration c dominates a closed configuration c', if c both cost- and fact- dominates c'.
+ * Closed dominance. A closed configuration c dominates a closed configuration c', 
+ * if c both cost- and fact- dominates c'.
  *
  * @author Efthymia Tsamoura
  */
 public class CostFactDominance implements Dominance{
 
 	/** The cost estimator. */
-	private final OrderIndependentCostEstimator costEstimator;
+	private final OrderIndependentCostEstimator costEstimatorForOpenPlans;
 	
 	/** The fact dominance. */
 	private final FactDominance inputFactDominance;
 	
-	private final boolean isStrict;
+	private final boolean hasStrictlyFewerFactsOrLessCostCheck;
 
 	/**
 	 * Constructor for ClosedDominance.
 	 *
-	 * @param costEstimator the cost estimator
+	 * @param costEstimatorForOpenPlans the cost estimator
 	 * @param inputFactDominance FactDominance<DAGConfiguration<?>>
 	 */
-	public CostFactDominance(OrderIndependentCostEstimator costEstimator, FactDominance inputFactDominance, boolean isStrict){
+	public CostFactDominance(OrderIndependentCostEstimator costEstimatorForOpenPlans, FactDominance inputFactDominance, boolean hasStrictlyFewerFactsOrLessCostCheck){
 		Preconditions.checkNotNull(inputFactDominance);
-		Preconditions.checkNotNull(costEstimator);
-		this.costEstimator = costEstimator;
+		Preconditions.checkNotNull(costEstimatorForOpenPlans);
+		this.costEstimatorForOpenPlans = costEstimatorForOpenPlans;
 		this.inputFactDominance = inputFactDominance;
-		this.isStrict = isStrict;
+		this.hasStrictlyFewerFactsOrLessCostCheck = hasStrictlyFewerFactsOrLessCostCheck;
 	}
 
 	/**
@@ -50,7 +51,7 @@ public class CostFactDominance implements Dominance{
 		Preconditions.checkNotNull(target);
 		
 		if(!(source instanceof ApplyRule)) {
-			if(this.isStrict) {
+			if(this.hasStrictlyFewerFactsOrLessCostCheck) {
 				FactDominance strictFactDominance = new FastFactDominance(true);
 				boolean strictlyFactDominated = strictFactDominance.isDominated(source, target);
 				boolean factDominated = this.inputFactDominance.isDominated(source, target);
@@ -60,9 +61,9 @@ public class CostFactDominance implements Dominance{
 				if(source.getPlan().isClosed() && target.getPlan().isClosed()) {
 					strictlyCostDominated = source.getCost().greaterThan(target.getCost());
 					costDominated = source.getCost().greaterOrEquals(target.getCost());
-				} else if(this.costEstimator != null) {
-					strictlyCostDominated = this.costEstimator.cost(source.getPlan()).greaterThan(this.costEstimator.cost(target.getPlan()));
-					costDominated = this.costEstimator.cost(source.getPlan()).greaterOrEquals(this.costEstimator.cost(target.getPlan()));
+				} else if(this.costEstimatorForOpenPlans != null) {
+					strictlyCostDominated = this.costEstimatorForOpenPlans.cost(source.getPlan()).greaterThan(this.costEstimatorForOpenPlans.cost(target.getPlan()));
+					costDominated = this.costEstimatorForOpenPlans.cost(source.getPlan()).greaterOrEquals(this.costEstimatorForOpenPlans.cost(target.getPlan()));
 				} 
 				if(strictlyFactDominated && costDominated || factDominated && strictlyCostDominated) 
 					return true;
@@ -74,8 +75,8 @@ public class CostFactDominance implements Dominance{
 						&& source.getCost().greaterThan(target.getCost())
 						&& this.inputFactDominance.isDominated(source, target) ) {
 					return true;
-				} else if(this.costEstimator != null
-						&& this.costEstimator.cost(source.getPlan()).greaterThan(this.costEstimator.cost(target.getPlan()))
+				} else if(this.costEstimatorForOpenPlans != null
+						&& this.costEstimatorForOpenPlans.cost(source.getPlan()).greaterThan(this.costEstimatorForOpenPlans.cost(target.getPlan()))
 						&& this.inputFactDominance.isDominated(source, target) ) {
 					return true;
 				} else {
@@ -95,6 +96,6 @@ public class CostFactDominance implements Dominance{
 	 */
 	@Override
 	public CostFactDominance clone() {
-		return new CostFactDominance(this.costEstimator.clone(), this.inputFactDominance.clone(), this.isStrict);
+		return new CostFactDominance(this.costEstimatorForOpenPlans.clone(), this.inputFactDominance.clone(), this.hasStrictlyFewerFactsOrLessCostCheck);
 	}
 }
