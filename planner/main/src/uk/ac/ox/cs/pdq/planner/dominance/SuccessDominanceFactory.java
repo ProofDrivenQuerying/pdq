@@ -19,7 +19,7 @@ public class SuccessDominanceFactory {
 
 	//private final SuccessDominanceTypes type;
 	/** The estimator. */
-	private final OrderIndependentCostEstimator estimator = new CountNumberOfAccessedRelationsCostEstimator(null);
+	private final OrderIndependentCostEstimator costEstimatorForOpenPlans = new CountNumberOfAccessedRelationsCostEstimator(null);
 
 	/**
 	 * Constructor for DominanceFactory.
@@ -29,7 +29,6 @@ public class SuccessDominanceFactory {
 	 */
 	public SuccessDominanceFactory(SuccessDominanceTypes type) {
 		Preconditions.checkNotNull(type);
-		//this.type = type;
 	}
 	
 	/**
@@ -38,6 +37,6 @@ public class SuccessDominanceFactory {
 	 * @return SuccessDominance
 	 */
 	public SuccessDominance getInstance() {
-		return new SuccessDominance(this.estimator);
+		return new SuccessDominance(this.costEstimatorForOpenPlans);
 	}
 }

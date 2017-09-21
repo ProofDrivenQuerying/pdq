@@ -28,14 +28,14 @@ public class SuccessDominance {
 	//	private final boolean simpleFunction;
 
 	/** The estimator. */
-	private final OrderIndependentCostEstimator estimator;
+	private final OrderIndependentCostEstimator costEstimatorForOpenPlans;
 
 	/**
 	 * Constructor for SuccessDominance.
 	 * @param simpleFunction Boolean
 	 */
 	public SuccessDominance(OrderIndependentCostEstimator estimator) {
-		this.estimator = estimator;
+		this.costEstimatorForOpenPlans = estimator;
 	}
 
 	/**
@@ -48,7 +48,7 @@ public class SuccessDominance {
 	public boolean isDominated(RelationalTerm source, Cost sourceCost, RelationalTerm target, Cost targetCost) {
 		if(source.isClosed() && target.isClosed() && sourceCost.greaterThan(targetCost)) 
 			return true;
-		else if(this.estimator != null && this.estimator.cost(source).greaterThan(this.estimator.cost(target))) 
+		else if(this.costEstimatorForOpenPlans != null && this.costEstimatorForOpenPlans.cost(source).greaterThan(this.costEstimatorForOpenPlans.cost(target))) 
 			return true;
 		return false;
 	}
@@ -60,6 +60,6 @@ public class SuccessDominance {
 	 */
 	@Override
 	public SuccessDominance clone() {
-		return new SuccessDominance(this.estimator);
+		return new SuccessDominance(this.costEstimatorForOpenPlans);
 	}
 }
