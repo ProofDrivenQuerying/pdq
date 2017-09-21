@@ -264,6 +264,12 @@ public class IOManager {
 		if (type == Boolean.class) {
 			return TypedConstant.create(Boolean.parseBoolean(stringValue));
 		}
+		if (type == java.sql.Date.class) {
+			return TypedConstant.create(new java.sql.Date(Long.parseLong(stringValue)));
+		}
+		if (type == java.util.Date.class) {
+			return TypedConstant.create(new java.sql.Date(Long.parseLong(stringValue)));
+		}
 		Constructor<?> constructor=null;
 		try {
 			if (type != null) constructor = Class.forName(type.getTypeName()).getConstructor(String.class);

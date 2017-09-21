@@ -86,7 +86,7 @@ public class PlanCreationUtility {
 		Relation planRelation = null;
 		//Iterate over each exposed fact
 		for (Atom exposedFact: exposedFacts) {
-			Assert.assertTrue(exposedFact.getPredicate().equals(relation));
+			Assert.assertTrue(exposedFact.getPredicate().getName().equals(relation.getName()));
 			if (access == null) {
 				Attribute[] attributes = new Attribute[relation.getArity()-1];
 				System.arraycopy(relation.getAttributes(), 0, attributes, 0, attributes.length); 
@@ -203,6 +203,9 @@ public class PlanCreationUtility {
 						assigned = true;
 						break;
 					}
+				} else {
+					//TODO we need to study this case
+					System.out.println("Breakpoint here: " + s + " should be a relation");
 				}
 			}
 			if (!assigned) 

@@ -51,7 +51,7 @@ public class DominanceFactory {
 		ArrayList<Dominance> detector = new ArrayList<>();
 		switch(this.type) {
 		case CLOSED:
-			detector.add(new CostFactDominance(null, this.factDominance, false));
+			detector.add(new CostFactDominance(this.costEstimator, this.factDominance, false));
 			break;
 		case OPEN:
 			detector.add(new CostFactDominance(this.costEstimator, this.factDominance, true));

@@ -82,8 +82,8 @@ public class DatabaseConnection implements AutoCloseable {
 			}
 			// database name cannot be longer then 128 character, so if it is close we shorten it, 
 			// add current time to make sure it is unique even in case of multiple runs.
-			if (database.length() > 115) {
-				database = database.substring(0, 100);
+			if (database.length() > 90) {
+				database = database.substring(0, 80) + "__";
 			}
 			database += "_" + System.currentTimeMillis() + "_" + GlobalCounterProvider.getNext("DatabaseConnectionName");
 			

@@ -102,13 +102,18 @@ public final class PostPruningRemoveFollowUps extends PostPruning {
 			}
 
 			int n;
-			for(n = 0; n < this.path.size() - 1; ++n) 
-				this.path.get(n).setPathToSuccess(Lists.<Integer>newArrayList(nodeIds.subList(n+1, nodeIds.size())));
-			this.path.get(n).setPathToSuccess(Lists.<Integer>newArrayList());
-			this.path.get(n).setStatus(NodeStatus.SUCCESSFUL);
-			List<Match> matches = this.path.get(n).matchesQuery(this.query);
-			Preconditions.checkArgument(!matches.isEmpty());
-			this.plan = this.path.get(n).getConfiguration().getPlan();
+			if (this.path.size() > 0) {
+				for(n = 0; n < this.path.size() - 1; ++n) 
+					this.path.get(n).setPathToSuccess(Lists.<Integer>newArrayList(nodeIds.subList(n+1, nodeIds.size())));
+				this.path.get(n).setPathToSuccess(Lists.<Integer>newArrayList());
+				this.path.get(n).setStatus(NodeStatus.SUCCESSFUL);
+				List<Match> matches = this.path.get(n).matchesQuery(this.query);
+				Preconditions.checkArgument(!matches.isEmpty());
+				this.plan = this.path.get(n).getConfiguration().getPlan();
+			} else {
+				this.isPruned = false;
+				// no path available
+			}
 		}
 	}
 
