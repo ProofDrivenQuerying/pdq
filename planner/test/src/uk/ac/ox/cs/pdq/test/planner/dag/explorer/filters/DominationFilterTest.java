@@ -32,7 +32,7 @@ import uk.ac.ox.cs.pdq.util.Utility;
  *
  * @author Efthymia Tsamoura
  */
-public class FactDominationFilterTest {
+public class DominationFilterTest {
 
 	protected Attribute a1 = Attribute.create(String.class, "a1");
 	protected Attribute a2 = Attribute.create(String.class, "a2"); 
