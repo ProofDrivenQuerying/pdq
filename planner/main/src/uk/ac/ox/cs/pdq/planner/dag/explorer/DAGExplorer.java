@@ -7,6 +7,8 @@ import uk.ac.ox.cs.pdq.algebra.ProjectionTerm;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
+import uk.ac.ox.cs.pdq.db.Relation;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.planner.Explorer;
 import uk.ac.ox.cs.pdq.planner.PlannerParameters;
@@ -92,12 +94,26 @@ public abstract class DAGExplorer extends Explorer {
 		
 		this.parameters = parameters;
 		this.query = query;
+		checkQueryForPredicatesInsteadOfRelations(accessibleQuery);
 		this.accessibleQuery = accessibleQuery;
 //		this.schema = schema;
 		this.accessibleSchema = accessibleSchema;
 		this.chaser = chaser;
 		this.connection = connection;
 		this.costEstimator = costEstimator;
+	}
+	
+	/** Uses Preconditions to throw exception in case the query contains predicates instead of Relations.
+	 * @param query
+	 */
+	private static void checkQueryForPredicatesInsteadOfRelations(ConjunctiveQuery query) {
+		Atom[] atoms = query.getAtoms();
+		for (Atom atom:atoms) {
+			if (!(atom.getPredicate() instanceof Relation)) {
+				System.out.println();
+			}
+			Preconditions.checkArgument(atom.getPredicate() instanceof Relation,"" + atom.getPredicate() + " should be an instance of Relation.");
+		}
 	}
 
 	/**

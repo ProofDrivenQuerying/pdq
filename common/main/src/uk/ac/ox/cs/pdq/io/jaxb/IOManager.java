@@ -6,6 +6,7 @@ import java.io.OutputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -235,7 +236,7 @@ public class IOManager {
 					newTerms.add(a.getTerm(i));
 				}
 			}
-			newAtoms.add(Atom.create(a.getPredicate(), newTerms.toArray(new Term[newTerms.size()])));
+			newAtoms.add(Atom.create(schema.getRelation(a.getPredicate().getName()), newTerms.toArray(new Term[newTerms.size()])));
 		}
 		Formula something = Conjunction.of( newAtoms.toArray(new Atom[newAtoms.size()]));
 		if (something instanceof Atom) {
@@ -265,7 +266,12 @@ public class IOManager {
 			return TypedConstant.create(Boolean.parseBoolean(stringValue));
 		}
 		if (type == java.sql.Date.class) {
-			return TypedConstant.create(new java.sql.Date(Long.parseLong(stringValue)));
+			try {
+				return TypedConstant.create(new java.sql.Date(Long.parseLong(stringValue)));
+			}catch(Exception e) {
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				return TypedConstant.create(sdf.parse(stringValue));
+			}
 		}
 		if (type == java.util.Date.class) {
 			return TypedConstant.create(new java.sql.Date(Long.parseLong(stringValue)));
