@@ -270,11 +270,11 @@ public class IOManager {
 				return TypedConstant.create(new java.sql.Date(Long.parseLong(stringValue)));
 			}catch(Exception e) {
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-				return TypedConstant.create(sdf.parse(stringValue));
+				return TypedConstant.create(new java.sql.Date(sdf.parse(stringValue).getTime()));
 			}
 		}
 		if (type == java.util.Date.class) {
-			return TypedConstant.create(new java.sql.Date(Long.parseLong(stringValue)));
+			return TypedConstant.create(new java.util.Date(Long.parseLong(stringValue)));
 		}
 		Constructor<?> constructor=null;
 		try {
