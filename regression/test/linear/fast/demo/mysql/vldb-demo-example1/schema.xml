@@ -1,12 +1,196 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<schema description="" name="Demo API">
-    <sources>
-        <source discoverer="uk.ac.ox.cs.pdq.services.ServiceReader" file="test/linear/fast/demo/geonames-services.xml" name="geonames"/>
-        <source discoverer="uk.ac.ox.cs.pdq.services.ServiceReader" file="test/linear/fast/demo/yahoo-services.xml" name="yahoo"/>
-        <source discoverer="uk.ac.ox.cs.pdq.services.ServiceReader" file="test/linear/fast/demo/google-services.xml" name="google"/>
-        <source discoverer="uk.ac.ox.cs.pdq.services.ServiceReader" file="test/linear/fast/demo/worldbank-services.xml" name="worldbank"/>
-    </sources>
+<schema>
     <relations>
+        <relation name="GoogleTimezone">
+            <attribute name="latitude" type="java.lang.Double"/>
+            <attribute name="longitude" type="java.lang.Double"/>
+            <attribute name="timestamp" type="java.lang.Long"/>
+            <attribute name="dstOffset" type="java.lang.Integer"/>
+            <attribute name="rawOffset" type="java.lang.Integer"/>
+            <attribute name="timeZoneId" type="java.lang.String"/>
+            <attribute name="timeZoneName" type="java.lang.String"/>
+        </relation>
+        <relation name="FreeBasePeople">
+            <attribute name="id" type="java.lang.String"/>
+            <attribute name="name" type="java.lang.String"/>
+            <attribute name="notable" type="java.lang.String"/>
+            <attribute name="date_of_birth" type="java.lang.String"/>
+            <attribute name="place_of_birth" type="java.lang.String"/>
+        </relation>
+        <relation name="WBTopics">
+            <attribute name="id" type="java.lang.Integer"/>
+            <attribute name="name" type="java.lang.String"/>
+            <attribute name="sourceNote" type="java.lang.String"/>
+        </relation>
+        <relation name="YahooWeather">
+            <attribute name="woeid" type="java.lang.Integer"/>
+            <attribute name="city" type="java.lang.String"/>
+            <attribute name="country" type="java.lang.String"/>
+            <attribute name="region" type="java.lang.String"/>
+            <attribute name="distance_unit" type="java.lang.String"/>
+            <attribute name="pressure_unit" type="java.lang.String"/>
+            <attribute name="speed_unit" type="java.lang.String"/>
+            <attribute name="temp_unit" type="java.lang.String"/>
+            <attribute name="wind_chill" type="java.lang.Integer"/>
+            <attribute name="wind_direction" type="java.lang.Integer"/>
+            <attribute name="wind_speed" type="java.lang.String"/>
+            <attribute name="humidity" type="java.lang.Double"/>
+            <attribute name="pressure" type="java.lang.Double"/>
+            <attribute name="rising" type="java.lang.Integer"/>
+            <attribute name="visibility" type="java.lang.Double"/>
+            <attribute name="sunrise" type="java.lang.String"/>
+            <attribute name="sunset" type="java.lang.String"/>
+            <attribute name="date" type="java.lang.String"/>
+            <attribute name="temperature" type="java.lang.Double"/>
+            <attribute name="condition" type="java.lang.String"/>
+            <attribute name="code" type="java.lang.Integer"/>
+            <access-method name="yh_wtr_woeid" inputs="0"/>
+        </relation>
+        <relation name="GoogleBooks">
+            <attribute name="keywords" type="java.lang.String"/>
+            <attribute name="kind" type="java.lang.String"/>
+            <attribute name="id" type="java.lang.String"/>
+            <attribute name="etag" type="java.lang.String"/>
+            <attribute name="selfLink" type="java.lang.String"/>
+            <attribute name="title" type="java.lang.String"/>
+            <attribute name="subtitle" type="java.lang.String"/>
+            <attribute name="author1" type="java.lang.String"/>
+            <attribute name="author2" type="java.lang.String"/>
+            <attribute name="author3" type="java.lang.String"/>
+            <attribute name="publisher" type="java.lang.String"/>
+            <attribute name="published" type="java.lang.String"/>
+            <attribute name="description" type="java.lang.String"/>
+            <attribute name="isbn_10" type="java.lang.String"/>
+            <attribute name="isbn_13" type="java.lang.String"/>
+            <attribute name="pageCount" type="java.lang.Integer"/>
+            <attribute name="pageCount" type="java.lang.Integer"/>
+            <attribute name="printType" type="java.lang.String"/>
+            <attribute name="category1" type="java.lang.String"/>
+            <attribute name="category2" type="java.lang.String"/>
+            <attribute name="category3" type="java.lang.String"/>
+            <attribute name="averageRating" type="java.lang.Double"/>
+            <attribute name="ratingsCount" type="java.lang.Integer"/>
+            <attribute name="contentVersion" type="java.lang.String"/>
+            <attribute name="thumbnailLinks" type="java.lang.String"/>
+            <attribute name="printType" type="java.lang.String"/>
+            <attribute name="language" type="java.lang.String"/>
+            <attribute name="previewLink" type="java.lang.String"/>
+            <attribute name="infoLink" type="java.lang.String"/>
+            <attribute name="canonicalVolumeLink" type="java.lang.String"/>
+            <attribute name="saleCountry" type="java.lang.String"/>
+            <attribute name="saleType" type="java.lang.String"/>
+            <attribute name="isEbook" type="java.lang.Boolean"/>
+            <attribute name="accessCountry" type="java.lang.String"/>
+            <attribute name="viewability" type="java.lang.String"/>
+            <attribute name="embeddable" type="java.lang.Boolean"/>
+            <attribute name="publicDomain" type="java.lang.Boolean"/>
+            <attribute name="textToSpeech" type="java.lang.String"/>
+            <attribute name="epubAvailable" type="java.lang.Boolean"/>
+            <attribute name="acsTokenLink" type="java.lang.String"/>
+            <attribute name="pdfAvailable" type="java.lang.Boolean"/>
+            <attribute name="webReaderLink" type="java.lang.String"/>
+            <attribute name="accessViewStatus" type="java.lang.String"/>
+            <attribute name="quoteSharingAllowed" type="java.lang.Boolean"/>
+            <attribute name="textSnippet" type="java.lang.Boolean"/>
+        </relation>
+        <relation name="YahooCountries">
+            <attribute name="woeid" type="java.lang.Integer"/>
+            <attribute name="placeType" type="java.lang.Integer"/>
+            <attribute name="placeTypeName" type="java.lang.String"/>
+            <attribute name="name" type="java.lang.String"/>
+            <access-method name="yh_geo_country"/>
+        </relation>
+        <relation name="WBCountries">
+            <attribute name="id" type="java.lang.String"/>
+            <attribute name="iso2" type="java.lang.String"/>
+            <attribute name="name" type="java.lang.String"/>
+            <attribute name="incomeLevel" type="java.lang.String"/>
+            <attribute name="lendingType" type="java.lang.String"/>
+            <attribute name="capitalCity" type="java.lang.String"/>
+            <attribute name="latitude" type="java.lang.Double"/>
+            <attribute name="longitude" type="java.lang.Double"/>
+            <access-method name="c_free"/>
+            <access-method name="c_il" inputs="3"/>
+        </relation>
+        <relation name="GNTimezone">
+            <attribute name="id" type="java.lang.String"/>
+            <attribute name="time" type="java.lang.String"/>
+            <attribute name="countryName" type="java.lang.String"/>
+            <attribute name="countryCode" type="java.lang.String"/>
+            <attribute name="sunset" type="java.lang.String"/>
+            <attribute name="sunrise" type="java.lang.String"/>
+            <attribute name="rawOffset" type="java.lang.String"/>
+            <attribute name="dstOffset" type="java.lang.String"/>
+            <attribute name="gmtOffset" type="java.lang.String"/>
+            <attribute name="latitude" type="java.lang.Double"/>
+            <attribute name="longitude" type="java.lang.Double"/>
+        </relation>
+        <relation name="YahooPlaceType">
+            <attribute name="placeTypeName" type="java.lang.String"/>
+            <attribute name="code" type="java.lang.Integer"/>
+            <attribute name="uri" type="java.lang.String"/>
+        </relation>
+        <relation name="YahooSeas">
+            <attribute name="woeid" type="java.lang.Integer"/>
+            <attribute name="placeType" type="java.lang.Integer"/>
+            <attribute name="placeTypeName" type="java.lang.String"/>
+            <attribute name="name" type="java.lang.String"/>
+        </relation>
+        <relation name="GNHierarchy">
+            <attribute name="source" type="java.lang.Integer"/>
+            <attribute name="id" type="java.lang.Integer"/>
+            <attribute name="name" type="java.lang.String"/>
+            <attribute name="topoName" type="java.lang.String"/>
+            <attribute name="class" type="java.lang.String"/>
+            <attribute name="code" type="java.lang.String"/>
+            <attribute name="countryCode" type="java.lang.String"/>
+            <attribute name="latitude" type="java.lang.Double"/>
+            <attribute name="longitude" type="java.lang.Double"/>
+        </relation>
+        <relation name="WBLendingTypes">
+            <attribute name="id" type="java.lang.String"/>
+            <attribute name="name" type="java.lang.String"/>
+        </relation>
+        <relation name="YahooBelongsTo">
+            <attribute name="source" type="java.lang.Integer"/>
+            <attribute name="target" type="java.lang.Integer"/>
+            <attribute name="placeTypeName" type="java.lang.String"/>
+            <attribute name="name" type="java.lang.String"/>
+            <attribute name="uri" type="java.lang.String"/>
+            <access-method name="yh_geo_belongs" inputs="0"/>
+        </relation>
+        <relation name="GNNeighbours">
+            <attribute name="source" type="java.lang.Integer"/>
+            <attribute name="id" type="java.lang.Integer"/>
+            <attribute name="name" type="java.lang.String"/>
+            <attribute name="topoName" type="java.lang.String"/>
+            <attribute name="class" type="java.lang.String"/>
+            <attribute name="code" type="java.lang.String"/>
+            <attribute name="countryCode" type="java.lang.String"/>
+            <attribute name="latitude" type="java.lang.Double"/>
+            <attribute name="longitude" type="java.lang.Double"/>
+        </relation>
+        <relation name="YahooContinents">
+            <attribute name="woeid" type="java.lang.Integer"/>
+            <attribute name="placeType" type="java.lang.Integer"/>
+            <attribute name="placeTypeName" type="java.lang.String"/>
+            <attribute name="name" type="java.lang.String"/>
+            <access-method name="yh_geo_continent"/>
+        </relation>
+        <relation name="FreeBaseCountries">
+            <attribute name="id" type="java.lang.String"/>
+            <attribute name="name" type="java.lang.String"/>
+            <attribute name="notable" type="java.lang.String"/>
+            <attribute name="capitalCity" type="java.lang.String"/>
+            <attribute name="isoCode" type="java.lang.String"/>
+        </relation>
+        <relation name="WBIndicators">
+            <attribute name="id" type="java.lang.String"/>
+            <attribute name="topicId" type="java.lang.Integer"/>
+            <attribute name="name" type="java.lang.String"/>
+            <attribute name="sourceId" type="java.lang.Integer"/>
+            <attribute name="sourceNote" type="java.lang.String"/>
+        </relation>
         <relation name="GNCountryInfo">
             <attribute name="id" type="java.lang.Integer"/>
             <attribute name="countryCode" type="java.lang.String"/>
@@ -27,6 +211,92 @@
             <attribute name="areaInSqKm" type="java.lang.Double"/>
             <access-method name="gn_cinfo"/>
             <access-method name="gn_cinfo_cc" inputs="1"/>
+        </relation>
+        <relation name="YahooPlaceRelationship">
+            <attribute name="relation" type="java.lang.String"/>
+            <attribute name="of" type="java.lang.Integer"/>
+            <attribute name="woeid" type="java.lang.Integer"/>
+            <attribute name="placeTypeName" type="java.lang.String"/>
+            <attribute name="name" type="java.lang.String"/>
+            <attribute name="uri" type="java.lang.String"/>
+        </relation>
+        <relation name="GNContains">
+            <attribute name="source" type="java.lang.Integer"/>
+            <attribute name="id" type="java.lang.Integer"/>
+            <attribute name="name" type="java.lang.String"/>
+            <attribute name="topoName" type="java.lang.String"/>
+            <attribute name="class" type="java.lang.String"/>
+            <attribute name="code" type="java.lang.String"/>
+            <attribute name="countryCode" type="java.lang.String"/>
+            <attribute name="latitude" type="java.lang.Double"/>
+            <attribute name="longitude" type="java.lang.Double"/>
+        </relation>
+        <relation name="GNCountryCode">
+            <attribute name="languages" type="java.lang.String"/>
+            <attribute name="distance" type="java.lang.Integer"/>
+            <attribute name="countryName" type="java.lang.String"/>
+            <attribute name="countryCode" type="java.lang.String"/>
+            <attribute name="latitude" type="java.lang.Double"/>
+            <attribute name="longitude" type="java.lang.Double"/>
+        </relation>
+        <relation name="GNOcean">
+            <attribute name="name" type="java.lang.String"/>
+            <attribute name="latitude" type="java.lang.Double"/>
+            <attribute name="longitude" type="java.lang.Double"/>
+        </relation>
+        <relation name="City">
+            <attribute name="id" type="java.lang.String"/>
+            <attribute name="name" type="java.lang.String"/>
+            <attribute name="countryCode" type="java.lang.String"/>
+            <attribute name="cityBBNorth" type="java.lang.Double"/>
+            <attribute name="cityBBSouth" type="java.lang.Double"/>
+            <attribute name="cityBBEast" type="java.lang.Double"/>
+            <attribute name="cityBBWest" type="java.lang.Double"/>
+        </relation>
+        <relation name="WBData">
+            <attribute name="country" type="java.lang.String"/>
+            <attribute name="indicator" type="java.lang.String"/>
+            <attribute name="date" type="java.lang.Integer"/>
+            <attribute name="countryName" type="java.lang.String"/>
+            <attribute name="value" type="java.lang.Double"/>
+        </relation>
+        <relation name="GNPlaces">
+            <attribute name="id" type="java.lang.Integer"/>
+            <attribute name="name" type="java.lang.String"/>
+            <attribute name="topoName" type="java.lang.String"/>
+            <attribute name="class" type="java.lang.String"/>
+            <attribute name="className" type="java.lang.String"/>
+            <attribute name="code" type="java.lang.String"/>
+            <attribute name="codeName" type="java.lang.String"/>
+            <attribute name="country" type="java.lang.String"/>
+            <attribute name="countryId" type="java.lang.Integer"/>
+            <attribute name="countryCode" type="java.lang.String"/>
+            <attribute name="continentCode" type="java.lang.String"/>
+            <attribute name="admin1" type="java.lang.String"/>
+            <attribute name="admin2" type="java.lang.String"/>
+            <attribute name="admin3" type="java.lang.String"/>
+            <attribute name="admin4" type="java.lang.String"/>
+            <attribute name="admin5" type="java.lang.String"/>
+            <attribute name="adminId1" type="java.lang.Integer"/>
+            <attribute name="adminId2" type="java.lang.Integer"/>
+            <attribute name="adminId3" type="java.lang.Integer"/>
+            <attribute name="adminId4" type="java.lang.Integer"/>
+            <attribute name="adminId5" type="java.lang.Integer"/>
+            <attribute name="adminCode1" type="java.lang.String"/>
+            <attribute name="adminCode2" type="java.lang.String"/>
+            <attribute name="adminCode3" type="java.lang.String"/>
+            <attribute name="adminCode4" type="java.lang.String"/>
+            <attribute name="adminCode5" type="java.lang.String"/>
+            <attribute name="wikipedia" type="java.lang.String"/>
+            <attribute name="population" type="java.lang.Integer"/>
+            <attribute name="elevation" type="java.lang.Integer"/>
+            <attribute name="latitude" type="java.lang.Double"/>
+            <attribute name="longitude" type="java.lang.Double"/>
+            <attribute name="bbNorth" type="java.lang.Double"/>
+            <attribute name="bbSouth" type="java.lang.Double"/>
+            <attribute name="bbEast" type="java.lang.Double"/>
+            <attribute name="bbWest" type="java.lang.Double"/>
+            <attribute name="timezone" type="java.lang.String"/>
         </relation>
         <relation name="YahooPlaces">
             <attribute name="woeid" type="java.lang.Integer"/>
@@ -51,17 +321,82 @@
             <access-method name="yh_geo_woeid" inputs="0"/>
             <access-method name="yh_geo_type" inputs="1,2"/>
         </relation>
-        <relation name="WBCountries">
+        <relation name="WBIncomeLevels">
             <attribute name="id" type="java.lang.String"/>
-            <attribute name="iso2" type="java.lang.String"/>
             <attribute name="name" type="java.lang.String"/>
-            <attribute name="incomeLevel" type="java.lang.String"/>
-            <attribute name="lendingType" type="java.lang.String"/>
-            <attribute name="capitalCity" type="java.lang.String"/>
+        </relation>
+        <relation name="Continent">
+            <attribute name="id" type="java.lang.String"/>
+            <attribute name="name" type="java.lang.String"/>
+            <attribute name="surface" type="java.lang.Integer"/>
+            <attribute name="bbNorth" type="java.lang.Double"/>
+            <attribute name="bbSouth" type="java.lang.Double"/>
+            <attribute name="bbEast" type="java.lang.Double"/>
+            <attribute name="bbWest" type="java.lang.Double"/>
+        </relation>
+        <relation name="YahooPlaceCommonAncestor">
+            <attribute name="woeid1" type="java.lang.Integer"/>
+            <attribute name="woeid2" type="java.lang.Integer"/>
+            <attribute name="woeid" type="java.lang.Integer"/>
+            <attribute name="placeTypeName" type="java.lang.String"/>
+            <attribute name="name" type="java.lang.String"/>
+            <attribute name="uri" type="java.lang.String"/>
+        </relation>
+        <relation name="GNEarthquakes">
+            <attribute name="bbNorth" type="java.lang.Double"/>
+            <attribute name="bbSouth" type="java.lang.Double"/>
+            <attribute name="bbEast" type="java.lang.Double"/>
+            <attribute name="bbWest" type="java.lang.Double"/>
+            <attribute name="id" type="java.lang.String"/>
+            <attribute name="magnitude" type="java.lang.Double"/>
+            <attribute name="depth" type="java.lang.Double"/>
+            <attribute name="datetime" type="java.lang.String"/>
             <attribute name="latitude" type="java.lang.Double"/>
             <attribute name="longitude" type="java.lang.Double"/>
-            <access-method name="c_free"/>
-            <access-method name="c_il" inputs="3"/>
+        </relation>
+        <relation name="YahooWeatherForecast">
+            <attribute name="woeid" type="java.lang.Integer"/>
+            <attribute name="code" type="java.lang.Integer"/>
+            <attribute name="date" type="java.lang.String"/>
+            <attribute name="condition" type="java.lang.String"/>
+            <attribute name="high" type="java.lang.Integer"/>
+            <attribute name="low" type="java.lang.Integer"/>
+        </relation>
+        <relation name="GNWeather">
+            <attribute name="bbNorth" type="java.lang.Double"/>
+            <attribute name="bbSouth" type="java.lang.Double"/>
+            <attribute name="bbEast" type="java.lang.Double"/>
+            <attribute name="bbWest" type="java.lang.Double"/>
+            <attribute name="datetime" type="java.lang.String"/>
+            <attribute name="latitude" type="java.lang.Double"/>
+            <attribute name="longitude" type="java.lang.Double"/>
+            <attribute name="icao" type="java.lang.String"/>
+            <attribute name="observation" type="java.lang.Double"/>
+            <attribute name="condition" type="java.lang.String"/>
+            <attribute name="conditionCode" type="java.lang.String"/>
+            <attribute name="clouds" type="java.lang.String"/>
+            <attribute name="cloudsCode" type="java.lang.Double"/>
+            <attribute name="dewPoint" type="java.lang.Integer"/>
+            <attribute name="temperature" type="java.lang.Double"/>
+            <attribute name="windSpeed" type="java.lang.Integer"/>
+            <attribute name="windDirection" type="java.lang.Double"/>
+            <attribute name="humidity" type="java.lang.Integer"/>
+            <attribute name="stationName" type="java.lang.String"/>
+        </relation>
+        <relation name="GoogleElevation">
+            <attribute name="latitude" type="java.lang.Double"/>
+            <attribute name="longitude" type="java.lang.Double"/>
+            <attribute name="elevation" type="java.lang.Double"/>
+            <attribute name="resolution" type="java.lang.Double"/>
+        </relation>
+        <relation name="CapitalCity">
+            <attribute name="id" type="java.lang.String"/>
+            <attribute name="name" type="java.lang.String"/>
+            <attribute name="countryCode" type="java.lang.String"/>
+            <attribute name="cityBBNorth" type="java.lang.Double"/>
+            <attribute name="cityBBSouth" type="java.lang.Double"/>
+            <attribute name="cityBBEast" type="java.lang.Double"/>
+            <attribute name="cityBBWest" type="java.lang.Double"/>
         </relation>
         <relation name="Country">
             <attribute name="id" type="java.lang.String"/>
@@ -76,84 +411,73 @@
             <attribute name="bbEast" type="java.lang.Double"/>
             <attribute name="bbWest" type="java.lang.Double"/>
         </relation>
-        <relation name="YahooContinents" source="yahoo">
-            <attribute name="woeid" type="java.lang.Integer"/>
-            <attribute name="placeType" type="java.lang.Integer"/>
-            <attribute name="placeTypeName" type="java.lang.String"/>
+        <relation name="GNChildren">
+            <attribute name="source" type="java.lang.Integer"/>
+            <attribute name="id" type="java.lang.Integer"/>
             <attribute name="name" type="java.lang.String"/>
-            <access-method name="yh_geo_continent"/>
+            <attribute name="topoName" type="java.lang.String"/>
+            <attribute name="class" type="java.lang.String"/>
+            <attribute name="code" type="java.lang.String"/>
+            <attribute name="countryCode" type="java.lang.String"/>
+            <attribute name="latitude" type="java.lang.Double"/>
+            <attribute name="longitude" type="java.lang.Double"/>
+            <attribute name="children" type="java.lang.Integer"/>
         </relation>
-        <relation name="YahooCountries" source="yahoo">
-            <attribute name="woeid" type="java.lang.Integer"/>
-            <attribute name="placeType" type="java.lang.Integer"/>
-            <attribute name="placeTypeName" type="java.lang.String"/>
-            <attribute name="name" type="java.lang.String"/>
-            <access-method name="yh_geo_country"/>
-        </relation>
-        <relation name="Continent" source="yahoo">
-            <attribute name="id" type="java.lang.String"/>
-            <attribute name="name" type="java.lang.String"/>
-            <attribute name="surface" type="java.lang.Integer"/>
+        <relation name="GNCities">
             <attribute name="bbNorth" type="java.lang.Double"/>
             <attribute name="bbSouth" type="java.lang.Double"/>
             <attribute name="bbEast" type="java.lang.Double"/>
             <attribute name="bbWest" type="java.lang.Double"/>
+            <attribute name="id" type="java.lang.Integer"/>
+            <attribute name="name" type="java.lang.String"/>
+            <attribute name="topoName" type="java.lang.String"/>
+            <attribute name="countryCode" type="java.lang.String"/>
+            <attribute name="fcl" type="java.lang.String"/>
+            <attribute name="fclName" type="java.lang.String"/>
+            <attribute name="fcode" type="java.lang.String"/>
+            <attribute name="fcodeName" type="java.lang.String"/>
+            <attribute name="population" type="java.lang.Integer"/>
+            <attribute name="wikipedia" type="java.lang.String"/>
+            <attribute name="latitude" type="java.lang.Double"/>
+            <attribute name="longitude" type="java.lang.Double"/>
         </relation>
-        <relation name="YahooPlaceCode" source="yahoo">
+        <relation name="GoogleGeoCode">
+            <attribute name="address" type="java.lang.String"/>
+            <attribute name="latitude" type="java.lang.Double"/>
+            <attribute name="longitude" type="java.lang.Double"/>
+        </relation>
+        <relation name="GNCountrySubDivision">
+            <attribute name="languages" type="java.lang.String"/>
+            <attribute name="distance" type="java.lang.Integer"/>
+            <attribute name="countryName" type="java.lang.String"/>
+            <attribute name="countryCode" type="java.lang.String"/>
+            <attribute name="adminName" type="java.lang.String"/>
+            <attribute name="adminCode" type="java.lang.String"/>
+            <attribute name="latitude" type="java.lang.Double"/>
+            <attribute name="longitude" type="java.lang.Double"/>
+        </relation>
+        <relation name="GNSiblings">
+            <attribute name="source" type="java.lang.Integer"/>
+            <attribute name="id" type="java.lang.Integer"/>
+            <attribute name="name" type="java.lang.String"/>
+            <attribute name="topoName" type="java.lang.String"/>
+            <attribute name="class" type="java.lang.String"/>
+            <attribute name="code" type="java.lang.String"/>
+            <attribute name="countryCode" type="java.lang.String"/>
+            <attribute name="latitude" type="java.lang.Double"/>
+            <attribute name="longitude" type="java.lang.Double"/>
+        </relation>
+        <relation name="YahooPlaceCode">
             <attribute name="namespace" type="java.lang.String"/>
             <attribute name="code" type="java.lang.String"/>
             <attribute name="woeid" type="java.lang.Integer"/>
             <access-method name="yh_geo_code" inputs="0,1"/>
         </relation>
-        <relation name="YahooBelongsTo" source="yahoo">
-            <attribute name="source" type="java.lang.Integer"/>
-            <attribute name="target" type="java.lang.Integer"/>
+        <relation name="YahooOceans">
+            <attribute name="woeid" type="java.lang.Integer"/>
+            <attribute name="placeType" type="java.lang.Integer"/>
             <attribute name="placeTypeName" type="java.lang.String"/>
             <attribute name="name" type="java.lang.String"/>
-            <attribute name="uri" type="java.lang.String"/>
-            <access-method name="yh_geo_belongs" inputs="0"/>
-        </relation>
-        <relation name="City" source="yahoo">
-            <attribute name="id" type="java.lang.String"/>
-            <attribute name="name" type="java.lang.String"/>
-            <attribute name="countryCode" type="java.lang.String"/>
-            <attribute name="cityBBNorth" type="java.lang.Double"/>
-            <attribute name="cityBBSouth" type="java.lang.Double"/>
-            <attribute name="cityBBEast" type="java.lang.Double"/>
-            <attribute name="cityBBWest" type="java.lang.Double"/>
-        </relation>
-        <relation name="CapitalCity" source="geonames">
-            <attribute name="id" type="java.lang.String"/>
-            <attribute name="name" type="java.lang.String"/>
-            <attribute name="countryCode" type="java.lang.String"/>
-            <attribute name="cityBBNorth" type="java.lang.Double"/>
-            <attribute name="cityBBSouth" type="java.lang.Double"/>
-            <attribute name="cityBBEast" type="java.lang.Double"/>
-            <attribute name="cityBBWest" type="java.lang.Double"/>
-        </relation>
-        <relation name="YahooWeather" source="worldbank">
-            <attribute name="woeid" type="java.lang.Integer"/>
-            <attribute name="city" type="java.lang.String"/>
-            <attribute name="country" type="java.lang.String"/>
-            <attribute name="region" type="java.lang.String"/>
-            <attribute name="distance_unit" type="java.lang.String"/>
-            <attribute name="pressure_unit" type="java.lang.String"/>
-            <attribute name="speed_unit" type="java.lang.String"/>
-            <attribute name="temp_unit" type="java.lang.String"/>
-            <attribute name="wind_chill" type="java.lang.Integer"/>
-            <attribute name="wind_direction" type="java.lang.Integer"/>
-            <attribute name="wind_speed" type="java.lang.String"/>
-            <attribute name="humidity" type="java.lang.Double"/>
-            <attribute name="pressure" type="java.lang.Double"/>
-            <attribute name="rising" type="java.lang.Integer"/>
-            <attribute name="visibility" type="java.lang.Double"/>
-            <attribute name="sunrise" type="java.lang.String"/>
-            <attribute name="sunset" type="java.lang.String"/>
-            <attribute name="date" type="java.lang.String"/>
-            <attribute name="temperature" type="java.lang.Double"/>
-            <attribute name="condition" type="java.lang.String"/>
-            <attribute name="code" type="java.lang.Integer"/>
-            <access-method name="yh_wtr_woeid" inputs="0"/>
         </relation>
     </relations>
     <dependencies>

@@ -1,31 +1,37 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<schema description="" name="Yahoo! API">
-    <sources>
-        <source discoverer="uk.ac.ox.cs.pdq.services.ServiceReader" file="test/linear/fast/demo/yahoo-services.xml" name="yahoo"/>
-    </sources>
+<schema>
     <relations>
-        <relation name="YahooOceans" source="yahoo">
+        <relation name="YahooPlaces">
             <attribute name="woeid" type="java.lang.Integer"/>
-            <attribute name="placeType" type="java.lang.Integer"/>
-            <attribute name="placeTypeName" type="java.lang.String"/>
             <attribute name="name" type="java.lang.String"/>
-            <access-method name="yh_geo_ocean"/>
+            <attribute name="type" type="java.lang.Integer"/>
+            <attribute name="placeTypeName" type="java.lang.String"/>
+            <attribute name="country" type="java.lang.String"/>
+            <attribute name="admin1" type="java.lang.String"/>
+            <attribute name="admin2" type="java.lang.String"/>
+            <attribute name="admin3" type="java.lang.String"/>
+            <attribute name="locality1" type="java.lang.String"/>
+            <attribute name="locality2" type="java.lang.String"/>
+            <attribute name="postal" type="java.lang.String"/>
+            <attribute name="centroid_lat" type="java.lang.Double"/>
+            <attribute name="centroid_lng" type="java.lang.Double"/>
+            <attribute name="bboxNorth" type="java.lang.Double"/>
+            <attribute name="bboxSouth" type="java.lang.Double"/>
+            <attribute name="bboxEast" type="java.lang.Double"/>
+            <attribute name="bboxWest" type="java.lang.Double"/>
+            <attribute name="timezone" type="java.lang.String"/>
+            <access-method name="yh_geo_name" inputs="1"/>
+            <access-method name="yh_geo_woeid" inputs="0"/>
+            <access-method name="yh_geo_type" inputs="1,2"/>
         </relation>
-        <relation name="YahooContinents" source="yahoo">
+        <relation name="YahooContinents">
             <attribute name="woeid" type="java.lang.Integer"/>
             <attribute name="placeType" type="java.lang.Integer"/>
             <attribute name="placeTypeName" type="java.lang.String"/>
             <attribute name="name" type="java.lang.String"/>
             <access-method name="yh_geo_continent"/>
         </relation>
-        <relation name="YahooSeas" source="yahoo">
-            <attribute name="woeid" type="java.lang.Integer"/>
-            <attribute name="placeType" type="java.lang.Integer"/>
-            <attribute name="placeTypeName" type="java.lang.String"/>
-            <attribute name="name" type="java.lang.String"/>
-            <access-method name="yh_geo_sea"/>
-        </relation>
-        <relation name="YahooPlaceCommonAncestor" source="yahoo">
+        <relation name="YahooPlaceCommonAncestor">
             <attribute name="woeid1" type="java.lang.Integer"/>
             <attribute name="woeid2" type="java.lang.Integer"/>
             <attribute name="woeid" type="java.lang.Integer"/>
@@ -34,14 +40,38 @@
             <attribute name="uri" type="java.lang.String"/>
             <access-method name="yh_com_anc" inputs="0,1"/>
         </relation>
-        <relation name="YahooCountries" source="yahoo">
+        <relation name="YahooPlaceType">
+            <attribute name="placeTypeName" type="java.lang.String"/>
+            <attribute name="code" type="java.lang.Integer"/>
+            <attribute name="uri" type="java.lang.String"/>
+            <access-method name="yh_geo_types"/>
+            <access-method name="yh_geo_types_name" inputs="1"/>
+        </relation>
+        <relation name="YahooPlaceRelationship">
+            <attribute name="relation" type="java.lang.String"/>
+            <attribute name="of" type="java.lang.Integer"/>
+            <attribute name="woeid" type="java.lang.Integer"/>
+            <attribute name="placeTypeName" type="java.lang.String"/>
+            <attribute name="name" type="java.lang.String"/>
+            <attribute name="uri" type="java.lang.String"/>
+            <access-method name="yh_geo_rel" inputs="0,1"/>
+        </relation>
+        <relation name="YahooWeatherForecast">
+            <attribute name="woeid" type="java.lang.Integer"/>
+            <attribute name="code" type="java.lang.Integer"/>
+            <attribute name="date" type="java.lang.String"/>
+            <attribute name="condition" type="java.lang.String"/>
+            <attribute name="high" type="java.lang.Integer"/>
+            <attribute name="low" type="java.lang.Integer"/>
+        </relation>
+        <relation name="YahooSeas">
             <attribute name="woeid" type="java.lang.Integer"/>
             <attribute name="placeType" type="java.lang.Integer"/>
             <attribute name="placeTypeName" type="java.lang.String"/>
             <attribute name="name" type="java.lang.String"/>
-            <access-method name="yh_geo_country"/>
+            <access-method name="yh_geo_sea"/>
         </relation>
-        <relation name="YahooWeather" source="yahoo">
+        <relation name="YahooWeather">
             <attribute name="woeid" type="java.lang.Integer"/>
             <attribute name="city" type="java.lang.String"/>
             <attribute name="country" type="java.lang.String"/>
@@ -65,50 +95,32 @@
             <attribute name="code" type="java.lang.Integer"/>
             <access-method name="yh_wtr_woeid" inputs="0"/>
         </relation>
-        <relation name="YahooPlaceType" source="yahoo">
+        <relation name="YahooCountries">
+            <attribute name="woeid" type="java.lang.Integer"/>
+            <attribute name="placeType" type="java.lang.Integer"/>
             <attribute name="placeTypeName" type="java.lang.String"/>
-            <attribute name="code" type="java.lang.Integer"/>
-            <attribute name="uri" type="java.lang.String"/>
-            <access-method name="yh_geo_types"/>
-            <access-method name="yh_geo_types_name" inputs="1"/>
+            <attribute name="name" type="java.lang.String"/>
+            <access-method name="yh_geo_country"/>
         </relation>
-        <relation name="YahooPlaceCode" source="yahoo">
+        <relation name="YahooBelongsTo">
+            <attribute name="source" type="java.lang.Integer"/>
+            <attribute name="target" type="java.lang.Integer"/>
+            <attribute name="placeTypeName" type="java.lang.String"/>
+            <attribute name="name" type="java.lang.String"/>
+            <attribute name="uri" type="java.lang.String"/>
+        </relation>
+        <relation name="YahooPlaceCode">
             <attribute name="namespace" type="java.lang.String"/>
             <attribute name="code" type="java.lang.String"/>
             <attribute name="woeid" type="java.lang.Integer"/>
             <access-method name="yh_geo_code" inputs="0,1"/>
         </relation>
-        <relation name="YahooPlaceRelationship" source="yahoo">
-            <attribute name="relation" type="java.lang.String"/>
-            <attribute name="of" type="java.lang.Integer"/>
+        <relation name="YahooOceans">
             <attribute name="woeid" type="java.lang.Integer"/>
+            <attribute name="placeType" type="java.lang.Integer"/>
             <attribute name="placeTypeName" type="java.lang.String"/>
             <attribute name="name" type="java.lang.String"/>
-            <attribute name="uri" type="java.lang.String"/>
-            <access-method name="yh_geo_rel" inputs="0,1"/>
-        </relation>
-        <relation name="YahooPlaces" source="yahoo">
-            <attribute name="woeid" type="java.lang.Integer"/>
-            <attribute name="name" type="java.lang.String"/>
-            <attribute name="type" type="java.lang.Integer"/>
-            <attribute name="placeTypeName" type="java.lang.String"/>
-            <attribute name="country" type="java.lang.String"/>
-            <attribute name="admin1" type="java.lang.String"/>
-            <attribute name="admin2" type="java.lang.String"/>
-            <attribute name="admin3" type="java.lang.String"/>
-            <attribute name="locality1" type="java.lang.String"/>
-            <attribute name="locality2" type="java.lang.String"/>
-            <attribute name="postal" type="java.lang.String"/>
-            <attribute name="centroid_lat" type="java.lang.Double"/>
-            <attribute name="centroid_lng" type="java.lang.Double"/>
-            <attribute name="bboxNorth" type="java.lang.Double"/>
-            <attribute name="bboxSouth" type="java.lang.Double"/>
-            <attribute name="bboxEast" type="java.lang.Double"/>
-            <attribute name="bboxWest" type="java.lang.Double"/>
-            <attribute name="timezone" type="java.lang.String"/>
-            <access-method name="yh_geo_name" inputs="1"/>
-            <access-method name="yh_geo_woeid" inputs="0"/>
-            <access-method name="yh_geo_type" inputs="1,2"/>
+            <access-method name="yh_geo_ocean"/>
         </relation>
     </relations>
     <dependencies>
