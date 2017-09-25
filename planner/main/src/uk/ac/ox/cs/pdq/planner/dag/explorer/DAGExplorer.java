@@ -109,9 +109,6 @@ public abstract class DAGExplorer extends Explorer {
 	private static void checkQueryForPredicatesInsteadOfRelations(ConjunctiveQuery query) {
 		Atom[] atoms = query.getAtoms();
 		for (Atom atom:atoms) {
-			if (!(atom.getPredicate() instanceof Relation)) {
-				System.out.println();
-			}
 			Preconditions.checkArgument(atom.getPredicate() instanceof Relation,"" + atom.getPredicate() + " should be an instance of Relation.");
 		}
 	}

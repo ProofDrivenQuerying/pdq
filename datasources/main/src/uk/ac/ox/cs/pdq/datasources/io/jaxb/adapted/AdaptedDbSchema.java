@@ -115,9 +115,6 @@ public class AdaptedDbSchema {
 				Cache.reStartCaches();
 				for (int i = 0; i <discoveredPartialSchema.getNumberOfRelations(); i++) {
 					Relation dr = discoveredPartialSchema.getRelation(i);
-					if (dr.getForeignKeys()!=null && dr.getForeignKeys().length>0) {
-						System.out.println();
-					}
 					AdaptedRelation xmlRelation = getRelationByName(dr.getName());
 					AccessMethod[] am = null; 
 					if (xmlRelation !=null && xmlRelation.getAccessMethods() !=null && xmlRelation.getAccessMethods().length > 0 ) 

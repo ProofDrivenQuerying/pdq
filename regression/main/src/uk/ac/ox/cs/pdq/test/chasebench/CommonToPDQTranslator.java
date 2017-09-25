@@ -155,9 +155,6 @@ public class CommonToPDQTranslator {
 						terms.add(TypedConstant.create(t.replaceAll("\"", "")));
 					}
 				}
-				if (relations.get(name)==null) {
-					System.out.println();
-				}
 				atoms.add(Atom.create(relations.get(name), terms.toArray(new Term[terms.size()])));
 			}
 		}
@@ -315,9 +312,6 @@ public class CommonToPDQTranslator {
 				List<Term> constants = Lists.newArrayList();
 				for (int i = 0; i < tuple.length; ++i) {
 					constants.add(TypedConstant.create(tuple[i].replace("\"", "")));
-				}
-				if (schema.getRelation(table)==null) {
-					System.out.println();
 				}
 				facts.add(Atom.create(schema.getRelation(table), constants.toArray(new Term[constants.size()])));
 			}

@@ -72,7 +72,11 @@ public class ExecuteSQLQueryThread implements Callable<List<Match>> {
 				query = entry.getMiddle();
 				LinkedHashMap<String, Variable> projectedVariables = entry.getRight();
 				if (databaseName!=null) {
-					sqlStatement.execute("USE " + databaseName+";\n");
+					try {
+						sqlStatement.execute("USE " + databaseName+";\n");
+					}catch(Throwable t) {
+						System.err.println("Problem while switching to database: \"" + databaseName + "\". " + t.getMessage());
+					}
 				}
 				ResultSet resultSet = sqlStatement.executeQuery(query);
 				try {
