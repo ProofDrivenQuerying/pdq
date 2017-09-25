@@ -436,7 +436,7 @@ public class TestAccessibleChaseInstance {
 		}
 	}
 	
-	private DatabaseParameters getPostgresConfig() {
+	protected DatabaseParameters getPostgresConfig() {
 		DatabaseParameters dbParam = new DatabaseParameters();
 		dbParam.setConnectionUrl("jdbc:postgresql://localhost/");
 		dbParam.setDatabaseDriver("org.postgresql.Driver");
