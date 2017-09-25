@@ -44,6 +44,7 @@ import uk.ac.ox.cs.pdq.test.RegressionTestException;
 import uk.ac.ox.cs.pdq.test.acceptance.AcceptanceCriterion;
 import uk.ac.ox.cs.pdq.test.acceptance.ApproximateCostAcceptanceCheck;
 import uk.ac.ox.cs.pdq.test.acceptance.SameCostAcceptanceCheck;
+import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 import uk.ac.ox.cs.pdq.util.LimitReachedException;
 import uk.ac.ox.cs.pdq.util.LimitReachedException.Reasons;
 
@@ -158,6 +159,11 @@ public class PlannerTest extends RegressionTest {
 		 */
 		private boolean compare(File directory) throws ReflectiveOperationException {
 			try {
+		        GlobalCounterProvider.resetCounters();
+		        uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
+		        uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
+		        uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
+		        
 				this.out.println("\nStarting case '" + directory.getAbsolutePath() + "'");
 				PlannerParameters plannerParams = new PlannerParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
 				CostParameters costParams = new CostParameters(new File(directory.getAbsolutePath() + '/' + PLAN_PARAMETERS_FILE));
