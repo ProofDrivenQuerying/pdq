@@ -121,7 +121,7 @@ public class AdaptedDbSchema {
 					if (xmlRelation !=null && xmlRelation.getAccessMethods() !=null && xmlRelation.getAccessMethods().length > 0 ) 
 						am = xmlRelation.getAccessMethods();
 					if (dr.getAccessMethods() != null && dr.getAccessMethods().length > 0) {
-						throw new IllegalArgumentException("Access method merging is not implemented!");
+						//throw new IllegalArgumentException("Access method merging is not implemented!");
 					}
 					if (dr instanceof View) {
 						View v = new View(dr.getName(), dr.getAttributes(),am);
