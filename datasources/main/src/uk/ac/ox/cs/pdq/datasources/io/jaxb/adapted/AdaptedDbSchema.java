@@ -2,9 +2,12 @@ package uk.ac.ox.cs.pdq.datasources.io.jaxb.adapted;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
@@ -13,12 +16,26 @@ import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
+import org.apache.commons.collections4.CollectionUtils;
+
 import uk.ac.ox.cs.pdq.datasources.builder.SchemaDiscoverer;
 import uk.ac.ox.cs.pdq.datasources.io.jaxb.Source;
+import uk.ac.ox.cs.pdq.db.AccessMethod;
+import uk.ac.ox.cs.pdq.db.Cache;
+import uk.ac.ox.cs.pdq.db.ForeignKey;
+import uk.ac.ox.cs.pdq.db.Reference;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.View;
+import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Dependency;
+import uk.ac.ox.cs.pdq.fol.Formula;
+import uk.ac.ox.cs.pdq.fol.FormulaEquivalence;
+import uk.ac.ox.cs.pdq.fol.LinearGuarded;
+import uk.ac.ox.cs.pdq.fol.QuantifiedFormula;
+import uk.ac.ox.cs.pdq.fol.TGD;
+import uk.ac.ox.cs.pdq.fol.Term;
+import uk.ac.ox.cs.pdq.fol.Variable;
 import uk.ac.ox.cs.pdq.io.jaxb.adapted.AdaptedRelation;
 import uk.ac.ox.cs.pdq.io.jaxb.adapted.AdaptedView;
 
@@ -53,8 +70,9 @@ public class AdaptedDbSchema {
 				Schema s = new Schema(relations);
 				return s;
 			}
-			HashSet<Relation> discoveredRelations = new HashSet<Relation>();
+			HashMap<String,Relation> discoveredRelations = new HashMap<>();
 			List<String> discoveredSources = new ArrayList<>();
+			List<Dependency> discoveredDependencies = new ArrayList<>();
 			for (Source s : sources) {
 				Properties propertiesClone = new Properties();
 				if (properties!=null)
@@ -79,30 +97,221 @@ public class AdaptedDbSchema {
 				SchemaDiscoverer sd = (SchemaDiscoverer) Class.forName(discoverer).newInstance();
 				sd.setProperties(propertiesClone);
 				Schema discoveredPartialSchema = sd.discover();
-				for (AdaptedRelation r : ars) {
-					if (s.getName() != null && s.getName().equals(r.getSource())) {
-						//create (String name, Attribute[] attributes, AccessMethod[] accessMethods, ForeignKey[] foreignKeys, boolean isEquality)
-						Relation dr = discoveredPartialSchema.getRelation(r.getName());
-						discoveredRelations.add(Relation.create(r.getName(), dr.getAttributes(),r.getAccessMethods(),dr.getForeignKeys(),dr.isEquality()));
-					} else if (r.getSource()==null) {
-						discoveredRelations.add(r.toRelation());
+				if (discoveredPartialSchema.getDependencies() != null && discoveredPartialSchema.getDependencies().length!=0) {
+					discoveredDependencies.addAll(Arrays.asList(discoveredPartialSchema.getDependencies()));
+				}
+				
+				Cache.reStartCaches();
+				for (int i = 0; i <discoveredPartialSchema.getNumberOfRelations(); i++) {
+					Relation dr = discoveredPartialSchema.getRelation(i);
+					if (dr.getForeignKeys()!=null && dr.getForeignKeys().length>0) {
+						System.out.println();
+					}
+					AdaptedRelation xmlRelation = getRelationByName(dr.getName());
+					AccessMethod[] am = null; 
+					if (xmlRelation !=null && xmlRelation.getAccessMethods() !=null && xmlRelation.getAccessMethods().length > 0 ) 
+						am = xmlRelation.getAccessMethods();
+					if (dr.getAccessMethods() != null && dr.getAccessMethods().length > 0) {
+						throw new IllegalArgumentException("Access method merging is not implemented!");
+					}
+					if (dr instanceof View) {
+						View v = new View(dr.getName(), dr.getAttributes(),am);
+						v.setViewToRelationDependency(((View) dr).getViewToRelationDependency());
+						discoveredRelations.remove(dr.getName());
+						discoveredRelations.put(dr.getName(),v);
+					} else {
+						if (!discoveredRelations.containsKey(dr.getName())) {
+							discoveredRelations.put(dr.getName(),Relation.create(dr.getName(), dr.getAttributes(),am,dr.getForeignKeys(),dr.isEquality()));
+						}
 					}
 				}
+				for (Relation r:discoveredRelations.values()) {
+					if (!(r instanceof View)) {
+						ensureForeignKeyDefinition(r,discoveredDependencies);
+					}
+				}
+				
+				for (Relation r:discoveredRelations.values()) {
+					if (r instanceof View) {
+						ensureViewDefinition((View) r,discoveredDependencies);
+					}
+				}
+				
 				discoveredSources.add(s.getName());
 			}
-			if (discoveredRelations.size() != relations.length) {
+			if (discoveredRelations.size() < relations.length) {
 				throw new IllegalArgumentException("Not every relations were discovered. Discovered sources:" + discoveredSources + " out of : " + Arrays.asList(relations));
 			}
-			if (getDependencies() != null && getDependencies().length > 0)
-				return new Schema(discoveredRelations.toArray(new Relation[discoveredRelations.size()]), getDependencies());
-			Schema s = new Schema(discoveredRelations.toArray(new Relation[discoveredRelations.size()]));
-			return s;
+			if (getDependencies() != null && getDependencies().length > 0) {
+				discoveredDependencies.addAll(Arrays.asList(getDependencies()));				
+			}
+			
+			
+			if (discoveredDependencies.size() > 0) {
+				return new Schema(discoveredRelations.values().toArray(new Relation[discoveredRelations.size()]), discoveredDependencies.toArray(new Dependency[discoveredDependencies.size()]));
+			}
+			return new Schema(discoveredRelations.values().toArray(new Relation[discoveredRelations.size()])); 
 		} catch ( ClassNotFoundException t) {
 			t.printStackTrace();
 			throw t;
 		}
 	}
+	
+	private AdaptedRelation getRelationByName(String name) {
+		for (AdaptedRelation r:ars) {
+			if (name.equals(r.getName()))
+				return r;
+		}
+		return null;
+	}
+	/**
+	 * Ensure every view has its corresponding definition as constraints.
+	 *
+	 * @param view the view
+	 */
+	private void ensureViewDefinition(View view,List<Dependency> allDependencies) {
+		LinearGuarded d = view.getViewToRelationDependency();
+		LinearGuarded t = findViewDependency(view,allDependencies);		
+		if (d != null) {
+			TGD inverse = TGD.create(
+					d.getHead() instanceof QuantifiedFormula ?
+							d.getHead().getChildren()[0].getAtoms() :
+								d.getHead().getAtoms(), 
+								d.getBody().getAtoms());
+			if (t == null) {
+				allDependencies.add(d);
+			}
+			if (!allDependencies.contains(inverse)) {
+				allDependencies.add(inverse);
+			}
+		} else {
+			if (t != null) {
+				view.setViewToRelationDependency(t);
+				TGD inverse = TGD.create(
+						t.getHead() instanceof QuantifiedFormula ?
+								t.getHead().getChildren()[0].getAtoms():
+									t.getHead().getAtoms(), 
+									t.getBody().getAtoms());
+				if (!allDependencies.contains(inverse)) {
+					allDependencies.add(inverse);
+				}
+			} else {
+				throw new IllegalStateException("No linear guarded dependency found for view " + view.getName());
+			}
+		}
+	}
+	
+	private LinearGuarded findViewDependency(View v, List<Dependency> allDependencies) {
+		if (allDependencies != null) {
+			for (Dependency dependency:allDependencies) {
+				if (dependency.getBody().getAtoms().length == 1) {
+					if (dependency.getBody().getAtoms()[0]
+							.getPredicate().getName().equals(v.getName())) {
+						return (LinearGuarded) dependency;
+					}
+				}
+			}
+		}
+		return null;
+	}
+	/**
+	 * Ensure every relation's foreign has its corresponding constraints.
+	 *
+	 * @param relation Relation
+	 */
+	private void ensureForeignKeyDefinition(Relation relation,List<Dependency> allDependencies) {
+		for (ForeignKey fkey: relation.getForeignKeys()) {
+			LinearGuarded gd = LinearGuarded.create(createBody(relation),new Atom[] {createHead(relation,fkey)});
+			if (this.findFKDependency(gd,allDependencies) == null) {
+				allDependencies.add(gd);
+			}
+		}
+		for (LinearGuarded gd: this.findFKDependency(relation, allDependencies)) {
+			ForeignKey fk = new ForeignKey("FK_for_LG" + gd.getId());
+			Atom left = gd.getBody().getAtoms()[0];
+			Atom right = gd.getHead().getAtoms()[0];
+			Relation leftRel = (Relation) left.getPredicate();
+			Relation rightRel = (Relation) right.getPredicate();
+			fk.setForeignRelation(rightRel);
+			fk.setForeignRelationName(rightRel.getName());
+			for (Variable v:CollectionUtils.intersection(Arrays.asList(left.getVariables()), Arrays.asList(right.getVariables()))) {
+				fk.addReference(new Reference(leftRel.getAttribute(Arrays.asList(left.getTerms()).indexOf(v)), rightRel.getAttribute(Arrays.asList(right.getTerms()).indexOf(v))));
+			}
+			if (!Arrays.asList(relation.getForeignKeys()).contains(fk)) {
+				relation.addForeignKey(fk);
+			}
+		}
+	}
+	
+	private Collection<LinearGuarded> findFKDependency(Relation r,List<Dependency> allDependencies) {
+		Set<LinearGuarded> result = new LinkedHashSet<>();
+		if (allDependencies != null) {
+			for (Dependency dependency: allDependencies) {
+				if (dependency instanceof LinearGuarded
+						&& ((LinearGuarded) dependency).getHead().getAtoms().length == 1
+						&& ((LinearGuarded) dependency).getGuard().getPredicate().equals(r)) {
+					result.add((LinearGuarded) dependency);
+				}
+			}
+		}
+		return result;
+	}
+	
+	private TGD findFKDependency(TGD input,List<Dependency> allDependencies) {
+		if (allDependencies != null) {
+			for (Dependency dependency:allDependencies) {
+				if (FormulaEquivalence.approximateEquivalence((Formula) input, (Formula) dependency)) {
+					return (TGD)dependency;
+				}
+			}
+		}
+		return null;
+	}
 
+	/**
+	 *
+	 * @param relation Relation
+	 * @return the body formula of a linear guarded dependency for the given relation
+	 */
+	private static Atom createBody(Relation relation) {
+		List<Variable> free = new ArrayList<>();
+		int index = 0;
+		for (int i = 0, l = relation.getArity(); i < l; i++) {
+			Variable v = Variable.create(Variable.DEFAULT_VARIABLE_PREFIX + (index++));
+			free.add(v);
+		}
+		return Atom.create(relation, free.toArray(new Term[free.size()]));
+	}
+
+	/**
+	 *
+	 * @param relation the relation
+	 * @param foreignKey the foreign key
+	 * @return the head formula of a linear guarded dependency for the given relation and foreign key constraint
+	 */
+	private static Atom createHead(Relation relation, ForeignKey foreignKey) {
+		List<Variable> free = new ArrayList<>();
+		int index = 0;
+		for (int i = 0, l = relation.getArity(); i < l; i++) {
+			Variable v = Variable.create(Variable.DEFAULT_VARIABLE_PREFIX + (index++));
+			free.add(v);
+		}
+
+		List<Variable> remoteTerms = new ArrayList<>();
+		for (int i = 0, l = foreignKey.getForeignRelation().getArity(); i < l; i++) {
+			Variable v = Variable.create(Variable.DEFAULT_VARIABLE_PREFIX + (index++));
+			remoteTerms.add(v);
+		}
+
+		Reference[] references = foreignKey.getReferences();
+		for (Reference rf:references) {
+			int remoteTermIndex = foreignKey.getForeignRelation().getAttributePosition(rf.getForeignAttributeName());
+			int localTermIndex = relation.getAttributePosition(rf.getLocalAttributeName());
+			remoteTerms.set(remoteTermIndex, free.get(localTermIndex));
+		}
+		return Atom.create(foreignKey.getForeignRelation(), remoteTerms.toArray(new Term[remoteTerms.size()]));
+	}
+	
 	@XmlElement(name = "dependency")
 	@XmlElementWrapper(name = "dependencies")
 	public Dependency[] getDependencies() {
