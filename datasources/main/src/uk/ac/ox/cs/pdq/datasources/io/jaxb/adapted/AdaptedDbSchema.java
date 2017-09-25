@@ -29,6 +29,7 @@ import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.View;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Dependency;
+import uk.ac.ox.cs.pdq.fol.EGD;
 import uk.ac.ox.cs.pdq.fol.Formula;
 import uk.ac.ox.cs.pdq.fol.FormulaEquivalence;
 import uk.ac.ox.cs.pdq.fol.LinearGuarded;
@@ -225,6 +226,16 @@ public class AdaptedDbSchema {
 		}
 		return null;
 	}
+
+	private Relation findRelation(String name) {
+		for (Relation r : relations) {
+			if (r.getName().equals(name)) {
+				return r;
+			}
+		}
+		return null;
+	}
+	
 	/**
 	 * Ensure every relation's foreign has its corresponding constraints.
 	 *
@@ -330,7 +341,35 @@ public class AdaptedDbSchema {
 	}
 
 	public void setDependencies(Dependency[] dependencies) {
-		this.dependencies = dependencies;
+		this.dependencies = convertDependenciesToPointToActualRelations(dependencies);
+	}
+
+	protected Dependency[] convertDependenciesToPointToActualRelations(Dependency[] dependencies2) {
+		if (dependencies2==null)
+			return null;
+		Dependency[] newDep = new Dependency[dependencies2.length];
+		for (int i = 0; i<dependencies2.length; i++) {
+			Dependency d = dependencies2[i];
+			if (d instanceof TGD) {
+				newDep[i] = TGD.create(convertAtoms(d.getBodyAtoms()), convertAtoms(d.getHeadAtoms()));
+			} else if (d instanceof EGD) {
+				newDep[i] = EGD.create(convertAtoms(d.getBodyAtoms()), convertAtoms(d.getHeadAtoms()));
+			} else {
+				throw new IllegalArgumentException("Unsupported type: " + d);
+			}
+
+		}
+		return newDep;
+	}
+	
+	private Atom[] convertAtoms(Atom[] bodyAtoms) {
+		if (bodyAtoms==null)
+			return null;
+		Atom[] newAtoms = new Atom[bodyAtoms.length];
+		for (int i =0; i < bodyAtoms.length; i++) {
+			newAtoms[i] = Atom.create(findRelation(bodyAtoms[i].getPredicate().getName()),bodyAtoms[i].getTerms());
+		}
+		return newAtoms;
 	}
 
 	@XmlElementWrapper(name = "relations")
