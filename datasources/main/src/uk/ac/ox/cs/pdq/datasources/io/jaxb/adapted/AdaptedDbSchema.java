@@ -148,9 +148,14 @@ public class AdaptedDbSchema {
 				
 				discoveredSources.add(s.getName());
 			}
-			if (discoveredRelations.size() < relations.length) {
-				throw new IllegalArgumentException("Not every relations were discovered. Discovered sources:" + discoveredSources + " out of : " + Arrays.asList(relations));
+			for (Relation r: relations) {
+				if (!discoveredRelations.containsKey(r.getName())) {
+					discoveredRelations.put(r.getName(), r);
+				}
 			}
+//			if (discoveredRelations.size() < relations.length) {
+//				throw new IllegalArgumentException("Not every relations were discovered. Discovered sources:" + discoveredSources + " out of : " + Arrays.asList(relations));
+//			}
 			if (getDependencies() != null && getDependencies().length > 0) {
 				discoveredDependencies.addAll(Arrays.asList(getDependencies()));				
 			}
