@@ -64,10 +64,20 @@ public class AdaptedDbSchema {
 	public Schema toSchema(Properties properties) throws  ClassNotFoundException, InstantiationException, IllegalAccessException {
 		try {
 			if (sources==null) {
+				List<Dependency> discoveredDependencies = new ArrayList<>();
+				discoveredDependencies.addAll(Arrays.asList(dependencies));
+				for (Relation r:relations) {
+					if (r instanceof View) {
+						ensureViewDefinition((View) r,discoveredDependencies);
+					}
+				}
+				
+				
 				// not every schema has external sources
-				if (getDependencies()!=null && getDependencies().length>0)
-					return new Schema(relations,getDependencies());
+				if (discoveredDependencies.size()>0)
+					return new Schema(relations,discoveredDependencies.toArray(new Dependency[discoveredDependencies.size()]));
 				Schema s = new Schema(relations);
+				
 				return s;
 			}
 			HashMap<String,Relation> discoveredRelations = new HashMap<>();
@@ -207,7 +217,10 @@ public class AdaptedDbSchema {
 				if (dependency.getBody().getAtoms().length == 1) {
 					if (dependency.getBody().getAtoms()[0]
 							.getPredicate().getName().equals(v.getName())) {
-						return (LinearGuarded) dependency;
+						if (dependency instanceof LinearGuarded)
+							return (LinearGuarded) dependency;
+						return (LinearGuarded) LinearGuarded.create(dependency.getBodyAtoms()[0],dependency.getHeadAtoms());
+
 					}
 				}
 			}
