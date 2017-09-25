@@ -65,7 +65,8 @@ public class AdaptedDbSchema {
 		try {
 			if (sources==null) {
 				List<Dependency> discoveredDependencies = new ArrayList<>();
-				discoveredDependencies.addAll(Arrays.asList(dependencies));
+				if (dependencies!=null)
+					discoveredDependencies.addAll(Arrays.asList(dependencies));
 				for (Relation r:relations) {
 					if (r instanceof View) {
 						ensureViewDefinition((View) r,discoveredDependencies);
