@@ -10,6 +10,8 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.junit.Assert;
 
+import uk.ac.ox.cs.pdq.db.Attribute;
+import uk.ac.ox.cs.pdq.db.PrimaryKey;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.Predicate;
@@ -133,5 +135,53 @@ public class MySQLStatementBuilder extends SQLStatementBuilder {
 	public String createBulkDeleteStatement(Predicate predicate, Collection<Atom> facts, Map<String, Relation> relationNamesToDatabaseTables) {
 		return super.createBulkDeleteStatement(predicate, facts, relationNamesToDatabaseTables)+";";
 	}
+	
+	/**
+	 * Creates the table statement.
+	 *
+	 * @param relation
+	 *            the table to create
+	 * @return a SQL statement that creates the fact table of the given relation
+	 */
+	public String createTableStatement(Relation relation) {
+		StringBuilder result = new StringBuilder();
+		result.append("CREATE TABLE " + databaseName + ".").append(relation.getName()).append('(');
+		for (int attributeIndex = 0; attributeIndex < relation.getArity(); ++attributeIndex) {
+			Attribute attribute = relation.getAttribute(attributeIndex);
+			result.append(attribute.getName());
+			if (String.class.isAssignableFrom((Class<?>) attribute.getType()))
+				result.append(" TEXT");
+			else if (Integer.class.isAssignableFrom((Class<?>) attribute.getType()))
+				result.append(" INT");
+			else if (Double.class.isAssignableFrom((Class<?>) attribute.getType()))
+				result.append(" DOUBLE");
+			else if (Float.class.isAssignableFrom((Class<?>) attribute.getType()))
+				result.append(" FLOAT");
+			else
+				throw new RuntimeException("Unsupported type");
+			if (attributeIndex < relation.getArity() - 1)
+				result.append(",");
+		}
+		String keyAttributes = null;
+		PrimaryKey pk = relation.getKey();
+		if (pk != null) {
+			for (Attribute a : pk.getAttributes()) {
+				if (keyAttributes == null) {
+					keyAttributes = "";
+				} else {
+					keyAttributes += ",";
+				}
+				keyAttributes += a.getName();
+				keyAttributes += " ";
+			}
+			result.append(" PRIMARY KEY ").append("(").append(keyAttributes).append(")");
+		}
+		result.append(')');
+		log.trace(relation);
+		log.trace(result);
+		return result.toString();
+	}
+	
+	
 }
 
