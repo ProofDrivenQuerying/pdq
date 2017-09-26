@@ -1,4 +1,4 @@
-package uk.ac.ox.cs.pdq.test.planner.dag.explorer.filters;
+package uk.ac.ox.cs.pdq.test.planner.dominance;
 
 import static org.mockito.Mockito.when;
 
@@ -34,7 +34,7 @@ import uk.ac.ox.cs.pdq.util.Utility;
  *
  * @author Efthymia Tsamoura
  */
-public class DominationFilterTest {
+public class FastFactDominanceTest {
 
 	protected Attribute a1 = Attribute.create(String.class, "a1");
 	protected Attribute a2 = Attribute.create(String.class, "a2"); 
@@ -82,9 +82,6 @@ public class DominationFilterTest {
 	@Mock protected Cost plan31Cost;
 	@Mock protected Cost plan32Cost;
 
-	
-	DominationFilter filter = new DominationFilter(new FastFactDominance(false));
-
 	/* (non-Javadoc)
 	 * @see uk.ac.ox.cs.pdq.test.planner.TestObjects1#setup()
 	 */
@@ -105,6 +102,8 @@ public class DominationFilterTest {
 	//config21 dominates config11, config12
 	//config32 dominates all configurations
 	@Test public void test1() {
+		FastFactDominance dominance = new FastFactDominance(false);
+
 		when(config11.getState()).thenReturn(config11State);
 		when(config11State.getInferredAccessibleFacts()).thenReturn(Lists.newArrayList(p1,p2,p3));
 		when(config11.getPlan()).thenReturn(plan11);
@@ -146,22 +145,77 @@ public class DominationFilterTest {
 		when(config32.getCost()).thenReturn(new DoubleCost(3.0));
 		when(config32.isClosed()).thenReturn(true);
 		when(config32.getInput()).thenReturn(Lists.<Constant>newArrayList());
+		
+		Assert.assertEquals(true, dominance.isDominated(config31, config32));
+		Assert.assertEquals(true, dominance.isDominated(config12, config11));
+		Assert.assertEquals(true, dominance.isDominated(config22, config21));
+		Assert.assertEquals(false, dominance.isDominated(config32, config31));
+		Assert.assertEquals(false, dominance.isDominated(config11, config12));
+		Assert.assertEquals(false, dominance.isDominated(config21, config22));
+	}
+	
+	
+	//Configuration config11 has facts p1,p2,p3 is not closed and requires input c1
+	//Configuration config12 has facts p2,p3,p5 is not closed and requires input c1
+	//Configuration config21 has facts p1,p2,p3,p4 and is closed 
+	//Configuration config22 has facts p1,p2,p4 is closed
+	//Configuration config31 has facts p1,p2,p3,p4,p5,p6,p7 and requires inputs c1,c3	
+	//Configuration config32 has facts p1,p2,p3,p4,p5,p6,p7 and is closed
+	//config11 dominates config12
+	//config21 dominates config22
+	//config32 dominates config31
+	//config21 dominates config11, config12
+	//config32 dominates all configurations
+	@Test public void test2() {
+		FastFactDominance dominance = new FastFactDominance(true);
 
-		Set<DAGChaseConfiguration> expected = new LinkedHashSet<>();
-		expected.add(config11);
-		expected.add(config12);
-		expected.add(config21);
-		expected.add(config22);
-		expected.add(config31);
+		when(config11.getState()).thenReturn(config11State);
+		when(config11State.getInferredAccessibleFacts()).thenReturn(Lists.newArrayList(p1,p2,p3));
+		when(config11.getPlan()).thenReturn(plan11);
+		when(config11.getCost()).thenReturn(new DoubleCost(3.0));
+		when(config11.isClosed()).thenReturn(false);
+		when(config11.getInput()).thenReturn(Lists.<Constant>newArrayList(UntypedConstant.create("c1")));
+
+		when(config12.getState()).thenReturn(config12State);
+		when(config12State.getInferredAccessibleFacts()).thenReturn(Lists.newArrayList(p3,p2,p5));
+		when(config12.getPlan()).thenReturn(plan12);
+		when(config12.getCost()).thenReturn(new DoubleCost(3.0));
+		when(config12.isClosed()).thenReturn(false);
+		when(config12.getInput()).thenReturn(Lists.<Constant>newArrayList(UntypedConstant.create("c1")));
+
+		when(config21.getState()).thenReturn(config21State);
+		when(config21State.getInferredAccessibleFacts()).thenReturn(Lists.newArrayList(p1,p2,p3,p4));
+		when(config21.getPlan()).thenReturn(plan21);
+		when(config21.getCost()).thenReturn(new DoubleCost(4.0));
+		when(config21.isClosed()).thenReturn(true);
+		when(config21.getInput()).thenReturn(Lists.<Constant>newArrayList());
 		
-		Set<DAGChaseConfiguration> input = new LinkedHashSet<>();
-		input.add(config11);
-		input.add(config12);
-		input.add(config21);
-		input.add(config22);
-		input.add(config31);
-		input.add(config32);
+		when(config22.getState()).thenReturn(config22State);
+		when(config22State.getInferredAccessibleFacts()).thenReturn(Lists.newArrayList(p1,p2,p4));
+		when(config22.getPlan()).thenReturn(plan22);
+		when(config22.getCost()).thenReturn(new DoubleCost(2.0));
+		when(config22.isClosed()).thenReturn(true);
+		when(config22.getInput()).thenReturn(Lists.<Constant>newArrayList());
+
+		when(config31.getState()).thenReturn(config31State);
+		when(config31State.getInferredAccessibleFacts()).thenReturn(Lists.newArrayList(p1,p2,p3,p4,p5,p6,p7));
+		when(config31.getPlan()).thenReturn(plan31);
+		when(config31.getCost()).thenReturn(new DoubleCost(2.0));
+		when(config31.isClosed()).thenReturn(false);
+		when(config31.getInput()).thenReturn(Lists.<Constant>newArrayList(UntypedConstant.create("c1"), UntypedConstant.create("c3")));
+
+		when(config32.getState()).thenReturn(config32State);
+		when(config32State.getInferredAccessibleFacts()).thenReturn(Lists.newArrayList(p1,p2,p3,p4,p5,p6,p7));
+		when(config32.getPlan()).thenReturn(plan32);
+		when(config32.getCost()).thenReturn(new DoubleCost(3.0));
+		when(config32.isClosed()).thenReturn(true);
+		when(config32.getInput()).thenReturn(Lists.<Constant>newArrayList());
 		
-		Assert.assertEquals(expected, this.filter.filter(input));
+		Assert.assertEquals(false, dominance.isDominated(config31, config32));
+		Assert.assertEquals(false, dominance.isDominated(config12, config11));
+		Assert.assertEquals(true, dominance.isDominated(config22, config21));
+		Assert.assertEquals(false, dominance.isDominated(config32, config31));
+		Assert.assertEquals(false, dominance.isDominated(config11, config12));
+		Assert.assertEquals(false, dominance.isDominated(config21, config22));
 	}
 }
