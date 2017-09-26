@@ -147,12 +147,6 @@ public class PlannerParameters extends Parameters {
 			+ "semantic depending of which planning algorithm is used.")
 	protected Integer maxDepth;
 
-	/** The max bushiness. */
-	@Parameter(description = "Maximum level of bushiness allowed.\n This is "
-			+ "only used with ILP-types of planning algorithms",
-			defaultValue = "Integer.MAX_VALUE")
-	protected Integer maxBushiness = Integer.MAX_VALUE;
-
 	@Parameter(description = 
 			"If true, a LimitReachedException is thrown during planning if a "
 			+ "limit (e.g. time or max no. interactions) is reached.\n"
@@ -199,34 +193,24 @@ public class PlannerParameters extends Parameters {
 	@Parameter(description = "Number of threads to use in the first phase of "
 			+ "a parallel DAG planning algorithm",
 			defaultValue = "50")
-	protected Integer firstPhaseThreads = 50;
+	protected Integer firstPhaseThreads = 1;
 
 	/** The second phase threads. */
 	@Parameter(description = "Number of threads to use in the second phase of "
 			+ "a parallel DAG planning algorithm",
 			defaultValue = "50")
-	protected Integer secondPhaseThreads = 50;
+	protected Integer secondPhaseThreads = 1;
 
 	/** The depth threshold. */
 	@Parameter(description = "Threshold for the DEPTH_THROTTLING validator",
 			defaultValue = "2")
 	protected Integer depthThreshold = 2;
-
-	@Parameter(description = "If true, all join orders are considered during "
-			+ "plan search",
-			defaultValue = "true")
-	protected Boolean orderAware = true;
 	
 	/** The zombification. */
 	@Parameter(description = "If true, then we perform (de)zombification during optimised linear plan exploration "
 			+ "plan search",
 			defaultValue = "true")
 	protected Boolean zombification;
-	
-	
-	/** The access file. */
-	@Parameter(description = "Contains the desired list of accesses")
-	protected String accessFile;
 
 	/**
 	 * @return Integer
@@ -442,27 +426,6 @@ public class PlannerParameters extends Parameters {
 	 */
 	public void setMaxDepth(Number maxDepth) {
 		this.maxDepth = maxDepth != null ? maxDepth.intValue() : null;
-	}
-
-	/**
-	 * Gets the max bushiness.
-	 *
-	 * @return Integer
-	 */
-	public Integer getMaxBushiness() {
-		if (this.maxBushiness == null) {
-			return Integer.MAX_VALUE;
-		}
-		return this.maxBushiness;
-	}
-
-	/**
-	 * Sets the max bushiness.
-	 *
-	 * @param maxBushiness Number
-	 */
-	public void setMaxBushiness(Number maxBushiness) {
-		this.maxBushiness = maxBushiness != null ? maxBushiness.intValue() : null;
 	}
 
 	/**
@@ -737,24 +700,6 @@ public class PlannerParameters extends Parameters {
 	}
 	
 	/**
-	 * Gets the order aware.
-	 *
-	 * @return Boolean
-	 */
-	public Boolean getOrderAware() {
-		return this.orderAware;
-	}
-
-	/**
-	 * Sets the order aware.
-	 *
-	 * @param b the new order aware
-	 */
-	public void setOrderAware(Boolean b) {
-		this.orderAware = b;
-	}
-	
-	/**
 	 * Gets the zombification.
 	 *
 	 * @return the zombification
@@ -770,24 +715,6 @@ public class PlannerParameters extends Parameters {
 	 */
 	public void setZombification(Boolean zombification) {
 		this.zombification = zombification;
-	}
-	
-	/**
-	 * Gets the access file.
-	 *
-	 * @return the access file
-	 */
-	public String getAccessFile() {
-		return this.accessFile;
-	}
-
-	/**
-	 * Sets the access file.
-	 *
-	 * @param accessFile the new access file
-	 */
-	public void setAccessFile(String accessFile) {
-		this.accessFile = accessFile;
 	}
 
 	/** Planning algorithm types. */
