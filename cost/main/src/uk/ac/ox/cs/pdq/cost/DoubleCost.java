@@ -50,6 +50,8 @@ public final class DoubleCost extends Cost {
 	 */
 	@Override
 	public boolean lessOrEquals(Cost cost) {
+		if (cost==null)
+			return true;
 		Preconditions.checkState(cost instanceof DoubleCost);
 		return this.value <= ((DoubleCost) cost).value;
 	}
@@ -63,6 +65,8 @@ public final class DoubleCost extends Cost {
 	 */
 	@Override
 	public boolean greaterOrEquals(Cost cost) {
+		if (cost==null)
+			return false;
 		Preconditions.checkState(cost instanceof DoubleCost);
 		return this.value >= ((DoubleCost) cost).value;
 
@@ -77,6 +81,8 @@ public final class DoubleCost extends Cost {
 	 */
 	@Override
 	public boolean lessThan(Cost cost) {
+		if (cost == null)
+			return true;
 		Preconditions.checkState(cost instanceof DoubleCost);
 		return this.value < ((DoubleCost) cost).value;
 	}
@@ -90,7 +96,11 @@ public final class DoubleCost extends Cost {
 	 */
 	@Override
 	public boolean greaterThan(Cost cost) {
-		Preconditions.checkState(cost instanceof DoubleCost);
+		if (cost == null)
+			return true;
+		if (!(cost instanceof DoubleCost)) {
+			Preconditions.checkState(cost instanceof DoubleCost);
+		}
 		return this.value > ((DoubleCost) cost).value;
 	}
 

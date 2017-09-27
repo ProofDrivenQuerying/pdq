@@ -103,7 +103,7 @@ public class ConfigurationSpaceExplorationThread implements Callable<DAGChaseCon
 					) {
 			} else {
 				//Assess its potential
-				if (ConfigurationUtility.getPotential(configuration, this.best == null ? null : this.best.getPlan(), this.best.getCost(), this.successDominance)) {
+				if (ConfigurationUtility.getPotential(configuration, this.best == null ? null : this.best.getPlan(), this.best == null ? null : this.best.getCost(), this.successDominance)) {
 					//Find the configurations dominated by the current one and remove them
 					Collection<DAGChaseConfiguration> dominated = this.equivalenceClasses.dominatedBy(this.dominance, configuration);
 					if(!dominated.isEmpty()) {
@@ -137,6 +137,10 @@ public class ConfigurationSpaceExplorationThread implements Callable<DAGChaseCon
 	 * @param configuration DAGChaseConfiguration
 	 */
 	private void setBestConfiguration(DAGChaseConfiguration configuration) {
+		if (this.best != null && this.best.getCost() == null && configuration!=null && configuration.getCost() != null) {
+			this.best = configuration;
+			return;
+		}
 		if (this.best == null
 				|| (this.best != null && configuration != null
 				&& this.best.getCost().greaterThan(configuration.getCost()))) {

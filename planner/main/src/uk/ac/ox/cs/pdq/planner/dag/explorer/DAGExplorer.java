@@ -126,8 +126,8 @@ public abstract class DAGExplorer extends Explorer {
 		}
 		this.bestConfiguration = configuration;
 		//Add the final projection to the best plan
-		ProjectionTerm project = PlanCreationUtility.createFinalProjection(this.accessibleQuery, this.bestConfiguration.getPlan());
-		this.bestPlan = project;
+		this.bestPlan = PlanCreationUtility.createFinalProjection(this.accessibleQuery, this.bestConfiguration.getPlan());
+		this.bestCost = configuration.getCost();
 		this.eventBus.post(this);
 		this.eventBus.post(this.getBestPlan());
 		log.trace("\t+ BEST CONFIGURATION	" + configuration + "\t" + configuration.getCost());
