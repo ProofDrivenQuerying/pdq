@@ -137,6 +137,10 @@ public class ConfigurationSpaceExplorationThread implements Callable<DAGChaseCon
 	 * @param configuration DAGChaseConfiguration
 	 */
 	private void setBestConfiguration(DAGChaseConfiguration configuration) {
+		if (this.best != null && this.best.getCost() == null && configuration!=null && configuration.getCost() != null) {
+			this.best = configuration;
+			return;
+		}
 		if (this.best == null
 				|| (this.best != null && configuration != null
 				&& this.best.getCost().greaterThan(configuration.getCost()))) {
