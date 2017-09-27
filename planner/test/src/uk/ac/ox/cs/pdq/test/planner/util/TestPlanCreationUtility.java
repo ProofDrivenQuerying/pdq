@@ -132,7 +132,6 @@ public class TestPlanCreationUtility {
 		Assert.assertNotNull(plan2.getChild(0));
 		Assert.assertTrue(plan2.getChild(0) instanceof SelectionTerm);
 		Assert.assertTrue(plan2.getChild(1) instanceof RenameTerm);
-		
 	}
 	
 	@Test public void test2b() {
@@ -185,7 +184,6 @@ public class TestPlanCreationUtility {
 		Assert.assertNotNull(plan2.getChild(0));
 		Assert.assertTrue(plan2.getChild(0) instanceof SelectionTerm);
 		Assert.assertTrue(plan2.getChild(1) instanceof RenameTerm);
-		
 	}
 	
 	@Test public void test4() {
@@ -209,7 +207,6 @@ public class TestPlanCreationUtility {
 		Assert.assertNotNull(plan2.getChild(0));
 		Assert.assertTrue(plan2.getChild(0) instanceof SelectionTerm);
 		Assert.assertTrue(plan2.getChild(1) instanceof SelectionTerm);
-		
 	}
 	
 	@Test public void test5() {
@@ -233,7 +230,6 @@ public class TestPlanCreationUtility {
 		Assert.assertNotNull(plan2.getChild(0));
 		Assert.assertTrue(plan2.getChild(0) instanceof SelectionTerm);
 		Assert.assertTrue(plan2.getChild(1) instanceof RenameTerm);
-		
 	}
 	
 	@Test public void test6() {
@@ -258,7 +254,57 @@ public class TestPlanCreationUtility {
 		Assert.assertNotNull(plan2.getChild(0));
 		Assert.assertTrue(plan2.getChild(0) instanceof RenameTerm);
 		Assert.assertTrue(plan2.getChild(1) instanceof SelectionTerm);
-		
 	}
+	
+	//We have the following dag configuration
+	//APPLYRULE(customer(3){customer(c46,c52,c53,c40,c54,c55,c56,c57),customer(c31,c38,c39,c40,c41,c42,c43,c44)})
+	//which exposes two facts with a single access
+	//We should produce an open plan that accesses relation customer once.
+	//Then we have two rename terms with child the same access
+	//the first term renames the attributes to c31,c38,c39,c40,c41,c42,c43,c44
+	//the first term renames the attributes to c46,c52,c53,c40,c54,c55,c56,c57
+	//These two terms should be joined on the attribute c40
+	@Test public void test7() {
+		Assert.assertTrue(false);
+		AccessMethod method0 = AccessMethod.create(new Integer[]{3});
+		Attribute a = Attribute.create(String.class, "a");
+		Attribute b = Attribute.create(String.class, "b");
+		Attribute c = Attribute.create(String.class, "c");
+		Attribute d = Attribute.create(String.class, "d");
+		Attribute e = Attribute.create(String.class, "e");
+		Attribute f = Attribute.create(String.class, "f");
+		Attribute g = Attribute.create(String.class, "g");
+		Attribute h = Attribute.create(String.class, "h");
+		Attribute InstanceID = Attribute.create(String.class, "InstanceID");
+	    
+		Relation customer = Relation.create("customer", new Attribute[]{a,b,c,d,e,f,g,h,InstanceID}, new AccessMethod[]{method0});
+		Atom fact1 = Atom.create(customer, new UntypedConstant[]{
+				UntypedConstant.create("c46"),
+				UntypedConstant.create("c52"),
+				UntypedConstant.create("c53"),
+				UntypedConstant.create("c40"),
+				UntypedConstant.create("c54"),
+				UntypedConstant.create("c55"),
+				UntypedConstant.create("c56"),
+				UntypedConstant.create("c57")});
+		
+		Atom fact2 = Atom.create(customer, new UntypedConstant[]{
+				UntypedConstant.create("c31"),
+				UntypedConstant.create("c38"),
+				UntypedConstant.create("c39"),
+				UntypedConstant.create("c40"),
+				UntypedConstant.create("c41"),
+				UntypedConstant.create("c42"),
+				UntypedConstant.create("c43"),
+				UntypedConstant.create("c44")});
+		
+		Set<Atom> facts = new LinkedHashSet<>();
+		facts.add(fact1);
+		facts.add(fact2);
+		PlanCreationUtility.createSingleAccessPlan(customer, method0, facts);
+		
+		//TODO add assertions
+	}
+	
 	
 }

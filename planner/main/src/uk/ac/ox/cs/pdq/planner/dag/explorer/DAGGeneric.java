@@ -104,7 +104,6 @@ public class DAGGeneric extends DAGExplorer {
 			PlannerParameters parameters,
 			ConjunctiveQuery query,
 			ConjunctiveQuery accessibleQuery,
-			//			Schema schema,
 			AccessibleSchema accessibleSchema, 
 			Chaser chaser,
 			DatabaseConnection connection,

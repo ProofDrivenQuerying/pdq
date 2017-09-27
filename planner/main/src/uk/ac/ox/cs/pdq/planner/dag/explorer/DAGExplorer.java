@@ -3,7 +3,6 @@ package uk.ac.ox.cs.pdq.planner.dag.explorer;
 import com.google.common.base.Preconditions;
 import com.google.common.eventbus.EventBus;
 
-import uk.ac.ox.cs.pdq.algebra.ProjectionTerm;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;
@@ -35,9 +34,6 @@ public abstract class DAGExplorer extends Explorer {
 	
 	/**  The accessible counterpart of the user query *. */
 	protected final ConjunctiveQuery accessibleQuery;
-
-//	/**  The input schema *. */
-//	protected final Schema schema;
 	
 	/**  The accessible counterpart of the input schema *. */
 	protected final AccessibleSchema accessibleSchema;
@@ -77,7 +73,6 @@ public abstract class DAGExplorer extends Explorer {
 			PlannerParameters parameters,
 			ConjunctiveQuery query, 
 			ConjunctiveQuery accessibleQuery,
-//			Schema schema,
 			AccessibleSchema accessibleSchema, 
 			Chaser chaser, 
 			DatabaseConnection connection,
@@ -86,7 +81,6 @@ public abstract class DAGExplorer extends Explorer {
 		Preconditions.checkArgument(parameters != null);
 		Preconditions.checkArgument(query != null);
 		Preconditions.checkArgument(accessibleQuery != null);
-//		Preconditions.checkArgument(schema != null);
 		Preconditions.checkArgument(accessibleSchema != null);
 		Preconditions.checkArgument(chaser != null);
 		Preconditions.checkArgument(connection != null);
@@ -96,7 +90,6 @@ public abstract class DAGExplorer extends Explorer {
 		this.query = query;
 		checkQueryForPredicatesInsteadOfRelations(accessibleQuery);
 		this.accessibleQuery = accessibleQuery;
-//		this.schema = schema;
 		this.accessibleSchema = accessibleSchema;
 		this.chaser = chaser;
 		this.connection = connection;
