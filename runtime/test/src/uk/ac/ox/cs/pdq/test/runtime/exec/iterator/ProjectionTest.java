@@ -3,6 +3,7 @@ package uk.ac.ox.cs.pdq.test.runtime.exec.iterator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -15,6 +16,8 @@ import uk.ac.ox.cs.pdq.algebra.ConjunctiveCondition;
 import uk.ac.ox.cs.pdq.algebra.ConstantEqualityCondition;
 import uk.ac.ox.cs.pdq.algebra.SimpleCondition;
 import uk.ac.ox.cs.pdq.datasources.memory.InMemoryTableWrapper;
+import uk.ac.ox.cs.pdq.datasources.sql.PostgresqlRelationWrapper;
+import uk.ac.ox.cs.pdq.datasources.sql.SQLRelationWrapper;
 import uk.ac.ox.cs.pdq.datasources.utility.Table;
 import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
 import uk.ac.ox.cs.pdq.datasources.utility.TupleType;
@@ -30,12 +33,43 @@ import uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator;
 
 public class ProjectionTest {
 
-	AccessMethod am1 = AccessMethod.create("access_method1",new Integer[] {});
+	AccessMethod amFree = AccessMethod.create("free_access",new Integer[] {});
+
+	/*
+	 *  InMemoryRelation construction.
+	 */
 
 	InMemoryTableWrapper relation1 = new InMemoryTableWrapper("R1", new Attribute[] {Attribute.create(Integer.class, "a"),
 			Attribute.create(Integer.class, "b"), Attribute.create(Integer.class, "c")},
-			new AccessMethod[] {am1});
+			new AccessMethod[] {amFree});
 
+	/*
+	 *  PostgresqlRelation construction.
+	 */
+	public Properties getProperties() {
+		Properties properties = new Properties();
+		properties.setProperty("url", "TODO");
+		properties.setProperty("database", "tpch");
+		properties.setProperty("username", "admin");
+		properties.setProperty("password", "admin");
+		return(properties);
+	}
+
+	Attribute[] attributes_C = new Attribute[] {
+			Attribute.create(Integer.class, "C_CUSTKEY"),
+			Attribute.create(String.class, "C_NAME"),
+			Attribute.create(Integer.class, "C_ADDRESS"),
+			Attribute.create(Integer.class, "C_NATIONKEY"),
+			Attribute.create(String.class, "C_PHONE"),
+			Attribute.create(Float.class, "C_ACCTBAL"),
+			Attribute.create(String.class, "C_MKTSEGMENT"),
+			Attribute.create(String.class, "C_COMMENT")
+	};
+	
+	SQLRelationWrapper postgresqlRelationCustomer = new PostgresqlRelationWrapper(this.getProperties(), "CUSTOMER", 
+			attributes_C, new AccessMethod[] {amFree});
+
+	
 	@SuppressWarnings("resource")
 	@Test
 	public void testProjection() {
@@ -43,7 +77,7 @@ public class ProjectionTest {
 		// Sanity check the Projection constructor
 		boolean caught = false;
 		try {
-			new Projection(new Attribute[]{Attribute.create(Integer.class, "d")}, new Access(relation1, am1));
+			new Projection(new Attribute[]{Attribute.create(Integer.class, "d")}, new Access(relation1, amFree));
 		} catch (IllegalArgumentException e) {
 			Assert.assertEquals("Inconsistent attributes", e.getMessage());
 			caught = true;
@@ -52,7 +86,7 @@ public class ProjectionTest {
 
 		caught = false;
 		try {
-			new Projection(new Attribute[]{Attribute.create(String.class, "b")}, new Access(relation1, am1));
+			new Projection(new Attribute[]{Attribute.create(String.class, "b")}, new Access(relation1, amFree));
 		} catch (IllegalArgumentException e) {
 			Assert.assertEquals("Inconsistent attributes", e.getMessage());
 			caught = true;
@@ -89,7 +123,7 @@ public class ProjectionTest {
 		 * Simple plan that does an free access on relation R1 and projects the second column
 		 */
 		Projection target = new Projection(new Attribute[]{Attribute.create(Integer.class, "b")}, 
-				new Access(relation1, am1));
+				new Access(relation1, amFree));
 
 		// Create some tuples
 		TupleType tt = TupleType.DefaultFactory.create(Integer.class, Integer.class, Integer.class);
@@ -138,7 +172,7 @@ public class ProjectionTest {
 		 */
 		Condition condition = ConstantEqualityCondition.create(0, TypedConstant.create(1));
 		Projection target = new Projection(new Attribute[]{Attribute.create(Integer.class, "c")}, 
-				new Selection(condition, new Access(relation1, am1))); 
+				new Selection(condition, new Access(relation1, amFree))); 
 
 		// Create some tuples
 		TupleType tt = TupleType.DefaultFactory.create(Integer.class, Integer.class, Integer.class);
@@ -183,7 +217,7 @@ public class ProjectionTest {
 
 		// Reconstruct the target projection (TODO: instead, reset ought to work here)
 		target = new Projection(new Attribute[]{Attribute.create(Integer.class, "c")}, 
-				new Selection(condition, new Access(relation1, am1)));
+				new Selection(condition, new Access(relation1, amFree)));
 
 		//Execute the plan
 		result = null;
@@ -215,7 +249,7 @@ public class ProjectionTest {
 	public void test3() {
 
 		/*
-		 *  Simple plan that does a free access on relation R1, then selects the rows where the value
+		 *  Plan that does a free access on relation R1, then selects the rows where the value
 		 *  of first column is "1" and the second column equals the third and finally projects the first 
 		 *  and last columns. 
 		 */
@@ -223,7 +257,7 @@ public class ProjectionTest {
 				AttributeEqualityCondition.create(1, 2)});
 		Projection target = new Projection(new Attribute[]{Attribute.create(Integer.class, "a"), 
 				Attribute.create(Integer.class, "c")}, 
-				new Selection(condition, new Access(relation1, am1))); 
+				new Selection(condition, new Access(relation1, amFree))); 
 
 		// Create some tuples
 		TupleType tt = TupleType.DefaultFactory.create(Integer.class, Integer.class, Integer.class);
@@ -271,7 +305,7 @@ public class ProjectionTest {
 		// Reconstruct the target projection (TODO: instead, reset ought to work here)
 		target = new Projection(new Attribute[]{Attribute.create(Integer.class, "a"), 
 				Attribute.create(Integer.class, "c")}, 
-				new Selection(condition, new Access(relation1, am1)));
+				new Selection(condition, new Access(relation1, amFree)));
 
 		//Execute the plan
 		result = null;
@@ -300,4 +334,35 @@ public class ProjectionTest {
 		Assert.assertArrayEquals(expected.toArray(), result.getData().toArray());		
 	}
 
+	@Test
+	public void test4() {
+
+		/*
+		 *  Plan that does a free access on the CUSTOMER relation, then selects the rows where the value
+		 *  of the NATIONKEY column is 44 (TODO) and the MKTSEGMENT column is "TODO" and finally projects the NAME 
+		 *  and ACCTBAL columns. 
+		 */
+		Condition condition = ConjunctiveCondition.create(new SimpleCondition[]{ConstantEqualityCondition.create(3, TypedConstant.create(44)), 
+				ConstantEqualityCondition.create(6, TypedConstant.create("TODO"))});
+		Projection target = new Projection(new Attribute[]{Attribute.create(String.class, "NAME"), 
+				Attribute.create(Float.class, "ACCTBAL")}, 
+				new Selection(condition, new Access(postgresqlRelationCustomer, amFree))); 
+
+		//Execute the plan
+		Table result = null;
+		try {
+			result = this.planExecution(target);
+		} catch (TimeoutException e) {
+			e.printStackTrace();
+		}
+	
+		// Check that the result tuples are the ones expected. 
+		Assert.assertNotNull(result);
+		
+		// TODO: once we have the database populated...
+		Assert.assertEquals(22, result.size());
+//		for (Tuple x:result.getData())
+//			Assert.assertArrayEquals(values1, x.getValues());
+		
+	}
 }

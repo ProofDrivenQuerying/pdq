@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -14,6 +15,8 @@ import org.junit.Test;
 import uk.ac.ox.cs.pdq.algebra.Condition;
 import uk.ac.ox.cs.pdq.algebra.ConstantEqualityCondition;
 import uk.ac.ox.cs.pdq.datasources.memory.InMemoryTableWrapper;
+import uk.ac.ox.cs.pdq.datasources.sql.PostgresqlRelationWrapper;
+import uk.ac.ox.cs.pdq.datasources.sql.SQLRelationWrapper;
 import uk.ac.ox.cs.pdq.datasources.utility.Table;
 import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
 import uk.ac.ox.cs.pdq.datasources.utility.TupleType;
@@ -28,12 +31,51 @@ import uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator;
 
 public class SelectionTest {
 
-	AccessMethod am1 = AccessMethod.create("access_method1", new Integer[] {});
+	AccessMethod amFree = AccessMethod.create("free_access", new Integer[] {});
+	
+	/*
+	 *  InMemoryRelation construction.
+	 */
 
-	InMemoryTableWrapper relation1 = new InMemoryTableWrapper("R1", new Attribute[] {Attribute.create(Integer.class, "a"),
+	InMemoryTableWrapper inMemoryRelation = new InMemoryTableWrapper("R1", new Attribute[] {Attribute.create(Integer.class, "a"),
 			Attribute.create(Integer.class, "b"), Attribute.create(Integer.class, "c")},
-			new AccessMethod[] {am1});
+			new AccessMethod[] {amFree});
 
+	/*
+	 *  PostgresqlRelation construction.
+	 */
+	public Properties getProperties() {
+		Properties properties = new Properties();
+		properties.setProperty("url", "TODO");
+		properties.setProperty("database", "tpch");
+		properties.setProperty("username", "admin");
+		properties.setProperty("password", "admin");
+		return(properties);
+	}
+
+	Attribute[] attributes_C = new Attribute[] {
+			Attribute.create(Integer.class, "C_CUSTKEY"),
+			Attribute.create(String.class, "C_NAME"),
+			Attribute.create(Integer.class, "C_ADDRESS"),
+			Attribute.create(Integer.class, "C_NATIONKEY"),
+			Attribute.create(String.class, "C_PHONE"),
+			Attribute.create(Float.class, "C_ACCTBAL"),
+			Attribute.create(String.class, "C_MKTSEGMENT"),
+			Attribute.create(String.class, "C_COMMENT")
+	};
+
+	Attribute[] attributes_N = new Attribute[] {
+			Attribute.create(Integer.class, "N_NATIONKEY"),
+			Attribute.create(String.class, "N_NAME"),
+			Attribute.create(Integer.class, "N_REGIONKEY"),
+			Attribute.create(String.class, "N_COMMENT")
+	};
+
+	SQLRelationWrapper postgresqlRelationCustomer = new PostgresqlRelationWrapper(this.getProperties(), "CUSTOMER", 
+			attributes_C, new AccessMethod[] {amFree});
+	SQLRelationWrapper postgresqlRelationNation = new PostgresqlRelationWrapper(this.getProperties(), "NATION", 
+			attributes_N, new AccessMethod[] {amFree});
+	
 	/*
 	 * The following are integration tests: Projection instances are constructed and executed.
 	 */
@@ -64,7 +106,7 @@ public class SelectionTest {
 		 *  of first column is equal to the constant "1". 
 		 */
 		Condition condition = ConstantEqualityCondition.create(0, TypedConstant.create(1));
-		Selection target = new Selection(condition, new Access(relation1, am1));
+		Selection target = new Selection(condition, new Access(inMemoryRelation, amFree));
 
 		// Create some tuples
 		TupleType tt = TupleType.DefaultFactory.create(Integer.class, Integer.class, Integer.class);
@@ -76,10 +118,10 @@ public class SelectionTest {
 			tuples1.add(tt.createTuple((Object[]) Arrays.copyOf(values1, values1.length)));
 		}
 
-		// Load tuples by calling the load method of relation1  
-		Assert.assertEquals(0, relation1.getData().size());
-		relation1.load(tuples1);
-		Assert.assertEquals(N, relation1.getData().size());
+		// Load tuples by calling the load method of inMemoryRelation  
+		Assert.assertEquals(0, inMemoryRelation.getData().size());
+		inMemoryRelation.load(tuples1);
+		Assert.assertEquals(N, inMemoryRelation.getData().size());
 
 		//Execute the plan
 		Table result = null;
@@ -103,14 +145,14 @@ public class SelectionTest {
 		}
 
 		// Load tuples by calling the load method.
-		relation1.clear();
-		Assert.assertEquals(0, relation1.getData().size());
-		relation1.load(tuples12);
-		Assert.assertEquals(N, relation1.getData().size());
+		inMemoryRelation.clear();
+		Assert.assertEquals(0, inMemoryRelation.getData().size());
+		inMemoryRelation.load(tuples12);
+		Assert.assertEquals(N, inMemoryRelation.getData().size());
 
 		// Reconstruct the target selection (TODO: instead, reset ought to work here)
 		target = null;
-		target = new Selection(condition, new Access(relation1, am1));
+		target = new Selection(condition, new Access(inMemoryRelation, amFree));
 
 		//Execute the plan
 		result = null;
@@ -127,6 +169,66 @@ public class SelectionTest {
 		Assert.assertEquals(N/2, result.size());
 		for (Tuple x:result.getData())
 			Assert.assertArrayEquals(values1, x.getValues());
+
+	}
+
+	
+	@Test
+	public void test2() {
+
+		/*
+		 *  Simple plan that does a free access on relation NATION, then selects the rows where the value
+		 *  of REGIONKEY column is equal to the constant 2. 
+		 */
+		Condition condition = ConstantEqualityCondition.create(2, TypedConstant.create(2));
+		Selection target = new Selection(condition, new Access(postgresqlRelationNation, amFree));
+		
+		//Execute the plan
+		Table result = null;
+		try {
+			result = this.planExecution(target);
+		} catch (TimeoutException e) {
+			e.printStackTrace();
+		}
+	
+		// Check that the result tuples are the ones expected. 
+		Assert.assertNotNull(result);
+		
+		// TODO: Find out which nations are in Region 2
+		Assert.assertEquals(22, result.size());
+//		for (Tuple x:result.getData())
+//			Assert.assertArrayEquals(values1, x.getValues());
+
+	}
+	
+	@Test
+	public void test3() {
+
+		/*
+		 *  Plan that does a free access on relation CUSTOMER, then selects the rows where the value
+		 *  of NATIONKEY column is equal to the constant 44 and then selects the rows where the value
+		 *  of MKTSEGMENT is "TODO". 
+		 */
+		Condition nationkeyCondition = ConstantEqualityCondition.create(3, TypedConstant.create(44));
+		Condition mktsegmentCondition = ConstantEqualityCondition.create(6, TypedConstant.create("TODO"));
+		Selection target = new Selection(mktsegmentCondition, 
+				new Selection(nationkeyCondition, new Access(postgresqlRelationCustomer, amFree)));
+		
+		//Execute the plan
+		Table result = null;
+		try {
+			result = this.planExecution(target);
+		} catch (TimeoutException e) {
+			e.printStackTrace();
+		}
+	
+		// Check that the result tuples are the ones expected. 
+		Assert.assertNotNull(result);
+		
+		// TODO: Find out which nation has key 44, and which  customers have mktsegment "TODO". 
+		Assert.assertEquals(22, result.size());
+//		for (Tuple x:result.getData())
+//			Assert.assertArrayEquals(values1, x.getValues());
 
 	}
 
