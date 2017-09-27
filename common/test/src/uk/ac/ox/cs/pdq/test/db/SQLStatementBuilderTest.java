@@ -21,6 +21,7 @@ import java.util.concurrent.TimeUnit;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.MockitoAnnotations;
 
 import com.google.common.collect.Lists;
 
@@ -40,6 +41,7 @@ import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
+import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
 import uk.ac.ox.cs.pdq.util.LimitReachedException;
 import uk.ac.ox.cs.pdq.util.LimitReachedException.Reasons;
 import uk.ac.ox.cs.pdq.util.Utility;
@@ -74,6 +76,13 @@ public class SQLStatementBuilderTest {
 	private DatabaseConnection dcDerby;
 	@Before
 	public void setup() throws SQLException {
+		Utility.assertsEnabled();
+        MockitoAnnotations.initMocks(this);
+        GlobalCounterProvider.resetCounters();
+        uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
+        uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
+        uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
+		
 		Attribute factId = Attribute.create(Integer.class, "InstanceID");
 		
 		Attribute at11 = Attribute.create(String.class, "at11");
@@ -101,27 +110,9 @@ public class SQLStatementBuilderTest {
 				Variable.create("z"),Variable.create("w"))});
 		this.schema = new Schema(new Relation[]{this.rel1, this.rel2, this.rel3}, new Dependency[]{this.tgd,this.tgd2, this.egd});
 		
-		DatabaseParameters mySqlDbParam = new DatabaseParameters();
-		mySqlDbParam.setConnectionUrl("jdbc:mysql://localhost/");
-		mySqlDbParam.setDatabaseDriver("com.mysql.jdbc.Driver");
-		mySqlDbParam.setDatabaseName("test_get_triggers");
-		mySqlDbParam.setDatabaseUser("root");
-		mySqlDbParam.setDatabasePassword("root");
-		
-		dcMySql = new DatabaseConnection(mySqlDbParam, this.schema);
-		
-		DatabaseParameters postgresDbParam = new DatabaseParameters();
-		postgresDbParam.setConnectionUrl("jdbc:postgresql://localhost/");
-		postgresDbParam.setDatabaseDriver("org.postgresql.Driver");
-		postgresDbParam.setDatabaseName("test_get_triggers");
-		postgresDbParam.setDatabaseUser("postgres");
-		postgresDbParam.setDatabasePassword("root");
-		
-		dcPostgresSql = new DatabaseConnection(postgresDbParam, this.schema);
-		dcDerby = new DatabaseConnection(new DatabaseParameters(), this.schema);
-		
-		
-		
+		dcMySql = new DatabaseConnection(DatabaseParameters.MySql, this.schema);
+		dcPostgresSql = new DatabaseConnection(DatabaseParameters.Postgres, this.schema);
+		dcDerby = new DatabaseConnection(DatabaseParameters.Derby, this.schema);
 		test_derbyAddFacts();
 		test_mySqlAddFacts();
 		test_PostgresAddFacts();

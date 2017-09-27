@@ -47,7 +47,7 @@ public class TestAddingEqualities {
 	@Before
 	public void setup() throws SQLException {
 		createSchema();
-		setup(new DatabaseConnection(new DatabaseParameters(), schema));
+		setup(new DatabaseConnection(DatabaseParameters.Derby, schema));
 	}
 
 	public void createSchema() {

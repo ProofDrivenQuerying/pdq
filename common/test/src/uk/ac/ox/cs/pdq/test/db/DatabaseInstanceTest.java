@@ -50,7 +50,7 @@ public class DatabaseInstanceTest {
 		try {
 			Schema schema = IOManager.importSchema(new File("test\\src\\uk\\ac\\ox\\cs\\pdq\\test\\db\\schema.xml"));
 			
-			DatabaseConnection dc = new DatabaseConnection(new DatabaseParameters(), schema);
+			DatabaseConnection dc = new DatabaseConnection(DatabaseParameters.Derby, schema);
 			Assert.assertNotNull(dc);
 			Assert.assertNotNull(dc.getSQLStatementBuilder());
 			Assert.assertNotNull(dc.getSynchronousConnections());

@@ -148,7 +148,7 @@ public class Reason {
 
 		DatabaseParameters dbParams = this.getConfigFile() != null ?
 						new DatabaseParameters(this.getConfigFile()) :
-							new DatabaseParameters() ;
+							DatabaseParameters.Derby ;
 
 		for (String k : this.dynamicParams.keySet()) {
 			reasoningParams.set(k, this.dynamicParams.get(k));

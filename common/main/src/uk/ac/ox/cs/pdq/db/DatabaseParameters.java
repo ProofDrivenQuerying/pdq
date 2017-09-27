@@ -25,23 +25,23 @@ public class DatabaseParameters extends Parameters {
 	/**  Properties file path. */
 	static final String DEFAULT_CONFIG_FILE_PATH = "./" + DEFAULT_CONFIG_FILE_NAME;
 
-
 	public static final DatabaseParameters MySql = getDefaultForMySql();
 	public static final DatabaseParameters Postgres = getDefaultForPostgres();
 	public static final DatabaseParameters Derby = new DatabaseParameters();
-
+	public static final DatabaseParameters Empty = new DatabaseParameters();
+	
 	/**
 	 * Constructor for DatabaseParameters using default configuration file path.
 	 */
-	public DatabaseParameters() {
-		this(new File(DEFAULT_CONFIG_FILE_PATH), false, false);
+	private DatabaseParameters() {
+		super(new File(DEFAULT_CONFIG_FILE_PATH), false, false);
 	}
 
 	private static DatabaseParameters getDefaultForMySql() {
 		DatabaseParameters dbParam = new DatabaseParameters();
 		dbParam.setConnectionUrl("jdbc:mysql://localhost/");
 		dbParam.setDatabaseDriver("com.mysql.jdbc.Driver");
-		dbParam.setDatabaseName("test_get_triggers");
+		dbParam.setDatabaseName("pdq");
 		dbParam.setDatabaseUser("root");
 		dbParam.setDatabasePassword("root");
 		return dbParam; 
@@ -51,7 +51,7 @@ public class DatabaseParameters extends Parameters {
 		DatabaseParameters dbParam = new DatabaseParameters();
 		dbParam.setConnectionUrl("jdbc:postgresql://localhost/");
 		dbParam.setDatabaseDriver("org.postgresql.Driver");
-		dbParam.setDatabaseName("test_get_triggers");
+		dbParam.setDatabaseName("pdq");
 		dbParam.setDatabaseUser("postgres");
 		dbParam.setDatabasePassword("root");
 		return dbParam; 
@@ -62,33 +62,7 @@ public class DatabaseParameters extends Parameters {
 	 * @param config path to the configuration file to read
 	 */
 	public DatabaseParameters(File config) {
-		this(config, false, false);
-	}
-
-
-	/**
-	 * Constructor for DatabaseParameters.
-	 * @param config path to the configuration file to read
-	 * @param verbose if true, param loading problem will be reported
-	 * @param strict if true, param loading problem will throw an exception
-	 */
-	public DatabaseParameters(File config, boolean verbose, boolean strict) {
-		this(config, false, verbose, strict);
-	}
-
-	/**
-	 * Constructor for DatabaseParameters.
-	 *
-	 * @param config path to the configuration file to read
-	 * @param delay true if the loading of the given config file should be delayed
-	 * @param verbose the verbose
-	 * @param strict if true, param loading problem will throw an exception
-	 */
-	public DatabaseParameters(File config, boolean delay, boolean verbose, boolean strict) {
-		super(config, true, verbose, strict);
-		if (!delay) {
-			this.load(config, verbose, strict);
-		}
+		super(config, false, false);
 	}
 
 	/** The database driver. */

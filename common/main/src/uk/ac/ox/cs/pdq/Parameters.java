@@ -104,14 +104,13 @@ public abstract class Parameters extends Properties {
 	 * default location as default variables.
 	 *
 	 * @param configFile the config file
-	 * @param delay true if the loading of the given config file should be delayed
 	 * @param verbose the verbose
 	 * @param strict if true, param loading problem will throw an exception
 	 */
-	protected Parameters(File configFile, boolean delay, boolean verbose, boolean strict) {
+	protected Parameters(File configFile, boolean verbose, boolean strict) {
 		this.strict = strict;
 		this.verbose = verbose;
-		if (!delay) {
+		if (configFile!=null) {
 			this.load(configFile, verbose, strict);
 		}
 		this.updateAccessors();
@@ -123,7 +122,7 @@ public abstract class Parameters extends Properties {
 	 * default location as default variables.
 	 */
 	protected Parameters() {
-		this(new File(DEFAULT_CONFIG_FILE_PATH), false, false, false);
+		this(new File(DEFAULT_CONFIG_FILE_PATH), false, false);
 	}
 
 	/**

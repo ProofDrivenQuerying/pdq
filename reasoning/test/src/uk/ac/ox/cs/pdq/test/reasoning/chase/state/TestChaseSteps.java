@@ -49,7 +49,7 @@ public class TestChaseSteps {
 	@Before
 	public void setup() throws SQLException {
 		setupMocks();
-		this.connection = new DatabaseConnection(new DatabaseParameters(), this.schema);
+		this.connection = new DatabaseConnection(DatabaseParameters.Derby, this.schema);
 	}
 
 	public void setupMocks() throws SQLException {

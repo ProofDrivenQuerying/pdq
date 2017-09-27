@@ -39,7 +39,7 @@ public class TestMainPostgres {
 
 	@Before
 	public void setup() {
-		postgresDbParam = new DatabaseParameters();
+		postgresDbParam = DatabaseParameters.Derby;
 		postgresDbParam.setConnectionUrl("jdbc:postgresql://localhost/");
 		postgresDbParam.setDatabaseDriver("org.postgresql.Driver");
 		postgresDbParam.setDatabaseName("test_get_triggers");

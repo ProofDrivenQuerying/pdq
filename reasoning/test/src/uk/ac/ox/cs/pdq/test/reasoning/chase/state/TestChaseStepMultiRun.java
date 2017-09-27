@@ -17,7 +17,7 @@ public class TestChaseStepMultiRun {
 
 	@Before
 	public void setup() {
-		postgresDbParam = new DatabaseParameters();
+		postgresDbParam = DatabaseParameters.Derby;
 		postgresDbParam.setConnectionUrl("jdbc:postgresql://localhost/");
 		postgresDbParam.setDatabaseDriver("org.postgresql.Driver");
 		postgresDbParam.setDatabaseName("test_get_triggers");
@@ -37,7 +37,7 @@ public class TestChaseStepMultiRun {
 	public void testMultiThreadDerby() throws Exception {
 		TestChaseSteps tcs = new TestChaseSteps();
 		tcs.setupMocks();
-		tcs.setConnection(new DatabaseConnection(new DatabaseParameters(), tcs.schema, 10));
+		tcs.setConnection(new DatabaseConnection(DatabaseParameters.Derby, tcs.schema, 10));
 		tcs.test_chaseStep();
 		tcs.tearDown();
 	}
@@ -115,7 +115,7 @@ public class TestChaseStepMultiRun {
 		for (int i = 0; i < REPEAT; i++) {
 			TestChaseSteps tcs = new TestChaseSteps();
 			tcs.setupMocks();
-			tcs.setConnection(new DatabaseConnection(new DatabaseParameters(), tcs.schema, 10));
+			tcs.setConnection(new DatabaseConnection(DatabaseParameters.Derby, tcs.schema, 10));
 			tcs.test_chaseStepInit();
 			for (int j = 0; j < REPEAT; j++) {
 				tcs.test_chaseStepAddFacts();

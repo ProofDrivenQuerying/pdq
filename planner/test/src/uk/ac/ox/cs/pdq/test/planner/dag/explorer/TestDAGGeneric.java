@@ -123,7 +123,7 @@ public class TestDAGGeneric {
 		// Create database connection
 		DatabaseConnection connection = null;
 		try {
-			DatabaseParameters mySqlDbParam = new DatabaseParameters();
+			DatabaseParameters mySqlDbParam = DatabaseParameters.Derby;
 			mySqlDbParam.setConnectionUrl("jdbc:mysql://localhost/");
 			mySqlDbParam.setDatabaseDriver("com.mysql.jdbc.Driver");
 			mySqlDbParam.setDatabaseName("test_get_triggers");
@@ -279,7 +279,7 @@ public class TestDAGGeneric {
 		// Create database connection
 		DatabaseConnection databaseConnection = null;
 		try {
-			DatabaseParameters mySqlDbParam = new DatabaseParameters();
+			DatabaseParameters mySqlDbParam = DatabaseParameters.Derby;
 			mySqlDbParam.setConnectionUrl("jdbc:mysql://localhost/");
 			mySqlDbParam.setDatabaseDriver("com.mysql.jdbc.Driver");
 			mySqlDbParam.setDatabaseName("test_get_triggers");
@@ -382,7 +382,7 @@ public class TestDAGGeneric {
 		// Create database connection
 		DatabaseConnection connection = null;
 		try {
-			DatabaseParameters postgresDbParam = new DatabaseParameters();
+			DatabaseParameters postgresDbParam = DatabaseParameters.Derby;
 			postgresDbParam.setConnectionUrl("jdbc:postgresql://localhost/");
 			postgresDbParam.setDatabaseDriver("org.postgresql.Driver");
 			postgresDbParam.setDatabaseName("test_get_triggers");
@@ -510,7 +510,7 @@ public class TestDAGGeneric {
 		// Create database connection
 		DatabaseConnection databaseConnection = null;
 		try {
-			DatabaseParameters mySqlDbParam = new DatabaseParameters();
+			DatabaseParameters mySqlDbParam = DatabaseParameters.Derby;
 			mySqlDbParam.setConnectionUrl("jdbc:mysql://localhost/");
 			mySqlDbParam.setDatabaseDriver("com.mysql.jdbc.Driver");
 			mySqlDbParam.setDatabaseName("test_get_triggers");

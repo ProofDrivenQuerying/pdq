@@ -3,7 +3,6 @@ package uk.ac.ox.cs.pdq.planner.dag.explorer;
 import com.google.common.base.Preconditions;
 import com.google.common.eventbus.EventBus;
 
-import uk.ac.ox.cs.pdq.algebra.ProjectionTerm;
 import uk.ac.ox.cs.pdq.algebra.RelationalTerm;
 import uk.ac.ox.cs.pdq.cost.estimators.CostEstimator;
 import uk.ac.ox.cs.pdq.db.DatabaseConnection;

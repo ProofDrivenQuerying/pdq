@@ -10,6 +10,7 @@ import java.util.Set;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.MockitoAnnotations;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -37,6 +38,8 @@ import uk.ac.ox.cs.pdq.logging.StatisticsCollector;
 import uk.ac.ox.cs.pdq.reasoning.chase.RestrictedChaser;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance;
 import uk.ac.ox.cs.pdq.reasoning.chase.state.DatabaseChaseInstance.LimitToThisOrAllInstances;
+import uk.ac.ox.cs.pdq.util.GlobalCounterProvider;
+import uk.ac.ox.cs.pdq.util.Utility;
 
 /**
  * Tests the reasonUntilTermination method of the RestrictedChaser class
@@ -62,6 +65,12 @@ public class TestRestrictedChaser {
 
 	@Before
 	public void setup() throws SQLException {
+		Utility.assertsEnabled();
+        MockitoAnnotations.initMocks(this);
+        GlobalCounterProvider.resetCounters();
+        uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
+        uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
+        uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
 		Attribute fact = Attribute.create(Integer.class, "InstanceID");
 		Attribute at11 = Attribute.create(String.class, "at11");
 		Attribute at12 = Attribute.create(String.class, "at12");
@@ -82,7 +91,7 @@ public class TestRestrictedChaser {
 		this.schema = new Schema(new Relation[] { this.rel1, this.rel2 }, new Dependency[] { this.tgd });
 		this.schema.addConstants(Lists.<TypedConstant>newArrayList(TypedConstant.create(new String("John"))));
 
-		this.setConnection(new DatabaseConnection(new DatabaseParameters(), this.schema));
+		this.setConnection(new DatabaseConnection(DatabaseParameters.Derby, this.schema));
 		this.chaser = new RestrictedChaser(new StatisticsCollector(true, new EventBus()));
 	}
 
@@ -208,7 +217,7 @@ public class TestRestrictedChaser {
 		}
 		s.addConstants(constants);
 		try {
-			this.state = new DatabaseChaseInstance(facts, new DatabaseConnection(new DatabaseParameters(), s));
+			this.state = new DatabaseChaseInstance(facts, new DatabaseConnection(DatabaseParameters.Derby,s));
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
@@ -311,9 +320,9 @@ public class TestRestrictedChaser {
 		for (int i = 1; i <= 10; i++)
 			facts.add(Atom.create(R, new Term[] { TypedConstant.create("a_" + (i - 1)), TypedConstant.create("a_" + i) }));
 		try {
-			this.state = new DatabaseChaseInstance(facts, new DatabaseConnection(new DatabaseParameters(), s));
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
+			this.state = new DatabaseChaseInstance(facts, new DatabaseConnection(DatabaseParameters.Derby, s));
+		} catch (Exception e) {
+				throw new RuntimeException(e);
 		}
 		System.out.println("Schema:" + s);
 		Set<Atom> newfacts = Sets.newHashSet(this.state.getFacts());
@@ -352,29 +361,17 @@ public class TestRestrictedChaser {
 
 	@Test
 	public void testA1Derby() throws SQLException {
-		testA1(new DatabaseParameters());
+		testA1(DatabaseParameters.Derby);
 	}
 
 	@Test
 	public void testA1MySql() throws SQLException {
-		DatabaseParameters dbParam = new DatabaseParameters();
-		dbParam.setConnectionUrl("jdbc:mysql://localhost/");
-		dbParam.setDatabaseDriver("com.mysql.jdbc.Driver");
-		dbParam.setDatabaseName("test_get_triggers");
-		dbParam.setDatabaseUser("root");
-		dbParam.setDatabasePassword("root");
-		testA1(dbParam);
+		testA1(DatabaseParameters.MySql);
 	}
 
 	@Test
 	public void testA1Postgres() throws SQLException {
-		DatabaseParameters dbParam = new DatabaseParameters();
-		dbParam.setConnectionUrl("jdbc:postgresql://localhost/");
-		dbParam.setDatabaseDriver("org.postgresql.Driver");
-		dbParam.setDatabaseName("test_get_triggers");
-		dbParam.setDatabaseUser("postgres");
-		dbParam.setDatabasePassword("root");
-		testA1(dbParam);
+		testA1(DatabaseParameters.Postgres);
 	}
 
 	public void testA1(DatabaseParameters dbParam) {
@@ -452,29 +449,17 @@ public class TestRestrictedChaser {
 
 	@Test
 	public void testB1Derby() throws SQLException {
-		testB1(new DatabaseParameters());
+		testB1(DatabaseParameters.Derby);
 	}
 
 	@Test
 	public void testB1MySql() throws SQLException {
-		DatabaseParameters dbParam = new DatabaseParameters();
-		dbParam.setConnectionUrl("jdbc:mysql://localhost/");
-		dbParam.setDatabaseDriver("com.mysql.jdbc.Driver");
-		dbParam.setDatabaseName("test_get_triggers");
-		dbParam.setDatabaseUser("root");
-		dbParam.setDatabasePassword("root");
-		testB1(dbParam);
+		testB1(DatabaseParameters.MySql);
 	}
 
 	@Test
 	public void testB1Postgres() throws SQLException {
-		DatabaseParameters dbParam = new DatabaseParameters();
-		dbParam.setConnectionUrl("jdbc:postgresql://localhost/");
-		dbParam.setDatabaseDriver("org.postgresql.Driver");
-		dbParam.setDatabaseName("test_get_triggers");
-		dbParam.setDatabaseUser("postgres");
-		dbParam.setDatabasePassword("root");
-		testB1(dbParam);
+		testB1(DatabaseParameters.Postgres);
 	}
 
 	public void testB1(DatabaseParameters dbParam) {
@@ -592,7 +577,7 @@ public class TestRestrictedChaser {
 			facts.add(Atom.create(E, new Term[] { TypedConstant.create("TC2"), TypedConstant.create("y" + i), TypedConstant.create("y" + i) }));
 
 		try {
-			this.state = new DatabaseChaseInstance(facts, new DatabaseConnection(new DatabaseParameters(), s));
+			this.state = new DatabaseChaseInstance(facts, new DatabaseConnection(DatabaseParameters.Derby, s));
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
