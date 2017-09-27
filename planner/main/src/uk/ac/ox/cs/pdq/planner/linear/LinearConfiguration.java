@@ -22,13 +22,6 @@ public interface LinearConfiguration extends Configuration {
 	 */
 	Collection<Candidate> getCandidates();
 
-//	/**
-//	 * Gets the exposed candidates.
-//	 *
-//	 * @return the exposed candidates of this configuration
-//	 */
-//	Collection<Candidate> getExposedCandidates();
-
 	/**
 	 *
 	 * @return a randomly chosen candidate of this configuration
@@ -54,11 +47,5 @@ public interface LinearConfiguration extends Configuration {
 	 * @return a list of candidates sharing the same chase constants in their input positions with this configuration
 	 */
 	Set<Candidate> getSimilarCandidates(Candidate candidate);
-	
-//	/* (non-Javadoc)
-//	 * @see uk.ac.ox.cs.pdq.planner.reasoning.Configuration#clone()
-//	 */
-//	@Override
-//	LinearConfiguration clone(); 
 
 }

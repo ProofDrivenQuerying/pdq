@@ -10,13 +10,13 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
-import uk.ac.ox.cs.pdq.db.AccessMethod;
 import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.fol.Atom;
 import uk.ac.ox.cs.pdq.fol.ConjunctiveQuery;
 import uk.ac.ox.cs.pdq.fol.Dependency;
 import uk.ac.ox.cs.pdq.planner.accessibleschema.AccessibilityAxiom;
 import uk.ac.ox.cs.pdq.planner.reasoning.chase.accessiblestate.AccessibleChaseInstance;
+import uk.ac.ox.cs.pdq.planner.util.PlanCreationUtility;
 import uk.ac.ox.cs.pdq.planner.util.PlannerUtility;
 import uk.ac.ox.cs.pdq.reasoning.chase.Chaser;
 import uk.ac.ox.cs.pdq.util.Utility;
@@ -59,18 +59,12 @@ public class ApplyRule extends DAGChaseConfiguration {
 			AccessibilityAxiom rule,
 			Set<Atom> facts
 			) {		
-		super(state, 
-				PlannerUtility.getInputConstants(rule, facts),
-				Utility.getUntypedConstants(facts),
-				1,
-				0);
+		super(state, PlannerUtility.getInputConstants(rule, facts), Utility.getUntypedConstants(facts), 1, 0);
 		Preconditions.checkNotNull(rule);
 		Preconditions.checkNotNull(facts);
 		this.rule = rule;
 		this.facts = facts;
-		this.plan = DAGPlanGenerator.toPlan(this);
-//		Preconditions.checkState(this.getInput().containsAll(this.getPlan().getInputs()));
-//		Preconditions.checkState(this.getPlan().getInputs().containsAll(this.getPlan().getInputs()));
+		this.plan = PlanCreationUtility.createSingleAccessPlan(this.rule.getBaseRelation(), this.rule.getAccessMethod(), this.facts);
 	}
 
 	/**
@@ -81,7 +75,6 @@ public class ApplyRule extends DAGChaseConfiguration {
 		return this.rule;
 	}
 
-
 	/**
 	 *
 	 * @return 		the facts of this configuration
@@ -91,15 +84,7 @@ public class ApplyRule extends DAGChaseConfiguration {
 	}
 
 	/**
-	 *
-	 * @return 		the access method
-	 */
-	public AccessMethod getBindingPositions() {
-		return this.rule.getAccessMethod();
-	}
-
-	/**
-	 *
+	 *s
 	 * @return 		the relation of this configuration
 	 */
 	public Relation getRelation() {

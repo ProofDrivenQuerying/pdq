@@ -100,7 +100,7 @@ public class SelectorOfPairsOfConfigurationsToCombine<S extends AccessibleChaseI
 				this.plansOfConfigurationPairsReturnedInThePast.add(PlanCreationUtility.createPlan(l.getPlan(), r.getPlan()));
 				return Pair.of(l, r);
 				// in case (l,r) is not new and valid we check the r,l combination
-			} else if (!this.plansOfConfigurationPairsReturnedInThePast.contains(PlanCreationUtility.createPlan(r.getPlan(), l.getPlan()))
+			} else if (!this.plansOfConfigurationPairsReturnedInThePast.contains(PlanCreationUtility.createPlan(l.getPlan(), r.getPlan()))
 					&& ConfigurationUtility.validate(r, l, this.validators, depth)) {
 				this.plansOfConfigurationPairsReturnedInThePast.add(PlanCreationUtility.createPlan(l.getPlan(), r.getPlan()));
 				return Pair.of(l, r);
