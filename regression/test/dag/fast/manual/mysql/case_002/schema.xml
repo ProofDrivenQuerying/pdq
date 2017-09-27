@@ -9,4 +9,5 @@
             <attribute name="r2.1" type="java.lang.String"/>
         </relation>
     </relations>
+    <dependencies/>
 </schema>
