@@ -1,29 +1,18 @@
 package uk.ac.ox.cs.pdq.test.db;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.db.Attribute;
 import uk.ac.ox.cs.pdq.db.Relation;
-import uk.ac.ox.cs.pdq.util.Utility;
+import uk.ac.ox.cs.pdq.test.PdqTest;
 
 /**
  * @author Gabor
  *
  */
-public class RelationTest {
+public class RelationTest extends PdqTest {
 
-	public RelationTest() {
-	}
-	/**
-	 * Makes sure assertions are enabled.
-	 */
-	@Before 
-	public void setup() {
-		Utility.assertsEnabled();
-	}
-	
 	/**
 	 * Test number of relations.
 	 */

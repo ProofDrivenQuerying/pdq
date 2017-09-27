@@ -5,9 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
-import org.mockito.MockitoAnnotations;
 
 import uk.ac.ox.cs.pdq.algebra.AccessTerm;
 import uk.ac.ox.cs.pdq.algebra.AttributeEqualityCondition;
@@ -27,37 +25,13 @@ import uk.ac.ox.cs.pdq.db.Relation;
 import uk.ac.ox.cs.pdq.db.Schema;
 import uk.ac.ox.cs.pdq.db.TypedConstant;
 import uk.ac.ox.cs.pdq.io.jaxb.IOManager;
-import uk.ac.ox.cs.pdq.util.Utility;
+import uk.ac.ox.cs.pdq.test.PdqTest;
 
 /**
  * @author Gabor
  *
  */
-public class RelationalTermTest {
-
-	protected AccessMethod method0 = AccessMethod.create(new Integer[]{});
-	protected AccessMethod method1 = AccessMethod.create(new Integer[]{0});
-	protected AccessMethod method2 = AccessMethod.create(new Integer[]{0,1});
-	protected AccessMethod method3 = AccessMethod.create(new Integer[]{1});
-
-    Attribute a = Attribute.create(Integer.class, "a");
-    Attribute b = Attribute.create(Integer.class, "b");
-    Attribute c = Attribute.create(Integer.class, "c");
-    Attribute d = Attribute.create(Integer.class, "d");
-    
-	protected Relation R;
-	protected Relation S;	
-    
-	/**
-	 * Setup.
-	 */
-	@Before public void setup() {
-		Utility.assertsEnabled();
-        MockitoAnnotations.initMocks(this);
-        
-        this.R = Relation.create("R", new Attribute[]{a,b,c}, new AccessMethod[]{this.method0, this.method2});
-        this.S = Relation.create("S", new Attribute[]{b,c}, new AccessMethod[]{this.method0, this.method1, this.method2});
-	}
+public class RelationalTermTest extends PdqTest {
 
 	@Test
 	public void testAccessCreation() {

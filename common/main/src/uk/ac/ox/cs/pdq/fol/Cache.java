@@ -37,26 +37,24 @@ public class Cache {
 	 * of unit testing.
 	 */
 	public static void reStartCaches() {
-		atom = null;
-		clause = null;
-		conjunction = null;
-		conjunctiveQuery = null;
-		dependency = null;
-		disjunction = null;
-		egd = null;
-		implication = null;
-		linearGuarded = null;
-		literal = null;
-		negation = null;
-		quantifiedFormula = null;
-		tgd = null;
-		untypedConstant = null;
-		variable = null;
-
-		startCaches();
+		atom.reset();
+		clause.reset();
+		conjunction.reset();
+		conjunctiveQuery.reset();
+		dependency.reset();
+		disjunction.reset();
+		egd.reset();
+		implication.reset();
+		linearGuarded.reset();
+		literal.reset();
+		negation.reset();
+		quantifiedFormula.reset();
+		tgd.reset();
+		untypedConstant.reset();
+		variable.reset();
 	}
 
-	private static void startCaches() {
+	private static synchronized void startCaches() {
 		atom = new ClassManager<Atom>() {
 			protected boolean equal(Atom object1, Atom object2) {
 				if (!object1.predicate.equals(object2.predicate) || object1.terms.length != object2.terms.length)

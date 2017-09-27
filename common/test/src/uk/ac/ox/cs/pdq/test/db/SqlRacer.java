@@ -28,6 +28,7 @@ import uk.ac.ox.cs.pdq.fol.TGD;
 import uk.ac.ox.cs.pdq.fol.Term;
 import uk.ac.ox.cs.pdq.fol.UntypedConstant;
 import uk.ac.ox.cs.pdq.fol.Variable;
+import uk.ac.ox.cs.pdq.test.PdqTest;
 
 /**
  * This test when executed as a java application can detect memory leaks in the
@@ -77,23 +78,8 @@ public class SqlRacer {
 	public SqlRacer() throws SQLException {
 		try {
 			setup();
-			DatabaseParameters mySqlDbParam = DatabaseParameters.Derby;
-			mySqlDbParam.setConnectionUrl("jdbc:mysql://localhost/");
-			mySqlDbParam.setDatabaseDriver("com.mysql.jdbc.Driver");
-			mySqlDbParam.setDatabaseName("test_get_triggers");
-			mySqlDbParam.setDatabaseUser("root");
-			mySqlDbParam.setDatabasePassword("root");
-			
-			dcMySql = new DatabaseConnection(mySqlDbParam, this.schema,PARALLEL_THREADS);
-			
-			DatabaseParameters postgresDbParam = DatabaseParameters.Derby;
-			postgresDbParam.setConnectionUrl("jdbc:postgresql://localhost/");
-			postgresDbParam.setDatabaseDriver("org.postgresql.Driver");
-			postgresDbParam.setDatabaseName("test_get_triggers");
-			postgresDbParam.setDatabaseUser("postgres");
-			postgresDbParam.setDatabasePassword("root");
-			
-			dcPostgresSql = new DatabaseConnection(postgresDbParam, this.schema,PARALLEL_THREADS);
+			dcMySql = new DatabaseConnection(DatabaseParameters.MySql, this.schema,PARALLEL_THREADS);
+			dcPostgresSql = new DatabaseConnection(DatabaseParameters.Postgres, this.schema,PARALLEL_THREADS);
 			dcDerby = new DatabaseConnection(DatabaseParameters.Derby, this.schema);
 
 			derbyInstance = new DatabaseInstance(dcDerby) {
@@ -202,6 +188,7 @@ public class SqlRacer {
 		long counter = 0;
 		while (true) {
 			for (int i = 0; i < repeat; i++) {
+				PdqTest.reInitalize(this);
 				Collection<Atom> facts = createTestFacts1000();
 				instance.addFacts(facts);
 				Statement sqlStatement = dc.getSynchronousConnections(0).createStatement();

@@ -26,6 +26,12 @@ public abstract class ClassManager<E> {
         m_resizeThreshold = (int) (m_entries.length * LOAD_FACTOR);
     }
 
+    public synchronized void reset() {
+		while(m_referenceQueue.poll()!=null);
+        m_entries = createEntries(16);
+        m_size = 0;
+        m_resizeThreshold = (int) (m_entries.length * LOAD_FACTOR);
+    }
     public synchronized E retrieve(E object) {
         processQueue();
         int hashCode = getHashCode(object);

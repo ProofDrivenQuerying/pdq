@@ -5,7 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.db.AccessMethod;
-import uk.ac.ox.cs.pdq.util.Utility;
+import uk.ac.ox.cs.pdq.test.PdqTest;
 
 /**
  * Tests the AccessMethod class, and if we created it using the cache or not.
@@ -21,7 +21,7 @@ public class AccessMethodTest {
 	 */
 	@Before 
 	public void setup() {
-		Utility.assertsEnabled();
+		PdqTest.reInitalize(this);
 	}
 
 	/**
