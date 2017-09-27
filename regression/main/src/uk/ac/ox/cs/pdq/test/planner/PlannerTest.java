@@ -2,6 +2,7 @@ package uk.ac.ox.cs.pdq.test.planner;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -84,7 +85,7 @@ public class PlannerTest extends RegressionTest {
 
 		/** The param overrides. */
 		private Map<String, String> paramOverrides = new HashMap<>();
-
+		
 		/**
 		 * The Class PlannerTestCommand.
 		 */
@@ -149,7 +150,7 @@ public class PlannerTest extends RegressionTest {
 				return this.compare(directory);
 			}
 		}
-
+private static FileWriter summary = null;
 		/**
 		 * Runs a single test case base on the .
 		 *
@@ -157,7 +158,21 @@ public class PlannerTest extends RegressionTest {
 		 * @return boolean
 		 * @throws ReflectiveOperationException the reflective operation exception
 		 */
-		private boolean compare(File directory) throws ReflectiveOperationException {
+		private boolean compare(File directory) throws ReflectiveOperationException {       
+			if (!directory.getAbsolutePath().toLowerCase().contains("mysql")) {             
+				return false;                                                               
+			}
+			if (directory.getAbsolutePath().toLowerCase().contains("blackbox_db")) {
+				return false;
+			}
+			if (summary == null) {
+				try {
+					summary = new FileWriter(new File("summary.txt"));
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 			try {
 		        GlobalCounterProvider.resetCounters();
 		        uk.ac.ox.cs.pdq.fol.Cache.reStartCaches();
@@ -174,7 +189,7 @@ public class PlannerTest extends RegressionTest {
 				Schema schema = DbIOManager.importSchema(new File(directory.getAbsolutePath() + '/' + SCHEMA_FILE));
 				ConjunctiveQuery query = IOManager.importQuery(new File(directory.getAbsolutePath() + '/' + QUERY_FILE));
 				query = IOManager.convertQueryConstants(query, schema);
-			
+				DbIOManager.exportSchemaToXml(schema, new File(directory.getAbsolutePath() + '/' + SCHEMA_FILE));
 				Entry<RelationalTerm, Cost> expectedPlan = PlannerTestUtilities.obtainPlan(directory.getAbsolutePath() + '/' + PLAN_FILE, schema);
 				if (schema == null || query == null) {
 					throw new RegressionTestException(
@@ -198,6 +213,11 @@ public class PlannerTest extends RegressionTest {
 				} catch (LimitReachedException lre) {
 					log.warn(lre);
 				}
+				if (observedPlan!=null)
+					summary.write(directory.getAbsolutePath() + " Cost = "+observedPlan.getValue()+" plan: "+observedPlan.getKey()+ " \n");
+				else 
+					summary.write(directory.getAbsolutePath() + " No Plan \n");
+				summary.flush();
 				AcceptanceCriterion<Entry<RelationalTerm, Cost>, Entry<RelationalTerm, Cost>> acceptance = acceptance(plannerParams, costParams);
 				this.out.print("Using " + acceptance.getClass().getSimpleName() + ": ");
 				acceptance.check(expectedPlan, observedPlan).report(this.out);
@@ -209,6 +229,12 @@ public class PlannerTest extends RegressionTest {
 					
 				}
 			} catch (Throwable e) {
+				try {
+					summary.write(directory.getAbsolutePath() + " Crashed : "+e.getMessage()+" \n");
+					summary.flush();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
 				e.printStackTrace();
 				return handleException(e, directory);
 			}

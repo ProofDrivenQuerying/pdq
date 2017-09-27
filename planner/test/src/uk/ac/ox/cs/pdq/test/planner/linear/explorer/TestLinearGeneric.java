@@ -136,7 +136,7 @@ public class TestLinearGeneric {
 		//Create database connection
 		DatabaseConnection databaseConnection = null;
 		try {
-			databaseConnection = new DatabaseConnection(new DatabaseParameters(), accessibleSchema);
+			databaseConnection = new DatabaseConnection(DatabaseParameters.Derby, accessibleSchema);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -278,7 +278,7 @@ public class TestLinearGeneric {
 		//Create database connection
 		DatabaseConnection databaseConnection = null;
 		try {
-			databaseConnection = new DatabaseConnection(new DatabaseParameters(), accessibleSchema);
+			databaseConnection = new DatabaseConnection(DatabaseParameters.Derby, accessibleSchema);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -371,7 +371,7 @@ public class TestLinearGeneric {
 		//Create database connection
 		DatabaseConnection databaseConnection = null;
 		try {
-			databaseConnection = new DatabaseConnection(new DatabaseParameters(), accessibleSchema);
+			databaseConnection = new DatabaseConnection(DatabaseParameters.Derby, accessibleSchema);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			Assert.fail();
@@ -483,7 +483,7 @@ public class TestLinearGeneric {
 	}
 	
 	private DatabaseParameters getMySqlConfig() {
-		DatabaseParameters dbParam = new DatabaseParameters();
+		DatabaseParameters dbParam = DatabaseParameters.Derby;
 		dbParam.setConnectionUrl("jdbc:mysql://localhost/");
 		dbParam.setDatabaseDriver("com.mysql.jdbc.Driver");
 		dbParam.setDatabaseName("test_get_triggers");
@@ -493,7 +493,7 @@ public class TestLinearGeneric {
 	}
 	
 	private DatabaseParameters getPostgresConfig() {
-		DatabaseParameters dbParam = new DatabaseParameters();
+		DatabaseParameters dbParam = DatabaseParameters.Derby;
 		dbParam.setConnectionUrl("jdbc:postgresql://localhost/");
 		dbParam.setDatabaseDriver("org.postgresql.Driver");
 		dbParam.setDatabaseName("test_get_triggers");
@@ -503,7 +503,7 @@ public class TestLinearGeneric {
 	}
 	//@Test //works but too slow (around 4 minutes) to execute. 
 	public void test1ExplorationThreeRelationsDerby() {
-		List<Entry<RelationalTerm, Cost>> exploredPlans = findExploredPlans(3,new DatabaseParameters());
+		List<Entry<RelationalTerm, Cost>> exploredPlans = findExploredPlans(3,DatabaseParameters.Derby);
 		Assert.assertEquals(16, exploredPlans.size());
 	}
 	@Test 
@@ -518,7 +518,7 @@ public class TestLinearGeneric {
 	}
 	//@Test takes too long
 	public void test1ExplorationFiveRelationsDerby() {
-		List<Entry<RelationalTerm, Cost>> exploredPlans = findExploredPlans(5,new DatabaseParameters());
+		List<Entry<RelationalTerm, Cost>> exploredPlans = findExploredPlans(5,DatabaseParameters.Derby);
 		Assert.assertEquals(6, exploredPlans.size());
 	}
 	//@Test takes too long
@@ -685,7 +685,7 @@ public class TestLinearGeneric {
 		// Create database connection
 		DatabaseConnection databaseConnection = null;
 		try {
-			DatabaseParameters mySqlDbParam = new DatabaseParameters();
+			DatabaseParameters mySqlDbParam = DatabaseParameters.Derby;
 			mySqlDbParam.setConnectionUrl("jdbc:mysql://localhost/");
 			mySqlDbParam.setDatabaseDriver("com.mysql.jdbc.Driver");
 			mySqlDbParam.setDatabaseName("test_get_triggers");

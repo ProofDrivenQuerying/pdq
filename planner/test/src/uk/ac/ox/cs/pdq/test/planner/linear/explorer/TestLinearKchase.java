@@ -127,7 +127,7 @@ public class TestLinearKchase {
 		// Create database connection
 		DatabaseConnection databaseConnection = null;
 		try {
-			databaseConnection = new DatabaseConnection(new DatabaseParameters(), accessibleSchema);
+			databaseConnection = new DatabaseConnection(DatabaseParameters.Derby, accessibleSchema);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

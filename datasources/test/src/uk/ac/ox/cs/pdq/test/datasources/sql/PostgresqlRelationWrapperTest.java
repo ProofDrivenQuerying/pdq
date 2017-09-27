@@ -20,12 +20,12 @@ import uk.ac.ox.cs.pdq.db.Attribute;
 public class PostgresqlRelationWrapperTest {
 
 	AccessMethod amFree= AccessMethod.create("free_access", new Integer[] {});
-	AccessMethod am0 = AccessMethod.create("free_access", new Integer[] {0});
-	AccessMethod am1 = AccessMethod.create("free_access", new Integer[] {1});
-	AccessMethod am4 = AccessMethod.create("free_access", new Integer[] {4});
-	AccessMethod am5 = AccessMethod.create("free_access", new Integer[] {5});
+	AccessMethod am0 = AccessMethod.create("access_0", new Integer[] {0});
+	AccessMethod am1 = AccessMethod.create("access_1", new Integer[] {1});
+	AccessMethod am4 = AccessMethod.create("access_4", new Integer[] {4});
+	AccessMethod am5 = AccessMethod.create("access_5", new Integer[] {5});
 
-	AccessMethod am015 = AccessMethod.create("free_access", new Integer[] {015});
+	AccessMethod am015 = AccessMethod.create("access_015", new Integer[] {015});
 
 	TupleType ttInteger = TupleType.DefaultFactory.create(Integer.class);
 	TupleType ttFloat = TupleType.DefaultFactory.create(Float.class);

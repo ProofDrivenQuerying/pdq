@@ -130,7 +130,7 @@ public class RuntimeParameters extends uk.ac.ox.cs.pdq.Parameters {
 	 * @param config path to the configuration file to read
 	 */
 	public RuntimeParameters(File config) {
-		this(config, false, false, false);
+		super(config, false, false);
 	}
 
 	/**
@@ -139,34 +139,7 @@ public class RuntimeParameters extends uk.ac.ox.cs.pdq.Parameters {
 	 * @param verbose the verbose
 	 */
 	public RuntimeParameters(File config, boolean verbose) {
-		this(config, false, verbose, false);
-	}
-
-	/**
-	 * TOCOMMENT: DIFFERENTIATE FROM PRIOR -- DO NOT JUST REPEAT THE SAME COMMENT
-	 * @param config path to the configuration file to read
-	 * @param delay true if the loading of the given config file should be delayed
-	 * @param verbose if true, param loading problem will be reported
-	 */
-	public RuntimeParameters(File config, boolean delay, boolean verbose) {
-		super(config, true, verbose, false);
-		if (!delay) {
-			this.load(config, verbose, false);
-		}
-	}
-
-	/**
-	 * TOCOMMENT: DIFFERENTIATE FROM PRIOR
-	 * @param config path to the configuration file to read
-	 * @param delay true if the loading of the given config file should be delayed
-	 * @param verbose if true, param loading problem will be reported
-	 * @param strict if true, param loading problem will throw an exception
-	 */
-	public RuntimeParameters(File config, boolean delay, boolean verbose, boolean strict) {
-		super(config, true, verbose, strict);
-		if (!delay) {
-			this.load(config, verbose, strict);
-		}
+		super(config, verbose, false);
 	}
 
 	/**

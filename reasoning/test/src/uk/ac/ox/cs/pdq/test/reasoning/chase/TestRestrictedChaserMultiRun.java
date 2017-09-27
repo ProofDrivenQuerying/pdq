@@ -13,7 +13,7 @@ public class TestRestrictedChaserMultiRun {
 	private static final int REPEAT = 50;
 	
 	private DatabaseParameters getMySqlDBParams() {
-		DatabaseParameters mySqlDbParam = new DatabaseParameters();
+		DatabaseParameters mySqlDbParam = DatabaseParameters.Derby;
 		mySqlDbParam.setConnectionUrl("jdbc:mysql://localhost/");
 		mySqlDbParam.setDatabaseDriver("com.mysql.jdbc.Driver");
 		mySqlDbParam.setDatabaseName("test_get_triggers");
@@ -22,7 +22,7 @@ public class TestRestrictedChaserMultiRun {
 		return mySqlDbParam;
 	}
 	private DatabaseParameters getPostgresDBParams() {
-		DatabaseParameters postgresDbParam = new DatabaseParameters();
+		DatabaseParameters postgresDbParam = DatabaseParameters.Derby;
 		postgresDbParam.setConnectionUrl("jdbc:postgresql://localhost/");
 		postgresDbParam.setDatabaseDriver("org.postgresql.Driver");
 		postgresDbParam.setDatabaseName("test_get_triggers");
@@ -42,7 +42,7 @@ public class TestRestrictedChaserMultiRun {
 	public void testMultiThreadDerby() throws Exception {
 		TestRestrictedChaser trc = new TestRestrictedChaser();
 		trc.createSchema();
-		trc.setup(new DatabaseConnection(new DatabaseParameters(), trc.schema, 10));
+		trc.setup(new DatabaseConnection(DatabaseParameters.Derby, trc.schema, 10));
 		trc.test_reasonUntilTermination1();
 		trc.tearDown();
 	}
@@ -114,7 +114,7 @@ public class TestRestrictedChaserMultiRun {
 		for (int i = 0; i < REPEAT; i++) {
 			TestRestrictedChaser trc = new TestRestrictedChaser();
 			trc.createSchema();
-			trc.setup(new DatabaseConnection(new DatabaseParameters(), trc.schema, 1));
+			trc.setup(new DatabaseConnection(DatabaseParameters.Derby, trc.schema, 1));
 			trc.test_reasonUntilTermination1();
 			trc.tearDown();
 		}

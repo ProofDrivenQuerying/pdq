@@ -40,14 +40,14 @@ public class TestMainMySql {
 
 	@Before
 	public void setup() {
-		mySqlDbParam = new DatabaseParameters();
+		mySqlDbParam = DatabaseParameters.Derby;
 		mySqlDbParam.setConnectionUrl("jdbc:mysql://localhost/");
 		mySqlDbParam.setDatabaseDriver("com.mysql.jdbc.Driver");
 		mySqlDbParam.setDatabaseName("test_get_triggers");
 		mySqlDbParam.setDatabaseUser("root");
 		mySqlDbParam.setDatabasePassword("root");
 		
-		postgresDbParam = new DatabaseParameters();
+		postgresDbParam = DatabaseParameters.Derby;
 		postgresDbParam.setConnectionUrl("jdbc:postgresql://localhost/");
 		postgresDbParam.setDatabaseDriver("org.postgresql.Driver");
 		postgresDbParam.setDatabaseName("test_get_triggers");

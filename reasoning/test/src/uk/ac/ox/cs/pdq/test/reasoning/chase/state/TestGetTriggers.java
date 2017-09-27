@@ -84,9 +84,9 @@ public class TestGetTriggers {
 				new Atom[] { Atom.create(Predicate.create(QNames.EQUALITY.toString(), 2, true), Variable.create("z"), Variable.create("w")) },true);
 
 		this.schema = new Schema(new Relation[] { this.rel1, this.rel2, this.rel3 }, new Dependency[] { this.tgd, this.tgd2, this.egd });
-		this.chaseState[DERBY] = new DatabaseChaseInstance(new ArrayList<Atom>(), new DatabaseConnection(new DatabaseParameters(), this.schema, PARALLEL_THREADS));
+		this.chaseState[DERBY] = new DatabaseChaseInstance(new ArrayList<Atom>(), new DatabaseConnection(DatabaseParameters.Derby, this.schema, PARALLEL_THREADS));
 
-		DatabaseParameters mySqlDbParam = new DatabaseParameters();
+		DatabaseParameters mySqlDbParam = DatabaseParameters.Derby;
 		mySqlDbParam.setConnectionUrl("jdbc:mysql://localhost/");
 		mySqlDbParam.setDatabaseDriver("com.mysql.jdbc.Driver");
 		mySqlDbParam.setDatabaseName("test_get_triggers");
@@ -95,7 +95,7 @@ public class TestGetTriggers {
 		
 		this.chaseState[MYSQL] = new DatabaseChaseInstance(new ArrayList<Atom>(), new DatabaseConnection(mySqlDbParam, this.schema, PARALLEL_THREADS));
 		
-		DatabaseParameters postgresDbParam = new DatabaseParameters();
+		DatabaseParameters postgresDbParam = DatabaseParameters.Derby;
 		postgresDbParam.setConnectionUrl("jdbc:postgresql://localhost/");
 		postgresDbParam.setDatabaseDriver("org.postgresql.Driver");
 		postgresDbParam.setDatabaseName("test_get_triggers");
@@ -299,12 +299,12 @@ public class TestGetTriggers {
 
 	@Test
 	public void testScanario2Derby() throws SQLException {
-		testScanario2(new DatabaseConnection(new DatabaseParameters(), createSchemaScanario2()));
+		testScanario2(new DatabaseConnection(DatabaseParameters.Derby, createSchemaScanario2()));
 	}
 
 	@Test
 	public void testScanario2MySql() throws SQLException {
-		DatabaseParameters dbParam = new DatabaseParameters();
+		DatabaseParameters dbParam = DatabaseParameters.Derby;
 		dbParam.setConnectionUrl("jdbc:mysql://localhost/");
 		dbParam.setDatabaseDriver("com.mysql.jdbc.Driver");
 		dbParam.setDatabaseName("test_get_triggers");
@@ -315,7 +315,7 @@ public class TestGetTriggers {
 
 	@Test
 	public void testScanario2Postgres() throws SQLException {
-		DatabaseParameters dbParam = new DatabaseParameters();
+		DatabaseParameters dbParam = DatabaseParameters.Derby;
 		dbParam.setConnectionUrl("jdbc:postgresql://localhost/");
 		dbParam.setDatabaseDriver("org.postgresql.Driver");
 		dbParam.setDatabaseName("test_get_triggers");

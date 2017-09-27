@@ -140,7 +140,7 @@ public class CostParameters extends uk.ac.ox.cs.pdq.Parameters {
 	 * @param strict if true, param loading problem will throw an exception
 	 */
 	public CostParameters(File config, boolean delay, boolean verbose, boolean strict) {
-		super(config, true, verbose, strict);
+		super(config, verbose, strict);
 		if (!delay) {
 			this.load(config, verbose, strict);
 		}

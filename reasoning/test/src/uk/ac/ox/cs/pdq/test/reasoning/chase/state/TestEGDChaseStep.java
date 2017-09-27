@@ -129,9 +129,9 @@ public class TestEGDChaseStep {
 
 	private DatabaseConnection getDatabaseConnection(String sqlType, Schema s) throws SQLException {
 		if ("derby".equals(sqlType))
-			return new DatabaseConnection(new DatabaseParameters(), s);
+			return new DatabaseConnection(DatabaseParameters.Derby, s);
 		if ("mysql".equals(sqlType)) {
-			DatabaseParameters dbParam = new DatabaseParameters();
+			DatabaseParameters dbParam = DatabaseParameters.Derby;
 			dbParam.setConnectionUrl("jdbc:mysql://localhost/");
 			dbParam.setDatabaseDriver("com.mysql.jdbc.Driver");
 			dbParam.setDatabaseName("test_get_triggers");
@@ -140,7 +140,7 @@ public class TestEGDChaseStep {
 			return new DatabaseConnection(dbParam , s);
 		}
 		if ("postgres".equals(sqlType)) {
-			DatabaseParameters dbParam = new DatabaseParameters();
+			DatabaseParameters dbParam = DatabaseParameters.Derby;
 			dbParam.setConnectionUrl("jdbc:postgresql://localhost/");
 			dbParam.setDatabaseDriver("org.postgresql.Driver");
 			dbParam.setDatabaseName("test_get_triggers");

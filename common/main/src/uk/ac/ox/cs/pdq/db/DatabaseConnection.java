@@ -75,7 +75,7 @@ public class DatabaseConnection implements AutoCloseable {
 				driver = "org.apache.derby.jdbc.EmbeddedDriver";
 			}
 			if (Strings.isNullOrEmpty(url)) {
-				url = "jdbc:derby:memory:tmp;create=true";
+				url = "jdbc:derby:memory:{1};create=true;";
 			}
 			if (Strings.isNullOrEmpty(database)) {
 				database = "chase";

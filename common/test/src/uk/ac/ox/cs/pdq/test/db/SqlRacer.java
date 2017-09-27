@@ -77,7 +77,7 @@ public class SqlRacer {
 	public SqlRacer() throws SQLException {
 		try {
 			setup();
-			DatabaseParameters mySqlDbParam = new DatabaseParameters();
+			DatabaseParameters mySqlDbParam = DatabaseParameters.Derby;
 			mySqlDbParam.setConnectionUrl("jdbc:mysql://localhost/");
 			mySqlDbParam.setDatabaseDriver("com.mysql.jdbc.Driver");
 			mySqlDbParam.setDatabaseName("test_get_triggers");
@@ -86,7 +86,7 @@ public class SqlRacer {
 			
 			dcMySql = new DatabaseConnection(mySqlDbParam, this.schema,PARALLEL_THREADS);
 			
-			DatabaseParameters postgresDbParam = new DatabaseParameters();
+			DatabaseParameters postgresDbParam = DatabaseParameters.Derby;
 			postgresDbParam.setConnectionUrl("jdbc:postgresql://localhost/");
 			postgresDbParam.setDatabaseDriver("org.postgresql.Driver");
 			postgresDbParam.setDatabaseName("test_get_triggers");
@@ -94,7 +94,7 @@ public class SqlRacer {
 			postgresDbParam.setDatabasePassword("root");
 			
 			dcPostgresSql = new DatabaseConnection(postgresDbParam, this.schema,PARALLEL_THREADS);
-			dcDerby = new DatabaseConnection(new DatabaseParameters(), this.schema);
+			dcDerby = new DatabaseConnection(DatabaseParameters.Derby, this.schema);
 
 			derbyInstance = new DatabaseInstance(dcDerby) {
 				

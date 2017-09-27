@@ -77,14 +77,14 @@ public class TestAccessibleChaseInstance {
 		this.InferredAccessibleR = Relation.create(AccessibleSchema.inferredAccessiblePrefix + "R", new Attribute[] { a, b, InstanceID }, new AccessMethod[] {});
 		this.S = Relation.create("S", new Attribute[] { b, c, InstanceID }, new AccessMethod[] { this.method0, this.method1, this.method2 });
 		this.schema = new Schema(new Relation[] { this.R, this.S });
-		this.connection = new DatabaseConnection(new DatabaseParameters(), this.schema);
+		this.connection = new DatabaseConnection(DatabaseParameters.Derby, this.schema);
 		this.schema.addConstants(Lists.<TypedConstant>newArrayList(TypedConstant.create(new String("John"))));
 		this.accessibleSchema = new AccessibleSchema(this.schema);
 	}
 
 	@Test
 	public void test1_groupFactsByAccessMethods() throws SQLException {
-		this.connection = new DatabaseConnection(new DatabaseParameters(), this.accessibleSchema);
+		this.connection = new DatabaseConnection(DatabaseParameters.Derby, this.accessibleSchema);
 		Atom f0 = Atom.create(this.R, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c1") });
 		Atom f1 = Atom.create(this.R, new Term[] { UntypedConstant.create("c"), TypedConstant.create(new String("John")) });
 		Atom f2 = Atom.create(this.R, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c4") });
@@ -108,7 +108,7 @@ public class TestAccessibleChaseInstance {
 
 	@Test
 	public void test2_groupFactsByAccessMethods() throws SQLException {
-		this.connection = new DatabaseConnection(new DatabaseParameters(), this.accessibleSchema);
+		this.connection = new DatabaseConnection(DatabaseParameters.Derby, this.accessibleSchema);
 		Atom f0 = Atom.create(this.R, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c1") });
 		Atom f1 = Atom.create(this.R, new Term[] { UntypedConstant.create("c"), TypedConstant.create(new String("John")) });
 		Atom f2 = Atom.create(this.R, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c4") });
@@ -140,7 +140,7 @@ public class TestAccessibleChaseInstance {
 
 	@Test
 	public void test3_groupFactsByAccessMethods() throws SQLException {
-		this.connection = new DatabaseConnection(new DatabaseParameters(), this.accessibleSchema);
+		this.connection = new DatabaseConnection(DatabaseParameters.Derby, this.accessibleSchema);
 		Atom f0 = Atom.create(this.R, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c1") });
 		Atom f1 = Atom.create(this.R, new Term[] { UntypedConstant.create("c"), TypedConstant.create(new String("John")) });
 		Atom f2 = Atom.create(this.R, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c4") });
@@ -163,7 +163,7 @@ public class TestAccessibleChaseInstance {
 
 	@Test
 	public void test4_groupFactsByAccessMethods() throws SQLException {
-		this.connection = new DatabaseConnection(new DatabaseParameters(), this.accessibleSchema);
+		this.connection = new DatabaseConnection(DatabaseParameters.Derby, this.accessibleSchema);
 		Atom f0 = Atom.create(this.R, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c1") });
 		Atom f1 = Atom.create(this.R, new Term[] { UntypedConstant.create("c"), TypedConstant.create(new String("John")) });
 		Atom f2 = Atom.create(this.R, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c4") });
@@ -195,7 +195,7 @@ public class TestAccessibleChaseInstance {
 
 	@Test
 	public void test1_getUnexposedFacts() throws SQLException {
-		this.connection = new DatabaseConnection(new DatabaseParameters(), this.accessibleSchema);
+		this.connection = new DatabaseConnection(DatabaseParameters.Derby, this.accessibleSchema);
 		Atom f0 = Atom.create(this.R, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c1") });
 		Atom f1 = Atom.create(this.R, new Term[] { UntypedConstant.create("c"), TypedConstant.create(new String("John")) });
 		Atom f2 = Atom.create(this.R, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c4") });
@@ -216,7 +216,7 @@ public class TestAccessibleChaseInstance {
 
 	@Test
 	public void test1b_getUnexposedFacts() throws SQLException {
-		this.connection = new DatabaseConnection(new DatabaseParameters(), this.accessibleSchema);
+		this.connection = new DatabaseConnection(DatabaseParameters.Derby, this.accessibleSchema);
 		Atom f0 = Atom.create(this.R, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c1") });
 		Atom f0b = Atom.create(this.InferredAccessibleR, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c1") });
 		Atom f1 = Atom.create(this.R, new Term[] { UntypedConstant.create("c"), TypedConstant.create(new String("John")) });
@@ -241,7 +241,7 @@ public class TestAccessibleChaseInstance {
 
 	@Test
 	public void test2_getUnexposedFacts() throws SQLException {
-		this.connection = new DatabaseConnection(new DatabaseParameters(), this.accessibleSchema);
+		this.connection = new DatabaseConnection(DatabaseParameters.Derby, this.accessibleSchema);
 		Atom f0 = Atom.create(this.R, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c1") });
 		Atom f1 = Atom.create(this.R, new Term[] { UntypedConstant.create("c"), TypedConstant.create(new String("John")) });
 		Atom f2 = Atom.create(this.R, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c4") });
@@ -263,7 +263,7 @@ public class TestAccessibleChaseInstance {
 
 	@Test
 	public void test2b_getUnexposedFacts() throws SQLException {
-		this.connection = new DatabaseConnection(new DatabaseParameters(), this.accessibleSchema);
+		this.connection = new DatabaseConnection(DatabaseParameters.Derby, this.accessibleSchema);
 		Atom f0 = Atom.create(this.R, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c1") });
 		Atom f0b = Atom.create(this.InferredAccessibleR, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c1") });
 		Atom f1 = Atom.create(this.R, new Term[] { UntypedConstant.create("c"), TypedConstant.create(new String("John")) });
@@ -288,7 +288,7 @@ public class TestAccessibleChaseInstance {
 
 	@Test
 	public void test3_getUnexposedFacts() throws SQLException {
-		this.connection = new DatabaseConnection(new DatabaseParameters(), this.accessibleSchema);
+		this.connection = new DatabaseConnection(DatabaseParameters.Derby, this.accessibleSchema);
 		Atom f0 = Atom.create(this.R, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c1") });
 		Atom f1 = Atom.create(this.R, new Term[] { UntypedConstant.create("c"), TypedConstant.create(new String("John")) });
 		Atom f2 = Atom.create(this.R, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c4") });
@@ -313,7 +313,7 @@ public class TestAccessibleChaseInstance {
 
 	@Test
 	public void test4_getUnexposedFacts() throws SQLException {
-		this.connection = new DatabaseConnection(new DatabaseParameters(), this.accessibleSchema);
+		this.connection = new DatabaseConnection(DatabaseParameters.Derby, this.accessibleSchema);
 		Atom f0 = Atom.create(this.R, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c1") });
 		Atom f1 = Atom.create(this.R, new Term[] { UntypedConstant.create("c"), TypedConstant.create(new String("John")) });
 		Atom f2 = Atom.create(this.R, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c4") });
@@ -335,7 +335,7 @@ public class TestAccessibleChaseInstance {
 
 	@Test
 	public void test4b_getUnexposedFacts() throws SQLException {
-		this.connection = new DatabaseConnection(new DatabaseParameters(), this.accessibleSchema);
+		this.connection = new DatabaseConnection(DatabaseParameters.Derby, this.accessibleSchema);
 		Atom f0 = Atom.create(this.R, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c1") });
 		Atom f1 = Atom.create(this.R, new Term[] { UntypedConstant.create("c"), TypedConstant.create(new String("John")) });
 		Atom f2 = Atom.create(this.R, new Term[] { UntypedConstant.create("c"), UntypedConstant.create("c4") });
@@ -437,7 +437,7 @@ public class TestAccessibleChaseInstance {
 	}
 	
 	protected DatabaseParameters getPostgresConfig() {
-		DatabaseParameters dbParam = new DatabaseParameters();
+		DatabaseParameters dbParam = DatabaseParameters.Derby;
 		dbParam.setConnectionUrl("jdbc:postgresql://localhost/");
 		dbParam.setDatabaseDriver("org.postgresql.Driver");
 		dbParam.setDatabaseName("test_get_triggers");
@@ -446,7 +446,7 @@ public class TestAccessibleChaseInstance {
 		return dbParam; 
 	}
 	private DatabaseParameters getMySqlConfig() {
-		DatabaseParameters dbParam = new DatabaseParameters();
+		DatabaseParameters dbParam = DatabaseParameters.Derby;
 		dbParam.setConnectionUrl("jdbc:mysql://localhost/");
 		dbParam.setDatabaseDriver("com.mysql.jdbc.Driver");
 		dbParam.setDatabaseName("test_get_triggers");

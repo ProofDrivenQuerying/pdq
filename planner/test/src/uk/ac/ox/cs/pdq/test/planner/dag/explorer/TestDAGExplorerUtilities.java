@@ -105,7 +105,7 @@ public class TestDAGExplorerUtilities {
 		//Create database connection
 		DatabaseConnection connection = null;
 		try {
-			connection = new DatabaseConnection(new DatabaseParameters(), accessibleSchema);
+			connection = new DatabaseConnection(DatabaseParameters.Derby, accessibleSchema);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			Assert.fail();

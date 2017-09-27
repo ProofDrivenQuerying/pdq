@@ -200,7 +200,7 @@ public class RestrictedChaserTest {
 				schema.addConstants(Utility.getTypedConstants(query));
 				RestrictedChaser reasoner = new RestrictedChaser(new StatisticsCollector(true, new EventBus()));
 
-				DatabaseConnection dbcon = new DatabaseConnection(new DatabaseParameters(),schema);
+				DatabaseConnection dbcon = new DatabaseConnection(DatabaseParameters.Derby,schema);
 				DatabaseChaseInstance state = new DatabaseChaseInstance(query, dbcon);				
 				
 				reasoner.reasonUntilTermination(state, schema.getDependencies());
