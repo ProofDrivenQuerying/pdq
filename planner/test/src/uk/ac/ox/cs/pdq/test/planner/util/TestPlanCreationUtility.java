@@ -256,9 +256,10 @@ public class TestPlanCreationUtility {
 		Assert.assertTrue(plan2.getChild(1) instanceof SelectionTerm);
 	}
 	
-	//We have the following dag configuration
-	//APPLYRULE(customer(3){customer(c46,c52,c53,c40,c54,c55,c56,c57),customer(c31,c38,c39,c40,c41,c42,c43,c44)})
-	//which exposes two facts with a single access
+	//We want to expose these two facts 
+	//customer(c46,c52,c53,c40,c54,c55,c56,c57),
+	//customer(c31,c38,c39,c40,c41,c42,c43,c44)
+	//using a single access on the 4th position.
 	//We should produce an open plan that accesses relation customer once.
 	//Then we have two rename terms with child the same access
 	//the first term renames the attributes to c31,c38,c39,c40,c41,c42,c43,c44
