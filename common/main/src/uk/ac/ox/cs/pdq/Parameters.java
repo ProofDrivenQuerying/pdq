@@ -114,6 +114,10 @@ public abstract class Parameters extends Properties {
 			this.load(configFile, verbose, strict);
 		}
 		this.updateAccessors();
+		if (configFile!=null) {
+			// you have to load twice!
+			this.load(configFile, verbose, strict);
+		}
 	}
 
 	/**
