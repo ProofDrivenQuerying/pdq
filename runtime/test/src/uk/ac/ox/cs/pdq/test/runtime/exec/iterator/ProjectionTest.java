@@ -344,8 +344,8 @@ public class ProjectionTest {
 		 */
 		Condition condition = ConjunctiveCondition.create(new SimpleCondition[]{ConstantEqualityCondition.create(3, TypedConstant.create(44)), 
 				ConstantEqualityCondition.create(6, TypedConstant.create("TODO"))});
-		Projection target = new Projection(new Attribute[]{Attribute.create(String.class, "NAME"), 
-				Attribute.create(Float.class, "ACCTBAL")}, 
+		Projection target = new Projection(new Attribute[]{Attribute.create(String.class, "C_NAME"), 
+				Attribute.create(Float.class, "C_ACCTBAL")}, 
 				new Selection(condition, new Access(postgresqlRelationCustomer, amFree))); 
 
 		//Execute the plan

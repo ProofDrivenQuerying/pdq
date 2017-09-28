@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -15,7 +16,10 @@ import org.junit.Test;
 
 import uk.ac.ox.cs.pdq.algebra.AttributeEqualityCondition;
 import uk.ac.ox.cs.pdq.algebra.Condition;
+import uk.ac.ox.cs.pdq.algebra.ConstantEqualityCondition;
 import uk.ac.ox.cs.pdq.datasources.memory.InMemoryTableWrapper;
+import uk.ac.ox.cs.pdq.datasources.sql.PostgresqlRelationWrapper;
+import uk.ac.ox.cs.pdq.datasources.sql.SQLRelationWrapper;
 import uk.ac.ox.cs.pdq.datasources.utility.Table;
 import uk.ac.ox.cs.pdq.datasources.utility.Tuple;
 import uk.ac.ox.cs.pdq.datasources.utility.TupleType;
@@ -27,15 +31,20 @@ import uk.ac.ox.cs.pdq.runtime.exec.PipelinedPlanExecutor.TimeoutChecker;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.Access;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.DependentJoin;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.Join;
+import uk.ac.ox.cs.pdq.runtime.exec.iterator.NestedLoopJoin;
+import uk.ac.ox.cs.pdq.runtime.exec.iterator.Projection;
+import uk.ac.ox.cs.pdq.runtime.exec.iterator.Selection;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.SymmetricMemoryHashJoin;
 import uk.ac.ox.cs.pdq.runtime.exec.iterator.TupleIterator;
 
 public class DependentJoinTest {
 
 	//	TODO: tidy up by moving all this inside individual tests (since there's very little common setup here).
-	AccessMethod am1 = AccessMethod.create("access_method1",new Integer[] {});
-	AccessMethod am2 = AccessMethod.create("access_method2",new Integer[] {0});
-	AccessMethod am3 = AccessMethod.create("access_method3",new Integer[] {0,1});
+	AccessMethod amFree = AccessMethod.create("free_access",new Integer[] {});
+	AccessMethod am0 = AccessMethod.create("access_0", new Integer[] {0});
+	AccessMethod am1 = AccessMethod.create("access_0", new Integer[] {1});
+	AccessMethod am01 = AccessMethod.create("access_method3",new Integer[] {0,1});
+	AccessMethod am3 = AccessMethod.create("access_0", new Integer[] {3});
 
 	TupleType tt2 = TupleType.DefaultFactory.create(Integer.class, Integer.class);
 	TupleType tt3 = TupleType.DefaultFactory.create(Integer.class, Integer.class, Integer.class);
@@ -48,20 +57,20 @@ public class DependentJoinTest {
 
 		InMemoryTableWrapper relation1 = new InMemoryTableWrapper("R1", new Attribute[] {Attribute.create(Integer.class, "a"),
 				Attribute.create(Integer.class, "b"), Attribute.create(Integer.class, "c")},
-				new AccessMethod[] {am1});
+				new AccessMethod[] {amFree});
 		InMemoryTableWrapper relation2 = new InMemoryTableWrapper("R2", new Attribute[] {Attribute.create(Integer.class, "c"),
 				Attribute.create(Integer.class, "d"), Attribute.create(Integer.class, "e")},
-				new AccessMethod[] {am1, am2, am3});
+				new AccessMethod[] {amFree, am0, am01});
 
 		// Free access on relation R1.
-		Access relation1Free = new Access(relation1, am1);
+		Access relation1Free = new Access(relation1, amFree);
 
 		// Access on relation R2 that requires inputs on first position.
 		// Suppose that a user already specified the typed constant "100" to access it 
 		Map<Integer, TypedConstant> inputConstants1 = new HashMap<>();
 		inputConstants1.put(0, TypedConstant.create(100));
 
-		Access relation2InputonFirst = new Access(relation2, am2);
+		Access relation2InputonFirst = new Access(relation2, am0);
 
 		// Valid dependent join construction: the right child requires input in position 0,
 		// which is supplied by the left child output in position 2 (attribute "c").
@@ -72,17 +81,17 @@ public class DependentJoinTest {
 
 		// Note that there is currently no getJoinConditions in DependentJoin (but the fix is, probably,
 		// to make DependentJoin a subclass of Join).
-		
+
 		// Assert.assertEquals(expected, target.getJoinConditions());
-		
+
 		/*
 		 *  Constructor sanity checks
 		 */
-		
-		// Note that it is the access method am2 that specifies that relation2 requires 
+
+		// Note that it is the access method am0 that specifies that relation2 requires 
 		// input(s) on the first position (i.e. position 0). The inputConstants1 map contains
 		// the TypedConstant that provides that input.
-		Access relation2ConstantInputonFirst = new Access(relation2, am2, inputConstants1);
+		Access relation2ConstantInputonFirst = new Access(relation2, am0, inputConstants1);
 
 		// An exception is thrown if the right child does not require any inputs from the left
 		// (i.e. the following is not a valid dependent join).
@@ -98,17 +107,17 @@ public class DependentJoinTest {
 		// Here the left child supplies inputs only for the first position of relation2 but not for the second one.
 		caught = false; 
 		try {
-			new DependentJoin(relation1Free, new Access(relation2, am3));
+			new DependentJoin(relation1Free, new Access(relation2, am01));
 		} catch (IllegalArgumentException e) {
 			caught = true;
 		}
 		Assert.assertTrue(caught);
-		
+
 		// An exception is thrown if the right child input attributes are not a subset of the 
 		// left child output attributes.  
 		AccessMethod am = AccessMethod.create("access_method",new Integer[] {1});
 		Access relation2InputonSecond = new Access(relation2, am);
-		
+
 		caught = false; 
 		try {
 			new DependentJoin(relation1Free, relation2InputonSecond);
@@ -146,13 +155,13 @@ public class DependentJoinTest {
 
 		InMemoryTableWrapper relationR = new InMemoryTableWrapper("R", new Attribute[] {Attribute.create(Integer.class, "a"),
 				Attribute.create(Integer.class, "b"), Attribute.create(Integer.class, "c")},
-				new AccessMethod[] {am1});
+				new AccessMethod[] {amFree});
 
 		InMemoryTableWrapper relationS = new InMemoryTableWrapper("S", new Attribute[] {Attribute.create(Integer.class, "b"),
 				Attribute.create(Integer.class, "c"), Attribute.create(Integer.class, "d")},
-				new AccessMethod[] {am1, am2, am3});
+				new AccessMethod[] {amFree, am0, am01});
 
-		DependentJoin target = new DependentJoin(new Access(relationR, am1), new Access(relationS, am2));
+		DependentJoin target = new DependentJoin(new Access(relationR, amFree), new Access(relationS, am0));
 
 		// Check that the plan has no input attributes (the left child has no input attributes
 		// and the right child has only one, namely "b", which is supplied by the left child).
@@ -208,25 +217,25 @@ public class DependentJoinTest {
 
 		InMemoryTableWrapper relationR = new InMemoryTableWrapper("R", new Attribute[] {Attribute.create(Integer.class, "a"),
 				Attribute.create(Integer.class, "b"), Attribute.create(Integer.class, "c")},
-				new AccessMethod[] {am1});
+				new AccessMethod[] {amFree});
 
 		InMemoryTableWrapper relationS = new InMemoryTableWrapper("S", new Attribute[] {Attribute.create(Integer.class, "a"),
 				Attribute.create(Integer.class, "CONST"), Attribute.create(Integer.class, "c")},
-				new AccessMethod[] {am1, am2, am3});
+				new AccessMethod[] {amFree, am0, am01});
 
 		// Access on relation R2 that requires inputs on first position.
 		// Suppose that a user already specified the typed constant "100" to access it 
 		Map<Integer, TypedConstant> inputConstants = new HashMap<>();
 		inputConstants.put(1, TypedConstant.create(100));
 
-		// Note that it is the access method am2 that specifies that relation2 requires 
+		// Note that it is the access method am0 that specifies that relation2 requires 
 		// input(s) on the first two positions (i.e. positions 0 & 1). The inputConstants1 
 		// map contains the TypedConstant that provides the input on position 1.
-		Access relationSInputs01 = new Access(relationS, am3, inputConstants);
+		Access relationSInputs01 = new Access(relationS, am01, inputConstants);
 
 		// A dependent join plan that takes the outputs of the first access and feeds them to the 
 		// first input position (i.e. position 0) of the second accessed relation. 
-		DependentJoin target = new DependentJoin(new Access(relationR, am1), relationSInputs01);
+		DependentJoin target = new DependentJoin(new Access(relationR, amFree), relationSInputs01);
 
 		// Create some tuples
 		Integer[] values11 = new Integer[] {10, 55, 12};
@@ -285,15 +294,15 @@ public class DependentJoinTest {
 		//
 		InMemoryTableWrapper relationS = new InMemoryTableWrapper("S", new Attribute[] {Attribute.create(Integer.class, "a1"),
 				Attribute.create(Integer.class, "b1"), Attribute.create(Integer.class, "c1")},
-				new AccessMethod[] {am1});
+				new AccessMethod[] {amFree});
 		InMemoryTableWrapper relationR = new InMemoryTableWrapper("R", new Attribute[] {Attribute.create(Integer.class, "b1"),
 				Attribute.create(Integer.class, "c1")},
-				new AccessMethod[] {am1, am2, am3});
+				new AccessMethod[] {amFree, am0, am01});
 
 		// Free access on relation S.
-		Access relationSFree = new Access(relationS, am1);
+		Access relationSFree = new Access(relationS, amFree);
 		// Access on relation R that requires inputs on first position.
-		Access relationRInputonFirst = new Access(relationR, am2);
+		Access relationRInputonFirst = new Access(relationR, am0);
 
 		DependentJoin dj = new DependentJoin(relationSFree, relationRInputonFirst);
 
@@ -302,14 +311,14 @@ public class DependentJoinTest {
 		//
 		InMemoryTableWrapper relationT1 = new InMemoryTableWrapper("T1", new Attribute[] {Attribute.create(Integer.class, "a1"),
 				Attribute.create(Integer.class, "b2")},
-				new AccessMethod[] {am1});
+				new AccessMethod[] {amFree});
 		InMemoryTableWrapper relationT2 = new InMemoryTableWrapper("T2", new Attribute[] {Attribute.create(Integer.class, "b2"),
 				Attribute.create(Integer.class, "c2")},
-				new AccessMethod[] {am1, am2, am3});
+				new AccessMethod[] {amFree, am0, am01});
 
 		// Free access on relations T1 & T2.
-		Access relationT1Free = new Access(relationT1, am1);
-		Access relationT2Free = new Access(relationT2, am1);
+		Access relationT1Free = new Access(relationT1, amFree);
+		Access relationT2Free = new Access(relationT2, amFree);
 
 		Join ej = new SymmetricMemoryHashJoin(relationT1Free, relationT2Free);
 
@@ -379,37 +388,37 @@ public class DependentJoinTest {
 		//
 		InMemoryTableWrapper relationR = new InMemoryTableWrapper("R", new Attribute[] {Attribute.create(Integer.class, "a1"),
 				Attribute.create(Integer.class, "b1"), Attribute.create(Integer.class, "c1")},
-				new AccessMethod[] {am1});
+				new AccessMethod[] {amFree});
 		InMemoryTableWrapper relationS = new InMemoryTableWrapper("S", new Attribute[] {Attribute.create(Integer.class, "CONST"),
 				Attribute.create(Integer.class, "c1")},
-				new AccessMethod[] {am1, am2, am3});
+				new AccessMethod[] {amFree, am0, am01});
 
 		// Free access on relation R.
-		Access relationRFree = new Access(relationR, am1);
+		Access relationRFree = new Access(relationR, amFree);
 
 		// Access on relation S that requires inputs on both positions.
 		// Suppose that a user already specified the typed constant "100" to access it 
 		Map<Integer, TypedConstant> inputConstants = new HashMap<>();
 		inputConstants.put(0, TypedConstant.create(100));
-		Access relationSInputsonBoth = new Access(relationS, am2, inputConstants);
+		Access relationSInputOnFirst = new Access(relationS, am0, inputConstants);
 
-		DependentJoin dj = new DependentJoin(relationRFree, relationSInputsonBoth);
+		DependentJoin dj = new DependentJoin(relationRFree, relationSInputOnFirst);
 
 		//
 		// Equi-join on T & V
 		//
 		InMemoryTableWrapper relationT = new InMemoryTableWrapper("T", new Attribute[] {Attribute.create(Integer.class, "b1"),
 				Attribute.create(Integer.class, "c2")},
-				new AccessMethod[] {am1});
+				new AccessMethod[] {amFree});
 		InMemoryTableWrapper relationV = new InMemoryTableWrapper("V", new Attribute[] {Attribute.create(Integer.class, "b1"),
 				Attribute.create(Integer.class, "c3")},
-				new AccessMethod[] {am1, am2, am3});
+				new AccessMethod[] {amFree, am0, am01});
 
 		// Free access on relations T & V.
-		Access relationTFree = new Access(relationT, am1);
-		Access relationVFree = new Access(relationV, am1);
+		Access relationTInputOnFirst = new Access(relationT, am0);
+		Access relationVInputOnFirst = new Access(relationV, am0);
 
-		Join ej = new SymmetricMemoryHashJoin(relationTFree, relationVFree);
+		Join ej = new SymmetricMemoryHashJoin(relationTInputOnFirst, relationVInputOnFirst);
 
 		DependentJoin target = new DependentJoin(dj, ej);
 
@@ -473,15 +482,15 @@ public class DependentJoinTest {
 		InMemoryTableWrapper relationRS = new InMemoryTableWrapper("R", new Attribute[] {Attribute.create(Integer.class, "a"),
 				Attribute.create(Integer.class, "b"), Attribute.create(Integer.class, "c"), Attribute.create(Integer.class, "CONST"), 
 				Attribute.create(Integer.class, "c")},
-				new AccessMethod[] {am1});
+				new AccessMethod[] {amFree});
 		InMemoryTableWrapper relationTV = new InMemoryTableWrapper("S", new Attribute[] {Attribute.create(Integer.class, "b"),
 				Attribute.create(Integer.class, "d"), Attribute.create(Integer.class, "b"), Attribute.create(Integer.class, "e")},
-				new AccessMethod[] {am1, am2, am3});
+				new AccessMethod[] {amFree, am0, am01});
 
 		AccessMethod am = AccessMethod.create("access_method2",new Integer[] {0,2});
 
 		// Free access on relation R.
-		Access relationRSFree = new Access(relationRS, am1);
+		Access relationRSFree = new Access(relationRS, amFree);
 		Access relationTVInputOnFirstAndThird = new Access(relationTV, am);
 
 		DependentJoin target = new DependentJoin(relationRSFree, relationTVInputOnFirstAndThird);
@@ -520,5 +529,472 @@ public class DependentJoinTest {
 		Assert.assertNotNull(result);
 		Assert.assertEquals(Math.min(M, N), result.size());
 
+	}
+
+	/*
+	 *  PostgresqlRelation construction.
+	 */
+	public Properties getProperties() {
+		Properties properties = new Properties();
+		properties.setProperty("url", "TODO");
+		properties.setProperty("database", "tpch");
+		properties.setProperty("username", "admin");
+		properties.setProperty("password", "admin");
+		return(properties);
+	}
+
+	Attribute[] attributes_C = new Attribute[] {
+			Attribute.create(Integer.class, "C_CUSTKEY"),
+			Attribute.create(String.class, "C_NAME"),
+			Attribute.create(Integer.class, "C_ADDRESS"),
+			Attribute.create(Integer.class, "C_NATIONKEY"),
+			Attribute.create(String.class, "C_PHONE"),
+			Attribute.create(Float.class, "C_ACCTBAL"),
+			Attribute.create(String.class, "C_MKTSEGMENT"),
+			Attribute.create(String.class, "C_COMMENT")
+	};
+
+	Attribute[] attributes_N = new Attribute[] {
+			Attribute.create(Integer.class, "N_NATIONKEY"),
+			Attribute.create(String.class, "N_NAME"),
+			Attribute.create(Integer.class, "N_REGIONKEY"),
+			Attribute.create(String.class, "N_COMMENT")
+	};
+
+	Attribute[] attributes_S = new Attribute[] {
+			Attribute.create(Integer.class, "S_SUPPKEY"),
+			Attribute.create(String.class, "S_NAME"),
+			Attribute.create(String.class, "S_ADDRESS"),
+			Attribute.create(Integer.class, "S_NATIONKEY"),
+			Attribute.create(String.class, "S_PHONE"),
+			Attribute.create(Float.class, "S_ACCTBAL"),
+			Attribute.create(String.class, "S_COMMENT")
+	};
+
+	Attribute[] attributes_P = new Attribute[] {
+			Attribute.create(Integer.class, "P_PARTKEY"),
+			Attribute.create(String.class, "P_NAME"),
+			Attribute.create(String.class, "P_MFGR"),
+			Attribute.create(String.class, "P_BRAND"),
+			Attribute.create(String.class, "P_TYPE"),
+			Attribute.create(Integer.class, "P_SIZE"),
+			Attribute.create(String.class, "P_CONTAINER"),
+			Attribute.create(Float.class, "P_RETAILPRICE"),
+			Attribute.create(String.class, "P_COMMENT")
+	};
+
+	Attribute[] attributes_PS = new Attribute[] {
+			Attribute.create(Integer.class, "PS_PARTKEY"),
+			Attribute.create(String.class, "PS_SUPPKEY"),
+			Attribute.create(String.class, "PS_AVAILQTY"),
+			Attribute.create(String.class, "PS_SUPPLYCOST"),
+			Attribute.create(String.class, "PS_COMMENT")
+	};
+
+	Attribute[] attributes_O = new Attribute[] {
+			Attribute.create(String.class, "O_ORDERKEY"),
+			Attribute.create(Integer.class, "O_CUSTKEY"),
+			Attribute.create(Integer.class, "O_ORDERSTATUS"),
+			Attribute.create(Integer.class, "O_TOTALPRICE"),
+			Attribute.create(String.class, "O_ORDERDATE"),
+			Attribute.create(Float.class, "O_ORDER-PRIORITY"),
+			Attribute.create(String.class, "O_CLERK"),
+			Attribute.create(String.class, "O_SHIP-PRIORITY"),
+			Attribute.create(String.class, "O_COMMENT")
+	};
+
+	SQLRelationWrapper postgresqlRelationCustomer = new PostgresqlRelationWrapper(this.getProperties(), "CUSTOMER", 
+			attributes_C, new AccessMethod[] {amFree, am3});
+	SQLRelationWrapper postgresqlRelationNation = new PostgresqlRelationWrapper(this.getProperties(), "NATION", 
+			attributes_N, new AccessMethod[] {amFree});
+	SQLRelationWrapper postgresqlRelationSupplier = new PostgresqlRelationWrapper(this.getProperties(), "SUPPLIER", 
+			attributes_S, new AccessMethod[] {amFree});
+	SQLRelationWrapper postgresqlRelationPart = new PostgresqlRelationWrapper(this.getProperties(), "PART", 
+			attributes_P, new AccessMethod[] {amFree});
+	SQLRelationWrapper postgresqlRelationPartsupp = new PostgresqlRelationWrapper(this.getProperties(), "PARTSUPP", 
+			attributes_PS, new AccessMethod[] {amFree});
+	SQLRelationWrapper postgresqlRelationOrders = new PostgresqlRelationWrapper(this.getProperties(), "ORDERS", 
+			attributes_O, new AccessMethod[] {amFree});
+
+
+	@Test
+	public void test6() {
+
+		/*
+		 * Plan: DependentJoin(Access1, Access2)
+		 */
+		DependentJoin target = new DependentJoin(new Access(postgresqlRelationCustomer, amFree), 
+				new Access(postgresqlRelationNation, am0));
+
+		// Check that the plan has no input attributes (the left child has no input attributes
+		// and the right child has only one, namely "NATIONKEY", which is supplied by the left child).
+		Assert.assertEquals(0, target.getInputAttributes().length);
+
+		//Execute the plan
+		Table result = null;
+		try {
+			result = this.planExecution(target);
+		} catch (TimeoutException e) {
+			e.printStackTrace();
+		}
+
+		// TODO. Check that the result tuples are the ones expected. 
+		Assert.assertNotNull(result);
+		// TODO: execute a join manually to determine the expected size.
+		Assert.assertEquals(1000, result.size());
+		// TODO: check that the common attributes (by name) have common values.
+
+	}
+
+
+	@Test
+	public void test7() {
+
+		/*
+		 * Plan: DependentJoin(Access1, Selection(Access2))
+		 */
+		Condition mktsegmentCondition = ConstantEqualityCondition.create(6, TypedConstant.create("TODO"));
+		Selection selection = new Selection(mktsegmentCondition, new Access(postgresqlRelationCustomer, am3));
+
+		DependentJoin target = new DependentJoin(new Access(postgresqlRelationNation, amFree), 
+				selection);
+
+		// Check that the plan has no input attributes (the left child has no input attributes
+		// and the right child has only one, namely "NATIONKEY", which is supplied by the left child).
+		Assert.assertEquals(0, target.getInputAttributes().length);
+
+		//Execute the plan
+		Table result = null;
+		try {
+			result = this.planExecution(target);
+		} catch (TimeoutException e) {
+			e.printStackTrace();
+		}
+
+		// TODO. Check that the result tuples are the ones expected. 
+		Assert.assertNotNull(result);
+		// TODO: execute a join manually to determine the expected size.
+		Assert.assertEquals(1000, result.size());
+		// TODO: check that the common attributes (by name) have common values.
+
+	}
+
+	@Test
+	public void test8() {
+
+		/*
+		 * Plan: DependentJoin(Selection(Access1), Access2)
+		 */
+		Condition suppkeyCondition = ConstantEqualityCondition.create(0, TypedConstant.create(22)); // TODO.
+		Selection selection = new Selection(suppkeyCondition, new Access(postgresqlRelationSupplier, amFree));
+
+		DependentJoin target = new DependentJoin(selection, 
+				new Access(postgresqlRelationNation, am0));
+
+		// Check that the plan has no input attributes (the left child has no input attributes
+		// and the right child has only one, namely "NATIONKEY", which is supplied by the left child).
+		Assert.assertEquals(0, target.getInputAttributes().length);
+
+		//Execute the plan
+		Table result = null;
+		try {
+			result = this.planExecution(target);
+		} catch (TimeoutException e) {
+			e.printStackTrace();
+		}
+
+		// TODO. Check that the result tuples are the ones expected. 
+		Assert.assertNotNull(result);
+		// TODO: execute a join manually to determine the expected size.
+		Assert.assertEquals(1000, result.size());
+		// TODO: check that the common attributes (by name) have common values.
+
+	}
+
+	/*
+	 * Stress tests
+	 */
+
+	@Test
+	public void stressTest1() {
+
+		/*
+		 * Plan: PROJECTION(DependentJoin(DependentJoin(NATION, SUPPLIER), DependentJoin(PART, PARTSUPP)))
+		 */
+		DependentJoin djLeft = new DependentJoin(new Access(postgresqlRelationNation, amFree), 
+				new Access(postgresqlRelationSupplier, am3));
+		// In the access on the PARTSUPP relation the first attribute (PARTKEY) is supplied by
+		// the free access on the PART relation. The second attribute (SUPPKEY) will be supplied
+		// in the outer nested DependentJoin.
+		DependentJoin djRight = new DependentJoin(new Access(postgresqlRelationPart, amFree), 
+				new Access(postgresqlRelationPartsupp, am01));
+
+		// Check that the left DependentJoin plan has no input attributes (since the required 
+		// NATIONKEY attribute is supplied by the free access on the NATION relation).
+		Assert.assertEquals(0, djLeft.getInputAttributes().length);
+		
+		// Check that the right DependentJoin plan has one input attribute (to be supplied
+		// by the outer nested DependentJoin).
+		Assert.assertEquals(1, djRight.getInputAttributes().length);
+
+		DependentJoin dj = new DependentJoin(djLeft, djRight);
+		
+		Projection target = new Projection(new Attribute[]{ Attribute.create(String.class, "N_NAME"), 
+				Attribute.create(String.class, "S_NAME"), Attribute.create(String.class, "P_NAME"), 
+				Attribute.create(Integer.class, "PS_AVAILQTY")}, dj); 
+
+
+		// Check that the plan has no input attributes (the left child has no input attributes
+		// and the right child has only one, namely "SUPPKEY", which is supplied by the left child).
+		Assert.assertEquals(0, target.getInputAttributes().length);
+
+		//Execute the plan
+		Table result = null;
+		try {
+			result = this.planExecution(target);
+		} catch (TimeoutException e) {
+			e.printStackTrace();
+		}
+
+		// TODO. Check that the result tuples are the ones expected. 
+		Assert.assertNotNull(result);
+		// TODO: execute a join manually to determine the expected size.
+		Assert.assertEquals(1000, result.size());
+		// TODO: check that the common attributes (by name) have common values.	
+
+	}
+
+	@Test
+	public void stressTest2() {
+
+		/*
+		 * Plan: PROJECTION(DependentJoin(DependentJoin(NATION, SUPPLIER), DependentJoin(CUSTOMER, ORDERS)))
+		 */
+		DependentJoin djLeft = new DependentJoin(new Access(postgresqlRelationNation, amFree), 
+				new Access(postgresqlRelationSupplier, am3));
+		// In the access on the ORDERS relation the second attribute (CUSTKEY) is supplied by
+		// the access on the CUSTOMER relation, which itself requires input on the NATIONKEY 
+		// attribute, to be supplied by the outer nested DependentJoin.  
+		DependentJoin djRight = new DependentJoin(new Access(postgresqlRelationCustomer, am3), 
+				new Access(postgresqlRelationOrders, am1));
+		
+		// Check that the left DependentJoin plan has no input attributes (since the required 
+		// NATIONKEY attribute is supplied by the free access on the NATION relation).
+		Assert.assertEquals(0, djLeft.getInputAttributes().length);
+		
+		// Check that the right DependentJoin plan has one input attribute (to be supplied
+		// by the outer nested DependentJoin).
+		Assert.assertEquals(1, djRight.getInputAttributes().length);
+
+		DependentJoin dj = new DependentJoin(djLeft, djRight);
+		
+		Projection target = new Projection(new Attribute[]{ Attribute.create(String.class, "N_NAME"), 
+				Attribute.create(String.class, "S_NAME"), Attribute.create(String.class, "C_NAME"), 
+				Attribute.create(String.class, "O_ORDERSTATUS")}, dj); 
+
+		// Check that the plan has no input attributes (the left child has no input attributes
+		// and the right child has only one, namely "NATIONKEY", which is supplied by the left child).
+		Assert.assertEquals(0, target.getInputAttributes().length);
+
+		//Execute the plan
+		Table result = null;
+		try {
+			result = this.planExecution(target);
+		} catch (TimeoutException e) {
+			e.printStackTrace();
+		}
+
+		// TODO. Check that the result tuples are the ones expected. 
+		Assert.assertNotNull(result);
+		// TODO: execute a join manually to determine the expected size.
+		Assert.assertEquals(1000, result.size());
+		// TODO: check that the common attributes (by name) have common values.	
+
+	}
+
+	@Test
+	public void stressTest3() {
+
+		/*
+		 * Plan: 
+		 * DependentJoin(DependentJoin(NATION, Selection(SUPPLIER)), DependentJoin(Selection(PART), PARTSUPP))
+		 */
+		
+		// Select on the SUPPLIER SUPPKEY attribute with input required on the NATIONKEY attribute.
+		Condition conditionLeft = ConstantEqualityCondition.create(0, TypedConstant.create(22));
+		Selection selectionLeft = new Selection(conditionLeft, new Access(postgresqlRelationSupplier, am3));
+		DependentJoin djLeft = new DependentJoin(new Access(postgresqlRelationNation, amFree), selectionLeft);
+
+		// Select on the PART TYPE attribute.
+		Condition conditionRight = ConstantEqualityCondition.create(4, TypedConstant.create("TODO"));
+		Selection selectionRight = new Selection(conditionRight, new Access(postgresqlRelationPart, amFree));
+		DependentJoin djRight = new DependentJoin(selectionRight, new Access(postgresqlRelationPartsupp, am01));
+	
+		// Check that the left DependentJoin plan has no input attributes (since the required 
+		// NATIONKEY attribute is supplied by the free access on the NATION relation).
+		Assert.assertEquals(0, djLeft.getInputAttributes().length);
+		
+		// Check that the right DependentJoin plan has one input attribute, SUPPKEY, to be supplied
+		// by the outer nested DependentJoin. (The PARTKEY attribute is supplied by the selectionRight).
+		Assert.assertEquals(1, djRight.getInputAttributes().length);
+
+		DependentJoin target = new DependentJoin(djLeft, djRight);
+	
+		Assert.assertEquals(0, target.getInputAttributes().length);
+
+		//Execute the plan
+		Table result = null;
+		try {
+			result = this.planExecution(target);
+		} catch (TimeoutException e) {
+			e.printStackTrace();
+		}
+
+		// TODO. Check that the result tuples are the ones expected. 
+		Assert.assertNotNull(result);
+		// TODO: execute a join manually to determine the expected size.
+		Assert.assertEquals(1000, result.size());
+		// TODO: check that the common attributes (by name) have common values.	
+	}
+	
+	@Test
+	public void stressTest4() {
+
+		/*
+		 * Plan: 
+		 * Join(DependentJoin(Selection(NATION), SUPPLIER), DependentJoin(CUSTOMER, Selection(ORDERS)))
+		 */
+		// Select on the SUPPLIER SUPPKEY attribute with input required on the NATIONKEY attribute.
+		Condition conditionLeft = ConstantEqualityCondition.create(0, TypedConstant.create(22));
+		Selection selectionLeft = new Selection(conditionLeft, new Access(postgresqlRelationSupplier, am3));
+		DependentJoin djLeft = new DependentJoin(new Access(postgresqlRelationNation, amFree), selectionLeft);
+		
+		// Select on the ORDERS ORDERSTATUS attribute with input required on the CUSTKEY attribute.
+		Condition conditionRight = ConstantEqualityCondition.create(2, TypedConstant.create("TODO"));
+		Selection selectionRight = new Selection(conditionRight, new Access(postgresqlRelationOrders, am1));
+		DependentJoin djRight = new DependentJoin(new Access(postgresqlRelationCustomer, amFree), selectionRight);
+		
+		// Check that the left & right DependentJoin have no no input attributes.
+		Assert.assertEquals(0, djLeft.getInputAttributes().length);
+		Assert.assertEquals(0, djRight.getInputAttributes().length);
+
+		Join target = new NestedLoopJoin(djLeft, djRight);
+
+		//Execute the plan
+		Table result = null;
+		try {
+			result = this.planExecution(target);
+		} catch (TimeoutException e) {
+			e.printStackTrace();
+		}
+
+		// TODO. Check that the result tuples are the ones expected. 
+		Assert.assertNotNull(result);
+		// TODO: execute a join manually to determine the expected size.
+		Assert.assertEquals(1000, result.size());
+		// TODO: check that the common attributes (by name) have common values.	
+		
+	}
+	
+	@Test
+	public void stressTest5() {
+
+		/*
+		 * Plan: 
+		 * Join(DependentJoin(Selection(NATION), SUPPLIER), Selection(DependentJoin(CUSTOMER, Selection(ORDERS))))
+		 */
+
+		// Select on the SUPPLIER SUPPKEY attribute with input required on the NATIONKEY attribute.
+		Condition conditionLeft = ConstantEqualityCondition.create(0, TypedConstant.create(22));
+		Selection selectionLeft = new Selection(conditionLeft, new Access(postgresqlRelationSupplier, am3));
+		DependentJoin djLeft = new DependentJoin(new Access(postgresqlRelationNation, amFree), selectionLeft);
+		
+		// Select on the ORDERS ORDERSTATUS attribute with input required on the CUSTKEY attribute.
+		Condition conditionRight = ConstantEqualityCondition.create(2, TypedConstant.create("TODO"));
+		Selection selectionRight = new Selection(conditionRight, new Access(postgresqlRelationOrders, am1));
+		DependentJoin djRight = new DependentJoin(new Access(postgresqlRelationCustomer, amFree), selectionRight);
+		
+		// Check that the left & right DependentJoin have no no input attributes.
+		Assert.assertEquals(0, djLeft.getInputAttributes().length);
+		Assert.assertEquals(0, djRight.getInputAttributes().length);
+
+		// For the outer-right selection condition, select on the SHIP-PRIORITY attribute.
+		Condition condition = ConstantEqualityCondition.create(15, TypedConstant.create(2L)); // TODO.
+		Join target = new NestedLoopJoin(djLeft, new Selection(condition, djRight));
+
+		//Execute the plan
+		Table result = null;
+		try {
+			result = this.planExecution(target);
+		} catch (TimeoutException e) {
+			e.printStackTrace();
+		}
+
+		// TODO. Check that the result tuples are the ones expected. 
+		Assert.assertNotNull(result);
+		// TODO: execute a join manually to determine the expected size.
+		Assert.assertEquals(1000, result.size());
+		// TODO: check that the common attributes (by name) have common values.	
+		
+	}
+	
+	@Test
+	public void stressTest6() {
+
+		/*
+		 * Plan: 
+		 * DependentJoin(
+		 * 		Selection(DependentJoin(CUSTOMER, Selection(ORDERS))),
+		 * 		DependentJoin(DependentJoin(Selection(NATION), SUPPLIER), Selection(DependentJoin(Selection(PART), PARTSUPP))) 
+		 * )
+		 */
+
+		// Select on the SUPPLIER SUPPKEY attribute with input required on the NATIONKEY attribute.
+		Condition conditionRightLeft = ConstantEqualityCondition.create(0, TypedConstant.create(22));
+		Selection selectionRightLeft = new Selection(conditionRightLeft, new Access(postgresqlRelationSupplier, am3));
+		DependentJoin djRightLeft = new DependentJoin(new Access(postgresqlRelationNation, amFree), selectionRightLeft);
+		
+		// Select on the PART MFGR attribute. 
+		Condition conditionRightRight = ConstantEqualityCondition.create(2, TypedConstant.create("TODO"));
+		Selection selectionRightRight = new Selection(conditionRightRight, new Access(postgresqlRelationPart, amFree));
+		DependentJoin djLeftRight = new DependentJoin(selectionRightRight, new Access(postgresqlRelationPartsupp, am01));
+		
+		// Select on the PART TYPE attribute. 
+		Condition conditionRight = ConstantEqualityCondition.create(4, TypedConstant.create("TODO"));
+		
+		DependentJoin djRight = new DependentJoin(djRightLeft, new Selection(conditionRight, djLeftRight));
+		
+		// Check that the left DependentJoin plan has one input attribute, SUPPKEY, to be supplied
+		// by the outer nested DependentJoin.
+		Assert.assertEquals(1, djRight.getInputAttributes().length);
+
+		
+		// Select on the ORDERS ORDERSTATUS attribute with input required on the CUSTKEY attribute.
+		Condition conditionLeftRight = ConstantEqualityCondition.create(2, TypedConstant.create("TODO"));
+		Selection selectionLeftRight = new Selection(conditionLeftRight, new Access(postgresqlRelationOrders, am1));
+		DependentJoin djLeft = new DependentJoin(new Access(postgresqlRelationCustomer, amFree), selectionLeftRight);
+		
+		// For the outer-left selection condition, select on the SHIP-PRIORITY attribute.
+		Condition conditionLeft = ConstantEqualityCondition.create(15, TypedConstant.create(2L)); // TODO.
+		Selection selectionLeft = new Selection(conditionLeft, djLeft);
+		
+		DependentJoin target = new DependentJoin(selectionLeft, djRight);
+		
+		// Check that the target DependentJoin has no no input attributes.
+		Assert.assertEquals(0, target.getInputAttributes().length);
+		
+		//Execute the plan
+		Table result = null;
+		try {
+			result = this.planExecution(target);
+		} catch (TimeoutException e) {
+			e.printStackTrace();
+		}
+
+		// TODO. Check that the result tuples are the ones expected. 
+		Assert.assertNotNull(result);
+		// TODO: execute a join manually to determine the expected size.
+		Assert.assertEquals(1000, result.size());
+		// TODO: check that the common attributes (by name) have common values.			
 	}
 }
