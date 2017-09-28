@@ -42,42 +42,7 @@ public class SelectionTest {
 			new AccessMethod[] {amFree});
 
 	/*
-	 *  PostgresqlRelation construction.
-	 */
-	public Properties getProperties() {
-		Properties properties = new Properties();
-		properties.setProperty("url", "TODO");
-		properties.setProperty("database", "tpch");
-		properties.setProperty("username", "admin");
-		properties.setProperty("password", "admin");
-		return(properties);
-	}
-
-	Attribute[] attributes_C = new Attribute[] {
-			Attribute.create(Integer.class, "C_CUSTKEY"),
-			Attribute.create(String.class, "C_NAME"),
-			Attribute.create(Integer.class, "C_ADDRESS"),
-			Attribute.create(Integer.class, "C_NATIONKEY"),
-			Attribute.create(String.class, "C_PHONE"),
-			Attribute.create(Float.class, "C_ACCTBAL"),
-			Attribute.create(String.class, "C_MKTSEGMENT"),
-			Attribute.create(String.class, "C_COMMENT")
-	};
-
-	Attribute[] attributes_N = new Attribute[] {
-			Attribute.create(Integer.class, "N_NATIONKEY"),
-			Attribute.create(String.class, "N_NAME"),
-			Attribute.create(Integer.class, "N_REGIONKEY"),
-			Attribute.create(String.class, "N_COMMENT")
-	};
-
-	SQLRelationWrapper postgresqlRelationCustomer = new PostgresqlRelationWrapper(this.getProperties(), "CUSTOMER", 
-			attributes_C, new AccessMethod[] {amFree});
-	SQLRelationWrapper postgresqlRelationNation = new PostgresqlRelationWrapper(this.getProperties(), "NATION", 
-			attributes_N, new AccessMethod[] {amFree});
-	
-	/*
-	 * The following are integration tests: Projection instances are constructed and executed.
+	 * The following are integration tests: Selection instances are constructed and executed.
 	 */
 
 	// Execute plans by passing them to this method
@@ -172,6 +137,42 @@ public class SelectionTest {
 
 	}
 
+
+	/*
+	 *  PostgresqlRelation construction.
+	 */
+	public Properties getProperties() {
+		Properties properties = new Properties();
+		properties.setProperty("url", "TODO");
+		properties.setProperty("database", "tpch");
+		properties.setProperty("username", "admin");
+		properties.setProperty("password", "admin");
+		return(properties);
+	}
+
+	Attribute[] attributes_C = new Attribute[] {
+			Attribute.create(Integer.class, "C_CUSTKEY"),
+			Attribute.create(String.class, "C_NAME"),
+			Attribute.create(Integer.class, "C_ADDRESS"),
+			Attribute.create(Integer.class, "C_NATIONKEY"),
+			Attribute.create(String.class, "C_PHONE"),
+			Attribute.create(Float.class, "C_ACCTBAL"),
+			Attribute.create(String.class, "C_MKTSEGMENT"),
+			Attribute.create(String.class, "C_COMMENT")
+	};
+
+	Attribute[] attributes_N = new Attribute[] {
+			Attribute.create(Integer.class, "N_NATIONKEY"),
+			Attribute.create(String.class, "N_NAME"),
+			Attribute.create(Integer.class, "N_REGIONKEY"),
+			Attribute.create(String.class, "N_COMMENT")
+	};
+
+	SQLRelationWrapper postgresqlRelationCustomer = new PostgresqlRelationWrapper(this.getProperties(), "CUSTOMER", 
+			attributes_C, new AccessMethod[] {amFree});
+	SQLRelationWrapper postgresqlRelationNation = new PostgresqlRelationWrapper(this.getProperties(), "NATION", 
+			attributes_N, new AccessMethod[] {amFree});
+	
 	
 	@Test
 	public void test2() {

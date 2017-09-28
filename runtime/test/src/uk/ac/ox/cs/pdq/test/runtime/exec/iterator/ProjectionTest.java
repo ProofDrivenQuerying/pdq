@@ -43,33 +43,6 @@ public class ProjectionTest {
 			Attribute.create(Integer.class, "b"), Attribute.create(Integer.class, "c")},
 			new AccessMethod[] {amFree});
 
-	/*
-	 *  PostgresqlRelation construction.
-	 */
-	public Properties getProperties() {
-		Properties properties = new Properties();
-		properties.setProperty("url", "TODO");
-		properties.setProperty("database", "tpch");
-		properties.setProperty("username", "admin");
-		properties.setProperty("password", "admin");
-		return(properties);
-	}
-
-	Attribute[] attributes_C = new Attribute[] {
-			Attribute.create(Integer.class, "C_CUSTKEY"),
-			Attribute.create(String.class, "C_NAME"),
-			Attribute.create(Integer.class, "C_ADDRESS"),
-			Attribute.create(Integer.class, "C_NATIONKEY"),
-			Attribute.create(String.class, "C_PHONE"),
-			Attribute.create(Float.class, "C_ACCTBAL"),
-			Attribute.create(String.class, "C_MKTSEGMENT"),
-			Attribute.create(String.class, "C_COMMENT")
-	};
-	
-	SQLRelationWrapper postgresqlRelationCustomer = new PostgresqlRelationWrapper(this.getProperties(), "CUSTOMER", 
-			attributes_C, new AccessMethod[] {amFree});
-
-	
 	@SuppressWarnings("resource")
 	@Test
 	public void testProjection() {
@@ -333,6 +306,33 @@ public class ProjectionTest {
 		// (i.e. attributes "a" & "c"). 
 		Assert.assertArrayEquals(expected.toArray(), result.getData().toArray());		
 	}
+	
+	/*
+	 *  PostgresqlRelation construction.
+	 */
+	public Properties getProperties() {
+		Properties properties = new Properties();
+		properties.setProperty("url", "TODO");
+		properties.setProperty("database", "tpch");
+		properties.setProperty("username", "admin");
+		properties.setProperty("password", "admin");
+		return(properties);
+	}
+
+	Attribute[] attributes_C = new Attribute[] {
+			Attribute.create(Integer.class, "C_CUSTKEY"),
+			Attribute.create(String.class, "C_NAME"),
+			Attribute.create(Integer.class, "C_ADDRESS"),
+			Attribute.create(Integer.class, "C_NATIONKEY"),
+			Attribute.create(String.class, "C_PHONE"),
+			Attribute.create(Float.class, "C_ACCTBAL"),
+			Attribute.create(String.class, "C_MKTSEGMENT"),
+			Attribute.create(String.class, "C_COMMENT")
+	};
+	
+	SQLRelationWrapper postgresqlRelationCustomer = new PostgresqlRelationWrapper(this.getProperties(), "CUSTOMER", 
+			attributes_C, new AccessMethod[] {amFree});
+
 
 	@Test
 	public void test4() {
