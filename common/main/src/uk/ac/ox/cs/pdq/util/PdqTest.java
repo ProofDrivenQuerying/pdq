@@ -89,7 +89,7 @@ public class PdqTest {
 	protected Relation access = Relation.create("Accessible", new Attribute[] { i, instanceID });
 
 	protected Relation rel1 = Relation.create("R1", new Attribute[] { at11, at12, at13, instanceID });
-	protected Relation rel2 = Relation.create("R2", new Attribute[] { at21, at22, instanceID });
+	protected Relation rel2 = Relation.create("R2", new Attribute[] { at21, at22, instanceID },new AccessMethod[] { this.method0, this.method2 });
 	protected Relation rel3 = Relation.create("R3", new Attribute[] { at31, at32, instanceID });
 
 	/* example atoms */
