@@ -37,9 +37,10 @@ public class TestAccessibleSchema extends PdqTest {
 	 * Create a schema, then make a call to create its accessible version and then
 	 * test if the accessible version is what it should be.
 	 * 
-	 * For schema it uses the R,S,T tables from PdqTest, and adds these dependencies:
-		* tgd:  T(x,y,'constant1'), S(x,'constant2') -> R(x,y,z') S(y,x) <br>
-		* egd:  R(x,y,z), R(x,y,z') -> z=z'
+	 * For schema it uses the R,S,T tables from PdqTest, and adds these
+	 * dependencies: tgd: T(x,y,'constant1'), S(x,'constant2') -> R(x,y,z') S(y,x)
+	 * <br>
+	 * egd: R(x,y,z), R(x,y,z') -> z=z'
 	 * 
 	 */
 	@Test
